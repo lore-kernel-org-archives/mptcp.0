@@ -1,31 +1,31 @@
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08136AB7
-	for <mptcp@lists.linux.dev>; Fri, 21 Oct 2022 22:59:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4346AB6
+	for <mptcp@lists.linux.dev>; Fri, 21 Oct 2022 22:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666393144; x=1697929144;
+  t=1666393146; x=1697929146;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BVoQO49mbb5TcS4QVTWYXVSx7xX/0TjdWjL77zoQ0eU=;
-  b=h7Kk6SjyOQ6Ej7HqguKaav4IHL1GI4BCkbeYaqHE1pzVfgBYCQCl0BfT
-   hmvV9hsucNr0I3HFBk8Q1aZMMGdI9H2/l+251lUZJJUNSh6Ni2NJds7PZ
-   eo+1Nl1+gSQZp03DY4ciclZDmAI+hgtV7VfQ/CKKrZyP0aVHIXbenIA7d
-   COlhwrVgqDpsq+G01wEpxFDBiYMyhYx0jXm8Xjz6paU9HM1A3EB0Eu8E6
-   b+BVeeJzXoYDv3Zo7E1mYshg5rCLsWqii05lI8wUVGCoHzgaGFHrBUs5u
-   D7+2acRNqjNt4DepKNQirbx67L10s/4+9UJYj17Tf1cPm6hab3IXeo3WZ
+  bh=gXNmSpNkiu0qZwX34gMr7ZrLlRCl7DXUpHrvm/2Ux9E=;
+  b=ZSikJ3uEAyWCsQT3XW6NVCgUqsqb4nDQG5cxN63gNejiaMdC0Vf2jEJh
+   oVmGsZdZ5l5hNrOTuVda1zIa3mNKkxq39M4VHtqqPFr2oh+uigRTJtL4Z
+   +oBNb3WWR3Bvjh0EW3BCJqwQrT+SiKjubbPMx5RDfu2HYk8rm1rSH45ev
+   C8tJYjWr6pmiqJZaQ1EE2WnxhiQvM+T9nWW/45QBB0j0gz/BwiJLnQ2vP
+   W7n0qyhviF0AhUrBeFFgq8bHLlVPp5Uw7FPNI/sL0FOfEA6GSUhwLATBy
+   cuDdo4CwLBM3o/SikNGpwppGPDYCHf9fvQcAbOZvKOPGsZOc/OB4RikBY
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="333699092"
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="333699093"
 X-IronPort-AV: E=Sophos;i="5.95,203,1661842800"; 
-   d="scan'208";a="333699092"
+   d="scan'208";a="333699093"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 15:59:02 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="663928732"
+X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="663928734"
 X-IronPort-AV: E=Sophos;i="5.95,203,1661842800"; 
-   d="scan'208";a="663928732"
+   d="scan'208";a="663928734"
 Received: from tremple-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.66.81])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 15:59:01 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 15:59:02 -0700
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: netdev@vger.kernel.org
 Cc: Paolo Abeni <pabeni@redhat.com>,
@@ -37,9 +37,9 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 2/3] mptcp: factor out mptcp_connect()
-Date: Fri, 21 Oct 2022 15:58:55 -0700
-Message-Id: <20221021225856.88119-3-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net 3/3] mptcp: fix abba deadlock on fastopen
+Date: Fri, 21 Oct 2022 15:58:56 -0700
+Message-Id: <20221021225856.88119-4-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221021225856.88119-1-mathew.j.martineau@linux.intel.com>
 References: <20221021225856.88119-1-mathew.j.martineau@linux.intel.com>
@@ -53,217 +53,157 @@ Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-The current MPTCP connect implementation duplicates a bit of inet
-code and does not use nor provide a struct proto->connect callback,
-which in turn will not fit the upcoming fastopen implementation.
+Our CI reported lockdep splat in the fastopen code:
+ ======================================================
+ WARNING: possible circular locking dependency detected
+ 6.0.0.mptcp_f5e8bfe9878d+ #1558 Not tainted
+ ------------------------------------------------------
+ packetdrill/1071 is trying to acquire lock:
+ ffff8881bd198140 (sk_lock-AF_INET){+.+.}-{0:0}, at: inet_wait_for_connect+0x19c/0x310
 
-Refactor such implementation to use the common helper, moving the
-MPTCP-specific bits into mptcp_connect(). Additionally, avoid an
-indirect call to the subflow connect callback.
+ but task is already holding lock:
+ ffff8881b8346540 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg+0xfdf/0x1740
 
-Note that the fastopen call-path invokes mptcp_connect() while already
-holding the subflow socket lock. Explicitly keep track of such path
-via a new MPTCP-level flag and handle the locking accordingly.
+ which lock already depends on the new lock.
 
-Additionally, track the connect flags in a new msk field to allow
-propagating them to the subflow inet_stream_connect call.
+ the existing dependency chain (in reverse order) is:
+
+ -> #1 (k-sk_lock-AF_INET){+.+.}-{0:0}:
+        __lock_acquire+0xb6d/0x1860
+        lock_acquire+0x1d8/0x620
+        lock_sock_nested+0x37/0xd0
+        inet_stream_connect+0x3f/0xa0
+        mptcp_connect+0x411/0x800
+        __inet_stream_connect+0x3ab/0x800
+        mptcp_stream_connect+0xac/0x110
+        __sys_connect+0x101/0x130
+        __x64_sys_connect+0x6e/0xb0
+        do_syscall_64+0x59/0x90
+        entry_SYSCALL_64_after_hwframe+0x63/0xcd
+
+ -> #0 (sk_lock-AF_INET){+.+.}-{0:0}:
+        check_prev_add+0x15e/0x2110
+        validate_chain+0xace/0xdf0
+        __lock_acquire+0xb6d/0x1860
+        lock_acquire+0x1d8/0x620
+        lock_sock_nested+0x37/0xd0
+        inet_wait_for_connect+0x19c/0x310
+        __inet_stream_connect+0x26c/0x800
+        tcp_sendmsg_fastopen+0x341/0x650
+        mptcp_sendmsg+0x109d/0x1740
+        sock_sendmsg+0xe1/0x120
+        __sys_sendto+0x1c7/0x2a0
+        __x64_sys_sendto+0xdc/0x1b0
+        do_syscall_64+0x59/0x90
+        entry_SYSCALL_64_after_hwframe+0x63/0xcd
+
+ other info that might help us debug this:
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(k-sk_lock-AF_INET);
+                                lock(sk_lock-AF_INET);
+                                lock(k-sk_lock-AF_INET);
+   lock(sk_lock-AF_INET);
+
+  *** DEADLOCK ***
+
+ 1 lock held by packetdrill/1071:
+  #0: ffff8881b8346540 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg+0xfdf/0x1740
+ ======================================================
+
+The problem is caused by the blocking inet_wait_for_connect() releasing
+and re-acquiring the msk socket lock while the subflow socket lock is
+still held and the MPTCP socket requires that the msk socket lock must
+be acquired before the subflow socket lock.
+
+Address the issue always invoking tcp_sendmsg_fastopen() in an
+unblocking manner, and later eventually complete the blocking
+__inet_stream_connect() as needed.
 
 Fixes: d98a82a6afc7 ("mptcp: handle defer connect in mptcp_sendmsg")
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/protocol.c | 136 ++++++++++++++++++++++---------------------
- net/mptcp/protocol.h |   4 +-
- 2 files changed, 73 insertions(+), 67 deletions(-)
+ net/mptcp/protocol.c | 49 ++++++++++++++++++++++++++++++--------------
+ 1 file changed, 34 insertions(+), 15 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e33f9caf409d..f2930699c6d3 100644
+index f2930699c6d3..b6dc6e260334 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1698,7 +1698,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 
- 		lock_sock(ssk);
- 
-+		msk->connect_flags = (msg->msg_flags & MSG_DONTWAIT) ? O_NONBLOCK : 0;
-+		msk->is_sendmsg = 1;
- 		ret = tcp_sendmsg_fastopen(ssk, msg, &copied_syn, len, NULL);
-+		msk->is_sendmsg = 0;
- 		copied += copied_syn;
- 		if (ret == -EINPROGRESS && copied_syn > 0) {
- 			/* reflect the new state on the MPTCP socket */
-@@ -3507,10 +3510,73 @@ static int mptcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
- 	return put_user(answ, (int __user *)arg);
+@@ -1673,6 +1673,37 @@ static void mptcp_set_nospace(struct sock *sk)
+ 	set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
  }
  
-+static void mptcp_subflow_early_fallback(struct mptcp_sock *msk,
-+					 struct mptcp_subflow_context *subflow)
++static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msghdr *msg,
++				  size_t len, int *copied_syn)
 +{
-+	subflow->request_mptcp = 0;
-+	__mptcp_do_fallback(msk);
-+}
-+
-+static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
-+{
-+	struct mptcp_subflow_context *subflow;
++	unsigned int saved_flags = msg->msg_flags;
 +	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct socket *ssock;
-+	int err = -EINVAL;
++	int ret;
 +
-+	ssock = __mptcp_nmpc_socket(msk);
-+	if (!ssock)
-+		return -EINVAL;
++	lock_sock(ssk);
++	msg->msg_flags |= MSG_DONTWAIT;
++	msk->connect_flags = O_NONBLOCK;
++	msk->is_sendmsg = 1;
++	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
++	msk->is_sendmsg = 0;
++	msg->msg_flags = saved_flags;
++	release_sock(ssk);
 +
-+	mptcp_token_destroy(msk);
-+	inet_sk_state_store(sk, TCP_SYN_SENT);
-+	subflow = mptcp_subflow_ctx(ssock->sk);
-+#ifdef CONFIG_TCP_MD5SIG
-+	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
-+	 * TCP option space.
-+	 */
-+	if (rcu_access_pointer(tcp_sk(ssock->sk)->md5sig_info))
-+		mptcp_subflow_early_fallback(msk, subflow);
-+#endif
-+	if (subflow->request_mptcp && mptcp_token_new_connect(ssock->sk)) {
-+		MPTCP_INC_STATS(sock_net(ssock->sk), MPTCP_MIB_TOKENFALLBACKINIT);
-+		mptcp_subflow_early_fallback(msk, subflow);
-+	}
-+	if (likely(!__mptcp_check_fallback(msk)))
-+		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVE);
++	/* do the blocking bits of inet_stream_connect outside the ssk socket lock */
++	if (ret == -EINPROGRESS && !(msg->msg_flags & MSG_DONTWAIT)) {
++		ret = __inet_stream_connect(sk->sk_socket, msg->msg_name,
++					    msg->msg_namelen, msg->msg_flags, 1);
 +
-+	/* if reaching here via the fastopen/sendmsg path, the caller already
-+	 * acquired the subflow socket lock, too.
-+	 */
-+	if (msk->is_sendmsg)
-+		err = __inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags, 1);
-+	else
-+		err = inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags);
-+	inet_sk(sk)->defer_connect = inet_sk(ssock->sk)->defer_connect;
-+
-+	/* on successful connect, the msk state will be moved to established by
-+	 * subflow_finish_connect()
-+	 */
-+	if (unlikely(err && err != -EINPROGRESS)) {
-+		inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
-+		return err;
++		/* Keep the same behaviour of plain TCP: zero the copied bytes in
++		 * case of any error, except timeout or signal
++		 */
++		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret != -EINTR)
++			*copied_syn = 0;
 +	}
 +
-+	mptcp_copy_inaddrs(sk, ssock->sk);
-+
-+	/* unblocking connect, mptcp-level inet_stream_connect will error out
-+	 * without changing the socket state, update it here.
-+	 */
-+	if (err == -EINPROGRESS)
-+		sk->sk_socket->state = ssock->state;
-+	return err;
++	return ret;
 +}
 +
- static struct proto mptcp_prot = {
- 	.name		= "MPTCP",
- 	.owner		= THIS_MODULE,
- 	.init		= mptcp_init_sock,
-+	.connect	= mptcp_connect,
- 	.disconnect	= mptcp_disconnect,
- 	.close		= mptcp_close,
- 	.accept		= mptcp_accept,
-@@ -3562,78 +3628,16 @@ static int mptcp_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
- 	return err;
- }
- 
--static void mptcp_subflow_early_fallback(struct mptcp_sock *msk,
--					 struct mptcp_subflow_context *subflow)
--{
--	subflow->request_mptcp = 0;
--	__mptcp_do_fallback(msk);
--}
--
- static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
- 				int addr_len, int flags)
+ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  {
--	struct mptcp_sock *msk = mptcp_sk(sock->sk);
--	struct mptcp_subflow_context *subflow;
--	struct socket *ssock;
--	int err = -EINVAL;
-+	int ret;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -1693,26 +1724,14 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  
- 	lock_sock(sock->sk);
--	if (uaddr) {
--		if (addr_len < sizeof(uaddr->sa_family))
--			goto unlock;
+ 	ssock = __mptcp_nmpc_socket(msk);
+ 	if (unlikely(ssock && inet_sk(ssock->sk)->defer_connect)) {
+-		struct sock *ssk = ssock->sk;
+ 		int copied_syn = 0;
+ 
+-		lock_sock(ssk);
 -
--		if (uaddr->sa_family == AF_UNSPEC) {
--			err = mptcp_disconnect(sock->sk, flags);
--			sock->state = err ? SS_DISCONNECTING : SS_UNCONNECTED;
--			goto unlock;
+-		msk->connect_flags = (msg->msg_flags & MSG_DONTWAIT) ? O_NONBLOCK : 0;
+-		msk->is_sendmsg = 1;
+-		ret = tcp_sendmsg_fastopen(ssk, msg, &copied_syn, len, NULL);
+-		msk->is_sendmsg = 0;
++		ret = mptcp_sendmsg_fastopen(sk, ssock->sk, msg, len, &copied_syn);
+ 		copied += copied_syn;
+-		if (ret == -EINPROGRESS && copied_syn > 0) {
+-			/* reflect the new state on the MPTCP socket */
+-			inet_sk_state_store(sk, inet_sk_state_load(ssk));
+-			release_sock(ssk);
++		if (ret == -EINPROGRESS && copied_syn > 0)
+ 			goto out;
+-		} else if (ret) {
+-			release_sock(ssk);
++		else if (ret)
+ 			goto do_error;
 -		}
--	}
--
--	if (sock->state != SS_UNCONNECTED && msk->subflow) {
--		/* pending connection or invalid state, let existing subflow
--		 * cope with that
--		 */
--		ssock = msk->subflow;
--		goto do_connect;
--	}
--
--	ssock = __mptcp_nmpc_socket(msk);
--	if (!ssock)
--		goto unlock;
--
--	mptcp_token_destroy(msk);
--	inet_sk_state_store(sock->sk, TCP_SYN_SENT);
--	subflow = mptcp_subflow_ctx(ssock->sk);
--#ifdef CONFIG_TCP_MD5SIG
--	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
--	 * TCP option space.
--	 */
--	if (rcu_access_pointer(tcp_sk(ssock->sk)->md5sig_info))
--		mptcp_subflow_early_fallback(msk, subflow);
--#endif
--	if (subflow->request_mptcp && mptcp_token_new_connect(ssock->sk)) {
--		MPTCP_INC_STATS(sock_net(ssock->sk), MPTCP_MIB_TOKENFALLBACKINIT);
--		mptcp_subflow_early_fallback(msk, subflow);
--	}
--	if (likely(!__mptcp_check_fallback(msk)))
--		MPTCP_INC_STATS(sock_net(sock->sk), MPTCP_MIB_MPCAPABLEACTIVE);
--
--do_connect:
--	err = ssock->ops->connect(ssock, uaddr, addr_len, flags);
--	inet_sk(sock->sk)->defer_connect = inet_sk(ssock->sk)->defer_connect;
--	sock->state = ssock->state;
--
--	/* on successful connect, the msk state will be moved to established by
--	 * subflow_finish_connect()
--	 */
--	if (!err || err == -EINPROGRESS)
--		mptcp_copy_inaddrs(sock->sk, ssock->sk);
--	else
--		inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
--
--unlock:
-+	mptcp_sk(sock->sk)->connect_flags = flags;
-+	ret = __inet_stream_connect(sock, uaddr, addr_len, flags, 0);
- 	release_sock(sock->sk);
--	return err;
-+	return ret;
- }
+-		release_sock(ssk);
+ 	}
  
- static int mptcp_listen(struct socket *sock, int backlog)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index be19592441df..6a09ab99a12d 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -285,7 +285,9 @@ struct mptcp_sock {
- 	u8		mpc_endpoint_id;
- 	u8		recvmsg_inq:1,
- 			cork:1,
--			nodelay:1;
-+			nodelay:1,
-+			is_sendmsg:1;
-+	int		connect_flags;
- 	struct work_struct work;
- 	struct sk_buff  *ooo_last_skb;
- 	struct rb_root  out_of_order_queue;
+ 	timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
 -- 
 2.38.1
 
