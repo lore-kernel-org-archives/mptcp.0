@@ -1,138 +1,125 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2050.outbound.protection.outlook.com [40.107.22.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A7F7B
-	for <mptcp@lists.linux.dev>; Sun, 23 Oct 2022 12:48:41 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B7io60IY+ulLaxJA6zFXuEDXOrmjHOEXERwXk+FLhrHq5N6kVwC5MOcqKKG7LbM7FNlz0OUcQ4pD1Gi+ew5EKw00PALbI7f9F4iVDUeSlguXoZV1GBI0VTj7myg3k8CM5nVOyo6eDG5EaVbxvosqJHDaDhpNyKwgdJOEjvKekHG5zw4WrIYnfqWTS8sUkvrUUqgbK2jXk1eOsy2k/5T7j1+t0OfvuRYutUEz6YK4pb63GrqZxEhyWkyaaBPlUzEAdQ7ID94trKOtU4u1dr47+V2wnH6slIhwF3kLtdnzvT8x7mkumoBm+0b+zRwi88CqksTL4ptKP9kdRoes8gFXbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xbq3sRoG4M5N72RVqStxjkCrEoMt/Im2RE4C5BHe6gg=;
- b=ZwizOg9L4LKWAUVgpyjvyrSgtsYTmgKuLVHpmF2WuYOjV9/Fkncx0CuwLpbVxImATJ7UhKNCzLiU+nbLHzbsouZMOB2yd8bx/LQwK9GetEjnIKOduCvQ4gx/lgISRyfQ7UDbh1Z7h/WUpRjkWdvCo0Ziw033P2yfIYR67hoL+E/+TxDMlMJO12d4Ac21C4O2HlSEe4peMqZ/0M+Yjedjp0R+6yWLSsZ4B6EFVgu7bomyzjBhhwI0z1yj9UtdToRqodee7U/rW3S9I6NFu2UXZ6OPHX9uMSOivkgTouxecIgu4UyzDkwYGUI0wvFSME3srfyUUbzBLLMKyDJX7UqxnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xbq3sRoG4M5N72RVqStxjkCrEoMt/Im2RE4C5BHe6gg=;
- b=0dfDmZuQ3oi3nVa1hFjTrxPmj3hoQwIYaPb2GTAjgtNJJjTXh8ft1vNMeekxfqRYlIE8wAyTsrPSrO9uFM6hH0Feer2IEEyDkPbBORkq22EvBxIiwWaVsETPSNcMhBkWC7ZrZjCEI60D5PapkTyYva60o4Cv0g5NklWb9ZQykRLdvLn9hY9z4XkDJ6Xi2Rl4vFvptxuIdCSMQJ1JBABFbbzafIUILNYrnQfKYeYtbycilQS0um4eJpSJXGigHs+44Iwl1PIaKjF9Od2o15tBFpd/jjJFy+5qi8MneHQ/x9l3j9gOUUCji53cL/u+hARMmGjEdHXDPL6V54tX3g0ufQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from VI1PR0402MB3503.eurprd04.prod.outlook.com (2603:10a6:803:d::26)
- by AM0PR04MB7156.eurprd04.prod.outlook.com (2603:10a6:208:19b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.23; Sun, 23 Oct
- 2022 12:48:38 +0000
-Received: from VI1PR0402MB3503.eurprd04.prod.outlook.com
- ([fe80::58fb:e772:9521:1a5]) by VI1PR0402MB3503.eurprd04.prod.outlook.com
- ([fe80::58fb:e772:9521:1a5%7]) with mapi id 15.20.5723.032; Sun, 23 Oct 2022
- 12:48:37 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v2] mptcp: get sk from msk directly
-Date: Sun, 23 Oct 2022 20:48:31 +0800
-Message-Id: <20221023124831.8959-1-geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYAPR01CA0176.jpnprd01.prod.outlook.com
- (2603:1096:404:ba::20) To VI1PR0402MB3503.eurprd04.prod.outlook.com
- (2603:10a6:803:d::26)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033F47B
+	for <mptcp@lists.linux.dev>; Sun, 23 Oct 2022 13:47:03 +0000 (UTC)
+Received: by mail-pl1-f171.google.com with SMTP id f23so6389423plr.6
+        for <mptcp@lists.linux.dev>; Sun, 23 Oct 2022 06:47:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3nHa8A+7PeIMg7RKdNLlRzsKGG0uAkGmk1JSJv06f7g=;
+        b=f2Cppc+QfZk1KXVH6JcNRhs8g7DPxaW5ORqSgC5zYxTOJHX4Znuc/dXjM3N/q6m89d
+         +waRzpUa3GYJ7QiIORnDN1J9gVB9Wyqd+F8iwhrsMrD49QrXT9JPTtqzNHUrHJKxgxAE
+         1rzC5bcP8RTof1JSPL/cmRJlwYu3SfBGUeQ1YHbbwRZzRyUxUuOwhpckW9eKAoHAIvdX
+         D+2N5eg78YTFFRWxrg+5O9RLcTYC5pXXlhVrMvYY9RxQ7rHdg0rifkQn85dPqe8Q+wya
+         05lOONZSOoHJLN0FPL0XG/ja/EL2aF4P+Slx3vbLEAezGK4GczXjOgZ86AxFi1CVeti2
+         naFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3nHa8A+7PeIMg7RKdNLlRzsKGG0uAkGmk1JSJv06f7g=;
+        b=DuGpP0hTFCv17o5+LqlnOcoF98HTLTWN3zL7T6PEk/vemEW5gBGqKpCCS6ky+rLZcT
+         7o5DEjbd7e8MA4uD39JY6ya5cH3nLRRRxvSgzMjA5ZhpP1+ucW3jJ2HDkkNXwFXysxN1
+         FYjQG2/8uuD/6ds7q739YJ5qGYWlxwPXrcAG4JJqkZwYuJQl0dLdGIzGlX6I3BFGjE5j
+         HJiQTpEp4ZHDrUrPuslfwkOt/ljCTQqxqwT1xsTC8x3TfGUJrRqxGgfloEQ0T9K7CAgk
+         zby9G/kMlwvKcyXUVMSOuSFk4amuYkrWGWFrb8l2S9ECkhTmaN5bVP3rET+GFN3hSURP
+         WK5A==
+X-Gm-Message-State: ACrzQf0SYRWi8HUyyCcx0CGEpxXkCPmtV/XzfW/IndbP0AtuWGuwtUCm
+	2CwgwDwq6hjTCC9POvwQ+v0=
+X-Google-Smtp-Source: AMsMyM6NkjM2G8o7YZ+RxKeQn131uK3LWFYzUa0kiOACmGutmZsEEiSpVlcjBePs8fqT48DOK1KZRg==
+X-Received: by 2002:a17:90b:4a8f:b0:20d:2f93:3bb with SMTP id lp15-20020a17090b4a8f00b0020d2f9303bbmr68543882pjb.149.1666532823495;
+        Sun, 23 Oct 2022 06:47:03 -0700 (PDT)
+Received: from debian.me (subs02-180-214-232-1.three.co.id. [180.214.232.1])
+        by smtp.gmail.com with ESMTPSA id v16-20020a1709028d9000b0016d5b7fb02esm17976494plo.60.2022.10.23.06.47.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Oct 2022 06:47:02 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 3065A1005FC; Sun, 23 Oct 2022 20:47:00 +0700 (WIB)
+Date: Sun, 23 Oct 2022 20:47:00 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: wangjianli <wangjianli@cdjrlc.com>
+Cc: mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/mptcp: fix repeated words in comments
+Message-ID: <Y1VF1DBYePbkTk8x@debian.me>
+References: <20221022070527.55960-1-wangjianli@cdjrlc.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3503:EE_|AM0PR04MB7156:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88b518b6-6423-411a-88ed-08dab4f4e78e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GHcxoDynmHDJtTFvj4vpL7t8osvYDSDFZVsKt/Rtf8FHgoCIdI7esuMowt2t9nlZ2iPuqFJpIyPrEzE/QsDk9GAkoQlKnS1pImlYsGQqjVyJLey1YWpMql5jlfq+cNhBFgd5TqIPdC4cgnq3+Kisecs1feG54bi7QmGnmHb6oXfNH7ZOwPAXHSdyX0JimgEdoZ7eWwoHwz0OLlyrm/UynIwmc88bsPSMUereqxs4zSJLMUQlbwGvS00yF0hV4eniZ5J5bOvqFm4Zbyw5cDecCPZ6zdZBeT1c8n8OpaOmfMTNp3WlWx5PrS6MIs9tIhLzMkUG+jRRUqHP/5DvuZrD4UeyB94/YOIxWtAhtvE9cUdegvKVt/oQnZ4jIMpup+9zxCSAcG6BXFCUlb/yZorz5LLebIfPBewQdRW4NZJMrzMNmWsZToexko+DQCmwwguql2jKYDGAXk3ieihrSHWt6EKFWVFNGtG+4RhxkoNjeeohCsUAOO8AFECoUcNdbhLq38vQ62k6NBKZxiSYI9JZN78lYaRjeHhOr5Ij/HKJwdX3SiJtGiZII3wwlbCsH0iDxdhG6mt1qplNpqjiDaxXlQbVHO816T+y344pV9Wc8SWiKxC3a7VH7puzyQzTAWm8KYPK8G3/Knb2lcGKttSx0z7chCi+8FFFBLFi26Iu3eSttDeNxWp5ZU0imwyQUcT2fy8cjLWH0SNUiAVqi745gTY01FXJCh5BCmJM5UrbmTYHLlL/GylPmOgsvvRv08M4
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3503.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(376002)(366004)(39850400004)(136003)(346002)(451199015)(478600001)(8676002)(8936002)(2906002)(41300700001)(6666004)(107886003)(316002)(6916009)(5660300002)(66476007)(66556008)(66946007)(4326008)(44832011)(86362001)(6486002)(38100700002)(36756003)(2616005)(186003)(1076003)(26005)(83380400001)(6512007)(6506007)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VQPAs+Vn7sRGca7xY7J6u+dcuBScNpHsuJbeiYj6x1yj2w0KMCYEbddFokzl?=
- =?us-ascii?Q?gflkHLyItamsEpqbP8A1d+u8AU1RxYF7xHusq4/Bj3OsUUuKkxiw47jPIW38?=
- =?us-ascii?Q?85YtrkykO7c17BbuMXAvut6QRxAjM3fC9Pp/D52noJt7OdAqLZoxzUMeYlna?=
- =?us-ascii?Q?DHxLIfQhs8S4UZaar+3yjAqSekwxuhwMnqCzzGkWutxUpXgJju9CMcW6lkhn?=
- =?us-ascii?Q?lM9mCmLmWG4p3gTbpxSZYNbEom6tLevZGTK3NIiDIWe/qUO00FWeg9GRy596?=
- =?us-ascii?Q?KwwL0GXDzSexSfjHfyWDnf34l66wd/cE1EDLtLPhPEG1EssPlXr8PlVvNcWI?=
- =?us-ascii?Q?h15Q+LGvWIoVZdm92fMs9D5TD5aHIJGMWBDWO2ICOZhYBvkDLxS7mXMrpIo8?=
- =?us-ascii?Q?+hPcEOZcLXL7BSj+8EsC3m9rqQ1+60UFXB6b0kS29BS4J8/RvVQIRO2kkOnC?=
- =?us-ascii?Q?lM6AFW4d66hcNzc9l8SsBUGXtXvWFuONfJRu705R270n2zGYX0qYQtJiKRli?=
- =?us-ascii?Q?Acn8fnjDE/wz//36UJZLRwy/GrsIHAuNkPozLokpgs6tcLqhRItii964DHvK?=
- =?us-ascii?Q?Y195tNahJ+eeu2UqOcNPmTTH6yVorEFkOo2y65iy70vLu+nsNQMJPMHb38TG?=
- =?us-ascii?Q?dZokrDPvZQeRqFHemShIx9QwpZveDFJC9qKxNG+3rtJNYzh/yQu0Yt6sIjm3?=
- =?us-ascii?Q?IppGy3hUyQSh5kMSucdSz2pDpMMdWsNaM2EtQG5EZtSQRYyDkis98qsB8hSs?=
- =?us-ascii?Q?7mDVyaQ2CJBO5soSwzfmKPtcockju0KlE+6246bZaIk8ZmK82cCiSk4aBY/N?=
- =?us-ascii?Q?oLe0+seILkbLw7SFbNba/TZwVdAgYElSFm0Pk1z003RX6B2nuWk3vKNAPsre?=
- =?us-ascii?Q?pw+dEJmlZWjpJd1cj8lusgJNJJuxXbE4MqAeUnZ+KQCxGImS42PbwKtbSFYe?=
- =?us-ascii?Q?mM0CPq80hLsoqGBJ7Psx96EyRexFinD4RhKwe4StaNGLaeGgYUFAZJafmpw2?=
- =?us-ascii?Q?KI/6iUtTmIZsB/Lsl+MIZieJ8sJQ20b0xVLHExn3SrDe/FTYYYD8ADYJ1kPN?=
- =?us-ascii?Q?DYXmoD2d4AmwX8fdXnkeK1ttG+5bLHREGox6b+PeWALrVVnbXYj76ZQLFkRZ?=
- =?us-ascii?Q?R5ViO+26c+o051kq/a4FESBGiWb9cPH82FIDhy89IiakAFwLML6p8nppzKUD?=
- =?us-ascii?Q?iJ5Vh0xwKXbbvYGtAkwJuImRbWCx3g7VdWbSi5RulV63nCKq2SaENApubeEd?=
- =?us-ascii?Q?moL5FtsYDyNS0RoljHKzDXVDNKD7ZB7jM3awIWBk70/vDoz9aQkQXovmfFWk?=
- =?us-ascii?Q?oRWNdi3na810g1mpU5Ol/64x8SjIvZjY/sbjQvIYX2aTZ8wTrgKWP6iGYFkp?=
- =?us-ascii?Q?Nabu34TC58p1EtkVC3JoRHaEvpL40nhQrCw7VweZGuugYSstqr2H4oXz65lE?=
- =?us-ascii?Q?kktHJEr5/tpSq2Ti1l18j5rlHBQDw+N0Upg4gzMVMeyFtdx+2JyzmX7jsVzs?=
- =?us-ascii?Q?smPQEoGbPqIoccWGWoNZDmerbCICuGgz3C7pqNMbR6+NuQ+6ZuyxNaboXOqA?=
- =?us-ascii?Q?VQwA0Zq8Xl5zi+p4F4Y95pVnVf0kSwNfdNqtni3E1Q3UI67d7fTHCZEoYRBa?=
- =?us-ascii?Q?tg=3D=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88b518b6-6423-411a-88ed-08dab4f4e78e
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3503.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2022 12:48:37.7963
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cFZTUf28K09oOA60n+yQl5kfJIzVtyCf+I7FYrcbvtDr0lNNX5NzRVgt8w0IrGSEHi8DvYOXd1SRXmBpkQVnVg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7156
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="M9jz/0j3xO1O4oqZ"
+Content-Disposition: inline
+In-Reply-To: <20221022070527.55960-1-wangjianli@cdjrlc.com>
 
-Use '(struct sock *)msk' to get 'sk' from 'msk' in a more direct way
-instead of using '&msk->sk.icsk_inet.sk' in mptcp_nl_cmd_sf_create()
-and mptcp_nl_cmd_sf_destroy().
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
-v2:
-- fix the "uninitialized use occurs" error reported by kernel test robot
-<lkp@intel.com>
----
- net/mptcp/pm_userspace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--M9jz/0j3xO1O4oqZ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 9e82250cbb70..5cb65f0928f4 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -291,7 +291,7 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
- 		goto create_err;
- 	}
- 
--	sk = &msk->sk.icsk_inet.sk;
-+	sk = (struct sock *)msk;
- 	lock_sock(sk);
- 
- 	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
-@@ -403,7 +403,7 @@ int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
- 		goto destroy_err;
- 	}
- 
--	sk = &msk->sk.icsk_inet.sk;
-+	sk = (struct sock *)msk;
- 	lock_sock(sk);
- 	ssk = mptcp_nl_find_ssk(msk, &addr_l, &addr_r);
- 	if (ssk) {
--- 
-2.35.3
+On Sat, Oct 22, 2022 at 03:05:27PM +0800, wangjianli wrote:
+> Delete the redundant word 'the'.
+>=20
+> Signed-off-by: wangjianli <wangjianli@cdjrlc.com>
+> ---
+>  net/mptcp/token.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+> index f52ee7b26aed..b817c2564300 100644
+> --- a/net/mptcp/token.c
+> +++ b/net/mptcp/token.c
+> @@ -287,7 +287,7 @@ EXPORT_SYMBOL_GPL(mptcp_token_get_sock);
+>   * This function returns the first mptcp connection structure found insi=
+de the
+>   * token container starting from the specified position, or NULL.
+>   *
+> - * On successful iteration, the iterator is move to the next position an=
+d the
+> + * On successful iteration, the iterator is move to the next position and
+>   * the acquires a reference to the returned socket.
+>   */
+>  struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_=
+slot,
 
+NAK!
+
+Instead, slightly reword the comment above as "On successful iteration,
+the iterator moves to the next position and acquires a reference to the
+returned socket.".
+
+Also, you and other @cdjrlc.com developers ignore reviews that request
+changes to your patches. If you want to participate in kernel
+development community, please don't just sending random patches without
+any sort of reply.
+
+I have pointed out this behavior either as part of my review or as reply
+to reviews from other developers. I may write this as final warning before
+I just say NAK without further ado to your future patches.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--M9jz/0j3xO1O4oqZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCY1VF0AAKCRD2uYlJVVFO
+o25EAQDIoaFBeuz0b5mrP55Nk6SpOrkxQQ0pTeEwTsUbrqbC2wD/UsccZMALgll3
+5yvwmQtwwSeG2n05VcGxoklMaPFGDwQ=
+=mQXI
+-----END PGP SIGNATURE-----
+
+--M9jz/0j3xO1O4oqZ--
