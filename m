@@ -1,125 +1,113 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033F47B
-	for <mptcp@lists.linux.dev>; Sun, 23 Oct 2022 13:47:03 +0000 (UTC)
-Received: by mail-pl1-f171.google.com with SMTP id f23so6389423plr.6
-        for <mptcp@lists.linux.dev>; Sun, 23 Oct 2022 06:47:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBAC20F7
+	for <mptcp@lists.linux.dev>; Sun, 23 Oct 2022 14:54:57 +0000 (UTC)
+Received: by mail-pg1-f178.google.com with SMTP id b5so6678674pgb.6
+        for <mptcp@lists.linux.dev>; Sun, 23 Oct 2022 07:54:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3nHa8A+7PeIMg7RKdNLlRzsKGG0uAkGmk1JSJv06f7g=;
-        b=f2Cppc+QfZk1KXVH6JcNRhs8g7DPxaW5ORqSgC5zYxTOJHX4Znuc/dXjM3N/q6m89d
-         +waRzpUa3GYJ7QiIORnDN1J9gVB9Wyqd+F8iwhrsMrD49QrXT9JPTtqzNHUrHJKxgxAE
-         1rzC5bcP8RTof1JSPL/cmRJlwYu3SfBGUeQ1YHbbwRZzRyUxUuOwhpckW9eKAoHAIvdX
-         D+2N5eg78YTFFRWxrg+5O9RLcTYC5pXXlhVrMvYY9RxQ7rHdg0rifkQn85dPqe8Q+wya
-         05lOONZSOoHJLN0FPL0XG/ja/EL2aF4P+Slx3vbLEAezGK4GczXjOgZ86AxFi1CVeti2
-         naFg==
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i+VnWXyRNudKkpaNxqJoE4fXY04IdHVeQn+KYmPxFG8=;
+        b=MtpVw//TbMW5/IXQ+z6/or7ekPXeeVMrMNhOiVkL1GJoRmMj/mlBF8FiSaRaeMG77e
+         Aw3Jo0dbS6owTeZy4sxYrd555XqGVNpClh02quon1VGQcGp2K/0w4fe18+RDlWrUYmF1
+         Pe2y7YMOEqMkm4roSidpjcj7uAamkv+Gv4ywvLN3wcRiM211Smdg/uhth1GArR+jed30
+         T1sL35CMpJE0FCvS0Y1tTOYGXcW4UbQVprRj/CtuzVxAAK2uV707R8bRo3uZv1LAWswI
+         nkRg7VOp/SpTDyEhyhJJyfztATJahZZrn8DzkOUcyCVpMmyyKHyZao7FWQ6P+SrjT+ZX
+         Ptqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3nHa8A+7PeIMg7RKdNLlRzsKGG0uAkGmk1JSJv06f7g=;
-        b=DuGpP0hTFCv17o5+LqlnOcoF98HTLTWN3zL7T6PEk/vemEW5gBGqKpCCS6ky+rLZcT
-         7o5DEjbd7e8MA4uD39JY6ya5cH3nLRRRxvSgzMjA5ZhpP1+ucW3jJ2HDkkNXwFXysxN1
-         FYjQG2/8uuD/6ds7q739YJ5qGYWlxwPXrcAG4JJqkZwYuJQl0dLdGIzGlX6I3BFGjE5j
-         HJiQTpEp4ZHDrUrPuslfwkOt/ljCTQqxqwT1xsTC8x3TfGUJrRqxGgfloEQ0T9K7CAgk
-         zby9G/kMlwvKcyXUVMSOuSFk4amuYkrWGWFrb8l2S9ECkhTmaN5bVP3rET+GFN3hSURP
-         WK5A==
-X-Gm-Message-State: ACrzQf0SYRWi8HUyyCcx0CGEpxXkCPmtV/XzfW/IndbP0AtuWGuwtUCm
-	2CwgwDwq6hjTCC9POvwQ+v0=
-X-Google-Smtp-Source: AMsMyM6NkjM2G8o7YZ+RxKeQn131uK3LWFYzUa0kiOACmGutmZsEEiSpVlcjBePs8fqT48DOK1KZRg==
-X-Received: by 2002:a17:90b:4a8f:b0:20d:2f93:3bb with SMTP id lp15-20020a17090b4a8f00b0020d2f9303bbmr68543882pjb.149.1666532823495;
-        Sun, 23 Oct 2022 06:47:03 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-1.three.co.id. [180.214.232.1])
-        by smtp.gmail.com with ESMTPSA id v16-20020a1709028d9000b0016d5b7fb02esm17976494plo.60.2022.10.23.06.47.02
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=i+VnWXyRNudKkpaNxqJoE4fXY04IdHVeQn+KYmPxFG8=;
+        b=od+9b9rwWsBbRxALGi9juwTCOsStC5P/ZeytXa69bi7SZFSIfd//eJ58WS5HOKnEiM
+         573/WIB9UJzL5YbU+FfyqG66lKmNTJ4ilBFNZGKCL8y1WAxLBX7/5Ove47/0eySOC6ZF
+         ntmmUBOwlOHBgz9owGW60qkY6qaMuyR/QZEzDj39uD0j4mHpjmgPAh+7Z3hXpP3u6A1Z
+         mTfKbLQeCmYNIRk3vQitckshRzI5k/o4w3fhW8OC68P59PBCT3KdRafhxZ+PHwEt6+Fr
+         NB5KVpRlqUwFAiTXM1hCI9FO+Uc0GOVeuJ1Aunuhhve+7MYg1cE4F97If/hT1+IBm83/
+         USQg==
+X-Gm-Message-State: ACrzQf3JBv4X5eNuR973LgHrYcJbgttCsEmP/nlOdry2489D7LkTI0vo
+	wwQNqEyMNUxzyEu/EO4x3Q==
+X-Google-Smtp-Source: AMsMyM5YhcOf4ID+z9TUMSEai4x6AqGLMDkt5WCYxEyiHeFMYMx+Fg0rgzgKq9+YKNw7CyUZcMqoxQ==
+X-Received: by 2002:a63:dc4e:0:b0:46e:acf4:7589 with SMTP id f14-20020a63dc4e000000b0046eacf47589mr13771429pgj.170.1666536897136;
+        Sun, 23 Oct 2022 07:54:57 -0700 (PDT)
+Received: from [127.0.0.1] ([168.61.0.179])
+        by smtp.gmail.com with ESMTPSA id 1-20020a620601000000b005626a1c77c8sm18304548pfg.80.2022.10.23.07.54.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Oct 2022 06:47:02 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 3065A1005FC; Sun, 23 Oct 2022 20:47:00 +0700 (WIB)
-Date: Sun, 23 Oct 2022 20:47:00 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: wangjianli <wangjianli@cdjrlc.com>
-Cc: mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/mptcp: fix repeated words in comments
-Message-ID: <Y1VF1DBYePbkTk8x@debian.me>
-References: <20221022070527.55960-1-wangjianli@cdjrlc.com>
+        Sun, 23 Oct 2022 07:54:56 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20221023124831.8959-1-geliang.tang@suse.com>
+References: <20221023124831.8959-1-geliang.tang@suse.com>
+Subject: Re: mptcp: get sk from msk directly: Tests Results
+Message-ID: <0818ecad-641a-f981-e1d1-31d2f760c488@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 23 Oct 2022 14:54:55 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="M9jz/0j3xO1O4oqZ"
-Content-Disposition: inline
-In-Reply-To: <20221022070527.55960-1-wangjianli@cdjrlc.com>
+
+Hi Geliang,
+
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): =
+selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/5530777696862208
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5530777696862208/summary/summary.txt
+
+- {"code":404,"message":
+  - "Can't find artifacts containing file =
+conclusion.txt"}:
+  - Task: https://cirrus-ci.com/task/6656677603704832
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6656677603704832/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/38acef14684b
 
 
---M9jz/0j3xO1O4oqZ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
-On Sat, Oct 22, 2022 at 03:05:27PM +0800, wangjianli wrote:
-> Delete the redundant word 'the'.
->=20
-> Signed-off-by: wangjianli <wangjianli@cdjrlc.com>
-> ---
->  net/mptcp/token.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
-> index f52ee7b26aed..b817c2564300 100644
-> --- a/net/mptcp/token.c
-> +++ b/net/mptcp/token.c
-> @@ -287,7 +287,7 @@ EXPORT_SYMBOL_GPL(mptcp_token_get_sock);
->   * This function returns the first mptcp connection structure found insi=
-de the
->   * token container starting from the specified position, or NULL.
->   *
-> - * On successful iteration, the iterator is move to the next position an=
-d the
-> + * On successful iteration, the iterator is move to the next position and
->   * the acquires a reference to the returned socket.
->   */
->  struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_=
-slot,
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-NAK!
+For more details:
 
-Instead, slightly reword the comment above as "On successful iteration,
-the iterator moves to the next position and acquires a reference to the
-returned socket.".
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Also, you and other @cdjrlc.com developers ignore reviews that request
-changes to your patches. If you want to participate in kernel
-development community, please don't just sending random patches without
-any sort of reply.
 
-I have pointed out this behavior either as part of my review or as reply
-to reviews from other developers. I may write this as final warning before
-I just say NAK without further ado to your future patches.
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---M9jz/0j3xO1O4oqZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCY1VF0AAKCRD2uYlJVVFO
-o25EAQDIoaFBeuz0b5mrP55Nk6SpOrkxQQ0pTeEwTsUbrqbC2wD/UsccZMALgll3
-5yvwmQtwwSeG2n05VcGxoklMaPFGDwQ=
-=mQXI
------END PGP SIGNATURE-----
-
---M9jz/0j3xO1O4oqZ--
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
