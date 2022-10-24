@@ -1,44 +1,40 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E446ADB
-	for <mptcp@lists.linux.dev>; Mon, 24 Oct 2022 22:04:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939F07B
+	for <mptcp@lists.linux.dev>; Mon, 24 Oct 2022 23:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666649070; x=1698185070;
+  t=1666654657; x=1698190657;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=o6EZzwIuG3lKm3iYYLguTM9aIweOE9YaLFfrddeogvQ=;
-  b=MrEI/d0sZ9hjrd/JGF94/A8eRPEI9FCE5P+O8uhdv0Y1FEB0yi34wAtX
-   esVLBkPBvSY2xsQ7fV2x8BFzRp+QD4LzyLJz9A5DYclbslDnTTRkmaMaF
-   07pedSQiB7CzToAlMyo/qdN8uNL0fpGHLiwj3V+Ceypm8hhx5BhhAHLJc
-   Ck1qEF+kqfoCPZBZ+9kgCZlKW1dG88O3TCM511zm/cHEa7iOFEAix+0NP
-   gr2PSWuwFiXGM9hd9NHTpmLU8d5f0GTPjielQeltPKlbOWC/O8qL7XDS8
-   jvZV3Tiu9eiV4ohMP+BY6vldPLF2qvSmhGAZorQlXSy3DYnsAMi9cqrlS
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="306264079"
+  bh=W5yk7mbSAGP+IFuLyR1CW8CfqAG2Og/VUjsIz7sAquU=;
+  b=OE62+LU7YJb/bbeOQkO2kCCRZcbNMNvc1VJaJqwalTEnnk1w8GWfMHyW
+   pBKwhm/zkuLoZner3fIMYWB902GXGmoDrTqdc9hK+z33fOEOjTxxVeASD
+   /ztpdgf9hyaIgwda9luWNzgTBlPcACA9qyQwdx9JUQedmV8GfaExEe386
+   RU9cCVuEN0et5uxZRgOgnfhzuU99Ov7N3LvG3WliembnKqZWhcxGsXn1e
+   5RZA38E3cnaJZsppzICQgiBCkBvpAdhD1RvwE3Be914kt1y4eDSrWdSkx
+   b1ZEsyPdo8aqARprggpzASOD1sBXmlTMJdzXlM3z5DbP2bGLyBKbX+RsI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="371761665"
 X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
-   d="scan'208";a="306264079"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 15:04:29 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="631415597"
+   d="scan'208";a="371761665"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 16:37:37 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="626233061"
 X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
-   d="scan'208";a="631415597"
+   d="scan'208";a="626233061"
 Received: from mlotfi-mobl.amr.corp.intel.com ([10.212.254.208])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 15:04:29 -0700
-Date: Mon, 24 Oct 2022 15:04:28 -0700 (PDT)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 16:37:37 -0700
+Date: Mon, 24 Oct 2022 16:37:36 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: wangjianli <wangjianli@cdjrlc.com>
-cc: Bagas Sanjaya <bagasdotme@gmail.com>, 
-    Matthieu Baerts <matthieu.baerts@tessares.net>, 
-    David Miller <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-    Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-    netdev@vger.kernel.org, mptcp@lists.linux.dev, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/mptcp: fix repeated words in comments
-In-Reply-To: <Y1VF1DBYePbkTk8x@debian.me>
-Message-ID: <162b5545-7d24-3cf2-9158-3100ef644e03@linux.intel.com>
-References: <20221022070527.55960-1-wangjianli@cdjrlc.com> <Y1VF1DBYePbkTk8x@debian.me>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] mptcp: fix divide error in
+ mptcp_subflow_get_send
+In-Reply-To: <20221022075412.471-1-geliang.tang@suse.com>
+Message-ID: <71f12325-6216-f1d8-63da-3876f9b148fa@linux.intel.com>
+References: <20221022075412.471-1-geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,42 +43,69 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Sun, 23 Oct 2022, Bagas Sanjaya wrote:
+On Sat, 22 Oct 2022, Geliang Tang wrote:
 
-> On Sat, Oct 22, 2022 at 03:05:27PM +0800, wangjianli wrote:
->> Delete the redundant word 'the'.
->>
->> Signed-off-by: wangjianli <wangjianli@cdjrlc.com>
->> ---
->>  net/mptcp/token.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
->> index f52ee7b26aed..b817c2564300 100644
->> --- a/net/mptcp/token.c
->> +++ b/net/mptcp/token.c
->> @@ -287,7 +287,7 @@ EXPORT_SYMBOL_GPL(mptcp_token_get_sock);
->>   * This function returns the first mptcp connection structure found inside the
->>   * token container starting from the specified position, or NULL.
->>   *
->> - * On successful iteration, the iterator is move to the next position and the
->> + * On successful iteration, the iterator is move to the next position and
->>   * the acquires a reference to the returned socket.
->>   */
->>  struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_slot,
+> Fix this divide error:
 >
-> NAK!
+> ----
+> divide error: 0000 [#1] PREEMPT SMP KASAN NOPTI
+> CPU: 0 PID: 14336 Comm: syz-executor.6 Not tainted 6.1.0-rc1-00215-g47aa7f23f440 #1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> RIP: 0010:div_u64_rem include/linux/math64.h:29 [inline]
+> RIP: 0010:div_u64 include/linux/math64.h:128 [inline]
+> RIP: 0010:mptcp_subflow_get_send+0xa87/0x1200 net/mptcp/protocol.c:1486
+> ----
 >
-> Instead, slightly reword the comment above as "On successful iteration,
-> the iterator moves to the next position and acquires a reference to the
-> returned socket.".
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/314
+> Reported-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/protocol.c | 7 ++++---
+> 1 file changed, 4 insertions(+), 3 deletions(-)
 >
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index ddeb8b36a677..3a07c0d197d4 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1475,13 +1475,14 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+> 	if (!ssk || !sk_stream_memory_free(ssk))
+> 		return NULL;
+>
+> -	burst = min_t(int, MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
+> -	wmem = READ_ONCE(ssk->sk_wmem_queued);
+> -	if (!burst) {
+> +	if (mptcp_wnd_end(msk) <= msk->snd_nxt) {
+> 		msk->last_snd = NULL;
+> 		return ssk;
+> 	}
+>
+> +	burst = min_t(u32, MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
+> +	wmem = READ_ONCE(ssk->sk_wmem_queued);
+> +
+> 	subflow = mptcp_subflow_ctx(ssk);
+> 	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
+> 					   READ_ONCE(ssk->sk_pacing_rate) * burst,
+> -- 
+> 2.35.3
 
-Agree on this rewording.
+Hi Geliang -
 
-This particular duplicated word came up before, and I thought it would be 
-best if the author sent a v2 - but they never did. I will fix this in the 
-MPTCP tree next week if there's no suitable v2 by then.
+I haven't been able to reproduce the problem using commit id c3917837f483 
+(export/20221024T065054 without the "features other trees" patches), and 
+the only change in mptcp_subflow_get_send() is the removal of the fallback 
+check in "mptcp: add get_subflow wrappers". The stack trace shows that 
+mptcp_subflow_get_send() is called directly by __mptcp_push_pending():
+
+RIP: 0010:mptcp_subflow_get_send+0xa87/0x1200 net/mptcp/protocol.c:1486
+...
+Call Trace:
+  <TASK>
+  __mptcp_push_pending+0x19e/0x770 net/mptcp/protocol.c:1550
+  mptcp_sendmsg+0x694/0x19d0 net/mptcp/protocol.c:1813
+
+So I think the divide by zero is due to the missing fallback check. Seems 
+like the fallback check should be moved only when mptcp_subflow_get_send() 
+is only called using the wrapper? WDYT?
 
 --
 Mat Martineau
