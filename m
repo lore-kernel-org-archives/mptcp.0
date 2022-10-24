@@ -1,115 +1,89 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DD9648
-	for <mptcp@lists.linux.dev>; Mon, 24 Oct 2022 18:33:29 +0000 (UTC)
-Received: by mail-qk1-f182.google.com with SMTP id s17so6586915qkj.12
-        for <mptcp@lists.linux.dev>; Mon, 24 Oct 2022 11:33:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QUQ02SLVIT8qZzDKRysbEhr0pHAk/sw1aR7f1CKp1Ho=;
-        b=oUAF0ExOhQa66Ik+gNFmC5gpAdmLV0OSUOJtdHbCP180g/mZ4OBqVmd3VbtEmTywkm
-         VHc/LBS2u8Vo//megte0PDhl3wVWWpnBDLCgreTF9wqZjTdGphb4tir63RAYjR7kSqSs
-         mNT7eX2TPchlK37YX6x+Gg7IpAQy2XhBh9Q/iN9yefAeOqdTPDgnrk+6t9QxarOp2yGv
-         NdLbXgCQCXqX9clhddoP+ZhJL5pS9TBOYq+YIKNkWbtv28qUzU/wpmU38lns/qajthA6
-         2HaE4v7IEz36TLpQ4KaW04XItkBNCHyYRUglA/6hBT2llvUo2jhONt80j5SAHSZGCsnr
-         S9ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=QUQ02SLVIT8qZzDKRysbEhr0pHAk/sw1aR7f1CKp1Ho=;
-        b=N74mw7qboxH2XGlj9ZxauPgEp1tKJkm3yDqkBCnIDPrzsyj8YLe397xqN8bj4hcoRB
-         aMJ/71fETVd95EPmfbbPWF7UaM1dsxs9vSJ9vTGL3Yx2PVXRkLToR0kUIHTQEHC9lYu9
-         2cxSiPRYkgKPyVk6z3HM/Lr3Goolg/yMk7gI3aKunwPkQmJt0gfDtJZSIcU+eoH5t3lW
-         pP5Lw/9zEeh4y2vZvXfyfJrcOjZZr55xOgQi9Tm5Xk27sQ6padQK3sMRda+yzUXFBfP0
-         jWzvVBO8K/MQp4BDKFeApl947LeE3FK+7aMkOy7lsqsR0HDa1e7UWH5GAPa4fBk2R4gp
-         BMUQ==
-X-Gm-Message-State: ACrzQf3Jb5RVs95+AcQv9ODoE5d5qCXquP8TCUmjGeFzoNcnDMhXillw
-	boRzMaWciDLwkctj0oXKHE4qWkLln6SWnfA=
-X-Google-Smtp-Source: AMsMyM6vkUAqz7hpFDxA34hARp/a3NoGlPbnglj+Ohfbk/F72LUGROYLWbh6Q3reANO8HOFpe/8CDg==
-X-Received: by 2002:ac8:5794:0:b0:39c:b855:41b0 with SMTP id v20-20020ac85794000000b0039cb85541b0mr28239086qta.585.1666636397335;
-        Mon, 24 Oct 2022 11:33:17 -0700 (PDT)
-Received: from [127.0.0.1] ([104.208.142.229])
-        by smtp.gmail.com with ESMTPSA id m16-20020a05620a291000b006cf9084f7d0sm488151qkp.4.2022.10.24.11.33.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Oct 2022 11:33:16 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <680973297b6995126f49732c0828ccfce8865c72.1666628806.git.pabeni@redhat.com>
-References:
- <680973297b6995126f49732c0828ccfce8865c72.1666628806.git.pabeni@redhat.com>
-Subject: Re: selftests: mptcp: gives slow test-case more time: Tests
- Results
-Message-ID: <fa932db2-c670-6274-bcd1-6ec4a079c814@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 24 Oct 2022 18:33:16 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E446ADB
+	for <mptcp@lists.linux.dev>; Mon, 24 Oct 2022 22:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666649070; x=1698185070;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=o6EZzwIuG3lKm3iYYLguTM9aIweOE9YaLFfrddeogvQ=;
+  b=MrEI/d0sZ9hjrd/JGF94/A8eRPEI9FCE5P+O8uhdv0Y1FEB0yi34wAtX
+   esVLBkPBvSY2xsQ7fV2x8BFzRp+QD4LzyLJz9A5DYclbslDnTTRkmaMaF
+   07pedSQiB7CzToAlMyo/qdN8uNL0fpGHLiwj3V+Ceypm8hhx5BhhAHLJc
+   Ck1qEF+kqfoCPZBZ+9kgCZlKW1dG88O3TCM511zm/cHEa7iOFEAix+0NP
+   gr2PSWuwFiXGM9hd9NHTpmLU8d5f0GTPjielQeltPKlbOWC/O8qL7XDS8
+   jvZV3Tiu9eiV4ohMP+BY6vldPLF2qvSmhGAZorQlXSy3DYnsAMi9cqrlS
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="306264079"
+X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
+   d="scan'208";a="306264079"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 15:04:29 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="631415597"
+X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
+   d="scan'208";a="631415597"
+Received: from mlotfi-mobl.amr.corp.intel.com ([10.212.254.208])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 15:04:29 -0700
+Date: Mon, 24 Oct 2022 15:04:28 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: wangjianli <wangjianli@cdjrlc.com>
+cc: Bagas Sanjaya <bagasdotme@gmail.com>, 
+    Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    David Miller <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+    Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+    netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/mptcp: fix repeated words in comments
+In-Reply-To: <Y1VF1DBYePbkTk8x@debian.me>
+Message-ID: <162b5545-7d24-3cf2-9158-3100ef644e03@linux.intel.com>
+References: <20221022070527.55960-1-wangjianli@cdjrlc.com> <Y1VF1DBYePbkTk8x@debian.me>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Sun, 23 Oct 2022, Bagas Sanjaya wrote:
 
-Thank you for your modifications, that's great!
+> On Sat, Oct 22, 2022 at 03:05:27PM +0800, wangjianli wrote:
+>> Delete the redundant word 'the'.
+>>
+>> Signed-off-by: wangjianli <wangjianli@cdjrlc.com>
+>> ---
+>>  net/mptcp/token.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+>> index f52ee7b26aed..b817c2564300 100644
+>> --- a/net/mptcp/token.c
+>> +++ b/net/mptcp/token.c
+>> @@ -287,7 +287,7 @@ EXPORT_SYMBOL_GPL(mptcp_token_get_sock);
+>>   * This function returns the first mptcp connection structure found inside the
+>>   * token container starting from the specified position, or NULL.
+>>   *
+>> - * On successful iteration, the iterator is move to the next position and the
+>> + * On successful iteration, the iterator is move to the next position and
+>>   * the acquires a reference to the returned socket.
+>>   */
+>>  struct mptcp_sock *mptcp_token_iter_next(const struct net *net, long *s_slot,
+>
+> NAK!
+>
+> Instead, slightly reword the comment above as "On successful iteration,
+> the iterator moves to the next position and acquires a reference to the
+> returned socket.".
+>
 
-Our CI did some validations and here is its report:
+Agree on this rewording.
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5922635212128256
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5922635212128256/summary/summary.txt
+This particular duplicated word came up before, and I thought it would be 
+best if the author sent a v2 - but they never did. I will fix this in the 
+MPTCP tree next week if there's no suitable v2 by then.
 
-- {"code":404,"message":
-  - "Can't find artifacts containing file =
-conclusion.txt"}:
-  - Task: https://cirrus-ci.com/task/5359685258706944
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5359685258706944/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b3fe6bfab13a
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+--
+Mat Martineau
+Intel
