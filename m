@@ -1,69 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A8DEBE
-	for <mptcp@lists.linux.dev>; Tue, 25 Oct 2022 11:00:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 91C72C43470;
-	Tue, 25 Oct 2022 11:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666695616;
-	bh=FA1VZQDtazyCxbkXstqAX/NSbbxs7NzuJb+fqDysfk0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hmGDgn+UfhmT1tzoTzzQPX5H+4UrgoKjctsNqu+CRlIFGXZt3WUtdN+SPzRJf2CbP
-	 YzFbNwgZ7wfrLoSOU8hhGxIKY1ICJIMUS/HCmpjHLg4Q6uoi3e+/PdLn9/39pddNvU
-	 q+1swia4vQegpGC/VcBqyeT40UXwPYHISc+HO+hx3JGgMIkkQi042zYFfgqSp9UR5i
-	 4Eh5ITwqPlYJpuFJDi+S0rKXLM7CQ9m8CZflE1WmULWCg1QR3+w60Jl4oosNleHxH1
-	 g6dV5ael7FMTVc78OQ727MKSTo9FRASLh7AEQKesdGFEP8ZX/9r/pAk55TGnxlJA/x
-	 bAM+zpfmK2ZrA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 751FCE270DD;
-	Tue, 25 Oct 2022 11:00:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666C0EBE
+	for <mptcp@lists.linux.dev>; Tue, 25 Oct 2022 11:09:34 +0000 (UTC)
+Received: by mail-qk1-f179.google.com with SMTP id s17so7726300qkj.12
+        for <mptcp@lists.linux.dev>; Tue, 25 Oct 2022 04:09:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k/726CIABuKonf4NqHI/E2W9KVdcHoufM82vgSj2ODo=;
+        b=D2exjPJFA6UnK711otcy1zPorbkzqr8miCkdqEMlOLnQnj1BFIoPOB+Uym3Z7fne7R
+         gryZadxxb1cMDFCrhGew6IssrZLziOnzYcLEn7yKBtAo7YRW05gt1c0Es2VuapUB2Tns
+         wRdMIEJ9QUlwujaDLR/aS0Q5uh7jFBPL1FkZF2VnNJeB9uHsHyFgjRYr4Cjq1lEiF6Te
+         bglEcqXmgk7UiNzf7I9tq3Bd4yeFDtdDehAMzfolnZMqcbwdlIjzGA9MGFkGpuoCisXY
+         0e3q/WO2JMQ6Tc2lVthVcHKeo/dWbx5bxh5EtR6bMGbKlFkcs19BmpVRYy4eKfHsymrk
+         7gCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=k/726CIABuKonf4NqHI/E2W9KVdcHoufM82vgSj2ODo=;
+        b=nzeGCPcXpW+7xecK79MMjmgq3R77yAjt46RW4rM6LE10e7Sjz3lJ+HrjkxwEIIxUdH
+         i1ypvO3W0YxL550Ao930D0FcSLrgmhfcNNnh5FaxKPH9QeQ7Vv5qgfqbDvunmAMLyS4s
+         aCFk4hO7/L/ExdHYQGzBK8+lP4ukOOzx5njZj82yjrHdIf9fz3J4twiejFspKfYumZWD
+         49Yqv/jYTaQpYZIcznInP3KEA+CfokoJH+BRGzyORB06RtEbep+0VCiCPlgnJftrhuWo
+         8UHd7S3f3qCBMwekYMLt3M5wWb9Lw7dTvpGoy9cvOA9LXBHxVD8OPKpq9AwkJfP3+F2I
+         +VIw==
+X-Gm-Message-State: ACrzQf1Dp5lpKsQp6JzAn0TMZccdB0NRS/HYggnhnxrdZMRJjlOjvW+Q
+	A8Fx08yaftlGe7toAmeUJw==
+X-Google-Smtp-Source: AMsMyM4GViBnIBwmZ5rhZwOQD6NbaZ2VbwNR5PX2p1ZJed6kKOzxNHn7myjesweGuZmUpUtWZeGnRg==
+X-Received: by 2002:a05:620a:1725:b0:6ee:e8bc:9594 with SMTP id az37-20020a05620a172500b006eee8bc9594mr26996610qkb.184.1666696173254;
+        Tue, 25 Oct 2022 04:09:33 -0700 (PDT)
+Received: from [127.0.0.1] ([40.87.40.186])
+        by smtp.gmail.com with ESMTPSA id k1-20020a05620a142100b006ee949b8051sm1791698qkj.51.2022.10.25.04.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Oct 2022 04:09:32 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20221025092444.6646-1-geliang.tang@suse.com>
+References: <20221025092444.6646-1-geliang.tang@suse.com>
+Subject: Re: mptcp: add pm listener events: Tests Results
+Message-ID: <a8c23c80-a95b-69fc-1553-05ee76b94d89@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 25 Oct 2022 11:09:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/3] mptcp: Socket option updates
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <166669561647.19870.18241415967281584728.git-patchwork-notify@kernel.org>
-Date: Tue, 25 Oct 2022 11:00:16 +0000
-References: <20221022004505.160988-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20221022004505.160988-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, matthieu.baerts@tessares.net,
- mptcp@lists.linux.dev
 
-Hello:
+Hi Geliang,
 
-This series was applied to netdev/net-next.git (master)
-by Paolo Abeni <pabeni@redhat.com>:
+Thank you for your modifications, that's great!
 
-On Fri, 21 Oct 2022 17:45:02 -0700 you wrote:
-> Patches 1 and 3 refactor a recent socket option helper function for more
-> generic use, and make use of it in a couple of places.
-> 
-> Patch 2 adds TCP_FASTOPEN_NO_COOKIE functionality to MPTCP sockets,
-> similar to TCP_FASTOPEN_CONNECT support recently added in v6.1
-> 
-> 
-> [...]
+Our CI did some validations and here is its report:
 
-Here is the summary with links:
-  - [net-next,1/3] mptcp: sockopt: make 'tcp_fastopen_connect' generic
-    https://git.kernel.org/netdev/net-next/c/d3d429047cc6
-  - [net-next,2/3] mptcp: add TCP_FASTOPEN_NO_COOKIE support
-    https://git.kernel.org/netdev/net-next/c/e64d4deb4de0
-  - [net-next,3/3] mptcp: sockopt: use new helper for TCP_DEFER_ACCEPT
-    https://git.kernel.org/netdev/net-next/c/caea64675d8b
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): =
+selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/6369359325560832
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6369359325560832/summary/summary.txt
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+- KVM Validation: debug:
+  - Unstable: 3 failed test(s): =
+packetdrill_add_addr packetdrill_sockopts selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4961984442007552
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4961984442007552/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/e850ac34e772
 
 
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
