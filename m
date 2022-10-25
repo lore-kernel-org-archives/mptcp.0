@@ -1,104 +1,112 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6451D7B
-	for <mptcp@lists.linux.dev>; Tue, 25 Oct 2022 00:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666657644; x=1698193644;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=waFq0kfS/W2yK9hJAuGroWFVx6x0czdv3sru/rmNXI8=;
-  b=DGqmyZmJ2ZWi92k4OrO6AUsYz3cL2Q8NqtYs5/zkCWq+NOT17XSuOfQC
-   tWESRNIVhF7jCQjcUN1HxfsYPySzb3fslJPPKup5q2za1ErTwmgecnm11
-   g/x9mFhy/mDPzLDpFzIetjBy7OW461iE8fU7R08f0z6cygppMxHvs1Ihr
-   /jUBwS1+EfR5kz+G+s86RZUT3wYxlxPLktOvkMdxOa+JESDsRJXYIxUT8
-   HPsXaKxi8Jj71gENhi0OuTW3ZBPdeXJHsUg9+tGEa7bYayYPMN3AfIlsS
-   dUyDymu0YZib3NVMMGA81wu91c07f+kTJQt/2vwj8lW8WDRsoNbeqp3IV
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="294955120"
-X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
-   d="scan'208";a="294955120"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 17:27:24 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="664724733"
-X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
-   d="scan'208";a="664724733"
-Received: from mlotfi-mobl.amr.corp.intel.com ([10.212.254.208])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 17:27:23 -0700
-Date: Mon, 24 Oct 2022 17:27:22 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8344F7E2
+	for <mptcp@lists.linux.dev>; Tue, 25 Oct 2022 02:20:41 +0000 (UTC)
+Received: by mail-oi1-f182.google.com with SMTP id n83so12753988oif.11
+        for <mptcp@lists.linux.dev>; Mon, 24 Oct 2022 19:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W6VffDsQLcKYLv9aOqoqPsZiMIwsyKwmYJbMR3qvicU=;
+        b=p/3Fd7ZqgQsqifYM3CR83VB+JHCL06GhY7yV6yrjNXS0Rp0lI0P3smjK0ZMOBFvSgi
+         CIfpLmftetqZwVigmub2AhDrYTA17YjC60Rd/sjpEhqted3p8vG0IICSpJV23o8VKLMj
+         Sz3q2HZuoLzTH2aa21Kj2J0GZCToM7adAojsUt0f0gblAZS6AjOdKCLWOpkqSzLIP/ly
+         vYe+Y4h8ImC26QkDlIC+3Qi2xEgp0bt/BR39fyPzBD39T6DVfE4X3xZhwU/uEBDqG4AM
+         PrrNH/A+JP/+eZR+nUtCccDC6tWUXXOxBLhLqcHTnGt3D5ikmD1w7WpihXtnNDhwVmyi
+         Cy/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=W6VffDsQLcKYLv9aOqoqPsZiMIwsyKwmYJbMR3qvicU=;
+        b=vTit+rAsNhiWixo1uIeHB1jHqOxcAAqhFJaGI//fwBpH9ZXu8De1xlkO1Ko1H1lpZ2
+         5c1/OQ+IK5taaxEIbuGbYA1e8afHJnM+nlWKlahPrFBfOMV3HhatsLz6pQmtQ6VJLRcH
+         VQ87pJYaftmOZSlFZNzyh/iLCtZx1WbYYzgAxiaDR5qYTeTv+pU2aiM9MIdL2psQirME
+         WCr48lCfw8rILPedBJUm0Q4DwWjgkQHSTzhuzkkuSRF6+YlhQSSE5SFGi0RdAxe/I+ce
+         7L0yhscY41dm5z0HmpYaQ1QkyYCmMR0tZJrRselRctAmBuYVw+34tNP5Py4f+VYIBC66
+         0ZlQ==
+X-Gm-Message-State: ACrzQf26KwVQAyy65/2+Qj0ga4NG18U/bCH4Lphh45qGSskk96mQHxLk
+	r0L7iBxHmQN7qIv0UqjSCw==
+X-Google-Smtp-Source: AMsMyM6rC91U1F9CF+5ktVgEDB716UkxYXHZqR7ZS3AewINMJgP1yrdpUueQsE8DzPX5B2mlH56O/Q==
+X-Received: by 2002:a05:6808:1295:b0:355:367e:d2ac with SMTP id a21-20020a056808129500b00355367ed2acmr21084888oiw.223.1666664440586;
+        Mon, 24 Oct 2022 19:20:40 -0700 (PDT)
+Received: from [127.0.0.1] ([20.97.14.209])
+        by smtp.gmail.com with ESMTPSA id r25-20020a9d7cd9000000b00661ac94f187sm497470otn.42.2022.10.24.19.20.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Oct 2022 19:20:40 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2] mptcp: get sk from msk directly
-In-Reply-To: <20221023124831.8959-1-geliang.tang@suse.com>
-Message-ID: <14d6e808-4ff2-ef6a-3262-d43a885e34c4@linux.intel.com>
-References: <20221023124831.8959-1-geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20221022133528.31996-1-geliang.tang@suse.com>
+References: <20221022133528.31996-1-geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: use max_time instead of time: Tests Results
+Message-ID: <23b5db67-91c2-cf93-95f3-81ed842c55d9@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 25 Oct 2022 02:20:39 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-,On Sun, 23 Oct 2022, Geliang Tang wrote:
+Hi Geliang,
 
-> Use '(struct sock *)msk' to get 'sk' from 'msk' in a more direct way
-> instead of using '&msk->sk.icsk_inet.sk' in mptcp_nl_cmd_sf_create()
-> and mptcp_nl_cmd_sf_destroy().
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Thank you for your modifications, that's great!
 
-Hi Geliang -
+Our CI did some validations and here is its report:
 
-This is a good cleanup, thanks. We use the struct sock * cast almost 
-everywhere. Can you extend this patch to also change the similar 
-statements in sockopt.c and protocol.c?
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/6536517840535552
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/6536517840535552/summary/summary.txt
 
-(I think the assignment in mptcp_retransmit_timer() should stay unchanged)
+- {"code":404,"message":
+  - "Can't find artifacts containing file =
+conclusion.txt"}:
+  - Task: https://cirrus-ci.com/task/6259775448023040
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6259775448023040/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/4f37eaa09fcb
 
 
-- Mat
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
 
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-> ---
-> v2:
-> - fix the "uninitialized use occurs" error reported by kernel test robot
-> <lkp@intel.com>
-> ---
-> net/mptcp/pm_userspace.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 9e82250cbb70..5cb65f0928f4 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -291,7 +291,7 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
-> 		goto create_err;
-> 	}
->
-> -	sk = &msk->sk.icsk_inet.sk;
-> +	sk = (struct sock *)msk;
-> 	lock_sock(sk);
->
-> 	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
-> @@ -403,7 +403,7 @@ int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
-> 		goto destroy_err;
-> 	}
->
-> -	sk = &msk->sk.icsk_inet.sk;
-> +	sk = (struct sock *)msk;
-> 	lock_sock(sk);
-> 	ssk = mptcp_nl_find_ssk(msk, &addr_l, &addr_r);
-> 	if (ssk) {
-> -- 
-> 2.35.3
->
->
->
-
---
-Mat Martineau
-Intel
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
