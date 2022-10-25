@@ -1,40 +1,39 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551267B
-	for <mptcp@lists.linux.dev>; Tue, 25 Oct 2022 00:15:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6451D7B
+	for <mptcp@lists.linux.dev>; Tue, 25 Oct 2022 00:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666656930; x=1698192930;
+  t=1666657644; x=1698193644;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=tHkAof8ZKv5edLODYoOllVQsnKFzOI2q49ceu1mXOuA=;
-  b=nE+KlEtEL/h71ceJcblCNz6zIT+iKrN/1WXRlv6I/m95EVikaw/a8W0g
-   4FIUWkE9mHzNKrgkbzT+lLWMIAiHT2KLi3Z1cX6gj1HmBI4cQBwRkhN0i
-   4/kSXdesW2jNMngRA1BoT2ViLVHuYOSuXeHTHiJkt+wlNVSYJ/WJc3Zma
-   B9BGEw5kPRuD5vjdbI9MY6knGQdOKBmwaONVUFjeS5w2nmz8OelaOXLuD
-   0R/3N+jbl44ywcgvLnQWK1bDEI4ldBLy4Low+2IzAB0y0A86Sh4THNoSn
-   bw0pzwr94BUdM0tWQuG+OxCS5i17spE+DNJbye9hqSzhX9/dN69tVkkJZ
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="306282246"
+  bh=waFq0kfS/W2yK9hJAuGroWFVx6x0czdv3sru/rmNXI8=;
+  b=DGqmyZmJ2ZWi92k4OrO6AUsYz3cL2Q8NqtYs5/zkCWq+NOT17XSuOfQC
+   tWESRNIVhF7jCQjcUN1HxfsYPySzb3fslJPPKup5q2za1ErTwmgecnm11
+   g/x9mFhy/mDPzLDpFzIetjBy7OW461iE8fU7R08f0z6cygppMxHvs1Ihr
+   /jUBwS1+EfR5kz+G+s86RZUT3wYxlxPLktOvkMdxOa+JESDsRJXYIxUT8
+   HPsXaKxi8Jj71gENhi0OuTW3ZBPdeXJHsUg9+tGEa7bYayYPMN3AfIlsS
+   dUyDymu0YZib3NVMMGA81wu91c07f+kTJQt/2vwj8lW8WDRsoNbeqp3IV
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="294955120"
 X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
-   d="scan'208";a="306282246"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 17:15:29 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="633896102"
+   d="scan'208";a="294955120"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 17:27:24 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="664724733"
 X-IronPort-AV: E=Sophos;i="5.95,210,1661842800"; 
-   d="scan'208";a="633896102"
+   d="scan'208";a="664724733"
 Received: from mlotfi-mobl.amr.corp.intel.com ([10.212.254.208])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 17:15:28 -0700
-Date: Mon, 24 Oct 2022 17:15:27 -0700 (PDT)
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 17:27:23 -0700
+Date: Mon, 24 Oct 2022 17:27:22 -0700 (PDT)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: use max_time instead of
- time
-In-Reply-To: <20221022133528.31996-1-geliang.tang@suse.com>
-Message-ID: <2c99f83f-4e2a-9205-7690-2cdde6f2a335@linux.intel.com>
-References: <20221022133528.31996-1-geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v2] mptcp: get sk from msk directly
+In-Reply-To: <20221023124831.8959-1-geliang.tang@suse.com>
+Message-ID: <14d6e808-4ff2-ef6a-3262-d43a885e34c4@linux.intel.com>
+References: <20221023124831.8959-1-geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,45 +42,57 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Sat, 22 Oct 2022, Geliang Tang wrote:
+,On Sun, 23 Oct 2022, Geliang Tang wrote:
 
-> 'time' is the local variable of run_test() function, while 'max_time' is
-> the local variable of do_transfer() function. So in do_transfer(),
-> $max_time should be used, not $time.
+> Use '(struct sock *)msk' to get 'sk' from 'msk' in a more direct way
+> instead of using '&msk->sk.icsk_inet.sk' in mptcp_nl_cmd_sf_create()
+> and mptcp_nl_cmd_sf_destroy().
 >
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 
-Looks good to me, thanks Geliang:
+Hi Geliang -
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+This is a good cleanup, thanks. We use the struct sock * cast almost 
+everywhere. Can you extend this patch to also change the similar 
+statements in sockopt.c and protocol.c?
+
+(I think the assignment in mptcp_retransmit_timer() should stay unchanged)
+
+
+- Mat
+
 
 
 > ---
-> tools/testing/selftests/net/mptcp/simult_flows.sh | 4 ++--
+> v2:
+> - fix the "uninitialized use occurs" error reported by kernel test robot
+> <lkp@intel.com>
+> ---
+> net/mptcp/pm_userspace.c | 4 ++--
 > 1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> index ffa13a957a36..af70c14e0bf9 100755
-> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> @@ -173,7 +173,7 @@ do_transfer()
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 9e82250cbb70..5cb65f0928f4 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -291,7 +291,7 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+> 		goto create_err;
+> 	}
 >
-> 	timeout ${timeout_test} \
-> 		ip netns exec ${ns3} \
-> -			./mptcp_connect -jt ${timeout_poll} -l -p $port -T $time \
-> +			./mptcp_connect -jt ${timeout_poll} -l -p $port -T $max_time \
-> 				0.0.0.0 < "$sin" > "$sout" &
-> 	local spid=$!
+> -	sk = &msk->sk.icsk_inet.sk;
+> +	sk = (struct sock *)msk;
+> 	lock_sock(sk);
 >
-> @@ -181,7 +181,7 @@ do_transfer()
+> 	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
+> @@ -403,7 +403,7 @@ int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
+> 		goto destroy_err;
+> 	}
 >
-> 	timeout ${timeout_test} \
-> 		ip netns exec ${ns1} \
-> -			./mptcp_connect -jt ${timeout_poll} -p $port -T $time \
-> +			./mptcp_connect -jt ${timeout_poll} -p $port -T $max_time \
-> 				10.0.3.3 < "$cin" > "$cout" &
-> 	local cpid=$!
->
+> -	sk = &msk->sk.icsk_inet.sk;
+> +	sk = (struct sock *)msk;
+> 	lock_sock(sk);
+> 	ssk = mptcp_nl_find_ssk(msk, &addr_l, &addr_r);
+> 	if (ssk) {
 > -- 
 > 2.35.3
 >
