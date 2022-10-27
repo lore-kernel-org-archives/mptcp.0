@@ -1,65 +1,121 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4BD186B
-	for <mptcp@lists.linux.dev>; Thu, 27 Oct 2022 10:42:48 +0000 (UTC)
-Received: by mail-wm1-f45.google.com with SMTP id r186-20020a1c44c3000000b003cf4d389c41so1049216wma.3
-        for <mptcp@lists.linux.dev>; Thu, 27 Oct 2022 03:42:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:subject:message-id:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H6WsQ3KWGpdVyKHLBQa8AnduLOWItG0cpSHWHSxL/Jc=;
-        b=WVKvOEa3utPLJjD1Twfm5OizR8E1ucWsRHQjTBxLCCuFA0vf5geCxXBJ4opiJiH8Rq
-         d+mIHQaVKt6O0dPX1Yn7OufQTV4i9HBAg/uyLPE/LUhgIFs9qfGPnjdZTn9rke8s/Z1P
-         NktIW022GwCJKhXC6RHgOy+Mei07kS20RmeFqCJAarc2uOFoOQ1ESZladD/I/eJwBfQw
-         zoAB+7g4f5qYNbla3m1s0jqY7fjDp8j4pQbr2FYrz5pG407g6qZpxnonwgw5y9gAIKBO
-         NOc1/sYuloKShC2isZPSW3n+whq0xJfWyEDzVG+K6yVpDGjxhZkAuYFp1/o56RC4zrhO
-         A4Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:subject:message-id:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H6WsQ3KWGpdVyKHLBQa8AnduLOWItG0cpSHWHSxL/Jc=;
-        b=s6mycTpObeApeHEbw+0wcffPNzYFaoGBKGbJ2cO1A6VmY6/uZetxe62aKL9I8Q0VvU
-         KyvSaCgHOGOTUEyJYIFYYQqYBYnbPLlk3vwca8/N+rRfxrEYGywqP4fi9u55/S3JZR/o
-         j6lrX3L93EvAdC2o+ZRDhe8xvknKsQNEKchjlf1klWaUECR/rO/am67JSCXRjLUlIcJC
-         gahJwZbIyz+zJtYrCOSfCIVNOdoCCtz0LdLLXvzO9ZwoeZ3KOJ5mbg97eLPFeRKfIey6
-         UUgL/CT9MUSQMOPjcb0QhFrx57fRk+LytiqCQRVL5o3Ki/25x0Y3pOlBGGGmOL8Sni/F
-         7I7g==
-X-Gm-Message-State: ACrzQf3bH9CbA7y4iY3F/lRtVOkqybxMEFJpDeuKFb43S2SYD8MOs7aA
-	dtLvFK0zpMWpxEMSdI0K/djBrSKLpsGsnA==
-X-Google-Smtp-Source: AMsMyM5gOL1DVYA0pEzDUj92zmccC9KUylqjv0+UN48btEDYnqJ+rN7kFFVHdWIXY3lJnwfZqr3ydQ==
-X-Received: by 2002:a05:600c:4fcb:b0:3cc:2858:5e24 with SMTP id o11-20020a05600c4fcb00b003cc28585e24mr5594799wmq.160.1666867366548;
-        Thu, 27 Oct 2022 03:42:46 -0700 (PDT)
-Received: from [127.0.0.1] ([194.110.115.71])
-        by smtp.gmail.com with ESMTPSA id bn8-20020a056000060800b002365921c9aesm918145wrb.77.2022.10.27.03.42.45
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Oct 2022 03:42:45 -0700 (PDT)
-Date: Thu, 27 Oct 2022 12:42:44 +0200 (GMT+02:00)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Message-ID: <eede4b08-7224-4d0a-92e1-f2c85d26b83f@tessares.net>
-Subject: No meeting today
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B209D520
+	for <mptcp@lists.linux.dev>; Thu, 27 Oct 2022 19:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666900205; x=1698436205;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=FTm3JAsxCSO3Hw7F+ykGJbCZlK7xV552xrrwTGiXB8Q=;
+  b=gB5Y1XfHejdaXnsB3irH0vI05jvDScS54G4iPS98wLHDK7o+/KYis7sn
+   OihipQCiNKSDQ2wbvhDiAIQbFT85SKnTpdRjnYtIfhMdbto/FKwKNMs15
+   fK8uJmzmz+0s6fGubDKqW1jPi4Jb2O/twh3s35EMdD6Z4ZP+fvsWDMaK6
+   NLpkJit6l3F7RsT7E4ekdmQlaWnEIQubzNibnYKx88qbEQo7V0Kp3PqMO
+   DywTqcsrGy0EnyoDoIIaQ41QShqKfPKBlESDG7MbyLeWDqFsjSfMmjmsF
+   dNCUZenRBs5bEkfLu4leXlBjGFtW2HVooABBzKG6uwE0NmFBgB2NMtU64
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="370392246"
+X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
+   d="scan'208";a="370392246"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2022 12:50:04 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="737825223"
+X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
+   d="scan'208";a="737825223"
+Received: from wayzkhan-mobl.amr.corp.intel.com ([10.212.240.131])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2022 12:50:03 -0700
+Date: Thu, 27 Oct 2022 12:50:03 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v2 1/2] mptcp: use entry->lsk directly
+In-Reply-To: <6c8c57c5a419395f8f4a23aa8e3f76c830f0c12f.1666780919.git.geliang.tang@suse.com>
+Message-ID: <673ea417-59a7-bc9f-9e09-d290417ceae9@linux.intel.com>
+References: <cover.1666780919.git.geliang.tang@suse.com> <6c8c57c5a419395f8f4a23aa8e3f76c830f0c12f.1666780919.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Correlation-ID: <eede4b08-7224-4d0a-92e1-f2c85d26b83f@tessares.net>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hello,
+On Wed, 26 Oct 2022, Geliang Tang wrote:
 
-Don't forget that there is no meeting today at the usual time. I will talk to you all next week!
+> This patch drops msk and ssock in mptcp_pm_nl_create_listen_socket(),
+> use entry->lsk directly instead of ssock.
+>
 
-PS: pay attention to daylight savings: next week the meeting will be at 4pm UTC, 5 might be one hour later if you are *not* in Europe.
+Hi Geliang -
 
-Cheers,
-Matt
+The change looks good, but the old code looks buggy. Seems like it would 
+be trying to re-bind the nmpc socket each time a listener socket was 
+created. Is this a fix for mptcp-net in your opinion?
+
+
+Thanks,
+
+Mat
+
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/pm_netlink.c | 18 ++----------------
+> 1 file changed, 2 insertions(+), 16 deletions(-)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 9813ed0fde9b..52a5847b9d74 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -992,8 +992,6 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+> {
+> 	int addrlen = sizeof(struct sockaddr_in);
+> 	struct sockaddr_storage addr;
+> -	struct mptcp_sock *msk;
+> -	struct socket *ssock;
+> 	int backlog = 1024;
+> 	int err;
+>
+> @@ -1002,30 +1000,18 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+> 	if (err)
+> 		return err;
+>
+> -	msk = mptcp_sk(entry->lsk->sk);
+> -	if (!msk) {
+> -		err = -EINVAL;
+> -		goto out;
+> -	}
+> -
+> -	ssock = __mptcp_nmpc_socket(msk);
+> -	if (!ssock) {
+> -		err = -EINVAL;
+> -		goto out;
+> -	}
+> -
+> 	mptcp_info2sockaddr(&entry->addr, &addr, entry->addr.family);
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> 	if (entry->addr.family == AF_INET6)
+> 		addrlen = sizeof(struct sockaddr_in6);
+> #endif
+> -	err = kernel_bind(ssock, (struct sockaddr *)&addr, addrlen);
+> +	err = kernel_bind(entry->lsk, (struct sockaddr *)&addr, addrlen);
+> 	if (err) {
+> 		pr_warn("kernel_bind error, err=%d", err);
+> 		goto out;
+> 	}
+>
+> -	err = kernel_listen(ssock, backlog);
+> +	err = kernel_listen(entry->lsk, backlog);
+> 	if (err) {
+> 		pr_warn("kernel_listen error, err=%d", err);
+> 		goto out;
+> -- 
+> 2.35.3
+>
+>
+>
+
 --
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Mat Martineau
+Intel
