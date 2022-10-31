@@ -1,45 +1,45 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1148E7E
-	for <mptcp@lists.linux.dev>; Mon, 31 Oct 2022 15:02:57 +0000 (UTC)
-Received: by mail-wr1-f42.google.com with SMTP id cl5so4725763wrb.9
-        for <mptcp@lists.linux.dev>; Mon, 31 Oct 2022 08:02:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021317E
+	for <mptcp@lists.linux.dev>; Mon, 31 Oct 2022 15:07:02 +0000 (UTC)
+Received: by mail-wr1-f54.google.com with SMTP id o4so16399502wrq.6
+        for <mptcp@lists.linux.dev>; Mon, 31 Oct 2022 08:07:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uqwYadvirUTIoAP/uUlVqNQOrgabgHNjk446znykzsA=;
-        b=VdVbU0OPAr5g9WRoHLQbldxjAuQCWOl10KQucsyuqpg2IRGmmX989xzcIHw7CMDUI/
-         ApCFTJcUPGSWjQ3DWyPMf5Bof5IvWD5tVFyEt7l9GZIc6pn2GdhEKonY4nuddlspOpql
-         bHRdOljAEf4YsVcpM8iwPjOJBegY2JJLRJ9uAH9FLlIaLVikPosAQ7gxGk4oEHnBr81k
-         N2o/N9+beec8lHg5OjJFy5XYx4J+hW8Gwp1HZ8/N5Zs2f7ip8rGe9Q5y/3q8AmiSFjp3
-         UtWqb8qZd4gGfFEeXRPBY8sNNsAQg2zkTBvcjzrvLqbVMl6QBGS0zKDdslpbocFPdy5L
-         szDg==
+        bh=TsqXcWVNrI5P7JUi6Krs0B/MtFkHdsAvIZheZca4Y9Q=;
+        b=rdauestz8FvW409BxyHoDto5fG2ABev9TOInKP/qSaw/req+pe+AiO1390N31lkkj4
+         NxN7P0rjyUzFzVRhJ70F+OQ37cMygIMpbR1NvKeU561Dv4zuxvhRTfOTJ0WiqCLBcGAH
+         HMExVXDWSFCqVFnr7yF/3k70jA5Ofo3arCY8Qe1fOQIg7ONnC6wPpIx7eBAVQz2A/VXW
+         1kQ69zM7xitHCeDuTaED/AoXmVnPHT7mfvM8W6eaqQ5HoXIUJs5sbLdVE5va5QG21xJr
+         oD0NvAnnHIcbQ2MuH5FUmviPcHYTegl0p3Ay1JVTGLfa2s+5hOYRK4BOw1wDGHhYWJ74
+         FXKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uqwYadvirUTIoAP/uUlVqNQOrgabgHNjk446znykzsA=;
-        b=CfZOvDHW1dWvVvMXPmRZqPYsyysgOiK9bEbqoTjveQ+E5PV9n8CxzU3VkG/rjN+1JE
-         EI/5g4ZnwTU9qI25HedhDcHEKQktHzcHXwcmcAls92iCqPsHI+42brBut7gUBFDzAZts
-         9PwKIXZmVhGCRr0bNMeWbg1Zs5lu8j4CeMxsn1HmqmcgfnuZmXYPZPWCN8CKx7dz5/qi
-         W1u3dtqFwDKK2qyCW/jrDwt7mt4T91xYRCjUGLjw2QfEBmOPoks43pbWv7A2Bn2sec4z
-         II/oO9slyn9Oti5+yjYi41YoCbnna6juiMec3l3HNnP07ii1Rl3NI8BuUakS5okxizPu
-         moGA==
-X-Gm-Message-State: ACrzQf1U1yQePssaydekhFdfNjOQLgQUkxaCn90BhAc/zOpHiDLRqKIO
-	AKZ7N8wj03coBQA1jM4VwXVYOmDerE2sHA==
-X-Google-Smtp-Source: AMsMyM4gJrAXt8mh9mClik08TR966rEshmODXNgBeRSrAXFiUAxKJBp13VU68bTBsM+GsnXM1pObZQ==
-X-Received: by 2002:a05:6000:1e0b:b0:236:8a6e:8d with SMTP id bj11-20020a0560001e0b00b002368a6e008dmr8275507wrb.20.1667228575109;
-        Mon, 31 Oct 2022 08:02:55 -0700 (PDT)
+        bh=TsqXcWVNrI5P7JUi6Krs0B/MtFkHdsAvIZheZca4Y9Q=;
+        b=2uCz3yhASdkWVMAxM8vyVEBNZAqbLlVMUyZS+TupvjDnxOSl5IGD7QCzqjp8Z99dbC
+         TKIMbeFNmmhJ3uvyqcFAnUUtg7XBdT9tKaTIM7+n60r2d/7TVoaSKpnFGlXHdX1QCWDt
+         4Pd857IJrbL5kJWLOi/cRS76spHZmSpRw28wIJRN0rBObDpWk8MH9SUH6wG0fv9CKpqD
+         VtpndwWmJM5/2sN/ls03FhV/TbZSO2572EG7CZ91sk15m/QldM0DgRyqGyXCQtSm4Jka
+         g1DZDQxANK+/JfaDkdfya7amwOYxaB4tUcXwZYe/YUbMwTmY5vH/Mj2RKFkZw6Ey33Eu
+         CmRA==
+X-Gm-Message-State: ACrzQf1zCQ70r3h66LxHq3pivtvqgRwVcOvX8tOucQGb9s2jluTspZz6
+	+H1WUNNJccw0Pjob3UNvLjc7rbLVryTw8w==
+X-Google-Smtp-Source: AMsMyM5DmuP/cb7ummw1eYAaaNO3HV2hCXIspvKV3BwqgiuD2lvWeVunVhysa8reBu2r718uki7mPQ==
+X-Received: by 2002:a5d:47aa:0:b0:236:79cc:6d5f with SMTP id 10-20020a5d47aa000000b0023679cc6d5fmr8494806wrb.391.1667228821116;
+        Mon, 31 Oct 2022 08:07:01 -0700 (PDT)
 Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id bl19-20020adfe253000000b00236576c8eddsm7397330wrb.12.2022.10.31.08.02.53
+        by smtp.gmail.com with ESMTPSA id f5-20020a5d64c5000000b0022cd96b3ba6sm9403264wri.90.2022.10.31.08.07.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Oct 2022 08:02:53 -0700 (PDT)
-Message-ID: <9e501292-c3e9-6b3c-9457-407df7fa43ba@tessares.net>
-Date: Mon, 31 Oct 2022 16:02:53 +0100
+        Mon, 31 Oct 2022 08:07:00 -0700 (PDT)
+Message-ID: <ace10e70-6b8f-ec9c-f2a9-eb00829a79c7@tessares.net>
+Date: Mon, 31 Oct 2022 16:07:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,37 +50,26 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
 Subject: Re: [PATCH mptcp-next] selftests: mptcp: use max_time instead of time
 Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <20221022133528.31996-1-geliang.tang@suse.com>
- <2c99f83f-4e2a-9205-7690-2cdde6f2a335@linux.intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <2c99f83f-4e2a-9205-7690-2cdde6f2a335@linux.intel.com>
+In-Reply-To: <20221022133528.31996-1-geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Mat,
+Hi Geliang,
 
-On 25/10/2022 02:15, Mat Martineau wrote:
-> On Sat, 22 Oct 2022, Geliang Tang wrote:
-> 
->> 'time' is the local variable of run_test() function, while 'max_time' is
->> the local variable of do_transfer() function. So in do_transfer(),
->> $max_time should be used, not $time.
->>
->> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> 
-> Looks good to me, thanks Geliang:
-> 
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+On 22/10/2022 15:35, Geliang Tang wrote:
+> 'time' is the local variable of run_test() function, while 'max_time' is
+> the local variable of do_transfer() function. So in do_transfer(),
+> $max_time should be used, not $time.
 
-Should this go to -net with a 'Fixes' tag?
+Out of curiosity, did you create this patch because you were looking at
+issue #310 on GitHub?
 
-Fixes: b6ab64b074f2 ("selftests: mptcp: more stable simult_flows tests")
+https://github.com/multipath-tcp/mptcp_net-next/issues/310
 
-If yes, I can add do the modifications when applying the patch, no need
-to send a v2.
+Would it help fixing the issues reported by the different CIs?
 
 Cheers,
 Matt
