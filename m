@@ -1,330 +1,249 @@
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147D4362
-	for <mptcp@lists.linux.dev>; Tue,  1 Nov 2022 00:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667262401; x=1698798401;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=cyvreVQRSuKaosfhJcYkjLcPMKk3yi5U6ttL24wUCi0=;
-  b=kA7JTTcZeBoQ+fiTH/GM9n9vcjVw17imyT9GJP3A4FlWP1eQ0gq0zLFh
-   RgtUzgHI/h4HmuICh51rZz0lTDmZHc7k3b2OcryFcePRxFBtvjmM/sp50
-   LpB97x9vKyuVr0nxp+ZtrwyuOaKtLVce2PhGu4Hn0aZBKYRA5Z2QweEye
-   xnqr/aWDab3Ufzc5x/nEH8sTsfO0u8dFyndGob9rTQqGV8dpFtnbMjFl5
-   bqLxjbUvtQsgqDf39dWrENbFw+gThW2OA04T6BYunpG2e8MqN4yWZClfk
-   iO5+Ney4SuaporGn3ViNJrPFqQo4ZMNfxHGsS9E5FNpXLY2Vaiewrj4Da
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="371111492"
-X-IronPort-AV: E=Sophos;i="5.95,229,1661842800"; 
-   d="scan'208";a="371111492"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2022 17:26:40 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="878924877"
-X-IronPort-AV: E=Sophos;i="5.95,229,1661842800"; 
-   d="scan'208";a="878924877"
-Received: from jblosfi-mobl1.amr.corp.intel.com ([10.255.229.117])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2022 17:26:40 -0700
-Date: Mon, 31 Oct 2022 17:26:39 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v16 10/15] mptcp: use get_send wrapper
-In-Reply-To: <e9983543fbdefba28a426a4015966be804ba0477.1666771065.git.geliang.tang@suse.com>
-Message-ID: <1df91e3d-5cfb-ecbb-197c-001ef3746e20@linux.intel.com>
-References: <cover.1666771065.git.geliang.tang@suse.com> <e9983543fbdefba28a426a4015966be804ba0477.1666771065.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EB77E
+	for <mptcp@lists.linux.dev>; Tue,  1 Nov 2022 11:54:58 +0000 (UTC)
+Received: by mail-lf1-f66.google.com with SMTP id j16so23190210lfe.12
+        for <mptcp@lists.linux.dev>; Tue, 01 Nov 2022 04:54:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NIMftf3sRNdYqM5SNRz4VVFBYBtZ/YYPJB4+EamxaKc=;
+        b=dQGHNEkA/VRtufzjbAnxC12v4gYGxi5miSJMCQaDegO13jz7WPvDpk67VfesW2S3MP
+         msZIk3s/yJZ6g2UL5WvYA41Vgi/FuY/wp0i3vOrkIEr5t8KI1rG7rIQMjTcgr66czHhE
+         yE8bzGc8wn+RdxVqufzbmixBsnOsyZ4PbsVtRruFWZYxvngRILQBJ1rkoBpyEYLr5DpG
+         eIuCdthHES0umti1De89fOxv/9m5FI00YE11f3A5/A8PRoMf08jPivjc00IFk6hKxcW4
+         cVkfmXItPhhQqyu2Q7bTdGd0e7zLxHb1JX5zl8HRhejvDPE3Y0E7DVYrx6b6+q8cDnqk
+         D+Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NIMftf3sRNdYqM5SNRz4VVFBYBtZ/YYPJB4+EamxaKc=;
+        b=bGM16l5bnEKbJ2Z/TzQUU031/iAssXjYpF54KVS8RwwnTx6HykeSyOC8E1wsfcWYaY
+         YTAFLeZSxu5T1dQ5VeKV+IrayUY7gk2rpK5YshSX/owjhqloIWvloFyj8d0ncFu7Pehg
+         P1jA5zTmkYDWXy5C9AT3tQM+W8Oxka/D1QRO50DlymWMbGeRdyNmJOGl2BP2jyrbehzD
+         0olO/47Xq/bJVHowRhVuRCs3lPhoLCY+kMUysyV+a2uafFfcnImxpV4lWX0ZABcS7Kw9
+         F8BFZDZF35V9HAJQGJo+/4QbRcOZaTbU73vPVqs/aY+n6jA3S084T1mrnFSnim9pzROl
+         mzXQ==
+X-Gm-Message-State: ACrzQf3fliuQbdUtiDPpOc3Ir/h9iw9Tlqywi7LmuM2kiJdSC3hqqwIQ
+	MNOFcsJtXD34cl+7XG4MULQvvvdkI4UK1oarKs4=
+X-Google-Smtp-Source: AMsMyM6ATGsFokTiJJxa55B9tADmQzmiLlkeUUtRKqIhteb/LfCsTz3o3cARG1m2+AHclbFANQE5TYqyK+bWtLgXX/o=
+X-Received: by 2002:a19:5e5b:0:b0:4b0:2b8e:8a59 with SMTP id
+ z27-20020a195e5b000000b004b02b8e8a59mr7785373lfi.161.1667303696511; Tue, 01
+ Nov 2022 04:54:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <20221007092922.13169-1-imagedong@tencent.com> <95cb50a4-e50c-3b02-a521-24c2d11341de@linux.intel.com>
+ <b3346c1f-5934-4c97-e65e-c0983f9e45ae@tessares.net> <CADxym3YDfLuOjMUkUCEF-29YsXVJHGgB3PVkrC=o8vb3HWw8gg@mail.gmail.com>
+ <b3f3c01e-4010-d5ce-970d-394711bcd0e1@tessares.net>
+In-Reply-To: <b3f3c01e-4010-d5ce-970d-394711bcd0e1@tessares.net>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Tue, 1 Nov 2022 19:54:44 +0800
+Message-ID: <CADxym3a9cAmG+UN-hWRyzGzMYt8JA5RWKCL94Jq=P49unbu9qg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v5 0/3] mptcp: add statistics for mptcp socket
+ in use
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev, 
+	Menglong Dong <imagedong@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 26 Oct 2022, Geliang Tang wrote:
+On Tue, Nov 1, 2022 at 1:07 AM Matthieu Baerts
+<matthieu.baerts@tessares.net> wrote:
+>
+> Hi Menglong,
+>
+> On 28/10/2022 05:18, Menglong Dong wrote:
+> > On Wed, Oct 12, 2022 at 5:29 PM Matthieu Baerts
+> > <matthieu.baerts@tessares.net> wrote:
+> >>
+> >> Hi Menglong, Mat,
+> >>
+> >> On 12/10/2022 02:53, Mat Martineau wrote:
+> >>> On Fri, 7 Oct 2022, menglong8.dong@gmail.com wrote:
+> >>>
+> >>>> From: Menglong Dong <imagedong@tencent.com>
+> >>>>
+> >>>> In the 1th patch, we do some code cleanup with replease 'sock->sk'
+> >>>> with 'sk'. In the 2th patch, we add statistics for mptcp socket in
+> >>>> use. And in the 3th patch, we add the testing for this commit.
+> >>>>
+> >>>
+> >>> I think v5 looks ok for the export branch - we can get more test
+> >>> coverage there and update if needed.
+> >>>
+> >>> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> >>
+> >> Thank you for the patch and the review!
+> >>
+> >> I was going to apply it but I just noticed our public CI complained
+> >> about the new test during its second test:
+>
+> (...)
+> >> Do you mind looking at that please?
+> >
+> > Hello,
+> >
+> > With the test command on my computer, the 'many msk socket present'
+> > always fails, and bellow is the log:
+> >
+> > # no msk on netns creation                          [  ok  ]
+> > # listen match for dport 10000                      [  ok  ]
+> > # listen match for sport 10000                      [  ok  ]
+> > # listen match for saddr and sport                  [  ok  ]
+> > # all listen sockets                                [  ok  ]
+> > # after MPC handshake                               [  ok  ]
+> > # ....chk remote_key                                [  ok  ]
+> > # ....chk no fallback                               [  ok  ]
+> > # msk in use statistics                             [  ok  ]
+> > # msk in use statistics                             [  ok  ]
+> > # check fallback                                    [  ok  ]
+> > # main_loop_s: timed out
+> > # connect(): Connection refused
+> > # main_loop_s: timed out
+> > # main_loop_s: timed out
+> > # connect(): Connection refused
+> > # connect(): Connection refused
+>
+> (...)
+>
+> > # many msk socket present                           [ fail ] timeout
+> > while expecting 200 max 0 last 0
+> > # msk in use statistics                             [ fail ] expected
+> > 201 found 0
+> > # msk in use statistics                             [  ok  ]
+> >
+> > Do you have any ideas?
+>
+> The test "many msk socket present" creates 100 listening MPTCP sockets,
+> wait maximum 1 second for them to be ready, then tries to connect to it
+> and check counters reported by 'ss'.
+>
+> Could it be possible your environment is quite slow and it needs more
+> than one second to have the 100 listening MPTCP sockets to be ready? May
+> you try this patch please?
+>
+> -------------------- 8< --------------------
+> diff --git a/tools/testing/selftests/net/mptcp/diag.sh
+> b/tools/testing/selftests/net/mptcp/diag.sh
+> index 515859a5168b..72ff61f5dd99 100755
+> --- a/tools/testing/selftests/net/mptcp/diag.sh
+> +++ b/tools/testing/selftests/net/mptcp/diag.sh
+> @@ -150,7 +150,7 @@ wait_local_port_listen()
+>         local port_hex i
+>
+>         port_hex="$(printf "%04X" "${port}")"
+> -       for i in $(seq 10); do
+> +       for i in $(seq 20); do
+>                 ip netns exec "${listener_ns}" cat /proc/net/tcp | \
+>                         awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ &&
+> \$4 ~ /0A/) {rc=0; exit}} END {exit rc}" &&
+>                         break
+> -------------------- 8< --------------------
+>
+> (or even with 'seq 50')
+>
+>
+> Or is there something limiting the number of sockets being created on
+> your side? I see that you got 60 connect() errors, maybe limited to 40
+> somewhere?
+>
 
-> This patch defines the packet scheduler wrapper mptcp_sched_get_send(),
-> invoke data_init() and get_subflow() of msk->sched in it.
->
-> Set data->reinject to false in mptcp_sched_get_send(). If msk->sched is
-> NULL, use default functions mptcp_subflow_get_send() to send data.
->
-> Move sock_owned_by_me() check and fallback check into the wrapper from
-> mptcp_subflow_get_send().
->
-> Add the multiple subflows support for __mptcp_push_pending() and
-> __mptcp_subflow_push_pending(). Use get_send() wrapper instead of
-> mptcp_subflow_get_send() in them.
->
-> Check the subflow scheduled flags to test which subflow or subflows are
-> picked by the scheduler, use them to send data.
->
+You are right, the qemu that runs the tests is quite slow on
+my computer. With increasing the 'timeout_poll', '-w' that passed to
+mptcp_connect, etc, finally it works.
 
-Hi Geliang -
+Meanwhile, I figure out why the test failed. On a fast computer,
+the mptcp_connect with the '-r' won't exit after flush_pids().
+However, on a slow computer, such as qemu, it will exit out of the
+'timeout' command.
 
-I think the commit message should mention that this commit allows the 
-scheduler to set the subflow->scheduled bit in multiple subflows, but it 
-does not allow for sending redundant data. Multiple scheduled subflows 
-will send sequential data on each subflow (correct?).
-
-
-
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> net/mptcp/protocol.c | 113 +++++++++++++++++++++++++------------------
-> net/mptcp/protocol.h |   2 +
-> net/mptcp/sched.c    |  31 ++++++++++++
-> 3 files changed, 99 insertions(+), 47 deletions(-)
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 1f64abb94cc8..277f1de31e65 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1406,7 +1406,7 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
->  * returns the subflow that will transmit the next DSS
->  * additionally updates the rtx timeout
->  */
-> -static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
-> +struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
-> {
-> 	struct subflow_send_info send_info[SSK_MODE_MAX];
-> 	struct mptcp_subflow_context *subflow;
-> @@ -1417,15 +1417,6 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
-> 	u64 linger_time;
-> 	long tout = 0;
+> > I suspect the failure in your tests has something to do with the '+1'
+> > in 'chk_msk_inuse $((NR_CLIENTS*2+1))'. I add the '+1' as I find
+> > that the 'mptcp_connect' with '-r' won't exit after flush_pids(),
+> > until the second flush_pids(). I'm sure if this opinion is right.
 >
-> -	sock_owned_by_me(sk);
-> -
-> -	if (__mptcp_check_fallback(msk)) {
-> -		if (!msk->first)
-> -			return NULL;
-> -		return __tcp_can_send(msk->first) &&
-> -		       sk_stream_memory_free(msk->first) ? msk->first : NULL;
-> -	}
-> -
-> 	/* pick the subflow with the lower wmem/wspace ratio */
-> 	for (i = 0; i < SSK_MODE_MAX; ++i) {
-> 		send_info[i].ssk = NULL;
-> @@ -1572,36 +1563,42 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> {
-> 	struct sock *prev_ssk = NULL, *ssk = NULL;
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct mptcp_subflow_context *subflow;
-> 	struct mptcp_sendmsg_info info = {
-> 		.flags = flags,
-> 	};
-> 	int ret = 0;
+> Mmm, flush_pids() sends a 'SIGUSR1' signal to all pids but:
 >
-> -	while (mptcp_send_head(sk)) {
-> -		prev_ssk = ssk;
-> -		ssk = mptcp_subflow_get_send(msk);
-> -
-> -		/* First check. If the ssk has changed since
-> -		 * the last round, release prev_ssk
-> -		 */
-> -		if (ssk != prev_ssk && prev_ssk)
-> -			mptcp_push_release(prev_ssk, &info);
-> -		if (!ssk)
-> -			goto out;
-> +again:
-> +	while (mptcp_send_head(sk) && !mptcp_sched_get_send(msk)) {
-> +		mptcp_for_each_subflow(msk, subflow) {
-> +			if (READ_ONCE(subflow->scheduled)) {
-> +				prev_ssk = ssk;
-> +				ssk = mptcp_subflow_tcp_sock(subflow);
+> (1) it doesn't wait for mptcp_connect processes to be finished: may you
+> try with this patch please?
 >
-> -		/* Need to lock the new subflow only if different
-> -		 * from the previous one, otherwise we are still
-> -		 * helding the relevant lock
-> -		 */
-> -		if (ssk != prev_ssk)
-> -			lock_sock(ssk);
-> +				/* First check. If the ssk has changed since
-> +				 * the last round, release prev_ssk
-> +				 */
-> +				if (ssk != prev_ssk && prev_ssk)
-> +					mptcp_push_release(prev_ssk, &info);
+> -------------------- 8< --------------------
+> diff --git a/tools/testing/selftests/net/mptcp/diag.sh
+> b/tools/testing/selftests/net/mptcp/diag.sh
+> index 515859a5168b..4ad70ead3bdf 100755
+> --- a/tools/testing/selftests/net/mptcp/diag.sh
+> +++ b/tools/testing/selftests/net/mptcp/diag.sh
+> @@ -16,6 +16,12 @@ flush_pids()
+>         sleep 1.1
 >
-> -		ret = __subflow_push_pending(sk, ssk, &info);
-> -		if (ret <= 0) {
-> -			if (ret == -EAGAIN)
-> -				continue;
-> -			mptcp_push_release(ssk, &info);
-> -			goto out;
-> +				/* Need to lock the new subflow only if different
-> +				 * from the previous one, otherwise we are still
-> +				 * helding the relevant lock
-> +				 */
-> +				if (ssk != prev_ssk)
-> +					lock_sock(ssk);
+>         ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGUSR1
+> &>/dev/null
 > +
-> +				ret = __subflow_push_pending(sk, ssk, &info);
-> +				if (ret <= 0) {
-> +					if (ret == -EAGAIN)
-> +						goto again;
-> +					mptcp_push_release(ssk, &info);
-> +					goto out;
-
-If there was an error sending on this subflow, I think this code path 
-should "continue" so the other scheduled subflows get a chance to send. 
-This also makes sure the subflow->enabled flag is cleared on every 
-scheduled subflow before this loop is done.
-
-There's still a check to run __mptcp_check_send_data_fin() at the end of 
-this function. That should run if any subflow returned a positive value 
-from __subflow_push_pending(), not just the last subflow in the loop.
-
-> +				}
-> +				msk->last_snd = ssk;
-> +				mptcp_subflow_set_scheduled(subflow, false);
-> +			}
-> 		}
-> 	}
+> +       for _ in $(seq 10); do
+> +               [ -z "$(ip netns pids "${ns}")" ] && break
+> +
+> +               sleep 0.1
+> +       done
+>  }
 >
-> @@ -1620,32 +1617,54 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
-> {
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct mptcp_subflow_context *subflow;
-> 	struct mptcp_sendmsg_info info = {
-> 		.data_lock_held = true,
-> 	};
-> -	struct sock *xmit_ssk;
-> 	int ret = 0;
->
-> 	info.flags = 0;
-> +again:
-> 	while (mptcp_send_head(sk)) {
-> 		/* check for a different subflow usage only after
-> 		 * spooling the first chunk of data
-> 		 */
-> -		xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
-> -		if (!xmit_ssk)
-> -			goto out;
-> -		if (xmit_ssk != ssk) {
-> -			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk),
-> -					       MPTCP_DELEGATE_SEND);
-> -			goto out;
-> +		if (first) {
-> +			ret = __subflow_push_pending(sk, ssk, &info);
-> +			first = false;
-> +			if (ret <= 0) {
-> +				if (ret == -EAGAIN)
-> +					goto again;
-> +				break;
-> +			}
-> +			msk->last_snd = ssk;
-> +			continue;
-> 		}
->
-> -		ret = __subflow_push_pending(sk, ssk, &info);
-> -		first = false;
-> -		if (ret <= 0) {
-> -			if (ret == -EAGAIN)
-> -				continue;
-> -			break;
-> +		if (mptcp_sched_get_send(msk))
-> +			goto out;
-> +
-> +		mptcp_for_each_subflow(msk, subflow) {
-> +			if (READ_ONCE(subflow->scheduled)) {
-> +				struct sock *xmit_ssk = mptcp_subflow_tcp_sock(subflow);
-> +
-> +				if (xmit_ssk != ssk) {
-> +					mptcp_subflow_delegate(subflow,
-> +							       MPTCP_DELEGATE_SEND);
-> +					msk->last_snd = ssk;
-> +					mptcp_subflow_set_scheduled(subflow, false);
-> +					goto out;
-> +				}
-> +
-> +				ret = __subflow_push_pending(sk, ssk, &info);
-> +				if (ret <= 0) {
-> +					if (ret == -EAGAIN)
-> +						goto again;
-> +					goto out;
-> +				}
-> +				msk->last_snd = ssk;
-> +				mptcp_subflow_set_scheduled(subflow, false);
-> +			}
-> 		}
-> 	}
-
-I don't think this __mptcp_subflow_push_pending() code path fully handles 
-the case where subflow->enabled is set on multiple subflows. 
-If __mptcp_push_pending() runs on a separate thread, it can find 
-subflow->enabled already set in some subflows. With the code in this 
-revision of the patch series, the subflow->enabled flags in each subflow 
-would just get overwritten by the new call to mptcp_sched_get_send().
-
-It seems to me that __mptcp_push_pending() should check the existing 
-subflow->enabled flags (or a new msk-level flag?) to make sure the 
-previous scheduled sends have finished. This will also better prepare for 
-the redundant send patches.
-
-- Mat
-
-
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 285abbad833f..cb8ea1eadbae 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -640,6 +640,8 @@ int mptcp_init_sched(struct mptcp_sock *msk,
-> void mptcp_release_sched(struct mptcp_sock *msk);
-> void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
-> 				 bool scheduled);
-> +struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk);
-> +int mptcp_sched_get_send(struct mptcp_sock *msk);
->
-> static inline bool __tcp_can_send(const struct sock *ssk)
-> {
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index 0d7c73e9562e..063f5005b2db 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -112,3 +112,34 @@ void mptcp_sched_data_set_contexts(const struct mptcp_sock *msk,
-> 	for (; i < MPTCP_SUBFLOWS_MAX; i++)
-> 		data->contexts[i] = NULL;
-> }
-> +
-> +int mptcp_sched_get_send(struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_sched_data data;
-> +	struct sock *ssk = NULL;
-> +
-> +	sock_owned_by_me((const struct sock *)msk);
-> +
-> +	/* the following check is moved out of mptcp_subflow_get_send */
-> +	if (__mptcp_check_fallback(msk)) {
-> +		if (msk->first &&
-> +		    __tcp_can_send(msk->first) &&
-> +		    sk_stream_memory_free(msk->first)) {
-> +			mptcp_subflow_set_scheduled(mptcp_subflow_ctx(msk->first), true);
-> +			return 0;
-> +		}
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!msk->sched) {
-> +		ssk = mptcp_subflow_get_send(msk);
-> +		if (!ssk)
-> +			return -EINVAL;
-> +		mptcp_subflow_set_scheduled(mptcp_subflow_ctx(ssk), true);
-> +		return 0;
-> +	}
-> +
-> +	data.reinject = false;
-> +	msk->sched->data_init(msk, &data);
-> +	return msk->sched->get_subflow(msk, &data);
-> +}
-> -- 
-> 2.35.3
+>  cleanup()
+> -------------------- 8< --------------------
 >
 >
+> (2) I think mptcp_connect might not stop in some conditions when SIGUSR1
+> is received. May you try with this patch please?
+>
+> -------------------- 8< --------------------
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index e54653ea2ed4..596e3344d5af 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -586,7 +586,7 @@ static int copyfd_io_poll(int infd, int peerfd, int
+> outfd, bool *in_closed_after
+>                 char rbuf[8192];
+>                 ssize_t len;
+>
+> -               if (fds.events == 0)
+> +               if (fds.events == 0 || quit)
+>                         break;
+>
+>                 switch (poll(&fds, 1, poll_timeout)) {
+> -------------------- 8< --------------------
+>
+> If these fixes are needed, best to add them in (a) separated commit(s).
+> I can also send them if you prefer, they are not directly related to
+> your series.
 >
 
---
-Mat Martineau
-Intel
+The 'quit' is not used anywhere, which also puzzled me before.
+Seems it can exit normally with the second method you raise,
+plus the following:
+
+@@ -692,7 +692,7 @@ static int copyfd_io_poll(int infd, int peerfd,
+int outfd, bool *in_closed_after
+        }
+
+        /* leave some time for late join/announce */
+-       if (cfg_remove)
++       if (cfg_remove && !quit)
+                usleep(cfg_wait);
+
+I'll add them in a separate commit.
+
+Thanks!
+Menglong Dong
+
+> Cheers,
+> Matt
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
