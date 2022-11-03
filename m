@@ -1,75 +1,107 @@
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B765F363
-	for <mptcp@lists.linux.dev>; Wed,  2 Nov 2022 00:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667347902; x=1698883902;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=62lcq6FS5pc/SrcbXyO6E3M3qsRX8lqsmJ/vXD604mM=;
-  b=GZVy2xWFzVtBQDCIqqceLJNRzQgJGf7aBfMIxfCU8OWBzZUMqVMOKj6p
-   NPT+0LQ357a0hlmmzYGU6CnW8XN+igWrroGlWVKfB3y0ohdRriEB2LO7/
-   AKSyqvD1SwWKDu3Ld2LgBZ3RiR0U3If2aAfBcxzECX5Rr0NKOF+Ac2HBq
-   KFygrMQ9Z1BMrcicmRAJ+G4/TaPxq8HznDxa5PDuvpvJCUScn907DldaF
-   pOmNcbTmgyZxx+STPR6E2r4vTd1rhyjQd5Tm5akzX7o0eSLFOwCStyqyE
-   84b7FT4DyqlhQ6+MsH8drMJMKFX76Tnp42UAISsy189Cjy39bDup4ZmsK
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="371361081"
-X-IronPort-AV: E=Sophos;i="5.95,232,1661842800"; 
-   d="scan'208";a="371361081"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 17:11:41 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="739532369"
-X-IronPort-AV: E=Sophos;i="5.95,232,1661842800"; 
-   d="scan'208";a="739532369"
-Received: from ckong3-mobl1.amr.corp.intel.com ([10.209.110.122])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 17:11:41 -0700
-Date: Tue, 1 Nov 2022 17:11:40 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: use max_time instead of
- time
-In-Reply-To: <9e501292-c3e9-6b3c-9457-407df7fa43ba@tessares.net>
-Message-ID: <26d6c1ad-f4c6-49c6-49d9-aba1aafd8b45@linux.intel.com>
-References: <20221022133528.31996-1-geliang.tang@suse.com> <2c99f83f-4e2a-9205-7690-2cdde6f2a335@linux.intel.com> <9e501292-c3e9-6b3c-9457-407df7fa43ba@tessares.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93836FAE
+	for <mptcp@lists.linux.dev>; Thu,  3 Nov 2022 11:07:25 +0000 (UTC)
+Received: by mail-pl1-f193.google.com with SMTP id v17so1594959plo.1
+        for <mptcp@lists.linux.dev>; Thu, 03 Nov 2022 04:07:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=T2dWzk38BsJfkWls/1UWswOlk57f8LnG3Qe+IA9sUEs=;
+        b=P9ii/x1HF+aRZfnlFdQqiyfhHWV6AR6QLOCKBJwlQj+2yzVR9NMOOckTu6OOm5dZgY
+         wT9lwH81bz4ltdQ95gUC18IBTGrLdBSIp7UxgGMbCV409GEt4MWOunNv5ZBfvE+kONVQ
+         uvS/D4aYv5oziD2rJ0tv5OczUo0jiRDMAIwOLfKDQKMzd8L8XH1l52/rp5TrpkXvQhFf
+         GbtWv68DMoGkglDkuTNIgSdJzuOgj+bnsdMugcxvZ/caUVP1zdLyR3iWYNNcHVOrQyCF
+         x/XFQWjP1MtZHIap+z3ieSoCm/wo/nb/5M9AT43n0kr0/eefq9hDOfyN6Mlest6eagJ9
+         B1dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T2dWzk38BsJfkWls/1UWswOlk57f8LnG3Qe+IA9sUEs=;
+        b=x5+hEeL3SdjobISm+UHNjSDJvUT+DWt/oXqaOivTioBOZmTRQFDWAW6bHQRtz9pMVZ
+         oeQiuzxTAfSqGLpJfacBYEfzqCsSp098aBM8vOUE6bPp+Hgvj6LML7xbGhVUNu/x2r1H
+         0peOhixIYpJZuVhBGWyEqaLGELKDcqOR6JXUea0XkPRpSfEx1rGFveg/Ev/p1dryzFNV
+         2q95DeOcqUr/HM8ZNCYBrmZVZUZ3vWqpjRgNtP3pPpmkmhpZeHCRe5zXfVhAIxnL0wLk
+         bMzHtcNRh6eZEFE4sIlXthXbZxgFVIvb/yCYaFlcCDfnzDR0q8xjyPQAM2WV4awJ+OI1
+         8gmQ==
+X-Gm-Message-State: ACrzQf31m2Qlz05HrwFrTNbPCFDnO885YdWL2dA09j4m+YrHq2FdWF4G
+	5e0YcgxDvIaTg8YuJWRZJ4M93CLNj1CrLw==
+X-Google-Smtp-Source: AMsMyM7HstujDf3UrzSVisOCLJWhs2Gv4NxsyZ7LNBXFfytUvDQB4WkrnDpjTHa1xUexBLxTwW/+Vg==
+X-Received: by 2002:a17:90b:1e0a:b0:212:c44b:fffb with SMTP id pg10-20020a17090b1e0a00b00212c44bfffbmr48745374pjb.113.1667473645204;
+        Thu, 03 Nov 2022 04:07:25 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.83])
+        by smtp.gmail.com with ESMTPSA id w14-20020a627b0e000000b0056bd4ec964csm450555pfc.194.2022.11.03.04.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Nov 2022 04:07:24 -0700 (PDT)
+From: menglong8.dong@gmail.com
+X-Google-Original-From: imagedong@tencent.com
+To: mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net
+Cc: mptcp@lists.linux.dev,
+	Menglong Dong <imagedong@tencent.com>
+Subject: [PATCH mptcp-next v6 0/4] mptcp: add statistics for mptcp socket in use
+Date: Thu,  3 Nov 2022 19:06:45 +0800
+Message-Id: <20221103110649.299284-1-imagedong@tencent.com>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 31 Oct 2022, Matthieu Baerts wrote:
+From: Menglong Dong <imagedong@tencent.com>
 
-> Hi Geliang, Mat,
->
-> On 25/10/2022 02:15, Mat Martineau wrote:
->> On Sat, 22 Oct 2022, Geliang Tang wrote:
->>
->>> 'time' is the local variable of run_test() function, while 'max_time' is
->>> the local variable of do_transfer() function. So in do_transfer(),
->>> $max_time should be used, not $time.
->>>
->>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
->>
->> Looks good to me, thanks Geliang:
->>
->> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
->
-> Should this go to -net with a 'Fixes' tag?
->
-> Fixes: b6ab64b074f2 ("selftests: mptcp: more stable simult_flows tests")
->
-> If yes, I can add do the modifications when applying the patch, no need
-> to send a v2.
->
+In the 1th patch, we do some code cleanup with replease 'sock->sk'
+with 'sk'. In the 2th patch, we add statistics for mptcp socket in
+use. In the 3th patch, we make mptcp_connect can exit when receive
+'SIGUSR1' with '-r' flag. And in the 4th patch, we add the testing
+for this commit.
 
-Since the old code works, I think it's ok to just apply for mptcp-next.
+Changes since v5:
+- introduce MPTCP_INUSE flag to store if msk is in use, as I find
+  that it's not correct to check is a msk is in use by
+  !sk_unhashed(sk) in mptcp_destroy_common(), because the token
+  can be release in mptcp_check_fastclose()
+- add the 3th patch
+- reuse __chk_nr in 4th patch
 
---
-Mat Martineau
-Intel
+Changes since v4:
+- rebase to solve merge conflict
+
+Changes since v3:
+- rename MPTCP_DESTROIED to MPTCP_DESTROYED in the 2th patch
+
+Changes since v2:
+- add testing
+
+Changes since v1:
+- split the code cleanup into the 1th patch.
+- decrease the statistics for listening mptcp socket inuse with
+  mptcp_listen_inuse_dec()
+- add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
+  called on the msk. For fallback case, we need to decrease the
+  statistics only once, and mptcp_destroy_common() can be called
+  more than once.
+
+Menglong Dong (4):
+  mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
+  mptcp: add statistics for mptcp socket in use
+  selftest: mptcp: exit from copyfd_io_poll() when receive SIGUSR1
+  selftest: mptcp: add test for mptcp socket in use
+
+ net/mptcp/protocol.c                          | 21 ++++++---
+ net/mptcp/protocol.h                          | 13 +++++
+ net/mptcp/subflow.c                           |  1 +
+ tools/testing/selftests/net/mptcp/diag.sh     | 47 +++++++++++++++++--
+ .../selftests/net/mptcp/mptcp_connect.c       |  4 +-
+ 5 files changed, 72 insertions(+), 14 deletions(-)
+
+-- 
+2.37.2
+
