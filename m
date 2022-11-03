@@ -1,45 +1,45 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460EF63A0
-	for <mptcp@lists.linux.dev>; Thu,  3 Nov 2022 17:18:52 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id g12so3744130wrs.10
-        for <mptcp@lists.linux.dev>; Thu, 03 Nov 2022 10:18:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE98963A0
+	for <mptcp@lists.linux.dev>; Thu,  3 Nov 2022 17:34:42 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id m29-20020a05600c3b1d00b003c6bf423c71so3895552wms.0
+        for <mptcp@lists.linux.dev>; Thu, 03 Nov 2022 10:34:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=0db7cGjFpLrsxaZTlCWvccufRkXThv+YBUa7Argu0Qc=;
-        b=ElS79yJaVI28Wb1/75frRsJu2ddidX3w7ZH5B1Q130lJfivFQQma3d3e6l8s7xxQry
-         Ac5jQxQDKtNiwaLfLUIHnJvkWgOX+VyJ2zdUn0GVwGONatqiB6E0EosntbFGQjkccyNq
-         UYJBRsy8f2lTqVD34TSYt8+l2GM/FsPvoDgk4qZhSYb5oLGjOZIzxGFNdoRkTZOmFUIb
-         pZ5JE7pwqKuZx2WCjVIHMMG4nVFsWICTyph4HZXwTBFsS8qoJ+f9q1/ROHQrYHB8CjUC
-         bLQy7z31BNvcV5uVYbfm/G8mz6xDvjO4FFMeLSkufcsoQRbKV2SfU5Fh5wQUu+R6MyAw
-         GbIg==
+        bh=y1xU3D7bdWJ8UrzLOwDwVbT0ePwRQ1+5TIY1p+z1RCg=;
+        b=ony6MC3Iixz8SXAKw4p2LSjPDbpjq9pa6phMdNU2gXKsCCNO3trjcDxvX7Xhn/hwIl
+         gLUh37WonbRaFnPOa74/wdqfOO8X/NnztHjG0oV8VuNk42oJhqIYhtkTKoJfXBaB6ues
+         5NZNM5ofSEK87WEIhROtDJgyg/TlP9A6xqnwVCw6APKKLRR2LXnc/RCLLH1MMqryaI4q
+         cFHxHE49F8tOkcRFCDK2kAmG0TyFekq2ZO2J+iXMFIQUGYHAp+Y6LOt338dx+flxv2n0
+         UzFDnqp3UGdbqi7SP3L04OcNXlTLl8uBKUDtjyRPBz7OlFyxm3ahtmd0ljD/IYWKojVR
+         MJwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0db7cGjFpLrsxaZTlCWvccufRkXThv+YBUa7Argu0Qc=;
-        b=zC3JdDlrJPP9or7N+JpdRUQcwWyIqB4Zl9EDroTGfwGuwVPH24nJE/r67v04y1J49/
-         PcURKuhz6XA5C6hweiFLjIjavUvn9kR8g1xIw1K6twRLcYWwKODafZT1dv2210ctNDzh
-         ZQU3yWjYwznevXp/74y1v2TdSPzyA4HIpHy0lXJ4vRB6GfuwxnZAbaygS9MBBga5dG5o
-         fRnRmkYlOJLHTKtKDcuhIv+jIq3j8sFLsDrtOu3lsjVQ7sxRuVGso3zclUknEtv9PzXR
-         ozLjbWQ2d75dPzeY2NYOXWUcpSWsHMfGdsq6XdU0L5l+vTH+CIz08Kyd+Z+7B/Shx1qg
-         jqbw==
-X-Gm-Message-State: ACrzQf3acYy9Z1pI+J8NIydq30j0Apo1PUHfKNLmI8ZvJ9lts6Oi+mOV
-	1MOKK6P0DAMkXDYxgK6lFRARhZELBq4rUY7k
-X-Google-Smtp-Source: AMsMyM5beCu9f2fd5ApXNYABzg34bPSFvkt1loGai8Xyuf5Sjeg+KFEEvhltW3ePr30wvs04VH/Hiw==
-X-Received: by 2002:adf:f342:0:b0:236:9035:31b6 with SMTP id e2-20020adff342000000b00236903531b6mr19462284wrp.200.1667495931067;
-        Thu, 03 Nov 2022 10:18:51 -0700 (PDT)
+        bh=y1xU3D7bdWJ8UrzLOwDwVbT0ePwRQ1+5TIY1p+z1RCg=;
+        b=Z18saqmT1x0TT/T9I2qCq+oYU3FCDAxxd0DNCh5SPKOrP3f+OGNneI5OHzYYGVBQrb
+         VIxwFyhe+dlOapcwmr+NkY53hgRjHqU6iqiPuDZFC8ms0qVCbcHkxb0XkSKJccxZS6uq
+         XWoMJjG/v19mTJSylNkM/u1mzyQ7yNOlrOz1XxZsUGViFNxpTZ44/c2tTm+f0nAfj8UN
+         ZIdHyVeco19h64IEfVKJPBE1SCx0fmD6QETuKzzRZP1SuyS3VknXkol25mMpZmox6DGo
+         H60Es9DMAF44/kihhoIQyxyny1CyXs11XZf0ANNw3hjGl8wxZxf1BvUyKHxibT+7ozPU
+         MwDA==
+X-Gm-Message-State: ACrzQf39bvYv0C8sQzyRqIjq6aot4xQf5t1FA1c3GFR9O7zse5RCosnO
+	zhqOWAdsFnaFVyG15lxz6IunxQ==
+X-Google-Smtp-Source: AMsMyM5HUJJcRvSbzhumesVS02pndQ5H9Q4VTPwub1JFvY7VtfeEeN5V8E4+hSLKOWz3OYgglfN7NA==
+X-Received: by 2002:a05:600c:5109:b0:3cf:5fd2:877f with SMTP id o9-20020a05600c510900b003cf5fd2877fmr20474977wms.156.1667496880822;
+        Thu, 03 Nov 2022 10:34:40 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:f4ce:89a5:47d5:7afb? ([2a02:578:8593:1200:f4ce:89a5:47d5:7afb])
-        by smtp.gmail.com with ESMTPSA id i2-20020a05600c354200b003c71358a42dsm650628wmq.18.2022.11.03.10.18.50
+        by smtp.gmail.com with ESMTPSA id c5-20020a05600c0a4500b003b4a68645e9sm519256wmq.34.2022.11.03.10.34.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Nov 2022 10:18:50 -0700 (PDT)
-Message-ID: <181df718-eed0-8c74-452b-a7865e53e003@tessares.net>
-Date: Thu, 3 Nov 2022 18:18:50 +0100
+        Thu, 03 Nov 2022 10:34:40 -0700 (PDT)
+Message-ID: <e0768153-ee97-f0f6-4b17-49ee02a4d3f0@tessares.net>
+Date: Thu, 3 Nov 2022 18:34:39 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,37 +48,77 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH mptcp-next] mptcp: Fix grammar in a comment
+Subject: Re: selftest: mptcp: add test for mptcp socket in use: Tests Results
 Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev
-References: <20221101205538.13892-1-mathew.j.martineau@linux.intel.com>
+To: Menglong Dong <imagedong@tencent.com>
+References: <20221103110649.299284-5-imagedong@tencent.com>
+ <20c04c0d-8110-535b-0ce9-65eca5bda725@gmail.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20221101205538.13892-1-mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20c04c0d-8110-535b-0ce9-65eca5bda725@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Mat,
+Hi Menglong,
 
-On 01/11/2022 21:55, Mat Martineau wrote:
-> We kept getting initial patches from new contributors to remove a
-> duplicate 'the' (since grammar checking scripts flag it), but submitters
-> never followed up after code review.
+Thank you for the v6!
 
-Thank you for the patch!
+It looks like the CI is not happy with it:
 
-As discussed at the last meeting, OK to apply as it is:
+On 03/11/2022 14:21, MPTCP CI wrote:
+> Hi Menglong,
+> 
+> Thank you for your modifications, that's great!
+> 
+> Our CI did some validations and here is its report:
+> 
+> - KVM Validation: normal:
+>   - Success! ✅:
+>   - Task: https://cirrus-ci.com/task/4909154062565376
+>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/4909154062565376/summary/summary.txt
+> 
+> - KVM Validation: debug:
+>   - Unstable: 1 failed test(s): selftest_diag 🔴:
+>   - Task: https://cirrus-ci.com/task/6035053969408000
+>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/6035053969408000/summary/summary.txt
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+As you can see:
 
-Now in our tree (feat. for net-next):
+----------------------------
+(...)
+# all listen sockets                                [  ok  ]
+# after MPC handshake                               [  ok  ]
+# ....chk remote_key                                [  ok  ]
+# ....chk no fallback                               [  ok  ]
+# chk 2 msk in use                                  [  ok  ]
+# chk 0 msk in use after flush                      [  ok  ]
+# check fallback                                    [  ok  ]
+# many msk socket present                           [ fail ] timeout
+while expecting 200 max 201 last 1
+# chk many msk in use                               [ fail ] expected
+200 found 0
+# chk 0 msk in use after flush                      [  ok  ]
+----------------------------
 
-New patches for t/upstream:
-- c98a6a04fe47: mptcp: Fix grammar in a comment
-- Results: c40114c3c367..5b48361cc96d (export)
+I guess one socket is still present after the 'check fallback': you
+probably need to modify flush_pids() to wait for the processes to be
+over, as suggested on a comment in your v5, no?
 
-Tests are now in progress:
+https://lore.kernel.org/all/b3f3c01e-4010-d5ce-970d-394711bcd0e1@tessares.net/
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221103T171741
+I don't think it is a good idea to wait for >= 200 except if it takes a
+very long time to have the previous socket terminated. If it does, maybe
+we should re-order the test or re-create the netns instead of re-using it.
+
+
+About the patch 3/4, note that the SIGUSR1 is probably stopping the test
+earlier than expected because the interrupt will cause some actions to
+stop but still good to check for the 'quit' variable.
+
+
+Also, one small detail for patch 4/4: can you add "...." at the
+beginning of the new lines you print in the selftest, similar to
+"....chk no fallback"?
 
 Cheers,
 Matt
