@@ -1,127 +1,127 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE98963A0
-	for <mptcp@lists.linux.dev>; Thu,  3 Nov 2022 17:34:42 +0000 (UTC)
-Received: by mail-wm1-f48.google.com with SMTP id m29-20020a05600c3b1d00b003c6bf423c71so3895552wms.0
-        for <mptcp@lists.linux.dev>; Thu, 03 Nov 2022 10:34:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y1xU3D7bdWJ8UrzLOwDwVbT0ePwRQ1+5TIY1p+z1RCg=;
-        b=ony6MC3Iixz8SXAKw4p2LSjPDbpjq9pa6phMdNU2gXKsCCNO3trjcDxvX7Xhn/hwIl
-         gLUh37WonbRaFnPOa74/wdqfOO8X/NnztHjG0oV8VuNk42oJhqIYhtkTKoJfXBaB6ues
-         5NZNM5ofSEK87WEIhROtDJgyg/TlP9A6xqnwVCw6APKKLRR2LXnc/RCLLH1MMqryaI4q
-         cFHxHE49F8tOkcRFCDK2kAmG0TyFekq2ZO2J+iXMFIQUGYHAp+Y6LOt338dx+flxv2n0
-         UzFDnqp3UGdbqi7SP3L04OcNXlTLl8uBKUDtjyRPBz7OlFyxm3ahtmd0ljD/IYWKojVR
-         MJwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y1xU3D7bdWJ8UrzLOwDwVbT0ePwRQ1+5TIY1p+z1RCg=;
-        b=Z18saqmT1x0TT/T9I2qCq+oYU3FCDAxxd0DNCh5SPKOrP3f+OGNneI5OHzYYGVBQrb
-         VIxwFyhe+dlOapcwmr+NkY53hgRjHqU6iqiPuDZFC8ms0qVCbcHkxb0XkSKJccxZS6uq
-         XWoMJjG/v19mTJSylNkM/u1mzyQ7yNOlrOz1XxZsUGViFNxpTZ44/c2tTm+f0nAfj8UN
-         ZIdHyVeco19h64IEfVKJPBE1SCx0fmD6QETuKzzRZP1SuyS3VknXkol25mMpZmox6DGo
-         H60Es9DMAF44/kihhoIQyxyny1CyXs11XZf0ANNw3hjGl8wxZxf1BvUyKHxibT+7ozPU
-         MwDA==
-X-Gm-Message-State: ACrzQf39bvYv0C8sQzyRqIjq6aot4xQf5t1FA1c3GFR9O7zse5RCosnO
-	zhqOWAdsFnaFVyG15lxz6IunxQ==
-X-Google-Smtp-Source: AMsMyM5HUJJcRvSbzhumesVS02pndQ5H9Q4VTPwub1JFvY7VtfeEeN5V8E4+hSLKOWz3OYgglfN7NA==
-X-Received: by 2002:a05:600c:5109:b0:3cf:5fd2:877f with SMTP id o9-20020a05600c510900b003cf5fd2877fmr20474977wms.156.1667496880822;
-        Thu, 03 Nov 2022 10:34:40 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:f4ce:89a5:47d5:7afb? ([2a02:578:8593:1200:f4ce:89a5:47d5:7afb])
-        by smtp.gmail.com with ESMTPSA id c5-20020a05600c0a4500b003b4a68645e9sm519256wmq.34.2022.11.03.10.34.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Nov 2022 10:34:40 -0700 (PDT)
-Message-ID: <e0768153-ee97-f0f6-4b17-49ee02a4d3f0@tessares.net>
-Date: Thu, 3 Nov 2022 18:34:39 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043B71846
+	for <mptcp@lists.linux.dev>; Fri,  4 Nov 2022 00:04:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667520282; x=1699056282;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=HGNkPaH99ocZyu81yFc2FPY2nBQgWqSCFYadtc+xI6g=;
+  b=Ld9B1GZ4ri54GDsn26K+QxDHVQwSn3p4baua7EGJnJfT5DCOR/YFCa4/
+   uqt2ccO2AuyOjHwZUsIWYJsybQUSStn+IChp2/VpzsOofJo7bMwGt6ncS
+   GIq/wFik0sPPbJsmB8s0hJuhsLEj03i2sdETi0y/rv0mPEo7sVxBcv2u0
+   GTNf7YHZjH7oEseywojPXRNqNUpszBUk4IzP6f+JyWLNLzvOUlC+Rm3EB
+   5jt0dw+lHQWse3PJZWptx9A8rALq/hzsCRfzABHlACYDEQxH7LuK6C6xV
+   PfMQm64DrAiMItply9kPqUxYH74vHWS1ZNT7bbc5STClfSeaPas5lxlrn
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="311572105"
+X-IronPort-AV: E=Sophos;i="5.96,135,1665471600"; 
+   d="scan'208";a="311572105"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 17:04:19 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="760137651"
+X-IronPort-AV: E=Sophos;i="5.96,135,1665471600"; 
+   d="scan'208";a="760137651"
+Received: from saisiddh-mobl1.amr.corp.intel.com ([10.209.49.248])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 17:04:19 -0700
+Date: Thu, 3 Nov 2022 17:04:19 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Menglong Dong <imagedong@tencent.com>
+cc: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+Subject: Re: selftest: mptcp: add test for mptcp socket in use: Tests
+ Results
+In-Reply-To: <e0768153-ee97-f0f6-4b17-49ee02a4d3f0@tessares.net>
+Message-ID: <2db2587f-987b-c720-bd21-aaa09c0aedb7@linux.intel.com>
+References: <20221103110649.299284-5-imagedong@tencent.com> <20c04c0d-8110-535b-0ce9-65eca5bda725@gmail.com> <e0768153-ee97-f0f6-4b17-49ee02a4d3f0@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: selftest: mptcp: add test for mptcp socket in use: Tests Results
-Content-Language: en-GB
-To: Menglong Dong <imagedong@tencent.com>
-References: <20221103110649.299284-5-imagedong@tencent.com>
- <20c04c0d-8110-535b-0ce9-65eca5bda725@gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20c04c0d-8110-535b-0ce9-65eca5bda725@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="0-973917123-1667520259=:40204"
 
-Hi Menglong,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thank you for the v6!
+--0-973917123-1667520259=:40204
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-It looks like the CI is not happy with it:
+On Thu, 3 Nov 2022, Matthieu Baerts wrote:
 
-On 03/11/2022 14:21, MPTCP CI wrote:
 > Hi Menglong,
-> 
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal:
->   - Success! ✅:
->   - Task: https://cirrus-ci.com/task/4909154062565376
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/4909154062565376/summary/summary.txt
-> 
-> - KVM Validation: debug:
->   - Unstable: 1 failed test(s): selftest_diag 🔴:
->   - Task: https://cirrus-ci.com/task/6035053969408000
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/6035053969408000/summary/summary.txt
+>
+> Thank you for the v6!
+>
+> It looks like the CI is not happy with it:
+>
+> On 03/11/2022 14:21, MPTCP CI wrote:
+>> Hi Menglong,
+>>
+>> Thank you for your modifications, that's great!
+>>
+>> Our CI did some validations and here is its report:
+>>
+>> - KVM Validation: normal:
+>>   - Success! ✅:
+>>   - Task: https://cirrus-ci.com/task/4909154062565376
+>>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/4909154062565376/summary/summary.txt
+>>
+>> - KVM Validation: debug:
+>>   - Unstable: 1 failed test(s): selftest_diag 🔴:
+>>   - Task: https://cirrus-ci.com/task/6035053969408000
+>>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/6035053969408000/summary/summary.txt
+>
+> As you can see:
+>
+> ----------------------------
+> (...)
+> # all listen sockets                                [  ok  ]
+> # after MPC handshake                               [  ok  ]
+> # ....chk remote_key                                [  ok  ]
+> # ....chk no fallback                               [  ok  ]
+> # chk 2 msk in use                                  [  ok  ]
+> # chk 0 msk in use after flush                      [  ok  ]
+> # check fallback                                    [  ok  ]
+> # many msk socket present                           [ fail ] timeout
+> while expecting 200 max 201 last 1
+> # chk many msk in use                               [ fail ] expected
+> 200 found 0
+> # chk 0 msk in use after flush                      [  ok  ]
+> ----------------------------
+>
+> I guess one socket is still present after the 'check fallback': you
+> probably need to modify flush_pids() to wait for the processes to be
+> over, as suggested on a comment in your v5, no?
+>
+> https://lore.kernel.org/all/b3f3c01e-4010-d5ce-970d-394711bcd0e1@tessares.net/
+>
+> I don't think it is a good idea to wait for >= 200 except if it takes a
+> very long time to have the previous socket terminated. If it does, maybe
+> we should re-order the test or re-create the netns instead of re-using it.
+>
+>
+> About the patch 3/4, note that the SIGUSR1 is probably stopping the test
+> earlier than expected because the interrupt will cause some actions to
+> stop but still good to check for the 'quit' variable.
+>
+>
+> Also, one small detail for patch 4/4: can you add "...." at the
+> beginning of the new lines you print in the selftest, similar to
+> "....chk no fallback"?
+>
 
-As you can see:
+Menglong -
 
-----------------------------
-(...)
-# all listen sockets                                [  ok  ]
-# after MPC handshake                               [  ok  ]
-# ....chk remote_key                                [  ok  ]
-# ....chk no fallback                               [  ok  ]
-# chk 2 msk in use                                  [  ok  ]
-# chk 0 msk in use after flush                      [  ok  ]
-# check fallback                                    [  ok  ]
-# many msk socket present                           [ fail ] timeout
-while expecting 200 max 201 last 1
-# chk many msk in use                               [ fail ] expected
-200 found 0
-# chk 0 msk in use after flush                      [  ok  ]
-----------------------------
+Thanks for the updated patches. The test ran ok on my local system, but 
+the CI is slow on the debug build which makes the timing trickier. I don't 
+have anything to add to Matthieu's comments above, seems like his 
+suggestions will resolve the CI issue.
 
-I guess one socket is still present after the 'check fallback': you
-probably need to modify flush_pids() to wait for the processes to be
-over, as suggested on a comment in your v5, no?
-
-https://lore.kernel.org/all/b3f3c01e-4010-d5ce-970d-394711bcd0e1@tessares.net/
-
-I don't think it is a good idea to wait for >= 200 except if it takes a
-very long time to have the previous socket terminated. If it does, maybe
-we should re-order the test or re-create the netns instead of re-using it.
-
-
-About the patch 3/4, note that the SIGUSR1 is probably stopping the test
-earlier than expected because the interrupt will cause some actions to
-stop but still good to check for the 'quit' variable.
-
-
-Also, one small detail for patch 4/4: can you add "...." at the
-beginning of the new lines you print in the selftest, similar to
-"....chk no fallback"?
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+--
+Mat Martineau
+Intel
+--0-973917123-1667520259=:40204--
