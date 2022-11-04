@@ -1,92 +1,95 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1A9186F
-	for <mptcp@lists.linux.dev>; Fri,  4 Nov 2022 14:28:08 +0000 (UTC)
-Received: by mail-wm1-f54.google.com with SMTP id 5so3148116wmo.1
-        for <mptcp@lists.linux.dev>; Fri, 04 Nov 2022 07:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/IEK9p8Dpdgtcyzpq8YSLNP/wT2HHgay9mwfXtgMXJc=;
-        b=F+2QzhyMOUb1HZkKUtkF0kjBW0lahXey2pCWFCN0U37hPz5dznD3c1RDWlZIZQ91OF
-         Mvp7gHyNR9glR8ise/90E20urADHRX+EixqGYGPGzzbLJf8unFm1FG17E7bCTFJQ/HBl
-         NDFKhjcgwcC4RHUFkiCXlYeP9NaQ+1bsTKnAQzQz/XhbHkW9rQ1gu8hdtJGkwDz1bfiB
-         Ng9QPOEfXfyNUlMIOIBbqzOKM/ZQTTy1y6OOrteqnAQjFaCuJOIziPhuNCrHn5oWtC5s
-         UbA+NawpA3rdeGxPuMaJ0qzmLP5xYTZmY+f42Tn7cm9V4qtJQcFTuY4h9dne970LRlF1
-         o83Q==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5098D846A
+	for <mptcp@lists.linux.dev>; Fri,  4 Nov 2022 15:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1667577457;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XY84A8aXXKFGyJpYlggkZzJ31bZdfjRAu2/+8RBpxbo=;
+	b=Ysrvs1lnq+hv9pFhWHGrUG6SEGYsYQ+GCQv2wzE6YuRSeM2wVXdcEcPW3ZsgZcrUa5Y4uv
+	sD273iFgJsUZQKwsv84SAWWSDyLXoPgg3B0sTITjTwhZobBoMR4nSogZ6ACoIoeH6j91t5
+	bwyrcnmdsBFPG5B3zEHXlj7YOPM5Cwc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-529-vNIhdacMNgWI0vorcwKISA-1; Fri, 04 Nov 2022 11:57:35 -0400
+X-MC-Unique: vNIhdacMNgWI0vorcwKISA-1
+Received: by mail-wr1-f69.google.com with SMTP id t12-20020adfa2cc000000b0022adcbb248bso1365376wra.1
+        for <mptcp@lists.linux.dev>; Fri, 04 Nov 2022 08:57:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/IEK9p8Dpdgtcyzpq8YSLNP/wT2HHgay9mwfXtgMXJc=;
-        b=ZTxP815v7FjxpmQTfV69W2iOA+0TElQJ4nUbUiV0Cr+8A+/mFlzKTHFs8E9MD78vBc
-         KfBkFSKfXfH0OY9MN40rh/v7BfX/0w3yrpjp6zHct3FlqGpPuQesxLnucawItegUA95Q
-         8oSEeAqyfkNlvyn6Sohu77SekoPQyWnJuMEGeq/L77E9MXzz30bN+JAtpc/qDUqxRiyk
-         mXoAmXJwsKOnIz3o2nb5EKYc9ctXjOOcZOuuo1Xwp67YG1dHUz/e8pphqslKE24ax5Zb
-         x6+XkHuPzvPzu/OG/72PlJqhLJbpvwGgDQ0xc4JzKRbh1Hj29ikq+DlElv9rCetgdeVj
-         oe/w==
-X-Gm-Message-State: ACrzQf0iH3UDK/Vt9LCbIXhalZ6AD7oALd5omTP/2dU/ms9YU0oWQVO3
-	pjzQmHd4N7nGzqoeRYVooZrvchjKqvo5Cg==
-X-Google-Smtp-Source: AMsMyM4fEO+gCTiWJ9F8092XMTdAOUN0b3/bwV2EW89Z9F3rwunEGR2fj8pKX+tGoJz6YzwSz1Vorg==
-X-Received: by 2002:a1c:2502:0:b0:3cf:6f44:3e4d with SMTP id l2-20020a1c2502000000b003cf6f443e4dmr19415336wml.177.1667572087069;
-        Fri, 04 Nov 2022 07:28:07 -0700 (PDT)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id j15-20020a05600c1c0f00b003c21ba7d7d6sm3201042wms.44.2022.11.04.07.28.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Nov 2022 07:28:06 -0700 (PDT)
-Message-ID: <18645841-3b43-5520-3dd6-d8bbd5485576@tessares.net>
-Date: Fri, 4 Nov 2022 15:28:06 +0100
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XY84A8aXXKFGyJpYlggkZzJ31bZdfjRAu2/+8RBpxbo=;
+        b=1j0zda13jFH+cql8r/XnS2WvV3Moe7JPLtZsRAFHBySHEz7s7NzXgl0z/Mm7D31gBG
+         Ee0Qfy3l24jrDHl0jM4VRb/6zmXlunuT0o9pK7IyxE3kUT0q1tkvAZp0+zg+FGJqZuCb
+         2+x5jDbR4m1ToILDuDiQArF7tYSkoLkPAC53xh44H+sBOFL6Gijkce8YQPb4F+dappZT
+         8mxJHFYGU08o4ujwcTeeXo/ttsP36dnM1MAq3y+GYhuvRTB+emkVGc1BBT/dCqiTC9D0
+         BrAwQXH7SnC688khmx5HBdjVOZUH+zAq4XZaMAnbKv/A7RGSu4QYDjvnWZLvfT1RXSyK
+         3Sqw==
+X-Gm-Message-State: ACrzQf10D5pHFI8dqvIhDSoCwHpBkW2r8BWkNxWycz1X9mpNe5DrKnvs
+	tap8OAzCdJ0eoCPpVJgfi1Fz0gmR7yFV6pubx9Ky9DLPBg1DYEEpXWws4m9/R14f5KUrLxB3kTr
+	NWFieUzd8Jogp14o=
+X-Received: by 2002:a05:600c:4f53:b0:3ce:6cf5:e1e9 with SMTP id m19-20020a05600c4f5300b003ce6cf5e1e9mr33321068wmq.107.1667577454331;
+        Fri, 04 Nov 2022 08:57:34 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7LKlAu12gXTRpl/nhXTTftZ7jhjm1vQFytjB/dq5aF0WLLxQl8e+B1xtY1kYmnCk70gzYtYg==
+X-Received: by 2002:a05:600c:4f53:b0:3ce:6cf5:e1e9 with SMTP id m19-20020a05600c4f5300b003ce6cf5e1e9mr33321053wmq.107.1667577454114;
+        Fri, 04 Nov 2022 08:57:34 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-124-216.dyn.eolo.it. [146.241.124.216])
+        by smtp.gmail.com with ESMTPSA id by13-20020a056000098d00b002383edcde09sm3856976wrb.59.2022.11.04.08.57.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Nov 2022 08:57:33 -0700 (PDT)
+Message-ID: <0c139c30ad0d626a67ddcffb83c83e211471c542.camel@redhat.com>
+Subject: Re: [PATCH mptcp-net v3] mptcp: use entry->lsk directly
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Date: Fri, 04 Nov 2022 16:57:32 +0100
+In-Reply-To: <20221104115354.3413-1-geliang.tang@suse.com>
+References: <20221104115354.3413-1-geliang.tang@suse.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH mptcp-net v3] mptcp: use entry->lsk directly
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>
-References: <20221104115354.3413-1-geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <20221104115354.3413-1-geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hello,
 
-On 04/11/2022 12:53, Geliang Tang wrote:
+On Fri, 2022-11-04 at 19:53 +0800, Geliang Tang wrote:
 > entry->lsk should be used as the PM listening socket directly in
 > mptcp_pm_nl_create_listen_socket(), not the initial subflow socket.
 > 
 > This patch fixes this, use entry->lsk directly instead of ssock.
+> 
+> Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 
-I'm sorry but the commit message is still unclear to me: it doesn't
-explain why "entry->lsk" should be used directly instead of ssock. Do
-you mind adding this justification?
+Sorry for the late review. I also don't understand exactly what bug is
+fixed here. Could you please elaborate more - even in this thread,
+before an eventual next version?
 
-(The "reason" why a commit is needed is for me the most important info
-to add in the commit message because it is not always obvious: here I
-can clearly and quickly see you are using 'entry->lsk' directly when
-looking at the diff but I cannot extract the "reason" that easily).
+AFAICS, this patch introduces a functional change: before the msk
+created by the NL PM was left in TCP_CLOSE status, while the tcp
+subflow entered into the TCP_LISTENER mode.
 
-Please also note the public CI reported a possible recursive locking
-issue with this patch when creating a listening socket on a different
-port (single address with port):
-
-- KVM Validation: debug:
-  - Critical: 1 Call Trace(s) ❌:
-  - Task: https://cirrus-ci.com/task/6164964783161344
-  - Summary:
-https://api.cirrus-ci.com/v1/artifact/task/6164964783161344/summary/summary.txt
+After this patch even the msk status is updated to TCP_LISTENER, which
+is possibly cleaner, and looks safe, but I don't see a bug fixed
+here?!?
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+
+Paolo
+
+
+
+
