@@ -1,127 +1,111 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mail11.tencent.com (mail11.tencent.com [14.18.178.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043B71846
-	for <mptcp@lists.linux.dev>; Fri,  4 Nov 2022 00:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667520282; x=1699056282;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=HGNkPaH99ocZyu81yFc2FPY2nBQgWqSCFYadtc+xI6g=;
-  b=Ld9B1GZ4ri54GDsn26K+QxDHVQwSn3p4baua7EGJnJfT5DCOR/YFCa4/
-   uqt2ccO2AuyOjHwZUsIWYJsybQUSStn+IChp2/VpzsOofJo7bMwGt6ncS
-   GIq/wFik0sPPbJsmB8s0hJuhsLEj03i2sdETi0y/rv0mPEo7sVxBcv2u0
-   GTNf7YHZjH7oEseywojPXRNqNUpszBUk4IzP6f+JyWLNLzvOUlC+Rm3EB
-   5jt0dw+lHQWse3PJZWptx9A8rALq/hzsCRfzABHlACYDEQxH7LuK6C6xV
-   PfMQm64DrAiMItply9kPqUxYH74vHWS1ZNT7bbc5STClfSeaPas5lxlrn
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="311572105"
-X-IronPort-AV: E=Sophos;i="5.96,135,1665471600"; 
-   d="scan'208";a="311572105"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 17:04:19 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="760137651"
-X-IronPort-AV: E=Sophos;i="5.96,135,1665471600"; 
-   d="scan'208";a="760137651"
-Received: from saisiddh-mobl1.amr.corp.intel.com ([10.209.49.248])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 17:04:19 -0700
-Date: Thu, 3 Nov 2022 17:04:19 -0700 (PDT)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Menglong Dong <imagedong@tencent.com>
-cc: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Subject: Re: selftest: mptcp: add test for mptcp socket in use: Tests
- Results
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470CA7C
+	for <mptcp@lists.linux.dev>; Fri,  4 Nov 2022 03:06:17 +0000 (UTC)
+Received: from EX-SZ021.tencent.com (unknown [10.28.6.73])
+	by mail11.tencent.com (Postfix) with ESMTP id A7FDC6628D;
+	Fri,  4 Nov 2022 10:58:01 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
+	s=s202002; t=1667530681;
+	bh=WxZK/mrSzqDfOOsLLdTDA9n50qs3K08f4nG4tBBvoJw=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To;
+	b=g53/yyLNVdRodm2QtnWRYc0mzNRdVWl2u9qCbfo4E2a4lJV2u8axdznAJieT5cfkn
+	 1H7ZSbcVGeK3V4Rjdv5NQhicZeSsKKt7L5wYVBnSxBg8Caw7Anwq98XZtDVOuAo8wn
+	 Gmkl/GTP7nlAmmKFCit8ij9PoeLp9xrkyjjea27M=
+Received: from EX-SZ082.tencent.com (10.28.6.55) by EX-SZ021.tencent.com
+ (10.28.6.73) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Fri, 4 Nov 2022
+ 10:58:01 +0800
+Received: from EX-SZ079.tencent.com (10.28.6.51) by EX-SZ082.tencent.com
+ (10.28.6.55) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Fri, 4 Nov 2022
+ 10:58:01 +0800
+Received: from EX-SZ079.tencent.com ([fe80::9139:f467:e23f:e2b7]) by
+ EX-SZ079.tencent.com ([fe80::9139:f467:e23f:e2b7%3]) with mapi id
+ 15.01.2242.008; Fri, 4 Nov 2022 10:58:01 +0800
+From: =?utf-8?B?aW1hZ2Vkb25nKOiRo+aipum+mSk=?= <imagedong@tencent.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+CC: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>
+Subject: Re: [Internet]Re: selftest: mptcp: add test for mptcp socket in use:
+ Tests Results
+Thread-Topic: [Internet]Re: selftest: mptcp: add test for mptcp socket in use:
+ Tests Results
+Thread-Index: AQHY74cntjWBUW3yC0GV1BFOGy5Wka4s7+6AgAEjggA=
+Date: Fri, 4 Nov 2022 02:58:01 +0000
+Message-ID: <3102C06E-A81D-4B32-919C-A3DC23CE2273@tencent.com>
+References: <20221103110649.299284-5-imagedong@tencent.com>
+ <20c04c0d-8110-535b-0ce9-65eca5bda725@gmail.com>
+ <e0768153-ee97-f0f6-4b17-49ee02a4d3f0@tessares.net>
 In-Reply-To: <e0768153-ee97-f0f6-4b17-49ee02a4d3f0@tessares.net>
-Message-ID: <2db2587f-987b-c720-bd21-aaa09c0aedb7@linux.intel.com>
-References: <20221103110649.299284-5-imagedong@tencent.com> <20c04c0d-8110-535b-0ce9-65eca5bda725@gmail.com> <e0768153-ee97-f0f6-4b17-49ee02a4d3f0@tessares.net>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [10.99.16.3]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1273DC3164128444A15E58771A660E9A@tencent.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-973917123-1667520259=:40204"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---0-973917123-1667520259=:40204
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-
-On Thu, 3 Nov 2022, Matthieu Baerts wrote:
-
-> Hi Menglong,
->
-> Thank you for the v6!
->
-> It looks like the CI is not happy with it:
->
-> On 03/11/2022 14:21, MPTCP CI wrote:
->> Hi Menglong,
->>
->> Thank you for your modifications, that's great!
->>
->> Our CI did some validations and here is its report:
->>
->> - KVM Validation: normal:
->>   - Success! ✅:
->>   - Task: https://cirrus-ci.com/task/4909154062565376
->>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/4909154062565376/summary/summary.txt
->>
->> - KVM Validation: debug:
->>   - Unstable: 1 failed test(s): selftest_diag 🔴:
->>   - Task: https://cirrus-ci.com/task/6035053969408000
->>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/6035053969408000/summary/summary.txt
->
-> As you can see:
->
-> ----------------------------
-> (...)
-> # all listen sockets                                [  ok  ]
-> # after MPC handshake                               [  ok  ]
-> # ....chk remote_key                                [  ok  ]
-> # ....chk no fallback                               [  ok  ]
-> # chk 2 msk in use                                  [  ok  ]
-> # chk 0 msk in use after flush                      [  ok  ]
-> # check fallback                                    [  ok  ]
-> # many msk socket present                           [ fail ] timeout
-> while expecting 200 max 201 last 1
-> # chk many msk in use                               [ fail ] expected
-> 200 found 0
-> # chk 0 msk in use after flush                      [  ok  ]
-> ----------------------------
->
-> I guess one socket is still present after the 'check fallback': you
-> probably need to modify flush_pids() to wait for the processes to be
-> over, as suggested on a comment in your v5, no?
->
-> https://lore.kernel.org/all/b3f3c01e-4010-d5ce-970d-394711bcd0e1@tessares.net/
->
-> I don't think it is a good idea to wait for >= 200 except if it takes a
-> very long time to have the previous socket terminated. If it does, maybe
-> we should re-order the test or re-create the netns instead of re-using it.
->
->
-> About the patch 3/4, note that the SIGUSR1 is probably stopping the test
-> earlier than expected because the interrupt will cause some actions to
-> stop but still good to check for the 'quit' variable.
->
->
-> Also, one small detail for patch 4/4: can you add "...." at the
-> beginning of the new lines you print in the selftest, similar to
-> "....chk no fallback"?
->
-
-Menglong -
-
-Thanks for the updated patches. The test ran ok on my local system, but 
-the CI is slow on the debug build which makes the timing trickier. I don't 
-have anything to add to Matthieu's comments above, seems like his 
-suggestions will resolve the CI issue.
-
---
-Mat Martineau
-Intel
---0-973917123-1667520259=:40204--
+DQoNCj4gT24gMjAyMi8xMS80IDAxOjM077yM4oCcTWF0dGhpZXUgQmFlcnRz4oCdPG1hdHRoaWV1
+LmJhZXJ0c0B0ZXNzYXJlcy5uZXQ+IHdyaXRlOg0KPiANCj4gSGkgTWVuZ2xvbmcsDQo+IA0KPiBU
+aGFuayB5b3UgZm9yIHRoZSB2NiENCj4gDQo+IEl0IGxvb2tzIGxpa2UgdGhlIENJIGlzIG5vdCBo
+YXBweSB3aXRoIGl0Og0KPiANCj4gT24gMDMvMTEvMjAyMiAxNDoyMSwgTVBUQ1AgQ0kgd3JvdGU6
+DQo+ID4gSGkgTWVuZ2xvbmcsDQo+ID4gDQo+ID4gVGhhbmsgeW91IGZvciB5b3VyIG1vZGlmaWNh
+dGlvbnMsIHRoYXQncyBncmVhdCENCj4gPiANCj4gPiBPdXIgQ0kgZGlkIHNvbWUgdmFsaWRhdGlv
+bnMgYW5kIGhlcmUgaXMgaXRzIHJlcG9ydDoNCj4gPiANCj4gPiAtIEtWTSBWYWxpZGF0aW9uOiBu
+b3JtYWw6DQo+ID4gICAtIFN1Y2Nlc3MhIOKchToNCj4gPiAgIC0gVGFzazogaHR0cHM6Ly9jaXJy
+dXMtY2kuY29tL3Rhc2svNDkwOTE1NDA2MjU2NTM3Ng0KPiA+ICAgLSBTdW1tYXJ5OiBodHRwczov
+L2FwaS5jaXJydXMtY2kuY29tL3YxL2FydGlmYWN0L3Rhc2svNDkwOTE1NDA2MjU2NTM3Ni9zdW1t
+YXJ5L3N1bW1hcnkudHh0DQo+ID4gDQo+ID4gLSBLVk0gVmFsaWRhdGlvbjogZGVidWc6DQo+ID4g
+ICAtIFVuc3RhYmxlOiAxIGZhaWxlZCB0ZXN0KHMpOiBzZWxmdGVzdF9kaWFnIPCflLQ6DQo+ID4g
+ICAtIFRhc2s6IGh0dHBzOi8vY2lycnVzLWNpLmNvbS90YXNrLzYwMzUwNTM5Njk0MDgwMDANCj4g
+PiAgIC0gU3VtbWFyeTogaHR0cHM6Ly9hcGkuY2lycnVzLWNpLmNvbS92MS9hcnRpZmFjdC90YXNr
+LzYwMzUwNTM5Njk0MDgwMDAvc3VtbWFyeS9zdW1tYXJ5LnR4dA0KPiANCj4gQXMgeW91IGNhbiBz
+ZWU6DQo+IA0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICguLi4pDQo+ICMgYWxs
+IGxpc3RlbiBzb2NrZXRzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbICBvayAgXQ0K
+PiAjIGFmdGVyIE1QQyBoYW5kc2hha2UgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgWyAg
+b2sgIF0NCj4gIyAuLi4uY2hrIHJlbW90ZV9rZXkgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIFsgIG9rICBdDQo+ICMgLi4uLmNoayBubyBmYWxsYmFjayAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBbICBvayAgXQ0KPiAjIGNoayAyIG1zayBpbiB1c2UgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgWyAgb2sgIF0NCj4gIyBjaGsgMCBtc2sgaW4gdXNlIGFmdGVyIGZs
+dXNoICAgICAgICAgICAgICAgICAgICAgIFsgIG9rICBdDQo+ICMgY2hlY2sgZmFsbGJhY2sgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbICBvayAgXQ0KPiAjIG1hbnkgbXNrIHNv
+Y2tldCBwcmVzZW50ICAgICAgICAgICAgICAgICAgICAgICAgICAgWyBmYWlsIF0gdGltZW91dA0K
+PiB3aGlsZSBleHBlY3RpbmcgMjAwIG1heCAyMDEgbGFzdCAxDQo+ICMgY2hrIG1hbnkgbXNrIGlu
+IHVzZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbIGZhaWwgXSBleHBlY3RlZA0KPiAy
+MDAgZm91bmQgMA0KPiAjIGNoayAwIG1zayBpbiB1c2UgYWZ0ZXIgZmx1c2ggICAgICAgICAgICAg
+ICAgICAgICAgWyAgb2sgIF0NCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiANCj4g
+SSBndWVzcyBvbmUgc29ja2V0IGlzIHN0aWxsIHByZXNlbnQgYWZ0ZXIgdGhlICdjaGVjayBmYWxs
+YmFjayc6IHlvdQ0KPiBwcm9iYWJseSBuZWVkIHRvIG1vZGlmeSBmbHVzaF9waWRzKCkgdG8gd2Fp
+dCBmb3IgdGhlIHByb2Nlc3NlcyB0byBiZQ0KPiBvdmVyLCBhcyBzdWdnZXN0ZWQgb24gYSBjb21t
+ZW50IGluIHlvdXIgdjUsIG5vPw0KPiANCg0KSW4gZmFjdCwgSSBzdXNwZWN0IHRoYXQgaXQncyBz
+b21ldGhpbmcgZWxzZS4gdGhlIHdhaXRfbXNrX25yKCkNCmhhcyBhbHJlYWR5IHdhaXQgbG9uZyBl
+bm91Z2ggZm9yIHRoZSBwcm9jZXNzZXMgdG8gYmUgb3Zlci4NCkkgc3VzcGVjdCB0aGF0IHRoZSBt
+c2sgaXMgbm90IHJlbGVhc2VkIGFmdGVyIHRoZSBwcm9jZXNzZXMNCmV4aXQuDQoNCk5vdywgSSBj
+YW4gcmVwcm9kdWNlIGl0IGluIG15IGNvbXB1dGVyLCBhYm91dCBvbmNlIGluIDEwIHRpbWVzLg0K
+QW5kIEknbGwgdHJ5IHRvIGZpZ3VyZSBvdXQgd2hhdCdzIGhhcHBlbmluZy4NCg0KPiBiM2YzYzAx
+ZS00MDEwLWQ1Y2UtOTcwZC0zOTQ3MTFiY2QwZTFAdGVzc2FyZXMubmV0IDxodHRwczovL2xvcmUu
+a2VybmVsLm9yZy9hbGwvPGEgaHJlZj0+LyI+aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsL2Iz
+ZjNjMDFlLTQwMTAtZDVjZS05NzBkLTM5NDcxMWJjZDBlMUB0ZXNzYXJlcy5uZXQvDQo+IA0KPiBJ
+IGRvbid0IHRoaW5rIGl0IGlzIGEgZ29vZCBpZGVhIHRvIHdhaXQgZm9yID49IDIwMCBleGNlcHQg
+aWYgaXQgdGFrZXMgYQ0KPiB2ZXJ5IGxvbmcgdGltZSB0byBoYXZlIHRoZSBwcmV2aW91cyBzb2Nr
+ZXQgdGVybWluYXRlZC4gSWYgaXQgZG9lcywgbWF5YmUNCj4gd2Ugc2hvdWxkIHJlLW9yZGVyIHRo
+ZSB0ZXN0IG9yIHJlLWNyZWF0ZSB0aGUgbmV0bnMgaW5zdGVhZCBvZiByZS11c2luZyBpdC4NCj4g
+DQoNCkl0IGNhbiBoYXBwZW4gaW4gYSB2ZXJ5IHNsb3cgcWVtdSBtYWNoaW5lLCBidXQgbm90IHBv
+c3NpYmxlDQppbiBhIHBoeXNpY2FsIG1hY2hpbmUuDQoNCj4gDQo+IEFib3V0IHRoZSBwYXRjaCAz
+LzQsIG5vdGUgdGhhdCB0aGUgU0lHVVNSMSBpcyBwcm9iYWJseSBzdG9wcGluZyB0aGUgdGVzdA0K
+PiBlYXJsaWVyIHRoYW4gZXhwZWN0ZWQgYmVjYXVzZSB0aGUgaW50ZXJydXB0IHdpbGwgY2F1c2Ug
+c29tZSBhY3Rpb25zIHRvDQo+IHN0b3AgYnV0IHN0aWxsIGdvb2QgdG8gY2hlY2sgZm9yIHRoZSAn
+cXVpdCcgdmFyaWFibGUuDQo+IA0KPiANCj4gQWxzbywgb25lIHNtYWxsIGRldGFpbCBmb3IgcGF0
+Y2ggNC80OiBjYW4geW91IGFkZCAiLi4uLiIgYXQgdGhlDQo+IGJlZ2lubmluZyBvZiB0aGUgbmV3
+IGxpbmVzIHlvdSBwcmludCBpbiB0aGUgc2VsZnRlc3QsIHNpbWlsYXIgdG8NCj4gIi4uLi5jaGsg
+bm8gZmFsbGJhY2siPw0KPiANCg0KT2theSENCg0KVGhhbmtzIQ0KTWVuZ2xvbmcgRG9uZw0KDQo+
+IENoZWVycywNCj4gTWF0dA0KPiAtLSANCj4gVGVzc2FyZXMgfCBCZWxnaXVtIHwgSHlicmlkIEFj
+Y2VzcyBTb2x1dGlvbnMNCj4gd3d3LnRlc3NhcmVzLm5ldA0KDQoNCg==
