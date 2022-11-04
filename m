@@ -1,114 +1,158 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506F9AD25
-	for <mptcp@lists.linux.dev>; Fri,  4 Nov 2022 20:12:34 +0000 (UTC)
-Received: by mail-qk1-f177.google.com with SMTP id x18so3761771qki.4
-        for <mptcp@lists.linux.dev>; Fri, 04 Nov 2022 13:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NS5YD2WHPtqq78ePjmZnNUmLaas8qwKmkIVXe5v0DLs=;
-        b=cxBSSKDmgK6FSkVC8W61A9r+UAb+IuT26JvFiiojAHDfYkB86dd6TxtO1TuGFgbDKw
-         VOsQYw8L3x51Rszkl/bAB6sla1irWl70Nsh3CzwwNvsM4p1aANgQAt+jkTDLIbtqwjOH
-         x4nG0yn+69DHhUNPJUH0Q8Ai+oU2rjFk7Lymh+DzIOHNYx0FtFHyn22lKYBRRCrFsNM4
-         /41cKiAH4wDphgv4YTkSZytcCPWT9sWlTVpWFWBhTb9wUDHn05d/VgyHbccB6jnRkLhU
-         UKyyaRh004YKot90qu2Ba2Q4aqbe1jC0tsKsaPxBp45zdBwESMThAT1cubqcgAn7jS5U
-         N8BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NS5YD2WHPtqq78ePjmZnNUmLaas8qwKmkIVXe5v0DLs=;
-        b=5cDr7gPFzF/Xq5kmx5GgMDTIQxGNQNL9Ffnk7whKg/suTtF0GoBts7oBq2X6fV8a6+
-         o0BE+2J1hq0tUH1f0SOYVjXIfzdr0f49RuMzGgGmU6PGOwvBJA8vsAkTHwdL9kguVJJa
-         9kQxRKhru9Hi1tg9NkSBV1NjToV5JxjkOtkbgfl1twaRjUui1ZjcbGmaDqTllBsXq6bM
-         vcT2Wc2k+99q9GUQQc1clYabUhC21YZa5eD7WWfWmMRsvHDvgfiDpE8x1lGGIJM2esK1
-         T0cVTVqtflNLce/3yGW1vWmbm/rG0xFKZMHb+4sO/LK1/zUOjFGZuASM4OEFVaS7ls+e
-         IMjw==
-X-Gm-Message-State: ACrzQf1wJCuNLxHTihexIY9TRC12V4TBK6EHlznkgFsJfP4Ue+DlzTEg
-	8Ybh7HBYKisVtuX+Rvv56N9B/iNf1Cou
-X-Google-Smtp-Source: AMsMyM6vSv8Sx9ukXqIyyfu6B/UVJWen/6pu5tjM9IktWjb3r1XhWCY1Kna2rtszuoLp++5zuD363g==
-X-Received: by 2002:a37:af41:0:b0:6f9:5ebe:2b10 with SMTP id y62-20020a37af41000000b006f95ebe2b10mr26423820qke.294.1667592753172;
-        Fri, 04 Nov 2022 13:12:33 -0700 (PDT)
-Received: from [127.0.0.1] ([20.122.88.255])
-        by smtp.gmail.com with ESMTPSA id m17-20020ae9e711000000b006cfc7f9eea0sm51359qka.122.2022.11.04.13.12.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 13:12:32 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D717DAD56
+	for <mptcp@lists.linux.dev>; Fri,  4 Nov 2022 22:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667600845; x=1699136845;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=AYIk6KpQCjMTnl9RgDUccX97AdAtIX63Jdcyq8hfCoQ=;
+  b=A+1yFntVsy6UJIbRIfrrDZzu62u8SfRBgpyTwbRoWvPqMiprLQ6p0saE
+   Mk3N+SxJ4rrz0cJYA6flAhLWpqpfWq1h/B6vqEfZR7RY5mnMRMY+bWqgV
+   pQGrIh33QrH7LLEEOjQF3iWxHcBEzvRrljo3KOeJn1geX5L4e626W89tS
+   g3/Mia+dqXYC5ATH5cL5khgO1kmeNSZq4zR+5S1r3oF6yFn62+MHjyDpo
+   Lt0r8sFo2aVxmDZySh4NTaKEYR681UaHPu/7jKJvR1Axi33HlBGSzr/0p
+   fKy4rVLxMWkvjT0Zz12k4Tej8H2dbdyL1vS337FhVptCKRh1iFOzMvYHt
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="308797197"
+X-IronPort-AV: E=Sophos;i="5.96,138,1665471600"; 
+   d="scan'208";a="308797197"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 15:27:25 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="666526341"
+X-IronPort-AV: E=Sophos;i="5.96,138,1665471600"; 
+   d="scan'208";a="666526341"
+Received: from mvedaei-mobl2.amr.corp.intel.com ([10.212.176.106])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 15:27:22 -0700
+Date: Fri, 4 Nov 2022 15:27:21 -0700 (PDT)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <d51ab9e9d73cfa3e7b8e6c8864e022d5fdad434d.1667586266.git.pabeni@redhat.com>
-References:
- <d51ab9e9d73cfa3e7b8e6c8864e022d5fdad434d.1667586266.git.pabeni@redhat.com>
-Subject: Re: mptcp: more detailed error reporting on endpoint creation:
- Tests Results
-Message-ID: <07bbfaea-c5cd-0854-28b3-1edd3fac2e39@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Nov 2022 20:12:32 +0000
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: deduplicate error paths on endpoint
+ creation
+In-Reply-To: <13fc62c6a047dbd043be5131567c0f3a6c46267e.1667586266.git.pabeni@redhat.com>
+Message-ID: <65f6ecce-13df-6c2e-9533-4ab5d3e56e9b@linux.intel.com>
+References: <13fc62c6a047dbd043be5131567c0f3a6c46267e.1667586266.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Fri, 4 Nov 2022, Paolo Abeni wrote:
 
-Thank you for your modifications, that's great!
+> When endpoint creation fails, we need to free the newly allocated
+> entry and eventually destroy the paired mptcp listener socket.
+>
+> Consolidate such action in a single point let all the errors path
+> reach it.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-Our CI did some validations and here is its report:
+Thanks for the cleanup Paolo:
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/4602037861089280
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/4602037861089280/summary/summary.txt
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5727937767931904
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5727937767931904/summary/summary.txt
+> ---
+> net/mptcp/pm_netlink.c | 35 +++++++++++++----------------------
+> 1 file changed, 13 insertions(+), 22 deletions(-)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 9813ed0fde9b..fdf2ee29f762 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1003,16 +1003,12 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+> 		return err;
+>
+> 	msk = mptcp_sk(entry->lsk->sk);
+> -	if (!msk) {
+> -		err = -EINVAL;
+> -		goto out;
+> -	}
+> +	if (!msk)
+> +		return -EINVAL;
+>
+> 	ssock = __mptcp_nmpc_socket(msk);
+> -	if (!ssock) {
+> -		err = -EINVAL;
+> -		goto out;
+> -	}
+> +	if (!ssock)
+> +		return -EINVAL;
+>
+> 	mptcp_info2sockaddr(&entry->addr, &addr, entry->addr.family);
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> @@ -1022,20 +1018,16 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+> 	err = kernel_bind(ssock, (struct sockaddr *)&addr, addrlen);
+> 	if (err) {
+> 		pr_warn("kernel_bind error, err=%d", err);
+> -		goto out;
+> +		return err;
+> 	}
+>
+> 	err = kernel_listen(ssock, backlog);
+> 	if (err) {
+> 		pr_warn("kernel_listen error, err=%d", err);
+> -		goto out;
+> +		return err;
+> 	}
+>
+> 	return 0;
+> -
+> -out:
+> -	sock_release(entry->lsk);
+> -	return err;
+> }
+>
+> int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+> @@ -1327,7 +1319,7 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
+> 		return -EINVAL;
+> 	}
+>
+> -	entry = kmalloc(sizeof(*entry), GFP_KERNEL_ACCOUNT);
+> +	entry = kzalloc(sizeof(*entry), GFP_KERNEL_ACCOUNT);
+> 	if (!entry) {
+> 		GENL_SET_ERR_MSG(info, "can't allocate addr");
+> 		return -ENOMEM;
+> @@ -1338,22 +1330,21 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
+> 		ret = mptcp_pm_nl_create_listen_socket(skb->sk, entry);
+> 		if (ret) {
+> 			GENL_SET_ERR_MSG(info, "create listen socket error");
+> -			kfree(entry);
+> -			return ret;
+> +			goto out_free;
+> 		}
+> 	}
+> 	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
+> 	if (ret < 0) {
+> 		GENL_SET_ERR_MSG(info, "too many addresses or duplicate one");
+> -		if (entry->lsk)
+> -			sock_release(entry->lsk);
+> -		kfree(entry);
+> -		return ret;
+> +		goto out_free;
+> 	}
+>
+> 	mptcp_nl_add_subflow_or_signal_addr(sock_net(skb->sk));
+> -
+> 	return 0;
+> +
+> +out_free:
+> +	__mptcp_pm_release_addr_entry(entry);
+> +	return ret;
+> }
+>
+> int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int id,
+> -- 
+> 2.38.1
+>
+>
+>
 
-Initiator: Matthieu Baerts
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/1b9b75524997
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+--
+Mat Martineau
+Intel
