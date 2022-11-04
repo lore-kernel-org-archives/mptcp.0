@@ -1,111 +1,92 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518221859
-	for <mptcp@lists.linux.dev>; Fri,  4 Nov 2022 13:53:30 +0000 (UTC)
-Received: by mail-qv1-f51.google.com with SMTP id ml12so3243489qvb.0
-        for <mptcp@lists.linux.dev>; Fri, 04 Nov 2022 06:53:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1A9186F
+	for <mptcp@lists.linux.dev>; Fri,  4 Nov 2022 14:28:08 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id 5so3148116wmo.1
+        for <mptcp@lists.linux.dev>; Fri, 04 Nov 2022 07:28:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6cHqKvnv09OEWF7th/+9LPWgpllQnvnSD+opIsN8N2A=;
-        b=VB5QFqUFYHv6i5NZmUiH2hoWbl1+nipGbag9h+80tAUoZwisGGGuwwyzY9XilZ8DVG
-         m6aqyPCrNF+rTdV5Z7zZ3WAQZ0/qE9s31yBcvQyfQL5cKg6K5AYmQJ81UDBGYCuRVcMA
-         q+fS10ljIdCv0XWDxGCMwP7kw33bHJDt4ZsAi1z/Oa5t7H/897DcWL2YNoFxcf0CWgK+
-         J591dAKxH8buYsHOH9cBLS4u3Svk9vGLssunE0ebp8i+3kWkrOEPaqp100mgm1lQ6bAP
-         wIAudguHXM60mDLLZaEIZcGXIfAkkfIpDhs2Wu0ItnHCKnnye6c6L+wet4O2hqSqzs4I
-         4iIw==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/IEK9p8Dpdgtcyzpq8YSLNP/wT2HHgay9mwfXtgMXJc=;
+        b=F+2QzhyMOUb1HZkKUtkF0kjBW0lahXey2pCWFCN0U37hPz5dznD3c1RDWlZIZQ91OF
+         Mvp7gHyNR9glR8ise/90E20urADHRX+EixqGYGPGzzbLJf8unFm1FG17E7bCTFJQ/HBl
+         NDFKhjcgwcC4RHUFkiCXlYeP9NaQ+1bsTKnAQzQz/XhbHkW9rQ1gu8hdtJGkwDz1bfiB
+         Ng9QPOEfXfyNUlMIOIBbqzOKM/ZQTTy1y6OOrteqnAQjFaCuJOIziPhuNCrHn5oWtC5s
+         UbA+NawpA3rdeGxPuMaJ0qzmLP5xYTZmY+f42Tn7cm9V4qtJQcFTuY4h9dne970LRlF1
+         o83Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6cHqKvnv09OEWF7th/+9LPWgpllQnvnSD+opIsN8N2A=;
-        b=Sykw9uvBisPx+1WtfLlp3+2anm4VSWxGwW5fHKcCBmh7Of8QaYOZGizNYF4UGJrt+k
-         YpW0H8xg6LYoHnskncY1qJ9wRH+GMnKTqGYgQKMoSwDjlVJoCigfpAHkYVuyaOzwEBaN
-         /oWwRebNx63EMEx89L4SVukO18aBLNNnoFIjrEWg4Yt//peFVBJG5FfjIRq+BRgl7FRa
-         6/FkyIu8EQv30QF7X24H1LBpXhGgM0h6pKjgE1pqU3HoSV3ctEC+uAaKoUP005DvdtFY
-         v/THc2rfTJB0yqgp/bsARjMq2SR1UTg+Kr/ewzUhJXkrRr+JqTP+JrIxdWcVtuCXnsQI
-         tkcQ==
-X-Gm-Message-State: ACrzQf3S5dR2PuqYn8S+pF+vdsBxe2lWpcTjL93o5k8zbTdlTkx0Ov3I
-	b+dfdwXsDsC6p7oAy8G6VA==
-X-Google-Smtp-Source: AMsMyM4xPabQBDm5UEldDLgeTUIGbTNlUqWiyjtGm1eJYMkf/tL9cyNdoMcDYfI1b/kORBFpCu+6oA==
-X-Received: by 2002:a05:6214:4104:b0:4af:8576:e65a with SMTP id kc4-20020a056214410400b004af8576e65amr32413517qvb.70.1667570009181;
-        Fri, 04 Nov 2022 06:53:29 -0700 (PDT)
-Received: from [127.0.0.1] ([52.242.87.116])
-        by smtp.gmail.com with ESMTPSA id x18-20020a05620a259200b006bc192d277csm2906154qko.10.2022.11.04.06.53.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 06:53:28 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221104115354.3413-1-geliang.tang@suse.com>
-References: <20221104115354.3413-1-geliang.tang@suse.com>
-Subject: Re: mptcp: use entry->lsk directly: Tests Results
-Message-ID: <bff36cb1-0d5d-4d70-af3a-4ecb986acebb@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Nov 2022 13:53:28 +0000
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/IEK9p8Dpdgtcyzpq8YSLNP/wT2HHgay9mwfXtgMXJc=;
+        b=ZTxP815v7FjxpmQTfV69W2iOA+0TElQJ4nUbUiV0Cr+8A+/mFlzKTHFs8E9MD78vBc
+         KfBkFSKfXfH0OY9MN40rh/v7BfX/0w3yrpjp6zHct3FlqGpPuQesxLnucawItegUA95Q
+         8oSEeAqyfkNlvyn6Sohu77SekoPQyWnJuMEGeq/L77E9MXzz30bN+JAtpc/qDUqxRiyk
+         mXoAmXJwsKOnIz3o2nb5EKYc9ctXjOOcZOuuo1Xwp67YG1dHUz/e8pphqslKE24ax5Zb
+         x6+XkHuPzvPzu/OG/72PlJqhLJbpvwGgDQ0xc4JzKRbh1Hj29ikq+DlElv9rCetgdeVj
+         oe/w==
+X-Gm-Message-State: ACrzQf0iH3UDK/Vt9LCbIXhalZ6AD7oALd5omTP/2dU/ms9YU0oWQVO3
+	pjzQmHd4N7nGzqoeRYVooZrvchjKqvo5Cg==
+X-Google-Smtp-Source: AMsMyM4fEO+gCTiWJ9F8092XMTdAOUN0b3/bwV2EW89Z9F3rwunEGR2fj8pKX+tGoJz6YzwSz1Vorg==
+X-Received: by 2002:a1c:2502:0:b0:3cf:6f44:3e4d with SMTP id l2-20020a1c2502000000b003cf6f443e4dmr19415336wml.177.1667572087069;
+        Fri, 04 Nov 2022 07:28:07 -0700 (PDT)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id j15-20020a05600c1c0f00b003c21ba7d7d6sm3201042wms.44.2022.11.04.07.28.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Nov 2022 07:28:06 -0700 (PDT)
+Message-ID: <18645841-3b43-5520-3dd6-d8bbd5485576@tessares.net>
+Date: Fri, 4 Nov 2022 15:28:06 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH mptcp-net v3] mptcp: use entry->lsk directly
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>
+References: <20221104115354.3413-1-geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <20221104115354.3413-1-geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 04/11/2022 12:53, Geliang Tang wrote:
+> entry->lsk should be used as the PM listening socket directly in
+> mptcp_pm_nl_create_listen_socket(), not the initial subflow socket.
+> 
+> This patch fixes this, use entry->lsk directly instead of ssock.
 
-Our CI did some validations and here is its report:
+I'm sorry but the commit message is still unclear to me: it doesn't
+explain why "entry->lsk" should be used directly instead of ssock. Do
+you mind adding this justification?
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5039064876318720
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5039064876318720/summary/summary.txt
+(The "reason" why a commit is needed is for me the most important info
+to add in the commit message because it is not always obvious: here I
+can clearly and quickly see you are using 'entry->lsk' directly when
+looking at the diff but I cannot extract the "reason" that easily).
+
+Please also note the public CI reported a possible recursive locking
+issue with this patch when creating a listening socket on a different
+port (single address with port):
 
 - KVM Validation: debug:
-  - Critical: 1 Call Trace(s) =E2=9D=8C:
+  - Critical: 1 Call Trace(s) ❌:
   - Task: https://cirrus-ci.com/task/6164964783161344
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6164964783161344/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/3dd3db3d01db
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+  - Summary:
+https://api.cirrus-ci.com/v1/artifact/task/6164964783161344/summary/summary.txt
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
