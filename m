@@ -1,100 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C98DEBE2
-	for <mptcp@lists.linux.dev>; Wed,  9 Nov 2022 14:52:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1668005574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Oj81ZqsLRLykgk3AbaE4nH4uhQUv9UgA9QlZT130oMY=;
-	b=Ydp2VnykBmfyXNs8w1VorIcb/cUJbKvvKtpK8m47We7i7ZMLnXTegQT1lWPKqBA1uleBaN
-	dBOQqE6TAaZVGgje/yOvJpy7ra84bBdXTxKx1Wm5wT51t3FGe+XM2YERJ6UN4Wf3x7NwGk
-	WQqznRxWLP7zRtjWYw+DTD1yPv45FzY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-595-QadpnyXlPB6GqwdNBotVwA-1; Wed, 09 Nov 2022 09:52:42 -0500
-X-MC-Unique: QadpnyXlPB6GqwdNBotVwA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 42118858F13;
-	Wed,  9 Nov 2022 14:52:42 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.116])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 91223202903F;
-	Wed,  9 Nov 2022 14:52:41 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Subject: [PATCH mptcp-next 1.5/5] mptcp: track accuratelly the incoming MPC suboption type.
-Date: Wed,  9 Nov 2022 15:52:29 +0100
-Message-Id: <4edc02c8a8e040d0ac212ff61d9256c8148f2429.1667993416.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A541EC05
+	for <mptcp@lists.linux.dev>; Wed,  9 Nov 2022 16:42:35 +0000 (UTC)
+Received: by mail-qk1-f179.google.com with SMTP id f8so11266304qkg.3
+        for <mptcp@lists.linux.dev>; Wed, 09 Nov 2022 08:42:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nwLB9DY0ATKiJAV1DjVNIGhiT7qmQRVzwh0jMnUGlO0=;
+        b=bl6XdSHyC3fo0ZWjRcn4DzMJlysjXBMiqHltRMTsX+wIrBSsBbuWqvGs8mA4KusfMF
+         JBxN8lzhcIZXqtT+aMoyQBI+UienYQDbP3X6e2hUNv/VEsDOOBE+4JnDTkWsJVnP9ZBu
+         nTG7uyPoE8E/RIpJ9qZ/9EW5RPA0VO9mOx3ZryHiXz2C/ioyWW4cX8xRuZbhncSCo6CU
+         awWaQDFkFep1aUVOo9sq8Mz9t2H/oPxS3nq/TX9KGuZRZmSYE1KWxNg3qKThZjGolvCp
+         HKjd7Vx5R8j0gOoezJzLogTK9sonEFGRdLoUw0eRuUCAzZnk5LwGWBg4LO3EGnH43G0o
+         2G/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nwLB9DY0ATKiJAV1DjVNIGhiT7qmQRVzwh0jMnUGlO0=;
+        b=G/4sryY4RWkRY8rx4VjgAliXY5ZnDjM2+OJTVDw10OVa9LjCmLEVG9FWWcsgaROtK6
+         tH1YwAtTesSfbmG2nSOKbvv6VVaXQUUDxPgIh0bz/ca22ROb0OaSMAxFy/bPz4uB0lSQ
+         vIXnstkhphgtupbvDzNASBzYTSsZPl73gs1oh1qyMXP3H6QwVe14LOsU01OhMeLRa8A0
+         HWDIKLm7sZrEsTr3t672ZwTj44NcfDHZGg4HeK4SLSw4XaH5E4Dubrv9cTW9cv5YO/Fv
+         uxPIhlidh2En45BaU6SOd/KDdyKyUAowPLJW/DOrMu248K+TLBQs1+LZZQyVvi6c3OhQ
+         X0nA==
+X-Gm-Message-State: ACrzQf2BhDlhVBpDdj4Cidsq/+xn1a13340n3X2u8BsjBDrCMGVmwTyA
+	LZHsGbVurK4IP/KB+C97Ca0z1ZNVi9RyiiU=
+X-Google-Smtp-Source: AMsMyM5n31EebovdGGPQxyNpo7dlYXDPQ2EhO6wUfhyGN0Vq2EuxDyuNtgLxrSGD8EjDSAw8EAcQ+w==
+X-Received: by 2002:a05:620a:2889:b0:6cf:5798:e126 with SMTP id j9-20020a05620a288900b006cf5798e126mr44583343qkp.588.1668012153947;
+        Wed, 09 Nov 2022 08:42:33 -0800 (PST)
+Received: from [127.0.0.1] ([52.152.164.173])
+        by smtp.gmail.com with ESMTPSA id r3-20020a05620a298300b006eecc4a0de9sm11810401qkp.62.2022.11.09.08.42.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Nov 2022 08:42:33 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <4edc02c8a8e040d0ac212ff61d9256c8148f2429.1667993416.git.pabeni@redhat.com>
+References:
+ <4edc02c8a8e040d0ac212ff61d9256c8148f2429.1667993416.git.pabeni@redhat.com>
+Subject: Re: mptcp: track accuratelly the incoming MPC suboption type.:
+ Tests Results
+Message-ID: <40d8ce34-c0cc-796c-2d59-6125b1b3323e@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 09 Nov 2022 16:42:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Currently in the receive path we don't need to discriminate
-between MPC SYN, MPC SYN-ACK adn MPC ACK, but soon the fastopen
-code will need that info to properly track the fully established
-status.
+Hi Paolo,
 
-Track the exact MPC suboption type into the receive opt bitmap.
-No functional change intended.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/options.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Our CI did some validations and here is its report:
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 30d289044e71..784a205e80da 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -26,6 +26,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- {
- 	u8 subtype = *ptr >> 4;
- 	int expected_opsize;
-+	u16 subopt;
- 	u8 version;
- 	u8 flags;
- 	u8 i;
-@@ -38,11 +39,15 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 				expected_opsize = TCPOLEN_MPTCP_MPC_ACK_DATA;
- 			else
- 				expected_opsize = TCPOLEN_MPTCP_MPC_ACK;
-+			subopt = OPTION_MPTCP_MPC_ACK;
- 		} else {
--			if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_ACK)
-+			if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_ACK) {
- 				expected_opsize = TCPOLEN_MPTCP_MPC_SYNACK;
--			else
-+				subopt = OPTION_MPTCP_MPC_SYNACK;
-+			} else {
- 				expected_opsize = TCPOLEN_MPTCP_MPC_SYN;
-+				subopt = OPTION_MPTCP_MPC_SYN;
-+			}
- 		}
- 
- 		/* Cfr RFC 8684 Section 3.3.0:
-@@ -85,7 +90,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 
- 		mp_opt->deny_join_id0 = !!(flags & MPTCP_CAP_DENY_JOIN_ID0);
- 
--		mp_opt->suboptions |= OPTIONS_MPTCP_MPC;
-+		mp_opt->suboptions |= subopt;
- 		if (opsize >= TCPOLEN_MPTCP_MPC_SYNACK) {
- 			mp_opt->sndr_key = get_unaligned_be64(ptr);
- 			ptr += 8;
--- 
-2.38.1
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/6400536625807360
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/6400536625807360/summary/summary.txt
 
+- KVM Validation: debug:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/4993161742254080
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/4993161742254080/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/7a66b9b991d0
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
