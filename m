@@ -1,37 +1,37 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB182C9E
-	for <mptcp@lists.linux.dev>; Wed,  9 Nov 2022 14:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E655EBE2
+	for <mptcp@lists.linux.dev>; Wed,  9 Nov 2022 14:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1668005566;
+	s=mimecast20190719; t=1668005568;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UIMeHOuBx7qBys0Kp4EMRrdRCnBrgcjuX4DpWCUOgBI=;
-	b=OFVeQm49LR38C+8MvAaIsLs64TCYoMbXGEaBppzdWokTW4MR5Kn7Q3X9HBzEz0VxDLBBSv
-	/ytI93mqazSmeBiPC/22owfWuG0JrAQAwQfWaqyB2nc/L6lvJFmzo+poD4s3cSnZU+e9zg
-	ZOukKCp+USNaab7KfZEYdkm4h4qXSXk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=WIQ7PrtQQKiM/Ge3a6CQ6FqaNFzFWAd8tuOv8cLP8IU=;
+	b=TJ/AYTeboKsbkgTw62GLGpJPJEMSiYF3Lupl5hdCW6Md6RaHCFW0gQwgvuXz4Jo0CbFmsS
+	oUabHjTUYS39G/8PIJD5/rg2R4MDgxYukQtYOR9Hn6NEyrvF1PEID95Nugxd1XtKJIQ0e6
+	hg9qbCK5sL/CHPlN6e10cPoQPvNz9mw=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-318-BGhTzpttMoef_qxEoA5eKg-1; Wed, 09 Nov 2022 09:52:43 -0500
-X-MC-Unique: BGhTzpttMoef_qxEoA5eKg-1
+ us-mta-532-qVjuBVdMNO6qYn7W_YFZCA-1; Wed, 09 Nov 2022 09:52:44 -0500
+X-MC-Unique: qVjuBVdMNO6qYn7W_YFZCA-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 61A878027EC;
-	Wed,  9 Nov 2022 14:52:43 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 533341C0CE61;
+	Wed,  9 Nov 2022 14:52:44 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.194.116])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 8D0AF2024CC6;
-	Wed,  9 Nov 2022 14:52:42 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id AD35D2028E90;
+	Wed,  9 Nov 2022 14:52:43 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Subject: [PATCH net-next] Squash-to: "mptcp: implement delayed seq generation for passive fastopen"
-Date: Wed,  9 Nov 2022 15:52:30 +0100
-Message-Id: <0c2a587290902feb0c3c0a2f5c7f04e788d63751.1667993471.git.pabeni@redhat.com>
+Subject: [PATCH net-next] Squash-to: "selftests: mptcp: mptfo Initiator/Listener"
+Date: Wed,  9 Nov 2022 15:52:31 +0100
+Message-Id: <41b40e837c47147ce713ae0d35a916471d36f82d.1667993466.git.pabeni@redhat.com>
 In-Reply-To: <4edc02c8a8e040d0ac212ff61d9256c8148f2429.1667993416.git.pabeni@redhat.com>
 References: <4edc02c8a8e040d0ac212ff61d9256c8148f2429.1667993416.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,226 +46,273 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-A bunch of fixups:
-- must use sk->sk_receive_queue instead of msk->receive_queue, as the
-  latter is protected via the msk socket lock, quite the first is under
-  msk data lock proteciton
-
-- can't fully init skb MPTCP_CB at
-  subflow_fastopen_send_synack_set_params() time, as the msk ack_seq is
-  not known yet. Instead put it some dunny seq and update it as needed
-  when the peer key is received. Note that we need the correct seq value
-  only to handle correctly coalescing of later skb, that is, only if
-  the first data skb is still in the receive queue when the next one
-  comes in
-
-- must prevent subflow_syn_recv_sock() from switching the newly created
-  mptfo socket to fully established status, as only the initial syn is
-  recived and we still lack the peer's key
-
-- hook mptcp_gen_msk_ackseq_fastopen() to fully established swiching
+The TFO is allowed to send less data than the provided one,
+we need to track more status info to properly allow the next sendmsg()
+starting from the next to send byte.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/fastopen.c | 56 ++++++++++++++++++++++++++++----------------
- net/mptcp/options.c  | 14 +++++------
- net/mptcp/protocol.h |  2 +-
- net/mptcp/subflow.c  |  5 +++-
- 4 files changed, 47 insertions(+), 30 deletions(-)
+ .../selftests/net/mptcp/mptcp_connect.c       | 118 ++++++++----------
+ 1 file changed, 55 insertions(+), 63 deletions(-)
 
-diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
-index 2a36a83cd846..10f901e281f6 100644
---- a/net/mptcp/fastopen.c
-+++ b/net/mptcp/fastopen.c
-@@ -7,13 +7,11 @@
- void subflow_fastopen_send_synack_set_params(struct mptcp_subflow_context *subflow,
- 					     struct request_sock *req)
- {
--	struct tcp_request_sock *treq = tcp_rsk(req);
- 	struct sock *ssk = subflow->tcp_sock;
- 	struct sock *sk = subflow->conn;
- 	struct mptcp_sock *msk;
- 	struct sk_buff *skb;
- 	struct tcp_sock *tp;
--	u32 offset;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 4bc855159c52..134e569cd75a 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -26,13 +26,11 @@
  
- 	msk = mptcp_sk(sk);
- 	tp = tcp_sk(ssk);
-@@ -22,45 +20,63 @@ void subflow_fastopen_send_synack_set_params(struct mptcp_subflow_context *subfl
- 	msk->is_mptfo = 1;
+ #include <netdb.h>
+ #include <netinet/in.h>
+-#include <netinet/tcp.h>
  
- 	skb = skb_peek(&ssk->sk_receive_queue);
-+	if (WARN_ON_ONCE(!skb))
-+		return;
++#include <linux/tcp.h>
+ #include <linux/time_types.h>
+ #include <linux/sockios.h>
  
- 	/* dequeue the skb from sk receive queue */
- 	__skb_unlink(skb, &ssk->sk_receive_queue);
- 	skb_ext_reset(skb);
- 	skb_orphan(skb);
- 
--	/* set the skb mapping */
--	tp->copied_seq += tp->rcv_nxt - treq->rcv_isn - 1;
--	subflow->map_seq = mptcp_subflow_get_mapped_dsn(subflow);
--	subflow->ssn_offset = tp->copied_seq - 1;
 -
--	/* initialize MPTCP_CB */
--	offset = tp->copied_seq - TCP_SKB_CB(skb)->seq;
--	MPTCP_SKB_CB(skb)->map_seq = mptcp_subflow_get_mapped_dsn(subflow);
--	MPTCP_SKB_CB(skb)->end_seq = MPTCP_SKB_CB(skb)->map_seq +
--				     (skb->len - offset);
--	MPTCP_SKB_CB(skb)->offset = offset;
-+	/* We copy the fastopen data, but that don't belown to the mptcp sequence
-+	 * space, need to offset it in the subflow sequence, see mptcp_subflow_get_map_offset()
-+	 */
-+	tp->copied_seq += skb->len;
-+	subflow->ssn_offset += skb->len;
-+
-+	/* initialize a dummy sequence number, we will update it at MPC
-+	 * completion, if needed
-+	 */
-+	MPTCP_SKB_CB(skb)->map_seq = -skb->len;
-+	MPTCP_SKB_CB(skb)->end_seq = 0;
-+	MPTCP_SKB_CB(skb)->offset = 0;
- 	MPTCP_SKB_CB(skb)->has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
- 
- 	mptcp_data_lock(sk);
- 
- 	mptcp_set_owner_r(skb, sk);
--	__skb_queue_tail(&msk->receive_queue, skb);
-+	__skb_queue_tail(&sk->sk_receive_queue, skb);
- 
--	(sk)->sk_data_ready(sk);
-+	sk->sk_data_ready(sk);
- 
- 	mptcp_data_unlock(sk);
- }
- 
- void mptcp_gen_msk_ackseq_fastopen(struct mptcp_sock *msk, struct mptcp_subflow_context *subflow,
--				   struct mptcp_options_received mp_opt)
-+				   const struct mptcp_options_received *mp_opt)
- {
-+	struct sock *sk = (struct sock *)msk;
-+	struct sk_buff *skb;
- 	u64 ack_seq;
- 
--	WRITE_ONCE(msk->can_ack, true);
--	WRITE_ONCE(msk->remote_key, mp_opt.sndr_key);
--	mptcp_crypto_key_sha(msk->remote_key, NULL, &ack_seq);
-+	mptcp_crypto_key_sha(mp_opt->sndr_key, NULL, &ack_seq);
- 	ack_seq++;
-+
-+	mptcp_data_lock(sk);
-+	WRITE_ONCE(msk->can_ack, true);
- 	WRITE_ONCE(msk->ack_seq, ack_seq);
--	pr_debug("ack_seq=%llu sndr_key=%llu", msk->ack_seq, mp_opt.sndr_key);
- 	atomic64_set(&msk->rcv_wnd_sent, ack_seq);
-+	msk->remote_key = mp_opt->sndr_key;
-+	skb = skb_peek_tail(&sk->sk_receive_queue);
-+	if (skb) {
-+		WARN_ON_ONCE(MPTCP_SKB_CB(skb)->end_seq);
-+		pr_debug("msk %p moving seq %llx -> %llx end_seq %llx -> %llx", sk,
-+			MPTCP_SKB_CB(skb)->map_seq,  msk->ack_seq + MPTCP_SKB_CB(skb)->map_seq,
-+			MPTCP_SKB_CB(skb)->end_seq, MPTCP_SKB_CB(skb)->end_seq + msk->ack_seq);
-+		MPTCP_SKB_CB(skb)->map_seq += msk->ack_seq;
-+		MPTCP_SKB_CB(skb)->end_seq += msk->ack_seq;
-+	}
-+
-+	pr_debug("msk=%p ack_seq=%llx", msk, msk->ack_seq);
-+	mptcp_data_unlock(sk);
- }
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index ca54a08aa0a3..398f5afac124 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -939,7 +939,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 		    subflow->mp_join && (mp_opt->suboptions & OPTIONS_MPTCP_MPJ) &&
- 		    !subflow->request_join)
- 			tcp_send_ack(ssk);
--		goto fully_established;
-+		goto check_notify;
- 	}
- 
- 	/* we must process OoO packets before the first subflow is fully
-@@ -950,6 +950,8 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 	if (TCP_SKB_CB(skb)->seq != subflow->ssn_offset + 1) {
- 		if (subflow->mp_join)
- 			goto reset;
-+		if (msk->is_mptfo && mp_opt->suboptions & OPTION_MPTCP_MPC_ACK)
-+			goto set_fully_established;
- 		return subflow->mp_capable;
- 	}
- 
-@@ -960,7 +962,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 		 */
- 		subflow->fully_established = 1;
- 		WRITE_ONCE(msk->fully_established, true);
--		goto fully_established;
-+		goto check_notify;
- 	}
- 
- 	/* If the first established packet does not contain MP_CAPABLE + data
-@@ -979,11 +981,12 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 	if (mp_opt->deny_join_id0)
- 		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
- 
-+set_fully_established:
- 	if (unlikely(!READ_ONCE(msk->pm.server_side)))
- 		pr_warn_once("bogus mpc option on established client sk");
- 	mptcp_subflow_fully_established(subflow, mp_opt);
- 
--fully_established:
-+check_notify:
- 	/* if the subflow is not already linked into the conn_list, we can't
- 	 * notify the PM: this subflow is still on the listener queue
- 	 * and the PM possibly acquiring the subflow lock could race with
-@@ -1213,11 +1216,6 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 			mpext->dsn64 = 1;
- 			mpext->mpc_map = 1;
- 			mpext->data_fin = 0;
 -
--			if (msk->is_mptfo) {
--				mptcp_gen_msk_ackseq_fastopen(msk, subflow, mp_opt);
--				mpext->data_seq = READ_ONCE(msk->ack_seq);
--			}
- 		} else {
- 			mpext->data_seq = mp_opt.data_seq;
- 			mpext->subflow_seq = mp_opt.subflow_seq;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 2df779c5f8cb..f805036e3c93 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -849,7 +849,7 @@ bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
+ extern int optind;
  
- // Fast Open Mechanism functions begin
- void mptcp_gen_msk_ackseq_fastopen(struct mptcp_sock *msk, struct mptcp_subflow_context *subflow,
--				   struct mptcp_options_received mp_opt);
-+				   const struct mptcp_options_received *mp_opt);
- void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk);
- void subflow_fastopen_send_synack_set_params(struct mptcp_subflow_context *subflow,
- 					     struct request_sock *req);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 2e3f858a73cb..ff9716e53786 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -685,6 +685,9 @@ void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 	subflow->fully_established = 1;
- 	subflow->can_ack = 1;
- 	WRITE_ONCE(msk->fully_established, true);
+ #ifndef IPPROTO_MPTCP
+@@ -93,6 +91,12 @@ struct tcp_inq_state {
+ 	bool expect_eof;
+ };
+ 
++struct wstate {
++	char buf[8192];
++	unsigned int len;
++	unsigned int off;
++};
 +
-+	if (msk->is_mptfo)
-+		mptcp_gen_msk_ackseq_fastopen(msk, subflow, mp_opt);
+ static struct tcp_inq_state tcp_inq;
+ 
+ static struct cfg_cmsg_types cfg_cmsg_types;
+@@ -239,7 +243,7 @@ static void set_mptfo(int fd, int pf)
+ {
+ 	int qlen = 25;
+ 
+-	if (setsockopt(fd, SOL_TCP, TCP_FASTOPEN, &qlen, sizeof(qlen)) == -1)
++	if (setsockopt(fd, IPPROTO_TCP, TCP_FASTOPEN, &qlen, sizeof(qlen)) == -1)
+ 		perror("TCP_FASTOPEN");
  }
  
- static struct sock *subflow_syn_recv_sock(const struct sock *sk,
-@@ -800,7 +803,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			/* with OoO packets we can reach here without ingress
- 			 * mpc option
- 			 */
--			if (mp_opt.suboptions & OPTIONS_MPTCP_MPC)
-+			if (mp_opt.suboptions & OPTION_MPTCP_MPC_ACK)
- 				mptcp_subflow_fully_established(ctx, &mp_opt);
- 		} else if (ctx->mp_join) {
- 			struct mptcp_sock *owner;
+@@ -345,17 +349,14 @@ static int sock_listen_mptcp(const char * const listenaddr,
+ static int sock_connect_mptcp(const char * const remoteaddr,
+ 			      const char * const port, int proto,
+ 			      struct addrinfo **peer,
+-			      int infd,
+-			      unsigned int *woff)
++			      int infd, struct wstate *winfo)
+ {
+ 	struct addrinfo hints = {
+ 		.ai_protocol = IPPROTO_TCP,
+ 		.ai_socktype = SOCK_STREAM,
+ 	};
+ 	struct addrinfo *a, *addr;
+-	unsigned int wlen = 0;
+ 	int syn_copied = 0;
+-	char wbuf[8192];
+ 	int sock = -1;
+ 
+ 	hints.ai_family = pf;
+@@ -374,13 +375,15 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+ 			set_mark(sock, cfg_mark);
+ 
+ 		if (cfg_sockopt_types.mptfo) {
+-			if (wlen == 0)
+-				wlen = read(infd, wbuf, sizeof(wbuf));
++			winfo->len = read(infd, winfo->buf, sizeof(winfo->buf));
+ 
+-			syn_copied = sendto(sock, wbuf, wlen, MSG_FASTOPEN,
++			syn_copied = sendto(sock, winfo->buf, winfo->len, MSG_FASTOPEN,
+ 					    a->ai_addr, a->ai_addrlen);
++			if (syn_copied < 0)
++				perror("sendto");
+ 			if (syn_copied) {
+-				*woff = wlen;
++				winfo->off = syn_copied;
++				winfo->len -= syn_copied;
+ 				*peer = a;
+ 				break; /* success */
+ 			}
+@@ -610,14 +613,13 @@ static void shut_wr(int fd)
+ }
+ 
+ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+-			  bool *in_closed_after_out, unsigned int woff)
++			  bool *in_closed_after_out, struct wstate *winfo)
+ {
+ 	struct pollfd fds = {
+ 		.fd = peerfd,
+ 		.events = POLLIN | POLLOUT,
+ 	};
+-	unsigned int wlen = 0, total_wlen = 0, total_rlen = 0;
+-	char wbuf[8192];
++	unsigned int total_wlen = 0, total_rlen = 0;
+ 
+ 	set_nonblock(peerfd, true);
+ 
+@@ -677,19 +679,19 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+ 		}
+ 
+ 		if (fds.revents & POLLOUT) {
+-			if (wlen == 0) {
+-				woff = 0;
+-				wlen = read(infd, wbuf, sizeof(wbuf));
++			if (winfo->len == 0) {
++				winfo->off = 0;
++				winfo->len = read(infd, winfo->buf, sizeof(winfo->buf));
+ 			}
+ 
+-			if (wlen > 0) {
++			if (winfo->len > 0) {
+ 				ssize_t bw;
+ 
+ 				/* limit the total amount of written data to the trunc value */
+-				if (cfg_truncate > 0 && wlen + total_wlen > cfg_truncate)
+-					wlen = cfg_truncate - total_wlen;
++				if (cfg_truncate > 0 && winfo->len + total_wlen > cfg_truncate)
++					winfo->len = cfg_truncate - total_wlen;
+ 
+-				bw = do_rnd_write(peerfd, wbuf + woff, wlen);
++				bw = do_rnd_write(peerfd, winfo->buf + winfo->off, winfo->len);
+ 				if (bw < 0) {
+ 					if (cfg_rcv_trunc)
+ 						return 0;
+@@ -697,10 +699,10 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd,
+ 					return 111;
+ 				}
+ 
+-				woff += bw;
+-				wlen -= bw;
++				winfo->off += bw;
++				winfo->len -= bw;
+ 				total_wlen += bw;
+-			} else if (wlen == 0) {
++			} else if (winfo->len == 0) {
+ 				/* We have no more data to send. */
+ 				fds.events &= ~POLLOUT;
+ 
+@@ -878,7 +880,7 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
+ 	return err;
+ }
+ 
+-static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, unsigned int woff)
++static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct wstate *winfo)
+ {
+ 	bool in_closed_after_out = false;
+ 	struct timespec start, end;
+@@ -890,7 +892,7 @@ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, unsigne
+ 
+ 	switch (cfg_mode) {
+ 	case CFG_MODE_POLL:
+-		ret = copyfd_io_poll(infd, peerfd, outfd, &in_closed_after_out, woff);
++		ret = copyfd_io_poll(infd, peerfd, outfd, &in_closed_after_out, winfo);
+ 		break;
+ 
+ 	case CFG_MODE_MMAP:
+@@ -1038,6 +1040,7 @@ static void maybe_close(int fd)
+ int main_loop_s(int listensock)
+ {
+ 	struct sockaddr_storage ss;
++	struct wstate winfo;
+ 	struct pollfd polls;
+ 	socklen_t salen;
+ 	int remotesock;
+@@ -1072,7 +1075,8 @@ int main_loop_s(int listensock)
+ 
+ 		SOCK_TEST_TCPULP(remotesock, 0);
+ 
+-		copyfd_io(fd, remotesock, 1, true, 0);
++		memset(&winfo, 0, sizeof(winfo));
++		copyfd_io(fd, remotesock, 1, true, &winfo);
+ 	} else {
+ 		perror("accept");
+ 		return 1;
+@@ -1210,53 +1214,40 @@ void xdisconnect(int fd, int addrlen)
+ 
+ int main_loop(void)
+ {
+-	int fd, ret, fd_in = 0;
++	int fd = 0, ret, fd_in = 0;
+ 	struct addrinfo *peer;
+-	unsigned int woff = 0;
+-
+-	if (!cfg_sockopt_types.mptfo) {
+-		/* listener is ready. */
+-		fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto, &peer, 0, 0);
+-		if (fd < 0)
+-			return 2;
+-again:
+-		check_getpeername_connect(fd);
++	struct wstate winfo;
+ 
+-		SOCK_TEST_TCPULP(fd, cfg_sock_proto);
+-
+-		if (cfg_rcvbuf)
+-			set_rcvbuf(fd, cfg_rcvbuf);
+-		if (cfg_sndbuf)
+-			set_sndbuf(fd, cfg_sndbuf);
+-		if (cfg_cmsg_types.cmsg_enabled)
+-			apply_cmsg_types(fd, &cfg_cmsg_types);
+-	}
+-
+-	if (cfg_input) {
++	if (cfg_input && cfg_sockopt_types.mptfo) {
+ 		fd_in = open(cfg_input, O_RDONLY);
+ 		if (fd < 0)
+ 			xerror("can't open %s:%d", cfg_input, errno);
+ 	}
+ 
+-	if (cfg_sockopt_types.mptfo) {
+-		/* sendto() instead of connect */
+-		fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto, &peer, fd_in, &woff);
+-		if (fd < 0)
+-			return 2;
++	memset(&winfo, 0, sizeof(winfo));
++	fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto, &peer, fd_in, &winfo);
++	if (fd < 0)
++		return 2;
+ 
+-		check_getpeername_connect(fd);
++again:
++	check_getpeername_connect(fd);
+ 
+-		SOCK_TEST_TCPULP(fd, cfg_sock_proto);
++	SOCK_TEST_TCPULP(fd, cfg_sock_proto);
+ 
+-		if (cfg_rcvbuf)
+-			set_rcvbuf(fd, cfg_rcvbuf);
+-		if (cfg_sndbuf)
+-			set_sndbuf(fd, cfg_sndbuf);
+-		if (cfg_cmsg_types.cmsg_enabled)
+-			apply_cmsg_types(fd, &cfg_cmsg_types);
++	if (cfg_rcvbuf)
++		set_rcvbuf(fd, cfg_rcvbuf);
++	if (cfg_sndbuf)
++		set_sndbuf(fd, cfg_sndbuf);
++	if (cfg_cmsg_types.cmsg_enabled)
++		apply_cmsg_types(fd, &cfg_cmsg_types);
++
++	if (cfg_input && !cfg_sockopt_types.mptfo) {
++		fd_in = open(cfg_input, O_RDONLY);
++		if (fd < 0)
++			xerror("can't open %s:%d", cfg_input, errno);
+ 	}
+ 
+-	ret = copyfd_io(fd_in, fd, 1, 0, 0);
++	ret = copyfd_io(fd_in, fd, 1, 0, &winfo);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1273,6 +1264,7 @@ int main_loop(void)
+ 			xerror("can't reconnect: %d", errno);
+ 		if (cfg_input)
+ 			close(fd_in);
++		memset(&winfo, 0, sizeof(winfo));
+ 		goto again;
+ 	} else {
+ 		close(fd);
 -- 
 2.38.1
 
