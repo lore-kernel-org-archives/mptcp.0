@@ -1,105 +1,87 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C731CA490
-	for <mptcp@lists.linux.dev>; Thu, 10 Nov 2022 16:00:39 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id m22so6053710eji.10
-        for <mptcp@lists.linux.dev>; Thu, 10 Nov 2022 08:00:39 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4751A601
+	for <mptcp@lists.linux.dev>; Thu, 10 Nov 2022 17:07:35 +0000 (UTC)
+Received: by mail-wr1-f46.google.com with SMTP id v1so3173301wrt.11
+        for <mptcp@lists.linux.dev>; Thu, 10 Nov 2022 09:07:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hriuBsJq6Dv11gWCf+XU+En904IFvPCdild11UGSTb0=;
-        b=7xQgzPNHefdjt3PmuLgFKA8MK1SN3adHd1MM8c2u803Zd/UXvF1ZZPgdOpUhw5qVKX
-         N/3PVUwvGDAweMJ7TBvijo5o4uQVhXjgsyAbR3KIP9uJGlg2q9YZJua5dcFDXJhCxuCL
-         iSsl4vuYra56FP08eQDC+itEl2T58w+yAnr/cccYfoX6AgajWNduB/NwxYf1Yh1qT37M
-         bX2wHSVy2p7DjYhFBCs8/B5/6mB4GVneUgHVRh+PRu334PnhiafuFmvmlfqB+1SC5T5j
-         /kTUsKplhoFbTc8ylxdn7rqlhe2DgE+5Ai8EBp5W9cM9lnfJ2Um4ST2onn40rVxsMbBt
-         Ra1w==
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E1E1MxV4I5WpxWFQ3kHcqZaocXG7RWKvhLtXqJcn9wQ=;
+        b=XrrUK42p9FelZtaPAS7tNjNmH2HyJvqiTlV/ZPvNN8nz+s9UnSxyuB/lAmhmBkzP+e
+         OEIzjvbN3UoGGeayz9lMj50Cyq1+c8HTApXEPo0j2NwoBarPv98ja9mnO8XRJ2zVMcFg
+         ccoOIbOYa9cJtEh++hixIy2a/FEuoXQrmPGRrlZwsVmKSKvreMirj0pdZNcsXr4pbZdE
+         J8QqV21wWQDGcN1gvf+gylL5e8XfPBL4ysG1HJc6K5mwE0wjGk2GaF3oZPOWwjlPNLmL
+         OpmAQ2pyyUD+bB/SLbZgbqERihb7HXZttTMUfNcruvBdxNa6qhX1jX8ydRuiw4otrIOm
+         d/5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hriuBsJq6Dv11gWCf+XU+En904IFvPCdild11UGSTb0=;
-        b=HOTSrrOwbkl1E0EwNdlI2AOooYbICIrHTIjz6iuSWelDEHslWfptGbpRtFVe5jc5Oz
-         PMYnzUIfTgdcU7QtvZFiVvGT5e3gQ3m9xJYehD0TkWtNIVzrUdvxJTnFP4t9hKKRzNu/
-         w7iaX6THL2m5mAJkBGK6uWaBD+DuCqpwk68e19venfXWJXRqZrjNvQcTEzizHuY3AoCc
-         aj29O/mH83HBN2rLCRyPFXoxeZh5+dU+7zmuqTjFCeQfJZxnY5MMRCSv4qhYVlXEqPAK
-         ULm6c+jRvGggf2mMI9Zp08m0VrFDPUmu+3lASS1MbS1f4GJBs9Al9iUW9Nl15+nTiqxw
-         vcUQ==
-X-Gm-Message-State: ACrzQf0/RU5pyWnsfm4505IJVIeyleaWbnAEWFXRbaDY+QCWx5Fodn6b
-	udFvIDczraS+2GUnKxRtTZVYzDfcvQlHaUcLcqE=
-X-Google-Smtp-Source: AMsMyM5VMtRnZc8rYWxiptePBtp/EMNjy72ZTBqmJr9tY0bSrJCLoPge0r5JJYORMWqbRpfmYZdunQ==
-X-Received: by 2002:a17:906:8470:b0:7ad:aeda:f47d with SMTP id hx16-20020a170906847000b007adaedaf47dmr57207387ejc.139.1668096037017;
-        Thu, 10 Nov 2022 08:00:37 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id v24-20020aa7d9d8000000b0045c3f6ad4c7sm8639503eds.62.2022.11.10.08.00.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 08:00:35 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH mptcp-net] selftests: mptcp: fix mibit vs mbit mix up
-Date: Thu, 10 Nov 2022 17:00:17 +0100
-Message-Id: <20221110160017.3641527-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.37.2
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E1E1MxV4I5WpxWFQ3kHcqZaocXG7RWKvhLtXqJcn9wQ=;
+        b=8OVOywzK57gSwBQdA9Njmbef/gEbmTlrUFCaV90e5whUO+7zZ4e1HJXB3xQiRaQy6I
+         Diw3ZtK+CCou+TuGu8yn1d28wopshAmrO0+gSf1MqGQmmZcmiRLeKedHHEGMjL1lV/df
+         /Rf46eKXfYp0aJDmw+Yn1YYpN43bivLBVOfXHvEWiEk3VApYZF5CobOCo0gnnGtVobgN
+         Q9VZW0jOBO3awtE4RwRevbx6Cu+9QTNtK26vEYUJ7JfwCvznB8c34/Z0IIpTFz4xHOL4
+         V9MKyo1jLqr7qVs1rZiTLRdykhgREMqU89J+KSEE93SBiNUux3PJ/0Wowr9gEorJ1EpN
+         oCtA==
+X-Gm-Message-State: ACrzQf0zbsTg3/QihLBg8usHuWZOyCvMA2lvEqkAljUERMBkdK4hDhKX
+	pJ4RxUyksl+ldpfPpinW/viSyQ==
+X-Google-Smtp-Source: AMsMyM6Dzv65CcbWxYvRl3kJA9t3m+s3PtRDMr4A6K4vl8Uipl2KP0jgJKC5W2M+H2owlYuJ9Ll/MA==
+X-Received: by 2002:adf:c601:0:b0:230:7cfa:b3fe with SMTP id n1-20020adfc601000000b002307cfab3femr42305674wrg.344.1668100053818;
+        Thu, 10 Nov 2022 09:07:33 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:a69e:b302:f965:8831? ([2a02:578:8593:1200:a69e:b302:f965:8831])
+        by smtp.gmail.com with ESMTPSA id f63-20020a1c3842000000b003b31c560a0csm157266wma.12.2022.11.10.09.07.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Nov 2022 09:07:33 -0800 (PST)
+Message-ID: <e6f250a5-acef-26d7-5d44-302a10912dd6@tessares.net>
+Date: Thu, 10 Nov 2022 18:07:32 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1544; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=5mMBbs8dJeaihckVLwjgcKY7c3vEPzrGXbHKF1dGLHw=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjbSAHaMAZJRbacwN1t5tbaKPegMOBU+LH90mgSipK
- Nb9v2V+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY20gBwAKCRD2t4JPQmmgc5qTD/
- 4u2nuerXZsRumIMR67q9klJCXtQlwJRKpqhrFb/mNyufQfXz3pg0aCRdKoWz9YqdVyfnQCWX+/Q7re
- XoXBR/PaiU8HT87yve+3UEGTi9PclmdHKzTaxj+9md80KQftWeuYD5gXD5l3Q7Y1wxLz8D5szULK8G
- x8jKUOXXq5N40UOeiPt1s6AY0ckdKOz8lKXO5OC21Mz69XKrXsnZlSc4y4ZRu13an8nGzj9WJaFCyp
- HSyD/R7tA8lOA+kj6IBiIUsb/YZcDv+a1aLSJhDnT5P++QkXnd1OFIt6SKBibqw35mlAzbdUbmxy76
- LhscfBS7msK/0r5ivwjawxpSKe0RstakLSm7viRDX5daljI+hRC60Tt/gfM+DNgCnTpDL9d0lR2nMJ
- gwBKIsikEZa3LfCuUIkkF5NvwYf3VsKuyoMFuk0VGWw3cfWVKO03eknLCrDUqheNjK+pPcVuHi33q1
- cK04HimsHrIx+3Jovl77FzQlkgIVu7D68Huzl4XicMiu45LCNBxO4DInhc0NNH/BC+9CUrKUHF68T4
- xRCaVaIFVLLmHDs6lfsG5DY/dpgjOcjbwxMJ2bOCaFdcXXvQVAjTZrbvJ/fYVkYkZXDfX/NAI2IIBi
- 67m3k2GKDo9vnXgLFJv8KFd+zpy+D4sC3tJjfKbF6Zoh455gSi0IJfKGA1wg==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: deduplicate error paths on endpoint
+ creation
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <13fc62c6a047dbd043be5131567c0f3a6c46267e.1667586266.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <13fc62c6a047dbd043be5131567c0f3a6c46267e.1667586266.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The estimated time was supposing the rate was expressed in mibit
-(bit * 1024^2) but it is in mbit (bit * 1000^2).
+Hi Paolo, Mat,
 
-This makes the threshold higher but in a more realistic way to avoid
-false positives reported by CI instances.
+On 04/11/2022 19:25, Paolo Abeni wrote:
+> When endpoint creation fails, we need to free the newly allocated
+> entry and eventually destroy the paired mptcp listener socket.
+> 
+> Consolidate such action in a single point let all the errors path
+> reach it.
 
-Before this patch, the thresholds were at 7561/4005ms and now they are
-at 7906/4178ms.
+Thank you for the patches and the reviews!
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/310
-Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/net/mptcp/simult_flows.sh | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Now in our tree (feat. for net-next) with Mat's RvB tag:
 
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index af70c14e0bf9..34362c4644ff 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -249,7 +249,8 @@ run_test()
- 
- 	# time is measured in ms, account for transfer size, affegated link speed
- 	# and header overhead (10%)
--	local time=$((size * 8 * 1000 * 10 / (( $rate1 + $rate2) * 1024 *1024 * 9) ))
-+	#              ms    byte -> bit   10%        mbit      -> kbit -> bit  10%
-+	local time=$((1000 * size  *  8  * 10 / ((rate1 + rate2) * 1000 * 1000 * 9) ))
- 
- 	# mptcp_connect will do some sleeps to allow the mp_join handshake
- 	# completion (see mptcp_connect): 200ms on each side, add some slack
+New patches for t/upstream:
+- 497665201aac: mptcp: deduplicate error paths on endpoint creation
+- afc4856d2507: mptcp: more detailed error reporting on endpoint creation
+- Results: 9c6870ffc219..d33b3e9215cd (export)
 
-base-commit: 9c6870ffc2198874360447d04eb79c5f578b0f26
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221110T170554
+
+Cheers,
+Matt
 -- 
-2.37.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
