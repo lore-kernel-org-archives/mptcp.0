@@ -1,29 +1,29 @@
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F651E9F8
-	for <mptcp@lists.linux.dev>; Thu, 10 Nov 2022 23:23:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E7A1EA09
+	for <mptcp@lists.linux.dev>; Thu, 10 Nov 2022 23:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668122611; x=1699658611;
+  t=1668122612; x=1699658612;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=cNGnY0VU4qbhgNQGwKKP6KBBS84YJ9VSkme6zv3AmPs=;
-  b=DsWzg8cqjFewnA2kmBVsAX8y8drBzdJE7mhCmChXRKwAvQ6ecXqMvy/j
-   eJO7Xalfx74Y+waa+tHkSxI9KkhBdWalZFtFPghBNt+cHwtv+bbGEDudK
-   mdq5YGEJZnC8tWZhh9PE6fetxspu4EvXkszrq4jgBrRXhMy2Etqzw277o
-   c35kEJFRiV+esD3QkgoLpJOSyXNruymljJkFw+m0zPvLXfV1hgPru4wAw
-   YLUQ8ZMgK7MVpqaVrT+jGgSYWve+XsYbTWPzSSg37mBa0l5tO4Rh6LVo9
-   2RSjoEiQ8rXS1ItT+HwhAptB1ABvA0zgKdgSMM1o5tmmiYKqsYix00OhW
+  bh=dkHFHct5jmMR29HfWsBOmJdLyB9m7Wj7O5Y3w3dZj3Y=;
+  b=Z1UGHSzEAQd1oI0SJOsY0UpSEF6Q+bx1XM0Bu3IYE4PldQUw8i9m7Tr5
+   m/XhERsjtohaAHfKqNPri0X4oP9ANSYfrfMew5oe0f8liyerVx6E0B3dx
+   Ov+bpRVvqehYQFMFXJOsbeXc17Zcm3nccx9ycLU1d4fLwCmv6DMuyt7h0
+   LhJFrOe7EItXf/8zmHDYLmAAsluZK0fDkcIdXCf/DgM48+vl3Lm8aETMz
+   T2mgROhvL0Pb/AFm2tNYdTJ0EZLMdJllSC3VcctLO32FhEXeM97Jh+W+N
+   yvhJnQ8AT/8hfeU+j/79jc3snd3kenHTj6k+dSs3rrN/fc59cQWAT59ac
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="373594071"
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="373594074"
 X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
-   d="scan'208";a="373594071"
+   d="scan'208";a="373594074"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 15:23:29 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="637367371"
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="637367373"
 X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
-   d="scan'208";a="637367371"
+   d="scan'208";a="637367373"
 Received: from jsandova-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.81.89])
   by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 15:23:29 -0800
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
@@ -36,9 +36,9 @@ Cc: Geliang Tang <geliang.tang@suse.com>,
 	matthieu.baerts@tessares.net,
 	mptcp@lists.linux.dev,
 	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 2/5] mptcp: change 'first' as a parameter
-Date: Thu, 10 Nov 2022 15:23:19 -0800
-Message-Id: <20221110232322.125068-3-mathew.j.martineau@linux.intel.com>
+Subject: [PATCH net-next 3/5] mptcp: get sk from msk directly
+Date: Thu, 10 Nov 2022 15:23:20 -0800
+Message-Id: <20221110232322.125068-4-mathew.j.martineau@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221110232322.125068-1-mathew.j.martineau@linux.intel.com>
 References: <20221110232322.125068-1-mathew.j.martineau@linux.intel.com>
@@ -52,83 +52,85 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-The function mptcp_subflow_process_delegated() uses the input ssk first,
-while __mptcp_check_push() invokes the packet scheduler first.
-
-So this patch adds a new parameter named 'first' for the function
-__mptcp_subflow_push_pending() to deal with these two cases separately.
-
-With this change, the code that invokes the packet scheduler in the
-function __mptcp_check_push() can be removed, and replaced by invoking
-__mptcp_subflow_push_pending() directly.
+Use '(struct sock *)msk' to get 'sk' from 'msk' in a more direct way
+instead of using '&msk->sk.icsk_inet.sk'.
 
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 ---
- net/mptcp/protocol.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+ net/mptcp/pm_userspace.c | 4 ++--
+ net/mptcp/protocol.c     | 4 ++--
+ net/mptcp/sockopt.c      | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 9e82250cbb70..5cb65f0928f4 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -291,7 +291,7 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+ 		goto create_err;
+ 	}
+ 
+-	sk = &msk->sk.icsk_inet.sk;
++	sk = (struct sock *)msk;
+ 	lock_sock(sk);
+ 
+ 	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
+@@ -403,7 +403,7 @@ int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
+ 		goto destroy_err;
+ 	}
+ 
+-	sk = &msk->sk.icsk_inet.sk;
++	sk = (struct sock *)msk;
+ 	lock_sock(sk);
+ 	ssk = mptcp_nl_find_ssk(msk, &addr_l, &addr_r);
+ 	if (ssk) {
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 64d7070de901..5a344788f843 100644
+index 5a344788f843..3796d1bfef6b 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1602,7 +1602,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 		__mptcp_check_send_data_fin(sk);
- }
- 
--static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
-+static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
+@@ -2454,7 +2454,7 @@ static bool mptcp_check_close_timeout(const struct sock *sk)
+ static void mptcp_check_fastclose(struct mptcp_sock *msk)
  {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_sendmsg_info info = {
-@@ -1611,7 +1611,6 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
- 	struct mptcp_data_frag *dfrag;
- 	struct sock *xmit_ssk;
- 	int len, copied = 0;
--	bool first = true;
+ 	struct mptcp_subflow_context *subflow, *tmp;
+-	struct sock *sk = &msk->sk.icsk_inet.sk;
++	struct sock *sk = (struct sock *)msk;
  
- 	info.flags = 0;
- 	while ((dfrag = mptcp_send_head(sk))) {
-@@ -1621,8 +1620,7 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk)
- 		while (len > 0) {
- 			int ret = 0;
- 
--			/* the caller already invoked the packet scheduler,
--			 * check for a different subflow usage only after
-+			/* check for a different subflow usage only after
- 			 * spooling the first chunk of data
- 			 */
- 			xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
-@@ -3220,16 +3218,10 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
- 	if (!mptcp_send_head(sk))
+ 	if (likely(!READ_ONCE(msk->rcv_fastclose)))
  		return;
+@@ -2616,7 +2616,7 @@ static void mptcp_do_fastclose(struct sock *sk)
+ static void mptcp_worker(struct work_struct *work)
+ {
+ 	struct mptcp_sock *msk = container_of(work, struct mptcp_sock, work);
+-	struct sock *sk = &msk->sk.icsk_inet.sk;
++	struct sock *sk = (struct sock *)msk;
+ 	unsigned long fail_tout;
+ 	int state;
  
--	if (!sock_owned_by_user(sk)) {
--		struct sock *xmit_ssk = mptcp_subflow_get_send(mptcp_sk(sk));
--
--		if (xmit_ssk == ssk)
--			__mptcp_subflow_push_pending(sk, ssk);
--		else if (xmit_ssk)
--			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk), MPTCP_DELEGATE_SEND);
--	} else {
-+	if (!sock_owned_by_user(sk))
-+		__mptcp_subflow_push_pending(sk, ssk, false);
-+	else
- 		__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
--	}
- }
- 
- #define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
-@@ -3320,7 +3312,7 @@ void mptcp_subflow_process_delegated(struct sock *ssk)
- 	if (test_bit(MPTCP_DELEGATE_SEND, &subflow->delegated_status)) {
- 		mptcp_data_lock(sk);
- 		if (!sock_owned_by_user(sk))
--			__mptcp_subflow_push_pending(sk, ssk);
-+			__mptcp_subflow_push_pending(sk, ssk, true);
- 		else
- 			__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
- 		mptcp_data_unlock(sk);
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index f85e9bbfe86f..f62f6483ef77 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -987,7 +987,7 @@ static int mptcp_getsockopt_tcpinfo(struct mptcp_sock *msk, char __user *optval,
+ 				    int __user *optlen)
+ {
+ 	struct mptcp_subflow_context *subflow;
+-	struct sock *sk = &msk->sk.icsk_inet.sk;
++	struct sock *sk = (struct sock *)msk;
+ 	unsigned int sfcount = 0, copied = 0;
+ 	struct mptcp_subflow_data sfd;
+ 	char __user *infoptr;
+@@ -1078,8 +1078,8 @@ static void mptcp_get_sub_addrs(const struct sock *sk, struct mptcp_subflow_addr
+ static int mptcp_getsockopt_subflow_addrs(struct mptcp_sock *msk, char __user *optval,
+ 					  int __user *optlen)
+ {
+-	struct sock *sk = &msk->sk.icsk_inet.sk;
+ 	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
+ 	unsigned int sfcount = 0, copied = 0;
+ 	struct mptcp_subflow_data sfd;
+ 	char __user *addrptr;
 -- 
 2.38.1
 
