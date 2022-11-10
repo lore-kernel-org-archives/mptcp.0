@@ -1,122 +1,112 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D283E1A601
-	for <mptcp@lists.linux.dev>; Thu, 10 Nov 2022 17:16:11 +0000 (UTC)
-Received: by mail-wm1-f49.google.com with SMTP id ja4-20020a05600c556400b003cf6e77f89cso4559020wmb.0
-        for <mptcp@lists.linux.dev>; Thu, 10 Nov 2022 09:16:11 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0C31A612
+	for <mptcp@lists.linux.dev>; Thu, 10 Nov 2022 17:55:31 +0000 (UTC)
+Received: by mail-io1-f42.google.com with SMTP id p141so1828669iod.6
+        for <mptcp@lists.linux.dev>; Thu, 10 Nov 2022 09:55:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=04tsQl2zXO1HLHE4tqpma+pmOBLbKtyJcgaJfAQDIzE=;
-        b=WErRB48UL0SXmqG70/k6K3u3Z2UjuyVfxHxwJ4Hh8damxuGXUUeSX5khuY/Zyb0Gje
-         tWN+jCmp7gsr2pWJiWwvSnPlt4sn+HBMrFXLYIhNVybp6gDfZVyZZXj2mV8pvvoaMapQ
-         ydKhVJcOgirfSJ/x12YBDNKd4XruMq1nIg7VC9RgryMCTg9N81R0q33dsQcH860SUBNJ
-         OTTaf7T7NwDOHPjleY1RpbAQZPRrMsNJP/ayOscGER6CEBFTeGKBH0GNIaei2uwYqI+l
-         4xU9Qms7/B/hyeB+FibYBJaJeqrXjBl+nOfgV1XRSUnBeLpN1myK7/WvmpwVLAzXzC0c
-         Zudw==
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3GLdlBUmgQRluNLCs0+JQ7KWgD63vepDsWUgdvwo5Ok=;
+        b=Y3ul8qRys4TVPVxT73zYtZxCc9PNzePKNDCaP5ZjSQNkDihYmca9/V9pMIbHg0D4PH
+         0Hs7scvkylUhIDCc/qsIfHsxD7YWVlDTYRLjiF6NcFdXQwpqYHrODtveBhFjk/+PZ0bg
+         gRvSwpEIN8ORWIXTrG5ceWtCvZ2lwal7ItkJjNSSFsXulKv0Eu6D8eo+SXM8qf45/Qxx
+         w2E6TB/mP0thzSupZ1mzgIXjBaV6VGA4v2duGfZ5hMLE9uotbOftxuEOZs3EuCPwnnPe
+         O59mLOmHICuPTCmVnPNvjIyELAKcjuyzYiV0AdJu2MIZ4mpvveOz29+IP2LxuPuBG107
+         E6lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=04tsQl2zXO1HLHE4tqpma+pmOBLbKtyJcgaJfAQDIzE=;
-        b=sv0HaRyzj18ILofuJ2oAOjcJgZSxrzf7prZAdJvfCMn4aHuSh2gauUc9rQubO1R7au
-         8vr0MSajTX2VRrioox1+aO4MOixUFKW73dY8F6aG3fDhZAPSBpdrkBlsFskmgk1KMjzI
-         bdbwyCj6LsuvJ/zi6QI5z0in4yJGdWjToJf4zfK5OpbXpib3FyCiZIXz0uTXEUwvjJA8
-         nHFhSdZaJj4gWLgUIDr0a1BIErcKTDCb0ec6WMplKzPOEpADpggBPkvOyVz+/r2UeOVN
-         6sOIuqCsgNXw5WaNPFVkvjNQYWktmcctNmleRbbE62oXoD2moEMobtt2+CiiJH9mVYpt
-         DvYw==
-X-Gm-Message-State: ANoB5pmnDXWi+Ux8YngaoiS0PBJEp0HcnJdP0DPtTv+HLfdOJJIr83PT
-	AL/CNhWNQD6FOLhg5R9qOmoBhQJImYSKjAV2kjM=
-X-Google-Smtp-Source: AA0mqf5V+GJ99MBF2D5/o5P4TJ9QEtUfJVz/i6tEJcKnGlJFnN9i3dyIjz524JSgM8FbX2UpSEWHQA==
-X-Received: by 2002:a05:600c:2942:b0:3cf:b1c1:336a with SMTP id n2-20020a05600c294200b003cfb1c1336amr11934256wmd.95.1668100569684;
-        Thu, 10 Nov 2022 09:16:09 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:a69e:b302:f965:8831? ([2a02:578:8593:1200:a69e:b302:f965:8831])
-        by smtp.gmail.com with ESMTPSA id m9-20020a05600c4f4900b003b3307fb98fsm166485wmq.24.2022.11.10.09.16.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Nov 2022 09:16:09 -0800 (PST)
-Message-ID: <8cea7adf-83a9-f568-a612-1428eecf4c32@tessares.net>
-Date: Thu, 10 Nov 2022 18:16:08 +0100
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3GLdlBUmgQRluNLCs0+JQ7KWgD63vepDsWUgdvwo5Ok=;
+        b=YT4lgdLrZ9WZ/k8J8yNTNRwVjgCHJjVvnffhSoFUFtxwDDcFxVqYus6ytBXM4dOUsO
+         5xbF2+3tHH2dekS6rHDe5hO3niWGwolKiTm+aES5BBoz0qrVhVM+zJDWm3d3Qs2UMVhg
+         tBne8f3U7jyUyDMcFgshUxHRHT6cCofYpDGvz288XPunbu5ivHy88adcCG3gjW039Uwq
+         sg1JRD3fCAbQ8abFtJAdS8q360JSi/AXkKhRZnRgDZBxG4gGFLZmRpyUqpIhH/TXl9TU
+         ooWvETfYayUHw/kNZUcV7+wgIA6H0STye1hejO7pYzfCyTpcO23ZvEw52U7m0sTLpwUn
+         stmA==
+X-Gm-Message-State: ACrzQf2by6DQFne/dx0YFXyyi2fC1cNhQUgfTdwT9c1f8KPuXBagSliI
+	7VMP83eSigE5klnM0aSP+1fpgvK1kA==
+X-Google-Smtp-Source: AMsMyM6aem+Z0TbLZLX/ffgu2puKyYn5RzYS/lFRPxi24//bdweatvGMKotvslRhN0KvCMO45jPdhg==
+X-Received: by 2002:a05:6602:3812:b0:6a3:e352:d51f with SMTP id bb18-20020a056602381200b006a3e352d51fmr3195106iob.199.1668102931068;
+        Thu, 10 Nov 2022 09:55:31 -0800 (PST)
+Received: from [127.0.0.1] ([40.122.75.103])
+        by smtp.gmail.com with ESMTPSA id a14-20020a92c70e000000b0030237bcb9bdsm88646ilp.12.2022.11.10.09.55.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Nov 2022 09:55:30 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20221110160017.3641527-1-matthieu.baerts@tessares.net>
+References: <20221110160017.3641527-1-matthieu.baerts@tessares.net>
+Subject: Re: selftests: mptcp: fix mibit vs mbit mix up: Tests Results
+Message-ID: <19c60342-e878-a0e5-250f-baae72b0c6f4@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 10 Nov 2022 17:55:29 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH mptcp-next 0/4] mptcp: run mptcp_sockopt from a new netns
- + cleanup
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-References: <20221019161940.3178393-1-matthieu.baerts@tessares.net>
- <a1572fd3-3ae2-5f67-4d9a-b561eecfed2a@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <a1572fd3-3ae2-5f67-4d9a-b561eecfed2a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi Mat,
+Hi Matthieu,
 
-On 31/10/2022 23:04, Mat Martineau wrote:
-> On Wed, 19 Oct 2022, Matthieu Baerts wrote:
-> 
->> Here are some small fixes for the MPTCP selftests, no big changes.
->>
->> The first patch is a fix and for -net: if we run mptcp_sockopt.sh
->> after having
->> modified some settings related to MPTCP on the host, we can run into
->> issues
->> without this patch.
->>
->> The second patch uses the new netns for mptcp_inq, cleaner.
->>
->> The third one remove some defined but unused vars.
->>
->> The last one uniform 'rndh' variable because it was declared with
->> undefined
->> variables in a few places.
->>
->> Matthieu Baerts (4):
->>  selftests: mptcp: run mptcp_sockopt from a new netns
->>  selftests: mptcp: run mptcp_inq from a clean netns
->>  selftests: mptcp: removed defined but unused vars
->>  selftests: mptcp: uniform 'rndh' variable
-> 
-> Ok, with the follow-up discussion and handling Geliang's suggested fix
-> for mptcp-next as an additional patch, this series looks good to me:
-> 
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Thank you for your modifications, that's great!
 
-Thank you for the review!
+Our CI did some validations and here is its report:
 
-Now in our tree (fix for net for patch 1/4, feat. for net-next with the
-others):
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): =
+packetdrill_add_addr =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/6122416422780928
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6122416422780928/summary/summary.txt
 
-New patches for t/upstream-net:
-- c0dbc5e74ae0: selftests: mptcp: run mptcp_sockopt from a new netns
-- Results: 21b3ec76c898..5a5c32fdb403 (export-net)
+- KVM Validation: debug:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5559466469359616
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5559466469359616/summary/summary.txt
 
-New patches for t/upstream:
-- c0dbc5e74ae0: selftests: mptcp: run mptcp_sockopt from a new netns
-- 972ae67540f4: selftests: mptcp: run mptcp_inq from a clean netns
-- 6af6a13a0afc: selftests: mptcp: removed defined but unused vars
-- ca4c25547d92: selftests: mptcp: uniform 'rndh' variable
-- Results: d33b3e9215cd..5f9e0bf4aacf (export)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/d274a6a1623e
 
 
-Tests are now in progress:
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20221110T171431
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221110T171431
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
