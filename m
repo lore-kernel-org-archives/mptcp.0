@@ -1,72 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A3D2596
-	for <mptcp@lists.linux.dev>; Fri, 11 Nov 2022 11:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1668165549;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1J1LvAj2IQo3vVf7Pi3vsTkccwKQ9X+J6wg1C/5+O5s=;
-	b=Jf99qRZ6b1aUlZfhihozhKZdjyqfSV5QMM891zVxJQdFbQ9/Oy8b1UUf9uH3rlOlQN8xAx
-	HNOpgFktUd3EVhX/aYyrAHCvz/v2Yjz69E2/y7p2Ntm7zZZQoyhzaxjApusWA7peTK+JoA
-	B8wtJKmFHMMVNjaOl5J5bS1jANrZCtc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-392-UI2BxaVJML2EhC58t_QFuw-1; Fri, 11 Nov 2022 06:19:06 -0500
-X-MC-Unique: UI2BxaVJML2EhC58t_QFuw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B6CA2280D724;
-	Fri, 11 Nov 2022 11:19:05 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.106])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 28233C15BB2;
-	Fri, 11 Nov 2022 11:19:05 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Dmytro Shytyi <dmytro@shytyi.net>
-Subject: [PATCH mptcp-next 2/2] Squash-to: "mptcp: add subflow_v(4,6)_send_synack()"
-Date: Fri, 11 Nov 2022 12:18:59 +0100
-Message-Id: <08853d114ad67bbb0ad66b40493b0880ca1ae862.1668165456.git.pabeni@redhat.com>
-In-Reply-To: <00a831a7ae3ffb0573dca58f270a98799f5230bf.1668165456.git.pabeni@redhat.com>
-References: <00a831a7ae3ffb0573dca58f270a98799f5230bf.1668165456.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4512A2582
+	for <mptcp@lists.linux.dev>; Fri, 11 Nov 2022 11:55:34 +0000 (UTC)
+Received: by mail-pf1-f179.google.com with SMTP id k22so4718702pfd.3
+        for <mptcp@lists.linux.dev>; Fri, 11 Nov 2022 03:55:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=COD1Log/oMLixjJ96zqWAf0jyWR2Tvj8/qxe8vqi5iM=;
+        b=Wb54OK2vHN0LeU71fpJuFIBz5IzxizoFJTk7cszIw1kFkBk46B/4Es5CJHqVpWFIf8
+         +I0YyJd1hEcdskD/sMuhMVTq3ECatW0tZudeN+T9XzzaxpjKThAsyLffNSXf/bmaS6sC
+         VUR7Pu8VI0fRTAuDtg1L3TPY7hg+VNs6Y6qBFGJ3idgIGrspcx5SPXlWIe6f7h1sxg2x
+         odEDXiKK+fBg6CSaLd2YmsfShCIl+rI0rNYJb2HvEG9OQibYKhHEj73HUq8IjC42o0/m
+         qNAr2aR4csVoIPm4rJHIZFukzq1Xuo0/QRmwnAlFcPVTuVfS/feIJhdNDVLtAikGXqcr
+         Vayw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=COD1Log/oMLixjJ96zqWAf0jyWR2Tvj8/qxe8vqi5iM=;
+        b=JBpluUOGk4cUMKDPCelkA8+ulHvOz+d8Vr4HFHJcjizbHMHc7+hYpHL8Kvs8uZAQOc
+         q7vVIX3FQp0i+a6chiG0OeiBc9/doc7iw9zXqGmZC3ONGDdGTJZ5EPpewYMTPWoj9G0F
+         Bw7WoXkAkVMGVlr4yvavO1s8SUMlogmKNsR1Lgkkk0gBrd5boWka6b+kUj6plD/ShvHx
+         6cV3bBhVsq+lVAxjptWccyby5eOTraQbykiGhx3+zWDfa36T1dUvzSudYsGZcSudz069
+         37PpDiwEJyUZgKLcMp7tDx2ZJktaVXWnnfxVO7Oy5cpsPtU6AqxpabaKK7JVM1/kUHcw
+         QQgg==
+X-Gm-Message-State: ANoB5pm8qog0y7R9/MpufO1ZwnTvtad+kpCJeaSuaZkgTUfADNDtg8W5
+	sZm2w36AStsIjLvY+HRbln+l1F4iVA==
+X-Google-Smtp-Source: AA0mqf6aC9oElTL/HYKBQFVa+YQrYrJZerN20eR8g+BV9X2GR1BKkhy25m6w9oWp1BDsuVTdJhwIzw==
+X-Received: by 2002:a63:454a:0:b0:46f:b888:164f with SMTP id u10-20020a63454a000000b0046fb888164fmr1314970pgk.386.1668167733593;
+        Fri, 11 Nov 2022 03:55:33 -0800 (PST)
+Received: from [127.0.0.1] ([168.61.65.186])
+        by smtp.gmail.com with ESMTPSA id s18-20020a170903215200b00186a6b6350esm1481507ple.268.2022.11.11.03.55.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Nov 2022 03:55:33 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <508587c12b02e0f33388aa2fe30add27eb8c13c8.1668161791.git.pabeni@redhat.com>
+References:
+ <508587c12b02e0f33388aa2fe30add27eb8c13c8.1668161791.git.pabeni@redhat.com>
+Subject: =?UTF-8?Q?Re=3A_Squash-to=3A_=22selftests=3A_mptcp?=
+ =?UTF-8?Q?=3A_mptfo_Initiator/Listener=22=3A_Tests?= =?UTF-8?Q?_Results?=
+Message-ID: <f7fd0ef8-69a0-e629-b990-e701262e4a65@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 11 Nov 2022 11:55:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Follow-up to the previous patch, splitted here to hopefully
-simplify processing/merging.
+Hi Paolo,
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/fastopen.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for your modifications, that's great!
 
-diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
-index 10f901e281f6..330a19392f55 100644
---- a/net/mptcp/fastopen.c
-+++ b/net/mptcp/fastopen.c
-@@ -17,7 +17,7 @@ void subflow_fastopen_send_synack_set_params(struct mptcp_subflow_context *subfl
- 	tp = tcp_sk(ssk);
- 
- 	/* mark subflow/msk as "mptfo" */
--	msk->is_mptfo = 1;
-+	subflow->is_mptfo = 1;
- 
- 	skb = skb_peek(&ssk->sk_receive_queue);
- 	if (WARN_ON_ONCE(!skb))
--- 
-2.38.1
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): =
+mptcp_connect_mmap =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/5533446215303168
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5533446215303168/summary/summary.txt
+
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s): mptcp_connect_mmap=
+ =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6659346122145792
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6659346122145792/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/d2547fcc926f
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
