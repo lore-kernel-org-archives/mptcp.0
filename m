@@ -1,97 +1,96 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE537492
-	for <mptcp@lists.linux.dev>; Mon, 14 Nov 2022 16:46:42 +0000 (UTC)
-Received: by mail-ej1-f43.google.com with SMTP id y14so29789766ejd.9
-        for <mptcp@lists.linux.dev>; Mon, 14 Nov 2022 08:46:42 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB79F748D
+	for <mptcp@lists.linux.dev>; Mon, 14 Nov 2022 16:58:15 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id f5so29886499ejc.5
+        for <mptcp@lists.linux.dev>; Mon, 14 Nov 2022 08:58:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oJAkMZmPTXd81mYjHRUWlG7lWbfI6wrWe3E8hF+LyqA=;
-        b=ALrg11XwoUoLFXRcSUadjGPbCMuRX97qlqGJch/od7TyAiWLwRGEBopn0qfkmd2avs
-         8HQpwhmXwbNFG/JJBnJRR2/XnILTlxbkCY6HWVLLXCPyslQ+zXBegYd7m1lrzdXRUp6B
-         KRGgVeqybbhtAKXm64EJiSEomLNJxvsk5FTygMTFQsJ2TrYBagx8meyHnglaRC6ZkdmQ
-         BtuDseollBLoajqHB6Mncr6hIsm6MGSKObVb/eSxoF2Mig+Z/F/CY/R6w3Mu1VqgOv9k
-         UyEMEHisq9R6TZKwTqpKr2S3GZUoojMLuJkz7xtIVuwVRBSgpEBKEFzh1ppgeCuEfZAP
-         FE4A==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rim/BbVz2vO5xv23Vaa9q6UHpkvTTLwCy9cz26VViwM=;
+        b=wDpfggATTvaLMs27d9ZaFNDy3q2ScynzBqdH0VEhRhJkQEMW4vDfwKaq6pbeJXoJNy
+         o7+uVv8Ixo/WqsUpQZpC+xqPTytUqOlVPiXBWO+M/LqA6/q89oZT2kY/GwJrEmiIxY8y
+         xWMzLhZxfTMu9wMZja3i5Cvi77ayeF90J3YV8l2HuoLkIYQaKa+6WteDzSk1GXYRQh8I
+         +oPqGy7d33OcbZ35ASsbv9G+9pphffBj+ZHGyIIbhM4ZskQ+mMiGYAuLMNthoWANNAZk
+         2wW1xOh/HPsool5Q8p8k6j3br9Qjrzpxn7r/14ewAHCrwmuPMaZxvtSaAtcAkL5+j07/
+         4TkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oJAkMZmPTXd81mYjHRUWlG7lWbfI6wrWe3E8hF+LyqA=;
-        b=qLvlPj2rbiGX2oLi8ysGtowJqhBvTvV0uaW1y6HK9QWu+B1IIcV2OIi7Srd7imnfnZ
-         QFKlNpCQdRbeo7WBxqI1C/29EBoRxQ9xRZWoBD+H9n8ijVtq8Q3F86FOv8q0yIdbIu3N
-         UWaYtD7bI6Resw7BNprDc/BPkylN617OFIoJpR8CBqxZc9m3tjftirJacQ51Qo5PTTHA
-         brQDBFtZd5Oo3IveZRta2YBcuta5LO3BQv6LCuAxtnKVVP6qVQTm7DbOCU8fX8SylbNf
-         q8RvqUQLKme4LANoXPihYpS8Fjn+jIiHnzL9m2A4XFgvefrGHLkc9ECQQfjojqQR8m0u
-         btRg==
-X-Gm-Message-State: ANoB5pkH4vslzCC08jAbUtBymg+gk6ptxdgBQKTgGQxH09OlCSQ/rxdy
-	73Os6pk4yAUsgcIg8f/FV5cyVMkxhSEjGQ==
-X-Google-Smtp-Source: AA0mqf5fuH88DJSE3RM6nLmvDq1T+TD+0XuE1ZfEs4Nr0RmfoMmlXXE4F/NQVmSjWVX8aBOLzfJN4Q==
-X-Received: by 2002:a17:906:71d8:b0:7ad:b45c:dbe1 with SMTP id i24-20020a17090671d800b007adb45cdbe1mr10988205ejk.726.1668444400510;
-        Mon, 14 Nov 2022 08:46:40 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id qq18-20020a17090720d200b00773f3ccd989sm4377877ejb.68.2022.11.14.08.46.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Nov 2022 08:46:40 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next 5/5] Squash-to: "selftests: mptcp: mptfo Initiator/Listener"
-Date: Mon, 14 Nov 2022 17:46:01 +0100
-Message-Id: <20221114164601.861295-6-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221114164601.861295-1-matthieu.baerts@tessares.net>
-References: <20221114164601.861295-1-matthieu.baerts@tessares.net>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rim/BbVz2vO5xv23Vaa9q6UHpkvTTLwCy9cz26VViwM=;
+        b=JPng5389C9/1Xsu0HCXyuh4tBTVxQ2TPZA8mGtYwTqmWQSpwEREWyGFSVucxHWpSjz
+         p6PGe7m/vJjoYTrT4YXvjMWmGWog4l4nJ4qBxNGHfjrpCGIwXN5gHrxAciTblc6aar8G
+         aLldGzNb90P2zG+uAC5j4IlaSsfzq8pIVPlDDaTamGFjfVx0G/0OujARehk/uKCkX/6q
+         Ko9N7gqJeqQ46qV6j5fmP55N08lAqTZfVOlXWQMSujvRhLk3Ij/Ut8V3uzlSkiBlkom3
+         bocEw6LcXV68ExcYVbb80t5DPPAKk/9dltoeXdd7vuYhxdbVxgGGD2AoKUqaS1LjE9Cb
+         8aAg==
+X-Gm-Message-State: ANoB5pkxoknP+cWimK2KwrjxM4a12+aQr/F1+QXir+mOWnH46F6qfraG
+	BfkSKfykyKz48HPNOyg29ixvDRg85egvOgUKA1k=
+X-Google-Smtp-Source: AA0mqf5k5MtqBDw1CaSzqnQxovij7azkOO4c9t9RFmz27JofeFupItahYSMEnBuKvC5AsUBLObd4kg==
+X-Received: by 2002:a17:906:7c8d:b0:7af:1233:948d with SMTP id w13-20020a1709067c8d00b007af1233948dmr1735319ejo.698.1668445093414;
+        Mon, 14 Nov 2022 08:58:13 -0800 (PST)
+Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id ku22-20020a170907789600b00787a6adab7csm2395805ejc.147.2022.11.14.08.58.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Nov 2022 08:58:12 -0800 (PST)
+Message-ID: <1a4372b7-3206-162c-c198-c16891391f01@tessares.net>
+Date: Mon, 14 Nov 2022 17:58:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=782; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=C4MOV1v4d8mrKObij1JhZkoEZ4glmkOlt1ohhxb4w2E=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjcnAx5C6/CS9eSkcT3EgREzTmToJzsEu1IfDpru7C
- cRIR+eCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY3JwMQAKCRD2t4JPQmmgc9itEA
- DVi59BUHzdsK0EvD9A+qJPKl/YJQed+W+3TuQk1wDcd92Sm7oT5V8hudusUQ40An53zlLfWxYjN3uh
- 3PUeY9UMUi5toP1CmsG5QXLnsW+xd43+SdybxBHFx87wV48FIJ8d3F9RvoeWuRHRiGyB7WWoP3THbn
- hycrZD38h8GCh6k6y2qurk0KiJw7XxSzKK/2gONzTb1pDPjItKj/pF5bWLxJoaGG03yDHJDNJBzsZL
- 4OdJhCCcEcGaFlj1Lx9JsHWFUmcKRELH4KUc3lNHKdGY7UkjaOH5WcU6dgw8ouGsSiaGCx6tk9Le8g
- rLrT88wWQq7UrFKnRwyaaKnWCFEHaPQCSjrJX/6ygDT0KOHBpNxC10dZvkVEa6SUAFwRimgnScjHej
- Ae7X+YTBJkU8rQh0pKIXQ/vTEalkMrWxE6MDuJXVVoKRRdBg0M7PdCvbavQwR5OlmOtYeLd9JIhM7j
- tqpMD4UlnHfJV0hzKUpkoaFTmOsPvKeq/JBz96X2dGTklpb0H6kRS9St+dlbe28zXBt5XLdKbNlSt9
- OoELkpKamCcD+/d/S1g0wnY5zOxstFmqt96OwIDjxAojS5FVLTjvYh7rXNLmxiOiEGSpgVrVC8ckWl
- UVhKgunmIiYN4D/j0Redvd3aJXkWb8U7Ybdd6uzK/QtOf7TRD0GXK4P7ec0Q==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH mptcp-next 0/5] mptcp: uniform code style and fix
+ checkpatch splats
+Content-Language: en-GB
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, Dmytro Shytyi <dmytro@shytyi.net>
+References: <20221114164601.861295-1-matthieu.baerts@tessares.net>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20221114164601.861295-1-matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-mptcp: fix warning reported by checkpatch:
+Hello,
 
-  mptcp_connect.c:398:  Blank lines aren't necessary after an open brace '{'
+On 14/11/2022 17:45, Matthieu Baerts wrote:
+> Just some small quick fixes about "issues" I saw when I applied the patches last
+> week. Nothing important: function names, place in the .h and small checkpatch
+> splats.
 
-(while at it...)
+An additional thing to do is to update the commit message of the first
+patch of the "TFO listener" series which is currently:
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 1 -
- 1 file changed, 1 deletion(-)
+  mptcp: introduce MSG_FASTOPEN flag
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index c8bd109c991f..8a8266957bc5 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -399,7 +399,6 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 			close(sock);
- 			sock = -1;
- 		} else {
--
- 			perror("connect()");
- 			close(sock);
- 			sock = -1;
+  In the following patches we will analyse the MSG_FASTOPEN flag
+  in the mptcp_sendmsg() and invoke the MPTFO.
+
+Maybe by:
+
+  mptcp: add MSG_FASTOPEN sendmsg flag support
+
+  Since commit 54f1944ed6d2 ("mptcp: factor out mptcp_connect()") from
+  Paolo Abeni, all the infrastructure is now in place to support this
+  flag.
+
+  The remaining action to do is to allow it and treat it as a fastopen
+  message to be able to access this:
+
+    sendto(sockfd, ..., ..., MSG_FASTOPEN, ..., ...);
+
+What do you think?
+
+Cheers,
+Matt
 -- 
-2.37.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
