@@ -1,40 +1,40 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3787C
-	for <mptcp@lists.linux.dev>; Wed, 16 Nov 2022 00:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4AC7C
+	for <mptcp@lists.linux.dev>; Wed, 16 Nov 2022 00:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668559595; x=1700095595;
+  t=1668560156; x=1700096156;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=TrawdByVlpRxO6LFVnoSCXdENeNApt9n3xqMPWZUSsI=;
-  b=k9CqVeRxXnIhpYgiPZZfSAYNUcm8ZTBjebWxtAcUUm26rmepN+417pkd
-   Y810uamzD6uAmg9UDb0G/5igRsvbkJtmNAssCKVyaS5kZ2MwyfJfIJjH7
-   EvXkpSt2z8gigw3giIB7CW4qBP/AndDf4+pAJ3TqURX1nlkLdzn8YZSni
-   bzwpGZptPPOsPnzrhwkogyv9S1t8bMMLASzU2qsB8j2gVxWnLo016/9NF
-   xaLhFi/JpchGLKbd5z3paFzu+8uSw9doU8I8EIwVgZ0wCT9RAhnUa0gCT
-   T7QNDrheLnoUs1BIaKqIeF2QwOeX8Nqe1tP6Q/xjkjv0mLZ/T8meGucsO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="311116737"
+  bh=6rVE/J0HuqwilgWp5RLytieN7CLsrkPGdvx3ypvHvfA=;
+  b=FLYtnXaxRz4eT6OS4fW9n+1Uln61HFt2EJsIdQfcfyKRxyN0xDMhxjlc
+   ZKpxkuQscrWfCREGo3JtVm1tJS47ZTvASSniR+gXBVkqEKuorvB6mxqo3
+   sfRtswa80UEzASAfVoDPxk0deSQ+Gru+b2J4EVVFCv4HM0Z0gvzXpTF+G
+   9UfWxVRAsiD4VIjPeSbesMjMjvMJp7vaMI1Rm6SiCfgjQQieqCzvVEm7b
+   vTrRYRSGFvEafOvnPt7LSBfTpQ+HYrEWBDtiC8rU3W5RZcFQFgCZg6M5E
+   YBtY2UOZyo2Pl9ZAmIRGLcLq2x7WfDVcZqG+isJB1hmSbRNcyuelOhtTJ
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="295776268"
 X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="311116737"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 16:46:34 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="968211010"
+   d="scan'208";a="295776268"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 16:55:55 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="813884498"
 X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="968211010"
+   d="scan'208";a="813884498"
 Received: from trichard-mobl1.amr.corp.intel.com ([10.209.2.82])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 16:46:34 -0800
-Date: Tue, 15 Nov 2022 16:46:33 -0800 (PST)
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 16:55:55 -0800
+Date: Tue, 15 Nov 2022 16:55:55 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] Squash to "mptcp: refactor push_pending logic"
- v19
-In-Reply-To: <20221112003133.27153-1-geliang.tang@suse.com>
-Message-ID: <f2536a94-6bed-03ec-7f33-69efdbe3043a@linux.intel.com>
-References: <20221112003133.27153-1-geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next] mptcp: don't fallback when dss validating
+ fails
+In-Reply-To: <20221114024005.26661-1-geliang.tang@suse.com>
+Message-ID: <73445d23-2060-3d90-cf44-042bcaabf040@linux.intel.com>
+References: <20221114024005.26661-1-geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,50 +43,51 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Sat, 12 Nov 2022, Geliang Tang wrote:
+On Mon, 14 Nov 2022, Geliang Tang wrote:
 
-> In the "msk->snd_burst <= 0" block, copied will never be 0, so err will
-> never be EAGAIN, drop it.
+> When DSS validating fails, just drop this skb and continue, don't
+> fallback and reset the subflow.
 >
-> The orignal code only checks EAGAIN in __mptcp_push_pending, so drop this
-> check in __mptcp_subflow_push_pending.
+> This patch changes the return value of get_mapping_status() in this
+> case from MAPPING_INVALID to MAPPING_EMPTY. With this change, in
+> subflow_check_data_avail(), the code will reach 'goto no_data', instead
+> of 'goto fallback'.
 >
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> This patch could be put into "BPF redundant scheduler, part 2" series.
+> It can fix the issue I mentioned in [1].
+>
+> [1]
+> https://patchwork.kernel.org/project/mptcp/patch/b0a39d02796da8a214fb8b8b9a597eef59e3ebd7.1666349129.git.geliang.tang@suse.com/
 
-Looks good to squash, thanks.
+I don't think this is the solution - the problem is that 
+validate_mapping() is finding mappings that don't match with the TCP 
+sequence numbers of the packets. This check for the receiver seems ok, 
+it's the sender side that needs fixing.
 
 - Mat
 
 > ---
-> net/mptcp/protocol.c | 7 ++-----
-> 1 file changed, 2 insertions(+), 5 deletions(-)
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index a60961d0676d..2e60165c0eb2 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1548,7 +1548,7 @@ static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
-> 		if (msk->snd_burst <= 0 ||
-> 		    !sk_stream_memory_free(ssk) ||
-> 		    !mptcp_subflow_active(mptcp_subflow_ctx(ssk))) {
-> -			err = copied ? : -EAGAIN;
-> +			err = copied;
-> 			goto out;
-> 		}
-> 		mptcp_set_timeout(sk);
-> @@ -1638,11 +1638,8 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/subflow.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> 		ret = __subflow_push_pending(sk, ssk, &info);
-> 		first = false;
-> -		if (ret <= 0) {
-> -			if (ret == -EAGAIN)
-> -				continue;
-> +		if (ret <= 0)
-> 			break;
-> -		}
-> 		copied += ret;
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 97d301d3bfd3..3944ebf492d9 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1128,7 +1128,8 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+> 	 */
+> 	if (!validate_mapping(ssk, skb)) {
+> 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSTCPMISMATCH);
+> -		return MAPPING_INVALID;
+> +		sk_eat_skb(ssk, skb);
+> +		return MAPPING_EMPTY;
 > 	}
 >
+> 	skb_ext_del(skb, SKB_EXT_MPTCP);
 > -- 
 > 2.35.3
 >
