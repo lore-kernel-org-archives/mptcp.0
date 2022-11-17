@@ -1,114 +1,98 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4248AEB28
-	for <mptcp@lists.linux.dev>; Thu, 17 Nov 2022 08:02:43 +0000 (UTC)
-Received: by mail-io1-f49.google.com with SMTP id y6so805822iof.9
-        for <mptcp@lists.linux.dev>; Thu, 17 Nov 2022 00:02:43 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FC28BE0
+	for <mptcp@lists.linux.dev>; Thu, 17 Nov 2022 18:24:32 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id f18so7220165ejz.5
+        for <mptcp@lists.linux.dev>; Thu, 17 Nov 2022 10:24:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K8fa/EiXtbopR6Nwou3mjZ7cKIpApJ9wePqbKGHhteQ=;
-        b=a/jVVAGKFrCqbThZt9mMAQkyFr0RhPBCaVp7f604+3bH3ylPEmZOd3xQ4LK07ySkRg
-         9FA1yufxjY8MwusMI67iJ/L18D1SU7aNjwZI6OqPBIim7yvK7FCCnHxBCSUEhmfIZQVJ
-         rTpdZ30c9A3Y/8EKQDn9Q2Ukau0MaDlDsaM4dthI5Wg88dyS921m+Ak6EM6YQkI/h0ZG
-         hlQex5atrcdilkDLYv2RW1RE1oyXAEeyhp6UjlyYLm979q1FTXTKDyQ4YZkYDZo6D6O7
-         ohHdmul3uO6am9nqJZea8dqaV5Dslopq9BTV6CYFfnUdSzeFhKGO7MpmV6xDOUw4csqp
-         FOFA==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:cc:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QK99coJy/kT0gVrmXLU4DBSf9iCQMfzncKu7JuAccaM=;
+        b=rpOhi5HeupY5LMQ10j3ilvOE4OaNyDhZWrfKPX9+ymiXBN5DbmO0TUgtyY2Prh0Gt3
+         7I9wJetqwZYSqopht5IQvPl0jVpETLcpX9E3xIHfHYLDaPM+CbAA3F0SsTixU7b4cuQK
+         VxIudIncH5cywDbxaMcJDtRFPGYDETeCsbv2O1XO79vbaWWnjZXZoU4+NeAgo4foLYvW
+         HjcXlM7d9pILCYLjMPMt1uzzeCgLfV06TNCX1j3QvGCV052FqchjQukHq8vCqENmhYY9
+         ZLPZZjGmU+KVOctocriuvZpRrwl38v8EVUDUuQuvQ6sGreUKeBhW1/8usrKFHMNUEMmb
+         +RCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=K8fa/EiXtbopR6Nwou3mjZ7cKIpApJ9wePqbKGHhteQ=;
-        b=ica/J7J5dIVv25wmnneZykHDHm3n3dNnrxQZpW0RJUZoZ08E5kFHgEApAAs7ONv20G
-         hOPIccOng4L0MbFv/A8ygfjbc08K4OBPc0OTPCnc3xrgN+PBR/k5ucRsBIR+kXqjM8CS
-         6K7illmcLpaIVuQ5z+W8GeO8O7jlgcV9dwrOEDjOwZw+IuIOrIMDVcGgboNPQncNFaMz
-         +xUZYp5BdPx86xjJN2tycNCDBBSxUddGeAKkAUyzDyS0rkfy6Yb905nWko0/6rjG4XGR
-         XI2z2f8P0mFsCbzIsOYz3qCPS+AatnqGDhSKJaonh3cV8H+PQqyH99sdYhd6WZgR8gEQ
-         sYyA==
-X-Gm-Message-State: ANoB5pkheVTcT/zeZGu7539tbqVqZq4P6bCFSf5OPlvqFoSLl/fsyB8e
-	VRwJZOGYPzjWpWCHjVYQVabG1tXZ3Sn8QY0=
-X-Google-Smtp-Source: AA0mqf6sWu5B+KV/yZ4hiCd/FHxYY7sInLIa0PTuoLofWKCRCByR2Gpv3QLbWofWa/B0OGdQJGJUJg==
-X-Received: by 2002:a02:6d6f:0:b0:375:c16b:7776 with SMTP id e47-20020a026d6f000000b00375c16b7776mr587677jaf.54.1668672162262;
-        Thu, 17 Nov 2022 00:02:42 -0800 (PST)
-Received: from [127.0.0.1] ([52.154.178.188])
-        by smtp.gmail.com with ESMTPSA id y35-20020a029526000000b0037586addbe9sm30512jah.88.2022.11.17.00.02.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 00:02:41 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <60b6d97a1087057ed07ec1c0c7068e22cede2ad9.1668662624.git.geliang.tang@suse.com>
-References:
- <60b6d97a1087057ed07ec1c0c7068e22cede2ad9.1668662624.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: listener test for in-kernel PM: Tests
- Results
-Message-ID: <ed229fef-6f30-de62-c7d9-617840b7b1af@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Nov 2022 08:02:40 +0000
+        h=content-transfer-encoding:in-reply-to:from:cc:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QK99coJy/kT0gVrmXLU4DBSf9iCQMfzncKu7JuAccaM=;
+        b=VrI0+uiDTcBywwHMhDyK1gZgPAM2rlTvMYasi22IslBBNhYihH7Na/avob9MzKVku6
+         cVXZThCKCKvnSN1cIPnT6tSnZ2hyoe5uJRLxp4oN53k5XAjl5b6C75vwGJkwfXrG7Z5m
+         EyWHt95vTNQwYyBI+U/En+G/b0AvxRzj5yr86Gr5HFJYeCHVuEWuYJJiv9X9Nlm4lLpu
+         buiNSOwJzzv90dSxUHr86+jCGXcfFghWiqBQflDadt+aFBWC1jfI4wsd4JzOXZGRfpi8
+         hrJc0hhllxAwvEL3h8NnXb0AXq35mMPzxjewGUL8X4pcdgxBzVAf92XgKFhH9H9H/9QL
+         Qrqw==
+X-Gm-Message-State: ANoB5plwjdBkCSl8orsxQzcrc4nBY3irdhu22pTvOJ6Dfy4A7D2yV57g
+	O08KJoUD19ZJjg+/0ywVST3sl+767RWEsSlM
+X-Google-Smtp-Source: AA0mqf7oniYSygFAihapxIMh77r2357lq4C4VIYTzYnxOQLi5FH/EzN5SLFxs0jEjDkxlJy+Wy2+Dg==
+X-Received: by 2002:a17:906:234a:b0:7ac:e7b1:20c8 with SMTP id m10-20020a170906234a00b007ace7b120c8mr3281073eja.68.1668709471003;
+        Thu, 17 Nov 2022 10:24:31 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:c628:990b:1aee:b25? ([2a02:578:8593:1200:c628:990b:1aee:b25])
+        by smtp.gmail.com with ESMTPSA id z6-20020a170906668600b007add1c4dadbsm679018ejo.153.2022.11.17.10.24.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Nov 2022 10:24:30 -0800 (PST)
+Message-ID: <768ebac9-476b-97af-9f40-a0e68f3af698@tessares.net>
+Date: Thu, 17 Nov 2022 19:24:29 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH mptcp-next 0/2] mptcp: more fastopen follow-up
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>
+References: <cover.1668531722.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <cover.1668531722.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo,
 
-Thank you for your modifications, that's great!
+On 15/11/2022 18:45, Paolo Abeni wrote:
+> The last bunch of mptcp fast open follow-up I have planned.
+> 
+> This aims at reducing the number of unnecessary mptcp_crypto_key_sha()
+> invocation, calling such primitive at most once per MPC subflow
+> and caching the result as subflow level.
+> 
+> The first patch should be inserted just before
+> 
+> "mptcp: implement delayed seq generation for passive fastopen"
+> 
+> while the 2nd one is a squash-to, still to the above.
+> 
+> Note that this will cause a trivial conflict in "DO-NOT-MERGE: mptcp:
+> use kmalloc on kasan build"
 
-Our CI did some validations and here is its report:
+Thank you for the patches and the notes here above!
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6305794950430720
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6305794950430720/summary/summary.txt
+New patches for t/upstream:
+- cccf62e31b88: mptcp: consolidate initial ack seq generation
+- b4c09c888e0b: conflict in t/DO-NOT-MERGE-mptcp-use-kmalloc-on-kasan-build
+- Results: dc870dc49415..ee79be9e1648 (export)
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5653956353851392
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5653956353851392/summary/summary.txt
+- 23c22cf366e6: "squashed" patch 2/2 in "mptcp: implement delayed seq
+generation for passive fastopen"
+- Results: ee79be9e1648..42fdee53dc8e (export)
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/49c535583971
+Tests are now in progress:
 
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221117T182326
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
