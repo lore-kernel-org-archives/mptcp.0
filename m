@@ -1,98 +1,172 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FC28BE0
-	for <mptcp@lists.linux.dev>; Thu, 17 Nov 2022 18:24:32 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id f18so7220165ejz.5
-        for <mptcp@lists.linux.dev>; Thu, 17 Nov 2022 10:24:32 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522698BFF
+	for <mptcp@lists.linux.dev>; Thu, 17 Nov 2022 18:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QK99coJy/kT0gVrmXLU4DBSf9iCQMfzncKu7JuAccaM=;
-        b=rpOhi5HeupY5LMQ10j3ilvOE4OaNyDhZWrfKPX9+ymiXBN5DbmO0TUgtyY2Prh0Gt3
-         7I9wJetqwZYSqopht5IQvPl0jVpETLcpX9E3xIHfHYLDaPM+CbAA3F0SsTixU7b4cuQK
-         VxIudIncH5cywDbxaMcJDtRFPGYDETeCsbv2O1XO79vbaWWnjZXZoU4+NeAgo4foLYvW
-         HjcXlM7d9pILCYLjMPMt1uzzeCgLfV06TNCX1j3QvGCV052FqchjQukHq8vCqENmhYY9
-         ZLPZZjGmU+KVOctocriuvZpRrwl38v8EVUDUuQuvQ6sGreUKeBhW1/8usrKFHMNUEMmb
-         +RCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QK99coJy/kT0gVrmXLU4DBSf9iCQMfzncKu7JuAccaM=;
-        b=VrI0+uiDTcBywwHMhDyK1gZgPAM2rlTvMYasi22IslBBNhYihH7Na/avob9MzKVku6
-         cVXZThCKCKvnSN1cIPnT6tSnZ2hyoe5uJRLxp4oN53k5XAjl5b6C75vwGJkwfXrG7Z5m
-         EyWHt95vTNQwYyBI+U/En+G/b0AvxRzj5yr86Gr5HFJYeCHVuEWuYJJiv9X9Nlm4lLpu
-         buiNSOwJzzv90dSxUHr86+jCGXcfFghWiqBQflDadt+aFBWC1jfI4wsd4JzOXZGRfpi8
-         hrJc0hhllxAwvEL3h8NnXb0AXq35mMPzxjewGUL8X4pcdgxBzVAf92XgKFhH9H9H/9QL
-         Qrqw==
-X-Gm-Message-State: ANoB5plwjdBkCSl8orsxQzcrc4nBY3irdhu22pTvOJ6Dfy4A7D2yV57g
-	O08KJoUD19ZJjg+/0ywVST3sl+767RWEsSlM
-X-Google-Smtp-Source: AA0mqf7oniYSygFAihapxIMh77r2357lq4C4VIYTzYnxOQLi5FH/EzN5SLFxs0jEjDkxlJy+Wy2+Dg==
-X-Received: by 2002:a17:906:234a:b0:7ac:e7b1:20c8 with SMTP id m10-20020a170906234a00b007ace7b120c8mr3281073eja.68.1668709471003;
-        Thu, 17 Nov 2022 10:24:31 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:c628:990b:1aee:b25? ([2a02:578:8593:1200:c628:990b:1aee:b25])
-        by smtp.gmail.com with ESMTPSA id z6-20020a170906668600b007add1c4dadbsm679018ejo.153.2022.11.17.10.24.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 10:24:30 -0800 (PST)
-Message-ID: <768ebac9-476b-97af-9f40-a0e68f3af698@tessares.net>
-Date: Thu, 17 Nov 2022 19:24:29 +0100
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1668710870; x=1700246870;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Tq3Muv37hyy+3Tzh7xc5jLl+9WA1YJ4LwaRysVJR/xY=;
+  b=vhO5xt/NsqQagRFHlW2gGi743jvCXYTuoPJESD2TDf0KpQgfByecicIa
+   ZTFMIj50ncc1/G6LsX2tV1UZf1oWza5Z+EgRmVe7vRIKvVoPO+R1UBPyL
+   u32lcO/S+z2f3Zv4SVhEbUvBBZXPqKs0nRODSIhfADtSqA3m6cQfw33fg
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.96,172,1665446400"; 
+   d="scan'208";a="264201213"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-f253a3a3.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 18:47:47 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+	by email-inbound-relay-pdx-2b-m6i4x-f253a3a3.us-west-2.amazon.com (Postfix) with ESMTPS id C0133811C6;
+	Thu, 17 Nov 2022 18:47:44 +0000 (UTC)
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.42; Thu, 17 Nov 2022 18:47:44 +0000
+Received: from 88665a182662.ant.amazon.com (10.43.161.14) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.20;
+ Thu, 17 Nov 2022 18:47:41 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, Hideaki YOSHIFUJI
+	<yoshfuji@linux-ipv6.org>
+CC: Christoph Paasch <cpaasch@apple.com>, Florian Westphal <fw@strlen.de>,
+	Peter Krystad <peter.krystad@linux.intel.com>, Kuniyuki Iwashima
+	<kuniyu@amazon.com>, Kuniyuki Iwashima <kuni1840@gmail.com>,
+	<netdev@vger.kernel.org>, <mptcp@lists.linux.dev>
+Subject: [PATCH v1 net] net: Return errno in sk->sk_prot->get_port().
+Date: Thu, 17 Nov 2022 10:47:23 -0800
+Message-ID: <20221117184723.29318-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: more fastopen follow-up
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
-References: <cover.1668531722.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1668531722.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.14]
+X-ClientProxiedBy: EX13D37UWA002.ant.amazon.com (10.43.160.211) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Precedence: Bulk
 
-Hi Paolo,
+We assume the correct errno is -EADDRINUSE when sk->sk_prot->get_port()
+fails, so some ->get_port() functions return just 1 on failure and the
+callers return -EADDRINUSE instead.
 
-On 15/11/2022 18:45, Paolo Abeni wrote:
-> The last bunch of mptcp fast open follow-up I have planned.
-> 
-> This aims at reducing the number of unnecessary mptcp_crypto_key_sha()
-> invocation, calling such primitive at most once per MPC subflow
-> and caching the result as subflow level.
-> 
-> The first patch should be inserted just before
-> 
-> "mptcp: implement delayed seq generation for passive fastopen"
-> 
-> while the 2nd one is a squash-to, still to the above.
-> 
-> Note that this will cause a trivial conflict in "DO-NOT-MERGE: mptcp:
-> use kmalloc on kasan build"
+However, mptcp_get_port() can return -EINVAL.  Let's not ignore the error.
 
-Thank you for the patches and the notes here above!
+Note the only exception is inet_autobind(), all of whose callers return
+-EAGAIN instead.
 
-New patches for t/upstream:
-- cccf62e31b88: mptcp: consolidate initial ack seq generation
-- b4c09c888e0b: conflict in t/DO-NOT-MERGE-mptcp-use-kmalloc-on-kasan-build
-- Results: dc870dc49415..ee79be9e1648 (export)
+Fixes: cec37a6e41aa ("mptcp: Handle MP_CAPABLE options for outgoing connections")
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+---
+ net/ipv4/af_inet.c              | 4 ++--
+ net/ipv4/inet_connection_sock.c | 7 ++++---
+ net/ipv4/ping.c                 | 2 +-
+ net/ipv4/udp.c                  | 2 +-
+ net/ipv6/af_inet6.c             | 4 ++--
+ 5 files changed, 10 insertions(+), 9 deletions(-)
 
-- 23c22cf366e6: "squashed" patch 2/2 in "mptcp: implement delayed seq
-generation for passive fastopen"
-- Results: ee79be9e1648..42fdee53dc8e (export)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221117T182326
-
-Cheers,
-Matt
+diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+index 4728087c42a5..4799eb55c830 100644
+--- a/net/ipv4/af_inet.c
++++ b/net/ipv4/af_inet.c
+@@ -522,9 +522,9 @@ int __inet_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len,
+ 	/* Make sure we are allowed to bind here. */
+ 	if (snum || !(inet->bind_address_no_port ||
+ 		      (flags & BIND_FORCE_ADDRESS_NO_PORT))) {
+-		if (sk->sk_prot->get_port(sk, snum)) {
++		err = sk->sk_prot->get_port(sk, snum);
++		if (err) {
+ 			inet->inet_saddr = inet->inet_rcv_saddr = 0;
+-			err = -EADDRINUSE;
+ 			goto out_release_sock;
+ 		}
+ 		if (!(flags & BIND_FROM_BPF)) {
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index 4e84ed21d16f..4a34bc7cb15e 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -471,11 +471,11 @@ int inet_csk_get_port(struct sock *sk, unsigned short snum)
+ 	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
+ 	bool found_port = false, check_bind_conflict = true;
+ 	bool bhash_created = false, bhash2_created = false;
++	int ret = -EADDRINUSE, port = snum, l3mdev;
+ 	struct inet_bind_hashbucket *head, *head2;
+ 	struct inet_bind2_bucket *tb2 = NULL;
+ 	struct inet_bind_bucket *tb = NULL;
+ 	bool head2_lock_acquired = false;
+-	int ret = 1, port = snum, l3mdev;
+ 	struct net *net = sock_net(sk);
+ 
+ 	l3mdev = inet_sk_bound_l3mdev(sk);
+@@ -1186,7 +1186,7 @@ int inet_csk_listen_start(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	struct inet_sock *inet = inet_sk(sk);
+-	int err = -EADDRINUSE;
++	int err;
+ 
+ 	reqsk_queue_alloc(&icsk->icsk_accept_queue);
+ 
+@@ -1202,7 +1202,8 @@ int inet_csk_listen_start(struct sock *sk)
+ 	 * after validation is complete.
+ 	 */
+ 	inet_sk_state_store(sk, TCP_LISTEN);
+-	if (!sk->sk_prot->get_port(sk, inet->inet_num)) {
++	err = sk->sk_prot->get_port(sk, inet->inet_num);
++	if (!err) {
+ 		inet->inet_sport = htons(inet->inet_num);
+ 
+ 		sk_dst_reset(sk);
+diff --git a/net/ipv4/ping.c b/net/ipv4/ping.c
+index bde333b24837..bb9854c2b7a1 100644
+--- a/net/ipv4/ping.c
++++ b/net/ipv4/ping.c
+@@ -138,7 +138,7 @@ int ping_get_port(struct sock *sk, unsigned short ident)
+ 
+ fail:
+ 	spin_unlock(&ping_table.lock);
+-	return 1;
++	return -EADDRINUSE;
+ }
+ EXPORT_SYMBOL_GPL(ping_get_port);
+ 
+diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+index 6a320a614e54..b30137f48fff 100644
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -234,7 +234,7 @@ int udp_lib_get_port(struct sock *sk, unsigned short snum,
+ {
+ 	struct udp_hslot *hslot, *hslot2;
+ 	struct udp_table *udptable = sk->sk_prot->h.udp_table;
+-	int    error = 1;
++	int error = -EADDRINUSE;
+ 	struct net *net = sock_net(sk);
+ 
+ 	if (!snum) {
+diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
+index 024191004982..7b0cd54da452 100644
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -409,10 +409,10 @@ static int __inet6_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len,
+ 	/* Make sure we are allowed to bind here. */
+ 	if (snum || !(inet->bind_address_no_port ||
+ 		      (flags & BIND_FORCE_ADDRESS_NO_PORT))) {
+-		if (sk->sk_prot->get_port(sk, snum)) {
++		err = sk->sk_prot->get_port(sk, snum);
++		if (err) {
+ 			sk->sk_ipv6only = saved_ipv6only;
+ 			inet_reset_saddr(sk);
+-			err = -EADDRINUSE;
+ 			goto out;
+ 		}
+ 		if (!(flags & BIND_FROM_BPF)) {
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.30.2
+
