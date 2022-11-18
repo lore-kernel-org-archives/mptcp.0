@@ -1,128 +1,112 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3A628E3
-	for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 08:51:11 +0000 (UTC)
-Received: by mail-yb1-f177.google.com with SMTP id k84so4899265ybk.3
-        for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 00:51:11 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BFC28E3
+	for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 09:17:17 +0000 (UTC)
+Received: by mail-pj1-f47.google.com with SMTP id v3-20020a17090ac90300b00218441ac0f6so7761867pjt.0
+        for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 01:17:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=29C9VDb0xFfxfLwch0GtgT2kazUQ6gngPGVWOe9/sG8=;
-        b=kg1rS6yrqb4Vbzvloc1Xab/Re0aJ7tlJiS4uTChf44RQwD9LJMqaNcgl+RvOos1BoV
-         3D7I6xbz6rgUX2io5f//xhtX3UdxqcMvD0pddUFey2KNcIyH5aGulDulUo7yJlm1wS48
-         Qv2yt6/wHWp7O27+/5C1/frtxxLVHqVYS2bGmJKJXAujgxBMlfgUw6NWo51Ax/3sbFwR
-         hj2ORdpmJCZTfBPbJlIK2O6MV0Otj21R9l11ewyN2+Kjue4uZCIVD7zYvNyQos5dF3QU
-         2ZssHszI4lYndYEvqZZR60H+1fJFoZ/orRX3PWQRrxAPY0G+5BWdaRdMTiA/SiB88ER3
-         p+Eg==
+        bh=CnSAg3lRxWFHgWiBIv6Wr1S6sPFRHhcAwWrxTUsxQOs=;
+        b=UfxsSz1adtlHXXC4zBH3eLcLrZXqAN+CWi6+H0I2ZVulvddBEfKYUrT/DzdN967W2V
+         xYDKhMt1RsF89dKbYgrQbKcBDJIni98ebzMKEiu0T9LM/WBkwJE9B9O23dfIo5sNOJnQ
+         237JlhhxNJAMy2Q89JVgebZQPHKABR3MrG6FzC89D9YZNpbEhfqpdKWAB0jA6UwXCw2T
+         hvfxeJh2qS2ew67C/YJqyCeZQdefXDlEVuV7pGv+y1FvMefmkhFmSAoRbJP9Q1bAR8Kk
+         8oa4bCJ+fPyL70OA5ZXbYBFx7EOUSOQy2JPXEM3z41XrSqlBcwNAiyzh4bhf3DN7IIFb
+         YGmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=29C9VDb0xFfxfLwch0GtgT2kazUQ6gngPGVWOe9/sG8=;
-        b=nKI288PHabih5CQ94mSCi+HHM9fOoLop+goOkbZP2hGv9VT2/QhVoRig7PBfQnEBcM
-         Gy0Mnu/YKAofuuBYNK5Hb/sH8QiD7QDJlnhU0B6aykvMDTddohf7qL8HISsU3iv6lZkX
-         kWLhyVxNuFYgz9rLWkzW4iYwggKrqp8YyNfHF2/rWZ6MP6qtMEndWWRFf6V4SIQhAyIW
-         ZrGZdpodkaETKHPnyHQCtQEOoatz9KcaXAIzsO5QwFp0SuzXHsZP5L7zfSkZkfHDndnm
-         YGY5tA9pXfMvc317ma6MIa/Y3B4aLUHhCrjndeZgqQ879RA/eAke4sHy+8KSQmwa77wW
-         55xQ==
-X-Gm-Message-State: ANoB5pk9bvL691mJWWlK2OGd63+UMGOtFHMG4fOMpLaJTDQtfXCIf8/5
-	nt4tgLEmyhVxdgE+VECFOcdp583j3kf+aU7V1VZV5A==
-X-Google-Smtp-Source: AA0mqf6lR4n2bbFcvSHmJly3xhqjf/lBBF6p9eJW4pVV7WFtDvVjHZaOSXDUt+ebRKHsBSiIwYCE75JlPirtw+wXL3Y=
-X-Received: by 2002:a25:268b:0:b0:6e6:e55e:bacb with SMTP id
- m133-20020a25268b000000b006e6e55ebacbmr5661900ybm.250.1668761470501; Fri, 18
- Nov 2022 00:51:10 -0800 (PST)
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=CnSAg3lRxWFHgWiBIv6Wr1S6sPFRHhcAwWrxTUsxQOs=;
+        b=YoALhBG6n5I2mjAXrmwQaNpEuVr3zdO6ahgBK02J+ICqZc74L1Njv58Hh5T4WND/UG
+         Z9Om+zdZ/Wa7xyNGfiZBza/rjvMDXe2PoVXTkm+SEjQmPoaH7+8Q1HMmNPJeSfO6VKzU
+         KH0Qf/Q7ZO06ipzVxe8ffNiMNMvcJawHEhUT33M7UYW1AQAOLMYgBoL6Zg+w5LBAqfde
+         qWASZnVCjswG8eUQiqMJOneGROu6bj57ExwxetJS+T3Ms+MLgyhwaNGUQcdp26/6pUSY
+         bnDftu3voFhj9jrdoptnCu0OtatdvF4xTZ0yBlewPVDmKU6CEOG+Cyh5J0pCWjNKCpZr
+         vIlA==
+X-Gm-Message-State: ANoB5plo3FXqKniLdg7Kz4wpQD4TZggygXxZ1IkmD7q42Cs6omQ7fH3O
+	vOQHAmbm7UCnsTfO9cMnV7Je0VkAWLIx
+X-Google-Smtp-Source: AA0mqf4x7ueCuqjwCKYhaoxuwccl1niImeNX63L/cxhTRQvP/1pFPyvv0bWM1aWGK7vqoTjyiAs3iw==
+X-Received: by 2002:a17:902:ef8f:b0:186:9890:97cd with SMTP id iz15-20020a170902ef8f00b00186989097cdmr6745125plb.104.1668763036837;
+        Fri, 18 Nov 2022 01:17:16 -0800 (PST)
+Received: from [127.0.0.1] ([40.83.251.185])
+        by smtp.gmail.com with ESMTPSA id w10-20020a63160a000000b00473c36ea150sm2317525pgl.92.2022.11.18.01.17.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Nov 2022 01:17:16 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Menglong Dong <imagedong@tencent.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20221118072030.3500578-1-imagedong@tencent.com>
+References: <20221118072030.3500578-1-imagedong@tencent.com>
+Subject: Re: mptcp: don't orphan ssk in mptcp_close(): Tests Results
+Message-ID: <a9ef5e2a-cbf6-4d22-700a-614239bfc1c8@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 18 Nov 2022 09:17:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAO4mrfdb1UdjQxr0zLH9J8b6T+8kn4UOm-sO6nZ2aKErKg7i0A@mail.gmail.com>
-In-Reply-To: <CAO4mrfdb1UdjQxr0zLH9J8b6T+8kn4UOm-sO6nZ2aKErKg7i0A@mail.gmail.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Fri, 18 Nov 2022 09:50:33 +0100
-Message-ID: <CAG_fn=UHgpEcGLjvHu8ze6jV8q_R9uSnvbeijsFFNmqchAe6OA@mail.gmail.com>
-Subject: Re: KASAN: double-free in kfree
-To: Wei Chen <harperchen1110@gmail.com>, Eric Dumazet <edumazet@google.com>
-Cc: mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net, 
-	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
-	netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	yoshfuji@linux-ipv6.org, dsahern@kernel.org, nathan@kernel.org, 
-	ndesaulniers@google.com, trix@redhat.com, syzkaller-bugs@googlegroups.com, 
-	syzkaller@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 18, 2022 at 8:37 AM Wei Chen <harperchen1110@gmail.com> wrote:
->
-> Dear Linux Developer,
->
-> Recently when using our tool to fuzz kernel, the following crash was trig=
-gered:
->
-> HEAD commit: 4fe89d07 Linux v6.0
-> git tree: upstream
-> compiler: clang 12.0.0
-> console output:
-> https://drive.google.com/file/d/1_CdtSwaMJZmN-4dQw1mmZT0Ijq28X8aC/view?us=
-p=3Dshare_link
-> kernel config: https://drive.google.com/file/d/1ZHRxVTXHL9mENdAPmQYS1Dtgb=
-flZ9XsD/view?usp=3Dsharing
->
-> Unfortunately, I didn't have a reproducer for this bug yet.
+Hi Menglong,
 
-Hint: if you don't have a reproducer for the bug, look at the process
-name that generated the error (syz-executor.0 in this case) and try
-the program from the log with that number ("executing program 0")
-preceding the report:
+Thank you for your modifications, that's great!
 
-r0 =3D accept4(0xffffffffffffffff, &(0x7f0000000600)=3D@in=3D{0x2, 0x0,
-@multicast2}, &(0x7f0000000680)=3D0x80, 0x80000)
-r1 =3D socket$nl_generic(0x10, 0x3, 0x10)
-r2 =3D syz_genetlink_get_family_id$mptcp(&(0x7f00000002c0), 0xfffffffffffff=
-fff)
-sendmsg$MPTCP_PM_CMD_DEL_ADDR(r1, &(0x7f0000000300)=3D{0x0, 0x0,
-&(0x7f0000000000)=3D{&(0x7f0000000280)=3D{0x28, r2, 0x1, 0x0, 0x0, {},
-[@MPTCP_PM_ATTR_ADDR=3D{0x14, 0x1, 0x0, 0x1,
-[@MPTCP_PM_ADDR_ATTR_ADDR4=3D{0x8, 0x3, @multicast2=3D0xac14140a},
-@MPTCP_PM_ADDR_ATTR_FAMILY=3D{0x6, 0x1, 0x2}]}]}, 0x28}}, 0x0)
-sendmsg$MPTCP_PM_CMD_FLUSH_ADDRS(r0,
-&(0x7f0000000780)=3D{&(0x7f00000006c0), 0xc,
-&(0x7f0000000740)=3D{&(0x7f0000000700)=3D{0x1c, r2, 0x4, 0x70bd28,
-0x25dfdbfb, {}, [@MPTCP_PM_ATTR_SUBFLOWS=3D{0x8, 0x3, 0x8}]}, 0x1c},
-0x1, 0x0, 0x0, 0x4c890}, 0x20008040)
-shmat(0xffffffffffffffff, &(0x7f0000ffd000/0x2000)=3Dnil, 0x1000)
-r3 =3D shmget$private(0x0, 0x3000, 0x40, &(0x7f0000ffd000/0x3000)=3Dnil)
-shmat(r3, &(0x7f0000ffc000/0x2000)=3Dnil, 0x7000)
-syz_usb_connect$uac1(0x0, 0x8a,
-&(0x7f0000000340)=3DANY=3D[@ANYBLOB=3D"12010000000000206b1f0101400001020301=
-0902780003010000000904000000010100000a2401000000020106061d154a00ffac190b240=
-4007f1f00000000000000040100000102000009040101010102400008240201000000000905=
-0109000000000000250100241694c11a11c2000000090402000001020020090402010105020=
-00009058209000000f456c30000fd240100000000000000000076af0bc3ac1605de4480cca5=
-3afa66f00807f17fb00132f9de1d1ec1d987f75530448d06a723ae111cb967ab97001d826aa=
-f1c7eb0f9d0df07d29aa5a01e58ccbbab20f723605387ba8179874ad74d25d7dd7699a83189=
-ba9c8b58980ea9cb58dd3a5afe7244a9d268d2397ac42994de8924d0478b17b13a564f69643=
-2da53be08aff66deb52e3f7c90c28079a9562280b9fda5f881598636375cc77499c22fe673f=
-e447ac74c25c0e2df0901d8babcdf31f59a3a15daae3f2"],
-0x0)
-r4 =3D socket$alg(0x26, 0x5, 0x0)
-bind$alg(r4, &(0x7f0000002240)=3D{0x26, 'skcipher\x00', 0x0, 0x0,
-'cts(cbc-twofish-3way)\x00'}, 0x58)
-r5 =3D accept4(r4, 0x0, 0x0, 0x0)
-syz_genetlink_get_family_id$nl80211(&(0x7f00000003c0), r5)
-sendmsg$NL80211_CMD_SET_WOWLAN(r5, &(0x7f0000000440)=3D{0x0, 0x0,
-&(0x7f0000000400)=3D{&(0x7f0000000480)=3DANY=3D[], 0x3e0}}, 0x0)
-syz_genetlink_get_family_id$team(&(0x7f0000000040), r5)
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/4892156595273728
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/4892156595273728/summary/summary.txt
+
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s): =
+packetdrill_add_addr - Critical: 1 Call Trace(s) =E2=9D=8C:
+  - Task: https://cirrus-ci.com/task/6018056502116352
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6018056502116352/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/0061c26274eb
 
 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit=
-:
-> Reported-by: Wei Chen <harperchen1110@gmail.com>
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
-@Eric, does this have something to do with "tcp: cdg: allow
-tcp_cdg_release() to be called multiple times" ?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
