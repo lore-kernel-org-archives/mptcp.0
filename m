@@ -1,98 +1,128 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975DB28E3
-	for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 08:50:58 +0000 (UTC)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ND98F3C72z4f3lHg
-	for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 16:35:09 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.102.38])
-	by APP4 (Coremail) with SMTP id gCh0CgD3Gti+Q3djooXqAg--.28111S4;
-	Fri, 18 Nov 2022 16:35:12 +0800 (CST)
-From: Wei Yongjun <weiyongjun@huaweicloud.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Kishen Maloor <kishen.maloor@intel.com>,
-	Florian Westphal <fw@strlen.de>
-Cc: Wei Yongjun <weiyongjun1@huawei.com>,
-	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: netlink: fix some error return code
-Date: Fri, 18 Nov 2022 08:35:41 +0000
-Message-Id: <20221118083541.123585-1-weiyongjun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3A628E3
+	for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 08:51:11 +0000 (UTC)
+Received: by mail-yb1-f177.google.com with SMTP id k84so4899265ybk.3
+        for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 00:51:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=29C9VDb0xFfxfLwch0GtgT2kazUQ6gngPGVWOe9/sG8=;
+        b=kg1rS6yrqb4Vbzvloc1Xab/Re0aJ7tlJiS4uTChf44RQwD9LJMqaNcgl+RvOos1BoV
+         3D7I6xbz6rgUX2io5f//xhtX3UdxqcMvD0pddUFey2KNcIyH5aGulDulUo7yJlm1wS48
+         Qv2yt6/wHWp7O27+/5C1/frtxxLVHqVYS2bGmJKJXAujgxBMlfgUw6NWo51Ax/3sbFwR
+         hj2ORdpmJCZTfBPbJlIK2O6MV0Otj21R9l11ewyN2+Kjue4uZCIVD7zYvNyQos5dF3QU
+         2ZssHszI4lYndYEvqZZR60H+1fJFoZ/orRX3PWQRrxAPY0G+5BWdaRdMTiA/SiB88ER3
+         p+Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=29C9VDb0xFfxfLwch0GtgT2kazUQ6gngPGVWOe9/sG8=;
+        b=nKI288PHabih5CQ94mSCi+HHM9fOoLop+goOkbZP2hGv9VT2/QhVoRig7PBfQnEBcM
+         Gy0Mnu/YKAofuuBYNK5Hb/sH8QiD7QDJlnhU0B6aykvMDTddohf7qL8HISsU3iv6lZkX
+         kWLhyVxNuFYgz9rLWkzW4iYwggKrqp8YyNfHF2/rWZ6MP6qtMEndWWRFf6V4SIQhAyIW
+         ZrGZdpodkaETKHPnyHQCtQEOoatz9KcaXAIzsO5QwFp0SuzXHsZP5L7zfSkZkfHDndnm
+         YGY5tA9pXfMvc317ma6MIa/Y3B4aLUHhCrjndeZgqQ879RA/eAke4sHy+8KSQmwa77wW
+         55xQ==
+X-Gm-Message-State: ANoB5pk9bvL691mJWWlK2OGd63+UMGOtFHMG4fOMpLaJTDQtfXCIf8/5
+	nt4tgLEmyhVxdgE+VECFOcdp583j3kf+aU7V1VZV5A==
+X-Google-Smtp-Source: AA0mqf6lR4n2bbFcvSHmJly3xhqjf/lBBF6p9eJW4pVV7WFtDvVjHZaOSXDUt+ebRKHsBSiIwYCE75JlPirtw+wXL3Y=
+X-Received: by 2002:a25:268b:0:b0:6e6:e55e:bacb with SMTP id
+ m133-20020a25268b000000b006e6e55ebacbmr5661900ybm.250.1668761470501; Fri, 18
+ Nov 2022 00:51:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3Gti+Q3djooXqAg--.28111S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFyUAF48GF43WryfuFykZrb_yoW8XFW7pF
-	15uwnxGr48trW29r1vy3yxWr1IgF4Fga1DK39Fg3Waka1DtFy0grWv9Fn7ZrW7CFZ7Jw48
-	ZFZxKw45JF9ru3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-	c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
-	CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
-	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJV
-	Cq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBI
-	daVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
-X-CM-SenderInfo: 5zhl50pqjm3046kxt4xhlfz01xgou0bp/
-X-CFilter-Loop: Reflected
+References: <CAO4mrfdb1UdjQxr0zLH9J8b6T+8kn4UOm-sO6nZ2aKErKg7i0A@mail.gmail.com>
+In-Reply-To: <CAO4mrfdb1UdjQxr0zLH9J8b6T+8kn4UOm-sO6nZ2aKErKg7i0A@mail.gmail.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Fri, 18 Nov 2022 09:50:33 +0100
+Message-ID: <CAG_fn=UHgpEcGLjvHu8ze6jV8q_R9uSnvbeijsFFNmqchAe6OA@mail.gmail.com>
+Subject: Re: KASAN: double-free in kfree
+To: Wei Chen <harperchen1110@gmail.com>, Eric Dumazet <edumazet@google.com>
+Cc: mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net, 
+	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+	netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	yoshfuji@linux-ipv6.org, dsahern@kernel.org, nathan@kernel.org, 
+	ndesaulniers@google.com, trix@redhat.com, syzkaller-bugs@googlegroups.com, 
+	syzkaller@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+On Fri, Nov 18, 2022 at 8:37 AM Wei Chen <harperchen1110@gmail.com> wrote:
+>
+> Dear Linux Developer,
+>
+> Recently when using our tool to fuzz kernel, the following crash was trig=
+gered:
+>
+> HEAD commit: 4fe89d07 Linux v6.0
+> git tree: upstream
+> compiler: clang 12.0.0
+> console output:
+> https://drive.google.com/file/d/1_CdtSwaMJZmN-4dQw1mmZT0Ijq28X8aC/view?us=
+p=3Dshare_link
+> kernel config: https://drive.google.com/file/d/1ZHRxVTXHL9mENdAPmQYS1Dtgb=
+flZ9XsD/view?usp=3Dsharing
+>
+> Unfortunately, I didn't have a reproducer for this bug yet.
 
-Fix to return negative error code -EINVAL from some error handling
-case instead of 0, as done elsewhere in those functions.
+Hint: if you don't have a reproducer for the bug, look at the process
+name that generated the error (syz-executor.0 in this case) and try
+the program from the log with that number ("executing program 0")
+preceding the report:
 
-Fixes: 9ab4807c84a4 ("mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE")
-Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- net/mptcp/pm_userspace.c | 4 ++++
- 1 file changed, 4 insertions(+)
+r0 =3D accept4(0xffffffffffffffff, &(0x7f0000000600)=3D@in=3D{0x2, 0x0,
+@multicast2}, &(0x7f0000000680)=3D0x80, 0x80000)
+r1 =3D socket$nl_generic(0x10, 0x3, 0x10)
+r2 =3D syz_genetlink_get_family_id$mptcp(&(0x7f00000002c0), 0xfffffffffffff=
+fff)
+sendmsg$MPTCP_PM_CMD_DEL_ADDR(r1, &(0x7f0000000300)=3D{0x0, 0x0,
+&(0x7f0000000000)=3D{&(0x7f0000000280)=3D{0x28, r2, 0x1, 0x0, 0x0, {},
+[@MPTCP_PM_ATTR_ADDR=3D{0x14, 0x1, 0x0, 0x1,
+[@MPTCP_PM_ADDR_ATTR_ADDR4=3D{0x8, 0x3, @multicast2=3D0xac14140a},
+@MPTCP_PM_ADDR_ATTR_FAMILY=3D{0x6, 0x1, 0x2}]}]}, 0x28}}, 0x0)
+sendmsg$MPTCP_PM_CMD_FLUSH_ADDRS(r0,
+&(0x7f0000000780)=3D{&(0x7f00000006c0), 0xc,
+&(0x7f0000000740)=3D{&(0x7f0000000700)=3D{0x1c, r2, 0x4, 0x70bd28,
+0x25dfdbfb, {}, [@MPTCP_PM_ATTR_SUBFLOWS=3D{0x8, 0x3, 0x8}]}, 0x1c},
+0x1, 0x0, 0x0, 0x4c890}, 0x20008040)
+shmat(0xffffffffffffffff, &(0x7f0000ffd000/0x2000)=3Dnil, 0x1000)
+r3 =3D shmget$private(0x0, 0x3000, 0x40, &(0x7f0000ffd000/0x3000)=3Dnil)
+shmat(r3, &(0x7f0000ffc000/0x2000)=3Dnil, 0x7000)
+syz_usb_connect$uac1(0x0, 0x8a,
+&(0x7f0000000340)=3DANY=3D[@ANYBLOB=3D"12010000000000206b1f0101400001020301=
+0902780003010000000904000000010100000a2401000000020106061d154a00ffac190b240=
+4007f1f00000000000000040100000102000009040101010102400008240201000000000905=
+0109000000000000250100241694c11a11c2000000090402000001020020090402010105020=
+00009058209000000f456c30000fd240100000000000000000076af0bc3ac1605de4480cca5=
+3afa66f00807f17fb00132f9de1d1ec1d987f75530448d06a723ae111cb967ab97001d826aa=
+f1c7eb0f9d0df07d29aa5a01e58ccbbab20f723605387ba8179874ad74d25d7dd7699a83189=
+ba9c8b58980ea9cb58dd3a5afe7244a9d268d2397ac42994de8924d0478b17b13a564f69643=
+2da53be08aff66deb52e3f7c90c28079a9562280b9fda5f881598636375cc77499c22fe673f=
+e447ac74c25c0e2df0901d8babcdf31f59a3a15daae3f2"],
+0x0)
+r4 =3D socket$alg(0x26, 0x5, 0x0)
+bind$alg(r4, &(0x7f0000002240)=3D{0x26, 'skcipher\x00', 0x0, 0x0,
+'cts(cbc-twofish-3way)\x00'}, 0x58)
+r5 =3D accept4(r4, 0x0, 0x0, 0x0)
+syz_genetlink_get_family_id$nl80211(&(0x7f00000003c0), r5)
+sendmsg$NL80211_CMD_SET_WOWLAN(r5, &(0x7f0000000440)=3D{0x0, 0x0,
+&(0x7f0000000400)=3D{&(0x7f0000000480)=3DANY=3D[], 0x3e0}}, 0x0)
+syz_genetlink_get_family_id$team(&(0x7f0000000040), r5)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 9e82250cbb70..0430415357ba 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -156,6 +156,7 @@ int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
- 
- 	if (addr_val.addr.id == 0 || !(addr_val.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
- 		GENL_SET_ERR_MSG(info, "invalid addr id or flags");
-+		err = -EINVAL;
- 		goto announce_err;
- 	}
- 
-@@ -282,6 +283,7 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
- 
- 	if (addr_l.id == 0) {
- 		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "missing local addr id");
-+		err = -EINVAL;
- 		goto create_err;
- 	}
- 
-@@ -395,11 +397,13 @@ int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
- 
- 	if (addr_l.family != addr_r.family) {
- 		GENL_SET_ERR_MSG(info, "address families do not match");
-+		err = -EINVAL;
- 		goto destroy_err;
- 	}
- 
- 	if (!addr_l.port || !addr_r.port) {
- 		GENL_SET_ERR_MSG(info, "missing local or remote port");
-+		err = -EINVAL;
- 		goto destroy_err;
- 	}
- 
--- 
-2.34.1
 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit=
+:
+> Reported-by: Wei Chen <harperchen1110@gmail.com>
+
+@Eric, does this have something to do with "tcp: cdg: allow
+tcp_cdg_release() to be called multiple times" ?
