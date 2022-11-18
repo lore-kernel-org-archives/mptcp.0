@@ -1,115 +1,72 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FC717E8
-	for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 03:52:42 +0000 (UTC)
-Received: by mail-ot1-f47.google.com with SMTP id p8-20020a056830130800b0066bb73cf3bcso2356898otq.11
-        for <mptcp@lists.linux.dev>; Thu, 17 Nov 2022 19:52:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VUo5wYeayAN46U0X2y51c5wIQe/lwheLdMeLlocamhk=;
-        b=kfDOog3SddPWhjFNMB6O3xpVtR5C+vo0XUbCDz/Lh66tmqJU6qyKVz3P8OoU1soD2M
-         vxDz3I8ywgzqAbUMyNCItg5o8bBklN68RWYLG5Y1vKOHW9Xj81+G6VT9gw8k2eB35BJN
-         HvpuaFJggwJjlDduFPzGSyBUwScNhTNUxN1Shmnqce5MPQJgzofsKuqpoxApPaQNnWNW
-         WRk2NWisjAPv+UbjpXSIpN1JxFs0NPEdV1PtCJpgqsO5uz87YZEia2cQxOtJHZpiuGsq
-         R7XTSbaUdjieHfy0/xD1f8TddOCwt99NEZGNvXW8fPwXykxyaoQbP9oX9wOqkM4xTgGN
-         Al6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VUo5wYeayAN46U0X2y51c5wIQe/lwheLdMeLlocamhk=;
-        b=0m+FpAZI597fo6TALQ1oq98XRSV0Y1r4MvBN5jmw2j5cFTh6Wsj4CwFf6FIhmyawfX
-         H5WVLSvww15CuGkXuUvwjb7koO93shTQBj9seFF19tLqCoVLXr7a2Y2o7vOeeGmTokTW
-         oN+0BrF+qP8VvWT813O8Zqbg+nsJEnk+GQVkA8aSipwJAtSUJFhai5Z9eUoeikPysYBV
-         R/44H6tiMkV+m/gpFY/KXXGhKSCS14C+lAw5/CcihtEHtT/aiGjwMIcw2ybr4QUHq2bg
-         HceutuLHoShjvbC7AaeokU61SLMt07Lo48b2CFBrekKjYS1ma7B08+jiGPFOgoqkvgJD
-         A09Q==
-X-Gm-Message-State: ANoB5pmhK8m5oTDoRqDlOMWo+ngTfGFsCZkhLgsHan+zXUCONhtZQUW2
-	vRf1UEBUFCxXWoczqzpXOg==
-X-Google-Smtp-Source: AA0mqf4kzSVhNHSLoNdDf1ZJzkAWIohnDFMcP+xRHMRYalc+ZNr8RjHufIw/QfqhIfYPyliIUSUdJw==
-X-Received: by 2002:a9d:2f62:0:b0:66d:afa0:aa38 with SMTP id h89-20020a9d2f62000000b0066dafa0aa38mr2946997otb.218.1668743561253;
-        Thu, 17 Nov 2022 19:52:41 -0800 (PST)
-Received: from [127.0.0.1] ([13.65.187.100])
-        by smtp.gmail.com with ESMTPSA id y18-20020a4a6252000000b0049b17794d19sm1031825oog.20.2022.11.17.19.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 19:52:40 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <60b6d97a1087057ed07ec1c0c7068e22cede2ad9.1668662624.git.geliang.tang@suse.com>
-References:
- <60b6d97a1087057ed07ec1c0c7068e22cede2ad9.1668662624.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: listener test for in-kernel PM: Tests
- Results
-Message-ID: <3a26c64e-1eec-01dc-210b-d8945f0ce299@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 18 Nov 2022 03:52:40 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DBE20F9
+	for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 05:50:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 05B09C43150;
+	Fri, 18 Nov 2022 05:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1668750616;
+	bh=OBni7kSkvJ9NVTurCAl06y5VxseAiRMPxJV8IfTT4Z0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=giA0JAxSqxO6iqD2fhTqukhw2KbvuY1665/Ka32MQyIwSPicR7xOjoDwRuyQvR5tB
+	 ddixnCgvYrnSMxBYRzSoOTOUnCpn9oH2SlGS41kq4RGqK5uGjqYE3sXwJxTPJFWMmC
+	 tiIeW5ptcFS+36Y2Xg2rbl6Ml0bNPFOtoF2njx6hXfvcDl+4v1f7Cx7mppUIrUzor5
+	 rPJGfw+dB8mSrKChYOkR8yIjAOaDNAQfeX6IhMqkOheOMnDw9uYC1fw+67EwwHgf0N
+	 C5tg2z8r9WimzcB/WqqCGXU9kbofk6/H1cJKmXznU8nKZ5HaGuxUpfak76X3V4LNTy
+	 2kFRacusND/LA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DDF5EE270D5;
+	Fri, 18 Nov 2022 05:50:15 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/3] mptcp: selftests: Fix timeouts and test isolation
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <166875061590.17881.7118032525132376110.git-patchwork-notify@kernel.org>
+Date: Fri, 18 Nov 2022 05:50:15 +0000
+References: <20221115221046.20370-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20221115221046.20370-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, fw@strlen.de, geliang.tang@suse.com,
+ matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hi Geliang,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Our CI did some validations and here is its report:
+On Tue, 15 Nov 2022 14:10:43 -0800 you wrote:
+> Patches 1 and 3 adjust test timeouts to reduce false negatives on slow
+> machines.
+> 
+> Patch 2 improves test isolation by running the mptcp_sockopt test in its
+> own net namespace.
+> 
+> Matthieu Baerts (2):
+>   selftests: mptcp: run mptcp_sockopt from a new netns
+>   selftests: mptcp: fix mibit vs mbit mix up
+> 
+> [...]
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6178938796376064
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6178938796376064/summary/summary.txt
+Here is the summary with links:
+  - [net,1/3] selftests: mptcp: gives slow test-case more time
+    https://git.kernel.org/netdev/net/c/22b29557aef3
+  - [net,2/3] selftests: mptcp: run mptcp_sockopt from a new netns
+    https://git.kernel.org/netdev/net/c/7e68d31020f1
+  - [net,3/3] selftests: mptcp: fix mibit vs mbit mix up
+    https://git.kernel.org/netdev/net/c/3de88b95c4d4
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5924801957593088
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5924801957593088/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/9b92ff8007de
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
