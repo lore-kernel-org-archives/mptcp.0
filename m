@@ -1,24 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DBE20F9
-	for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 05:50:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 05B09C43150;
-	Fri, 18 Nov 2022 05:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1668750616;
-	bh=OBni7kSkvJ9NVTurCAl06y5VxseAiRMPxJV8IfTT4Z0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=giA0JAxSqxO6iqD2fhTqukhw2KbvuY1665/Ka32MQyIwSPicR7xOjoDwRuyQvR5tB
-	 ddixnCgvYrnSMxBYRzSoOTOUnCpn9oH2SlGS41kq4RGqK5uGjqYE3sXwJxTPJFWMmC
-	 tiIeW5ptcFS+36Y2Xg2rbl6Ml0bNPFOtoF2njx6hXfvcDl+4v1f7Cx7mppUIrUzor5
-	 rPJGfw+dB8mSrKChYOkR8yIjAOaDNAQfeX6IhMqkOheOMnDw9uYC1fw+67EwwHgf0N
-	 C5tg2z8r9WimzcB/WqqCGXU9kbofk6/H1cJKmXznU8nKZ5HaGuxUpfak76X3V4LNTy
-	 2kFRacusND/LA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DDF5EE270D5;
-	Fri, 18 Nov 2022 05:50:15 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7874A7C
+	for <mptcp@lists.linux.dev>; Fri, 18 Nov 2022 07:21:01 +0000 (UTC)
+Received: by mail-pl1-f196.google.com with SMTP id v17so3848742plo.1
+        for <mptcp@lists.linux.dev>; Thu, 17 Nov 2022 23:21:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jn3rU0lQxMzHCsGRYg1iXa4HZdm9l5N0KJ8eX3S9glc=;
+        b=q3CZbXDuCtcter8VvJNva0r8o1+1zdaMffPAUjl82CKqJB7kMAzwmdNmTXVIjLK0uD
+         gWKHF4Mp+nBJdaocVrPY1sAgFfaIX+J5RK/camgAl/RTg8IQlxm22/XlYZH5bnwLLw0T
+         F0l+w/TnwP+PtnSyefosgjSts/fQs5s/0DLJTspdTahqaoRDViDIK7F2XPeounQaxFSK
+         FJD7k/IgjaVTUzQcjPrAXdIxGazBhtz/bbZ5/sYq8K496x6MwXA168s3a2Px6TyTBmVE
+         A5NkD++2SFGc7crwxiuKi0OLUstp7diCmzAcB7w+rrxWNxr/ukvLg8xZ1+yo0zjSCXhc
+         tnVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Jn3rU0lQxMzHCsGRYg1iXa4HZdm9l5N0KJ8eX3S9glc=;
+        b=WmpjjpZ9RfuyUf4q+LyapzgECK4sANEBTlVR2CEctqYgzLFHy6fV5uWcliv5yQb4MW
+         W/pw66J7mhsbDoBTSTjYhSWH+y1oi3vqP6H9YuRqD0sYuiPKf/yC1cbEXJ6qXfgdxFka
+         Y4dTBj0HmeZCdJ68i8wwnYb33M1VEJtxyZqWNN33o8ZgXqYmnyW2awNwUcoGoME3Km+g
+         eMwtUj7YIBlo45mqRGE4NrYEhgLibzXWao2n2wDLh2jPVtaTM5hKngTDdmfoHRjUrQKN
+         zy5cMSOoQx6FiezaLlvNY/DA/5VhAae6ZwzODe+QE2SBLrcNjMpE9DIXs0Hrf+wLBQyL
+         3Raw==
+X-Gm-Message-State: ANoB5plOANwW2W8icvU5EpCOFGW+v0VvUpQtgbzabTCyMfxntHRGeOrU
+	FfTwyrujWzCF+xIyg2QAUB8=
+X-Google-Smtp-Source: AA0mqf4EhknNkSzglZsVDj/sD/x7q4FwbGEv7BjdkyGYc/pXfWmHX5XBokbKftG6bMivt93yq8Qfeg==
+X-Received: by 2002:a17:903:2c2:b0:187:1a3f:d54b with SMTP id s2-20020a17090302c200b001871a3fd54bmr6569529plk.9.1668756060983;
+        Thu, 17 Nov 2022 23:21:00 -0800 (PST)
+Received: from localhost.localdomain ([203.205.141.83])
+        by smtp.gmail.com with ESMTPSA id i15-20020a170902c94f00b0017854cee6ebsm2830072pla.72.2022.11.17.23.20.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 23:21:00 -0800 (PST)
+From: menglong8.dong@gmail.com
+X-Google-Original-From: imagedong@tencent.com
+To: pabeni@redhat.com,
+	mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net
+Cc: mptcp@lists.linux.dev,
+	Menglong Dong <imagedong@tencent.com>,
+	Biao Jiang <benbjiang@tencent.com>,
+	Mengen Sun <mengensun@tencent.com>
+Subject: [PATCH mptcp-net] mptcp: don't orphan ssk in mptcp_close()
+Date: Fri, 18 Nov 2022 15:20:30 +0800
+Message-Id: <20221118072030.3500578-1-imagedong@tencent.com>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,47 +57,52 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/3] mptcp: selftests: Fix timeouts and test isolation
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <166875061590.17881.7118032525132376110.git-patchwork-notify@kernel.org>
-Date: Fri, 18 Nov 2022 05:50:15 +0000
-References: <20221115221046.20370-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20221115221046.20370-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, fw@strlen.de, geliang.tang@suse.com,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev
 
-Hello:
+From: Menglong Dong <imagedong@tencent.com>
 
-This series was applied to netdev/net.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+All of the subflows of a msk will be orphaned in mptcp_close(), which
+means the subflows are in DEAD state. After then, DATA_FIN will be sent,
+and the other side will response with a DATA_ACK for this DATA_FIN.
 
-On Tue, 15 Nov 2022 14:10:43 -0800 you wrote:
-> Patches 1 and 3 adjust test timeouts to reduce false negatives on slow
-> machines.
-> 
-> Patch 2 improves test isolation by running the mptcp_sockopt test in its
-> own net namespace.
-> 
-> Matthieu Baerts (2):
->   selftests: mptcp: run mptcp_sockopt from a new netns
->   selftests: mptcp: fix mibit vs mbit mix up
-> 
-> [...]
+However, if the other side still has pending data, the data that received
+on these subflows will not be passed to the msk, as they are DEAD and
+subflow_data_ready() will not be called in tcp_data_ready(). Therefore,
+these data can't be acked, and they will be retransmitted again and again,
+until timeout.
 
-Here is the summary with links:
-  - [net,1/3] selftests: mptcp: gives slow test-case more time
-    https://git.kernel.org/netdev/net/c/22b29557aef3
-  - [net,2/3] selftests: mptcp: run mptcp_sockopt from a new netns
-    https://git.kernel.org/netdev/net/c/7e68d31020f1
-  - [net,3/3] selftests: mptcp: fix mibit vs mbit mix up
-    https://git.kernel.org/netdev/net/c/3de88b95c4d4
+Fix this by not orphaning the subflows in mptcp_close(). I think that's
+ok, as they can still be orphaned in __mptcp_close_ssk(). Maybe we can
+also fix this in mptcp_incoming_options() by check the status of ssk and
+msk?
 
-You are awesome, thank you!
+Reviewed-by: Biao Jiang <benbjiang@tencent.com>
+Reviewed-by: Mengen Sun <mengensun@tencent.com>
+Signed-off-by: Menglong Dong <imagedong@tencent.com>
+---
+ net/mptcp/protocol.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3796d1bfef6b..5ac1584baf61 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -815,7 +815,7 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ 
+ 	/* Wake-up the reader only for in-sequence data */
+ 	mptcp_data_lock(sk);
+-	if (move_skbs_to_msk(msk, ssk))
++	if (move_skbs_to_msk(msk, ssk) && !sock_flag(sk, SOCK_DEAD))
+ 		sk->sk_data_ready(sk);
+ 
+ 	mptcp_data_unlock(sk);
+@@ -2940,7 +2940,6 @@ bool __mptcp_close(struct sock *sk, long timeout)
+ 		if (ssk == msk->first)
+ 			subflow->fail_tout = 0;
+ 
+-		sock_orphan(ssk);
+ 		unlock_sock_fast(ssk, slow);
+ 	}
+ 	sock_orphan(sk);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.37.2
 
