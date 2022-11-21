@@ -1,111 +1,67 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B115E1C02
-	for <mptcp@lists.linux.dev>; Mon, 21 Nov 2022 11:54:14 +0000 (UTC)
-Received: by mail-pg1-f171.google.com with SMTP id 6so10934245pgm.6
-        for <mptcp@lists.linux.dev>; Mon, 21 Nov 2022 03:54:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cqrzed4dd/XCyd5hgjUiviwgeSdMu10EK0b26hF/l9Y=;
-        b=jbUnhzi8gaVUTLl/0R383TW4VAwtXtCeyWisU695XHYbjwhch6s/KlKBBsE5g+1vOo
-         l913X6PpnoMN101ENh0kSYGhWx7/YgZpiv5QfQJiVqInbFSf4sg9bscHLCemf2WDF/mY
-         zfrXU5oRW0hgQJ+UuspcO982joQqZ/GcgLDZ21NmQieoxv7xAeBiaRdoSCrt4RFRrtGm
-         1UhXXdVDWLolKs/dihpyM72O2CY3l4TRuQH3PUG0nzcLrU8zctVO1TzTE4iuE6tC816y
-         sQ1RoivdJYZAGj4XT9DcvCIwUhPw/S9TTfRLEGNpZTiLwIuTnafo8W1+hT4LnW1wBqpc
-         G1mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Cqrzed4dd/XCyd5hgjUiviwgeSdMu10EK0b26hF/l9Y=;
-        b=gRBGPHafmbDW7ksNCIrXBwqqyclehepj/XXARhCYTg7b7VdDpuGoEDhuHqh/6EXWUo
-         dUF77TFGYIL96IptuUjEt4QRG9WI/i5R8l5dCbKEbAR+22YoTj+XEHd5v+x/cLFmDNqj
-         YmdpE7xeO217a3bnLL+Z43Z02fhAxomT2VXkGPc68K03CrfirD0d3tEnETMBGJkNvL6T
-         nQaGzimCOvj9Yi/3JQPI8w/48VVn73+W0rtGEJADsbv7s2dZUjqe1Wk5fTgB6DRlQfRm
-         CL1Rs4uBfZA0KYPUZyiWlrE9qmAj9FlTOhlx8jXxYdbupAJWrgWWTi1x8FnlGu3A+975
-         90/Q==
-X-Gm-Message-State: ANoB5pmY3810Lkx15cSUEmdkIYSBveXGusYe6yMgwTYkJrRBVSTSLBeq
-	brDauYAYPEFTGQveHsonAfJgJ5UWXBT3
-X-Google-Smtp-Source: AA0mqf4ENjLe2b0BjapT7KOyrEWTNDL6pv+XnKC8j7wDt4YIq6ZCqyKBDmiSKb3VeC7i8CXsSx3ccA==
-X-Received: by 2002:a63:5f4c:0:b0:450:3c0c:b17c with SMTP id t73-20020a635f4c000000b004503c0cb17cmr139985pgb.64.1669031654142;
-        Mon, 21 Nov 2022 03:54:14 -0800 (PST)
-Received: from [127.0.0.1] ([20.66.69.211])
-        by smtp.gmail.com with ESMTPSA id c30-20020a056a00009e00b0056b3c863950sm8568442pfj.8.2022.11.21.03.54.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Nov 2022 03:54:13 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Menglong Dong <imagedong@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221121034140.548112-1-imagedong@tencent.com>
-References: <20221121034140.548112-1-imagedong@tencent.com>
-Subject: Re: mptcp: don't orphan ssk in mptcp_close(): Tests Results
-Message-ID: <22386b32-a405-ec90-2f88-dcbe754948ec@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 21 Nov 2022 11:54:12 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3339D3D79
+	for <mptcp@lists.linux.dev>; Mon, 21 Nov 2022 13:10:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D3D32C4347C;
+	Mon, 21 Nov 2022 13:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1669036216;
+	bh=14nDf19iPFoNhtOw7/BsxLX6P7i/fmVxRsZ0ksPhWiY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=dz+K6O8ay7/iDjiujdNUVTc/8Nem08JO9wUIgI3Mi2ofBErCOtkKRPvBAH9CHnA4/
+	 bdpjGl74ZkZJVyW/YPVMiJAsdgFQSnlN2WRAYK2DttboFe0KIqsCq34hM/hAGTpgNc
+	 CAqWQgr0aGolzocV6QPGE1DZ23NbS93YxPb+0oHh5wL4odiUpSV3WA3m+hKHisD1Y4
+	 6gkP3BM+PftQc2/P7UIkpWz4jevEvfn+ui5e7OS8QGFGdhSH2axENwr2URTQ8GaDW+
+	 itQqtpc5YGtkJSr3bDIVUi0WI8fWbSyB8ARcYm7uyl1BrPo5a6sczdi2qCiHQiYYXM
+	 oB2/hNrr0C3xA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B7959E29F40;
+	Mon, 21 Nov 2022 13:10:16 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/2] mptcp: More specific netlink command errors
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <166903621674.4573.13888635392662727952.git-patchwork-notify@kernel.org>
+Date: Mon, 21 Nov 2022 13:10:16 +0000
+References: <20221118184608.187932-1-mathew.j.martineau@linux.intel.com>
+In-Reply-To: <20221118184608.187932-1-mathew.j.martineau@linux.intel.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, matthieu.baerts@tessares.net,
+ mptcp@lists.linux.dev
 
-Hi Menglong,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-Our CI did some validations and here is its report:
+On Fri, 18 Nov 2022 10:46:06 -0800 you wrote:
+> This series makes the error reporting for the MPTCP_PM_CMD_ADD_ADDR netlink
+> command more specific, since there are multiple reasons the command could
+> fail.
+> 
+> Note that patch 2 adds a GENL_SET_ERR_MSG_FMT() macro to genetlink.h,
+> which is outside the MPTCP subsystem.
+> 
+> [...]
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5471374876606464
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5471374876606464/summary/summary.txt
+Here is the summary with links:
+  - [net-next,1/2] mptcp: deduplicate error paths on endpoint creation
+    https://git.kernel.org/netdev/net-next/c/976d302fb616
+  - [net-next,2/2] mptcp: more detailed error reporting on endpoint creation
+    https://git.kernel.org/netdev/net-next/c/a3400e8746b6
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6597274783449088
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6597274783449088/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/6dbdc9ee6d06
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
