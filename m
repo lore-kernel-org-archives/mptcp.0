@@ -1,52 +1,55 @@
-Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8978EA8
-	for <mptcp@lists.linux.dev>; Tue, 22 Nov 2022 03:51:20 +0000 (UTC)
-Received: by mail-pg1-f193.google.com with SMTP id v3so12994830pgh.4
-        for <mptcp@lists.linux.dev>; Mon, 21 Nov 2022 19:51:20 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5200BEA8
+	for <mptcp@lists.linux.dev>; Tue, 22 Nov 2022 03:51:23 +0000 (UTC)
+Received: by mail-pf1-f194.google.com with SMTP id y203so13205640pfb.4
+        for <mptcp@lists.linux.dev>; Mon, 21 Nov 2022 19:51:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZkuRuTh64JiVAeRqGjzkhRUMwDLIFy4FD+55JxiVX2g=;
-        b=Ii4rsAaNBvTdM1jtoczQVm7/t91ZBxBoby8PlNBZNGmzowX91pm34wQDJEYnuUNs/Y
-         qu9ZCMS5ubQhCLKy7ZqdbSX7OQUjP2r6TcKGeRwT8n1niCsOg8kxw6MWgziXoveBXm8c
-         WRUB93iarr3oS/J0gh8K8XZgsyLaIGc9Kcsf3OZiZ+EXgSQT6ByQHuEwFDsEnTOZOhPY
-         A0Fu+95NQC+QysnI3oiBRayDSghNMRShCjG0WDuIB8LUhSMoM++J8kx41iyoMNvdpRVn
-         u0kvfj2fSHIFKfC4d+8WaNQ69P7FCfO07/3I8dxcRqNBIU7N+CzHLE2tKwgZ7FG6A2+q
-         jtxQ==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T0ydhPJoXSyhpeuxe/hVgjBauVZHn6Z/85xIJA53WwM=;
+        b=p/GQ2d3IOWkvExxDHSDyko5DE6DfV+SulXDJHZOukRW08jwP2pSxRJDUe5cWlmz1ud
+         19daSZ67BmCcppkKdjIZIiGoxAvDgudElUXwPlp66pupKb/xM+plzENrDet5M8YsL9eP
+         eMrjaRio8Aq4iz9cdD8LZAXp41QCdiEfIOuz5BaOjbClt5lYToQ6JbW+SWKtE8cIxjrQ
+         XDpsIvJ56orxVlJ/pZOMd9JEnk+SX3dExWC67q5wSU9NAq38YsXGCSxTHzps/7xVV5a0
+         kym2M+bBgdIx3iBk6ZDNBvABn9ZLKxWQRiRjtql7IrjVO2VzJ9tIzUYunPURi6AV55+N
+         zShg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZkuRuTh64JiVAeRqGjzkhRUMwDLIFy4FD+55JxiVX2g=;
-        b=aAKxe/vwNzFmklkUxMH1Odmj56TKhTsEqFavgQHSktedZ60MRCXlurevJBwv17+iBl
-         XIISZCrOAbzUmMq1o8Tdw2FdhMXf1OXnxR1Zpfgx4JeUicEXjkBjpzT9y0SYo7nA22M1
-         mZDcW81zedcLB04XJSflpE5Bf0hbdIRQa4jvrTwvAYYlwmzXIVfgbET+bMCQ1acNGDzT
-         M63Y7W9uKitAMhUqlzv+v15vZcRbmSuQE5U87S7pThvRgauaLUxLrfID0DJl/owI16PY
-         frIBhCS+yKLtKK3OGztOIgyE/QxMGSuLggUgPgWiyjc3658a/CbZclN6pA8lWp1jHWXT
-         EAKw==
-X-Gm-Message-State: ANoB5pkvwOBj0WMR+o21CzELMUyArbNUIdG4IsZ3OH0cMP1lyb1Om2wK
-	ynHxrny8ECPE3ruO0rj0plE=
-X-Google-Smtp-Source: AA0mqf4GdmBwVm5hi8nWf9E9ocauv+Fcml7XoK0K6IGVcpL9jSSKJnJGCTrNcySQISXuqjHhvBmZmA==
-X-Received: by 2002:a05:6a00:21c2:b0:56b:bba4:650a with SMTP id t2-20020a056a0021c200b0056bbba4650amr2061210pfj.4.1669089080374;
-        Mon, 21 Nov 2022 19:51:20 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T0ydhPJoXSyhpeuxe/hVgjBauVZHn6Z/85xIJA53WwM=;
+        b=BuBe0NDvBe+0gApPGbopG7mkK29SOJO+fkHjr0obzBBE7R1/IGKBieQYREjNIG9pnl
+         5aoYN4rNSlYflYavGstJiiMfx5ZcKo3XLKem/h6ceBM8J6rrOFHDiMc/xgWqd/lqZBGK
+         Hk1AiCj7aiSDIq/VRUMdHJ/Z1iK9adVxzdtp1d7kZQTOp35xjipcfwygv2wu7pIyekwI
+         j5EcsAFCpTm03whzmhJx3A94C7WP+Z1at3EjTR2NLNfRKRBP4rV8YgzngJ1tBI34FSj2
+         5UYI7xtxzP0e/bxhBIgKowWtYGhY7BXuyuxqGMIUJgNm8UWm+BpJfYmQKkEvm90e1Xe4
+         UmCg==
+X-Gm-Message-State: ANoB5pkgC7g+Vf1Pi1Bi9PKChS+EtbvhSN3qLA/0UNuAaDOCtPxcrxIZ
+	8bsAMFthc+O8GuwRoOrkhuE=
+X-Google-Smtp-Source: AA0mqf6xl2boawgUchA5waH0TOaXNGBIoFS821TvakAkK4PExRepErIiKVWoAQ698HCrINJ8fzfexg==
+X-Received: by 2002:a05:6a00:24c1:b0:56e:a001:8cb0 with SMTP id d1-20020a056a0024c100b0056ea0018cb0mr3577341pfv.60.1669089082774;
+        Mon, 21 Nov 2022 19:51:22 -0800 (PST)
 Received: from localhost.localdomain ([162.14.78.182])
-        by smtp.gmail.com with ESMTPSA id x11-20020a170902ec8b00b001869d71228bsm10707220plg.170.2022.11.21.19.51.18
+        by smtp.gmail.com with ESMTPSA id x11-20020a170902ec8b00b001869d71228bsm10707220plg.170.2022.11.21.19.51.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Nov 2022 19:51:19 -0800 (PST)
+        Mon, 21 Nov 2022 19:51:21 -0800 (PST)
 From: menglong8.dong@gmail.com
 X-Google-Original-From: imagedong@tencent.com
 To: mathew.j.martineau@linux.intel.com,
 	matthieu.baerts@tessares.net
 Cc: mptcp@lists.linux.dev,
 	Menglong Dong <imagedong@tencent.com>
-Subject: [PATCH mptcp-next v7 0/4] mptcp: add statistics for mptcp socket in use
-Date: Tue, 22 Nov 2022 11:49:19 +0800
-Message-Id: <20221122034923.804955-1-imagedong@tencent.com>
+Subject: [PATCH mptcp-next v7 1/4] mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
+Date: Tue, 22 Nov 2022 11:49:20 +0800
+Message-Id: <20221122034923.804955-2-imagedong@tencent.com>
 X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20221122034923.804955-1-imagedong@tencent.com>
+References: <20221122034923.804955-1-imagedong@tencent.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -57,61 +60,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Menglong Dong <imagedong@tencent.com>
 
-In the 1th patch, we do some code cleanup with replease 'sock->sk'
-with 'sk'. In the 2th patch, we add statistics for mptcp socket in
-use. In the 3th patch, we make mptcp_connect can exit when receive
-'SIGUSR1' with '-r' flag. And in the 4th patch, we add the testing
-for this commit.
+'sock->sk' is used frequently in mptcp_listen(). Therefore, we can
+introduce the 'sk' and replace 'sock->sk' with it.
 
-With the commit e8695e504942("mptcp: don't orphan ssk in mptcp_close()"),
-I belive that the testing of diag.sh can pass now. In fallback and
-simultaneous close case, the msk can't release normal (sometimes?) without
-that commit, and makes the testing fail. Enn...let's just see that the
-CI is saying~
+Signed-off-by: Menglong Dong <imagedong@tencent.com>
+---
+ net/mptcp/protocol.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-
-Changes since v6:
-- check all processes exit in flush_pids() in the 4th patch
-
-Changes since v5:
-- introduce MPTCP_INUSE flag to store if msk is in use, as I find
-  that it's not correct to check is a msk is in use by
-  !sk_unhashed(sk) in mptcp_destroy_common(), because the token
-  can be release in mptcp_check_fastclose()
-- add the 3th patch
-- reuse __chk_nr in 4th patch
-
-Changes since v4:
-- rebase to solve merge conflict
-
-Changes since v3:
-- rename MPTCP_DESTROIED to MPTCP_DESTROYED in the 2th patch
-
-Changes since v2:
-- add testing
-
-Changes since v1:
-- split the code cleanup into the 1th patch.
-- decrease the statistics for listening mptcp socket inuse with
-  mptcp_listen_inuse_dec()
-- add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
-  called on the msk. For fallback case, we need to decrease the
-  statistics only once, and mptcp_destroy_common() can be called
-  more than once.
-
-Menglong Dong (4):
-  mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
-  mptcp: add statistics for mptcp socket in use
-  selftest: mptcp: exit from copyfd_io_poll() when receive SIGUSR1
-  selftest: mptcp: add test for mptcp socket in use
-
- net/mptcp/protocol.c                          | 21 +++++---
- net/mptcp/protocol.h                          | 13 +++++
- net/mptcp/subflow.c                           |  1 +
- tools/testing/selftests/net/mptcp/diag.sh     | 54 +++++++++++++++++--
- .../selftests/net/mptcp/mptcp_connect.c       |  4 +-
- 5 files changed, 79 insertions(+), 14 deletions(-)
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index a4fd971a7aa4..f9bcc724d9e2 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3655,12 +3655,13 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+ static int mptcp_listen(struct socket *sock, int backlog)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
++	struct sock *sk = sock->sk;
+ 	struct socket *ssock;
+ 	int err;
+ 
+ 	pr_debug("msk=%p", msk);
+ 
+-	lock_sock(sock->sk);
++	lock_sock(sk);
+ 	ssock = __mptcp_nmpc_socket(msk);
+ 	if (!ssock) {
+ 		err = -EINVAL;
+@@ -3668,16 +3669,16 @@ static int mptcp_listen(struct socket *sock, int backlog)
+ 	}
+ 
+ 	mptcp_token_destroy(msk);
+-	inet_sk_state_store(sock->sk, TCP_LISTEN);
+-	sock_set_flag(sock->sk, SOCK_RCU_FREE);
++	inet_sk_state_store(sk, TCP_LISTEN);
++	sock_set_flag(sk, SOCK_RCU_FREE);
+ 
+ 	err = ssock->ops->listen(ssock, backlog);
+-	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
++	inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
+ 	if (!err)
+-		mptcp_copy_inaddrs(sock->sk, ssock->sk);
++		mptcp_copy_inaddrs(sk, ssock->sk);
+ 
+ unlock:
+-	release_sock(sock->sk);
++	release_sock(sk);
+ 	return err;
+ }
+ 
 -- 
 2.37.2
 
