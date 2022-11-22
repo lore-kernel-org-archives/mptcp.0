@@ -1,52 +1,52 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C487EA8
-	for <mptcp@lists.linux.dev>; Tue, 22 Nov 2022 03:51:27 +0000 (UTC)
-Received: by mail-pf1-f195.google.com with SMTP id d192so13242296pfd.0
-        for <mptcp@lists.linux.dev>; Mon, 21 Nov 2022 19:51:27 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B07EA8
+	for <mptcp@lists.linux.dev>; Tue, 22 Nov 2022 03:51:29 +0000 (UTC)
+Received: by mail-pj1-f68.google.com with SMTP id o5-20020a17090a678500b00218cd5a21c9so809827pjj.4
+        for <mptcp@lists.linux.dev>; Mon, 21 Nov 2022 19:51:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ddvDW/MDUtgM+qsmGJtiTql+jw6vfIq1S7pyop6Cv2k=;
-        b=OZLE+ZYJegoTvyjsPlGfv/KHH7144dl/v2J6pgfgO3R3zk86KeT7ESSob/8R6kh3E9
-         s9jIkEDv3VJT6N41qfng8fNCb0zYQu3TZ05hRX8VAbKn8Xmvipf0E3d+LoKqYrIO2T52
-         tYxKAiknXOyAk001BeOl3//qqi2XJ+7yd5pfSCR8QQtC5ZSZAE2QCUT6Uh4qHTAGPAXT
-         uhvxO6gSkVXDRWR4/rwQqmLdH/QeGzL88LZadaMSIO3FmKFqHUeMj1wXt5V4uIdlhZl7
-         ka2HYHyiXcsy+bzElE5Fraqi8YPzIJXja27vK/f7++XDXCNOAID26L6Ch2SRqugd2ge/
-         Ishw==
+        bh=niWQtG1fWIVuG/NRj2Q8+EYIVC8ygMo41dzMZHL4cCc=;
+        b=CogAgdhYGXh0HbudKT/RNjJkh1ASZr5KW+jxvJTd18Z/OUM2BYQ9QxjHKLXKEsOpa8
+         0Svw3oEM+VL/o7Xz22gA6ZaZbEJVdadYjLMZv+AjOl5afgHotFw4MnvzBDmhvHHIv7EV
+         NpdDTWtODGC7BZ2169NoKn7buWCUCPCJdNSGr/W+P1aLp/5tWNIzVgAM0zLjMRoE/+qw
+         Fin6kn5iKoNqMuy+lu3QJsyTP4t2fEzL65OpOteABBBFLnOzpRyHxBFnHlJkHweQWBrR
+         Uzz+3uBnLV5FTXfyoK2fQvpL3Rz9w6FaiR9uhBVuYrdRayz0oJvh7yYfb7dIm3Zg29UN
+         Ku+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ddvDW/MDUtgM+qsmGJtiTql+jw6vfIq1S7pyop6Cv2k=;
-        b=3KC76ybxRz5bkY9XAmtjbGqZUbnGU5CzwVfrULxglk1y9BXbY1C9/dkmwM6aWhDDk9
-         dBc4IuX4S7LesQ4aik0+3FgYzv1N6CPYTYmucNOUVtPptgO90uBCVVPuVqlKFMD4KW9l
-         zd2hB+343Zbi1FbdY9vtpHW4ZrP9d4JfHoKgAXm19neIQGkfm4XBCP157XK/ErNbRaWS
-         fIlCJvMnLFZBA6wiePnFhzaRtMKQfmuyFKeqzK46+VBh2XfJIFBJMmoSf/P2LYr4lfVF
-         ntGBE8wizeC2/Wqvz16p2OnLxu52JAdxshlp8Vy90o0Httx8DWOMNPa18stjWNTFAl5i
-         ObOA==
-X-Gm-Message-State: ANoB5pkvzOsOHTfRahpSY7tHJNMHtoJpekhrLOlZnjIbsBCgv2graunT
-	gVbiBmpYEVX3RBNPDrBvuNoBSATThVgMDUQ0
-X-Google-Smtp-Source: AA0mqf7Ut+5MgOdEqCiLGM1S0Ji9DhX3sYaDnP6X1t+ggiphU9+Ogmiw+f17uDVzPGh7uamilqMTwg==
-X-Received: by 2002:a63:2043:0:b0:477:5e25:4ca8 with SMTP id r3-20020a632043000000b004775e254ca8mr5067885pgm.511.1669089086758;
-        Mon, 21 Nov 2022 19:51:26 -0800 (PST)
+        bh=niWQtG1fWIVuG/NRj2Q8+EYIVC8ygMo41dzMZHL4cCc=;
+        b=A6z+XpkHmutcrVY9nGAJpPOaqCJphACUMinPWMPBYgpZOP1wyCRPeDA76cJtLEWFLq
+         13QHrax6aoFrK7EFcxGjJpmh7HLLfdXQbcOQoN4M1BKIr926RmwmLn3le/QHLNzWIH/p
+         8vJoE+rNM1Grh+BqotDpQVwlq6ZVVYmQ+fGQJQkNOmzSE5K+WLovkgPkfz/OoLvjVrDd
+         XcjdzUKNClq368fX+kM+5ywVTWOPmFf3/s+vHVBGZ5rSLUbclC4TB7MuIcSZ6SVLrD4H
+         /bH27NKRgKUw8CGcAODmc4qOWwgrv7xEfam7JkedwsHk5xd7KW42GPapd9ydv+2IQQXo
+         TTNw==
+X-Gm-Message-State: ANoB5pkKzds9exinJSX/rawD9qsX/5GVst5bG5ZqYrxmDBd6N8sIhMvL
+	4+nuhtt+2c70AVV1uQaqL90=
+X-Google-Smtp-Source: AA0mqf4a8a+eMKTXr3FV3BVbRZH7F6M9PVz0j/6oghDJhJ+Z8zTISA/r1yOjvR+fSe1J7/ilUaXiHw==
+X-Received: by 2002:a17:90a:d38a:b0:218:a7e6:60df with SMTP id q10-20020a17090ad38a00b00218a7e660dfmr10282326pju.38.1669089088887;
+        Mon, 21 Nov 2022 19:51:28 -0800 (PST)
 Received: from localhost.localdomain ([162.14.78.182])
-        by smtp.gmail.com with ESMTPSA id x11-20020a170902ec8b00b001869d71228bsm10707220plg.170.2022.11.21.19.51.25
+        by smtp.gmail.com with ESMTPSA id x11-20020a170902ec8b00b001869d71228bsm10707220plg.170.2022.11.21.19.51.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Nov 2022 19:51:26 -0800 (PST)
+        Mon, 21 Nov 2022 19:51:28 -0800 (PST)
 From: menglong8.dong@gmail.com
 X-Google-Original-From: imagedong@tencent.com
 To: mathew.j.martineau@linux.intel.com,
 	matthieu.baerts@tessares.net
 Cc: mptcp@lists.linux.dev,
 	Menglong Dong <imagedong@tencent.com>
-Subject: [PATCH mptcp-next v7 3/4] selftest: mptcp: exit from copyfd_io_poll() when receive SIGUSR1
-Date: Tue, 22 Nov 2022 11:49:22 +0800
-Message-Id: <20221122034923.804955-4-imagedong@tencent.com>
+Subject: [PATCH mptcp-next v7 4/4] selftest: mptcp: add test for mptcp socket in use
+Date: Tue, 22 Nov 2022 11:49:23 +0800
+Message-Id: <20221122034923.804955-5-imagedong@tencent.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221122034923.804955-1-imagedong@tencent.com>
 References: <20221122034923.804955-1-imagedong@tencent.com>
@@ -60,37 +60,150 @@ Content-Transfer-Encoding: 8bit
 
 From: Menglong Dong <imagedong@tencent.com>
 
-For now, mptcp_connect won't exit after receiving the 'SIGUSR1' signal
-if '-r' is set. Fix this by skipping poll and sleep in copyfd_io_poll()
-if 'quit' is set.
+Add the function chk_msk_inuse() to diag.sh, which is used to check the
+statistics of mptcp socket in use. As mptcp socket in listen state will
+be closed randomly after 'accept', we need to get the count of listening
+mptcp socket through 'ss' command.
+
+All tests pass.
 
 Signed-off-by: Menglong Dong <imagedong@tencent.com>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v7:
+- check all processes exit in flush_pids()
+---
+ tools/testing/selftests/net/mptcp/diag.sh | 54 ++++++++++++++++++++---
+ 1 file changed, 49 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index e54653ea2ed4..518c6d653c0e 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -586,7 +586,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 		char rbuf[8192];
- 		ssize_t len;
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index 515859a5168b..4dd5dc1130ca 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -16,6 +16,11 @@ flush_pids()
+ 	sleep 1.1
  
--		if (fds.events == 0)
-+		if (fds.events == 0 || quit)
- 			break;
+ 	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGUSR1 &>/dev/null
++
++	for _ in $(seq 10); do
++		[ -z "$(ip netns pids "${ns}")" ] && break
++		sleep 0.1
++	done
+ }
  
- 		switch (poll(&fds, 1, poll_timeout)) {
-@@ -692,7 +692,7 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 	}
+ cleanup()
+@@ -36,15 +41,20 @@ if [ $? -ne 0 ];then
+ 	exit $ksft_skip
+ fi
  
- 	/* leave some time for late join/announce */
--	if (cfg_remove)
-+	if (cfg_remove && !quit)
- 		usleep(cfg_wait);
++get_msk_inuse()
++{
++	ip netns exec $ns cat /proc/net/protocols | awk '$1~/^MPTCP$/{print $3}'
++}
++
+ __chk_nr()
+ {
+-	local condition="$1"
++	local command="$1"
+ 	local expected=$2
+ 	local msg nr
  
- 	return 0;
+ 	shift 2
+ 	msg=$*
+-	nr=$(ss -inmHMN $ns | $condition)
++	nr=$(eval $command)
+ 
+ 	printf "%-50s" "$msg"
+ 	if [ $nr != $expected ]; then
+@@ -56,9 +66,17 @@ __chk_nr()
+ 	test_cnt=$((test_cnt+1))
+ }
+ 
++__chk_msk_nr()
++{
++	local condition=$1
++	shift 1
++
++	__chk_nr "ss -inmHMN $ns | $condition" $*
++}
++
+ chk_msk_nr()
+ {
+-	__chk_nr "grep -c token:" $*
++	__chk_msk_nr "grep -c token:" $*
+ }
+ 
+ wait_msk_nr()
+@@ -96,12 +114,12 @@ wait_msk_nr()
+ 
+ chk_msk_fallback_nr()
+ {
+-		__chk_nr "grep -c fallback" $*
++		__chk_msk_nr "grep -c fallback" $*
+ }
+ 
+ chk_msk_remote_key_nr()
+ {
+-		__chk_nr "grep -c remote_key" $*
++		__chk_msk_nr "grep -c remote_key" $*
+ }
+ 
+ __chk_listen()
+@@ -141,6 +159,25 @@ chk_msk_listen()
+ 	nr=$(ss -Ml $filter | wc -l)
+ }
+ 
++chk_msk_inuse()
++{
++	local expected=$1
++	local listen_nr
++
++	listen_nr=$(ss -N $ns -Ml | grep -c LISTEN)
++	expected=$(($expected+$listen_nr))
++	shift 1
++
++	for i in $(seq 10); do
++		if [ $(get_msk_inuse) -eq $expected ];then
++			break
++		fi
++		sleep 0.1
++	done
++
++	__chk_nr get_msk_inuse $expected $*
++}
++
+ # $1: ns, $2: port
+ wait_local_port_listen()
+ {
+@@ -194,8 +231,10 @@ wait_connected $ns 10000
+ chk_msk_nr 2 "after MPC handshake "
+ chk_msk_remote_key_nr 2 "....chk remote_key"
+ chk_msk_fallback_nr 0 "....chk no fallback"
++chk_msk_inuse 2 "....chk 2 msk in use"
+ flush_pids
+ 
++chk_msk_inuse 0 "....chk 0 msk in use after flush"
+ 
+ echo "a" | \
+ 	timeout ${timeout_test} \
+@@ -212,6 +251,8 @@ wait_connected $ns 10001
+ chk_msk_fallback_nr 1 "check fallback"
+ flush_pids
+ 
++chk_msk_inuse 0 "....chk 0 msk in use after flush"
++
+ NR_CLIENTS=100
+ for I in `seq 1 $NR_CLIENTS`; do
+ 	echo "a" | \
+@@ -231,6 +272,9 @@ for I in `seq 1 $NR_CLIENTS`; do
+ done
+ 
+ wait_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
++chk_msk_inuse $((NR_CLIENTS*2)) "....chk many msk in use"
+ flush_pids
+ 
++chk_msk_inuse 0 "....chk 0 msk in use after flush"
++
+ exit $ret
 -- 
 2.37.2
 
