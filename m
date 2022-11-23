@@ -1,123 +1,201 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18221FA3
-	for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 11:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C8A1FA3
+	for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 11:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1669202599;
+	s=mimecast20190719; t=1669204203;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jbiMF4OnAhMMqNPcwfFJwMKJUob3Qe0pNA+BjIVF+Kk=;
-	b=gbexfvaVZBYZOGzo67CfhnZ38NTUp9lk0nftQfRx761jt7QLg1sDkrhvApUYq/GuxxC+Gr
-	D+5TovCqQk9doFHfPVcKc9QxFlcINv6p0i3oH+2FHZyBfz3nlobJqp8ncStvMjTvJDo4MM
-	4DmnrlxMkyhpOwAW81js5hy9b37qo6c=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-114-CCYsl793PY6cLeG5Ai7rEw-1; Wed, 23 Nov 2022 06:23:16 -0500
-X-MC-Unique: CCYsl793PY6cLeG5Ai7rEw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3F6993C0F237;
-	Wed, 23 Nov 2022 11:23:16 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.190])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 546CD4EA4A;
-	Wed, 23 Nov 2022 11:23:15 +0000 (UTC)
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J4kf4o5MbVIUXiTqzfKwTv04ui/IkPGcykJfT2rNrOs=;
+	b=D6r8MG8CxdJBHu8Zi8vvEH+va/LYkENE8wJZEcgww0pp9Z9E9mG0kDIJ00mEc51kk5uVeV
+	xnQZGzw+6eO1gJy2Oj1hF2Z17Y95MG3w97gQ8obZTml9fdSwXRVzCx4S1cqEqa2GXhXtMb
+	E5QzUJz6slGJf/lMaYCytxWEWu7OKBw=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-582-fj4ZBLSpOVenjAOa8zouBQ-1; Wed, 23 Nov 2022 06:50:01 -0500
+X-MC-Unique: fj4ZBLSpOVenjAOa8zouBQ-1
+Received: by mail-wm1-f71.google.com with SMTP id j2-20020a05600c1c0200b003cf7397fc9bso9520909wms.5
+        for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 03:50:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=J4kf4o5MbVIUXiTqzfKwTv04ui/IkPGcykJfT2rNrOs=;
+        b=FGpWaRCXvDoYE39hpdISQOaauljTkh0LaUuWQe6I82Uk4Q5VY1og86z2A/xjuz7wEX
+         2k905rqRIVUwcVyuSSY2GVig1u0vH5Ex1E8gp+eQ1M9v5z8f0qQjNHSWfXN+3vEn3lqn
+         t8YFCjytXmTVa8kJKpEPJ7y44g8xrk2WlWn1aIlyj/D/6hjpeP0OoQuuzQc9gk4pv7Nh
+         C9PszSW4XKSyoqZnZOd5h9TgjYhsGrDCx13TK4HsGX6eDFKqnpM2KDPskQ2dLQYTgIHl
+         ekfJiHk6CzAXp0wXzCgwA0CJ4M2WFFIFevQ7iK7sJ0og7MDoEZ3Q7/yYL5eARCu4rhCC
+         ci4g==
+X-Gm-Message-State: ANoB5plfaXw+wRTTHdTY49nDY7JahKTq8i9xTtA8OQSaS/rCJoB3Pe4E
+	Cn+WGcSG+pH2bA4y15VPMEhHEtSy0iGlBaMpmLm8bY6/hu7MtjdpyaxQRVDnoR7lbQTfNhWKP26
+	RhZi9YTS0FsRfQwY=
+X-Received: by 2002:a05:6000:1148:b0:236:71cd:1a71 with SMTP id d8-20020a056000114800b0023671cd1a71mr17113032wrx.712.1669204200313;
+        Wed, 23 Nov 2022 03:50:00 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf73Chen52HW61poUYz07zksYjCunuCmsv6mTQyMqeJ8d00kCmb+z11NtTRgatyG//+t7jHJNQ==
+X-Received: by 2002:a05:6000:1148:b0:236:71cd:1a71 with SMTP id d8-20020a056000114800b0023671cd1a71mr17113015wrx.712.1669204200007;
+        Wed, 23 Nov 2022 03:50:00 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-120-203.dyn.eolo.it. [146.241.120.203])
+        by smtp.gmail.com with ESMTPSA id j14-20020a05600c190e00b003b47e75b401sm2347396wmq.37.2022.11.23.03.49.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Nov 2022 03:49:59 -0800 (PST)
+Message-ID: <db094b53bb343ec9c490506134b913e15ea5ac20.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v5 4/4] selftests: mptcp: listener test for
+ in-kernel PM
 From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Jiang Biao <benbjiang@tencent.com>,
-	Mengen Sun <mengensun@tencent.com>
-Subject: [PATCH mptcp-net] mptcp: fix sleep in atomic at close time
-Date: Wed, 23 Nov 2022 12:23:05 +0100
-Message-Id: <feee93bcba06bf05a9308188f91007e7f6cbe5f4.1669201422.git.pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Date: Wed, 23 Nov 2022 12:49:58 +0100
+In-Reply-To: <60b6d97a1087057ed07ec1c0c7068e22cede2ad9.1668662624.git.geliang.tang@suse.com>
+References: <cover.1668662624.git.geliang.tang@suse.com>
+	 <60b6d97a1087057ed07ec1c0c7068e22cede2ad9.1668662624.git.geliang.tang@suse.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Mat reported a splat at msk close time:
+Hello,
 
-BUG: sleeping function called from invalid context at net/mptcp/protocol.c:2877
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 155, name: packetdrill
-preempt_count: 201, expected: 0
-RCU nest depth: 0, expected: 0
-4 locks held by packetdrill/155:
-#0: ffff888001536990 (&sb->s_type->i_mutex_key#6){+.+.}-{3:3}, at: __sock_release (net/socket.c:650)
-#1: ffff88800b498130 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_close (net/mptcp/protocol.c:2973)
-#2: ffff88800b49a130 (sk_lock-AF_INET/1){+.+.}-{0:0}, at: __mptcp_close_ssk (net/mptcp/protocol.c:2363)
-#3: ffff88800b49a0b0 (slock-AF_INET){+...}-{2:2}, at: __lock_sock_fast (include/net/sock.h:1820)
-Preemption disabled at:
-0x0
-CPU: 1 PID: 155 Comm: packetdrill Not tainted 6.1.0-rc5 #365
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-Call Trace:
-<TASK>
-dump_stack_lvl (lib/dump_stack.c:107 (discriminator 4))
-__might_resched.cold (kernel/sched/core.c:9891)
-__mptcp_destroy_sock (include/linux/kernel.h:110)
-__mptcp_close (net/mptcp/protocol.c:2959)
-mptcp_subflow_queue_clean (include/net/sock.h:1777)
-__mptcp_close_ssk (net/mptcp/protocol.c:2363)
-mptcp_destroy_common (net/mptcp/protocol.c:3170)
-mptcp_destroy (include/net/sock.h:1495)
-__mptcp_destroy_sock (net/mptcp/protocol.c:2886)
-__mptcp_close (net/mptcp/protocol.c:2959)
-mptcp_close (net/mptcp/protocol.c:2974)
-inet_release (net/ipv4/af_inet.c:432)
-__sock_release (net/socket.c:651)
-sock_close (net/socket.c:1367)
-__fput (fs/file_table.c:320)
-task_work_run (kernel/task_work.c:181 (discriminator 1))
-exit_to_user_mode_prepare (include/linux/resume_user_mode.h:49)
-syscall_exit_to_user_mode (kernel/entry/common.c:130)
-do_syscall_64 (arch/x86/entry/common.c:87)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
+sorry for the late feedback.
 
-We can't acquire call mptcp_close under the 'fast' socket lock veriant,
-replace it with a sock_lock_nested() as the relevant code is already
-under the listening msk socket lock protection.
+On Thu, 2022-11-17 at 13:31 +0800, Geliang Tang wrote:
+> This patch adds test coverage for listening sockets created by the
+> in-kernel path manager in mptcp_join.sh.
+> 
+> It adds the listener event checking in the existing "remove single
+> address with port" test. The output looks like this:
+> 
+>  003 remove single address with port syn[ ok ] - synack[ ok ] - ack[ ok ]
+>                                      add[ ok ] - echo  [ ok ] - pt [ ok ]
+>                                      syn[ ok ] - synack[ ok ] - ack[ ok ]
+>                                      syn[ ok ] - ack   [ ok ]
+>                                      rm [ ok ] - rmsf  [ ok ]   invert
+>                                      CREATE_LISTENER 10.0.2.1:10100[ ok ]
+>                                      CLOSE_LISTENER 10.0.2.1:10100 [ ok ]
+> 
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index f10ef65a7009..89a30225bbd7 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -2509,6 +2509,54 @@ backup_tests()
+>  	fi
+>  }
+>  
+> +LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
+> +LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
+> +
+> +AF_INET=2
+> +AF_INET6=10
+> +
+> +verify_listener_events()
+> +{
+> +	local evt=$1
+> +	local e_type=$2
+> +	local e_family=$3
+> +	local e_saddr=$4
+> +	local e_sport=$5
+> +	local type
+> +	local family
+> +	local saddr
+> +	local sport
+> +
+> +	if [ $e_type = $LISTENER_CREATED ]; then
+> +		stdbuf -o0 -e0 printf "\t\t\t\t\t CREATE_LISTENER %s:%s"\
+> +			$e_saddr $e_sport
+> +	elif [ $e_type = $LISTENER_CLOSED ]; then
+> +		stdbuf -o0 -e0 printf "\t\t\t\t\t CLOSE_LISTENER %s:%s "\
+> +			$e_saddr $e_sport
+> +	fi
+> +
+> +	type=$(grep "type:$e_type," $evt |
+> +	       sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q')
+> +	family=$(grep "type:$e_type," $evt |
+> +		 sed --unbuffered -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q')
+> +	sport=$(grep "type:$e_type," $evt |
+> +		sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
 
-Reported-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Closes: Matthieu Baerts <matthieu.baerts@tessares.net>
-Fixes: 30e51b923e43 ("mptcp: fix unreleased socket in accept queue")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/subflow.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This does not handle properly error conditions: $family, $type or
+$sport could be undef in case of bugs, you need to quote them
+everywhere.
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 05099b3760b5..602cb2fe5148 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1802,16 +1802,16 @@ void mptcp_subflow_queue_clean(struct sock *listener_ssk)
- 
- 	for (msk = head; msk; msk = next) {
- 		struct sock *sk = (struct sock *)msk;
--		bool slow, do_cancel_work;
-+		bool do_cancel_work;
- 
- 		sock_hold(sk);
--		slow = lock_sock_fast_nested(sk);
-+		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
- 		next = msk->dl_next;
- 		msk->first = NULL;
- 		msk->dl_next = NULL;
- 
- 		do_cancel_work = __mptcp_close(sk, 0);
--		unlock_sock_fast(sk, slow);
-+		release_sock(sk);
- 		if (do_cancel_work)
- 			mptcp_cancel_work(sk);
- 		sock_put(sk);
--- 
-2.38.1
+> +	if [ $family = $AF_INET6 ]; then
+> +		saddr=$(grep "type:$e_type," $evt |
+> +			sed --unbuffered -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
+> +	else
+> +		saddr=$(grep "type:$e_type," $evt |
+> +			sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
+> +	fi
+> +
+> +	if [ $type = $e_type ] && [ $family = $e_family ] &&
+> +	   [ $saddr = $e_saddr ] && [ $sport = $e_sport ]; then
+> +		stdbuf -o0 -e0 printf "[ ok ]\n"
+> +		return 0
+> +	fi
+> +	stdbuf -o0 -e0 printf "[fail]\n"
+
+This is not enough, you must additionally call
+
+	fail_test
+
+to properly report the failure to the CI, otherwise the test will be
+considered successful even when the condition is not meet.
+
+> +}
+> +
+>  add_addr_ports_tests()
+>  {
+>  	# signal address with port
+> @@ -2533,7 +2581,16 @@ add_addr_ports_tests()
+>  	fi
+>  
+>  	# single address with port, remove
+> +	# pm listener events
+>  	if reset "remove single address with port"; then
+> +		local evts
+> +		local pid
+> +
+> +		evts=$(mktemp)
+> +		:> $evts
+> +		ip netns exec $ns1 ./pm_nl_ctl events >> $evts 2>&1 &
+> +		pid=$!
+> +
+>  		pm_nl_set_limits $ns1 0 1
+>  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
+>  		pm_nl_set_limits $ns2 1 1
+> @@ -2541,6 +2598,11 @@ add_addr_ports_tests()
+>  		chk_join_nr 1 1 1
+>  		chk_add_nr 1 1 1
+>  		chk_rm_nr 1 1 invert
+> +
+> +		verify_listener_events $evts 15 $AF_INET 10.0.2.1 10100
+> +		verify_listener_events $evts 16 $AF_INET 10.0.2.1 10100
+> +		kill_wait $pid
+> +		rm -rf $evts
+
+is better if you make the 'evts' variable global, moving its definition
+in the initial global variable declaration and move the 'rm -rf $evts'
+in cleanup() 
+
+@Geliang: could you please send a squash-to follow tacking care of
+the above?
+
+Thanks!
+
+Paolo
 
