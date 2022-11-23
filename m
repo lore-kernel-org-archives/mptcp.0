@@ -1,90 +1,114 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB90F1C04
-	for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 16:50:09 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id o30so13513523wms.2
-        for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 08:50:09 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F1B4699
+	for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 17:17:03 +0000 (UTC)
+Received: by mail-qv1-f45.google.com with SMTP id p12so1117180qvu.5
+        for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 09:17:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7A4rzfnPqHYnpHhIo1vde/ZjYmulTIPx1486L/BaHcI=;
-        b=dlBPZlzuIsDA0e/rz5+n2X+my17kDGAf/wsFTuQ97tVdOJvyDOcLU0zSpHzuAw729C
-         Fv+NWJy+BfDaHm9Wc+NlxRGriSCAayCgIaDYanX3KrH3D95xjZr7E2xrIciKaNFmUY46
-         iAZPsmLCooStMS4a0Yo+rQOi8yWF6iyRSOm7rdAy/oseU1Mf0tdcu7GwjxiJtXN4nFKi
-         Jh6GJfyoDpBIb0GkH7bQ1ShqJmmcI2gitzN1uXg3Pn1Vrv7EIgHobDQHE+CUJTpC6uJa
-         6WLQ1m7eP9zQoNDkqMCW59Tj98lDVbISnr87bFfquVWsXK/JQn1FejmT+3yFAWRDWNkn
-         BWLg==
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DFhmXRZmf9nXx18ytKlFUOlssRqBQojg9KqjAvckWcE=;
+        b=jdKrfjt/YjM0ZQFFUjRaSTbSDzbx8zLKR+W8uRF9MAUDhjTHcxOXRSWnSAY+vKmnnk
+         d2zf5BK2RcCf3ezmhfHWxYxDsD+VA4S7sjDWc6WyFOWdemPbnWe9Sz+GK9atCJlCyMAG
+         mv0e+2+Wi20A50MfAihkfCK9oTGD/laMCIteJHvOUfgOUjD2maILFgkm8YN9Sv09AD+/
+         Om736VJrv5Rtlsagf6sHK21BudsBwJI5r5G4vz5IwFTvvCyTDfBd4z9iJVL/2oA+Hhy/
+         bZ09bcMxtka72hOPYLchNzo4oeVR+P2CBYXFN53zINHZx8TuXHUUdiCc2V8h2CuLECXU
+         zJmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7A4rzfnPqHYnpHhIo1vde/ZjYmulTIPx1486L/BaHcI=;
-        b=uLeffmZajUiDTp46qeWcGlm9SzesvCY2y0Zg05FJ4CG+VeUyr734SqtOm4nOi2IMsw
-         KxGeybXvUaQvy+5ZKNWR8iPEPnGdWibZw9SBYeQNlYEKOx5hQHGcoAmmlCG3ZCdcs/WK
-         m0CYP2eQyZ7dkPIC718HAzW9knj38BZyUpDV4aZNl91IjaPnbKLGxeGjfB4A6CQylh+d
-         Iy+hskK4dp68G9WnIZr+OXf7nuMOsudscu/SdEY/7N9DCAwVdjD2iSmnkLhCGbGXZX0q
-         h6d/P85xWnGVgPRDUTwx8ZX4Rpmb4X9g2m6UHwkkqsViHn5XSo/VMR03rg0lt2akDBTx
-         pqYg==
-X-Gm-Message-State: ANoB5pn2Y98IG0ok5Ltw6ZWR4ME7PD44v9HEgcOctqvgujdUa4YfbMbR
-	GrbbgVN3BYkDcMi+eFpbQB4cMg==
-X-Google-Smtp-Source: AA0mqf4eJuYOTC9ZBcEC9Pi9Cs+FA2soEMudLhy11NQJmKYBSbnG/8OzGtqSLx8vnstHKCo3qKYV+A==
-X-Received: by 2002:a1c:6a04:0:b0:3cf:77cc:5f65 with SMTP id f4-20020a1c6a04000000b003cf77cc5f65mr14443293wmc.25.1669222207507;
-        Wed, 23 Nov 2022 08:50:07 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:aeed:e7e9:2ae2:91e2? ([2a02:578:8593:1200:aeed:e7e9:2ae2:91e2])
-        by smtp.gmail.com with ESMTPSA id m35-20020a05600c3b2300b003cfd0bd8c0asm3286486wms.30.2022.11.23.08.50.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Nov 2022 08:50:06 -0800 (PST)
-Message-ID: <63889555-b03a-03e5-83cc-bfae01cd70dd@tessares.net>
-Date: Wed, 23 Nov 2022 17:50:05 +0100
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=DFhmXRZmf9nXx18ytKlFUOlssRqBQojg9KqjAvckWcE=;
+        b=tn4EV7tOB8t0918cWpmRLpJ8wCl4aX0xEH/HGW1+VaLoSiq9/pz1J0CNW+2UTsgcHK
+         w+7+myLK+5pLE6l9oDB1dqKqAfAKzpr2a3NZC6Hx4pfCxIDxYeEjCHSd34y3BwmEH/Zn
+         9Yf3/Rf8noeAm8iDLp+uXD/mALWqdJUX03N+Xr/647gLbI95m2Y/biUzta6AgOtxvVjo
+         pWtT6Ya9mEDAZNofpN2UASWt597CI6igwryolVavQ771f3yU8Xnhk6LkqZ3IPjnqj1rz
+         CEhy9djpJ9CvhwMEeydSk7rcWlVVfnwBINRmEPTFNQd5Tiys5T28V1Mm9H/IJzAXUdt8
+         yAxg==
+X-Gm-Message-State: ANoB5pnVkH3IqvXUvbc6JvvQbmbqNsadf0hc7ftArW+uZohOYPHjUmKi
+	sK0WOPLmRfXtqffnckqboA==
+X-Google-Smtp-Source: AA0mqf4hbqup0ttyRnmVRu6dxrtmmRLar42conMeTXgTZeiUAackgzyvODXL1tCMIdY97eO5FK5mQw==
+X-Received: by 2002:a0c:fe47:0:b0:4bb:e74a:f640 with SMTP id u7-20020a0cfe47000000b004bbe74af640mr9179049qvs.36.1669223822804;
+        Wed, 23 Nov 2022 09:17:02 -0800 (PST)
+Received: from [127.0.0.1] ([172.173.198.202])
+        by smtp.gmail.com with ESMTPSA id x10-20020a05620a258a00b006bb82221013sm12499643qko.0.2022.11.23.09.17.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Nov 2022 09:17:02 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <feee93bcba06bf05a9308188f91007e7f6cbe5f4.1669201422.git.pabeni@redhat.com>
+References:
+ <feee93bcba06bf05a9308188f91007e7f6cbe5f4.1669201422.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix sleep in atomic at close time: Tests Results
+Message-ID: <101e0b8b-253e-d121-2a35-2827c7c5adc0@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 23 Nov 2022 17:17:01 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH mptcp-net] mptcp: fix sleep in atomic at close time
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Jiang Biao <benbjiang@tencent.com>, Mengen Sun <mengensun@tencent.com>
-References: <feee93bcba06bf05a9308188f91007e7f6cbe5f4.1669201422.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <feee93bcba06bf05a9308188f91007e7f6cbe5f4.1669201422.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 23/11/2022 12:23, Paolo Abeni wrote:
-> Mat reported a splat at msk close time:
+Thank you for your modifications, that's great!
 
-(...)
+Our CI did some validations and here is its report:
 
-> We can't acquire call mptcp_close under the 'fast' socket lock veriant,
-> replace it with a sock_lock_nested() as the relevant code is already
-> under the listening msk socket lock protection.
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5289200753311744
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5289200753311744/summary/summary.txt
 
-Thank you for the patch!
+- KVM Validation: debug:
+  - Unstable: 1 failed test(s): =
+selftest_mptcp_connect =F0=9F=94=B4:
+  - Task: https://cirrus-ci.=
+com/task/6415100660154368
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6415100660154368/summary/summary.txt
 
-Now in our tree (fix for -net) with my RvB tag (and the 3 other small
-fixes mentioned in my previous email)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/1b888ac1f43d
 
-New patches for t/upstream-net:
-- ff05017f41a8: mptcp: fix sleep in atomic at close time
-- Results: 4b0094499418..515e95912b40 (export-net)
-- Results: 3d12c8bc8c2c..e97e3cfdc32b (export)
 
-Tests are now in progress:
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221123T164310
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
