@@ -1,155 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1C41FA3
-	for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 11:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1669204520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1Jxv+u6Llcj9EdYnXlKFoQSeYAGl9AIsE2DTXeKqmqo=;
-	b=TmGNNdeiFcQpLt1gejOrlFQvCwms+8HTxE4gu9TNSlYNd8EXJVSJljU0jGF4BKNDvcMrpw
-	WyyontSrKZsJt1f7zsfc44zmDwZTIwi6/ZofKK8cisdm4HnqUqID2yo/Thi7FUOidZ9q95
-	eJiEBJQfkalI73EL328mCovEOZAza60=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-612-Amwgo2uqNkiYWAocttMwrA-1; Wed, 23 Nov 2022 06:55:19 -0500
-X-MC-Unique: Amwgo2uqNkiYWAocttMwrA-1
-Received: by mail-wm1-f69.google.com with SMTP id ay40-20020a05600c1e2800b003cf8aa16377so9518887wmb.7
-        for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 03:55:18 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B8E23B7
+	for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 13:22:09 +0000 (UTC)
+Received: by mail-qk1-f178.google.com with SMTP id d8so12318371qki.13
+        for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 05:22:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k6qmff47Y6nLwVesOzGFbj9ylsjeEGmVN092Z4E+9qw=;
+        b=ZVR5gumnmrNeUe/wOjJjOmfz3i5kKlKOJgqSDAeeqy+QUV33VvP0DK9hlYrpQY5jiF
+         AOODPRjvEJSt7A8a75UO+TRTukfxR0bVYUWCDmm3+LA2bm1G7cLd6195fkUvC8tfyZwa
+         ZC20eKeiXSH9M4riSjonaoq17o492/SE1sUKSYgJny+R4fyS30SEjEvC/0L6RT+jKuNA
+         2aWJ0yFrvPhsRzGKwbFcwlTfSvXsgJqGqVC4swNXJTnNZebpjnrfLtp9xr2yHIwcwji3
+         Ss4mCQ57qhWINM/mX+CP7sWzhv4jz4IRRwBU3zt4bepn2Vp1p1VXhmYWKO/c3E0DrgQA
+         TVVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=1Jxv+u6Llcj9EdYnXlKFoQSeYAGl9AIsE2DTXeKqmqo=;
-        b=B7J5YuvqxvKu4DLvdfFV5yBDDh2uZ68yHJRAItejs4uVbd0XX/YfxMpiv4rlUyZ1hO
-         PMXkZhfL1v6QOP1q0u/iOSVmUzyaMFbk/pfseVR6JrH6oiZnKGFd37N2WSJxnzaaHc8m
-         8hbRGGFoWQmdPtCJekRn8fPf5HT3gzr7F355VRP/mzghBexdFc58sVjT1ggSvyHBDHkk
-         sk17LAl3+fBq3hMAE6OR9HDiKZlBPqwsqNYgmd9IyMLKF+yzzJMZc+NWApqdD2vhJEIZ
-         XjdVM7huc4AdcjMoJuOom883kLlRFi7Flo8aNya/sppCjdxFRh6nOT/vVQg1P6iqKHwR
-         wjGg==
-X-Gm-Message-State: ANoB5pnt46GWfLYv9ImIpF5+uJ8oxExYPxcSjtvsmVzZeEu14inaP542
-	yoiD1WPmjjn4S2cZIAu2sIb8ClJcTcQJ8HEHRU89bfHn2L+E4rrpBUAtB6zZ90tB1QdO5ywI6ZT
-	EPXVpG68+HQS7z/o=
-X-Received: by 2002:a05:6000:12d1:b0:236:71fe:c9c5 with SMTP id l17-20020a05600012d100b0023671fec9c5mr16522125wrx.677.1669204517860;
-        Wed, 23 Nov 2022 03:55:17 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7LavH/rIQZ27Brh7SynlIcK8hAizkmyfzG6cnUxdtG2HUKPrtPR5ppy4zln+jvQf80IMMtVw==
-X-Received: by 2002:a05:6000:12d1:b0:236:71fe:c9c5 with SMTP id l17-20020a05600012d100b0023671fec9c5mr16522108wrx.677.1669204517596;
-        Wed, 23 Nov 2022 03:55:17 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-120-203.dyn.eolo.it. [146.241.120.203])
-        by smtp.gmail.com with ESMTPSA id y9-20020a5d4ac9000000b00241ce5d605dsm10897209wrs.110.2022.11.23.03.55.16
+        bh=k6qmff47Y6nLwVesOzGFbj9ylsjeEGmVN092Z4E+9qw=;
+        b=lqFONHDp4PVLrHwc4UOTmJ2IExRBxFKCJIkl44Wf1krov80NO7G7ZLr4NUMrOkx+fL
+         EEYbJ+31//cy79imoojzJX0ya0Mpqqh0LDg2vR5/eWJFoox3QaOeMXowmf0vTfan1vl6
+         wZsI6TG5pPQ1KELumMgYCHbAAPNKKCffCGTt22cLPn6BKKbwupXLEo3cKx08EtClhStK
+         IB9tsLMx49aiLggHCr8B2Bw9VTFJrtO4A3TSL5PlP7o/ZJqSjFjP0uLZkvL2rZkNEBVk
+         2ZOVLUn9O7vnqy3XzlujPIEYOvVy8bFwi68D7E3woGs7sVRjCnQm0XptPM45sHAGvRkR
+         ywZA==
+X-Gm-Message-State: ANoB5pmuJNqlupC2qizWhtX53tp3LfrzpjGNbHSuvhcGZYoKLpQDFz3H
+	s6EuZAMnLPCIY6IO/ITdwQ==
+X-Google-Smtp-Source: AA0mqf6/Uw5RKrSESrTdMstvqlarR3TIqaflWYYw6mHWxd4q2vHUXg3f1cf4Pe0WluLUCsvryrFezg==
+X-Received: by 2002:a37:a87:0:b0:6fc:26a8:4ee3 with SMTP id 129-20020a370a87000000b006fc26a84ee3mr4585804qkk.148.1669209728126;
+        Wed, 23 Nov 2022 05:22:08 -0800 (PST)
+Received: from [127.0.0.1] ([20.22.244.111])
+        by smtp.gmail.com with ESMTPSA id bj26-20020a05620a191a00b006fa313bf185sm12059626qkb.8.2022.11.23.05.22.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 03:55:17 -0800 (PST)
-Message-ID: <12e2fa8c76de3b572433f11607d4314c06334b10.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v5 3/4] selftests: mptcp: listener test for
- userspace PM
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Date: Wed, 23 Nov 2022 12:55:16 +0100
-In-Reply-To: <25f1826e79124415086fe3d6ceb139e2ec80a756.1668662624.git.geliang.tang@suse.com>
-References: <cover.1668662624.git.geliang.tang@suse.com>
-	 <25f1826e79124415086fe3d6ceb139e2ec80a756.1668662624.git.geliang.tang@suse.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        Wed, 23 Nov 2022 05:22:07 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <feee93bcba06bf05a9308188f91007e7f6cbe5f4.1669201422.git.pabeni@redhat.com>
+References:
+ <feee93bcba06bf05a9308188f91007e7f6cbe5f4.1669201422.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix sleep in atomic at close time: Tests Results
+Message-ID: <646f862f-a891-dbfe-4611-acec2aa268eb@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 23 Nov 2022 13:22:07 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Thu, 2022-11-17 at 13:31 +0800, Geliang Tang wrote:
-> This patch adds test coverage for listening sockets created by the
-> userspace path manager in userspace_pm.sh.
-> 
-> It adds a new test named test_listener() and a new verifying helper
-> verify_listener_events(). The new output looks like this:
-> 
->  CREATE_SUBFLOW 10.0.2.2 (ns2) => 10.0.2.1 (ns1)              [OK]
->  DESTROY_SUBFLOW 10.0.2.2 (ns2) => 10.0.2.1 (ns1)             [OK]
->  MP_PRIO TX                                                   [OK]
->  MP_PRIO RX                                                   [OK]
->  CREATE_LISTENER 10.0.2.2:37106				      [OK]
->  CLOSE_LISTENER 10.0.2.2:37106				      [OK]
-> 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  .../selftests/net/mptcp/userspace_pm.sh       | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> index 08a88ea47a29..40801279ebdf 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -11,6 +11,8 @@ ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
->  REMOVED=7          # MPTCP_EVENT_REMOVED
->  SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
->  SUB_CLOSED=11      # MPTCP_EVENT_SUB_CLOSED
-> +LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
-> +LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
->  
->  AF_INET=2
->  AF_INET6=10
-> @@ -808,11 +810,91 @@ test_prio()
->  	fi
->  }
->  
-> +verify_listener_events()
-> +{
-> +	local evt=$1
-> +	local e_type=$2
-> +	local e_family=$3
-> +	local e_saddr=$4
-> +	local e_sport=$5
-> +	local type
-> +	local family
-> +	local saddr
-> +	local sport
-> +
-> +	if [ $e_type = $LISTENER_CREATED ]; then
-> +		stdbuf -o0 -e0 printf "CREATE_LISTENER %s:%s\t\t\t\t\t"\
-> +			$e_saddr $e_sport
-> +	elif [ $e_type = $LISTENER_CLOSED ]; then
-> +		stdbuf -o0 -e0 printf "CLOSE_LISTENER %s:%s\t\t\t\t\t"\
-> +			$e_saddr $e_sport
-> +	fi
-> +
-> +	type=$(grep "type:$e_type," $evt |
-> +	       sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q')
-> +	family=$(grep "type:$e_type," $evt |
-> +		 sed --unbuffered -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q')
-> +	sport=$(grep "type:$e_type," $evt |
-> +		sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
-> +	if [ $family = $AF_INET6 ]; then
-> +		saddr=$(grep "type:$e_type," $evt |
-> +			sed --unbuffered -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
-> +	else
-> +		saddr=$(grep "type:$e_type," $evt |
-> +			sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
-> +	fi
-> +
-> +	if [ $type = $e_type ] && [ $family = $e_family ] &&
-> +	   [ $saddr = $e_saddr ] && [ $sport = $e_sport ]; then
-> +		stdbuf -o0 -e0 printf "[OK]\n"
-> +		return 0
-> +	fi
-> +	stdbuf -o0 -e0 printf "[FAIL]\n"
-> +	exit 1
+Hi Paolo,
 
-This has similar issues to the patch 4/4, with the main difference that
-we dont need the test_fail call here: exit 1 is enough.
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/6329217620115456
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/6329217620115456/summary/summary.txt
+
+- KVM Validation: debug:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5865717434679296
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5865717434679296/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/cbc71d5d8b05
 
 
-@Geliang: could you please take care of the follow-up here, too?
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-Thanks!
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-Paolo
+For more details:
 
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
