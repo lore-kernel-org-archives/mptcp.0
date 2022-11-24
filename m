@@ -1,113 +1,107 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-yb1-f193.google.com (mail-yb1-f193.google.com [209.85.219.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D653236
-	for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 19:14:07 +0000 (UTC)
-Received: by mail-qt1-f177.google.com with SMTP id a27so11846048qtw.10
-        for <mptcp@lists.linux.dev>; Wed, 23 Nov 2022 11:14:07 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0399023AE
+	for <mptcp@lists.linux.dev>; Thu, 24 Nov 2022 09:06:58 +0000 (UTC)
+Received: by mail-yb1-f193.google.com with SMTP id l67so1162670ybl.1
+        for <mptcp@lists.linux.dev>; Thu, 24 Nov 2022 01:06:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q8CnCPSqbBbckpxoAKqyABgEMK1xvC0whaxlJ61G5ao=;
-        b=oy5ULKPmnEYc20Nd6dSm7zwYYUGflCgp63C0PmdoBWQKkJIBhwpBSu/8Do629oSI61
-         2IdiSbT2V/Xcmi2/lOQb0ZBUf8p9pefi7qwo/HDieCCXgl+VWuDMvD/vdzNlhh7GtrRV
-         AfWHedDqF+io3szrys74TmldyKm3AavjUxbsB0yZdGMSl6T81uVZXFX1Lbv2Hn6bvGIZ
-         d5wwfy61wTn/PPQ+QnbFIMQvUw8WEO9rVpydzTabGxiBqrFwNcez73oyb5/Keh2eVAHx
-         q2DvUsOPaePQev+WyVXtnPHFKbUHek0CJBnff+CvgMPj0cnIBLgT57VIBDGfhmkya9iG
-         MF9Q==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=r3v4mctkSEw+EA3Te9cvedTknjGT6jnHVuhHXjUHPx0=;
+        b=TexT0UqTN2vhQlJUZwWQTPZIvbbbDVIKSUeEtXyQ0fCkLp/DBUxFzkcmgQX99A4j68
+         wS0N3Xu/r/RPKrVAB8k/tAt8fUZe6Ywg5EzvpPZmfnYDJwIjYhtGE3uKLFwb3IjuT2hW
+         7CJFxK6Fyj7PNYDAUjbfkOYuMH157ChSk1IQVypK39Wu0B9RJ6zMS+/NhRx7wwq3vsAR
+         0anNpft+HuZKL+b+WsipDcoq/yvgX/XM0u28qFDyMomSCs/ANcQch6pHu08YDw0vFHay
+         wwlOQSlAYsyYmoJliMELm0GVKYvvp+bOEp8vIJyZ2xNmNeyPlYC2R9WmNE+zWrXetxXB
+         OToQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Q8CnCPSqbBbckpxoAKqyABgEMK1xvC0whaxlJ61G5ao=;
-        b=ET/RBIDw1Nl20HK+EFCoeNnbpLNnQdgW397CfIF2+B7S/WtPdgG8bIkTWYTdtofz/k
-         hkgVtF2ww30tOC57fuZEplLjaJlIKdBVEO4Shspzz4q/m2DqghzBXAd+Up/igN7kraDs
-         +J8bU27DTU86RpEXBSjWmf4ezg6OpvYkeHTFgGaNgzliK6kL1NLHt8XPhUNBj3++x1gM
-         BTnRnYK5/wK0stxV2wRgdnegJt6QOXI14U1b47DxVW1MSgc6mJNcPVoFJu3ByDU4qRfA
-         wSwwKSzaL9ZYXQJZ5FQdCwYnHDBpRNuZs/RopsR2cbKTY9Uct/T3+YIK0k46yje9LeEJ
-         NWSg==
-X-Gm-Message-State: ANoB5pmlpjdTqHsxNrVYnyUcEAFg1nsqiyO82WoTzTAohtiIbDOPXWph
-	8Y4aSJDg9XavZkkNyXlzrQ==
-X-Google-Smtp-Source: AA0mqf59kO5Vo3dqBudoKq/1lvf6LrYpyyPntnH80b2IoTwmqdhdtT0y19+ks9E2i6O+oix/ZA6iuw==
-X-Received: by 2002:ac8:1197:0:b0:3a5:74c6:e265 with SMTP id d23-20020ac81197000000b003a574c6e265mr27825894qtj.405.1669230846959;
-        Wed, 23 Nov 2022 11:14:06 -0800 (PST)
-Received: from [127.0.0.1] ([20.14.198.85])
-        by smtp.gmail.com with ESMTPSA id bm3-20020a05620a198300b006f474e6a715sm12570985qkb.131.2022.11.23.11.14.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 11:14:06 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Menglong Dong <imagedong@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221122034923.804955-5-imagedong@tencent.com>
-References: <20221122034923.804955-5-imagedong@tencent.com>
-Subject: Re: selftest: mptcp: add test for mptcp socket in use: Tests
- Results
-Message-ID: <a60aaffd-d6f8-9c7f-55ff-e61bae56b445@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Nov 2022 19:14:05 +0000
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r3v4mctkSEw+EA3Te9cvedTknjGT6jnHVuhHXjUHPx0=;
+        b=kuKRLjRdPpbR9F0j1xuMJr6PuSNtxL9myDQLs47F8zcAuWx0SLqNzGa+pKhmwdr1CW
+         IVBmTNtB2PNvoeVBSHxpFXQq/Ak7O6jcaVDWYEgaQiv8Wpi9wtGQbd5KMWAvXvWYsf48
+         c50BQNyJwqrYk3+SVpXS9Ybn5ldpjkJ4FxB5iy71mqsMPGmGhZWBO6NDyS7bNKjnOUrH
+         gCUmn13CAglKqItS1vxt8wbu+zfcZlyicIAk9vYA1hISQLeuNIUpyZf3mgRdb+1s+Sd1
+         ath9e3LP1Bi8WzVXRFJBWg8eeY1U+NQcVCk1yGZIELZFqRZT7xKdUObVqyGO5LAATJNI
+         hM7A==
+X-Gm-Message-State: ANoB5pk4Qi5RuKmdKu0CjyVofmTo1a0M/rii2YpqIjOdr6YWbXFP8U2a
+	smimojYntEuUo0tp3DBS3WIo/8Attfe63qluTuFcXH51TUkd7Q==
+X-Google-Smtp-Source: AA0mqf7bV6zAS/2fBEVAGZwSTUC9PGGw3P/me0T7QkB4k7AA6ig4wh7V1wrFqJvrMk+4oNgCEfZ3iPd7hHrMXeadMZY=
+X-Received: by 2002:a25:6b04:0:b0:6dd:51d0:fc6d with SMTP id
+ g4-20020a256b04000000b006dd51d0fc6dmr30191481ybc.285.1669280817902; Thu, 24
+ Nov 2022 01:06:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20221122034923.804955-1-imagedong@tencent.com> <0b86b2b1-1a5c-d500-fd79-c23f2fd4a5ed@tessares.net>
+In-Reply-To: <0b86b2b1-1a5c-d500-fd79-c23f2fd4a5ed@tessares.net>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Thu, 24 Nov 2022 17:06:46 +0800
+Message-ID: <CADxym3axbs=a5Xw=0NW1t225MLqY42M47qQiSu_SuLJ+R_KtbQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v7 0/4] mptcp: add statistics for mptcp socket
+ in use
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mathew.j.martineau@linux.intel.com, mptcp@lists.linux.dev, 
+	Menglong Dong <imagedong@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Menglong,
+Hello,
 
-Thank you for your modifications, that's great!
+On Wed, Nov 23, 2022 at 11:58 PM Matthieu Baerts
+<matthieu.baerts@tessares.net> wrote:
+>
+> Hi Menglong,
+>
+> On 22/11/2022 04:49, menglong8.dong@gmail.com wrote:
+> > From: Menglong Dong <imagedong@tencent.com>
+> >
+> > In the 1th patch, we do some code cleanup with replease 'sock->sk'
+> > with 'sk'. In the 2th patch, we add statistics for mptcp socket in
+> > use. In the 3th patch, we make mptcp_connect can exit when receive
+> > 'SIGUSR1' with '-r' flag. And in the 4th patch, we add the testing
+> > for this commit.
+> >
+> > With the commit e8695e504942("mptcp: don't orphan ssk in mptcp_close()"),
+> > I belive that the testing of diag.sh can pass now. In fallback and
+> > simultaneous close case, the msk can't release normal (sometimes?) without
+> > that commit, and makes the testing fail. Enn...let's just see that the
+> > CI is saying~
+>
+> Thank you for this new version!
+> I was waiting the feedback from the CI to start my review but it looks
+> like the CI was not able to apply your series [1].
+>
+> I just applied the series manually, fixed the two conflicts I got and
+> sent it to our repo[2]. We should get the results later on.
+>
 
-Our CI did some validations and here is its report:
+Thank you for what you do :/
+Enn....seems net-next is not a good branch for mptcp works,
+I'll rebase to mptcp_net-next branch next time.
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6563194622181376
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6563194622181376/summary/summary.txt
+I notice that the CI contains some failures, which I am not sure
+if it is caused by my commit. Could you please have a look?
+Here is the summary:
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/4733607273562112
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/4733607273562112/summary/summary.txt
+https://api.cirrus-ci.com/v1/artifact/task/6563194622181376/summary/summary.txt
 
-Initiator: Matthieu Baerts
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/5afcc5ab13e3
+Thanks!
+Menglong Dong
 
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+> Cheers,
+> Matt
+>
+> [1]
+> https://patchew.org/MPTCP/20221122034923.804955-1-imagedong@tencent.com/logs/git/
+> [2]
+> https://github.com/multipath-tcp/mptcp_net-next/tree/patchew/20221122034923.804955-1-imagedong@tencent.com
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
