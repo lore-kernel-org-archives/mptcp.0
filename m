@@ -1,48 +1,58 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EC58474
-	for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 21:20:54 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id v8so7903020edi.3
-        for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 13:20:54 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C062F41
+	for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 22:30:20 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id e13so8043390edj.7
+        for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 14:30:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y3fZKyWblqg3q0looy+K21Wkk7G9FbBw2pGMu95k2w8=;
-        b=W4Bv3uX08BOvui6xGJ6k30Uv0ii7PYgfNfbBiwjG6aV8u7ydd/Ov7A2FRpJMYLjm8o
-         iVOKQqteIgIauVHPij2UiqHsZQo3lUOVvH0dZ4aywI1LPN6AU0HSLoQT6lG3Y+o6JLFr
-         /M1sxtZHvxd1bBrVub1rIBoEZrc5VQbcLv6EZ9V7aNvuEF3Rm6iHI5IKt1pjVegvV5v+
-         ZHXtbOGxMTfSxL63+ZKo21yRC+tzU6b0F4vOMHfp0CUrh+6J/Cqa89YHmpSU9ZzbXsWC
-         P5EXzpyp82EPF7IEE8yubqxx8PZs/TOfhCZ9BrV979KZPmWQcNn89BCFQVJ3oRUWHBIH
-         zQzg==
+        bh=/lfe7NcgAftfCbfY2/+Z4pAkfVrRZUU2cO+H0igoqlA=;
+        b=7FzjGwCiJNJVId0pUks3IuSTjdAMDw/5uXCGz//3wbe+aLq/LZkraFTPq+18Iqy8f+
+         CAVozAtbugIdxu88+z6SZt3bmZRfgpoeY2+CfsQsBW3uw1dbpoPZTSya72tcg61Zp4Yz
+         MEPWXVkwFTLGVCxst/lDCPkehzZk5zczUMp7euaQlpBLGQDL0hDDDINkWnD6arSwHjDx
+         KZe7Q3wXtmnB9mRA+gi5eoFCbv7gFJ7/xXP4mT3AP4LuiVTP7obGpqCSjYh9gGg31rRx
+         bTOl5+gcVNvCOUQp/opbKTBlY2OFU51UNYpeOSUbTDLjfcpmey7BW0Vljjbs9AfGHspU
+         SARQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Y3fZKyWblqg3q0looy+K21Wkk7G9FbBw2pGMu95k2w8=;
-        b=z3IkB3ya/qASPAzRbbm6xB5DtJubiiYc2ebTFyhuW4qPGL16yop4UbEMEawdhkGaCp
-         XOn28JPUvqOpTkD1rVS6tpjE6GEsQMooDBoK2l/bajiBZl2pdD0mmQGSS3PtYMjQjcfo
-         +qnfWmWEerI1vf6zzvioJE+TnA/e9WfVuJ0596qM47H3MkXQcJgwigVPA3XTGenIanij
-         QNzPua/RDqx4QDUt1iecLZgDfby6JMwgvRWy0o5Yu0tzrxqCcFvhnv0AApiRWzWFgSn2
-         UanI0eg1wKhXVqq/4CjgxAtkvOETsGKdtf1jv0PFVTvd2J6vtKlnNHthzREGelmQZ6y2
-         7tQw==
-X-Gm-Message-State: ANoB5pmHnHAeylW1K76JRmg3EsuKWxjhMiCWNdNp5p5tLhyVHQOknoL1
-	njbDaCuAOnmULfNWcmgKl+4Rv73Cbv4Zb8CD
-X-Google-Smtp-Source: AA0mqf769y9ipCo/6dXjaTdeYRyEvtOj3UlJSTItjj3R0ixmSR9jsFTM5ICAp2MAG3tNDyEvrBWMpg==
-X-Received: by 2002:aa7:ccd3:0:b0:468:f345:aa4a with SMTP id y19-20020aa7ccd3000000b00468f345aa4amr36401014edt.412.1669411252313;
-        Fri, 25 Nov 2022 13:20:52 -0800 (PST)
+        bh=/lfe7NcgAftfCbfY2/+Z4pAkfVrRZUU2cO+H0igoqlA=;
+        b=5pkfVcNLZr3W5yAWt+Y4mpeX/+myjc4p8MRrxiJ1RmN/yPm+G9K+aijzQrB6h3Dj1R
+         C7gnJnOrXhdr3P6iBDfiNZW8DJ6TJJK8x8UMc5C5+mCytRpMlW+hKqsOtLzUB0ujKhtn
+         Hf429Qn+6wOBq4X+B/jX8TeOaZdxnkcZ1uJCFiybLx81pxaKE7zvph87vMfADpRgUXEd
+         uSKpdKMIpTJIjqIxRCuVWrcdt07JI8wVKvewnPo8yZRHOcLYzGG79qL0D+c972tJiuUy
+         5RnkQYj4MAP8qGtltKVhbqtqiLpmIntsSaUVH11nyqPC60fZZ/p+2BPIWC1QuSatki9F
+         X5VA==
+X-Gm-Message-State: ANoB5pmIIqqDOrXvr+AeIeiZ0gs/VNWvoEhalM8qsdgusJFcNy/M+Nj8
+	kI7i9/4fCrSLsn2/SrXUyx7ZHQ==
+X-Google-Smtp-Source: AA0mqf45lZIo5bLh7SlwVwao3zqUEgyAn3xE8WBlMhIlo1JGSbjME9QxdeWPkodlemi4FjWWeyrtJA==
+X-Received: by 2002:a05:6402:5c7:b0:469:6e8f:74c1 with SMTP id n7-20020a05640205c700b004696e8f74c1mr19895454edx.334.1669415419190;
+        Fri, 25 Nov 2022 14:30:19 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id i20-20020a50fc14000000b004618f2127d2sm2198480edr.57.2022.11.25.13.20.51
+        by smtp.gmail.com with ESMTPSA id q1-20020a056402248100b0046267f8150csm2254612eda.19.2022.11.25.14.30.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Nov 2022 13:20:51 -0800 (PST)
+        Fri, 25 Nov 2022 14:30:18 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next] Squash to "mptcp: add subflow_v(4,6)_send_synack()"
-Date: Fri, 25 Nov 2022 22:20:28 +0100
-Message-Id: <20221125212028.702058-1-matthieu.baerts@tessares.net>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next 0/8] mptcp: MSG_FASTOPEN and TFO listener side support
+Date: Fri, 25 Nov 2022 23:29:46 +0100
+Message-Id: <20221125222958.958636-1-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -50,95 +60,74 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2869; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=QKQDaVaMGU2BCfEF7shKj/6P6Um+MTn6TuYJT6XdaVc=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjgTF0K443ObqLG9qXW7PGhipb7uOtNrlM66Dn5RK0
- ZZW1wtWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY4ExdAAKCRD2t4JPQmmgc524D/
- 9xhKzVB9UHKl/CK1nvPtMDlnG/54kL4reCNx3lb5sbui0evbkCZN4i5dgz1RkeJULt/FwBR4BU0fXC
- gIRWWbHNgyC21b9bh1EQTsVWxYEdMcpBhhXFjBaNOpd7sZf9TTwr0RFab3VWmrTAJDOwaJ739WRFQc
- m13H08X020kktCwG87t8MuuYc54B8JhgQZ6M/sSO7giUnzmvo/MGMXC7AMrMgmK8iTSkzEFxx+j5gn
- 5K6/0+LLEl+7IoFiFf4jnbvHmKnAkWLxpTVQpbtlJlZUFURuExzjSY39mQXDxnpkT+i9d3QcI52FOC
- PaNcWuM+DEVKbxapBCrzOoVfhW7vvNnL+GfJtRXt84wqYWV+5xao+DNgcas6ktbX7/Xd+6X6aTLw55
- VbEHjZdDUZaUeTnuuWsGJfljTHqvPsb+dJEOJIyXInOpcyHgcFsX0FgchCmJD3OGd3IvivlhmpdKle
- QvzCklTcTzRkE2/RXRsyvPYticJEmSwrCOb0g7sZ/Y8zLQgopBw+thZKeKm4r3otyu8ZZckH3EkkT/
- OuaOHQ58CVlAIiw/eb/f+HAaGufc8VaP6xKdvk5W17wC7TM2WRmuqR/HasYgiOe87tttAvR/qGy0ie
- GVOeM1kq4POfcspvSSuJZ/+SAd+ke25DTCSCTLbX3yo34INbg7Ipm86Yb9fQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2144; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=/zzbai6dUt499JGTzQ7EvmldP8hH2rMm7tWR7FtcNHY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjgUHP3odjVCF44gMniUSK742ym4dsZtaly1a5iwCc
+ FH/sZh6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY4FBzwAKCRD2t4JPQmmgc4AgD/
+ 9DDOGjkr+5Wmxj4SWdYT43p//sr3oSXjQ2BycD/2oU/9vaHX0oS66ZS1zlrHRX5eTvWTvrx52OsQUn
+ dPITVA4VCiU8KuNrys1OOjMJ1Lhmc5GrhEXujArJiqlMzCinR/g4YvTClJnCdHtx43gsrC7n7Ipp6Q
+ yuocyEcoNVPLVIvpDqDbkIGjC0iYuMbBE/X4HF1r8/EnMNHC3TWbtoYGjqDpRKvs8hOAHeXdvZMmxe
+ Graz1JQuoSCj3rsZBy726G8sGveOYkwcKstbTayfW5X/B8hIG4h0sF6N5pRwDR1L+WnpytQ/IRPBLJ
+ gC7c06L5RN+DkzrQ2o+WF2LPBVDm9ZlbbGIQz04c/EwDR8bXfNMG5RBVwTuCds4RDuXf7n/KrMQIMR
+ vF/0Zm4qJO9rs6PzJ6d3PcW/hP8AmmPrmuSyVmltFVmWSvcV+nT4JryyqgK3MbXRy1OmE+7oZtzkwg
+ WZaAYLQUI0wqZ9FB2ewIdGcvULVhwjo+N9lOx0vny3H+7dJxoid3QgpGZnzLjYKsXP5Ktj/cKCqepr
+ wO0rMej6wXKqtMLaER8mVT5Rjm8wzaJNiaVH2D8Sq7nF8BGjb+BlSFD+mZy7vvf3T0lJSupd5lz1S9
+ bkuc/p9WoY5PocljH1c4FM5mPGPwaAI3SAGFPAt7FicEtbh284ft0Gs/R+HA==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-This is a small cleanup, just to avoid duplicating the whole function
-for v4 and v6 while the only difference between the two is one call to a
-different send_synack() function.
+Before this series, only the initiator of a connection was able to combine both
+TCP FastOpen and MPTCP when using TCP_FASTOPEN_CONNECT socket option.
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- net/mptcp/subflow.c | 35 ++++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+These new patches here add (in theory) the full support of TFO with MPTCP, which
+means:
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 05099b3760b5..2ff3840fc058 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -307,12 +307,9 @@ static struct dst_entry *subflow_v4_route_req(const struct sock *sk,
- 	return NULL;
- }
- 
--static int subflow_v4_send_synack(const struct sock *sk, struct dst_entry *dst,
--				  struct flowi *fl,
--				  struct request_sock *req,
--				  struct tcp_fastopen_cookie *foc,
--				  enum tcp_synack_type synack_type,
--				  struct sk_buff *syn_skb)
-+static void subflow_send_synack(const struct sock *sk, struct request_sock *req,
-+				struct tcp_fastopen_cookie *foc,
-+				enum tcp_synack_type synack_type)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct inet_request_sock *ireq = inet_rsk(req);
-@@ -323,8 +320,19 @@ static int subflow_v4_send_synack(const struct sock *sk, struct dst_entry *dst,
- 
- 	if (synack_type == TCP_SYNACK_FASTOPEN)
- 		mptcp_fastopen_subflow_synack_set_params(subflow, req);
-+}
-+
-+static int subflow_v4_send_synack(const struct sock *sk, struct dst_entry *dst,
-+				  struct flowi *fl,
-+				  struct request_sock *req,
-+				  struct tcp_fastopen_cookie *foc,
-+				  enum tcp_synack_type synack_type,
-+				  struct sk_buff *syn_skb)
-+{
-+	subflow_send_synack(sk, req, foc, synack_type);
- 
--	return tcp_request_sock_ipv4_ops.send_synack(sk, dst, fl, req, foc, synack_type, syn_skb);
-+	return tcp_request_sock_ipv4_ops.send_synack(sk, dst, fl, req, foc,
-+						     synack_type, syn_skb);
- }
- 
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-@@ -335,17 +343,10 @@ static int subflow_v6_send_synack(const struct sock *sk, struct dst_entry *dst,
- 				  enum tcp_synack_type synack_type,
- 				  struct sk_buff *syn_skb)
- {
--	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
--	struct inet_request_sock *ireq = inet_rsk(req);
--
--	/* clear tstamp_ok, as needed depending on cookie */
--	if (foc && foc->len > -1)
--		ireq->tstamp_ok = 0;
--
--	if (synack_type == TCP_SYNACK_FASTOPEN)
--		mptcp_fastopen_subflow_synack_set_params(subflow, req);
-+	subflow_send_synack(sk, req, foc, synack_type);
- 
--	return tcp_request_sock_ipv6_ops.send_synack(sk, dst, fl, req, foc, synack_type, syn_skb);
-+	return tcp_request_sock_ipv6_ops.send_synack(sk, dst, fl, req, foc,
-+						     synack_type, syn_skb);
- }
- 
- static struct dst_entry *subflow_v6_route_req(const struct sock *sk,
+ - MSG_FASTOPEN sendmsg flag support (patch 1/8)
+ - TFO support for the listener side (patches 2-5/8)
+ - TCP_FASTOPEN socket option (patch 6/8)
+ - TCP_FASTOPEN_KEY socket option (patch 7/8)
 
-base-commit: 5d9ac522aceb69b5b524d330b6ecdbaff61decdc
+To support TFO for the server side, a few preparation patches are needed
+(patches 2 to 5/8). Some of them were inspired by a previous work from Benjamin
+Hesmans.
+
+Note that TFO support with MPTCP has been validated with selftests (patch 8/8)
+but also with Packetdrill tests running with a modified but still very WIP
+version supporting MPTCP. Both the modified tool and the tests are available
+online:
+
+  https://github.com/multipath-tcp/packetdrill/
+
+
+Dmytro Shytyi (5):
+  mptcp: add MSG_FASTOPEN sendmsg flag support
+  mptcp: implement delayed seq generation for passive fastopen
+  mptcp: add subflow_v(4,6)_send_synack()
+  mptcp: add TCP_FASTOPEN sock option
+  selftests: mptcp: mptfo Initiator/Listener
+
+Matthieu Baerts (1):
+  mptcp: add support for TCP_FASTOPEN_KEY sockopt
+
+Paolo Abeni (2):
+  mptcp: track accurately the incoming MPC suboption type
+  mptcp: consolidate initial ack seq generation
+
+ net/mptcp/Makefile                            |   2 +-
+ net/mptcp/fastopen.c                          |  73 ++++++++
+ net/mptcp/options.c                           |  25 ++-
+ net/mptcp/protocol.c                          |  39 +---
+ net/mptcp/protocol.h                          |  28 ++-
+ net/mptcp/sockopt.c                           |   9 +-
+ net/mptcp/subflow.c                           | 105 ++++++++---
+ .../selftests/net/mptcp/mptcp_connect.c       | 171 +++++++++++++-----
+ .../selftests/net/mptcp/mptcp_connect.sh      |  21 +++
+ 9 files changed, 358 insertions(+), 115 deletions(-)
+ create mode 100644 net/mptcp/fastopen.c
+
+
+Cc: Benjamin Hesmans <benjamin.hesmans@tessares.net>
+base-commit: a6e3d86ece0b42a571a11055ace5c3148cb7ce76
 -- 
 2.37.2
 
