@@ -1,537 +1,105 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3ACF2F41
-	for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 22:30:34 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id z18so8017468edb.9
-        for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 14:30:34 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5082F41
+	for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 22:35:08 +0000 (UTC)
+Received: by mail-wr1-f42.google.com with SMTP id d1so8626884wrs.12
+        for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 14:35:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9FW1FPeLZx4mDcycLi1OiKzB79mBTY0nX1izjOvx9Nc=;
-        b=8tSprGLZ8nCj3kaBjQQcHtEI/jJAfe8hfnr+qrlgBPsAn2tXDIcCbfcMyZHkQRO/Ne
-         rf0c/a8cph7AYSBG2EdzrlfVbcMyBkumiUw8ljPnzn3+7x/RmseIOMOhREa7vDXd+lO6
-         dIDUfEBW76Fi3a02PZhEwELv+9UO+S7dupup+7iVIE3CQudKJH0DMOas8Stew/zTUyLI
-         EDnPymooraXi5sHrKe7LxiSBIWQU14XuCbpIv1HnV4/TUgAdV5eAcuBf7ZUYCSD72A/S
-         bIWVoXvmHg6ULtMO9td8teCtDdqxwMslAEwtoFabUJTiAwfpzAONUYof/h+7BSxZ3sDM
-         UsJA==
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fMIe8WzYew8Aq7jUaZLEA+Ww6ePxrAf2PLP3rlGKBR4=;
+        b=tdIJlXyy31Q3SOjzIYTv/84bZtCk6joyJjP/ldIz826ru6PVFwrw3oSKv2RTcEWs3e
+         z5I+EWaOxuuvmvgQGchd39lCM6A2aImHlS8FScB/Dj49F3p+lTQfgEQoEeoPM8XO4M7z
+         DODGHwjxue3RGLSfLUN/g5zhh77YCsMqazHVW10AqcaUaTTSXtycdykTyUQbSIRN76yI
+         i54FY7uJU42Ntb+62u0KBynx9Wzd/f9eMR9vUfJK4SeBn9lbBAQNuwP0WW19PdmnULyh
+         PaV9ruxZp39TW10Qy86/zoF3aYRd6ffw+vNYyAqxsb0EpSLTsq1Y/2uUXDs+uGZzYG3t
+         mO5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9FW1FPeLZx4mDcycLi1OiKzB79mBTY0nX1izjOvx9Nc=;
-        b=q43KHS7GhVDE4niWnXORSGXgfnQtm0yAq0089JE6+ZLweLYWKUuDF1QztfnJLm18/t
-         e6G+XM0K1m0xqldX48z8zkbg9ERVKn3zwq3bQMu8+nxfoGzKrOpc/imZjx7daXoaFzg/
-         hgCcG9le6yJllM2MR+exzrtCEvCJ0PGnnsa698zr2x6retRqMXvNcmRpzfR3ZX7RZ98i
-         MMJFgknOc0kw1/d/s1YxkLSAMbdJRxs/QZoDlmsKfBTiO8Fykx/LflxtLs3MBxB1jczw
-         Si/VO4eOkrLaTPy9yrNRjegnCo6frQc33AJ8vG++yF2LpxGH67To6EodMwv1LDXdhIzt
-         7flQ==
-X-Gm-Message-State: ANoB5pmbOKHtg4peqA8jzsCb24SaYFwBx4dglB08RxhqHkHh4WbKvzdC
-	fFGiQPyHlIbWVBTEBvfkxawUJA==
-X-Google-Smtp-Source: AA0mqf7bJILODfW27tRke1a0d0aPcu9kTJ8afB3UT0aTdRF2Ljoz4EQqJGD1N0FJMJxSYByaHSi39g==
-X-Received: by 2002:a05:6402:ea0:b0:463:a83c:e019 with SMTP id h32-20020a0564020ea000b00463a83ce019mr20782813eda.253.1669415432901;
-        Fri, 25 Nov 2022 14:30:32 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id q1-20020a056402248100b0046267f8150csm2254612eda.19.2022.11.25.14.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Nov 2022 14:30:32 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Dmytro Shytyi <dmytro@shytyi.net>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 8/8] selftests: mptcp: mptfo Initiator/Listener
-Date: Fri, 25 Nov 2022 23:29:54 +0100
-Message-Id: <20221125222958.958636-9-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221125222958.958636-1-matthieu.baerts@tessares.net>
-References: <20221125222958.958636-1-matthieu.baerts@tessares.net>
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fMIe8WzYew8Aq7jUaZLEA+Ww6ePxrAf2PLP3rlGKBR4=;
+        b=7keGzjYiWZsaJh1T4V3ciVQQwk94peh2fk8KRM6bBA4F/fQMB0ftRPAu/9J5QPmRoP
+         7D1HjFUdaTQKsBFeibTV3tqB8l6vfx/36fZcLvHcn1WwwDexeZ+wpvvGguXMYxv3J5sg
+         80a5HvEMgFvH8UVxFv+o3+niV/bxuP5dcDv70xMqIf2C55J78t0lepKM5kwQ5r37mlkM
+         HIW9UxMpP0Isvgl84I3kWhl4LBbYgc4z25SiabLMeng1VfKqfY446Q8+j7I++Km974ig
+         p8y1Ox0eTvhwwIy1ieO0H4kwiqmTsrTh02Rbujy6YIvuf9bXletP/yH9/wKQvUTEW96X
+         WRDA==
+X-Gm-Message-State: ANoB5pmEhHkL2eSYvyJ56qwyggz9NtdD+n6Aub28rbE0VRxqFlPHMEdw
+	ip53GJfhAX5NdVteiZOaC9A1vVrIHWVZ2uOs
+X-Google-Smtp-Source: AA0mqf4GjjTqYSehMXMaMSfZgVGt5uiNiO4Z/vtwvg8acYQd55KqarQdNlAeyIvuaeAyfy1jEPAZXw==
+X-Received: by 2002:a05:6000:10c6:b0:241:d021:52d3 with SMTP id b6-20020a05600010c600b00241d02152d3mr17486978wrx.540.1669415706692;
+        Fri, 25 Nov 2022 14:35:06 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:290:7ca:2a3e:9f9e? ([2a02:578:8593:1200:290:7ca:2a3e:9f9e])
+        by smtp.gmail.com with ESMTPSA id i7-20020a05600c354700b003d04e4ed873sm709763wmq.22.2022.11.25.14.35.06
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Nov 2022 14:35:06 -0800 (PST)
+Message-ID: <b2c2b1f3-82af-f987-b7e5-f6106270aff8@tessares.net>
+Date: Fri, 25 Nov 2022 23:35:05 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13376; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=/yNrNZcdW7bNIcSFQjgLzGv5H2U4OMElFjPASvCJmLg=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjgUHQEWiDtRCFe+QHpCjVwW+BaTtDLjIGTeMP0jyN
- qOX0wvmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY4FB0AAKCRD2t4JPQmmgcxauEA
- DtDSvYnW8cVflXM4b5GHzHSRoYiscvMk54R/UToyGKqw/W7K0jJmt3CFEXjU3557D86eLdWee69v/2
- unV7zfWcxGLK76dNjGpsnyxxqP8Ji3NUTGSUgxwI7+DOkdrFSQ1vq97+Vrxd6hAqRZ9dMsnSDCbDA4
- nfmRXesJa817IBuRkOoM0Q3Q/rUE+nmMUrOKEygxkObZzUi8aY3Cyq3q6gAcAzEfHP5NoH39/kCZ4d
- xam9EnxdOCzHgPe3st6b+ZwBwcOamCfW6ARibftEZYi30rJFPzl1XqQfILu81qgOkEClZH80nvl6bb
- ivH+1YHSVXIGDJLslYsdUwAreIakL8cEA0NwGIRRydMc8sXYOZVzeYoFrtSHU9L7R7oaa8hKbjawt5
- hpvkrXNaSglIwXqHF39ZOkaY2lBshEyoO7k6to3ielVrudRBqmDKuukdwcYW2vaXWAFKk6Yq3GOJeh
- 7jXmzJYU/Aa5uKd0uOrAJu2i4fWQ/NKaw4BLVpp2BkqSv/wzZ2qBj+BCSzkCDDDO6xRD7kfLpR2+SQ
- cfg+dIWTzuc0xXxg0vxp28wTV0bEN+KZMnWQQ0gh1xOyAPWyVj54JhCGs2dHNnExZz4Vnz4N2SeCgt
- wGfkvnIhWxsod+9Ld6Ba+iHG+E2J0OEOCeM/yt/okDYA6sz1IKzGQ0QO4rfQ==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH mptcp-next] Squash to "mptcp: add
+ subflow_v(4,6)_send_synack()"
+Content-Language: en-GB
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20221125212028.702058-1-matthieu.baerts@tessares.net>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20221125212028.702058-1-matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Dmytro Shytyi <dmytro@shytyi.net>
+Hello,
 
-This patch first adds TFO support in mptcp_connect.c.
+On 25/11/2022 22:20, Matthieu Baerts wrote:
+> This is a small cleanup, just to avoid duplicating the whole function
+> for v4 and v6 while the only difference between the two is one call to a
+> different send_synack() function.
+> 
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
+>  net/mptcp/subflow.c | 35 ++++++++++++++++++-----------------
+>  1 file changed, 18 insertions(+), 17 deletions(-)
+> 
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 05099b3760b5..2ff3840fc058 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -307,12 +307,9 @@ static struct dst_entry *subflow_v4_route_req(const struct sock *sk,
+>  	return NULL;
+>  }
+>  
+> -static int subflow_v4_send_synack(const struct sock *sk, struct dst_entry *dst,
+> -				  struct flowi *fl,
+> -				  struct request_sock *req,
+> -				  struct tcp_fastopen_cookie *foc,
+> -				  enum tcp_synack_type synack_type,
+> -				  struct sk_buff *syn_skb)
+> +static void subflow_send_synack(const struct sock *sk, struct request_sock *req,
 
-This can be enabled via a new option: -o MPTFO.
+I just applied this patch with a small change:
 
-Once enabled, the TCP_FASTOPEN socket option is enabled for the server
-side and a sendto() with MSG_FASTOPEN is used instead of a connect() for
-the client side.
+    s/subflow_send_synack/subflow_prep_synack/
 
-Note that the first SYN has a limit of bytes it can carry. In other
-words, it is allowed to send less data than the provided one. We then
-need to track more status info to properly allow the next sendmsg()
-starting from the next part of the data to send the rest.
+- 61e817662ce3: "squashed" in "mptcp: add subflow_v(4,6)_send_synack()"
+- Results: 2deca8211919..ace83548981f (export)
 
-Also in TFO scenarios, we need to completely spool the partially xmitted
-buffer -- and account for that -- before starting sendfile/mmap xmit,
-otherwise the relevant tests will fail.
+Tests are now in progress:
 
-Co-developed-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Dmytro Shytyi <dmytro@shytyi.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- .../selftests/net/mptcp/mptcp_connect.c       | 171 +++++++++++++-----
- .../selftests/net/mptcp/mptcp_connect.sh      |  21 +++
- 2 files changed, 150 insertions(+), 42 deletions(-)
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221125T222831
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index e54653ea2ed4..8a8266957bc5 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -83,6 +83,7 @@ struct cfg_cmsg_types {
- 
- struct cfg_sockopt_types {
- 	unsigned int transparent:1;
-+	unsigned int mptfo:1;
- };
- 
- struct tcp_inq_state {
-@@ -90,6 +91,13 @@ struct tcp_inq_state {
- 	bool expect_eof;
- };
- 
-+struct wstate {
-+	char buf[8192];
-+	unsigned int len;
-+	unsigned int off;
-+	unsigned int total_len;
-+};
-+
- static struct tcp_inq_state tcp_inq;
- 
- static struct cfg_cmsg_types cfg_cmsg_types;
-@@ -232,6 +240,14 @@ static void set_transparent(int fd, int pf)
- 	}
- }
- 
-+static void set_mptfo(int fd, int pf)
-+{
-+	int qlen = 25;
-+
-+	if (setsockopt(fd, IPPROTO_TCP, TCP_FASTOPEN, &qlen, sizeof(qlen)) == -1)
-+		perror("TCP_FASTOPEN");
-+}
-+
- static int do_ulp_so(int sock, const char *name)
- {
- 	return setsockopt(sock, IPPROTO_TCP, TCP_ULP, name, strlen(name));
-@@ -300,6 +316,9 @@ static int sock_listen_mptcp(const char * const listenaddr,
- 		if (cfg_sockopt_types.transparent)
- 			set_transparent(sock, pf);
- 
-+		if (cfg_sockopt_types.mptfo)
-+			set_mptfo(sock, pf);
-+
- 		if (bind(sock, a->ai_addr, a->ai_addrlen) == 0)
- 			break; /* success */
- 
-@@ -330,13 +349,15 @@ static int sock_listen_mptcp(const char * const listenaddr,
- 
- static int sock_connect_mptcp(const char * const remoteaddr,
- 			      const char * const port, int proto,
--			      struct addrinfo **peer)
-+			      struct addrinfo **peer,
-+			      int infd, struct wstate *winfo)
- {
- 	struct addrinfo hints = {
- 		.ai_protocol = IPPROTO_TCP,
- 		.ai_socktype = SOCK_STREAM,
- 	};
- 	struct addrinfo *a, *addr;
-+	int syn_copied = 0;
- 	int sock = -1;
- 
- 	hints.ai_family = pf;
-@@ -354,14 +375,34 @@ static int sock_connect_mptcp(const char * const remoteaddr,
- 		if (cfg_mark)
- 			set_mark(sock, cfg_mark);
- 
--		if (connect(sock, a->ai_addr, a->ai_addrlen) == 0) {
--			*peer = a;
--			break; /* success */
-+		if (cfg_sockopt_types.mptfo) {
-+			if (!winfo->total_len)
-+				winfo->total_len = winfo->len = read(infd, winfo->buf,
-+								     sizeof(winfo->buf));
-+
-+			syn_copied = sendto(sock, winfo->buf, winfo->len, MSG_FASTOPEN,
-+					    a->ai_addr, a->ai_addrlen);
-+			if (syn_copied >= 0) {
-+				winfo->off = syn_copied;
-+				winfo->len -= syn_copied;
-+				*peer = a;
-+				break; /* success */
-+			}
-+		} else {
-+			if (connect(sock, a->ai_addr, a->ai_addrlen) == 0) {
-+				*peer = a;
-+				break; /* success */
-+			}
-+		}
-+		if (cfg_sockopt_types.mptfo) {
-+			perror("sendto()");
-+			close(sock);
-+			sock = -1;
-+		} else {
-+			perror("connect()");
-+			close(sock);
-+			sock = -1;
- 		}
--
--		perror("connect()");
--		close(sock);
--		sock = -1;
- 	}
- 
- 	freeaddrinfo(addr);
-@@ -571,14 +612,14 @@ static void shut_wr(int fd)
- 	shutdown(fd, SHUT_WR);
- }
- 
--static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after_out)
-+static int copyfd_io_poll(int infd, int peerfd, int outfd,
-+			  bool *in_closed_after_out, struct wstate *winfo)
- {
- 	struct pollfd fds = {
- 		.fd = peerfd,
- 		.events = POLLIN | POLLOUT,
- 	};
--	unsigned int woff = 0, wlen = 0, total_wlen = 0, total_rlen = 0;
--	char wbuf[8192];
-+	unsigned int total_wlen = 0, total_rlen = 0;
- 
- 	set_nonblock(peerfd, true);
- 
-@@ -638,19 +679,19 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 		}
- 
- 		if (fds.revents & POLLOUT) {
--			if (wlen == 0) {
--				woff = 0;
--				wlen = read(infd, wbuf, sizeof(wbuf));
-+			if (winfo->len == 0) {
-+				winfo->off = 0;
-+				winfo->len = read(infd, winfo->buf, sizeof(winfo->buf));
- 			}
- 
--			if (wlen > 0) {
-+			if (winfo->len > 0) {
- 				ssize_t bw;
- 
- 				/* limit the total amount of written data to the trunc value */
--				if (cfg_truncate > 0 && wlen + total_wlen > cfg_truncate)
--					wlen = cfg_truncate - total_wlen;
-+				if (cfg_truncate > 0 && winfo->len + total_wlen > cfg_truncate)
-+					winfo->len = cfg_truncate - total_wlen;
- 
--				bw = do_rnd_write(peerfd, wbuf + woff, wlen);
-+				bw = do_rnd_write(peerfd, winfo->buf + winfo->off, winfo->len);
- 				if (bw < 0) {
- 					if (cfg_rcv_trunc)
- 						return 0;
-@@ -658,10 +699,10 @@ static int copyfd_io_poll(int infd, int peerfd, int outfd, bool *in_closed_after
- 					return 111;
- 				}
- 
--				woff += bw;
--				wlen -= bw;
-+				winfo->off += bw;
-+				winfo->len -= bw;
- 				total_wlen += bw;
--			} else if (wlen == 0) {
-+			} else if (winfo->len == 0) {
- 				/* We have no more data to send. */
- 				fds.events &= ~POLLOUT;
- 
-@@ -717,10 +758,26 @@ static int do_recvfile(int infd, int outfd)
- 	return (int)r;
- }
- 
--static int do_mmap(int infd, int outfd, unsigned int size)
-+static int spool_buf(int fd, struct wstate *winfo)
-+{
-+	while (winfo->len) {
-+		int ret = write(fd, winfo->buf + winfo->off, winfo->len);
-+
-+		if (ret < 0) {
-+			perror("write");
-+			return 4;
-+		}
-+		winfo->off += ret;
-+		winfo->len -= ret;
-+	}
-+	return 0;
-+}
-+
-+static int do_mmap(int infd, int outfd, unsigned int size,
-+		   struct wstate *winfo)
- {
- 	char *inbuf = mmap(NULL, size, PROT_READ, MAP_SHARED, infd, 0);
--	ssize_t ret = 0, off = 0;
-+	ssize_t ret = 0, off = winfo->total_len;
- 	size_t rem;
- 
- 	if (inbuf == MAP_FAILED) {
-@@ -728,7 +785,11 @@ static int do_mmap(int infd, int outfd, unsigned int size)
- 		return 1;
- 	}
- 
--	rem = size;
-+	ret = spool_buf(outfd, winfo);
-+	if (ret < 0)
-+		return ret;
-+
-+	rem = size - winfo->total_len;
- 
- 	while (rem > 0) {
- 		ret = write(outfd, inbuf + off, rem);
-@@ -772,8 +833,16 @@ static int get_infd_size(int fd)
- 	return (int)count;
- }
- 
--static int do_sendfile(int infd, int outfd, unsigned int count)
-+static int do_sendfile(int infd, int outfd, unsigned int count,
-+		       struct wstate *winfo)
- {
-+	int ret = spool_buf(outfd, winfo);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	count -= winfo->total_len;
-+
- 	while (count > 0) {
- 		ssize_t r;
- 
-@@ -790,7 +859,8 @@ static int do_sendfile(int infd, int outfd, unsigned int count)
- }
- 
- static int copyfd_io_mmap(int infd, int peerfd, int outfd,
--			  unsigned int size, bool *in_closed_after_out)
-+			  unsigned int size, bool *in_closed_after_out,
-+			  struct wstate *winfo)
- {
- 	int err;
- 
-@@ -799,9 +869,9 @@ static int copyfd_io_mmap(int infd, int peerfd, int outfd,
- 		if (err)
- 			return err;
- 
--		err = do_mmap(infd, peerfd, size);
-+		err = do_mmap(infd, peerfd, size, winfo);
- 	} else {
--		err = do_mmap(infd, peerfd, size);
-+		err = do_mmap(infd, peerfd, size, winfo);
- 		if (err)
- 			return err;
- 
-@@ -815,7 +885,7 @@ static int copyfd_io_mmap(int infd, int peerfd, int outfd,
- }
- 
- static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
--			      unsigned int size, bool *in_closed_after_out)
-+			      unsigned int size, bool *in_closed_after_out, struct wstate *winfo)
- {
- 	int err;
- 
-@@ -824,9 +894,9 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
- 		if (err)
- 			return err;
- 
--		err = do_sendfile(infd, peerfd, size);
-+		err = do_sendfile(infd, peerfd, size, winfo);
- 	} else {
--		err = do_sendfile(infd, peerfd, size);
-+		err = do_sendfile(infd, peerfd, size, winfo);
- 		if (err)
- 			return err;
- 
-@@ -839,7 +909,7 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
- 	return err;
- }
- 
--static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd)
-+static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct wstate *winfo)
- {
- 	bool in_closed_after_out = false;
- 	struct timespec start, end;
-@@ -851,21 +921,24 @@ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd)
- 
- 	switch (cfg_mode) {
- 	case CFG_MODE_POLL:
--		ret = copyfd_io_poll(infd, peerfd, outfd, &in_closed_after_out);
-+		ret = copyfd_io_poll(infd, peerfd, outfd, &in_closed_after_out,
-+				     winfo);
- 		break;
- 
- 	case CFG_MODE_MMAP:
- 		file_size = get_infd_size(infd);
- 		if (file_size < 0)
- 			return file_size;
--		ret = copyfd_io_mmap(infd, peerfd, outfd, file_size, &in_closed_after_out);
-+		ret = copyfd_io_mmap(infd, peerfd, outfd, file_size,
-+				     &in_closed_after_out, winfo);
- 		break;
- 
- 	case CFG_MODE_SENDFILE:
- 		file_size = get_infd_size(infd);
- 		if (file_size < 0)
- 			return file_size;
--		ret = copyfd_io_sendfile(infd, peerfd, outfd, file_size, &in_closed_after_out);
-+		ret = copyfd_io_sendfile(infd, peerfd, outfd, file_size,
-+					 &in_closed_after_out, winfo);
- 		break;
- 
- 	default:
-@@ -999,6 +1072,7 @@ static void maybe_close(int fd)
- int main_loop_s(int listensock)
- {
- 	struct sockaddr_storage ss;
-+	struct wstate winfo;
- 	struct pollfd polls;
- 	socklen_t salen;
- 	int remotesock;
-@@ -1033,7 +1107,8 @@ int main_loop_s(int listensock)
- 
- 		SOCK_TEST_TCPULP(remotesock, 0);
- 
--		copyfd_io(fd, remotesock, 1, true);
-+		memset(&winfo, 0, sizeof(winfo));
-+		copyfd_io(fd, remotesock, 1, true, &winfo);
- 	} else {
- 		perror("accept");
- 		return 1;
-@@ -1130,6 +1205,11 @@ static void parse_setsock_options(const char *name)
- 		return;
- 	}
- 
-+	if (strncmp(name, "MPTFO", len) == 0) {
-+		cfg_sockopt_types.mptfo = 1;
-+		return;
-+	}
-+
- 	fprintf(stderr, "Unrecognized setsockopt option %s\n", name);
- 	exit(1);
- }
-@@ -1166,11 +1246,18 @@ void xdisconnect(int fd, int addrlen)
- 
- int main_loop(void)
- {
--	int fd, ret, fd_in = 0;
-+	int fd = 0, ret, fd_in = 0;
- 	struct addrinfo *peer;
-+	struct wstate winfo;
-+
-+	if (cfg_input && cfg_sockopt_types.mptfo) {
-+		fd_in = open(cfg_input, O_RDONLY);
-+		if (fd < 0)
-+			xerror("can't open %s:%d", cfg_input, errno);
-+	}
- 
--	/* listener is ready. */
--	fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto, &peer);
-+	memset(&winfo, 0, sizeof(winfo));
-+	fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto, &peer, fd_in, &winfo);
- 	if (fd < 0)
- 		return 2;
- 
-@@ -1186,14 +1273,13 @@ int main_loop(void)
- 	if (cfg_cmsg_types.cmsg_enabled)
- 		apply_cmsg_types(fd, &cfg_cmsg_types);
- 
--	if (cfg_input) {
-+	if (cfg_input && !cfg_sockopt_types.mptfo) {
- 		fd_in = open(cfg_input, O_RDONLY);
- 		if (fd < 0)
- 			xerror("can't open %s:%d", cfg_input, errno);
- 	}
- 
--	/* close the client socket open only if we are not going to reconnect */
--	ret = copyfd_io(fd_in, fd, 1, 0);
-+	ret = copyfd_io(fd_in, fd, 1, 0, &winfo);
- 	if (ret)
- 		return ret;
- 
-@@ -1210,6 +1296,7 @@ int main_loop(void)
- 			xerror("can't reconnect: %d", errno);
- 		if (cfg_input)
- 			close(fd_in);
-+		memset(&winfo, 0, sizeof(winfo));
- 		goto again;
- 	} else {
- 		close(fd);
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 621af6895f4d..60198b91a530 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -762,6 +762,23 @@ run_tests_peekmode()
- 	run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1 "-P ${peekmode}"
- }
- 
-+run_tests_mptfo()
-+{
-+	echo "INFO: with MPTFO start"
-+	ip netns exec "$ns1" sysctl -q net.ipv4.tcp_fastopen=2
-+	ip netns exec "$ns2" sysctl -q net.ipv4.tcp_fastopen=1
-+
-+	run_tests_lo "$ns1" "$ns2" 10.0.1.1 0 "-o MPTFO"
-+	run_tests_lo "$ns1" "$ns2" 10.0.1.1 0 "-o MPTFO"
-+
-+	run_tests_lo "$ns1" "$ns2" dead:beef:1::1 0 "-o MPTFO"
-+	run_tests_lo "$ns1" "$ns2" dead:beef:1::1 0 "-o MPTFO"
-+
-+	ip netns exec "$ns1" sysctl -q net.ipv4.tcp_fastopen=0
-+	ip netns exec "$ns2" sysctl -q net.ipv4.tcp_fastopen=0
-+	echo "INFO: with MPTFO end"
-+}
-+
- run_tests_disconnect()
- {
- 	local peekmode="$1"
-@@ -901,6 +918,10 @@ run_tests_peekmode "saveWithPeek"
- run_tests_peekmode "saveAfterPeek"
- stop_if_error "Tests with peek mode have failed"
- 
-+# MPTFO (MultiPath TCP Fatopen tests)
-+run_tests_mptfo
-+stop_if_error "Tests with MPTFO have failed"
-+
- # connect to ns4 ip address, ns2 should intercept/proxy
- run_test_transparent 10.0.3.1 "tproxy ipv4"
- run_test_transparent dead:beef:3::1 "tproxy ipv6"
+Cheers,
+Matt
 -- 
-2.37.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
