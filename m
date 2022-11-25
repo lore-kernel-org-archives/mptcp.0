@@ -1,146 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2060.outbound.protection.outlook.com [40.107.104.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840DE23A3
-	for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 06:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1669358938;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jgypgHnn+BTJi5Rx4CD2pEIayDm6tnDFTyl4hSKVAF4=;
-	b=gpB7mJ9tfLiiKrBbkMQAh6k0Fcb48Dv3kqZhUrG3ZBJuQWr/4R0u5Suo+4vzkgXoqHLU52
-	2uE6JDZnmgQXLu5CMpNoYDN026hbwk+9iQpZ2rFMRmMHfSLSmgyZWSLy+Bnmgj2tF2joG/
-	mWVcMpYCCReivS411lq/a0dsL3dJnyE=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-73-zJVdK_unN_ygCKcqlePlFw-1; Fri, 25 Nov 2022 01:48:56 -0500
-X-MC-Unique: zJVdK_unN_ygCKcqlePlFw-1
-Received: by mail-qt1-f200.google.com with SMTP id b20-20020ac844d4000000b003a542f9de3dso3452972qto.7
-        for <mptcp@lists.linux.dev>; Thu, 24 Nov 2022 22:48:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jgypgHnn+BTJi5Rx4CD2pEIayDm6tnDFTyl4hSKVAF4=;
-        b=NBfuy5WOVnOaUvqNMMeeEbBaru1M77a/qL1ZMTGKkCJKS/Guz8YNbl2OpKsTnUE2I2
-         Tq0nF52R94TrEQjK2QQal4r4VGPiZoSCcBKiI6VGB0I7SYGWADOrV8pXPbZ9cIa5AsqL
-         w4dGhrEz+paNcm9loCOXfnt+7tVHPJ8qK5hmmGcfsU0ciSBnwnIfY3JNESadoZH25hGI
-         kxu+aVf8H80dGgaoPESfTU5JRTRoEvLMtIZ4Pv+Q7rEIrh6DS7kxSFmwApOyD7KRj+K+
-         BeiHODKhDBRFrkgi59CYg0UJP9B+hZgaZv3TdqVXJxBHzSBr2UjDhSChxDqpEI5bFdto
-         3kvQ==
-X-Gm-Message-State: ANoB5pnR66A/AkVOtGSsOKe+eVtWu1J26/enMsvDa3f5Dyu/yC3e8hMC
-	3CZG2FDW5yXnFrPmEs0+vDHLkii8P47aLosK7wQ/PZld/ZqaJaKYnfF/otJoPxzw9WjxzvoGImn
-	uuz4SgLcQwD33lgg=
-X-Received: by 2002:a37:b1c5:0:b0:6fb:11d1:dab2 with SMTP id a188-20020a37b1c5000000b006fb11d1dab2mr32995313qkf.75.1669358936069;
-        Thu, 24 Nov 2022 22:48:56 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7IO5hL8KEo/HBfS1UkfKjyG+BJEHgBFc8o3tul1wK0vrDagQrNyPbBnwChwEMNvJLnkz1+Kw==
-X-Received: by 2002:a37:b1c5:0:b0:6fb:11d1:dab2 with SMTP id a188-20020a37b1c5000000b006fb11d1dab2mr32995301qkf.75.1669358935768;
-        Thu, 24 Nov 2022 22:48:55 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-120-203.dyn.eolo.it. [146.241.120.203])
-        by smtp.gmail.com with ESMTPSA id d23-20020ac81197000000b00399ad646794sm1786227qtj.41.2022.11.24.22.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Nov 2022 22:48:55 -0800 (PST)
-Message-ID: <40767d7126fe5344e35e83a1814d5b1589618228.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next 2/2] Squash to "selftests: mptcp: listener
- test for in-kernel PM"
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Date: Fri, 25 Nov 2022 07:48:53 +0100
-In-Reply-To: <225d8a6c589e80c89d59ccccdbb2438de78597e4.1669340938.git.geliang.tang@suse.com>
-References: <7416de705544121ada6c71199d728e8307223eb0.1669340938.git.geliang.tang@suse.com>
-	 <225d8a6c589e80c89d59ccccdbb2438de78597e4.1669340938.git.geliang.tang@suse.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8FB33DC
+	for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 13:40:23 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V8aLgmNyBVUDcQWsR3Iq3K07NOCptSe+Aqigfa3V9I6pYVPRwx2aUSX6JB/vKg9q5JSUboQkR4TzY1qNaUeVpdaM0WdMuLhCZS1+KVmyOrqjPe0NDu7UJ2MbajMMjmVfAU4DPS7NlZreSSEVMic6xCLiZpvNxOMBwD4DlNebqAZIHAUnWSszQE1vojH6gPY5Ff/S4a+VYC3hLmtkGlRoT2qiryOJx+ObnnhST/Mx3E4ko7TnCeYM7NpummHFAwxB6O6w6myz7oMdT94S4EL8Mq5wQbsmqB4BRbwZkXutAA+ZwvnLe1NjB6WAANBVuAHT0WfTp+4e41PiijTrS7oDDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oqq4DOLupjVQ10hIEmz3DsfPFoRrCGrizG7h2p+p9DY=;
+ b=kCkqEtsM4W7vg5KjEPZJQFVpBD4jWwlJNvpyN48GygzZVJ+/u01vxZTU7Ne3e679bvw8sewmHqBWZzYm9vIl70cJw2BW6sFkJtRs06g5m8c1ytrrCyHz5HIB0It1JFBuFym2w/wWCBuXlI0WW51nYstgmyZ74x1szWH499tw7pxV4NrGOf/iEwnzcJ4jBmHaoqmYvTK7h7yS9I4Up1hi9b8y9SacX5fgebMqMqHOpWeqEi05PzKSBiocRV0xGF1vqwAVAevm89540HT09o/l6uU/TwpUfBbd+xkxsAt8c9cB00TObBoHd/syLwt6c6RvQa4GDb3fNXFF5Cb2mOedxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oqq4DOLupjVQ10hIEmz3DsfPFoRrCGrizG7h2p+p9DY=;
+ b=c8DjKIBVMjStCqvE0NO75YL02CfpkWDVoccpzIpTq96OZ1uvOiCy1Pk0ImAm6g3QgRcJWULIJdG6/cD6G4Mv7aSOGJGgoa7wZLqd1lbmVD79ADHPaz4I5EWGZHxbqp7qKtt3G55TGNqSpY+fGIgV5HsFGrsUKmH95+F362LkXZA4mpbrvRfVDjbJQ8P7BHLjeIRYvafWDr4LX4yU9BvcoN/E+JhIN1bqbaZK3dxiwPJYEd9iHA73LEImVFoiXUsSpgB9eWltuxpFzQNZxEv061bAGlAww8wRSFFagz7mA+PBDDrbOBKuaU1ZrZiix4OfeVkcbCZ/XJlWJ3/bH0bM4w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by DU2PR04MB9116.eurprd04.prod.outlook.com (2603:10a6:10:2f7::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.17; Fri, 25 Nov
+ 2022 13:40:19 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::62bf:d98a:f54a:2852]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::62bf:d98a:f54a:2852%7]) with mapi id 15.20.5857.020; Fri, 25 Nov 2022
+ 13:40:18 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2 0/4] cleanups for pm listener event tests
+Date: Fri, 25 Nov 2022 21:40:45 +0800
+Message-Id: <cover.1669383374.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0020.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::9) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DU2PR04MB9116:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8943a856-5432-4b7a-928d-08daceea9730
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	bJ/8H0iresIkY5cEwraw2VN/Vl4KPSAlQLqmcHljYSzMGVIoTWCrrYnDk8FGcx1V6YbKvhkmeLTFjM61TvNSosHhphdbA87y59id9SLCLRKqD8BiKOI0H5JgP+RMmHVkXeyAGYK+EnS2yAc5tJAGgydtfUwpHJ4z2npjZzUKmyrYW5yvD2Q/AGsAGCz/1YVPwmOgY96dbwQRQA6YKo2xiLwAJtHinBnN8hs1ThrT2pJel8c/6ZpLBK/FUnw0mSrKxtuBodLClBLmQzG5siyCsyKQesiw4OKo4ijCt7irjZbkFBjliz2GpGOlpxL3ir55TCSozd8Xb0r1i5KK/bd9dM2gAkCVqpxDdOuyg+wwAFbIuzxaTv7byMK2UOzM58smcpGKh8+ZhHsvaGmAw6+/G8foB9pKrET0qhKUIFM7fhJYmWq87YvWI5SzpfVsle5wagIgha0DhvoqTq00tndpQ9tXHBQEz2g9rVd/iMoxgw2zeab0ZABeJ7IVocefD1pvvlaAcLg37eKX1FJqTlUpecEfFhBYiV4Nf+R3G/op/dS6P89W5SNo/rjtsuxm/MB+7IRceLCT1zDSTfHhMdJHCgeOeFiFy8qvu9vLy65T3i6TA6Y1Z0HQh0T9SChQWtaONsPRDFgYuWQCg8OZbFxFWQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(39860400002)(346002)(366004)(136003)(396003)(376002)(451199015)(2906002)(38100700002)(36756003)(86362001)(186003)(2616005)(107886003)(5660300002)(316002)(6916009)(6512007)(6506007)(26005)(6666004)(478600001)(6486002)(8936002)(41300700001)(4744005)(44832011)(83380400001)(66476007)(8676002)(66556008)(66946007)(4326008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aZj7A/YPue6lxg6JRJgkYpUwnT+JqbIZE7iMDlE6rq6FCdxisvV3JFLQDd82?=
+ =?us-ascii?Q?TW6ubLCgpusiojey7SkVMUOwD17m4I50Je06xp0oS3Iu82rLFPzdI1oRuqPQ?=
+ =?us-ascii?Q?k1mIQ0SbzCOaGFKIjyvcecc3d2dS3K3euBirk9xO4iV7cxzRdWNjMULwsR/Q?=
+ =?us-ascii?Q?qrnGklaP+9lyi6zbJ06gkT/VAYOjH+eS1H8ZMimr9uHVPcavxwMcahtK2/u1?=
+ =?us-ascii?Q?EI/tnCRHSIn5EIccLTMgqohYAB/mOZOqEqlkhDm0InColXUtjUEa43VhNiqc?=
+ =?us-ascii?Q?eu/VUGAwOruv1rrwS4hpErcP/tQuGoYtygxRMTriGo4eaIhwvQX4XW0HhTop?=
+ =?us-ascii?Q?7J4XlUkbujvD6F/kyeO1czER7e/Ab44ZI6hOazJfUOE54/Fa+HwXNJXhiXyu?=
+ =?us-ascii?Q?Igd6Yfp0qmao5gU1IXZLWF6/qPWJOoVNpWjiwAcJcPNTGw8Rre4MgbzsGpQv?=
+ =?us-ascii?Q?OtVg7YZCMGp3Xm2hg7eYbzrAjwjcJGbwXbv6pOWfeBhE3aS/IjVZyY9H5YwJ?=
+ =?us-ascii?Q?3u4Wo7NW8lX09b1+myGAov7ucYO4oZmI91DeX2pE32CkM1OFAIpibJyT28Qt?=
+ =?us-ascii?Q?CAavcXkQkCOrC2FJrBFkzdZ6oBiowXr/X08onRJ5AwYAm94tIjFsKhMRpvRW?=
+ =?us-ascii?Q?CHT90KXbGBQQ/9uoUnopk3xpJqwCU+Xkj3//QwLkjpEd8wjww6MLoodUvFsY?=
+ =?us-ascii?Q?O4WRsrHzE9Du2KzD+eLruggpSNpnO3ygKFwUvAGTCMzBNqqQkqMaEr7U2QVh?=
+ =?us-ascii?Q?mErqkgIGdR8LmenS+fZy0lUWmvQBAX3/lw+bY8hT9cyEO5KerRnniF+ISiMt?=
+ =?us-ascii?Q?kI447YieSkdoqfNVLMw9CwSe1Se0sBkh0s1ieQxZbXVwZr8hou84E/0FLywY?=
+ =?us-ascii?Q?1pT8qUJ9tj16Egan9rUCvDd7Q8tA30wYS3n4Zh6s3QrbIju79KaawqKQW4hO?=
+ =?us-ascii?Q?pYlNxE1iFXjCGoQtX/rVrW/Jnpxl8yuKm91xqardu8Ri0NUl/JFUeainKoAH?=
+ =?us-ascii?Q?OdGUA7M84fX8KYNvosROSZNHp6Qio35MxF3RuQLiKLznneiF6mMS3PdYTUKt?=
+ =?us-ascii?Q?3PE6FNweE4tKm7F70Fm/nZa9P9qL64JKKExEB7RSEVHYzbLA+BG7hReXBcOE?=
+ =?us-ascii?Q?ST0Kq+qRTrarWKotFfKh+ijGgIY91XwdtP2Ov93igYjn53lI5/JBlczwn7wC?=
+ =?us-ascii?Q?V5xmoztDtr6ZlIwCJ4/7sItfPk4lsamQ8oSwMRWAOTw/n1+I4L/cMjC6l6VW?=
+ =?us-ascii?Q?Qb2Ate6l+Wmg1zAsdegmV/HrKLRGVRfQglCd3VKJ35mSGbzVTIYgdXA9DZY4?=
+ =?us-ascii?Q?Mjtduy86rSd9dBxzN5J10tqJ3+EipbTJQIypLJVgOuzeW4Mchepcfkjk8dXu?=
+ =?us-ascii?Q?tTF22Kx+ItQfCyErPsmT03GjBoyKgbQFXLi1HZ4TVVQ2KvbIxkE6ys75snjS?=
+ =?us-ascii?Q?i2m84BL5a42XsBbngGBLYR7cH7dMMsRn/x2UzDRlk81672H/UOW3Bd4ZYi5v?=
+ =?us-ascii?Q?Nz2vBZFhhQZtgRPr7A2XX8am9vV+eu/lOmmUAidRlhy5c93uGGDAAV15yzQo?=
+ =?us-ascii?Q?UNtPVQZIQEJ+EPEEoTBFTU3Y3Y5LogH7Eay1NH8WuMVo0bzDU48btzJ1R6Yc?=
+ =?us-ascii?Q?Vw=3D=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8943a856-5432-4b7a-928d-08daceea9730
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2022 13:40:18.5089
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qdOGsHDdJeDU4E/QcHQoCxBQY7k4XrrH3hzXlWQOqa5RFk2tT4/NkL0b4F4Nu3ZbJE9MjodykKAr/lTi7Drz/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9116
 
-Hello,
+Order of these patches:
+  selftests: mptcp: listener test for in-kernel PM
+  selftests: mptcp: make evts global in mptcp_join
+  selftests: mptcp: listener test for userspace PM
+  selftests: mptcp: make evts global in userspace_pm
+  selftests: mptcp: enhance userspace pm tests
+  mptcp: add pm listener events
 
-Thank you for the quick turn-around!
+Geliang Tang (4):
+  selftests: mptcp: make evts global in userspace_pm
+  Squash to "selftests: mptcp: listener test for userspace PM"
+  selftests: mptcp: make evts global in mptcp_join
+  Squash to "selftests: mptcp: listener test for in-kernel PM"
 
-On Fri, 2022-11-25 at 09:51 +0800, Geliang Tang wrote:
-> Do some cleanups.
-> 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 89a30225bbd7..e24884f9c039 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -2541,7 +2541,7 @@ verify_listener_events()
->  		 sed --unbuffered -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q')
->  	sport=$(grep "type:$e_type," $evt |
->  		sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
-> -	if [ $family = $AF_INET6 ]; then
-> +	if [ $family ] && [ $family = $AF_INET6 ]; then
->  		saddr=$(grep "type:$e_type," $evt |
->  			sed --unbuffered -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
->  	else
-> @@ -2549,12 +2549,16 @@ verify_listener_events()
->  			sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
->  	fi
->  
-> -	if [ $type = $e_type ] && [ $family = $e_family ] &&
-> -	   [ $saddr = $e_saddr ] && [ $sport = $e_sport ]; then
-> +	if [ $type ] && [ $type = $e_type ] &&
-> +	   [ $family ] && [ $family = $e_family ] &&
-> +	   [ $saddr ] && [ $saddr = $e_saddr ] &&
-> +	   [ $sport ] && [ $sport = $e_sport ]; then
->  		stdbuf -o0 -e0 printf "[ ok ]\n"
->  		return 0
->  	fi
-> +	fail_test
->  	stdbuf -o0 -e0 printf "[fail]\n"
-> +	return 1
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  95 +++----
+ .../selftests/net/mptcp/userspace_pm.sh       | 233 ++++++++----------
+ 2 files changed, 149 insertions(+), 179 deletions(-)
 
-I think this is not needed, the caller never checks the fuction return
-code, and it's implicitly the exit status of the last command, in this
-case 'printf', which should be always successful.
-
->  }
->  
->  add_addr_ports_tests()
-> @@ -2599,8 +2603,8 @@ add_addr_ports_tests()
->  		chk_add_nr 1 1 1
->  		chk_rm_nr 1 1 invert
->  
-> -		verify_listener_events $evts 15 $AF_INET 10.0.2.1 10100
-> -		verify_listener_events $evts 16 $AF_INET 10.0.2.1 10100
-> +		verify_listener_events $evts $LISTENER_CREATED $AF_INET 10.0.2.1 10100
-> +		verify_listener_events $evts $LISTENER_CLOSED $AF_INET 10.0.2.1 10100
->  		kill_wait $pid
->  		rm -rf $evts
-
-I think we need to make evts global. The goal is removing the created
-file when the script is terminated by the user before completion. With
-the current code, if the user kills the test script in between the
-$evts file creation and the above line, such file will be left-over. 
-
-It looks like that the user-space pm script is not doing the correct
-thing wrt such files. I think an additional patch (to be applied deeper
-in the patch list than this series) could change evts usage in all the
-existing places and then the squash-to patch 3/4 could adjust the new
-test.
-
-WDYT?
-
-Thanks!
-
-Paolo
-
-
+-- 
+2.35.3
 
