@@ -1,506 +1,154 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80083.outbound.protection.outlook.com [40.107.8.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F112F26
-	for <mptcp@lists.linux.dev>; Thu, 24 Nov 2022 17:49:03 +0000 (UTC)
-Received: by mail-wr1-f44.google.com with SMTP id v1so3423012wrt.11
-        for <mptcp@lists.linux.dev>; Thu, 24 Nov 2022 09:49:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wB/aUGZEhzuNro7+fP3LxfPtWKL/bWj7g+t0uV1lN1Y=;
-        b=GlidopxsPtposdlh74vkszlS5ZANFciJgzMtmDAv7jOgokIeEP4gyL1nZps8//U5JF
-         oae7WTdVCxfI6+YD+kfSgiU4OwJQMrXjmzbRUZtLOOM/iZoV1elnGwPQQGa5QemNSO8I
-         6bhgxj2qQPt106tmLQIBxzRC3AV49DsqKb8XYEoVYoyWmEAB1DGkz2ruP0LxdBY6juN8
-         NTXlMEcuRoaaCKLOhXmG3s7p68bLsBs4qySJgbOQMDiUzPCzahcFE9ZP63NJDxT9fI9c
-         IslovtUqvD1OBxBVrXm8htQEtOqShnNl6F1B+O/k+KoYIIVWa8doBhSO53ZKF8FjKppt
-         LsMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wB/aUGZEhzuNro7+fP3LxfPtWKL/bWj7g+t0uV1lN1Y=;
-        b=BKvbOlHg4hKYNaPdM7FfbUfPq9uyY013Yx2pJF1nVV7r7BRsDSbjTgK5hDy3em+HjO
-         KMaHS01EcxcyVawRXp7XgcidW8A0uV324H+6Hy3a4+c/Mq4l/V9uM5QvOjUva6xvBm/3
-         N5PFEQlddYw0l6K4o6QXWxPVaXbyxtI8sdZyb1ea13UyLkBXc4xkOgRGKk1FclzD/xgt
-         0OLJLGMYE6wNzvCVNPw9+biM0AaTuG5j1MVnFGAvbi3zoXaERw4YEBYl2RCWSdBCuO5x
-         6aLGRN7p67e3iH5C8YKxxqxmMU6hVUMg++SiWBmjOjhaa79dRhbp//fwJE4UlGaLtSgs
-         uy2A==
-X-Gm-Message-State: ANoB5pm2mWht/c0xIANZyfHLMZPfaxGhXZ6btye8EVMwaJPh7JD6gewR
-	+NZCxflvPmd7WDpekYa8CYjGOdtCPss7FQ==
-X-Google-Smtp-Source: AA0mqf7Eu5ga45oLeCD3AsZMa7xcovyGmeWEbeGauM0ex9r4D0/96a6ZZvYQeDM8WwS1cm0YWCZUfQ==
-X-Received: by 2002:adf:d0ca:0:b0:236:8ead:4871 with SMTP id z10-20020adfd0ca000000b002368ead4871mr21092671wrh.498.1669312141182;
-        Thu, 24 Nov 2022 09:49:01 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:e809:e459:4aec:7414? ([2a02:578:8593:1200:e809:e459:4aec:7414])
-        by smtp.gmail.com with ESMTPSA id g14-20020a05600c310e00b003a2f2bb72d5sm8017981wmo.45.2022.11.24.09.49.00
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Nov 2022 09:49:00 -0800 (PST)
-Message-ID: <0aa6c8e0-2915-69c6-d850-69b54c54dbed@tessares.net>
-Date: Thu, 24 Nov 2022 18:49:00 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5F115B5
+	for <mptcp@lists.linux.dev>; Fri, 25 Nov 2022 01:50:48 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DozhlmRxGrvKSMOq74t83iG4nicgmah7B/uPPrG81v7OZrigfgY47FXr/6mqzfY+CBleEFtFi8rfMxhSct5SjFO09RJtDPQBGmlpv4WKQ3HxlPYiiAp0NeoGPJ65o+2/ajfEei79tK3uy+ZbG+GXKb1P900CLTva0hFchD+t/yqlTomhYoSHGPJqWZDgXCI5yT83u6QOcEdCKc950WSDH48vcbJFwmHMQMcKBIamire0yMwNlJRZgMqVv3DwPLlB2RhwpIp8B3fYzPv+w7ZOZExlISwIVd/qeUQ39RazFkYfX4X0hMHIfxowdS9cxbwuZU9N+2xXVQkAvpRl96n9hw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n+rqgTNEmHoImvoOaDgpoAN560cVCi5HeMses8/++3Y=;
+ b=EW+UhIBu3BXQ/8O0XBwBHJoqPfaOjTxqUsHs2bk/a+AvPjt/fYN32nX/VR+f2JuY/DIHgrERwT2LXLjrEX0YkjlPxf1tQZbkRYybMniW+wICf+h5uef29vB0KgHfQ15MUY919h5/3q9V5QcjdFcIrbNoVkNri9A7W9IsxVn0MXdCiXG0xvdJMUmY9O79Mu1d0f6S/2aedhX6RIpRxq9h0Twe+TVNZMDMo+OJ3+OQKSvwCsiu/9xpv5yXVD89wnMkktZHXosg9m3dvOSX7ACAxwz+HEoaDwxF5WvLr9ikkZ7MQcrc6MKp8+KfUl8rFVGWLwmCDZKFY85nv2eikuRPKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n+rqgTNEmHoImvoOaDgpoAN560cVCi5HeMses8/++3Y=;
+ b=ZvUGYCgbsQbg+nY2MsLDFtUz/g6cz/etCz7GDFI5NMDkglKVCVb3Ibl3zt41OYjWQmqTimjobJuU4fG7NbJOn7xnjXcPG29NDZRxYI1OBgUZWaBkh4bbVDTzlvCL9fT//X4YjOX9nkWTayJSdJAY0yFLgxTzOUI1WWrmkuA5HKZs65hBNX71lFWsDuUk4OHDB+MaZTwdLPe1sVMUCSb74ervBLapInL8iSwqv18ttfiy7CDZHui9xPRjPojc41/bTa8Dx3k9hQP95MGClhEb2pExuBuryHbMtEIFW16fnrmB1QIjxV5Y0OXe1OamgKTGN0WWaRHFt/99WPPmXb4GFw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from VI1PR0402MB3503.eurprd04.prod.outlook.com (2603:10a6:803:d::26)
+ by DB9PR04MB9579.eurprd04.prod.outlook.com (2603:10a6:10:306::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.15; Fri, 25 Nov
+ 2022 01:50:45 +0000
+Received: from VI1PR0402MB3503.eurprd04.prod.outlook.com
+ ([fe80::89bf:6855:abfe:203b]) by VI1PR0402MB3503.eurprd04.prod.outlook.com
+ ([fe80::89bf:6855:abfe:203b%7]) with mapi id 15.20.5834.015; Fri, 25 Nov 2022
+ 01:50:44 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next 1/2] Squash to "selftests: mptcp: listener test for userspace PM"
+Date: Fri, 25 Nov 2022 09:51:14 +0800
+Message-Id: <7416de705544121ada6c71199d728e8307223eb0.1669340938.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR03CA0127.apcprd03.prod.outlook.com
+ (2603:1096:4:91::31) To VI1PR0402MB3503.eurprd04.prod.outlook.com
+ (2603:10a6:803:d::26)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Content-Language: en-GB
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [Weekly meetings] MoM - 24th of November 2022
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Hello everyone,
-
-Happy Thanksgiving!
-
-Today, we just had our 218th meeting with Paolo (Redhat), Benjamin and
-myself (Tessares).
-
-
-Thanks again for this new good meeting!
-
-Here are the minutes of the meeting:
-
-
-
-Accepted patches:
-    - The list of accepted patches can be seen on PatchWork:
-      https://patchwork.kernel.org/project/mptcp/list/?state=3
-
-
-    netdev (if mptcp ML is in cc) (by: Kuniyuki Iwashima, Mat Martineau):
-
-13044249: [net,1/3] selftests: mptcp: gives slow test-case more time
-13044250: [net,2/3] selftests: mptcp: run mptcp_sockopt from a new netns
-13044251: [net,3/3] selftests: mptcp: fix mibit vs mbit mix up:
-      - Series: mptcp: selftests: Fix timeouts and test isolation
-      - Submitter: Mat Martineau
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=695716&state=*&archive=both
-
-13048608: [v2,net-next] net: Return errno in sk->sk_prot->get_port().:
-      - Submitter: Kuniyuki Iwashima
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20221118182506.6226-1-kuniyu@amazon.com/
-
-13048615: [net-next,1/2] mptcp: deduplicate error paths on endpoint creation
-13048616: [net-next,2/2] mptcp: more detailed error reporting on
-endpoint creation:
-      - Series: mptcp: More specific netlink command errors
-      - Submitter: Mat Martineau
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=697048&state=*&archive=both
-
-
-    our repo (by: Geliang Tang, Menglong Dong, Paolo Abeni):
-
-13039804: [mptcp-next,v19,2/9] mptcp: drop last_snd and
-MPTCP_RESET_SCHEDULER
-13039805: [mptcp-next,v19,3/9] mptcp: add sched_data_set_contexts helper
-13039806: [mptcp-next,v19,4/9] Squash to "mptcp: add struct mptcp_sched_ops"
-13039807: [mptcp-next,v19,5/9] Squash to "bpf: Add bpf_mptcp_sched_ops"
-13039808: [mptcp-next,v19,6/9] Squash to "bpf: Add
-bpf_mptcp_sched_kfunc_set"
-13039809: [mptcp-next,v19,7/9] Squash to "selftests/bpf: Add bpf_first
-scheduler"
-13039810: [mptcp-next,v19,8/9] Squash to "selftests/bpf: Add bpf_bkup
-scheduler"
-13039811: [mptcp-next,v19,9/9] Squash to "selftests/bpf: Add bpf_rr
-scheduler":
-      - Series: BPF redundant scheduler, part 1
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=694383&state=*&archive=both
-
-13040964: [mptcp-next] Squash to "mptcp: refactor push_pending logic" v19:
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20221112003133.27153-1-geliang.tang@suse.com/
-
-13044027: [mptcp-next,1/2] mptcp: consolidate initial ack seq generation
-13044028: [mptcp-next,2/2] Squash-to "mptcp: implement delayed seq
-generation for passive fastopen":
-      - Series: mptcp: more fastopen follow-up
-      - Submitter: Paolo Abeni
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=695647&state=*&archive=both
-
-13046149: [mptcp-next,v5,1/4] mptcp: add pm listener events
-13046150: [mptcp-next,v5,2/4] selftests: mptcp: enhance userspace pm tests
-13046151: [mptcp-next,v5,3/4] selftests: mptcp: listener test for
-userspace PM
-13046152: [mptcp-next,v5,4/4] selftests: mptcp: listener test for
-in-kernel PM:
-      - Series: add pm listener events
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=696257&state=*&archive=both
-      - Paolo commented on that one: follow-up needed for Geliang
-
-13048843: [mptcp-next] Squash to "mptcp: add sched_data_set_contexts
-helper":
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20221118221251.4330-1-geliang.tang@suse.com/
-
-13050327: [mptcp-net,v2] mptcp: don't orphan ssk in mptcp_close():
-      - Submitter: Menglong Dong
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20221121034140.548112-1-imagedong@tencent.com/
-
-13053506: [mptcp-net] mptcp: fix sleep in atomic at close time:
-      - Submitter: Paolo Abeni
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/feee93bcba06bf05a9308188f91007e7f6cbe5f4.1669201422.git.pabeni@redhat.com/
-      - linked to issue #316
-
-
-
-Pending patches:
-    - The list of pending patches can be seen on PatchWork:
-      https://patchwork.kernel.org/project/mptcp/list/?state=*
-
-
-    netdev (if mptcp ML is in cc) (by: /):
-
-/
-
-
-    our repo (by: Benjamin Hesmans, Geliang Tang, Jiapeng Chong,
-Matthieu Baerts, Menglong Dong, Paolo Abeni, Wei Yongjun):
-
-12282219: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
-12282221: [RESEND,RFC,4/4] tcp: parse tcp options contained in reset
-packets:
-12282223: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support:
-12282225: [RESEND,1/5] tcp: make two mptcp helpers available to tcp stack
-12282227: [RESEND,5/5] mptcp: send fastclose if userspace closes socket
-with unread data:
-12321111: mptcp: Remove redundant assignment to remaining:
-      - Status is the same as last week
-
-12970164: [RFC,mptcp-next,05/10] mptcp: delay mptcp data_ack calculation
-12970163: [RFC,mptcp-next,06/10] mptcp: allow delayed data_ack calculation
-12970165: [RFC,mptcp-next,07/10] mptcp: TFO receive: bypass mapping check
-12970166: [RFC,mptcp-next,08/10] mptcp: allow data that can not be
-DATA_ACKed
-12970167: [RFC,mptcp-next,09/10] mptcp: force data_ready
-12970168: [RFC,mptcp-next,10/10] mptcp: test TFO:
-      - can be archived
-
-13007315: [RFC] selftests: mptcp: set test-case parameters consistently:
-      - State: RFC
-      - Submitter: Paolo Abeni
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/2abed554f2050c7626dede74c92a181506a92682.1665779933.git.pabeni@redhat.com/
-      - Can be archived
-
-13045005: [mptcp-next,v20,1/7] mptcp: add scheduler wrappers
-13045006: [mptcp-next,v20,2/7] mptcp: use get_send wrapper
-13045007: [mptcp-next,v20,3/7] mptcp: use get_retrans wrapper
-13045008: [mptcp-next,v20,4/7] mptcp: delay updating first_pending
-13045009: [mptcp-next,v20,5/7] mptcp: delay updating already_sent
-13045010: [mptcp-next,v20,6/7] selftests/bpf: Add bpf_red scheduler
-13045011: [mptcp-next,v20,7/7] selftests/bpf: Add bpf_red test:
-      - State: Changes requested
-      - Series: BPF redundant scheduler, part 2
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=695953&state=*&archive=both
-      - Mat commented on this series
-
-13047668: [mptcp-next] Squash to "mptcp: delay updating first_pending" v20:
-      - State: Changes requested
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20221118022150.30520-1-geliang.tang@suse.com/
-      - linked to the previous series ↑
-
-13047855: [mptcp-net] mptcp: netlink: fix some error return code:
-      - State: New
-      - Submitter: Wei Yongjun
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20221118083541.123585-1-weiyongjun@huaweicloud.com/
-      - To be reviewed
-
-13051931: [mptcp-next,v7,1/4] mptcp: introduce 'sk' to replace
-'sock->sk' in mptcp_listen()
-13051932: [mptcp-next,v7,2/4] mptcp: add statistics for mptcp socket in use
-13051933: [mptcp-next,v7,3/4] selftest: mptcp: exit from
-copyfd_io_poll() when receive SIGUSR1
-13051934: [mptcp-next,v7,4/4] selftest: mptcp: add test for mptcp socket
-in use:
-      - State: Under review
-      - Series: mptcp: add statistics for mptcp socket in use
-      - Submitter: Menglong Dong
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=697917&state=*&archive=both
-      - looks OK
-      - Paolo would like to take some times looking at it: maybe we can
-avoid a new STATUS bit:
-          - this is adding quite a bit of complexity "just for the
-stats", maybe a better way?
-          - Matth will wait a bit before applying it
-
-
-
-
-Issues on Github:
-    https://github.com/multipath-tcp/mptcp_net-next/issues/
-
-    Recently opened (latest from last week: 315):
-
-  317  TFO: IPv6: the generated cookie is not the expected one [bug]
-@matttbe:
-      - see new comments on the issue
-      - remaining questions:
-          - do we need the same slab for v4 and v6 or better with two
-different ones
-          - (I guess it is not linked with ↑ but we should still allow a
-mix of subflows in v4 and v6 for the same MPTCP connection)
-          - still not sure we are really fixing something important there:
-              - maybe issues with cookies in v6?
-              - maybe a memleak in v6?
-
-
-    Bugs (opened, flagged as "bug" and assigned)
-
-  317  TFO: IPv6: the generated cookie is not the expected one [bug]
-@matttbe:
-      - see above
-
-
-    Bugs (opened and flagged as "bug" and not assigned)
-
-  315  Issues with backup flow [bug]:
-      - waiting for feedback
-
-  290  Not possible to `connect()` after a disconnect for a passive
-socket [bug]
-
-
-    In Progress (opened, new feature and assigned)
-
-  296  Support IP_TTL & IPV6_UNICAST_HOPS [enhancement] @matttbe
-  234  Packetdrill: Support MPC+DATA+checksum error [enhancement]
-[packetdrill] @spoorva
-  167  packetdrill: add coverage for RM_ADDR [enhancement] [packetdrill]
-@dcaratti
-
-   75  BPF: packet scheduler [enhancement] @geliangtang:
-       - See patches above
-
-   74  BPF: path manager [enhancement] @geliangtang
-
-   59  (MP)TFO support [enhancement] @dmytroshytyi:
-       - Packetdrill tests being added
-
-
-    Assigned Questions (opened, questions and assigned)
-
-  307  TCP performance better than MPTCP [question] @matttbe:
-      - waiting for feedback (somehow linked to #315)
-
-
-    Open questions (opened, questions and not assigned)
-
-/
-
-    For later (opened and not assigned assigned)
-
-  298  CG Memory accounting for passive MPTCP socket [enhancement]
-  289  mptcp: audit comments for non inclusive language [enhancement]
-  273  Packetdrill: test outgoing MP_FASTCLOSE [enhancement] [packetdrill]
-
-  269  Allow having a mix of v4/v6 subflows for the same socket
-[enhancement]:
-      - we should not forget about this one: quite important for some UC
-
-  266  Packetdrill: add MP_FAIL coverage [packetdrill]
-  236  Review supported sockopts list [enhancement]
-  222  Netlink event API: add SUBFLOW_CREATED event [enhancement]
-  215  TCP Urgent pointer and MPTCP [enhancement]
-  213  add MPTCP man page [enhancement]
-  208  better handing of ssk memory pressure in the TX path [enhancement]
-  202  Add sendmsg support for ancillary data [enhancement]
-  197  more mibs needed [enhancement]
-  180  Get an update when MPTCP fall back to TCP [enhancement]
-  177  improve retransmit subflow selection [enhancement]
-  169  packetdrill: add coverage for ADD_ADDR and MP_JOIN on a different
-port [enhancement] [packetdrill]
-  150  remove completely workqueue usage [enhancement]
-  141  avoid acquiring mptcp_data_lock() twice in the receive path
-[enhancement]
-  133  PM: Closing the MPTCP connection when last subflow is not the
-initial one and its IP address is removed [enhancement]
-  128  When the last subflow is closed without DATA_FIN and msk
-Established, close msk (after a timeout) [enhancement]
-   79  allow 'force to MPTCP' mode: BPF [enhancement]
-   78  notify the application (userspace) when a subflow is
-added/removed [enhancement]
-   77  [gs]etsockopt: forward to new/existing SF [enhancement]
-   76  [gs]etsockopt per subflow: BPF [enhancement]
-   61  move msk clone after ctx creation [enhancement]
-   57  After a few attempts of failed MPTCP, directly fallback to TCP
-for new connections [enhancement]
-   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag
-interface [enhancement] [syzkaller]
-   41  reduce indirect call usage [enhancement]
-   24  Revisit layout of struct mptcp_subflow_context [enhancement]
-
-
-    Recently closed (since last week)
-
-  316  TFO: stall CPU if SYN is reset  [bug] @pabeni
-  313  Add netlink events for listening socket create/close
-[enhancement] @geliangtang
-
-
-
-FYI: Current Roadmap:
-    - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
-    - Current/Coming merge window (6.2):
-https://github.com/multipath-tcp/mptcp_net-next/projects/17
-    - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
-
-
-
-Patches to send to netdev:
-
-    - Fixes for other trees: /
-
-    - Fixes for -net:
-
-        - [31de1f8653b0] mptcp: don't orphan ssk in mptcp_close()
-(Menglong Dong)
-        - [4d14796b503a] mptcp: fix sleep in atomic at close time (Paolo
-Abeni):
-            - can be sent: TODO Matth
-
-    - Fixes for net-next:
-        (IPv6 issue has been fixed with another patch than the one
-previously in our tree ; the new patch has already been merged in net-next)
-
-    - Features for net-next:
-
-        - [328183ee7bcb] selftests: mptcp: run mptcp_inq from a clean
-netns (Matthieu Baerts)
-        - [792d810919d1] selftests: mptcp: removed defined but unused
-vars (Matthieu Baerts)
-        - [84ea3ad1f3c2] selftests: mptcp: uniform 'rndh' variable
-(Matthieu Baerts)
-        - [34a761de4869] selftests: mptcp: clearly declare global ns
-vars (Matthieu Baerts)
-        - [dfce1a51b673] selftests: mptcp: declare var as local
-(Matthieu Baerts)
-        - [82412ac63fd3] mptcp: add pm listener events (Geliang Tang)
-        - [add6819bf7a9] selftests: mptcp: enhance userspace pm tests
-(Geliang Tang)
-        - [692f9c62ab71] selftests: mptcp: listener test for userspace
-PM (Geliang Tang)
-        - [c14602d46f4a] selftests: mptcp: listener test for in-kernel
-PM (Geliang Tang):
-            - can be sent after TFO
-
-    - Features for net-next (next):
-
-        - [fc5afafb90d6] mptcp: add MSG_FASTOPEN sendmsg flag support
-(Dmytro Shytyi)
-        - [8d9ea2f45f08] mptcp: track accurately the incoming MPC
-suboption type (Paolo Abeni)
-        - [d9e90f9ea21e] mptcp: consolidate initial ack seq generation
-(Paolo Abeni)
-        - [b69af54bbeee] mptcp: implement delayed seq generation for
-passive fastopen (Dmytro Shytyi)
-        - [04d12d53478c] mptcp: add subflow_v(4,6)_send_synack() (Dmytro
-Shytyi)
-        - [9fa1c743f3d6] mptcp: add TCP_FASTOPEN sock option (Dmytro Shytyi)
-        - [fd9889427e16] selftests: mptcp: mptfo Initiator/Listener
-(Dmytro Shytyi):
-            - can be sent tomorrow: TODO Matt
-
-    - Features for other trees:
-
-        - [a53db1f67c56] mptcp: refactor push_pending logic (Geliang Tang)
-        - [553ee45b1936] mptcp: drop last_snd and MPTCP_RESET_SCHEDULER
-(Geliang Tang)
-        - [ab6336db0bba] mptcp: add struct mptcp_sched_ops (Geliang Tang)
-        - [26ef66228e4c] mptcp: add a new sysctl scheduler (Geliang Tang)
-        - [8f6c9d08794e] mptcp: add sched in mptcp_sock (Geliang Tang)
-        - [44d93cfa1a59] mptcp: add scheduled in mptcp_subflow_context
-(Geliang Tang)
-        - [2d34bcf5dbc2] mptcp: add sched_data_set_contexts helper
-(Geliang Tang)
-        - [2b5bab1cb8ba] bpf: Add bpf_mptcp_sched_ops (Geliang Tang)
-        - [2e28cfa1ad54] bpf: Add bpf_mptcp_sched_kfunc_set (Geliang Tang)
-        - [2f4b025acced] selftests/bpf: Add mptcp sched structs (Geliang
-Tang)
-        - [09e80541ea28] selftests/bpf: Add bpf_first scheduler (Geliang
-Tang)
-        - [1ff81f9f0c43] selftests/bpf: Add bpf_first test (Geliang Tang)
-        - [53c9b2ba3753] selftests/bpf: Add bpf_bkup scheduler (Geliang
-Tang)
-        - [759a1aa275bf] selftests/bpf: Add bpf_bkup test (Geliang Tang)
-        - [f01167c88194] selftests/bpf: Add bpf_rr scheduler (Geliang Tang)
-        - [7f33ecbb1dae] selftests/bpf: Add bpf_rr test (Geliang Tang):
-            - there are still patches in preparation, this can wait (to
-avoid an API change just in case)
-
-
-
-
-Extra tests:
-    - news about Syzkaller? (Christoph / Mat):
-        - /
-
-    - news about interop with mptcp.org/other stacks? (Christoph):
-        - /
-
-    - news about Intel's kbuild? (Mat):
-        - /
-
-    - packetdrill (Davide):
-        - new packetdrill tests for TFO in progress
-
-    - Patchew (Davide):
-        - /
-
-    - CI (Matth):
-        - greener \o/ (but still some issues):
-            - some issues with MPTCP connect (syncookies in IPv6)
-            - some issues with mptcp_join: errors are not reported → for
-Geliang, see message from Paolo on the ML
-
-
-
-Other topics:
-    - fosdem 2023:
-        - there is a kernel dev room
-        - anybody to present there?
-        - People from Tessares will be there
-
-
-
-Next meeting:
-    - Next one on Thursday, the 1st of December.
-    - 16:00 UTC (8am PST, 5pm CET, 12am CST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20221201
-
-
-
-Feel free to comment on these topics and suggest new ones for the next
-meeting!
-
-Talk to you on Thursday,
-Matt
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3503:EE_|DB9PR04MB9579:EE_
+X-MS-Office365-Filtering-Correlation-Id: ddd077f8-b108-4a1c-bf12-08dace87774d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Y4Y5UdtY8oiEvJTG8o+WBVWDhLIBD5om+Hk4bNXJf4DwwnMRcbsrJx6zG6PxQvxFVeR16kLRFLKs2dD6Tbx3+idSypFS1s7E+V4ULea0O3FUatpLH79mE9niQ1q7Bn1u5J+pFNzgHnaZNeH1X12/9nHmk84WtpCLf3Jk3VK9ghM2beAIewW/3BDR+QTjODBnz7bR12diDZO26uP5M45twhV53ea7BIJijjhYVJUj1WAZ9GpuJNsU0PixSFqO2LxUWRfOpMsZpZWJsMxt+C7ULYBA6741etaSeUh4oyqucFEQa57hM8z1o/0i3Z9B6hOYMvF3twOG8pX7vCi9fZHeVIlJpFHbmwXMJCaPVjPc+ZAeBR+m7oPVZJa/zfJ8rpWLjEi+qXv60VVuSrIklWY8Lm9f6Zm4fz2V5bQ8YDtWf/oDNbJ9F2rc2cHCqOFHq+Q6FHGrqydPtn1pzb1mIGFoyuuaxfMc2wgSX1IQJ+B3PxzDeYF7PZ9iGnjnQ7dIqdpcQqgVCIWV2wSHAfmmBt3Vrd5g1jDXoXGK8bWLK8dzX/9gDe/iIWGo7TWEzINGxtfiPJ+Tmqv68SmrtWA0Vh8yhgvA2Pyxj/s+ReuhcN9psBCYKLKtwr9uThlR4ANBAVFKY+euLJs/evvhBt7iovEXsQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3503.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(39860400002)(396003)(366004)(136003)(346002)(376002)(451199015)(2616005)(186003)(6506007)(6666004)(6512007)(26005)(107886003)(316002)(6916009)(6486002)(478600001)(66556008)(66476007)(66946007)(8676002)(41300700001)(86362001)(44832011)(5660300002)(4326008)(83380400001)(8936002)(38100700002)(2906002)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3xmA0Kr+RYN759FfOBDLcLlItuMtAmQ/wVpKbplQ2P2jpDfS5fdxKRPAkB+6?=
+ =?us-ascii?Q?ITX5BTJfzMgSxRjp+yE+n//zBd+gwZlamX2Q1gqNpMJwrcsufKwjd8YjadtQ?=
+ =?us-ascii?Q?OGuZ49+5Ay9AoFLFfmHkGC09xNnMwlWl8tRgchvv05RhJt1wdl7/my0Q53uh?=
+ =?us-ascii?Q?VGeJ0bjIH7MLyLPfwzuLr2y94ND77UvWgiAMaPpS/KU8D4Ghfc0+UhlgVPZb?=
+ =?us-ascii?Q?fBv79Kc23Y0FWYp05tAxvi306Gf4gfXzVBhXFtp9l3UxjzLyww1Eu0bzQIYz?=
+ =?us-ascii?Q?uMGQf9Anb9n81ZcTzf53PA0r0hH9oq7tRuAK7QeR0rAcyM4MusX63bhq3crw?=
+ =?us-ascii?Q?OtRYp1VoSH3I50pnn4gpeg+AUzfIoMq2EgAzjoXLhqzf0NYtIvWSVMzDgV/z?=
+ =?us-ascii?Q?5VXZIm1TGScP3UW03yxi/cAnphWEl7xw72406z3DzCreVzY0nCXURSwsj1cE?=
+ =?us-ascii?Q?i5iM0MwaNZzJUFe25HkO47BaO7UVcTr3pRoQVdnutY7emPGZrp2CqoE+p1Fk?=
+ =?us-ascii?Q?bbwymdQfCZbb+T3HcrZew88hICH8SlMqdVtuyHKzljX5Nq5lh6vAlrYz8Ozz?=
+ =?us-ascii?Q?gPrvLIaqb4VnwGmGEHtklLpBEHHXkjGbVOd33hFREdUhwAY8puFy0zNietoN?=
+ =?us-ascii?Q?ve1Jv9drhDPFZ7gJgPCjRiiUsVDklqp336Td5cOeQ7uJHTItLPNmFasqAytB?=
+ =?us-ascii?Q?3RMZQRPu+KINBX42R70llNGZxDWf0o84KW96ttZmF+XQwxHvcVH6QwByDfq6?=
+ =?us-ascii?Q?E8p8J4BFA/M2GiCtkTGcKujv86Pxx3D2PS50vOEkQwTdzBNG93B+Gdx4i0Jm?=
+ =?us-ascii?Q?1HWlMeTHX/kl2npDZr2BICGY0NOg97CeTTmQipk3wnt9BYyhUQHIRh6yQDOQ?=
+ =?us-ascii?Q?tdzOddZHE6o98jsqof9Q4x30ImeVHHlG04PniIFHPb2LJpweTsxCzn6NfhJa?=
+ =?us-ascii?Q?qLNMS3rC7I914Iz1/oQHNrxRNellBL5DkAl8SXaD3RFvIF5+BmMLQpYwr43w?=
+ =?us-ascii?Q?+M5L644x6Kul6C0euK0Gj4ZPEO1PKlO9xGfBMV8a0Rsf0EWbeZDJ8FF/NCF+?=
+ =?us-ascii?Q?pVcyBgBY66oxCscZVR5FGsf6SQC8dfY1SX1wHdev29z+luK3zVbrI3FjWup5?=
+ =?us-ascii?Q?+t2lcLRCRWtxXrv3NFl4qAcnRXLY0Bu3wZYxD63VQLyHptSlHkUHpAlPKJ32?=
+ =?us-ascii?Q?tqBkpNb28Ledd6AzkTKomD8Ae1Wj414m9ph5rrY/h/CyHOJQv1t0VKkty4l7?=
+ =?us-ascii?Q?5VFvlvjH74EvWP0a9H6b1SVEIFUu5eA41bVtzHCQV/Cdp35dKikvhdEQOg5H?=
+ =?us-ascii?Q?whBqWq/SJ8eoeWrdnf3b3TlLlaLskwMQpvjlfqzGL1hJhW1WKMxntASkPl0W?=
+ =?us-ascii?Q?468DAk8sd24wBN698t97Rnonn7hopopljjaMoaPB/cZjlADUOstwIQqV+5Rv?=
+ =?us-ascii?Q?vQbYnpoJm72xN3LzY03dJiTnkyjygcd0gr4dvItILP6FxAoqm5CD9xSRzkZi?=
+ =?us-ascii?Q?QWP4+WSJJv0iqyL4l8rV1fISLkZKz8CBbXBFKmSBEVhZcHoqpJ6PrdRNB1GQ?=
+ =?us-ascii?Q?iLUqO7CYvEGbRZBcBk+eL/Ze2CECY7e12YbUM9zd0jDbmAKbGTUaZPSxz8sP?=
+ =?us-ascii?Q?sA=3D=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddd077f8-b108-4a1c-bf12-08dace87774d
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3503.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2022 01:50:44.5555
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QbQGkiqvLwsnB36Y51dten5dZM5ceSPk4oSHLJunpp0BsSbi6k9rgdX2m0tMYle6lsxN9kqyNvYuNAj3XYH5yQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9579
+
+Do some cleanups.
+
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+---
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 40801279ebdf..b0946526d70b 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -836,7 +836,7 @@ verify_listener_events()
+ 		 sed --unbuffered -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q')
+ 	sport=$(grep "type:$e_type," $evt |
+ 		sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
+-	if [ $family = $AF_INET6 ]; then
++	if [ $family ] && [ $family = $AF_INET6 ]; then
+ 		saddr=$(grep "type:$e_type," $evt |
+ 			sed --unbuffered -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
+ 	else
+@@ -844,8 +844,10 @@ verify_listener_events()
+ 			sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
+ 	fi
+ 
+-	if [ $type = $e_type ] && [ $family = $e_family ] &&
+-	   [ $saddr = $e_saddr ] && [ $sport = $e_sport ]; then
++	if [ $type ] && [ $type = $e_type ] &&
++	   [ $family ] && [ $family = $e_family ] &&
++	   [ $saddr ] && [ $saddr = $e_saddr ] &&
++	   [ $sport ] && [ $sport = $e_sport ]; then
+ 		stdbuf -o0 -e0 printf "[OK]\n"
+ 		return 0
+ 	fi
+@@ -868,7 +870,7 @@ test_listener()
+ 		$client4_port > /dev/null 2>&1 &
+ 	local listener_pid=$!
+ 
+-	verify_listener_events $evts 15 $AF_INET 10.0.2.2 $client4_port
++	verify_listener_events $evts $LISTENER_CREATED $AF_INET 10.0.2.2 $client4_port
+ 
+ 	# ADD_ADDR from client to server machine reusing the subflow port
+ 	ip netns exec $ns2 ./pm_nl_ctl ann 10.0.2.2 token $client4_token id\
+@@ -883,7 +885,7 @@ test_listener()
+ 	# Delete the listener from the client ns, if one was created
+ 	kill_wait $listener_pid
+ 
+-	verify_listener_events $evts 16 $AF_INET 10.0.2.2 $client4_port
++	verify_listener_events $evts $LISTENER_CLOSED $AF_INET 10.0.2.2 $client4_port
+ 
+ 	kill_wait $evts_pid
+ 	rm -f $evts
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.35.3
+
