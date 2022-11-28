@@ -1,119 +1,111 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAE88F6C
-	for <mptcp@lists.linux.dev>; Mon, 28 Nov 2022 17:26:34 +0000 (UTC)
-Received: by mail-ed1-f44.google.com with SMTP id b8so16357587edf.11
-        for <mptcp@lists.linux.dev>; Mon, 28 Nov 2022 09:26:34 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8CDA461
+	for <mptcp@lists.linux.dev>; Mon, 28 Nov 2022 17:58:15 +0000 (UTC)
+Received: by mail-il1-f180.google.com with SMTP id x12so2478330ilg.1
+        for <mptcp@lists.linux.dev>; Mon, 28 Nov 2022 09:58:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=C2LCS86qciGuLjwO2ge+sCV8B2FGFMwhRaz24WQJhpk=;
-        b=0LoqBI4pBgPOiTvheV4vsguNtm/z2zdQj6wVYyIPW8jaF0SE0v1DnOgUQBATsqd+Ud
-         nJhpsd32qEACcEN0gMh+FVbZHhoBo2tc7kK70qEe2uDH/tXuc1R9o17jOAWAVjs8Asnx
-         jnWbqajq5dJRd13hpUK9l2tPAmspA/KE5Qi1aRpCIP5gWSP+yMa8I7xXAjrV5mSyU8ls
-         oO57lrTAZOBdFovsN5W/z3QepIq1ACn6ihJCfFUV5En0bHzke7Yu9i0e7auUklVakgLc
-         S1VlXrwFjIkCYqWbJrAVfPtjtHInIH8l8tOpBoJ79RmHYJj4/b1D9ZbdwD8yrPqF+FYC
-         R5jQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VO3m5Xzb0LrkgU7cQR/bnAdXWHY5j5+RBMpFp/Xsb3s=;
+        b=nysXOPqdlPDhwkBcVx/64QcHoK2M1AkcHNLShJIbHpbK5KlxWwF6EcDyr31Y9ze7PF
+         9e+E5BKbxhY4PDLrEiijAFqlb/6edKCpoVu57eQh1w7ZZFfn8bIutcXzIhg4sIRmaSAD
+         RktZwMDkahnLGYSQMKG38XEoZFHdb7hwIsZFAsZRVJuMKJewFqw+I8ZdUXpydLqofFWH
+         1DVnUTD0/vsGny7lKflo5Q4t7Vq+56yoVq65RvFyhULKZNpZju0QzloHnMUXPhjWuYfr
+         X1pC5ADkW/4WEsQ1cp0rfyA83KNh5vFfKBUajPJ7do+aX1bahOeLzhJNmzQTMrm7I7m+
+         6MuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C2LCS86qciGuLjwO2ge+sCV8B2FGFMwhRaz24WQJhpk=;
-        b=gHeN99rOnPfLtHs6lM6SqDkVvikAYwASk6lGQkjV8sEjA9HVB2HPIsM6QksjUyGxTD
-         j+u2ygfklw2z8Gb8/PEFy/7+wJcz6pVKjYCu64rx/ipn/vX4KmBcWRZFGwxVKVNSIkZY
-         /9osh8mVNCd050pFprV/lgx2gDAqDtiXMs6nqoSZccGyLG492o3uu0ChEIx5G3JEVpcM
-         lMxRRdKlOXR8YCJfemMvdmCR8yAwrP+TTxEjrqSPwW305XryFzqGVesTNJtTkfg+RG1b
-         02kevw7fvxDtyLJGx9I0A7aQXlN18yQY0E9fuHTyRzf+sCZlj+M/NAYhNqqWabXqChJk
-         4J4Q==
-X-Gm-Message-State: ANoB5plcgfiZ2/a0mR1tf5zu5/LniFmY2+UJhFh7lnhPWWFebBBjKEwy
-	iED6RqPlFA5zpXObWLUVbladDA==
-X-Google-Smtp-Source: AA0mqf6cYbzqdbi6fgpY620lo4pyUcNdjdwO7MbfPPtHc3UgHD5MHgaDz3HmjhZ5K4ghwLtuAWy86w==
-X-Received: by 2002:aa7:d943:0:b0:469:cdb7:7fe4 with SMTP id l3-20020aa7d943000000b00469cdb77fe4mr33498599eds.261.1669656392456;
-        Mon, 28 Nov 2022 09:26:32 -0800 (PST)
-Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id bh16-20020a170906a0d000b007adaca75bd0sm5215922ejb.179.2022.11.28.09.26.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Nov 2022 09:26:32 -0800 (PST)
-Message-ID: <c33411f9-73d5-2717-a6e9-9dbde95552c1@tessares.net>
-Date: Mon, 28 Nov 2022 18:26:31 +0100
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VO3m5Xzb0LrkgU7cQR/bnAdXWHY5j5+RBMpFp/Xsb3s=;
+        b=JFmMAkoFqjcUt9geo5H2In/d5PMVYh/bj2NN7YKf+ox5LVdABZ47N3ORwbIXQaOCDW
+         T/HczwEZXdEuzjNUBA7XvqsbtyUC64KOGMxCWxtW9rGcpGGhoJC3QzvYpja8/knsnJir
+         tgz6hXONqOgsebQv1ofFJEIQobCQtM0c0kwZaMqAGYTilwSLStlA1egzsFwSi/JSSTIq
+         nxjt/rDli0CR9IlgOnSmtudzGmrnOUkOf2BQUFX7DlKfCWppvcEqxSndIqEeUFV39tup
+         F1SBn//vP3dAOPNrqwb7qand7w5nIk48spGbgNBpcnRpPf1zp9vy+HVRsH1mSIbuF0vJ
+         22EQ==
+X-Gm-Message-State: ANoB5pk9WBnb3TH39KM5Lwe2LJFuhWetvlhpoAR8rWWzgqfxqOEHwsjG
+	EHHY2bUNAF5oYfRItDSmA5aK+MvFYA==
+X-Google-Smtp-Source: AA0mqf7F/YJL/gI62CR6sC5GzhH5UwT9WAVpZCktMIjsVbf2a+m2eYK++Jza1IUJ/fUrql4uefGXlg==
+X-Received: by 2002:a92:6e0a:0:b0:302:4d37:9e69 with SMTP id j10-20020a926e0a000000b003024d379e69mr17770422ilc.160.1669658294235;
+        Mon, 28 Nov 2022 09:58:14 -0800 (PST)
+Received: from [127.0.0.1] ([40.122.79.156])
+        by smtp.gmail.com with ESMTPSA id k21-20020a6bf715000000b006cce295dde1sm4624727iog.10.2022.11.28.09.58.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Nov 2022 09:58:13 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Wei Yongjun <weiyongjun1@huawei.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20221118083541.123585-1-weiyongjun@huaweicloud.com>
+References: <20221118083541.123585-1-weiyongjun@huaweicloud.com>
+Subject: Re: mptcp: netlink: fix some error return code: Tests Results
+Message-ID: <e069edbc-6552-c52c-3daf-c23c29df16af@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 28 Nov 2022 17:58:13 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH mptcp-next v3 0/4] cleanups for pm listener event tests
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, Paolo Abeni <pabeni@redhat.com>
-References: <cover.1669468340.git.geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1669468340.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Paolo,
+Hi Wei,
 
-On 26/11/2022 14:15, Geliang Tang wrote:
-> v3:
->  - fix CI errors in v2.
+Thank you for your modifications, that's great!
 
-Thank you for the patches and the reviews!
+Our CI did some validations and here is its report:
 
-> v2:
->  - add make evts global patches
-> 
-> Order of these patches:
->   selftests: mptcp: listener test for in-kernel PM
->   selftests: mptcp: make evts global in mptcp_join
->   selftests: mptcp: listener test for userspace PM
->   selftests: mptcp: make evts global in userspace_pm
->   selftests: mptcp: enhance userspace pm tests
->   mptcp: add pm listener events
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/6167649541947392
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/6167649541947392/summary/summary.txt
 
-Arf, I though the order was from the older to the newest but it was the
-opposite. I saw that after having started applying patches :) Hopefully,
-I fixed that properly after!
+- KVM Validation: debug:
+  - Success! =E2=9C=85:
+  - Task: =
+https://cirrus-ci.com/task/5604699588526080
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5604699588526080/summary/summary.txt
 
-> Geliang Tang (4):
->   selftests: mptcp: make evts global in userspace_pm
->   Squash to "selftests: mptcp: listener test for userspace PM"
->   selftests: mptcp: make evts global in mptcp_join
->   Squash to "selftests: mptcp: listener test for in-kernel PM"
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/108f979a735f
 
-Now in our tree (feat. for net-next) with Paolo's ACK:
 
-New patches for t/upstream:
-- ed6d9febb0b2: selftests: mptcp: make evts global in userspace_pm
-(applied just before "selftests: mptcp: listener test for userspace PM")
-- Results: 392b1b99f540..79547c1065c6 (export)
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-- 3070d58445cf: "squashed" patch 5/4 in "selftests: mptcp: make evts
-global in userspace_pm"
-- b9485b47c19b: tg:msg: update commit message
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-- 79d06eac81fb: "squashed" patch 2/4 in "selftests: mptcp: listener test
-for userspace PM"
+For more details:
 
-- 52bc70ea6192: selftests: mptcp: make evts global in mptcp_join
-- Results: 79547c1065c6..bc4d825a7fd3 (export)
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
 
-- 2f4c24bf60f4: "squashed" patch 4/4 in "selftests: mptcp: listener test
-for in-kernel PM"
-- Results: bc4d825a7fd3..36f5c1632395 (export)
 
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221128T172446
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
