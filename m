@@ -1,115 +1,137 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F291D362
-	for <mptcp@lists.linux.dev>; Mon, 28 Nov 2022 05:02:57 +0000 (UTC)
-Received: by mail-pj1-f49.google.com with SMTP id o5-20020a17090a678500b00218cd5a21c9so9109330pjj.4
-        for <mptcp@lists.linux.dev>; Sun, 27 Nov 2022 21:02:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cvaADxEj/OM1cQg6u9ejF+eVfhH9KaZ6U/ioL+8QH/s=;
-        b=gf/YxNvhsHi8blg9uDm5o6spBEXeikTaxQkjEj7paWcxoGYPw/A5Qwx9mENc5EJSnp
-         AAynaoCB4UQUJSvm3Y+KS/UhSGKH6a1v60jeIX8MCQ1a5EFa7hOMr3SGY3dSJXL3MXVj
-         UkLdabM/jnZWCgBVphy7SHMa5GsmTYCPURb1xRtLxCKtUdkxlL441hHNHC/hhZEpiCCY
-         ylp5894PWJ0kHYAm9876xvEwAriZW8GKhlT+nOgJWhVsojCEQtwSZUqnWXxQJhS536/p
-         fdbeQFH7O5DNaRG2QpQg7IXmzOCTRrIYLwL8pXdKF1zsdXq+QYs/F1M/BpeMBp3GnmnY
-         j/vg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9143420E2
+	for <mptcp@lists.linux.dev>; Mon, 28 Nov 2022 08:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1669622690;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hk9pD3fCW412P61Xos4wVsgQLnCLnerOijQ3ZMEj0hA=;
+	b=d85g8ueKIg6LyFTTEtVT3bx6XbetzGiIjPvDksge2LpLJWx9Rac71ViKcEPtzMM9tk2ZTg
+	aNMqD6icQ1vo9ZjVs8Zn8tVsvUw2ISvgJ9Gy3/vm4KKl8wncaweS26Ldu7KW77uEjjTSIL
+	9Lm1MC+dH+tkxXBm+4Q1/ZGKUpm6GXs=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-613-FFAteuj6PhSH2XJb-s3zjg-1; Mon, 28 Nov 2022 03:04:48 -0500
+X-MC-Unique: FFAteuj6PhSH2XJb-s3zjg-1
+Received: by mail-qt1-f200.google.com with SMTP id u31-20020a05622a199f00b003a51fa90654so13612508qtc.19
+        for <mptcp@lists.linux.dev>; Mon, 28 Nov 2022 00:04:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=cvaADxEj/OM1cQg6u9ejF+eVfhH9KaZ6U/ioL+8QH/s=;
-        b=t62B9qf4LluQF81PcU0ZPNaO9/slahv0RdEVlS8c4wqbUAS/HTkRzqAI0SHE0uW2fJ
-         usTvuPTp0C2/TadhfZnIbMApX7/74shffLKutEAPb09Ig2vs59L3Rh109zhBvOhZ8sKF
-         pkcoWGcg19cAMcNbtlS3b0TPQ1oUa05JOUypQEbKS1B6bs/YGVY61LVMsCDiact1GyZK
-         DNnh68lFQVeBnCYseWgFfVv5Yoc7xjTqC5sWBwC+3MNhQ+wTMZ8p1XK9hCn+zI8lDww+
-         1yuTfW/zJCIBKa9v4A2RIGWUuFIloT60ZFA7hVXttR/BLDRNUFlURuiXmbYSQvMrOO8R
-         2k3g==
-X-Gm-Message-State: ANoB5pmZDUITanCkxE5X84BWMolPnfpwkM8qjbJiEVd4lZriMXpBoUzF
-	VmxWHKNy2IYXG+bLs9ZweQlZhnclQQ==
-X-Google-Smtp-Source: AA0mqf4AqKxlcqny7jsjwocyuLfi1Bw4nHkcqg/tIDLqAU+W9gW9fEAJ/f4bWWN4YOh1lsSd5E796g==
-X-Received: by 2002:a17:90a:dc10:b0:20d:69a3:1fd9 with SMTP id i16-20020a17090adc1000b0020d69a31fd9mr59145584pjv.167.1669611777401;
-        Sun, 27 Nov 2022 21:02:57 -0800 (PST)
-Received: from [127.0.0.1] ([40.118.164.81])
-        by smtp.gmail.com with ESMTPSA id i12-20020a17090332cc00b00186b69157ecsm7695066plr.202.2022.11.27.21.02.56
+        bh=hk9pD3fCW412P61Xos4wVsgQLnCLnerOijQ3ZMEj0hA=;
+        b=fEdCjvHUkKaRznA9VqXeo8ixJD3hMw9+1Pu5WpvgWsLdcZC4gYXeHYOXqGPml4QOlG
+         QVS+EPVXZs+rfBxtdFI+DVnNfLB2w2HZdVrMEJv+YmMVRJFqnJ2HiLacZ6jsiYq/3XUb
+         qr1nuLJUdMF+R92XIopAFy9TjMEu+Loznd1gZBvVILuANBHLdqrT2kKd0ItQQVRs4k58
+         RLuoaNed9pvznWo7DhNDEOzu8NwjIfeGJBQyasRA/xT8L7QtNLZBBCkhKM15P+QDOyLb
+         C0eN2zvdLMo6HUupBTIK1PiU7OfEig9SoVrDV0Ps6ZCNcd3ZVXiLpBNyx85fSskg1pez
+         bLgQ==
+X-Gm-Message-State: ANoB5pn2B7OKMae2GfnNemyFsHg6i5WC7zDKrOtsjS4Wnf2/T4OR71SW
+	5HCjDiq003Vk3dtOwc/3ZcHhFoPpWLfNHhtYqksjv6pr5RfjOz01LiOHlbAnbgI/eCdypcHeEb/
+	+pFY9HHy6dt+wfGc=
+X-Received: by 2002:ac8:7492:0:b0:3a5:425b:f865 with SMTP id v18-20020ac87492000000b003a5425bf865mr31851928qtq.589.1669622688054;
+        Mon, 28 Nov 2022 00:04:48 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7sO4WsEFREoq/iTtcmzwjVkTJIdvfMXDpBOmHLONIXqHMl/2cvy0sMLm/jJsHzdMYCXxb3yw==
+X-Received: by 2002:ac8:7492:0:b0:3a5:425b:f865 with SMTP id v18-20020ac87492000000b003a5425bf865mr31851911qtq.589.1669622687797;
+        Mon, 28 Nov 2022 00:04:47 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-120-203.dyn.eolo.it. [146.241.120.203])
+        by smtp.gmail.com with ESMTPSA id w30-20020a05620a0e9e00b006faaf6dc55asm7813508qkm.22.2022.11.28.00.04.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Nov 2022 21:02:56 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <5ea0584d148efedf545cbd2a382c87d8155ad7e3.1669605531.git.geliang.tang@suse.com>
-References:
- <5ea0584d148efedf545cbd2a382c87d8155ad7e3.1669605531.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: Add bpf_red test: Tests Results
-Message-ID: <65bb6e77-2761-584d-0516-87914234f606@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Nov 2022 05:02:55 +0000
+        Mon, 28 Nov 2022 00:04:47 -0800 (PST)
+Message-ID: <e1f32a3438e563718778e393394fd5ae036444cb.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 1/4] selftests: mptcp: make evts global in
+ userspace_pm
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Date: Mon, 28 Nov 2022 09:04:44 +0100
+In-Reply-To: <7b755941b11aeb74e443e3178c07c143986a5227.1669383374.git.geliang.tang@suse.com>
+References: <cover.1669383374.git.geliang.tang@suse.com>
+	 <7b755941b11aeb74e443e3178c07c143986a5227.1669383374.git.geliang.tang@suse.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi,
 
-Thank you for your modifications, that's great!
+On Fri, 2022-11-25 at 21:40 +0800, Geliang Tang wrote:
+> @@ -134,18 +140,25 @@ make_connection()
+>  
+>  	# Capture netlink events over the two network namespaces running
+>  	# the MPTCP client and server
+> -	local client_evts
+> -	client_evts=$(mktemp)
+> +	if [ -z "$client_evts" ]; then
+> +		client_evts=$(mktemp)
+> +	fi
+>  	:>"$client_evts"
+> +	if [ $client_evts_pid -ne 0 ]; then
+> +		kill_wait $client_evts_pid
+> +	fi
+>  	ip netns exec "$ns2" ./pm_nl_ctl events >> "$client_evts" 2>&1 &
+> -	local client_evts_pid=$!
+> -	local server_evts
+> -	server_evts=$(mktemp)
+> +	client_evts_pid=$!
+> +	if [ -z "$server_evts" ]; then
+> +		server_evts=$(mktemp)
+> +	fi
+>  	:>"$server_evts"
+> +	if [ $server_evts_pid -ne 0 ]; then
+> +		kill_wait $server_evts_pid
+> +	fi
+>  	ip netns exec "$ns1" ./pm_nl_ctl events >> "$server_evts" 2>&1 &
+> -	local server_evts_pid=$!
+> +	server_evts_pid=$!
+>  	sleep 0.5
+> -
 
-Our CI did some validations and here is its report:
+Minor nit: I would not remove this empty line here.
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6078049075068928
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6078049075068928/summary/summary.txt
+>  	# Run the server
+>  	ip netns exec "$ns1" \
+>  	   ./mptcp_connect -s MPTCP -w 300 -p $app_port -l $listen_addr > /dev/null 2>&1 &
+> @@ -161,7 +174,6 @@ make_connection()
+>  	sleep 1
+>  
+>  	# Capture client/server attributes from MPTCP connection netlink events
+> -	kill_wait $client_evts_pid
+>  
+>  	local client_token
+>  	local client_port
+> @@ -173,12 +185,11 @@ make_connection()
+>  	client_port=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$client_evts")
+>  	client_serverside=$(sed --unbuffered -n 's/.*\(server_side:\)\([[:digit:]]*\).*$/\2/p;q'\
+>  				      "$client_evts")
+> -	kill_wait $server_evts_pid
+>  	server_token=$(grep "type:1," "$server_evts" |
+>  		       sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q')
+>  	server_serverside=$(grep "type:1," "$server_evts" |
+>  			    sed --unbuffered -n 's/.*\(server_side:\)\([[:digit:]]*\).*$/\2/p;q')
+> -	rm -f "$client_evts" "$server_evts" "$file"
+> +	rm -f "$file"
 
-- KVM Validation: debug:
-  - Unstable: 2 failed test(s): =
-selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5515099121647616
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5515099121647616/su=
-mmary/summary.txt
+At this point is better to move even 'file' as a global variable, for
+the same reason as 'evts'
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/f53d9d553d2e
+>  
+>  	if [ "$client_token" != "" ] && [ "$server_token" != "" ] && [ "$client_serverside" = 0 ] &&
+>  		   [ "$server_serverside" = 1 ]
 
+Thanks!
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+Paolo
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
