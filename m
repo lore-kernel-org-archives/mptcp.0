@@ -1,95 +1,168 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DF8BA28
-	for <mptcp@lists.linux.dev>; Tue, 29 Nov 2022 21:08:33 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id d20so10732639edn.0
-        for <mptcp@lists.linux.dev>; Tue, 29 Nov 2022 13:08:32 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1CDBA48
+	for <mptcp@lists.linux.dev>; Tue, 29 Nov 2022 21:08:34 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id b2so20530635eja.7
+        for <mptcp@lists.linux.dev>; Tue, 29 Nov 2022 13:08:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=89GXJKIMgi2m/CbFCE5gveAnUdurt/NONIDiWMfvTJI=;
-        b=2IrB2NwRScVUc5aUNsG8AVdd/+l2F7Bx+tLhT2gkEj+/RABlbcAwgcuyTvaBC9zA70
-         bhYqS636JA61CVLw3/HfJVvs6apyGkYLlQrAuuT7K79zBCiR8GizpcRYjVzEEws/LsqG
-         o2nlhX5QUFDXt9WzaSd7lqiXylCWSCjKM/ngWMHZwNrthd7vliqqahkwos5eE7u0NaDY
-         qVnubDxoreCwZpILGBhWFcY6S5J1A6VDQuLWWYVZgUIY1RuZ3m3Xw/DSnXR0ep4LHLIw
-         RBOMv/dKyoliHb1F3x32buOE93jM3q4IUylQlDP6XPT6bPrW8e+8wdz8RJ8aCVKKcOGi
-         Mi6A==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sDkQm/Igbqn4yMwljYrb+bCgf8pesfJApfImuUram6c=;
+        b=t6bmNlLiQshsVtG9APUJUJAbsl4ch3jnGjEdXaYoddScBbjv6OMtOJZiU/skeopRi2
+         Fy1C9qDBd5MgMLVHVmfeUDAxgA66/3pYErko+gZXUpCjMStl26c5c/zmbHi2vSoXODKI
+         fJma8gnAur6y3bK8a+tA+ko28KcobEfWEBIXPwPL7fA65QOLsB5kYgyfimm5vwoIKLRY
+         WoFLmbd+8fIv6LrkfmdHVcTCGlyiaMHDdkqBCqfUnOIQfFEw52eFOa2+IGbdTaAcvlyq
+         +ks117Luh5DaK+BGh0KeyCbNIvdMXqEJ1fbbKyVZitiy2HZ1xwKjps0avxt+MVzuMoIS
+         jYJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=89GXJKIMgi2m/CbFCE5gveAnUdurt/NONIDiWMfvTJI=;
-        b=wiPqJXOjAwQwt+NATi7MYjID835tjlJ5XSdYe83zHZjrFuSGYoX6iro/oCoXlokh7G
-         LJQ3NFroocu9HWC849EykQp2aOIfY7pc4k5dwknj3trG+c0Nu1dZFg7coGeU9+R2/EPh
-         d8JZXPBYreqMjBXoPsRB5OdNPuzGWgHUhMfSL4uxrsu6CMBxzMq4y3b3L9/qJLy34beM
-         Jr68+toqamDpNlA2Fa7oRl5DC/+zpCzg/95m6FP9VxRv4oY9OP11k3n+OVggzlnCR74B
-         Aq6PhUspkdoTgKjxcyy/CgqRPvJpH4SP/hC12oQGyMw8IIdaTrDVLIfHtu5NM0BwHfgd
-         ed9Q==
-X-Gm-Message-State: ANoB5pkcggg2QFAgWY9H89cMSee3Fwwy3KwfLYZXuBAT+5CgDJzPUKa0
-	Gn56P+SH2GSFUiZ1EplA5VqAn6mhFXfYfynHmpA=
-X-Google-Smtp-Source: AA0mqf6FSlX1sAwdGzdsYVHMJ24g4CvakkAvUpo/P/BOowNF9cqVh/aHnzFW/OdIDiBShYsL2i58EQ==
-X-Received: by 2002:a05:6402:5:b0:459:cdb:92ad with SMTP id d5-20020a056402000500b004590cdb92admr36741870edu.77.1669756111077;
-        Tue, 29 Nov 2022 13:08:31 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sDkQm/Igbqn4yMwljYrb+bCgf8pesfJApfImuUram6c=;
+        b=TSaITxaglMhqGX2Pt2K0l1zwnGLdOdAO2B0gP7aUpe6VViQ/dR4vjAFEuMRlsJjU5e
+         7kbEuzXqJduh6XUpY1DSI99bESVImMUmPDQstPzpRkTvMIzt6gp/ewLJdIQ0Lg84dyY4
+         0qGTZAs2coOMnZOp7rYK8KHVoe1xIOdMczF02Epk8I1myBroknLQxbjbU1jKHxM6OWsI
+         cD6GCGPBYqw33QwGGzk/JiOFOEHd8Y6vnoOVYk2oFXfygkEAwpvZUonnX5AFzMjJLp0a
+         whED3AbnR+5yYATCHUHXIb3LxCjEh0xnip3XeBasHEQ9NVEps8uMy5tlkLJACtcCjbYM
+         xySA==
+X-Gm-Message-State: ANoB5plcTYH153GgUoDSZfH1eQi9xwIojycWihiFNAuBCNP3hqvh/sRe
+	60An9KYCIJrKAfIZ4coK6/ma5XNs67Ab17e6THA=
+X-Google-Smtp-Source: AA0mqf7CL6Uav0lCb4QGKVTTrPdK/+ltIMLZB2DGwwjqV0+pAoB3+bKQHkqKsH6i0lLgAi9ZqAYCRw==
+X-Received: by 2002:a17:906:a293:b0:7bf:c6d3:b803 with SMTP id i19-20020a170906a29300b007bfc6d3b803mr10588348ejz.116.1669756112168;
+        Tue, 29 Nov 2022 13:08:32 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id d14-20020a17090694ce00b007aed2057eacsm6516487ejy.221.2022.11.29.13.08.30
+        by smtp.gmail.com with ESMTPSA id d14-20020a17090694ce00b007aed2057eacsm6516487ejy.221.2022.11.29.13.08.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Nov 2022 13:08:30 -0800 (PST)
+        Tue, 29 Nov 2022 13:08:31 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-net 0/3] mptcp: fix request sock for subflow in v6
-Date: Tue, 29 Nov 2022 22:08:01 +0100
-Message-Id: <20221129210804.3769157-1-matthieu.baerts@tessares.net>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH mptcp-net 1/3] mptcp: remove MPTCP 'ifdef' in TCP SYN cookies
+Date: Tue, 29 Nov 2022 22:08:02 +0100
+Message-Id: <20221129210804.3769157-2-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20221129210804.3769157-1-matthieu.baerts@tessares.net>
+References: <20221129210804.3769157-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=957; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=8hVqgsPwfi8Qb0p6nTrlyrfuCYOqjc6olFThCq+MFOM=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjhnSzq6fj/0GcL6dqGvVVKUBkrD5q82gyk00CunGM
- 5EMjIliJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY4Z0swAKCRD2t4JPQmmgczvFEA
- DwocBnUdbNyIJCKtfTNYRTrfGqmPSSHSn7xi41IL+olEod2iS8oE2eb3lZVtP9mecKOzUNvy6OoyX3
- y+nxz3snEowxI05nHTFk8QVFFC2szhiQfC6+jz23eo1I7Xhca3Bf9rJPbH/SvHhnXoYyGD4obyQP/e
- ksme0l4SZsvHoiSJjGTFddmivGXbZrlKtDqGlHlazkXC66LQ7Seqy9vTfe0hT1X4G1QNKECLtj6GFP
- LPxZB7r5UxoDW84gG8pxVeay9BxKaNZp4VHd3RkxZQr2G2use3BmU7ZmLaTYpmiPVxwTZZVuCCCRef
- z7kFj9YyLj7z2eIuLukNwaa7ixDKXq4MTU1xHTVLiZNjPgTqY0TD4rw8C2FG5RP0wwsujxQmGE3Fez
- zPJ17+5CU3uttQ5qi0cm9jzvG/Dinm6wyrN+jMM2CY+qxPRtFFOMk7rf1t9PV0/9GbzXrnrwFmcZwh
- aItFjpp7JaBHDbwySo/S8r/PTFcPSVBcVCOBqTmMeigJByYgXxa7C7tjHzFYoTDofsDoQfsLJS/N6R
- E1rs8E3dUhCefyev0rzjeq8WZtrLV3csJqnZGCD4axhYRpavmNfnXaNDR525ozXMaPiqfWvasLQciY
- z6YJCfUCCJaQUjzMp8JEiXZCRJOEFKYFX0GHb8DuhE2kLkRtBa1Q4vmUejMw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3232; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=G5Jigfxrz+PZHTLlMDvp3PvM4NMKe3ZPisN3SNA98z8=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjhnSzolzY65p7BkoG95o4BVTF9qbVkCsIt1B3uMGR
+ NsFtN3yJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY4Z0swAKCRD2t4JPQmmgc+tXD/
+ 4k5RDWr4Dht66b0HXlYBFq6rCDsLtIyBYy4Ena67VbRYFNlUL4q+0sgqTFrGb8+cSIOIp7H7+IMpYU
+ vhddhzRuRwyu9TTPehNq6i059wKhFcSu4jv5cgjNZ5QePs6hu8+/GfaWX+JIIPtJyTF2I3d37HcK5a
+ xL2FB0dwYnaXyG2mPI2hiB6edgu7dyNwP5qgz720qrYZisbd1edG+JMCZxYDODqvKSHvifM4knX9tU
+ 3B9LVuFLE7FK/fQDfM7b8wvgcygP3+16qpAfwjj35ICVhJFsVMk9Icfr4MPlx8yrmlQ9dvO19/CCF3
+ ChfIY3j5JQ4IFVPdfYFOFNvQ1CTr+6HQt5XpbHWJv85nh62HqRObVwse1tt7rJysQ0+TYPwzIFOXDl
+ fVrCnuoIglRFuGjAfOUAoOWBgK+dr22kW9emphM9KMAgHQ9m/kKI0gOUlxALtvDMiCfesrTLcLW+5n
+ mR0GVRBAbBIzSGn4DGuygtgw/erTeMGyMEx5ZA4QvsJ1PjwmREdVRDS+HGcxq1HU9DRN5Q41tKVPXH
+ jzjyyy3nDSaQYumqk0taBGnh9435Zc/1iR+hLu1vdpqB+QgrNQIPwZ7j3dTG/F5oVMrefADHtHvKzi
+ xe7p9rOFN76CfoYjET0OA6pGBvWYIBF/JJ85T4imjIcNFZ4Xglz2bCnqPgnA==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-When working on validating the listener part of TCP FastOpen with Packetdrill, I
-noticed the cookie in IPv6 was not the expected one.
+To ease the maintenance, it is often recommended to avoid having #ifdef
+preprocessor conditions.
 
-The root cause was that req->rsk_ops->family was set to AF_INET while the
-subflow was in v6. Patch 2/3 solves that.
+Here the section related to CONFIG_MPTCP was quite short but the next
+commit needs to add more code around. It is then cleaner to move
+specific MPTCP code to functions located in net/mptcp directory.
 
-While looking around, I noticed we were always calling the destructor from TCP
-in v4 and I changed that in patch 3/3. I don't think there is a memory leaks in
-usual cases.
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ include/net/mptcp.h   | 12 ++++++++++--
+ net/ipv4/syncookies.c |  7 +++----
+ net/mptcp/subflow.c   | 10 ++++++++++
+ 3 files changed, 23 insertions(+), 6 deletions(-)
 
-Paolo did a pre-review (thanks again for that!) and suggested the patch 1/3.
-
-Matthieu Baerts (3):
-  mptcp: remove MPTCP 'ifdef' in TCP SYN cookies
-  mptcp: dedicated request sock for subflow in v6
-  mptcp: use proper req destructor for IPv6
-
- include/net/mptcp.h   | 12 +++++++--
- net/ipv4/syncookies.c |  7 +++--
- net/mptcp/subflow.c   | 61 ++++++++++++++++++++++++++++++++++++-------
- 3 files changed, 64 insertions(+), 16 deletions(-)
-
-
-base-commit: 8b052cb09c12ccbcf7086bd7f35146941dd337a3
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 412479ebf5ad..3c5c68618fcc 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -97,8 +97,6 @@ struct mptcp_out_options {
+ };
+ 
+ #ifdef CONFIG_MPTCP
+-extern struct request_sock_ops mptcp_subflow_request_sock_ops;
+-
+ void mptcp_init(void);
+ 
+ static inline bool sk_is_mptcp(const struct sock *sk)
+@@ -188,6 +186,9 @@ void mptcp_seq_show(struct seq_file *seq);
+ int mptcp_subflow_init_cookie_req(struct request_sock *req,
+ 				  const struct sock *sk_listener,
+ 				  struct sk_buff *skb);
++struct request_sock *mptcp_subflow_reqsk_alloc(const struct request_sock_ops *ops,
++					       struct sock *sk_listener,
++					       bool attach_listener);
+ 
+ __be32 mptcp_get_reset_option(const struct sk_buff *skb);
+ 
+@@ -274,6 +275,13 @@ static inline int mptcp_subflow_init_cookie_req(struct request_sock *req,
+ 	return 0; /* TCP fallback */
+ }
+ 
++static inline struct request_sock *mptcp_subflow_reqsk_alloc(const struct request_sock_ops *ops,
++							     struct sock *sk_listener,
++							     bool attach_listener)
++{
++	return NULL;
++}
++
+ static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
+ #endif /* CONFIG_MPTCP */
+ 
+diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+index 942d2dfa1115..26fb97d1d4d9 100644
+--- a/net/ipv4/syncookies.c
++++ b/net/ipv4/syncookies.c
+@@ -288,12 +288,11 @@ struct request_sock *cookie_tcp_reqsk_alloc(const struct request_sock_ops *ops,
+ 	struct tcp_request_sock *treq;
+ 	struct request_sock *req;
+ 
+-#ifdef CONFIG_MPTCP
+ 	if (sk_is_mptcp(sk))
+-		ops = &mptcp_subflow_request_sock_ops;
+-#endif
++		req = mptcp_subflow_reqsk_alloc(ops, sk, false);
++	else
++		req = inet_reqsk_alloc(ops, sk, false);
+ 
+-	req = inet_reqsk_alloc(ops, sk, false);
+ 	if (!req)
+ 		return NULL;
+ 
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 2159b5f9988f..97a354aea25f 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -582,6 +582,16 @@ static int subflow_v6_conn_request(struct sock *sk, struct sk_buff *skb)
+ }
+ #endif
+ 
++struct request_sock *mptcp_subflow_reqsk_alloc(const struct request_sock_ops *ops,
++					       struct sock *sk_listener,
++					       bool attach_listener)
++{
++	ops = &mptcp_subflow_request_sock_ops;
++
++	return inet_reqsk_alloc(ops, sk_listener, attach_listener);
++}
++EXPORT_SYMBOL(mptcp_subflow_reqsk_alloc);
++
+ /* validate hmac received in third ACK */
+ static bool subflow_hmac_valid(const struct request_sock *req,
+ 			       const struct mptcp_options_received *mp_opt)
 -- 
 2.37.2
 
