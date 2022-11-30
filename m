@@ -1,86 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ettrick.pl (mail.ettrick.pl [141.94.21.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0DF632
-	for <mptcp@lists.linux.dev>; Wed, 30 Nov 2022 04:30:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 181AAC433C1;
-	Wed, 30 Nov 2022 04:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1669782617;
-	bh=/in5Kk6DmVC0nx8gtlneaUqJh9o6GPhXF1Lsqe68WZE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=LHnXcq6BNH6yDBBD4vpPwdkh5HwAh7wUbK7tXSW7BZNTGHniJKrQZia4y1S4ZmnST
-	 2B2UyRVRvYslk+mjT4c86WhINS0MzL7PqUiC3vebGIf78nv3REb3Z/67Z+vXkoUgxF
-	 zkSLxgMLigbppZGa6U0YD3yC65t6u7vyn0tBsmNv3fAZyi5XuCEf+XIX4WG9wX3e4g
-	 gZUtMqaAB7g+KGsjlJGp8YXo959jhcYsyIVOnJHy3hgD5jx/KVW58bmv1wpxQPOJmD
-	 j9twxFiWw2L48tnARGsXMxf1oSWkZPttt7XARgEFo8qlkzOLXmi9WbBH0DQJexwuUw
-	 lJ3JrzqtFeZjw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F3121E4D00F;
-	Wed, 30 Nov 2022 04:30:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A301BA42
+	for <mptcp@lists.linux.dev>; Wed, 30 Nov 2022 09:19:05 +0000 (UTC)
+Received: by mail.ettrick.pl (Postfix, from userid 1002)
+	id 70860A3BE3; Wed, 30 Nov 2022 09:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ettrick.pl; s=mail;
+	t=1669799482; bh=ChRcLNpIfKnVgp03/tSyWuRw1tWSTk/OEiEnuZMWs58=;
+	h=Date:From:To:Subject:From;
+	b=WOUlF+0UycDrA1frR2+kjqqevRaJ0srKJ8Fsf8SKjpk1ZrTeuBH5J2703fQIxcccQ
+	 Tc4MEMkRKpQmwShXyHLRe9OhXNuZ9u0YlF3O1ol9zKtucaMPrS07xP+GLhuw+EFslt
+	 rryEpN+yh7wbGY2urYrGOGzqplTEECBNMVyt6IstXF8nnlvmDLpY9rxwcF+8GS40YB
+	 /rvbRrovmohm2TrRPy9a8GRVHGiXv0RV8R23kSZB7cHoZpOvnM1Z1LOCJ/nHWQLLH8
+	 fQ6w5B+JnFZcCTpC3pzLG45WFG0KWGhFPPvOXkY5Zm3nsqfCwTtlcvUt9OfxSMVUZV
+	 GE6MrxGOsoklA==
+Received: by mail.ettrick.pl for <mptcp@lists.linux.dev>; Wed, 30 Nov 2022 09:10:33 GMT
+Message-ID: <20221130074500-0.1.7a.1yu7j.0.36ha60bvgg@ettrick.pl>
+Date: Wed, 30 Nov 2022 09:10:33 GMT
+From: "Norbert Karecki" <norbert.karecki@ettrick.pl>
+To: <mptcp@lists.linux.dev>
+Subject: Wycena paneli fotowoltaicznych
+X-Mailer: mail.ettrick.pl
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/8] mptcp: MSG_FASTOPEN and TFO listener side
- support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <166978261699.28302.9342506278559559292.git-patchwork-notify@kernel.org>
-Date: Wed, 30 Nov 2022 04:30:16 +0000
-References: <20221125222958.958636-1-matthieu.baerts@tessares.net>
-In-Reply-To: <20221125222958.958636-1-matthieu.baerts@tessares.net>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- mathew.j.martineau@linux.intel.com, pabeni@redhat.com, shuah@kernel.org,
- benjamin.hesmans@tessares.net, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
- netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+Dzie=C5=84 dobry,
 
-This series was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+dostrzegam mo=C5=BCliwo=C5=9B=C4=87 wsp=C3=B3=C5=82pracy z Pa=C5=84stwa f=
+irm=C4=85.
 
-On Fri, 25 Nov 2022 23:29:46 +0100 you wrote:
-> Before this series, only the initiator of a connection was able to combine both
-> TCP FastOpen and MPTCP when using TCP_FASTOPEN_CONNECT socket option.
-> 
-> These new patches here add (in theory) the full support of TFO with MPTCP, which
-> means:
-> 
->  - MSG_FASTOPEN sendmsg flag support (patch 1/8)
->  - TFO support for the listener side (patches 2-5/8)
->  - TCP_FASTOPEN socket option (patch 6/8)
->  - TCP_FASTOPEN_KEY socket option (patch 7/8)
-> 
-> [...]
+=C5=9Awiadczymy kompleksow=C4=85 obs=C5=82ug=C4=99 inwestycji w fotowolta=
+ik=C4=99, kt=C3=B3ra obni=C5=BCa koszty energii elektrycznej nawet o 90%.
 
-Here is the summary with links:
-  - [net-next,1/8] mptcp: add MSG_FASTOPEN sendmsg flag support
-    https://git.kernel.org/netdev/net-next/c/1e777f39b4d7
-  - [net-next,2/8] mptcp: track accurately the incoming MPC suboption type
-    https://git.kernel.org/netdev/net-next/c/fe33d3862677
-  - [net-next,3/8] mptcp: consolidate initial ack seq generation
-    https://git.kernel.org/netdev/net-next/c/b3ea6b272d79
-  - [net-next,4/8] mptcp: implement delayed seq generation for passive fastopen
-    https://git.kernel.org/netdev/net-next/c/dfc8d0603033
-  - [net-next,5/8] mptcp: add subflow_v(4,6)_send_synack()
-    https://git.kernel.org/netdev/net-next/c/36b122baf6a8
-  - [net-next,6/8] mptcp: add TCP_FASTOPEN sock option
-    https://git.kernel.org/netdev/net-next/c/4ffb0a02346c
-  - [net-next,7/8] mptcp: add support for TCP_FASTOPEN_KEY sockopt
-    https://git.kernel.org/netdev/net-next/c/cb99816cb59d
-  - [net-next,8/8] selftests: mptcp: mptfo Initiator/Listener
-    https://git.kernel.org/netdev/net-next/c/ca7ae8916043
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Czy s=C4=85 Pa=C5=84stwo zainteresowani weryfikacj=C4=85 wst=C4=99pnych p=
+ropozycji?
 
 
+Pozdrawiam,
+Norbert Karecki
