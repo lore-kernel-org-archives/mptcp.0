@@ -1,190 +1,309 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1B563AF
-	for <mptcp@lists.linux.dev>; Wed, 30 Nov 2022 14:07:14 +0000 (UTC)
-Received: by mail-ed1-f46.google.com with SMTP id d20so13431730edn.0
-        for <mptcp@lists.linux.dev>; Wed, 30 Nov 2022 06:07:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xHXcuy6oLE+Bgau9uGaJ5XFA1fmV6aif/DsLUjpATIk=;
-        b=6pAl5L0VLYVXTiFnKW5E0skgWr5aO+z+xDFrjrFCoygUB9HiXC6ugck9ATxUopyWti
-         H8wqG8ibFuGqDbf4IxVAeG+MNjsB02sYm/XJbeaxKF+IZSNU1+5NIlmQlMshCEMMrDx3
-         LEJ9Fb9y+F9bLOtrqPFQ07p4zXiLA1tFbD4mnU+5cHobdfroCt9rehpFbgt1DeVNtU+G
-         cyXZM79AcPgsgUPEed9ODLeH0n14OrTVbrJUzxNPSz+thEi1umaCxayYXmLyegjTfds7
-         w1k4hD/aBdMHN4e4zelHwEEEqCnfdJnHIoAdgIlbQsP0O5tJ9n5Qjt/ssncXzjqO26aU
-         p+VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xHXcuy6oLE+Bgau9uGaJ5XFA1fmV6aif/DsLUjpATIk=;
-        b=x1qx39pnxt6RtSi0DDcd/wgmlF8IA7B8ql37V0pTdJOzOST2dKLEJQIjcmveHUCmCH
-         LQ66NWbG+yzCYKaajUzjZnC/jcJ/urCZ900qcke+fBJd2tssCfBpL89+q1/qof6j0T7V
-         2DQ3pSqGnXadfJW0S5RNqkqCP2DetvfynT5ZW7r67gO2xD/8KPXCza+AcLCT4jaPDt9+
-         8BxrbBK4fBoEobJLqC2Cn1Q3PdmQ9Ex6YvzI9kKALz0MSOnbYmIgIwvyGzIlBcsghd4h
-         oo+N1JZh1dBLFJwIkiTBezhOa1XXfgwyX7jQNs0IzvGw6086HIo0FX1tQg3LY5LvqJ5s
-         L6PA==
-X-Gm-Message-State: ANoB5pm4htBhPZg6ojmdUn5e8QtQVRBzlyTv67FxP+/FRydWf1z2NWlE
-	ygasZUdYOoREa4iUYbmfRlQW5fZP0/twiWvbo3U=
-X-Google-Smtp-Source: AA0mqf6ewQ3Wcmzfrxx1kg91XYTrJwaHBigrcJyyV4Am60DQzR9SUx1Bh1B7j8tYPPI+bjGnpvw8TA==
-X-Received: by 2002:a05:6402:2074:b0:46a:bb9e:40d1 with SMTP id bd20-20020a056402207400b0046abb9e40d1mr23210839edb.242.1669817232990;
-        Wed, 30 Nov 2022 06:07:12 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id mh1-20020a170906eb8100b0073d83f80b05sm692454ejb.94.2022.11.30.06.07.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Nov 2022 06:07:12 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Geliang Tang <geliang.tang@suse.com>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 11/11] selftests: mptcp: listener test for in-kernel PM
-Date: Wed, 30 Nov 2022 15:06:33 +0100
-Message-Id: <20221130140637.409926-12-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221130140637.409926-1-matthieu.baerts@tessares.net>
-References: <20221130140637.409926-1-matthieu.baerts@tessares.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA940D50F
+	for <mptcp@lists.linux.dev>; Wed, 30 Nov 2022 23:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669850196; x=1701386196;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=JmOOHyBP5NhEfLW98K/P9P+oKNkVzNFjmBdsfGSkidw=;
+  b=fSsdgfUnIfsnNWeMz3Cp2MYW6mTZCMa/aLnciRPTwdgX7t50dXwk1uQu
+   6heakbsAHpHn41HryuB7VlQiJdPatjSVgwyAoc18NnAdN9vQY4ok+XfYr
+   jRb2o3iGOHfSA5WM2coenQPlNYX6DAiHV9LLpcuivli/AABv0R4j6ife1
+   EdppumsXlw1Kf6RTMR6dbK7jB8lZxtPyi1npYhWWDygBW940ul3s4xHYn
+   XwAz8nBDeqJ4uEht6HfqsDc4p7/rT4UAHZR6paVnwmvP6lfP5T5P8d2Cj
+   0UcnWin1TMFonnjdfOQTZ5tcH1gQHgwo0FQf5zvm6aaAKu404ZfzqcWSf
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="401811096"
+X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
+   d="scan'208";a="401811096"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 15:16:36 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="638173930"
+X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
+   d="scan'208";a="638173930"
+Received: from cman-mobl2.amr.corp.intel.com ([10.212.228.45])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 15:16:36 -0800
+Date: Wed, 30 Nov 2022 15:16:35 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v21 2/7] mptcp: use get_send wrapper
+In-Reply-To: <b09e23224b7b9a98e22d8db9660ab4761ef61f18.1669605531.git.geliang.tang@suse.com>
+Message-ID: <6fedab02-8371-fab5-5dbf-7cd2602f9053@linux.intel.com>
+References: <cover.1669605531.git.geliang.tang@suse.com> <b09e23224b7b9a98e22d8db9660ab4761ef61f18.1669605531.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3645; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=GYVgZ0ERRFhrNn6nnoF5lHfo9sSALlgzV4tXPFj4Gfk=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjh2NpDQZZlZIAutRRRraikXlvQ/bHo9/MRdBkQPGS
- nPdMgDOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY4djaQAKCRD2t4JPQmmgcyohD/
- 91r32UYsZ+REfGf2SMW49ZwRShsLHwi5nPmiCAvVMANuAb2Y3i5PhjtnNnJCQLYLvgWRTQsH4YTNUg
- GQFlLgIUEygrccr5MOayeQePm0fDejaZHUjk5CW39jGzXwvgOqRvS712fn6ozELABLwvGHbSJRJV5y
- 9D9u0mscDRn8umN+CLnKKDdAtgrOXXLUwqYlZ73AqhRy+TVWvzc0fNyXNpfhoHxyzFgM504MzfJlUH
- yS/qOmPKSFW7q20nRSRvkM4h1Uy/7McV7bSLsBXa4zMOruaYE0nYHOiFkOx3Bxk/3ZFvBe1DQlit6g
- MR8ml8BpXoh0BYUKpP0NWZrD4bahTKRaxMjQRl3ozG4brL1ox1RP0Bt69iT56TGf7kV2sNMB3mMr19
- q8UrJTPtBd4B7m1GeDmrGOUtaqjxyjRJXVSQvObhNfIO/V2RV1i9eIbziAgXUvQKslgRdFQz7F5qCB
- 8hVWKG+47EqvJ/FSMdgNjCy9nM1+x3CJXO25g/G6VL3qub3xE1ztOATl1vYR09TpSq1907TsZX5Fp8
- J98/rJGjupG6Q5k1qrnCVYSzZsD4ARUpH9Rm3kigqIyf9vGVnUwC6dVWMQde0yTYmnLNbCxZLHn1uU
- kUCTllIMXHZv7MTbvuurpLPDWpao7kRurC+kTPJg2jRU6+/mXJrna2SOKsrQ==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-From: Geliang Tang <geliang.tang@suse.com>
+On Mon, 28 Nov 2022, Geliang Tang wrote:
 
-This patch adds test coverage for listening sockets created by the
-in-kernel path manager in mptcp_join.sh.
+> This patch adds the multiple subflows support for __mptcp_push_pending
+> and __mptcp_subflow_push_pending. Use get_send() wrapper instead of
+> mptcp_subflow_get_send() in them.
+>
+> Check the subflow scheduled flags to test which subflow or subflows are
+> picked by the scheduler, use them to send data.
+>
+> Move sock_owned_by_me() check and fallback check into get_send() wrapper
+> from mptcp_subflow_get_send().
+>
+> This commit allows the scheduler to set the subflow->scheduled bit in
+> multiple subflows, but it does not allow for sending redundant data.
+> Multiple scheduled subflows will send sequential data on each subflow.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/protocol.c | 118 ++++++++++++++++++++++++++-----------------
+> net/mptcp/sched.c    |  13 +++++
+> 2 files changed, 84 insertions(+), 47 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d8ad68dd504a..65eaf59c9a6f 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1408,15 +1408,6 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+> 	u64 linger_time;
+> 	long tout = 0;
+>
+> -	sock_owned_by_me(sk);
+> -
+> -	if (__mptcp_check_fallback(msk)) {
+> -		if (!msk->first)
+> -			return NULL;
+> -		return __tcp_can_send(msk->first) &&
+> -		       sk_stream_memory_free(msk->first) ? msk->first : NULL;
+> -	}
+> -
+> 	/* pick the subflow with the lower wmem/wspace ratio */
+> 	for (i = 0; i < SSK_MODE_MAX; ++i) {
+> 		send_info[i].ssk = NULL;
+> @@ -1563,47 +1554,58 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> {
+> 	struct sock *prev_ssk = NULL, *ssk = NULL;
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct mptcp_subflow_context *subflow;
+> 	struct mptcp_sendmsg_info info = {
+> 				.flags = flags,
+> 	};
+> 	bool do_check_data_fin = false;
+> +	bool err = false;
 
-It adds the listener event checking in the existing "remove single
-address with port" test. The output looks like this:
+The code below will still quit the "while (mptcp send_head() && !err)" 
+loop if the previous iteration had an error on one subflow (even if 
+multiple subflows were scheduled and there were successful sends).
 
- 003 remove single address with port syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                     add[ ok ] - echo  [ ok ] - pt [ ok ]
-                                     syn[ ok ] - synack[ ok ] - ack[ ok ]
-                                     syn[ ok ] - ack   [ ok ]
-                                     rm [ ok ] - rmsf  [ ok ]   invert
-                                     CREATE_LISTENER 10.0.2.1:10100[ ok ]
-                                     CLOSE_LISTENER 10.0.2.1:10100 [ ok ]
+I suggest removing the "bool err" and instead add
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 58 ++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+ 	int push_count = -1;
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 32a3694c57fb..d11d3d566608 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2513,6 +2513,57 @@ backup_tests()
- 	fi
- }
- 
-+LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
-+LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
-+
-+AF_INET=2
-+AF_INET6=10
-+
-+verify_listener_events()
-+{
-+	local evt=$1
-+	local e_type=$2
-+	local e_family=$3
-+	local e_saddr=$4
-+	local e_sport=$5
-+	local type
-+	local family
-+	local saddr
-+	local sport
-+
-+	if [ $e_type = $LISTENER_CREATED ]; then
-+		stdbuf -o0 -e0 printf "\t\t\t\t\t CREATE_LISTENER %s:%s"\
-+			$e_saddr $e_sport
-+	elif [ $e_type = $LISTENER_CLOSED ]; then
-+		stdbuf -o0 -e0 printf "\t\t\t\t\t CLOSE_LISTENER %s:%s "\
-+			$e_saddr $e_sport
-+	fi
-+
-+	type=$(grep "type:$e_type," $evt |
-+	       sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q')
-+	family=$(grep "type:$e_type," $evt |
-+		 sed --unbuffered -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q')
-+	sport=$(grep "type:$e_type," $evt |
-+		sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
-+	if [ $family ] && [ $family = $AF_INET6 ]; then
-+		saddr=$(grep "type:$e_type," $evt |
-+			sed --unbuffered -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
-+	else
-+		saddr=$(grep "type:$e_type," $evt |
-+			sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
-+	fi
-+
-+	if [ $type ] && [ $type = $e_type ] &&
-+	   [ $family ] && [ $family = $e_family ] &&
-+	   [ $saddr ] && [ $saddr = $e_saddr ] &&
-+	   [ $sport ] && [ $sport = $e_sport ]; then
-+		stdbuf -o0 -e0 printf "[ ok ]\n"
-+		return 0
-+	fi
-+	fail_test
-+	stdbuf -o0 -e0 printf "[fail]\n"
-+}
-+
- add_addr_ports_tests()
- {
- 	# signal address with port
-@@ -2537,7 +2588,8 @@ add_addr_ports_tests()
- 	fi
- 
- 	# single address with port, remove
--	if reset "remove single address with port"; then
-+	# pm listener events
-+	if reset_with_events "remove single address with port"; then
- 		pm_nl_set_limits $ns1 0 1
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
- 		pm_nl_set_limits $ns2 1 1
-@@ -2545,6 +2597,10 @@ add_addr_ports_tests()
- 		chk_join_nr 1 1 1
- 		chk_add_nr 1 1 1
- 		chk_rm_nr 1 1 invert
-+
-+		verify_listener_events $evts_ns1 $LISTENER_CREATED $AF_INET 10.0.2.1 10100
-+		verify_listener_events $evts_ns1 $LISTENER_CLOSED $AF_INET 10.0.2.1 10100
-+		kill_events_pids
- 	fi
- 
- 	# subflow and signal with port, remove
--- 
-2.37.2
+(more info below)
 
+>
+> -	while (mptcp_send_head(sk)) {
+> +	while (mptcp_send_head(sk) && !err) {
+
+Change to
+
+ 	while (mptcp_send_head(sk) && (push_count == 0)) {
+
+> 		int ret = 0;
+>
+> -		prev_ssk = ssk;
+> -		ssk = mptcp_subflow_get_send(msk);
+> -
+> -		/* First check. If the ssk has changed since
+> -		 * the last round, release prev_ssk
+> -		 */
+> -		if (ssk != prev_ssk && prev_ssk)
+> -			mptcp_push_release(prev_ssk, &info);
+> -		if (!ssk)
+> +		if (mptcp_sched_get_send(msk))
+> 			goto out;
+>
+> -		/* Need to lock the new subflow only if different
+> -		 * from the previous one, otherwise we are still
+> -		 * helding the relevant lock
+> -		 */
+> -		if (ssk != prev_ssk)
+> -			lock_sock(ssk);
+
+add:
+
+ 		push_count = 0;
+
+> +		mptcp_for_each_subflow(msk, subflow) {
+> +			if (READ_ONCE(subflow->scheduled)) {
+> +				prev_ssk = ssk;
+> +				ssk = mptcp_subflow_tcp_sock(subflow);
+>
+> -		ret = __subflow_push_pending(sk, ssk, &info);
+> -		if (ret <= 0) {
+> -			if (ret == -EAGAIN)
+> -				continue;
+> -			mptcp_push_release(ssk, &info);
+> -			goto out;
+> +				if (ssk != prev_ssk) {
+> +					/* First check. If the ssk has changed since
+> +					 * the last round, release prev_ssk
+> +					 */
+> +					if (prev_ssk)
+> +						mptcp_push_release(prev_ssk, &info);
+> +
+> +					/* Need to lock the new subflow only if different
+> +					 * from the previous one, otherwise we are still
+> +					 * helding the relevant lock
+> +					 */
+> +					lock_sock(ssk);
+> +				}
+> +
+
+add:
+
+ 				push_count++;
+
+> +				ret = __subflow_push_pending(sk, ssk, &info);
+> +				if (ret <= 0) {
+> +					if (ret != -EAGAIN ||
+> +					    (1 << ssk->sk_state) &
+> +					     (TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSE))
+> +						err = true;
+
+replace with:
+
+ 						push_count--;
+
+This way push_count will be a positive number at the end of the loop 
+iteration if any __subflow_push_pending() calls succeeded, and the loop 
+will continue sending on the working subflow(s).
+
+- Mat
+
+> +					continue;
+> +				}
+> +				do_check_data_fin = true;
+> +				msk->last_snd = ssk;
+> +				mptcp_subflow_set_scheduled(subflow, false);
+> +			}
+> 		}
+> -		do_check_data_fin = true;
+> 	}
+>
+> +out:
+> 	/* at this point we held the socket lock for the last subflow we used */
+> 	if (ssk)
+> 		mptcp_push_release(ssk, &info);
+>
+> -out:
+> 	/* ensure the rtx timer is running */
+> 	if (!mptcp_timer_pending(sk))
+> 		mptcp_reset_timer(sk);
+> @@ -1614,33 +1616,55 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
+> {
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct mptcp_subflow_context *subflow;
+> 	struct mptcp_sendmsg_info info = {
+> 		.data_lock_held = true,
+> 	};
+> -	struct sock *xmit_ssk;
+> +	bool err = false;
+> 	int copied = 0;
+>
+> 	info.flags = 0;
+> -	while (mptcp_send_head(sk)) {
+> +	while (mptcp_send_head(sk) && !err) {
+> 		int ret = 0;
+>
+> 		/* check for a different subflow usage only after
+> 		 * spooling the first chunk of data
+> 		 */
+> -		xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
+> -		if (!xmit_ssk)
+> -			goto out;
+> -		if (xmit_ssk != ssk) {
+> -			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk),
+> -					       MPTCP_DELEGATE_SEND);
+> -			goto out;
+> +		if (first) {
+> +			ret = __subflow_push_pending(sk, ssk, &info);
+> +			first = false;
+> +			if (ret <= 0)
+> +				break;
+> +			copied += ret;
+> +			msk->last_snd = ssk;
+> +			continue;
+> 		}
+>
+> -		ret = __subflow_push_pending(sk, ssk, &info);
+> -		first = false;
+> -		if (ret <= 0)
+> -			break;
+> -		copied += ret;
+> +		if (mptcp_sched_get_send(msk))
+> +			goto out;
+> +
+> +		mptcp_for_each_subflow(msk, subflow) {
+> +			if (READ_ONCE(subflow->scheduled)) {
+> +				struct sock *xmit_ssk = mptcp_subflow_tcp_sock(subflow);
+> +
+> +				if (xmit_ssk != ssk) {
+> +					mptcp_subflow_delegate(subflow,
+> +							       MPTCP_DELEGATE_SEND);
+> +					msk->last_snd = ssk;
+> +					mptcp_subflow_set_scheduled(subflow, false);
+> +					goto out;
+> +				}
+> +
+> +				ret = __subflow_push_pending(sk, ssk, &info);
+> +				if (ret <= 0) {
+> +					err = true;
+> +					continue;
+> +				}
+> +				copied += ret;
+> +				msk->last_snd = ssk;
+> +				mptcp_subflow_set_scheduled(subflow, false);
+> +			}
+> +		}
+> 	}
+>
+> out:
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index c4006f142f10..18518a81afb3 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -118,6 +118,19 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+> 	struct mptcp_subflow_context *subflow;
+> 	struct mptcp_sched_data data;
+>
+> +	sock_owned_by_me((const struct sock *)msk);
+> +
+> +	/* the following check is moved out of mptcp_subflow_get_send */
+> +	if (__mptcp_check_fallback(msk)) {
+> +		if (msk->first &&
+> +		    __tcp_can_send(msk->first) &&
+> +		    sk_stream_memory_free(msk->first)) {
+> +			mptcp_subflow_set_scheduled(mptcp_subflow_ctx(msk->first), true);
+> +			return 0;
+> +		}
+> +		return -EINVAL;
+> +	}
+> +
+> 	mptcp_for_each_subflow(msk, subflow) {
+> 		if (READ_ONCE(subflow->scheduled))
+> 			return 0;
+> -- 
+> 2.35.3
+>
+>
+>
+
+--
+Mat Martineau
+Intel
