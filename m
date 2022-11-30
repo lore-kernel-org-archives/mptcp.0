@@ -1,111 +1,136 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D9F3214
-	for <mptcp@lists.linux.dev>; Wed, 30 Nov 2022 13:48:22 +0000 (UTC)
-Received: by mail-pl1-f182.google.com with SMTP id g10so16710032plo.11
-        for <mptcp@lists.linux.dev>; Wed, 30 Nov 2022 05:48:22 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E4B63A8
+	for <mptcp@lists.linux.dev>; Wed, 30 Nov 2022 14:06:56 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id e27so41584787ejc.12
+        for <mptcp@lists.linux.dev>; Wed, 30 Nov 2022 06:06:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J24aZiDdviha9UIm2lm7zN5t+uqPHg9R7KhN/IVznJU=;
-        b=q7yV6sl2gvNvqkQ6FahPdy4Pus4kPNl8OLrfaUuYWpE27gXgROJYGQePxACfBWwSFY
-         wiVYC5BB3Rsu4lWaMv7LIBpsyJRM112RRVZQBkeGO2iu708M5CfQN/GLhxHLmo1RF2tw
-         grfQHg3UABl2DNFlKI8fZxy87taK3aE+kAf64adtxGhILSZVXiggP4NthsdH3GnSYMwb
-         CZWL7Ij1V4oWyXI9Uog3No6JoiGCuOvEqObjYIMyvo4LUekBzOf3HkrKEF26fcKB3+RB
-         OxiA5h1C6Qp68sLy44yi6sICbgZIl4EJnrIhw1Qp/0zL9uko357m6mo0kAf1yd+/QiJ1
-         UXIg==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rt1ilKFDzEzlhdKfYbR+znkHTtNyBE/kTERl0l5cx8w=;
+        b=XGgNGGxtOChAIQsnl1Rw6eAqP+KQCn5XAKjAhxawLhkHMNZRCws2UYSArJhydm3uAO
+         KT5dcraiYYrJavkOmIw3396ajGj1HsM6sA3eM9u1GZXDiFZ9oYIvlyW9KYGTH6D1Nqdl
+         fLAHntstcW3ONz0ZqIBI7ssM8K+Z+5peQEg1SvAEj0F+OWCoAsb8rTyPGA5wrZ5iZNpp
+         cD9T5CEUwUfcVd0W612EAQPva43vpQOTnrATCiBrruJGtuVgQLgU5w5I+2Ci93qRq/1U
+         rLuEM6lSG5SrBusRnRc4B1Wxmr9bRMTsc7WoFxpJ42SKM8mH2ta1VsZ42y6z4ZfMGn24
+         M8Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=J24aZiDdviha9UIm2lm7zN5t+uqPHg9R7KhN/IVznJU=;
-        b=FGDmHvAHpzvTE+RUKvO9HfDN2bHbZ1glVFlOIrLTSzqjPiKogXEsSGuOg/UCyGW6G5
-         atDwAvu6Wjj1TVlKnbQEAp2Zf3cqav5Dh0FYcHJJaDv6bj6u1J4SZKOERuLueLGegyzD
-         UOt7d7x+MposvV2WJuwKsnmw16sTeBBNWE46EFuLqk+yHjPYuE3jiBGjpXWtAV1JMdrV
-         8U6c0Oz1NmACJ8HgfiVgBhx3PYN9Rp+hayDURzuoOrt6UxB2dbhRC0taSbys3BC6ItbL
-         IOLMkZHh8yIZtSGTi8mL4lioS1/PNpeIYtb3raCkWt2lGTcbSsdeMGi9ImWYU6skq7Oe
-         nDQA==
-X-Gm-Message-State: ANoB5pnZzVsEovNy3uqc4DP5mH63WW70VqaQWtSERWl3XG4m/fmHueEL
-	rDiIEWfkPBHlR5NJUvX5yEkEt6HIGzHB
-X-Google-Smtp-Source: AA0mqf7ppqZ8hXWIas6JMyTZDx2g9FW4XNJyBhuITHUF57FPyYlXWw6NsRhuDWXFLaI3KkyGLoUMXA==
-X-Received: by 2002:a17:903:c5:b0:187:4467:7aba with SMTP id x5-20020a17090300c500b0018744677abamr54143988plc.61.1669816101728;
-        Wed, 30 Nov 2022 05:48:21 -0800 (PST)
-Received: from [127.0.0.1] ([20.245.54.129])
-        by smtp.gmail.com with ESMTPSA id j6-20020a170903028600b00189758e2babsm1479575plr.125.2022.11.30.05.48.20
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rt1ilKFDzEzlhdKfYbR+znkHTtNyBE/kTERl0l5cx8w=;
+        b=pRdC8oDL37fLqBz+ly9IY8QrJSGwa7MlXVPnhPXiRriQVtAvBPkwk0ERF7Ua1/EuHh
+         IdRUI7zJOA357CPAL0IM6j9Gw8NORZSx4HC0CJa8+3uN5y7lfkvaHASic0cPazItiFAd
+         djg6LipEXTCD9+NbfQFpEJ577iF27HKHvPQN58tE50VazoTJ291Us6k4Zb6dC0JKkufH
+         C6Xs1yfgE+Kpf32w41vL+HesQMgrvLb3VQGLV8BVHXenctM7MfThN+MIoY+rn7cva5uV
+         5rOhRhsV+SAlL1WqGYaJdpy5TVLghUOwteigyst5ID3fyLOPnYVIeSRRNhsmyFyQpE6g
+         0AsQ==
+X-Gm-Message-State: ANoB5plfeuila3VoS3tKdX9dnpbEqKvFdPtfALKDU0rTMyTUxj6FwLkI
+	bbKB8mlgqEfm32M3H4rsBQ2WFQ==
+X-Google-Smtp-Source: AA0mqf5rBUQp06bOPeb2P50vGhfAiW493UUbrMxL6CqiT7DSfI3HjTNhhwFvxgv3FyimqSG/D/nYcQ==
+X-Received: by 2002:a17:906:79c4:b0:778:e3e2:8311 with SMTP id m4-20020a17090679c400b00778e3e28311mr38419262ejo.342.1669817214914;
+        Wed, 30 Nov 2022 06:06:54 -0800 (PST)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id mh1-20020a170906eb8100b0073d83f80b05sm692454ejb.94.2022.11.30.06.06.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Nov 2022 05:48:21 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221130094448.4119946-4-matthieu.baerts@tessares.net>
-References: <20221130094448.4119946-4-matthieu.baerts@tessares.net>
-Subject: Re: mptcp: use proper req destructor for IPv6: Tests Results
-Message-ID: <1fac7c86-7e6e-0a3a-39b4-c9d39c5302bf@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 30 Nov 2022 13:48:20 +0000
+        Wed, 30 Nov 2022 06:06:54 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next 00/11] mptcp: PM listener events + selftests cleanup
+Date: Wed, 30 Nov 2022 15:06:22 +0100
+Message-Id: <20221130140637.409926-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2590; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=pl1o6f40D2/19YlccetSq1+bjdqP611/9GCIe0J7Hbs=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjh2Nn+X5cqZr4yFarrOLufGxDeYDd/qEfd0Z/hsBE
+ U9Ou3IKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY4djZwAKCRD2t4JPQmmgc/ZkEA
+ CrhsRPYiY1HY18bBWROwXSiegcbNbajaWlgMHWIPeBX/HUhbweqo45mTB2AQJ0LfdDFCHZ/jLk5KaB
+ bUTbXhGfBoV5BRJYtZHqnYnFSh3SoNFAlacDxG8AZQX3ZgqvHWY7eap9mK5cympe63LNxfRUNiVUsC
+ pKMdP22IPNNlpa7ZZbWBcEtaExeJ2wZryNdMIHEjuyZ07oxoAquQs+yv3kWcL57UcNdzi58R6vbj9t
+ O19eTfT6TA0KApwz9zsHIFuZPhwdS4Pj7KZxAYyACEncduMx+UcHjxLMJzDz0Cl3FUzwFpovdHsjl0
+ hp5rqgmYCRUiPYmLwG6QggbHvK72/97znq3LvymB0tMZjFKN6t8D57j8RriSjaM/KTnnyXk5CS+W9x
+ mjKV41zTlHmH7S8/OHu8OYzL8MJVS20dWJVe19MyDFKD1f8tY47nU8HdtE4RFpMns2V8OBaToVpcy4
+ lr/L8fs0qEpGuOJy0zKXsbGXa4j8vGs1ViAHMD93OXj2Xe/lvpEh3uJdgQn+zwAxypWKWxQ5ZaEtwA
+ /po4jh+7S1HNJyTMsfLouZLAF2dCNegSK/fJ47FhmQTh0mXVSYL68MoMnuRMTtcrYI3Yk+EX6LeTqd
+ gT4tfSYxNB/7xdA+mfM/JNKcklq77kSM/MNV0k8UmpPuw4xvRGuZ0Qnzrc2w==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+Thanks to the patch 6/11, the MPTCP path manager now sends Netlink events when
+MPTCP listening sockets are created and closed. The reason why it is needed is
+explained in the linked ticket [1]:
 
-Thank you for your modifications, that's great!
+  MPTCP for Linux, when not using the in-kernel PM, depends on the userspace PM
+  to create extra listening sockets before announcing addresses and ports. Let's
+  call these "PM listeners".
 
-Our CI did some validations and here is its report:
+  With the existing MPTCP netlink events, a userspace PM can create PM listeners
+  at startup time, or in response to an incoming connection. Creating sockets in
+  response to connections is not optimal: ADD_ADDRs can't be sent until the
+  sockets are created and listen()ed, and if all connections are closed then it
+  may not be clear to the userspace PM daemon that PM listener sockets should be
+  cleaned up.
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/5358507365498880
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5358507365498880/summary/summary.txt
+  Hence this feature request: to add MPTCP netlink events for listening socket
+  close & create, so PM listening sockets can be managed based on application
+  activity.
 
-- KVM Validation: debug:
-  - Success! =E2=9C=85:
-  - Task: =
-https://cirrus-ci.com/task/6128572050440192
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6128572050440192/summary/summary.txt
+  [1] https://github.com/multipath-tcp/mptcp_net-next/issues/313
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/bc00aef00e2a
+Selftests for these new Netlink events have been added in patches 9,11/11.
 
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+The remaining patches introduce different cleanups and small improvements in
+MPTCP selftests to ease the maintenance and the addition of new tests.
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+Geliang Tang (6):
+  mptcp: add pm listener events
+  selftests: mptcp: enhance userspace pm tests
+  selftests: mptcp: make evts global in userspace_pm
+  selftests: mptcp: listener test for userspace PM
+  selftests: mptcp: make evts global in mptcp_join
+  selftests: mptcp: listener test for in-kernel PM
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matthieu Baerts (5):
+  selftests: mptcp: run mptcp_inq from a clean netns
+  selftests: mptcp: removed defined but unused vars
+  selftests: mptcp: uniform 'rndh' variable
+  selftests: mptcp: clearly declare global ns vars
+  selftests: mptcp: declare var as local
+
+ include/uapi/linux/mptcp.h                    |   9 +
+ net/mptcp/pm_netlink.c                        |  57 ++++
+ net/mptcp/protocol.c                          |   3 +
+ net/mptcp/protocol.h                          |   2 +
+ tools/testing/selftests/net/mptcp/diag.sh     |   1 +
+ .../selftests/net/mptcp/mptcp_connect.sh      |   6 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 118 +++++--
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  69 ++--
+ .../selftests/net/mptcp/simult_flows.sh       |   4 +-
+ .../selftests/net/mptcp/userspace_pm.sh       | 298 ++++++++++--------
+ 10 files changed, 375 insertions(+), 192 deletions(-)
+
+
+base-commit: 91a7de85600d5dfa272cea3cef83052e067dc0ab
+-- 
+2.37.2
+
