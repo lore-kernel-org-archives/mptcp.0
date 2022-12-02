@@ -1,126 +1,184 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684DE29A0
-	for <mptcp@lists.linux.dev>; Fri,  2 Dec 2022 14:36:13 +0000 (UTC)
-Received: by mail-qt1-f170.google.com with SMTP id cg5so5302605qtb.12
-        for <mptcp@lists.linux.dev>; Fri, 02 Dec 2022 06:36:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/zs2Gs0jko/0Ar4Z7er3ktGoOa84bMEbml6tUIKpkUI=;
-        b=GA54z2mrAoic/DvnjqBXt7Fzizovb2AlJg/sbU9UuKaYl8Xsf2NUrXkhbNFjMhh5dt
-         OoZkElRLPArBV6u7xxgqQ610/g5XyGiSLt1BA5zjCcF3msEVPnwS7fWU2yhEDCDRpdc6
-         SXg6s4UfGEag0KRZ7W7BAXHUqc7aZjiRN4JWMkIzbeeGLVXAHSk740CQR6SwcyGM0sVn
-         V+573+eYg8JZY2Brnq8xySqbUYYfX3Oldgs2vLFN4EZfqjJVmgIZdk6gqtjxhoVi4884
-         ZUlbCTJNfy+HGLZZ0ptqH6mVVXwjqzPeJbIc53j9d4wrnBcULT8nCm0mO5Cy4o9GKxvx
-         tIng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/zs2Gs0jko/0Ar4Z7er3ktGoOa84bMEbml6tUIKpkUI=;
-        b=2Rn0p4rHECkeuWE9ZEQAtzJ7gkRgA7CDFi1zMTTvYdROm1+2mha4lX42r6FH22or1/
-         34AbtpwHQbR45vzS079UWQ8x1sG2CjR/mxHNSRbgot8TVPq2WwJBRVeAn31DxcnwaRlm
-         Z//w5qYHzU3uuqPvTNU2viiK62SCJLzTuiO/zfnRmRRsQQMLZaz7ciJVBe+K4ecnFDpf
-         wKMKex0Qs5M0oTydRfnZRlPiT/5aoEbh1OrQADEs5KlIzY6/SXJU2xu1RWZDDfit5Sgq
-         /t1BhhcA6PvLSOIhOAXXp8ZvGWMaSqHWqDb8JN5JX6jJ9y98p64ibYg8st0Fx9evM2+S
-         aIhA==
-X-Gm-Message-State: ANoB5pneVEPPqoaB56ggAs2q8YLfeXC26kAyC8H3mDDcqJH6R2HzXAWf
-	roqAKNYx2IjatxSS0KFoQg==
-X-Google-Smtp-Source: AA0mqf4gAFm6FipD23gx6nPlpsEySKmZf0in4EccmLxehnzoxFE1EuWwkG4c+L4E+zA8fGDbz3L8zA==
-X-Received: by 2002:ac8:110c:0:b0:3a4:f665:3619 with SMTP id c12-20020ac8110c000000b003a4f6653619mr66706009qtj.669.1669991772271;
-        Fri, 02 Dec 2022 06:36:12 -0800 (PST)
-Received: from [127.0.0.1] ([20.169.238.199])
-        by smtp.gmail.com with ESMTPSA id w3-20020ac87183000000b0039cd4d87aacsm4194736qto.15.2022.12.02.06.36.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 06:36:11 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <409d2e76d1dd4e35f99e0d38083fbc2a64406859.1669987293.git.geliang.tang@suse.com>
-References:
- <409d2e76d1dd4e35f99e0d38083fbc2a64406859.1669987293.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: Add bpf_red test: Tests Results
-Message-ID: <cb631317-5406-c1ba-4077-ab1d98459e55@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 02 Dec 2022 14:36:11 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A213539E
+	for <mptcp@lists.linux.dev>; Fri,  2 Dec 2022 18:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1670005667;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7I+1mNGLw5rapi+FvPXrjGVAUcAmFrjWuNVQYRXLyZc=;
+	b=S2IiqH1by4IC+G4OwPcvhC+OuyZ3Yo8L926/3n0D7eetK/6uaYmWWBl/wGws2Sfz2Op9xH
+	wnEBF+r137AZ54PUaAB0378LSNI9V9knjoC2lcJveRv1fIRLNUbjqHaPWkUgy8PS8MRa5u
+	ES9NPDWt9boWt5FOMLIkrPprs246/Uw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-394-r9PwXXwaOKmI718CRTPwog-1; Fri, 02 Dec 2022 13:27:46 -0500
+X-MC-Unique: r9PwXXwaOKmI718CRTPwog-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CDA7B811E75
+	for <mptcp@lists.linux.dev>; Fri,  2 Dec 2022 18:27:45 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.80])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5FE59477F55
+	for <mptcp@lists.linux.dev>; Fri,  2 Dec 2022 18:27:45 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] mptcp: fix deadlock in fastopen error path.
+Date: Fri,  2 Dec 2022 19:27:15 +0100
+Message-Id: <21c1eac505e089b2628539dc5e4d9ab2ed1379f8.1670005632.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Geliang,
+MatM reported a deadlock at fastopening time:
 
-Thank you for your modifications, that's great!
+INFO: task syz-executor.0:11454 blocked for more than 143 seconds.
+      Tainted: G S                 6.1.0-rc5-03226-gdb0157db5153 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor.0  state:D stack:25104 pid:11454 ppid:424    flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5191 [inline]
+ __schedule+0x5c2/0x1550 kernel/sched/core.c:6503
+ schedule+0xe8/0x1c0 kernel/sched/core.c:6579
+ __lock_sock+0x142/0x260 net/core/sock.c:2896
+ lock_sock_nested+0xdb/0x100 net/core/sock.c:3466
+ __mptcp_close_ssk+0x1a3/0x790 net/mptcp/protocol.c:2328
+ mptcp_destroy_common+0x16a/0x650 net/mptcp/protocol.c:3171
+ mptcp_disconnect+0xb8/0x450 net/mptcp/protocol.c:3019
+ __inet_stream_connect+0x897/0xa40 net/ipv4/af_inet.c:720
+ tcp_sendmsg_fastopen+0x3dd/0x740 net/ipv4/tcp.c:1200
+ mptcp_sendmsg_fastopen net/mptcp/protocol.c:1682 [inline]
+ mptcp_sendmsg+0x128a/0x1a50 net/mptcp/protocol.c:1721
+ inet6_sendmsg+0x11f/0x150 net/ipv6/af_inet6.c:663
+ sock_sendmsg_nosec net/socket.c:714 [inline]
+ sock_sendmsg+0xf7/0x190 net/socket.c:734
+ ____sys_sendmsg+0x336/0x970 net/socket.c:2476
+ ___sys_sendmsg+0x122/0x1c0 net/socket.c:2530
+ __sys_sendmmsg+0x18d/0x460 net/socket.c:2616
+ __do_sys_sendmmsg net/socket.c:2645 [inline]
+ __se_sys_sendmmsg net/socket.c:2642 [inline]
+ __x64_sys_sendmmsg+0x9d/0x110 net/socket.c:2642
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x38/0x90 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x63/0xcd
+RIP: 0033:0x7f5920a75e7d
+RSP: 002b:00007f59201e8028 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 00007f5920bb4f80 RCX: 00007f5920a75e7d
+RDX: 0000000000000001 RSI: 0000000020002940 RDI: 0000000000000005
+RBP: 00007f5920ae7593 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000020004050 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f5920bb4f80 R15: 00007f59201c8000
+ </TASK>
 
-Our CI did some validations and here is its report:
+In the error path, tcp_sendmsg_fastopen() ends-up calling
+mptcp_disconnect(), and the latter tries to close each
+subflow, acquring the socket lock on each of them.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4751096581718016
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4751096581718016/summary/summary.txt
+At fastopen time, we have a single subflow, and such subflow
+socket lock is already held by the called, causing the deadlock.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5876996488560640
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5876996488560640/su=
-mmary/summary.txt
+We already track the 'fastopen in progress' status inside the msk
+socket. Use it to address the issue, making mptcp_disconnect() a
+no op when invoked from the fastopen (error) path and doing the
+relevant cleanup after releasing the subflow socket lock.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Critical: 1 Call Trace(s) =E2=9D=8C:
-  - Task: https://cirrus-ci.=
-com/task/5314046535139328
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5314046535139328/summary/summary.txt
+While at the above rename the fastopen status bit to something
+more meaningful.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6439946441981952
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6439946441981952/su=
-mmary/summary.txt
+Fixes: https://github.com/multipath-tcp/mptcp_net-next/issues/321
+Reported-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Fixes: fa9e57468aa1 ("mptcp: fix abba deadlock on fastopen")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 19 +++++++++++++++----
+ net/mptcp/protocol.h |  2 +-
+ 2 files changed, 16 insertions(+), 5 deletions(-)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/c9b94d2472b1
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index adf10c6c7a0f..9b20c7f3c9ab 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1668,6 +1668,8 @@ static void mptcp_set_nospace(struct sock *sk)
+ 	set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
+ }
+ 
++static int mptcp_disconnect(struct sock *sk, int flags);
++
+ static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msghdr *msg,
+ 				  size_t len, int *copied_syn)
+ {
+@@ -1678,9 +1680,9 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msgh
+ 	lock_sock(ssk);
+ 	msg->msg_flags |= MSG_DONTWAIT;
+ 	msk->connect_flags = O_NONBLOCK;
+-	msk->is_sendmsg = 1;
++	msk->fastopening = 1;
+ 	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
+-	msk->is_sendmsg = 0;
++	msk->fastopening = 0;
+ 	msg->msg_flags = saved_flags;
+ 	release_sock(ssk);
+ 
+@@ -1694,7 +1696,8 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msgh
+ 		 */
+ 		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret != -EINTR)
+ 			*copied_syn = 0;
+-	}
++	} else if (ret)
++		mptcp_disconnect(sk, 0);
+ 
+ 	return ret;
+ }
+@@ -3005,6 +3008,14 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
++	/* We are on the fastopen error path. We can't call straigt into the
++	 * subflows cleanup code due to lock nesting (we are already under
++	 * msk->firstsocket lock). Do nothing and leave the cleanup to the
++	 * caller.
++	 */
++	if (msk->fastopening)
++		return 0;
++
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+ 
+ 	mptcp_stop_timer(sk);
+@@ -3552,7 +3563,7 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ 	/* if reaching here via the fastopen/sendmsg path, the caller already
+ 	 * acquired the subflow socket lock, too.
+ 	 */
+-	if (msk->is_sendmsg)
++	if (msk->fastopening)
+ 		err = __inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags, 1);
+ 	else
+ 		err = inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 224f03a899c5..a9ff7028fad8 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -294,7 +294,7 @@ struct mptcp_sock {
+ 	u8		recvmsg_inq:1,
+ 			cork:1,
+ 			nodelay:1,
+-			is_sendmsg:1;
++			fastopening:1;
+ 	int		connect_flags;
+ 	struct work_struct work;
+ 	struct sk_buff  *ooo_last_skb;
+-- 
+2.38.1
 
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
