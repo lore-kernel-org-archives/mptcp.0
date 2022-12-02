@@ -1,205 +1,127 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA07110C
-	for <mptcp@lists.linux.dev>; Fri,  2 Dec 2022 18:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670007258; x=1701543258;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=PVJ9yGwnKuJDZUwexnazq5i/fnp5ELGQOzfczpVM2YI=;
-  b=cKpZLcCXeTprPzeLhAaSQxu3LZIayjmsU3kiwDXgIBH5w6tr1XOTdxLP
-   p+NcobKV5vOFiweLguZ/WrS/iiYbYnchQWiHtoVbcX+oNHxThoL+fHssS
-   kwc/cCCwzUor8Yf3I7zHpcKIXKnQyT+c7EPls5BbnjA1TLZEBHeGj/17Z
-   pcijYaabbWGhmFMoIYawTUi5nTWCc4Jh1qHjY/U35OZyLTBh2cCTiLFiv
-   lEPiP8Awi9rMC0vm7oYSJfXSwzThQyHFdvxGfXJm+g4+2IWYZm8GhUsoi
-   O5IJzkf25/RXhxgucb9+3ZsbmfnivDH3Nsg4onoalx3Tbvp9NuoS5Z9IK
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="317876185"
-X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
-   d="scan'208";a="317876185"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 10:54:17 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="708580911"
-X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
-   d="scan'208";a="708580911"
-Received: from zamamohx-mobl.amr.corp.intel.com ([10.209.22.121])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 10:54:17 -0800
-Date: Fri, 2 Dec 2022 10:54:16 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A158B4C8E
+	for <mptcp@lists.linux.dev>; Fri,  2 Dec 2022 19:32:46 +0000 (UTC)
+Received: by mail-io1-f44.google.com with SMTP id n188so3704674iof.8
+        for <mptcp@lists.linux.dev>; Fri, 02 Dec 2022 11:32:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3qxPS2JUBYZ49BeIodutrE+4nJMauF95fNcOYivtZ8E=;
+        b=lau58CDCN4LHyhbL3brWckOCbUIDRdW/xqN3n0kh2JD8oU6bF+6ySh+cLLALKaWjLY
+         TrERge6ysaol9ElpiAaOubS0trtuAQ/GjbsduoBAz9hktVEP2kW+EJrG8gYwVeMHvXOu
+         thyJLJWxFNqLOjveLuWvDrCQY2fMBqpk5FL0Z9J41I2zUMxnnGYYkIdJgqySyLwXyNIb
+         x7OxsiCtSbmw23jreBnZHii06otZpVo44pakjeUhUkqeq8SH7ognNA25fVF4CUgs/k3H
+         PErRRb13UEl2avnB5A/eru1tEfK++EEgRjs7sh/Qc31bLn8bn9+T4pNmo46vfVW5vmue
+         cIfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3qxPS2JUBYZ49BeIodutrE+4nJMauF95fNcOYivtZ8E=;
+        b=hFTWaz1zw3Dqlw5Ava0zowRKLZbf1pP0dkJCJSgWD66xztHo1BULfSWjkFM5z2LTzj
+         oSjcUb43q2RKZzIzJSqqxUIz6Us03uMRzSrMBTg1Pqh3zAlNGYaddgD3E8LKkMUdCRci
+         97uBIEMu/NPSxTCQ+rA3hokfuc82FoTktxCoN5be17an8P6D7UV2Fn4A2DStT6lBajMZ
+         kV//W23GZQDhZd4GwAdbSnmHgvfqAMbDSOvzEiTyjvag2RdKAZM8uJMDPGzjxvpRn2Vo
+         rDV/G5Z5E83k3MHtEv3aM29T/XoXF4dxhg4tJ2EurWQicKwkzpRq34bxIlPQe/xx5gUQ
+         1L7Q==
+X-Gm-Message-State: ANoB5pl5Hr7pUvqRCrcSxOm1Qu8KrKyAt/dFM44KWc7ImXsY+jRY8pBy
+	jaCJ8oppeXQ09LtYIBiHXw==
+X-Google-Smtp-Source: AA0mqf5ile2myI2kshspoRTa+SBVy/I038+CC5VKlQ34cr/BBTgVH5T7HI7gkZB5L4ZGiHbM4p9oPw==
+X-Received: by 2002:a02:cd12:0:b0:389:cc3d:51da with SMTP id g18-20020a02cd12000000b00389cc3d51damr16927561jaq.303.1670009565691;
+        Fri, 02 Dec 2022 11:32:45 -0800 (PST)
+Received: from [127.0.0.1] ([104.208.39.39])
+        by smtp.gmail.com with ESMTPSA id y5-20020a5d94c5000000b006c05ff4cd91sm2965964ior.35.2022.12.02.11.32.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Dec 2022 11:32:45 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] mptcp: fix deadlock in fastopen error path.
-In-Reply-To: <21c1eac505e089b2628539dc5e4d9ab2ed1379f8.1670005632.git.pabeni@redhat.com>
-Message-ID: <e0f957f0-f990-d287-3430-921084869fcb@linux.intel.com>
-References: <21c1eac505e089b2628539dc5e4d9ab2ed1379f8.1670005632.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <21c1eac505e089b2628539dc5e4d9ab2ed1379f8.1670005632.git.pabeni@redhat.com>
+References:
+ <21c1eac505e089b2628539dc5e4d9ab2ed1379f8.1670005632.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix deadlock in fastopen error path.: Tests Results
+Message-ID: <68462f55-f41e-a232-7487-e47a4d72580a@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 02 Dec 2022 19:32:44 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Fri, 2 Dec 2022, Paolo Abeni wrote:
+Hi Paolo,
 
-> MatM reported a deadlock at fastopening time:
->
-> INFO: task syz-executor.0:11454 blocked for more than 143 seconds.
->      Tainted: G S                 6.1.0-rc5-03226-gdb0157db5153 #1
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> task:syz-executor.0  state:D stack:25104 pid:11454 ppid:424    flags:0x00004006
-> Call Trace:
-> <TASK>
-> context_switch kernel/sched/core.c:5191 [inline]
-> __schedule+0x5c2/0x1550 kernel/sched/core.c:6503
-> schedule+0xe8/0x1c0 kernel/sched/core.c:6579
-> __lock_sock+0x142/0x260 net/core/sock.c:2896
-> lock_sock_nested+0xdb/0x100 net/core/sock.c:3466
-> __mptcp_close_ssk+0x1a3/0x790 net/mptcp/protocol.c:2328
-> mptcp_destroy_common+0x16a/0x650 net/mptcp/protocol.c:3171
-> mptcp_disconnect+0xb8/0x450 net/mptcp/protocol.c:3019
-> __inet_stream_connect+0x897/0xa40 net/ipv4/af_inet.c:720
-> tcp_sendmsg_fastopen+0x3dd/0x740 net/ipv4/tcp.c:1200
-> mptcp_sendmsg_fastopen net/mptcp/protocol.c:1682 [inline]
-> mptcp_sendmsg+0x128a/0x1a50 net/mptcp/protocol.c:1721
-> inet6_sendmsg+0x11f/0x150 net/ipv6/af_inet6.c:663
-> sock_sendmsg_nosec net/socket.c:714 [inline]
-> sock_sendmsg+0xf7/0x190 net/socket.c:734
-> ____sys_sendmsg+0x336/0x970 net/socket.c:2476
-> ___sys_sendmsg+0x122/0x1c0 net/socket.c:2530
-> __sys_sendmmsg+0x18d/0x460 net/socket.c:2616
-> __do_sys_sendmmsg net/socket.c:2645 [inline]
-> __se_sys_sendmmsg net/socket.c:2642 [inline]
-> __x64_sys_sendmmsg+0x9d/0x110 net/socket.c:2642
-> do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-> do_syscall_64+0x38/0x90 arch/x86/entry/common.c:80
-> entry_SYSCALL_64_after_hwframe+0x63/0xcd
-> RIP: 0033:0x7f5920a75e7d
-> RSP: 002b:00007f59201e8028 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-> RAX: ffffffffffffffda RBX: 00007f5920bb4f80 RCX: 00007f5920a75e7d
-> RDX: 0000000000000001 RSI: 0000000020002940 RDI: 0000000000000005
-> RBP: 00007f5920ae7593 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000020004050 R11: 0000000000000246 R12: 0000000000000000
-> R13: 000000000000000b R14: 00007f5920bb4f80 R15: 00007f59201c8000
-> </TASK>
->
-> In the error path, tcp_sendmsg_fastopen() ends-up calling
-> mptcp_disconnect(), and the latter tries to close each
-> subflow, acquring the socket lock on each of them.
->
-> At fastopen time, we have a single subflow, and such subflow
-> socket lock is already held by the called, causing the deadlock.
->
-> We already track the 'fastopen in progress' status inside the msk
-> socket. Use it to address the issue, making mptcp_disconnect() a
-> no op when invoked from the fastopen (error) path and doing the
-> relevant cleanup after releasing the subflow socket lock.
->
-> While at the above rename the fastopen status bit to something
-> more meaningful.
->
-> Fixes: https://github.com/multipath-tcp/mptcp_net-next/issues/321
+Thank you for your modifications, that's great!
 
-"Closes:" ?
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 2 failed test(s): packetdrill_fastopen selftest_simult_flows =
+=F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6580586486693888
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6580586486693888/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4750999138074624
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4750999138074624/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5313949091495936
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5313949091495936/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_fastopen - Critical: 1 Call =
+Trace(s) =E2=9D=8C:
+  - Task: https://cirrus-ci.com/task/5876899044917248
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5876899044917248/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/797ad66382dc
 
 
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
-> Reported-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> Fixes: fa9e57468aa1 ("mptcp: fix abba deadlock on fastopen")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/protocol.c | 19 +++++++++++++++----
-> net/mptcp/protocol.h |  2 +-
-> 2 files changed, 16 insertions(+), 5 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index adf10c6c7a0f..9b20c7f3c9ab 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1668,6 +1668,8 @@ static void mptcp_set_nospace(struct sock *sk)
-> 	set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
-> }
->
-> +static int mptcp_disconnect(struct sock *sk, int flags);
-> +
-> static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msghdr *msg,
-> 				  size_t len, int *copied_syn)
-> {
-> @@ -1678,9 +1680,9 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msgh
-> 	lock_sock(ssk);
-> 	msg->msg_flags |= MSG_DONTWAIT;
-> 	msk->connect_flags = O_NONBLOCK;
-> -	msk->is_sendmsg = 1;
-> +	msk->fastopening = 1;
-> 	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
-> -	msk->is_sendmsg = 0;
-> +	msk->fastopening = 0;
-> 	msg->msg_flags = saved_flags;
-> 	release_sock(ssk);
->
-> @@ -1694,7 +1696,8 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msgh
-> 		 */
-> 		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret != -EINTR)
-> 			*copied_syn = 0;
-> -	}
-> +	} else if (ret)
-> +		mptcp_disconnect(sk, 0);
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-Minor nit: should have braces since the previous block has them.
+For more details:
 
-But other than that, it looks good to me. I'll run this code in syzkaller 
-and see what we get.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-- Mat
 
->
-> 	return ret;
-> }
-> @@ -3005,6 +3008,14 @@ static int mptcp_disconnect(struct sock *sk, int flags)
-> {
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
->
-> +	/* We are on the fastopen error path. We can't call straigt into the
-> +	 * subflows cleanup code due to lock nesting (we are already under
-> +	 * msk->firstsocket lock). Do nothing and leave the cleanup to the
-> +	 * caller.
-> +	 */
-> +	if (msk->fastopening)
-> +		return 0;
-> +
-> 	inet_sk_state_store(sk, TCP_CLOSE);
->
-> 	mptcp_stop_timer(sk);
-> @@ -3552,7 +3563,7 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
-> 	/* if reaching here via the fastopen/sendmsg path, the caller already
-> 	 * acquired the subflow socket lock, too.
-> 	 */
-> -	if (msk->is_sendmsg)
-> +	if (msk->fastopening)
-> 		err = __inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags, 1);
-> 	else
-> 		err = inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 224f03a899c5..a9ff7028fad8 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -294,7 +294,7 @@ struct mptcp_sock {
-> 	u8		recvmsg_inq:1,
-> 			cork:1,
-> 			nodelay:1,
-> -			is_sendmsg:1;
-> +			fastopening:1;
-> 	int		connect_flags;
-> 	struct work_struct work;
-> 	struct sk_buff  *ooo_last_skb;
-> -- 
-> 2.38.1
->
->
->
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
---
-Mat Martineau
-Intel
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
