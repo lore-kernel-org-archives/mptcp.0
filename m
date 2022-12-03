@@ -1,123 +1,97 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFAB10F2
-	for <mptcp@lists.linux.dev>; Sat,  3 Dec 2022 00:16:14 +0000 (UTC)
-Received: by mail-pj1-f54.google.com with SMTP id k5so6342625pjo.5
-        for <mptcp@lists.linux.dev>; Fri, 02 Dec 2022 16:16:14 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CB57B;
+	Sat,  3 Dec 2022 08:29:36 +0000 (UTC)
+Received: by mail-wr1-f49.google.com with SMTP id u12so10304273wrr.11;
+        Sat, 03 Dec 2022 00:29:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=krboBoHe1okN4mqztUm27bmVYzCnHj6Sne1f1uLqmOs=;
-        b=Se+Dr5u1PV67YhPP2cmBHSUdicfsMZr31wO+A+rEWOlIp6BK8GzGhnNCkRB6Eyj13M
-         gRlcNFVJf2kj3QIQP6iMLPgJT5vG+3QIBSzB+S0ejJpCzSe6Y7M0ksSqsdG3bParTP7D
-         JakYocZfT1x+D5yO5wrRyGrQkn80RKRxdOXLt4dODA9Q/cO2e4vY53FILCgk8aNzdcIJ
-         2+Fvvr8Ja2jLtLX4M9zeqqCGz6Ro59SFXG1Px7tU7ZrAg6t2nQ0KZ7vK5avI2Ne2rUe1
-         Jg/PFkwBKkqTVPK0sQZWHlhdhFUV7lk3XHfjF5EGSrnOJY14EWepk/8wbv3quNAlIIwV
-         Cmhw==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=++FsqaVqwJx6XYFbJqgrWmLCuJt14qXZ43q8ET3YWf4=;
+        b=HhfB9e8o57PE+BDcjO4D+jMa9L2vT2zeY2txxBD+V5LKRTWgFJVzBkl5jHWXj1bCDW
+         QVKgDv85lfi2w043G+9Gi25eC0dyUzBLrL5JPfHyfU+e/1pfMR1WONQke/2Q6IraVpLc
+         2s9FHnav4wzkVHIdgCN1COw8oCcN2D+05RgdcXi3Nub2a1K9zM9XGoyU/75s7nLCuVJK
+         G9nxsa6POuXVHIIRB60+QGpjDv2jxAu7+zDi5qy8y0YIvxQHyphjhC9VKVhabDEybyCo
+         lSqFFem87i7NJ9CMH2uRp35qLFqHGYruXb2F2AiVcgdFOW9Q1fgBAO+5VXaGhpNprclJ
+         ghLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=krboBoHe1okN4mqztUm27bmVYzCnHj6Sne1f1uLqmOs=;
-        b=SlBTF3nBl8vS6JJUsCG1O484Hnqow3E3zHvvPwPAUmpYOsjsiDEIIprcjG+rnBesTq
-         fuJg58qOWw/yRufTM9xrx3YrCVmr9pBig7FrIbFb4k2pr2te9Ke/e5cUf0EbJ4P6ZQee
-         kGm2LVWA+SUpK4rLRifhLuftv1tcz4z/e651Lw3tuzUI0mtqbduG/DCioaNFwixQrEp1
-         /sbCqEmv+y4S/oQR0INM8eOFNJixIlxXWcgJSoxAzsdpnN+e9+lYbzlwhxXN0/hGXprL
-         XpolTxdLtiPrsUZ9dc+0ClMhn3A8Q24zEa9AnAIlHy5SRuRlio9WxgtoycXMfm+usfCs
-         wQDA==
-X-Gm-Message-State: ANoB5pk05nu66ME6UHBDbK42bS2PdgtqhD7mRgdo+fA/tFghRfaLustY
-	vNQvp8VXy/czB/SQHh4T193WvPR+C9nN
-X-Google-Smtp-Source: AA0mqf4kQii5pg0jmBBE9lOzOEelpveh8pxSMYWtEiKe5sBBG50pJK+Rp1hAnk5jLK6xfcBPRzGp2w==
-X-Received: by 2002:a17:903:41c8:b0:17d:b9c:cd64 with SMTP id u8-20020a17090341c800b0017d0b9ccd64mr56595725ple.40.1670026573695;
-        Fri, 02 Dec 2022 16:16:13 -0800 (PST)
-Received: from [127.0.0.1] ([40.85.156.95])
-        by smtp.gmail.com with ESMTPSA id q13-20020a170902a3cd00b00186b04776b0sm491540plb.118.2022.12.02.16.16.12
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=++FsqaVqwJx6XYFbJqgrWmLCuJt14qXZ43q8ET3YWf4=;
+        b=HX4gk2jrWJcf0/1tvZoprUf7yqOpTm+DFUNFrdBXEmmumMWvMpXkybE5kSzAc4DpH2
+         x3rQgfTRv6QH+Xe2BA3r9OB4ydD+vw35yU9w6yJp1T/XYjevBCp8eKKIWxv6VpM8ko8Y
+         N3XYh0qphMtap6hyAStL96TZFIOlWXXtqn/eWWCwcX1NaQ1fSXRFI2uMNeQVL7TAKAC0
+         S1cwa44SpVFk8HBO2bnb23pDK0lJ13dCxvsp13uSh3EN1UaoqQ4LS9/OOvGdhUJqPDd1
+         45F8PzbzFPVq4+W59QM/BvI4FiFqVLOJ2kuxKkOw7P/3odLpdYcjB//+9r6iGpP4XnUT
+         GtnQ==
+X-Gm-Message-State: ANoB5pnUuCEIMluxJFmbJa6N+xzWgwjzb6m7W5x9ii4M/CJ6X4inOYJz
+	TSI1kgDpDA9v3y3NR/W+v7g=
+X-Google-Smtp-Source: AA0mqf5psme3doI+eE0Qu5GiQ8w8heQyM/BTczlkyI/94oO5q37sIh7C9m/7yqsfMCCRQxuohNF6mA==
+X-Received: by 2002:adf:ea4e:0:b0:242:1d48:e043 with SMTP id j14-20020adfea4e000000b002421d48e043mr15623224wrn.498.1670056174834;
+        Sat, 03 Dec 2022 00:29:34 -0800 (PST)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id d14-20020adff2ce000000b00241fab5a296sm9025238wrp.40.2022.12.03.00.29.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 16:16:13 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221130094448.4119946-4-matthieu.baerts@tessares.net>
-References: <20221130094448.4119946-4-matthieu.baerts@tessares.net>
-Subject: Re: mptcp: use proper req destructor for IPv6: Tests Results
-Message-ID: <f95d8b17-d7fe-ba24-da9e-4c844fd3b6e9@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 03 Dec 2022 00:16:12 +0000
+        Sat, 03 Dec 2022 00:29:34 -0800 (PST)
+Date: Sat, 3 Dec 2022 11:29:31 +0300
+From: Dan Carpenter <error27@gmail.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, lkp@intel.com
+Cc: oe-kbuild@lists.linux.dev, Florian Westphal <fw@strlen.de>,
+	lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: net/mptcp/pm_netlink.c:1169 mptcp_pm_parse_pm_addr_attr() warn:
+ missing error code? 'err'
+Message-ID: <Y4sI65oadrVtBlnR@kadam>
+References: <202212021422.Uh5cCKY2-lkp@intel.com>
+ <f0722fd5-af12-4cff-9ffa-38b9e8d23313@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f0722fd5-af12-4cff-9ffa-38b9e8d23313@linux.intel.com>
 
-Hi Matthieu,
+On Fri, Dec 02, 2022 at 03:38:01PM -0800, Mat Martineau wrote:
+> > 01cacb00b35cb6 Paolo Abeni      2020-03-27  1158  	/* no validation needed - was already done via nested policy */
+> > 01cacb00b35cb6 Paolo Abeni      2020-03-27  1159  	err = nla_parse_nested_deprecated(tb, MPTCP_PM_ADDR_ATTR_MAX, attr,
+> > 01cacb00b35cb6 Paolo Abeni      2020-03-27  1160  					  mptcp_pm_addr_policy, info->extack);
+> > 01cacb00b35cb6 Paolo Abeni      2020-03-27  1161  	if (err)
+> > 01cacb00b35cb6 Paolo Abeni      2020-03-27  1162  		return err;
+> > 01cacb00b35cb6 Paolo Abeni      2020-03-27  1163
+> > 982f17ba1a2534 Florian Westphal 2022-05-03  1164  	if (tb[MPTCP_PM_ADDR_ATTR_ID])
+> > 982f17ba1a2534 Florian Westphal 2022-05-03  1165  		addr->id = nla_get_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
+> > 982f17ba1a2534 Florian Westphal 2022-05-03  1166
+> > 01cacb00b35cb6 Paolo Abeni      2020-03-27  1167  	if (!tb[MPTCP_PM_ADDR_ATTR_FAMILY]) {
+> > 01cacb00b35cb6 Paolo Abeni      2020-03-27  1168  		if (!require_family)
+> > 982f17ba1a2534 Florian Westphal 2022-05-03 @1169  			return err;
+> > 
+> > "err" is zero at this point.  Presumably a negative error code was
+> > intended.
+> 
+> Hi Dan -
+> 
+> The intended error code is 0 here: the return happens if no
+> MPTCP_PM_ADDR_ATTR_FAMILY value is present and require_family is false.
+> 
+> It would be clearer to "return 0;", but the code is working as expected.
+> 
+> 
+> Could you be sure to cc mptcp@lists.linux.dev and
+> matthieu.baerts@tessares.net for future MPTCP issues?
 
-Thank you for your modifications, that's great!
+These emails are automatically generated by the kbuild team.  I don't
+know what kind of heuristics they use...  I've put them on the To
+header.  There is probably a reason why they don't just use
+get_maintainer.pl...
 
-Our CI did some validations and here is its report:
+regards,
+dan carpenter
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_add_addr =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4825337440239616
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4825337440239616/su=
-mmary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6514187300503552
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6514187300503552/su=
-mmary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5951237347082240
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5951237347082240/summary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Critical: 1 Call Trace(s) =E2=9D=8C:
-  - Task: https://cirrus-ci.=
-com/task/5071165463461888
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5071165463461888/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/66d8b71a4163
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
