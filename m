@@ -1,190 +1,309 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC4C7C
-	for <mptcp@lists.linux.dev>; Mon,  5 Dec 2022 20:45:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C5E7C
+	for <mptcp@lists.linux.dev>; Mon,  5 Dec 2022 20:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1670273102;
+	s=mimecast20190719; t=1670273926;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aqphksb09+hK9Sv1/USB+qH5cNjSUS17UUZjMtmOm3g=;
-	b=Xc6qcZ+/CszJW6INDhz7+xS7sM0c1M425E33cKe1+k4wsOEGCLpMirWVc/JkuLYBPFWvaN
-	rHKFFXmi/wBOcHHPwM3WOxY0lle+YLBLpJRXarV+JMVg6JgfIfNAB3mdh3LhW9V9driFNc
-	Zt2fyNA644iTvcpLi2UB5bus+ZHexPs=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-460-eaJtYeNaMEuf-nKf3IWpVQ-1; Mon, 05 Dec 2022 15:45:01 -0500
-X-MC-Unique: eaJtYeNaMEuf-nKf3IWpVQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 984B93C025CE
-	for <mptcp@lists.linux.dev>; Mon,  5 Dec 2022 20:45:01 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.89])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 267FB1121325
-	for <mptcp@lists.linux.dev>; Mon,  5 Dec 2022 20:45:01 +0000 (UTC)
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pZxLt4/GF+wys/GuWAIbGAH9lD65j6IwW6mM3UiAHcI=;
+	b=FXahjqqUDYIOQTSZy3Vn0KPSbKl1ZJ3g4PJUDP8Sp0F8yFYmVgNnWrw73uGK+WOFNb8WiX
+	lHS3itC96jwzVP7KnGwjFFrsVWqI59/fHOo7e1+h0qSbU8DjFu6RNgnWXd7Tj4LBYsLq3D
+	xCBuTC7bR0BFYwDXscY10CqMBSNxk5U=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-177-lKDRn3GLM3CABPxEkWKYtQ-1; Mon, 05 Dec 2022 15:58:46 -0500
+X-MC-Unique: lKDRn3GLM3CABPxEkWKYtQ-1
+Received: by mail-qt1-f198.google.com with SMTP id g3-20020ac84b63000000b003a529c62a92so34127708qts.23
+        for <mptcp@lists.linux.dev>; Mon, 05 Dec 2022 12:58:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pZxLt4/GF+wys/GuWAIbGAH9lD65j6IwW6mM3UiAHcI=;
+        b=erInEDpBBCPCoG5e37pI4hl+LggZp4/CB/w5dpe3SfQZYgKmNIqX+EQcejUup0fMAQ
+         XGtLl6IuKLjQLBykqzPVma8qKuobZJO/8asDz0umhqYhyRd1M3XsMq0K2x8Lg/dMCY2k
+         Cu0ceqHoarfT9bxikKI1LrYI1zABdrX6HmUSHLpF3eATdUE4W9BTagPaNa0YxfWMV49Y
+         PTwGoDK40fbmPt5qbXgAsdWI+fQnsrX4RwpboxtNctqlW5EED/IrnKqhYdAaIvpVnv58
+         Gf/IHVrQW+cr2mOIPXbljCzgDRzP6wFLC6hyauDq4qD1M7ZFgIMwH7nAgz8IgEiGuwlv
+         X74Q==
+X-Gm-Message-State: ANoB5plCkLsiHjHRKbhVO0v9rEv006HXYKvHvG6x3I2RCRc05eOw+oAZ
+	ssxiaL/46NbGSEasxfqqnoYUPDxqW4JT5fJhUZXEYVmS/70yFjDx5Qvr/oJjBKyqUfImPZHhFLP
+	/bVk8KEzoJkJzsiU=
+X-Received: by 2002:a0c:fa51:0:b0:4c7:2a8f:7e70 with SMTP id k17-20020a0cfa51000000b004c72a8f7e70mr19336171qvo.28.1670273925381;
+        Mon, 05 Dec 2022 12:58:45 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7AaySR5zBpy3s6Xs7h2gonCvwpPKR8N9evdPLgjXaTKZj2xt6CHalnwdxAsXlJh8ORvqRACA==
+X-Received: by 2002:a0c:fa51:0:b0:4c7:2a8f:7e70 with SMTP id k17-20020a0cfa51000000b004c72a8f7e70mr19336149qvo.28.1670273925063;
+        Mon, 05 Dec 2022 12:58:45 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-106-100.dyn.eolo.it. [146.241.106.100])
+        by smtp.gmail.com with ESMTPSA id c19-20020ac81113000000b003a57eb7f212sm10212375qtj.10.2022.12.05.12.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Dec 2022 12:58:44 -0800 (PST)
+Message-ID: <50e7ea22119c3afcb4be5a4b6ad9747465693d10.camel@redhat.com>
+Subject: Re: Broken SELinux/LSM labeling with MPTCP and accept(2)
 From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-net] mptcp: fix deadlock in fastopen error path.
-Date: Mon,  5 Dec 2022 21:44:51 +0100
-Message-Id: <f594fa95592f25434e24f0d16033cda1af9ce2cc.1670272505.git.pabeni@redhat.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Ondrej Mosnacek <omosnace@redhat.com>, SElinux list
+ <selinux@vger.kernel.org>, Linux Security Module list
+ <linux-security-module@vger.kernel.org>, mptcp@lists.linux.dev, network dev
+ <netdev@vger.kernel.org>, Mat Martineau
+ <mathew.j.martineau@linux.intel.com>,  Matthieu Baerts
+ <matthieu.baerts@tessares.net>
+Date: Mon, 05 Dec 2022 21:58:41 +0100
+In-Reply-To: <CAHC9VhT0rRhr7Ty_p3Ld5O+Ltf8a8XSXcyik7tFpDRMrTfsF+A@mail.gmail.com>
+References: <CAFqZXNs2LF-OoQBUiiSEyranJUXkPLcCfBkMkwFeM6qEwMKCTw@mail.gmail.com>
+	 <108a1c80eed41516f85ebb264d0f46f95e86f754.camel@redhat.com>
+	 <CAHC9VhSSKN5kh9Kqgj=aCeA92bX1mJm1v4_PnRgua86OHUwE3w@mail.gmail.com>
+	 <48dd1e9b21597c46e4767290e5892c01850a45ff.camel@redhat.com>
+	 <CAHC9VhT0rRhr7Ty_p3Ld5O+Ltf8a8XSXcyik7tFpDRMrTfsF+A@mail.gmail.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-MatM reported a deadlock at fastopening time:
+On Fri, 2022-12-02 at 15:16 -0500, Paul Moore wrote:
+> On Fri, Dec 2, 2022 at 7:07 AM Paolo Abeni <pabeni@redhat.com> wrote:
+> 
+> > Side note: I'm confused by the selinux_sock_graft() implementation:
+> > 
+> > https://elixir.bootlin.com/linux/v6.1-rc7/source/security/selinux/hooks.c#L5243
+> > 
+> > it looks like the 'sid' is copied from the 'child' socket into the
+> > 'parent', while the sclass from the 'parent' into the 'child'. Am I
+> > misreading it? is that intended? I would have expeted both 'sid' and
+> > 'sclass' being copied from the parent into the child. Other LSM's
+> > sock_graft() initilize the child and leave alone the parent.
+> 
+> MPTCP isn't the only thing that is ... complex ;)
+> 
+> Believe it or not, selinux_sock_graft() is correct.  The reasoning is
+> that the new connection sock has been labeled based on the incoming
+> connection, which can be influenced by a variety of sources including
+> the security attributes of the remote endpoint; however, the
+> associated child socket is always labeled based on the security
+> context of the task calling accept(2).  Transfering the sock's label
+> (sid) to the child socket during the accept(2) operation ensures that
+> the newly created socket is labeled based on the inbound connection
+> labeling rules, and not simply the security context of the calling
+> process.
+> 
+> Transferring the object class (sclass) from the socket/inode to the
+> newly grafted sock just ensures that the sock's object class is set
+> correctly.
 
-INFO: task syz-executor.0:11454 blocked for more than 143 seconds.
-      Tainted: G S                 6.1.0-rc5-03226-gdb0157db5153 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor.0  state:D stack:25104 pid:11454 ppid:424    flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5191 [inline]
- __schedule+0x5c2/0x1550 kernel/sched/core.c:6503
- schedule+0xe8/0x1c0 kernel/sched/core.c:6579
- __lock_sock+0x142/0x260 net/core/sock.c:2896
- lock_sock_nested+0xdb/0x100 net/core/sock.c:3466
- __mptcp_close_ssk+0x1a3/0x790 net/mptcp/protocol.c:2328
- mptcp_destroy_common+0x16a/0x650 net/mptcp/protocol.c:3171
- mptcp_disconnect+0xb8/0x450 net/mptcp/protocol.c:3019
- __inet_stream_connect+0x897/0xa40 net/ipv4/af_inet.c:720
- tcp_sendmsg_fastopen+0x3dd/0x740 net/ipv4/tcp.c:1200
- mptcp_sendmsg_fastopen net/mptcp/protocol.c:1682 [inline]
- mptcp_sendmsg+0x128a/0x1a50 net/mptcp/protocol.c:1721
- inet6_sendmsg+0x11f/0x150 net/ipv6/af_inet6.c:663
- sock_sendmsg_nosec net/socket.c:714 [inline]
- sock_sendmsg+0xf7/0x190 net/socket.c:734
- ____sys_sendmsg+0x336/0x970 net/socket.c:2476
- ___sys_sendmsg+0x122/0x1c0 net/socket.c:2530
- __sys_sendmmsg+0x18d/0x460 net/socket.c:2616
- __do_sys_sendmmsg net/socket.c:2645 [inline]
- __se_sys_sendmmsg net/socket.c:2642 [inline]
- __x64_sys_sendmmsg+0x9d/0x110 net/socket.c:2642
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x38/0x90 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x63/0xcd
-RIP: 0033:0x7f5920a75e7d
-RSP: 002b:00007f59201e8028 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-RAX: ffffffffffffffda RBX: 00007f5920bb4f80 RCX: 00007f5920a75e7d
-RDX: 0000000000000001 RSI: 0000000020002940 RDI: 0000000000000005
-RBP: 00007f5920ae7593 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000020004050 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f5920bb4f80 R15: 00007f59201c8000
- </TASK>
+Thank you for the explaination. Hopefully I'm less confused now;)
 
-In the error path, tcp_sendmsg_fastopen() ends-up calling
-mptcp_disconnect(), and the latter tries to close each
-subflow, acquring the socket lock on each of them.
+> > ---
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 99f5e51d5ca4..b8095b8df71d 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -3085,7 +3085,10 @@ struct sock *mptcp_sk_clone(const struct
+> > sock *sk,
+> >         /* will be fully established after successful MPC subflow
+> > creation */
+> >         inet_sk_state_store(nsk, TCP_SYN_RECV);
+> > 
+> > - security_inet_csk_clone(nsk, req);
+> > + /* let's the new socket inherit the security label from the msk
+> > + * listener, as the TCP reqest socket carries a kernel context
+> > + */
+> > + security_sock_graft(nsk, sk->sk_socket);
+> >         bh_unlock_sock(nsk);
+> 
+> As a quick aside, I'm working under the assumption that a MPTCP
+> request_sock goes through the same sort of logic/processing as TCP, 
 
-At fastopen time, we have a single subflow, and such subflow
-socket lock is already held by the called, causing the deadlock.
+The above assumption is correct.
 
-We already track the 'fastopen in progress' status inside the msk
-socket. Use it to address the issue, making mptcp_disconnect() a
-no op when invoked from the fastopen (error) path and doing the
-relevant cleanup after releasing the subflow socket lock.
+> if that is wrong we likely have additional issues.
+> 
+> I think one potential problem with the code above is that if the
+> subflow socket, @sk above, has multiple inbound connections (is that
+> legal with MPTCP?) 
 
-While at the above, rename the fastopen status bit to something
-more meaningful.
+Here there are few things that need some clarifications. In the above
+chunk of code, 'sk' is the main mptcp socket, not a subflow. Insite the
+mptcp code, subflow sockets variable name is usually 'ssk' (== subflow
+sk).
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/321
-Reported-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Fixes: fa9e57468aa1 ("mptcp: fix abba deadlock on fastopen")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+An mptcp socket allows multiple inbound connections (each of them is a
+subflow).
+
+> it is going to be relabeled multiple times which is
+> not good (label's shouldn't change once set, unless there is an
+> explicit relabel event).  
+
+I now see that even my 2nd proposal is wrong, thanks for pointing that
+out!
+
+> I think we need to focus on ensuring that
+> the subflow socket is labeled properly at creation time, and that has
+> me looking more at mptcp_subflow_create_socket() ...
+
+Agreed.
+
+> What if we added a new LSM call in mptcp_subflow_create_socket(), just
+> after the sock_create_kern() call?  
+
+That should work, I think. I would like to propose a (last) attempt
+that will not need an additional selinux hook - to try to minimize the
+required changes and avoid unnecessary addional work for current and
+future LSM mainteniance and creation.
+
+I tested the following patch and passes the reproducer (and mptcp self-
+tests). Basically it introduces and uses a sock_create_nosec variant,
+to allow mptcp_subflow_create_socket() calling
+security_socket_post_create() with the corrct arguments. WDYT?
+
 ---
-v1 -> v2:
- - Fixes -> Closes (MatM)
- - fix style issue - missing brackets (MatM)
- - fix code comment typo
- - fix pktdrill failures (ret != -EINPROGRESS -> ret && ret !=
-   -EINPROGRESS)
----
- net/mptcp/protocol.c | 18 +++++++++++++++---
- net/mptcp/protocol.h |  2 +-
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ include/linux/net.h |  2 ++
+ net/mptcp/subflow.c | 18 ++++++++++++--
+ net/socket.c        | 60 ++++++++++++++++++++++++++++++---------------
+ 3 files changed, 58 insertions(+), 22 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 99f5e51d5ca4..6d03bdcda33e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1668,6 +1668,8 @@ static void mptcp_set_nospace(struct sock *sk)
- 	set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
- }
+diff --git a/include/linux/net.h b/include/linux/net.h
+index b73ad8e3c212..91713012504d 100644
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -251,6 +251,8 @@ int sock_wake_async(struct socket_wq *sk_wq, int how, int band);
+ int sock_register(const struct net_proto_family *fam);
+ void sock_unregister(int family);
+ bool sock_is_registered(int family);
++int __sock_create_nosec(struct net *net, int family, int type, int proto,
++			struct socket **res, int kern);
+ int __sock_create(struct net *net, int family, int type, int proto,
+ 		  struct socket **res, int kern);
+ int sock_create(int family, int type, int proto, struct socket **res);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 29904303f5c2..9341f9313154 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1646,11 +1646,25 @@ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
+ 	if (unlikely(!sk->sk_socket))
+ 		return -EINVAL;
  
-+static int mptcp_disconnect(struct sock *sk, int flags);
-+
- static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msghdr *msg,
- 				  size_t len, int *copied_syn)
- {
-@@ -1678,9 +1680,9 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msgh
- 	lock_sock(ssk);
- 	msg->msg_flags |= MSG_DONTWAIT;
- 	msk->connect_flags = O_NONBLOCK;
--	msk->is_sendmsg = 1;
-+	msk->fastopening = 1;
- 	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
--	msk->is_sendmsg = 0;
-+	msk->fastopening = 0;
- 	msg->msg_flags = saved_flags;
- 	release_sock(ssk);
- 
-@@ -1694,6 +1696,8 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msgh
- 		 */
- 		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret != -EINTR)
- 			*copied_syn = 0;
-+	} else if (ret && ret != -EINPROGRESS) {
-+		mptcp_disconnect(sk, 0);
- 	}
- 
- 	return ret;
-@@ -3005,6 +3009,14 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
-+	/* We are on the fastopen error path. We can't call straight into the
-+	 * subflows cleanup code due to lock nesting (we are already under
-+	 * msk->firstsocket lock). Do nothing and leave the cleanup to the
-+	 * caller.
+-	err = sock_create_kern(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
+-			       &sf);
++	/* the subflow is created by the kernel, and we need kernel annotation
++	 * for lockdep's sake...
 +	 */
-+	if (msk->fastopening)
-+		return 0;
-+
- 	inet_sk_state_store(sk, TCP_CLOSE);
++	err = __sock_create_nosec(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
++				  &sf, 1);
+ 	if (err)
+ 		return err;
  
- 	mptcp_stop_timer(sk);
-@@ -3549,7 +3561,7 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
- 	/* if reaching here via the fastopen/sendmsg path, the caller already
- 	 * acquired the subflow socket lock, too.
++	/* ... but the first subflow will be indirectly exposed to the
++	 * user-space via accept(). Let's attach the current user security
++	 * label
++	 */
++	err = security_socket_post_create(sf, sk->sk_family, SOCK_STREAM,
++					  IPPROTO_TCP, 0);
++	if (err) {
++		sock_release(sf);
++		return err;
++	}
++
+ 	lock_sock(sf->sk);
+ 
+ 	/* the newly created socket has to be in the same cgroup as its parent */
+diff --git a/net/socket.c b/net/socket.c
+index 55c5d536e5f6..d5d51e4e26ae 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -1426,23 +1426,11 @@ int sock_wake_async(struct socket_wq *wq, int how, int band)
+ }
+ EXPORT_SYMBOL(sock_wake_async);
+ 
+-/**
+- *	__sock_create - creates a socket
+- *	@net: net namespace
+- *	@family: protocol family (AF_INET, ...)
+- *	@type: communication type (SOCK_STREAM, ...)
+- *	@protocol: protocol (0, ...)
+- *	@res: new socket
+- *	@kern: boolean for kernel space sockets
+- *
+- *	Creates a new socket and assigns it to @res, passing through LSM.
+- *	Returns 0 or an error. On failure @res is set to %NULL. @kern must
+- *	be set to true if the socket resides in kernel space.
+- *	This function internally uses GFP_KERNEL.
+- */
+ 
+-int __sock_create(struct net *net, int family, int type, int protocol,
+-			 struct socket **res, int kern)
++
++/* Creates a socket leaving LSM post-creation checks to the caller */
++int __sock_create_nosec(struct net *net, int family, int type, int protocol,
++			struct socket **res, int kern)
+ {
+ 	int err;
+ 	struct socket *sock;
+@@ -1528,11 +1516,8 @@ int __sock_create(struct net *net, int family, int type, int protocol,
+ 	 * module can have its refcnt decremented
  	 */
--	if (msk->is_sendmsg)
-+	if (msk->fastopening)
- 		err = __inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags, 1);
- 	else
- 		err = inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 224f03a899c5..a9ff7028fad8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -294,7 +294,7 @@ struct mptcp_sock {
- 	u8		recvmsg_inq:1,
- 			cork:1,
- 			nodelay:1,
--			is_sendmsg:1;
-+			fastopening:1;
- 	int		connect_flags;
- 	struct work_struct work;
- 	struct sk_buff  *ooo_last_skb;
--- 
-2.38.1
+ 	module_put(pf->owner);
+-	err = security_socket_post_create(sock, family, type, protocol, kern);
+-	if (err)
+-		goto out_sock_release;
+-	*res = sock;
+ 
++	*res = sock;
+ 	return 0;
+ 
+ out_module_busy:
+@@ -1548,6 +1533,41 @@ int __sock_create(struct net *net, int family, int type, int protocol,
+ 	rcu_read_unlock();
+ 	goto out_sock_release;
+ }
++
++/**
++ *	__sock_create - creates a socket
++ *	@net: net namespace
++ *	@family: protocol family (AF_INET, ...)
++ *	@type: communication type (SOCK_STREAM, ...)
++ *	@protocol: protocol (0, ...)
++ *	@res: new socket
++ *	@kern: boolean for kernel space sockets
++ *
++ *	Creates a new socket and assigns it to @res, passing through LSM.
++ *	Returns 0 or an error. On failure @res is set to %NULL. @kern must
++ *	be set to true if the socket resides in kernel space.
++ *	This function internally uses GFP_KERNEL.
++ */
++
++int __sock_create(struct net *net, int family, int type, int protocol,
++		  struct socket **res, int kern)
++{
++	struct socket *sock;
++	int err;
++
++	err = __sock_create_nosec(net, family, type, protocol, &sock, kern);
++	if (err)
++		return err;
++
++	err = security_socket_post_create(sock, family, type, protocol, kern);
++	if (err) {
++		sock_release(sock);
++		return err;
++	}
++
++	*res = sock;
++	return 0;
++}
+ EXPORT_SYMBOL(__sock_create);
+ 
+ /**
 
