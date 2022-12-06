@@ -1,126 +1,133 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35238BEC
-	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 14:50:30 +0000 (UTC)
-Received: by mail-qk1-f179.google.com with SMTP id v8so7583665qkg.12
-        for <mptcp@lists.linux.dev>; Tue, 06 Dec 2022 06:50:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NjiKyMOubCzKiGiq0Oq/mV/mrQcQmhZeTcZ0O8sTVcw=;
-        b=Q1I3qdH/t+6tRPJg61PJkQHAL66DwAoCcRiY95HbceN0yVTJMAWymARQ3yYkb0+hhz
-         qSTgddcXSlHHV22vFaSQIdW+6KrxRfBLppo+2aZgdRJ69HNqbEqUAft57B5ZuNW4+rU3
-         iJCyQ91y2pMyyBxP4RPU9ymGEVnL/fUrknQA+I2gC8fjSMYSCqTVCUWDbZ4q44Q/qqeB
-         2nHEHV8Ck5G4KBrOmgRKZZEXl51CMNFAjQlGwMmLkkrja0aV/rfV5LVLTMe2dlH1YtVu
-         KRi1FEdAtekxJ50mossAffKcwAHwgAqxWpCV6b4hoXj3cpHosI2VT9UDBcjDKkKoLStd
-         JlrA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D5227713
+	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 16:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1670345522;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XIpckjVarsXSQqROHjIV5YMQ3njKr27YAdfHQ1eBWXM=;
+	b=JpPeZRVuDnCD/TTN1sDBE150dHBM7ryYDl3QVQzsuwPyRrmrouP9Z8HvCosY85/EN8DYrI
+	udnKWwgrMxnVK3fTIqxTrgz/5jBdsxc84HQaANTmc5R3EAq9aVCaYJyKTSKqj9zI3WCDPW
+	xN6kFzV7dts8BT7kGnx9VLCh8lLXoLU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-503-hiMdHbCGNAeWn58_29CJSw-1; Tue, 06 Dec 2022 11:52:00 -0500
+X-MC-Unique: hiMdHbCGNAeWn58_29CJSw-1
+Received: by mail-wm1-f69.google.com with SMTP id u9-20020a05600c00c900b003cfb12839d6so5863701wmm.5
+        for <mptcp@lists.linux.dev>; Tue, 06 Dec 2022 08:52:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NjiKyMOubCzKiGiq0Oq/mV/mrQcQmhZeTcZ0O8sTVcw=;
-        b=nzyRk7WZv5DRmd9PAscw5h18pYMNFY5ej/gENi2asIA7+9Zpk2Xa/H81yjQ/zegHyQ
-         YlV3vJbeoglSB4sE/6lO5gOAPr6Vbk49qCDFlKn1vYyocYi5Ac8EKJehWg2+9b88VFff
-         d9FTFB6r+UVnvfnBYS7OP5H4jvcVv+blq35jG7gO+sn/3QhgqL6bW82yt+VVT6wndZSD
-         2ON+G+ZFnx54J2R26jorcUpwUBJRECNWjL/+Qfc/v/XlmqTsxgZeLesdMK3Is7Vy+pIX
-         FkF1NXj5kgSySLwhpVtHqxsqzKTLRQuOw1B6fuoykUnLy2B8xwEObahF766Brc6A8JaY
-         bmRw==
-X-Gm-Message-State: ANoB5pkj3fySoeAWQ9bUmaWaqCrwv/bgbJTR/mHiEom3KSSD0MaCFr4J
-	F7jIJ4uiek15WjGN3Kh6RA==
-X-Google-Smtp-Source: AA0mqf40KmfcrayYOAOCgI4Jsw/puzFWkAK6BkKmpbzVJhKrsStzh6SibpSQed/Ll+EHy0KCP5ezmg==
-X-Received: by 2002:a05:620a:1a84:b0:6fb:ffbb:e8b0 with SMTP id bl4-20020a05620a1a8400b006fbffbbe8b0mr59410800qkb.612.1670338229677;
-        Tue, 06 Dec 2022 06:50:29 -0800 (PST)
-Received: from [127.0.0.1] ([40.117.252.185])
-        by smtp.gmail.com with ESMTPSA id x13-20020a05620a448d00b006ce76811a07sm15356354qkp.75.2022.12.06.06.50.28
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XIpckjVarsXSQqROHjIV5YMQ3njKr27YAdfHQ1eBWXM=;
+        b=ddZqNSkpmuAxEabCNLd3ivy/LvOFFFVVAs+BMqRLP0+NdLWv0scWgzzKrvk64Z9+nt
+         MehwwGYFtdEg8rVXxSapBQrl/RJl79rcRxySoew2og1nsVXBY0iTS8TVhGJTqk9NJS9H
+         y2T59LTc1MKFXrFZS/96DzI05364LFRzPA6SeLV8ynyOlTJzC1dV5fSzfi0N0nkY/mEr
+         dBfgYSrtsc++zYzA8EmmqHF75zepNtcJwTGdYaOLmVE5q4XtSdqUgULJGmb7yri1rEJQ
+         21zs9hZGBy0L12OblmN7poXJpZXF2aIvjFJv4QTJFsOQZozkGiLrcaigjXqFBuAyZGtC
+         2y0Q==
+X-Gm-Message-State: ANoB5pkQPjaphIaFpoHs7QTXHUCNG1Ca/HhTK3PH6MTwcrAdvbW9kNA/
+	sP0pbvEkl/04eXbZH5BV9bRsv7k1calg0FVSx2QzhjfLjQ6hEGe335eUrMMeaMZSgX9FUlIbhCV
+	1pvL4QwtoEzDN3bQ=
+X-Received: by 2002:adf:ebc6:0:b0:241:c6d8:be83 with SMTP id v6-20020adfebc6000000b00241c6d8be83mr46196226wrn.454.1670345519817;
+        Tue, 06 Dec 2022 08:51:59 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf60dqg/J7gSlr8BiWptFPCbF1mq7Dzc0r47+I6tQYq+KjcdkixAhM+jx7p9yL/Kn4RX5L/gMA==
+X-Received: by 2002:adf:ebc6:0:b0:241:c6d8:be83 with SMTP id v6-20020adfebc6000000b00241c6d8be83mr46196208wrn.454.1670345519570;
+        Tue, 06 Dec 2022 08:51:59 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-106-100.dyn.eolo.it. [146.241.106.100])
+        by smtp.gmail.com with ESMTPSA id f6-20020a0560001b0600b002415dd45320sm16896783wrz.112.2022.12.06.08.51.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Dec 2022 06:50:29 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1937ca954785e8dad06aa2157722c7c5409e0957.1670332660.git.geliang.tang@suse.com>
-References:
- <1937ca954785e8dad06aa2157722c7c5409e0957.1670332660.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: Add bpf_red test: Tests Results
-Message-ID: <78ad5392-807f-27ae-e865-ead196314eb6@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Dec 2022 14:50:28 +0000
+        Tue, 06 Dec 2022 08:51:59 -0800 (PST)
+Message-ID: <99550009c78de401d55356721aac56873319b5cc.camel@redhat.com>
+Subject: Re: Broken SELinux/LSM labeling with MPTCP and accept(2)
+From: Paolo Abeni <pabeni@redhat.com>
+To: Ondrej Mosnacek <omosnace@redhat.com>
+Cc: Paul Moore <paul@paul-moore.com>, SElinux list
+ <selinux@vger.kernel.org>,  Linux Security Module list
+ <linux-security-module@vger.kernel.org>, mptcp@lists.linux.dev, network dev
+ <netdev@vger.kernel.org>, Mat Martineau
+ <mathew.j.martineau@linux.intel.com>, Matthieu Baerts
+ <matthieu.baerts@tessares.net>
+Date: Tue, 06 Dec 2022 17:51:57 +0100
+In-Reply-To: <CAFqZXNtOku4vr5RrQU4vcvCVz5iK79CimeUVHu0S=QoN-QVEjg@mail.gmail.com>
+References: <CAFqZXNs2LF-OoQBUiiSEyranJUXkPLcCfBkMkwFeM6qEwMKCTw@mail.gmail.com>
+	 <108a1c80eed41516f85ebb264d0f46f95e86f754.camel@redhat.com>
+	 <CAHC9VhSSKN5kh9Kqgj=aCeA92bX1mJm1v4_PnRgua86OHUwE3w@mail.gmail.com>
+	 <48dd1e9b21597c46e4767290e5892c01850a45ff.camel@redhat.com>
+	 <CAHC9VhT0rRhr7Ty_p3Ld5O+Ltf8a8XSXcyik7tFpDRMrTfsF+A@mail.gmail.com>
+	 <50e7ea22119c3afcb4be5a4b6ad9747465693d10.camel@redhat.com>
+	 <CAFqZXNtOku4vr5RrQU4vcvCVz5iK79CimeUVHu0S=QoN-QVEjg@mail.gmail.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+On Tue, 2022-12-06 at 15:43 +0100, Ondrej Mosnacek wrote:
+> On Mon, Dec 5, 2022 at 9:58 PM Paolo Abeni <pabeni@redhat.com> wrote:
+> > 
+> > On Fri, 2022-12-02 at 15:16 -0500, Paul Moore wrote:
+> [...]
+> > > What if we added a new LSM call in mptcp_subflow_create_socket(), just
+> > > after the sock_create_kern() call?
+> > 
+> > That should work, I think. I would like to propose a (last) attempt
+> > that will not need an additional selinux hook - to try to minimize the
+> > required changes and avoid unnecessary addional work for current and
+> > future LSM mainteniance and creation.
+> > 
+> > I tested the following patch and passes the reproducer (and mptcp self-
+> > tests). Basically it introduces and uses a sock_create_nosec variant,
+> > to allow mptcp_subflow_create_socket() calling
+> > security_socket_post_create() with the corrct arguments. WDYT?
+> 
+> This seems like a step in the right direction, but I wonder if we
+> shouldn't solve the current overloading of the "kern" flag more
+> explicitly - i.e. split it into two flags: one to indicate that the
+> socket will only be used internally by the kernel ("internal") and
+> another one to indicate if it should be labeled according to the
+> current task or as a kernel-created socket ("kern"?). Technically,
+> each combination could have a valid use case:
+> - !internal && !kern -> a regular userspace-created socket,
+> - !internal && kern -> a socket that is exposed to userspace, but
+> created by the kernel outside of a syscall (e.g. some global socket
+> created during initcall phase and later returned to userspace via an
+> ioctl or something),
+> - internal && !kern -> our MPTCP case, where the socket itself is
+> internal, but the label is still important so it can be passed onto
+> its accept-offspring (which may no longer be internal),
+> - internal && kern -> a completely kernel-internal socket.
 
-Thank you for your modifications, that's great!
+I would say perfect is the enemy of good ;) it would be nice to have a
+fix sometime soon, and we can improve as needed.
 
-Our CI did some validations and here is its report:
+> Another concern I have about this approach is whether it is possible
+> (in some more advanced scenario) for mptcp_subflow_create_socket() to
+> be called in the context of a different task than the one
+> creating/handling the main socket. Because then a potential socket
+> accepted from the new subflow socket would end up with an unexpected
+> (and probably semantically wrong) label. Glancing over the call tree,
+> it seems it can be called via some netlink commands - presumably
+> intended to be used by mptcpd?
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6216965698617344
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6216965698617344/summary/summary.txt
+Yes, the above can happen, but I think it does not have LSM-related
+implications, as subflows created in the above scenario can be MP_JOIN
+only - that is, will never be even indirectly exposed to user-space.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5372540768485376
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5372540768485376/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5935490721906688
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5935490721906688/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4809590815064064
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4809590815064064/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/3b6f8d0d0621
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+
+Paolo
+
