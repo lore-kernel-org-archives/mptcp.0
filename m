@@ -1,40 +1,39 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F059E180
-	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 00:05:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1182517C3
+	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 01:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670285149; x=1701821149;
+  t=1670288974; x=1701824974;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=AqJiiCW87FCHWpkXLtei+pU+Jlezo72vhJR6K7hKjdI=;
-  b=BdsxMIPEBpLSUjIL1bxIpYTu5ZQrg7i9ZaRqn5VNNDvT+X8sWJs0xiMT
-   sPavGoZQyZXnQi/qZMSdfvkiyDphj8vCqRjjs5W/T6ojOON1DsnRwdPT7
-   RMk54jjMHE7Zgy8N0fD7SeQeTk6SAakoilH5KDaFKb8kmg/DN2xQzpAY0
-   mSuPHit4ILP/cyQCnCp+8RAo0w2hYsUabiI2qFIkKk+1yS8U7xSzKCW9S
-   QA+AwjBFjdeBatZSPjghmTLaOVH4kj/S9vzWhgAD23culP1FSUFTBFzE6
-   KhUf450ues31TORjjB6IO+mhlK8a+3cfx1/bOCvCS68El0O6f1GaJgFkL
+  bh=dPiwIu0YbN+RCTh7+JKG78lG/gJ/IsAI5UhG1g6h0q8=;
+  b=d8nWFAvZeLECCAXrUOlqaBG8lzh0Xy5oPsFKCC7Yhj6ifRM0fuy5XQYX
+   VYwjBZUmWS8XdDj3gCiESn4Vdt1GYGH+NE9Xcee3kUjwVetn8DPwv1U6N
+   2QcEdHw4tFJhHrJh0PLVarPRoh2A5Rrv3jEY1GzBWNQ1jP+hZ/bsjqrbY
+   v7m0PXgCAYiz2UlDq08pyQ3lA0BxcF4JO0oBt7u6C2F9+P/KLEqAakJ7m
+   JFfGsdyK1dmVixdY/Z72wYI15RgjgUMu66tOVKFTStRG2/u7tG/9j0fEp
+   d54Ye+HCog+A+b9J8BX/Rf+BtKDXpjb1DlfKvdtC+s1VBF4k+9bx1X+qy
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="318355890"
+X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="304124577"
 X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="318355890"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 16:05:40 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="623697707"
+   d="scan'208";a="304124577"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 17:09:33 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="788294765"
 X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="623697707"
+   d="scan'208";a="788294765"
 Received: from psjohns1-mobl.amr.corp.intel.com ([10.209.67.116])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 16:05:40 -0800
-Date: Mon, 5 Dec 2022 16:05:40 -0800 (PST)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 17:09:32 -0800
+Date: Mon, 5 Dec 2022 17:09:32 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp-net] mptcp: fix deadlock in fastopen error
- path.
-In-Reply-To: <b9c538f1-ae46-bda5-77ce-42c963d6fa90@linux.intel.com>
-Message-ID: <38d42e8b-5875-0427-c808-5f5d918846b8@linux.intel.com>
-References: <f594fa95592f25434e24f0d16033cda1af9ce2cc.1670272505.git.pabeni@redhat.com> <b9c538f1-ae46-bda5-77ce-42c963d6fa90@linux.intel.com>
+Subject: Re: [PATCH mptcp-next v22 2/5] mptcp: use get_send wrapper
+In-Reply-To: <052d8257378ae7fae5e913f2c3a4007eaef1a856.1669987293.git.geliang.tang@suse.com>
+Message-ID: <c3ced640-9520-3dac-8888-daa8f54576ec@linux.intel.com>
+References: <cover.1669987293.git.geliang.tang@suse.com> <052d8257378ae7fae5e913f2c3a4007eaef1a856.1669987293.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,185 +42,252 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 5 Dec 2022, Mat Martineau wrote:
+On Fri, 2 Dec 2022, Geliang Tang wrote:
 
-> On Mon, 5 Dec 2022, Paolo Abeni wrote:
+> This patch adds the multiple subflows support for __mptcp_push_pending
+> and __mptcp_subflow_push_pending. Use get_send() wrapper instead of
+> mptcp_subflow_get_send() in them.
 >
->> MatM reported a deadlock at fastopening time:
->> 
->> INFO: task syz-executor.0:11454 blocked for more than 143 seconds.
->>      Tainted: G S                 6.1.0-rc5-03226-gdb0157db5153 #1
->> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->> task:syz-executor.0  state:D stack:25104 pid:11454 ppid:424 
->> flags:0x00004006
->> Call Trace:
->> <TASK>
->> context_switch kernel/sched/core.c:5191 [inline]
->> __schedule+0x5c2/0x1550 kernel/sched/core.c:6503
->> schedule+0xe8/0x1c0 kernel/sched/core.c:6579
->> __lock_sock+0x142/0x260 net/core/sock.c:2896
->> lock_sock_nested+0xdb/0x100 net/core/sock.c:3466
->> __mptcp_close_ssk+0x1a3/0x790 net/mptcp/protocol.c:2328
->> mptcp_destroy_common+0x16a/0x650 net/mptcp/protocol.c:3171
->> mptcp_disconnect+0xb8/0x450 net/mptcp/protocol.c:3019
->> __inet_stream_connect+0x897/0xa40 net/ipv4/af_inet.c:720
->> tcp_sendmsg_fastopen+0x3dd/0x740 net/ipv4/tcp.c:1200
->> mptcp_sendmsg_fastopen net/mptcp/protocol.c:1682 [inline]
->> mptcp_sendmsg+0x128a/0x1a50 net/mptcp/protocol.c:1721
->> inet6_sendmsg+0x11f/0x150 net/ipv6/af_inet6.c:663
->> sock_sendmsg_nosec net/socket.c:714 [inline]
->> sock_sendmsg+0xf7/0x190 net/socket.c:734
->> ____sys_sendmsg+0x336/0x970 net/socket.c:2476
->> ___sys_sendmsg+0x122/0x1c0 net/socket.c:2530
->> __sys_sendmmsg+0x18d/0x460 net/socket.c:2616
->> __do_sys_sendmmsg net/socket.c:2645 [inline]
->> __se_sys_sendmmsg net/socket.c:2642 [inline]
->> __x64_sys_sendmmsg+0x9d/0x110 net/socket.c:2642
->> do_syscall_x64 arch/x86/entry/common.c:50 [inline]
->> do_syscall_64+0x38/0x90 arch/x86/entry/common.c:80
->> entry_SYSCALL_64_after_hwframe+0x63/0xcd
->> RIP: 0033:0x7f5920a75e7d
->> RSP: 002b:00007f59201e8028 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
->> RAX: ffffffffffffffda RBX: 00007f5920bb4f80 RCX: 00007f5920a75e7d
->> RDX: 0000000000000001 RSI: 0000000020002940 RDI: 0000000000000005
->> RBP: 00007f5920ae7593 R08: 0000000000000000 R09: 0000000000000000
->> R10: 0000000020004050 R11: 0000000000000246 R12: 0000000000000000
->> R13: 000000000000000b R14: 00007f5920bb4f80 R15: 00007f59201c8000
->> </TASK>
->> 
->> In the error path, tcp_sendmsg_fastopen() ends-up calling
->> mptcp_disconnect(), and the latter tries to close each
->> subflow, acquring the socket lock on each of them.
->> 
->> At fastopen time, we have a single subflow, and such subflow
->> socket lock is already held by the called, causing the deadlock.
->> 
->> We already track the 'fastopen in progress' status inside the msk
->> socket. Use it to address the issue, making mptcp_disconnect() a
->> no op when invoked from the fastopen (error) path and doing the
->> relevant cleanup after releasing the subflow socket lock.
->> 
->> While at the above, rename the fastopen status bit to something
->> more meaningful.
->> 
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/321
->> Reported-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
->> Fixes: fa9e57468aa1 ("mptcp: fix abba deadlock on fastopen")
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->> v1 -> v2:
->> - Fixes -> Closes (MatM)
->> - fix style issue - missing brackets (MatM)
->> - fix code comment typo
->> - fix pktdrill failures (ret != -EINPROGRESS -> ret && ret !=
->>   -EINPROGRESS)
+> Check the subflow scheduled flags to test which subflow or subflows are
+> picked by the scheduler, use them to send data.
 >
-> CI confirmed that packetdrill is happy with this v2 fix (for the non-debug 
-> build, the debug test is still in progress at the moment), so v2 looks good 
-> to me:
+> Move sock_owned_by_me() check and fallback check into get_send() wrapper
+> from mptcp_subflow_get_send().
 >
-> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> This commit allows the scheduler to set the subflow->scheduled bit in
+> multiple subflows, but it does not allow for sending redundant data.
+> Multiple scheduled subflows will send sequential data on each subflow.
 >
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/protocol.c | 129 +++++++++++++++++++++++++++----------------
+> net/mptcp/sched.c    |  13 +++++
+> 2 files changed, 95 insertions(+), 47 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index d8ad68dd504a..cef6086c7f40 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1408,15 +1408,6 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+> 	u64 linger_time;
+> 	long tout = 0;
+>
+> -	sock_owned_by_me(sk);
+> -
+> -	if (__mptcp_check_fallback(msk)) {
+> -		if (!msk->first)
+> -			return NULL;
+> -		return __tcp_can_send(msk->first) &&
+> -		       sk_stream_memory_free(msk->first) ? msk->first : NULL;
+> -	}
+> -
+> 	/* pick the subflow with the lower wmem/wspace ratio */
+> 	for (i = 0; i < SSK_MODE_MAX; ++i) {
+> 		send_info[i].ssk = NULL;
+> @@ -1563,47 +1554,61 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> {
+> 	struct sock *prev_ssk = NULL, *ssk = NULL;
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct mptcp_subflow_context *subflow;
+> 	struct mptcp_sendmsg_info info = {
+> 				.flags = flags,
+> 	};
+> 	bool do_check_data_fin = false;
+> +	int push_count = 1;
+>
+> -	while (mptcp_send_head(sk)) {
+> +	while (mptcp_send_head(sk) && (push_count > 0)) {
 
-I forgot to mention: when running with v1 of this patch, syzkaller did not 
-detect any deadlocks over the weekend.
+Hi Geliang -
+
+Thanks, this is the correct logic (I had a typo in my suggested code for 
+this).
+
+> 		int ret = 0;
+>
+> -		prev_ssk = ssk;
+> -		ssk = mptcp_subflow_get_send(msk);
+> +		if (mptcp_sched_get_send(msk))
+> +			break;
+>
+> -		/* First check. If the ssk has changed since
+> -		 * the last round, release prev_ssk
+> -		 */
+> -		if (ssk != prev_ssk && prev_ssk)
+> -			mptcp_push_release(prev_ssk, &info);
+> -		if (!ssk)
+> -			goto out;
+> +		push_count = 0;
+>
+> -		/* Need to lock the new subflow only if different
+> -		 * from the previous one, otherwise we are still
+> -		 * helding the relevant lock
+> -		 */
+> -		if (ssk != prev_ssk)
+> -			lock_sock(ssk);
+> +		mptcp_for_each_subflow(msk, subflow) {
+> +			if (READ_ONCE(subflow->scheduled)) {
+> +				prev_ssk = ssk;
+> +				ssk = mptcp_subflow_tcp_sock(subflow);
+>
+> -		ret = __subflow_push_pending(sk, ssk, &info);
+> -		if (ret <= 0) {
+> -			if (ret == -EAGAIN)
+> -				continue;
+> -			mptcp_push_release(ssk, &info);
+> -			goto out;
+> +				if (ssk != prev_ssk) {
+> +					/* First check. If the ssk has changed since
+> +					 * the last round, release prev_ssk
+> +					 */
+> +					if (prev_ssk)
+> +						mptcp_push_release(prev_ssk, &info);
+> +
+> +					/* Need to lock the new subflow only if different
+> +					 * from the previous one, otherwise we are still
+> +					 * helding the relevant lock
+> +					 */
+> +					lock_sock(ssk);
+> +				}
+> +
+> +				push_count++;
+> +
+> +				ret = __subflow_push_pending(sk, ssk, &info);
+> +				if (ret <= 0) {
+> +					if (ret != -EAGAIN ||
+> +					    (1 << ssk->sk_state) &
+> +					     (TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSE))
+> +						push_count--;
+> +					continue;
+> +				}
+> +				do_check_data_fin = true;
+> +				msk->last_snd = ssk;
+> +				mptcp_subflow_set_scheduled(subflow, false);
+
+I missed this before: the subflow->scheduled flag should be cleared on the 
+error path too. If it's only cleared on success there could be problems 
+with the __mptcp_subflow_push_pending() code path in later patches.
 
 - Mat
 
+> +			}
+> 		}
+> -		do_check_data_fin = true;
+> 	}
 >
->> ---
->> net/mptcp/protocol.c | 18 +++++++++++++++---
->> net/mptcp/protocol.h |  2 +-
->> 2 files changed, 16 insertions(+), 4 deletions(-)
->> 
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 99f5e51d5ca4..6d03bdcda33e 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -1668,6 +1668,8 @@ static void mptcp_set_nospace(struct sock *sk)
->> 	set_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags);
->> }
->> 
->> +static int mptcp_disconnect(struct sock *sk, int flags);
->> +
->> static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct 
->> msghdr *msg,
->> 				  size_t len, int *copied_syn)
->> {
->> @@ -1678,9 +1680,9 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, 
->> struct sock *ssk, struct msgh
->> 	lock_sock(ssk);
->> 	msg->msg_flags |= MSG_DONTWAIT;
->> 	msk->connect_flags = O_NONBLOCK;
->> -	msk->is_sendmsg = 1;
->> +	msk->fastopening = 1;
->> 	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
->> -	msk->is_sendmsg = 0;
->> +	msk->fastopening = 0;
->> 	msg->msg_flags = saved_flags;
->> 	release_sock(ssk);
->> 
->> @@ -1694,6 +1696,8 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, 
->> struct sock *ssk, struct msgh
->> 		 */
->> 		if (ret && ret != -EINPROGRESS && ret != -ERESTARTSYS && ret 
->> != -EINTR)
->> 			*copied_syn = 0;
->> +	} else if (ret && ret != -EINPROGRESS) {
->> +		mptcp_disconnect(sk, 0);
->> 	}
->>
->> 	return ret;
->> @@ -3005,6 +3009,14 @@ static int mptcp_disconnect(struct sock *sk, int 
->> flags)
->> {
->> 	struct mptcp_sock *msk = mptcp_sk(sk);
->> 
->> +	/* We are on the fastopen error path. We can't call straight into the
->> +	 * subflows cleanup code due to lock nesting (we are already under
->> +	 * msk->firstsocket lock). Do nothing and leave the cleanup to the
->> +	 * caller.
->> +	 */
->> +	if (msk->fastopening)
->> +		return 0;
->> +
->> 	inet_sk_state_store(sk, TCP_CLOSE);
->>
->> 	mptcp_stop_timer(sk);
->> @@ -3549,7 +3561,7 @@ static int mptcp_connect(struct sock *sk, struct 
->> sockaddr *uaddr, int addr_len)
->> 	/* if reaching here via the fastopen/sendmsg path, the caller already
->> 	 * acquired the subflow socket lock, too.
->> 	 */
->> -	if (msk->is_sendmsg)
->> +	if (msk->fastopening)
->> 		err = __inet_stream_connect(ssock, uaddr, addr_len, 
->> msk->connect_flags, 1);
->> 	else
->> 		err = inet_stream_connect(ssock, uaddr, addr_len, 
->> msk->connect_flags);
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index 224f03a899c5..a9ff7028fad8 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -294,7 +294,7 @@ struct mptcp_sock {
->> 	u8		recvmsg_inq:1,
->> 			cork:1,
->> 			nodelay:1,
->> -			is_sendmsg:1;
->> +			fastopening:1;
->> 	int		connect_flags;
->> 	struct work_struct work;
->> 	struct sk_buff  *ooo_last_skb;
->> -- 
->> 2.38.1
->> 
->> 
->> 
+> 	/* at this point we held the socket lock for the last subflow we used */
+> 	if (ssk)
+> 		mptcp_push_release(ssk, &info);
 >
-> --
-> Mat Martineau
-> Intel
+> -out:
+> 	/* ensure the rtx timer is running */
+> 	if (!mptcp_timer_pending(sk))
+> 		mptcp_reset_timer(sk);
+> @@ -1614,33 +1619,63 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+> static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
+> {
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> +	struct mptcp_subflow_context *subflow;
+> 	struct mptcp_sendmsg_info info = {
+> 		.data_lock_held = true,
+> 	};
+> -	struct sock *xmit_ssk;
+> +	bool push = true;
+> 	int copied = 0;
+>
+> 	info.flags = 0;
+> -	while (mptcp_send_head(sk)) {
+> +	while (mptcp_send_head(sk) && push) {
+> +		bool delegate = false;
+> 		int ret = 0;
+>
+> 		/* check for a different subflow usage only after
+> 		 * spooling the first chunk of data
+> 		 */
+> -		xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
+> -		if (!xmit_ssk)
+> -			goto out;
+> -		if (xmit_ssk != ssk) {
+> -			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk),
+> -					       MPTCP_DELEGATE_SEND);
+> -			goto out;
+> +		if (first) {
+> +			ret = __subflow_push_pending(sk, ssk, &info);
+> +			first = false;
+> +			if (ret <= 0)
+> +				break;
+> +			copied += ret;
+> +			msk->last_snd = ssk;
+> +			continue;
+> 		}
+>
+> -		ret = __subflow_push_pending(sk, ssk, &info);
+> -		first = false;
+> -		if (ret <= 0)
+> -			break;
+> -		copied += ret;
+> +		if (mptcp_sched_get_send(msk))
+> +			goto out;
+> +
+> +		mptcp_for_each_subflow(msk, subflow) {
+> +			if (READ_ONCE(subflow->scheduled)) {
+> +				struct sock *xmit_ssk = mptcp_subflow_tcp_sock(subflow);
+> +
+> +				if (xmit_ssk != ssk) {
+> +					/* Only delegate to one subflow recently,
+> +					 * TODO: chain delegated calls for more subflows.
+> +					 */
+> +					if (delegate)
+> +						goto out;
+> +					mptcp_subflow_delegate(subflow,
+> +							       MPTCP_DELEGATE_SEND);
+> +					msk->last_snd = ssk;
+> +					mptcp_subflow_set_scheduled(subflow, false);
+> +					delegate = true;
+> +					push = false;
+> +					continue;
+> +				}
+> +
+> +				ret = __subflow_push_pending(sk, ssk, &info);
+> +				if (ret <= 0) {
+> +					push = false;
+> +					continue;
+> +				}
+> +				copied += ret;
+> +				msk->last_snd = ssk;
+> +				mptcp_subflow_set_scheduled(subflow, false);
+> +			}
+> +		}
+> 	}
+>
+> out:
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index c4006f142f10..18518a81afb3 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -118,6 +118,19 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+> 	struct mptcp_subflow_context *subflow;
+> 	struct mptcp_sched_data data;
+>
+> +	sock_owned_by_me((const struct sock *)msk);
+> +
+> +	/* the following check is moved out of mptcp_subflow_get_send */
+> +	if (__mptcp_check_fallback(msk)) {
+> +		if (msk->first &&
+> +		    __tcp_can_send(msk->first) &&
+> +		    sk_stream_memory_free(msk->first)) {
+> +			mptcp_subflow_set_scheduled(mptcp_subflow_ctx(msk->first), true);
+> +			return 0;
+> +		}
+> +		return -EINVAL;
+> +	}
+> +
+> 	mptcp_for_each_subflow(msk, subflow) {
+> 		if (READ_ONCE(subflow->scheduled))
+> 			return 0;
+> -- 
+> 2.35.3
+>
 >
 >
 
