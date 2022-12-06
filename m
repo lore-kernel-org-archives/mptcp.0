@@ -1,242 +1,104 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FED194
-	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 01:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670290644; x=1701826644;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=0ro1/ykGul10/TrHJiH+cZvLaUInTqQ5qoaR/8c7Hp0=;
-  b=f+M5UpYQn3JPA+9q0fNfmsKLxqetgObluS5I7m+YzDTpSXhXAQXYD71L
-   oC3HtJm6xcfjNBGh8LmrTN3g8QowMz+V9efB9pL/OscJ5KNE3aRJmSg0I
-   wOytcI3LDr1ju8qZfmMPluMgnzcZxei84k9nNNUvisRMela03opwEPOTb
-   1f4W9/ddbse0zrYGCV9jhyskhVAPdP9aeX+62iJpaqsh+FgPRMxWZWmJS
-   EO7xY3Vu6DRD1yTKcmIooRZvV3VsGkqsxjGxjaEXbTE6svHIosQPUvmiG
-   ogtIwEi1i5KuDptx9N/VJ6Tj8qKeL7V5493tv0LUgTc1viw+VXqw+TBDi
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="318370653"
-X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="318370653"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 17:37:24 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="820407045"
-X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="820407045"
-Received: from psjohns1-mobl.amr.corp.intel.com ([10.209.67.116])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 17:37:23 -0800
-Date: Mon, 5 Dec 2022 17:37:23 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 2/2] mptcp: retrans for redundant sends
-In-Reply-To: <b302a1c5caefc522b8721d099c6a353487fa5c40.1670243225.git.geliang.tang@suse.com>
-Message-ID: <9b671ec9-4b5e-bdbc-b54e-e78bf0867cf3@linux.intel.com>
-References: <cover.1670243225.git.geliang.tang@suse.com> <b302a1c5caefc522b8721d099c6a353487fa5c40.1670243225.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4BA28E7
+	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 09:55:50 +0000 (UTC)
+Received: by mail-ej1-f50.google.com with SMTP id n21so4838203ejb.9
+        for <mptcp@lists.linux.dev>; Tue, 06 Dec 2022 01:55:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kMfnRnynkbHu/P1xUthNQDUf84XAPvKxogIReN4oWko=;
+        b=g3SktiJ4TC5IcpTqAqS6QmkO81qupeqwgy0dAUFaPAPP1TkJnHGDTsglrN66cEyhHW
+         n2n9wL0kjvjLAhCXHs6+S45EY2L6m8fboNtaxsAc6/2DvfhAqenS78sHNXr9KmxxDlvz
+         vtmfO5cYE3/8on2nwlLQpeIlMhHVFCNYxoINNB17q47tUpwvdwWO+v5rZHpKARPcJhHz
+         3oXW4R1UN+RkY5tjhCap2ivkeDVb7GJOlUXoTUY6zItGf5tsq6X38kw9oPDyR01nYQVZ
+         5jkhqul1pZRGGXxuMhPZCVu2Yu4dHjCBgGrHL2gOM4Hh/iy3ODL+Ks+uiqyY3T5UYAux
+         OBXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kMfnRnynkbHu/P1xUthNQDUf84XAPvKxogIReN4oWko=;
+        b=hA2jboeTU188KHa+YwzwmtaMLVzZ4fF9qlVe+/olmPf99x9+Q/zqDg1t/n2cUkEYHs
+         rqRZvuM1mBxSDGzEzh95T+uAg3H6njThFBHpUwIm8DHJ9xldRhUdRrCPgsW8zB2URsbw
+         jHno1eBson6kuSj5YAQKO6QSKRuJnwA5Bw80OBKkAUgiO3y4ZprL7DHyZwhrlXjRgXKz
+         7Mnw4x5QHjM5+5f0430hxqJYkWchTJ4cB95qCqFfYhA8Eu8j15SRpSVKsYDqmwzrU3n+
+         accApk2r0KDsT/gnpdelucWiut8m2EWsdlisW7xy6zdcr4ZYmgmMCnqGbVGTxsOowwUk
+         ljxQ==
+X-Gm-Message-State: ANoB5pn2YBOMg9JemkQUWLpbYtkyus/3NBy8xA3ZGvXGpEee8bLL/Q6m
+	Y1iklzJEiBYDA3a3Z1+/KszwhA==
+X-Google-Smtp-Source: AA0mqf6IZO3CLL1cmjBlcxFwA0SxvZEdrsUlLg1tsgvB9maGZl/m8hyC2o0x6g7cWLWNKexD6ebN3A==
+X-Received: by 2002:a17:907:c718:b0:7ad:dd43:5d2c with SMTP id ty24-20020a170907c71800b007addd435d2cmr111745ejc.8.1670320548460;
+        Tue, 06 Dec 2022 01:55:48 -0800 (PST)
+Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id fe17-20020a1709072a5100b0073d7b876621sm7131513ejc.205.2022.12.06.01.55.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Dec 2022 01:55:48 -0800 (PST)
+Message-ID: <54b8bf5a-a456-c2fb-6dec-95121fe4fab5@tessares.net>
+Date: Tue, 6 Dec 2022 10:55:46 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH mptcp-net v2 1/3] mptcp: remove MPTCP 'ifdef' in TCP SYN
+ cookies
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+References: <20221130094448.4119946-1-matthieu.baerts@tessares.net>
+ <20221130094448.4119946-2-matthieu.baerts@tessares.net>
+ <48d0aa62-276c-c23b-d49a-1d7e3a62fed5@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <48d0aa62-276c-c23b-d49a-1d7e3a62fed5@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 5 Dec 2022, Geliang Tang wrote:
+Hi Mat,
 
-> Redundant sends need to work more like the MPTCP retransmit code path.
-> When the scheduler selects multiple subflows, the first subflow to send
-> is a "normal" transmit, and any other subflows would act like a retransmit
-> when accessing the dfrags.
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
-> net/mptcp/protocol.c | 42 +++++++++++++++++++++++++++++++++++++++---
-> net/mptcp/protocol.h |  1 +
-> 2 files changed, 40 insertions(+), 3 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index ea2e48a74772..545b29c0e01c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -997,6 +997,8 @@ static void __mptcp_clean_una(struct sock *sk)
-> 			break;
->
-> 		if (unlikely(dfrag == msk->first_pending)) {
-> +			if (msk->retrans_redundant)
-> +				break;
-> 			/* in recovery mode can see ack after the current snd head */
-> 			if (WARN_ON_ONCE(!msk->recovery))
-> 				break;
-> @@ -1013,6 +1015,8 @@ static void __mptcp_clean_una(struct sock *sk)
->
-> 		/* prevent wrap around in recovery mode */
-> 		if (unlikely(delta > dfrag->already_sent)) {
-> +			if (msk->retrans_redundant)
-> +				goto out;
-> 			if (WARN_ON_ONCE(!msk->recovery))
-> 				goto out;
-> 			if (WARN_ON_ONCE(delta > dfrag->data_len))
-> @@ -1473,7 +1477,8 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
->
-> static void mptcp_push_release(struct sock *ssk, struct mptcp_sendmsg_info *info)
-> {
-> -	tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
-> +	if (info->mss_now)
-> +		tcp_push(ssk, 0, info->mss_now, tcp_sk(ssk)->nonagle, info->size_goal);
-> 	release_sock(ssk);
-> }
->
-> @@ -1555,14 +1560,19 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> 	struct sock *prev_ssk = NULL, *ssk = NULL;
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> 	struct mptcp_subflow_context *subflow;
-> +	struct mptcp_data_frag *head = NULL;
-> 	struct mptcp_sendmsg_info info = {
-> 				.flags = flags,
-> 	};
-> 	bool do_check_data_fin = false;
-> 	int push_count = 1;
->
-> +	head = mptcp_send_head(sk);
-> +	if (!head)
-> +		goto out;
-> +
-> 	while (mptcp_send_head(sk) && (push_count > 0)) {
-> -		int ret = 0;
-> +		int ret = 0, i = 0;
->
-> 		if (mptcp_sched_get_send(msk))
-> 			goto out;
-> @@ -1571,6 +1581,14 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
->
-> 		mptcp_for_each_subflow(msk, subflow) {
-> 			if (READ_ONCE(subflow->scheduled)) {
-> +				if (i > 0) {
-> +					if (!test_and_set_bit(MPTCP_WORK_RTX, &msk->flags))
-> +						mptcp_schedule_work(sk);
-> +					WRITE_ONCE(msk->first_pending, head);
-> +					msk->retrans_redundant = true;
-> +					goto out;
-> +				}
-> +
+On 05/12/2022 22:52, Mat Martineau wrote:
+> On Wed, 30 Nov 2022, Matthieu Baerts wrote:
+> 
+>> To ease the maintenance, it is often recommended to avoid having #ifdef
+>> preprocessor conditions.
+>>
+>> Here the section related to CONFIG_MPTCP was quite short but the next
+>> commit needs to add more code around. It is then cleaner to move
+>> specific MPTCP code to functions located in net/mptcp directory.
+>>
+>> Now that mptcp_subflow_request_sock_ops structure can be static, it can
+>> also be marked as "read only after init".
+>>
+>> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> 
+> Hi Matthieu -
+> 
+> I noticed today that there's no Fixes: tag for this commit, which the
+> netdev CI will check for. Like you say in the commit message, this patch
+> is a small bit of refactoring to prepare for the following patch(es) -
+> should it share Fixes: tags with those or just let the git dependencies
+> speak for themselves?
 
-Hi Geliang -
+I don't think we need to add a Fixes tag because as you said, it is
+mentioned this modification is needed for the next patch. I'm sure
+netdev maintainers will understand why it doesn't have a "Fixes" tag.
+But I guess we can also add it (even if it is not really a fix).
 
-On this code path, the msk lock is not released between subflow sends, so 
-I don't think it's necessary to use the retrans_redundant approach for 
-__mptcp_push_pending().
+We should probably Cc 'stable' ML on the 3 patches but we never really
+did before.
 
-Did you find that the retrans_redundant path was needed in both 
-__mptcp_push_pending() and __mptcp_subflow_push_pending()?
+Up to you, if you prefer, I can add it :)
 
-> 				prev_ssk = ssk;
-> 				ssk = mptcp_subflow_tcp_sock(subflow);
->
-> @@ -1598,6 +1616,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-> 						push_count--;
-> 					continue;
-> 				}
-> +				i++;
-> 				do_check_data_fin = true;
-> 				msk->last_snd = ssk;
-> 				mptcp_subflow_set_scheduled(subflow, false);
-> @@ -1621,16 +1640,21 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
-> {
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> 	struct mptcp_subflow_context *subflow;
-> +	struct mptcp_data_frag *head = NULL;
-> 	struct mptcp_sendmsg_info info = {
-> 		.data_lock_held = true,
-> 	};
-> 	bool push = true;
-> 	int copied = 0;
->
-> +	head = mptcp_send_head(sk);
-> +	if (!head)
-> +		goto out;
-> +
-> 	info.flags = 0;
-> 	while (mptcp_send_head(sk) && push) {
-> 		bool delegate = false;
-> -		int ret = 0;
-> +		int ret = 0, i = 0;
->
-> 		/* check for a different subflow usage only after
-> 		 * spooling the first chunk of data
-> @@ -1652,6 +1676,14 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
-> 			if (READ_ONCE(subflow->scheduled)) {
-> 				struct sock *xmit_ssk = mptcp_subflow_tcp_sock(subflow);
->
-> +				if (i > 0) {
-> +					if (!test_and_set_bit(MPTCP_WORK_RTX, &msk->flags))
-> +						mptcp_schedule_work(sk);
-> +					WRITE_ONCE(msk->first_pending, head);
-> +					msk->retrans_redundant = true;
-> +					goto out;
-> +				}
-> +
-
-I need to look at this in some more detail, but my initial impression is 
-that redundant sends will need to avoid the worker thread and instead 
-add calls to the retrans code through MPTCP_DELEGATE_SEND.
-
-
-- Mat
-
-> 				if (xmit_ssk != ssk) {
-> 					/* Only delegate to one subflow recently,
-> 					 * TODO: chain delegated calls for more subflows.
-> @@ -1660,6 +1692,7 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
-> 						goto out;
-> 					mptcp_subflow_delegate(subflow,
-> 							       MPTCP_DELEGATE_SEND);
-> +					i++;
-> 					msk->last_snd = ssk;
-> 					mptcp_subflow_set_scheduled(subflow, false);
-> 					delegate = true;
-> @@ -1672,6 +1705,7 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
-> 					push = false;
-> 					continue;
-> 				}
-> +				i++;
-> 				copied += ret;
-> 				msk->last_snd = ssk;
-> 				mptcp_subflow_set_scheduled(subflow, false);
-> @@ -2593,6 +2627,7 @@ static void __mptcp_retrans(struct sock *sk)
-> 		}
-> 	}
-> 	dfrag->already_sent = max(dfrag->already_sent, len);
-> +	msk->retrans_redundant = false;
->
-> reset_timer:
-> 	mptcp_check_and_set_pending(sk);
-> @@ -2724,6 +2759,7 @@ static int __mptcp_init_sock(struct sock *sk)
-> 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
-> 	WRITE_ONCE(msk->allow_infinite_fallback, true);
-> 	msk->recovery = false;
-> +	msk->retrans_redundant = false;
->
-> 	mptcp_pm_data_init(msk);
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index adfb758a842f..e6bebde2f3ab 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -290,6 +290,7 @@ struct mptcp_sock {
-> 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
-> 	bool		csum_enabled;
-> 	bool		allow_infinite_fallback;
-> +	bool		retrans_redundant;
-> 	u8		mpc_endpoint_id;
-> 	u8		recvmsg_inq:1,
-> 			cork:1,
-> -- 
-> 2.35.3
->
->
->
-
---
-Mat Martineau
-Intel
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
