@@ -1,102 +1,116 @@
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7A51362;
-	Tue,  6 Dec 2022 10:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670323378; x=1701859378;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=31y31Kfr+aYyNgRZJuIfo1aOe8I3JoDh4dq09J2qISw=;
-  b=bpY14Etfrpe1bsOOoPomCO2QryN3qppbtKjLceeRv1RjHzGlSzf6UHU/
-   50P/30XTOX7K5oF4Rb1Da9qlAHrLfTSEDTlYPWZbEpqa4+dyroMLd8Sor
-   uPggb8LtXp1i9kZVtywpMDWffwwPod+1jdMCVvsZNsToYCiDFFCc2ndxO
-   3brDVKaP6X5hrb00flOPRl/wShqNxuZfZc5vyRBJW3/Rq6q0HC7DimXag
-   hmr4KwjcCGH98RmBWYEMwIdlTvqUqjhUX9HbgUxeEnwjCGdY7qfKK9DMY
-   4ZWiuayLC21eWRPysa3kDkcDKdvLpyu4aIrl+rf2ZtAfjRHMSSf9nt11Q
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="378757236"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="378757236"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 02:42:57 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="788438522"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="788438522"
-Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.254.210.59]) ([10.254.210.59])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 02:42:55 -0800
-Subject: Re: net/mptcp/pm_netlink.c:1169 mptcp_pm_parse_pm_addr_attr() warn:
- missing error code? 'err'
-To: Dan Carpenter <error27@gmail.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>, lkp@intel.com
-Cc: oe-kbuild@lists.linux.dev, Florian Westphal <fw@strlen.de>,
- oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
- mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-References: <202212021422.Uh5cCKY2-lkp@intel.com>
- <f0722fd5-af12-4cff-9ffa-38b9e8d23313@linux.intel.com>
- <Y4sI65oadrVtBlnR@kadam>
-From: "Chen, Rong A" <rong.a.chen@intel.com>
-Message-ID: <3b6b27ec-e478-1e71-a84e-e1177827d437@intel.com>
-Date: Tue, 6 Dec 2022 18:42:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.12.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F7A2F2E
+	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 11:00:45 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id vp12so5249038ejc.8
+        for <mptcp@lists.linux.dev>; Tue, 06 Dec 2022 03:00:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DgzCH7hmFFkmGRbOGnzhF0U7QzL2mZ6msG/ICtNfg2I=;
+        b=NNxHWON0I6jPNyLKi08XLy8J/UCRcdSJuBjaJKKdb0MOMCT29qKBMlgIVo40Cr9/2l
+         rnFEYYGaX0oQB7Bk1pCQKmCiq7DbjVcJBVEyzuamnWEI0G37IksSvDmEFFTvSN/zU1Cc
+         a4i3NY8pMCuez+gmojtTBogay1A7uf8UO13lotDFAZAWNDLK+k/9SdU5/glAvW3ltnjN
+         FOLg60MWNbInN/e1uzVAL5kDL2oYFe+B8UhQajPgLfq1bx23VW1hntFNHvVtfXNNgaVq
+         TWihy9b81RPWQOFze6L4p3QQ15aOGHA5g/B1Ek+ETJmfTv5fMqxviMxO+lxFIC7BsVVY
+         FP2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DgzCH7hmFFkmGRbOGnzhF0U7QzL2mZ6msG/ICtNfg2I=;
+        b=0eBnuZAETDdVRo4WFoBIzYKyg/zNNIsC15hh3V0hIs5xoAhY2INGNR5AkvP8j2EIbo
+         TDKtNZfoFJeNXD7lOIFCtq+V7Bx74s9euQ6p+w5Np4GqSwg58b6nHqgcQnZpxUWuMWIm
+         QXguVLus++3yzieigqEFRH1fRKcaLyojDiOrUE13JF+625q/jUSR62MOLGMWM5itoAQR
+         Hj/d/9u7usPZq+kfHPnCKfvgjoLEkPe4ARh786aZ0ueIY3ghP3yW5M9vDq6NQp3MxR3b
+         fA2gbRtFHcjvwutUYgvJmxusvsZ6kcS1/a3dumo7+rX+u31q6y+Vc6YsQ/pLZkUMLuAp
+         cPfg==
+X-Gm-Message-State: ANoB5pnycDfLRuovVKdLnGfFikg4wEYV4j+3dZjrdkaMAnCogSyW/q0X
+	Dx1gbERZVCTR3tNHYeFfT8ky6Q12bLapCJfs
+X-Google-Smtp-Source: AA0mqf5YBfKiCAcgerrRBQK5dkOM0PTFwRG6PcxBDiR4GFy6w0QVBe4XAislDcNKrbBr1NCt4kceeQ==
+X-Received: by 2002:a17:906:2554:b0:7c0:db53:c599 with SMTP id j20-20020a170906255400b007c0db53c599mr94117ejb.22.1670324444173;
+        Tue, 06 Dec 2022 03:00:44 -0800 (PST)
+Received: from [10.44.2.26] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id va13-20020a17090711cd00b007c09d37eac7sm7238832ejb.216.2022.12.06.03.00.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Dec 2022 03:00:43 -0800 (PST)
+Message-ID: <5f7fd533-88e8-277b-5a9a-0dc6bb9bd1ce@tessares.net>
+Date: Tue, 6 Dec 2022 12:00:43 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <Y4sI65oadrVtBlnR@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v2 mptcp-net] mptcp: fix deadlock in fastopen error path.
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <f594fa95592f25434e24f0d16033cda1af9ce2cc.1670272505.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <f594fa95592f25434e24f0d16033cda1af9ce2cc.1670272505.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Hi Paolo, Mat,
 
+On 05/12/2022 21:44, Paolo Abeni wrote:
+> MatM reported a deadlock at fastopening time:
 
-On 12/3/2022 4:29 PM, Dan Carpenter wrote:
-> On Fri, Dec 02, 2022 at 03:38:01PM -0800, Mat Martineau wrote:
->>> 01cacb00b35cb6 Paolo Abeni      2020-03-27  1158  	/* no validation needed - was already done via nested policy */
->>> 01cacb00b35cb6 Paolo Abeni      2020-03-27  1159  	err = nla_parse_nested_deprecated(tb, MPTCP_PM_ADDR_ATTR_MAX, attr,
->>> 01cacb00b35cb6 Paolo Abeni      2020-03-27  1160  					  mptcp_pm_addr_policy, info->extack);
->>> 01cacb00b35cb6 Paolo Abeni      2020-03-27  1161  	if (err)
->>> 01cacb00b35cb6 Paolo Abeni      2020-03-27  1162  		return err;
->>> 01cacb00b35cb6 Paolo Abeni      2020-03-27  1163
->>> 982f17ba1a2534 Florian Westphal 2022-05-03  1164  	if (tb[MPTCP_PM_ADDR_ATTR_ID])
->>> 982f17ba1a2534 Florian Westphal 2022-05-03  1165  		addr->id = nla_get_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
->>> 982f17ba1a2534 Florian Westphal 2022-05-03  1166
->>> 01cacb00b35cb6 Paolo Abeni      2020-03-27  1167  	if (!tb[MPTCP_PM_ADDR_ATTR_FAMILY]) {
->>> 01cacb00b35cb6 Paolo Abeni      2020-03-27  1168  		if (!require_family)
->>> 982f17ba1a2534 Florian Westphal 2022-05-03 @1169  			return err;
->>>
->>> "err" is zero at this point.  Presumably a negative error code was
->>> intended.
->>
->> Hi Dan -
->>
->> The intended error code is 0 here: the return happens if no
->> MPTCP_PM_ADDR_ATTR_FAMILY value is present and require_family is false.
->>
->> It would be clearer to "return 0;", but the code is working as expected.
->>
->>
->> Could you be sure to cc mptcp@lists.linux.dev and
->> matthieu.baerts@tessares.net for future MPTCP issues?
+(...)
 
-Hi Mat,
-
-Sorry for the delay, we'll cc you and the mailing list in the future.
-
-Best Regards,
-Rong Chen
-
+> In the error path, tcp_sendmsg_fastopen() ends-up calling
+> mptcp_disconnect(), and the latter tries to close each
+> subflow, acquring the socket lock on each of them.
 > 
-> These emails are automatically generated by the kbuild team.  I don't
-> know what kind of heuristics they use...  I've put them on the To
-> header.  There is probably a reason why they don't just use
-> get_maintainer.pl...
+> At fastopen time, we have a single subflow, and such subflow
+> socket lock is already held by the called, causing the deadlock.
 > 
-> regards,
-> dan carpenter
+> We already track the 'fastopen in progress' status inside the msk
+> socket. Use it to address the issue, making mptcp_disconnect() a
+> no op when invoked from the fastopen (error) path and doing the
+> relevant cleanup after releasing the subflow socket lock.
 > 
+> While at the above, rename the fastopen status bit to something
+> more meaningful.
 > 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/321
+> Reported-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> Fixes: fa9e57468aa1 ("mptcp: fix abba deadlock on fastopen")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+>  - Fixes -> Closes (MatM)
+>  - fix style issue - missing brackets (MatM)
+>  - fix code comment typo
+>  - fix pktdrill failures (ret != -EINPROGRESS -> ret && ret !=
+>    -EINPROGRESS)
+
+Thank you for the patch and the review!
+
+Now in our tree (fixes for -net) with Mat's RvB tag and without a typo
+spot by codespell:
+
+
+New patches for t/upstream-net and t/upstream:
+- 46a9518f3d44: mptcp: fix deadlock in fastopen error path
+- Results: d548986b0c83..8def2e2cb0cb (export-net)
+- Results: 9d2a0e3ede73..c7fdd02a4241 (export)
+
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20221206T105822
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221206T105822
+
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
