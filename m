@@ -1,45 +1,45 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F7A2F2E
-	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 11:00:45 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id vp12so5249038ejc.8
-        for <mptcp@lists.linux.dev>; Tue, 06 Dec 2022 03:00:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B552F2E
+	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 11:02:49 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id qk9so5295930ejc.3
+        for <mptcp@lists.linux.dev>; Tue, 06 Dec 2022 03:02:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DgzCH7hmFFkmGRbOGnzhF0U7QzL2mZ6msG/ICtNfg2I=;
-        b=NNxHWON0I6jPNyLKi08XLy8J/UCRcdSJuBjaJKKdb0MOMCT29qKBMlgIVo40Cr9/2l
-         rnFEYYGaX0oQB7Bk1pCQKmCiq7DbjVcJBVEyzuamnWEI0G37IksSvDmEFFTvSN/zU1Cc
-         a4i3NY8pMCuez+gmojtTBogay1A7uf8UO13lotDFAZAWNDLK+k/9SdU5/glAvW3ltnjN
-         FOLg60MWNbInN/e1uzVAL5kDL2oYFe+B8UhQajPgLfq1bx23VW1hntFNHvVtfXNNgaVq
-         TWihy9b81RPWQOFze6L4p3QQ15aOGHA5g/B1Ek+ETJmfTv5fMqxviMxO+lxFIC7BsVVY
-         FP2w==
+        bh=b3focy5DPRaylciSJKtJeMul5LMPRnPX+E8mGzav3Ag=;
+        b=GjtZPoETNrGAtHGPBij+7ohy8mUZSdjwv0dNRsljGtc3cIWu2vR+vrD4BFWcYDdEAL
+         9pZpMKtifqZ9YLhmeHkkxka0NlBquO5JzTwjBVKjOFZ8KXsaJ2z06FXVTsQ25LwhDCih
+         g4EorocVI/3k23pUJK7msl4p7UNrbcmF5q1bB6RN8XBBaE/scJ3wew3FTUF3y1HNVq3R
+         5S6DoR+GedPNjozh5e3W46m1rr+jfY6SWv2PgGShz4BGbPgcUdKclI5YF4Ij1ESDJqM1
+         kK9no2af75RuCqVVrP/o0QQSsv+NWcwwRYsakam48/WsaX08eYx72oEACowVT/hVvj5W
+         4e0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DgzCH7hmFFkmGRbOGnzhF0U7QzL2mZ6msG/ICtNfg2I=;
-        b=0eBnuZAETDdVRo4WFoBIzYKyg/zNNIsC15hh3V0hIs5xoAhY2INGNR5AkvP8j2EIbo
-         TDKtNZfoFJeNXD7lOIFCtq+V7Bx74s9euQ6p+w5Np4GqSwg58b6nHqgcQnZpxUWuMWIm
-         QXguVLus++3yzieigqEFRH1fRKcaLyojDiOrUE13JF+625q/jUSR62MOLGMWM5itoAQR
-         Hj/d/9u7usPZq+kfHPnCKfvgjoLEkPe4ARh786aZ0ueIY3ghP3yW5M9vDq6NQp3MxR3b
-         fA2gbRtFHcjvwutUYgvJmxusvsZ6kcS1/a3dumo7+rX+u31q6y+Vc6YsQ/pLZkUMLuAp
-         cPfg==
-X-Gm-Message-State: ANoB5pnycDfLRuovVKdLnGfFikg4wEYV4j+3dZjrdkaMAnCogSyW/q0X
-	Dx1gbERZVCTR3tNHYeFfT8ky6Q12bLapCJfs
-X-Google-Smtp-Source: AA0mqf5YBfKiCAcgerrRBQK5dkOM0PTFwRG6PcxBDiR4GFy6w0QVBe4XAislDcNKrbBr1NCt4kceeQ==
-X-Received: by 2002:a17:906:2554:b0:7c0:db53:c599 with SMTP id j20-20020a170906255400b007c0db53c599mr94117ejb.22.1670324444173;
-        Tue, 06 Dec 2022 03:00:44 -0800 (PST)
+        bh=b3focy5DPRaylciSJKtJeMul5LMPRnPX+E8mGzav3Ag=;
+        b=5Yd01dKS9wigTylZnCLawz2RL52nVvFOdm2IvcXCAHi4ti+kvCEs/sC2S2mgx3LLn7
+         qq7qZpawzNAko51NVkuUsi7Cx7YaKjJLicZFYcvTQvIbA+51hFP/Z8X9fGBtCN4yhi0y
+         ti7PCz3NfbfVFDfEmnrPDu1IwdnK/Ut+eC2X37FfLsQ4Hx8vdS9n4a2Var9DFTn1l1ho
+         VNtywdUxNdTap0vtvkIDLTLmXgndUE3XkyE/VnxjthQX5hmWtjTyvQpJr/l91g7nForw
+         +dnsk3oneuqoxjeMM1N1w5I92I283qZilrgWSkzNaX5TMHEMpsvpVIpw/zdW/EKwDyx7
+         6fNg==
+X-Gm-Message-State: ANoB5pmXngXFtHoei0WdvzyGE07nBrsnBU6yCu2rPi4A+MyDar6a+LBS
+	U6EMdE4UtD5gPtphsZtuZtajRF16JyUs34gn
+X-Google-Smtp-Source: AA0mqf6H/xujUtV4AxisjCWAeG8wmqnusz/7Oz0485kKxrg8TPICyRydHn8D3uL8nnHnjHLrc8U4zQ==
+X-Received: by 2002:a17:906:844:b0:7ad:fd3e:8fd4 with SMTP id f4-20020a170906084400b007adfd3e8fd4mr117996ejd.69.1670324567779;
+        Tue, 06 Dec 2022 03:02:47 -0800 (PST)
 Received: from [10.44.2.26] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id va13-20020a17090711cd00b007c09d37eac7sm7238832ejb.216.2022.12.06.03.00.43
+        by smtp.gmail.com with ESMTPSA id b19-20020a17090630d300b007adade0e9easm4583479ejb.85.2022.12.06.03.02.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Dec 2022 03:00:43 -0800 (PST)
-Message-ID: <5f7fd533-88e8-277b-5a9a-0dc6bb9bd1ce@tessares.net>
-Date: Tue, 6 Dec 2022 12:00:43 +0100
+        Tue, 06 Dec 2022 03:02:47 -0800 (PST)
+Message-ID: <1213912e-b707-d6a5-195d-5383726c69c5@tessares.net>
+Date: Tue, 6 Dec 2022 12:02:46 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,66 +48,54 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [PATCH v2 mptcp-net] mptcp: fix deadlock in fastopen error path.
+Subject: Re: [PATCH mptcp-next] mptcp: return 0 instead of 'err' var
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <f594fa95592f25434e24f0d16033cda1af9ce2cc.1670272505.git.pabeni@redhat.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, kernel test robot <lkp@intel.com>,
+ Dan Carpenter <error27@gmail.com>
+References: <20221205101002.2620762-1-matthieu.baerts@tessares.net>
+ <4ca7e8d1-4d93-0e23-45a5-2084f7df982e@linux.intel.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <f594fa95592f25434e24f0d16033cda1af9ce2cc.1670272505.git.pabeni@redhat.com>
+In-Reply-To: <4ca7e8d1-4d93-0e23-45a5-2084f7df982e@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Mat,
+Hi Mat,
 
-On 05/12/2022 21:44, Paolo Abeni wrote:
-> MatM reported a deadlock at fastopening time:
-
-(...)
-
-> In the error path, tcp_sendmsg_fastopen() ends-up calling
-> mptcp_disconnect(), and the latter tries to close each
-> subflow, acquring the socket lock on each of them.
+On 05/12/2022 22:31, Mat Martineau wrote:
+> On Mon, 5 Dec 2022, Matthieu Baerts wrote:
 > 
-> At fastopen time, we have a single subflow, and such subflow
-> socket lock is already held by the called, causing the deadlock.
+>> When 'err' is 0, it looks clearer to return '0' instead of the variable
+>> called 'err'.
+>>
+>> The behaviour is then not modified, just a clearer code.
+>>
+>> By doing this, we can also avoid false positive smatch warnings like
+>> this one:
+>>
+>>  net/mptcp/pm_netlink.c:1169 mptcp_pm_parse_pm_addr_attr() warn:
+>> missing error code? 'err'
+>>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Reported-by: Dan Carpenter <error27@gmail.com>
+>> Suggested-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 > 
-> We already track the 'fastopen in progress' status inside the msk
-> socket. Use it to address the issue, making mptcp_disconnect() a
-> no op when invoked from the fastopen (error) path and doing the
-> relevant cleanup after releasing the subflow socket lock.
+> Thanks for the cleanup Matthieu. Looks good to me.
 > 
-> While at the above, rename the fastopen status bit to something
-> more meaningful.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/321
-> Reported-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> Fixes: fa9e57468aa1 ("mptcp: fix abba deadlock on fastopen")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> v1 -> v2:
->  - Fixes -> Closes (MatM)
->  - fix style issue - missing brackets (MatM)
->  - fix code comment typo
->  - fix pktdrill failures (ret != -EINPROGRESS -> ret && ret !=
->    -EINPROGRESS)
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
-Thank you for the patch and the review!
+Thank you for the review!
 
-Now in our tree (fixes for -net) with Mat's RvB tag and without a typo
-spot by codespell:
+Now in our tree (feat. for net-next) with your RvB tag:
 
-
-New patches for t/upstream-net and t/upstream:
-- 46a9518f3d44: mptcp: fix deadlock in fastopen error path
-- Results: d548986b0c83..8def2e2cb0cb (export-net)
-- Results: 9d2a0e3ede73..c7fdd02a4241 (export)
-
+New patches for t/upstream:
+- 1172127291d8: mptcp: return 0 instead of 'err' var
+- Results: c7fdd02a4241..fb04e49223d2 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20221206T105822
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221206T105822
-
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221206T110210
 
 Cheers,
 Matt
