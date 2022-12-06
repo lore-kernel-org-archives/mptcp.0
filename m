@@ -1,133 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D5227713
-	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 16:52:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1670345522;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XIpckjVarsXSQqROHjIV5YMQ3njKr27YAdfHQ1eBWXM=;
-	b=JpPeZRVuDnCD/TTN1sDBE150dHBM7ryYDl3QVQzsuwPyRrmrouP9Z8HvCosY85/EN8DYrI
-	udnKWwgrMxnVK3fTIqxTrgz/5jBdsxc84HQaANTmc5R3EAq9aVCaYJyKTSKqj9zI3WCDPW
-	xN6kFzV7dts8BT7kGnx9VLCh8lLXoLU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-503-hiMdHbCGNAeWn58_29CJSw-1; Tue, 06 Dec 2022 11:52:00 -0500
-X-MC-Unique: hiMdHbCGNAeWn58_29CJSw-1
-Received: by mail-wm1-f69.google.com with SMTP id u9-20020a05600c00c900b003cfb12839d6so5863701wmm.5
-        for <mptcp@lists.linux.dev>; Tue, 06 Dec 2022 08:52:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XIpckjVarsXSQqROHjIV5YMQ3njKr27YAdfHQ1eBWXM=;
-        b=ddZqNSkpmuAxEabCNLd3ivy/LvOFFFVVAs+BMqRLP0+NdLWv0scWgzzKrvk64Z9+nt
-         MehwwGYFtdEg8rVXxSapBQrl/RJl79rcRxySoew2og1nsVXBY0iTS8TVhGJTqk9NJS9H
-         y2T59LTc1MKFXrFZS/96DzI05364LFRzPA6SeLV8ynyOlTJzC1dV5fSzfi0N0nkY/mEr
-         dBfgYSrtsc++zYzA8EmmqHF75zepNtcJwTGdYaOLmVE5q4XtSdqUgULJGmb7yri1rEJQ
-         21zs9hZGBy0L12OblmN7poXJpZXF2aIvjFJv4QTJFsOQZozkGiLrcaigjXqFBuAyZGtC
-         2y0Q==
-X-Gm-Message-State: ANoB5pkQPjaphIaFpoHs7QTXHUCNG1Ca/HhTK3PH6MTwcrAdvbW9kNA/
-	sP0pbvEkl/04eXbZH5BV9bRsv7k1calg0FVSx2QzhjfLjQ6hEGe335eUrMMeaMZSgX9FUlIbhCV
-	1pvL4QwtoEzDN3bQ=
-X-Received: by 2002:adf:ebc6:0:b0:241:c6d8:be83 with SMTP id v6-20020adfebc6000000b00241c6d8be83mr46196226wrn.454.1670345519817;
-        Tue, 06 Dec 2022 08:51:59 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf60dqg/J7gSlr8BiWptFPCbF1mq7Dzc0r47+I6tQYq+KjcdkixAhM+jx7p9yL/Kn4RX5L/gMA==
-X-Received: by 2002:adf:ebc6:0:b0:241:c6d8:be83 with SMTP id v6-20020adfebc6000000b00241c6d8be83mr46196208wrn.454.1670345519570;
-        Tue, 06 Dec 2022 08:51:59 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-106-100.dyn.eolo.it. [146.241.106.100])
-        by smtp.gmail.com with ESMTPSA id f6-20020a0560001b0600b002415dd45320sm16896783wrz.112.2022.12.06.08.51.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Dec 2022 08:51:59 -0800 (PST)
-Message-ID: <99550009c78de401d55356721aac56873319b5cc.camel@redhat.com>
-Subject: Re: Broken SELinux/LSM labeling with MPTCP and accept(2)
-From: Paolo Abeni <pabeni@redhat.com>
-To: Ondrej Mosnacek <omosnace@redhat.com>
-Cc: Paul Moore <paul@paul-moore.com>, SElinux list
- <selinux@vger.kernel.org>,  Linux Security Module list
- <linux-security-module@vger.kernel.org>, mptcp@lists.linux.dev, network dev
- <netdev@vger.kernel.org>, Mat Martineau
- <mathew.j.martineau@linux.intel.com>, Matthieu Baerts
- <matthieu.baerts@tessares.net>
-Date: Tue, 06 Dec 2022 17:51:57 +0100
-In-Reply-To: <CAFqZXNtOku4vr5RrQU4vcvCVz5iK79CimeUVHu0S=QoN-QVEjg@mail.gmail.com>
-References: <CAFqZXNs2LF-OoQBUiiSEyranJUXkPLcCfBkMkwFeM6qEwMKCTw@mail.gmail.com>
-	 <108a1c80eed41516f85ebb264d0f46f95e86f754.camel@redhat.com>
-	 <CAHC9VhSSKN5kh9Kqgj=aCeA92bX1mJm1v4_PnRgua86OHUwE3w@mail.gmail.com>
-	 <48dd1e9b21597c46e4767290e5892c01850a45ff.camel@redhat.com>
-	 <CAHC9VhT0rRhr7Ty_p3Ld5O+Ltf8a8XSXcyik7tFpDRMrTfsF+A@mail.gmail.com>
-	 <50e7ea22119c3afcb4be5a4b6ad9747465693d10.camel@redhat.com>
-	 <CAFqZXNtOku4vr5RrQU4vcvCVz5iK79CimeUVHu0S=QoN-QVEjg@mail.gmail.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7A027713
+	for <mptcp@lists.linux.dev>; Tue,  6 Dec 2022 17:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670347205; x=1701883205;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=jXk2NH0jp/RY5rc8EnkhVrFiLgevPSEwfBS6FuLf+tQ=;
+  b=NfG+Vh7WJfpklgD3UYHuDG4/AEOI/IS44MowSG3k95NcLuUddT61866U
+   T8gut9SdfjEIj7rjzvaIxqnuns7UKfbSfO+8kKp1p66We6g6Ca9eyc3Xr
+   WwNhlr31xiNcWV7JOL2S3m7dFGyISzf6WrWvPkZ5YseGujEUab+AjhUCB
+   wBnvF5qD9upyLH+p+cNtZ0h85zi3Lkykoa4lW4CTyVBqNdzFzfskiSuSJ
+   BqEGiPYfFXXqvl3u5J6ede6vuz3HNwjI7en9QyLbLX+3rOG5Eb8OYZRfY
+   ahXa8b2FhA60/6jqrmAoaw4y8vMGL3dYuwbE0L7Us1R2fBvl+bQD2p9i3
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="317821908"
+X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
+   d="scan'208";a="317821908"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 09:20:05 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="639948516"
+X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
+   d="scan'208";a="639948516"
+Received: from mjpenner-mobl2.amr.corp.intel.com ([10.209.71.159])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 09:20:04 -0800
+Date: Tue, 6 Dec 2022 09:20:04 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net v2 1/3] mptcp: remove MPTCP 'ifdef' in TCP SYN
+ cookies
+In-Reply-To: <54b8bf5a-a456-c2fb-6dec-95121fe4fab5@tessares.net>
+Message-ID: <21087bb1-41e3-110d-e7c7-a211320d3f80@linux.intel.com>
+References: <20221130094448.4119946-1-matthieu.baerts@tessares.net> <20221130094448.4119946-2-matthieu.baerts@tessares.net> <48d0aa62-276c-c23b-d49a-1d7e3a62fed5@linux.intel.com> <54b8bf5a-a456-c2fb-6dec-95121fe4fab5@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 2022-12-06 at 15:43 +0100, Ondrej Mosnacek wrote:
-> On Mon, Dec 5, 2022 at 9:58 PM Paolo Abeni <pabeni@redhat.com> wrote:
-> > 
-> > On Fri, 2022-12-02 at 15:16 -0500, Paul Moore wrote:
-> [...]
-> > > What if we added a new LSM call in mptcp_subflow_create_socket(), just
-> > > after the sock_create_kern() call?
-> > 
-> > That should work, I think. I would like to propose a (last) attempt
-> > that will not need an additional selinux hook - to try to minimize the
-> > required changes and avoid unnecessary addional work for current and
-> > future LSM mainteniance and creation.
-> > 
-> > I tested the following patch and passes the reproducer (and mptcp self-
-> > tests). Basically it introduces and uses a sock_create_nosec variant,
-> > to allow mptcp_subflow_create_socket() calling
-> > security_socket_post_create() with the corrct arguments. WDYT?
-> 
-> This seems like a step in the right direction, but I wonder if we
-> shouldn't solve the current overloading of the "kern" flag more
-> explicitly - i.e. split it into two flags: one to indicate that the
-> socket will only be used internally by the kernel ("internal") and
-> another one to indicate if it should be labeled according to the
-> current task or as a kernel-created socket ("kern"?). Technically,
-> each combination could have a valid use case:
-> - !internal && !kern -> a regular userspace-created socket,
-> - !internal && kern -> a socket that is exposed to userspace, but
-> created by the kernel outside of a syscall (e.g. some global socket
-> created during initcall phase and later returned to userspace via an
-> ioctl or something),
-> - internal && !kern -> our MPTCP case, where the socket itself is
-> internal, but the label is still important so it can be passed onto
-> its accept-offspring (which may no longer be internal),
-> - internal && kern -> a completely kernel-internal socket.
+On Tue, 6 Dec 2022, Matthieu Baerts wrote:
 
-I would say perfect is the enemy of good ;) it would be nice to have a
-fix sometime soon, and we can improve as needed.
+> Hi Mat,
+>
+> On 05/12/2022 22:52, Mat Martineau wrote:
+>> On Wed, 30 Nov 2022, Matthieu Baerts wrote:
+>>
+>>> To ease the maintenance, it is often recommended to avoid having #ifdef
+>>> preprocessor conditions.
+>>>
+>>> Here the section related to CONFIG_MPTCP was quite short but the next
+>>> commit needs to add more code around. It is then cleaner to move
+>>> specific MPTCP code to functions located in net/mptcp directory.
+>>>
+>>> Now that mptcp_subflow_request_sock_ops structure can be static, it can
+>>> also be marked as "read only after init".
+>>>
+>>> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+>>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>>
+>> Hi Matthieu -
+>>
+>> I noticed today that there's no Fixes: tag for this commit, which the
+>> netdev CI will check for. Like you say in the commit message, this patch
+>> is a small bit of refactoring to prepare for the following patch(es) -
+>> should it share Fixes: tags with those or just let the git dependencies
+>> speak for themselves?
+>
+> I don't think we need to add a Fixes tag because as you said, it is
+> mentioned this modification is needed for the next patch. I'm sure
+> netdev maintainers will understand why it doesn't have a "Fixes" tag.
+> But I guess we can also add it (even if it is not really a fix).
+>
+> We should probably Cc 'stable' ML on the 3 patches but we never really
+> did before.
+>
+> Up to you, if you prefer, I can add it :)
+>
 
-> Another concern I have about this approach is whether it is possible
-> (in some more advanced scenario) for mptcp_subflow_create_socket() to
-> be called in the context of a different task than the one
-> creating/handling the main socket. Because then a potential socket
-> accepted from the new subflow socket would end up with an unexpected
-> (and probably semantically wrong) label. Glancing over the call tree,
-> it seems it can be called via some netlink commands - presumably
-> intended to be used by mptcpd?
+I think it's ok to try without it, not every patch merged to -net has one.
 
-Yes, the above can happen, but I think it does not have LSM-related
-implications, as subflows created in the above scenario can be MP_JOIN
-only - that is, will never be even indirectly exposed to user-space.
+Regarding cc: to stable, I've been trying to do that for patches we do 
+want backported. We don't want that tag included when sending to mptcp-net 
+on our ML as git-send-email would spam the stable list, so I've been 
+adding them to the .patch files before upstreaming to netdev. Adding the 
+Cc: stable tag in the export branch would probably be ok as long as we're 
+careful in other cases where the patches are emailed (when not 
+upstreaming).
 
-
-Cheers,
-
-Paolo
-
+--
+Mat Martineau
+Intel
