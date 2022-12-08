@@ -1,273 +1,496 @@
-Received: from sonic303-27.consmr.mail.ne1.yahoo.com (sonic303-27.consmr.mail.ne1.yahoo.com [66.163.188.153])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E216ADE
-	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 15:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1670513586; bh=bAXj1zQgUqxwL+NfnAA1mkuO8NrpRS0bZrRSsA8Ai7Y=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=U14M7xTTSXpURi3inbYBNTdhtj223knANIrG/B2KBhnUkwomX8mydA/+fx12kpNIevxfRsr0Ik1/LOdg5Ukjn6+eB0uY65GoehNun4CRY+YKv/0hER0Njlz62Lh3nJgm4sZaEiKoS46qyp+7BmwKprodsb17NLKUF1SRhuxvzTsR22hWiemnLuE4WS9kH9/YRi+uJ3I1hrlphjiXy+FHrWpM3VgjfmhgH0R8hH/x6v1nJdEy6JWqYbYrbv0yBPg1e8vmfseruvTscvkMJTeXxp2QA6oJZDLpcAqFYJfn8k9gVAqEmrl8Oc0SSGSdBO+ePYykL5tCc73dQhQNOn7hug==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1670513586; bh=+j3fx/y3x/+OH2L2dtdrscsnx1t3lpp1vtanp8nTyjh=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=DWzDvXcugVCgIEMyqPpJ5zJWN97QSQlAwF4FAfyY/kfwO+VLxR5JEg1eIHofwzoqotHdz9d0XvHbte0hGEMQdM+9LFaR+GiAPH+11qhNmSOYf4gBwMnkD2atES4f93SzeUa9jMgH2dQ2i37wTSc5wX3AwDqx/JbAjKlvdU4B6JYGjtGROsa6Y7FfXEoQQmKHQP1sC6xmC2BjAgrlIqQX3BzxvOPMwD/qD99E3orRNIXjsLgRzFRb0byp6ptmurvbx8o4fnMouE/Gv1dXpJLgYOupe4D8zWqJZxkoeturQ5d+I5MYAYV0yp9Fxy39VVljRgCq8Pb1SorHD6Jf5Ae7NQ==
-X-YMail-OSG: C28rwg8VM1n6hHhnKM4z1AJ_F0w_AVTXer8C.OcgniARUCy0D8hRGlcagCSHTr0
- X6pyHz7vBNIMtvBOupJ6mQPRdbHv4e1rQfvRTvBS5vEZCkyTDUmMb.3XfgPK9aPAARM..kvKN9j2
- eZKrN7v46ocVwBKbz6N0KtocsTIBbfh7v0r6HATsDhWlpO9lRHpOLdXA5hj7gpABEuR8xvqMbP7u
- lbjFJEKypu_PS6XuUxYcymXA4NRBn7_UHvmdE1MTkiDj3tP.Npl2g0eGsX1otX7LEEdDNj.gNbcj
- 9PNmNzgMT9MYGeyl3DhGc5rW1_ZTR0OfU.ZaUDcE6C5HX0LgAsuIIcY8QsglUd8NGo70Ku5C__d3
- BGPhPfug8f7MS5oIq1oiCHpLdxIU3grNhn.sY2WExwdsvm2KT43PttjXxYe2LtImGK2HGysjGO7s
- obylB8R.uDiJFmjllvocMuswyT3O2qM5OKH0xJHCOrpIv.7Qs0UhC.a9lCa_q3OTYYR20Hly7N2k
- ArhIfPNWNzNLt__pGNY5gOFTXUAjbFfL5ljWG9IkkTo7iWK9O6TQ0VAiDbMCqaaYzClNnvnoOSZM
- T5elUJOm6Rq2Pk3khW2t2HXKuL3xEty0tAbwEtBKHDuP1kavkYL.EkZVvxHuDS6ypykYEDqnuHUS
- NnCVoi8pLZku1UxRnjdFbkbJODudFuSfmakikilw8941GIeXOyFRqG0sGT02vU_xbQ27y3txTike
- OKpyngC7gWGqbRvcZydhfWF.6rDO4wZe7Ub4RrX8W9JlbLgl0Zj7_2WbgMDmOXBjRKJERWL6yVqx
- _.PL_IgbUlPZfl_i2NkAio8nCzQ8brfX2orTt01xkEJIBJ2nqpwIhU_QwXZmmP.ayDCg5evb3VUT
- nO6hL.TLaS6godP2LgQCoYR1jN7e564QcMGQf7AagGgfB.5RrN0AMLIhuQlM7SjJvqxMH6s4VKqx
- 0T.Seq9xeRU6WuIywOBM2A9.NnSgym3sjdNt2Uvt.91lidl_Fd6CFCpwBDGqH91NnVZSIl8KDmXC
- sFFFRPlHGwNF_c.JXxEbmjP0inKzCyInjDunq1gHjV7PoDyolG5h7CpBrjkB85e5LKIobMXt0Eu.
- ZDvaR7vJJadbgFHYlOlhnY4T_JiXMLMnWae3PD9dLdI.66AmILCWZ.8TQWHX5.ZMGrwcOhaAkPrP
- pJWvENoNg.s02ucRFAnCs7.4senoRwBTfcEd1mGlad4qh24eKhayGjo21MMWLYUvKJ4TUlk4Gs4n
- GOF4Z..EZmrBSPG.6A0wqnO8Av79mcXixS2yAjf5ZpJdh6BU5qJHfPAjYziB5VNqTeBOX9RF3tl2
- ZkCeqJpqgCyjKX09J1SlI0vs5ERPEjLDMWimHj8uR3GnaVSHfMEr8YOMuJhOdbTa.VDIDnM9Gugu
- w0GUmPjG2jgLQ25lCy6h4uds29uHC.g5qtJPBDeX0o6bhuaE4_FYJrjUPTOyKFZSaeNDBowV04ZJ
- _Y9qlFxsA8NKfZ0JjrDvEqLOE.rrqHWj__TYhgf.tsGJYS2I8XULgqxJotTAXuBvOMeRipneATCw
- nGNz4LCUMgY.u3jD11lEp8lGhZcWIGnDzuxSobACeJS3iw2PIJSeJbHpVg_Qy3Z9zOLNI_YkQLnO
- ZHx0D5iNkmyhUwTltOBnG8qpG_o3w4ymwCaBQknS3p0muN6Fyw2zgJBV95jQ71u0OdHLkfbIjyfU
- CWpI9ZPHDevONIcG4zj08EYfm6TIztY1lkwAGKQuS0fnbKr_gUYP8yYyY41xNcQ8ecEc5KqdAGTk
- qONAgggW084qDEcQA7JKHtCeIk4F44YoFalvtXNG6RY1WcH9YydWllU_oPTOtvZpva_TTKTlvA0M
- 8Yuau0lXOApmaTOSZs2sdKu6sqYjYrzmlXOpFkwNa4vJv6o7xT1ucKjYjCl7gGjwajmWRZVRq6no
- 1mUoMelmmQE7.rLC3y8V3MZji44P6RiwYvtyb_6I8pKSbqNWmCDIVt9JWoX3ucBQSJpNx_OSQUVO
- 7ubCPwzteRYEpmCPF42IWGa5Vm6H8jubAZ2LXnwuXdfBWEK0eITXwsjXs_V6iesV7qOH3YFFNgfc
- qNDftQNAkCVvhFRfi9u9nNxhJQR33uHnyiKfrUTN1qwRiPlzcv8dRAOdBIElZVNqHDkpu4pZ1JKD
- MhLtivA10DZ6pa5Mh9N_R.H3bXC9o2bSYocC7psXBycMC9q9Va8z0HFdUUh_5FUQieOTXVEvEF6j
- elZEMMo0Pl.GBnynGGTdv9YktXCcXscw-
-X-Sonic-MF: <casey@schaufler-ca.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ne1.yahoo.com with HTTP; Thu, 8 Dec 2022 15:33:06 +0000
-Received: by hermes--production-gq1-d898c4779-lkhfb (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID e73aadf127eff01f7a55e8a7a7a39458;
-          Thu, 08 Dec 2022 15:33:02 +0000 (UTC)
-Message-ID: <fc052c3c-7545-4d84-05d8-adb5659348a1@schaufler-ca.com>
-Date: Thu, 8 Dec 2022 07:33:01 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F291F3217
+	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 17:35:13 +0000 (UTC)
+Received: by mail-wr1-f42.google.com with SMTP id y16so2485207wrm.2
+        for <mptcp@lists.linux.dev>; Thu, 08 Dec 2022 09:35:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WQ3H0leEht8N17d76Llmj4SfQQHApyz9BBDuytr1+Ww=;
+        b=OqqnKuR7Xa4wUREYql67OnCNX0wHB3TGAVFZhhwbaFF5SSZiWqDmlBBsgBGI97XTWg
+         M4QvlWoBkOzOPCxj2gvDBq/d2oGVChBQOsAbb64oGV5mJ4mZeUS2P7aak204l6ZgjLlB
+         rTAToAtJKPeRtBlqxuE8c043FVRM9SWgHf7mHQy8ZqvMXm5b0n96qg126I1KjxTLTPfV
+         7Bt2vPy06xC9CpCOjT1MYbt+Emfb4NMI+n4ffaH8aNMmG/h0r7oIRvnYQNdvQFvYTnwv
+         TDfTkAJ+/PceREzyHvWVgjkoHNW80v8Wqejjx80+6rxbklwTpISaTZ+XekgV1TUGy8IF
+         LQZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WQ3H0leEht8N17d76Llmj4SfQQHApyz9BBDuytr1+Ww=;
+        b=qnI0HMYpqMjEFoAwR8JCdNPreDC6eLuckJImVcEZzOJSySQlRsza4KlJN2HN8WKq3C
+         i25XvvpQm+7qX8LipJL7nns1hBJTiSbmfImnKUmlo+KJJ6RtALrBX5IESIMDnLxrrbZw
+         /RxeLaD1Ng4ES4aInjkDsv8XQqWFfPNMebT231TK1VO1oYivCwCCYMpAK0Aq5UlGxxxN
+         fbWpxz/g/bMMPAmwjHXNwe/ZCVsPQ5Jd8goN1uGNI7XRKfirnRdfjTr2xFupljkHwB78
+         j/Uhn1jy24dHJ/GRjtTa6dfGVuqNrRpZc2MpwdV6EGm3XySdniXAmZjVvo/hk5tECizv
+         DgJw==
+X-Gm-Message-State: ANoB5pkfQLMfKf/IBM+pHgHkEe6wPWnwBAiNrshlrVPp2Neg7G/5UKem
+	riodabadtP6aWdQMlVY1uyAgCFqZoWkbSlSn
+X-Google-Smtp-Source: AA0mqf71dZy2VlROqIPLWMTlXMe7d3UpiFHsLdOqO+cn2G2y3u6pue1QXB4GGy96o1ihfYJ0q8CLeA==
+X-Received: by 2002:adf:dd03:0:b0:241:f4dc:a728 with SMTP id a3-20020adfdd03000000b00241f4dca728mr2205355wrm.18.1670520911416;
+        Thu, 08 Dec 2022 09:35:11 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:a52e:7e0:5ffc:6cea? ([2a02:578:8593:1200:a52e:7e0:5ffc:6cea])
+        by smtp.gmail.com with ESMTPSA id n5-20020adff085000000b00236c1f2cecesm27639456wro.81.2022.12.08.09.35.10
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Dec 2022 09:35:11 -0800 (PST)
+Message-ID: <4f5cbf37-f2c7-9d48-4a21-1c8af0720409@tessares.net>
+Date: Thu, 8 Dec 2022 18:35:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH mptcp-net] mptcp: fix LSM labeling for passive msk
-Content-Language: en-US
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev, Paul Moore <paul@paul-moore.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, SElinux list
- <selinux@vger.kernel.org>,
- Linux Security Module list <linux-security-module@vger.kernel.org>,
- casey@schaufler-ca.com
-References: <ffee337de5d6e447185b87ade65cc27f0b3576db.1670434580.git.pabeni@redhat.com>
- <a3c81322-36b5-a289-c07b-15d2be75b02d@linux.intel.com>
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <a3c81322-36b5-a289-c07b-15d2be75b02d@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Content-Language: en-GB
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [Weekly meetings] MoM - 8th of December 2022
+To: MPTCP Upstream <mptcp@lists.linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.20926 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On 12/7/2022 6:19 PM, Mat Martineau wrote:
-> On Wed, 7 Dec 2022, Paolo Abeni wrote:
->
->> MPTCP sockets created via accept() inherit their LSM label
->> from the initial request socket, which in turn get it from the
->> listener socket's first subflow. The latter is a kernel socket,
->> and get the relevant labeling at creation time.
->>
->> Due to all the above even the accepted MPTCP socket get a kernel
->> label, causing unexpected behaviour and failure on later LSM tests.
->>
->> Address the issue factoring out a socket creation helper that does
->> not include the post-creation LSM checks. Use such helper to create
->> mptcp subflow as in-kernel sockets and doing explicitly LSM validation:
->> vs the current user for the first subflow, as a kernel socket otherwise.
->>
->> Fixes: 0c14846032f2 ("mptcp: fix security context on server socket")
->> Reported-by: Ondrej Mosnacek <omosnace@redhat.com>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->
-> The MPTCP content looks good to me:
->
-> Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
->
->
-> I didn't see issues with the socket.c changes but I'd like to get some
-> security community feedback before upstreaming - Paul or other
-> security reviewers, what do you think?
+Hello everyone,
 
-I haven't had the opportunity to work out what impact, if any, this will
-have on Smack. I haven't seen a reproducer for the problem, is one available?
-Sorry to chime in late.
+Last week, we had our 220th meeting with Mat (Intel), Benjamin and
+myself (Tessares).
 
->
->
-> Thanks,
->
-> Mat
->
->
->> ---
->> include/linux/net.h |  2 ++
->> net/mptcp/subflow.c | 19 ++++++++++++--
->> net/socket.c        | 60 ++++++++++++++++++++++++++++++---------------
->> 3 files changed, 59 insertions(+), 22 deletions(-)
->>
->> diff --git a/include/linux/net.h b/include/linux/net.h
->> index b73ad8e3c212..91713012504d 100644
->> --- a/include/linux/net.h
->> +++ b/include/linux/net.h
->> @@ -251,6 +251,8 @@ int sock_wake_async(struct socket_wq *sk_wq, int
->> how, int band);
->> int sock_register(const struct net_proto_family *fam);
->> void sock_unregister(int family);
->> bool sock_is_registered(int family);
->> +int __sock_create_nosec(struct net *net, int family, int type, int
->> proto,
->> +            struct socket **res, int kern);
->> int __sock_create(struct net *net, int family, int type, int proto,
->>           struct socket **res, int kern);
->> int sock_create(int family, int type, int proto, struct socket **res);
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index d5ff502c88d7..e7e6f17df7ef 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -1646,11 +1646,26 @@ int mptcp_subflow_create_socket(struct sock
->> *sk, struct socket **new_sock)
->>     if (unlikely(!sk->sk_socket))
->>         return -EINVAL;
->>
->> -    err = sock_create_kern(net, sk->sk_family, SOCK_STREAM,
->> IPPROTO_TCP,
->> -                   &sf);
->> +    /* the subflow is created by the kernel, and we need kernel
->> annotation
->> +     * for lockdep's sake...
->> +     */
->> +    err = __sock_create_nosec(net, sk->sk_family, SOCK_STREAM,
->> IPPROTO_TCP,
->> +                  &sf, 1);
->>     if (err)
->>         return err;
->>
->> +    /* ... but the MPC subflow will be indirectly exposed to the
->> +     * user-space via accept(). Let's attach the current user security
->> +     * label to the first subflow, that is when msk->first is not yet
->> +     * initialized.
->> +     */
->> +    err = security_socket_post_create(sf, sk->sk_family, SOCK_STREAM,
->> +                      IPPROTO_TCP, !!mptcp_sk(sk)->first);
->> +    if (err) {
->> +        sock_release(sf);
->> +        return err;
->> +    }
->> +
->>     lock_sock(sf->sk);
->>
->>     /* the newly created socket has to be in the same cgroup as its
->> parent */
->> diff --git a/net/socket.c b/net/socket.c
->> index 55c5d536e5f6..d5d51e4e26ae 100644
->> --- a/net/socket.c
->> +++ b/net/socket.c
->> @@ -1426,23 +1426,11 @@ int sock_wake_async(struct socket_wq *wq, int
->> how, int band)
->> }
->> EXPORT_SYMBOL(sock_wake_async);
->>
->> -/**
->> - *    __sock_create - creates a socket
->> - *    @net: net namespace
->> - *    @family: protocol family (AF_INET, ...)
->> - *    @type: communication type (SOCK_STREAM, ...)
->> - *    @protocol: protocol (0, ...)
->> - *    @res: new socket
->> - *    @kern: boolean for kernel space sockets
->> - *
->> - *    Creates a new socket and assigns it to @res, passing through LSM.
->> - *    Returns 0 or an error. On failure @res is set to %NULL. @kern
->> must
->> - *    be set to true if the socket resides in kernel space.
->> - *    This function internally uses GFP_KERNEL.
->> - */
->>
->> -int __sock_create(struct net *net, int family, int type, int protocol,
->> -             struct socket **res, int kern)
->> +
->> +/*creates a socket leaving LSM post-creation checks to the caller */
->> +int __sock_create_nosec(struct net *net, int family, int type, int
->> protocol,
->> +            struct socket **res, int kern)
->> {
->>     int err;
->>     struct socket *sock;
->> @@ -1528,11 +1516,8 @@ int __sock_create(struct net *net, int family,
->> int type, int protocol,
->>      * module can have its refcnt decremented
->>      */
->>     module_put(pf->owner);
->> -    err = security_socket_post_create(sock, family, type, protocol,
->> kern);
->> -    if (err)
->> -        goto out_sock_release;
->> -    *res = sock;
->>
->> +    *res = sock;
->>     return 0;
->>
->> out_module_busy:
->> @@ -1548,6 +1533,41 @@ int __sock_create(struct net *net, int family,
->> int type, int protocol,
->>     rcu_read_unlock();
->>     goto out_sock_release;
->> }
->> +
->> +/**
->> + *    __sock_create - creates a socket
->> + *    @net: net namespace
->> + *    @family: protocol family (AF_INET, ...)
->> + *    @type: communication type (SOCK_STREAM, ...)
->> + *    @protocol: protocol (0, ...)
->> + *    @res: new socket
->> + *    @kern: boolean for kernel space sockets
->> + *
->> + *    Creates a new socket and assigns it to @res, passing through LSM.
->> + *    Returns 0 or an error. On failure @res is set to %NULL. @kern
->> must
->> + *    be set to true if the socket resides in kernel space.
->> + *    This function internally uses GFP_KERNEL.
->> + */
->> +
->> +int __sock_create(struct net *net, int family, int type, int protocol,
->> +          struct socket **res, int kern)
->> +{
->> +    struct socket *sock;
->> +    int err;
->> +
->> +    err = __sock_create_nosec(net, family, type, protocol, &sock,
->> kern);
->> +    if (err)
->> +        return err;
->> +
->> +    err = security_socket_post_create(sock, family, type, protocol,
->> kern);
->> +    if (err) {
->> +        sock_release(sock);
->> +        return err;
->> +    }
->> +
->> +    *res = sock;
->> +    return 0;
->> +}
->> EXPORT_SYMBOL(__sock_create);
->>
->> /**
->> -- 
->> 2.38.1
->>
->>
->>
->
-> -- 
-> Mat Martineau
-> Intel
+
+Thanks again for this new good meeting!
+
+Here are the minutes of the meeting:
+
+
+
+Accepted patches:
+    - The list of accepted patches can be seen on PatchWork:
+      https://patchwork.kernel.org/project/mptcp/list/?state=3
+
+
+    netdev (if mptcp ML is in cc) (by: Matthieu Baerts):
+
+13059923: [net-next,01/11] selftests: mptcp: run mptcp_inq from a clean
+netns
+13059924: [net-next,02/11] selftests: mptcp: removed defined but unused vars
+13059926: [net-next,03/11] selftests: mptcp: uniform 'rndh' variable
+13059925: [net-next,04/11] selftests: mptcp: clearly declare global ns vars
+13059927: [net-next,05/11] selftests: mptcp: declare var as local
+13059928: [net-next,06/11] mptcp: add pm listener events
+13059929: [net-next,07/11] selftests: mptcp: enhance userspace pm tests
+13059930: [net-next,08/11] selftests: mptcp: make evts global in
+userspace_pm
+13059931: [net-next,09/11] selftests: mptcp: listener test for userspace PM
+13059932: [net-next,10/11] selftests: mptcp: make evts global in mptcp_join
+13059933: [net-next,11/11] selftests: mptcp: listener test for in-kernel PM
+
+    our repo (by: Geliang Tang, Matthieu Baerts, Paolo Abeni):
+
+13059640: [mptcp-net,v2,1/3] mptcp: remove MPTCP 'ifdef' in TCP SYN cookies
+13059641: [mptcp-net,v2,2/3] mptcp: dedicated request sock for subflow in v6
+13059642: [mptcp-net,v2,3/3] mptcp: use proper req destructor for IPv6:
+      - Series: mptcp: fix request sock for subflow in v6
+      - Submitter: Matthieu Baerts
+      - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=700384&state=*&archive=both
+
+13062203: [mptcp-next] mptcp: use nlmsg_free instead of kfree_skb:
+      - Submitter: Geliang Tang
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20221202053736.2980-1-geliang.tang@suse.com/
+
+13064358: [mptcp-next] mptcp: return 0 instead of 'err' var:
+      - Submitter: Matthieu Baerts
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/20221205101002.2620762-1-matthieu.baerts@tessares.net/
+
+13065066: [v2,mptcp-net] mptcp: fix deadlock in fastopen error path.:
+      - Submitter: Paolo Abeni
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/f594fa95592f25434e24f0d16033cda1af9ce2cc.1670272505.git.pabeni@redhat.com/
+
+
+
+Pending patches:
+    - The list of pending patches can be seen on PatchWork:
+      https://patchwork.kernel.org/project/mptcp/list/?state=*
+
+
+    netdev (if mptcp ML is in cc) (by: /):
+
+/
+
+
+    our repo (by: Geliang Tang, Jiapeng Chong, Matthieu Baerts, Menglong
+Dong, Paolo Abeni):
+
+12282219: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
+12282221: [RESEND,RFC,4/4] tcp: parse tcp options contained in reset
+packets:
+12282223: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support:
+12282225: [RESEND,1/5] tcp: make two mptcp helpers available to tcp stack
+12282227: [RESEND,5/5] mptcp: send fastclose if userspace closes socket
+with unread data:
+12321111: mptcp: Remove redundant assignment to remaining:
+      - State: RFC
+      - Series: mptcp: Remove redundant assignment to remaining
+      - Submitter: Jiapeng Chong
+      - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=500495&state=*&archive=both
+      - Status: same as last week
+
+13065794: [mptcp-next,v23,1/5] mptcp: add scheduler wrappers
+13065795: [mptcp-next,v23,2/5] mptcp: use get_send wrapper
+13065796: [mptcp-next,v23,3/5] mptcp: use get_retrans wrapper
+13065797: [mptcp-next,v23,4/5] selftests/bpf: Add bpf_red scheduler
+13065798: [mptcp-next,v23,5/5] selftests/bpf: Add bpf_red test:
+      - State: New
+      - Series: BPF redundant scheduler, part 2
+      - Submitter: Geliang Tang
+      - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=702195&state=*&archive=both
+13066994: [mptcp-next,v3,1/2] mptcp: update mptcp_push_release
+13066995: [mptcp-next,v3,2/2] mptcp: retrans for redundant sends:
+      - State: New
+      - Series: BPF redundant scheduler, part 3
+      - Submitter: Geliang Tang
+      - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=702554&state=*&archive=both
+      - Can be "squash" with the other series (part 2)
+      - reminder about the complexity: 2 paths to transmit things:
+          - when the msk is locked and subflow is picked
+          - when the msk locked is not held: optimisation to continue
+sending on the same subflow:
+              - that's the complex part here if we want to allow
+re-injecting the same data on a different subflow
+
+13067480: [mptcp-net] mptcp: fix LSM labeling for passive msk:
+      - State: Under review
+      - Submitter: Paolo Abeni
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/ffee337de5d6e447185b87ade65cc27f0b3576db.1670434580.git.pabeni@redhat.com/
+      - Paolo had a discussion on the ML with SELinux maintainers
+      - Seems good but because it is about security stuff, we need
+SELinux reviewers approval
+      - Once reviewed by them, we can handle it and send it to netdev
+(with a note in the cover letter because we are changing code outside
+mptcp subsytem)
+
+13067481: [mptcp-net] mptcp: fix lockdep false positive:
+      - State: Changes requested (but maybe not needed to change it)
+      - Submitter: Paolo Abeni
+      - URL:
+https://patchwork.kernel.org/project/mptcp/patch/0818f7332284bd7781956959fbebb90188e140cb.1670435550.git.pabeni@redhat.com/
+      - Is there a way to make sure this code is modified if the locking
+graph is changing on other sides?
+
+13067832: [mptcp-next,v8,1/4] mptcp: introduce 'sk' to replace
+'sock->sk' in mptcp_listen()
+13067833: [mptcp-next,v8,2/4] mptcp: add statistics for mptcp socket in use
+13067834: [mptcp-next,v8,3/4] selftest: mptcp: exit from
+copyfd_io_poll() when receive SIGUSR1
+13067835: [mptcp-next,v8,4/4] selftest: mptcp: add test for mptcp socket
+in use:
+      - State: Changes requested
+      - Series: mptcp: add statistics for mptcp socket in use
+      - Submitter: Menglong Dong
+      - URL:
+https://patchwork.kernel.org/project/mptcp/list/?series=702785&state=*&archive=both
+      - Some modifications needed in the token code not to break the
+unit tests
+
+
+
+Issues on Github:
+    https://github.com/multipath-tcp/mptcp_net-next/issues/
+    Recently opened (latest from last week: 319):
+
+  325  selftests: `mptcp_join`: test 18 `signal addresses race test` is
+sometimes failing [bug] [selftests]:
+      - not regularly failing
+
+  324  selftests: `mptcp_join`: test 98 `fastclose test` is sometimes
+failing [bug] [selftests]:
+      - not regularly failing
+
+  323  selftests: `mptcp_join`: test 111 `delete and re-add` is often
+failing [bug] [selftests]:
+      - Paolo sent a suggestion: right direction but there are some issues
+
+  322  TFO: possible circular locking dependency detected [bug] @pabeni:
+      - Linked to "mptcp: fix lockdep false positive" patch
+
+  320  Broken SELinux/LSM labelling with MPTCP and accept(2) [bug] @pabeni:
+      - Linked to "mptcp: fix LSM labeling for passive msk" patch
+
+
+    Bugs (opened, flagged as "bug" and assigned)
+
+  322  TFO: possible circular locking dependency detected [bug] @pabeni:
+      - See above ↑
+
+  320  Broken SELinux/LSM labeling with MPTCP and accept(2) [bug] @pabeni:
+      - See above ↑
+
+
+    Bugs (opened and flagged as "bug" and not assigned)
+
+  325  selftests: `mptcp_join`: test 18 `signal addresses race test` is
+sometimes failing [bug] [selftests]:
+      - See above ↑
+
+  324  selftests: `mptcp_join`: test 98 `fastclose test` is sometimes
+failing [bug] [selftests]:
+      - See above ↑
+
+  323  selftests: `mptcp_join`: test 111 `delete and re-add` is often
+failing [bug] [selftests]:
+      - See above ↑
+
+  319  kmemleak: 6 new suspected memory leaks in -net [bug]:
+      - not reproduced this week
+      - we can wait another week and close it later
+
+  318  selftests: `mptcp_connect.sh` sometimes fails when validating SYN
+cookies [bug] [selftests]:
+      - Also got the issue with IPv4, not IPv6 specific bug
+
+  315  Issues with backup flow [bug]:
+      - TODO: Matth: ask if there is anything new → Done
+
+  290  Not possible to `connect()` after a disconnect for a passive
+socket [bug]
+
+
+    In Progress (opened, new feature and assigned)
+
+  296  Support IP_TTL & IPV6_UNICAST_HOPS [enhancement] @matttbe
+  234  Packetdrill: Support MPC+DATA+checksum error [enhancement]
+[packetdrill] @spoorva
+  167  packetdrill: add coverage for RM_ADDR [enhancement] [packetdrill]
+@dcaratti
+
+   75  BPF: packet scheduler [enhancement] @geliangtang:
+       - see patches above
+
+   74  BPF: path manager [enhancement] @geliangtang
+
+   59  (MP)TFO support [enhancement] @dmytroshytyi:
+       - can be closed now
+       - some issues with lockdeps but handled by another issue
+
+
+    Assigned Questions (opened, questions and assigned)
+
+  307  TCP performance better than MPTCP [question] @matttbe:
+      - TODO: ask if there is anything new → somehow linked to #315
+
+
+    Open questions (opened, questions and not assigned)
+
+/
+
+    For later (opened and not assigned assigned)
+
+  298  CG Memory accounting for passive MPTCP socket [enhancement]
+  289  mptcp: audit comments for non inclusive language [enhancement]
+  273  Packetdrill: test outgoing MP_FASTCLOSE [enhancement] [packetdrill]
+
+  269  Allow having a mix of v4/v6 subflows for the same socket
+[enhancement]:
+      - Matth is looking at this, trying to reproduce the situation with
+the userspace PM
+
+  266  Packetdrill: add MP_FAIL coverage [packetdrill]
+  236  Review supported sockopts list [enhancement]
+  222  Netlink event API: add SUBFLOW_CREATED event [enhancement]
+  215  TCP Urgent pointer and MPTCP [enhancement]
+  213  add MPTCP man page [enhancement]
+  208  better handing of ssk memory pressure in the TX path [enhancement]
+  202  Add sendmsg support for ancillary data [enhancement]
+  197  more mibs needed [enhancement]
+  180  Get an update when MPTCP fall back to TCP [enhancement]
+  177  improve retransmit subflow selection [enhancement]
+  169  packetdrill: add coverage for ADD_ADDR and MP_JOIN on a different
+port [enhancement] [packetdrill]
+  150  remove completely workqueue usage [enhancement]
+  141  avoid acquiring mptcp_data_lock() twice in the receive path
+[enhancement]
+  133  PM: Closing the MPTCP connection when last subflow is not the
+initial one and its IP address is removed [enhancement]
+  128  When the last subflow is closed without DATA_FIN and msk
+Established, close msk (after a timeout) [enhancement]
+   79  allow 'force to MPTCP' mode: BPF [enhancement]
+   78  notify the application (userspace) when a subflow is
+added/removed [enhancement]
+   77  [gs]etsockopt: forward to new/existing SF [enhancement]
+   76  [gs]etsockopt per subflow: BPF [enhancement]
+   61  move msk clone after ctx creation [enhancement]
+   57  After a few attempts of failed MPTCP, directly fallback to TCP
+for new connections [enhancement]
+   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag
+interface [enhancement] [syzkaller]
+   41  reduce indirect call usage [enhancement]
+   24  Revisit layout of struct mptcp_subflow_context [enhancement]
+
+
+    Recently closed (since last week)
+
+  321  [syzkaller] task hung in lock_sock_nested
+  317  TFO: IPv6: the generated cookie is not the expected one [bug]
+@matttbe
+
+
+
+FYI: Current Roadmap:
+    - Bugs: https://github.com/multipath-tcp/mptcp_net-next/projects/2
+    - Current/Coming merge window (6.2):
+https://github.com/multipath-tcp/mptcp_net-next/projects/17
+    - For later: https://github.com/multipath-tcp/mptcp_net-next/projects/4
+
+
+
+Patches to send to netdev:
+
+    - Fixes for other trees: /
+
+    - Fixes for -net:
+
+        - [8f68d50ac279] mptcp: netlink: fix some error return code (Wei
+Yongjun)
+        - [f9f38712b1eb] mptcp: remove MPTCP 'ifdef' in TCP SYN cookies
+(Matthieu Baerts)
+        - [31e85911931b] mptcp: dedicated request sock for subflow in v6
+(Matthieu Baerts)
+        - [758918812de8] mptcp: use proper req destructor for IPv6
+(Matthieu Baerts):
+            - Can be sent but we are just before a new release, might be
+better to send the features first
+            - But can be sent after, not that urgent, will go in stable
+at some points anyway
+
+        - [46874bcecfcc] mptcp: fix deadlock in fastopen error path
+(Paolo Abeni):
+            - can wait a bit
+
+    - Fixes for net-next: /
+
+    - Features for net-next:
+
+        - [b7477390c08a] mptcp: use nlmsg_free instead of kfree_skb
+(Geliang Tang)
+        - [c2c686a857ec] mptcp: return 0 instead of 'err' var (Matthieu
+Baerts):
+            - can be sent to be in 6.2, small cleanup
+
+    - Features for net-next (next): /
+
+    - Features for other trees:
+
+        - [86df102d2272] mptcp: refactor push_pending logic (Geliang Tang)
+        - [b7d79873686f] mptcp: drop last_snd and MPTCP_RESET_SCHEDULER
+(Geliang Tang)
+        - [446c07ef2262] mptcp: add struct mptcp_sched_ops (Geliang Tang)
+        - [8c379b7afbec] mptcp: add a new sysctl scheduler (Geliang Tang)
+        - [c722dec9c58d] mptcp: add sched in mptcp_sock (Geliang Tang)
+        - [ef454a1b48bb] mptcp: add scheduled in mptcp_subflow_context
+(Geliang Tang)
+        - [036449ccab66] mptcp: add sched_data_set_contexts helper
+(Geliang Tang)
+        - [5c7f8388f3cf] bpf: Add bpf_mptcp_sched_ops (Geliang Tang)
+        - [4469f01b675c] bpf: Add bpf_mptcp_sched_kfunc_set (Geliang Tang)
+        - [ab217c1f8e7e] selftests/bpf: Add mptcp sched structs (Geliang
+Tang)
+        - [35e7a949680c] selftests/bpf: Add bpf_first scheduler (Geliang
+Tang)
+        - [63b6978e2d54] selftests/bpf: Add bpf_first test (Geliang Tang)
+        - [7dc4a3873fd1] selftests/bpf: Add bpf_bkup scheduler (Geliang
+Tang)
+        - [5ca91c54036d] selftests/bpf: Add bpf_bkup test (Geliang Tang)
+        - [4fe04f54529f] selftests/bpf: Add bpf_rr scheduler (Geliang Tang)
+        - [41d8d7710934] selftests/bpf: Add bpf_rr test (Geliang Tang):
+            - status: same as last week: we can wait for the patches
+being developed
+
+
+
+Extra tests:
+    - news about Syzkaller? (Christoph / Mat):
+        - nothing new related to MPTCP
+        - Paolo fixed the locking issue \o/
+
+    - news about interop with mptcp.org/other stacks? (Christoph):
+        - old issue we had with the interop with mptcp.org is probably
+fixed by a recent patch from Christoph
+        - https://github.com/multipath-tcp/mptcp/issues/427
+
+    - news about Intel's kbuild? (Mat):
+        - one issue recently in userspace_pm with the tests recently
+added by Geliang
+        - to be monitored
+
+    - packetdrill (Davide):
+        - https://github.com/multipath-tcp/packetdrill/pull/110 → can
+probably be merged → done
+        - plenty of new tests for MPTCPv0 and the mptcp.org kernel
+thanks to Apple \o/:
+            - https://github.com/multipath-tcp/packetdrill_mptcp/pull/1
+
+    - Patchew (Davide):
+        - /
+
+    - CI (Matth):
+        - some issues have been opened with the tests that have failed
+recently
+        - split of mptcp_join selftests is working fine: no more global
+timeout issues (and faster)
+        - Linaro is executing some tests, looks good on v6.0 except for
+the userspace pm:
+            -
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.0.y/build/v6.0.11-126-gb2f103096329/testrun/13473649/suite/kselftest-net-mptcp/tests/
+            - because busybox is used
+
+
+Go:
+    - MPTCP support proposition in net library is going to be "likely
+accepted":
+        - https://github.com/golang/go/issues/56539#issuecomment-1341583878
+        - "likely accepted" means: A week after a proposal moves to
+Likely Accept, absent a change in consensus, the proposal review group
+moves the proposal to the Accepted column
+        - not sure what will happen after: who is going to do the
+implementation?
+
+
+
+Meetings:
+    - eventually change the day of the week / time if people prefer?
+    - Tuesday might be OK but we were only 3 today
+    - Or one hour later?
+    - Or at a different time but not with everybody to have people from
+different parts of the world participating
+    - TODO: Matth: send a message on the ML about that
+
+
+
+Next meeting:
+    - Next one on Thursday, the 15th of December.
+    - 16:00 UTC (8am PST, 5pm CET, 12am CST)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20221215
+
+
+
+Feel free to comment on these topics and suggest new ones for the next
+meeting!
+
+Talk to you on Thursday,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
