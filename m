@@ -1,127 +1,223 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6B133E7
-	for <mptcp@lists.linux.dev>; Wed,  7 Dec 2022 20:55:03 +0000 (UTC)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-143ffc8c2b2so22791616fac.2
-        for <mptcp@lists.linux.dev>; Wed, 07 Dec 2022 12:55:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yBcCU6siPLwlVW+TfOuUOqoRiYLgWI6sNfHOpi/CA1k=;
-        b=a9aACU6KgDwv1PqFcF2JX2sny313CxzRDtrLMaHDEtSNv40WVKVx9gVCH5JfS8j+Cw
-         Bxs6t1Q2syLLhtpSFSg3Ce+cqzk9ReEEv3rVVAqygoeuC5ux8AWhiL6o3RXhHFqWWe47
-         0/94OhLdfhgpVUR0suMtW4oNjJ+ptmku7cQkwbk0QP30DZYC7hrhK7vMmV/5BynEKH4B
-         TcgT6IA0ov5V5X4WGRwjr1lCtxHRMW1vrRYcCwjBzNiigiutXdbs6gUrs0LA/9G1D5cq
-         9sbEkM6QbW8n8T6F7CFToovD7jcslo3wvN8ol7fd3KBYVByDbnWsegmKNQ+UukdplKoV
-         GTow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yBcCU6siPLwlVW+TfOuUOqoRiYLgWI6sNfHOpi/CA1k=;
-        b=YFs18fuFBrrQnsGSqdqTi1JfP7rut8xXkOeSkcX5UO1Svs7XrLIJWavJH/eJAvvhy2
-         YXUj5jdsfnV520/SD8PBkx/D3YIfNov5jz+4NGXD7DMWsWjEDQDral5iUAmZrKsrw6Od
-         cPEoh2GTso0uKtoSHVMZ0dIqDAay4hWA+01ACcinMkgw+xbG3nZ4qzAWF+HBjw82AlPW
-         l3ppY0Ch90gzoHwYzEbOJjAslNZlCqoSLMm0yv0LKvQJobRKoMPbzjPmOnKFLUoSQLN8
-         oY8ic1rxl5VSn2PAu+OBBjlnoPGBsDAjmHQA8V6GdByoGrppov/fYSbA/xsLlDGdwIdu
-         MFuA==
-X-Gm-Message-State: ANoB5pl97ukcnu1NEsZ/r7lRzXv1J34CYojBT6wJhSj9AzQ+lsoeg+s0
-	vyJLZFVQ3oWJIxWbmZ75QQ==
-X-Google-Smtp-Source: AA0mqf6ddZ+ioe4uggM3aHT4AVt1pOa2RjCp/tGwa+N8WB6oBGKFvWbHEGZzGZ02/uX8+9MkqVgHAw==
-X-Received: by 2002:a05:6870:312:b0:143:58a2:8974 with SMTP id m18-20020a056870031200b0014358a28974mr749787oaf.5.1670446502097;
-        Wed, 07 Dec 2022 12:55:02 -0800 (PST)
-Received: from [127.0.0.1] ([23.102.190.106])
-        by smtp.gmail.com with ESMTPSA id fo12-20020a0568709a0c00b001431bf4e5a0sm12792411oab.38.2022.12.07.12.55.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Dec 2022 12:55:01 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E117D621
+	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 01:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670464207; x=1702000207;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=BbtGS17GWkfRkxYaAdSAelBUnwfsZHk4wBvSWKDc3tI=;
+  b=ljZbXJ9aWRHUbilXE5JaQyDgg+Hx/e0kjNHOuAJi10mnYDeCtqxGxe9K
+   H9WhnE5wKHc7S+GRTemD1pG6Bm17K0y4eAlK4PXldBo5B+W6QPYWGqOi8
+   rDtH7LVDQ3gohGnStIsJ7pdjhC9D639hjVFe79HT6VfHiuEw9hqltV1l4
+   9rou8inyTSueG6wgvjF6ZMlQ7w/l3dCHbsk9rHvju86JyNvtblycVVKbc
+   BJGIwm/4/b1UXaCR6XgHnDbQFy8zR295kV1AufCUeT8bqdFe1AUSiDySU
+   XadngUMbJWkIHSqoup0cFmAdqctxOMcUAVcrX3WV2N1oEIZKS7OcdNBAt
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="317058144"
+X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
+   d="scan'208";a="317058144"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 17:50:07 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="648955981"
+X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
+   d="scan'208";a="648955981"
+Received: from rtalla-mobl.amr.corp.intel.com ([10.209.87.225])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 17:50:07 -0800
+Date: Wed, 7 Dec 2022 17:50:06 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <0818f7332284bd7781956959fbebb90188e140cb.1670435550.git.pabeni@redhat.com>
-References:
- <0818f7332284bd7781956959fbebb90188e140cb.1670435550.git.pabeni@redhat.com>
-Subject: Re: mptcp: fix lockdep false positive: Tests Results
-Message-ID: <55fedd22-1b19-dafd-375a-2ec6c71069a8@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 07 Dec 2022 20:55:01 +0000
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net] mptcp: fix lockdep false positive
+In-Reply-To: <0818f7332284bd7781956959fbebb90188e140cb.1670435550.git.pabeni@redhat.com>
+Message-ID: <194f648f-4813-a0ef-2c28-dd46acc3c4eb@linux.intel.com>
+References: <0818f7332284bd7781956959fbebb90188e140cb.1670435550.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Paolo,
+On Wed, 7 Dec 2022, Paolo Abeni wrote:
 
-Thank you for your modifications, that's great!
+> MatB reported a lockdep splat in the mptcp listener code cleanup:
+>
+> WARNING: possible circular locking dependency detected
+> packetdrill/14278 is trying to acquire lock:
+> ffff888017d868f0 ((work_completion)(&msk->work)){+.+.}-{0:0}, at: __flush_work (kernel/workqueue.c:3069)
+>
+> but task is already holding lock:
+> ffff888017d84130 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_close (net/mptcp/protocol.c:2973)
+>
+> which lock already depends on the new lock.
+>
+>
+> the existing dependency chain (in reverse order) is:
+>
+> -> #1 (sk_lock-AF_INET){+.+.}-{0:0}:
+>        __lock_acquire (kernel/locking/lockdep.c:5055)
+>        lock_acquire (kernel/locking/lockdep.c:466)
+>        lock_sock_nested (net/core/sock.c:3463)
+>        mptcp_worker (net/mptcp/protocol.c:2614)
+>        process_one_work (kernel/workqueue.c:2294)
+>        worker_thread (include/linux/list.h:292)
+>        kthread (kernel/kthread.c:376)
+>        ret_from_fork (arch/x86/entry/entry_64.S:312)
+>
+> -> #0 ((work_completion)(&msk->work)){+.+.}-{0:0}:
+>        check_prev_add (kernel/locking/lockdep.c:3098)
+>        validate_chain (kernel/locking/lockdep.c:3217)
+>        __lock_acquire (kernel/locking/lockdep.c:5055)
+>        lock_acquire (kernel/locking/lockdep.c:466)
+>        __flush_work (kernel/workqueue.c:3070)
+>        __cancel_work_timer (kernel/workqueue.c:3160)
+>        mptcp_cancel_work (net/mptcp/protocol.c:2758)
+>        mptcp_subflow_queue_clean (net/mptcp/subflow.c:1817)
+>        __mptcp_close_ssk (net/mptcp/protocol.c:2363)
+>        mptcp_destroy_common (net/mptcp/protocol.c:3170)
+>        mptcp_destroy (include/net/sock.h:1495)
+>        __mptcp_destroy_sock (net/mptcp/protocol.c:2886)
+>        __mptcp_close (net/mptcp/protocol.c:2959)
+>        mptcp_close (net/mptcp/protocol.c:2974)
+>        inet_release (net/ipv4/af_inet.c:432)
+>        __sock_release (net/socket.c:651)
+>        sock_close (net/socket.c:1367)
+>        __fput (fs/file_table.c:320)
+>        task_work_run (kernel/task_work.c:181 (discriminator 1))
+>        exit_to_user_mode_prepare (include/linux/resume_user_mode.h:49)
+>        syscall_exit_to_user_mode (kernel/entry/common.c:130)
+>        do_syscall_64 (arch/x86/entry/common.c:87)
+>        entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
+>
+> other info that might help us debug this:
+>
+>  Possible unsafe locking scenario:
+>
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(sk_lock-AF_INET);
+>                                lock((work_completion)(&msk->work));
+>                                lock(sk_lock-AF_INET);
+>   lock((work_completion)(&msk->work));
+>
+>  *** DEADLOCK ***
+>
 
-Our CI did some validations and here is its report:
+Hi Paolo -
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6525687946280960
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6525687946280960/summary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4856789854846976
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4856789854846976/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4696100597661696
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4696100597661696/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5109398255697920
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5109398255697920/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/989a6ecd0b50
+Just a couple of typo fixes, and a question below about the workaround.
 
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+> The report is actually a false positive, since the only exiting lock
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+s/exiting/existing/
 
-For more details:
+> nesting is the msk socket lock acquire by the mptcp work.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+s/acquire/acquired/
+
+> cancel_work_sync() is invoked without the relevant socket lock being
+> held, but under a different (the msk listener) socket lock.
+>
+> We could silence the splat adding a per workqueue dynamic lockdep key,
+> but that looks overkill. Instead just tell lockdep the msk socket lock
+> is not held around cancel_work_sync().
+>
+> Fixes: 30e51b923e43 ("mptcp: fix unreleased socket in accept queue")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> note: mutex_release() is available as a NULL macro even when LOCKDEP is
+> disabled
+> ---
+> net/mptcp/protocol.c |  2 +-
+> net/mptcp/protocol.h |  2 +-
+> net/mptcp/subflow.c  | 14 ++++++++++++--
+> 3 files changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 6d03bdcda33e..289dd4add88c 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2363,7 +2363,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+> 		/* otherwise tcp will dispose of the ssk and subflow ctx */
+> 		if (ssk->sk_state == TCP_LISTEN) {
+> 			tcp_set_state(ssk, TCP_CLOSE);
+> -			mptcp_subflow_queue_clean(ssk);
+> +			mptcp_subflow_queue_clean(sk, ssk);
+> 			inet_csk_listen_stop(ssk);
+> 			mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CLOSED);
+> 		}
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index a9ff7028fad8..3cd3270407b0 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -630,7 +630,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+> 		     struct mptcp_subflow_context *subflow);
+> void __mptcp_subflow_send_ack(struct sock *ssk);
+> void mptcp_subflow_reset(struct sock *ssk);
+> -void mptcp_subflow_queue_clean(struct sock *ssk);
+> +void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
+> void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+> struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
+> bool __mptcp_close(struct sock *sk, long timeout);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 29904303f5c2..d5ff502c88d7 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1764,7 +1764,7 @@ static void subflow_state_change(struct sock *sk)
+> 	}
+> }
+>
+> -void mptcp_subflow_queue_clean(struct sock *listener_ssk)
+> +void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_ssk)
+> {
+> 	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
+> 	struct mptcp_sock *msk, *next, *head = NULL;
+> @@ -1813,8 +1813,18 @@ void mptcp_subflow_queue_clean(struct sock *listener_ssk)
+>
+> 		do_cancel_work = __mptcp_close(sk, 0);
+> 		release_sock(sk);
+> -		if (do_cancel_work)
+> +		if (do_cancel_work) {
+> +			/* lockdep will report a false positive ABBA deadlock between
+> +			 * cancel_work_sync and the listener socket. The involved locks
+> +			 * belong to differen sockets WRT the existing AB chain.
+
+s/differen/different/
+
+> +			 * Using a per socket key would be very invasive and heavy, just
+> +			 * tell lockdep to consider the listener socket released here
+> +			 */
+> +			mutex_release(&listener_sk->sk_lock.dep_map, _RET_IP_);
+> 			mptcp_cancel_work(sk);
+> +			mutex_acquire(&listener_sk->sk_lock.dep_map,
+> +				      SINGLE_DEPTH_NESTING, 0, _RET_IP_);
+
+Any concerns about this change breaking lockdep if the existing 
+assumptions about listener sockets no longer apply? For example, if 
+someone made the unfortunate choice to start using mptcp_worker() with a 
+MPTCP listener sock?
+
+Maybe it would help to add code in mptcp_worker() to check the 
+"mptcp_worker() isn't used with TCP_LISTEN sockets" assumption to ensure 
+that the above workaround doesn't hide future issues. Or maybe I'm being 
+too paranoid :)
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+> +		}
+> 		sock_put(sk);
+> 	}
+>
+> -- 
+> 2.38.1
+>
+>
+>
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+--
+Mat Martineau
+Intel
