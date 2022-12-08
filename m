@@ -1,90 +1,118 @@
-Received: from sender11-of-o51.zoho.eu (sender11-of-o51.zoho.eu [31.186.226.237])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC073217
-	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 17:54:32 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; t=1670522056; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=EOAVCY0WSM1KJXwcWIlAE5tPu0MjSU4uRL8ooMm7IE+HSFOOd2y+KvNNcJHtFcHAsJNYKqNk4Dubm0JROkKDMvS+PcvNA1qc0pJCmEJuga2BmBaZxLCCfk9CZzJQw86cN75ibiDUeG0Uj3kHI7hyFk2dWNY8SBHh9Q5BbK4v9qE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1670522056; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=DSZZkJ+U0QfV6vZlQL87LQ78n25wI8ep3ZcAhCcMQGo=; 
-	b=HWia2MWnPN0pnvmKb5BiHKeti9Jyf/hqbjwQ9Bln3QjRxxi6Doi/UUuMGiRBntlLiUV9VoeShPPFZgmgYrb3JonjMIV5Z6sjg9bt32Jl6pfByhQt9WY01qVtA4LLwIyafOBhWR/4FitRfynRf9aygXk45zb3j7fNtb5e/ne+xI8=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=shytyi.net;
-	spf=pass  smtp.mailfrom=dmytro@shytyi.net;
-	dmarc=pass header.from=<dmytro@shytyi.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1670522056;
-	s=hs; d=shytyi.net; i=dmytro@shytyi.net;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=DSZZkJ+U0QfV6vZlQL87LQ78n25wI8ep3ZcAhCcMQGo=;
-	b=bBqvq73+mmM3vruHlRr7Z/Rzuux0TJAzrkfhL4Lg07V4h9hk3l+xBEC9W46XvAXj
-	lSRjibiX6NS/H653fYzcD+IBFQ5tZpjt0psVbvymsq+cM11FlWOat9Duyp9JXmVCaya
-	Gbqqbt4o6Oo0AQL4IyB8JRb3veK6qBBQZUuDCDsY=
-Received: from [10.85.0.2] (185.13.181.2 [185.13.181.2]) by mx.zoho.eu
-	with SMTPS id 1670522052711454.12693382843474; Thu, 8 Dec 2022 18:54:12 +0100 (CET)
-Message-ID: <4097df42-95ce-e535-429d-502233f484e5@shytyi.net>
-Date: Thu, 8 Dec 2022 18:54:11 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38A32F36
+	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 22:46:01 +0000 (UTC)
+Received: by mail-pf1-f181.google.com with SMTP id x66so2428170pfx.3
+        for <mptcp@lists.linux.dev>; Thu, 08 Dec 2022 14:46:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GXy3yVe6q44PfcggGGGUoLM0qgF3oqADIjhfyUy/5w8=;
+        b=m0U0ZyFNHfG7+MToeaYyNjB7X1PggzXeEpqu2rb1ZJ7cTBviwA7gIG9Tyg572P8M1b
+         aKoxD95GRuURnVVDMmNXtach1deUW3CYeOF5HiN+hYwwM+xShJ0zYF+iP0iEFmn/cHM2
+         lEauTXA0ZpM1jcwn45Hth/b30ZBTjfcRMzgHJkIvt3Pl08Id5JbUY7+Vupwn4p0vOjJE
+         1E6B+2w13xlykPVmmMf+fKKASvtjbBEG8Tui51K4xAhWtHIyua0fwLbOPhtad3sc6YB0
+         wnq14MofX2PUUUiAPae/85s/LGMAQZtc8xd1yTvA1WF4lH5xFjw8y2ZZoxfgpGRWjQOd
+         6QNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GXy3yVe6q44PfcggGGGUoLM0qgF3oqADIjhfyUy/5w8=;
+        b=CehuICPOJ+TymvUwJglfRqReZ89pA+F8Km4I9SMBJ3UoUh9SLe8gY61uhCleQWQgT2
+         VImAOisHY0qUSlGWMor+uZzBdCfm9egrAkBcx8XeXyPYcZtz4wsC4vSv7BXUmX+hxzTF
+         yQToEnmPfIPgR3EBzwFgz1pHGh+o4WZmumDI4w/5dZ7tkcvSqHLKZaiGDnoVfGX+fL5t
+         px4oiCCYfGOwaEZ9JAu9VIf8Af+WAtyfZUNVRwkGUOC5IuRCZOxoSqDCjHYu65HRfrjl
+         nluQDgWcRLYqXIQTVplwlKI769H2nDuHrbjb7vorX4zpFaVsu9Mfq1DjWaHjRxyU9sNp
+         Dx+Q==
+X-Gm-Message-State: ANoB5pk08ocMZxeeCzu8NIsBfDsJInvsdqnkNMXJJOVEb6waN2aasMR4
+	KX92TOTMARd/SzVczQN24ECnDeVIrERruLM03ZUU
+X-Google-Smtp-Source: AA0mqf6bVEu+zdRUSkuWOcp4cIkScjpUe3duREc67t/ScI57nnNA5ajNFIWKMsygOUVvxfoMtTAQsEEbtmvq9CmQ8oU=
+X-Received: by 2002:a63:e74a:0:b0:478:42f:5a3d with SMTP id
+ j10-20020a63e74a000000b00478042f5a3dmr48968019pgk.3.1670539560762; Thu, 08
+ Dec 2022 14:46:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [Weekly meetings] Change day/hour?
-To: Matthieu Baerts <matthieu.baerts@tessares.net>,
- MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Paolo Abeni <pabeni@redhat.com>, Ossama Othman <ossama.othman@intel.com>,
- Davide Caratti <dcaratti@redhat.com>, Florian Westphal <fw@strlen.de>,
- Benjamin Hesmans <benjamin.hesmans@tessares.net>,
- Christoph Paasch <cpaasch@apple.com>, Geliang Tang <geliang.tang@suse.com>
-References: <40149ef8-5ec6-f1de-45c0-038e42245b33@tessares.net>
-Content-Language: fr
-From: Dmytro Shytyi <dmytro@shytyi.net>
-In-Reply-To: <40149ef8-5ec6-f1de-45c0-038e42245b33@tessares.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+References: <CAFqZXNs2LF-OoQBUiiSEyranJUXkPLcCfBkMkwFeM6qEwMKCTw@mail.gmail.com>
+ <108a1c80eed41516f85ebb264d0f46f95e86f754.camel@redhat.com>
+ <CAHC9VhSSKN5kh9Kqgj=aCeA92bX1mJm1v4_PnRgua86OHUwE3w@mail.gmail.com>
+ <48dd1e9b21597c46e4767290e5892c01850a45ff.camel@redhat.com>
+ <CAHC9VhT0rRhr7Ty_p3Ld5O+Ltf8a8XSXcyik7tFpDRMrTfsF+A@mail.gmail.com>
+ <50e7ea22119c3afcb4be5a4b6ad9747465693d10.camel@redhat.com> <CAFqZXNtOku4vr5RrQU4vcvCVz5iK79CimeUVHu0S=QoN-QVEjg@mail.gmail.com>
+In-Reply-To: <CAFqZXNtOku4vr5RrQU4vcvCVz5iK79CimeUVHu0S=QoN-QVEjg@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Thu, 8 Dec 2022 17:45:49 -0500
+Message-ID: <CAHC9VhSQnhH3UL4gqzu+YiA1Q3YyLLCv88gLJOvw-0+uw5Lvkw@mail.gmail.com>
+Subject: Re: Broken SELinux/LSM labeling with MPTCP and accept(2)
+To: Ondrej Mosnacek <omosnace@redhat.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, SElinux list <selinux@vger.kernel.org>, 
+	Linux Security Module list <linux-security-module@vger.kernel.org>, mptcp@lists.linux.dev, 
+	network dev <netdev@vger.kernel.org>, Mat Martineau <mathew.j.martineau@linux.intel.com>, 
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+On Tue, Dec 6, 2022 at 9:43 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> On Mon, Dec 5, 2022 at 9:58 PM Paolo Abeni <pabeni@redhat.com> wrote:
+> >
+> > On Fri, 2022-12-02 at 15:16 -0500, Paul Moore wrote:
+> [...]
+> > > What if we added a new LSM call in mptcp_subflow_create_socket(), just
+> > > after the sock_create_kern() call?
+> >
+> > That should work, I think. I would like to propose a (last) attempt
+> > that will not need an additional selinux hook - to try to minimize the
+> > required changes and avoid unnecessary addional work for current and
+> > future LSM mainteniance and creation.
+> >
+> > I tested the following patch and passes the reproducer (and mptcp self-
+> > tests). Basically it introduces and uses a sock_create_nosec variant,
+> > to allow mptcp_subflow_create_socket() calling
+> > security_socket_post_create() with the corrct arguments. WDYT?
 
+I'm still working my way through the recent patch posted by Paolo
+(sorry, I lost some time due to build failures and other discussions),
+but I wanted to comment on a few things in Ondrej's email ...
 
-It is okay for me to changing the meeting day to Tuesday.
+> This seems like a step in the right direction, but I wonder if we
+> shouldn't solve the current overloading of the "kern" flag more
+> explicitly - i.e. split it into two flags: one to indicate that the
+> socket will only be used internally by the kernel ("internal") and
+> another one to indicate if it should be labeled according to the
+> current task or as a kernel-created socket ("kern"?).
 
-Thanks.
+The problem here is that labeling behavior isn't always going to be
+the same across LSMs, or rather I don't want to force a specific
+labeling behavior at the LSM layer.  We pass the @kern flag to
+indicate a kernel socket that is not visible to userspace, but we
+leave it up to the individual LSMs to handle that as they see fit
+(including if they should label sockets based on @current, an
+associated socket, or something else).
 
+> Another concern I have about this approach is whether it is possible
+> (in some more advanced scenario) for mptcp_subflow_create_socket() to
+> be called in the context of a different task than the one
+> creating/handling the main socket. Because then a potential socket
+> accepted from the new subflow socket would end up with an unexpected
+> (and probably semantically wrong) label. Glancing over the call tree,
+> it seems it can be called via some netlink commands - presumably
+> intended to be used by mptcpd?
 
-Dmytro.
+Yes, this is something we need to be careful about, if we want to
+treat all of these subflows just as we would treat the main socket,
+the subflows need to be labeled the same as the main socket,
+regardless of the process which creates them.
 
+As a FYI to the non-SELinux folks, a socket's label can be important
+even when it is not visible to userspace as the label is used both to
+set the on-the-wire label (CIPSO, CALIPSO, labeled IPsec) and in the
+per-packet access controls (see security_sock_rcv_skb()).
 
-On 12/8/2022 6:51 PM, Matthieu Baerts wrote:
-> Hello,
->
-> At the last meeting, we discussed the idea of re-scheduling the weekly
-> meetings we have because some people might not be able to join or prefer
-> another moment.
->
-> But because we were exceptionally only 3 today because of the feast of
-> the Immaculate Conception, we didn't take any decision. Instead, we
-> would then like to hear from people who want to participate to know what
-> they think about eventually:
->
-> - Changing the day to Tuesday?
->    - It might be better to avoid Monday (morning) and Friday (evening).
->    - Wednesday was not OK for today's participants
->
-> - Changing the time to have it one hour later?
->    - It means 17:00 UTC (9am PST, 6pm CET, 1am CST)
->    - This is late for people in China but midnight is late anyway
->    - Maybe we can also schedule less frequent meetings at a different
-> time (or on request), e.g. morning in Europe, afternoon in China?
->    - (the BPF weekly meetings are on Thursdays at 17:00 UTC)
->
-> What would be OK or not OK for you? Tuesday or Thursday, same time or
-> one hour later?
->
-> Thanks,
-> Matt
+-- 
+paul-moore.com
