@@ -1,214 +1,126 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECB462C
-	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 02:46:49 +0000 (UTC)
-Received: by mail-pl1-f196.google.com with SMTP id jl24so222609plb.8
-        for <mptcp@lists.linux.dev>; Wed, 07 Dec 2022 18:46:49 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9D762C
+	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 03:23:08 +0000 (UTC)
+Received: by mail-oo1-f46.google.com with SMTP id j6-20020a4ab1c6000000b004809a59818cso61801ooo.0
+        for <mptcp@lists.linux.dev>; Wed, 07 Dec 2022 19:23:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dgtwbM9/80y8yPptKc/3f93/fPhOk90dsnObLjOfD9E=;
-        b=aoAUJJjCuv131Xbp1+q6Tuo1Z4Yn19M4OJk+y3nPFp1+ddgVhsaj8PAILaWs2jhWLA
-         9RsMZkI7dqSLSZfyeOKBKhoKNyByLKZ+VwmoeIwTPQuWBEmipq6/zjJw73iqGidGISRW
-         xHiJRXHg1dNCk0Not3tW0JtA8mI4fxuN4+uK3Uvf6aUI92T/Y9rXJWFexzykMWVNYJw2
-         KqENYtvrp2PuiC97nBIF97Nnnk+J4WOL1gGBBJXby11+AOSLPLb9NppfjWELQbPQz2fS
-         1kR913GCILfRl3mp2GKWzuaafMtubkFCInXbkq18xnJU6vCgKAp8DUMwd+pNHiUMs3sP
-         7jwA==
+        bh=Pd6MU7HFAHE4HFIUFfh8z/ug/K6PTIUobHtPh9xOPco=;
+        b=mzA/7Ye+6LABbV9vZ/ZliPmCf3rv4Ys+IcKHAdK7buu7iw3/PO0Qu3vWjRBg+AMpg1
+         QV4D1ZcnjN10iOx9JbSt4Lqty8Lgj/4nvYVpR9LGT+A1x0K1JpamLYruTdvBU4ald+7m
+         dXonWJ5aRd4/2uorpsIbHg1CLCXXhlN/RChfHOdNDAgyKa/WCN5uVGcat/Vge+Wu2pre
+         IERGqmBdi1yfdfdrtWXIoqYNL874/0cSjvq2Ap2cNiAHkGi5I/CQSshXETYS7mSv0Nkd
+         zsGu1s0GKSobven5i6uJjhfgDthfjcZgUFnWdKI3KGC0WOXmRmJ+Wo948USlzHYSb0oZ
+         699Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dgtwbM9/80y8yPptKc/3f93/fPhOk90dsnObLjOfD9E=;
-        b=dsN3bU4r6N/j4OEtfyiwQxAX6IjVKJC/U0IuTgOUBmjeOzfd1Vrfexf+hkdGjHOdDk
-         mTNITRUcGL+igIdoP5JnnWSs9kXRd0xoRCcGGd2hZwoeLAF8IvCuC281HCwmHzaxyImB
-         Gakvj8XqtAyCLDZV2VyIMW3t6vtz4Khnny325A8LmmYvvZtjwCYFu/dJ1xXIUVis8Cxw
-         xqGpKTeA7OeRiVoniVUqosSCbmkTPiagcQwwFJWI2WFQZBdkyCCgsOMhWtstOSy9LMUP
-         hjwGxBA6w86M+lB+OCsKmaQzw5lfIFQRgE8WWbbOV9Ap1319dP71CZbjwnHIyL3IcHSN
-         YK1A==
-X-Gm-Message-State: ANoB5plRiFVGCt9/lnXiFD7u2UFHYTKq9OkyAJ5XZvvvcnaVFh8HC9Tq
-	POHAWekjSyUe/JJaUGx/iR0=
-X-Google-Smtp-Source: AA0mqf4R0EwhkKm+hw0DR4/HXUn3mLwpYD67iIRs86WpRsBUR/1Q3Lkrgo2/+xvwsQW9U21I8h5FXQ==
-X-Received: by 2002:a17:902:ee82:b0:189:f0ce:43db with SMTP id a2-20020a170902ee8200b00189f0ce43dbmr7547530pld.88.1670467609120;
-        Wed, 07 Dec 2022 18:46:49 -0800 (PST)
-Received: from localhost.localdomain ([203.205.141.17])
-        by smtp.gmail.com with ESMTPSA id a26-20020aa78e9a000000b005769cee6735sm8606394pfr.43.2022.12.07.18.46.42
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Pd6MU7HFAHE4HFIUFfh8z/ug/K6PTIUobHtPh9xOPco=;
+        b=ylaDabbujStV9XeWra/dow2z8Vti98WCAm2MYHN5C5zPnXjD7ukDPzVFyvAIMRl8E9
+         z6UmbEQfQ9yWFVAK8ii4YoCPmtFKqnQ6g7SwVBYH6W6Z5RJNciOL+KiBJA5weMdIggmL
+         00viK5MnH8qVWuSRsCB5/BPB25NXFIscHmLAJKXSKiTtNxQVT2LeiTELVawCeK7+MER8
+         JbS2dhP+JfQb/rwAnLzU7rVSyc8iUPlW/PWA1QvOiQfWMwQwSY0+iKUD2wSX0dkwmpTh
+         wssPEDi7UuvLhYH5s8YEt1wG5W+zkZNUsRDWB3bfjvxS45WBGzcpNJHpR4D5JgIlNRn7
+         uj/A==
+X-Gm-Message-State: ANoB5pnEGfgMeR6xHVjKYuFh1uuUB+ty1MQwm+p88/3gmOU2i/pnoeAJ
+	mT4QuXh+jVYRmhVAZvLMQg==
+X-Google-Smtp-Source: AA0mqf4HJe1Knxj8EqCLWRsF+G9Q5oXY5iZIvOEDpq+Ltx4e75GzozpCBVw96YfGev9lKTCGfHzkig==
+X-Received: by 2002:a4a:e882:0:b0:49f:f4e6:2063 with SMTP id g2-20020a4ae882000000b0049ff4e62063mr560894ooe.6.1670469787391;
+        Wed, 07 Dec 2022 19:23:07 -0800 (PST)
+Received: from [127.0.0.1] ([23.98.139.127])
+        by smtp.gmail.com with ESMTPSA id z4-20020a4ade44000000b004a38ccf775fsm691149oot.45.2022.12.07.19.23.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Dec 2022 18:46:48 -0800 (PST)
-From: menglong8.dong@gmail.com
-X-Google-Original-From: imagedong@tencent.com
-To: pabeni@redhat.com,
-	mathew.j.martineau@linux.intel.com,
-	matthieu.baerts@tessares.net
-Cc: mptcp@lists.linux.dev,
-	Menglong Dong <imagedong@tencent.com>
-Subject: [PATCH mptcp-next v8 4/4] selftest: mptcp: add test for mptcp socket in use
-Date: Thu,  8 Dec 2022 10:45:43 +0800
-Message-Id: <20221208024543.113633-5-imagedong@tencent.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221208024543.113633-1-imagedong@tencent.com>
-References: <20221208024543.113633-1-imagedong@tencent.com>
+        Wed, 07 Dec 2022 19:23:06 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <ffee337de5d6e447185b87ade65cc27f0b3576db.1670434580.git.pabeni@redhat.com>
+References:
+ <ffee337de5d6e447185b87ade65cc27f0b3576db.1670434580.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix LSM labeling for passive msk: Tests Results
+Message-ID: <1bac0f85-87f0-8e94-d23a-a0a63ed095c1@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 08 Dec 2022 03:23:06 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Menglong Dong <imagedong@tencent.com>
+Hi Paolo,
 
-Add the function chk_msk_inuse() to diag.sh, which is used to check the
-statistics of mptcp socket in use. As mptcp socket in listen state will
-be closed randomly after 'accept', we need to get the count of listening
-mptcp socket through 'ss' command.
+Thank you for your modifications, that's great!
 
-All tests pass.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Menglong Dong <imagedong@tencent.com>
----
-v7:
-- check all processes exit in flush_pids()
----
- tools/testing/selftests/net/mptcp/diag.sh | 56 +++++++++++++++++++++--
- 1 file changed, 51 insertions(+), 5 deletions(-)
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4599690394599424
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4599690394599424/summary/summary.txt
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 24bcd7b9bdb2..ef628b16fe9b 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -17,6 +17,11 @@ flush_pids()
- 	sleep 1.1
- 
- 	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGUSR1 &>/dev/null
-+
-+	for _ in $(seq 10); do
-+		[ -z "$(ip netns pids "${ns}")" ] && break
-+		sleep 0.1
-+	done
- }
- 
- cleanup()
-@@ -37,15 +42,20 @@ if [ $? -ne 0 ];then
- 	exit $ksft_skip
- fi
- 
-+get_msk_inuse()
-+{
-+	ip netns exec $ns cat /proc/net/protocols | awk '$1~/^MPTCP$/{print $3}'
-+}
-+
- __chk_nr()
- {
--	local condition="$1"
-+	local command="$1"
- 	local expected=$2
- 	local msg nr
- 
- 	shift 2
- 	msg=$*
--	nr=$(ss -inmHMN $ns | $condition)
-+	nr=$(eval $command)
- 
- 	printf "%-50s" "$msg"
- 	if [ $nr != $expected ]; then
-@@ -57,9 +67,17 @@ __chk_nr()
- 	test_cnt=$((test_cnt+1))
- }
- 
-+__chk_msk_nr()
-+{
-+	local condition=$1
-+	shift 1
-+
-+	__chk_nr "ss -inmHMN $ns | $condition" $*
-+}
-+
- chk_msk_nr()
- {
--	__chk_nr "grep -c token:" $*
-+	__chk_msk_nr "grep -c token:" $*
- }
- 
- wait_msk_nr()
-@@ -97,12 +115,12 @@ wait_msk_nr()
- 
- chk_msk_fallback_nr()
- {
--		__chk_nr "grep -c fallback" $*
-+		__chk_msk_nr "grep -c fallback" $*
- }
- 
- chk_msk_remote_key_nr()
- {
--		__chk_nr "grep -c remote_key" $*
-+		__chk_msk_nr "grep -c remote_key" $*
- }
- 
- __chk_listen()
-@@ -142,6 +160,26 @@ chk_msk_listen()
- 	nr=$(ss -Ml $filter | wc -l)
- }
- 
-+chk_msk_inuse()
-+{
-+	local expected=$1
-+	local listen_nr
-+
-+	shift 1
-+
-+	listen_nr=$(ss -N "${ns}" -Ml | grep -c LISTEN)
-+	expected=$((expected + listen_nr))
-+
-+	for _ in $(seq 10); do
-+		if [ $(get_msk_inuse) -eq $expected ];then
-+			break
-+		fi
-+		sleep 0.1
-+	done
-+
-+	__chk_nr get_msk_inuse $expected $*
-+}
-+
- # $1: ns, $2: port
- wait_local_port_listen()
- {
-@@ -195,8 +233,10 @@ wait_connected $ns 10000
- chk_msk_nr 2 "after MPC handshake "
- chk_msk_remote_key_nr 2 "....chk remote_key"
- chk_msk_fallback_nr 0 "....chk no fallback"
-+chk_msk_inuse 2 "....chk 2 msk in use"
- flush_pids
- 
-+chk_msk_inuse 0 "....chk 0 msk in use after flush"
- 
- echo "a" | \
- 	timeout ${timeout_test} \
-@@ -211,8 +251,11 @@ echo "b" | \
- 				127.0.0.1 >/dev/null &
- wait_connected $ns 10001
- chk_msk_fallback_nr 1 "check fallback"
-+chk_msk_inuse 1 "....chk 1 msk in use"
- flush_pids
- 
-+chk_msk_inuse 0 "....chk 0 msk in use after flush"
-+
- NR_CLIENTS=100
- for I in `seq 1 $NR_CLIENTS`; do
- 	echo "a" | \
-@@ -232,6 +275,9 @@ for I in `seq 1 $NR_CLIENTS`; do
- done
- 
- wait_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
-+chk_msk_inuse $((NR_CLIENTS*2)) "....chk many msk in use"
- flush_pids
- 
-+chk_msk_inuse 0 "....chk 0 msk in use after flush"
-+
- exit $ret
--- 
-2.37.2
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5162640348020736
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5162640348020736/summary/summary.txt
 
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6288540254863360
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6288540254863360/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5725590301442048
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5725590301442048/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/bd71c6923ce8
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
