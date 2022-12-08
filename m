@@ -1,229 +1,121 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33891621
-	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 02:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670465944; x=1702001944;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Jt7NLbv+WMLBtqgdb3SxO2ErbAI1LICf45IEtoCF5VE=;
-  b=XHWNUWbEyHwiHjUCxoU2tnhQfGZ3NP+1nRe94gS8sZhSlTx2LxZNewKS
-   iqyLSATisl5+BcFgxgkJ+/hDIPVsO6zuP1RGLlo0C+A3+93eFbVLOCY7c
-   5h13JpnOf+waK7KRDlzZ6XVjOEWVYlEhfwqZQhayTECOaWRdRtU5KEBW2
-   znM69Bc5SarNPe5ZUzm74N+PhIyg5u34s2rSL0fJR3bgRvAx0cEfJld+d
-   X5GkWYJCQw5egNXPaARasLs0alVw0Ay3vM1SyO3QLIA7xY1KXrhftm+P1
-   M5AmI6JT3q0C78kfhlptBvFShpm3edIkVcJQgDIzIR5U3xKLhjWhcbHHf
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="318191581"
-X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
-   d="scan'208";a="318191581"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 18:19:03 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="735618903"
-X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
-   d="scan'208";a="735618903"
-Received: from rtalla-mobl.amr.corp.intel.com ([10.209.87.225])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 18:19:01 -0800
-Date: Wed, 7 Dec 2022 18:19:01 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev, Paul Moore <paul@paul-moore.com>, 
-    Ondrej Mosnacek <omosnace@redhat.com>, 
-    SElinux list <selinux@vger.kernel.org>, 
-    Linux Security Module list <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH mptcp-net] mptcp: fix LSM labeling for passive msk
-In-Reply-To: <ffee337de5d6e447185b87ade65cc27f0b3576db.1670434580.git.pabeni@redhat.com>
-Message-ID: <a3c81322-36b5-a289-c07b-15d2be75b02d@linux.intel.com>
-References: <ffee337de5d6e447185b87ade65cc27f0b3576db.1670434580.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03825370
+	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 02:46:28 +0000 (UTC)
+Received: by mail-pg1-f193.google.com with SMTP id 62so99254pgb.13
+        for <mptcp@lists.linux.dev>; Wed, 07 Dec 2022 18:46:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AcyFgJUJIzEqZi1NqQ6ikanQWhPq38fNHFeJLV3etxs=;
+        b=EVnw5BB92dZZ3n8epil029d7Hq4Ro6NAbYKhfUryRyy5Nj91oTy/51AYDYtf2A5FaU
+         yCM3QwObhJFf/FiutMpkfCe+hgXlWok/7MQ2Q5awIM2yjYDrKcWjg4n8yAHRlTSnTBfo
+         ZGZoBnhkwi2wWNr3sin4cBXrlkUiewlUbzM8syaV+7dCRbrhI/WXYCQB1R4t2JgX03LL
+         tiBTjZcpz2+mROoNGC0dgkqp3n/AhuFkWpiLvWEszM3K44Qp7w7u/u/ECauvKvP9yVhg
+         w7vPMHxtCozRfVZyrPgDlqb+7Fgc+tBZmBTargKsh+qWkTBNVbjTr9vC9gnnPyb1siTE
+         Yi/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AcyFgJUJIzEqZi1NqQ6ikanQWhPq38fNHFeJLV3etxs=;
+        b=XYEHgJuawXq7sSTPHDxyhFF3bEpPXXDJFR1aZM/iOUa1ss3fLT+KQkTRVPayCvOleb
+         uS81CNxqxZFe/SNt2Rl6MhhpvGg6A+b/5iV44UTHw6nDap85xnhJPG1PGaGoX8DFevp8
+         FM5PFUb7h2Qqsgpi5R3/GrdkPX05Yf+eO57USadblkw2pijCUB3OIBVtsiO4NB55wNN7
+         o74jnQmRApoFanzPCdH6rcr2MoTcrTg7vgRURkMSAIJGjNS31J1KA2GEcbrMPu7Yfjcx
+         fgowXqDJlH+GJnTjigkMuquoQTkZzoLkTor8LANIlCzHliGoXrw/pzCCzjwZdHfY1JrJ
+         PAJg==
+X-Gm-Message-State: ANoB5pkLr6hV4SYYjMozuFIYnY3ZDN6Ch79lXc6dmyVPi3ZlpieDAdeH
+	LqsWoos+VfkYYtP7F/YepQs=
+X-Google-Smtp-Source: AA0mqf5JxwGairpRXymkLi7HNAcmn78AQqGLiLk4K/+G7pbaeyEJxgOC/GPFbfyXV3OKTSTWuxp0JA==
+X-Received: by 2002:a63:1747:0:b0:478:1391:fd14 with SMTP id 7-20020a631747000000b004781391fd14mr45393931pgx.112.1670467588350;
+        Wed, 07 Dec 2022 18:46:28 -0800 (PST)
+Received: from localhost.localdomain ([203.205.141.17])
+        by smtp.gmail.com with ESMTPSA id a26-20020aa78e9a000000b005769cee6735sm8606394pfr.43.2022.12.07.18.46.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Dec 2022 18:46:27 -0800 (PST)
+From: menglong8.dong@gmail.com
+X-Google-Original-From: imagedong@tencent.com
+To: pabeni@redhat.com,
+	mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net
+Cc: mptcp@lists.linux.dev,
+	Menglong Dong <imagedong@tencent.com>
+Subject: [PATCH mptcp-next v8 0/4] mptcp: add statistics for mptcp socket in use
+Date: Thu,  8 Dec 2022 10:45:39 +0800
+Message-Id: <20221208024543.113633-1-imagedong@tencent.com>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 7 Dec 2022, Paolo Abeni wrote:
+From: Menglong Dong <imagedong@tencent.com>
 
-> MPTCP sockets created via accept() inherit their LSM label
-> from the initial request socket, which in turn get it from the
-> listener socket's first subflow. The latter is a kernel socket,
-> and get the relevant labeling at creation time.
->
-> Due to all the above even the accepted MPTCP socket get a kernel
-> label, causing unexpected behaviour and failure on later LSM tests.
->
-> Address the issue factoring out a socket creation helper that does
-> not include the post-creation LSM checks. Use such helper to create
-> mptcp subflow as in-kernel sockets and doing explicitly LSM validation:
-> vs the current user for the first subflow, as a kernel socket otherwise.
->
-> Fixes: 0c14846032f2 ("mptcp: fix security context on server socket")
-> Reported-by: Ondrej Mosnacek <omosnace@redhat.com>
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+In the 1th patch, we do some code cleanup with replease 'sock->sk'
+with 'sk'. In the 2th patch, we add statistics for mptcp socket in
+use. In the 3th patch, we make mptcp_connect can exit when receive
+'SIGUSR1' with '-r' flag. And in the 4th patch, we add the testing
+for this commit.
 
-The MPTCP content looks good to me:
-
-Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+With the commit e8695e504942("mptcp: don't orphan ssk in mptcp_close()"),
+I belive that the testing of diag.sh can pass now. In fallback and
+simultaneous close case, the msk can't release normal (sometimes?) without
+that commit, and makes the testing fail. Enn...let's just see that the
+CI is saying~
 
 
-I didn't see issues with the socket.c changes but I'd like to get some 
-security community feedback before upstreaming - Paul or other security 
-reviewers, what do you think?
+Changes since v7:
+- remove the MPTCP_INUSE flag and do the statistics according to the
+  creation and destruction of the token in the 2th patch.
 
+Changes since v6:
+- check all processes exit in flush_pids() in the 4th patch
 
-Thanks,
+Changes since v5:
+- introduce MPTCP_INUSE flag to store if msk is in use, as I find
+  that it's not correct to check is a msk is in use by
+  !sk_unhashed(sk) in mptcp_destroy_common(), because the token
+  can be release in mptcp_check_fastclose()
+- add the 3th patch
+- reuse __chk_nr in 4th patch
 
-Mat
+Changes since v4:
+- rebase to solve merge conflict
 
+Changes since v3:
+- rename MPTCP_DESTROIED to MPTCP_DESTROYED in the 2th patch
 
-> ---
-> include/linux/net.h |  2 ++
-> net/mptcp/subflow.c | 19 ++++++++++++--
-> net/socket.c        | 60 ++++++++++++++++++++++++++++++---------------
-> 3 files changed, 59 insertions(+), 22 deletions(-)
->
-> diff --git a/include/linux/net.h b/include/linux/net.h
-> index b73ad8e3c212..91713012504d 100644
-> --- a/include/linux/net.h
-> +++ b/include/linux/net.h
-> @@ -251,6 +251,8 @@ int sock_wake_async(struct socket_wq *sk_wq, int how, int band);
-> int sock_register(const struct net_proto_family *fam);
-> void sock_unregister(int family);
-> bool sock_is_registered(int family);
-> +int __sock_create_nosec(struct net *net, int family, int type, int proto,
-> +			struct socket **res, int kern);
-> int __sock_create(struct net *net, int family, int type, int proto,
-> 		  struct socket **res, int kern);
-> int sock_create(int family, int type, int proto, struct socket **res);
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index d5ff502c88d7..e7e6f17df7ef 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1646,11 +1646,26 @@ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
-> 	if (unlikely(!sk->sk_socket))
-> 		return -EINVAL;
->
-> -	err = sock_create_kern(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
-> -			       &sf);
-> +	/* the subflow is created by the kernel, and we need kernel annotation
-> +	 * for lockdep's sake...
-> +	 */
-> +	err = __sock_create_nosec(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
-> +				  &sf, 1);
-> 	if (err)
-> 		return err;
->
-> +	/* ... but the MPC subflow will be indirectly exposed to the
-> +	 * user-space via accept(). Let's attach the current user security
-> +	 * label to the first subflow, that is when msk->first is not yet
-> +	 * initialized.
-> +	 */
-> +	err = security_socket_post_create(sf, sk->sk_family, SOCK_STREAM,
-> +					  IPPROTO_TCP, !!mptcp_sk(sk)->first);
-> +	if (err) {
-> +		sock_release(sf);
-> +		return err;
-> +	}
-> +
-> 	lock_sock(sf->sk);
->
-> 	/* the newly created socket has to be in the same cgroup as its parent */
-> diff --git a/net/socket.c b/net/socket.c
-> index 55c5d536e5f6..d5d51e4e26ae 100644
-> --- a/net/socket.c
-> +++ b/net/socket.c
-> @@ -1426,23 +1426,11 @@ int sock_wake_async(struct socket_wq *wq, int how, int band)
-> }
-> EXPORT_SYMBOL(sock_wake_async);
->
-> -/**
-> - *	__sock_create - creates a socket
-> - *	@net: net namespace
-> - *	@family: protocol family (AF_INET, ...)
-> - *	@type: communication type (SOCK_STREAM, ...)
-> - *	@protocol: protocol (0, ...)
-> - *	@res: new socket
-> - *	@kern: boolean for kernel space sockets
-> - *
-> - *	Creates a new socket and assigns it to @res, passing through LSM.
-> - *	Returns 0 or an error. On failure @res is set to %NULL. @kern must
-> - *	be set to true if the socket resides in kernel space.
-> - *	This function internally uses GFP_KERNEL.
-> - */
->
-> -int __sock_create(struct net *net, int family, int type, int protocol,
-> -			 struct socket **res, int kern)
-> +
-> +/*creates a socket leaving LSM post-creation checks to the caller */
-> +int __sock_create_nosec(struct net *net, int family, int type, int protocol,
-> +			struct socket **res, int kern)
-> {
-> 	int err;
-> 	struct socket *sock;
-> @@ -1528,11 +1516,8 @@ int __sock_create(struct net *net, int family, int type, int protocol,
-> 	 * module can have its refcnt decremented
-> 	 */
-> 	module_put(pf->owner);
-> -	err = security_socket_post_create(sock, family, type, protocol, kern);
-> -	if (err)
-> -		goto out_sock_release;
-> -	*res = sock;
->
-> +	*res = sock;
-> 	return 0;
->
-> out_module_busy:
-> @@ -1548,6 +1533,41 @@ int __sock_create(struct net *net, int family, int type, int protocol,
-> 	rcu_read_unlock();
-> 	goto out_sock_release;
-> }
-> +
-> +/**
-> + *	__sock_create - creates a socket
-> + *	@net: net namespace
-> + *	@family: protocol family (AF_INET, ...)
-> + *	@type: communication type (SOCK_STREAM, ...)
-> + *	@protocol: protocol (0, ...)
-> + *	@res: new socket
-> + *	@kern: boolean for kernel space sockets
-> + *
-> + *	Creates a new socket and assigns it to @res, passing through LSM.
-> + *	Returns 0 or an error. On failure @res is set to %NULL. @kern must
-> + *	be set to true if the socket resides in kernel space.
-> + *	This function internally uses GFP_KERNEL.
-> + */
-> +
-> +int __sock_create(struct net *net, int family, int type, int protocol,
-> +		  struct socket **res, int kern)
-> +{
-> +	struct socket *sock;
-> +	int err;
-> +
-> +	err = __sock_create_nosec(net, family, type, protocol, &sock, kern);
-> +	if (err)
-> +		return err;
-> +
-> +	err = security_socket_post_create(sock, family, type, protocol, kern);
-> +	if (err) {
-> +		sock_release(sock);
-> +		return err;
-> +	}
-> +
-> +	*res = sock;
-> +	return 0;
-> +}
-> EXPORT_SYMBOL(__sock_create);
->
-> /**
-> -- 
-> 2.38.1
->
->
->
+Changes since v2:
+- add testing
 
---
-Mat Martineau
-Intel
+Changes since v1:
+- split the code cleanup into the 1th patch.
+- decrease the statistics for listening mptcp socket inuse with
+  mptcp_listen_inuse_dec()
+- add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
+  called on the msk. For fallback case, we need to decrease the
+  statistics only once, and mptcp_destroy_common() can be called
+  more than once.
+
+Menglong Dong (4):
+  mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
+  mptcp: add statistics for mptcp socket in use
+  selftest: mptcp: exit from copyfd_io_poll() when receive SIGUSR1
+  selftest: mptcp: add test for mptcp socket in use
+
+ net/mptcp/protocol.c                          | 29 +++++++---
+ net/mptcp/token.c                             |  7 +++
+ tools/testing/selftests/net/mptcp/diag.sh     | 56 +++++++++++++++++--
+ .../selftests/net/mptcp/mptcp_connect.c       |  4 +-
+ 4 files changed, 82 insertions(+), 14 deletions(-)
+
+-- 
+2.37.2
+
