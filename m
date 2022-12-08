@@ -1,43 +1,43 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD5762C
-	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 02:46:33 +0000 (UTC)
-Received: by mail-pf1-f195.google.com with SMTP id k79so197776pfd.7
-        for <mptcp@lists.linux.dev>; Wed, 07 Dec 2022 18:46:33 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E406162C
+	for <mptcp@lists.linux.dev>; Thu,  8 Dec 2022 02:46:37 +0000 (UTC)
+Received: by mail-pj1-f66.google.com with SMTP id u5so319784pjy.5
+        for <mptcp@lists.linux.dev>; Wed, 07 Dec 2022 18:46:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UwpGsX7iMK5E/SJU2XUAJwEavDvM+3ejc/xz/wz/5o8=;
-        b=I1GSrrI+Z4ghtqwS3fEwaXW5h6rM3fOHp5rIiv/Tt5cX3NmiYsiPoQTmEMLPBJNJ3w
-         wvSFy3rztm+JMGG8m0xrEYisgxwBO2LxUjFx/cXqnKNcQPbL0AmmFfHRBAzzZsn966iI
-         KaTXYGCJiC1/ZdK3ooVOyUge+m4gPdiqFu7erk01jmXYdxvzSABx/Vs+EJSFq3mu9ivA
-         yljC7BmOJixbpyU5YassGBgUM/3oaBm5Z4mhLVIEl2Grcld4r9jq8FSv0LWSq32vuA8y
-         iVwk2Hqz8BZroS3kPgjmzsU9ZF19wTiqYHkh+TKe5X1DxLwrANpbSDYaobMS+pFfZp+n
-         zHMA==
+        bh=SDxupugxA4j3iu+Sx18nuzXfQ7swC3BH0oWcZxdifXg=;
+        b=Osz5AxCUNvAhuCrLuBmLVsyKP10CRBLmWtk4r/veD6Tf71DtQ7XQ98oKqTooPThUyy
+         5J0Sow/Trh01gMaO3RbKpXSnE23KBbhNabP6OjLyq9DQvS+ia2WLK04ax0Vvc/cqcDFt
+         4deQ0i852wonZ6cN3GuKbSpXQYkk8Q7lgRdbDqnAFUxMQ5RKEvvSI6eBpvzGApBk8Jd3
+         4OOCjAD/nsfjYzTw0opQmM9d9qM25ZxyIFpO0LEnX63ni8sQAnYxgMEiOwS4md2FmMtg
+         vrAH/rej2Sqi6Lkl30JLV21jdYDNM4NHz+uzflT7CaAvd3TNT5XqRYeMJY8B4rKdib+D
+         YBBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UwpGsX7iMK5E/SJU2XUAJwEavDvM+3ejc/xz/wz/5o8=;
-        b=UpjO1icI2TiOdisIZMLVabSSWj9ZjxDq0/YjKgOd9PYhWITwUhxMeqvPTVAYTe/M4v
-         FCGOuMmrQCz85za1B47bsDmqtUvLUFBOZbwbAYUe9GVZFYfwsLyHU2akGxpYXmMuGu7p
-         z7KN6IGyNvmoNG7OEJakknKJkcI+BLkM5SrSMTSWqDKMGF81mE9F+CjQoIptwQQPsqBk
-         GZ2EnzzBKvIXRd7kzzcrfeA29PHP0HDLiQ+PGMNleeqXW+HhbmOs7k3FAn9qclKuACk8
-         EDb+gqJY7ypv2QWFxkF1TU7PWwCA5NOMjSS4Ua6A1DKDB3BiEkLDxE/phOwfAp2ALUi0
-         u8Sg==
-X-Gm-Message-State: ANoB5pl+Dby4l4m4zzmThe2ctTd1tRsKzWSec4HIcsa9no7jrm8aZ5Xj
-	JlsqbBMqFkpZ+TyBCJ4IxM8=
-X-Google-Smtp-Source: AA0mqf7e7w2YvD6IwSfi5TyRwyY6bK6TwYx3nPVe2RbVMtoSDg4jt+WceO7Ddc7AzRkJJDWpWR6hDQ==
-X-Received: by 2002:a63:5408:0:b0:478:31a5:3656 with SMTP id i8-20020a635408000000b0047831a53656mr40542750pgb.273.1670467593095;
-        Wed, 07 Dec 2022 18:46:33 -0800 (PST)
+        bh=SDxupugxA4j3iu+Sx18nuzXfQ7swC3BH0oWcZxdifXg=;
+        b=OV8hCnJpq5mva1M8eEDBpQ5O3fd64OX6pCsrhP7K9sOlDgZtERhTBxYNLXx3GvbclI
+         KDNe6rYaygkEM0D6jrn9Jygkpq3kF02yFOOgxkejrmziwvS93xH68BMlNjlkwa2hCCiF
+         iUNUb0vE9NFh6Oe2tWwkO9hrmjSYE9eoodkk7IB4Kq84P54ajvLjHdKph5w0+F030hBs
+         G200Knj4Nm0sVq9KxNk8LCl8GJ03CMaNesrtwhm7T56Ip3EsSOhi+NqwlP6fcpCfgTaE
+         78s61xvzY73raK25YvojbTGfYCTP564UT4R2MXcAiNkf3+NC3XJAp7q0r+Ch/hc4dwKj
+         Yigw==
+X-Gm-Message-State: ANoB5pkqnqmbYgWDK15BfSpDU96jwWi7t8mRc7aXLZ3/n/Cu95eql3D+
+	Wd+7CQYXKoytJmGxr1JRXN4=
+X-Google-Smtp-Source: AA0mqf68u/UNsz7EIpcjryq9W2vetNGgipFAmulAdOHmMNBATA3j08F2kB1MD1t4SOD3Ab1POU0YGg==
+X-Received: by 2002:a17:902:c104:b0:189:a931:c8a1 with SMTP id 4-20020a170902c10400b00189a931c8a1mr39056593pli.112.1670467597367;
+        Wed, 07 Dec 2022 18:46:37 -0800 (PST)
 Received: from localhost.localdomain ([203.205.141.17])
-        by smtp.gmail.com with ESMTPSA id a26-20020aa78e9a000000b005769cee6735sm8606394pfr.43.2022.12.07.18.46.28
+        by smtp.gmail.com with ESMTPSA id a26-20020aa78e9a000000b005769cee6735sm8606394pfr.43.2022.12.07.18.46.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Dec 2022 18:46:32 -0800 (PST)
+        Wed, 07 Dec 2022 18:46:37 -0800 (PST)
 From: menglong8.dong@gmail.com
 X-Google-Original-From: imagedong@tencent.com
 To: pabeni@redhat.com,
@@ -45,9 +45,9 @@ To: pabeni@redhat.com,
 	matthieu.baerts@tessares.net
 Cc: mptcp@lists.linux.dev,
 	Menglong Dong <imagedong@tencent.com>
-Subject: [PATCH mptcp-next v8 1/4] mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
-Date: Thu,  8 Dec 2022 10:45:40 +0800
-Message-Id: <20221208024543.113633-2-imagedong@tencent.com>
+Subject: [PATCH mptcp-next v8 2/4] mptcp: add statistics for mptcp socket in use
+Date: Thu,  8 Dec 2022 10:45:41 +0800
+Message-Id: <20221208024543.113633-3-imagedong@tencent.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221208024543.113633-1-imagedong@tencent.com>
 References: <20221208024543.113633-1-imagedong@tencent.com>
@@ -61,57 +61,129 @@ Content-Transfer-Encoding: 8bit
 
 From: Menglong Dong <imagedong@tencent.com>
 
-'sock->sk' is used frequently in mptcp_listen(). Therefore, we can
-introduce the 'sk' and replace 'sock->sk' with it.
+Do the statistics of mptcp socket in use with sock_prot_inuse_add().
+Therefore, we can get the count of used mptcp socket from
+/proc/net/protocols:
+
+& cat /proc/net/protocols
+protocol  size sockets  memory press maxhdr  slab module     cl co di ac io in de sh ss gs se re sp bi br ha uh gp em
+MPTCPv6   2048      0       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
+MPTCP     1896      1       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
 
 Signed-off-by: Menglong Dong <imagedong@tencent.com>
 ---
- net/mptcp/protocol.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+v8:
+- remove the MPTCP_INUSE flag and do the statistics according to the
+  creation and destruction of the token
+
+v6:
+- introduce the 'MPTCP_INUSE' flag and check if msk is in use by it
+
+v5:
+- rebase to solve merge conflict
+
+v4:
+- rename MPTCP_DESTROIED to MPTCP_DESTROYED
+
+v2:
+- decrease the statistics for listening mptcp socket inuse with
+  mptcp_listen_inuse_dec()
+- add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
+  called on the msk. For fallback case, we need to decrease the
+---
+ net/mptcp/protocol.c | 16 +++++++++++++++-
+ net/mptcp/token.c    |  7 +++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6d03bdcda33e..ffdccf26af99 100644
+index ffdccf26af99..775454a9d49b 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -3656,12 +3656,13 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
- static int mptcp_listen(struct socket *sock, int backlog)
+@@ -3005,6 +3005,16 @@ void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
+ 	inet_sk(msk)->inet_rcv_saddr = inet_sk(ssk)->inet_rcv_saddr;
+ }
+ 
++static void mptcp_listen_inuse_dec(struct sock *sk)
++{
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct socket *ssock;
++
++	ssock = __mptcp_nmpc_socket(msk);
++	if (ssock && inet_sk_state_load(ssock->sk) == TCP_LISTEN)
++		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
++}
++
+ static int mptcp_disconnect(struct sock *sk, int flags)
  {
- 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
-+	struct sock *sk = sock->sk;
- 	struct socket *ssock;
- 	int err;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -3025,6 +3035,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 	if (msk->token)
+ 		mptcp_event(MPTCP_EVENT_CLOSED, msk, NULL, GFP_KERNEL);
  
- 	pr_debug("msk=%p", msk);
++	mptcp_listen_inuse_dec(sk);
+ 	/* msk->subflow is still intact, the following will not free the first
+ 	 * subflow
+ 	 */
+@@ -3203,6 +3214,7 @@ static void mptcp_destroy(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
  
--	lock_sock(sock->sk);
-+	lock_sock(sk);
- 	ssock = __mptcp_nmpc_socket(msk);
- 	if (!ssock) {
- 		err = -EINVAL;
-@@ -3669,18 +3670,18 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 	}
- 
- 	mptcp_token_destroy(msk);
--	inet_sk_state_store(sock->sk, TCP_LISTEN);
--	sock_set_flag(sock->sk, SOCK_RCU_FREE);
-+	inet_sk_state_store(sk, TCP_LISTEN);
-+	sock_set_flag(sk, SOCK_RCU_FREE);
++	mptcp_listen_inuse_dec(sk);
+ 	/* clears msk->subflow, allowing the following to close
+ 	 * even the initial subflow
+ 	 */
+@@ -3675,8 +3687,10 @@ static int mptcp_listen(struct socket *sock, int backlog)
  
  	err = ssock->ops->listen(ssock, backlog);
--	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
-+	inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
- 	if (!err)
--		mptcp_copy_inaddrs(sock->sk, ssock->sk);
-+		mptcp_copy_inaddrs(sk, ssock->sk);
+ 	inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
+-	if (!err)
++	if (!err) {
++		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
+ 		mptcp_copy_inaddrs(sk, ssock->sk);
++	}
  
  	mptcp_event_pm_listener(ssock->sk, MPTCP_EVENT_LISTENER_CREATED);
  
- unlock:
--	release_sock(sock->sk);
-+	release_sock(sk);
- 	return err;
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index 65430f314a68..54064146175f 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -175,6 +175,9 @@ int mptcp_token_new_connect(struct sock *sk)
+ 	__sk_nulls_add_node_rcu((struct sock *)msk, &bucket->msk_chain);
+ 	bucket->chain_len++;
+ 	spin_unlock_bh(&bucket->lock);
++	sock_prot_inuse_add(sock_net(subflow->conn),
++			    subflow->conn->sk_prot,
++			    1);
+ 	return 0;
  }
  
+@@ -190,8 +193,10 @@ void mptcp_token_accept(struct mptcp_subflow_request_sock *req,
+ 			struct mptcp_sock *msk)
+ {
+ 	struct mptcp_subflow_request_sock *pos;
++	struct sock *sk = (struct sock *)msk;
+ 	struct token_bucket *bucket;
+ 
++	sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
+ 	bucket = token_bucket(req->token);
+ 	spin_lock_bh(&bucket->lock);
+ 
+@@ -370,12 +375,14 @@ void mptcp_token_destroy_request(struct request_sock *req)
+  */
+ void mptcp_token_destroy(struct mptcp_sock *msk)
+ {
++	struct sock *sk = (struct sock *)msk;
+ 	struct token_bucket *bucket;
+ 	struct mptcp_sock *pos;
+ 
+ 	if (sk_unhashed((struct sock *)msk))
+ 		return;
+ 
++	sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
+ 	bucket = token_bucket(msk->token);
+ 	spin_lock_bh(&bucket->lock);
+ 	pos = __token_lookup_msk(bucket, msk->token);
 -- 
 2.37.2
 
