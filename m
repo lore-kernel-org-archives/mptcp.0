@@ -1,114 +1,107 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B861B652
-	for <mptcp@lists.linux.dev>; Fri,  9 Dec 2022 00:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670546679; x=1702082679;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hQBp37x+YF6P+lJ16BGpex90f7Ktlcv6uncn05y46Wo=;
-  b=PFgzqfqKwnF3tIwU3/kKHjppk8XiuEsMyO8l9as/zxkt62WpFpbqpudU
-   tTHiGFaPdqIpRXcgqBITfcU+tBsXKrxh493tWKxJ8GnNJQ7A9xckalgbV
-   CD5Rs/GEVIQwDhF9id9Dr1HqDw7LcDt6PnhuMQIGbthglqpvm3197gwJB
-   +eqEXVpRoGJN8sn1fpOg5c3c0ZVv9eZdStIYfoeu9+P+anI+Jjt1zFVC6
-   We+0qZ/Vmn+InCHVQm4yb1zGMMYXpvPCxBNIuIsfIPlsXG6MOP85jWI1u
-   V5PJZ2xSMsnRjTSfoa4TDLOM6/mh1ZOi7mRKSownRpVUDEVY7epG5hlcl
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="317367592"
-X-IronPort-AV: E=Sophos;i="5.96,228,1665471600"; 
-   d="scan'208";a="317367592"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 16:44:37 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="736027008"
-X-IronPort-AV: E=Sophos;i="5.96,228,1665471600"; 
-   d="scan'208";a="736027008"
-Received: from mchombea-mobl1.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.102.119])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 16:44:37 -0800
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	mptcp@lists.linux.dev,
-	kernel test robot <lkp@intel.com>,
-	Dan Carpenter <error27@gmail.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net-next 2/2] mptcp: return 0 instead of 'err' var
-Date: Thu,  8 Dec 2022 16:44:31 -0800
-Message-Id: <20221209004431.143701-3-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221209004431.143701-1-mathew.j.martineau@linux.intel.com>
-References: <20221209004431.143701-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501AC7E
+	for <mptcp@lists.linux.dev>; Fri,  9 Dec 2022 02:08:37 +0000 (UTC)
+Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-3f15a6f72d0so35853017b3.1
+        for <mptcp@lists.linux.dev>; Thu, 08 Dec 2022 18:08:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QBH1NCfGM0uQDcYGhuil27iyED/TBwGIdOiHXwUvgXo=;
+        b=XsC1+KesBR1YYJBFYLDTw4wGxxaVR5tcCt+7FS1Eg3Nj/0lQ0tQfVMPYgIdcpqN+1z
+         GKEj7GvhmwwGTwz8GOjgvx1639cpKdRVX8CVA7dI/nCuaObe2qXhsheFbMkiZ2GY3yJ9
+         N2fA0xmumxB1LvLNpif6ZPLJiD5wy+0UhpWBCezt1+Z4YuJNmrMTmZtrDArzeigEqsni
+         bxCx0FTUjc+cMIyP54JHY9gQ08ZDrId5LKszEvy/BL6yFIlyW8rT2rm5F2TuzHCHk9nj
+         ojnx8rEp05EbJEXhLI9c9sUIK23MXc4MZcOuBMwdXilNMF6h2XEbGc1kfTsmxE0tNNjJ
+         H+nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QBH1NCfGM0uQDcYGhuil27iyED/TBwGIdOiHXwUvgXo=;
+        b=ZArMBSDrueJ8uu/VJN1u+MTPG1vV37F66YGtYE/rq18cFrL1ttX7/qEO5qSbd15xpn
+         pPgyk9aDwLPCmfk+NZhpVZXIqhnmtxYUN0PfKzW+nCdqFM6IzBJGD706fuoYI3xLiHfX
+         tYhSVFOFQNQE4krrMv9DsfgfoXwV25qEdFYvJuKuXYv9xidHlLSP1PNubz8dQ8FTs1KO
+         thXa7afWuRIjSSWbQ08syLo42PSpHsl8JMWJ+aeu2eFWW1gMefOf4Rvcqd9aVzounfV+
+         DGO/QytWp6snuGFnRZu0WqiqJUCeqZ6XH0EJypUej6RtzBxgS7oVioOoOs97keAu/hOA
+         UO7Q==
+X-Gm-Message-State: ANoB5pnM+7LBZ5ejMdXQQlOnUMxwlQQUMI2pg2+0bwdZ8lf20GvjiMvL
+	iFhvDCoB+VAl3KcYqMvDZy/w+AQN0gvJTSnoHQU=
+X-Google-Smtp-Source: AA0mqf798mdie6SeMblB80AGHNOesZdVu3bE6yk2J8VsvfZg/ZNtd+YO2CobqJUwk2NsO9+30xjGC3IYp7dOVaWAngM=
+X-Received: by 2002:a81:1709:0:b0:3be:16c3:6829 with SMTP id
+ 9-20020a811709000000b003be16c36829mr56653802ywx.298.1670551716209; Thu, 08
+ Dec 2022 18:08:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20221208024543.113633-1-imagedong@tencent.com>
+ <20221208024543.113633-3-imagedong@tencent.com> <b4ef6ea7-4eaa-05ef-9447-43763e1c0aea@tessares.net>
+In-Reply-To: <b4ef6ea7-4eaa-05ef-9447-43763e1c0aea@tessares.net>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Fri, 9 Dec 2022 10:08:24 +0800
+Message-ID: <CADxym3ZRTyY-gX_uJCYE7QvtU+p2isLgiiPPWVf=toBFu33UTg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v8 2/4] mptcp: add statistics for mptcp socket
+ in use
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: pabeni@redhat.com, mathew.j.martineau@linux.intel.com, 
+	mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+On Thu, Dec 8, 2022 at 9:53 PM Matthieu Baerts
+<matthieu.baerts@tessares.net> wrote:
+>
+> Hi Menglong Dong,
+>
+> On 08/12/2022 03:45, menglong8.dong@gmail.com wrote:
+> > From: Menglong Dong <imagedong@tencent.com>
+> >
+> > Do the statistics of mptcp socket in use with sock_prot_inuse_add().
+> > Therefore, we can get the count of used mptcp socket from
+> > /proc/net/protocols:
+> >
+> > & cat /proc/net/protocols
+> > protocol  size sockets  memory press maxhdr  slab module     cl co di a=
+c io in de sh ss gs se re sp bi br ha uh gp em
+> > MPTCPv6   2048      0       0   no       0   yes  kernel      y  n  y  =
+y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
+> > MPTCP     1896      1       0   no       0   yes  kernel      y  n  y  =
+y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
+> >
+> > Signed-off-by: Menglong Dong <imagedong@tencent.com>
+> > ---
+> > v8:
+> > - remove the MPTCP_INUSE flag and do the statistics according to the
+> >   creation and destruction of the token
+>
+> Thank you for the new version!
+>
+> I marked this series as "Changes Requested" on Patchwork because I guess
+> you saw the CI was not happy with the KUnit token tests, e.g.:
+>
+> - KVM Validation: normal (except selftest_mptcp_join):
+>   - Unstable: 1 failed test(s): insmod - Critical: 3 Call Trace(s) =E2=9D=
+=8C:
+>   - Task: https://cirrus-ci.com/task/5270512411082752
+>   - Summary:
+> https://api.cirrus-ci.com/v1/artifact/task/5270512411082752/summary/summa=
+ry.txt
+>   - Debug: https://cirrus-ci.com/task/4989037434372096
+>
+> Do you mind looking at that please?
+>
 
-When 'err' is 0, it looks clearer to return '0' instead of the variable
-called 'err'.
+Of course! I'll run all of the tests to make sure they pass.
 
-The behaviour is then not modified, just a clearer code.
-
-By doing this, we can also avoid false positive smatch warnings like
-this one:
-
-  net/mptcp/pm_netlink.c:1169 mptcp_pm_parse_pm_addr_attr() warn: missing error code? 'err'
-
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <error27@gmail.com>
-Suggested-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/pm_netlink.c | 4 ++--
- net/mptcp/sockopt.c    | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 08c65f3e70a3..2ea7eae43bdb 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1190,7 +1190,7 @@ static int mptcp_pm_parse_pm_addr_attr(struct nlattr *tb[],
- 
- 	if (!tb[MPTCP_PM_ADDR_ATTR_FAMILY]) {
- 		if (!require_family)
--			return err;
-+			return 0;
- 
- 		NL_SET_ERR_MSG_ATTR(info->extack, attr,
- 				    "missing family");
-@@ -1224,7 +1224,7 @@ static int mptcp_pm_parse_pm_addr_attr(struct nlattr *tb[],
- 	if (tb[MPTCP_PM_ADDR_ATTR_PORT])
- 		addr->port = htons(nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]));
- 
--	return err;
-+	return 0;
- }
- 
- int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index a47423ebb33a..d4b1e6ec1b36 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -740,7 +740,7 @@ static int mptcp_setsockopt_v4_set_tos(struct mptcp_sock *msk, int optname,
- 	}
- 	release_sock(sk);
- 
--	return err;
-+	return 0;
- }
- 
- static int mptcp_setsockopt_v4(struct mptcp_sock *msk, int optname,
--- 
-2.38.1
-
+> Cheers,
+> Matt
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
