@@ -1,95 +1,103 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239CC7475
-	for <mptcp@lists.linux.dev>; Mon, 12 Dec 2022 23:28:25 +0000 (UTC)
-Received: by mail-pg1-f182.google.com with SMTP id 142so9294456pga.1
-        for <mptcp@lists.linux.dev>; Mon, 12 Dec 2022 15:28:25 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4C95CBC
+	for <mptcp@lists.linux.dev>; Tue, 13 Dec 2022 15:53:10 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id h10so16078718wrx.3
+        for <mptcp@lists.linux.dev>; Tue, 13 Dec 2022 07:53:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lDMpBs92GDwHHSGPWXE6ZbOfetatETM5r1yUsqZWmYU=;
-        b=Kvh5zgo3uISQqMXTbxWjd9MNjk/vmARRZbcPyDRDL8hBhYNcHhlu/Wr8If4AkfsZn/
-         ST2t+vgBR0VI2aRmpHcrJgkR2GjPXw9jQvJhsOM3bwvoj+Mf0AqE5esf+lc9C05eXbtQ
-         F2c6OzCdLLnuy23a9X1IyYPulLgFSnABWGO/H8CDmU0t4T/6WhPpcvJR6ftQ3Ahc85OD
-         osL/9UjGT71f6wO3/8VKBTLBIS4T0Rk0YUfVkksKAZ10G3G4zfMegjDuHcKMSbQIfIVP
-         gefmOzT+y2l2rrfBiBncwpkVRnKXbgstDp5dbQvWSoD4HqVpVTW7PYdQmBu1qCaHtMgu
-         g1dg==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dXHAKkuUPNmajc/w3tltJtXy78gtRsK2DOHkSFZZn7Q=;
+        b=IYW3tq2HdGpXdSfmNIl0k5BtLFD8dn47gpHI65VjbhelYOKqYXvj/Q0AZHOw1jHtpD
+         XLuIZuq8mVL2oSML7DvFRohkf63R4nBihsmN3liguYbi/s+9ZclPqfe6otda4so1vKsC
+         DEr4otO9SQYUEguQhmZ/lnRxnFvxKf7FjuinVJl/3IQUbnqN7pJSA1/eyWjGO1vbI1FN
+         ENANboSoJwalvCxMSGeA6tM8iRTeXDDZs/wBI6zUZvuMQ48pz+UhOXPilwFN+ZAeVDAG
+         HJUPFe1dep1pflJYu+MCBs4aNh6PGEw0fPI0vU/tL3SeW5KOH/nvSXoAXk3PkpTxtDUV
+         BLAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lDMpBs92GDwHHSGPWXE6ZbOfetatETM5r1yUsqZWmYU=;
-        b=azMOIrNFMMxY1yxBBwRYs8Vd/1XEpFPlzu9VuyHHPBDEqGLzuxwEbw/4HUoXT9HOAc
-         xS9WgLnE1OV2nnWKBh39z6JEJTNk90uJizd5BiT+IcRsUZ273pnGeDFhzpbC/aDTsIMl
-         2TL1MRxuoCtNJNCmKPaqY4izd0oxEd6UVkZ//xxi1W+we6vPHyEc3yA1F4qEsshmftD4
-         oxrXr4w/z5ABGrTGGLG9If1mD/M0wjnY+VFQT+8X1S20p2zPw2EdFbbPv1HqCimpfNp8
-         MheWXTh0woEFQylh5RldTCWI/D4EXqnWldRzcVJL/GFEsu/kcYnq6PkRzpIoTGTZU1VN
-         ArhA==
-X-Gm-Message-State: ANoB5pkIF2siQFeeo81lR/UHSiuyk7YlIXUvwBDTPJB9RVZg3vxOOrnR
-	CVh9MUlEBXCdcqbOORxBbjZQvSIWwHSogqU3/mlw
-X-Google-Smtp-Source: AA0mqf5nuk73f8SqlgS3qMu08yIFcWROfsVVv20WHkeTOTsnQKfKNmb9vRIE1UvLlCwc2nUXH5de7YLfmnytra2JeBI=
-X-Received: by 2002:a62:e402:0:b0:577:62a8:f7a1 with SMTP id
- r2-20020a62e402000000b0057762a8f7a1mr8981577pfh.2.1670887705431; Mon, 12 Dec
- 2022 15:28:25 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dXHAKkuUPNmajc/w3tltJtXy78gtRsK2DOHkSFZZn7Q=;
+        b=o8ehJwDUsC9pgpaOuZWwu1Cu5pVAK/g37JQ9xyJQYswrxv9sEQ+ynDogKMZCfAWSx9
+         qynsJSEzhOFxGxXsxW2ZLoQNP0r58GtoSurw8lMxibTatbuKB929qpwFKqFhr9pgs+Tt
+         scPHuKTy60BE48aVP6yyx0e6UdAGQJom7V5r86ekLtbmWeJ/UYjAl9rbUO01azoADT+b
+         8hwBxkeLUfGac3qKZOqByFTyDy3/QcAdiDT3eRXjEec7rKjd/ZxzpyJws+1DAZw2epHH
+         ZyIgNRDa+OhMr4Hnpvxt3wA5H8y4OiLxbRatpw3sGX+922syQmCl64Txd+pvFK8jZIJL
+         ZaAA==
+X-Gm-Message-State: ANoB5pmQbwB3oL56DkM0JupQhXdg+2EfhGbFQUV/WqrQC/CRGcJ6ZF0+
+	59CwlXW1zmHeFXerP92gzUGgpdBUzPYbjpB9A/U=
+X-Google-Smtp-Source: AA0mqf4gAVapSfVVbOAdjnaAR7nBangYMt6DEIe/g8giKaQFz8Eu8vkU5HiyDcDPcHWD3g2Ytz82vA==
+X-Received: by 2002:adf:bb04:0:b0:242:144:90d0 with SMTP id r4-20020adfbb04000000b00242014490d0mr14179079wrg.57.1670946788447;
+        Tue, 13 Dec 2022 07:53:08 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:766d:43c5:d004:76be? ([2a02:578:8593:1200:766d:43c5:d004:76be])
+        by smtp.gmail.com with ESMTPSA id h8-20020adff4c8000000b00241f029e672sm81802wrp.107.2022.12.13.07.53.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Dec 2022 07:53:08 -0800 (PST)
+Message-ID: <82b017e9-7d62-29b9-e2f6-8960973d067b@tessares.net>
+Date: Tue, 13 Dec 2022 16:53:07 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ffee337de5d6e447185b87ade65cc27f0b3576db.1670434580.git.pabeni@redhat.com>
- <a3c81322-36b5-a289-c07b-15d2be75b02d@linux.intel.com> <CAHC9VhQzJAhNtpMnU7STEfq6QpaJo-xiie8HoHH2w3io3aXBHw@mail.gmail.com>
- <75d48710be78d59e990cbb3930133a4f42c95a30.camel@redhat.com>
-In-Reply-To: <75d48710be78d59e990cbb3930133a4f42c95a30.camel@redhat.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 12 Dec 2022 18:28:14 -0500
-Message-ID: <CAHC9VhTNh-YwiyTds=P1e3rixEDqbRTFj22bpya=+qJqfcaMfg@mail.gmail.com>
-Subject: Re: [PATCH mptcp-net] mptcp: fix LSM labeling for passive msk
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>, mptcp@lists.linux.dev, 
-	Ondrej Mosnacek <omosnace@redhat.com>, SElinux list <selinux@vger.kernel.org>, 
-	Linux Security Module list <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [Weekly meetings] Change day/hour?
+Content-Language: en-GB
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Paolo Abeni <pabeni@redhat.com>, Ossama Othman <ossama.othman@intel.com>,
+ Davide Caratti <dcaratti@redhat.com>, Florian Westphal <fw@strlen.de>,
+ Benjamin Hesmans <benjamin.hesmans@tessares.net>,
+ Dmytro Shytyi <dmytro@shytyi.net>, Christoph Paasch <cpaasch@apple.com>,
+ Geliang Tang <geliang.tang@suse.com>
+References: <40149ef8-5ec6-f1de-45c0-038e42245b33@tessares.net>
+In-Reply-To: <40149ef8-5ec6-f1de-45c0-038e42245b33@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 12, 2022 at 10:36 AM Paolo Abeni <pabeni@redhat.com> wrote:
-> If the preferrede solution is via a new LSM hook I have no objections
-> at all. I'm sorry to put another hook mainteinance on you.
+Hello,
 
-Don't worry about it, sure there is a bit more code, but I think it's
-a better approach than all of the alternatives we've attempted.  I'd
-rather have "better" than a hack ;)
+On 08/12/2022 18:51, Matthieu Baerts wrote:
+> Hello,
+> 
+> At the last meeting, we discussed the idea of re-scheduling the weekly
+> meetings we have because some people might not be able to join or prefer
+> another moment.
+> 
+> But because we were exceptionally only 3 today because of the feast of
+> the Immaculate Conception, we didn't take any decision. Instead, we
+> would then like to hear from people who want to participate to know what
+> they think about eventually:
+> 
+> - Changing the day to Tuesday?
+>   - It might be better to avoid Monday (morning) and Friday (evening).
+>   - Wednesday was not OK for today's participants
+> 
+> - Changing the time to have it one hour later?
+>   - It means 17:00 UTC (9am PST, 6pm CET, 1am CST)
+>   - This is late for people in China but midnight is late anyway
+>   - Maybe we can also schedule less frequent meetings at a different
+> time (or on request), e.g. morning in Europe, afternoon in China?
+>   - (the BPF weekly meetings are on Thursdays at 17:00 UTC)
+> 
+> What would be OK or not OK for you? Tuesday or Thursday, same time or
+> one hour later?
 
-> How do you propose to preceed? After quickly digging into the relevant
-> LSM code, the only module I think I could handle in a reasonable
-> timeframe is selinux. Hopefully the new hook implementation should be
-> quite straight-forward for the relevant SME.
+Thanks to those who replied to this question already!
 
-That's sounds reasonable to me.  Our policy in LSM land is that you
-should provide at least one LSM implementation when adding a new hook
-(the BPF LSM doesn't count due to it's rather unique approach), so if
-you can provide a SELinux implementation that should meet that
-requirement.  I'm also not sure that any of the other LSMs currently
-claim support for MPTCP.
+I suggest we take the decision about changing the day and/or time at our
+meeting this Thursday.
 
-> I guess the patch[es] should target the LSM tree, as the change in the
-> mptcp code should be a one-liner. On the flip side, that would likely
-> lead to some merge conflict, as the mptcp protocol impl. is quite a
-> moving target.
-
-The LSM has also seen a lot of renewed activity lately.  However, I
-think the deciding factor is where the bulk of the code will live, and
-with the vast majority of the code expected under security/, I think
-it makes sense to merge this via the LSM tree.  My general policy for
-the LSM tree is to either base your patches of Linus' tree or the
-lsm/next branch and I'll handle whatever merge conflicts arise at the
-time of merging.
-
-For reference, the current LSM tree can be found here:
-
-* https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.git
-
+Cheers,
+Matt
 -- 
-paul-moore.com
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
