@@ -1,54 +1,56 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE3B8472
-	for <mptcp@lists.linux.dev>; Tue, 13 Dec 2022 23:23:44 +0000 (UTC)
-Received: by mail-pj1-f47.google.com with SMTP id q17-20020a17090aa01100b002194cba32e9so5279067pjp.1
-        for <mptcp@lists.linux.dev>; Tue, 13 Dec 2022 15:23:44 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFCC8472
+	for <mptcp@lists.linux.dev>; Tue, 13 Dec 2022 23:31:17 +0000 (UTC)
+Received: by mail-qt1-f181.google.com with SMTP id g7so1267150qts.1
+        for <mptcp@lists.linux.dev>; Tue, 13 Dec 2022 15:31:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oLKELv8f0wlEbKvuMIST9y/0vnQ9tosCW9abzY1S6Ow=;
-        b=Yyt1WOTd/hLtnCCAhAIZ1ses9K9IUE3iZmiy+QfXwVLk90hRYcqMsRu6DwgWGK/prF
-         M/CW6cJmf0pxQcjnQerwCMXkfQlku2sG2/Pxk+nFb/ilBBYDZGrDWKZPP5L3MmzxC0P1
-         nV4wbH1mFkvTJzvQMtdIk6AAoPRtjEwMaTln7CGeW8+0/pzE0ZDcZvkdrpniToRo3rIl
-         H2fVQO9gMRtf7ooj0VosazMSazVHBYAH8jWNjYWNiFT19KT/B7CnoMRG7CXQo5uzoFLb
-         4isKlUueNOrY5HyZjAEC9IYW9EjSuu43UkyU3w1ZdDUP2lFE3sHRauwRHZXfUP2Rk8MG
-         AGUQ==
+        bh=TONXGJtT8iCJkL2jD+8CR/Ct/MWiHU8dPQ/qsXsaz3k=;
+        b=Z90N2EvWw3eIlIXZhydy7af0+ViG0ciz79TwSiMel06gi3KW8B87b56ohX1zW/JWAM
+         v+60Fj5/qK81g1NVedkyQ+kgliJ/A+eZS3MAo9TGPZ5kLkCa3ytSUYsUlV8WqK5ou0Jx
+         CPjDXkpjZJNGh5ecXfYTWX+0N4yCznD9ahUgLxwrdHM/gEnaXQuWqFZNIZ3nLoWPpUjv
+         wZxOXYUFYG60zKWnqOBN+/fndZpXeQc/uZv7LaKH25M0GXPl2+S7ZTUR5/LU26Zt8pg5
+         mh7IE0VRlC9C8JAgS0lGdprIeJm8BjuK7QnK82eNoRGdN/t4d04LzsdzUXGz9dWnPrUc
+         /CQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=oLKELv8f0wlEbKvuMIST9y/0vnQ9tosCW9abzY1S6Ow=;
-        b=UZ8L43Ea81nTmt3Vh7PgDcFUGje9+9WouldzLoy7PyobMr7Ptoe/R06etRnqAY2rLX
-         VpP/U/iPJVG6dZ58FlZYsDP9VpotknATYozxfwg5KmW2dEcgTe8UlcMdDAf93JkQxf+g
-         +OGmOTj47BDtqRD7J2t86SM+H5VdcCzSpXq42badlnVS8FbLBdFPpUScdMy4avWxIMM1
-         /Un7L/wLxWwnKKwBbkjRKr81YEdiz7uwq/C8SUxIO6oaDD3TFsmj5WCUXgGNrMowLRJA
-         +XzzY8SDdw9sIfhYxnpN+O3pVNankTJ8b/pJ9otrphOScSmRcXdctUc2kl24fKZ6emcm
-         K5Rg==
-X-Gm-Message-State: ANoB5pmoJMYwuQ4PlVQoovA8QtEr/nG/4TyvbAmdryhAeD9LCxE1BLmu
-	lsoyiSp79Ek8zhbhY39xXg==
-X-Google-Smtp-Source: AA0mqf4EayEjsEU7OANiWELBz78G/IxIsbpJqAaf+4m3sbPKnQkQUSewRyxd61hKY8Xd7PW6o3um1w==
-X-Received: by 2002:a05:6a20:e60e:b0:a7:8d78:6069 with SMTP id my14-20020a056a20e60e00b000a78d786069mr27164163pzb.57.1670973823637;
-        Tue, 13 Dec 2022 15:23:43 -0800 (PST)
-Received: from [127.0.0.1] ([168.62.11.101])
-        by smtp.gmail.com with ESMTPSA id d13-20020a63d70d000000b0047829d1b8eesm7387918pgg.31.2022.12.13.15.23.42
+        bh=TONXGJtT8iCJkL2jD+8CR/Ct/MWiHU8dPQ/qsXsaz3k=;
+        b=Q7PP6BHmXpin80SW9s8n3PF8EhDyU1Bodwj2KDJ4/IGoRcBFRWNkftKig3gMZMn+GK
+         2aidZsVOBc8hTdl+UGOvmu/0HkM7C2RKxz8f3bQFzQwRXK0iIfwSOBcdyxb3S5keKoS7
+         G2q3+uTtXKiZIYM5NvJ87JVRP3zoSpP74ecwUjTooBYbBkd82PvTbTafRKV4ckDZXzHm
+         PpCrn82rzuVYeVX1G1IRM1HZkn4RX0jExkqs+WBxIuY6TsRJjjXsk04VuxxF+cZS6xOZ
+         AWcrR9Tnrym2puQijdmwNhYZyMF/ODEl3V5d7WeB0C9mb8zjM1UHNxeuaCRslVncnT2Q
+         fxXg==
+X-Gm-Message-State: ANoB5pkNGellNfXpSppT71s3n4JnD1bWGTkgmon2wp6SRq9X5KJLqKGZ
+	gaiBBDDbjMRHoagp4CdAvA==
+X-Google-Smtp-Source: AA0mqf4qVMgSPlb/np2LfmvA7sVLvsDyi1W5IoxaOU8mKrlxkMfoYW+34FvAOMK5iotkRlLfUqD4RA==
+X-Received: by 2002:ac8:4a8a:0:b0:3a5:784b:d512 with SMTP id l10-20020ac84a8a000000b003a5784bd512mr8065130qtq.40.1670974276916;
+        Tue, 13 Dec 2022 15:31:16 -0800 (PST)
+Received: from [127.0.0.1] ([20.14.173.22])
+        by smtp.gmail.com with ESMTPSA id d18-20020ac847d2000000b003a54a19c550sm707170qtr.57.2022.12.13.15.31.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Dec 2022 15:23:43 -0800 (PST)
+        Tue, 13 Dec 2022 15:31:16 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Geliang Tang <geliang.tang@suse.com>
 Cc: mptcp@lists.linux.dev
 Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221209045925.20408-1-geliang.tang@suse.com>
-References: <20221209045925.20408-1-geliang.tang@suse.com>
-Subject: Re: mptcp: use msk_owned_by_me helper: Tests Results
-Message-ID: <5b529cbe-3663-9655-a690-3c17ce785e70@gmail.com>
+In-Reply-To:
+ <0802393e224df13d9ac71e5fe7524e40d262b8b5.1670575887.git.geliang.tang@suse.com>
+References:
+ <0802393e224df13d9ac71e5fe7524e40d262b8b5.1670575887.git.geliang.tang@suse.com>
+Subject: Re: mptcp: use local variable ssk in write_options: Tests Results
+Message-ID: <2dd94bb0-0017-0a6c-2576-345c4ab74c10@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Dec 2022 23:23:42 +0000
+Date: Tue, 13 Dec 2022 23:31:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -65,34 +67,34 @@ Our CI did some validations and here is its report:
 - KVM Validation: Script error! =E2=9D=93:
   - :
   - Task: =
-https://cirrus-ci.com/task/5326783529091072
+https://cirrus-ci.com/task/5564318373117952
   - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5326783529091072/summary/summary.txt
+cirrus-ci.com/v1/artifact/task/5564318373117952/summary/summary.txt
 
 - KVM Validation: Script error! =E2=9D=93:
   - :
   - Task: =
-https://cirrus-ci.com/task/6452683435933696
+https://cirrus-ci.com/task/5669871489384448
   - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6452683435933696/summary/summary.txt
+cirrus-ci.com/v1/artifact/task/5669871489384448/summary/summary.txt
 
 - KVM Validation: Script error! =E2=9D=93:
   - :
   - Task: =
-https://cirrus-ci.com/task/5045308552380416
+https://cirrus-ci.com/task/4543971582541824
   - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5045308552380416/summary/summary.txt
+cirrus-ci.com/v1/artifact/task/4543971582541824/summary/summary.txt
 
 - KVM Validation: Script error! =E2=9D=93:
   - :
   - Task: =
-https://cirrus-ci.com/task/6171208459223040
+https://cirrus-ci.com/task/6690218279960576
   - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/6171208459223040/summary/summary.txt
+cirrus-ci.com/v1/artifact/task/6690218279960576/summary/summary.txt
 
 Initiator: Patchew Applier
 Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/37ca12499f3b
+net-next/commits/ab729ffde0c0
 
 
 If there are some issues, you can reproduce=
