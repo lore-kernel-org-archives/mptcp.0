@@ -1,91 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30379BA24
-	for <mptcp@lists.linux.dev>; Wed, 14 Dec 2022 22:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1671056037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aW8p5rry295NkbefzP1yJqPHwKJ4e7g3eAuxYhpUnzE=;
-	b=SRvPKGVqdqkcbO6n8EQKvyeCEEenHQCXfg9rUDyQMUPFiWIp8qK6HVM6q+UEPLFdduuTb2
-	Adrf/mb3RtkZbbTshhrR9QqdEl+E1/EvxlkVUvMYQJ8Vzubqw1SjIpbx3AdUCAzl3IPFvp
-	iwnMWDEWV+G2e6DuOEJS16KRLr8yWAQ=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-445-sxot61P7Ox-_xXRcDKae6Q-1; Wed, 14 Dec 2022 17:13:55 -0500
-X-MC-Unique: sxot61P7Ox-_xXRcDKae6Q-1
-Received: by mail-wm1-f69.google.com with SMTP id i132-20020a1c3b8a000000b003d0f49bc21bso239975wma.6
-        for <mptcp@lists.linux.dev>; Wed, 14 Dec 2022 14:13:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B081BA24
+	for <mptcp@lists.linux.dev>; Wed, 14 Dec 2022 22:15:26 +0000 (UTC)
+Received: by mail-qt1-f182.google.com with SMTP id j16so3722743qtv.4
+        for <mptcp@lists.linux.dev>; Wed, 14 Dec 2022 14:15:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pBQnBZIQwKtjmEjtLfbfDi6oWy4i1Xww4DPROu3AHN4=;
+        b=h+B07/a5+r2Tk7I/3LtBkKLH2FaddVIfit8j0nn8H0nQlpLbd3r/rHKDsewlPD94Ze
+         f2wb8sAFA4oBmHHTQGmzvJvBr2BuJ5vjBeSn/WdfxEqSlXNu95v2l81oDKS6OeyZelWZ
+         hE0CccweXPHUMDDVxUkT0TEHe+UYgM19YWvypnvAgdAOkh7uxPU5M9+R4PRYnMvyV8eY
+         mXFrOVdqVtMvqBb6lbw4MNzB+MJ2dkq1UM/QlZ8psSfmLdzLkP8arMY6iSoe5/kzyF2z
+         xa4K+4s0eSkiWjOed57fZOM2j3tWILHbkEpp8GYO7tu36ui3ubRcihO2+/JNJF9KSs7+
+         XXoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aW8p5rry295NkbefzP1yJqPHwKJ4e7g3eAuxYhpUnzE=;
-        b=Gil6S8E81avluXsD6zRIHXOOIquOqRSqH4RhvXP+XVHsKoOLxDrJFLG0bwx1lUVzNs
-         Prgx0F7I9qflJ89O9C28/3+DMfGWf+1QVvroWwEWYoypCUzOi2NMQHzpHb1znphaEoPu
-         Xcw1+ZDEmR1d+hPBELEr0T4mmkgU7+aRkKlWh8/FY2liWldc/cMbQVfr3DB+MUGM6QVj
-         3ynQK0qBV7Ws75Kk4QsNq4fUOU9rGGiesi4Xr9Z5P2JQ2siP1BVYtNj7eQocnLkgl604
-         XGGASd8RfQ6x5GTFP1zdQbKu8t04/NABxsa+1ZsZIUt9ZG54/2AZT8FPWPnxeVXewdwy
-         2C4g==
-X-Gm-Message-State: ANoB5pkun6RtdGEClrT72BA94uixoP07dEX26n9c2JPNo38DyDyxzBEO
-	wi6Qe/j1T2GXA/+Kwe1wk5l+5kJliCcYHnBMvJKl7DHbeGa9vob9SwKqjPXqH1Lfza1wTB1gR/g
-	iNGtxOCeRKPwNdyA=
-X-Received: by 2002:a05:600c:5386:b0:3cf:8155:2adc with SMTP id hg6-20020a05600c538600b003cf81552adcmr19884828wmb.33.1671056034276;
-        Wed, 14 Dec 2022 14:13:54 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf68HKsZKNnRWxk2Lze71V2S9dTijIVMH9f0Wt6PD1jdQF6OZ5wOAj/Q1v+j8/lMDCgXi1f6KA==
-X-Received: by 2002:a05:600c:5386:b0:3cf:8155:2adc with SMTP id hg6-20020a05600c538600b003cf81552adcmr19884817wmb.33.1671056034014;
-        Wed, 14 Dec 2022 14:13:54 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-97-87.dyn.eolo.it. [146.241.97.87])
-        by smtp.gmail.com with ESMTPSA id p11-20020a05600c430b00b003c6b70a4d69sm3502193wme.42.2022.12.14.14.13.53
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=pBQnBZIQwKtjmEjtLfbfDi6oWy4i1Xww4DPROu3AHN4=;
+        b=tIcDJxFrQmCEZ2X58vd4Z6c5rnsifmSyHBgYG2YsHMzZ4vuQZyxMsNIMoGUZueNfT7
+         za6F41k6QMV1YxvyCjZNLbVwdnqr5p6AGh9KQjN1oVcBDtTaKPWjHaL6llOrXV3nmUCn
+         sZcJhmO9zf1dBFs/5acRuEOQzmXjGJAvKMIgMuGu2fQDC4v5haKD5uQCCGBNrjMyVn6L
+         w5tMMOIIBiAPlUmiC8vOq2sXr8zIBKUEBP74EhnNwqxu25w34xUQ1BdwxB0F4zzXgSwn
+         CSv8exoeEVN3z+4oNzy6PFS77uVLv1Zv5B/vrqNOtLa0qfVKVU9ytagLiNyRiVvF1cST
+         J6Fg==
+X-Gm-Message-State: ANoB5pmtKv/xOp+7UwNyZOW2GPXoUgyPZ3AWr0v5X/vc0YpmddmqCBpe
+	mfsGDNUcOfqQGx39BhaIhA==
+X-Google-Smtp-Source: AA0mqf64yy2jA3/EdwkDog5mkZgY3em2XLKw18VB09/Ixm9FT9WKpK3UWFivKMX1ulUDHItp8SOQJA==
+X-Received: by 2002:ac8:787:0:b0:3a8:1ca5:e7e2 with SMTP id l7-20020ac80787000000b003a81ca5e7e2mr15639994qth.7.1671056125568;
+        Wed, 14 Dec 2022 14:15:25 -0800 (PST)
+Received: from [127.0.0.1] ([20.242.81.114])
+        by smtp.gmail.com with ESMTPSA id r10-20020ac85e8a000000b00342f8d4d0basm2377314qtx.43.2022.12.14.14.15.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Dec 2022 14:13:53 -0800 (PST)
-Message-ID: <401591eef86a3c47065e9873d3f25ff978f0a51d.camel@redhat.com>
-Subject: Re: [PATCH 0/2] lsm: introduce and use security_mptcp_add_subflow()
-From: Paolo Abeni <pabeni@redhat.com>
-To: linux-security-module@vger.kernel.org
-Cc: Paul Moore <paul@paul-moore.com>, selinux@vger.kernel.org, 
-	mptcp@lists.linux.dev
-Date: Wed, 14 Dec 2022 23:13:52 +0100
-In-Reply-To: <cover.1671054577.git.pabeni@redhat.com>
-References: <cover.1671054577.git.pabeni@redhat.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        Wed, 14 Dec 2022 14:15:25 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <d6f04d238c8a797899d6cb543a43f75e544221af.1671054577.git.pabeni@redhat.com>
+References:
+ <d6f04d238c8a797899d6cb543a43f75e544221af.1671054577.git.pabeni@redhat.com>
+Subject: Re: selinux: Implement mptcp_add_subflow hook: Build Failure
+Message-ID: <8df32a3c-213d-34e1-055a-06203c766003@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 14 Dec 2022 22:15:24 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Wed, 2022-12-14 at 23:01 +0100, Paolo Abeni wrote:
-> This series is an attempt to solve the LSM labeling breakage
-> reported here:
-> 
-> https://lore.kernel.org/linux-security-module/CAHC9VhSQnhH3UL4gqzu+YiA1Q3YyLLCv88gLJOvw-0+uw5Lvkw@mail.gmail.com/
-> 
-> As per previous discussion, a new LSM hook is introduced and
-> invoked by the mptcp code to let LSMs set the appropriate label
-> for the newly created subflow.
-> 
-> I'm not sure the chosen hook name is a perfect fit, any suggestion
-> more then welcome.
-> The new hook requires both the mptcp socket reference and the
-> subflow socket reference, even if the provided LSM implementation
-> for selinux ends-up accessing only the subflow socket. Possibly
-> other LSM implementation could need or use the addtional parameter.
+Hi Paolo,
 
-I forgot to mention this has been tested vs the reproducer described in
-the above link and vs the mptcp self-tests.
+Thank you for your modifications, that's great!
+
+But sadly, our CI spotted some issues with it when trying to build it.
+
+You can find more details there:
+
+  https://patchwork.kernel.=
+org/project/mptcp/patch/d6f04d238c8a797899d6cb543a43f75e544221af.1671054577=
+.git.pabeni@redhat.com/
+  https://github.com/multipath-tcp/mptcp_net-next/a=
+ctions/runs/3699109654
+
+Status: failure
+Initiator: MPTCPimporter
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e34e1ddf3d=
+dc
+
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
 
 Cheers,
-
-Paolo
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
