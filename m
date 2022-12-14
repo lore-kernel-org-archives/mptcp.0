@@ -1,193 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1DE8489
-	for <mptcp@lists.linux.dev>; Wed, 14 Dec 2022 15:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1671032674;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ggZcNyyy5Z481IAB5dmOFb5MQGMRFbt3n7rljPwdGzw=;
-	b=KtHIOXw7Ezkhq9773gMons4D1Rpw8Kg5yPnUO4lt3d9/SSuvUC//aJZiI5gLUs35YG5wP+
-	txIEQtUdlDnAsLmnhf/7uTMOoGSwVaBbl0x5Kbm6kM/LWTCB8blZqVTz8reJcF0UktVle/
-	mmkadlNWif3LP/gzN9PpRRehAZMM7uc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-206-wZitOeASML2VMhjYZvRdRA-1; Wed, 14 Dec 2022 10:44:33 -0500
-X-MC-Unique: wZitOeASML2VMhjYZvRdRA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 641EE3815D27
-	for <mptcp@lists.linux.dev>; Wed, 14 Dec 2022 15:44:33 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.195.136])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E9D4840BC781
-	for <mptcp@lists.linux.dev>; Wed, 14 Dec 2022 15:44:32 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v2] mptcp: fix lockdep false positive
-Date: Wed, 14 Dec 2022 16:44:24 +0100
-Message-Id: <1f27ea6ff3b76035685ec372cc9e2753b9f9d90e.1671032651.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB00193
+	for <mptcp@lists.linux.dev>; Wed, 14 Dec 2022 17:25:08 +0000 (UTC)
+Received: by mail-pj1-f43.google.com with SMTP id 3-20020a17090a098300b00219041dcbe9so7747271pjo.3
+        for <mptcp@lists.linux.dev>; Wed, 14 Dec 2022 09:25:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xrGn/tGUZzjkOEPdabw5Y7dH2kQWyT1hjXHxEnyXSDc=;
+        b=QE1dDRg+IHbWio2p+CbiWWk2BNJEsmX35uUM/w6Q/JjYrwS4+9rjMr/8Gq9ZpO74+Y
+         fsUnIuzyEvCVrorFmwLohe8MJKLciVLUs7y0ojXZEDEsZuR0PaZBskQGu2kPZ/uqPVBn
+         /boYwaipu2evul7z3tQU6SXNMu0j3kn+zcd4C8A/iqe5DPV2qFd4x1o0hzZntxzJoi7y
+         xH9fZbg4sUUQEANGuJgzY9NEsCzZVUqNv++naRNK0qn5M7zMMHwvrKaGX6KKtfY6UdpK
+         1rTPgMC7qzGvbqRLBkAsdwlPRbmtDQoU7IskjKLu/GElU9jk3jD5oPi+1XtI+o0FYwcy
+         Nf0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xrGn/tGUZzjkOEPdabw5Y7dH2kQWyT1hjXHxEnyXSDc=;
+        b=SuJDpD7f+bMN6sxfJ4878XHg1vXXqPOfpvzS6raQ776wa8PvAylCiTQ8IX92Jlguge
+         twC73SN72Dg/8b+MMr9pwmoK3pbS7bKH7l5TJyqXiFdqvJMKR9rnL6esYGEYFICsIHk2
+         tu61dq1r144eW/bAxAtqNRuLLcnSItuYlpOJseN6enc2dkW0YU7VOIMFafHhMB3hB8IN
+         fi4odY9Ch/s1FZq481qhp2zoj6h5RTL6TprXCy8OOtdgnXGbiU+QI7V+QQ5hxDfD8C2x
+         Ttp0NacKaDGO89WrmRkvFtjGMY+8xwQejpUmG7WZ10BPyWnHppcPdZ0d6VVfaCT0LSu3
+         mhDw==
+X-Gm-Message-State: ANoB5pnA6hC5J67Gmmq6N+jqojTsHxC1FzbGwGizJr+DcvrlcOXPUOsm
+	RmnsmlD6TS2MOOiWXk4+YQ==
+X-Google-Smtp-Source: AA0mqf6e/jtQweMm5IjFt2wyLqwB6G3xGq4Z42Ps0TH+QOoV7dSaHw+F4h86hF+SejZ7n6Ep9SHt5A==
+X-Received: by 2002:a17:903:410b:b0:189:911a:6b5a with SMTP id r11-20020a170903410b00b00189911a6b5amr23103358pld.31.1671038707919;
+        Wed, 14 Dec 2022 09:25:07 -0800 (PST)
+Received: from [127.0.0.1] ([40.78.25.171])
+        by smtp.gmail.com with ESMTPSA id c7-20020a170902d48700b001871acf245csm2162241plg.37.2022.12.14.09.25.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Dec 2022 09:25:07 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <1f27ea6ff3b76035685ec372cc9e2753b9f9d90e.1671032651.git.pabeni@redhat.com>
+References:
+ <1f27ea6ff3b76035685ec372cc9e2753b9f9d90e.1671032651.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix lockdep false positive: Tests Results
+Message-ID: <4ece7d78-2e1c-2402-3c66-be29f2c41f3b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 14 Dec 2022 17:25:06 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-MatB reported a lockdep splat in the mptcp listener code cleanup:
+Hi Paolo,
 
- WARNING: possible circular locking dependency detected
- packetdrill/14278 is trying to acquire lock:
- ffff888017d868f0 ((work_completion)(&msk->work)){+.+.}-{0:0}, at: __flush_work (kernel/workqueue.c:3069)
+Thank you for your modifications, that's great!
 
- but task is already holding lock:
- ffff888017d84130 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_close (net/mptcp/protocol.c:2973)
+Our CI did some validations and here is its report:
 
- which lock already depends on the new lock.
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5554305462173696
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5554305462173696/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4639511787864064
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4639511787864064/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5765411694706688
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5765411694706688/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6680205369016320
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6680205369016320/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/6fb2e2062f7d
 
 
- the existing dependency chain (in reverse order) is:
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
- -> #1 (sk_lock-AF_INET){+.+.}-{0:0}:
-        __lock_acquire (kernel/locking/lockdep.c:5055)
-        lock_acquire (kernel/locking/lockdep.c:466)
-        lock_sock_nested (net/core/sock.c:3463)
-        mptcp_worker (net/mptcp/protocol.c:2614)
-        process_one_work (kernel/workqueue.c:2294)
-        worker_thread (include/linux/list.h:292)
-        kthread (kernel/kthread.c:376)
-        ret_from_fork (arch/x86/entry/entry_64.S:312)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
- -> #0 ((work_completion)(&msk->work)){+.+.}-{0:0}:
-        check_prev_add (kernel/locking/lockdep.c:3098)
-        validate_chain (kernel/locking/lockdep.c:3217)
-        __lock_acquire (kernel/locking/lockdep.c:5055)
-        lock_acquire (kernel/locking/lockdep.c:466)
-        __flush_work (kernel/workqueue.c:3070)
-        __cancel_work_timer (kernel/workqueue.c:3160)
-        mptcp_cancel_work (net/mptcp/protocol.c:2758)
-        mptcp_subflow_queue_clean (net/mptcp/subflow.c:1817)
-        __mptcp_close_ssk (net/mptcp/protocol.c:2363)
-        mptcp_destroy_common (net/mptcp/protocol.c:3170)
-        mptcp_destroy (include/net/sock.h:1495)
-        __mptcp_destroy_sock (net/mptcp/protocol.c:2886)
-        __mptcp_close (net/mptcp/protocol.c:2959)
-        mptcp_close (net/mptcp/protocol.c:2974)
-        inet_release (net/ipv4/af_inet.c:432)
-        __sock_release (net/socket.c:651)
-        sock_close (net/socket.c:1367)
-        __fput (fs/file_table.c:320)
-        task_work_run (kernel/task_work.c:181 (discriminator 1))
-        exit_to_user_mode_prepare (include/linux/resume_user_mode.h:49)
-        syscall_exit_to_user_mode (kernel/entry/common.c:130)
-        do_syscall_64 (arch/x86/entry/common.c:87)
-        entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
+For more details:
 
- other info that might help us debug this:
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-  Possible unsafe locking scenario:
 
-        CPU0                    CPU1
-        ----                    ----
-   lock(sk_lock-AF_INET);
-                                lock((work_completion)(&msk->work));
-                                lock(sk_lock-AF_INET);
-   lock((work_completion)(&msk->work));
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-  *** DEADLOCK ***
-
-The report is actually a false positive, since the only existing lock
-nesting is the msk socket lock acquired by the mptcp work.
-cancel_work_sync() is invoked without the relevant socket lock being
-held, but under a different (the msk listener) socket lock.
-
-We could silence the splat adding a per workqueue dynamic lockdep key,
-but that looks overkill. Instead just tell lockdep the msk socket lock
-is not held around cancel_work_sync().
-
-Fixes: 30e51b923e43 ("mptcp: fix unreleased socket in accept queue")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
---
-v1 -> v2:
- - fix a few typos (MatM)
----
- net/mptcp/protocol.c |  2 +-
- net/mptcp/protocol.h |  2 +-
- net/mptcp/subflow.c  | 19 +++++++++++++++++--
- 3 files changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6d03bdcda33e..289dd4add88c 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2363,7 +2363,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		/* otherwise tcp will dispose of the ssk and subflow ctx */
- 		if (ssk->sk_state == TCP_LISTEN) {
- 			tcp_set_state(ssk, TCP_CLOSE);
--			mptcp_subflow_queue_clean(ssk);
-+			mptcp_subflow_queue_clean(sk, ssk);
- 			inet_csk_listen_stop(ssk);
- 			mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CLOSED);
- 		}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index a9ff7028fad8..3cd3270407b0 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -630,7 +630,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		     struct mptcp_subflow_context *subflow);
- void __mptcp_subflow_send_ack(struct sock *ssk);
- void mptcp_subflow_reset(struct sock *ssk);
--void mptcp_subflow_queue_clean(struct sock *ssk);
-+void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
- void mptcp_sock_graft(struct sock *sk, struct socket *parent);
- struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
- bool __mptcp_close(struct sock *sk, long timeout);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 29904303f5c2..294f8d1bb3fc 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1764,7 +1764,7 @@ static void subflow_state_change(struct sock *sk)
- 	}
- }
- 
--void mptcp_subflow_queue_clean(struct sock *listener_ssk)
-+void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_ssk)
- {
- 	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
- 	struct mptcp_sock *msk, *next, *head = NULL;
-@@ -1813,8 +1813,23 @@ void mptcp_subflow_queue_clean(struct sock *listener_ssk)
- 
- 		do_cancel_work = __mptcp_close(sk, 0);
- 		release_sock(sk);
--		if (do_cancel_work)
-+		if (do_cancel_work) {
-+			/* lockdep will report a false positive ABBA deadlock
-+			 * between cancel_work_sync and the listener socket.
-+			 * The involved locks belong to different sockets WRT
-+			 * the existing AB chain.
-+			 * Using a per socket key is problematic as key
-+			 * deregistration requires process context and must be
-+			 * performed at socket disposal time, in atomic
-+			 * context.
-+			 * Just tell lockdep to consider the listener socket
-+			 * released here.
-+			 */
-+			mutex_release(&listener_sk->sk_lock.dep_map, _RET_IP_);
- 			mptcp_cancel_work(sk);
-+			mutex_acquire(&listener_sk->sk_lock.dep_map,
-+				      SINGLE_DEPTH_NESTING, 0, _RET_IP_);
-+		}
- 		sock_put(sk);
- 	}
- 
--- 
-2.38.1
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
