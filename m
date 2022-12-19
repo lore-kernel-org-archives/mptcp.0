@@ -1,125 +1,134 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A0110EF
-	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 08:58:00 +0000 (UTC)
-Received: by mail-pj1-f50.google.com with SMTP id v23so3127580pju.3
-        for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 00:58:00 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28DD10EF
+	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 10:24:21 +0000 (UTC)
+Received: by mail-pg1-f196.google.com with SMTP id v3so5857093pgh.4
+        for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 02:24:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n1oJrjVgN6DsIHqqrjmqgFldxDINDglud31b5ygKqgI=;
-        b=nM5QI9avxj7MJQu9/p1tIc/lERlmYpjtRE5W5hzwRdXHHAi+Ce98vsH0qZUXPioWlu
-         gER8LZeYV2V3saZvZIQCzNyFGFVxSt0InJ6Nib83Mw067nYSuwQkR7I/cTJJ0lzZMN12
-         AMlCHXdzyszarVoyeWX5okI21pWIYyLxh/ClJ5w6uBGn0xaylKonoUItUZ9escC+RAvK
-         5d8Qk+t00q0MrOl2wxGRX3QnSB0/MaATajwxTGz8XL4DDlsk4xq1TC/OwO2QiFwbjvkX
-         ac+5yuCgNQsqKI0NeH99+L4TVS3bn0Fyd07Gto9qJAP/89/2VUit/Txfnl3txga31n2Y
-         ZVZA==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PMY7Yj5zP9SERXR2hO7dFJ25r/PLgWbUujMeAkm6izg=;
+        b=Bmmf4/mNWoWetRsmC0BwRJKU2J2H+qDv6ByjTM5RuOhNw6SqEVXrLAd3ptuYTx3a38
+         itPlxaWrdueibAv1FFNVXFCqBVbL7/xSq32+IGc8W/ZuwUONEEd9FULLN7j4Ah86rwpD
+         n9SC/7FokNOoHzEkqrgOcrHLAA26o1E2rI9i5sx2VS0iccMpEU6ha6qmnSxxb0oBDLos
+         Q45ES41O+S/Kum7sQFKF211cfPIG73bXIEvxVGLBMsqoCi5KWhZpn9SvgGBM6otWyg69
+         3XU4OEBtKOLkLwHHwk22EJQMkjXO94o4IOEq/gVuDTEuwbbncP8EcNb868LvAIi0/fR9
+         VFkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=n1oJrjVgN6DsIHqqrjmqgFldxDINDglud31b5ygKqgI=;
-        b=fUh1DpwQtunS5AtUyZ6DXrkAM4Q3CN967nzavVRY/4U5W7DCE+KNyS8VmYH1WI96Sa
-         tPA9VQrjFmpqaTfPKoghTvEoOXGqa6NBZ2HUzlUxrT1ybmzqMAK9uhp+9O01kK/ln0vh
-         kClYF5SC6DyWXaIo5YftUDjU68xv/05M5t8WODa0T2utTXYBxX9/mpSc5JiZSxu8+RXg
-         0EHYwy7fIfgYGsm6OymckrI4P1OEoprMNyvMOvVQaReIUgkaD+3/GP6A2Dq+89SzCmrN
-         TI8QxqICvMds2Nw50dflnXno/flhS+VYhcIKnN5Jur+pfNR63C8yvUs+vgujX8THvdTv
-         IH9A==
-X-Gm-Message-State: AFqh2krgU2Ow6HGqDUFcbq6s+UKWt03tmo0OtLw4wEWHt9cX47sEn/no
-	a/glXECMfNaqsLMXkkW0hO6U4DKEHRCr
-X-Google-Smtp-Source: AMrXdXtFoi1Aq2HSouTcQuUSRiUF8D1iBJPx0XlQWYGBfTxjuQoc9zolXA3r5k4AKcua/2Y1EgwxWw==
-X-Received: by 2002:a05:6a21:3393:b0:ab:fb31:be13 with SMTP id yy19-20020a056a21339300b000abfb31be13mr12057639pzb.37.1671440279796;
-        Mon, 19 Dec 2022 00:57:59 -0800 (PST)
-Received: from [127.0.0.1] ([20.245.188.36])
-        by smtp.gmail.com with ESMTPSA id x12-20020a63cc0c000000b004468cb97c01sm5841283pgf.56.2022.12.19.00.57.58
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PMY7Yj5zP9SERXR2hO7dFJ25r/PLgWbUujMeAkm6izg=;
+        b=f81KgtoP8xgXFTxafQs9kPtg03u4X2erQgIOKJU07YFXR+p21azEL5wRgXOAU824JW
+         YsMImmZMvpD0MnDcyTMaWczs2MStPkKL046pWbqG6u9xO8IEc2svMWpCTYuLBkQNm15y
+         E8IZJ1XqpJ2kmMI/q1KFftv4yEI9fGCPUymJfs7eCS3Z2HPhgirabPliffKsVXp5j170
+         pGei3o6leCnM+MX0kY9M2RZKOjVC1qP0AkuXyHXN5zLvyOmVNGW5SoSxXoSoPjFNf2t+
+         HwI/L33mJqrqyBDPWM2q98oxjENVIviy0YDB9lZNNKAyYD+mYi4UQnc29g/w9Ntj7j0s
+         t8lQ==
+X-Gm-Message-State: AFqh2koQwVIw2uiUi/BzABy8Sonul0oIqtoz2T35HWYEmIJN2MZ3sjJC
+	oZorogWQnjJBEt2jW/2+HnA=
+X-Google-Smtp-Source: AMrXdXvhAUBRIbwuKHKS8DcwYKafomx9ZTTdOKIT4htC3oC5zHkhVVG8da6GN+d6VZGRTZE/DPTOTA==
+X-Received: by 2002:a62:17c6:0:b0:576:c454:38e2 with SMTP id 189-20020a6217c6000000b00576c45438e2mr7686773pfx.30.1671445461133;
+        Mon, 19 Dec 2022 02:24:21 -0800 (PST)
+Received: from localhost.localdomain ([203.205.141.23])
+        by smtp.gmail.com with ESMTPSA id n5-20020a056a00212500b005775c52dbc4sm6206517pfj.167.2022.12.19.02.24.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Dec 2022 00:57:59 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Menglong Dong <imagedong@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221219075048.255811-7-imagedong@tencent.com>
-References: <20221219075048.255811-7-imagedong@tencent.com>
-Subject: Re: selftest: mptcp: add test for mptcp socket in use: Tests
- Results
-Message-ID: <76603ddd-9883-bafd-2d36-982e4f632007@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Dec 2022 08:57:58 +0000
+        Mon, 19 Dec 2022 02:24:20 -0800 (PST)
+From: menglong8.dong@gmail.com
+X-Google-Original-From: imagedong@tencent.com
+To: pabeni@redhat.com,
+	mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net
+Cc: mptcp@lists.linux.dev,
+	Menglong Dong <imagedong@tencent.com>
+Subject: [PATCH mptcp-next v10 0/6] mptcp: add statistics for mptcp socket in use
+Date: Mon, 19 Dec 2022 18:23:10 +0800
+Message-Id: <20221219102316.627491-1-imagedong@tencent.com>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Menglong,
+From: Menglong Dong <imagedong@tencent.com>
 
-Thank you for your modifications, that's great!
+In the 1th patch, we do some code cleanup with replease 'sock->sk'
+with 'sk'. In the 2th patch, we rename 'sk' to 'ssk' in
+mptcp_token_new_connect(). In the 3th patch, we add statistics for mptcp
+socket in use. In the 4th patch, we init the 'sk_prot' field with
+tcp_prot in build_msk. In the 5th patch, we make mptcp_connect can exit
+when receive 'SIGUSR1' with '-r' flag. And in the 6th patch, we add the
+testing for this commit.
 
-Our CI did some validations and here is its report:
+With the commit e8695e504942("mptcp: don't orphan ssk in mptcp_close()"),
+I belive that the testing of diag.sh can pass now. In fallback and
+simultaneous close case, the msk can't release normal (sometimes?) without
+that commit, and makes the testing fail. Enn...let's just see that the
+CI is saying~
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6683962794311680
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6683962794311680/summary/summary.txt
+Changes since v9:
+- rename 'sk' to 'ssk' in the document of mptcp_token_new_connect()
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4643269213159424
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4643269213159424/su=
-mmary/summary.txt
+Changes since v8:
+- fix the panic caused by mptcp token KUNIT tests by init sk->sk_prot in
+  build_msk()
+- check the state of msk instead of ssk for listening socket
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5769169120002048
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5769169120002048/summary/summary.txt
+Changes since v7:
+- remove the MPTCP_INUSE flag and do the statistics according to the
+  creation and destruction of the token in the 2th patch.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5206219166580736
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5206219166580736/su=
-mmary/summary.txt
+Changes since v6:
+- check all processes exit in flush_pids() in the 4th patch
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/93db6277a7d9
+Changes since v5:
+- introduce MPTCP_INUSE flag to store if msk is in use, as I find
+  that it's not correct to check is a msk is in use by
+  !sk_unhashed(sk) in mptcp_destroy_common(), because the token
+  can be release in mptcp_check_fastclose()
+- add the 3th patch
+- reuse __chk_nr in 4th patch
 
+Changes since v4:
+- rebase to solve merge conflict
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+Changes since v3:
+- rename MPTCP_DESTROIED to MPTCP_DESTROYED in the 2th patch
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+Changes since v2:
+- add testing
 
-For more details:
+Changes since v1:
+- split the code cleanup into the 1th patch.
+- decrease the statistics for listening mptcp socket inuse with
+  mptcp_listen_inuse_dec()
+- add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
+  called on the msk. For fallback case, we need to decrease the
+  statistics only once, and mptcp_destroy_common() can be called
+  more than once.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Menglong Dong (6):
+  mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
+  mptcp: init sk->sk_prot in build_msk()
+  mptcp: rename 'sk' to 'ssk' in mptcp_token_new_connect()
+  mptcp: add statistics for mptcp socket in use
+  selftest: mptcp: exit from copyfd_io_poll() when receive SIGUSR1
+  selftest: mptcp: add test for mptcp socket in use
 
+ net/mptcp/protocol.c                          | 25 ++++++---
+ net/mptcp/protocol.h                          |  2 +-
+ net/mptcp/token.c                             | 14 +++--
+ net/mptcp/token_test.c                        |  3 +
+ tools/testing/selftests/net/mptcp/diag.sh     | 56 +++++++++++++++++--
+ .../selftests/net/mptcp/mptcp_connect.c       |  4 +-
+ 6 files changed, 85 insertions(+), 19 deletions(-)
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+-- 
+2.37.2
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
