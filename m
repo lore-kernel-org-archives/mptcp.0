@@ -1,125 +1,82 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCB91C02
-	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 13:50:04 +0000 (UTC)
-Received: by mail-vs1-f50.google.com with SMTP id c184so8718816vsc.3
-        for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 05:50:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=62UjoI91z8wssTiCOyg06cmySAFwGQYEPg3lS9wrDxE=;
-        b=jyEIDyqZZj8yiyJ6a5ojAsgT1I5K3hybubREoGt9bl95kWypNzi4c/LADdmYFfBuEK
-         uHEbhn5ZRhYNTrfBbyzU2P3iC4XGy9OhUA/GnVTQ8yGwZmIYoP0PSUOeBWW+74xHiJMC
-         W7C6of8ShLHowQ4DzjgubNkCBX0mh5VOVxISALOZ5vAmsd6CKXjpfari5KnA8GA3uzFy
-         R0z28F2qa6zPIeSIY0Zttc7fuMy66hDGQIBzItFQ1ExdIQFcGdAEIxpjFBL1E5cKJDEg
-         q2p0U0hjTTqx3l398SZpAC/N0y1o3rEDCzh1pv9UW94yASB8spoNXnR68EU1nh2qfyBU
-         vSRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=62UjoI91z8wssTiCOyg06cmySAFwGQYEPg3lS9wrDxE=;
-        b=ZQPQ3JECji6JZ+/NNJIlowG+6HtXnhn1ANkWnJ5Sry+69j/J7K7N+CkCaReob6NedO
-         2SpC2oCvjWxliawf93p4TUZGxYCO8XwzB9RwEAwb475afcQrmv6AVwdqnXw/Pas3wGz7
-         Cbm4ND6a12LwBlWuj2dhV0nujz7GGWLtim4Rdq+iLjcc236gC9ogF9yx/hszREYoo7Mr
-         UyMR4mthyzEZ687zrxTow7RAij02pxiD+lkeYoOPc2ZFGy3r7nvMEnT9e/hXbpldYRKW
-         w3884hDgSChkQCEW+TeNzSUovRLP2ogtkAWA7c1EPjr3LkhGhR+wQ9xU81zUDL1j01Lg
-         5bXQ==
-X-Gm-Message-State: AFqh2krUpGoFwJlewIH2c1JAS6dfQLwd0MePEQTG5XvI+9QpTjepDseO
-	1Q5L4cCfa4PQgplVjZffIw==
-X-Google-Smtp-Source: AMrXdXsU/JHzRNMh+dAGq0bU7U9TsE/OhE8CJ68QiUeMOQSnGnnLu60gEFI8PWYHFCiLZshPNg5FjA==
-X-Received: by 2002:a05:6102:b0f:b0:3b5:1f39:bcdb with SMTP id b15-20020a0561020b0f00b003b51f39bcdbmr2770467vst.2.1671457803013;
-        Mon, 19 Dec 2022 05:50:03 -0800 (PST)
-Received: from [127.0.0.1] ([20.230.10.79])
-        by smtp.gmail.com with ESMTPSA id o18-20020a05620a111200b006fefa5f7fc9sm6772607qkk.134.2022.12.19.05.50.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Dec 2022 05:50:02 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Menglong Dong <imagedong@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221219102316.627491-7-imagedong@tencent.com>
-References: <20221219102316.627491-7-imagedong@tencent.com>
-Subject: Re: selftest: mptcp: add test for mptcp socket in use: Tests
- Results
-Message-ID: <68757bb8-f1e3-8ed5-322a-72024043301a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Dec 2022 13:50:01 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629646D24
+	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 17:34:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1671471247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=566BxPRMWIWkdoo1gj5qaysR/Knf9uynC4l+eYaS2mY=;
+	b=UpGwPxPqbE9Z1MHylJ9bQ3NBTH4hz5NjWl/dNpXlC4zAFJZQaQvLzf/Fzl39FKVWm3lNk7
+	9m6RQFCfwOt2GGkyc8jMG0kYXoiaaTLMEXtFqSTRSm9dZkR+yCrNei8UZNiUqLqj1KS5Oa
+	RJ3f0gqhKr/BcxtgcpVyDVpJ4gyKOdo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-646-0AnJ2G5FMP2hrufpzkXtrw-1; Mon, 19 Dec 2022 12:34:03 -0500
+X-MC-Unique: 0AnJ2G5FMP2hrufpzkXtrw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 35EF485CBE6;
+	Mon, 19 Dec 2022 17:34:03 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.37])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 249812166B26;
+	Mon, 19 Dec 2022 17:34:01 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: linux-security-module@vger.kernel.org
+Cc: Paul Moore <paul@paul-moore.com>,
+	selinux@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH v2 0/2] lsm: introduce and use security_mptcp_add_subflow()
+Date: Mon, 19 Dec 2022 18:33:47 +0100
+Message-Id: <cover.1671469167.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-Hi Menglong,
+This series is an attempt to solve the LSM labeling breakage
+reported here:
 
-Thank you for your modifications, that's great!
+https://lore.kernel.org/linux-security-module/CAHC9VhSQnhH3UL4gqzu+YiA1Q3YyLLCv88gLJOvw-0+uw5Lvkw@mail.gmail.com/
 
-Our CI did some validations and here is its report:
+As per previous discussion, a new LSM hook is introduced and
+invoked by the mptcp code to let LSMs set the appropriate label
+for the newly created subflow.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5235989799501824
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5235989799501824/su=
-mmary/summary.txt
+I'm not sure the chosen hook name is a perfect fit, any suggestion
+more then welcome.
+The new hook requires both the mptcp socket reference and the
+subflow socket reference, even if the provided LSM implementation
+for selinux ends-up accessing only the subflow socket. Possibly
+other LSM implementation could need or use the addtional parameter.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4954514822791168
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4954514822791168/summary/summary.txt
+Tested vs the issue reproducer and mptcp self-tests.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6361889706344448
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6361889706344448/summary/summary.txt
+v1 -> v2:
+ - fix a few build issues with unusual configurations reported
+   by bots
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6080414729633792
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6080414729633792/su=
-mmary/summary.txt
+Paolo Abeni (2):
+  security, lsm: Introduce security_mptcp_add_subflow()
+  selinux: Implement mptcp_add_subflow hook
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/7683ddc9684a
+ include/linux/lsm_hook_defs.h |  1 +
+ include/linux/lsm_hooks.h     |  9 +++++++++
+ include/linux/security.h      |  6 ++++++
+ net/mptcp/subflow.c           |  6 ++++++
+ security/security.c           |  5 +++++
+ security/selinux/hooks.c      | 27 +++++++++++++++++++++++++++
+ security/selinux/netlabel.c   |  4 +++-
+ 7 files changed, 57 insertions(+), 1 deletion(-)
 
+-- 
+2.38.1
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
