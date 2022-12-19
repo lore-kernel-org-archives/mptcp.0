@@ -1,131 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE2C6D24
-	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 17:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1671471250;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mge2WhqWFyM9HhE8E4llCSfJEuyu5fUhFFg1FKTv2b0=;
-	b=IOBsAaScuoBLHVLJzOAzG5c6n+zJhNxuK/VgRBqufJkfRjx/nC/b+VSygM9x5/jAb4fHI7
-	An9oYn8s6LbBW+kiuZoDcf4t9auQfEYLxtEfbUyHNQ7IJYvoZcThQRbOxPDQND6ly1DiQn
-	kCQXkUna4IL6uKBOpgl0pcjPBtsw6Gk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-590-RwNk93g1NoyypRfJLiLUAg-1; Mon, 19 Dec 2022 12:34:06 -0500
-X-MC-Unique: RwNk93g1NoyypRfJLiLUAg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EA3251802D50;
-	Mon, 19 Dec 2022 17:34:05 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.37])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E4D5D2166B26;
-	Mon, 19 Dec 2022 17:34:04 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: linux-security-module@vger.kernel.org
-Cc: Paul Moore <paul@paul-moore.com>,
-	selinux@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH v2 2/2] selinux: Implement mptcp_add_subflow hook
-Date: Mon, 19 Dec 2022 18:33:49 +0100
-Message-Id: <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
-In-Reply-To: <cover.1671469167.git.pabeni@redhat.com>
-References: <cover.1671469167.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7E829A8
+	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 19:10:33 +0000 (UTC)
+Received: by mail-vs1-f43.google.com with SMTP id h26so9698031vsr.5
+        for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 11:10:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=co2P5idy3/oTrGq4uSvNHpuw1Ub5TBl8ivqXqWCkPJM=;
+        b=X7PVwZLNgJuiZz8sfRG9amxxyj5VDMdaU8Mks5lJO/7RjY4/qtGWim7563NXc4RWqp
+         fCdOgb8/5stS/UJN8dj3cV8UAw+8NIP9teuKS0tjAovAD0Jlum3JN0wxqw/elgQ022Do
+         ph53IH8QI7tFeQbATQMTDBMB5FrOG7DY/zWjC35AJt8Env2f1jx9cZ6DOSv2mfXQlb4R
+         FUlQrSy8lBcre8SNFrVQQM+ZOQQIrhBuf8xLz4TqoDgejGuIiSrgs2JkFRrmRr8ozmRy
+         qYFbaQ1gG691GKNkTjOpfJtrfbbL5i5/oHeD1b7wj/jOG4MU5ECeHuw89vjs7lwsrLcL
+         MpsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=co2P5idy3/oTrGq4uSvNHpuw1Ub5TBl8ivqXqWCkPJM=;
+        b=iGHiDY+/2ISNapRir+eJDD0hbOE2in+FAtUH3rmiTjfvz3zoNxTFbm3jD9mgnJHJye
+         DoWTuqBXOV7qI0jAI1x1qtvgD8YzJvwvKNia281eRK+Tf44FrwmjW3uWFVXTsaNIV/Eh
+         RYhQ/bGdUHemZ7LZOrZyLyN3uVeLpkRVC5aAj8YK6djIvjDwfpCPvXb9z+rUKeuRBxny
+         qMAFNEGj/NUFLEt7cLAx07wceFfJXzu4T+hcWViWzEQmoJybZ2LGxGMCyH4njexYcGke
+         Q6TdcdKmWCbWVff0kxosY/2hZhVZEBbP/XqbYN6OyvqfvJzJZURp8PlYWPLOAGlODK9S
+         XDCg==
+X-Gm-Message-State: AFqh2krI5LgdtYLn0Ce00YfDPFNIYfXyrqPYJs+v3S2T9cbd1Q3SMwMP
+	l4F7MYgWEwOCXLeU9CVTsEBCXFK+iFunFPU=
+X-Google-Smtp-Source: AMrXdXvcVVytKHR8c+rXzKPCIXKjjgXSP4eAlXRDIxvRatvoTkUlIxfpdS2ZXTAqZCEwIw/UbOvclA==
+X-Received: by 2002:a67:5fc1:0:b0:3b5:3d73:97c4 with SMTP id t184-20020a675fc1000000b003b53d7397c4mr7708962vsb.33.1671477032691;
+        Mon, 19 Dec 2022 11:10:32 -0800 (PST)
+Received: from [127.0.0.1] ([172.177.155.147])
+        by smtp.gmail.com with ESMTPSA id de36-20020a05620a372400b006cf19068261sm7552814qkb.116.2022.12.19.11.10.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Dec 2022 11:10:32 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
+References:
+ <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
+Subject: Re: selinux: Implement mptcp_add_subflow hook: Tests Results
+Message-ID: <551e778e-1094-39eb-791c-b108e866b4ef@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 19 Dec 2022 19:10:31 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-Newly added subflows should inherit the associated label
-from the current process context, regarless of the sk_kern_sock
-flag value.
+Hi Paolo,
 
-This patch implements the above resetting the subflow sid, deleting
-the existing subflow label, if any, and then re-creating a new one.
+Thank you for your modifications, that's great!
 
-The new helper reuses the selinux_netlbl_sk_security_free() function,
-and it can end-up being called multiple times with the same argument;
-we additionally need to make it idempotent.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-v1 -> v2:
- - fix build issue with !CONFIG_NETLABEL
----
- security/selinux/hooks.c    | 27 +++++++++++++++++++++++++++
- security/selinux/netlabel.c |  4 +++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6575725860356096
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6575725860356096/summary/summary.txt
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 3c5be76a9199..f785600b666a 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -5476,6 +5476,32 @@ static void selinux_sctp_sk_clone(struct sctp_association *asoc, struct sock *sk
- 	selinux_netlbl_sctp_sk_clone(sk, newsk);
- }
- 
-+static int selinux_mptcp_add_subflow(struct sock *sk, struct sock *ssk)
-+{
-+	const struct task_security_struct *tsec = selinux_cred(current_cred());
-+	struct sk_security_struct *ssksec = ssk->sk_security;
-+	u16 sclass;
-+	u32 sid;
-+	int err;
-+
-+	/* create the sid using the current cred, regardless of the ssk kern
-+	 * flag
-+	 */
-+	sclass = socket_type_to_security_class(ssk->sk_family, ssk->sk_type,
-+					       ssk->sk_protocol);
-+	err = socket_sockcreate_sid(tsec, sclass, &sid);
-+	if (err)
-+		return err;
-+
-+	ssksec->sid = sid;
-+
-+	/* replace the existing subflow label deleting the existing one
-+	 * and re-recrating a new label using the current context
-+	 */
-+	selinux_netlbl_sk_security_free(ssksec);
-+	return selinux_netlbl_socket_post_create(ssk, ssk->sk_family);
-+}
-+
- static int selinux_inet_conn_request(const struct sock *sk, struct sk_buff *skb,
- 				     struct request_sock *req)
- {
-@@ -7216,6 +7242,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
- 	LSM_HOOK_INIT(sctp_sk_clone, selinux_sctp_sk_clone),
- 	LSM_HOOK_INIT(sctp_bind_connect, selinux_sctp_bind_connect),
- 	LSM_HOOK_INIT(sctp_assoc_established, selinux_sctp_assoc_established),
-+	LSM_HOOK_INIT(mptcp_add_subflow, selinux_mptcp_add_subflow),
- 	LSM_HOOK_INIT(inet_conn_request, selinux_inet_conn_request),
- 	LSM_HOOK_INIT(inet_csk_clone, selinux_inet_csk_clone),
- 	LSM_HOOK_INIT(inet_conn_established, selinux_inet_conn_established),
-diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
-index 1321f15799e2..8e0080b8a8ef 100644
---- a/security/selinux/netlabel.c
-+++ b/security/selinux/netlabel.c
-@@ -155,8 +155,10 @@ void selinux_netlbl_err(struct sk_buff *skb, u16 family, int error, int gateway)
-  */
- void selinux_netlbl_sk_security_free(struct sk_security_struct *sksec)
- {
--	if (sksec->nlbl_secattr != NULL)
-+	if (sksec->nlbl_secattr != NULL) {
- 		netlbl_secattr_free(sksec->nlbl_secattr);
-+		sksec->nlbl_secattr = NULL;
-+	}
- }
- 
- /**
--- 
-2.38.1
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4746138511736832
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4746138511736832/summary/summary.txt
 
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5309088465158144
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5309088465158144/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6507154962644992
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6507154962644992/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/86a067dd1f5c
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
