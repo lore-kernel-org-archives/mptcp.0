@@ -1,145 +1,127 @@
-Received: from mail-yb1-f195.google.com (mail-yb1-f195.google.com [209.85.219.195])
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECA120EA
-	for <mptcp@lists.linux.dev>; Fri, 16 Dec 2022 15:24:10 +0000 (UTC)
-Received: by mail-yb1-f195.google.com with SMTP id 186so2706591ybe.8
-        for <mptcp@lists.linux.dev>; Fri, 16 Dec 2022 07:24:10 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10433ED2
+	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 07:51:19 +0000 (UTC)
+Received: by mail-pl1-f196.google.com with SMTP id t2so8254812ply.2
+        for <mptcp@lists.linux.dev>; Sun, 18 Dec 2022 23:51:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8HFmklnFaeR3V8CnyZNDOV3xpZX2u8WmsmdpM7gbbYw=;
-        b=WRcHb8q/pz61M+cTPWmG6gbDBar5kUmqmBJTTR/YYl/DmaKmYa+wOxtFfEpTXQ3S7Q
-         m9fvVXmSUxGty7/ck567GqAZfA+o3NnpBbuKuYGoSZl13Sl5z6zTOxm6iDIUzpY2NHcV
-         VP0G6LBezQlWsbS6MEXpdOmx6/h+y5/0dfQc1CusiHfKkp1Iumbo5nI1z+dZzN9PM2I8
-         yrjWL+OwjXODCH4JOWhE5FunQjiBWKyvEqKVRRjibdRLGg0J4ZD3JcIQSP9RhVDM5AhZ
-         THc9wU9m6soiWrQ2lpg/icbjODSNF0h5TX9rKv0iVzTnlgfuJC2QnH65OsZlImw1tVlI
-         UFrQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YIlTivSSiNWf3l/eK8GSonHjpbX9UWgd/QlIKgnsHKU=;
+        b=Ul5kLMZ4WZzz/77U7xFNuSKU7GBoXgRpOeAHrpBxZBtukCpOS73Sv/jEPCpDq4LSNC
+         pFEKFD3OlgGUToN/sR8TISVds80YOBK1qM4YOln7fY5K7rS/pOJ3JJ3pDpnHF3ToAe7t
+         uz1h9TMeuCL9j9sDdOsMjYqzukkwJ0INZaaO5+leMGsufyY+5oxnazfPJx4bcJjQCixN
+         HGEIJshMFNJpxilff9wB2y5ASHdDNhAftcUpe5gRiAHokeXbKyvHw7z5if7Jpy9nw5T6
+         iT5/LljfStfx0lP1MZm/G9hriPWoVg0pT111/mgNf5Ym0y5mDoRhnDzuHVbxttDsV+8I
+         pLuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8HFmklnFaeR3V8CnyZNDOV3xpZX2u8WmsmdpM7gbbYw=;
-        b=QidryyPEU7konfWpDcc0Zv33tGfGSdfSjRb/ntyswJuhMYhkcHtP1kmT4QZjxCdgxt
-         dYGxUDktfhSFP91TuQsXGotrpIt2NGHMMEgKnSwaOO12u6dhbxoSglW7FcwCvtCIbhve
-         DjS7Ra3DGEuI37jQ34knhAUhV4G3m9M8Fdp8KCv8bzfocHWoRB8yD3LVi6e5KaRljvO5
-         2ksTs+MvhoreihdXvu5ncxjkDEOOn3sdvn5WOHXNNMJmcVzMMGmm7Uz2WX0GoJV2Yn5w
-         1V3T5D0Sz3+QAVdv70PLPfo23FrGlCMHfA4d7fXkRqeZDdy49s9DWOxghg8k9zdciHeh
-         Q4ZA==
-X-Gm-Message-State: ANoB5pl9kNtqiIiwpaRsL6wqLGkoB0aPDEOqdGbMSq5D4Gqgi+9nmQU2
-	EQgvirqTXKPoUJeJi1D0DyJU4xuYpo8KcUeUqai0mAuahv0IWg==
-X-Google-Smtp-Source: AA0mqf6BGpngXNiXBLKcDH+sscSm0P1vAdWHwU/la74d/JJPN6jyaBK0eNOsl7qcWpNNtn4YNEupjJgLHWcQpsOHyzU=
-X-Received: by 2002:a25:ced1:0:b0:6f4:8e4e:6f7e with SMTP id
- x200-20020a25ced1000000b006f48e4e6f7emr54507843ybe.285.1671204249689; Fri, 16
- Dec 2022 07:24:09 -0800 (PST)
+        bh=YIlTivSSiNWf3l/eK8GSonHjpbX9UWgd/QlIKgnsHKU=;
+        b=zMt76O7LY2572M5NzzOnyXDS6AOVSswOen5F0KpFi1lrUstrgOFYMnwOTYAJU0T3pF
+         hSx2NbPYVCTeVY3LFoxTmDEVtHFmMUClD+tdvMubmak3Z17jbDD8ZkCVXbJT88I6cRdE
+         khb98Yh18iY/eJYpUE2/0fhUomMajLuReSIOPOiDjZ2/7MmQmsEflFr7q61vv2g2LvM2
+         SA1hi69BxxbP+um/7IeXCnGRC5mOFIcLR3HvvDiD5xbPIo6bn5gfPOJmrspXstLVtW29
+         xb50BBpN7/ZTl/pIf4ehZ/DSQe3o3Cm3jg1N++2WwvtnDkSTC+fQKnGmeEzMifZ/Tdnp
+         uEvw==
+X-Gm-Message-State: AFqh2krNG5xC8JCYoTca14X81JQByn/Z8Ym9id974+eBsKYburL/Lq7U
+	X78Zghyib/hT7+p0Wu1UvZU=
+X-Google-Smtp-Source: AMrXdXujjnpeMAlPrh9VSK20NBNQxw8rNs91aSn12yGTS9zXKP5v9inhcvFuOnWC5Nz5dVgLlQtxPw==
+X-Received: by 2002:a05:6a20:af14:b0:9d:efbf:816d with SMTP id dr20-20020a056a20af1400b0009defbf816dmr8063821pzb.54.1671436279319;
+        Sun, 18 Dec 2022 23:51:19 -0800 (PST)
+Received: from localhost.localdomain ([203.205.141.21])
+        by smtp.gmail.com with ESMTPSA id t9-20020a170902e84900b001888cadf8f6sm6366673plg.49.2022.12.18.23.51.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Dec 2022 23:51:18 -0800 (PST)
+From: menglong8.dong@gmail.com
+X-Google-Original-From: imagedong@tencent.com
+To: pabeni@redhat.com,
+	mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net
+Cc: mptcp@lists.linux.dev,
+	Menglong Dong <imagedong@tencent.com>
+Subject: [PATCH mptcp-next v9 0/5] mptcp: add statistics for mptcp socket in use
+Date: Mon, 19 Dec 2022 15:50:42 +0800
+Message-Id: <20221219075048.255811-1-imagedong@tencent.com>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221208024543.113633-1-imagedong@tencent.com>
- <20221208024543.113633-3-imagedong@tencent.com> <d6bcf7e63c35d5769fd6496ae6d23a283e36a678.camel@redhat.com>
- <CADxym3aXUg5uhwTvUYTh9PGXcCyUvM92h-C3Z_GbOap=fYvb9g@mail.gmail.com> <7da5b207620795939388bf906ebbc443b4d7fa75.camel@redhat.com>
-In-Reply-To: <7da5b207620795939388bf906ebbc443b4d7fa75.camel@redhat.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Fri, 16 Dec 2022 23:23:58 +0800
-Message-ID: <CADxym3abYtfzPYV1xbOdAp5ndJjxoqFgkwmrv03au753fWZMdA@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v8 2/4] mptcp: add statistics for mptcp socket
- in use
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net, 
-	mptcp@lists.linux.dev, Menglong Dong <imagedong@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Menglong Dong <imagedong@tencent.com>
 
-On Fri, Dec 16, 2022 at 4:45 PM Paolo Abeni <pabeni@redhat.com> wrote:
->
-> On Fri, 2022-12-16 at 16:01 +0800, Menglong Dong wrote:
-> > Hello,
-> >
-> > On Tue, Dec 13, 2022 at 12:35 AM Paolo Abeni <pabeni@redhat.com> wrote:
-> > >
-> > > On Thu, 2022-12-08 at 10:45 +0800, menglong8.dong@gmail.com wrote:
-> > > > From: Menglong Dong <imagedong@tencent.com>
-> > > >
-> > > > Do the statistics of mptcp socket in use with sock_prot_inuse_add().
-> > > > Therefore, we can get the count of used mptcp socket from
-> > > > /proc/net/protocols:
-> > > >
-> > > > & cat /proc/net/protocols
-> > > > protocol  size sockets  memory press maxhdr  slab module     cl co di ac io in de sh ss gs se re sp bi br ha uh gp em
-> > > > MPTCPv6   2048      0       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
-> > > > MPTCP     1896      1       0   no       0   yes  kernel      y  n  y  y  y  y  y  y  y  y  y  y  n  n  n  y  y  y  n
-> > > >
-> > > > Signed-off-by: Menglong Dong <imagedong@tencent.com>
-> > > > ---
-> > > > v8:
-> > > > - remove the MPTCP_INUSE flag and do the statistics according to the
-> > > >   creation and destruction of the token
-> > > >
-> > > > v6:
-> > > > - introduce the 'MPTCP_INUSE' flag and check if msk is in use by it
-> > > >
-> > > > v5:
-> > > > - rebase to solve merge conflict
-> > > >
-> > > > v4:
-> > > > - rename MPTCP_DESTROIED to MPTCP_DESTROYED
-> > > >
-> > > > v2:
-> > > > - decrease the statistics for listening mptcp socket inuse with
-> > > >   mptcp_listen_inuse_dec()
-> > > > - add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
-> > > >   called on the msk. For fallback case, we need to decrease the
-> > > > ---
-> > > >  net/mptcp/protocol.c | 16 +++++++++++++++-
-> > > >  net/mptcp/token.c    |  7 +++++++
-> > > >  2 files changed, 22 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > > > index ffdccf26af99..775454a9d49b 100644
-> > > > --- a/net/mptcp/protocol.c
-> > > > +++ b/net/mptcp/protocol.c
-> > > > @@ -3005,6 +3005,16 @@ void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
-> > > >       inet_sk(msk)->inet_rcv_saddr = inet_sk(ssk)->inet_rcv_saddr;
-> > > >  }
-> > > >
-> > > > +static void mptcp_listen_inuse_dec(struct sock *sk)
-> > > > +{
-> > > > +     struct mptcp_sock *msk = mptcp_sk(sk);
-> > > > +     struct socket *ssock;
-> > > > +
-> > > > +     ssock = __mptcp_nmpc_socket(msk);
-> > > > +     if (ssock && inet_sk_state_load(ssock->sk) == TCP_LISTEN)
-> > >
-> > > Here I think you can check directly: sk->sk_state == TCP_LISTEN, which
-> > > should be both simpler and safer, since this should be called under the
-> > > (m)sk socket lock.
-> > >
-> >
-> > Then, mptcp_listen_inuse_dec() needs to be called before msk
-> > enters TCP_CLOSE state, which means __mptcp_close()
-> > and mptcp_disconnect(). Do I miss any case that a listening
-> > msk enters TCP_CLOSE state?
->
-> AFAIK, that is correct. Note that the number of hooks will not change
-> compared to the current patch revision (mptcp_disconnect() +
-> mptcp_destroy()).
->
+In the 1th patch, we do some code cleanup with replease 'sock->sk'
+with 'sk'. In the 2th patch, we rename 'sk' to 'ssk' in
+mptcp_token_new_connect(). In the 3th patch, we add statistics for mptcp
+socket in use. In the 4th patch, we init the 'sk_prot' field with
+tcp_prot in build_msk. In the 5th patch, we make mptcp_connect can exit
+when receive 'SIGUSR1' with '-r' flag. And in the 6th patch, we add the
+testing for this commit.
 
-With the changes you suggested, I need to the move mptcp_listen_inuse_dec()
-that called in mptcp_destroy() to __mptcp_close(), as msk is already in
-CLOSE state in mptcp_destroy(). Isn't it?
+With the commit e8695e504942("mptcp: don't orphan ssk in mptcp_close()"),
+I belive that the testing of diag.sh can pass now. In fallback and
+simultaneous close case, the msk can't release normal (sometimes?) without
+that commit, and makes the testing fail. Enn...let's just see that the
+CI is saying~
 
-Thanks!
-Menglong Dong
+Changes since v8:
+- fix the panic caused by mptcp token KUNIT tests by init sk->sk_prot in
+  build_msk()
+- check the state of msk instead of ssk for listening socket
 
->
-> Cheers,
->
-> Paolo
->
+Changes since v7:
+- remove the MPTCP_INUSE flag and do the statistics according to the
+  creation and destruction of the token in the 2th patch.
+
+Changes since v6:
+- check all processes exit in flush_pids() in the 4th patch
+
+Changes since v5:
+- introduce MPTCP_INUSE flag to store if msk is in use, as I find
+  that it's not correct to check is a msk is in use by
+  !sk_unhashed(sk) in mptcp_destroy_common(), because the token
+  can be release in mptcp_check_fastclose()
+- add the 3th patch
+- reuse __chk_nr in 4th patch
+
+Changes since v4:
+- rebase to solve merge conflict
+
+Changes since v3:
+- rename MPTCP_DESTROIED to MPTCP_DESTROYED in the 2th patch
+
+Changes since v2:
+- add testing
+
+Changes since v1:
+- split the code cleanup into the 1th patch.
+- decrease the statistics for listening mptcp socket inuse with
+  mptcp_listen_inuse_dec()
+- add MPTCP_DESTROIED flags to store if mptcp_destroy_common() was
+  called on the msk. For fallback case, we need to decrease the
+  statistics only once, and mptcp_destroy_common() can be called
+  more than once.
+
+Menglong Dong (4):
+  mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
+  mptcp: add statistics for mptcp socket in use
+  selftest: mptcp: exit from copyfd_io_poll() when receive SIGUSR1
+  selftest: mptcp: add test for mptcp socket in use
+
+ net/mptcp/protocol.c                          | 29 +++++++---
+ net/mptcp/token.c                             |  7 +++
+ tools/testing/selftests/net/mptcp/diag.sh     | 56 +++++++++++++++++--
+ .../selftests/net/mptcp/mptcp_connect.c       |  4 +-
+ 4 files changed, 82 insertions(+), 14 deletions(-)
+
+-- 
+2.37.2
+
