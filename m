@@ -1,43 +1,43 @@
-Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545341103
-	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 10:24:25 +0000 (UTC)
-Received: by mail-pg1-f196.google.com with SMTP id v3so5857191pgh.4
-        for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 02:24:25 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A471D1103
+	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 10:24:27 +0000 (UTC)
+Received: by mail-pf1-f196.google.com with SMTP id d82so5867895pfd.11
+        for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 02:24:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u1ymkI2ZS9oEdM8+QN725eb8XM7yvFMf0CKAT7LDW2M=;
-        b=No8pIptm0ucrQlnf+PCggDcfUzXNotEMHWBRGaTVDcppKuLefJEDvmEutTNnc8Mh5F
-         eLPnGHQkCrzSX2ky8Yq0WZnCjtv7BJepff8nIT5yLSb0jvPKSIRt34QUcPP+3WeucKg+
-         C1S4zdRXTsa3w2dYYnka+IWGyQRScyFzTGcmG+GZDrX20sbRdpdhRGAe5Q++V1vQkoyj
-         vICNmjiPG4cLwK7RR8nI67j32abyTOenR4kt6xkbEQDWZwvPMN169032B+oCoGoaJ7VY
-         xwfKf3L1UASsluEPTkcNIFecnF4YSXi62VZhjEBWPlhODHeIrKNjsyuFb/GhVse/HS8f
-         CjPg==
+        bh=sBA7CV3EQ+9fTM1bMrHYppBeRTRpqJ3IwFrDYg4UjbQ=;
+        b=V3KHqeF7rwEEANkts+YM+6FDj5/YnRGZVUM9gqGODq1hzYr3+EguK6PYsUFNtEgXD4
+         Cpf8HTltQh7AfuoanWRy9yOSq18nfRXBXh4O8EaAcz1e40YOK/9UCDfZn6i+CK+U5OyI
+         3uNHyHybYGPXXbvSRcv3gvWg/gIHqMQr/MuwlQN2FoP2s1lsAfUAhvWtDOTPN4SEITrP
+         YSmHakWP+B2TKNlMnoQLGYIodh+LGi/BBO6owioeOgSRMqkW7XIvJGKAmW+c8bdH2c95
+         633iJHttsca5Xj2Qg4du+y4NEwBwlastQJXc4S+3D8DA5xnOpCR0/SLJipoUOQ7mhpcJ
+         dQpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=u1ymkI2ZS9oEdM8+QN725eb8XM7yvFMf0CKAT7LDW2M=;
-        b=7KueeOdG+VfCP8pWjEb5BVtbUIt5r1YCRnEYt+7S/zdWSyg6szWTKF/cTgiSQItDUx
-         /rk8mUc099+RdNZXjq35QYHk3+P1epaQIKX/WKj3CDJBTSMPcynPULd0jXMiTzK28JbH
-         PwwH7i366vhvwEzzw3ACiMu8QiQjHR7PFUXq7u9XqNGUWL64XWRqBvCH+G4Xy6WpIZxf
-         lKObiEmsTkHDWJ1vTzXiKvVV9IzXE6HZeNxwc7Q8rwqF0gfiEJ2FirdRff0RROJjRUNM
-         tP015I4FVmlkwCeZ/ieQ3f7oifN6PfVQsQk3PgaRW/liSWV9MupZl1ENdU4Htmzuktd7
-         pL9w==
-X-Gm-Message-State: ANoB5pl7FQH/LFYk2UTU6FzqzN7YfBBH1KIe1bYdyb6lR8cfNsJIDZqc
-	75PwKUjjVb5tsGGo+4wtytE=
-X-Google-Smtp-Source: AA0mqf5auK8INFIf/q+u75esm1AxnJ080UAXTIQnOVUmsqHFfZWEK17slaJmGBZzR7F+x9n0A6olyA==
-X-Received: by 2002:a05:6a00:1d14:b0:57b:30b6:9e85 with SMTP id a20-20020a056a001d1400b0057b30b69e85mr22172047pfx.22.1671445465046;
-        Mon, 19 Dec 2022 02:24:25 -0800 (PST)
+        bh=sBA7CV3EQ+9fTM1bMrHYppBeRTRpqJ3IwFrDYg4UjbQ=;
+        b=1GMQVOfqmOU7KTmdgQy/X8wX4GhK7dqWRsYV/K83TjfAIklaQ2EtRJn5utIMNzLSks
+         Fs2GYcxMMHgm57RPmxAC1OD/J7qaZnAvdaDTvNSHe+kKAWNMDIUWGr53hg2KNDZrgR/t
+         jHzKr47dPF95Yy/wIWds08JkkVc9smjCw/ewJzyL9pgyp7yMpTxyoZNxXyoMZmaz1Mro
+         hnAf8v9T00p1rbXzjzSzr7bSmpTRGm702MGtV6oeRwZyoYKNwM6FpPa8Br481MiipDko
+         KtFnHvUNVKnbn2hsht5BahIM1tL9TWtVLt2gBrlubbtVUqiIU3Vxf4YbNSiABAFH3Rb3
+         I2DA==
+X-Gm-Message-State: ANoB5pnqMmx+H9BYW3T7/0tIwSgzu688oc5UrFEHc2g9scp2sp1EoawJ
+	AfZDm77jof/VacXotZaCM4o=
+X-Google-Smtp-Source: AA0mqf7/rUJ5GfZvIRF9hcIdKquxtP0Il7qBTA7NYCP6rPFrDE+ZY1c7i3ZjimY5vrRHnLYQ9hDnaw==
+X-Received: by 2002:aa7:8190:0:b0:575:62f8:be3 with SMTP id g16-20020aa78190000000b0057562f80be3mr41242794pfi.23.1671445467166;
+        Mon, 19 Dec 2022 02:24:27 -0800 (PST)
 Received: from localhost.localdomain ([203.205.141.23])
-        by smtp.gmail.com with ESMTPSA id n5-20020a056a00212500b005775c52dbc4sm6206517pfj.167.2022.12.19.02.24.23
+        by smtp.gmail.com with ESMTPSA id n5-20020a056a00212500b005775c52dbc4sm6206517pfj.167.2022.12.19.02.24.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Dec 2022 02:24:24 -0800 (PST)
+        Mon, 19 Dec 2022 02:24:26 -0800 (PST)
 From: menglong8.dong@gmail.com
 X-Google-Original-From: imagedong@tencent.com
 To: pabeni@redhat.com,
@@ -45,9 +45,9 @@ To: pabeni@redhat.com,
 	matthieu.baerts@tessares.net
 Cc: mptcp@lists.linux.dev,
 	Menglong Dong <imagedong@tencent.com>
-Subject: [PATCH mptcp-next v10 2/6] mptcp: init sk->sk_prot in build_msk()
-Date: Mon, 19 Dec 2022 18:23:12 +0800
-Message-Id: <20221219102316.627491-3-imagedong@tencent.com>
+Subject: [PATCH mptcp-next v10 3/6] mptcp: rename 'sk' to 'ssk' in mptcp_token_new_connect()
+Date: Mon, 19 Dec 2022 18:23:13 +0800
+Message-Id: <20221219102316.627491-4-imagedong@tencent.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221219102316.627491-1-imagedong@tencent.com>
 References: <20221219102316.627491-1-imagedong@tencent.com>
@@ -61,28 +61,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Menglong Dong <imagedong@tencent.com>
 
-The 'sk_prot' field in token KUNIT self-tests will be dereferenced in
-mptcp_token_new_connect(). Therefore, init it with tcp_prot.
+'ssk' should be more appropriate to be the name of the first argument
+in mptcp_token_new_connect().
 
 Signed-off-by: Menglong Dong <imagedong@tencent.com>
 ---
- net/mptcp/token_test.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/mptcp/protocol.h | 2 +-
+ net/mptcp/token.c    | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/token_test.c b/net/mptcp/token_test.c
-index 5d984bec1cd8..0758865ab658 100644
---- a/net/mptcp/token_test.c
-+++ b/net/mptcp/token_test.c
-@@ -57,6 +57,9 @@ static struct mptcp_sock *build_msk(struct kunit *test)
- 	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, msk);
- 	refcount_set(&((struct sock *)msk)->sk_refcnt, 1);
- 	sock_net_set((struct sock *)msk, &init_net);
-+
-+	/* be sure the token helpers can dereference sk->sk_prot */
-+	((struct sock *)msk)->sk_prot = &tcp_prot;
- 	return msk;
- }
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 3cd3270407b0..de7d901a79c6 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -766,7 +766,7 @@ static inline void mptcp_token_init_request(struct request_sock *req)
  
+ int mptcp_token_new_request(struct request_sock *req);
+ void mptcp_token_destroy_request(struct request_sock *req);
+-int mptcp_token_new_connect(struct sock *sk);
++int mptcp_token_new_connect(struct sock *ssk);
+ void mptcp_token_accept(struct mptcp_subflow_request_sock *r,
+ 			struct mptcp_sock *msk);
+ bool mptcp_token_exists(u32 token);
+diff --git a/net/mptcp/token.c b/net/mptcp/token.c
+index 65430f314a68..3af502a374bc 100644
+--- a/net/mptcp/token.c
++++ b/net/mptcp/token.c
+@@ -134,7 +134,7 @@ int mptcp_token_new_request(struct request_sock *req)
+ 
+ /**
+  * mptcp_token_new_connect - create new key/idsn/token for subflow
+- * @sk: the socket that will initiate a connection
++ * @ssk: the socket that will initiate a connection
+  *
+  * This function is called when a new outgoing mptcp connection is
+  * initiated.
+@@ -148,9 +148,9 @@ int mptcp_token_new_request(struct request_sock *req)
+  *
+  * returns 0 on success.
+  */
+-int mptcp_token_new_connect(struct sock *sk)
++int mptcp_token_new_connect(struct sock *ssk)
+ {
+-	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
++	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+ 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+ 	int retries = MPTCP_TOKEN_MAX_RETRIES;
+ 	struct token_bucket *bucket;
+@@ -169,7 +169,7 @@ int mptcp_token_new_connect(struct sock *sk)
+ 	}
+ 
+ 	pr_debug("ssk=%p, local_key=%llu, token=%u, idsn=%llu\n",
+-		 sk, subflow->local_key, subflow->token, subflow->idsn);
++		 ssk, subflow->local_key, subflow->token, subflow->idsn);
+ 
+ 	WRITE_ONCE(msk->token, subflow->token);
+ 	__sk_nulls_add_node_rcu((struct sock *)msk, &bucket->msk_chain);
 -- 
 2.37.2
 
