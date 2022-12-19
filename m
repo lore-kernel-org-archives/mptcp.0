@@ -1,43 +1,43 @@
-Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
+Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D8C10EF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545341103
 	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 10:24:25 +0000 (UTC)
-Received: by mail-pj1-f67.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso12567962pjt.0
+Received: by mail-pg1-f196.google.com with SMTP id v3so5857191pgh.4
         for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 02:24:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pDMRQQgmzcLrWi3iJXP5+Yn2rtVedztMbMwGnRNqbyM=;
-        b=qHyuyv+aKvhuD59QBvrnsY3H3BMXw4mTCFsMNKDzSzeLKIaY4BzwVyLo3ZE24kaish
-         uL8j5XivyvY0sXjVR/aFLdSL3fYARmzsdO/jc1aiiC3eDHeNFS9GNiBvWYC8xNxfMG2c
-         KW5QnFG+0SaP/0k7Cw8BiPl9cqkFpFpZE7rPt1R8z8cs1SCx7h3hSnz80EE/DOchJjtR
-         /2Y34wL5vA4H8Z3EIWtB5ZpZ+6fVVKokkPzM49VmF02caJzbPVZ4ylXwRZiRTtbFhgFx
-         mTbLJ36c97SLuS6G/7h1nRXnhXrosIX7Zzo4W0zK8bk4RtOs+EMAS4X7P57arzuEuvBT
-         bzig==
+        bh=u1ymkI2ZS9oEdM8+QN725eb8XM7yvFMf0CKAT7LDW2M=;
+        b=No8pIptm0ucrQlnf+PCggDcfUzXNotEMHWBRGaTVDcppKuLefJEDvmEutTNnc8Mh5F
+         eLPnGHQkCrzSX2ky8Yq0WZnCjtv7BJepff8nIT5yLSb0jvPKSIRt34QUcPP+3WeucKg+
+         C1S4zdRXTsa3w2dYYnka+IWGyQRScyFzTGcmG+GZDrX20sbRdpdhRGAe5Q++V1vQkoyj
+         vICNmjiPG4cLwK7RR8nI67j32abyTOenR4kt6xkbEQDWZwvPMN169032B+oCoGoaJ7VY
+         xwfKf3L1UASsluEPTkcNIFecnF4YSXi62VZhjEBWPlhODHeIrKNjsyuFb/GhVse/HS8f
+         CjPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pDMRQQgmzcLrWi3iJXP5+Yn2rtVedztMbMwGnRNqbyM=;
-        b=nQw/ZQ7jHnnA3snuMRv1a54CTG4nLDdUjC6jc0bFsrLfKZ/MweRWeQTOSq3TUBSNNQ
-         yzI8MGq/LbiXx0NSVw+rUmgrBrUO+KCd1NoBfDqENuZ0L77vhfljQeDv3bAUvD1ehWAy
-         wHPuk/hQ0i3eyAzJlRmx54qScEgDgufbwy0zXrG50iuq7lBwCXNxVJnm4HRaoLcDC/ZJ
-         yfnN9Bev7S4aH3maB46k/Q5Cbq3fJGWIouU2v9av4M1o+KU4xgua9Gx6//8WctyVqo4m
-         wVjDWeoXl7kJ7HEcM5Em3cW5D60av72WKdEk//aSco6lwIRu61V3enaf8HtaCmPoqyNa
-         YNQQ==
-X-Gm-Message-State: ANoB5plo6P9PmRXWkCPvSpTGmF3N+Q2+Rn5fU4prHxbE7Kzxb7ZXzjlP
-	YDzAcvQoBF/GZjMRK4IuxGrrUCHbdLjB7Q==
-X-Google-Smtp-Source: AA0mqf5f1gBrNjPRVfZ0KwCxgw6cLoAoaojf//fvSvS/TVwDnKfKo8rzLNkuqaYoUokGS2G/O+8Y3A==
-X-Received: by 2002:a05:6a20:bf02:b0:af:1a39:553d with SMTP id gc2-20020a056a20bf0200b000af1a39553dmr21527791pzb.14.1671445463155;
-        Mon, 19 Dec 2022 02:24:23 -0800 (PST)
+        bh=u1ymkI2ZS9oEdM8+QN725eb8XM7yvFMf0CKAT7LDW2M=;
+        b=7KueeOdG+VfCP8pWjEb5BVtbUIt5r1YCRnEYt+7S/zdWSyg6szWTKF/cTgiSQItDUx
+         /rk8mUc099+RdNZXjq35QYHk3+P1epaQIKX/WKj3CDJBTSMPcynPULd0jXMiTzK28JbH
+         PwwH7i366vhvwEzzw3ACiMu8QiQjHR7PFUXq7u9XqNGUWL64XWRqBvCH+G4Xy6WpIZxf
+         lKObiEmsTkHDWJ1vTzXiKvVV9IzXE6HZeNxwc7Q8rwqF0gfiEJ2FirdRff0RROJjRUNM
+         tP015I4FVmlkwCeZ/ieQ3f7oifN6PfVQsQk3PgaRW/liSWV9MupZl1ENdU4Htmzuktd7
+         pL9w==
+X-Gm-Message-State: ANoB5pl7FQH/LFYk2UTU6FzqzN7YfBBH1KIe1bYdyb6lR8cfNsJIDZqc
+	75PwKUjjVb5tsGGo+4wtytE=
+X-Google-Smtp-Source: AA0mqf5auK8INFIf/q+u75esm1AxnJ080UAXTIQnOVUmsqHFfZWEK17slaJmGBZzR7F+x9n0A6olyA==
+X-Received: by 2002:a05:6a00:1d14:b0:57b:30b6:9e85 with SMTP id a20-20020a056a001d1400b0057b30b69e85mr22172047pfx.22.1671445465046;
+        Mon, 19 Dec 2022 02:24:25 -0800 (PST)
 Received: from localhost.localdomain ([203.205.141.23])
-        by smtp.gmail.com with ESMTPSA id n5-20020a056a00212500b005775c52dbc4sm6206517pfj.167.2022.12.19.02.24.21
+        by smtp.gmail.com with ESMTPSA id n5-20020a056a00212500b005775c52dbc4sm6206517pfj.167.2022.12.19.02.24.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Dec 2022 02:24:22 -0800 (PST)
+        Mon, 19 Dec 2022 02:24:24 -0800 (PST)
 From: menglong8.dong@gmail.com
 X-Google-Original-From: imagedong@tencent.com
 To: pabeni@redhat.com,
@@ -45,9 +45,9 @@ To: pabeni@redhat.com,
 	matthieu.baerts@tessares.net
 Cc: mptcp@lists.linux.dev,
 	Menglong Dong <imagedong@tencent.com>
-Subject: [PATCH mptcp-next v10 1/6] mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
-Date: Mon, 19 Dec 2022 18:23:11 +0800
-Message-Id: <20221219102316.627491-2-imagedong@tencent.com>
+Subject: [PATCH mptcp-next v10 2/6] mptcp: init sk->sk_prot in build_msk()
+Date: Mon, 19 Dec 2022 18:23:12 +0800
+Message-Id: <20221219102316.627491-3-imagedong@tencent.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221219102316.627491-1-imagedong@tencent.com>
 References: <20221219102316.627491-1-imagedong@tencent.com>
@@ -61,55 +61,26 @@ Content-Transfer-Encoding: 8bit
 
 From: Menglong Dong <imagedong@tencent.com>
 
-'sock->sk' is used frequently in mptcp_listen(). Therefore, we can
-introduce the 'sk' and replace 'sock->sk' with it.
+The 'sk_prot' field in token KUNIT self-tests will be dereferenced in
+mptcp_token_new_connect(). Therefore, init it with tcp_prot.
 
 Signed-off-by: Menglong Dong <imagedong@tencent.com>
 ---
- net/mptcp/protocol.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ net/mptcp/token_test.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5e813580c394..3de45444557d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3655,12 +3655,13 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
- static int mptcp_listen(struct socket *sock, int backlog)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
-+	struct sock *sk = sock->sk;
- 	struct socket *ssock;
- 	int err;
- 
- 	pr_debug("msk=%p", msk);
- 
--	lock_sock(sock->sk);
-+	lock_sock(sk);
- 	ssock = __mptcp_nmpc_socket(msk);
- 	if (!ssock) {
- 		err = -EINVAL;
-@@ -3668,18 +3669,18 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 	}
- 
- 	mptcp_token_destroy(msk);
--	inet_sk_state_store(sock->sk, TCP_LISTEN);
--	sock_set_flag(sock->sk, SOCK_RCU_FREE);
-+	inet_sk_state_store(sk, TCP_LISTEN);
-+	sock_set_flag(sk, SOCK_RCU_FREE);
- 
- 	err = ssock->ops->listen(ssock, backlog);
--	inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
-+	inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
- 	if (!err)
--		mptcp_copy_inaddrs(sock->sk, ssock->sk);
-+		mptcp_copy_inaddrs(sk, ssock->sk);
- 
- 	mptcp_event_pm_listener(ssock->sk, MPTCP_EVENT_LISTENER_CREATED);
- 
- unlock:
--	release_sock(sock->sk);
-+	release_sock(sk);
- 	return err;
+diff --git a/net/mptcp/token_test.c b/net/mptcp/token_test.c
+index 5d984bec1cd8..0758865ab658 100644
+--- a/net/mptcp/token_test.c
++++ b/net/mptcp/token_test.c
+@@ -57,6 +57,9 @@ static struct mptcp_sock *build_msk(struct kunit *test)
+ 	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, msk);
+ 	refcount_set(&((struct sock *)msk)->sk_refcnt, 1);
+ 	sock_net_set((struct sock *)msk, &init_net);
++
++	/* be sure the token helpers can dereference sk->sk_prot */
++	((struct sock *)msk)->sk_prot = &tcp_prot;
+ 	return msk;
  }
  
 -- 
