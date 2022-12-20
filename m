@@ -1,207 +1,170 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C61A8F65
-	for <mptcp@lists.linux.dev>; Tue, 20 Dec 2022 19:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671565955; x=1703101955;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=uFjJt54zA4AcZJG3xfNcULjZA/lfb3hNecw8HMpysd0=;
-  b=UfqPVoVt4lQ759XUgyuoii5sh5U0YZS/D1RxQA8jKCBsy6+qxjAP0UEy
-   i5octrQuRQDoqC04RKZ+38fcxu+D+luaz4z/omNDg7ychmxNGg1+QqeBT
-   AbqLsj4qGciBD/Dw6flQ5pQMJhJRpNmBVBeEn0H1IfxExni/Hwwvfc5iI
-   93JdetKDS+zlrSJYaAlt2xg2eq8yIgxhNfa48O1Uw+QULMqBRoDMXZpnv
-   oAUQhfOcsWSGdUWFGvFndgLbxsvUChhIWS7V/1iGcchtBrbkTiEXDLu5g
-   c1fPoF/AHDvHvQx6BMNZJ0VGiJjahv36NWC9halqAih44QLeYQ1Wwv+mU
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10567"; a="299376691"
-X-IronPort-AV: E=Sophos;i="5.96,259,1665471600"; 
-   d="scan'208";a="299376691"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2022 11:52:21 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10567"; a="681780965"
-X-IronPort-AV: E=Sophos;i="5.96,259,1665471600"; 
-   d="scan'208";a="681780965"
-Received: from mdaugher-mobl.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.212.232.138])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2022 11:52:21 -0800
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: netdev@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	edumazet@google.com,
-	imagedong@tencent.com,
-	mptcp@lists.linux.dev,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH net 2/2] mptcp: fix lockdep false positive
-Date: Tue, 20 Dec 2022 11:52:15 -0800
-Message-Id: <20221220195215.238353-3-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20221220195215.238353-1-mathew.j.martineau@linux.intel.com>
-References: <20221220195215.238353-1-mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FF87E
+	for <mptcp@lists.linux.dev>; Tue, 20 Dec 2022 22:07:25 +0000 (UTC)
+Received: by mail-pj1-f53.google.com with SMTP id n65-20020a17090a2cc700b0021bc5ef7a14so212539pjd.0
+        for <mptcp@lists.linux.dev>; Tue, 20 Dec 2022 14:07:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jFAFy2cX6p2TxsPpogzDjs9fiQ6UuglhalzGO4odrnI=;
+        b=QDsdbXmsvZ+ZTvzBdxGLT8GWYu85ANRweHrwxsJMFBsiDhJRfQXp7fTKPF7hxLgZ+J
+         AmUkpodyJAOcjj6LSJXtHEvp4VUUo5c4M6lnLbeul2NakFsw78nbz416BVzTjObpU/Og
+         2+2xRaG6P0tWDL/GSVolA+WfbrFJB9t4gNwddm3qKPz2oEVr6HLhuSezPgPdZBfGERNb
+         Hm0xida19crW/LZwfehkRKT/V/WK6UxMwpFWqnsQCV8pKzk0+rDWNvrdA7pRVqVBZh/g
+         EUNn78E/O5i8T3oS0K7ORBPxMoLNh6uOc04eli9ywvwMLbxr5OtS59lvzmdlv5fCZRRk
+         Dzdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jFAFy2cX6p2TxsPpogzDjs9fiQ6UuglhalzGO4odrnI=;
+        b=hSIFsCWXaTKmCWCVtoPcCa71ZEJ20u0HEWvIufMkFpaey3XCRlutFCfRk63L8ZwOtr
+         I7AWH6jCvwaWpwoQTXtVHBxKaPjx593PGsipme/qIVYQ26okYkKwzkyx76vBknWhSrU9
+         DKUa5v1LnZKciv4MO0k1oIfLuTSInRSO2W2WuOe4HRWtz9F76wfyJPKertriUHuswhAA
+         26ZGw2U4wY3K3QIF426lP21OUf+9TJ5W7z8fCwS58BRNPMla8dJR6SdniPpuWppyP55P
+         W2ZlnwB0mAepoeRVY6W8iOpwr2x09pUSfeg2NOc48G+RopPgcIZkm/SgMx8YtsEbUeAc
+         jSDQ==
+X-Gm-Message-State: AFqh2kqz76Hm0DzbH6wshE4GnF8vHYaslis74Yx3vy/n7X51hH1j/uQZ
+	jdrzpC6whI4faqyZ1oUq5n+iWf7cqa7PS+h2uqSq
+X-Google-Smtp-Source: AMrXdXsHspUJoS7HSo5OLC8JbdXBJm3B8unlBAtSokp6tcirCSO9Ki89+7LVWXPWIsCTqcqYf1HoTKFzPM5W66dsCSQ=
+X-Received: by 2002:a17:90a:6481:b0:221:5597:5de7 with SMTP id
+ h1-20020a17090a648100b0022155975de7mr1983156pjj.147.1671574044825; Tue, 20
+ Dec 2022 14:07:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1671469167.git.pabeni@redhat.com> <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
+In-Reply-To: <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 20 Dec 2022 17:07:13 -0500
+Message-ID: <CAHC9VhRYr9=qKUeF0EuY46koCnkeZ5d-=umV5TxbiUZ7qNXJ6w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] selinux: Implement mptcp_add_subflow hook
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Mon, Dec 19, 2022 at 12:34 PM Paolo Abeni <pabeni@redhat.com> wrote:
+>
+> Newly added subflows should inherit the associated label
+> from the current process context, regarless of the sk_kern_sock
+> flag value.
+>
+> This patch implements the above resetting the subflow sid, deleting
+> the existing subflow label, if any, and then re-creating a new one.
+>
+> The new helper reuses the selinux_netlbl_sk_security_free() function,
+> and it can end-up being called multiple times with the same argument;
+> we additionally need to make it idempotent.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+>  - fix build issue with !CONFIG_NETLABEL
+> ---
+>  security/selinux/hooks.c    | 27 +++++++++++++++++++++++++++
+>  security/selinux/netlabel.c |  4 +++-
+>  2 files changed, 30 insertions(+), 1 deletion(-)
+>
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 3c5be76a9199..f785600b666a 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -5476,6 +5476,32 @@ static void selinux_sctp_sk_clone(struct sctp_association *asoc, struct sock *sk
+>         selinux_netlbl_sctp_sk_clone(sk, newsk);
+>  }
+>
+> +static int selinux_mptcp_add_subflow(struct sock *sk, struct sock *ssk)
+> +{
+> +       const struct task_security_struct *tsec = selinux_cred(current_cred());
+> +       struct sk_security_struct *ssksec = ssk->sk_security;
+> +       u16 sclass;
+> +       u32 sid;
+> +       int err;
+> +
+> +       /* create the sid using the current cred, regardless of the ssk kern
+> +        * flag
+> +        */
+> +       sclass = socket_type_to_security_class(ssk->sk_family, ssk->sk_type,
+> +                                              ssk->sk_protocol);
+> +       err = socket_sockcreate_sid(tsec, sclass, &sid);
+> +       if (err)
+> +               return err;
+> +
+> +       ssksec->sid = sid;
+> +
+> +       /* replace the existing subflow label deleting the existing one
+> +        * and re-recrating a new label using the current context
+> +        */
+> +       selinux_netlbl_sk_security_free(ssksec);
+> +       return selinux_netlbl_socket_post_create(ssk, ssk->sk_family);
+> +}
 
-MattB reported a lockdep splat in the mptcp listener code cleanup:
+I thought the idea was to ensure that new subflows of an existing
+MPTCP connection would be created with the same label as the main
+MPTCP connection socket?  The code above labels the new subflow based
+on the current process, not the main MPTCP connection; it matches the
+commit description, but not what we had previously discussed - or I am
+horribly mis-remembering something? :)
 
- WARNING: possible circular locking dependency detected
- packetdrill/14278 is trying to acquire lock:
- ffff888017d868f0 ((work_completion)(&msk->work)){+.+.}-{0:0}, at: __flush_work (kernel/workqueue.c:3069)
+I was expecting something more like the following:
 
- but task is already holding lock:
- ffff888017d84130 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_close (net/mptcp/protocol.c:2973)
+static int selinux_mptcp_add_subflow(...)
+{
+  struct sk_security_struct *sksec = sk->sk_security;
+  struct sk_security_struct *ssksec = ssk->sk_security;
 
- which lock already depends on the new lock.
+  ssksec->sclass = sksec->sclass;
+  ssksec->sid = sksec->sid;
 
- the existing dependency chain (in reverse order) is:
+  selinux_netlbl_sk_security_free(ssksec);
+  selinux_netlbl_socket_post_create(ssk, ssk->sk_family);
+}
 
- -> #1 (sk_lock-AF_INET){+.+.}-{0:0}:
-        __lock_acquire (kernel/locking/lockdep.c:5055)
-        lock_acquire (kernel/locking/lockdep.c:466)
-        lock_sock_nested (net/core/sock.c:3463)
-        mptcp_worker (net/mptcp/protocol.c:2614)
-        process_one_work (kernel/workqueue.c:2294)
-        worker_thread (include/linux/list.h:292)
-        kthread (kernel/kthread.c:376)
-        ret_from_fork (arch/x86/entry/entry_64.S:312)
+> diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
+> index 1321f15799e2..8e0080b8a8ef 100644
+> --- a/security/selinux/netlabel.c
+> +++ b/security/selinux/netlabel.c
+> @@ -155,8 +155,10 @@ void selinux_netlbl_err(struct sk_buff *skb, u16 family, int error, int gateway)
+>   */
+>  void selinux_netlbl_sk_security_free(struct sk_security_struct *sksec)
+>  {
+> -       if (sksec->nlbl_secattr != NULL)
+> +       if (sksec->nlbl_secattr != NULL) {
+>                 netlbl_secattr_free(sksec->nlbl_secattr);
+> +               sksec->nlbl_secattr = NULL;
+> +       }
+>  }
 
- -> #0 ((work_completion)(&msk->work)){+.+.}-{0:0}:
-        check_prev_add (kernel/locking/lockdep.c:3098)
-        validate_chain (kernel/locking/lockdep.c:3217)
-        __lock_acquire (kernel/locking/lockdep.c:5055)
-        lock_acquire (kernel/locking/lockdep.c:466)
-        __flush_work (kernel/workqueue.c:3070)
-        __cancel_work_timer (kernel/workqueue.c:3160)
-        mptcp_cancel_work (net/mptcp/protocol.c:2758)
-        mptcp_subflow_queue_clean (net/mptcp/subflow.c:1817)
-        __mptcp_close_ssk (net/mptcp/protocol.c:2363)
-        mptcp_destroy_common (net/mptcp/protocol.c:3170)
-        mptcp_destroy (include/net/sock.h:1495)
-        __mptcp_destroy_sock (net/mptcp/protocol.c:2886)
-        __mptcp_close (net/mptcp/protocol.c:2959)
-        mptcp_close (net/mptcp/protocol.c:2974)
-        inet_release (net/ipv4/af_inet.c:432)
-        __sock_release (net/socket.c:651)
-        sock_close (net/socket.c:1367)
-        __fput (fs/file_table.c:320)
-        task_work_run (kernel/task_work.c:181 (discriminator 1))
-        exit_to_user_mode_prepare (include/linux/resume_user_mode.h:49)
-        syscall_exit_to_user_mode (kernel/entry/common.c:130)
-        do_syscall_64 (arch/x86/entry/common.c:87)
-        entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
+This is pretty nitpicky, but it might be a little cleaner to use the
+pattern below.  At the very least I think it tends to better match a
+lot of the various free helpers in the kernel.
 
- other info that might help us debug this:
+void free_stuff(void *ptr)
+{
+  if (!ptr)
+    return;
+  free_properly(ptr);
+}
 
-  Possible unsafe locking scenario:
+I would probably also reset sk_security_struct::nlbl_state too, so
+maybe something like the following:
 
-        CPU0                    CPU1
-        ----                    ----
-   lock(sk_lock-AF_INET);
-                                lock((work_completion)(&msk->work));
-                                lock(sk_lock-AF_INET);
-   lock((work_completion)(&msk->work));
+void selinux_netlbl_sk_security_free(...)
+{
+  if (!sksec)
+    return;
+  netlbl_secattr_free(sksec->nlbl_secattr);
+  sksec->nlbl_secattr = NULL;
+  sksec->nlbl_state = NLBL_UNSET;
+}
 
-  *** DEADLOCK ***
-
-The report is actually a false positive, since the only existing lock
-nesting is the msk socket lock acquired by the mptcp work.
-cancel_work_sync() is invoked without the relevant socket lock being
-held, but under a different (the msk listener) socket lock.
-
-We could silence the splat adding a per workqueue dynamic lockdep key,
-but that looks overkill. Instead just tell lockdep the msk socket lock
-is not held around cancel_work_sync().
-
---
-v1 -> v2:
- - fix a few typos (MatM)
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/322
-Fixes: 30e51b923e43 ("mptcp: fix unreleased socket in accept queue")
-Reported-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
- net/mptcp/protocol.c |  2 +-
- net/mptcp/protocol.h |  2 +-
- net/mptcp/subflow.c  | 19 +++++++++++++++++--
- 3 files changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 907b435e2984..b7ad030dfe89 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2357,7 +2357,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		/* otherwise tcp will dispose of the ssk and subflow ctx */
- 		if (ssk->sk_state == TCP_LISTEN) {
- 			tcp_set_state(ssk, TCP_CLOSE);
--			mptcp_subflow_queue_clean(ssk);
-+			mptcp_subflow_queue_clean(sk, ssk);
- 			inet_csk_listen_stop(ssk);
- 			mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CLOSED);
- 		}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f47d3e4018b5..a0d1658ce59e 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -628,7 +628,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		     struct mptcp_subflow_context *subflow);
- void __mptcp_subflow_send_ack(struct sock *ssk);
- void mptcp_subflow_reset(struct sock *ssk);
--void mptcp_subflow_queue_clean(struct sock *ssk);
-+void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
- void mptcp_sock_graft(struct sock *sk, struct socket *parent);
- struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
- bool __mptcp_close(struct sock *sk, long timeout);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index d1d32a66ae3f..bd387d4b5a38 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1791,7 +1791,7 @@ static void subflow_state_change(struct sock *sk)
- 	}
- }
- 
--void mptcp_subflow_queue_clean(struct sock *listener_ssk)
-+void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_ssk)
- {
- 	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
- 	struct mptcp_sock *msk, *next, *head = NULL;
-@@ -1840,8 +1840,23 @@ void mptcp_subflow_queue_clean(struct sock *listener_ssk)
- 
- 		do_cancel_work = __mptcp_close(sk, 0);
- 		release_sock(sk);
--		if (do_cancel_work)
-+		if (do_cancel_work) {
-+			/* lockdep will report a false positive ABBA deadlock
-+			 * between cancel_work_sync and the listener socket.
-+			 * The involved locks belong to different sockets WRT
-+			 * the existing AB chain.
-+			 * Using a per socket key is problematic as key
-+			 * deregistration requires process context and must be
-+			 * performed at socket disposal time, in atomic
-+			 * context.
-+			 * Just tell lockdep to consider the listener socket
-+			 * released here.
-+			 */
-+			mutex_release(&listener_sk->sk_lock.dep_map, _RET_IP_);
- 			mptcp_cancel_work(sk);
-+			mutex_acquire(&listener_sk->sk_lock.dep_map,
-+				      SINGLE_DEPTH_NESTING, 0, _RET_IP_);
-+		}
- 		sock_put(sk);
- 	}
- 
 -- 
-2.39.0
-
+paul-moore.com
