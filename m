@@ -1,127 +1,207 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD1C79D7
-	for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 21:55:45 +0000 (UTC)
-Received: by mail-pl1-f176.google.com with SMTP id n4so10393805plp.1
-        for <mptcp@lists.linux.dev>; Mon, 19 Dec 2022 13:55:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yGbwOmW0NJnMy/LcW2yf83uTR3+VnV4fetBHyNWJkEA=;
-        b=VylAsPh2TnKXhcJZDOV6z23NmSz0CHLy1tNyqyrQy8jncJUEqSj6MIqbk07zotUwOD
-         j6F6A7CJrhUBgwIHBre1qxwvK4g+aWabvhGOh16vUwe0T5hivffciC/DSbZjt/RAvNOf
-         gRwcZUQlmiWtFnhkpbhFcpP8r5qsnS0nCm2Y+cgkCicIGPkdmYgKEjGNWgeMlBPmwkdl
-         3yBSlcdqzpWFOl5lBnVMw7718TxiGr1TfoABeYI2u/b9muhVkQ0NrDO3kUcwaWydi/SM
-         qMFYOfVKzpNU3ye59IFgs2Owf6xdRqeDzIPQBl+Duthcikg4hjudooTJIM8aMIQhJ9Xy
-         Ojjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yGbwOmW0NJnMy/LcW2yf83uTR3+VnV4fetBHyNWJkEA=;
-        b=zTgBhuZTjWSI8RJILkbH8iRfOrBpJ9Fz7nFd7UNNT6swFdmkmm9+iQ1oJI/IKQRTPs
-         njNqpHq/P+3106AKecgfU9ZbNR9yHcaD+RfQDWLYf7Lvp+KaMs3SLDXFRXUlrHfKtPp0
-         VRnwRH6f6ttSA1YCdcBvgqKZ8qu0MRVxb1xyxzNymh+Lr+yswDt4JFpvAELNNZs9IPzn
-         Q39DZT6evDKQjGpn4Ixh8FMyfvvUYF/AAgIQloh2A2MtupMyXZtOFMdGtqhi4hxhbMW3
-         fvq7Ysx+ZPTUzb673fNYuxsZ230A5TdQ7nDG9Qs87Q8eY4g+zLQYG52CFsZMccO9CE9i
-         Tnzw==
-X-Gm-Message-State: ANoB5pn2F1yqtwc2gjfJ2Umr131Ww/YGYMyj96M0ti/7lww1zxJ+x1dp
-	3Hvl53SDjuNFPuGDwbWNtw==
-X-Google-Smtp-Source: AA0mqf4fGCgMaj5NYOzx83TSIYfD9IrXD9ZouytEVf0FGOj1x9zjGDy/07gew9Vm2gtOabXiDdoMDw==
-X-Received: by 2002:a05:6a21:2d07:b0:aa:15b6:6322 with SMTP id tw7-20020a056a212d0700b000aa15b66322mr53579122pzb.42.1671486944619;
-        Mon, 19 Dec 2022 13:55:44 -0800 (PST)
-Received: from [127.0.0.1] ([13.73.36.242])
-        by smtp.gmail.com with ESMTPSA id e13-20020a6558cd000000b004768ce9e4fasm6871387pgu.59.2022.12.19.13.55.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Dec 2022 13:55:44 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
-References:
- <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
-Subject: Re: selinux: Implement mptcp_add_subflow hook: Tests Results
-Message-ID: <ae5633f7-eefa-77e5-4a13-499d6e0a6e7c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Dec 2022 21:55:43 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D08310E6
+	for <mptcp@lists.linux.dev>; Tue, 20 Dec 2022 01:40:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671500401; x=1703036401;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=QvvjzwXSpfzlfUCkFGNnznob/siYDlR2Yi31fqSqYRA=;
+  b=kLGXplQlfqRsCthXrek73xHYlbmmpi8ntmBKaFuZmyZu9BGavDs3s8Xc
+   VrK8vlgTlFRwZsgzWwIOKhk1fQd48O9ve9EFnLk0wCpIF97TT5hSy5Phi
+   Iu0yDLMQZosu6NDezaGsTX3R9OeXgE4wC/w35lCGKNmNF7hTqaIqJeV6T
+   F0z2zve6ON35Frt/YWQEEeZdr6jv/zTHCeD7CQYqCyzGUWFIYPJ3VbjRx
+   xokv2Axz1wgT8agYlnsScwQWE0oxcWNTtrO7JjvScmMYC81x+M8J7Exaw
+   4JyQnIxU7ZLVKq2a5l9XFdSG0UIvlQccPhxATLbLSuMAEoVJj9eCEaEhY
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10566"; a="299840131"
+X-IronPort-AV: E=Sophos;i="5.96,258,1665471600"; 
+   d="scan'208";a="299840131"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 17:40:00 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10566"; a="681452546"
+X-IronPort-AV: E=Sophos;i="5.96,258,1665471600"; 
+   d="scan'208";a="681452546"
+Received: from wootaekl-mobl1.amr.corp.intel.com ([10.212.220.86])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 17:40:00 -0800
+Date: Mon, 19 Dec 2022 17:39:59 -0800 (PST)
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v25 0/5] BPF redundant scheduler, part 2
+In-Reply-To: <cover.1671107241.git.geliang.tang@suse.com>
+Message-ID: <a94575d7-c444-c011-e49f-e538a61a0481@linux.intel.com>
+References: <cover.1671107241.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Paolo,
+On Thu, 15 Dec 2022, Geliang Tang wrote:
 
-Thank you for your modifications, that's great!
+> v25:
+> - update calls to mptcp_subflow_set_scheduled(subflow, false) in
+>  __mptcp_subflow_push_pending().
+> - rebased on "tag: export/20221215T054923"
+>
 
-Our CI did some validations and here is its report:
+Thanks for all the work on this Geliang. I think it's ok to add this to 
+the export branch for further testing, and any fixes/updates can be 
+squashed if needed.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6620708260806656
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6620708260806656/summary/summary.txt
+I do have feedback on one line to delete in patch 2 (see that reply). Not 
+sure if Matthieu needs a squash-to patch for that or can update when 
+applying.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4548841605693440
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4548841605693440/summary/summary.txt
+Should this be applied after the bpf_rr patches, or earlier in the 
+"features other trees" section of the export branch?
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5705914586497024
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5705914586497024/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5142964633075712
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5142964633075712/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/53ef095bcdc1
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+- Mat
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+> v24:
+> - rename push to keep_pushing
+> - check the scheduled bit on ssk first
+> - drop delegate flag
+> - depends on "mptcp: use msk_owned_by_me helper"
+>
+> v23:
+> - patch 2 and 3: clear subflow->scheduled flag on the error paths.
+>
+> v22:
+> - update patch 2 as Mat suggested.
+> - patch 4 and 5 in v21 will send later.
+>
+> v21:
+> - address Mat's comments in v20.
+> - redundant sends on retransmit code path.
+>
+> v20:
+> - rebased on "Squash to "mptcp: refactor push_pending logic" v19"
+>
+> v19:
+> - patch 1, use 'continue' instead of 'goto again'.
+>
+> v18:
+> - some cleanups
+> - update commit logs.
+>
+> v17:
+> - address to Mat's comments in v16
+> - rebase to export/20221108T055508.
+>
+> v16:
+> - keep last_snd and snd_burst in struct mptcp_sock.
+> - drop "mptcp: register default scheduler".
+> - drop "mptcp: add scheduler wrappers", move it into "mptcp: use
+> get_send wrapper" and "mptcp: use get_retrans wrapper".
+> - depends on 'v2, Revert "mptcp: add get_subflow wrappers" - fix
+> divide error in mptcp_subflow_get_send'
+>
+> v15:
+> 1: "refactor push pending" v10
+> 2-11: "register default scheduler" v3
+>  - move last_snd and snd_burst into struct mptcp_sched_ops
+> 12-19: "BPF redundant scheduler" v15
+>  - split "use get_send wrapper" into two patches
+> - rebase to export/20221021T061837.
+>
+> v14:
+> - add "mptcp: refactor push_pending logic" v10 as patch 1
+> - drop update_first_pending in patch 4
+> - drop update_already_sent in patch 5
+>
+> v13:
+> - deponds on "refactor push pending" v9.
+> - Simply 'goto out' after invoking mptcp_subflow_delegate in patch 1.
+> - All selftests (mptcp_connect.sh, mptcp_join.sh and simult_flows.sh) passed.
+>
+> v12:
+> - fix WARN_ON_ONCE(reuse_skb) and WARN_ON_ONCE(!msk->recovery) errors
+>   in kernel logs.
+>
+> v11:
+> - address to Mat's comments in v10.
+> - rebase to export/20220908T063452
+>
+> v10:
+> - send multiple dfrags in __mptcp_push_pending().
+>
+> v9:
+> - drop the extra *err paramenter of mptcp_sched_get_send() as Florian
+>   suggested.
+>
+> v8:
+> - update __mptcp_push_pending(), send the same data on each subflow.
+> - update __mptcp_retrans, track the max sent data.
+> = add a new patch.
+>
+> v7:
+> - drop redundant flag in v6
+> - drop __mptcp_subflows_push_pending in v6
+> - update redundant subflows support in __mptcp_push_pending
+> - update redundant subflows support in __mptcp_retrans
+>
+> v6:
+> - Add redundant flag for struct mptcp_sched_ops.
+> - add a dedicated function __mptcp_subflows_push_pending() to deal with
+>   redundat subflows push pending.
+>
+> v5:
+> - address to Paolo's comment, keep the optimization to
+> mptcp_subflow_get_send() for the non eBPF case.
+> - merge mptcp_sched_get_send() and __mptcp_sched_get_send() in v4 into one.
+> - depends on "cleanups for bpf sched selftests".
+>
+> v4:
+> - small cleanups in patch 1, 2.
+> - add TODO in patch 3.
+> - rebase patch 5 on 'cleanups for bpf sched selftests'.
+>
+> v3:
+> - use new API.
+> - fix the link failure tests issue mentioned in ("https://patchwork.kernel.org/project/mptcp/cover/cover.1653033459.git.geliang.tang@suse.com/").
+>
+> v2:
+> - add MPTCP_SUBFLOWS_MAX limit to avoid infinite loops when the
+>   scheduler always sets call_again to true.
+> - track the largest copied amount.
+> - deal with __mptcp_subflow_push_pending() and the retransmit loop.
+> - depends on "BPF round-robin scheduler" v14.
+>
+> v1:
+>
+> Implements the redundant BPF MPTCP scheduler, which sends all packets
+> redundantly on all available subflows.
+>
+> Geliang Tang (5):
+>  mptcp: add scheduler wrappers
+>  mptcp: use get_send wrapper
+>  mptcp: use get_retrans wrapper
+>  selftests/bpf: Add bpf_red scheduler
+>  selftests/bpf: Add bpf_red test
+>
+> net/mptcp/protocol.c                          | 187 +++++++++++-------
+> net/mptcp/protocol.h                          |   4 +
+> net/mptcp/sched.c                             |  69 +++++++
+> .../testing/selftests/bpf/prog_tests/mptcp.c  |  34 ++++
+> .../selftests/bpf/progs/mptcp_bpf_red.c       |  45 +++++
+> 5 files changed, 264 insertions(+), 75 deletions(-)
+> create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_red.c
+>
+> -- 
+> 2.35.3
+>
+>
+>
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+--
+Mat Martineau
+Intel
