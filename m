@@ -1,170 +1,92 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FF87E
-	for <mptcp@lists.linux.dev>; Tue, 20 Dec 2022 22:07:25 +0000 (UTC)
-Received: by mail-pj1-f53.google.com with SMTP id n65-20020a17090a2cc700b0021bc5ef7a14so212539pjd.0
-        for <mptcp@lists.linux.dev>; Tue, 20 Dec 2022 14:07:25 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF862569
+	for <mptcp@lists.linux.dev>; Wed, 21 Dec 2022 14:07:27 +0000 (UTC)
+Received: by mail-wm1-f42.google.com with SMTP id o5-20020a05600c510500b003d21f02fbaaso1617690wms.4
+        for <mptcp@lists.linux.dev>; Wed, 21 Dec 2022 06:07:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jFAFy2cX6p2TxsPpogzDjs9fiQ6UuglhalzGO4odrnI=;
-        b=QDsdbXmsvZ+ZTvzBdxGLT8GWYu85ANRweHrwxsJMFBsiDhJRfQXp7fTKPF7hxLgZ+J
-         AmUkpodyJAOcjj6LSJXtHEvp4VUUo5c4M6lnLbeul2NakFsw78nbz416BVzTjObpU/Og
-         2+2xRaG6P0tWDL/GSVolA+WfbrFJB9t4gNwddm3qKPz2oEVr6HLhuSezPgPdZBfGERNb
-         Hm0xida19crW/LZwfehkRKT/V/WK6UxMwpFWqnsQCV8pKzk0+rDWNvrdA7pRVqVBZh/g
-         EUNn78E/O5i8T3oS0K7ORBPxMoLNh6uOc04eli9ywvwMLbxr5OtS59lvzmdlv5fCZRRk
-         Dzdw==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=t08dbMxxgYNxikwsmaCXURwrFgFs/Yro0lqU7t6BVVk=;
+        b=HmfBNUV++op9CEnS/XUvF2QSM70kwXSIMtH0KDevE1OTGqYFb6N25bg0XEQ51HWXgM
+         HC+T0jLlQ2pqMM6RsYEdmfTULZ+4nt/PBlhAAaqwpz6aXr1Ti95NI6SjMaxZwc++EW6D
+         HEF0HQ139w+Fbi2ACd5VsdMmzQLiuw/Z92pstOWE5C1iPcxsWvkxoHGk38rJVQmwE4/O
+         fB511QOB/wxhVe/BT3ImckZmJM7ouh/yCrS7yK2IkBT6UcdsB8NsiBh0J93iUyfm5Wm1
+         C1JpW4P8IHkglVR70FnZ8m6TBwAh/0wv+UMpo/6F2INVjQJI281K2TQD7e34vt9EcWVR
+         M6Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jFAFy2cX6p2TxsPpogzDjs9fiQ6UuglhalzGO4odrnI=;
-        b=hSIFsCWXaTKmCWCVtoPcCa71ZEJ20u0HEWvIufMkFpaey3XCRlutFCfRk63L8ZwOtr
-         I7AWH6jCvwaWpwoQTXtVHBxKaPjx593PGsipme/qIVYQ26okYkKwzkyx76vBknWhSrU9
-         DKUa5v1LnZKciv4MO0k1oIfLuTSInRSO2W2WuOe4HRWtz9F76wfyJPKertriUHuswhAA
-         26ZGw2U4wY3K3QIF426lP21OUf+9TJ5W7z8fCwS58BRNPMla8dJR6SdniPpuWppyP55P
-         W2ZlnwB0mAepoeRVY6W8iOpwr2x09pUSfeg2NOc48G+RopPgcIZkm/SgMx8YtsEbUeAc
-         jSDQ==
-X-Gm-Message-State: AFqh2kqz76Hm0DzbH6wshE4GnF8vHYaslis74Yx3vy/n7X51hH1j/uQZ
-	jdrzpC6whI4faqyZ1oUq5n+iWf7cqa7PS+h2uqSq
-X-Google-Smtp-Source: AMrXdXsHspUJoS7HSo5OLC8JbdXBJm3B8unlBAtSokp6tcirCSO9Ki89+7LVWXPWIsCTqcqYf1HoTKFzPM5W66dsCSQ=
-X-Received: by 2002:a17:90a:6481:b0:221:5597:5de7 with SMTP id
- h1-20020a17090a648100b0022155975de7mr1983156pjj.147.1671574044825; Tue, 20
- Dec 2022 14:07:24 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t08dbMxxgYNxikwsmaCXURwrFgFs/Yro0lqU7t6BVVk=;
+        b=Slxu9fRijXsfzzg6H8gSDsMtn7l+3oKc5nAMUhIBKVQQ4chjZAeG0Zq19PTZey84SN
+         O2ERa5gocEJm01KZ1kawApbJLzX27zZ/+0CrbOKIe9ukUXIf7wvQ5kUvG9XQr2KEv5np
+         9xCVjqZvQR4m4aKlB38W1TEOR66Qw6PZpH5Sflfdj4MGjLPYFINJEotMT024SLrfMW6U
+         RF/N4iczrNyqUtdt4jJ5Kb1FJE6FhMhbUEqMNj2lCoSHA4MjK00DVp4wL0vAu8chQaoj
+         t6eaz8y2N2IVtwR7mM7uZaDoVRNHu3K7HpIrtvqCtp6s8MZ5Cc01QbKGdVTnGYZ909mt
+         DHxQ==
+X-Gm-Message-State: AFqh2ko81PYdm55s5TUWqxHzzricR3XA03IajnNBci6VguHl3Klm/oWx
+	KEYSRCwPFzyDpFdPVpcKS0nDoQ==
+X-Google-Smtp-Source: AMrXdXvZkQmVrT0W42/s0rvpIONZf+uUN51GpTW6Jsr1iZgrupERNOzoPBvOJ/WsXXJEPb+LFIHPfQ==
+X-Received: by 2002:a05:600c:4e90:b0:3cf:894f:964b with SMTP id f16-20020a05600c4e9000b003cf894f964bmr1533103wmq.16.1671631645512;
+        Wed, 21 Dec 2022 06:07:25 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:c6df:cbae:132:5f5b? ([2a02:578:8593:1200:c6df:cbae:132:5f5b])
+        by smtp.gmail.com with ESMTPSA id c12-20020a05600c0a4c00b003cfa3a12660sm7273174wmq.1.2022.12.21.06.07.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Dec 2022 06:07:25 -0800 (PST)
+Message-ID: <20b3d783-b490-1db6-78d1-e84b2edb60a1@tessares.net>
+Date: Wed, 21 Dec 2022 15:07:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1671469167.git.pabeni@redhat.com> <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
-In-Reply-To: <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 20 Dec 2022 17:07:13 -0500
-Message-ID: <CAHC9VhRYr9=qKUeF0EuY46koCnkeZ5d-=umV5TxbiUZ7qNXJ6w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] selinux: Implement mptcp_add_subflow hook
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
-	mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH mptcp-next v25 0/5] BPF redundant scheduler, part 2
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
+References: <cover.1671107241.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <cover.1671107241.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 19, 2022 at 12:34 PM Paolo Abeni <pabeni@redhat.com> wrote:
->
-> Newly added subflows should inherit the associated label
-> from the current process context, regarless of the sk_kern_sock
-> flag value.
->
-> This patch implements the above resetting the subflow sid, deleting
-> the existing subflow label, if any, and then re-creating a new one.
->
-> The new helper reuses the selinux_netlbl_sk_security_free() function,
-> and it can end-up being called multiple times with the same argument;
-> we additionally need to make it idempotent.
->
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> v1 -> v2:
->  - fix build issue with !CONFIG_NETLABEL
-> ---
->  security/selinux/hooks.c    | 27 +++++++++++++++++++++++++++
->  security/selinux/netlabel.c |  4 +++-
->  2 files changed, 30 insertions(+), 1 deletion(-)
->
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 3c5be76a9199..f785600b666a 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -5476,6 +5476,32 @@ static void selinux_sctp_sk_clone(struct sctp_association *asoc, struct sock *sk
->         selinux_netlbl_sctp_sk_clone(sk, newsk);
->  }
->
-> +static int selinux_mptcp_add_subflow(struct sock *sk, struct sock *ssk)
-> +{
-> +       const struct task_security_struct *tsec = selinux_cred(current_cred());
-> +       struct sk_security_struct *ssksec = ssk->sk_security;
-> +       u16 sclass;
-> +       u32 sid;
-> +       int err;
-> +
-> +       /* create the sid using the current cred, regardless of the ssk kern
-> +        * flag
-> +        */
-> +       sclass = socket_type_to_security_class(ssk->sk_family, ssk->sk_type,
-> +                                              ssk->sk_protocol);
-> +       err = socket_sockcreate_sid(tsec, sclass, &sid);
-> +       if (err)
-> +               return err;
-> +
-> +       ssksec->sid = sid;
-> +
-> +       /* replace the existing subflow label deleting the existing one
-> +        * and re-recrating a new label using the current context
-> +        */
-> +       selinux_netlbl_sk_security_free(ssksec);
-> +       return selinux_netlbl_socket_post_create(ssk, ssk->sk_family);
-> +}
+Hi Geliang, Mat,
 
-I thought the idea was to ensure that new subflows of an existing
-MPTCP connection would be created with the same label as the main
-MPTCP connection socket?  The code above labels the new subflow based
-on the current process, not the main MPTCP connection; it matches the
-commit description, but not what we had previously discussed - or I am
-horribly mis-remembering something? :)
+On 15/12/2022 13:32, Geliang Tang wrote:
+> Implements the redundant BPF MPTCP scheduler, which sends all packets
+> redundantly on all available subflows.
 
-I was expecting something more like the following:
+Thank you for the hard work with the patches and the reviews!
 
-static int selinux_mptcp_add_subflow(...)
-{
-  struct sk_security_struct *sksec = sk->sk_security;
-  struct sk_security_struct *ssksec = ssk->sk_security;
+I just applied them in our tree in 2 different places as requested by
+Geliang. I also integrated the Squash-to patch sent by Geliang and added
+Mat's RvB tag.
 
-  ssksec->sclass = sksec->sclass;
-  ssksec->sid = sksec->sid;
+New patches for t/upstream:
+- 324b3cbe75ae: mptcp: add scheduler wrappers
+- 2e6f3e6c3604: mptcp: use get_send wrapper
+- 52f8f6af934c: mptcp: use get_retrans wrapper
+- Results: 6c58a377c113..4254b6598308 (export)
 
-  selinux_netlbl_sk_security_free(ssksec);
-  selinux_netlbl_socket_post_create(ssk, ssk->sk_family);
-}
+- 61c95bbb18c7: selftests/bpf: Add bpf_red scheduler
+- 46cf70243ce8: selftests/bpf: Add bpf_red test
+- Results: 4254b6598308..224f92634d88 (export)
 
-> diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
-> index 1321f15799e2..8e0080b8a8ef 100644
-> --- a/security/selinux/netlabel.c
-> +++ b/security/selinux/netlabel.c
-> @@ -155,8 +155,10 @@ void selinux_netlbl_err(struct sk_buff *skb, u16 family, int error, int gateway)
->   */
->  void selinux_netlbl_sk_security_free(struct sk_security_struct *sksec)
->  {
-> -       if (sksec->nlbl_secattr != NULL)
-> +       if (sksec->nlbl_secattr != NULL) {
->                 netlbl_secattr_free(sksec->nlbl_secattr);
-> +               sksec->nlbl_secattr = NULL;
-> +       }
->  }
+Tests are now in progress:
 
-This is pretty nitpicky, but it might be a little cleaner to use the
-pattern below.  At the very least I think it tends to better match a
-lot of the various free helpers in the kernel.
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20221221T140648
 
-void free_stuff(void *ptr)
-{
-  if (!ptr)
-    return;
-  free_properly(ptr);
-}
-
-I would probably also reset sk_security_struct::nlbl_state too, so
-maybe something like the following:
-
-void selinux_netlbl_sk_security_free(...)
-{
-  if (!sksec)
-    return;
-  netlbl_secattr_free(sksec->nlbl_secattr);
-  sksec->nlbl_secattr = NULL;
-  sksec->nlbl_state = NLBL_UNSET;
-}
-
+Cheers,
+Matt
 -- 
-paul-moore.com
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
