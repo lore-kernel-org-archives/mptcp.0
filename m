@@ -1,68 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7097215A9
-	for <mptcp@lists.linux.dev>; Thu, 22 Dec 2022 02:10:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E343EC433F2;
-	Thu, 22 Dec 2022 02:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1671675017;
-	bh=eCEg3Qw2EO+D/FDoDFYwgmonbMtJaZzu40BAhaaB4+g=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=AsbszxtUIfKxCN78ZZN79x1rok1zP8SfDgXHG9c7nD0kOkDxK6TptKFRKSqmcgtoB
-	 AqBvZME/Ix/8nNVYNkHzacX2AY/AM0vh2C+xwYeAFfTDfxlzUP/HP5l+64cmFHuihV
-	 Tdvqv3Efz+bD2x3QxtwcMVBVLPNLovs9lKUQKWZ4SWZ8VA9aUWr+7Q/bkWCvehPhbo
-	 1yvj+5p5uVpWpKoF9qQtf3DGG5LDLpiT6La9qLQhpkVva4bix2Erk/4OIN1e4rr9RJ
-	 P+we0i8mglW4RaKT8Vm8EekaEotg3P+9xgsOs2LbIQ44iRKv11t+pQi/dhv0pguJQ0
-	 mDecBGhdJR+rQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C7DF3C74000;
-	Thu, 22 Dec 2022 02:10:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98216FD9
+	for <mptcp@lists.linux.dev>; Thu, 22 Dec 2022 15:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1671724655;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x5VXoJ1iG6D6T430sOtOSp45mTWDSL9bWW7eZEVH72Y=;
+	b=QQCujgq6N6Tp9M6q3iNt44P7/JAZ3nuiXARwst/D8ZcfRXfby0ChhUsyZruMpPdqsDHB+W
+	Jjj8A3qCSB31MRiAuewk9aK6IcNNhB4S7r2dZ3gqBU4cjJXeX+aOrJJH+u+hF9I0/Y4+3Y
+	10dZD1a7enTA2VKU+aFlEwISbWrWbl4=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-319-1fUSLjKrP4GtoLMQNjTMmA-1; Thu, 22 Dec 2022 10:57:34 -0500
+X-MC-Unique: 1fUSLjKrP4GtoLMQNjTMmA-1
+Received: by mail-wm1-f69.google.com with SMTP id bg25-20020a05600c3c9900b003cf3ed7e27bso1025130wmb.4
+        for <mptcp@lists.linux.dev>; Thu, 22 Dec 2022 07:57:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x5VXoJ1iG6D6T430sOtOSp45mTWDSL9bWW7eZEVH72Y=;
+        b=DnoVse7F8Yx6sAM7bC1Ufon0KI5xCI1tFRR/z9cRtrKn24saCkIzdyyW9wd7Sk7fk5
+         Kqvc+PbW+8KCxl33gFFUREMuaVooghTCqDioOw4OqtlJ0l7mp/aWt6UEjTNCDqoNoWIz
+         CznA8A7B5Frbo3RYsz6i/L+QRX0UYceNk4eIil+ONIVmLIekJmSLEyo2Zd8E3vq323Q/
+         cPxB1dXrQHsG3SpBUobYo3YQI4gzpoRtNBNN4d/yxLB2TBQkCEwLgIhvv1/TV7pPBGUt
+         LGPPTQ0THNJWELGlKPuj1LmXdEkl7TDU2guVIrVZ+tD+6VFFY/4oF8ARjIoY0+y+lS+d
+         O0iA==
+X-Gm-Message-State: AFqh2ko0ab2OAx7wUNAGZl6AJX/UydM3taZVCqsCZ6+ysCPnKebjEPq1
+	/B85kbdQ6AyeL3XohIL1T2PtO8J0VDio6X23kM+DWYq9+IjdPT7Nu14jDwNZJUnwOi6kLMPNxiD
+	xLxk9WzvndqkPAh4=
+X-Received: by 2002:a05:600c:2d85:b0:3d0:7d89:2256 with SMTP id i5-20020a05600c2d8500b003d07d892256mr4667369wmg.13.1671724652794;
+        Thu, 22 Dec 2022 07:57:32 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXtUaa+OoEvrKP/DEfFr3TMLGonyxPaxFxG2tCDsxoPdOOnNlChgeQsMs09L7q7KAxfnNgCAew==
+X-Received: by 2002:a05:600c:2d85:b0:3d0:7d89:2256 with SMTP id i5-20020a05600c2d8500b003d07d892256mr4667355wmg.13.1671724652501;
+        Thu, 22 Dec 2022 07:57:32 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-101-173.dyn.eolo.it. [146.241.101.173])
+        by smtp.gmail.com with ESMTPSA id bh12-20020a05600c3d0c00b003cfa81e2eb4sm1390826wmb.38.2022.12.22.07.57.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Dec 2022 07:57:31 -0800 (PST)
+Message-ID: <fd3ca85bbaceea0ef629c35a0a63129cb6090811.camel@redhat.com>
+Subject: Re: [PATCH v2 2/2] selinux: Implement mptcp_add_subflow hook
+From: Paolo Abeni <pabeni@redhat.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	mptcp@lists.linux.dev
+Date: Thu, 22 Dec 2022 16:57:30 +0100
+In-Reply-To: <CAHC9VhTZ-boJeMs3ir-6=rCxyfY3ROjZ4qeXyuoo5DRPBw6gew@mail.gmail.com>
+References: <cover.1671469167.git.pabeni@redhat.com>
+	 <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
+	 <CAHC9VhRYr9=qKUeF0EuY46koCnkeZ5d-=umV5TxbiUZ7qNXJ6w@mail.gmail.com>
+	 <944c4ab043713f75ad3bb512fc146e48de7b3e25.camel@redhat.com>
+	 <CAHC9VhTZ-boJeMs3ir-6=rCxyfY3ROjZ4qeXyuoo5DRPBw6gew@mail.gmail.com>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/2] mptcp: Locking fixes
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <167167501681.18442.13030546934783703967.git-patchwork-notify@kernel.org>
-Date: Thu, 22 Dec 2022 02:10:16 +0000
-References: <20221220195215.238353-1-mathew.j.martineau@linux.intel.com>
-In-Reply-To: <20221220195215.238353-1-mathew.j.martineau@linux.intel.com>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com, imagedong@tencent.com,
- mptcp@lists.linux.dev
 
-Hello:
-
-This series was applied to netdev/net.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 20 Dec 2022 11:52:13 -0800 you wrote:
-> Two separate locking fixes for the networking tree:
+On Wed, 2022-12-21 at 20:21 -0500, Paul Moore wrote:
+> On Wed, Dec 21, 2022 at 2:24 PM Paolo Abeni <pabeni@redhat.com> wrote:
+> > I just tested the other option and there is another problem :(
 > 
-> Patch 1 addresses a MPTCP fastopen error-path deadlock that was found
-> with syzkaller.
+> It's never easy, is it? ;)
 > 
-> Patch 2 works around a lockdep false-positive between MPTCP listening and
-> non-listening sockets at socket destruct time.
+> > The first subflow creations happens inside af_inet->create, via the sk-
+> > > sk_prot->init() hook. The security_socket_post_create() call on the
+> > owning MPTCP sockets happens after that point. So we copy data from a
+> > not yet initialized security context (and the test fail badly).
 > 
-> [...]
+> Hmmm.  Let's come back to this later on down this email.
+> 
+> > There are a few options to cope with that:
+> > - [ugly hack] call  security_socket_post_create() on the mptcp code
+> > before creating the subflow. I experimented this just to double the
+> > problem and a possible solution.
+> 
+> I'm guessing "[ugly hack]" is probably a bit of an understatement.
+> Let's see if we can do better before we explore this option too much
+> further.
 
-Here is the summary with links:
-  - [net,1/2] mptcp: fix deadlock in fastopen error path
-    https://git.kernel.org/netdev/net/c/7d803344fdc3
-  - [net,2/2] mptcp: fix lockdep false positive
-    https://git.kernel.org/netdev/net/c/fec3adfd754c
+Yup, I compiled the list in "brainstom-mode", trying to include
+whatever would be possible even if clearly not suitable. 
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+[...]
 
+> > WDYT?
+> 
+> Let's go back to the the inet_create() case for a little bit.  I'm
+> thinking we might be able to do something by leveraging the
+> sk_alloc()->sk_prot_alloc()->security_sk_alloc() code path.  As
+> inet_create() is going to be called from task context here, it seems
+> like we could do the sock's sid/sclass determination here, cached in
+> separate fields in the sk_security_struct if necessary, and use those
+> in a new MPTCP subflow hook.  We could also update
+> selinux_socket_post_create() to take advantage of this as well.  We
+> could also possibly pass the proto struct into security_sk_alloc() if
+> we needed to identify IPPROTO_MPTCP there as well.
+> 
+> I'll admit to not chasing down all the details, but I suspect this may
+> be the cleanest option - thoughts?
+
+Thanks, I did not consider such possibility!
+
+I think we should be careful to avoid increasing sk_security_struct
+size. Currently it is 16 bytes, nicely matching a kmalloc slab, any
+increase will move it on kmalloc-32 bytes slab possibly causing
+performance and memory regressions).
+
+More importantly, I think there is a problem with the 
+sk_clone_lock() -> sk_prot_alloc() -> security_sk_alloc()
+code path. 
+
+sk_clone_lock() happens in BH context, if security_transition_sid()
+needs process context that would be a problem - quickly skimming the
+code it does not look so, I need to double check.
+
+sk_clone_lock() is in a very critical path - socket creation for
+incoming connections. The sid-related operation there will be
+unnecessary/discarded by later the selinux_inet_csk_clone(), this will
+likelly cause performance regressions even for plain TCP sockets.
+
+Perhaps the cleanest option could be the one involving the mptcp
+refactoring, moving subflow creation at a later stage. It could have
+some minor side benefit for MPTCP, too - solving:
+
+https://github.com/multipath-tcp/mptcp_net-next/issues/290
+
+but I'm not fond of that option because it will require quite a bit of
+time: we need first to have the mptcp refactor in place and then cook
+the lsm patches. I guess such process will require at least 2 release
+cycles, due to the needed mptcp(netdev)/lsm trees synchronization.
+
+If that would prove to be the most reasonable option, could we consider
+to transiently merge first something alike:
+
+https://lore.kernel.org/mptcp/CAHC9VhSQnhH3UL4gqzu+YiA1Q3YyLLCv88gLJOvw-0+uw5Lvkw@mail.gmail.com/T/#m06c612f84f6b6fe759e670573b2c8092df71607b
+
+to have a workable short-term solution, and later revert it when the
+final solution would be in place?
+
+Thanks,
+
+Paolo
 
