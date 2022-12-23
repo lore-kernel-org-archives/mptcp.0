@@ -1,182 +1,216 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1D423A2
-	for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 17:11:53 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id y21so1513754pfo.7
-        for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 09:11:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vkee7RrYc2U/oJNyyVQMHhwa70/pKZltx8G4phukYAg=;
-        b=F9HK21FJgpueXWxYyaXW6otcPqsYmX70jjKroW/3L13tKaSBM0GAPYFvv5qMk8+ZQw
-         ExJ8zj0FumAcoviULNN59OHzYyrq0GUdLptYCrYLSrmvPXlR7Z9w4iLH9X3w9Yc6GBWy
-         76eHES/BxNdPb3HySB1nua+D1+QAELcc0UUpbZkaDJ+zJY6uH6iDOrvAFwQxO1jlibmp
-         lesxL2e0aDAM8wD2SgT7jdAVxnGZtWsp2OlYV2g3hcNZ6663m7xiY8VfQg/EJWMSPs2e
-         tfm/oGnyyhIQ9yzhbj64ZioK0TTxbkAB+gXtnGIyW2Yc4cn93FXDwE1IlFrPOiq8eRSL
-         8TiQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF710A48A
+	for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 18:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1671820171;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mxzk/o6zmeg/5Rgjm/IxSTMlD79/QWfIt1pylUEfQig=;
+	b=Tb66tfov3KI5XrfVsO6SaLA0vL108pzqw6t0g23CgaUDsH/MRcu0l1InDTE9bhNWuaDpWJ
+	3361eZVgMpBjp4WDhgb+tJR8SciPtcItAPKXDdO4hYdj8uEjXPt2EhrKUj/sAZ2st+gMmV
+	ixhBjNcjSdLmxcuHUn7C4PFOdh1YUZw=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-657-0Ryg6Uj3Mee57yEamEgUpg-1; Fri, 23 Dec 2022 13:29:30 -0500
+X-MC-Unique: 0Ryg6Uj3Mee57yEamEgUpg-1
+Received: by mail-qv1-f69.google.com with SMTP id lc30-20020a0562142c1e00b0052f5d835229so790789qvb.5
+        for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 10:29:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Vkee7RrYc2U/oJNyyVQMHhwa70/pKZltx8G4phukYAg=;
-        b=zx9Oq/vWplQbeMHz/z3JTqR1bo9uOC9SSmqgk/PRl2CDaWUNgHg/gE4IDo+xCTkjnB
-         LkL81dcwCIl8wOZHNg3bvPy7R/M1zZK7k4vNlIaAIj9fq/1Fm0dS5hV0YT3Wkg+KyOdp
-         kMbs7nHeyPH70gJCzl1Q3hRdfKFibh9QAKrko2iD2rXft096H6abLia4rVpK5SxQGWYE
-         jmiO8Ionh3n1OKFON4ibl9AO4/KAEIaIcxhFeaLQPQffPCdJHf2/hCojsQ8kC/07b8O8
-         GqPu3vJs7e1x4ZTpJ1zQl//iuA9cMBhv2i2siN7X0KLgM+c4B3fIBx/IRxrSj0Jm1Om1
-         GJZg==
-X-Gm-Message-State: AFqh2kp8beXvowgdMAV5CL6GFnre0OfwOwr2NEOWKiIahVPaIhL1bTvB
-	4pQpC+WAsorDsSvAxu75s6hPlRFk3jVaJGpEP19y
-X-Google-Smtp-Source: AMrXdXsToPAmuMaeE3tIMxt6zsFbwbjkvgpaVqdsYK/dGFrAIrqQ8guM+Z7tZmVPs+0YTPoUBU3SQu7dW/bTZ++mAkg=
-X-Received: by 2002:a63:4e5d:0:b0:478:42f:5a3d with SMTP id
- o29-20020a634e5d000000b00478042f5a3dmr597740pgl.3.1671815512483; Fri, 23 Dec
- 2022 09:11:52 -0800 (PST)
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Mxzk/o6zmeg/5Rgjm/IxSTMlD79/QWfIt1pylUEfQig=;
+        b=4h/wpA70juPPOo/2h1cQ+fwIhSWz8cqdHVEvBimirC159SZnHNSzGoGHI1rriwmCvb
+         YI02e/rrdzJSV5Gj7ntdcOhxnv+Di2J8LI1iDuat2EuY5i2yJBWVQhzyc6ZKi3DGJ2Tf
+         5ZkSkSgyG1IpYYIVDPKkE+1hJQw04h/pHTkVl3bMLtWwkrM8CFYAVhlF2p2k/LKE6sRm
+         mLNK8Zmt/CKWaBYqdA6RJ6QfBvStJymZFUL4cDLia8NbUCBegVoipQ8tQ26iMJik4No2
+         N0Zb8JtjDhRZbb+fLRaqz6+fDgiC2vtN8angdFGpqMUNo4l7y+5M6mm3BPYfBEvObX55
+         fwLQ==
+X-Gm-Message-State: AFqh2koNJt7CEmfOvoluPZdsFsKQ2T/aSBtd2qCQBBkN31FfCNcoTu0I
+	yiBP9G1vL1wsBH+OnHAbehpeXODGGVfSx3BgmKfOOFUAo0+SgkMaRygGUs2Vt78NG474G9ezM0K
+	dFUHOK/oiIWRocDE=
+X-Received: by 2002:a05:622a:1b1e:b0:3a7:ef7b:6aac with SMTP id bb30-20020a05622a1b1e00b003a7ef7b6aacmr12256085qtb.11.1671820169339;
+        Fri, 23 Dec 2022 10:29:29 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXvEurzG8VXvn0y7vqiKFLqGd5JU0fZzwRhk+J/w2l22qkfAr5ZB0nCIt+6VaBVSzO2RxBPo3Q==
+X-Received: by 2002:a05:622a:1b1e:b0:3a7:ef7b:6aac with SMTP id bb30-20020a05622a1b1e00b003a7ef7b6aacmr12256057qtb.11.1671820168903;
+        Fri, 23 Dec 2022 10:29:28 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-101-173.dyn.eolo.it. [146.241.101.173])
+        by smtp.gmail.com with ESMTPSA id cm27-20020a05622a251b00b0035d432f5ba3sm2293013qtb.17.2022.12.23.10.29.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Dec 2022 10:29:28 -0800 (PST)
+Message-ID: <69b575721cd0164895fd634f93d2900485698999.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: add test-cases for
+ mixed v4/v6 subflows
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+Date: Fri, 23 Dec 2022 19:29:25 +0100
+In-Reply-To: <45315757-d5fc-8d90-39e1-d7fd8a7682a4@tessares.net>
+References: <cover.1671799401.git.pabeni@redhat.com>
+	 <c2b08053101c90d85634c95840e3a8a637fa8346.1671799401.git.pabeni@redhat.com>
+	 <45315757-d5fc-8d90-39e1-d7fd8a7682a4@tessares.net>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1671469167.git.pabeni@redhat.com> <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
- <CAHC9VhRYr9=qKUeF0EuY46koCnkeZ5d-=umV5TxbiUZ7qNXJ6w@mail.gmail.com>
- <944c4ab043713f75ad3bb512fc146e48de7b3e25.camel@redhat.com>
- <CAHC9VhTZ-boJeMs3ir-6=rCxyfY3ROjZ4qeXyuoo5DRPBw6gew@mail.gmail.com> <fd3ca85bbaceea0ef629c35a0a63129cb6090811.camel@redhat.com>
-In-Reply-To: <fd3ca85bbaceea0ef629c35a0a63129cb6090811.camel@redhat.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Fri, 23 Dec 2022 12:11:41 -0500
-Message-ID: <CAHC9VhSBYMyjciZbX38OY_5NU-d6fszPj3xX4F3FhQYLCAWe2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] selinux: Implement mptcp_add_subflow hook
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
-	mptcp@lists.linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Dec 22, 2022 at 10:57 AM Paolo Abeni <pabeni@redhat.com> wrote:
->
-> On Wed, 2022-12-21 at 20:21 -0500, Paul Moore wrote:
-> > On Wed, Dec 21, 2022 at 2:24 PM Paolo Abeni <pabeni@redhat.com> wrote:
-> > > I just tested the other option and there is another problem :(
-> >
-> > It's never easy, is it? ;)
-> >
-> > > The first subflow creations happens inside af_inet->create, via the sk-
-> > > > sk_prot->init() hook. The security_socket_post_create() call on the
-> > > owning MPTCP sockets happens after that point. So we copy data from a
-> > > not yet initialized security context (and the test fail badly).
-> >
-> > Hmmm.  Let's come back to this later on down this email.
-> >
-> > > There are a few options to cope with that:
-> > > - [ugly hack] call  security_socket_post_create() on the mptcp code
-> > > before creating the subflow. I experimented this just to double the
-> > > problem and a possible solution.
-> >
-> > I'm guessing "[ugly hack]" is probably a bit of an understatement.
-> > Let's see if we can do better before we explore this option too much
-> > further.
->
-> Yup, I compiled the list in "brainstom-mode", trying to include
-> whatever would be possible even if clearly not suitable.
->
-> [...]
->
-> > > WDYT?
-> >
-> > Let's go back to the the inet_create() case for a little bit.  I'm
-> > thinking we might be able to do something by leveraging the
-> > sk_alloc()->sk_prot_alloc()->security_sk_alloc() code path.  As
-> > inet_create() is going to be called from task context here, it seems
-> > like we could do the sock's sid/sclass determination here, cached in
-> > separate fields in the sk_security_struct if necessary, and use those
-> > in a new MPTCP subflow hook.  We could also update
-> > selinux_socket_post_create() to take advantage of this as well.  We
-> > could also possibly pass the proto struct into security_sk_alloc() if
-> > we needed to identify IPPROTO_MPTCP there as well.
-> >
-> > I'll admit to not chasing down all the details, but I suspect this may
-> > be the cleanest option - thoughts?
->
-> Thanks, I did not consider such possibility!
->
-> I think we should be careful to avoid increasing sk_security_struct
-> size. Currently it is 16 bytes, nicely matching a kmalloc slab, any
-> increase will move it on kmalloc-32 bytes slab possibly causing
-> performance and memory regressions).
+On Fri, 2022-12-23 at 15:35 +0100, Matthieu Baerts wrote:
+> Hi Paolo,
+> 
+> On 23/12/2022 13:51, Paolo Abeni wrote:
+> > Note that we can't guess anymore the listener family based on the
+> > client target address; use always IPv6.
+> > 
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> >  .../testing/selftests/net/mptcp/mptcp_join.sh | 51 +++++++++++++++----
+> >  1 file changed, 42 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > index d11d3d566608..6ef4787ad244 100755
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > @@ -774,24 +774,17 @@ do_transfer()
+> >  		addr_nr_ns2=${addr_nr_ns2:9}
+> >  	fi
+> >  
+> > -	local local_addr
+> > -	if is_v6 "${connect_addr}"; then
+> > -		local_addr="::"
+> > -	else
+> > -		local_addr="0.0.0.0"
+> > -	fi
+> > -
+> >  	extra_srv_args="$extra_args $extra_srv_args"
+> >  	if [ "$test_link_fail" -gt 1 ];then
+> >  		timeout ${timeout_test} \
+> >  			ip netns exec ${listener_ns} \
+> >  				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+> > -					$extra_srv_args ${local_addr} < "$sinfail" > "$sout" &
+> > +					$extra_srv_args "::" < "$sinfail" > "$sout" &
+> >  	else
+> >  		timeout ${timeout_test} \
+> >  			ip netns exec ${listener_ns} \
+> >  				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+> > -					$extra_srv_args ${local_addr} < "$sin" > "$sout" &
+> > +					$extra_srv_args "::" < "$sin" > "$sout" &
+> >  	fi
+> >  	local spid=$!
+> >  
+> > @@ -2448,6 +2441,45 @@ v4mapped_tests()
+> >  	fi
+> >  }
+> >  
+> > +mixed_tests()
+> > +{
+> > +	# subflow IPv4-mapped to IPv4-mapped
+> 
+> (small detail: the comment is not adapted. I can remove it when applying
+> the patch if no other modifications are needed. Same just below, the
+> next test)
+> 
+> > +	if reset "simult IPv4 and IPv6 subflows, first is IPv4"; then
+> > +		pm_nl_set_limits $ns1 0 1
+> > +		pm_nl_set_limits $ns2 1 1
+> > +		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
+> > +		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+> 
+> (linked to my question from patch 1/3)
+> 
+> If I'm not mistaken, by default, mptcp_connect will create an MPTCP
+> socket with AF_INET family if the initial destination is an IPv4
+> address, no?
+> Here should we not try to connect to ::ffff:10.0.1.1 instead (or pass -6
+> option? Maybe not enough)?
+> 
+> Also, I guess we should have an extra test to make sure a v4 only
+> sockets is not allowing extra subflows in v6, no?
+> 
+> > +		chk_join_nr 1 1 1
+> > +	fi
+> > +
+> > +	# subflow IPv4-mapped to IPv4-mapped
+> > +	if reset "simult IPv4 and IPv6 subflows, first is IPv6"; then
+> > +		pm_nl_set_limits $ns1 0 1
+> > +		pm_nl_set_limits $ns2 1 1
+> > +		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
+> > +		run_tests $ns1 $ns2 dead:beef:2::1 0 0 0 slow
+> 
+> Linked to the previous question: that makes me think we properly don't
+> propagate the IPV6_V6ONLY socket option (sk_ipv6only) to new subflows
+> (just before the connect). Now that we can connect to v4 addresses, it
+> might be an issue. Easy to fix with this I guess:
+> 
+> --------------------- 8< ---------------------
+> > diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> > index 582ed93bcc8a..9986681aaf40 100644
+> > --- a/net/mptcp/sockopt.c
+> > +++ b/net/mptcp/sockopt.c
+> > @@ -1255,6 +1255,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+> >         ssk->sk_priority = sk->sk_priority;
+> >         ssk->sk_bound_dev_if = sk->sk_bound_dev_if;
+> >         ssk->sk_incoming_cpu = sk->sk_incoming_cpu;
+> > +       ssk->sk_ipv6only = sk->sk_ipv6only;
+> >         __ip_sock_set_tos(ssk, inet_sk(sk)->tos);
+> >  
+> >         if (sk->sk_userlocks & tx_rx_locks) {
+> --------------------- 8< ---------------------
+> 
+> (+ a test checking that for v6 only socket as well I suppose)
 
-FWIW, it is likely that this will end up growing in the future to
-support stacking LSMs.  It's unfortunate, messy, and generally ugly,
-but inevitable.
+This is an unrelated patch. Additionally, I think sk_ipv6only on
+subflow other then the first one is not needed, as we already match
+carefully the sk family and address family (we create ipv6 subflow for
+ipv6 addr)
 
-See the selinux_inode() function as a similar example using
-inode/inode_security_struct.
+> > +		chk_join_nr 1 1 1
+> > +	fi
+> > +
+> > +	if reset "simult IPv4 and IPv6 subflows, fullmesh 1x1"; then
+> > +		pm_nl_set_limits $ns1 0 4
+> > +		pm_nl_set_limits $ns2 1 4
+> 
+> Does the limit here mean 1 subflow or 1 extra subflow? (it might answer
+> my question below)
+> 
+> > +		pm_nl_add_endpoint $ns2 dead:beef:2::2 flags subflow,fullmesh
+> > +		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
+> > +		run_tests $ns1 $ns2 dead:beef:2::1 0 0 0 slow
+> > +		chk_join_nr 1 1 1
+> 
+> Why do you not have an extra subflow in IPv6 between the second IPv6 of
+> ns2 (subflow,fullmesh) and the main IPV6 of the server on ns1?
 
-> More importantly, I think there is a problem with the
-> sk_clone_lock() -> sk_prot_alloc() -> security_sk_alloc()
-> code path.
->
-> sk_clone_lock() happens in BH context, if security_transition_sid()
-> needs process context that would be a problem - quickly skimming the
-> code it does not look so, I need to double check.
+becayse there is no second ipv6 address in ns2:  dead:beef:2::2 is used
+as source by the first subflow (to connect towards dead:beef:2::1).
 
-The problem is that in both selinux_socket_create() and
-selinux_socket_post_create() the credentials from @current are needed
-to determine the sock/sk_security_stuct label.  In
-selinux_socket_create() @current's credentials are also used to
-determine if the socket can be created.
+> > +	fi
+> > +
+> > +	if reset "simult IPv4 and IPv6 subflows, fullmesh 2x2"; then
+> > +		pm_nl_set_limits $ns1 0 4
+> > +		pm_nl_set_limits $ns2 2 4
+> > +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+> > +		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
+> > +		run_tests $ns1 $ns2 dead:beef:1::1 0 0 fullmesh_1 slow
+> > +		chk_join_nr 4 4 4
+> 
+> Why do you have so many subflows here? The client has one IPv6 and the
+> server 2, no?
 
-It's looking like doing labeling determinations in the
-security_sk_alloc() struct is not going to work.  While
-sk_clone_lock() will end up calling into
-security_sk_clone()/selinux_sk_clone_security() via sock_copy(), if I
-understand you correctly that won't help as the main MPTCP socket is
-not yet setup (e.g. selinux_socket_post_create() has not yet been run
-on the main socket).
+Here the client has 2 IPv6 addresses: dead:beef:1::2 and the one added
+by the 'fullmesh_1' argument (dead:beef:3::2, IIRC).
 
-> Perhaps the cleanest option could be the one involving the mptcp
-> refactoring, moving subflow creation at a later stage. It could have
-> some minor side benefit for MPTCP, too - solving:
->
-> https://github.com/multipath-tcp/mptcp_net-next/issues/290
->
-> but I'm not fond of that option because it will require quite a bit of
-> time: we need first to have the mptcp refactor in place and then cook
-> the lsm patches. I guess such process will require at least 2 release
-> cycles, due to the needed mptcp(netdev)/lsm trees synchronization.
+/P
 
-I generally take the long term view when it comes to Linux Kernel
-development; given the nature of the kernel, and all the constraints
-that come with it, I would much rather pursue solutions that we
-believe have the longest staying power.
-
-I'm also happy to work on, and/or review, LSM patches in conjunction
-with a MPTCP refactor.  If the only reason to split the work over two
-kernel releases is to soften the blow during the merge window, I think
-we can work that out in a single release ... at least I say that now
-:)
-
-Basically when it comes down to it, I want to make sure that any fix
-we come up with *works*.  In my mind that means doing the LSM fix in
-conjunction with the rework; I would hate to see all of the rework
-happen only to find out later that it still didn't solve the LSM
-problem.
-
-Does that make sense?
-
-> If that would prove to be the most reasonable option, could we consider
-> to transiently merge first something alike:
->
-> https://lore.kernel.org/mptcp/CAHC9VhSQnhH3UL4gqzu+YiA1Q3YyLLCv88gLJOvw-0+uw5Lvkw@mail.gmail.com/T/#m06c612f84f6b6fe759e670573b2c8092df71607b
->
-> to have a workable short-term solution, and later revert it when the
-> final solution would be in place?
-
-I would need to go back through that to make sure that it makes sense,
-and ensure that the hook is idempotent for SELinux, AppArmor, and
-Smack (current hook implementations), *aaaand* if we promise that this
-is just a *temporary* hack I think I would be okay with that.
-
--- 
-paul-moore.com
