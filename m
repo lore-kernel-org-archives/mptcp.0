@@ -1,122 +1,182 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAB18F63
-	for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 16:08:57 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id fc4so12907393ejc.12
-        for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 08:08:57 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1D423A2
+	for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 17:11:53 +0000 (UTC)
+Received: by mail-pf1-f175.google.com with SMTP id y21so1513754pfo.7
+        for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 09:11:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BM+eL4nFcpEjh+xA2GtIaxfo0YqAfq74LGc+8R3mjx8=;
-        b=tL05qQzjS4yIGzJeAlIPLk82d8G4cqhTWRntes09NrBCC/EhsYoUPTceZ4f75IM9K3
-         pf+tlP17a2pcxn5tgmAhmeBW7r2yTRizTEXiOLslAfUqir5Fb64E8a5bJ9l2Mqbs76RZ
-         2zXfikQ3UVMhaSWvS/zRwMoQ5L48NoJTnOkX98W1FpZVHKrXIHSlgdSqStWmI6O2pDeG
-         n5RDukxBKdlzooi1utlnKo++vu7QBJSNU7scZZSyPYTjTWWHlww4nuvv3qXCz3uzg+WK
-         HfHsoOpHc7ZJ3Oas5DxzTo1BrRZwAPjjSJDTcXEhjdxTXktrJMTTPiL70IKbrC4ugoRr
-         hy0Q==
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vkee7RrYc2U/oJNyyVQMHhwa70/pKZltx8G4phukYAg=;
+        b=F9HK21FJgpueXWxYyaXW6otcPqsYmX70jjKroW/3L13tKaSBM0GAPYFvv5qMk8+ZQw
+         ExJ8zj0FumAcoviULNN59OHzYyrq0GUdLptYCrYLSrmvPXlR7Z9w4iLH9X3w9Yc6GBWy
+         76eHES/BxNdPb3HySB1nua+D1+QAELcc0UUpbZkaDJ+zJY6uH6iDOrvAFwQxO1jlibmp
+         lesxL2e0aDAM8wD2SgT7jdAVxnGZtWsp2OlYV2g3hcNZ6663m7xiY8VfQg/EJWMSPs2e
+         tfm/oGnyyhIQ9yzhbj64ZioK0TTxbkAB+gXtnGIyW2Yc4cn93FXDwE1IlFrPOiq8eRSL
+         8TiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BM+eL4nFcpEjh+xA2GtIaxfo0YqAfq74LGc+8R3mjx8=;
-        b=HZUy8XVgyqE0lKhCuoSBOKKGLtDMnAcYTNGzSy6ByKW62jq6VCOsXHwuJYQgZ33VjV
-         Au22CQyRyJqYVteWN7bVC/MsleY8pz0frBQADG2zkmEQa9ZrzrTdP45IsbEVHXVtHx67
-         v7pSPlwdbjdSxHjdU14ncH5OXsN+9oJXq6W8MJke4TIPyl5+xRtGzeA6KFEE7gvNu+hI
-         IiQY7FaFOD8dIWBPxKJdsfO4zVaYlIDFfoNSbURLX5TIzrxXgDl+Qj1jmDwifrAyxCBz
-         Ym4/qMUXH6qVpjzXsLHmnqvMouaucFcyRPUcjPGDNgU+8C1ii0Gi69GMDSQLKJSfghUm
-         e6aA==
-X-Gm-Message-State: AFqh2krLoEv0WTtH/IfGWvXHR4WIhihqTUq4hp1BFdEd2A2GFo/4JZVh
-	nmfasm3LJJtKmhJ+9xNdm19ycSGSPtx0HvVeKbdopg==
-X-Google-Smtp-Source: AMrXdXszDvfv9Zl4dlwyhYycUeyqqDljGuREJYHBXrY7MOvy9M39Pn7ZG2XXYW+wuWy0MXmrmxHugQ==
-X-Received: by 2002:a17:906:6dcb:b0:7e7:4dd7:bbcc with SMTP id j11-20020a1709066dcb00b007e74dd7bbccmr8524406ejt.73.1671811736120;
-        Fri, 23 Dec 2022 08:08:56 -0800 (PST)
-Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id lb2-20020a170907784200b0084aade9d6b5sm314447ejc.17.2022.12.23.08.08.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Dec 2022 08:08:55 -0800 (PST)
-Message-ID: <2deb7590-9c5e-0e7e-37ec-e447391f74bf@tessares.net>
-Date: Fri, 23 Dec 2022 17:08:55 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Vkee7RrYc2U/oJNyyVQMHhwa70/pKZltx8G4phukYAg=;
+        b=zx9Oq/vWplQbeMHz/z3JTqR1bo9uOC9SSmqgk/PRl2CDaWUNgHg/gE4IDo+xCTkjnB
+         LkL81dcwCIl8wOZHNg3bvPy7R/M1zZK7k4vNlIaAIj9fq/1Fm0dS5hV0YT3Wkg+KyOdp
+         kMbs7nHeyPH70gJCzl1Q3hRdfKFibh9QAKrko2iD2rXft096H6abLia4rVpK5SxQGWYE
+         jmiO8Ionh3n1OKFON4ibl9AO4/KAEIaIcxhFeaLQPQffPCdJHf2/hCojsQ8kC/07b8O8
+         GqPu3vJs7e1x4ZTpJ1zQl//iuA9cMBhv2i2siN7X0KLgM+c4B3fIBx/IRxrSj0Jm1Om1
+         GJZg==
+X-Gm-Message-State: AFqh2kp8beXvowgdMAV5CL6GFnre0OfwOwr2NEOWKiIahVPaIhL1bTvB
+	4pQpC+WAsorDsSvAxu75s6hPlRFk3jVaJGpEP19y
+X-Google-Smtp-Source: AMrXdXsToPAmuMaeE3tIMxt6zsFbwbjkvgpaVqdsYK/dGFrAIrqQ8guM+Z7tZmVPs+0YTPoUBU3SQu7dW/bTZ++mAkg=
+X-Received: by 2002:a63:4e5d:0:b0:478:42f:5a3d with SMTP id
+ o29-20020a634e5d000000b00478042f5a3dmr597740pgl.3.1671815512483; Fri, 23 Dec
+ 2022 09:11:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH mptcp-next 1/3] mptcp: explicitly specify sock family at
- subflow creation time
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1671799401.git.pabeni@redhat.com>
- <7d3aae6493caa1563d1aaadc79d299c01077f28a.1671799401.git.pabeni@redhat.com>
- <93c4e8a6-4797-9c10-5ae5-7499d6e2bed4@tessares.net>
- <a9cddc311804ebc183c0b1568c296b23932d7dd4.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <a9cddc311804ebc183c0b1568c296b23932d7dd4.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1671469167.git.pabeni@redhat.com> <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
+ <CAHC9VhRYr9=qKUeF0EuY46koCnkeZ5d-=umV5TxbiUZ7qNXJ6w@mail.gmail.com>
+ <944c4ab043713f75ad3bb512fc146e48de7b3e25.camel@redhat.com>
+ <CAHC9VhTZ-boJeMs3ir-6=rCxyfY3ROjZ4qeXyuoo5DRPBw6gew@mail.gmail.com> <fd3ca85bbaceea0ef629c35a0a63129cb6090811.camel@redhat.com>
+In-Reply-To: <fd3ca85bbaceea0ef629c35a0a63129cb6090811.camel@redhat.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 23 Dec 2022 12:11:41 -0500
+Message-ID: <CAHC9VhSBYMyjciZbX38OY_5NU-d6fszPj3xX4F3FhQYLCAWe2Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] selinux: Implement mptcp_add_subflow hook
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 23/12/2022 17:01, Paolo Abeni wrote:
-> On Fri, 2022-12-23 at 15:35 +0100, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 23/12/2022 13:51, Paolo Abeni wrote:
->>> Let the caller specify the to-be-created subflow family. No
->>> functional change intended, will be leveraged by the next
->>> patch.
->>
->> (...)
->>
->>> @@ -1673,8 +1675,7 @@ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
->>>  	if (unlikely(!sk->sk_socket))
->>>  		return -EINVAL;
->>>  
->>> -	err = sock_create_kern(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
->>> -			       &sf);
->>> +	err = sock_create_kern(net, family, SOCK_STREAM, IPPROTO_TCP, &sf);
->>
->> Mmh, I don't know if we can do that: it means we no longer inherit the
->> 'sk_family'. With the modification, it means if the initial socket is
->> created in v4 only (AF_INET), we will still be able to create subflows
->> in IPv6, right?
-> 
-> Yes. That was my understanding of issues/269 goal.
+On Thu, Dec 22, 2022 at 10:57 AM Paolo Abeni <pabeni@redhat.com> wrote:
+>
+> On Wed, 2022-12-21 at 20:21 -0500, Paul Moore wrote:
+> > On Wed, Dec 21, 2022 at 2:24 PM Paolo Abeni <pabeni@redhat.com> wrote:
+> > > I just tested the other option and there is another problem :(
+> >
+> > It's never easy, is it? ;)
+> >
+> > > The first subflow creations happens inside af_inet->create, via the sk-
+> > > > sk_prot->init() hook. The security_socket_post_create() call on the
+> > > owning MPTCP sockets happens after that point. So we copy data from a
+> > > not yet initialized security context (and the test fail badly).
+> >
+> > Hmmm.  Let's come back to this later on down this email.
+> >
+> > > There are a few options to cope with that:
+> > > - [ugly hack] call  security_socket_post_create() on the mptcp code
+> > > before creating the subflow. I experimented this just to double the
+> > > problem and a possible solution.
+> >
+> > I'm guessing "[ugly hack]" is probably a bit of an understatement.
+> > Let's see if we can do better before we explore this option too much
+> > further.
+>
+> Yup, I compiled the list in "brainstom-mode", trying to include
+> whatever would be possible even if clearly not suitable.
+>
+> [...]
+>
+> > > WDYT?
+> >
+> > Let's go back to the the inet_create() case for a little bit.  I'm
+> > thinking we might be able to do something by leveraging the
+> > sk_alloc()->sk_prot_alloc()->security_sk_alloc() code path.  As
+> > inet_create() is going to be called from task context here, it seems
+> > like we could do the sock's sid/sclass determination here, cached in
+> > separate fields in the sk_security_struct if necessary, and use those
+> > in a new MPTCP subflow hook.  We could also update
+> > selinux_socket_post_create() to take advantage of this as well.  We
+> > could also possibly pass the proto struct into security_sk_alloc() if
+> > we needed to identify IPPROTO_MPTCP there as well.
+> >
+> > I'll admit to not chasing down all the details, but I suspect this may
+> > be the cleanest option - thoughts?
+>
+> Thanks, I did not consider such possibility!
+>
+> I think we should be careful to avoid increasing sk_security_struct
+> size. Currently it is 16 bytes, nicely matching a kmalloc slab, any
+> increase will move it on kmalloc-32 bytes slab possibly causing
+> performance and memory regressions).
 
-I didn't think about that when creating issue 269.
+FWIW, it is likely that this will end up growing in the future to
+support stacking LSMs.  It's unfortunate, messy, and generally ugly,
+but inevitable.
 
->> Somehow, I like the idea because with today's Internet, it is normal for
->> a client to have both IPv4 and IPv6 addresses. Then we avoid people
->> creating AF_INET sockets and complaining they cannot have additional
->> IPv6 subflows.
->>
->> But on the other hand, there is no more way to force having v4 only
->> subflows, no?
->> And I guess listening sockets will have to be created with AF_INET6 to
->> accept additional v6 subflows.
->>
->> WDYT?
-> 
-> I'm not sure I understand. Do you mean that we should allow mixed
-> ipv4/ipv6 subflows only if mptcp family is ipv6? that is doable, I
-> think, just slightly different from what is implemented here.
+See the selinux_inode() function as a similar example using
+inode/inode_security_struct.
 
-Maybe we don't need to change, we just need to decide which behaviour we
-want.
+> More importantly, I think there is a problem with the
+> sk_clone_lock() -> sk_prot_alloc() -> security_sk_alloc()
+> code path.
+>
+> sk_clone_lock() happens in BH context, if security_transition_sid()
+> needs process context that would be a problem - quickly skimming the
+> code it does not look so, I need to double check.
 
-Is it OK to have a mix of v4 and v6 subflows if the socket has been
-created with AF_INET family? In this case, the family is just for the
-initial subflow and not the next ones.
+The problem is that in both selinux_socket_create() and
+selinux_socket_post_create() the credentials from @current are needed
+to determine the sock/sk_security_stuct label.  In
+selinux_socket_create() @current's credentials are also used to
+determine if the socket can be created.
 
-That's maybe fine but it might be strange that for the server side,
-AF_INET6 is required to accept both IPv4 and IPv6 subflows.
+It's looking like doing labeling determinations in the
+security_sk_alloc() struct is not going to work.  While
+sk_clone_lock() will end up calling into
+security_sk_clone()/selinux_sk_clone_security() via sock_copy(), if I
+understand you correctly that won't help as the main MPTCP socket is
+not yet setup (e.g. selinux_socket_post_create() has not yet been run
+on the main socket).
 
-Cheers,
-Matt
+> Perhaps the cleanest option could be the one involving the mptcp
+> refactoring, moving subflow creation at a later stage. It could have
+> some minor side benefit for MPTCP, too - solving:
+>
+> https://github.com/multipath-tcp/mptcp_net-next/issues/290
+>
+> but I'm not fond of that option because it will require quite a bit of
+> time: we need first to have the mptcp refactor in place and then cook
+> the lsm patches. I guess such process will require at least 2 release
+> cycles, due to the needed mptcp(netdev)/lsm trees synchronization.
+
+I generally take the long term view when it comes to Linux Kernel
+development; given the nature of the kernel, and all the constraints
+that come with it, I would much rather pursue solutions that we
+believe have the longest staying power.
+
+I'm also happy to work on, and/or review, LSM patches in conjunction
+with a MPTCP refactor.  If the only reason to split the work over two
+kernel releases is to soften the blow during the merge window, I think
+we can work that out in a single release ... at least I say that now
+:)
+
+Basically when it comes down to it, I want to make sure that any fix
+we come up with *works*.  In my mind that means doing the LSM fix in
+conjunction with the rework; I would hate to see all of the rework
+happen only to find out later that it still didn't solve the LSM
+problem.
+
+Does that make sense?
+
+> If that would prove to be the most reasonable option, could we consider
+> to transiently merge first something alike:
+>
+> https://lore.kernel.org/mptcp/CAHC9VhSQnhH3UL4gqzu+YiA1Q3YyLLCv88gLJOvw-0+uw5Lvkw@mail.gmail.com/T/#m06c612f84f6b6fe759e670573b2c8092df71607b
+>
+> to have a workable short-term solution, and later revert it when the
+> final solution would be in place?
+
+I would need to go back through that to make sure that it makes sense,
+and ensure that the hook is idempotent for SELinux, AppArmor, and
+Smack (current hook implementations), *aaaand* if we promise that this
+is just a *temporary* hack I think I would be okay with that.
+
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+paul-moore.com
