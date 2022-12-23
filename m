@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED297A498
-	for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 19:00:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413ACA499
+	for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 19:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1671822025;
+	s=mimecast20190719; t=1671822027;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ghBJVfFZFDXwXCBFFoN6ZIlCCxpPV7mON6nb9Zh0YPM=;
-	b=fyjWjuDu2gPHKbpUQR/CxFNaFUqHnNK0/9ue2V+B2qmfbexM6iML1b1Mgb5HKlg0QZMdzS
-	A6XPAkfKBqWs2FC60wzCGuZHdnqcnxBWNITzZJ6xxoPX9kdsrbFq+AQWBGBRKJFeZdHEiM
-	3iBmBdcR/c22Nqggkxv/ZXbCExkkWj4=
+	bh=q002Cx6H7J6GsTMmS8yYrnNQymIZc5XPTwuQcylTC5U=;
+	b=bl9a294ZdwNgPCcS7Ddsccbo9KBBpDS0OuiT66lftO4uiQli8Oq0moGlvNnRI/v23On5B+
+	VVtD/wZ2v+x/ynPRuflT2GTInW5BiAtudCl/tHOPwI1w5eNH+2OB8goFwu8KiBSdpYxjvZ
+	tAZLvJ2Q+qTdyohInsMVJtPNk/2CWPE=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-45-mIluhuabP8a6S15PtNlqoA-1; Fri, 23 Dec 2022 14:00:24 -0500
-X-MC-Unique: mIluhuabP8a6S15PtNlqoA-1
+ us-mta-158-o522248eM9SQcIPr9CMEGA-1; Fri, 23 Dec 2022 14:00:25 -0500
+X-MC-Unique: o522248eM9SQcIPr9CMEGA-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 21FB23832783
-	for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 19:00:24 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 25FB83C0DDCD
+	for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 19:00:25 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.156])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 888F740C945A
-	for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 19:00:23 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7E36A40C945A
+	for <mptcp@lists.linux.dev>; Fri, 23 Dec 2022 19:00:24 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 2/3] mptcp: let the in kernel PM use mixed ipv4 and ipv6 addresses
-Date: Fri, 23 Dec 2022 20:00:13 +0100
-Message-Id: <61ebbe1bdb47f74d856b3edee06112999da50f07.1671821017.git.pabeni@redhat.com>
+Subject: [PATCH v2 mptcp-next 3/3] selftests: mptcp: add test-cases for mixed v4/v6 subflows
+Date: Fri, 23 Dec 2022 20:00:14 +0100
+Message-Id: <ea9b21f5551490cc9fa9d0098b4943b91febb971.1671821017.git.pabeni@redhat.com>
 In-Reply-To: <cover.1671821017.git.pabeni@redhat.com>
 References: <cover.1671821017.git.pabeni@redhat.com>
 Precedence: bulk
@@ -45,171 +45,101 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Currently the in kernel PM arbitrary enforces that created subflow's
-family must match the main MPTCP socket. The RFC allow instead for
-mixing IPv4 and IPv6 subflows.
+Note that we can't guess anymore the listener family based on the
+client target address; use always IPv6.
 
-This patch changes the in kernel PM logic to create subflows matching
-the currently selected source (or destination) address. IPv4 sockets
-can pick only IPv4 addresses, while IPv6 sockets not restricted to
-V6ONLY can pick either IPv4 and IPv6 addresses, effectively
-allowing the creation of IPv4 and IPv6 subflows under the same msk.
-
-While at that, factor out a new helper for address family matching,
-taking care of ipv4 vs ipv4-mapped-ipv6.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/269
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/pm_netlink.c | 68 ++++++++++++++++++++++++++----------------
- 1 file changed, 42 insertions(+), 26 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 53 +++++++++++++++----
+ 1 file changed, 44 insertions(+), 9 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index f2a43e13bacd..23c4e74312f7 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -152,7 +152,6 @@ static struct mptcp_pm_addr_entry *
- select_local_address(const struct pm_nl_pernet *pernet,
- 		     const struct mptcp_sock *msk)
- {
--	const struct sock *sk = (const struct sock *)msk;
- 	struct mptcp_pm_addr_entry *entry, *ret = NULL;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index d11d3d566608..387abdcec011 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -774,24 +774,17 @@ do_transfer()
+ 		addr_nr_ns2=${addr_nr_ns2:9}
+ 	fi
  
- 	msk_owned_by_me(msk);
-@@ -165,16 +164,6 @@ select_local_address(const struct pm_nl_pernet *pernet,
- 		if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
- 			continue;
- 
--		if (entry->addr.family != sk->sk_family) {
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--			if ((entry->addr.family == AF_INET &&
--			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
--			    (sk->sk_family == AF_INET &&
--			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
--#endif
--				continue;
--		}
+-	local local_addr
+-	if is_v6 "${connect_addr}"; then
+-		local_addr="::"
+-	else
+-		local_addr="0.0.0.0"
+-	fi
 -
- 		ret = entry;
- 		break;
- 	}
-@@ -420,10 +409,34 @@ static bool lookup_address_in_vec(const struct mptcp_addr_info *addrs, unsigned
- 	return false;
+ 	extra_srv_args="$extra_args $extra_srv_args"
+ 	if [ "$test_link_fail" -gt 1 ];then
+ 		timeout ${timeout_test} \
+ 			ip netns exec ${listener_ns} \
+ 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+-					$extra_srv_args ${local_addr} < "$sinfail" > "$sout" &
++					$extra_srv_args "::" < "$sinfail" > "$sout" &
+ 	else
+ 		timeout ${timeout_test} \
+ 			ip netns exec ${listener_ns} \
+ 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
+-					$extra_srv_args ${local_addr} < "$sin" > "$sout" &
++					$extra_srv_args "::" < "$sin" > "$sout" &
+ 	fi
+ 	local spid=$!
+ 
+@@ -2448,6 +2441,47 @@ v4mapped_tests()
+ 	fi
  }
  
-+/* if sk is ipv4 or ipv6_only allows only same-family local and remote addresses,
-+ * otherwise allow any matching local/remote pair
-+ */
-+static bool addr_families_match(const struct sock *sk,
-+				const struct mptcp_addr_info *loc,
-+				const struct mptcp_addr_info *remote)
++mixed_tests()
 +{
-+	if (sk->sk_family == loc->family && sk->sk_family == remote->family)
-+		return true;
++	if reset "IPv4 sockets do not use IPv6 addresses"; then
++		pm_nl_set_limits $ns1 0 1
++		pm_nl_set_limits $ns2 1 1
++		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
++		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
++		chk_join_nr 0 0 0
++	fi
 +
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	if (sk->sk_family == AF_INET || sk->sk_ipv6only)
-+		return false;
++	# Need an IPv6 mptcp socket to allow subflows of both families
++	if reset "simult IPv4 and IPv6 subflows"; then
++		pm_nl_set_limits $ns1 0 1
++		pm_nl_set_limits $ns2 1 1
++		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
++		run_tests $ns1 $ns2 dead:beef:2::1 0 0 0 slow
++		chk_join_nr 1 1 1
++	fi
 +
-+	if (loc->family == remote->family ||
-+	    (loc->family == AF_INET && ipv6_addr_v4mapped(&remote->addr6)) ||
-+	    (remote->family == AF_INET && ipv6_addr_v4mapped(&loc->addr6)))
-+		return true;
-+#endif
-+	return false;
++	# cross families subflows will not be created even in fullmesh mode
++	if reset "simult IPv4 and IPv6 subflows, fullmesh 1x1"; then
++		pm_nl_set_limits $ns1 0 4
++		pm_nl_set_limits $ns2 1 4
++		pm_nl_add_endpoint $ns2 dead:beef:2::2 flags subflow,fullmesh
++		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
++		run_tests $ns1 $ns2 dead:beef:2::1 0 0 0 slow
++		chk_join_nr 1 1 1
++	fi
++
++	# fullmesh still tries to create all the possibly subflows with
++	# matching family
++	if reset "simult IPv4 and IPv6 subflows, fullmesh 2x2"; then
++		pm_nl_set_limits $ns1 0 4
++		pm_nl_set_limits $ns2 2 4
++		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
++		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
++		run_tests $ns1 $ns2 dead:beef:1::1 0 0 fullmesh_1 slow
++		chk_join_nr 4 4 4
++	fi
 +}
 +
- /* Fill all the remote addresses into the array addrs[],
-  * and return the array size.
-  */
--static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullmesh,
-+static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
-+					      struct mptcp_addr_info *local,
-+					      bool fullmesh,
- 					      struct mptcp_addr_info *addrs)
+ backup_tests()
  {
- 	bool deny_id0 = READ_ONCE(msk->pm.remote_deny_join_id0);
-@@ -443,6 +456,9 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
- 		if (deny_id0)
- 			return 0;
- 
-+		if (!addr_families_match(sk, local, &remote))
-+			return 0;
-+
- 		msk->pm.subflows++;
- 		addrs[i++] = remote;
- 	} else {
-@@ -453,6 +469,9 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
- 			if (deny_id0 && !addrs[i].id)
- 				continue;
- 
-+			if (!addr_families_match(sk, local, &addrs[i]))
-+				continue;
-+
- 			if (!lookup_address_in_vec(addrs, i, &addrs[i]) &&
- 			    msk->pm.subflows < subflows_max) {
- 				msk->pm.subflows++;
-@@ -600,10 +619,10 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 		fullmesh = !!(local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH);
- 
- 		msk->pm.local_addr_used++;
--		nr = fill_remote_addresses_vec(msk, fullmesh, addrs);
--		if (nr)
--			__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
-+		nr = fill_remote_addresses_vec(msk, &local->addr, fullmesh, addrs);
-+		__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
- 		spin_unlock_bh(&msk->pm.lock);
-+
- 		for (i = 0; i < nr; i++)
- 			__mptcp_subflow_connect(sk, &local->addr, &addrs[i]);
- 		spin_lock_bh(&msk->pm.lock);
-@@ -625,6 +644,7 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
-  * and return the array size.
-  */
- static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
-+					     struct mptcp_addr_info *remote,
- 					     struct mptcp_addr_info *addrs)
- {
- 	struct sock *sk = (struct sock *)msk;
-@@ -642,15 +662,8 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
- 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
- 			continue;
- 
--		if (entry->addr.family != sk->sk_family) {
--#if IS_ENABLED(CONFIG_MPTCP_IPV6)
--			if ((entry->addr.family == AF_INET &&
--			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
--			    (sk->sk_family == AF_INET &&
--			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
--#endif
--				continue;
--		}
-+		if (!addr_families_match(sk, &entry->addr, remote))
-+			continue;
- 
- 		if (msk->pm.subflows < subflows_max) {
- 			msk->pm.subflows++;
-@@ -664,7 +677,10 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
- 	 */
- 	if (!i) {
- 		memset(&local, 0, sizeof(local));
--		local.family = msk->pm.remote.family;
-+		local.family = remote->family;
-+
-+		if (!addr_families_match(sk, &local, remote))
-+			return 0;
- 
- 		msk->pm.subflows++;
- 		addrs[i++] = local;
-@@ -703,7 +719,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	/* connect to the specified remote address, using whatever
- 	 * local address the routing configuration will pick.
- 	 */
--	nr = fill_local_addresses_vec(msk, addrs);
-+	nr = fill_local_addresses_vec(msk, &remote, addrs);
- 
- 	msk->pm.add_addr_accepted++;
- 	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
+ 	# single subflow, backup
+@@ -3120,6 +3154,7 @@ all_tests_sorted=(
+ 	a@add_tests
+ 	6@ipv6_tests
+ 	4@v4mapped_tests
++	M@mixed_tests
+ 	b@backup_tests
+ 	p@add_addr_ports_tests
+ 	k@syncookies_tests
 -- 
 2.38.1
 
