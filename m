@@ -1,109 +1,177 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFCE7E3
-	for <mptcp@lists.linux.dev>; Mon, 26 Dec 2022 09:36:36 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id qk9so25165802ejc.3
-        for <mptcp@lists.linux.dev>; Mon, 26 Dec 2022 01:36:36 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8179110E2
+	for <mptcp@lists.linux.dev>; Mon, 26 Dec 2022 13:09:11 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id q15so13798416edb.1
+        for <mptcp@lists.linux.dev>; Mon, 26 Dec 2022 05:09:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jzlZyunipQwcK3f21UzjZnIndMnmoN4oFFTPZjGSTZ0=;
-        b=LaoYcOaRYblwJ/KTz+DIA5sfqlQnnQlzaqCc4wV4fDEMOvKRcos/GLMG99Ig/a5aOD
-         wBSy5ynIGGX2PHjC2/rcmAAs/R+k8VU+hkt/XPiW7KqBwHMOC5b6d89/LHqbCgqRZ4dg
-         AYW0HC5nc+4K4JtFax9wnXkSOMQOwRcgmpumRySU4WiAQkpg2xijoKvuz8RAc+hXwlq0
-         P73NB9V8MO0j4Y7oKgIuur+XXoJQhJko+Fl0gJujD8MPZ2O1LOzgCv4IrI/PWexhVdUv
-         q9VtXT5C02v8+hBt9ePY6os2FI0ASQVqF+tVwSAHjvvZApFssbBGf6Ed68Sdaej6oGjY
-         y0WA==
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I2a0n9AWe/QBudCGTOmBMZdvWAZzV9CvLX8LoYObRX8=;
+        b=62iWvrX62PLs1Wbab3AX+jT5pSqNfvQ+4P2ZO822Poe57pT3XD8GgS/YWSmsC8H5P/
+         oXubBP7MbYw0+KIDjGYWCdoImE2vQJ4OkYKi2nIzHVw4wBM0eZ6fp5Zrlli8b0pssZMv
+         L5zJHNGZycOvXznuYVPnJW5CEkgU4eF2zEdfmW76Sj6mdrvlnSel1DzBT3CDNiJGhnHf
+         GtsAxJF3K9BFmoTGPBitvtVvsmUr2FPIqHpQ75BM/OXSu4eyARC9M3CiBZtDZk9WV5vO
+         UGAra9x6NYiO9Iv4Mtycy2Xh6KUMD54deEOjKekrGKgt+np3gYiaXPxM4rj5jJ9IRPHW
+         1ljQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jzlZyunipQwcK3f21UzjZnIndMnmoN4oFFTPZjGSTZ0=;
-        b=fwbYpas5X2n8/jy2W+8DATCzr2mKo8ExRL0wzADJJ96/QreFJ5oBbE44hBwh90s0xH
-         yWAzUoJKwyz5R/28tGFwNzk8FPQXbG+MVNJILLZ2WLOKCKwS4MpsUX7t5MkIFhlSfOCH
-         Qi5D3nhmvNu09oXnhrmuVN4GRnQiD6zII07yErpGupz3ExvkTqo+JT336Aol0ccitjPr
-         L4zhm6uooSo27uqRtTNfid8n06zlIQGtzfEVdTe/bED/M+J9xMRW9mXQUHuTbq+cvT+K
-         vxw1uYa56dhUuN4lkqMcqSRcfWGbCHsawUZ9SQAy5kwWqDz4NOKYKlYmv95paD0edTxx
-         whiQ==
-X-Gm-Message-State: AFqh2kqJusSyLn9FFURR37L9amGL1uFRl6sNitSK+N0aCKb+JiPjbHkk
-	DMLvKORUR68AX426/BEAy0sb/jagsLd2Ic/7RSg=
-X-Google-Smtp-Source: AMrXdXuQZcmhQkn2jVk/bDeEp43EMYhnN/k7GzFLswrdYHNcRnC7GYThrPLPmKwuFnSqgbMFuvURgg==
-X-Received: by 2002:a17:907:d48e:b0:7ae:b2e4:7b3f with SMTP id vj14-20020a170907d48e00b007aeb2e47b3fmr15650628ejc.8.1672047394501;
-        Mon, 26 Dec 2022 01:36:34 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id p15-20020a056402500f00b0047eeaae9558sm4407233eda.60.2022.12.26.01.36.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Dec 2022 01:36:34 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Geliang Tang <geliang.tang@suse.com>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-iproute2] mptcp: add new listener events
-Date: Mon, 26 Dec 2022 10:35:58 +0100
-Message-Id: <20221226093558.599103-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.37.2
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I2a0n9AWe/QBudCGTOmBMZdvWAZzV9CvLX8LoYObRX8=;
+        b=WJVQe985dJrbw77liFo55FyhLi8f5SgK1n5p2ZNB0iTAuvfmg9btzIK/83YyCMfEwr
+         5QkzQ8i50B/LDM0/qKT2hkbFuAk44lmX/pBOEm6dNWPDh7WpYnpWSQeeTXsdi31bfCmQ
+         YVYyL+MDfauIInsffxcgROCKyXayEBKn41uO1lr1aF+bwSZBHLT0B5t0ZDgUHI4w5R47
+         4XNEUboEB7jAzG3kkazLJOQ1UbACMeXZGpWMSPXE2Yp+yWu7O4kNFNLruUmP2kgWSKs9
+         NCCebpmpgo5tNcf57MsI5LPNsU0FhEvD+QRJB/fcT2TFl7uf86oCs3Qn8pQJzH3nmCjE
+         cFwg==
+X-Gm-Message-State: AFqh2krZEuNGBesAINUgk0otFkQL6NqSazwZBt6hwO1eRVJ0SKm9Sq4J
+	TAdpnnGd4n18jm8sSfdjGNvYNERqjgmAj6WlxOs=
+X-Google-Smtp-Source: AMrXdXuM0y90RpimaSDDV1q9JVjgH+fhbaC2Q/+ySehY/K1c9T3a0pJCCIbO9eAiu6Zp1yLmnAjQ6w==
+X-Received: by 2002:aa7:c30b:0:b0:47b:a6e:6ba5 with SMTP id l11-20020aa7c30b000000b0047b0a6e6ba5mr15336587edq.12.1672060149397;
+        Mon, 26 Dec 2022 05:09:09 -0800 (PST)
+Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id d23-20020a05640208d700b0047f0af53d92sm4627712edz.91.2022.12.26.05.09.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Dec 2022 05:09:09 -0800 (PST)
+Message-ID: <df67ca04-4f4f-3902-58f5-a2c8829ff60f@tessares.net>
+Date: Mon, 26 Dec 2022 14:09:08 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: add test-cases for mixed
+ v4/v6 subflows
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1671799401.git.pabeni@redhat.com>
+ <c2b08053101c90d85634c95840e3a8a637fa8346.1671799401.git.pabeni@redhat.com>
+ <45315757-d5fc-8d90-39e1-d7fd8a7682a4@tessares.net>
+ <69b575721cd0164895fd634f93d2900485698999.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <69b575721cd0164895fd634f93d2900485698999.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-These new events have been added in kernel commit f8c9dfbd875b ("mptcp:
-add pm listener events") by Geliang Tang.
+Hi Paolo,
 
-Two new MPTCP Netlink event types for PM listening socket creation and
-closure have been recently added. They will be available in the future
-v6.2 kernel.
+Thank you for the replies!
 
-They have been added because MPTCP for Linux, when not using the
-in-kernel PM, depends on the userspace PM to create extra listening
-sockets -- called "PM listeners" -- before announcing addresses and
-ports. With the existing MPTCP Netlink events, a userspace PM can create
-PM listeners at startup time, or in response to an incoming connection.
-Creating sockets in response to connections is not optimal: ADD_ADDRs
-can't be sent until the sockets are created and listen()ed, and if all
-connections are closed then it may not be clear to the userspace PM
-daemon that PM listener sockets should be cleaned up. Hence these new
-events: PM listening sockets can be managed based on application
-activity.
+On 23/12/2022 19:29, Paolo Abeni wrote:
+> On Fri, 2022-12-23 at 15:35 +0100, Matthieu Baerts wrote:
+>> Hi Paolo,
+>>
+>> On 23/12/2022 13:51, Paolo Abeni wrote:
+>>> Note that we can't guess anymore the listener family based on the
+>>> client target address; use always IPv6.
+>>>
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> ---
+>>>  .../testing/selftests/net/mptcp/mptcp_join.sh | 51 +++++++++++++++----
+>>>  1 file changed, 42 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> index d11d3d566608..6ef4787ad244 100755
+>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/313
-Cc: Geliang Tang <geliang.tang@suse.com>
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
+(...)
 
-Notes:
-    No objection for the names?
+>>> +		chk_join_nr 1 1 1
+>>> +	fi
+>>> +
+>>> +	# subflow IPv4-mapped to IPv4-mapped
+>>> +	if reset "simult IPv4 and IPv6 subflows, first is IPv6"; then
+>>> +		pm_nl_set_limits $ns1 0 1
+>>> +		pm_nl_set_limits $ns2 1 1
+>>> +		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
+>>> +		run_tests $ns1 $ns2 dead:beef:2::1 0 0 0 slow
+>>
+>> Linked to the previous question: that makes me think we properly don't
+>> propagate the IPV6_V6ONLY socket option (sk_ipv6only) to new subflows
+>> (just before the connect). Now that we can connect to v4 addresses, it
+>> might be an issue. Easy to fix with this I guess:
+>>
+>> --------------------- 8< ---------------------
+>>> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+>>> index 582ed93bcc8a..9986681aaf40 100644
+>>> --- a/net/mptcp/sockopt.c
+>>> +++ b/net/mptcp/sockopt.c
+>>> @@ -1255,6 +1255,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+>>>         ssk->sk_priority = sk->sk_priority;
+>>>         ssk->sk_bound_dev_if = sk->sk_bound_dev_if;
+>>>         ssk->sk_incoming_cpu = sk->sk_incoming_cpu;
+>>> +       ssk->sk_ipv6only = sk->sk_ipv6only;
+>>>         __ip_sock_set_tos(ssk, inet_sk(sk)->tos);
+>>>  
+>>>         if (sk->sk_userlocks & tx_rx_locks) {
+>> --------------------- 8< ---------------------
+>>
+>> (+ a test checking that for v6 only socket as well I suppose)
+> 
+> This is an unrelated patch. Additionally, I think sk_ipv6only on
+> subflow other then the first one is not needed, as we already match
+> carefully the sk family and address family (we create ipv6 subflow for
+> ipv6 addr)
 
-    We are currently limiting the name to 14 chars. If we want to have
-    "LISTENER_xxx" instead of "LISTEN_xxx", we need to increase this
-    limit. I'm fine with the current names or with +ER.
+I'm sorry, I'm not sure to understand. If someone wants to have only v6
+connections, it has to create an AF_INET6 socket and set IPV6_V6ONLY
+option. Why not reflecting that to the different subflows to have
+subflow in v6 only?
 
- ip/ipmptcp.c | 2 ++
- 1 file changed, 2 insertions(+)
+But I agree it is not directly related.
 
-diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-index ce62ab9a..2338ba53 100644
---- a/ip/ipmptcp.c
-+++ b/ip/ipmptcp.c
-@@ -454,6 +454,8 @@ static const char * const event_to_str[] = {
- 	[MPTCP_EVENT_SUB_ESTABLISHED] = "SF_ESTABLISHED",
- 	[MPTCP_EVENT_SUB_CLOSED] = "SF_CLOSED",
- 	[MPTCP_EVENT_SUB_PRIORITY] = "SF_PRIO",
-+	[MPTCP_EVENT_LISTENER_CREATED] = "LISTEN_CREATED",
-+	[MPTCP_EVENT_LISTENER_CLOSED] = "LISTEN_CLOSED",
- };
+>>> +		chk_join_nr 1 1 1
+>>> +	fi
+>>> +
+>>> +	if reset "simult IPv4 and IPv6 subflows, fullmesh 1x1"; then
+>>> +		pm_nl_set_limits $ns1 0 4
+>>> +		pm_nl_set_limits $ns2 1 4
+>>
+>> Does the limit here mean 1 subflow or 1 extra subflow? (it might answer
+>> my question below)
+>>
+>>> +		pm_nl_add_endpoint $ns2 dead:beef:2::2 flags subflow,fullmesh
+>>> +		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
+>>> +		run_tests $ns1 $ns2 dead:beef:2::1 0 0 0 slow
+>>> +		chk_join_nr 1 1 1
+>>
+>> Why do you not have an extra subflow in IPv6 between the second IPv6 of
+>> ns2 (subflow,fullmesh) and the main IPV6 of the server on ns1?
+> 
+> becayse there is no second ipv6 address in ns2:  dead:beef:2::2 is used
+> as source by the first subflow (to connect towards dead:beef:2::1).
 
- static void print_addr(const char *key, int af, struct rtattr *value)
+Ah yes indeed, I don't know why I had another topology in mind...
 
-base-commit: 1e994cf69cfd55fefd000565914fd85e3ec150af
---
-2.37.2
+>>> +	fi
+>>> +
+>>> +	if reset "simult IPv4 and IPv6 subflows, fullmesh 2x2"; then
+>>> +		pm_nl_set_limits $ns1 0 4
+>>> +		pm_nl_set_limits $ns2 2 4
+>>> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+>>> +		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
+>>> +		run_tests $ns1 $ns2 dead:beef:1::1 0 0 fullmesh_1 slow
+>>> +		chk_join_nr 4 4 4
+>>
+>> Why do you have so many subflows here? The client has one IPv6 and the
+>> server 2, no?
+> 
+> Here the client has 2 IPv6 addresses: dead:beef:1::2 and the one added
+> by the 'fullmesh_1' argument (dead:beef:3::2, IIRC).
 
+Indeed, thank you. There will then be 3 subflows in v6 and 1 in v4.
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
