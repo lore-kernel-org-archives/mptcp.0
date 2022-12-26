@@ -1,45 +1,45 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2911367
-	for <mptcp@lists.linux.dev>; Mon, 26 Dec 2022 13:16:05 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id gh17so26027331ejb.6
-        for <mptcp@lists.linux.dev>; Mon, 26 Dec 2022 05:16:05 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3022108
+	for <mptcp@lists.linux.dev>; Mon, 26 Dec 2022 16:27:36 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id ud5so26840386ejc.4
+        for <mptcp@lists.linux.dev>; Mon, 26 Dec 2022 08:27:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:references:to:from
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2ZE3zrMsb7jWfMfVdfbtXep2qNITRjXhhNIKuVW1zcc=;
-        b=meGj9Wpf+dgc84qjdgoAtpeOxwBajziWHLz2mJKB2I0JfCguhD1IaAIelo2lOD/q5F
-         svrFVXdTRFu3TumOOTWZ36fZFxz/D+DhqW/GF+LXMbILdzQBvezmbBcWgm8JoOMC0BNY
-         QbslmJz2KA+e5laVXux9s81WfZDJa2SIuS4H3sDa5wI2ik6Mm+bfGcOe+6EvJ+Dg+k5m
-         fETN0ayJx8J9bLOsLcILWb/VW828drkMVR8U9XXSB0nhcBMFq5TEgVFMx+kxtAFrnLTC
-         uQEmY1WBaOQzUqkQYMNiCQuKoJFzp+hMy51xHbtnQ4lm+jGxB9Ujx5Z5f18A4jszeov3
-         5jOQ==
+        bh=AyE6HChMWj+dWcZV6vkWbI34PTR0t2GAdE6BKL+epBg=;
+        b=WLSJzlGUU2tjKm1iHHMvHEAxBpO2sVWFeDtTlZwnpKJXOtRgNzSsuGoDl6UZERVtAk
+         FOqFMpXMq0zSjho76tj9lcCOV5tXnqg8ZE2t6C9FVTMM+mWaYpf0mB1TZDf9PTUTPhaU
+         tK2BNdS4HgNGr20Oou5uLDxiiKTQGaN3pbGPkykhSSX+wBnOwTO9f7LHx53TDCvTRH/3
+         uosryC+5qbqj6aP30YD/Mg211hH4dSrk0i7UipcaFQmENRBVAtsE0ueXKfkFYzo8CHqE
+         cJ3nSU2cS/auD+6vmWro/jHiu5EegiqevDcuygw629iupKmNQ5NYiAXtBZSlmsWw8JEM
+         hdmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:to:from
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2ZE3zrMsb7jWfMfVdfbtXep2qNITRjXhhNIKuVW1zcc=;
-        b=xWhnaJj5P7VMFuwVTW9cAiwS/YUpbly8gyLiSktBy3vcqyd18aSayqpjQD/MuER+tP
-         oCnFzeV52/oi4B5bHLQ11+UTHW9XDmCbeLBljjpRcbZYg2w5XiZq6oMheORXydTASOWo
-         kkkVhp9OQigte14mSg0cAUhE35fNgUbCYu4dTm2jU3AqA5jDTQFMW4rYa0uQOcm1/N2Z
-         4my/hAq0Wd6mDQEs2F1rfzAo20XR1DBomyvS+hfc4ZM2/OIO3UTlXGuHKZp8MvZdR8s9
-         xeZ4CujnUa5ZY5Z3ilCqmjDys8J3AF+eZ6KFsPu2UHW0r71DqS4B/zIfl9cvXJDY+G4y
-         upFQ==
-X-Gm-Message-State: AFqh2kozbnXdJrm68V4uZx75kYw6ej2X5yK6AAWmCE0fREj0fizhO90U
-	nKkOPZZsko/dGOllepSvpq+98nynNClUI2a6y2c=
-X-Google-Smtp-Source: AMrXdXuLpGX61/Bm3jvYwd9D55u/TDoTlXl1YXcA8bX3BnkElXehU8v7q7k6Ur3yElJ97BFAk5//Kw==
-X-Received: by 2002:a17:907:d68e:b0:7bd:43e9:d3ab with SMTP id wf14-20020a170907d68e00b007bd43e9d3abmr14958062ejc.52.1672060563367;
-        Mon, 26 Dec 2022 05:16:03 -0800 (PST)
+        bh=AyE6HChMWj+dWcZV6vkWbI34PTR0t2GAdE6BKL+epBg=;
+        b=2F7S8Zxp0LPp4eqH1R+ikKICYUckhOvROBEY/tJ421el0bUigwsJkKjnTjNAmChQnE
+         OCIHfCTlMVm3vBd5O0spFh+AaHIH5Yel1o4SAFBR30iZTUsQeCS4MHPBXbNOvz7itNfL
+         9Y0bZm07938m277h3R9mbqB+0suPlDLzyriyp//K9JxPCSJf2xZ07vKdvQyFN6i7Kf1c
+         GMK+O3GCt8T3DgM5nV6fmD0iqAW/GN2rNRcg02mabIrlWsbkXTsO6Txjk+OiG1jTcidr
+         qLCEVaIU64FLSfwmrhnAwkVIgyZIEpdd25dCHufV7KkxKh7Ao7qWGaD+1EuebgxknbEv
+         T+7w==
+X-Gm-Message-State: AFqh2kp+LC3WeFmJjgcOuuPSwvmOVrF8rsSB9zWWh1xh38J+2pVVQ+MU
+	hw3131loXS677V11pX1ghtUkDA==
+X-Google-Smtp-Source: AMrXdXvYNvYSOUw+s7fkVtFc8D0eoieAq0j1EaxdivMRoOirrGiPsdpGWAdXVYpaTP5aVUVrk6FVvQ==
+X-Received: by 2002:a17:906:184a:b0:78d:f456:1ed0 with SMTP id w10-20020a170906184a00b0078df4561ed0mr20441695eje.33.1672072055139;
+        Mon, 26 Dec 2022 08:27:35 -0800 (PST)
 Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id r2-20020a1709061ba200b0079800b8173asm4805138ejg.158.2022.12.26.05.16.02
+        by smtp.gmail.com with ESMTPSA id bx4-20020a170906a1c400b007c0e6d6bd10sm4959969ejb.132.2022.12.26.08.27.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Dec 2022 05:16:03 -0800 (PST)
-Message-ID: <8ce97f1e-49d9-d014-fa06-2a971c60037f@tessares.net>
-Date: Mon, 26 Dec 2022 14:16:02 +0100
+        Mon, 26 Dec 2022 08:27:34 -0800 (PST)
+Message-ID: <cb231563-f904-de27-34fd-7d217b3a00a3@tessares.net>
+Date: Mon, 26 Dec 2022 17:27:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,94 +48,271 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH mptcp-next 3/3] selftests: mptcp: add test-cases for mixed
- v4/v6 subflows
+Subject: Re: [PATCH v2 mptcp-next 2/3] mptcp: let the in kernel PM use mixed
+ ipv4 and ipv6 addresses
 Content-Language: en-GB
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1671799401.git.pabeni@redhat.com>
- <c2b08053101c90d85634c95840e3a8a637fa8346.1671799401.git.pabeni@redhat.com>
- <45315757-d5fc-8d90-39e1-d7fd8a7682a4@tessares.net>
- <69b575721cd0164895fd634f93d2900485698999.camel@redhat.com>
- <df67ca04-4f4f-3902-58f5-a2c8829ff60f@tessares.net>
-In-Reply-To: <df67ca04-4f4f-3902-58f5-a2c8829ff60f@tessares.net>
+References: <cover.1671821017.git.pabeni@redhat.com>
+ <61ebbe1bdb47f74d856b3edee06112999da50f07.1671821017.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <61ebbe1bdb47f74d856b3edee06112999da50f07.1671821017.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Hi Paolo,
 
+On 23/12/2022 20:00, Paolo Abeni wrote:
+> Currently the in kernel PM arbitrary enforces that created subflow's
+> family must match the main MPTCP socket. The RFC allow instead for
+> mixing IPv4 and IPv6 subflows.
+> 
+> This patch changes the in kernel PM logic to create subflows matching
+> the currently selected source (or destination) address. IPv4 sockets
+> can pick only IPv4 addresses, while IPv6 sockets not restricted to
+> V6ONLY can pick either IPv4 and IPv6 addresses, effectively
+> allowing the creation of IPv4 and IPv6 subflows under the same msk.
+> 
+> While at that, factor out a new helper for address family matching,
+> taking care of ipv4 vs ipv4-mapped-ipv6.
 
-On 26/12/2022 14:09, Matthieu Baerts wrote:
-> Hi Paolo,
+Thank you for the v2!
+
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/269
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/pm_netlink.c | 68 ++++++++++++++++++++++++++----------------
+>  1 file changed, 42 insertions(+), 26 deletions(-)
 > 
-> Thank you for the replies!
-> 
-> On 23/12/2022 19:29, Paolo Abeni wrote:
->> On Fri, 2022-12-23 at 15:35 +0100, Matthieu Baerts wrote:
->>> Hi Paolo,
->>>
->>> On 23/12/2022 13:51, Paolo Abeni wrote:
->>>> Note that we can't guess anymore the listener family based on the
->>>> client target address; use always IPv6.
->>>>
->>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>>> ---
->>>>  .../testing/selftests/net/mptcp/mptcp_join.sh | 51 +++++++++++++++----
->>>>  1 file changed, 42 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> index d11d3d566608..6ef4787ad244 100755
->>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> 
-> (...)
-> 
->>>> +		chk_join_nr 1 1 1
->>>> +	fi
->>>> +
->>>> +	# subflow IPv4-mapped to IPv4-mapped
->>>> +	if reset "simult IPv4 and IPv6 subflows, first is IPv6"; then
->>>> +		pm_nl_set_limits $ns1 0 1
->>>> +		pm_nl_set_limits $ns2 1 1
->>>> +		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
->>>> +		run_tests $ns1 $ns2 dead:beef:2::1 0 0 0 slow
->>>
->>> Linked to the previous question: that makes me think we properly don't
->>> propagate the IPV6_V6ONLY socket option (sk_ipv6only) to new subflows
->>> (just before the connect). Now that we can connect to v4 addresses, it
->>> might be an issue. Easy to fix with this I guess:
->>>
->>> --------------------- 8< ---------------------
->>>> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
->>>> index 582ed93bcc8a..9986681aaf40 100644
->>>> --- a/net/mptcp/sockopt.c
->>>> +++ b/net/mptcp/sockopt.c
->>>> @@ -1255,6 +1255,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
->>>>         ssk->sk_priority = sk->sk_priority;
->>>>         ssk->sk_bound_dev_if = sk->sk_bound_dev_if;
->>>>         ssk->sk_incoming_cpu = sk->sk_incoming_cpu;
->>>> +       ssk->sk_ipv6only = sk->sk_ipv6only;
->>>>         __ip_sock_set_tos(ssk, inet_sk(sk)->tos);
->>>>  
->>>>         if (sk->sk_userlocks & tx_rx_locks) {
->>> --------------------- 8< ---------------------
->>>
->>> (+ a test checking that for v6 only socket as well I suppose)
->>
->> This is an unrelated patch. Additionally, I think sk_ipv6only on
->> subflow other then the first one is not needed, as we already match
->> carefully the sk family and address family (we create ipv6 subflow for
->> ipv6 addr)
-> 
-> I'm sorry, I'm not sure to understand. If someone wants to have only v6
-> connections, it has to create an AF_INET6 socket and set IPV6_V6ONLY
-> option. Why not reflecting that to the different subflows to have
-> subflow in v6 only?
-> 
-> But I agree it is not directly related.
-I just noticed that in your v2, you added a check in pm_netlink.h. But I
-guess it is fine to also apply the patch, just to be sure the check for
-pm_netlink.h is not bypassed somehow (by the userspace PM, a future one,
-with BPF, etc.), no?
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index f2a43e13bacd..23c4e74312f7 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+
+(...)
+
+> @@ -420,10 +409,34 @@ static bool lookup_address_in_vec(const struct mptcp_addr_info *addrs, unsigned
+>  	return false;
+>  }
+>  
+> +/* if sk is ipv4 or ipv6_only allows only same-family local and remote addresses,
+> + * otherwise allow any matching local/remote pair
+> + */
+> +static bool addr_families_match(const struct sock *sk,
+> +				const struct mptcp_addr_info *loc,
+> +				const struct mptcp_addr_info *remote)
+> +{
+> +	if (sk->sk_family == loc->family && sk->sk_family == remote->family)
+
+Do we need to handle this case: MPTCP socket is in v6, local and remote
+are also in v6 but one or the two of them are in fact v4 mapped in v6.
+If the two are v4 mapped, we need to checked for sk_ipv6only as well
+which increase the number of checks to do :-/
+
+> +		return true;
+> +
+> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> +	if (sk->sk_family == AF_INET || sk->sk_ipv6only)
+> +		return false;
+
+This breaks one test in mptcp_join.sh selftests (55: single subflow
+v6-map-v4). This test creates an AF_INET MPTCP socket and adds a subflow
+endpoint using a v6 mapped form address: "::ffff:10.0.3.2".
+
+If we want to imitate TCP, we should treat v4 mapped addresses in v6 as
+v4 and then allow AF_INET6 if it is in fact a v4.
+
+I suggest to do this modification:
+
+----------------- 8< -----------------
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 23c4e74312f7..22dfbaf988a5 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -414,21 +414,32 @@ static bool lookup_address_in_vec(const struct mptcp_addr_info *addrs, unsigned
+>   */
+>  static bool addr_families_match(const struct sock *sk,
+>                                 const struct mptcp_addr_info *loc,
+> -                               const struct mptcp_addr_info *remote)
+> +                               const struct mptcp_addr_info *rem)
+>  {
+> -       if (sk->sk_family == loc->family && sk->sk_family == remote->family)
+> -               return true;
+> +       bool mptcp_is_v4 = sk->sk_family == AF_INET;
+>  
+>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> -       if (sk->sk_family == AF_INET || sk->sk_ipv6only)
+> +       bool loc_is_v4 = loc->family == AF_INET || ipv6_addr_v4mapped(&loc->addr6);
+> +       bool rem_is_v4 = rem->family == AF_INET || ipv6_addr_v4mapped(&rem->addr6);
+> +
+> +       /* v4 only */
+> +       if (mptcp_is_v4) {
+> +               if (loc_is_v4 && rem_is_v4)
+> +                       return true;
+>                 return false;
+> +       }
+>  
+> -       if (loc->family == remote->family ||
+> -           (loc->family == AF_INET && ipv6_addr_v4mapped(&remote->addr6)) ||
+> -           (remote->family == AF_INET && ipv6_addr_v4mapped(&loc->addr6)))
+> -               return true;
+> +       /* v6 only */
+> +       if (sk->sk_ipv6only) {
+> +               if (!loc_is_v4 && !rem_is_v4)
+> +                       return true;
+> +               return false;
+> +       }
+> +
+> +       return loc_is_v4 == rem_is_v4;
+> +#else
+> +       return mptcp_is_v4 && loc->family == AF_INET && rem->family && AF_INET;
+>  #endif
+> -       return false;
+>  }
+>  
+>  /* Fill all the remote addresses into the array addrs[],
+----------------- 8< -----------------
+
+Note that if the kernel is compiled without CONFIG_MPTCP_IPV6, we don't
+really need to check if the MPTCP socket is in v4 but I keep it here to
+continue to use 'sk' and avoid a warning from the compiler.
+
+> +
+> +	if (loc->family == remote->family ||
+> +	    (loc->family == AF_INET && ipv6_addr_v4mapped(&remote->addr6)) ||
+> +	    (remote->family == AF_INET && ipv6_addr_v4mapped(&loc->addr6)))
+> +		return true;
+> +#endif
+> +	return false;
+> +}
+> +
+>  /* Fill all the remote addresses into the array addrs[],
+>   * and return the array size.
+>   */
+> -static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullmesh,
+> +static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
+> +					      struct mptcp_addr_info *local,
+> +					      bool fullmesh,
+>  					      struct mptcp_addr_info *addrs)
+>  {
+>  	bool deny_id0 = READ_ONCE(msk->pm.remote_deny_join_id0);
+> @@ -443,6 +456,9 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
+>  		if (deny_id0)
+>  			return 0;
+>  
+> +		if (!addr_families_match(sk, local, &remote))
+> +			return 0;
+> +
+>  		msk->pm.subflows++;
+>  		addrs[i++] = remote;
+>  	} else {
+> @@ -453,6 +469,9 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
+>  			if (deny_id0 && !addrs[i].id)
+>  				continue;
+>  
+> +			if (!addr_families_match(sk, local, &addrs[i]))
+> +				continue;
+> +
+>  			if (!lookup_address_in_vec(addrs, i, &addrs[i]) &&
+>  			    msk->pm.subflows < subflows_max) {
+>  				msk->pm.subflows++;
+> @@ -600,10 +619,10 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+>  		fullmesh = !!(local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH);
+>  
+>  		msk->pm.local_addr_used++;
+> -		nr = fill_remote_addresses_vec(msk, fullmesh, addrs);
+> -		if (nr)
+> -			__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
+> +		nr = fill_remote_addresses_vec(msk, &local->addr, fullmesh, addrs);
+> +		__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
+>  		spin_unlock_bh(&msk->pm.lock);
+> +
+>  		for (i = 0; i < nr; i++)
+>  			__mptcp_subflow_connect(sk, &local->addr, &addrs[i]);
+>  		spin_lock_bh(&msk->pm.lock);
+> @@ -625,6 +644,7 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
+>   * and return the array size.
+>   */
+>  static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+> +					     struct mptcp_addr_info *remote,
+>  					     struct mptcp_addr_info *addrs)
+>  {
+>  	struct sock *sk = (struct sock *)msk;
+> @@ -642,15 +662,8 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+>  		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
+>  			continue;
+>  
+> -		if (entry->addr.family != sk->sk_family) {
+> -#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> -			if ((entry->addr.family == AF_INET &&
+> -			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
+> -			    (sk->sk_family == AF_INET &&
+> -			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
+> -#endif
+> -				continue;
+> -		}
+> +		if (!addr_families_match(sk, &entry->addr, remote))
+> +			continue;
+>  
+>  		if (msk->pm.subflows < subflows_max) {
+>  			msk->pm.subflows++;
+> @@ -664,7 +677,10 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+>  	 */
+>  	if (!i) {
+>  		memset(&local, 0, sizeof(local));
+> -		local.family = msk->pm.remote.family;
+> +		local.family = remote->family;
+
+Here, you need to take into account v4mapped addresses not to break
+mptcp_join selftest (56 signal address v6-map-v4):
+
+----------------- 8< -----------------
+> @@ -649,7 +655,6 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+>  {
+>         struct sock *sk = (struct sock *)msk;
+>         struct mptcp_pm_addr_entry *entry;
+> -       struct mptcp_addr_info local;
+>         struct pm_nl_pernet *pernet;
+>         unsigned int subflows_max;
+>         int i = 0;
+> @@ -676,8 +681,12 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+>          * 'IPADDRANY' local address
+>          */
+>         if (!i) {
+> +               struct mptcp_addr_info local;
+> +
+>                 memset(&local, 0, sizeof(local));
+> -               local.family = remote->family;
+> +               local.family = remote->family == AF_INET6 &&
+> +                              ipv6_addr_v4mapped(&remote->addr6) ? AF_INET :
+> +                              remote->family;
+>  
+>                 if (!addr_families_match(sk, &local, remote))
+>                         return 0;
+----------------- 8< -----------------
+
+> +
+> +		if (!addr_families_match(sk, &local, remote))
+> +			return 0;
+
+Now that this function can return 0 ... (see below)
+
+>  
+>  		msk->pm.subflows++;
+>  		addrs[i++] = local;
+> @@ -703,7 +719,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+>  	/* connect to the specified remote address, using whatever
+>  	 * local address the routing configuration will pick.
+>  	 */
+> -	nr = fill_local_addresses_vec(msk, addrs);
+> +	nr = fill_local_addresses_vec(msk, &remote, addrs);
+
+... does it still make sense to increment add_addr_accepted counter here
+below if nr == 0? We got an ADD_ADDR but we cannot do anything with it
+so we didn't really "accepted" it. WDYT?
+
+>  
+>  	msk->pm.add_addr_accepted++;
+>  	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
 
 Cheers,
 Matt
