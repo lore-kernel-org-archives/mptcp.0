@@ -1,96 +1,130 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777642596
-	for <mptcp@lists.linux.dev>; Mon, 26 Dec 2022 17:00:38 +0000 (UTC)
-Received: by mail-ed1-f54.google.com with SMTP id l29so9012476edj.7
-        for <mptcp@lists.linux.dev>; Mon, 26 Dec 2022 09:00:38 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6590663A5
+	for <mptcp@lists.linux.dev>; Tue, 27 Dec 2022 18:21:36 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id c17so19992952edj.13
+        for <mptcp@lists.linux.dev>; Tue, 27 Dec 2022 10:21:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hqlE9ovMLknLU0oeylsQEydbxAZ8zHexT5Sun0Cfeq0=;
-        b=UXQhnKQwgwool8og8kT176VSPXovXQ/b3KUThOCirzizYEwyuSx9I/A9FiOf4Ix/QU
-         r3XSujHQQ7lq19NBJCW5r45exhFWvnhiZGAk3bOt1dpDJWrbO/nTwQ7SG1QirJVNjDFX
-         3ly1DuQE6Dvg2CL3cv0OUyLDtpDC8ub3LAyCaUSceREJYPmGYWA3N+P8XQwDJ7Tx4k72
-         PI1w6vdGSAGIqsDpmNAMVYjqlVvv4cy1fdviynsRyFzNBnSyjb0kMunwjx9wl8QWrpV+
-         aaIL9mk3f1ZxHIHla+Ev83zjH5/1HdgKqldYqjzjmrV2Zvea1//iGSXqlgHhJRbyYDjF
-         T5Ag==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VW296BWRbwmRPHY4fYPrUGKSPkzb2XbEA1UDLX3bhdY=;
+        b=sNLCgl351ThBTTwtO3zo+o86tuZ1dUiyCdp9CzH3RPg1mj2TGOnuxTz9YCvLxb5GrN
+         of9t5lNOkDPxlLMcI1nm1hJTsipSZYhuPFCoodW0WPtIvaxYeBTf1qPtDX1Q52qZ3q8k
+         2yfPwJ0BLcwdZLvekEA+DW5QXW9LOjp2widfTo+poZTffcu69p7Mixv82DeD4JUDfd35
+         SrndMg83YGILIVP9XRPmPHs9m8rFwM30qMYX5fz8lAFGtMztUHfcWgrVfesmd1PLJ4zN
+         khQhkVbhsTcqqlj3fWItyjMEbiHigZcIyet1rrkQ6vOqJgmHj1Mtce2Cm1CZhl5lbF+r
+         lJzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hqlE9ovMLknLU0oeylsQEydbxAZ8zHexT5Sun0Cfeq0=;
-        b=dAzlAl5+Kw1eow/eUvIbtf5FGOCW90WDdvX+q5wZl+sfj6vButSWXAE/UgtteR1B30
-         dERUIYDtM7PPaNuXbxJS6utnjGCwVJduK2AnspNjXtqJFPPzpxgprz1cRt9Je4MGCPrN
-         Oo1yezwEZH2ZYPl8WyjNDuOPND5d4DzqHzDAGc8TgfI6XwOGs9x14IqozOoWBo8mEetS
-         jQ9W6fIIxOXHwa1khdLQ0ajewSM0ohXIJfnEec4TKnATztGCACV/Q7yUDM+oYDTEvHQN
-         rY/X6w/nG/35hQR3fiYxufxQI7nn8R5Dwrl55dYOfG9erbMEzIV6wHl88S9qPclJKNgg
-         AuYw==
-X-Gm-Message-State: AFqh2kqR7jVfop4mKXtW/pXjnjyKB+4L5VgffmYPg7ukAbqo2KTx2ISs
-	HgdgxCRlMrU6hE2ouWe3LUIr6FYKTrKELZ2kOSg=
-X-Google-Smtp-Source: AMrXdXt1rhuwahMS3JQkboXIdej2Bx+DjOlnEnm2/PkLXPN25Ja0onkrXplYcSGU2p5urwr/PZ0EmQ==
-X-Received: by 2002:aa7:d3d9:0:b0:46b:1715:e64 with SMTP id o25-20020aa7d3d9000000b0046b17150e64mr17735973edr.18.1672074036511;
-        Mon, 26 Dec 2022 09:00:36 -0800 (PST)
-Received: from [10.44.2.26] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id da20-20020a056402177400b0046fb9492961sm4801860edb.25.2022.12.26.09.00.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Dec 2022 09:00:36 -0800 (PST)
-Message-ID: <5078260a-db63-a111-bd8b-4d9731d2ce0a@tessares.net>
-Date: Mon, 26 Dec 2022 18:00:35 +0100
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VW296BWRbwmRPHY4fYPrUGKSPkzb2XbEA1UDLX3bhdY=;
+        b=q5S/sf93mdYWs6mFi5Z4lG3A5z7eGCsjY9MpB4g632VL4KFOS1TxZYoYFB8gRHxhd0
+         BhTVHB5Qu6EkmTSMgJxJLuWn+7UmA3/3TqDwa6RO0Ne1IzNk/BOFV44SLz4F1SG4Nd4J
+         KJejm5LMMSM375WaM/hrg5+W6BWPOWdDtWVaQEocyCEFGuCRKTql+1fA3OYnqyh2fFvR
+         vvcw2VIFuLODTQDU7BbMuCMxy0O/1DNHbMSysrg8LteGZ8qC62aUmWG8ktecbunmoiX8
+         gD5OGNOIMgRXyPGNWqkqWPoZqaYF46X06beOGq0nfRvtAWkTPGT4rTqnAWMNeIYuM8rZ
+         gQqQ==
+X-Gm-Message-State: AFqh2ko+iYippD5kgGi5GA/8LJI73BBWJ4hCGl1VYUiRIpDNhI/OyR1P
+	sNvefcbTW8C5Gg/vWqYIBpi3KyZJ3jXxBNUnZrrLTg==
+X-Google-Smtp-Source: AMrXdXvWJ8KH6PvpYYozzx+0VDaW7VWpbHUf+IndusN2363b09p9HbQ1cf53Rr0OkVln4iFavNMc6g==
+X-Received: by 2002:a50:d0d1:0:b0:46d:7ed4:1f66 with SMTP id g17-20020a50d0d1000000b0046d7ed41f66mr21194320edf.3.1672165295024;
+        Tue, 27 Dec 2022 10:21:35 -0800 (PST)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id o17-20020a1709062e9100b007bd9e683639sm6336612eji.130.2022.12.27.10.21.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Dec 2022 10:21:34 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-net/next v3 00/11] mptcp: add support for mixed v4/v6
+Date: Tue, 27 Dec 2022 19:20:46 +0100
+Message-Id: <20221227182057.2288816-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2 mptcp-next 1/3] mptcp: explicitly specify sock family
- at subflow creation time
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1671821017.git.pabeni@redhat.com>
- <7d3aae6493caa1563d1aaadc79d299c01077f28a.1671821017.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <7d3aae6493caa1563d1aaadc79d299c01077f28a.1671821017.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2567; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=iXET1W6rey/uKfzz83tYhaHkGa7MsjL2YCKvoMr+U5o=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjqzd5YUxOgPQz8NN2coBfwfN7jLqoGQftBNTivYF7
+ EvlI7yqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY6s3eQAKCRD2t4JPQmmgcw/0D/
+ 9hrR6baEGhUNAP438l89oy7EcOeQdUFXxB9U+RUkrpVbBN5iKtZ79zmV3eIwu8zrLbZpPs6Dsn4NuW
+ BVUuJndeprG+HT17JkCIMW9gaqHM7rG5pNBnTPdUZR9ObtIbd1+vZcvMUG6cJnlUEf+X9k75+Bu/H4
+ 5sTZNYf70hqXMX/wtdE/XOBUmEdG3GvTiM1m3wol/gxJYxSTCs1HK7EMiJkW2XrlEVTmWnsQItquzJ
+ sDUCNJ6rf74ZcsY1iknG/CBzjd9YSqvWI0ooGfsyBMUtmyEbkLweZYMagXtUS/uvACeaRD5dlXbYlt
+ wesP+967uieTpJGqeRv/4V056NPVvH06w1mRcWVGKhpp8j6Kax4C6m2ZAAtmFDCYZcu34gWd2SqFnh
+ nxbTFM5pMhu81i8LRHQTXZE5xFwOpX8goyyl1ODce0Pho/qsvF1xdLaXEmCViGDJiy4Cai4PhKGQgm
+ mlBGKYk+6zYI2O3hP9SxOdVd01ZSbYXOmYLI9zHwHxzADEuKqfiMaf9dGnLBY0GLjxIwQzdTwaRyV7
+ sWvKrKAk32wj5dg0MKNcJqKAn9U8YAWISGxykBWH4GXiPGg/5xXG0dMwzYnh1i8zuzoDQWac4s/vDk
+ BRFV7TMc8PMshnwZ/Rry7hDpCzdr1WwnuzMQCXECPimfTcgU8TBNnpPIt4WQ==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+This is a v3 of Paolo's series with the same name with some
+modifications and additional patches.
 
-On 23/12/2022 20:00, Paolo Abeni wrote:
-> Let the caller specify the to-be-created subflow family. No
-> functional change intended, will be leveraged by the next
-> patch.
+This series can be split in 2 parts: the 3 first patches are for -net
+while the rest is for net-next.
 
-If I'm not mistaken, there is a functional change ... (see below)
+Patch 1 let the userspace PM selects the proper family to avoid creating
+subflows with wrong source and/or destination addresses because the
+family is not the expected one.
 
-(...)
+Patch 2 makes sure the userspace PM doesn't allow the userspace to
+create subflows for a family that is not allowed.
 
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index bd387d4b5a38..ec54413fb31f 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1547,7 +1547,7 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
->  	if (!mptcp_is_fully_established(sk))
->  		goto err_out;
->  
-> -	err = mptcp_subflow_create_socket(sk, &sf);
-> +	err = mptcp_subflow_create_socket(sk, loc->family, &sf);
+The core MPTCP implementation is just a few bits of properly supporting
+a mix of v4 and v6 subflows, we just need to allow specifying the
+subflow family explicitly (patch 1) and remove artificial constraints in
+the in-kernel PM currently enforcing no mixed subflow in place (patch
+4).
 
-This seems to allow the userspace PM to create subflows for different
-family than the one of the MPTCP socket.
+Patch 5 makes sure the sk_ipv6only attribute is also propagated to
+subflows, just in case the PM doesn't respect it.
 
-A detail but maybe this should be mentioned in the commit message?
+Some selftests have also been added for the userspace PM (patch 3) and
+the in-kernel PM (patch 6).
 
-(and I suppose the userspace PM should be modified to check subflows can
-be created but that's for an additional commit)
+Patches 7 and 8 are just some cleanups in the userspace PM, not related
+to the rest but I saw them when modifying the file.
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Patches 9 to 11 improve the messages printed by the userspace PM,
+especially in case of error during the validation.
+
+Matthieu Baerts (8):
+  mptcp: netlink: respect v4/v6-only sockets
+  selftests: mptcp: userspace: validate v4-v6 subflows mix
+  mptcp: propagate sk_ipv6only to subflows
+  mptcp: remove assigned but unused value
+  mptcp: userspace pm: use a single point of exit
+  selftests: mptcp: userspace: print titles
+  selftests: mptcp: userspace: refactor asserts
+  selftests: mptcp: userspace: print error details if any
+
+Paolo Abeni (3):
+  mptcp: explicitly specify sock family at subflow creation time
+  mptcp: let the in-kernel PM use mixed IPv4 and IPv6 addresses
+  selftests: mptcp: add test-cases for mixed v4/v6 subflows
+
+ net/mptcp/pm.c                                |  25 +++
+ net/mptcp/pm_netlink.c                        |  55 +++---
+ net/mptcp/pm_userspace.c                      |  14 +-
+ net/mptcp/protocol.c                          |   2 +-
+ net/mptcp/protocol.h                          |   6 +-
+ net/mptcp/sockopt.c                           |   1 +
+ net/mptcp/subflow.c                           |   9 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  53 +++++-
+ .../selftests/net/mptcp/userspace_pm.sh       | 164 +++++++++++++-----
+ 9 files changed, 244 insertions(+), 85 deletions(-)
+
+
+base-commit: fe84ec2a445f2ec26dc0484538f2175945b43822
+--
+2.37.2
+
