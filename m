@@ -1,50 +1,49 @@
 Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246A463B9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F8563A5
 	for <mptcp@lists.linux.dev>; Tue, 27 Dec 2022 18:21:42 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id fc4so33532420ejc.12
-        for <mptcp@lists.linux.dev>; Tue, 27 Dec 2022 10:21:41 -0800 (PST)
+Received: by mail-ej1-f41.google.com with SMTP id gh17so33628859ejb.6
+        for <mptcp@lists.linux.dev>; Tue, 27 Dec 2022 10:21:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sqP1m3ysIMg0iSieM9IErT6eQu57d4t7jTZbtjotdQo=;
-        b=sppVVW2dpTb6AoyzQO9lHIargc4OvboetyZHtHdUUb4bRBm/H3Qx412R2GgRpb16B7
-         8n7DXiSM2JPIA5+FDWen1JQMrODtPL2aJCFB3dNiI6WPZUUCu29XQ3jUhRlsaPbxAKVp
-         wA1+a5RVajd0qEQayVV68umyMPahBIumy6VDl3SWaAlXVy7WCJw9+aoTNy8X4bJ1VdUQ
-         4lE/ptfRe0mvz63msERwd1Pjk2jbJ2nGCKET3MdFxk1vy+g5AFwPdrV9xGShyJmEgMqp
-         uuhZ42pmwEts3MohYSwLEa4cvwkv+r/gT1h4f/M/W4fEadguUDXjOk0YT1rit2PXFdF2
-         9awQ==
+        bh=drNb1S9tj9maCJICCjpsuyCFdKnsYG7mF64cROKJf/w=;
+        b=L/wmeKgZWm1sMByRqIElyvhQkAGr89JBMfmCuBltRRf6qyPQY6Dl8izfAZlIX+cNEh
+         roNZDVSHVIGuEkwx7wbD/J+hRHxGfk8F6+owjQxDI0zK+qi+yalfz3SxqS6IkLrCGuvt
+         q3TcX8uV+rtl6cOrrzYUrpvDore+GW39IY4aVl38LxWC+BDFp1y+KBWw0YlHdmuQJ+mD
+         IHVI1+8BnCxz70wNMFErtXAwg7d/HyUId/MI2VfZCt+alH0TxLvylDee0LLDCFMr0YUB
+         EBDU8JQp1PvtVM3fRA20XHOQ+WNSDTryd9vnPQ5hBSuGbZeL6bOd7BLVATdXQ/yMuoGY
+         cKdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sqP1m3ysIMg0iSieM9IErT6eQu57d4t7jTZbtjotdQo=;
-        b=HApeBmTPVjdm+OUa19edaqMQDC0pxSeQeD9XLwJ9hNp7fdnbkuGUlRt96tFaCDHh/Q
-         EZaHd88baCAtNhUr9bvnz2rF2A6M3nUu7NhWgDsaggU0+P+5z4j+a/PvAx95aZi5u558
-         Ce3/K7P886Jbmzr5fq5psGV1oqpOp6oavX2O/9swB89Dk9zrMr0vpT12xfgrQXEt10X6
-         kJFxT4GlVfnB41oVA428FrFE3U2ScsZoDjDuzor3JveB6e5DpszmWQH7owg3W1ikHVIv
-         lcAIpvX9qMCVVN9lNEPUw9b/F4gGctrj+4a76R/2IOHUZyp9NG7nD9njUwl5vs6ICK/3
-         5emg==
-X-Gm-Message-State: AFqh2kpvd525m/XbJZgVIUZMHX1SetOadFPkUb0BhW1IO5VcQvQdmnG/
-	QIjhLt5NUbJ5fJm8p4/7nmS9fS4DGvQvHAxhb9V5Dg==
-X-Google-Smtp-Source: AMrXdXvUt86k+3bxB3RIEhISpHAJSXfz7w8MHm5gHCETMYueM0byQBE05z7wcLcNaP93iMALjPE7Ew==
-X-Received: by 2002:a17:907:c301:b0:7fd:ecee:c8ba with SMTP id tl1-20020a170907c30100b007fdeceec8bamr29927365ejc.42.1672165300169;
-        Tue, 27 Dec 2022 10:21:40 -0800 (PST)
+        bh=drNb1S9tj9maCJICCjpsuyCFdKnsYG7mF64cROKJf/w=;
+        b=Za4LGiYw2xHpCn8EQubISa3F28nFo9QXbw4NO15w5TURlmcwD7NhY9xMTO9U7aCs22
+         +eBX4A+MvreMfRAaDECQLawzmyF/jPGkqonphXGXZKAf0QQzstUP4pELKI3YVTBc7/jj
+         oIzyJr1OxaSrFyDNHUExEJe7tJxowFz9xlADOMsi6Z93GN4xBJr+hEW2MRyj1koD9U4o
+         2xoYj1XcckHxrz0PjzegSURIuVZfslPxiMjIi4TlpTHrjUZKyd16Padh5tdEF/6V8Doq
+         nowd995JMtnr8JAUgwzVPzoK+ype0HsIsgKzesZYZOcDMTkOMwptJYsMSedgpkx/fpeR
+         8UQg==
+X-Gm-Message-State: AFqh2kpq1j6jvgKM07UEWF/iuE3ol8gRDUFEhw6Ldt6FrApzgWnqtuOY
+	L3xq4OhfSQFUfSxVjBP5vdhKsUwY+35g8xSxrr/DYA==
+X-Google-Smtp-Source: AMrXdXtbqXbecQix53KEXIuuhPSYEEC89tXSM1ZnN4RmlPiu5+aci3HP2ZPIbmlEP7nij6OAX2tkZg==
+X-Received: by 2002:a17:906:b108:b0:843:a9fe:f115 with SMTP id u8-20020a170906b10800b00843a9fef115mr18922543ejy.32.1672165301036;
+        Tue, 27 Dec 2022 10:21:41 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id o17-20020a1709062e9100b007bd9e683639sm6336612eji.130.2022.12.27.10.21.39
+        by smtp.gmail.com with ESMTPSA id o17-20020a1709062e9100b007bd9e683639sm6336612eji.130.2022.12.27.10.21.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Dec 2022 10:21:39 -0800 (PST)
+        Tue, 27 Dec 2022 10:21:40 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v3 06/11] selftests: mptcp: add test-cases for mixed v4/v6 subflows
-Date: Tue, 27 Dec 2022 19:20:52 +0100
-Message-Id: <20221227182057.2288816-7-matthieu.baerts@tessares.net>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v3 07/11] mptcp: remove assigned but unused value
+Date: Tue, 27 Dec 2022 19:20:53 +0100
+Message-Id: <20221227182057.2288816-8-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221227182057.2288816-1-matthieu.baerts@tessares.net>
 References: <20221227182057.2288816-1-matthieu.baerts@tessares.net>
@@ -54,123 +53,42 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3187; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=PF+uTEj4sVeWj5WOdqleYcs6AGKouaOt3Y7ZNlAhaDY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjqzd6/u9W3XrLYTL0rSfmiQqGD3i+cS34N+jOWwX+
- +9eeMG2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY6s3egAKCRD2t4JPQmmgc6mOD/
- 9mUziO3/vqgt7DQv5o8qkW33ZcG+RAl6EyVLv+9Thx/DDlxU669hMnX1bHY2JJN+2Gav6/ThmUsgG5
- 2Z5EGiXsdI+U6EGPpwWvcWo0Fh23Fljf0roAQTvDB0eANz13RB6EZvK0ZNT0TnIW/R6dAV0ZsVvw7r
- vuNKAvyYohjDDhyAAHnfAnJdTb80Gh19WjrkSvaiEhZ4AhoWKZ7tnVT0NEp4LIgGjTNtRjd6d+G9rx
- h2qpIGCDkgPYYwGQXIhOQC8v52SoX1GhtAs3AQI+VsghgYWdJCRpSNUXOUsdFLBGo+66dFC/T/W75F
- h7if9FSoX4PaprRLAac86A/f/3I88RI1vlUiX1hmFYnDr2F2ArlYkhxJmFdGxfzsqe/HM9m+2uGRg4
- fYpJ5WFA4/dsqkV36rOCFki+ptKQnEFqh/pUdsus/Oc0AXwXafgJIjAYnYFrTNUOawb9LaOyOf1Y8E
- eOTEAaxoHuCPBq9q1P4PYMxCGw+BzHukwKvPSBJLCwZPns//9D4iByaMunWCOZbrnqW4IOqWi6rad6
- nn/PBUgUafg53nlrIzDrZtk0Qv2USgNVNBXaH2R+XroGl/xb+rE8UCzN1FsfP4xu/4JG7thsXrpMdO
- 4We2uBEMq+UeiNXE9jWk1VihefyYiHxBSGm118M9qNLeH55n5u2XxplrNVnQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=653; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=uZ1GtsrShc9C2g5MMHxhX8M/nNp+YYPJg4WshuQZCy0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjqzd6zdwNwhX5GIi12lg2zt1E/c6//XWQ04V9HwzN
+ HqFhr5CJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY6s3egAKCRD2t4JPQmmgcwSdEA
+ DmG29nqOwmE2TtMeXgRSwfVtBePJbuGdC3h9Ukyc/RNTonYvd1xjty4ntDI+S0JTFcwzd9Lq4rTV8s
+ aYrCa57D21bMVFgtfGtrpL0wjtOZIrn6batlMhN+PO/C/yIaOEK8OD8KukbxIONZ4+b657qgSfeSoc
+ 3xJ/5RBzsO7g0rEzcvZUwIxN1cQ1NdbtjBprpkWrPsrV5HN2+zD1vKHzhZrKKMHD4BBxP1dXQ2Uaeg
+ 6aeqLL1eook8xYnr4rBRJNSC0s+Fb2A5a3NKTi3TVzL4RAXm7hNFCWji1VBkFSUWf2ILc8vH1uh0wU
+ jQ/qiOb+TLEjUf2UyMmWM3P/5oOfQeKEWtqctYkw3E0bV7JN/eDipDRoizxBtlxVOpsf/zwcEtVqzL
+ SRfYknj0o4vcMHhMITQsMMCezC2IOwCCxG55yP2OFPzijx62ZTCN2MN1CHwYAUvUtZi3pI/f2V8CaN
+ i64pmTSawqX0V2OUvNli1FFDSykhdi7LZCHNhIY5G4XQBoB93hBb4XjtZEAQs488XiVFXi29Qdm9VK
+ 1ORIJQMhiPB5FOvdyx1WkVEIt3qNlxNjELsWcjLMd83MAynJMsvICpWEbIE6c/2vRSO7vTu4HYPPsp
+ 00SkU696RlD+q+KE2SORW/q7/1C7AS8H8I+Zsw+ZTIjfRVYrGsUtixAsuEPA==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+'ret' is always set later before being used.
 
-Note that we can't guess the listener family anymore based on the client
-target address: always use IPv6.
-
-The fullmesh flag with endpoints from different families is also
-validated here.
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 53 +++++++++++++++----
- 1 file changed, 44 insertions(+), 9 deletions(-)
+ net/mptcp/pm_userspace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index d11d3d566608..387abdcec011 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -774,24 +774,17 @@ do_transfer()
- 		addr_nr_ns2=${addr_nr_ns2:9}
- 	fi
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index ea6ad9da7493..be389dad3f0a 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -34,7 +34,7 @@ int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+ 	struct mptcp_pm_addr_entry *e;
+ 	bool addr_match = false;
+ 	bool id_match = false;
+-	int ret = -EINVAL;
++	int ret;
  
--	local local_addr
--	if is_v6 "${connect_addr}"; then
--		local_addr="::"
--	else
--		local_addr="0.0.0.0"
--	fi
--
- 	extra_srv_args="$extra_args $extra_srv_args"
- 	if [ "$test_link_fail" -gt 1 ];then
- 		timeout ${timeout_test} \
- 			ip netns exec ${listener_ns} \
- 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
--					$extra_srv_args ${local_addr} < "$sinfail" > "$sout" &
-+					$extra_srv_args "::" < "$sinfail" > "$sout" &
- 	else
- 		timeout ${timeout_test} \
- 			ip netns exec ${listener_ns} \
- 				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
--					$extra_srv_args ${local_addr} < "$sin" > "$sout" &
-+					$extra_srv_args "::" < "$sin" > "$sout" &
- 	fi
- 	local spid=$!
+ 	bitmap_zero(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
  
-@@ -2448,6 +2441,47 @@ v4mapped_tests()
- 	fi
- }
- 
-+mixed_tests()
-+{
-+	if reset "IPv4 sockets do not use IPv6 addresses"; then
-+		pm_nl_set_limits $ns1 0 1
-+		pm_nl_set_limits $ns2 1 1
-+		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
-+		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
-+		chk_join_nr 0 0 0
-+	fi
-+
-+	# Need an IPv6 mptcp socket to allow subflows of both families
-+	if reset "simult IPv4 and IPv6 subflows"; then
-+		pm_nl_set_limits $ns1 0 1
-+		pm_nl_set_limits $ns2 1 1
-+		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
-+		run_tests $ns1 $ns2 dead:beef:2::1 0 0 0 slow
-+		chk_join_nr 1 1 1
-+	fi
-+
-+	# cross families subflows will not be created even in fullmesh mode
-+	if reset "simult IPv4 and IPv6 subflows, fullmesh 1x1"; then
-+		pm_nl_set_limits $ns1 0 4
-+		pm_nl_set_limits $ns2 1 4
-+		pm_nl_add_endpoint $ns2 dead:beef:2::2 flags subflow,fullmesh
-+		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
-+		run_tests $ns1 $ns2 dead:beef:2::1 0 0 0 slow
-+		chk_join_nr 1 1 1
-+	fi
-+
-+	# fullmesh still tries to create all the possibly subflows with
-+	# matching family
-+	if reset "simult IPv4 and IPv6 subflows, fullmesh 2x2"; then
-+		pm_nl_set_limits $ns1 0 4
-+		pm_nl_set_limits $ns2 2 4
-+		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
-+		run_tests $ns1 $ns2 dead:beef:1::1 0 0 fullmesh_1 slow
-+		chk_join_nr 4 4 4
-+	fi
-+}
-+
- backup_tests()
- {
- 	# single subflow, backup
-@@ -3120,6 +3154,7 @@ all_tests_sorted=(
- 	a@add_tests
- 	6@ipv6_tests
- 	4@v4mapped_tests
-+	M@mixed_tests
- 	b@backup_tests
- 	p@add_addr_ports_tests
- 	k@syncookies_tests
 -- 
 2.37.2
 
