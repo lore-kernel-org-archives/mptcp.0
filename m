@@ -1,146 +1,125 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4667810E9
-	for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 10:18:17 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id bj12so37342768ejb.13
-        for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 02:18:17 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B212C1C07
+	for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 16:13:21 +0000 (UTC)
+Received: by mail-pl1-f176.google.com with SMTP id d15so16435411pls.6
+        for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 08:13:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N/jHKBQFqn7bUxdd3zFAuj3Z6MLFTXhPHtnSVA/ZQLI=;
-        b=sSRRL2FPl7spcpKvTKw2Jlz1MnsAyLz63Aaaqdv3QbPKzl/aFlG6a7vIqDe5xUAmop
-         GosrQ5nJUmJwY4jHFvW2EY2iEWMflSLN2DSpfeceJ6vprOxWMAe8GwbZkClbdmR1oICj
-         yFTWHkCD5orBNyJ75mHXmMe3yDHe4KhN/d5d+ohGI5MvdmoFeCjIq7WKxTpDlv7O2ziA
-         y/de2Ss1mx9Ecl307fLnwzLrhJTavYicvhlxJKKE+Y0tmqBCo4i9UETRy71OCZs1F0ZC
-         nPfrLbh+R4TM13qAKEH68qWetvUDyfkGYDAncyQxDM3/bFOcntyremyVwVgJf5x6+Mmk
-         q1Og==
+        bh=h4RoMJ6DOX4qPVPdQ+5jsZxe05u/5bCGb0XaJZMfYks=;
+        b=FS2Ufz3vzLNtmouuVTfcIixF6YAqGDz8x81Xy/+a+S5Qb7Fal/m8PfaPqKvecXGPpH
+         DG0Wuhfk/dG1l29vKqMytpW3/o5OU/GyM2A0SzPF0eSabtrsZ26CaAe6a6BQ459xWTSI
+         ZhOwJCMHl3ADFh6PMN491rhhfujb9ofc/Kr0ZteVWpflKp5MnPprTfU/g664fwFC/GyE
+         uaTupFFy6IDHvCJSzbck/5G4YpiyjueqAICF3elnQF8jdwdAk6ezt1kPx3hg2iMjh4A5
+         tVq+EmKSno6IL7mhOvVKwAh9yyem7Nmd2FdSjKyTdDeEH1ntJlgP34N8t0B0poaIksUk
+         hjaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N/jHKBQFqn7bUxdd3zFAuj3Z6MLFTXhPHtnSVA/ZQLI=;
-        b=YIT6T3UMxA27YckuUC4u8XvIDiO2VpDf6PSrdWOwwCR0uH2suBJmlpfBTv1NwXek4F
-         /6o/uQPN0MUPcXTw8Jp+AH8Wctu3Q61ILDlY+f2VbJwblI3ZRrzSCtI039biiSPyqcDG
-         kpbnjRogvKcisjc3nq5KniLO/2NzSeoZHRItt8ic5VrYO21SmdVsmS2Lt01pGx0Wwe7i
-         nwnIwKZssV4okkMH0x8BHUypb2j5Y7JN9Gt/8SfapeRZYDdf4IVg6xh1zdmjVSFIayVn
-         Nol8WM8CGsE55xuIy1jcjABmxJik9CTXGApVUJyJht4/ikfIgc60/ERNm9abPMiuROCR
-         XiyQ==
-X-Gm-Message-State: AFqh2kqU3Z3R9ZP/S+iM/nPIMjlbWuD7aUrwgmJlIvntUaPZi6T8qBLs
-	VUVl/NAow0nGIfg2hRpTCLENvbeIleTha5x/eztU8A==
-X-Google-Smtp-Source: AMrXdXsYvk6o5PzMDV8IMC/gem6NS10P11rlYyV7usXUWZjjp0UF5BdII4jey9zZFIi33lwjSesEuw==
-X-Received: by 2002:a17:907:d302:b0:7c1:3472:5e75 with SMTP id vg2-20020a170907d30200b007c134725e75mr21978377ejc.29.1672222695169;
-        Wed, 28 Dec 2022 02:18:15 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id q14-20020a17090676ce00b007ad94422cf6sm7174127ejn.198.2022.12.28.02.18.14
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=h4RoMJ6DOX4qPVPdQ+5jsZxe05u/5bCGb0XaJZMfYks=;
+        b=NrYS2c6/7CslavqbQic57+BqhPm4em7M2cG5pT0TZbBNCMZDEJ6GCEh3rR7iSUskWq
+         f4c8wItpFhlbpuZNw+m5bYnlLNzecmcmE/U8t48Wgv9vgifR+w3vCZCEL8V9ZzhXlraI
+         nR42bLVHZ27somvD2Bax8jB9C+twDCPb1WnRIAPc/F0DTX7/kMUWm3b5oA+JU6CxwKfe
+         HanWTeV7dFPQnJBMtyDIWkUTYnPHiUTGt7+iI8kyx5U2J2Y4avBOJpP0vpf2MFeHhlrO
+         VfDK1B4OfN1BwFYWcfRfdO+68icPv8gXabAE1VjYUiLcuo+WeVHFAQFpft0u2l5eUAbJ
+         fIGA==
+X-Gm-Message-State: AFqh2krY+j3H05ofPs5NbO8ItpUT205122wh61tCObyy91ce8mfLk4u/
+	pD3ODv38jBvid+Va6/KKK/0JLu6H1g==
+X-Google-Smtp-Source: AMrXdXvDsMEskncnW5V3zZ6xhxu1e7cxdFCOOZwDvVZeFnH3WtLBbGN5tl/AhYj22cyKXT0BllFCsQ==
+X-Received: by 2002:a05:6a20:93a1:b0:a5:cc8f:cd14 with SMTP id x33-20020a056a2093a100b000a5cc8fcd14mr33844006pzh.35.1672244001087;
+        Wed, 28 Dec 2022 08:13:21 -0800 (PST)
+Received: from [127.0.0.1] ([65.52.126.97])
+        by smtp.gmail.com with ESMTPSA id t66-20020a635f45000000b0046feb2754e5sm9592590pgb.28.2022.12.28.08.13.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Dec 2022 02:18:14 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v4 12/12] selftests: mptcp: userspace: avoid read errors
-Date: Wed, 28 Dec 2022 11:17:48 +0100
-Message-Id: <20221228101748.2518303-13-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221228101748.2518303-1-matthieu.baerts@tessares.net>
-References: <20221228101748.2518303-1-matthieu.baerts@tessares.net>
+        Wed, 28 Dec 2022 08:13:20 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20221228101748.2518303-13-matthieu.baerts@tessares.net>
+References: <20221228101748.2518303-13-matthieu.baerts@tessares.net>
+Subject: Re: selftests: mptcp: userspace: avoid read errors: Tests Results
+Message-ID: <7f1e13ed-4e34-5a91-76fa-28f5bcc2739c@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 28 Dec 2022 16:13:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2046; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=R010oh46FcW31/7ZHEGi4EYd6Lvb3u6lx2QxCCnXZ1I=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjrBe/cxyi6f2f9eDjRxyGAWuZ1HNAmTZYz3tkM20t
- xLGCznWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY6wXvwAKCRD2t4JPQmmgc4GsD/
- 0QjqCUFvlLd8fBqiC4++fqjwXEUP5HcYs5jqxuiqDnCzVbXAA14aAR1vXrFQMDJo+XgiOh3jgWeAFY
- ofY/fF9DQh7g+ODtXNhMI3eZl5w+3Dy60U82+K3K9JQdztDjIxX3XZYgI6ZXrtjvOMOgS3+OMhTpS/
- /CCG7WTMTTZtst19SdSkNOEByBYgZ/+ibDmoPs89TnIJWn/PTJz69afJeCsedJlk5fwgxfD+2mBUi7
- oTLgNdYVx7jqqLJmM+hgLA6FyigY51DzcdCcAf3eMzfjoeWhWdRGuIurlZF8FUWN0FMg2Q7s7LmbdT
- CThj+EWTkLLG4K3CkdgujFFzHOwuflzhU1TBNpGmlGO/snHik17AyBLYvB1oCRImi6S4Dmc2ooVBQw
- 44quGOxCd4rX+0foW+KyR7XyqqbNjBi34gJ9V3NZdbkb6C9Q3v/eSipsWTeRBRYWMcfG3//7jDyalw
- 0/SeRpW3Xh4hzw8sVoH4ZPoTjpZPDf0LcJM3tFR++9vy8XPEsZnRSyQVIzcdmVqXbha4G0sKnDmTCJ
- U2CzyJSQcm0pRNyiiO+nAjZm4Gp+FC1L8ojKbRq/KkiVTePl7Irlc2igivrlzBXgAYKCeeyCVwybqb
- 0Mz+NjDLXW66LxzePJvLqqx1Bdxm9qxgjly7vnxVfad1VNyIexXExPEnrR8g==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
 
-During the cleanup phase, the server pids were killed with a SIGTERM
-directly, not using a SIGUSR1 first to quit safely. As a result, this
-test was often ending with two error messages:
+Hi Matthieu,
 
-  read: Connection reset by peer
+Thank you for your modifications, that's great!
 
-While at it, use a for-loop to terminal all the PIDs the same way.
+Our CI did some validations and here is its report:
 
-Also the different files are now removed after having killed the PIDs
-using them. It makes more sense to do that in this order.
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6671667710656512
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6671667710656512/summary/summary.txt
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- .../selftests/net/mptcp/userspace_pm.sh       | 32 +++++++------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4630974129504256
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4630974129504256/summary/summary.txt
 
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 0bd35768c1aa..8b4f130800b9 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -50,6 +50,9 @@ print_title()
- 
- kill_wait()
- {
-+	[ $1 -eq 0 ] && return 0
-+
-+	kill -SIGUSR1 $1 > /dev/null 2>&1
- 	kill $1 > /dev/null 2>&1
- 	wait $1 2>/dev/null
- }
-@@ -58,32 +61,21 @@ cleanup()
- {
- 	print_title "Cleanup"
- 
--	rm -rf $file $client_evts $server_evts
--
- 	# Terminate the MPTCP connection and related processes
--	if [ $client4_pid -ne 0 ]; then
--		kill -SIGUSR1 $client4_pid > /dev/null 2>&1
--	fi
--	if [ $server4_pid -ne 0 ]; then
--		kill_wait $server4_pid
--	fi
--	if [ $client6_pid -ne 0 ]; then
--		kill -SIGUSR1 $client6_pid > /dev/null 2>&1
--	fi
--	if [ $server6_pid -ne 0 ]; then
--		kill_wait $server6_pid
--	fi
--	if [ $server_evts_pid -ne 0 ]; then
--		kill_wait $server_evts_pid
--	fi
--	if [ $client_evts_pid -ne 0 ]; then
--		kill_wait $client_evts_pid
--	fi
-+	local pid
-+	for pid in $client4_pid $server4_pid $client6_pid $server6_pid\
-+		   $server_evts_pid $client_evts_pid
-+	do
-+		kill_wait $pid
-+	done
-+
- 	local netns
- 	for netns in "$ns1" "$ns2" ;do
- 		ip netns del "$netns"
- 	done
- 
-+	rm -rf $file $client_evts $server_evts
-+
- 	stdbuf -o0 -e0 printf "Done\n"
- }
- 
--- 
-2.37.2
+- KVM Validation: Script error! =E2=9D=93:
+  - :
+  - Task: =
+https://cirrus-ci.com/task/5193924082925568
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5193924082925568/summary/summary.txt
 
+- KVM Validation: Script error! =E2=9D=93:
+  - :
+  - Task: =
+https://cirrus-ci.com/task/5756874036346880
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5756874036346880/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/93cb3af31a5c
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
