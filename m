@@ -1,49 +1,50 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B65210FE
-	for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 10:18:09 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id u19so37367515ejm.8
-        for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 02:18:09 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EED10E9
+	for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 10:18:11 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id u9so37538562ejo.0
+        for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 02:18:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UmkiOWACWTt0hLZDqv1AI1TNAWCah4XFf8P7MvVQ+Fc=;
-        b=yLYATEIr2wRsUMXziTg/1z9yMMC4t3ynLX/ekuvOFLNZp4Ulp0TGRFVTDnOruHmZzS
-         VpCPKY10m5O94Fv5kqBJ5LAcFprzQpchmsF8JZoNjsqKIkfuT+tB03/gwae+s8taPIuY
-         9nrPG4N9NQIrPYP4dpU08QGKYkJVoa1UVb/aPDzLsAseRU/M1tyuefxJ9JbQm6C5McQP
-         MTJGmONL7pVa+ul6jEIAxjDD+Guzl0sVnwdJpGKfNzeXFJ4rzeMiFXknrgMGvghjsOys
-         ENN3cfGNfUDaeaZnYc8stX7zBCQAfb9MCNDGbCd8wOxTSgByLKmIYiOhGIWWDIPeIPsF
-         Ob1A==
+        bh=z9AFSUFfwnnN5pBtjBJ8jxeWxFDb6GcqJiEe5i0JjJ0=;
+        b=8DBQ2DG3J8F4eCbPXZaDSpi9MmaVUAM2n2kMEVqGDNperVPT9JCi2Jp9xsO725YYdl
+         9Pd+YinZFiYhKSlfYRCz6F8hqFiQ1XIKqS6uvGM19en6/AFzsupm51cke3ivZtRdP7os
+         wyCYY57CuA9E8O3yu+op/hrCwiseV5of2npVFD7QNopgXNfvxGX64hO317hRb0sx/ICI
+         ANoLMocICZ2p0rOkQLYjwahfgK6NxUSNq4Ice/iQCbyViTXOPDTOS6FJ5CuaTVw332Qf
+         +gwD5PFOEDRX0C3MC1xLmaHfoJ0mpiRX7zmjemxQWT/tEKtVV6POU1XLXKCLVJvAXJAi
+         CuMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UmkiOWACWTt0hLZDqv1AI1TNAWCah4XFf8P7MvVQ+Fc=;
-        b=IB6DPooPG/yddzqkd3Q4nug3ipAAm7ICIZwvDA8Jt+6IQ0bz3QnkrJ3xlsMUfNHcWx
-         ZS3ublomL3HCMrnAbPPu9wSCgT7dHCHTRF6zNQd2MWA0qbxDcIYhTnJx8o/u+DhITKBs
-         ZGfzq56flcqv/i4Rk985SGbQG9yPOui23KeW0MZN1/MJlqK/ec847Uk3s2Ji0k041FdY
-         MK7R/9rgQdyslV8k4UwPEIL+/HpKbbEJjTQk/mzWBwdeN1Tl9oHx8k2aTIxSKSeMcSRm
-         N+gshaLpJ04M4p/CmOQcS6JM6t8CXSeJhWpWqmGog+nZFlhvhg2UWO/uqfmqOKuxKn6T
-         ee5w==
-X-Gm-Message-State: AFqh2kperr2663OyE1OZMNTCNx0knElyCCMU2hlH7hlFihl/h6OVABvT
-	/fDkbu5IaVgJwlNsL3fnRnLpFGs6O2ZU5Ht5HtW0Xg==
-X-Google-Smtp-Source: AMrXdXtNbOg16qbDevJcj51fHqiMpXWCMV3s5IAqdH2qEi/ekg8AuokXVHV+UuCrnMRP9OtwYCnHFw==
-X-Received: by 2002:a17:907:d08d:b0:7aa:76a:fb3 with SMTP id vc13-20020a170907d08d00b007aa076a0fb3mr23393350ejc.66.1672222688026;
-        Wed, 28 Dec 2022 02:18:08 -0800 (PST)
+        bh=z9AFSUFfwnnN5pBtjBJ8jxeWxFDb6GcqJiEe5i0JjJ0=;
+        b=UjEVkVNT9lxG/hc2D9vcZf8+uce6qh7vkEInSfmn0EXlYEeCZTGwOmmOCKcgD1aXIx
+         Ht4seFmZ84u39BoqOuDuvpMujos4ATttfJxlfHOTlyMCtHAhPUac+ouhB/abEGWTh48g
+         F88FC8KHI/bfjwNIXjajqkZNvLkjXJTjXlpWGYC0MbvDxrzXm2eNvL0p5CdmBXkk377O
+         1L9KH9y3F7vxkH44ZWmanmTP2h21T08PWbs2Z5X/M/o9AM1mjsogdbRCWr1+7sf7lOn5
+         gmJzYn7DlbGWO6mDIx+tC3qXFWHOiY0illrnlH1MD1M0M7m9Fcg+8LlEaw4Vr8Mxs/6F
+         MILg==
+X-Gm-Message-State: AFqh2kq29VnUg/ennAGGydXAdUN81tnGsZRQnygqUBqKUdfaB71dVU8f
+	hWfiiRzb4wQ+2AST5rZFI2UdTO1ZsSjkQOPpJqrLZw==
+X-Google-Smtp-Source: AMrXdXuHPLYkZv6d4mekO7JoMKKDNE0hR586tU1cGVX7PcgCRo5f8WHiTwmvXfiNRN8anGk7ZVelpA==
+X-Received: by 2002:a17:907:6d0b:b0:83f:1f64:c1e with SMTP id sa11-20020a1709076d0b00b0083f1f640c1emr22551860ejc.47.1672222689488;
+        Wed, 28 Dec 2022 02:18:09 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id q14-20020a17090676ce00b007ad94422cf6sm7174127ejn.198.2022.12.28.02.18.07
+        by smtp.gmail.com with ESMTPSA id q14-20020a17090676ce00b007ad94422cf6sm7174127ejn.198.2022.12.28.02.18.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Dec 2022 02:18:07 -0800 (PST)
+        Wed, 28 Dec 2022 02:18:09 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-net v4 02/12] mptcp: netlink: respect v4/v6-only sockets
-Date: Wed, 28 Dec 2022 11:17:38 +0100
-Message-Id: <20221228101748.2518303-3-matthieu.baerts@tessares.net>
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v4 04/12] mptcp: let the in-kernel PM use mixed IPv4 and IPv6 addresses
+Date: Wed, 28 Dec 2022 11:17:40 +0100
+Message-Id: <20221228101748.2518303-5-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221228101748.2518303-1-matthieu.baerts@tessares.net>
 References: <20221228101748.2518303-1-matthieu.baerts@tessares.net>
@@ -53,114 +54,198 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3621; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=5vHj++yOudegJpdjUjRNe8ThnfAp9dTH9plU+MPMpWM=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjrBe+67GABS4DEB4IbEEHE7Fz+I5PCP29ZUvcwrFW
- aZHmcsyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY6wXvgAKCRD2t4JPQmmgc5LnEA
- Db6/Ja2dFSI6X5Wih9CWKh1eyTACEYLt+kw/3T0J2RciHGSivGw2z5XuySU6XRPnzTE0tOMt55FxNg
- FhxgMfB08iHaknsZVqyPFBtRHMCQeT2jFty8c56KwOpr41KAGJgrkRFSqI9sct9DLv7d6VkR91b1pj
- +SYNpP/yNjfCB2zAvsWuy50oD6PNFsRblRRZaaYF0bCtCENUYF6ydkDRSSL0ifQlnlVSFxoBZeAWvm
- WPtE3gliBu9Eh5sDXn/GT5mcM5lkmwAJcsLwH6RCHsd6G4NCxKfb6D9dvuEWxE2Pl1sSwr97A6/pGC
- KfMgiaYdkvlglUx7VugJCtBe+DYjnyiYm8pwLTll1JvJNBaW7DTanrvbH8R45Cfs5DX7PfriHIx4YF
- uvfeggtKdq82BW35uQP7ojit16dYKL1CZJkDkWn20TTJkRCjSQg0Pb0oB28ip2cFWr3JYcLIeivLZv
- iPANOLDPV6YxjB6t5TcQ8XPnU6eZhz6BYjmKUKhDvjisHdG1QXImAJLVIOIFogk7Y53C1JWN646zs9
- H80hatqYlIPcQ4ysNlGYKVkfA5lvIZE/6lpMfw0Bykk0mWY5lj12+E+3o9Y4C429CEXpmNCwX/vRW2
- 7Px2qeptvVqCF5eME6hTkhXRf7sgbyAJNW2grZCbNt/1hiwp8R97yZ8gc0gQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6570; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=EZau0IcHuZezehsM4S+L+WmU7fdtiMnSXR0653fkPKA=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjrBe+pM1oE+giBOmJ8py3SqUsjBASiJzO0F9PAm0P
+ OC6/aAuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY6wXvgAKCRD2t4JPQmmgc0BYD/
+ 9M8hCmeV/t0Inq55XLdeya3MQFa68lAl58elruu4YJTnhoatSsnXfI6427rTdLuLRZjbQgr8U5kOKc
+ jk5yi+XJw1yOrSJvOq/7K8bEj9YV9Hf2E3p445Zs0LtYz0yXx5qP4nAQdt4Ho/oGN5MJ7fIYeVX+as
+ lpDv1NHuyQ8e8f4vCMhxvkjNNjKDBcSezkO3N9I1HqKr1r1IMHZl5tgspXEMMzHsFK1SiGWgZQwxQ7
+ y9IS0oQt95BrmhGO/GL2HjiL2CcOni0LfNbp62Cc3G1vzRdbbhfhYpEaNNq6ScJQzojkz3jhPBXO2g
+ ObIYUc/kSdrHnvUjO+gq0m1si1WXKa+5FW5MAW2iyfjEHsH9ZGFMWSjRF/VrfNsp6EYsj/baIH4YZl
+ at2Ki2FRR/tJ603Q4rhJtnQwNd1EeL3EqfdZ1JHjUCsHOlxSdkUp6wE/5oK1DLfPkvfs6qgWC7BKpb
+ vLQGYS0bdv23BkpO3CpqVQ1tKtpGhbBP0Y/1sqHrgiWTuRHG8wlPHCdR/5N2XpK3tWqSOsE9iyqQX+
+ YqiuzfcMTw+JOosv1m2SdiSZPKnqmJjRLuJ4z5fXMvUq9kxBKZEBBL8/Wo+KpSDK3KEICGiC1aMQYZ
+ wZiByKfAWEKIUmjI8gz8iFqukKFs1xXsoxEojCuxCA9S12CSTVLu3xm4wIPg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-If an MPTCP socket has been created with AF_INET6 and the IPV6_V6ONLY
-option has been set, the userspace PM would allow creating subflows
-using IPv4 addresses, e.g. mapped in v6.
+From: Paolo Abeni <pabeni@redhat.com>
 
-The userspace PM will also accept creating subflows with local and
-remote addresses having different families resulting in the creation
-of non expected subflows.
+Currently the in-kernel PM arbitrary enforces that created subflow's
+family must match the main MPTCP socket while the RFC allows mixing
+IPv4 and IPv6 subflows.
 
-It is then required to check the given families can be accepted. This is
-done by using a new helper for addresses family matching, taking care of
-IPv4 vs IPv4-mapped-IPv6 addresses. This helper will be re-used later by
-the in-kernel path-manager to use mixed IPv4 and IPv6 addresses.
+This patch changes the in-kernel PM logic to create subflows matching
+the currently selected source (or destination) address. IPv4 sockets
+can pick only IPv4 addresses (and v4 mapped in v6), while IPv6 sockets
+not restricted to V6ONLY can pick either IPv4 and IPv6 addresses as
+long as the source and destination matches.
 
-While at it, a clear error message is now reported if there are some
-conflicts with the families that have been passed by the userspace.
+A helper, previously introduced is used to ease family matching checks,
+taking care of IPv4 vs IPv4-mapped-IPv6 vs IPv6 only addresses.
 
-Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/269
+Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/pm.c           | 25 +++++++++++++++++++++++++
- net/mptcp/pm_userspace.c |  7 +++++++
- net/mptcp/protocol.h     |  3 +++
- 3 files changed, 35 insertions(+)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index cdeb7280ac76..083f3f8322c0 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -413,6 +413,31 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
- 	}
- }
- 
-+/* if sk is ipv4 or ipv6_only allows only same-family local and remote addresses,
-+ * otherwise allow any matching local/remote pair
-+ */
-+bool mptcp_pm_addr_families_match(const struct sock *sk,
-+				  const struct mptcp_addr_info *loc,
-+				  const struct mptcp_addr_info *rem)
-+{
-+	bool mptcp_is_v4 = sk->sk_family == AF_INET;
-+
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	bool loc_is_v4 = loc->family == AF_INET || ipv6_addr_v4mapped(&loc->addr6);
-+	bool rem_is_v4 = rem->family == AF_INET || ipv6_addr_v4mapped(&rem->addr6);
-+
-+	if (mptcp_is_v4)
-+		return loc_is_v4 && rem_is_v4;
-+
-+	if (ipv6_only_sock(sk))
-+		return !loc_is_v4 && !rem_is_v4;
-+
-+	return loc_is_v4 == rem_is_v4;
-+#else
-+	return mptcp_is_v4 && loc->family == AF_INET && rem->family && AF_INET;
-+#endif
-+}
-+
- void mptcp_pm_data_reset(struct mptcp_sock *msk)
+Notes:
+    v3->v4:
+      - fix compilation error without CONFIG_MPTCP_IPV6
+    v2->v3:
+      - the helper has been moved to an earlier commit ("mptcp: netlink:
+        respect v4/v6-only sockets") and to pm.c because needed to fix a bug.
+      - the helper also takes into account different cases of IPv4 addresses
+        mapped in v6 and has been renamed.
+      - fill_local_addresses_vec() now considers v4-mapped-v6 as AF_INET not
+        to change the behaviour and break selftests.
+      - add_addr_accepted is not incremented if the ADD_ADDR cannot be used
+        (e.g. v4/v6-only sockets)
+      - if no subflows need to be created, the PM lock is no longer
+        manipulated.
+
+ net/mptcp/pm_netlink.c | 58 ++++++++++++++++++++++--------------------
+ 1 file changed, 31 insertions(+), 27 deletions(-)
+
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index f2a43e13bacd..e82a112b8779 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -152,7 +152,6 @@ static struct mptcp_pm_addr_entry *
+ select_local_address(const struct pm_nl_pernet *pernet,
+ 		     const struct mptcp_sock *msk)
  {
- 	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 65dcc55a8ad8..ea6ad9da7493 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -294,6 +294,13 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+-	const struct sock *sk = (const struct sock *)msk;
+ 	struct mptcp_pm_addr_entry *entry, *ret = NULL;
+ 
+ 	msk_owned_by_me(msk);
+@@ -165,16 +164,6 @@ select_local_address(const struct pm_nl_pernet *pernet,
+ 		if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
+ 			continue;
+ 
+-		if (entry->addr.family != sk->sk_family) {
+-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-			if ((entry->addr.family == AF_INET &&
+-			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
+-			    (sk->sk_family == AF_INET &&
+-			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
+-#endif
+-				continue;
+-		}
+-
+ 		ret = entry;
+ 		break;
  	}
+@@ -423,7 +412,9 @@ static bool lookup_address_in_vec(const struct mptcp_addr_info *addrs, unsigned
+ /* Fill all the remote addresses into the array addrs[],
+  * and return the array size.
+  */
+-static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullmesh,
++static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
++					      struct mptcp_addr_info *local,
++					      bool fullmesh,
+ 					      struct mptcp_addr_info *addrs)
+ {
+ 	bool deny_id0 = READ_ONCE(msk->pm.remote_deny_join_id0);
+@@ -443,6 +434,9 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
+ 		if (deny_id0)
+ 			return 0;
  
- 	sk = (struct sock *)msk;
++		if (!mptcp_pm_addr_families_match(sk, local, &remote))
++			return 0;
 +
-+	if (!mptcp_pm_addr_families_match(sk, &addr_l, &addr_r)) {
-+		GENL_SET_ERR_MSG(info, "families mismatch");
-+		err = -EINVAL;
-+		goto create_err;
-+	}
-+
- 	lock_sock(sk);
+ 		msk->pm.subflows++;
+ 		addrs[i++] = remote;
+ 	} else {
+@@ -453,6 +447,9 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk, bool fullm
+ 			if (deny_id0 && !addrs[i].id)
+ 				continue;
  
- 	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index b2b56a80e817..871ec3e93314 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -793,6 +793,9 @@ int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
- int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
- 			 bool require_family,
- 			 struct mptcp_pm_addr_entry *entry);
-+bool mptcp_pm_addr_families_match(const struct sock *sk,
-+				  const struct mptcp_addr_info *loc,
-+				  const struct mptcp_addr_info *rem);
- void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
- void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
- void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ssk, int server_side);
++			if (!mptcp_pm_addr_families_match(sk, local, &addrs[i]))
++				continue;
++
+ 			if (!lookup_address_in_vec(addrs, i, &addrs[i]) &&
+ 			    msk->pm.subflows < subflows_max) {
+ 				msk->pm.subflows++;
+@@ -600,9 +597,11 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 		fullmesh = !!(local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH);
+ 
+ 		msk->pm.local_addr_used++;
+-		nr = fill_remote_addresses_vec(msk, fullmesh, addrs);
+-		if (nr)
+-			__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
++		__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
++		nr = fill_remote_addresses_vec(msk, &local->addr, fullmesh, addrs);
++		if (nr == 0)
++			continue;
++
+ 		spin_unlock_bh(&msk->pm.lock);
+ 		for (i = 0; i < nr; i++)
+ 			__mptcp_subflow_connect(sk, &local->addr, &addrs[i]);
+@@ -625,11 +624,11 @@ static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
+  * and return the array size.
+  */
+ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
++					     struct mptcp_addr_info *remote,
+ 					     struct mptcp_addr_info *addrs)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+ 	struct mptcp_pm_addr_entry *entry;
+-	struct mptcp_addr_info local;
+ 	struct pm_nl_pernet *pernet;
+ 	unsigned int subflows_max;
+ 	int i = 0;
+@@ -642,15 +641,8 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
+ 			continue;
+ 
+-		if (entry->addr.family != sk->sk_family) {
+-#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-			if ((entry->addr.family == AF_INET &&
+-			     !ipv6_addr_v4mapped(&sk->sk_v6_daddr)) ||
+-			    (sk->sk_family == AF_INET &&
+-			     !ipv6_addr_v4mapped(&entry->addr.addr6)))
+-#endif
+-				continue;
+-		}
++		if (!mptcp_pm_addr_families_match(sk, &entry->addr, remote))
++			continue;
+ 
+ 		if (msk->pm.subflows < subflows_max) {
+ 			msk->pm.subflows++;
+@@ -663,8 +655,18 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ 	 * 'IPADDRANY' local address
+ 	 */
+ 	if (!i) {
++		struct mptcp_addr_info local;
++
+ 		memset(&local, 0, sizeof(local));
+-		local.family = msk->pm.remote.family;
++		local.family =
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++			       remote->family == AF_INET6 &&
++			       ipv6_addr_v4mapped(&remote->addr6) ? AF_INET :
++#endif
++			       remote->family;
++
++		if (!mptcp_pm_addr_families_match(sk, &local, remote))
++			return 0;
+ 
+ 		msk->pm.subflows++;
+ 		addrs[i++] = local;
+@@ -703,7 +705,9 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ 	/* connect to the specified remote address, using whatever
+ 	 * local address the routing configuration will pick.
+ 	 */
+-	nr = fill_local_addresses_vec(msk, addrs);
++	nr = fill_local_addresses_vec(msk, &remote, addrs);
++	if (nr == 0)
++		return;
+ 
+ 	msk->pm.add_addr_accepted++;
+ 	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
 -- 
 2.37.2
 
