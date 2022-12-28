@@ -1,49 +1,49 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83851117
-	for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 10:18:15 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id bj12so37342640ejb.13
-        for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 02:18:15 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4667810E9
+	for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 10:18:17 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id bj12so37342768ejb.13
+        for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 02:18:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Effoef+23AA8q569t3z3FvYJYTOw8TADOT4dKKnnPz4=;
-        b=HkSlbjC+2oOKM7wGdhsVqDoe3GtLLsecbh2Foq54jPtiUu4stGLn4BJrY3YwlfIkfJ
-         dmSVEm7WF09WzYq3lIv/+jc3BCB34nejHt29TPV90e7a0pBFdIeo/QN61LJQ77W/ibFU
-         9Iy5Bhh093IOAhJrfVWpy95lsSvJ0HlluYUqhJqU7lppzcjU4EQxLcCxM56r+8TUEfXV
-         GOcrDHx0v9TOcfuCo+s5wyXrxQXbw1iCfGzaL3dgp/vj6n126ylC/E6UOb3U5MqIS8er
-         lNm2PZRw6bF39cOzfH4q/ts2MoAByKQx4ay3+HhHpSYSTxV30vDijtpw1maS9FT+HxbV
-         oKvg==
+        bh=N/jHKBQFqn7bUxdd3zFAuj3Z6MLFTXhPHtnSVA/ZQLI=;
+        b=sSRRL2FPl7spcpKvTKw2Jlz1MnsAyLz63Aaaqdv3QbPKzl/aFlG6a7vIqDe5xUAmop
+         GosrQ5nJUmJwY4jHFvW2EY2iEWMflSLN2DSpfeceJ6vprOxWMAe8GwbZkClbdmR1oICj
+         yFTWHkCD5orBNyJ75mHXmMe3yDHe4KhN/d5d+ohGI5MvdmoFeCjIq7WKxTpDlv7O2ziA
+         y/de2Ss1mx9Ecl307fLnwzLrhJTavYicvhlxJKKE+Y0tmqBCo4i9UETRy71OCZs1F0ZC
+         nPfrLbh+R4TM13qAKEH68qWetvUDyfkGYDAncyQxDM3/bFOcntyremyVwVgJf5x6+Mmk
+         q1Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Effoef+23AA8q569t3z3FvYJYTOw8TADOT4dKKnnPz4=;
-        b=xbmqsziWdQqRsjHBDSCTzGirkFp20au4nVvVUym0vQBP0skei1dlSzr+Y3MZMxfRdd
-         b2NH4SVwjOP7AQSIPjK6sW1qF2qhp8CRsPH9M5cJQMTAdv1X2pZb+5WvTK7416H04cSw
-         slZLyJHFCxBEAIB66txqM20Ex96HTv0BND+GObim3FKYuB1pZZkAd+lBycHUzH4seHfG
-         ND9GDyxPS5soCLQc6SFRQVoR2azYEyEZPWdJ3aE0rjlsArRqC2MxTq/k082igMTXf9mo
-         K9R8kgTf3bUqZu92h0OWMt5ME0uXgm3F+wiv3RxICbFdyD1YngZAXNgX8QzclPSbnLtP
-         RUKQ==
-X-Gm-Message-State: AFqh2kpXhpEainptLCSYqybj+8oa5WPRJAenWDt9vF6z/IOT3UwOk32H
-	2hXeLlrwazrf3217nA5JWMJ3XxfNIDfQ7ECttdl2sw==
-X-Google-Smtp-Source: AMrXdXuSZo2QVmw7aoBlXwe9Hf5jA1o47j9GC8IR1ZfFn3oKhcogNr8SzDYIWApsawiQ/MSeMJGCCg==
-X-Received: by 2002:a17:906:d96c:b0:7c1:7cc2:1f1e with SMTP id rp12-20020a170906d96c00b007c17cc21f1emr24478259ejb.35.1672222693933;
-        Wed, 28 Dec 2022 02:18:13 -0800 (PST)
+        bh=N/jHKBQFqn7bUxdd3zFAuj3Z6MLFTXhPHtnSVA/ZQLI=;
+        b=YIT6T3UMxA27YckuUC4u8XvIDiO2VpDf6PSrdWOwwCR0uH2suBJmlpfBTv1NwXek4F
+         /6o/uQPN0MUPcXTw8Jp+AH8Wctu3Q61ILDlY+f2VbJwblI3ZRrzSCtI039biiSPyqcDG
+         kpbnjRogvKcisjc3nq5KniLO/2NzSeoZHRItt8ic5VrYO21SmdVsmS2Lt01pGx0Wwe7i
+         nwnIwKZssV4okkMH0x8BHUypb2j5Y7JN9Gt/8SfapeRZYDdf4IVg6xh1zdmjVSFIayVn
+         Nol8WM8CGsE55xuIy1jcjABmxJik9CTXGApVUJyJht4/ikfIgc60/ERNm9abPMiuROCR
+         XiyQ==
+X-Gm-Message-State: AFqh2kqU3Z3R9ZP/S+iM/nPIMjlbWuD7aUrwgmJlIvntUaPZi6T8qBLs
+	VUVl/NAow0nGIfg2hRpTCLENvbeIleTha5x/eztU8A==
+X-Google-Smtp-Source: AMrXdXsYvk6o5PzMDV8IMC/gem6NS10P11rlYyV7usXUWZjjp0UF5BdII4jey9zZFIi33lwjSesEuw==
+X-Received: by 2002:a17:907:d302:b0:7c1:3472:5e75 with SMTP id vg2-20020a170907d30200b007c134725e75mr21978377ejc.29.1672222695169;
+        Wed, 28 Dec 2022 02:18:15 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id q14-20020a17090676ce00b007ad94422cf6sm7174127ejn.198.2022.12.28.02.18.13
+        by smtp.gmail.com with ESMTPSA id q14-20020a17090676ce00b007ad94422cf6sm7174127ejn.198.2022.12.28.02.18.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Dec 2022 02:18:13 -0800 (PST)
+        Wed, 28 Dec 2022 02:18:14 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v4 10/12] selftests: mptcp: userspace: refactor asserts
-Date: Wed, 28 Dec 2022 11:17:46 +0100
-Message-Id: <20221228101748.2518303-11-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v4 12/12] selftests: mptcp: userspace: avoid read errors
+Date: Wed, 28 Dec 2022 11:17:48 +0100
+Message-Id: <20221228101748.2518303-13-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221228101748.2518303-1-matthieu.baerts@tessares.net>
 References: <20221228101748.2518303-1-matthieu.baerts@tessares.net>
@@ -53,144 +53,94 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3455; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=ROj86lyIiRGetvyo5Qdh6lfFZ8/hVlMOitwP1IlR0lI=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjrBe/as0W5dDXxbQ4x96m34zESntwoRlmPRbqg4Ye
- COC9rKiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY6wXvwAKCRD2t4JPQmmgc7HcEA
- C5TDH2eUJhO04TNyv3dgCQcVAdG+BfyLZUA62O8p06iUWyF9FmIZiKz1Clk4AI6mNWP2xDWFiSEqGM
- I8YRBNWFYORysIi3wCxpSrKJVp6DoZDtE+bzNZsQjamCdfKtzDA8/RDrrU20qP9ez9zHgBVA6n9gON
- 0DnBHO+kGZvuMHlfGXRv2wmSeHzywhbfaMdTwI5r6xfedTlXfpSEUEkkxK7VCpTnpB2SU8xnFL9ADc
- Nsr3Qu7BFo9eKxMNMppnhpSOiyFVqn5Qv58dhhVIqWsvGChXgqKS59ObrxotjQYFoaXyUwAhoOWBmy
- vSE5EseLcKBds7ufzEzULvv9rM10wifX5fyXXRWim9gwTwmJ3KCUELpXeZ7cK+f0iAknLIllSyJIlD
- OpPtGpof5QPXnri5ABONpoRSfpXIb2lDobwMz3MmvL5QEI4UZX1eOpWd7ZL9ojAL/O5XeHuCqFSTIz
- /BP6RaIsqtbA2YvUf4dxJKbpaljzYV/UHN0ioVrBAlqZTRvQ0i9foO1nVj1wA7fxZFRhAzvrKWxkuX
- lyMiJvu8JzjGWZ/Z3xyzbnqLWOc6NIPUCX68MeCRAH+GvoIZ8xzLMvTHx6/y+cBAYHKugnNuY2dsnK
- XIm5tyCn18XFbMKTI96G68Prn4Rxs0WOToOFFWtBcRtrEYRt2vvYsljqlGdw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2046; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=R010oh46FcW31/7ZHEGi4EYd6Lvb3u6lx2QxCCnXZ1I=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjrBe/cxyi6f2f9eDjRxyGAWuZ1HNAmTZYz3tkM20t
+ xLGCznWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY6wXvwAKCRD2t4JPQmmgc4GsD/
+ 0QjqCUFvlLd8fBqiC4++fqjwXEUP5HcYs5jqxuiqDnCzVbXAA14aAR1vXrFQMDJo+XgiOh3jgWeAFY
+ ofY/fF9DQh7g+ODtXNhMI3eZl5w+3Dy60U82+K3K9JQdztDjIxX3XZYgI6ZXrtjvOMOgS3+OMhTpS/
+ /CCG7WTMTTZtst19SdSkNOEByBYgZ/+ibDmoPs89TnIJWn/PTJz69afJeCsedJlk5fwgxfD+2mBUi7
+ oTLgNdYVx7jqqLJmM+hgLA6FyigY51DzcdCcAf3eMzfjoeWhWdRGuIurlZF8FUWN0FMg2Q7s7LmbdT
+ CThj+EWTkLLG4K3CkdgujFFzHOwuflzhU1TBNpGmlGO/snHik17AyBLYvB1oCRImi6S4Dmc2ooVBQw
+ 44quGOxCd4rX+0foW+KyR7XyqqbNjBi34gJ9V3NZdbkb6C9Q3v/eSipsWTeRBRYWMcfG3//7jDyalw
+ 0/SeRpW3Xh4hzw8sVoH4ZPoTjpZPDf0LcJM3tFR++9vy8XPEsZnRSyQVIzcdmVqXbha4G0sKnDmTCJ
+ U2CzyJSQcm0pRNyiiO+nAjZm4Gp+FC1L8ojKbRq/KkiVTePl7Irlc2igivrlzBXgAYKCeeyCVwybqb
+ 0Mz+NjDLXW66LxzePJvLqqx1Bdxm9qxgjly7vnxVfad1VNyIexXExPEnrR8g==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-Instead of having a long list of conditions to check, it is possible to
-give a list of variable names to compare with their 'e_XXX' version.
+During the cleanup phase, the server pids were killed with a SIGTERM
+directly, not using a SIGUSR1 first to quit safely. As a result, this
+test was often ending with two error messages:
 
-This will ease the introduction of the following commit which will print
-which condition has failed (if any).
+  read: Connection reset by peer
+
+While at it, use a for-loop to terminal all the PIDs the same way.
+
+Also the different files are now removed after having killed the PIDs
+using them. It makes more sense to do that in this order.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- .../selftests/net/mptcp/userspace_pm.sh       | 72 +++++++++----------
- 1 file changed, 36 insertions(+), 36 deletions(-)
+ .../selftests/net/mptcp/userspace_pm.sh       | 32 +++++++------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index f9a03e6e968f..9edd1abcc067 100755
+index 0bd35768c1aa..8b4f130800b9 100755
 --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
 +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -225,6 +225,36 @@ make_connection()
- 	fi
- }
+@@ -50,6 +50,9 @@ print_title()
  
-+# $1: var name
-+check_expected_one()
-+{
-+	local var="${1}"
-+	local exp="e_${var}"
+ kill_wait()
+ {
++	[ $1 -eq 0 ] && return 0
 +
-+	[ "${!var}" = "${!exp}" ]
-+}
-+
-+# $@: all var names to check
-+check_expected()
-+{
-+	local ret=0
-+	local var
-+
-+	for var in "${@}"
++	kill -SIGUSR1 $1 > /dev/null 2>&1
+ 	kill $1 > /dev/null 2>&1
+ 	wait $1 2>/dev/null
+ }
+@@ -58,32 +61,21 @@ cleanup()
+ {
+ 	print_title "Cleanup"
+ 
+-	rm -rf $file $client_evts $server_evts
+-
+ 	# Terminate the MPTCP connection and related processes
+-	if [ $client4_pid -ne 0 ]; then
+-		kill -SIGUSR1 $client4_pid > /dev/null 2>&1
+-	fi
+-	if [ $server4_pid -ne 0 ]; then
+-		kill_wait $server4_pid
+-	fi
+-	if [ $client6_pid -ne 0 ]; then
+-		kill -SIGUSR1 $client6_pid > /dev/null 2>&1
+-	fi
+-	if [ $server6_pid -ne 0 ]; then
+-		kill_wait $server6_pid
+-	fi
+-	if [ $server_evts_pid -ne 0 ]; then
+-		kill_wait $server_evts_pid
+-	fi
+-	if [ $client_evts_pid -ne 0 ]; then
+-		kill_wait $client_evts_pid
+-	fi
++	local pid
++	for pid in $client4_pid $server4_pid $client6_pid $server6_pid\
++		   $server_evts_pid $client_evts_pid
 +	do
-+		check_expected_one "${var}" || ret=1
++		kill_wait $pid
 +	done
 +
-+	if [ ${ret} -eq 0 ]
-+	then
-+		stdbuf -o0 -e0 printf "[OK]\n"
-+		return 0
-+	fi
+ 	local netns
+ 	for netns in "$ns1" "$ns2" ;do
+ 		ip netns del "$netns"
+ 	done
+ 
++	rm -rf $file $client_evts $server_evts
 +
-+	stdbuf -o0 -e0 printf "[FAIL]\n"
-+	exit 1
-+}
-+
- verify_announce_event()
- {
- 	local evt=$1
-@@ -250,15 +280,8 @@ verify_announce_event()
- 	fi
- 	dport=$(sed --unbuffered -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
- 	id=$(sed --unbuffered -n 's/.*\(rem_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	if [ "$type" = "$e_type" ] && [ "$token" = "$e_token" ] &&
--		   [ "$addr" = "$e_addr" ] && [ "$dport" = "$e_dport" ] &&
--		   [ "$id" = "$e_id" ]
--	then
--		stdbuf -o0 -e0 printf "[OK]\n"
--		return 0
--	fi
--	stdbuf -o0 -e0 printf "[FAIL]\n"
--	exit 1
-+
-+	check_expected "type" "token" "addr" "dport" "id"
+ 	stdbuf -o0 -e0 printf "Done\n"
  }
  
- test_announce()
-@@ -357,14 +380,8 @@ verify_remove_event()
- 	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
- 	token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
- 	id=$(sed --unbuffered -n 's/.*\(rem_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	if [ "$type" = "$e_type" ] && [ "$token" = "$e_token" ] &&
--		   [ "$id" = "$e_id" ]
--	then
--		stdbuf -o0 -e0 printf "[OK]\n"
--		return 0
--	fi
--	stdbuf -o0 -e0 printf "[FAIL]\n"
--	exit 1
-+
-+	check_expected "type" "token" "id"
- }
- 
- test_remove()
-@@ -519,16 +536,7 @@ verify_subflow_events()
- 		daddr=$(sed --unbuffered -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evt")
- 	fi
- 
--	if [ "$type" = "$e_type" ] && [ "$token" = "$e_token" ] &&
--		   [ "$daddr" = "$e_daddr" ] && [ "$e_dport" = "$dport" ] &&
--		   [ "$family" = "$e_family" ] && [ "$saddr" = "$e_saddr" ] &&
--		   [ "$e_locid" = "$locid" ] && [ "$e_remid" = "$remid" ]
--	then
--		stdbuf -o0 -e0 printf "[OK]\n"
--		return 0
--	fi
--	stdbuf -o0 -e0 printf "[FAIL]\n"
--	exit 1
-+	check_expected "type" "token" "daddr" "dport" "family" "saddr" "locid" "remid"
- }
- 
- test_subflows()
-@@ -881,15 +889,7 @@ verify_listener_events()
- 			sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
- 	fi
- 
--	if [ $type ] && [ $type = $e_type ] &&
--	   [ $family ] && [ $family = $e_family ] &&
--	   [ $saddr ] && [ $saddr = $e_saddr ] &&
--	   [ $sport ] && [ $sport = $e_sport ]; then
--		stdbuf -o0 -e0 printf "[OK]\n"
--		return 0
--	fi
--	stdbuf -o0 -e0 printf "[FAIL]\n"
--	exit 1
-+	check_expected "type" "family" "saddr" "sport"
- }
- 
- test_listener()
 -- 
 2.37.2
 
