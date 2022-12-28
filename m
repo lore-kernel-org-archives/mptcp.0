@@ -1,125 +1,138 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2559A3239
-	for <mptcp@lists.linux.dev>; Tue, 27 Dec 2022 18:57:24 +0000 (UTC)
-Received: by mail-qt1-f170.google.com with SMTP id c7so11094240qtw.8
-        for <mptcp@lists.linux.dev>; Tue, 27 Dec 2022 10:57:23 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D85110E9
+	for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 10:18:08 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id jo4so37407705ejb.7
+        for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 02:18:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NmuLWW9Jp6YvnjhIgS6mRxb8920U5llifF4o+wblQdU=;
-        b=iz2R9zSKJCu3Aa5ZeZAbNsbNRznVeke11T5lwTQGD7U8o5egKfZA/jAE+1VR6umiFW
-         4JI6aiC4qK0Xf/+BGFKeg/wHOWCfIRmh47fECOMwZOX6iAD7M2O5gfxEqs1hVyEus8yI
-         XO/SXQJTVp+eM83xhCFXNPrRxVNgfjYqp2HdCkdwq30zWMjpUeB6WyZ33Bs2KZY8PGZk
-         dnqOJBl8Hw+Af0tknIdmS5YCMak/0pFcmOWvUxD8aLQttV6G9XCCUjv6Oa/baeL0hkYI
-         kvpEitr8kbYEmknXS7jqkhKd5xUgVBSFZfblca9YkoDLwMhAbuV4eoa7s6glNtBVmRKN
-         ieoQ==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6qxEgD5ugbVDgpN9ZZF8jlwBhB7yxS/xdw0vHQKcfAM=;
+        b=XRflJPSBFSHT9etLFkUXkhFBkvif7FJpv1QhKe8PNExtipz9FRZsKQekqPfbp6OPCL
+         1/rTKEzTX5jp+B7TLJwJ+EL7QXX9ECFZGBPFrriQiyhdPPdQkKMPxEQkY1ZlX7MXpCj+
+         QRFaiuhU0uUgYQAPX/CPeA/DDqqY8nv/4QSCIfyxApx0dZ3bylfF9Ct2pjrheHvHPp+3
+         Wxy3mbzuHdw9wfqDuSsnxtNam7o4/7zkJ1rToOmdogK104DKZX5qmuAUYoz+PTVn2t/9
+         rD87u1CGxmOm75JUq47KPAAF1jHpg0H+cpCfGroSIueWX8BEqDxCP4DxUcc8baEzb2oc
+         UGVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NmuLWW9Jp6YvnjhIgS6mRxb8920U5llifF4o+wblQdU=;
-        b=eqf4PruyG3oawyVy3F/l8c/QYtcHWijisIZFKxOZffnkYG16HAhSDfvTPq2aFXxES4
-         /FTZgyr62VnJBG1dWZWq5MISqChBEfP81AxfvX3lkYYsXCANUI+42Cay5LfP2ZwCeg+c
-         UijXbRxjNkD+RJmpuAxEwH2kOoiMPF1+fF2Wa0pjQe1HdvjQrK1VrF7Dd2guPPNIprTL
-         aNqFfc3uWuAge5PzpKMCIpv39x73ydxxuCUL8C/E7TObj1Za4QSnRtrCFn/L6Ssj2Frn
-         LbkV3j8ehHf4bnYMY9z0VZBh51cP112kvXgl8EO7U+ktgygCElLAcioV0dl8YdQd0Cst
-         8Lfw==
-X-Gm-Message-State: AFqh2kphkDHfQHkpt6GNu6I8l3bd6j+ZNhF1FPThTkuFwm2PwX4asejs
-	A5kx1gbJucotepNP7FVL9Q==
-X-Google-Smtp-Source: AMrXdXuvNaZbUeJc2itFBZ0/PDtqztiY7/ggKq2ioI4WeRnxQfQIV3HIYWNKY7lb0j9G2hD2BztVQQ==
-X-Received: by 2002:ac8:66d1:0:b0:3a5:9267:ee07 with SMTP id m17-20020ac866d1000000b003a59267ee07mr31028853qtp.63.1672167442899;
-        Tue, 27 Dec 2022 10:57:22 -0800 (PST)
-Received: from [127.0.0.1] ([172.177.2.97])
-        by smtp.gmail.com with ESMTPSA id cj8-20020a05622a258800b003ab7aee56a0sm5845869qtb.39.2022.12.27.10.57.22
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6qxEgD5ugbVDgpN9ZZF8jlwBhB7yxS/xdw0vHQKcfAM=;
+        b=aIWbiOdZ4BgCi88ng1JNhh1dHS19YYQNc1owi2OzOCAmgd75P0EI40vYzbEEWr/tN+
+         AyeDCuimmMF6Z2IhDcjoGr6ZvBtfKcZ++vxeAMgBfEYyEnkjS1/sVSLcc80BdjS04aUp
+         gAJ+8S2AoNSO8QQ6OiqzTzffM9CpD/dEvKYp2N1Sv7c7bXh2GQon7esLYp50dvDebfkL
+         bpaZ/wgOlsbKhpGzVX+nFYYUb4FVo+g1F4+VLNdEJqyVKjRo+u6uchszNlZZJhTEdIHL
+         0fB6VYpxB3zae63UPoDzmr7SLLxKB1u0b4/jN8oy172/USXkUbBfsOhumOWK0Ej03quj
+         FLhg==
+X-Gm-Message-State: AFqh2koaoKiY+3akymiTq3KMqfwKERD82xiY42jFQwOrRqN+vgXPIsVa
+	mOZv+bOLmBd1clm463reA0bzQO6ayyvYam1XMy2BlQ==
+X-Google-Smtp-Source: AMrXdXseX45Yx7lqbMcTWG4bty34LeUUQ3Ralga5mh6ELZudMX0hew/S5QwyyRzD9ys1wPEKDEFrRw==
+X-Received: by 2002:a17:906:4f88:b0:7cd:5a34:8932 with SMTP id o8-20020a1709064f8800b007cd5a348932mr19447520eju.21.1672222686648;
+        Wed, 28 Dec 2022 02:18:06 -0800 (PST)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id q14-20020a17090676ce00b007ad94422cf6sm7174127ejn.198.2022.12.28.02.18.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Dec 2022 10:57:22 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221227182057.2288816-12-matthieu.baerts@tessares.net>
-References: <20221227182057.2288816-12-matthieu.baerts@tessares.net>
-Subject: Re: selftests: mptcp: userspace: print error details if any: Tests
- Results
-Message-ID: <2023624f-f4e6-ab27-59c8-d77373e4e6ec@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Dec 2022 18:57:21 +0000
+        Wed, 28 Dec 2022 02:18:06 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-net/next v4 00/12] mptcp: add support for mixed v4/v6
+Date: Wed, 28 Dec 2022 11:17:36 +0100
+Message-Id: <20221228101748.2518303-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2920; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=ijRaBGWloDQY099IggnIDynPLWg/nRlVDKZn7Rq2Kcs=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjrBe+q92FMGVUChSsMAn6kcdgFZb8S0kT8zfEt2Qu
+ /CDMqIiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY6wXvgAKCRD2t4JPQmmgc10FD/
+ 0Zj3Bnj3D9Zvc2WpM+yHUmiwjJbjAKUo/CLKc+pUeWKcuLcqiPTeIS1U08RyxxSEY5T4g5H0JQViR2
+ 7bwkuGVZhlaXRoBhZAhydD3D6JOO6KVmmw2IgW0J3VxRuUoKQ8AtyIubJwDAkGLF3nX9GBslDslAYO
+ nav8dttiSl2QzKHY/9nwbVWLq7nUjF25rLrA0CrO/wzMyXW9G1xf5/OryVWN19rrIME6vG5R732Kvp
+ M4RQNrSf7kG2sfvdsDL8VKrfKClth3mv2r+kdxc5s6kJ4rB6HWlqgZh4jl9Z5fbdVWIRdGIAQjeKeS
+ okeWHLa5imTJPpfJplMc4sXUdVuATcCMSgoznDUxZyn+XCLWHsSjTGkUiPrRvfmzop0Mx6aMIxRYQ9
+ LRixBXR4VFRzMV2akmaqBjCqhzlXrUZX8mVEiX0kCJmseGz/RAp8gAiW8suhHJ6NXcqwTnbgkP5R+Z
+ J17lsFuk5janCT8imRuRi5e+Ffqx7dZeOoy9ni3LtnpCT7SCSwh9HVwnJGppNgs47i/zKZoz9BR9DA
+ LHgcMu3J02wOsSn/E2S84cuHHQColeWhhY2CLNZijTukjO0kVoK8OoMsRDIF44pAqcT8C+OgWvRJ6H
+ 2ACh6k9uxA+jOL9UXh7EL1JAxwwE/F40R1KKH94bh+ZuJ1FEqNCQzthB84CA==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+This is a v4 of Paolo's series with the same name with some
+modifications and additional patches.
 
-Thank you for your modifications, that's great!
+ChangeLog:
+  - v3 -> v4:
+    - Fix a compilation error without CONFIG_MPTCP_IPV6 in patch 4/12.
+    - Add a title for the cleanup part in patch 9/12
+    - Add the patch 12/12 to avoid "read" errors
 
-Our CI did some validations and here is its report:
+This series can be split in 2 parts: the 3 first patches are for -net
+while the rest is for net-next. Patches for net-next depends on patches
+for -net, that's why everything is being sent together.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6455355476017152
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6455355476017152/summary/summary.txt
+Patch 1 lets the userspace PM selects the proper family to avoid
+creating subflows with wrong source and/or destination addresses because
+the family is not the expected one.
 
-- KVM Validation: Script error! =E2=9D=93:
-  - :
-  - Task: =
-https://cirrus-ci.com/task/5610930545885184
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5610930545885184/summary/summary.txt
+Patch 2 makes sure the userspace PM doesn't allow the userspace to
+create subflows for a family that is not allowed.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5047980592463872
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5047980592463872/su=
-mmary/summary.txt
+The core MPTCP implementation is just a few bits of properly supporting
+a mix of v4 and v6 subflows, we just need to allow specifying the
+subflow family explicitly (patch 1) and remove artificial constraints in
+the in-kernel PM currently enforcing no mixed subflow in place (patch
+4).
 
-- KVM Validation: Script error! =E2=9D=93:
-  - :
-  - Task: https://cirrus-ci.com/task/6173880499306496
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6173880499306496/su=
-mmary/summary.txt
+Patch 5 makes sure the sk_ipv6only attribute is also propagated to
+subflows, just in case the PM doesn't respect it.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b2729de9466c
+Some selftests have also been added for the userspace PM (patch 3) and
+the in-kernel PM (patch 6).
+
+Patches 7 and 8 are just some cleanups in the userspace PM, not related
+to the rest but I saw them when modifying the file.
+
+Patches 9 to 12 improve the messages printed by the userspace PM,
+especially in case of error during the validation.
+
+Matthieu Baerts (9):
+  mptcp: netlink: respect v4/v6-only sockets
+  selftests: mptcp: userspace: validate v4-v6 subflows mix
+  mptcp: propagate sk_ipv6only to subflows
+  mptcp: remove assigned but unused value
+  mptcp: userspace pm: use a single point of exit
+  selftests: mptcp: userspace: print titles
+  selftests: mptcp: userspace: refactor asserts
+  selftests: mptcp: userspace: print error details if any
+  selftests: mptcp: userspace: avoid read errors
+
+Paolo Abeni (3):
+  mptcp: explicitly specify sock family at subflow creation time
+  mptcp: let the in-kernel PM use mixed IPv4 and IPv6 addresses
+  selftests: mptcp: add test-cases for mixed v4/v6 subflows
+
+ net/mptcp/pm.c                                |  25 +++
+ net/mptcp/pm_netlink.c                        |  58 ++---
+ net/mptcp/pm_userspace.c                      |  14 +-
+ net/mptcp/protocol.c                          |   2 +-
+ net/mptcp/protocol.h                          |   6 +-
+ net/mptcp/sockopt.c                           |   1 +
+ net/mptcp/subflow.c                           |   9 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  53 ++++-
+ .../selftests/net/mptcp/userspace_pm.sh       | 200 ++++++++++++------
+ 9 files changed, 262 insertions(+), 106 deletions(-)
 
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+base-commit: fe84ec2a445f2ec26dc0484538f2175945b43822
+-- 
+2.37.2
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
