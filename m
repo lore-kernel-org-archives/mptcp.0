@@ -1,125 +1,79 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B212C1C07
-	for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 16:13:21 +0000 (UTC)
-Received: by mail-pl1-f176.google.com with SMTP id d15so16435411pls.6
-        for <mptcp@lists.linux.dev>; Wed, 28 Dec 2022 08:13:21 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAA95667
+	for <mptcp@lists.linux.dev>; Mon,  2 Jan 2023 16:48:48 +0000 (UTC)
+Received: by mail-ej1-f45.google.com with SMTP id m18so67669507eji.5
+        for <mptcp@lists.linux.dev>; Mon, 02 Jan 2023 08:48:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h4RoMJ6DOX4qPVPdQ+5jsZxe05u/5bCGb0XaJZMfYks=;
-        b=FS2Ufz3vzLNtmouuVTfcIixF6YAqGDz8x81Xy/+a+S5Qb7Fal/m8PfaPqKvecXGPpH
-         DG0Wuhfk/dG1l29vKqMytpW3/o5OU/GyM2A0SzPF0eSabtrsZ26CaAe6a6BQ459xWTSI
-         ZhOwJCMHl3ADFh6PMN491rhhfujb9ofc/Kr0ZteVWpflKp5MnPprTfU/g664fwFC/GyE
-         uaTupFFy6IDHvCJSzbck/5G4YpiyjueqAICF3elnQF8jdwdAk6ezt1kPx3hg2iMjh4A5
-         tVq+EmKSno6IL7mhOvVKwAh9yyem7Nmd2FdSjKyTdDeEH1ntJlgP34N8t0B0poaIksUk
-         hjaQ==
+        bh=4jY4w4GEWCPfcfW3DS+Oq01QZ0kOrwhhjsi752PdZm4=;
+        b=m4sKOgbLGAlgw/VUs+C5rqEeh2nC9K5NBTt7Lbqhz52IQmO7c20/hPudqtvwJSQxSi
+         f9eCg8BxTPwGzsyS8z4v0Ux9sqrwA1srZcgbsZzWspdppX8dGwNdbPl19aBO+nXd+mTe
+         1Os9sY4tIEp4Ro8MutH8Q2GsQBAhjb/jSAY47cRu3NLBplg+FlO6bz7praKOjzItcKH5
+         OAUozQrUKm3pTo7R9pFpAqh9rLG6m4FCjBz1M6EffDpQrrQ2cJ0nx4qMu3oD3xoel+Ls
+         0Lm7xHRW16leiyk83SbNgGVeQ3IUVL/kp8kpggFkiJU/Ew3+rGzqkz6BPDd7QZ5h8eYS
+         Dk5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=h4RoMJ6DOX4qPVPdQ+5jsZxe05u/5bCGb0XaJZMfYks=;
-        b=NrYS2c6/7CslavqbQic57+BqhPm4em7M2cG5pT0TZbBNCMZDEJ6GCEh3rR7iSUskWq
-         f4c8wItpFhlbpuZNw+m5bYnlLNzecmcmE/U8t48Wgv9vgifR+w3vCZCEL8V9ZzhXlraI
-         nR42bLVHZ27somvD2Bax8jB9C+twDCPb1WnRIAPc/F0DTX7/kMUWm3b5oA+JU6CxwKfe
-         HanWTeV7dFPQnJBMtyDIWkUTYnPHiUTGt7+iI8kyx5U2J2Y4avBOJpP0vpf2MFeHhlrO
-         VfDK1B4OfN1BwFYWcfRfdO+68icPv8gXabAE1VjYUiLcuo+WeVHFAQFpft0u2l5eUAbJ
-         fIGA==
-X-Gm-Message-State: AFqh2krY+j3H05ofPs5NbO8ItpUT205122wh61tCObyy91ce8mfLk4u/
-	pD3ODv38jBvid+Va6/KKK/0JLu6H1g==
-X-Google-Smtp-Source: AMrXdXvDsMEskncnW5V3zZ6xhxu1e7cxdFCOOZwDvVZeFnH3WtLBbGN5tl/AhYj22cyKXT0BllFCsQ==
-X-Received: by 2002:a05:6a20:93a1:b0:a5:cc8f:cd14 with SMTP id x33-20020a056a2093a100b000a5cc8fcd14mr33844006pzh.35.1672244001087;
-        Wed, 28 Dec 2022 08:13:21 -0800 (PST)
-Received: from [127.0.0.1] ([65.52.126.97])
-        by smtp.gmail.com with ESMTPSA id t66-20020a635f45000000b0046feb2754e5sm9592590pgb.28.2022.12.28.08.13.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Dec 2022 08:13:20 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20221228101748.2518303-13-matthieu.baerts@tessares.net>
-References: <20221228101748.2518303-13-matthieu.baerts@tessares.net>
-Subject: Re: selftests: mptcp: userspace: avoid read errors: Tests Results
-Message-ID: <7f1e13ed-4e34-5a91-76fa-28f5bcc2739c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 28 Dec 2022 16:13:19 +0000
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4jY4w4GEWCPfcfW3DS+Oq01QZ0kOrwhhjsi752PdZm4=;
+        b=nbx3XZnW7MivUm8x8e7bQme3eev5fPK2PqLfMNqEQvmOmgjxFzBpnBp3bax1CdDLf4
+         EoMY4mPXPMirILcZg1NCy+WRpOe1Ai1/5tCmY3idt02CV+hqWiRZIjyVCjzQljh3Jbo9
+         k+ZdOBWf8V1X5x1osevjngs5c2Dybvjkhs6HUjdkUelZj0ByETUr/VN4Nt79QIC1VWvD
+         VLCzOttZoC6/zzYKOVOpMRpaTAT3RWxVlHh5s9xEqVPDVETG4YuDbaSx51vCcnZmOIzb
+         v8hmTGDnPHzeIlIjY2Jq8PnD1fc6KyV3jgkksDUYqnAP4lDVzn1CXGR7IkHfbfXQRego
+         2PEg==
+X-Gm-Message-State: AFqh2kq0qiMVEIZ5g9wLURhjt2e/JI3bm/+xhNImbOZwZAg7uBu4n7w3
+	N5CK0FVyBwu4UD9Z+lB7Iaw5mVv0NKItiPRR
+X-Google-Smtp-Source: AMrXdXuUg+EVw0QxTF3qZirz9O+BHUFZqq4hSb2/WQXukmNkP7R6zWgFCDTrdH3KbnsY9V5iBiZdig==
+X-Received: by 2002:a17:907:2be8:b0:7e6:bae:fa0f with SMTP id gv40-20020a1709072be800b007e60baefa0fmr38826194ejc.58.1672678126388;
+        Mon, 02 Jan 2023 08:48:46 -0800 (PST)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id dt6-20020a170906b78600b0078d22b0bcf2sm13123939ejb.168.2023.01.02.08.48.46
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jan 2023 08:48:46 -0800 (PST)
+Message-ID: <fcbda329-4dee-0ada-647d-9a3c89b56f9b@tessares.net>
+Date: Mon, 2 Jan 2023 17:48:45 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-GB
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Weekly meeting - 3 January 2022 16:30 UTC (8.30am PST, 5.30pm CET,
+ 12.30am CST)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hello everybody!
 
-Thank you for your modifications, that's great!
+Happy New Year!
 
-Our CI did some validations and here is its report:
+Our public MPTCP upstreaming weekly web conference is scheduled for
+*tomorrow at the (new) usual time* (16.30 UTC).
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6671667710656512
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6671667710656512/summary/summary.txt
+The list of topics is available here:
+https://annuel2.framapad.org/p/mptcp_upstreaming_20230103
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4630974129504256
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4630974129504256/summary/summary.txt
+Feel free to add/modify topics!
 
-- KVM Validation: Script error! =E2=9D=93:
-  - :
-  - Task: =
-https://cirrus-ci.com/task/5193924082925568
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5193924082925568/summary/summary.txt
+Anybody can join the meeting using Google Meet website/app/phone:
+https://meet.google.com/edk-rkrk-vaj
 
-- KVM Validation: Script error! =E2=9D=93:
-  - :
-  - Task: =
-https://cirrus-ci.com/task/5756874036346880
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5756874036346880/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/93cb3af31a5c
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+See/Speak to you later!
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
