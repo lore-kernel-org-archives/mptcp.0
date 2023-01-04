@@ -1,39 +1,41 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C307F
-	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 01:26:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A897F
+	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 01:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672795585; x=1704331585;
+  t=1672796138; x=1704332138;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=ybXc1BMJDhQKEjeYQFNH5Uj5pxigszoPvUm7fv51jgg=;
-  b=fYF63h5gqOGU/GCsHWvk6Zcccubph4Opgfit1wwgGFsDktyU+I+RxlgR
-   sl94s/8QxQ7Pm2XIpCb6P3IfA/Wwc4JrEdSvYnQGdu09AhaO2YWAKZ/bz
-   J67Anbi0hYMWqevta58nNV+7dh1NhCfDiVRHjqdKeYgVnPYf+b6hFlPGo
-   n27G4Y3GzB3ezpGWB8Y/TwSVJXvMQBXxGO9fFwgyFxsc3w7OMtrWZGkK4
-   t3d1SHXEsjj1fbo7Ozbr9kmnHwFflewvb/pWT4+nVilLbhc1Q/71obmup
-   K3N6xoJJ+/XtZ2q8n/GRZ6i5RdqYKwmI2HpCiclpMWymW/mL+mrs/T3TW
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="321871524"
+  bh=Y2gjcHxf3UXRK4oi6rE7fcF97QWEREQt5muHXEI6GCI=;
+  b=CeUjhBk7Lh4meoDwy90TiRHnSCf7WQPvbqWhUXt7nA1ZJJ2E+1avlwl9
+   wf8SVukUEwjHzY86DmEcxUyM9VhUM8Wna7Jfwkn+Dtrn71hHlzfzpqra6
+   RiK+l4gM4CeBh3a+bZAIuNLw0GWCN37q3gWBIR/CdzhgVZZ4eLcEWJ2uC
+   XznBV8JTwUiWah/bmZUzRpK/X6S8lW2DjQ3iSjgujaOlS9M1KD4XeLbmL
+   DfdBPppJG+btiPe6Cnq5WIkz0bRVbOsYOfCSvN3f9KElBAsrnmw/3D0LA
+   ExW1CpoUl5iFxiIbzKFBvHFW6EAKF0VKq3B814tL0ktV0TAZMEu9147ZQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="301492449"
 X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="321871524"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 17:26:24 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="779039680"
+   d="scan'208";a="301492449"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 17:35:38 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="797367429"
 X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="779039680"
+   d="scan'208";a="797367429"
 Received: from ticela-or-138.amr.corp.intel.com ([10.212.169.215])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 17:26:24 -0800
-Date: Tue, 3 Jan 2023 17:26:23 -0800 (PST)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 17:35:38 -0800
+Date: Tue, 3 Jan 2023 17:35:37 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-Subject: Re: [PATCH mptcp-iproute2] mptcp: add new listener events
-In-Reply-To: <20221226093558.599103-1-matthieu.baerts@tessares.net>
-Message-ID: <93761b86-6851-c1e1-1ddd-86942f71128b@linux.intel.com>
-References: <20221226093558.599103-1-matthieu.baerts@tessares.net>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v4 02/12] mptcp: netlink: respect v4/v6-only
+ sockets
+In-Reply-To: <20221228101748.2518303-3-matthieu.baerts@tessares.net>
+Message-ID: <454ad691-ca73-f9d0-79b3-9760893bcdf4@linux.intel.com>
+References: <20221228101748.2518303-1-matthieu.baerts@tessares.net> <20221228101748.2518303-3-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,73 +44,122 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 26 Dec 2022, Matthieu Baerts wrote:
+On Wed, 28 Dec 2022, Matthieu Baerts wrote:
 
-> These new events have been added in kernel commit f8c9dfbd875b ("mptcp:
-> add pm listener events") by Geliang Tang.
+> If an MPTCP socket has been created with AF_INET6 and the IPV6_V6ONLY
+> option has been set, the userspace PM would allow creating subflows
+> using IPv4 addresses, e.g. mapped in v6.
 >
-> Two new MPTCP Netlink event types for PM listening socket creation and
-> closure have been recently added. They will be available in the future
-> v6.2 kernel.
+> The userspace PM will also accept creating subflows with local and
+> remote addresses having different families resulting in the creation
+> of non expected subflows.
 >
-> They have been added because MPTCP for Linux, when not using the
-> in-kernel PM, depends on the userspace PM to create extra listening
-> sockets -- called "PM listeners" -- before announcing addresses and
-> ports. With the existing MPTCP Netlink events, a userspace PM can create
-> PM listeners at startup time, or in response to an incoming connection.
-> Creating sockets in response to connections is not optimal: ADD_ADDRs
-> can't be sent until the sockets are created and listen()ed, and if all
-> connections are closed then it may not be clear to the userspace PM
-> daemon that PM listener sockets should be cleaned up. Hence these new
-> events: PM listening sockets can be managed based on application
-> activity.
+
+Could you clarify the consequences of a userspace PM allowing these 
+subflows on unpatched kernels? Are resources leaked, or undefined behavior 
+caused?
+
+
+> It is then required to check the given families can be accepted. This is
+> done by using a new helper for addresses family matching, taking care of
+> IPv4 vs IPv4-mapped-IPv6 addresses. This helper will be re-used later by
+> the in-kernel path-manager to use mixed IPv4 and IPv6 addresses.
 >
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/313
-> Cc: Geliang Tang <geliang.tang@suse.com>
-> Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+> While at it, a clear error message is now reported if there are some
+> conflicts with the families that have been passed by the userspace.
+>
+> Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
 > Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 > ---
+> net/mptcp/pm.c           | 25 +++++++++++++++++++++++++
+> net/mptcp/pm_userspace.c |  7 +++++++
+> net/mptcp/protocol.h     |  3 +++
+> 3 files changed, 35 insertions(+)
 >
-> Notes:
->    No objection for the names?
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index cdeb7280ac76..083f3f8322c0 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -413,6 +413,31 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
+> 	}
+> }
 >
->    We are currently limiting the name to 14 chars. If we want to have
->    "LISTENER_xxx" instead of "LISTEN_xxx", we need to increase this
->    limit. I'm fine with the current names or with +ER.
+> +/* if sk is ipv4 or ipv6_only allows only same-family local and remote addresses,
+> + * otherwise allow any matching local/remote pair
+> + */
+> +bool mptcp_pm_addr_families_match(const struct sock *sk,
+> +				  const struct mptcp_addr_info *loc,
+> +				  const struct mptcp_addr_info *rem)
+> +{
+> +	bool mptcp_is_v4 = sk->sk_family == AF_INET;
+> +
+> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> +	bool loc_is_v4 = loc->family == AF_INET || ipv6_addr_v4mapped(&loc->addr6);
+> +	bool rem_is_v4 = rem->family == AF_INET || ipv6_addr_v4mapped(&rem->addr6);
+> +
+> +	if (mptcp_is_v4)
+> +		return loc_is_v4 && rem_is_v4;
+> +
+> +	if (ipv6_only_sock(sk))
+> +		return !loc_is_v4 && !rem_is_v4;
+> +
+> +	return loc_is_v4 == rem_is_v4;
+> +#else
+> +	return mptcp_is_v4 && loc->family == AF_INET && rem->family && AF_INET;
 
-I have a slight preference to go with the LISTENER_* names and increase 
-the fixed event length to 16.
+                                                                     ^^
 
-Also had to add "if (tb[MPTCP_ATTR_TOKEN])" before the token printf() in 
-mptcp_monitor_msg() (line 502) to avoid a segfault, since the listener 
-events don't have token attributes.
+Looks like you intended:
 
-The patch only applied to iproute2, not iproute2-next. Not sure which git 
-tree they expect to reply to.
++     return mptcp_is_v4 && loc->family == AF_INET && rem->family == AF_INET;
+
+Correct?
+
 
 - Mat
 
+
+> +#endif
+> +}
+> +
+> void mptcp_pm_data_reset(struct mptcp_sock *msk)
+> {
+> 	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 65dcc55a8ad8..ea6ad9da7493 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -294,6 +294,13 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+> 	}
 >
-> ip/ipmptcp.c | 2 ++
-> 1 file changed, 2 insertions(+)
+> 	sk = (struct sock *)msk;
+> +
+> +	if (!mptcp_pm_addr_families_match(sk, &addr_l, &addr_r)) {
+> +		GENL_SET_ERR_MSG(info, "families mismatch");
+> +		err = -EINVAL;
+> +		goto create_err;
+> +	}
+> +
+> 	lock_sock(sk);
 >
-> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-> index ce62ab9a..2338ba53 100644
-> --- a/ip/ipmptcp.c
-> +++ b/ip/ipmptcp.c
-> @@ -454,6 +454,8 @@ static const char * const event_to_str[] = {
-> 	[MPTCP_EVENT_SUB_ESTABLISHED] = "SF_ESTABLISHED",
-> 	[MPTCP_EVENT_SUB_CLOSED] = "SF_CLOSED",
-> 	[MPTCP_EVENT_SUB_PRIORITY] = "SF_PRIO",
-> +	[MPTCP_EVENT_LISTENER_CREATED] = "LISTEN_CREATED",
-> +	[MPTCP_EVENT_LISTENER_CLOSED] = "LISTEN_CLOSED",
-> };
->
-> static void print_addr(const char *key, int af, struct rtattr *value)
->
-> base-commit: 1e994cf69cfd55fefd000565914fd85e3ec150af
-> --
+> 	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index b2b56a80e817..871ec3e93314 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -793,6 +793,9 @@ int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
+> int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
+> 			 bool require_family,
+> 			 struct mptcp_pm_addr_entry *entry);
+> +bool mptcp_pm_addr_families_match(const struct sock *sk,
+> +				  const struct mptcp_addr_info *loc,
+> +				  const struct mptcp_addr_info *rem);
+> void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
+> void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
+> void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ssk, int server_side);
+> -- 
 > 2.37.2
+>
 >
 >
 
