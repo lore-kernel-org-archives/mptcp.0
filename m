@@ -1,49 +1,49 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BDDAD54
-	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 17:15:58 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id u28so44681793edd.10
-        for <mptcp@lists.linux.dev>; Wed, 04 Jan 2023 09:15:57 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED084AD59
+	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 17:16:00 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id s5so49480826edc.12
+        for <mptcp@lists.linux.dev>; Wed, 04 Jan 2023 09:16:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=09g6QqktahkBKWabGA7JntIoRRWNFTXK9Wy8Tqe6jNM=;
-        b=e9Aku4X2C45KxqXED80ZhQ0TJgPz/k4KgSNj1Wgy4TsG0EIHKVm0bjrFn/Hx0CpP6v
-         ivvfmln8mOmob2tpBaezTj+LaOxo40EPR0y2x4yB2yNjd+9RPhJpqxZNkacOQdcvjDBL
-         7q7CIObhPJJJjMs8y841S/tdPrFPFwlAFOH3jqnnWpbKnQ0S9w/Do0BRsNiGe/k7JK4Y
-         E3YT05kBMqbUjsfSNUVSRpM54XlzBnq4XsTs6HD9Gba4H2ECWHvWbyfflEoaiJ+WkIQS
-         STLdHs/u7Bc0KWj3wcm9+Fm2MXIEVdP7bbak18gP+Ik8jv2sYDKBbqAfov8km5YkIcwJ
-         mhOA==
+        bh=qXCSBF6liyCYU8H57JsfKDAkklMDGoDA3nQJzOmYetk=;
+        b=V7MORkvtldbrV6cT2PmJbfWqEL2h02hdiQFoZRTgbPddbRQ/QmAmQJyje80D/iFYZE
+         Tvyz9h7LZmsQ4iH7FuIfIsCM5gU19/Jw/ftHov/O3LMlcD6K3pGyIkIKqwQRybb6Lcq+
+         iFZAmk5qC9DPJysFQ9sqxcUCw5Fw2IljtosFH3pyJzLeLatZ/nJJYnjck8Er0EPoQb/O
+         dJ8OVpskmp1/QXkXiujpqkONSVzDAExGMxYxf7uHie22b8tzTVMV83JDT0FKGiZjpwth
+         ZGxXo/xNW4RPUTOesXLAIeSezQq8O+aIJk54Q61q0JOJH+WOkzcyKeE1P2iWG6mFnM9z
+         mtVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=09g6QqktahkBKWabGA7JntIoRRWNFTXK9Wy8Tqe6jNM=;
-        b=16cWg6pVqzj8Kil62060iHzzmXQYXHujP1z716DZwgeaujUw1KwJjS77kNoTAUOoOY
-         dmxe38yJBXeLMLlepdSf57DGRrj3/Rz7FzIMncjBavknlS/i4gkqxzr8mj9IMMP4+Xgs
-         cUe4empY++qj4lvL/KzFCvVxaMqtlsunIhshMgLgJjxS5mzf6uxsIZz5g6a6HjRvNEFb
-         rwzDkqxEHytQ9ced3sxmA4YdWfB7tKFSv7YjLZ6EanjCMVRAPq/9cz4n7bD7G11jSPkw
-         S6+GA5sYvRvX75Zbp6FKFSMAU2/gzy6tloBD5TmVwvD8QhPsP44tDsC8JNcu1l77wHcc
-         dXWg==
-X-Gm-Message-State: AFqh2kpIv7J7WPstcBJ4rV5keKcvhvEYI4J8h1V9L5cywIMnB5PM8/nn
-	sjVf9lm4AnkeVw/fNJf1nR+luMvaiMoK4vrkLZs=
-X-Google-Smtp-Source: AMrXdXvy/AtbbpD/kntx1ScODPb/jpH/SnqeTn/r+3D3yua+ZTwG0uEzW5IQGdwqDPMVtwmfHLe9Wg==
-X-Received: by 2002:a05:6402:2074:b0:48e:a97e:9f2d with SMTP id bd20-20020a056402207400b0048ea97e9f2dmr6798930edb.11.1672852556099;
-        Wed, 04 Jan 2023 09:15:56 -0800 (PST)
+        bh=qXCSBF6liyCYU8H57JsfKDAkklMDGoDA3nQJzOmYetk=;
+        b=Y4LuQZmTwyxiPXAqjkMuFAaovecW3sBK1+L+ZBEa5YrLguiptQeLc4L+Qs1CmswCBp
+         GoIQ3s/sVG9g6RBDoo9fWshecXIxegLCFPNm4c9C8vE4rjGAcJA6zsTJT1KCT3ghZgKF
+         LfqEe8boVmc3K3ev0k1291nai1ZqiJv5atVawsfiFEnWTVNg85I0okxFXpl4Jn+IUS24
+         pIqK+ljtWqR54YxM99rA0xRTQ2uf3GuaoHyBk6q/DEqXC6FThQp5TquJsbVk7guwtWjr
+         IMqp4ALZIipS+UrD6XI5Mkz22Lv2Al3EUMflHwEupoUTS24SWU0MzbBekoHgZWpv68Tw
+         KI2g==
+X-Gm-Message-State: AFqh2kpgDqjAxtxCJBSHB19zdnpCkv7V8ePH01hWcwI+R07PvPNRgK9A
+	CPs2tK9po9Y97vaX8IfPh2be7ahOywd9vmkUqDE=
+X-Google-Smtp-Source: AMrXdXu/bYcbQd0MBxaksmUw8p2k9GCvXeXV64hMJcIymi36yg8vgEtz7qNM2K0AquimBJ2VTsjosg==
+X-Received: by 2002:aa7:d689:0:b0:46c:3f90:f5d9 with SMTP id d9-20020aa7d689000000b0046c3f90f5d9mr41496266edr.5.1672852560317;
+        Wed, 04 Jan 2023 09:16:00 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id m11-20020a50cc0b000000b00487fc51c532sm9258074edi.33.2023.01.04.09.15.55
+        by smtp.gmail.com with ESMTPSA id m11-20020a50cc0b000000b00487fc51c532sm9258074edi.33.2023.01.04.09.15.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jan 2023 09:15:55 -0800 (PST)
+        Wed, 04 Jan 2023 09:15:59 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-net v5 03/12] selftests: mptcp: userspace: validate v4-v6 subflows mix
-Date: Wed,  4 Jan 2023 18:15:17 +0100
-Message-Id: <20230104171526.1416746-4-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v5 09/12] selftests: mptcp: userspace: print titles
+Date: Wed,  4 Jan 2023 18:15:23 +0100
+Message-Id: <20230104171526.1416746-10-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
 References: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
@@ -53,99 +53,143 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2908; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=m9HnWTWgGp3tGRqYrsvJ05oHQXHp33ZFVgSd1l16S0k=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjtbQHqeU9rN6zHcQ7Q7UWA7LRvHLxLx6pOBXUAjBi
- Ydw4d26JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY7W0BwAKCRD2t4JPQmmgc0fbD/
- 4svjgAAWucfpDsJ7qNSksjtt2BMi44eNMsVPjlHnTp07tTSRbJN4oJ9g6wrZ5CanmUsMxJVVFkRVeX
- fy2RcQ3fkc1uAPYntTKApy0lkHOY8hn87wZe+X8XG0Qim6qHuqay18Fip43A394I0WG75UDJ82ioA2
- jZIHzP6sYVxnpe5CI62ZRVJq5Mn/PGm/bXAEtzZeMMmr8hBccUxa8IdnnOCaMu6rQ6z01utTI9rV53
- crnn8/V34aIZr1JWB/LSSDAsevHyjy6Vx6thSt58d9q7DZUDPIpMwkMfSRob4m1BZxm3J22EBOkacc
- EGPPDq/DTIt6abzBP7Pi95oMqVxhmuhnrlIWal3YvNkTeWp1mEqzD+ADGV/zthC6jW/2zN1XliNP+x
- xA1y4imhpLyIqIROKo0nrBggBzjexSNxFYcJbdHKHWXHBGY6aX27rZGPhV59oW0Nhy/F/v9rgt2hEu
- 7qJpkc91ZFKEj2NWyyEDCmXkGyKbFp2UKnKUKyFqpMuN+EZELso1e5CMRGF5kE7IkkypU2nEb/l8Ry
- 626T8V6J3g6dovHDByiICwcbEhf8a/7ZaOIV17V/ZWEEEr62Hs8LeZao4G0AoPIWKvGVvL5TehecJy
- Kl4Ae4176GDoBkDPP00qbGT2fIeeWhhGO2h+iQ3DB+ZkcmSuDOR56VnItRLg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2989; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=H+9EHc7FP/MHeHEjjNd26f57XIP8B+ErItLbmQVHXng=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjtbQIRLHwMAfsnmaWyMo8L7biigvp7cf2bLozce9Z
+ z6d0+xKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY7W0CAAKCRD2t4JPQmmgc09ZD/
+ 42vSe/qU++c5mqYpBtMx6RlvZyrwB/GD0HNykfOf9G47Ks/ZouZBz6zi4bYbBvH243wjThml7oFt0l
+ 7JFVb8JWs0F0XHoi4rQXgV6FJ7YELq2NJTrh7Btq+F1aYUVyIpPbx4dDKZYiH6LbhRhBi3aIWKIUMx
+ 1rBEOWqUMqL04hL8bAlAWKa/zXS5ytVuBCvAG3+4g33WOxoVCBBTvSmHF3mh/2Z8Pgtvtd60UPJm1T
+ zm0rbV7O8/RQ230S8XYZ229pR+e1Ydj0HDD9tSjcc0BcCb2oG8PVRaN+ZQl6dofPyxLs4XBAIPjHyu
+ eQ1mKZMJbtw+FwEt8b0QkHU53zVCvBoVoxh3dl7p8O9/ONRqqvU+VxSEm2QWvHYuHqYJB4L6n9Od6z
+ J4GivRhFBsR5m3jfgWkw3hSw7gmqAHx0HXRdNB1I3GIyf25/lgfCBoyRVO0kuXILo4d94uVO43ZBDL
+ cSGrw7ZrhveofwkGDoaS4QKMV68Fho3q9QhTj3X9bj0hJSTh7jL5z8113y6Eva8pjGFFhQzGNxhzBj
+ WFV/IUb/a85PRUVQcy236a4YpG5W/oXKjHsP1Z2w+Aqi/PkfGYpnzCAUQM+o04AhpdgoP9D4mW7ErI
+ 8jcff29v5nN2AN3LXel+w6NSaRGg4nEDOokOtBVrTqMDkN60r5972ezFrhBA==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-MPTCP protocol supports having subflows in both IPv4 and IPv6. In Linux,
-it is possible to have that if the MPTCP socket has been created with
-AF_INET6 family without the IPV6_V6ONLY option.
+This script is running a few tests after having setup the environment.
 
-Here, a new IPv4 subflow is being added to the initial IPv6 connection,
-then being removed using Netlink commands.
+Printing titles helps understand what is being tested.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- .../selftests/net/mptcp/userspace_pm.sh       | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
+
+Notes:
+    v3->v4:
+      - Add a title for the Cleanup (+ 'Done' at the end)
+
+ .../selftests/net/mptcp/userspace_pm.sh       | 24 ++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index a29deb9fa024..ab2d581f28a1 100755
+index ab2d581f28a1..f9a03e6e968f 100755
 --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
 +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -752,6 +752,52 @@ test_subflows()
- 	   "$server4_token" > /dev/null 2>&1
- }
+@@ -43,6 +43,11 @@ rndh=$(printf %x "$sec")-$(mktemp -u XXXXXX)
+ ns1="ns1-$rndh"
+ ns2="ns2-$rndh"
  
-+test_subflows_v4_v6_mix()
++print_title()
 +{
-+	# Attempt to add a listener at 10.0.2.1:<subflow-port>
-+	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
-+	   $app6_port > /dev/null 2>&1 &
-+	local listener_pid=$!
-+
-+	# ADD_ADDR4 from server to client machine reusing the subflow port on
-+	# the established v6 connection
-+	:>"$client_evts"
-+	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server6_token" id\
-+	   $server_addr_id dev ns1eth2 > /dev/null 2>&1
-+	stdbuf -o0 -e0 printf "ADD_ADDR4 id:%d 10.0.2.1 (ns1) => ns2, reuse port\t\t" $server_addr_id
-+	sleep 0.5
-+	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "10.0.2.1"\
-+			      "$server_addr_id" "$app6_port"
-+
-+	# CREATE_SUBFLOW from client to server machine
-+	:>"$client_evts"
-+	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
-+	   $app6_port token "$client6_token" > /dev/null 2>&1
-+	sleep 0.5
-+	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client6_token"\
-+			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app6_port" "23"\
-+			      "$server_addr_id" "ns2" "ns1"
-+
-+	# Delete the listener from the server ns, if one was created
-+	kill_wait $listener_pid
-+
-+	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$client_evts")
-+
-+	# DESTROY_SUBFLOW from client to server machine
-+	:>"$client_evts"
-+	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
-+	   $app6_port token "$client6_token" > /dev/null 2>&1
-+	sleep 0.5
-+	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client6_token" \
-+			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app6_port" "23"\
-+			      "$server_addr_id" "ns2" "ns1"
-+
-+	# RM_ADDR from server to client machine
-+	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
-+	   "$server6_token" > /dev/null 2>&1
-+	sleep 0.5
++	stdbuf -o0 -e0 printf "\t%s:\n" "${1}"
 +}
 +
+ kill_wait()
+ {
+ 	kill $1 > /dev/null 2>&1
+@@ -51,7 +56,7 @@ kill_wait()
+ 
+ cleanup()
+ {
+-	echo "cleanup"
++	print_title "Cleanup"
+ 
+ 	rm -rf $file $client_evts $server_evts
+ 
+@@ -78,6 +83,8 @@ cleanup()
+ 	for netns in "$ns1" "$ns2" ;do
+ 		ip netns del "$netns"
+ 	done
++
++	stdbuf -o0 -e0 printf "Done\n"
+ }
+ 
+ trap cleanup EXIT
+@@ -108,6 +115,7 @@ ip -net "$ns2" addr add dead:beef:1::2/64 dev ns2eth1 nodad
+ ip -net "$ns2" addr add dead:beef:2::2/64 dev ns2eth1 nodad
+ ip -net "$ns2" link set ns2eth1 up
+ 
++print_title "Init"
+ stdbuf -o0 -e0 printf "Created network namespaces ns1, ns2         \t\t\t[OK]\n"
+ 
+ make_file()
+@@ -255,6 +263,8 @@ verify_announce_event()
+ 
+ test_announce()
+ {
++	print_title "Announce tests"
++
+ 	# Capture events on the network namespace running the server
+ 	:>"$server_evts"
+ 
+@@ -359,6 +369,8 @@ verify_remove_event()
+ 
+ test_remove()
+ {
++	print_title "Remove tests"
++
+ 	# Capture events on the network namespace running the server
+ 	:>"$server_evts"
+ 
+@@ -521,6 +533,8 @@ verify_subflow_events()
+ 
+ test_subflows()
+ {
++	print_title "Subflows v4 or v6 only tests"
++
+ 	# Capture events on the network namespace running the server
+ 	:>"$server_evts"
+ 
+@@ -754,6 +768,8 @@ test_subflows()
+ 
+ test_subflows_v4_v6_mix()
+ {
++	print_title "Subflows v4 and v6 mix tests"
++
+ 	# Attempt to add a listener at 10.0.2.1:<subflow-port>
+ 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
+ 	   $app6_port > /dev/null 2>&1 &
+@@ -800,6 +816,8 @@ test_subflows_v4_v6_mix()
+ 
  test_prio()
  {
++	print_title "Prio tests"
++
  	local count
-@@ -861,6 +907,7 @@ make_connection "v6"
+ 
+ 	# Send MP_PRIO signal from client to server machine
+@@ -876,6 +894,8 @@ verify_listener_events()
+ 
+ test_listener()
+ {
++	print_title "Listener tests"
++
+ 	# Capture events on the network namespace running the client
+ 	:>$client_evts
+ 
+@@ -902,8 +922,10 @@ test_listener()
+ 	verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.2 $client4_port
+ }
+ 
++print_title "Make connections"
+ make_connection
+ make_connection "v6"
++
  test_announce
  test_remove
  test_subflows
-+test_subflows_v4_v6_mix
- test_prio
- test_listener
- 
 -- 
 2.37.2
 
