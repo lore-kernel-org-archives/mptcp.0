@@ -1,49 +1,49 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED084AD59
-	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 17:16:00 +0000 (UTC)
-Received: by mail-ed1-f46.google.com with SMTP id s5so49480826edc.12
-        for <mptcp@lists.linux.dev>; Wed, 04 Jan 2023 09:16:00 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15146AD55
+	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 17:16:03 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id b88so42209811edf.6
+        for <mptcp@lists.linux.dev>; Wed, 04 Jan 2023 09:16:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qXCSBF6liyCYU8H57JsfKDAkklMDGoDA3nQJzOmYetk=;
-        b=V7MORkvtldbrV6cT2PmJbfWqEL2h02hdiQFoZRTgbPddbRQ/QmAmQJyje80D/iFYZE
-         Tvyz9h7LZmsQ4iH7FuIfIsCM5gU19/Jw/ftHov/O3LMlcD6K3pGyIkIKqwQRybb6Lcq+
-         iFZAmk5qC9DPJysFQ9sqxcUCw5Fw2IljtosFH3pyJzLeLatZ/nJJYnjck8Er0EPoQb/O
-         dJ8OVpskmp1/QXkXiujpqkONSVzDAExGMxYxf7uHie22b8tzTVMV83JDT0FKGiZjpwth
-         ZGxXo/xNW4RPUTOesXLAIeSezQq8O+aIJk54Q61q0JOJH+WOkzcyKeE1P2iWG6mFnM9z
-         mtVQ==
+        bh=N/jHKBQFqn7bUxdd3zFAuj3Z6MLFTXhPHtnSVA/ZQLI=;
+        b=vYG0695Zx0eNdfDrvEm431Hb3w2Q2yYkEDRU1jpQeUD932fJfK/KHQpkd9Nd0fMOqt
+         8eOGYQrUfrGYSq0QXaL1bMhZbxm5BTMKA0bxXotI/+dd8RwwHPl6qn0EJTywt3+vnOOm
+         8pXIRzPvimDwyYJy66R1xSVjO6K4vM/9pV1GJidXzYp2AwFwA3VaKjHq/R7K1kzZeCXh
+         zLhorMs+MbFGA2tjSWJs0xarZBhiyLCosyiNTzmPlLGSmYDsz/HsZ0E3clIiTv7FmFmR
+         h6i6NMC+Ga0hrXrg6dHIfKxwAHOzpG8XlzsUinz0wk+4UYz8b02oT34iyAW2IPV3CNRy
+         no9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qXCSBF6liyCYU8H57JsfKDAkklMDGoDA3nQJzOmYetk=;
-        b=Y4LuQZmTwyxiPXAqjkMuFAaovecW3sBK1+L+ZBEa5YrLguiptQeLc4L+Qs1CmswCBp
-         GoIQ3s/sVG9g6RBDoo9fWshecXIxegLCFPNm4c9C8vE4rjGAcJA6zsTJT1KCT3ghZgKF
-         LfqEe8boVmc3K3ev0k1291nai1ZqiJv5atVawsfiFEnWTVNg85I0okxFXpl4Jn+IUS24
-         pIqK+ljtWqR54YxM99rA0xRTQ2uf3GuaoHyBk6q/DEqXC6FThQp5TquJsbVk7guwtWjr
-         IMqp4ALZIipS+UrD6XI5Mkz22Lv2Al3EUMflHwEupoUTS24SWU0MzbBekoHgZWpv68Tw
-         KI2g==
-X-Gm-Message-State: AFqh2kpgDqjAxtxCJBSHB19zdnpCkv7V8ePH01hWcwI+R07PvPNRgK9A
-	CPs2tK9po9Y97vaX8IfPh2be7ahOywd9vmkUqDE=
-X-Google-Smtp-Source: AMrXdXu/bYcbQd0MBxaksmUw8p2k9GCvXeXV64hMJcIymi36yg8vgEtz7qNM2K0AquimBJ2VTsjosg==
-X-Received: by 2002:aa7:d689:0:b0:46c:3f90:f5d9 with SMTP id d9-20020aa7d689000000b0046c3f90f5d9mr41496266edr.5.1672852560317;
-        Wed, 04 Jan 2023 09:16:00 -0800 (PST)
+        bh=N/jHKBQFqn7bUxdd3zFAuj3Z6MLFTXhPHtnSVA/ZQLI=;
+        b=Y574XV7AY1cbBiXxQ8JXeWXgHHDCL1ufJPgKtAtIWtTKi89fCZ8A+i7cBpZ0xHIwmC
+         SsdbIF4u8U05GbUeXliSch0vLeDPWcTkFGbISbII7eAY/z+b+LOd0MTyDa7C68aHjuEg
+         cD+CEiasObr4Pu2mCTJjJu6/OA3/S3SWnKdkvQufEa46T1unQLDf/St6vItoM9hbcLSo
+         BlYmZY4HnjRltfVuEG6JytYeMxhdeTiYKbf8A79imUUKhEw93KMR2rkD9SvsMiCKuPX2
+         JG1VAMbo5wyGx82FugTkePJlQaHrnTPfM/XjkjUu+xkluPFw9y9fM9wE5PUSsXQirFLA
+         LlnA==
+X-Gm-Message-State: AFqh2kroXBZpbYZi2Uzmn2hbuYCj91QIi+tuw1BXLuVwXFp4qrjI7Ycf
+	Mmx14qBnKpcErzWP+PS/nz0fvYF1nUvmZjgZwbU=
+X-Google-Smtp-Source: AMrXdXug+dZVebw5PUN4HYjCYaqP22Tko+klv1+IVjlLiBgdvF3aQVR7y6okLoZR8uWCduu7RyxJ6A==
+X-Received: by 2002:aa7:cb4b:0:b0:491:3a5c:6e2 with SMTP id w11-20020aa7cb4b000000b004913a5c06e2mr547122edt.5.1672852562433;
+        Wed, 04 Jan 2023 09:16:02 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id m11-20020a50cc0b000000b00487fc51c532sm9258074edi.33.2023.01.04.09.15.59
+        by smtp.gmail.com with ESMTPSA id m11-20020a50cc0b000000b00487fc51c532sm9258074edi.33.2023.01.04.09.16.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jan 2023 09:15:59 -0800 (PST)
+        Wed, 04 Jan 2023 09:16:02 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next v5 09/12] selftests: mptcp: userspace: print titles
-Date: Wed,  4 Jan 2023 18:15:23 +0100
-Message-Id: <20230104171526.1416746-10-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v5 12/12] selftests: mptcp: userspace: avoid read errors
+Date: Wed,  4 Jan 2023 18:15:26 +0100
+Message-Id: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
 References: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
@@ -53,143 +53,94 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2989; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=H+9EHc7FP/MHeHEjjNd26f57XIP8B+ErItLbmQVHXng=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjtbQIRLHwMAfsnmaWyMo8L7biigvp7cf2bLozce9Z
- z6d0+xKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY7W0CAAKCRD2t4JPQmmgc09ZD/
- 42vSe/qU++c5mqYpBtMx6RlvZyrwB/GD0HNykfOf9G47Ks/ZouZBz6zi4bYbBvH243wjThml7oFt0l
- 7JFVb8JWs0F0XHoi4rQXgV6FJ7YELq2NJTrh7Btq+F1aYUVyIpPbx4dDKZYiH6LbhRhBi3aIWKIUMx
- 1rBEOWqUMqL04hL8bAlAWKa/zXS5ytVuBCvAG3+4g33WOxoVCBBTvSmHF3mh/2Z8Pgtvtd60UPJm1T
- zm0rbV7O8/RQ230S8XYZ229pR+e1Ydj0HDD9tSjcc0BcCb2oG8PVRaN+ZQl6dofPyxLs4XBAIPjHyu
- eQ1mKZMJbtw+FwEt8b0QkHU53zVCvBoVoxh3dl7p8O9/ONRqqvU+VxSEm2QWvHYuHqYJB4L6n9Od6z
- J4GivRhFBsR5m3jfgWkw3hSw7gmqAHx0HXRdNB1I3GIyf25/lgfCBoyRVO0kuXILo4d94uVO43ZBDL
- cSGrw7ZrhveofwkGDoaS4QKMV68Fho3q9QhTj3X9bj0hJSTh7jL5z8113y6Eva8pjGFFhQzGNxhzBj
- WFV/IUb/a85PRUVQcy236a4YpG5W/oXKjHsP1Z2w+Aqi/PkfGYpnzCAUQM+o04AhpdgoP9D4mW7ErI
- 8jcff29v5nN2AN3LXel+w6NSaRGg4nEDOokOtBVrTqMDkN60r5972ezFrhBA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2046; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=R010oh46FcW31/7ZHEGi4EYd6Lvb3u6lx2QxCCnXZ1I=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjtbQIcxyi6f2f9eDjRxyGAWuZ1HNAmTZYz3tkM20t
+ xLGCznWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY7W0CAAKCRD2t4JPQmmgc4gUD/
+ 9+Ft+d1kXzaqGMv//92XNaQlnzuqfjaiZFfvmKykv9bsqvjQ1ftqh0ldw8YOjPF2F9JwSwocoEDS8R
+ bRmpUNxwlECKGTWasZdQR2dYsrgCJom3Fg8/H1+oXA/AkS3Im8rLjWNsJdIPR0jOta3MwnyCegzPgR
+ EsvY48vPPm377ZdaYKopiGjSR5u5Xxmdbl7heL/ID/NVvX8kjxaO08+LrUqLlD5BwrRCrTe7inSfE9
+ nReuFJJwOQdqmsIvWx6Dppp0Z62TcUZs/y6t8G4PDrZLgSwP2ahp47zoJMkBnNCtaiCcl96WIjVlSU
+ 7rMx/8SLy7bx5yb7QLnhgzv1qGrkdgp55lp+8xASHd/Xnpws9Y2UDmWIfLN5v7K0XfMnvayekc7J1g
+ 3Xc6eGNbyQUHJbP30ePGY9K+6YHbCPtMUYGxGf0hdNZ5nfYQ965dtu2Xk3E0a648hQvBc39ULyODfz
+ zM8y0oINP0I5jit43MGTMQWBtBNoaQ6QX6TCFEYy6ts0r+7VY+14xfzofLktdH+EjWFsUY41cXkgQR
+ wd5zbq7LNBykDXd+vu3z9eViT7XA9cnA4a1chq+wInEmThlE0IV9f2sjEC//+1ji7QdflLSauTcs6i
+ bGYLfNEm/BgR6Qoqg0y6ctLSB7Wfww7DUs1Ngp+0Q9ZuyWVjoUvkQRtImYYw==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-This script is running a few tests after having setup the environment.
+During the cleanup phase, the server pids were killed with a SIGTERM
+directly, not using a SIGUSR1 first to quit safely. As a result, this
+test was often ending with two error messages:
 
-Printing titles helps understand what is being tested.
+  read: Connection reset by peer
+
+While at it, use a for-loop to terminal all the PIDs the same way.
+
+Also the different files are now removed after having killed the PIDs
+using them. It makes more sense to do that in this order.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-
-Notes:
-    v3->v4:
-      - Add a title for the Cleanup (+ 'Done' at the end)
-
- .../selftests/net/mptcp/userspace_pm.sh       | 24 ++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ .../selftests/net/mptcp/userspace_pm.sh       | 32 +++++++------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index ab2d581f28a1..f9a03e6e968f 100755
+index 0bd35768c1aa..8b4f130800b9 100755
 --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
 +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -43,6 +43,11 @@ rndh=$(printf %x "$sec")-$(mktemp -u XXXXXX)
- ns1="ns1-$rndh"
- ns2="ns2-$rndh"
+@@ -50,6 +50,9 @@ print_title()
  
-+print_title()
-+{
-+	stdbuf -o0 -e0 printf "\t%s:\n" "${1}"
-+}
-+
  kill_wait()
  {
++	[ $1 -eq 0 ] && return 0
++
++	kill -SIGUSR1 $1 > /dev/null 2>&1
  	kill $1 > /dev/null 2>&1
-@@ -51,7 +56,7 @@ kill_wait()
- 
- cleanup()
+ 	wait $1 2>/dev/null
+ }
+@@ -58,32 +61,21 @@ cleanup()
  {
--	echo "cleanup"
-+	print_title "Cleanup"
+ 	print_title "Cleanup"
  
- 	rm -rf $file $client_evts $server_evts
- 
-@@ -78,6 +83,8 @@ cleanup()
+-	rm -rf $file $client_evts $server_evts
+-
+ 	# Terminate the MPTCP connection and related processes
+-	if [ $client4_pid -ne 0 ]; then
+-		kill -SIGUSR1 $client4_pid > /dev/null 2>&1
+-	fi
+-	if [ $server4_pid -ne 0 ]; then
+-		kill_wait $server4_pid
+-	fi
+-	if [ $client6_pid -ne 0 ]; then
+-		kill -SIGUSR1 $client6_pid > /dev/null 2>&1
+-	fi
+-	if [ $server6_pid -ne 0 ]; then
+-		kill_wait $server6_pid
+-	fi
+-	if [ $server_evts_pid -ne 0 ]; then
+-		kill_wait $server_evts_pid
+-	fi
+-	if [ $client_evts_pid -ne 0 ]; then
+-		kill_wait $client_evts_pid
+-	fi
++	local pid
++	for pid in $client4_pid $server4_pid $client6_pid $server6_pid\
++		   $server_evts_pid $client_evts_pid
++	do
++		kill_wait $pid
++	done
++
+ 	local netns
  	for netns in "$ns1" "$ns2" ;do
  		ip netns del "$netns"
  	done
+ 
++	rm -rf $file $client_evts $server_evts
 +
-+	stdbuf -o0 -e0 printf "Done\n"
+ 	stdbuf -o0 -e0 printf "Done\n"
  }
  
- trap cleanup EXIT
-@@ -108,6 +115,7 @@ ip -net "$ns2" addr add dead:beef:1::2/64 dev ns2eth1 nodad
- ip -net "$ns2" addr add dead:beef:2::2/64 dev ns2eth1 nodad
- ip -net "$ns2" link set ns2eth1 up
- 
-+print_title "Init"
- stdbuf -o0 -e0 printf "Created network namespaces ns1, ns2         \t\t\t[OK]\n"
- 
- make_file()
-@@ -255,6 +263,8 @@ verify_announce_event()
- 
- test_announce()
- {
-+	print_title "Announce tests"
-+
- 	# Capture events on the network namespace running the server
- 	:>"$server_evts"
- 
-@@ -359,6 +369,8 @@ verify_remove_event()
- 
- test_remove()
- {
-+	print_title "Remove tests"
-+
- 	# Capture events on the network namespace running the server
- 	:>"$server_evts"
- 
-@@ -521,6 +533,8 @@ verify_subflow_events()
- 
- test_subflows()
- {
-+	print_title "Subflows v4 or v6 only tests"
-+
- 	# Capture events on the network namespace running the server
- 	:>"$server_evts"
- 
-@@ -754,6 +768,8 @@ test_subflows()
- 
- test_subflows_v4_v6_mix()
- {
-+	print_title "Subflows v4 and v6 mix tests"
-+
- 	# Attempt to add a listener at 10.0.2.1:<subflow-port>
- 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
- 	   $app6_port > /dev/null 2>&1 &
-@@ -800,6 +816,8 @@ test_subflows_v4_v6_mix()
- 
- test_prio()
- {
-+	print_title "Prio tests"
-+
- 	local count
- 
- 	# Send MP_PRIO signal from client to server machine
-@@ -876,6 +894,8 @@ verify_listener_events()
- 
- test_listener()
- {
-+	print_title "Listener tests"
-+
- 	# Capture events on the network namespace running the client
- 	:>$client_evts
- 
-@@ -902,8 +922,10 @@ test_listener()
- 	verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.2 $client4_port
- }
- 
-+print_title "Make connections"
- make_connection
- make_connection "v6"
-+
- test_announce
- test_remove
- test_subflows
 -- 
 2.37.2
 
