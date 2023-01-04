@@ -1,50 +1,49 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C10AD52
-	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 17:15:56 +0000 (UTC)
-Received: by mail-ed1-f47.google.com with SMTP id c17so49413646edj.13
-        for <mptcp@lists.linux.dev>; Wed, 04 Jan 2023 09:15:56 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63930AD53
+	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 17:15:57 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id s5so49480463edc.12
+        for <mptcp@lists.linux.dev>; Wed, 04 Jan 2023 09:15:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Iq3E4HRxn6yxKUsEwffezaIZxNXLvcYcDLjRAQfS+5Q=;
-        b=HamGpLsq8ll157ff4nPCjLRdSqIwhiC2bXOArgdnlGkXi8yTHVDvOIsly3h7ZXB2gg
-         /UP2RbsHeDQwIMSjWk7sjJyyJYiF+5A98k9a4zPhqxRP81k1PKu62uBA7WwItITdgzoh
-         cpJfOWPwk6JfN+OxzdECSyuMYPb2qYvUAqN14jDO3tq9Yjt3mrDQnaVAFlcBm8KQHb2C
-         A6lPDMlfvTwEhqjlUcjWiRE2bODXwBSdmULLVGJENZ0mdxsc0Rlk4m3+K9xc+C6ddduc
-         uUZ856g2OEC/8FQQlP9ubaetSMOp1dagAw3FsKF/IvxRCYyZf1O/CTH4j2xZxONkQob3
-         nHSg==
+        bh=MyBM6679GFfybRCkLJqvCSQQKrdRQeFiewhOr1JMMoc=;
+        b=kA4EROhCyPoWb1qTjjiTq9OiOUWEx2rAvAH4DO79QErlyNyc2346OZARFcM875HqgN
+         vVmogCRl6NgYIiZJ/WFaKvM5rrXr+q0qGlLwVS67+OvLBUkkGFSh0+maiJ+jRUzHzzLR
+         C8HTGBh1YSRkRE53lzSqVlHSn8g2u+sPUYDY5jqHrg7MKoU2EslBg2MC9/8CDsNf9Krp
+         kpJm5+veG7X3AkN+6G+STxALcwn3NfJ5e07TqDjn6tG/DMZtf9TH3/Gzc3Ar0lfmf9Wd
+         Wsne/GGbPDOoy90rpD04AIZs21VhR3ty+1Oe5BtE0W4l4J0zqYhZ7OFGhTS3ZaMdkzMJ
+         MH2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Iq3E4HRxn6yxKUsEwffezaIZxNXLvcYcDLjRAQfS+5Q=;
-        b=Ln7nq3ELv1/ax2Q+VtIE1LrPQtirsC1oCfQ2/cfYmcRTD4RxRzO95JVbe0bACaUMbG
-         XSZRal8uOv3nXWfIZzp0KkyWNhp3Koce37znB+EKPfaF8iug1CntP1Uj8/pgM6ri7f6y
-         aRMpYmXzfsKDBDn13qb1VWI5muBjh+Q7b0jEEsuzUd29gFLtzGkiS9jgwGlNDPCWBxS8
-         geTM1N46dOhsNGyFfAPD0y9yybEgQTAH7CmPniVVRHZDPnAUKJxkyTMGquT4TDKqN6g9
-         fohMK9G1rbjnSZE3UGoNstscA4kLBZcY/r/cnRY1Ej/ynDUGRPrD9Eq+4GrqkxIf6p97
-         oI3Q==
-X-Gm-Message-State: AFqh2krXZkH412y9wm4Kv0RHQ1VPL+1QPxdwALXiuTZCuYuXwLo+GaHn
-	lsCYulDN+6U3P9SecdmmaoEf9FgOPPlph8rnBTA=
-X-Google-Smtp-Source: AMrXdXuvj4IN72S1M/A/9nNUpajbKFNKbiWopol6EgWmxcCCNqr2ARhpBhozdMBgwwBGAC4JkMgpXQ==
-X-Received: by 2002:a05:6402:1217:b0:461:e5d1:73c5 with SMTP id c23-20020a056402121700b00461e5d173c5mr37103803edw.32.1672852554889;
-        Wed, 04 Jan 2023 09:15:54 -0800 (PST)
+        bh=MyBM6679GFfybRCkLJqvCSQQKrdRQeFiewhOr1JMMoc=;
+        b=Y70GhQ3gDin+ApLws9uk0WC3Gvi7AzhYRz+VCpRp5Ja+aDdfkdoMhI8c90NtGcRAsx
+         1zjTO9QPbcjkNsg/S+R9BjFFJWLwONQMgZ0/S8tvgP3frWoHscHWhieyZNRcMUFRpjNp
+         dHf4xu8PoIlXn+H9Ku/vrQiq3tw158lTo3fvL27BK9oqluMJIINi8/rbYJFQllzVpuU2
+         Es8T4dc1B3bLwozfkQZTnW1glFrwDo7j14Si4kLQ8ksxj36Q+iasBbhBZ/pIreth5PmS
+         mUlaHbCuMoW0ZleHitGAKJT/KivfFvClgGiDyNSXEj6NOVmn56fAgPR59gHgviviuqYX
+         nGLQ==
+X-Gm-Message-State: AFqh2kqgiNsI3E3wMwxlfPjboQxc0vIyS3WLa46sQryexj955eJg7sD1
+	JWulBJyfhYqtGM3/2gWyJNuFvvWsUK5f+6032JA=
+X-Google-Smtp-Source: AMrXdXsVw/xsVUyFqXbLqNbk282hYRC/ESZIntsaUBNuP7VwhLETzb9jhTLcKlQEtw1YlCdmkdiPKQ==
+X-Received: by 2002:aa7:d04d:0:b0:47d:b4e6:a631 with SMTP id n13-20020aa7d04d000000b0047db4e6a631mr41930286edo.7.1672852555474;
+        Wed, 04 Jan 2023 09:15:55 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
         by smtp.gmail.com with ESMTPSA id m11-20020a50cc0b000000b00487fc51c532sm9258074edi.33.2023.01.04.09.15.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jan 2023 09:15:54 -0800 (PST)
+        Wed, 04 Jan 2023 09:15:55 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-net v5 01/12] mptcp: explicitly specify sock family at subflow creation time
-Date: Wed,  4 Jan 2023 18:15:15 +0100
-Message-Id: <20230104171526.1416746-2-matthieu.baerts@tessares.net>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-net v5 02/12] mptcp: netlink: respect v4/v6-only sockets
+Date: Wed,  4 Jan 2023 18:15:16 +0100
+Message-Id: <20230104171526.1416746-3-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
 References: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
@@ -54,121 +53,127 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3944; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=2d3UcZEI4VmYmUKskWW4hroBAzI3yr+/Q0t9Liyx5So=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjtbQHc1hsPJ40uIi91KDLtfepM+0LFk36Wa3QODeH
- bs3zbKuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY7W0BwAKCRD2t4JPQmmgc4FEEA
- C4/yYNbQ02whXcfLfCLcAyJPELa8T3YClu4TGUJawQMuhFeporNaRsGW7HC5lZRWxqRK6BfVNYnx5p
- 2d9avS2NAnl9rdiUYi+iDB5MQhn5sBnBt1YN+I7VynKLuZ/CDaItYkw/pJM3OhyADVuK8Zx3JyuliX
- Pavvnf7pATZt70A53epB0YpuA7d515wP8OGU+VMeC9hyhFrlHLlWUKKecfERF+1w9+pXlQXPcES0hs
- W4CXiXZWiiR4x12mnaHJlvfWFoKWzcsbDYUH6vPUFJLrxL3tQMcYFPZ83OX8+MM0cm3JZpMUlUdEyo
- 84cT2gl7QK4WYRRNjEDvwxerlHWr8BT2ytHGXjPr0x1VxBTd/aiK5T1SbiGYz1Lk7V6dHDobL59TPp
- nb0SUhcSRyOzPMsqC6LwIGJzrh81ItbvOnCHFyKWspal6wQKnN6KxjghljzMgCPmUytIkqOdlRzMTo
- OSPPgmREMGqs42eZi8oI2ad6z5+KhteB08amSso51j3sV3jqG8/zwVM1mpTRgjlR7oXHUrgDbHlveQ
- E+fGW+URXM3vDjrlUiOy+MubEoNfOJ6uwVd8H6WrvSZ1R/j8/yr2HECO63ReMyApZetSeJ7M78GbTi
- LEzZoy3LxIewPvnORt0t5rGaqdaSlOZqQOjYJJ1By8wvW1C5yeyhvvJPujxQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4219; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=qsWwAJBOfxLF5wyiKb7fnddtqML/5Rha0v2lKGRP2Ks=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjtbQHstWObAbcukzQPUMqzT5yokcNmb3hB9AnTAPp
+ jbJn14KJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY7W0BwAKCRD2t4JPQmmgc7vTEA
+ CHwpfwu4F2+lhzcTFdKHxJaIzt6Tt9sSQfAou6AQ+jyDCciAyYfnrU0ehxwRqbjjhqOa/KsE/DF6Mr
+ FO0O+pX3sa7cUb5vnTdCK7mKuMf6MXd2CLYaK6MOE9th/D9jxDh0LkXBAA16GpQJYITSDhC7yBjFbB
+ vnO4VFTk4/PjPc9mFL4G0JNLlQO1J1tdXIs/WPa+ZFxMPe7d+MhpdT8ngpP1+zzxFEC7LrZShu98C5
+ obJ3UnEOG63w4PpGuFa0BukQWdB9gvpvKP9IHm4Wv7pdFOlsSrbUvlP9QPN6AWdEW5sJc9MTS8jmVe
+ mvwyGv9/5y0XVFIMyXo1aZZrlPCC6rwmV9SUnGT940DApHG1L1kdGTBVgmkQVThxn27x2Ocvb/LXta
+ uuUIV2Sw4b8adbArfjfJ10kTPRPIcaxJa4B7xfg47wy0rW14IZSlFq3I8TYuGATZNL7/z7+3MK2tz1
+ KnrJ+0QX0aJeU+q5O9v9QI4uLU7uI5FlJRw/OziksJbvZwMIH7qj3QL4GtnW2FJNjBGIPwL8z8ApTM
+ hviGjCmsMDMVfnr7jEQ3gOCmcVUM0sGCdDsTtGQQsu7R3ZEp+nlVApoMks3wrTamMKb3HruUxiFTE0
+ 4aVwQoyiu3hyY8AH62YkBHzgowPlvwRFtsNHHr8ZT3bcjBXrMAEZYlddd1tA==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+If an MPTCP socket has been created with AF_INET6 and the IPV6_V6ONLY
+option has been set, the userspace PM would allow creating subflows
+using IPv4 addresses, e.g. mapped in v6.
 
-Let the caller specify the to-be-created subflow family.
+The kernel side of userspace PM will also accept creating subflows with
+local and remote addresses having different families. Depending on the
+subflow socket's family, different behaviours are expected:
+ - If AF_INET is forced with a v6 address, the kernel will take the last
+   byte of the IP and try to connect to that: a new subflow is created
+   but to a non expected address.
+ - If AF_INET6 is forced with a v4 address, the kernel will try to
+   connect to a v4 address (v4-mapped-v6). A -EBADF error from the
+   connect() part is then expected.
 
-For a given MPTCP socket created with the AF_INET6 family, the current
-userspace PM can already ask the kernel to create subflows in v4 and v6.
-If "plain" IPv4 addresses are passed to the kernel, they are
-automatically mapped in v6 addresses "by accident". This can be
-problematic because the userspace will need to pass different addresses,
-now the v4-mapped-v6 addresses to destroy this new subflow.
+It is then required to check the given families can be accepted. This is
+done by using a new helper for addresses family matching, taking care of
+IPv4 vs IPv4-mapped-IPv6 addresses. This helper will be re-used later by
+the in-kernel path-manager to use mixed IPv4 and IPv6 addresses.
 
-On the other hand, if the MPTCP socket has been created with the AF_INET
-family, the command to create a subflow in v6 will be accepted but the
-result will not be the one as expected as new subflow will be created in
-IPv4 using part of the v6 addresses passed to the kernel: not creating
-the expected subflow then.
-
-No functional change intended for the in-kernel PM where an explicit
-enforcement is currently in place. This arbitrary enforcement will be
-leveraged by other patches in a future version.
+While at it, a clear error message is now reported if there are some
+conflicts with the families that have been passed by the userspace.
 
 Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
-Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
 
 Notes:
-    v2->v3:
-      - Update the commit message because the behaviour is modified for the
-        userspace PM and needed not to create subflows from/to wrong IP
-        addresses.
+    v4 -> v5:
+      - fix typo (s/&&/==/) in mptcp_pm_addr_families_match() without IPv6
+        support (Mat)
+      - more details about the unexpected behaviour in the commit msg (Mat)
 
- net/mptcp/protocol.c | 2 +-
- net/mptcp/protocol.h | 3 ++-
- net/mptcp/subflow.c  | 9 +++++----
- 3 files changed, 8 insertions(+), 6 deletions(-)
+ net/mptcp/pm.c           | 25 +++++++++++++++++++++++++
+ net/mptcp/pm_userspace.c |  7 +++++++
+ net/mptcp/protocol.h     |  3 +++
+ 3 files changed, 35 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index aaafdae73b6a..003b44a79fce 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -98,7 +98,7 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
- 	struct socket *ssock;
- 	int err;
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index cdeb7280ac76..8e0cf6275e94 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -413,6 +413,31 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
+ 	}
+ }
  
--	err = mptcp_subflow_create_socket(sk, &ssock);
-+	err = mptcp_subflow_create_socket(sk, sk->sk_family, &ssock);
- 	if (err)
- 		return err;
++/* if sk is ipv4 or ipv6_only allows only same-family local and remote addresses,
++ * otherwise allow any matching local/remote pair
++ */
++bool mptcp_pm_addr_families_match(const struct sock *sk,
++				  const struct mptcp_addr_info *loc,
++				  const struct mptcp_addr_info *rem)
++{
++	bool mptcp_is_v4 = sk->sk_family == AF_INET;
++
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	bool loc_is_v4 = loc->family == AF_INET || ipv6_addr_v4mapped(&loc->addr6);
++	bool rem_is_v4 = rem->family == AF_INET || ipv6_addr_v4mapped(&rem->addr6);
++
++	if (mptcp_is_v4)
++		return loc_is_v4 && rem_is_v4;
++
++	if (ipv6_only_sock(sk))
++		return !loc_is_v4 && !rem_is_v4;
++
++	return loc_is_v4 == rem_is_v4;
++#else
++	return mptcp_is_v4 && loc->family == AF_INET && rem->family == AF_INET;
++#endif
++}
++
+ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+ {
+ 	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 65dcc55a8ad8..ea6ad9da7493 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -294,6 +294,13 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+ 	}
  
+ 	sk = (struct sock *)msk;
++
++	if (!mptcp_pm_addr_families_match(sk, &addr_l, &addr_r)) {
++		GENL_SET_ERR_MSG(info, "families mismatch");
++		err = -EINVAL;
++		goto create_err;
++	}
++
+ 	lock_sock(sk);
+ 
+ 	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 5b92906cb91f..b2b56a80e817 100644
+index b2b56a80e817..871ec3e93314 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -643,7 +643,8 @@ bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
- /* called with sk socket lock held */
- int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 			    const struct mptcp_addr_info *remote);
--int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
-+int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
-+				struct socket **new_sock);
- void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
- 			 struct sockaddr_storage *addr,
- 			 unsigned short family);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index bd387d4b5a38..ec54413fb31f 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1547,7 +1547,7 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 	if (!mptcp_is_fully_established(sk))
- 		goto err_out;
- 
--	err = mptcp_subflow_create_socket(sk, &sf);
-+	err = mptcp_subflow_create_socket(sk, loc->family, &sf);
- 	if (err)
- 		goto err_out;
- 
-@@ -1660,7 +1660,9 @@ static void mptcp_subflow_ops_undo_override(struct sock *ssk)
- #endif
- 		ssk->sk_prot = &tcp_prot;
- }
--int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
-+
-+int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
-+				struct socket **new_sock)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct net *net = sock_net(sk);
-@@ -1673,8 +1675,7 @@ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
- 	if (unlikely(!sk->sk_socket))
- 		return -EINVAL;
- 
--	err = sock_create_kern(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
--			       &sf);
-+	err = sock_create_kern(net, family, SOCK_STREAM, IPPROTO_TCP, &sf);
- 	if (err)
- 		return err;
- 
+@@ -793,6 +793,9 @@ int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
+ int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
+ 			 bool require_family,
+ 			 struct mptcp_pm_addr_entry *entry);
++bool mptcp_pm_addr_families_match(const struct sock *sk,
++				  const struct mptcp_addr_info *loc,
++				  const struct mptcp_addr_info *rem);
+ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
+ void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
+ void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ssk, int server_side);
 -- 
 2.37.2
 
