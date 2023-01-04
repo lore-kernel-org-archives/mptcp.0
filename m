@@ -1,171 +1,142 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A6BA4A
-	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 17:03:31 +0000 (UTC)
-Received: by mail-wm1-f42.google.com with SMTP id z8-20020a05600c220800b003d33b0bda11so1193134wml.0
-        for <mptcp@lists.linux.dev>; Wed, 04 Jan 2023 09:03:31 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC7EA4A
+	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 17:15:55 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id m21so49412891edc.3
+        for <mptcp@lists.linux.dev>; Wed, 04 Jan 2023 09:15:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u4qLzkQm+d88IvlJYCb4VJXEJ28lDdhlh5NLJNmzo94=;
-        b=1BaCQL3xvDA5NKhJJ0myXfVxFx6wQr+Ne+TJef3u7aq6nvU6QZAd3C69tFfcBrDl9c
-         4R9kAxDxgBa3Q4omKQgqXGoYexC996JSa0TZSm7sVux5l2Oxed1/iQYNhsbzhDUOpG2K
-         qErYwkLxG0+p3/l1FKKc3a4OuuJp6Voj3FzvsnWUTZRAcwIHRm6QOmebxDvryzAQp3YR
-         IH70MtT1ZoVfzXsmczE9rynRVETahIcTt/1ndGAFCkPio1a+ngrfzh/ziCrw6v1ZPLO/
-         v6GMnG7t4GfX0N3n2OvC9Vddr7Zp6loJTT0t+RiGIYbu2ju7FwLTlX5PAHhbRILpwMKJ
-         jR/Q==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=H7A1PqYQEene1UuO9/VaIy67Fx4Gq2fGUvZbkEQqdHM=;
+        b=WBlDc3d3o6YH5AhrESe2wqI6BDHEO6PYj4yqExnGTnf+gxOB+eDdmZvXyCW/JIyDS7
+         Tgu6zt3H9m0OPs8uYh/JgmRHmw9KF+SF+28tny1NrcY/EFe37Hpos/lZWmibpNU/H8OM
+         bQTlBB1wkpQWN8hTvDoyznXDlic8RgISsYK/bZDSA4W21i0hgZWg4EjWOG/yUr8pLItM
+         daoAWSlPXoguFUe6FHMYidavZX7U0XkfL1KnG/nI2erXVnVaNL7q+0fQwrXzGxNiB0xk
+         hT9BdDHDxebwes4n4HlSnYJQqLB07j6SYGtsMHQbZ7UVmxBTbrw0UzG5HzWcjYoS7k8u
+         x8MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u4qLzkQm+d88IvlJYCb4VJXEJ28lDdhlh5NLJNmzo94=;
-        b=RBd0b9XWqtFrCyavrWGQxN2PXaXZ5zoDNN9J994xL/KOqZ7rjQzexNqmcIiLXwLAZD
-         k4B4bTo8wTwQuAsvg4V6NLqILzpehQzUeZHUxc1B4T8+cYnGE8i08FteXrJPhBO+h8O/
-         V4hLFxeoO0kluaZXq82JzYvlBsCzCsHtSA1Z5GR2Y73xuCTFcGEQwebkJwrIJUIUfWJf
-         MFgCyS/kfmW4GlqQu+FpAMitkS/RS847uqGP4OUHUD7H7D2pfCpv81LjXWXPmnZEMuZq
-         1RCDNwns3m5Kb9I37E39CXgQvl8zywAkOuZ5f85iKauc+5KHxNPP/nA1LrMtqVknMOku
-         vO4w==
-X-Gm-Message-State: AFqh2krDeSm9LDchPam7YNVcXOUzDcMHkCEtO4v7l30K3s5bXw/+/Meb
-	YX+fPAhV3vB/hmR7vmHKKD/1EA==
-X-Google-Smtp-Source: AMrXdXtI/Q7LsZhrNy6ir7Khh4vgQnct5P43jLWY2M+rhJC2HI5PLrvE3y9f33sdQZARPRZLkcVIEQ==
-X-Received: by 2002:a05:600c:34d4:b0:3cf:a39f:eb2a with SMTP id d20-20020a05600c34d400b003cfa39feb2amr34186794wmq.11.1672851810138;
-        Wed, 04 Jan 2023 09:03:30 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:540d:f562:8a82:61fa? ([2a02:578:8593:1200:540d:f562:8a82:61fa])
-        by smtp.gmail.com with ESMTPSA id q16-20020a05600c46d000b003d1f3e9df3csm56776914wmo.7.2023.01.04.09.03.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jan 2023 09:03:29 -0800 (PST)
-Message-ID: <7bebf3e5-1bc5-970b-9626-acd42da8f428@tessares.net>
-Date: Wed, 4 Jan 2023 18:03:29 +0100
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H7A1PqYQEene1UuO9/VaIy67Fx4Gq2fGUvZbkEQqdHM=;
+        b=shZBFrVXeBJDPr9pjWeON1RcTHUO8zRqP63DYjQR+g7VbsGDlOETLEeC425SsVXDqi
+         7ubAZyXWuJs6uF2kn/yW6PmxtaWed5mNKl9ktvVceNDMNMGfaNEOhH8sHhBQu4xfvRtI
+         BWw0dYaWCcPhy15bzQRoOTDgtNeXUtKuT8/carAhzIT5jjizxKIQcZtDxrqWx+1oaX/8
+         vEwoSSK7jmd9yBdhInDd9T3X2UK0opZTJSy2l/h1XAeRS77xJLC5AD/aWhYD1Nqm6D8G
+         5sQdCRE1I8QQvR2keObFUeQtfVHwapRD+NnR8DHV/2Fgliymqmi4FT988bVXLIs/7umx
+         DoNw==
+X-Gm-Message-State: AFqh2kpL8b37LyZWrjLcKU3T9gFx5i7h6OZQbeOY425q/6ztgbao9LBB
+	foySIvxb8iWFvSCLGIb4BrAbUTElwgo/D13qSYs=
+X-Google-Smtp-Source: AMrXdXsvVCuz6/k21b7YJsGMKdnR2uAarf47RU7LcTj1lpd9dShREhWlmg8PX3TthArGOf6fBpFsow==
+X-Received: by 2002:aa7:db53:0:b0:479:973d:8672 with SMTP id n19-20020aa7db53000000b00479973d8672mr41406703edt.3.1672852554079;
+        Wed, 04 Jan 2023 09:15:54 -0800 (PST)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id m11-20020a50cc0b000000b00487fc51c532sm9258074edi.33.2023.01.04.09.15.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jan 2023 09:15:53 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-net/next v5 00/12] mptcp: add support for mixed v4/v6
+Date: Wed,  4 Jan 2023 18:15:14 +0100
+Message-Id: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH mptcp-net v4 02/12] mptcp: netlink: respect v4/v6-only
- sockets
-Content-Language: en-GB
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <20221228101748.2518303-1-matthieu.baerts@tessares.net>
- <20221228101748.2518303-3-matthieu.baerts@tessares.net>
- <454ad691-ca73-f9d0-79b3-9760893bcdf4@linux.intel.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <454ad691-ca73-f9d0-79b3-9760893bcdf4@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3087; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=lBNT+Hv2KHEh30vs0EHh/tBrCrDDhOXLYwXrCJP3cTY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjtbQHeREOnzGAHXriPag+NlmuAsmcZ+5QI3dh0ECN
+ V9l80KiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY7W0BwAKCRD2t4JPQmmgc2ReEA
+ DP+BiGs6PT8MqlUDlywbeByPm3vvQ+QeoPXe8fuMijXLoJWwc0wBGaGQ5E2O7dET+zcImwGkOcWB7Q
+ bCZzp+QNrYmvrcGsdZFlOu+nZ+iJh+32HeETZFHmFWWvvjzoSM7OpN4s2pIjE18O012sT2vxpiMo/n
+ FOXD/vvLtRkTCz+lUpR28wTMyDpDKGahiGnPDZTEYDk1tPt5oSi2WBCITY3cTpch8WdbrV8O3+ekDe
+ OXM78nsknH36j84MPV7QQA4SAx+XV5JKgju5Q81J29ukdssa6mSmmLImsVv6ga1bPrQmm9kV0LUz71
+ +NslieWfAMTCviK9OGrYDhpVqp2MHXF460+IMfkpgxEGbIgpNDfFi3ufXveRO9zoTlT9IqXG3hlsoL
+ +0l9vGrDA/zjKYz4lw19WkD6T4ek/rhqFSjjQjjWiKfG/0E9UUMkj+usLDx8QGnUq0Rszn7J1xijBT
+ At39+/PxWtvZuRhA+VMj2bbSxe+73JquQLfYKPE5u6YmLL/t3DeqouUXCwdjpSr3eF6UxlDACMZ6YW
+ XJPPjToL6zr4EXzvBHxKkBsZJ55YzBvr4Mwy+iYL7c+QQgvbFf1GfD6A31aoEyNHRJ91X8KHEEHHsR
+ e/dayhSeopoa2fxFxCaKiM4gj6c0wAOnWEXIhhy9mJ0+CRsVMg3UCuEYuzbQ==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-Hi Mat,
+This is a v5 of Paolo's series with the same name but with some
+modifications and additional patches.
 
-Thank you for the review!
+ChangeLog:
+  - v3 -> v4:
+    - Fix a compilation error without CONFIG_MPTCP_IPV6 in patch 4/12.
+    - Add a title for the cleanup part in patch 9/12
+    - Add the patch 12/12 to avoid "read" errors
+  - v4 -> v5:
+    - Fix typo in patch 2/12 (Mat)
+    - More details in the commit message of patch 2/12 (Mat)
+    - Rebased on top of the latest export branch
 
-On 04/01/2023 02:35, Mat Martineau wrote:
-> On Wed, 28 Dec 2022, Matthieu Baerts wrote:
-> 
->> If an MPTCP socket has been created with AF_INET6 and the IPV6_V6ONLY
->> option has been set, the userspace PM would allow creating subflows
->> using IPv4 addresses, e.g. mapped in v6.
->>
->> The userspace PM will also accept creating subflows with local and
->> remote addresses having different families resulting in the creation
->> of non expected subflows.
->>
-> 
-> Could you clarify the consequences of a userspace PM allowing these
-> subflows on unpatched kernels? Are resources leaked, or undefined
-> behavior caused?
+This series can be split in 2 parts: the 3 first patches are for -net
+while the rest is for net-next. Patches for net-next depends on patches
+for -net, that's why everything is being sent together.
 
-Before the parent commit, the kernel was creating a new socket using the
-family of the MPTCP socket. With the parent commit, now the socket is
-created using the family of the "local" address.
+Patch 1 lets the userspace PM selects the proper family to avoid
+creating subflows with wrong source and/or destination addresses because
+the family is not the expected one.
 
-Depending on the subflow socket's family, different behaviours are
-expected. If AF_INET is forced with a v6 address, the kernel will take
-the last byte of the IP and try to connect to that. On the other hand,
-if AF_INET6 is forced with a v4 address, the kernel will tries to
-connect to a v4 address (v4-mapped-v6). I didn't try this specific case
-but similar to what the userspace would have by using a bind(v6) and
-then a connect(v4), the kernel_connect() operation will fail with EBADF
-if a kernel_bind() to a (real) v6 address has been done. So if I'm not
-mistaken, no resources leaked, not an undefined behaviour really but not
-the expected one.
+Patch 2 makes sure the userspace PM doesn't allow the userspace to
+create subflows for a family that is not allowed.
 
-I can add that in the commit message of the v5.
+The core MPTCP implementation is just a few bits of properly supporting
+a mix of v4 and v6 subflows, we just need to allow specifying the
+subflow family explicitly (patch 1) and remove artificial constraints in
+the in-kernel PM currently enforcing no mixed subflow in place (patch
+4).
 
->> It is then required to check the given families can be accepted. This is
->> done by using a new helper for addresses family matching, taking care of
->> IPv4 vs IPv4-mapped-IPv6 addresses. This helper will be re-used later by
->> the in-kernel path-manager to use mixed IPv4 and IPv6 addresses.
->>
->> While at it, a clear error message is now reported if there are some
->> conflicts with the families that have been passed by the userspace.
->>
->> Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow
->> establishment")
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->> ---
->> net/mptcp/pm.c           | 25 +++++++++++++++++++++++++
->> net/mptcp/pm_userspace.c |  7 +++++++
->> net/mptcp/protocol.h     |  3 +++
->> 3 files changed, 35 insertions(+)
->>
->> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->> index cdeb7280ac76..083f3f8322c0 100644
->> --- a/net/mptcp/pm.c
->> +++ b/net/mptcp/pm.c
->> @@ -413,6 +413,31 @@ void mptcp_pm_subflow_chk_stale(const struct
->> mptcp_sock *msk, struct sock *ssk)
->>     }
->> }
->>
->> +/* if sk is ipv4 or ipv6_only allows only same-family local and
->> remote addresses,
->> + * otherwise allow any matching local/remote pair
->> + */
->> +bool mptcp_pm_addr_families_match(const struct sock *sk,
->> +                  const struct mptcp_addr_info *loc,
->> +                  const struct mptcp_addr_info *rem)
->> +{
->> +    bool mptcp_is_v4 = sk->sk_family == AF_INET;
->> +
->> +#if IS_ENABLED(CONFIG_MPTCP_IPV6)
->> +    bool loc_is_v4 = loc->family == AF_INET ||
->> ipv6_addr_v4mapped(&loc->addr6);
->> +    bool rem_is_v4 = rem->family == AF_INET ||
->> ipv6_addr_v4mapped(&rem->addr6);
->> +
->> +    if (mptcp_is_v4)
->> +        return loc_is_v4 && rem_is_v4;
->> +
->> +    if (ipv6_only_sock(sk))
->> +        return !loc_is_v4 && !rem_is_v4;
->> +
->> +    return loc_is_v4 == rem_is_v4;
->> +#else
->> +    return mptcp_is_v4 && loc->family == AF_INET && rem->family &&
->> AF_INET;
-> 
->                                                                     ^^
-> 
-> Looks like you intended:
-> 
-> +     return mptcp_is_v4 && loc->family == AF_INET && rem->family ==
-> AF_INET;
-> 
-> Correct?
+Patch 5 makes sure the sk_ipv6only attribute is also propagated to
+subflows, just in case the PM doesn't respect it.
 
-Good catch!
-Thank you, I will fix that in a v5.
+Some selftests have also been added for the userspace PM (patch 3) and
+the in-kernel PM (patch 6).
 
-Cheers,
-Matt
+Patches 7 and 8 are just some cleanups in the userspace PM, not related
+to the rest but I saw them when modifying the file.
+
+Patches 9 to 12 improve the messages printed by the userspace PM,
+especially in case of error during the validation.
+
+Matthieu Baerts (9):
+  mptcp: netlink: respect v4/v6-only sockets
+  selftests: mptcp: userspace: validate v4-v6 subflows mix
+  mptcp: propagate sk_ipv6only to subflows
+  mptcp: remove assigned but unused value
+  mptcp: userspace pm: use a single point of exit
+  selftests: mptcp: userspace: print titles
+  selftests: mptcp: userspace: refactor asserts
+  selftests: mptcp: userspace: print error details if any
+  selftests: mptcp: userspace: avoid read errors
+
+Paolo Abeni (3):
+  mptcp: explicitly specify sock family at subflow creation time
+  mptcp: let the in-kernel PM use mixed IPv4 and IPv6 addresses
+  selftests: mptcp: add test-cases for mixed v4/v6 subflows
+
+ net/mptcp/pm.c                                |  25 +++
+ net/mptcp/pm_netlink.c                        |  58 ++---
+ net/mptcp/pm_userspace.c                      |  14 +-
+ net/mptcp/protocol.c                          |   2 +-
+ net/mptcp/protocol.h                          |   6 +-
+ net/mptcp/sockopt.c                           |   1 +
+ net/mptcp/subflow.c                           |   9 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  53 ++++-
+ .../selftests/net/mptcp/userspace_pm.sh       | 200 ++++++++++++------
+ 9 files changed, 262 insertions(+), 106 deletions(-)
+
+
+base-commit: 0e6e165b9b9b5ea418067cfac1e861892ee7e12c
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.37.2
+
