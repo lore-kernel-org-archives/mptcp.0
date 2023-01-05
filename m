@@ -1,132 +1,227 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81107BA29
-	for <mptcp@lists.linux.dev>; Wed,  4 Jan 2023 19:04:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E03F621
+	for <mptcp@lists.linux.dev>; Thu,  5 Jan 2023 00:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672859059; x=1704395059;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=BoCVbJUyRerEYdqDjy1UfkeWBm6IPHXidK0a2juFGTI=;
-  b=GuDft9ii5ByhPk6/MDU53/zi/THumfUOYbtt0GBNK9/GTpnriOhCR3Ke
-   uGnbOk6oOfe7h39hHRObFOd2CZG9K4btMQUm8paZAeI+oKKDYMK1hRZMu
-   wOFY0pgL8YiNZuw+G9Ros/ziI8doBiGN4AUf9hT1E3RUCqWKt1HXE2UFN
-   SwqPF169svq2pow8VatoE0F43/lsSE6imEL178yb/hQOuN48VKpM//zh/
-   Kuz0qOWq1VHxek62ydDeQ8HALrRJcIyqf8KfWIDy2VeJ6kat4PxFuazOi
-   6en+2IaYzlTwEdyX4Ee5tpxjVioL8UZXgbHWKnJZH+qlz3YFuGIQ7ICuD
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="349239922"
-X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
-   d="scan'208";a="349239922"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 11:04:18 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="687626618"
-X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
-   d="scan'208";a="687626618"
+  t=1672877651; x=1704413651;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=EEQs6tAx3/O2ktT40Q8VnUQZtcj7xhrIBHefFNtU6/w=;
+  b=mtTbinEVJN1U7P1obbQIvN+zP1SdmqEWKfhNU+rVK4BMWQRhjM61PYI+
+   M801pcq/wKgnaZVG8lC/vHldMQRuZhZQY5ryAODu08k2yYJS8q1EXyvyL
+   fauKzSMZ4JLjqiZ++sL+ilX/KYfHVeHWU6T4GcrIrMHEbVywneoTZphPv
+   ZTmunID6j12yfA9PsTMXvhA3kfTWcPQUURYOVWb3Ag4aa2f0l4+BOeH1x
+   3FTD2m7uFbJbXTjENYkh7837ketf9zyPH8tPYJ9+fsTnXHkTN1pVyrhn6
+   6M8uMiZF0kFOqcoO2sxRx5tyMSnLtqfFNObTtEiimqnSgjmoK+Uuto206
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="323309217"
+X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
+   d="scan'208";a="323309217"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 16:14:11 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="657297222"
+X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
+   d="scan'208";a="657297222"
 Received: from lakkired-mobl1.amr.corp.intel.com ([10.212.143.9])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 11:04:17 -0800
-Date: Wed, 4 Jan 2023 11:04:17 -0800 (PST)
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 16:14:10 -0800
+Date: Wed, 4 Jan 2023 16:14:10 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-Subject: Re: [PATCH mptcp-iproute2-net v2] mptcp: add new listener events
-In-Reply-To: <20230104150909.1238738-1-matthieu.baerts@tessares.net>
-Message-ID: <ca69ff67-a04d-4e1b-4044-dcd642b6e1da@linux.intel.com>
-References: <20230104150909.1238738-1-matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
+    Paolo Abeni <pabeni@redhat.com>
+Subject: Patch "mptcp: remove MPTCP 'ifdef' in TCP SYN cookies" has been
+ added to the 5.15-stable tree (fwd)
+Message-ID: <83ca6b33-db3f-3c38-ea63-05db4e18d265@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, 4 Jan 2023, Matthieu Baerts wrote:
 
-> These new events have been added in kernel commit f8c9dfbd875b ("mptcp:
-> add pm listener events") by Geliang Tang.
->
-> Two new MPTCP Netlink event types for PM listening socket creation and
-> closure have been recently added. They will be available in the future
-> v6.2 kernel.
->
-> They have been added because MPTCP for Linux, when not using the
-> in-kernel PM, depends on the userspace PM to create extra listening
-> sockets -- called "PM listeners" -- before announcing addresses and
-> ports. With the existing MPTCP Netlink events, a userspace PM can create
-> PM listeners at startup time, or in response to an incoming connection.
-> Creating sockets in response to connections is not optimal: ADD_ADDRs
-> can't be sent until the sockets are created and listen()ed, and if all
-> connections are closed then it may not be clear to the userspace PM
-> daemon that PM listener sockets should be cleaned up. Hence these new
-> events: PM listening sockets can be managed based on application
-> activity.
->
-> Note that the maximum event string size has to be increased by 2 to be
-> able to display LISTENER_CREATED without trunking it.
+Matthieu and Paolo -
 
-s/trunking/truncated/
+We all received a number of stable backport messages related to this 
+series that was upstreamed about a month ago:
 
-Other than that, looks good!
+https://lore.kernel.org/netdev/20221210002810.289674-1-mathew.j.martineau@linux.intel.com/
 
-Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Matthieu Baerts (3):
+   mptcp: remove MPTCP 'ifdef' in TCP SYN cookies
+   mptcp: dedicated request sock for subflow in v6
+   mptcp: use proper req destructor for IPv6
 
->
-> Also, as pointed by Mat, this event doesn't have any "token" attribute
-> so this attribute is now printed only if it is available.
->
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/313
-> Cc: Geliang Tang <geliang.tang@suse.com>
-> Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->
-> Notes:
->    v1 -> v2:
->      - print LISTENER_* instead of LISTEN_* and increase the limit to 16
->        chars (Mat)
->      - check if the TOKEN attribute is available before printing it (Mat)
->      - edit the commit message to reflect the modifications from v2
->
-> ip/ipmptcp.c | 7 +++++--
-> 1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-> index ce62ab9a..beba7a41 100644
-> --- a/ip/ipmptcp.c
-> +++ b/ip/ipmptcp.c
-> @@ -454,6 +454,8 @@ static const char * const event_to_str[] = {
-> 	[MPTCP_EVENT_SUB_ESTABLISHED] = "SF_ESTABLISHED",
-> 	[MPTCP_EVENT_SUB_CLOSED] = "SF_CLOSED",
-> 	[MPTCP_EVENT_SUB_PRIORITY] = "SF_PRIO",
-> +	[MPTCP_EVENT_LISTENER_CREATED] = "LISTENER_CREATED",
-> +	[MPTCP_EVENT_LISTENER_CLOSED] = "LISTENER_CLOSED",
-> };
->
-> static void print_addr(const char *key, int af, struct rtattr *value)
-> @@ -492,11 +494,12 @@ static int mptcp_monitor_msg(struct rtnl_ctrl_data *ctrl,
-> 		goto out;
-> 	}
->
-> -	printf("[%14s]", event_to_str[ghdr->cmd]);
-> +	printf("[%16s]", event_to_str[ghdr->cmd]);
->
-> 	parse_rtattr(tb, MPTCP_ATTR_MAX, (void *) ghdr + GENL_HDRLEN, len);
->
-> -	printf(" token=%08x", rta_getattr_u32(tb[MPTCP_ATTR_TOKEN]));
-> +	if (tb[MPTCP_ATTR_TOKEN])
-> +		printf(" token=%08x", rta_getattr_u32(tb[MPTCP_ATTR_TOKEN]));
->
-> 	if (tb[MPTCP_ATTR_REM_ID])
-> 		printf(" remid=%u", rta_getattr_u8(tb[MPTCP_ATTR_REM_ID]));
->
-> base-commit: d0e02f35af33b8957cc9f52af07b0b81d557ad3b
-> -- 
-> 2.37.2
->
->
+Wei Yongjun (1):
+   mptcp: netlink: fix some error return code
 
---
-Mat Martineau
-Intel
+
+The process went smoothly for 6.0-stable and 6.1-stable, but the more 
+important request_sock patches didn't apply to 5.15-stable:
+
+   mptcp: dedicated request sock for subflow in v6
+   mptcp: use proper req destructor for IPv6
+
+Even though "mptcp: remove MPTCP 'ifdef' in TCP SYN cookies" doesn't do 
+much on its own, it seems worthwhile to leave it in the current 5.15 
+stable queue so we can backport the two additional patches that depend on 
+it.
+
+None of the 4 patches above applied to 5.10-stable. It looks like the code 
+has not changed a lot and the backport should not be tricky - I lean 
+toward backporting Matthieu's 3 patches. Wei's patch fixes code added in 
+5.19, so isn't relevant in these older stable kernels.
+
+Both 5.15-stable and 5.10-stable manual backporting plans sound good?
+
+
+Thanks,
+Mat
+
+
+
+---------- Forwarded message ----------
+Date: Wed, 4 Jan 2023 06:02:28
+From: gregkh@linuxfoundation.org
+To: gregkh@linuxfoundation.org, kuba@kernel.org,
+     mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+     pabeni@redhat.com
+Cc: stable-commits@vger.kernel.org
+Subject: Patch "mptcp: remove MPTCP 'ifdef' in TCP SYN cookies" has been added
+     to the 5.15-stable tree
+
+
+This is a note to let you know that I've just added the patch titled
+
+     mptcp: remove MPTCP 'ifdef' in TCP SYN cookies
+
+to the 5.15-stable tree which can be found at:
+     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+      mptcp-remove-mptcp-ifdef-in-tcp-syn-cookies.patch
+and it can be found in the queue-5.15 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+>From 3fff88186f047627bb128d65155f42517f8e448f Mon Sep 17 00:00:00 2001
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Date: Fri, 9 Dec 2022 16:28:08 -0800
+Subject: mptcp: remove MPTCP 'ifdef' in TCP SYN cookies
+
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+
+commit 3fff88186f047627bb128d65155f42517f8e448f upstream.
+
+To ease the maintenance, it is often recommended to avoid having #ifdef
+preprocessor conditions.
+
+Here the section related to CONFIG_MPTCP was quite short but the next
+commit needs to add more code around. It is then cleaner to move
+specific MPTCP code to functions located in net/mptcp directory.
+
+Now that mptcp_subflow_request_sock_ops structure can be static, it can
+also be marked as "read only after init".
+
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+  include/net/mptcp.h   |   12 ++++++++++--
+  net/ipv4/syncookies.c |    7 +++----
+  net/mptcp/subflow.c   |   12 +++++++++++-
+  3 files changed, 24 insertions(+), 7 deletions(-)
+
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -93,8 +93,6 @@ struct mptcp_out_options {
+  };
+
+  #ifdef CONFIG_MPTCP
+-extern struct request_sock_ops mptcp_subflow_request_sock_ops;
+-
+  void mptcp_init(void);
+
+  static inline bool sk_is_mptcp(const struct sock *sk)
+@@ -182,6 +180,9 @@ void mptcp_seq_show(struct seq_file *seq
+  int mptcp_subflow_init_cookie_req(struct request_sock *req,
+  				  const struct sock *sk_listener,
+  				  struct sk_buff *skb);
++struct request_sock *mptcp_subflow_reqsk_alloc(const struct request_sock_ops *ops,
++					       struct sock *sk_listener,
++					       bool attach_listener);
+
+  __be32 mptcp_get_reset_option(const struct sk_buff *skb);
+
+@@ -274,6 +275,13 @@ static inline int mptcp_subflow_init_coo
+  	return 0; /* TCP fallback */
+  }
+
++static inline struct request_sock *mptcp_subflow_reqsk_alloc(const struct request_sock_ops *ops,
++							     struct sock *sk_listener,
++							     bool attach_listener)
++{
++	return NULL;
++}
++
+  static inline __be32 mptcp_reset_option(const struct sk_buff *skb)  { return htonl(0u); }
+  #endif /* CONFIG_MPTCP */
+
+--- a/net/ipv4/syncookies.c
++++ b/net/ipv4/syncookies.c
+@@ -290,12 +290,11 @@ struct request_sock *cookie_tcp_reqsk_al
+  	struct tcp_request_sock *treq;
+  	struct request_sock *req;
+
+-#ifdef CONFIG_MPTCP
+  	if (sk_is_mptcp(sk))
+-		ops = &mptcp_subflow_request_sock_ops;
+-#endif
++		req = mptcp_subflow_reqsk_alloc(ops, sk, false);
++	else
++		req = inet_reqsk_alloc(ops, sk, false);
+
+-	req = inet_reqsk_alloc(ops, sk, false);
+  	if (!req)
+  		return NULL;
+
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -483,7 +483,7 @@ do_reset:
+  	mptcp_subflow_reset(sk);
+  }
+
+-struct request_sock_ops mptcp_subflow_request_sock_ops;
++static struct request_sock_ops mptcp_subflow_request_sock_ops __ro_after_init;
+  static struct tcp_request_sock_ops subflow_request_sock_ipv4_ops __ro_after_init;
+
+  static int subflow_v4_conn_request(struct sock *sk, struct sk_buff *skb)
+@@ -536,6 +536,16 @@ drop:
+  }
+  #endif
+
++struct request_sock *mptcp_subflow_reqsk_alloc(const struct request_sock_ops *ops,
++					       struct sock *sk_listener,
++					       bool attach_listener)
++{
++	ops = &mptcp_subflow_request_sock_ops;
++
++	return inet_reqsk_alloc(ops, sk_listener, attach_listener);
++}
++EXPORT_SYMBOL(mptcp_subflow_reqsk_alloc);
++
+  /* validate hmac received in third ACK */
+  static bool subflow_hmac_valid(const struct request_sock *req,
+  			       const struct mptcp_options_received *mp_opt)
+
+
+Patches currently in stable-queue which might be from matthieu.baerts@tessares.net are
+
+queue-5.15/mptcp-remove-mptcp-ifdef-in-tcp-syn-cookies.patch
