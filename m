@@ -1,88 +1,125 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D37621
-	for <mptcp@lists.linux.dev>; Thu,  5 Jan 2023 00:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672878479; x=1704414479;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=JUy0TmDms+wDGJY5KwOkzWuWNDXZYGDX0NH62lDckfM=;
-  b=SFChw9oxrGVzs1vLHrIVUBjg14+GVZEM76zN5SSA9lBhW9RSItWf84RK
-   L9VmlpbaOmFxbnqWCmJMU01j9mzPGWPV2QEz+AwONQgloweji26EsaTHz
-   5nRGC8V4RPo+5vc4jufOF4dWg6DQ2dmG9F8cepfOTu7T7mAYChmw1ioOO
-   kAfcP9eERkr9lMBag9DTNpRbVf8OhO8qHBZschb1BcHEaNjMmWI1RghC9
-   LIQ8hjsxNhMjnJ+w6sKXluZofqC+D/J7q3ghb12IWUCpuYrYVQ4lK1ylp
-   JjgLQEUV3wIfA+bzAvkxrGKZoKKOYjXE29hzTas+Po4So5fUJEgunOZiq
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="386517928"
-X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
-   d="scan'208";a="386517928"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 16:27:58 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="797718353"
-X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
-   d="scan'208";a="797718353"
-Received: from lakkired-mobl1.amr.corp.intel.com ([10.212.143.9])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 16:27:58 -0800
-Date: Wed, 4 Jan 2023 16:27:57 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0421E630
+	for <mptcp@lists.linux.dev>; Thu,  5 Jan 2023 08:32:45 +0000 (UTC)
+Received: by mail-qt1-f173.google.com with SMTP id s9so29417428qtx.6
+        for <mptcp@lists.linux.dev>; Thu, 05 Jan 2023 00:32:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kFBiTFmj7Vu2vymqta6d5RtL1q0zIimJ6jOS6+arByk=;
+        b=PkkgG6bkT92aPh5wFFckS2OMB49FgDSD594qzLIWcBn9+jHJ/imsXnolaR9jmLFEC8
+         fPiIt+nT7HzOsDU+44OsGqiCSUdA5IidSc/oND/ydDzWeDn+yzmDUZBY2Mx9IpCMLaGG
+         p6JodO0pXZK3oXrl6I7kxQA+7QBGMBKeNMlgKTI4UG6rxFMasDwIAq6XWWn2lIc0/0tb
+         IQZpRU8mbvLonoerqBOqUsV0nMVER1RNFQ03TDV0TyzOtUtUr5cNAAxVzYl4/Fqr4jie
+         coM13m8sgdeUW0qky/nuYPBRGXBnb1OSnzEd2gf3tFOH+/myL/FLzwBvjkHnmDkywSKU
+         XmXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=kFBiTFmj7Vu2vymqta6d5RtL1q0zIimJ6jOS6+arByk=;
+        b=lDGnDVVarIhlIuQH5QluijRYf/PingJMqS26bJUkznp1M/1yUandTmifEB4NQ6DThK
+         7NCBmSgVe1iC/PasTvWVcFfv3JmcWOjGWZ5RJjWtUt+kPBV9XELLa9vQiRsyHaMBbyvJ
+         BjUv2qWS3sAxuJJxoIs2sM31EmDSheJsVYf/0aXRyrpXb7ys2bKkhthbg2YxmuCPAB47
+         5MGyAstKotRitvlQTKD8WoZEVGp+mj+VPU9LGhdyS9pN2bwXvw27f7zhXX9TjKBXqosZ
+         Tf+pbd1glSC6FTZ7F5YCXV8bwHdGBIbHv98e9acVWLfzD89vSRquWZuO+XXhc/QpjoFv
+         Q/VA==
+X-Gm-Message-State: AFqh2kpLRe2g/sA8E+gNL+/pLBKPhCoEvcvMpmGrPqRlEiYqftBAmmda
+	ligFRPr0SrDAp2Xya8Eoz+SN2kGepeRjwdo=
+X-Google-Smtp-Source: AMrXdXuTr0NXzAX1TtXCTLG1rdhUd6VwHSyPUL7lwsWhaPgPoOFvEU19iN7exwiMzkveEWU82VqXLA==
+X-Received: by 2002:a05:622a:4007:b0:3a8:3039:a702 with SMTP id cf7-20020a05622a400700b003a83039a702mr65662544qtb.43.1672907564890;
+        Thu, 05 Jan 2023 00:32:44 -0800 (PST)
+Received: from [127.0.0.1] ([172.177.129.241])
+        by smtp.gmail.com with ESMTPSA id q29-20020a37f71d000000b006fb9bbb071fsm24714044qkj.29.2023.01.05.00.32.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jan 2023 00:32:44 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: Re: [Weekly meetings] MoM - 3rd of January 2022
-In-Reply-To: <d01f9328-3469-2ea8-d207-f5ea24b341e7@tessares.net>
-Message-ID: <1918d8f6-47aa-054a-f859-902a4a13f8b1@linux.intel.com>
-References: <d01f9328-3469-2ea8-d207-f5ea24b341e7@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
+References: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
+Subject: Re: selftests: mptcp: userspace: avoid read errors: Tests Results
+Message-ID: <8a778ab4-18dd-e342-bbe3-5154cf82ee72@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 05 Jan 2023 08:32:43 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+
+Hi Matthieu,
+
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6007793140891648
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6007793140891648/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5444843187470336
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5444843187470336/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6570743094312960
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6570743094312960/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4741155745693696
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4741155745693696/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/b224e1e9ab22
 
 
-On Wed, 4 Jan 2023, Matthieu Baerts wrote:
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
-> Patches to send to netdev:
->
->    - Fixes for other trees: /
->
->    - Fixes for -net: /
->
->    - Fixes for net-next: /
->
->    - Features for net-next:
->
->        - [760b7619015e] mptcp: use msk_owned_by_me helper (Geliang Tang)
->        - [2d1f1999916a] mptcp: use net instead of sock_net (Geliang Tang)
->        - [7d1a091c596d] mptcp: use local variable ssk in write_options
-> (Geliang Tang)
->        - [017ea57bcf09] mptcp: introduce 'sk' to replace 'sock->sk' in
-> mptcp_listen() (Menglong Dong)
->        - [944e5425715a] mptcp: init sk->sk_prot in build_msk()
-> (Menglong Dong)
->        - [cb22370bcc5a] mptcp: rename 'sk' to 'ssk' in
-> mptcp_token_new_connect() (Menglong Dong)
->        - [647661f97d3f] mptcp: add statistics for mptcp socket in use
-> (Menglong Dong)
->        - [a39c64febbd5] selftest: mptcp: exit from copyfd_io_poll()
-> when receive SIGUSR1 (Menglong Dong)
->        - [2f1882aa4aca] selftest: mptcp: add test for mptcp socket in
-> use (Menglong Dong):
->            - can be sent but net-next is still closed
->            - Note: net-next has been re-opened a few hours after the
-> meeting
->
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-While net-next is open, it hasn't been synced with -net in a couple of 
-weeks and there's a conflict with our locking fixes in -net.
+For more details:
 
-Jakub mentioned that the -net PR goes to Linus tomorrow, so that will 
-clear the way for upstreaming the net-next feature patches.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
---
-Mat Martineau
-Intel
 
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
