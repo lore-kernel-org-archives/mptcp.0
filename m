@@ -1,125 +1,173 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0421E630
-	for <mptcp@lists.linux.dev>; Thu,  5 Jan 2023 08:32:45 +0000 (UTC)
-Received: by mail-qt1-f173.google.com with SMTP id s9so29417428qtx.6
-        for <mptcp@lists.linux.dev>; Thu, 05 Jan 2023 00:32:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kFBiTFmj7Vu2vymqta6d5RtL1q0zIimJ6jOS6+arByk=;
-        b=PkkgG6bkT92aPh5wFFckS2OMB49FgDSD594qzLIWcBn9+jHJ/imsXnolaR9jmLFEC8
-         fPiIt+nT7HzOsDU+44OsGqiCSUdA5IidSc/oND/ydDzWeDn+yzmDUZBY2Mx9IpCMLaGG
-         p6JodO0pXZK3oXrl6I7kxQA+7QBGMBKeNMlgKTI4UG6rxFMasDwIAq6XWWn2lIc0/0tb
-         IQZpRU8mbvLonoerqBOqUsV0nMVER1RNFQ03TDV0TyzOtUtUr5cNAAxVzYl4/Fqr4jie
-         coM13m8sgdeUW0qky/nuYPBRGXBnb1OSnzEd2gf3tFOH+/myL/FLzwBvjkHnmDkywSKU
-         XmXA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA4510785
+	for <mptcp@lists.linux.dev>; Thu,  5 Jan 2023 20:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1672949543;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qP7GgaungF4LpLiIW53DOAlPCQeFqX17MNRkX0URUPQ=;
+	b=DwpknoJpZ87qZOlDpA+mrRKrqOlXgFXSxcRFVh83h/PalTL3YdYdJQKei3FwSLdqgVLTYv
+	+lkMJoaJAas7TDLgfI3Eo0jnb4q+E5bmL/fnqs0dVrvLEcMUou1glcGY/PmV1ifm6px37f
+	xwTRnjS8LlCA+564RiIkIgoc5ftiFjk=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-672-WYiNu02zOsCAtaet4ZYy_A-1; Thu, 05 Jan 2023 15:12:22 -0500
+X-MC-Unique: WYiNu02zOsCAtaet4ZYy_A-1
+Received: by mail-pf1-f200.google.com with SMTP id b197-20020a621bce000000b00581b15e98cdso9842878pfb.8
+        for <mptcp@lists.linux.dev>; Thu, 05 Jan 2023 12:12:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kFBiTFmj7Vu2vymqta6d5RtL1q0zIimJ6jOS6+arByk=;
-        b=lDGnDVVarIhlIuQH5QluijRYf/PingJMqS26bJUkznp1M/1yUandTmifEB4NQ6DThK
-         7NCBmSgVe1iC/PasTvWVcFfv3JmcWOjGWZ5RJjWtUt+kPBV9XELLa9vQiRsyHaMBbyvJ
-         BjUv2qWS3sAxuJJxoIs2sM31EmDSheJsVYf/0aXRyrpXb7ys2bKkhthbg2YxmuCPAB47
-         5MGyAstKotRitvlQTKD8WoZEVGp+mj+VPU9LGhdyS9pN2bwXvw27f7zhXX9TjKBXqosZ
-         Tf+pbd1glSC6FTZ7F5YCXV8bwHdGBIbHv98e9acVWLfzD89vSRquWZuO+XXhc/QpjoFv
-         Q/VA==
-X-Gm-Message-State: AFqh2kpLRe2g/sA8E+gNL+/pLBKPhCoEvcvMpmGrPqRlEiYqftBAmmda
-	ligFRPr0SrDAp2Xya8Eoz+SN2kGepeRjwdo=
-X-Google-Smtp-Source: AMrXdXuTr0NXzAX1TtXCTLG1rdhUd6VwHSyPUL7lwsWhaPgPoOFvEU19iN7exwiMzkveEWU82VqXLA==
-X-Received: by 2002:a05:622a:4007:b0:3a8:3039:a702 with SMTP id cf7-20020a05622a400700b003a83039a702mr65662544qtb.43.1672907564890;
-        Thu, 05 Jan 2023 00:32:44 -0800 (PST)
-Received: from [127.0.0.1] ([172.177.129.241])
-        by smtp.gmail.com with ESMTPSA id q29-20020a37f71d000000b006fb9bbb071fsm24714044qkj.29.2023.01.05.00.32.44
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qP7GgaungF4LpLiIW53DOAlPCQeFqX17MNRkX0URUPQ=;
+        b=2T+MDE6aWdSjjRieJgW+fWaITq3qj81od14spT1YXw8BO6uPNzhR+6ElF/ugKjSjI2
+         aB2xtxb+Stzk2aFoRqVZqeRgVWfcyB5o1dT/yCJ0yoCici1Kh8+4RSbqTLFCYvS66GII
+         W8DOupGtoiQ6hMexybnDzvch0Q6YviIpZVVc4auZiSgQtJyHSkMmOMiMlC8rMZJCnOMQ
+         SF9Fm9r/6Ja82xKylW3Edn1rUxiGLnL12mr+PsoEFePcuX6HrGzeIjQW2JyS2FX4/n1T
+         XEp++C59SDoyShI7N9DE7Q6ytQY5r3BGvI1yPso3K8KlGp51rC75m2zzwc0dtgLAOnuu
+         5eQQ==
+X-Gm-Message-State: AFqh2koO4sDuQYWAMtdSKomJjO0zJbjUoz5LIhKRTtxoVzLqUQGjWHHm
+	/I4n+zqU+thkK2TlMv5yncnbsh+fVopZlhaB995qYPo/hMITiz5EAH/pU0pAartUsFxoJNR1b+a
+	AlwpEM7xKbMRcK/o=
+X-Received: by 2002:a17:902:f711:b0:192:8ca0:b86e with SMTP id h17-20020a170902f71100b001928ca0b86emr44610322plo.35.1672949540785;
+        Thu, 05 Jan 2023 12:12:20 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXvh5BYK9jnJ1/ierKFbMs7rt9oYDnwOUEI3E2+7h8gq5HjwHZr6D4+K/PXVYDnWkRaAoFcGJQ==
+X-Received: by 2002:a17:902:f711:b0:192:8ca0:b86e with SMTP id h17-20020a170902f71100b001928ca0b86emr44610295plo.35.1672949540483;
+        Thu, 05 Jan 2023 12:12:20 -0800 (PST)
+Received: from localhost.localdomain ([240d:1a:c0d:9f00:ca6:1aff:fead:cef4])
+        by smtp.gmail.com with ESMTPSA id y15-20020a17090322cf00b001896ba683b9sm16754710plg.131.2023.01.05.12.12.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 00:32:44 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
-References: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
-Subject: Re: selftests: mptcp: userspace: avoid read errors: Tests Results
-Message-ID: <8a778ab4-18dd-e342-bbe3-5154cf82ee72@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Jan 2023 08:32:43 +0000
+        Thu, 05 Jan 2023 12:12:20 -0800 (PST)
+From: Shigeru Yoshida <syoshida@redhat.com>
+To: mathew.j.martineau@linux.intel.com,
+	matthieu.baerts@tessares.net
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	dmytro@shytyi.net,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Shigeru Yoshida <syoshida@redhat.com>
+Subject: [PATCH] mptcp: Fix deadlock in mptcp_sendmsg()
+Date: Fri,  6 Jan 2023 05:12:05 +0900
+Message-Id: <20230105201205.1087439-1-syoshida@redhat.com>
+X-Mailer: git-send-email 2.39.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Matthieu,
+__mptcp_close_ssk() can be called from mptcp_sendmsg() with subflow
+socket locked.  This can cause a deadlock as below:
 
-Thank you for your modifications, that's great!
+mptcp_sendmsg()
+  mptcp_sendmsg_fastopen() --> lock ssk
+    tcp_sendmsg_fastopen()
+       __inet_stream_connect()
+          mptcp_disconnect()
+             mptcp_destroy_common()
+                __mptcp_close_ssk() --> lock ssk again
 
-Our CI did some validations and here is its report:
+This patch fixes the issue by skipping locking for subflow socket
+which is already locked.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6007793140891648
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6007793140891648/summary/summary.txt
+Fixes: d98a82a6afc7 ("mptcp: handle defer connect in mptcp_sendmsg")
+Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
+---
+ net/mptcp/protocol.c | 15 +++++++++------
+ net/mptcp/protocol.h |  4 ++--
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5444843187470336
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5444843187470336/summary/summary.txt
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f6f93957275b..979265f66082 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1672,9 +1672,9 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct sock *ssk, struct msgh
+ 	lock_sock(ssk);
+ 	msg->msg_flags |= MSG_DONTWAIT;
+ 	msk->connect_flags = O_NONBLOCK;
+-	msk->is_sendmsg = 1;
++	msk->sendmsg_locked_sk = ssk;
+ 	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
+-	msk->is_sendmsg = 0;
++	msk->sendmsg_locked_sk = NULL;
+ 	msg->msg_flags = saved_flags;
+ 	release_sock(ssk);
+ 
+@@ -2319,7 +2319,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	if (dispose_it)
+ 		list_del(&subflow->node);
+ 
+-	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
++	if (msk->sendmsg_locked_sk != ssk)
++		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+ 
+ 	if (flags & MPTCP_CF_FASTCLOSE) {
+ 		/* be sure to force the tcp_disconnect() path,
+@@ -2335,7 +2336,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		tcp_disconnect(ssk, 0);
+ 		msk->subflow->state = SS_UNCONNECTED;
+ 		mptcp_subflow_ctx_reset(subflow);
+-		release_sock(ssk);
++		if (msk->sendmsg_locked_sk != ssk)
++			release_sock(ssk);
+ 
+ 		goto out;
+ 	}
+@@ -2362,7 +2364,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		/* close acquired an extra ref */
+ 		__sock_put(ssk);
+ 	}
+-	release_sock(ssk);
++	if (msk->sendmsg_locked_sk != ssk)
++		release_sock(ssk);
+ 
+ 	sock_put(ssk);
+ 
+@@ -3532,7 +3535,7 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ 	/* if reaching here via the fastopen/sendmsg path, the caller already
+ 	 * acquired the subflow socket lock, too.
+ 	 */
+-	if (msk->is_sendmsg)
++	if (msk->sendmsg_locked_sk)
+ 		err = __inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags, 1);
+ 	else
+ 		err = inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 955fb3d88eb3..43afc399e16b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -294,8 +294,7 @@ struct mptcp_sock {
+ 	u8		mpc_endpoint_id;
+ 	u8		recvmsg_inq:1,
+ 			cork:1,
+-			nodelay:1,
+-			is_sendmsg:1;
++			nodelay:1;
+ 	int		connect_flags;
+ 	struct work_struct work;
+ 	struct sk_buff  *ooo_last_skb;
+@@ -318,6 +317,7 @@ struct mptcp_sock {
+ 	u32 setsockopt_seq;
+ 	char		ca_name[TCP_CA_NAME_MAX];
+ 	struct mptcp_sock	*dl_next;
++	struct sock	*sendmsg_locked_sk;
+ };
+ 
+ #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
+-- 
+2.39.0
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6570743094312960
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6570743094312960/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4741155745693696
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4741155745693696/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b224e1e9ab22
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
