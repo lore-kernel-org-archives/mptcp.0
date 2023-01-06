@@ -1,40 +1,40 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EC77E3
-	for <mptcp@lists.linux.dev>; Fri,  6 Jan 2023 01:15:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D95F7E3
+	for <mptcp@lists.linux.dev>; Fri,  6 Jan 2023 01:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672967726; x=1704503726;
+  t=1672967964; x=1704503964;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=4rWGoHurHhpz0RALwlLyd5/fqwsBsrM9zbFG4W6h04Q=;
-  b=PYnKabeleQ88ItxMTKXx7Ft3L0H3hNdFQnOmVu/z72lrigA08uXb8I11
-   H7TrL3Nc21trRbQVGxDS4Kfxs1n8OEVUifgUipk4avjunGWCGnKiO7V6B
-   puMeqjTtwjNYzdFTYu8FQciDj8LBD5HolL/ZFwC3idTIxo9+7t4IlGz1i
-   b5zJFrX3DiANQlgiKgdt6HkPcbmVwT1PS/cl4Jgm+zz0+JNAm+aNC39KH
-   LXOBV29Gj+J36c3cM+KAQlzAqhz9Zn6VcZD+Kgkbr9xQtKXF07UEYbBba
-   DjSerGuNJk0XHeu5oqBHPHfbMmlWP6DIRHmQQ2ayU+19YB5IitRhsfgaJ
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="322436109"
+  bh=rj0yu+HqNcasieTVYngOTtMcEMDIWdkOKITRpskCjwA=;
+  b=RYUgBgWKqhIpnS3sv2GRFngxRaqX6wnSBNTVOi4Pg8eBAVhMm38Aq1N3
+   pLfPwockUE7708SEf1Pr5emsH08DadoduNsyp32hDLCsRk54xSS7DlOib
+   tu3jWMob+JFb6H+EX7baRsgiGDaGOjlz9k+0Kyv9r35sr9OA5+W56/UL9
+   /Xnx/2tw76YlSWHeEWgIu/oGJhrJ2bOk3E1C8HDIjTZYX9Be7rn8NO4K6
+   gMNJxg5881/4xBZI9Corou1DWpekIoA6tIAaSpRMh1nXrae7P5Puqk7hg
+   8VcEjBZr9964K0Qh5D73kgSVw2eYYRQIqF/rZdGKpgYh2gLrgkmPRdiwU
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="310160462"
 X-IronPort-AV: E=Sophos;i="5.96,303,1665471600"; 
-   d="scan'208";a="322436109"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 17:15:04 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="686305578"
+   d="scan'208";a="310160462"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 17:19:23 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="605750904"
 X-IronPort-AV: E=Sophos;i="5.96,303,1665471600"; 
-   d="scan'208";a="686305578"
+   d="scan'208";a="605750904"
 Received: from bkrishn1-mobl.amr.corp.intel.com ([10.251.16.148])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 17:15:02 -0800
-Date: Thu, 5 Jan 2023 17:15:02 -0800 (PST)
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 17:19:23 -0800
+Date: Thu, 5 Jan 2023 17:19:23 -0800 (PST)
 From: Mat Martineau <mathew.j.martineau@linux.intel.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net/next v5 00/12] mptcp: add support for mixed
- v4/v6
-In-Reply-To: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
-Message-ID: <1d6a5e49-dd47-0c1a-c566-825e3da7e75b@linux.intel.com>
-References: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
+Subject: Re: [PATCH mptcp-next v5 09/12] selftests: mptcp: userspace: print
+ titles
+In-Reply-To: <20230104171526.1416746-10-matthieu.baerts@tessares.net>
+Message-ID: <a684ae0c-060c-49ae-f3a4-ec0a26dd0e21@linux.intel.com>
+References: <20230104171526.1416746-1-matthieu.baerts@tessares.net> <20230104171526.1416746-10-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,92 +45,164 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Wed, 4 Jan 2023, Matthieu Baerts wrote:
 
-> This is a v5 of Paolo's series with the same name but with some
-> modifications and additional patches.
+> This script is running a few tests after having setup the environment.
 >
-> ChangeLog:
->  - v3 -> v4:
->    - Fix a compilation error without CONFIG_MPTCP_IPV6 in patch 4/12.
->    - Add a title for the cleanup part in patch 9/12
->    - Add the patch 12/12 to avoid "read" errors
->  - v4 -> v5:
->    - Fix typo in patch 2/12 (Mat)
->    - More details in the commit message of patch 2/12 (Mat)
->    - Rebased on top of the latest export branch
+> Printing titles helps understand what is being tested.
 >
-> This series can be split in 2 parts: the 3 first patches are for -net
-> while the rest is for net-next. Patches for net-next depends on patches
-> for -net, that's why everything is being sent together.
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
 >
-> Patch 1 lets the userspace PM selects the proper family to avoid
-> creating subflows with wrong source and/or destination addresses because
-> the family is not the expected one.
+> Notes:
+>    v3->v4:
+>      - Add a title for the Cleanup (+ 'Done' at the end)
 >
-> Patch 2 makes sure the userspace PM doesn't allow the userspace to
-> create subflows for a family that is not allowed.
+> .../selftests/net/mptcp/userspace_pm.sh       | 24 ++++++++++++++++++-
+> 1 file changed, 23 insertions(+), 1 deletion(-)
 >
-> The core MPTCP implementation is just a few bits of properly supporting
-> a mix of v4 and v6 subflows, we just need to allow specifying the
-> subflow family explicitly (patch 1) and remove artificial constraints in
-> the in-kernel PM currently enforcing no mixed subflow in place (patch
-> 4).
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> index ab2d581f28a1..f9a03e6e968f 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -43,6 +43,11 @@ rndh=$(printf %x "$sec")-$(mktemp -u XXXXXX)
+> ns1="ns1-$rndh"
+> ns2="ns2-$rndh"
 >
-> Patch 5 makes sure the sk_ipv6only attribute is also propagated to
-> subflows, just in case the PM doesn't respect it.
->
-> Some selftests have also been added for the userspace PM (patch 3) and
-> the in-kernel PM (patch 6).
->
-> Patches 7 and 8 are just some cleanups in the userspace PM, not related
-> to the rest but I saw them when modifying the file.
->
+> +print_title()
+> +{
+> +	stdbuf -o0 -e0 printf "\t%s:\n" "${1}"
 
-Patches 1-8 look good for further testing in the export (and export-net) 
-branches:
+The indented titles seem kind of inverted to me:
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+"""
+ 	Init:
+Created network namespaces ns1, ns2         			[OK]
+ 	Make connections:
+Established IPv4 MPTCP Connection ns2 => ns1    		[OK]
+Established IPv6 MPTCP Connection ns2 => ns1    		[OK]
+ 	Announce tests:
+ADD_ADDR 10.0.2.2 (ns2) => ns1, invalid token    		[OK]
+ADD_ADDR id:55 10.0.2.2 (ns2) => ns1, reuse port 		[OK]
+...
+"""
 
+It would read better to have the titles left-justified and the test 
+results indented, but that makes all of the test results extra long. Seems 
+like you are trying to avoid that (for good reason!).
 
+What do you think about copying the "INFO: ..." style from 
+mptcp_connect.sh?
 
-> Patches 9 to 12 improve the messages printed by the userspace PM,
-> especially in case of error during the validation.
->
-
-I have a very minor formatting comment on patch 9 (separate reply)
-
+"""
+INFO: Init
+Created network namespaces ns1, ns2                             [OK]
+INFO: Make connections
+Established IPv4 MPTCP Connection ns2 => ns1                    [OK]
+Established IPv6 MPTCP Connection ns2 => ns1                    [OK]
+INFO: Announce tests
+ADD_ADDR 10.0.2.2 (ns2) => ns1, invalid token                   [OK]
+ADD_ADDR id:55 10.0.2.2 (ns2) => ns1, reuse port                [OK]
+...
+"""
 
 - Mat
 
 
-> Matthieu Baerts (9):
->  mptcp: netlink: respect v4/v6-only sockets
->  selftests: mptcp: userspace: validate v4-v6 subflows mix
->  mptcp: propagate sk_ipv6only to subflows
->  mptcp: remove assigned but unused value
->  mptcp: userspace pm: use a single point of exit
->  selftests: mptcp: userspace: print titles
->  selftests: mptcp: userspace: refactor asserts
->  selftests: mptcp: userspace: print error details if any
->  selftests: mptcp: userspace: avoid read errors
+> +}
+> +
+> kill_wait()
+> {
+> 	kill $1 > /dev/null 2>&1
+> @@ -51,7 +56,7 @@ kill_wait()
 >
-> Paolo Abeni (3):
->  mptcp: explicitly specify sock family at subflow creation time
->  mptcp: let the in-kernel PM use mixed IPv4 and IPv6 addresses
->  selftests: mptcp: add test-cases for mixed v4/v6 subflows
+> cleanup()
+> {
+> -	echo "cleanup"
+> +	print_title "Cleanup"
 >
-> net/mptcp/pm.c                                |  25 +++
-> net/mptcp/pm_netlink.c                        |  58 ++---
-> net/mptcp/pm_userspace.c                      |  14 +-
-> net/mptcp/protocol.c                          |   2 +-
-> net/mptcp/protocol.h                          |   6 +-
-> net/mptcp/sockopt.c                           |   1 +
-> net/mptcp/subflow.c                           |   9 +-
-> .../testing/selftests/net/mptcp/mptcp_join.sh |  53 ++++-
-> .../selftests/net/mptcp/userspace_pm.sh       | 200 ++++++++++++------
-> 9 files changed, 262 insertions(+), 106 deletions(-)
+> 	rm -rf $file $client_evts $server_evts
 >
+> @@ -78,6 +83,8 @@ cleanup()
+> 	for netns in "$ns1" "$ns2" ;do
+> 		ip netns del "$netns"
+> 	done
+> +
+> +	stdbuf -o0 -e0 printf "Done\n"
+> }
 >
-> base-commit: 0e6e165b9b9b5ea418067cfac1e861892ee7e12c
+> trap cleanup EXIT
+> @@ -108,6 +115,7 @@ ip -net "$ns2" addr add dead:beef:1::2/64 dev ns2eth1 nodad
+> ip -net "$ns2" addr add dead:beef:2::2/64 dev ns2eth1 nodad
+> ip -net "$ns2" link set ns2eth1 up
+>
+> +print_title "Init"
+> stdbuf -o0 -e0 printf "Created network namespaces ns1, ns2         \t\t\t[OK]\n"
+>
+> make_file()
+> @@ -255,6 +263,8 @@ verify_announce_event()
+>
+> test_announce()
+> {
+> +	print_title "Announce tests"
+> +
+> 	# Capture events on the network namespace running the server
+> 	:>"$server_evts"
+>
+> @@ -359,6 +369,8 @@ verify_remove_event()
+>
+> test_remove()
+> {
+> +	print_title "Remove tests"
+> +
+> 	# Capture events on the network namespace running the server
+> 	:>"$server_evts"
+>
+> @@ -521,6 +533,8 @@ verify_subflow_events()
+>
+> test_subflows()
+> {
+> +	print_title "Subflows v4 or v6 only tests"
+> +
+> 	# Capture events on the network namespace running the server
+> 	:>"$server_evts"
+>
+> @@ -754,6 +768,8 @@ test_subflows()
+>
+> test_subflows_v4_v6_mix()
+> {
+> +	print_title "Subflows v4 and v6 mix tests"
+> +
+> 	# Attempt to add a listener at 10.0.2.1:<subflow-port>
+> 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
+> 	   $app6_port > /dev/null 2>&1 &
+> @@ -800,6 +816,8 @@ test_subflows_v4_v6_mix()
+>
+> test_prio()
+> {
+> +	print_title "Prio tests"
+> +
+> 	local count
+>
+> 	# Send MP_PRIO signal from client to server machine
+> @@ -876,6 +894,8 @@ verify_listener_events()
+>
+> test_listener()
+> {
+> +	print_title "Listener tests"
+> +
+> 	# Capture events on the network namespace running the client
+> 	:>$client_evts
+>
+> @@ -902,8 +922,10 @@ test_listener()
+> 	verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.2 $client4_port
+> }
+>
+> +print_title "Make connections"
+> make_connection
+> make_connection "v6"
+> +
+> test_announce
+> test_remove
+> test_subflows
 > -- 
 > 2.37.2
 >
