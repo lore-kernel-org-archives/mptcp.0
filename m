@@ -1,214 +1,125 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D95F7E3
-	for <mptcp@lists.linux.dev>; Fri,  6 Jan 2023 01:19:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672967964; x=1704503964;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=rj0yu+HqNcasieTVYngOTtMcEMDIWdkOKITRpskCjwA=;
-  b=RYUgBgWKqhIpnS3sv2GRFngxRaqX6wnSBNTVOi4Pg8eBAVhMm38Aq1N3
-   pLfPwockUE7708SEf1Pr5emsH08DadoduNsyp32hDLCsRk54xSS7DlOib
-   tu3jWMob+JFb6H+EX7baRsgiGDaGOjlz9k+0Kyv9r35sr9OA5+W56/UL9
-   /Xnx/2tw76YlSWHeEWgIu/oGJhrJ2bOk3E1C8HDIjTZYX9Be7rn8NO4K6
-   gMNJxg5881/4xBZI9Corou1DWpekIoA6tIAaSpRMh1nXrae7P5Puqk7hg
-   8VcEjBZr9964K0Qh5D73kgSVw2eYYRQIqF/rZdGKpgYh2gLrgkmPRdiwU
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="310160462"
-X-IronPort-AV: E=Sophos;i="5.96,303,1665471600"; 
-   d="scan'208";a="310160462"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 17:19:23 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="605750904"
-X-IronPort-AV: E=Sophos;i="5.96,303,1665471600"; 
-   d="scan'208";a="605750904"
-Received: from bkrishn1-mobl.amr.corp.intel.com ([10.251.16.148])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 17:19:23 -0800
-Date: Thu, 5 Jan 2023 17:19:23 -0800 (PST)
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4D17B
+	for <mptcp@lists.linux.dev>; Fri,  6 Jan 2023 02:39:17 +0000 (UTC)
+Received: by mail-qt1-f171.google.com with SMTP id c7so1077505qtw.8
+        for <mptcp@lists.linux.dev>; Thu, 05 Jan 2023 18:39:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hHnWrArRL2lWKaQ+i5MU+rVbmewoZmaJpMtVSXM7Zgk=;
+        b=ksm9ykdF07mcuOxJUhYqynHC7tre7kXqT+NY18oc29xsBDRCmeoD6yUDs5fppc8jyr
+         dPW05AShQvZ1V/pudzppatoNgN/3ub3O8RRXpmzsB2aS71Z+mWVFyStD54MHJIT5Ea3c
+         bTer06u6D6JAX5KjE4paJhrZDgpRy0q9C4TAc/wQ4waw4kG1E/4c+ACo/9ZGfo+clKxd
+         FUJkdHIKBY1sAHBw0xVxU2nOeHXUXLWFMZv+fMIheUzT+16JL07rKJ9Yrqc+B5wHoNx7
+         ZFN77HBShIQ/6ykj+wjySWE1/PHaGDKh3HACfk7pX89qsi+HTu7wmkeS1mir/tkxEPtO
+         SHJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=hHnWrArRL2lWKaQ+i5MU+rVbmewoZmaJpMtVSXM7Zgk=;
+        b=OtbZrC+44JI1G/twITjpzG6blPpHLM7FgEerE0RimsffnzhKVHwJuoZJhvxb1IG+2B
+         rNPVMqlRo5IKaKNT0k41h6M0Fay4xVjrvGkfYBizHSXZRhsVqoIDFuvrEZ/UfkJ0bBg4
+         RvLaGBYN7k8MOBpVYj59h3Q6/21NCCjiOLFU2Fe+VH1PzdbZhJzzhBoInvJwB4sIa3uP
+         w75WbhOwmH84gtvxLmo3KI1tEbVEGR2fl0bWUuTiMUPeDQyBTZCysnYg0mkxRVZwATo7
+         ymXDQZJcuhX6nMzqwHx9dA6jMhYZ+KTqr+b3vgs082uXw6N9Lo0Hwg+XX32kbEioeoiM
+         ahKQ==
+X-Gm-Message-State: AFqh2kqhX3G1EeG3eAMVCc0j1t1iq2y4ocphYWPVWATumktFcT1tfhpH
+	n6HJREI5SQVqygvcHZoM/bk42zWoXA==
+X-Google-Smtp-Source: AMrXdXvUBRT/6L15v3Cjvy0rbYBtrGHcjnKFt0gQui70cTbpk4SNUeA1uQ1Iv8q5QofNpbjiwOf2Dw==
+X-Received: by 2002:a05:622a:c:b0:3ab:b78b:c3cf with SMTP id x12-20020a05622a000c00b003abb78bc3cfmr30731908qtw.60.1672972756027;
+        Thu, 05 Jan 2023 18:39:16 -0800 (PST)
+Received: from [127.0.0.1] ([172.177.209.209])
+        by smtp.gmail.com with ESMTPSA id s24-20020ac87598000000b003a7f1e16649sm22726957qtq.42.2023.01.05.18.39.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jan 2023 18:39:15 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v5 09/12] selftests: mptcp: userspace: print
- titles
-In-Reply-To: <20230104171526.1416746-10-matthieu.baerts@tessares.net>
-Message-ID: <a684ae0c-060c-49ae-f3a4-ec0a26dd0e21@linux.intel.com>
-References: <20230104171526.1416746-1-matthieu.baerts@tessares.net> <20230104171526.1416746-10-matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
+References: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
+Subject: Re: selftests: mptcp: userspace: avoid read errors: Tests Results
+Message-ID: <d749aeec-6a82-5f54-afef-bc74c7189c7d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Jan 2023 02:39:14 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, 4 Jan 2023, Matthieu Baerts wrote:
+Hi Matthieu,
 
-> This script is running a few tests after having setup the environment.
->
-> Printing titles helps understand what is being tested.
->
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->
-> Notes:
->    v3->v4:
->      - Add a title for the Cleanup (+ 'Done' at the end)
->
-> .../selftests/net/mptcp/userspace_pm.sh       | 24 ++++++++++++++++++-
-> 1 file changed, 23 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> index ab2d581f28a1..f9a03e6e968f 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -43,6 +43,11 @@ rndh=$(printf %x "$sec")-$(mktemp -u XXXXXX)
-> ns1="ns1-$rndh"
-> ns2="ns2-$rndh"
->
-> +print_title()
-> +{
-> +	stdbuf -o0 -e0 printf "\t%s:\n" "${1}"
+Thank you for your modifications, that's great!
 
-The indented titles seem kind of inverted to me:
+Our CI did some validations and here is its report:
 
-"""
- 	Init:
-Created network namespaces ns1, ns2         			[OK]
- 	Make connections:
-Established IPv4 MPTCP Connection ns2 => ns1    		[OK]
-Established IPv6 MPTCP Connection ns2 => ns1    		[OK]
- 	Announce tests:
-ADD_ADDR 10.0.2.2 (ns2) => ns1, invalid token    		[OK]
-ADD_ADDR id:55 10.0.2.2 (ns2) => ns1, reuse port 		[OK]
-...
-"""
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5545190199394304
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5545190199394304/summary/summary.txt
 
-It would read better to have the titles left-justified and the test 
-results indented, but that makes all of the test results extra long. Seems 
-like you are trying to avoid that (for good reason!).
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4630396525084672
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4630396525084672/summary/summary.txt
 
-What do you think about copying the "INFO: ..." style from 
-mptcp_connect.sh?
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6671090106236928
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6671090106236928/summary/summary.txt
 
-"""
-INFO: Init
-Created network namespaces ns1, ns2                             [OK]
-INFO: Make connections
-Established IPv4 MPTCP Connection ns2 => ns1                    [OK]
-Established IPv6 MPTCP Connection ns2 => ns1                    [OK]
-INFO: Announce tests
-ADD_ADDR 10.0.2.2 (ns2) => ns1, invalid token                   [OK]
-ADD_ADDR id:55 10.0.2.2 (ns2) => ns1, reuse port                [OK]
-...
-"""
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5756296431927296
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5756296431927296/su=
+mmary/summary.txt
 
-- Mat
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/d15ee7ad18a9
 
 
-> +}
-> +
-> kill_wait()
-> {
-> 	kill $1 > /dev/null 2>&1
-> @@ -51,7 +56,7 @@ kill_wait()
->
-> cleanup()
-> {
-> -	echo "cleanup"
-> +	print_title "Cleanup"
->
-> 	rm -rf $file $client_evts $server_evts
->
-> @@ -78,6 +83,8 @@ cleanup()
-> 	for netns in "$ns1" "$ns2" ;do
-> 		ip netns del "$netns"
-> 	done
-> +
-> +	stdbuf -o0 -e0 printf "Done\n"
-> }
->
-> trap cleanup EXIT
-> @@ -108,6 +115,7 @@ ip -net "$ns2" addr add dead:beef:1::2/64 dev ns2eth1 nodad
-> ip -net "$ns2" addr add dead:beef:2::2/64 dev ns2eth1 nodad
-> ip -net "$ns2" link set ns2eth1 up
->
-> +print_title "Init"
-> stdbuf -o0 -e0 printf "Created network namespaces ns1, ns2         \t\t\t[OK]\n"
->
-> make_file()
-> @@ -255,6 +263,8 @@ verify_announce_event()
->
-> test_announce()
-> {
-> +	print_title "Announce tests"
-> +
-> 	# Capture events on the network namespace running the server
-> 	:>"$server_evts"
->
-> @@ -359,6 +369,8 @@ verify_remove_event()
->
-> test_remove()
-> {
-> +	print_title "Remove tests"
-> +
-> 	# Capture events on the network namespace running the server
-> 	:>"$server_evts"
->
-> @@ -521,6 +533,8 @@ verify_subflow_events()
->
-> test_subflows()
-> {
-> +	print_title "Subflows v4 or v6 only tests"
-> +
-> 	# Capture events on the network namespace running the server
-> 	:>"$server_evts"
->
-> @@ -754,6 +768,8 @@ test_subflows()
->
-> test_subflows_v4_v6_mix()
-> {
-> +	print_title "Subflows v4 and v6 mix tests"
-> +
-> 	# Attempt to add a listener at 10.0.2.1:<subflow-port>
-> 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
-> 	   $app6_port > /dev/null 2>&1 &
-> @@ -800,6 +816,8 @@ test_subflows_v4_v6_mix()
->
-> test_prio()
-> {
-> +	print_title "Prio tests"
-> +
-> 	local count
->
-> 	# Send MP_PRIO signal from client to server machine
-> @@ -876,6 +894,8 @@ verify_listener_events()
->
-> test_listener()
-> {
-> +	print_title "Listener tests"
-> +
-> 	# Capture events on the network namespace running the client
-> 	:>$client_evts
->
-> @@ -902,8 +922,10 @@ test_listener()
-> 	verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.2 $client4_port
-> }
->
-> +print_title "Make connections"
-> make_connection
-> make_connection "v6"
-> +
-> test_announce
-> test_remove
-> test_subflows
-> -- 
-> 2.37.2
->
->
->
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
---
-Mat Martineau
-Intel
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
