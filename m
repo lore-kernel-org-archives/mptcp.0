@@ -1,125 +1,135 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4D17B
-	for <mptcp@lists.linux.dev>; Fri,  6 Jan 2023 02:39:17 +0000 (UTC)
-Received: by mail-qt1-f171.google.com with SMTP id c7so1077505qtw.8
-        for <mptcp@lists.linux.dev>; Thu, 05 Jan 2023 18:39:16 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE187B
+	for <mptcp@lists.linux.dev>; Fri,  6 Jan 2023 06:34:34 +0000 (UTC)
+Received: by mail-ej1-f54.google.com with SMTP id gh17so1576736ejb.6
+        for <mptcp@lists.linux.dev>; Thu, 05 Jan 2023 22:34:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hHnWrArRL2lWKaQ+i5MU+rVbmewoZmaJpMtVSXM7Zgk=;
-        b=ksm9ykdF07mcuOxJUhYqynHC7tre7kXqT+NY18oc29xsBDRCmeoD6yUDs5fppc8jyr
-         dPW05AShQvZ1V/pudzppatoNgN/3ub3O8RRXpmzsB2aS71Z+mWVFyStD54MHJIT5Ea3c
-         bTer06u6D6JAX5KjE4paJhrZDgpRy0q9C4TAc/wQ4waw4kG1E/4c+ACo/9ZGfo+clKxd
-         FUJkdHIKBY1sAHBw0xVxU2nOeHXUXLWFMZv+fMIheUzT+16JL07rKJ9Yrqc+B5wHoNx7
-         ZFN77HBShIQ/6ykj+wjySWE1/PHaGDKh3HACfk7pX89qsi+HTu7wmkeS1mir/tkxEPtO
-         SHJw==
+        bh=OMfQymO3cmOwB7oFKXbZfXhUdUu3aW0fMLT5d+QztAQ=;
+        b=HhSJqYQrVpmC/4JZc53fusJClGep7la2k40nEBjd/4oBu5ACNDAmG9hiugmMf6ACeL
+         HFfikGWmyTTOVuAbReiSPkYwE7AbV+zWq61k1bXthrrFgvOIndaC+5X81mX40/Q7OrUU
+         PhI8oCplwuj3LwemsouMiy+BI+X14iDQEMs8SI280Cj0c1okQBvQ5yyisnyFtpsgJbXR
+         4RYsBrQwKSqbTkGd50Eb2WM46izfAIrHcdNYCLl/o1B8Sj2Qc0ha221aOlmPq6pnQKLR
+         aTBn2dvhUBEj1ZGZOkAzQ4ZJxkjKOZeNGabIZHjepg+iURUX2I7fv1XOef8vu9jZOcsw
+         AYGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hHnWrArRL2lWKaQ+i5MU+rVbmewoZmaJpMtVSXM7Zgk=;
-        b=OtbZrC+44JI1G/twITjpzG6blPpHLM7FgEerE0RimsffnzhKVHwJuoZJhvxb1IG+2B
-         rNPVMqlRo5IKaKNT0k41h6M0Fay4xVjrvGkfYBizHSXZRhsVqoIDFuvrEZ/UfkJ0bBg4
-         RvLaGBYN7k8MOBpVYj59h3Q6/21NCCjiOLFU2Fe+VH1PzdbZhJzzhBoInvJwB4sIa3uP
-         w75WbhOwmH84gtvxLmo3KI1tEbVEGR2fl0bWUuTiMUPeDQyBTZCysnYg0mkxRVZwATo7
-         ymXDQZJcuhX6nMzqwHx9dA6jMhYZ+KTqr+b3vgs082uXw6N9Lo0Hwg+XX32kbEioeoiM
-         ahKQ==
-X-Gm-Message-State: AFqh2kqhX3G1EeG3eAMVCc0j1t1iq2y4ocphYWPVWATumktFcT1tfhpH
-	n6HJREI5SQVqygvcHZoM/bk42zWoXA==
-X-Google-Smtp-Source: AMrXdXvUBRT/6L15v3Cjvy0rbYBtrGHcjnKFt0gQui70cTbpk4SNUeA1uQ1Iv8q5QofNpbjiwOf2Dw==
-X-Received: by 2002:a05:622a:c:b0:3ab:b78b:c3cf with SMTP id x12-20020a05622a000c00b003abb78bc3cfmr30731908qtw.60.1672972756027;
-        Thu, 05 Jan 2023 18:39:16 -0800 (PST)
-Received: from [127.0.0.1] ([172.177.209.209])
-        by smtp.gmail.com with ESMTPSA id s24-20020ac87598000000b003a7f1e16649sm22726957qtq.42.2023.01.05.18.39.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 18:39:15 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OMfQymO3cmOwB7oFKXbZfXhUdUu3aW0fMLT5d+QztAQ=;
+        b=Z3LL80s2XHrQjS+5wWkavagNDRjgt9LV0o2s+p1ZEauoTnUu7ez5Rv/3lv5w2p2LYJ
+         ZTXoezlRJM+AR16qK//RuQxpFXh882ZdLYzEDM+oKDHOIp35ClMHaBELxpqkrGsG3pnK
+         9q1gXdGQovpppRF6X2NzyWeHYNoc7sgxS9I7pgSVACBiFGcBUWDlibS5RkD7Qep6HOII
+         NUCRtZ6Tza8tPF79WOPXe8gk42IKBZAirySwnpUAX1a7XqewgByAfF/hJ+X6Low6eyMW
+         sa3WBhCsPc1jMAvSECoKJHhwisD5lWh2kukc8EVXUE+lFYtuiRc5gRIabJNXdY8WYwux
+         y12A==
+X-Gm-Message-State: AFqh2kpTEZ6+qalwm9hdvQNIZn+rYA9UXFiggqqNfz220bNbhez9kE4w
+	q5CEq1u8bv8DYXU4sndtcVRMVQ==
+X-Google-Smtp-Source: AMrXdXt6xvJWzGKFU7vUi9pv/3yKxmFhZYvb0VC0PqqtZU4Gt0/2pNDq0oAg7tm7bAqZqc0lIYzKeQ==
+X-Received: by 2002:a17:907:8c0c:b0:7c1:1901:a445 with SMTP id ta12-20020a1709078c0c00b007c11901a445mr47812796ejc.20.1672986872918;
+        Thu, 05 Jan 2023 22:34:32 -0800 (PST)
+Received: from [127.0.0.1] ([194.110.115.77])
+        by smtp.gmail.com with ESMTPSA id lb24-20020a170907785800b008448d273670sm106061ejc.49.2023.01.05.22.34.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jan 2023 22:34:32 -0800 (PST)
+Date: Fri, 6 Jan 2023 07:34:32 +0100 (GMT+01:00)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
-References: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
-Subject: Re: selftests: mptcp: userspace: avoid read errors: Tests Results
-Message-ID: <d749aeec-6a82-5f54-afef-bc74c7189c7d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Jan 2023 02:39:14 +0000
+Message-ID: <bfae082b-18a5-4c15-8bdd-d9a34516d5f7@tessares.net>
+In-Reply-To: <a684ae0c-060c-49ae-f3a4-ec0a26dd0e21@linux.intel.com>
+References: <20230104171526.1416746-1-matthieu.baerts@tessares.net> <20230104171526.1416746-10-matthieu.baerts@tessares.net> <a684ae0c-060c-49ae-f3a4-ec0a26dd0e21@linux.intel.com>
+Subject: Re: [PATCH mptcp-next v5 09/12] selftests: mptcp: userspace: print
+ titles
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <bfae082b-18a5-4c15-8bdd-d9a34516d5f7@tessares.net>
 
-Hi Matthieu,
+Hi Mat,
 
-Thank you for your modifications, that's great!
+Thank you for the review!
 
-Our CI did some validations and here is its report:
+6 Jan 2023 02:19:26 Mat Martineau <mathew.j.martineau@linux.intel.com>:
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5545190199394304
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5545190199394304/summary/summary.txt
+> On Wed, 4 Jan 2023, Matthieu Baerts wrote:
+>
+>> This script is running a few tests after having setup the environment.
+>>
+>> Printing titles helps understand what is being tested.
+>>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> ---
+>>
+>> Notes:
+>> =C2=A0=C2=A0 v3->v4:
+>> =C2=A0=C2=A0=C2=A0=C2=A0 - Add a title for the Cleanup (+ 'Done' at the =
+end)
+>>
+>> .../selftests/net/mptcp/userspace_pm.sh=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 24 ++++++++++++++++++-
+>> 1 file changed, 23 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/t=
+esting/selftests/net/mptcp/userspace_pm.sh
+>> index ab2d581f28a1..f9a03e6e968f 100755
+>> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+>> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+>> @@ -43,6 +43,11 @@ rndh=3D$(printf %x "$sec")-$(mktemp -u XXXXXX)
+>> ns1=3D"ns1-$rndh"
+>> ns2=3D"ns2-$rndh"
+>>
+>> +print_title()
+>> +{
+>> +=C2=A0=C2=A0 stdbuf -o0 -e0 printf "\t%s:\n" "${1}"
+>
+> The indented titles seem kind of inverted to me:
+>
+> """
+> =C2=A0=C2=A0=C2=A0 Init:
+> Created network namespaces ns1, ns2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 [OK]
+> =C2=A0=C2=A0=C2=A0 Make connections:
+> Established IPv4 MPTCP Connection ns2 =3D> ns1=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [OK]
+> Established IPv6 MPTCP Connection ns2 =3D> ns1=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [OK]
+> =C2=A0=C2=A0=C2=A0 Announce tests:
+> ADD_ADDR 10.0.2.2 (ns2) =3D> ns1, invalid token=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [OK]
+> ADD_ADDR id:55 10.0.2.2 (ns2) =3D> ns1, reuse port=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 [OK]
+> ...
+> """
+>
+> It would read better to have the titles left-justified and the test resul=
+ts indented, but that makes all of the test results extra long. Seems like =
+you are trying to avoid that (for good reason!).
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4630396525084672
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4630396525084672/summary/summary.txt
+Indeed :)
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6671090106236928
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6671090106236928/summary/summary.txt
+> What do you think about copying the "INFO: ..." style from mptcp_connect.=
+sh?
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5756296431927296
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5756296431927296/su=
-mmary/summary.txt
+Good idea, that works for me!
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/d15ee7ad18a9
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+I can do the modification (s/\t/INFO: /) when applying the patches if that'=
+s OK for you (if there is nothing else to change of course).
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
