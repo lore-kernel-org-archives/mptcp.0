@@ -1,125 +1,89 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31412770E
-	for <mptcp@lists.linux.dev>; Fri,  6 Jan 2023 17:39:19 +0000 (UTC)
-Received: by mail-vs1-f41.google.com with SMTP id i10so2149334vsr.12
-        for <mptcp@lists.linux.dev>; Fri, 06 Jan 2023 09:39:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aBvW3o6PsOoEMy8Z5mOyMMp0dmDcTc7D7iqeAn6UGB8=;
-        b=nUtllRjI6ZjEaqTg0qv7wqfRhi9ioVnnT9HtDwQE/zHH83A2UeUuesTOawprzL1IdV
-         wrygygsdPRzksmsOBuv3PeQt2vFPMf9MW1txZYTkJbxJZrn/WEvEJuetfyR6CouXo5Dh
-         b7784jVC5vBmlbAnljn8Qwo25Xt4POZ8Yglwehkn8DbBBUwzilP8nER7PQSW5bcwBGu7
-         Q1UzbpkOpRPKV13AYJpxCtG09okxMS8UKZ2D4JtHuYUb83u8ijPmNZ48jScNJc3V2y6E
-         TQKSycHBebeykd9a1qxYodg/qasu+uZqpCHlVT1RV1iDKiHHxO+9BnhCBe+XH68oRD/5
-         XQbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aBvW3o6PsOoEMy8Z5mOyMMp0dmDcTc7D7iqeAn6UGB8=;
-        b=wNkldxQyDNtKXl1KYPMDCrcberQ4Brbh1cPE+J+RTgUzkVL2+Zq9lopYzaKsT5Dumd
-         8+rFpPy95/348dZYtdx6q+LB55YOkE+PbhsNQjAa+ZLR69efEf3xvMzcXDLL3gCqkkBg
-         6ddQwL2r4FJEY+UYl298q5mR1NloKkcnapYOF2s/n8HlOpTaRyQwDia04sIpZBPspPlr
-         OzzjkP4wtKWtPRLrZVwuyB30Hf8AMh0yGNFS0FDH/r2RfxnD1yecqRWEjub6rpfoc4QP
-         TGMBbswOqF5LXXxC3ZEVemc0f4CGphwoe4P0c1X/mVSIGqls6A7bOkk5QcoITOP4ZpJG
-         QE0g==
-X-Gm-Message-State: AFqh2kqcqzMDtcO+sSSElFWAGM2l6Ljae3JuTkTfG/Tt+wKPcVnUvVkl
-	7Pg9ezBBeFR9ikNgS3P6BLdjRXB336kv
-X-Google-Smtp-Source: AMrXdXt0tnn99PpPZ/CgEymwQV81aKIP5EUr4pDQGG/F2CMrC717XbXjerFMX5JCPfMMzsxaLmCuUg==
-X-Received: by 2002:a05:6102:661:b0:3c8:693a:8a85 with SMTP id z1-20020a056102066100b003c8693a8a85mr20711034vsf.35.1673026758599;
-        Fri, 06 Jan 2023 09:39:18 -0800 (PST)
-Received: from [127.0.0.1] ([172.176.145.224])
-        by smtp.gmail.com with ESMTPSA id x15-20020a05620a448f00b006ea7f9d8644sm834498qkp.96.2023.01.06.09.39.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jan 2023 09:39:18 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
-References: <20230104171526.1416746-13-matthieu.baerts@tessares.net>
-Subject: Re: selftests: mptcp: userspace: avoid read errors: Tests Results
-Message-ID: <b5ab1365-f06e-9361-4993-29581e399435@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Jan 2023 17:39:17 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7127E8
+	for <mptcp@lists.linux.dev>; Fri,  6 Jan 2023 18:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673031454; x=1704567454;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7TIumUDPpEAOEBg0s828TzSxiiXHZj89eU4D6tJcElg=;
+  b=RYD9dJGvGVs0aKpDltefeYwOA1XJzidNL5V7T0mCKAYmfYS75VUIqTE6
+   Lg4ewqIHJKa32KwyT+5NgpXXMTM56y9zjZ5MfRbh9tISiF5+kpfMn1eoj
+   wFBz9tjB2hMTLxaiPi3DOV1gxOeyIHu8JgBgZwAzQ5ZVJSQpfiYcBxm9O
+   TIyxjsKLkHwwZ8dEgoZeKFC4BDRvsFqT1eB6R2xjzPstum+IFM/RXMaLn
+   yl2cqCq0CRnmgldKz9Lq61bsrIgMBKNd0F+KNabLTRq/phIAjkjx+ub1f
+   PtA8xjVvKRBe7X5qvWom61B8ppq9e+/37WqoSgmYt5wioXUtmDBG7Ps1p
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="322611200"
+X-IronPort-AV: E=Sophos;i="5.96,306,1665471600"; 
+   d="scan'208";a="322611200"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 10:57:33 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="688383426"
+X-IronPort-AV: E=Sophos;i="5.96,306,1665471600"; 
+   d="scan'208";a="688383426"
+Received: from mechevar-mobl.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.66.63])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 10:57:33 -0800
+From: Mat Martineau <mathew.j.martineau@linux.intel.com>
+To: netdev@vger.kernel.org
+Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	matthieu.baerts@tessares.net,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next 0/9] mptcp: Protocol in-use tracking and code cleanup
+Date: Fri,  6 Jan 2023 10:57:16 -0800
+Message-Id: <20230106185725.299977-1-mathew.j.martineau@linux.intel.com>
+X-Mailer: git-send-email 2.39.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+Here's a collection of commits from the MPTCP tree:
 
-Thank you for your modifications, that's great!
+Patches 1-4 and 6 contain miscellaneous code cleanup for more consistent
+use of helper functions, existing local variables, and better naming.
 
-Our CI did some validations and here is its report:
+Patches 5, 7, and 9 add sock_prot_inuse tracking for MPTCP and an
+associated self test.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5454374122553344
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5454374122553344/summary/summary.txt
+Patch 8 modifies the mptcp_connect self test tool to exit on SIGUSR1
+when in "slow mode".
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6580274029395968
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6580274029395968/summary/summary.txt
+Geliang Tang (3):
+  mptcp: use msk_owned_by_me helper
+  mptcp: use net instead of sock_net
+  mptcp: use local variable ssk in write_options
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4750686680776704
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4750686680776704/summary/summary.txt
+Menglong Dong (6):
+  mptcp: introduce 'sk' to replace 'sock->sk' in mptcp_listen()
+  mptcp: init sk->sk_prot in build_msk()
+  mptcp: rename 'sk' to 'ssk' in mptcp_token_new_connect()
+  mptcp: add statistics for mptcp socket in use
+  selftest: mptcp: exit from copyfd_io_poll() when receive SIGUSR1
+  selftest: mptcp: add test for mptcp socket in use
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5876586587619328
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5876586587619328/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/006896eb902f
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+ net/mptcp/options.c                           |  3 +-
+ net/mptcp/pm_netlink.c                        |  5 +-
+ net/mptcp/protocol.c                          | 38 ++++++++-----
+ net/mptcp/protocol.h                          |  2 +-
+ net/mptcp/sockopt.c                           |  2 +-
+ net/mptcp/token.c                             | 14 +++--
+ net/mptcp/token_test.c                        |  3 +
+ tools/testing/selftests/net/mptcp/diag.sh     | 56 +++++++++++++++++--
+ .../selftests/net/mptcp/mptcp_connect.c       |  4 +-
+ 9 files changed, 95 insertions(+), 32 deletions(-)
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+base-commit: 6bd4755c7c499dbcef46eaaeafa1a319da583b29
+-- 
+2.39.0
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
