@@ -1,242 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F1515B1
-	for <mptcp@lists.linux.dev>; Mon,  9 Jan 2023 10:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1673260269;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wsZDVFFI4B9JFOMYA2LQvus/4YHNnW5fVh15L9NVkzE=;
-	b=faAvsqQpQ9GXjxDvU+l22w0zTC4bL6q5sI4l2LDwdHqIsnEJ7FFfv+MbdHwAqTnRC8kKCt
-	28HRBUUZhO7oDwFmwsGbL6ckEf+7NXecrskcxAyTiKmDIJqoGvXGDJWxYaB/5JUBwF9McJ
-	lRwzFUGomLoTrVtdl2DGvS0sc+KeF+g=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-659-ACCwsP5oOIeLIBMckULu1A-1; Mon, 09 Jan 2023 05:31:08 -0500
-X-MC-Unique: ACCwsP5oOIeLIBMckULu1A-1
-Received: by mail-qv1-f69.google.com with SMTP id o95-20020a0c9068000000b005320eb4e959so4983029qvo.16
-        for <mptcp@lists.linux.dev>; Mon, 09 Jan 2023 02:31:08 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184183C0B
+	for <mptcp@lists.linux.dev>; Mon,  9 Jan 2023 17:04:10 +0000 (UTC)
+Received: by mail-ej1-f45.google.com with SMTP id hw16so9893518ejc.10
+        for <mptcp@lists.linux.dev>; Mon, 09 Jan 2023 09:04:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G3Ud5721rtpLSCr2vWbjki7VKP1XI4oNLyasURYSICQ=;
+        b=8y0GxXFIZU+4+uz8BiERtOxNbUrv2SzmiB7qtPj9k3yCQADrMmg4SQuxgLl1SeaJMx
+         JfwFVNoladzzljFKjprUyimr7AnJ7tdKnDAi6bs60em66m6Kq876i8u42O1a0O+Kty1F
+         +c2DXPX65ck+A2ye83PTIZg13f9PwT/qektooCcQbsmEjEK8PSA9fsgk7d7SAoY3n/99
+         SRThqQdh5fQOnqs+NbQ/5mpaOoLzFbGyuXyqTnuROjUCkyOD2RhXyCM2V9Hl/gdX74Cg
+         OOXxbb/EkpXymRDLqi6AokfbcNpA1XUD6L+j23a+/g8dhpyq9YXmHrdDl+BUW3ZX3H4q
+         nYOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wsZDVFFI4B9JFOMYA2LQvus/4YHNnW5fVh15L9NVkzE=;
-        b=bzypXp/CIDtVXHNNgFB3uqcsdwdHuLRSP7ic49nCzU3JvU+xhDHPGbaoedHWK9Z5ZA
-         0ZAOWgVkxfsKGqeOLPyzX3G0nAU1aOORElhh4ijAiIUjbt+UuSLRIqRoIFkOyfiM5N8m
-         UST2t3yyC/qSSDGdzJLHcjjHWQzqXERUg8iqjk5i3vMN+1JM9EALVcTtLJKgEVN/IpOu
-         CYPM+4YpklebitqWxM6ymlMuyHN0aj6e/FoiyGnnMt3KrMIhmf77TzJsOh2IqKQZdLYQ
-         QwMGFgoElNVsIJwbjTgsT4IAWehZ/2hH5F3iFmUJccTTCMFQhwHurhkgB0cVJAP+xIiT
-         Na4Q==
-X-Gm-Message-State: AFqh2kqJjfjTz8ruU4UlJXBYxWJYVMJLOEw5h6P8EmrzvwmuhLXBeWNi
-	+OosIrf+x4PQe+3uyobKq6lh89XD38XQY4gFhbIyUglsJuM+BVplGNZmmXhfAKhq/pqsiLjFGzt
-	YabUkemcXSsM+DeE=
-X-Received: by 2002:a0c:e805:0:b0:531:91cc:3ce5 with SMTP id y5-20020a0ce805000000b0053191cc3ce5mr61446041qvn.39.1673260267914;
-        Mon, 09 Jan 2023 02:31:07 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXvE2Hq9Ndujw+JebXu00a2dNrJm2kvrPaFC6wcKDMUavqkScAAIzCCqzvyJ2AYfMBVhw7ii6Q==
-X-Received: by 2002:a0c:e805:0:b0:531:91cc:3ce5 with SMTP id y5-20020a0ce805000000b0053191cc3ce5mr61446019qvn.39.1673260267463;
-        Mon, 09 Jan 2023 02:31:07 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-116-99.dyn.eolo.it. [146.241.116.99])
-        by smtp.gmail.com with ESMTPSA id s19-20020a05620a29d300b006ff8a122a1asm5183158qkp.78.2023.01.09.02.31.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jan 2023 02:31:06 -0800 (PST)
-Message-ID: <b318b611df77a449b162197868e0af14b2d81b68.camel@redhat.com>
-Subject: Re: [PATCH v2 2/2] selinux: Implement mptcp_add_subflow hook
-From: Paolo Abeni <pabeni@redhat.com>
-To: Paul Moore <paul@paul-moore.com>
-Cc: linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
-	mptcp@lists.linux.dev
-Date: Mon, 09 Jan 2023 11:31:04 +0100
-In-Reply-To: <CAHC9VhSBYMyjciZbX38OY_5NU-d6fszPj3xX4F3FhQYLCAWe2Q@mail.gmail.com>
-References: <cover.1671469167.git.pabeni@redhat.com>
-	 <3074022fdca04676443a9c74f57328eb729f150e.1671469167.git.pabeni@redhat.com>
-	 <CAHC9VhRYr9=qKUeF0EuY46koCnkeZ5d-=umV5TxbiUZ7qNXJ6w@mail.gmail.com>
-	 <944c4ab043713f75ad3bb512fc146e48de7b3e25.camel@redhat.com>
-	 <CAHC9VhTZ-boJeMs3ir-6=rCxyfY3ROjZ4qeXyuoo5DRPBw6gew@mail.gmail.com>
-	 <fd3ca85bbaceea0ef629c35a0a63129cb6090811.camel@redhat.com>
-	 <CAHC9VhSBYMyjciZbX38OY_5NU-d6fszPj3xX4F3FhQYLCAWe2Q@mail.gmail.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G3Ud5721rtpLSCr2vWbjki7VKP1XI4oNLyasURYSICQ=;
+        b=DbQWTh+PDqlJdDJa+qYciyi9M2ShAUpNexW/xpKkpHWW2CQtx88PF6+Wgu3W3CRxNS
+         9ikrgcdfzWM+9/Vwf0o93TH0SRm+yT5rYjo34MgWJ7wJRA2OysXFqB2JSTFWZ5sJUz+h
+         9sFvT7ayahDSviR948Kuu4YbK9UI40kHjqMF7TruwJmA4cbnVH8erR57a0UJCzrLGyGw
+         Xx9pIEOm+4tV+e0Rgch5kvNCiXWyD7WqnBJyc3fiUFCJMBznKhCdsSCAecDITrN8mnBy
+         WJZJL3if0+ASwiAWbFvkb5rH0lqv+wsQ9RRbkc7bgwlmnxZGDMaXB7oQeW132FLUiDmR
+         JlBg==
+X-Gm-Message-State: AFqh2kqLWbbps1lQrGiTwlPt24iapRxd0a+ihQTnggZa3UiuggJLSZnu
+	mfbQhBgqlRo/TyviLpD6sp7y9n93iNpT7Ujw
+X-Google-Smtp-Source: AMrXdXsmiW/Z5NFazDPgz9ArYg2QMhCdylKlwMUVZ+wBBMqLNx4Jku7y3Xs+VOoDsxTpmFA2CDldRA==
+X-Received: by 2002:a17:906:7747:b0:840:604:1da1 with SMTP id o7-20020a170906774700b0084006041da1mr53189501ejn.61.1673283848962;
+        Mon, 09 Jan 2023 09:04:08 -0800 (PST)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id fd7-20020a056402388700b00483dd234ac6sm3833925edb.96.2023.01.09.09.04.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jan 2023 09:04:08 -0800 (PST)
+Message-ID: <2fc7004e-de92-4e4d-dbd0-4325cdb17189@tessares.net>
+Date: Mon, 9 Jan 2023 18:04:08 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH mptcp-net/next v5 00/12] mptcp: add support for mixed
+ v4/v6
+Content-Language: en-GB
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+References: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
+ <1d6a5e49-dd47-0c1a-c566-825e3da7e75b@linux.intel.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <1d6a5e49-dd47-0c1a-c566-825e3da7e75b@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Mat,
 
-I'm sorry for the long delay:  I was on PTO with limited internet
-access.
-
-On Fri, 2022-12-23 at 12:11 -0500, Paul Moore wrote:
-> On Thu, Dec 22, 2022 at 10:57 AM Paolo Abeni <pabeni@redhat.com> wrote:
-> > 
-> > On Wed, 2022-12-21 at 20:21 -0500, Paul Moore wrote:
-> > > On Wed, Dec 21, 2022 at 2:24 PM Paolo Abeni <pabeni@redhat.com> wrote:
-> > > > I just tested the other option and there is another problem :(
-> > > 
-> > > It's never easy, is it? ;)
-> > > 
-> > > > The first subflow creations happens inside af_inet->create, via the sk-
-> > > > > sk_prot->init() hook. The security_socket_post_create() call on the
-> > > > owning MPTCP sockets happens after that point. So we copy data from a
-> > > > not yet initialized security context (and the test fail badly).
-> > > 
-> > > Hmmm.  Let's come back to this later on down this email.
-> > > 
-> > > > There are a few options to cope with that:
-> > > > - [ugly hack] call  security_socket_post_create() on the mptcp code
-> > > > before creating the subflow. I experimented this just to double the
-> > > > problem and a possible solution.
-> > > 
-> > > I'm guessing "[ugly hack]" is probably a bit of an understatement.
-> > > Let's see if we can do better before we explore this option too much
-> > > further.
-> > 
-> > Yup, I compiled the list in "brainstom-mode", trying to include
-> > whatever would be possible even if clearly not suitable.
-> > 
-> > [...]
-> > 
-> > > > WDYT?
-> > > 
-> > > Let's go back to the the inet_create() case for a little bit.  I'm
-> > > thinking we might be able to do something by leveraging the
-> > > sk_alloc()->sk_prot_alloc()->security_sk_alloc() code path.  As
-> > > inet_create() is going to be called from task context here, it seems
-> > > like we could do the sock's sid/sclass determination here, cached in
-> > > separate fields in the sk_security_struct if necessary, and use those
-> > > in a new MPTCP subflow hook.  We could also update
-> > > selinux_socket_post_create() to take advantage of this as well.  We
-> > > could also possibly pass the proto struct into security_sk_alloc() if
-> > > we needed to identify IPPROTO_MPTCP there as well.
-> > > 
-> > > I'll admit to not chasing down all the details, but I suspect this may
-> > > be the cleanest option - thoughts?
-> > 
-> > Thanks, I did not consider such possibility!
-> > 
-> > I think we should be careful to avoid increasing sk_security_struct
-> > size. Currently it is 16 bytes, nicely matching a kmalloc slab, any
-> > increase will move it on kmalloc-32 bytes slab possibly causing
-> > performance and memory regressions).
+On 06/01/2023 02:15, Mat Martineau wrote:
+> On Wed, 4 Jan 2023, Matthieu Baerts wrote:
 > 
-> FWIW, it is likely that this will end up growing in the future to
-> support stacking LSMs.  It's unfortunate, messy, and generally ugly,
-> but inevitable.
+>> This is a v5 of Paolo's series with the same name but with some
+>> modifications and additional patches.
+>>
+>> ChangeLog:
+>>  - v3 -> v4:
+>>    - Fix a compilation error without CONFIG_MPTCP_IPV6 in patch 4/12.
+>>    - Add a title for the cleanup part in patch 9/12
+>>    - Add the patch 12/12 to avoid "read" errors
+>>  - v4 -> v5:
+>>    - Fix typo in patch 2/12 (Mat)
+>>    - More details in the commit message of patch 2/12 (Mat)
+>>    - Rebased on top of the latest export branch
+>>
+>> This series can be split in 2 parts: the 3 first patches are for -net
+>> while the rest is for net-next. Patches for net-next depends on patches
+>> for -net, that's why everything is being sent together.
+>>
+>> Patch 1 lets the userspace PM selects the proper family to avoid
+>> creating subflows with wrong source and/or destination addresses because
+>> the family is not the expected one.
+>>
+>> Patch 2 makes sure the userspace PM doesn't allow the userspace to
+>> create subflows for a family that is not allowed.
+>>
+>> The core MPTCP implementation is just a few bits of properly supporting
+>> a mix of v4 and v6 subflows, we just need to allow specifying the
+>> subflow family explicitly (patch 1) and remove artificial constraints in
+>> the in-kernel PM currently enforcing no mixed subflow in place (patch
+>> 4).
+>>
+>> Patch 5 makes sure the sk_ipv6only attribute is also propagated to
+>> subflows, just in case the PM doesn't respect it.
+>>
+>> Some selftests have also been added for the userspace PM (patch 3) and
+>> the in-kernel PM (patch 6).
+>>
+>> Patches 7 and 8 are just some cleanups in the userspace PM, not related
+>> to the rest but I saw them when modifying the file.
+>>
 > 
-> See the selinux_inode() function as a similar example using
-> inode/inode_security_struct.
+> Patches 1-8 look good for further testing in the export (and export-net)
+> branches:
 > 
-> > More importantly, I think there is a problem with the
-> > sk_clone_lock() -> sk_prot_alloc() -> security_sk_alloc()
-> > code path.
-> > 
-> > sk_clone_lock() happens in BH context, if security_transition_sid()
-> > needs process context that would be a problem - quickly skimming the
-> > code it does not look so, I need to double check.
+> Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 > 
-> The problem is that in both selinux_socket_create() and
-> selinux_socket_post_create() the credentials from @current are needed
-> to determine the sock/sk_security_stuct label.  In
-> selinux_socket_create() @current's credentials are also used to
-> determine if the socket can be created.
 > 
-> It's looking like doing labeling determinations in the
-> security_sk_alloc() struct is not going to work.  While
-> sk_clone_lock() will end up calling into
-> security_sk_clone()/selinux_sk_clone_security() via sock_copy(), if I
-> understand you correctly that won't help as the main MPTCP socket is
-> not yet setup (e.g. selinux_socket_post_create() has not yet been run
-> on the main socket).
 > 
-> > Perhaps the cleanest option could be the one involving the mptcp
-> > refactoring, moving subflow creation at a later stage. It could have
-> > some minor side benefit for MPTCP, too - solving:
-> > 
-> > https://github.com/multipath-tcp/mptcp_net-next/issues/290
-> > 
-> > but I'm not fond of that option because it will require quite a bit of
-> > time: we need first to have the mptcp refactor in place and then cook
-> > the lsm patches. I guess such process will require at least 2 release
-> > cycles, due to the needed mptcp(netdev)/lsm trees synchronization.
+>> Patches 9 to 12 improve the messages printed by the userspace PM,
+>> especially in case of error during the validation.
+>>
 > 
-> I generally take the long term view when it comes to Linux Kernel
-> development; given the nature of the kernel, and all the constraints
-> that come with it, I would much rather pursue solutions that we
-> believe have the longest staying power.
-> 
-> I'm also happy to work on, and/or review, LSM patches in conjunction
-> with a MPTCP refactor.  If the only reason to split the work over two
-> kernel releases is to soften the blow during the merge window, I think
-> we can work that out in a single release ... at least I say that now
-> :)
+> I have a very minor formatting comment on patch 9 (separate reply)
 
-I thought about doing the MPTCP and selinux patches sequentially to
-both avoid the possibly untrivial conflicts resultion issues and to
-ensure that the mptcp patches are in place when the selinux ones are
-applied, as there is a fuctional dependency. 
+Thank you for the review!
 
-> Basically when it comes down to it, I want to make sure that any fix
-> we come up with *works*.  In my mind that means doing the LSM fix in
-> conjunction with the rework; I would hate to see all of the rework
-> happen only to find out later that it still didn't solve the LSM
-> problem.
-> 
-> Does that make sense?
+I just applied these patches. I can of course modify them later if Paolo
+is not OK with the modifications I did or to add Acked-by! (But I
+understand Paolo probably has a huge email backlog to process, no hurry,
+but at least here we can have more validations from the CI :-) )
 
-Indeed it makes sense to me.
+New patches for t/upstream-net:
+- 232e5ef7e4fb: mptcp: explicitly specify sock family at subflow
+creation time
+- 8215e56b14f2: mptcp: netlink: respect v4/v6-only sockets
+- 13ce9dd3a3da: selftests: mptcp: userspace: validate v4-v6 subflows mix
+- Results: 4d3787dfafff..e8000101a67b (export-net)
 
-I think we can address that concern in a quite consolidated way. We
-usually include in the MPTCP tree a (very limited) number of patches
-that will not be submitted to the netdev because belong to other trees
-and/or are handled/owned by others devel. 
+Tests are now in progress:
 
-We use the above e.g. to fix build and/or functional issues in our
-self-tests caused by other subsystems without the need to wait for the
-proper fix to land into vanilla. When such event happen, we simply drop
-the local copy of the fixup patch.
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230109T163931
 
-We could use a similar schema in this scenario. We can include the the
-LSM patches to the mptcp in our tree while the rework is in progress to
-ensure that overall the effort really addresses the LSM issue.
 
-We can rebase the LSM patches as needed to address conflicts as
-needed/if/when they pops up.
+New patches for t/upstream:
+- d7f79d4ba386: mptcp: let the in-kernel PM use mixed IPv4 and IPv6
+addresses
+- 4b28be013860: mptcp: propagate sk_ipv6only to subflows
+- 371aa633fcf3: selftests: mptcp: add test-cases for mixed v4/v6 subflows
+- 0e67a2df934f: mptcp: remove assigned but unused value
+- 082c80d3fdbd: mptcp: userspace pm: use a single point of exit
+- 621e00114ef6: selftests: mptcp: userspace: print titles
+- 7c48d44f2d7d: selftests: mptcp: userspace: refactor asserts
+- 543addc028f6: selftests: mptcp: userspace: print error details if any
+- 4d29130d0eb7: selftests: mptcp: userspace: avoid read errors
+- Results: 4ae7362cc1dc..24e3778f30ac (export)
 
-Once that the mptcp patches will land into the LSM tree, we will submit
-formally the LSM ones to you. During the process I'll check and ensure
-that the LSM issue is really/still fixed. Would that work for you?
+Tests are now in progress:
 
-> > If that would prove to be the most reasonable option, could we consider
-> > to transiently merge first something alike:
-> > 
-> > https://lore.kernel.org/mptcp/CAHC9VhSQnhH3UL4gqzu+YiA1Q3YyLLCv88gLJOvw-0+uw5Lvkw@mail.gmail.com/T/#m06c612f84f6b6fe759e670573b2c8092df71607b
-> > 
-> > to have a workable short-term solution, and later revert it when the
-> > final solution would be in place?
-> 
-> I would need to go back through that to make sure that it makes sense,
-> and ensure that the hook is idempotent for SELinux, AppArmor, and
-> Smack (current hook implementations), *aaaand* if we promise that this
-> is just a *temporary* hack I think I would be okay with that.
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230109T165807
 
-I would appreciate that addtional extra mile a lot, as it will allow a
-(temporary!) fix to be delivered quite earlier than what the above
-process will provide. 
-
-Of course the deal is that I'll take ownership of pursuing the complete
-fix till resolution.
-
-Many thanks!
-
-Paolo
-
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
