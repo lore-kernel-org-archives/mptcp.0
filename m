@@ -1,92 +1,147 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721323214
-	for <mptcp@lists.linux.dev>; Tue, 10 Jan 2023 09:20:28 +0000 (UTC)
-Received: by mail-ed1-f54.google.com with SMTP id x10so13675167edd.10
-        for <mptcp@lists.linux.dev>; Tue, 10 Jan 2023 01:20:27 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84A56FCF
+	for <mptcp@lists.linux.dev>; Tue, 10 Jan 2023 15:37:10 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id v10so16895474edi.8
+        for <mptcp@lists.linux.dev>; Tue, 10 Jan 2023 07:37:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3E8HTqjSxihjroa/NP/h0G4LTRbefMJK3onrGX2JSfM=;
-        b=miGRK3kyMiyaKoSBUmRa9OBV2e/Y6RZ09MG3cl6pdvaKRqJx8CwqZyvJZRSJUE7wQC
-         GTLiS+xrTpteX1pNzsOF2fM7/WFh/rKPeNvfK4l3Z6bT63c/2kyaL2x1XmJuOFfcpfi0
-         6i6Db5UkNiRVAbZRdgRlvLu9tG97tl4xCQw0d8/8KE5/mF1r9209EtSSZUslGWwhRKpm
-         Nx1qhwVjAakyeKdpyA1M/WM7DeEoZ8umuLHM48N5LsrpNno2kvFIvJSPCAuPIZqJexjO
-         7Kt25lto+M0kLO6Cc7Et5gXdDdhcEz3slu7fhgd8YTzluKGidZ1qO9l3LH1LJ/582Qw0
-         WXtw==
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7NIQeuqySBIn+/uDaa/soJfoHNgcOoKhnCbDXaRsxm0=;
+        b=zqh6Mgg82B1tXQe7W9TP1iNKzPVo0xchv59YaW05C7Yku6/PTD8KofxLrzGeWU4Ra/
+         rMjD40FwxLHOPeheHMsIRiqpGv7yARDE7wU62JKGc6faYcnjohKSUjGrjc+O/Xe76nQP
+         q3tKzbjGiw9kfa01cSsil6K346g4xAdO+pF8KIguqW7LPoUjEvDjohAuUbWT4mHWLA5x
+         OAzEaQryqEtI9wTHtUpbTszHIbNrPxByk9nDxTesIB3epVze6t0O4CoIqaL+tWDfUUo1
+         sJVrDDGFOQ/HskDqP/iaadoHKSpBEyw734arLRPW/HplmO0JUcqjH65VqR6dDBMDz7aM
+         i1Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3E8HTqjSxihjroa/NP/h0G4LTRbefMJK3onrGX2JSfM=;
-        b=6lAcSgnIIC7r4iaJGk/eqJa3haqVxYJ1v42vGrCJaGJPvl4eKXYyRZfDInKX4mtgQc
-         +nThBxm9CKcmUMw6UGjHeMtBYk340g7wCwvGGM7QvoSmJwgdVv7hFj3IEhyt3TGTxEDn
-         oIXGfT0ivRT0b2yRL7W5DqSevQyBglOvMfIh95kxFfiPUJPv6PtT+auWuoHRI5b3Q5zW
-         v0BiJst/fxMg/xjkXpa97EHzd1nVH4ZgDha+4ZxqZ43bf33GVRCe1LcQPAm42Zc1pexs
-         ye6Fj68/FH06pcH5/E1EMyguS/WHVmAB290uNKax9x6IJhH3nP0cnk3xW20NMHeTDUas
-         p4oA==
-X-Gm-Message-State: AFqh2kp/Biffw4NbhqleeLbxdGOGYLdRWL2GvxLb6L2paLxEt40mRCaI
-	hFgNi+K1JC8hwRPR3CMWjVHlVdTI7lVKN4En
-X-Google-Smtp-Source: AMrXdXsCPZe9n+c8pJd3U5swxczQX50kK+nx47UATJbyv/fG0fwpOXDtBEeUZkv2zWAfB3nXAN+S6w==
-X-Received: by 2002:a05:6402:34f:b0:461:57c1:84ea with SMTP id r15-20020a056402034f00b0046157c184eamr60228476edw.3.1673342426099;
-        Tue, 10 Jan 2023 01:20:26 -0800 (PST)
-Received: from [192.168.113.205] ([109.139.161.100])
-        by smtp.gmail.com with ESMTPSA id e21-20020aa7d7d5000000b0048ca2b6c370sm4679077eds.29.2023.01.10.01.20.25
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jan 2023 01:20:25 -0800 (PST)
-Message-ID: <862d1f2a-7c28-b740-7ff5-bcd5e13a6802@tessares.net>
-Date: Tue, 10 Jan 2023 10:20:25 +0100
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7NIQeuqySBIn+/uDaa/soJfoHNgcOoKhnCbDXaRsxm0=;
+        b=Y2PhuxQlGqTDQvnIrZZlPKIHG98ce7tszM/YtStDCHzEWpEEooy+FN4XFsEwWd09ey
+         PtArx/JrYPLseJyj2TIVkLfx0rGgjxk/AauYl+RCFzL6jwplEiWHZ2U9qu/cIhNYEsbd
+         wzOncpF4ANV7lH42LTG4AGGVU8dSfPf0fPxvoXnk1EXpZYYf8mhFVrpuuEQYo7los9zb
+         303bSVy60LH71A5BgbKEp6e5pvdpK49PxOEYfv1g1rJDHSONSBnakoXA6/x3q14W3dDg
+         gJHEUKlObWvuxXGVbxHi10BD5f+2nHJopSCfcB1EYw7HWGz9/aLPDZFP2t8JZeaE9rcI
+         U5eA==
+X-Gm-Message-State: AFqh2kqzHo3vb/VR/I/gBSLO8eX7tmnhBwhqidj6uZ55nJTPLC7IVf0A
+	o7f0UFccMGeLajOSZTfcQUS0sEQ7yqFm+nL9at4=
+X-Google-Smtp-Source: AMrXdXtcp7K3vPf9p5zACoPucDR8gxDti/v5Ic+Pl2ZROby/+0iDmXPIyKJUz6KeIyZN5fAtABoeuQ==
+X-Received: by 2002:aa7:c24e:0:b0:499:c083:fd2e with SMTP id y14-20020aa7c24e000000b00499c083fd2emr4105381edo.36.1673365028536;
+        Tue, 10 Jan 2023 07:37:08 -0800 (PST)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id y11-20020aa7c24b000000b004954c90c94bsm5047068edo.6.2023.01.10.07.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jan 2023 07:37:08 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Date: Tue, 10 Jan 2023 16:36:20 +0100
+Subject: [PATCH iproute2] mptcp: add new listener events
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH mptcp-next v5 07/12] mptcp: remove assigned but unused
- value
-Content-Language: en-GB
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20230104171526.1416746-1-matthieu.baerts@tessares.net>
- <20230104171526.1416746-8-matthieu.baerts@tessares.net>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20230104171526.1416746-8-matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id:
+ <20230110-mptcp-events-listener-net-v1-1-88a946722fe7@tessares.net>
+X-B4-Tracking: v=1; b=H4sIAPSFvWMC/x2NQQqDMBBFryKz7kCi3dirlC6S+FsH6hgyqRTEu
+ zd2+T68/3YyFIHRrdupYBOTVRv4S0dpDvoCy9SYetcPznvHS64pMzZoNX6LVSgKKyqPKcJdB6TJ
+ jdT8GAwcS9A0nw9LED3nXPCU7z95J8ll/VT09DiOH1gC38mMAAAA
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ Mat Martineau <mathew.j.martineau@linux.intel.com>,
+ Matthieu Baerts <matthieu.baerts@tessares.net>,
+ Geliang Tang <geliang.tang@suse.com>
+X-Mailer: b4 0.11.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2802;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=QqWVX+k2rpTiwxxRFOs9wtaop9d+Tb6WckSGb/ajKOs=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjvYYjAtm5ss+jKqAb/yvhlh2gJnz0lCPaPrp1C5pB
+ KYEeHZKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY72GIwAKCRD2t4JPQmmgc7KqEA
+ DUiQlADKZjtugI4einqwFhOD0Kwcof356ffKZJt9imhU91XNn9Yd1OECQrVWUUeNW9jbvvH9GW8b5h
+ mswh0B1bNFc9h2r9zFxNspZnPDdYRmbzoVvh4uW9rBLb8MIs1cOYLH3Ri6kyUP7EX7hHx+MDAXSTtV
+ el2O4Hip8J6RhgJiR7QvEOfyjOBho4dsorMwaIG0jlF6h1/43SS6SCxxj2TYg71VC3tjlvlHxUonKP
+ AKfj1JSh9u2u2GwdAEyKob9fJkZzPAfB45gG+RIPPQgsWh9IC7G9YOfpC4bsbTo7tonjQ9cRE0ag3V
+ IArkx3JidQYpe5+AC5M9D+IkaolWdDz+AIbWTDokO1UUhUgmTPsqVh8YTOfSKTwxMpc1WQlGejVtKt
+ szR5H5/t9EqcKxh11SouezaMYoOGWEwA4sRdfIh0MhXX3hInPEs2eOUwvVE0tiZTbM9/ZT1JOnkpQT
+ fRtTclrW4O4V6bHUwGE4n8OQbgFD5TLmoapfEqz1LGvlVLnh83vxbosxvY3awFdaYIkVsgHPbV8Ezt
+ V0RjlczkCdwBM0hryGQkuEMeKv8M8kWIPJGk0va8g362xTQgXVSo96y2JTb1khDVE+UAh60s4m7h1k
+ X1A+bDHHUZ84zvIn6/3Xd8MgJ9bg4PFWcHbBTHuvEUqmXnSSfmdIvhWf0a0g==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello,
+These new events have been added in kernel commit f8c9dfbd875b ("mptcp:
+add pm listener events") by Geliang Tang.
 
-On 04/01/2023 18:15, Matthieu Baerts wrote:
-> 'ret' is always set later before being used.
-> 
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->  net/mptcp/pm_userspace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index ea6ad9da7493..be389dad3f0a 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -34,7 +34,7 @@ int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
->  	struct mptcp_pm_addr_entry *e;
->  	bool addr_match = false;
->  	bool id_match = false;
-> -	int ret = -EINVAL;
-> +	int ret;
+Two new MPTCP Netlink event types for PM listening socket creation and
+closure have been recently added. They will be available in the future
+v6.2 kernel.
 
-I don't know how I got the warning nor how I missed that but as reported
-by the kernel test robot, "ret" could be used unassigned below. So I'm
-going to revert this patch directly in our tree, sorry for the noise.
+They have been added because MPTCP for Linux, when not using the
+in-kernel PM, depends on the userspace PM to create extra listening
+sockets -- called "PM listeners" -- before announcing addresses and
+ports. With the existing MPTCP Netlink events, a userspace PM can create
+PM listeners at startup time, or in response to an incoming connection.
+Creating sockets in response to connections is not optimal: ADD_ADDRs
+can't be sent until the sockets are created and listen()ed, and if all
+connections are closed then it may not be clear to the userspace PM
+daemon that PM listener sockets should be cleaned up. Hence these new
+events: PM listening sockets can be managed based on application
+activity.
 
-Cheers,
-Matt
+Note that the maximum event string size has to be increased by 2 to be
+able to display LISTENER_CREATED without truncated it.
+
+Also, as pointed by Mat, this event doesn't have any "token" attribute
+so this attribute is now printed only if it is available.
+
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/313
+Cc: Geliang Tang <geliang.tang@suse.com>
+Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ ip/ipmptcp.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+index ce62ab9a..beba7a41 100644
+--- a/ip/ipmptcp.c
++++ b/ip/ipmptcp.c
+@@ -454,6 +454,8 @@ static const char * const event_to_str[] = {
+ 	[MPTCP_EVENT_SUB_ESTABLISHED] = "SF_ESTABLISHED",
+ 	[MPTCP_EVENT_SUB_CLOSED] = "SF_CLOSED",
+ 	[MPTCP_EVENT_SUB_PRIORITY] = "SF_PRIO",
++	[MPTCP_EVENT_LISTENER_CREATED] = "LISTENER_CREATED",
++	[MPTCP_EVENT_LISTENER_CLOSED] = "LISTENER_CLOSED",
+ };
+ 
+ static void print_addr(const char *key, int af, struct rtattr *value)
+@@ -492,11 +494,12 @@ static int mptcp_monitor_msg(struct rtnl_ctrl_data *ctrl,
+ 		goto out;
+ 	}
+ 
+-	printf("[%14s]", event_to_str[ghdr->cmd]);
++	printf("[%16s]", event_to_str[ghdr->cmd]);
+ 
+ 	parse_rtattr(tb, MPTCP_ATTR_MAX, (void *) ghdr + GENL_HDRLEN, len);
+ 
+-	printf(" token=%08x", rta_getattr_u32(tb[MPTCP_ATTR_TOKEN]));
++	if (tb[MPTCP_ATTR_TOKEN])
++		printf(" token=%08x", rta_getattr_u32(tb[MPTCP_ATTR_TOKEN]));
+ 
+ 	if (tb[MPTCP_ATTR_REM_ID])
+ 		printf(" remid=%u", rta_getattr_u8(tb[MPTCP_ATTR_REM_ID]));
+
+---
+base-commit: 1ba8021057acde2ea06f5b52c370f7cc86fb2b3e
+change-id: 20230110-mptcp-events-listener-net-9cbe043ecd09
+
+Best regards,
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Matthieu Baerts <matthieu.baerts@tessares.net>
