@@ -1,48 +1,47 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53A179F8
-	for <mptcp@lists.linux.dev>; Thu, 12 Jan 2023 17:43:17 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id j16-20020a05600c1c1000b003d9ef8c274bso11361855wms.0
-        for <mptcp@lists.linux.dev>; Thu, 12 Jan 2023 09:43:17 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6098467
+	for <mptcp@lists.linux.dev>; Thu, 12 Jan 2023 17:43:18 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so15716904wms.2
+        for <mptcp@lists.linux.dev>; Thu, 12 Jan 2023 09:43:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1UJtseQcGwMVKi/xxv0N3WAnrUksBlvoIFHzshgB/So=;
-        b=GGHisRe9FQZw2Pt87kLichAs0+AZaBGl/bcSl7S1ecHup0b0wTxFzsTeG1mg/vWMHh
-         TVNKPuucTLJ1P4hSpz51ghW5gCmtkNwmyMBE+q+1JBMlJOzdjZik9b+E11x3JBYl5VSv
-         Ql7qqItwPoR0cu9wGvRJBat8sghiGWVt4633bc/j6zF+kgF1LvCX+qtJ8HzQjBrEHwPM
-         diEMirpaTbgks5tF+vZvmcsRRfjs21so6iZHcDf+ErOkwIMIRDp2v/rEmKEYezwdMUQY
-         ztY7PT//kFMZvpK4rrH0FRAZg4hcJ8zBL1KT4PC3e6E60jCHgsl6q6XH59kfJfUAOrJU
-         UGtg==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8YUfEdizU6etVNTRXoI4GW0/pb7ruC4LypASoGIVwPU=;
+        b=2KtC7802s32bVsm7NZjN7KH4JundRVEoKhT7MLX3ExFrG8IJ4+v3cCKL/BOb6NeuAr
+         WflCfYzguxCXWVA84P4+arDan1X86BYFIMJc8Y37BZtvt/1ck7WxQwvtJAZwNSkBkY+N
+         Ao2M2KztoSLHYoEPIuX8nTrP8drcderZ0PMpldAK8AiU6Xoz9UxEYf+yVxocKa7zwcI5
+         xefZ9mwdftJ4KjE38zxYWn8GLitnxJjyHexF+ZI+6mKgAdUpokoIhNTVwt01pCC4sOBC
+         XxUxhiu5SQl/tKVWAkiI6k5Xm6azWV1eUWUvOpCV7ln/SeqgZ4w/uH+8R9+wyRCb3DS3
+         noig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1UJtseQcGwMVKi/xxv0N3WAnrUksBlvoIFHzshgB/So=;
-        b=q+dr+ky67QWQlk5KpoCsoxEF6VrgdANpgi9KX0LE3Q0kvvHZuPPbNRhjgOrz9DOt3i
-         kcUCFuSPew7cCKvEMf3fXoMir0v5NPXk2KNVclWf7rYt7g9FX8NkbIuGsREm9twRONsS
-         X8cavpHLJFXuDcEV1kwdjuI2CJJ7u1Kbcyqv8ivVT37ihcjL2ztNgyXBN6ayeYLIOjLY
-         9fFIdgSPY8ju0TBMzrWyTH55+LufddthD6AxEZhw8/mA4suj6aIt/XQNGyZcmvCQqTbs
-         JDmF/ug1GOS/aTt4v9YlXGsLjElURGNVaEV7fN/QRf99xFNUvmYyAlGJEy7pXkASKOJk
-         Qlnw==
-X-Gm-Message-State: AFqh2krm8jIYJC9V9xhPhSa0o+RrrzZpjt2wtK37SiVqvDWHMaNq/hDf
-	4jaosJ3KSc++HDGeW+ljPDOsTw==
-X-Google-Smtp-Source: AMrXdXtvjozpJKYjb5s0L0a0c9u2jlFxSOhfFdL03MZaYX+pL3wP4o55G0gnn2CE119t8WoCSmey2w==
-X-Received: by 2002:a05:600c:34d1:b0:3d7:72e3:f437 with SMTP id d17-20020a05600c34d100b003d772e3f437mr56706371wmq.21.1673545395768;
-        Thu, 12 Jan 2023 09:43:15 -0800 (PST)
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8YUfEdizU6etVNTRXoI4GW0/pb7ruC4LypASoGIVwPU=;
+        b=Z7uy/96QAsbVq0OVmcw0I4Sa+iIDxnmVQZz1nw6cxO1IMmFEaFH7dmkI8RiGOe/Pzz
+         c2EpSeXzmrH/K+47BX45DYFVR5hmHvsiIhiYiRPpClTstSmHj8lvXzQ7/pWHE4Uxf/iS
+         kDxcs5t1VnaJSL0HqcDYgIWN5WdfFNmN6i22AQU22Pf/mscZG6QpGGCCIziz5Sq+i3VY
+         +NrIo6jBFOXiOsi7xQwWByC3YzLPNVT1YJi4s/IipxCIar8j8xqJRgfXO6jMBQNTLa5w
+         ZGHb38ASBqydBlTl8C4q67iGnbfgGOyhO08tvSh5PfzJjOVhN53S8o9QFp79ebdnwbrn
+         pUrw==
+X-Gm-Message-State: AFqh2kr7M9MIZNiILIYdCVBdRlmHdCTKAsjQXhRihXana17avzJ14lYM
+	6pPbSfNPW6V7OW8YOpDQeAnxhQ==
+X-Google-Smtp-Source: AMrXdXvK/Dxj0h2KI8ZmmNzOHGYhNVCFb4CLn9xyRam5mqbJmKWsmKzga/swbRi3y8zBS1sJHNoECg==
+X-Received: by 2002:a05:600c:c87:b0:3d9:73fb:8aaa with SMTP id fj7-20020a05600c0c8700b003d973fb8aaamr46696670wmb.8.1673545396847;
+        Thu, 12 Jan 2023 09:43:16 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id hg9-20020a05600c538900b003cfa622a18asm26448769wmb.3.2023.01.12.09.43.14
+        by smtp.gmail.com with ESMTPSA id hg9-20020a05600c538900b003cfa622a18asm26448769wmb.3.2023.01.12.09.43.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jan 2023 09:43:15 -0800 (PST)
+        Thu, 12 Jan 2023 09:43:16 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject:
- [PATCH net 0/3] mptcp: userspace pm: create sockets for the right family
 Date: Thu, 12 Jan 2023 18:42:51 +0100
-Message-Id:
- <20230112-upstream-net-20230112-netlink-v4-v6-v1-0-6a8363a221d2@tessares.net>
+Subject: [PATCH net 1/3] mptcp: explicitly specify sock family at subflow
+ creation time
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -51,9 +50,12 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJtGwGMC/z2NQQ6CQAxFr0K6tsnMIES8inExA1UatZIpTkwId
- 7ewcPleft5fQCkzKZyrBTIVVn6LgT9U0I9R7oQ8GENwoXbeB/xMOmeKLxSa8W8NniwPLEcsLaY2
- dc3J1R2RAyulqIQpR+nHrWXjzU6Zbvzdvy+7u67rD9e3iq2QAAAA
+Message-Id:
+ <20230112-upstream-net-20230112-netlink-v4-v6-v1-1-6a8363a221d2@tessares.net>
+References:
+ <20230112-upstream-net-20230112-netlink-v4-v6-v1-0-6a8363a221d2@tessares.net>
+In-Reply-To:
+ <20230112-upstream-net-20230112-netlink-v4-v6-v1-0-6a8363a221d2@tessares.net>
 To: "David S. Miller" <davem@davemloft.net>,
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
  Kishen Maloor <kishen.maloor@intel.com>, Florian Westphal <fw@strlen.de>,
@@ -64,76 +66,118 @@ Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
  Mat Martineau <mathew.j.martineau@linux.intel.com>,
  Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org
 X-Mailer: b4 0.11.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2305;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3907;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=zm0A5mWdQk3xBGQ5u/VEO3txMGrQk2HzQqNZk2n/aw0=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjwEayhLoK9HDeUD022Cd4xPH++QoWrbyoVTXRoFIt
- v30tzeCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY8BGsgAKCRD2t4JPQmmgc1SpEA
- CgioDccxnNIFQBbXTXuqbhabB/mTV0Wu4qLPrs4ga5lEmvbJB2jSNTXmEtScC9Pf6t3idr0PviTicf
- fSunIYxSTg+KX7vnmifmvmFc9fTJoKG44jxCCrfsXkV1qBn184BXjWiEoC+svh3CkWFVD+4obQbG89
- 6HZEQMdNOV45QP8kqYBhRHGnB1YSvktiivQz1/LbrfWxL8f7tiiuIoCg2gV+NuksfHL2bFrmv2dftr
- EGjBo+WfQGHV08EMYZhS1Q15buHmZsp6saUBC82xVg+L/IX7uf0RrkF6xdhjsTSWnBdLAsIv9iErgL
- qQ0fal8pNf0LoUlf4nud5+14msSkFPNAz8ZoYOuUNKZo3tIR4Qkbkhkpt1Ld4/HPIVAgo/R7HHfDij
- yxf2ShdizmRoXgzrRSP8jGoF8QwcDMA1Rx32PtXF7mtHPPNQ9Ya+UXJbhBq16GTwjNX4VZYKWj1TFF
- xDijT3R54uwNFUjSYasicZz+q+0YgiQ/YAi/mS/SEM/hpEh39InAxuZMGBNmOtOn6h8i7CbuznI3wq
- msm8hhQGnwGwagt1Ma66GVTdcNCH/Vkpg8EmAMFnUm+hLrAMSCiLCTSb1tTRcsTg0yhKI34HK99Yx9
- Q1TVX0hd7JzAFCPFaiabfutjU/VQ/2Cb1ep+6bov1v/0lIMNAW+io0Ka5PSA==
+ bh=s+3xVgukLGyOe4wr8E0yNyqO1BWR4F9rZ7m7xbrXwhc=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBjwEayyEL2TZPccGTRXgPHRC1HAS9t3XYCkU15kPTM
+ hAQuVZSJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY8BGsgAKCRD2t4JPQmmgcy48D/
+ 9INvcrgJwYWWJjoPXs3GnIhV9aEsw999RC4xYkwhfyvmT5af/I4pDPHMyCWBNf+u3N2iJnVMnSoLK6
+ omjUZ8KvNuhlK8RJ178lcVztmvyYpVL+17/zoeArxUH+w1Hmr4cqHGpv8rGC/9we34lmQ3zWBgECmd
+ a/aDROtQYsnfBu/FIavm64IzA3g5ouCfUAy4WAVDy5PfHe3OVGfQ4ftaZM61TCo/3AvZwF9k19MIx7
+ imwoUl9YY7g6PGf8Sm65Non2oe5C12DXIlxSA1h3uAKGKoTsdE2Qtpk00yZykK68kN1rwZA9ivUuXn
+ eE2OYIjs/RNDPMwBbwNlafJsLt523vDgIJyE/+eeqYOZftWuF6b4SBxMpCVBHOCdERDE/6NN9aA0V3
+ SXFsGGD+ravF6uD/uAtMnV/bHf3Dc3rDKALgtdfbf9mWdgKV/oxuVFzruIK3ARyVQilefKpYlwMnbl
+ h5Twxa6KnBGr11FMnX8/Cpr6Dst54q8JvhftvLSOnGc+8ZuHuiKFcMczOOHh5fGatQI/StezvT9sC2
+ uBOBuI3umttX8BqL/lkD4eI9OkZpL7GEGZCaozGnqOcRNyWuriGWXdMWoh0d09Mns8DtkyJTLKoL4I
+ BiLiqqt6Cg9RcWaMEVUb0LOs1+a0nz2HuUgdLAcf4ItdD+0wffRxfn5RtqVg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Before these patches, the Userspace Path Manager would allow the
-creation of subflows with wrong families: taking the one of the MPTCP
-socket instead of the provided ones and resulting in the creation of
-subflows with likely not the right source and/or destination IPs. It
-would also allow the creation of subflows between different families or
-not respecting v4/v6-only socket attributes.
+From: Paolo Abeni <pabeni@redhat.com>
 
-Patch 1 lets the userspace PM select the proper family to avoid creating
-subflows with the wrong source and/or destination addresses because the
-family is not the expected one.
+Let the caller specify the to-be-created subflow family.
 
-Patch 2 makes sure the userspace PM doesn't allow the userspace to
-create subflows for a family that is not allowed.
+For a given MPTCP socket created with the AF_INET6 family, the current
+userspace PM can already ask the kernel to create subflows in v4 and v6.
+If "plain" IPv4 addresses are passed to the kernel, they are
+automatically mapped in v6 addresses "by accident". This can be
+problematic because the userspace will need to pass different addresses,
+now the v4-mapped-v6 addresses to destroy this new subflow.
 
-Patch 3 validates scenarios with a mix of v4 and v6 subflows for the
-same MPTCP connection.
+On the other hand, if the MPTCP socket has been created with the AF_INET
+family, the command to create a subflow in v6 will be accepted but the
+result will not be the one as expected as new subflow will be created in
+IPv4 using part of the v6 addresses passed to the kernel: not creating
+the expected subflow then.
 
-These patches fix issues introduced in v5.19 when the userspace path
-manager has been introduced.
+No functional change intended for the in-kernel PM where an explicit
+enforcement is currently in place. This arbitrary enforcement will be
+leveraged by other patches in a future version.
 
-To: "David S. Miller" <davem@davemloft.net>
-To: Eric Dumazet <edumazet@google.com>
-To: Jakub Kicinski <kuba@kernel.org>
-To: Kishen Maloor <kishen.maloor@intel.com>
-To: Florian Westphal <fw@strlen.de>
-To: Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org
-Cc: mptcp@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
+Cc: stable@vger.kernel.org
+Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-Matthieu Baerts (2):
-      mptcp: netlink: respect v4/v6-only sockets
-      selftests: mptcp: userspace: validate v4-v6 subflows mix
+ net/mptcp/protocol.c | 2 +-
+ net/mptcp/protocol.h | 3 ++-
+ net/mptcp/subflow.c  | 9 +++++----
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
-Paolo Abeni (1):
-      mptcp: explicitly specify sock family at subflow creation time
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index b7ad030dfe89..8cd6cc67c2c5 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -98,7 +98,7 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
+ 	struct socket *ssock;
+ 	int err;
+ 
+-	err = mptcp_subflow_create_socket(sk, &ssock);
++	err = mptcp_subflow_create_socket(sk, sk->sk_family, &ssock);
+ 	if (err)
+ 		return err;
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index a0d1658ce59e..a9e0355744b6 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -641,7 +641,8 @@ bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
+ /* called with sk socket lock held */
+ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+ 			    const struct mptcp_addr_info *remote);
+-int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock);
++int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
++				struct socket **new_sock);
+ void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+ 			 struct sockaddr_storage *addr,
+ 			 unsigned short family);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index bd387d4b5a38..ec54413fb31f 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1547,7 +1547,7 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+ 	if (!mptcp_is_fully_established(sk))
+ 		goto err_out;
+ 
+-	err = mptcp_subflow_create_socket(sk, &sf);
++	err = mptcp_subflow_create_socket(sk, loc->family, &sf);
+ 	if (err)
+ 		goto err_out;
+ 
+@@ -1660,7 +1660,9 @@ static void mptcp_subflow_ops_undo_override(struct sock *ssk)
+ #endif
+ 		ssk->sk_prot = &tcp_prot;
+ }
+-int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
++
++int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
++				struct socket **new_sock)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct net *net = sock_net(sk);
+@@ -1673,8 +1675,7 @@ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
+ 	if (unlikely(!sk->sk_socket))
+ 		return -EINVAL;
+ 
+-	err = sock_create_kern(net, sk->sk_family, SOCK_STREAM, IPPROTO_TCP,
+-			       &sf);
++	err = sock_create_kern(net, family, SOCK_STREAM, IPPROTO_TCP, &sf);
+ 	if (err)
+ 		return err;
+ 
 
- net/mptcp/pm.c                                    | 25 ++++++++++++
- net/mptcp/pm_userspace.c                          |  7 ++++
- net/mptcp/protocol.c                              |  2 +-
- net/mptcp/protocol.h                              |  6 ++-
- net/mptcp/subflow.c                               |  9 +++--
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 47 +++++++++++++++++++++++
- 6 files changed, 90 insertions(+), 6 deletions(-)
----
-base-commit: be53771c87f4e322a9835d3faa9cd73a4ecdec5b
-change-id: 20230112-upstream-net-20230112-netlink-v4-v6-b6b958039ee0
-
-Best regards,
 -- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
+2.37.2
