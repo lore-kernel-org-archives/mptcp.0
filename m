@@ -1,127 +1,88 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE46320E2
-	for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 09:51:50 +0000 (UTC)
-Received: by mail-qt1-f169.google.com with SMTP id x7so8565212qtv.13
-        for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 01:51:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0jh2sGDWkGPtFEvdNn+L4KUwvAHVl5FRC8LO59ign8U=;
-        b=W/ZkJd1MMtBD2k39uJAHVKG1RN9kYWV/ZODT6T9wUnEXDnjxbNk8CJZgkQJrK8j/oc
-         NFrCOIXfsQl+U4CCY4GqiU9YRhCiRwlMxUXcjN844YaV/lMUfcKJKHZGAB4/noysHS8L
-         G6j3TQpDthFa349nYS9oLd0VqtmewxNwKpJ493YuaPheutvCwwnuibnPbUIrswssJAre
-         VbOqso3+GcIWXVBeTLp91vN/XFrDYasUumt3cNgCLxnh4CGx+U0vF50KfBIrQS6eE//t
-         gkVA6KlYdG7Vn/uRzO304zBSfv7IBOmOyhZ47vzoPsKJ24pvj/w2y37truQNr5+nDVpY
-         GwTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0jh2sGDWkGPtFEvdNn+L4KUwvAHVl5FRC8LO59ign8U=;
-        b=F46BM4Zy1OaehjA2pqyaivZQCjCb6aFjL+S9kmZYjiTxW09NSlpQT2zJ/PzAeYhrB7
-         Zb4xxTImAAWA1JqJMaUwNjeifPHpMSXlBKsk6UjY+5e5yjqe3HMzV732/+fOeg74TBvJ
-         +cgDazXohY+o5Xs1k6oIMWCycX18a1Ix8yxEvfaKp6GBydHulo7CQduqztwPpT1F5o4N
-         QFCntdCJIz0DASmS3c6slb1APT/20QGGYqDsnsMXeYeG+ptde4VjvUCRY7hsz+JYPgzd
-         C64tXqziHonlC7D3/rvmT0u+Tx9i3t8VEIhlwAMk8A0j84tZtVdey192zfoxhndOp4Za
-         li+w==
-X-Gm-Message-State: AFqh2kopJ1sLj6ikLdjlJgmU9P+RKtYspP9VQ7Xrpj/mizwUKBtejGRy
-	rMicrXx0Ta9HSXQ2MTsO51VVaxtT0/cE
-X-Google-Smtp-Source: AMrXdXtcCWiKjKAN2ghp/qmg8zpI5/u2NZ01PUVdryDCY0QZbxg1KDxsu2EzQVMN38kXJ4SSafUjzg==
-X-Received: by 2002:ac8:744f:0:b0:3a6:a19e:49dc with SMTP id h15-20020ac8744f000000b003a6a19e49dcmr101230410qtr.17.1673603509850;
-        Fri, 13 Jan 2023 01:51:49 -0800 (PST)
-Received: from [127.0.0.1] ([172.177.255.81])
-        by smtp.gmail.com with ESMTPSA id i4-20020a05620a404400b00704a2a40cf2sm12486419qko.38.2023.01.13.01.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 01:51:49 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <d262f6beb6899f0a79acbeb1d3c8c855e95e098a.1673599496.git.geliang.tang@suse.com>
-References:
- <d262f6beb6899f0a79acbeb1d3c8c855e95e098a.1673599496.git.geliang.tang@suse.com>
-Subject: Re: mptcp: update userspace pm subflows info: Tests Results
-Message-ID: <c153a5f1-1e4f-e492-8e6c-78f3886ce8bb@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Jan 2023 09:51:48 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3383AD4A
+	for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 18:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1673634067;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wDBXvsnX4wJAb8WokouxoMSFEa/A/HlAR+ilXCTrOMk=;
+	b=I0GtL5ydrb4q9601xodPHsrrxvcUVegLjxlebCeO+lEqpP/blCGlN2jFoAbHUBSjr2z0yl
+	CRfZsDuEazHn6bQlNvKSUB4VYJaYpjL5n2jTwm8hmpgpKyZ+npo+S8VwucgRSjBuUHeTXa
+	e0HhfiXaBLDdj7lOSZGmjJNsYTzEi1M=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-611-mtbtVpZANv-0y0VF3CRYjw-1; Fri, 13 Jan 2023 13:21:06 -0500
+X-MC-Unique: mtbtVpZANv-0y0VF3CRYjw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D3385101B44F
+	for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 18:21:05 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.89])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 61B474078903
+	for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 18:21:05 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next 0/9] mptcp: refactor first subflow init
+Date: Fri, 13 Jan 2023 19:20:47 +0100
+Message-Id: <cover.1673629755.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Geliang,
+This is the needed refactor for the selinux fixes, as discussed on
+the ML.
 
-Thank you for your modifications, that's great!
+The main change, introduced by patch 6/9 consist in moving the first
+subflow initialization from the msk init callback into the mptcp
+syscall needing such data (namely: bind, listen, connect). 
 
-Our CI did some validations and here is its report:
+Patch 4 and 5 allow making such change smaller.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6024448923402240
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6024448923402240/summary/summary.txt
+Patches 7, 8, 9 are not strictly needed, but are some nice to have
+follow-up, cleaning-up the related code.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6587398876823552
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6587398876823552/summary/summary.txt
+Specifically patch 8 closes issues/290, but requires some additional
+pre-req (patches 1-3), which in turn are also nice to have IMHO.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5461498969980928
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5461498969980928/summary/summary.txt
+Sharing after little testing to get feedback and let the bot massage
+the new code: patch 1 and 7 can have subtle effect, I would like to
+have syzkaller digest them for a while.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4757811528204288
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4757811528204288/su=
-mmary/summary.txt
+I'll rebase the selinux patches on top and share them soon.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/59ca5c77a991
+Paolo Abeni (9):
+  mptcp: refactor passive socket initialization.
+  mptcp: drop unneeded argument
+  mptcp: drop legacy code.
+  mptcp: avoid unneeded __mptcp_nmpc_socket() usage
+  mptcp: move fastopen subflow check inside mptcp_sendmsg_fastopen()
+  mptcp: move first subflow allocation at mpc access time
+  mptcp: do not keep around the first subflow after disconnect.
+  mptcp: fastclose msk when cleaning unaccepted sockets
+  mptcp: refactor mptcp_stream_accept()
 
+ net/mptcp/options.c    |   9 +--
+ net/mptcp/pm.c         |   4 +-
+ net/mptcp/pm_netlink.c |   4 +-
+ net/mptcp/protocol.c   | 159 ++++++++++++++++++++++-------------------
+ net/mptcp/protocol.h   |   4 +-
+ net/mptcp/sockopt.c    |  18 ++---
+ net/mptcp/subflow.c    |  40 +++++++----
+ 7 files changed, 132 insertions(+), 106 deletions(-)
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+-- 
+2.38.1
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
