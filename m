@@ -1,140 +1,127 @@
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2050.outbound.protection.outlook.com [40.107.13.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182F17EC
-	for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 08:45:48 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BXzuk7PuVdeDTZ6mPjjyNF5p4YYwdfzy0jkyci2xx7Oot8cRQ3AWAeijeytlxzbZgiSS1T7aDC3icbhGpmwWWqTXBsHqHK0fQ2sd3zJnL+zsjjUCWLyiioVsb48RbI7bx5jMNDogjh9Emv9Y4eTc/Z8hGLcQzutubYoO8UMXi36O1kvmPYV1rseOB6MQk9XMzeKQAyCLAcGqQZtmxx9kqmoM7I4xUtDuvUzWgeNCq2mfyejSm4fkhNV3z3pNl8g/brBjv+7iSg7xfC5eERJf1micmRxP5Vj0e0fgmdgxfqzhs8KXm8L8siFXHRjtds6s7GIDEakmGtJTunPGvatMmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hv7y33FdtPucT3S1mlFhVvwR7hpMuwKyj6mVKFFi+Z4=;
- b=irMkIebiHa+UAS7EnPkxvdeDjaTlWEJiCdQ/yqv9F/ntVYC5P+jQcEz6kPlHzs96skCYFCe2nKAmffZ4MvF81cX6wFytWSZ3epck1SCPTorXSWSdMldaxw/firSkqBulxOWHWTjdjd4gSgXkQfRdHabFegCytq3jD/kvSM5zo80ENobdAQR6Ah0YUhC4vCYKfCRdn3n+RrcfpjcLKMA/tuGWzh0Q3fCuSrlC/xEOrRaXUOwaQM/V86f8B+glb1Kcrjfb9TcVzQJq7w0rf1xKA3YsbDC010qAZCAPYg3CKs9QyY/6CHmyUmdmvMaApZfef1BJXWX1G/26/CURp1Qa+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hv7y33FdtPucT3S1mlFhVvwR7hpMuwKyj6mVKFFi+Z4=;
- b=t2W7fsZsGrsuepS6vPPppTG8UxPjnrBfP4m5xU7pYNBCjWgGkMIl3mWBn/O/V177lHIMUGQV2+E0/J2D/4Qa6dVKvMgwxicImvYmlkHJ2gza9HsHwsGolD+UCRC1PfPdePl47qgN4PL3RNsaGJGzri7STsEYw/xzrqcKHL6fuD+g0KA5r5RCVDWEjT0FsU8ZCoR/FQbRoBvSS1Us1qGi5Dc2i4jtw/AY1QF618Il/SE/ZPoNwj0Dz60UR07//GutCns57XMukU1fUP336Pj15K8E1eKk2Z9OB+92J2yvsiiTF57QV0pD66ihtTl+dpBq/jn6JEGvBaAtHveISpTFXQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by VI1PR04MB7054.eurprd04.prod.outlook.com (2603:10a6:800:12d::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.13; Fri, 13 Jan
- 2023 08:45:45 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::4c71:cec1:22de:41b5]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::4c71:cec1:22de:41b5%6]) with mapi id 15.20.6002.013; Fri, 13 Jan 2023
- 08:45:44 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v2] mptcp: update userspace pm subflows info
-Date: Fri, 13 Jan 2023 16:45:49 +0800
-Message-Id: <d262f6beb6899f0a79acbeb1d3c8c855e95e098a.1673599496.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0033.apcprd02.prod.outlook.com
- (2603:1096:4:195::20) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE46320E2
+	for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 09:51:50 +0000 (UTC)
+Received: by mail-qt1-f169.google.com with SMTP id x7so8565212qtv.13
+        for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 01:51:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0jh2sGDWkGPtFEvdNn+L4KUwvAHVl5FRC8LO59ign8U=;
+        b=W/ZkJd1MMtBD2k39uJAHVKG1RN9kYWV/ZODT6T9wUnEXDnjxbNk8CJZgkQJrK8j/oc
+         NFrCOIXfsQl+U4CCY4GqiU9YRhCiRwlMxUXcjN844YaV/lMUfcKJKHZGAB4/noysHS8L
+         G6j3TQpDthFa349nYS9oLd0VqtmewxNwKpJ493YuaPheutvCwwnuibnPbUIrswssJAre
+         VbOqso3+GcIWXVBeTLp91vN/XFrDYasUumt3cNgCLxnh4CGx+U0vF50KfBIrQS6eE//t
+         gkVA6KlYdG7Vn/uRzO304zBSfv7IBOmOyhZ47vzoPsKJ24pvj/w2y37truQNr5+nDVpY
+         GwTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0jh2sGDWkGPtFEvdNn+L4KUwvAHVl5FRC8LO59ign8U=;
+        b=F46BM4Zy1OaehjA2pqyaivZQCjCb6aFjL+S9kmZYjiTxW09NSlpQT2zJ/PzAeYhrB7
+         Zb4xxTImAAWA1JqJMaUwNjeifPHpMSXlBKsk6UjY+5e5yjqe3HMzV732/+fOeg74TBvJ
+         +cgDazXohY+o5Xs1k6oIMWCycX18a1Ix8yxEvfaKp6GBydHulo7CQduqztwPpT1F5o4N
+         QFCntdCJIz0DASmS3c6slb1APT/20QGGYqDsnsMXeYeG+ptde4VjvUCRY7hsz+JYPgzd
+         C64tXqziHonlC7D3/rvmT0u+Tx9i3t8VEIhlwAMk8A0j84tZtVdey192zfoxhndOp4Za
+         li+w==
+X-Gm-Message-State: AFqh2kopJ1sLj6ikLdjlJgmU9P+RKtYspP9VQ7Xrpj/mizwUKBtejGRy
+	rMicrXx0Ta9HSXQ2MTsO51VVaxtT0/cE
+X-Google-Smtp-Source: AMrXdXtcCWiKjKAN2ghp/qmg8zpI5/u2NZ01PUVdryDCY0QZbxg1KDxsu2EzQVMN38kXJ4SSafUjzg==
+X-Received: by 2002:ac8:744f:0:b0:3a6:a19e:49dc with SMTP id h15-20020ac8744f000000b003a6a19e49dcmr101230410qtr.17.1673603509850;
+        Fri, 13 Jan 2023 01:51:49 -0800 (PST)
+Received: from [127.0.0.1] ([172.177.255.81])
+        by smtp.gmail.com with ESMTPSA id i4-20020a05620a404400b00704a2a40cf2sm12486419qko.38.2023.01.13.01.51.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jan 2023 01:51:49 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <d262f6beb6899f0a79acbeb1d3c8c855e95e098a.1673599496.git.geliang.tang@suse.com>
+References:
+ <d262f6beb6899f0a79acbeb1d3c8c855e95e098a.1673599496.git.geliang.tang@suse.com>
+Subject: Re: mptcp: update userspace pm subflows info: Tests Results
+Message-ID: <c153a5f1-1e4f-e492-8e6c-78f3886ce8bb@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 Jan 2023 09:51:48 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|VI1PR04MB7054:EE_
-X-MS-Office365-Filtering-Correlation-Id: 43f07fa0-529c-47c6-af32-08daf5428f30
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	B9su3HjReGA+inPiFsnhBRkr3a83C7xg0tN4F7xqlo0EsABGUbj8E18dtJOMVcb9IJtoxM2jvfYHRwBLhAs0hv4ReYBHDXWu0UGo4wMXgNfFxkwhpZqAuUrPOaNyrw53jtNWBVKPca2jkxVT2mSPRaFwy1mQ3Q640qqLGDEIAhPRwg/TwDhm+ulRd4xWECISjZARV2P/Br9ocObaIKkTAX0A3OU8fDLN2+x33h4/W0PX6hy4WEFouaXryPJi0lSMw6czqrVorOLZM8lAtdhvMixQLi0cdBnQZEfMNtYFRqbTnQKi/pcbmSBHD2LNkH/RwzDb1u+2i87Xyr9v25LAIu4yDuZp1AAPRdokY2cNh4/SSlDbgrHrrgGeappkW1o5Dx2kXtO4C9qnaJ8umd/VjJRyhk2uroPNKbfTbO4kJi+2L4zK3YdqfHbdoP06WgJyfHZP1zYQHF36VSenFmeNHgyBwegoHM2bmoGFIrj0B8UltmPQY6W4mrRSWut+wCBE1+zL4du65oVN0WdudXqvSOCMYSuucOxCRQ2g7jV85TFLYwf6GiCbEt2EwhDbGk/4Hq98g7Qkqd9qcGxwcGmcglVcjQ1ISl5HDCGyW7WNJvCEGvSy5UVbqWjxtQZj8P1pwAYTwVaG7tIeveBbdrbDtJIGaz/Nir6tsqw7L6y2t/0=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(136003)(39860400002)(366004)(396003)(376002)(451199015)(6512007)(6486002)(966005)(186003)(26005)(66476007)(107886003)(66946007)(2616005)(316002)(66556008)(478600001)(6506007)(4326008)(6916009)(8676002)(38100700002)(8936002)(83380400001)(41300700001)(5660300002)(44832011)(86362001)(36756003)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VuccQTpTwYKz8Rn/xvjB5fd8dQwJFCkgEjHXeS9hej2ztzp7QzZq/J7JVFfe?=
- =?us-ascii?Q?XiP/f2W63E929sQEV0nMI53nbE4cMuWAxEwOItkw0s/lf3vYWMF4vZGt8bnL?=
- =?us-ascii?Q?eI+s0CyziYnyTTwHHQOcg+D6UwjvpUypthIMSx8gy5Sm35ry7tQ/l/Sc9sq3?=
- =?us-ascii?Q?jHsLQJwakcwvyYLKsF4SQrtp8ZSI2F4gq6uQHOYnkBBNM/Fr3xt7w4cvNFa/?=
- =?us-ascii?Q?YhTOk2YdRmzYpyVQLRWd4ud+uUKkG9MHUAqNNu7K+DFgXB3Bs39PWj+pBrE7?=
- =?us-ascii?Q?nK9gZQ5+pOJ2pM5uxBeMbA442oU2o2PtOvHLvhXO8RQyI+IEJqKIhVTF4FlW?=
- =?us-ascii?Q?1HDsKd2ObvBSyOtsK0zieIoxze3wrJdx/18HxyDIvrCY3uOTQxQ/0tuoTY+o?=
- =?us-ascii?Q?83AjxScCpTpwrl7yn+kaKiqZJeiWHfdSFk/rH1IUGGMUk2I2O77OvehQlcsI?=
- =?us-ascii?Q?pqB3e1eHLGUzAASWSMHaPs+tkluma5GoM/5V1KLpXqP6/wq2cBErFxPr1mQ5?=
- =?us-ascii?Q?JpeU5xi0/rpIG4Wezhx0s20AYLWPkXnM9SAI5lr9JcSisN2Yat/Vkrbsx90a?=
- =?us-ascii?Q?Vm32F/GJhAHg/oXOaMU2csWu47S5yqi0+rcauWibcrkaoLUOqyFoKgfrrI9K?=
- =?us-ascii?Q?9mrU8TVunIt0UU7HUoJNz1FyboClY8RFxinBwBlhhJbV+ksqQ4UbaqVVqjib?=
- =?us-ascii?Q?k/jfLosGp0wOOeXbAL0xmGKooTbeIBQYN1M7xytfT3kobpqDzwj4eVqVaXwq?=
- =?us-ascii?Q?7ThEwzuu3e+Bxex8E//56N9zcXr0iC5qyI6MmWOC9HlMqwtDIrW0o/HfL8go?=
- =?us-ascii?Q?8WLP72taswOEziEKp1mSR4iQjaC0Q3lCTs07zQnSklZtUb3k37Eehs/4EnXV?=
- =?us-ascii?Q?/eRfBF7U8TUAfc2/SHXwsOCANQzPmLhFgWs9OrsctEB6wweSQVblTA3gADTS?=
- =?us-ascii?Q?oD+eCPr2FF4YREho6qeotpwg3OinObenpLU8XUTlUGID4P6UMhKFRWtBmCdL?=
- =?us-ascii?Q?VxvnbJqbJTOoBMRCDYRp0tm5lLjSx5+Rlxb6zAaIZjPVTD0p0oD/vE+oHp60?=
- =?us-ascii?Q?A4GuU7TZifupWx6e4B2npTo6/bbXSxBdH6I5/Ddk6WGBd0XMmU7Jz6OrtuBt?=
- =?us-ascii?Q?KkW2L4llEL6wGDF0D+lfWaD3IRaWFOwWOPIRDkrlONDKNTJE9yRWRSHPe7g7?=
- =?us-ascii?Q?P5/JJ1DegD2jBHdE3Knf3Wd2f24u2YdKtEzFRODk75UgENpwTPGFB1WJhMxj?=
- =?us-ascii?Q?iOdloFd6Hru1hIYJ1jvRQs6u9Z/iuAtKt7ol55jzaBD5pfU3mHbjXsXhFmbD?=
- =?us-ascii?Q?fxLjVke5b6S/D6AMoOJiiGQbDBH57MHA3IPUVMPLruVc0bpZuhDgsMpbQeKr?=
- =?us-ascii?Q?agm4aXhoVLWra1sj1y4KkNZSZvndoNLmpv1Deh1xfOzpaRPMYox18h4lH9I5?=
- =?us-ascii?Q?k767q0SRyjQ0e9woldOJG26X/UgrS6ddy3AP2bnFmhxjdt3m+1uWgMrYDuUr?=
- =?us-ascii?Q?Z6Ej0jMpSyivP2mJVBDfrd7swyzISPEN2hqPMOQ2p+xLn9sY5c2bWFOk3PBK?=
- =?us-ascii?Q?jUCJAD2e2G8cijnATPpZ1o7rML95/2+DnUzwmS2UUmzXVXNj1IeE396dDP4S?=
- =?us-ascii?Q?4w=3D=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43f07fa0-529c-47c6-af32-08daf5428f30
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2023 08:45:44.8294
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: p/rv8aDKs0C2aLI8l7xD/f8CnedOYuNJtu+hJsX086GIWtRxyMoa4yvBdx3GbrGuya0kZpizhLEEqdf0qHm3KA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7054
 
-Increase pm subflows counter when userspace pm creates a new subflow,
-and decrease the counter when it closes a subflow.
+Hi Geliang,
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/329
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
-v2:
- - hold pm locks.
----
- net/mptcp/pm_userspace.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thank you for your modifications, that's great!
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index a02d3cbf2a1b..9f7fc0b0d960 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -302,6 +302,10 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
- 		goto create_err;
- 	}
- 
-+	spin_lock_bh(&msk->pm.lock);
-+	msk->pm.subflows++;
-+	spin_unlock_bh(&msk->pm.lock);
-+
- 	lock_sock(sk);
- 
- 	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
-@@ -424,6 +428,9 @@ int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
- 		mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
- 		mptcp_close_ssk(sk, ssk, subflow);
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
-+		spin_lock_bh(&msk->pm.lock);
-+		msk->pm.subflows--;
-+		spin_unlock_bh(&msk->pm.lock);
- 		err = 0;
- 	} else {
- 		err = -ESRCH;
--- 
-2.35.3
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6024448923402240
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6024448923402240/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6587398876823552
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6587398876823552/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5461498969980928
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5461498969980928/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4757811528204288
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4757811528204288/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/59ca5c77a991
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
