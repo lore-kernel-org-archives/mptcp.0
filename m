@@ -1,122 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF46AD4A
-	for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 18:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1673634210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W9OgPz1q3u28kuyyhgSILyfjwOGipZa7LJr2kB8AlHA=;
-	b=MH+PCyJ/m7QTSGOm+Wc1gqQa6HGtSeSrqLsOoNrOPCZNGWVw9Q/Q/kdCOjb6N1giaTRz3v
-	G7yzq5DsgvQpJQA7AzvSL/o8xqtHrhammP3mNufxtC55rIuYwOnoOEnV+w2LGZ+f95RVw0
-	NPBRWhVvshTxz+QSfeiotL5n+p7kAiU=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-462-3zAOGbQqP2qw116bWdAPLQ-1; Fri, 13 Jan 2023 13:21:45 -0500
-X-MC-Unique: 3zAOGbQqP2qw116bWdAPLQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 66CCD380673D
-	for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 18:21:07 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.89])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E2DD34078903
-	for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 18:21:06 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 2/9] mptcp: drop unneeded argument
-Date: Fri, 13 Jan 2023 19:20:49 +0100
-Message-Id: <964fa27c1f71f563b2cc395c38627f62c3bfa116.1673629755.git.pabeni@redhat.com>
-In-Reply-To: <cover.1673629755.git.pabeni@redhat.com>
-References: <cover.1673629755.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218542115
+	for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 19:28:23 +0000 (UTC)
+Received: by mail-qt1-f169.google.com with SMTP id e22so7407110qts.1
+        for <mptcp@lists.linux.dev>; Fri, 13 Jan 2023 11:28:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6sMS5HLkFhLJu83iTbG5qtSqle8fyov1Do+3PgIHBbc=;
+        b=Ny3ERyGee8kX+QhQPMQMAqijFqVDi20FcoXNJXbBkkhvQ4lV7FkTG5ntKwaJhtjQ0m
+         bDLTkhGbLIq1ulZ8Hu3Eh4YQHWtCX1hYMmrI2S+cvRgHDFisrX5ECtINtGrgGkiFyKWN
+         k6yKdxz/qz9lOeblWWxMIGnIRLR4xl+M5WKzSRDaOvdXnTLMzg3sdljrvzP/w7m2Bvhq
+         VXGV36QM8AKQTvOJuaMw7hHZBekQnjCDA1rBGLFqgG6HYKkQ7INRiso4i7NLRRPmtGI5
+         OauK6FWAXQxtymTtqG4aHO/ChpxnEzpN8KEDhccR9OJAYohlBZjc97duKNUadRZfgCtA
+         x/SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6sMS5HLkFhLJu83iTbG5qtSqle8fyov1Do+3PgIHBbc=;
+        b=IIARcXchugogMgFD4jVFYYI9ezGk7niE775lQot5tld8s2P7RoFogNwH7GwRBKEyKB
+         YgxEKAl+8qMkQFXXxriVuAYwzYk/svCrHDi+jn1EZMP4xZkYr0rfDDjIOhuUxIFJA6bz
+         h6srw35IXhAo3SnPXncjM+7NS5YQVtlJ8JEZmO5T+5WdjqsjUKQpE+9kST3OEhnHqQK+
+         KISSGedp1OqfVkf5Ltrl1B9iVcCIS/freQNJV80xYZY/PVmB8wjyNSjv5JbGoBbJrBU4
+         oa8uGItox3HmwIV3YJJ9/p9f4vbCMJvztA6AkEM2akA2FAASHJoDxH7fd1AUg3n68aVA
+         AaIA==
+X-Gm-Message-State: AFqh2koi/k8nvll3Ac8+lcuv+/wB6klAm2e6ec4j7MtG6CqpxedmEisk
+	J6MPQBpjxC7i97KkR7r+RQ==
+X-Google-Smtp-Source: AMrXdXsjDL4qhojjcOdjHxMLA6YoEhqtgr9b6sSh7jwXN5QHWhl5NA1d8tSyCvu2D/pJWfoHkG6rCQ==
+X-Received: by 2002:ac8:4a88:0:b0:3a8:15e2:a068 with SMTP id l8-20020ac84a88000000b003a815e2a068mr110971074qtq.4.1673638101972;
+        Fri, 13 Jan 2023 11:28:21 -0800 (PST)
+Received: from [127.0.0.1] ([172.177.22.51])
+        by smtp.gmail.com with ESMTPSA id w6-20020a05620a424600b00705be892191sm8734011qko.56.2023.01.13.11.28.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jan 2023 11:28:21 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <b20fb19052027c1e2b2455e852537ebd068c78cf.1673629755.git.pabeni@redhat.com>
+References:
+ <b20fb19052027c1e2b2455e852537ebd068c78cf.1673629755.git.pabeni@redhat.com>
+Subject: Re: mptcp: refactor mptcp_stream_accept(): Tests Results
+Message-ID: <7d86fb69-3c24-4ae2-8095-29af356c7251@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 Jan 2023 19:28:20 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-After the previous commit every mptcp_pm_fully_established() is
-always invoked with a GFP_ATOMIC argument. We can drop it.
+Hi Paolo,
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/options.c  | 2 +-
- net/mptcp/pm.c       | 4 ++--
- net/mptcp/protocol.h | 2 +-
- net/mptcp/subflow.c  | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+Thank you for your modifications, that's great!
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index b30cea2fbf3f..99c4f9e9bb90 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1001,7 +1001,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 		clear_3rdack_retransmission(ssk);
- 		mptcp_pm_subflow_established(msk);
- 	} else {
--		mptcp_pm_fully_established(msk, ssk, GFP_ATOMIC);
-+		mptcp_pm_fully_established(msk, ssk);
- 	}
- 	return true;
- 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 8e0cf6275e94..4ed4d29d9c11 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -126,7 +126,7 @@ static bool mptcp_pm_schedule_work(struct mptcp_sock *msk,
- 	return true;
- }
- 
--void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk, gfp_t gfp)
-+void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk)
- {
- 	struct mptcp_pm_data *pm = &msk->pm;
- 	bool announce = false;
-@@ -150,7 +150,7 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk,
- 	spin_unlock_bh(&pm->lock);
- 
- 	if (announce)
--		mptcp_event(MPTCP_EVENT_ESTABLISHED, msk, ssk, gfp);
-+		mptcp_event(MPTCP_EVENT_ESTABLISHED, msk, ssk, GFP_ATOMIC);
- }
- 
- void mptcp_pm_connection_closed(struct mptcp_sock *msk)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 871ec3e93314..5f1a30959b5c 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -799,7 +799,7 @@ bool mptcp_pm_addr_families_match(const struct sock *sk,
- void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
- void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
- void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ssk, int server_side);
--void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk, gfp_t gfp);
-+void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk);
- bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk);
- void mptcp_pm_connection_closed(struct mptcp_sock *msk);
- void mptcp_pm_subflow_established(struct mptcp_sock *msk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 0b7e7a6606f5..769ac8b7900d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -860,7 +860,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			 */
- 			if (mp_opt.suboptions & OPTION_MPTCP_MPC_ACK) {
- 				mptcp_subflow_fully_established(ctx, &mp_opt);
--				mptcp_pm_fully_established(owner, child, GFP_ATOMIC);
-+				mptcp_pm_fully_established(owner, child);
- 				ctx->pm_notified = 1;
- 			}
- 		} else if (ctx->mp_join) {
--- 
-2.38.1
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_syscalls =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5237060924080128
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5237060924080128/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 2 failed test(s): packetdrill_syscalls selftest_diag =
+=F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4955585947369472
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4955585947369472/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6362960830922752
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6362960830922752/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6081485854212096
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6081485854212096/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/039d0617a717
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
