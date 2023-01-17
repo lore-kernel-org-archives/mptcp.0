@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9011FB3
-	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694E11FB6
+	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1673941041;
+	s=mimecast20190719; t=1673941042;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jBNr5u5HARESPaBwPPbQQt0n5Q7p7/rsZplOVB5vUPk=;
-	b=bKyQcWQZGeS7KBFhb1PDViwc7BfMW9CtSz9E961Wk35VsaKZFH+RrOSvpKOqvFgXhgTni2
-	kYAgKsKuPf5yoKkAagC8YTnpCxKGU/AggMjpKAV3n5aZK/GZUE9VwfeB39XNTEv2VjxJo3
-	fZfUf0oeZWoSMg+l+40GT62eq1YUsFk=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=7L11CLY7hRFXPUClesgTsdftxeVUVk9UeBNwXIYWbmM=;
+	b=Q1gp2UjQACV/NimzmxuDdarHiVKY+rW4vN61/tH2a2GvIPZltD/P6nMXOHnDvBMta4hd4C
+	Xuf0N3nmuvF5uU2Gr3JxvVT3smUiohGxFgbemXYiEt2ik1QbPtVA2e1s763bQCFZzpQqcG
+	IZ511VjPCXeCcqBx0ir8lNqJv7t0bW0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-671-sQl5Z7p2MhiPwHz4eniAvg-1; Tue, 17 Jan 2023 02:37:20 -0500
-X-MC-Unique: sQl5Z7p2MhiPwHz4eniAvg-1
+ us-mta-338-3gJmsd4yMlOpe4u7cpEZRg-1; Tue, 17 Jan 2023 02:37:21 -0500
+X-MC-Unique: 3gJmsd4yMlOpe4u7cpEZRg-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 24DF3381494D
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DF752858F09
 	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:20 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.87])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A76BD40C2004
-	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:19 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6C51A40C2006
+	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:20 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 10/13] mptcp: fastclose msk when cleaning unaccepted sockets
-Date: Tue, 17 Jan 2023 08:36:30 +0100
-Message-Id: <394c4a5a2cb8764519aa732fc27dad59fa2ba71c.1673940640.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v2 11/13] mptcp: refactor mptcp_stream_accept()
+Date: Tue, 17 Jan 2023 08:36:31 +0100
+Message-Id: <afe5ec8c5d1e4b7c72839c9ed9c153c18ff97935.1673940640.git.pabeni@redhat.com>
 In-Reply-To: <cover.1673940640.git.pabeni@redhat.com>
 References: <cover.1673940640.git.pabeni@redhat.com>
 Precedence: bulk
@@ -45,53 +45,75 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-When cleaning up unaccepted mptcp socket still laying inside
-the listener queue at listener close time, such sockets will
-go through a regular close, waiting for a timeout before
-shutting down the subflows.
+Rewrite the mptcp socket accept op, partially open-codying
+inet_accept(), instead of indirectly calling it.
 
-There is no need to keep the kernel resources in use for
-such a possibly long time: short-circuit to fast-close.
+This way we can avoid acquiring the new socket lock twice
+and we can avoid a couple of indirect calls.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c | 7 +++++--
- net/mptcp/subflow.c  | 2 +-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b867e3eec5b9..f742d558a1b8 100644
+index f742d558a1b8..cf161deb64d8 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2977,10 +2977,13 @@ bool __mptcp_close(struct sock *sk, long timeout)
- 		goto cleanup;
- 	}
+@@ -3748,6 +3748,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
+ 	struct socket *ssock;
++	struct sock *newsk;
+ 	int err;
  
--	if (mptcp_check_readable(msk)) {
--		/* the msk has read data, do the MPTCP equivalent of TCP reset */
-+	if (mptcp_check_readable(msk) || timeout < 0) {
-+		/* If the msk has read data, or the caller explicitly ask it,
-+		 * do the MPTCP equivalent of TCP reset, aka MTCP fastclose
-+		 */
- 		inet_sk_state_store(sk, TCP_CLOSE);
- 		mptcp_do_fastclose(sk);
-+		timeout = 0;
- 	} else if (mptcp_close_state(sk)) {
- 		__mptcp_wr_shutdown(sk);
- 	}
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6f198d6e1b22..a1f8bb745c1b 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1856,7 +1856,7 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
- 		if (msk->first)
- 			sock_hold(msk->first);
+ 	pr_debug("msk=%p", msk);
+@@ -3759,16 +3760,26 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 	if (!ssock)
+ 		return -EINVAL;
  
--		do_cancel_work = __mptcp_close(sk, 0);
-+		do_cancel_work = __mptcp_close(sk, -1);
- 		release_sock(sk);
- 		if (do_cancel_work) {
- 			/* lockdep will report a false positive ABBA deadlock
+-	err = ssock->ops->accept(sock, newsock, flags, kern);
+-	if (err == 0 && !mptcp_is_tcpsk(newsock->sk)) {
+-		struct mptcp_sock *msk = mptcp_sk(newsock->sk);
++	newsk = mptcp_accept(sock->sk, flags, &err, kern);
++	if (!newsk)
++		return err;
++
++	lock_sock(newsk);
++
++	sock_rps_record_flow(newsk);
++	WARN_ON(!((1 << newsk->sk_state) &
++		  (TCPF_ESTABLISHED | TCPF_SYN_RECV |
++		  TCPF_CLOSE_WAIT | TCPF_CLOSE)));
++
++	sock_graft(newsk, newsock);
++
++	newsock->state = SS_CONNECTED;
++	if (!mptcp_is_tcpsk(newsock->sk)) {
++		struct mptcp_sock *msk = mptcp_sk(newsk);
+ 		struct mptcp_subflow_context *subflow;
+-		struct sock *newsk = newsock->sk;
+ 
+ 		set_bit(SOCK_CUSTOM_SOCKOPT, &newsock->flags);
+ 
+-		lock_sock(newsk);
+-
+ 		/* set ssk->sk_socket of accept()ed flows to mptcp socket.
+ 		 * This is needed so NOSPACE flag can be set from tcp stack.
+ 		 */
+@@ -3778,10 +3789,10 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 			if (!ssk->sk_socket)
+ 				mptcp_sock_graft(ssk, newsock);
+ 		}
+-		release_sock(newsk);
+ 	}
++	release_sock(newsk);
+ 
+-	return err;
++	return 0;
+ }
+ 
+ static __poll_t mptcp_check_writeable(struct mptcp_sock *msk)
 -- 
 2.39.0
 
