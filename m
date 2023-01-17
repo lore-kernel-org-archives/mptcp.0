@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2831FB3
-	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46071FB0
+	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1673941038;
+	s=mimecast20190719; t=1673941039;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=barDMb2Xf6YqJ0tZHH4LwL7fLiEstH2PdV7UFCbjr2o=;
-	b=R3KxFRO7+/4U1r3VfWTxIh7OCOIvDZZe6v3abd3FQPXBZfnLMMUaCBPv5Z4apGElKS5B1l
-	+JfFb+GbjH0C6pascxE8zuBev8ZL+QL6L6PPEi1WoNwrSbsJf0WLMTSzkOoyampzQK1EhB
-	1CB49j6WOJ+eV94B3ZoyaKlL8DGXnj4=
+	bh=STOWPGwSE773zhlawTEXcElOJSTVsESesy8J/2SHfTI=;
+	b=REjnvtU3itUOiP85ch3lfyq6WRUzBjjtglDLZntbJWL16rYjDnLoCgXzfUbpsfuOda1Lqg
+	9qGua+2svQPl1nMljsxoJQVcy/MpicRjYeZJjKNHui6Wwp6Wjv9KP5CjJc/Zi4PtxspQnm
+	GWDgrB6Y0bCpxpn8izuHamhN5Pk5XAU=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-9-FO-d1X3aMkCwM_3eZAJ1mw-1; Tue, 17 Jan 2023 02:37:16 -0500
-X-MC-Unique: FO-d1X3aMkCwM_3eZAJ1mw-1
+ us-mta-526-zNqd7FJTOAOwB-FbJmfYpw-1; Tue, 17 Jan 2023 02:37:18 -0500
+X-MC-Unique: zNqd7FJTOAOwB-FbJmfYpw-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5498580D0E3
-	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:16 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 98B9980D0E3
+	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:18 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.87])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C8CE640C2064
-	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:15 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 27D7740C2004
+	for <mptcp@lists.linux.dev>; Tue, 17 Jan 2023 07:37:18 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 05/13] mptcp: drop legacy code.
-Date: Tue, 17 Jan 2023 08:36:25 +0100
-Message-Id: <86e96a76504f819131cd3f6065ad0bb1b261d6b8.1673940640.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v2 08/13] mptcp: move first subflow allocation at mpc access time
+Date: Tue, 17 Jan 2023 08:36:28 +0100
+Message-Id: <badc4b131ab094bb806971a019807538abd6ccd5.1673940640.git.pabeni@redhat.com>
 In-Reply-To: <cover.1673940640.git.pabeni@redhat.com>
 References: <cover.1673940640.git.pabeni@redhat.com>
 Precedence: bulk
@@ -45,56 +45,243 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-After the previous commits the PM worker can't race anymore
-with the unaccepted subflow close and disposal, as the msk
-keeps a reference to such subflow.
+In the long run this will simplify the mptcp code and will
+allow for more consistent behavior. Move the first subflow
+allocation out of the sock->init ops into the __mptcp_nmpc_socket()
+helper.
 
-We can remove the now irrelevant and confusing checks explicitly
-preventing the mentioned race.
+Since the first subflow creation can now happen after the first
+setsockopt() we additionally need to invoke mptcp_sockopt_sync()
+on it.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/options.c | 7 +------
- net/mptcp/subflow.c | 7 +++----
- 2 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 99c4f9e9bb90..91d5b59540e9 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -988,12 +988,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 	mptcp_subflow_fully_established(subflow, mp_opt);
+v1 -> v2:
+ - really remove subflow creation from init() (!!!)
+---
+ net/mptcp/pm_netlink.c |  4 +--
+ net/mptcp/protocol.c   | 61 +++++++++++++++++++++++++-----------------
+ net/mptcp/protocol.h   |  2 +-
+ net/mptcp/sockopt.c    | 20 +++++++-------
+ 4 files changed, 51 insertions(+), 36 deletions(-)
+
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 155916174841..d1d859517d91 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1016,8 +1016,8 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 	lock_sock(newsk);
+ 	ssock = __mptcp_nmpc_socket(mptcp_sk(newsk));
+ 	release_sock(newsk);
+-	if (!ssock)
+-		return -EINVAL;
++	if (IS_ERR(ssock))
++		return PTR_ERR(ssock);
  
- check_notify:
--	/* if the subflow is not already linked into the conn_list, we can't
--	 * notify the PM: this subflow is still on the listener queue
--	 * and the PM possibly acquiring the subflow lock could race with
--	 * the listener close
--	 */
--	if (likely(subflow->pm_notified) || list_empty(&subflow->node))
-+	if (likely(subflow->pm_notified))
- 		return true;
+ 	mptcp_info2sockaddr(&entry->addr, &addr, entry->addr.family);
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 9c4c729bf271..4f7a71561efd 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -49,18 +49,6 @@ static void __mptcp_check_send_data_fin(struct sock *sk);
+ DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
+ static struct net_device mptcp_napi_dev;
  
- 	subflow->pm_notified = 1;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7b91dc57049e..6f198d6e1b22 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1933,11 +1933,10 @@ static void subflow_ulp_release(struct sock *ssk)
+-/* If msk has an initial subflow socket, and the MP_CAPABLE handshake has not
+- * completed yet or has failed, return the subflow socket.
+- * Otherwise return NULL.
+- */
+-struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk)
+-{
+-	if (!msk->subflow || READ_ONCE(msk->can_ack))
+-		return NULL;
+-
+-	return msk->subflow;
+-}
+-
+ /* Returns end sequence number of the receiver's advertised window */
+ static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
+ {
+@@ -116,6 +104,31 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
+ 	return 0;
+ }
  
- 	sk = ctx->conn;
- 	if (sk) {
--		/* if the msk has been orphaned, keep the ctx
--		 * alive, will be freed by __mptcp_close_ssk(),
--		 * when the subflow is still unaccepted
-+		/* if the subflow has been closed by the TCP stack, keep
-+		 * the ctx alive, will be freed by __mptcp_close_ssk()
- 		 */
--		release = ctx->disposable || list_empty(&ctx->node);
-+		release = ctx->disposable;
- 		sock_put(sk);
++/* Returns the first subflow socket if available and the MPC
++ * handshake is not started yet.
++ */
++struct socket *__mptcp_nmpc_socket(struct mptcp_sock *msk)
++{
++	struct sock *sk = (struct sock *)msk;
++	int ret;
++
++	if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)))
++		return ERR_PTR(-EINVAL);
++
++	if (!msk->subflow) {
++		if (msk->first)
++			return ERR_PTR(-EINVAL);
++
++		ret = __mptcp_socket_create(msk);
++		if (ret)
++			return ERR_PTR(ret);
++
++		mptcp_sockopt_sync(msk, msk->first);
++	}
++
++	return msk->subflow;
++}
++
+ static void mptcp_drop(struct sock *sk, struct sk_buff *skb)
+ {
+ 	sk_drops_add(sk, skb);
+@@ -1699,6 +1712,7 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+ {
+ 	unsigned int saved_flags = msg->msg_flags;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct socket *ssock;
+ 	struct sock *ssk;
+ 	int ret;
+ 
+@@ -1708,8 +1722,11 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+ 	 * Since the defer_connect flag is cleared after the first succsful
+ 	 * fastopen attempt, no need to check for additional subflow status.
+ 	 */
+-	if (msg->msg_flags & MSG_FASTOPEN && !__mptcp_nmpc_socket(msk))
+-		return -EINVAL;
++	if (msg->msg_flags & MSG_FASTOPEN) {
++		ssock = __mptcp_nmpc_socket(msk);
++		if (IS_ERR(ssock))
++			return PTR_ERR(ssock);
++	}
+ 	if (!msk->first)
+ 		return -EINVAL;
+ 
+@@ -2768,10 +2785,6 @@ static int mptcp_init_sock(struct sock *sk)
+ 	if (unlikely(!net->mib.mptcp_statistics) && !mptcp_mib_alloc(net))
+ 		return -ENOMEM;
+ 
+-	ret = __mptcp_socket_create(mptcp_sk(sk));
+-	if (ret)
+-		return ret;
+-
+ 	ret = mptcp_init_sched(mptcp_sk(sk),
+ 			       mptcp_sched_find(mptcp_get_scheduler(net)));
+ 	if (ret)
+@@ -3592,8 +3605,8 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ 	int err = -EINVAL;
+ 
+ 	ssock = __mptcp_nmpc_socket(msk);
+-	if (!ssock)
+-		return -EINVAL;
++	if (IS_ERR(ssock))
++		return PTR_ERR(ssock);
+ 
+ 	mptcp_token_destroy(msk);
+ 	inet_sk_state_store(sk, TCP_SYN_SENT);
+@@ -3681,8 +3694,8 @@ static int mptcp_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 
+ 	lock_sock(sock->sk);
+ 	ssock = __mptcp_nmpc_socket(msk);
+-	if (!ssock) {
+-		err = -EINVAL;
++	if (IS_ERR(ssock)) {
++		err = PTR_ERR(ssock);
+ 		goto unlock;
  	}
  
+@@ -3718,8 +3731,8 @@ static int mptcp_listen(struct socket *sock, int backlog)
+ 
+ 	lock_sock(sk);
+ 	ssock = __mptcp_nmpc_socket(msk);
+-	if (!ssock) {
+-		err = -EINVAL;
++	if (IS_ERR(ssock)) {
++		err = PTR_ERR(ssock);
+ 		goto unlock;
+ 	}
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 5f1a30959b5c..3a055438c65e 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -632,7 +632,7 @@ void __mptcp_subflow_send_ack(struct sock *ssk);
+ void mptcp_subflow_reset(struct sock *ssk);
+ void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
+ void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+-struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
++struct socket *__mptcp_nmpc_socket(struct mptcp_sock *msk);
+ bool __mptcp_close(struct sock *sk, long timeout);
+ void mptcp_cancel_work(struct sock *sk);
+ void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk);
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 8a9656248b0f..9bddae9c5c58 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -301,9 +301,9 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 	case SO_BINDTOIFINDEX:
+ 		lock_sock(sk);
+ 		ssock = __mptcp_nmpc_socket(msk);
+-		if (!ssock) {
++		if (IS_ERR(ssock)) {
+ 			release_sock(sk);
+-			return -EINVAL;
++			return PTR_ERR(ssock);
+ 		}
+ 
+ 		ret = sock_setsockopt(ssock, SOL_SOCKET, optname, optval, optlen);
+@@ -396,9 +396,9 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+ 	case IPV6_FREEBIND:
+ 		lock_sock(sk);
+ 		ssock = __mptcp_nmpc_socket(msk);
+-		if (!ssock) {
++		if (IS_ERR(ssock)) {
+ 			release_sock(sk);
+-			return -EINVAL;
++			return PTR_ERR(ssock);
+ 		}
+ 
+ 		ret = tcp_setsockopt(ssock->sk, SOL_IPV6, optname, optval, optlen);
+@@ -693,9 +693,9 @@ static int mptcp_setsockopt_sol_ip_set_transparent(struct mptcp_sock *msk, int o
+ 	lock_sock(sk);
+ 
+ 	ssock = __mptcp_nmpc_socket(msk);
+-	if (!ssock) {
++	if (IS_ERR(ssock)) {
+ 		release_sock(sk);
+-		return -EINVAL;
++		return PTR_ERR(ssock);
+ 	}
+ 
+ 	issk = inet_sk(ssock->sk);
+@@ -762,13 +762,15 @@ static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ {
+ 	struct sock *sk = (struct sock *)msk;
+ 	struct socket *sock;
+-	int ret = -EINVAL;
++	int ret;
+ 
+ 	/* Limit to first subflow, before the connection establishment */
+ 	lock_sock(sk);
+ 	sock = __mptcp_nmpc_socket(msk);
+-	if (!sock)
++	if (IS_ERR(sock)) {
++		ret = PTR_ERR(sock);
+ 		goto unlock;
++	}
+ 
+ 	ret = tcp_setsockopt(sock->sk, level, optname, optval, optlen);
+ 
+@@ -872,7 +874,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ 	}
+ 
+ 	ssock = __mptcp_nmpc_socket(msk);
+-	if (!ssock)
++	if (IS_ERR(ssock))
+ 		goto out;
+ 
+ 	ret = tcp_getsockopt(ssock->sk, level, optname, optval, optlen);
 -- 
 2.39.0
 
