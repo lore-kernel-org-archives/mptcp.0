@@ -1,100 +1,124 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E542F29
-	for <mptcp@lists.linux.dev>; Thu, 19 Jan 2023 22:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674168264; x=1705704264;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ViDWoMuzU+c9aQabLLq+FyDK35XeGBe9/4vSIYEA4+Y=;
-  b=QBOrrtI08bFvezv63BzGR4foEJw6gOwoqwsXvFLH+tlbXw7oDqq9wA/L
-   Du7JaIN6rADnIaX+EkGgH7Rh0+nYrCfdbd9JrxEXlILM+VlxeNNYl7nl9
-   j+Ht55YZj0eY/CxdaH7riMXborY5/u+yzAMepMK4Vv84lbOfG6UCwKc/A
-   BKpKD8HZoHrtlsWRmfXVymxagX12pNRhPP6tQ3gwGvZvG7sfzvawkt1ox
-   CJWJv9XYnmk54XkCnRwhdTLKKhiQiia/Kkhdwdq6EBVFxkqz1zN6yJFyk
-   RFueMKSoyJLdI9hwy42PN74lK/Xajnb8x8saGRj0Z6vuxGbDNpbeqk1FE
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="411682711"
-X-IronPort-AV: E=Sophos;i="5.97,230,1669104000"; 
-   d="scan'208";a="411682711"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2023 14:44:24 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="749114439"
-X-IronPort-AV: E=Sophos;i="5.97,230,1669104000"; 
-   d="scan'208";a="749114439"
-Received: from ticela-or-197.amr.corp.intel.com (HELO mjmartin-desk2.intel.com) ([10.209.70.51])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2023 14:44:23 -0800
-From: Mat Martineau <mathew.j.martineau@linux.intel.com>
-To: mptcp@lists.linux.dev,
-	matthieu.baerts@tessares.net
-Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: [PATCH mptcp-net] MAINTAINERS: Update MPTCP maintainer list and CREDITS
-Date: Thu, 19 Jan 2023 14:44:11 -0800
-Message-Id: <20230119224411.24410-1-mathew.j.martineau@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96C6180
+	for <mptcp@lists.linux.dev>; Fri, 20 Jan 2023 00:14:51 +0000 (UTC)
+Received: by mail-pl1-f173.google.com with SMTP id p24so3875270plw.11
+        for <mptcp@lists.linux.dev>; Thu, 19 Jan 2023 16:14:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XyBHF4YrRq8YKGid81d5OcTvI9nU5A+xRjWNnYUBft0=;
+        b=KaRvmEC+ZoxiA/KzbRdeq7CWMEnO2YfwjG/EjBx3EG4Q+BMYkxoy7YBGRXY6dE6Fm6
+         SHvgfD+zP2dw8HlWxSfZD7N7mQc7/DL+wx2QQx6yn/OTtFHVwafG35acigClQ2mgghum
+         q/BwGvfSbB7gaVVs9p9lOkOPsedzWWjHEhQhlHnxmhC8p0yQuEzKKvfzc/5HgQhk7zxS
+         LKNUp13tBtffgRzr4jtIkeJH1C6/XuWjJYaNPz6ssXgojz5RUzUhj77DtwIZGQjqUoja
+         FARgdw+ZhJVOUdC/g7C+//OkfSG4fhVB3yMOzIeDSod/jw09NvmJ1Bf8xFhMmiA5CCy4
+         6Hww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XyBHF4YrRq8YKGid81d5OcTvI9nU5A+xRjWNnYUBft0=;
+        b=XpqAAb/s8lMXLaP1D3r+KFrRvbTqqDV+NGJ5fCRliDJF1pqn5648v6uBuj9QCctiqP
+         5HfdFUIBnSK+8zhETxJp618KtqEZr/FBqgTXAu7daZp9MZSHSbhpsRhJRsvBoiWZbuzm
+         H8kug+hbUASGnaJhGGefSUyBXJD5BluH60Fxh4cPUZhl2rQhAH3SadI0+3zw1DjCgCjy
+         zK7m2PwpgyNdiTwAQjJOdOswIQ7EnVapoZQWLgE2cB85w2KN5GqtiGRD60QFms9QmZiI
+         fB1rzxsG7gSXwU3TzRP96w1hHnbme27bSYuqp4UArrlVFleAb7TYGog6TzgmYRPUMs6V
+         F4/Q==
+X-Gm-Message-State: AFqh2kqBFgsXZ8jEwFhG/77ydEraIle2cb90HmUJNTKaouAZ/PtzbMRl
+	0JjGCu13vSemqPEOgcyotw==
+X-Google-Smtp-Source: AMrXdXszSBgxIaD4bvRZsJC0DMxpRSItoEVAgdl93HplEG5lN5GOafZf1/yU1y6IXkTMn77+dhp84w==
+X-Received: by 2002:a17:902:e54b:b0:194:7efa:702f with SMTP id n11-20020a170902e54b00b001947efa702fmr17790278plf.53.1674173691042;
+        Thu, 19 Jan 2023 16:14:51 -0800 (PST)
+Received: from [127.0.0.1] ([13.88.61.210])
+        by smtp.gmail.com with ESMTPSA id j6-20020a170902690600b00192aecb231asm25636261plk.121.2023.01.19.16.14.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jan 2023 16:14:50 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230119224411.24410-1-mathew.j.martineau@linux.intel.com>
+References: <20230119224411.24410-1-mathew.j.martineau@linux.intel.com>
+Subject: Re: MAINTAINERS: Update MPTCP maintainer list and CREDITS: Tests
+ Results
+Message-ID: <a35cbec3-b5c9-8449-a675-3c186ebf1d41@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 20 Jan 2023 00:14:49 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-My responsibilities at Intel have changed, so I'm handing off exclusive
-MPTCP subsystem maintainer duties to Matthieu. It has been a privilege
-to see MPTCP through its initial upstreaming and first few years in the
-upstream kernel!
+Hi Mat,
 
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
----
+Thank you for your modifications, that's great!
 
-Hi Matthieu -
+Our CI did some validations and here is its report:
 
-Hoping you can tag this (not sure if signoff or Acked-by is best?)
-before I send to netdev.
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6277750156165120
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6277750156165120/summary/summary.txt
 
-Thanks,
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5433325226033152
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5433325226033152/su=
+mmary/summary.txt
 
-Mat
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4870375272611840
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4870375272611840/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5996275179454464
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5996275179454464/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/bfd054965396
 
 
----
- CREDITS     | 7 +++++++
- MAINTAINERS | 1 -
- 2 files changed, 7 insertions(+), 1 deletion(-)
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-diff --git a/CREDITS b/CREDITS
-index 4e302a459ddf..acac06b6563e 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -2489,6 +2489,13 @@ D: XF86_Mach8
- D: XF86_8514
- D: cfdisk (curses based disk partitioning program)
- 
-+N: Mat Martineau
-+E: mat@martineau.name
-+D: MPTCP subsystem co-maintainer 2020-2023
-+D: Keyctl restricted keyring and Diffie-Hellman UAPI
-+D: Bluetooth L2CAP ERTM mode and AMP
-+S: USA
-+
- N: John S. Marvin
- E: jsm@fc.hp.com
- D: PA-RISC port
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 180c18f936b7..b166dec1ffc3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14633,7 +14633,6 @@ F:	net/netfilter/xt_SECMARK.c
- F:	net/netlabel/
- 
- NETWORKING [MPTCP]
--M:	Mat Martineau <mathew.j.martineau@linux.intel.com>
- M:	Matthieu Baerts <matthieu.baerts@tessares.net>
- L:	netdev@vger.kernel.org
- L:	mptcp@lists.linux.dev
--- 
-2.39.1
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
