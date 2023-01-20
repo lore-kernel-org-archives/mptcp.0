@@ -1,45 +1,45 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD1EBD3F
-	for <mptcp@lists.linux.dev>; Fri, 20 Jan 2023 09:54:56 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id ss4so12500106ejb.11
-        for <mptcp@lists.linux.dev>; Fri, 20 Jan 2023 01:54:56 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9973517E6
+	for <mptcp@lists.linux.dev>; Fri, 20 Jan 2023 10:07:52 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id ss4so12580833ejb.11
+        for <mptcp@lists.linux.dev>; Fri, 20 Jan 2023 02:07:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=zlmOE3LY+NnEssmKwDWE/zQ4siHapINLKqER/QeAebg=;
-        b=EUDhje+Rbi6NLH3d3wOo2+Obi/fWd9Bh8AUKFcGQvfWznsaGcj1TKDD2LvnkbTFnMe
-         bc7nCMIYF6IPTK17UnklPWLxdBn8hX1dr7l7vD+0IfchVGqigRfqbxpFYo+7aAMEXT9Q
-         oM/JHxi7/EMrTYkp8dcFtdGEKf5PTVLBlHJK0h2D5CI4kHyc2jR7Qb/BNyqZMV6MUQ9b
-         cVxgC88+gLuqcPeXoJerI/QOvB/4zxzWN4HLAfhg1GEwOsjSuPuH4vF2rme592k1h4fu
-         pGSvef/Hj2tJaZxVKNq3r5zJxVckPmgYpM8jnpvSwYEi+WzMy6F2j/6XgbUulX/1J94y
-         k1vQ==
+        bh=PyuRC16RNsk7K6WGBVBSReefG793JHUBCM/5sTXGDKg=;
+        b=n/6AN30BbiwejM73zH+H1olqK+4hSdEZaqfr49ClKkeRY9xYHrWl/iBrQDIwY8G3Ro
+         JRClqyN1zk0O3eLjNiN58rFFpBf3rtmaHo3a/bCGspmTu97kXOyHFNrgQU3/QZekzp5N
+         A6b3LprKg1A/lT76vPZVRQC/4jzpAxYhBEPYAMARZR/oaEYucsQXCuLlZVXhcIYsIJ7D
+         aQY8mx+SzVlFhVTR8nANsHefBs6a7agryR4hnW1xbt8HLhhy4rDpEWY4+4jA8aDWQEON
+         CWZ1qdG869NJNXTD1/TKFS20cllIehPAbQJEJ9ppC8c9TLXUcZ9wy3E96fF6HBEygRTF
+         X7bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zlmOE3LY+NnEssmKwDWE/zQ4siHapINLKqER/QeAebg=;
-        b=Zkt4tLdYM6yeGYvGbQ56c7uwFNHAcAAS+lLERrijbiYxEzQu5xvxz3Xi4FBEch4eux
-         TDQ32SL/w4YvTER7Ge0u6EMBCo1AJG46UaS3stmKG2Kdb5tSt16d5Ae3Fza0mEmHq6hY
-         wR2Hor7963G9ShO9Dmn4seb7mL8wpsNK42hT0D+QK3o37bSqmcGPtFwu5gPv2fAv8ZL4
-         tIK/D9CmZkj3RQGNuBcRh0fDsWpcuzTL/JOQ6dcXDCH7FKIdAyjdoN4QshpOuUNO0qdJ
-         4XFgZLSm/pODGZIZZCZ5movSlfsIYHtA13+uGvdk8s6xDxo/3U5v8/CCa2RkawqxGMID
-         F5aA==
-X-Gm-Message-State: AFqh2kq+Y7MsQtXROFH5VRCVGEC7L9cgXRU68H0ahiB0z/ebS+Mukohz
-	fFluPm0dB14c4axwUI8q1fLpY3Qo0iB+P81cm6E05Q==
-X-Google-Smtp-Source: AMrXdXsgWvESRJ7+9BjTGQY2pDAsB/Szn+E47lmrnQdVoLdnE85Q6LtjBDDtYgr75iQyKl0KpBpPVQ==
-X-Received: by 2002:a17:907:8a1d:b0:86f:950a:32ce with SMTP id sc29-20020a1709078a1d00b0086f950a32cemr18853003ejc.75.1674208494785;
-        Fri, 20 Jan 2023 01:54:54 -0800 (PST)
+        bh=PyuRC16RNsk7K6WGBVBSReefG793JHUBCM/5sTXGDKg=;
+        b=CD3H09u+uK+Brh4nu/+sf5Jr7BhMZDCtMUvKDpNsO76AIWIDLDfmYMSgovK2Gva04H
+         rOpf00YPC6pnll84BTw64Ps9h78CcxDzsxr0Xz5VqsBRbZYNZRtHrSm3PvlJ1kLK611J
+         eBvmFpvCbuFxHJ+CPtUhP+PSvvroTcIgUwIoScZRhl9AahiHzMFfDHZ/HA5bSzpYeMex
+         NetBAWamsuiM3x9CwJEOg4bEFgJSj7zHGRPQ8zzzyPNTgEHTw3LPx0kvVR83caH6CBHw
+         Dm+0XxjPv6xaA3aLGeNqGP4VeeZah9mtDJ4cwxzZ19anlLUscguFYUgtHmjRNKsK9zHQ
+         oo8g==
+X-Gm-Message-State: AFqh2krcmsaLwfQuJTn724XrWLAhG3+IIWbcIu3jLhPfp7SG0OSV5aTf
+	6qm2o4dhqXBcZjSVnvQSbYxy8+A6gW+suJcfx22+FA==
+X-Google-Smtp-Source: AMrXdXuNXiQQxIXgrEGjoRQJW9FI9pADP+u+dpxi/ZPeIMbGNzkE5IOxt2XQdIvxX6ek0uaim3xYiA==
+X-Received: by 2002:a17:906:57cf:b0:841:e5b3:c95f with SMTP id u15-20020a17090657cf00b00841e5b3c95fmr13982006ejr.29.1674209270698;
+        Fri, 20 Jan 2023 02:07:50 -0800 (PST)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id gh9-20020a170906e08900b0086f4b8f9e42sm7810194ejb.65.2023.01.20.01.54.54
+        by smtp.gmail.com with ESMTPSA id d9-20020a1709063ec900b0084c2065b388sm17538839ejj.128.2023.01.20.02.07.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jan 2023 01:54:54 -0800 (PST)
-Message-ID: <702d73af-1306-2210-0e9f-af3f8bad6049@tessares.net>
-Date: Fri, 20 Jan 2023 10:54:54 +0100
+        Fri, 20 Jan 2023 02:07:50 -0800 (PST)
+Message-ID: <e3ccc49d-b90c-2003-d966-1739a318b2d6@tessares.net>
+Date: Fri, 20 Jan 2023 11:07:50 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -66,12 +66,15 @@ On 19/01/2023 23:44, Mat Martineau wrote:
 > to see MPTCP through its initial upstreaming and first few years in the
 > upstream kernel!
 
-It has been a privilege to support you maintaining MPTCP!
+I just applied this patch in our tree (fix for -net) with my Ack:
 
-Thank you for all the hard work you did to have MPTCP upstreamed! I hope
-you will enjoy your new responsibilities!
+New patches for t/upstream-net:
+- 11cee47cfc2c: MAINTAINERS: Update MPTCP maintainer list and CREDITS
+- Results: 051fdb31d822..ffc202408d0f (export-net)
 
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230120T100637
 
 Cheers,
 Matt
