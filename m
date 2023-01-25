@@ -1,157 +1,84 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B830F1FBC
-	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 10:48:08 +0000 (UTC)
-Received: by mail-wm1-f51.google.com with SMTP id e19-20020a05600c439300b003db1cac0c1fso914489wmn.5
-        for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 02:48:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3qynjSOc6nz4Nf6cQvYVVmdAvys7aqe1bFN8sKVYTz8=;
-        b=mvgkbs7E687JKkTLyPJRpf8Xfh8mSV2+GLd1lNG7xZ/hquVAxxx/ZdarKyszSnvPE+
-         DBXn/W4v1I2+NKYIqjUPOOorRGG+Kdonx9kWv7PkfHwHg8NakgZhDD5UooSRECRGQDeX
-         tBgY//8TJ1ncc4A1nGHSGMuHVvW6FLrQN/FaPsJSA9xHji44P9/C6IYa9KIuTTDWhkdi
-         ipYwsJGijh9sT/4dflQh12wTP9sf7+iiKdPef3xIM6Sq9EKHcKd3pp+LiAXEFUUKavm6
-         zXDZMFo+ywL3NJEM4wqelJNC2vv/n2y768gbUPChpXzC/EJ+n0NV8K2eInQsnFhps1Sc
-         BqIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3qynjSOc6nz4Nf6cQvYVVmdAvys7aqe1bFN8sKVYTz8=;
-        b=v3EPcr+iW/QYjsJyDMHeWKaXBPZ4ooNWBK2USCBwPCSw82heSAOTTi5mtEmApp5TH0
-         dTlXMhwzYtA0LCKXAYKAJwdEBeFTJk2NTlX6AE+/H7me5cVbEZ14imNDCZ+PCSb7AIvo
-         wl23wYjIMUOmmFRGjKBXM4YP0wr+XONDL0wXpd7eqv9tnOH0aCY2+wCJZegZ5ZblRNuQ
-         uGqJe7lKnlNc5O/IgCp5KqzBeRaR4kdzY68lvmUofLsz8vKVr7mzJiSDT/qEl425sS33
-         Ms09KNisTJK4KFTk7LIAYNOsNeqnLVGYR525HMAIM531MKfRgOO3Ve9hB0aMgGqeFbNl
-         cA2w==
-X-Gm-Message-State: AFqh2krYzqDAT3M2GM/0QMVocr9+xW2jSrt8BOm5Jv3ZkaUQhHB1pmDi
-	jxL5Xe6oEofvEP5oC3UpnYUzUA==
-X-Google-Smtp-Source: AMrXdXue8fHvsLjHuYjJlYDZFc9m+OmNq0Yo/E91IxOqD8Lm3kf4A9yMhzqoxJAjsplHCLG0SdGLoA==
-X-Received: by 2002:a05:600c:1713:b0:3da:fd90:19dd with SMTP id c19-20020a05600c171300b003dafd9019ddmr31052393wmn.26.1674643686984;
-        Wed, 25 Jan 2023 02:48:06 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id r1-20020a05600c424100b003d9a86a13bfsm1423692wmm.28.2023.01.25.02.48.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jan 2023 02:48:06 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Wed, 25 Jan 2023 11:47:28 +0100
-Subject: [PATCH net-next 8/8] selftests: mptcp: userspace: avoid read
- errors
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04526FA1
+	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 17:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1674668301;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HUhfx3lBpiPRer8MpFBJ2H0SifUezJBKZf5dRAoNDpg=;
+	b=I8bYlfCmDkOjXbAoei4peULwuaXbGvA9JgPBa6Iz3OvVrII8V2WyTI/n3hy9xap16Dqn9T
+	GHk9bkr3BJJOe489BK4nDU8FPnRZn7f0IrY83r1X36Fn6UYMWM71inal28hfR+TiNtB7mD
+	bVb9xTqJGP8KfyIncWOL7qf1RzmrUr8=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-160-BmzcB4tpNfewzwvrVdzN-g-1; Wed, 25 Jan 2023 12:38:20 -0500
+X-MC-Unique: BmzcB4tpNfewzwvrVdzN-g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5D5952804832
+	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 17:38:20 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.60])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E16012026D4B
+	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 17:38:19 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] mptcp: do not propagate fallback subflow status on error
+Date: Wed, 25 Jan 2023 18:38:16 +0100
+Message-Id: <97f7deb4132d567132088d43f3e7f5ff0602a45b.1674668294.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230123-upstream-net-next-pm-v4-v6-v1-8-43fac502bfbf@tessares.net>
-References: <20230123-upstream-net-next-pm-v4-v6-v1-0-43fac502bfbf@tessares.net>
-In-Reply-To: <20230123-upstream-net-next-pm-v4-v6-v1-0-43fac502bfbf@tessares.net>
-To: Mat Martineau <mathew.j.martineau@linux.intel.com>, 
- Matthieu Baerts <matthieu.baerts@tessares.net>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2122;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=6MOG1ZEazJbpV3v3EchrO329puIDO6dd5lQxjWDGRMo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj0QjdROHosjdgthf7sJ7fwTT7T291txcJlOXdMy83
- 0OLZ1G6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY9EI3QAKCRD2t4JPQmmgc7csEA
- CbPf+IRNTcrGZQC9QI7Yjf/aCMXKOxRtzRhttRiohq7mKvymkfTT4g70DdGz+uRLKD+cK9TkMqd2mv
- HVH3WfEd+OSehw0Vk/yr3fYuXQewl8dVbg+DA1EagE3EDeUJ0Ztm/y5N2f7Zud34C5b1mWqKShx+dF
- wg1ybzUvvQu+GCkGL/SqRVNkVSK37EfnYB65gIikXED5CDt/I+wqCi/cOQcmFpjk7/Pfdaj4uhS2mP
- A/6iMw32sesJ2BMqCVuyCDRxPCOPEiFD22/45KINjXTfVOZGtBYchOynwxDxpTGsOnrWANUWay21xs
- 7KJ7eIIXLiv+OJM+6+8Fyjl6vW2h5z1msYmcBZjmJMdKFFAGvnx6XGVji524YO3uQECONQolvJoItm
- Op86B/1iTSVmGpwB7wJJNCTcgWuEB9+GSbRWYyfuKPWgf1YpK4AEHBOCJn74qFvXd0qhHZ8bzKZ6D1
- 0O/nrR+CJGb4HlMQCrzrr6Xe0KFPfx7UMZg/RiCG9APdhw3Viamh03zD8WfI1Bs0Ocb5x/0K9dwW48
- 22UiCsU1M11LYEkINUw65f6XsqPO/uwWh7fGmXFHzM9gCg0HeHRi75RV1ztTqey69uMSk5d0aDKuRp
- RvfrKxDXEYcTaQAG+/nA/RXn78aCdfwHL6oHShYKJXZMf/Mm/6OLUsCoaNNA==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-During the cleanup phase, the server pids were killed with a SIGTERM
-directly, not using a SIGUSR1 first to quit safely. As a result, this
-test was often ending with two error messages:
+Currently the subflow error report callback unconditionally
+propagates the fallback subflow status to the owning msk.
 
-  read: Connection reset by peer
+That is not needed as there is a great deal of infrastructure
+trying to propagate correctly the fallback subflow status to
+the owning mptcp socket, e.g. via mptcp_subflow_eof() and
+subflow_sched_work_if_closed().
 
-While at it, use a for-loop to terminate all the PIDs the same way.
+And in some circumstances - specifically if the msk is already
+orphaned - it prevents the code from correctly tracking the msk
+moving to the TCP_CLOSE state and doing the appropriate
+cleanup.
 
-Also the different files are now removed after having killed the PIDs
-using them. It makes more sense to do that in this order.
+All the above causes increasing memory usage over time and
+sporadic self-tests failures.
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Address the issue simply removing the unneeded state update.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/339
+Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 32 +++++++++--------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+ net/mptcp/subflow.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 259382ad552c..66c5be25c13d 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -50,6 +50,9 @@ print_title()
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index beaec843f5ca..5f952d0e06d4 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1410,7 +1410,6 @@ void __mptcp_error_report(struct sock *sk)
+ 		if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(msk))
+ 			continue;
  
- kill_wait()
- {
-+	[ $1 -eq 0 ] && return 0
-+
-+	kill -SIGUSR1 $1 > /dev/null 2>&1
- 	kill $1 > /dev/null 2>&1
- 	wait $1 2>/dev/null
- }
-@@ -58,32 +61,21 @@ cleanup()
- {
- 	print_title "Cleanup"
+-		inet_sk_state_store(sk, inet_sk_state_load(ssk));
+ 		sk->sk_err = -err;
  
--	rm -rf $file $client_evts $server_evts
--
- 	# Terminate the MPTCP connection and related processes
--	if [ $client4_pid -ne 0 ]; then
--		kill -SIGUSR1 $client4_pid > /dev/null 2>&1
--	fi
--	if [ $server4_pid -ne 0 ]; then
--		kill_wait $server4_pid
--	fi
--	if [ $client6_pid -ne 0 ]; then
--		kill -SIGUSR1 $client6_pid > /dev/null 2>&1
--	fi
--	if [ $server6_pid -ne 0 ]; then
--		kill_wait $server6_pid
--	fi
--	if [ $server_evts_pid -ne 0 ]; then
--		kill_wait $server_evts_pid
--	fi
--	if [ $client_evts_pid -ne 0 ]; then
--		kill_wait $client_evts_pid
--	fi
-+	local pid
-+	for pid in $client4_pid $server4_pid $client6_pid $server6_pid\
-+		   $server_evts_pid $client_evts_pid
-+	do
-+		kill_wait $pid
-+	done
-+
- 	local netns
- 	for netns in "$ns1" "$ns2" ;do
- 		ip netns del "$netns"
- 	done
- 
-+	rm -rf $file $client_evts $server_evts
-+
- 	stdbuf -o0 -e0 printf "Done\n"
- }
- 
-
+ 		/* This barrier is coupled with smp_rmb() in mptcp_poll() */
 -- 
-2.38.1
+2.39.1
 
