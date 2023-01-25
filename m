@@ -1,286 +1,130 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C2B33C4
-	for <mptcp@lists.linux.dev>; Tue, 24 Jan 2023 16:31:03 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id q10-20020a1cf30a000000b003db0edfdb74so1193970wmq.1
-        for <mptcp@lists.linux.dev>; Tue, 24 Jan 2023 08:31:03 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691381C29
+	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 10:48:01 +0000 (UTC)
+Received: by mail-wm1-f50.google.com with SMTP id iv8-20020a05600c548800b003db04a0a46bso2450888wmb.0
+        for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 02:48:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pMen4TX8dJiQrTgsr9O/rPS+iZi5AFgwNkHnikbYooc=;
-        b=5n/uDbsycSNdnVb6VDeJECooWsMUKF1FHRh2lL4BX3gpLTGVMDLSnSoJ2ZmgKSfPro
-         ILfByQ+RDBZiBW0jCjoLmS7cDyj2aLTHk+a9Qu0CJEMLgkD59nchM7Wwu3mM+KMcG/l8
-         +zd/QCBsikx74xRQOAA2g2gETNWeENv9Nt3bmezoKUK6FXSgfHWjZ0I7BrRrnHipsYw0
-         k/mWYYSSUbAaOnY5ins4Mc0xjZMtETg7K2vTp55T/qlWXWjNP5FYciT6P5eb1/e4tssQ
-         NDi2aiM6tBKbVOlIUv1TIXC9BliwDFhOxEVRuaocIPTH8r4RaPqAL5zi522xkJnwnjiJ
-         zD/w==
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sm7cAXvuksIT8Vn2KQfM6U5yXB3a8DRF5yFqF7/IqD8=;
+        b=1DG9Q4JaxhWmDSfrx9wk2S4ODUu5D6gqvoB6VO/OCaz2SOQSO3tjWY73kamLORPcBs
+         56QmJF4rzK2p74s4oX2uBD3waQUQ53Kixs4jk1ALWv+c5d9BHhh0ftllxk9dMguVzn5a
+         B5XjxReIgyKyP0kQqfsJmKpnv49gQLWO/JicjGLQVJHavsgprJs7AW+l5VE1/9EJatep
+         88ftE+66RVdR4tra/hy7oWcjZijq5eln7VYfBbp5GVADqPcnwu85xD5UsnbvBdbBGtHQ
+         EZtRJsFpD9FgH2TxCxiufaMmnJkqbY8ybwCJlDoi6g4v1rATIQkY/un3sGjVCBd9vFiu
+         DeUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pMen4TX8dJiQrTgsr9O/rPS+iZi5AFgwNkHnikbYooc=;
-        b=Xu2bJOHmyX/69FW5RlE+NCgEZ5A7jebZlnIHbEQxlJ7PioCEfPUysDbtqsGqGCy/CO
-         DiUE4wVGBslVh67Hk1vCLz96KAloAKz1NNWhVObXh7jbiUSDoe7eW5Zh5lUa8v+KxP1R
-         UNR7kgPiTEqqiCIuS1vqAeQHlAhcN38gyQvpNYPOWT0FhiispNSdh6WVwNt+QQoYhQaE
-         nZ/+wbXPCWltb+ltWAgFW28rKNN8h+lSeswCr+CA+OFa6gdga3e1KaC/Lh01Y83CLePo
-         CWrlQluMVqgKXpTD4F+Mv9fLE/libQto+Q6cO1H9X4OxfPMM/kf0uEwf9/ZRECNQ+307
-         Tqtw==
-X-Gm-Message-State: AO0yUKUWIJN2S/AM+sKRK7widfSdv8kHjPnyyRS8ZCGxIcaBw+lxs5j7
-	38yl3qzdrzw646J2Dw8njIzQZQ==
-X-Google-Smtp-Source: AK7set/YCobfWWu6GzQ39brVT7xP+ueeAAPZOn40zI7Y5sRCb2tgW2RXcYHIJKdBQa8KkpD9GaXmFA==
-X-Received: by 2002:a05:600c:4f53:b0:3dc:1298:69b8 with SMTP id m19-20020a05600c4f5300b003dc129869b8mr2982201wmq.4.1674577861429;
-        Tue, 24 Jan 2023 08:31:01 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:e6e1:b6fe:4f49:c5d? ([2a02:578:8593:1200:e6e1:b6fe:4f49:c5d])
-        by smtp.gmail.com with ESMTPSA id g22-20020a05600c309600b003c6b70a4d69sm2319010wmn.42.2023.01.24.08.31.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jan 2023 08:31:01 -0800 (PST)
-Message-ID: <09a5cdbf-de41-ea88-6f93-f09709c09631@tessares.net>
-Date: Tue, 24 Jan 2023 17:31:00 +0100
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Sm7cAXvuksIT8Vn2KQfM6U5yXB3a8DRF5yFqF7/IqD8=;
+        b=iei85iqZFWlB02qPuVhfPVTSkHjBSk+rzDcOz9tPe8LToWV0pk3NMNOCIcV2cqEXUM
+         ZF+S0424VQklGY7d94ybdsvg2OhPsyNbsdqYOnK8LT+NAo+j/UHMs8Qsm2s45h+wglvj
+         lrMxOqARd32AOoRRU9/6YX02SgYHMYkO4AFT3O/ZT3OFDABsMcu/kw8ODr5IdHIgMTwv
+         360vD3+3IPZFiOYBJ6GjYOztYXrkWTWRMZyOFCBt3+BQ7wUE4WU0NnRpNCX5r9hjnHIp
+         OgB7E+WdST+0TbmhaiL5r8i/vI73x0yqoOK6mbMTO49EufOof2wWI5OFgth5MTwH1hGz
+         QPWQ==
+X-Gm-Message-State: AFqh2ko+/LF9migWlGUdIiZuC14YW+TuaBGzpephKBzsxL8C+93liU9v
+	8DxC15y+1aZmh6lFBPVcm/+ZgA==
+X-Google-Smtp-Source: AMrXdXsG9G6gXlDwKCzRzfrFFehM2xBbZSrI5a0qX8I0kxu8fudTbJrBiiil6k+s843f+kkQHh9C+g==
+X-Received: by 2002:a05:600c:a15:b0:3db:18a0:310f with SMTP id z21-20020a05600c0a1500b003db18a0310fmr25637661wmp.33.1674643679225;
+        Wed, 25 Jan 2023 02:47:59 -0800 (PST)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id r1-20020a05600c424100b003d9a86a13bfsm1423692wmm.28.2023.01.25.02.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jan 2023 02:47:58 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net-next 0/8] mptcp: add mixed v4/v6 support for the
+ in-kernel PM
+Date: Wed, 25 Jan 2023 11:47:20 +0100
+Message-Id: <20230123-upstream-net-next-pm-v4-v6-v1-0-43fac502bfbf@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [PATCH mptcp-next v2 08/13] mptcp: move first subflow allocation
- at mpc access time
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1673940640.git.pabeni@redhat.com>
- <badc4b131ab094bb806971a019807538abd6ccd5.1673940640.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <badc4b131ab094bb806971a019807538abd6ccd5.1673940640.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALgI0WMC/0WNwQqDMBBEf0X23IUkBpH+SulhY7d1D6ZhkwZB/
+ HdjofQwh8cwbzbIrMIZrt0GylWyvGMDe+lgmim+GOXRGJxxvbGux0/KRZkWjFxa1oJpweqxDhj
+ sOPjRkg/GQBMEyoxBKU7zqfgNziopP2X9/t7+xX3fDwd82FWRAAAA
+To: Mat Martineau <mathew.j.martineau@linux.intel.com>, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2147;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=y7xt/jDxFXcJ15EgIkD8oBTqZDL9ojRU13M9eMUQTFQ=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj0QjdXadWm/alm36siF313JgJqm+QfrUf00BHhUMv
+ Oqy+kBeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY9EI3QAKCRD2t4JPQmmgc7g9D/
+ 49zFh8NUIeA1NRsjrUD0s0nvcXhkcm1uDs+xlatBCfkwwhyLVci2wWXKq9rEzynsV6Ff+IQe70UXwZ
+ Bega11YJTkt84+t1DJCbQ8RW6m79vF3dETy7Huuv6yfSZjgtbaiv1rS/7Qy0dQSKkH3MOoHBSau9Gd
+ CIx4MIY6OYi3Q2mn4wociPth1irrJ1bnU7YqWt9qtu1f3G8EaEPiBfYki7X6JPqi6dmJylb0Li5PZS
+ /p2jUczI7ctJDWCGU3JTn42cgk5O6aKi5zqEKm2p6uLxdFhhd8x/Z36yLChfdO8dn5t28JHFqA5Z7K
+ V4ybZ2x4yflm+GilYKxrnP9pn7ryn47k9Cumg2GPG7jT4E5LeEhvFIDjjFEMIDeFtVBdRi6VB3syG9
+ hS4Ig5Us92VM82fFDxav6yMOsqzppwe45+oC/j7nOTDcESeGaWY4w3LUOAnUxYC77peICUM3p3wcyn
+ z2oWhpcgsNmF79QnfONrsxeEDSBVNoqZWMLmYlldc8MmTrmjMCxmOyxu9NGyN+l3WjR6mA+wJ5F1Sy
+ cEeqBi6wXxuOrFbCjgJcu4+IFY0XC8GlJAViBH1rF9rYocoR+VwF4HoHLoZm6FXYmxFIWU8gDImogL
+ CB/IGVehkyu/rQwkYp45hdw3OUoZpa/yyVhNpIpWUIHLsvwPnQX+Hk4Dp+3w==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+Before these patches, the in-kernel Path-Manager would not allow, for
+the same MPTCP connection, having a mix of subflows in v4 and v6.
 
-On 17/01/2023 08:36, Paolo Abeni wrote:
-> In the long run this will simplify the mptcp code and will
-> allow for more consistent behavior. Move the first subflow
-> allocation out of the sock->init ops into the __mptcp_nmpc_socket()
-> helper.
-> 
-> Since the first subflow creation can now happen after the first
-> setsockopt() we additionally need to invoke mptcp_sockopt_sync()
-> on it.
+MPTCP's RFC 8684 doesn't forbid that and it is even recommended to do so
+as the path in v4 and v6 are likely different. Some networks are also
+v4 or v6 only, we cannot assume they all have both v4 and v6 support.
 
-Thank you for this improvement! I have some questions below if you don't
-mind :)
+Patch 1 then removes this artificial constraint in the in-kernel PM
+currently enforcing there are no mixed subflows in place, either in
+address announcement or in subflow creation areas.
 
-(...)
+Patch 2 makes sure the sk_ipv6only attribute is also propagated to
+subflows, just in case a new PM wouldn't respect it.
 
-> @@ -116,6 +104,31 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
->  	return 0;
->  }
->  
-> +/* Returns the first subflow socket if available and the MPC
-> + * handshake is not started yet.
-> + */
-> +struct socket *__mptcp_nmpc_socket(struct mptcp_sock *msk)
-> +{
-> +	struct sock *sk = (struct sock *)msk;
-> +	int ret;
-> +
-> +	if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	if (!msk->subflow) {
-> +		if (msk->first)
-> +			return ERR_PTR(-EINVAL);
-> +
-> +		ret = __mptcp_socket_create(msk);
-> +		if (ret)
-> +			return ERR_PTR(ret);
-> +
-> +		mptcp_sockopt_sync(msk, msk->first);
+Some selftests have also been added for the in-kernel PM (patch 3).
 
-Do you think the function should be renamed? Maybe not but it looks
-strange to me to create the socket and do the sync here with this name.
-Maybe it is just me but with this name, I would expect it just to
-returns the first subflow or NULL, but not create a socket if not, no?
+Patches 4 to 8 are just some cleanups and small improvements in the
+printed messages in the userspace PM. It is not linked to the rest but
+identified when working on a related patch modifying this selftest,
+already in -net:
 
-Mainly to make it clear a "[gs]etsockopt()" before the MPC will create a
-new socket.
+  commit 4656d72c1efa ("selftests: mptcp: userspace: validate v4-v6 subflows mix")
 
-> +	}
-> +
-> +	return msk->subflow;
-> +}
-> +
->  static void mptcp_drop(struct sock *sk, struct sk_buff *skb)
->  {
->  	sk_drops_add(sk, skb);
-> @@ -1699,6 +1712,7 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
->  {
->  	unsigned int saved_flags = msg->msg_flags;
->  	struct mptcp_sock *msk = mptcp_sk(sk);
-> +	struct socket *ssock;
->  	struct sock *ssk;
->  	int ret;
->  
-> @@ -1708,8 +1722,11 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
->  	 * Since the defer_connect flag is cleared after the first succsful
->  	 * fastopen attempt, no need to check for additional subflow status.
->  	 */
-> -	if (msg->msg_flags & MSG_FASTOPEN && !__mptcp_nmpc_socket(msk))
-> -		return -EINVAL;
-> +	if (msg->msg_flags & MSG_FASTOPEN) {
-> +		ssock = __mptcp_nmpc_socket(msk);
-> +		if (IS_ERR(ssock))
-> +			return PTR_ERR(ssock);> +	}
+---
+Matthieu Baerts (6):
+      mptcp: propagate sk_ipv6only to subflows
+      mptcp: userspace pm: use a single point of exit
+      selftests: mptcp: userspace: print titles
+      selftests: mptcp: userspace: refactor asserts
+      selftests: mptcp: userspace: print error details if any
+      selftests: mptcp: userspace: avoid read errors
 
-Here 'ssock' could be declared in this 'if' section: I guess it doesn't
-really matter but out of curiosity, what's the code style to apply here?
-Fine where it is or moved only where needed?
+Paolo Abeni (2):
+      mptcp: let the in-kernel PM use mixed IPv4 and IPv6 addresses
+      selftests: mptcp: add test-cases for mixed v4/v6 subflows
 
->  	if (!msk->first)
->  		return -EINVAL;
->  
-> @@ -2768,10 +2785,6 @@ static int mptcp_init_sock(struct sock *sk)
->  	if (unlikely(!net->mib.mptcp_statistics) && !mptcp_mib_alloc(net))
->  		return -ENOMEM;
->  
-> -	ret = __mptcp_socket_create(mptcp_sk(sk));
-> -	if (ret)
-> -		return ret;
-> -
->  	ret = mptcp_init_sched(mptcp_sk(sk),
->  			       mptcp_sched_find(mptcp_get_scheduler(net)));
->  	if (ret)
-> @@ -3592,8 +3605,8 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
->  	int err = -EINVAL;
->  
->  	ssock = __mptcp_nmpc_socket(msk);
-> -	if (!ssock)
-> -		return -EINVAL;
-> +	if (IS_ERR(ssock))
-> +		return PTR_ERR(ssock);
->  
->  	mptcp_token_destroy(msk);
->  	inet_sk_state_store(sk, TCP_SYN_SENT);
-> @@ -3681,8 +3694,8 @@ static int mptcp_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
->  
->  	lock_sock(sock->sk);
->  	ssock = __mptcp_nmpc_socket(msk);
-> -	if (!ssock) {
-> -		err = -EINVAL;
-> +	if (IS_ERR(ssock)) {
-> +		err = PTR_ERR(ssock);
->  		goto unlock;
->  	}
->  
-> @@ -3718,8 +3731,8 @@ static int mptcp_listen(struct socket *sock, int backlog)
->  
->  	lock_sock(sk);
->  	ssock = __mptcp_nmpc_socket(msk);
-> -	if (!ssock) {
-> -		err = -EINVAL;
-> +	if (IS_ERR(ssock)) {
-> +		err = PTR_ERR(ssock);
->  		goto unlock;
->  	}
->  
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 5f1a30959b5c..3a055438c65e 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -632,7 +632,7 @@ void __mptcp_subflow_send_ack(struct sock *ssk);
->  void mptcp_subflow_reset(struct sock *ssk);
->  void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
->  void mptcp_sock_graft(struct sock *sk, struct socket *parent);
-> -struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
-> +struct socket *__mptcp_nmpc_socket(struct mptcp_sock *msk);
->  bool __mptcp_close(struct sock *sk, long timeout);
->  void mptcp_cancel_work(struct sock *sk);
->  void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk);
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 8a9656248b0f..9bddae9c5c58 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -301,9 +301,9 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
->  	case SO_BINDTOIFINDEX:
->  		lock_sock(sk);
->  		ssock = __mptcp_nmpc_socket(msk);
-> -		if (!ssock) {
-> +		if (IS_ERR(ssock)) {
->  			release_sock(sk);
-> -			return -EINVAL;
-> +			return PTR_ERR(ssock);
->  		}
->  
->  		ret = sock_setsockopt(ssock, SOL_SOCKET, optname, optval, optlen);
-> @@ -396,9 +396,9 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
->  	case IPV6_FREEBIND:
->  		lock_sock(sk);
->  		ssock = __mptcp_nmpc_socket(msk);
-> -		if (!ssock) {
-> +		if (IS_ERR(ssock)) {
->  			release_sock(sk);
-> -			return -EINVAL;
-> +			return PTR_ERR(ssock);
->  		}
->  
->  		ret = tcp_setsockopt(ssock->sk, SOL_IPV6, optname, optval, optlen);
-> @@ -693,9 +693,9 @@ static int mptcp_setsockopt_sol_ip_set_transparent(struct mptcp_sock *msk, int o
->  	lock_sock(sk);
->  
->  	ssock = __mptcp_nmpc_socket(msk);
-> -	if (!ssock) {
-> +	if (IS_ERR(ssock)) {
->  		release_sock(sk);
-> -		return -EINVAL;
-> +		return PTR_ERR(ssock);
->  	}
->  
->  	issk = inet_sk(ssock->sk);
-> @@ -762,13 +762,15 @@ static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
->  {
->  	struct sock *sk = (struct sock *)msk;
->  	struct socket *sock;
-> -	int ret = -EINVAL;
-> +	int ret;
->  
->  	/* Limit to first subflow, before the connection establishment */
->  	lock_sock(sk);
->  	sock = __mptcp_nmpc_socket(msk);
-> -	if (!sock)
-> +	if (IS_ERR(sock)) {
-> +		ret = PTR_ERR(sock);
->  		goto unlock;
-> +	}
+ net/mptcp/pm_netlink.c                            |  58 ++++----
+ net/mptcp/pm_userspace.c                          |   5 +-
+ net/mptcp/sockopt.c                               |   1 +
+ tools/testing/selftests/net/mptcp/mptcp_join.sh   |  53 ++++++--
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 153 +++++++++++++---------
+ 5 files changed, 171 insertions(+), 99 deletions(-)
+---
+base-commit: 4373a023e0388fc19e27d37f61401bce6ff4c9d7
+change-id: 20230123-upstream-net-next-pm-v4-v6-b186481a4b00
 
-Just to be sure: here and above the error with __mptcp_nmpc_socket()
-should not happen most of the time: only when we reach some limits, e.g.
-mem, etc., right?
-
-So it is fine to potentially return a different error than before (and
-potentially different than what TCP what doing), is it correct?
-
->  
->  	ret = tcp_setsockopt(sock->sk, level, optname, optval, optlen);
->  
-> @@ -872,7 +874,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
->  	}
->  
->  	ssock = __mptcp_nmpc_socket(msk);
-> -	if (!ssock)
-> +	if (IS_ERR(ssock))
->  		goto out;
->  
->  	ret = tcp_getsockopt(ssock->sk, level, optname, optval, optlen);
-
-Why here you don't assign the error that is returned? (Maybe a comment
-should be added?)
-
-Cheers,
-Matt
+Best regards,
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Matthieu Baerts <matthieu.baerts@tessares.net>
+
