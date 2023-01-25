@@ -1,84 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04526FA1
-	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 17:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1674668301;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HUhfx3lBpiPRer8MpFBJ2H0SifUezJBKZf5dRAoNDpg=;
-	b=I8bYlfCmDkOjXbAoei4peULwuaXbGvA9JgPBa6Iz3OvVrII8V2WyTI/n3hy9xap16Dqn9T
-	GHk9bkr3BJJOe489BK4nDU8FPnRZn7f0IrY83r1X36Fn6UYMWM71inal28hfR+TiNtB7mD
-	bVb9xTqJGP8KfyIncWOL7qf1RzmrUr8=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-160-BmzcB4tpNfewzwvrVdzN-g-1; Wed, 25 Jan 2023 12:38:20 -0500
-X-MC-Unique: BmzcB4tpNfewzwvrVdzN-g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5D5952804832
-	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 17:38:20 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.60])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E16012026D4B
-	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 17:38:19 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: do not propagate fallback subflow status on error
-Date: Wed, 25 Jan 2023 18:38:16 +0100
-Message-Id: <97f7deb4132d567132088d43f3e7f5ff0602a45b.1674668294.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0996FA1
+	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 17:47:35 +0000 (UTC)
+Received: by mail-wr1-f47.google.com with SMTP id bk16so17850784wrb.11
+        for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 09:47:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CVnrDA+GX4AD5Ev/0IDJ8QHD448gFwb+yD0b07Iwi7I=;
+        b=6XfSNlooP4+/yGFIiR/0R9hAYli+sL1Wwg0l8yJIVM5nymWfFDwgTC+rKVMKJglaxy
+         apL4gp1s4iYAXew/YUDtToWM+W3ZgZZrSpG8wGs90Mqdl1cVNVE6GrprpclKSYgNgrN+
+         b1JvjTAWjw8wIj0c8a7VtgTXtqlLibaAJMjZC7RdCkoTlYv1ZYJY4q+LtHJFJ5Dpd7yG
+         qP8kh48dqEIaoXHcM/v8/h0uNSH72+5c6LqLHPNL5RX426qO/a3RiJuaIUe6oQO7Tlbw
+         nf91E2ObwxcV70TXr3I2sBJBKD1q6kv/e7SVlNCDSVV7JrwO8bRCABS2zW5ZiKT/4i30
+         44kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CVnrDA+GX4AD5Ev/0IDJ8QHD448gFwb+yD0b07Iwi7I=;
+        b=aJ/CKoOVrlew92N5r6aKS31e7KzEzpawXyFm4KrwusDSrDi7G3zM2lj2rMgsPNuHLt
+         OVeu/mg7o71CCMND4ny8Noi5aV8abLoae+Hkdyhdjke+RWIKnOpK1jEp+yXTXOzAcz36
+         tjCc48iHv7vpzv00Eudcxy9oufksQRKsJ1/swelCZTU7+8GYps/NS/m2ANvBdQzOm0jc
+         +kxsxKCp+JibPJuYNLrdz3jZ0stpqcv+4gUMhZUOschvK1LfydweNJSIcqLMRs50NwgW
+         mCY3wfFXWtdIvHF48oTkAU2nz1NPZYboe+ApdmDiWngdlvB2HuoRMrIS5jQMdsKgaN+D
+         U7jw==
+X-Gm-Message-State: AO0yUKUp/mPp8NG3oWeq14D6HDzdVfCElirYxLww6tXAwwVDkgVJDmdC
+	z6OqdcvtAkYkJoDMHm5ZLi/GiYzfyGbC3aU5qxI=
+X-Google-Smtp-Source: AK7set9f4taZfFIsT/9gpppxyBVQtcGuVhJ8fFpTJ3jK3yBJ/GOY/ac61JhBDVhMo6wHJJnXiHMjiA==
+X-Received: by 2002:a05:6000:1281:b0:2bf:ae19:d8e4 with SMTP id f1-20020a056000128100b002bfae19d8e4mr6651098wrx.16.1674668853336;
+        Wed, 25 Jan 2023 09:47:33 -0800 (PST)
+Received: from [192.168.3.222] (213.211.137.183.static.edpnet.net. [213.211.137.183])
+        by smtp.gmail.com with ESMTPSA id a2-20020a056000100200b002be50604c81sm4989546wrx.47.2023.01.25.09.47.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jan 2023 09:47:31 -0800 (PST)
+Message-ID: <7abea9a1-9f31-7a52-41df-c6199671c4ec@tessares.net>
+Date: Wed, 25 Jan 2023 18:47:30 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH mptcp-next v2 11/13] mptcp: refactor mptcp_stream_accept()
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1673940640.git.pabeni@redhat.com>
+ <afe5ec8c5d1e4b7c72839c9ed9c153c18ff97935.1673940640.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <afe5ec8c5d1e4b7c72839c9ed9c153c18ff97935.1673940640.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Currently the subflow error report callback unconditionally
-propagates the fallback subflow status to the owning msk.
+Hi Paolo,
 
-That is not needed as there is a great deal of infrastructure
-trying to propagate correctly the fallback subflow status to
-the owning mptcp socket, e.g. via mptcp_subflow_eof() and
-subflow_sched_work_if_closed().
+On 17/01/2023 08:36, Paolo Abeni wrote:
+> Rewrite the mptcp socket accept op, partially open-codying
+> inet_accept(), instead of indirectly calling it.
+>
+> This way we can avoid acquiring the new socket lock twice
+> and we can avoid a couple of indirect calls.
 
-And in some circumstances - specifically if the msk is already
-orphaned - it prevents the code from correctly tracking the msk
-moving to the TCP_CLOSE state and doing the appropriate
-cleanup.
+Maybe a stupid idea but could we eventually split inet_accept() to have
+a __inet_accept() version with what has to be done while holding the
+lock and reusable in MPTCP?
 
-All the above causes increasing memory usage over time and
-sporadic self-tests failures.
+From MPTCP, we would not need to duplicate the code but call
+__inet_accept() (no more indirection) and be ready for Zero Copy stuff
+or other modifications of __inet_accept() later if needed.
 
-Address the issue simply removing the unneeded state update.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/339
-Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/subflow.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index beaec843f5ca..5f952d0e06d4 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1410,7 +1410,6 @@ void __mptcp_error_report(struct sock *sk)
- 		if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(msk))
- 			continue;
- 
--		inet_sk_state_store(sk, inet_sk_state_load(ssk));
- 		sk->sk_err = -err;
- 
- 		/* This barrier is coupled with smp_rmb() in mptcp_poll() */
+Cheers,
+Matt
 -- 
-2.39.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
