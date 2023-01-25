@@ -1,46 +1,47 @@
 Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41BB1C33
-	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 10:48:06 +0000 (UTC)
-Received: by mail-wm1-f42.google.com with SMTP id k16so13414652wms.2
-        for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 02:48:06 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B470B1C29
+	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 10:48:07 +0000 (UTC)
+Received: by mail-wm1-f42.google.com with SMTP id l8so13412841wms.3
+        for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 02:48:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YQermjS6R/5XAyAu5/q5M18B1G6CnrMggCM48+JT+NI=;
-        b=ggZDxTUWMIwQvaTBH2CZcOfeTvRCdWuADNjhZcfFap1M949alWd3/4b9fWRaM9tH1K
-         ghQ/wiXkjQKkZaq/i1aeftBsmFznh7bBBzvn+MJ8sNwonGzt48c19jki/2guEt7Zl/25
-         /stBVVIg8ei84QtoHPZs9xXShdyrNwFf96apttX9xHyDpE1apgQSfRrT/bTYd0/fHx70
-         uRvdUVvZwUrm+ZDVVB4ZzyRDka387efi+CFChL0oUzjjES2yU6fb51fbF4WLNjSJGnvh
-         eNKEo5+ik/vQSQlj6mKcYkUlDj8Trdbd1cfUiqolXdu00896na0LxaRi7PjgMYFHKRKm
-         zjCA==
+        bh=lFeFjlVyq7czxhjI1VZOkS1166vM8kNK7PFQZae9ZFw=;
+        b=0iKPrMjvnojdKykTl3Y1/BU4/slXFwnpzJfWxjP/I6zsxmz+F29haKh3nobyfuI3IW
+         bqjYJVtT+5ztCCfSntHJQ5SJx03uRFH5pXXIq22DgpzpQa1eLr9i07J+Y7LiEyCkNKm6
+         NThUMF6I1qgnneftd36p7AXonkFZ4fjDx2Cf0GIecMi1hMTV3YBQ5uJ4PB7HlvaiSi1/
+         oRBrCGHNDowu8v/piALnxn7JEwYsqZAhjMoxbUauoLUMyiZadI3OJ+BMojvSf0L5s5uK
+         XQk/E7ICtR3IbxMTP2hu/t721fxMCZ8AQF50hOY1pH5CCOtPnvfkkO4/LRJ3YqSxranL
+         dpUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YQermjS6R/5XAyAu5/q5M18B1G6CnrMggCM48+JT+NI=;
-        b=sRiZ5Bx8bSkMf1nHa3Q5x+tg7VJzzlGBFh4rUrhrHmWthsjMNspBJb9JrIpNKd5q9h
-         oRP5Is4zBUqYbpwZcgdJ/F496aXA0qypdFHJc3YLsTsvUWCQzHtq8kaJPa/cvFPsSUXF
-         TbcI4t0//Ct4htX7gzpH9fMM37GmPmvxEjSIsmgWxz2TKey3w04xq2LqSYc43HaRv6Z0
-         605X/n0vbKBo8gH0DnWmGP57B4XpB8YE50Y1F7CMie6s1Xl8WDsQpsJtXqCKqsKWA587
-         qkMpEwLXda6DZiNgFuXYY2qna4DrN+o2I1PoEcqX1AuBdpPpScTMZBzGmIev56pAucXN
-         eRHQ==
-X-Gm-Message-State: AFqh2kr50REwkewWXmMK6dy/aaI6eaAnqfAcuAup1tt5flGDA+pbBDRn
-	P3CrpSwwZwBeNTxKnLgYOnELfg==
-X-Google-Smtp-Source: AMrXdXuui7o5XomraQFAlr7lyLVPyS9M6wBZA7G6RnRCu1XS4gQi7YwZWKtbpcdx771dtX7zXn5UIA==
-X-Received: by 2002:a1c:6a10:0:b0:3da:f665:5b66 with SMTP id f16-20020a1c6a10000000b003daf6655b66mr31652426wmc.6.1674643684973;
-        Wed, 25 Jan 2023 02:48:04 -0800 (PST)
+        bh=lFeFjlVyq7czxhjI1VZOkS1166vM8kNK7PFQZae9ZFw=;
+        b=BR3QfMUG5jsg6v1YMvyZdWVRKkebLFIkkhvkAxyC4LQGSxpOIy2ERUvlDWI/3Z7I26
+         7KiSRnd9+hT9aehkD6xBOT6Hqlcpw8Lz5VuKsymYO8czOW6vnSZ0EVuD6j8gNxTXGtW9
+         e+cu6IXceb2zBzytZdxhKYiIf6OQl8ToiDPZoTEM9LgbSs4tDomI024WolSKOkqsJtpM
+         dnMA42JDI/bYk/tB0Pd9uxP/apcxzqw/yFWIqwYENg36am55ymXVQuCsfwBFXoKdnAjB
+         uDgVCfC8bepPioTamhSzfw+Pk5+0F3ezYioh8aBSyS5T16kl+s912L96x522SgeQdbSd
+         wNZg==
+X-Gm-Message-State: AFqh2kr7b0Y3WOfQ+EZ/Gb1NwhxDRmQSrMheHgtnoY+ao4kq3uQRWklU
+	MIWqU6lWC1Ig2KCSdIhBWSIU1Q==
+X-Google-Smtp-Source: AMrXdXvptRbQHSP6hhhCBCs0bBJe/vPxgaB1q3PVPjyhxjrcTt5/sIY7sxrQUXPnGUYSw/uRN2tP3A==
+X-Received: by 2002:a05:600c:5390:b0:3d9:a145:4d1a with SMTP id hg16-20020a05600c539000b003d9a1454d1amr28227018wmb.34.1674643685887;
+        Wed, 25 Jan 2023 02:48:05 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id r1-20020a05600c424100b003d9a86a13bfsm1423692wmm.28.2023.01.25.02.48.04
+        by smtp.gmail.com with ESMTPSA id r1-20020a05600c424100b003d9a86a13bfsm1423692wmm.28.2023.01.25.02.48.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jan 2023 02:48:04 -0800 (PST)
+        Wed, 25 Jan 2023 02:48:05 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Wed, 25 Jan 2023 11:47:26 +0100
-Subject: [PATCH net-next 6/8] selftests: mptcp: userspace: refactor asserts
+Date: Wed, 25 Jan 2023 11:47:27 +0100
+Subject: [PATCH net-next 7/8] selftests: mptcp: userspace: print error
+ details if any
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230123-upstream-net-next-pm-v4-v6-v1-6-43fac502bfbf@tessares.net>
+Message-Id: <20230123-upstream-net-next-pm-v4-v6-v1-7-43fac502bfbf@tessares.net>
 References: <20230123-upstream-net-next-pm-v4-v6-v1-0-43fac502bfbf@tessares.net>
 In-Reply-To: <20230123-upstream-net-next-pm-v4-v6-v1-0-43fac502bfbf@tessares.net>
 To: Mat Martineau <mathew.j.martineau@linux.intel.com>, 
@@ -60,146 +61,130 @@ To: Mat Martineau <mathew.j.martineau@linux.intel.com>,
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
  linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3530;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3263;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=m1DWBx6mmyT/LHJ7/zf16MtXVb6plkJtMvBgtaF7t54=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj0Qjd5OjtyhttPPtPx2kgV8v1cOHuklyXsgPTPqaO
- kigK4kWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY9EI3QAKCRD2t4JPQmmgc7nHD/
- 49UjDr+Utp/YdqroKfnfrSFLdVtSuMSge9A7+yIwV+68DIPDNtUQU/I6i5q1+OBPjJWrDcN/Acxnt8
- e1E8IMVlIZi0uGk/YeJ+h+HXPLfjFCU0zEKBRe0pank5fJ3aAo+YWVoFf9faGJY8/OM8QxjLmpaFa5
- 2aD/M8K9itFbM+xvYpCrwZvsTnt8x7E1ybRFhVw7l9chsz5KPL7jAmtbVmxgLC/5GidpnKGDhbCxDY
- w6b73VjH6fZYE0GBXl+8DMvJ8dMlz4UciuitK3Y4J564eVqCoMGZEDB0ZUSZ+ZX+V+m+AYl58TMS4N
- hZ8WeT05bvrS4KZe+WVlY70VnhgdkOWUGy8zfEILGZa3MZIgP0kHnWah7k8mR0JMB8GieqG03bv49d
- +wCH/o6oHY7ynAS+YU0EQknUBGvClWrn24znxEaDn+iEnTKBiToJ9fKt8YgRtsIzsL2SmmnHU/Bljs
- OUTWMrny1oYS/QugaFp+45h+BtbXvWrrCE28T2m/yj/F7+EadqZU+zmO0USriKT5CocAax3poLy8Dt
- wSDjmw0FQvQ5I2C/LEVjsumQ2BFeUafewPL8qNjmWkZV3KDw6IBdA8MyahWahWH8d6LIhNaF1qh6wv
- xlmLHW451210sfawI+uU29kOSGaT9kT12S9ATD+F+Gf17AQ4NpnUAtPbyr5g==
+ bh=XsnNPL7z5dm5JxMwwYbNAIpkerjh8rYMC069ugPLZRg=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj0QjdsdzWwXQUyHiKXSu4ihI82o0WJpcgSCoHmMK1
+ TvyVCcCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY9EI3QAKCRD2t4JPQmmgc6gPEA
+ CMqwG7nLxieLA3rVdb76ZtJbgSbkOBnNKeFZCBy+C+1vwjyq8I9ZE9IxbcI1U4udabCNQFs9/k/K1k
+ FJ+70fvbjcD3nF8+lNvlo5RPnO/lcGNePYs/IhrkvXEPtdlAeQZhS0Igj1ImL6fSoMKFJG+22UExot
+ zUWug7JQlV7DFzJi09ZGJVaM2e9AoMMUucEJ2deTa7/+rXzxK0ChVf0q4PLzZwZEUJbNwAMLdk9boM
+ dM/YiempXCSjy3Pfvt3nYJgXkVpUweoEatxVmV3L5QnI9WZCwbw6ctDJZ5qM5WrDrbPClmP6+I8hpu
+ pkABtE85NQkphA23jxYZCQmX+M82xcfQbueyTyAvrs8x3hS4tFrX8mkfWHmn7zYdvjtShDNqmvaFhW
+ +oXDlNB3uA+Qu8kgQO7kPCJAwgLqNXFukdk4zOlSoxCNZiwKQL7R2W4AF4ukYcYEgr8vkc3zyvYqN3
+ 07DIPkX2JIl1aDRQ+3L/kS0SXoerW8AdnqSQTwOEKPprQb2jytyGNiXgq48izc4EKMDcW09OYBpQp+
+ 8LFqzkTUoc31Bl+oO9w4/UxTAsi7iJ28IMhjtiYCXcSQ6rA9qorzoycBaQ8xW0FRISWiBTpOnm84de
+ cg9MTYafJrq+JNNeVCWgxbMYRK9/1GjEOV+abhHHCI2vSgLYGcT03PB8XgMw==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Instead of having a long list of conditions to check, it is possible to
-give a list of variable names to compare with their 'e_XXX' version.
+Before, only '[FAIL]' was printed in case of error during the validation
+phase.
 
-This will ease the introduction of the following commit which will print
-which condition has failed (if any).
+Now, in case of failure, the variable name, its value and expected one
+are displayed to help understand what was wrong.
 
 Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 72 +++++++++++------------
- 1 file changed, 36 insertions(+), 36 deletions(-)
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 33 +++++++++++++++++------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 7b06d9d0aa46..2f2a85a212b0 100755
+index 2f2a85a212b0..259382ad552c 100755
 --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
 +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -225,6 +225,36 @@ make_connection()
+@@ -201,11 +201,16 @@ make_connection()
+ 	server_serverside=$(grep "type:1," "$server_evts" |
+ 			    sed --unbuffered -n 's/.*\(server_side:\)\([[:digit:]]*\).*$/\2/p;q')
+ 
++	stdbuf -o0 -e0 printf "Established IP%s MPTCP Connection ns2 => ns1    \t\t" $is_v6
+ 	if [ "$client_token" != "" ] && [ "$server_token" != "" ] && [ "$client_serverside" = 0 ] &&
+ 		   [ "$server_serverside" = 1 ]
+ 	then
+-		stdbuf -o0 -e0 printf "Established IP%s MPTCP Connection ns2 => ns1    \t\t[OK]\n" $is_v6
++		stdbuf -o0 -e0 printf "[OK]\n"
+ 	else
++		stdbuf -o0 -e0 printf "[FAIL]\n"
++		stdbuf -o0 -e0 printf "\tExpected tokens (c:%s - s:%s) and server (c:%d - s:%d)\n" \
++			"${client_token}" "${server_token}" \
++			"${client_serverside}" "${server_serverside}"
+ 		exit 1
+ 	fi
+ 
+@@ -225,13 +230,26 @@ make_connection()
  	fi
  }
  
-+# $1: var name
-+check_expected_one()
-+{
-+	local var="${1}"
-+	local exp="e_${var}"
-+
-+	[ "${!var}" = "${!exp}" ]
-+}
-+
-+# $@: all var names to check
-+check_expected()
-+{
-+	local ret=0
-+	local var
-+
-+	for var in "${@}"
-+	do
-+		check_expected_one "${var}" || ret=1
-+	done
-+
-+	if [ ${ret} -eq 0 ]
+-# $1: var name
++# $1: var name ; $2: prev ret
+ check_expected_one()
+ {
+ 	local var="${1}"
+ 	local exp="e_${var}"
++	local prev_ret="${2}"
+ 
+-	[ "${!var}" = "${!exp}" ]
++	if [ "${!var}" = "${!exp}" ]
 +	then
-+		stdbuf -o0 -e0 printf "[OK]\n"
 +		return 0
 +	fi
 +
-+	stdbuf -o0 -e0 printf "[FAIL]\n"
-+	exit 1
-+}
++	if [ "${prev_ret}" = "0" ]
++	then
++		stdbuf -o0 -e0 printf "[FAIL]\n"
++	fi
 +
- verify_announce_event()
- {
- 	local evt=$1
-@@ -250,15 +280,8 @@ verify_announce_event()
- 	fi
- 	dport=$(sed --unbuffered -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
- 	id=$(sed --unbuffered -n 's/.*\(rem_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	if [ "$type" = "$e_type" ] && [ "$token" = "$e_token" ] &&
--		   [ "$addr" = "$e_addr" ] && [ "$dport" = "$e_dport" ] &&
--		   [ "$id" = "$e_id" ]
--	then
--		stdbuf -o0 -e0 printf "[OK]\n"
--		return 0
--	fi
--	stdbuf -o0 -e0 printf "[FAIL]\n"
--	exit 1
-+
-+	check_expected "type" "token" "addr" "dport" "id"
++	stdbuf -o0 -e0 printf "\tExpected value for '%s': '%s', got '%s'.\n" \
++		"${var}" "${!var}" "${!exp}"
++	return 1
  }
  
- test_announce()
-@@ -357,14 +380,8 @@ verify_remove_event()
- 	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
- 	token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
- 	id=$(sed --unbuffered -n 's/.*\(rem_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	if [ "$type" = "$e_type" ] && [ "$token" = "$e_token" ] &&
--		   [ "$id" = "$e_id" ]
--	then
--		stdbuf -o0 -e0 printf "[OK]\n"
--		return 0
--	fi
--	stdbuf -o0 -e0 printf "[FAIL]\n"
--	exit 1
-+
-+	check_expected "type" "token" "id"
- }
+ # $@: all var names to check
+@@ -242,7 +260,7 @@ check_expected()
  
- test_remove()
-@@ -519,16 +536,7 @@ verify_subflow_events()
- 		daddr=$(sed --unbuffered -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evt")
+ 	for var in "${@}"
+ 	do
+-		check_expected_one "${var}" || ret=1
++		check_expected_one "${var}" "${ret}" || ret=1
+ 	done
+ 
+ 	if [ ${ret} -eq 0 ]
+@@ -251,7 +269,6 @@ check_expected()
+ 		return 0
  	fi
  
--	if [ "$type" = "$e_type" ] && [ "$token" = "$e_token" ] &&
--		   [ "$daddr" = "$e_daddr" ] && [ "$e_dport" = "$dport" ] &&
--		   [ "$family" = "$e_family" ] && [ "$saddr" = "$e_saddr" ] &&
--		   [ "$e_locid" = "$locid" ] && [ "$e_remid" = "$remid" ]
--	then
--		stdbuf -o0 -e0 printf "[OK]\n"
--		return 0
--	fi
 -	stdbuf -o0 -e0 printf "[FAIL]\n"
--	exit 1
-+	check_expected "type" "token" "daddr" "dport" "family" "saddr" "locid" "remid"
+ 	exit 1
  }
  
- test_subflows()
-@@ -881,15 +889,7 @@ verify_listener_events()
- 			sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
+@@ -303,7 +320,7 @@ test_announce()
+ 	then
+ 		stdbuf -o0 -e0 printf "[OK]\n"
+ 	else
+-		stdbuf -o0 -e0 printf "[FAIL]\n"
++		stdbuf -o0 -e0 printf "[FAIL]\n\ttype defined: %s\n" "${type}"
+ 		exit 1
  	fi
  
--	if [ $type ] && [ $type = $e_type ] &&
--	   [ $family ] && [ $family = $e_family ] &&
--	   [ $saddr ] && [ $saddr = $e_saddr ] &&
--	   [ $sport ] && [ $sport = $e_sport ]; then
--		stdbuf -o0 -e0 printf "[OK]\n"
--		return 0
--	fi
--	stdbuf -o0 -e0 printf "[FAIL]\n"
--	exit 1
-+	check_expected "type" "family" "saddr" "sport"
- }
- 
- test_listener()
+@@ -837,7 +854,7 @@ test_prio()
+ 	count=$(ip netns exec "$ns2" nstat -as | grep MPTcpExtMPPrioTx | awk '{print $2}')
+ 	[ -z "$count" ] && count=0
+ 	if [ $count != 1 ]; then
+-		stdbuf -o0 -e0 printf "[FAIL]\n"
++		stdbuf -o0 -e0 printf "[FAIL]\n\tCount != 1: %d\n" "${count}"
+ 		exit 1
+ 	else
+ 		stdbuf -o0 -e0 printf "[OK]\n"
+@@ -848,7 +865,7 @@ test_prio()
+ 	count=$(ip netns exec "$ns1" nstat -as | grep MPTcpExtMPPrioRx | awk '{print $2}')
+ 	[ -z "$count" ] && count=0
+ 	if [ $count != 1 ]; then
+-		stdbuf -o0 -e0 printf "[FAIL]\n"
++		stdbuf -o0 -e0 printf "[FAIL]\n\tCount != 1: %d\n" "${count}"
+ 		exit 1
+ 	else
+ 		stdbuf -o0 -e0 printf "[OK]\n"
 
 -- 
 2.38.1
