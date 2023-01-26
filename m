@@ -1,35 +1,38 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95E4538D
-	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 21:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C602F5392
+	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 21:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1674767141;
+	s=mimecast20190719; t=1674767142;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0bDNNpZDGFK1PJ4vFf3r8tcE2rUFlRCn3vBPQrZtKqA=;
-	b=ikZWd6zX1hLszSqHCU6sbFHC3NWmP9SmvRfoFrW6qvpGr4d+UgBOepEGPxt5HuZ6bCWTXb
-	KzIKzh9mieyEwjsRL8em/3vBZHnVx3t0QvQVzjjeImUFitvYYjk+sbA8E2Xxv0EEgFAUDN
-	CdBQrJs6MxL3sn31NRuOE9XXEl2Z0mc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8Q00Z4Trst2e3TeHPJUTeBUPj/W8TtHliQ41m22Xlsc=;
+	b=SprOmql9TsdbZa6usgX7WFchKD00RXnqacAclGvLrURAVrjJ4maFcE/KX1FjSBPj21hSE2
+	2Doylkf1cBs5egpdek3VbOoa9xT2tWqKopUsnAda0E3K6dJEW0ch30HenyH7o0oWZ/Mcgt
+	+r0stFVdYq2B3lZmIF4Adokjy2Ov9Zk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-595-LJqvRnwuPrixBwHMytHAJg-1; Thu, 26 Jan 2023 16:05:39 -0500
-X-MC-Unique: LJqvRnwuPrixBwHMytHAJg-1
+ us-mta-288-Kq6LH1dKMCW0QE7nZkJ2KA-1; Thu, 26 Jan 2023 16:05:41 -0500
+X-MC-Unique: Kq6LH1dKMCW0QE7nZkJ2KA-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 90AC31C05ACD
-	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 21:05:39 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0BEA2857A86
+	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 21:05:41 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.60])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 261DE492C14
-	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 21:05:39 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 94672492C18
+	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 21:05:40 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v3 mptcp-next 00/15] mptcp: refactor first subflow init
-Date: Thu, 26 Jan 2023 22:05:05 +0100
-Message-Id: <cover.1674767058.git.pabeni@redhat.com>
+Subject: [PATCH v3 mptcp-next 02/15] mptcp: fix locking for setsockopt corner-case
+Date: Thu, 26 Jan 2023 22:05:07 +0100
+Message-Id: <0d9c9eb3fac78843df8c62e287e9e2a11fabfcdc.1674767058.git.pabeni@redhat.com>
+In-Reply-To: <cover.1674767058.git.pabeni@redhat.com>
+References: <cover.1674767058.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,51 +45,48 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-This is the needed refactor for the selinux fixes, as discussed on
-the ML.
+We need to call the __mptcp_nmpc_socket(), and later subflow socket
+access under the msk socket lock, or e.g. a racing connect() could
+change the socket status under the wood, with unexpected results.
 
-Compared to v2 this revision introduces 2 additional patches:
-1/15, just another cleanup found while addressing the recent bugs
-12/15 factoring out a __inet_listener() helper, as suggested by Mat.
+Fixes: 54635bd04701 ("mptcp: add TCP_FASTOPEN_CONNECT socket option")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+this and the next patch are new v2. In both case the addressed issue
+is almost irrelevant until patch 8/12, but will cause lockdep splat
+after such change
+---
+ net/mptcp/sockopt.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-The only other patches with some change is 9/15, adding more
-comments and consistently reporting the newly introduced error code
-(a bit different from what discussed on the ML, for consistency's sake).
-
-Paolo Abeni (15):
-  mptcp: use mptcp_schedule_work() instead of open-codying it
-  mptcp: fix locking for setsockopt corner-case
-  mptcp: fix locking for in-kernel listener creation.
-  mptcp: refactor passive socket initialization.
-  mptcp: drop unneeded argument
-  mptcp: drop legacy code.
-  mptcp: avoid unneeded __mptcp_nmpc_socket() usage
-  mptcp: move fastopen subflow check inside mptcp_sendmsg_fastopen()
-  mptcp: move first subflow allocation at mpc access time
-  mptcp: do not keep around the first subflow after disconnect.
-  mptcp: fastclose msk when cleaning unaccepted sockets
-  inet: factor out locked section of inet_accept() in a new helper
-  mptcp: refactor mptcp_stream_accept()
-  security, lsm: Introduce security_mptcp_add_subflow()
-  selinux: Implement mptcp_add_subflow hook
-
- include/linux/lsm_hook_defs.h |   1 +
- include/linux/lsm_hooks.h     |   9 ++
- include/linux/security.h      |   6 ++
- include/net/inet_common.h     |   2 +
- net/ipv4/af_inet.c            |  32 +++----
- net/mptcp/options.c           |   9 +-
- net/mptcp/pm.c                |   4 +-
- net/mptcp/pm_netlink.c        |  14 +--
- net/mptcp/protocol.c          | 158 +++++++++++++++++-----------------
- net/mptcp/protocol.h          |   4 +-
- net/mptcp/sockopt.c           |  31 ++++---
- net/mptcp/subflow.c           |  57 +++++++-----
- security/security.c           |   5 ++
- security/selinux/hooks.c      |  16 ++++
- security/selinux/netlabel.c   |   8 +-
- 15 files changed, 215 insertions(+), 141 deletions(-)
-
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 9986681aaf40..8a9656248b0f 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -760,14 +760,21 @@ static int mptcp_setsockopt_v4(struct mptcp_sock *msk, int optname,
+ static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int optname,
+ 					  sockptr_t optval, unsigned int optlen)
+ {
++	struct sock *sk = (struct sock *)msk;
+ 	struct socket *sock;
++	int ret = -EINVAL;
+ 
+ 	/* Limit to first subflow, before the connection establishment */
++	lock_sock(sk);
+ 	sock = __mptcp_nmpc_socket(msk);
+ 	if (!sock)
+-		return -EINVAL;
++		goto unlock;
+ 
+-	return tcp_setsockopt(sock->sk, level, optname, optval, optlen);
++	ret = tcp_setsockopt(sock->sk, level, optname, optval, optlen);
++
++unlock:
++	release_sock(sk);
++	return ret;
+ }
+ 
+ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
 -- 
 2.39.1
 
