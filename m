@@ -1,127 +1,104 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC8E2904
-	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 16:38:04 +0000 (UTC)
-Received: by mail-qt1-f175.google.com with SMTP id o5so1688023qtr.11
-        for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 08:38:04 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5888846BF
+	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 17:22:14 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id q10so2501914wrm.4
+        for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 09:22:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=msI70apKkKFoq8oOSJlkTPvFPr7YSGzlvwUtb5u0dJU=;
-        b=KGpPpm5X+UN6ntUFTjpLMx9Tcs9R+MOrZxG50Ee1o/KFEKJCj7U9azVNwyB0L/YsUn
-         oJfX1dp6W8xOeTvG7nn+YNgC3JptpYJpvzMoer60jZu8zVyTPGj1oPnn2C96CysciKsJ
-         wUox+RB5xCJXiP/ODu7+wz6KxmyL3pPwbMg1uhbqwrFUTDVFSzqhO/s2iThTKxlzCHaP
-         dAmj5S8+XMjHpmM768i9a6ywkLOhSBnjEUjb8BzUyMELv764zbg9NBYGV3jf4SbCwBjL
-         gvcDAK3GDW/7A6NoAbJBeF6RVOYge7bBZHX4Xbv45dLDm6POszhMoiRoDj5nOJlNZQSf
-         vVUg==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=11J/7ZZmGDY2hRDr4lbnYul1IBDnou6zNVlIkTiz+d4=;
+        b=6I2jG5jJgx062nV69nGIHczA9IuXdbmyhtkylAbtor1tafT625Pd0yvawTOpHGoQLw
+         49Kw8ATqMXbbVTDIVfufkqau45dsiTiTBkHEjDgB2YJJDKTMdQnzVfJ56MPZQ89Kol+N
+         LqmohfHxdmHOJtDGZ8qKX8qPqeCx/qXGQSp8hqSe8pBNLKpPKs2Ma0S/SnAMEVuXG4l7
+         Cv4an6bAtRGoL5SQzvOxsA4kIW5hj/5fBZY3vtLW0upyl7O++JclZnVPLy6vplv8R7Y9
+         IRdXsdNI8aULjO7Vr79PQnFJ2OIEsTpl+FYLBTCvKh0VtHuOEfWMJmlTiJCVuYIn7xq3
+         nBlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=msI70apKkKFoq8oOSJlkTPvFPr7YSGzlvwUtb5u0dJU=;
-        b=XiGLvWJmcXn+lC9i68Bg3FQUi7ku51d8Pc4kyyIOz4XHf88Mxo7VKMzgSOrD+A8f/N
-         u+6vo/9GFvql3zRtTdhgPSmPRK6i9GBYBEotL117a1+DmTnWSSE85nlv4KHWSYBlSI0r
-         bbsII48yR4L27GGjXcmB1jgkRTCGzWRtr+UFYw8oqOCFoKmrlDPZyvCkBeTPPoONPBlF
-         SP3Z8tzVdRU1Z52eCjxQt4dClQdH+a2C6uZxm8tU5ZHs7FLxc1uOivy8Wk6TfeaIv4bZ
-         yfmRhGDa3zfefvI2tAF7bxRlBdavG9sR+X2ZbEsAUCR5brrmzZRqOWAa+y1zLpxkRphh
-         JT5g==
-X-Gm-Message-State: AO0yUKWO4d/oTmp/RvbX1ZhC4lsGcHHvWpjhc07CzulQI3kxg7rRWnkG
-	AWLEFqp1DxwU6h0KGB3/mfuGsopFWfQoePI=
-X-Google-Smtp-Source: AK7set+EBNLN3D/X5bALPY3sQrUMusZBM8/pLVyNacXgGDIaCLIPoRCDKBevMTT8NshKAk1WgldmfA==
-X-Received: by 2002:a05:622a:355:b0:3a8:2d6:521e with SMTP id r21-20020a05622a035500b003a802d6521emr11851540qtw.37.1674751083249;
-        Thu, 26 Jan 2023 08:38:03 -0800 (PST)
-Received: from [127.0.0.1] ([104.45.204.163])
-        by smtp.gmail.com with ESMTPSA id ej4-20020a05622a4f8400b003b2ea9b76d0sm997956qtb.34.2023.01.26.08.38.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 08:38:02 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1f0aa2feba9240d202a087e60013c6ff8039897c.1674747837.git.pabeni@redhat.com>
-References:
- <1f0aa2feba9240d202a087e60013c6ff8039897c.1674747837.git.pabeni@redhat.com>
-Subject: Re: mptcp: do not wait for bare sockets' timeout: Tests Results
-Message-ID: <a5d933ba-7ff9-cb61-7c8a-4ee83c6a0378@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 26 Jan 2023 16:38:02 +0000
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=11J/7ZZmGDY2hRDr4lbnYul1IBDnou6zNVlIkTiz+d4=;
+        b=ql69LmElbZ/9+4Cp7UcJYQL4tt6bI8KMSifG7uYeIrpmGldIqSyB+1XsYXHKamJNE6
+         347sCfbAgrAoedMJVpcItNudpfAZU3UQ416ySJ7nNz+mdUK1KPa3kmlZNffJ4s9k/b2R
+         pOXic87y+EPYCVKD7sHiaKcpiqo1DjwwPpr//kH+3q2uBVRLcrIQ2yUhcRDoWl7ixOZl
+         UOVp7rKi9mjpbiI3CekQYLai26mNwEns8qB7uzLwTZf71zK/ftANwdVCBMb/FgFrCzsh
+         4qXXXmtaN5C7lH2vzOBU4vaqeFXkn+qpKbKiKWIGILymEMdCILkiXTL8TU308bLW/1ox
+         daHg==
+X-Gm-Message-State: AO0yUKVQaJjYHrtXt/QbR5W9HVFi6We6L4SdPAXRrEhopCR9DIRAcp2C
+	R6SCLxtg5dyOiYiVZT9IVx+6MSzrxPIh+JjPl9E=
+X-Google-Smtp-Source: AK7set9DEAfLriWjb2OLhMVkcI0lMnuVduIxtnMMtLnRnw5PONFVpOD36Ek3WlEaFGW648tgev0aNQ==
+X-Received: by 2002:a05:6000:1f8d:b0:2bf:ace0:a19b with SMTP id bw13-20020a0560001f8d00b002bface0a19bmr14966807wrb.45.1674753733167;
+        Thu, 26 Jan 2023 09:22:13 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:9734:4fc3:798b:7157? ([2a02:578:8593:1200:9734:4fc3:798b:7157])
+        by smtp.gmail.com with ESMTPSA id z14-20020a5d4c8e000000b002bfc2d0eff0sm1818759wrs.47.2023.01.26.09.22.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jan 2023 09:22:12 -0800 (PST)
+Message-ID: <c4d0ff16-125f-4bd3-69aa-5034a36a977d@tessares.net>
+Date: Thu, 26 Jan 2023 18:22:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH mptcp-next] mptcp: do not wait for bare sockets' timeout
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <1f0aa2feba9240d202a087e60013c6ff8039897c.1674747837.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <1f0aa2feba9240d202a087e60013c6ff8039897c.1674747837.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-Thank you for your modifications, that's great!
+On 26/01/2023 16:44, Paolo Abeni wrote:
+> If the peer closes all the existing subflows for a given
+> mptcp socket and later the application closes it, the current
+> implementation let it survive until the timewait timeout expires.
 
-Our CI did some validations and here is its report:
+Thank you for having looked at that and provided a solution!
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6644295248117760
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6644295248117760/summary/summary.txt
+> While the above is allowed by the protocol specification it
+> consumes resources for almost no reason and additionally
+> causes sporadic self-tests failures.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4603601666965504
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4603601666965504/summary/summary.txt
+I guess if we are in __mptcp_close(), there is no reason to keep the
+MPTCP socket alive if there is no more subflows: if there are new
+subflows requests coming, they will not be accepted, right?
 
-- {"code":404,"message":
-  - "Can't find artifacts containing file =
-conclusion.txt"}:
-  - Task: https://cirrus-ci.com/task/5166551620386816
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5166551620386816/su=
-mmary/summary.txt
+When the last subflow is closed without MPTCP DATA FIN, it might be good
+to keep the MPTCP socket alive for a bit longer before closing the
+socket to let the client joining from another network
+(make-before-break?). (this should be controllable from the userspace
+but that's another topic)
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_sockopts =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5729501573808128
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5729501573808128/su=
-mmary/summary.txt
+> Let's move the mptcp socket to the TCP_CLOSE state when there are
+> no alive subflows at close time, so that the allocated resources
+> will be freed immediately.
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> --
+> this could land either on -net or net-next, as it introduces
+> a change of behavior that "fixes" self-tests.
+> 
+> The fix tag would be:
+> 
+> Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/bb52e8434e1d
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+If I understand properly, this doesn't break any 'make-before-break'
+feature but it clean resources quicker while there was no reason to
+wait, right? In this case it makes sense to target the -net tree.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
