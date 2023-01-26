@@ -1,125 +1,81 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456A96FB1
-	for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 20:03:50 +0000 (UTC)
-Received: by mail-pl1-f178.google.com with SMTP id jm10so18890134plb.13
-        for <mptcp@lists.linux.dev>; Wed, 25 Jan 2023 12:03:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6dISy9ad1EMs5MUXJ6eH7ODpWt6nwwUWrzo+C9Vtyk4=;
-        b=CttvJmbNXhArnja2kD5OuhK5bUu/SYb5tJFJ8Upp2XXIN6x4phda4Jd17K8jO42WVq
-         GcRhVH5K0/AzmuizGwTW9UtodoCddjlbcQl0WdsM3jmCvH14woO7pzgjyPyPHNOJeuDr
-         XR8QN+QleYhyTNSVHf9EZE2ojMleMc1kb5RrGtkdpxiJ6Zt699ZPK1wMfEo1c2ctGL2x
-         tpzE1H475XgthWLqULx1//fl9zHk5aqhbQbmyUGg+/0Woy+qXxcGOpRLSdlRCbBMQeNv
-         tIx/XroP0xWge2tS7aka1rnMQP0m6kxWJ9JfDIGTApKkhkWYCbE/tVjEA7wZhPg9Lfh8
-         9viQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6dISy9ad1EMs5MUXJ6eH7ODpWt6nwwUWrzo+C9Vtyk4=;
-        b=QjA3Za+VO+Yld/bGB2/3CpGN2DLWyiD9Qg+Ic/GrPrSKd1pwNlztZojRJ6b0GNviLI
-         4V7XfkEsaLtZOhflI5M0SkgqExVnaxH054GtbbzB0YAdCxHQspuUv3qsn81/MSv0pT9L
-         MIU8Sa7Nncosuyrb85SCXKHkxmpvICWBYs0+ly5ncpA4jLvZG9ejUvw60VjdwaJqi38l
-         CqyjY8QxKhL++sydQPRJfV5kFenL4WoixLRYb/Ky78Os45SuODvQ0cgoAHepjiyRJm1m
-         JFYgJ9ErulKSIp+8varZrAbr5xS7uvf2imtD0eTbVX1YQcQAb6Zx4378NARaldSKQS8h
-         FspA==
-X-Gm-Message-State: AFqh2kpcNCzs4yj3D23CZOMmZwY56orI5u+mhM1TqQzmVtLUREI3lel7
-	uk3uwZ5cl1iDw+jwXrQ4rA==
-X-Google-Smtp-Source: AMrXdXsDHZjMg8UR6Ppkw6f5Ri/EIq+DyXEbQGHoNUA4613GXYecwDbErsejtIjEeTOiiFDgHXaL6w==
-X-Received: by 2002:a17:902:e892:b0:194:d2c7:ea46 with SMTP id w18-20020a170902e89200b00194d2c7ea46mr29672223plg.68.1674677029652;
-        Wed, 25 Jan 2023 12:03:49 -0800 (PST)
-Received: from [127.0.0.1] ([138.91.87.51])
-        by smtp.gmail.com with ESMTPSA id p20-20020a170903249400b001949b92f8a8sm3980469plw.279.2023.01.25.12.03.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jan 2023 12:03:49 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <97f7deb4132d567132088d43f3e7f5ff0602a45b.1674668294.git.pabeni@redhat.com>
-References:
- <97f7deb4132d567132088d43f3e7f5ff0602a45b.1674668294.git.pabeni@redhat.com>
-Subject: Re: mptcp: do not propagate fallback subflow status on error:
- Tests Results
-Message-ID: <d007c301-f185-bf39-4002-be1b55073562@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Jan 2023 20:03:48 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078531FA1
+	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 12:50:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A4E87C4339B;
+	Thu, 26 Jan 2023 12:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1674737417;
+	bh=yDz83fE7q/0XQMOijEOYcAWFyQhdt8Jgn/4oZ3kirN0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=nBQBMEDZojeav/XHfb7xQcbOVJ9raYxpGhKotqobgZWFgECjuvTigUdyl+C8vH8Na
+	 XdB1pcboyv488/ttisuYTltw3TDpds4Lq0Vbx/dAEt+r2EZVx3M/ztC9EcuFrni0zv
+	 PJi9HOyV/xosV6a1CydGO8zI9migJrCiecj5j2NVmIAiuRcTEaesEGcEs/dEv3lVQo
+	 CZTDaMgX3lPTtvWFz5TugZYWxzii7BpEPGnhRStqX3AZQMYZ3GAL+1hgQEeV+D7ANH
+	 w+qqIVplPgYFLZoS3PsTIl/S46FUlAbgNlEPicEBFfNm/P0qUJBQrATulj6TO46F+Z
+	 oJmqjv8Xj6E+g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8ADD7F83ED5;
+	Thu, 26 Jan 2023 12:50:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/8] mptcp: add mixed v4/v6 support for the
+ in-kernel PM
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <167473741756.10605.18145706805093327804.git-patchwork-notify@kernel.org>
+Date: Thu, 26 Jan 2023 12:50:17 +0000
+References: <20230123-upstream-net-next-pm-v4-v6-v1-0-43fac502bfbf@tessares.net>
+In-Reply-To: <20230123-upstream-net-next-pm-v4-v6-v1-0-43fac502bfbf@tessares.net>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mathew.j.martineau@linux.intel.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
 
-Hi Paolo,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net-next.git (master)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Our CI did some validations and here is its report:
+On Wed, 25 Jan 2023 11:47:20 +0100 you wrote:
+> Before these patches, the in-kernel Path-Manager would not allow, for
+> the same MPTCP connection, having a mix of subflows in v4 and v6.
+> 
+> MPTCP's RFC 8684 doesn't forbid that and it is even recommended to do so
+> as the path in v4 and v6 are likely different. Some networks are also
+> v4 or v6 only, we cannot assume they all have both v4 and v6 support.
+> 
+> [...]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_syscalls =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4694040256446464
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4694040256446464/su=
-mmary/summary.txt
+Here is the summary with links:
+  - [net-next,1/8] mptcp: let the in-kernel PM use mixed IPv4 and IPv6 addresses
+    https://git.kernel.org/netdev/net-next/c/b9d69db87fb7
+  - [net-next,2/8] mptcp: propagate sk_ipv6only to subflows
+    https://git.kernel.org/netdev/net-next/c/7e9740e0e84e
+  - [net-next,3/8] selftests: mptcp: add test-cases for mixed v4/v6 subflows
+    https://git.kernel.org/netdev/net-next/c/ad3493746ebe
+  - [net-next,4/8] mptcp: userspace pm: use a single point of exit
+    https://git.kernel.org/netdev/net-next/c/40c71f763f87
+  - [net-next,5/8] selftests: mptcp: userspace: print titles
+    https://git.kernel.org/netdev/net-next/c/f790ae03db33
+  - [net-next,6/8] selftests: mptcp: userspace: refactor asserts
+    https://git.kernel.org/netdev/net-next/c/1c0b0ee2640b
+  - [net-next,7/8] selftests: mptcp: userspace: print error details if any
+    https://git.kernel.org/netdev/net-next/c/10d4273411be
+  - [net-next,8/8] selftests: mptcp: userspace: avoid read errors
+    https://git.kernel.org/netdev/net-next/c/8dbdf24f4e9e
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_syscalls =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5256990209867776
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5256990209867776/su=
-mmary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6382890116710400
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6382890116710400/su=
-mmary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5819940163289088
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5819940163289088/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/496b568c3bbe
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
