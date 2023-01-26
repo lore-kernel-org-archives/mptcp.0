@@ -1,45 +1,45 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F3846BF
-	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 18:01:14 +0000 (UTC)
-Received: by mail-wr1-f48.google.com with SMTP id y1so2618949wru.2
-        for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 10:01:14 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BB246A7
+	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 18:19:13 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id e19-20020a05600c439300b003db1cac0c1fso3774416wmn.5
+        for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 10:19:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=P0Ipijf8AmrhL9KNONaCw2+cvlidclyfcQ9aC+01hIo=;
-        b=wwHrYhFUpE942+zRsTHNdwRy+/99yZyXBzmLdo8itsEsEO0jXq0zLlW064BT//stY5
-         dbrxT23P/FU+HRC547aokmEIueIY5G5UttmsaJP8Q4RIKS6lkjzskvkgmYn5rDi4J5Nn
-         +GpbV48YhTpIX1jTyicWCMLP3kGeJxPhTmEE5G6mDA1JzXUfqyM89VEDmoexK4PTLLT0
-         YXyNLr9o9lvYCQhVvObyfqkzfPc/LUR1wwAEzV3KcFNGnnnlr6rLAr28xTbvNIy/cJOW
-         1TQKPtOU1qFtKDN93oARuRnWXDeo7nUhMjwy1YuHs59Ska5470hg1nOOY2BjAKWYkJ3Q
-         hJHA==
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=En7BHDGyaCPA4SMSYvVbZVnvbuFqoHkPNjmd3Ui5juw=;
+        b=lm279Yf1TcnwH0Uh6JKAKZ8B+B5wsq19M9qygyiY/BrpziuALiOEOQOlzvM1XNddXK
+         /5im5IDzgZVjb8C8nZ0u6ZZ/YquGDmk4jFbHileHHIKwKh+OgnCAWqWDS8vEkI0SM1kV
+         92A6bMncZHDjyhtimz5o0V4tBgF/hZcsb4HhwPnV8RnSKq9vo2OJ1Om7mVHHMTBEETIH
+         MBZx2qgtsCiYa70BYiFtbvwNZWqGDFMKm1zSXPo6lAwdgRguwOL2yxcuu6FpZi348BjD
+         N+AxuYWPpKQ5EWlRkqiKUs9wxuyT/s6x/lDHcKJJnjFhgF64dL/vFVB84dBmDhqQvWU+
+         MkBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P0Ipijf8AmrhL9KNONaCw2+cvlidclyfcQ9aC+01hIo=;
-        b=oTsZHz/0CLOojNtRjWyFEbeo0lGPlCt555/4sZIFJVL9ZdcSnkA6WMHMREkX17jtwE
-         zvm8FnCrHxgm+yuY3lGwEWIwFmXoVTMy25n1ejZxnlRYGP5xCoWZbb+4TY9QS0Y/mICx
-         Y10Mm/Wkc/htZ1XfLAJHgYLD4ej7ZqTWc084RB4EkP2BydmuPmXlHUgGeHlLgR8+AwfR
-         gGZXM49o1g7N4/IihoZRnPSFnf42WTrrB+tYwyoNBs5Ka00EI4m6lhed7hnfnxNEORZy
-         jiiUMWDoABEmMwqd1PxmMGvPdEAWLk/evrbLStrP5GE82MB0UVn2X1LgMDT7FMoi5peU
-         AQtg==
-X-Gm-Message-State: AO0yUKWV4cGW/r7xn2VoIp8hQuMkykxIYBhopDRUCn79O+SW31WUV9pz
-	EQOUadOUZPpn63MqHASvsLS7WOxz+pHY92/kQDk=
-X-Google-Smtp-Source: AK7set+lTV/0qIRW/54MlJ30snDOB/bjuqQYmXCWyk6uIaT//NDcOK28w+BUOHifwTKMGJAog7WLVQ==
-X-Received: by 2002:adf:e747:0:b0:2bf:cfc0:7416 with SMTP id c7-20020adfe747000000b002bfcfc07416mr467866wrn.29.1674756071204;
-        Thu, 26 Jan 2023 10:01:11 -0800 (PST)
+        bh=En7BHDGyaCPA4SMSYvVbZVnvbuFqoHkPNjmd3Ui5juw=;
+        b=kocYt8APT1/LcNVhjfw/J3U7LV82yaRSxIzX4AvhgqL6CPP9+mZG+XLiPTpSCxkYCf
+         X6ZYke7c5cHiGs3GFEzGSW6a0VnowOBGd96nY0twIVIgbQk4Q8owFi+/2osaJD1CCqnq
+         IwsxYEdjQLGq/DNY1wtlN5TY7JorGzzn2xCD1+pVCtEMA7xzNOLzwwboUytked8Jt041
+         HoK/Yp5p/Q4byKrBwzzjPixyxn6P4HAKcAeNyn5jDe0057kkFZmEXPkTOtc2CBhzktfd
+         KRAB1pUbMwALzmC0dbNdc0oUJoQJHY2pi57hIImds7H59msIBv8WJY5R9h3PVg95+XJj
+         XriA==
+X-Gm-Message-State: AFqh2krqS15CmxcgkwmCr5p80rTPeXIW/cj8mWe0AK1vNMXquSys6aFk
+	Vwfw2zo0avh0ZppTjK1o2IJGXCtznISuCVgB/L4=
+X-Google-Smtp-Source: AMrXdXv6cdU6J9EQrPay+k24Cnxmss+DM1wubZAZfvucOXFRLhCQBeJxZS9TQpXahPURaFZx8SkIkA==
+X-Received: by 2002:a05:600c:35c1:b0:3db:1424:e781 with SMTP id r1-20020a05600c35c100b003db1424e781mr31094199wmq.23.1674757151741;
+        Thu, 26 Jan 2023 10:19:11 -0800 (PST)
 Received: from ?IPV6:2a02:578:8593:1200:9734:4fc3:798b:7157? ([2a02:578:8593:1200:9734:4fc3:798b:7157])
-        by smtp.gmail.com with ESMTPSA id a13-20020adfeecd000000b002bbedd60a9asm1807863wrp.77.2023.01.26.10.01.10
+        by smtp.gmail.com with ESMTPSA id a18-20020a05600c069200b003db305bece4sm2029296wmn.45.2023.01.26.10.19.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jan 2023 10:01:10 -0800 (PST)
-Message-ID: <88b80d6e-06b3-7768-31fd-29eab8366895@tessares.net>
-Date: Thu, 26 Jan 2023 19:01:10 +0100
+        Thu, 26 Jan 2023 10:19:11 -0800 (PST)
+Message-ID: <ba768f87-7dc6-912f-1498-ae521828d87f@tessares.net>
+Date: Thu, 26 Jan 2023 19:19:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,94 +48,164 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.0
-Subject: Re: [PATCH mptcp-next] mptcp: do not wait for bare sockets' timeout
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <1f0aa2feba9240d202a087e60013c6ff8039897c.1674747837.git.pabeni@redhat.com>
- <c4d0ff16-125f-4bd3-69aa-5034a36a977d@tessares.net>
- <17e6a8783f4149cf2dd20b876ffaa27a7f35ac0b.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 08/13] mptcp: move first subflow allocation
+ at mpc access time
 Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1673940640.git.pabeni@redhat.com>
+ <badc4b131ab094bb806971a019807538abd6ccd5.1673940640.git.pabeni@redhat.com>
+ <09a5cdbf-de41-ea88-6f93-f09709c09631@tessares.net>
+ <fd340c53e129664b4041e2370dbcf07e4bfa8ce7.camel@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <17e6a8783f4149cf2dd20b876ffaa27a7f35ac0b.camel@redhat.com>
+In-Reply-To: <fd340c53e129664b4041e2370dbcf07e4bfa8ce7.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Paolo,
 
-On 26/01/2023 18:36, Paolo Abeni wrote:
-> On Thu, 2023-01-26 at 18:22 +0100, Matthieu Baerts wrote:
->> Hi Paolo,
+Thank you for your reply!
+
+On 26/01/2023 18:49, Paolo Abeni wrote:
+> On Tue, 2023-01-24 at 17:31 +0100, Matthieu Baerts wrote:
+>> On 17/01/2023 08:36, Paolo Abeni wrote:
 >>
->> On 26/01/2023 16:44, Paolo Abeni wrote:
->>> If the peer closes all the existing subflows for a given
->>> mptcp socket and later the application closes it, the current
->>> implementation let it survive until the timewait timeout expires.
+>>> @@ -116,6 +104,31 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +/* Returns the first subflow socket if available and the MPC
+>>> + * handshake is not started yet.
+>>> + */
+>>> +struct socket *__mptcp_nmpc_socket(struct mptcp_sock *msk)
+>>> +{
+>>> +	struct sock *sk = (struct sock *)msk;
+>>> +	int ret;
+>>> +
+>>> +	if (!((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)))
+>>> +		return ERR_PTR(-EINVAL);
+>>> +
+>>> +	if (!msk->subflow) {
+>>> +		if (msk->first)
+>>> +			return ERR_PTR(-EINVAL);
+>>> +
+>>> +		ret = __mptcp_socket_create(msk);
+>>> +		if (ret)
+>>> +			return ERR_PTR(ret);
+>>> +
+>>> +		mptcp_sockopt_sync(msk, msk->first);
 >>
->> Thank you for having looked at that and provided a solution!
+>> Do you think the function should be renamed? Maybe not but it looks
+>> strange to me to create the socket and do the sync here with this name.
+>> Maybe it is just me but with this name, I would expect it just to
+>> returns the first subflow or NULL, but not create a socket if not, no?
 >>
->>> While the above is allowed by the protocol specification it
->>> consumes resources for almost no reason and additionally
->>> causes sporadic self-tests failures.
->>
->> I guess if we are in __mptcp_close(), there is no reason to keep the
->> MPTCP socket alive if there is no more subflows: if there are new
->> subflows requests coming, they will not be accepted, right?
+>> Mainly to make it clear a "[gs]etsockopt()" before the MPC will create a
+>> new socket.
 > 
-> Correct, as both passive and active subflow creation checks
-> mptcp_is_fully_established(sk), which in turn always returns false
-> after close() -> msk is not in ESTABLISHED status.
+> I don't have a good alternative name handy. You have good suggestions,
+> they are more then welcome!
 
-Thank you for the confirmation!
+Indeed, not easy to find an alternative.
 
-Then it looks good to me!
+  __mptcp_initial_or_new_sf_socket_before_estab()
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+might be too long :þ
 
->> When the last subflow is closed without MPTCP DATA FIN, it might be good
->> to keep the MPTCP socket alive for a bit longer before closing the
->> socket to let the client joining from another network
->> (make-before-break?).
-> 
-> yes, and we do that. Even with no subflow alive, the msk is closed only
-> _after_ the close(). Otherwise it stay happily around and the msk
-> socket status is not affected at all.
+(but quite explicit :) )
 
-I missed that part, thank you!
-(and now I remembered we already discussed about that, sorry)
+> IMHO the function name is not bad: it does not imply allocation, nor
+> lack of such thing.
 
->> (this should be controllable from the userspace
->> but that's another topic)
+You are right. If there is no better names, we can keep it like that.
+
+If you want, I can add this line in the comment when applying the patch
+(if there is no v3):
+
+  Be careful that a new socket might be created if needed.
+
+>>> @@ -1708,8 +1722,11 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+>>>  	 * Since the defer_connect flag is cleared after the first succsful
+>>>  	 * fastopen attempt, no need to check for additional subflow status.
+>>>  	 */
+>>> -	if (msg->msg_flags & MSG_FASTOPEN && !__mptcp_nmpc_socket(msk))
+>>> -		return -EINVAL;
+>>> +	if (msg->msg_flags & MSG_FASTOPEN) {
+>>> +		ssock = __mptcp_nmpc_socket(msk);
+>>> +		if (IS_ERR(ssock))
+>>> +			return PTR_ERR(ssock);> +	}
 >>
->>> Let's move the mptcp socket to the TCP_CLOSE state when there are
->>> no alive subflows at close time, so that the allocated resources
->>> will be freed immediately.
->>>
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> --
->>> this could land either on -net or net-next, as it introduces
->>> a change of behavior that "fixes" self-tests.
->>>
->>> The fix tag would be:
->>>
->>> Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
->>
->> If I understand properly, this doesn't break any 'make-before-break'
->> feature but it clean resources quicker while there was no reason to
->> wait, right? In this case it makes sense to target the -net tree.
+>> Here 'ssock' could be declared in this 'if' section: I guess it doesn't
+>> really matter but out of curiosity, what's the code style to apply here?
+>> Fine where it is or moved only where needed?
 > 
-> I'm ok with the above.
+> AFAIK there is no strict codying style rule (even if the preference
+> should go for the smaller scope). I opted for this way just to reduce
+> the number of added line - otherwise an additional empty line would
+> have been mandatory.
 
-Good, just applied in our tree (fixes for -net) with my RvB and the
-Fixes tags:
+Thank you for the explanation. OK to keep it like that!
 
-New patches for t/upstream-net:
-- fca3ab68ee5a: mptcp: do not wait for bare sockets' timeout
-- Results: 03f3f3e2e0ae..c32eb8d771ff (export-net)
-- Results: e34b063a59ec..302a589ae88a (export)
+>>> @@ -762,13 +762,15 @@ static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+>>>  {
+>>>  	struct sock *sk = (struct sock *)msk;
+>>>  	struct socket *sock;
+>>> -	int ret = -EINVAL;
+>>> +	int ret;
+>>>  
+>>>  	/* Limit to first subflow, before the connection establishment */
+>>>  	lock_sock(sk);
+>>>  	sock = __mptcp_nmpc_socket(msk);
+>>> -	if (!sock)
+>>> +	if (IS_ERR(sock)) {
+>>> +		ret = PTR_ERR(sock);
+>>>  		goto unlock;
+>>> +	}
+>>
+>> Just to be sure: here and above the error with __mptcp_nmpc_socket()
+>> should not happen most of the time: only when we reach some limits, e.g.
+>> mem, etc., right?
+>>
+>> So it is fine to potentially return a different error than before (and
+>> potentially different than what TCP what doing), is it correct?
+> 
+> Well the situation is a bit fuzzy. __mptcp_nmpc_socket() can now return
+> an additional error code (ENOMEM) compared to the code prior to this
+> patch. But plain tcp could already return such error for
+> TCP_FASTOPEN_KEY. For the other sockopt addressed with
+> mptcp_setsockopt_first_sf_only(), that will introduce a new possible
+> error code. I think that is fine, the user-space application must not
+> restrict the set of accepted error code for a given syscall.
 
-Tests are now in progress:
+OK so additional error codes should then be rare. Then it is fine. If
+they get the ENOMEM now, they would have got it later. If they ignore
+it, that's fine. If they consider it as a big issue resulting on not
+doing the connect/bind/listen, that's fine as well.
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230126T175912
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230126T175912
+Thank you for having looked!
+
+>>>  	ret = tcp_setsockopt(sock->sk, level, optname, optval, optlen);
+>>>  
+>>> @@ -872,7 +874,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+>>>  	}
+>>>  
+>>>  	ssock = __mptcp_nmpc_socket(msk);
+>>> -	if (!ssock)
+>>> +	if (IS_ERR(ssock))
+>>>  		goto out;
+>>>  
+>>>  	ret = tcp_getsockopt(ssock->sk, level, optname, optval, optlen);
+>>
+>> Why here you don't assign the error that is returned? (Maybe a comment
+>> should be added?)
+> 
+> I guess it felt strange returning ENOMEM for a get operation. I can
+> switch to full error reporting if you prefer.
+
+Indeed, you are right.
+
+Do you mind if I add this when applying the patch (if there is no v3):
+
+  /* don't return err linked to the socket creation for a getsockopt */
 
 Cheers,
 Matt
