@@ -1,125 +1,97 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23411538D
-	for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 22:24:23 +0000 (UTC)
-Received: by mail-il1-f175.google.com with SMTP id g15so1415639ild.3
-        for <mptcp@lists.linux.dev>; Thu, 26 Jan 2023 14:24:23 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03084290D
+	for <mptcp@lists.linux.dev>; Fri, 27 Jan 2023 14:04:27 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id ud5so14003721ejc.4
+        for <mptcp@lists.linux.dev>; Fri, 27 Jan 2023 06:04:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zdnlrTLb1cSpzDA8MU/yIoKI9nzkw/UDJDUHeudOVLo=;
-        b=OUpG82NWOpJqYYQ/AyTk4Gi+ClVFkinJJ/bhymZarfRlDX335BI5kmLvKRoyifDk4q
-         ew7Kbj46kgyWxMs21bNw4cMU2r1397l0fWSED7Yb8f1mSu4geidHjRIU+bZRbvTTpHKv
-         pj94WNQcPSxVFm8+EcK/LZYyxGxUbFFCBpzCvlK+82K91JGAu8zog3HVVUaR0zNzvQQ+
-         yETLZ83gPK7Sv6D75PEmYqxMc1DORmk54v9o45BmDBmYnroSurEJjzLXfdhLXcLcBwL0
-         4lFiLkqslto/p0R1LKfZsSpPV07sghw/c4f6Zl+TClqSGk1nl4x0r1OtOXDhG4bnvY1i
-         eBfw==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dFoxX7vsje/lQFOTe6KzuqAqhiAfqa7wTWXyH5FdonE=;
+        b=T1jLejasHKvI9lfOKQEtrKgsuNg8zDbwip7Y49PUw/UuMiTdDkbMz27V9cjw1xMAK4
+         Fr+CWfw5i0zOx+7zHL0Bbx7cvTClo05+fxokMxxg14nfChxK6f3nXBFehTnoCqcE82hk
+         PNhXdOAQ9HO9oQvmDz34CzkOkMk9XiOpO+OcJF8FoOTxGsZ/3xaCDvzCV3KVV1BVkwkG
+         d5cpikr7hfqqtcydEeT+t5w7+dzopDRORBqHSnBNJEVxjrljeJ0mQEA/wKE6fV7NDOBt
+         cDxFjGQMjl3Q5Md4kyjYW1cYwZDehVyWStDnMYFPEZphw7rAoYeUJoLyJPTtNYXe57wS
+         JMkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=zdnlrTLb1cSpzDA8MU/yIoKI9nzkw/UDJDUHeudOVLo=;
-        b=HkIKUPGORBJ0YNi6fwOZsseG/Z9s/EgvltfJaFGZ8VP4VNXz7Mah2Ieh5lhV5lC5QO
-         cQLh/be03UonsaFUNUI9JZZb0NGmLB+qBARAEUOpAQjk1RX+x1b5umj4/nnfGp554tSE
-         KprIPBRtFM5yjpm6NSINL3CanzVGgKkAc2TSp1JPLum2hMP7QgKeor7P2JmOFbgk2GVi
-         3edJR0b3JFhfQj6khNrV08OGDL6x2jnwpPPPoBKzz9JdD5DHk2kSoN13yntvPPB8rLBG
-         xj54KJeTUXeDJshXAJJR3zd0eWAhSmXijvWUFRpYgdT6hLC0a8C++XR2tP8UXLB+ibhD
-         cX4w==
-X-Gm-Message-State: AO0yUKU5L4Ygf0YmiLK9yiHAF6rehCkLV2mBZQlY4pfkftJF78zbnmmq
-	UPewbo+H6bqJaK3e7vIhGSPe9UOGqx3X
-X-Google-Smtp-Source: AK7set93jg3AsT7mjGBglu/3j83+CTCtgaojpQXUpjprGEPoHpJQuL46KJdEkdL4nJpRZhXBc6gO6w==
-X-Received: by 2002:a05:6e02:19cb:b0:310:9f7c:2e1 with SMTP id r11-20020a056e0219cb00b003109f7c02e1mr7701345ill.5.1674771862181;
-        Thu, 26 Jan 2023 14:24:22 -0800 (PST)
-Received: from [127.0.0.1] ([13.89.2.162])
-        by smtp.gmail.com with ESMTPSA id a16-20020a92d590000000b0031093e9c7fasm650772iln.85.2023.01.26.14.24.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 14:24:21 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <4d5c94f133002e76ecb74c3303ab350df9175e90.1674767058.git.pabeni@redhat.com>
-References:
- <4d5c94f133002e76ecb74c3303ab350df9175e90.1674767058.git.pabeni@redhat.com>
-Subject: Re: selinux: Implement mptcp_add_subflow hook: Tests Results
-Message-ID: <9462c399-1aa3-083e-c253-2adce228a105@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 26 Jan 2023 22:24:20 +0000
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dFoxX7vsje/lQFOTe6KzuqAqhiAfqa7wTWXyH5FdonE=;
+        b=y31iqFOxqgJAoGosj7S4CVErwQeP7ZeabcMZ2PgTBqBsBdlgeXJLGroRm3SX/VNVBe
+         wE+qHLaN/s+EA6DLacNkZ4C+uhtAlb4dq7VYLUHBZCLOKXh8cSOr5cDCYGX4BN82wcpW
+         79sk8KJOx9QZzIzGON5MjIpR53nDyL6/TNwAGK8Xb5RSQivd+RJ6DAwKufJMC3pMxzwV
+         EhDGG23w9nRVRrmZ2AmbuYSBbrLVhd/Y5McdFr/HTvuIdGiSygkdYxiVvyUER5xKG+Yy
+         5jFZzucT+q/W6z10rjVmiuS4FUBBDa5a9Okpv0ReE95P5q4JTuAFPO9C5ACdert1WUoZ
+         r/oQ==
+X-Gm-Message-State: AFqh2kqkC4cZk4GF6ZvNf7uG6psmHn1daOKa4eBS4bFB+SWAB+yDuLhZ
+	Daq7J7s+6gG2aEbW4D4/6jkM4A==
+X-Google-Smtp-Source: AMrXdXsq/jBMExcQH5fPdCx7XSx/CFaN2LNWoK/m6BH2EWPK8yNTQCyEbWA2AW0Wi8jMp5Lo78j4ew==
+X-Received: by 2002:a17:907:cb86:b0:7b9:f9d8:9554 with SMTP id un6-20020a170907cb8600b007b9f9d89554mr45317482ejc.40.1674828265783;
+        Fri, 27 Jan 2023 06:04:25 -0800 (PST)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id 17-20020a170906059100b0085fc3dec567sm2295560ejn.175.2023.01.27.06.04.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jan 2023 06:04:25 -0800 (PST)
+Message-ID: <39af32d0-67ac-dddb-3482-db9229db2e4f@tessares.net>
+Date: Fri, 27 Jan 2023 15:04:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v3 mptcp-next 00/15] mptcp: refactor first subflow init
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1674767058.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <cover.1674767058.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-Thank you for your modifications, that's great!
+On 26/01/2023 22:05, Paolo Abeni wrote:
+> This is the needed refactor for the selinux fixes, as discussed on
+> the ML.
 
-Our CI did some validations and here is its report:
+Thank you for the new version!
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_syscalls =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5066988909756416
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5066988909756416/su=
-mmary/summary.txt
+> Compared to v2 this revision introduces 2 additional patches:
+> 1/15, just another cleanup found while addressing the recent bugs
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_syscalls =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4785513933045760
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4785513933045760/su=
-mmary/summary.txt
+I guess this patch 1/15 is for net-next, like the rest except patches
+2-3/15 for -net and 14-15/15 for "features for other trees", OK with
+that? :)
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6192888816599040
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6192888816599040/summary/summary.txt
+> 12/15 factoring out a __inet_listener() helper, as suggested by Mat.
+> 
+> The only other patches with some change is 9/15, adding more
+> comments and consistently reporting the newly introduced error code
+> (a bit different from what discussed on the ML, for consistency's sake).
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5911413839888384
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5911413839888384/su=
-mmary/summary.txt
+That's fine for me!
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/7edc0a62d5ee
+I just have a small comment in patch 9/12 but I can do it when applying
+the patch.
 
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+> Paolo Abeni (15):
+>   mptcp: use mptcp_schedule_work() instead of open-codying it
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+(small detail: I'm not sure "open-codying" is correct, maybe "open coding"?)
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
