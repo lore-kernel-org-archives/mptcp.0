@@ -1,93 +1,82 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A214F17D9
-	for <mptcp@lists.linux.dev>; Mon, 30 Jan 2023 10:26:26 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id d14so10540182wrr.9
-        for <mptcp@lists.linux.dev>; Mon, 30 Jan 2023 02:26:26 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89054376
+	for <mptcp@lists.linux.dev>; Mon, 30 Jan 2023 10:30:07 +0000 (UTC)
+Received: by mail-ed1-f54.google.com with SMTP id v10so10443857edi.8
+        for <mptcp@lists.linux.dev>; Mon, 30 Jan 2023 02:30:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CWD34Aoq6uhQ6TSuu9z4VKxzK49tgZOewgaCTVhCCcw=;
-        b=BdZEtHKc2wSoi16fbiZL2ylGPi9bnIEizqwLwtc0yuRSsoGIXleDLhXItHQWiJ1X+V
-         UriSLofFzGefudJcOHpqng71UAiErWhHz9HRM3baqCs9aySYb/oAhM396sx4DF6h2X6d
-         Wo/MMEsKjWS50aDUImpg9XdM0RjHXb//8iUfSv8YrdJQvzAcC0Tm+ExHlqq8b1FJiTdt
-         CiNRl7dFlIgON8ozNxDR0TexCIIgxlohRpwQ76Jj+Ju1WMu4Zq31dWlFpG6QkBfBiIRV
-         HRAjhK15AMzprnLRsLP24q9rTMgdzgsfMLwSrTGvWaK0GyDKiSEY7Di8ZQ3iABZ6fdyc
-         97FQ==
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oLLfi3OSVeysv0hMO9uy53QuJJUDBZ98D2B2HFaisls=;
+        b=4qy3UO+H+pW7D5TaAB/m1oMvzpLlwwqtTOpC8HiL4WRL39QP9YTs/j9ZnwAmeCjyWH
+         V7IlPrOvgby8MWrXQWMzWFhl0Te22a9ShEjFAv2tPpWz7oy7Ei5dIjDgJZsBo5OVIRzg
+         5G0AnPlvczXlxnNmj0hzUElUuPCPyKwsSh/p2WUMTaLVmKJyVxZjgomPOj2qQtJPjH1j
+         FBr8Trs4oO/z5+ftq52O080RTmZTtbFtEGzdSbInPIxkf/qNEnLToQ/xKaFNlMIW+ytz
+         hQezM2QisgRqepOJtEZ1NadqByZpo7hKbKXHxd37YeZsjxE7wBjUUi1tSq55dhP4iS2k
+         8/nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CWD34Aoq6uhQ6TSuu9z4VKxzK49tgZOewgaCTVhCCcw=;
-        b=VbYCBPVy6xkngQ1IaJ5r3UDAw4R0zbzoOT7Tsr7VfHKKBRYQDQ521OyASJDQhtSeof
-         /cyMrdTCOuh3t5RFse2NA4cQPsvdoQciBI4yfmzMoXC7VEDTbNKU3GCtQhKfFidcUt+l
-         x6koe7yjW5p5si3vN5UDXpQpgGvUGOnWmu9MFpHyVLpcaKkKcQOtvY7BBc66InqmCrvj
-         0XmkfZxckSyRjXVrFogn7UXIHx6wfd6ctkbZNyKedY4o/y9EzBU8v6frZN7LvwlWrZYs
-         3SnnHiZNRXbErMiJfaWSWNWOsWuYnLya49EQqNCEc4Rxh+fBKCkk8t212mM0njc9JpBQ
-         mxBw==
-X-Gm-Message-State: AFqh2kq0/+YWr2FpX9q41JZvUzCtplP6CCJb3pW2QC5XmMVZR2P/TF4D
-	Lfjn63yfX/V7T7OqKbb6ewpjBwtdV254zKOR5EM=
-X-Google-Smtp-Source: AMrXdXs0xj3V2SCfpxBxjJA0JY+ekJVi4NOs2Q6kXubZ0K10j7zEx7KFLgMTigOrF69n53ioqhIizw==
-X-Received: by 2002:a05:6000:3c9:b0:2bc:7f32:e6ae with SMTP id b9-20020a05600003c900b002bc7f32e6aemr42518730wrg.64.1675074384234;
-        Mon, 30 Jan 2023 02:26:24 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id p12-20020a056000018c00b002bfe08c566fsm6029187wrx.106.2023.01.30.02.26.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 02:26:23 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-others-next] mptcp: bpf: Pass const struct bpf_prog * to .check_member
-Date: Mon, 30 Jan 2023 11:26:08 +0100
-Message-Id: <20230130102608.1278837-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.38.1
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oLLfi3OSVeysv0hMO9uy53QuJJUDBZ98D2B2HFaisls=;
+        b=WJwpxSwuTQsiRMEKdGeo2sYKmP3AbdWFnLp/YmzQKO5GtZAaxHxoqOyziSmQY7I0lj
+         oZfLW7nnQ1wzuOoLTTREIRL1T79/M5Y3GiBWSsE3ojJc/KEv7WowCxphd06KdXpUqF9Y
+         F7sxduvTUYgNSmFD8HvtjQvuNoXDJqppwyG5RPmn3oGEYvwRKBoZeGP/0Sh5okusgXwz
+         9VArXffJlBnqpiItA+b3cnoBeRxFLtcjaogE6YrmPt9JtfKG2xCb/GJMJVGEMev7cJ0v
+         dd5/ixrT6yxgitjbzkcChvkzyQ90DJ4y/0+yNHciKAcZt7rqVzvslyCXGqTiuVWRIGX3
+         NyJg==
+X-Gm-Message-State: AO0yUKWZ4Z5IADoXFEF8qKwU/Z/CU9hQQLU6mDVF45HuwnZifITTHRLY
+	bcOZGKp53PMpso20YxfMOjD9uY2p3roaJNaj7Gc=
+X-Google-Smtp-Source: AK7set8Tlm4LBKxZvQXkvDTKsw5ZbnAr/JnBSIIe288zkMRydcfbSJ/CSom6ECGDS17vMP/87J6Gpw==
+X-Received: by 2002:a05:6402:28a5:b0:4a2:254f:6b1a with SMTP id eg37-20020a05640228a500b004a2254f6b1amr8570990edb.11.1675074605326;
+        Mon, 30 Jan 2023 02:30:05 -0800 (PST)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id ee36-20020a056402292400b004a21c9facd5sm4091917edb.67.2023.01.30.02.30.04
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jan 2023 02:30:04 -0800 (PST)
+Message-ID: <88e3ca28-9976-58ee-91df-1ce18da83af8@tessares.net>
+Date: Mon, 30 Jan 2023 11:30:04 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=715; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=1s91bTVh6puK0DmIptNBz7Wut7PFeGLaQWwgK03/iBc=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj15s+SENkOaKZ27nhPVBpMGe2z6sow0AHM8zs4
- GeNjgC75K2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY9ebPgAKCRD2t4JPQmmg
- c7nGEACRkrtiUbIAUCEbqrwUjEuJjngqhSfQRvv4zLOQk8ep92BQvnCS89fTZnRO7naZKhM6f05
- a7TJBvXig9HJPJ7EaHUQ2nJ+KE96J2LTn2kBn/R9tkq2RJqKdtGUQ7j/v+uGotvHvyaykACKBpv
- aHfV3jVdyh4AnX5Mci7sK2K1NeUTsBSVAKOJf3vPuZNen5DaaAQBQ8mD0t9tdBXHLG6V+FmC5Oq
- V/6q/pAA+r5MHBbaO4rR9E8D6uwNUDY90OUh5RMqwce/xm1rQAi0W3O5pNK0eINfen9Hr/pEyo0
- MqCx4GqU13Rt9z+w1rUTygMOgd/m+5aDEsiJM7PAqur4QqR/B966190J2qt5w4c62SkDSMQvWeL
- HF4JAhTTHHFbXChV/9Qm80x1INbgvAROf+A+6N5cb2y1DoVEZ3Cp7x/JJjt2M3eW1hyXckwnaeS
- Gz2WbstIcP0txgd9aCXuM2TZCEtlsw2rQ0UvOpXNpHEC1BvsUNdFctRrEYfNQG2wU4rzKLM8CoX
- Q8cY9LmIDluDOjulT+A/b1sf++/mcb4tp27ecd4YXN/pc6UVPkpMsKTJl5ecCPt8SKyeoAXyd2U
- h5UwPUTD4fY3AILyuHlJpd8LBywXeCS6ZhqeGIJ101Vvm/vsHORJdNXdrb20x9A78m32C63t6+F RCchj1/JfqJ3QrA==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH mptcp-others-next] mptcp: bpf: Pass const struct bpf_prog
+ * to .check_member
+Content-Language: en-GB
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20230130102608.1278837-1-matthieu.baerts@tessares.net>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20230130102608.1278837-1-matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Adapt our code to a recent API change in BPF, see the Fixes tag.
+Hello,
 
-Fixes: 51a52a29ebaa ("bpf: Pass const struct bpf_prog * to .check_member")
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- net/mptcp/bpf.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On 30/01/2023 11:26, Matthieu Baerts wrote:
+> Adapt our code to a recent API change in BPF, see the Fixes tag.
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index c08458a31f46..14ea1342598a 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -89,7 +89,8 @@ static void bpf_mptcp_sched_unreg(void *kdata)
- }
- 
- static int bpf_mptcp_sched_check_member(const struct btf_type *t,
--					const struct btf_member *member)
-+					const struct btf_member *member,
-+					const struct bpf_prog *prog)
- {
- 	return 0;
- }
+I forgot to mention the goal is to squash this in "bpf: Add
+bpf_mptcp_sched_ops" commit.
+
+I just applied it there to have the CI stop complaining:
+
+- 2282363eec43: mptcp: bpf: Pass const struct bpf_prog * to .check_member
+- Results: b1869910a6c3..a9e99450a0dc (export)
+
+I guess no other modifications are needed as the modified function is
+doing nothing for the moment.
+
+Cheers,
+Matt
 -- 
-2.38.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
