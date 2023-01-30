@@ -1,127 +1,93 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1F56AA3
-	for <mptcp@lists.linux.dev>; Mon, 30 Jan 2023 17:42:24 +0000 (UTC)
-Received: by mail-qt1-f176.google.com with SMTP id h24so10799782qta.12
-        for <mptcp@lists.linux.dev>; Mon, 30 Jan 2023 09:42:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O0d7ZrY6+OaGcTRpJco83O9v/VTkOPBOgu8zhPygJUY=;
-        b=oGA/PgPOe/VExuh7yI2nyjpMtnrqT6yGt1kyTYEQua5hA+bSzydpUX17+Q5pPVj04b
-         YlncWY9MqqddF/9d7GkHV2rVneKjChRWM71izT1tb8XPHkKNuXpNonaDT5GefvrZTvms
-         3XCaX9sQF0QJAqyeqO3qmEIXb4Dv5AmTFyNdiYHH9LTyg+yYGjwrpwue0Ec9r6a1Vozb
-         LmPpfMYGS8muFAuslXXoy46jSFXxBotMQ2bSbBepJMNyNz5HpKAj/r15yPyHXk/cz+Jz
-         iR5dL2/gtWfa/mFtzQAuZ2JBvjAeipt/k0Vz8YFHlG2syHgTysSr8TEhSTgdynzd/vUk
-         ic+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=O0d7ZrY6+OaGcTRpJco83O9v/VTkOPBOgu8zhPygJUY=;
-        b=AunSz5goqBcebXb3W91vBIjlk2KMQkNnGOdx9uU9i+PVKRZzS+EAO2mnNErWqOd97P
-         jmfgxfSCY4RBsZ0gMEUG9xIXDIXl0y/nKUWoFP6IiXYdmrbdBaE7jfQk1PZard7cgIO8
-         vNQpx57O8k125CcJSfzpzzeShaanOezs03Eufp+2ff66kHEU2eXPEl6Qr25WxQdAYfZg
-         AGzEWhiS4kDchY/8s6s11crL/zWwGgjSGqIpIhLhn/JbhDrLBbs27xowMC+FcJKsSwFM
-         /V+XZC8hVJp3PE7P+ptC5v9IccDQM8Fkyw6+VSRyO7QVhsYZjlKX7d2tZA1gyXeRpNRO
-         I2uw==
-X-Gm-Message-State: AFqh2kov44q7jEL8oyZAPqW04mmSAU00UqyxaVXNPuN63MeKT/Ozon6A
-	0Ern682i661SH8RPIsb3Fw==
-X-Google-Smtp-Source: AMrXdXtyZB78bue6QDjiS8z7HL6e2lNzfllB2uOiAPfdZ9kvwUVAXFsyoiMyDxxRPWK6rohPdidUWg==
-X-Received: by 2002:ac8:7ed7:0:b0:3b6:3260:fa1d with SMTP id x23-20020ac87ed7000000b003b63260fa1dmr70001380qtj.45.1675100543516;
-        Mon, 30 Jan 2023 09:42:23 -0800 (PST)
-Received: from [127.0.0.1] ([172.177.6.21])
-        by smtp.gmail.com with ESMTPSA id z20-20020ac84314000000b003b960aad697sm867268qtm.9.2023.01.30.09.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 09:42:23 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <b9cfd415281fc206300a3adbcdbd36047facb31c.1675095773.git.pabeni@redhat.com>
-References:
- <b9cfd415281fc206300a3adbcdbd36047facb31c.1675095773.git.pabeni@redhat.com>
-Subject: Re: mptcp: be careful on subflow status propagation on errors:
- Tests Results
-Message-ID: <d51d85a4-d78b-6cea-ac14-7f9374ef56b6@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 30 Jan 2023 17:42:22 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D6C6AA3
+	for <mptcp@lists.linux.dev>; Mon, 30 Jan 2023 18:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1675101973;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=BbGG6tOcuiy8dZcBaTsQPxqJsfDizh+6Z142lxBPDDo=;
+	b=CZ4FeW8SBgCCCI5SQE1vebHBy5nW2i8Wm0e7CUTbVlQ/IvIe9/mMa0JbPeXT7MOKYK8KrV
+	4aQoTDsEg6niX7a3rd9w+1/mouxdHaxXB86Yz+R0Y9JZHFa6iEIJJwBGxI/9pIoTEWghCi
+	1iKhqaZxctGK6VWILsQIvQMLPkWBD2s=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-673-_uiuLKSpP2i9e0sLNxXBxQ-1; Mon, 30 Jan 2023 13:06:12 -0500
+X-MC-Unique: _uiuLKSpP2i9e0sLNxXBxQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 07E61101A521
+	for <mptcp@lists.linux.dev>; Mon, 30 Jan 2023 18:06:12 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.233])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8AF07C15BAD
+	for <mptcp@lists.linux.dev>; Mon, 30 Jan 2023 18:06:11 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] selftests: mptcp: allow more slack for slow test-case
+Date: Mon, 30 Jan 2023 19:06:01 +0100
+Message-Id: <9da09e4407af3ccd51489686c71a3c07c2cb6d3b.1675101940.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+A test-case is frequently failing on some extremelly slow VMs.
+The mptcp transfer completes before the script is able to do
+all the required PM manipulation.
 
-Thank you for your modifications, that's great!
+Address the issue in the simplest possible way, making the
+transfer even more slow.
 
-Our CI did some validations and here is its report:
+Additionally dump more info in case of failures, to help debugging
+similar problems in the future.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4854224215867392
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4854224215867392/summary/summary.txt
+Fixes: e274f7154008 ("selftests: mptcp: add subflow limits test-cases")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+this is just a wild guess, since I can't repro the issue at all. Ideally
+it would be great to have a loop with mpj 115 to validate this
+---
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5980124122710016
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5980124122710016/summary/summary.txt
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 387abdcec011..4e428871f961 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1704,7 +1704,12 @@ chk_subflow_nr()
+ 		echo "[ ok ]"
+ 	fi
+ 
+-	[ "${dump_stats}" = 1 ] && ( ss -N $ns1 -tOni ; ss -N $ns1 -tOni | grep token; ip -n $ns1 mptcp endpoint )
++	if [ "${dump_stats}" = 1 ]; then
++		ss -N $ns1 -tOni
++		ss -N $ns1 -tOni | grep token
++		ip -n $ns1 mptcp endpoint
++		dump_stats
++	fi
+ }
+ 
+ chk_link_usage()
+@@ -3103,7 +3108,7 @@ endpoint_tests()
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
+-		run_tests $ns1 $ns2 10.0.1.1 4 0 0 slow &
++		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 &
+ 
+ 		wait_mpj $ns2
+ 		pm_nl_del_endpoint $ns2 2 10.0.2.2
+-- 
+2.39.1
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6543074076131328
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6543074076131328/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5417174169288704
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5417174169288704/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/390fff044f6c
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
