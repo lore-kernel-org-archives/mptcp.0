@@ -1,47 +1,47 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F5E20E4
-	for <mptcp@lists.linux.dev>; Tue, 31 Jan 2023 11:23:53 +0000 (UTC)
-Received: by mail-wr1-f41.google.com with SMTP id m14so13411362wrg.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5020E20F8
+	for <mptcp@lists.linux.dev>; Tue, 31 Jan 2023 11:23:54 +0000 (UTC)
+Received: by mail-wr1-f43.google.com with SMTP id bk16so13861938wrb.11
         for <mptcp@lists.linux.dev>; Tue, 31 Jan 2023 03:23:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SnZUDOCHMQVIhlEB+bu8TiB0jmIpwU9lc66itOumz4s=;
-        b=sikAKJdS+EeKrqmbe4WQxICG+fSzFqoNnAIjkVQKrHbAPEzmIwX9a+5rU70OO8OR5h
-         fo+FykArKI6EnAGK2dKLE8DD9EJzDCm6jQNDaMSuJ6spLrvMNUjH33IzSsvBjIMQD4CC
-         CWPlO1PgnqKve7FiV562PbX+CQecATWjvMLLXzWJRZ8SSkMvt0g0evxCY7n6xXcXDnao
-         YEXVeWtFwUrBJD+KozMiTs/6eAvRmPni6ynnilKVfYcFykmmkxMZLxET6ITcAKbA13Cj
-         EJ7zAbt3dXoXjbP8B6AcJOlhCwEMC7SSiNArM/p01i/d6oe5aQrRML4b0DSPDP3hSGcj
-         YVAg==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hUgQeK3fvqfAupOFuXWFrVHPMCd2NNNxc+S0EXuCEcg=;
+        b=b+E2V4WHC2MoM5nVoSzseGtWYkF7iCTBX87818kiIDY14WQdtUw6VNPuEzamChlgfB
+         hPAOXqb0fr0XVcvyYfhmfBKQ/gL3qRW7AMFwDzvSd+U2XOtRUEuUxM0rZSJtKlps4u0I
+         CWRFfkXmAyVIQ+zuyM5CF8sD43OWM10MeTS/1XVIFmCuFLnapRqKHdyyy+nsigMuZ3J8
+         9FLnNnMrjtekF84qsHumZHoTzRPxtPdd49cQUI3bPiMx7OMYIhSXdf8mpT6rcutmvYhR
+         o3poS4J4Uw+JP4ECSbcrrRaAeO4h9K0qS0Tx7OnGLDThIWFqyCdbLqrEXPvVTJ6ZVVB5
+         +Rqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SnZUDOCHMQVIhlEB+bu8TiB0jmIpwU9lc66itOumz4s=;
-        b=MtciCVseCjAFYxspNwP4VeLvdwd2ZnrQBe7SyAkjpxRY8JotXdbGImLJG2yPEtMJzf
-         mEzWsapGoEOqK249a1cpB6aDCHmIHW/fzxLkUhoyvusKY1fP1bYEqH+YIhh7dLFqHHXo
-         LCO2jkATz1nIaE116I0JBARzQS2+/K8HlOS4Yowepx3o4GCakVVDAHjT3E7xetbpwE8i
-         wBF32q58rQ6HdKBpok7w1zQfe0qyzdZBD8dU/Y73sx09QTEM7Ll+gykIqhxD6RvsOPb/
-         jlNcZdoy3M48fV20nlHOb4t/bX3Qav87k9w4iZ/3f3/Z+DN8/UasGaOcRNABxsVERDXm
-         4O1w==
-X-Gm-Message-State: AO0yUKUJe+6q73/UgRBIIcaZFohLv/YHupShDvAaAbqxfVTNekNOIAZp
-	08+9zm3BoLvFl58TPC4EMY3Xrg==
-X-Google-Smtp-Source: AK7set+nKFQODiLmdRx9Rb6zqH/L1J4AEgPYKgvpBPDJ7c9sCVLceMbAOxYcYfHmHr1LbfkC748Kaw==
-X-Received: by 2002:adf:f045:0:b0:2bf:b872:cf29 with SMTP id t5-20020adff045000000b002bfb872cf29mr20243112wro.2.1675164231660;
-        Tue, 31 Jan 2023 03:23:51 -0800 (PST)
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hUgQeK3fvqfAupOFuXWFrVHPMCd2NNNxc+S0EXuCEcg=;
+        b=ew8+CQWsl5CHtecZNb9EMhCK/7IKNICHyB8T3EN/pLKTa7cxx0uFE8v7+tOD2ZdIMV
+         vPB6T85QHNk8+MLX3q5Lt26NGq7h5AygToESs/1AbhaQl/sf0hutZFJ9zpOPfkyiBpAe
+         I9iuf42VB8fGULkOKsF0glHCHpRd7BtEb9lG0Mw+e4c1gY7WPP03DTaXGSEAyb05xl/9
+         rvVW19Ewt2h0O4iGchIWPMs8FAP9DCK3GertmDjgN6WpRL7LhNG8S3U+UKXl8LevOvSz
+         D0rU0Jtl5BpBYpqc8E9yrk1y+mWaQiVlvcgw4sXT7X7iJL6+nfQoCjUNGIlaRsCr/z+Z
+         uRmA==
+X-Gm-Message-State: AO0yUKWR2mecYphA98HKgL1/LX3MzaZma/ccAHZo2AdQW7NpKEeCnvCY
+	+DqItAJtFMHmArGDipCRyORctHegara+YUXief8=
+X-Google-Smtp-Source: AK7set9IqImnHENmGKfttNiag5dyJdaNq26zT8vS2STYNA26RU4K1Kz2YuDGpghIwuFsamb+bA1mzA==
+X-Received: by 2002:a5d:45c6:0:b0:2bf:bfb7:2fde with SMTP id b6-20020a5d45c6000000b002bfbfb72fdemr19017322wrs.30.1675164232350;
+        Tue, 31 Jan 2023 03:23:52 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id o1-20020a5d4a81000000b002882600e8a0sm3140503wrq.12.2023.01.31.03.23.50
+        by smtp.gmail.com with ESMTPSA id o1-20020a5d4a81000000b002882600e8a0sm3140503wrq.12.2023.01.31.03.23.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Jan 2023 03:23:50 -0800 (PST)
+        Tue, 31 Jan 2023 03:23:51 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-net v2 0/2] selftests: mptcp: stabilise 'endpoint'
- Join tests
-Date: Tue, 31 Jan 2023 12:23:28 +0100
-Message-Id: <20230131-mptcp-issue-323-join-delete-re-add-v2-0-8de2421163c9@tessares.net>
+Date: Tue, 31 Jan 2023 12:23:29 +0100
+Subject: [PATCH mptcp-net v2 1/2] selftests: mptcp: allow more slack for
+ slow test-case
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,55 +50,87 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADD62GMC/yXNywrCMBCF4Vcps3YgF5Hgq4iLNDPaEZuGTBSh9
- N1NdfmfxXdWUK7CCudhhcpvUVlyD3cYIE0x3xmFeoMzzhvrLc6lpYKi+mL0zuNjkYzET26MlTE
- S4THEQIHMyToDHRqjMo415jTtVJvLvpbKN/n8ri/wVzM3uG7bF532NU2VAAAA
+Message-Id: <20230131-mptcp-issue-323-join-delete-re-add-v2-1-8de2421163c9@tessares.net>
+References: <20230131-mptcp-issue-323-join-delete-re-add-v2-0-8de2421163c9@tessares.net>
+In-Reply-To: <20230131-mptcp-issue-323-join-delete-re-add-v2-0-8de2421163c9@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, 
  Paolo Abeni <pabeni@redhat.com>
 X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=918;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1891;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=CgdfmL4cJJxY1BmSTrXPrny5BoyKMqytq4mD4ORmX8M=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj2PpGqTomeXNWno3cNLdYLUe/6iP+Yvrusl85I
- mN5lV3OXiiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY9j6RgAKCRD2t4JPQmmg
- cyNWD/49OnFouIhXPIRFb5IAYxMx6IWvq6okBkG92OJvUNvPA79VMimLtaBb45+cf1BS8TmeuR9
- p41DjmfgYaHmlmwEnNl7drtMl8cUTY1CB+OQWUTI8yi9eGFr/5JPI9RnuVOYZOGbLOD4kDA0H8e
- +4Oon00i0Y95oriIkZiflg1FjYOk4A6zmyWzdJuIXoivmTfc0gw8iscv+Jaovh8PCCSSV71yxY6
- EZ69xWCoOwIwYsVXdyxI5LKSO4QiedNWDnN+ruNFKfGTnGo+J18iGY0PIIhm7DZSMfx6lb5cM+W
- 6O23QkVbDkvFeJcy74MGn+MVxb0vGzlL56XsukAFUvcQaD+L02I8IiaI6E+JVJsFZeutavDCQBx
- tXbh5e5wa+f26Gfi2g3bM/Uv52Lg1U4I6qfWEoLuiGLypjb1lPwBB14RD3vO2dXu+wcgSFL/ylW
- 5D1uqPiEl+cIzEJIoNe4i8AEj0qnHPUQFgPbsgZnW7NKHUtRCR8XfSzt0QQj42MmI2iWWcQqp/5
- q777EoVBibmf9kQraMC+ZH0ht3Soa+j1aT4jA9aIVpQjcriqgdno+oQI45Xe7CjtyMKg1HYZYVD
- uzVwpOtNIO8hQbcISabrKGne0zv9M5UfyL7b2DgfZ3mew+OTPTPjyIfhHnZduDJ4zNMOhRoKOnk
- VyZxTn79eKjbQ1g==
+ bh=eKlBHTZfX33dERk04tQloaPko+YrgAKJmCUgq1hSJNc=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj2PpGn417c+V3Vhse1t6hsHuUZ2PEbL+te/MeK
+ p3jX+85FpqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY9j6RgAKCRD2t4JPQmmg
+ cwCLD/wJ3GKSXV4gag1AIuIppev0T8o2pcrHcUJcD49XSzh0xI2sxrCue02V4KVg62YWTwE8gxk
+ H56ibeKC7e/az77kUherjy/s8gMPUfSz6PVIfbjNrNqvxZZkq5jjz5VZ1LhXsqit9lAmK8aa3Ed
+ s90p5ZA838kb+9YLOmVGg1Hq+n+KvG/PtgT8KgRU+ZpOzn+TlcUu/dSD6J20GsOYi+3t2jyTXdL
+ amf8V8tOgWEQqJ57mEkKM9E3OqlXHP7zaRfZyjb86Q+6+QPegqUyduNG3OWT9iceeMN3PON39Ej
+ vSWfEkQLDqW2BGT/oXiJoeCf8r7Gl6c1q+ypQo9t4vw9ULf2Yi/ecUh36R183zlNwkR/1zWNoBy
+ T9PDudBeXQXQoBm8tOvsSJp9o5rwxJHsLHuCdER1d7VHqUxATdbTp1FZGCYnBFrtWF+m4XrSr1G
+ KZJpR1uGCfiBSu/XxEtV2ba2m8p6oaDG/X4AiLlOjdgVuAQ0sEr5HMsKLiJAuwTHXZytC4z94KM
+ QoZP27ZuLpXFBfJHacjL0vu3Z+kzXLuumzwCj7V0HR9zIJxFrgngniEVrG87wvlLzYFwIMtcYIq
+ qyYb2B2TkUI6OINtFXDX0BiaT2ohs11Wn254tDiV9ybZTf1zp/wCjiZPnCUP/aMwV4mx5HXMGSJ
+ w+5woXhiLgmiLyg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The first patch is the one of Paolo where I only added the
-initialisation of "dump_stats" var as discussed on the mailing list.
+From: Paolo Abeni <pabeni@redhat.com>
 
-The second patch is also somehow a fix as it stops the test earlier not
-to wait quite a bit of time for nothing. It is good to have it now as
-after the modification of patch 1/2, the waiting time is longer.
+A test-case is frequently failing on some extremelly slow VMs.
+The mptcp transfer completes before the script is able to do
+all the required PM manipulation.
 
-To: mptcp@lists.linux.dev
+Address the issue in the simplest possible way, making the
+transfer even more slow.
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Additionally dump more info in case of failures, to help debugging
+similar problems in the future.
+
+Fixes: e274f7154008 ("selftests: mptcp: add subflow limits test-cases")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/323
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-Matthieu Baerts (1):
-      selftests: mptcp: stop tests earlier
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Paolo Abeni (1):
-      selftests: mptcp: allow more slack for slow test-case
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 387abdcec011..52484a7c286a 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1687,6 +1687,7 @@ chk_subflow_nr()
+ 	local subflow_nr=$3
+ 	local cnt1
+ 	local cnt2
++	local dump_stats
+ 
+ 	if [ -n "${need_title}" ]; then
+ 		printf "%03u %-36s %s" "${TEST_COUNT}" "${TEST_NAME}" "${msg}"
+@@ -1704,7 +1705,12 @@ chk_subflow_nr()
+ 		echo "[ ok ]"
+ 	fi
+ 
+-	[ "${dump_stats}" = 1 ] && ( ss -N $ns1 -tOni ; ss -N $ns1 -tOni | grep token; ip -n $ns1 mptcp endpoint )
++	if [ "${dump_stats}" = 1 ]; then
++		ss -N $ns1 -tOni
++		ss -N $ns1 -tOni | grep token
++		ip -n $ns1 mptcp endpoint
++		dump_stats
++	fi
+ }
+ 
+ chk_link_usage()
+@@ -3103,7 +3109,7 @@ endpoint_tests()
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
+-		run_tests $ns1 $ns2 10.0.1.1 4 0 0 slow &
++		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 &
+ 
+ 		wait_mpj $ns2
+ 		pm_nl_del_endpoint $ns2 2 10.0.2.2
 
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
----
-base-commit: 0825e0ffa15862dc5c95b2195656f250a47be8ae
-change-id: 20230131-mptcp-issue-323-join-delete-re-add-48a8d8d06120
-
-Best regards,
 -- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
+2.38.1
 
