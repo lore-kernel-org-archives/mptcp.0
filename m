@@ -1,149 +1,127 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF922102
-	for <mptcp@lists.linux.dev>; Tue, 31 Jan 2023 11:23:54 +0000 (UTC)
-Received: by mail-wr1-f41.google.com with SMTP id a3so7181930wrt.6
-        for <mptcp@lists.linux.dev>; Tue, 31 Jan 2023 03:23:54 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130F833E7
+	for <mptcp@lists.linux.dev>; Tue, 31 Jan 2023 12:11:14 +0000 (UTC)
+Received: by mail-pg1-f172.google.com with SMTP id v3so9896262pgh.4
+        for <mptcp@lists.linux.dev>; Tue, 31 Jan 2023 04:11:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZjJCn/NsFwivBP2qiE+0v8GiWRstnXE+SxqxP0dBT8k=;
-        b=JNyUYWNlDpuio2j0EqIk1wdOgkZVp1Npjk3tPOwD8b8Pi7AJ/M7E8WGJetRriXNigS
-         UIcYvHCC9m5l3SRIuiZVn6KYMqLVSqDZKXQCHtv1xqE1U2IDEFbRqc8rGNxbCM9mvF2T
-         DCjn4o9BPiCCTvNjUcxqJInefrNBNkn7A6uYS8JDBr50R6yHiKIoQWomo60RkB/LO3k7
-         pAkKhN6gw4eaNiywNhOZSV4lA/R5pcMmTZXzN22bwwXdNl8Lm3eMogNOEwV/HcY2Z5tU
-         s3j2T/wN3uSYv7GG5iLucRvUXXUDxVctNigSDirgv5luEp+dNABpaz8nvgjYIhFZO5d7
-         kdjg==
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r36TL1YSx9y0BjhyShy1SglgqbwHsMS4oN0j1cAsWT4=;
+        b=nBdwJlNPboeRM824VV5MHpSSDow3NSLTqaMu/Y3mejvWjOX9mUgH/6KKWD8W5Ivm5j
+         AlDZ5GvxfM4/i24PjARxlDc8k8flQOPDDCgGoBwThE7xit62UgXuo9v9CcQp5+88AA96
+         Zg+r6bnauS4i1d0Wsz5QM54m0zHEpHpXKceYuKLmaJTmK8ZNhfVWOJCIMtxt6Qwuzo7s
+         o6QbPL/nh1Fb4yFgiqoNy09dlMLd2hcz3e4no/ueErnASrE7LlwhZCifM7NXn497XU/Q
+         NR3ou8TLhRHmKCU/vVId4yKOSSDZvOcKcCr7WyXRpp/KOJVk5C5eQNktWczFUaEq0WcQ
+         qQvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZjJCn/NsFwivBP2qiE+0v8GiWRstnXE+SxqxP0dBT8k=;
-        b=U8WQZN/+tJW/6Rkjle0vVwmZOfBecAsFIw6HJYYEoTYvcVFpwCGqeMYIFiJtjAXcWb
-         Lt4Pw4vXnKF/Tgry/yzEPLoyUYrzpJC0t9CPeA55Mw83vJQGdHTijLUstyEkD+fsRiLY
-         tkXigAp+R/Id3NDOZ9/qbSNZW31Ejf6zayfiBq+Atn434PrVJJtf4sWu799CNuvJm+X1
-         xhHRBvT2PvhIY79H7llVYVAT/LfPePbHylZVJqma58PYBqfizK0d76X+QrkF725y36Nu
-         XP2jtOP5hpQwGKXUBNwV2+1AJ2c1KrN4FPlBkp0CfK5r7WyCvLhEGNbWQmUfMUONLtKm
-         /IJw==
-X-Gm-Message-State: AFqh2kp0JePRrwVs9P+yaVZLL2tsx2g/hqatPhkkklMcIhOHgBD+YlmG
-	IJGMhgfen+MFSPlhqSebJ/lgX0Gf8ZsqUQD/oiw=
-X-Google-Smtp-Source: AMrXdXuPr5myfvTcoQb83HPUWP3zsZCJ54HTYV2LLag6JoGoysa75Cl5pKog1AVs75Fu4IwQb+KqCA==
-X-Received: by 2002:a5d:6d4b:0:b0:2bd:e1fd:2536 with SMTP id k11-20020a5d6d4b000000b002bde1fd2536mr42076993wri.9.1675164233084;
-        Tue, 31 Jan 2023 03:23:53 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id o1-20020a5d4a81000000b002882600e8a0sm3140503wrq.12.2023.01.31.03.23.52
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=r36TL1YSx9y0BjhyShy1SglgqbwHsMS4oN0j1cAsWT4=;
+        b=1aD9LUCiv/Sy1fX+TAT80PpgyOQEXF9YC0jCq3BHBuZvVL7krt981jd8xyq9EVS5px
+         Nocn4DBRP8o2CcKeNLIEgSXUCq5McC4kqf77IewdhaKG9/wIneVFf/DuQEameywfX4Vt
+         zOWsfD+aK7bkYHKUqjPD0UGmmH0nt8W/IagD4FvQnTyeVuqfzM5gQu7h6skDCP6SlUE4
+         xMg2R0OYN7iqVi0ldIJ0K7ClxDQA7q0KZJIJwrwwi4weZ/iruyXsJu9QtnTb5pIeoWfy
+         2eZpuZ5WE/lhdQSzb14abISyZiFG/dDh0V8zMxzH7yxrYV/SPqMPMOVdMrmb7qso1CXh
+         sEFw==
+X-Gm-Message-State: AO0yUKXWntWgopJAOJ+rr/6BGx3DxRUpsemz9DyjjlkirlMFGuuoopIS
+	LGXABZIt+x/bNN0AaamfYLy2O7zasg==
+X-Google-Smtp-Source: AK7set/g6CWA/32ILAH/OGRTvD8795TLwS43OpSWM0wWNReAZ+u0M4ELz24XIw+XRDzTf1TPsRc/xA==
+X-Received: by 2002:a05:6a00:349a:b0:593:96a2:d60a with SMTP id cp26-20020a056a00349a00b0059396a2d60amr11137308pfb.30.1675167074378;
+        Tue, 31 Jan 2023 04:11:14 -0800 (PST)
+Received: from [127.0.0.1] ([13.91.160.245])
+        by smtp.gmail.com with ESMTPSA id 144-20020a621996000000b0058bcb42dd1asm9328908pfz.111.2023.01.31.04.11.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Jan 2023 03:23:52 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Tue, 31 Jan 2023 12:23:30 +0100
-Subject: [PATCH mptcp-net v2 2/2] selftests: mptcp: stop tests earlier
+        Tue, 31 Jan 2023 04:11:13 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <9da09e4407af3ccd51489686c71a3c07c2cb6d3b.1675101940.git.pabeni@redhat.com>
+References:
+ <9da09e4407af3ccd51489686c71a3c07c2cb6d3b.1675101940.git.pabeni@redhat.com>
+Subject: Re: selftests: mptcp: allow more slack for slow test-case: Tests
+ Results
+Message-ID: <0766bdc3-0f00-0823-329b-aeda5e686b59@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 31 Jan 2023 12:11:12 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230131-mptcp-issue-323-join-delete-re-add-v2-2-8de2421163c9@tessares.net>
-References: <20230131-mptcp-issue-323-join-delete-re-add-v2-0-8de2421163c9@tessares.net>
-In-Reply-To: <20230131-mptcp-issue-323-join-delete-re-add-v2-0-8de2421163c9@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2437;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=5L+NrhU0mdbv1XiBdpNFIeaavR/J1PHw1VTQ991LDws=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj2PpGmLvxldkqNN3UCFkI9n9Tv9njJLq3Bz2wN
- hcyzEi+27aJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY9j6RgAKCRD2t4JPQmmg
- c+DCEACNXR9y9k+viK64JcTl+UCUwz7OhIP/rqaYU7Btpm0UyH/U4JQFaxx3TDNQFYwqJytw8lj
- ZtZgQBJkrxYgKheN4rmJACZgNf/2fPCMT27BoZ3VbWyLcGthTwe4wJcvJ9iZXf62/VEmb3a1tiS
- y4xZ/WZqAeiP98+3PDJZedZxYMhjCrhZizcE6op4+oCbO0LpatCLUr0Y5ZQyfD+x/9UTUvcexWv
- LQjIsy/HkFCYRdxkF2YIZswAVcdvCQUr2gu/qFV9ZHfPlA8b0bSAC15E1hxRqrNuFRNkCR8HXic
- MTLXZSGx12AQwmFPIIEDdNWE8JKgU7subIMbPSau+EwPEyccv5Mgrr1pD0qIfh69HyfN5jdJnKG
- OXWgFX41fWP7aSD5+9ClrnSS2mhe/2TSebFxwdn9L5JghSJelbYcP7hnWMETltLU23Gg0GnH71D
- ujeI6tFiR5ZITVLx+E8zIr/rZc2VE0gCFPViiGIiWNWkY/z2nN9gluumuOSRlQwiG51f+2ZFNDq
- bUMhDqi4WKtEi42oGhnUbVy78zdA2LuCJ3LreIl95Akxt8t5d0a3j31H/pMnvt/cs3cOBvOYFUI
- /QU2PAtsqHxtqLF4U3wmGD1GTVQqi+ID20jPeU1QsklNynPkJJzgUqd9MQAjM6Z2vnvhs7+D5l0
- W4ql0IlMgCkQWmg==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-These 'endpoint' tests from 'mptcp_join.sh' selftest start a transfer in
-the background and check the status during this transfer.
+Hi Paolo,
 
-Once the expected events have been recorded, there is no reason to wait
-for the data transfer to finish. It can be stopped earlier to reduce the
-execution time by more than half.
+Thank you for your modifications, that's great!
 
-For these tests, the exchanged data were not verified. Errors, if any,
-were ignored but that's fine, plenty of other tests are looking at that.
-It is then OK to mute stderr now that we are sure errors will be printed
-(and still ignored) because the transfer is stopped before the end.
+Our CI did some validations and here is its report:
 
-Fixes: e274f7154008 ("selftests: mptcp: add subflow limits test-cases")
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5160588897157120
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5160588897157120/summary/summary.txt
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 52484a7c286a..42e3bd1a05f5 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -498,6 +498,12 @@ kill_events_pids()
- 	kill_wait $evts_ns2_pid
- }
- 
-+kill_tests_wait()
-+{
-+	kill -SIGUSR1 $(ip netns pids $ns2) $(ip netns pids $ns1)
-+	wait
-+}
-+
- pm_nl_set_limits()
- {
- 	local ns=$1
-@@ -3089,7 +3095,7 @@ endpoint_tests()
- 		pm_nl_set_limits $ns1 2 2
- 		pm_nl_set_limits $ns2 2 2
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
--		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
-+		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow 2>/dev/null &
- 
- 		wait_mpj $ns1
- 		pm_nl_check_endpoint 1 "creation" \
-@@ -3102,14 +3108,14 @@ endpoint_tests()
- 		pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
- 		pm_nl_check_endpoint 0 "modif is allowed" \
- 			$ns2 10.0.2.2 id 1 flags signal
--		wait
-+		kill_tests_wait
- 	fi
- 
- 	if reset "delete and re-add"; then
- 		pm_nl_set_limits $ns1 1 1
- 		pm_nl_set_limits $ns2 1 1
- 		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
--		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 &
-+		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 2>/dev/null &
- 
- 		wait_mpj $ns2
- 		pm_nl_del_endpoint $ns2 2 10.0.2.2
-@@ -3119,7 +3125,7 @@ endpoint_tests()
- 		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
- 		wait_mpj $ns2
- 		chk_subflow_nr "" "after re-add" 2
--		wait
-+		kill_tests_wait
- 	fi
- }
- 
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6005013827289088
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6005013827289088/su=
+mmary/summary.txt
 
--- 
-2.38.1
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6286488803999744
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6286488803999744/summary/summary.txt
 
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4879113920446464
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4879113920446464/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/196a242b1927
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
