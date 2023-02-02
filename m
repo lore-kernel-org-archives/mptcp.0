@@ -1,128 +1,93 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8367F
-	for <mptcp@lists.linux.dev>; Thu,  2 Feb 2023 07:55:59 +0000 (UTC)
-Received: by mail-wr1-f53.google.com with SMTP id y1so892761wru.2
-        for <mptcp@lists.linux.dev>; Wed, 01 Feb 2023 23:55:59 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B815263B7
+	for <mptcp@lists.linux.dev>; Thu,  2 Feb 2023 13:32:04 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id h12so1698836wrv.10
+        for <mptcp@lists.linux.dev>; Thu, 02 Feb 2023 05:32:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4ZaRLWGKt3SAujksEsSJFqPjUsyQ/D3Ki1Z/FfvRqdo=;
-        b=km1DeMQBYZ+WQWrV/Zsde8CxN6TGegSq9KOMLusK7oPSsYgnOaOkuAj8cIZIVkmxuB
-         MHcmYjTcK3YxiXmtAnhECr3Qo13SpnOq1CTS05FPKYOWMD6FJUnS1edTx6igeFGI6iJt
-         e2m9tJL6NumFWRxA4m1NEDN8zZ2jqLNdoqxGsMU1qjK8vbiDs8QEUzrqH1nVgy+ONuqE
-         n/nHft7udgoEDMj0P80KFZIyTHbphp5dq1ORskKbro9HTWz0uiJUwwjYBaVdCPQu4WQH
-         sS1lzauGwxdVT/Y1sRa1eMvKF2bGiLtSUrnBG1Al624sApFMNjfI6GoGkZ2Rnj43pOli
-         DkUQ==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vdNDhLYTOgJmkGCOO3LenmZk4wcDyO/fXbVMbMYA0GM=;
+        b=bMHUmtIKHJC5499L4G3BsP3oWQPcrMK/5wAD9yQi2ucFDAwCAfa6HKO4T2di15sHec
+         AQ229A/8P7RAYYfZsLXi+ZaeJBlr2vCHmdl3qD643XaPcqS0EUX37ZUwB9f6WOc7zhOc
+         qLBMRJXAG22zFMWU5W7zm6xZqpN3oOQxbxbirypDIUwDOcLYruT1Il5DjTsMEwsZmCmX
+         +WSK0ENMBWmKrroZU9NOga8uSGfjvHOuxMAhrTcSVCby+W2NwEp2kF77dif/VMqvnSSH
+         RSlbTD336YrMcbXtCfLYqGI4bIipD2+acFAv+u+tdnmP2z/Z5HA4hsqZzmemuwhH+zN+
+         NMDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4ZaRLWGKt3SAujksEsSJFqPjUsyQ/D3Ki1Z/FfvRqdo=;
-        b=N5TSTz+nFo+P1i/rdPEaI8Y1U0Rziw//ozJw1oHtLRUygEt9xggXrzqne5QGxvR5/h
-         Y3t5aORoul6S3o6gx6htbhhQmaDvHFJurehCFajW6hOzwFWm8ziir/aSaLWhHS1mKaRq
-         LUgbOnvQ1TqeHRuGKmnvuKeq6e6+MLXdADq25dL3f9MEalLkYcPDJAFho5UwX+hJqZ09
-         YRurFhETP8riOTCOHqf/a9B/PXU8VSNAWL/UsafG/DjOklkzEsQ4J3/6dTzWCKl3hnC8
-         AplT9ywJUnJG/NdSW47oi44osLZiweMzAbwMp0yYdUdBiz7Zv9AwhgAi8KjK9N5ZOZd1
-         f4+Q==
-X-Gm-Message-State: AO0yUKXPbxIuS2zaaOOsRltH4ZKEVC6E+enR0+IVdqNsiory7e07y+0V
-	3Xe0A4BZ/KTvN9CzgvqC8VkjXmos/KmCeNnbVsQ80v/Q
-X-Google-Smtp-Source: AK7set8Y2bqFPNScx3oGG7xZsFTM3feHcHW03i3m7DXFEN8SdaMztuk3hbfWJkTF9Exbnr+HOEq8mWtLfreOD2aGNI4=
-X-Received: by 2002:a05:6000:15ce:b0:2bf:e778:41ae with SMTP id
- y14-20020a05600015ce00b002bfe77841aemr268379wry.227.1675324557997; Wed, 01
- Feb 2023 23:55:57 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vdNDhLYTOgJmkGCOO3LenmZk4wcDyO/fXbVMbMYA0GM=;
+        b=A8XXpA3f8ADXONrjvaeJ55qUAqzwRaKY4m5U+7stgiK+Glf6w3jjlisdqS5OEW+6Wh
+         9B2/SmlP//uK4xGejSY11/cLnuUr7JXV4IbkcdrLGY4U+MtD5dv3Mu15Rr2VvkC3E3yo
+         /kQ6TBXbJ0j3VSy3SVYj8shRrMXAeExfn4JWFOinnu54ISgc7PmpbT+3ZzJtNpGT7uuC
+         1mUG7BMkrBWd7H0TPF9TqvSnmpySNnbuVuQrtSyQ1e7iAqedk8y3mo1PfzfX5R6c2xwl
+         qsL2jJRCFh3/p63Kh3pwjwbDJkOlV066gALvOS9QCOt+GMjlHeKNukQCxOVQXXDiP9zb
+         OWHA==
+X-Gm-Message-State: AO0yUKVyDnfG3P2P9rHV0BbC3pn4Qs+SG0GyIUtFCTM8lZFECO94644P
+	7vO1U1vr8NTYHdeshj7QG0YdyGm9VlOlEl5eyw0=
+X-Google-Smtp-Source: AK7set/0BAyQThO1psPKTQBRjSg/jOBuldHgvwSHli98RAbmsfm5lr/Y19S7b3JG0EDgYZxBtGGUxQ==
+X-Received: by 2002:a05:6000:3c6:b0:2bf:ae18:34dd with SMTP id b6-20020a05600003c600b002bfae1834ddmr5551359wrg.56.1675344722276;
+        Thu, 02 Feb 2023 05:32:02 -0800 (PST)
+Received: from [192.168.3.222] ([213.211.148.158])
+        by smtp.gmail.com with ESMTPSA id t16-20020adfe450000000b002bbdcd15e44sm19467609wrm.37.2023.02.02.05.32.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Feb 2023 05:32:01 -0800 (PST)
+Message-ID: <2133472e-0f43-2a9c-f3f9-af3f57a930a8@tessares.net>
+Date: Thu, 2 Feb 2023 14:32:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH mptcp-net v2 0/2] selftests: mptcp: stabilise 'endpoint'
+ Join tests
+To: mptcp@lists.linux.dev, Geliang Tang <geliangtang@gmail.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
 References: <20230131-mptcp-issue-323-join-delete-re-add-v2-0-8de2421163c9@tessares.net>
- <20230131-mptcp-issue-323-join-delete-re-add-v2-2-8de2421163c9@tessares.net>
- <CA+WQbwsOc66b+3a6RwCto4xa-JCoGt7gw_zGWadxMoWN=umWZw@mail.gmail.com> <d6d7bac0-fd4e-1417-8b02-d81314c2f744@tessares.net>
-In-Reply-To: <d6d7bac0-fd4e-1417-8b02-d81314c2f744@tessares.net>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Thu, 2 Feb 2023 15:56:34 +0800
-Message-ID: <CA+WQbwtJMpvCTo+h-HBUohT16Cwxg9ViysDRHLQrqo7dqUorTg@mail.gmail.com>
-Subject: Re: [PATCH mptcp-net v2 2/2] selftests: mptcp: stop tests earlier
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20230131-mptcp-issue-323-join-delete-re-add-v2-0-8de2421163c9@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2023=E5=B9=B42=E6=
-=9C=881=E6=97=A5=E5=91=A8=E4=B8=89 18:27=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Geliang,
->
-> On 01/02/2023 06:17, Geliang Tang wrote:
-> > Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2023=E5=B9=B41=
-=E6=9C=8831=E6=97=A5=E5=91=A8=E4=BA=8C 19:23=E5=86=99=E9=81=93=EF=BC=9A
-> >>
-> >> These 'endpoint' tests from 'mptcp_join.sh' selftest start a transfer =
-in
-> >> the background and check the status during this transfer.
-> >>
-> >> Once the expected events have been recorded, there is no reason to wai=
-t
-> >> for the data transfer to finish. It can be stopped earlier to reduce t=
-he
-> >> execution time by more than half.
-> >>
-> >> For these tests, the exchanged data were not verified. Errors, if any,
-> >> were ignored but that's fine, plenty of other tests are looking at tha=
-t.
-> >> It is then OK to mute stderr now that we are sure errors will be print=
-ed
-> >> (and still ignored) because the transfer is stopped before the end.
-> >>
-> >> Fixes: e274f7154008 ("selftests: mptcp: add subflow limits test-cases"=
-)
-> >> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> >> ---
-> >>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 14 ++++++++++----
-> >>  1 file changed, 10 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/t=
-esting/selftests/net/mptcp/mptcp_join.sh
-> >> index 52484a7c286a..42e3bd1a05f5 100755
-> >> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> >> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> >> @@ -498,6 +498,12 @@ kill_events_pids()
-> >>         kill_wait $evts_ns2_pid
-> >>  }
-> >>
-> >> +kill_tests_wait()
-> >> +{
-> >> +       kill -SIGUSR1 $(ip netns pids $ns2) $(ip netns pids $ns1)
-> >> +       wait
-> >> +}
-> >
-> > Can we use the existing function kill_wait() to do this?
->
-> Not easily: here, the best is to send SIGUSR1 to mptcp_connect process
-> to do a graceful stop. We could probably do a SIGTERM but still, in
-> endpoint_tests(), we don't have the process IDs, we would need to look
-> for them.
->
-> Also, we want to wait for the whole "run_tests" -- launched in the
-> background -- to finish, not just mptcp_connect but also the validation
-> part with the different "sleep" before executing the next test.
->
-> So I think we should use this new kill_tests_wait() as it is, no?
+Hello,
 
-I agree.
+On 31/01/2023 12:23, Matthieu Baerts wrote:
+> The first patch is the one of Paolo where I only added the
+> initialisation of "dump_stats" var as discussed on the mailing list.
+> 
+> The second patch is also somehow a fix as it stops the test earlier not
+> to wait quite a bit of time for nothing. It is good to have it now as
+> after the modification of patch 1/2, the waiting time is longer.
 
-Thanks,
--Geliang
+I just applied these two patches after having replied to Geliang's
+questions. I hope that's OK
 
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+@Geliang: can I add your Acked-by? (I didn't added yet as they were not
+explicitly there, thus my script didn't add them automatically :) )
+
+New patches for t/upstream-net:
+- 23bbeff9e3c6: selftests: mptcp: allow more slack for slow test-case
+- 98d24d468734: selftests: mptcp: stop tests earlier
+- Results: b5041e5446ed..d1ac838733b6 (export-net)
+- Results: c22959a266e5..8b2ca48295cf (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230202T133022
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230202T133022
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
