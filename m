@@ -1,40 +1,40 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAD17F
-	for <mptcp@lists.linux.dev>; Thu,  2 Feb 2023 07:55:20 +0000 (UTC)
-Received: by mail-wm1-f47.google.com with SMTP id j29-20020a05600c1c1d00b003dc52fed235so669632wms.1
-        for <mptcp@lists.linux.dev>; Wed, 01 Feb 2023 23:55:19 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8367F
+	for <mptcp@lists.linux.dev>; Thu,  2 Feb 2023 07:55:59 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id y1so892761wru.2
+        for <mptcp@lists.linux.dev>; Wed, 01 Feb 2023 23:55:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2mDloKOdb+UcSZ0cVXnNXofdWWtrYWw2cpclBqmIVfQ=;
-        b=cPRRf6WT/mGPAEAP1nQh+u0rzynU7XcgTq/SKH4PAVLoEnfMuXkMJ/Zmll2jP2PMr6
-         rXr1PaY8XFlof70u9sIp2S2F86yV2s/zeYB6Gdzo9+nsBCxl4Brz6w4SWJHkAOnjGfDy
-         XVdEYf39WCjfzWRzXEJIE6TaiBUEZE+XLn8z/RC4wotFTxesRgdmzE/lIioyZg/jlXeA
-         MzB+VM2rSvXFoGahKsB5DshBi8qWTWq71VCBwI1qWMHvvCdQn6i4jdZV6bwVyyFyf/vA
-         GTcZ0zvLHQXsD1x0ozs7BoL99IdjXAcYCgS/BRdTzp8AL6t1VAwI64/GeC91YnMpM87E
-         g+ew==
+        bh=4ZaRLWGKt3SAujksEsSJFqPjUsyQ/D3Ki1Z/FfvRqdo=;
+        b=km1DeMQBYZ+WQWrV/Zsde8CxN6TGegSq9KOMLusK7oPSsYgnOaOkuAj8cIZIVkmxuB
+         MHcmYjTcK3YxiXmtAnhECr3Qo13SpnOq1CTS05FPKYOWMD6FJUnS1edTx6igeFGI6iJt
+         e2m9tJL6NumFWRxA4m1NEDN8zZ2jqLNdoqxGsMU1qjK8vbiDs8QEUzrqH1nVgy+ONuqE
+         n/nHft7udgoEDMj0P80KFZIyTHbphp5dq1ORskKbro9HTWz0uiJUwwjYBaVdCPQu4WQH
+         sS1lzauGwxdVT/Y1sRa1eMvKF2bGiLtSUrnBG1Al624sApFMNjfI6GoGkZ2Rnj43pOli
+         DkUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2mDloKOdb+UcSZ0cVXnNXofdWWtrYWw2cpclBqmIVfQ=;
-        b=S+gK/Hw8hANd/SZ0Cv7Xb/P+8wlz3x2/BS3BAAxl4MEnIxcYh9vauC+naqjAr7/IMO
-         OryoLaU1Jmq3RaEuoL1dA500Sw/vmxrmqdymkelr6NaifDs56wcCbYnGA/zs+QfcMclG
-         G6Fte4eZmD52a1cRKUu6rjEgMOcbvLiKw9ZNBlFg100ENeP5SsrQT/RwSUKoWXY12iiW
-         P9bZmwiljtzFh4Vwu6LwowrSPV+Nt0AiTtZLYmkgYJKA5Hjtf6LgzidMvEqHTGYqoAGs
-         7yemDx+WnpqHhvc4DO/KKDNhPk6AyUVFmI9n6yS0JjY2qHUIe0C6jxpj0n9586E7u1Bx
-         n63w==
-X-Gm-Message-State: AO0yUKUFlGphUMgqppZko8tj5Q0moU4WB/WBFVQX5S9cLbNx3LpoU3Gx
-	dxn3c7yTdYns8ci6muMYOAN/ufE3NzOy0w46hsc=
-X-Google-Smtp-Source: AK7set9Q9d12rhZQjoPSwsQYtgJMG+iLOEygCDwb+2C2+rYDcWBAab0Kye4auaoFldzf0F+l9PXVC3mKehKL4xIv0/0=
-X-Received: by 2002:a05:600c:3513:b0:3cf:7b68:631 with SMTP id
- h19-20020a05600c351300b003cf7b680631mr98388wmq.55.1675324518083; Wed, 01 Feb
- 2023 23:55:18 -0800 (PST)
+        bh=4ZaRLWGKt3SAujksEsSJFqPjUsyQ/D3Ki1Z/FfvRqdo=;
+        b=N5TSTz+nFo+P1i/rdPEaI8Y1U0Rziw//ozJw1oHtLRUygEt9xggXrzqne5QGxvR5/h
+         Y3t5aORoul6S3o6gx6htbhhQmaDvHFJurehCFajW6hOzwFWm8ziir/aSaLWhHS1mKaRq
+         LUgbOnvQ1TqeHRuGKmnvuKeq6e6+MLXdADq25dL3f9MEalLkYcPDJAFho5UwX+hJqZ09
+         YRurFhETP8riOTCOHqf/a9B/PXU8VSNAWL/UsafG/DjOklkzEsQ4J3/6dTzWCKl3hnC8
+         AplT9ywJUnJG/NdSW47oi44osLZiweMzAbwMp0yYdUdBiz7Zv9AwhgAi8KjK9N5ZOZd1
+         f4+Q==
+X-Gm-Message-State: AO0yUKXPbxIuS2zaaOOsRltH4ZKEVC6E+enR0+IVdqNsiory7e07y+0V
+	3Xe0A4BZ/KTvN9CzgvqC8VkjXmos/KmCeNnbVsQ80v/Q
+X-Google-Smtp-Source: AK7set8Y2bqFPNScx3oGG7xZsFTM3feHcHW03i3m7DXFEN8SdaMztuk3hbfWJkTF9Exbnr+HOEq8mWtLfreOD2aGNI4=
+X-Received: by 2002:a05:6000:15ce:b0:2bf:e778:41ae with SMTP id
+ y14-20020a05600015ce00b002bfe77841aemr268379wry.227.1675324557997; Wed, 01
+ Feb 2023 23:55:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,104 +42,83 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20230131-mptcp-issue-323-join-delete-re-add-v2-0-8de2421163c9@tessares.net>
- <20230131-mptcp-issue-323-join-delete-re-add-v2-1-8de2421163c9@tessares.net>
- <CA+WQbwuB9jMnbnPKT8z0KeWT56upWOG9tKhOCPCU1f4uAkTwqA@mail.gmail.com> <498f5acc-df60-7599-6a59-918f3a7c5027@tessares.net>
-In-Reply-To: <498f5acc-df60-7599-6a59-918f3a7c5027@tessares.net>
+ <20230131-mptcp-issue-323-join-delete-re-add-v2-2-8de2421163c9@tessares.net>
+ <CA+WQbwsOc66b+3a6RwCto4xa-JCoGt7gw_zGWadxMoWN=umWZw@mail.gmail.com> <d6d7bac0-fd4e-1417-8b02-d81314c2f744@tessares.net>
+In-Reply-To: <d6d7bac0-fd4e-1417-8b02-d81314c2f744@tessares.net>
 From: Geliang Tang <geliangtang@gmail.com>
-Date: Thu, 2 Feb 2023 15:55:54 +0800
-Message-ID: <CA+WQbwvYejU7FOD9PjNFjB7uk4DNQK2C0s-Ur=xH-K1ym3ehsg@mail.gmail.com>
-Subject: Re: [PATCH mptcp-net v2 1/2] selftests: mptcp: allow more slack for
- slow test-case
+Date: Thu, 2 Feb 2023 15:56:34 +0800
+Message-ID: <CA+WQbwtJMpvCTo+h-HBUohT16Cwxg9ViysDRHLQrqo7dqUorTg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-net v2 2/2] selftests: mptcp: stop tests earlier
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2023=E5=B9=B42=E6=
-=9C=881=E6=97=A5=E5=91=A8=E4=B8=89 18:22=E5=86=99=E9=81=93=EF=BC=9A
+=9C=881=E6=97=A5=E5=91=A8=E4=B8=89 18:27=E5=86=99=E9=81=93=EF=BC=9A
 >
 > Hi Geliang,
 >
-> On 01/02/2023 06:14, Geliang Tang wrote:
+> On 01/02/2023 06:17, Geliang Tang wrote:
 > > Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2023=E5=B9=B41=
 =E6=9C=8831=E6=97=A5=E5=91=A8=E4=BA=8C 19:23=E5=86=99=E9=81=93=EF=BC=9A
 > >>
-> >> From: Paolo Abeni <pabeni@redhat.com>
+> >> These 'endpoint' tests from 'mptcp_join.sh' selftest start a transfer =
+in
+> >> the background and check the status during this transfer.
 > >>
-> >> A test-case is frequently failing on some extremelly slow VMs.
-> >> The mptcp transfer completes before the script is able to do
-> >> all the required PM manipulation.
+> >> Once the expected events have been recorded, there is no reason to wai=
+t
+> >> for the data transfer to finish. It can be stopped earlier to reduce t=
+he
+> >> execution time by more than half.
 > >>
-> >> Address the issue in the simplest possible way, making the
-> >> transfer even more slow.
-> >>
-> >> Additionally dump more info in case of failures, to help debugging
-> >> similar problems in the future.
+> >> For these tests, the exchanged data were not verified. Errors, if any,
+> >> were ignored but that's fine, plenty of other tests are looking at tha=
+t.
+> >> It is then OK to mute stderr now that we are sure errors will be print=
+ed
+> >> (and still ignored) because the transfer is stopped before the end.
 > >>
 > >> Fixes: e274f7154008 ("selftests: mptcp: add subflow limits test-cases"=
 )
-> >> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/323
-> >> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> >> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> >> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 > >> ---
-> >>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++++++--
-> >>  1 file changed, 8 insertions(+), 2 deletions(-)
+> >>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 14 ++++++++++----
+> >>  1 file changed, 10 insertions(+), 4 deletions(-)
 > >>
 > >> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/t=
 esting/selftests/net/mptcp/mptcp_join.sh
-> >> index 387abdcec011..52484a7c286a 100755
+> >> index 52484a7c286a..42e3bd1a05f5 100755
 > >> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > >> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> >> @@ -1687,6 +1687,7 @@ chk_subflow_nr()
-> >>         local subflow_nr=3D$3
-> >>         local cnt1
-> >>         local cnt2
-> >> +       local dump_stats
+> >> @@ -498,6 +498,12 @@ kill_events_pids()
+> >>         kill_wait $evts_ns2_pid
+> >>  }
 > >>
-> >>         if [ -n "${need_title}" ]; then
-> >>                 printf "%03u %-36s %s" "${TEST_COUNT}" "${TEST_NAME}" =
-"${msg}"
-> >> @@ -1704,7 +1705,12 @@ chk_subflow_nr()
-> >>                 echo "[ ok ]"
-> >>         fi
-> >>
-> >> -       [ "${dump_stats}" =3D 1 ] && ( ss -N $ns1 -tOni ; ss -N $ns1 -=
-tOni | grep token; ip -n $ns1 mptcp endpoint )
-> >> +       if [ "${dump_stats}" =3D 1 ]; then
-> >> +               ss -N $ns1 -tOni
-> >> +               ss -N $ns1 -tOni | grep token
-> >> +               ip -n $ns1 mptcp endpoint
-> >> +               dump_stats
-> >> +       fi
+> >> +kill_tests_wait()
+> >> +{
+> >> +       kill -SIGUSR1 $(ip netns pids $ns2) $(ip netns pids $ns1)
+> >> +       wait
+> >> +}
 > >
-> > Hi Matt,
+> > Can we use the existing function kill_wait() to do this?
 >
-> Thank you for the review!
+> Not easily: here, the best is to send SIGUSR1 to mptcp_connect process
+> to do a graceful stop. We could probably do a SIGTERM but still, in
+> endpoint_tests(), we don't have the process IDs, we would need to look
+> for them.
 >
-> > Does this work:
-> >
-> > [ "${dump_stats}" =3D 1 ] && ( ss -N $ns1 -tOni ; ss -N $ns1 -tOni |
-> > grep token; ip -n $ns1 mptcp endpoint; dump_stats )
-> >
-> > This is more like the original code.
+> Also, we want to wait for the whole "run_tests" -- launched in the
+> background -- to finish, not just mptcp_connect but also the validation
+> part with the different "sleep" before executing the next test.
 >
-> This works indeed but I think it was a good idea from Paolo to switch to
-> a clear 'if' statement for two reasons:
->
-> - It is easier to read than having quite a few other commands on a
-> single line. If only 'dump_stats' function was invoked, that would have
-> been fine.
->
-> - If 'dump_stats' var is not 1 and because this is the last instruction
-> of the function, chk_subflow_nr will cause the returned code to be !=3D 0=
-.
-> That's fine here because 'set -e' is not defined and the returned code
-> is not checked but still, that's not ideal, better to avoid that with a
-> clear "if" I think.
->
-> So I think we should keep the patch as it is, no?
+> So I think we should use this new kill_tests_wait() as it is, no?
 
-Sure.
+I agree.
+
+Thanks,
+-Geliang
 
 >
 > Cheers,
