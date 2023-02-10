@@ -1,56 +1,56 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862492F29
-	for <mptcp@lists.linux.dev>; Thu,  9 Feb 2023 18:57:31 +0000 (UTC)
-Received: by mail-qt1-f181.google.com with SMTP id q13so3140578qtx.2
-        for <mptcp@lists.linux.dev>; Thu, 09 Feb 2023 10:57:31 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF392F31
+	for <mptcp@lists.linux.dev>; Fri, 10 Feb 2023 12:18:31 +0000 (UTC)
+Received: by mail-pj1-f43.google.com with SMTP id f16-20020a17090a9b1000b0023058bbd7b2so5383678pjp.0
+        for <mptcp@lists.linux.dev>; Fri, 10 Feb 2023 04:18:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=49YvE/uxMhXrR5b2yG/Tl9hCg3mhnGDVVFOfbi7+RvU=;
-        b=ELKZliFzTWpt+1AEYbatPUpd4mhk05mC8RyuLQyjrCxNi2MXq+3jQvBnf4HoItDgoJ
-         /yXfC3Zvz1XX8GTo+R6MtI48dVvo4Hq1PDLOWFQR2JXlHLOndr9itFwMbcXsfVT3FElG
-         6eP0wKrQV1YnbEmOf6DslAkCnH/IFpnmoeeLzbhc7DyVd/i3cNtq/m+0exVp+HIYS4Gm
-         vbpEtpeZcE8SqF/0yQL41utulS8sRTln0BK8dYNmZG6EmRkYj6eFAigd9N4XfG/I26Di
-         srrJR0+5I4IoQlq9V/jrzbytHQPN1K+WtaLOMTJrw1Kh+EYOEnQH65XhrNZEciknJhEu
-         V2gw==
+        bh=ZI/3AvUKHBuAANn3mC/heTJpluWYXcADZZvv+s5Ie5c=;
+        b=FA+9hRL1FrTc0kHYZEOTM/IPnODkWsI0ZztdgAukJFwRXZV7jUqgCGT45NM/tFl8oR
+         ooPan6uu/W8yO/bBub3RXZs/Wkxrd4cKDyng7+enEsul8nhACOi0NhhWmoccXrGjBhai
+         g8fNz99KmqBlvgQE+uXl9f9figjzGLE6iL6SoG8v8PiIDVZ3qOjiU+BQQswuxkz36K5t
+         4O2o+C7fVF3q5qJhgDNglW7Acfxm0OoykKgeHnqKGPhurZxFt/UcvrSI8iTvNF7lGc+I
+         dbIhzfV9GXM2+lxk0DI+ZkuPYP3Si+zUZZRJp6IVzThUwzD5YEHBAo/v/QTd6yjwxvdy
+         JfTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=49YvE/uxMhXrR5b2yG/Tl9hCg3mhnGDVVFOfbi7+RvU=;
-        b=LF4j3PEd33IHMY1XkTXjKaXdzWcQeCzT528hLeQh8nXjFpL/ZoOWGjWyC4NvYgU8vs
-         6AiOI4u4DCOhjlX2uK7S+cF8xo/ZwTLXhT7UjhuluHcLJvLG/fPJaPz8kX6uqgC3U/1L
-         OuZIOrg+ilt6Tp+w+2oBhSHBiBCeMOf4Ft/oVNJYcZsmjDJ0ldX/FC731zBD3DEsEiHW
-         4tk7rRjb1Uhqiv5KUdgfjQuE9nmXqmQHWhEQEsps5upWNK3XirkR5lgsvkw6m+LsBNOM
-         yAVrjfXnnmKsWeV64dumWA26flDuwfh53qkPxnXRgPgswUIS2nJqf7lsNjZkGI50EhOS
-         Z7UA==
-X-Gm-Message-State: AO0yUKX7QKl6zXnEAWgr3xlJWYortWt/l3QRbGZ5f0suS4QtTg6iQJME
-	HvTkywe5/wVsTn9xZvkBHA==
-X-Google-Smtp-Source: AK7set/UnvGQzeeDByTUBo2uFpYM5GieNfA7tYmfRk2ymRGmBbr+jvMYdOWb/wvQpnmDrO66mbFtDg==
-X-Received: by 2002:a05:622a:244:b0:3b9:b450:61f6 with SMTP id c4-20020a05622a024400b003b9b45061f6mr19078401qtx.62.1675969050446;
-        Thu, 09 Feb 2023 10:57:30 -0800 (PST)
-Received: from [127.0.0.1] ([172.176.193.178])
-        by smtp.gmail.com with ESMTPSA id d186-20020a3768c3000000b006fa7b5ea2d1sm1881966qkc.125.2023.02.09.10.57.29
+        bh=ZI/3AvUKHBuAANn3mC/heTJpluWYXcADZZvv+s5Ie5c=;
+        b=3tX/GsQ+QprGZ4JWRQzCLkDzgfAAZbWM9Xmv25S5g8w4u1QMP0FauC6892k4qoiVJw
+         HOr0x2cUQ82kr121W7hrc7iqQhI2p+rtA3CEi83SkCUQjDS1iNaqDwlcTJQ1D5bRaYep
+         YzP4nDmgYo/jocbVRZ+3N//qUzMAG/T3+/Q8cfFmG1HMvhJMynE35F23QvXuj6ASfI8r
+         Tq3f8Nm6bg2p/bdb1cDJp6IydcUXXJt1X7qxOyoOdDJORkhp4fna6+wNkRcNu8t17iyK
+         HZban46HfeEEdhbwMW1TigFSJUaHfjOmJsPH8pe++MIyP5lLa3qn3GYAmNIcf0DvFkPH
+         ipHw==
+X-Gm-Message-State: AO0yUKWwsEkCVYqBsOroEsCFNgcy4K+CfrQp4JtkIkj0zZaHTXSdHu1e
+	bq8JlrMR1YWE/l1cBTMhCQ==
+X-Google-Smtp-Source: AK7set/97/6qiHcg80MdgbKOR2NxvgbbrxThzFQf/JIMIOZBvYASs1qmHwNnxqblblRFji+Lvi0qjg==
+X-Received: by 2002:a17:902:f394:b0:199:512f:75e2 with SMTP id f20-20020a170902f39400b00199512f75e2mr6298305ple.26.1676031511455;
+        Fri, 10 Feb 2023 04:18:31 -0800 (PST)
+Received: from [127.0.0.1] ([20.172.10.65])
+        by smtp.gmail.com with ESMTPSA id q10-20020a170902bd8a00b00186cf82717fsm3267205pls.165.2023.02.10.04.18.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Feb 2023 10:57:29 -0800 (PST)
+        Fri, 10 Feb 2023 04:18:30 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Paolo Abeni <pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
 Reply-To: mptcp@lists.linux.dev
 In-Reply-To:
- <e65dfb17e0aeed03dbbebc4ef4559fe3ca349354.1675892307.git.pabeni@redhat.com>
+ <ad634b00b9c4cfb0f8cd6c8ec57d1a7405ba3799.1675968499.git.pabeni@redhat.com>
 References:
- <e65dfb17e0aeed03dbbebc4ef4559fe3ca349354.1675892307.git.pabeni@redhat.com>
+ <ad634b00b9c4cfb0f8cd6c8ec57d1a7405ba3799.1675968499.git.pabeni@redhat.com>
 Subject: Re: mptcp: fix UaF in listener shutdown: Tests Results
-Message-ID: <d3666b9f-636c-2415-0b83-e57529047adf@gmail.com>
+Message-ID: <2cb7f6a5-5ecf-ec8a-c734-87c9fbdd1791@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Feb 2023 18:57:29 +0000
+Date: Fri, 10 Feb 2023 12:18:30 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -65,35 +65,34 @@ Thank you for your modifications, that's great!
 Our CI did some validations and here is its report:
 
 - KVM Validation: normal (except selftest_mptcp_join):
-  - Critical: 1 Call Trace(s) =E2=9D=8C:
+  - Success! =E2=9C=85:
   - Task: https://cirrus-ci.=
-com/task/5329004899598336
+com/task/5943503453159424
   - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5329004899598336/summary/summary.txt
+com/v1/artifact/task/5943503453159424/summary/summary.txt
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Critical: 1 Call Trace(s) =E2=9D=8C:
-  - Task: https://cirrus-ci.=
-com/task/5047529922887680
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5047529922887680/summary/summary.txt
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/4676866057961472
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4676866057961472/su=
+mmary/summary.txt
 
 - KVM Validation: normal (only selftest_mptcp_join):
   - Success! =E2=9C=85:
   - Task: https://cirrus-ci.=
-com/task/6454904806440960
+com/task/5380553499738112
   - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6454904806440960/summary/summary.txt
+com/v1/artifact/task/5380553499738112/summary/summary.txt
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6173429829730304
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6173429829730304/su=
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_add_addr =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6506453406580736
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6506453406580736/su=
 mmary/summary.txt
 
-Initiator: Patchew Applier
+Initiator: Matthieu Baerts
 Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/cbc3e5c367d4
+com/multipath-tcp/mptcp_net-next/commits/017df44e3b70
 
 
 If there are some issues, you can reproduce them using the same environment=
