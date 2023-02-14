@@ -1,407 +1,120 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699A123D5
-	for <mptcp@lists.linux.dev>; Tue, 14 Feb 2023 04:15:19 +0000 (UTC)
-Received: by mail-pj1-f49.google.com with SMTP id r9-20020a17090a2e8900b00233ba727724so488678pjd.1
-        for <mptcp@lists.linux.dev>; Mon, 13 Feb 2023 20:15:19 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4059DC0B4
+	for <mptcp@lists.linux.dev>; Tue, 14 Feb 2023 16:05:29 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id bu23so16171284wrb.8
+        for <mptcp@lists.linux.dev>; Tue, 14 Feb 2023 08:05:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aYoGiVnitKVsiwNVJDrEKDE+kZ8NsbSA29728NlslYo=;
-        b=L3svDzg8AWJe2cYOCVf8R3Kyd9+pqdQrJEvcPYliRXKdirjtAs0hHLgKY4IhCwcUc6
-         YsV81el0iCr+i91i+byhN5ZYPdLvkwWJOcSjsV3dzTCzni5Vl5hkMuZGfh4bTsH5T98t
-         L6DbhzajIXfLqOm4UYJ6g7KQykx5OUuLidBvvOM8uBTmcJBBb0MMSC0nKtZyADzm72u4
-         6wbywC9gE8oi2rlwEqKygDAiOuNy7xk/QKE6sO8usd+96aoTB/NWzj8h1/hOvsGsfqI0
-         VG3XkcPRorB/tO1ezDw/cAJvCdH5r0s9Mom7hOR/unSibg4JRgsI+cT8840+Iz75p3m8
-         fzqQ==
+        d=tessares.net; s=google;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SV42mF+MU/yNNSvEQ3cDck0zrBQnXXK1gKwku8LNjTk=;
+        b=gy/5cZ2aMrhndW30F+FCqaYK+HxAuA1zxnPhxQFUiywLxOjmNP3CwC43CPdfr5BH/v
+         T5SUWAnNZxQie2Ft4qQO25+5nntY/7fgnoOUfqwIo8MBEjvp6R+7kjvVYwxca5Zoyq1W
+         Hh+0sj/ih+pLIZGOQ1Gv3ideoWjbJv6hGThumetKQL9SMhm8NydCosYx0AM8DtJSkLra
+         Iz9H8AVRmev9rWw7s5Wqnx7n2Kjg2pQ4TBdm0mmD2S5tF7AGVYFWQIhWZwo9SpKBRQ8/
+         z6bvcVM5GmyFUDO/k+dWvH27WLa1GMeXD4UkidOiW1W5dqX7pZcRz+vHwyO3QhGXPvbf
+         OPmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aYoGiVnitKVsiwNVJDrEKDE+kZ8NsbSA29728NlslYo=;
-        b=Ds8ebVA2IGCCjv73ElkeOpQJQ3WJmZhvGfBCCffd3NrYaAoLk0/I0QmrHCfSaUVGZV
-         tzRn5ZLQVU/QCtydsPEz8dGmc91lNRCP17DhxwuPB/qPbGR/oy6Y3eZR9XmjpH7QOnRo
-         7vhnTflOf76rOFqKAu7DRB1DNmN6Ejtr6aNO6uZDMERjjeAn2ADLM8OGQv+DzBQcZMmS
-         yUDfWnlriyySy9Hiwt1reU/+9VthCsHdntmBo4c4ywUUieJELdhdiODSryAPKLQ8uqHo
-         uarZRGJMFEy0OTjv9o7yYyWr1U45HNpyPcY8MLy6iUA00Y95PrbTGRrzL73XVNIjcoLs
-         YvUQ==
-X-Gm-Message-State: AO0yUKXVYC7aN8u+7E2eF5oMyqNzd4VYdn5T63YM6uq0JixJn5MvRw4i
-	ll1H0EP22Tf8dDkEnI6aQ54=
-X-Google-Smtp-Source: AK7set/olXPDRSQzuo4Wwxxbe1sWjQiXnjrAFsiPwcOGM2AriEpild14YdA2O572A2LuCJhCsIOmYA==
-X-Received: by 2002:a05:6a21:980d:b0:bd:93a:4c8f with SMTP id ue13-20020a056a21980d00b000bd093a4c8fmr680154pzb.23.1676348118709;
-        Mon, 13 Feb 2023 20:15:18 -0800 (PST)
-Received: from KERNELXING-MB0.tencent.com ([103.7.29.31])
-        by smtp.gmail.com with ESMTPSA id iw3-20020a170903044300b0019ab3308554sm740154plb.85.2023.02.13.20.15.13
+        bh=SV42mF+MU/yNNSvEQ3cDck0zrBQnXXK1gKwku8LNjTk=;
+        b=4LqKunSAFYvn2JVfQ/79UZwhc96SL/qH0TSzjEZbtOIs2Cu3p2CRZJlD22ZvBr4lAu
+         iUS9fvpI+uyjh0Ny5yWkqu/0f0GuCo/Ra+pswK5Z/FcF2/BHmBjS9pBJ/AqufdYhI3iJ
+         d3adIqQRYt2io4VMyde+VEBIplvrVf7ILGzkrsCkFXFyaCEXFGdwNLXCr8S0nO5ZTT9l
+         Pv1R9alFzifZRtTbWK+SRoVrKKrSwA4uzUtexUf3QxRYTeuXux1PVi6a+Nn7aVBUQ4Nu
+         Rcrh1dhfYtBIizhaBws7a5R2Lc4UYyHVhSi4BZgQCK9a1LGsM8T9mfhrXx9CJlQLkcfA
+         rKnA==
+X-Gm-Message-State: AO0yUKX+O2b/uJyBWu+t0Ei19m/jCo7Z0rgROhZXAQMNXUqUub1Mv3vD
+	no3KD6x2AOsXrMnr77EDdEEnIR1aWq5ItNQEhPy0zg==
+X-Google-Smtp-Source: AK7set85EfmJ3xaVxXEKcfjUrXPWb7MiIP1nWM0eDC4AkvRs+E48pEpJ7TfTYo/5FNO83tFCSsa/2w==
+X-Received: by 2002:adf:fc86:0:b0:2c5:53f8:4054 with SMTP id g6-20020adffc86000000b002c553f84054mr2348438wrr.51.1676390727983;
+        Tue, 14 Feb 2023 08:05:27 -0800 (PST)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id bg30-20020a05600c3c9e00b003db012d49b7sm4435537wmb.2.2023.02.14.08.05.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Feb 2023 20:15:18 -0800 (PST)
-From: Jason Xing <kerneljasonxing@gmail.com>
-To: kuniyu@amazon.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	dsahern@kernel.org,
-	matthieu.baerts@tessares.net,
-	willemdebruijn.kernel@gmail.com,
-	nhorman@tuxdriver.com,
-	marcelo.leitner@gmail.com,
-	lucien.xin@gmail.com,
-	kgraul@linux.ibm.com,
-	wenjia@linux.ibm.com,
-	jaka@linux.ibm.com,
-	bjorn@kernel.org,
-	magnus.karlsson@intel.com,
-	maciej.fijalkowski@intel.com,
-	jonathan.lemon@gmail.com
-Cc: bpf@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-sctp@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kerneljasonxing@gmail.com,
-	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH v2 net-next] net: no longer support SOCK_REFCNT_DEBUG feature
-Date: Tue, 14 Feb 2023 12:14:10 +0800
-Message-Id: <20230214041410.6295-1-kerneljasonxing@gmail.com>
-X-Mailer: git-send-email 2.33.0
+        Tue, 14 Feb 2023 08:05:27 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH 6.1 0/4] mptcp: Stable backports for 6.1.12
+Date: Tue, 14 Feb 2023 17:05:06 +0100
+Message-Id: <20230214-upstream-stable-20230214-linux-6-1-12-rc1-mptcp-fixes-v1-0-02f36fa30f8c@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADKx62MC/z3MSw6CMBAG4KuQWTvIVHDhVYyLUgZpArWZKQZDu
+ LvFEJf/I98KyuJZ4VasIPz26l8hBzoV4AYbnoy+yxlMZS6VoRrnqEnYTqjJtiPjfxh9mBe8IiE
+ ZFEc4xeQi9n5hxa43tW36mqghyHZrlbEVG9yw64cl7nwoJZWf/ReFf0A+3SG38Ni2L53TAkm0A
+ AAA
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Sasha Levin <sashal@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, stable@vger.kernel.org, 
+ mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ Mat Martineau <mathew.j.martineau@linux.intel.com>, 
+ "David S. Miller" <davem@davemloft.net>
+X-Mailer: b4 0.12.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1591;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=pbuAhIx9yE2zwRo97rTcHGLzAnrJnbrf1fjkhlJ0qFk=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj67FGKipTFMqr7vbOLouBGnvBW4T5lL281Bsb2
+ MeT+8OUEI6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY+uxRgAKCRD2t4JPQmmg
+ c5CHD/0XLS478ViEGLXstLJLS/TgUp/i1F33SDHjuM0V1mOCiHQgbMIyP67yF1Qgqzins95JjKM
+ eI0IMUn7EtbL+QZSB8PZX4xo+szL/EkS2bi9JbP3GxyV2nRiXnSWeTJp4oXOsIzOrGjoRIlGkkd
+ bidEeR8gAUTAxrQnwQLLX11jiqTVbICl4op54VGKQbDMGPBe5cMNtGJr4JHGMTvtxA2vV2DUTxI
+ CIZ6TvQocUcSVailPhgMeenlBvc6hneSXQ9KBMgAKEUMusLNUR60/VcaH+R38Z+XNyshWBuTU/d
+ oA/NXOHjpoWGld/T/n66/JBgDM06+3YBk1MsneI+6v/eHiN2Y901d2cdP8ZvlF7MvTsLAf7COWd
+ cwBP/NxslP0xAT+m4bPovPNiDSY1yc25dlJr6ficIQasTduk27V3OjSzihz5XhLX1cwhwDlQA1V
+ TD7gLC2NNPfe5Fkh4Tzv0PglRkHHGF91AUctI1GzDT+wEZSmdQsHeJdwlJ61NFNlIuhrfPa5jmU
+ xuR5N5PubruEJOpod7LuNFhsRaXOjWP6vRcTMuz3TN5WE+GH5mqekDd1Eq1Tzm0TucIMXdjg6mR
+ ZfsxPAuTneLQx8ePKqzxVqiUxoDHGurUWQy5g8Y/AMA+OtZ/1WkWROiDd5BWJrTYnhuQZOlLyYu
+ kl73EZksHOOqVlw==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Jason Xing <kernelxing@tencent.com>
+Hi Greg, Sasha,
 
-Commit e48c414ee61f ("[INET]: Generalise the TCP sock ID lookup routines")
-commented out the definition of SOCK_REFCNT_DEBUG in 2005 and later another
-commit 463c84b97f24 ("[NET]: Introduce inet_connection_sock") removed it.
-Since we could track all of them through bpf and kprobe related tools
-and the feature could print loads of information which might not be
-that helpful even under a little bit pressure, the whole feature which
-has been inactive for many years is no longer supported.
+Here are two MPTCP patches backports (patches 2-3/4), and one
+prerequisite (patch 1/4), that recently failed to apply to the 6.1
+stable tree. They prevent some locking issues with MPTCP.
 
-Link: https://lore.kernel.org/lkml/20230211065153.54116-1-kerneljasonxing@gmail.com/
-Suggested-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Signed-off-by: Jason Xing <kernelxing@tencent.com>
+After having cherry-picked patch 1/4 -- a simple refactoring to make a
+function more generic -- patch 2/4 applied without any issue.
+
+For patch 3/4, I had to resolve two simple function because two
+if-statements around the modified code have curly braces in v6.1, not
+later, see commit 976d302fb616 ("mptcp: deduplicate error paths on
+endpoint creation").
+
+On top of that, patch 4/4 fixes MPTCP userspace PM selftest that has
+been recently broken due to a backport done in v6.1.8.
+
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-v2:
-1) change the title and body message.
-2) remove the whole feature instead suggested by Kuniyuki Iwashima.
----
- include/net/sock.h              | 28 ----------------------------
- net/core/sock.c                 | 13 -------------
- net/ipv4/af_inet.c              |  3 ---
- net/ipv4/inet_connection_sock.c |  2 --
- net/ipv4/inet_timewait_sock.c   |  3 ---
- net/ipv6/af_inet6.c             | 10 ----------
- net/ipv6/ipv6_sockglue.c        | 12 ------------
- net/mptcp/protocol.c            |  1 -
- net/packet/af_packet.c          |  4 ----
- net/sctp/ipv6.c                 |  2 --
- net/sctp/protocol.c             |  2 --
- net/smc/af_smc.c                |  3 ---
- net/xdp/xsk.c                   |  4 ----
- 13 files changed, 87 deletions(-)
+Matthieu Baerts (2):
+      mptcp: sockopt: make 'tcp_fastopen_connect' generic
+      selftests: mptcp: userspace: fix v4-v6 test in v6.1
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index dcd72e6285b2..e6369068a7bb 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -1349,9 +1349,6 @@ struct proto {
- 	char			name[32];
- 
- 	struct list_head	node;
--#ifdef SOCK_REFCNT_DEBUG
--	atomic_t		socks;
--#endif
- 	int			(*diag_destroy)(struct sock *sk, int err);
- } __randomize_layout;
- 
-@@ -1359,31 +1356,6 @@ int proto_register(struct proto *prot, int alloc_slab);
- void proto_unregister(struct proto *prot);
- int sock_load_diag_module(int family, int protocol);
- 
--#ifdef SOCK_REFCNT_DEBUG
--static inline void sk_refcnt_debug_inc(struct sock *sk)
--{
--	atomic_inc(&sk->sk_prot->socks);
--}
--
--static inline void sk_refcnt_debug_dec(struct sock *sk)
--{
--	atomic_dec(&sk->sk_prot->socks);
--	printk(KERN_DEBUG "%s socket %p released, %d are still alive\n",
--	       sk->sk_prot->name, sk, atomic_read(&sk->sk_prot->socks));
--}
--
--static inline void sk_refcnt_debug_release(const struct sock *sk)
--{
--	if (refcount_read(&sk->sk_refcnt) != 1)
--		printk(KERN_DEBUG "Destruction of the %s socket %p delayed, refcnt=%d\n",
--		       sk->sk_prot->name, sk, refcount_read(&sk->sk_refcnt));
--}
--#else /* SOCK_REFCNT_DEBUG */
--#define sk_refcnt_debug_inc(sk) do { } while (0)
--#define sk_refcnt_debug_dec(sk) do { } while (0)
--#define sk_refcnt_debug_release(sk) do { } while (0)
--#endif /* SOCK_REFCNT_DEBUG */
--
- INDIRECT_CALLABLE_DECLARE(bool tcp_stream_memory_free(const struct sock *sk, int wake));
- 
- static inline int sk_forward_alloc_get(const struct sock *sk)
-diff --git a/net/core/sock.c b/net/core/sock.c
-index f954d5893e79..be7b29d97637 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2338,17 +2338,6 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
- 	smp_wmb();
- 	refcount_set(&newsk->sk_refcnt, 2);
- 
--	/* Increment the counter in the same struct proto as the master
--	 * sock (sk_refcnt_debug_inc uses newsk->sk_prot->socks, that
--	 * is the same as sk->sk_prot->socks, as this field was copied
--	 * with memcpy).
--	 *
--	 * This _changes_ the previous behaviour, where
--	 * tcp_create_openreq_child always was incrementing the
--	 * equivalent to tcp_prot->socks (inet_sock_nr), so this have
--	 * to be taken into account in all callers. -acme
--	 */
--	sk_refcnt_debug_inc(newsk);
- 	sk_set_socket(newsk, NULL);
- 	sk_tx_queue_clear(newsk);
- 	RCU_INIT_POINTER(newsk->sk_wq, NULL);
-@@ -3696,8 +3685,6 @@ void sk_common_release(struct sock *sk)
- 
- 	xfrm_sk_free_policy(sk);
- 
--	sk_refcnt_debug_release(sk);
--
- 	sock_put(sk);
- }
- EXPORT_SYMBOL(sk_common_release);
-diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-index 6c0ec2789943..f46a3924c440 100644
---- a/net/ipv4/af_inet.c
-+++ b/net/ipv4/af_inet.c
-@@ -156,7 +156,6 @@ void inet_sock_destruct(struct sock *sk)
- 	kfree(rcu_dereference_protected(inet->inet_opt, 1));
- 	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
- 	dst_release(rcu_dereference_protected(sk->sk_rx_dst, 1));
--	sk_refcnt_debug_dec(sk);
- }
- EXPORT_SYMBOL(inet_sock_destruct);
- 
-@@ -356,8 +355,6 @@ static int inet_create(struct net *net, struct socket *sock, int protocol,
- 	inet->mc_list	= NULL;
- 	inet->rcv_tos	= 0;
- 
--	sk_refcnt_debug_inc(sk);
--
- 	if (inet->inet_num) {
- 		/* It assumes that any protocol which allows
- 		 * the user to assign a number at socket
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index d1f837579398..64be59d93b04 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -1178,8 +1178,6 @@ void inet_csk_destroy_sock(struct sock *sk)
- 
- 	xfrm_sk_free_policy(sk);
- 
--	sk_refcnt_debug_release(sk);
--
- 	this_cpu_dec(*sk->sk_prot->orphan_count);
- 
- 	sock_put(sk);
-diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
-index beed32fff484..40052414c7c7 100644
---- a/net/ipv4/inet_timewait_sock.c
-+++ b/net/ipv4/inet_timewait_sock.c
-@@ -77,9 +77,6 @@ void inet_twsk_free(struct inet_timewait_sock *tw)
- {
- 	struct module *owner = tw->tw_prot->owner;
- 	twsk_destructor((struct sock *)tw);
--#ifdef SOCK_REFCNT_DEBUG
--	pr_debug("%s timewait_sock %p released\n", tw->tw_prot->name, tw);
--#endif
- 	kmem_cache_free(tw->tw_prot->twsk_prot->twsk_slab, tw);
- 	module_put(owner);
- }
-diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
-index fee9163382c2..c93f2e865fea 100644
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -238,16 +238,6 @@ static int inet6_create(struct net *net, struct socket *sock, int protocol,
- 		inet->pmtudisc = IP_PMTUDISC_DONT;
- 	else
- 		inet->pmtudisc = IP_PMTUDISC_WANT;
--	/*
--	 * Increment only the relevant sk_prot->socks debug field, this changes
--	 * the previous behaviour of incrementing both the equivalent to
--	 * answer->prot->socks (inet6_sock_nr) and inet_sock_nr.
--	 *
--	 * This allows better debug granularity as we'll know exactly how many
--	 * UDPv6, TCPv6, etc socks were allocated, not the sum of all IPv6
--	 * transport protocol socks. -acme
--	 */
--	sk_refcnt_debug_inc(sk);
- 
- 	if (inet->inet_num) {
- 		/* It assumes that any protocol which allows
-diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-index 9ce51680290b..2917dd8d198c 100644
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -464,13 +464,6 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
- 			__ipv6_sock_mc_close(sk);
- 			__ipv6_sock_ac_close(sk);
- 
--			/*
--			 * Sock is moving from IPv6 to IPv4 (sk_prot), so
--			 * remove it from the refcnt debug socks count in the
--			 * original family...
--			 */
--			sk_refcnt_debug_dec(sk);
--
- 			if (sk->sk_protocol == IPPROTO_TCP) {
- 				struct inet_connection_sock *icsk = inet_csk(sk);
- 
-@@ -507,11 +500,6 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
- 
- 			inet6_cleanup_sock(sk);
- 
--			/*
--			 * ... and add it to the refcnt debug socks count
--			 * in the new family. -acme
--			 */
--			sk_refcnt_debug_inc(sk);
- 			module_put(THIS_MODULE);
- 			retv = 0;
- 			break;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 8cd6cc67c2c5..e913752df112 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2876,7 +2876,6 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 	sk_stream_kill_queues(sk);
- 	xfrm_sk_free_policy(sk);
- 
--	sk_refcnt_debug_release(sk);
- 	sock_put(sk);
- }
- 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index b5ab98ca2511..a4c8f86ac12a 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -1335,8 +1335,6 @@ static void packet_sock_destruct(struct sock *sk)
- 		pr_err("Attempt to release alive packet socket: %p\n", sk);
- 		return;
- 	}
--
--	sk_refcnt_debug_dec(sk);
- }
- 
- static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
-@@ -3172,7 +3170,6 @@ static int packet_release(struct socket *sock)
- 
- 	skb_queue_purge(&sk->sk_receive_queue);
- 	packet_free_pending(po);
--	sk_refcnt_debug_release(sk);
- 
- 	sock_put(sk);
- 	return 0;
-@@ -3362,7 +3359,6 @@ static int packet_create(struct net *net, struct socket *sock, int protocol,
- 	packet_cached_dev_reset(po);
- 
- 	sk->sk_destruct = packet_sock_destruct;
--	sk_refcnt_debug_inc(sk);
- 
- 	/*
- 	 *	Attach a protocol block
-diff --git a/net/sctp/ipv6.c b/net/sctp/ipv6.c
-index 097bd60ce964..62b436a2c8fe 100644
---- a/net/sctp/ipv6.c
-+++ b/net/sctp/ipv6.c
-@@ -807,8 +807,6 @@ static struct sock *sctp_v6_create_accept_sk(struct sock *sk,
- 
- 	newsk->sk_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
- 
--	sk_refcnt_debug_inc(newsk);
--
- 	if (newsk->sk_prot->init(newsk)) {
- 		sk_common_release(newsk);
- 		newsk = NULL;
-diff --git a/net/sctp/protocol.c b/net/sctp/protocol.c
-index 909a89a1cff4..c365df24ad33 100644
---- a/net/sctp/protocol.c
-+++ b/net/sctp/protocol.c
-@@ -601,8 +601,6 @@ static struct sock *sctp_v4_create_accept_sk(struct sock *sk,
- 
- 	newinet->inet_daddr = asoc->peer.primary_addr.v4.sin_addr.s_addr;
- 
--	sk_refcnt_debug_inc(newsk);
--
- 	if (newsk->sk_prot->init(newsk)) {
- 		sk_common_release(newsk);
- 		newsk = NULL;
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index e12d4fa5aece..c594312e22cd 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -359,8 +359,6 @@ static void smc_destruct(struct sock *sk)
- 		return;
- 	if (!sock_flag(sk, SOCK_DEAD))
- 		return;
--
--	sk_refcnt_debug_dec(sk);
- }
- 
- static struct sock *smc_sock_alloc(struct net *net, struct socket *sock,
-@@ -389,7 +387,6 @@ static struct sock *smc_sock_alloc(struct net *net, struct socket *sock,
- 	spin_lock_init(&smc->accept_q_lock);
- 	spin_lock_init(&smc->conn.send_lock);
- 	sk->sk_prot->hash(sk);
--	sk_refcnt_debug_inc(sk);
- 	mutex_init(&smc->clcsock_release_lock);
- 	smc_init_saved_callbacks(smc);
- 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 9f0561b67c12..a245c1b4a21b 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -845,7 +845,6 @@ static int xsk_release(struct socket *sock)
- 	sock_orphan(sk);
- 	sock->sk = NULL;
- 
--	sk_refcnt_debug_release(sk);
- 	sock_put(sk);
- 
- 	return 0;
-@@ -1396,8 +1395,6 @@ static void xsk_destruct(struct sock *sk)
- 
- 	if (!xp_put_pool(xs->pool))
- 		xdp_put_umem(xs->umem, !xs->pool);
--
--	sk_refcnt_debug_dec(sk);
- }
- 
- static int xsk_create(struct net *net, struct socket *sock, int protocol,
-@@ -1427,7 +1424,6 @@ static int xsk_create(struct net *net, struct socket *sock, int protocol,
- 	sk->sk_family = PF_XDP;
- 
- 	sk->sk_destruct = xsk_destruct;
--	sk_refcnt_debug_inc(sk);
- 
- 	sock_set_flag(sk, SOCK_RCU_FREE);
- 
+Paolo Abeni (2):
+      mptcp: fix locking for setsockopt corner-case
+      mptcp: fix locking for in-kernel listener creation
+
+ net/mptcp/pm_netlink.c                            | 10 ++++++----
+ net/mptcp/sockopt.c                               | 20 ++++++++++++++------
+ net/mptcp/subflow.c                               |  2 +-
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 11 +++++++++++
+ 4 files changed, 32 insertions(+), 11 deletions(-)
+---
+base-commit: 9012d1ebd3236e1d741ab4264f1d14e276c2e29f
+change-id: 20230214-upstream-stable-20230214-linux-6-1-12-rc1-mptcp-fixes-df24a5f41151
+
+Best regards,
 -- 
-2.37.3
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
