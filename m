@@ -1,46 +1,47 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4059DC0B4
-	for <mptcp@lists.linux.dev>; Tue, 14 Feb 2023 16:05:29 +0000 (UTC)
-Received: by mail-wr1-f48.google.com with SMTP id bu23so16171284wrb.8
-        for <mptcp@lists.linux.dev>; Tue, 14 Feb 2023 08:05:29 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4396C0B7
+	for <mptcp@lists.linux.dev>; Tue, 14 Feb 2023 16:05:30 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id k8-20020a05600c1c8800b003dc57ea0dfeso14059617wms.0
+        for <mptcp@lists.linux.dev>; Tue, 14 Feb 2023 08:05:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SV42mF+MU/yNNSvEQ3cDck0zrBQnXXK1gKwku8LNjTk=;
-        b=gy/5cZ2aMrhndW30F+FCqaYK+HxAuA1zxnPhxQFUiywLxOjmNP3CwC43CPdfr5BH/v
-         T5SUWAnNZxQie2Ft4qQO25+5nntY/7fgnoOUfqwIo8MBEjvp6R+7kjvVYwxca5Zoyq1W
-         Hh+0sj/ih+pLIZGOQ1Gv3ideoWjbJv6hGThumetKQL9SMhm8NydCosYx0AM8DtJSkLra
-         Iz9H8AVRmev9rWw7s5Wqnx7n2Kjg2pQ4TBdm0mmD2S5tF7AGVYFWQIhWZwo9SpKBRQ8/
-         z6bvcVM5GmyFUDO/k+dWvH27WLa1GMeXD4UkidOiW1W5dqX7pZcRz+vHwyO3QhGXPvbf
-         OPmg==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ly6DfkEKz/G+rxKKbWncYYr46bc2Li2tCDDJdiz0T8M=;
+        b=ag05wB9PpHBHmboVYhZi7jl9gaupeMoVum/iIEd4UdEfztJtdlqtoqaxK8cG0vAqpa
+         HVxiTBnhAm8HYDuRjIQn/h7S2LtHv9sRBA9JaSMxs1bgacFBXFIlNNIgPb6jGqzIGulf
+         KUWRtn8mCG3blgQmHPsqTlgJZy5JQ4GN+cIkstq1VmD+ULkVnxxVk83M1+PyKLAyvb0v
+         lXweCzJHI89+kBcTlSbe0GnZYeVfJZNjyrlta/XWFbFGKbhTOQbTGQAjDAXW1FaAH4a3
+         Etvf1Mpp8cZMxqVzVoSMJs9RHKkTQh2IKypPgjHKx7E+gTTFI2+1NPt8CnaWNz9b1ZIE
+         GTbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SV42mF+MU/yNNSvEQ3cDck0zrBQnXXK1gKwku8LNjTk=;
-        b=4LqKunSAFYvn2JVfQ/79UZwhc96SL/qH0TSzjEZbtOIs2Cu3p2CRZJlD22ZvBr4lAu
-         iUS9fvpI+uyjh0Ny5yWkqu/0f0GuCo/Ra+pswK5Z/FcF2/BHmBjS9pBJ/AqufdYhI3iJ
-         d3adIqQRYt2io4VMyde+VEBIplvrVf7ILGzkrsCkFXFyaCEXFGdwNLXCr8S0nO5ZTT9l
-         Pv1R9alFzifZRtTbWK+SRoVrKKrSwA4uzUtexUf3QxRYTeuXux1PVi6a+Nn7aVBUQ4Nu
-         Rcrh1dhfYtBIizhaBws7a5R2Lc4UYyHVhSi4BZgQCK9a1LGsM8T9mfhrXx9CJlQLkcfA
-         rKnA==
-X-Gm-Message-State: AO0yUKX+O2b/uJyBWu+t0Ei19m/jCo7Z0rgROhZXAQMNXUqUub1Mv3vD
-	no3KD6x2AOsXrMnr77EDdEEnIR1aWq5ItNQEhPy0zg==
-X-Google-Smtp-Source: AK7set85EfmJ3xaVxXEKcfjUrXPWb7MiIP1nWM0eDC4AkvRs+E48pEpJ7TfTYo/5FNO83tFCSsa/2w==
-X-Received: by 2002:adf:fc86:0:b0:2c5:53f8:4054 with SMTP id g6-20020adffc86000000b002c553f84054mr2348438wrr.51.1676390727983;
-        Tue, 14 Feb 2023 08:05:27 -0800 (PST)
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ly6DfkEKz/G+rxKKbWncYYr46bc2Li2tCDDJdiz0T8M=;
+        b=MBLYfLtDofcAbLGosQtWTJ38l16N9H+dMAxeKqjwMx2i3I/w6o+WOoPNXXKVxzQLKK
+         ELOdqNqGseAeE4h+KPx9dPvJibOYNroZkKhyqah0u1KbXPUhkP8x8ylI70fMJ+Ruryg6
+         sf+/SuDcGCqrpFcxc1U8eFDsQHBuULm49mUbC90BVe1Nl+JIxRfAlMFybWKR4vm9OcJf
+         3VPWx1l9anaLGbzT31IumPNED/x4UHg89aFGkE6QKGI84LOikgE/8zrjZznjEZ1AkVCR
+         But0CmN2lMT4/MEYXN861T7cpjVWXu/wtFvKJRtd5NtnFoegdpKh82w+xAXQVDjeFoWW
+         aouw==
+X-Gm-Message-State: AO0yUKWUG4fUF58GkZ/7poQX3wseEP13hjbRb3dIzey44L5SbpVeMo3R
+	BbzXatbWsIYHSeNpNRGH66tn+l1SCdblJqeCMshdlQ==
+X-Google-Smtp-Source: AK7set9dsNaaz8mZMAVPHChTu9UZgZGDw+xvILUMyZHZQ/STzLl27yRjoWAXXjB7Fo2PehqG7Lj3xg==
+X-Received: by 2002:a05:600c:4ab0:b0:3de:d9f:3025 with SMTP id b48-20020a05600c4ab000b003de0d9f3025mr2313297wmp.0.1676390728817;
+        Tue, 14 Feb 2023 08:05:28 -0800 (PST)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id bg30-20020a05600c3c9e00b003db012d49b7sm4435537wmb.2.2023.02.14.08.05.27
+        by smtp.gmail.com with ESMTPSA id bg30-20020a05600c3c9e00b003db012d49b7sm4435537wmb.2.2023.02.14.08.05.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Feb 2023 08:05:27 -0800 (PST)
+        Tue, 14 Feb 2023 08:05:28 -0800 (PST)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH 6.1 0/4] mptcp: Stable backports for 6.1.12
-Date: Tue, 14 Feb 2023 17:05:06 +0100
-Message-Id: <20230214-upstream-stable-20230214-linux-6-1-12-rc1-mptcp-fixes-v1-0-02f36fa30f8c@tessares.net>
+Date: Tue, 14 Feb 2023 17:05:07 +0100
+Subject: [PATCH 6.1 1/4] mptcp: sockopt: make 'tcp_fastopen_connect'
+ generic
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,72 +50,90 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADKx62MC/z3MSw6CMBAG4KuQWTvIVHDhVYyLUgZpArWZKQZDu
- LvFEJf/I98KyuJZ4VasIPz26l8hBzoV4AYbnoy+yxlMZS6VoRrnqEnYTqjJtiPjfxh9mBe8IiE
- ZFEc4xeQi9n5hxa43tW36mqghyHZrlbEVG9yw64cl7nwoJZWf/ReFf0A+3SG38Ni2L53TAkm0A
- AAA
+Message-Id: <20230214-upstream-stable-20230214-linux-6-1-12-rc1-mptcp-fixes-v1-1-02f36fa30f8c@tessares.net>
+References: <20230214-upstream-stable-20230214-linux-6-1-12-rc1-mptcp-fixes-v1-0-02f36fa30f8c@tessares.net>
+In-Reply-To: <20230214-upstream-stable-20230214-linux-6-1-12-rc1-mptcp-fixes-v1-0-02f36fa30f8c@tessares.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  Sasha Levin <sashal@kernel.org>
 Cc: Paolo Abeni <pabeni@redhat.com>, stable@vger.kernel.org, 
  mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
- Mat Martineau <mathew.j.martineau@linux.intel.com>, 
- "David S. Miller" <davem@davemloft.net>
+ Mat Martineau <mathew.j.martineau@linux.intel.com>
 X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1591;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2300;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=pbuAhIx9yE2zwRo97rTcHGLzAnrJnbrf1fjkhlJ0qFk=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj67FGKipTFMqr7vbOLouBGnvBW4T5lL281Bsb2
- MeT+8OUEI6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY+uxRgAKCRD2t4JPQmmg
- c5CHD/0XLS478ViEGLXstLJLS/TgUp/i1F33SDHjuM0V1mOCiHQgbMIyP67yF1Qgqzins95JjKM
- eI0IMUn7EtbL+QZSB8PZX4xo+szL/EkS2bi9JbP3GxyV2nRiXnSWeTJp4oXOsIzOrGjoRIlGkkd
- bidEeR8gAUTAxrQnwQLLX11jiqTVbICl4op54VGKQbDMGPBe5cMNtGJr4JHGMTvtxA2vV2DUTxI
- CIZ6TvQocUcSVailPhgMeenlBvc6hneSXQ9KBMgAKEUMusLNUR60/VcaH+R38Z+XNyshWBuTU/d
- oA/NXOHjpoWGld/T/n66/JBgDM06+3YBk1MsneI+6v/eHiN2Y901d2cdP8ZvlF7MvTsLAf7COWd
- cwBP/NxslP0xAT+m4bPovPNiDSY1yc25dlJr6ficIQasTduk27V3OjSzihz5XhLX1cwhwDlQA1V
- TD7gLC2NNPfe5Fkh4Tzv0PglRkHHGF91AUctI1GzDT+wEZSmdQsHeJdwlJ61NFNlIuhrfPa5jmU
- xuR5N5PubruEJOpod7LuNFhsRaXOjWP6vRcTMuz3TN5WE+GH5mqekDd1Eq1Tzm0TucIMXdjg6mR
- ZfsxPAuTneLQx8ePKqzxVqiUxoDHGurUWQy5g8Y/AMA+OtZ/1WkWROiDd5BWJrTYnhuQZOlLyYu
- kl73EZksHOOqVlw==
+ bh=XgzkoybHN6ABv/TX942NWNid6qtwPZKWNVbrOVabEK8=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj67FGqQtd+YwgDINrS+SBqFBoIc+L3o3Bk6Jmi
+ IEkgWfMNwmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY+uxRgAKCRD2t4JPQmmg
+ c7GtD/4un9n6YptAU7aNzIVTvTx9aLILOaddL0mVlwN6l+YChgp1geqYAsP6sfdxokobJZAouON
+ qs+fzhGSJaQIl0ViU2OA+fzrNvLCLwvu/ZwNU0NbrEsSu5YmvFx1tR3VvjbvnPTf5CsNiuUSBt3
+ fyleKiM9piQXwWBtRSnbhA7HHzlgKyVrl2T2a3a65CmfRYI6fX0WE4nrsIb7yZARdbxWAiNOonl
+ op78YmaN1eiHuLziJxyw8tURkwM7X9AeftMw+yGJLMY1/+wtu1SVcn6BRKh2IyCS8/Ui6jiGs51
+ OIJiT/vacHr4PHi1bsaBTiqt+Tb5ba3UCRy1JPwmzyFfFcTpoZ7LS5+5uUIErp0tz69IinxNg0r
+ ryU6XsZ3OoMRYopVV7tXtQOmc06Ji6MYO68HPjGGBoFX0rR58JVLG/KO06nUSRe9XxF8f0PKPtt
+ lQTd5d8Q+tFBFpZFx0x8Cpx63jsb3rmQNK5TryBJgAcIhhjDaoorYp6B4J6p1dP1UpENvdTky+A
+ tK5ovhb92b3Kau0ejsleEdUZITndbT17y+2BXgM0erVKSz0now8CaxrRhQZlyhT8lDiyP6t77ss
+ Rqf53ATYYx0Y3vzcpEusTiiui1zmPjUUrjgW5CGuOYOpzR9cxgfI/82LC3rO1yoGcVHv1psgEyC
+ 9Mhnev1123FwSYw==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Greg, Sasha,
+[ Upstream commit d3d429047cc66ff49780c93e4fccd9527723d385 ]
 
-Here are two MPTCP patches backports (patches 2-3/4), and one
-prerequisite (patch 1/4), that recently failed to apply to the 6.1
-stable tree. They prevent some locking issues with MPTCP.
+There are other socket options that need to act only on the first
+subflow, e.g. all TCP_FASTOPEN* socket options.
 
-After having cherry-picked patch 1/4 -- a simple refactoring to make a
-function more generic -- patch 2/4 applied without any issue.
+This is similar to the getsockopt version.
 
-For patch 3/4, I had to resolve two simple function because two
-if-statements around the modified code have curly braces in v6.1, not
-later, see commit 976d302fb616 ("mptcp: deduplicate error paths on
-endpoint creation").
+In the next commit, this new mptcp_setsockopt_first_sf_only() helper is
+used by other another option.
 
-On top of that, patch 4/4 fixes MPTCP userspace PM selftest that has
-been recently broken due to a backport done in v6.1.8.
-
+Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Stable-dep-of: 21e43569685d ("mptcp: fix locking for setsockopt corner-case")
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-Matthieu Baerts (2):
-      mptcp: sockopt: make 'tcp_fastopen_connect' generic
-      selftests: mptcp: userspace: fix v4-v6 test in v6.1
+ net/mptcp/sockopt.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Paolo Abeni (2):
-      mptcp: fix locking for setsockopt corner-case
-      mptcp: fix locking for in-kernel listener creation
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index c7cb68c725b2..8d3b09d75c3a 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -769,17 +769,17 @@ static int mptcp_setsockopt_sol_tcp_defer(struct mptcp_sock *msk, sockptr_t optv
+ 	return tcp_setsockopt(listener->sk, SOL_TCP, TCP_DEFER_ACCEPT, optval, optlen);
+ }
+ 
+-static int mptcp_setsockopt_sol_tcp_fastopen_connect(struct mptcp_sock *msk, sockptr_t optval,
+-						     unsigned int optlen)
++static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int optname,
++					  sockptr_t optval, unsigned int optlen)
+ {
+ 	struct socket *sock;
+ 
+-	/* Limit to first subflow */
++	/* Limit to first subflow, before the connection establishment */
+ 	sock = __mptcp_nmpc_socket(msk);
+ 	if (!sock)
+ 		return -EINVAL;
+ 
+-	return tcp_setsockopt(sock->sk, SOL_TCP, TCP_FASTOPEN_CONNECT, optval, optlen);
++	return tcp_setsockopt(sock->sk, level, optname, optval, optlen);
+ }
+ 
+ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+@@ -811,7 +811,8 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 	case TCP_DEFER_ACCEPT:
+ 		return mptcp_setsockopt_sol_tcp_defer(msk, optval, optlen);
+ 	case TCP_FASTOPEN_CONNECT:
+-		return mptcp_setsockopt_sol_tcp_fastopen_connect(msk, optval, optlen);
++		return mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname,
++						      optval, optlen);
+ 	}
+ 
+ 	return -EOPNOTSUPP;
 
- net/mptcp/pm_netlink.c                            | 10 ++++++----
- net/mptcp/sockopt.c                               | 20 ++++++++++++++------
- net/mptcp/subflow.c                               |  2 +-
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 11 +++++++++++
- 4 files changed, 32 insertions(+), 11 deletions(-)
----
-base-commit: 9012d1ebd3236e1d741ab4264f1d14e276c2e29f
-change-id: 20230214-upstream-stable-20230214-linux-6-1-12-rc1-mptcp-fixes-df24a5f41151
-
-Best regards,
 -- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
+2.38.1
 
