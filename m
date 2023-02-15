@@ -1,138 +1,396 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA029C0B7
-	for <mptcp@lists.linux.dev>; Tue, 14 Feb 2023 16:05:33 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id o36so11322514wms.1
-        for <mptcp@lists.linux.dev>; Tue, 14 Feb 2023 08:05:33 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FA017EC
+	for <mptcp@lists.linux.dev>; Wed, 15 Feb 2023 04:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=koohUOzc3rjrd3gVo0FWEGT8TyvX1unyQ4Ov4ky2KxY=;
-        b=ezar0RbmXvGadURMmsgoHqS5UwCpOY4/xRvW9tk4MUUE6qnooytNWC1Q4jjOa3Pmwi
-         eJDcWj2/IQJXO1bJOLjkoW5wFOVsuMe4ekd2ZyUr/wsai2Lb8Y/xQfcALH2qP6BySKKV
-         NmMnJOcC0Qvt56vU3ZwQW8nmNHN88lFb5My0CHi2jFRn80KY8H0o/PE4S8lt9YIFXwLg
-         nBZtkiBa0g+PB0r+nw7kH1HjZB3vcdDyMWwH//fGjDe7jnbYk+Kr/vxpCzTZUAxkELCE
-         0K+OtGfvL/PuHEkYzTBcSYM54uZTGgXQM/pOwdpftVpC6gE/G8/TIG3S6d/xo3LP9aj9
-         wOqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=koohUOzc3rjrd3gVo0FWEGT8TyvX1unyQ4Ov4ky2KxY=;
-        b=iAUBDiUXzP4/qiqXTXxZFFY36QWAddScrg8QA5xLDM3dSBiyMMJXtCZGZcXr9DzN93
-         FAGOcesoD5vv4Wu3EFo2rvYMkk/+Brq8Qvndo2QvdT5YcceCA2dbvi7rW8LHnFXObDwk
-         QkDhjf+YOV+fat8OHs0vrOwT/67wEWYxoZYE0+qHCqwybP8Z/UbI4CvnYm+pV+o0fXHI
-         LybqlgEGQWazmhyAgsg4TJxxAFX1L3DZMZpOwvQRffwK/3Vx081Z6j1zsAcBDcMRNOI+
-         j5ajbAz+vt73MEOucOW/qpY2OpAioJh33ajfycvF/cfDXzljCjcXJaTTnFEOPML7QSEv
-         h2xQ==
-X-Gm-Message-State: AO0yUKVrbAlLAGP8hqfyP5gumE7PgybIyb6hpTLkcZJwzHtZ8kUBPVFg
-	Yg4ilPpkbuAns9R5+AUB44LIV7i1/0JA6azm6rjkbw==
-X-Google-Smtp-Source: AK7set9Av7L6grWHige91KlE2d/GnFM04OOwqDW8qWWoB91apgCCJeh4yyq/B8Ly9x+X+KF13pc2SA==
-X-Received: by 2002:a05:600c:1893:b0:3dc:4cb5:41c with SMTP id x19-20020a05600c189300b003dc4cb5041cmr2343832wmp.0.1676390731757;
-        Tue, 14 Feb 2023 08:05:31 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id bg30-20020a05600c3c9e00b003db012d49b7sm4435537wmb.2.2023.02.14.08.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Feb 2023 08:05:31 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Tue, 14 Feb 2023 17:05:10 +0100
-Subject: [PATCH 6.1 4/4] selftests: mptcp: userspace: fix v4-v6 test in
- v6.1
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1676437014; x=1707973014;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=N67n0EQAQm+DUJNJ4Imhx9KFbs2DRD8zoaytDC7vlD4=;
+  b=FXtdzCi+OIV89c8/XKVYpOIvYAet4jsVxky1FkwiiBzWi6yNgDwo/tCW
+   yWH1KcEGqw407ya4tK/3U95chsh8Yt1Jdvn7WrBAbT3i9JVd6ocOAjmSS
+   YdSmqpwjvKeRkMtjv3gWmota0E3H53PixIH2Vpo2Y/nn9g6nyTt3fz8/B
+   w=;
+X-IronPort-AV: E=Sophos;i="5.97,298,1669075200"; 
+   d="scan'208";a="292950557"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-ed19f671.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 04:56:49 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+	by email-inbound-relay-pdx-2b-m6i4x-ed19f671.us-west-2.amazon.com (Postfix) with ESMTPS id C7604810D0;
+	Wed, 15 Feb 2023 04:56:46 +0000 (UTC)
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.45; Wed, 15 Feb 2023 04:56:46 +0000
+Received: from 88665a182662.ant.amazon.com.com (10.119.90.83) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.24; Wed, 15 Feb 2023 04:56:41 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <kerneljasonxing@gmail.com>
+CC: <bjorn@kernel.org>, <bpf@vger.kernel.org>, <davem@davemloft.net>,
+	<dsahern@kernel.org>, <edumazet@google.com>, <jaka@linux.ibm.com>,
+	<jonathan.lemon@gmail.com>, <kernelxing@tencent.com>, <kgraul@linux.ibm.com>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<linux-s390@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
+	<lucien.xin@gmail.com>, <maciej.fijalkowski@intel.com>,
+	<magnus.karlsson@intel.com>, <marcelo.leitner@gmail.com>,
+	<matthieu.baerts@tessares.net>, <mptcp@lists.linux.dev>,
+	<netdev@vger.kernel.org>, <nhorman@tuxdriver.com>, <pabeni@redhat.com>,
+	<wenjia@linux.ibm.com>, <willemdebruijn.kernel@gmail.com>
+Subject: Re: [PATCH v2 net-next] net: no longer support SOCK_REFCNT_DEBUG feature
+Date: Tue, 14 Feb 2023 20:56:30 -0800
+Message-ID: <20230215045630.85835-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230214041410.6295-1-kerneljasonxing@gmail.com>
+References: <20230214041410.6295-1-kerneljasonxing@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230214-upstream-stable-20230214-linux-6-1-12-rc1-mptcp-fixes-v1-4-02f36fa30f8c@tessares.net>
-References: <20230214-upstream-stable-20230214-linux-6-1-12-rc1-mptcp-fixes-v1-0-02f36fa30f8c@tessares.net>
-In-Reply-To: <20230214-upstream-stable-20230214-linux-6-1-12-rc1-mptcp-fixes-v1-0-02f36fa30f8c@tessares.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Sasha Levin <sashal@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, stable@vger.kernel.org, 
- mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2149;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=SmWA3FfTQrdAQe5yh2fWIfTfIMgI4aRmQCw9PfjZtg8=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj67FHtzAQM2XHOno/T9eG7WW2rME9eHlHJv9JW
- jorwRbL/NeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY+uxRwAKCRD2t4JPQmmg
- c6SfD/9t1cdsl3PoFAZAjnJGng3cDWJx1rnsIJyQE55YF0cdFCSYuxv3XGgyVVBGs78+FUqpS0n
- mVck4LqsDy4i5LFDKzjMCkzph0kewhA0V3CfcQO5iG2nvyaanXqDGoAhqNI+chU5uTLrF6Ax6k6
- hzKqBYAImEECjiwyrOSfhhOc/JxqmRZjn/kkQwI5eQah0IuCAfgAJczFgt5KNEkOrlQc5d9tUeQ
- G+vhz6meBV8/poBpby3+yuY0amgzGuvgWbkJhgTbMXYWgGcECFJVwehoSBo5NPOoeQGsNbM6pud
- VkqTb/wp5ss7ai+RPn2QwC/O5y0TW2/7ceBAR1C5MBpiS0S3K2DzBqbs7CP8CsgyqItRDI7yjkC
- VMEIuoFKssTflZN6xQZUeSWVNSvbzbRh3dHckGIxBnccDK7BwNtL6WukRSnknIv3CjAYFmdZ524
- ZXFDWfQFxz+egzx7tMAyZy23iXV7XumrMzG7puTSngpPGT3BuYSxdBJ0gwkvBbrbbdhpvoCTfu3
- Q7kJsFblUcC7QzscFCu1KEprt10PjH30N8/Zu6902I7eYyEF84Y7p0A1Otj75pZrRAUsYEBHybE
- UfBv/TZm+uVu/i1SpNjAmbTiawsnc2rUPuIdZWcy0wzUtvNbAsisl40lxmIk+s0IhGiCU5DWoPY
- FwNN7N8T972HqSw==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.119.90.83]
+X-ClientProxiedBy: EX19D046UWA003.ant.amazon.com (10.13.139.18) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Precedence: Bulk
 
-The commit 4656d72c1efa ("selftests: mptcp: userspace: validate v4-v6 subflows mix")
-has been backported to v6.1.8 without any conflicts. But it looks like
-it was depending on a previous one:
+From:   Jason Xing <kerneljasonxing@gmail.com>
+Date:   Tue, 14 Feb 2023 12:14:10 +0800
+> From: Jason Xing <kernelxing@tencent.com>
+> 
+> Commit e48c414ee61f ("[INET]: Generalise the TCP sock ID lookup routines")
+> commented out the definition of SOCK_REFCNT_DEBUG in 2005 and later another
+> commit 463c84b97f24 ("[NET]: Introduce inet_connection_sock") removed it.
+> Since we could track all of them through bpf and kprobe related tools
+> and the feature could print loads of information which might not be
+> that helpful even under a little bit pressure, the whole feature which
+> has been inactive for many years is no longer supported.
+> 
+> Link: https://lore.kernel.org/lkml/20230211065153.54116-1-kerneljasonxing@gmail.com/
+> Suggested-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+> Signed-off-by: Jason Xing <kernelxing@tencent.com>
 
-  commit 1cc94ac1af4b ("selftests: mptcp: make evts global in userspace_pm")
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-Without it, the test fails with:
+Thanks!
 
-  ./userspace_pm.sh: line 788: : No such file or directory
-  # ADD_ADDR4 id:14 10.0.2.1 (ns1) => ns2, reuse port        [FAIL]
-  sed: can't read : No such file or directory
 
-This dependence refactors the way the monitoring files are being
-created: only once for all the different sub-tests instead of per
-sub-test.
-
-It is probably better to avoid backporting the refactoring. That is why
-the new sub-test has been adapted to work using the previous way that is
-still in place here in v6.1: the monitoring is started at the beginning
-of each sub-test and the created file is removed at the end.
-
-Fixes: f59549814a64 ("selftests: mptcp: userspace: validate v4-v6 subflows mix")
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 0040e3bc7b16..ad6547c79b83 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -778,6 +778,14 @@ test_subflows()
- 
- test_subflows_v4_v6_mix()
- {
-+	local client_evts
-+	client_evts=$(mktemp)
-+	# Capture events on the network namespace running the client
-+	:>"$client_evts"
-+	ip netns exec "$ns2" ./pm_nl_ctl events >> "$client_evts" 2>&1 &
-+	evts_pid=$!
-+	sleep 0.5
-+
- 	# Attempt to add a listener at 10.0.2.1:<subflow-port>
- 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
- 	   $app6_port > /dev/null 2>&1 &
-@@ -820,6 +828,9 @@ test_subflows_v4_v6_mix()
- 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
- 	   "$server6_token" > /dev/null 2>&1
- 	sleep 0.5
-+
-+	kill_wait $evts_pid
-+	rm -f "$client_evts"
- }
- 
- test_prio()
-
--- 
-2.38.1
-
+> ---
+> v2:
+> 1) change the title and body message.
+> 2) remove the whole feature instead suggested by Kuniyuki Iwashima.
+> ---
+>  include/net/sock.h              | 28 ----------------------------
+>  net/core/sock.c                 | 13 -------------
+>  net/ipv4/af_inet.c              |  3 ---
+>  net/ipv4/inet_connection_sock.c |  2 --
+>  net/ipv4/inet_timewait_sock.c   |  3 ---
+>  net/ipv6/af_inet6.c             | 10 ----------
+>  net/ipv6/ipv6_sockglue.c        | 12 ------------
+>  net/mptcp/protocol.c            |  1 -
+>  net/packet/af_packet.c          |  4 ----
+>  net/sctp/ipv6.c                 |  2 --
+>  net/sctp/protocol.c             |  2 --
+>  net/smc/af_smc.c                |  3 ---
+>  net/xdp/xsk.c                   |  4 ----
+>  13 files changed, 87 deletions(-)
+> 
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index dcd72e6285b2..e6369068a7bb 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -1349,9 +1349,6 @@ struct proto {
+>  	char			name[32];
+>  
+>  	struct list_head	node;
+> -#ifdef SOCK_REFCNT_DEBUG
+> -	atomic_t		socks;
+> -#endif
+>  	int			(*diag_destroy)(struct sock *sk, int err);
+>  } __randomize_layout;
+>  
+> @@ -1359,31 +1356,6 @@ int proto_register(struct proto *prot, int alloc_slab);
+>  void proto_unregister(struct proto *prot);
+>  int sock_load_diag_module(int family, int protocol);
+>  
+> -#ifdef SOCK_REFCNT_DEBUG
+> -static inline void sk_refcnt_debug_inc(struct sock *sk)
+> -{
+> -	atomic_inc(&sk->sk_prot->socks);
+> -}
+> -
+> -static inline void sk_refcnt_debug_dec(struct sock *sk)
+> -{
+> -	atomic_dec(&sk->sk_prot->socks);
+> -	printk(KERN_DEBUG "%s socket %p released, %d are still alive\n",
+> -	       sk->sk_prot->name, sk, atomic_read(&sk->sk_prot->socks));
+> -}
+> -
+> -static inline void sk_refcnt_debug_release(const struct sock *sk)
+> -{
+> -	if (refcount_read(&sk->sk_refcnt) != 1)
+> -		printk(KERN_DEBUG "Destruction of the %s socket %p delayed, refcnt=%d\n",
+> -		       sk->sk_prot->name, sk, refcount_read(&sk->sk_refcnt));
+> -}
+> -#else /* SOCK_REFCNT_DEBUG */
+> -#define sk_refcnt_debug_inc(sk) do { } while (0)
+> -#define sk_refcnt_debug_dec(sk) do { } while (0)
+> -#define sk_refcnt_debug_release(sk) do { } while (0)
+> -#endif /* SOCK_REFCNT_DEBUG */
+> -
+>  INDIRECT_CALLABLE_DECLARE(bool tcp_stream_memory_free(const struct sock *sk, int wake));
+>  
+>  static inline int sk_forward_alloc_get(const struct sock *sk)
+> diff --git a/net/core/sock.c b/net/core/sock.c
+> index f954d5893e79..be7b29d97637 100644
+> --- a/net/core/sock.c
+> +++ b/net/core/sock.c
+> @@ -2338,17 +2338,6 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
+>  	smp_wmb();
+>  	refcount_set(&newsk->sk_refcnt, 2);
+>  
+> -	/* Increment the counter in the same struct proto as the master
+> -	 * sock (sk_refcnt_debug_inc uses newsk->sk_prot->socks, that
+> -	 * is the same as sk->sk_prot->socks, as this field was copied
+> -	 * with memcpy).
+> -	 *
+> -	 * This _changes_ the previous behaviour, where
+> -	 * tcp_create_openreq_child always was incrementing the
+> -	 * equivalent to tcp_prot->socks (inet_sock_nr), so this have
+> -	 * to be taken into account in all callers. -acme
+> -	 */
+> -	sk_refcnt_debug_inc(newsk);
+>  	sk_set_socket(newsk, NULL);
+>  	sk_tx_queue_clear(newsk);
+>  	RCU_INIT_POINTER(newsk->sk_wq, NULL);
+> @@ -3696,8 +3685,6 @@ void sk_common_release(struct sock *sk)
+>  
+>  	xfrm_sk_free_policy(sk);
+>  
+> -	sk_refcnt_debug_release(sk);
+> -
+>  	sock_put(sk);
+>  }
+>  EXPORT_SYMBOL(sk_common_release);
+> diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+> index 6c0ec2789943..f46a3924c440 100644
+> --- a/net/ipv4/af_inet.c
+> +++ b/net/ipv4/af_inet.c
+> @@ -156,7 +156,6 @@ void inet_sock_destruct(struct sock *sk)
+>  	kfree(rcu_dereference_protected(inet->inet_opt, 1));
+>  	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
+>  	dst_release(rcu_dereference_protected(sk->sk_rx_dst, 1));
+> -	sk_refcnt_debug_dec(sk);
+>  }
+>  EXPORT_SYMBOL(inet_sock_destruct);
+>  
+> @@ -356,8 +355,6 @@ static int inet_create(struct net *net, struct socket *sock, int protocol,
+>  	inet->mc_list	= NULL;
+>  	inet->rcv_tos	= 0;
+>  
+> -	sk_refcnt_debug_inc(sk);
+> -
+>  	if (inet->inet_num) {
+>  		/* It assumes that any protocol which allows
+>  		 * the user to assign a number at socket
+> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+> index d1f837579398..64be59d93b04 100644
+> --- a/net/ipv4/inet_connection_sock.c
+> +++ b/net/ipv4/inet_connection_sock.c
+> @@ -1178,8 +1178,6 @@ void inet_csk_destroy_sock(struct sock *sk)
+>  
+>  	xfrm_sk_free_policy(sk);
+>  
+> -	sk_refcnt_debug_release(sk);
+> -
+>  	this_cpu_dec(*sk->sk_prot->orphan_count);
+>  
+>  	sock_put(sk);
+> diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+> index beed32fff484..40052414c7c7 100644
+> --- a/net/ipv4/inet_timewait_sock.c
+> +++ b/net/ipv4/inet_timewait_sock.c
+> @@ -77,9 +77,6 @@ void inet_twsk_free(struct inet_timewait_sock *tw)
+>  {
+>  	struct module *owner = tw->tw_prot->owner;
+>  	twsk_destructor((struct sock *)tw);
+> -#ifdef SOCK_REFCNT_DEBUG
+> -	pr_debug("%s timewait_sock %p released\n", tw->tw_prot->name, tw);
+> -#endif
+>  	kmem_cache_free(tw->tw_prot->twsk_prot->twsk_slab, tw);
+>  	module_put(owner);
+>  }
+> diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
+> index fee9163382c2..c93f2e865fea 100644
+> --- a/net/ipv6/af_inet6.c
+> +++ b/net/ipv6/af_inet6.c
+> @@ -238,16 +238,6 @@ static int inet6_create(struct net *net, struct socket *sock, int protocol,
+>  		inet->pmtudisc = IP_PMTUDISC_DONT;
+>  	else
+>  		inet->pmtudisc = IP_PMTUDISC_WANT;
+> -	/*
+> -	 * Increment only the relevant sk_prot->socks debug field, this changes
+> -	 * the previous behaviour of incrementing both the equivalent to
+> -	 * answer->prot->socks (inet6_sock_nr) and inet_sock_nr.
+> -	 *
+> -	 * This allows better debug granularity as we'll know exactly how many
+> -	 * UDPv6, TCPv6, etc socks were allocated, not the sum of all IPv6
+> -	 * transport protocol socks. -acme
+> -	 */
+> -	sk_refcnt_debug_inc(sk);
+>  
+>  	if (inet->inet_num) {
+>  		/* It assumes that any protocol which allows
+> diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+> index 9ce51680290b..2917dd8d198c 100644
+> --- a/net/ipv6/ipv6_sockglue.c
+> +++ b/net/ipv6/ipv6_sockglue.c
+> @@ -464,13 +464,6 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
+>  			__ipv6_sock_mc_close(sk);
+>  			__ipv6_sock_ac_close(sk);
+>  
+> -			/*
+> -			 * Sock is moving from IPv6 to IPv4 (sk_prot), so
+> -			 * remove it from the refcnt debug socks count in the
+> -			 * original family...
+> -			 */
+> -			sk_refcnt_debug_dec(sk);
+> -
+>  			if (sk->sk_protocol == IPPROTO_TCP) {
+>  				struct inet_connection_sock *icsk = inet_csk(sk);
+>  
+> @@ -507,11 +500,6 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
+>  
+>  			inet6_cleanup_sock(sk);
+>  
+> -			/*
+> -			 * ... and add it to the refcnt debug socks count
+> -			 * in the new family. -acme
+> -			 */
+> -			sk_refcnt_debug_inc(sk);
+>  			module_put(THIS_MODULE);
+>  			retv = 0;
+>  			break;
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 8cd6cc67c2c5..e913752df112 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2876,7 +2876,6 @@ static void __mptcp_destroy_sock(struct sock *sk)
+>  	sk_stream_kill_queues(sk);
+>  	xfrm_sk_free_policy(sk);
+>  
+> -	sk_refcnt_debug_release(sk);
+>  	sock_put(sk);
+>  }
+>  
+> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+> index b5ab98ca2511..a4c8f86ac12a 100644
+> --- a/net/packet/af_packet.c
+> +++ b/net/packet/af_packet.c
+> @@ -1335,8 +1335,6 @@ static void packet_sock_destruct(struct sock *sk)
+>  		pr_err("Attempt to release alive packet socket: %p\n", sk);
+>  		return;
+>  	}
+> -
+> -	sk_refcnt_debug_dec(sk);
+>  }
+>  
+>  static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
+> @@ -3172,7 +3170,6 @@ static int packet_release(struct socket *sock)
+>  
+>  	skb_queue_purge(&sk->sk_receive_queue);
+>  	packet_free_pending(po);
+> -	sk_refcnt_debug_release(sk);
+>  
+>  	sock_put(sk);
+>  	return 0;
+> @@ -3362,7 +3359,6 @@ static int packet_create(struct net *net, struct socket *sock, int protocol,
+>  	packet_cached_dev_reset(po);
+>  
+>  	sk->sk_destruct = packet_sock_destruct;
+> -	sk_refcnt_debug_inc(sk);
+>  
+>  	/*
+>  	 *	Attach a protocol block
+> diff --git a/net/sctp/ipv6.c b/net/sctp/ipv6.c
+> index 097bd60ce964..62b436a2c8fe 100644
+> --- a/net/sctp/ipv6.c
+> +++ b/net/sctp/ipv6.c
+> @@ -807,8 +807,6 @@ static struct sock *sctp_v6_create_accept_sk(struct sock *sk,
+>  
+>  	newsk->sk_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
+>  
+> -	sk_refcnt_debug_inc(newsk);
+> -
+>  	if (newsk->sk_prot->init(newsk)) {
+>  		sk_common_release(newsk);
+>  		newsk = NULL;
+> diff --git a/net/sctp/protocol.c b/net/sctp/protocol.c
+> index 909a89a1cff4..c365df24ad33 100644
+> --- a/net/sctp/protocol.c
+> +++ b/net/sctp/protocol.c
+> @@ -601,8 +601,6 @@ static struct sock *sctp_v4_create_accept_sk(struct sock *sk,
+>  
+>  	newinet->inet_daddr = asoc->peer.primary_addr.v4.sin_addr.s_addr;
+>  
+> -	sk_refcnt_debug_inc(newsk);
+> -
+>  	if (newsk->sk_prot->init(newsk)) {
+>  		sk_common_release(newsk);
+>  		newsk = NULL;
+> diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+> index e12d4fa5aece..c594312e22cd 100644
+> --- a/net/smc/af_smc.c
+> +++ b/net/smc/af_smc.c
+> @@ -359,8 +359,6 @@ static void smc_destruct(struct sock *sk)
+>  		return;
+>  	if (!sock_flag(sk, SOCK_DEAD))
+>  		return;
+> -
+> -	sk_refcnt_debug_dec(sk);
+>  }
+>  
+>  static struct sock *smc_sock_alloc(struct net *net, struct socket *sock,
+> @@ -389,7 +387,6 @@ static struct sock *smc_sock_alloc(struct net *net, struct socket *sock,
+>  	spin_lock_init(&smc->accept_q_lock);
+>  	spin_lock_init(&smc->conn.send_lock);
+>  	sk->sk_prot->hash(sk);
+> -	sk_refcnt_debug_inc(sk);
+>  	mutex_init(&smc->clcsock_release_lock);
+>  	smc_init_saved_callbacks(smc);
+>  
+> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> index 9f0561b67c12..a245c1b4a21b 100644
+> --- a/net/xdp/xsk.c
+> +++ b/net/xdp/xsk.c
+> @@ -845,7 +845,6 @@ static int xsk_release(struct socket *sock)
+>  	sock_orphan(sk);
+>  	sock->sk = NULL;
+>  
+> -	sk_refcnt_debug_release(sk);
+>  	sock_put(sk);
+>  
+>  	return 0;
+> @@ -1396,8 +1395,6 @@ static void xsk_destruct(struct sock *sk)
+>  
+>  	if (!xp_put_pool(xs->pool))
+>  		xdp_put_umem(xs->umem, !xs->pool);
+> -
+> -	sk_refcnt_debug_dec(sk);
+>  }
+>  
+>  static int xsk_create(struct net *net, struct socket *sock, int protocol,
+> @@ -1427,7 +1424,6 @@ static int xsk_create(struct net *net, struct socket *sock, int protocol,
+>  	sk->sk_family = PF_XDP;
+>  
+>  	sk->sk_destruct = xsk_destruct;
+> -	sk_refcnt_debug_inc(sk);
+>  
+>  	sock_set_flag(sk, SOCK_RCU_FREE);
+>  
+> -- 
+> 2.37.3
