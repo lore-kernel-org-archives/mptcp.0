@@ -1,157 +1,139 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F0B6AA9
-	for <mptcp@lists.linux.dev>; Fri, 17 Feb 2023 13:37:41 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id z12-20020a1c4c0c000000b003e21e018039so2469457wmf.3
-        for <mptcp@lists.linux.dev>; Fri, 17 Feb 2023 05:37:41 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08386AA9
+	for <mptcp@lists.linux.dev>; Fri, 17 Feb 2023 13:53:27 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id cz7so1130589edb.12
+        for <mptcp@lists.linux.dev>; Fri, 17 Feb 2023 05:53:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DMOTbpon0SqIBvl5Vhav/F2dklt1xh6wrZ1YnP+gH00=;
-        b=pvTXCADMqW+md3nuv0QlLT8w2Bmc/SErCOkXrzF3/arkfco/6GsGoMJ9pZPRJAafkh
-         +YIRbEc2W+9d67R3j4QnIsDUhSl7wruXTTUp2NUGO+iZ/xR4yMt/4uqhV+JR3M/H1UOI
-         eHG5KXa4nxiR4UCyx4p14N9SxK1pph1ZUJpnnxdikXnMBeTb/kNoCHN+4k1vx41s3o0o
-         pbIKzVh6okRM73MRm+ZvVNmmspMC1k5Nr0hvbUkKRYToZk15zSn0FYfYQdojry7scuuj
-         UtJJGRtXW+S5oSkOMLKp4BFsHhS1qOxgiUpsLbeCM4cbX0vI6g5sifLecPpmGk3BAh11
-         Sl0A==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ce2IYx1cxWdvUXB7PnSnCuxsADdC+K6046BpmKOpG94=;
+        b=seBIsagoJ8tPlbwarL6IK7dTQ8bdIeAtcb8sVl/PqajH2Usgrfz4nH7bUA3OfMITzF
+         opHBUl49CBhVpcaeTOa09ORmHIYXXi7eGSgGAZxRycw9GbI+rdmp5CP5Iz6irxs7VbLv
+         RzFe94uKqQ4my1/g3ZSduvegrQw+yMyiTYKx4G1Yv/MR7fHCD+GOYm4sI7F20vjB52he
+         VS1jzBdQ9qJTwOcTnROdeSqxFMa/JUdf4jfzc1Imza7Dy5XjFUlv7LwRCF+i/NGX80ZE
+         bEYoZ8+SisfnQWJPDuKAP11p3jFhjTTcbRoyTbkjHL5pjh/ROU8vzVvMk6/yDss3W/AA
+         lO6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DMOTbpon0SqIBvl5Vhav/F2dklt1xh6wrZ1YnP+gH00=;
-        b=w3MjXHdkWOg3Spz0YpruOUNOMJVch55klAOpCt6d1vlFfsbyzRYjeI79A5+Pq1a6fP
-         OtnhyRe2duqus93yOZ1jLQO/0/y257PbiKRjpU4CSf0PSBFKrijUCDwXRKH1CfAmT1xN
-         f1+xecVtp2Auuj7TWHpCpAmBGFojSrq1C9XxpCRXkGvxrmeozwv8n+6iB7/LrbA/Qnsi
-         JD/3Ezm73M7lqcxseXt6MxxVMtvBy+6xaGhSomYmEoLT131aGoAJ7D2dgomG8OTQ/7gE
-         8YJgqXERjkh4TUxzEIMx23XGLnUN9o53dvVlQb7qgevJa3wvZmDQP4zrA6nwd4h2hgll
-         nWeA==
-X-Gm-Message-State: AO0yUKVJceP6KLzv8lARdlgXPtvwfwkRgM8PjFF0Z7e0PtY51vNw4vQG
-	JcXgDF5mQnTcvi15F3tmMgcnlri24FS8Lfw78vw=
-X-Google-Smtp-Source: AK7set9SKUduX2vWpSp2cBaCJoG4bzfLNGjiW99V8PerBQaP03RVlNV/dfw+94VMDho2476/gcr8bg==
-X-Received: by 2002:a05:600c:21d6:b0:3d0:6a57:66a5 with SMTP id x22-20020a05600c21d600b003d06a5766a5mr1007438wmj.0.1676641059381;
-        Fri, 17 Feb 2023 05:37:39 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id p22-20020a05600c205600b003de2fc8214esm4854230wmg.20.2023.02.17.05.37.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Feb 2023 05:37:38 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Fri, 17 Feb 2023 14:37:33 +0100
-Subject: [PATCH 5.15] mptcp: do not wait for bare sockets' timeout
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ce2IYx1cxWdvUXB7PnSnCuxsADdC+K6046BpmKOpG94=;
+        b=hg+OAkJ+hiWaWdHMYfaL0NZPYibT9vV2qM3vCYFC5IzmSJVPBKaI99+ZhjPpwzALy8
+         qLDiXzLeOjJRkVIUXPW9AqA+puKZtOJsQmm3b26udzdU/owt7UunGcGMkPjFh4P4Ty/j
+         PpC01aZES8kAbglX8ft1U9Egl9yKr/w7R2OjOnOflMf6zYe5gehJ9cqB8Ugeoll2I6R4
+         Ie1Okx4FIY9m7PzB2wdR1BB0fXGvePycvbs27iHVr1sSTOSX4HJJIVsgi88qztP6L/0O
+         ZK1TBpksUzOpMi8Ee8snc+IDqZ9HaTAZu0RS893BAqh9k1Yqo0dORXK4N0+guNUrS5xH
+         fX2w==
+X-Gm-Message-State: AO0yUKXC2uXbcvoG0fD6Jpz0vjpP1UZ2omWmxGQoZZ5MMWMoPtcoX140
+	ojeFgE79wfxg5EcA7fCdIjfzsA==
+X-Google-Smtp-Source: AK7set9tVfirY8bLk7/aMJ57J1i/x8s+zHF7SSjuGKrnf+v9zNwFHqGTNqjzxDP+LL3yeu6ogQso+A==
+X-Received: by 2002:a17:906:f2d5:b0:8b2:7564:dfd5 with SMTP id gz21-20020a170906f2d500b008b27564dfd5mr1822108ejb.60.1676642005900;
+        Fri, 17 Feb 2023 05:53:25 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:e048:140f:ea30:d130? ([2a02:578:8593:1200:e048:140f:ea30:d130])
+        by smtp.gmail.com with ESMTPSA id m18-20020a170906849200b0087bd4e34eb8sm2131010ejx.203.2023.02.17.05.53.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Feb 2023 05:53:25 -0800 (PST)
+Message-ID: <eb7bc302-8661-229b-f8b9-d5045bffbd19@tessares.net>
+Date: Fri, 17 Feb 2023 14:53:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH bpf-next] selftests/bpf: run mptcp in a dedicated netns
+Content-Language: en-GB
+To: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ bpf@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+ "David S . Miller" <davem@davemloft.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Felix Maurer <fmaurer@redhat.com>,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20230217082607.3309391-1-liuhangbin@gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20230217082607.3309391-1-liuhangbin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230214-upstream-stable-20230214-linux-5-15-94-rc1-mptcp-fixes-v1-1-fc57df3fbda0@tessares.net>
-X-B4-Tracking: v=1; b=H4sIAByD72MC/z2MwQ6CMBBEf4Xs2UVaaYj+ivHQlkWaQG26xWAI/
- 26rxuPMvHkbMEVHDJdqg0hPx+7hcxCHCuyo/Z3Q9TmDbOSpkaLFJXCKpGfkpM1E+B8m55cVFQq
- F5xajFTiHZAMObiVGJbqBjFSmbzvIcqOZ0ETt7Vj0X9nx56iFql+FCpE+94xcodRw2/c3u72OF
- bQAAAA=
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Sasha Levin <sashal@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, stable@vger.kernel.org, 
- mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
- "David S. Miller" <davem@davemloft.net>
-X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2694;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=xUwBLmQpTcbbug0sA/Z2SUqNiB7cZGhuCbj3EY+9cIs=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj74MiuL9NwynFYUMo4zU5ro7EiyM0vETLLWfvA
- YWNs4N9daGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY++DIgAKCRD2t4JPQmmg
- c/nLEACa+jiP2SJC+Aot4HO1oIoz2rVH/tr+l4VG3B2BNwZWAbSIkHQajqWs9r5+E5azUn7NhMH
- SJJLiIEf4OF0W4z4+tk9zaRMd9EfXKllol9RAMXnPyS12bW35IBUokEqR/EtCri8M3e7VbJqrIR
- nnSYUV7bR8mMsZFbS/uE6E/9hp9ofCU6zEZuQ9Ybe+qw67Iem3X4nkgb+PAQEw6d/mvJm3mplU2
- 3XOZOkAp6KjCtFTEetD8okYhJeggSdnsN/DCjU4l3gvDSEZSPDSZ390FOxQf4oWwVwJVMZqDwP0
- Dw3IoqqYI/bpymUEw7VD1rm0EhYjOzK2iuJ3I1nM55zrz4ewIpSjOQRuUue3ORSur7nTGNcMvF2
- OiV7lhwFhixYSCnJzKJ2UQlXCfeGMld88CgRHxtKLBUYDh/ecYqzTBaZzgSr6BM53VeE1jxPnz/
- /qxfsk6dr3nRnNyhfcct4lVuP631PYdg+oCjq20rUNxMVOdR3d+VZ+innohy79q7nRTA4nC7OhT
- 6YkSfCHvkbmrWHo0ZwlDip2WlbViwoLbher1yZEvRhfyWTiXPnRIn8eIJQxITAwEd9dDVte+yqZ
- t/+OYxYN3TT6x7/Z7QPCTQ5ofnNPVe9nX5WBv8d0I05IxllI8jLAhl6ODrPb92VTI/ihq2SVRem
- eTRvO4NTQpeQ67g==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hi Hangbin,
 
-[ Upstream commit d4e85922e3e7ef2071f91f65e61629b60f3a9cf4 ]
+(+cc MPTCP ML)
 
-If the peer closes all the existing subflows for a given
-mptcp socket and later the application closes it, the current
-implementation let it survive until the timewait timeout expires.
+On 17/02/2023 09:26, Hangbin Liu wrote:
+> The current mptcp test is run in init netns. If the user or default
+> system config disabled mptcp, the test will fail. Let's run the mptcp
+> test in a dedicated netns to avoid none kernel default mptcp setting.
 
-While the above is allowed by the protocol specification it
-consumes resources for almost no reason and additionally
-causes sporadic self-tests failures.
+Thank you for the patch!
 
-Let's move the mptcp socket to the TCP_CLOSE state when there are
-no alive subflows at close time, so that the allocated resources
-will be freed immediately.
+I just have one request below if you don't mind:
 
-Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
-Hi Greg, Sasha,
+(...)
 
-Here is one MPTCP patch backport that recently failed to apply to the
-5.15 stable tree: it clears resources earlier if there is no more
-reasons to keep MPTCP sockets alive.
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index 59f08d6d1d53..8a4ed9510ec7 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
 
-I had a simple conflict because in v5.15, the context is a bit different
-when iterating over the different subflows in __mptcp_close() but the
-idea is still the same: in this loop, a counter needs to be incremented.
----
- net/mptcp/protocol.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+(...)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 47f359dac247..5d05d85242bc 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2726,6 +2726,7 @@ static void mptcp_close(struct sock *sk, long timeout)
- {
- 	struct mptcp_subflow_context *subflow;
- 	bool do_cancel_work = false;
-+	int subflows_alive = 0;
- 
- 	lock_sock(sk);
- 	sk->sk_shutdown = SHUTDOWN_MASK;
-@@ -2747,11 +2748,19 @@ static void mptcp_close(struct sock *sk, long timeout)
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 		bool slow = lock_sock_fast_nested(ssk);
- 
-+		subflows_alive += ssk->sk_state != TCP_CLOSE;
-+
- 		sock_orphan(ssk);
- 		unlock_sock_fast(ssk, slow);
- 	}
- 	sock_orphan(sk);
- 
-+	/* all the subflows are closed, only timeout can change the msk
-+	 * state, let's not keep resources busy for no reasons
-+	 */
-+	if (subflows_alive == 0)
-+		inet_sk_state_store(sk, TCP_CLOSE);
-+
- 	sock_hold(sk);
- 	pr_debug("msk=%p state=%d", sk, sk->sk_state);
- 	if (sk->sk_state == TCP_CLOSE) {
+> @@ -138,12 +148,20 @@ static int run_test(int cgroup_fd, int server_fd, bool is_mptcp)
+>  
+>  static void test_base(void)
+>  {
+> +	struct nstoken *nstoken = NULL;
+>  	int server_fd, cgroup_fd;
+>  
+>  	cgroup_fd = test__join_cgroup("/mptcp");
+>  	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
+>  		return;
+>  
+> +	SYS("ip netns add %s", NS_TEST);
+> +	SYS("ip -net %s link set dev lo up", NS_TEST);
+> +
+> +	nstoken = open_netns(NS_TEST);
+> +	if (!ASSERT_OK_PTR(nstoken, "open_netns"))
+> +		goto cmd_fail;
+> +
+>  	/* without MPTCP */
+>  	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
+>  	if (!ASSERT_GE(server_fd, 0, "start_server"))
+> @@ -163,6 +181,12 @@ static void test_base(void)
+>  
+>  	close(server_fd);
+>  
+> +cmd_fail:
+> +	if (nstoken)
+> +		close_netns(nstoken);
+> +
+> +	system("ip netns del " NS_TEST " >& /dev/null");
+> +
+>  close_cgroup_fd:
 
----
-base-commit: e2c1a934fd8e4288e7a32f4088ceaccf469eb74c
-change-id: 20230214-upstream-stable-20230214-linux-5-15-94-rc1-mptcp-fixes-517feb25bd47
+If I'm not mistaken, this label should no longer be needed: after the
+modification you did, the only 'goto close_cgroup_fd' used above should
+be replaced by 'goto cmd_fail', no?
 
-Best regards,
+Apart from that, the rest looks good to me.
+
+Cheers,
+Matt
+
+>  	close(cgroup_fd);
+>  }
+
 -- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
