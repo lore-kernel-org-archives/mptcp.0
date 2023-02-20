@@ -1,121 +1,127 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B28D7ED
-	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 16:43:40 +0000 (UTC)
-Received: by mail-ed1-f41.google.com with SMTP id x10so6183872edd.13
-        for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 08:43:40 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5017ED
+	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 17:24:25 +0000 (UTC)
+Received: by mail-pl1-f170.google.com with SMTP id t14so2588201plo.2
+        for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 09:24:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+WmvHmcg+HxGncjqNfPp3ekJv0O0iaamf0jAbVN8GCU=;
-        b=OtlzTyitlYzSL65jO+puTNqpIT3vaUQejhYhjHawaMiGRLKnL+acEAehCm+MGJCh5f
-         Pti20XJtgAPQhmA4vjWWqWydAjA/l/wFxTva/3ptA7Xr3cDuoEVM6MXjd4OYV3GgCpMI
-         8qAMoLfb4xYc3XE2pq4OTsd/Nqz8tRw9n9+3O8lmU7H4rQPnt6pXht4dpBy3z3YfTCm1
-         7/MkYRbfViIlFpL4fF4q9xn32rvzFgjlfWXulo4fmk/LfZBbUspSPSvSLqZIz+w0bHsl
-         umgvhCGmx1ChEl0xUWW4maO++uvLLbbHSmUW+ltbTMXpdVAWFaXUDVRxPNkCFYg6lGDw
-         2fsg==
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wc+qEzwG2+1z5OL43aZyz5IioXBqTvqEJrOo2AQSk2U=;
+        b=K1ABOqBWCrKOtkzV28+LqsZKlb1NeKHTBJmwvoGTprTTn9Z1zutOF6lMrT2FXVL4tP
+         xpFnzJefx32l6VUOTn5CegrkcbPhg7R0P92UIkLgZ2wWZnsSxniK9OVXyFTsDz2+RhS0
+         pCyW2TenH2AC9GzHdzkOiQK+A1UUekxVWTl1uR4jiGiUqChxVDOWgbP5JqxEctN1LOYO
+         /aX3b5YVQ/LofIaJATAH+glSJS++7JMwArUlvO0HnR+3k4Q+f6oXBAIwmYgV5GsdGTNW
+         4FIy8hp8Di9MvqsPufVWUObx9vk0TJ7lG7JMkCwpHZBTM07J/WGKqnt1CeLVLSWIey/x
+         6uAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+WmvHmcg+HxGncjqNfPp3ekJv0O0iaamf0jAbVN8GCU=;
-        b=U6L5zWz351U6DIo2In3TxC7dyl1oGT73SpRGIpsFWZvTboggJrn8oHpDwzX+xqF8RR
-         fxpm1gwKZisHP2QRc+29o9ZVF8+xgD2LKdPA6S9YyPCqw2308/1AHYYfmEe56qder9Io
-         IIRFuyRmMkltr+meJMlTftoRlxVcq26H1FRQmDbBdSxI5jWy4GAPpBvpPis4rI/x9euo
-         415Hgfk5QLEbBEz1Sn2WloFP1u4DrLPTf/GflSh53IN9HKVqocRptbVmffLypZ6MECf2
-         VIN8eteli7eAXYvjFIl43+4hbRW7qmrZ+tZp1Q/hjijw28o2l1X9ROtEtVBOMH5xlqLS
-         MsfA==
-X-Gm-Message-State: AO0yUKV52gtfNfqa6N+WFIizU5+JRdkfMkuD0utSiUsf64VBNPSre740
-	MbKw1nPyMVcte2M3sNt+GJ9TwA==
-X-Google-Smtp-Source: AK7set/DBd9+V3UaOxTc6KjELFJYD0DkPA57NwS4FyZRapvTVu2u1EvG4jlJDWMcPd6HswlZR/w1ig==
-X-Received: by 2002:a17:906:4e9a:b0:88d:697d:a3d2 with SMTP id v26-20020a1709064e9a00b0088d697da3d2mr9037683eju.54.1676911419087;
-        Mon, 20 Feb 2023 08:43:39 -0800 (PST)
-Received: from [10.44.2.5] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id jj1-20020a170907984100b008d606b1bbb1sm1205147ejc.9.2023.02.20.08.43.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Feb 2023 08:43:38 -0800 (PST)
-Message-ID: <f2c3d45b-6bab-5747-98f2-b2cdfef5127d@tessares.net>
-Date: Mon, 20 Feb 2023 17:43:38 +0100
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Wc+qEzwG2+1z5OL43aZyz5IioXBqTvqEJrOo2AQSk2U=;
+        b=gfzeHHeTjcd58DlMRZhJaTZAxYe6ouLKegW4iPY5EbwmyYJHZ4kriP4jgliylMoKEa
+         t/X87j6mc/nL/bjII6bpBagDwbxcfg5n2riqU/ZSdIwnr1gmdyCfL6eoWnYj+gV12uxN
+         B0P3SLFidP8BlXtwP0zXgUqjY4qg/YoZ6EGktfKuGwqL4mzBX2v1kN3Bm8ppWi2SjJ+k
+         OJzMJDH3Q4LFL1pyBjClNCT/ChjkBhzDv/ecyhXQols0Py4OdjwRGDkYIN9IgURM612s
+         XI1migC2VDEfYw7FiaCIkSOgMRw6lgO59Nr1J3EvFrxPr5b5p2+4WuKJjuN11bynM0fZ
+         4o/Q==
+X-Gm-Message-State: AO0yUKVqkiGyroXZEKypVzoZH3+heM6ckZE91XrFs3MEOgKKpwEMffq5
+	utjilf+OuNcOnncFAH+9KA==
+X-Google-Smtp-Source: AK7set+Gf0vWFEsNhpmCeG01cV46GVAu7BhmjskyyJJ9Jh71gyEYw8chKATQCS4OPwbGM91wLZLzBg==
+X-Received: by 2002:a17:903:2289:b0:19a:9833:6f8 with SMTP id b9-20020a170903228900b0019a983306f8mr5534862plh.35.1676913865221;
+        Mon, 20 Feb 2023 09:24:25 -0800 (PST)
+Received: from [127.0.0.1] ([20.171.102.115])
+        by smtp.gmail.com with ESMTPSA id s19-20020a170902a51300b00198e7d97171sm2546710plq.128.2023.02.20.09.24.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Feb 2023 09:24:24 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <1cde3460ddf2e5fa7be0e81dd2c3060a663d4ccc.1676909181.git.pabeni@redhat.com>
+References:
+ <1cde3460ddf2e5fa7be0e81dd2c3060a663d4ccc.1676909181.git.pabeni@redhat.com>
+Subject: =?UTF-8?Q?Re=3A_Revert_=22mptcp=3A_fix_locking_for?=
+ =?UTF-8?Q?_in-kernel_listener_creation=22=3A_Tests?= =?UTF-8?Q?_Results?=
+Message-ID: <3a8331bb-676f-4112-0840-6141aaac52a3@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 20 Feb 2023 17:24:23 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH mptcp-next] Squash-to: mptcp: refactor passive socket
- initialization
-Content-Language: en-GB
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <29f3677f2032145ac2b1c1a90ec96ef0d61e4269.1676889558.git.pabeni@redhat.com>
- <7a23540c-0c17-6a8a-7826-2cea1e7c2ebf@tessares.net>
- <ff85210e42fbacb69ae14d4ae972e8a95c098962.camel@redhat.com>
- <7f6f4cf7-b643-544c-1fab-a19a4d6ea75f@tessares.net>
-In-Reply-To: <7f6f4cf7-b643-544c-1fab-a19a4d6ea75f@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 20/02/2023 17:26, Matthieu Baerts wrote:
-> 
-> 
-> On 20/02/2023 17:09, Paolo Abeni wrote:
->> On Mon, 2023-02-20 at 16:01 +0100, Matthieu Baerts wrote:
->>> Hi Paolo,
->>>
->>> On 20/02/2023 15:27, Paolo Abeni wrote:
->>>> Since the squash-to commit, msk->first is set even for unaccepted
->>>> sockets: mptcp_mp_fail_no_response() can take action and reset
->>>> the subflow even when msk->first is still in the accept queue,
->>>> after that incoming reset already closed such socket.
->>>>
->>>> That in turn will end-up calling tcp_done() - via mptcp_subflow_reset()
->>>> - on already closed sockets, which is illegal.
->>>
->>> Should we not add a WARN_ON() there for our CI (and syzkaller) to catch
->>> that earlier?
->>
->> If you mean as a non upstreamable patch touching tcp_done(), that could
->> be useful.
-> 
-> Yes, a non upstreamable patch, similar to:
-> 
->   mptcp: use kmalloc on kasan build
-> 
->> I think it's better not touching the upstream code enforcing such
->> constraint (either tcp or mptcp one) because it should be an "obvious"
->> one.
-> 
-> Indeed but it is just to warn once before having real issues :)
-> But it makes sense not to upstream this.
+Hi Paolo,
 
-I just tried this patch on top of the export branch and I got a warning
-with the 2nd test of "mptcp_join.sh" :-D
+Thank you for your modifications, that's great!
 
-------------------- 8< -------------------
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 33f559f491c8..d21ec9bdd453 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -4639,6 +4639,8 @@ void tcp_done(struct sock *sk)
-         */
-        req = rcu_dereference_protected(tcp_sk(sk)->fastopen_rsk, 1);
+Our CI did some validations and here is its report:
 
-+       WARN_ON_ONCE(sk->sk_state == TCP_CLOSE);
-+
-        if (sk->sk_state == TCP_SYN_SENT || sk->sk_state == TCP_SYN_RECV)
-                TCP_INC_STATS(sock_net(sk), TCP_MIB_ATTEMPTFAILS);
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5846314349494272
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5846314349494272/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5283364396072960
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5283364396072960/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6409264302915584
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6409264302915584/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Critical: 1 Call Trace(s) =E2=9D=8C:
+  - Task: https://cirrus-ci.=
+com/task/5001889419362304
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5001889419362304/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/b8b8b32faad4
 
 
-------------------- 8< -------------------
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
