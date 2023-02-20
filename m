@@ -1,45 +1,45 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F342F2B
-	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 11:14:49 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id da10so4429885edb.3
-        for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 03:14:49 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641122FAF
+	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 11:16:13 +0000 (UTC)
+Received: by mail-ed1-f44.google.com with SMTP id ck15so4457280edb.0
+        for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 03:16:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=3S8Xasm70ik9IB+rlfhmTZ0XXdcuF+B8pGoj7pTbmlQ=;
-        b=b3PJIbrKcb4Q0m3b60L4AhQkWwqw+xjAfMshDpVUue1jvxUGWdfB9fi2yrzN3gbtEY
-         xDWpb2BIzlKi9oMCK/wGDj14u9OGFuCCmQnM8s7wHC9wfzXWAOt+WQ7TSdF3zNfC5F3F
-         rdAJfIOx8VwUX7efZl0ZJjH6m+CEoIVNTCnMmdCT09jEp5RmsIQTBKoIf0qT73VaYLlw
-         KJ3HwACaKYKEypAr7+pYNRGkn5S1nmisXkghInR8BpL/75piqQOJxz9HCkGExPE6/xnP
-         gJamD8d7tavgndot6OAkwTJNapmTltC/I0yvgkUTlW5xrHbAG04/Te7sIdaf3eZd7Cgy
-         KQeQ==
+        bh=8PoFbTAadJ+43wOAm2K5cpVEABJmL3iRNCRdHHCzefw=;
+        b=Dir9WT9k1Y/bxVD3+brb5gZm9/yj5Z/1q2L3Bu6uaXxvchM7h3yUE1iH3cT/K6biqj
+         UDwCKhvUiWv+mpDY8N33akppy9NqEXu6SGpnZ/bgznVTMld4b5DHDInRgx0KbMyG9dmP
+         PpeOQKTF7sgSQuZ7zvJzQwcCLsGz3xZzTJEpaJd4NwnFQOa4Zrhl84u8+PcPr2jEK3gB
+         Qk8i9Hg/PPqU5AqZ/aMunOq8Z0K+Z7nEDZEUd7ZkqA/2b820PjYPwVO0aNly5zsKaTBG
+         KE7Gw8HcaqAhhRYkD+mMegyKv9QL7Py719GvjEwMeAxXc9JvX6aMmlcVrUhcmph1Q3tc
+         OP4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3S8Xasm70ik9IB+rlfhmTZ0XXdcuF+B8pGoj7pTbmlQ=;
-        b=uBMM+wlC4S5hMU1El/Y3zfqUsSkwhJw1R1TWMnFzlNoG6eldptjNKIV430T/AXoywl
-         uakPfn+RyA29jZX0FXVgEcta1NS8ctJeplsJgYTyrx/Y+kqqvj5sKBpN72u8CJRjjljQ
-         gycFC4+e84ph4Fq5+2Olh/vTf9SOwetPIxslWUgMGd4LU2Ww1P681smvdLpg6/6wpiUp
-         fD0C/CUeL6MKUOQ9T3OCTf4KsfZytju7fGWKxa6ilS5z8udJsrwfpRm+mN6T21rP/J+E
-         zM13N1KoI14BVjsJ5z75jx0UupuupgV/3rfTrf8Pc+RDt+8RLjQHiSxM1h9xTuSsaM9X
-         2XFg==
-X-Gm-Message-State: AO0yUKWzyYOg87lbysCjzUY8374yWXZPvyDIhp/zXAUoanxjYeyGrq7O
-	iO9PEFEFZnqUK5cvUkvZwQQnFQ==
-X-Google-Smtp-Source: AK7set8G1ehzjVJtS3SByNqrzLhrcBdSBeNROpOMvovEyW0Ymgra6Dt06UdwhzNFbXu4ZypckAKFxg==
-X-Received: by 2002:a17:906:aca:b0:8b1:7841:9f28 with SMTP id z10-20020a1709060aca00b008b178419f28mr11978758ejf.55.1676891687926;
-        Mon, 20 Feb 2023 03:14:47 -0800 (PST)
+        bh=8PoFbTAadJ+43wOAm2K5cpVEABJmL3iRNCRdHHCzefw=;
+        b=UbMUSRchIf/1KiyfADEg0iRrAIFafuz5BDwPKtHjt7+z61upd7Gmx/6yrvvjHcUP5J
+         lwx8/YTmiJTn9nr+5jTitPR8D45mN5SDXLaxfMMjR6GgTk3SaKP7pnshj/SBTtmtBtLq
+         82yz2A564FLs71Wv237wjgrLdVQIVwAalTkpK41yMG5+X5RGI2vlthgZqVu6DROmT3Ao
+         Ug2bwUJ5YB6hnVg24dMbFPGJlY95MGv3sDZpgzBTXmEfnffTHPASdXXuGDUT/ZKjTbbg
+         rakMzyLU+DGwBysguWKi9BFTQEDNBDqWSa3wr2d11UffzPTf7iCbQPsOUchHOqwZKrZF
+         Fbyw==
+X-Gm-Message-State: AO0yUKXVKfnMFuGSnyu6Sk3e677VB0DL3J6VzCpf1jJ6AYCvN9E1VAo4
+	c/FReB1eOBWjFP6YTG/HpYdAdQ==
+X-Google-Smtp-Source: AK7set+HYw4RCAHeS6v6rYL/JuG8/dMUwKnuAvdtPtHONyOn0eft5/2bJ7+F0yVn7fexBYxOUXrzWw==
+X-Received: by 2002:a17:907:2da2:b0:889:33ca:70c6 with SMTP id gt34-20020a1709072da200b0088933ca70c6mr14374470ejc.2.1676891771408;
+        Mon, 20 Feb 2023 03:16:11 -0800 (PST)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id i13-20020a170906444d00b008d6348a5524sm818128ejp.184.2023.02.20.03.14.47
+        by smtp.gmail.com with ESMTPSA id w10-20020a170906968a00b008b17de9d1f2sm4787395ejx.15.2023.02.20.03.16.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Feb 2023 03:14:47 -0800 (PST)
-Message-ID: <5eb0dec3-172a-953d-110d-009cadaa711f@tessares.net>
-Date: Mon, 20 Feb 2023 12:14:46 +0100
+        Mon, 20 Feb 2023 03:16:11 -0800 (PST)
+Message-ID: <ac85e6d0-c147-6659-ebb6-85b79d7fa797@tessares.net>
+Date: Mon, 20 Feb 2023 12:16:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,65 +48,43 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v2 mptcp-net 2/2] mptcp: fix UaF in listener shutdown
+Subject: Re: [PATCHv2 bpf-next] selftests/bpf: run mptcp in a dedicated netns
 Content-Language: en-GB
+To: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ bpf@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+ "David S . Miller" <davem@davemloft.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Felix Maurer <fmaurer@redhat.com>,
+ mptcp@lists.linux.dev
+References: <20230219070124.3900561-1-liuhangbin@gmail.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>
-References: <b5b35cfd2d10179fc81643e601e125aa881f7c79.1675968499.git.pabeni@redhat.com>
- <ad634b00b9c4cfb0f8cd6c8ec57d1a7405ba3799.1675968499.git.pabeni@redhat.com>
- <7c02bf27-2de1-cea8-691a-120c988c4da0@tessares.net>
-In-Reply-To: <7c02bf27-2de1-cea8-691a-120c988c4da0@tessares.net>
+In-Reply-To: <20230219070124.3900561-1-liuhangbin@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Hangbin,
 
-On 17/02/2023 18:58, Matthieu Baerts wrote:
-> Hi Paolo,
+On 19/02/2023 08:01, Hangbin Liu wrote:
+> The current mptcp test is run in init netns. If the user or default
+> system config disabled mptcp, the test will fail. Let's run the mptcp
+> test in a dedicated netns to avoid none kernel default mptcp setting.
 > 
-> On 09/02/2023 19:48, Paolo Abeni wrote:
->> As reported by Christoph, the mptcp listener shutdown path is prone
->> to an UaF issue.
-> 
-> Again, thank you for the two patches!
-> 
-> Now in our tree (fixes for -net) with my RvB tag.
-> 
-> I had a few conflicts when applying them on -net (and later when
-> propagating them to our tree, see below), I hope that's OK but don't
-> hesitate to double check if you have the opportunity :)
+> Suggested-by: Martin KaFai Lau <martin.lau@linux.dev>
+> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+> ---
+> v2: remove unneed close_cgroup_fd goto label.
 
-I probably didn't resolve the conflicts properly (or maybe some
-adaptations are needed on -net) because this introduce some regressions
-on export-net (not on net-next):
+Thank you for the update!
 
-Any idea what could cause that?
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/361
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
 Cheers,
 Matt
-
-> New patches for t/upstream-net and t/upstream:
-> - 4f70189ea062: mptcp: use the workqueue to destroy unaccepted sockets
-> - 477601b8695d: mptcp: fix UaF in listener shutdown
-> - Results: 2a5c259387e2..de8ae10003bd (export-net)
-> 
-> - 1c2f1e5c434b: conflict in t/mptcp-refactor-passive-socket-initialization
-> - 1fed9c65e6d5: conflict in t/mptcp-drop-legacy-code
-> - a5a7fffe5413: conflict in
-> t/mptcp-fastclose-msk-when-cleaning-unaccepted-sockets
-> - Results: c6f15583a946..2275e6265ebe (export)
-> 
-> Tests are now in progress:
-> 
-> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230217T145032
-> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230217T145032
-> 
-> Cheers,
-> Matt
-
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
