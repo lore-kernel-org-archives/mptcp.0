@@ -1,149 +1,93 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93ED463BB
-	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 14:05:35 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id x10so4312848edd.13
-        for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 06:05:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1da5Mmv+lVSfrDW97v/PmXpj1+WQtwPjTFXxSLpd/34=;
-        b=se3yYivU8Wj9KOD395YXTgnPGXWvPJ2XBJ8xZqL4l5FGChAbWe/eOBWPBJUnLWZ4Wj
-         AKH843jtB5lBexZ5OlakrT4pUQwFYn8wZhp4u/8nSDp3A8tXQOYLT6riYyYb9icWJZcU
-         kffNGrXvm4+wM2yRY4Ky9pkbp6kWA4f9yLhWgjFkG0A+m0JMT133xQw2vwU9UVj5Gcaa
-         5gC7BXNbSgnTTiZ3XfwWy6hgQumtsjjdKE+DRrFg0Fm9l7o5dIZFMKXOZ0vlnjvkpSbz
-         m36oqp2jjI+fhNDrRqXr4xQejG/Re4+UYkJVmxbiY3UOd7cScBg5OC06xYIS9ixlJLcW
-         Uchg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1da5Mmv+lVSfrDW97v/PmXpj1+WQtwPjTFXxSLpd/34=;
-        b=HSdaRf3vLgY9Ucx3rDRXbJlg031+4zWh51x7D5ZXBOhru7kcK1OB411XLAK2chbgTQ
-         rxOUNC9IYTuRwC7kwCxb6Ds7l9OS0IzQYM5Cmoa+fC6ohTXbo1lUlZ/HJhK53OSGXlhv
-         5UtNj96PQX/1nDkRkFmPu+HZJBCLqaUO8/k8ijI6ZFuMEIFXd96WXVvM/gicX30I6wdR
-         KuNo54Hav+tsFd5umfAYapSvTWiJJ6m6aHhHPiRTHCmIckYqk5NTfnt6yY1QrmAMRAJX
-         IvaCgeXZMwpb/5qHAf75f/um2d2ERmTtWnRa02a6/4E82TBLh9IBkfaapA/5FlXtfI1A
-         Cc3A==
-X-Gm-Message-State: AO0yUKUlsw8c6MVQkF5JaBJ3CRZ7cAjCW/V5IYa9JPJ4x5sehYDPPAo1
-	i9cUm5S8i5kMZ2De4x1yuvkxc8oCssO1JPgD
-X-Google-Smtp-Source: AK7set+uPytvG0MhkHxb4zJnPApMlqhIv69pSsu4PV2fe3DCY9L1+PRqHv+1ws8bbNF4i/wGop0ugg==
-X-Received: by 2002:a05:6402:138e:b0:4ac:d34b:c2aa with SMTP id b14-20020a056402138e00b004acd34bc2aamr2052420edv.10.1676901933528;
-        Mon, 20 Feb 2023 06:05:33 -0800 (PST)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id k25-20020a50c099000000b004ad7c42a17esm770821edf.25.2023.02.20.06.05.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Feb 2023 06:05:33 -0800 (PST)
-Message-ID: <4cef3e6b-ad2b-0757-098d-14f09692f68e@tessares.net>
-Date: Mon, 20 Feb 2023 15:05:32 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3ED063BB
+	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 14:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1676903259;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JRK4i3ZRhfBxdmzSYCHDGkzQ8eLQcXa4qGrYxCl6Uxg=;
+	b=DP5MVHWws9t7ihI2NzW435Ri9pA4eW6c6tQQJV4OiDHpAir8MZ24q/17jnATyfTKSnaAMe
+	LgsrO09FsfcdGg9PypuSVuFg81idKpM1qIUDyHnxzAplgOxHHufCU0t6cEuN2roNPBNWfm
+	vNA8er+VTR1wRygHRntG/ulFHQ/EoJI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-537-5KZQm71yMAmidfLEHAWFlA-1; Mon, 20 Feb 2023 09:27:38 -0500
+X-MC-Unique: 5KZQm71yMAmidfLEHAWFlA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1E6E485A588
+	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 14:27:38 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.157])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A0DBE40C1423
+	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 14:27:37 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] mptcp: fix possible deadlock in subflow_error_report
+Date: Mon, 20 Feb 2023 15:27:25 +0100
+Message-Id: <c2265383cb2190247f7dec66fb67182e558bf5a1.1676889543.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2 mptcp-net 2/2] mptcp: fix UaF in listener shutdown
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>
-References: <b5b35cfd2d10179fc81643e601e125aa881f7c79.1675968499.git.pabeni@redhat.com>
- <ad634b00b9c4cfb0f8cd6c8ec57d1a7405ba3799.1675968499.git.pabeni@redhat.com>
- <7c02bf27-2de1-cea8-691a-120c988c4da0@tessares.net>
- <5eb0dec3-172a-953d-110d-009cadaa711f@tessares.net>
- <531ceec4b5af0abe463e80a19d98752ed1074aad.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <531ceec4b5af0abe463e80a19d98752ed1074aad.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+Christoph reported a possible deadlock while the TCP stack
+destroys an unaccepted subflow due to an incoming reset: the
+MPTCP socket error path tries to acquire the msk-level socket
+lock while TCP still owns the listener socket accept queue
+spinlock, and the reverse dependency already exists in the
+TCP stack.
 
-Thank you for your reply.
+Note that the above is actually a lockdep false positive, as
+the chain involves two separate sockets. A different per-socket
+lockdep key will address the issue, but such a change will be
+quite invasive.
 
-On 20/02/2023 12:51, Paolo Abeni wrote:
-> On Mon, 2023-02-20 at 12:14 +0100, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 17/02/2023 18:58, Matthieu Baerts wrote:
->>> Hi Paolo,
->>>
->>> On 09/02/2023 19:48, Paolo Abeni wrote:
->>>> As reported by Christoph, the mptcp listener shutdown path is prone
->>>> to an UaF issue.
->>>
->>> Again, thank you for the two patches!
->>>
->>> Now in our tree (fixes for -net) with my RvB tag.
->>>
->>> I had a few conflicts when applying them on -net (and later when
->>> propagating them to our tree, see below), I hope that's OK but don't
->>> hesitate to double check if you have the opportunity :)
->>
->> I probably didn't resolve the conflicts properly (or maybe some
->> adaptations are needed on -net) because this introduce some regressions
->> on export-net (not on net-next):
->>
->> Any idea what could cause that?
->>
->> https://github.com/multipath-tcp/mptcp_net-next/issues/361
-> 
-> I *think* it's not a conflict resolution issue; patch 1/2 here
-> functionally depends on ("mptcp: refactor passive socket
-> initialization") which let msk take a reference on unaccepted MPC
-> subflows, so that incoming reset will not free such subflow via
-> inet_child_forget().
-> 
-> I *think* the easier solution is moving this patches on export-next
-> after ("mptcp: refactor passive socket initialization"), mentioned
-> explicitly the functional dependency
-Indeed, it makes sense. I just did that.
+Instead, we can simply stop earlier the socket error handling
+for orphaned or unaccepted subflows, breaking the critical
+lockdep chain. Error handling in such a scenario is a no-op.
 
-I removed the Fixes tags and mentioned it was linked to the refactor of
-the passive socket initialization: is it OK? :)
+Reported-and-tested-by: Christoph Paasch <cpaasch@apple.com>
+Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/355
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+Note that the fixes tag above is different from the bisected, much
+more recent, commit pointed by syzkaller, but I believe (code
+inspection shows) that the DL scenario is present since it.
+---
+ net/mptcp/subflow.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-
-
-Revert from -net side:
-
-New patches for t/upstream-net:
-- 1403082cb4f9: Revert "mptcp: use the workqueue to destroy unaccepted
-sockets"
-- a68e4d2c86ab: Revert "mptcp: fix UaF in listener shutdown"
-- Results: 67a9b5dd9647..1231bdd38564 (export-net)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230220T125607
-
-
-
-Re-adding in net-next side *before*:
-
-   mptcp: avoid unneeded __mptcp_nmpc_socket() usage
-
-New patches for t/upstream:
-- b1eb4bc7fd93: conflict in t/mptcp-drop-legacy-code
-- (9842f24e0af3: mptcp: fix wrong merge resolution)
-- bcf869e80661: mptcp: use the workqueue to destroy unaccepted sockets
-(net-next)
-- (f1af1e12dde5: mptcp: add missing fix discussed on the ML)
-- be46758055b5: conflict in
-t/mptcp-use-the-workqueue-to-destroy-unaccepted-sockets-net-next
-- cd7f29d04aa1: mptcp: fix UaF in listener shutdown (net-next)
-- Results: 6d5a19a2f0c5..07db02c0176e (export) => empty, as expected!
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230220T135733
-
-Cheers,
-Matt
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 8b46311b8d5e..a14c3a0c7c00 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1437,6 +1437,13 @@ static void subflow_error_report(struct sock *ssk)
+ {
+ 	struct sock *sk = mptcp_subflow_ctx(ssk)->conn;
+ 
++	/* bail early if this is a no-op, so that we avoid introducing a
++	 * problematic lockdep dependency between TCP accept queue lock
++	 * and msk socket spinlock
++	 */
++	if (!sk->sk_socket)
++		return;
++
+ 	mptcp_data_lock(sk);
+ 	if (!sock_owned_by_user(sk))
+ 		__mptcp_error_report(sk);
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.39.2
+
