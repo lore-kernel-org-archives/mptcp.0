@@ -1,116 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D0A6D39
-	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 16:10:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1676909419;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ukswy3s/NxM7YEfazf2FVWSr1n3HoIEtrjvZXcHfCP0=;
-	b=SOf7QrhyoDi+YTb1k5KN4CUxn7jh3o8d2xcD2bB8LXYN3JA/mFk49BpHv2K170ws0I3gxC
-	MhpmRXcK/szg19NOwh5SaYfjNmqmcwsaJBsc71I40uN0jAGRX/LSu4k/IBOqGPRLz8zEU2
-	2uQHw16lUkHUsh0KXepk3nq836po6xU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-199-TwbRQaPeN5Wp7pAGZ49eGQ-1; Mon, 20 Feb 2023 11:10:18 -0500
-X-MC-Unique: TwbRQaPeN5Wp7pAGZ49eGQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1EDCE101A55E
-	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 16:10:18 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.157])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A30252166B26
-	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 16:10:17 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] Revert "mptcp: fix locking for in-kernel listener creation"
-Date: Mon, 20 Feb 2023 17:10:14 +0100
-Message-Id: <1cde3460ddf2e5fa7be0e81dd2c3060a663d4ccc.1676909181.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB4E6D39
+	for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 16:26:05 +0000 (UTC)
+Received: by mail-ed1-f47.google.com with SMTP id cy6so1330894edb.5
+        for <mptcp@lists.linux.dev>; Mon, 20 Feb 2023 08:26:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dUUWhUXwKUahjI0Kz4Ny2RsFdMUjBLyp1pGCmthgrsg=;
+        b=ZdqS6zdGaFTgvarlP23+rFTbRvScxXqdNe9RceTgmC6gSo9fSLWF2d/KPDANMyfzIG
+         A+FqUsdTWseBm4313eSCMQRNK1TzPKprfhyWFanw0kUjssOcy2laE9DwB3V+ssNeMB+7
+         lBlJ6BW2gpTYrDApfZ2eqDpDJ/JBSJMR26qs/FFqVHDPV50gmuJ2npr1NaYQoJnRM8bK
+         mS6oWPk5dJ56fJAy/NS+RlAWP7pZUwumcoBA+NZ/z8+DbuUjnCCOy3Axvi3L6X1dO4jV
+         C0xByug08hjqXoLXkl5+6yiZKThsCrCdPAdEXdhcBpVO/x3T0G1ksTBy4rHAkKxDw7dS
+         iiag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dUUWhUXwKUahjI0Kz4Ny2RsFdMUjBLyp1pGCmthgrsg=;
+        b=UVz40QXg1ACc3KMuYLLsCd5xbK57VOomBUj/ZmonORi0NyPEr0NuSEjDlIhRGumEdL
+         gi+s8nseDq6I8gOWx7TjsyH/KBZQ9w1xS8rF7GhNMY2nqy0D49E7LLAcbdqFw1T7Fywc
+         SxDKHk3b9uL9H26uWv2D61TK3FwZuUjwLUr3pzerXDgEudw6B20brun9nr4sH0fyH0FA
+         8imKXobzxwfPL1DesCB+J5PdUyw7hvXspzZ4YJxrvLSIi6LMp0rStNKKUP/H2IxX47Bu
+         0vBmW1jcXwUzgELUvnW80ZmzO2kK2x3odWNkyLddjRnRlTLBuricvBYKONeF5fD4yl2U
+         Y9EQ==
+X-Gm-Message-State: AO0yUKUMFYBg4cgZ/eMxkcEdyP+SjwmznIWGMDjONNdds3ZsSQzFrT4D
+	WbQ5O98GKHjEiGwQcb7bUuunmA==
+X-Google-Smtp-Source: AK7set8ywdEVGu0hcRWOMoIPqYcc1qTIxZu+S8MOpp1lnIpxstcN7DYf9xRAgcTu84OTw9JGERFQqg==
+X-Received: by 2002:a17:907:2095:b0:8b1:949a:28da with SMTP id pv21-20020a170907209500b008b1949a28damr10562220ejb.42.1676910363840;
+        Mon, 20 Feb 2023 08:26:03 -0800 (PST)
+Received: from [10.44.2.5] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id lf19-20020a170906ae5300b008da6a37de1bsm635475ejb.10.2023.02.20.08.26.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Feb 2023 08:26:03 -0800 (PST)
+Message-ID: <7f6f4cf7-b643-544c-1fab-a19a4d6ea75f@tessares.net>
+Date: Mon, 20 Feb 2023 17:26:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH mptcp-next] Squash-to: mptcp: refactor passive socket
+ initialization
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <29f3677f2032145ac2b1c1a90ec96ef0d61e4269.1676889558.git.pabeni@redhat.com>
+ <7a23540c-0c17-6a8a-7826-2cea1e7c2ebf@tessares.net>
+ <ff85210e42fbacb69ae14d4ae972e8a95c098962.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <ff85210e42fbacb69ae14d4ae972e8a95c098962.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Christoph reports a lockdep splat in the mptcp_subflow_create_socket()
-error path, when such function is invoked by
-mptcp_pm_nl_create_listen_socket().
 
-Such code path acquires two separates, nested socket lock, with the
-internal lock operation lacking the "nested" annotation. Adding that
-in sock_release() for mptcp's sake only could be confusing.
 
-Instead we can revert the commit introducing the outermost lock as the
-relevant socket is not exposted in any way to ther user not to the
-stack and can't be touched by any other entity.
+On 20/02/2023 17:09, Paolo Abeni wrote:
+> On Mon, 2023-02-20 at 16:01 +0100, Matthieu Baerts wrote:
+>> Hi Paolo,
+>>
+>> On 20/02/2023 15:27, Paolo Abeni wrote:
+>>> Since the squash-to commit, msk->first is set even for unaccepted
+>>> sockets: mptcp_mp_fail_no_response() can take action and reset
+>>> the subflow even when msk->first is still in the accept queue,
+>>> after that incoming reset already closed such socket.
+>>>
+>>> That in turn will end-up calling tcp_done() - via mptcp_subflow_reset()
+>>> - on already closed sockets, which is illegal.
+>>
+>> Should we not add a WARN_ON() there for our CI (and syzkaller) to catch
+>> that earlier?
+> 
+> If you mean as a non upstreamable patch touching tcp_done(), that could
+> be useful.
 
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Fixes: ad2171009d96 ("mptcp: fix locking for in-kernel listener creation")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/354
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/pm_netlink.c | 14 ++++++++------
- net/mptcp/subflow.c    |  2 +-
- 2 files changed, 9 insertions(+), 7 deletions(-)
+Yes, a non upstreamable patch, similar to:
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d1d859517d91..54b0aeb8bb01 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -999,8 +999,8 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- {
- 	int addrlen = sizeof(struct sockaddr_in);
- 	struct sockaddr_storage addr;
-+	struct mptcp_sock *msk;
- 	struct socket *ssock;
--	struct sock *newsk;
- 	int backlog = 1024;
- 	int err;
- 
-@@ -1009,13 +1009,15 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 	if (err)
- 		return err;
- 
--	newsk = entry->lsk->sk;
--	if (!newsk)
-+	msk = mptcp_sk(entry->lsk->sk);
-+	if (!msk)
- 		return -EINVAL;
- 
--	lock_sock(newsk);
--	ssock = __mptcp_nmpc_socket(mptcp_sk(newsk));
--	release_sock(newsk);
-+	/* No other code-paths can touch the msk at this point and acquiring
-+	 * the msk the socket lock will trigger a lockdep false positive in
-+	 * the mptcp_subflow_create_socket error path.
-+	 */
-+	ssock = __mptcp_nmpc_socket(msk);
- 	if (IS_ERR(ssock))
- 		return PTR_ERR(ssock);
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 28c64811a8af..90895733860f 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1708,7 +1708,7 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
- 	if (err)
- 		return err;
- 
--	lock_sock_nested(sf->sk, SINGLE_DEPTH_NESTING);
-+	lock_sock(sf->sk);
- 
- 	err = security_mptcp_add_subflow(sk, sf->sk);
- 	if (err)
+  mptcp: use kmalloc on kasan build
+
+> I think it's better not touching the upstream code enforcing such
+> constraint (either tcp or mptcp one) because it should be an "obvious"
+> one.
+
+Indeed but it is just to warn once before having real issues :)
+But it makes sense not to upstream this.
+
+Cheers,
+Matt
 -- 
-2.39.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
