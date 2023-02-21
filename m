@@ -1,136 +1,106 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2017B4C64
-	for <mptcp@lists.linux.dev>; Tue, 21 Feb 2023 15:51:06 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id o14so3923431wms.1
-        for <mptcp@lists.linux.dev>; Tue, 21 Feb 2023 07:51:06 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29E179C1
+	for <mptcp@lists.linux.dev>; Tue, 21 Feb 2023 17:54:57 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id t15so5481217wrz.7
+        for <mptcp@lists.linux.dev>; Tue, 21 Feb 2023 09:54:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RsKHFM+hKHMFdspXbgtQiDb5JlHO9GzKDSbmhroKKyw=;
-        b=idQVNI0qNZii5d3H3N2h4GegphTu0xfMhCCNOXC17VY0r/ZhvuMzRm5zcF5dQY6hal
-         GIjU+TZEvpRcIoU8ltrG221sBOYz3FcWw4j3X004Wuj0Bew3YyD7lKR4+LzAuLYc7Mn5
-         N+n0FBZxNUPhoj65Mxu/8iQ8LiiBgj+Ww5ROhMTR1HEqdTW9EOKOrj9fXnkwqMqBg8uB
-         2DOGBGRLBujcs+1SRvtqzcuhauG3pFDTd9W7Yr9AgucurzNDc2dIgvmwL92oSLSrb5OO
-         SLyQveIERz7eWTIPRx7MRFpwFBF5agaZH5hLMrueKc1twcdLtsLPKUZKr2GQ3Oon/EZf
-         WV6w==
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pfiDGjIFJSr9puXndsLPk/Tj9RVlavuvh3GNmS/1cvw=;
+        b=tCMqT3V5pDYZ8KV4JYDbZVHl6u4qrmh2Gi7GQvB+46+0RTGqxe0Og9+rmkIOitx1or
+         71K4JoxgtcB1VVeclyqo43XPdR9jBSo6smqQLGVH/vRDOodqcbg+SYUJoMWoSZ9zTGRi
+         Nz7Ns65fJES+R/dh0cJckb00mwXext5J/yULG23TAw2jRuRTBRgbLEqYg0FNJNcDo0jK
+         EVwmpPLo9o4CngMGYddJWzjSZgqyttGltZDam6HVP2/3ld92lBm4nqgWjpgZjZqEFvc/
+         XbGHGCULNpC4LS1926zIknJaee+Pcc4DFr5deIaHOJKnNhs9dhqgE6hTyiIxCm6bgzY1
+         SWvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RsKHFM+hKHMFdspXbgtQiDb5JlHO9GzKDSbmhroKKyw=;
-        b=rIf61+ff/Q2XwaCzVsoyClqLhNkeY3CRJ85aXlRka+hmqY6QB8ejBr1y37g16TF6so
-         hfDRa8GY0xWKpoA4RX/BenhbX4xx8qgR2XlUoxVejnHb4jI2Hq5rpkjN5Am6EQRMoxE8
-         MMa+kvY9lBs3mnAhCp2zh7se21G289uvcECKs91aHYhWzAzDsvv6gwyoe5unbWiuTR3O
-         /MzuwHYm2jL8YKYClMF7fdhrbohQH0zIm4XMsi+qoSA+L2jjm7mlu1ba1TuRbN8T6/yQ
-         49SncoQ71aa2yMdw6hCarTHXOB29dG0H0+6T7Fy5CqCasxyB31oH73MRiiYzxtgoYLW8
-         XWmg==
-X-Gm-Message-State: AO0yUKX7sVgbjhrbwl+H2Gny37wDD2LDNAtxuk6b0R+BQOnUtzLx05dS
-	78Az8CtLNXyd/p5Nk86Ni9db4g==
-X-Google-Smtp-Source: AK7set8TC7OxEGT7DnXa2BgDxBUehL1ALZiLmhdgTnzCZ1rLWvX4wqCJMNPhrRNNnmpSdg/LkcnIHA==
-X-Received: by 2002:a05:600c:1708:b0:3df:f71b:3f68 with SMTP id c8-20020a05600c170800b003dff71b3f68mr9267488wmn.39.1676994664878;
-        Tue, 21 Feb 2023 07:51:04 -0800 (PST)
-Received: from ?IPV6:2a02:578:8593:1200:50ef:91b7:fffc:fdae? ([2a02:578:8593:1200:50ef:91b7:fffc:fdae])
-        by smtp.gmail.com with ESMTPSA id m17-20020a05600c3b1100b003e896d953a8sm120387wms.17.2023.02.21.07.51.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Feb 2023 07:51:04 -0800 (PST)
-Message-ID: <03740b2e-f5ac-3b5d-8eb4-a2a0e3cadf9b@tessares.net>
-Date: Tue, 21 Feb 2023 16:51:03 +0100
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pfiDGjIFJSr9puXndsLPk/Tj9RVlavuvh3GNmS/1cvw=;
+        b=Nw0sOVibbPQT+VV5iSNuZs9sXJ+RKGS/lt7A+xiBeencAvs2OQLtnoKvi6LY56Eq7c
+         K3z/yckNULaG3EyDW3Z8TFTmBH+T57wyIrwApeT321uKlCIb7HJE+66/uEi6Hs8e3Lso
+         LRycZ5TeKfH+0zbcGwes9egMRYk2hFU4N/4/eFIOzQ26Z8XmJTPrsrkqqYPPYT9ks0qX
+         HkDtpbODrpT24kEzR1AmiktQ3INfhidX6NUDbXz6pr1Z0yHCtMs7PQfcBD2Al6Gs31lp
+         KOvTx5yI9s/BmOv5ZFUpPt7pNkkFxbc32nw/427SzL5S3w4AjqEBg9UYqvHAlaNVWPS7
+         W/Sw==
+X-Gm-Message-State: AO0yUKVv8Didvp55J2TvbwoPkJXrQRDtOBFYLTynbriYPM3eyu9h+PsR
+	r9v0+qHfKrO6D4JSQPoxJz7vgwj881yUAzJv2GVcGA==
+X-Google-Smtp-Source: AK7set/IgYM0/IQAWRJVdyfQwE2hUBdqdBUl8TX7Pbg7Fwndh+nDvCmACvBWpJLYI9tpsxzvzy/avA==
+X-Received: by 2002:adf:f208:0:b0:2c5:9ab9:60f6 with SMTP id p8-20020adff208000000b002c59ab960f6mr6033599wro.62.1677002095291;
+        Tue, 21 Feb 2023 09:54:55 -0800 (PST)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id t23-20020a05600c2f9700b003dc521f336esm4780228wmn.14.2023.02.21.09.54.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Feb 2023 09:54:54 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-net 0/2] mptcp: avoid tcp_done() on already closed
+ sockets
+Date: Tue, 21 Feb 2023 18:54:38 +0100
+Message-Id: <20230221-mptcp-warn-tcp-done-close-v1-0-d248242b29b6@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH mptcp-next] Squash-to: mptcp: refactor passive socket
- initialization
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <29f3677f2032145ac2b1c1a90ec96ef0d61e4269.1676889558.git.pabeni@redhat.com>
- <7a23540c-0c17-6a8a-7826-2cea1e7c2ebf@tessares.net>
- <ff85210e42fbacb69ae14d4ae972e8a95c098962.camel@redhat.com>
- <7f6f4cf7-b643-544c-1fab-a19a4d6ea75f@tessares.net>
- <f2c3d45b-6bab-5747-98f2-b2cdfef5127d@tessares.net>
- <8f8b4663ae3a35c5302a291538e7d36d6e1920ca.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <8f8b4663ae3a35c5302a291538e7d36d6e1920ca.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAF4F9WMC/yWNwQrCMBBEf6Xs2cU0LSL+injYJqsN2E3YpCqU/
+ ruJ3ubNMDMbZNbAGS7dBsqvkEOUCv2hAzeTPBiDrwzW2MFY2+OSikv4JhVswkdhdM+YGXkcDNn
+ x5M9+hNqfqJqTkri5LZTjmnJRpqWFSfkePr/jK/w3hQvc9v0LSQn28ZMAAAA=
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+X-Mailer: b4 0.12.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1095;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=VqoFD9jdj61D+pKbP8DJthpz8i+5WCqh6SOOkBYLMIE=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj9QVueBOwjQnefmGBFpIXZ65ThnWlpkLS7yXRL
+ v7fe+46k+CJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY/UFbgAKCRD2t4JPQmmg
+ c21SD/93n90PrQDjYPRagst1/whuFTz0z52HoIEVY4unjFZnDFj7AnwMWHAuCpP1D9euCFXWlmA
+ cB0zKfOmM/bRcb5tOW2zN3oS+exliDtbpgRs6dl0jCRO3ch0aBUJVTzavFdzIA2fTveQXhRKzZy
+ ZkflxTTprt8L86b0Eow7wCiTyHd9RgZTIkhkxGcIMAMZgKCggnLLCmdLVPBTomFrVcCtQe8jXxC
+ bM7l7XGklUSUX/XZUwV+SM1IvgmV5LLp1sJjwsMmYwx+Hk7zl/jFW8M6XoflrReooSacpqDwhTd
+ FmRvEI9PsP4vwPoUNjm+DExyafVq6EBaR4tOKaDdS9+n9GmpPQE3WMH2SnNjDbMHNIoto1f0WZM
+ NfrT/66/K9h+b0lrE3HV9b67PX6OLzy9wXBd+o2QBURzcghYbyW8e9ie7KTRsR8NRrpP8E0kj2q
+ 9O+YWIUjbHoz9tKrflfpfWcZcEGWlOkfDtkt+QzduOvM1gek+b8lEAFE++a43y+zqijmuP6Hb22
+ b5JOrd2GWxT5Sm/maY18MQgwq1v78fm6CCji6jR4EAzMpu0YB/ihAUC85jEmOLUz4u47iGdFK43
+ r62ArfBLfpYaHb4nq4GzZjcwpBXVHvxLBE5O7oe1t94g3vYHSyc2em3UnSIW8jj2iQriaVxtfap
+ obgOvwDqe0FqheA==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+Recently, Paolo noticed[1] that tcp_done() has been closed on an already
+closed socket and this was causing an issue reported by Christoph[2].
 
-On 21/02/2023 16:18, Paolo Abeni wrote:
-> On Mon, 2023-02-20 at 17:43 +0100, Matthieu Baerts wrote:
->> On 20/02/2023 17:26, Matthieu Baerts wrote:
->>>
->>>
->>> On 20/02/2023 17:09, Paolo Abeni wrote:
->>>> On Mon, 2023-02-20 at 16:01 +0100, Matthieu Baerts wrote:
->>>>> Hi Paolo,
->>>>>
->>>>> On 20/02/2023 15:27, Paolo Abeni wrote:
->>>>>> Since the squash-to commit, msk->first is set even for unaccepted
->>>>>> sockets: mptcp_mp_fail_no_response() can take action and reset
->>>>>> the subflow even when msk->first is still in the accept queue,
->>>>>> after that incoming reset already closed such socket.
->>>>>>
->>>>>> That in turn will end-up calling tcp_done() - via mptcp_subflow_reset()
->>>>>> - on already closed sockets, which is illegal.
->>>>>
->>>>> Should we not add a WARN_ON() there for our CI (and syzkaller) to catch
->>>>> that earlier?
->>>>
->>>> If you mean as a non upstreamable patch touching tcp_done(), that could
->>>> be useful.
->>>
->>> Yes, a non upstreamable patch, similar to:
->>>
->>>   mptcp: use kmalloc on kasan build
->>>
->>>> I think it's better not touching the upstream code enforcing such
->>>> constraint (either tcp or mptcp one) because it should be an "obvious"
->>>> one.
->>>
->>> Indeed but it is just to warn once before having real issues :)
->>> But it makes sense not to upstream this.
->>
->> I just tried this patch on top of the export branch and I got a warning
->> with the 2nd test of "mptcp_join.sh" :-D
->>
->> ------------------- 8< -------------------
->> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
->> index 33f559f491c8..d21ec9bdd453 100644
->> --- a/net/ipv4/tcp.c
->> +++ b/net/ipv4/tcp.c
->> @@ -4639,6 +4639,8 @@ void tcp_done(struct sock *sk)
->>          */
->>         req = rcu_dereference_protected(tcp_sk(sk)->fastopen_rsk, 1);
->>
->> +       WARN_ON_ONCE(sk->sk_state == TCP_CLOSE);
->> +
->>         if (sk->sk_state == TCP_SYN_SENT || sk->sk_state == TCP_SYN_RECV)
->>                 TCP_INC_STATS(sock_net(sk), TCP_MIB_ATTEMPTFAILS);
->>
->>
->> ------------------- 8< -------------------
-> 
-> Could you please share the (decoded) stack trace?
+To prevent such issues, we can add a WARN in tcp_done() if the state is
+already TCP_CLOSE, see patch 2/2.
 
-Thank you for your reply.
+But before, we need to remove code paths leading to such situations, see
+patch 1/2.
 
-I was planning to look at but I didn't manage to before. I just filled
-in a new ticket with the patch, the stack trace and a first quick analysis:
+[1] https://lore.kernel.org/mptcp/29f3677f2032145ac2b1c1a90ec96ef0d61e4269.1676889558.git.pabeni@redhat.com/
+[2] https://github.com/multipath-tcp/mptcp_net-next/issues/357
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues/362
+Link-to: https://github.com/multipath-tcp/mptcp_net-next/issues/362
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Matthieu Baerts (2):
+      mptcp: avoid setting TCP_CLOSE state twice
+      Squash-to: DO-NOT-MERGE: mptcp: use kmalloc on kasan build
 
-Cheers,
-Matt
+ net/ipv4/tcp.c      | 2 ++
+ net/mptcp/subflow.c | 1 -
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+---
+base-commit: dfa25741f79ebcd03e7a69646111ca18d600e562
+change-id: 20230221-mptcp-warn-tcp-done-close-e430a246d8d4
+
+Best regards,
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Matthieu Baerts <matthieu.baerts@tessares.net>
+
