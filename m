@@ -1,43 +1,43 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61908C0B
-	for <mptcp@lists.linux.dev>; Tue, 21 Feb 2023 19:04:33 +0000 (UTC)
-Received: by mail-qt1-f170.google.com with SMTP id w23so5402873qtn.6
-        for <mptcp@lists.linux.dev>; Tue, 21 Feb 2023 11:04:33 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8B133C4
+	for <mptcp@lists.linux.dev>; Tue, 21 Feb 2023 20:33:08 +0000 (UTC)
+Received: by mail-oi1-f174.google.com with SMTP id bl7so5766285oib.0
+        for <mptcp@lists.linux.dev>; Tue, 21 Feb 2023 12:33:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Pj+UuQQK+bgDv+O1geecd8hY4aVmsKazb2QAfzzGo2U=;
-        b=Hd965yzvVJara9+2rt+/a47IAt2gEJdsjO/gshdmVRrzcIsj3bvRb2tkaPsLFTZowf
-         w/0XO3sLCNsXTspBWTEXAlw6/uKaxW7xWmscxJpkO3Wb+tjZ+qkGtD5atOtA8O0YU7i7
-         SJJCswBegwhqVmmW0obIGUX1G3ppdXqHI64hrJO8ZYyJPYaH4/cWnrAWCMA5X4nk3lJQ
-         fJwlbbUKO1z7dGPGJ6oPmhrN15c+xRnNfDnHrS0UiUgcXv5qBeGcZ3VcEZgUfCDB4R2k
-         vxC3fzd+iniMuN797W1s8TJa8ZqVCxhgegAg6+ia52CTBI8bMaTjPXzQibNTla0AmNYG
-         NkXw==
+        bh=AvU9HxbC9w8iGkxuOn7UAh4NPyhuiDgKMv0FBDFMlaA=;
+        b=akvujWpohPDljWHTVi3uwgpc07VFl8Sxb5rPwR3bJRwbTSnc/DstG/uO4d3Q43a1wY
+         9vX4W+/USMMfoGhty3adVGlqHtGFI+X0LFOmbVCCRPh7CIwjPBV8pVYzO8g/KpsFB6I1
+         OzSCuCk/nNSsEVvodQChaG3aaXlVdQjVczutYqlgRaJp6wFOSb0k4JbJhD3+j9UrJ85X
+         oe7/K1Bw2ZLwEzuzZQCAMLVss56llI6b/dMpoK2o3OuNot7MBCHUlNjBNcdz7mINiiFK
+         /pL00Wqu49r2mg6Ixh25akTj0F7McbgBNbau6MqPQPQAtIdKfk6KHivH62hQKVYYTg++
+         0PBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Pj+UuQQK+bgDv+O1geecd8hY4aVmsKazb2QAfzzGo2U=;
-        b=avd470RgyCuZK3hNyIOZBcQkEZ8wiUDtjjwZtcOBIyf+pdGJtAE2PezFQYbJ4FKDIV
-         Mvw0d/OZDlOmTg1UZ/cseA8BYmE4kjbcT3h3JqaQwmYSwgX0o1nzYzLaHil8uE8974Hz
-         PkUj+7hcFqVFSTmm901Ld+87L+jImTchmUL4QNhB2UV3YY9rSrnVctgUE80do53e336g
-         MSM2VKiJU+C2i3R6+OpXir6Cfb36E1ijeaxBs+S+HX+zUYirSDHKVUo1HnLMhZ4d88Hn
-         tayql+5CC2tXDmrdKHZ87JreNNLEpFlHll5msKZS5sGvXXN4SVABRAurfj8pvyg3bqc5
-         qizQ==
-X-Gm-Message-State: AO0yUKWbebA2ApGsqmXMzTj1pjup6FnfjBLzkRTeWLfPQJgsuUaQ6G7j
-	nqS1b0M8UrDtbnNC3ohnsUQokMDV26qG
-X-Google-Smtp-Source: AK7set9O84l0XsfvFQBD9loMOEi6AOc0ebkQP4Nu/OsITafbJZvA/BPZ6AaS6yGjDRRPHV4eRW0mjQ==
-X-Received: by 2002:ac8:7c4b:0:b0:3bd:7a6:67c1 with SMTP id o11-20020ac87c4b000000b003bd07a667c1mr6274319qtv.43.1677006272705;
-        Tue, 21 Feb 2023 11:04:32 -0800 (PST)
-Received: from [127.0.0.1] ([172.176.137.180])
-        by smtp.gmail.com with ESMTPSA id 72-20020a37054b000000b0073b7f28e52bsm11463315qkf.7.2023.02.21.11.04.32
+        bh=AvU9HxbC9w8iGkxuOn7UAh4NPyhuiDgKMv0FBDFMlaA=;
+        b=KG0EtxD1bsud7D4fKxr1YPWeSa38+i82fDjf8goVktxiQYpjAv0dF6VoyiawIeMI2+
+         UiyV+mx67CYbTbnAR38A6Djl3gIV/6+SC9TMni3eu4NEn0apfdtD87XKx+gLolMLOGfq
+         RC1chzOz22ZROCUy1Mdns1kLw1VXPcDcrcLBmW8AorIwFC43uoG6EYZs5HbDQtUgZoo4
+         H0EjaZW6dHEnMhRCkkxeU2XO3Bl1XQ8QVzkbK2CLBSN8O0tsdiQDHkriJ9t3QoDbOt9+
+         npShdtpcLDWLGhiPzHrvrdibJmTI89d+kg8LEgQbBUR5DeyBKyG4Aot6AwHHKIKhoIk8
+         dU0Q==
+X-Gm-Message-State: AO0yUKUM4tZhhJvSXjH3IdO5+urOimIMXJkidvXg5HSrXW66NfGneWyz
+	55rQ8HEA4XXHglg0AiyF9vvVELhESg==
+X-Google-Smtp-Source: AK7set+WeitURAyVbNxyt0q3Mwuglln4van+Ti99sxvtNbITu6vpHYd4+zqP1BV+0SKfu5kxgPF1iQ==
+X-Received: by 2002:aca:1319:0:b0:378:99e8:4ba8 with SMTP id e25-20020aca1319000000b0037899e84ba8mr2239522oii.39.1677011587214;
+        Tue, 21 Feb 2023 12:33:07 -0800 (PST)
+Received: from [127.0.0.1] ([104.210.133.19])
+        by smtp.gmail.com with ESMTPSA id j7-20020acab907000000b00369a721732asm688465oif.41.2023.02.21.12.33.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Feb 2023 11:04:32 -0800 (PST)
+        Tue, 21 Feb 2023 12:33:06 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
@@ -49,9 +49,9 @@ References:
  <20230221-mptcp-warn-tcp-done-close-v1-2-d248242b29b6@tessares.net>
 Subject: Re: Squash-to: DO-NOT-MERGE: mptcp: use kmalloc on kasan build:
  Tests Results
-Message-ID: <c04b8028-a833-8bb5-db43-f6595644e8ab@gmail.com>
+Message-ID: <1805ac21-f6d9-6007-e74e-49af431f691e@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 21 Feb 2023 19:04:31 +0000
+Date: Tue, 21 Feb 2023 20:33:05 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -73,11 +73,11 @@ com/task/6730426857816064
 com/v1/artifact/task/6730426857816064/summary/summary.txt
 
 - KVM Validation: normal (only selftest_mptcp_join):
-  - Script error! =E2=9D=93:
+  - Success! =E2=9C=85:
   - Task: https://cirrus-ci.=
-com/task/4531403602264064
+com/task/6251718711705600
   - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4531403602264064/summary/summary.txt
+com/v1/artifact/task/6251718711705600/summary/summary.txt
 
 - KVM Validation: debug (only selftest_mptcp_join):
   - Success! =E2=9C=85:
