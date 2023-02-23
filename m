@@ -1,45 +1,45 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B720F258F
-	for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 13:49:58 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id p18-20020a05600c359200b003dc57ea0dfeso10531231wmq.0
-        for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 05:49:58 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD2B258F
+	for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 13:55:22 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id 6so10342082wrb.11
+        for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 05:55:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uAAoXHk9mX8rCcoccCGHlQnGF9rmRaN7RFLV5C/a6nE=;
-        b=mXD/XBLfdcmo1i/Yy5s93AS0y49p8wb05bLcHmD6h90a97hhD5NVW2isc2QybMHS9s
-         RpeIVtaPU0/ZY/MVJllAQxABibKXnzl6OQ5Y9PrW0JSqSlGKbY92vgfc+21XfKaI954N
-         AKHMN3ibpct2sJKRPEj2nrBcG5LC7NxpMBuDgPKxulk0lKUyOOvdsN5HDU6jr0AxTvH0
-         5SGE0TTIUWqp5zPR+dso38pUQRLijHQjtINf+qDywhOvtLkE/vYJvu44qN2Ih2bRfKYu
-         FEOz/GD2NYGkOXTxfsVj0+vf1fCdgitOqAkqg+lTTJfR9Srp1WnVr9NU0+/aYA/2Q9RF
-         0ZRg==
+        bh=uaWVLXm3B35gvyfujHMYtS6qqbA24gbcf7S5ZGwF4Oo=;
+        b=LMQ32eHPB/iXPQEiTda8GbBLW+Cmpk1bkinIh2fDz94lT7STBSLHU0FnH/4k825Hla
+         BghSvI8EkSY3oOgSYd4dA8QyuUSRew/1633ncCNwPk0Qo3oZJ3Tvv7fI81gy8+8X9lkN
+         YsXl3RgCpznPFyJIdbPBH9/p9+TA44+vmt3A1U9fsQTX3KLYcAZAlFIFvaXGevMFc2OJ
+         KpfaSRo01TIlCZb/tgpP7tsq/LdWBoKHcr05FbyD4FwEnpF42pY/mjB0vhkgKZoiFnhv
+         Afh/jekenaoQQ++Lytm8rJ8EAqcFCPjR8qTtth2780H6Oz2TMa8l0Wvz+cDbYcOl3/MA
+         wLTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uAAoXHk9mX8rCcoccCGHlQnGF9rmRaN7RFLV5C/a6nE=;
-        b=6bEKAuZYL5946A92bFtV9F4MRTIFxr+sz1qQXFq71jRbxg+TmncEQbP8F4/SRjzHVL
-         9k9AS36ztj7pMV0i9D4eugxNKQw8AZJFz/XtHNK0IjVEHbIvV3W7DTEYc5V3PJzgUPk6
-         Xm4ANlRjVGI/d0530JYi8kXO04D4R02PJMqfLfgqlIy3YM3BmHmx3CXudA103L1cUtMr
-         MD1Nv2FBAP33PwVLDz4K3prDEsSB2p7iuUp4IlZDN/ck+8V/SglkMHK6iH41MfiMGbvM
-         K3nLN/O7kvb/TfjnTPp71cvrXLO/ncZQCmkhMcA/VZfdXJxriyMHE3RhWJFfzxZgmqmp
-         hQ4g==
-X-Gm-Message-State: AO0yUKWHhD1xSYh1AWjMCfxAdP0zTSG27+ckv4b3gF9/mEeFyyT9uE5m
-	DLVkFJC+XCf5J/4fIbpedKrJbakQ0MnXx5rxPeA=
-X-Google-Smtp-Source: AK7set/8WgvwsiuRJiEfNhZfbAH8T3aUP/X11+23BzM2uQMqsJhd6FQnjuTpKIPDCUrfUTnVwG4EHQ==
-X-Received: by 2002:a05:600c:492a:b0:3dc:42d2:aee4 with SMTP id f42-20020a05600c492a00b003dc42d2aee4mr3295493wmp.25.1677160196700;
-        Thu, 23 Feb 2023 05:49:56 -0800 (PST)
+        bh=uaWVLXm3B35gvyfujHMYtS6qqbA24gbcf7S5ZGwF4Oo=;
+        b=Zf4kjh+dpnh23p7E01sofaBzvh8F1l30RkZS2wofq+QtobhoT64gMaNLp9zGpGGOAx
+         iwdbnNsUFT2b/KSHwjUXI9Hvm87+j2s8Uj9O6+v9rqdtOXggADtK+3g2E9wR0j9hKF37
+         0tZqXhqpoM2FRoSR7W860bna88m9H4uTM58L6K0db7YZDG35HYOalmKNSZoC6FfRoe9J
+         RJW8ibnqss3byR0osw7mjai6yinmxeZBNaQzVpVE4sYtNUu0fgcQCpdSTH8UGfSlGFa0
+         1wjCR/HkjLq7xq5FxVEbWtyoUbVl3CYMgABHQfO71RING52HQPCkCLdju5zn1+fnSK5D
+         gSpQ==
+X-Gm-Message-State: AO0yUKWmTTE9Qwib7wbJUFxOKPZw94PXJE4WHN1AWzEr335TmeLD7t5q
+	Ss5ndjjCQGAg/LLRF8i2LZVyH9cpZGnxduQs1SA=
+X-Google-Smtp-Source: AK7set84KvzKzPUWikZh0YeOzmqS6ILUiDikf4bQYuw0yoKfMBqhznhaxq55goYDYFW+HCFQMJWQYA==
+X-Received: by 2002:a05:6000:80e:b0:2c3:be89:7c2a with SMTP id bt14-20020a056000080e00b002c3be897c2amr9814173wrb.13.1677160520728;
+        Thu, 23 Feb 2023 05:55:20 -0800 (PST)
 Received: from ?IPV6:2a02:578:8593:1200:b5a0:3898:2dad:3d15? ([2a02:578:8593:1200:b5a0:3898:2dad:3d15])
-        by smtp.gmail.com with ESMTPSA id bi27-20020a05600c3d9b00b003dff870ce0esm4347948wmb.2.2023.02.23.05.49.56
+        by smtp.gmail.com with ESMTPSA id r189-20020a1c2bc6000000b003d9aa76dc6asm3681112wmr.0.2023.02.23.05.55.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Feb 2023 05:49:56 -0800 (PST)
-Message-ID: <a60ca644-0139-26e1-bf5a-6817adeb7e5c@tessares.net>
-Date: Thu, 23 Feb 2023 14:49:55 +0100
+        Thu, 23 Feb 2023 05:55:20 -0800 (PST)
+Message-ID: <55591ba8-d9d4-2f79-d7a7-cd586b54a805@tessares.net>
+Date: Thu, 23 Feb 2023 14:55:19 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -63,27 +63,9 @@ Content-Transfer-Encoding: 7bit
 
 On 23/02/2023 14:35, Geliang Tang wrote:
 > On Thu, Feb 23, 2023 at 10:10:25AM +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> Thank you for this patch!
->>
->> On 23/02/2023 04:37, Geliang Tang wrote:
->>> Add __ro_after_init labels for the variables tcp_prot_override and
->>> tcpv6_prot_override, just like other variables adjacent to them, to
->>> indicate that they are initialised from the init hoos and no writes
->>
->> (Do you mean s/hoos/hook/?)
-> 
-> Yes, it should be 'hooks'. Please fix this for me.
 
-Yes, I can do that!
+(...)
 
->>> occur afterwards.
->>
->> Good catch!
->>
->> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->>
 >> Do you mind if I change the target to mptcp-net and add a Fixes tag when
 >> applying this patch?
 >>
@@ -92,11 +74,8 @@ Yes, I can do that!
 > Fixes: 51fa7f8ebf0e2 ("mptcp: mark ops structures as ro_after_init")
 > Maybe this fixes tag is better, WDYT?
 
-Good idea!
-
-When looking at 51fa7f8ebf0e2 ("mptcp: mark ops structures as
-ro_after_init"), I wonder why this flag has not been added to
-tcp{,v6}_prot_override. I guess we just missed it :)
+If you don't mind, I will add both: the one you mention has been
+backported to v5.10 while the other one is only in v5.12.
 
 Cheers,
 Matt
