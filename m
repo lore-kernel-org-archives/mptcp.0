@@ -1,45 +1,45 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3457723A5
-	for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 09:14:54 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id l7-20020a05600c4f0700b003e79fa98ce1so5651019wmq.2
-        for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 01:14:54 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB0723A5
+	for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 10:17:16 +0000 (UTC)
+Received: by mail-wr1-f47.google.com with SMTP id bo30so9684019wrb.0
+        for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 02:17:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=fFeQNQ+M/pRvAUpMJU33ATQotaa0khSm2jpw9oSt3zk=;
-        b=12PnSYQvC8x8DM4hDE6mc6CrPvaYJcMvcxFQYjyh0DqLE9KJdq1JuXXNgMwzTECV9V
-         U+AlnScjnEKLxg0+A4+O6qktTJIWEBe0d4M+yVmNxlmr+YRTFENpOxZmRh7avgqR7GrO
-         Q42qkE/iAvGDSWgM9Mb0r52iZ+cOBb30e5LqiBy3izCqBfFmVuM91zytN0ZxAnHwoTvu
-         V5kkg40J6KVk1Dk7On3Rs5DIz2/8YLmx2LjzqRShxY0c0xH6J5a1gNURl2Oz9BZHu3Ye
-         rznVMWex7qUSoIB8h3gLIxMqYeBsgnpLn3ySBMcbjrrWEntwOmCC1uPwaO1UCd2vda9R
-         MTKQ==
+        bh=SM1RcPm5LW0SOhN+ekCE6Mz8oETeJiZWG11H8NNN+0Y=;
+        b=iMRhTSXtNQijeLDd/PDkG3gyDHr2u4FekY9/cOYekQksdkPjpHcGQDNr6uB9ShdxF3
+         gOmluninYSFVco7gonW9qepuBOk3mGMnEht5X2sxPzHgijXDQcaEiio2N48qXIj7byKZ
+         4fC0OUfemaXEvffkQuyEcrBoFjD3LwNrgVMT//ct5r0mT7+n29F5TqeNPpkYbRw8bHTv
+         HPhrYL4nudeRXjfVY6A4VPWKHfcF5kF7bt2jbFqEnMx8pQyywB4AwNUtEabc2pTJSoXE
+         uzX1X3dwX/rJ2yQfK4oWFPvCDtCqoGhF1+D5TWBQzQvTSoDh2KTnqeV59Onns8AcB8J5
+         w7OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fFeQNQ+M/pRvAUpMJU33ATQotaa0khSm2jpw9oSt3zk=;
-        b=59bdbbLJS+Qez0xPVZpTsKKvFFeZ+PZ/H7M1HSvPr3hcf8WFO9cC443+J5nKI2nfpA
-         pursq4batRsi86TeG4MkzrDzqEd+NamWnWC52YU0BC4UP2ekrLjqYWshDxUpChqE8J5s
-         0GBIS+nwzh189caNFVS1Cy9BGjEt3dIwEpw5ZqaQ3J8GUhKCY1F3CSUybshqhClbIRxO
-         QGYpV6u1YUBavlZLaeVdQcTe/mccFRZZ4GZQNuT3FWaJKFuQCwDRdBUwmWv46zm8vMML
-         AgM4XVAmvmC6NbX/nCQh15bcigPnbXR8WUUzMDjIOGiBcpX02t4GFjK8TLmQbp3kLFxA
-         v8FA==
-X-Gm-Message-State: AO0yUKWooZRd5aF/cO8nZNIAuKwopUz1Q+y8KRT1RSNGOn8hj4m5BB6w
-	RTN0PkvcDDFC+n/+Nl52eN8Ylzyo1hdgxFLR9XE=
-X-Google-Smtp-Source: AK7set+Nc7XzZu8PrWM4FZnfb0/Sp2zo6u10tyB+xD2075y/4TtBCL0N17lGEC6i5rVIa3LBgiqvNw==
-X-Received: by 2002:a05:600c:3b86:b0:3dc:4fd7:31e9 with SMTP id n6-20020a05600c3b8600b003dc4fd731e9mr9217553wms.7.1677143693105;
-        Thu, 23 Feb 2023 01:14:53 -0800 (PST)
+        bh=SM1RcPm5LW0SOhN+ekCE6Mz8oETeJiZWG11H8NNN+0Y=;
+        b=TXptpr/NznTjqXZ+sPSJV9SmHVF4YzIMSxo0WlkTTqQeSurm1LSScbgxJa5XQXD52s
+         I99A5S4JwLAYPVQKgNIKRYPzAA2AChJTt+cE6zk4il2hX03bNrnFG7XvNKQOAY7a5I6b
+         4p/kkyJy8iEkqJCZp/cxxbHIwHmz2bgyqp0UaKnoEJT4kVuJclzqCqN6NX1YzbceGTpd
+         67+acuP1PBBg7jlP9P2Zy2FDbgkMMoBrhjbk2miRx+pIS0xjs0WnP1BGMxfxrwY3XgQv
+         3nVzQgZ1SLEeeO4oyrBlKApQHAyYr7m9eI+dQIG50dhnDYjRqcgHLqvsC/cE1ckKz3Js
+         csMA==
+X-Gm-Message-State: AO0yUKVngmzShKJmT+t7kJEzjiAszs80C3LEfW8RALC2PFLoZIC15oS5
+	va88DaW3JTEU/PuGmMIFYEH7HA==
+X-Google-Smtp-Source: AK7set/eJfBieSEfF7lxWclqaZg3crMFBfPBssN8ulpvOjOOb9EOVDBID9DWEux5VQwtEL6kLbmHow==
+X-Received: by 2002:a5d:56c9:0:b0:2c3:e07d:46cc with SMTP id m9-20020a5d56c9000000b002c3e07d46ccmr10442788wrw.41.1677147434374;
+        Thu, 23 Feb 2023 02:17:14 -0800 (PST)
 Received: from ?IPV6:2a02:578:8593:1200:b5a0:3898:2dad:3d15? ([2a02:578:8593:1200:b5a0:3898:2dad:3d15])
-        by smtp.gmail.com with ESMTPSA id j29-20020a05600c1c1d00b003e204fdb160sm5093240wms.3.2023.02.23.01.14.52
+        by smtp.gmail.com with ESMTPSA id t4-20020adff044000000b002c5694aef92sm9586601wro.21.2023.02.23.02.17.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Feb 2023 01:14:52 -0800 (PST)
-Message-ID: <403ade13-2cc8-d8ab-63a1-592881b4ff66@tessares.net>
-Date: Thu, 23 Feb 2023 10:14:52 +0100
+        Thu, 23 Feb 2023 02:17:14 -0800 (PST)
+Message-ID: <3aee0b40-c744-77d9-5bd5-41651bc2c2b0@tessares.net>
+Date: Thu, 23 Feb 2023 11:17:13 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,47 +48,108 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: userspace pm: fix printed
- values
+Subject: Re: [PATCH mptcp-next v3] mptcp: update userspace pm mptcp_info
+ fields
 Content-Language: en-GB
-To: Geliang Tang <geliangtang@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
 Cc: mptcp@lists.linux.dev
-References: <20230216-mptcp-selftests-userspace-pm-typo-expected-v1-1-e004734154d6@tessares.net>
- <CA+WQbwuNVam8nM-pbNupxznZECiKb43-0RgRiEddF92vPjEsDA@mail.gmail.com>
+References: <7f695489e0ecba3f0951193be81a1620b1f8e6e7.1675410794.git.geliang.tang@suse.com>
+ <691e7dde-be9d-ee56-73dd-e6e6ede37d06@tessares.net>
+ <20230223055328.GA24434@localhost.localdomain>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <CA+WQbwuNVam8nM-pbNupxznZECiKb43-0RgRiEddF92vPjEsDA@mail.gmail.com>
+In-Reply-To: <20230223055328.GA24434@localhost.localdomain>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 23/02/2023 06:55, Geliang Tang wrote:
-> Matthieu Baerts <matthieu.baerts@tessares.net> 于2023年2月16日周四 18:23写道：
+On 23/02/2023 06:53, Geliang Tang wrote:
+> On Wed, Feb 08, 2023 at 06:43:58PM +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
 >>
->> In case of errors, the printed message had the expected and the seen
->> value inverted.
+>> Thank you for this v3.
 >>
->> This patch simply correct the order: first the expected value, then the
->> one that has been seen.
+>> On 03/02/2023 08:55, Geliang Tang wrote:
+>>> Increase pm subflows counter when userspace pm creates a new subflow,
+>>> and decrease the counter when it closes a subflow.
+>>>
+>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/329
+>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/330
 >>
+>> Sorry, the description of #330 was not clear: pm.subflows is not
+>> incremented for the server side when using the in-kernel PM if I'm not
+>> mistaken. I just updated the ticket to make it clearer. So this patch is
+>> not fixing #330.
 > 
-> Matt, this patch looks good, please add my acked-by tag:
+> Matt, how can I reproduce the issue you mentioned in #330? In my test,
+> pm.subflows is incremented for the server side. My test patch is as
+> follows:
 > 
-> Acked-by: Geliang Tang <geliang.tang@suse.com>
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -981,6 +981,12 @@ do_transfer()
+>                 done
+>         fi
+>  
+> +       ip netns exec ${listener_ns} ss -version
+> +       echo "listener_ns ss"
+> +       ip netns exec ${listener_ns} ss -inmHM
+> +       echo "connector_ns ss"
+> +       ip netns exec ${connector_ns} ss -inmHM
+> +
+>         wait $cpid
+>         local retc=$?
+>         wait $spid
 
-Thank you for your review!
+Good idea to use 'ss'!
 
-Now in our tree (fix for -net):
+These info are also exported via:
 
-New patches for t/upstream-net and t/upstream:
-- ca6c4a980444: selftests: mptcp: userspace pm: fix printed values
-- Results: 0b504c8bc901..32f1046d667c (export-net)
-- Results: 6bb4cfee7e04..7264bacd3544 (export)
+  getsockopt(..., SOL_MPTCP, MPTCP_INFO, ...);
 
-Tests are now in progress:
+But easier to use 'ss' indeed!
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230223T091254
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230223T091254
+> The output is:
+> 
+> -----
+
+(...)
+
+> -------
+> 
+> You can see that the subflows are updated for both sides.
+
+Indeed, my bad. I thought there was an issue, probably I looked at the
+wrong time (too early/late) or at the wrong fd. Then when reading the
+code, I saw "pm.subflows" was only incremented for the "client" side in
+"pm_netlink.c". But I missed "mptcp_pm_allow_new_subflow()" from "pm.c",
+doing "++pm->subflows" :)
+
+Thank you for having checked!
+
+> This ss -version is a bit strange. If it is removed, the test will fail.
+
+Maybe just a question of timing? Without it, 'ss' is launched too early:
+before the creation of the additional subflows. I guess that kind of
+check should be done in the middle of the connection, probably not easy
+to do that for all tests not knowing in advance how many subflows will
+be created, how long you can wait.
+
+> Anyway, I think it's necessary to add a testcase for this mptcp_info
+> fileds. WDYT?
+Yes, good idea!
+
+It could make sense to do that in diag.sh selftest but only one subflow
+is created there, so not very useful.
+
+Maybe good to modify do_getsockopt_mptcp_info() from mptcp_sockopt.c to
+check more fields? Not so many fields are being checked so far.
+
+Or chk_subflow_nr() from mptcp_join.sh to add an additional check where
+MPTCP info would be read?
+
+And maybe in userspace_pm.sh to add some coverage for the userspace PM
+case, what you are fixing here in this v3 patch?
 
 Cheers,
 Matt
