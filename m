@@ -1,127 +1,142 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2081.outbound.protection.outlook.com [40.107.7.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACB02564
-	for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 12:13:07 +0000 (UTC)
-Received: by mail-pj1-f54.google.com with SMTP id l1so2319656pjt.2
-        for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 04:13:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oW8aqoP/gGrFAIOZzudt3kBJ0Bnq7pWLFzTDqKtdGU0=;
-        b=NNQvwMWn3iCV901krPTJegEg9Xvv1WBtE14iIxmjjvp1WT4DSArQZIzIpqNGBIX45l
-         kHbdMX8pWF1uE+/CY6fmS7valArPtF0ujVByVOkZIuQrH95MmDrVC7wcVJ/+/70Heq8N
-         NGKPmW48OimGsQHB/D12JoHWwExSgVck4F91bgixicdBYkIzFAtlqe0T9m40syve7xa7
-         rYap7qrl1gm/QOscZGUs32mxFqY10BXfp0Hs3wbWBvlR7W1dl0jzaicBkI3kISSeXgYM
-         P7Q8xFATbz925X4Sstdjj3S2uuQFIsACeRwuxVI7YMTJJ22U0qsBsRXo+werTcqbmXWa
-         4gAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oW8aqoP/gGrFAIOZzudt3kBJ0Bnq7pWLFzTDqKtdGU0=;
-        b=I9aa9Yb84NPLZM/EU43jBbJi2wnabQQeHOZvgH66Q+TF+94kP2ZIiKWlRPi61hMiqX
-         EvZfQ/CIrrEIYuaApiD7WqOps1uTZNr7PVW4nVKdaC/GDwlm5RrMRXUcD8CcwbiBdFMI
-         h/qXm91qef1ZCZWKElwmwypB1c4A4JgRDC5XJ6lKZTfb6SxihtMPnf5nEcJ7LKGIcKh9
-         VG6cMFZj2Pb+vi7wt7h9oqdgW/bjUI+iIxXwRqcc0KftE8n9LkWg6l5yJ0sv/mjTn7SX
-         tKV5wWY46EW7YkdxnmUsZLTQ8vHT/KGK2I5iS7r+b3iuCfZrqgUJvioX1hAjOPEY2/vk
-         RRgw==
-X-Gm-Message-State: AO0yUKVUZqHMPpr3kXRm4b+dnq2S+zmq4RCXFqLAxTKq2ZSDw7bk2vhm
-	S2/TPHaft58Dnj63DsLhOw==
-X-Google-Smtp-Source: AK7set+8VAkUdfLuvSKLRbij86kLJx3F/+nDpfZMQP8WXPvyv68vJ8lMNWYKUSrsPwOXTy+nzA/JfA==
-X-Received: by 2002:a17:902:e745:b0:198:adc4:22a4 with SMTP id p5-20020a170902e74500b00198adc422a4mr13249628plf.31.1677154386934;
-        Thu, 23 Feb 2023 04:13:06 -0800 (PST)
-Received: from [127.0.0.1] ([20.172.4.0])
-        by smtp.gmail.com with ESMTPSA id n7-20020a6543c7000000b00502ea97cbc0sm2768950pgp.40.2023.02.23.04.13.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Feb 2023 04:13:06 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D1B258F
+	for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 13:34:59 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Fh69fvRwWOmlejgft89UJSg4f6kT7kYkztGKmzaCiUshouEgEyTkHlextB+tnjS8pmePoPZipVyezRGQWDeL+1+at1MSkYaJBuJFm3OhcsnQuZMFvXbBbwNij/c/KD10RZ25Vo25C0wshJv0QddKPgvbhpUvhmmA1VPmHp7Lk23JxcB9BmebsRuPkcpYQDJ5li90Ms/07wrMyHPKz7+RMRnRKI8fb4o9BkEXRCf19Oy2JqnQluLWkwXf73YiWpOHMNu3TAb1o5rJEXcknY5AuYQus4SrUwP5VqZXeWcqba8Mv4Bptu+WipTTxdv5TUFiLsx7PTe3Vb2z17QOw+MH2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PqAutQzUcRvs5hPMH2LYaJP019ZY6xyJFiUoZAO7qmU=;
+ b=ipJGT5X5Uz35ls+LG4XACHLmB9+f7NfpyFlZeBh/IkDTMYJ2rQDPQkvTaebxRmThDD1ptzJwifx3EwZjpVe+CQ7hZ8iYi85BKVyCGIv2pbhwE5H/qE+n6IXfMFMOkcFa9oRe3aB7jFfeH2mhhtmCEWw20P9NVwetQOtR72McDIiArS25zyqU0YZhEY4JExtuhz3os+oA4eBcuY4dzz2wiTjToVIFhqM76BZs5oKbApSN7FNn/ZG+GwLFBgTA/VHR03g+9hC9mDfLz50JFsXNQ69e0PWcQ4M8cxfub+EM/d/NNg2WuHT4765GreGrCs8idPZ4HpwwxMyoeQmmOUCfhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PqAutQzUcRvs5hPMH2LYaJP019ZY6xyJFiUoZAO7qmU=;
+ b=CU0vGodE2hXuQkZ/9u0rPY4h9gQQEADLdMSB3x3COPCsvrT+55U3tEiW9CIA/vfx44HN1/DubXvpdPJyXMrCsvt62X4+/G3W57VCxXpFJ8X0URQRjYLuNf+aJfjPCOPjJREOFc+K9su+Tm1+iy7Da/brasNxvXYgL68MQv7NCew5AcCo+bWs9hRPqcc4ZzD4zGbTGiEqwIJfzXIB5Na1YDJQAVRYXk5hHpFEnAwHes0+mgHOtmeVN1cGQu72DiL1qmvwK3f2/wyzpev2U6kj9IXVmZiLvgujDgta8ZU/YOCN+aTiduDIUFlrAlhKfwbp0zNztCpOXCilPGxd42/HLw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by DB9PR04MB9379.eurprd04.prod.outlook.com (2603:10a6:10:369::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.19; Thu, 23 Feb
+ 2023 13:34:55 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::f6b0:27af:a96f:ab6e]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::f6b0:27af:a96f:ab6e%6]) with mapi id 15.20.6134.019; Thu, 23 Feb 2023
+ 13:34:54 +0000
+Date: Thu, 23 Feb 2023 21:35:58 +0800
+From: Geliang Tang <geliang.tang@suse.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
 Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20230223-mptcp-diag-info-limits-in-kernel-pm-v1-1-699561f9f9f4@tessares.net>
-References:
- <20230223-mptcp-diag-info-limits-in-kernel-pm-v1-1-699561f9f9f4@tessares.net>
-Subject: Re: mptcp: do not fill info not used by the PM in used: Tests
- Results
-Message-ID: <c20bc2f7-6c4c-a46e-5aae-9f0d22fab892@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Feb 2023 12:13:05 +0000
+Subject: Re: [PATCH mptcp-next] mptcp: add ro_after_init for
+ tcp{,v6}_prot_override
+Message-ID: <20230223133558.GA2878@bogon>
+References: <f2d3a14b9382645f8770ad6496fcba6db699ad19.1677123443.git.geliang.tang@suse.com>
+ <db64d10e-3887-fc95-a91c-33408e3670f9@tessares.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <db64d10e-3887-fc95-a91c-33408e3670f9@tessares.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: TYCP286CA0216.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c5::12) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DB9PR04MB9379:EE_
+X-MS-Office365-Filtering-Correlation-Id: c31bb393-805a-49e4-581a-08db15a2bf71
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	lQR4vvs8YB86IF2BbDNgmJGp2D38zUhWNJBMAJ+E/cGZ2F7GmfrHPkzkUhJxvlJ3Bj2QdlZ+MV5BBN0ZPu5t9//mE6+r0UaVCsSqC6lS1lWF2uqWJeb/E6WH4gf0zTmvXis7rQzZvkEEXshwzTd6p0m4nkTCRknYZzv9sbySuysj74x1wtKQs+MNKWxHLXikfr1/R42jsLY5M7YzBC3EF7Nnz8kbBcUtfo95XBTWiKmwUyYH+8AM5j9JUsweoRKqrFIq+/rAnpNAyD2YGlKoMqegog95eceE2p8XwPFLnOmlhfN3w17uCUwm8q5WM6sD9pQRSJhKxyAKY+yegYX3PRVpMOb0ZZB2qPhwpX+hLOEXtfTiTKYCyoI/boGCaxmtZlzIzcGCfPbJcjMQAUGatJZkqSspkXJWH+Gy/0ST+WbJBTCFhplu8sX2RRvv920k4Wi9dKNxxl+v1MR+CPsOFRE12JpLFOBDefcRVniecBIZ0zYLSzAr29TMfRCkmH0lq6auZ7lwou1vo4evqMPyWrQZ4BVRURwj0LYnM20LMQ5WkRxb6Or6N+sTYfUcehgTDXP4CIfG4GgNI0zhHWMb+y61yoiZ6X8rz64U2WNmV0mgEmERunjbjPfOfiWWNGdjN+SMR/B8eoiBpMRbqTbilu0X4PPollzKxYk9g5BcGT49RHkXIGlvGdzLQdnfl9ZQZAVzIRybJj09W8kVd9ceJw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(7916004)(366004)(136003)(376002)(396003)(39860400002)(346002)(451199018)(4326008)(83380400001)(38100700002)(9686003)(8676002)(6916009)(26005)(186003)(6512007)(66556008)(66946007)(478600001)(1076003)(6506007)(316002)(66476007)(33716001)(33656002)(86362001)(2906002)(41300700001)(15974865002)(8936002)(4744005)(44832011)(5660300002)(6486002)(53546011)(13296009)(18886075002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?oZ3bmluLy074v8D6HBqgCj3oHCmWJFGaj3AdJp2DpG5Aw2r9Ke5JgW3URSiK?=
+ =?us-ascii?Q?QqsTmrO6l+QqMLpCiGUQKW4WlJTYH8NVSQ+h6koj4hgtrdhb993gx1j6dJdc?=
+ =?us-ascii?Q?aEpcwQmsnkjwo39hEN+QmUv0NL8tCbG2D8Fw6gYYllTwjqpWaBScKw8CQ0Yj?=
+ =?us-ascii?Q?G6wz6yyhAjky1H7braLglaDemLuThfNHpB7D/cMLfFvi+GtW2DLMWZ0g+4AG?=
+ =?us-ascii?Q?tUPFthHLBnNdSinQEPEfOgbb2cZGBxUliHam62zGJHZOXANcx2gYeNQhYQtm?=
+ =?us-ascii?Q?lUR3pTmO6v71uBa6Eircp5x1NB09h6B36Z2hEckdJxx2Nu19No64bOG0249j?=
+ =?us-ascii?Q?cou76Ap/dlENig4PjxiLH1gQJQ5mUKBsFYlvgCB4kXL65mFcylCm8p+FrUaX?=
+ =?us-ascii?Q?7rbIwkx/spTBdZlFxkqMRLEql28IYR4HQ+7I/HWUhDRCxjKtbxvJVGVQKMZK?=
+ =?us-ascii?Q?1zc5l3WHJWArVur3jiFmw+aMU9IRjtPQhJ6EIcLrdHB2eTj03MKrdjwkiWVR?=
+ =?us-ascii?Q?JxUYhYyAmY5t8ugjyiiJsPhXP6BPfjrMiGHK8H+48cj6/KkWofResNz6QfnF?=
+ =?us-ascii?Q?np8nNtkwjQodP4L3V9sQC3SlH8udQMb/ipZw5MtTwg74MPeBNpTXk4zvF5fc?=
+ =?us-ascii?Q?QusGBbAI4wpYHIBS5RO1Eujc7XPyf/NxxIfJM4jekRikrySi8OgzkDE/G+/j?=
+ =?us-ascii?Q?Xk6ZBX0eLDYx39F/D32DcwEREg0YK6di4RrTWR3iCH53LcSi7tHXuC7M6ZoP?=
+ =?us-ascii?Q?8s+fEh0ONMeesyBLKY74aGBcYvJ4KVa9c0WgMAlCYOrug1Wk2X94ApUk7enN?=
+ =?us-ascii?Q?aR9EJuJjxu2Rt0ySnKUH/A/kIszreSAtxOZy2Gk+Q5EJj1vN5xrHxq4CAP8e?=
+ =?us-ascii?Q?1yfo+PIlmv4tDGu9TJMrUkWoVljpyXC2J/WUc9NaG1seDh2twrVlAItCFdGt?=
+ =?us-ascii?Q?iZH7mesg3x6EhrbgGBK6nD6nv4nv1XLsejPTLJ0MGzZCT2MOEIqqiI/k+KNE?=
+ =?us-ascii?Q?6IzEvOZQrUI43+u1ih+zzCo65glg+zX1QVhdA1jekUkNthfHW++RLW0tUlLv?=
+ =?us-ascii?Q?Nxzf6qq2f/fLJuCj6b329cWnbzDd5/PNkaFh6AWmsOWsB2KzSi6Res9nzFLq?=
+ =?us-ascii?Q?/Vh3hUT+089GN+Ik+kTupmc7J05jJp5xlHlDqE5qOiENhapQGPYhQHTWY7a2?=
+ =?us-ascii?Q?y+ZpXkAZRHRmVEVALDI9bd07Z+Tv2Zq2DLVmn3/s1rDEPtqxb29lc++pdi2H?=
+ =?us-ascii?Q?gIY/T7lyfryvsIjFmVVZ3vG2gLg0Fr79HD0XRfgy2GVigVziPakwBWG7O9oF?=
+ =?us-ascii?Q?K4vFLJUaTb3HPwR5vpf2KZLTxoBlSUGdElGx1nWmQl5cwfKNa53RxOaKHcuc?=
+ =?us-ascii?Q?KaBYlKtBAEr2K2m3EWyQtva3sDjBdMwPOuDn2h7XTjIEaT26dfWXDuzbRyUQ?=
+ =?us-ascii?Q?bM3XoJgcJrFLnF+bvsvgAydlBmtz2+YhehE0+s9K7Z2H1Ba1uhVczMKsQmAh?=
+ =?us-ascii?Q?nPFyAm5HGgwbz60yctDZ2JtswQ2nQ/EwnUIewGY3PUoAUi2pqx0nCQ+uS/3m?=
+ =?us-ascii?Q?VKKs5mxFSJ3fXbW613jOMnf9QhELEbpdtPkyUepgwRyrQglYUw85KstwnTbd?=
+ =?us-ascii?Q?YA=3D=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c31bb393-805a-49e4-581a-08db15a2bf71
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2023 13:34:54.6787
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Px6QS4UuumclEOC7f3VpfhvW8e99IOiPHql0sTY6f4Ul5Hjoxhcgl6ItSloD/ABdXv0P2dBbKyhwOAQBgRdB7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9379
 
-Hi Matthieu,
+On Thu, Feb 23, 2023 at 10:10:25AM +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> Thank you for this patch!
+> 
+> On 23/02/2023 04:37, Geliang Tang wrote:
+> > Add __ro_after_init labels for the variables tcp_prot_override and
+> > tcpv6_prot_override, just like other variables adjacent to them, to
+> > indicate that they are initialised from the init hoos and no writes
+> 
+> (Do you mean s/hoos/hook/?)
 
-Thank you for your modifications, that's great!
+Yes, it should be 'hooks'. Please fix this for me.
 
-Our CI did some validations and here is its report:
+> 
+> > occur afterwards.
+> 
+> Good catch!
+> 
+> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> 
+> Do you mind if I change the target to mptcp-net and add a Fixes tag when
+> applying this patch?
+> 
+> Fixes: b19bc2945b40 ("mptcp: implement delegated actions")
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6249986447376384
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6249986447376384/summary/summary.txt
+Fixes: 51fa7f8ebf0e2 ("mptcp: mark ops structures as ro_after_init")
+Maybe this fixes tag is better, WDYT?
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4842611563823104
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4842611563823104/summary/summary.txt
+Thanks,
+-Geliang
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5405561517244416
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5405561517244416/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5968511470665728
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5968511470665728/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/48c8d60ff9f4
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+> 
+> Cheers,
+> Matt
+> -- 
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
