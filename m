@@ -1,138 +1,127 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37032564
-	for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 11:20:13 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id t15so10507989wrz.7
-        for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 03:20:13 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACB02564
+	for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 12:13:07 +0000 (UTC)
+Received: by mail-pj1-f54.google.com with SMTP id l1so2319656pjt.2
+        for <mptcp@lists.linux.dev>; Thu, 23 Feb 2023 04:13:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ytwl8Uf1FJtazs13lMzaCYQJ1Z0mJwiy3yXcLKeUEKw=;
-        b=wuHl/2NAmbadodq0cQbjwqydjGGzrxt2GcCkJh9dNBoAp782AUvGCEpuf+bzwbWys6
-         RQYnUmYivjLYLFhu6qpA+AgXmFYsQ+uJ5Ch0yalEG+55ppGQ4f9ea9+qYjQMNGfWpcyd
-         e2nSkkEvD/z8WbXUDBqeZ55fpqDO2SSLU6bcRBJpRJCg5qolzEupCokOJOxH0JblrK8E
-         svc0Dxx12p6wc5LacRSu6TWpucE71PigMLB4APGswMnxeHIFp1TGtML50dNNS9Js3T6w
-         FgFLfASkvnNcYpqPO3OMpJLjJF8YlIrEQGzrtVZGkmYdy5z1D2M55kpNIGyOTvtecOc5
-         04lQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oW8aqoP/gGrFAIOZzudt3kBJ0Bnq7pWLFzTDqKtdGU0=;
+        b=NNQvwMWn3iCV901krPTJegEg9Xvv1WBtE14iIxmjjvp1WT4DSArQZIzIpqNGBIX45l
+         kHbdMX8pWF1uE+/CY6fmS7valArPtF0ujVByVOkZIuQrH95MmDrVC7wcVJ/+/70Heq8N
+         NGKPmW48OimGsQHB/D12JoHWwExSgVck4F91bgixicdBYkIzFAtlqe0T9m40syve7xa7
+         rYap7qrl1gm/QOscZGUs32mxFqY10BXfp0Hs3wbWBvlR7W1dl0jzaicBkI3kISSeXgYM
+         P7Q8xFATbz925X4Sstdjj3S2uuQFIsACeRwuxVI7YMTJJ22U0qsBsRXo+werTcqbmXWa
+         4gAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ytwl8Uf1FJtazs13lMzaCYQJ1Z0mJwiy3yXcLKeUEKw=;
-        b=NRVqTx7PLFIoqv9xAoIFlvMEG3Jpvv4WHLSjsOALYfkzy5ydgO0gVFIlrLNsKJF/vE
-         gdQSekfIzAcpOEbUQIAqIaIOWNFjMUxePgPfASXMQkaIXfkoA3BLPXbuYOPJ2egTeFfw
-         6ccUBjzuhijKS+Ld5I/X4oFHTyxSwHYPv58repiC/6UBFeaqdFN9bAImERWLvBaJOMcV
-         BtnSY9xpnlGnv9mK2NDfSkfBWNRO1q7hKAABv0F/EknhJd33ONSW2jQ6qVCD2XpBgTIw
-         Yiamm9oFAjzQqMp/Isjc2FQzQuiEWf+/yEFv1tNFqqoVx9mR5GW/xajlgrbGCReRtI0Z
-         V+BQ==
-X-Gm-Message-State: AO0yUKWqrNW7ELPP7uHHs8w2mKTRl7+QaGcGpFq9gcg9s0pvFAq25Uv4
-	xGQq0GOyvX6/e5cHBz+tdDSkQA==
-X-Google-Smtp-Source: AK7set/NrelozWjqRbv2TrnRzltl3KvZwBju1Ea0w5BHmc44Zz7nNRK6BSDp/41AGeVz5OWIAzywmA==
-X-Received: by 2002:adf:cd8c:0:b0:2c5:4f2d:d9b4 with SMTP id q12-20020adfcd8c000000b002c54f2dd9b4mr8933483wrj.58.1677151211440;
-        Thu, 23 Feb 2023 03:20:11 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id l18-20020a5d4112000000b002c56179d39esm11079512wrp.44.2023.02.23.03.20.10
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=oW8aqoP/gGrFAIOZzudt3kBJ0Bnq7pWLFzTDqKtdGU0=;
+        b=I9aa9Yb84NPLZM/EU43jBbJi2wnabQQeHOZvgH66Q+TF+94kP2ZIiKWlRPi61hMiqX
+         EvZfQ/CIrrEIYuaApiD7WqOps1uTZNr7PVW4nVKdaC/GDwlm5RrMRXUcD8CcwbiBdFMI
+         h/qXm91qef1ZCZWKElwmwypB1c4A4JgRDC5XJ6lKZTfb6SxihtMPnf5nEcJ7LKGIcKh9
+         VG6cMFZj2Pb+vi7wt7h9oqdgW/bjUI+iIxXwRqcc0KftE8n9LkWg6l5yJ0sv/mjTn7SX
+         tKV5wWY46EW7YkdxnmUsZLTQ8vHT/KGK2I5iS7r+b3iuCfZrqgUJvioX1hAjOPEY2/vk
+         RRgw==
+X-Gm-Message-State: AO0yUKVUZqHMPpr3kXRm4b+dnq2S+zmq4RCXFqLAxTKq2ZSDw7bk2vhm
+	S2/TPHaft58Dnj63DsLhOw==
+X-Google-Smtp-Source: AK7set+8VAkUdfLuvSKLRbij86kLJx3F/+nDpfZMQP8WXPvyv68vJ8lMNWYKUSrsPwOXTy+nzA/JfA==
+X-Received: by 2002:a17:902:e745:b0:198:adc4:22a4 with SMTP id p5-20020a170902e74500b00198adc422a4mr13249628plf.31.1677154386934;
+        Thu, 23 Feb 2023 04:13:06 -0800 (PST)
+Received: from [127.0.0.1] ([20.172.4.0])
+        by smtp.gmail.com with ESMTPSA id n7-20020a6543c7000000b00502ea97cbc0sm2768950pgp.40.2023.02.23.04.13.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Feb 2023 03:20:11 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Thu, 23 Feb 2023 12:20:08 +0100
-Subject: [PATCH mptcp-net] mptcp: do not fill info not used by the PM in
- used
+        Thu, 23 Feb 2023 04:13:06 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20230223-mptcp-diag-info-limits-in-kernel-pm-v1-1-699561f9f9f4@tessares.net>
+References:
+ <20230223-mptcp-diag-info-limits-in-kernel-pm-v1-1-699561f9f9f4@tessares.net>
+Subject: Re: mptcp: do not fill info not used by the PM in used: Tests
+ Results
+Message-ID: <c20bc2f7-6c4c-a46e-5aae-9f0d22fab892@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 23 Feb 2023 12:13:05 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230223-mptcp-diag-info-limits-in-kernel-pm-v1-1-699561f9f9f4@tessares.net>
-X-B4-Tracking: v=1; b=H4sIAOdL92MC/yWOywrCMBBFf6XM2sE2wQr+irjIY9IONtOQRBFK/
- 91Ud/dw4XA2KJSZCty6DTK9ufAqDYZTB242MhGybwyqV7pXSmNM1SX0bCZkCSsuHLmWtvFJWWj
- BFHG82KDteB208tBM1hRCm424+XDV8yuVmsnE40yZAn9+CXf424UqPPb9C8sG1jydAAAA
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2352;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=63abynn6P2YMPag/1MLy+SRqT5wQGnLtnAgwJvxFLsw=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj90vqctDu5eQVlcf58SR/DvASCZ23dihqzmggZ
- hF5Zib8DfeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY/dL6gAKCRD2t4JPQmmg
- c+gQEADA7S3OSp13GTlHtmAU255e/rUdN50opakGGKBUzq7Z6xEDRpP5HZ5nS0wZcARP4PbXNcR
- 1xmBQBkKG36GQqk37SX0sF9nnDzR9pypyF+YpULPnWU4wWJT8iFYfH0oAF4bsVK32CI8SCPCZ64
- bcuX0XX/8agpvErOao0iijOTpyHQ4NyPch0ynDNcJcGVF3FXb+li5S1cW8XfwX6AjvPvE7OrjVO
- Y73VTT9w59UGtjpMVoH6InFV8Gn0AvUMkM4IjSRVOgP59uFh5dBQo7cLkb5+6Qv8N9nBwUbaGhj
- /GxeFgathe4kQgVuNN5BevAKZYLJ0vyRqauNuDMe9d+S4ZS9A41wfrcU77FW7ZlosY0xdOX+FZE
- d/IszJj5sXknmV9BaV1FJiE+ivNmug9KdMIf7vr3PXQm4efz6XrJWwQo/IZfu9wvvGEW/gvwdvh
- JNWX37g3SPDif9sbP3P9VnMBtog8+uD5+u8ewG7aDtY/mYCwaJvMzsExVUfhzSNqHZSdTi3oUqn
- Bf2xsVf0GRU8Bg6y5t6g7JOYSvo0px0On7NTbEkNLUIuUkatbiDDchy95SPyb4WbaRBXKQJ+0qy
- mq2YHodT4lGnXdFEPhoipmgutQEJXABV3DU2Wid+6uMbsnh//Yel/IBSZAVnmP5m4s9imBO/li6
- JmkQIgxozc+i59Q==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Only the in-kernel PM uses the number of address and subflow limits
-allowed per connection.
+Hi Matthieu,
 
-It then makes more sense not to display such info when other PMs are
-used not to confuse the userspace by showing limits not being used.
+Thank you for your modifications, that's great!
 
-While at it, we can get rid of the "val" variable and add indentations
-instead.
+Our CI did some validations and here is its report:
 
-Fixes: 3fd4c2a2d672 ("mptcp: bypass in-kernel PM restrictions for non-kernel PMs")
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- net/mptcp/sockopt.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6249986447376384
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6249986447376384/summary/summary.txt
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index f7842a0b6536..fa1e72235f28 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -889,7 +889,6 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
- void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
- {
- 	u32 flags = 0;
--	u8 val;
- 
- 	memset(info, 0, sizeof(*info));
- 
-@@ -897,12 +896,19 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
- 	info->mptcpi_add_addr_signal = READ_ONCE(msk->pm.add_addr_signaled);
- 	info->mptcpi_add_addr_accepted = READ_ONCE(msk->pm.add_addr_accepted);
- 	info->mptcpi_local_addr_used = READ_ONCE(msk->pm.local_addr_used);
--	info->mptcpi_subflows_max = mptcp_pm_get_subflows_max(msk);
--	val = mptcp_pm_get_add_addr_signal_max(msk);
--	info->mptcpi_add_addr_signal_max = val;
--	val = mptcp_pm_get_add_addr_accept_max(msk);
--	info->mptcpi_add_addr_accepted_max = val;
--	info->mptcpi_local_addr_max = mptcp_pm_get_local_addr_max(msk);
-+
-+	/* The following limits only make sense for the in-kernel PM */
-+	if (mptcp_pm_is_kernel(msk)) {
-+		info->mptcpi_subflows_max =
-+			mptcp_pm_get_subflows_max(msk);
-+		info->mptcpi_add_addr_signal_max =
-+			mptcp_pm_get_add_addr_signal_max(msk);
-+		info->mptcpi_add_addr_accepted_max =
-+			mptcp_pm_get_add_addr_accept_max(msk);
-+		info->mptcpi_local_addr_max =
-+			mptcp_pm_get_local_addr_max(msk);
-+	}
-+
- 	if (test_bit(MPTCP_FALLBACK_DONE, &msk->flags))
- 		flags |= MPTCP_INFO_FLAG_FALLBACK;
- 	if (READ_ONCE(msk->can_ack))
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4842611563823104
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4842611563823104/summary/summary.txt
 
----
-base-commit: 7264bacd354401e60be232ea28eb4a8a249937e4
-change-id: 20230223-mptcp-diag-info-limits-in-kernel-pm-65bf3b67132d
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5405561517244416
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5405561517244416/su=
+mmary/summary.txt
 
-Best regards,
--- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5968511470665728
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5968511470665728/summary/summary.txt
 
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/48c8d60ff9f4
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
