@@ -1,103 +1,125 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BDC323B
-	for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 09:36:45 +0000 (UTC)
-Received: by mail-ed1-f46.google.com with SMTP id cq23so52156236edb.1
-        for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 01:36:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081013C26
+	for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 10:20:28 +0000 (UTC)
+Received: by mail-pj1-f51.google.com with SMTP id cp7-20020a17090afb8700b0023756229427so2357250pjb.1
+        for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 02:20:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4g6Pog0uKfNtReecQwAr8HANdq8gx5xyaSwfGoRsToI=;
-        b=c4xu8Uv5Sac5Z5UMiU2FUSOhOI1Du1ge5QYhwbjWGcOVWXZeZnOBKd9q6cZlFItCXS
-         MEDgLYMwJS8Sn1Tr0ynZdPWhGIhbGNaGRrkTMLtL5eBI3IViWZgHagQagBkEz7owqtRl
-         Wpc2ZR02Z8miQ58kPNYxbCS7QgnvpBKcMVctTgVuIwxSEc+Y2rci0h5OEYfJjzEACpOM
-         q8rlyc8st9K318URxxvi5f+T2pifXAllAzcEsTf2/AP+N9TYRR3smnKg1SvMVqBBM/+s
-         KpjwpfpL0oO9Z3WpDT2h8uM5tIccGEfvcEVgFckiJZ/pfxgkR3tf3v4Acn8RgdA7TVVF
-         Omlw==
+        d=gmail.com; s=20210112;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l2H/J5frKcluwIau/W9ZNnWZvZMan9NjTH8Ub9/5/4w=;
+        b=okgGTH3d+GBxLobzCPcAEBVBRam+TmkpA18bN6a/THzOIgcxIgVV0li0OgI05EqR0e
+         9/EjUP8NdOxI7mJZZR7xm+Pc//DVW8z1ZTiazBFKoa1Hd+iOpOBtz9lPj3EZOy/aUTjq
+         iJQP1b1pAvrsukdb2LSxXzVKZQ9zMu1er0MjwGKRTb51gtaqSK/3QLLVUE4nWI1YVdLV
+         mAKTcSi32Wnfk5gZqa/+UdDrYsmZT0vYtmL3XhLd0sS8B/u0Z2s19KViPv/Xvehn3ZL7
+         lRg7hYJuZ0p39gkJhCmJUUP+MElpmI8oHBashX3iyITeWR/URFZzEh68FnJ9CEc+5+rz
+         kjKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4g6Pog0uKfNtReecQwAr8HANdq8gx5xyaSwfGoRsToI=;
-        b=eB90d3wAH30Ek9r1rvGqJQqv/IKJ/C31RCyvTTWgpz7+6LZUvLGY98bnNkwPELRov6
-         R9f2jjtmMGDC7F4YUdskeq+57XI5LCcBreiZ7d1pDPXOJFNMeAqN3+bsW3ExzUDiB4dP
-         pSPpieoDMO/ZcPvhuIoTmJucXWJ63ToxSiFCD+ZC6oshVSvkWz1Yhi8Hj/M5VbZHE1f/
-         QncswJRHS/Xu9a4I/aRbwf2Ie3/JMVVxusajchosqQSlaj+FByRE/dWHBZMdvFPJPBMy
-         EcGnRxky10d/1oOZCUBeRGswScmmWZvmf4ugju0Po5dev+c2YjTyDmBOVrKpOXLPmePi
-         b0fg==
-X-Gm-Message-State: AO0yUKUFr84jTLBXfHQf4JPt0EnsDDH7ZTCuK1hTa6Cdx+cWcA/A+bkI
-	U1EMmGRRQ1Igs5HGFZT/uDg8XBL4aPFVKrxqqs0=
-X-Google-Smtp-Source: AK7set+r5ROOPr2nfGE3s77JdgcPnegwtuFHNEjbGpaGSCCDQdIbIhLCxGfI/9qjGz17AoHIup0lmg==
-X-Received: by 2002:a17:906:b06:b0:8b2:abcd:624 with SMTP id u6-20020a1709060b0600b008b2abcd0624mr23158075ejg.0.1677231403658;
-        Fri, 24 Feb 2023 01:36:43 -0800 (PST)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id kf26-20020a17090776da00b008e51a1fd7bfsm3418398ejc.172.2023.02.24.01.36.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Feb 2023 01:36:43 -0800 (PST)
-Message-ID: <edd1c0a6-b6fe-6518-9ffa-d220ee36e71f@tessares.net>
-Date: Fri, 24 Feb 2023 10:36:42 +0100
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=l2H/J5frKcluwIau/W9ZNnWZvZMan9NjTH8Ub9/5/4w=;
+        b=CxK48SZpcgrBX/M0VNFY4tyGjmRe+kE6XnYyffW1rlL7vayQQKCQZSGq9qH+AeH7Df
+         gMmPwySb93ucU3Ma1Ky7Qci13ew03bN95eMMRKgq/D/tU52maV7BZfkci/ChKcEyAEf4
+         1PS4uBRShcC71TP0od8wQ1v7M4ZC8T8/xKCvmlPyC4DhOh43xMp2rd7taR2PfGDtAb83
+         EUGGOJeBAfQ4EWca3M3J4ztPHRkWFBBOtCW2mntgSKOO9T6yhDYCF13p3mOE0hiEAFVY
+         2OHsqQg4bEJ4ny8Dc1290v+O1QXmLQu2rmGQqTaQ4hLPJ+KD8y4iWeScQtxpn6Uo/9sK
+         p4Ew==
+X-Gm-Message-State: AO0yUKWEo/gBB41mPGG4IL5z1/KCjophMEidzPMvGffcqyl/+8DzKfZ0
+	3DZy58mQNeAmhJyI38eBt4l+aJVwNPwW
+X-Google-Smtp-Source: AK7set+ugE0c3tJ29cEvss3Eod7cvJSwTbIxq6RfKh8bTw44ouG/zoJFGuOFfyMtblp0naGl8MVM0Q==
+X-Received: by 2002:a17:90b:4f4e:b0:22b:fd64:c48e with SMTP id pj14-20020a17090b4f4e00b0022bfd64c48emr14532256pjb.14.1677234028327;
+        Fri, 24 Feb 2023 02:20:28 -0800 (PST)
+Received: from [127.0.0.1] ([20.172.43.81])
+        by smtp.gmail.com with ESMTPSA id u5-20020a17090a518500b00229bc852468sm1237533pjh.0.2023.02.24.02.20.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Feb 2023 02:20:27 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Hangbin Liu <liuhangbin@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230224061343.506571-3-liuhangbin@gmail.com>
+References: <20230224061343.506571-3-liuhangbin@gmail.com>
+Subject: Re: selftests/bpf: run mptcp in a dedicated netns: Tests Results
+Message-ID: <112d8bdd-6109-8782-3a6e-878fc196a419@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 24 Feb 2023 10:20:26 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH mptcp-next] mptcp: add ro_after_init for
- tcp{,v6}_prot_override
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-References: <f2d3a14b9382645f8770ad6496fcba6db699ad19.1677123443.git.geliang.tang@suse.com>
- <4ff31862-96a4-53d2-37ce-9fd69c38c7ae@tessares.net>
- <20230224012920.GA2968@bogon>
-Content-Language: en-GB
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20230224012920.GA2968@bogon>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Hangbin,
 
-On 24/02/2023 02:29, Geliang Tang wrote:
-> On Thu, Feb 23, 2023 at 02:57:35PM +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 23/02/2023 04:37, Geliang Tang wrote:
->>> Add __ro_after_init labels for the variables tcp_prot_override and
->>> tcpv6_prot_override, just like other variables adjacent to them, to
->>> indicate that they are initialised from the init hoos and no writes
->>> occur afterwards.
->>
->> Thank you for the patch!
->>
->> Now in our tree (fix for -net):
->>
->> New patches for t/upstream-net and t/upstream:
->> - 14b7f49f8c61: mptcp: add ro_after_init for tcp{,v6}_prot_override
->> - Results: 32f1046d667c..2d0e2918d1a9 (export-net)
->> - Results: 7264bacd3544..e438a165544f (export)
->>
->> Tests are now in progress:
->>
->> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230223T135546
->> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230223T135546
-> 
-> Matt, you forgot to help me change 'hoos' to 'hooks' in the commit log.
-> :)
+Thank you for your modifications, that's great!
 
-Good catch, I got distracted by the Fixes tags and I forgot this, my bad!
+Our CI did some validations and here is its report:
 
-Fixed now in export/20230224T093441 and export-net/20230224T093441:
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4837629401759744
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4837629401759744/summary/summary.txt
 
-- 63df269b74e8: tg:msg: fix typo s/hoos/hooks/
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5139978573840384
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5139978573840384/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5400579355181056
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5400579355181056/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6526479262023680
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6526479262023680/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/371547334aac
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
