@@ -1,125 +1,97 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1A77C
-	for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 08:14:18 +0000 (UTC)
-Received: by mail-il1-f179.google.com with SMTP id r4so4180941ila.2
-        for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 00:14:18 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEA92902
+	for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 09:24:21 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id h16so52478140edz.10
+        for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 01:24:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oP1HMHCM2Hz0zSgBr5+hY7VPqX08ufdrop9K3oUxnIY=;
-        b=nrDgsRTR+/KxSfGUcZqF28tXtXklQVPiw7yt6CQFAe8HQtbMEbzJ6pZNJC2xmS3tOg
-         DULx1Kyi1QCJimW0/56ob5489vZs+9x2NO35w4B2CD5oWngLo9RoBPOBRTM4bOB/MDmr
-         LP+f1TVCT4iUhJY1mhtgAuuqbySYKJNE8U22fDUhSv8ZMKRl0WTRsIhgFnHUM+8EAkOA
-         UN8te09YTHcj54YkFwCN6oPj+WBgObbBm+N9woKW6dUwrxVxVlr0z3iTv3BuSaXDyASQ
-         mLWdqhmE/u47p2KTKXnY40WX1QpfTrF0yyndTRwh4oT8gBWqD8yioi3dnP/fHIVwmm0x
-         aSxA==
+        d=tessares.net; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sTweRjc8yOnKd0wjXCLkcU3l1xjeg/lfkkZ4yVcU0+I=;
+        b=lAW36uHb21iACHYo5y0767OorPNQyOVChBjbKQXEz7UbflVipMZmuNBkb5a++ifQMi
+         miKaR7O4KdoFbaBwsa0THkJIVpyxM7m9/8rzqqnqzqo2guyTh2O/MJ3pJ1jj6MhmizOQ
+         2UFVBs8BHG8p0thtikLhm1G3slZaxmq5Sw9QBbTZX+b2mELlokJyuWWH8OxwCvuvkmtb
+         UVP+u2s0B2d3z5D4IoxMWEXcnOHVDySOY1qnleR7rA4M/PdG55/bnYANIL3qpklSy3Ev
+         jinwMlrjvYXKXV+3WUADCFGBOCV3ZpbpF8RiW/pKiEEizExoTm2nfrNVQ+MvulCPaoLe
+         R/5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oP1HMHCM2Hz0zSgBr5+hY7VPqX08ufdrop9K3oUxnIY=;
-        b=I9YMj0tqzOgZOs1vDXT3sC5rL1mXF2dOKLCM/u6okIonX6kURv83gECCNcRJxtIFO3
-         42TDv4JIFNrtrq+TeIPc10/m8J/wtipLqQRU/tv2JifOLMxSPHYR6Zzt9gUN83Iw4KsA
-         6UR+n5LORAr2msHp5u4P+gQOMfzD0/vAtZGb7sahE7XODQgwc85njDX6OPcVruAgqygE
-         uGzkiTQi0Q5wfhveZchiPTPPFW1NfQ/65NOe2WzQZeGlvUTFoND98rC9SP71lSgCUENa
-         uJdAmij3Qzs8uZG8G5gcDUicSoPJ4rquE2n/c0Ov3zO3RT/FTsnQborOdunNNTGG8NaB
-         KyeQ==
-X-Gm-Message-State: AO0yUKUH7yvBaXbisyQk116hR85477CYfYe/SSaKd5SnQ/Wa5dQAbw9Z
-	BmI7DASmmKXgl1J+dJ924g==
-X-Google-Smtp-Source: AK7set/qtRd4rrq8oIYlGfW6axjagbDKk4MpU/on5nfj7NsT4dM6LoK8yVbm4B/QDfxJcwgMwLXGNQ==
-X-Received: by 2002:a92:444e:0:b0:315:cefa:f75e with SMTP id a14-20020a92444e000000b00315cefaf75emr11040713ilm.27.1677226457585;
-        Fri, 24 Feb 2023 00:14:17 -0800 (PST)
-Received: from [127.0.0.1] ([13.86.66.34])
-        by smtp.gmail.com with ESMTPSA id l7-20020a92d8c7000000b0031595ea003asm3276118ilo.85.2023.02.24.00.14.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Feb 2023 00:14:17 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Hangbin Liu <liuhangbin@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230224061343.506571-3-liuhangbin@gmail.com>
-References: <20230224061343.506571-3-liuhangbin@gmail.com>
-Subject: Re: selftests/bpf: run mptcp in a dedicated netns: Tests Results
-Message-ID: <c211d234-414a-65f2-95e6-50af0080573c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Feb 2023 08:14:16 +0000
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sTweRjc8yOnKd0wjXCLkcU3l1xjeg/lfkkZ4yVcU0+I=;
+        b=mVPp8G+Ki1VRtZaRSQTmMP5FI5LSX/2wxAIslzb8JQ5LY6cUqxfFPPMSkfOFZQUV4c
+         9BIYZQobbwFSwyv8xqRqlTE2NDtwmtcA/OKnkumVHIMR0QlC2OTU3n12Vq4pCwxsZlrV
+         qBCsfPWC4opeqaJzzmuQ+H2exNLvVyqEvLL8h1VrYz4sMqYlKnqm7mCdcgyeMkKvEQvE
+         U5sxrK3coFco+07TWF7S4bCg2jc4LZpFX4cxC9zpSvqa5bLtWzsGsUi0wDj3uNb/N+Fc
+         L7LujhrCQ6ZMe8klY3W7pADXI7QPd32ibuTjAMZne2Zu2BaV2g5l9+1yCwOQq2xSlrXo
+         CP1w==
+X-Gm-Message-State: AO0yUKVhI8thnA9O5rI+ylRJ91Pr87YMw/t3+GGX0uWiXzIU4eYc25Kb
+	NrRRP3tKfO0HkvubHpQK7RR8Mg==
+X-Google-Smtp-Source: AK7set+LQUlpGYF4mH0Seww8ZBljv26E7b+3K+NxIP/8qiSepghYnSTxsefRs1ucyl9ESWWKX78+fA==
+X-Received: by 2002:a05:6402:756:b0:4af:6c25:f028 with SMTP id p22-20020a056402075600b004af6c25f028mr4629896edy.5.1677230660144;
+        Fri, 24 Feb 2023 01:24:20 -0800 (PST)
+Received: from [10.44.2.5] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id t17-20020a50d711000000b004af596a6bfcsm4003815edi.26.2023.02.24.01.24.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Feb 2023 01:24:19 -0800 (PST)
+Message-ID: <7dba2833-04ec-f59f-0b2f-64912f70bc7f@tessares.net>
+Date: Fri, 24 Feb 2023 10:24:14 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCHv3 bpf-next 2/2] selftests/bpf: run mptcp in a dedicated
+ netns
+Content-Language: en-GB
+To: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ bpf@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+ "David S . Miller" <davem@davemloft.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Felix Maurer <fmaurer@redhat.com>,
+ mptcp@lists.linux.dev
+References: <20230224061343.506571-1-liuhangbin@gmail.com>
+ <20230224061343.506571-3-liuhangbin@gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20230224061343.506571-3-liuhangbin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Hangbin,
 
-Thank you for your modifications, that's great!
+Thank you for this new version!
 
-Our CI did some validations and here is its report:
+On 24/02/2023 07:13, Hangbin Liu wrote:
+> The current mptcp test is run in init netns. If the user or default
+> system config disabled mptcp, the test will fail. Let's run the mptcp
+> test in a dedicated netns to avoid none kernel default mptcp setting.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6389903999631360
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6389903999631360/summary/summary.txt
+(...)
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6108429022920704
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6108429022920704/summary/summary.txt
+> +	SYS_NOFAIL("ip netns del " NS_TEST " &> /dev/null");
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4982529116078080
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4982529116078080/summary/summary.txt
+"Funny", I saw the ">&" in a previous versions and I was going to react
+before noticing this is in fact valid in Bash (and ZSH). But of course I
+should have checked with 'sh' instead...
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5545479069499392
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5545479069499392/su=
-mmary/summary.txt
+Anyway, Martin: thank you for having spotted that!
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/a2ffc9d05e68
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
