@@ -1,45 +1,45 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEA92902
-	for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 09:24:21 +0000 (UTC)
-Received: by mail-ed1-f51.google.com with SMTP id h16so52478140edz.10
-        for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 01:24:21 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BDC323B
+	for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 09:36:45 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id cq23so52156236edb.1
+        for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 01:36:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=sTweRjc8yOnKd0wjXCLkcU3l1xjeg/lfkkZ4yVcU0+I=;
-        b=lAW36uHb21iACHYo5y0767OorPNQyOVChBjbKQXEz7UbflVipMZmuNBkb5a++ifQMi
-         miKaR7O4KdoFbaBwsa0THkJIVpyxM7m9/8rzqqnqzqo2guyTh2O/MJ3pJ1jj6MhmizOQ
-         2UFVBs8BHG8p0thtikLhm1G3slZaxmq5Sw9QBbTZX+b2mELlokJyuWWH8OxwCvuvkmtb
-         UVP+u2s0B2d3z5D4IoxMWEXcnOHVDySOY1qnleR7rA4M/PdG55/bnYANIL3qpklSy3Ev
-         jinwMlrjvYXKXV+3WUADCFGBOCV3ZpbpF8RiW/pKiEEizExoTm2nfrNVQ+MvulCPaoLe
-         R/5g==
+        bh=4g6Pog0uKfNtReecQwAr8HANdq8gx5xyaSwfGoRsToI=;
+        b=c4xu8Uv5Sac5Z5UMiU2FUSOhOI1Du1ge5QYhwbjWGcOVWXZeZnOBKd9q6cZlFItCXS
+         MEDgLYMwJS8Sn1Tr0ynZdPWhGIhbGNaGRrkTMLtL5eBI3IViWZgHagQagBkEz7owqtRl
+         Wpc2ZR02Z8miQ58kPNYxbCS7QgnvpBKcMVctTgVuIwxSEc+Y2rci0h5OEYfJjzEACpOM
+         q8rlyc8st9K318URxxvi5f+T2pifXAllAzcEsTf2/AP+N9TYRR3smnKg1SvMVqBBM/+s
+         KpjwpfpL0oO9Z3WpDT2h8uM5tIccGEfvcEVgFckiJZ/pfxgkR3tf3v4Acn8RgdA7TVVF
+         Omlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sTweRjc8yOnKd0wjXCLkcU3l1xjeg/lfkkZ4yVcU0+I=;
-        b=mVPp8G+Ki1VRtZaRSQTmMP5FI5LSX/2wxAIslzb8JQ5LY6cUqxfFPPMSkfOFZQUV4c
-         9BIYZQobbwFSwyv8xqRqlTE2NDtwmtcA/OKnkumVHIMR0QlC2OTU3n12Vq4pCwxsZlrV
-         qBCsfPWC4opeqaJzzmuQ+H2exNLvVyqEvLL8h1VrYz4sMqYlKnqm7mCdcgyeMkKvEQvE
-         U5sxrK3coFco+07TWF7S4bCg2jc4LZpFX4cxC9zpSvqa5bLtWzsGsUi0wDj3uNb/N+Fc
-         L7LujhrCQ6ZMe8klY3W7pADXI7QPd32ibuTjAMZne2Zu2BaV2g5l9+1yCwOQq2xSlrXo
-         CP1w==
-X-Gm-Message-State: AO0yUKVhI8thnA9O5rI+ylRJ91Pr87YMw/t3+GGX0uWiXzIU4eYc25Kb
-	NrRRP3tKfO0HkvubHpQK7RR8Mg==
-X-Google-Smtp-Source: AK7set+LQUlpGYF4mH0Seww8ZBljv26E7b+3K+NxIP/8qiSepghYnSTxsefRs1ucyl9ESWWKX78+fA==
-X-Received: by 2002:a05:6402:756:b0:4af:6c25:f028 with SMTP id p22-20020a056402075600b004af6c25f028mr4629896edy.5.1677230660144;
-        Fri, 24 Feb 2023 01:24:20 -0800 (PST)
-Received: from [10.44.2.5] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id t17-20020a50d711000000b004af596a6bfcsm4003815edi.26.2023.02.24.01.24.19
+        bh=4g6Pog0uKfNtReecQwAr8HANdq8gx5xyaSwfGoRsToI=;
+        b=eB90d3wAH30Ek9r1rvGqJQqv/IKJ/C31RCyvTTWgpz7+6LZUvLGY98bnNkwPELRov6
+         R9f2jjtmMGDC7F4YUdskeq+57XI5LCcBreiZ7d1pDPXOJFNMeAqN3+bsW3ExzUDiB4dP
+         pSPpieoDMO/ZcPvhuIoTmJucXWJ63ToxSiFCD+ZC6oshVSvkWz1Yhi8Hj/M5VbZHE1f/
+         QncswJRHS/Xu9a4I/aRbwf2Ie3/JMVVxusajchosqQSlaj+FByRE/dWHBZMdvFPJPBMy
+         EcGnRxky10d/1oOZCUBeRGswScmmWZvmf4ugju0Po5dev+c2YjTyDmBOVrKpOXLPmePi
+         b0fg==
+X-Gm-Message-State: AO0yUKUFr84jTLBXfHQf4JPt0EnsDDH7ZTCuK1hTa6Cdx+cWcA/A+bkI
+	U1EMmGRRQ1Igs5HGFZT/uDg8XBL4aPFVKrxqqs0=
+X-Google-Smtp-Source: AK7set+r5ROOPr2nfGE3s77JdgcPnegwtuFHNEjbGpaGSCCDQdIbIhLCxGfI/9qjGz17AoHIup0lmg==
+X-Received: by 2002:a17:906:b06:b0:8b2:abcd:624 with SMTP id u6-20020a1709060b0600b008b2abcd0624mr23158075ejg.0.1677231403658;
+        Fri, 24 Feb 2023 01:36:43 -0800 (PST)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id kf26-20020a17090776da00b008e51a1fd7bfsm3418398ejc.172.2023.02.24.01.36.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Feb 2023 01:24:19 -0800 (PST)
-Message-ID: <7dba2833-04ec-f59f-0b2f-64912f70bc7f@tessares.net>
-Date: Fri, 24 Feb 2023 10:24:14 +0100
+        Fri, 24 Feb 2023 01:36:43 -0800 (PST)
+Message-ID: <edd1c0a6-b6fe-6518-9ffa-d220ee36e71f@tessares.net>
+Date: Fri, 24 Feb 2023 10:36:42 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,48 +47,54 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCHv3 bpf-next 2/2] selftests/bpf: run mptcp in a dedicated
- netns
+ Thunderbird/102.8.0
+Subject: Re: [PATCH mptcp-next] mptcp: add ro_after_init for
+ tcp{,v6}_prot_override
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+References: <f2d3a14b9382645f8770ad6496fcba6db699ad19.1677123443.git.geliang.tang@suse.com>
+ <4ff31862-96a4-53d2-37ce-9fd69c38c7ae@tessares.net>
+ <20230224012920.GA2968@bogon>
 Content-Language: en-GB
-To: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- bpf@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
- "David S . Miller" <davem@davemloft.net>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Felix Maurer <fmaurer@redhat.com>,
- mptcp@lists.linux.dev
-References: <20230224061343.506571-1-liuhangbin@gmail.com>
- <20230224061343.506571-3-liuhangbin@gmail.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20230224061343.506571-3-liuhangbin@gmail.com>
+In-Reply-To: <20230224012920.GA2968@bogon>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Hangbin,
+Hi Geliang,
 
-Thank you for this new version!
+On 24/02/2023 02:29, Geliang Tang wrote:
+> On Thu, Feb 23, 2023 at 02:57:35PM +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 23/02/2023 04:37, Geliang Tang wrote:
+>>> Add __ro_after_init labels for the variables tcp_prot_override and
+>>> tcpv6_prot_override, just like other variables adjacent to them, to
+>>> indicate that they are initialised from the init hoos and no writes
+>>> occur afterwards.
+>>
+>> Thank you for the patch!
+>>
+>> Now in our tree (fix for -net):
+>>
+>> New patches for t/upstream-net and t/upstream:
+>> - 14b7f49f8c61: mptcp: add ro_after_init for tcp{,v6}_prot_override
+>> - Results: 32f1046d667c..2d0e2918d1a9 (export-net)
+>> - Results: 7264bacd3544..e438a165544f (export)
+>>
+>> Tests are now in progress:
+>>
+>> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230223T135546
+>> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230223T135546
+> 
+> Matt, you forgot to help me change 'hoos' to 'hooks' in the commit log.
+> :)
 
-On 24/02/2023 07:13, Hangbin Liu wrote:
-> The current mptcp test is run in init netns. If the user or default
-> system config disabled mptcp, the test will fail. Let's run the mptcp
-> test in a dedicated netns to avoid none kernel default mptcp setting.
+Good catch, I got distracted by the Fixes tags and I forgot this, my bad!
 
-(...)
+Fixed now in export/20230224T093441 and export-net/20230224T093441:
 
-> +	SYS_NOFAIL("ip netns del " NS_TEST " &> /dev/null");
-
-"Funny", I saw the ">&" in a previous versions and I was going to react
-before noticing this is in fact valid in Bash (and ZSH). But of course I
-should have checked with 'sh' instead...
-
-Anyway, Martin: thank you for having spotted that!
-
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+- 63df269b74e8: tg:msg: fix typo s/hoos/hooks/
 
 Cheers,
 Matt
