@@ -1,125 +1,103 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081013C26
-	for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 10:20:28 +0000 (UTC)
-Received: by mail-pj1-f51.google.com with SMTP id cp7-20020a17090afb8700b0023756229427so2357250pjb.1
-        for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 02:20:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l2H/J5frKcluwIau/W9ZNnWZvZMan9NjTH8Ub9/5/4w=;
-        b=okgGTH3d+GBxLobzCPcAEBVBRam+TmkpA18bN6a/THzOIgcxIgVV0li0OgI05EqR0e
-         9/EjUP8NdOxI7mJZZR7xm+Pc//DVW8z1ZTiazBFKoa1Hd+iOpOBtz9lPj3EZOy/aUTjq
-         iJQP1b1pAvrsukdb2LSxXzVKZQ9zMu1er0MjwGKRTb51gtaqSK/3QLLVUE4nWI1YVdLV
-         mAKTcSi32Wnfk5gZqa/+UdDrYsmZT0vYtmL3XhLd0sS8B/u0Z2s19KViPv/Xvehn3ZL7
-         lRg7hYJuZ0p39gkJhCmJUUP+MElpmI8oHBashX3iyITeWR/URFZzEh68FnJ9CEc+5+rz
-         kjKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=l2H/J5frKcluwIau/W9ZNnWZvZMan9NjTH8Ub9/5/4w=;
-        b=CxK48SZpcgrBX/M0VNFY4tyGjmRe+kE6XnYyffW1rlL7vayQQKCQZSGq9qH+AeH7Df
-         gMmPwySb93ucU3Ma1Ky7Qci13ew03bN95eMMRKgq/D/tU52maV7BZfkci/ChKcEyAEf4
-         1PS4uBRShcC71TP0od8wQ1v7M4ZC8T8/xKCvmlPyC4DhOh43xMp2rd7taR2PfGDtAb83
-         EUGGOJeBAfQ4EWca3M3J4ztPHRkWFBBOtCW2mntgSKOO9T6yhDYCF13p3mOE0hiEAFVY
-         2OHsqQg4bEJ4ny8Dc1290v+O1QXmLQu2rmGQqTaQ4hLPJ+KD8y4iWeScQtxpn6Uo/9sK
-         p4Ew==
-X-Gm-Message-State: AO0yUKWEo/gBB41mPGG4IL5z1/KCjophMEidzPMvGffcqyl/+8DzKfZ0
-	3DZy58mQNeAmhJyI38eBt4l+aJVwNPwW
-X-Google-Smtp-Source: AK7set+ugE0c3tJ29cEvss3Eod7cvJSwTbIxq6RfKh8bTw44ouG/zoJFGuOFfyMtblp0naGl8MVM0Q==
-X-Received: by 2002:a17:90b:4f4e:b0:22b:fd64:c48e with SMTP id pj14-20020a17090b4f4e00b0022bfd64c48emr14532256pjb.14.1677234028327;
-        Fri, 24 Feb 2023 02:20:28 -0800 (PST)
-Received: from [127.0.0.1] ([20.172.43.81])
-        by smtp.gmail.com with ESMTPSA id u5-20020a17090a518500b00229bc852468sm1237533pjh.0.2023.02.24.02.20.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Feb 2023 02:20:27 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Hangbin Liu <liuhangbin@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230224061343.506571-3-liuhangbin@gmail.com>
-References: <20230224061343.506571-3-liuhangbin@gmail.com>
-Subject: Re: selftests/bpf: run mptcp in a dedicated netns: Tests Results
-Message-ID: <112d8bdd-6109-8782-3a6e-878fc196a419@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Feb 2023 10:20:26 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FC3525A
+	for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 12:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1677240124;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3YXvfYk7RELLRjWLx6RrZAQOtSqbfSY7fu5MO1KRC+8=;
+	b=RCcvtM2b2YfdCkrgxG5IOg0oqQlBX4198jaM1lOoRONIcyRPnBgii+FzEIv92s3UJNny4n
+	xylft4aXQLkooaRMuvPaYQUVClVJRDGPj+2M81uUTIbAx07QfiorOlcHHORvTaUuDYyVjT
+	PU6sWZIMT8Z6/77ez7T0q0czqO+u7UM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-619-bvqlzIxzM2q7E0ulZCtXyg-1; Fri, 24 Feb 2023 07:02:03 -0500
+X-MC-Unique: bvqlzIxzM2q7E0ulZCtXyg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A5B3C18E0043
+	for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 12:02:02 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.194])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 35739C15BA0
+	for <mptcp@lists.linux.dev>; Fri, 24 Feb 2023 12:02:02 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] mptcp: fix lockdep false positive in mptcp_pm_nl_create_listen_socket()
+Date: Fri, 24 Feb 2023 13:01:57 +0100
+Message-Id: <011f8740491f4cbbdc7b568551a2b44fab942ab5.1677240111.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Hangbin,
+Christoph reports a lockdep splat in the mptcp_subflow_create_socket()
+error path, when such function is invoked by
+mptcp_pm_nl_create_listen_socket().
 
-Thank you for your modifications, that's great!
+Such code path acquires two separates, nested socket lock, with the
+internal lock operation lacking the "nested" annotation. Adding that
+in sock_release() for mptcp's sake only could be confusing.
 
-Our CI did some validations and here is its report:
+Instead just add a new lockclass to the in-kernel msk socket,
+re-initializing the lockdep infra after the socket creation.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4837629401759744
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4837629401759744/summary/summary.txt
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Fixes: ad2171009d96 ("mptcp: fix locking for in-kernel listener creation")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/pm_netlink.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5139978573840384
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5139978573840384/summary/summary.txt
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d1d859517d91..6048fdee404b 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -994,9 +994,13 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+ 	return ret;
+ }
+ 
++static struct lock_class_key mptcp_slock_keys[2];
++static struct lock_class_key mptcp_keys[2];
++
+ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 					    struct mptcp_pm_addr_entry *entry)
+ {
++	bool is_ipv6 = sk->sk_family == AF_INET6;
+ 	int addrlen = sizeof(struct sockaddr_in);
+ 	struct sockaddr_storage addr;
+ 	struct socket *ssock;
+@@ -1013,6 +1017,19 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 	if (!newsk)
+ 		return -EINVAL;
+ 
++	/* The subflow socket lock is acquired in a nested to the msk one
++	 * in several places, even by the TCP stack, and this msk is a kernel
++	 * socket: lockdep complains. Instead of propagating the _nested
++	 * modifiers in several places, re-init the lock class for the msk
++	 * socket to an mptcp specific one.
++	 */
++	sock_lock_init_class_and_name(
++			newsk,
++			is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET",
++			&mptcp_slock_keys[is_ipv6],
++			is_ipv6 ? "msk_lock-AF_INET6": "msk_lock-AF_INET",
++			&mptcp_keys[is_ipv6]);
++
+ 	lock_sock(newsk);
+ 	ssock = __mptcp_nmpc_socket(mptcp_sk(newsk));
+ 	release_sock(newsk);
+-- 
+2.39.2
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5400579355181056
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5400579355181056/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6526479262023680
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6526479262023680/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/371547334aac
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
