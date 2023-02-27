@@ -1,161 +1,133 @@
-Received: from ma-mailsvcp-mx-lapp01.apple.com (ma-mailsvcp-mx-lapp01.apple.com [17.32.222.22])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BF717E8
-	for <mptcp@lists.linux.dev>; Sat, 25 Feb 2023 01:53:22 +0000 (UTC)
-Received: from rn-mailsvcp-mta-lapp01.rno.apple.com
- (rn-mailsvcp-mta-lapp01.rno.apple.com [10.225.203.149])
- by ma-mailsvcp-mx-lapp01.apple.com
- (Oracle Communications Messaging Server 8.1.0.21.20230112 64bit (built Jan 12
- 2023)) with ESMTPS id <0RQM006CL2GSJU10@ma-mailsvcp-mx-lapp01.apple.com> for
- mptcp@lists.linux.dev; Fri, 24 Feb 2023 16:53:16 -0800 (PST)
-X-Proofpoint-ORIG-GUID: m77xwjOHIXXomGhOmaEVdTGQFFc6QVXw
-X-Proofpoint-GUID: m77xwjOHIXXomGhOmaEVdTGQFFc6QVXw
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.562,18.0.930
- definitions=2023-02-24_18:2023-02-23,2023-02-24 signatures=0
-X-Proofpoint-Spam-Details: rule=interactive_user_notspam
- policy=interactive_user score=0 phishscore=0 malwarescore=0 mlxlogscore=999
- mlxscore=0 suspectscore=0 spamscore=0 adultscore=0 bulkscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302250002
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com;
- h=content-type : mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=20180706;
- bh=2HcumZPRRQ+X8q205cutWwx8Uxy7XGWN0G/ExalzJXw=;
- b=mhhc8E7lnRxRFae8uBS7Ktc4z9y3GuSuc5eUy3hxWWHzmJIVV8cvCPqRC+4c7rJlEike
- /Sibcd9yY0mbwxqNUa3Atz7reAq4nBYfeob+P3mx1BnuJ+pSWdL3SJ46PFamacTAk+I1
- no04WRqJiEQke1v/eE0sQwQbjNHa4KI3o6TNTagafGbiFfU+ZB0GYpQzP4J9s64W5Meg
- x55DzRHDKfT8fAyvll+gbVeZnZgSPltpW2Qrz1+UqVyHabZCKCR/xQyGn01pihxKK9KT
- qoeCCzZ9D0X3LlySby6K/+AYLJLiGDpPSvs0lA3So8AzMyvhmgnhS9jz8ddNdCYUHFnN jw==
-Received: from rn-mailsvcp-mmp-lapp02.rno.apple.com
- (rn-mailsvcp-mmp-lapp02.rno.apple.com [17.179.253.15])
- by rn-mailsvcp-mta-lapp01.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.21.20230112 64bit (built Jan 12
- 2023)) with ESMTPS id <0RQM00QHB2GJZ700@rn-mailsvcp-mta-lapp01.rno.apple.com>;
- Fri, 24 Feb 2023 16:53:15 -0800 (PST)
-Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp02.rno.apple.com by
- rn-mailsvcp-mmp-lapp02.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.20.20220923 64bit (built Sep 23
- 2022)) id <0RQM00W002AQMY00@rn-mailsvcp-mmp-lapp02.rno.apple.com>; Fri,
- 24 Feb 2023 16:53:13 -0800 (PST)
-X-Va-A:
-X-Va-T-CD: 63633cf878a009867ff2b0b1cd43e165
-X-Va-E-CD: 00c874777b0628ef496a6e93c9677a02
-X-Va-R-CD: 770ac1f3500ac7de59cbb2734caf72d5
-X-Va-ID: c0c741e9-7caa-466a-a0c1-4a2b7cc158e9
-X-Va-CD: 0
-X-V-A:
-X-V-T-CD: 63633cf878a009867ff2b0b1cd43e165
-X-V-E-CD: 00c874777b0628ef496a6e93c9677a02
-X-V-R-CD: 770ac1f3500ac7de59cbb2734caf72d5
-X-V-ID: 955ed330-3785-4764-858f-46a44205877f
-X-V-CD: 0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.562,18.0.930
- definitions=2023-02-24_18:2023-02-23,2023-02-24 signatures=0
-Received: from smtpclient.apple (unknown [17.11.93.53])
- by rn-mailsvcp-mmp-lapp02.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.20.20220923 64bit (built Sep 23
- 2022))
- with ESMTPSA id <0RQM010402GNJD00@rn-mailsvcp-mmp-lapp02.rno.apple.com>; Fri,
- 24 Feb 2023 16:53:12 -0800 (PST)
-Content-type: text/plain; charset=us-ascii
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8842F3A
+	for <mptcp@lists.linux.dev>; Mon, 27 Feb 2023 17:29:57 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id e37so4580480wri.10
+        for <mptcp@lists.linux.dev>; Mon, 27 Feb 2023 09:29:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lMbMZcHUrrYgIjxQ3ommUoIZSbNpJdzQ8dTTJi4pkT0=;
+        b=jiiraGod+mfy/gSH21dqocUcdQ9K+XriznRtZj/Yp8iFBMLEpvs8qu8NIFdlXRXi9/
+         Xxd5PTKNIq9x3PlxEHqn63yxlrWm2YgviOTkbH2LmUOhFlfXdqBIH3ad7M0uViIjlTwJ
+         1uvKoaLYTjb/h53j5WJ1Wtr+r6zI+Az/OC1HfCjns7iBMNoxWr0JX/0+5uaXMXVyXX6O
+         1smTgZpggDCkCVm1/rJb5IwdnevsqL16jJcQxn5PCe3bSUONJM3h/VEmFisrrlWx8E3N
+         Qrn5siz951ot0Ku+aCJmlPSPc4PBbC+ImtqD6G5BF0yOsBLNc328C/wC1M6nRYbkhZ7K
+         wVZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lMbMZcHUrrYgIjxQ3ommUoIZSbNpJdzQ8dTTJi4pkT0=;
+        b=auBzZBTOVuhCQMjlcxtfSuEPaxBiNLm1u9H+gLNx+EChajSDW8xFJlEXYB9l+HBa7/
+         qZvSx22rCxr5q7g1/sXOdqbdVQyMy1yb6cj/xLTjhr+2N1QEoCvTT+Mzb71WTBedVzVc
+         TAte2R26dfGJIZbRs1bSI7nXwkL3sWuC7VJrGfCiTSbd6yEKD4apgApvJOtGfgls3fMK
+         bDKUHu/cAogbF1M+RN1K+UKfiZ+8ksA0G8Ihrb+HPHq2+QwEeUU1OevjhE36K1ozAbke
+         mbwo1dqMAJOTPM5wwW6zvdyntUxSMwMQ8BH8o/QARMYxUCQWD1A/gS5FYgxRFIqdib/J
+         9++w==
+X-Gm-Message-State: AO0yUKUSNZhFNs6cMxAvSN6ASG9J+E1ZebxPUfJUXqtN4NAbk/bvYUM5
+	/j2KT4A4xYdbKUm2w/EuOvJvOQ==
+X-Google-Smtp-Source: AK7set9RL2ni8PZMkaWcgkVMsYYhLc8cLUuhLTJLSFxiQWfMPyjBHe5vgRo+5Mzot049KcV626nCvQ==
+X-Received: by 2002:adf:fb8f:0:b0:2c5:6182:5f6b with SMTP id a15-20020adffb8f000000b002c561825f6bmr21630310wrr.18.1677518995376;
+        Mon, 27 Feb 2023 09:29:55 -0800 (PST)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id t1-20020a5d6a41000000b002c70a68111asm7763689wrw.83.2023.02.27.09.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Feb 2023 09:29:54 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net 0/7] mptcp: fixes for 6.3
+Date: Mon, 27 Feb 2023 18:29:23 +0100
+Message-Id: <20230227-upstream-net-20230227-mptcp-fixes-v1-0-070e30ae4a8e@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-version: 1.0 (Mac OS X Mail 16.0 \(3731.500.161\))
-Subject: Re: [PATCH mptcp-net] mptcp: fix lockdep false positive in
- mptcp_pm_nl_create_listen_socket()
-From: Christoph Paasch <cpaasch@apple.com>
-In-reply-to:
- <011f8740491f4cbbdc7b568551a2b44fab942ab5.1677240111.git.pabeni@redhat.com>
-Date: Fri, 24 Feb 2023 16:53:01 -0800
-Cc: mptcp@lists.linux.dev
-Content-transfer-encoding: quoted-printable
-Message-id: <D0E3A8A0-E777-4C7B-941E-092AF39E02E4@apple.com>
-References:
- <011f8740491f4cbbdc7b568551a2b44fab942ab5.1677240111.git.pabeni@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-X-Mailer: Apple Mail (2.3731.500.161)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHPo/GMC/z2MQQ7CMAwEv1L5jEVxhYr4CuLgpA71ISGK2wqp6
+ t9JOHCc3Z3dwaSoGNy7HYpsavpOFS6nDvzM6SWoU2WgnoaeaMQ121KEIyZZ8J/GvPiMQT9i6P1
+ 4CwNTuDqC+uPYBF3h5Of2VL1JtqafI2tqi1zkp9b60Xp4HscXOIU5L5oAAAA=
+To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Menglong Dong <imagedong@tencent.com>, 
+ Mengen Sun <mengensun@tencent.com>, Shuah Khan <shuah@kernel.org>, 
+ Florian Westphal <fw@strlen.de>, Jiang Biao <benbjiang@tencent.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org, 
+ Christoph Paasch <cpaasch@apple.com>, Geliang Tang <geliang.tang@suse.com>
+X-Mailer: b4 0.12.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2123;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=Bt1cusZoNgmgHT2JSLsa0gsxCy4BA3wwvkYRFU/ply4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj/OiR/VSGNNE1zEgw63i7JHZ0WBzAWg/eVk+C2
+ euxS097MPOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY/zokQAKCRD2t4JPQmmg
+ c0ZXD/9ci9xPaOkpjJruTQZp3P0oJR9Q2ZHrODLyjX83LIqXB5okUaWTyQ77XBNtghYxrcImBkC
+ K0oQ6kY0eLlKlC732AM5vKczlA/vUgYvCHAI7rU7YXHwJGN24gIBm0hWQSqmFb0cm+Ft9/tT+aE
+ yj8koskniQKSIql95wXX5o0yD3XVkMknt44vf/rwZUX7SyEoKGhwzsm8lq1QfgVX8zSku+zczmw
+ XM+KtHRw8jqk/K2MhXYJ9LRvmcmv+N68wqaY1e0tBKRhf6D/9zTmXDeN9sszFK8t7ygk/xLtJTm
+ S0Ms5Kh6y7OaEZd2BsQRRUqQgEeX+U0yq716EP7URHIHA+QSX9OqrUml6BLa40Zk8bDaYj0mdMa
+ gxPe9XkJ0MaJ3CUwLlNfL8giGfvX0kludEcGyi0r31WnpOyyRpR6QQSUTlcwTBORv3Z3KTR/elC
+ Vb2/dKXV35cUcKYDN8Jj4Wb52tL3HJMmvke+QWgXETiqLucbVJoJYhCeQ5a8QtgH/528TgeRZMm
+ keiyutzuEQvdNRWptr3T9Fm5C7kQzsTVKk+dutflMn8NWLnleznPWG7H8GRTWHKuryST6/EcMEr
+ CuHvwDboc4tufiPleLrCz2JFH8nS56QEOYWlaJ8eoNo7nW6jzL3RP3Uvg9b+RiCa2mZIhomWmcP
+ DHHINGid4/5xENA==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
+Patch 1 fixes a possible deadlock in subflow_error_report() reported by
+lockdep. The report was in fact a false positive but the modification
+makes sense and silences lockdep to allow syzkaller to find real issues.
+The regression has been introduced in v5.12.
 
+Patch 2 is a refactoring needed to be able to fix the two next issues.
+It improves the situation and can be backported up to v6.0.
 
-> On Feb 24, 2023, at 4:01 AM, Paolo Abeni <pabeni@redhat.com> wrote:
->=20
-> Christoph reports a lockdep splat in the mptcp_subflow_create_socket()
-> error path, when such function is invoked by
-> mptcp_pm_nl_create_listen_socket().
->=20
-> Such code path acquires two separates, nested socket lock, with the
-> internal lock operation lacking the "nested" annotation. Adding that
-> in sock_release() for mptcp's sake only could be confusing.
->=20
-> Instead just add a new lockclass to the in-kernel msk socket,
-> re-initializing the lockdep infra after the socket creation.
->=20
-> Reported-by: Christoph Paasch <cpaasch@apple.com>
-> Fixes: ad2171009d96 ("mptcp: fix locking for in-kernel listener =
-creation")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/pm_netlink.c | 17 +++++++++++++++++
-> 1 file changed, 17 insertions(+)
+Patches 3 and 4 fix UaF reported by KASAN. It fixes issues potentially
+visible since v5.7 and v5.19 but only reproducible until recently
+(v6.0). These two patches depend on patch 2/7.
 
-Works!
+Patch 5 fixes the order of the printed values: expected vs seen values.
+The regression has been introduced recently: present in Linus' tree but
+not in a tagged version yet.
 
-Tested-by: Christoph Paasch <cpaasch@apple.com>
+Patch 6 adds missing ro_after_init flags. A previous patch added them
+for other functions but these two have been missed. This previous patch
+has been backported to stable versions (up to v5.12) so probably better
+to do the same here.
 
+Patch 7 fixes tcp_set_state() being called twice in a row since v5.10.
 
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Geliang Tang (1):
+      mptcp: add ro_after_init for tcp{,v6}_prot_override
 
->=20
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index d1d859517d91..6048fdee404b 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -994,9 +994,13 @@ static int =
-mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
-> 	return ret;
-> }
->=20
-> +static struct lock_class_key mptcp_slock_keys[2];
-> +static struct lock_class_key mptcp_keys[2];
-> +
-> static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
-> 					    struct mptcp_pm_addr_entry =
-*entry)
-> {
-> +	bool is_ipv6 =3D sk->sk_family =3D=3D AF_INET6;
-> 	int addrlen =3D sizeof(struct sockaddr_in);
-> 	struct sockaddr_storage addr;
-> 	struct socket *ssock;
-> @@ -1013,6 +1017,19 @@ static int =
-mptcp_pm_nl_create_listen_socket(struct sock *sk,
-> 	if (!newsk)
-> 		return -EINVAL;
->=20
-> +	/* The subflow socket lock is acquired in a nested to the msk =
-one
-> +	 * in several places, even by the TCP stack, and this msk is a =
-kernel
-> +	 * socket: lockdep complains. Instead of propagating the _nested
-> +	 * modifiers in several places, re-init the lock class for the =
-msk
-> +	 * socket to an mptcp specific one.
-> +	 */
-> +	sock_lock_init_class_and_name(
-> +			newsk,
-> +			is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET",
-> +			&mptcp_slock_keys[is_ipv6],
-> +			is_ipv6 ? "msk_lock-AF_INET6": =
-"msk_lock-AF_INET",
-> +			&mptcp_keys[is_ipv6]);
-> +
-> 	lock_sock(newsk);
-> 	ssock =3D __mptcp_nmpc_socket(mptcp_sk(newsk));
-> 	release_sock(newsk);
-> --=20
-> 2.39.2
->=20
->=20
+Matthieu Baerts (2):
+      selftests: mptcp: userspace pm: fix printed values
+      mptcp: avoid setting TCP_CLOSE state twice
+
+Paolo Abeni (4):
+      mptcp: fix possible deadlock in subflow_error_report
+      mptcp: refactor passive socket initialization
+      mptcp: use the workqueue to destroy unaccepted sockets
+      mptcp: fix UaF in listener shutdown
+
+ net/mptcp/protocol.c                              |  44 +++-----
+ net/mptcp/protocol.h                              |   4 +-
+ net/mptcp/subflow.c                               | 122 +++++++---------------
+ tools/testing/selftests/net/mptcp/userspace_pm.sh |   2 +-
+ 4 files changed, 59 insertions(+), 113 deletions(-)
+---
+base-commit: aaa3c08ee0653beaa649d4adfb27ad562641cfd8
+change-id: 20230227-upstream-net-20230227-mptcp-fixes-cc78f3a2f5b2
+
+Best regards,
+-- 
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
