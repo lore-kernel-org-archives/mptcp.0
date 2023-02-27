@@ -1,111 +1,100 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C2579E0
-	for <mptcp@lists.linux.dev>; Mon, 27 Feb 2023 17:30:04 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id bt28so7053205wrb.8
-        for <mptcp@lists.linux.dev>; Mon, 27 Feb 2023 09:30:04 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8C628E1
+	for <mptcp@lists.linux.dev>; Mon, 27 Feb 2023 21:17:57 +0000 (UTC)
+Received: by mail-ed1-f48.google.com with SMTP id cy6so31446608edb.5
+        for <mptcp@lists.linux.dev>; Mon, 27 Feb 2023 13:17:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=deRiawW7JdNy0QaIv3Yy/aPFkC3toFzqqvaPGWyei48=;
-        b=6Pk5Pum7YSnsna2htNtZ4tY+1XBtoXGAfekKOkX/jGa7ar2SGAS6DoDav+oex+/Hz1
-         eHedgZLDdIFpfJD9rNYGpKydSdjkYoQvsfxJlhDTJpElH3QNraf5N8QL+0NBlg/SIMUy
-         pcBe4q3e5VQpcx3L8IL2BJdcffJJ39mZdmG5JZ3qWGTIYvWntw8vjwfRyJKR+pvlGH52
-         5gpD/3yBQkxMpxI6/679DC0mZ7Kkc4IR1vG0gLocmBaohYQGBxGMJANctFk2HQbX3pwc
-         QllXXfbbwnDeWITQ01EKy1B31Vi1JV9QfwGahyZncUUyKIr/v3cJhrmJpTYiBVOKIS9v
-         YoTA==
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MUA73YG4yXPbURTwSoy9K63ZTwALevNoZURjeZoeoeo=;
+        b=Zzb/TbfR9EivTSHt6zOoGvySn8k0Yojn42Kuzx2cHyaJ3cdsd6tEz7y6/slfxPs21E
+         6B+0R6Tcqew16clzpe2lqH/lkK+Lk5uBXsnCeRjgHsURVpYX18AuNrdBJyxn//3UpvaJ
+         hkSCMwNmrmJ3usofEFf+tThdqa+WAf7FP/UZjqE0bhxZ8TVDQEMaz/PowUoVYsOwf8t5
+         5qSsBJ6kgNCxZ1uJR+8eM55aoFJHliRPCRiFZW+5GRjh/0fRbz5vX30I69wvxO+MfZsp
+         ugEyRWxmSQOe+7tPX4kQLOmCRg/bTdjwkc3SAS3XdDXudc24F0cLq8Z4ESOyUae37CxX
+         xhfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=deRiawW7JdNy0QaIv3Yy/aPFkC3toFzqqvaPGWyei48=;
-        b=uVN9LOw8SJt6Eu5otIHqDmZmDqyyZBbNv5ICQhxPQcVz5h5kOPD1cwCCmSkv9IoM9n
-         YQsVxCHQuqtXw8vA89u4FEZ6lNgGre+pJSq8EYn+TIq1WNtFtmP7gNv/Jtcr3eXvoG6i
-         NZHYljjuo8uPQYtU9fPESE07LFYBWKxfAQiDWJ98T0y2aeX028OukeXciZ7THebFdSaK
-         14YpLX/pvZenLw/LtHHnU0Ze9FdkmbozwNZ7f8Rt6qzWQ0xnU0tDlJgV88zOKrJxRGEI
-         H5Y4xs5H7GqiZyCtp4Rlybm+DVrSto3APw+1UnT0PQhh4x+2guBTmOChGY+B310SS3e7
-         XHJA==
-X-Gm-Message-State: AO0yUKU2kkjUdsNkxntTIQ082nPzzBbGTEe61EmGX19oaE34Cz0dfjNV
-	Sr9of59JZExjGhBS0DY1Vdtzdg==
-X-Google-Smtp-Source: AK7set8/XDombvwT5MsIh/G8JzGbdq8e5xfVCkBm6t112lsnOD03lHNvPYejla3hWvZROcw51RCHdQ==
-X-Received: by 2002:a5d:52d2:0:b0:2ca:8ae5:ea6 with SMTP id r18-20020a5d52d2000000b002ca8ae50ea6mr4965384wrv.44.1677519003021;
-        Mon, 27 Feb 2023 09:30:03 -0800 (PST)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id t1-20020a5d6a41000000b002c70a68111asm7763689wrw.83.2023.02.27.09.30.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Feb 2023 09:30:02 -0800 (PST)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Mon, 27 Feb 2023 18:29:30 +0100
-Subject: [PATCH net 7/7] mptcp: avoid setting TCP_CLOSE state twice
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MUA73YG4yXPbURTwSoy9K63ZTwALevNoZURjeZoeoeo=;
+        b=O08+YXVMq8Alln0NexU/c23fqWd1oqmyFXeswdyjVAdQGDqdP7QppfJN7wEZni3f6M
+         Ogo4VOk9+T0vYB02dUgI0H59Y5oZC57Sn5La4bmmQq45dCmL+R8TMY4OqVVNr1iT5bU/
+         IrjQ4Bv9DXngVdCiuA03yVe7i/lUGBjqFZBlZvUbXhE0oB6I8KvI+50BeYKElgHlT42g
+         N1+gYD4SJzSVZeMCv8UUKB6q/RtsiwbjsUf+IVj/AR4inIlqn/lKiB+rB1Zflqy6Uip+
+         cIZ/x7oa0sifjlyaiqq+abV8Lep9NJ5s8roWtaHXUVsC+62KBM2WEQZwmgnO74EC5Rm7
+         YfEQ==
+X-Gm-Message-State: AO0yUKUSgb4OHJmaaSjPrUK4bwub10fxZHc0iI48WS73DIOPXKpYGklV
+	eg6P2qz8MEdP5amwHXS14NjFWQ==
+X-Google-Smtp-Source: AK7set90pISaDuD++i/ii3u7bet/1KRenn4aJbLjymZWen29YC57AYkdFaoMHKbHhZBxksOP5g920Q==
+X-Received: by 2002:aa7:cb0a:0:b0:4af:649d:da4e with SMTP id s10-20020aa7cb0a000000b004af649dda4emr1113555edt.20.1677532675833;
+        Mon, 27 Feb 2023 13:17:55 -0800 (PST)
+Received: from ?IPV6:2a02:578:8593:1200:9d8a:f91f:ec0e:ec0b? ([2a02:578:8593:1200:9d8a:f91f:ec0e:ec0b])
+        by smtp.gmail.com with ESMTPSA id h11-20020a1709063c0b00b008e82cb55195sm3621460ejg.203.2023.02.27.13.17.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Feb 2023 13:17:55 -0800 (PST)
+Message-ID: <bca9a072-c211-fa93-9b78-8bae610074b0@tessares.net>
+Date: Mon, 27 Feb 2023 22:17:54 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH mptcp-net] mptcp: fix lockdep false positive in
+ mptcp_pm_nl_create_listen_socket()
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <011f8740491f4cbbdc7b568551a2b44fab942ab5.1677240111.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <011f8740491f4cbbdc7b568551a2b44fab942ab5.1677240111.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230227-upstream-net-20230227-mptcp-fixes-v1-7-070e30ae4a8e@tessares.net>
-References: <20230227-upstream-net-20230227-mptcp-fixes-v1-0-070e30ae4a8e@tessares.net>
-In-Reply-To: <20230227-upstream-net-20230227-mptcp-fixes-v1-0-070e30ae4a8e@tessares.net>
-To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Menglong Dong <imagedong@tencent.com>, 
- Mengen Sun <mengensun@tencent.com>, Shuah Khan <shuah@kernel.org>, 
- Florian Westphal <fw@strlen.de>, Jiang Biao <benbjiang@tencent.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org
-X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=963;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=ZQAflEk+Pt3pdyX3H49VKj6DNfbIjbdl8OwWNGZf1oo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBj/OiSKcNbYspP4is6sagaj4lgSe0AAKke2eBo6
- b0pUvD32P2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCY/zokgAKCRD2t4JPQmmg
- c+fQEADo3jnVu0BRlzREUet2ygwyPhNLWvDv5KQ6kMiT0FqqEzpgZEMzhRU5Pi+6JHGMIK01hRh
- RNdXmRQ9kGBwlTmPWhjt2lYivyVJcR3BJY59q6HRnAkCp887qyf/fcUziyaIVXU3HmHWWjr0dGT
- eSjDAOVfa2Tl9PvUhfpor3rC03ayatTiKZrLNbuUpJKkBET4BKWd+OdgA7Le/Nnhz5nZQPAe3Y/
- 5O84AUf4w3LKOsSzTeyJ0Yd+s8z0wcAXp5l2S47H7kI/F1BHxKNn+flQSu/yCVjiSb0MEv3dYBO
- cWSG1CFdNiUVrZEsUWHboLw9Ypk67HcAKzOaL7srmEGBzpD7u2sQJw0fuhEViLvjx2WFyxL7jGi
- 2PgpvOn3B8F7tA7vKEt8Qap+pjebxrgM/w/gV0uA4XrpFmQQehP5ySO/2s+dKyqHoWaNrRK9HrP
- oVCyRbgOYijYjTsCVHB7SK90jKBamk+bdSbS5JHoNnRZPo0J8fOoP7ElkdrGjuMajjwrnTPxHze
- O6Zc37mBVdeTz2TV7Y9mT47mWrsnanyn7egrdfmtuBLWuDliSC217cBuYZ3Q6ci/NJFCLWQVmrQ
- 5new4VkeIto0Y1u85+6Akcs30TfEsmwRC5H/tfDjWNI56eAy6Pe+y/bwk0dQj2NspYxsrl4BPML
- iUOtjUnOdSsJSrw==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-tcp_set_state() is called from tcp_done() already.
+Hi Paolo, Christoph,
 
-There is then no need to first set the state to TCP_CLOSE, then call
-tcp_done().
+On 24/02/2023 13:01, Paolo Abeni wrote:
+> Christoph reports a lockdep splat in the mptcp_subflow_create_socket()
+> error path, when such function is invoked by
+> mptcp_pm_nl_create_listen_socket().
+> 
+> Such code path acquires two separates, nested socket lock, with the
+> internal lock operation lacking the "nested" annotation. Adding that
+> in sock_release() for mptcp's sake only could be confusing.
+> 
+> Instead just add a new lockclass to the in-kernel msk socket,
+> re-initializing the lockdep infra after the socket creation.
+> 
+> Reported-by: Christoph Paasch <cpaasch@apple.com>
+> Fixes: ad2171009d96 ("mptcp: fix locking for in-kernel listener creation")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-Fixes: d582484726c4 ("mptcp: fix fallback for MP_JOIN subflows")
-Cc: stable@vger.kernel.org
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/362
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- net/mptcp/subflow.c | 1 -
- 1 file changed, 1 deletion(-)
+Thank you for the patch and for having tested it!
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index f6b4511b09b0..b865ba911bc4 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -406,7 +406,6 @@ void mptcp_subflow_reset(struct sock *ssk)
- 	/* must hold: tcp_done() could drop last reference on parent */
- 	sock_hold(sk);
- 
--	tcp_set_state(ssk, TCP_CLOSE);
- 	tcp_send_active_reset(ssk, GFP_ATOMIC);
- 	tcp_done(ssk);
- 	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags) &&
+I just applied this patch in our tree (fixes for -net) with Christoph's
+Tested-by tag and without the issues reported by checkpatch.pl (I hope
+that's OK).
 
+New patches for t/upstream-net and t/upstream:
+- 6f002c31c364: mptcp: fix lockdep false positive in
+mptcp_pm_nl_create_listen_socket()
+- Results: 48ec0932754d..8d03cb1e10a4 (export-net)
+- Results: 3bf7fef56098..f84e6823c4bb (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230227T211242
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230227T211242
+
+Cheers,
+Matt
 -- 
-2.38.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
