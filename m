@@ -1,35 +1,35 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D350E63C5
-	for <mptcp@lists.linux.dev>; Tue, 28 Feb 2023 16:19:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395B06D18
+	for <mptcp@lists.linux.dev>; Tue, 28 Feb 2023 16:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1677601169;
+	s=mimecast20190719; t=1677601171;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=3YXvfYk7RELLRjWLx6RrZAQOtSqbfSY7fu5MO1KRC+8=;
-	b=Pmtx3dXQlpe2sWkYzxY5cqSB5LquFG7G1IacREn315O0Zj80du7SGaDS3AXJvaK4IQE3yA
-	yCmGKVmq0scLDMpIxMIIEgoEUiVksmyQU1cqsfDB/5RL3N7CXBW8lziPqs1DddHSxBQ/vM
-	5krFeaDw7qicaJBVqYoHpHx23LZg5cI=
+	bh=WKN/8e/jg84EHksVJbWc5KU5gf8HhKmF7unQPWhXz08=;
+	b=NSWklVDxY5YhszUJGZ72E9h3CXlHbA/WhUq0yQHYuqKLpfO6QkWAwPbegkj1KCoKzxAeEF
+	scqtOgAUAb8yz+uTLXi3QXl1pIrs8GIH0ajSkB/MpvRBAIlbiGYLCMTi9oeUupqN52nO2g
+	N0UBKLuPSAaGIKtxcizQ8/n04mb0oP0=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-212-sOubfX4WP0GRVOACZLBr7A-1; Tue, 28 Feb 2023 11:19:26 -0500
-X-MC-Unique: sOubfX4WP0GRVOACZLBr7A-1
+ us-mta-258-YbUgGjYcNYSdD5rN08z0Sg-1; Tue, 28 Feb 2023 11:19:28 -0500
+X-MC-Unique: YbUgGjYcNYSdD5rN08z0Sg-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 430CA293248F
-	for <mptcp@lists.linux.dev>; Tue, 28 Feb 2023 16:19:26 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D391C1C05136
+	for <mptcp@lists.linux.dev>; Tue, 28 Feb 2023 16:19:27 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.235])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C75192026D4B
-	for <mptcp@lists.linux.dev>; Tue, 28 Feb 2023 16:19:25 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 634632026D4B
+	for <mptcp@lists.linux.dev>; Tue, 28 Feb 2023 16:19:27 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: fix lockdep false positive in mptcp_pm_nl_create_listen_socket()
-Date: Tue, 28 Feb 2023 17:19:18 +0100
-Message-ID: <011f8740491f4cbbdc7b568551a2b44fab942ab5.1677240111.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net 1/2] Squash-to: mptcp: use the workqueue to destroy unaccepted sockets
+Date: Tue, 28 Feb 2023 17:19:19 +0100
+Message-Id: <ee3e0181ffd7e4d81ed43d27f18401da3d5927d6.1677600530.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -41,64 +41,100 @@ X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
-Message-ID: <20230228161918.P0sFzfJnaT_vvqx3vlwDrYAf0oYZkLonqq2IKgAmM_w@z>
 
-Christoph reports a lockdep splat in the mptcp_subflow_create_socket()
-error path, when such function is invoked by
-mptcp_pm_nl_create_listen_socket().
+The workqueue could trigger before inet_csk_listen_stop() kicks-in,
+or the closed socket could even land to accept(). Solve the race
+falling back to TCP - we already complete the MPTCP level close
+signaling.
 
-Such code path acquires two separates, nested socket lock, with the
-internal lock operation lacking the "nested" annotation. Adding that
-in sock_release() for mptcp's sake only could be confusing.
-
-Instead just add a new lockclass to the in-kernel msk socket,
-re-initializing the lockdep infra after the socket creation.
-
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Fixes: ad2171009d96 ("mptcp: fix locking for in-kernel listener creation")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/pm_netlink.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/366
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d1d859517d91..6048fdee404b 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -994,9 +994,13 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 	return ret;
+possibly worth manual handling
+---
+ net/mptcp/protocol.c | 14 +++++++++++++-
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  |  6 +++---
+ 3 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 08a912bb7215..467989c2b0ec 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2398,7 +2398,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		goto out;
+ 	}
+ 
+-	sock_orphan(ssk);
+ 	subflow->disposable = 1;
+ 
+ 	/* if ssk hit tcp_done(), tcp_cleanup_ulp() cleared the related ops
+@@ -2406,7 +2405,20 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	 * reference owned by msk;
+ 	 */
+ 	if (!inet_csk(ssk)->icsk_ulp_ops) {
++		WARN_ON_ONCE(!sock_flag(sk, SOCK_DEAD));
+ 		kfree_rcu(subflow, rcu);
++	} else if (msk->in_accept_queue && msk->first == ssk) {
++		/* if the first subflow moved to a close state, e.g. due to
++		 * incoming reset and we reach here before inet_child_forget()
++		 * the TCP stack could later try to close it via
++		 * inet_csk_listen_stop(), or deliver it to the user space via
++		 * accept().
++		 * We can't delete the subflow - or risk a double free - nor let
++		 * the msk survive - or will be leaked in the non accept scenario:
++		 * fallback and let TCP cope with the subflow cleanup.
++		 */
++		WARN_ON_ONCE(sock_flag(sk, SOCK_DEAD));
++		mptcp_subflow_drop_ctx(ssk);
+ 	} else {
+ 		/* otherwise tcp will dispose of the ssk and subflow ctx */
+ 		if (ssk->sk_state == TCP_LISTEN) {
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index ba4d22ffd228..46962a2581b4 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -682,6 +682,8 @@ void mptcp_subflow_set_active(struct mptcp_subflow_context *subflow);
+ 
+ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow);
+ 
++void mptcp_subflow_drop_ctx(struct sock *ssk);
++
+ static inline void mptcp_subflow_tcp_fallback(struct sock *sk,
+ 					      struct mptcp_subflow_context *ctx)
+ {
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index bdbe9c783eed..cda6dc4cc6a7 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -717,7 +717,7 @@ static void subflow_ulp_fallback(struct sock *sk,
+ 	mptcp_subflow_ops_undo_override(sk);
  }
  
-+static struct lock_class_key mptcp_slock_keys[2];
-+static struct lock_class_key mptcp_keys[2];
-+
- static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 					    struct mptcp_pm_addr_entry *entry)
+-static void subflow_drop_ctx(struct sock *ssk)
++void mptcp_subflow_drop_ctx(struct sock *ssk)
  {
-+	bool is_ipv6 = sk->sk_family == AF_INET6;
- 	int addrlen = sizeof(struct sockaddr_in);
- 	struct sockaddr_storage addr;
- 	struct socket *ssock;
-@@ -1013,6 +1017,19 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 	if (!newsk)
- 		return -EINVAL;
+ 	struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(ssk);
  
-+	/* The subflow socket lock is acquired in a nested to the msk one
-+	 * in several places, even by the TCP stack, and this msk is a kernel
-+	 * socket: lockdep complains. Instead of propagating the _nested
-+	 * modifiers in several places, re-init the lock class for the msk
-+	 * socket to an mptcp specific one.
-+	 */
-+	sock_lock_init_class_and_name(
-+			newsk,
-+			is_ipv6 ? "mlock-AF_INET6" : "mlock-AF_INET",
-+			&mptcp_slock_keys[is_ipv6],
-+			is_ipv6 ? "msk_lock-AF_INET6": "msk_lock-AF_INET",
-+			&mptcp_keys[is_ipv6]);
-+
- 	lock_sock(newsk);
- 	ssock = __mptcp_nmpc_socket(mptcp_sk(newsk));
- 	release_sock(newsk);
+@@ -823,7 +823,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 
+ 			if (new_msk)
+ 				mptcp_copy_inaddrs(new_msk, child);
+-			subflow_drop_ctx(child);
++			mptcp_subflow_drop_ctx(child);
+ 			goto out;
+ 		}
+ 
+@@ -914,7 +914,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 	return child;
+ 
+ dispose_child:
+-	subflow_drop_ctx(child);
++	mptcp_subflow_drop_ctx(child);
+ 	tcp_rsk(req)->drop_req = true;
+ 	inet_csk_prepare_for_destroy_sock(child);
+ 	tcp_done(child);
 -- 
 2.39.2
 
