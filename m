@@ -1,98 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D5D847A
-	for <mptcp@lists.linux.dev>; Wed,  1 Mar 2023 17:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1677693399;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eOGnkUKCv4DM884coeeqliV7IKS5ounQpAFL5KoPEkQ=;
-	b=D0oHY7+HISMSDPuIhH5gyzzkjGr3Ar2EJstYPOIaYLi4VL3GlanrvNuPoZ9UxCI635XVqY
-	8icvSHExAD5ucefexz+sgjj8WcwAs9/ck4df1GULcXTH/T/UHl4F3hL2s/Hhn4rhqFz4Vg
-	Fbvox6lmNfxluMo/68EOaohvZzk+3rQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-670-hZgUStNGOmavnsvomiWjmg-1; Wed, 01 Mar 2023 12:56:35 -0500
-X-MC-Unique: hZgUStNGOmavnsvomiWjmg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7F3F7877CA4;
-	Wed,  1 Mar 2023 17:56:35 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.119])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DEB7D18EC1;
-	Wed,  1 Mar 2023 17:56:34 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>
-Subject: [PATCH mptcp-net] mptcp: fix possible memory leak on syn_recv race
-Date: Wed,  1 Mar 2023 18:56:26 +0100
-Message-Id: <869ca49933fc7983c50a88f2a8b4a680e5eedc5b.1677693276.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6123847A
+	for <mptcp@lists.linux.dev>; Wed,  1 Mar 2023 18:15:42 +0000 (UTC)
+Received: by mail-qv1-f43.google.com with SMTP id nv15so9881512qvb.7
+        for <mptcp@lists.linux.dev>; Wed, 01 Mar 2023 10:15:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677694541;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sQBTJWm2qmBJvNPeL9A+7Up1fFa3PZLHExlDuBy+Wv0=;
+        b=qv2i/oyq1eXBIRIyhlfdm/UuPiTpmwD29P45Wy0LlidcH9gkpn4EVG8JlgEHBRl3S1
+         82LEPzxFKRuGT13WqbdH5DnXxu/rWHO+ETX25ETnYsso8JSU+qlXVZuT7SVdIPHyarwA
+         cQZgr/Hk1eeOlr2F08VJjP//2xCTzIvNzOPtGFFNClJIJHDGNfkobeamnBnzOw/ai7w9
+         nGrIUCG6JrjBK9KOmOGFs5bCg19N/80LInGLSk/GBE6QphV2U3+3rZjRi4aagt/EtbJP
+         8kewfKaR1zhXfOjj3D/CIygs4Y8MasV1h4LDtQlm3LCZ8LiznlLz1c+xQ/FDYaQKIdsp
+         ZMqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677694541;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=sQBTJWm2qmBJvNPeL9A+7Up1fFa3PZLHExlDuBy+Wv0=;
+        b=h9z7J5N8Fb2FRbeSjRnlEobvcptQMrobes3eWwi/RM/msKiz45lgKw40I+mXI9Ix55
+         Yi6uCOLs37bwAo9rdeDubFjgNLHO8zlsKQta9vhe56DS/Rls4H5GQr8dW0YjWurL2tTv
+         fp8yRzmAFyMcBwqj+GV539PNPH/Y/4zEWnZXeGQ1veLGfXtTYJUIjaKa1WQruatewAyG
+         DDIpB+8qANK9BF0tqusR4Cb6s2yf9M7VexHcNU3hrD6R/t+lkifJG6HqrMKftLdvyL4w
+         APwyt4SM9TMFViec1AtAGgKj40vdgQEMLUlA9/1FV0PxZ8W9G68x+mqFit919d3pZb5k
+         1dkw==
+X-Gm-Message-State: AO0yUKV9ldflHZmarvP2jhD11kuHENWDLCPlZ44aq+72LjaP/yDb91sv
+	I6vpf5lKZlqHECwsxcPiFbAPfJbF43fC
+X-Google-Smtp-Source: AK7set/tIeGDACgPHGb8H5K4ugzLMsLSytqkZl8ZxlopkxP79IcwzshoNV99zCQCfPrJ5V/SAfv59w==
+X-Received: by 2002:a05:6214:2268:b0:56e:b7a7:40da with SMTP id gs8-20020a056214226800b0056eb7a740damr15413126qvb.12.1677694541534;
+        Wed, 01 Mar 2023 10:15:41 -0800 (PST)
+Received: from [127.0.0.1] ([172.176.229.21])
+        by smtp.gmail.com with ESMTPSA id o3-20020a375a03000000b0073b7f2a0bcbsm9255788qkb.36.2023.03.01.10.15.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Mar 2023 10:15:41 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <869ca49933fc7983c50a88f2a8b4a680e5eedc5b.1677693276.git.pabeni@redhat.com>
+References:
+ <869ca49933fc7983c50a88f2a8b4a680e5eedc5b.1677693276.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix possible memory leak on syn_recv race: Build
+ Failure
+Message-ID: <2bffe27c-fec7-a0c4-c002-c21a4753a94a@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 01 Mar 2023 18:15:40 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-When subflow_syn_recv_sock() loses the inet hash insert race, the
-newly created children will be released by inet_csk_complete_hashdance().
+Hi Paolo,
 
-In that scenario, without any further hint, the ulp release callback
-will keep the ulp context alive, expecting that the msk socket will
-later free it.
+Thank you for your modifications, that's great!
 
-Anyway the dying child is not linked to any msk socket, and the context
-will be leaked, as reported by Christoph.
+But sadly, our CI spotted some issues with it when trying to build it.
 
-Address the issue explicitly releasing the context in the critical
-scenario.
+You can find more details there:
 
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/356
-Fixes: cec37a6e41aa ("mptcp: Handle MP_CAPABLE options for outgoing connections")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-This patch is tested only vs the self tests, I have no actual proof
-it really closes 356, but it should at least avoid some real leak
----
- net/mptcp/subflow.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+  https://patchwork.kernel.=
+org/project/mptcp/patch/869ca49933fc7983c50a88f2a8b4a680e5eedc5b.1677693276=
+.git.pabeni@redhat.com/
+  https://github.com/multipath-tcp/mptcp_net-next/a=
+ctions/runs/4306566553
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index cda6dc4cc6a7..1ca8d30e9276 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -806,7 +806,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 	child = listener->icsk_af_ops->syn_recv_sock(sk, skb, req, dst,
- 						     req_unhash, own_req);
- 
--	if (child && *own_req) {
-+	if (likely(child && *own_req)) {
- 		struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(child);
- 
- 		tcp_rsk(req)->drop_req = false;
-@@ -898,6 +898,12 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
- 			tcp_rsk(req)->drop_req = true;
- 		}
-+	} else if (child) {
-+		/* inet_csk_complete_hashdance() is going to drop the sock
-+		 * soon, but context must be explicitly deleted or will be
-+		 * leaked
-+		 */
-+		mptcp_subflow_drop_ctx(child);
- 	}
- 
- out:
--- 
-2.39.2
+Status: failure
+Initiator: MPTCPimporter
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/6b3b8fa6b0=
+68
 
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
