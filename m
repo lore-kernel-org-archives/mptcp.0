@@ -1,160 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACF46137
-	for <mptcp@lists.linux.dev>; Mon,  6 Mar 2023 18:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1678127431;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IWELGuxVrarX1Qvkg+rKE0LMkRdNvIoH1Btd5XNDu+o=;
-	b=EtA7yhEiSuF+0lbO2ZDCUwMfsfQhcZwioL3Evg8+ZeRCkog1amAjd+ox9ATmGuX6drkHk/
-	zzMXFO+dTb3ZDlhBr0EddMI/MAR8jq4PVyUcSlBqb3wwhliAGXWlNa8K9rI0CItSfJvUph
-	Dx47Gt4SVL98r1TdJZz0wFNpT5vRwFo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-37-T1HZcaz5OKOvMnN62NCxSQ-1; Mon, 06 Mar 2023 13:30:29 -0500
-X-MC-Unique: T1HZcaz5OKOvMnN62NCxSQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7A8D6857A8E
-	for <mptcp@lists.linux.dev>; Mon,  6 Mar 2023 18:30:29 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.195.34])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id ED27E440DF
-	for <mptcp@lists.linux.dev>; Mon,  6 Mar 2023 18:30:28 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 2/2] mptcp: simplify subflow_syn_recv_sock()
-Date: Mon,  6 Mar 2023 19:30:21 +0100
-Message-Id: <ec8a2809ee4556d8b28efaef2aec26ce1a23ef4b.1678122760.git.pabeni@redhat.com>
-In-Reply-To: <cover.1678122760.git.pabeni@redhat.com>
-References: <cover.1678122760.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26316FC5
+	for <mptcp@lists.linux.dev>; Mon,  6 Mar 2023 19:17:08 +0000 (UTC)
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1755e639b65so12589160fac.3
+        for <mptcp@lists.linux.dev>; Mon, 06 Mar 2023 11:17:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678130228;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mCGLcrdpvFfQC1UWgZ3N7iSs8nemFqhBhHOShJVKbT0=;
+        b=Iq9174xo3kMZ8xYRI8iAvl4ufMPkCz5Iy7aEuZB/6uypCN4yjmAUADPEeXqqQW/qNi
+         Gyv8nx3vEAnqUvZq7PB1nhD1BTfhHdiUJUX7FnmBkOtu7IJrqD2R8lGjUau1pfxxwWV5
+         fOv+qYPZxMiUt+JsopYGjeGwHIvbif7b6bYhiGUaePDuGsgjdJCwy8w/s6FmX8LUgCTH
+         V0WLew9eo1ujPlfPlHEY81XghfcBXys4K0tF8zPH/TllD/bKyVS/lOPEVvZMqzfqx+M/
+         ySFs9aptQ4Kbr55ZuQr0GkFdvg37a1+9koDN2DYAKt+SqllV9x7M5pLPvbOgEbXYH3uu
+         x3jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678130228;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mCGLcrdpvFfQC1UWgZ3N7iSs8nemFqhBhHOShJVKbT0=;
+        b=W0apdYnSplyMqTuHP6tBAWAHHe03rSQkYze8FsZL3gZjGns3NvuBvJejQ41Fk1GaJ8
+         8VhIW3xXHs8YFRwmS3M6RIew2b9LQ1YMMkUCcG5n6Dd2saIh88c5CklZkN3N34Vo+VbL
+         731jq0UsmqBbXXaiBU0RV4GBFY72Kld+JHEZU/8eGe5T7XDDG0rv/is9nmnHhz8/PITm
+         D+LIqu9kkydGussP7U1xyvNCzw6q/7uV57uUBoGEdTs5ZlTZ0S7Bt7Q0dq0KGt6eSQL+
+         sFnoymCgA+N2zzb3aYFTOAvOjrVjXsOE50wvU0HBF+QiTQCAf9lSoBrpN7M5nwdjD1fv
+         V4iw==
+X-Gm-Message-State: AO0yUKW4u97BiUz/bo+c3/iTR84rZZVtFalrWNxwGkHQNpDrtpkIF/d3
+	bBWc13XT5SHtrjpAHdx61w==
+X-Google-Smtp-Source: AK7set9uhi4LjSHAdpFikCqnRWpp+Xqk9EQxmXwlRo3oyQiSjjdKvfpddbPXVSqeXLl25vnAsZtx9g==
+X-Received: by 2002:a05:6870:d60e:b0:176:43ad:83f3 with SMTP id a14-20020a056870d60e00b0017643ad83f3mr8201842oaq.22.1678130227889;
+        Mon, 06 Mar 2023 11:17:07 -0800 (PST)
+Received: from [127.0.0.1] ([40.84.170.96])
+        by smtp.gmail.com with ESMTPSA id dt4-20020a0568705a8400b001765ad671fcsm4308643oab.36.2023.03.06.11.17.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Mar 2023 11:17:07 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <869ca49933fc7983c50a88f2a8b4a680e5eedc5b.1677693276.git.pabeni@redhat.com>
+References:
+ <869ca49933fc7983c50a88f2a8b4a680e5eedc5b.1677693276.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix possible memory leak on syn_recv race: Tests
+ Results
+Message-ID: <2238086e-1bde-df26-5f45-ae0de607b1c6@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 06 Mar 2023 19:17:06 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Postpone the msk cloning to the child process creation
-so that we can avoid a bunch of conditionals.
+Hi Paolo,
 
-Close: https://github.com/multipath-tcp/mptcp_net-next/issues/61
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/subflow.c | 38 ++++++++++----------------------------
- 1 file changed, 10 insertions(+), 28 deletions(-)
+Thank you for your modifications, that's great!
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index f0758b23c6b2..d79926cb9152 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -696,14 +696,6 @@ static bool subflow_hmac_valid(const struct request_sock *req,
- 	return !crypto_memneq(hmac, mp_opt->hmac, MPTCPOPT_HMAC_LEN);
- }
- 
--static void mptcp_force_close(struct sock *sk)
--{
--	/* the msk is not yet exposed to user-space, and refcount is 2 */
--	inet_sk_state_store(sk, TCP_CLOSE);
--	sk_common_release(sk);
--	sock_put(sk);
--}
--
- static void subflow_ulp_fallback(struct sock *sk,
- 				 struct mptcp_subflow_context *old_ctx)
- {
-@@ -755,7 +747,6 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 	struct mptcp_subflow_request_sock *subflow_req;
- 	struct mptcp_options_received mp_opt;
- 	bool fallback, fallback_is_fatal;
--	struct sock *new_msk = NULL;
- 	struct mptcp_sock *owner;
- 	struct sock *child;
- 
-@@ -784,14 +775,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 		 * options.
- 		 */
- 		mptcp_get_options(skb, &mp_opt);
--		if (!(mp_opt.suboptions & OPTIONS_MPTCP_MPC)) {
-+		if (!(mp_opt.suboptions & OPTIONS_MPTCP_MPC))
- 			fallback = true;
--			goto create_child;
--		}
- 
--		new_msk = mptcp_sk_clone(listener->conn, &mp_opt, req);
--		if (!new_msk)
--			fallback = true;
- 	} else if (subflow_req->mp_join) {
- 		mptcp_get_options(skb, &mp_opt);
- 		if (!(mp_opt.suboptions & OPTIONS_MPTCP_MPJ) ||
-@@ -820,21 +806,23 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 				subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
- 				goto dispose_child;
- 			}
--
--			mptcp_subflow_drop_ctx(child);
--			goto out;
-+			goto fallback;
- 		}
- 
- 		/* ssk inherits options of listener sk */
- 		ctx->setsockopt_seq = listener->setsockopt_seq;
- 
- 		if (ctx->mp_capable) {
--			owner = mptcp_sk(new_msk);
-+			ctx->conn = mptcp_sk_clone(listener->conn, &mp_opt, req);
-+			if (!ctx->conn)
-+				goto fallback;
-+
-+			owner = mptcp_sk(ctx->conn);
- 
- 			/* this can't race with mptcp_close(), as the msk is
- 			 * not yet exposted to user-space
- 			 */
--			inet_sk_state_store((void *)new_msk, TCP_ESTABLISHED);
-+			inet_sk_state_store(ctx->conn, TCP_ESTABLISHED);
- 
- 			/* record the newly created socket as the first msk
- 			 * subflow, but don't link it yet into conn_list
-@@ -844,11 +832,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			/* new mpc subflow takes ownership of the newly
- 			 * created mptcp socket
- 			 */
--			mptcp_sk(new_msk)->setsockopt_seq = ctx->setsockopt_seq;
-+			owner->setsockopt_seq = ctx->setsockopt_seq;
- 			mptcp_pm_new_connection(owner, child, 1);
- 			mptcp_token_accept(subflow_req, owner);
--			ctx->conn = new_msk;
--			new_msk = NULL;
- 
- 			/* set msk addresses early to ensure mptcp_pm_get_local_id()
- 			 * uses the correct data
-@@ -901,14 +887,10 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 		 * soon, but context must be explicitly deleted or will be
- 		 * leaked
- 		 */
-+fallback:
- 		mptcp_subflow_drop_ctx(child);
- 	}
- 
--out:
--	/* dispose of the left over mptcp master, if any */
--	if (unlikely(new_msk))
--		mptcp_force_close(new_msk);
--
- 	/* check for expected invariant - should never trigger, just help
- 	 * catching eariler subtle bugs
- 	 */
--- 
-2.39.2
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6243033163759616
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6243033163759616/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4835658280206336
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4835658280206336/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5398608233627648
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5398608233627648/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5961558187048960
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5961558187048960/summary/summary.txt
+
+Initiator: Matthieu Baerts
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/6d51676e3805
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
