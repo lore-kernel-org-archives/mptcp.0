@@ -1,84 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.corrib.pl (mail.corrib.pl [185.58.226.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994CC46AA;
-	Fri,  3 Mar 2023 13:35:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF15DC433D2;
-	Fri,  3 Mar 2023 13:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1677850543;
-	bh=Htqk16fIqSRpYOBmEt0mm+UstJGITrQgQKDJK8WYUQ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rwn6xV/xVM7MS4fgI9Q2TGJnRAmU+wb4TW7rXrZbY2wg0c5fVLcLXPrDvkFLjWB7q
-	 yJotfNV0VK2Sotzxf0qJkuSskFSywcMbGQQgCz4z2+xTXPb7zJYLKJY6BoeClq+944
-	 NLerBvzMhLzfHcmpNGjryMChXJ00mLVrSzZNIP7M=
-Date: Fri, 3 Mar 2023 14:35:40 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, mptcp@lists.linux.dev,
-	Florian Westphal <fw@strlen.de>,
-	Mat Martineau <mathew.j.martineau@linux.intel.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH 6.1 00/42] 6.1.15-rc1 review
-Message-ID: <ZAH3rLIHE1wIY9c+@kroah.com>
-References: <CA+G9fYtDGpgT4dckXD-y-N92nqUxuvue_7AtDdBcHrbOMsDZLg@mail.gmail.com>
- <ZAB6pP3MNy152f+7@kroah.com>
- <CA+G9fYsHbQyQFp+vMnmFKDSQxrmj-VKsexWq-aayxgrY+0O7KQ@mail.gmail.com>
- <CA+G9fYsn+AhWTFA+ZJmfFsM71WGLPOFemZp_vhFMMLUcgcAXKg@mail.gmail.com>
- <9586d0f99e27483b600d8eb3b5c6635b50905d82.camel@redhat.com>
- <CA+G9fYuLQEfeTjx52NxbXV5914YJQ2tVd8k4SJjrAryujPjnqA@mail.gmail.com>
- <ZAG8dla274kYfxoK@kroah.com>
- <28afc90c1b8b51a36ced5b6026d1a64aeb7c0b14.camel@redhat.com>
- <ZAHdrhY2P+sBI+xX@kroah.com>
- <d593e9434dba16a869ec48fcdfe8a3fe540c8a82.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBAF7E
+	for <mptcp@lists.linux.dev>; Mon,  6 Mar 2023 08:44:31 +0000 (UTC)
+Received: by mail.corrib.pl (Postfix, from userid 1001)
+	id 788CCA3137; Mon,  6 Mar 2023 08:43:54 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=corrib.pl; s=mail;
+	t=1678092268; bh=X6IEpSISwJiYlJ3uA866lskXve3r+4o2hf4z7VM6m5o=;
+	h=Date:From:To:Subject:From;
+	b=mO+r9QPFBNHm6/aZQi4uhE3loM5szadLI2Zcn07Z4BQgiZbsgQ2CQf/PtlEprrVkv
+	 W5XDHKO10XQhCR5kZ+erc3IfN1woMNHFzmhhi6XLVpqvbuPI2Gcey/QrQHL3c7ev1/
+	 X7V2f227yMScA8eNo36uVGxQWyA4R/1eMbbLUEIB8skdjVQd1uDDgYCifDXMh+M8sk
+	 4UHxz8cDexZxK0DaTZnNWU3+3FiYuNnEyLRqK8o7LvmosM9LvHTzeHDWwm2ujleJXP
+	 1I5jEhSRfw1Pvqhzoo09RGRI8DUTWkKkuLJx/4Ph07pE/30Ql7WMn3Yzpbq8xYB1vr
+	 Xg2euWtARJB1g==
+Received: by mail.corrib.pl for <mptcp@lists.linux.dev>; Mon,  6 Mar 2023 08:43:25 GMT
+Message-ID: <20230306074501-0.1.5v.hol1.0.01g4pe3ake@corrib.pl>
+Date: Mon,  6 Mar 2023 08:43:25 GMT
+From: =?UTF-8?Q?"Szczepan_Kie=C5=82basa"?= <szczepan.kielbasa@corrib.pl>
+To: <mptcp@lists.linux.dev>
+Subject: Faktoring
+X-Mailer: mail.corrib.pl
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d593e9434dba16a869ec48fcdfe8a3fe540c8a82.camel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 03, 2023 at 01:41:00PM +0100, Paolo Abeni wrote:
-> On Fri, 2023-03-03 at 12:44 +0100, Greg Kroah-Hartman wrote:
-> > On Fri, Mar 03, 2023 at 12:39:07PM +0100, Paolo Abeni wrote:
-> > > Additionally, some self-tests check for known bugs/regressions. Running
-> > > them on older kernel will cause real trouble, and checking for bug
-> > > presence in the running kernel would be problematic at best, I think.
-> > 
-> > No, not at all, why wouldn't you want to test for know bugs and
-> > regressions and fail?  That's a great thing to do, and so you will know
-> > to backport those bugfixes to those older kernels if you have to use
-> > them.
-> 
-> I'm sorry, I likely was not clear at all. What I mean is that the self-
-> test for a bug may trigger e.g. memory corruption on the bugged kernel
-> (or more specifically to networking, the infamous, recurring
-> "unregister_netdevice: waiting for ...") which in turn could cause
-> random failures later.
-> 
-> If that specific case runs on older (unpatched) kernel will screw the
-> overall tests results. The same could happen in less-detectable way for
-> old bugs non explicitly checked by any test, but still triggered by the
-> test-suite. As a consequence I expect that the results observed running
-> newer self-tests on older kernel are unreliable. 
+Dzie=C5=84 dobry,
 
-For the stable/LTS kernel trees, they should _never_ be unreliable,
-otherwise that means we have missed a needed fix and so we need to
-resolve that.
+rozwa=C5=BCali Pa=C5=84stwo wyb=C3=B3r finansowania, kt=C3=B3re spe=C5=82=
+ni potrzeby firmy, zapewniaj=C4=85c natychmiastowy dost=C4=99p do got=C3=B3=
+wki, bez zb=C4=99dnych przestoj=C3=B3w?=20
 
-Which is why I always recommend running the latest selftests on all
-older kernels, and have for a very long time now.
+Przygotowali=C5=9Bmy rozwi=C4=85zania faktoringowe dopasowane do Pa=C5=84=
+stwa bran=C5=BCy i wielko=C5=9Bci firmy, dzi=C4=99ki kt=C3=B3rym, nie mus=
+z=C4=85 Pa=C5=84stwo martwi=C4=87 si=C4=99 o niewyp=C5=82acalno=C5=9B=C4=87=
+ kontrahent=C3=B3w, poniewa=C5=BC transakcje s=C4=85 zabezpieczone i posi=
+adaj=C4=85 gwarancj=C4=99 sp=C5=82aty.=20
+Chc=C4=85 Pa=C5=84stwo przeanalizowa=C4=87 dost=C4=99pne opcje?
 
-thanks,
 
-greg k-h
+Pozdrawiam
+Szczepan Kie=C5=82basa
