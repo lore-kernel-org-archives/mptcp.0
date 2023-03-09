@@ -1,126 +1,154 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3D09473
-	for <mptcp@lists.linux.dev>; Thu,  9 Mar 2023 13:24:38 +0000 (UTC)
-Received: by mail-qt1-f172.google.com with SMTP id y10so1890006qtj.2
-        for <mptcp@lists.linux.dev>; Thu, 09 Mar 2023 05:24:38 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7090D50B
+	for <mptcp@lists.linux.dev>; Thu,  9 Mar 2023 14:50:21 +0000 (UTC)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-176eae36feaso2530124fac.6
+        for <mptcp@lists.linux.dev>; Thu, 09 Mar 2023 06:50:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678368277;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6Q86hisJJD3gIh8z5UbYrgj6eGR6htb+roMpXLMR44Y=;
-        b=VLuq5AoQ9jiqvZcB69zrZ0uGwdeVSWNZmr5enHazp29v7o7Zblhg9povNvX2bjtF+G
-         sEuwQEUUEsWh4sZ1jULuyfDmYEQJRRR1VHDwvHabXPNxvF8EIB3pjMKTgnxC5DsH9grs
-         SaaaA1fb8xR4hbNhNP74+AP4zC8OaI5v0wFbCnXux8pUadfpuPBvnjh3ESMvOQFJHpEj
-         DPj8kFyMT/8JlzHv9SqOW6uWXdloB7rC6uDbxSk/z+pw4/BaqiuUpha7lyv0LIitX0Vt
-         k2y7BIkp3q3vmQVvkw5ZN7xsYa/a9eSG72smZPl2r42UJrehR+bGuwXaS9oX368DRUdu
-         cpWQ==
+        d=tessares.net; s=google; t=1678373420;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pd3Lkot3b9xUlf3dAcLlAT6oagcWYg/ttZtHlyeFJuA=;
+        b=XguBoN4c3w1EVz2TKdJNXfaRnsWcFj+3h7Sri2mnrra4n1lMANrVVw5hQhqNyHynK1
+         k2/wgRUCHAqSMlsI/fbWbg1wtroyhlH9ClfpzwRtU3lJ+RJkaoyRIBZ8hADXb40oWnP0
+         Fuevm9l6l6zuukDFqZRNy5M0st17lcjINX8PNXE71QpU7+NJH13kAEjGoS2yF9DAaeVy
+         hMhujEqq56L6Etm+CY7U4bGM3meZ3VZQDibsQR7XyCG0zcJCX/l/7SyQCakia0zqAJv8
+         Il9lvmy9IwnQ+F79LBx9YUbYxGIWwjXs9RlckvlAWnfDEI9CaVayn0V1k6Bdho9koQl2
+         svmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678368277;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6Q86hisJJD3gIh8z5UbYrgj6eGR6htb+roMpXLMR44Y=;
-        b=h+d2uAm62WO9I+bqT/PZGCT/Nj6SPtimc8wIpwimOIWBKt5Sxehf6gduoisbXXIUKG
-         eEPJoodnsC1AXFpeDRajJaCDJrPbK6Fw/F1aKNrG99Y3dgrwsyGaDSqHygXBDe/aSwnu
-         GSKiivTC4a4YAln3NmFd3OHRuK8AH8NRVjsSV3JorwbycapdX1/YKE17+zQ1lLlijuWY
-         GqLV3VAWVySW8e2RimRjp/7YXbgI2YUKoqLUEadgnPDPRWYM0XCx17h/tE3WmeyKNaJj
-         XkfUkwlkX9ArSoYhQmlNrGwmdUbZ6MRFTGVHFWoydt06A1i3TNqwm+RwHfkxskMzazRG
-         GEhA==
-X-Gm-Message-State: AO0yUKV+rHk0pnr04x9gFQ1AmD3ucLQ/h47zrWTZ5h3iTQTvAVvnJI4C
-	iuBVC8OC9/cbZAN4hLlFgg==
-X-Google-Smtp-Source: AK7set+mjjUWceku6lxhQStvplLC06mE1m4gOYbdTB+iWVpb3JMvS31y/d5E6nZywrZuRAjYldn/7A==
-X-Received: by 2002:ac8:7fc3:0:b0:3c0:3c25:1b9f with SMTP id b3-20020ac87fc3000000b003c03c251b9fmr2629700qtk.56.1678368277452;
-        Thu, 09 Mar 2023 05:24:37 -0800 (PST)
-Received: from [127.0.0.1] ([172.177.120.52])
-        by smtp.gmail.com with ESMTPSA id s10-20020a05620a254a00b007426b917031sm13557082qko.121.2023.03.09.05.24.36
+        d=1e100.net; s=20210112; t=1678373420;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pd3Lkot3b9xUlf3dAcLlAT6oagcWYg/ttZtHlyeFJuA=;
+        b=4pbCuK77Qjqp7iztVfqkc7ZSUpSqxb0FRHb3PvByij9YZk7vD3gk6PucqGz1QJxSwx
+         PNinnKlB9KEQGMgM1eHwgr/Dhe/LV5B65kPUFTFhaxYfak34sQcON9VxhFLyiW4ecSBa
+         s6wIO348U0KXRF77eugiL5D7+yndtF1HfXENHMjr86p6y2oQf/TQK/4ii7f8NwUPIPks
+         veet4W37TnPcXA89MsiHxqNsjfJZO/2ea10q6h3NkHd+36FWBtOF5YeENVtLiP+OPAj1
+         ir1TKEb2EnXbbhtiFckVuu5FjhKSgV7PiiyODUVM3bgVongVNd8rB25upKNxsCyPkmGF
+         S9Tg==
+X-Gm-Message-State: AO0yUKUUBQGehOnlBXPh7GfsnuTSdqFzbsMhU0PKz/2oeeZCQ4ujYwB3
+	wwpsaQylv+fQ/TaDq2A8OtwQ6A==
+X-Google-Smtp-Source: AK7set8xW0L9dkcHq5g5ySMDfkDxpoazn3bl3Z3RUPUkkhBfK6L9OQtJMDXf/DF4tSrzNjWzqVmb4g==
+X-Received: by 2002:a05:687c:19c:b0:172:4240:f224 with SMTP id yo28-20020a05687c019c00b001724240f224mr572178oab.18.1678373418243;
+        Thu, 09 Mar 2023 06:50:18 -0800 (PST)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id ax39-20020a05687c022700b0016b0369f08fsm7351116oac.15.2023.03.09.06.50.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Mar 2023 05:24:37 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <4b8fae0280f74cb4678677a112113bbbc2b27d5a.1678365107.git.geliang.tang@suse.com>
-References:
- <4b8fae0280f74cb4678677a112113bbbc2b27d5a.1678365107.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: add mptcp_info tests: Tests Results
-Message-ID: <a4d59434-8934-c1fb-df71-0aa669d951b0@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Mar 2023 13:24:36 +0000
+        Thu, 09 Mar 2023 06:50:17 -0800 (PST)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net v2 0/8] mptcp: fixes for 6.3
+Date: Thu, 09 Mar 2023 15:49:56 +0100
+Message-Id: <20230227-upstream-net-20230227-mptcp-fixes-v2-0-47c2e95eada9@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABTyCWQC/5WOwQ7CIBBEf6Xh7Cqlmjae/A/jYUu3lkMpYZFoG
+ v5d4ODd48zbmZ1dMHlDLK7NLjxFw2azWahDI/SC9klgpqyFkqqTSvXwchw84QqWAvzc1QXtYDZ
+ vYtC6H+YO1XwZlcg9IzLB6NHqpTTl3ESxxE8rGlsunKcazfheuHhkczEcNv+py2Jb0R8jYgsSZ
+ C+pk0hnHOgWiBk98bE+SCl9AbE4x8X8AAAA
+To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>, 
+ Jiang Biao <benbjiang@tencent.com>, Menglong Dong <imagedong@tencent.com>, 
+ Mengen Sun <mengensun@tencent.com>, Shuah Khan <shuah@kernel.org>, 
+ Florian Westphal <fw@strlen.de>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ Christoph Paasch <cpaasch@apple.com>, stable@vger.kernel.org, 
+ Geliang Tang <geliang.tang@suse.com>
+X-Mailer: b4 0.12.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2908;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=eJfqegXakEakPpXnWf87SdzqEbYoKrFI19FY/itAd28=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkCfIhXcnZ5ZKt/o/UUyrdQcd85f2M6UnxDt9d2
+ ec5EeELVvuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZAnyIQAKCRD2t4JPQmmg
+ c72nEACeRBMVD2sAi3192xUCYkclJkbIcz0MIm3veGwJgdYvodHnBs9LAn5x29IGjvnvY8ZRJz3
+ dlmDwMDMwvLVvt4LsS3sU/ZC5Il1EJIx/w4QZFaOO3f5DCKviEX5b4yjtcYFsYUSpkf/1B9fKvV
+ Two7LCfQMGlOK0QjBgFDCtPf+GgPe8jkoc83mP9a69Ab2E2eKkn6gzOUfUGFjYmeT7/BKdocUfn
+ yiVMGR5X3YBbnBNIMoT0peQ+TmHbi/ZfonqC4XtpQTMHIHMZ+ITUuW6k6T420dTDOKysHhpfZgv
+ 8mTpk0+UqIy2zeqtSEd/8c46i7nPASDd9Uhapk3avT7LMkndSn4o32fpvh5oOTRAA3YI+1P7szO
+ 5oLUctP7XCBxMAzVgtLM7uAp35NQOx9IFYPg3Kk2LrqG8oypW3NWSyfMLxLAdB2B75yBluZ373A
+ ncGvPs4V1Yg9EtbW3r7vHWeyfvT6jZO9Srvl3rABBvVm+7xqjg0UOOm3NhZAcwf7pAgDy/MtW5L
+ ej9BiWeZY/FdRapKR80iFVZCJoJUZeWmJL51OvhvQa6r0lGPc2ow+ueuxU53lC1GrDOPB9C/W81
+ QAd3AyUY13rAfSeQMare7cUXGn4rnWdAJlrNuTLhqB5yQyMHDM0rcO0gzadzXPu8+dYLyp8kKM+
+ cEKi5S4c+KluQJA==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+Patch 1 fixes a possible deadlock in subflow_error_report() reported by
+lockdep. The report was in fact a false positive but the modification
+makes sense and silences lockdep to allow syzkaller to find real issues.
+The regression has been introduced in v5.12.
 
-Thank you for your modifications, that's great!
+Patch 2 is a refactoring needed to be able to fix the two next issues.
+It improves the situation and can be backported up to v6.0.
 
-Our CI did some validations and here is its report:
+Patches 3 and 4 fix UaF reported by KASAN. It fixes issues potentially
+visible since v5.7 and v5.19 but only reproducible until recently
+(v6.0). These two patches depend on patch 2/7.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6237066632101888
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6237066632101888/summary/summary.txt
+Patch 5 fixes the order of the printed values: expected vs seen values.
+The regression has been introduced recently: v6.3-rc1.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4829691748548608
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4829691748548608/summary/summary.txt
+Patch 6 adds missing ro_after_init flags. A previous patch added them
+for other functions but these two have been missed. This previous patch
+has been backported to stable versions (up to v5.12) so probably better
+to do the same here.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5392641701969920
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5392641701969920/su=
-mmary/summary.txt
+Patch 7 fixes tcp_set_state() being called twice in a row since v5.10.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5955591655391232
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5955591655391232/summary/summary.txt
+Patch 8 fixes another lockdep false positive issue but this time in
+MPTCP PM code. Same here, some modifications in the code has been made
+to silence this issue and help finding real ones later. This issue can
+be seen since v6.2.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/ee1cda591474
+Note that checkpatch.pl is now complaining about the "Closes" tag but
+discussions are ongoing to add an exception:
 
+  https://lore.kernel.org/all/a27480c5-c3d4-b302-285e-323df0349b8f@tessares.net/
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Changes in v2:
+- Patches 3 and 4 have been modified to fix the issue reported on netdev
+- Patch 8 has been added
+- Rebased
+- Link to v1: https://lore.kernel.org/r/20230227-upstream-net-20230227-mptcp-fixes-v1-0-070e30ae4a8e@tessares.net
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+---
+Geliang Tang (1):
+      mptcp: add ro_after_init for tcp{,v6}_prot_override
 
-For more details:
+Matthieu Baerts (2):
+      selftests: mptcp: userspace pm: fix printed values
+      mptcp: avoid setting TCP_CLOSE state twice
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+Paolo Abeni (5):
+      mptcp: fix possible deadlock in subflow_error_report
+      mptcp: refactor passive socket initialization
+      mptcp: use the workqueue to destroy unaccepted sockets
+      mptcp: fix UaF in listener shutdown
+      mptcp: fix lockdep false positive in mptcp_pm_nl_create_listen_socket()
 
+ net/mptcp/pm_netlink.c                            |  16 +++
+ net/mptcp/protocol.c                              |  64 +++++------
+ net/mptcp/protocol.h                              |   6 +-
+ net/mptcp/subflow.c                               | 128 +++++++---------------
+ tools/testing/selftests/net/mptcp/userspace_pm.sh |   2 +-
+ 5 files changed, 95 insertions(+), 121 deletions(-)
+---
+base-commit: 67eeadf2f95326f6344adacb70c880bf2ccff57b
+change-id: 20230227-upstream-net-20230227-mptcp-fixes-cc78f3a2f5b2
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+Best regards,
+-- 
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
