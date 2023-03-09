@@ -1,45 +1,45 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F8F2F2E
-	for <mptcp@lists.linux.dev>; Thu,  9 Mar 2023 08:38:36 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id az36so594383wmb.1
-        for <mptcp@lists.linux.dev>; Thu, 09 Mar 2023 00:38:36 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499C933ED
+	for <mptcp@lists.linux.dev>; Thu,  9 Mar 2023 09:28:05 +0000 (UTC)
+Received: by mail-wr1-f48.google.com with SMTP id bw19so1148066wrb.13
+        for <mptcp@lists.linux.dev>; Thu, 09 Mar 2023 01:28:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1678351115;
+        d=tessares.net; s=google; t=1678354083;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gTCUKw8EaUojAFnj1Vxr/jDoO6jOqfgU1ynmazOE3c4=;
-        b=lV+38JV3XeCTfVH/5M9gwJ4c9/6aHNlO/h/IoqfvtaVlHvS9w+Bziq3enYyOwwB5hV
-         OphwAIX7hso2+4N14uj07n86aFA4ycOI0szsl7R9gPoafPqWkvK2kuNpzn6dOUr9hzBN
-         YbqWWLdjSxE6xP+f0WnSKSInFNGQeEWph1s9NFFyVMmrot+lJi1b3+jv9xad82ZklT7q
-         82x9uJFdfKtCXwrm24NB8Z7QpVo+PHNUjH2A6VgYK26WC1FY6lzHD+rqgr6KE9uuYhyL
-         jA4XT2wqSJ8jdPjdFpmQ7ywb1Esxieio3y+0YKaK/0LGtM98D7XQt48ZC8n8pfZpO/1v
-         SS8Q==
+        bh=GHsvrw0dPhkF8ri7wKMb9gSDVoCDKrFWiyUtrSOcd3E=;
+        b=yJVxQyn2i72Fl6UNTDdhiI5Wk27FXkWDrFAvdzpsKvRIFxJR/jmX9l1UROOGETF0g4
+         Awb4+MkZIY1mBsqAoaJj1dQTPy0Fx+jaLdVXBEpRfpDUAygLXdibyt8jwvuGsHkjfOUS
+         tmh2QzkwBcWPQLlhs0Ri65/8/XK5DYDc6wRDqbEVDoH2QE4PzfZfV3iKsZmkThQI58GA
+         gMt4yEiJ/sWUy8GTDU7HlRILUZYwyqnE9Q3Fm/sqZu4fKWsGs8+FL5ox3KB49yiByTFD
+         RvFioS+3x9uLdtIVs5AHbzW6EMHODf+DLQesxY57lIudllIRjnIV02sdIHRbayt5y0Fc
+         W3aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678351115;
+        d=1e100.net; s=20210112; t=1678354083;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gTCUKw8EaUojAFnj1Vxr/jDoO6jOqfgU1ynmazOE3c4=;
-        b=VsNetBJjgmcqyODTQUupsHCxOSmADfY4NmajyOV9WMCNFmIQxkVDDpL59IW/72qORy
-         PnwTIx0UEiMfpNgaLEpkr8LWcZyB+yfv51qHsRONbEXz7v25VAGlU0JmhHaanNST1uM1
-         wdtjLVLZ2+iBkhTojVXRNRI39HCM93oV8d68N6889nDXgCDy03sVGMdlmlKnW9T7CPLh
-         wd68NXfsAqHqe1GcbU8Waqm79IAjH5vprkvtglYr0QPgjOE5HitKkOot0fFnaaavgeW+
-         4cJTmhj4rAe7RMMtFmsVpL9J3HC0KIv5ciaVJTD0340dCaQl8i/6wZb1Of+uUkOJkEwu
-         ewGg==
-X-Gm-Message-State: AO0yUKXgCK26DBPaWVBYZQD8gPHypIMA18/pISA+IuqKXCXd0+Xl5Yf6
-	PGuarMfWtY0UxRG9mWAtnD13PQ==
-X-Google-Smtp-Source: AK7set/ZhVnkt2cmD7V61auJNjZPIdul7o9sjPljwqRNZ9jH/uQfTo2kX6+nTlBzNPE/bW23lvioTw==
-X-Received: by 2002:a05:600c:3504:b0:3ea:e677:5017 with SMTP id h4-20020a05600c350400b003eae6775017mr18643666wmq.8.1678351114919;
-        Thu, 09 Mar 2023 00:38:34 -0800 (PST)
+        bh=GHsvrw0dPhkF8ri7wKMb9gSDVoCDKrFWiyUtrSOcd3E=;
+        b=r7rwd0BPQvdoYDkUgO6ag6tNnPtC6w7zHgGWodABn6jgR4DaUQSwZ+hTPEXy7jEe4h
+         J4NYaLUlM7ECwKi+gjRn94HSc54evQOHfATf8kRhPnwluvilgLg8z/wNHE+3R9UGv/3i
+         1GlVDPug+35BIwWPhoGzevOVZnPT524Kt+m9s9qe/GsItx61Ht0cIs+BUNjd5UeLMUH3
+         HCQhIbv1FsfOTfwC8BFC6r+a0wOW1fOB6tyGFktwAAJn439UIKVV2bnVhDka+a9LjTUT
+         O8NzzOFV6obGvlf8Sy4lHOuee2AaPtPTZLYEawgFtcmCd+SzTqJtmnwheP7rf8cGHWS4
+         nXoQ==
+X-Gm-Message-State: AO0yUKUmvEnheF2kjPrytUIkmzlWx0gOUSEJUX6S7tDUNYAlqMOhQJRl
+	EGRwjfwAiAF458K4j6un2qxB9JMioyPNaPArZEuIYA==
+X-Google-Smtp-Source: AK7set8pc0NPyHSsWvjrjseXqGBrcVUpDUGhBzZfQPx/YjPLIKqJrPbCIkQB1jkwaTnk/pBS+cLSXg==
+X-Received: by 2002:adf:f587:0:b0:2c7:deb:c61 with SMTP id f7-20020adff587000000b002c70deb0c61mr15142098wro.39.1678354083278;
+        Thu, 09 Mar 2023 01:28:03 -0800 (PST)
 Received: from ?IPV6:2a02:578:8593:1200:cf48:2681:518b:ac83? ([2a02:578:8593:1200:cf48:2681:518b:ac83])
-        by smtp.gmail.com with ESMTPSA id v15-20020a05600c444f00b003e2232d0960sm1884112wmn.23.2023.03.09.00.38.34
+        by smtp.gmail.com with ESMTPSA id u16-20020a5d5150000000b002c559843748sm17487405wrt.10.2023.03.09.01.28.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Mar 2023 00:38:34 -0800 (PST)
-Message-ID: <91a93914-4bd0-12f2-0eee-684ca8215fc1@tessares.net>
-Date: Thu, 9 Mar 2023 09:38:34 +0100
+        Thu, 09 Mar 2023 01:28:03 -0800 (PST)
+Message-ID: <ad01ca78-fc41-a39b-d73d-86a6d2f945b5@tessares.net>
+Date: Thu, 9 Mar 2023 10:28:02 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -79,60 +79,42 @@ On 09/03/2023 03:04, Geliang Tang wrote:
 > index 42e3bd1a05f5..625d24d94576 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1719,6 +1719,46 @@ chk_subflow_nr()
->  	fi
->  }
+
+(..)
+
+> @@ -3118,13 +3158,16 @@ endpoint_tests()
+>  		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 2>/dev/null &
 >  
-> +chk_mptcp_info()
-> +{
-> +	local nr_info=$1
-> +	local info
-> +	local cnt1
-> +	local cnt2
-> +	local dump_stats
-> +
-> +	if [[ $nr_info = "subflows_"* ]]; then
-> +		info="subflows"
-> +		nr_info=${nr_info:9}
-> +	else
-> +		echo "[fail] $nr_info"
-> +		fail_test
-> +		dump_stats=1
+>  		wait_mpj $ns2
+> +		chk_mptcp_info subflows_1
 
-Do you mind if I replace "dump_stats=1" by a "return 1" when applying
-the patch? No need to do the rest that will probably cause bash errors
-below.
+I forgot to look at the output when doing my previous review and it
+seems this is printed before the title:
 
-And while at it, I just change the 'echo' to say:
+#                          mptcp_info subflows=1         [ ok ]
+# 115 delete and re-add    after delete[ ok ]
+#                          mptcp_info subflows=0         [ ok ]
+#                          after re-add[ ok ]
+#                          mptcp_info subflows=1         [ ok ]
 
-  [fail] unsupported argument: $nr_info
+Maybe we should have:
 
-> +	fi
-> +
-> +	printf "%-${nr_blank}s %-30s" " " "mptcp_info $info=$nr_info"
-> +
-> +	cnt1=$(ss -N $ns1 -inmHM | grep "$info:" |
-> +		sed -n 's/.*\('"$info"':\)\([[:digit:]]*\).*$/\2/p;q')
-> +	[ -z $cnt1 ] && cnt1=0
-> +	cnt2=$(ss -N $ns2 -inmHM | grep "$info:" |
-> +		sed -n 's/.*\('"$info"':\)\([[:digit:]]*\).*$/\2/p;q')
-> +	[ -z $cnt2 ] && cnt2=0
-> +	if [ $cnt1 != $nr_info -o $cnt2 != $nr_info ]; then
+  (...)
 
-While at it, I will also add double quotes around variables just in case
-the parsing fails and return a few words [1] and use "||" instead of
-"-o" [2]
+  wait_mpj $ns2
+  chk_subflow_nr needtitle "before delete" 2
+  chk_mptcp_info subflows_1
 
-[1] https://www.shellcheck.net/wiki/SC2086
-[2] https://www.shellcheck.net/wiki/SC2166
+  pm_nl_del_endpoint $ns2 2 10.0.2.2
+  sleep 0.5
+  chk_subflow_nr "" "after delete" 1
+  chk_mptcp_info subflows_0
 
-Also, do you plan to add a similar test but with the userspace pm?
+  (...)
 
+What do you think?
 
-Apart from that and if you are OK with the suggested modifications, the
-rest looks good to me!
-
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Do you mind looking at that in a v4 (with the other comments) please?
 
 Cheers,
 Matt
