@@ -1,125 +1,126 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F5A2565
-	for <mptcp@lists.linux.dev>; Tue, 14 Mar 2023 07:49:58 +0000 (UTC)
-Received: by mail-wr1-f43.google.com with SMTP id v16so13454099wrn.0
-        for <mptcp@lists.linux.dev>; Tue, 14 Mar 2023 00:49:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98A828E8
+	for <mptcp@lists.linux.dev>; Tue, 14 Mar 2023 08:23:07 +0000 (UTC)
+Received: by mail-pg1-f173.google.com with SMTP id z10so8396109pgr.8
+        for <mptcp@lists.linux.dev>; Tue, 14 Mar 2023 01:23:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678780196;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20210112; t=1678782187;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z2twBbc3iciHckRmCHyYXR9VGfAtvvgrS++uiTKzu3Q=;
-        b=EjzX6LHGQdHYBFvQ4tRUI6cg7X6NMDlN94sDyM8bYT3PQx+agjt4b1R2yDe30VH5d0
-         oz8dkbHKmGwycyyKCFEBIYjAdvrB0lmvv+GG6OXDRDLTKz5nXUDftp8ikqmHH/m0UcQA
-         ql/kMqrnEoQNVtFbdr5KQvgeCsjUCX+dzZ/5ckPnJUhe947viRlZSC9o1A848gFmL4l3
-         W5iopjgMCSisbNk6Lb0Dcv7zXEVDmBneM++5GxGH3233MTs+mTzH7mkYClfbg0wmn04x
-         RA1zwYk+9gdrwPOZZASJRAYV8BeUWWUZt2wGgJtzc6ujctYoMO2wOVZiEgmVGmXkue5u
-         q7yQ==
+        bh=nh3I1ucX4XyF+SuS1f3zfhtM2Z+eyK6HqBeSGOfICVI=;
+        b=RHmUOW3rXqN5Iyc9bY3XM/+zxSfH9Fsn9EdYKW6ZHlGFGMY7Hnmu4Y7YcdZbCTkX19
+         sue+caE8NGJa0kjwyAO6b0Q4QCQrQfmCZlUL+zCLdM2xQmMmTqaNkaRdSK1+clqfd4qV
+         N+HRJL37u+gp51dPC52wCeNPjluqA/N6GSbMiqUUMBf9sOsZm4aI6ukdQ7l8WvP6cygu
+         DdSPSLaJLkd72K25vvxv9OyfKNXGEt8nJRCr99noLl/65xNLsIi607Q/dq7gkChqKBlV
+         MUGbqOMnsHiu/AfaCwcuKtUNbaKB8i6+CoY8vsNhQOvbbqGVPFft3G8hcCPyyhACf2QU
+         rPBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678780196;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z2twBbc3iciHckRmCHyYXR9VGfAtvvgrS++uiTKzu3Q=;
-        b=mfJ3SUUk3b1xj5GhS42S7agu6sC3FuI5IZl+agK0dGE0NdRsOv5Lg4Zd9vjAFcGHMx
-         w/NO/WamHBtMSEn6q1AQQDF/IIN6U6PWb0up3WfzTNXdq3bHHkyiib5DdUFK6oosKtSB
-         72yn2iavtFmMZgE87MCIPXX1uZfqqKhrTxg7LWaajbRkt6NUINCobzxXGEC9euvZ5axv
-         l0qSVzaMGePNAmsdl8vgPIP9VxPHa25Ui/B8u1s1uq6rsFmajk1hM5Us+sCCamBbryw6
-         YRFFNU+RoAsmtU16BW+7tKNiWBwu6pO8dBTRSZdOiHRcel1iXhfspGAzjO1W1IEmYOb7
-         LI5Q==
-X-Gm-Message-State: AO0yUKXtYOGYn4ipsk3+xVY3MhX0ywbiuvOZIBdcQ1+0jGfQDnxxOUAK
-	hICqXm1GjTAkcImMSQ+YiJr/sX4Bh1aQ3IOKSs0=
-X-Google-Smtp-Source: AK7set+u8uVhF5DhBO4SaN0s4+Pf5RZq5U5L+PysrY4yOtJW1HHvIfTNYyvpnxh1uxiaGLpCBue1VvXurn4RWGfxEBw=
-X-Received: by 2002:adf:e34c:0:b0:2c7:195c:5b13 with SMTP id
- n12-20020adfe34c000000b002c7195c5b13mr6758461wrj.0.1678780196410; Tue, 14 Mar
- 2023 00:49:56 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1678782187;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nh3I1ucX4XyF+SuS1f3zfhtM2Z+eyK6HqBeSGOfICVI=;
+        b=rZ4H4nYlfjNem9o0gyS4rORRBOKphxvlsLZUFGzkeToE474qtj98pw/qxkqSoU8MKu
+         pRzdTvixlp/yM+ugmYU57yilI63o8ggzybtcmJOTDP8+qpCFE0r/5VpppkPPuTy+CPa/
+         NwRcrQL7SBIQDGi30/V5BcEXbJN8/G1LvptDBBL2mmWFVLM26CsC+sfG/fSc6cgVETO3
+         x/13lsOLFEQqY01eNvFumTiAzDLQ91ywu8w5tDerbGcZPIoYAC5/0xpG+T7yQrHtKwHp
+         IAsUknAPRmjGTinP+5g+/9XDTAk0uH2i6aWFZegtkFveBxZCCceLHMuBrwjEPG9Hxe1/
+         BKPA==
+X-Gm-Message-State: AO0yUKXN3NdbArjNaOexRUKL/1v0Q17NThKOjWw9a0xfeZK5lbXq6+gE
+	LnjGNHp2tH+S5NKOVB8dF5vCYEmnf+ta
+X-Google-Smtp-Source: AK7set9J5SfuU3WeafGo7/SBKD6IO2ig63QGg6PYPmOSSnrEuAIVGTaJc9pcYgNGEECMsWuG/Q4/2w==
+X-Received: by 2002:a62:1bc7:0:b0:623:55c9:bcd3 with SMTP id b190-20020a621bc7000000b0062355c9bcd3mr6094831pfb.14.1678782187034;
+        Tue, 14 Mar 2023 01:23:07 -0700 (PDT)
+Received: from [127.0.0.1] ([13.88.61.217])
+        by smtp.gmail.com with ESMTPSA id f11-20020aa78b0b000000b005d4e89b69e5sm1003704pfd.127.2023.03.14.01.23.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Mar 2023 01:23:06 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <9511e6740c7249bcdb48ba8716b9248e073b99a3.1678778977.git.geliang.tang@suse.com>
+References:
+ <9511e6740c7249bcdb48ba8716b9248e073b99a3.1678778977.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: check userspace mptcp_info: Tests Results
+Message-ID: <727e7111-585b-8734-c09b-3fec788f498f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Mar 2023 08:23:05 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1678778977.git.geliang.tang@suse.com> <9511e6740c7249bcdb48ba8716b9248e073b99a3.1678778977.git.geliang.tang@suse.com>
-In-Reply-To: <9511e6740c7249bcdb48ba8716b9248e073b99a3.1678778977.git.geliang.tang@suse.com>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Tue, 14 Mar 2023 15:51:21 +0800
-Message-ID: <CA+WQbwsQF8L0osGcmXZ8g3m-9E3wOT8O2zbxcjxZimFbqfOD8w@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v5 7/7] selftests: mptcp: check userspace mptcp_info
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Geliang Tang <geliang.tang@suse.com> =E4=BA=8E2023=E5=B9=B43=E6=9C=8814=E6=
-=97=A5=E5=91=A8=E4=BA=8C 15:31=E5=86=99=E9=81=93=EF=BC=9A
->
-> This patch invokes chk_mptcp_info() to check mptcp_info of userspace PM.
->
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/test=
-ing/selftests/net/mptcp/mptcp_join.sh
-> index 506120401abe..8ca5accd5c82 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -842,8 +842,11 @@ do_transfer()
->                                 tk=3D$(grep "type:1," "$evts_ns1" |
->                                      sed -n 's/.*\(token:\)\([[:digit:]]*=
-\).*$/\2/p;q')
->                                 ip netns exec ${listener_ns} ./pm_nl_ctl =
-ann $addr token $tk id $id
-> +                               chk_mptcp_info subflows_1
->                                 sleep 1
->                                 ip netns exec ${listener_ns} ./pm_nl_ctl =
-rem token $tk id $id
-> +                               sleep 1
-> +                               chk_mptcp_info subflows_0
->                         fi
->
->                         counter=3D$((counter + 1))
-> @@ -906,11 +909,14 @@ do_transfer()
->                                 dp=3D$(sed -n 's/.*\(dport:\)\([[:digit:]=
-]*\).*$/\2/p;q' "$evts_ns2")
->                                 ip netns exec ${connector_ns} ./pm_nl_ctl=
- csf lip $addr lid $id \
->                                                                         r=
-ip $da rport $dp token $tk
-> +                               chk_mptcp_info subflows_1
->                                 sleep 1
->                                 sp=3D$(grep "type:10" "$evts_ns2" |
->                                      sed -n 's/.*\(sport:\)\([[:digit:]]*=
-\).*$/\2/p;q')
->                                 ip netns exec ${connector_ns} ./pm_nl_ctl=
- dsf lip $addr lport $sp \
->                                                                         r=
-ip $da rport $dp token $tk
-> +                               sleep 1
-> +                               chk_mptcp_info subflows_0
->                         fi
->                         counter=3D$((counter + 1))
->                         add_nr_ns2=3D$((add_nr_ns2 - 1))
-> @@ -3148,6 +3154,10 @@ endpoint_tests()
->                 pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
->                 pm_nl_check_endpoint 0 "modif is allowed" \
->                         $ns2 10.0.2.2 id 1 flags signal
-> +
-> +               chk_mptcp_info subflows_1
-> +               pm_nl_del_endpoint $ns2 1 10.0.2.2
-> +               chk_mptcp_info subflows_0
+Hi Geliang,
 
-These lines should be squashed to "selftests: mptcp: add mptcp_info tests".
+Thank you for your modifications, that's great!
 
--Geliang
+Our CI did some validations and here is its report:
 
->                 kill_tests_wait
->         fi
->
-> --
-> 2.35.3
->
->
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_userspace_pm =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5885673681453056
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5885673681453056/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5322723728031744
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5322723728031744/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6448623634874368
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6448623634874368/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5041248751321088
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5041248751321088/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/f55ea4c9374f
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
