@@ -1,127 +1,125 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31926123
-	for <mptcp@lists.linux.dev>; Wed, 15 Mar 2023 19:25:19 +0000 (UTC)
-Received: by mail-ot1-f46.google.com with SMTP id t10-20020a9d774a000000b00698d7d8d512so2605397otl.10
-        for <mptcp@lists.linux.dev>; Wed, 15 Mar 2023 12:25:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482DC6FC3
+	for <mptcp@lists.linux.dev>; Wed, 15 Mar 2023 20:27:45 +0000 (UTC)
+Received: by mail-oo1-f53.google.com with SMTP id j15-20020a4ad18f000000b00535ed74d62cso320369oor.5
+        for <mptcp@lists.linux.dev>; Wed, 15 Mar 2023 13:27:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678908319;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ARvQRXY+XV1/OdfEyFp4SglXQZsOf+4qHFtOCDiO2xE=;
-        b=YTzyeFDipClSCE5ysHmZftVawX0TxBD3CIBb1I+2XUgmSEeYWUWjmJgyugVNO0K7AB
-         pEGb8PFouxV63tOhIqGeoyur1bca6ZN2mdh42no1SypUyGkm/+U1ikSM3fF23s3YteWT
-         opN+nLdblVPi4jWk+zasMO4q+Gute0PLFXL/X4SRyYcn5XdtOdPN1xHrFMo6Yjt0fdML
-         5NxWj5RyUUNoOtGG3GAUlvqPVmHLei1N+DIts8V1ifWwYHDjgN1fYS7oBTRjGetuRz8L
-         SFo6cXIB5RF31aTbZxQY8bVNC3mMIgmHKyzUU/NKwcgPMVis6XoW0RCnLJzKD++82OAn
-         Mpbg==
+        d=tessares.net; s=google; t=1678912064;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YB8bCi0OFAJV1cNy2JUVpeOZKfBWS8MkybFkIp+Rpbk=;
+        b=51uZjduJt9l2N1CJkqQbkRVdaAb3f5hNoLz1BMyG9dU5WFap3z4wpp4gfRYMI6mYIC
+         AeysHEUDWKxo/PyiwsMEawPMMllVgRoFczloet9qzdcgvY3CE4VulYIaz6HWoQZhRnDy
+         t23A8TUFxhudTyEXmCIIKy0Ja8KWxg1UH+LQfvH7Tl8m87IynQ8p351I1J3jo7NujMHw
+         Klq5C5+AD6haKokxGm1ek2ggifkd6YE4qtJS4+McFvrh6l6xhqD390z7poQh+f6uxey4
+         w7lZiQqnKmowXHnLTVOWinw1KCud1SVjx/l1XoieuRkMQydpRw8gIR2KoCGQhdHucqCI
+         /eQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678908319;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ARvQRXY+XV1/OdfEyFp4SglXQZsOf+4qHFtOCDiO2xE=;
-        b=dHpIn+7xXSPPbG/L7UvwG3t+UPGN6lJdBPoOYrPd2g9t+LlXnEeI7YPH7CfOU2cvjr
-         iNnacwc7YvlHr+M26uM9Ehy5eGCqmebWDmZ8/sRxhuzr4bCB5XOQspIhTY6GiduGS2gU
-         ENufjp56I9cj3lkDXIp5FQbcI2TQqPUCyQ3DOLWaCywMTnn5IPa1QKkhbxH2vJTNI7hx
-         wnWuAvoLMtLO/hkWJC+PMSefYFoH1JdLtjcaIOHgn9iVsIy2nt9jCbPydzivXqE8+kr9
-         03NH1tgzXFDpLkhp6fRQgIUgEALPbQyNkuxebWhQiEomNX/ctmDb+lNh7IF/uBtiabaz
-         LQ4g==
-X-Gm-Message-State: AO0yUKWsaFbSBbICB5eXog+zDSqcm4mfLIobVdHDE7bWGnQNjlEmPvgu
-	IrwJxf3ge37l4ol5ASSK1A==
-X-Google-Smtp-Source: AK7set+X6fFURic3dpq0vo286bMdJcEZf5pdObvsjFm2tW/xtwvmH/fkeXR7Y/SMcc1DLmZ8yxXdpA==
-X-Received: by 2002:a05:6830:3296:b0:690:f6d8:1f7a with SMTP id m22-20020a056830329600b00690f6d81f7amr8505017ott.19.1678908318837;
-        Wed, 15 Mar 2023 12:25:18 -0700 (PDT)
-Received: from [127.0.0.1] ([40.84.174.133])
-        by smtp.gmail.com with ESMTPSA id j45-20020a4a9470000000b005200c4b6267sm2551341ooi.9.2023.03.15.12.25.18
+        d=1e100.net; s=20210112; t=1678912064;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YB8bCi0OFAJV1cNy2JUVpeOZKfBWS8MkybFkIp+Rpbk=;
+        b=m6FWLFgqlRvrOuSKkKEsBv8hhikLl7T3RR+sr1tTrKXR3Wivh8tEKSNSf37TLs3q/h
+         erw0Prr/jCxgs/FEuZlNaDSu5Z1SBatEdkfJUIXSBhg5MQVuvlOIZdzJDo72dLSGK0KO
+         0II4J89Az0LK37hXLOgvjm9j0Q1XxqV1KgQT240ibykXbXcXBIBgAwQKb7IpFrjuMgNV
+         gsi3a9DOMsg8IkaxYHu38nxs9E21UKe0GFJeQJWO0zPVuMx5Jocl/uQEMIkVIlp9/gou
+         4j+JoBkWcbjKAJYVN8NpzkGBqLjyttjsPUcJsGCREJXppa5N56k7KrmTdW0OR+r+jN2o
+         dD9g==
+X-Gm-Message-State: AO0yUKWrP9ho0C6HxdiLhdVioiuTwmsOGUJWD+bley0OkFuNNx3T1ALI
+	dTMTFw8DdGe020mgw+pyQfFwxHB5Ug/AiUJBvYHCdVjl
+X-Google-Smtp-Source: AK7set9JgcH7RFZcxUhQC2vyLMxD0/MdwkTcPNT6rjc4/UwtMUP8EM4p0QOtSDBhY8RN8QRKSpVHtg==
+X-Received: by 2002:a05:6820:1522:b0:520:f76:11e2 with SMTP id ay34-20020a056820152200b005200f7611e2mr21175882oob.9.1678912062878;
+        Wed, 15 Mar 2023 13:27:42 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id n5-20020a4a8485000000b005252d376caesm2614518oog.22.2023.03.15.13.27.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Mar 2023 12:25:18 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20230314-doc-checkpatch-closes-tag-v1-2-1b83072e9a9a@tessares.net>
-References:
- <20230314-doc-checkpatch-closes-tag-v1-2-1b83072e9a9a@tessares.net>
-Subject: Re: checkpatch: allow Closes tags with links: Tests Results
-Message-ID: <cc784671-68e6-00d8-3a2d-47cbc67a8e50@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 15 Mar 2023 19:25:17 +0000
+        Wed, 15 Mar 2023 13:27:42 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Date: Wed, 15 Mar 2023 21:25:17 +0100
+Subject: [PATCH net] hsr: ratelimit only when errors are printed
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230315-net-20230315-hsr_framereg-ratelimit-v1-1-61d2ef176d11@tessares.net>
+X-B4-Tracking: v=1; b=H4sIAKwpEmQC/z2NwQrCMBAFf6Xs2YWmaUX8FRFJ05dmwUbZBBFK/
+ 920B48zh5mVMlSQ6dqspPhIlleqYE4N+ejSDJapMnVtZ1trBk4o/IeY9RHULVDMrK7gKYsUtv4
+ Swhm9HYyhWhpdBo/qko97qyZ2+1YE+R7v2+Hu2/YDFce4/pAAAAA=
+To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Kristian Overskeid <koverskeid@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2026;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=992nLemSMOYGix02WD9DtzNzaFETn4pgWDlUvy2fi6o=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkEio6GjK4kj/mz2zubIAqSUbe7RZLNfXBmaxki
+ quQEiHNBC6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZBIqOgAKCRD2t4JPQmmg
+ c8LFD/9Jjda822CqNJnIzNOgj9PmPXHKXfTpSpEnUFS17XyfykO8h5mpUl3khEQnwRmRQkeG30d
+ 7MVdQIJD89iA+zCiwNPhxeH4lt1Vf6671/ckE3ERNcIDaGRefOrwd0BLGNyDttcttMY+EY8sDrw
+ lrbLKuWQBQ+o26HdYm+bH+nuusIOwRfR/NoSYqwEDhPx++E0YCVpcIx/DIuKeGjNJwbH/MOzidc
+ Ed3gyo1RUtlxbHepW4EUiRbgVBkMnYYlWQ/cQ/umc0paMkg4pklnHE/kMvzsCH/5jlOnUYRReRN
+ R5HwIWPiM/REVKZHj29nwX3EyfS7KCOms+XozbLUm9WZc+wc03NVy2tB+gFIjPS6UK0oU4+bOfN
+ +WYkEjs6T4Cvh6N2MIhT04HCzCfwgksY0W3z5vVWqQzXStfW/eby4P8ZB6Lru7ekGqmI9okXEA3
+ Zlx0KH7Xs7KrjoZxSRfHhqtgt6eTmSNlQZJWHWyKPL4potZdrioJqBEvP9RvKc3G8O0pstmx3g5
+ vKhotU7HlYDuToiPb3wlNPydwGROlMeBtfYrdlKhfLAwKLfhrcOG35y5pcwkpY7ghrtPvYSveZp
+ BKivy9MRWmIo9F6G1T6RLcrdfViFsmU7gD+rmry3tXkEVWVW1aN6xef6aSAMu66WXcfQZKEYPjP
+ GL2NoudBREa/jRQ==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Matthieu,
+Recently, when automatically merging -net and net-next in MPTCP devel
+tree, our CI reported [1] a conflict in hsr, the same as the one
+reported by Stephen in netdev [2].
 
-Thank you for your modifications, that's great!
+When looking at the conflict, I noticed it is in fact the v1 [3] that
+has been applied in -net and the v2 [4] in net-next. Maybe the v1 was
+applied by accident.
 
-Our CI did some validations and here is its report:
+As mentioned by Jakub Kicinski [5], the new condition makes more sense
+before the net_ratelimit(), not to update net_ratelimit's state which is
+unnecessary if we're not going to print either way.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6215348928643072
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6215348928643072/summary/summary.txt
+Here, this modification applies the v2 but in -net.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5933873951932416
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5933873951932416/summary/summary.txt
+Link: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/4423171069 [1]
+Link: https://lore.kernel.org/netdev/20230315100914.53fc1760@canb.auug.org.au/ [2]
+Link: https://lore.kernel.org/netdev/20230307133229.127442-1-koverskeid@gmail.com/ [3]
+Link: https://lore.kernel.org/netdev/20230309092302.179586-1-koverskeid@gmail.com/ [4]
+Link: https://lore.kernel.org/netdev/20230308232001.2fb62013@kernel.org/ [5]
+Fixes: 28e8cabe80f3 ("net: hsr: Don't log netdev_err message on unknown prp dst node")
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ net/hsr/hsr_framereg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4807974045089792
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4807974045089792/summary/summary.txt
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 865eda39d601..b77f1189d19d 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -415,7 +415,7 @@ void hsr_addr_subst_dest(struct hsr_node *node_src, struct sk_buff *skb,
+ 	node_dst = find_node_by_addr_A(&port->hsr->node_db,
+ 				       eth_hdr(skb)->h_dest);
+ 	if (!node_dst) {
+-		if (net_ratelimit() && port->hsr->prot_version != PRP_V1)
++		if (port->hsr->prot_version != PRP_V1 && net_ratelimit())
+ 			netdev_err(skb->dev, "%s: Unknown node\n", __func__);
+ 		return;
+ 	}
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5370923998511104
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5370923998511104/su=
-mmary/summary.txt
+---
+base-commit: 75014826d0826d175aa9e36cd8e118793263e3f4
+change-id: 20230315-net-20230315-hsr_framereg-ratelimit-3c8ff6e43511
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/90e7f91b369d
+Best regards,
+-- 
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
