@@ -1,125 +1,48 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.lokoho.com (mail.lokoho.com [217.61.105.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482DC6FC3
-	for <mptcp@lists.linux.dev>; Wed, 15 Mar 2023 20:27:45 +0000 (UTC)
-Received: by mail-oo1-f53.google.com with SMTP id j15-20020a4ad18f000000b00535ed74d62cso320369oor.5
-        for <mptcp@lists.linux.dev>; Wed, 15 Mar 2023 13:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1678912064;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YB8bCi0OFAJV1cNy2JUVpeOZKfBWS8MkybFkIp+Rpbk=;
-        b=51uZjduJt9l2N1CJkqQbkRVdaAb3f5hNoLz1BMyG9dU5WFap3z4wpp4gfRYMI6mYIC
-         AeysHEUDWKxo/PyiwsMEawPMMllVgRoFczloet9qzdcgvY3CE4VulYIaz6HWoQZhRnDy
-         t23A8TUFxhudTyEXmCIIKy0Ja8KWxg1UH+LQfvH7Tl8m87IynQ8p351I1J3jo7NujMHw
-         Klq5C5+AD6haKokxGm1ek2ggifkd6YE4qtJS4+McFvrh6l6xhqD390z7poQh+f6uxey4
-         w7lZiQqnKmowXHnLTVOWinw1KCud1SVjx/l1XoieuRkMQydpRw8gIR2KoCGQhdHucqCI
-         /eQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678912064;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YB8bCi0OFAJV1cNy2JUVpeOZKfBWS8MkybFkIp+Rpbk=;
-        b=m6FWLFgqlRvrOuSKkKEsBv8hhikLl7T3RR+sr1tTrKXR3Wivh8tEKSNSf37TLs3q/h
-         erw0Prr/jCxgs/FEuZlNaDSu5Z1SBatEdkfJUIXSBhg5MQVuvlOIZdzJDo72dLSGK0KO
-         0II4J89Az0LK37hXLOgvjm9j0Q1XxqV1KgQT240ibykXbXcXBIBgAwQKb7IpFrjuMgNV
-         gsi3a9DOMsg8IkaxYHu38nxs9E21UKe0GFJeQJWO0zPVuMx5Jocl/uQEMIkVIlp9/gou
-         4j+JoBkWcbjKAJYVN8NpzkGBqLjyttjsPUcJsGCREJXppa5N56k7KrmTdW0OR+r+jN2o
-         dD9g==
-X-Gm-Message-State: AO0yUKWrP9ho0C6HxdiLhdVioiuTwmsOGUJWD+bley0OkFuNNx3T1ALI
-	dTMTFw8DdGe020mgw+pyQfFwxHB5Ug/AiUJBvYHCdVjl
-X-Google-Smtp-Source: AK7set9JgcH7RFZcxUhQC2vyLMxD0/MdwkTcPNT6rjc4/UwtMUP8EM4p0QOtSDBhY8RN8QRKSpVHtg==
-X-Received: by 2002:a05:6820:1522:b0:520:f76:11e2 with SMTP id ay34-20020a056820152200b005200f7611e2mr21175882oob.9.1678912062878;
-        Wed, 15 Mar 2023 13:27:42 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id n5-20020a4a8485000000b005252d376caesm2614518oog.22.2023.03.15.13.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Mar 2023 13:27:42 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Wed, 15 Mar 2023 21:25:17 +0100
-Subject: [PATCH net] hsr: ratelimit only when errors are printed
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCCA2561
+	for <mptcp@lists.linux.dev>; Thu, 16 Mar 2023 09:06:37 +0000 (UTC)
+Received: by mail.lokoho.com (Postfix, from userid 1001)
+	id C545888675; Thu, 16 Mar 2023 08:57:01 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lokoho.com; s=mail;
+	t=1678957088; bh=Z0N5VlX9/JlryGOL5I747Le9USomZJCRNNGRT3LbbKc=;
+	h=Date:From:To:Subject:From;
+	b=HCH+pCAIkF4d19IJtD28KDojUMLO0WsHXoouWHUEcQ4qljT8qfGuh9ARCKTxh8/UU
+	 bNuohjncjbdFl0PUOilMqFUAvD0QCV4wmUbu2D73XqP5y9XMezTJbpu+90V61XORPt
+	 vSNh1LRiGPkDDW2kfFDIBKue9vCTsjD91v2YeGQeNa/8atQki0OiBooKux6D6qgyl4
+	 sqeqZ5Q4zo9Xuo/7QEmc+e/M5iuougj8rovWNTH3WXuMYF50F4POfkwFlvPfBcfkjV
+	 hrPwwV/NReNGXQEnmre1k2uxys+vhctmRljLPRlvabIVf/3AWmBK/zGy/qa6YIXnBh
+	 Ue7Png9AQhwSw==
+Received: by mail.lokoho.com for <mptcp@lists.linux.dev>; Thu, 16 Mar 2023 08:56:01 GMT
+Message-ID: <20230316074501-0.1.4n.1ho6f.0.pl8bo3ngn2@lokoho.com>
+Date: Thu, 16 Mar 2023 08:56:01 GMT
+From: "Adam Charachuta" <adam.charachuta@lokoho.com>
+To: <mptcp@lists.linux.dev>
+Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
+X-Mailer: mail.lokoho.com
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230315-net-20230315-hsr_framereg-ratelimit-v1-1-61d2ef176d11@tessares.net>
-X-B4-Tracking: v=1; b=H4sIAKwpEmQC/z2NwQrCMBAFf6Xs2YWmaUX8FRFJ05dmwUbZBBFK/
- 920B48zh5mVMlSQ6dqspPhIlleqYE4N+ejSDJapMnVtZ1trBk4o/IeY9RHULVDMrK7gKYsUtv4
- Swhm9HYyhWhpdBo/qko97qyZ2+1YE+R7v2+Hu2/YDFce4/pAAAAA=
-To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Kristian Overskeid <koverskeid@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2026;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=992nLemSMOYGix02WD9DtzNzaFETn4pgWDlUvy2fi6o=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkEio6GjK4kj/mz2zubIAqSUbe7RZLNfXBmaxki
- quQEiHNBC6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZBIqOgAKCRD2t4JPQmmg
- c8LFD/9Jjda822CqNJnIzNOgj9PmPXHKXfTpSpEnUFS17XyfykO8h5mpUl3khEQnwRmRQkeG30d
- 7MVdQIJD89iA+zCiwNPhxeH4lt1Vf6671/ckE3ERNcIDaGRefOrwd0BLGNyDttcttMY+EY8sDrw
- lrbLKuWQBQ+o26HdYm+bH+nuusIOwRfR/NoSYqwEDhPx++E0YCVpcIx/DIuKeGjNJwbH/MOzidc
- Ed3gyo1RUtlxbHepW4EUiRbgVBkMnYYlWQ/cQ/umc0paMkg4pklnHE/kMvzsCH/5jlOnUYRReRN
- R5HwIWPiM/REVKZHj29nwX3EyfS7KCOms+XozbLUm9WZc+wc03NVy2tB+gFIjPS6UK0oU4+bOfN
- +WYkEjs6T4Cvh6N2MIhT04HCzCfwgksY0W3z5vVWqQzXStfW/eby4P8ZB6Lru7ekGqmI9okXEA3
- Zlx0KH7Xs7KrjoZxSRfHhqtgt6eTmSNlQZJWHWyKPL4potZdrioJqBEvP9RvKc3G8O0pstmx3g5
- vKhotU7HlYDuToiPb3wlNPydwGROlMeBtfYrdlKhfLAwKLfhrcOG35y5pcwkpY7ghrtPvYSveZp
- BKivy9MRWmIo9F6G1T6RLcrdfViFsmU7gD+rmry3tXkEVWVW1aN6xef6aSAMu66WXcfQZKEYPjP
- GL2NoudBREa/jRQ==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Recently, when automatically merging -net and net-next in MPTCP devel
-tree, our CI reported [1] a conflict in hsr, the same as the one
-reported by Stephen in netdev [2].
+Dzie=C5=84 dobry,
 
-When looking at the conflict, I noticed it is in fact the v1 [3] that
-has been applied in -net and the v2 [4] in net-next. Maybe the v1 was
-applied by accident.
+zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
+=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
+o dalszych rozm=C3=B3w.=20
 
-As mentioned by Jakub Kicinski [5], the new condition makes more sense
-before the net_ratelimit(), not to update net_ratelimit's state which is
-unnecessary if we're not going to print either way.
+Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
+=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
+=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
+strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
 
-Here, this modification applies the v2 but in -net.
+Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/4423171069 [1]
-Link: https://lore.kernel.org/netdev/20230315100914.53fc1760@canb.auug.org.au/ [2]
-Link: https://lore.kernel.org/netdev/20230307133229.127442-1-koverskeid@gmail.com/ [3]
-Link: https://lore.kernel.org/netdev/20230309092302.179586-1-koverskeid@gmail.com/ [4]
-Link: https://lore.kernel.org/netdev/20230308232001.2fb62013@kernel.org/ [5]
-Fixes: 28e8cabe80f3 ("net: hsr: Don't log netdev_err message on unknown prp dst node")
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- net/hsr/hsr_framereg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
-index 865eda39d601..b77f1189d19d 100644
---- a/net/hsr/hsr_framereg.c
-+++ b/net/hsr/hsr_framereg.c
-@@ -415,7 +415,7 @@ void hsr_addr_subst_dest(struct hsr_node *node_src, struct sk_buff *skb,
- 	node_dst = find_node_by_addr_A(&port->hsr->node_db,
- 				       eth_hdr(skb)->h_dest);
- 	if (!node_dst) {
--		if (net_ratelimit() && port->hsr->prot_version != PRP_V1)
-+		if (port->hsr->prot_version != PRP_V1 && net_ratelimit())
- 			netdev_err(skb->dev, "%s: Unknown node\n", __func__);
- 		return;
- 	}
-
----
-base-commit: 75014826d0826d175aa9e36cd8e118793263e3f4
-change-id: 20230315-net-20230315-hsr_framereg-ratelimit-3c8ff6e43511
-
-Best regards,
--- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
-
+Pozdrawiam
+Adam Charachuta
