@@ -1,45 +1,45 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F026FD0
-	for <mptcp@lists.linux.dev>; Thu, 16 Mar 2023 18:26:04 +0000 (UTC)
-Received: by mail-ed1-f48.google.com with SMTP id fd5so11184483edb.7
-        for <mptcp@lists.linux.dev>; Thu, 16 Mar 2023 11:26:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F986FD0
+	for <mptcp@lists.linux.dev>; Thu, 16 Mar 2023 18:26:15 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id cn21so11433731edb.0
+        for <mptcp@lists.linux.dev>; Thu, 16 Mar 2023 11:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1678991162;
+        d=tessares.net; s=google; t=1678991173;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ly7vWtIP/5z78aRqytEaMrwqtd+ZzxgBQ7zThsxVNMc=;
-        b=LyP3rvk36qzhCGgGAS3p3oECpo5mMS6vuRPRuwpGpdBsqBtMFju3WrSzvNcihslPAX
-         W9IUbszAH2ZDYb+OboXf5ARtvlekf7BrMwmstiQ6m/5v9UaSsEvTxZOQJzfgVTU95Awh
-         zq1CKTBvb3YdeC7FKGLa25VgPScKWRc53a4QjzBo3Pwa50f6LE+Ks75Ag1wpLryBkH+J
-         58ip4+cSql8iMITZ3L+S3LDpKKE++cthsbb1G/eeuOKaFmZiPrTB97ZGnvz12B/MX2jA
-         +fvtAqWPI+bqtwGQTa6tLGVFVYvbn4cKmHM8qCMnhHvRKBUDl+QDTskRuttERC5XvWtZ
-         zLWA==
+        bh=372potJ9PdTnp9rwj4CxH43EYdkR5mxHV9VigjPNtUU=;
+        b=VJ7dUJnLtsi7Im6mZDu2LOqhjTUIbmH/NuW9tGRCDoluu/FXemzEVBqLFRRFjFTr3p
+         zO65hypVQjb+qfDrmTGPWjn5qpmPDTazGCz/6p/yAxAJNzPXJVk1rVmqlewZNr/G2rf8
+         tUEa2tED3DiZxx+jfnigZOrm13vSwAdiLqBlaOrEY4CAhVv3rzTUqwItENTPW7IQMdpC
+         0MuxQGtTjBG1XxE1dnP+qa9ZV+rhFF56AAXIsaoMHd3JZGUsVC1q+nbR3tx4vBz5BJJI
+         mBJGOsKddF6hkl/cU7BxLrvQBbYyV7hjvdQXYomARqYkDj42lVcc7AFpnEA+dMLOr6pE
+         F2zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678991162;
+        d=1e100.net; s=20210112; t=1678991173;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ly7vWtIP/5z78aRqytEaMrwqtd+ZzxgBQ7zThsxVNMc=;
-        b=c6mInc3UvgzMtmI4caHT8XfLde6Kfw94kFWXIEvregSuP6eHaQsDFzuURWBh3ooLXM
-         ZMDoAGeSeDHW+XyYT4FJ0DtaJYhn6p1v9NETbVBIXHPHNxoj367BTTcofsipduvfWwb4
-         QKtz6TOu68TBRTAF+Yypdq5Vp4QnSkfnFOkHn/vHJvUSHXCVPPmiuQ4wUoqfDEaorotJ
-         pgt3v1HNUH+ylIBAYs4l9RbKyPkUwnB5WQ+ymv3FIBqrsOMrKTCslZO+MG/P6Axd5wE6
-         z6nLbX/y/ReYkA/NLkI+T86s/Lfzg9jemJneQXahnbtHXwITgHYzdZng6WM4afDoO+PA
-         1IPQ==
-X-Gm-Message-State: AO0yUKVtaYTA5A9wGK7MCDpvwhswq/IQUz6FLXiUTPbdr6JYR+tQWJFG
-	CjhFoPjnkfoBWOH29kBvWZGhBw==
-X-Google-Smtp-Source: AK7set+luFHawSkpgIetpYWFHA48hPJuPxGCS5dOkr1ZqY49WiyWkEQXX0rQBqufFwzAMt3UJX/x8g==
-X-Received: by 2002:a17:907:9494:b0:92e:efa:b9b4 with SMTP id dm20-20020a170907949400b0092e0efab9b4mr14039596ejc.22.1678991162295;
-        Thu, 16 Mar 2023 11:26:02 -0700 (PDT)
+        bh=372potJ9PdTnp9rwj4CxH43EYdkR5mxHV9VigjPNtUU=;
+        b=grh1yOk4s8NjX/Xds6SJxDgVd3o9NF11VKh3z1ItDfwUk5LErF7FoRdVlDMJLfvFcK
+         +UvqkFYHt2hVzmyoMcPzR7xy6ffv+iiz9hylQX+Lqbk7ZIqVTRE7QLDJi8NHfYvOKorV
+         cy3rm3777aaEs9DZ67JbmvIO/NXCmrFvYCy0GuhOXY8nAINHgzS+O7ydDRI0KPk24Dgh
+         DIsphDPi119tqP9x2hfuo3xsQ2JJ7q2KJ0GEaxm2a6ToD+6Sl/sBjcvIdH+85OUwDnz4
+         dMu5sD5dsBSJmF2KH9mUwxJrCo58rwIvDAdf3E4tPYGveWa53SxNmkuhMeSS0i9C/UY+
+         b+7w==
+X-Gm-Message-State: AO0yUKVXvU80uMfVZJJU2WDURLYK0A3yK40m1yzJMnZKfccNW67a3hdR
+	ROG2tU/RIVzsWKHdiJLyMoWa/sX+WnolkLqcTgAd3Ltj
+X-Google-Smtp-Source: AK7set8w4pJhvebihQm10q0yGe1elnCDzuPWF3O9ZRaOmD+K32GBdCu6axE8pKJ692XznoY/RBgpTw==
+X-Received: by 2002:aa7:dd55:0:b0:4fe:9643:4c77 with SMTP id o21-20020aa7dd55000000b004fe96434c77mr508933edw.31.1678991173452;
+        Thu, 16 Mar 2023 11:26:13 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:f605:63cd:a743:20d5? ([2a02:578:8593:1200:f605:63cd:a743:20d5])
-        by smtp.gmail.com with ESMTPSA id oy17-20020a170907105100b008e385438c76sm4144233ejb.55.2023.03.16.11.26.01
+        by smtp.gmail.com with ESMTPSA id u3-20020a50d503000000b004fcd78d1215sm100166edi.36.2023.03.16.11.26.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Mar 2023 11:26:02 -0700 (PDT)
-Message-ID: <067bd46b-9c12-36cd-8ea5-3667669dc6cf@tessares.net>
-Date: Thu, 16 Mar 2023 19:26:01 +0100
+        Thu, 16 Mar 2023 11:26:13 -0700 (PDT)
+Message-ID: <d217309c-a5d6-39ee-0839-7e5ad629058b@tessares.net>
+Date: Thu, 16 Mar 2023 19:26:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,32 +48,29 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH mptcp-next v5 3/7] mptcp: close remote subflow when
- destroying it
+Subject: Re: [PATCH mptcp-next v5 4/7] mptcp: increase userspace pm
+ add_addr_signaled
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1678778977.git.geliang.tang@suse.com>
- <d47a06abb5dae1f333a496183da5ba3e51e5a98e.1678778977.git.geliang.tang@suse.com>
+ <498e1cd7f935d4c0867fa61170895539606989cf.1678778977.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <d47a06abb5dae1f333a496183da5ba3e51e5a98e.1678778977.git.geliang.tang@suse.com>
+In-Reply-To: <498e1cd7f935d4c0867fa61170895539606989cf.1678778977.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 14/03/2023 08:31, Geliang Tang wrote:
-> Not only close the local subflow but also send RM_ADDR by invoking
-> mptcp_pm_remove_addr() to close the remote subflow when a subflow is
-> destroyed by userspace PM.
+> Increase add_addr_signaled counter in mptcp_nl_cmd_announce() when the
+> address is announced by userspace PM.
 
-Should it not be the responsibility of the userspace PM daemon to send
-this RM_ADDR?
+I guess this can be seen as a bug fix: we forgot to increment the
+counter for the userspace PM, no?
 
-Do you maybe have a use case where it is interesting to force sending
-this RM_ADDR when asking for a destroy?
+If yes, we should probably send that to net with a Fixes tag. Maybe:
 
-Maybe we could do that only if the userspace PM asks for that by setting
-a new attribute or flag? (if there is an interest)
+Fixes: 9ab4807c84a4 ("mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE")
 
 Cheers,
 Matt
