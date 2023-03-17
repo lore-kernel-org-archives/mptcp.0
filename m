@@ -1,107 +1,158 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC027F1
-	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 08:00:41 +0000 (UTC)
-Received: by mail-pl1-f176.google.com with SMTP id ix20so4531455plb.3
-        for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 01:00:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B711E7475
+	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 16:59:10 +0000 (UTC)
+Received: by mail-oi1-f172.google.com with SMTP id bi17so4269570oib.3
+        for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 09:59:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679040041;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4axSodYm7h/BNJm0GjFw3QPyJy3MjTh4/w9gm29itNs=;
-        b=KtHieplKKdSSyt16iknom/A+exf72LbqoTbo1Plr9qrdmCIIBdNcQAmCE8Yb+w97as
-         LVJPqArFdgpmOJ4/fJ0t1s6qFvtGTLabP2JiCyT+vI3WdiZ5bcZhTauRzuIe7pORe/0Q
-         rvbppjByaSGCHzM8NoHkl2tEDLFReG/mt4z1tFjT5entkbVZUB41eNx8I3FBeBgoFWO7
-         d0smyRpLyvdiv17456OiqUxAyFO90oMTx1prS+qSyc+SADpkjK7wN/ryaGSBv/dHp+kI
-         ntM99svq2tEIi1RjrbFrXH2wXPWe1qkrnxB/nlnonzQk4c+lynfC4BnDkKb45/WzS/dM
-         nTxQ==
+        d=ffwll.ch; s=google; t=1679072349;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jbbDQn1A8vthNnznohW7ycJC/LEOJ/kpAS8HmP79G5g=;
+        b=HosbYxwVB7RIW33gKBDWMmwLOhKGvlQ3pOlPd4hpefavfzJ1clj7h2TS2GbVSRi3uv
+         5eWdDD6HNSDbE1q2T4S66Is7Y7mDSLwPSefJVSNMny17IkWwzWxqqNJuXHfrwDMCP0Lf
+         Er08wiZ2p6fHKOKrldHeWmqSXww/CV7Ehyx2U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679040041;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4axSodYm7h/BNJm0GjFw3QPyJy3MjTh4/w9gm29itNs=;
-        b=jtGyRzTel8+W/dNNuh2YidSalTr2Js7rN0uTiO5nKn4b+1dHC+XGC/RuekmGnC9x9X
-         xqTb9dlX6NPhy1yjqvgl/1dnQ66nzXSmMCVA8yIJHVFzbl8px073ZXSz73iRMxMlfwFw
-         7im11Yt3wCISDZDtqvHhYo8IquTZml6Zx+eag63URqUxH57ncghjqg1ecjFrZxNTCs7q
-         fmxFIMs0UNngksh3+9ccbJhdMFhvEUW9Qva/X0Cw6gL7xSHxxTc/CVA0lrS3uahIpbaE
-         8kRhiwB5GOKYts7LFV80gXG//OqqaSAn66FNDnKFGZuZk9QuqfCQds/soFB2vqA241XP
-         5p7A==
-X-Gm-Message-State: AO0yUKVGFYHEaQjTznGkBX4POnSPnYXTxeIZ5gz+DvMZd982O87i3eVt
-	fJuH04zOYEdZM1RTYSl1v3A=
-X-Google-Smtp-Source: AK7set9idfKEqSGsgoRA/rnz8q66k0EBzjhwQ6SP+vXw7pPC5h+sM/sKFKJ5l21t8O4eu3wRNw4c5A==
-X-Received: by 2002:a17:90b:180e:b0:233:f394:d83 with SMTP id lw14-20020a17090b180e00b00233f3940d83mr6532920pjb.48.1679040040917;
-        Fri, 17 Mar 2023 01:00:40 -0700 (PDT)
-Received: from [192.168.43.80] (subs02-180-214-232-2.three.co.id. [180.214.232.2])
-        by smtp.gmail.com with ESMTPSA id e13-20020a17090ab38d00b00230b572e90csm802922pjr.35.2023.03.17.01.00.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Mar 2023 01:00:40 -0700 (PDT)
-Message-ID: <4822168e-85a5-e507-9429-21d9a222406c@gmail.com>
-Date: Fri, 17 Mar 2023 15:00:35 +0700
+        d=1e100.net; s=20210112; t=1679072349;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jbbDQn1A8vthNnznohW7ycJC/LEOJ/kpAS8HmP79G5g=;
+        b=HcxGHqfe99uri+a+g8pHb/XMQXPLV3XDZpsKQh7TZp+mCDql7PfhJ//YlZAhj4WP54
+         Ednbw0At778z9zXRvZkyz0NzjJwbci+t622JftBBDgP2KZEmB2/NC4vcPIm25sxyxEse
+         Ledh6HnLOKAvzTJhyObisru4UjXBsqwoUJEcFmZyg1me/VlkncH4OaZbMHOggoIPWjZC
+         MBH0evB3UgZXBkucx3/aMwSvIGgAR1CYEYERzILCwT9ZJPkePpHOBvEPdg+4FmUBcuLS
+         7VkMqwBkWl5QcJLBOcuoBIO4Hp2fShmdBDtR2r056Au5oadV5AMFWeMTZh3BUHjT2pvy
+         K4gQ==
+X-Gm-Message-State: AO0yUKVRQawVzyCqjDcUzzzTj9NfxWIkNMVDk6IKosKWpGqAgTd9CNfJ
+	feZZo2orjIPY0G+B8MZeDuXYiP7Uwhz0LKpeUngiWQ==
+X-Google-Smtp-Source: AK7set+L2zleSfw5fVN0Oec1LbJ1X8C6NBaaRrjgnvp15TLcoL2wN9zgbF7gOISJ1rJb3tqW4k+GpBrcUV+ZbvYwyes=
+X-Received: by 2002:a05:6808:b30:b0:386:bc3c:408b with SMTP id
+ t16-20020a0568080b3000b00386bc3c408bmr1917639oij.8.1679072349591; Fri, 17 Mar
+ 2023 09:59:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 1/2] docs: process: allow Closes tags with links
-Content-Language: en-US
-To: Matthieu Baerts <matthieu.baerts@tessares.net>,
- Jonathan Corbet <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>,
- Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- =?UTF-8?Q?Kai_Wasserb=c3=a4ch?= <kai@dev.carbon-project.org>,
- Thorsten Leemhuis <linux@leemhuis.info>,
- Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
 References: <20230314-doc-checkpatch-closes-tag-v1-0-1b83072e9a9a@tessares.net>
- <20230314-doc-checkpatch-closes-tag-v1-1-1b83072e9a9a@tessares.net>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <20230314-doc-checkpatch-closes-tag-v1-1-1b83072e9a9a@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <c27709bd-90af-ec4f-de0b-3a4536bc17ca@leemhuis.info> <81f8be3e-4860-baf9-8e13-fec3a103245b@tessares.net>
+ <CAHk-=wh0v1EeDV3v8TzK81nDC40=XuTdY2MCr0xy3m3FiBV3+Q@mail.gmail.com>
+In-Reply-To: <CAHk-=wh0v1EeDV3v8TzK81nDC40=XuTdY2MCr0xy3m3FiBV3+Q@mail.gmail.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Date: Fri, 17 Mar 2023 17:58:58 +0100
+Message-ID: <CAKMK7uESvC-zgGJEup1OAmf34Rk8s5cCrSBYUNP_REFUuer1-w@mail.gmail.com>
+Subject: Re: [PATCH 0/2] docs & checkpatch: allow Closes tags with links
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, Thorsten Leemhuis <linux@leemhuis.info>, 
+	Jonathan Corbet <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
+	=?UTF-8?Q?Kai_Wasserb=C3=A4ch?= <kai@dev.carbon-project.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>, 
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/16/23 00:44, Matthieu Baerts wrote:
-> +In the same category as linking web pages, a special tag is also used to close
-> +issues but only when the mentioned ticketing system can do this operation
-> +automatically::
-> +
-> +        Closes: https://example.com/issues/1234
-> +
-> +Please use this 'Closes:' tag only if it helps managing issues thanks to
-> +automations. If not, pick the 'Link:' one.
-> +
+On Thu, 16 Mar 2023 at 18:30, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Thu, Mar 16, 2023 at 4:43=E2=80=AFAM Matthieu Baerts
+> <matthieu.baerts@tessares.net> wrote:
+> >
+> > @Linus: in short, we would like to continue using the "Closes:" tag (or
+> > similar, see below) with a URL in commit messages. They are useful to
+> > have public bug trackers doing automated actions like closing a specifi=
+c
+> > ticket. Any objection from your side?
+>
+> As long as it's a public link, I guess that just documents what the
+> drm people have been doing.
+>
+> I'm not convinced "Closes" is actually any better than just "Link:",
+> though. I would very much hope and expect that the actual closing of
+> any bug report is actually done separately and verified, rather than
+> some kind of automated "well, the commit says it closes it, so.."
+>
+> So honestly, I feel like "Link:" is just a better thing, and I worry
+> that "Closes:" is then going to be used for random internal crap.
+> We've very much seen people wanting to do that - having their own
+> private bug trackers, and then using the commit message to refer to
+> them, which I am *violently* against. If it's only useful to some
+> closed community, it shouldn't be in the public commits.
 
-What about:
+Yeah I think that's fine. The bot can then autogenerate a request in
+the bug report to confirm that it's fixed, and ask the reporter to
+close in that case. And then maybe if there's no message a few weeks
+after the release, auto-close or something.
 
-```
-Similarly, there is also "Closes:" tag that can be used to close issues when
-the underlying tracker can do this operation automatically. For example::
+Bot needs to make sure it's only parsing tags for the instance it's
+botting for anyway, so overloading Link: with all the meanings
+(absolutely all themeanings!) is not really a problem since Closes:
+has the same issue if different subsystems use it for different bug
+tracking needs.
 
-    Closes: <issue link>
+> And while the current GPU people seem to use "Closes:" the right way
+> (and maybe some other groups do too - but it does seem to be mostly a
+> freedesktop thing), I really think it is amenable to mis-use in ways
+> "Link:" is not.
 
-For other trackers keep using "Link:" tag instead.
-```
-?
+Huh I didn't realize this picked up. Way back we used Bugzilla: for
+this sometimes, but I think just using Link: for everything and
+letting instance-specific bots figure out whether it's relevant for
+them should be perfectly fine. Humans should have no problem parsing
+meaning out of a tag soup anyway (I mean we have Cc: stable meaning
+backport after all, and I think that address is a blackhole).
 
-> +Note that it might be interesting to use the 'Closes:' tag instead of 'Link:'
-> +if the URL points to an issue from public bug tracker that can automatically
-> +close tickets when such patches containing this tag is accepted upstream. For
-> +example::
-> +
-> +    Closes: https://example.com/issues/1234
-> +
+I guess if you feel strongly we can percolate this a bit to
+submaintainers and contributors in drm.
+-Daniel
 
-This one LGTM.
+> The point of "Link:" is explicitly two-fold:
+>
+>  - it makes it quite obvious that you expect an actual valid web-link,
+> not some internal garbage
+>
+>  - random people always want random extensions, and "Link:" is
+> _designed_ to counter-act that creeping "let's add a random new tag"
+> disease. It's very explicitly "any relevant link".
+>
+> and I really question the value of adding new types of tags,
+> particularly ones that seem almost designed to be mis-used.
+>
+> So I'm not violently against it, and 99% of the existing uses seem
+> fine. But I do note that some of the early "Closes:" tags in the
+> kernel were very much complete garbage, and exactly the kind of thing
+> that I absolutely detest.
+>
+> What does
+>
+>     Closes: 10437
+>
+> mean? That's crazy talk. (And yes, in that case it was a
+> kernel.bugzilla.org number, which is perfectly fine, but I'm using it
+> as a very real example of how "Closes:" ends up being very naturally
+> to mis-use).
+>
+> End result: I don't hate our current "Closes:" uses. But I'm very wary of=
+ it.
+>
+> I'm not at all convinced that it really adds a lot of value over
+> "Link:", and I am, _very_ aware of how easily it can be then taken to
+> be a "let's use our own bug tracker cookies here".
+>
+> So I will neither endorse nor condemn it, but if I see people using it
+> wrong, I will absolutely put my foot down.
+>
+>                     Linus
 
-Thanks.
 
--- 
-An old man doll... just what I always wanted! - Clara
 
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
