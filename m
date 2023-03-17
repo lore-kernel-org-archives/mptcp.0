@@ -1,45 +1,45 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083E57475
-	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 17:59:06 +0000 (UTC)
-Received: by mail-ed1-f48.google.com with SMTP id x3so23468949edb.10
-        for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 10:59:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176DE36A
+	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 18:41:06 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id h8so23913583ede.8
+        for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 11:41:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1679075945;
+        d=tessares.net; s=google; t=1679078465;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=CURlZjlwXFBYnr22NG5seE+9tLCX5eL5DZHpPYvttPk=;
-        b=qmd/CN745cn4LhYQ0lO3SPLXta/uEBfAThJzBEAkvsTEC/C34wzUXzWWUv+9dsm/zr
-         q9x2rvwcf3i5UNSPeN2y9fLIj5gYH7vFYZS1W/6/srnbeli5xE2qKoykOOyKPTp8RdeP
-         CPgHX03iN8JwjbB6jQOrm3urlHiwOZe/LviSJQu/pRN0iS49rgxTM+crr0pVRn3JX3Zk
-         /ktK8GX4O0GjpF0YIRNDg5dUNBFCZHwz74AXHEDh04gO+aHAhaWaM+1Yu3fHMqORkMD3
-         Q4bJBdy4CRe1CkthMTtX08AsZQKATwFJck0WVYNpxRsw4AowMfBGKcEYEc7NdZ+vrfqd
-         l6yg==
+        bh=qLt5F1/Ugauyf5shEntzjWUG+KhzEEAAsNAk/6CtFTE=;
+        b=lcoDKNmu1EfwcWHjdgwtVGLMa25SD/WC8VLwf7alwUeGfLq6eshSCJ22WOuJDtfOzb
+         6/69b0NxZlClU5YgYlWRL8KpAmwIWQOSw0civfngs2yfIhF6JLwFMe4Seg9TFyZh9GrZ
+         ytK+xvIOsMaQMd0BDqriHu/ELLUBiM0R0xAE1a2wv1u2LtV43klnMANaaqS68vU0nD2f
+         /oh9MQFTDdOXS+q+z69HiGaIdllndDY+7zS54Xou9egCnSJjupfgWj3u+aX8dQhHyUNi
+         Odh6bYxbmS79lr3QcCbLkCRU0JcC9lu5c0Z0hbPYrIEVRyRPEuJ6YtlAIkalOl8gNkdz
+         75gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679075945;
+        d=1e100.net; s=20210112; t=1679078465;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CURlZjlwXFBYnr22NG5seE+9tLCX5eL5DZHpPYvttPk=;
-        b=EsN2VohD3vNv1WuCzY/1CDQ0EBBtKI+TvIegOFPGYL8Tcvx2HQJdY4ILGnp75gizHP
-         1HA2LLr3jL4BSB6a5rdfkWdtoV38DV0PbVi541gNGxbE3IxYbiJ+GGkF8IYiF2qsEsvv
-         Xh83GHhjYgLrX38plNNLW58hXR1BROsAu/wTGLhYsxDmfwpdF80D3ZxOI+Hc8ijMWFJ0
-         A6yDKVu7f6DQQYGvpWN3NIC34Gkjap0Qw07i0RTNf36d7k5J3plgCBPel3dYwDIZwPYo
-         twRAjaBVlr1Ii653VFjPHTTIgKAXkckWmvvOp9k56aUfh46SDMj0RBFb7VLXlYEfJeEq
-         R1sQ==
-X-Gm-Message-State: AO0yUKUv08mTmWiONUejufcjAJg7xqkxx1QDAQ56Fdl/noHBN6QvmHbZ
-	iN7fRzzVpn38nBnp+p663hkTbA==
-X-Google-Smtp-Source: AK7set9OAo5PzMdo/PUAVySCz6yI6OKUJS97VHyaHKf5oJmmwavA29dc1XCBRfhMw1OvbJT5TF2n5Q==
-X-Received: by 2002:a05:6402:2143:b0:4fd:29a1:6a58 with SMTP id bq3-20020a056402214300b004fd29a16a58mr4077018edb.19.1679075944990;
-        Fri, 17 Mar 2023 10:59:04 -0700 (PDT)
+        bh=qLt5F1/Ugauyf5shEntzjWUG+KhzEEAAsNAk/6CtFTE=;
+        b=Nw972vGNybMR92VY54iEBIjde886YzGAlbu/qi25lqjL08oxGvRtjN+ZZsO2Jy5xIq
+         Ns7OsBjEAe6Wnkr72MrEwKY572VsHRLihjOeLyJbk/g8xUkVO0Tvv0bua5Yxdpag+RYx
+         DcN8NgrXokieIZni1YHk7Rd/lBsxC2C8CZ3bZJF8A4Rx4/Fy3TlyfeulSAYw4vDotYpJ
+         tnjK3Tz9QWJjwdzn3hdZPHDXrUxat20aIGvX+qhkBHNkhryZNPhidqSGfSWyg9x6krAd
+         MkQr0s7bKADYPk+/112MTsRZZx5YAlm+O1dKTJa/wDCjAqiLf5f2g43g5T2XLn9raIo+
+         Sp4A==
+X-Gm-Message-State: AO0yUKXDLJD5Qy0csvMVxQbRR9XQecTuv9xWwe9BYReWL1VkefA6xbPK
+	qw2VRocc7xQHEFeN/GepjOCxFg==
+X-Google-Smtp-Source: AK7set9zmfshHjflDBnfziFdWGSSG/cPG5ezsYRMkRCGB0k0XRTVRYAcMr0jg//ExGnmLG9ZrZDnQw==
+X-Received: by 2002:a17:906:d8d6:b0:886:ec6e:4c1 with SMTP id re22-20020a170906d8d600b00886ec6e04c1mr400460ejb.59.1679078464904;
+        Fri, 17 Mar 2023 11:41:04 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id q30-20020a50aa9e000000b004fadc041e13sm1382394edc.42.2023.03.17.10.59.04
+        by smtp.gmail.com with ESMTPSA id v2-20020a170906292200b009321cd80e15sm883836ejd.73.2023.03.17.11.41.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Mar 2023 10:59:04 -0700 (PDT)
-Message-ID: <618e9ca8-29fd-abf2-9f0b-eca253b6d2f4@tessares.net>
-Date: Fri, 17 Mar 2023 18:59:04 +0100
+        Fri, 17 Mar 2023 11:41:04 -0700 (PDT)
+Message-ID: <7974f3ec-3f17-c21c-139b-fd5651871a75@tessares.net>
+Date: Fri, 17 Mar 2023 19:41:04 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,88 +48,136 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH net-next 09/10] mptcp: preserve const qualifier in
- mptcp_sk()
+Subject: Re: [PATCH 0/2] docs & checkpatch: allow Closes tags with links
 Content-Language: en-GB
-To: Eric Dumazet <edumazet@google.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- David Ahern <dsahern@kernel.org>, Simon Horman <simon.horman@corigine.com>,
- Willem de Bruijn <willemb@google.com>, eric.dumazet@gmail.com,
- MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20230317155539.2552954-1-edumazet@google.com>
- <20230317155539.2552954-10-edumazet@google.com>
- <b9b3e7a2-788b-13ca-91a6-3017c8afbbf4@tessares.net>
- <CANn89i+xOmDmD2=1EQF0U5F5+GQb_HfAWmQD=1FP+6L=qK-E5w@mail.gmail.com>
+To: Daniel Vetter <daniel@ffwll.ch>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>, Jonathan Corbet
+ <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>,
+ Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+ =?UTF-8?Q?Kai_Wasserb=c3=a4ch?= <kai@dev.carbon-project.org>,
+ Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
+References: <20230314-doc-checkpatch-closes-tag-v1-0-1b83072e9a9a@tessares.net>
+ <c27709bd-90af-ec4f-de0b-3a4536bc17ca@leemhuis.info>
+ <81f8be3e-4860-baf9-8e13-fec3a103245b@tessares.net>
+ <CAHk-=wh0v1EeDV3v8TzK81nDC40=XuTdY2MCr0xy3m3FiBV3+Q@mail.gmail.com>
+ <CAKMK7uESvC-zgGJEup1OAmf34Rk8s5cCrSBYUNP_REFUuer1-w@mail.gmail.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <CANn89i+xOmDmD2=1EQF0U5F5+GQb_HfAWmQD=1FP+6L=qK-E5w@mail.gmail.com>
+In-Reply-To: <CAKMK7uESvC-zgGJEup1OAmf34Rk8s5cCrSBYUNP_REFUuer1-w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Eric,
+Hi Linus, Daniel, Konstantin,
 
-Thank you for your quick reply!
+@Linus, Daniel: Thank you both for your replies!
 
-On 17/03/2023 18:47, Eric Dumazet wrote:
-> On Fri, Mar 17, 2023 at 10:32 AM Matthieu Baerts
-> <matthieu.baerts@tessares.net> wrote:
->> On 17/03/2023 16:55, Eric Dumazet wrote:
+@Konstantin: I have one question for you at the end of this email if you
+don't mind.
+
+On 17/03/2023 17:58, Daniel Vetter wrote:
+> On Thu, 16 Mar 2023 at 18:30, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
 >>
->> (...)
->>
->>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->>> index 61fd8eabfca2028680e04558b4baca9f48bbaaaa..4ed8ffffb1ca473179217e640a23bc268742628d 100644
->>> --- a/net/mptcp/protocol.h
->>> +++ b/net/mptcp/protocol.h
->>
->> (...)
->>
->>> @@ -381,7 +378,7 @@ static inline struct mptcp_data_frag *mptcp_pending_tail(const struct sock *sk)
->>>       return list_last_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
->>>  }
+>> On Thu, Mar 16, 2023 at 4:43 AM Matthieu Baerts
+>> <matthieu.baerts@tessares.net> wrote:
 >>>
->>> -static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
->>> +static inline struct mptcp_data_frag *mptcp_rtx_head(struct sock *sk)
+>>> @Linus: in short, we would like to continue using the "Closes:" tag (or
+>>> similar, see below) with a URL in commit messages. They are useful to
+>>> have public bug trackers doing automated actions like closing a specific
+>>> ticket. Any objection from your side?
 >>
->> It was not clear to me why you had to remove the "const" qualifier here
->> and not just have to add one when assigning the msk just below. But then
->> I looked at what was behind the list_first_entry_or_null() macro used in
->> this function and understood what was the issue.
+>> As long as it's a public link, I guess that just documents what the
+>> drm people have been doing.
 >>
+>> I'm not convinced "Closes" is actually any better than just "Link:",
+>> though. I would very much hope and expect that the actual closing of
+>> any bug report is actually done separately and verified, rather than
+>> some kind of automated "well, the commit says it closes it, so.."
 >>
->> My naive approach would be to modify this macro but I guess we don't
->> want to go down that road, right?
->>
->> -------------------- 8< --------------------
->> diff --git a/include/linux/list.h b/include/linux/list.h
->> index f10344dbad4d..cd770766f451 100644
->> --- a/include/linux/list.h
->> +++ b/include/linux/list.h
->> @@ -550,7 +550,7 @@ static inline void list_splice_tail_init(struct
->> list_head *list,
->>   * Note that if the list is empty, it returns NULL.
->>   */
->>  #define list_first_entry_or_null(ptr, type, member) ({ \
->> -       struct list_head *head__ = (ptr); \
->> +       const struct list_head *head__ = (ptr); \
->>         struct list_head *pos__ = READ_ONCE(head__->next); \
->>         pos__ != head__ ? list_entry(pos__, type, member) : NULL; \
->>  })
->> -------------------- 8< --------------------
+>> So honestly, I feel like "Link:" is just a better thing, and I worry
+>> that "Closes:" is then going to be used for random internal crap.
+>> We've very much seen people wanting to do that - having their own
+>> private bug trackers, and then using the commit message to refer to
+>> them, which I am *violently* against. If it's only useful to some
+>> closed community, it shouldn't be in the public commits.
 > 
-> This could work, but it is a bit awkward.
+> Yeah I think that's fine. The bot can then autogenerate a request in
+> the bug report to confirm that it's fixed, and ask the reporter to
+> close in that case. And then maybe if there's no message a few weeks
+> after the release, auto-close or something.
+
+That would be a nice behaviour indeed. That's just a shame it means we
+cannot use the default behaviour of these bug trackers and we need a
+dedicated bot instead. I don't know what's the behaviour with GitLab and
+other bug trackers but with GitHub, when a commit is seen in a public
+repo with a "Link:" tag pointing to an issue, a "special" comment is
+added to the bug report but no notifications are sent. So if we don't
+implement the bot you described, we will still have to do the tracking
+manually.
+
+I understand we can see that as an issue with the existing service but
+it also means we cannot use their build-in automations.
+
+Maybe it means we have to switch to Bugzilla and wait for the new bot :)
+(but no, I don't want to add pressure on Konstantin ;) )
+
+
+> Bot needs to make sure it's only parsing tags for the instance it's
+> botting for anyway, so overloading Link: with all the meanings
+> (absolutely all themeanings!) is not really a problem since Closes:
+> has the same issue if different subsystems use it for different bug
+> tracking needs.
+
+Here, "Closes:" would be used exclusively with a URL to a specific bug
+report, not just "Closes: #1234". Would this not work if different
+subsystems use it?
+
+An extra check could be added to checkpatch.pl to display a warning if
+this "Closes:" tag is not used with a URL.
+
+In the case of GitHub -- and GitLab if I'm not mistaken -- there are
+some safeguards: the closure is only done if a commit having the
+"Closes:" tag to the bug report is applied into a specific branch. In
+other words, if someone applies the same patch elsewhere, the bug report
+will not be closed automatically. Also in case of closure, a
+notification is also sent and the bug report can be re-opened if
+something wrong happened.
+
+>> And while the current GPU people seem to use "Closes:" the right way
+>> (and maybe some other groups do too - but it does seem to be mostly a
+>> freedesktop thing), I really think it is amenable to mis-use in ways
+>> "Link:" is not.
 > 
-> mptcp_rtx_head() is used  in a context where we are changing the
-> socket, not during a readonly lookup ?
+> Huh I didn't realize this picked up. Way back we used Bugzilla: for
+> this sometimes, but I think just using Link: for everything and
+> letting instance-specific bots figure out whether it's relevant for
+> them should be perfectly fine. Humans should have no problem parsing
+> meaning out of a tag soup anyway (I mean we have Cc: stable meaning
+> backport after all, and I think that address is a blackhole).
+> 
+> I guess if you feel strongly we can percolate this a bit to
+> submaintainers and contributors in drm.
 
-Indeed, you are right. It is currently only used in a context where we
-are changing the socket.
+I understand the risks of being misused by some and I guess the main
+point here is that we want to avoid exceptions.
 
-I can see cases where a new packets scheduler might just need to check
-if the rtx queue is empty but then we should probably add a new helper
-using list_empty() instead.
+On our side with MPTCP, if we can definitively no longer use the
+"Closes:" tag, we will find alternatives. Probably by rewriting patches
+containing them before sending patches to netdev. This way we can
+continue to use the feature internally and when sent upstream, the
+commits will contain Fixes tag instead :)
 
-So yes, no need to change anything!
+
+So correct me if I'm wrong but the conclusion is then to stop using the
+"Closes:" tag to avoid misuses. In this case, we can of course drop this
+series.
+
+@Konstantin: would it be OK for your future Bugzilla bot to deal with
+the generic "Link:" tag instead of the specific "Closes:" one?
 
 Cheers,
 Matt
