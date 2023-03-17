@@ -1,186 +1,95 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176DE36A
-	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 18:41:06 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id h8so23913583ede.8
-        for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 11:41:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25DE36A
+	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 18:56:40 +0000 (UTC)
+Received: by mail-qt1-f177.google.com with SMTP id i24so6718797qtm.6
+        for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 11:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1679078465;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qLt5F1/Ugauyf5shEntzjWUG+KhzEEAAsNAk/6CtFTE=;
-        b=lcoDKNmu1EfwcWHjdgwtVGLMa25SD/WC8VLwf7alwUeGfLq6eshSCJ22WOuJDtfOzb
-         6/69b0NxZlClU5YgYlWRL8KpAmwIWQOSw0civfngs2yfIhF6JLwFMe4Seg9TFyZh9GrZ
-         ytK+xvIOsMaQMd0BDqriHu/ELLUBiM0R0xAE1a2wv1u2LtV43klnMANaaqS68vU0nD2f
-         /oh9MQFTDdOXS+q+z69HiGaIdllndDY+7zS54Xou9egCnSJjupfgWj3u+aX8dQhHyUNi
-         Odh6bYxbmS79lr3QcCbLkCRU0JcC9lu5c0Z0hbPYrIEVRyRPEuJ6YtlAIkalOl8gNkdz
-         75gA==
+        d=linuxfoundation.org; s=google; t=1679079399;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PTdUlyOfdt8if93QsQQjrsJH2A0sNNFk09AT9iR57Ws=;
+        b=EFi3o0HArF7UU3RivOVQRrRlFW6IQCaBsnCtxNHNCGuutqLAXEx8v31+MZ2nNQY+Tg
+         FaeF8G47moLnzYjlgYcpsL4zHbS1+XqXmfiOuBODfSQ1uVBlTkeJFAHKAxsFaubZmE5x
+         Zipjfqwm3/dJi7P5ugUcx1BfyqT8Caou44eRI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679078465;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qLt5F1/Ugauyf5shEntzjWUG+KhzEEAAsNAk/6CtFTE=;
-        b=Nw972vGNybMR92VY54iEBIjde886YzGAlbu/qi25lqjL08oxGvRtjN+ZZsO2Jy5xIq
-         Ns7OsBjEAe6Wnkr72MrEwKY572VsHRLihjOeLyJbk/g8xUkVO0Tvv0bua5Yxdpag+RYx
-         DcN8NgrXokieIZni1YHk7Rd/lBsxC2C8CZ3bZJF8A4Rx4/Fy3TlyfeulSAYw4vDotYpJ
-         tnjK3Tz9QWJjwdzn3hdZPHDXrUxat20aIGvX+qhkBHNkhryZNPhidqSGfSWyg9x6krAd
-         MkQr0s7bKADYPk+/112MTsRZZx5YAlm+O1dKTJa/wDCjAqiLf5f2g43g5T2XLn9raIo+
-         Sp4A==
-X-Gm-Message-State: AO0yUKXDLJD5Qy0csvMVxQbRR9XQecTuv9xWwe9BYReWL1VkefA6xbPK
-	qw2VRocc7xQHEFeN/GepjOCxFg==
-X-Google-Smtp-Source: AK7set9zmfshHjflDBnfziFdWGSSG/cPG5ezsYRMkRCGB0k0XRTVRYAcMr0jg//ExGnmLG9ZrZDnQw==
-X-Received: by 2002:a17:906:d8d6:b0:886:ec6e:4c1 with SMTP id re22-20020a170906d8d600b00886ec6e04c1mr400460ejb.59.1679078464904;
-        Fri, 17 Mar 2023 11:41:04 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id v2-20020a170906292200b009321cd80e15sm883836ejd.73.2023.03.17.11.41.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Mar 2023 11:41:04 -0700 (PDT)
-Message-ID: <7974f3ec-3f17-c21c-139b-fd5651871a75@tessares.net>
-Date: Fri, 17 Mar 2023 19:41:04 +0100
+        d=1e100.net; s=20210112; t=1679079399;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PTdUlyOfdt8if93QsQQjrsJH2A0sNNFk09AT9iR57Ws=;
+        b=pa96uXKKJxEgfgWP5uXAZgRCwPVy+28RnPYpHt/F15XyfoWYDp6m5uI5w8qiJKNZ0M
+         M5hmVXRVdeGIJP2s18g7aVFn0It1TGwBdJ8IQPrhWRdyewBXJLrat5N+QuKJwzDLkne6
+         4slwIbfPzWIGRIN3uQSTJgzphMoVTfo59agkgRZvrLomJptzm5CgHfOUnbXt2WDFNXRI
+         CWHEeL2NyNeQMmYkDof/qkkY9WEXkOrPX114TM3BLhtd02u90okdRJM9S5gL9JILoceW
+         K84FR441rxemZCdOv2c2+pW+ek0ucvtZOe8acsXIhJG8oEgzyVhRoQR6NGL5uicT7X9u
+         6Kvw==
+X-Gm-Message-State: AO0yUKUpV8OwCMRlrTjUCMnPqxh1y/RAUECpT5+lsbi1hpIBCSbmZDl5
+	NZFwWWSusoGDyJ5DzGVzv+jE0Q==
+X-Google-Smtp-Source: AK7set9jipsIbDPeQ8GoSgJyYG70m2o786TV4vW4nF1NZSCv49CfSTMV5e2Aa66Gvx3kXmdFh0Da1Q==
+X-Received: by 2002:a05:622a:1394:b0:3bf:b896:ff63 with SMTP id o20-20020a05622a139400b003bfb896ff63mr14593551qtk.52.1679079399521;
+        Fri, 17 Mar 2023 11:56:39 -0700 (PDT)
+Received: from meerkat.local (bras-base-mtrlpq5031w-grc-30-209-226-106-7.dsl.bell.ca. [209.226.106.7])
+        by smtp.gmail.com with ESMTPSA id r142-20020a37a894000000b00706c1f7a608sm2156724qke.89.2023.03.17.11.56.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Mar 2023 11:56:39 -0700 (PDT)
+Date: Fri, 17 Mar 2023 14:56:37 -0400
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: Daniel Vetter <daniel@ffwll.ch>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Kai =?utf-8?Q?Wasserb=C3=A4ch?= <kai@dev.carbon-project.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Airlie <airlied@gmail.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	mptcp@lists.linux.dev
+Subject: Re: [PATCH 0/2] docs & checkpatch: allow Closes tags with links
+Message-ID: <20230317185637.ebxzsdxivhgzkqqw@meerkat.local>
+References: <20230314-doc-checkpatch-closes-tag-v1-0-1b83072e9a9a@tessares.net>
+ <c27709bd-90af-ec4f-de0b-3a4536bc17ca@leemhuis.info>
+ <81f8be3e-4860-baf9-8e13-fec3a103245b@tessares.net>
+ <CAHk-=wh0v1EeDV3v8TzK81nDC40=XuTdY2MCr0xy3m3FiBV3+Q@mail.gmail.com>
+ <CAKMK7uESvC-zgGJEup1OAmf34Rk8s5cCrSBYUNP_REFUuer1-w@mail.gmail.com>
+ <7974f3ec-3f17-c21c-139b-fd5651871a75@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 0/2] docs & checkpatch: allow Closes tags with links
-Content-Language: en-GB
-To: Daniel Vetter <daniel@ffwll.ch>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, Jonathan Corbet
- <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>,
- Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- =?UTF-8?Q?Kai_Wasserb=c3=a4ch?= <kai@dev.carbon-project.org>,
- Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
-References: <20230314-doc-checkpatch-closes-tag-v1-0-1b83072e9a9a@tessares.net>
- <c27709bd-90af-ec4f-de0b-3a4536bc17ca@leemhuis.info>
- <81f8be3e-4860-baf9-8e13-fec3a103245b@tessares.net>
- <CAHk-=wh0v1EeDV3v8TzK81nDC40=XuTdY2MCr0xy3m3FiBV3+Q@mail.gmail.com>
- <CAKMK7uESvC-zgGJEup1OAmf34Rk8s5cCrSBYUNP_REFUuer1-w@mail.gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <CAKMK7uESvC-zgGJEup1OAmf34Rk8s5cCrSBYUNP_REFUuer1-w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <7974f3ec-3f17-c21c-139b-fd5651871a75@tessares.net>
 
-Hi Linus, Daniel, Konstantin,
+On Fri, Mar 17, 2023 at 07:41:04PM +0100, Matthieu Baerts wrote:
+> @Konstantin: would it be OK for your future Bugzilla bot to deal with
+> the generic "Link:" tag instead of the specific "Closes:" one?
 
-@Linus, Daniel: Thank you both for your replies!
+Yes and no -- we can easily figure out that "it's a bugzilla link and it
+points at this bug", but we can't make any decisions based on it. Just because
+it's a bug that is mentioned in a commit doesn't really mean that the bug is
+fixed and we should close it.
 
-@Konstantin: I have one question for you at the end of this email if you
-don't mind.
+E.g. it could be something like:
 
-On 17/03/2023 17:58, Daniel Vetter wrote:
-> On Thu, 16 Mar 2023 at 18:30, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->>
->> On Thu, Mar 16, 2023 at 4:43 AM Matthieu Baerts
->> <matthieu.baerts@tessares.net> wrote:
->>>
->>> @Linus: in short, we would like to continue using the "Closes:" tag (or
->>> similar, see below) with a URL in commit messages. They are useful to
->>> have public bug trackers doing automated actions like closing a specific
->>> ticket. Any objection from your side?
->>
->> As long as it's a public link, I guess that just documents what the
->> drm people have been doing.
->>
->> I'm not convinced "Closes" is actually any better than just "Link:",
->> though. I would very much hope and expect that the actual closing of
->> any bug report is actually done separately and verified, rather than
->> some kind of automated "well, the commit says it closes it, so.."
->>
->> So honestly, I feel like "Link:" is just a better thing, and I worry
->> that "Closes:" is then going to be used for random internal crap.
->> We've very much seen people wanting to do that - having their own
->> private bug trackers, and then using the commit message to refer to
->> them, which I am *violently* against. If it's only useful to some
->> closed community, it shouldn't be in the public commits.
-> 
-> Yeah I think that's fine. The bot can then autogenerate a request in
-> the bug report to confirm that it's fixed, and ask the reporter to
-> close in that case. And then maybe if there's no message a few weeks
-> after the release, auto-close or something.
+    foo: initial workaround for bar
 
-That would be a nice behaviour indeed. That's just a shame it means we
-cannot use the default behaviour of these bug trackers and we need a
-dedicated bot instead. I don't know what's the behaviour with GitLab and
-other bug trackers but with GitHub, when a commit is seen in a public
-repo with a "Link:" tag pointing to an issue, a "special" comment is
-added to the bug report but no notifications are sent. So if we don't
-implement the bot you described, we will still have to do the tracking
-manually.
+    This implements a workaround for problems with bar (see bug link below).
+    It's not a complete fix, so further work is required to address all issues
+    identified in the bug report.
 
-I understand we can see that as an issue with the existing service but
-it also means we cannot use their build-in automations.
+    Link: https://bugzilla.kernel.org/show_bug.cgi?id=5551212
 
-Maybe it means we have to switch to Bugzilla and wait for the new bot :)
-(but no, I don't want to add pressure on Konstantin ;) )
+It would be wrong here to auto-close this bug, but we can certainly add a new
+comment that says:
 
+    This bug was mentioned in commit abcd1234:
+    https://git.kernel.org/linus/abcd1234
 
-> Bot needs to make sure it's only parsing tags for the instance it's
-> botting for anyway, so overloading Link: with all the meanings
-> (absolutely all themeanings!) is not really a problem since Closes:
-> has the same issue if different subsystems use it for different bug
-> tracking needs.
-
-Here, "Closes:" would be used exclusively with a URL to a specific bug
-report, not just "Closes: #1234". Would this not work if different
-subsystems use it?
-
-An extra check could be added to checkpatch.pl to display a warning if
-this "Closes:" tag is not used with a URL.
-
-In the case of GitHub -- and GitLab if I'm not mistaken -- there are
-some safeguards: the closure is only done if a commit having the
-"Closes:" tag to the bug report is applied into a specific branch. In
-other words, if someone applies the same patch elsewhere, the bug report
-will not be closed automatically. Also in case of closure, a
-notification is also sent and the bug report can be re-opened if
-something wrong happened.
-
->> And while the current GPU people seem to use "Closes:" the right way
->> (and maybe some other groups do too - but it does seem to be mostly a
->> freedesktop thing), I really think it is amenable to mis-use in ways
->> "Link:" is not.
-> 
-> Huh I didn't realize this picked up. Way back we used Bugzilla: for
-> this sometimes, but I think just using Link: for everything and
-> letting instance-specific bots figure out whether it's relevant for
-> them should be perfectly fine. Humans should have no problem parsing
-> meaning out of a tag soup anyway (I mean we have Cc: stable meaning
-> backport after all, and I think that address is a blackhole).
-> 
-> I guess if you feel strongly we can percolate this a bit to
-> submaintainers and contributors in drm.
-
-I understand the risks of being misused by some and I guess the main
-point here is that we want to avoid exceptions.
-
-On our side with MPTCP, if we can definitively no longer use the
-"Closes:" tag, we will find alternatives. Probably by rewriting patches
-containing them before sending patches to netdev. This way we can
-continue to use the feature internally and when sent upstream, the
-commits will contain Fixes tag instead :)
-
-
-So correct me if I'm wrong but the conclusion is then to stop using the
-"Closes:" tag to avoid misuses. In this case, we can of course drop this
-series.
-
-@Konstantin: would it be OK for your future Bugzilla bot to deal with
-the generic "Link:" tag instead of the specific "Closes:" one?
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+-K
