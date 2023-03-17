@@ -1,158 +1,151 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B711E7475
-	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 16:59:10 +0000 (UTC)
-Received: by mail-oi1-f172.google.com with SMTP id bi17so4269570oib.3
-        for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 09:59:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AED7475
+	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 17:32:05 +0000 (UTC)
+Received: by mail-ed1-f50.google.com with SMTP id fd5so23233663edb.7
+        for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 10:32:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1679072349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jbbDQn1A8vthNnznohW7ycJC/LEOJ/kpAS8HmP79G5g=;
-        b=HosbYxwVB7RIW33gKBDWMmwLOhKGvlQ3pOlPd4hpefavfzJ1clj7h2TS2GbVSRi3uv
-         5eWdDD6HNSDbE1q2T4S66Is7Y7mDSLwPSefJVSNMny17IkWwzWxqqNJuXHfrwDMCP0Lf
-         Er08wiZ2p6fHKOKrldHeWmqSXww/CV7Ehyx2U=
+        d=tessares.net; s=google; t=1679074323;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EBQZtC+0eLGVRdevYQZTCzh9Pc2ZrfmWETKrta2FZlI=;
+        b=DGWApvCuqSnmrxlbunp6S4NSspRrHvVwXKGzPPeIEyEF+5t0ZJQJGZXtzNtrgMbo2o
+         4/D9LPJBAXryZ/r3HMix1Pc27X34y6WDqDDrsYcgAgeBrWz9xJI8sDtgQF6tO1KH9fd+
+         AlP8fyYtQ+wvhHI+GtG0tQqv7j7zqcRZb6nkM7Tuh6EbXLn4k9k0apTXEOFDyJibSeMf
+         LZ+e70+IYiTJPBnw32g39svpB6v4f3/ThjSfqjwKaeu8GEy2gVr0+dZO7pASNg3EMK2e
+         rWVBMeAIWUY9DJ9gxtCBQoPm7SFSHbHHBoJTrhpMr8tlpLqrDOnp/ptsevS9qULLX/fu
+         uw6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679072349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jbbDQn1A8vthNnznohW7ycJC/LEOJ/kpAS8HmP79G5g=;
-        b=HcxGHqfe99uri+a+g8pHb/XMQXPLV3XDZpsKQh7TZp+mCDql7PfhJ//YlZAhj4WP54
-         Ednbw0At778z9zXRvZkyz0NzjJwbci+t622JftBBDgP2KZEmB2/NC4vcPIm25sxyxEse
-         Ledh6HnLOKAvzTJhyObisru4UjXBsqwoUJEcFmZyg1me/VlkncH4OaZbMHOggoIPWjZC
-         MBH0evB3UgZXBkucx3/aMwSvIGgAR1CYEYERzILCwT9ZJPkePpHOBvEPdg+4FmUBcuLS
-         7VkMqwBkWl5QcJLBOcuoBIO4Hp2fShmdBDtR2r056Au5oadV5AMFWeMTZh3BUHjT2pvy
-         K4gQ==
-X-Gm-Message-State: AO0yUKVRQawVzyCqjDcUzzzTj9NfxWIkNMVDk6IKosKWpGqAgTd9CNfJ
-	feZZo2orjIPY0G+B8MZeDuXYiP7Uwhz0LKpeUngiWQ==
-X-Google-Smtp-Source: AK7set+L2zleSfw5fVN0Oec1LbJ1X8C6NBaaRrjgnvp15TLcoL2wN9zgbF7gOISJ1rJb3tqW4k+GpBrcUV+ZbvYwyes=
-X-Received: by 2002:a05:6808:b30:b0:386:bc3c:408b with SMTP id
- t16-20020a0568080b3000b00386bc3c408bmr1917639oij.8.1679072349591; Fri, 17 Mar
- 2023 09:59:09 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679074323;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EBQZtC+0eLGVRdevYQZTCzh9Pc2ZrfmWETKrta2FZlI=;
+        b=AOawKWbsQSu63kHXZlSScxBxIDpfeMK9EPCmJ77hFZRKThN3hN0g8jSmaFYNOwf08J
+         tAUBozTWj3jj0rLEaWItF93tliCoBQqlR9UuiUCWS+Iq+znbuDe+/s4DaU7C88EdHlmh
+         3mItB1T0Me6zqqVPElPhg3FO7ztV9o+aFwCYdAFcaVU8zHzsouiKsn4PpBlFqt+kXdYi
+         ljSxmwydOGPRHdrH0g1hS06cWbKGhJfUsS5865XwVjnRJC8CBujlCSFUqek7wnCmT67o
+         6z3nBeTtjgOjvk5vy7Cgg3IhBOMleTCHJ/wGxBUBf6kHO9nOHw/j3argH6kg7RWMtfIO
+         FK6Q==
+X-Gm-Message-State: AO0yUKVxLce9ea2HGR70w6i5V4QiR7c08gVBNjeDBawYJ9Bi32sOa+VE
+	BQFDvKNsJnFNv7sgIQkvBg+zxQ==
+X-Google-Smtp-Source: AK7set/Io+9nIBkV3nfTTlHpLyL63wJeICZLWQDgKoPp8r0nvwh2ySlASagnN9zUjuEW5ZPazOc3vQ==
+X-Received: by 2002:aa7:c948:0:b0:4ab:d1f4:4b88 with SMTP id h8-20020aa7c948000000b004abd1f44b88mr3306180edt.41.1679074323472;
+        Fri, 17 Mar 2023 10:32:03 -0700 (PDT)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id i23-20020a0564020f1700b00500383a202csm1347885eda.6.2023.03.17.10.32.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Mar 2023 10:32:03 -0700 (PDT)
+Message-ID: <b9b3e7a2-788b-13ca-91a6-3017c8afbbf4@tessares.net>
+Date: Fri, 17 Mar 2023 18:32:02 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230314-doc-checkpatch-closes-tag-v1-0-1b83072e9a9a@tessares.net>
- <c27709bd-90af-ec4f-de0b-3a4536bc17ca@leemhuis.info> <81f8be3e-4860-baf9-8e13-fec3a103245b@tessares.net>
- <CAHk-=wh0v1EeDV3v8TzK81nDC40=XuTdY2MCr0xy3m3FiBV3+Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wh0v1EeDV3v8TzK81nDC40=XuTdY2MCr0xy3m3FiBV3+Q@mail.gmail.com>
-From: Daniel Vetter <daniel@ffwll.ch>
-Date: Fri, 17 Mar 2023 17:58:58 +0100
-Message-ID: <CAKMK7uESvC-zgGJEup1OAmf34Rk8s5cCrSBYUNP_REFUuer1-w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] docs & checkpatch: allow Closes tags with links
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, Thorsten Leemhuis <linux@leemhuis.info>, 
-	Jonathan Corbet <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	=?UTF-8?Q?Kai_Wasserb=C3=A4ch?= <kai@dev.carbon-project.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>, 
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH net-next 09/10] mptcp: preserve const qualifier in
+ mptcp_sk()
+Content-Language: en-GB
+To: Eric Dumazet <edumazet@google.com>, "David S . Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, David Ahern <dsahern@kernel.org>,
+ Simon Horman <simon.horman@corigine.com>,
+ Willem de Bruijn <willemb@google.com>, eric.dumazet@gmail.com,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20230317155539.2552954-1-edumazet@google.com>
+ <20230317155539.2552954-10-edumazet@google.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20230317155539.2552954-10-edumazet@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 16 Mar 2023 at 18:30, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Thu, Mar 16, 2023 at 4:43=E2=80=AFAM Matthieu Baerts
-> <matthieu.baerts@tessares.net> wrote:
-> >
-> > @Linus: in short, we would like to continue using the "Closes:" tag (or
-> > similar, see below) with a URL in commit messages. They are useful to
-> > have public bug trackers doing automated actions like closing a specifi=
-c
-> > ticket. Any objection from your side?
->
-> As long as it's a public link, I guess that just documents what the
-> drm people have been doing.
->
-> I'm not convinced "Closes" is actually any better than just "Link:",
-> though. I would very much hope and expect that the actual closing of
-> any bug report is actually done separately and verified, rather than
-> some kind of automated "well, the commit says it closes it, so.."
->
-> So honestly, I feel like "Link:" is just a better thing, and I worry
-> that "Closes:" is then going to be used for random internal crap.
-> We've very much seen people wanting to do that - having their own
-> private bug trackers, and then using the commit message to refer to
-> them, which I am *violently* against. If it's only useful to some
-> closed community, it shouldn't be in the public commits.
+Hi Eric,
 
-Yeah I think that's fine. The bot can then autogenerate a request in
-the bug report to confirm that it's fixed, and ask the reporter to
-close in that case. And then maybe if there's no message a few weeks
-after the release, auto-close or something.
+On 17/03/2023 16:55, Eric Dumazet wrote:
+> We can change mptcp_sk() to propagate its argument const qualifier,
+> thanks to container_of_const().
+> 
+> We need to change few things to avoid build errors:
+> 
+> mptcp_set_datafin_timeout() and mptcp_rtx_head() have to accept
+> non-const sk pointers.
+> 
+> @msk local variable in mptcp_pending_tail() must be const.
+> 
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Bot needs to make sure it's only parsing tags for the instance it's
-botting for anyway, so overloading Link: with all the meanings
-(absolutely all themeanings!) is not really a problem since Closes:
-has the same issue if different subsystems use it for different bug
-tracking needs.
+Good idea!
 
-> And while the current GPU people seem to use "Closes:" the right way
-> (and maybe some other groups do too - but it does seem to be mostly a
-> freedesktop thing), I really think it is amenable to mis-use in ways
-> "Link:" is not.
+Thank you for this patch and for having Cced me.
 
-Huh I didn't realize this picked up. Way back we used Bugzilla: for
-this sometimes, but I think just using Link: for everything and
-letting instance-specific bots figure out whether it's relevant for
-them should be perfectly fine. Humans should have no problem parsing
-meaning out of a tag soup anyway (I mean we have Cc: stable meaning
-backport after all, and I think that address is a blackhole).
+It looks good to me. I just have one question below if you don't mind.
 
-I guess if you feel strongly we can percolate this a bit to
-submaintainers and contributors in drm.
--Daniel
+(...)
 
-> The point of "Link:" is explicitly two-fold:
->
->  - it makes it quite obvious that you expect an actual valid web-link,
-> not some internal garbage
->
->  - random people always want random extensions, and "Link:" is
-> _designed_ to counter-act that creeping "let's add a random new tag"
-> disease. It's very explicitly "any relevant link".
->
-> and I really question the value of adding new types of tags,
-> particularly ones that seem almost designed to be mis-used.
->
-> So I'm not violently against it, and 99% of the existing uses seem
-> fine. But I do note that some of the early "Closes:" tags in the
-> kernel were very much complete garbage, and exactly the kind of thing
-> that I absolutely detest.
->
-> What does
->
->     Closes: 10437
->
-> mean? That's crazy talk. (And yes, in that case it was a
-> kernel.bugzilla.org number, which is perfectly fine, but I'm using it
-> as a very real example of how "Closes:" ends up being very naturally
-> to mis-use).
->
-> End result: I don't hate our current "Closes:" uses. But I'm very wary of=
- it.
->
-> I'm not at all convinced that it really adds a lot of value over
-> "Link:", and I am, _very_ aware of how easily it can be then taken to
-> be a "let's use our own bug tracker cookies here".
->
-> So I will neither endorse nor condemn it, but if I see people using it
-> wrong, I will absolutely put my foot down.
->
->                     Linus
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 61fd8eabfca2028680e04558b4baca9f48bbaaaa..4ed8ffffb1ca473179217e640a23bc268742628d 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+
+(...)
+
+> @@ -381,7 +378,7 @@ static inline struct mptcp_data_frag *mptcp_pending_tail(const struct sock *sk)
+>  	return list_last_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
+>  }
+>  
+> -static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
+> +static inline struct mptcp_data_frag *mptcp_rtx_head(struct sock *sk)
+
+It was not clear to me why you had to remove the "const" qualifier here
+and not just have to add one when assigning the msk just below. But then
+I looked at what was behind the list_first_entry_or_null() macro used in
+this function and understood what was the issue.
 
 
+My naive approach would be to modify this macro but I guess we don't
+want to go down that road, right?
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+-------------------- 8< --------------------
+diff --git a/include/linux/list.h b/include/linux/list.h
+index f10344dbad4d..cd770766f451 100644
+--- a/include/linux/list.h
++++ b/include/linux/list.h
+@@ -550,7 +550,7 @@ static inline void list_splice_tail_init(struct
+list_head *list,
+  * Note that if the list is empty, it returns NULL.
+  */
+ #define list_first_entry_or_null(ptr, type, member) ({ \
+-       struct list_head *head__ = (ptr); \
++       const struct list_head *head__ = (ptr); \
+        struct list_head *pos__ = READ_ONCE(head__->next); \
+        pos__ != head__ ? list_entry(pos__, type, member) : NULL; \
+ })
+-------------------- 8< --------------------
+
+
+It looks safe to me to do that but I would not trust myself on a Friday
+evening :)
+(I'm sure I'm missing something, I'm sorry if it is completely wrong)
+
+Anyway if we cannot modify list_first_entry_or_null() one way or
+another, I'm fine with your modification!
+
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+
+Cheers,
+Matt
+
+>  {
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>  
+
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
