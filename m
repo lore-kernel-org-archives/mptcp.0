@@ -1,33 +1,48 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C55377
-	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 02:04:17 +0000 (UTC)
-Received: from canpemm500006.china.huawei.com (unknown [172.30.72.53])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Pd6PM1mX8z17LTm
-	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 09:44:23 +0800 (CST)
-Received: from [10.174.179.200] (10.174.179.200) by
- canpemm500006.china.huawei.com (7.192.105.130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Fri, 17 Mar 2023 09:47:22 +0800
-To: <mptcp@lists.linux.dev>
-From: "Ziyang Xuan (William)" <william.xuanziyang@huawei.com>
-Message-ID: <a51f88b7-bba9-69f6-547b-a909337fd07d@huawei.com>
-Date: Fri, 17 Mar 2023 09:47:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF66262D
+	for <mptcp@lists.linux.dev>; Fri, 17 Mar 2023 04:12:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10AF1C433D2;
+	Fri, 17 Mar 2023 04:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1679026327;
+	bh=v2zEYx2quVdWHyE4m+BHJg7VxqG48NX5bk+PdK53SKc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rTSWDI3mfJKKGhHTdkEc6wbjHhJWQdrojAI6fGLlVIBxOwZuxZ88Bxq+ezuuv4ggK
+	 Jg5tehC3W8eVEAqeXLgCOXp1J/eO7kRKt0t2vDtAhkqWRH9cu4Pn6LmbqL9vCdRQD2
+	 Qx0J7xash3y8rRx6b1VF0MeshXqX1QyAZW1r289UtrJyebpkQMToi5Ttkh5DOKWvTN
+	 y45+dK5DkApDUS3C4V+ZgBnQHmCeoIrTFPWKFnStlKUKVXGgRHKPSgfc00rfK+uW49
+	 y6GZ/2XtlgkGAPurMnSvWPAknf2A81DbYqqUdwe+bGcpKw5MBA/EoUhCp2+fnwju3j
+	 bHBIBlrOcKNmQ==
+Date: Thu, 16 Mar 2023 21:12:06 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Kristian
+ Overskeid <koverskeid@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] hsr: ratelimit only when errors are printed
+Message-ID: <20230316211206.1c01b585@kernel.org>
+In-Reply-To: <20230315-net-20230315-hsr_framereg-ratelimit-v1-1-61d2ef176d11@tessares.net>
+References: <20230315-net-20230315-hsr_framereg-ratelimit-v1-1-61d2ef176d11@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.200]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500006.china.huawei.com (7.192.105.130)
-X-CFilter-Loop: Reflected
 
-subscribe mptcp
+On Wed, 15 Mar 2023 21:25:17 +0100 Matthieu Baerts wrote:
+> Recently, when automatically merging -net and net-next in MPTCP devel
+> tree, our CI reported [1] a conflict in hsr, the same as the one
+> reported by Stephen in netdev [2].
+> 
+> When looking at the conflict, I noticed it is in fact the v1 [3] that
+> has been applied in -net and the v2 [4] in net-next. Maybe the v1 was
+> applied by accident.
+
+Ah, thank you! I didn't even notice that the version which went into 
+net was v1 :S
