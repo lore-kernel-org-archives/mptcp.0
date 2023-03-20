@@ -1,148 +1,158 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366F8184C
-	for <mptcp@lists.linux.dev>; Mon, 20 Mar 2023 11:39:34 +0000 (UTC)
-Received: by mail-wr1-f52.google.com with SMTP id y14so10021961wrq.4
-        for <mptcp@lists.linux.dev>; Mon, 20 Mar 2023 04:39:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A2D1FBF
+	for <mptcp@lists.linux.dev>; Mon, 20 Mar 2023 16:09:04 +0000 (UTC)
+Received: by mail-ed1-f52.google.com with SMTP id b20so15845976edd.1
+        for <mptcp@lists.linux.dev>; Mon, 20 Mar 2023 09:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679312372;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OJGyYxtb1bQ6xHbNSxXvNeSr75P0UPbtnSBwbgHFsG8=;
-        b=ZyBDUAn2rPwWGpRQOrRr3YeftHpm5s8T1Op2smHI3GFtv92uGs9VdS8q4JZ0ovp2Zd
-         SJLqBidWOlmXi1gvWtZlx5DKRe5YTi1YS4LUhbm3fuf77I3fnsZtCITT86V4RM/a6c+0
-         4R1+oLHuOB3pt+bf3O9NUOEA+gKfoG2Ac2FU0X2/0Aqrku/z42K0tpjgBhfCtMKzO3lc
-         oTCcIKj+12uhYYcJ+V+Vm1Wh98X3s9DE8MMu9SoDRtplo3bOzaKsB5gpF8K9irFKsAoN
-         i+aYbk0Bpn/55UEs3lElRwrhZ/2uiVlwmQZLR7/e2fzjkfNVUYjPSQKLcRbiUG11wrWb
-         TVKA==
+        d=tessares.net; s=google; t=1679328543;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Moer0UjNCxaN5LOpf3bM733HljpstT+YD80jPA/zdFg=;
+        b=iZ9nzm2ODUvvkIZrjm7n2jONtH0xfKjLjCCRDI4Eo4h1lxpRYsDneQfOhNRgvfhheQ
+         IMcC5b8FDhPEzHspOu3FxEJyz4bkPD5oWdcjtqJsdi9aXazwP0DoA4dpMv2KUdezaO0j
+         UrR5FuRKtxktM7ZVlEINZ4sxqGCHoIuzeNjkohUjXXQeTqjI3Lb/+rWkm8eDgzjMeZv4
+         zRrcnGbiT78ECWt8N7xv7ID4SozFRoxVA3Dx7gZTwCz9w/fnCh+kOoYsyhBcGxtIHWpv
+         QU5oHxq8wPH9QQlTDF28Q9Y5VJRxv3w4+uPIi8JyQh8wbGr7gwSqVjH4l5J6k7R496+X
+         8axA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679312372;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OJGyYxtb1bQ6xHbNSxXvNeSr75P0UPbtnSBwbgHFsG8=;
-        b=kyhDaMergaXf5VSMIzwjhUOrSwf/7NiE1tMDx4UZU8/pJwQy+RY2mciVlo8uq8/RyY
-         gx60alwppUblaEI+ykAAdslzzLsVudDxiIySl+gbsI/EE8ErexfGjPNQl12LcgsClgfK
-         VuIlijiATYuNY/MIGY0SD63w/T3hQorUBohh+gGZU0A14EG+78dVUN3/EhBhiTa8zDOn
-         b6dyWu9wUWXcN4TSFh8Os2U0iC1rouvm7GKlok1c1FkjTzr+7gXmYf7sSBnA7xKKZ/vA
-         B324I7Vmh+2R4JFcjM5S/txrW3z/WhDoTYjA9GPG3/ZYEd80FWl5tWyLksz7aaikIpuF
-         53DQ==
-X-Gm-Message-State: AO0yUKU0r/c68rqIK0fYK6V5UlP1ahR1G2o8y3Evj0cSdzJHHy3v+jvd
-	+L+tArTbgyjoZK2ZnRAOXmkUg8KAtq8GMN6WY0s=
-X-Google-Smtp-Source: AK7set8SF9tLx6qGbGLmEAIsm8gU6frxkQ6HCNm65eUx+eevleeKEn8ypxNYEZJ9YEG5LisneCkZqG5quYPW9lYvw2I=
-X-Received: by 2002:a5d:434a:0:b0:2cf:ea35:f8bc with SMTP id
- u10-20020a5d434a000000b002cfea35f8bcmr3108061wrr.6.1679312372214; Mon, 20 Mar
- 2023 04:39:32 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679328543;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Moer0UjNCxaN5LOpf3bM733HljpstT+YD80jPA/zdFg=;
+        b=LXlDdtd/9UQiSNkN36W3Ui0RXpkZYklqVG7+rPX+I4SIlKGCxaw0zqsVOYFarLUGWB
+         k4gAOwITKpSxfzIgHsE5gvCrV1CYGOc7gY95Pj8G2rafdLHwRn+rafz6NRI8xPquS36c
+         OBuNpe5f8eBRGAlC9lFlQSjuvMHBQ4D9Ry3ObZV8DTOpY2g3g2Ky2LyWkYpKhaste0mo
+         NsnSRJJalZsiaoeH54tlUZimjgNFFZs5sH6Eqj//5kdiuYtcTEBjmriL9sgf+5BnHgdk
+         2rRpIIBGAw5LWlrn3ljfHXPIXiLg5O2+7hUX8XK3Hlq91nYGIYilr2gu970GN/cQLtY7
+         doTg==
+X-Gm-Message-State: AO0yUKUyNjnW8SwBE9+yuP2J1N5YlheLtXi0XDl0FdFvaSbzXXGrtmhw
+	QHDsBN+oUVwesVHUJrqeGro31g==
+X-Google-Smtp-Source: AK7set8sD4egq9z5UmO3BYKz/rBq5xKlRxShVFv6YV6jD4Nrt0GoUA7mSEcrb8y+bnNnLs9jU5hqww==
+X-Received: by 2002:a17:906:86c4:b0:926:c7ac:51fd with SMTP id j4-20020a17090686c400b00926c7ac51fdmr9591686ejy.44.1679328542900;
+        Mon, 20 Mar 2023 09:09:02 -0700 (PDT)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id mh12-20020a170906eb8c00b0093210cf625bsm4252256ejb.187.2023.03.20.09.09.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Mar 2023 09:09:02 -0700 (PDT)
+Message-ID: <8387b3ee-c7dc-6555-c914-6cf856375fcc@tessares.net>
+Date: Mon, 20 Mar 2023 17:09:02 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1678778977.git.geliang.tang@suse.com> <d47a06abb5dae1f333a496183da5ba3e51e5a98e.1678778977.git.geliang.tang@suse.com>
- <067bd46b-9c12-36cd-8ea5-3667669dc6cf@tessares.net>
-In-Reply-To: <067bd46b-9c12-36cd-8ea5-3667669dc6cf@tessares.net>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Mon, 20 Mar 2023 19:41:03 +0800
-Message-ID: <CA+WQbwv1gBROrXG-8Fb=T+p6rQNf5PF0gKB95mJzfQdsH8-mGg@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
 Subject: Re: [PATCH mptcp-next v5 3/7] mptcp: close remote subflow when
  destroying it
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Content-Language: en-GB
+To: Geliang Tang <geliangtang@gmail.com>
 Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <cover.1678778977.git.geliang.tang@suse.com>
+ <d47a06abb5dae1f333a496183da5ba3e51e5a98e.1678778977.git.geliang.tang@suse.com>
+ <067bd46b-9c12-36cd-8ea5-3667669dc6cf@tessares.net>
+ <CA+WQbwv1gBROrXG-8Fb=T+p6rQNf5PF0gKB95mJzfQdsH8-mGg@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <CA+WQbwv1gBROrXG-8Fb=T+p6rQNf5PF0gKB95mJzfQdsH8-mGg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi Geliang,
 
-Thanks for your reviews.
+Thank you for your reply.
 
-We always remove address together with subflow, see
-mptcp_nl_remove_subflow_and_signal_addr() or
-mptcp_pm_remove_addrs_and_subflows().
+On 20/03/2023 12:41, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for your reviews.
+> 
+> We always remove address together with subflow, see
+> mptcp_nl_remove_subflow_and_signal_addr() or
+> mptcp_pm_remove_addrs_and_subflows().
+> 
+> So we always get "chk_rm_nr 1 1" in these tests:
+> 
+>         # single subflow, remove
+>         if reset "remove single subflow"; then
+>                 pm_nl_set_limits $ns1 0 1
+>                 pm_nl_set_limits $ns2 0 1
+>                 pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+>                 run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
+>                 chk_join_nr 1 1 1
+>                 chk_rm_nr 1 1
+>         fi
+> 
+>         # single address, remove
+>         if reset "remove single address"; then
+>                 pm_nl_set_limits $ns1 0 1
+>                 pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+>                 pm_nl_set_limits $ns2 1 1
+>                 run_tests $ns1 $ns2 10.0.1.1 0 -1 0 slow
+>                 chk_join_nr 1 1 1
+>                 chk_add_nr 1 1
+>                 chk_rm_nr 1 1 invert
+>         fi
+> 
+>         # userspace pm add & remove address
+>         if reset_with_events "userspace pm add & remove address"; then
+>                 set_userspace_pm $ns1
+>                 pm_nl_set_limits $ns2 1 1
+>                 run_tests $ns1 $ns2 10.0.1.1 0 userspace_1 0 slow
+>                 chk_join_nr 1 1 1
+>                 chk_add_nr 1 1
+>                 chk_rm_nr 1 1 invert
+>                 kill_events_pids
+>         fi
+> 
+> But the userspace remove subflow test got "chk_rm_nr 0 1":
+> 
+>         # userspace pm create destroy subflow
+>         if reset_with_events "userspace pm create destroy subflow"; then
+>                 set_userspace_pm $ns2
+>                 pm_nl_set_limits $ns1 0 1
+>                 run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
+>                 chk_join_nr 1 1 1
+>                 chk_rm_nr 0 1
+>                 kill_events_pids
+>         fi
+> 
+> "chk_rm_nr 0 1" means getting no rm_addr, but a rm_subflow.
 
-So we always get "chk_rm_nr 1 1" in these tests:
+Indeed but you have this behaviour only because the userspace PM didn't
+send this RM ADDR, no? I agree it might be better to do so but it is not
+mandatory if I'm not mistaken, especially for the client side. Then it
+is up to the userspace PM to decide to send the RM ADDR or not and we
+cannot force it I would say.
 
-        # single subflow, remove
-        if reset "remove single subflow"; then
-                pm_nl_set_limits $ns1 0 1
-                pm_nl_set_limits $ns2 0 1
-                pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
-                run_tests $ns1 $ns2 10.0.1.1 0 0 -1 slow
-                chk_join_nr 1 1 1
-                chk_rm_nr 1 1
-        fi
+Or maybe the client side cannot send a RM ADDR? (on the other hand, the
+address was not announced with an ADD_ADDR so why do you want to send a
+RM_ADDR?)
 
-        # single address, remove
-        if reset "remove single address"; then
-                pm_nl_set_limits $ns1 0 1
-                pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-                pm_nl_set_limits $ns2 1 1
-                run_tests $ns1 $ns2 10.0.1.1 0 -1 0 slow
-                chk_join_nr 1 1 1
-                chk_add_nr 1 1
-                chk_rm_nr 1 1 invert
-        fi
+(if there is a need, we can ease its use with an extra flag but I don't
+think we should force this behaviour, it is up to the PM to do that, no?)
 
-        # userspace pm add & remove address
-        if reset_with_events "userspace pm add & remove address"; then
-                set_userspace_pm $ns1
-                pm_nl_set_limits $ns2 1 1
-                run_tests $ns1 $ns2 10.0.1.1 0 userspace_1 0 slow
-                chk_join_nr 1 1 1
-                chk_add_nr 1 1
-                chk_rm_nr 1 1 invert
-                kill_events_pids
-        fi
+> This behavior is incorrect. This patch fix it. It looks through the
+> userspace_pm_local_addr_list to find the addr id, and send RM_ADDR
+> with this id.
+> 
+> So patch 2 is needed to add the address into
+> userspace_pm_local_addr_list, and patch 1 too, no clear the address
+> id.
 
-But the userspace remove subflow test got "chk_rm_nr 0 1":
+Would it not work if you modify do_transfer() to use pm_nl_ctl to send
+the RM_ADDR then do the destroy (I don't know if doing the opposite is
+supported)?
 
-        # userspace pm create destroy subflow
-        if reset_with_events "userspace pm create destroy subflow"; then
-                set_userspace_pm $ns2
-                pm_nl_set_limits $ns1 0 1
-                run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
-                chk_join_nr 1 1 1
-                chk_rm_nr 0 1
-                kill_events_pids
-        fi
+But again, I don't think we need to send an RM_ADD if no ADD_ADDR have
+been sent before by the client here.
 
-"chk_rm_nr 0 1" means getting no rm_addr, but a rm_subflow.
-
-This behavior is incorrect. This patch fix it. It looks through the
-userspace_pm_local_addr_list to find the addr id, and send RM_ADDR
-with this id.
-
-So patch 2 is needed to add the address into
-userspace_pm_local_addr_list, and patch 1 too, no clear the address
-id.
-
-Thanks,
--Geliang
-
-Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2023=E5=B9=B43=E6=
-=9C=8817=E6=97=A5=E5=91=A8=E4=BA=94 02:26=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Geliang,
->
-> On 14/03/2023 08:31, Geliang Tang wrote:
-> > Not only close the local subflow but also send RM_ADDR by invoking
-> > mptcp_pm_remove_addr() to close the remote subflow when a subflow is
-> > destroyed by userspace PM.
->
-> Should it not be the responsibility of the userspace PM daemon to send
-> this RM_ADDR?
->
-> Do you maybe have a use case where it is interesting to force sending
-> this RM_ADDR when asking for a destroy?
->
-> Maybe we could do that only if the userspace PM asks for that by setting
-> a new attribute or flag? (if there is an interest)
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
->
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
