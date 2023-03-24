@@ -1,126 +1,116 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3707619B
-	for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 17:01:03 +0000 (UTC)
-Received: by mail-io1-f50.google.com with SMTP id z1so1012699iot.11
-        for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 10:01:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F574C950
+	for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 17:12:04 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id l37so1561841wms.2
+        for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 10:12:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679677262;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9SXIKDB5DhowqFatRksbwt7OwdqE98ROKbu1tqATTA8=;
-        b=FBLCcJRP2cl26yZNe2HpBtW3aNDDBr5NjQZPz42yN+Mp6wSdG3HUMRV4/jmqqGefNv
-         8tSPRkoaKN79DaDsHSMTNJHHupGGCE6ZEwvtxsGgVrDQNLRfQJ2MyQ5nlDEt0tG2yP/q
-         FtANK876FLesqCTVcGxsIp9fpEoPL/gj9cA9r6BRP+6fczZB5KplqIVhn4j0Y+arLtUo
-         ZkKolreEtAk0ju2R/oUX0StIzOhT94D69rxNnnChWOAnEgLz4WnSfJm5lRvz2j20FZX5
-         DPABzT4KjzoIYLMkZb7xViiuY8qzQpSRk5YZeRo4GTdBnjESZmDLwisitPASY3XzxoNS
-         /Kiw==
+        d=tessares.net; s=google; t=1679677922;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rp4jzDgiOrieNODoUE7feSGHVsgmzzTUUSpbLxz1Poo=;
+        b=eg3VX4b/9QMY/w9Um0SvW5sAhGNaAzNudm8etC/W+KkwNirZkXfFHTdJwh7LVrxs5q
+         hlGkFrEi2Xc9WO+9EzypwG/LU2m/hQAJfEEDtD5yUU4yypvBPIEnJY8HMIqURrMFoMMS
+         RiY66SctKO9N43N9v0rKlrwCyTMLjBlz6Hn0UqtN/W9yVAAq64Ols6iglhKHGYhOP92y
+         1Q2TU3RWuE5P5AeJrVbYGkZzbR1hkmyvoBNIqEKG1qKnWjfBjH/cB9N6vb4vkBWYLaKh
+         PLG+vfdRo8jCnRCM5wkYp6SlthkW+wOoYNIz62a5yPIMo3UP+EUnWQzYxvOZwWYdFoma
+         6bjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679677262;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9SXIKDB5DhowqFatRksbwt7OwdqE98ROKbu1tqATTA8=;
-        b=OKcsht8C+uF/EZEcNwtRF5c2ZBTGdGBPzW4RgEcbt8LXejf9qB6mXFfWGDdxxRI5qA
-         f34f+k1MhDkR4rnmBWUm2knmo4wGHqCVKR4BoUGKzTa+yvpG74BLTVDhQlPm8NRpYDb2
-         TDOq/8mjqiWP8x+GqOZgAlNybFhw3lp7QR8EJDCZCqU2Ep5jQzmBTnAmypNB35OyWRzr
-         SfvagkS5iIrBFQtgLTOaL5RMNaJFqar9yH/hg4oeMmpeLHlVKRpUy9ZmgHnS5QsUErT9
-         vajnlgQC+Qu+nHgMCp0X4rq8ItNKifT3KZ+gJzBb35HswhZrHGyxcZhQLEbi8oY7AIeX
-         TJGA==
-X-Gm-Message-State: AO0yUKVhpmkDA44sF4M7dpS6GuMW7Dn4n4nLeHwK8JgqTTooGzxG2jye
-	CG+Pa5zVf0F1FrZv2IS0Bt76w6M3zNhE
-X-Google-Smtp-Source: AK7set8CIET3PO6VMwZAcj35Lfmkq2tze13jPR12UpZBDos6Osi+GVkD1Mfg2jJzplss0zMnvWFxeg==
-X-Received: by 2002:a5e:d60f:0:b0:74c:bf8f:4c88 with SMTP id w15-20020a5ed60f000000b0074cbf8f4c88mr2516769iom.14.1679677262179;
-        Fri, 24 Mar 2023 10:01:02 -0700 (PDT)
-Received: from [127.0.0.1] ([40.122.243.243])
-        by smtp.gmail.com with ESMTPSA id f10-20020a056638112a00b003de9d8de0edsm6982526jar.88.2023.03.24.10.01.01
+        d=1e100.net; s=20210112; t=1679677922;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rp4jzDgiOrieNODoUE7feSGHVsgmzzTUUSpbLxz1Poo=;
+        b=GLkb7J1tJz1QeUAltXclfzGCMqIgwWSo6QM138v+M4ZHLAjD4YxFQ5tklCzzUmiEjl
+         7g6ZWkdCTg+c/0Awat6YDPh3KEyK8lNKXBatKa6RrJKlrYgF4TawIFN3KlOuI6dDKaYd
+         PEjKhup+1pYHMwK6lZUa+ULvnZ+03KVSpX+fbroxU2GX9Nxpseh7w93RkAdurR11TC4K
+         CfC83I1aehFEVEPk/0dPeHFmV+ULIX4Fu6gyNg1Emo8wGKQsPSQ42bcApqU6pyEGg/Er
+         VhxrZcpJdW3IzecPTkUrk4mAh6uQM0AA+UmgVIwhSf9UQ8eaegng9r4u9CqraaBZJXFU
+         N1uA==
+X-Gm-Message-State: AO0yUKVbJkhf0ZdhtuLz+UT6AivTUv5n65NfRAdozNndNzCA0pbekz2w
+	UijGIvVJcUVQLIyr1sIj3v1Nog==
+X-Google-Smtp-Source: AK7set9ZOoz0f0isbrMvYYJ6nHirwCbWDPt6P6SBNjHPIksNu1/Fxo15zJ/cTuX6v+Uto7JKdduWeA==
+X-Received: by 2002:a05:600c:2909:b0:3eb:383c:1870 with SMTP id i9-20020a05600c290900b003eb383c1870mr3013607wmd.11.1679677922317;
+        Fri, 24 Mar 2023 10:12:02 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id n17-20020a1c7211000000b003edf2dc7ca3sm5336285wmc.34.2023.03.24.10.12.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Mar 2023 10:01:01 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <0e9ef531308d693bb8ff32af03de3827e33940fc.1679672048.git.pabeni@redhat.com>
-References:
- <0e9ef531308d693bb8ff32af03de3827e33940fc.1679672048.git.pabeni@redhat.com>
-Subject: Re: mptcp: stops worker on unaccepted sockets at listener close:
- Tests Results
-Message-ID: <0ba0a273-9785-c005-5e80-4312443159a2@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Mar 2023 17:01:00 +0000
+        Fri, 24 Mar 2023 10:12:02 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net-next 0/4] mptcp: a couple of cleanups and improvements
+Date: Fri, 24 Mar 2023 18:11:29 +0100
+Message-Id: <20230324-upstream-net-next-20230324-misc-features-v1-0-5a29154592bd@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMLZHWQC/2WOwQqDMBBEf0X23AUTQ5X+SukhSde6B6PsRhHEf
+ 2/swUsPc3jM8JgdlIRJ4VHtILSy8pQKmFsFcfDpQ8jvwmBr29SNdbjMmoX8iIlyyZbxqkbWiD3
+ 5vAgpmrYLNtxN54yDogteCYP4FIdT+Oc5N7NQz9vvzhOu4nUcXzu7zDeoAAAA
+To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ Geliang Tang <geliang.tang@suse.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1284;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=BbPKd6tExiRa5BLYOz2a++7Meq/Ul3smPHqa4Li5/A4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkHdnh686gD+l9bRK9koOr/oHp/1mkc2lAmaFLW
+ gnkYJucdF2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZB3Z4QAKCRD2t4JPQmmg
+ c7wsD/47ZlVEZNdxxFu1HQrRrIwW0tYnosH/p9bpE62YreDa2HQTI60M7x+gOPOtF6uBLXwox/C
+ lCJFcIsLbzpzUo/VIkd6SKEdDdjU0KqLB6270YQ74MZKwwbS6BzMKNZe9BH1yhcUAZGettPA901
+ wSX3HF7XOMmWvGHz8bkVeMCGOLJ3V608TfPATeEWvseKst85lwtZuaXngAfLtjBwKJiwRljym/6
+ oEwIhnbHsAL/JtiLRODn87sAtq602MVus+ajJQA3O+7G8mz+t1Ur5mKIAgAPuqTwG90UMk3QWIJ
+ 7dXaZLkwVCNJdVzDBvpfmjWmH3vpapJCv4Y/Yjm+j3QDCe1pS5ECx+EUStMyBo/n1dXa8y//Oij
+ +m6CT+v1tWHPzoHHD8xOcx9GtlYd2LzFfP4wmzBkfPnVeQpSu5JbxMgsmFssZLzadu3BRgZRnoU
+ iW5uz3nGTNLivAcxh6EJUMioICRVKhXZgbbLJmvN9HKXVe7FUzW4ZGwxNMI7mpQn32rBl0I9H7k
+ fZUVzy2JbDMxPrAgbR/WqWQdPlE80bdt0boBQtz7+eB2zBzs2YQk9ez7cqGgogD9+dzKwS/DSLJ
+ VeFqoRmRnLXY576j18qc4FvMoZnJhlgGsaauZt2WBFCYX4rT1Rq0kdH0yLrt3TgQ7HZvMnU+mGk
+ GKgfavySdvrbo9w==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+Patch 1 removes an unneeded address copy in subflow_syn_recv_sock().
 
-Thank you for your modifications, that's great!
+Patch 2 simplifies subflow_syn_recv_sock() to postpone some actions and
+to avoid a bunch of conditionals.
 
-Our CI did some validations and here is its report:
+Patch 3 stops reporting limits that are not taken into account when the
+userspace PM is used.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_userspace_pm =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4774799919022080
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4774799919022080/su=
-mmary/summary.txt
+Patch 4 adds a new test to validate that the 'subflows' field reported
+by the kernel is correct. Such info can be retrieved via Netlink (e.g.
+with ss) or getsockopt(SOL_MPTCP, MPTCP_INFO).
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_add_addr =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5337749872443392
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5337749872443392/su=
-mmary/summary.txt
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Geliang Tang (1):
+      selftests: mptcp: add mptcp_info tests
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6463649779286016
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6463649779286016/summary/summary.txt
+Matthieu Baerts (1):
+      mptcp: do not fill info not used by the PM in used
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5900699825864704
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5900699825864704/summary/summary.txt
+Paolo Abeni (2):
+      mptcp: avoid unneeded address copy
+      mptcp: simplify subflow_syn_recv_sock()
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/5f82cc6fbd3f
+ net/mptcp/sockopt.c                             | 20 +++++++----
+ net/mptcp/subflow.c                             | 43 +++++++---------------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 47 ++++++++++++++++++++++++-
+ 3 files changed, 72 insertions(+), 38 deletions(-)
+---
+base-commit: 323fe43cf9aef79159ba8937218a3f076bf505af
+change-id: 20230324-upstream-net-next-20230324-misc-features-178b2b618414
 
+Best regards,
+-- 
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
