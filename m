@@ -1,125 +1,234 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B03E6FD3
-	for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 15:12:48 +0000 (UTC)
-Received: by mail-qv1-f52.google.com with SMTP id x8so1761603qvr.9
-        for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 08:12:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679670767;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5zWMTHiXXEjYbzesesbehqaNDf8STs1WAuoOsR0K4sw=;
-        b=aMgdjcKiBHNezUXXbaoDBhlsDOIKLaC/p9LJxehz6rI/oIEV7lpJoKYePqJMbovjTJ
-         5XdoGR8VtYFLHbEYXwvAUPmwHErlB0Qwi9Zzhnet90evuY00txUaz1eQZHyDzQmrm17+
-         J4ofx/pkiwksrqJHh/gc8plGTKAjAINOSSm+LbviMUTb3fSGKvh/7aBulAv+DaF4jQqY
-         EqdA31cBCZYxkvtgjYHewqaMh1eg/ORgqTtpImI7x3s3cNdO4//drgQ7+UWRLO6a0DIR
-         dEesH+5mChB2QYH306wCGNWMRbHJkWxMehPMYQaj0ntn2m9D2aQnpE2VVwcF69DqpUxh
-         T+FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679670767;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5zWMTHiXXEjYbzesesbehqaNDf8STs1WAuoOsR0K4sw=;
-        b=lJHIj+F/kGiQhRu5/Orcw7aPIQUeZaHU2Fg8QMiCzpmgybOm0MYqufqGLwTFXNwX5E
-         xnXc7EGXxmQLpOR2ARS2mTs0Vb2AGw9TiDy/txInPKxxBACqBzHWTPJK7eqJ/sYgWPjS
-         dyu7Fjl0dPU5LPuNXiVUo3LvPiYZO8+aaFo2+SO71qR7MR+LezYv5Hhm6gTRz3vYsRMR
-         tIx8LdKNp5q3RgdtyAQvu9P2FLWb79WMCAzzE37QuB8jEa8iWvYi9UuR7Sa2yMspILYY
-         it9LKy8spYZzk1AwALemACVoUFd4WkXXVl1yVKUNTB4bDtU0zLEGDD6E4Vjsi4lIem9L
-         S6rg==
-X-Gm-Message-State: AAQBX9eSExf0i+G0LyDePEE2D4LMcQSDftUrh7FVahwrywhgPo1EMsR6
-	8o9oB75G2FTWnTHKbc1K1A==
-X-Google-Smtp-Source: AKy350YaxbH9XLMkNPsO7VC3Of084+E/gdEyo6G0/aJhozpkamimM3zLdqzU2eIpyiqU3vvOsCGzEQ==
-X-Received: by 2002:a05:6214:501a:b0:5c7:cc77:d203 with SMTP id jo26-20020a056214501a00b005c7cc77d203mr4945457qvb.3.1679670767505;
-        Fri, 24 Mar 2023 08:12:47 -0700 (PDT)
-Received: from [127.0.0.1] ([52.190.17.192])
-        by smtp.gmail.com with ESMTPSA id t184-20020ae9dfc1000000b007424239e4casm14229147qkf.117.2023.03.24.08.12.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Mar 2023 08:12:47 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <10b158069455d831d9efc547bcdb3a6379234f1c.1679654040.git.pabeni@redhat.com>
-References:
- <10b158069455d831d9efc547bcdb3a6379234f1c.1679654040.git.pabeni@redhat.com>
-Subject: Re: mptcp: stricter state check in mptcp_worker: Tests Results
-Message-ID: <78ecba6b-9c8b-5607-677c-c39af7d93e96@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Mar 2023 15:12:46 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B73B7471
+	for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 16:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1679673861;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ABtKiQC0fC/UtKgEYGFnLWsoOpZUQb8vHw3Vkg2QDew=;
+	b=bC5QLuac9E5KABu0rZS1SBtzuITjjnP5mqfJmT+RRG48dMXEvGFSUipRo6A0IDPAt42o7L
+	oPbJweyU2e97kPI1TZxZl6zszqQuzDpWrBkICgK4GUQq8/WPWwwTDTeeXtvJfbC58fsP4y
+	oCnuFheHucJjQfk3KhBXhduAcSHYTTM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-478-sIUcgZIjOFmUhSDaxCtgpg-1; Fri, 24 Mar 2023 12:04:19 -0400
+X-MC-Unique: sIUcgZIjOFmUhSDaxCtgpg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6907F185A78F
+	for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 16:04:19 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.233])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id F19BA1121315
+	for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 16:04:18 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] mptcp: stops worker on unaccepted sockets at listener close
+Date: Fri, 24 Mar 2023 17:04:03 +0100
+Message-Id: <0e9ef531308d693bb8ff32af03de3827e33940fc.1679672048.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+This is a partial revert of the blamed commit, with a relevant
+change: mptcp_subflow_queue_clean() now just change the msk
+socket status and stop the worker, so that the UaF issue addressed
+by the blamed commit is not re-introduced.
 
-Thank you for your modifications, that's great!
+The above prevents the mptcp worker from running concurrently with
+inet_csk_listen_stop(), as such race would trigger a warning, as
+reported by Christoph:
 
-Our CI did some validations and here is its report:
+RSP: 002b:00007f784fe09cd8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+WARNING: CPU: 0 PID: 25807 at net/ipv4/inet_connection_sock.c:1387 inet_csk_listen_stop+0x664/0x870 net/ipv4/inet_connection_sock.c:1387
+RAX: ffffffffffffffda RBX: 00000000006bc050 RCX: 00007f7850afd6a9
+RDX: 0000000000000000 RSI: 0000000020000340 RDI: 0000000000000004
+Modules linked in:
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006bc05c
+R13: fffffffffffffea8 R14: 00000000006bc050 R15: 000000000001fe40
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5434954880909312
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5434954880909312/summary/summary.txt
+ </TASK>
+CPU: 0 PID: 25807 Comm: syz-executor.7 Not tainted 6.2.0-g778e54711659 #7
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+RIP: 0010:inet_csk_listen_stop+0x664/0x870 net/ipv4/inet_connection_sock.c:1387
+RAX: 0000000000000000 RBX: ffff888100dfbd40 RCX: 0000000000000000
+RDX: ffff8881363aab80 RSI: ffffffff81c494f4 RDI: 0000000000000005
+RBP: ffff888126dad080 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: ffff888100dfe040
+R13: 0000000000000001 R14: 0000000000000000 R15: ffff888100dfbdd8
+FS:  00007f7850a2c800(0000) GS:ffff88813bc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32d26000 CR3: 000000012fdd8006 CR4: 0000000000770ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ __tcp_close+0x5b2/0x620 net/ipv4/tcp.c:2875
+ __mptcp_close_ssk+0x145/0x3d0 net/mptcp/protocol.c:2427
+ mptcp_destroy_common+0x8a/0x1c0 net/mptcp/protocol.c:3277
+ mptcp_destroy+0x41/0x60 net/mptcp/protocol.c:3304
+ __mptcp_destroy_sock+0x56/0x140 net/mptcp/protocol.c:2965
+ __mptcp_close+0x38f/0x4a0 net/mptcp/protocol.c:3057
+ mptcp_close+0x24/0xe0 net/mptcp/protocol.c:3072
+ inet_release+0x53/0xa0 net/ipv4/af_inet.c:429
+ __sock_release+0x4e/0xf0 net/socket.c:651
+ sock_close+0x15/0x20 net/socket.c:1393
+ __fput+0xff/0x420 fs/file_table.c:321
+ task_work_run+0x8b/0xe0 kernel/task_work.c:179
+ resume_user_mode_work include/linux/resume_user_mode.h:49 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:171 [inline]
+ exit_to_user_mode_prepare+0x113/0x120 kernel/entry/common.c:203
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:285 [inline]
+ syscall_exit_to_user_mode+0x1d/0x40 kernel/entry/common.c:296
+ do_syscall_64+0x46/0x90 arch/x86/entry/common.c:86
+ entry_SYSCALL_64_after_hwframe+0x72/0xdc
+RIP: 0033:0x7f7850af70dc
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 00007f7850af70dc
+RDX: 00007f7850a2c800 RSI: 0000000000000002 RDI: 0000000000000003
+RBP: 00000000006bd980 R08: 0000000000000000 R09: 00000000000018a0
+R10: 00000000316338a4 R11: 0000000000000293 R12: 0000000000211e31
+R13: 00000000006bc05c R14: 00007f785062c000 R15: 0000000000211af0
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5857167345975296
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5857167345975296/su=
-mmary/summary.txt
+Fixes: 0a3f4f1f9c27 ("mptcp: fix UaF in listener shutdown")
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/371
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c |  6 +++-
+ net/mptcp/protocol.h |  1 +
+ net/mptcp/subflow.c  | 75 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 81 insertions(+), 1 deletion(-)
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6560854787751936
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6560854787751936/su=
-mmary/summary.txt
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 1116a64d072e..d28528df43fa 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2421,8 +2421,12 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		mptcp_subflow_drop_ctx(ssk);
+ 	} else {
+ 		/* otherwise tcp will dispose of the ssk and subflow ctx */
+-		if (ssk->sk_state == TCP_LISTEN)
++		if (ssk->sk_state == TCP_LISTEN) {
++			tcp_set_state(ssk, TCP_CLOSE);
++			mptcp_subflow_queue_clean(sk, ssk);
++			inet_csk_listen_stop(ssk);
+ 			mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CLOSED);
++		}
+ 
+ 		__tcp_close(ssk, 0);
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d84f0d19e9d6..a4e82bcfc7b8 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -628,6 +628,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		     struct mptcp_subflow_context *subflow);
+ void __mptcp_subflow_send_ack(struct sock *ssk);
+ void mptcp_subflow_reset(struct sock *ssk);
++void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
+ void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+ struct socket *__mptcp_nmpc_socket(struct mptcp_sock *msk);
+ bool __mptcp_close(struct sock *sk, long timeout);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index e90c6f6a676a..793f80804d3e 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1808,6 +1808,81 @@ static void subflow_state_change(struct sock *sk)
+ 	}
+ }
+ 
++void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_ssk)
++{
++	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
++	struct mptcp_sock *msk, *next, *head = NULL;
++	struct request_sock *req;
++
++	/* build a list of all unaccepted mptcp sockets */
++	spin_lock_bh(&queue->rskq_lock);
++	for (req = queue->rskq_accept_head; req; req = req->dl_next) {
++		struct mptcp_subflow_context *subflow;
++		struct sock *ssk = req->sk;
++		struct mptcp_sock *msk;
++
++		if (!sk_is_mptcp(ssk))
++			continue;
++
++		subflow = mptcp_subflow_ctx(ssk);
++		if (!subflow || !subflow->conn)
++			continue;
++
++		/* skip if already in list */
++		msk = mptcp_sk(subflow->conn);
++		if (msk->dl_next || msk == head)
++			continue;
++
++		sock_hold(subflow->conn);
++		msk->dl_next = head;
++		head = msk;
++	}
++	spin_unlock_bh(&queue->rskq_lock);
++	if (!head)
++		return;
++
++	/* can't acquire the msk socket lock under the subflow one,
++	 * or will cause ABBA deadlock
++	 */
++	release_sock(listener_ssk);
++
++	for (msk = head; msk; msk = next) {
++		struct sock *sk = (struct sock *)msk;
++
++		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
++		next = msk->dl_next;
++		msk->first = NULL;
++		msk->dl_next = NULL;
++
++		/* prevent the stack from later re-schedule the worker for
++		 * this socket
++		 */
++		inet_sk_state_store(sk, TCP_CLOSE);
++		release_sock(sk);
++
++		/* lockdep will report a false positive ABBA deadlock
++		 * between cancel_work_sync and the listener socket.
++		 * The involved locks belong to different sockets WRT
++		 * the existing AB chain.
++		 * Using a per socket key is problematic as key
++		 * deregistration requires process context and must be
++		 * performed at socket disposal time, in atomic
++		 * context.
++		 * Just tell lockdep to consider the listener socket
++		 * released here.
++		 */
++		mutex_release(&listener_sk->sk_lock.dep_map, _RET_IP_);
++		mptcp_cancel_work(sk);
++		mutex_acquire(&listener_sk->sk_lock.dep_map,
++			      SINGLE_DEPTH_NESTING, 0, _RET_IP_);
++
++		sock_put(sk);
++	}
++
++	/* we are still under the listener msk socket lock */
++	lock_sock_nested(listener_ssk, SINGLE_DEPTH_NESTING);
++}
++
+ static int subflow_ulp_init(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+-- 
+2.39.2
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4731267439132672
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4731267439132672/summary/summary.txt
-
-Initiator: Matthieu Baerts
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/79b03f33ac6a
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
