@@ -1,121 +1,126 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B205389
-	for <mptcp@lists.linux.dev>; Sat, 25 Mar 2023 04:23:02 +0000 (UTC)
-Received: by mail-pl1-f172.google.com with SMTP id z19so3643092plo.2
-        for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 21:23:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA617631
+	for <mptcp@lists.linux.dev>; Sat, 25 Mar 2023 05:18:25 +0000 (UTC)
+Received: by mail-qv1-f46.google.com with SMTP id m6so3181933qvq.0
+        for <mptcp@lists.linux.dev>; Fri, 24 Mar 2023 22:18:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679718182;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vgpYKWXzjJN2Yld0pg3hkQUZovUKmsnyiCz0x9041pc=;
-        b=BQwlA3JxKsQ/NLXvTODQe/+kSL6/LDn89Lmh56eesDRtuy+wVQTjWJlTKlwCDOOMlN
-         ZrRNOCCTpch/KSblLe/3f4byk/RvuV38W96Te2n0NtDp3M6xNg/kwzLyNsJtzqVeeqR8
-         PxXy7h8IwhIjfZ4oeopCboNZftkfOlxaXSH1TDXGd/XP2PkaJ2OuWu9omxztCMiApdvE
-         98uC3F/PTxJkXVPkr5kZze0MQ0IrJxuvPB73GdELSyCcROzgZGzlfi/mgMJtm6WED61V
-         ld/U/rRVX6eRH4YVzWOD5H8HOO1ULHzeqE1vEHvaY4dKxvUlKhcoUC4etBHguOR9X+cx
-         4VoA==
+        d=gmail.com; s=20210112; t=1679721504;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KfJ6H7OubGGf2pbIakuWZSiGsTsko/JW/WuElG1haEI=;
+        b=p7mJoV694p5HbuY17XHW631T7r30N754/4MKpJvrURj+vgrfqMH/sd91Y9ej9l0ePr
+         cVcI0iJE8JOTprzFs7nvZxqkJ3fI6y1hI+80BeyYt0a7/JO4bTEUEyXpKnyaBwtKnHQf
+         3/Je0/O1ay2QmNcWyDSLKyXLImtdMPGG5G/sIu6IxLcVp4TEtVJm2lHzjL9X50F+G8cM
+         6fliNUp2RnfQE2rwlsieCaS3RyDVg5XAhHyXAup67oQKV/PXG2EoUfNi0zga6DZDp+Yy
+         IoSOQsOEXipVUqIIGzujgV1YcLxbGHefwVyy5dI/XoOd977ZGTQCWIphDj54+z9TWss6
+         x+sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679718182;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vgpYKWXzjJN2Yld0pg3hkQUZovUKmsnyiCz0x9041pc=;
-        b=LiihtLZ8nEM5DxkgMVMJqjKxSJ9z+ALwkW2DYUrFYeaIXNmo6g/oteKXzQTO2UJx63
-         qyzC+keyu7/i8/3kWfIqSS/AQzO0lmrKoW8KRzynerBfJhNmZGpFFk6/3OLOv7PLEtSr
-         l7Ee5CzeBLKv792RqLPCXvYsUt+Z0eRfLRO+BTa6zLeoeJsFD1wqKljkeZZmQRn6C/l2
-         niM83TdfBYAAdGUQ6mryUvfZYA/MU2kGz2oGDhAJOCV0y/uPp2OJ1kya1f5qEmOzVIP4
-         b7hhi+irw25iiJVd5DfE43/U8tyvvoxfv+VsgLbWZAUWBwqT8qdhsoE/nZfPwzt0scQp
-         +hBQ==
-X-Gm-Message-State: AAQBX9ehzHtQ085cjENWepwMquEjLda9KlXya8fsk5iLsgBBGKpoeGOz
-	Og7YYE12Lcj2+V0Pdp0ii/s=
-X-Google-Smtp-Source: AKy350b7n1hQhN2FdXuCHfv3E6Y+Fsn7JSY9rneZKs9hhy/ARsctLJ+8hbMgU1asbkLh4/wW0M+fUg==
-X-Received: by 2002:a17:90b:4d81:b0:23b:3422:e78a with SMTP id oj1-20020a17090b4d8100b0023b3422e78amr5152241pjb.6.1679718181842;
-        Fri, 24 Mar 2023 21:23:01 -0700 (PDT)
-Received: from [192.168.43.80] (subs02-180-214-232-18.three.co.id. [180.214.232.18])
-        by smtp.gmail.com with ESMTPSA id h7-20020a17090a2ec700b0023b5528b8d4sm3786553pjs.19.2023.03.24.21.22.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Mar 2023 21:23:01 -0700 (PDT)
-Message-ID: <fd643854-d687-1dda-f0ae-a6ef06432394@gmail.com>
-Date: Sat, 25 Mar 2023 11:22:56 +0700
+        d=1e100.net; s=20210112; t=1679721504;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KfJ6H7OubGGf2pbIakuWZSiGsTsko/JW/WuElG1haEI=;
+        b=n1rRS0lpsCMuOVrRk5k96MRdhMMRZk3nsqr5vTwxrR5OQNrtIL/d1xvF7OjMf6Gc07
+         E/y6Jw2+HRAivNYTmEs/5s+wWUWYCZjSj2X9jWsCBYeTMHAqH7VgPDsqkMAKHgXltIkj
+         VachAk6SaqHoDEbrObwZfFmaNdvvZFmFJkofYScDPw2ySG+Wy+gQ+gxYJcT8dg6O8U2T
+         9BKul8451coY/yKAkPxlTNeADu4on82ikkb3eELlZhbifyQyqVM+vXjqdXt2ukD09CuX
+         RPwhnTFvJnTAaXVbTJ25KzIqncgDzhkNz5HH2UqJjr7BngIuFhmSFwCvgX/x1j3bc8KN
+         lfgQ==
+X-Gm-Message-State: AAQBX9ewFoJ/RIs1H3n/Ek83aTa5PfV6wvh2nv51seU4o97Op8Ucm1N/
+	6eCF6MWux+/Q0oGqQezUxfatwYtY5y85hR4=
+X-Google-Smtp-Source: AKy350b+A/2Bam2ww7+iz9iocgUWwOhm3vPzhSlm+iKZzMCdR9j4V4NsrOw8ENMxr/7PwvbiLorTcA==
+X-Received: by 2002:ad4:5bc9:0:b0:5dd:aee7:e016 with SMTP id t9-20020ad45bc9000000b005ddaee7e016mr6787867qvt.8.1679721504527;
+        Fri, 24 Mar 2023 22:18:24 -0700 (PDT)
+Received: from [127.0.0.1] ([172.177.213.89])
+        by smtp.gmail.com with ESMTPSA id bk12-20020a05620a1a0c00b0074357a6529asm14931806qkb.105.2023.03.24.22.18.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Mar 2023 22:18:24 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20230314-doc-checkpatch-closes-tag-v2-2-f4a417861f6d@tessares.net>
+References:
+ <20230314-doc-checkpatch-closes-tag-v2-2-f4a417861f6d@tessares.net>
+Subject: Re: checkpatch: allow Closes tags with links: Tests Results
+Message-ID: <a5f39672-1251-4da3-9fce-f783e7330912@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 25 Mar 2023 05:18:23 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v2 1/2] docs: process: allow Closes tags with links
-To: Matthieu Baerts <matthieu.baerts@tessares.net>,
- Jonathan Corbet <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>,
- Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- =?UTF-8?Q?Kai_Wasserb=c3=a4ch?= <kai@dev.carbon-project.org>,
- Thorsten Leemhuis <linux@leemhuis.info>,
- Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
-References: <20230314-doc-checkpatch-closes-tag-v2-0-f4a417861f6d@tessares.net>
- <20230314-doc-checkpatch-closes-tag-v2-1-f4a417861f6d@tessares.net>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <20230314-doc-checkpatch-closes-tag-v2-1-f4a417861f6d@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 3/25/23 01:52, Matthieu Baerts wrote:
-> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
-> index 7a670a075ab6..20f0b6b639b7 100644
-> --- a/Documentation/process/5.Posting.rst
-> +++ b/Documentation/process/5.Posting.rst
-> @@ -217,6 +217,15 @@ latest public review posting of the patch; often this is automatically done
->  by tools like b4 or a git hook like the one described in
->  'Documentation/maintainer/configure-git.rst'.
->  
-> +Similarly, there is also the "Closes:" tag that can be used to close issues
-> +when the underlying public bug tracker can do this operation automatically.
-> +For example::
-> +
-> +	Closes: https://example.com/issues/1234
-> +
-> +Private bug trackers and invalid URLs are forbidden. For other public bug
-> +trackers not supporting automations, keep using the "Link:" tag instead.
-> +
->  A third kind of tag is used to document who was involved in the development of
->  the patch. Each of these uses this format::
->  
-> diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-> index 69ce64e03c70..759c99e34085 100644
-> --- a/Documentation/process/submitting-patches.rst
-> +++ b/Documentation/process/submitting-patches.rst
-> @@ -134,6 +134,15 @@ resources. In addition to giving a URL to a mailing list archive or bug,
->  summarize the relevant points of the discussion that led to the
->  patch as submitted.
->  
-> +It might be interesting to use the 'Closes:' tag to close issues when the
-> +underlying public bug tracker can do this operation automatically. For
-> +example::
-> +
-> +	Closes: https://example.com/issues/1234
-> +
-> +Private bug trackers and invalid URLs are forbidden. For other public bug
-> +trackers not supporting automations, keep using the "Link:" tag instead.
-> +
->  If your patch fixes a bug in a specific commit, e.g. you found an issue using
->  ``git bisect``, please use the 'Fixes:' tag with the first 12 characters of
->  the SHA-1 ID, and the one line summary.  Do not split the tag across multiple
-> 
+Hi Matthieu,
 
-The doc LGTM, thanks!
+Thank you for your modifications, that's great!
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Our CI did some validations and here is its report:
 
--- 
-An old man doll... just what I always wanted! - Clara
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6730930425954304
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6730930425954304/summary/summary.txt
 
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5657807077244928
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5657807077244928/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5094857123823616
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5094857123823616/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4531907170402304
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4531907170402304/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/49b26cb5b35a
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
