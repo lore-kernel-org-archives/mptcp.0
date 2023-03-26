@@ -1,126 +1,117 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291097F
-	for <mptcp@lists.linux.dev>; Sat, 25 Mar 2023 07:27:27 +0000 (UTC)
-Received: by mail-pj1-f53.google.com with SMTP id gp15-20020a17090adf0f00b0023d1bbd9f9eso7153881pjb.0
-        for <mptcp@lists.linux.dev>; Sat, 25 Mar 2023 00:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679729246;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8gfAcY8N8mJNbjNS9Nv+dKKetDKc3yRlvqQkRrR5p/I=;
-        b=Tv/q+kHORa5v1awJkmaZ84jMJXfZbU1qfT022O5pX9fY0nChF/WsTqRlAAwpa/yD5h
-         UDfSkUmjPshnq48CfHdBtbKCv6OHKdhBfSk0tvWC6//zYyeK/VlgIFFRVVCbNCwOxkjR
-         U+DBWRnvXYM7VoocBWKOPxprVcJTkKmWdv2poqRAgrSvrgjKe8vau3Qz/nGGpUOTCq7O
-         y49yVbOAgZJsODiF3IFSmLiOOZD3bxOEdr7ipkhWQLYEzKoRoXLBUyO1kHAWkAhXlYyd
-         t3j2qlmdxBafQ1vLaPWxZydc/A97YidUYbprY5qi2hmNOFZfYh+x1SelgZ9UjpCXGGQV
-         WSWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679729246;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=8gfAcY8N8mJNbjNS9Nv+dKKetDKc3yRlvqQkRrR5p/I=;
-        b=PCRllmifcvRfdC80QrjnfFL9OWBQkWsAup5+FFlQOvh2JlV5VKiuh72wJw8fw7/0Xe
-         uTxONf535gNIAos0VckBFiAaQvDjoONgUJZ44jZB8o8FaGFKoD1RG8GvfUohP4WGX/tJ
-         ce78ju7/BOlKPnvevqbuJFsup+OnGnXyJPSVUoKgFCWPCrNj/gxaS93vWlaEpndVZryf
-         dUgBAoyMVjUnA9r5hlFIFkBGTW6F2bIFRAy8KvsgB0QjUY7cN2uEiEJXOc48jR4Cqfok
-         DkpJnDLvFa2+TTHjdpmL1x0VznICFmjOtcZrfx8XHaaf4KeNNZVq1RMviEKlJ0yf4ic3
-         YgEg==
-X-Gm-Message-State: AAQBX9flgp1yK6PkXVnPtcrP2/AL9jaFz1ye32/kk7ibnUMP3hIXye/v
-	oq3rjEWqRrUB/etpsh9fvLLm3O/pIk7D
-X-Google-Smtp-Source: AKy350aA8LhqtytsWYSYzntCp3AyfBjxsa3CLbuGckyoIRUt5xCnVi8H/0Ck7EScKYSMaMjw7Rq3BQ==
-X-Received: by 2002:a17:903:20d4:b0:1a1:c746:7d6f with SMTP id i20-20020a17090320d400b001a1c7467d6fmr3858136plb.53.1679729246460;
-        Sat, 25 Mar 2023 00:27:26 -0700 (PDT)
-Received: from [127.0.0.1] ([13.87.244.144])
-        by smtp.gmail.com with ESMTPSA id t7-20020a170902bc4700b0019a91895cdfsm15316617plz.50.2023.03.25.00.27.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Mar 2023 00:27:25 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20230314-doc-checkpatch-closes-tag-v2-2-f4a417861f6d@tessares.net>
-References:
- <20230314-doc-checkpatch-closes-tag-v2-2-f4a417861f6d@tessares.net>
-Subject: Re: checkpatch: allow Closes tags with links: Tests Results
-Message-ID: <7decd0f8-3786-c4a9-a728-f7e5e8eda661@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Mar 2023 07:27:25 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1138A1FBD
+	for <mptcp@lists.linux.dev>; Sun, 26 Mar 2023 11:28:51 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pgOYA-0004Op-9n; Sun, 26 Mar 2023 13:28:38 +0200
+Message-ID: <29b2c9c1-f176-5e42-2606-94b4bc6d4c45@leemhuis.info>
+Date: Sun, 26 Mar 2023 13:28:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Content-Language: en-US, de-DE
+To: Matthieu Baerts <matthieu.baerts@tessares.net>,
+ Jonathan Corbet <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>,
+ Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+ =?UTF-8?Q?Kai_Wasserb=c3=a4ch?= <kai@dev.carbon-project.org>,
+ Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
+References: <20230314-doc-checkpatch-closes-tag-v2-0-f4a417861f6d@tessares.net>
+ <20230314-doc-checkpatch-closes-tag-v2-1-f4a417861f6d@tessares.net>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [PATCH v2 1/2] docs: process: allow Closes tags with links
+In-Reply-To: <20230314-doc-checkpatch-closes-tag-v2-1-f4a417861f6d@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1679830132;80aa5a97;
+X-HE-SMSGID: 1pgOYA-0004Op-9n
 
-Hi Matthieu,
+On 24.03.23 19:52, Matthieu Baerts wrote:
+> Making sure a bug tracker is up to date is not an easy task. For
+> example, a first version of a patch fixing a tracked issue can be sent a
+> long time after having created the issue. But also, it can take some
+> time to have this patch accepted upstream in its final form. When it is
+> done, someone -- probably not the person who accepted the patch -- has
+> to remember about closing the corresponding issue.
+> 
+> This task of closing and tracking the patch can be done automatically by
+> bug trackers like GitLab [1], GitHub [2] and hopefully soon [3]
+> bugzilla.kernel.org when the appropriated tag is used. The two first
+> ones accept multiple tags but it is probably better to pick one.
+> 
+> [...]
+> 
+> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
+> index 7a670a075ab6..20f0b6b639b7 100644
+> --- a/Documentation/process/5.Posting.rst
+> +++ b/Documentation/process/5.Posting.rst
+> @@ -217,6 +217,15 @@ latest public review posting of the patch; often this is automatically done
+>  by tools like b4 or a git hook like the one described in
+>  'Documentation/maintainer/configure-git.rst'.
+>  
+> +Similarly, there is also the "Closes:" tag that can be used to close issues
+> +when the underlying public bug tracker can do this operation automatically.
+> +For example::
+> +
+> +	Closes: https://example.com/issues/1234
+> +
+> +Private bug trackers and invalid URLs are forbidden. For other public bug
+> +trackers not supporting automations, keep using the "Link:" tag instead.
+> [...]
 
-Thank you for your modifications, that's great!
+This more and more seems half-hearted to me.
 
-Our CI did some validations and here is its report:
+One reason: it makes things unnecessarily complicated for developers, as
+they'd then have to remember `is this a public bug tracker that is
+supporting automations? Then use "Closes", otherwise "Link:"`.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5262323972046848
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5262323972046848/summary/summary.txt
+Another reason: the resulting situation ignores my regression tracking
+bot, which (among others) tracks emailed reports. It would benefit from
+"Closes" as well to avoid the ambiguity problem Konstantin brought up
+(the one about "Link: might just point to a report for background
+information in patches that don't address the problem the link points
+to"[1]. But FWIW, I'm not sure if this ambiguity is much of a problem in
+practice, I have a feeling that it's rare and most of the time will
+happen after the reported problem has been addressed or in the same
+patch-set.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6388223878889472
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6388223878889472/summary/summary.txt
+I thus think we should use either of these approaches:
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6106748902178816
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6106748902178816/su=
-mmary/summary.txt
+* just stick to "Link: <url>"
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4980848995336192
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4980848995336192/summary/summary.txt
+* go "all-in" and tell developers to use "Closes: <url>"[2] all the time
+when a patch is resolving an issue that was reported in public
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/ca6d67801b4c
+I'm not sure which of them I prefer myself. Maybe I'm slightly leaning
+towards the latter: it avoids the ambiguity, checkpatch.pl will yell if
+it's used with something else than a URL, it makes things easier for
+MPTCP & DRM developers, and (maybe most importantly) is something new
+developers are often used to already from git forges.
 
+Ciao, Thorsten
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+[1]
+https://lore.kernel.org/linux-doc/20230317185637.ebxzsdxivhgzkqqw@meerkat.local/
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+[2] fwiw, I still prefer "Resolves:" over "Closes". Yes, I've seen
+Konstantin's comment on the subtle difference between the two[3], but as
+he said, Bugbot can work with it as well. But to me "Resolves" sounds
+way friendlier and more descriptive to me; but well, I'm not a native
+speaker, so I don't think my option should count much here.
 
-For more details:
+[3]
+https://lore.kernel.org/linux-doc/20230316162227.727rhima2tejdl5j@meerkat.local/
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
