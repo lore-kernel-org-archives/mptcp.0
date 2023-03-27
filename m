@@ -1,169 +1,134 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26212A57
-	for <mptcp@lists.linux.dev>; Mon, 27 Mar 2023 10:24:19 +0000 (UTC)
-Received: by mail-wr1-f48.google.com with SMTP id q19so5103241wrc.5
-        for <mptcp@lists.linux.dev>; Mon, 27 Mar 2023 03:24:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F0AECF
+	for <mptcp@lists.linux.dev>; Mon, 27 Mar 2023 12:44:43 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id w9so35687352edc.3
+        for <mptcp@lists.linux.dev>; Mon, 27 Mar 2023 05:44:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1679912657;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VW3IChK5d/LMd19IisgoH//5UFlp1VHM94HpnaBU+Yc=;
-        b=MHjCaeveR0nLvCez0W14hOk+lY88zGiY+MtGz7b37omDe49MRW//+Jh3ZX+LhPr0xf
-         s38b+FeFevyydUSnJvBS9fnLrUofHcA8omadWCa31JPR4lCjzeWL3pNqmKUsXy9FpY7f
-         PGBtJm4HVfSgIIp434awf4kpHGCJqZBQY9EvwL/CwRAx8eG3EuiXslx/hutQmuJXwveP
-         /tzIs6Neyad/ysb/ObQKKswcmV5A3bzkqXKVmGuAlUopwt258xASbe5muXa9NQTtarM8
-         LUyTmSjnRR645SKYQIIZC4garvFLy4rbiZYzDpVHd+/SeCbHXuN9YSRz5oJT8rpG7UfO
-         nxyA==
+        d=tessares.net; s=google; t=1679921082;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EKW/tU35UjGEuUF9Mez4H7fZWGcAomPnT3WUqTcOwB8=;
+        b=glqgBSj0rwWYVzccQFPKfUYu5IDeMkUNFZIBmxGr8nrmFA32ZNrdBTM5DUu2qpSXLv
+         Mfo4LtPvpfhIO8obwOsqHhZlR0GD506gc5h7OGcxx5xgkduTJjVtlnkrpeagGFFgoyp2
+         d1cuQqvxMbD/Mce87L+rEUWcPATyTMuab+t9DHVvLAUdFlYlBvzEHQl1CfO6gB5HRYrf
+         1cR4RCuotDVykuEG2m/fTO/HXu5WRxL3jkji0Xf/AWOnRywfpk+o3DOWC7MZPaTGgLdo
+         dToSihjbS9ns47KyhivkdLSL9xl2cG6kBlkOEx/4lxrfyqAC/pQ40e0ifowVCDFNiNaK
+         7DrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679912657;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VW3IChK5d/LMd19IisgoH//5UFlp1VHM94HpnaBU+Yc=;
-        b=RLz/tpNvrKgyL/aWv6Py4DxOZiyOvwsbtEE4wWZ2IdGUvBLpDNMDKaHElb2KSFycGv
-         qcLFNFgzYkYlPCbWr8wdLwP+pUr22pzpGxL7eGbCY5L/7GQHxgbILbS4yjryWRiA4ksC
-         b1BJNDl11Hy2ZhIVUaVHGqlKYskZClRZ90/bcYtuzUOVCmUzhj++izQuJCAx+2k2PA7M
-         XKSiiEeKqFxVb2vju63Clog9974B7wGL1IC8+qgh8LD5Lg1pmFL9AHuj8QOlFfAAKm3y
-         kWAs3oXOC69A2pnVowusHepIAzBvdTigR7w21W0XgmK87xmuumJC5JE17bXYyTWHPFp5
-         gQtg==
-X-Gm-Message-State: AAQBX9f09jyCi1iCuzpKTzmR0YeY1w2ieDfjo/HKFtFbJ/r7huSRDG/R
-	Ridu6cOlKawC8h9dwtDyq8cfhA==
-X-Google-Smtp-Source: AKy350ZnTqf78NEN7xNAnvWTczWnbazaiB3XMXvoI9TF3wdfUBYXs4wNYne4EP6hBB0f6Yxpet1vwQ==
-X-Received: by 2002:a5d:420d:0:b0:2cf:d25a:635b with SMTP id n13-20020a5d420d000000b002cfd25a635bmr8804536wrq.62.1679912657412;
-        Mon, 27 Mar 2023 03:24:17 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id p5-20020a05600c358500b003ef6f87118dsm2220615wmq.42.2023.03.27.03.24.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Mar 2023 03:24:17 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Mon, 27 Mar 2023 12:22:24 +0200
-Subject: [PATCH net-next v2 4/4] selftests: mptcp: add mptcp_info tests
+        d=1e100.net; s=20210112; t=1679921082;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EKW/tU35UjGEuUF9Mez4H7fZWGcAomPnT3WUqTcOwB8=;
+        b=gDw+zIXVZ2OWtVFsqR//fnLjj09quW35TZivzlM5kwksUBDm7Jy77nqxBO5k3vHPvD
+         Vjs0vffkJpwxLk5wrvq0ZI3FfjVGaYoL3QyJgsNz5Lst6VFm4UNqLSpLqdHWVpm+LRhD
+         bTlGhXm2D7X9h4FyLhSkl9lUOqYznagiSBxMxJXvC4FR8+ag619H7opg3WM3D3l/CD8f
+         RxQGnYTXq4TAzfimZxRnGDfJpKD4Q/VafnlOvahQ35W2ZEz1Py1NvWfmY+UH8HZh4Ksd
+         U36ScCTFcqcMXtiMdEd22a48DiDBnmhi2rhEp5iZFrDNMuyk7WUxJ/5a6Ngd4E6sC5wp
+         xgiA==
+X-Gm-Message-State: AAQBX9eRm/VxVGz4MRX0bdEKHmOZh68BuuioJL+YjOnB5461JyHQVNzP
+	U4SYtFTLWdrN3aAvAt+WQfW9kQ==
+X-Google-Smtp-Source: AKy350bdtzCpB1RpTkMzpU+kL/HgZJs5VPsA2ZEf4q+QvtNuRCG23spbWNl2cGsoNjW3ojSIcOXorQ==
+X-Received: by 2002:a17:906:48cb:b0:932:c50e:d6b4 with SMTP id d11-20020a17090648cb00b00932c50ed6b4mr11850596ejt.9.1679921081892;
+        Mon, 27 Mar 2023 05:44:41 -0700 (PDT)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id w17-20020a170906b19100b0093fa8c2e877sm2894122ejy.80.2023.03.27.05.44.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Mar 2023 05:44:41 -0700 (PDT)
+Message-ID: <03e4389e-5790-68c5-422f-f128415c2d03@tessares.net>
+Date: Mon, 27 Mar 2023 14:44:41 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2 2/2] checkpatch: allow Closes tags with links
+Content-Language: en-GB
+To: Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+ Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+ =?UTF-8?Q?Kai_Wasserb=c3=a4ch?= <kai@dev.carbon-project.org>,
+ Thorsten Leemhuis <linux@leemhuis.info>,
+ Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
+References: <20230314-doc-checkpatch-closes-tag-v2-0-f4a417861f6d@tessares.net>
+ <20230314-doc-checkpatch-closes-tag-v2-2-f4a417861f6d@tessares.net>
+ <d24f2eca8f2a858b48ad0e019e58e0e5098be5c3.camel@perches.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <d24f2eca8f2a858b48ad0e019e58e0e5098be5c3.camel@perches.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230324-upstream-net-next-20230324-misc-features-v2-4-fca1471efbaa@tessares.net>
-References: <20230324-upstream-net-next-20230324-misc-features-v2-0-fca1471efbaa@tessares.net>
-In-Reply-To: <20230324-upstream-net-next-20230324-misc-features-v2-0-fca1471efbaa@tessares.net>
-To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>, 
- Geliang Tang <geliang.tang@suse.com>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2389;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=QeiNRTK3EtggzUHbWnfSGf4g3uU4Ocezndf67d7El5Q=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkIW7NXKdb4dxMlhzSbDAHfngN3I6Tno49jBB1w
- 9wkpMWGEhGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZCFuzQAKCRD2t4JPQmmg
- c92dD/4zNxMiqdjA6KqIPL1tAFlRl6VCTI2idiN6Z8PkYq3y0q07BFbQ3otEDtfcVqcWc3C5r8V
- BOn2ssLS34vGjWxMofBz3E4L7CmUpgVBPuaLKHq0S8w/cM0nBuvCsqoyDM8XaHvGqlyYEIdkhcq
- FkjwM4Ut40WYZbZfeeMPtR9AzYSVwHrTIj0a9U++UV3Bw51bOVI3T3KqctrGf+YNEL//byka15o
- h+eSU4pZ5dZcWj/ohiSaBKZ7bmKaGBoE2ttG/Dp5NQftUakEdWEVy4jNumKOSIVjBx+TWbGeicU
- ObkYtZF+OxWdfCuPjc5vNJIkzBh5vmziu89eiEclc7l17/2bacpfVX0he1F7l7jfx8heml1bMbJ
- KcFhuB2CbjK4btrsgRaWWD1gCcof6AvTBSoE5cIMIrH2RWo9aNZJ2XL+KAg+5XCOopi0CNniWdG
- 1bjehBk62nXEKfp5jMsK6qH777uJPKRQs6M575gSI1Fd9ZBV6VC+UWGaZ99b5dztnzIHZd+YS3t
- 5mtb/xFZ/mm0LA7hLqpHCNiyFUIf0A9NvspXvQ3jEpCYG1vSkcb3mKA6YbFi3bXxjUJVeOW5ZJD
- t9Fp+30MyxxZeJ+AaVHnhWfrFJhRTATxYf7ZDPxB+oPBVluRzNl40Bbs+ajQ4A95dszExXBfj5J
- /5v6Gn9hz8U7XFQ==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <geliang.tang@suse.com>
+Hi Joe,
 
-This patch adds the mptcp_info fields tests in endpoint_tests(). Add a
-new function chk_mptcp_info() to check the given number of the given
-mptcp_info field.
+Thank you for the review!
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/330
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 47 ++++++++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
+On 24/03/2023 20:13, Joe Perches wrote:
+> On Fri, 2023-03-24 at 19:52 +0100, Matthieu Baerts wrote:
+>> As a follow-up of the previous patch modifying the documentation to
+>> allow using the "Closes:" tag, checkpatch.pl is updated accordingly.
+>>
+>> checkpatch.pl now mentions the "Closes:" tag between brackets to express
+>> the fact it should be used only if it makes sense.
+>>
+>> While at it, checkpatch.pl will not complain if the "Closes" tag is used
+>> with a "long" line, similar to what is done with the "Link" tag.
+>>
+>> Fixes: 76f381bb77a0 ("checkpatch: warn when unknown tags are used for links")
+>> Fixes: d7f1d71e5ef6 ("checkpatch: warn when Reported-by: is not followed by Link:")
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/373
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> ---
+>>  scripts/checkpatch.pl | 16 ++++++++--------
+>>  1 file changed, 8 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+>> index bd44d12965c9..d6376e0b68cc 100755
+>> --- a/scripts/checkpatch.pl
+>> +++ b/scripts/checkpatch.pl
+>> @@ -3158,14 +3158,14 @@ sub process {
+>>  				}
+>>  			}
+>>  
+>> -# check if Reported-by: is followed by a Link:
+>> +# check if Reported-by: is followed by a Link: (or Closes:) tag
+>>  			if ($sign_off =~ /^reported(?:|-and-tested)-by:$/i) {
+>>  				if (!defined $lines[$linenr]) {
+>>  					WARN("BAD_REPORTED_BY_LINK",
+>> -					     "Reported-by: should be immediately followed by Link: to the report\n" . $herecurr . $rawlines[$linenr] . "\n");
+>> -				} elsif ($rawlines[$linenr] !~ m{^link:\s*https?://}i) {
+>> +					     "Reported-by: should be immediately followed by Link: (or Closes:) to the report\n" . $herecurr . $rawlines[$linenr] . "\n");
+>> +				} elsif ($rawlines[$linenr] !~ m{^(link|closes):\s*https?://}i) {
+> 
+> Please do not use an unnecessary capture group.
+> 
+> 		(?:link|closes)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 42e3bd1a05f5..fafd19ec7e1f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1719,6 +1719,46 @@ chk_subflow_nr()
- 	fi
- }
- 
-+chk_mptcp_info()
-+{
-+	local nr_info=$1
-+	local info
-+	local cnt1
-+	local cnt2
-+	local dump_stats
-+
-+	if [[ $nr_info = "subflows_"* ]]; then
-+		info="subflows"
-+		nr_info=${nr_info:9}
-+	else
-+		echo "[fail] unsupported argument: $nr_info"
-+		fail_test
-+		return 1
-+	fi
-+
-+	printf "%-${nr_blank}s %-30s" " " "mptcp_info $info=$nr_info"
-+
-+	cnt1=$(ss -N $ns1 -inmHM | grep "$info:" |
-+		sed -n 's/.*\('"$info"':\)\([[:digit:]]*\).*$/\2/p;q')
-+	[ -z "$cnt1" ] && cnt1=0
-+	cnt2=$(ss -N $ns2 -inmHM | grep "$info:" |
-+		sed -n 's/.*\('"$info"':\)\([[:digit:]]*\).*$/\2/p;q')
-+	[ -z "$cnt2" ] && cnt2=0
-+	if [ "$cnt1" != "$nr_info" ] || [ "$cnt2" != "$nr_info" ]; then
-+		echo "[fail] got $cnt1:$cnt2 $info expected $nr_info"
-+		fail_test
-+		dump_stats=1
-+	else
-+		echo "[ ok ]"
-+	fi
-+
-+	if [ "$dump_stats" = 1 ]; then
-+		ss -N $ns1 -inmHM
-+		ss -N $ns2 -inmHM
-+		dump_stats
-+	fi
-+}
-+
- chk_link_usage()
- {
- 	local ns=$1
-@@ -3118,13 +3158,18 @@ endpoint_tests()
- 		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 2>/dev/null &
- 
- 		wait_mpj $ns2
-+		chk_subflow_nr needtitle "before delete" 2
-+		chk_mptcp_info subflows_1
-+
- 		pm_nl_del_endpoint $ns2 2 10.0.2.2
- 		sleep 0.5
--		chk_subflow_nr needtitle "after delete" 1
-+		chk_subflow_nr "" "after delete" 1
-+		chk_mptcp_info subflows_0
- 
- 		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
- 		wait_mpj $ns2
- 		chk_subflow_nr "" "after re-add" 2
-+		chk_mptcp_info subflows_1
- 		kill_tests_wait
- 	fi
- }
+Good point, thank you, that will be in the v3.
 
+> And because it's somewhat likely that _more_ of these keywords
+> could be added, perhaps use some array like deprecated_apis
+
+I can but from the discussions we had on the v1, it looks unlikely to me
+that more of these keywords will be allowed (if this one already ends up
+being accepted :) ). Strangely, we might not even want to make it easy
+to add new tags.
+
+But I'm fine to change that in the v3 if you prefer to have an array here.
+
+Cheers,
+Matt
 -- 
-2.39.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
