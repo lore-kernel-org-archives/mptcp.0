@@ -1,89 +1,63 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B59323D
-	for <mptcp@lists.linux.dev>; Mon, 27 Mar 2023 14:28:16 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pgnpR-00038G-H4; Mon, 27 Mar 2023 16:28:09 +0200
-Message-ID: <e8ad8b03-70c5-03b5-3e48-61bf884ebb27@leemhuis.info>
-Date: Mon, 27 Mar 2023 16:28:08 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C1E3C0F
+	for <mptcp@lists.linux.dev>; Mon, 27 Mar 2023 15:30:49 +0000 (UTC)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 0607D37E;
+	Mon, 27 Mar 2023 15:30:42 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 0607D37E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1679931043; bh=XO9ObxSwSUHuoTConErq8w3ZLhO2VmWJEPLigLiermo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=fN+vjMoRDUqEliXEHD+l6iOZR1Cg8vrNvzwlYDcpqKJijL/xI979OQZTM0WX1vFfY
+	 rZIY/XEiWLiGHAjtCljofGySwqNsUG+kqOoWsVCIY+b2sJUR4uRgG0mtrqtPHjCpcW
+	 NUVSH2cGNrRYVicOdxYR1oRtpIcogIXcnuMKe6Hkkp91sy1bL7GPFPeViHJdwpVXtn
+	 arAjo0w1J86YrbO5C8J+YbI+vevDAShuYU3YMAJZD/8fPh7yZP1Z1fMSKzSOu7r3yC
+	 Je7X2t2ioLJPQtwivKBVqchCdMyy0K+/0+JDcJikQmDLvXttP4HA4cBuZ0pyHOu7Bb
+	 8kIXM93LiTfqg==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>, Matthieu Baerts
+ <matthieu.baerts@tessares.net>, Andy Whitcroft <apw@canonical.com>, Joe
+ Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas
+ Bulwahn <lukas.bulwahn@gmail.com>, Kai =?utf-8?Q?Wasserb=C3=A4ch?=
+ <kai@dev.carbon-project.org>, Andrew Morton <akpm@linux-foundation.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>, Bagas Sanjaya
+ <bagasdotme@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] docs: process: allow Closes tags with links
+In-Reply-To: <073d5ee7-64e7-7ced-44cc-2f7f00a8b238@leemhuis.info>
+References: <20230314-doc-checkpatch-closes-tag-v2-0-f4a417861f6d@tessares.net>
+ <20230314-doc-checkpatch-closes-tag-v2-1-f4a417861f6d@tessares.net>
+ <29b2c9c1-f176-5e42-2606-94b4bc6d4c45@leemhuis.info>
+ <9462668e-dbaf-8df8-8ba2-86f9511294ac@tessares.net>
+ <073d5ee7-64e7-7ced-44cc-2f7f00a8b238@leemhuis.info>
+Date: Mon, 27 Mar 2023 09:30:42 -0600
+Message-ID: <87cz4unrdp.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Content-Language: en-US, de-DE
-To: Matthieu Baerts <matthieu.baerts@tessares.net>,
- Jonathan Corbet <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>,
- Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- =?UTF-8?Q?Kai_Wasserb=c3=a4ch?= <kai@dev.carbon-project.org>,
- Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
-References: <20230314-doc-checkpatch-closes-tag-v2-0-f4a417861f6d@tessares.net>
- <20230314-doc-checkpatch-closes-tag-v2-2-f4a417861f6d@tessares.net>
- <2f96048b-c580-625f-6fc7-06237292efe3@leemhuis.info>
- <bf7546ab-6c76-05b0-4539-f4aa854ffae9@tessares.net>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH v2 2/2] checkpatch: allow Closes tags with links
-In-Reply-To: <bf7546ab-6c76-05b0-4539-f4aa854ffae9@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1679927297;a03a728f;
-X-HE-SMSGID: 1pgnpR-00038G-H4
+Content-Type: text/plain
 
-On 27.03.23 15:06, Matthieu Baerts wrote:
-> Hi Thorsten,
-> 
-> On 25/03/2023 07:25, Thorsten Leemhuis wrote:
->> On 24.03.23 19:52, Matthieu Baerts wrote:
->>> As a follow-up of the previous patch modifying the documentation to
->>> allow using the "Closes:" tag, checkpatch.pl is updated accordingly.
->>>
->>> checkpatch.pl now mentions the "Closes:" tag between brackets to express
->>> the fact it should be used only if it makes sense.
->>>
->>> While at it, checkpatch.pl will not complain if the "Closes" tag is used
->>> with a "long" line, similar to what is done with the "Link" tag.
->>>
->>> [...]
->>>  
->>> -# check if Reported-by: is followed by a Link:
->>> +# check if Reported-by: is followed by a Link: (or Closes:) tag
->>
->> Small detail: why the parenthesis here? Why no simply "check if
->> Reported-by: is followed by a either Link: or Closes: tag". Same below...
->>
->>>  			if ($sign_off =~ /^reported(?:|-and-tested)-by:$/i) {
->>>  				if (!defined $lines[$linenr]) {
->>>  					WARN("BAD_REPORTED_BY_LINK",
->>> -					     "Reported-by: should be immediately followed by Link: to the report\n" . $herecurr . $rawlines[$linenr] . "\n");
->>> -				} elsif ($rawlines[$linenr] !~ m{^link:\s*https?://}i) {
->>> +					     "Reported-by: should be immediately followed by Link: (or Closes:) to the report\n" . $herecurr . $rawlines[$linenr] . "\n");
->>
->> ...here, where users actually get to see this and might wonder why it's
->> written like that, without getting any answer.
-> 
-> I tried to explain that in the cover-letter but maybe I should add an
-> additional comment in the code: checkpatch.pl now mentions the "Closes:"
-> tag between parenthesis to express the fact it should be used only if it
-> makes sense. I didn't find any other short ways to express that but I'm
-> open to suggestions.
-> 
-> Now as discussed on patch 1/2, if the "Closes:" tag can be used with any
-> public link, we should definitively remove the parenthesis here and
-> probably below (see "Check for odd tags before a URI/URL") as well.
+Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-Well, ymmd, but if we go down that route I'd say this code should
-suggest to use "Closes:" all the time (or primarily).
+>> If we do that, would it be blocking to have this included in v6.3?
+>
+> You mean if this still can go in for 6.3? Well, the patches afaics needs
+> to be ACKed by the right people first (Joe for checkpatch I guess, Jon
+> for docs). It likely also depends on how this discussion continues and
+> the opinion of the maintainer(s?) that picks up the patches.
 
-Ciao, Thorsten
+We're at -rc4, I wouldn't really consider this for 6.3 at this point.
+There's no reason to try to rush it.
+
+Thanks,
+
+jon
