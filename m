@@ -1,117 +1,124 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1138A1FBD
-	for <mptcp@lists.linux.dev>; Sun, 26 Mar 2023 11:28:51 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pgOYA-0004Op-9n; Sun, 26 Mar 2023 13:28:38 +0200
-Message-ID: <29b2c9c1-f176-5e42-2606-94b4bc6d4c45@leemhuis.info>
-Date: Sun, 26 Mar 2023 13:28:37 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F440A29
+	for <mptcp@lists.linux.dev>; Mon, 27 Mar 2023 10:24:15 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id q7-20020a05600c46c700b003ef6e809574so1588287wmo.4
+        for <mptcp@lists.linux.dev>; Mon, 27 Mar 2023 03:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1679912654;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nwOigjhn0/nfkRIj9IqWCI0UBahJ590Lb8WM7IjXdAg=;
+        b=Xc+/9HD7Op2pUmUWyNmJKebsfr0V6V4TKAwRPQHLAeRro7SpW5jx05OjR5FdG8kRjw
+         iIveblhWJ+itaepVyxm8MgQ7RopOA2sUUSFfKYzcyOvb3QMC3xnmmrnYSAguvlREtM/Y
+         KPFRZFYN+stCmAKR4PV4gymb8CWHzwZkoIcWupam/J8tdmxPnJz9S9OquBMELkSutwDd
+         JbI1/E08wCj4FSBDa/9S3a+3dM6ZsJ6DFQCOj3Jl7Wl1aPEUNjLK9FORGkt5+qD4h04N
+         v3GAYm+l8/Y+ELBMKNaaFSwPCG+soviFpRQyrNiMqRlhisJo+H8KxPp/jsatG9kSHw7R
+         zkiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679912654;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nwOigjhn0/nfkRIj9IqWCI0UBahJ590Lb8WM7IjXdAg=;
+        b=kjptVS1uq4BMxBvrxUqsfaF7A05298gopeotu7UajYN5Dfwg0upiau/saFFtM7UN0/
+         Gh0p8MfNwHxire8bIVshwOuLUcZDok8NO97uG0ROW2ZGiPDa1ez2lCSFzcgPwXtYuUwX
+         x+fLxWpa5K7+fKpRheQo36f+dvvb94vbFQNerARgdH/95tbplcONHEvLi5dH4MR1xhoY
+         zplKK/+Sn+899TH1eSCqRonDghK3KLIIMC7NN1HLD13LVuC6XBXTQH1XG8ditlxfIIfE
+         CkWvIMvNMGqpU3pIrAiyHAzVIUzUgpnBYBD3O/GKaBOdXcA8SfW97HA3PD3PxndWAY7o
+         DE/g==
+X-Gm-Message-State: AO0yUKUUTcesgYXSVgP9DJd3IXUwrWa6yYiSMUyBib1mHsXWYJEAqmUX
+	c+iWpKsxxR1QsRMaRxkqpx4gfg==
+X-Google-Smtp-Source: AK7set898rOJQM5FW7BmbcFoKGsUFxXHG4duGjk1byMM9H0yiU52gRKBRI8gPGwbgMlkX2IDnaPsEg==
+X-Received: by 2002:a7b:c39a:0:b0:3ed:9ce3:4a39 with SMTP id s26-20020a7bc39a000000b003ed9ce34a39mr9370389wmj.26.1679912654170;
+        Mon, 27 Mar 2023 03:24:14 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id p5-20020a05600c358500b003ef6f87118dsm2220615wmq.42.2023.03.27.03.24.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Mar 2023 03:24:13 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net-next v2 0/4] mptcp: a couple of cleanups and
+ improvements
+Date: Mon, 27 Mar 2023 12:22:20 +0200
+Message-Id: <20230324-upstream-net-next-20230324-misc-features-v2-0-fca1471efbaa@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Content-Language: en-US, de-DE
-To: Matthieu Baerts <matthieu.baerts@tessares.net>,
- Jonathan Corbet <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>,
- Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- =?UTF-8?Q?Kai_Wasserb=c3=a4ch?= <kai@dev.carbon-project.org>,
- Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
-References: <20230314-doc-checkpatch-closes-tag-v2-0-f4a417861f6d@tessares.net>
- <20230314-doc-checkpatch-closes-tag-v2-1-f4a417861f6d@tessares.net>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH v2 1/2] docs: process: allow Closes tags with links
-In-Reply-To: <20230314-doc-checkpatch-closes-tag-v2-1-f4a417861f6d@tessares.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1679830132;80aa5a97;
-X-HE-SMSGID: 1pgOYA-0004Op-9n
+X-B4-Tracking: v=1; b=H4sIAFxuIWQC/5WOMQ6DMAxFr4I81xUJoYVOvUfFkIApGQgoDogKc
+ fcGBpZOHTx8ve+nvwKTt8TwSFbwNFu2g4tBXhKoO+3ehLaJGWQqszSTCqeRgyfdo6MQbwl4ot5
+ yjS3pMHliFPfCSHMThRIKos5oJjReu7rbhT+evTN6au1yzHnBCapIOsth8J9j5ywO/v+kWWCKu
+ ZalyFVeStM8AzHriK7xFapt277421BPEQEAAA==
+To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ Geliang Tang <geliang.tang@suse.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1529;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=YZ7HyQPpwwhOjk8ddV6pgNaqf8NyURsDaIfJoPwcGfY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkIW7NnZNWfPoVEFzjURT49Y1TSl9DYozAFxYOd
+ vZ+XAOPUeWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZCFuzQAKCRD2t4JPQmmg
+ c1kxD/4rQHDzB1swzhIlOTM2X1tysCsa0SaRMfBsABnVupqCeRq0kCcPvKrvxHGRCZDOj21yncl
+ RX+x906PnQHRKpbUxhB2oB+5AQyYil+4sODn9F3ZxGEY85QpxSvRiSiK2MgH9itn+y865r7oKio
+ vg/1sC00WnWFXzUkHwe8sQzFUxComYs5B7HHfg9hQmMC23c3Ec4fxjTkNRH1xWE6AXk0ckJ+4Sn
+ te3cm9VddP527c1BAJsrZnT0b21NAGh+4DadZ2T6JVQKO2OLJm7wcH6OJmD2HFphBhbC5HLnih+
+ ygpIun9Y4ZQIqI7A/avvLrUWfXMjskQT83UHqBn9kleJUwqvf0tJqE3fOCTLZY+0GPmoHzrm/tt
+ nEVwUu7zkn+lzBzkEqf0Q9DKcB+oFUT+f8G3ylQIyNG0WXcNp9zA/zWNeaA8hk7HUyV4cvGbL0E
+ Ajiic7nZv6rZ64B7VUz6619B3Emsp5S8bm69NRhMpAuvAyQARKTniyYcdGdvslhnMYiXyV3CCvm
+ /x7QF5dPe5TxNgoDhLxgRupyndmZdzXT4bArLI6HgOHs7eE5ZbCMiZKLtmeaiHrn96zJAfvYVhK
+ tTKiUHrfnLAyAYB7OoVQz6kIye7u6KRff3/REhJBf0za/vkvEp0yZWRWvc4zq2zR6CZ0ieVAJ9i
+ rQuRyn2ccC0nf3Q==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 24.03.23 19:52, Matthieu Baerts wrote:
-> Making sure a bug tracker is up to date is not an easy task. For
-> example, a first version of a patch fixing a tracked issue can be sent a
-> long time after having created the issue. But also, it can take some
-> time to have this patch accepted upstream in its final form. When it is
-> done, someone -- probably not the person who accepted the patch -- has
-> to remember about closing the corresponding issue.
-> 
-> This task of closing and tracking the patch can be done automatically by
-> bug trackers like GitLab [1], GitHub [2] and hopefully soon [3]
-> bugzilla.kernel.org when the appropriated tag is used. The two first
-> ones accept multiple tags but it is probably better to pick one.
-> 
-> [...]
-> 
-> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
-> index 7a670a075ab6..20f0b6b639b7 100644
-> --- a/Documentation/process/5.Posting.rst
-> +++ b/Documentation/process/5.Posting.rst
-> @@ -217,6 +217,15 @@ latest public review posting of the patch; often this is automatically done
->  by tools like b4 or a git hook like the one described in
->  'Documentation/maintainer/configure-git.rst'.
->  
-> +Similarly, there is also the "Closes:" tag that can be used to close issues
-> +when the underlying public bug tracker can do this operation automatically.
-> +For example::
-> +
-> +	Closes: https://example.com/issues/1234
-> +
-> +Private bug trackers and invalid URLs are forbidden. For other public bug
-> +trackers not supporting automations, keep using the "Link:" tag instead.
-> [...]
+Patch 1 removes an unneeded address copy in subflow_syn_recv_sock().
 
-This more and more seems half-hearted to me.
+Patch 2 simplifies subflow_syn_recv_sock() to postpone some actions and
+to avoid a bunch of conditionals.
 
-One reason: it makes things unnecessarily complicated for developers, as
-they'd then have to remember `is this a public bug tracker that is
-supporting automations? Then use "Closes", otherwise "Link:"`.
+Patch 3 stops reporting limits that are not taken into account when the
+userspace PM is used.
 
-Another reason: the resulting situation ignores my regression tracking
-bot, which (among others) tracks emailed reports. It would benefit from
-"Closes" as well to avoid the ambiguity problem Konstantin brought up
-(the one about "Link: might just point to a report for background
-information in patches that don't address the problem the link points
-to"[1]. But FWIW, I'm not sure if this ambiguity is much of a problem in
-practice, I have a feeling that it's rare and most of the time will
-happen after the reported problem has been addressed or in the same
-patch-set.
+Patch 4 adds a new test to validate that the 'subflows' field reported
+by the kernel is correct. Such info can be retrieved via Netlink (e.g.
+with ss) or getsockopt(SOL_MPTCP, MPTCP_INFO).
 
-I thus think we should use either of these approaches:
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Changes in v2:
+- Patch 3/4's commit message has been updated to use the correct SHA
+- Rebased on latest net-next
+- Link to v1: https://lore.kernel.org/r/20230324-upstream-net-next-20230324-misc-features-v1-0-5a29154592bd@tessares.net
 
-* just stick to "Link: <url>"
+---
+Geliang Tang (1):
+      selftests: mptcp: add mptcp_info tests
 
-* go "all-in" and tell developers to use "Closes: <url>"[2] all the time
-when a patch is resolving an issue that was reported in public
+Matthieu Baerts (1):
+      mptcp: do not fill info not used by the PM in used
 
-I'm not sure which of them I prefer myself. Maybe I'm slightly leaning
-towards the latter: it avoids the ambiguity, checkpatch.pl will yell if
-it's used with something else than a URL, it makes things easier for
-MPTCP & DRM developers, and (maybe most importantly) is something new
-developers are often used to already from git forges.
+Paolo Abeni (2):
+      mptcp: avoid unneeded address copy
+      mptcp: simplify subflow_syn_recv_sock()
 
-Ciao, Thorsten
+ net/mptcp/sockopt.c                             | 20 +++++++----
+ net/mptcp/subflow.c                             | 43 +++++++---------------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 47 ++++++++++++++++++++++++-
+ 3 files changed, 72 insertions(+), 38 deletions(-)
+---
+base-commit: e5b42483ccce50d5b957f474fd332afd4ef0c27b
+change-id: 20230324-upstream-net-next-20230324-misc-features-178b2b618414
 
-[1]
-https://lore.kernel.org/linux-doc/20230317185637.ebxzsdxivhgzkqqw@meerkat.local/
-
-[2] fwiw, I still prefer "Resolves:" over "Closes". Yes, I've seen
-Konstantin's comment on the subtle difference between the two[3], but as
-he said, Bugbot can work with it as well. But to me "Resolves" sounds
-way friendlier and more descriptive to me; but well, I'm not a native
-speaker, so I don't think my option should count much here.
-
-[3]
-https://lore.kernel.org/linux-doc/20230316162227.727rhima2tejdl5j@meerkat.local/
+Best regards,
+-- 
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
