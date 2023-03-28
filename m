@@ -1,129 +1,128 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462823D74
-	for <mptcp@lists.linux.dev>; Tue, 28 Mar 2023 17:06:13 +0000 (UTC)
-Received: by mail-wr1-f44.google.com with SMTP id e18so12961856wra.9
-        for <mptcp@lists.linux.dev>; Tue, 28 Mar 2023 10:06:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A38AD30
+	for <mptcp@lists.linux.dev>; Tue, 28 Mar 2023 18:07:13 +0000 (UTC)
+Received: by mail-pl1-f169.google.com with SMTP id iw3so12511213plb.6
+        for <mptcp@lists.linux.dev>; Tue, 28 Mar 2023 11:07:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1680023172;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=McRhWE42irHlshGPa5H0qklu6LxZPZctIJ3HmvaG550=;
-        b=viJBlb1xTq1egV3H+rvXjRUgDCaXon/+Xcw0K9D+3dE48dceweChXhskLTA1HqpFCo
-         gc34tM8v5jdNM8bqDtt3Uj0h2NS/+HQeXUgQIojSHO+OhYF4DQNli7D6xSOoMeqljIYH
-         FTCV2B47t1ik6xJCXiYXScZLkpdTFRPRDXk1ha0VkBHdErjiuHq+vpJN/0QLZQsUV0tc
-         BjiX1bxjty/PzxpuW13SvIxw4CJZ59XFqBydifsN/60Kr1+yScruSGdcpQOCyfGRbVJd
-         zd44usMeMUbN2Ympd2OG/MbGpN3V7BQ0QQDwOmtYEi2wrUQJdhQVhottVRo1mog1HVXb
-         Gulg==
+        d=gmail.com; s=20210112; t=1680026833;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3s/RpMg7963eKSuwlUPUhAQsCifNke046rWDCIkU1QA=;
+        b=LYlYvvIFzwSDnPnkSYx6goIEF0XI0uUOKDpTfM8TECxsxRKn2kT5ghPAK8/RhuDtZL
+         sOtlXO2a8YFqE15C861OE6MMM0+y65fo+gE2lT62QHe9JLI2iXM/VyJSOGmAdkIuEJTz
+         7VsvO0MsQC6hypi2MalHeMusM27jwDK3fG4rFmDPFgnu92oeqwTKNx1M8KCzySp5FiLX
+         dxLy+d7b3vVRT9PTYelr4LmMgl5E0WrCtdcdc8bdVYa74dZdiH58Z/a5+4arIQLn2xaM
+         Bzb+kkiismF91t/vOvoC5ZEAbJErxg4fMI08VNY1COJgdvuH6CCFcbWIAYf4OjZJyPMG
+         4A2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680023172;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=McRhWE42irHlshGPa5H0qklu6LxZPZctIJ3HmvaG550=;
-        b=pSma5BXpfIjHmwvtuUfcqAD7/xMR5J4uFNFOcPVQSa8mJXSf0kGurANKOOtEQ94SUh
-         m4m3fH4jagyFPV1f44iI5hXfK5U65IYS26V2E+b+OTiDGdYpzPBGN5sXmICIUie+/vW6
-         3RDohg60zAjEGCeYezdHAKzFwDBAUSQZodhieopGNMnRPxZo5lMyMgPApUy15fjfXfPB
-         0Esu+7KeEtoKDdtwABbj1v+9nfCWw7czm0hWHYXC27bFrdFpawHEiZTujaGjZAWCCwjS
-         V2cpnR5TbTSR2zFwV1mOPK6WQBLiaGTukh9nv3cfvGRM7q5EnmNWQ1i4yGn9xs1EBCPX
-         CMmw==
-X-Gm-Message-State: AAQBX9fGnTlaEy2gxnQhyGFu83qHhin1SMdig1DbcGigwXfjXIS5YWWK
-	DE0wzbnzq7Kdd3oSojCyvJ12J6IlleULSOLcCYQD7LdY
-X-Google-Smtp-Source: AKy350a9Y2S3U0VK7BxNs2xclmI8bb52DpJKT4cyXPZmbzurOrQWiXkCjACRuLPTsQrqzuprteg/og==
-X-Received: by 2002:adf:e950:0:b0:2da:1ac3:adfc with SMTP id m16-20020adfe950000000b002da1ac3adfcmr13972855wrn.60.1680023171899;
-        Tue, 28 Mar 2023 10:06:11 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id m6-20020a056000008600b002cde25fba30sm28175377wrx.1.2023.03.28.10.06.11
+        d=1e100.net; s=20210112; t=1680026833;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3s/RpMg7963eKSuwlUPUhAQsCifNke046rWDCIkU1QA=;
+        b=20nYWemTnWwDpjfJVwnePrKM3kt5vw2AyzyckDeWZ1+XL1twYv+PssHyXq3geSDtGV
+         1C+aOA7gwk0fyWmCujDGaGTKl5W7DPKESaNZosuJy+YXdUB7tZFgWDs3nQVz1gHLgxwX
+         jeAaD8IEoRh51klwZ3PHGaF3KN7xEvSu2RDyJA65Tx+3hK+MxTQ42eOSPlUHxYPh49hv
+         mDEgwcDPCOmYsLyvXTr//ZVXvgW8k1tKMmT8hZIIPBmIa5PQVVo8UQeyx27rbMU3R2HM
+         byBESu1gb5Mqq/MSVOkFYaA4LetrrERodoPrYneIjBLey9c1/clyTfrjr5g8PKnN/7aR
+         ZhJA==
+X-Gm-Message-State: AAQBX9diZCLgJ18k9JOuPv5er8BiO0oRwNBhWErVjSOrx563wFKQa7f4
+	6c/19jyLwAcrKuYvCk5Qyb6W97e1UA==
+X-Google-Smtp-Source: AKy350blg6MFgNCs7Lh3BFxrSsNDWgdLBjmj1Ch60ef93IO+7evwCCoyVVagSv6MOqz5NevCfCa1Cg==
+X-Received: by 2002:a17:902:f546:b0:1a0:6721:6cdb with SMTP id h6-20020a170902f54600b001a067216cdbmr18793349plf.40.1680026832928;
+        Tue, 28 Mar 2023 11:07:12 -0700 (PDT)
+Received: from [127.0.0.1] ([13.87.244.145])
+        by smtp.gmail.com with ESMTPSA id y20-20020a170902b49400b00196807b5189sm21339502plr.292.2023.03.28.11.07.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Mar 2023 10:06:11 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Tue, 28 Mar 2023 19:05:50 +0200
-Subject: [PATCH mptcp-net] selftests: mptcp: userspace pm: uniform verify
- events
+        Tue, 28 Mar 2023 11:07:12 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20230328-mptcp-selftests-userspace-sleep-verify-listen-v1-1-2a4adf550084@tessares.net>
+References:
+ <20230328-mptcp-selftests-userspace-sleep-verify-listen-v1-1-2a4adf550084@tessares.net>
+Subject: Re: selftests: mptcp: userspace pm: uniform verify events: Tests
+ Results
+Message-ID: <a5406313-c3b8-e965-62e9-455d4d186f2d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 28 Mar 2023 18:07:11 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230328-mptcp-selftests-userspace-sleep-verify-listen-v1-1-2a4adf550084@tessares.net>
-X-B4-Tracking: v=1; b=H4sIAG0eI2QC/yXOwQqDMBAE0F+RPXep1QrSXyk9JHFSA5qG7Cot4
- r83tsdh4M1sJMgBQrdqo4w1SHjFEi6nitxo4hMchpKpqZu2bpue56QusWDyClHhpQCSjAPLBCR
- ei+c/PAVRRL5623eddXV3HaiY1gjYZhPdeKh6XpJohpmPMmX48P6dudN/J0Lpse9f2E/t+6cAA
- AA=
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, 
- Matthieu Baerts <matthieu.baerts@tessares.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2090;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=SkU6HwVu6H6DY6n2AOnKrl+kBi8O4vw5xic5K1jhMuE=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkIx6DRkeCpHc3nJY1dH8xFDqzlct7fFUuXUKV9
- YtvNjcikx+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZCMegwAKCRD2t4JPQmmg
- cx0tD/0RFlh6AU6HXCGCSNzFyfF3G3L+oxDKNIPqdaBjDwgXV0hWVxjFyXwF8ug1JhTukL4B5J3
- dy+Pb2LUeRKZYFh2vAN+HTOrGyjMlrrFQ6PQah1ysDhlVopgfNloHnq0Hkb/O2+GwFBvYOkBwK9
- gNOFnXELeCeY5gV9UNhf2Gu8JXj0SR7IeBCmtKeJOB5QMsEurvjkkX+c+zCWcmnfRgOjRKs8CTe
- pRIn/Mz2USS+mDThUnBi2a8CKEbElsDALOmmD0Zg7a/pUbujNE/fr+o0ONkiti2cYzxMWF8PN5j
- xxAhraYBBRC9v4BuQHKiyFOQ62+t2CbIfNG6w2b9WJGeDOicO4ZaGb0FapR0EpRvxbNh29+xdU9
- Y7hrwUYDejCU9hgpzBi7/2YEYys4g7+c3loIOHBdsbh0Dwz4TxRBngRwhqoKGCrY2nz7DsFU1wo
- gMxyxUeyiPTMWN/DpjSPFOgrkUAd7pGSNcPq/4yXK1TA41xa3m1LtJSzUV/MPiOO7Ep26LMlDaB
- 5kaRr5rZTKPIBOpjRcELao+ZZ28JAwzs0/0LpB9EMHPMO4kGfoJO2t34COUolazLdbWbPqFLY2V
- 7C50Z42cxcBztjzfImnRA/ejdpM3dppsckF0v06d1hPA7E01OWBwzzxdTh1fPM3EYfzbJEW17KI
- t1X7rj1Ub2Ak7Hg==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Simply adding a "sleep" before checking something is usually not a good
-idea because the time that has been picked can not be enough or too
-much. The best is to wait for events with a timeout.
+Hi Matthieu,
 
-In this selftest, 'sleep 0.5' is used more than 40 times. It is always
-used before calling a 'verify_*' function except for this
-verify_listener_events which has been added later.
+Thank you for your modifications, that's great!
 
-At the end, using all these 'sleep 0.5' seems to work: the slow CIs
-don't complain so far. Also because it doesn't take too much time, we
-can just add two more 'sleep 0.5' to uniform what is done before calling
-a 'verify_*' function. For the same reasons, we can also delay a bigger
-refactoring to replace all these 'sleep 0.5' by functions waiting for
-events instead of waiting for a fix time and hope for the best.
+Our CI did some validations and here is its report:
 
-Fixes: 6c73008aa301 ("selftests: mptcp: listener test for userspace PM")
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 2 ++
- 1 file changed, 2 insertions(+)
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5618456821760000
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5618456821760000/summary/summary.txt
 
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 48e52f995a98..b1eb7bce599d 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -913,6 +913,7 @@ test_listener()
- 		$client4_port > /dev/null 2>&1 &
- 	local listener_pid=$!
- 
-+	sleep 0.5
- 	verify_listener_events $client_evts $LISTENER_CREATED $AF_INET 10.0.2.2 $client4_port
- 
- 	# ADD_ADDR from client to server machine reusing the subflow port
-@@ -928,6 +929,7 @@ test_listener()
- 	# Delete the listener from the client ns, if one was created
- 	kill_wait $listener_pid
- 
-+	sleep 0.5
- 	verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.2 $client4_port
- }
- 
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4518945193984000
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4518945193984000/summary/summary.txt
 
----
-base-commit: 1281a7eb9aa62b79cb9ad4d221ae31659ed892d0
-change-id: 20230328-mptcp-selftests-userspace-sleep-verify-listen-4fb855bc054d
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6744356728602624
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6744356728602624/summary/summary.txt
 
-Best regards,
--- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5644845100826624
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5644845100826624/su=
+mmary/summary.txt
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/84382bc475d1
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
