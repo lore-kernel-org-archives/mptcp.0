@@ -1,125 +1,100 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086802578
-	for <mptcp@lists.linux.dev>; Wed, 29 Mar 2023 14:34:20 +0000 (UTC)
-Received: by mail-pl1-f171.google.com with SMTP id ix20so15125559plb.3
-        for <mptcp@lists.linux.dev>; Wed, 29 Mar 2023 07:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680100460;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9KO/qsPQswwfdiuparzsHn3g0jUcd7us9bgBn4wD0aM=;
-        b=oAp0GBdDLDWu01ozV3XgXEcWkWuI5PlDjiHyBmTWSgk+57z+dIc+Pcgurblb7w/dfh
-         iYtT9Mk5VKjtj2eLrc/ekgk91UMAQ+wDWLu+uV4yAK4j5qKV63EIXDTfpLnANd5LrgRb
-         mAAwD2vjvIwf1JyO0mrvn2vrTqjAYwublDDiDxexf/9IRCHp52nLmAGLsGJ7mOR+fdfi
-         om/156JK5JVfDzrdPdM+ZGzsK+rHY8VF5zI7sMNaWgru1A99oleBZhWyC5KVYlSRE3M+
-         Ce8dekagWWZzHv28l3TXSawm44VHWftcM2Hnsh2BXuE5UmkPMsdsvcME5z5pYu2a31/l
-         f0jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680100460;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9KO/qsPQswwfdiuparzsHn3g0jUcd7us9bgBn4wD0aM=;
-        b=3XPR2mAIAY8HFi1WV9PcK3U47TwIH2Ev2TTq/LEYll2JzCDqTkoHEXTLW72fZLMybV
-         Sdrsz96qZtwPTK+ccEd65x6tM4LpmEjfcNyzXBzMppqVzZpsxDCjqFyYveWDnD+LqZo7
-         DrTZ94AnOet+TNQzPd6PhrcEWEzVCrSFag+nog8FadX5pwEnBlJ0mhxd+kmtNIAfN0fM
-         HDImzvm0Zy73Hr533cG4r8z+jkM23QzhTWykujSrwv2TixuUyDU5h2iChtwd1xXHoYNi
-         jcF6dnUOmvGlnS5d8CCOiqQyjpb5Nt6ArHhIOzvnuSgtG2VDzmYs1JaQojaOQJNqy018
-         s6ZA==
-X-Gm-Message-State: AAQBX9c5mYAL40n1ewdmcQaGK80kWBNmqjIpe4U8XN32CCjJyGYv1p03
-	tlZlz+hAX8c+rmtgZ2NMTouxJfMseOgT
-X-Google-Smtp-Source: AKy350bZYuL9nVvP++1GP+tHWKCyhCqphM6fRgglFmsRGwXvQyKFeVEuMVIjPMzX7WHN4hlhB9dE1Q==
-X-Received: by 2002:a17:90b:38cd:b0:240:1e0b:a7b7 with SMTP id nn13-20020a17090b38cd00b002401e0ba7b7mr22232372pjb.39.1680100460322;
-        Wed, 29 Mar 2023 07:34:20 -0700 (PDT)
-Received: from [127.0.0.1] ([4.155.128.241])
-        by smtp.gmail.com with ESMTPSA id fv22-20020a17090b0e9600b002372106a5c2sm1495412pjb.37.2023.03.29.07.34.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Mar 2023 07:34:19 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230329-mptcp-misc-cleanups-v1-3-a839001f0b05@tessares.net>
-References: <20230329-mptcp-misc-cleanups-v1-3-a839001f0b05@tessares.net>
-Subject: Re: selftests: mptcp: remove duplicated entries in usage: Tests
- Results
-Message-ID: <adfe91e7-cd48-c4eb-ec4d-e13e4dcb9af3@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Mar 2023 14:34:19 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EAEAFF3
+	for <mptcp@lists.linux.dev>; Wed, 29 Mar 2023 14:39:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680100785;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eOGvCBK3xTc7UhN8iQW8f99rBt5fCj0lar0/GGKSAUo=;
+	b=I7DsYnxIXi+N95JxEr8u3mTDsEOO3Rl0GZAt2maRaaN0hsdWK0xUa7V6pfebfrJYdZhYdN
+	bDX2gKAThIpA9TbaQAw78yN0rmH+SuZcOynknYVd4L3pGUxJoVVAGJYJ2eQLKYj202wOZi
+	DV2odxcOIVHprMQ3Mqw2nfO/NOT6REU=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-586-OX_M3mnhOyOLIjTwhOpgsw-1; Wed, 29 Mar 2023 10:39:40 -0400
+X-MC-Unique: OX_M3mnhOyOLIjTwhOpgsw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 52F783C10ED2;
+	Wed, 29 Mar 2023 14:39:38 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 900FA2166B33;
+	Wed, 29 Mar 2023 14:39:34 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <e128356a-f56f-4c02-7437-dfea38e4194b@suse.de>
+References: <e128356a-f56f-4c02-7437-dfea38e4194b@suse.de> <20230329141354.516864-1-dhowells@redhat.com> <20230329141354.516864-49-dhowells@redhat.com>
+To: Hannes Reinecke <hare@suse.de>
+cc: David Howells <dhowells@redhat.com>,
+    Matthew Wilcox <willy@infradead.org>,
+    "David S. Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>, linux-doc@vger.kernel.org,
+    virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+    linux-sctp@vger.kernel.org, linux-afs@lists.infradead.org,
+    rds-devel@oss.oracle.com, linux-x25@vger.kernel.org,
+    dccp@vger.kernel.org, linux-rdma@vger.kernel.org,
+    Christoph Hellwig <hch@infradead.org>, linux-wpan@vger.kernel.org,
+    linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org,
+    Marc Kleine-Budde <mkl@pengutronix.de>,
+    Al Viro <viro@zeniv.linux.org.uk>, linux-hams@vger.kernel.org,
+    mptcp@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
+    Christian Brauner <brauner@kernel.org>, netdev@vger.kernel.org,
+    Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org,
+    Chuck Lever III <chuck.lever@oracle.com>,
+    tipc-discussion@lists.sourceforge.net, linux-crypto@vger.kernel.org,
+    linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
+    Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH v2 48/48] sock: Remove ->sendpage*() in favour of sendmsg(MSG_SPLICE_PAGES)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <518630.1680100773.1@warthog.procyon.org.uk>
+Date: Wed, 29 Mar 2023 15:39:33 +0100
+Message-ID: <518631.1680100773@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-Hi Matthieu,
+Hannes Reinecke <hare@suse.de> wrote:
 
-Thank you for your modifications, that's great!
+> > [!] Note: This is a work in progress.  At the moment, some things won't
+> >      build if this patch is applied.  nvme, kcm, smc, tls.
 
-Our CI did some validations and here is its report:
+Actually, that needs updating.  nvme and smc now build.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4990035158630400
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4990035158630400/summary/summary.txt
+> Weelll ... what happens to consumers of kernel_sendpage()?
+> (Let's call them nvme ...)
+> Should they be moved over, too?
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Script error! =E2=9D=93:
-  - Task: https://cirrus-ci.=
-com/task/6115935065473024
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6115935065473024/summary/summary.txt
+Patch 42 should address NVMe, I think.  I can't test it, though, as I don't
+have hardware.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_add_addr =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5552985112051712
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5552985112051712/su=
-mmary/summary.txt
+There should be no callers of kernel_sendmsg() by the end of this patchset,
+and the only remaining implementors of sendpage are Chelsio-TLS, AF_TLS and
+AF_KCM, which as stated in the cover, aren't yet converted and won't build.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6678885018894336
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6678885018894336/summary/summary.txt
+> Or what is the general consensus here?
+> 
+> (And what do we do with TLS? It does have a ->sendpage() version, too ...)
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/df1c60a23322
+I know.  There are three things left that I need to tackle, but I'd like to
+get opinions on some of the other bits and I might need some help with AF_TLS
+and AF_KCM.
 
+That said, should I just remove tls_sw_do_sendpage() since presumably the data
+is going to get copied(?) and encrypted and the source pages aren't going to
+be held onto?
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+David
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
