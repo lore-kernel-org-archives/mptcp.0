@@ -1,178 +1,125 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941642582
-	for <mptcp@lists.linux.dev>; Wed, 29 Mar 2023 14:23:54 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C8D9E1FDD7;
-	Wed, 29 Mar 2023 14:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1680099832; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JgAqhks0C3IN4+lfZvuY0gbFhTkXdOVc3wNxYkO+XwE=;
-	b=VHJy/t4VnSzbZ4tzrhebOifyuC6pGjl5TQIz/eVAhtxXjcdr04nTTT8d+loIHlGU27b+2j
-	CSu6s44u+410mCUI1AS93mzHeTuhgDd5WeETx5FLlNVkwySfxchYWlJ1RLdkFjFZotLzG/
-	coolDxdnh26L8KxKvBfdG8ioSVVkkIQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1680099832;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JgAqhks0C3IN4+lfZvuY0gbFhTkXdOVc3wNxYkO+XwE=;
-	b=47xCWD44CmYf+Mf1uCacEcx5m0liEJt4VEk696Atou5kYSzLvIRfiSd0oiNW0K9PV3jU3L
-	lxDHHZyHaPhoaJCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 63D1E138FF;
-	Wed, 29 Mar 2023 14:23:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id vQXSFvhJJGTPMwAAMHmgww
-	(envelope-from <hare@suse.de>); Wed, 29 Mar 2023 14:23:52 +0000
-Message-ID: <e128356a-f56f-4c02-7437-dfea38e4194b@suse.de>
-Date: Wed, 29 Mar 2023 16:23:51 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086802578
+	for <mptcp@lists.linux.dev>; Wed, 29 Mar 2023 14:34:20 +0000 (UTC)
+Received: by mail-pl1-f171.google.com with SMTP id ix20so15125559plb.3
+        for <mptcp@lists.linux.dev>; Wed, 29 Mar 2023 07:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680100460;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9KO/qsPQswwfdiuparzsHn3g0jUcd7us9bgBn4wD0aM=;
+        b=oAp0GBdDLDWu01ozV3XgXEcWkWuI5PlDjiHyBmTWSgk+57z+dIc+Pcgurblb7w/dfh
+         iYtT9Mk5VKjtj2eLrc/ekgk91UMAQ+wDWLu+uV4yAK4j5qKV63EIXDTfpLnANd5LrgRb
+         mAAwD2vjvIwf1JyO0mrvn2vrTqjAYwublDDiDxexf/9IRCHp52nLmAGLsGJ7mOR+fdfi
+         om/156JK5JVfDzrdPdM+ZGzsK+rHY8VF5zI7sMNaWgru1A99oleBZhWyC5KVYlSRE3M+
+         Ce8dekagWWZzHv28l3TXSawm44VHWftcM2Hnsh2BXuE5UmkPMsdsvcME5z5pYu2a31/l
+         f0jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680100460;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9KO/qsPQswwfdiuparzsHn3g0jUcd7us9bgBn4wD0aM=;
+        b=3XPR2mAIAY8HFi1WV9PcK3U47TwIH2Ev2TTq/LEYll2JzCDqTkoHEXTLW72fZLMybV
+         Sdrsz96qZtwPTK+ccEd65x6tM4LpmEjfcNyzXBzMppqVzZpsxDCjqFyYveWDnD+LqZo7
+         DrTZ94AnOet+TNQzPd6PhrcEWEzVCrSFag+nog8FadX5pwEnBlJ0mhxd+kmtNIAfN0fM
+         HDImzvm0Zy73Hr533cG4r8z+jkM23QzhTWykujSrwv2TixuUyDU5h2iChtwd1xXHoYNi
+         jcF6dnUOmvGlnS5d8CCOiqQyjpb5Nt6ArHhIOzvnuSgtG2VDzmYs1JaQojaOQJNqy018
+         s6ZA==
+X-Gm-Message-State: AAQBX9c5mYAL40n1ewdmcQaGK80kWBNmqjIpe4U8XN32CCjJyGYv1p03
+	tlZlz+hAX8c+rmtgZ2NMTouxJfMseOgT
+X-Google-Smtp-Source: AKy350bZYuL9nVvP++1GP+tHWKCyhCqphM6fRgglFmsRGwXvQyKFeVEuMVIjPMzX7WHN4hlhB9dE1Q==
+X-Received: by 2002:a17:90b:38cd:b0:240:1e0b:a7b7 with SMTP id nn13-20020a17090b38cd00b002401e0ba7b7mr22232372pjb.39.1680100460322;
+        Wed, 29 Mar 2023 07:34:20 -0700 (PDT)
+Received: from [127.0.0.1] ([4.155.128.241])
+        by smtp.gmail.com with ESMTPSA id fv22-20020a17090b0e9600b002372106a5c2sm1495412pjb.37.2023.03.29.07.34.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Mar 2023 07:34:19 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230329-mptcp-misc-cleanups-v1-3-a839001f0b05@tessares.net>
+References: <20230329-mptcp-misc-cleanups-v1-3-a839001f0b05@tessares.net>
+Subject: Re: selftests: mptcp: remove duplicated entries in usage: Tests
+ Results
+Message-ID: <adfe91e7-cd48-c4eb-ec4d-e13e4dcb9af3@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 29 Mar 2023 14:34:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [RFC PATCH v2 48/48] sock: Remove ->sendpage*() in favour of
- sendmsg(MSG_SPLICE_PAGES)
-To: David Howells <dhowells@redhat.com>, Matthew Wilcox
- <willy@infradead.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: linux-doc@vger.kernel.org, virtualization@lists.linux-foundation.org,
- linux-mm@kvack.org, linux-sctp@vger.kernel.org,
- linux-afs@lists.infradead.org, rds-devel@oss.oracle.com,
- linux-x25@vger.kernel.org, dccp@vger.kernel.org, linux-rdma@vger.kernel.org,
- Christoph Hellwig <hch@infradead.org>, linux-wpan@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org,
- Marc Kleine-Budde <mkl@pengutronix.de>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-hams@vger.kernel.org, mptcp@lists.linux.dev,
- Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>,
- netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
- linux-kernel@vger.kernel.org, Chuck Lever III <chuck.lever@oracle.com>,
- tipc-discussion@lists.sourceforge.net, linux-crypto@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20230329141354.516864-1-dhowells@redhat.com>
- <20230329141354.516864-49-dhowells@redhat.com>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20230329141354.516864-49-dhowells@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 3/29/23 16:13, David Howells wrote:
-> [!] Note: This is a work in progress.  At the moment, some things won't
->      build if this patch is applied.  nvme, kcm, smc, tls.
-> 
-> Remove ->sendpage() and ->sendpage_locked().  sendmsg() with
-> MSG_SPLICE_PAGES should be used instead.  This allows multiple pages and
-> multipage folios to be passed through.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Acked-by: Marc Kleine-Budde <mkl@pengutronix.de> # for net/can
-> cc: "David S. Miller" <davem@davemloft.net>
-> cc: Eric Dumazet <edumazet@google.com>
-> cc: Jakub Kicinski <kuba@kernel.org>
-> cc: Paolo Abeni <pabeni@redhat.com>
-> cc: Jens Axboe <axboe@kernel.dk>
-> cc: Matthew Wilcox <willy@infradead.org>
-> cc: bpf@vger.kernel.org
-> cc: dccp@vger.kernel.org
-> cc: linux-afs@lists.infradead.org
-> cc: linux-arm-msm@vger.kernel.org
-> cc: linux-can@vger.kernel.org
-> cc: linux-crypto@vger.kernel.org
-> cc: linux-doc@vger.kernel.org
-> cc: linux-hams@vger.kernel.org
-> cc: linux-kernel@vger.kernel.org
-> cc: linux-rdma@vger.kernel.org
-> cc: linux-sctp@vger.kernel.org
-> cc: linux-wpan@vger.kernel.org
-> cc: linux-x25@vger.kernel.org
-> cc: mptcp@lists.linux.dev
-> cc: netdev@vger.kernel.org
-> cc: rds-devel@oss.oracle.com
-> cc: tipc-discussion@lists.sourceforge.net
-> cc: virtualization@lists.linux-foundation.org
-> ---
->   Documentation/networking/scaling.rst |   4 +-
->   crypto/af_alg.c                      |  29 ------
->   crypto/algif_aead.c                  |  22 +----
->   crypto/algif_rng.c                   |   2 -
->   crypto/algif_skcipher.c              |  14 ---
->   include/linux/net.h                  |   8 --
->   include/net/inet_common.h            |   2 -
->   include/net/sock.h                   |   6 --
->   net/appletalk/ddp.c                  |   1 -
->   net/atm/pvc.c                        |   1 -
->   net/atm/svc.c                        |   1 -
->   net/ax25/af_ax25.c                   |   1 -
->   net/caif/caif_socket.c               |   2 -
->   net/can/bcm.c                        |   1 -
->   net/can/isotp.c                      |   1 -
->   net/can/j1939/socket.c               |   1 -
->   net/can/raw.c                        |   1 -
->   net/core/sock.c                      |  35 +------
->   net/dccp/ipv4.c                      |   1 -
->   net/dccp/ipv6.c                      |   1 -
->   net/ieee802154/socket.c              |   2 -
->   net/ipv4/af_inet.c                   |  21 ----
->   net/ipv4/tcp.c                       |  34 -------
->   net/ipv4/tcp_bpf.c                   |  21 +---
->   net/ipv4/tcp_ipv4.c                  |   1 -
->   net/ipv4/udp.c                       |  22 -----
->   net/ipv4/udp_impl.h                  |   2 -
->   net/ipv4/udplite.c                   |   1 -
->   net/ipv6/af_inet6.c                  |   3 -
->   net/ipv6/raw.c                       |   1 -
->   net/ipv6/tcp_ipv6.c                  |   1 -
->   net/key/af_key.c                     |   1 -
->   net/l2tp/l2tp_ip.c                   |   1 -
->   net/l2tp/l2tp_ip6.c                  |   1 -
->   net/llc/af_llc.c                     |   1 -
->   net/mctp/af_mctp.c                   |   1 -
->   net/mptcp/protocol.c                 |   2 -
->   net/netlink/af_netlink.c             |   1 -
->   net/netrom/af_netrom.c               |   1 -
->   net/packet/af_packet.c               |   2 -
->   net/phonet/socket.c                  |   2 -
->   net/qrtr/af_qrtr.c                   |   1 -
->   net/rds/af_rds.c                     |   1 -
->   net/rose/af_rose.c                   |   1 -
->   net/rxrpc/af_rxrpc.c                 |   1 -
->   net/sctp/protocol.c                  |   1 -
->   net/socket.c                         |  48 ---------
->   net/tipc/socket.c                    |   3 -
->   net/unix/af_unix.c                   | 139 ---------------------------
->   net/vmw_vsock/af_vsock.c             |   3 -
->   net/x25/af_x25.c                     |   1 -
->   net/xdp/xsk.c                        |   1 -
->   52 files changed, 9 insertions(+), 447 deletions(-)
-> 
-Weelll ... what happens to consumers of kernel_sendpage()?
-(Let's call them nvme ...)
-Should they be moved over, too?
+Hi Matthieu,
 
-Or what is the general consensus here?
+Thank you for your modifications, that's great!
 
-(And what do we do with TLS? It does have a ->sendpage() version, too ...)
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4990035158630400
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4990035158630400/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Script error! =E2=9D=93:
+  - Task: https://cirrus-ci.=
+com/task/6115935065473024
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6115935065473024/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_add_addr =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5552985112051712
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5552985112051712/su=
+mmary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6678885018894336
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6678885018894336/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/df1c60a23322
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-
-Hannes
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
