@@ -1,46 +1,46 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD2C8C09
-	for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 18:13:48 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id r29so19960524wra.13
-        for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 11:13:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EC89442
+	for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 18:13:46 +0000 (UTC)
+Received: by mail-wr1-f50.google.com with SMTP id m2so19993335wrh.6
+        for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 11:13:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1680200027;
+        d=tessares.net; s=google; t=1680200025;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kWvu93s3B9VjmqDMiiXdedDGk5MrX3CFDculOGxbOWA=;
-        b=sli5Zcnh9i3zNFg0OD4NJPjzj5UPngZ7yeiqMMUves6L/8ZJDHVNC3ONaZ0AIC5yTQ
-         QPj6iYADmhwpApfEAzvdNjYd2EusisdpRaAUcu59P0Hmt6hV76sU2XaBlk9e/ZQqDa3o
-         9Blb/mtUqXj12HRbpXYfuM9xIjrpZP8IcSjfV1pAcqGNjBTp5jxqJdU2R8MdycMnWRY7
-         tH+KHrdlazlSAzTx2p2hgMOAOFMAZJIxesKhkQpBqmZx5kB380/W2iFcH1EFauzVNA98
-         wxewA9SGDs0AxubFXATsh0YzLUsHTtS08CB3oq4pTm/vPZLaoGMM6ASZV/utCcpaYZkP
-         i9Ow==
+        bh=ItInTAdnUAKLm+cm48IAJm3RPistuWUxFPvzsYYlPp8=;
+        b=oAoL62t7ERceub5TArLZ0xHe2p0ee4pBYyiAIEOnsb8ui0gahY61b5IZaCieOHj209
+         Jt8BFb2IIz5n1Q9I1ivzz0o/vULmPNWs9hXFwX0fWsAu+lwjuWxgTwapVPvI3bffYMfW
+         pQ+eneHIxILNbXo7+sRI6WPXcIcsczDyxv7sw9P7+yaD/vlDFrKxfynWWPjPX3ZOW6EQ
+         VQWD1m1VrZ4xTS8GOhlWtJ4TwCYuHe4Gnza6xlRoPu+qmx8nSN81FRD+y1eOjU8b0SE+
+         c6xsUUWt7QfGDTBIz43ahfu8ssU0xaERzizLu4h5pnclgf5mThDiU5nIlTkMaCx4T6pp
+         UBBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680200027;
+        d=1e100.net; s=20210112; t=1680200025;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kWvu93s3B9VjmqDMiiXdedDGk5MrX3CFDculOGxbOWA=;
-        b=7ccrxrmQlABC6EhJzl6Oy2CISnOO3UH2VgRzZDOjZqh2ih3RxI8rckHwQMJDm/GjjW
-         Kcclo6WcrJNiSMgo09SKY9WvrZHw+/XZwO+fj2ekRG6CqT+ofb7WsoQ50xzuqiUYbQsZ
-         f4rfc1dTBHvHJtMF07MA28vyKnaeokpFZoLyeIV/tP3Kj5TJ8l0eQYZg9SUUFuyIZae/
-         xq1/nx6Xzh6Qbc+Pt8OM9LEX+jyXwr9QlVazvUoQtqMOsVNlm9Qk6aVr+Iqxek2Gcgfz
-         NecLipHWJ923W3Th01eNK8/1H9RtPTNMjcBfqFmi5JOCsoSoqR12/saaCflLw7bQmeTW
-         4wkQ==
-X-Gm-Message-State: AAQBX9cr62ZeE00PyYwh0ztjjcPT79GRPd+79IL8oFAMrAH58LD7EUyt
-	bqWXYqZSeJpPueMVAHEoadR04g==
-X-Google-Smtp-Source: AKy350ZWc8tsaoQuJAI+JCJF8FIO6JAnNbN0LzQ0c1I4PsoO/4NA4M+PeruUOstds4qYABCZ9NPt5A==
-X-Received: by 2002:adf:fc8e:0:b0:2d5:39d:514f with SMTP id g14-20020adffc8e000000b002d5039d514fmr19572798wrr.65.1680200027085;
-        Thu, 30 Mar 2023 11:13:47 -0700 (PDT)
+        bh=ItInTAdnUAKLm+cm48IAJm3RPistuWUxFPvzsYYlPp8=;
+        b=M1064eJZDz4ikYztZ6/YQYd1Jqc0A3wmTBa8RTJ4Y+CXB5+AWNnhu92+sysQJH0P6X
+         yQEZoLBcz0uWPfmurCoAYuo5yU67YhIJdKL1x3RC8x6zj2M386AzBKCLKb5Hx7F27gQ+
+         KiHcM0P6cdJkXItOtgU6pb/pFoB1OGDAMKWWgR/lyJo0AAnzsp6c4/frFyKvHX2b/SmE
+         iBnHBkw0t6+UZxDYuQChJIqleTmqEU4tV7eTL11onup2oJoN7oHlhWk5i2EcaNrlz8jS
+         Qkf9joQh+9bM9oUMQNQw/r35DoqwSCd5qDIIzQL0qC7HlhRn42W3aYt6lWETaujm9730
+         ZpDA==
+X-Gm-Message-State: AAQBX9foqjBtSpn2xQ2vsBzyahquwdGHGb3IQXNgg78tgt/b6barFw77
+	UdE4UISI4H1vszBOuN272QoZ7g==
+X-Google-Smtp-Source: AKy350ZlArt1OzD3XguKd9+sKnR9BT4NPMnz/d7pVymlBzEEdHPMWH0ks7bIiqryGmqigP4mzlI03Q==
+X-Received: by 2002:a5d:68cb:0:b0:2cf:fd6:b83f with SMTP id p11-20020a5d68cb000000b002cf0fd6b83fmr4895020wrw.8.1680200024971;
+        Thu, 30 Mar 2023 11:13:44 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id e18-20020a056000121200b002d24a188b64sm33459741wrx.112.2023.03.30.11.13.46
+        by smtp.gmail.com with ESMTPSA id e18-20020a056000121200b002d24a188b64sm33459741wrx.112.2023.03.30.11.13.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Mar 2023 11:13:46 -0700 (PDT)
+        Thu, 30 Mar 2023 11:13:44 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Thu, 30 Mar 2023 20:13:25 +0200
-Subject: [PATCH v3 3/4] checkpatch: allow Closes tags with links
+Date: Thu, 30 Mar 2023 20:13:23 +0200
+Subject: [PATCH v3 1/4] docs: process: allow Closes tags with links
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230314-doc-checkpatch-closes-tag-v3-3-d1bdcf31c71c@tessares.net>
+Message-Id: <20230314-doc-checkpatch-closes-tag-v3-1-d1bdcf31c71c@tessares.net>
 References: <20230314-doc-checkpatch-closes-tag-v3-0-d1bdcf31c71c@tessares.net>
 In-Reply-To: <20230314-doc-checkpatch-closes-tag-v3-0-d1bdcf31c71c@tessares.net>
 To: Jonathan Corbet <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>, 
@@ -66,57 +66,156 @@ Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
  dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev, 
  Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1288;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6878;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=D3yoDenjNEV/KCtG0U0EPfT8PJhrudmfXIcKaZcGmXw=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkJdFWQocAajiRNqyFvXj5qo4/2Z8WWqi1nIZBk
- 5QwkcAZ+n+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZCXRVgAKCRD2t4JPQmmg
- c9SgEACJgEzspH+uZoG/13hgM9PKxSlrJyloUsc7rMZyyotfkMCSrhRetdU39HLP0ov13RMhD7x
- HyTbtXG6yJcsIyrNO7E1sjh/VsWLuSRUNc88IRngD4gPFXZ9dYSOxP8xhg8vSW59EmXi4eHVEW9
- FvharwxCLiaMfgbpEn6oKbgTv+5f9O5jJZ8In6M1fGvK8FPXd1AZc8fIrIQrGumKSK+SxUDP4z6
- 8+cx1flxxcXVJHy63snCsalNGkWNj03Fea9dLRaGGQn5YcWjeUcO5wr9JMNLsb9ab6alLGgWzwr
- yvf2tPBVjV3FMEWfYBRqDEhYtXdL857Nzu9ZXX1c+KRDrmYoKNHoNUdL5E1G+g7ZIruYEBAr4b5
- wzd+dkxAR30b0v8xbsdJ7VcTwppgqA5j67MJZbNMstx9fGZMSuTKIQE23VZc28fJHfhTX/fJTwT
- Uw9lMq4duCsQHUKbEby1KjZz2xZRCvw5khoin0vCsBG1kB5CG3tMzD2WtUT9l7/4lZ0pNxBiFv7
- DU3Fn4vpAPDBC5RZTS0Gu17bcoLNkKFlMTE6J/c96yTIKjQL7Q5JLlWzJ/uM7PTIrP+tHpzS9pU
- Ybx1BImfE7gTrV3hC08Kw/i6FBHVhwbtPLTF8tkzi2fCIFgjwGCcW6uqBVX3Y1Lpj3SAZe0MC+G
- 7ASkSErSjwx7pPw==
+ bh=tCxJpCXZj/WPjBCToCpp+PIvuovD/Z8f6431psypKfg=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkJdFWi0sLZAteAQ7quTCDXY0wVDMKo9SHHZpFH
+ reIJgAmbMqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZCXRVgAKCRD2t4JPQmmg
+ c7nlD/wI1UTBtopo8m/HSsTHXh/OShmdMF9UeXrWgwgn1Ch24A6x6JUw5L7qcDEJDH9fiZk4z3g
+ CExEzis51ESVDfUaBoIF1F+UN/WjG6Ol8Ntx7Q0w+yTwclRLgR5CKF93jZvS064JKUfMo6kyZkw
+ cXJW4kkM0net/5DicixSKupjHETn6eicuPFMe6/dww51hX+98+9KKZSHs7K0miiLZ7ZvZC+a5FS
+ XfNXGPPvKmd0PIABR7+nLZ2lonL7EHnIseTdU2rN5PR5XpdXLABGsRtPZ/mSuipaQs5TxuJLLAb
+ kbZ4bTkhIZoab5AWF6Vl6R5eLB2qhr61RqO5UmAqg2ck1Jk/fU5GzJM8morO/zlBTSVMQJP+iP/
+ r6e4Ii9QggrM/rSUnhmEbgSJFMRJJJDQJKGzB6PL1yrG9HZkobh+vivcBtH9CedfLwkGV4o+doo
+ zOxGIPWNIZ3p6HHiw4dh7fQnWwkfTST7aEGMO1d3vkADk9rouoaUw6x9KnTX79H/Yeq67Q24fK2
+ N1nJjnL0a2R7hFnAqSepLv1F888I4t8YbiboUUZ54X5YGZvdgMBpRnxYg2bzvdXRD7I3XE7vMht
+ OdFJkLe+Pt6f2+0dSv8fw+Ykz4zQH7ZP6s+9QVOs6K4oHMpaXiSnmI/+Rk27rC5ipHdWY52bDs2
+ wgxUqnuCJN1hJFg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-As a follow-up of a previous patch modifying the documentation to
-allow using the "Closes:" tag, checkpatch.pl is updated accordingly.
+Making sure a bug tracker is up to date is not an easy task. For
+example, a first version of a patch fixing a tracked issue can be sent a
+long time after having created the issue. But also, it can take some
+time to have this patch accepted upstream in its final form. When it is
+done, someone -- probably not the person who accepted the patch -- has
+to remember about closing the corresponding issue.
 
-checkpatch.pl now no longer complain when the "Closes:" tag is used by
-itself or after the "Reported-by:" tag.
+This task of closing and tracking the patch can be done automatically by
+bug trackers like GitLab [1], GitHub [2] and hopefully soon [3]
+bugzilla.kernel.org when the appropriated tag is used. The two first
+ones accept multiple tags but it is probably better to pick one.
 
-Fixes: 76f381bb77a0 ("checkpatch: warn when unknown tags are used for links")
-Fixes: d7f1d71e5ef6 ("checkpatch: warn when Reported-by: is not followed by Link:")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/373
+According to commit 76f381bb77a0 ("checkpatch: warn when unknown tags are used for links"),
+the "Closes" tag seems to have been used in the past by a few people and
+it is supported by popular bug trackers. Here is how it has been used in
+the past:
+
+ $ git log --no-merges --format=email -P --grep='^Closes: http' | \
+       grep '^Closes: http' | cut -d/ -f3-5 | sort | uniq -c | sort -rn
+    391 gitlab.freedesktop.org/drm/intel
+     79 github.com/multipath-tcp/mptcp_net-next
+      8 gitlab.freedesktop.org/drm/msm
+      3 gitlab.freedesktop.org/drm/amd
+      2 gitlab.freedesktop.org/mesa/mesa
+      1 patchwork.freedesktop.org/series/73320
+      1 gitlab.freedesktop.org/lima/linux
+      1 gitlab.freedesktop.org/drm/nouveau
+      1 github.com/ClangBuiltLinux/linux
+      1 bugzilla.netfilter.org/show_bug.cgi?id=1579
+      1 bugzilla.netfilter.org/show_bug.cgi?id=1543
+      1 bugzilla.netfilter.org/show_bug.cgi?id=1436
+      1 bugzilla.netfilter.org/show_bug.cgi?id=1427
+      1 bugs.debian.org/625804
+
+Likely here, the "Closes" tag was only properly used with GitLab and
+GitHub. We can also see that it has been used quite a few times (and
+still used recently) and this is then not a "random tag that makes no
+sense" like it was the case with "BugLink" recently [4]. It has also
+been misused but that was a long time ago, when it was common to use
+many different random tags.
+
+checkpatch.pl script should then stop complaining about this "Closes"
+tag. As suggested by Thorsten [5], if this tag is accepted, it should
+first be described in the documentation. This is what is done here in
+this patch.
+
+To avoid confusion, the "Closes" can be used with any public links. No
+need to check if the underlying bug tracker supports automations.
+Having this tag with any kind of public bug reports allows bots like
+regzbot to clearly identify patches fixing a specific bug and avoid
+false-positives, e.g. patches mentioning it is related to an issue but
+not fixing it.
+
+Note that thanks to this "Closes" tag, the mentioned bug trackers can
+also locate where a patch has been applied in different branches and
+repositories. If only the "Link" tag is used, the tracking can also be
+done but the ticket will not be closed and a manual operation will be
+needed. Also, these bug trackers have some safeguards: the closure is
+only done if a commit having the "Closes:" tag is applied in a specific
+branch. It will then not be closed if a random commit having the same
+tag is published elsewhere. Also in case of closure, a notification is
+sent to the owners.
+
+Link: https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#default-closing-pattern [1]
+Link: https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests [2]
+Link: https://lore.kernel.org/linux-doc/20230315181205.f3av7h6owqzzw64p@meerkat.local/ [3]
+Link: https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/ [4]
+Link: https://lore.kernel.org/all/688cd6cb-90ab-6834-a6f5-97080e39ca8e@leemhuis.info/ [5]
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/373
+Suggested-by: Thorsten Leemhuis <linux@leemhuis.info>
+Acked-by: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
 v3:
- - split into 2 patches: the previous one adds a list with all the
-   "link" tags. This one only allows the "Closes" tag. (Joe Perches)
- - "Closes" is no longer printed between parenthesis. (Thorsten
-   Leemhuis)
----
- scripts/checkpatch.pl | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- Allow using the "Closes" tag with any bug reports, not only the ones
+  supporting automations, useful for regzbot, etc. (Thorsten Leemhuis)
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 9d092ff4fc16..ca58c734ff22 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -620,7 +620,7 @@ our $signature_tags = qr{(?xi:
- 	Cc:
- )};
+v2:
+- Add Konstantin's Acked-by: even if the patch has changed a bit, the
+  concept is still the same, I hope that's OK.
+- Mention "public" in "5.Posting.rst" file as well. (Jonathan Corbet)
+- Re-phrase the new text from "5.Posting.rst". (Bagas Sanjaya &
+  Thorsten Leemhuis)
+- Clearly mention that private bug trackers and invalid URLs are
+  forbidden (Linus Torvalds).
+---
+ Documentation/process/5.Posting.rst          | 10 ++++++++++
+ Documentation/process/submitting-patches.rst | 10 ++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
+index 7a670a075ab6..c755ca795f15 100644
+--- a/Documentation/process/5.Posting.rst
++++ b/Documentation/process/5.Posting.rst
+@@ -217,6 +217,16 @@ latest public review posting of the patch; often this is automatically done
+ by tools like b4 or a git hook like the one described in
+ 'Documentation/maintainer/configure-git.rst'.
  
--our @link_tags = qw(Link);
-+our @link_tags = qw(Link Closes);
++Similarly, there is also the "Closes:" tag that can be used to mark any
++kind of public bug report as closed. For example::
++
++	Closes: https://example.com/issues/1234
++
++Some bug trackers have the ability to close issues automatically when a
++commit with such a tag is applied. Some bots monitoring mailing lists can
++also track such tags and take certain actions. Private bug trackers and
++invalid URLs are forbidden.
++
+ A third kind of tag is used to document who was involved in the development of
+ the patch. Each of these uses this format::
  
- #Create a search and print patterns for all these strings to be used directly below
- our $link_tags_search = "";
+diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+index 69ce64e03c70..b0ea03f18bad 100644
+--- a/Documentation/process/submitting-patches.rst
++++ b/Documentation/process/submitting-patches.rst
+@@ -134,6 +134,16 @@ resources. In addition to giving a URL to a mailing list archive or bug,
+ summarize the relevant points of the discussion that led to the
+ patch as submitted.
+ 
++It might be interesting to use the 'Closes:' tag to mark any kind of public
++bug report as closed. For example::
++
++	Closes: https://example.com/issues/1234
++
++Some bug trackers have the ability to close issues automatically when a
++commit with such a tag is applied. Some bots monitoring mailing lists can
++also track such tags and take certain actions. Private bug trackers and
++invalid URLs are forbidden.
++
+ If your patch fixes a bug in a specific commit, e.g. you found an issue using
+ ``git bisect``, please use the 'Fixes:' tag with the first 12 characters of
+ the SHA-1 ID, and the one line summary.  Do not split the tag across multiple
 
 -- 
 2.39.2
