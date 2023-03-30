@@ -1,56 +1,56 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8A08C09
-	for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 18:22:25 +0000 (UTC)
-Received: by mail-qt1-f171.google.com with SMTP id r5so19381877qtp.4
-        for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 11:22:25 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B5F9455
+	for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 19:20:43 +0000 (UTC)
+Received: by mail-oi1-f170.google.com with SMTP id q27so14265997oiw.0
+        for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 12:20:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680200544;
+        d=gmail.com; s=20210112; t=1680204043;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hhQtba6acn+ZVsnsONosatDulWJ+DnRhtXsh4HwETPM=;
-        b=Vr67cL2KrxgRpwnALvBWIzX78fDQZ8a55mX8ZTV3qwQhbgCFf43NdNRxhKAnnbx6lK
-         2RCJtYMIZMQqAiS1QrxmdeQ4OYQfn05Mtiyl/ZdxeO4H3MWIvNgG3SKM2OZhyb5lz2z4
-         InAmNgUoLvERWh6O4EHdAC1KhzA3DjtolBrYr0q26o7tRR5ZYck39FiB/sx6urgFAcGs
-         8v8TqpXLEqGXISEsc43XmI1CeUxcuXts9lys4CKRBiibL6fGSqXrAvFriYt9N0ljuxeh
-         gBrbtCwsP8osjK6tG+8YeTD0HTbqNstPoARwOZjvDQIj2bEGBNRwHjY3VHjdOgbXMt8K
-         ESsA==
+        bh=cmbKdVjrVyqHeEPO4nuO8FBuJhAFYW2wOuuQO2Msx48=;
+        b=L+9RxmvdbQZl8mPv6G7DBmhIZH0yin/bTP0x+ojv0MDwO27U37rK6vBpRF+9LAV+Yg
+         6Gc9USnwNL8L9yb59wE/ZetRNyammIJVoGKaxtBO/Q823WvJIEYiP1B+HLUbg3jCkO89
+         Gp3I2Q3peIK9jbUiVHEcPgR+6AwUEezkRbmac49g50VYYyVU/FlgbjXK1kmMW2QLyYHs
+         coPbI6WP1ftCff+szoDiANrL1gmGMZP2KDx1S0XcPgUhJXj0gMir+daHCxMXfUeH92cI
+         rDBdj+MYVtuXtRYqb/DbJk9CaE5eajdIIxfISg1UYJFRL4MZhn1OfrcAcPLrai95TVk9
+         G0Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680200544;
+        d=1e100.net; s=20210112; t=1680204043;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=hhQtba6acn+ZVsnsONosatDulWJ+DnRhtXsh4HwETPM=;
-        b=ttZzQ1Guy/xMj+27DL9XoUB+FZ00XRxB9A5YvXuZNs2z+9rvp18FhuPi9eHnC9MZSm
-         Spd81mew2PsEQBoO5+AO79vZcsjCfXhX7zysQAO0NeOnHu5xhylBHP73aJbY146hHbwL
-         K9ZKU7dcA1gGLIBxJ6ZbRodC2yJQql1kxQdgkm0Zj/G4VKWBvs3ZAPW7HjfysZLGOdoU
-         Mns47XzaDcT4U5/zRoxmewQ2bhzAEVUkDQDslcw8JgbKOc//gx9b0i8SZpvKiy12kPvZ
-         wjd4kfVD8JnbIwMUyPXg1I0cnID9XVzm9X7alPJp/cKdq40Npk7NsSpH4JTnh+22XyB1
-         BgOQ==
-X-Gm-Message-State: AAQBX9efS4fMpCST76E3zCAmFxIWn3EuWm/PvPUcrXjMEoQo7C/Phbro
-	ATltfpDAmMBReLbczXU48Q==
-X-Google-Smtp-Source: AKy350ZfVdK8OPmNIWUDeej7u4bV3oFivS4LqVrdDK8a/q3priZ6bYuXIcsamyWKMsR8QgilyJkmMw==
-X-Received: by 2002:ac8:5885:0:b0:3e4:d887:3e88 with SMTP id t5-20020ac85885000000b003e4d8873e88mr28118742qta.10.1680200544636;
-        Thu, 30 Mar 2023 11:22:24 -0700 (PDT)
-Received: from [127.0.0.1] ([104.45.204.233])
-        by smtp.gmail.com with ESMTPSA id q19-20020ac87353000000b003e387a2fbdfsm61569qtp.0.2023.03.30.11.22.24
+        bh=cmbKdVjrVyqHeEPO4nuO8FBuJhAFYW2wOuuQO2Msx48=;
+        b=YaNqHSqQ4f1mn8QWjTS9XOfcUuXXbE+wyarXqQkihO0IftSWyZZTrSAERS77huVY2J
+         SITWOBM9UiEUxzIF1bQbm8ArinLWMVsL92Oa1+N7krzb9S01qCIIRbsGcg3Sk6NizLil
+         eFFmA+yThtS64/O1ErI4A9kEBU0W18T6hegdic1vWR0dJC5wQqkjKsS4owe+9vXB/ls0
+         HJdnJ3qxLUMrZPaEE7dQNWOBPbTUduJ7nNrr3cR9lWLXImhcXv/Sdvr9VPKb7FYNVEri
+         KCtMh+raW5au0EqSexG2xuF2gz7dAqmeSOX9Fr9pkgVE/AE5x8+yTIdAEAuantLE4YL3
+         Ca8A==
+X-Gm-Message-State: AO0yUKU7DCTaPptyl4Ln/tCay0ZI1VMMndkO61OIaL/MGbNKE3GfWRIq
+	Nkyth476IywFdJCPh1KzE7mSwa2txt1r
+X-Google-Smtp-Source: AK7set8iXnX0N6fNlxYuHHbF/381GYewOminuqq2R/tMnYOjzkjKJC9IjX8yIUn+TdybuL/Mv5KbZQ==
+X-Received: by 2002:a05:6808:a0c:b0:386:ee34:afb9 with SMTP id n12-20020a0568080a0c00b00386ee34afb9mr10369439oij.11.1680204042946;
+        Thu, 30 Mar 2023 12:20:42 -0700 (PDT)
+Received: from [127.0.0.1] ([13.84.8.144])
+        by smtp.gmail.com with ESMTPSA id h4-20020aca1804000000b003896fc34eddsm191375oih.52.2023.03.30.12.20.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Mar 2023 11:22:24 -0700 (PDT)
+        Thu, 30 Mar 2023 12:20:42 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
 Cc: mptcp@lists.linux.dev
 Reply-To: mptcp@lists.linux.dev
 In-Reply-To:
- <93685516f6f6d543c831013f957a03a21f774fd9.1680110912.git.pabeni@redhat.com>
+ <20230314-doc-checkpatch-closes-tag-v3-4-d1bdcf31c71c@tessares.net>
 References:
- <93685516f6f6d543c831013f957a03a21f774fd9.1680110912.git.pabeni@redhat.com>
-Subject: Re: mptcp: fix accept vs worker race: Tests Results
-Message-ID: <f5833df0-d567-1f40-04c6-af7da0413912@gmail.com>
+ <20230314-doc-checkpatch-closes-tag-v3-4-d1bdcf31c71c@tessares.net>
+Subject: Re: checkpatch: check for misuse of the link tags: Tests Results
+Message-ID: <296a4239-8e05-1216-5dc0-3e7fc295495f@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 30 Mar 2023 18:22:23 +0000
+Date: Thu, 30 Mar 2023 19:20:41 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -58,40 +58,42 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Hi Paolo,
+Hi Matthieu,
 
 Thank you for your modifications, that's great!
 
 Our CI did some validations and here is its report:
 
 - KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_syscalls =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4921633274593280
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4921633274593280/su=
-mmary/summary.txt
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6470058105372672
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6470058105372672/summary/summary.txt
 
 - KVM Validation: normal (only selftest_mptcp_join):
   - Success! =E2=9C=85:
   - Task: https://cirrus-ci.=
-com/task/6047533181435904
+com/task/5062683221819392
   - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6047533181435904/summary/summary.txt
+com/v1/artifact/task/5062683221819392/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6188583128662016
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6188583128662016/summary/summary.txt
 
 - KVM Validation: debug (only selftest_mptcp_join):
   - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6610483134857216
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6610483134857216/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_syscalls =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5484583228014592
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5484583228014592/su=
+  - Task: https://cirrus-ci.com/task/5625633175240704
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5625633175240704/su=
 mmary/summary.txt
 
 Initiator: Patchew Applier
 Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/1ab9c8f4a437
+com/multipath-tcp/mptcp_net-next/commits/d6036791407e
 
 
 If there are some issues, you can reproduce them using the same environment=
