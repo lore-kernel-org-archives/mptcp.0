@@ -1,39 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06439455
-	for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 19:22:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44ED79462
+	for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 19:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680204144;
+	s=mimecast20190719; t=1680204146;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uq/OS94JJ9H4BF7/mfbrBsFRjfFTPLVzrClUFxousak=;
-	b=TpUerfyhgYvDafvgwDo8BmJYD3/6PNJzu0QXu1QVpUiTXwJ5Fwx2LLuuTsRYoWwX+AQj1N
-	NXiiTmn3ROvrRoWoWagI26GCtGbABfGL3VN4ENGcktC2kNbWrDYSmAKBD5bLTnUSQ76Xxm
-	kMHWlD8XqPVZpURJACYSTjh7jM06UqE=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=98nZe6AShvj5wQrLODzsRIxvxo93z1jQKYRh5WUlPeg=;
+	b=Wf1Mc2sa722E229IGHy4xcHUj+7kZ/31+p2t1Slf75bFO7AUFjGwfQZWWZ9bXSbUbpNFVk
+	KWXIddwAaMjGoClr79ah2X7ltGPu+vlkP1zg+x2oSqhGzmYigXMUxyaGvwHPPdDjrU4Q75
+	s7syawkSK8CW3/araZg/HO8Rutrn/Uw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-204-mkgS3HlyOwSlyCtAyMyzqQ-1; Thu, 30 Mar 2023 15:22:23 -0400
-X-MC-Unique: mkgS3HlyOwSlyCtAyMyzqQ-1
+ us-mta-611-DNEM8ei2Na60bYQmel2Ftg-1; Thu, 30 Mar 2023 15:22:22 -0400
+X-MC-Unique: DNEM8ei2Na60bYQmel2Ftg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 429F728135AF;
-	Thu, 30 Mar 2023 19:22:23 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.8])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9254F1121330;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 52FCC100DEAD;
 	Thu, 30 Mar 2023 19:22:22 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.8])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B7FE01121330;
+	Thu, 30 Mar 2023 19:22:21 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Christoph Paasch <cpaasch@apple.com>
-Subject: [PATCH v3 mptcp-net 1/2] mptcp: stops worker on unaccepted sockets at listener close
-Date: Thu, 30 Mar 2023 21:22:16 +0200
-Message-Id: <b4b0dc4d34dcc9e27c645cf4b163df02401c1774.1680204074.git.pabeni@redhat.com>
-In-Reply-To: <cover.1680204074.git.pabeni@redhat.com>
-References: <cover.1680204074.git.pabeni@redhat.com>
+Subject: [PATCH v3 mptcp-net 0/2] mptcp: a couple of fixes
+Date: Thu, 30 Mar 2023 21:22:15 +0200
+Message-Id: <cover.1680204074.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,191 +43,26 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-This is a partial revert of the blamed commit, with a relevant
-change: mptcp_subflow_queue_clean() now just change the msk
-socket status and stop the worker, so that the UaF issue addressed
-by the blamed commit is not re-introduced.
+dump cover letter to trigger the CI, see the individual
+changelog for the details.
 
-The above prevents the mptcp worker from running concurrently with
-inet_csk_listen_stop(), as such race would trigger a warning, as
-reported by Christoph:
+Note that patch  2/2 introduces a behavioral change that hits
+the packetdrill test close_before_accept.pkt. The msk socket
+will be CLOSED after accept if the first subflow is closed
+before accept.
 
-RSP: 002b:00007f784fe09cd8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-WARNING: CPU: 0 PID: 25807 at net/ipv4/inet_connection_sock.c:1387 inet_csk_listen_stop+0x664/0x870 net/ipv4/inet_connection_sock.c:1387
-RAX: ffffffffffffffda RBX: 00000000006bc050 RCX: 00007f7850afd6a9
-RDX: 0000000000000000 RSI: 0000000020000340 RDI: 0000000000000004
-Modules linked in:
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006bc05c
-R13: fffffffffffffea8 R14: 00000000006bc050 R15: 000000000001fe40
+v2 -> v3:
+ - fix locking in patch 2/2 as spotted by Matttbe
 
- </TASK>
-CPU: 0 PID: 25807 Comm: syz-executor.7 Not tainted 6.2.0-g778e54711659 #7
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
-RIP: 0010:inet_csk_listen_stop+0x664/0x870 net/ipv4/inet_connection_sock.c:1387
-RAX: 0000000000000000 RBX: ffff888100dfbd40 RCX: 0000000000000000
-RDX: ffff8881363aab80 RSI: ffffffff81c494f4 RDI: 0000000000000005
-RBP: ffff888126dad080 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: ffff888100dfe040
-R13: 0000000000000001 R14: 0000000000000000 R15: ffff888100dfbdd8
-FS:  00007f7850a2c800(0000) GS:ffff88813bc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b32d26000 CR3: 000000012fdd8006 CR4: 0000000000770ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- <TASK>
- __tcp_close+0x5b2/0x620 net/ipv4/tcp.c:2875
- __mptcp_close_ssk+0x145/0x3d0 net/mptcp/protocol.c:2427
- mptcp_destroy_common+0x8a/0x1c0 net/mptcp/protocol.c:3277
- mptcp_destroy+0x41/0x60 net/mptcp/protocol.c:3304
- __mptcp_destroy_sock+0x56/0x140 net/mptcp/protocol.c:2965
- __mptcp_close+0x38f/0x4a0 net/mptcp/protocol.c:3057
- mptcp_close+0x24/0xe0 net/mptcp/protocol.c:3072
- inet_release+0x53/0xa0 net/ipv4/af_inet.c:429
- __sock_release+0x4e/0xf0 net/socket.c:651
- sock_close+0x15/0x20 net/socket.c:1393
- __fput+0xff/0x420 fs/file_table.c:321
- task_work_run+0x8b/0xe0 kernel/task_work.c:179
- resume_user_mode_work include/linux/resume_user_mode.h:49 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:171 [inline]
- exit_to_user_mode_prepare+0x113/0x120 kernel/entry/common.c:203
- __syscall_exit_to_user_mode_work kernel/entry/common.c:285 [inline]
- syscall_exit_to_user_mode+0x1d/0x40 kernel/entry/common.c:296
- do_syscall_64+0x46/0x90 arch/x86/entry/common.c:86
- entry_SYSCALL_64_after_hwframe+0x72/0xdc
-RIP: 0033:0x7f7850af70dc
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 00007f7850af70dc
-RDX: 00007f7850a2c800 RSI: 0000000000000002 RDI: 0000000000000003
-RBP: 00000000006bd980 R08: 0000000000000000 R09: 00000000000018a0
-R10: 00000000316338a4 R11: 0000000000000293 R12: 0000000000211e31
-R13: 00000000006bc05c R14: 00007f785062c000 R15: 0000000000211af0
+Paolo Abeni (2):
+  mptcp: stops worker on unaccepted sockets at listener close
+  mptcp: fix accept vs worker race
 
-Fixes: 0a3f4f1f9c27 ("mptcp: fix UaF in listener shutdown")
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/371
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c |  6 +++-
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  | 73 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 79 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 54 +++++++++++++++++-----------
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  | 83 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 119 insertions(+), 20 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 1116a64d072e..d28528df43fa 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2421,8 +2421,12 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		mptcp_subflow_drop_ctx(ssk);
- 	} else {
- 		/* otherwise tcp will dispose of the ssk and subflow ctx */
--		if (ssk->sk_state == TCP_LISTEN)
-+		if (ssk->sk_state == TCP_LISTEN) {
-+			tcp_set_state(ssk, TCP_CLOSE);
-+			mptcp_subflow_queue_clean(sk, ssk);
-+			inet_csk_listen_stop(ssk);
- 			mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CLOSED);
-+		}
- 
- 		__tcp_close(ssk, 0);
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d84f0d19e9d6..a4e82bcfc7b8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -628,6 +628,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		     struct mptcp_subflow_context *subflow);
- void __mptcp_subflow_send_ack(struct sock *ssk);
- void mptcp_subflow_reset(struct sock *ssk);
-+void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
- void mptcp_sock_graft(struct sock *sk, struct socket *parent);
- struct socket *__mptcp_nmpc_socket(struct mptcp_sock *msk);
- bool __mptcp_close(struct sock *sk, long timeout);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e90c6f6a676a..d90267da9114 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1808,6 +1808,79 @@ static void subflow_state_change(struct sock *sk)
- 	}
- }
- 
-+void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_ssk)
-+{
-+	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
-+	struct mptcp_sock *msk, *next, *head = NULL;
-+	struct request_sock *req;
-+
-+	/* build a list of all unaccepted mptcp sockets */
-+	spin_lock_bh(&queue->rskq_lock);
-+	for (req = queue->rskq_accept_head; req; req = req->dl_next) {
-+		struct mptcp_subflow_context *subflow;
-+		struct sock *ssk = req->sk;
-+
-+		if (!sk_is_mptcp(ssk))
-+			continue;
-+
-+		subflow = mptcp_subflow_ctx(ssk);
-+		if (!subflow || !subflow->conn)
-+			continue;
-+
-+		/* skip if already in list */
-+		msk = mptcp_sk(subflow->conn);
-+		if (msk->dl_next || msk == head)
-+			continue;
-+
-+		sock_hold(subflow->conn);
-+		msk->dl_next = head;
-+		head = msk;
-+	}
-+	spin_unlock_bh(&queue->rskq_lock);
-+	if (!head)
-+		return;
-+
-+	/* can't acquire the msk socket lock under the subflow one,
-+	 * or will cause ABBA deadlock
-+	 */
-+	release_sock(listener_ssk);
-+
-+	for (msk = head; msk; msk = next) {
-+		struct sock *sk = (struct sock *)msk;
-+
-+		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
-+		next = msk->dl_next;
-+		msk->dl_next = NULL;
-+
-+		/* prevent the stack from later re-schedule the worker for
-+		 * this socket
-+		 */
-+		inet_sk_state_store(sk, TCP_CLOSE);
-+		release_sock(sk);
-+
-+		/* lockdep will report a false positive ABBA deadlock
-+		 * between cancel_work_sync and the listener socket.
-+		 * The involved locks belong to different sockets WRT
-+		 * the existing AB chain.
-+		 * Using a per socket key is problematic as key
-+		 * deregistration requires process context and must be
-+		 * performed at socket disposal time, in atomic
-+		 * context.
-+		 * Just tell lockdep to consider the listener socket
-+		 * released here.
-+		 */
-+		mutex_release(&listener_sk->sk_lock.dep_map, _RET_IP_);
-+		mptcp_cancel_work(sk);
-+		mutex_acquire(&listener_sk->sk_lock.dep_map,
-+			      SINGLE_DEPTH_NESTING, 0, _RET_IP_);
-+
-+		sock_put(sk);
-+	}
-+
-+	/* we are still under the listener msk socket lock */
-+	lock_sock_nested(listener_ssk, SINGLE_DEPTH_NESTING);
-+}
-+
- static int subflow_ulp_init(struct sock *sk)
- {
- 	struct inet_connection_sock *icsk = inet_csk(sk);
 -- 
 2.39.2
 
