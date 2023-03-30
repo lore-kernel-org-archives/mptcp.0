@@ -1,89 +1,126 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5790C944A
-	for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 22:43:23 +0000 (UTC)
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 41579140304;
-	Thu, 30 Mar 2023 22:43:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf04.hostedemail.com (Postfix) with ESMTPA id 8664F20028;
-	Thu, 30 Mar 2023 22:43:09 +0000 (UTC)
-Message-ID: <da9d8c2174e0813be2e0e6b31129e90fddaa128e.camel@perches.com>
-Subject: Re: [PATCH v3 3/4] checkpatch: allow Closes tags with links
-From: Joe Perches <joe@perches.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, Jonathan Corbet
- <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
- <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Kai
- =?ISO-8859-1?Q?Wasserb=E4ch?= <kai@dev.carbon-project.org>, Thorsten
- Leemhuis <linux@leemhuis.info>,  Andrew Morton <akpm@linux-foundation.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
-Date: Thu, 30 Mar 2023 15:43:08 -0700
-In-Reply-To: <20230314-doc-checkpatch-closes-tag-v3-3-d1bdcf31c71c@tessares.net>
-References: 
-	<20230314-doc-checkpatch-closes-tag-v3-0-d1bdcf31c71c@tessares.net>
-	 <20230314-doc-checkpatch-closes-tag-v3-3-d1bdcf31c71c@tessares.net>
-Content-Type: text/plain; charset="ISO-8859-1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3409AD304
+	for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 23:31:56 +0000 (UTC)
+Received: by mail-il1-f174.google.com with SMTP id x6so10687771ile.3
+        for <mptcp@lists.linux.dev>; Thu, 30 Mar 2023 16:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680219115;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hC6hPRweCVfAeCQNWCHgC53od1IhNQwjoHZnS3AfdFY=;
+        b=Zictit/ICJnpJI/4vMbA576vmFqAuDIZEV6otTjWopIl18LeCjPfQRnz9UMKfCNjbc
+         sb+76TrMZif6t93uPV4l2H197DtqezLzjWxhr5yX00x4drUMy9JhscEei+/WyUS32ASV
+         SbGz9SAu28AhPukyHI2SO1kWJDEM5DXwmqYaJnaZyQkU4nqvzNcXvwT+KpPnkf0TOtvv
+         rIeVwGzgJe6cZ8fltq1d+s3dntuu7rmU72qSStQuOHKfDpC8MwYZcPum6rbRSMfnRULf
+         5Kg62mvYICv3iJruptqveUk3LeMRwulYZl0k72J0WZd2dx43RfuLVdyRGBgFnlMfxyYk
+         c0kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680219115;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=hC6hPRweCVfAeCQNWCHgC53od1IhNQwjoHZnS3AfdFY=;
+        b=HZHfgSOiCNvVRBqtiyNh0lJhFBSzai8ImN8JkmLc/LvewHljLMsKuR2ga8QIAJjfA1
+         pCu6/6ZZNGahTIFDoDWPCvf7kRpaLtloMUkWbH8idSKzKdqJaxFzH0Nja8vZTdjIDZye
+         Q80QjgFflnnJuttrgdCRyoXrxEJo4n7+0VrMeKiSKS0sC/8BcAI+P8q7oYXaNhlFUOT9
+         Puq0jludKmN3brqDUKTyQ9webeT+1GEvGUrMrgcsG1itK94TWVVgkEFEkhsNd/va35db
+         iABmb2rssvMtFHrryCl8zOgD4nviYVlirzpI632qGXuuy7bdg7xAHm2hanYwCL5E9D7+
+         YeVA==
+X-Gm-Message-State: AAQBX9c+tctSSaMxVDmQsOhms+fsZfZ834g30nDiFW7gOO/Sb8mwHTk9
+	+RGPX0G8p0qM5pLtkQTYL/HzozoDHOir
+X-Google-Smtp-Source: AKy350b28XVlByC2jZ6ccuuN33aMp+8NrELcoqayUCctI39RQaBsg/yNvAW1uHPKavO12oqXNI4Fbw==
+X-Received: by 2002:a92:d688:0:b0:323:aa7:bef4 with SMTP id p8-20020a92d688000000b003230aa7bef4mr18705960iln.29.1680219115267;
+        Thu, 30 Mar 2023 16:31:55 -0700 (PDT)
+Received: from [127.0.0.1] ([13.86.22.96])
+        by smtp.gmail.com with ESMTPSA id y13-20020a927d0d000000b00313f1b861b7sm34768ilc.51.2023.03.30.16.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Mar 2023 16:31:54 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20230314-doc-checkpatch-closes-tag-v3-4-d1bdcf31c71c@tessares.net>
+References:
+ <20230314-doc-checkpatch-closes-tag-v3-4-d1bdcf31c71c@tessares.net>
+Subject: Re: checkpatch: check for misuse of the link tags: Tests Results
+Message-ID: <82dbd969-6c42-7f30-51d8-92ffbe1cdc74@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+Date: Thu, 30 Mar 2023 23:31:53 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 8664F20028
-X-Stat-Signature: o7s8y4yexe96pcmeht83bc8k1kmp4ytc
-X-Spam-Status: No, score=1.40
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1839bgV7wydgfXH7bCqxQ9k9vhrNnfor3U=
-X-HE-Tag: 1680216189-513749
-X-HE-Meta: U2FsdGVkX1+lgCVmV5KU3BNZtM6xwIk2/vlX9i6ZiIMH3ZU0YFPXMf/3WNcfaIuPazErrbphMTyQUkRCP/L9PA==
 
-On Thu, 2023-03-30 at 20:13 +0200, Matthieu Baerts wrote:
-> As a follow-up of a previous patch modifying the documentation to
-> allow using the "Closes:" tag, checkpatch.pl is updated accordingly.
->=20
-> checkpatch.pl now no longer complain when the "Closes:" tag is used by
-> itself or after the "Reported-by:" tag.
->=20
-> Fixes: 76f381bb77a0 ("checkpatch: warn when unknown tags are used for lin=
-ks")
-> Fixes: d7f1d71e5ef6 ("checkpatch: warn when Reported-by: is not followed =
-by Link:")
+Hi Matthieu,
 
-I don't think this _fixes_ anything.
-I believe it's merely a new capability.
+Thank you for your modifications, that's great!
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/373
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
-> v3:
->  - split into 2 patches: the previous one adds a list with all the
->    "link" tags. This one only allows the "Closes" tag. (Joe Perches)
->  - "Closes" is no longer printed between parenthesis. (Thorsten
->    Leemhuis)
-> ---
->  scripts/checkpatch.pl | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 9d092ff4fc16..ca58c734ff22 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -620,7 +620,7 @@ our $signature_tags =3D qr{(?xi:
->  	Cc:
->  )};
-> =20
-> -our @link_tags =3D qw(Link);
-> +our @link_tags =3D qw(Link Closes);
-> =20
->  #Create a search and print patterns for all these strings to be used dir=
-ectly below
->  our $link_tags_search =3D "";
->=20
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6300055515168768
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6300055515168768/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6018580538458112
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6018580538458112/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5455630585036800
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5455630585036800/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4892680631615488
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4892680631615488/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/65a9f3f24295
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
