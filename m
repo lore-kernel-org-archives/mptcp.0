@@ -1,127 +1,80 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A12CEBE
-	for <mptcp@lists.linux.dev>; Fri, 31 Mar 2023 10:30:25 +0000 (UTC)
-Received: by mail-pj1-f51.google.com with SMTP id j13so20001720pjd.1
-        for <mptcp@lists.linux.dev>; Fri, 31 Mar 2023 03:30:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680258624;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2a44RivD132Fxej6fwqxks4B/5hiYATN/I6y/+/JpaU=;
-        b=h/oz/lnSwhZwMpD3Lqwy2jBwVy+QbbdFpkgYkyJi1++ET4AMQqMaTSl6SPEHgrlWeM
-         JWQBVBNMcWpkUMEa5H0Vo4N/ikXencDbWjjNGgKyR02P1NbyTSS+DdEyw5V3f+rNeT1+
-         TaLKat3bcr3MNws5mevGb6vh7Y8lo5PcCxfaHDH/VBCr6XSTY9LwKdZLjclOjWy1QI9x
-         zCGEazUcU9ZDdGY4d+56qFBOlpq88scgYTCIC5DxKtEZc0hSGFfgVYFKhR38MMpJWLrS
-         ZMZugJV+30af3cBffM8SBkoXnezB/GyGtR9TJfTXk9vL3DMmx+jQCll1+cRfnDQrd277
-         OeAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680258624;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2a44RivD132Fxej6fwqxks4B/5hiYATN/I6y/+/JpaU=;
-        b=N+AD+fiKfPOmbrbkdxF61pO6PbATl64ZCanHHgyp0tY7dRI+57zlTZxzFYu7rTkejz
-         Bg3Y5dxnHED9Qn8UG2iYCrsjz5NoqBcRlIHEuG5Yb+CIinqF/lgokvg+Wkhxr/aByHvt
-         zLaImHTYy2/8dSw91KDF3jSdfuGSM3+Krg15Fmct7iprbJBg5k7qmC6NfhNxqZjV/O+G
-         wADH5fWTX6mk2DOT0fykAhetjeu4C8sc8h6EXFg/NxXOT2rLciIt97ugVt+Ab3akcLnq
-         80GmOaYGp21fmxUr2dk6wOLq8STzD8WZG8hwFdG1wYBiQqOIiiTmmPqFswIOrq8nkv8/
-         qaxw==
-X-Gm-Message-State: AAQBX9fTGF6oIcwLn+LmPyXmPJiFfQMeKytG0nXckNMjAtpzkGPhsuAN
-	vRHiH8LRbK/Nke86MehiFQ==
-X-Google-Smtp-Source: AKy350Yx1Yjh9wgV6FyxRcTX7VkCAp7oKbMwOBRTvKBF4uCwvyT/Imj0tDA+5QaZb5NbiE+NiYKlvA==
-X-Received: by 2002:a17:903:188:b0:19f:8ad5:4331 with SMTP id z8-20020a170903018800b0019f8ad54331mr33080742plg.38.1680258624421;
-        Fri, 31 Mar 2023 03:30:24 -0700 (PDT)
-Received: from [127.0.0.1] ([13.73.50.84])
-        by smtp.gmail.com with ESMTPSA id jl23-20020a170903135700b001a1faeac240sm1224531plb.186.2023.03.31.03.30.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Mar 2023 03:30:24 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <07059bdc844f97430ff5c92afc548485b1c20d74.1680253474.git.pabeni@redhat.com>
-References:
- <07059bdc844f97430ff5c92afc548485b1c20d74.1680253474.git.pabeni@redhat.com>
-Subject: Re: mptcp: fix NULL pointer dereference on fastopen early
- fallback: Tests Results
-Message-ID: <2b00d2fc-41b8-46df-33bf-c743f728c8dd@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 31 Mar 2023 10:30:23 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B75F23D5
+	for <mptcp@lists.linux.dev>; Fri, 31 Mar 2023 10:34:20 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1piC5D-0002Be-5M; Fri, 31 Mar 2023 12:34:11 +0200
+Message-ID: <7d8cae85-5d0a-599e-cc48-0d06db27d9fe@leemhuis.info>
+Date: Fri, 31 Mar 2023 12:34:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Content-Language: en-US, de-DE
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+ Jonathan Corbet <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>,
+ Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+ =?UTF-8?Q?Kai_Wasserb=c3=a4ch?= <kai@dev.carbon-project.org>,
+ Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ mptcp@lists.linux.dev
+References: <20230314-doc-checkpatch-closes-tag-v3-0-d1bdcf31c71c@tessares.net>
+ <2194d19d-f195-1a1e-41fc-7827ae569351@leemhuis.info>
+ <cf5a3e73-c97d-4f98-80d7-4bcc68eb557a@spud>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [PATCH v3 0/4] docs & checkpatch: allow Closes tags with links
+In-Reply-To: <cf5a3e73-c97d-4f98-80d7-4bcc68eb557a@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1680258861;7f4a33cb;
+X-HE-SMSGID: 1piC5D-0002Be-5M
 
-Hi Paolo,
+On 31.03.23 12:08, Conor Dooley wrote:
+> On Fri, Mar 31, 2023 at 11:39:22AM +0200, Thorsten Leemhuis wrote:
+> 
+>> -Please check the link to make sure that it is actually working and points
+>> -to the relevant message.
+>> +If the URL points to a bug report that is fixed by the patch, use 'Closes:'
+>> +instead.
+> 
+> This is not specifically a comment about your additional diff, but this
+> sprang to mind (again) while reading it.
+> I have been wondering if this sort of thing will lead to inconsistency. 
+> Reports sometimes report more than one issue at once. Other times a
+> patch that is (intentionally) not a complete fix for the problem.
+> Using Closes: in those cases is not really true, as it does not close
+> the report.
+>
+> Having a series of N patches, each of which purport to close an issue,
+> also doesn't seem quite right.
+> The word Closes has a meaning and "forcing" the use of Closes: for
+> reports implies meaning that may not be present.
+> 
+> I suppose it is true that just because documentation or checkpatch says
+> to do something, doesn't mean that you **have** to do it but I don't
+> want to be the one on the Rx side of a rant...
 
-Thank you for your modifications, that's great!
+Yeah, maybe checkpath.pl should allow a "Link" after a "Reported-by" for
+cases like this, then developers could save "Closes" for the patch that
+addresses the last of the issues the report is about.
 
-Our CI did some validations and here is its report:
+OTOH checkpatch.pl currently just prints a warning, so developers could
+ignore this and do the above already now, as you say. Guess it depends
+on how often we expect "one report with multiple issue" to happen.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5973018384531456
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5973018384531456/summary/summary.txt
+Maybe this is an indicator that we are on the wrong track in general and
+should not do any of this and just stick to "Link:".
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5410068431110144
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5410068431110144/summary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_connect =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6535968337952768
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6535968337952768/su=
-mmary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4706380989333504
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4706380989333504/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/5d2768a16a63
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Ciao, Thorsten
