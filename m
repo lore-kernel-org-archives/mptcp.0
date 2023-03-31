@@ -1,73 +1,86 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D07C23BC
-	for <mptcp@lists.linux.dev>; Fri, 31 Mar 2023 08:57:46 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1piAZm-0000VF-2g; Fri, 31 Mar 2023 10:57:38 +0200
-Message-ID: <c2d5cc07-ec95-eb64-0cef-42f8378ea054@leemhuis.info>
-Date: Fri, 31 Mar 2023 10:57:35 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9D023BC
+	for <mptcp@lists.linux.dev>; Fri, 31 Mar 2023 09:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680254268;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=aUYitwYKgPv7RvSzuEys2mNKeh94a4ncm7I7Or66PT0=;
+	b=dcmyPJqqkcVlKIm5Jl1U1P6QIsNdSc79BrUiAWkkAJjnP0ZDji1wgVuNlfGqVfMS+QcjNs
+	XtLE2nZ2BXHOcbgaCiGFzYK5WRxuzHisn6kw29M0V6fCy2Ty+CCJXghSsoY1gZwPXm9S40
+	5UK0iV04+Nw9NTP4j4/8ptpaUdR8jSM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-376-0LtTLWhEM06wLzXnC2qDxw-1; Fri, 31 Mar 2023 05:17:45 -0400
+X-MC-Unique: 0LtTLWhEM06wLzXnC2qDxw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D0F40185A791;
+	Fri, 31 Mar 2023 09:17:44 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.194.5])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3AF65492C3E;
+	Fri, 31 Mar 2023 09:17:44 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Dmytro Shytyi <dmytro@shytyi.net>
+Subject: [PATCH mptcp-net] mptcp: fix NULL pointer dereference on fastopen early fallback
+Date: Fri, 31 Mar 2023 11:17:34 +0200
+Message-Id: <07059bdc844f97430ff5c92afc548485b1c20d74.1680253474.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Content-Language: en-US, de-DE
-To: Matthieu Baerts <matthieu.baerts@tessares.net>,
- Jonathan Corbet <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>,
- Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- =?UTF-8?Q?Kai_Wasserb=c3=a4ch?= <kai@dev.carbon-project.org>,
- Andrew Morton <akpm@linux-foundation.org>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
-References: <20230314-doc-checkpatch-closes-tag-v3-0-d1bdcf31c71c@tessares.net>
- <20230314-doc-checkpatch-closes-tag-v3-4-d1bdcf31c71c@tessares.net>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH v3 4/4] checkpatch: check for misuse of the link tags
-In-Reply-To: <20230314-doc-checkpatch-closes-tag-v3-4-d1bdcf31c71c@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1680253066;250da276;
-X-HE-SMSGID: 1piAZm-0000VF-2g
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On 30.03.23 20:13, Matthieu Baerts wrote:
-> "Link:" and "Closes:" tags have to be used with public URLs.
-> 
-> It is difficult to make sure the link is public but at least we can
-> verify the tag is followed by 'http(s):'.
-> 
-> With that, we avoid such a tag that is not allowed [1]:
-> 
->   Closes: <number>
-> 
-> Link: https://lore.kernel.org/linux-doc/CAHk-=wh0v1EeDV3v8TzK81nDC40=XuTdY2MCr0xy3m3FiBV3+Q@mail.gmail.com/ [1]
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> [...]
-> +# Check for misuse of the link tags
-> +		if ($in_commit_log &&
-> +		    $line =~ /^\s*(\w+:)\s*(\S+)/) {
-> +			my $tag = $1;
-> +			my $value = $2;
-> +			if ($tag =~ /^$link_tags_search$/ && $value !~ /^https?:/) {
-> +				WARN("COMMIT_LOG_WRONG_LINK",
-> +				     "'$tag' should be followed by a public http(s) link\n" . $herecurr);
-> +			}
-> +		}
-> +
+In case of early fallback to TCP, subflow_syn_recv_sock() deletes
+the subflow context before returning the newly allocated sock to
+the caller.
 
-I must be missing something here, but it looks to me like this is
-checked twice now. See this line in patch2 (which is changed there, but
-the check itself remains):
+The fastopen path does not cope with the above unconditionally
+dereferencing the subflow context.
 
-> } elsif ($rawlines[$linenr] !~ m{^link:\s*https?://}i) {
+Fixes: 36b122baf6a8 ("mptcp: add subflow_v(4,6)_send_synack()")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/fastopen.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Ciao, Thorsten
+diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+index d237d142171c..bceaab8dd8e4 100644
+--- a/net/mptcp/fastopen.c
++++ b/net/mptcp/fastopen.c
+@@ -9,11 +9,18 @@
+ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subflow,
+ 					      struct request_sock *req)
+ {
+-	struct sock *ssk = subflow->tcp_sock;
+-	struct sock *sk = subflow->conn;
++	struct sock *sk, *ssk;
+ 	struct sk_buff *skb;
+ 	struct tcp_sock *tp;
+ 
++	/* on early fallback the subflow context is deleted by
++	 * subflow_syn_recv_sock()
++	 */
++	if (!subflow)
++		return;
++
++	ssk = subflow->tcp_sock;
++	sk = subflow->conn;
+ 	tp = tcp_sk(ssk);
+ 
+ 	subflow->is_mptfo = 1;
+-- 
+2.39.2
+
