@@ -1,127 +1,133 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40405747D
-	for <mptcp@lists.linux.dev>; Mon,  3 Apr 2023 18:04:36 +0000 (UTC)
-Received: by mail-pg1-f179.google.com with SMTP id l184so8939402pgd.11
-        for <mptcp@lists.linux.dev>; Mon, 03 Apr 2023 11:04:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680545075;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q7MKsNqlcSbEFpcbHwwheox2ryqdmoWVTUOhPE+Boxk=;
-        b=VF4gqWUeaNCYVrzxTVqx8Ym4hIssHkH5wWkLP/pyL489V20Ajfb/phXfsEckvPIJhF
-         NwAuXY+q3TsDyycq5Rd2yWiZJ8X2zNPqVrYmG/bwRumwr3ADqnMb/TdSXuihHfHy3ha5
-         nFz5t2ykm8NVEb1FjNbp2pSq3Arw3beRadlVNaLIHKkPwsXEtYzm/7D7qXBssJrBTwqP
-         67vV0kwweTWSlKZxBPgN9mC2FGtX717nGfnNNrsimqKQWGoW8t3tfJ2wyUlVxVpKZ3jJ
-         XaVg3fdJFk06AW7N82NM9svUV5JJWMGvsocgWUtEBrKF0sP0roNXp0tX33uRpzsbG314
-         KNwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680545075;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Q7MKsNqlcSbEFpcbHwwheox2ryqdmoWVTUOhPE+Boxk=;
-        b=gN9Ql8Smi4C/9CBhRaw1SEVdEpFYA/w8kCdQp02h6Ix/G8L4Wp0xYYBoNDaKG52Lea
-         wPT/bfM7OT1chQdJPsxzDkVuqJr5M4DFMteIy2JFgNNJO2lqDadMOaPe4VJQ7zdD2mzc
-         YX/hg06sGklHogXkJc/2qjlwOCDZhqgDuHpmSvoxrv01Y+g2JJJdfZSLeQGx5U3/9Egk
-         l7qLVLn4fKZLaQWbedrbrg8f6H/ksXZuJ7UwJVJhnT51GnS+t9BMcyPyk3NLteCdt4LL
-         PkBTY2DYOJf6Yw0OQlJwcl4iaIBwyLiXd2QP/mO/Ng2jzwitW1cCUXoUgXo8joPwD7Nb
-         DmMg==
-X-Gm-Message-State: AAQBX9dxm8rOFIwF5JKWLqy2EQgW2wqxv4X7fQalpxjJUgpO4NRWIqBh
-	LYyDOtnaMoeaf/Y02B4j2wy8vFhh9w==
-X-Google-Smtp-Source: AKy350bZV3aobjP5dtulgn63nEu/bI3jm9k3eria5jyCHAvSuq2Ic8F3PFfkXuruQ54RmQAb7YXUMg==
-X-Received: by 2002:a62:4e10:0:b0:5a8:aca5:817d with SMTP id c16-20020a624e10000000b005a8aca5817dmr33688442pfb.5.1680545075478;
-        Mon, 03 Apr 2023 11:04:35 -0700 (PDT)
-Received: from [127.0.0.1] ([138.91.87.21])
-        by smtp.gmail.com with ESMTPSA id c2-20020aa78802000000b005a8a5be96b2sm6380424pfo.104.2023.04.03.11.04.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Apr 2023 11:04:35 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20230314-doc-checkpatch-closes-tag-v4-5-d26d1fa66f9f@tessares.net>
-References:
- <20230314-doc-checkpatch-closes-tag-v4-5-d26d1fa66f9f@tessares.net>
-Subject: Re: checkpatch: check for misuse of the link tags: Tests Results
-Message-ID: <8cdab9f7-a97c-55cf-f39b-92ece32bbe29@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BBBA925
+	for <mptcp@lists.linux.dev>; Mon,  3 Apr 2023 20:23:14 +0000 (UTC)
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 9C5BB1C6141;
+	Mon,  3 Apr 2023 16:44:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf20.hostedemail.com (Postfix) with ESMTPA id 9479F20028;
+	Mon,  3 Apr 2023 16:44:24 +0000 (UTC)
+Message-ID: <f0014730875502c9f2117c2438de0c69512c7d0a.camel@perches.com>
+Subject: Re: [PATCH v4 0/5] docs & checkpatch: allow Closes tags with links
+From: Joe Perches <joe@perches.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, Jonathan Corbet
+ <corbet@lwn.net>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Kai
+ =?ISO-8859-1?Q?Wasserb=E4ch?= <kai@dev.carbon-project.org>, Thorsten
+ Leemhuis <linux@leemhuis.info>,  Andrew Morton <akpm@linux-foundation.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>, Bagas Sanjaya
+ <bagasdotme@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, mptcp@lists.linux.dev
+Date: Mon, 03 Apr 2023 09:44:23 -0700
+In-Reply-To: <20230314-doc-checkpatch-closes-tag-v4-0-d26d1fa66f9f@tessares.net>
+References: 
+	<20230314-doc-checkpatch-closes-tag-v4-0-d26d1fa66f9f@tessares.net>
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 03 Apr 2023 18:04:34 +0000
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 9479F20028
+X-Stat-Signature: xiw3fm8z4miy48d6eqzcbjbqgzde5eap
+X-Spam-Status: No, score=1.40
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX18AYvRZzAR1q2Hs1tsatw9ueURLajfnrEs=
+X-HE-Tag: 1680540264-872236
+X-HE-Meta: U2FsdGVkX1/wd3gCN3YdpSrEWSShFEzMbxSNJyksnDiVxWzTQo/h9bnPyZkSS+eShrwZBtgchjaYMYK2b1QT8Q==
 
-Hi Matthieu,
+On Mon, 2023-04-03 at 18:23 +0200, Matthieu Baerts wrote:
+> Since v6.3, checkpatch.pl now complains about the use of "Closes:" tags
+> followed by a link [1]. It also complains if a "Reported-by:" tag is
+> followed by a "Closes:" one [2].
 
-Thank you for your modifications, that's great!
+All these patches seems sensible, thanks.
 
-Our CI did some validations and here is its report:
+Assuming Linus approves the use of "Closes:"
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6018756900552704
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6018756900552704/summary/summary.txt
+Acked-by: Joe Perches <joe@perches.com>
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5455806947131392
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5455806947131392/summary/summary.txt
+> As detailed in the first patch, this "Closes:" tag is used for a bit of
+> time, mainly by DRM and MPTCP subsystems. It is used by some bug
+> trackers to automate the closure of issues when a patch is accepted.
+> It is even planned to use this tag with bugzilla.kernel.org [3].
+>=20
+> The first patch updates the documentation to explain what is this
+> "Closes:" tag and how/when to use it. The second patch modifies
+> checkpatch.pl to stop complaining about it.
+>=20
+> The DRM maintainers and their mailing list have been added in Cc as they
+> are probably interested by these two patches as well.
+>=20
+> [1] https://lore.kernel.org/all/3b036087d80b8c0e07a46a1dbaaf4ad0d018f8d5.=
+1674217480.git.linux@leemhuis.info/
+> [2] https://lore.kernel.org/all/bb5dfd55ea2026303ab2296f4a6df3da7dd64006.=
+1674217480.git.linux@leemhuis.info/
+> [3] https://lore.kernel.org/linux-doc/20230315181205.f3av7h6owqzzw64p@mee=
+rkat.local/
+>=20
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
+> Note: After having re-read the comments from the v1, it is still unclear
+> to me if this "Closes:" can be accepted or not. But because it seems
+> that the future Bugzilla bot for kernel.org and regzbot would like to
+> use it as well, I'm sending here new versions. I'm sorry if I
+> misunderstood the comments from v1. Please tell me if I did.
+>=20
+> Changes in v4:
+> - Patches 1/5, 3/5 and 4/5 have been added to ask using the "Closes" tag
+>   instead of the "Link" one for any bug reports. (Thorsten)
+> - The Fixes tags have been removed from patch 4/5. (Joe)
+> - The "Reported-by being followed by a link tag" check is now only
+>   looking for the tag, not the URL which is done elsewhere in patch 5/5.
+>   (Thorsten)
+> - A new patch has been added to fix a small issues in checkpatch.pl when
+>   checking if "Reported-by:" tag is on the last line.
+> - Link to v3: https://lore.kernel.org/r/20230314-doc-checkpatch-closes-ta=
+g-v3-0-d1bdcf31c71c@tessares.net
+>=20
+> Changes in v3:
+> - Patch 1/4 now allow using the "Closes" tag with any kind of bug
+>   reports, as long as the link is public. (Thorsten)
+> - The former patch 2/2 has been split in two: first to use a list for
+>   the different "link" tags (Joe). Then to allow the 'Closes' tag.
+> - A new patch has been added to let checkpatch.pl checking if "Closes"
+>   and "Links" are used with a URL.
+> - Link to v2: https://lore.kernel.org/r/20230314-doc-checkpatch-closes-ta=
+g-v2-0-f4a417861f6d@tessares.net
+>=20
+> Changes in v2:
+> - The text on patch 1/2 has been reworked thanks to Jon, Bagas and
+>   Thorsten. See the individual changelog on the patch for more details.
+> - Private bug trackers and invalid URLs are clearly marked as forbidden
+>   to avoid being misused. (Linus)
+> - Rebased on top of Linus' repo.
+> - Link to v1: https://lore.kernel.org/r/20230314-doc-checkpatch-closes-ta=
+g-v1-0-1b83072e9a9a@tessares.net
+>=20
+> ---
+> Matthieu Baerts (5):
+>       docs: process: allow Closes tags with links
+>       checkpatch: don't print the next line if not defined
+>       checkpatch: use a list of "link" tags
+>       checkpatch: allow Closes tags with links
+>       checkpatch: check for misuse of the link tags
+>=20
+>  Documentation/process/5.Posting.rst          | 22 ++++++++++----
+>  Documentation/process/submitting-patches.rst | 26 +++++++++++------
+>  scripts/checkpatch.pl                        | 43 ++++++++++++++++++++++=
+------
+>  3 files changed, 70 insertions(+), 21 deletions(-)
+> ---
+> base-commit: 7e364e56293bb98cae1b55fd835f5991c4e96e7d
+> change-id: 20230314-doc-checkpatch-closes-tag-1731b57556b1
+>=20
+> Best regards,
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6581706853974016
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6581706853974016/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4752119505354752
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4752119505354752/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/5055c32bd437
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
