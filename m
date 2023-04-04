@@ -1,47 +1,47 @@
 Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71601BA3E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F65BA40
 	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 14:56:17 +0000 (UTC)
-Received: by mail-wm1-f48.google.com with SMTP id i5-20020a05600c354500b003edd24054e0so22006820wmq.4
-        for <mptcp@lists.linux.dev>; Tue, 04 Apr 2023 07:56:16 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id v20-20020a05600c471400b003ed8826253aso1028461wmo.0
+        for <mptcp@lists.linux.dev>; Tue, 04 Apr 2023 07:56:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1680620175;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=S2sEwaYGottZRmqEbV+5Hg+2qoGyhyKxaDX0GIJikbk=;
-        b=f9f39qw1S2TCVjLdh+hs3JecPt2WRPjvB513OHdMavkkbk84LdQofkEUg7z3zH1ZW8
-         5pgqwPGFFhWRwkb74qyo86L29w/NMV4GFxnw5vx2bA3tTyLzXc8CTKQ7r7XtlWqy9KsP
-         EKoA2vcdJwf1gNEiGO2jxfCDtzshvFBPLLGTpeVE1HZG/W6HIbQQnAempX8yi0tQZ+c3
-         DVJVh/26RZIlLdXt72qU6PHajvqTd2KUthm25ZPEWuPULr52ZYPQ0JaBmQ+I7WvoGac/
-         KnUIwajlYvBX5vQ30Vf0nL45z0OHbW5pns/jVwvjFSSCOX3Icj8cfSab+7RT8j2UOXzT
-         cy0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680620175;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=tessares.net; s=google; t=1680620176;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=S2sEwaYGottZRmqEbV+5Hg+2qoGyhyKxaDX0GIJikbk=;
-        b=CXCKA+VgCeNI544OH8cZwuDzJyocRWJQkrayeIwm2JmCxtzU6xPAHWW0Jw5k9eEa1j
-         /G3qdhnuZZwWSdpky//tFqII5w35IFJD4GtEYqBB9byeEYQRDKV3RFRDcymYpe/9H7FQ
-         9iChR+DyBY7Yesy/46UmJ1URlCWnywujInVFPpmhVZ89kG5pwYiX4kfQz3QQWYsVisT4
-         d0bxQSG1iYQtok4x06223/Lx1McwineErAQs78umL9IsCsXHUB253gLW36bemCN+WjBF
-         wGFk8GG9gScwTlQoAaSdAXXls7d1Na5da5hdoXd7xrFoALYxO2k8jA5/lTOR7+rp01ZI
-         R5EQ==
-X-Gm-Message-State: AAQBX9fQyB/GozEDP8AHeIi9DQkoikiIcwchnam+OMviOXKlS85FJhcY
-	eC6Xym8Pm5/+GRjEY1JwAHO1zw==
-X-Google-Smtp-Source: AKy350bf5yczBYUf9xl+6i2IJ8vHJ0BlWOMvUt1dAZ1ixvHM0bw7JIDqZ3d4j4tLPV3e9AJGSI1G0A==
-X-Received: by 2002:a1c:f208:0:b0:3ef:5fe3:c57c with SMTP id s8-20020a1cf208000000b003ef5fe3c57cmr2443975wmc.23.1680620175288;
+        bh=qOafcJFrWtZ47jdzTypArQ36sYijAijwBp5l4C9k1HI=;
+        b=Pd+5eqUkNXAmzVgqRgSTXr5Qmj9Z9HdOswBfexwLI313Pq6g4SS1Z8+J6nQWu5eELL
+         d6y+uSAY/GHAptbq+z6lfzRcM8inQm2uhnuvgcgy2dSfAaS9FNKFKARfFBrICLyvfA3P
+         Y7B6qPe/mErTGiHA4I8QWPHTw5OrQQ7F6kGj2o+qTGZHT3MpM/T9u9iVWpspAM4800Yy
+         FvjNLKXDNaq4jhCYRyytSF7tLQJrSnMPV0S6g6+yh2O94YtsLduIcQ/aODSlpRn+Ji6G
+         /HosvU6W4g/lIadStlE2Oi6EaGmAc1NRCigmtasLOQ/DfFdH0NNYYj94UX2pIvxNgeZ6
+         AMjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680620176;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qOafcJFrWtZ47jdzTypArQ36sYijAijwBp5l4C9k1HI=;
+        b=zKi6h+BkNL1lU7KDQZeCERn7kMWQEVHWO8WEPN+zN4D5h7onaupsvjXih52nmUuu/x
+         RqM1iq8U+5Ft52nIE4/t14UN4q+Oo98kRYHfCHcguRjQOT2dQBJy4J0OO8oPGhrNFP82
+         x1yDXCL+rKTwHxT0JfUd3NrGzJRs8MFkpV3NwYgvcoLD8gCoi1kB1ib97Sgmv2sp3x2y
+         Yrre99p9YvCDMJqciSEVugHVjbkr1EFcqLVb+RjhheEMMpdPiaMB7odNigMCIAmgq+VS
+         PogVkcXObfVfFhJL3T+odt0YTjg2+x82KXBpWYEMk8UdYRjGcIhYnxM5HmiIisqtMuee
+         Jo2Q==
+X-Gm-Message-State: AAQBX9e5nUPNZTDdoOoqZ4drrDkLXH3N88w8SNdEmgbu2wuLevEV5JQq
+	ZEOiKf6fGVakF+S6VdpQK10LuUJZYwXMHgHBRoKVQgGm
+X-Google-Smtp-Source: AKy350Z27ADkB/03IkS1twpRVko2fEhodQjfnAZ3y9NnYs8dhDSvKCMjnzrby2seb6bwse2+1KVrsw==
+X-Received: by 2002:a05:600c:2193:b0:3ed:2eb5:c2dd with SMTP id e19-20020a05600c219300b003ed2eb5c2ddmr2327694wme.39.1680620175979;
         Tue, 04 Apr 2023 07:56:15 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id 3-20020a05600c228300b003ed2384566fsm15413333wmf.21.2023.04.04.07.56.14
+        by smtp.gmail.com with ESMTPSA id 3-20020a05600c228300b003ed2384566fsm15413333wmf.21.2023.04.04.07.56.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 07:56:14 -0700 (PDT)
+        Tue, 04 Apr 2023 07:56:15 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next 0/2] mptcp: selftests: join: support BusyBox and
- ShellCheck
-Date: Tue, 04 Apr 2023 16:55:58 +0200
-Message-Id: <20230404-mptcp-selftests-join-busybox-shellcheck-v1-0-65892428a951@tessares.net>
+Date: Tue, 04 Apr 2023 16:55:59 +0200
+Subject: [PATCH mptcp-next 1/2] selftests: mptcp: join: avoid using 'cmp
+ --bytes'
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,58 +50,76 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAH46LGQC/yWOQQ6CMBREr0L+2h8RWKBXMS7aMrVVKE1/IRjC3
- QVdvkzy3qwkSB5Ct2KlhNmLH8MOl1NBxqnwBPtuZ6rKqi6bsuEhZhNZ0NsMycKv0QfWk3z0uLA
- 49L1xMG+GqeqrbbsGraXdppWAdVLBuMOXz1OUnKCGY4wJ1i+/G3f6FwKWTI9t+wIXQ4NaogAAA
- A==
+Message-Id: <20230404-mptcp-selftests-join-busybox-shellcheck-v1-1-65892428a951@tessares.net>
+References: <20230404-mptcp-selftests-join-busybox-shellcheck-v1-0-65892428a951@tessares.net>
+In-Reply-To: <20230404-mptcp-selftests-join-busybox-shellcheck-v1-0-65892428a951@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, 
  Paolo Abeni <pabeni@redhat.com>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1182;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1841;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=pelmj0AHRvxOa/bR+QyZlCRB5bkE6m+LSsSsTaqf/sc=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkLDqOTqZC8Ur79nV70/vFyLdWQl1KW0PVc6MdN
- HMBtZAN/byJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZCw6jgAKCRD2t4JPQmmg
- c386D/9uWW0oIE3exPa02cZM1QbHQIHdTHwXRaxpXkfNDlmlTUkTSdACak1i20yLx3p7L2ypuY0
- 4NOm+aezvNeZZEY5Tn+X5SxmYvox8Q3hOltdP5NXNO9YxOHTnBjmn8+GkHGgUlhzUtf+kAElJGw
- yXHuF0AgO04t83iCFrFr9LTQ6hLspfJUEWprZmDAByhfZuUhDXWdA9M0GdDZnXb1gCGlsvdBtKB
- sN3dcvh5dB6fLnglUFL708qtGVg1GaGF67FH1W2eR86raq8Rk3K08Dp3Nfycz+73YYZvhtgUpzW
- DF3b52c3hUnFxDWuatq2ua/UfDmTNhvo9s9gwUIpSzW6r899dCqBJDWDSGZS3GTY0gR18Sm35zX
- JNWGXu4J1H9YDeLdRbb3e5IuYvZqrBYZTJRU90981OYzHM+UFKgz/MjsRaptX3t+VG8ouoFMGF1
- DPG21+fsclwbugXAMQ0BDUhwF7zcQBK1Z/gDoTz+POp9OHbJcYdoWV3tAh5ezsrU+mlk/uGHOZ8
- lcijiajY0OoPZQb4PHGoLltPcwWxzeUWU1vAdGqSghVWjyhsCmrtzCGKU9iWN8gDJTgss5q2X2Z
- 2vDvU4WLOSZWulBQ6qrNEMOBuPuf1iTNaL5Pl996skAIpgbBLqbyVLnpOgFxlAz4CDRhQqHICcm
- /7x9gtEQXR8txLQ==
+ bh=IDIhASqB8al/uYlZWN2Gskqs9lKyFSbiKuIYVKWYEsM=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkLDqO1PjkW7O/aZAb8WaPOV76M1cSUT4q8fvAH
+ Qpb7HbJ2cKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZCw6jgAKCRD2t4JPQmmg
+ c8iOD/4jr5eFgCK5ZQ86S/pfvGYuKnIFY0iJDfEC7dNr3RPRHpPcWW/TwkfLNqnUbn7eHmv+/Mc
+ 4PNJuao3yyTkfq8+TEQgEhzQWfgBVrln1CkT4BInakN/MEQo+N8cngZIMpSj1+tDsvFjiVjIdJU
+ U+T9TN/ugTYdxl0wcmCdE69mGr1tIjY3utManmbzecE1UDAw+31Qasul4j8OQDtbctcFaTCK/7h
+ tP3nlIydEyumexGBwCWanYL2IOQN1s27bmX+0k2rbiJD9YuC6yynoUIyUbp2wafRJyFyRwfqrgO
+ 2a92BPp4V+c3KagaoU6ZeMocK0Zs060BMdImFkxG6TJHuAG9Uybm9f9wKDcVO7gTBfVufZX0a2C
+ +EZrlLT6KvWVhlo3m8DhbY7gAPLBbWr19XbdEbAz3NVVKuPoJp7i/dkrATLiNGscetSEo+BSy/X
+ wV0LYdWXpQOLekX0GoegDzzS1FO0SEUJAq/52tWYYZUhlurIPlGT1pwcjFKUzMkKkvrKEQJpHSC
+ +zAKH0+xmhG7AXe7VQLmRMxOr86mVfitHtTNmpIuJVGxlLVgLIe1ZaRAJnNczrPyAfptKPFYt/A
+ awJ2mH2JFWGleT6bzaq8GFylXFPDBNaUa5P9utn2DyifWxoqZRBZPmHh9e4Ushtp4RVjgqNRiHw
+ oWPYyjA4Q1xO5vA==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Here are two simple modifications, not really fixing anything for us but
-fixing issues for those using BusyBox like LKFT.
+BusyBox's 'cmp' command doesn't support the '--bytes' parameter.
 
-At least the first patch fixes a bug they have. They might switch to a
-different version of cmp at some points but it doesn't seem easy. So
-probably best to have this patch flagged as a fix to have it backported
-in order to detect when other mptcp_join.sh subtests are failing.
+Some CIs -- i.e. LKFT -- use BusyBox and have the mptcp_join.sh test
+failing [1] because their 'cmp' command doesn't support this '--bytes'
+option:
 
-The second patch fixes ShellCheck warnings: it was reporting issues for
-most lines of the script. Best to fix these warnings to easily spot new
-warnings that could be linked to real issues. But no need to backport
-this one I suppose.
+    cmp: unrecognized option '--bytes=1024'
+    BusyBox v1.35.0 () multi-call binary.
 
+    Usage: cmp [-ls] [-n NUM] FILE1 [FILE2]
+
+Instead, 'head --bytes' can be used as this option is supported by
+BusyBox.
+
+Because it is apparently quite common to use BusyBox, it is certainly
+better to backport this fix to impacted kernels.
+
+Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
+Link: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.3-rc5-5-g148341f0a2f5/testrun/16088933/suite/kselftest-net-mptcp/test/net_mptcp_userspace_pm_sh/log [1]
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-Matthieu Baerts (2):
-      selftests: mptcp: join: avoid using 'cmp --bytes'
-      selftests: mptcp: join: fix ShellCheck warnings
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
----
-base-commit: 73fd52db48d9eff550fef735066f742acc2bf0e6
-change-id: 20230404-mptcp-selftests-join-busybox-shellcheck-ec239f8d4e8f
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index fafd19ec7e1f..b0b0931379b3 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -378,9 +378,12 @@ check_transfer()
+ 			fail_test
+ 			return 1
+ 		fi
+-		bytes="--bytes=${bytes}"
++		# note: BusyBox's "cmp" command doesn't support --bytes
++		bytes=(head --bytes="${bytes}")
++	else
++		bytes=(cat)
+ 	fi
+-	cmp -l "$in" "$out" ${bytes} | while read -r i a b; do
++	cmp -l "$in" "$out" 2>/dev/null | "${bytes[@]}" | while read -r i a b; do
+ 		local sum=$((0${a} + 0${b}))
+ 		if [ $check_invert -eq 0 ] || [ $sum -ne $((0xff)) ]; then
+ 			echo "[ FAIL ] $what does not match (in, out):"
 
-Best regards,
 -- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
+2.39.2
 
