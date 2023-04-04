@@ -1,57 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289056AB8
-	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 13:12:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680613939;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EJJRq81vhsNE/gImmH2RxKELKk1yC6+HtkrDkDbI6Po=;
-	b=R45BpqrDKYiBRrfNZTQ9suvSPF6VUxLhnZ7tySidqiDKT3ZAI29ijUb3q+K7Ma4iD7PI5N
-	baVYmLQsHJTb2dxDnoAqMHmCsU6X6pIFx8A24MdIdl/9X+6nixNtJ3hqS3jqKrx/xxjolQ
-	43SCMsNWCX0cAwDxw5b383RGGtL3Tfw=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103876D22
+	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 13:59:08 +0000 (UTC)
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-214-ZNN0xWtfNm20gf3SJmHOYg-1; Tue, 04 Apr 2023 09:12:17 -0400
-X-MC-Unique: ZNN0xWtfNm20gf3SJmHOYg-1
-Received: by mail-qk1-f197.google.com with SMTP id x80-20020a376353000000b0074681bc7f42so14668549qkb.8
-        for <mptcp@lists.linux.dev>; Tue, 04 Apr 2023 06:12:17 -0700 (PDT)
+ us-mta-77-kFQy_Pm_Pe6taA4-fomviQ-1; Tue, 04 Apr 2023 09:59:06 -0400
+X-MC-Unique: kFQy_Pm_Pe6taA4-fomviQ-1
+Received: by mail-qt1-f198.google.com with SMTP id r22-20020ac85c96000000b003e638022bc9so10215797qta.5
+        for <mptcp@lists.linux.dev>; Tue, 04 Apr 2023 06:59:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680613937;
+        d=1e100.net; s=20210112; t=1680616745;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=EJJRq81vhsNE/gImmH2RxKELKk1yC6+HtkrDkDbI6Po=;
-        b=ovqP+8kGS2fPShxOV04wCwk1OpC3AX+ncqp7PEjLwXaGm5tM0SxpD18K0yl3Oc2/Um
-         2MK65M6ENMcp870Jh1XPStddz55j+oFvb7LTR552ZGuDD76wrxFrDJyyYG1wuqb735Cy
-         yT3Z/pRzyCijSj2Qay43/kWnEXdZhVguC0uSYiFJIhG16gH8sp0fl1+lVqo0eJxXQNpb
-         xK+/Dq1TLe98VCOGlna9WRZxSNp22iXOQ3q/eIiuO6jHpnqr41PDyFIhGiRbReinHJVH
-         wrUso4KylT+ikjsJihZwuH/wp6daMvIJl2cs4Y2fiDAGAR4Kc1dyE9Ad3oj0YDUKOczo
-         YlKg==
-X-Gm-Message-State: AAQBX9fEXEBjH19oZzThgjO3OW1gb+XLPa/DangVnFaIqqDx9+CtDnMD
-	OZaofB7Ti3SgEZGyJIEjDPAp2ES6b0tIDnO+qjZjB1LUXamx6//xgYsUXWAY/6JxWlosT9s1rm4
-	ka01xo19obUfHEf09h28tLM80q74SltKo3GrO0C8EvVBfCHmeBhk/oX06AkouomqYaT7W3swj
-X-Received: by 2002:a05:622a:1826:b0:3bf:c458:5bac with SMTP id t38-20020a05622a182600b003bfc4585bacmr3647755qtc.0.1680613936814;
-        Tue, 04 Apr 2023 06:12:16 -0700 (PDT)
-X-Google-Smtp-Source: AKy350bKqyM9dtWwH0iAPtBDtMoFcT/Wt/H6Ar+vtniEPdXU3cMnjMzxd/Idf7/xAW3faLYnmt5cYw==
-X-Received: by 2002:a05:622a:1826:b0:3bf:c458:5bac with SMTP id t38-20020a05622a182600b003bfc4585bacmr3647698qtc.0.1680613936357;
-        Tue, 04 Apr 2023 06:12:16 -0700 (PDT)
+        bh=TRrhmDIBvP4ZGmnJwTlUysQMTGjMfM/YpM5TkiQkZ74=;
+        b=StX1ej/VFExx9rB/TTrNC2rTMPKAyx3pdZHc4n7YZOeVVfMPzJMfDhcbc4F/MxfCAj
+         l3z/6mgcgcTzKI4v9Wja3DaqtY6qGnDe80dIrnI9kH9niv2wr9DczZ66k7kH9CyaMj+B
+         3Stq8oI5p/a9A9sdFmNqqrCde/dDfigIVnldh1SlqWO4XFvdNoHnAC6EkqUcw1hxpmnY
+         F8QE8cQXnYE8rwQxJknLmDTkoALDcK2r9EZdY8f93YW8UNktgTvvaW6pMhGpetS8Y8KQ
+         bV5GNoWVm9rCmQk+j4t45foRpNaFem1TM1DR97Bi4HbwiwbQzytxfZ2y8vU9OcYcMJrv
+         ztqA==
+X-Gm-Message-State: AAQBX9fN6iAiX1jf+8EXYM3Xq65BvVWMAch1O+ccdEB0rzeDy0yS5/fx
+	1laOICxn1MpAp688mGQPMqrVTQYbAIlkEe69J0q/WRJFvINT5QaFbuaTgXrlzq/vrJw+8V6vtMy
+	JQb7vxrvqYMLGZlX313YRm7k=
+X-Received: by 2002:a05:6214:29ca:b0:5dd:ac69:4bdf with SMTP id gh10-20020a05621429ca00b005ddac694bdfmr3465789qvb.3.1680616745476;
+        Tue, 04 Apr 2023 06:59:05 -0700 (PDT)
+X-Google-Smtp-Source: AKy350YOLffW8zsxuMKU1UArnJH8sAh1AX29LcTS7fRbHV0BWjZHnRM8AJjmRs2ACVxipivs9jlDpw==
+X-Received: by 2002:a05:6214:29ca:b0:5dd:ac69:4bdf with SMTP id gh10-20020a05621429ca00b005ddac694bdfmr3465758qvb.3.1680616745066;
+        Tue, 04 Apr 2023 06:59:05 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-227-151.dyn.eolo.it. [146.241.227.151])
-        by smtp.gmail.com with ESMTPSA id i25-20020ac860d9000000b003bd0f0b26b0sm3225502qtm.77.2023.04.04.06.12.15
-        for <mptcp@lists.linux.dev>
+        by smtp.gmail.com with ESMTPSA id nd13-20020a056214420d00b005dd8b9345bcsm3421294qvb.84.2023.04.04.06.59.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 06:12:15 -0700 (PDT)
-Message-ID: <495fc443773ca7618dbf0f5f2ea6e744dad2581f.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next 0/3] mptcp: add more mibs
+        Tue, 04 Apr 2023 06:59:04 -0700 (PDT)
+Message-ID: <ba55d265f400227a15331e9cf26112de111a3e74.camel@redhat.com>
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: userspace pm: uniform
+ verify events
 From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Date: Tue, 04 Apr 2023 15:12:13 +0200
-In-Reply-To: <cover.1680544063.git.pabeni@redhat.com>
-References: <cover.1680544063.git.pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+Date: Tue, 04 Apr 2023 15:59:02 +0200
+In-Reply-To: <20230328-mptcp-selftests-userspace-sleep-verify-listen-v1-1-2a4adf550084@tessares.net>
+References: <20230328-mptcp-selftests-userspace-sleep-verify-listen-v1-1-2a4adf550084@tessares.net>
 User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -64,29 +54,64 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2023-04-04 at 13:41 +0200, Paolo Abeni wrote:
-> dumb cover letter for CI's sake.
+On Tue, 2023-03-28 at 19:05 +0200, Matthieu Baerts wrote:
+> Simply adding a "sleep" before checking something is usually not a good
+> idea because the time that has been picked can not be enough or too
+> much. The best is to wait for events with a timeout.
 >=20
-> Slould be applied only after the current tree has been crunched
-> by syzkaller for a little bit, as this will likely change quite
-> a bit the timings of some critical path, possibly hiding old races
-> and make more easy to reach other ones
+> In this selftest, 'sleep 0.5' is used more than 40 times. It is always
+> used before calling a 'verify_*' function except for this
+> verify_listener_events which has been added later.
 >=20
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/378
+> At the end, using all these 'sleep 0.5' seems to work: the slow CIs
+> don't complain so far. Also because it doesn't take too much time, we
+> can just add two more 'sleep 0.5' to uniform what is done before calling
+> a 'verify_*' function. For the same reasons, we can also delay a bigger
+> refactoring to replace all these 'sleep 0.5' by functions waiting for
+> events instead of waiting for a fix time and hope for the best.
 >=20
-> Paolo Abeni (3):
->   mptcp: introduces more address related mibs
->   selftests: mptcp: add explicit check for new mibs
->   selftests: mptcp: centralize stats dumping
+> Fixes: 6c73008aa301 ("selftests: mptcp: listener test for userspace PM")
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
+>  tools/testing/selftests/net/mptcp/userspace_pm.sh | 2 ++
+>  1 file changed, 2 insertions(+)
 >=20
->  net/mptcp/mib.c                               |   6 +
->  net/mptcp/mib.h                               |  14 +++
->  net/mptcp/options.c                           |   5 +-
->  net/mptcp/pm.c                                |   6 +-
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 112 +++++++++---------
->  5 files changed, 87 insertions(+), 56 deletions(-)
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/te=
+sting/selftests/net/mptcp/userspace_pm.sh
+> index 48e52f995a98..b1eb7bce599d 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -913,6 +913,7 @@ test_listener()
+>  =09=09$client4_port > /dev/null 2>&1 &
+>  =09local listener_pid=3D$!
+> =20
+> +=09sleep 0.5
+>  =09verify_listener_events $client_evts $LISTENER_CREATED $AF_INET 10.0.2=
+.2 $client4_port
+> =20
+>  =09# ADD_ADDR from client to server machine reusing the subflow port
+> @@ -928,6 +929,7 @@ test_listener()
+>  =09# Delete the listener from the client ns, if one was created
+>  =09kill_wait $listener_pid
+> =20
+> +=09sleep 0.5
+>  =09verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.=
+2 $client4_port
+>  }
+> =20
 >=20
-oops, I sent out an old version. I'll send a v2 soon.
+> ---
+> base-commit: 1281a7eb9aa62b79cb9ad4d221ae31659ed892d0
+> change-id: 20230328-mptcp-selftests-userspace-sleep-verify-listen-4fb855b=
+c054d
+>=20
+> Best regards,
 
-Paolo
+LGTM!
+
+(no need for a forma acked-by tag imho here due to the already present
+tag)
+
+/P
 
