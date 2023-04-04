@@ -1,117 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103876D22
-	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 13:59:08 +0000 (UTC)
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-77-kFQy_Pm_Pe6taA4-fomviQ-1; Tue, 04 Apr 2023 09:59:06 -0400
-X-MC-Unique: kFQy_Pm_Pe6taA4-fomviQ-1
-Received: by mail-qt1-f198.google.com with SMTP id r22-20020ac85c96000000b003e638022bc9so10215797qta.5
-        for <mptcp@lists.linux.dev>; Tue, 04 Apr 2023 06:59:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71601BA3E
+	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 14:56:17 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id i5-20020a05600c354500b003edd24054e0so22006820wmq.4
+        for <mptcp@lists.linux.dev>; Tue, 04 Apr 2023 07:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1680620175;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S2sEwaYGottZRmqEbV+5Hg+2qoGyhyKxaDX0GIJikbk=;
+        b=f9f39qw1S2TCVjLdh+hs3JecPt2WRPjvB513OHdMavkkbk84LdQofkEUg7z3zH1ZW8
+         5pgqwPGFFhWRwkb74qyo86L29w/NMV4GFxnw5vx2bA3tTyLzXc8CTKQ7r7XtlWqy9KsP
+         EKoA2vcdJwf1gNEiGO2jxfCDtzshvFBPLLGTpeVE1HZG/W6HIbQQnAempX8yi0tQZ+c3
+         DVJVh/26RZIlLdXt72qU6PHajvqTd2KUthm25ZPEWuPULr52ZYPQ0JaBmQ+I7WvoGac/
+         KnUIwajlYvBX5vQ30Vf0nL45z0OHbW5pns/jVwvjFSSCOX3Icj8cfSab+7RT8j2UOXzT
+         cy0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680616745;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=TRrhmDIBvP4ZGmnJwTlUysQMTGjMfM/YpM5TkiQkZ74=;
-        b=StX1ej/VFExx9rB/TTrNC2rTMPKAyx3pdZHc4n7YZOeVVfMPzJMfDhcbc4F/MxfCAj
-         l3z/6mgcgcTzKI4v9Wja3DaqtY6qGnDe80dIrnI9kH9niv2wr9DczZ66k7kH9CyaMj+B
-         3Stq8oI5p/a9A9sdFmNqqrCde/dDfigIVnldh1SlqWO4XFvdNoHnAC6EkqUcw1hxpmnY
-         F8QE8cQXnYE8rwQxJknLmDTkoALDcK2r9EZdY8f93YW8UNktgTvvaW6pMhGpetS8Y8KQ
-         bV5GNoWVm9rCmQk+j4t45foRpNaFem1TM1DR97Bi4HbwiwbQzytxfZ2y8vU9OcYcMJrv
-         ztqA==
-X-Gm-Message-State: AAQBX9fN6iAiX1jf+8EXYM3Xq65BvVWMAch1O+ccdEB0rzeDy0yS5/fx
-	1laOICxn1MpAp688mGQPMqrVTQYbAIlkEe69J0q/WRJFvINT5QaFbuaTgXrlzq/vrJw+8V6vtMy
-	JQb7vxrvqYMLGZlX313YRm7k=
-X-Received: by 2002:a05:6214:29ca:b0:5dd:ac69:4bdf with SMTP id gh10-20020a05621429ca00b005ddac694bdfmr3465789qvb.3.1680616745476;
-        Tue, 04 Apr 2023 06:59:05 -0700 (PDT)
-X-Google-Smtp-Source: AKy350YOLffW8zsxuMKU1UArnJH8sAh1AX29LcTS7fRbHV0BWjZHnRM8AJjmRs2ACVxipivs9jlDpw==
-X-Received: by 2002:a05:6214:29ca:b0:5dd:ac69:4bdf with SMTP id gh10-20020a05621429ca00b005ddac694bdfmr3465758qvb.3.1680616745066;
-        Tue, 04 Apr 2023 06:59:05 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-227-151.dyn.eolo.it. [146.241.227.151])
-        by smtp.gmail.com with ESMTPSA id nd13-20020a056214420d00b005dd8b9345bcsm3421294qvb.84.2023.04.04.06.59.04
+        d=1e100.net; s=20210112; t=1680620175;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S2sEwaYGottZRmqEbV+5Hg+2qoGyhyKxaDX0GIJikbk=;
+        b=CXCKA+VgCeNI544OH8cZwuDzJyocRWJQkrayeIwm2JmCxtzU6xPAHWW0Jw5k9eEa1j
+         /G3qdhnuZZwWSdpky//tFqII5w35IFJD4GtEYqBB9byeEYQRDKV3RFRDcymYpe/9H7FQ
+         9iChR+DyBY7Yesy/46UmJ1URlCWnywujInVFPpmhVZ89kG5pwYiX4kfQz3QQWYsVisT4
+         d0bxQSG1iYQtok4x06223/Lx1McwineErAQs78umL9IsCsXHUB253gLW36bemCN+WjBF
+         wGFk8GG9gScwTlQoAaSdAXXls7d1Na5da5hdoXd7xrFoALYxO2k8jA5/lTOR7+rp01ZI
+         R5EQ==
+X-Gm-Message-State: AAQBX9fQyB/GozEDP8AHeIi9DQkoikiIcwchnam+OMviOXKlS85FJhcY
+	eC6Xym8Pm5/+GRjEY1JwAHO1zw==
+X-Google-Smtp-Source: AKy350bf5yczBYUf9xl+6i2IJ8vHJ0BlWOMvUt1dAZ1ixvHM0bw7JIDqZ3d4j4tLPV3e9AJGSI1G0A==
+X-Received: by 2002:a1c:f208:0:b0:3ef:5fe3:c57c with SMTP id s8-20020a1cf208000000b003ef5fe3c57cmr2443975wmc.23.1680620175288;
+        Tue, 04 Apr 2023 07:56:15 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id 3-20020a05600c228300b003ed2384566fsm15413333wmf.21.2023.04.04.07.56.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 06:59:04 -0700 (PDT)
-Message-ID: <ba55d265f400227a15331e9cf26112de111a3e74.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: userspace pm: uniform
- verify events
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Tue, 04 Apr 2023 15:59:02 +0200
-In-Reply-To: <20230328-mptcp-selftests-userspace-sleep-verify-listen-v1-1-2a4adf550084@tessares.net>
-References: <20230328-mptcp-selftests-userspace-sleep-verify-listen-v1-1-2a4adf550084@tessares.net>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+        Tue, 04 Apr 2023 07:56:14 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next 0/2] mptcp: selftests: join: support BusyBox and
+ ShellCheck
+Date: Tue, 04 Apr 2023 16:55:58 +0200
+Message-Id: <20230404-mptcp-selftests-join-busybox-shellcheck-v1-0-65892428a951@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH46LGQC/yWOQQ6CMBREr0L+2h8RWKBXMS7aMrVVKE1/IRjC3
+ QVdvkzy3qwkSB5Ct2KlhNmLH8MOl1NBxqnwBPtuZ6rKqi6bsuEhZhNZ0NsMycKv0QfWk3z0uLA
+ 49L1xMG+GqeqrbbsGraXdppWAdVLBuMOXz1OUnKCGY4wJ1i+/G3f6FwKWTI9t+wIXQ4NaogAAA
+ A==
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ Paolo Abeni <pabeni@redhat.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1182;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=pelmj0AHRvxOa/bR+QyZlCRB5bkE6m+LSsSsTaqf/sc=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkLDqOTqZC8Ur79nV70/vFyLdWQl1KW0PVc6MdN
+ HMBtZAN/byJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZCw6jgAKCRD2t4JPQmmg
+ c386D/9uWW0oIE3exPa02cZM1QbHQIHdTHwXRaxpXkfNDlmlTUkTSdACak1i20yLx3p7L2ypuY0
+ 4NOm+aezvNeZZEY5Tn+X5SxmYvox8Q3hOltdP5NXNO9YxOHTnBjmn8+GkHGgUlhzUtf+kAElJGw
+ yXHuF0AgO04t83iCFrFr9LTQ6hLspfJUEWprZmDAByhfZuUhDXWdA9M0GdDZnXb1gCGlsvdBtKB
+ sN3dcvh5dB6fLnglUFL708qtGVg1GaGF67FH1W2eR86raq8Rk3K08Dp3Nfycz+73YYZvhtgUpzW
+ DF3b52c3hUnFxDWuatq2ua/UfDmTNhvo9s9gwUIpSzW6r899dCqBJDWDSGZS3GTY0gR18Sm35zX
+ JNWGXu4J1H9YDeLdRbb3e5IuYvZqrBYZTJRU90981OYzHM+UFKgz/MjsRaptX3t+VG8ouoFMGF1
+ DPG21+fsclwbugXAMQ0BDUhwF7zcQBK1Z/gDoTz+POp9OHbJcYdoWV3tAh5ezsrU+mlk/uGHOZ8
+ lcijiajY0OoPZQb4PHGoLltPcwWxzeUWU1vAdGqSghVWjyhsCmrtzCGKU9iWN8gDJTgss5q2X2Z
+ 2vDvU4WLOSZWulBQ6qrNEMOBuPuf1iTNaL5Pl996skAIpgbBLqbyVLnpOgFxlAz4CDRhQqHICcm
+ /7x9gtEQXR8txLQ==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Tue, 2023-03-28 at 19:05 +0200, Matthieu Baerts wrote:
-> Simply adding a "sleep" before checking something is usually not a good
-> idea because the time that has been picked can not be enough or too
-> much. The best is to wait for events with a timeout.
->=20
-> In this selftest, 'sleep 0.5' is used more than 40 times. It is always
-> used before calling a 'verify_*' function except for this
-> verify_listener_events which has been added later.
->=20
-> At the end, using all these 'sleep 0.5' seems to work: the slow CIs
-> don't complain so far. Also because it doesn't take too much time, we
-> can just add two more 'sleep 0.5' to uniform what is done before calling
-> a 'verify_*' function. For the same reasons, we can also delay a bigger
-> refactoring to replace all these 'sleep 0.5' by functions waiting for
-> events instead of waiting for a fix time and hope for the best.
->=20
-> Fixes: 6c73008aa301 ("selftests: mptcp: listener test for userspace PM")
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->  tools/testing/selftests/net/mptcp/userspace_pm.sh | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/te=
-sting/selftests/net/mptcp/userspace_pm.sh
-> index 48e52f995a98..b1eb7bce599d 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -913,6 +913,7 @@ test_listener()
->  =09=09$client4_port > /dev/null 2>&1 &
->  =09local listener_pid=3D$!
-> =20
-> +=09sleep 0.5
->  =09verify_listener_events $client_evts $LISTENER_CREATED $AF_INET 10.0.2=
-.2 $client4_port
-> =20
->  =09# ADD_ADDR from client to server machine reusing the subflow port
-> @@ -928,6 +929,7 @@ test_listener()
->  =09# Delete the listener from the client ns, if one was created
->  =09kill_wait $listener_pid
-> =20
-> +=09sleep 0.5
->  =09verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.=
-2 $client4_port
->  }
-> =20
->=20
-> ---
-> base-commit: 1281a7eb9aa62b79cb9ad4d221ae31659ed892d0
-> change-id: 20230328-mptcp-selftests-userspace-sleep-verify-listen-4fb855b=
-c054d
->=20
-> Best regards,
+Here are two simple modifications, not really fixing anything for us but
+fixing issues for those using BusyBox like LKFT.
 
-LGTM!
+At least the first patch fixes a bug they have. They might switch to a
+different version of cmp at some points but it doesn't seem easy. So
+probably best to have this patch flagged as a fix to have it backported
+in order to detect when other mptcp_join.sh subtests are failing.
 
-(no need for a forma acked-by tag imho here due to the already present
-tag)
+The second patch fixes ShellCheck warnings: it was reporting issues for
+most lines of the script. Best to fix these warnings to easily spot new
+warnings that could be linked to real issues. But no need to backport
+this one I suppose.
 
-/P
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Matthieu Baerts (2):
+      selftests: mptcp: join: avoid using 'cmp --bytes'
+      selftests: mptcp: join: fix ShellCheck warnings
+
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+---
+base-commit: 73fd52db48d9eff550fef735066f742acc2bf0e6
+change-id: 20230404-mptcp-selftests-join-busybox-shellcheck-ec239f8d4e8f
+
+Best regards,
+-- 
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
