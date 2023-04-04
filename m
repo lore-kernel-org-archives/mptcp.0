@@ -1,147 +1,126 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83E9BA41
-	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 14:56:18 +0000 (UTC)
-Received: by mail-wm1-f54.google.com with SMTP id s13so19189518wmr.4
-        for <mptcp@lists.linux.dev>; Tue, 04 Apr 2023 07:56:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CEBBA3E
+	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 15:47:32 +0000 (UTC)
+Received: by mail-qv1-f51.google.com with SMTP id k12so4901808qvo.13
+        for <mptcp@lists.linux.dev>; Tue, 04 Apr 2023 08:47:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1680620177;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=naEc1M79h9Rlwevdk9LN1zU3Sl/M47uvzfrvhY9XPHY=;
-        b=dWzHfTjdLhMNfX7RHBvwO04bP+Hltl2uITD1S+0ulZ0KQ5uA/gWVjWfJCBpAj7DODI
-         JX9aN1aup7AtU6XoYy7IHDzLAikOdr4gQiqHW9iF0lGrQeaqyx2j5YYPHvASCgMpIOjT
-         2CZzwenGhyQF/jgpNw1ntrIwCeg4vTqFyxjuoC7Kx8jpphp7SOZ3skpKlx9lHyy3m5cO
-         NHK1Ras2+U42AVQFnnuR9rOvhlxNXT4XmGPY8u6KpJC773MJOmtNSQ+QUxoYdvizmOM5
-         Yg5EFJo3/HfK7kbq5uCJrgfbZ/8hd30H6/wiSxzI4LF+S9sb67QzYkVahm5gdfIbaj5/
-         uU3Q==
+        d=gmail.com; s=20210112; t=1680623251;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U6Df+PgBXGqkxpF8OoxSH8bbT8wODUZP7MR9/X3PCbk=;
+        b=HDjgL3SDII+QG96L9OBoT7XWpmA9nlHpxawlvM0eQ4aKYTQO8jh2SFNp1GtoGJ+9Hw
+         VrsXQsQDLjuebu1hrEFyya3B/8Hdkbgh1c5zQvVZkqbDlSbzqO3DEKK45m489/2gBhZc
+         wUk/S2I6+2zlA+PXlTVgbxaOuaWliHZvhkO8qHe4NEygXDefs7Q5A5Gz8FaTTGP7gTy8
+         bC53ohMgpGbnTnJMdWUjkCeYWGyLgOtu7PaCDJ4RIcsp6OJjpueco4ayqfFp5f5ZRmN3
+         YqfgM/11pZtKW1ymcJncHakKSKnpQFMRc11iNBkPCE+pcvVd/ZIzgNCDxQjWxgqwByTb
+         HxLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680620177;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=naEc1M79h9Rlwevdk9LN1zU3Sl/M47uvzfrvhY9XPHY=;
-        b=FhzwKKd1bQ6LYY6RVs7v7bg1pUqmL/YfIl4hvR+c4q+gLLciE93dih66WCYdSNBsgW
-         1RUrhJ4wv8UO2qdW3Bwuu550j88KfSC3zFWMW3FZPFJIAVBBUEx8GevmZyISXr4kBj1G
-         KIGGBqYs0daOT0K6Dx5UwIoNDqVEU1U0PB8Zosvehu0RfCeq/R6UsKQbh6su6Sb0hLgM
-         9mm9HZuZnNdP0fmtXRLN9XLMepkDHe697HWK7AOMIM3tin70YwEYbaJyED2B3zqIm0vz
-         H6MP2AN9gL0pQAf4u6Jtt3vIMUlkseg9zE0VGwAo/fajxhUrpZBdJjPPmaQeTwj3RNiq
-         RLcA==
-X-Gm-Message-State: AAQBX9egiSZhNZ9sWfJ57AldZPcYuyhTZpxB5/71LMglulBhGDhvZlsh
-	6rvIWtJyGX4OmCoM3pnZ78FKCxYFIW4oYW6XnDIYk8kK
-X-Google-Smtp-Source: AKy350Yc2dCobZNSq4LG8iNJXt5z2lv9UFypY0vImDmFOSa46e7YeIIEhYzkSzLjTrgFO42fLXk0Qg==
-X-Received: by 2002:a7b:c7cd:0:b0:3df:e6bb:768 with SMTP id z13-20020a7bc7cd000000b003dfe6bb0768mr2408444wmk.24.1680620176718;
-        Tue, 04 Apr 2023 07:56:16 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id 3-20020a05600c228300b003ed2384566fsm15413333wmf.21.2023.04.04.07.56.16
+        d=1e100.net; s=20210112; t=1680623251;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=U6Df+PgBXGqkxpF8OoxSH8bbT8wODUZP7MR9/X3PCbk=;
+        b=FFGZW2yFkmcyk55WIapfXtSFO5/7T35kxlty7Ai0n6hExTp074oK5i34rZTt9t2EtV
+         ufp7GbEwAGuPuUVA6B0kn8JxzRhK1yl2yzwtKWX3N8JKgm8T+5+dxkYKfhSnrMGwdMgZ
+         nTEJqE10DlWyS8OoPo9P5mO/+3MjO41I1zdyFsoAkSWQmTr24jBPZxGEVZK6jer2sLBe
+         ZyA1G5v9LW/5usXyIp+P184lFRMxnKgbhhuKYSbSsrhYX1Yoq15sxkj7XJFP0wT1jj4j
+         N16yK4GVXd6C30DZfdScbKOhm0HVJVZZyagvkaWkg53N09GdmL6ucm2XiaWXhseNsixl
+         5oRQ==
+X-Gm-Message-State: AAQBX9dg+5pJdr/u+/jPN0noeHcuRzMHreGqX69jXG3za8gJnQRE0rg5
+	renZxB1ZDvquChO8015IUw==
+X-Google-Smtp-Source: AKy350Y+yGyp69DELawaUL8FuaOnMf/HFahr6+6dyvecCsw72wrPtBjDsD4ekPbIt3I7H6N+RWQgBg==
+X-Received: by 2002:a05:6214:29ce:b0:5e0:ad80:6846 with SMTP id gh14-20020a05621429ce00b005e0ad806846mr4090648qvb.0.1680623250835;
+        Tue, 04 Apr 2023 08:47:30 -0700 (PDT)
+Received: from [127.0.0.1] ([52.226.113.35])
+        by smtp.gmail.com with ESMTPSA id l14-20020ac84a8e000000b003e393c9feb7sm3346549qtq.58.2023.04.04.08.47.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 07:56:16 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Tue, 04 Apr 2023 16:56:00 +0200
-Subject: [PATCH mptcp-next 2/2] selftests: mptcp: join: fix ShellCheck
- warnings
+        Tue, 04 Apr 2023 08:47:30 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20230404-mptcp-selftests-join-busybox-shellcheck-v1-2-65892428a951@tessares.net>
+References:
+ <20230404-mptcp-selftests-join-busybox-shellcheck-v1-2-65892428a951@tessares.net>
+Subject: Re: selftests: mptcp: join: fix ShellCheck warnings: Tests Results
+Message-ID: <892c8d4b-4224-4d9b-3208-4189bcc197c0@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 04 Apr 2023 15:47:29 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230404-mptcp-selftests-join-busybox-shellcheck-v1-2-65892428a951@tessares.net>
-References: <20230404-mptcp-selftests-join-busybox-shellcheck-v1-0-65892428a951@tessares.net>
-In-Reply-To: <20230404-mptcp-selftests-join-busybox-shellcheck-v1-0-65892428a951@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2487;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=AFtPkbP1aEl5H/rYhq3uc7l/goofFCO9VXue9lU9uqY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkLDqOfT/zGoqZMUFnorzvTQ2aj2eCL5F4ufY1X
- K8J56XbpwOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZCw6jgAKCRD2t4JPQmmg
- c9sZD/986r8aK++udkPr0jS/A7aPseDcgju83nHsPM7ITODr7FiBYRAsXdciqWOzUJ/l9P7KaBx
- ZHvp7ZIagYWVxcCvpazRo2EJjWFxModIUQ2s6IYeAJcKspD0NtHWlckdAdAfI7ANFqU3E6YdnE+
- w83t4/sJfo5Rvvg9HEzNbNcvOBZVxwnW1HMsxBTnUXic888VQmhnTc4EbcaSi9liLzX7XF1WWO6
- VSA19kGBUcPt9FmqQj3MvWv15HvxBLYyQKrDZGvIQdR7uRclxpjH3/iChzsrEl0US7ImkVKeOj5
- k0SCANkLr5XzsFzRcdKsnqRgqxYAKjyBu6zKSAXR7C0F4wTYUZhaX0UVUvDcITh9NmxKREmLfrr
- KGIRTu9sEVzt+dd54Z7Bw5fuhzJN9oVNp2Xfxo8/zo7TMb5AHTreU9SABdFb0ldt3xhe1Y0BZdK
- uiU/1JX0XUVzUHxeJACWiPuwdDjXu+pmBegC8XnmdI2VF1eCWAIx9AHUkAfwGMmTXMijICO+Rz+
- lSwkuwkHL4SURiH1a+3zbQYzVnsuEG4aN7/E514iuvUf/y+s6/tFcuqXIIPqkHDetbqkaskjyiX
- 8d5gdvzifduR/5MSWldEu38SMh83hbCrpNJk9He2/hSLPfkmCHfnUXob5c4MmyYJl2hyTt/O4DC
- g+JKsJq0S6Fuvww==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Most of the code had an issue according to ShellCheck.
+Hi Matthieu,
 
-That's mainly due to the fact it incorrectly believes most of the code
-was unreachable because it's invoked by variable name, see how the
-"tests" array is used.
+Thank you for your modifications, that's great!
 
-Once SC2317 has been ignored, three small warnings were still visible:
+Our CI did some validations and here is its report:
 
- - SC2155: Declare and assign separately to avoid masking return values.
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6207163090075648
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6207163090075648/summary/summary.txt
 
- - SC2046: Quote this to prevent word splitting: can be ignored because
-   "ip netns pids" can display more than one pid.
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4799788206522368
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4799788206522368/su=
+mmary/summary.txt
 
- - SC2166: Prefer [ p ] || [ q ] as [ p -o q ] is not well defined.
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5362738159943680
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5362738159943680/summary/summary.txt
 
-This probably didn't fix any actual issues but it might help spotting
-new interesting warnings reported by ShellCheck as just before,
-ShellCheck was reporting issues for most lines making it a bit useless.
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5925688113364992
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5925688113364992/summary/summary.txt
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/a9e891b9e4a3
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b0b0931379b3..c18981c8f172 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -6,6 +6,10 @@
- # address all other issues detected by shellcheck.
- #shellcheck disable=SC2086
- 
-+# ShellCheck incorrectly believes that most of the code here is unreachable
-+# because it's invoked by variable name, see how the "tests" array is used
-+#shellcheck disable=SC2317
-+
- ret=0
- sin=""
- sinfail=""
-@@ -371,8 +375,9 @@ check_transfer()
- 
- 	local line
- 	if [ -n "$bytes" ]; then
-+		local out_size
- 		# when truncating we must check the size explicitly
--		local out_size=$(wc -c $out | awk '{print $1}')
-+		out_size=$(wc -c $out | awk '{print $1}')
- 		if [ $out_size -ne $bytes ]; then
- 			echo "[ FAIL ] $what output file has wrong size ($out_size, $bytes)"
- 			fail_test
-@@ -503,6 +508,7 @@ kill_events_pids()
- 
- kill_tests_wait()
- {
-+	#shellcheck disable=SC2046
- 	kill -SIGUSR1 $(ip netns pids $ns2) $(ip netns pids $ns1)
- 	wait
- }
-@@ -1706,7 +1712,7 @@ chk_subflow_nr()
- 
- 	cnt1=$(ss -N $ns1 -tOni | grep -c token)
- 	cnt2=$(ss -N $ns2 -tOni | grep -c token)
--	if [ "$cnt1" != "$subflow_nr" -o "$cnt2" != "$subflow_nr" ]; then
-+	if [ "$cnt1" != "$subflow_nr" ] || [ "$cnt2" != "$subflow_nr" ]; then
- 		echo "[fail] got $cnt1:$cnt2 subflows expected $subflow_nr"
- 		fail_test
- 		dump_stats=1
 
--- 
-2.39.2
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
