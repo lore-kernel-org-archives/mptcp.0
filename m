@@ -1,478 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6232D6AA7
-	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 11:41:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680608484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FLA/nBO1xOq0TcN8MlKsRcApvRciQQExqvJKfCkufbY=;
-	b=ifXazwDe/3iDpYippQXX+iB/yKoMEuUD1ZLdFfKx74NUipqg+iVvmO6bsmsyuPA3hfD4Cv
-	E333Il+zJHZUv4rtYgBZad8bY+agpB1yqBHO0Rp5GSU2vFKcXQazqQSapfKHLe7O5WwjAp
-	VZ0C6vvsNlf5zOTN3AFBqe+J8BNqp7U=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-623-RDnfJnE7Pxqk01GWC2M6Aw-1; Tue, 04 Apr 2023 07:41:22 -0400
-X-MC-Unique: RDnfJnE7Pxqk01GWC2M6Aw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EBD4E2810C06
-	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 11:41:21 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.15])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 85EA3440D7
-	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 11:41:21 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 3/3] selftests: mptcp: centralize stats dumping
-Date: Tue,  4 Apr 2023 13:41:04 +0200
-Message-Id: <85d115f611a952405d294aad906b8163baeb3c84.1680544063.git.pabeni@redhat.com>
-In-Reply-To: <cover.1680544063.git.pabeni@redhat.com>
-References: <cover.1680544063.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1174429A5
+	for <mptcp@lists.linux.dev>; Tue,  4 Apr 2023 12:43:21 +0000 (UTC)
+Received: by mail-qt1-f173.google.com with SMTP id n14so31342737qta.10
+        for <mptcp@lists.linux.dev>; Tue, 04 Apr 2023 05:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680612201;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nUjI4k1OZjgsVoU/H9iveMiPm8T5WC0htVOa6swhNn0=;
+        b=iMQVSuf0PZL8MZog6Nr2Si5rP+Rydv6x18v3Tz2QG8MzMu/Udp5WjMb8UfWzvba5Gc
+         GFt2OCSrc3Qqfc6/6LE9GKbtJ4LTrDCFMDAihYk7K1WK4pY66L+bLQvXylU0RBh806WP
+         jQSV4EEKbwlbaWeY6L45y7uGTxpjgBhLfVaR6bzJRs7LEgbsSi9mpVWXH4ayBlwlW0HZ
+         OtF7vg61+SrhBATgv2zqqmamtIKDnhKKV9i/tHWBhCID+umdmYgADYI/ZMvHLRmLkHCH
+         WIP0Q47s0X1tVvBCmOWR1cPIqLhWrfVQuc4duICc44CcKon6uz0Z6JArM/HDcfZSebwj
+         6Bew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680612201;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nUjI4k1OZjgsVoU/H9iveMiPm8T5WC0htVOa6swhNn0=;
+        b=5QSvmpTFO7SujdWRyfIViVy/Ax7FY9ZhFFBXU9UnmjvUxIxF1vEQiAdizTga9DptPN
+         PXRjRiNFxspNXzKABmImF38gmJ+cYn5AlHbOcrVPMQ5tNg0iSY2E10Q4KozpOYuP2PNF
+         JWMCvKzmZ1tmcFfDw8vzsJV1OvlNmM/QdeMPlXVDFsbtO5d67CeK+Xd/VPHHfLj1ycvm
+         65N6475RbZ3GpLxDhBuxFWAwvzlGkf3JvbnPqw9FdfUcV9JJhZ+SuStPZue64ioG4X4N
+         iYFZJLB8E1qdVpFYyB1nMBA3odSki0tA8gTiOlorcXnjkrHfHTuBd1NlkJjUW9kEQ/ho
+         49OQ==
+X-Gm-Message-State: AAQBX9e0Onc1yf5Bj33IV7yYJLp+bPVwAphIwYSjF1M80dG6JhfMeoNr
+	USPtuleGFAg3ge8r+4nLE76sZJCklbEv
+X-Google-Smtp-Source: AKy350bc4d51B4lCO4GhTBLIx9K3boNk+i+d+zO89kM/KlZQ2PyUios8MhzHJ7Nol1YT1XQ6T6uMww==
+X-Received: by 2002:a05:622a:100a:b0:3e4:dcb4:169 with SMTP id d10-20020a05622a100a00b003e4dcb40169mr3457564qte.16.1680612200917;
+        Tue, 04 Apr 2023 05:43:20 -0700 (PDT)
+Received: from [127.0.0.1] ([172.177.255.84])
+        by smtp.gmail.com with ESMTPSA id do43-20020a05620a2b2b00b007484bc04a63sm3569851qkb.99.2023.04.04.05.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Apr 2023 05:43:20 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <85d115f611a952405d294aad906b8163baeb3c84.1680544063.git.pabeni@redhat.com>
+References:
+ <85d115f611a952405d294aad906b8163baeb3c84.1680544063.git.pabeni@redhat.com>
+Subject: Re: selftests: mptcp: centralize stats dumping: Tests Results
+Message-ID: <b7524924-e243-2553-46f7-04517d748d41@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 04 Apr 2023 12:43:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-If a test case fails, the mptcp_join.sh script can dump the
-netns MIBs multiple times, leading to confusing output.
+Hi Paolo,
 
-Let's dump such info only once per test-case, when needed.
-This additionally allow removing some code duplication.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 66 ++-----------------
- 1 file changed, 5 insertions(+), 61 deletions(-)
+Our CI did some validations and here is its report:
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 14728c81777f..a4d2410c9f27 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -30,6 +30,7 @@ evts_ns1=""
- evts_ns2=""
- evts_ns1_pid=0
- evts_ns2_pid=0
-+stats_dumped=0
- 
- declare -A all_tests
- declare -a only_tests_ids
-@@ -83,6 +84,7 @@ init_partial()
- 		fi
- 	done
- 
-+	stats_dumped=0
- 	check_invert=0
- 	validate_checksum=$checksum
- 	FAILING_LINKS=""
-@@ -343,6 +345,9 @@ fail_test()
- {
- 	ret=1
- 	failed_tests[${TEST_COUNT}]="${TEST_NAME}"
-+
-+	[ "${stats_dumped}" = 0 ] && dump_stats
-+	stats_dumped=1
- }
- 
- get_failed_tests_ids()
-@@ -1114,7 +1119,6 @@ chk_csum_nr()
- 	local csum_ns1=${1:-0}
- 	local csum_ns2=${2:-0}
- 	local count
--	local dump_stats
- 	local extra_msg=""
- 	local allow_multi_errors_ns1=0
- 	local allow_multi_errors_ns2=0
-@@ -1138,7 +1142,6 @@ chk_csum_nr()
- 	   { [ "$count" -lt $csum_ns1 ] && [ $allow_multi_errors_ns1 -eq 1 ]; }; then
- 		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1152,11 +1155,9 @@ chk_csum_nr()
- 	   { [ "$count" -lt $csum_ns2 ] && [ $allow_multi_errors_ns2 -eq 1 ]; }; then
- 		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
--	[ "${dump_stats}" = 1 ] && dump_stats
- 
- 	echo "$extra_msg"
- }
-@@ -1167,7 +1168,6 @@ chk_fail_nr()
- 	local fail_rx=$2
- 	local ns_invert=${3:-""}
- 	local count
--	local dump_stats
- 	local ns_tx=$ns1
- 	local ns_rx=$ns2
- 	local extra_msg=""
-@@ -1199,7 +1199,6 @@ chk_fail_nr()
- 	   { [ "$count" -gt "$fail_tx" ] && [ $allow_tx_lost -eq 1 ]; }; then
- 		echo "[fail] got $count MP_FAIL[s] TX expected $fail_tx"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1214,13 +1213,10 @@ chk_fail_nr()
- 	   { [ "$count" -gt "$fail_rx" ] && [ $allow_rx_lost -eq 1 ]; }; then
- 		echo "[fail] got $count MP_FAIL[s] RX expected $fail_rx"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
- 
--	[ "${dump_stats}" = 1 ] && dump_stats
--
- 	echo "$extra_msg"
- }
- 
-@@ -1230,7 +1226,6 @@ chk_fclose_nr()
- 	local fclose_rx=$2
- 	local ns_invert=$3
- 	local count
--	local dump_stats
- 	local ns_tx=$ns2
- 	local ns_rx=$ns1
- 	local extra_msg="   "
-@@ -1248,7 +1243,6 @@ chk_fclose_nr()
- 	if [ "$count" != "$fclose_tx" ]; then
- 		echo "[fail] got $count MP_FASTCLOSE[s] TX expected $fclose_tx"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1260,13 +1254,10 @@ chk_fclose_nr()
- 	if [ "$count" != "$fclose_rx" ]; then
- 		echo "[fail] got $count MP_FASTCLOSE[s] RX expected $fclose_rx"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
- 
--	[ "${dump_stats}" = 1 ] && dump_stats
--
- 	echo "$extra_msg"
- }
- 
-@@ -1276,7 +1267,6 @@ chk_rst_nr()
- 	local rst_rx=$2
- 	local ns_invert=${3:-""}
- 	local count
--	local dump_stats
- 	local ns_tx=$ns1
- 	local ns_rx=$ns2
- 	local extra_msg=""
-@@ -1293,7 +1283,6 @@ chk_rst_nr()
- 	if [ $count -lt $rst_tx ]; then
- 		echo "[fail] got $count MP_RST[s] TX expected $rst_tx"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1304,13 +1293,10 @@ chk_rst_nr()
- 	if [ "$count" -lt "$rst_rx" ]; then
- 		echo "[fail] got $count MP_RST[s] RX expected $rst_rx"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
- 
--	[ "${dump_stats}" = 1 ] && dump_stats
--
- 	echo "$extra_msg"
- }
- 
-@@ -1319,7 +1305,6 @@ chk_infi_nr()
- 	local infi_tx=$1
- 	local infi_rx=$2
- 	local count
--	local dump_stats
- 
- 	printf "%-${nr_blank}s %s" " " "itx"
- 	count=$(ip netns exec $ns2 nstat -as | grep InfiniteMapTx | awk '{print $2}')
-@@ -1327,7 +1312,6 @@ chk_infi_nr()
- 	if [ "$count" != "$infi_tx" ]; then
- 		echo "[fail] got $count infinite map[s] TX expected $infi_tx"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1338,12 +1322,9 @@ chk_infi_nr()
- 	if [ "$count" != "$infi_rx" ]; then
- 		echo "[fail] got $count infinite map[s] RX expected $infi_rx"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo "[ ok ]"
- 	fi
--
--	[ "${dump_stats}" = 1 ] && dump_stats
- }
- 
- chk_join_nr()
-@@ -1358,7 +1339,6 @@ chk_join_nr()
- 	local infi_nr=${8:-0}
- 	local corrupted_pkts=${9:-0}
- 	local count
--	local dump_stats
- 	local with_cookie
- 	local title="${TEST_NAME}"
- 
-@@ -1372,7 +1352,6 @@ chk_join_nr()
- 	if [ "$count" != "$syn_nr" ]; then
- 		echo "[fail] got $count JOIN[s] syn expected $syn_nr"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1390,7 +1369,6 @@ chk_join_nr()
- 		else
- 			echo "[fail] got $count JOIN[s] synack expected $syn_ack_nr"
- 			fail_test
--			dump_stats=1
- 		fi
- 	else
- 		echo -n "[ ok ]"
-@@ -1402,11 +1380,9 @@ chk_join_nr()
- 	if [ "$count" != "$ack_nr" ]; then
- 		echo "[fail] got $count JOIN[s] ack expected $ack_nr"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo "[ ok ]"
- 	fi
--	[ "${dump_stats}" = 1 ] && dump_stats
- 	if [ $validate_checksum -eq 1 ]; then
- 		chk_csum_nr $csum_ns1 $csum_ns2
- 		chk_fail_nr $fail_nr $fail_nr
-@@ -1466,7 +1442,6 @@ chk_add_nr()
- 	local mis_syn_nr=${7:-0}
- 	local mis_ack_nr=${8:-0}
- 	local count
--	local dump_stats
- 	local timeout
- 
- 	timeout=$(ip netns exec $ns1 sysctl -n net.mptcp.add_addr_timeout)
-@@ -1480,7 +1455,6 @@ chk_add_nr()
- 	if [ "$count" != "$add_nr" ] && { [ "$timeout" -gt 1 ] || [ "$count" -lt "$add_nr" ]; }; then
- 		echo "[fail] got $count ADD_ADDR[s] expected $add_nr"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1491,7 +1465,6 @@ chk_add_nr()
- 	if [ "$count" != "$echo_nr" ]; then
- 		echo "[fail] got $count ADD_ADDR echo[s] expected $echo_nr"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1503,7 +1476,6 @@ chk_add_nr()
- 		if [ "$count" != "$port_nr" ]; then
- 			echo "[fail] got $count ADD_ADDR[s] with a port-number expected $port_nr"
- 			fail_test
--			dump_stats=1
- 		else
- 			echo "[ ok ]"
- 		fi
-@@ -1516,7 +1488,6 @@ chk_add_nr()
- 			echo "[fail] got $count JOIN[s] syn with a different \
- 				port-number expected $syn_nr"
- 			fail_test
--			dump_stats=1
- 		else
- 			echo -n "[ ok ]"
- 		fi
-@@ -1529,7 +1500,6 @@ chk_add_nr()
- 			echo "[fail] got $count JOIN[s] synack with a different \
- 				port-number expected $syn_ack_nr"
- 			fail_test
--			dump_stats=1
- 		else
- 			echo -n "[ ok ]"
- 		fi
-@@ -1542,7 +1512,6 @@ chk_add_nr()
- 			echo "[fail] got $count JOIN[s] ack with a different \
- 				port-number expected $ack_nr"
- 			fail_test
--			dump_stats=1
- 		else
- 			echo "[ ok ]"
- 		fi
-@@ -1555,7 +1524,6 @@ chk_add_nr()
- 			echo "[fail] got $count JOIN[s] syn with a mismatched \
- 				port-number expected $mis_syn_nr"
- 			fail_test
--			dump_stats=1
- 		else
- 			echo -n "[ ok ]"
- 		fi
-@@ -1568,22 +1536,18 @@ chk_add_nr()
- 			echo "[fail] got $count JOIN[s] ack with a mismatched \
- 				port-number expected $mis_ack_nr"
- 			fail_test
--			dump_stats=1
- 		else
- 			echo "[ ok ]"
- 		fi
- 	else
- 		echo ""
- 	fi
--
--	[ "${dump_stats}" = 1 ] && dump_stats
- }
- 
- chk_add_tx_nr()
- {
- 	local add_tx_nr=$1
- 	local echo_tx_nr=$2
--	local dump_stats
- 	local timeout
- 	local count
- 
-@@ -1598,7 +1562,6 @@ chk_add_tx_nr()
- 	if [ "$count" != "$add_tx_nr" ] && { [ "$timeout" -gt 1 ] || [ "$count" -lt "$add_tx_nr" ]; }; then
- 		echo "[fail] got $count ADD_ADDR[s] TX, expected $add_tx_nr"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1609,12 +1572,9 @@ chk_add_tx_nr()
- 	if [ "$count" != "$echo_tx_nr" ]; then
- 		echo "[fail] got $count ADD_ADDR echo[s] TX, expected $echo_tx_nr"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
--
--	[ "${dump_stats}" = 1 ] && dump_stats
- }
- 
- chk_rm_nr()
-@@ -1624,7 +1584,6 @@ chk_rm_nr()
- 	local invert
- 	local simult
- 	local count
--	local dump_stats
- 	local addr_ns=$ns1
- 	local subflow_ns=$ns2
- 	local extra_msg=""
-@@ -1651,7 +1610,6 @@ chk_rm_nr()
- 	if [ "$count" != "$rm_addr_nr" ]; then
- 		echo "[fail] got $count RM_ADDR[s] expected $rm_addr_nr"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1675,20 +1633,16 @@ chk_rm_nr()
- 		else
- 			echo "[fail] got $count RM_SUBFLOW[s] expected in range [$rm_subflow_nr:$((rm_subflow_nr*2))]"
- 			fail_test
--			dump_stats=1
- 		fi
- 		return
- 	fi
- 	if [ "$count" != "$rm_subflow_nr" ]; then
- 		echo "[fail] got $count RM_SUBFLOW[s] expected $rm_subflow_nr"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
- 
--	[ "${dump_stats}" = 1 ] && dump_stats
--
- 	echo "$extra_msg"
- }
- 
-@@ -1702,13 +1656,10 @@ chk_rm_tx_nr()
- 	if [ "$count" != "$rm_addr_nr" ]; then
- 		echo "[fail] got $count RM_ADDR[s] expected $rm_addr_nr"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
- 
--	[ "${dump_stats}" = 1 ] && dump_stats
--
- 	echo "$extra_msg"
- }
- 
-@@ -1717,7 +1668,6 @@ chk_prio_nr()
- 	local mp_prio_nr_tx=$1
- 	local mp_prio_nr_rx=$2
- 	local count
--	local dump_stats
- 
- 	printf "%-${nr_blank}s %s" " " "ptx"
- 	count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPPrioTx | awk '{print $2}')
-@@ -1725,7 +1675,6 @@ chk_prio_nr()
- 	if [ "$count" != "$mp_prio_nr_tx" ]; then
- 		echo "[fail] got $count MP_PRIO[s] TX expected $mp_prio_nr_tx"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo -n "[ ok ]"
- 	fi
-@@ -1736,12 +1685,9 @@ chk_prio_nr()
- 	if [ "$count" != "$mp_prio_nr_rx" ]; then
- 		echo "[fail] got $count MP_PRIO[s] RX expected $mp_prio_nr_rx"
- 		fail_test
--		dump_stats=1
- 	else
- 		echo "[ ok ]"
- 	fi
--
--	[ "${dump_stats}" = 1 ] && dump_stats
- }
- 
- chk_subflow_nr()
-@@ -1773,7 +1719,6 @@ chk_subflow_nr()
- 		ss -N $ns1 -tOni
- 		ss -N $ns1 -tOni | grep token
- 		ip -n $ns1 mptcp endpoint
--		dump_stats
- 	fi
- }
- 
-@@ -1813,7 +1758,6 @@ chk_mptcp_info()
- 	if [ "$dump_stats" = 1 ]; then
- 		ss -N $ns1 -inmHM
- 		ss -N $ns2 -inmHM
--		dump_stats
- 	fi
- }
- 
--- 
-2.39.2
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5212034736848896
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5212034736848896/summary/summary.txt
 
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6337934643691520
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6337934643691520/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4930559760138240
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4930559760138240/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6056459666980864
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6056459666980864/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/7cf1e8f55f33
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
