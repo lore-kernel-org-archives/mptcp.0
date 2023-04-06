@@ -1,38 +1,35 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA4AAD33
-	for <mptcp@lists.linux.dev>; Thu,  6 Apr 2023 17:32:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189E9AD29
+	for <mptcp@lists.linux.dev>; Thu,  6 Apr 2023 17:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1680802338;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i3weOfqRro6PgGD3KK5lLOw4Kv0/wG4afsY1+qIT9s0=;
-	b=G43iphSNQjfx3j4lCwmo6Rpyv1hPwtOVBiBp3+8/poQdvrHrgtq3DCf3NGs/GFB5n3esIe
-	tZaNWTGYIpqHBGKbXose43KKE1dCtq+r4GXYHtCe2Gy2n2IGKlV0CwBlD8ubftZE8Kx3Tn
-	hckPyfhwjVO0L8i0iAEUKTMaV526EDE=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8pAD0brmolSfS3bAeB2RILy7PcAjCQ4RwieUL5GtsVY=;
+	b=fpmsfgkLFdYR0u2z5XKUhgWaFHacVNreO16i4eeAzeYUU5gODPX+2VyTpS1W6KHYBRuZVr
+	ykb+5vTvwfXX/TK2iEWDPFN6z0jamH4EMucUizaeWptf16DPLWUAb80KJ+7qfrJ97Pjir7
+	UhCB2mvOh5xVA3Ee1DTlRbIDkm2lvWw=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-275-XsJ2jt5ZNDO46I4QuAxXvA-1; Thu, 06 Apr 2023 13:32:17 -0400
-X-MC-Unique: XsJ2jt5ZNDO46I4QuAxXvA-1
+ us-mta-113-3wK52bAkM4-wGSjvk-pbUg-1; Thu, 06 Apr 2023 13:32:16 -0400
+X-MC-Unique: 3wK52bAkM4-wGSjvk-pbUg-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EE6C585530E
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C3ED185A7A4
 	for <mptcp@lists.linux.dev>; Thu,  6 Apr 2023 17:32:16 +0000 (UTC)
 Received: from dcaratti.users.ipa.redhat.com (unknown [10.45.225.137])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 8A3622027062
-	for <mptcp@lists.linux.dev>; Thu,  6 Apr 2023 17:32:16 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id DC5162027062
+	for <mptcp@lists.linux.dev>; Thu,  6 Apr 2023 17:32:15 +0000 (UTC)
 From: Davide Caratti <dcaratti@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH RFC mptcp-net-next 1/5] tools: ynl: add uns-admin-perm to genetlink legacy
-Date: Thu,  6 Apr 2023 19:31:55 +0200
-Message-Id: <37cd08b77ca9ebfee64b40c8948bd75cb12ce54e.1680801697.git.dcaratti@redhat.com>
-In-Reply-To: <cover.1680801697.git.dcaratti@redhat.com>
-References: <cover.1680801697.git.dcaratti@redhat.com>
+Subject: [PATCH RFC mptcp-net-next 0/5] YAML template for MPTCP netlink API
+Date: Thu,  6 Apr 2023 19:31:54 +0200
+Message-Id: <cover.1680801697.git.dcaratti@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,26 +42,45 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-this flag maps to GENL_UNS_ADMIN_PERM and will be used by future specs.
+Related: #377
 
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
----
- Documentation/netlink/genetlink-legacy.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Notes:
+- the attributes in the operation list is not really good, we probably
+  need to specify better what parameters are used in the .doit() function
+  (though the generated code is the same). Specifying 'remote_addr'
+  either in 'request' or in 'reply' would  probably make patch 2/5 useless.
+- I didn't add the multicast groups on purpose. ynl-c.py is not able to
+  generate the operation list for genetlink-legacy, so all this part
+  (including multicast groups) needs to be left unspecified in the
+  template.
 
-diff --git a/Documentation/netlink/genetlink-legacy.yaml b/Documentation/netlink/genetlink-legacy.yaml
-index b33541a51d6b..6d075bfb712e 100644
---- a/Documentation/netlink/genetlink-legacy.yaml
-+++ b/Documentation/netlink/genetlink-legacy.yaml
-@@ -295,7 +295,7 @@ properties:
-               description: Command flags.
-               type: array
-               items:
--                enum: [ admin-perm ]
-+                enum: [ admin-perm, uns-admin-perm ]
-             dont-validate:
-               description: Kernel attribute validation flags.
-               type: array
+
+
+Davide Caratti (5):
+  tools: ynl: add uns-admin-perm to genetlink legacy
+  tools: ynl: fix bug in case of multiple nested attributes of the same
+    type
+  Documentation: netlink: add a YAML spec for mptcp
+  mptcp: uapi: add header files generated from YAML spec
+  net/mptcp: use netlink policy generated from YAML spec
+
+ Documentation/netlink/genetlink-legacy.yaml |   2 +-
+ Documentation/netlink/specs/mptcp.yaml      | 361 ++++++++++++++++++++
+ include/uapi/linux/mptcp.h                  | 167 +--------
+ include/uapi/linux/mptcp_pm.h               | 145 ++++++++
+ net/mptcp/Makefile                          |   3 +-
+ net/mptcp/pm_netlink.c                      | 107 +-----
+ net/mptcp/pm_nl.c                           |  91 +++++
+ net/mptcp/pm_nl.h                           |  39 +++
+ net/mptcp/pm_userspace.c                    |   9 +-
+ net/mptcp/protocol.h                        |   6 +-
+ tools/net/ynl/ynl-gen-c.py                  |   3 +-
+ 11 files changed, 665 insertions(+), 268 deletions(-)
+ create mode 100644 Documentation/netlink/specs/mptcp.yaml
+ create mode 100644 include/uapi/linux/mptcp_pm.h
+ create mode 100644 net/mptcp/pm_nl.c
+ create mode 100644 net/mptcp/pm_nl.h
+
 -- 
 2.39.2
 
