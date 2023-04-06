@@ -1,94 +1,77 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101948BE0
-	for <mptcp@lists.linux.dev>; Thu,  6 Apr 2023 15:08:53 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id r29so39820629wra.13
-        for <mptcp@lists.linux.dev>; Thu, 06 Apr 2023 08:08:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4C28BE0
+	for <mptcp@lists.linux.dev>; Thu,  6 Apr 2023 15:35:06 +0000 (UTC)
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-316d901b2ecso382565ab.0
+        for <mptcp@lists.linux.dev>; Thu, 06 Apr 2023 08:35:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1680793732;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=plDn9ZfrLqIGlNUKNGWNc0OQRPWonyCB+UZVQY+/Jys=;
-        b=hlTW4h40tzUd9EZBChhvvrt2dK0bK6AJBO2sDttu6fkro2RSXSoSKxg/PtLyuzikun
-         wxVfn9UxLMOuXAmtDlbLZVw+mOmn67Tci+Df0ooWSfJFj2CX79fYdv9Jwwf7mVTpOt4n
-         bnXUGnpJmqKQMTTV7bH/SFsEMnkWKGeHR9eY5l/QV/vm+CO49z16mwzgj7i03D8p4JD3
-         RdkX1LSTj9k6ZLfHT5efCmKkaaJ3RDuUwDiUODsqDrLa/jqvV95Y99LUFVafAXlxh0J2
-         AerU9ayrQbkCnlaIooa8S2/7uyKPfFCyBhaHK0XxuJii/iS0CGZ58tOIC9dYKdRaUwQr
-         emuw==
+        d=google.com; s=20210112; t=1680795305;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VUL9Ul78Bpb3XRyOISIrcWSMNz2ErChRMmovjR4Alg0=;
+        b=OYF148h4Nm9P6PgvskOIuWTx30F1Bwm7sbtDJbrJbROEL6DvXKusP6nniCeRlURmqR
+         Bj2InPvg2FA4L1hHmkdJMUGoq+ezpYia8hiEp0SJQBf39ETQ75/GR2XsYCc8SFs1gUGj
+         Jf4DLn0zPZ0GlGNIpf+McheP0yGY5MwfsfoMtXPV96d4guPMxk/R7YSuetOPL3y+1scw
+         En0Dk0K+jo9iVfkcLHvTAX/VoDqS7L/4lxFgnddiTGSXicaTmbnwBfISMqbET7wnlqlr
+         8lZFgnbtACkUXk5Z9UmfE1fEuCigYlm6OgLjM5ppw/fUxFUJ9+u7Rmfu02TIZR1YcTUO
+         49CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680793732;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=plDn9ZfrLqIGlNUKNGWNc0OQRPWonyCB+UZVQY+/Jys=;
-        b=JWKKzl4THn8YjYTuSS71Gs39AdQhMpPZBjJOK3FZWOTMH8Ioj2OaHCZFX2bMR9UTwV
-         qUoJIDeaoYCIBerbkrea81tctXQXRNh4T4IUENwhd2oakxhPL01eJhPwTP8moSobxq4v
-         GD6f+M75P8odYYbR446qMtp5C9fa0gZ6NMRZnB5bkRbuOzqAFyEr/j2iKnFdt9F9yR4G
-         W8AQSgbA8tLGTuBZGBw9WmnAY1f5zmMF3OqxoHPcKW1xjLhI08iDI6RFAljlZkAczNTb
-         xbeON5VlknJbGVAnSy0DPRR/e702ABy91a3F7vmcWWfVuKAMqC6uKv1j5PXCCfD//Xj7
-         CNGQ==
-X-Gm-Message-State: AAQBX9fwhwmhOAYzzqHIiB1vhMjhsjXbsZEGvtfP84qpoYYMs2aPLFWe
-	GTbgntlzEpqZBeS5uWyXXe2kDuLPVz3c9Eaqp+dJ/g==
-X-Google-Smtp-Source: AKy350Zvdn6wdR6zJRG6bXXDEU9kWqUIhRlANwHQKfux0P96icBqVpZw65usoscwTZVxX6cPBfLnSg==
-X-Received: by 2002:adf:dd91:0:b0:2da:3ef5:5a39 with SMTP id x17-20020adfdd91000000b002da3ef55a39mr4720675wrl.14.1680793732025;
-        Thu, 06 Apr 2023 08:08:52 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:96d8:3be1:720d:ea61? ([2a02:578:8593:1200:96d8:3be1:720d:ea61])
-        by smtp.gmail.com with ESMTPSA id o2-20020a5d4742000000b002e6423cb207sm1939901wrs.112.2023.04.06.08.08.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Apr 2023 08:08:51 -0700 (PDT)
-Message-ID: <38e23250-2264-c3a9-3df1-1c3f6fe3b86c@tessares.net>
-Date: Thu, 6 Apr 2023 17:08:50 +0200
+        d=1e100.net; s=20210112; t=1680795305;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VUL9Ul78Bpb3XRyOISIrcWSMNz2ErChRMmovjR4Alg0=;
+        b=H7Lr8OTKNVqUUGPwvecBb6YGlS19VRRHYIi1JkTRjr8/nLUUZ1I+Ieb0SUXCXQgEwU
+         l7KVy5jVD8v5XR0UMQvbIZjImle9Vkplsjgw+WQSIH9MXyB6por3jaDERGIKY+lhSLHV
+         mbQLxCymHrsjzkte9gRNOV1lc6iXgyFNvM9a35bF0y3e7y3jSLyZ9nobAPIABW2xwujq
+         QV9hri0uPqn3rKKQVBiiLhBy3CXtjEo0lw4in9IwUfg6qbgv9hGDyDhpb7LtHfYWyiVV
+         LY5SMP6mnpRtCe1B8j/dMt9fI7H8Jp+7+A702CZJDOR2qZih03dZaO7MqhXk1uEPTEw5
+         bn0w==
+X-Gm-Message-State: AAQBX9c/482GXejwFAbPo2ziVWyMxhzvB7qLR+u4IzqQ/LBap4dt83U+
+	zrz0qxXYvD4rLy4bUm1OfaNXyZ820aeRJ5J7amYtBQ==
+X-Google-Smtp-Source: AKy350bLXM1iysCDol/VAUBxZbdWNsWUekgKrBjhx1FHLZIm5wLO/EyiDgMXj5s262GeacHOp+oPA919pqPuO2gqhqY=
+X-Received: by 2002:a05:6e02:216b:b0:325:a6fe:11fc with SMTP id
+ s11-20020a056e02216b00b00325a6fe11fcmr223040ilv.17.1680795305527; Thu, 06 Apr
+ 2023 08:35:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH mptcp-net 0/2] mptcp: a couple of fixup
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>
-References: <cover.1680733942.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1680733942.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230406144330.1932798-1-leitao@debian.org>
+In-Reply-To: <20230406144330.1932798-1-leitao@debian.org>
+From: Willem de Bruijn <willemb@google.com>
+Date: Thu, 6 Apr 2023 11:34:28 -0400
+Message-ID: <CA+FuTSeKpOJVqcneCoh_4x4OuK1iE0Tr6f3rSNrQiR-OUgjWow@mail.gmail.com>
+Subject: Re: [PATCH 0/5] add initial io_uring_cmd support for sockets
+To: Breno Leitao <leitao@debian.org>
+Cc: io-uring@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org, 
+	asml.silence@gmail.com, axboe@kernel.dk, leit@fb.com, edumazet@google.com, 
+	pabeni@redhat.com, davem@davemloft.net, dccp@vger.kernel.org, 
+	mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, dsahern@kernel.org, 
+	willemdebruijn.kernel@gmail.com, matthieu.baerts@tessares.net, 
+	marcelo.leitner@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Thu, Apr 6, 2023 at 10:45=E2=80=AFAM Breno Leitao <leitao@debian.org> wr=
+ote:
+>
+> From: Breno Leitao <leit@fb.com>
+>
+> This patchset creates the initial plumbing for a io_uring command for
+> sockets.
+>
+> For now, create two uring commands for sockets, SOCKET_URING_OP_SIOCOUTQ
+> and SOCKET_URING_OP_SIOCINQ. They are similar to ioctl operations
+> SIOCOUTQ and SIOCINQ. In fact, the code on the protocol side itself is
+> heavily based on the ioctl operations.
 
-On 06/04/2023 00:47, Paolo Abeni wrote:
-> Hopefully addressing for good issues/371
-> 
-> There are actually several different problems that pop-up in random
-> order with the repro from such issue.
+This duplicates all the existing ioctl logic of each protocol.
 
-Thank you for the fixes! They look good to me!
-
-New patches for t/upstream-net and t/upstream:
-- 3ac6e434b228: "squashed" patch 1/2 in "mptcp: fix accept vs worker race"
-- 8e2c8f661424: "squashed" patch 2/2 in "mptcp: stops worker on
-unaccepted sockets at listener close"
-- Results: 5b4478bd1afd..e8ce70ce4423 (export-net)
-- Results: a73afdaa7080..2d58f6944092 (export)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230406T150700
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230406T150700
-
-Cheers,
-Matt
-
-> @Christoph: could you please have a spin in your testbed?
-
-@Christoph: you can now use the export branch ;-)
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Can this just call the existing proto_ops.ioctl internally and translate fr=
+om/to
+io_uring format as needed?
