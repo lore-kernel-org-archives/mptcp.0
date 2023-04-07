@@ -1,58 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1A4110E
-	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 08:00:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB661FA9
+	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 08:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680854448;
+	s=mimecast20190719; t=1680854636;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=d1b24xZ95YQQ3+puLwM4Th9SB79EvalVOOrgqjnnsIQ=;
-	b=VVI6oBRqoQn7DTSyed1sUhuXkZjwY1KU3Gpg7QHHUeu+oMnqGGaBYmCK6KK7kEr0o7cJbR
-	8qS4vb42RyLUj65ouKEkOFThcW2EnF/9+bkEFcG4F6ols8nYW4FodJLsnPsymIuIHjDgCd
-	MDorhgx6QlG4je6hMLLU/IWzMBlu6TE=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=dQRqgs//cE5inrvjcypICiuPqsFDntkPP0dbUZf2btI=;
+	b=PEYYeXXpcahV9AwWAfjmr+jHa5KeyYFoxxoxVT6yZ0FwlRVpnVsBcyjvo32aO+HoChGRFO
+	2PvHglyrzEQleR/zAZa7DGWdWF7D3VdCZObvxvu+lr2qguvC9UTlAVilnuxQeK3xNU5/rE
+	F02TkkpvOo0ECWB/ol8QJ0/I+73L5Fo=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-490-e6Wyog7KNQCIbnYd5rdflA-1; Fri, 07 Apr 2023 04:00:47 -0400
-X-MC-Unique: e6Wyog7KNQCIbnYd5rdflA-1
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-3e1522cf031so15739771cf.1
-        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 01:00:47 -0700 (PDT)
+ us-mta-551-qouuxQTSOA2q8_DakgmscQ-1; Fri, 07 Apr 2023 04:03:55 -0400
+X-MC-Unique: qouuxQTSOA2q8_DakgmscQ-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-74610f3f19fso43340785a.0
+        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 01:03:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680854447;
+        d=1e100.net; s=20210112; t=1680854635; x=1683446635;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=d1b24xZ95YQQ3+puLwM4Th9SB79EvalVOOrgqjnnsIQ=;
-        b=bS1r47yAJkAY2JI9Nmg6nLao7KPi2k2b4wVCSFgWdTXykVQeU3N+R04lmoyXpralrh
-         lQsblc0sVXhk/B3tnGkAj6IQaVse3fBrBYchPiEx7tgNQMew59TlQyZlicBERl9tDywK
-         PJf93xdnUk3QOH8NZd4rxTNkbObwCnBxSnugmiEaApdEJFVnMueiW15Dl8njIXGppeEG
-         sB28LjE6v5BApL7qJ1jYLNltkL/wf2Mar/wWY6Vab8BigdasQ9k6ad4ntNgLkYiZ6917
-         Wk7iuhKtZ7aGUA8F+hwCJtfPFu/q0eqqqaPHafm+9O12UXvx3l52l5/Ru9XbBX6d5olO
-         xOUg==
-X-Gm-Message-State: AAQBX9e7IUDS+h4Eh3s5YEXfL49dgqu0vh98ESki3IAVc9f7zrOIl+Na
-	4etEJUnotkK1dumpT35QTXmhrFGC84OOlKtXbFbtRdsWw5U4WnjQknsJD8yPTRk6HkSxmV5DZ/c
-	pU8IVujjmnbCpxsw=
-X-Received: by 2002:a05:6214:518c:b0:5da:b965:1efe with SMTP id kl12-20020a056214518c00b005dab9651efemr2932082qvb.4.1680854446853;
-        Fri, 07 Apr 2023 01:00:46 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZXnfWbO2H+VvovWLQzf33Zb2bYKXwaJX02PqU9T36D5fz/eOfVDN1gDMMRYG1CeBS/LnWCKg==
-X-Received: by 2002:a05:6214:518c:b0:5da:b965:1efe with SMTP id kl12-20020a056214518c00b005dab9651efemr2932043qvb.4.1680854446532;
-        Fri, 07 Apr 2023 01:00:46 -0700 (PDT)
+        bh=dQRqgs//cE5inrvjcypICiuPqsFDntkPP0dbUZf2btI=;
+        b=WwFmbXfPWX+GPvsR7zXmGRafnQ7ckPf1PInY+NrdLHrkBFVaqft/G1m9lTkuFUOOZc
+         6MKr+k2Af7gQKJePElZs6nu1FESlqR+lnCoHYA0ddry0/fTFZUg0kl2I4JptLeJmvuTd
+         eJYlpnO4nubVhX8k7FZH95v0p0hPcCa8SKf6JV5UmqvRMh1rvQyt85HxUcfSi0NcvDAS
+         SSvMT5TIVGOxeAGFnwp+sTR7UGR0UFUILCqMe5+jxeGzHTy5oFHWX2U4no1VBjGQS+pf
+         baAdV+qBBdvDbQzOfB8FGw2vYFZaLfJdcOvQjAUPE7q7MMcCqsAW1NcuB5XT54oLeuqI
+         2wIg==
+X-Gm-Message-State: AAQBX9cd8/WTuMIcBKSPOTPWlkXqV2rQVfGSpG/55Hx2m2RKmI0JXyqC
+	w6/ZzuU9uA+SB0PmMmHJByAn/RuAnWWrL2TNG2CQZtt6SF9Sd+Q40Tof5XcRYvIA31q7aSYUx2U
+	dHCfzd6dYxipcfJg=
+X-Received: by 2002:a05:622a:1a16:b0:3e6:30c4:656f with SMTP id f22-20020a05622a1a1600b003e630c4656fmr2841391qtb.3.1680854634768;
+        Fri, 07 Apr 2023 01:03:54 -0700 (PDT)
+X-Google-Smtp-Source: AKy350Y4FPffbHP3jUP7C4lNCS8iiMDnOjDa71Xcmm0RdIj+/GuK++ROkwy9sMDzw3Fr3u/NqOapwg==
+X-Received: by 2002:a05:622a:1a16:b0:3e6:30c4:656f with SMTP id f22-20020a05622a1a1600b003e630c4656fmr2841369qtb.3.1680854634492;
+        Fri, 07 Apr 2023 01:03:54 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-227-151.dyn.eolo.it. [146.241.227.151])
-        by smtp.gmail.com with ESMTPSA id r190-20020a37a8c7000000b00746b79101b6sm1120455qke.67.2023.04.07.01.00.45
+        by smtp.gmail.com with ESMTPSA id bm20-20020a05620a199400b00746ac77366fsm1126880qkb.12.2023.04.07.01.03.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Apr 2023 01:00:46 -0700 (PDT)
-Message-ID: <85d65b14b0550b284bf641ca0db55c550e23b251.camel@redhat.com>
-Subject: Re: [PATCH RFC mptcp-net-next 2/5] tools: ynl: fix bug in case of
- multiple nested attributes of the same type
+        Fri, 07 Apr 2023 01:03:54 -0700 (PDT)
+Message-ID: <8e3d2141bb0c0bcfbac0fba2bc3107d08fa2e9a3.camel@redhat.com>
+Subject: Re: [PATCH RFC mptcp-net-next 5/5] net/mptcp: use netlink policy
+ generated from YAML spec
 From: Paolo Abeni <pabeni@redhat.com>
 To: Davide Caratti <dcaratti@redhat.com>, mptcp@lists.linux.dev
-Date: Fri, 07 Apr 2023 10:00:43 +0200
-In-Reply-To: <9414bdc6d3d0212238cec12d4f2d80894910e944.1680801697.git.dcaratti@redhat.com>
+Date: Fri, 07 Apr 2023 10:03:52 +0200
+In-Reply-To: <c4f10d6368a1bf580dd3b4cbcdafa1a71e398404.1680801697.git.dcaratti@redhat.com>
 References: <cover.1680801697.git.dcaratti@redhat.com>
-	 <9414bdc6d3d0212238cec12d4f2d80894910e944.1680801697.git.dcaratti@redhat.com>
+	 <c4f10d6368a1bf580dd3b4cbcdafa1a71e398404.1680801697.git.dcaratti@redhat.com>
 User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -66,33 +66,22 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 2023-04-06 at 19:31 +0200, Davide Caratti wrote:
-> when a policy contains multiple nested attributes of the same type, avoid
-> re-initializing .request and .reply members.
+>  $ ./tools/net/ynl/ynl-gen-c.py --mode kernel  \
+>  > --spec Documentation/netlink/specs/mptcp.yaml --header \
+>  > -o net/mptcp/pm_nl.h
+>  $ ./tools/net/ynl/ynl-gen-c.py --mode kernel  \
+>  > --spec Documentation/netlink/specs/mptcp.yaml --source \
+>  > -o net/mptcp/pm_nl.c
 
-It's unclear to me why we need to avoid such re-init...
+perhaps:=C2=A0
 
->=20
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-> ---
->  tools/net/ynl/ynl-gen-c.py | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/tools/net/ynl/ynl-gen-c.py b/tools/net/ynl/ynl-gen-c.py
-> index cc2f8c945340..ba55f217a006 100755
-> --- a/tools/net/ynl/ynl-gen-c.py
-> +++ b/tools/net/ynl/ynl-gen-c.py
-> @@ -812,7 +812,8 @@ class Family(SpecFamily):
->                      inherit =3D set()
->                      nested =3D spec['nested-attributes']
->                      if nested not in self.root_sets:
-> -                        self.pure_nested_structs[nested] =3D Struct(self=
-, nested, inherited=3Dinherit)
-> +                        if nested not in self.pure_nested_structs:
-> +                            self.pure_nested_structs[nested] =3D Struct(=
-self, nested, inherited=3Dinherit)
+pm_nl_autogen.{c,h}
 
-... and is unclear to me how the above produces the effect described in
-the commit message :)
+or
+
+pm_nl_spec.{c,h}
+
+to avoid confusion vs pm_netlink ?
 
 Thanks!
 
