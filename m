@@ -1,144 +1,125 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF754C79
-	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 13:35:29 +0000 (UTC)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-50240a3b7fcso2129050a12.0
-        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 06:35:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5351E538B
+	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 14:16:03 +0000 (UTC)
+Received: by mail-pl1-f169.google.com with SMTP id kq3so40066986plb.13
+        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 07:16:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1680874528;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4Q9rplGn8yL7DfHf0xnLtcsyNWBY6wDdYIccJFXgPhw=;
-        b=TqLmrBf4itdub/3RUal+SyeL4ElZrZLL7TnAVBj2o69B6YDSI7kncCcWWZnOCE8vVK
-         gs1527EpPJUONqyWqkLwGUJ4jQ663z9TsXwRR9C0y9HqJuRQqY5AIdLEISvh66uEfxiW
-         HvPYG54qNNAFaKtorcZQqupqBPCcmQ4Ql4VLTZ+Wt+u9df9mkjPdtACujHS5P3WUuYCr
-         mMte2Ta1T/fsMCUjGQX534fzwPe33iXPP2f8XIlmrU57P3/C8ODAoV+7Myc+S0zi+Dii
-         7+hi870H5x/tN05vFPTq+1kPpHeTqOm/+WjNEjSZbxrFcMn1fXV9kKPz3II1fqILukYi
-         l0dQ==
+        d=gmail.com; s=20210112; t=1680876963; x=1683468963;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HAQsvjRNdiLAiaswzSRNqlojCsDGlkAf3yWQFDjS5P4=;
+        b=b0UB1NIKmUhnVf4ySwpEIJ2jYFO3+XAJYrRob0qwN/WJIcg2Y87On+7PcHKrppCH0k
+         FnoKui1wj9JcI9XXPtdDYQHe2IuVsa0rPtpnv4uWqnKA1AoHzNb/DO+sk7oX2/dJGrME
+         u5sXi6oX4sLkNKq1XYbEMwVeeetLXQSTJBm0z2ice5PK3DYjBwy3qcJm46JcO+FCe2WD
+         rVMaN11zqXlEi+1ChWqxuGcMnYFM47Oxrz8hi9A6gzWCbnTaXsRXmXz6kPn6LIMP3Rnz
+         0U4fqUODm6s6udx9pq12vpkexuibNjCRBUJNaxSzAAjHpK4lzNIO+2P3gncuudqk7QsJ
+         ZCpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680874528;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Q9rplGn8yL7DfHf0xnLtcsyNWBY6wDdYIccJFXgPhw=;
-        b=3zJxkzRalSj0Fts9qyx7b0j8LDnotfyOkJ10QAMtn6tV7CWhUAxR179J4vtXfKJOgX
-         Z8BQk2Pys+2eEGZUmwpIf+y4GF3/D1LzM+BL+BXinpo8uhFvrMm+f7KbnRuD9RVa9E1q
-         W++l07SOywzIApyJ3MSHfiiUaDE6UxX3MullqfqCJlSYCjtrvDOCqtDLGj4bjOWQlsS+
-         9sfbGrCpR+tvAnRSfYGlHCmvV55PDulHjjTydtVOZRwA8oLDpIJQDtIoGNpn1Q2uLWPv
-         07GS6aURiyEUz73v4DmRv2upUYTUQCKdlaL/geJeKmMs3ThDL5iYE/60OfNQOxXOV+KS
-         128Q==
-X-Gm-Message-State: AAQBX9fBDSXAiEe12yxMnsOd1Fx1+0FPBQePyskKDNOi8tcTmKx0ZHeT
-	ejfanoavlkhK4TBY5rCulqbz4Up/FEN3WwYjdZV55w==
-X-Google-Smtp-Source: AKy350YBAse926mRb/NUgq7tueWAAA6RGXxSx6vnCSZP9vm9vUtwthpp8uNAfYVq8hMOOTxVQI0FQA==
-X-Received: by 2002:aa7:dcc4:0:b0:504:81bb:5396 with SMTP id w4-20020aa7dcc4000000b0050481bb5396mr387818edu.4.1680874527877;
-        Fri, 07 Apr 2023 06:35:27 -0700 (PDT)
-Received: from [10.44.2.5] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id mf21-20020a170906cb9500b009495cfe446esm2081034ejb.223.2023.04.07.06.35.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Apr 2023 06:35:27 -0700 (PDT)
-Message-ID: <208afa12-9ff7-a4cf-ffdf-71bfc82194a9@tessares.net>
-Date: Fri, 7 Apr 2023 15:35:26 +0200
+        d=1e100.net; s=20210112; t=1680876963; x=1683468963;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=HAQsvjRNdiLAiaswzSRNqlojCsDGlkAf3yWQFDjS5P4=;
+        b=ayJR5B/K/axELN/WA83KwTYiFcXqSQFmjV1p4B3rrGNn0siKmqkr1OkBksZos1PtT9
+         8K9jUj2V575iRLSygGvo/fWSlr4NgPsBkNRMtICMj3Ppt9XrqQ6dhrNl5oO8gGPOJTGa
+         y3j3+vSRqQ/ybMdcV0PGNUY2QZnq6PXZ0BiA7w5h45DbOE1fnjNTMnLhgpfwe5abck/2
+         dkRSqtOdqBCtoJgjANw922sB8E/POPhiTVTK+yfmKFS/3c1rkFxbyxpY2i6l9ktaVs+0
+         zJZgPbN4Js218A+OmLSuLx5C4982xbniqqyM1yGne3UD/ngMC+ayVLM87OvGlLBwz62O
+         O8ng==
+X-Gm-Message-State: AAQBX9dMQDBVSiKLqDASytrOIhAf2lPypao7+JhtQD437ga5G5cF7qIX
+	6uw4qUnSGgVIu7fC2xNZ8jHz0pyLiU5Z
+X-Google-Smtp-Source: AKy350b21prZJLncw/2nJMNi5qjKpaZIQYE2Lfn9TWwcP5dcB0EvGA5NYqB90RrP+xBZTqAPUTIYpw==
+X-Received: by 2002:a17:902:f143:b0:1a5:3da:84cb with SMTP id d3-20020a170902f14300b001a503da84cbmr2404587plb.21.1680876962676;
+        Fri, 07 Apr 2023 07:16:02 -0700 (PDT)
+Received: from [127.0.0.1] ([13.64.13.80])
+        by smtp.gmail.com with ESMTPSA id s5-20020a170902a50500b0019ac23cb6edsm2482867plq.181.2023.04.07.07.16.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Apr 2023 07:16:02 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230329-mptcp-misc-cleanups-v1-3-a839001f0b05@tessares.net>
+References: <20230329-mptcp-misc-cleanups-v1-3-a839001f0b05@tessares.net>
+Subject: Re: selftests: mptcp: remove duplicated entries in usage: Tests
+ Results
+Message-ID: <f2a553a8-687c-c219-3570-66c8c4e5b848@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 07 Apr 2023 14:16:01 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH mptcp-next v2 1/2] selftests: mptcp: join: avoid using
- 'cmp --bytes'
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <20230404-mptcp-selftests-join-busybox-shellcheck-v2-0-9113fa4d2ce2@tessares.net>
- <20230404-mptcp-selftests-join-busybox-shellcheck-v2-1-9113fa4d2ce2@tessares.net>
- <fd34566a70fdfaed72644e6b13c635058b833bce.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <fd34566a70fdfaed72644e6b13c635058b833bce.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Matthieu,
 
-On 07/04/2023 15:30, Paolo Abeni wrote:
-> On Tue, 2023-04-04 at 18:21 +0200, Matthieu Baerts wrote:
->> BusyBox's 'cmp' command doesn't support the '--bytes' parameter.
->>
->> Some CIs -- i.e. LKFT -- use BusyBox and have the mptcp_join.sh test
->> failing [1] because their 'cmp' command doesn't support this '--bytes'
->> option:
->>
->>     cmp: unrecognized option '--bytes=1024'
->>     BusyBox v1.35.0 () multi-call binary.
->>
->>     Usage: cmp [-ls] [-n NUM] FILE1 [FILE2]
->>
->> Instead, 'head --bytes' can be used as this option is supported by
->> BusyBox.
->>
->> Because it is apparently quite common to use BusyBox, it is certainly
->> better to backport this fix to impacted kernels.
->>
->> Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
->> Link: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.3-rc5-5-g148341f0a2f5/testrun/16088933/suite/kselftest-net-mptcp/test/net_mptcp_userspace_pm_sh/log [1]
->> Suggested-by: Paolo Abeni <pabeni@redhat.com>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->> ---
->> v2:
->>  - limit the input file, not the output of cmp...
->>    (strange that on my side, I didn't reproduce the issue but the CI did)
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 13 +++++++++++--
->>  1 file changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index fafd19ec7e1f..bb26c406f09c 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -378,9 +378,14 @@ check_transfer()
->>  			fail_test
->>  			return 1
->>  		fi
->> -		bytes="--bytes=${bytes}"
->> +
->> +		# note: BusyBox's "cmp" command doesn't support --bytes
->> +		head --bytes="$bytes" "$in" > "$in.cut"
->> +		head --bytes="$bytes" "$out" > "$out.cut"
->> +		in="$in.cut"
->> +		out="$out.cut"
->>  	fi
->> -	cmp -l "$in" "$out" ${bytes} | while read -r i a b; do
->> +	cmp -l "$in" "$out" | while read -r i a b; do
->>  		local sum=$((0${a} + 0${b}))
->>  		if [ $check_invert -eq 0 ] || [ $sum -ne $((0xff)) ]; then
->>  			echo "[ FAIL ] $what does not match (in, out):"
->> @@ -394,6 +399,10 @@ check_transfer()
->>  		fi
->>  	done
->>  
->> +	if [ -n "$bytes" ]; then
->> +		rm -f "$in" "$out"
->> +	fi
-> 
-> I think it would be better additionally remove the above files in
-> cleanup(), too.
+Thank you for your modifications, that's great!
 
-Thank you for this review!
+Our CI did some validations and here is its report:
 
-Should I maybe instead override the files? So have this above:
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5918299830091776
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5918299830091776/summary/summary.txt
 
-+		head --bytes="$bytes" "$in" > "$in.cut"
-+		head --bytes="$bytes" "$out" > "$out.cut"
-+		mv "$in.cut" "$in"
-+		mv "$out.cut" "$out"
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/4651662434893824
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4651662434893824/su=
+mmary/summary.txt
 
-Then I don't need to make sure these specific files are really cleaned
-up. We don't use these files after if I'm not mistaken.
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6481249783513088
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6481249783513088/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5355349876670464
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5355349876670464/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/a5422f94b9f4
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
