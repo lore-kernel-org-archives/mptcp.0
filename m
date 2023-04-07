@@ -1,139 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2F27E2
-	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 02:46:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14D3BC433EF;
-	Fri,  7 Apr 2023 02:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1680835599;
-	bh=z5raEhmwE/FPqsbIHeHBjLdFu5XYEI5PD+vRQ68Ne5o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MfOo5PBrJYHuTa/yG7BB0n1I3I9sUOu9Y6dWTjcbxtOZtXsNAXjpG74O5NrjaA+1/
-	 Iih0i1zeEK1PLmsUS70CkXSeww/TGnH2MovprKGwb34L9nYc3ud+xHHFVpTsePdh9p
-	 QYd5n+cEpHyWH6/YgCSI+6AhJiYNxOa+Kjjbl7mMgBset7cwzOH4ttHzb7D7eySjh3
-	 lKGc0KvKf+oiaT9kTGd/6qyMQUYhp+QXRYUjDYndZFwfbUioa9oJM+3/y2fKE0DAu4
-	 gRZ6Mifp3mWco0V5QN37mVrqYwBOxhr/zlcneXraaHKKZtN+VPoo5G8MvoDDEPHcA1
-	 nntgo5i4qxqnA==
-Message-ID: <e576f6fe-d1f3-93cd-cb94-c0ae115299d8@kernel.org>
-Date: Thu, 6 Apr 2023 20:46:38 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D429110E
+	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 07:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680854203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pdSOwDvV0JC8xQOK+j3wUx6TIuS7GUt6hnkyLFi/mZ8=;
+	b=FduspKxMUNDMxlGngjif5aHEbaXLqUk+w1p2gJicS1988h00O1o1pqRP0SuU+j/+GuDqhB
+	euoAq/XemewODYr+W1vZR61HYSrGJz2rJyZVzi14M74BGvKKpln+4yQXYe4ERU6hRDjwtZ
+	g/wFevzifsepRByv49LSs/ydc6eHV9A=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-82-CAIFnT7uMW2M4ssmM0GuWw-1; Fri, 07 Apr 2023 03:56:42 -0400
+X-MC-Unique: CAIFnT7uMW2M4ssmM0GuWw-1
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-3e03178131bso4542531cf.1
+        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 00:56:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680854202;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=pdSOwDvV0JC8xQOK+j3wUx6TIuS7GUt6hnkyLFi/mZ8=;
+        b=N79BHTa7LUDKpqjtxdg4dl4r72OH/TVqNFfESJMSn82zOTgIeftPelmR45aYNPTA4g
+         0rJGD2q+Ifm0UPHNm8y2d9mFrzIbjXZU1lFhpNsMXcF0A8fqsh+XUw4P/18/7h6/zjWO
+         bIVhuc+HSJpv70FzoiFMm9QOlMK6wtWAZS6o9NTZLJdUAfpIEyFYElBPgYtWJx8OJlq/
+         ZxPVOAESELFAZworHr1C23nH6oBn84NTt1Vya9PHI9Dqs5v2TRKbncZk2St1uGbtN7yK
+         qg8EEAlqnhwohqCLGD+lbscSLCGuDT/bXRofZuKlT10l1LpOVNGg2dpf/iR/NAtzBfdU
+         DZZg==
+X-Gm-Message-State: AAQBX9do9Bz/ffQTaH3vzFN2KINRkipazvlr8EWkyfFuS/w5D48NWd5e
+	9G7mjdulM0wgOTmDuA7NOkWp3SqXiWiN3B7dpQxIRGD5YqwfiPzysN56u8xTcqgWgZvPGf+1wpV
+	hYQiumoM82ptnTXuvCx/gDFnGOg==
+X-Received: by 2002:a05:622a:1a9a:b0:3c0:40c3:b8fd with SMTP id s26-20020a05622a1a9a00b003c040c3b8fdmr2591191qtc.6.1680854201998;
+        Fri, 07 Apr 2023 00:56:41 -0700 (PDT)
+X-Google-Smtp-Source: AKy350aHHqGQ2DdIRjMyhMTYabzfy2LjQYQMvatnYfK+IBUf1TD0utS2fiWWVobFKl76bVZ31IpDdw==
+X-Received: by 2002:a05:622a:1a9a:b0:3c0:40c3:b8fd with SMTP id s26-20020a05622a1a9a00b003c040c3b8fdmr2591184qtc.6.1680854201765;
+        Fri, 07 Apr 2023 00:56:41 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-227-151.dyn.eolo.it. [146.241.227.151])
+        by smtp.gmail.com with ESMTPSA id d23-20020a05620a141700b00746803d7e8dsm1111468qkj.113.2023.04.07.00.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Apr 2023 00:56:41 -0700 (PDT)
+Message-ID: <7bc87c2f4acbe8157414b11936072efb07ad7f50.camel@redhat.com>
+Subject: Re: [PATCH RFC mptcp-net-next 3/5] Documentation: netlink: add a
+ YAML spec for mptcp
+From: Paolo Abeni <pabeni@redhat.com>
+To: Davide Caratti <dcaratti@redhat.com>, mptcp@lists.linux.dev
+Date: Fri, 07 Apr 2023 09:56:39 +0200
+In-Reply-To: <cb2ed01dd8797078c39c014e8c19eab5ddf1f0f2.1680801697.git.dcaratti@redhat.com>
+References: <cover.1680801697.git.dcaratti@redhat.com>
+	 <cb2ed01dd8797078c39c014e8c19eab5ddf1f0f2.1680801697.git.dcaratti@redhat.com>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.1
-Subject: Re: [PATCH 0/5] add initial io_uring_cmd support for sockets
-Content-Language: en-US
-To: Willem de Bruijn <willemb@google.com>, Breno Leitao <leitao@debian.org>
-Cc: io-uring@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
- asml.silence@gmail.com, axboe@kernel.dk, leit@fb.com, edumazet@google.com,
- pabeni@redhat.com, davem@davemloft.net, dccp@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- willemdebruijn.kernel@gmail.com, matthieu.baerts@tessares.net,
- marcelo.leitner@gmail.com
-References: <20230406144330.1932798-1-leitao@debian.org>
- <CA+FuTSeKpOJVqcneCoh_4x4OuK1iE0Tr6f3rSNrQiR-OUgjWow@mail.gmail.com>
- <ZC7seVq7St6UnKjl@gmail.com>
- <CA+FuTSf9LEhzjBey_Nm_-vN0ZjvtBSQkcDWS+5uBnLmr8Qh5uA@mail.gmail.com>
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <CA+FuTSf9LEhzjBey_Nm_-vN0ZjvtBSQkcDWS+5uBnLmr8Qh5uA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/6/23 12:16 PM, Willem de Bruijn wrote:
-> On Thu, Apr 6, 2023 at 11:59 AM Breno Leitao <leitao@debian.org> wrote:
->>
->> On Thu, Apr 06, 2023 at 11:34:28AM -0400, Willem de Bruijn wrote:
->>> On Thu, Apr 6, 2023 at 10:45 AM Breno Leitao <leitao@debian.org> wrote:
->>>>
->>>> From: Breno Leitao <leit@fb.com>
->>>>
->>>> This patchset creates the initial plumbing for a io_uring command for
->>>> sockets.
->>>>
->>>> For now, create two uring commands for sockets, SOCKET_URING_OP_SIOCOUTQ
->>>> and SOCKET_URING_OP_SIOCINQ. They are similar to ioctl operations
->>>> SIOCOUTQ and SIOCINQ. In fact, the code on the protocol side itself is
->>>> heavily based on the ioctl operations.
->>>
->>> This duplicates all the existing ioctl logic of each protocol.
->>>
->>> Can this just call the existing proto_ops.ioctl internally and translate from/to
->>> io_uring format as needed?
->>
->> This is doable, and we have two options in this case:
->>
->> 1) Create a ioctl core function that does not call `put_user()`, and
->> call it from both the `udp_ioctl` and `udp_uring_cmd`, doing the proper
->> translations. Something as:
->>
->>         int udp_ioctl_core(struct sock *sk, int cmd, unsigned long arg)
->>         {
->>                 int amount;
->>                 switch (cmd) {
->>                 case SIOCOUTQ: {
->>                         amount = sk_wmem_alloc_get(sk);
->>                         break;
->>                 }
->>                 case SIOCINQ: {
->>                         amount = max_t(int, 0, first_packet_length(sk));
->>                         break;
->>                 }
->>                 default:
->>                         return -ENOIOCTLCMD;
->>                 }
->>                 return amount;
->>         }
->>
->>         int udp_ioctl(struct sock *sk, int cmd, unsigned long arg)
->>         {
->>                 int amount = udp_ioctl_core(sk, cmd, arg);
->>
->>                 return put_user(amount, (int __user *)arg);
->>         }
->>         EXPORT_SYMBOL(udp_ioctl);
->>
->>
->> 2) Create a function for each "case entry". This seems a bit silly for
->> UDP, but it makes more sense for other protocols. The code will look
->> something like:
->>
->>          int udp_ioctl(struct sock *sk, int cmd, unsigned long arg)
->>          {
->>                 switch (cmd) {
->>                 case SIOCOUTQ:
->>                 {
->>                         int amount = udp_ioctl_siocoutq();
->>                         return put_user(amount, (int __user *)arg);
->>                 }
->>                 ...
->>           }
->>
->> What is the best approach?
-> 
-> A, the issue is that sock->ops->ioctl directly call put_user.
-> 
-> I was thinking just having sock_uring_cmd call sock->ops->ioctl, like
-> sock_do_ioctl.
-> 
-> But that would require those callbacks to return a negative error or
-> positive integer, rather than calling put_user. And then move the
-> put_user to sock_do_ioctl. Such a change is at least as much code
-> change as your series. Though without the ending up with code
-> duplication. It also works only if all ioctls only put_user of integer
-> size. That's true for TCP, UDP and RAW, but not sure if true more
-> broadly.
-> 
-> Another approach may be to pass another argument to the ioctl
-> callbacks, whether to call put_user or return the integer and let the
-> caller take care of the output to user. This could possibly be
-> embedded in the a high-order bit of the cmd, so that it fails on ioctl
-> callbacks that do not support this mode.
-> 
-> Of the two approaches you suggest, I find the first preferable.
+On Thu, 2023-04-06 at 19:31 +0200, Davide Caratti wrote:
+[...]
+> +attribute-sets:
+> +  -
+> +    name: addr
+> +    name-prefix: mptcp_pm_addr_attr_
+> +    attributes:
+> +      -
+> +        name: unspec
+> +        type: unused
+> +        value: 0
 
-The first approach sounds better to me and it would be good to avoid
-io_uring details in the networking code (ie., cmd->sqe->cmd_op).
+This entry should not be needed, the tool should add it by default and
+keep the first item with value =3D=3D 1.
+
+> +  -
+> +    name: attr
+> +    name-prefix: mptcp_pm_attr_
+> +    attributes:
+> +      -
+> +        name: unspec
+> +        type: unused
+> +        value: 0
+> +      -
+> +        name: addr
+> +        type: nest
+> +        nested-attributes: addr
+> +      -
+> +        name: rcv_add_addrs
+> +        type: u32
+> +      -
+> +        name: subflows
+> +        type: u32
+> +      -
+> +        name: token
+> +        type: u32
+> +      -
+> +        name: loc_id
+> +        type: u8
+> +      -
+> +        name: addr_remote
+> +        type: nest
+> +        nested-attributes: addr
+
+Is this the definition requiring patch 2/5 ?
+
+Are there other attribute set requiring such change?
+
+Thanks!
+
+Paolo
+
