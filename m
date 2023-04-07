@@ -1,86 +1,95 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6663D1FDB
-	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 09:58:43 +0000 (UTC)
-Received: by mail-pj1-f53.google.com with SMTP id lr16-20020a17090b4b9000b0023f187954acso42930559pjb.2
-        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 02:58:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680861523; x=1683453523;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UF/8IwJVfMsXicfnW+filTHzGgzzWFHXoUCYxMjStWk=;
-        b=RLMJors2E3JF04mP/8cG0ws37WYen1mehY4vADMpBK0xaHg6htIIv3mQEFHbahfO2q
-         WBV80/ZoFMor6dRVlRO00Saz4bDMh8YtsV5xRCAvS8G4ms7TYUVD4t/GvbGfjtGnAx/U
-         yN4UCTD1Ty3Oy7tito5E9G5hTKyN//PCPh2THNocnlhWBgIPKfUzWHxR0kQfioSD63AD
-         h2lV01ezN8OoyH7MMgy6O/4/fa2RobM2/TQftvAm7TFr/MHy/fY4IzhywlPSKyCBHwxt
-         Hv2XTIETR4UOqLNZQb48IRJo1PVSbVwEdShv/gM73rQiF8g3PoOj5PdP0hMWQNcYPBbJ
-         tUFQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7684C79
+	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 13:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680873954;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HIIxiNsNUL9Ev/E6ipax6p/gxYQ3T4JBH2hUs6E4kqY=;
+	b=dwOjmBedJH5aMejlsM2ppt7q5+NrDZ+OowlN6KztXlVNEzszv7jH8MLp+NJFgIcxw39kzG
+	x0eVMX3LqbOkiMup3yG6MKC9y7vFgRd0nvhf6fhVqmSf32gwfBwMa5R53dhsIQ7MEGaaDv
+	GgN2zhoQMb+AMC6ViMbjMZXTa3VQXH0=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-662-YIt6nwEBNsiy1qmdJUSM5Q-1; Fri, 07 Apr 2023 09:25:45 -0400
+X-MC-Unique: YIt6nwEBNsiy1qmdJUSM5Q-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-74610f3f19fso50059385a.0
+        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 06:25:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680861523; x=1683453523;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UF/8IwJVfMsXicfnW+filTHzGgzzWFHXoUCYxMjStWk=;
-        b=4hVlND2XAF7yeMEYiAiiK6IgpBDb6UYGwFlRnyKhbo8YEHOq7jvaeDoeRdZa+m/vA1
-         +Rmb1wjDC8TYQV4nHucWt4GcYmwFe/bnKk2fT07vVljRA71MklZo6pyt/DZQ/YjrR13P
-         KY/QvwUyU7OjDTJ/EEfCp20XE/x/VPMpjTmtnoVfydcmbqZ/ZK3X952hd/pHsKtQ/FVj
-         8/0Y0oZ4v4+ckfuZVBSZNeE50aVLHANrt+UNZ5s/WqC73UutL6/UYUWxrnLgxAUS1mZu
-         IMWfUvRfb/fWWmPvbem79psKxGeGojDvpQQS1t8WI0arocESYyD4sQ1Odz0nJpafx6Ok
-         mRLQ==
-X-Gm-Message-State: AAQBX9dvNafcSRuvDzeUJk+LpeCk4qoPHSN4Ua068XUSIjJIj6ROEqpv
-	i/vxE95nLcQu2HfJX5h2hQ==
-X-Google-Smtp-Source: AKy350aICbabkmkRLZ7kw2O4NmSAkejky8pTBaj3JC+BO9Is2Ll70UrVDiGX+9Ut1nw5M0Hk7Ep2JA==
-X-Received: by 2002:a05:6a20:b213:b0:d9:6650:ef14 with SMTP id eh19-20020a056a20b21300b000d96650ef14mr2491993pzb.31.1680861522795;
-        Fri, 07 Apr 2023 02:58:42 -0700 (PDT)
-Received: from [127.0.0.1] ([13.73.36.85])
-        by smtp.gmail.com with ESMTPSA id g19-20020aa78753000000b005a8ba70315bsm2725452pfo.6.2023.04.07.02.58.42
+        d=1e100.net; s=20210112; t=1680873945; x=1683465945;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HIIxiNsNUL9Ev/E6ipax6p/gxYQ3T4JBH2hUs6E4kqY=;
+        b=YJkmMayEYSz1YbyqvDIZBxPVioSdWxTHxui/UZtsJooXzH9/1oXqcnd8tlRUrK44iJ
+         hrq3H3FCP5F4IiNpwTXZd7/mQ/lBOKceT1WNWip2mbyO1S3Vahxx5xxiO0kbrDiO0JQZ
+         vmqltGOyXlaI4EOj0BWDLEIn3cPq8OswWEGxzwwmkTDijpxTcdxzxP5JopXQBp4qsoBT
+         +GvRbwoIgouE/49/PqV9VOAw/2TsFWLGQ515uNlAa/q+VLHC7mQgqQfSecWhBZKieRg8
+         +B+qtHriuzErk3+j1AXkRmLYcvs3X6zSe2+1QDszL22/GZFFEFsjWM1bvQpEF20kRISb
+         V2CA==
+X-Gm-Message-State: AAQBX9cGvwzAIJf4Pt3FWxf5pslG4eaPuupfK1U7WQ8DfkzSreXSmgdN
+	FBEF8hkgX8cGY/KxINYfbC+JtEfKJvWc2yq7ACY0IWktDJhxBTwAHull45qBQalvl2nGxlUG2D6
+	cH1bYU2DNIG2+j4geYTeDSsY=
+X-Received: by 2002:a05:6214:c2f:b0:5e0:84a9:2927 with SMTP id a15-20020a0562140c2f00b005e084a92927mr4077990qvd.4.1680873945042;
+        Fri, 07 Apr 2023 06:25:45 -0700 (PDT)
+X-Google-Smtp-Source: AKy350asrNu8OmA98rFZnJVCo9SwSj9y4HcnsyK5y2yjZhziQJ83i0RXLjbDthPDewVOfdzMqGnTig==
+X-Received: by 2002:a05:6214:c2f:b0:5e0:84a9:2927 with SMTP id a15-20020a0562140c2f00b005e084a92927mr4077950qvd.4.1680873944707;
+        Fri, 07 Apr 2023 06:25:44 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-227-151.dyn.eolo.it. [146.241.227.151])
+        by smtp.gmail.com with ESMTPSA id g8-20020a0cd7c8000000b005dd8b934571sm1365414qvj.9.2023.04.07.06.25.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Apr 2023 02:58:42 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Davide Caratti <dcaratti@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230406173159.vjKk7zJ6cyrQl9c5RwemQMbWO6eJd8GHzW-3jvtoa88@z>
-References: <20230406173159.vjKk7zJ6cyrQl9c5RwemQMbWO6eJd8GHzW-3jvtoa88@z>
-Subject: Re: net/mptcp: use netlink policy generated from YAML spec: Build
- Failure
-Message-ID: <68fbf830-09bd-d4a1-6281-a5ded6d70f28@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Apr 2023 09:58:41 +0000
+        Fri, 07 Apr 2023 06:25:44 -0700 (PDT)
+Message-ID: <1861e413e6befae96bddaa8b7ec25b52b1073c3c.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 0/3] mptcp: misc. small cleanups
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+Cc: Abaci Robot <abaci@linux.alibaba.com>, Mat Martineau
+ <martineau@kernel.org>,  Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Date: Fri, 07 Apr 2023 15:25:36 +0200
+In-Reply-To: <20230329-mptcp-misc-cleanups-v1-0-a839001f0b05@tessares.net>
+References: <20230329-mptcp-misc-cleanups-v1-0-a839001f0b05@tessares.net>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
+On Wed, 2023-03-29 at 15:17 +0200, Matthieu Baerts wrote:
+> Here is a series of small unrelated cleanups, nothing very important nor
+> big.
+>=20
+> I don't know if the modification of the MAINTAINERS file should go in
+> -net instead.
+>=20
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
+> Matthieu Baerts (3):
+>       MAINTAINERS: add git trees for MPTCP
+>       mptcp: remove unused 'remaining' variable
+>       selftests: mptcp: remove duplicated entries in usage
+>=20
+>  MAINTAINERS                                       | 2 ++
+>  net/mptcp/options.c                               | 7 ++-----
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 8 ++++----
+>  3 files changed, 8 insertions(+), 9 deletions(-)
+> ---
+> base-commit: b2c5489c86ee1881dae3bc431ff6f284eb74f7ef
+> change-id: 20230329-mptcp-misc-cleanups-90754eb81610
 
-Thank you for your modifications, that's great!
+LGTM, nice cleanups!
 
-But sadly, our CI spotted some issues with it when trying to build it.
+For the series:
 
-You can find more details there:
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/20230406173159.vjKk7zJ6cyrQl9c5RwemQMbWO6eJd8GHzW-3=
-jvtoa88@z/
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/4=
-631535712
-
-Status: cancelled
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/7d20481ccf=
-26
-
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
