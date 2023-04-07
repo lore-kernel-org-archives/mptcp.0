@@ -1,133 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3871FD7
-	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 09:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680861168;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fv8sH2BET8VSb8Ldzq5DiMYy8O2E0iX5evUCrTIAvds=;
-	b=LMOwzW4cgTv8dJK7C/35s43L3Ta45b0bK+8RMDKk86WSXM3awyuoXZ+Jx4e50KtzeG96Oh
-	qwTilbsXJmNd41hPdkNYaCsBWMeA6bKS9DZ6yVBglSm0PizZUKn2Tm2r2LbhMgaIYEBVAs
-	JYo90dZqQ5ggSe+3rHKNdcwuZe2Xugs=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-155-RL46qlVNOEaMINe_GsOT6Q-1; Fri, 07 Apr 2023 05:52:47 -0400
-X-MC-Unique: RL46qlVNOEaMINe_GsOT6Q-1
-Received: by mail-ej1-f71.google.com with SMTP id x3-20020a1709060a4300b00948c0473396so1360091ejf.10
-        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 02:52:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680861166; x=1683453166;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6663D1FDB
+	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 09:58:43 +0000 (UTC)
+Received: by mail-pj1-f53.google.com with SMTP id lr16-20020a17090b4b9000b0023f187954acso42930559pjb.2
+        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 02:58:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680861523; x=1683453523;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Fv8sH2BET8VSb8Ldzq5DiMYy8O2E0iX5evUCrTIAvds=;
-        b=g8Nlde1MJAn3ITyrrgaEr8E0K6IIu7QqjnA2SEVmbRCZHVv7KI9fclbqxX2RD0cQye
-         nm2gBmgEugYCAKgZFHBRe8VLJEEX19OQI21Ewbv+VgtJ0fIAU3VU1yrWiUaz0WIrTiLW
-         N7dyKFk5YvKKbtqxr0QCs0gEbU52yAtL2LTxCJryhErrS87BgPeQqTnV5SAK6uCXTgdt
-         xA6Tnh7ly1oOBAC1g1h0x23J7aPZWmVSTvi570arAOGPl1UPNanceYZSs+AWAOEHFfWw
-         a2ZiwtvC8bETzAm1/7XtzLKAk511o8QEAEK06FszDDK5xkb7KMoOSMGLuThzTqMP6X7U
-         RXyg==
-X-Gm-Message-State: AAQBX9dANrhW5/Hj/z0jk9chG2o0QMqMpubbAY1QnClUGS/AwFVtjIXp
-	72Jf3SMtuZ8fw5QztXgVFmXAuEvmdxAPcaVfCPHBYmJEFCC2Q7Qv5WgT9xHoOyevj73fFDiz+vb
-	XSUuYHEouqZZFKDs=
-X-Received: by 2002:a17:906:c799:b0:933:4ca3:9678 with SMTP id cw25-20020a170906c79900b009334ca39678mr2316126ejb.24.1680861166197;
-        Fri, 07 Apr 2023 02:52:46 -0700 (PDT)
-X-Google-Smtp-Source: AKy350Y0UhDOCPzURb/eFStjX8y9kXNewuc8WpOPulTHlkzqHfsN2yaaacVFGYgNCwwd9GByvQ24lw==
-X-Received: by 2002:a17:906:c799:b0:933:4ca3:9678 with SMTP id cw25-20020a170906c79900b009334ca39678mr2316104ejb.24.1680861165875;
-        Fri, 07 Apr 2023 02:52:45 -0700 (PDT)
-Received: from localhost (net-37-119-203-146.cust.vodafonedsl.it. [37.119.203.146])
-        by smtp.gmail.com with ESMTPSA id f13-20020a170906c08d00b0092f289b6fdbsm1869764ejz.181.2023.04.07.02.52.45
+        bh=UF/8IwJVfMsXicfnW+filTHzGgzzWFHXoUCYxMjStWk=;
+        b=RLMJors2E3JF04mP/8cG0ws37WYen1mehY4vADMpBK0xaHg6htIIv3mQEFHbahfO2q
+         WBV80/ZoFMor6dRVlRO00Saz4bDMh8YtsV5xRCAvS8G4ms7TYUVD4t/GvbGfjtGnAx/U
+         yN4UCTD1Ty3Oy7tito5E9G5hTKyN//PCPh2THNocnlhWBgIPKfUzWHxR0kQfioSD63AD
+         h2lV01ezN8OoyH7MMgy6O/4/fa2RobM2/TQftvAm7TFr/MHy/fY4IzhywlPSKyCBHwxt
+         Hv2XTIETR4UOqLNZQb48IRJo1PVSbVwEdShv/gM73rQiF8g3PoOj5PdP0hMWQNcYPBbJ
+         tUFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680861523; x=1683453523;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UF/8IwJVfMsXicfnW+filTHzGgzzWFHXoUCYxMjStWk=;
+        b=4hVlND2XAF7yeMEYiAiiK6IgpBDb6UYGwFlRnyKhbo8YEHOq7jvaeDoeRdZa+m/vA1
+         +Rmb1wjDC8TYQV4nHucWt4GcYmwFe/bnKk2fT07vVljRA71MklZo6pyt/DZQ/YjrR13P
+         KY/QvwUyU7OjDTJ/EEfCp20XE/x/VPMpjTmtnoVfydcmbqZ/ZK3X952hd/pHsKtQ/FVj
+         8/0Y0oZ4v4+ckfuZVBSZNeE50aVLHANrt+UNZ5s/WqC73UutL6/UYUWxrnLgxAUS1mZu
+         IMWfUvRfb/fWWmPvbem79psKxGeGojDvpQQS1t8WI0arocESYyD4sQ1Odz0nJpafx6Ok
+         mRLQ==
+X-Gm-Message-State: AAQBX9dvNafcSRuvDzeUJk+LpeCk4qoPHSN4Ua068XUSIjJIj6ROEqpv
+	i/vxE95nLcQu2HfJX5h2hQ==
+X-Google-Smtp-Source: AKy350aICbabkmkRLZ7kw2O4NmSAkejky8pTBaj3JC+BO9Is2Ll70UrVDiGX+9Ut1nw5M0Hk7Ep2JA==
+X-Received: by 2002:a05:6a20:b213:b0:d9:6650:ef14 with SMTP id eh19-20020a056a20b21300b000d96650ef14mr2491993pzb.31.1680861522795;
+        Fri, 07 Apr 2023 02:58:42 -0700 (PDT)
+Received: from [127.0.0.1] ([13.73.36.85])
+        by smtp.gmail.com with ESMTPSA id g19-20020aa78753000000b005a8ba70315bsm2725452pfo.6.2023.04.07.02.58.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Apr 2023 02:52:45 -0700 (PDT)
-Date: Fri, 7 Apr 2023 11:52:44 +0200
-From: Davide Caratti <dcaratti@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
+        Fri, 07 Apr 2023 02:58:42 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Davide Caratti <dcaratti@redhat.com>
 Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH RFC mptcp-net-next 3/5] Documentation: netlink: add a
- YAML spec for mptcp
-Message-ID: <ZC/n7GM/hsIAO3kQ@dcaratti.users.ipa.redhat.com>
-References: <cover.1680801697.git.dcaratti@redhat.com>
- <cb2ed01dd8797078c39c014e8c19eab5ddf1f0f2.1680801697.git.dcaratti@redhat.com>
- <7bc87c2f4acbe8157414b11936072efb07ad7f50.camel@redhat.com>
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230406173159.vjKk7zJ6cyrQl9c5RwemQMbWO6eJd8GHzW-3jvtoa88@z>
+References: <20230406173159.vjKk7zJ6cyrQl9c5RwemQMbWO6eJd8GHzW-3jvtoa88@z>
+Subject: Re: net/mptcp: use netlink policy generated from YAML spec: Build
+ Failure
+Message-ID: <68fbf830-09bd-d4a1-6281-a5ded6d70f28@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 07 Apr 2023 09:58:41 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <7bc87c2f4acbe8157414b11936072efb07ad7f50.camel@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-hello Paolo, thanks for looking at this!
+Hi Davide,
 
-On Fri, Apr 07, 2023 at 09:56:39AM +0200, Paolo Abeni wrote:
-> On Thu, 2023-04-06 at 19:31 +0200, Davide Caratti wrote:
-> [...]
-> > +attribute-sets:
-> > +  -
-> > +    name: addr
-> > +    name-prefix: mptcp_pm_addr_attr_
-> > +    attributes:
-> > +      -
-> > +        name: unspec
-> > +        type: unused
-> > +        value: 0
-> 
-> This entry should not be needed, the tool should add it by default and
-> keep the first item with value == 1.
+Thank you for your modifications, that's great!
 
-wouldn't this would break the uAPI? I mean, in the current one we have
-MPTCP_PM_ADDR_ATTR_UNSPEC equal to zero. Removing the whole element would
-make MPTCP_PM_ADDR_ATTR_UNSPEC disappear and potentially break the build
-of userspace programs that use it. See below:
+But sadly, our CI spotted some issues with it when trying to build it.
 
- $ git diff 
-diff --git a/Documentation/netlink/specs/mptcp.yaml b/Documentation/netlink/specs/mptcp.yaml
-index 910307b021ba..12974bf0cf10 100644
---- a/Documentation/netlink/specs/mptcp.yaml
-+++ b/Documentation/netlink/specs/mptcp.yaml
-@@ -91,10 +91,6 @@ attribute-sets:
-     name: addr
-     name-prefix: mptcp_pm_addr_attr_
-     attributes:
--      -
--        name: unspec
--        type: unused
--        value: 0
-       -
-         name: family
-         type: u16
- $ ./tools/net/ynl/ynl-gen-c.py --mode uapi  \
- > --spec Documentation/netlink/specs/mptcp.yaml --header \
- > | grep -B1 -A1 -i addr_attr_family
-enum {
-         MPTCP_PM_ADDR_ATTR_FAMILY = 1,
-         MPTCP_PM_ADDR_ATTR_ID,
+You can find more details there:
 
-[...]
+  https://patchwork.kernel.=
+org/project/mptcp/patch/20230406173159.vjKk7zJ6cyrQl9c5RwemQMbWO6eJd8GHzW-3=
+jvtoa88@z/
+  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/4=
+631535712
 
-> > +      -
-> > +        name: addr_remote
-> > +        type: nest
-> > +        nested-attributes: addr
-> 
-> Is this the definition requiring patch 2/5 ?
+Status: cancelled
+Initiator: MPTCPimporter
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/7d20481ccf=
+26
 
-yes! I replied to your comment to patch 2/5 (and hopefully didn't mess with the names ;) )
- 
-> Are there other attribute set requiring such change?
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
 
-currently ynl-gen-c.py supports only a single attribute-set for
-each list of operations - but the effect on the generated code is
-not relevant AFAIU.
-
--- 
-davide
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
