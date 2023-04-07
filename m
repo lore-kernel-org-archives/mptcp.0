@@ -1,58 +1,58 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D429110E
-	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 07:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1A4110E
+	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 08:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680854203;
+	s=mimecast20190719; t=1680854448;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pdSOwDvV0JC8xQOK+j3wUx6TIuS7GUt6hnkyLFi/mZ8=;
-	b=FduspKxMUNDMxlGngjif5aHEbaXLqUk+w1p2gJicS1988h00O1o1pqRP0SuU+j/+GuDqhB
-	euoAq/XemewODYr+W1vZR61HYSrGJz2rJyZVzi14M74BGvKKpln+4yQXYe4ERU6hRDjwtZ
-	g/wFevzifsepRByv49LSs/ydc6eHV9A=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=d1b24xZ95YQQ3+puLwM4Th9SB79EvalVOOrgqjnnsIQ=;
+	b=VVI6oBRqoQn7DTSyed1sUhuXkZjwY1KU3Gpg7QHHUeu+oMnqGGaBYmCK6KK7kEr0o7cJbR
+	8qS4vb42RyLUj65ouKEkOFThcW2EnF/9+bkEFcG4F6ols8nYW4FodJLsnPsymIuIHjDgCd
+	MDorhgx6QlG4je6hMLLU/IWzMBlu6TE=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-82-CAIFnT7uMW2M4ssmM0GuWw-1; Fri, 07 Apr 2023 03:56:42 -0400
-X-MC-Unique: CAIFnT7uMW2M4ssmM0GuWw-1
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-3e03178131bso4542531cf.1
-        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 00:56:42 -0700 (PDT)
+ us-mta-490-e6Wyog7KNQCIbnYd5rdflA-1; Fri, 07 Apr 2023 04:00:47 -0400
+X-MC-Unique: e6Wyog7KNQCIbnYd5rdflA-1
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-3e1522cf031so15739771cf.1
+        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 01:00:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680854202;
+        d=1e100.net; s=20210112; t=1680854447;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=pdSOwDvV0JC8xQOK+j3wUx6TIuS7GUt6hnkyLFi/mZ8=;
-        b=N79BHTa7LUDKpqjtxdg4dl4r72OH/TVqNFfESJMSn82zOTgIeftPelmR45aYNPTA4g
-         0rJGD2q+Ifm0UPHNm8y2d9mFrzIbjXZU1lFhpNsMXcF0A8fqsh+XUw4P/18/7h6/zjWO
-         bIVhuc+HSJpv70FzoiFMm9QOlMK6wtWAZS6o9NTZLJdUAfpIEyFYElBPgYtWJx8OJlq/
-         ZxPVOAESELFAZworHr1C23nH6oBn84NTt1Vya9PHI9Dqs5v2TRKbncZk2St1uGbtN7yK
-         qg8EEAlqnhwohqCLGD+lbscSLCGuDT/bXRofZuKlT10l1LpOVNGg2dpf/iR/NAtzBfdU
-         DZZg==
-X-Gm-Message-State: AAQBX9do9Bz/ffQTaH3vzFN2KINRkipazvlr8EWkyfFuS/w5D48NWd5e
-	9G7mjdulM0wgOTmDuA7NOkWp3SqXiWiN3B7dpQxIRGD5YqwfiPzysN56u8xTcqgWgZvPGf+1wpV
-	hYQiumoM82ptnTXuvCx/gDFnGOg==
-X-Received: by 2002:a05:622a:1a9a:b0:3c0:40c3:b8fd with SMTP id s26-20020a05622a1a9a00b003c040c3b8fdmr2591191qtc.6.1680854201998;
-        Fri, 07 Apr 2023 00:56:41 -0700 (PDT)
-X-Google-Smtp-Source: AKy350aHHqGQ2DdIRjMyhMTYabzfy2LjQYQMvatnYfK+IBUf1TD0utS2fiWWVobFKl76bVZ31IpDdw==
-X-Received: by 2002:a05:622a:1a9a:b0:3c0:40c3:b8fd with SMTP id s26-20020a05622a1a9a00b003c040c3b8fdmr2591184qtc.6.1680854201765;
-        Fri, 07 Apr 2023 00:56:41 -0700 (PDT)
+        bh=d1b24xZ95YQQ3+puLwM4Th9SB79EvalVOOrgqjnnsIQ=;
+        b=bS1r47yAJkAY2JI9Nmg6nLao7KPi2k2b4wVCSFgWdTXykVQeU3N+R04lmoyXpralrh
+         lQsblc0sVXhk/B3tnGkAj6IQaVse3fBrBYchPiEx7tgNQMew59TlQyZlicBERl9tDywK
+         PJf93xdnUk3QOH8NZd4rxTNkbObwCnBxSnugmiEaApdEJFVnMueiW15Dl8njIXGppeEG
+         sB28LjE6v5BApL7qJ1jYLNltkL/wf2Mar/wWY6Vab8BigdasQ9k6ad4ntNgLkYiZ6917
+         Wk7iuhKtZ7aGUA8F+hwCJtfPFu/q0eqqqaPHafm+9O12UXvx3l52l5/Ru9XbBX6d5olO
+         xOUg==
+X-Gm-Message-State: AAQBX9e7IUDS+h4Eh3s5YEXfL49dgqu0vh98ESki3IAVc9f7zrOIl+Na
+	4etEJUnotkK1dumpT35QTXmhrFGC84OOlKtXbFbtRdsWw5U4WnjQknsJD8yPTRk6HkSxmV5DZ/c
+	pU8IVujjmnbCpxsw=
+X-Received: by 2002:a05:6214:518c:b0:5da:b965:1efe with SMTP id kl12-20020a056214518c00b005dab9651efemr2932082qvb.4.1680854446853;
+        Fri, 07 Apr 2023 01:00:46 -0700 (PDT)
+X-Google-Smtp-Source: AKy350ZXnfWbO2H+VvovWLQzf33Zb2bYKXwaJX02PqU9T36D5fz/eOfVDN1gDMMRYG1CeBS/LnWCKg==
+X-Received: by 2002:a05:6214:518c:b0:5da:b965:1efe with SMTP id kl12-20020a056214518c00b005dab9651efemr2932043qvb.4.1680854446532;
+        Fri, 07 Apr 2023 01:00:46 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-227-151.dyn.eolo.it. [146.241.227.151])
-        by smtp.gmail.com with ESMTPSA id d23-20020a05620a141700b00746803d7e8dsm1111468qkj.113.2023.04.07.00.56.40
+        by smtp.gmail.com with ESMTPSA id r190-20020a37a8c7000000b00746b79101b6sm1120455qke.67.2023.04.07.01.00.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Apr 2023 00:56:41 -0700 (PDT)
-Message-ID: <7bc87c2f4acbe8157414b11936072efb07ad7f50.camel@redhat.com>
-Subject: Re: [PATCH RFC mptcp-net-next 3/5] Documentation: netlink: add a
- YAML spec for mptcp
+        Fri, 07 Apr 2023 01:00:46 -0700 (PDT)
+Message-ID: <85d65b14b0550b284bf641ca0db55c550e23b251.camel@redhat.com>
+Subject: Re: [PATCH RFC mptcp-net-next 2/5] tools: ynl: fix bug in case of
+ multiple nested attributes of the same type
 From: Paolo Abeni <pabeni@redhat.com>
 To: Davide Caratti <dcaratti@redhat.com>, mptcp@lists.linux.dev
-Date: Fri, 07 Apr 2023 09:56:39 +0200
-In-Reply-To: <cb2ed01dd8797078c39c014e8c19eab5ddf1f0f2.1680801697.git.dcaratti@redhat.com>
+Date: Fri, 07 Apr 2023 10:00:43 +0200
+In-Reply-To: <9414bdc6d3d0212238cec12d4f2d80894910e944.1680801697.git.dcaratti@redhat.com>
 References: <cover.1680801697.git.dcaratti@redhat.com>
-	 <cb2ed01dd8797078c39c014e8c19eab5ddf1f0f2.1680801697.git.dcaratti@redhat.com>
+	 <9414bdc6d3d0212238cec12d4f2d80894910e944.1680801697.git.dcaratti@redhat.com>
 User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -66,52 +66,33 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 2023-04-06 at 19:31 +0200, Davide Caratti wrote:
-[...]
-> +attribute-sets:
-> +  -
-> +    name: addr
-> +    name-prefix: mptcp_pm_addr_attr_
-> +    attributes:
-> +      -
-> +        name: unspec
-> +        type: unused
-> +        value: 0
+> when a policy contains multiple nested attributes of the same type, avoid
+> re-initializing .request and .reply members.
 
-This entry should not be needed, the tool should add it by default and
-keep the first item with value =3D=3D 1.
+It's unclear to me why we need to avoid such re-init...
 
-> +  -
-> +    name: attr
-> +    name-prefix: mptcp_pm_attr_
-> +    attributes:
-> +      -
-> +        name: unspec
-> +        type: unused
-> +        value: 0
-> +      -
-> +        name: addr
-> +        type: nest
-> +        nested-attributes: addr
-> +      -
-> +        name: rcv_add_addrs
-> +        type: u32
-> +      -
-> +        name: subflows
-> +        type: u32
-> +      -
-> +        name: token
-> +        type: u32
-> +      -
-> +        name: loc_id
-> +        type: u8
-> +      -
-> +        name: addr_remote
-> +        type: nest
-> +        nested-attributes: addr
+>=20
+> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+> ---
+>  tools/net/ynl/ynl-gen-c.py | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/tools/net/ynl/ynl-gen-c.py b/tools/net/ynl/ynl-gen-c.py
+> index cc2f8c945340..ba55f217a006 100755
+> --- a/tools/net/ynl/ynl-gen-c.py
+> +++ b/tools/net/ynl/ynl-gen-c.py
+> @@ -812,7 +812,8 @@ class Family(SpecFamily):
+>                      inherit =3D set()
+>                      nested =3D spec['nested-attributes']
+>                      if nested not in self.root_sets:
+> -                        self.pure_nested_structs[nested] =3D Struct(self=
+, nested, inherited=3Dinherit)
+> +                        if nested not in self.pure_nested_structs:
+> +                            self.pure_nested_structs[nested] =3D Struct(=
+self, nested, inherited=3Dinherit)
 
-Is this the definition requiring patch 2/5 ?
-
-Are there other attribute set requiring such change?
+... and is unclear to me how the above produces the effect described in
+the commit message :)
 
 Thanks!
 
