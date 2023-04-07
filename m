@@ -1,86 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B741FEBB
-	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 18:51:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42481C433EF;
-	Fri,  7 Apr 2023 18:51:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1680893508;
-	bh=5YjxGm12gelTf8QcSjIiWnSgzT8fwGgHvG2QpLB2WSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bQ1qbGd1qnLQd3QWnzmv3ZAI2tK1ZYUf6Y8fZvGt9y7PG/+mhwHNZ0ZJi18qkokxK
-	 gI2LRbKFYVtv0TZTTKaqmzSDp919mtLpsqU4TwnQYtNCGXhzyrynGyH5BzrRlAIfGI
-	 SAakRXulBW8DBbqgROCMw/4bHCgTldG1HZ02WRSeBbKEk+AlJuur8I6a4l0cBOgeyo
-	 dw5RKVMOjZsfNj2GN5A2VV2sJvPimHbTfEsb2HzN1YA+xFg4bBLzeSFlzUIYZquEI2
-	 566Sb7DWKyp6L6xtgMW622vGMM/L/F1T98srvQnKV9yXG3R9rhV6PTC3SE6CNnhDAh
-	 XTtkEEk660lDg==
-Date: Fri, 7 Apr 2023 12:51:44 -0600
-From: Keith Busch <kbusch@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C091AAD22
+	for <mptcp@lists.linux.dev>; Fri,  7 Apr 2023 19:43:35 +0000 (UTC)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-17786581fe1so46633555fac.10
+        for <mptcp@lists.linux.dev>; Fri, 07 Apr 2023 12:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680896615; x=1683488615;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VmGoFZWC9PDnvE+sTjJQzyudUY5A0ZmHnd4ikyyFi6Q=;
+        b=dsL3w0zn9H8ut4dezZTBHPXEZqxaZAeDsJVQ8Eu7Uj+qNZsTuCBK73dZiETONf6IB3
+         zShHsZ9nRyj03DrFkLHj6VCjrNog5UZcWb53ESXye9fSK6EpaYCh5riXw5NCs6/qyAbP
+         MjwSf1gBh/VqTZAA3/dvks8LJ2Ng7oOkOoO829EujghYnEU+zYJKRQGAqIRt/mYFtuy4
+         RdINmFqsASoJfutviA/FG8RtdzbbR+YOrtuTQbzsfr2CY9gZbMT7bVnW1ddqmNZBsaNi
+         mxnNDIB+/DLACpJAux0NBInzQDtvYMK0qsp0qc/+9O+dO7EOObRIpRBtU7oGDJQr+se4
+         4RRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680896615; x=1683488615;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VmGoFZWC9PDnvE+sTjJQzyudUY5A0ZmHnd4ikyyFi6Q=;
+        b=J2PVLSobvqmpMn/PITmOXm7vo3Y2JkrWfb+mH14qMGpew7C/4ABSRCaHEU7r4vtavw
+         Eknnv2trOy+CmmDUhpxUJM34Vw4QLkU/8W8E4UnfF1P40trmX8pJXP/WRTFHWOjGI/6T
+         CNpW0kkduUHKUMJjA2wbKQbRfe9q0565b9O4erz7IRSywtFXMDuDHZSX0wS/4fF1qhMe
+         E3leO8mU4Xafbg06ezr/zyA58nKAiqidSIAE3zUmQjVGcXOnKNoTzNpYvuC9yU3PeBzN
+         T2mtHisnS9Ie4xepjxZpUpZu/tDynKDJdS4yjDFb74W982egD8DsbxPI3223VGfYI3V6
+         ziNA==
+X-Gm-Message-State: AAQBX9c13++Kt2qYfT9pVdZ/ISPxpnxzSVtku6n9jV3Ji0mK5nvHwywG
+	6opeWEDHKcGgjtCR5saJNQ==
+X-Google-Smtp-Source: AKy350ZxlaeURyqnUbXuFsftIw+82E5Vt3HuRHEiSucQWWLg4nHD+odMcPzcG8xQKeSO8u7XNReRHw==
+X-Received: by 2002:a05:6870:700d:b0:17a:aea2:cd0e with SMTP id u13-20020a056870700d00b0017aaea2cd0emr1423736oae.1.1680896614719;
+        Fri, 07 Apr 2023 12:43:34 -0700 (PDT)
+Received: from [127.0.0.1] ([40.84.170.104])
+        by smtp.gmail.com with ESMTPSA id sz11-20020a056871860b00b0016e49af5815sm1830896oab.51.2023.04.07.12.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Apr 2023 12:43:34 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Breno Leitao <leitao@debian.org>
-Cc: asml.silence@gmail.com, axboe@kernel.dk, davem@davemloft.net,
-	dccp@vger.kernel.org, dsahern@kernel.org, edumazet@google.com,
-	io-uring@vger.kernel.org, kuba@kernel.org, leit@fb.com,
-	linux-kernel@vger.kernel.org, marcelo.leitner@gmail.com,
-	matthieu.baerts@tessares.net, mptcp@lists.linux.dev,
-	netdev@vger.kernel.org, pabeni@redhat.com,
-	willemdebruijn.kernel@gmail.com
-Subject: Re: [PATCH RFC] io_uring: Pass whole sqe to commands
-Message-ID: <ZDBmQOhbyU0iLhMw@kbusch-mbp.dhcp.thefacebook.com>
-References: <20230406144330.1932798-1-leitao@debian.org>
- <20230406165705.3161734-1-leitao@debian.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230406165705.3161734-1-leitao@debian.org>
+References: <20230406165705.3161734-1-leitao@debian.org>
+Subject: Re: io_uring: Pass whole sqe to commands: Tests Results
+Message-ID: <6558e001-bcd5-327d-3fd9-b4ea4897b64f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 07 Apr 2023 19:43:33 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230406165705.3161734-1-leitao@debian.org>
 
-On Thu, Apr 06, 2023 at 09:57:05AM -0700, Breno Leitao wrote:
-> Currently uring CMD operation relies on having large SQEs, but future
-> operations might want to use normal SQE.
-> 
-> The io_uring_cmd currently only saves the payload (cmd) part of the SQE,
-> but, for commands that use normal SQE size, it might be necessary to
-> access the initial SQE fields outside of the payload/cmd block.  So,
-> saves the whole SQE other than just the pdu.
-> 
-> This changes slighlty how the io_uring_cmd works, since the cmd
-> structures and callbacks are not opaque to io_uring anymore. I.e, the
-> callbacks can look at the SQE entries, not only, in the cmd structure.
-> 
-> The main advantage is that we don't need to create custom structures for
-> simple commands.
+Hi Breno,
 
-This looks good to me. The only disadvantage I can see is that the async
-fallback allocates just a tiny bit more data than before, but no biggie.
+Thank you for your modifications, that's great!
 
-Reviewed-by: Keith Busch <kbusch@kernel.org>
- 
-> @@ -63,14 +63,15 @@ EXPORT_SYMBOL_GPL(io_uring_cmd_done);
->  int io_uring_cmd_prep_async(struct io_kiocb *req)
->  {
->  	struct io_uring_cmd *ioucmd = io_kiocb_to_cmd(req, struct io_uring_cmd);
-> -	size_t cmd_size;
-> +	size_t size = sizeof(struct io_uring_sqe);
->  
->  	BUILD_BUG_ON(uring_cmd_pdu_size(0) != 16);
->  	BUILD_BUG_ON(uring_cmd_pdu_size(1) != 80);
+Our CI did some validations and here is its report:
 
-One minor suggestion. The above is the only user of uring_cmd_pdu_size() now,
-which is kind of a convoluted way to enfoce the offset of the 'cmd' field. It
-may be more clear to replace these with:
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6539795959119872
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6539795959119872/summary/summary.txt
 
-	BUILD_BUG_ON(offsetof(struct io_uring_sqe, cmd) == 48);
-  
-> -	cmd_size = uring_cmd_pdu_size(req->ctx->flags & IORING_SETUP_SQE128);
-> +	if (req->ctx->flags & IORING_SETUP_SQE128)
-> +		size <<= 1;
->  
-> -	memcpy(req->async_data, ioucmd->cmd, cmd_size);
-> +	memcpy(req->async_data, ioucmd->sqe, size);
->  	return 0;
->  }
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5273158563921920
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5273158563921920/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4710208610500608
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4710208610500608/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5836108517343232
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5836108517343232/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/9999e6372112
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
