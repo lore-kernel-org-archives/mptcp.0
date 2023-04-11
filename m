@@ -1,62 +1,65 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B508F47
-	for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 14:54:51 +0000 (UTC)
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7606d7cc9bdso2756639f.1
-        for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 07:54:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A95528EE
+	for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 15:00:27 +0000 (UTC)
+Received: by mail-qt1-f182.google.com with SMTP id y26so7173028qtv.9
+        for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 08:00:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112; t=1681224891;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=n1/uakkZjv9cQF6P7up1HAscrfLZ1PckVlhhE3kXYRA=;
-        b=i2M7Gt5eHTm8Zs3MHrk2JXdsmGkyZeCGjw4sJo9A0tJ26iSzx4aGtypYqkuS6DYNUz
-         lv1RUSJkcY1cOnuVLJs4ky1/FBfMdyPk/UbAr++vHYTxtv9pREyb/taP47PWOFzlSuMd
-         u2X+Rt6tRRnnS6EJ6xBsDnWIVJG5kzFKGBG5C34Rf8brfoKsgQR70flgDtlaTr4hkMtK
-         40GCjDp8pq2KkGHK2ikm830ZQw/BPjREs1RKfJNSmVi1XbgCbldOvyTDewUFzkQmuKs/
-         AERVqGet/CWXA1fCNIa0kcXhEBm1pVqsYVUPejuHM9u2J0G9iMPDz/RN2vBo+F8bg4R/
-         zszg==
+        d=gmail.com; s=20210112; t=1681225227; x=1683817227;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5a/e7NoKNRdC7o4W/4knkGx/Cr6Bsqtq0P+8IFSPj6w=;
+        b=DSr2E+bLihxuIKjAOdqe/dpQcZhaLyOUYRUkswjJULAchdWAje0gDePf/WJPPuQ0gl
+         Y4G3i6OVvhyIR0LIyFHfha8ArKE/dBVhit0GLkyW44dC0C+8JHnomAjSBDLECvIACJYH
+         esdXVZgohItWwzmbHw3rpUBX4MjAyotwUmBCELKyJ8vzPDoDJqygL8rhoGnehnoWGMKV
+         T+mSCmLSkFNwUdBiXFdqVq7gEhh7fGL35MC7teICj7v2szqgt5tHQsgrJY1qlCMpXp+r
+         t6kGqEwxcydV4iNwkFlbP/DW7AxnhiHRTa4Sx4dD6rzRLUeJuiSM9OiPfzfgBpClVtwR
+         kJeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681224891;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n1/uakkZjv9cQF6P7up1HAscrfLZ1PckVlhhE3kXYRA=;
-        b=fGli3IKP0PfPsrjErhc6I9MSYwBOq7eqiNH4gfzNKr8PqjdDfLCj1EddmiRWhUnvFO
-         Po/1RHx1xWpcPjRSfT6Gx33Jaty4bMDxP/CgxGlWk4VGzRyYfrIAfUmeR+2rqeWThi1+
-         Dbldv9E1i4PvWNoA0177LgW0CWSteZUic6C5Eb5OOlMaxGUSocQwQeRMMl7DkCnh6icd
-         q/iQzJLmFhxDh9hzCKz/9YCsGftxGbMeIBX29WLKlXndauvlGxWoe9AdmYHlg56piQAA
-         ign1f7843/uVVz7jRD7UMoizNhDAOYyQLl40zAqHU8Z9XJtXoVV/JnX7Ji2hcM2MrDbL
-         n26g==
-X-Gm-Message-State: AAQBX9dHxa7bMhYgSMwvPoDCXJIRqx/mXcdBiC638DfZu3OSdYOW8ODG
-	xkuKSw5ezMVkUkHgE+2S9HCRIw==
-X-Google-Smtp-Source: AKy350ZNd1GN2qGTn8k0KmKiar/rBVtqQ95KVwEH4VZ0jhuU+wlCTFTF5pf6yJ2PAMLuldmKwNN0IA==
-X-Received: by 2002:a6b:8d84:0:b0:740:7d21:d96f with SMTP id p126-20020a6b8d84000000b007407d21d96fmr4946123iod.1.1681224890937;
-        Tue, 11 Apr 2023 07:54:50 -0700 (PDT)
-Received: from [192.168.1.94] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id y32-20020a029523000000b0040bd91e4803sm980367jah.155.2023.04.11.07.54.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Apr 2023 07:54:50 -0700 (PDT)
-Message-ID: <036c80e5-4844-5c84-304c-7e553fe17a9b@kernel.dk>
-Date: Tue, 11 Apr 2023 08:54:49 -0600
-Precedence: bulk
-X-Mailing-List: mptcp@lists.linux.dev
-List-Id: <mptcp.lists.linux.dev>
-List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 0/5] add initial io_uring_cmd support for sockets
-Content-Language: en-US
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- David Ahern <dsahern@kernel.org>, Breno Leitao <leitao@debian.org>
-Cc: Willem de Bruijn <willemb@google.com>, io-uring@vger.kernel.org,
- netdev@vger.kernel.org, kuba@kernel.org, asml.silence@gmail.com,
- leit@fb.com, edumazet@google.com, pabeni@redhat.com, davem@davemloft.net,
- dccp@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- matthieu.baerts@tessares.net, marcelo.leitner@gmail.com
+        d=1e100.net; s=20210112; t=1681225227; x=1683817227;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5a/e7NoKNRdC7o4W/4knkGx/Cr6Bsqtq0P+8IFSPj6w=;
+        b=Rc1TJX58Pqc+jXX/5XTTw06SC7fMB2Wpwl5EcjZSf2lXZFXpUWD7yNH/Im/mVFchDZ
+         4Ya7bAvHemE5KbvHLnM2xsE+tu3dKzMEIHxR4qN3Dw5KRfWsXCzA4fWIADob96p8hBSf
+         m3a8BCEsSgk38syFAssu4JQrHanqlAmxCJiGTCss8wOZQoOmv4uqq2Lc/XeY1N7akbaY
+         iJfiyiZhBFJeDPoYcoCVlaeZvsn2VShvUkxjRaZDxh22TrDLaPS6lBWmWEspFI9krSht
+         D2jIVBv3u70PDbIwDL5Km8hw4vF+EVFu4kV5XuPt61kiiK/CMM6dkKgmT9Qzz1usNN2g
+         P3wg==
+X-Gm-Message-State: AAQBX9dd29yhKSvaQIf4oe0W2MG2zGB4U1Uq2oxAgHKMBGl1EIwz3fMm
+	jB3AjV6dOxojEcDvZInrCXQ=
+X-Google-Smtp-Source: AKy350aGAPWamY9+W7w81yRyWj3JGvcdqv9fPOUoNNwmY1QOgNWHvjS04w6tkQFHF73FWcTmOiJv5Q==
+X-Received: by 2002:a05:622a:1043:b0:3d2:efe6:3c23 with SMTP id f3-20020a05622a104300b003d2efe63c23mr23778449qte.42.1681225226470;
+        Tue, 11 Apr 2023 08:00:26 -0700 (PDT)
+Received: from localhost (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
+        by smtp.gmail.com with ESMTPSA id c7-20020ac853c7000000b003e4ee0f5234sm3641080qtq.87.2023.04.11.08.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 08:00:25 -0700 (PDT)
+Date: Tue, 11 Apr 2023 11:00:24 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ David Ahern <dsahern@kernel.org>, 
+ Breno Leitao <leitao@debian.org>
+Cc: Willem de Bruijn <willemb@google.com>, 
+ io-uring@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ kuba@kernel.org, 
+ asml.silence@gmail.com, 
+ leit@fb.com, 
+ edumazet@google.com, 
+ pabeni@redhat.com, 
+ davem@davemloft.net, 
+ dccp@vger.kernel.org, 
+ mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, 
+ matthieu.baerts@tessares.net, 
+ marcelo.leitner@gmail.com
+Message-ID: <64357608c396d_113ebd294ba@willemb.c.googlers.com.notmuch>
+In-Reply-To: <036c80e5-4844-5c84-304c-7e553fe17a9b@kernel.dk>
 References: <20230406144330.1932798-1-leitao@debian.org>
  <CA+FuTSeKpOJVqcneCoh_4x4OuK1iE0Tr6f3rSNrQiR-OUgjWow@mail.gmail.com>
  <ZC7seVq7St6UnKjl@gmail.com>
@@ -66,72 +69,89 @@ References: <20230406144330.1932798-1-leitao@debian.org>
  <75e3c434-eb8b-66e5-5768-ca0f906979a1@kernel.org>
  <67831406-8d2f-feff-f56b-d0f002a95d96@kernel.dk>
  <643573df81e20_11117c2942@willemb.c.googlers.com.notmuch>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <643573df81e20_11117c2942@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
+ <036c80e5-4844-5c84-304c-7e553fe17a9b@kernel.dk>
+Subject: Re: [PATCH 0/5] add initial io_uring_cmd support for sockets
+Precedence: bulk
+X-Mailing-List: mptcp@lists.linux.dev
+List-Id: <mptcp.lists.linux.dev>
+List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-On 4/11/23 8:51?AM, Willem de Bruijn wrote:
-> Jens Axboe wrote:
->> On 4/11/23 8:36?AM, David Ahern wrote:
->>> On 4/11/23 6:00 AM, Breno Leitao wrote:
->>>> I am not sure if avoiding io_uring details in network code is possible.
->>>>
->>>> The "struct proto"->uring_cmd callback implementation (tcp_uring_cmd()
->>>> in the TCP case) could be somewhere else, such as in the io_uring/
->>>> directory, but, I think it might be cleaner if these implementations are
->>>> closer to function assignment (in the network subsystem).
->>>>
->>>> And this function (tcp_uring_cmd() for instance) is the one that I am
->>>> planning to map io_uring CMDs to ioctls. Such as SOCKET_URING_OP_SIOCINQ
->>>> -> SIOCINQ.
->>>>
->>>> Please let me know if you have any other idea in mind.
->>>
->>> I am not convinced that this io_uring_cmd is needed. This is one
->>> in-kernel subsystem calling into another, and there are APIs for that.
->>> All of this set is ioctl based and as Willem noted a little refactoring
->>> separates the get_user/put_user out so that in-kernel can call can be
->>> made with existing ops.
->>
->> How do you want to wire it up then? We can't use fops->unlocked_ioctl()
->> obviously, and we already have ->uring_cmd() for this purpose.
+Jens Axboe wrote:
+> On 4/11/23 8:51?AM, Willem de Bruijn wrote:
+> > Jens Axboe wrote:
+> >> On 4/11/23 8:36?AM, David Ahern wrote:
+> >>> On 4/11/23 6:00 AM, Breno Leitao wrote:
+> >>>> I am not sure if avoiding io_uring details in network code is possible.
+> >>>>
+> >>>> The "struct proto"->uring_cmd callback implementation (tcp_uring_cmd()
+> >>>> in the TCP case) could be somewhere else, such as in the io_uring/
+> >>>> directory, but, I think it might be cleaner if these implementations are
+> >>>> closer to function assignment (in the network subsystem).
+> >>>>
+> >>>> And this function (tcp_uring_cmd() for instance) is the one that I am
+> >>>> planning to map io_uring CMDs to ioctls. Such as SOCKET_URING_OP_SIOCINQ
+> >>>> -> SIOCINQ.
+> >>>>
+> >>>> Please let me know if you have any other idea in mind.
+> >>>
+> >>> I am not convinced that this io_uring_cmd is needed. This is one
+> >>> in-kernel subsystem calling into another, and there are APIs for that.
+> >>> All of this set is ioctl based and as Willem noted a little refactoring
+> >>> separates the get_user/put_user out so that in-kernel can call can be
+> >>> made with existing ops.
+> >>
+> >> How do you want to wire it up then? We can't use fops->unlocked_ioctl()
+> >> obviously, and we already have ->uring_cmd() for this purpose.
+> > 
+> > Does this suggestion not work?
 > 
-> Does this suggestion not work?
+> Not sure I follow, what suggestion?
+>
 
-Not sure I follow, what suggestion?
+This quote from earlier in the thread:
 
->>> I was thinking just having sock_uring_cmd call sock->ops->ioctl, like
->>> sock_do_ioctl.
->  
->> I do think the right thing to do is have a common helper that returns
->> whatever value you want (or sets it), and split the ioctl parts into a
->> wrapper around that that simply copies in/out as needed. Then
->> ->uring_cmd() could call that, or you could some exported function that
->> does supports that.
->>
->> This works for the basic cases, though I do suspect we'll want to go
->> down the ->uring_cmd() at some point for more advanced cases or cases
->> that cannot sanely be done in an ioctl fashion.
+I was thinking just having sock_uring_cmd call sock->ops->ioctl, like
+sock_do_ioctl.
+> >  
+> >> I do think the right thing to do is have a common helper that returns
+> >> whatever value you want (or sets it), and split the ioctl parts into a
+> >> wrapper around that that simply copies in/out as needed. Then
+> >> ->uring_cmd() could call that, or you could some exported function that
+> >> does supports that.
+> >>
+> >> This works for the basic cases, though I do suspect we'll want to go
+> >> down the ->uring_cmd() at some point for more advanced cases or cases
+> >> that cannot sanely be done in an ioctl fashion.
+> > 
+> > Right now the two examples are ioctls that return an integer. Do you 
+> > already have other calls in mind? That would help estimate whether
+> > ->uring_cmd() indeed will be needed and we might as well do it now.
 > 
-> Right now the two examples are ioctls that return an integer. Do you 
-> already have other calls in mind? That would help estimate whether
-> ->uring_cmd() indeed will be needed and we might as well do it now.
+> Right, it's a proof of concept. But we'd want to support anything that
+> setsockopt/getsockopt would do. This is necessary so that direct
+> descriptors (eg ones that describe a struct file that isn't in the
+> process file table or have a regular fd) can be used for anything that a
+> regular file can. Beyond that, perhaps various things necessary for
+> efficient zero copy rx.
+> 
+> I do think we can make the ->uring_cmd() hookup a bit more palatable in
+> terms of API. It really should be just a sub-opcode and then arguments
+> to support that. The grunt of the work is really refactoring the ioctl
+> and set/getsockopt bits so that they can be called in-kernel rather than
+> assuming copy in/out is needed. Once that is done, the actual uring_cmd
+> hookup should be simple and trivial.
 
-Right, it's a proof of concept. But we'd want to support anything that
-setsockopt/getsockopt would do. This is necessary so that direct
-descriptors (eg ones that describe a struct file that isn't in the
-process file table or have a regular fd) can be used for anything that a
-regular file can. Beyond that, perhaps various things necessary for
-efficient zero copy rx.
+That sounds like what I proposed above. That suggestion was only for
+the narrow case where ioctls return an integer. The general approach
+has to handle any put_user.
 
-I do think we can make the ->uring_cmd() hookup a bit more palatable in
-terms of API. It really should be just a sub-opcode and then arguments
-to support that. The grunt of the work is really refactoring the ioctl
-and set/getsockopt bits so that they can be called in-kernel rather than
-assuming copy in/out is needed. Once that is done, the actual uring_cmd
-hookup should be simple and trivial.
+Though my initial skim of TCP, UDP and RAW did not bring up any other
+forms.
 
--- 
-Jens Axboe
+getsockopt indeed has plenty of examples, such as receive zerocopy.
 
