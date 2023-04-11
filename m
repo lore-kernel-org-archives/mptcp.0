@@ -1,46 +1,47 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E2C9475
-	for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 20:42:27 +0000 (UTC)
-Received: by mail-wm1-f54.google.com with SMTP id gw11-20020a05600c850b00b003f07d305b32so6111604wmb.4
-        for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 13:42:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C2C9473
+	for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 20:42:28 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id v14-20020a05600c470e00b003f06520825fso10347240wmo.0
+        for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 13:42:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1681245745;
+        d=tessares.net; s=google; t=1681245746;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ThABOxRzB1jOSc6wyzWaQirUycxd5ifOhlieHpINE4U=;
-        b=vfp9P0kk4rWxJMhykJb2fbP+oVEyogltUROSwdrkl7exUPWGjLd1FcFfF4pxPdTdC6
-         JZoQ6VcCLAcKDvl5E6FJ2na+rtrkXFP8XvmvBnFp5RX95KgDurOKu+BTfNEE4UMYZQWX
-         0D6FTm7/L6DMLs1abSASabUt+ezPGoBgs533paCgjt2anJjlYFyrp5QQ0A6s+gmtxW5s
-         iQ5tjraZSKbG2Q6P3QhF4LnqoIdQpkFIT+FTMO197mJQ1pnWLgk6iz3OJYgiqdejnvbH
-         NRTsc2hw97fi8SEWiddVlVsOXGmq7Ad5vtH8kRXjAV9e0RCBdggnBk7yG26qU1LbX5AL
-         DNBw==
+        bh=iJSkDzvHDv+IldvOKYCUeGWLBa1YxITsKTNgz5UKiD4=;
+        b=0yNawdYCXfHfH1a2o5KD4daFIw5hxojs6Vivsduai6u32Icbn0QMEKlF5qVaEZydDS
+         ZTi9tokkuRtihm1pcqaeBvUBvBhvYDEm/l2HgI7DYHn5HZyqah9ur1KYEiAJrVRHsdat
+         qRpEIWdvc3CC2VJ/LyrPBmaKibCPdsCFRYIz7fxF1COXjWcgpaSbP/+1pUZpcdtmCfsI
+         j6Q2FG2UXt77b61OSneGev8C9QKvzefw+IAMTDuoTWa431wBo/XBJuh4VkkpXAd+hjFn
+         +nZAPNILDcvS/6x24zbu+Hc+1/r3wQ78p5c+9llT4dXddUY9oAOq0WtF+cdbZfagIt4v
+         wheg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681245745;
+        d=1e100.net; s=20210112; t=1681245746;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ThABOxRzB1jOSc6wyzWaQirUycxd5ifOhlieHpINE4U=;
-        b=UwpdTITLzt9l9EICJCVZOaYEvado6AZw5GEO0Eb9fY4QpKPxEEkxLjwVz1uixviigz
-         f4RzpZzLHfTtWBKzKhfz1mezx6ywU9ubcgtdB69nktK6qTFymjOZRmqDAIYpd7yR34pT
-         xLhI4EukATCoMmgk9z7sR5kvoqir3hWsrFSsExBKgYKDQoFbpTB1Zkt5UCeHYx2ADXlF
-         Xlvfu11YdXmLl6jmiaq9jwSg6plWNRJp7Kuujv8AHka2uDz6QQusa8LqdaAnOfLm1YHJ
-         c+HCe5l4eZZQfRH3U4btpVw9HQH8VZjq+FTKLcLMLcgh12LVwS9Zhu+YLjoWzl0Fpem8
-         C8kw==
-X-Gm-Message-State: AAQBX9fA2byyXWAaO3loE3XC/ohbhuMd2KHbcR+BYU9xSiqeQo13/tgg
-	EJM0o2DI85/yVAkJdfZdRJrZhIzKdBxvpH9bXAKZRA==
-X-Google-Smtp-Source: AKy350YaAE8OeYg5muwH7x63CSEWe7p7/VwqyNevtW+epcooOR8ka+kGPDMpNIocSebB/6TGukRTew==
-X-Received: by 2002:a7b:cd18:0:b0:3ed:ce50:435a with SMTP id f24-20020a7bcd18000000b003edce50435amr7701116wmj.10.1681245745475;
-        Tue, 11 Apr 2023 13:42:25 -0700 (PDT)
+        bh=iJSkDzvHDv+IldvOKYCUeGWLBa1YxITsKTNgz5UKiD4=;
+        b=X7HKf8O4jQFrvZBtcGulpKsX2EsSyBcevE5pMQnrap5ZaeHKzf4Wom12m668czOqYx
+         TNXCEWw5L5f3HPJh8Yc0zeSAnrDFCFo+KgT/WO3p0UakUaoUGYVo6eshzaMrPf6vdZJi
+         x7U+mWZSUm34yh/LIWzH1hCObjey7rz/S3XllS6rih9D7/pr46wwyw7cbHslhh+8RnkG
+         YjvNr4A3/6O3mWaku6+wQbbIGurDY5WUVLfwk35s/I76jcjZLBILJ098i33GI9TyIyzC
+         s2LSAbL0u8yCDSesPcWvMqxmvmevapyjbX9jUcVTfvxm70SL8/W2Cjs8xspaHf6tclg3
+         rwNQ==
+X-Gm-Message-State: AAQBX9d/gT0fwvQk3mc7qEn4+U424clI8vuIkcvRiKWn2iDM6WIBV7gH
+	T21vZN9ZElLkCVUlv9B4VD55yA==
+X-Google-Smtp-Source: AKy350aIa6jYhKVLXpHR/Nd/AgNCfOHPkHJFHkAnJcVDq7eVZ/9K1b7yxtV82ST3VPC1yLZBlohU/g==
+X-Received: by 2002:a05:600c:1e25:b0:3ed:24f7:2b48 with SMTP id ay37-20020a05600c1e2500b003ed24f72b48mr279773wmb.8.1681245746479;
+        Tue, 11 Apr 2023 13:42:26 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id p23-20020a1c7417000000b003f0824e8c92sm86887wmc.7.2023.04.11.13.42.24
+        by smtp.gmail.com with ESMTPSA id p23-20020a1c7417000000b003f0824e8c92sm86887wmc.7.2023.04.11.13.42.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 13:42:25 -0700 (PDT)
+        Tue, 11 Apr 2023 13:42:26 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Tue, 11 Apr 2023 22:42:10 +0200
-Subject: [PATCH net 2/4] mptcp: stricter state check in mptcp_worker
+Date: Tue, 11 Apr 2023 22:42:11 +0200
+Subject: [PATCH net 3/4] mptcp: fix NULL pointer dereference on fastopen
+ early fallback
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230411-upstream-net-20230411-mptcp-fixes-v1-2-ca540f3ef986@tessares.net>
+Message-Id: <20230411-upstream-net-20230411-mptcp-fixes-v1-3-ca540f3ef986@tessares.net>
 References: <20230411-upstream-net-20230411-mptcp-fixes-v1-0-ca540f3ef986@tessares.net>
 In-Reply-To: <20230411-upstream-net-20230411-mptcp-fixes-v1-0-ca540f3ef986@tessares.net>
 To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
@@ -59,100 +60,69 @@ To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>,
  Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang.tang@suse.com>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org, 
- Christoph Paasch <cpaasch@apple.com>
+ Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2953;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1313;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=J9zcdQyThTTtsTWaVj72ahLWvIQIgNH67+VqXIn1Uuo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkNcYuEH/UqLGCEVfX4sXwfz++pATil6ANN409h
- KapHdhmnNGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZDXGLgAKCRD2t4JPQmmg
- cxyhD/oDKk5lIhohbniVijmI9kVeFLo+mvcl2/XdEzTCT1KWG2v5P8h6odWGKLcPq+oVkozG78M
- 8vK6c2kDXAuZCJzGccIiXoMyz9gIidrbVYaQMTy1rznD0Q9kFRM1pG8xQZatGzwdZIx8m3KIrWm
- MGSyDLLLJSNb/Ahdpi0kVZevSaMJ7m6ltA3/EgBrzfknJWXeQdsTkO663jaqEjap1Q2rFBafypN
- oPet/tcSyoznsvHCclLiQW2EeYW+jCYG+DOQJ/Cim2LBnGxH7TL5+RABmNHUWH//m0tp4fQQQ2y
- QBFFU+98X3wyzqE0ZrlgUF+tpu1KqH+adRMq/1zB0UB5py9pirKI5jjLwgS1jPgzPdNaSxudBXp
- QhBkAXK4qT1wMWr28cKQjUcXE9rHc9U1KEk60w5ucmZA7yH6F2b7PvtZPGyKTllxRwvyesI7H9s
- xsDoDuvUsaT7pCot2kpYmqG0kTzRP8sT9QiG8wZ2KMQD8Liy0AL2WmlWc+AaAt00ehyFdSojQLj
- eSo/0Mu3y+Yq14w0D58U91WubWL/cbyDjIEL6qKQyQEQ5N9Eoboq9S95/JfKESzJK7maq1nIkej
- eKyiE6kNPBSX9jEh3qe5A/AYIl98t4IvYpm6/IGZa8cJsFncyMODa8hyDQxSfS7fVs5u4z/oUqq
- 2DJiXiAYkKtFoLA==
+ bh=M0lbg2vrKXi+X9w75ix6Wwp/oOxfY96lIrVHUJdPEwE=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkNcYuUYRtIKl0zwJ/mKGDzxR9gRBkAHRRLlrq4
+ oIYSLoVXneJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZDXGLgAKCRD2t4JPQmmg
+ c2/hEACJPabxn8n8GOLIdaDIhZa3hSUPMXr+LVjq3jLWwu2tFeLrppZQpoNO50UqV5Lui8cDLjw
+ JH1Y6vIxKp1Bptqd194v+luCJ3HvCC+oshWSCDjfRD1nHSNE41BMe52hiFk+a1RBfiUhxwA6MLb
+ QMy/EDQMJYJyJrJnGsH3tOBHN8oQFXlfqj1Oe++zYK3joDZFIgJRJq1UNUIfsrBA/LQsb28KPe3
+ UhSL/xflT3pdVZzzAG1R0jhLAIjOf/MpD82d3rmQLaz1AAB/1sCqSQRgjQFEPKjYPHXLrjO4Ud0
+ ks7j9FOefboDIUG1zEe6xOJuGPHUV9vHDL1DTXkSHLKzgrBOryPELBNfMauvzlEcAUr5HJJsXEL
+ l0IWbret5sg+uWszLZth+6nv8XU5MOkmA1HRaQcbFdg6Ni+KVe7XFuroxMeU9vd+y9H6OqlnEep
+ zWi12vS5L+5zvmPZlfkIBwOBH3y13xIqa68AL/3SasDxeG5sncUZLI2tSFu6l2Hgxsh7yj6Kg2z
+ vc55pl0aIjoRU9Lv0a1e79/y309ZUK6iHwaUtj6wHNgrI58IP/3PjXvVyIaUvwcTnUJ8osQp+AW
+ 07Qdpdn1CQhNnhhAPQeTCfShcCvBISudqowh+fQBf7tInGC0v7sACxSfqxyD6U6V2+au0tFkE3w
+ KHw2vyIrQNnmdBg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-As reported by Christoph, the mptcp protocol can run the
-worker when the relevant msk socket is in an unexpected state:
+In case of early fallback to TCP, subflow_syn_recv_sock() deletes
+the subflow context before returning the newly allocated sock to
+the caller.
 
-connect()
-// incoming reset + fastclose
-// the mptcp worker is scheduled
-mptcp_disconnect()
-// msk is now CLOSED
-listen()
-mptcp_worker()
+The fastopen path does not cope with the above unconditionally
+dereferencing the subflow context.
 
-Leading to the following splat:
-
-divide error: 0000 [#1] PREEMPT SMP
-CPU: 1 PID: 21 Comm: kworker/1:0 Not tainted 6.3.0-rc1-gde5e8fd0123c #11
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
-Workqueue: events mptcp_worker
-RIP: 0010:__tcp_select_window+0x22c/0x4b0 net/ipv4/tcp_output.c:3018
-RSP: 0018:ffffc900000b3c98 EFLAGS: 00010293
-RAX: 000000000000ffd7 RBX: 000000000000ffd7 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8214ce97 RDI: 0000000000000004
-RBP: 000000000000ffd7 R08: 0000000000000004 R09: 0000000000010000
-R10: 000000000000ffd7 R11: ffff888005afa148 R12: 000000000000ffd7
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff88803ed00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000405270 CR3: 000000003011e006 CR4: 0000000000370ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- tcp_select_window net/ipv4/tcp_output.c:262 [inline]
- __tcp_transmit_skb+0x356/0x1280 net/ipv4/tcp_output.c:1345
- tcp_transmit_skb net/ipv4/tcp_output.c:1417 [inline]
- tcp_send_active_reset+0x13e/0x320 net/ipv4/tcp_output.c:3459
- mptcp_check_fastclose net/mptcp/protocol.c:2530 [inline]
- mptcp_worker+0x6c7/0x800 net/mptcp/protocol.c:2705
- process_one_work+0x3bd/0x950 kernel/workqueue.c:2390
- worker_thread+0x5b/0x610 kernel/workqueue.c:2537
- kthread+0x138/0x170 kernel/kthread.c:376
- ret_from_fork+0x2c/0x50 arch/x86/entry/entry_64.S:308
- </TASK>
-
-This change addresses the issue explicitly checking for bad states
-before running the mptcp worker.
-
-Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
+Fixes: 36b122baf6a8 ("mptcp: add subflow_v(4,6)_send_synack()")
 Cc: stable@vger.kernel.org
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/374
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Tested-by: Christoph Paasch <cpaasch@apple.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/fastopen.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 60b23b2716c4..06c5872e3b00 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2626,7 +2626,7 @@ static void mptcp_worker(struct work_struct *work)
+diff --git a/net/mptcp/fastopen.c b/net/mptcp/fastopen.c
+index d237d142171c..bceaab8dd8e4 100644
+--- a/net/mptcp/fastopen.c
++++ b/net/mptcp/fastopen.c
+@@ -9,11 +9,18 @@
+ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subflow,
+ 					      struct request_sock *req)
+ {
+-	struct sock *ssk = subflow->tcp_sock;
+-	struct sock *sk = subflow->conn;
++	struct sock *sk, *ssk;
+ 	struct sk_buff *skb;
+ 	struct tcp_sock *tp;
  
- 	lock_sock(sk);
- 	state = sk->sk_state;
--	if (unlikely(state == TCP_CLOSE))
-+	if (unlikely((1 << state) & (TCPF_CLOSE | TCPF_LISTEN)))
- 		goto unlock;
++	/* on early fallback the subflow context is deleted by
++	 * subflow_syn_recv_sock()
++	 */
++	if (!subflow)
++		return;
++
++	ssk = subflow->tcp_sock;
++	sk = subflow->conn;
+ 	tp = tcp_sk(ssk);
  
- 	mptcp_check_data_fin_ack(sk);
+ 	subflow->is_mptfo = 1;
 
 -- 
 2.39.2
