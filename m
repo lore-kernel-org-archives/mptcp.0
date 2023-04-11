@@ -1,135 +1,113 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C68F28EE
-	for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 15:17:56 +0000 (UTC)
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7607a12cfd3so2869939f.1
-        for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 08:17:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275F028EE
+	for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 15:18:16 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5047074939fso16893727a12.1
+        for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 08:18:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112; t=1681226275;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=tessares.net; s=google; t=1681226295;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=EKa9vfhk8fWfVEyyFRSYlQGodtOxRM3cBgC7nPc2RUw=;
-        b=0wa2bOqaU+MMRmMY52v0O1jnHzxBGA60OdAJeGWlzzPGGR9oN4Acfx8NJMjzQe8F/M
-         ou21tMDCsa1i1pEt481881+H/O6S5KsnhIUfSXPH6kxnk3lPjg6XrwzbMehzS4eAUtai
-         csP+DrgYpgTrntay5AE+YW0PSAw50GKLATwO7PluUS0rxGZs2npLjcPPNoPilYiZe3XF
-         enziKtkF4hOa8DMd6wPtlV4Wf8WF+69kU/ebhkUn4P5rVBxafFztysDJKDVWTEhOeCEC
-         7mumjYFYaaG2+g3MMmTE/Bi3w/nb3p6pK2AVj0gY6iDvUbaFonWfjgDbIQVJVlB90BGn
-         XjtA==
+        bh=FWUNQnZ5IGLENSlcyE5EnzDCOGMpMV3nVoWoS6ehi8c=;
+        b=2KXc5K+JERqBBn5ckTbdEEyZ9AHrPaXxlcrFilnT2vVOemhWUMivSkuOd34Uzwd3PK
+         +TTW8L1KxZ2S1rZlJN8QZ+146m50Zu3o2kqkCeHgt5aMru4C7+qgJrkbpjtilGO6zzeB
+         SVqBVVyWU6Jd/k0gYjVpHYLRYw3juvdt8IDrPBU1ZvcemM4D3FmzTZYebQ5M5yuc7x0b
+         kKHkjTcF83O2LifZtygCyn80KgwJhMauSd/NuXoycgflCKkrD0P1SdOswqWjcrCia1G1
+         Pu7kmP96K5g0lY+4hQj7EzKge4cn+M2DNCIk32hgYPbe3JNOfQJKmY91j6e7N6BsCC4+
+         IOqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681226275;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20210112; t=1681226295;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EKa9vfhk8fWfVEyyFRSYlQGodtOxRM3cBgC7nPc2RUw=;
-        b=hwcXgbD9a1+MzyxdUtJV5PsoA5p9wqTF/e81JfhYjIdSNEDvJ3ZPj7aS6oAMkdgWfn
-         JVsrG8vkhri3h6PkbVzOtx/ESJv53dKlR+3hykBlenzk/B1HniMLLArPQKgjRgEHK155
-         q20dSXOwOXTkjQvHkPk417mx3q97cKVWOMHUUerGuUjWcUvl5fc1YpZSQr0f2+Ie8cW9
-         dKqkAUzgdR0Ml4B6Mc8u42oH4OXdsgr6BVb87J9+vx5U3FSD1EL3IOINQbt0tI7LU1/2
-         xVtIGBpQs+B5ivFaeBCQCHQsTJ4mJvyD6ZA4JTC9Dft22290bXlohdmrWOResnKvAdyw
-         DPDg==
-X-Gm-Message-State: AAQBX9eSdURbolDAnTqSmvajM1Y8RpKNVNK0SOIv1bSV6qNJAFw7fyKn
-	pHb2BoRf7HclKGL3C1us9PImZA==
-X-Google-Smtp-Source: AKy350awgP7upH1oGzwb0nt0C364ALZg4lHY8iZS5MvbkBnmbmAvrYl10aLtZIQ+uIzLTrIEeDbKWQ==
-X-Received: by 2002:a05:6602:2b91:b0:75c:f48c:2075 with SMTP id r17-20020a0566022b9100b0075cf48c2075mr7019947iov.2.1681226275104;
-        Tue, 11 Apr 2023 08:17:55 -0700 (PDT)
-Received: from [192.168.1.94] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id z27-20020a056638215b00b003acde48bdc3sm3940376jaj.111.2023.04.11.08.17.54
+        bh=FWUNQnZ5IGLENSlcyE5EnzDCOGMpMV3nVoWoS6ehi8c=;
+        b=YuMA//l6lmR/QKN1vCIYDl5e6BCEBY4/DPDVj2CbWAAL+asWcpUusNZUCai/K0/hNv
+         PMGEde73vDa3aZVtSrAnub8a8czoSbMKBxCiqYkNRNixPs7pwclSEN94GRQuL+duoB9V
+         2/kRaLyPKSpqw0Bj/9SZyY7KNsMjTeEFJDHnBafX1uw3eMX50xJ3YI8JZBBuYL+NYOXA
+         phPPolHQuf/VprIzhLf4i3UBW2E2F+bsEq5fEUfXS/GixPFTeehQtppUqtMTr2ndltL8
+         hPQjjYP32he5JDFZFI27m6or6pZYoctG0Y9rtFEACKISMXMQNi90md26xovGdArG01V9
+         vB6Q==
+X-Gm-Message-State: AAQBX9eiXw8LdILLrVXqVzE5PUJRvPDxveKE9x+mH/tb9mv/m64qBsWQ
+	h3GYjIdRLy3YPkUNdKZKDKP1QQ==
+X-Google-Smtp-Source: AKy350aJbmjteQ+ozupIW517GyMUz9fQPPw3r8jV9eNskE92l7+OtsnF/OTuCuhlPDGOOCELTQ5JtQ==
+X-Received: by 2002:a05:6402:26cc:b0:504:999f:525a with SMTP id x12-20020a05640226cc00b00504999f525amr7267773edd.20.1681226294935;
+        Tue, 11 Apr 2023 08:18:14 -0700 (PDT)
+Received: from [10.44.2.5] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id 16-20020a170906021000b00949691d3183sm6204721ejd.36.2023.04.11.08.18.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Apr 2023 08:17:54 -0700 (PDT)
-Message-ID: <b56c03b3-d948-2fdf-bc5d-635ecfdf1592@kernel.dk>
-Date: Tue, 11 Apr 2023 09:17:52 -0600
+        Tue, 11 Apr 2023 08:18:14 -0700 (PDT)
+Message-ID: <f83fe4a6-8d42-cc33-6f51-9e4d4086024e@tessares.net>
+Date: Tue, 11 Apr 2023 17:18:13 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 0/5] add initial io_uring_cmd support for sockets
-Content-Language: en-US
-To: David Ahern <dsahern@kernel.org>, Breno Leitao <leitao@debian.org>
-Cc: Willem de Bruijn <willemb@google.com>, io-uring@vger.kernel.org,
- netdev@vger.kernel.org, kuba@kernel.org, asml.silence@gmail.com,
- leit@fb.com, edumazet@google.com, pabeni@redhat.com, davem@davemloft.net,
- dccp@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org,
- willemdebruijn.kernel@gmail.com, matthieu.baerts@tessares.net,
- marcelo.leitner@gmail.com
-References: <20230406144330.1932798-1-leitao@debian.org>
- <CA+FuTSeKpOJVqcneCoh_4x4OuK1iE0Tr6f3rSNrQiR-OUgjWow@mail.gmail.com>
- <ZC7seVq7St6UnKjl@gmail.com>
- <CA+FuTSf9LEhzjBey_Nm_-vN0ZjvtBSQkcDWS+5uBnLmr8Qh5uA@mail.gmail.com>
- <e576f6fe-d1f3-93cd-cb94-c0ae115299d8@kernel.org>
- <ZDVLyi1PahE0sfci@gmail.com>
- <75e3c434-eb8b-66e5-5768-ca0f906979a1@kernel.org>
- <67831406-8d2f-feff-f56b-d0f002a95d96@kernel.dk>
- <ea36790d-b2fe-0b4d-1bfc-be7b20b1614b@kernel.org>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <ea36790d-b2fe-0b4d-1bfc-be7b20b1614b@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH mptcp-next 0/3] mptcp: misc. small cleanups
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Abaci Robot <abaci@linux.alibaba.com>,
+ Mat Martineau <martineau@kernel.org>,
+ Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+References: <20230329-mptcp-misc-cleanups-v1-0-a839001f0b05@tessares.net>
+ <1861e413e6befae96bddaa8b7ec25b52b1073c3c.camel@redhat.com>
+Content-Language: en-GB
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <1861e413e6befae96bddaa8b7ec25b52b1073c3c.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/11/23 9:10?AM, David Ahern wrote:
-> On 4/11/23 8:41 AM, Jens Axboe wrote:
->> On 4/11/23 8:36?AM, David Ahern wrote:
->>> On 4/11/23 6:00 AM, Breno Leitao wrote:
->>>> I am not sure if avoiding io_uring details in network code is possible.
->>>>
->>>> The "struct proto"->uring_cmd callback implementation (tcp_uring_cmd()
->>>> in the TCP case) could be somewhere else, such as in the io_uring/
->>>> directory, but, I think it might be cleaner if these implementations are
->>>> closer to function assignment (in the network subsystem).
->>>>
->>>> And this function (tcp_uring_cmd() for instance) is the one that I am
->>>> planning to map io_uring CMDs to ioctls. Such as SOCKET_URING_OP_SIOCINQ
->>>> -> SIOCINQ.
->>>>
->>>> Please let me know if you have any other idea in mind.
->>>
->>> I am not convinced that this io_uring_cmd is needed. This is one
->>> in-kernel subsystem calling into another, and there are APIs for that.
->>> All of this set is ioctl based and as Willem noted a little refactoring
->>> separates the get_user/put_user out so that in-kernel can call can be
->>> made with existing ops.
+Hi Paolo,
+
+On 07/04/2023 15:25, Paolo Abeni wrote:
+> On Wed, 2023-03-29 at 15:17 +0200, Matthieu Baerts wrote:
+>> Here is a series of small unrelated cleanups, nothing very important nor
+>> big.
 >>
->> How do you want to wire it up then? We can't use fops->unlocked_ioctl()
->> obviously, and we already have ->uring_cmd() for this purpose.
+>> I don't know if the modification of the MAINTAINERS file should go in
+>> -net instead.
 >>
->> I do think the right thing to do is have a common helper that returns
->> whatever value you want (or sets it), and split the ioctl parts into a
->> wrapper around that that simply copies in/out as needed. Then
->> ->uring_cmd() could call that, or you could some exported function that
->> does supports that.
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> ---
+>> Matthieu Baerts (3):
+>>       MAINTAINERS: add git trees for MPTCP
+>>       mptcp: remove unused 'remaining' variable
+>>       selftests: mptcp: remove duplicated entries in usage
 >>
->> This works for the basic cases, though I do suspect we'll want to go
->> down the ->uring_cmd() at some point for more advanced cases or cases
->> that cannot sanely be done in an ioctl fashion.
->>
+>>  MAINTAINERS                                       | 2 ++
+>>  net/mptcp/options.c                               | 7 ++-----
+>>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 8 ++++----
+>>  3 files changed, 8 insertions(+), 9 deletions(-)
+>> ---
+>> base-commit: b2c5489c86ee1881dae3bc431ff6f284eb74f7ef
+>> change-id: 20230329-mptcp-misc-cleanups-90754eb81610
 > 
-> My meta point is that there are uapis today to return this information
-> to applications (and I suspect this is just the start of more networking
-> changes - both data retrieval and adjusting settings). io_uring is
-> wanting to do this on behalf of the application without a syscall. That
-> makes io_uring yet another subsystem / component managing a socket. Any
-> change to the networking stack required by io_uring should be usable by
-> all other in-kernel socket owners or managers. ie., there is no reason
-> for io_uring specific code here.
+> LGTM, nice cleanups!
+> 
+> For the series:
+> 
+> Acked-by: Paolo Abeni <pabeni@redhat.com>
 
-I think we are in violent agreement here, what I'm describing is exactly
-that - it'd make ioctl/{set,get}sockopt call into the same helpers that
-->uring_cmd() would, with the only difference being that the former
-would need copy in/out and the latter would not.
+Thank you for the review!
 
-But let me just stress that for direct descriptors, we cannot currently
-call ioctl or set/getsockopt. This means we have to instantiate a
-regular descriptor first, do those things, then register it to never use
-the regular file descriptor again. That's wasteful, and this is what we
-want to enable (direct use of ioctl set/getsockopt WITHOUT a normal file
-descriptor). It's not just for "oh it'd be handy to also do this from
-io_uring" even if that would be a worthwhile goal in itself.
+Now in our tree (feat. for net-next):
 
+New patches for t/upstream:
+- 144a31d2ebfc: MAINTAINERS: add git trees for MPTCP
+- 4cd4a5a79d58: mptcp: remove unused 'remaining' variable
+- d61fbc5070ca: selftests: mptcp: remove duplicated entries in usage
+- Results: d11915457436..34df362b6d0a (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230411T150102
+
+Cheers,
+Matt
 -- 
-Jens Axboe
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
