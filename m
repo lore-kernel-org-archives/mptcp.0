@@ -1,148 +1,116 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFCC611A
-	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 14:28:43 +0000 (UTC)
-Received: by mail-qt1-f171.google.com with SMTP id cm23so2870253qtb.3
-        for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 07:28:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893733205
+	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 14:36:48 +0000 (UTC)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-3ee6c339cceso63645e9.0
+        for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 07:36:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681309722; x=1683901722;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1681310207; x=1683902207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g3csUU+MZIL4psk3MHBw1EHOXxochpb77aPV46ZLfuc=;
-        b=aI6Q+2c2WaaTUQarPujC9vC4U+H06kMJ1qHxGql7eaQVoNPr4VI6/vTF20Gq0LrCOd
-         JUDyMJIC+/nGqr4gtxOQDYTlG2rqjsjPSXCJYVDyNnU7/visH6dzicAcsw917ORO/PW+
-         B+kYVJaEtQZ45dAnLsOgIl9PZq6Zz8f7E5ziG10GSCSsba7CEp8sJDNhd9m92KhZoJMd
-         +CEN2d4h/EVQRnzpA5ZyXzrN/4q9QwRHGNJXRrCpW0MUpzEmo2oEht0vdZE92tU7+cew
-         0TtCqPXhwtAvPD1w+obFG/+LpXEfiMk9/oSZ3bZaBHgysbET3Mze4e+lQ9YDtaTuv2Bo
-         Kt8A==
+        bh=BQ5Da21SHvC9nshSJadPY72sAw8THhs3ruWeBsGMVQc=;
+        b=WWKl3pXEEO1YhmfXqQay1x8DDLSi6WmwxnUh4bTKkRUE71/Zv2tXzVRfxfdjgGDksF
+         5lgB3rPC8EyndkRXLFOv4vC+ZpudF8JNK7NFIrW93D+A46dJL1G1iJofP9yuxhMAlAMf
+         pExqsY4lUS3sRrDpXsWoXCKrU6JzHLo6jBakEnkYBCtQxh+TxEOgAbNhd4eztbI6dyDJ
+         0aStdgaShuqFnTGZTpenmLVacRNr6HUghKqOlLhDdB8nwk0gIRIZkrgTWfFM79gnSQNJ
+         tGqZPCw7jp7h6YK0l9W+0ymeGYpD7KdP7xCa3YQ791OeTiGR83QZKDQ3Bix/4rgsBZoQ
+         SzwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681309722; x=1683901722;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=g3csUU+MZIL4psk3MHBw1EHOXxochpb77aPV46ZLfuc=;
-        b=if0O5gzIQBTvu84zBGpgM6/cdJTezZN9d1oAVVL1zlqJzjtckU29NlTMrVYcHBLCi/
-         nvYy5LPByOAVqjU64FMa2iU4SOabUMUWDUr0V4LjTYJDcuK7SBEpqo6W7PA0znJ7SvX6
-         Iq6WgM4xCSsujP+6LmNDqrQAHIlAtZJh3VjSF7G5ARs2wx2nczai9gc/P0xwqlZ5lHur
-         YyBLkTjZXZi8QEcm2NHzZbQHp6Om/sF6Pu3UqXBcxFh5wvLuycsfYpfe5GMR5quRo2TC
-         qJbRzsXUaTOaCPUdSHG3W9JIgZkL/trwkVIQiwq6RYIir6ykg7B/HSQ+fExi9Xb4e3B5
-         tX/w==
-X-Gm-Message-State: AAQBX9eC0sttAVPiDtMF0WgoNMee8y0fxYHZybpWSp/O01wSp+ik6inW
-	j3UZh2sbZOVHBxHP09MXAkU=
-X-Google-Smtp-Source: AKy350Y9tE06l148YDTVFtOEKyW0JshhF+aM8qF7BkYMcr6VkzIdVIBtB5Ltrqx2TDstNnLe4jBZWQ==
-X-Received: by 2002:a05:622a:14e:b0:3e3:3941:d167 with SMTP id v14-20020a05622a014e00b003e33941d167mr29755868qtw.34.1681309722274;
-        Wed, 12 Apr 2023 07:28:42 -0700 (PDT)
-Received: from localhost (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
-        by smtp.gmail.com with ESMTPSA id t12-20020a37aa0c000000b007468b183a65sm257126qke.30.2023.04.12.07.28.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Apr 2023 07:28:41 -0700 (PDT)
-Date: Wed, 12 Apr 2023 10:28:41 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Breno Leitao <leitao@debian.org>, 
- Jens Axboe <axboe@kernel.dk>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- David Ahern <dsahern@kernel.org>, 
- Willem de Bruijn <willemb@google.com>, 
- io-uring@vger.kernel.org, 
- netdev@vger.kernel.org, 
- kuba@kernel.org, 
- asml.silence@gmail.com, 
- leit@fb.com, 
- edumazet@google.com, 
- pabeni@redhat.com, 
- davem@davemloft.net, 
- dccp@vger.kernel.org, 
- mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, 
- matthieu.baerts@tessares.net, 
- marcelo.leitner@gmail.com
-Message-ID: <6436c01979c9b_163b6294b4@willemb.c.googlers.com.notmuch>
-In-Reply-To: <ZDa32u9RNI4NQ7Ko@gmail.com>
-References: <e576f6fe-d1f3-93cd-cb94-c0ae115299d8@kernel.org>
- <ZDVLyi1PahE0sfci@gmail.com>
- <75e3c434-eb8b-66e5-5768-ca0f906979a1@kernel.org>
- <67831406-8d2f-feff-f56b-d0f002a95d96@kernel.dk>
- <643573df81e20_11117c2942@willemb.c.googlers.com.notmuch>
- <036c80e5-4844-5c84-304c-7e553fe17a9b@kernel.dk>
- <64357608c396d_113ebd294ba@willemb.c.googlers.com.notmuch>
- <19c69021-dce3-1a4a-00eb-920d1f404cfc@kernel.dk>
- <64357bb97fb19_114b22294c4@willemb.c.googlers.com.notmuch>
- <20cb4641-c765-e5ef-41cb-252be7721ce5@kernel.dk>
- <ZDa32u9RNI4NQ7Ko@gmail.com>
-Subject: Re: [PATCH 0/5] add initial io_uring_cmd support for sockets
+        d=1e100.net; s=20210112; t=1681310207; x=1683902207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BQ5Da21SHvC9nshSJadPY72sAw8THhs3ruWeBsGMVQc=;
+        b=cflL6g42vFYHTXuOc5SZBGzZh55bv3A+es6a+C8633oNOeL84oSa4rWNfkZSibXz6g
+         eXTFqzNUjuBennONr1+SpYmvzCeikmwEQrPvC/m+zC7IKf4bMz1HXhyaN8HApDmo1nd/
+         09PQLaHSOn1WYM5YMCke6vNNfQeJ8P6K9UxnARnofH6i7XmZdVh/Gu9KGGuug1l73Mxd
+         scX01xyZIexj7NgAjwiDXCSSnoNj2j1C8jI7ahjnbUdKMRh//oqndXagxnw6x6jDeF3b
+         3ZoKIIJfNcPJbjUmBv3NWagRgw0KOLYap92ieWcyfys7AZ9WCF6cRv9aQsL4YiQ+2eXg
+         oUBQ==
+X-Gm-Message-State: AAQBX9ex7P00QWyEz3d3T9olQ0vb1ASy/Q/ziUKmmY/wIli5xz6nwFwG
+	iSTT9x0Nk7i4Fd6GfwnUaGWKt9Bb0NpKmvgoefte/Q==
+X-Google-Smtp-Source: AKy350a6rl+G2vgp08/k903Rby90og7xTyRH0jFiW1fda+XtbApRhr+n5MF6Gwzk0H0ex1Vpy3gaPAcRejvDjKlyxOs=
+X-Received: by 2002:a05:600c:4fc6:b0:3ed:e6da:ffcd with SMTP id
+ o6-20020a05600c4fc600b003ede6daffcdmr428452wmq.7.1681310206647; Wed, 12 Apr
+ 2023 07:36:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <0000000000004afcae05a7041e98@google.com> <5272b58b-59b8-9ae7-38c7-2578a304e3de@tessares.net>
+ <CANp29Y5x13DD8n+aTypSGa5B7+VgOYRvCiSugHz7eFBZrKMZ1w@mail.gmail.com> <7c1b7cc3-82fc-4e72-7021-8d209bb3bd83@tessares.net>
+In-Reply-To: <7c1b7cc3-82fc-4e72-7021-8d209bb3bd83@tessares.net>
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Wed, 12 Apr 2023 16:36:34 +0200
+Message-ID: <CANp29Y4F=qM9L0F+2Yb6DH=JSiaUSdu-BSN-pSmMp4W0fpGCRg@mail.gmail.com>
+Subject: Re: INFO: task hung in corrupted (2)
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: syzbot <syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com>, 
+	syzkaller-bugs@googlegroups.com, syzbot <syzkaller@googlegroups.com>, 
+	MPTCP Upstream <mptcp@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Breno Leitao wrote:
-> On Tue, Apr 11, 2023 at 09:28:29AM -0600, Jens Axboe wrote:
-> > On 4/11/23 9:24?AM, Willem de Bruijn wrote:
-> > > Jens Axboe wrote:
-> > >> On 4/11/23 9:00?AM, Willem de Bruijn wrote:
-> > >> But that doesn't work, because sock->ops->ioctl() assumes the arg is
-> > >> memory in userspace. Or do you mean change all of the sock->ops->ioctl()
-> > >> to pass in on-stack memory (or similar) and have it work with a kernel
-> > >> address?
-> > > 
-> > > That was what I suggested indeed.
-> > > 
-> > > It's about as much code change as this patch series. But it avoids
-> > > the code duplication.
-> > 
-> > Breno, want to tackle that as a prep patch first? Should make the
-> > functional changes afterwards much more straightforward, and will allow
-> > support for anything really.
-> 
-> Absolutely. I just want to make sure that I got the proper approach that
-> we agreed here.
-> 
-> Let me explain what I understood taking TCP as an example:
-> 
-> 1) Rename tcp_ioctl() to something as _tcp_ioctl() where the 'arg'
-> argument is now just a kernel memory (located in the stack frame from the
-> callee).
-> 
-> 2) Recreate "tcp_ioctl()" that will basically allocate a 'arg' in the
-> stack and call _tcp_ioctl() passing that 'arg' argument. At the bottom of
-> this (tcp_ioctl() function) function, call `put_user(in_kernel_arg, userspace_arg)
-> 
-> 3) Repeat it for the 20 protocols that implement ioctl:
-> 
-> 	ag  "struct proto .* = {" -A 20 net/ | grep \.ioctl
-> 	net/dccp/ipv6.c 	.ioctl	= dccp_ioctl,
-> 	net/dccp/ipv4.c		.ioctl	= dccp_ioctl,
-> 	net/ieee802154/socket.c .ioctl	= dgram_ioctl,
-> 	net/ipv4/udplite.c	.ioctl	= udp_ioctl,
-> 	net/ipv4/raw.c 		.ioctl	= raw_ioctl,
-> 	net/ipv4/udp.c		.ioctl	= udp_ioctl,
-> 	net/ipv4/tcp_ipv4.c 	.ioctl	= tcp_ioctl,
-> 	net/ipv6/raw.c		.ioctl	= rawv6_ioctl,
-> 	net/ipv6/tcp_ipv6.c	.ioctl	= tcp_ioctl,
-> 	net/ipv6/udp.c	 	.ioctl	= udp_ioctl,
-> 	net/ipv6/udplite.c	.ioctl	= udp_ioctl,
-> 	net/l2tp/l2tp_ip6.c	.ioctl	= l2tp_ioctl,
-> 	net/l2tp/l2tp_ip.c	.ioctl	= l2tp_ioctl,
-> 	net/phonet/datagram.:	.ioctl	= pn_ioctl,
-> 	net/phonet/pep.c	.ioctl	= pep_ioctl,
-> 	net/rds/af_rds.c	.ioctl	=	rds_ioctl,
-> 	net/sctp/socket.c	.ioctl  =	sctp_ioctl,
-> 	net/sctp/socket.c	.ioctl	= sctp_ioctl,
-> 	net/xdp/xsk.c		.ioctl	= sock_no_ioctl,
-> 	net/mptcp/protocol.c	.ioctl	= mptcp_ioctl,
-> 
-> Am I missing something?
+On Wed, Apr 12, 2023 at 4:22=E2=80=AFPM Matthieu Baerts
+<matthieu.baerts@tessares.net> wrote:
+>
+> Hi Aleksandr,
+>
+> Thank you for your reply!
+>
+> On 12/04/2023 12:55, Aleksandr Nogikh wrote:
+> > Hello Matthieu,
+> >
+> > Thanks for contacting us!
+> >
+> > This bug is somewhat special. Syzbot normally classifies crashes
+> > according to their titles, but there are also cases when we cannot
+> > extract a good crash title. As a result, crashes caused by unrelated
+> > problems may end up in the same syzbot bug. This is the case with
+> > "INFO: task hung in corrupted", "no output from test machine", "lost
+> > connection to test machine" and a few others. Probably we should put
+> > some explicit warning label on them and treat them differently.. At
+> > the moment it just drives bisections and subsystem recognition
+> > somewhat crazy.
+>
+> Thank you for the explanation!
+>
+> (yes, a label would be nice and it would be even better if they are
+> treated differently :) )
 
-The suggestion is to convert all to take kernel memory and do the
-put_cmsg in the caller of .ioctl. Rather than create a wrapper for
-each individual instance and add a separate .iouring_cmd for each.
+I've filed https://github.com/google/syzkaller/issues/3806
+Hopefully we'll get to it some day :)
 
-"change all of the sock->ops->ioctl() to pass in on-stack memory
-(or similar) and have it work with a kernel address"
+>
+> > The MPTCP was mentioned in the crash from "2020/05/28 11:24":
+> >
+> > report: https://syzkaller.appspot.com/text?tag=3DCrashReport&x=3D138006=
+d2100000
+> > syz repro: https://syzkaller.appspot.com/text?tag=3DReproSyz&x=3D14947d=
+26100000
+> > C repro: https://syzkaller.appspot.com/text?tag=3DReproC&x=3D172726d210=
+0000
+> >
+> > Though, looking at the report, it seems that mtcp was mentioned there
+> > just coincidentally.
+>
+> Yes, I confirm it looks like a coincidence.
+>
+> The two repro seem to suggest we should assign this to the USB
+> subsystem. But does it make sense to do that if there are different and
+> unrelated problems linked to the same report? Also because there were no
+> more activities for more than 2 years, it can maybe be marked as closed?
+
+Good idea, let's just invalidate the bug:
+#syz invalid
+
+>
+> Cheers,
+> Matt
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
