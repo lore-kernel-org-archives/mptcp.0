@@ -1,126 +1,290 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A0B33CF
-	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 10:09:35 +0000 (UTC)
-Received: by mail-qt1-f182.google.com with SMTP id cm23so2249283qtb.3
-        for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 03:09:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A41A3C00
+	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 10:55:43 +0000 (UTC)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3f048b144eeso55125e9.1
+        for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 03:55:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681294174; x=1683886174;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1681296942; x=1683888942;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x31IGINOPfwcN6D24cmHSpgdMvd3g6FWIXEFXx/KxxM=;
-        b=Z+Slw+p66egXzO13LH/+pyheFYPTm42vLtlpfSMpOpOG2TjZLayKGhknd/RvVroNb2
-         e652pjfWI94aKiDzG1YZMnGupxrg/0J5WhXjSC/PlvDo1OL3RQDzdp1pMvpkmxgNbtQI
-         +zWnvlIvAcAPvmbodn7ACRHMndfNmJW4UzNHL6QPilKKs/AmNgCijM1GFFqdIGjrlBQH
-         0erLZv9J4FDs6u/z3YTzp6QRsQe7rlmivELnIUrlEUWVjl/v6NqXKu9naxA1xxUvN8Zv
-         zvJVzPR92m8gTmeDL91DGEt1F56t5kT6qy0i223TjbGO+BU6ChoaipUa370BSc+1w8QN
-         6i5w==
+        bh=VrhAOjpxKdmjN9/B62JDFB/A9qpyEU41x6Hz9kaHLqs=;
+        b=X7GX5l4FTzA/2rbflFKsTlCjJ0z3lYUoBHZl7WZLWHnwTaO/8iwvIYA5v8TmHOWcsG
+         3bqdiA9Y6M/PSwmRlacaY+DYBRDjSFVA+DwkB++CZVUDtHjunCnc3wgHRl0E1sEzNRVE
+         Ivod0/GarYGmrUorEVYccGrpV3V5DAd2E+RUbuja45tCckis0deV10wfwgaPqa7yM3nz
+         DLgFCsRhGlbUAnxTskpo6uQQlZwATYBqwrxIsaPVj+qPbEWQccqlJaulmzfMhkIuHDN9
+         GwfCB2nzGKnXqskGErgt+2cKfKb/QU9f4D376TiXjTq1L+hNGa+hIkRCH1M0KOhmV8fo
+         /rUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681294174; x=1683886174;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=x31IGINOPfwcN6D24cmHSpgdMvd3g6FWIXEFXx/KxxM=;
-        b=ClEfcDXWfTTEZN1KgIlSOABg/5D/fxp2HZPeV8sn37eGYtWbrgYX+XaaaNnat4J8Ao
-         YJ8ZLHuaFca6Z3EDVloesCms0jH/kTr7Lgcpu/YP25oTK3+AEBPToUg3VSE6Zl2gkDld
-         rMsAvW7iHrizrQgx3Q5ifNwJh3wLGPZwl/JnljTW3kqt0pqQgg2YBMXHRrEp/kF7tgNd
-         3bHhloNz629zpD9GeFS7U92n/flnHIz4F0bMm0DzrRM8dEKaH7KJ5i05cbg34qRtpzFP
-         ob6yDl1fAl8MsbVaIX0uyvfoLBBdDksq1P4SCyyc5sRWHRYRg1Y2XvV7+PR4KGJKz3n6
-         aBTw==
-X-Gm-Message-State: AAQBX9ftwWijSoJs175Nv0mWL5VfOYulW1a7TDHqowQDmD0oxP92L8+p
-	ca8tewJpQneUa49aI40vC3Iip1y6HezO
-X-Google-Smtp-Source: AKy350ZVmWozkYrEUo/e09JEvHnKo237bJn1F8DDxMvM1J0/Xe2Rmfy9/NK5dRcyGcaphirJy6Wn/A==
-X-Received: by 2002:ac8:5c03:0:b0:3bf:e15f:935c with SMTP id i3-20020ac85c03000000b003bfe15f935cmr2726817qti.14.1681294174667;
-        Wed, 12 Apr 2023 03:09:34 -0700 (PDT)
-Received: from [127.0.0.1] ([104.45.204.212])
-        by smtp.gmail.com with ESMTPSA id s9-20020ac85289000000b003e638d0aa67sm4165335qtn.93.2023.04.12.03.09.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Apr 2023 03:09:34 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20230404-mptcp-selftests-join-busybox-shellcheck-v3-2-eab5dd7bc996@tessares.net>
-References:
- <20230404-mptcp-selftests-join-busybox-shellcheck-v3-2-eab5dd7bc996@tessares.net>
-Subject: Re: selftests: mptcp: join: fix ShellCheck warnings: Tests Results
-Message-ID: <a792e8f5-8d02-c4bf-27ca-2d69b60908cb@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 12 Apr 2023 10:09:33 +0000
+        d=1e100.net; s=20210112; t=1681296942; x=1683888942;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VrhAOjpxKdmjN9/B62JDFB/A9qpyEU41x6Hz9kaHLqs=;
+        b=PWkmbs8kBaiXGNuua7jxl1criJ2msgxNEZorfb9IOpZYgN1UgU3NzccT2tmqPrNlG9
+         ttLcDVkx1b5RMOgk8fnGmnfLY0ChrkfunuoLsCNygUJAkCW3JMxzVEapGvCT24NRNagn
+         qRrq65uFAI4QghbFQW4KlNRT73KUi3CYgy917uwsbpXWx24sGiOtDGjv7f6rWVET6DFD
+         z5t6q3PlRmpnVPF69szhcwvQiHqb530CqtA0qvYd8DtneWZbkSrcXQi9oW14ctnmBuJ+
+         zKNBZjYc1U8a53L+uU8Bup5aRp0FEO/SJM/kI6B3WGmnYSRGBzbFbRPvmIYTvvPqPskU
+         Ed0g==
+X-Gm-Message-State: AAQBX9dFzJ0IiRTfzjJ2h+BWJKGVLYPP//Rd/xHGuu4rWLhIxvB6Ieqv
+	GdikYHwN9Zv2Db/VhIptCt/aF/n7mwAwM/I8RKKKUA==
+X-Google-Smtp-Source: AKy350aHRs1I+wAXHGdv5wMwVLLibLl/3mGicIdMFfDaXdFkkdjUL0RbHkDb6pHLl2VBSwwtPLxykd1536znSqk2MtQ=
+X-Received: by 2002:a05:600c:3109:b0:3f0:9642:d410 with SMTP id
+ g9-20020a05600c310900b003f09642d410mr250416wmo.3.1681296941679; Wed, 12 Apr
+ 2023 03:55:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <0000000000004afcae05a7041e98@google.com> <5272b58b-59b8-9ae7-38c7-2578a304e3de@tessares.net>
+In-Reply-To: <5272b58b-59b8-9ae7-38c7-2578a304e3de@tessares.net>
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Wed, 12 Apr 2023 12:55:29 +0200
+Message-ID: <CANp29Y5x13DD8n+aTypSGa5B7+VgOYRvCiSugHz7eFBZrKMZ1w@mail.gmail.com>
+Subject: Re: INFO: task hung in corrupted (2)
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: syzbot <syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com>, 
+	syzkaller-bugs@googlegroups.com, syzbot <syzkaller@googlegroups.com>, 
+	MPTCP Upstream <mptcp@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Matthieu,
+Hello Matthieu,
 
-Thank you for your modifications, that's great!
+Thanks for contacting us!
 
-Our CI did some validations and here is its report:
+This bug is somewhat special. Syzbot normally classifies crashes
+according to their titles, but there are also cases when we cannot
+extract a good crash title. As a result, crashes caused by unrelated
+problems may end up in the same syzbot bug. This is the case with
+"INFO: task hung in corrupted", "no output from test machine", "lost
+connection to test machine" and a few others. Probably we should put
+some explicit warning label on them and treat them differently.. At
+the moment it just drives bisections and subsystem recognition
+somewhat crazy.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6333563574943744
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6333563574943744/summary/summary.txt
+The MPTCP was mentioned in the crash from "2020/05/28 11:24":
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6052088598233088
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6052088598233088/summary/summary.txt
+report: https://syzkaller.appspot.com/text?tag=3DCrashReport&x=3D138006d210=
+0000
+syz repro: https://syzkaller.appspot.com/text?tag=3DReproSyz&x=3D14947d2610=
+0000
+C repro: https://syzkaller.appspot.com/text?tag=3DReproC&x=3D172726d2100000
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5489138644811776
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5489138644811776/su=
-mmary/summary.txt
+Though, looking at the report, it seems that mtcp was mentioned there
+just coincidentally.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4926188691390464
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4926188691390464/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/11a1e9a68af5
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+--
+Aleksandr
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+On Thu, Apr 6, 2023 at 7:17=E2=80=AFPM 'Matthieu Baerts' via syzkaller
+<syzkaller@googlegroups.com> wrote:
+>
+> Hello people behind syzbot,
+>
+> When looking at the new and nice modifications around syzkaller web
+> interface (thanks for that!), I noticed there was one issue assigned to
+> MPTCP subsystem, please see below. The "bisect" seems to say that the
+> bug is in "USB" subsystem but the discussions on the mailing list point
+> to HID [1].
+>
+> The last report on the website [2] seems to point to nilfs and the
+> previous one is also different.
+>
+> What should we do with this issue?
+>
+> Cheers,
+> Matt
+>
+> [1] https://lore.kernel.org/netdev/0000000000004afcae05a7041e98@google.co=
+m/
+> [2]
+> https://syzkaller.appspot.com/bug?id=3Ddfa0ece589f369f3047982c5a3bd7aef32=
+380298
+>
+> On 01/06/2020 13:30, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    b0c3ba31 Merge tag 'fsnotify_for_v5.7-rc8' of git://git=
+.ke..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D14089eee100=
+000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dce116858301=
+bc2ea
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D6921abfb75d6f=
+c79c0eb
+> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-proj=
+ect/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14947d261=
+00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D172726d2100=
+000
+> >
+> > The bug was bisected to:
+> >
+> > commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
+> > Author: Andrey Konovalov <andreyknvl@google.com>
+> > Date:   Mon Feb 24 16:13:03 2020 +0000
+> >
+> >     usb: gadget: add raw-gadget interface
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D119e4702=
+100000
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D139e4702=
+100000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D159e4702100=
+000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the comm=
+it:
+> > Reported-by: syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com
+> > Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
+> >
+> > INFO: task syz-executor610:7072 blocked for more than 143 seconds.
+> >       Not tainted 5.7.0-rc7-syzkaller #0
+> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this messag=
+e.
+> > syz-executor610 D24336  7072   7071 0x80004002
+> > Call Trace:
+> >  context_switch kernel/sched/core.c:3367 [inline]
+> >  __schedule+0x805/0xc90 kernel/sched/core.c:4083
+> >
+> > Showing all locks held in the system:
+> > 1 lock held by khungtaskd/1134:
+> >  #0: ffffffff892e85d0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire=
++0x0/0x30 net/mptcp/pm_netlink.c:860
+> > 1 lock held by in:imklog/6715:
+> >  #0: ffff8880a441e6b0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0x2=
+5d/0x2f0 fs/file.c:826
+> > 6 locks held by kworker/1:0/7064:
+> > 1 lock held by syz-executor610/7072:
+> >  #0: ffffffff892eab20 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel=
+_lock kernel/rcu/tree_exp.h:290 [inline]
+> >  #0: ffffffff892eab20 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchroniz=
+e_rcu_expedited+0x1bd/0x5b0 kernel/rcu/tree_exp.h:856
+> > 4 locks held by systemd-udevd/7099:
+> >  #0: ffff8880a7fdcc70 (&p->lock){+.+.}-{3:3}, at: seq_read+0x60/0xce0 f=
+s/seq_file.c:153
+> >  #1: ffff888096486888 (&of->mutex){+.+.}-{3:3}, at: kernfs_seq_start+0x=
+50/0x3b0 fs/kernfs/file.c:111
+> >  #2: ffff88809fc0d660 (kn->count#78){.+.+}-{0:0}, at: kernfs_seq_start+=
+0x6f/0x3b0 fs/kernfs/file.c:112
+> >  #3: ffff8880a1df7218 (&dev->mutex){....}-{3:3}, at: device_lock_interr=
+uptible include/linux/device.h:773 [inline]
+> >  #3: ffff8880a1df7218 (&dev->mutex){....}-{3:3}, at: serial_show+0x22/0=
+xa0 drivers/usb/core/sysfs.c:142
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > NMI backtrace for cpu 0
+> > CPU: 0 PID: 1134 Comm: khungtaskd Not tainted 5.7.0-rc7-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS=
+ Google 01/01/2011
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+> >  nmi_cpu_backtrace+0x9f/0x180 lib/nmi_backtrace.c:101
+> >  nmi_trigger_cpumask_backtrace+0x16a/0x280 lib/nmi_backtrace.c:62
+> >  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+> >  watchdog+0xd2a/0xd40 kernel/hung_task.c:289
+> >  kthread+0x353/0x380 kernel/kthread.c:268
+> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+> > Sending NMI from CPU 0 to CPUs 1:
+> > NMI backtrace for cpu 1
+> > CPU: 1 PID: 7064 Comm: kworker/1:0 Not tainted 5.7.0-rc7-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS=
+ Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x0/0x90 kernel/kcov.c:275
+> > Code: 4c f2 08 48 c1 e0 03 48 83 c8 18 49 89 14 02 4d 89 44 f2 18 49 ff=
+ c1 4d 89 0a c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <4c> 8b 04 24 =
+65 48 8b 04 25 40 1e 02 00 65 8b 0d 78 96 8e 7e f7 c1
+> > RSP: 0018:ffffc90001676cf0 EFLAGS: 00000246
+> > RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff88809fb9e240
+> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000ffffffff
+> > RBP: ffff888092d24a04 R08: ffffffff86034f3b R09: ffffc900016790cc
+> > R10: 0000000000000004 R11: 0000000000000000 R12: ffff888092d24a00
+> > R13: 0000000000000000 R14: dffffc0000000000 R15: ffff888092d24a00
+> > FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:00000000000=
+00000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00000000004c6e68 CR3: 0000000092d41000 CR4: 00000000001406e0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  hid_apply_multiplier drivers/hid/hid-core.c:1106 [inline]
+> >  hid_setup_resolution_multiplier+0x2ab/0xbe0 drivers/hid/hid-core.c:116=
+3
+> >  hid_open_report+0xab2/0xdd0 drivers/hid/hid-core.c:1274
+> >  hid_parse include/linux/hid.h:1017 [inline]
+> >  ms_probe+0x12f/0x3f0 drivers/hid/hid-microsoft.c:388
+> >  hid_device_probe+0x26c/0x410 drivers/hid/hid-core.c:2263
+> >  really_probe+0x704/0xf60 drivers/base/dd.c:520
+> >  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
+> >  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
+> >  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
+> >  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
+> >  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
+> >  hid_add_device+0xa2a/0xef0 drivers/hid/hid-core.c:2419
+> >  usbhid_probe+0x9bd/0xd10 drivers/hid/usbhid/hid-core.c:1407
+> >  usb_probe_interface+0x614/0xac0 drivers/usb/core/driver.c:374
+> >  really_probe+0x761/0xf60 drivers/base/dd.c:524
+> >  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
+> >  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
+> >  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
+> >  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
+> >  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
+> >  usb_set_configuration+0x19d2/0x1f20 drivers/usb/core/message.c:2032
+> >  usb_generic_driver_probe+0x82/0x140 drivers/usb/core/generic.c:241
+> >  usb_probe_device+0x12d/0x1d0 drivers/usb/core/driver.c:272
+> >  really_probe+0x761/0xf60 drivers/base/dd.c:524
+> >  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
+> >  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
+> >  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
+> >  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
+> >  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
+> >  usb_new_device+0xcc3/0x1650 drivers/usb/core/hub.c:2554
+> >  hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+> >  hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+> >  port_event drivers/usb/core/hub.c:5494 [inline]
+> >  hub_event+0x2823/0x4cb0 drivers/usb/core/hub.c:5576
+> >  process_one_work+0x76e/0xfd0 kernel/workqueue.c:2268
+> >  worker_thread+0xa7f/0x1450 kernel/workqueue.c:2414
+> >  kthread+0x353/0x380 kernel/kthread.c:268
+> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bise=
+ction
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+>
+> --
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "syzkaller" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to syzkaller+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgi=
+d/syzkaller/5272b58b-59b8-9ae7-38c7-2578a304e3de%40tessares.net.
