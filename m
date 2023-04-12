@@ -1,146 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6548517DB
-	for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 23:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1681256621;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=DrNVWIPb5Ynpl5ydo6gKX6vmxwV/sMCHRh7FcMdlbWc=;
-	b=eJX95aEQvlQg3w/WHi59a7AIC9rQ0w/99x9YHh3t4qjlvxdj7eRHAzvMRQcolofnb7iVEt
-	frjuud4GcYBbYoCv+RPdddyBrF+PkAIYQdIBngsVEGDQ/QsD3r6PopUzlKAAxi0Ny0ND/K
-	efC620WAKwRCTpx/nx9JvcoJVN5lCcU=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-652-8Y1-ewwxPVyJKF_Z3LYmuA-1; Tue, 11 Apr 2023 19:43:39 -0400
-X-MC-Unique: 8Y1-ewwxPVyJKF_Z3LYmuA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7E21D1C05ABD;
-	Tue, 11 Apr 2023 23:43:39 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.195.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E009447CD0;
-	Tue, 11 Apr 2023 23:43:38 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>
-Subject: [PATCH mptcp-net] Squash-to: "mptcp: fix accept vs worker race"
-Date: Wed, 12 Apr 2023 01:43:30 +0200
-Message-Id: <484c6fbff67a4587215d88e17f3a6688eb2c9ea1.1681256534.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6B917E
+	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 00:36:48 +0000 (UTC)
+Received: by mail-pj1-f41.google.com with SMTP id mn5-20020a17090b188500b00246eddf34f6so2108056pjb.0
+        for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 17:36:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681259808; x=1683851808;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IB7QOkkW6N3JTmDwmmf6eAieT7UdIGXZyy4ObqUVB4Q=;
+        b=j/+bpvf9LZaFqpe6DGV3FLkxyKaaF1gciayXKpuhlRoJ4GfvKBr+hlbbfff+JtKAzw
+         LaHZG/RjMCbDSJJrhv9HB0GSNGwEKF61g83fNjYVKAxOKVRyExRR3w0fzvybrVSFkdcN
+         g1CrA00tp/ODCSMdtr+bbQ6OfZGhNN8Dy6XIj3YtYRHUxrwqXr76hVaBj5WCnhRGM+vp
+         lJWEhuC5QnEKxVFtkq4fJNmAk1vTHv/Tbrl4J44VGGRTzf7BQ2807pgnea/l1NNMf7np
+         rY0Q8km89gwt20udA7dmGwNhm/KHJygDcZlCd2Daue/o0vtPdo4BAVTRDhuZ3xffLF0/
+         Ze0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681259808; x=1683851808;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=IB7QOkkW6N3JTmDwmmf6eAieT7UdIGXZyy4ObqUVB4Q=;
+        b=BegJ51QjwQjK/lG2HOxC1D7l+ZaVvzxmMz9HJejW1JNDPaiGF+cGJGkD5kO+RzAGwK
+         rl02RmUYOQ8tpx1McxkSxOproWVjLGG8q6lF80J5BgtNuJHWgL8wGdaqKbsyvPOL3k6J
+         CwPQ3xpF1+lmf8V4MDnORfRbubZC6SJVFqB3JXdqytfbnGkYJznSo8lB0VupgmkBC2Mq
+         gk9RWivKHgK0MKzkINMQOUciREACPCSbaNnUn1pOsEAUEiREvB4Vp3H313s76e4WYoMf
+         rodgRbHqwmtrmDJ9p05GJzkYBihNLc8A2yAHI+svirDycKbYa3Z5QzPJzxIFdBPpIhP/
+         OkoA==
+X-Gm-Message-State: AAQBX9dd6ArIrTbKiPaKMmjSwY5YU2EuXMrSkvasjDxpPY07SiHk64c2
+	mIDaSfHoIyTtMAbrFuyxHA==
+X-Google-Smtp-Source: AKy350ZJ/GTKqVRg505bxXaX8d7dpUAT9nHKIm0bLscnPu0Q+L1/aRGaTSVcBsBt8vYI/XPOav3Vkw==
+X-Received: by 2002:a17:903:280d:b0:1a2:8c7e:f315 with SMTP id kp13-20020a170903280d00b001a28c7ef315mr15787957plb.21.1681259808160;
+        Tue, 11 Apr 2023 17:36:48 -0700 (PDT)
+Received: from [127.0.0.1] ([13.64.10.193])
+        by smtp.gmail.com with ESMTPSA id bb10-20020a170902bc8a00b0019cad2de86bsm7545924plb.156.2023.04.11.17.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 17:36:47 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <484c6fbff67a4587215d88e17f3a6688eb2c9ea1.1681256534.git.pabeni@redhat.com>
+References:
+ <484c6fbff67a4587215d88e17f3a6688eb2c9ea1.1681256534.git.pabeni@redhat.com>
+Subject: =?UTF-8?Q?Re=3A_Squash-to=3A_=22mptcp=3A_fix_accep?=
+ =?UTF-8?Q?t_vs_worker_race=22=3A_Tests_Results?=
+Message-ID: <ca2d2cd9-1e3a-6ab5-e249-3092f58a3aef@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 12 Apr 2023 00:36:46 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-The current patch has at least 2 issues:
-- the first subflow context cleanup can race with
-  the path manager: we should acquire the full ssk socket.
-- such subflow can accept data while the msk is closed, leading
-  to fwd memory corruption.
+Hi Paolo,
 
-Address the issues moving the ssk cleanup into plain mptcp_close_ssk
-and detaching the ssk from the msk before closing the latter: no
-input data can land to the msk at that point.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 23 ++++++++++++++---------
- net/mptcp/subflow.c  | 19 +++++--------------
- 2 files changed, 19 insertions(+), 23 deletions(-)
+Our CI did some validations and here is its report:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 045570ebad96..4d1c099f4b29 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2373,20 +2373,25 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	bool need_push, dispose_it;
- 
--	/* If the first subflow moved to a close state, e.g. due to
--	 * incoming reset and we reach here before accept we need to be able
--	 * to deliver the msk to user-space.
--	 * Do nothing at the moment and take action at accept and/or listener
--	 * shutdown.
--	 * If instead such subflow has been destroyed, e.g. by inet_child_forget
--	 * do the kill
-+	/* If the first subflow moved to a close state before accept, e.g. due
-+	 * to an incoming reset, mptcp either:
-+	 * - if either the subflow or the msk are dead, destroy the context
-+	 *   (the subflow socket is deleted by inet_child_forget) and the msk
-+	 * - otherwise do nothing at the moment and take action at accept and/or
-+	 *   listener shutdown - user-space must be able to accept() the closed
-+	 *   socket.
- 	 */
- 	if (msk->in_accept_queue && msk->first == ssk) {
--		if (!sock_flag(ssk, SOCK_DEAD))
-+		if (!sock_flag(sk, SOCK_DEAD) && !sock_flag(ssk, SOCK_DEAD))
- 			return;
- 
--		/* ensure later check in mptcp_worker will dispose the msk */
-+		/* ensure later check in mptcp_worker() will dispose the msk */
- 		sock_set_flag(sk, SOCK_DEAD);
-+		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
-+		mptcp_subflow_drop_ctx(ssk);
-+		release_sock(ssk);
-+		msk->first = NULL;
-+		return;
- 	}
- 
- 	dispose_it = !msk->subflow || ssk != msk->subflow->sk;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index c6ae5ddd3bb0..38d43a15502b 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -716,9 +716,11 @@ void mptcp_subflow_drop_ctx(struct sock *ssk)
- 		return;
- 
- 	list_del(&mptcp_subflow_ctx(ssk)->node);
--	subflow_ulp_fallback(ssk, ctx);
--	if (ctx->conn)
--		sock_put(ctx->conn);
-+	if (inet_csk(ssk)->icsk_ulp_ops) {
-+		subflow_ulp_fallback(ssk, ctx);
-+		if (ctx->conn)
-+			sock_put(ctx->conn);
-+	}
- 
- 	kfree_rcu(ctx, rcu);
- }
-@@ -1852,23 +1854,12 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
- 		sk = (struct sock *)msk;
- 
- 		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
--		ssk = msk->first;
- 		next = msk->dl_next;
- 		msk->dl_next = NULL;
- 
- 		__mptcp_unaccepted_force_close(sk);
- 		release_sock(sk);
- 
--		/* the first subflow is not touched by the above, as the msk
--		 * is still in the accept queue, see __mptcp_close_ssk,
--		 * we need to release only the ctx related resources, the
--		 * tcp socket will be destroyed by inet_csk_listen_stop()
--		 */
--		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
--		mptcp_subflow_drop_ctx(ssk);
--		release_sock(ssk);
--		sock_put(ssk);
--
- 		/* lockdep will report a false positive ABBA deadlock
- 		 * between cancel_work_sync and the listener socket.
- 		 * The involved locks belong to different sockets WRT
--- 
-2.39.2
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6728750830714880
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6728750830714880/summary/summary.txt
 
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4529727575162880
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4529727575162880/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5655627482005504
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5655627482005504/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5092677528584192
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5092677528584192/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/f3b6a3c53df1
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
