@@ -1,290 +1,165 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A41A3C00
-	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 10:55:43 +0000 (UTC)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3f048b144eeso55125e9.1
-        for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 03:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681296942; x=1683888942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VrhAOjpxKdmjN9/B62JDFB/A9qpyEU41x6Hz9kaHLqs=;
-        b=X7GX5l4FTzA/2rbflFKsTlCjJ0z3lYUoBHZl7WZLWHnwTaO/8iwvIYA5v8TmHOWcsG
-         3bqdiA9Y6M/PSwmRlacaY+DYBRDjSFVA+DwkB++CZVUDtHjunCnc3wgHRl0E1sEzNRVE
-         Ivod0/GarYGmrUorEVYccGrpV3V5DAd2E+RUbuja45tCckis0deV10wfwgaPqa7yM3nz
-         DLgFCsRhGlbUAnxTskpo6uQQlZwATYBqwrxIsaPVj+qPbEWQccqlJaulmzfMhkIuHDN9
-         GwfCB2nzGKnXqskGErgt+2cKfKb/QU9f4D376TiXjTq1L+hNGa+hIkRCH1M0KOhmV8fo
-         /rUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681296942; x=1683888942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VrhAOjpxKdmjN9/B62JDFB/A9qpyEU41x6Hz9kaHLqs=;
-        b=PWkmbs8kBaiXGNuua7jxl1criJ2msgxNEZorfb9IOpZYgN1UgU3NzccT2tmqPrNlG9
-         ttLcDVkx1b5RMOgk8fnGmnfLY0ChrkfunuoLsCNygUJAkCW3JMxzVEapGvCT24NRNagn
-         qRrq65uFAI4QghbFQW4KlNRT73KUi3CYgy917uwsbpXWx24sGiOtDGjv7f6rWVET6DFD
-         z5t6q3PlRmpnVPF69szhcwvQiHqb530CqtA0qvYd8DtneWZbkSrcXQi9oW14ctnmBuJ+
-         zKNBZjYc1U8a53L+uU8Bup5aRp0FEO/SJM/kI6B3WGmnYSRGBzbFbRPvmIYTvvPqPskU
-         Ed0g==
-X-Gm-Message-State: AAQBX9dFzJ0IiRTfzjJ2h+BWJKGVLYPP//Rd/xHGuu4rWLhIxvB6Ieqv
-	GdikYHwN9Zv2Db/VhIptCt/aF/n7mwAwM/I8RKKKUA==
-X-Google-Smtp-Source: AKy350aHRs1I+wAXHGdv5wMwVLLibLl/3mGicIdMFfDaXdFkkdjUL0RbHkDb6pHLl2VBSwwtPLxykd1536znSqk2MtQ=
-X-Received: by 2002:a05:600c:3109:b0:3f0:9642:d410 with SMTP id
- g9-20020a05600c310900b003f09642d410mr250416wmo.3.1681296941679; Wed, 12 Apr
- 2023 03:55:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAF95660
+	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 13:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1681307112;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AdkAL0RmUxFa2ondWwv/0JnhYojjtPNCNuJwyVg1ymI=;
+	b=hSrl78WtGpoCtq/JVxuHDyvpNqPfEEq7CZXt1RBJCLXbzA0mPE1i5PusNZ98WFKh9p6KdN
+	dK1zNCYyvkJTCYHEqFQT666tr4RmsoL3XWK+1X9d9Et6/kWvzM1TLX/K4hTLrStL5/KOi7
+	kLE8qMEllJ0wqbQlsruCUt4O9mB4/rI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-587-uMquYwFpMdagwicCGNlevw-1; Wed, 12 Apr 2023 09:45:09 -0400
+X-MC-Unique: uMquYwFpMdagwicCGNlevw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DDCE2101A552;
+	Wed, 12 Apr 2023 13:45:08 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.36])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 45B5C47CD0;
+	Wed, 12 Apr 2023 13:45:08 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Christoph Paasch <cpaasch@apple.com>
+Subject: [PATCH v2 mptcp-net] Squash-to: "mptcp: fix accept vs worker race"
+Date: Wed, 12 Apr 2023 15:45:04 +0200
+Message-Id: <835d24d74d7381f79e994b20d84002ec1b953da8.1681306366.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <0000000000004afcae05a7041e98@google.com> <5272b58b-59b8-9ae7-38c7-2578a304e3de@tessares.net>
-In-Reply-To: <5272b58b-59b8-9ae7-38c7-2578a304e3de@tessares.net>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Wed, 12 Apr 2023 12:55:29 +0200
-Message-ID: <CANp29Y5x13DD8n+aTypSGa5B7+VgOYRvCiSugHz7eFBZrKMZ1w@mail.gmail.com>
-Subject: Re: INFO: task hung in corrupted (2)
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: syzbot <syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com>, 
-	syzkaller-bugs@googlegroups.com, syzbot <syzkaller@googlegroups.com>, 
-	MPTCP Upstream <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hello Matthieu,
+The current patch has at least 2 issues:
+- the first subflow context cleanup can race with
+  the path manager: we should acquire the full ssk socket.
+- such subflow can accept data while the msk is closed, leading
+  to fwd memory corruption.
 
-Thanks for contacting us!
+Address the issues moving the ssk cleanup into plain mptcp_close_ssk
+and detaching the ssk from the msk before closing the latter: no
+input data can land to the msk at that point.
 
-This bug is somewhat special. Syzbot normally classifies crashes
-according to their titles, but there are also cases when we cannot
-extract a good crash title. As a result, crashes caused by unrelated
-problems may end up in the same syzbot bug. This is the case with
-"INFO: task hung in corrupted", "no output from test machine", "lost
-connection to test machine" and a few others. Probably we should put
-some explicit warning label on them and treat them differently.. At
-the moment it just drives bisections and subsystem recognition
-somewhat crazy.
+v1 -> v2:
+- fix memory leak for unaccepted MPC sockets (previous version lacked
+  a sock_put()
 
-The MPTCP was mentioned in the crash from "2020/05/28 11:24":
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 24 ++++++++++++++----------
+ net/mptcp/subflow.c  | 19 +++++--------------
+ 2 files changed, 19 insertions(+), 24 deletions(-)
 
-report: https://syzkaller.appspot.com/text?tag=3DCrashReport&x=3D138006d210=
-0000
-syz repro: https://syzkaller.appspot.com/text?tag=3DReproSyz&x=3D14947d2610=
-0000
-C repro: https://syzkaller.appspot.com/text?tag=3DReproC&x=3D172726d2100000
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 045570ebad96..741cf0bbffa6 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2373,20 +2373,23 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	bool need_push, dispose_it;
+ 
+-	/* If the first subflow moved to a close state, e.g. due to
+-	 * incoming reset and we reach here before accept we need to be able
+-	 * to deliver the msk to user-space.
+-	 * Do nothing at the moment and take action at accept and/or listener
+-	 * shutdown.
+-	 * If instead such subflow has been destroyed, e.g. by inet_child_forget
+-	 * do the kill
++	/* If the first subflow moved to a close state before accept, e.g. due
++	 * to an incoming reset, mptcp either:
++	 * - if either the subflow or the msk are dead, destroy the context
++	 *   (the subflow socket is deleted by inet_child_forget) and the msk
++	 * - otherwise do nothing at the moment and take action at accept and/or
++	 *   listener shutdown - user-space must be able to accept() the closed
++	 *   socket.
+ 	 */
+ 	if (msk->in_accept_queue && msk->first == ssk) {
+-		if (!sock_flag(ssk, SOCK_DEAD))
++		if (!sock_flag(sk, SOCK_DEAD) && !sock_flag(ssk, SOCK_DEAD))
+ 			return;
+ 
+-		/* ensure later check in mptcp_worker will dispose the msk */
++		/* ensure later check in mptcp_worker() will dispose the msk */
+ 		sock_set_flag(sk, SOCK_DEAD);
++		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
++		mptcp_subflow_drop_ctx(ssk);
++		goto out_release;
+ 	}
+ 
+ 	dispose_it = !msk->subflow || ssk != msk->subflow->sk;
+@@ -2410,7 +2413,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		msk->subflow->state = SS_UNCONNECTED;
+ 		mptcp_subflow_ctx_reset(subflow);
+ 		release_sock(ssk);
+-
+ 		goto out;
+ 	}
+ 
+@@ -2437,6 +2439,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		/* close acquired an extra ref */
+ 		__sock_put(ssk);
+ 	}
++
++out_release:
+ 	release_sock(ssk);
+ 
+ 	sock_put(ssk);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index c6ae5ddd3bb0..38d43a15502b 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -716,9 +716,11 @@ void mptcp_subflow_drop_ctx(struct sock *ssk)
+ 		return;
+ 
+ 	list_del(&mptcp_subflow_ctx(ssk)->node);
+-	subflow_ulp_fallback(ssk, ctx);
+-	if (ctx->conn)
+-		sock_put(ctx->conn);
++	if (inet_csk(ssk)->icsk_ulp_ops) {
++		subflow_ulp_fallback(ssk, ctx);
++		if (ctx->conn)
++			sock_put(ctx->conn);
++	}
+ 
+ 	kfree_rcu(ctx, rcu);
+ }
+@@ -1852,23 +1854,12 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
+ 		sk = (struct sock *)msk;
+ 
+ 		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+-		ssk = msk->first;
+ 		next = msk->dl_next;
+ 		msk->dl_next = NULL;
+ 
+ 		__mptcp_unaccepted_force_close(sk);
+ 		release_sock(sk);
+ 
+-		/* the first subflow is not touched by the above, as the msk
+-		 * is still in the accept queue, see __mptcp_close_ssk,
+-		 * we need to release only the ctx related resources, the
+-		 * tcp socket will be destroyed by inet_csk_listen_stop()
+-		 */
+-		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+-		mptcp_subflow_drop_ctx(ssk);
+-		release_sock(ssk);
+-		sock_put(ssk);
+-
+ 		/* lockdep will report a false positive ABBA deadlock
+ 		 * between cancel_work_sync and the listener socket.
+ 		 * The involved locks belong to different sockets WRT
+-- 
+2.39.2
 
-Though, looking at the report, it seems that mtcp was mentioned there
-just coincidentally.
-
---
-Aleksandr
-
-
-
-On Thu, Apr 6, 2023 at 7:17=E2=80=AFPM 'Matthieu Baerts' via syzkaller
-<syzkaller@googlegroups.com> wrote:
->
-> Hello people behind syzbot,
->
-> When looking at the new and nice modifications around syzkaller web
-> interface (thanks for that!), I noticed there was one issue assigned to
-> MPTCP subsystem, please see below. The "bisect" seems to say that the
-> bug is in "USB" subsystem but the discussions on the mailing list point
-> to HID [1].
->
-> The last report on the website [2] seems to point to nilfs and the
-> previous one is also different.
->
-> What should we do with this issue?
->
-> Cheers,
-> Matt
->
-> [1] https://lore.kernel.org/netdev/0000000000004afcae05a7041e98@google.co=
-m/
-> [2]
-> https://syzkaller.appspot.com/bug?id=3Ddfa0ece589f369f3047982c5a3bd7aef32=
-380298
->
-> On 01/06/2020 13:30, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    b0c3ba31 Merge tag 'fsnotify_for_v5.7-rc8' of git://git=
-.ke..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D14089eee100=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dce116858301=
-bc2ea
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D6921abfb75d6f=
-c79c0eb
-> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-proj=
-ect/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14947d261=
-00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D172726d2100=
-000
-> >
-> > The bug was bisected to:
-> >
-> > commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
-> > Author: Andrey Konovalov <andreyknvl@google.com>
-> > Date:   Mon Feb 24 16:13:03 2020 +0000
-> >
-> >     usb: gadget: add raw-gadget interface
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D119e4702=
-100000
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D139e4702=
-100000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D159e4702100=
-000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the comm=
-it:
-> > Reported-by: syzbot+6921abfb75d6fc79c0eb@syzkaller.appspotmail.com
-> > Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
-> >
-> > INFO: task syz-executor610:7072 blocked for more than 143 seconds.
-> >       Not tainted 5.7.0-rc7-syzkaller #0
-> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this messag=
-e.
-> > syz-executor610 D24336  7072   7071 0x80004002
-> > Call Trace:
-> >  context_switch kernel/sched/core.c:3367 [inline]
-> >  __schedule+0x805/0xc90 kernel/sched/core.c:4083
-> >
-> > Showing all locks held in the system:
-> > 1 lock held by khungtaskd/1134:
-> >  #0: ffffffff892e85d0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire=
-+0x0/0x30 net/mptcp/pm_netlink.c:860
-> > 1 lock held by in:imklog/6715:
-> >  #0: ffff8880a441e6b0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0x2=
-5d/0x2f0 fs/file.c:826
-> > 6 locks held by kworker/1:0/7064:
-> > 1 lock held by syz-executor610/7072:
-> >  #0: ffffffff892eab20 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel=
-_lock kernel/rcu/tree_exp.h:290 [inline]
-> >  #0: ffffffff892eab20 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchroniz=
-e_rcu_expedited+0x1bd/0x5b0 kernel/rcu/tree_exp.h:856
-> > 4 locks held by systemd-udevd/7099:
-> >  #0: ffff8880a7fdcc70 (&p->lock){+.+.}-{3:3}, at: seq_read+0x60/0xce0 f=
-s/seq_file.c:153
-> >  #1: ffff888096486888 (&of->mutex){+.+.}-{3:3}, at: kernfs_seq_start+0x=
-50/0x3b0 fs/kernfs/file.c:111
-> >  #2: ffff88809fc0d660 (kn->count#78){.+.+}-{0:0}, at: kernfs_seq_start+=
-0x6f/0x3b0 fs/kernfs/file.c:112
-> >  #3: ffff8880a1df7218 (&dev->mutex){....}-{3:3}, at: device_lock_interr=
-uptible include/linux/device.h:773 [inline]
-> >  #3: ffff8880a1df7218 (&dev->mutex){....}-{3:3}, at: serial_show+0x22/0=
-xa0 drivers/usb/core/sysfs.c:142
-> >
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >
-> > NMI backtrace for cpu 0
-> > CPU: 0 PID: 1134 Comm: khungtaskd Not tainted 5.7.0-rc7-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS=
- Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
-> >  nmi_cpu_backtrace+0x9f/0x180 lib/nmi_backtrace.c:101
-> >  nmi_trigger_cpumask_backtrace+0x16a/0x280 lib/nmi_backtrace.c:62
-> >  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
-> >  watchdog+0xd2a/0xd40 kernel/hung_task.c:289
-> >  kthread+0x353/0x380 kernel/kthread.c:268
-> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-> > Sending NMI from CPU 0 to CPUs 1:
-> > NMI backtrace for cpu 1
-> > CPU: 1 PID: 7064 Comm: kworker/1:0 Not tainted 5.7.0-rc7-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS=
- Google 01/01/2011
-> > Workqueue: usb_hub_wq hub_event
-> > RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x0/0x90 kernel/kcov.c:275
-> > Code: 4c f2 08 48 c1 e0 03 48 83 c8 18 49 89 14 02 4d 89 44 f2 18 49 ff=
- c1 4d 89 0a c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <4c> 8b 04 24 =
-65 48 8b 04 25 40 1e 02 00 65 8b 0d 78 96 8e 7e f7 c1
-> > RSP: 0018:ffffc90001676cf0 EFLAGS: 00000246
-> > RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff88809fb9e240
-> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000ffffffff
-> > RBP: ffff888092d24a04 R08: ffffffff86034f3b R09: ffffc900016790cc
-> > R10: 0000000000000004 R11: 0000000000000000 R12: ffff888092d24a00
-> > R13: 0000000000000000 R14: dffffc0000000000 R15: ffff888092d24a00
-> > FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:00000000000=
-00000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 00000000004c6e68 CR3: 0000000092d41000 CR4: 00000000001406e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  hid_apply_multiplier drivers/hid/hid-core.c:1106 [inline]
-> >  hid_setup_resolution_multiplier+0x2ab/0xbe0 drivers/hid/hid-core.c:116=
-3
-> >  hid_open_report+0xab2/0xdd0 drivers/hid/hid-core.c:1274
-> >  hid_parse include/linux/hid.h:1017 [inline]
-> >  ms_probe+0x12f/0x3f0 drivers/hid/hid-microsoft.c:388
-> >  hid_device_probe+0x26c/0x410 drivers/hid/hid-core.c:2263
-> >  really_probe+0x704/0xf60 drivers/base/dd.c:520
-> >  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
-> >  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
-> >  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
-> >  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
-> >  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
-> >  hid_add_device+0xa2a/0xef0 drivers/hid/hid-core.c:2419
-> >  usbhid_probe+0x9bd/0xd10 drivers/hid/usbhid/hid-core.c:1407
-> >  usb_probe_interface+0x614/0xac0 drivers/usb/core/driver.c:374
-> >  really_probe+0x761/0xf60 drivers/base/dd.c:524
-> >  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
-> >  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
-> >  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
-> >  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
-> >  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
-> >  usb_set_configuration+0x19d2/0x1f20 drivers/usb/core/message.c:2032
-> >  usb_generic_driver_probe+0x82/0x140 drivers/usb/core/generic.c:241
-> >  usb_probe_device+0x12d/0x1d0 drivers/usb/core/driver.c:272
-> >  really_probe+0x761/0xf60 drivers/base/dd.c:524
-> >  driver_probe_device+0xe6/0x230 drivers/base/dd.c:697
-> >  bus_for_each_drv+0x108/0x170 drivers/base/bus.c:431
-> >  __device_attach+0x20c/0x3a0 drivers/base/dd.c:870
-> >  bus_probe_device+0xb8/0x1f0 drivers/base/bus.c:491
-> >  device_add+0x1828/0x1ba0 drivers/base/core.c:2557
-> >  usb_new_device+0xcc3/0x1650 drivers/usb/core/hub.c:2554
-> >  hub_port_connect drivers/usb/core/hub.c:5208 [inline]
-> >  hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
-> >  port_event drivers/usb/core/hub.c:5494 [inline]
-> >  hub_event+0x2823/0x4cb0 drivers/usb/core/hub.c:5576
-> >  process_one_work+0x76e/0xfd0 kernel/workqueue.c:2268
-> >  worker_thread+0xa7f/0x1450 kernel/workqueue.c:2414
-> >  kthread+0x353/0x380 kernel/kthread.c:268
-> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bise=
-ction
-> > syzbot can test patches for this bug, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
->
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "syzkaller" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to syzkaller+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/syzkaller/5272b58b-59b8-9ae7-38c7-2578a304e3de%40tessares.net.
