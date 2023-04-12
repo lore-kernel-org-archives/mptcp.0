@@ -1,96 +1,118 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BC02F2D
-	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 08:39:58 +0000 (UTC)
-Received: by mail-wr1-f53.google.com with SMTP id v6so10043406wrv.8
-        for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 01:39:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530542F24
+	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 09:20:36 +0000 (UTC)
+Received: by mail-wr1-f45.google.com with SMTP id v27so951108wra.13
+        for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 02:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1681288796;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Xhkfk5J4IfcXKmt8zSXtCoxVNQe8zIUHLsVLrRyvySg=;
-        b=1Ys5QlbtiUoSOD1PoXQ0EeyOLnX3IK6+816vCs2XEkexR5ifiD4lHBztS7cPRNqBQ3
-         e6aZCAhNwCpo1cZgAaUE4xyvasOh0fLB2+72d6v4rbrU5RYv2bSJ9necwy+UhEt02exT
-         3/43BVXjQi2SFdkzMI5KLpDYGcVVoVCOmetUOzJjtBEF4713SoKllnu1rPsxVneVj74m
-         6GJixG/7PU+Ng1FFaBPdRbqzP7LeNyN3alO3tKP3c0iO4gfr07sjaM9ATr/EDrdtsZBg
-         GfP+dmb2J1UfUMQBMGmoDjjP/8D2tWC3MrPXKl91WzcqHpNGIHDgAF1ulRPD6ycSkhx4
-         1W3w==
+        d=tessares.net; s=google; t=1681291235;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=77a5Zd29mShgETk9mrvYzoDupB/QEbLM3u3+5ecy5zA=;
+        b=cr74xkftMZ5Gp6DMXWH0C8694PuSuncq6RjaTzoQCmukCn+ZmHVymR51opJ3kTyEPF
+         VY5YKZGYOJY4cE91z9EOieceHaqPEk2TMvssdKmQTZm9BAPYRMivZaocPAs2wOmubXk1
+         yyZSJQcAEsAQTFuIJcbECgWPXU/FWEcQ2HCXPDXbkkHWL41t3vr1e578OAYfEvlU5FhR
+         AMHeUf97lynlWYJEPnCDoZ+jl/dfAGjd/tp/rMVLCY9FyoOI1+3HuA9LhNRV7oNWmdd1
+         z/Ycsi8ROHeFhdaZRP2sxrXxKsOjeFGDDZTDoIvzUH6pdVHP1X2i75dZdv8div9eAMvv
+         ZHdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681288796;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xhkfk5J4IfcXKmt8zSXtCoxVNQe8zIUHLsVLrRyvySg=;
-        b=eieIxZJSdzBZhsvQCj3dUMqsFVDxTYOno1VfJh4xGrcEL7pF7RbsTIvw8J2Acnop68
-         E3b43dUIrRi05TBm4zT/QvX+/rs5S7mlxv+SW9xUOkdaLqoBKuywB/cG4T1rf9TN/C9s
-         s0nnMDJQSBOVtuxk9RqVyHYNsODVCeS9JdMFK8Sl0fhvj7d2yL1hiFqzSWPG7npSab/r
-         rt7iYCLaGDYEoL2tetPzxEP5PhUDTykstE3qL5U0woVkwG8npUvSnHJxKFRi5YE+sIi2
-         fZ6UQ70tsKJTgYUyBVffMju4ZJZ2fW5W1jjaI7wpok+dXfM+o9uTj9I8FJ6Lm4uAq3B4
-         XQxQ==
-X-Gm-Message-State: AAQBX9dhkMKxan9Mf88uOl1Md1IfZf4ZVV/4rg+5M+aXqZVYPQm0Qa0y
-	XVb0Yt4lByv/WzEjLmUjbaCyrg==
-X-Google-Smtp-Source: AKy350aYb3QLJwMpqdo6BYGdbBakz+8CsysRnr70wPOAAoYOkVeI6pB+U5sBCR3S+kv5lyd///qQsQ==
-X-Received: by 2002:a5d:5148:0:b0:2ee:687c:5252 with SMTP id u8-20020a5d5148000000b002ee687c5252mr1370514wrt.24.1681288796253;
-        Wed, 12 Apr 2023 01:39:56 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:d700:c3ed:8099:5bf4? ([2a02:578:8593:1200:d700:c3ed:8099:5bf4])
-        by smtp.gmail.com with ESMTPSA id j5-20020adff005000000b002daf0b52598sm8003918wro.18.2023.04.12.01.39.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 01:39:56 -0700 (PDT)
-Message-ID: <36afdb25-f0c7-5c47-eb19-ea0cf2c9d43b@tessares.net>
-Date: Wed, 12 Apr 2023 10:39:54 +0200
+        d=1e100.net; s=20210112; t=1681291235;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=77a5Zd29mShgETk9mrvYzoDupB/QEbLM3u3+5ecy5zA=;
+        b=HBg8l1u/uoTdk43YjtpCgvMbgvlnbVLduyMxq75S9cjpWHreT58jKOVf7m5yDZdF+g
+         b9fo578qwOjQclBtZ4YZ2mSZ7DkiofQUxIBPXurnQDUnVaIKFonKglTwW4JwkAJT95Rj
+         uUVg+AXY8gYnAPdyFWvsC2BpaZb2W/u0kC+pGAyaEY5jwMeUcbSP76hZMAvJZ81QAowY
+         ShRtsgHP7XyP+YHoJMhkVwd9UAvVrPG91s/qOq3U+vACpYgYmfbemKvVi2umP0utjquf
+         wxY/GH+jbuQZaM8iC1iZbSSb22SMfta3sRajCFy2vgLCi1XOa4YUOtAxR0fpXXb3zYjK
+         Vwrw==
+X-Gm-Message-State: AAQBX9cTPvVojDcz9GR1ciU9SuU2Pjqc65voQA0bEy7ykDwKSkYQT4vw
+	/hTD87TccxJBldt9uIPH9/Z0dQkC3a/pFgsA3j/U5A==
+X-Google-Smtp-Source: AKy350Yp7wal476NBP/V79cwfs9LV6yuVdkWlwPTeBWC1vd1y6POY0GFh3Q7od2QOQ7GS16dJOecJA==
+X-Received: by 2002:adf:d088:0:b0:2f0:2d96:1c5a with SMTP id y8-20020adfd088000000b002f02d961c5amr1238249wrh.32.1681291235081;
+        Wed, 12 Apr 2023 02:20:35 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id k1-20020adfe3c1000000b002f01e181c4asm8981069wrm.5.2023.04.12.02.20.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Apr 2023 02:20:34 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-net v3 0/2] mptcp: selftests: join: support BusyBox
+ and ShellCheck
+Date: Wed, 12 Apr 2023 11:20:11 +0200
+Message-Id: <20230404-mptcp-selftests-join-busybox-shellcheck-v3-0-eab5dd7bc996@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH mptcp-net] Squash-to: "mptcp: fix accept vs worker race"
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>
-References: <484c6fbff67a4587215d88e17f3a6688eb2c9ea1.1681256534.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <484c6fbff67a4587215d88e17f3a6688eb2c9ea1.1681256534.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMt3NmQC/52OwW7CMBBEfwX5zJZ4Y1DCqf9RcXCcNTYEJ/Kai
+ CjKv2NS9dIbHEczevNmwRQ9sThuZhFp9Oz7kEO53QjjdDgT+DZngQWWhSoU3IZkBmDqbCJODJf
+ eB2juPDX9A9hR1xlH5gpksKxt1SqqrMi0RjNBE3Uw7sVLu/vAKZK+vcohkvWPVeNH/D4ESuKUK
+ +c59XFaBUe5Dt52GSUUcNhXNSqsdL2X33nPOhJ//d2M+CEaM7qWsrRatWgI/6GXZXkCm0fVZ2Q
+ BAAA=
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ Paolo Abeni <pabeni@redhat.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1677;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=2hHK9SNdz1aqQL/JM14fzWdxcLAT2uGtyE8BjqgFN+o=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkNnfilcQFGnMx4aVV96RlIEaGcRcawR2Z0KixM
+ F4qec2niUKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZDZ34gAKCRD2t4JPQmmg
+ c597D/9kLud979QuplYl6MO1YFQX0rTX2EMCpHFsttX3gF0eCq4Rpkk+/XCEOLSdKiF9jrG3LWA
+ UwjPviNLhv3fg3scCVOBbrgyPqHpmKbWDvaE1WFT9fiyoeNE4k1Tk5Ttr2Rk/YznBMrlJ0WdHRf
+ iIfEU4NTAIcHvyQ/4x75XZ7bAAhN4Mq7Et72/wcdVQT+Kk5vXh2AupTo9wM3D3tklsnHp4yPec9
+ JLN/pZfYrPEN6seZ7SjulOdnjn/EPkiuALh+gIuXtOShF1ILwVtvKekRXAnZMUGDExQJIUyQb4V
+ PASK0I8BfDi3YJW4PbaB6ZGodyzsY9ByK0xUf/UpuIv0NzMEtRBLT006RjSFBzJf263IldEwEkJ
+ Q/OkkxwBVwIi6rHGlKVFPHw3k6qgALGq2G+9+GhNVg0xUBj/fWKJfIjDpOIfKucSatUBJ8cEaaF
+ LsQSAELGGX5G2+OJG7wlk1m7kLUKNluPOj3wPhp825GuIz0u0U/k/XwiWZJh6M25NAZFaiSwtsI
+ 6Nq5XYpqiYHahcYBfvisAFFiMdhPGrz7oiS43iS8xGBrFJoVEvOeiBC879OKbzUqKNZ5+sykCqo
+ 6yiDTJ0nBSw7o8kxEL71iYN665gmxSs4w+zOaSVjnS/08z07+t7av7lXzSQz/h1K5YBWzeVV90T
+ tcFYniiZ7BUFkhA==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+Here are two simple modifications, not really fixing anything for us but
+fixing issues for those using BusyBox like LKFT.
 
-On 12/04/2023 01:43, Paolo Abeni wrote:
-> The current patch has at least 2 issues:
-> - the first subflow context cleanup can race with
->   the path manager: we should acquire the full ssk socket.
-> - such subflow can accept data while the msk is closed, leading
->   to fwd memory corruption.
-> 
-> Address the issues moving the ssk cleanup into plain mptcp_close_ssk
-> and detaching the ssk from the msk before closing the latter: no
-> input data can land to the msk at that point.
+At least the first patch fixes a bug they have. They might switch to a
+different version of cmp at some points but it doesn't seem easy. So
+probably best to have this patch flagged as a fix to have it backported
+in order to detect when other mptcp_join.sh subtests are failing.
 
-Thank you for this fix! (hopefully for your health, the last one linked
-to this patch :) )
+The second patch fixes ShellCheck warnings: it was reporting issues for
+most lines of the script. Best to fix these warnings to easily spot new
+warnings that could be linked to real issues. But no need to backport
+this one I suppose.
 
-I added a small patch just to revert a small modification from "mptcp:
-fix accept vs worker race" around the "ssk" variable that is no longer
-needed.
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Changes in v3:
+- patch 1/2 use a tmp file and delete it in the cleanup phase just in
+  case the operation is stopped between 'head > file' and 'mv file'.
+- Link to v2: https://lore.kernel.org/r/20230404-mptcp-selftests-join-busybox-shellcheck-v2-0-9113fa4d2ce2@tessares.net
 
-New patches for t/upstream-net and t/upstream:
-- eb7dd7b98e94: "squashed" in "mptcp: fix accept vs worker race"
-- 3c88203fb8ed: mptcp: reduce scope of ssk: "squashed" there too
-- Results: fae53252db9c..bfe6de18752b (export-net)
-- Results: 5fddaf33c674..7abc2bc2d1a8 (export)
+Changes in v2:
+- Patch 1/2 now shrink files instead of doing something useless
+- Link to v1: https://lore.kernel.org/r/20230404-mptcp-selftests-join-busybox-shellcheck-v1-0-65892428a951@tessares.net
 
-Tests are now in progress:
+---
+Matthieu Baerts (2):
+      selftests: mptcp: join: avoid using 'cmp --bytes'
+      selftests: mptcp: join: fix ShellCheck warnings
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230412T083701
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230412T083701
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
+---
+base-commit: 7abc2bc2d1a8d495956f75440f45088d7d118f9a
+change-id: 20230404-mptcp-selftests-join-busybox-shellcheck-ec239f8d4e8f
 
-Cheers,
-Matt
+Best regards,
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Matthieu Baerts <matthieu.baerts@tessares.net>
+
