@@ -1,128 +1,91 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6B917E
-	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 00:36:48 +0000 (UTC)
-Received: by mail-pj1-f41.google.com with SMTP id mn5-20020a17090b188500b00246eddf34f6so2108056pjb.0
-        for <mptcp@lists.linux.dev>; Tue, 11 Apr 2023 17:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681259808; x=1683851808;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IB7QOkkW6N3JTmDwmmf6eAieT7UdIGXZyy4ObqUVB4Q=;
-        b=j/+bpvf9LZaFqpe6DGV3FLkxyKaaF1gciayXKpuhlRoJ4GfvKBr+hlbbfff+JtKAzw
-         LaHZG/RjMCbDSJJrhv9HB0GSNGwEKF61g83fNjYVKAxOKVRyExRR3w0fzvybrVSFkdcN
-         g1CrA00tp/ODCSMdtr+bbQ6OfZGhNN8Dy6XIj3YtYRHUxrwqXr76hVaBj5WCnhRGM+vp
-         lJWEhuC5QnEKxVFtkq4fJNmAk1vTHv/Tbrl4J44VGGRTzf7BQ2807pgnea/l1NNMf7np
-         rY0Q8km89gwt20udA7dmGwNhm/KHJygDcZlCd2Daue/o0vtPdo4BAVTRDhuZ3xffLF0/
-         Ze0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681259808; x=1683851808;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IB7QOkkW6N3JTmDwmmf6eAieT7UdIGXZyy4ObqUVB4Q=;
-        b=BegJ51QjwQjK/lG2HOxC1D7l+ZaVvzxmMz9HJejW1JNDPaiGF+cGJGkD5kO+RzAGwK
-         rl02RmUYOQ8tpx1McxkSxOproWVjLGG8q6lF80J5BgtNuJHWgL8wGdaqKbsyvPOL3k6J
-         CwPQ3xpF1+lmf8V4MDnORfRbubZC6SJVFqB3JXdqytfbnGkYJznSo8lB0VupgmkBC2Mq
-         gk9RWivKHgK0MKzkINMQOUciREACPCSbaNnUn1pOsEAUEiREvB4Vp3H313s76e4WYoMf
-         rodgRbHqwmtrmDJ9p05GJzkYBihNLc8A2yAHI+svirDycKbYa3Z5QzPJzxIFdBPpIhP/
-         OkoA==
-X-Gm-Message-State: AAQBX9dd6ArIrTbKiPaKMmjSwY5YU2EuXMrSkvasjDxpPY07SiHk64c2
-	mIDaSfHoIyTtMAbrFuyxHA==
-X-Google-Smtp-Source: AKy350ZJ/GTKqVRg505bxXaX8d7dpUAT9nHKIm0bLscnPu0Q+L1/aRGaTSVcBsBt8vYI/XPOav3Vkw==
-X-Received: by 2002:a17:903:280d:b0:1a2:8c7e:f315 with SMTP id kp13-20020a170903280d00b001a28c7ef315mr15787957plb.21.1681259808160;
-        Tue, 11 Apr 2023 17:36:48 -0700 (PDT)
-Received: from [127.0.0.1] ([13.64.10.193])
-        by smtp.gmail.com with ESMTPSA id bb10-20020a170902bc8a00b0019cad2de86bsm7545924plb.156.2023.04.11.17.36.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 17:36:47 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <484c6fbff67a4587215d88e17f3a6688eb2c9ea1.1681256534.git.pabeni@redhat.com>
-References:
- <484c6fbff67a4587215d88e17f3a6688eb2c9ea1.1681256534.git.pabeni@redhat.com>
-Subject: =?UTF-8?Q?Re=3A_Squash-to=3A_=22mptcp=3A_fix_accep?=
- =?UTF-8?Q?t_vs_worker_race=22=3A_Tests_Results?=
-Message-ID: <ca2d2cd9-1e3a-6ab5-e249-3092f58a3aef@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 12 Apr 2023 00:36:46 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247881843
+	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 07:39:31 +0000 (UTC)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-180-BM_HQVsgMWedE-uoB0ILog-1; Wed, 12 Apr 2023 08:39:29 +0100
+X-MC-Unique: BM_HQVsgMWedE-uoB0ILog-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 12 Apr
+ 2023 08:39:26 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Wed, 12 Apr 2023 08:39:26 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'David Ahern' <dsahern@kernel.org>, Jens Axboe <axboe@kernel.dk>, "Breno
+ Leitao" <leitao@debian.org>
+CC: Willem de Bruijn <willemb@google.com>, "io-uring@vger.kernel.org"
+	<io-uring@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "kuba@kernel.org" <kuba@kernel.org>,
+	"asml.silence@gmail.com" <asml.silence@gmail.com>, "leit@fb.com"
+	<leit@fb.com>, "edumazet@google.com" <edumazet@google.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "davem@davemloft.net"
+	<davem@davemloft.net>, "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+	"mptcp@lists.linux.dev" <mptcp@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"willemdebruijn.kernel@gmail.com" <willemdebruijn.kernel@gmail.com>,
+	"matthieu.baerts@tessares.net" <matthieu.baerts@tessares.net>,
+	"marcelo.leitner@gmail.com" <marcelo.leitner@gmail.com>
+Subject: RE: [PATCH 0/5] add initial io_uring_cmd support for sockets
+Thread-Topic: [PATCH 0/5] add initial io_uring_cmd support for sockets
+Thread-Index: AQHZbIo9yiioZyVNEkW7nkcDZ6Um0a8nR9fA
+Date: Wed, 12 Apr 2023 07:39:26 +0000
+Message-ID: <d25962b44b2d4204a7251d97c331fcf8@AcuMS.aculab.com>
+References: <20230406144330.1932798-1-leitao@debian.org>
+ <CA+FuTSeKpOJVqcneCoh_4x4OuK1iE0Tr6f3rSNrQiR-OUgjWow@mail.gmail.com>
+ <ZC7seVq7St6UnKjl@gmail.com>
+ <CA+FuTSf9LEhzjBey_Nm_-vN0ZjvtBSQkcDWS+5uBnLmr8Qh5uA@mail.gmail.com>
+ <e576f6fe-d1f3-93cd-cb94-c0ae115299d8@kernel.org>
+ <ZDVLyi1PahE0sfci@gmail.com>
+ <75e3c434-eb8b-66e5-5768-ca0f906979a1@kernel.org>
+ <67831406-8d2f-feff-f56b-d0f002a95d96@kernel.dk>
+ <ea36790d-b2fe-0b4d-1bfc-be7b20b1614b@kernel.org>
+ <b56c03b3-d948-2fdf-bc5d-635ecfdf1592@kernel.dk>
+ <a9858183-8f69-7aff-51ac-122f627ba66f@kernel.org>
+In-Reply-To: <a9858183-8f69-7aff-51ac-122f627ba66f@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-Hi Paolo,
+RnJvbTogRGF2aWQgQWhlcm4NCj4gU2VudDogMTEgQXByaWwgMjAyMyAxNjoyOA0KLi4uLg0KPiBD
+aHJpc3RvcGgncyBwYXRjaCBzZXQgYSBmZXcgeWVhcnMgYmFjayB0aGF0IHJlbW92ZWQgc2V0X2Zz
+IGJyb2tlIHRoZQ0KPiBhYmlsaXR5IHRvIGRvIGluLWtlcm5lbCBpb2N0bCBhbmQge3MsZ31zZXRz
+b2Nrb3B0IGNhbGxzLiBJIGRpZCBub3QNCj4gZm9sbG93IHRoYXQgY2hhbmdlOyB3YXMgaXQgYSBk
+ZWxpYmVyYXRlIGludGVudCB0byBub3QgYWxsb3cgdGhlc2UNCj4gaW4ta2VybmVsIGNhbGxzIHZz
+IHdhbnRpbmcgdG8gcmVtb3ZlIHRoZSBzZXRfZnM/IGUuZy4sIGNhbiB3ZSBhZGQgYQ0KPiBraW9j
+dGwgdmFyaWFudCBmb3IgaW4ta2VybmVsIHVzZSBvZiB0aGUgQVBJcz8NCg0KSSB0aGluayB0aGF0
+IHdhcyBhIHNpZGUgZWZmZWN0LCBhbmQgd2l0aCBubyBpbi10cmVlIGluLWtlcm5lbA0KdXNlcnMg
+KGFwYXJ0IGZyb20gbGltaXRlZCBjYWxscyBpbiBicGYpIGl0IHdhcyBkZWVtZWQgYWNjZXB0YWJs
+ZS4NCihJdCBpcyBhIFBJVEEgZm9yIGFueSBjb2RlIHRyeWluZyB0byB1c2UgU0NUUCBpbiBrZXJu
+ZWwuKQ0KDQpPbmUgcHJvYmxlbSBpcyB0aGF0IG5vdCBhbGwgc29ja29wdCBjYWxscyBwYXNzIHRo
+ZSBjb3JyZWN0IGxlbmd0aC4NCkFuZCBzb21lIG9mIHRoZW0gY2FuIGhhdmUgdmVyeSBsb25nIGJ1
+ZmZlcnMuDQpOb3QgdG8gbWVudGlvbiB0aGUgb25lcyB0aGF0IGFyZSByZWFkLW1vZGlmeS13cml0
+ZS4NCg0KQSBwbGF1c2libGUgc29sdXRpb24gaXMgdG8gcGFzcyBhICdmYXQgcG9pbnRlcicgdGhh
+dCBjb250YWlucw0Kc29tZSwgb3IgYWxsLCBvZjoNCgktIEEgdXNlcnNwYWNlIGJ1ZmZlciBwb2lu
+dGVyLg0KCS0gQSBrZXJuZWwgYnVmZmVyIHBvaW50ZXIuDQoJLSBUaGUgbGVuZ3RoIHN1cHBsaWVk
+IGJ5IHRoZSB1c2VyLg0KCS0gVGhlIGxlbmd0aCBvZiB0aGUga2VybmVsIGJ1ZmZlci4NCgk9IFRo
+ZSBudW1iZXIgb2YgYnl0ZXMgdG8gY29weSBvbiBjb21wbGV0aW9uLg0KRm9yIHNpbXBsZSB1c2Vy
+IHJlcXVlc3RzIHRoZSBzeXNjYWxsIGVudHJ5L2V4aXQgY29kZQ0Kd291bGQgY29weSB0aGUgZGF0
+YSB0byBhIHNob3J0IG9uLXN0YWNrIGJ1ZmZlci4NCktlcm5lbCB1c2VycyBqdXN0IHBhc3MgdGhl
+IGtlcm5lbCBhZGRyZXNzLg0KT2RkIHJlcXVlc3RzIGNhbiBqdXN0IHVzZSB0aGUgdXNlciBwb2lu
+dGVyLg0KDQpQcm9iYWJseSBuZWVkcyBhY2Nlc3NvcnMgdGhhdCBhZGQgaW4gYW4gb2Zmc2V0Lg0K
+DQpJdCBtaWdodCBhbHNvIGJlIHRoYXQgc29tZSBvZiB0aGUgcHJvYmxlbWF0aWMgc29ja29wdA0K
+d2VyZSBpbiBkZWNuZXQgLSBub3cgcmVtb3ZlZC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQg
+QWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVz
+LCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6728750830714880
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6728750830714880/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4529727575162880
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4529727575162880/summary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5655627482005504
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5655627482005504/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5092677528584192
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5092677528584192/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/f3b6a3c53df1
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
