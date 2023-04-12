@@ -1,165 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAF95660
-	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 13:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1681307112;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=AdkAL0RmUxFa2ondWwv/0JnhYojjtPNCNuJwyVg1ymI=;
-	b=hSrl78WtGpoCtq/JVxuHDyvpNqPfEEq7CZXt1RBJCLXbzA0mPE1i5PusNZ98WFKh9p6KdN
-	dK1zNCYyvkJTCYHEqFQT666tr4RmsoL3XWK+1X9d9Et6/kWvzM1TLX/K4hTLrStL5/KOi7
-	kLE8qMEllJ0wqbQlsruCUt4O9mB4/rI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-587-uMquYwFpMdagwicCGNlevw-1; Wed, 12 Apr 2023 09:45:09 -0400
-X-MC-Unique: uMquYwFpMdagwicCGNlevw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DDCE2101A552;
-	Wed, 12 Apr 2023 13:45:08 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.36])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 45B5C47CD0;
-	Wed, 12 Apr 2023 13:45:08 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>
-Subject: [PATCH v2 mptcp-net] Squash-to: "mptcp: fix accept vs worker race"
-Date: Wed, 12 Apr 2023 15:45:04 +0200
-Message-Id: <835d24d74d7381f79e994b20d84002ec1b953da8.1681306366.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A34568B
+	for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 13:53:35 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id o6-20020a05600c4fc600b003ef6e6754c5so4297906wmq.5
+        for <mptcp@lists.linux.dev>; Wed, 12 Apr 2023 06:53:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681307613; x=1683899613;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VMUJR0ziXAKL97/Fc/1XtofHlhmh4dw/ld6x3YBdDJA=;
+        b=io4SYCgUnARIWt0/9gU7aC8rmRA94UoXASoT9NUEgfJnxYdXSlRU9FHzjcgjo+nOWi
+         LawyTo3VgaKEgwvsFN7QNdHKyO10tjZbCQiNHSU320itoBefTylJqiH1E2/v446998hI
+         0kDXaeqbzqFWyewaoJybUkvzLvIMe17H8PT8yjljUSnLEEe7dQ1NoCh9Mk2mTEUkKToc
+         VN+2/jtXRtaptB+LYO3+QE0r9jUtSE+YjZ8h1N+HgBHzUWSmsfT9SRkirStc2Nasdi/g
+         45lBCPt4+5wVRUN/m03K76784BmE4ENX3C9t11KSHGz6GkbT5lf4srZ+kjw5j0UzqhiH
+         FORg==
+X-Gm-Message-State: AAQBX9fuiUdby08GoWM1rjCyGaKIgSW1lp5oym3OOIPMwWFo2roEMrjw
+	0kxZusTN7OMPqb7bB5vJ6Vg=
+X-Google-Smtp-Source: AKy350a7suuVGRUdrJzLxBrp2tG07AraETPQmB+GH8IgY+nxp+FZeY/RzoijoKarE9xMi9XKLFzzAw==
+X-Received: by 2002:a05:600c:3658:b0:3ef:7594:48cc with SMTP id y24-20020a05600c365800b003ef759448ccmr9450881wmq.23.1681307613395;
+        Wed, 12 Apr 2023 06:53:33 -0700 (PDT)
+Received: from gmail.com (fwdproxy-cln-024.fbsv.net. [2a03:2880:31ff:18::face:b00c])
+        by smtp.gmail.com with ESMTPSA id m2-20020a05600c3b0200b003f0652084b8sm2540633wms.20.2023.04.12.06.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Apr 2023 06:53:32 -0700 (PDT)
+Date: Wed, 12 Apr 2023 06:53:30 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemb@google.com>, io-uring@vger.kernel.org,
+	netdev@vger.kernel.org, kuba@kernel.org, asml.silence@gmail.com,
+	leit@fb.com, edumazet@google.com, pabeni@redhat.com,
+	davem@davemloft.net, dccp@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org, matthieu.baerts@tessares.net,
+	marcelo.leitner@gmail.com
+Subject: Re: [PATCH 0/5] add initial io_uring_cmd support for sockets
+Message-ID: <ZDa32u9RNI4NQ7Ko@gmail.com>
+References: <e576f6fe-d1f3-93cd-cb94-c0ae115299d8@kernel.org>
+ <ZDVLyi1PahE0sfci@gmail.com>
+ <75e3c434-eb8b-66e5-5768-ca0f906979a1@kernel.org>
+ <67831406-8d2f-feff-f56b-d0f002a95d96@kernel.dk>
+ <643573df81e20_11117c2942@willemb.c.googlers.com.notmuch>
+ <036c80e5-4844-5c84-304c-7e553fe17a9b@kernel.dk>
+ <64357608c396d_113ebd294ba@willemb.c.googlers.com.notmuch>
+ <19c69021-dce3-1a4a-00eb-920d1f404cfc@kernel.dk>
+ <64357bb97fb19_114b22294c4@willemb.c.googlers.com.notmuch>
+ <20cb4641-c765-e5ef-41cb-252be7721ce5@kernel.dk>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20cb4641-c765-e5ef-41cb-252be7721ce5@kernel.dk>
 
-The current patch has at least 2 issues:
-- the first subflow context cleanup can race with
-  the path manager: we should acquire the full ssk socket.
-- such subflow can accept data while the msk is closed, leading
-  to fwd memory corruption.
+On Tue, Apr 11, 2023 at 09:28:29AM -0600, Jens Axboe wrote:
+> On 4/11/23 9:24?AM, Willem de Bruijn wrote:
+> > Jens Axboe wrote:
+> >> On 4/11/23 9:00?AM, Willem de Bruijn wrote:
+> >> But that doesn't work, because sock->ops->ioctl() assumes the arg is
+> >> memory in userspace. Or do you mean change all of the sock->ops->ioctl()
+> >> to pass in on-stack memory (or similar) and have it work with a kernel
+> >> address?
+> > 
+> > That was what I suggested indeed.
+> > 
+> > It's about as much code change as this patch series. But it avoids
+> > the code duplication.
+> 
+> Breno, want to tackle that as a prep patch first? Should make the
+> functional changes afterwards much more straightforward, and will allow
+> support for anything really.
 
-Address the issues moving the ssk cleanup into plain mptcp_close_ssk
-and detaching the ssk from the msk before closing the latter: no
-input data can land to the msk at that point.
+Absolutely. I just want to make sure that I got the proper approach that
+we agreed here.
 
-v1 -> v2:
-- fix memory leak for unaccepted MPC sockets (previous version lacked
-  a sock_put()
+Let me explain what I understood taking TCP as an example:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 24 ++++++++++++++----------
- net/mptcp/subflow.c  | 19 +++++--------------
- 2 files changed, 19 insertions(+), 24 deletions(-)
+1) Rename tcp_ioctl() to something as _tcp_ioctl() where the 'arg'
+argument is now just a kernel memory (located in the stack frame from the
+callee).
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 045570ebad96..741cf0bbffa6 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2373,20 +2373,23 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	bool need_push, dispose_it;
- 
--	/* If the first subflow moved to a close state, e.g. due to
--	 * incoming reset and we reach here before accept we need to be able
--	 * to deliver the msk to user-space.
--	 * Do nothing at the moment and take action at accept and/or listener
--	 * shutdown.
--	 * If instead such subflow has been destroyed, e.g. by inet_child_forget
--	 * do the kill
-+	/* If the first subflow moved to a close state before accept, e.g. due
-+	 * to an incoming reset, mptcp either:
-+	 * - if either the subflow or the msk are dead, destroy the context
-+	 *   (the subflow socket is deleted by inet_child_forget) and the msk
-+	 * - otherwise do nothing at the moment and take action at accept and/or
-+	 *   listener shutdown - user-space must be able to accept() the closed
-+	 *   socket.
- 	 */
- 	if (msk->in_accept_queue && msk->first == ssk) {
--		if (!sock_flag(ssk, SOCK_DEAD))
-+		if (!sock_flag(sk, SOCK_DEAD) && !sock_flag(ssk, SOCK_DEAD))
- 			return;
- 
--		/* ensure later check in mptcp_worker will dispose the msk */
-+		/* ensure later check in mptcp_worker() will dispose the msk */
- 		sock_set_flag(sk, SOCK_DEAD);
-+		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
-+		mptcp_subflow_drop_ctx(ssk);
-+		goto out_release;
- 	}
- 
- 	dispose_it = !msk->subflow || ssk != msk->subflow->sk;
-@@ -2410,7 +2413,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		msk->subflow->state = SS_UNCONNECTED;
- 		mptcp_subflow_ctx_reset(subflow);
- 		release_sock(ssk);
--
- 		goto out;
- 	}
- 
-@@ -2437,6 +2439,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		/* close acquired an extra ref */
- 		__sock_put(ssk);
- 	}
-+
-+out_release:
- 	release_sock(ssk);
- 
- 	sock_put(ssk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index c6ae5ddd3bb0..38d43a15502b 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -716,9 +716,11 @@ void mptcp_subflow_drop_ctx(struct sock *ssk)
- 		return;
- 
- 	list_del(&mptcp_subflow_ctx(ssk)->node);
--	subflow_ulp_fallback(ssk, ctx);
--	if (ctx->conn)
--		sock_put(ctx->conn);
-+	if (inet_csk(ssk)->icsk_ulp_ops) {
-+		subflow_ulp_fallback(ssk, ctx);
-+		if (ctx->conn)
-+			sock_put(ctx->conn);
-+	}
- 
- 	kfree_rcu(ctx, rcu);
- }
-@@ -1852,23 +1854,12 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
- 		sk = (struct sock *)msk;
- 
- 		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
--		ssk = msk->first;
- 		next = msk->dl_next;
- 		msk->dl_next = NULL;
- 
- 		__mptcp_unaccepted_force_close(sk);
- 		release_sock(sk);
- 
--		/* the first subflow is not touched by the above, as the msk
--		 * is still in the accept queue, see __mptcp_close_ssk,
--		 * we need to release only the ctx related resources, the
--		 * tcp socket will be destroyed by inet_csk_listen_stop()
--		 */
--		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
--		mptcp_subflow_drop_ctx(ssk);
--		release_sock(ssk);
--		sock_put(ssk);
--
- 		/* lockdep will report a false positive ABBA deadlock
- 		 * between cancel_work_sync and the listener socket.
- 		 * The involved locks belong to different sockets WRT
--- 
-2.39.2
+2) Recreate "tcp_ioctl()" that will basically allocate a 'arg' in the
+stack and call _tcp_ioctl() passing that 'arg' argument. At the bottom of
+this (tcp_ioctl() function) function, call `put_user(in_kernel_arg, userspace_arg)
 
+3) Repeat it for the 20 protocols that implement ioctl:
+
+	ag  "struct proto .* = {" -A 20 net/ | grep \.ioctl
+	net/dccp/ipv6.c 	.ioctl	= dccp_ioctl,
+	net/dccp/ipv4.c		.ioctl	= dccp_ioctl,
+	net/ieee802154/socket.c .ioctl	= dgram_ioctl,
+	net/ipv4/udplite.c	.ioctl	= udp_ioctl,
+	net/ipv4/raw.c 		.ioctl	= raw_ioctl,
+	net/ipv4/udp.c		.ioctl	= udp_ioctl,
+	net/ipv4/tcp_ipv4.c 	.ioctl	= tcp_ioctl,
+	net/ipv6/raw.c		.ioctl	= rawv6_ioctl,
+	net/ipv6/tcp_ipv6.c	.ioctl	= tcp_ioctl,
+	net/ipv6/udp.c	 	.ioctl	= udp_ioctl,
+	net/ipv6/udplite.c	.ioctl	= udp_ioctl,
+	net/l2tp/l2tp_ip6.c	.ioctl	= l2tp_ioctl,
+	net/l2tp/l2tp_ip.c	.ioctl	= l2tp_ioctl,
+	net/phonet/datagram.:	.ioctl	= pn_ioctl,
+	net/phonet/pep.c	.ioctl	= pep_ioctl,
+	net/rds/af_rds.c	.ioctl	=	rds_ioctl,
+	net/sctp/socket.c	.ioctl  =	sctp_ioctl,
+	net/sctp/socket.c	.ioctl	= sctp_ioctl,
+	net/xdp/xsk.c		.ioctl	= sock_no_ioctl,
+	net/mptcp/protocol.c	.ioctl	= mptcp_ioctl,
+
+Am I missing something?
+
+Thanks!
