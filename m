@@ -1,104 +1,127 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E8E2115
-	for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 14:57:29 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id gc14so1147552ejc.5
-        for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 07:57:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EE32918
+	for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 15:23:27 +0000 (UTC)
+Received: by mail-qt1-f180.google.com with SMTP id fv6so5893654qtb.9
+        for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 08:23:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681484248; x=1684076248;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DM2mW2Rbzq80i13ESUhdjRuNie03MRT+cBj0ZCjad9Q=;
-        b=O1urDIL0iVK8fIqb6jvRx//AnvMSlvAViqigw8GkIFRQwMcEzKFOmoRQ3ds/rp0tPQ
-         t4BOdSyq1LGN70nqTn9T9piWqIBpvdoF/OCBhokMB7nudO/ZkyJQhV56FKGGn/OVvM60
-         XtQgISR7pYEAjBh/GD9vy5vUjHOtGZwmxvVp2yfyoFZDoaTFHVMAfRepSpoSPpdjOyT+
-         xVTBXPAxTZsDg1oMfLwruQs6X50IjE+v5ivPxZ2kJ/Wuqu3JR2+KuLrxbdB3WpP61gWY
-         zMAnjrFpnTXYEtzPg+udbe+yMY/Z3gOmtg3gdpeNE2ua/t6fluoBV2tdJ5+CGc2xEFiU
-         pvxw==
+        d=gmail.com; s=20221208; t=1681485806; x=1684077806;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bIw/wdXCPIKKk+Xkg4DAZo50MoQOWfEoDY5zVD45+/4=;
+        b=aVMxBF6Qus1yS1H3UnU5hdtpuK1SgyTxkNu2sNXbc4Ue2AtphkKS3sSx5YnyScvPyC
+         XITJENltJeO6JlpIV+18uS2SlWv4f8tmRkKpHhHG9lLBS9TA7QDAgZjHiNgJurdJTKq+
+         ruJnH6uhm1DfwtzfHaKwWQIO1eNFwLKgY19hWYMrUL8yf95bJevesM18Jg1fxxlRkO3V
+         SKsTp64LZg1hZAEkA70uq007lv/N4EgQH8+xpWsJ3kVrg5s7KhYWMHKF6GoHP7Ao4/K3
+         ZdTUOYVyzVvEFrPNGn1b1A/Uk+w0EtDtds5loNJaryCQs72Tpd68ny5G9qq5Gr9pxk1M
+         /ylQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681484248; x=1684076248;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DM2mW2Rbzq80i13ESUhdjRuNie03MRT+cBj0ZCjad9Q=;
-        b=Ay1+5JNOC8U/Z5ww1H+Z1cGNa/CGfSViMB3xt9WXzV4xt1G+PmVQX+qXJCl7c0l9sq
-         IKB0J7PtvrgiGpDo7ie9vXX9xAnKKms3G+AC6y2Jh8k9EiPTEK6/Nl5FivnUhTnQRAce
-         PeiSuOpqOiFZiE4oCnw3CAZSTwNLdVSWyNWsmJLEqq6z+9kbiAKlYNkZNalsohdqIBuE
-         mBBGBT0A73BmhdYJT1uYG6vPZKXEF7qeZOWjWvqXrQqNwdQc/iVMARmrk28NEGMtM75H
-         nP4kbQmBzY/cL6DhT/l/Yd9tF/KEnYFsvVQzh9S5RqWVao6ws61CLVtljxH+PYZw6mCk
-         oz3g==
-X-Gm-Message-State: AAQBX9ej25ANRoJw+nCJtorob31mjANBta/jIUl2NR/dndWMsddzf/CU
-	l3f2fpwKnK2VJOvSZESUv2xv2xkimSQ=
-X-Google-Smtp-Source: AKy350bHkOFUpBb3YsaKjCJ11CfDiHR+Lq4nnsJ+NGuM2lOCiYs75yLUnU3A5RILbGNYokF5dMCcIw==
-X-Received: by 2002:a17:907:25c9:b0:94e:ef09:544c with SMTP id ae9-20020a17090725c900b0094eef09544cmr1860484ejc.10.1681484247950;
-        Fri, 14 Apr 2023 07:57:27 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:310::26ef? ([2620:10d:c092:600::2:b2ce])
-        by smtp.gmail.com with ESMTPSA id gj19-20020a170906e11300b0094a83007249sm2602686ejb.16.2023.04.14.07.57.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Apr 2023 07:57:27 -0700 (PDT)
-Message-ID: <e152d8f0-6bf9-f658-f484-f7a18055a664@gmail.com>
-Date: Fri, 14 Apr 2023 15:56:47 +0100
+        d=1e100.net; s=20221208; t=1681485806; x=1684077806;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=bIw/wdXCPIKKk+Xkg4DAZo50MoQOWfEoDY5zVD45+/4=;
+        b=F0dwHRcXYUwtigzzdAzwmXOaRDRI6fS0kplSIzmHHzRkso1R9/1ypp6UbX44svkPc6
+         ILE8S1mhFWP5UvoneiQe623OgdIX6XG4HHw45Pe82w/ZwVI2MhuFB44KHkGvTavYUb5h
+         2DwBgvMOgc/K9v5z5wtmd9EYKf+iAr5RrInnifd/RH7kssZnd/sbKXQotvccRbQTGORa
+         zOET+cjARafSdyqy19+2j+Gylrk3/RVoQ3OvO3lxQJMTJYukDRgE69arJczVRcvx32lL
+         6NrgG7RGfIg5DFWVs6UkoyQni+9RVm1XBsZL1A+Im2hFVn9dwvQYHDj+3JS9m5cpaAb0
+         H/OQ==
+X-Gm-Message-State: AAQBX9ehgL0Y6oAVuL5oAM6j2CYrSSBkV4YV1Glhddk6do5fCtqGXAh4
+	sM4QjKGjF82yVbwXXmO3ZA==
+X-Google-Smtp-Source: AKy350ZU1toEt7NoTrYAbNBpGcTa29lBT51H6saoAUlpAet78SLkrfG45NH6RG1FZXTJJ8Zc4zXeuQ==
+X-Received: by 2002:a05:622a:190:b0:3e6:4b7b:253 with SMTP id s16-20020a05622a019000b003e64b7b0253mr10683380qtw.7.1681485806784;
+        Fri, 14 Apr 2023 08:23:26 -0700 (PDT)
+Received: from [127.0.0.1] ([52.190.17.199])
+        by smtp.gmail.com with ESMTPSA id c3-20020ac84e03000000b003e635f0fdb4sm1282632qtw.53.2023.04.14.08.23.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Apr 2023 08:23:26 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <291b881c99c9fe75898c0f65a0f6a49c5066a1dd.1681481877.git.pabeni@redhat.com>
+References:
+ <291b881c99c9fe75898c0f65a0f6a49c5066a1dd.1681481877.git.pabeni@redhat.com>
+Subject: Re: selftests: mptcp: centralize stats dumping: Tests Results
+Message-ID: <b1af4079-f62d-de78-07a3-9609181339eb@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 14 Apr 2023 15:23:25 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH RFC] io_uring: Pass whole sqe to commands
-Content-Language: en-US
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Breno Leitao <leitao@debian.org>, axboe@kernel.dk, davem@davemloft.net,
- dccp@vger.kernel.org, dsahern@kernel.org, edumazet@google.com,
- io-uring@vger.kernel.org, kuba@kernel.org, leit@fb.com,
- linux-kernel@vger.kernel.org, marcelo.leitner@gmail.com,
- matthieu.baerts@tessares.net, mptcp@lists.linux.dev, netdev@vger.kernel.org,
- pabeni@redhat.com, willemdebruijn.kernel@gmail.com
-References: <20230406144330.1932798-1-leitao@debian.org>
- <20230406165705.3161734-1-leitao@debian.org>
- <ZDdvcSKLa6ZEAhRW@ovpn-8-18.pek2.redhat.com> <ZDgyPL6UrX/MaBR4@gmail.com>
- <ZDi2pP4jgHwCvJRm@ovpn-8-21.pek2.redhat.com>
- <44420e92-f629-f56e-f930-475be6f6a83a@gmail.com>
- <ZDlcXd4K+a2iGbnv@ovpn-8-21.pek2.redhat.com>
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <ZDlcXd4K+a2iGbnv@ovpn-8-21.pek2.redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 4/14/23 14:59, Ming Lei wrote:
-[...]
->>> Will this kind of inconsistency cause trouble for driver? Cause READ
->>> TWICE becomes possible with this patch.
->>
->> Right it might happen, and I was keeping that in mind, but it's not
->> specific to this patch. It won't reload core io_uring bits, and all
-> 
-> It depends if driver reloads core bits or not, anyway the patch exports
-> all fields and opens the window.
+Hi Paolo,
 
-If a driver tries to reload core bits and even worse modify io_uring
-request without proper helpers, it should be rooted out and thrown
-into a bin. In any case cmds are expected to exercise cautiousness
-while working with SQEs as they may change. I'd even argue that
-hiding it as void *cmd makes it much less obvious.
+Thank you for your modifications, that's great!
 
->> fields cmds use already have this problem.
-> 
-> driver is supposed to load cmds field just once too, right?
+Our CI did some validations and here is its report:
 
-Ideally they shouldn't, but it's fine to reload as long as
-the cmd can handle it. And it should always be READ_ONCE()
-and so.
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5301653952266240
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5301653952266240/summary/summary.txt
 
->> Unless there is a better option, the direction we'll be moving in is
->> adding a preparation step that should read and stash parts of SQE
->> it cares about, which should also make full SQE copy not
->> needed / optional.
-> 
-> Sounds good.
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6427553859108864
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6427553859108864/summary/summary.txt
 
--- 
-Pavel Begunkov
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5020178975555584
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5020178975555584/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6146078882398208
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6146078882398208/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/d17c54b50423
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
