@@ -1,159 +1,151 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CAF36B
-	for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 13:12:43 +0000 (UTC)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-504eccc8fc8so2277764a12.2
-        for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 06:12:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681477962; x=1684069962;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2Uom6lc4AWGfEj6FlZegDGpqslLO6mugP8+4t00eUbk=;
-        b=BmZ8EPO4h0mM3Mt5eW1k3OTRWCZy0A/N0LVFa4nVRbMecDr8gUorPxktYnDsMBf9ap
-         M+z08/XOuzDoDWoGD+4ef2zG8CCmQ41G4Rtru6xuXFpIhqspl+LrXyhGTW7r/AFlqqr+
-         vXTzX4+ozGzo03KEqoH+vzjVzidVpjQd6yFbyEMmzNsPJPIKIFTItdPPhIoglZcY2kpP
-         GDDYZLg9L5+DnthyY9kw98npLGsg8BXbynM/F8g2No5pQCovaN7N7obu95NQhLmL2bUo
-         uelmdJevCMw0oVGEvY5BjDZRpdCPPwn7NCUMesY1+yPwg7YQCEpLrdCkhZx/6Rym1OBZ
-         +MPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681477962; x=1684069962;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Uom6lc4AWGfEj6FlZegDGpqslLO6mugP8+4t00eUbk=;
-        b=mGAjKxuE5ml557InJJkvIpca72MLpH9TvsLDCdhqbRMm31hBMmp2orN3ZUtEHKBWE0
-         Q8V3iCDta+izX/Vp4PUcCKmL4lrVxt9UqoXknCrrQ3JOKx1SrIoeA9AG0Pxa0J2dwA9a
-         jm1BlYET4fId4MIvALCTXTWuJG4hlyTDN6xWXpnAL5NNNcLGGTc1eOKxVJr28Tn/u5sb
-         x55hX9Q0ijH/1zwKLwN9UkG8IlG56vLTm1U8MD0icvXZkOSooAfnyGKjrEnDYcGcv3Y+
-         135mUAHEVsaA/IHEgrNvFhx4kLwUgBse3MPe6XoFsnp4uuoBhB1JXPiTH3Y3ZYz/rmXr
-         OMUw==
-X-Gm-Message-State: AAQBX9fv8ovLKows2rV9dax45bc4JK6CCuIX4wXeAFp1cGivlM3+cfeP
-	52Knu9JtX6nDlzpN1fw/aFQ=
-X-Google-Smtp-Source: AKy350bQ919IQYOcCLpYeV47FFJjr0wzWWGdFepcMolluF6PUo9O5lgrLH8PBiKun80jqf64z4Q3oQ==
-X-Received: by 2002:aa7:cd56:0:b0:4fb:59bb:ce71 with SMTP id v22-20020aa7cd56000000b004fb59bbce71mr5550074edw.36.1681477962047;
-        Fri, 14 Apr 2023 06:12:42 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:310::26ef? ([2620:10d:c092:600::2:5dfa])
-        by smtp.gmail.com with ESMTPSA id u11-20020aa7d98b000000b004ad601533a3sm2097486eds.55.2023.04.14.06.12.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Apr 2023 06:12:41 -0700 (PDT)
-Message-ID: <44420e92-f629-f56e-f930-475be6f6a83a@gmail.com>
-Date: Fri, 14 Apr 2023 14:12:10 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5715A1FBB
+	for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 14:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1681480817;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=27YyBi9hssfCHBO7/PKix6vU7A+oXZmvyq6RpUloX40=;
+	b=NJRYVgNYUl0Biswn/+qXMnD3QbbQLgoFpsDrEFUsViNptokEcdouGE0VuFA7P6lr93hWfX
+	kKu5C9osY4SsAWphjsu/5tADO4XvKmWH9Vcj/AKknwyYHXRoYeIIjNtgVjEkPn5NGsMO5o
+	JFbJ27rQ0KoqYnR+nFT/V1fbEYUaHm0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-630-BcRvrHRHMtmqZL31AExtOw-1; Fri, 14 Apr 2023 10:00:14 -0400
+X-MC-Unique: BcRvrHRHMtmqZL31AExtOw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3F8F41C0691B;
+	Fri, 14 Apr 2023 14:00:13 +0000 (UTC)
+Received: from ovpn-8-21.pek2.redhat.com (ovpn-8-21.pek2.redhat.com [10.72.8.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0A3E6404DC40;
+	Fri, 14 Apr 2023 14:00:02 +0000 (UTC)
+Date: Fri, 14 Apr 2023 21:59:57 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: Breno Leitao <leitao@debian.org>, axboe@kernel.dk, davem@davemloft.net,
+	dccp@vger.kernel.org, dsahern@kernel.org, edumazet@google.com,
+	io-uring@vger.kernel.org, kuba@kernel.org, leit@fb.com,
+	linux-kernel@vger.kernel.org, marcelo.leitner@gmail.com,
+	matthieu.baerts@tessares.net, mptcp@lists.linux.dev,
+	netdev@vger.kernel.org, pabeni@redhat.com,
+	willemdebruijn.kernel@gmail.com, ming.lei@redhat.com
+Subject: Re: [PATCH RFC] io_uring: Pass whole sqe to commands
+Message-ID: <ZDlcXd4K+a2iGbnv@ovpn-8-21.pek2.redhat.com>
+References: <20230406144330.1932798-1-leitao@debian.org>
+ <20230406165705.3161734-1-leitao@debian.org>
+ <ZDdvcSKLa6ZEAhRW@ovpn-8-18.pek2.redhat.com>
+ <ZDgyPL6UrX/MaBR4@gmail.com>
+ <ZDi2pP4jgHwCvJRm@ovpn-8-21.pek2.redhat.com>
+ <44420e92-f629-f56e-f930-475be6f6a83a@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH RFC] io_uring: Pass whole sqe to commands
-Content-Language: en-US
-To: Ming Lei <ming.lei@redhat.com>, Breno Leitao <leitao@debian.org>
-Cc: axboe@kernel.dk, davem@davemloft.net, dccp@vger.kernel.org,
- dsahern@kernel.org, edumazet@google.com, io-uring@vger.kernel.org,
- kuba@kernel.org, leit@fb.com, linux-kernel@vger.kernel.org,
- marcelo.leitner@gmail.com, matthieu.baerts@tessares.net,
- mptcp@lists.linux.dev, netdev@vger.kernel.org, pabeni@redhat.com,
- willemdebruijn.kernel@gmail.com
-References: <20230406144330.1932798-1-leitao@debian.org>
- <20230406165705.3161734-1-leitao@debian.org>
- <ZDdvcSKLa6ZEAhRW@ovpn-8-18.pek2.redhat.com> <ZDgyPL6UrX/MaBR4@gmail.com>
- <ZDi2pP4jgHwCvJRm@ovpn-8-21.pek2.redhat.com>
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <ZDi2pP4jgHwCvJRm@ovpn-8-21.pek2.redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <44420e92-f629-f56e-f930-475be6f6a83a@gmail.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 
-On 4/14/23 03:12, Ming Lei wrote:
-> On Thu, Apr 13, 2023 at 09:47:56AM -0700, Breno Leitao wrote:
->> Hello Ming,
->>
->> On Thu, Apr 13, 2023 at 10:56:49AM +0800, Ming Lei wrote:
->>> On Thu, Apr 06, 2023 at 09:57:05AM -0700, Breno Leitao wrote:
->>>> Currently uring CMD operation relies on having large SQEs, but future
->>>> operations might want to use normal SQE.
->>>>
->>>> The io_uring_cmd currently only saves the payload (cmd) part of the SQE,
->>>> but, for commands that use normal SQE size, it might be necessary to
->>>> access the initial SQE fields outside of the payload/cmd block.  So,
->>>> saves the whole SQE other than just the pdu.
->>>>
->>>> This changes slighlty how the io_uring_cmd works, since the cmd
->>>> structures and callbacks are not opaque to io_uring anymore. I.e, the
->>>> callbacks can look at the SQE entries, not only, in the cmd structure.
->>>>
->>>> The main advantage is that we don't need to create custom structures for
->>>> simple commands.
->>>>
->>>> Suggested-by: Pavel Begunkov <asml.silence@gmail.com>
->>>> Signed-off-by: Breno Leitao <leitao@debian.org>
->>>> ---
->>>
->>> ...
->>>
->>>> diff --git a/io_uring/uring_cmd.c b/io_uring/uring_cmd.c
->>>> index 2e4c483075d3..9648134ccae1 100644
->>>> --- a/io_uring/uring_cmd.c
->>>> +++ b/io_uring/uring_cmd.c
->>>> @@ -63,14 +63,15 @@ EXPORT_SYMBOL_GPL(io_uring_cmd_done);
->>>>   int io_uring_cmd_prep_async(struct io_kiocb *req)
->>>>   {
->>>>   	struct io_uring_cmd *ioucmd = io_kiocb_to_cmd(req, struct io_uring_cmd);
->>>> -	size_t cmd_size;
->>>> +	size_t size = sizeof(struct io_uring_sqe);
->>>>   
->>>>   	BUILD_BUG_ON(uring_cmd_pdu_size(0) != 16);
->>>>   	BUILD_BUG_ON(uring_cmd_pdu_size(1) != 80);
->>>>   
->>>> -	cmd_size = uring_cmd_pdu_size(req->ctx->flags & IORING_SETUP_SQE128);
->>>> +	if (req->ctx->flags & IORING_SETUP_SQE128)
->>>> +		size <<= 1;
->>>>   
->>>> -	memcpy(req->async_data, ioucmd->cmd, cmd_size);
->>>> +	memcpy(req->async_data, ioucmd->sqe, size);
->>>
->>> The copy will make some fields of sqe become READ TWICE, and driver may see
->>> different sqe field value compared with the one observed in io_init_req().
->>
->> This copy only happens if the operation goes to the async path
->> (calling io_uring_cmd_prep_async()).  This only happens if
->> f_op->uring_cmd() returns -EAGAIN.
->>
->>            ret = file->f_op->uring_cmd(ioucmd, issue_flags);
->>            if (ret == -EAGAIN) {
->>                    if (!req_has_async_data(req)) {
->>                            if (io_alloc_async_data(req))
->>                                    return -ENOMEM;
->>                            io_uring_cmd_prep_async(req);
->>                    }
->>                    return -EAGAIN;
->>            }
->>
->> Are you saying that after this copy, the operation is still reading from
->> sqe instead of req->async_data?
+On Fri, Apr 14, 2023 at 02:12:10PM +0100, Pavel Begunkov wrote:
+> On 4/14/23 03:12, Ming Lei wrote:
+> > On Thu, Apr 13, 2023 at 09:47:56AM -0700, Breno Leitao wrote:
+> > > Hello Ming,
+> > > 
+> > > On Thu, Apr 13, 2023 at 10:56:49AM +0800, Ming Lei wrote:
+> > > > On Thu, Apr 06, 2023 at 09:57:05AM -0700, Breno Leitao wrote:
+> > > > > Currently uring CMD operation relies on having large SQEs, but future
+> > > > > operations might want to use normal SQE.
+> > > > > 
+> > > > > The io_uring_cmd currently only saves the payload (cmd) part of the SQE,
+> > > > > but, for commands that use normal SQE size, it might be necessary to
+> > > > > access the initial SQE fields outside of the payload/cmd block.  So,
+> > > > > saves the whole SQE other than just the pdu.
+> > > > > 
+> > > > > This changes slighlty how the io_uring_cmd works, since the cmd
+> > > > > structures and callbacks are not opaque to io_uring anymore. I.e, the
+> > > > > callbacks can look at the SQE entries, not only, in the cmd structure.
+> > > > > 
+> > > > > The main advantage is that we don't need to create custom structures for
+> > > > > simple commands.
+> > > > > 
+> > > > > Suggested-by: Pavel Begunkov <asml.silence@gmail.com>
+> > > > > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > > > > ---
+> > > > 
+> > > > ...
+> > > > 
+> > > > > diff --git a/io_uring/uring_cmd.c b/io_uring/uring_cmd.c
+> > > > > index 2e4c483075d3..9648134ccae1 100644
+> > > > > --- a/io_uring/uring_cmd.c
+> > > > > +++ b/io_uring/uring_cmd.c
+> > > > > @@ -63,14 +63,15 @@ EXPORT_SYMBOL_GPL(io_uring_cmd_done);
+> > > > >   int io_uring_cmd_prep_async(struct io_kiocb *req)
+> > > > >   {
+> > > > >   	struct io_uring_cmd *ioucmd = io_kiocb_to_cmd(req, struct io_uring_cmd);
+> > > > > -	size_t cmd_size;
+> > > > > +	size_t size = sizeof(struct io_uring_sqe);
+> > > > >   	BUILD_BUG_ON(uring_cmd_pdu_size(0) != 16);
+> > > > >   	BUILD_BUG_ON(uring_cmd_pdu_size(1) != 80);
+> > > > > -	cmd_size = uring_cmd_pdu_size(req->ctx->flags & IORING_SETUP_SQE128);
+> > > > > +	if (req->ctx->flags & IORING_SETUP_SQE128)
+> > > > > +		size <<= 1;
+> > > > > -	memcpy(req->async_data, ioucmd->cmd, cmd_size);
+> > > > > +	memcpy(req->async_data, ioucmd->sqe, size);
+> > > > 
+> > > > The copy will make some fields of sqe become READ TWICE, and driver may see
+> > > > different sqe field value compared with the one observed in io_init_req().
+> > > 
+> > > This copy only happens if the operation goes to the async path
+> > > (calling io_uring_cmd_prep_async()).  This only happens if
+> > > f_op->uring_cmd() returns -EAGAIN.
+> > > 
+> > >            ret = file->f_op->uring_cmd(ioucmd, issue_flags);
+> > >            if (ret == -EAGAIN) {
+> > >                    if (!req_has_async_data(req)) {
+> > >                            if (io_alloc_async_data(req))
+> > >                                    return -ENOMEM;
+> > >                            io_uring_cmd_prep_async(req);
+> > >                    }
+> > >                    return -EAGAIN;
+> > >            }
+> > > 
+> > > Are you saying that after this copy, the operation is still reading from
+> > > sqe instead of req->async_data?
+> > 
+> > I meant that the 2nd read is on the sqe copy(req->aync_data), but same
+> > fields can become different between the two READs(first is done on original
+> > SQE during io_init_req(), and second is done on sqe copy in driver).
+> > 
+> > Will this kind of inconsistency cause trouble for driver? Cause READ
+> > TWICE becomes possible with this patch.
 > 
-> I meant that the 2nd read is on the sqe copy(req->aync_data), but same
-> fields can become different between the two READs(first is done on original
-> SQE during io_init_req(), and second is done on sqe copy in driver).
+> Right it might happen, and I was keeping that in mind, but it's not
+> specific to this patch. It won't reload core io_uring bits, and all
+
+It depends if driver reloads core bits or not, anyway the patch exports
+all fields and opens the window.
+
+> fields cmds use already have this problem.
+
+driver is supposed to load cmds field just once too, right?
+
 > 
-> Will this kind of inconsistency cause trouble for driver? Cause READ
-> TWICE becomes possible with this patch.
+> Unless there is a better option, the direction we'll be moving in is
+> adding a preparation step that should read and stash parts of SQE
+> it cares about, which should also make full SQE copy not
+> needed / optional.
 
-Right it might happen, and I was keeping that in mind, but it's not
-specific to this patch. It won't reload core io_uring bits, and all
-fields cmds use already have this problem.
+Sounds good.
 
-Unless there is a better option, the direction we'll be moving in is
-adding a preparation step that should read and stash parts of SQE
-it cares about, which should also make full SQE copy not
-needed / optional.
 
->> If you have an example of the two copes flow, that would be great.
-> 
-> Not any example yet, but also not see any access on cmd->sqe(except for cmd_op)
-> in your patches too.
+Thanks,
+Ming
 
--- 
-Pavel Begunkov
