@@ -1,47 +1,46 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106122107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587942102
 	for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 14:08:30 +0000 (UTC)
-Received: by mail-wr1-f53.google.com with SMTP id s12so9165356wrb.1
-        for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 07:08:30 -0700 (PDT)
+Received: by mail-wr1-f49.google.com with SMTP id i3so8327273wrc.4
+        for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 07:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1681481309; x=1684073309;
+        d=tessares.net; s=google; t=1681481308; x=1684073308;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m66cRDfB61TtjfV8yD54rvNQYmtYBLMGnE8NSc4/AeM=;
-        b=fY6FXzLykolJ+i9Za1CV4ll8jWr69FyB35y2mOLGOihNwAFCEZQOp8fOjHcwtyL02I
-         u5vd0ml7sD3Fr4Qtnbfyc5QH5cfa43RpmK1NozI/0c0gdHT7ZwNSc8qluqcpm7795JpG
-         xqtP6e/1jo172fq3SmjUOzkZRVIJAJ76/GgZ6JE5HTIU0wKD/Oz/SMwO5RJ5L4CPVmuJ
-         4p7BCaZ1DPzd4Eec0cxV2PeqngvlIZgZ5jfshNLHoIWa+GPsjezIkLKixGvFyJKfUgRy
-         r+mLB4xBUezdkFjGOvXayAqFaXyqYmd8Ts7Njzc3JVGvoUxVYYPgjcGnB74F/Y1bCadg
-         413w==
+        bh=dmK0FCUfNmeHXQ4DJ8Hz0byh7p8vyN8GhI+Kn6kA5ic=;
+        b=qngY7ZD1pySsHI+SAimaDsNO2GfF1aBNavcCotGj6RdfSeKnt4YJQkhECqjrPwvKyI
+         ndDoTuaPtt+tyGY/v+PVpKunlsL+oNr2CURiMl7B6Z6LBAUc9hvzU4To8Qu73jiyQ9mA
+         9PbM2z8jwDYYaBz1NktgHk5QXskA/YewaLddhgDC7F0WaU4YxA4+DRW/jt+WkPZp+gtj
+         3o5ajMHfd3NKcF0+MDEXbbS1ArNBwWtc6KAuG5yt/o9cTjY9Y2xhu/uyT3y7sQHRxzue
+         YYc6ucBESWMBcn1q20hDULFGMAUTGovrsLek3Y+QOCZoTjzFuBFijgzIa3ZwWTOsOYs5
+         ccVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681481309; x=1684073309;
+        d=1e100.net; s=20221208; t=1681481308; x=1684073308;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=m66cRDfB61TtjfV8yD54rvNQYmtYBLMGnE8NSc4/AeM=;
-        b=HWG704tGEaw2J+Tr13NkbsPkaDdfxax/Na+zn7W5aveozuPycwPb6q6alGlu5fedC4
-         rTehL9CpU46enXf3b2GTlHYbtDCyK+OGW3r2hwmRQd1e8Tg1TQ5ShkAEyIVUMPhBPvNz
-         PhVn98x3wY9HbETcCfYNFYtUVLh9QPnuKQytG7j5/eVoDy3TIX5gPXVbow1StXHHGvKB
-         u62dm12Lpk2eOjgC/zQXAFC8nGYTo1kL+VSXwDOHu6jkercyXOOdtE5PtXoagBxgRvor
-         NlWRF+326joaCZRkkR/JpQQTE9/ppnP0j9zeWtEqhlyQ8INE7UuhmwWCJGhW/GnOBy2O
-         2EuA==
-X-Gm-Message-State: AAQBX9cagWnTdqpDN//sbhqr06cndhImKYY+4PwR2xWeKoaq5dGqi8Ys
-	Y6g6zP5RH/fxpa0VvCUWDqS18w==
-X-Google-Smtp-Source: AKy350bA8/0376eltw9U92W6fyJcWu/gjRqArOrAL4R63+NWGnvftSBEoJT1Vi8etirM2fPo1S6idQ==
-X-Received: by 2002:adf:ebc7:0:b0:2f6:6f0c:a2ba with SMTP id v7-20020adfebc7000000b002f66f0ca2bamr3318268wrn.63.1681481309191;
-        Fri, 14 Apr 2023 07:08:29 -0700 (PDT)
+        bh=dmK0FCUfNmeHXQ4DJ8Hz0byh7p8vyN8GhI+Kn6kA5ic=;
+        b=chJwILKDvsrDRa5aHObj08LEHOWhSLKoaYBkKo0JipczE7Rk8ME6S7uCX+1x/vQTI7
+         Kz5BoO0GGS0yQrLQ9iBcirrzBgniwqsCOiW85nrg0j3Mr18+JHto3UA/Ueynq0CJkQqB
+         dlYsN1bM+d9f7eNujRLAnMK2M4tLO1P0Rw2V4KUlQVKWjJkg2Bpy34jKGwhS7QeoC/Qs
+         TXqcfd+OPwevQn44lfn8tPSF6yqJAvE+HbM1mCMgn3KvHH7cgmhzWl7Tkt5WfkzMU4a+
+         /gQ3WouMVgx2nDHd8B8JbIyXYj17wIeTRYGLWO+5oKYpEegJ0U0Ca/ILkyn7YJ7WihTC
+         W8wQ==
+X-Gm-Message-State: AAQBX9cTIIVL6Jtn7u9kazWnu8zEp40k3rVxHxRa9ykL96XlOqh2eCXL
+	cLy/erfqwWJX3xhX2pYxPSbv1A==
+X-Google-Smtp-Source: AKy350YwslMhP1L25HkhxfV9JbUM0Ew6TOTd4/xl01s5XymHCG4YaA2X+NUENIQ9OyoYOxuqT+5V9A==
+X-Received: by 2002:a05:6000:182:b0:2c9:b9bf:e20c with SMTP id p2-20020a056000018200b002c9b9bfe20cmr4061444wrx.2.1681481307476;
+        Fri, 14 Apr 2023 07:08:27 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id o5-20020a5d58c5000000b002f47ae62fe0sm3648185wrf.115.2023.04.14.07.08.28
+        by smtp.gmail.com with ESMTPSA id o5-20020a5d58c5000000b002f47ae62fe0sm3648185wrf.115.2023.04.14.07.08.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Apr 2023 07:08:28 -0700 (PDT)
+        Fri, 14 Apr 2023 07:08:27 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Fri, 14 Apr 2023 16:08:01 +0200
-Subject: [PATCH net-next 2/5] mptcp: avoid unneeded __mptcp_nmpc_socket()
- usage
+Date: Fri, 14 Apr 2023 16:08:00 +0200
+Subject: [PATCH net-next 1/5] mptcp: drop unneeded argument
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,7 +49,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230414-upstream-net-next-20230414-mptcp-refactor-first-subflow-init-v1-2-04d177057eb9@tessares.net>
+Message-Id: <20230414-upstream-net-next-20230414-mptcp-refactor-first-subflow-init-v1-1-04d177057eb9@tessares.net>
 References: <20230414-upstream-net-next-20230414-mptcp-refactor-first-subflow-init-v1-0-04d177057eb9@tessares.net>
 In-Reply-To: <20230414-upstream-net-next-20230414-mptcp-refactor-first-subflow-init-v1-0-04d177057eb9@tessares.net>
 To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
@@ -60,76 +59,101 @@ Cc: Ondrej Mosnacek <omosnace@redhat.com>, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1864;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3214;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=v3ERWSmGTwhX1zfSOFHxV4yLOCVx2TIDjGL56UvMCw0=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkOV5Zyl/LCHrWjit6z8vyaL4Okf2RFmEt3FnMi
- GJI4vpLCoiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZDleWQAKCRD2t4JPQmmg
- cxroEACJ0K+liYP3kEeK1Y3OyVkmSgD4Y+GGfKtR0SOc9aYpBCMnVKufnipdwiV2iJ4j4hfwbt7
- 6Q5g3VcDB7g/210e3iBTx0pjawiePuwz7YknZA1hHl3l5nWcuTLQG1yAESzwTTom7WJNTTJFJLu
- VpaNJFTtU1twEV9JmF+qBVReTZ+sa0A2cpgznnnOXii8zLtUzTsAWUXSrSWxJT1Y8c5mgjhbGmu
- Z8m+d3/Tm8izeLQtZfhnnyCV/ZG3950G7+te/gzIjeY5SAD4+ByZyz2F7Z9+O8sOKLTMwXFBGxv
- IRtATjxXwHzmW+tzijxnL4mODecfX7KRfD+P6soi4dj/hQHGzbfcNgj5n+SBT/3NEPZljm9CSw1
- zK9iUKr6Te4lW2Ewzd6uA+wzpfb3ibluVyV21Q5TLiqu3vTC2ZRoyzl2U0HGKbyuWufsRfeJ2jR
- eTWOSL7ZuAH+q6a6Hf1gJZ8IHXI0KhymFlKiMsvTY/kCBmvQkLeg04q7FRXuk5Cs9Laekn0nGQi
- jtd29DF6maOOO5NLdMAlf1puJ+zIybKP9kUjg/PtkKK6G+pWswf8W99JHjnQSlKn/78jWLUJtbj
- 0wy2DQD86waQ+ded1+8otDps+5fSarm7qr/c8XEkbLZkD54ZiT197PngORD7nCpmr4JCOtzE5ho
- g/llVsoT5mxWjjg==
+ bh=MaZ06pjF4key6Fm9pULF8bD6R2n9RR6/Lph50fcV+5c=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkOV5Z+BGDys8VB1jwJ/I95s1ZAbmqPntjUxuM3
+ BCQfTkfm3aJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZDleWQAKCRD2t4JPQmmg
+ c2PGD/9a2M2J4FmsqD7mq031j8Cw/jOwb1MYLrqouMG34GWmqBSZTRN2432RuVEXzlqWl7lcF3P
+ nK4fXBnc+uB2G3aky9mhS5WCebwI4/TEmXJ0p0LJNdtTHxpzK0Jqmi1A6Idls4fKqE555Y/sgrM
+ OLxVbunskkX7fKVFj84sKxCWPEzi/vwUt6g842ntgziVq2ZnWdtpamTO9E1fJxqe47Mvm0VqYtk
+ fkFvCCaWhWEAemff14JdYiiPggwsomZI9r9ky8piC8QdthtS4mBLidupihPLpvS9kE/aKqAr04q
+ d/TlBOp0vYTOUbAj0qGnCcpYleUowgtXgPGidKtt23qU2sEapehdyPFpHw7CkwUGrFc75LMdPr8
+ 2LIzOgy/bMTPJDE/sK+JlTSSIFIprz85cQp8ImKf79O0Lvc2DSRSsuFMLrnpVLRzW+mfrTzOn72
+ lKdVYua8JSYcSU77iWhTMNBgKJ2NZk4rUHkSQRouiyHNjDytlxoTitIskjhH1ZINJ+I8aJtLhj5
+ JDxlsyiLqumzsjP2D+56JYU04mE1CTGhca/+xkoSbTYGTn4asVFpKtz7Eh7pTimaM+mJmRFxKTf
+ 1L0v/7WBNNtvxhXJRrusDMNrdwh5zTHpUDSrXb8xmyQukbzsiJcq5Qr87VXD/LsuCCP2JyHQ6eJ
+ Bag0J0MVQK7B4Sw==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-In a few spots, the mptcp code invokes the __mptcp_nmpc_socket() helper
-multiple times under the same socket lock scope. Additionally, in such
-places, the socket status ensures that there is no MP capable handshake
-running.
-
-Under the above condition we can replace the later __mptcp_nmpc_socket()
-helper invocation with direct access to the msk->subflow pointer and
-better document such access is not supposed to fail with WARN().
+After commit 3a236aef280e ("mptcp: refactor passive socket initialization"),
+every mptcp_pm_fully_established() call is always invoked with a
+GFP_ATOMIC argument. We can then drop it.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- net/mptcp/protocol.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/mptcp/options.c  | 2 +-
+ net/mptcp/pm.c       | 4 ++--
+ net/mptcp/protocol.h | 2 +-
+ net/mptcp/subflow.c  | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e6cb36784a68..9cdcfdb44aee 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3143,7 +3143,7 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
- 	struct socket *listener;
- 	struct sock *newsk;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 355f798d575a..cd3b885c8faa 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1001,7 +1001,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+ 		clear_3rdack_retransmission(ssk);
+ 		mptcp_pm_subflow_established(msk);
+ 	} else {
+-		mptcp_pm_fully_established(msk, ssk, GFP_ATOMIC);
++		mptcp_pm_fully_established(msk, ssk);
+ 	}
+ 	return true;
  
--	listener = __mptcp_nmpc_socket(msk);
-+	listener = msk->subflow;
- 	if (WARN_ON_ONCE(!listener)) {
- 		*err = -EINVAL;
- 		return NULL;
-@@ -3363,7 +3363,7 @@ static int mptcp_get_port(struct sock *sk, unsigned short snum)
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct socket *ssock;
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 70f0ced3ca86..78c924506e83 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -126,7 +126,7 @@ static bool mptcp_pm_schedule_work(struct mptcp_sock *msk,
+ 	return true;
+ }
  
--	ssock = __mptcp_nmpc_socket(msk);
-+	ssock = msk->subflow;
- 	pr_debug("msk=%p, subflow=%p", msk, ssock);
- 	if (WARN_ON_ONCE(!ssock))
- 		return -EINVAL;
-@@ -3709,7 +3709,10 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+-void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk, gfp_t gfp)
++void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk)
+ {
+ 	struct mptcp_pm_data *pm = &msk->pm;
+ 	bool announce = false;
+@@ -150,7 +150,7 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk,
+ 	spin_unlock_bh(&pm->lock);
  
- 	pr_debug("msk=%p", msk);
+ 	if (announce)
+-		mptcp_event(MPTCP_EVENT_ESTABLISHED, msk, ssk, gfp);
++		mptcp_event(MPTCP_EVENT_ESTABLISHED, msk, ssk, GFP_ATOMIC);
+ }
  
--	ssock = __mptcp_nmpc_socket(msk);
-+	/* buggy applications can call accept on socket states other then LISTEN
-+	 * but no need to allocate the first subflow just to error out.
-+	 */
-+	ssock = msk->subflow;
- 	if (!ssock)
- 		return -EINVAL;
- 
+ void mptcp_pm_connection_closed(struct mptcp_sock *msk)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index e1310bc113be..a9eb0e428a6b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -782,7 +782,7 @@ bool mptcp_pm_addr_families_match(const struct sock *sk,
+ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
+ void mptcp_pm_nl_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk);
+ void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ssk, int server_side);
+-void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk, gfp_t gfp);
++void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk);
+ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk);
+ void mptcp_pm_connection_closed(struct mptcp_sock *msk);
+ void mptcp_pm_subflow_established(struct mptcp_sock *msk);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index f46d8f6c40aa..80bbe96c0694 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -850,7 +850,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 			 */
+ 			if (mp_opt.suboptions & OPTION_MPTCP_MPC_ACK) {
+ 				mptcp_subflow_fully_established(ctx, &mp_opt);
+-				mptcp_pm_fully_established(owner, child, GFP_ATOMIC);
++				mptcp_pm_fully_established(owner, child);
+ 				ctx->pm_notified = 1;
+ 			}
+ 		} else if (ctx->mp_join) {
 
 -- 
 2.39.2
