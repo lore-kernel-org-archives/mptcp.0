@@ -1,151 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5715A1FBB
-	for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 14:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1681480817;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=27YyBi9hssfCHBO7/PKix6vU7A+oXZmvyq6RpUloX40=;
-	b=NJRYVgNYUl0Biswn/+qXMnD3QbbQLgoFpsDrEFUsViNptokEcdouGE0VuFA7P6lr93hWfX
-	kKu5C9osY4SsAWphjsu/5tADO4XvKmWH9Vcj/AKknwyYHXRoYeIIjNtgVjEkPn5NGsMO5o
-	JFbJ27rQ0KoqYnR+nFT/V1fbEYUaHm0=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-630-BcRvrHRHMtmqZL31AExtOw-1; Fri, 14 Apr 2023 10:00:14 -0400
-X-MC-Unique: BcRvrHRHMtmqZL31AExtOw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3F8F41C0691B;
-	Fri, 14 Apr 2023 14:00:13 +0000 (UTC)
-Received: from ovpn-8-21.pek2.redhat.com (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0A3E6404DC40;
-	Fri, 14 Apr 2023 14:00:02 +0000 (UTC)
-Date: Fri, 14 Apr 2023 21:59:57 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Breno Leitao <leitao@debian.org>, axboe@kernel.dk, davem@davemloft.net,
-	dccp@vger.kernel.org, dsahern@kernel.org, edumazet@google.com,
-	io-uring@vger.kernel.org, kuba@kernel.org, leit@fb.com,
-	linux-kernel@vger.kernel.org, marcelo.leitner@gmail.com,
-	matthieu.baerts@tessares.net, mptcp@lists.linux.dev,
-	netdev@vger.kernel.org, pabeni@redhat.com,
-	willemdebruijn.kernel@gmail.com, ming.lei@redhat.com
-Subject: Re: [PATCH RFC] io_uring: Pass whole sqe to commands
-Message-ID: <ZDlcXd4K+a2iGbnv@ovpn-8-21.pek2.redhat.com>
-References: <20230406144330.1932798-1-leitao@debian.org>
- <20230406165705.3161734-1-leitao@debian.org>
- <ZDdvcSKLa6ZEAhRW@ovpn-8-18.pek2.redhat.com>
- <ZDgyPL6UrX/MaBR4@gmail.com>
- <ZDi2pP4jgHwCvJRm@ovpn-8-21.pek2.redhat.com>
- <44420e92-f629-f56e-f930-475be6f6a83a@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB10A20F6
+	for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 14:08:28 +0000 (UTC)
+Received: by mail-wr1-f49.google.com with SMTP id i3so8327173wrc.4
+        for <mptcp@lists.linux.dev>; Fri, 14 Apr 2023 07:08:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1681481306; x=1684073306;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=s1PB0Wv+X709r9gK1DvzM1L0T2wxDcvnl72V9qpeZSo=;
+        b=WTswzxto2LWs5T1ZZv4PfRoEv2lZ+IBkWicbwaiXNBl9NFYat2/WH0uxvXwRofEqn3
+         CidhDsjz7VIW8P3YV3Y1X/ntkrrmGH9eW2HFU2SJWzi1xuCsI5tnptZVOC+aGGG9cZuf
+         ZOWw+t/zlqev4P+EexhxM+qZ4wBrQ+u841VHiIDaBWW+ijMw6s8yHjRGroxef49S9XCh
+         tJ0H8bxT+koL2Uou5KV9XKYNwwDtmzOPSsWo4KrZw/Yc40NmNWJA5Nm2uWr+i4jYfZPx
+         DTc2m1iE4NRDkl3zqWios+VBrS+PClqIrVWUcZ2OQ8IniqiSJniMX6Au/VtRhdFR68ny
+         rTBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681481306; x=1684073306;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s1PB0Wv+X709r9gK1DvzM1L0T2wxDcvnl72V9qpeZSo=;
+        b=azsFPxCzj7PwYrwo6d8Q4g7m7DrUGtr+DpOYyFQEGe1vg3gzmx3Rlt6D+EL2bQFlMR
+         KC3v/kLda7US5j4u8FAU836OxgZDrBcTBYR2oLchCsahWr+uR1wQP9eaobEQJur8pHUj
+         j/xQ+zLcIqXc5sb+dgHzx/ec/u2bZb+VVdlYG7lxwSPwcvinbmNwnr1suMUAgPa+02/1
+         xp9Dfj9C8IO7mAC9Z8AbvXbyQB0v9ReV4ZC/+WBGmQy3wHal6INwUi+00jAJhb3mPOLH
+         c0Lvrd6QK6197Md3/O6/3FcVmCzFYR3W6vUlU0fzjQO4w2dkXdJw1DQ8gvkWkGE/Weko
+         1gRw==
+X-Gm-Message-State: AAQBX9fGjkEAeYm2pLHRJR0xA7o1eq39kq8egm+ufUl1yvK0QVnc70E/
+	5iTkTB3YVyc8+ANIdM0708gLKQ==
+X-Google-Smtp-Source: AKy350aGsOrJZHd0G9sjH0pEUFtRZ8X58J4OqAa/eg1kMTvhXqxCJotBcKwF6hELCEaKdNPm178A0g==
+X-Received: by 2002:adf:f492:0:b0:2f0:df59:1ea7 with SMTP id l18-20020adff492000000b002f0df591ea7mr4382632wro.31.1681481306425;
+        Fri, 14 Apr 2023 07:08:26 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id o5-20020a5d58c5000000b002f47ae62fe0sm3648185wrf.115.2023.04.14.07.08.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Apr 2023 07:08:26 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net-next 0/5] mptcp: refactor first subflow init
+Date: Fri, 14 Apr 2023 16:07:59 +0200
+Message-Id: <20230414-upstream-net-next-20230414-mptcp-refactor-first-subflow-init-v1-0-04d177057eb9@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <44420e92-f629-f56e-f930-475be6f6a83a@gmail.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD9eOWQC/z2O0QqDMAxFf0XyvDDnnOB+ZewhrekMzFra6ATx3
+ 1eF7SEPl3s5JyskjsIJ7sUKkWdJMvocLqcCbE/+xShdzlCV1bWsLzVOIWlkGtCz5lsU/9UQ1Aa
+ M7MjqGNFJTIppMu49flC8KBLXza3tXEOmhawwlBhNJG/7XZKRHc8H9TyQ+H0SMk+W48MH/Jzw3
+ LYvICelMbsAAAA=
+To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Ondrej Mosnacek <omosnace@redhat.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2218;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=HU9Ki4cI++7m6T8hYN0UqK/vmUY+R07+hTP2VGju6xA=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkOV5ZSkCmwdWKPC/lxOxiCWwqJbVICR+LGlNlL
+ N7BxQ8mHTGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZDleWQAKCRD2t4JPQmmg
+ c5fmD/4gtUdRr0TmXmfPmZmkvMiJjlxQBr0/fCh0UzFh4XlZ58xuk18KsQBYfmmftx/j2+e5Y8R
+ 9CBeqUCGrmaPr4oKxG9O2/Y0hJu1CK0CL/L44hJJoCOhO+DVlro+3qG1zsCl12WJzzE0utO0FMM
+ S1rIinJ/71SgRhfnTwr7wH3MGj5MdF1NcNXMGqiHHYyuvUvGYTE6SWZYhgR1mdZwYzKXiL0at5g
+ XfAGKhc9AkCNSoZTag1zV2VMeqOqtlglyjCyl1gdX61BuJAbw2NrF+VWyU6hgqPSQunDrqwGdDy
+ i6GwlWv7qIcixFRQtl7ZEgA/AnNedZfT8oNbQDiNSKDSitbOebghdafrjMM7e6j0bRpzFnCJVNp
+ wA+jEL6q0UiLcZFIdoXGKdUKsJtwfayOG3mDivik1krleg1DSb4vbATjCp+BL5N7A/RMZ3tOPqj
+ y1gA98HnHzrTK+yl6BFgQzqTCXbCntak4NNGQYiBSSOuLJ7Snlm0N55b45RrPK6U+xUXUBaahWL
+ pg7Z93+A308UPD99z2bolS7fdsnkdglhlV+2sZF9ngKbrtkapm5KFvkDR64OKC8EJnfcp+KYYLv
+ /nWM/7GyG9B3cRO3U5rnKAkOEwW0Mj2G/iPNzZXXp3K5i12dh9VybB9j7KO6aVmT8G0Mxqa0k+q
+ i5OCsTP7LkgfxJQ==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Fri, Apr 14, 2023 at 02:12:10PM +0100, Pavel Begunkov wrote:
-> On 4/14/23 03:12, Ming Lei wrote:
-> > On Thu, Apr 13, 2023 at 09:47:56AM -0700, Breno Leitao wrote:
-> > > Hello Ming,
-> > > 
-> > > On Thu, Apr 13, 2023 at 10:56:49AM +0800, Ming Lei wrote:
-> > > > On Thu, Apr 06, 2023 at 09:57:05AM -0700, Breno Leitao wrote:
-> > > > > Currently uring CMD operation relies on having large SQEs, but future
-> > > > > operations might want to use normal SQE.
-> > > > > 
-> > > > > The io_uring_cmd currently only saves the payload (cmd) part of the SQE,
-> > > > > but, for commands that use normal SQE size, it might be necessary to
-> > > > > access the initial SQE fields outside of the payload/cmd block.  So,
-> > > > > saves the whole SQE other than just the pdu.
-> > > > > 
-> > > > > This changes slighlty how the io_uring_cmd works, since the cmd
-> > > > > structures and callbacks are not opaque to io_uring anymore. I.e, the
-> > > > > callbacks can look at the SQE entries, not only, in the cmd structure.
-> > > > > 
-> > > > > The main advantage is that we don't need to create custom structures for
-> > > > > simple commands.
-> > > > > 
-> > > > > Suggested-by: Pavel Begunkov <asml.silence@gmail.com>
-> > > > > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > > > > ---
-> > > > 
-> > > > ...
-> > > > 
-> > > > > diff --git a/io_uring/uring_cmd.c b/io_uring/uring_cmd.c
-> > > > > index 2e4c483075d3..9648134ccae1 100644
-> > > > > --- a/io_uring/uring_cmd.c
-> > > > > +++ b/io_uring/uring_cmd.c
-> > > > > @@ -63,14 +63,15 @@ EXPORT_SYMBOL_GPL(io_uring_cmd_done);
-> > > > >   int io_uring_cmd_prep_async(struct io_kiocb *req)
-> > > > >   {
-> > > > >   	struct io_uring_cmd *ioucmd = io_kiocb_to_cmd(req, struct io_uring_cmd);
-> > > > > -	size_t cmd_size;
-> > > > > +	size_t size = sizeof(struct io_uring_sqe);
-> > > > >   	BUILD_BUG_ON(uring_cmd_pdu_size(0) != 16);
-> > > > >   	BUILD_BUG_ON(uring_cmd_pdu_size(1) != 80);
-> > > > > -	cmd_size = uring_cmd_pdu_size(req->ctx->flags & IORING_SETUP_SQE128);
-> > > > > +	if (req->ctx->flags & IORING_SETUP_SQE128)
-> > > > > +		size <<= 1;
-> > > > > -	memcpy(req->async_data, ioucmd->cmd, cmd_size);
-> > > > > +	memcpy(req->async_data, ioucmd->sqe, size);
-> > > > 
-> > > > The copy will make some fields of sqe become READ TWICE, and driver may see
-> > > > different sqe field value compared with the one observed in io_init_req().
-> > > 
-> > > This copy only happens if the operation goes to the async path
-> > > (calling io_uring_cmd_prep_async()).  This only happens if
-> > > f_op->uring_cmd() returns -EAGAIN.
-> > > 
-> > >            ret = file->f_op->uring_cmd(ioucmd, issue_flags);
-> > >            if (ret == -EAGAIN) {
-> > >                    if (!req_has_async_data(req)) {
-> > >                            if (io_alloc_async_data(req))
-> > >                                    return -ENOMEM;
-> > >                            io_uring_cmd_prep_async(req);
-> > >                    }
-> > >                    return -EAGAIN;
-> > >            }
-> > > 
-> > > Are you saying that after this copy, the operation is still reading from
-> > > sqe instead of req->async_data?
-> > 
-> > I meant that the 2nd read is on the sqe copy(req->aync_data), but same
-> > fields can become different between the two READs(first is done on original
-> > SQE during io_init_req(), and second is done on sqe copy in driver).
-> > 
-> > Will this kind of inconsistency cause trouble for driver? Cause READ
-> > TWICE becomes possible with this patch.
-> 
-> Right it might happen, and I was keeping that in mind, but it's not
-> specific to this patch. It won't reload core io_uring bits, and all
+This series refactors the initialisation of the first subflow of a
+listen socket. The first subflow allocation is no longer done at the
+initialisation of the socket but later, when the connection request is
+received or when requested by the userspace.
 
-It depends if driver reloads core bits or not, anyway the patch exports
-all fields and opens the window.
+This is needed not just because Paolo likes to refactor things but
+because this simplifies the code and makes the behaviour more consistent
+with the rest. Also, this is a prerequisite for future patches adding
+proper support of SELinux/LSM labels with MPTCP and accept(2).
 
-> fields cmds use already have this problem.
+In [1], Ondrej Mosnacek explained they discovered the (userspace-facing)
+sockets returned by accept(2) when using MPTCP always end up with the
+label representing the kernel (typically system_u:system_r:kernel_t:s0),
+while it would make more sense to inherit the context from the parent
+socket (the one that is passed to accept(2)).
 
-driver is supposed to load cmds field just once too, right?
+Before being able to properly support that on SELinux/LSM side, patches
+2-3/5 prepare the code to simplify the patch 4/5 moving the allocation.
 
-> 
-> Unless there is a better option, the direction we'll be moving in is
-> adding a preparation step that should read and stash parts of SQE
-> it cares about, which should also make full SQE copy not
-> needed / optional.
+Patch 1/5 is a small clean-up seen while working on the series and patch
+5/5 is a small improvement when closing unaccepted sockets.
 
-Sounds good.
+[1] https://lore.kernel.org/netdev/CAFqZXNs2LF-OoQBUiiSEyranJUXkPLcCfBkMkwFeM6qEwMKCTw@mail.gmail.com/
 
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Paolo Abeni (5):
+      mptcp: drop unneeded argument
+      mptcp: avoid unneeded __mptcp_nmpc_socket() usage
+      mptcp: move fastopen subflow check inside mptcp_sendmsg_fastopen()
+      mptcp: move first subflow allocation at mpc access time
+      mptcp: fastclose msk when cleaning unaccepted sockets
 
-Thanks,
-Ming
+ net/mptcp/options.c    |  2 +-
+ net/mptcp/pm.c         |  4 +--
+ net/mptcp/pm_netlink.c |  4 +--
+ net/mptcp/protocol.c   | 97 +++++++++++++++++++++++++++++++++-----------------
+ net/mptcp/protocol.h   |  4 +--
+ net/mptcp/sockopt.c    | 24 +++++++------
+ net/mptcp/subflow.c    |  2 +-
+ 7 files changed, 86 insertions(+), 51 deletions(-)
+---
+base-commit: e473ea818bfe42cbdf872c41593cbaf24dbf1297
+change-id: 20230414-upstream-net-next-20230414-mptcp-refactor-first-subflow-init-ae4659df6ab9
+
+Best regards,
+-- 
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
