@@ -1,23 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC21E1848
-	for <mptcp@lists.linux.dev>; Mon, 17 Apr 2023 07:20:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7C6BCC43321;
-	Mon, 17 Apr 2023 07:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10403C2E2
+	for <mptcp@lists.linux.dev>; Mon, 17 Apr 2023 07:30:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A5B1CC4339C;
+	Mon, 17 Apr 2023 07:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681716022;
-	bh=u2Sguc+3766z1o03X+zVOjd8o1h6bry1xdq0odNeVqY=;
+	s=k20201202; t=1681716619;
+	bh=leNX+acNVy8tTVTexUmA8hPJABXi1tT50Vr4vkpw6pM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=s01MbO9j/hOSKo3HvKIYIvoge9ZYVGNEbygdM+YonPC+6JpfccQOZi151HZK+lid0
-	 DmCdKWnLkwF16+Oq3CBrr6UZq64M0Jf4gkqA/EM+eyUUnEm+C3j4ssG1HSX2lszPWo
-	 3bnN6ZSTE4r5Cf4ZMM9Qh9tMZU36xwcwyaP4EYPdFY5uJXIUzc2CDP7W2mGiuvpnVk
-	 Ia6DmHZ8SeatfrLqQ+lVexCEjovw8uMp2mtjGSfesF+1kPiqVo4iTrnE/zU2PlBNRI
-	 Ke7fIXTxn5bxuYTuuEm8Q8INbpp1W4kRvj1FAGbO8TqrSD/5o+YUEIB8uE4oOngOP3
-	 Ya1V5BxiRGECw==
+	b=tR7sdBYa9NbzRjRv6hIqQGaM3dJjhqJQeRCYuvk6s7fWqZW3T5TpC4KI7EBkkL2Qx
+	 LI2w1L2Apy0+H/nNsvPGxRKLYMPaPVRqWAZcwIBmnIRf5jGQRPCRfgCUAoROUbqzdM
+	 nkdJPtSwlmnr7JJUyKeisGXSNLozIeoXmOn4OcytarVGdPc1hHMokysbTc/IKI60Ma
+	 MEhUpkOCJOFMnbP9tZbN4hfrEFPp9R5bBcPd3wnuv+058lislHdSytrSgZBnEsxttk
+	 y3FAMzFPXiya7T3dzUC74si5Xy5ZwhSQnJPWAakw3znG2C4lOFyjo/1k/WUvc6BTWw
+	 zMAaRsZ17EzAA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 52590E3309E;
-	Mon, 17 Apr 2023 07:20:22 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 868D2E3309E;
+	Mon, 17 Apr 2023 07:30:19 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -26,47 +26,48 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/5] mptcp: refactor first subflow init
+Subject: Re: [PATCH net-next 0/5] mptcp: various small cleanups
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <168171602233.1935.2357676124507584739.git-patchwork-notify@kernel.org>
-Date: Mon, 17 Apr 2023 07:20:22 +0000
-References: <20230414-upstream-net-next-20230414-mptcp-refactor-first-subflow-init-v1-0-04d177057eb9@tessares.net>
-In-Reply-To: <20230414-upstream-net-next-20230414-mptcp-refactor-first-subflow-init-v1-0-04d177057eb9@tessares.net>
+ <168171661954.7386.4716677833792034478.git-patchwork-notify@kernel.org>
+Date: Mon, 17 Apr 2023 07:30:19 +0000
+References: <20230414-upstream-net-next-20230414-mptcp-small-cleanups-v1-0-5aa4a2e05cf2@tessares.net>
+In-Reply-To: <20230414-upstream-net-next-20230414-mptcp-small-cleanups-v1-0-5aa4a2e05cf2@tessares.net>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
 Cc: mptcp@lists.linux.dev, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, omosnace@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+ kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ geliang.tang@suse.com, abaci@linux.alibaba.com, martineau@kernel.org,
+ jiapeng.chong@linux.alibaba.com
 
 Hello:
 
 This series was applied to netdev/net-next.git (main)
 by David S. Miller <davem@davemloft.net>:
 
-On Fri, 14 Apr 2023 16:07:59 +0200 you wrote:
-> This series refactors the initialisation of the first subflow of a
-> listen socket. The first subflow allocation is no longer done at the
-> initialisation of the socket but later, when the connection request is
-> received or when requested by the userspace.
+On Fri, 14 Apr 2023 17:47:05 +0200 you wrote:
+> Patch 1 makes a function static because it is only used in one file.
 > 
-> This is needed not just because Paolo likes to refactor things but
-> because this simplifies the code and makes the behaviour more consistent
-> with the rest. Also, this is a prerequisite for future patches adding
-> proper support of SELinux/LSM labels with MPTCP and accept(2).
+> Patch 2 adds info about the git trees we use to help occasional devs.
+> 
+> Patch 3 removes an unused variable.
+> 
+> Patch 4 removes duplicated entries from the help menu of a tool used in
+> MPTCP selftests.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,1/5] mptcp: drop unneeded argument
-    https://git.kernel.org/netdev/net-next/c/7a486c443c89
-  - [net-next,2/5] mptcp: avoid unneeded __mptcp_nmpc_socket() usage
-    https://git.kernel.org/netdev/net-next/c/617612316953
-  - [net-next,3/5] mptcp: move fastopen subflow check inside mptcp_sendmsg_fastopen()
-    https://git.kernel.org/netdev/net-next/c/a2702a076e73
-  - [net-next,4/5] mptcp: move first subflow allocation at mpc access time
-    https://git.kernel.org/netdev/net-next/c/ddb1a072f858
-  - [net-next,5/5] mptcp: fastclose msk when cleaning unaccepted sockets
-    https://git.kernel.org/netdev/net-next/c/8d547809a5d7
+  - [net-next,1/5] mptcp: make userspace_pm_append_new_local_addr static
+    https://git.kernel.org/netdev/net-next/c/aa5887dca2d2
+  - [net-next,2/5] MAINTAINERS: add git trees for MPTCP
+    https://git.kernel.org/netdev/net-next/c/c3d713409b53
+  - [net-next,3/5] mptcp: remove unused 'remaining' variable
+    https://git.kernel.org/netdev/net-next/c/ce395d0e3ad5
+  - [net-next,4/5] selftests: mptcp: remove duplicated entries in usage
+    https://git.kernel.org/netdev/net-next/c/0a85264e48b6
+  - [net-next,5/5] selftests: mptcp: join: fix ShellCheck warnings
+    https://git.kernel.org/netdev/net-next/c/0fcd72df8847
 
 You are awesome, thank you!
 -- 
