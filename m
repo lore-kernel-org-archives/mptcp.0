@@ -1,83 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31938186A
-	for <mptcp@lists.linux.dev>; Sun, 16 Apr 2023 09:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1681638697;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3rm3Tx4scnUmIq1Y7/GKTAQGQLeBUUnvNMLalbZs9d4=;
-	b=hQS9e4rbjWXadvNqjn6shqHvQmFe/IiAO7Bp+0/LXZ0Xb3aUSTn8Ci+qqQZvkn/UjDPE5e
-	Jb7R94vUUUmetPNGSs0dMHlDEHpC8Syog30qThpGnu/TgCZ1XME02eyJ9BbWn4BZncUI9a
-	p8xGobAutvTw/C6cLDcDcsbFy1QM3U4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-492-pFmwaZ38MRmb-VHaBeYHqg-1; Sun, 16 Apr 2023 05:51:33 -0400
-X-MC-Unique: pFmwaZ38MRmb-VHaBeYHqg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BA6AB185A78F;
-	Sun, 16 Apr 2023 09:51:32 +0000 (UTC)
-Received: from ovpn-8-16.pek2.redhat.com (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2053614152F6;
-	Sun, 16 Apr 2023 09:51:20 +0000 (UTC)
-Date: Sun, 16 Apr 2023 17:51:14 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Breno Leitao <leitao@debian.org>, axboe@kernel.dk, davem@davemloft.net,
-	dccp@vger.kernel.org, dsahern@kernel.org, edumazet@google.com,
-	io-uring@vger.kernel.org, kuba@kernel.org, leit@fb.com,
-	linux-kernel@vger.kernel.org, marcelo.leitner@gmail.com,
-	matthieu.baerts@tessares.net, mptcp@lists.linux.dev,
-	netdev@vger.kernel.org, pabeni@redhat.com,
-	willemdebruijn.kernel@gmail.com, ming.lei@redhat.com
-Subject: Re: [PATCH RFC] io_uring: Pass whole sqe to commands
-Message-ID: <ZDvFEkRo+yor7FM+@ovpn-8-16.pek2.redhat.com>
-References: <20230406144330.1932798-1-leitao@debian.org>
- <20230406165705.3161734-1-leitao@debian.org>
- <ZDdvcSKLa6ZEAhRW@ovpn-8-18.pek2.redhat.com>
- <ZDgyPL6UrX/MaBR4@gmail.com>
- <ZDi2pP4jgHwCvJRm@ovpn-8-21.pek2.redhat.com>
- <44420e92-f629-f56e-f930-475be6f6a83a@gmail.com>
- <ZDlcXd4K+a2iGbnv@ovpn-8-21.pek2.redhat.com>
- <e152d8f0-6bf9-f658-f484-f7a18055a664@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC21E1848
+	for <mptcp@lists.linux.dev>; Mon, 17 Apr 2023 07:20:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7C6BCC43321;
+	Mon, 17 Apr 2023 07:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1681716022;
+	bh=u2Sguc+3766z1o03X+zVOjd8o1h6bry1xdq0odNeVqY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=s01MbO9j/hOSKo3HvKIYIvoge9ZYVGNEbygdM+YonPC+6JpfccQOZi151HZK+lid0
+	 DmCdKWnLkwF16+Oq3CBrr6UZq64M0Jf4gkqA/EM+eyUUnEm+C3j4ssG1HSX2lszPWo
+	 3bnN6ZSTE4r5Cf4ZMM9Qh9tMZU36xwcwyaP4EYPdFY5uJXIUzc2CDP7W2mGiuvpnVk
+	 Ia6DmHZ8SeatfrLqQ+lVexCEjovw8uMp2mtjGSfesF+1kPiqVo4iTrnE/zU2PlBNRI
+	 Ke7fIXTxn5bxuYTuuEm8Q8INbpp1W4kRvj1FAGbO8TqrSD/5o+YUEIB8uE4oOngOP3
+	 Ya1V5BxiRGECw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 52590E3309E;
+	Mon, 17 Apr 2023 07:20:22 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e152d8f0-6bf9-f658-f484-f7a18055a664@gmail.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/5] mptcp: refactor first subflow init
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <168171602233.1935.2357676124507584739.git-patchwork-notify@kernel.org>
+Date: Mon, 17 Apr 2023 07:20:22 +0000
+References: <20230414-upstream-net-next-20230414-mptcp-refactor-first-subflow-init-v1-0-04d177057eb9@tessares.net>
+In-Reply-To: <20230414-upstream-net-next-20230414-mptcp-refactor-first-subflow-init-v1-0-04d177057eb9@tessares.net>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, omosnace@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 03:56:47PM +0100, Pavel Begunkov wrote:
-> On 4/14/23 14:59, Ming Lei wrote:
-> [...]
-> > > > Will this kind of inconsistency cause trouble for driver? Cause READ
-> > > > TWICE becomes possible with this patch.
-> > > 
-> > > Right it might happen, and I was keeping that in mind, but it's not
-> > > specific to this patch. It won't reload core io_uring bits, and all
-> > 
-> > It depends if driver reloads core bits or not, anyway the patch exports
-> > all fields and opens the window.
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
+
+On Fri, 14 Apr 2023 16:07:59 +0200 you wrote:
+> This series refactors the initialisation of the first subflow of a
+> listen socket. The first subflow allocation is no longer done at the
+> initialisation of the socket but later, when the connection request is
+> received or when requested by the userspace.
 > 
-> If a driver tries to reload core bits and even worse modify io_uring
-> request without proper helpers, it should be rooted out and thrown
-> into a bin. In any case cmds are expected to exercise cautiousness
-> while working with SQEs as they may change. I'd even argue that
-> hiding it as void *cmd makes it much less obvious.
+> This is needed not just because Paolo likes to refactor things but
+> because this simplifies the code and makes the behaviour more consistent
+> with the rest. Also, this is a prerequisite for future patches adding
+> proper support of SELinux/LSM labels with MPTCP and accept(2).
+> 
+> [...]
 
-Fair enough, if it is well documented, then people will know these
-problems and any change in this area can get careful review.
+Here is the summary with links:
+  - [net-next,1/5] mptcp: drop unneeded argument
+    https://git.kernel.org/netdev/net-next/c/7a486c443c89
+  - [net-next,2/5] mptcp: avoid unneeded __mptcp_nmpc_socket() usage
+    https://git.kernel.org/netdev/net-next/c/617612316953
+  - [net-next,3/5] mptcp: move fastopen subflow check inside mptcp_sendmsg_fastopen()
+    https://git.kernel.org/netdev/net-next/c/a2702a076e73
+  - [net-next,4/5] mptcp: move first subflow allocation at mpc access time
+    https://git.kernel.org/netdev/net-next/c/ddb1a072f858
+  - [net-next,5/5] mptcp: fastclose msk when cleaning unaccepted sockets
+    https://git.kernel.org/netdev/net-next/c/8d547809a5d7
 
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Thanks, 
-Ming
 
