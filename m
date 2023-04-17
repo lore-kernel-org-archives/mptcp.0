@@ -1,96 +1,119 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55B56FCB
-	for <mptcp@lists.linux.dev>; Mon, 17 Apr 2023 13:52:26 +0000 (UTC)
-Received: by mail-ej1-f44.google.com with SMTP id xd13so30397390ejb.4
-        for <mptcp@lists.linux.dev>; Mon, 17 Apr 2023 06:52:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDA26FCB
+	for <mptcp@lists.linux.dev>; Mon, 17 Apr 2023 14:00:48 +0000 (UTC)
+Received: by mail-wm1-f52.google.com with SMTP id gw13so13836564wmb.3
+        for <mptcp@lists.linux.dev>; Mon, 17 Apr 2023 07:00:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1681739544; x=1684331544;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lW3ir3pNcu8iEW4vVakiINroAgOWLO5lZBwSFsFBBSg=;
-        b=tCpyfWj8p7g7HYO8gApzLbwFSDxTGdgZDXaf4M15IEOfv2qPF80LZ1vHVJHv5sYaau
-         s9zoombn+Nz3n514TLbTJwZ1Z9NQF0LZBHrsDmU5x8BkFDPMI62Dt4UTCJgDQzSle1Nw
-         RMsg3LOEycQnIu+iHkzrD75cDRefLlmJuJ2ijKSXNICQ+6bor1Kvco5LfjQIWsLC2cxp
-         HkWHVyLTBY1V/869C0HXPh1leU28DJe/dLT7yzJJjx2C7dMwMXovP73c1QAdKFLpawLN
-         pwbnUGH1igsxYeKMXyFuSp449E2cwMFnqMgJDpwxAjnD4jeYghBTpvoSvbV+wS9HcWyD
-         OsIA==
+        d=tessares.net; s=google; t=1681740047; x=1684332047;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lwYZr0tdmSWA2lS4jSh8G0uHrl4ssZt285ILCs+hSX0=;
+        b=MOoHIpZOiD5XrGBLi+alDgsoj4qZK4BazoRK5tcbh1e3yizm/aY40p+Dwxa97Ch1mb
+         odtqFczGCXEBV65kL46gMTBWjEth9fsT7GPvuLPHx6+eM4ASdzgY7g9b3re0cHfeB7Fc
+         6l/EwJSK52F4/zhh5QnAAzdVCTUQDE8ur6LMFM8KRG0LCIoquphE+bpY+TJr09Gi+/r2
+         Y+YvnM7DoCMtUnYqRZ2YqKKZ3zPdo4m1WIHh/lN0FPiRoWKHNa/eTxUXnoX/vpfI8UQv
+         HBfdYPKq0s7rz49af4Z6UiVa9YDKnCrCufB7a/o6GfftgNDz9hL3gTC4Wif2CGq1axur
+         yhGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681739544; x=1684331544;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lW3ir3pNcu8iEW4vVakiINroAgOWLO5lZBwSFsFBBSg=;
-        b=SHD3E+AX2lzvdzD8rBqsjc34XOPaXqHguDPJ2iiagL3wrKRIx6s3JV+86XO2M9nIUx
-         FgraY7CtByTwwQHuYXpmTUgp7KQjA60+bg3hXeL6AlIbwLd0kKCPSoow5cB9SwtoqV5l
-         3dX0KJpp70HUX5eBz0q++updXcFKngFOAziNvUZjgmyKwy643emVk1MtPsYS7pmOLjEf
-         9l52a5b+WwjD76yzb2B7lrSvdQPmL7hEpH+nKzorEg1cGVyNyFMb1CarX6HW7t2xiYgO
-         UKQq3LYmWq6P+WlpZGjcLHotEK0dxQVR+rWEg4XwiV1WZ7UcvV9AdE89cMXakv1wx5ea
-         Rd2g==
-X-Gm-Message-State: AAQBX9fUuJhDRt8XyHGiOJIKq4YWTL0kNQ1kclAIqFl1OgSin2MMvhj1
-	K8MrI4aqsyPRTp5SigRTGg60lXMZAlYAA2tG0OHoCw==
-X-Google-Smtp-Source: AKy350aXLrO19IWe785LBmfAqMVlK39jmeq/U6olKd/GoscUDXVrr6Z8bOc+jjCoZF5rE60b5van+g==
-X-Received: by 2002:a17:907:3c07:b0:92b:6b6d:2daf with SMTP id gh7-20020a1709073c0700b0092b6b6d2dafmr6276075ejc.77.1681739544610;
-        Mon, 17 Apr 2023 06:52:24 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id v25-20020a170906381900b0094f3f222d34sm2729390ejc.56.2023.04.17.06.52.24
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Apr 2023 06:52:24 -0700 (PDT)
-Message-ID: <6bbe26ed-9079-d826-4b07-276e4ade8c16@tessares.net>
-Date: Mon, 17 Apr 2023 15:52:23 +0200
+        d=1e100.net; s=20221208; t=1681740047; x=1684332047;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lwYZr0tdmSWA2lS4jSh8G0uHrl4ssZt285ILCs+hSX0=;
+        b=Oowc/s10/QbZF3aPfdDnmXT+TrsaF5bDefaSg3tq1ScnzKOtzyK77691qZzCCcUUah
+         TMFriPJ7oGSzOYfC0LDWTgJRebeWklCqd1lO2VeQ2bE9eIr41AHIMESuklIrugTwpIjb
+         pg4s+Lvq+5q6UtsBV4nMi14wG3g0cGsIaCHslghfqWF0pYjr4feIrlJAggrrUgggLsCS
+         bmzb/Z1NEjCJAMI9KdAB/PrGO2jfu+NXWv804MFBX/MCnvC+gHqwffZjZw8QJjFD6j54
+         nYF++8LjlyP+eaKr5aBFZ+CfCW5D4pUK/AUPGdiZqcw8psXvP8NLiuHSRxctB9Whz9Q+
+         CrSA==
+X-Gm-Message-State: AAQBX9dxQjbTVsOTSqbxqmzzOS5JJn2WksbOLTlGBYvyce6Uxw/Kypc2
+	DUx2VMU4NUS03PZgnWLniAYDFA==
+X-Google-Smtp-Source: AKy350YWApKGUen0p3cpHF0CL1GxnS4R+9/uyq7VhhxQhCy77ndfYxW/ZayZEq1eubZ/9S/A7gr5pw==
+X-Received: by 2002:a7b:cb06:0:b0:3ef:f26b:a187 with SMTP id u6-20020a7bcb06000000b003eff26ba187mr9822770wmj.0.1681740046780;
+        Mon, 17 Apr 2023 07:00:46 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id x12-20020adff0cc000000b002d64fcb362dsm10580652wro.111.2023.04.17.07.00.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Apr 2023 07:00:46 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net 0/2] mptcp: fixes around listening sockets and the
+ MPTCP worker
+Date: Mon, 17 Apr 2023 16:00:39 +0200
+Message-Id: <20230417-upstream-net-20230417-mptcp-worker-acceptw-v1-0-1d2ecf6d1ae4@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH mptcp-next] Squash to "mptcp: fix accept vs worker race"
-Content-Language: en-GB
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20230417134134.1636540-1-matthieu.baerts@tessares.net>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20230417134134.1636540-1-matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAdRPWQC/z3OwQqDMBAE0F+RPXepMS3S/krxsK5rDcUYNmkVx
+ H83FtrjzMBjVoiiTiLcixVUPi66yedgTgXwQP4p6LqcoSorW15Mje8QkwqN6CXhvx1D4oDzpC9
+ RJGYJaUZrenvtarZyI8hgS1GwVfI8HGQ6/6xjDCq9W75PHpBtaLZtBwd70WqeAAAA
+To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Christoph Paasch <cpaasch@apple.com>, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1777;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=sE3/rnP5lAEFTV7sAWWzUeeAVYS7OAXmYmfeSexbhZ4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkPVENs23FmmZFYmqwW+NbjgJm5qm1Ri21lKPlc
+ /QvqpmSzZyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZD1RDQAKCRD2t4JPQmmg
+ c574EACF4M/8vhN6Xxj2AN1dcf/5sFKLreu6hGictpgTQCg3XWa71jJTaBoWiX3D1/4ZIw6uwhd
+ q0b2gCP/l6lWW1IoKYp4euGGwEgPwhRuOKgMVKqrsrLv9ifzLlFhPbsAlN+cbrYs0tZgLyoJTWM
+ nGjq4GFENyrMWujwG5e/z7almhDcWEu7RLDzX2vkvxCVlr2Gnd/ByLAP51Epmmo36APeS+/PoR4
+ DOcpmeWaPQfvObUQJS9cyN+UB1zTwcnzQ7YYwUFER4Q5qp3ge/SwgAXYWsSJZGk55skv5ZJTpT7
+ zmsW9XTNn7B0tiilaNKHOQYeEDnCap/VhjHVQw9zphsN4ely2EvJL9mDVXmQyScQ01tR2fq5Ku9
+ r5sBW8ZtDWZW4HYhJvMQGSeY4XrTrWUe4BfBioPqtOBjhGTw7tavb9juHiWk2syfw+PFDtZE2TZ
+ 08iqKTwEzZcxpPiJNS5FtIr9MxvjFDv5cqGCt3Frp3dbkfWCgHeY+LOA7RL7wu1vynZ/qACC2AK
+ mGUlY4A0lueCGIxLJB+iELvzTwd0Zg8lfvE6VAklgSlZFefj5b070hTtZFLjm8l2yj2k8AfJwre
+ 4nExvTx50gk9W6nHa7JMbV9wypeBdDXUZCihffd9wagdFaD+M+GbiFGLajShYNyweG1ydGU6Fvr
+ YsOUUM4Le0+JD1w==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello,
+Christoph Paasch reported a couple of issues found by syzkaller and
+linked to operations done by the MPTCP worker on (un)accepted sockets.
 
-On 17/04/2023 15:41, Matthieu Baerts wrote:
-> Just move the declaration of __mptcp_unaccepted_force_close() lower to
-> avoid conflicts when merging with the current net-next, see
-> commit ddb1a072f858 ("mptcp: move first subflow allocation at mpc access
-> time").
-> 
-> By doing that, I can send our two last patches queued for -net without
-> creating conflicts.
-> 
-> At the end, __mptcp_unaccepted_force_close() is declared after
-> mptcp_cancel_work() (but before __mptcp_close()).
-> 
-> I'm going to apply this patch and then sent the two fix to netdev. I
-> hope that's OK!
+Fixing these issues was not obvious and rather complex but Paolo Abeni
+nicely managed to propose these excellent patches that seem to satisfy
+syzkaller.
 
-Just did:
+Patch 1 partially reverts a recent fix but while still providing a
+solution for the previous issue, it also prevents the MPTCP worker from
+running concurrently with inet_csk_listen_stop(). A warning is then
+avoided. The partially reverted patch has been introduced in v6.3-rc3,
+backported up to v6.1 and fixing an issue visible from v5.18.
 
-New patches for t/upstream:
-- d8d5315ec77f: "squashed" in "mptcp: fix accept vs worker race"
-- 680788b99efb: conflict in top-bases/t/DO-NOT-MERGE-git-markup-net-next
-(fix the previous conflict resolution)
-- Results: 9787cab4f315..9a0205674b16 (export-net)
-- Results: 1fcf1c7d50dc..f43ad21ca737 (export)
+Patch 2 prevents the MPTCP worker to race with mptcp_accept() causing a
+UaF when a fallback to TCP is done while in parallel, the socket is
+being accepted by the userspace. This is also a fix of a previous fix
+introduced in v6.3-rc3, backported up to v6.1 but here fixing an issue
+that is in theory there from v5.7. There is no need to backport it up
+to here as it looks like it is only visible later, around v5.18, see the
+previous cover-letter linked to this original fix.
 
-Tests are now in progress:
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Paolo Abeni (2):
+      mptcp: stops worker on unaccepted sockets at listener close
+      mptcp: fix accept vs worker race
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230417T134909
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230417T134909
+ net/mptcp/protocol.c | 74 ++++++++++++++++++++++++++++++++----------------
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  | 80 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 129 insertions(+), 27 deletions(-)
+---
+base-commit: 338469d677e5d426f5ada88761f16f6d2c7c1981
+change-id: 20230417-upstream-net-20230417-mptcp-worker-acceptw-31f35d7c3e9a
 
-Cheers,
-Matt
+Best regards,
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Matthieu Baerts <matthieu.baerts@tessares.net>
+
