@@ -1,56 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03AEAFE6
-	for <mptcp@lists.linux.dev>; Tue, 18 Apr 2023 18:57:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A130C433EF;
-	Tue, 18 Apr 2023 18:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681844260;
-	bh=pvhh1HBF2ZpOHH24X5AqKQ6tayz4pTahSUgPTUbeW5k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FwUp8xCQRqj5Z90J/QV7b8uJIVjwUVCzytL4PjDMavAstZWEicp87b72HmwquB+MA
-	 dmvdVEED+yOJ+02W/FQwvDjrql1YfYJ7D0GTLfPJhpEIS8QD8Y6B3GnRKsSmVnutn4
-	 mkVB4BDXAm/SJsoqEWwfkJBrbevYqV1kAzTM5wg/WdQOeh2EX+tN05j2ycxRfVv6Qj
-	 Kn0NXeq4WjvTgveK2GYQGvqz8xa5w4maQz5V/laAruQDmZISR9VZmC/xMYlse8Wxx6
-	 y3Kakeo5b0sj14LbQoVxPLj57u7fi2N3AalypaUR1aR7VZ4YXnf2hbM8Xf/ObOXCBD
-	 08LCyXYLzWQww==
-From: Mat Martineau <martineau@kernel.org>
-To: mptcp@lists.linux.dev,
-	matthieu.baerts@tessares.net
-Cc: Mat Martineau <martineau@kernel.org>
-Subject: [PATCH mptcp-next] MAINTAINERS: Resume MPTCP co-maintainer role
-Date: Tue, 18 Apr 2023 11:57:30 -0700
-Message-Id: <20230418185730.40775-1-martineau@kernel.org>
-X-Mailer: git-send-email 2.40.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E352AFED
+	for <mptcp@lists.linux.dev>; Tue, 18 Apr 2023 19:41:26 +0000 (UTC)
+Received: by mail-qv1-f53.google.com with SMTP id op30so18341243qvb.3
+        for <mptcp@lists.linux.dev>; Tue, 18 Apr 2023 12:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681846885; x=1684438885;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dqdkta1Zk1UqyIAXbk1/CAopdFNFnp9tf0jtsKEKX/U=;
+        b=k+BsMLjVgeY/JRtYXrnJI7vJ28yuIV8fhFcqK/kmJDiMB5YFSQbzH9svJL79M/gtvu
+         VkXtGsnxtx/EqNRIl8oeR6K/kcokITpfVeYv6D7/FX6vBT1SPZJFAjj6YSU5U1EHyLM/
+         brSazLGWCynYtMhGzcI9jBakr2lDu7uVETrKXbQat9FsDly4XNz+9FFrGEZ5B868rTpN
+         Jyb9BpH/eHjDgs7P9638iPyZAgf9P7phn0RWP4cTLoJg3WbB9XYltFDYNufzNi6l8jhJ
+         kM7LEU7ZG+svskLUAyWp8q0RtlTvZkPwFsMWHwil8kjM/j/WegL9cCFlceZl/xOq76bs
+         NLBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681846885; x=1684438885;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Dqdkta1Zk1UqyIAXbk1/CAopdFNFnp9tf0jtsKEKX/U=;
+        b=CZQnXVD/Mmgh8fyZ20kN9pC1nf9I2GM2eV8yhrxIyC1EMwsEwQXA3evrFIRn5nJ/F7
+         14J7PZJja08HjQQ03vLSF8MIyn0Z0k/4UTpfGqAmObCBwKLOsYD4NkfbRq/PQVmzhh2M
+         qb7NAR78TUzyaw/Fy5OfWPwK19vLhpl9I36IIxyi9DHcj2pUqqr49zy/r+5BZHsl0U1m
+         zb3wxykEyTE41oNjMo/qirFN/uHtZM+dKc7fpiKStKG1gXG8K1RuSpNoewg+99+5nmEP
+         dhdc4tslFxjMPNFTHCKitYZ7Crm2+q6Pbbah3fi2Wicpti765tXIDfpk+sn5WPUiJm7l
+         W2/w==
+X-Gm-Message-State: AAQBX9d3BCpJUmpHnWdtYOrV+yPACSfGMvj5xV/AhfxUMmRy6JBtNoGo
+	ePEZuoSXJ5IqqZE4cID0WIU=
+X-Google-Smtp-Source: AKy350Y3WRyEQO9TtYe/YYFXZqAOBuHoJeYs1uPJYBRJu7+rvTUnFvSGRVH65/YcG6Zgt2Qr5fL+Ag==
+X-Received: by 2002:a05:6214:1c4e:b0:5e3:d150:3168 with SMTP id if14-20020a0562141c4e00b005e3d1503168mr25374707qvb.18.1681846885409;
+        Tue, 18 Apr 2023 12:41:25 -0700 (PDT)
+Received: from localhost (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
+        by smtp.gmail.com with ESMTPSA id w14-20020a0cfc4e000000b005ef6ba1f4afsm2179222qvp.134.2023.04.18.12.41.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Apr 2023 12:41:24 -0700 (PDT)
+Date: Tue, 18 Apr 2023 15:41:24 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Breno Leitao <leitao@debian.org>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ kuba@kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>, 
+ David Ahern <dsahern@kernel.org>, 
+ Willem de Bruijn <willemb@google.com>, 
+ io-uring@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ kuba@kernel.org, 
+ asml.silence@gmail.com, 
+ leit@fb.com, 
+ edumazet@google.com, 
+ pabeni@redhat.com, 
+ davem@davemloft.net, 
+ dccp@vger.kernel.org, 
+ mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, 
+ matthieu.baerts@tessares.net, 
+ marcelo.leitner@gmail.com
+Message-ID: <643ef2643f3ce_352b2f2945d@willemb.c.googlers.com.notmuch>
+In-Reply-To: <ZD6Zw1GAZR28++3v@gmail.com>
+References: <643573df81e20_11117c2942@willemb.c.googlers.com.notmuch>
+ <036c80e5-4844-5c84-304c-7e553fe17a9b@kernel.dk>
+ <64357608c396d_113ebd294ba@willemb.c.googlers.com.notmuch>
+ <19c69021-dce3-1a4a-00eb-920d1f404cfc@kernel.dk>
+ <64357bb97fb19_114b22294c4@willemb.c.googlers.com.notmuch>
+ <20cb4641-c765-e5ef-41cb-252be7721ce5@kernel.dk>
+ <ZDa32u9RNI4NQ7Ko@gmail.com>
+ <6436c01979c9b_163b6294b4@willemb.c.googlers.com.notmuch>
+ <ZDdGl/JGDoRDL8ja@gmail.com>
+ <6438109fe8733_13361929472@willemb.c.googlers.com.notmuch>
+ <ZD6Zw1GAZR28++3v@gmail.com>
+Subject: Re: [PATCH 0/5] add initial io_uring_cmd support for sockets
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-I'm returning to the MPTCP maintainer role I held for most of the
-subsytem's history. This time I'm using my kernel.org email address.
+Breno Leitao wrote:
+> On Thu, Apr 13, 2023 at 10:24:31AM -0400, Willem de Bruijn wrote:
+> > > How to handle these contradictory behaviour ahead of time (at callee
+> > > time, where the buffers will be prepared)?
+> > 
+> > Ah you found a counter-example to the simple pattern of put_user.
+> > 
+> > The answer perhaps depends on how many such counter-examples you
+> > encounter in the list you gave. If this is the only one, exceptions
+> > in the wrapper are reasonable. Not if there are many.
+> 
+> 
+> Hello Williem,
+> 
+> I spend sometime dealing with it, and the best way for me to figure out
+> how much work this is, was implementing a PoC. You can find a basic PoC
+> in the link below. It is not 100% complete (still need to convert 4
+> simple ioctls), but, it deals with the most complicated cases. The
+> missing parts are straighforward if we are OK with this approach.
+> 
+> 	https://github.com/leitao/linux/commits/ioctl_refactor
+> 
+> Details
+> =======
+> 
+> 1)  Change the ioctl callback to use kernel memory arguments. This
+> changes a lot of files but most of them are trivial. This is the new
+> ioctl callback:
+> 
+> struct proto {
+> 
+>         int                     (*ioctl)(struct sock *sk, int cmd,
+> -                                        unsigned long arg);
+> +                                        int *karg);
+> 
+> 	You can see the full changeset in the following commit (which is
+> 	the last in the tree above)
+> 	https://github.com/leitao/linux/commit/ad78da14601b078c4b6a9f63a86032467ab59bf7
+> 
+> 2) Create a wrapper (sock_skprot_ioctl()) that should be called instead
+> of sk->sk_prot->ioctl(). For every exception, calls a specific function
+> for the exception (basically ipmr_ioctl and ipmr_ioctl) (see more on 3)
+> 
+> 	This is the commit https://github.com/leitao/linux/commit/511592e549c39ef0de19efa2eb4382cac5786227
+> 
+> 3) There are two exceptions, they are ip{6}mr_ioctl() and pn_ioctl().
+> ip{6}mr is the hardest one, and I implemented the exception flow for it.
+> 
+> 	You could find ipmr changes here:
+> 	https://github.com/leitao/linux/commit/659a76dc0547ab2170023f31e20115520ebe33d9
+> 
+> Is this what you had in mind?
+> 
+> Thank you!
 
-Signed-off-by: Mat Martineau <martineau@kernel.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Thanks for the series, Breno. Yes, this looks very much what I hoped for.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1c09473685b1..6841ef90cb0e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14612,6 +14612,7 @@ F:	net/netlabel/
- 
- NETWORKING [MPTCP]
- M:	Matthieu Baerts <matthieu.baerts@tessares.net>
-+M:	Mat Martineau <martineau@kernel.org>
- L:	netdev@vger.kernel.org
- L:	mptcp@lists.linux.dev
- S:	Maintained
--- 
-2.40.0
+The series shows two cases of ioctls: getters that return an int, and
+combined getter/setters that take a struct of a certain size and
+return the exact same.
+
+I would deduplicate the four ipmr/ip6mr cases that constitute the second
+type, by having a single helper for this type. sock_skprot_ioctl_struct,
+which takes an argument for the struct size to copy in/out.
+
+Did this series cover all proto ioctls, or is this still a subset just
+for demonstration purposes -- and might there still be other types
+lurking elsewhere?
+
+If this is all, this looks like a reasonable amount of code churn to me.
+
+Three small points
+
+* please keep the __user annotation. Use make C=2 when unsure to warn
+  about mismatched annotation
+* minor: special case the ipmr (type 2) ioctls in sock_skprot_ioctl
+  and treat the "return int" (type 1) ioctls as the default case.
+* introduce code in a patch together with its use-case, so no separate
+  patches for sock_skprot_ioctl and sock_skprot_ioctl_ipmr. Either one
+  patch, or two, for each type of conversion.
 
