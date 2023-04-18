@@ -1,124 +1,127 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB4110F2
-	for <mptcp@lists.linux.dev>; Tue, 18 Apr 2023 00:53:12 +0000 (UTC)
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-63b60365f53so1459826b3a.0
-        for <mptcp@lists.linux.dev>; Mon, 17 Apr 2023 17:53:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B551C02
+	for <mptcp@lists.linux.dev>; Tue, 18 Apr 2023 08:21:01 +0000 (UTC)
+Received: by mail-ej1-f53.google.com with SMTP id dm2so71134796ejc.8
+        for <mptcp@lists.linux.dev>; Tue, 18 Apr 2023 01:21:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681779192; x=1684371192;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tkIiU/fq7xeN8QQjqGQlcRSrQt7X8OfhVxFqo3ZlSNs=;
-        b=cWEsHyGwRIq1JRSyXXGZmVvHH0e60tzOaC6F9qYi5MmenwywbDD9RAOWsF2QxWMRVt
-         3mX5v4NfBPwNSCX/CC1YM3HaZMiXuzokJ5MnAUPfO7ueIWWYvFrmiaUgLD5WDKTvyAZa
-         de9XVJmfZJsJU29Dz7zLHjeIQ8ZweBpNeVdsHsIaqYcPEIhjt0Jetf8+3xQANf59cpV/
-         XyVsVZnwlqx+hBzTLPxmBpM8VHGbmP/lGcqd5X/Jr8mTS8ju00tmWhGf9fqwFNCFcSRN
-         GzjhJhTejJprwZ0s8zsMtjtYYIYyJayw2m9v15TcbqIAWbaTkxZJGjYtlQfRElOSpZI1
-         LoKw==
+        d=tessares.net; s=google; t=1681806060; x=1684398060;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mVt5p7SShiItNbthKbmGtnFXX+qJqoqJaI2I752KVkg=;
+        b=uEtL1ZqL/eFVPBp1abVDNNsi+trf45T2qFhVQwa82/HX2Ar9t5lVJHIkc1wuXNm28m
+         9W7UCV6F/GgZFNVdwHJtkr0Wz39AjKl3KGqIr1iW121UEamENjUpAdN2X32T1c18ZYLP
+         SV4Fj7/nLAelexcfgCJ2Y3DhDgKxKIs6y0GrBnN8YognD8yLDcIdLooFl9F1m4LKydZL
+         ktyJYCUasWhFkWIQcPqZGBoW5ek4jjKlw04HYMQERG53YecTjfJqL9XMs6tmEug65fR2
+         w3kLIM72C3ABiBb/7uQUzV0THYHOI8IHCCOhAX/4jOoQRYicqKaNG/QpC7AW4HjylbrA
+         oZtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681779192; x=1684371192;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tkIiU/fq7xeN8QQjqGQlcRSrQt7X8OfhVxFqo3ZlSNs=;
-        b=e91m2GG2h+immU/lI5jqTJrqUK1UF8UfDAxP6Vwxr/YBiglpuUIaDqzfJWzqJWRRO8
-         fdXFmam+8hCWlsXgmRavKvSyoImpa03AmmrsxmeeG6+5XVZIlYf4rDtGVYHebQKpzeqU
-         vTOrYB02UfFH6x4sIewtzcCwISbHSYw5kjTtIkiwMCZvJZqAqw2bzI7HEOJCz7ceNZXu
-         hWBbabXZcwSNO5vXNKNjTpwtbulyLyrF7cVw7dngLd94jn+aAyAF9wPIgEyIPVGQ45L8
-         tNFD6NScFXxTvRtN5acuZKCmLMhly3YWJl3YdXN4f+pRbu7HANTH4PF5iTTFSy40SWOu
-         AJag==
-X-Gm-Message-State: AAQBX9d/g7hb2De8/39X/Hhd0V+UXEMXlIy7zKO74MOJMQPMBhAqPLPZ
-	Jd60+9jGeZ9T2bOQs83hnRNbn157zQ==
-X-Google-Smtp-Source: AKy350bMrg4LS5k2EacbOEHQC2Ogcd2rLs5l3Q6KGV8Z91vTVPSEEB11aticPRjk492IWoYPZ9V3sw==
-X-Received: by 2002:a05:6a00:1507:b0:63d:2910:5c8b with SMTP id q7-20020a056a00150700b0063d29105c8bmr4713860pfu.29.1681779192212;
-        Mon, 17 Apr 2023 17:53:12 -0700 (PDT)
-Received: from [127.0.0.1] ([4.227.9.16])
-        by smtp.gmail.com with ESMTPSA id d10-20020aa7814a000000b0062607d604b2sm8154783pfn.53.2023.04.17.17.53.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Apr 2023 17:53:11 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230417-mptcp-mat-alias-v1-1-abe486377b02@tessares.net>
-References: <20230417-mptcp-mat-alias-v1-1-abe486377b02@tessares.net>
-Subject: Re: mailmap: add entry for Mat Martineau: Tests Results
-Message-ID: <a0c0dcea-324b-890d-7aa4-83fecaa59129@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 18 Apr 2023 00:53:10 +0000
+        d=1e100.net; s=20221208; t=1681806060; x=1684398060;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mVt5p7SShiItNbthKbmGtnFXX+qJqoqJaI2I752KVkg=;
+        b=hRmEM48L2QgFKddtMTzl7fwwGjbKDf7B38WeqVGlSoG1CzxYDJenSSh89RBBpUfpyC
+         n+zHZyhsCF3rfo1XUrardtKbH7P6H4EMshrEfsKyLt85KeOJL85f5Bc0QNHTHq1e8DDx
+         3vVPWaP/XzEx2PM1wI6Q9Mk+Ihoz3hIcVj4iGP5ByWAYnZwO0G5i9din8FShB61YEKTL
+         oPtIf82d4CTtQHGubzTTi4K+DfdxhskgPxSAfZFF5mFTmq1kJ5NdWTzNPfEMgUAIKWrE
+         hDrt3WV18x30fMRr936bQDPmAXxe0ri6s2eWyy+/wKHtlFmGRUaRJEn7K+LoxfoLRaXP
+         CMzg==
+X-Gm-Message-State: AAQBX9cP1HIprTWxM3uPTt66PGj9CwNFsLZHPEZ7WrE4rcuQ0/Az3WV0
+	PIuVkTvtLudrRALjhnpkcWRTgWHVY/FMn1Bi2pWSBw==
+X-Google-Smtp-Source: AKy350a+ECCbQGJPyhw3g/0pWimGPzQ/e7vUyzS7115QeTb93xC7pUExs4sGa0ClMWdqL/Z0iOJilQ==
+X-Received: by 2002:a17:907:6d93:b0:94f:6c6c:e14c with SMTP id sb19-20020a1709076d9300b0094f6c6ce14cmr6526198ejc.57.1681806059688;
+        Tue, 18 Apr 2023 01:20:59 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:3cb9:953f:8660:73e? ([2a02:578:8593:1200:3cb9:953f:8660:73e])
+        by smtp.gmail.com with ESMTPSA id dy11-20020a05640231eb00b00506956c99d9sm3844227edb.15.2023.04.18.01.20.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Apr 2023 01:20:59 -0700 (PDT)
+Message-ID: <8bf71db3-aa30-6991-e9db-82696cfa3213@tessares.net>
+Date: Tue, 18 Apr 2023 10:20:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH mptcp-next] mailmap: add entry for Mat Martineau
+Content-Language: en-GB
+To: Mat Martineau <martineau@kernel.org>, mptcp@lists.linux.dev
+Cc: Mat Martineau <mat@martineau.name>
+References: <20230417-mptcp-mat-alias-v1-1-abe486377b02@tessares.net>
+ <fa956ceb-cdfa-5acf-ed1b-7fbe4a2cdef7@kernel.org>
+ <6772d944-fa7d-b840-04e5-c46600c8c8f3@kernel.org>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <6772d944-fa7d-b840-04e5-c46600c8c8f3@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+Hi Mat,
 
-Thank you for your modifications, that's great!
+On 18/04/2023 01:54, Mat Martineau wrote:
+> 
+> 
+> On 4/17/23 4:25 PM, Mat Martineau wrote:
+>>
+>>
+>> On 4/17/23 10:25 AM, Matthieu Baerts wrote:
+>>> Map Mat's old corporate address to his kernel.org one.
+>>>
+>>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>>> ---
+>>> Mat's address is still being used because get_maintainers.pl will look
+>>> at the Git history.
+>>>
+>>> @Mat: still OK to use your kernel.org one?
+>>
+>> Hi Matthieu -
+>>
+>> Yes, martineau@kernel.org is what I plan to use going forward. Thanks
+>> for creating the commit!
+>>
+>> Signed-off-by: Mat Martineau <martineau@kernel.org>
+> 
+> Oops, maybe I should have said:
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-Our CI did some validations and here is its report:
+Thanks!
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6437075239567360
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6437075239567360/summary/summary.txt
+>>> ---
+>>>   .mailmap | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/.mailmap b/.mailmap
+>>> index e42486317d18..ad1d3c166e64 100644
+>>> --- a/.mailmap
+>>> +++ b/.mailmap
+>>> @@ -297,6 +297,7 @@ Martin Kepplinger <martink@posteo.de>
+>>> <martin.kepplinger@puri.sm>
+>>>   Martin Kepplinger <martink@posteo.de>
+>>> <martin.kepplinger@theobroma-systems.com>
+>>>   Martyna Szapar-Mudlaw <martyna.szapar-mudlaw@linux.intel.com>
+>>> <martyna.szapar-mudlaw@intel.com>
+>>>   Mathieu Othacehe <m.othacehe@gmail.com>
+>>> +Mat Martineau <martineau@kernel.org>
+>>> <mathew.j.martineau@linux.intel.com>
+> 
+> Oh yeah! Can you also add
+> 
+> Mat Martineau <martineau@kernel.org> <mathewm@codeaurora.org>
+> 
+> to cover my old Bluetooth commits?
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6155600262856704
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6155600262856704/summary/summary.txt
+Sure, good idea!
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5592650309435392
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5592650309435392/su=
-mmary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5029700356014080
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5029700356014080/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/140085dd99a8
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+I will send this directly to netdev, for the net tree, no need to add
+that in ours :)
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
