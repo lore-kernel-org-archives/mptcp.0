@@ -1,124 +1,68 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CE9179
-	for <mptcp@lists.linux.dev>; Wed, 19 Apr 2023 00:12:43 +0000 (UTC)
-Received: by mail-qt1-f173.google.com with SMTP id u37so6724898qtc.10
-        for <mptcp@lists.linux.dev>; Tue, 18 Apr 2023 17:12:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681863162; x=1684455162;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Yu1K74KMOBsJHGNP7AWoY6M5/zqlAeM0WGNwZXXNDo=;
-        b=E2+J4MNqqWD31/R627InHLpWWPRC2N2VsVysZpuk3trDFGxBtJomLigB4deinfze6A
-         /YswW7NwRTxGUGBC71At/Sy0USUvwzwnCOZJ6FdgHVYaP42WydIHqCm3TJyHeNQCNJcl
-         5tHo/xXUPEHSM2NQntqPXZVGXMMlFm3YEvAM/8aCs8ClRQZkgxuLn4hwZ777/nQBkln1
-         n/d9V8QnIZouVvq3BCka3s5d26LKz/b5MC8O2q16yz96eqcv2AlL60aYhiJZwbF7Tc4a
-         nhfUXANY2ysJnnpGZjHrPqrBuxnNXEbRyf+cA6+sHDu4wYobplu41r7RLioT1gfc5OZa
-         Pj/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681863162; x=1684455162;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+Yu1K74KMOBsJHGNP7AWoY6M5/zqlAeM0WGNwZXXNDo=;
-        b=FOnVXvuVFyExW57ybO8883rGLu1UTSgGglBwewz7b/6pbKi9JT0iDqlRb7vXu4/nza
-         TiMScFoZW++8/DKAwfTFRO/MrvOYkf3DVjdjNOOCza0fUqPMZUCnHNB7hZA/bC7HeSkN
-         rLzOAi0FgdcNlnXm7jA+CIIafl4XsjrsaNZooI8pUHXyf1YketikgAdL1ScNUf7mvv3y
-         xbYpVh8pmgKQRHNeODi0tznRNlXGP8IMyJVzPaePfzCra4j5/aWXDp21c1Ppbj24etsI
-         kXYua8AU2tKuD269Wh+Nl3D0UNRFxxkWI/8ToJqDuw8AR14EjuJHrGKmwAi7CFL2RWcj
-         9VAw==
-X-Gm-Message-State: AAQBX9flHoy0f4LwXM4CqLweLyaIgHObU5DqvThQ3Bz3vUrOYn2xM1U9
-	2DGv4tYUfguktqvBU1eCpOcIelk17sswtlI=
-X-Google-Smtp-Source: AKy350ZT7DKyE3vlpF/RN7y4jE47/NCc4sT8nJRvPuDIQNnHAA5kVCXCuu1LrKLHMidyehsHKJvJtw==
-X-Received: by 2002:ac8:5f0f:0:b0:3ef:3cdf:c29d with SMTP id x15-20020ac85f0f000000b003ef3cdfc29dmr2175950qta.52.1681863162695;
-        Tue, 18 Apr 2023 17:12:42 -0700 (PDT)
-Received: from [127.0.0.1] ([172.176.188.93])
-        by smtp.gmail.com with ESMTPSA id bq16-20020a05620a469000b007484d284cdasm4291760qkb.93.2023.04.18.17.12.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Apr 2023 17:12:42 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230418231318.115331-1-martineau@kernel.org>
-References: <20230418231318.115331-1-martineau@kernel.org>
-Subject: Re: MAINTAINERS: Resume MPTCP co-maintainer role: Tests Results
-Message-ID: <b064a162-61bf-7d1f-df38-bd3c4fe88511@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 19 Apr 2023 00:12:41 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC982564
+	for <mptcp@lists.linux.dev>; Wed, 19 Apr 2023 08:20:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DF1F8C433D2;
+	Wed, 19 Apr 2023 08:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1681892418;
+	bh=Mr0B9uCVD5trRbAKu1vsfRpRO8Am8uiDAmvqlfUo7ug=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=fn/cE0TfqezwmgdpGOvFCZdbmVPGSRBKXZgdbqDq8HfGRLXL385u+Zvh5is1bAmiN
+	 dfLB/qd95MKh3JA7gXTTZLjFWQgfC3Oo+akkyuxCby0pAIe2/s+vqPi570vmooaNJf
+	 XXtk/AZUDd/nMDIe4hdqcxegJQzyq16SBxBsFaokFO6Lzp6s5LTmyr5PWQUz1d9wz1
+	 OVBwuX0WHqg9H+c8k00DO8R3GYH56TCQfrS/sqPs2T5UQi25bnmI7TvzMAFhz9C8Gg
+	 mQDZcO4IwkOhZsjLrpNwRxTsGHxqEfxagwAw3DnyNIVDNZ9i58j/LwZdZRt88q/0s2
+	 AYpymD7adsEiQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BEE16C561EE;
+	Wed, 19 Apr 2023 08:20:18 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/2] mptcp: fixes around listening sockets and the
+ MPTCP worker
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <168189241877.2626.11768515224982258773.git-patchwork-notify@kernel.org>
+Date: Wed, 19 Apr 2023 08:20:18 +0000
+References: <20230417-upstream-net-20230417-mptcp-worker-acceptw-v1-0-1d2ecf6d1ae4@tessares.net>
+In-Reply-To: <20230417-upstream-net-20230417-mptcp-worker-acceptw-v1-0-1d2ecf6d1ae4@tessares.net>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cpaasch@apple.com, stable@vger.kernel.org
 
-Hi Mat,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Our CI did some validations and here is its report:
+On Mon, 17 Apr 2023 16:00:39 +0200 you wrote:
+> Christoph Paasch reported a couple of issues found by syzkaller and
+> linked to operations done by the MPTCP worker on (un)accepted sockets.
+> 
+> Fixing these issues was not obvious and rather complex but Paolo Abeni
+> nicely managed to propose these excellent patches that seem to satisfy
+> syzkaller.
+> 
+> [...]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5548554148642816
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5548554148642816/summary/summary.txt
+Here is the summary with links:
+  - [net,1/2] mptcp: stops worker on unaccepted sockets at listener close
+    https://git.kernel.org/netdev/net/c/2a6a870e44dd
+  - [net,2/2] mptcp: fix accept vs worker race
+    https://git.kernel.org/netdev/net/c/63740448a32e
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6674454055485440
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6674454055485440/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5759660381175808
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5759660381175808/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4633760474333184
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4633760474333184/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/7d96499f0ff6
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
