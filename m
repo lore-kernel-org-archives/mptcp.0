@@ -1,135 +1,127 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9073236
-	for <mptcp@lists.linux.dev>; Wed, 19 Apr 2023 10:17:26 +0000 (UTC)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-3f0a00a5880so20203145e9.0
-        for <mptcp@lists.linux.dev>; Wed, 19 Apr 2023 03:17:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE613C17
+	for <mptcp@lists.linux.dev>; Wed, 19 Apr 2023 11:40:47 +0000 (UTC)
+Received: by mail-qt1-f172.google.com with SMTP id ey8so8500535qtb.3
+        for <mptcp@lists.linux.dev>; Wed, 19 Apr 2023 04:40:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1681899445; x=1684491445;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=exPiBWIdwzcDShp2L+JXabpml6A8YfkZ6eZf2n18zB8=;
-        b=A2z4WMohhUD3pENnaCbQiIdZbaAFJAuB+DUfc04JKAhdKxgn/Mi83IjPlYIJKzSaFU
-         RFOhOtKWZtAjSIXw1ckukcBTdZcbmM1k7zp/JEh/tn+GONVF2OUlXDJnRq/u2sDBC3GS
-         6hl45w5N0u+5kKz7ZUNF4sER7tnRfd2RRxKln6CVe/Sd0kh27xAnoxhH8OdkAB6ZUvqR
-         DNtkC2H/na2/CJjvK8p6GVI3xHUrHjIKrigspo8eaPfIETQ2iEDqrxmRLYrefw0b9DPo
-         3JculFndCiyYe7sUILyKp0eiKx9vnLmCi7QJJzXVZ6fpPw+GehTH1RGXJSxK+j0TS2w6
-         n9NQ==
+        d=gmail.com; s=20221208; t=1681904446; x=1684496446;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yTZuwOMz4m+N4ZymgKo8PpOk19A1ouoqlazzf2eigbA=;
+        b=iZfEwavK2PcgSDSptOAi3EGMPiRuiX28N5XA8e9t7r+87pDSZbRQVNErLv59pPV6Ft
+         uzySUSrCoBci3akQ33FJf+lw/WnrSl+D3FO4yPAwvDNLndvl+H7693dbeI9376s5Tnoz
+         1w+aPrs9k5FdQQIZwfP1EkVZWaTM1ltV4vkoA8fW7e84wGru8gV28fcdzuYONOl0QSUd
+         XWkhfl9hGc9WsqQ0lI9SdCJsv9sDvUmHKRBwmDlkmUNZWaGPjugkitfgV1odWcME/dlU
+         0ns2zumKih5y8c+qDrHHCF/IUbt0ShM8+dc6TYpl2oF2Jj5E/vhQqC9MonbZRMxvXQR9
+         YzPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681899445; x=1684491445;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=exPiBWIdwzcDShp2L+JXabpml6A8YfkZ6eZf2n18zB8=;
-        b=YCBAE8OEY3el8BNVCLMaK6xmkT9qlkfX6S4dV8+aR6i6W6JzVBj7DZH/pDMf2YHJHy
-         FnscZ1x1jl8ipkfdN0+ZbAGjqvxAsqWSmQZ3P91SZPlKedeXwqt+5QDBn7mfcSQ59QZw
-         MvJSfhsnem8eDqGmttP1/WpChMOM0VUiDvsP3y0hIUaCbNhikZsaa29LM80Zp55s7a3k
-         +LugB9FxyQID7tyxXAXSCzKfXlmc6jrZf02U5D5gWgsr4bWlF+5YL1gpqQyvInAJgTQ8
-         bzKQ9pTpz/HWHerU38ZY0k1s7F+l8V9lmUOmVwjjGOU8WGprPmw6ooBgMv5+LWz2Ns21
-         djdA==
-X-Gm-Message-State: AAQBX9c4HblK9sv/1bPZDN9RMTyEvFzpVSn9c96AP0rwwn28FOpyRSMT
-	+uedAfaRgbV67DvVBuKNqhhvvoZKczhjkKh0025zEEan
-X-Google-Smtp-Source: AKy350Ycf59P2uShdTqaP1zRVR6X3kLY3ea/soibFKdOC1z9s/GOd7zpbE7fiq9QtmNg5J+xcBrizg==
-X-Received: by 2002:a5d:49d0:0:b0:2f9:1224:2475 with SMTP id t16-20020a5d49d0000000b002f912242475mr4354157wrs.68.1681899444965;
-        Wed, 19 Apr 2023 03:17:24 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id l26-20020a1ced1a000000b003eeb1d6a470sm1727605wmh.13.2023.04.19.03.17.24
+        d=1e100.net; s=20221208; t=1681904446; x=1684496446;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yTZuwOMz4m+N4ZymgKo8PpOk19A1ouoqlazzf2eigbA=;
+        b=cVUsv8P8NU+32myzw44me8XSn9pxkMO0GbgwwYrWXQc8mkA3ATNrU4B5fp7whegbAi
+         RMouvaPgWWTOp3iTurUE0b5KnR3gmrAHiHxTO+NhD6ISDFhvpcW4k5Ayg6K4pnXd1ITM
+         d6H29+DOA8+ue1RHHe9NIyrnVGLIhdVO1t52a3GaL7Xp9R87WjNRW18XWKnTKcehn8Tz
+         bcYX6tGyThsbfCKus5R27Yo62Uk+m8+U1bAEdKD5PL3EFgqmZETnqKOrG/8EA96M2yTl
+         LsCxnh8dp4+ngRHGX5Dzr+F54iQY15S56iMuGslF/UDb60wMukgMQYDAsWlzONVdfGme
+         aj+w==
+X-Gm-Message-State: AAQBX9f66LfxeeTxpXvpHRrHTHBPahQENRLRXrGNqEgaORbPgnQlaB2A
+	Q6Fsx16JCinBVbB/xCtjNSTBylRpRf3N
+X-Google-Smtp-Source: AKy350Y+0DHZIc4cVyK4XBCyZwh4X7oC008sh6EuSOvRVX1wlX2m8ZYhkjMU4QDH6ncm5aC4rj8eiw==
+X-Received: by 2002:ac8:5dd2:0:b0:3e3:93ca:42d9 with SMTP id e18-20020ac85dd2000000b003e393ca42d9mr5225315qtx.65.1681904446571;
+        Wed, 19 Apr 2023 04:40:46 -0700 (PDT)
+Received: from [127.0.0.1] ([172.176.128.186])
+        by smtp.gmail.com with ESMTPSA id d13-20020ac85acd000000b003edce7e34bfsm3018980qtd.81.2023.04.19.04.40.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Apr 2023 03:17:24 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next] Squash to "security, lsm: Introduce security_mptcp_add_subflow()"
-Date: Wed, 19 Apr 2023 12:17:14 +0200
-Message-Id: <20230419101714.3347358-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.39.2
+        Wed, 19 Apr 2023 04:40:46 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230419101714.3347358-1-matthieu.baerts@tessares.net>
+References: <20230419101714.3347358-1-matthieu.baerts@tessares.net>
+Subject: =?UTF-8?Q?Re=3A_Squash_to_=22security=2C_lsm=3A_In?=
+ =?UTF-8?Q?troduce_security=5Fmptcp=5Fadd=5Fsubflow?=
+ =?UTF-8?Q?=28=29=22=3A_Tests_Results?=
+Message-ID: <45703b72-e36f-e68f-b5ad-2ba2fedda555@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 19 Apr 2023 11:40:45 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2175; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=lhMcnQDU3leSelex6XJobqUGiATiOq4ng431dWPvNvo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkP7+mO/Qd4HPEwIvThnmK9XRIK23yWSTkft1Hl
- chv9GRzqHSJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZD+/pgAKCRD2t4JPQmmg
- c9bwD/99t8BhnU3tBskZw7O/sMPlDfaMiqcigsZbYg4QAcKsPBdnQX3lg6gNhXgBqWJI0Ey3e5X
- 37w2IB+gbQbFCYtVKsL7+iG5c5GE71L3ZJQVjlWht0Mspyxh4R75M2fRAEszmkU0TghwVpmxqBE
- 0/fjJDKBPUh8qYLyTLu0sHeDXr3u2Zc0HBeZoSyo0Zx0g4x/1HdStO07gtb/gUcJXq/zgLvxuJ2
- 5Uai42YxT/jRVXMfp7xHBa2X1xXvURkdAQi4podqbZb5aV0/isgjl69LxDCzgSwGN42w+vVU7Ua
- 5lO4DmEOi60lT9vUTyRP0XaanfNvwhiQIYMz7b2Dz1WRiHIKclEHMGhrbK9TpTjrUvWrCH2lcKz
- +R0FLvmD+IENF0ZEJGIgzPL2Iw8cikHLMjm9W8HLrS5++XHVrG14hQbgZbcfErEhph2sJLq+JKk
- KUGGh0KtPcQh4lYNtaTaCjxJu/ZDu+HdwOVvKTL5FEBb9uR7ZJ2fTrxaMjwhijFOBSc08pkiP8d
- a34fvfWM0y5H1OI0O0L8Z9vAA5JXSOdmB8TdXC/eBQCuSYviduUHW4nYLJs5OayuKKMe6FKexHK
- V84m57/j9rZ/LfoTHdUdDvonNePxA5Oo5rfNiyd4BZ4a2c2wby27cbvoObXXdsqG1mADc19jazO IXefMGO9KGq9GpA==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
 
-lsm: move the MPTCP hook comments to security/security.c
+Hi Matthieu,
 
-This is similar to what has been done in lsm/next, e.g. with
-commit 4a49f592e931 ("lsm: move the SCTP hook comments to security/security.c"),
-see the link below.
+Thank you for your modifications, that's great!
 
-By doing that, the patch can be applied without conflicts in lsm/next
-branch.
+Our CI did some validations and here is its report:
 
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.git/commit/?h=next&id=4a49f592e931
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6376102365495296
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6376102365495296/summary/summary.txt
 
-Notes:
-    to be squashed in "security, lsm: Introduce security_mptcp_add_subflow()"
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6094627388784640
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6094627388784640/summary/summary.txt
 
- include/linux/lsm_hooks.h |  9 ---------
- security/security.c       | 10 ++++++++++
- 2 files changed, 10 insertions(+), 9 deletions(-)
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4968727481942016
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4968727481942016/summary/summary.txt
 
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index 333b21095638..6e156d2acffc 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -1096,15 +1096,6 @@
-  *	@skb pointer to skbuff of association packet.
-  *	Return 0 if permission is granted.
-  *
-- * Security hooks for MPTCP
-- *
-- * @mptcp_add_subflow
-- *	Update the labeling for the given MPTCP subflow, to match to
-- *	owning MPTCP socket.
-- *	@sk: the owning MPTCP socket
-- *	@ssk: the new subflow
-- *	Return 0 if successful, otherwise < 0 error code.
-- *
-  * Security hooks for Infiniband
-  *
-  * @ib_pkey_access:
-diff --git a/security/security.c b/security/security.c
-index 4e56893aada5..1e99200ed0c9 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2494,6 +2494,16 @@ int security_sctp_assoc_established(struct sctp_association *asoc,
- }
- EXPORT_SYMBOL(security_sctp_assoc_established);
- 
-+/**
-+ * security_mptcp_add_subflow() - Inherit the LSM label from the MPTCP socket
-+ * @sk: the owning MPTCP socket
-+ * @ssk: the new subflow
-+ *
-+ * Update the labeling for the given MPTCP subflow, to match the one of the
-+ * owning MPTCP socket.
-+ *
-+ * Return: Returns 0 on success or a negative error code on failure.
-+ */
- int security_mptcp_add_subflow(struct sock *sk, struct sock *ssk)
- {
- 	return call_int_hook(mptcp_add_subflow, 0, sk, ssk);
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5531677435363328
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5531677435363328/su=
+mmary/summary.txt
 
-base-commit: 0eb4d1a28182c9af28ba970a8a899a2be5407867
--- 
-2.39.2
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/4a339f07d719
 
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
