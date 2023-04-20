@@ -1,188 +1,100 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B6D28F5
-	for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 14:44:00 +0000 (UTC)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-2efbaad9d76so638635f8f.0
-        for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 07:44:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7EB8C15
+	for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 16:20:06 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-3f09b9ac51dso23842515e9.0
+        for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 09:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1682007604; x=1684599604;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nyyg3T7y0P8qBkSyFA5E6NNLqB3eayIMN8iFz7bJdNQ=;
+        b=Jix6/xVApTlWz0jyL0PoG/8fHcL1AWXS7qLQwr0U+ZWScAp++CyRIgd94pjzKfvme0
+         +HHYBXy61Y3f0FKLDH/FSVPi22JAM9crNZAW8k5SiDpPW3ASS1OkdTkxLV5Gc2s7Rm5i
+         QUFDhaJ2Bb03xkKt1L6taTfvejLmD0X/qQwt8HPYTxosoiV/mucbONsXQWjDaScF6JFK
+         iW4NKw73J+F6BIaWnob3DIppoNzmDhw7ob/rzp1dg52rzjfb8dEEP2j/RrnS+qHLyZHN
+         e4LFXz8xTZRw3d9wUGtmwQ8B4Gvx+/KwTx/WR7imtvagHm/znZ8hDMRQaht+6Ps7Ig5l
+         p/Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682001838; x=1684593838;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QbffplO3VOZcBuvT0UOJ7mzyhsrhOlVkaEplR1sfDJk=;
-        b=f5TR5LzQFnNZioDruKCHE1qZca17tC9d5UxgKNl9JqE6DS33wqODRICvB09vpyE+5Y
-         SN4NdktFqf++NHJ/Kc6KqeM1Tnnjiqmt6uKh9fUNn3FTuXyFMxrw3U8Hd826JRn9h+kx
-         tP3aQp2aEPqJWNpUvR3rcTdtm8VvgBZZMKqVkoAEWtxfUfB8iznz579OrFZVYsDpqNnm
-         mJds7rhaGbNNr3UMX9XejM3lwluyeau/cG4sO+MxJNM3nauIiK+iuw2KirdSwlR1sG5D
-         SXj3CFatny0c8zf4PY++UCq2iZo9CyNo8KQfCLiTpc5tseO40T/HZGBvtxJNnxSVLqI3
-         RlLA==
-X-Gm-Message-State: AAQBX9ditlPZsn+ffMvwYBGgrktzx3IIGl6SJ0fqYmWyhZ/2Pb47xmuV
-	D1JMpjhPP+eqCN+4ZvK1av0=
-X-Google-Smtp-Source: AKy350bFMAekMWmVpbReB2mEMQlH58SOps8pRO56YWnsO6OvZe+Bv8fTq/PabS3BkG4Y1rRHi/yj9Q==
-X-Received: by 2002:a05:6000:12c9:b0:2fa:ce3:9a0 with SMTP id l9-20020a05600012c900b002fa0ce309a0mr1400681wrx.36.1682001838483;
-        Thu, 20 Apr 2023 07:43:58 -0700 (PDT)
-Received: from gmail.com (fwdproxy-cln-004.fbsv.net. [2a03:2880:31ff:4::face:b00c])
-        by smtp.gmail.com with ESMTPSA id u15-20020a5d468f000000b002f5fbc6ffb2sm2154621wrq.23.2023.04.20.07.43.57
+        d=1e100.net; s=20221208; t=1682007604; x=1684599604;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Nyyg3T7y0P8qBkSyFA5E6NNLqB3eayIMN8iFz7bJdNQ=;
+        b=C4TbrKSmYgr7YTkG3gwI8n3aJITaf085GlMzN8/VecIm9VSCRemNE8MgDdYA+OlTFI
+         8/QUs7aqGgzGL0GGRIsbUKXSI+H2hrbNEjIFuaZLwg7dN9hRHnrOOAdE/MPR9l2xcg8K
+         Q/yrb+x8cF1Oz107KiF6v2n9NgISIKl80sj3R5GLoTNikDLgHnk41csTbqHpx8hDePwY
+         KOil3N+S3tpJslx9nebnUiw27kkER8iQNe9hCY2fAfW8CugNFZ9sLVQcsrxsou35wPpt
+         TriI4lnrHWMjoxQxmL/GIA4aBjQQ2ttNpb65kgNRo6MqZEUAP9qb0sawhq651c8mdy6e
+         MfgA==
+X-Gm-Message-State: AAQBX9cTN0uLfelA2M5m2n2W+Bv0QI8kJ4dqiIdXK/LgJr0Q+X+Q/kS2
+	4pXvxnOE3mbYO32tjQXOK+FI5bg7wXg8MjoghiooXGiZ
+X-Google-Smtp-Source: AKy350akQ/g9wk/PdB2zm0IF+cO4ZlUgymEQ4XvSk8km3oMg9H8LxWvJ3CZ1Wd3hC9OCLfwunnmIjA==
+X-Received: by 2002:adf:ed87:0:b0:2fb:a0eb:feaa with SMTP id c7-20020adfed87000000b002fba0ebfeaamr5500961wro.17.1682007604385;
+        Thu, 20 Apr 2023 09:20:04 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id z18-20020adfe552000000b002f3e1122c1asm2371335wrm.15.2023.04.20.09.20.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 07:43:58 -0700 (PDT)
-Date: Thu, 20 Apr 2023 07:43:56 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: kuba@kernel.org, Jens Axboe <axboe@kernel.dk>,
-	David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemb@google.com>, io-uring@vger.kernel.org,
-	netdev@vger.kernel.org, asml.silence@gmail.com, leit@fb.com,
-	edumazet@google.com, pabeni@redhat.com, davem@davemloft.net,
-	dccp@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org, matthieu.baerts@tessares.net,
-	marcelo.leitner@gmail.com
-Subject: Re: [PATCH 0/5] add initial io_uring_cmd support for sockets
-Message-ID: <ZEFPrGSuDopUwi9V@gmail.com>
-References: <64357608c396d_113ebd294ba@willemb.c.googlers.com.notmuch>
- <19c69021-dce3-1a4a-00eb-920d1f404cfc@kernel.dk>
- <64357bb97fb19_114b22294c4@willemb.c.googlers.com.notmuch>
- <20cb4641-c765-e5ef-41cb-252be7721ce5@kernel.dk>
- <ZDa32u9RNI4NQ7Ko@gmail.com>
- <6436c01979c9b_163b6294b4@willemb.c.googlers.com.notmuch>
- <ZDdGl/JGDoRDL8ja@gmail.com>
- <6438109fe8733_13361929472@willemb.c.googlers.com.notmuch>
- <ZD6Zw1GAZR28++3v@gmail.com>
- <643ef2643f3ce_352b2f2945d@willemb.c.googlers.com.notmuch>
+        Thu, 20 Apr 2023 09:20:04 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next 0/2] Squash to "security: SELinux/LSM label with MPTCP and accept "
+Date: Thu, 20 Apr 2023 18:19:55 +0200
+Message-Id: <20230420161957.664328-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <643ef2643f3ce_352b2f2945d@willemb.c.googlers.com.notmuch>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1246; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=fBHwr4oJSB8RJHK7H45QWlcKhm23hpBJVDYyAwf8aPo=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkQWX5zmWnv6floIBZZSNusNvFzo+lf9lOu/UkF
+ IJqRShoxmOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZEFl+QAKCRD2t4JPQmmg
+ c2f5D/oD0KFwaDbkKyjqeXVQ4x9fkRA8PmuPtVTmrV9neEJdX8z4ZH23xUIY3AV6jsCniX5+lax
+ xDthuYb6xjBU3oOQRvyzAh7TNLRXV0RZS7or5dFHkGTpns8fHaDNT0PneG2/ey93WaM9RFqC/2n
+ YkIF9mvgulFGy4lB3qRPXG+OILag4oG57wdFXFWE2aqSxal7cl/JSO/hNSecONLmlSqTXAVS6nQ
+ KuoLHPVZf3F9x3Qe1NaD1PS4XtoL46O4Ge1sffu4NPbg5PqN+rvv+qeKka460qr1AJqsZQz1VpX
+ Q/G3HeG6wfaPkgHfUb2JGO9v7NvzdoUUFFVAqImRs9CXgBqMruv9wMdoc70eB6gkPrH722YPN3x
+ XzZfISiJD22IS5NwHIlnmrmNZz2Q1GKFlSyLUBrp8rBJiczD8YHDtF2mSBJ3o6qetZ4lQXAxC+p
+ ECxCdCirCTbpY9/GZtoz/v0WOMZl7xHyYcMSVguW8niHjCZPcSievaNGCV7GlOJI+Ci4TKWWSxW
+ ugEDdvZzIwd3sNeIw2CpUzLcm+Sud8PAFJTaVRw2v2qmNuK06xtuiLzbwz8rRbSKujGxlZ+dSNc
+ VpsWEm9PDYbBeJx41t/K7PkbGcC2At2msC8hD2WPNBXhQJR5XrW26nKcr4o34kxqOQEt1CQ1n9C vX1v3U7vIICbHRw==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 18, 2023 at 03:41:24PM -0400, Willem de Bruijn wrote:
-> Breno Leitao wrote:
-> > On Thu, Apr 13, 2023 at 10:24:31AM -0400, Willem de Bruijn wrote:
-> > > > How to handle these contradictory behaviour ahead of time (at callee
-> > > > time, where the buffers will be prepared)?
-> > > 
-> > > Ah you found a counter-example to the simple pattern of put_user.
-> > > 
-> > > The answer perhaps depends on how many such counter-examples you
-> > > encounter in the list you gave. If this is the only one, exceptions
-> > > in the wrapper are reasonable. Not if there are many.
-> > 
-> > 
-> > Hello Williem,
-> > 
-> > I spend sometime dealing with it, and the best way for me to figure out
-> > how much work this is, was implementing a PoC. You can find a basic PoC
-> > in the link below. It is not 100% complete (still need to convert 4
-> > simple ioctls), but, it deals with the most complicated cases. The
-> > missing parts are straighforward if we are OK with this approach.
-> > 
-> > 	https://github.com/leitao/linux/commits/ioctl_refactor
-> > 
-> > Details
-> > =======
-> > 
-> > 1)  Change the ioctl callback to use kernel memory arguments. This
-> > changes a lot of files but most of them are trivial. This is the new
-> > ioctl callback:
-> > 
-> > struct proto {
-> > 
-> >         int                     (*ioctl)(struct sock *sk, int cmd,
-> > -                                        unsigned long arg);
-> > +                                        int *karg);
-> > 
-> > 	You can see the full changeset in the following commit (which is
-> > 	the last in the tree above)
-> > 	https://github.com/leitao/linux/commit/ad78da14601b078c4b6a9f63a86032467ab59bf7
-> > 
-> > 2) Create a wrapper (sock_skprot_ioctl()) that should be called instead
-> > of sk->sk_prot->ioctl(). For every exception, calls a specific function
-> > for the exception (basically ipmr_ioctl and ipmr_ioctl) (see more on 3)
-> > 
-> > 	This is the commit https://github.com/leitao/linux/commit/511592e549c39ef0de19efa2eb4382cac5786227
-> > 
-> > 3) There are two exceptions, they are ip{6}mr_ioctl() and pn_ioctl().
-> > ip{6}mr is the hardest one, and I implemented the exception flow for it.
-> > 
-> > 	You could find ipmr changes here:
-> > 	https://github.com/leitao/linux/commit/659a76dc0547ab2170023f31e20115520ebe33d9
-> > 
-> > Is this what you had in mind?
-> > 
-> > Thank you!
-> 
-> Thanks for the series, Breno. Yes, this looks very much what I hoped for.
+These two patches address the comments from Paul Moore on the series I
+sent yesterday containing Paolo's patches.
 
-Awesome. Thanks.
+Note that I used 'MPTCP socket' instead of 'main MPTCP socket' as
+suggested: there is only one MPTCP socket owning subflows (TCP) sockets,
+no main MPTCP ones.
 
-> The series shows two cases of ioctls: getters that return an int, and
-> combined getter/setters that take a struct of a certain size and
-> return the exact same.
->
-> I would deduplicate the four ipmr/ip6mr cases that constitute the second
-> type, by having a single helper for this type. sock_skprot_ioctl_struct,
-> which takes an argument for the struct size to copy in/out.
+These patches will likely be applied on lsm/next after the next merge
+window:
 
-Ok, that is a good advice. Thanks!
+  As far as potential merge issues with netdev/net-next and lsm/next, I
+  think we'll be okay.  I have a general policy[1] of not accepting new
+  patchsets, unless critical bugfixes, past rc5/rc6 so this would be
+  merged into lsm/next *after* the current merge window closes and
+  presumably after the netdev/net-next branch finds its way into Linus'
+  tree.
 
-> Did this series cover all proto ioctls, or is this still a subset just
-> for demonstration purposes -- and might there still be other types
-> lurking elsewhere?
+Link: https://lore.kernel.org/mptcp/20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v1-0-9d4064cb0075@tessares.net/
 
-It does not cover all the cases. I would say it cover 80% of the cases,
-and the hardest cases.  These are the missing cases, and what they do:
+Matthieu Baerts (2):
+  Squash to "security, lsm: Introduce security_mptcp_add_subflow()"
+  Squash to "selinux: Implement mptcp_add_subflow hook"
 
-* pn_ioctl     (getters/setter that reads/return an int)
-* l2tp_ioctl   (getters that return an int)
-* dgram_ioctl  (getters that return an int)
-* sctp_ioctl   (getters that return an int)
-* mptcp_ioctl  (getters that return an int)
-* dccp_ioctl   (getters that return an int)
-* dgram_ioctl  (getters that return an int)
-* pep_ioctl    (getters that return an int)
+ .topmsg                  | 15 +++++++++++----
+ security/security.c      |  4 +++-
+ .topmsg                  | 13 +++++++++----
+ security/selinux/hooks.c |  2 +-
+ 4 files changed, 24 insertions(+), 10 deletions(-)
 
-
-Here is what I am using to get the full list:
- # ag  --no-filename -A 20 "struct proto \w* = {"  | grep .ioctl | cut -d "=" -f 2 | tr -d '\n'
-
- dccp_ioctl, dccp_ioctl, dgram_ioctl, tcp_ioctl, raw_ioctl, udp_ioctl,
- udp_ioctl, udp_ioctl, tcp_ioctl, l2tp_ioctl, rawv6_ioctl, l2tp_ioctl,
- mptcp_ioctl, pep_ioctl, pn_ioctl, rds_ioctl, sctp_ioctl, sctp_ioctl,
- sock_no_ioctl
-
-> If this is all, this looks like a reasonable amount of code churn to me.
-
-Should I proceed and create a final patch? I don't see a way to break up
-the last patch, which changes the API , in smaller patches. I.e., the
-last patch will be huge, right?
-
-> Three small points
-> 
-> * please keep the __user annotation. Use make C=2 when unsure to warn
->   about mismatched annotation
-
-ack!
-
-> * minor: special case the ipmr (type 2) ioctls in sock_skprot_ioctl
->   and treat the "return int" (type 1) ioctls as the default case.
-
-ack!
-
-> * introduce code in a patch together with its use-case, so no separate
->   patches for sock_skprot_ioctl and sock_skprot_ioctl_ipmr. Either one
->   patch, or two, for each type of conversion.
-
-I am not sure how to change the ABI (struct proto) without doing all the
-protocol changes in the same patch. Otherwise compilation will be broken between
-the patch that changes the "struct proto" and the patch that changes the
-_ioctl for protocol X.  I mean, is it possible to break up changing
-"struct proto" and the affected protocols?
-
-Thank you for the review and suggestions!
-
-PS: I will take some days off next week, and I am planning to send the
-final patch when I come back.
+-- 
+2.39.2
