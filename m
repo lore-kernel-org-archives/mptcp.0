@@ -1,127 +1,116 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3A320F4
-	for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 04:13:35 +0000 (UTC)
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-5ed99ebe076so2850226d6.2
-        for <mptcp@lists.linux.dev>; Wed, 19 Apr 2023 21:13:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EF2539D
+	for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 10:14:07 +0000 (UTC)
+Received: by mail-wm1-f52.google.com with SMTP id bg5so108941wmb.1
+        for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 03:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681964014; x=1684556014;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XajnOyZHDgDYz4y9bWbx997qPGL4s1VhWv+BjjPTMTg=;
-        b=givIPmz0jd7aKs9dwhhNu4pRx6MLHg2RVS2LyLMeRWU6OWVpJDCrfgl9wLgN7p4bFA
-         j/Nb6li9jmESGejnoQ2WGBZzMdfMBET3em+zWr6zp1p4UeDO3z2hO/yI4dvk4g6lv3vb
-         Cvh9Eu/UV3KuRl5xRV6LdGSlu4H0O2/JnHaTqorv0WhWOEuJhDQAkq3UC0iiE0IxS0vN
-         6/mNeFmwIyagx1s/WeyPsAYIBY1//5ihUjR43nXAGTOlQHzLYXw/Ih8R4YOF78MpboYi
-         37QxpLkrqJdT67Nq+5OeVKJCSVwjuPrgPSINJQMERGpMaigejgnHarlXPcTkZI8KxHsW
-         PyqA==
+        d=tessares.net; s=google; t=1681985645; x=1684577645;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IMhHp3ToiOSXQR2Jm5k0DaZVdzFesoNAgqCPAddC49Q=;
+        b=FS7XawVKrDyfNtAs5WBhEf5N/CLBjB5egSREcu0R5ztmy2QhlvAeWteHPFyo8j9Q8I
+         9Sdl0l3aN9wqUMeJhZJMV1qS70Ab8eTiuQ1Hd1YZmsDurMqrU/uUUFbaTSTXsQniwmDW
+         VM8sawmxiRX7CabEKmJrg7KhhfwQO8mJyiCqrLO/d6TMMiu9cEqr2oimGUB+U7dV+CSL
+         T9HnHaRysA3Wvvor8mDZO56wr488GeKkWEKNm1p7ElBqp0nB1MM+rcQ9Lvhi/eEb1Yqe
+         6QI7dSOxUp8rLuapRkZG7jQ9rUgmZLggYPGFv39POL0BSM2LcLwunpMkaLwNUbgKxCcs
+         yCig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681964014; x=1684556014;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XajnOyZHDgDYz4y9bWbx997qPGL4s1VhWv+BjjPTMTg=;
-        b=A+YZ7wMZw/CeIdgDulvAaCWcu6lp8C4QzsK8/QXnniT/nZmU59LxhBM1ki/VajScjs
-         f+dqj19HU6FDBQuAiFA8XEhGG9W1K+fObCR+NNUKT3Ltwp2aZpGMIrnvmvo9N4C6VOz+
-         XrEv+N1NhrTcGIiGr5SjwFyGjNDxcl7aG923cp/lU2r8R/So2jN4YkBQHU4ss6g61Dha
-         UEW9FGcPKySeGuTm/SFcBs2kLOnX0bucCypYwU5xXXEE+SP8Ju6AIDRAgz7JMXlIW1at
-         1cRdVeiKGVp5ooPvsxunTFRcEqTuN7K0alss02djvq/llvmAOaFk5oIZXkI8KfKnPyig
-         OBrA==
-X-Gm-Message-State: AAQBX9eL6edUjLZgSd6wwVzX4reLz0X9DV7cYNNsVT3eSwGO69q/Iv1O
-	DlVjKJgv5J+HH+kc7ihVAA==
-X-Google-Smtp-Source: AKy350ZOgPQM9aN8tsNJaXtC8TAxU3mHUhxE4zXLbvVuyHcH14tTs0V37r19ZlX8ERYUM4YLqFWqcg==
-X-Received: by 2002:a05:6214:da3:b0:5b8:6efe:77f4 with SMTP id h3-20020a0562140da300b005b86efe77f4mr1844716qvh.46.1681964014734;
-        Wed, 19 Apr 2023 21:13:34 -0700 (PDT)
-Received: from [127.0.0.1] ([52.226.28.166])
-        by smtp.gmail.com with ESMTPSA id m4-20020a05620a214400b0074d1d3b2143sm135664qkm.118.2023.04.19.21.13.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Apr 2023 21:13:34 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <177f9ca7d30f810324bf46705ac7d977461ffc2d.1681960259.git.geliang.tang@suse.com>
-References:
- <177f9ca7d30f810324bf46705ac7d977461ffc2d.1681960259.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: update userspace pm subflow tests: Tests
- Results
-Message-ID: <08841cc0-4d7b-417c-f33c-48322842a38f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 20 Apr 2023 04:13:33 +0000
+        d=1e100.net; s=20221208; t=1681985645; x=1684577645;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IMhHp3ToiOSXQR2Jm5k0DaZVdzFesoNAgqCPAddC49Q=;
+        b=jLam6uki5kddOr9on2XceRU0Sa84Iv0vNu/H9xSCBOL8I4ydgZDalHebZBP5tP2El3
+         Y1n01nuPwic3olqVOf5Aj+rxQS3fTLT9Yr9yAfMuCk1U+wGvZGEZESUfOQrDGM+4i100
+         v+tfJTgj345i5y2WURrZgYHg+jNtqu+Km863QY21M0hs6DTWizRaas2lafhA/eGd2bFK
+         iFpJPWFXAE/wCJUf5JAUZD/Ofcvb7UgDn05yKfANx/z+F9DLw7w0wYMK4jPJylRwIf19
+         DIfE/J5EZSFWa+HndgJL0xQowhW3U8bOTuDdUjperAgG69ckMcYsASdBwROMZzPdN8SJ
+         jFwQ==
+X-Gm-Message-State: AAQBX9c7ULlZgjYOXDYjGZxB1q7Juwz+XiPJftWGct4WJcO+kgYMnMh2
+	UUEPun4QjozW4pceZpAEGInbBA==
+X-Google-Smtp-Source: AKy350blN3ju4+Q1NSXUlUXaOubDiAeTRhYY2nyAWfzqB8la3ndsGbaKa3FmhqbySD0W5giF/8VSlA==
+X-Received: by 2002:a7b:cc15:0:b0:3f1:65cb:8156 with SMTP id f21-20020a7bcc15000000b003f165cb8156mr975956wmh.0.1681985645469;
+        Thu, 20 Apr 2023 03:14:05 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:4d8f:e9b5:dea0:5307? ([2a02:578:8593:1200:4d8f:e9b5:dea0:5307])
+        by smtp.gmail.com with ESMTPSA id ay37-20020a05600c1e2500b003f18b52c73asm1320829wmb.24.2023.04.20.03.14.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Apr 2023 03:14:05 -0700 (PDT)
+Message-ID: <ddf27f38-588a-bd6b-1de5-3c5d71cd1ed5@tessares.net>
+Date: Thu, 20 Apr 2023 12:14:04 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH mptcp-net 00/13] selftests: mptcp: skip tests when
+ features are not supported
+Content-Language: en-GB
+To: Geliang Tang <geliangtang@gmail.com>
+Cc: mptcp@lists.linux.dev
+References: <20230406-mptcp-issue-368-selftests-old-kernels-v1-0-246ac567724d@tessares.net>
+ <CA+WQbwt06V64hW3V2xos4=CEj6PuhqRHwHBq_+dY4vBwQCfR9Q@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <CA+WQbwt06V64hW3V2xos4=CEj6PuhqRHwHBq_+dY4vBwQCfR9Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+Thank you for having looked at these patches.
 
-Our CI did some validations and here is its report:
+On 20/04/2023 05:49, Geliang Tang wrote:
+> Matthieu Baerts <matthieu.baerts@tessares.net> 于2023年4月8日周六 01:06写道：
+>>
+>> Selftests are supposed to run on any kernels, including the old ones not
+>> supporting all MPTCP features.
+>>
+>> These different patches add support for older kernels. More similar
+>> checks will be needed but here is a first batch not to have too many
+>> patches (because each patch fixes different commits).
+>>
+>> I tried to minimise the modifications and do the checks from the bash
+>> script not to have to detect the feature when being used in a .c file,
+>> then pass the info to the bash script, skip the test, clean the
+>> environment, etc.
+>>
+>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> ---
+>> Matthieu Baerts (13):
+>>       selftests: mptcp: connect: skip if MPTCP is not supported
+>>       selftests: mptcp: pm nl: skip if MPTCP is not supported
+>>       selftests: mptcp: join: skip if MPTCP is not supported
+>>       selftests: mptcp: diag: skip if MPTCP is not supported
+>>       selftests: mptcp: simult flows: skip if MPTCP is not supported
+>>       selftests: mptcp: sockopt: skip if MPTCP is not supported
+>>       selftests: mptcp: userspace pm: skip if MPTCP is not supported
+>>       selftests: mptcp: lib: skip if missing symbol
+>>       selftests: mptcp: connect: skip TFO tests if not supported
+>>       selftests: mptcp: userspace pm: skip if 'ip' tool is unavailable
+>>       selftests: mptcp: userspace pm: skip if not supported
+>>       selftests: mptcp: userspace pm: skip PM listener events tests if unavailable
+> 
+> Hi Matt,
+> 
+> How about merging these three commits and "selftests: mptcp: userspace
+> pm: skip if MPTCP is not supported" into a single commit?
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_userspace_pm =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5458994014191616
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5458994014191616/su=
-mmary/summary.txt
+I prefer not to because they fix different issues, to be backported to
+different stable versions. If I mix all of them together, it will be
+harder to have them backported.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6584893921034240
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6584893921034240/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5881206479257600
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5881206479257600/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 3 failed test(s): packetdrill_add_addr packetdrill_sockopts =
-selftest_userspace_pm =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/4755306572414976
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4755306572414976/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/4f0513e3d53e
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+Maybe the patches 7/13 and 11/13 could be squashed together but I didn't
+because the 7 first patches are doing the same for all our different
+tests we have (and different "Fixes" tags).
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
