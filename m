@@ -1,50 +1,50 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2E18C1E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4153E8C1F
 	for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 16:20:07 +0000 (UTC)
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3010889c6ebso471523f8f.2
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-2fa47de5b04so723935f8f.1
         for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 09:20:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1682007605; x=1684599605;
+        d=tessares.net; s=google; t=1682007606; x=1684599606;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tmc1OFWQxJ5WWDOe2A3aVSpZm+mFWexOYU77x72mdcM=;
-        b=zNzdMycUhQmGimWavn5BVTIu76yQ25Bz1Wup25bV70SRp5lA64M/pGn0WkzymRAN21
-         29VhU48IxwcjZY0a9Ubsxgowk1LQMtRmP/nCD9PRLPfFBsd/08L4WgRElAOgUgyX5Ldd
-         ITCuf1TEms7sIiPFfEE4NG7hF0oxevkC5CxNJsdCNThEcuQlCxHabjENEhCfwNo3hJFh
-         0QFheBO3kWCocHE55dTW/1pO7cnCrKsvzWE41zGJDbtPthhUmZd7Up61OLTPE1QbzYeX
-         VIywGGoQOum+JKFk6r3gmcPiM1xxxvc04C2xdyQ33SejxfffZFTYysS2Nu0YyHYHkzA9
-         hiLA==
+        bh=s5W7I6T+Lbxo5QN5hv5rfoj2DWsCzq6IRUstEIZeeEw=;
+        b=J5AwrxOHdSW2eQxsTgdoSUUoriYRf6fptQHF0YPV8/a52CUEbbKksw7CRaB6b+uhD5
+         AaDFiYtzAqtBHWvB7SQkXCE9137ihb+lr0d3n2/1pvqcyMtyTE39RTYRmPTRY+g/I0Y9
+         WzY3KOpvv7oGjikXQYnbEghkjYYv3x0dEFV22Whm2inadqD0jsgEhTF56gfqrUtyZvsi
+         3l7u4WiioDO1czgovIEhPQ4JBo0f7lsBIfBztsWgNCTo99RqoCA5QId9C+0Bj8u5AlYS
+         utdsmYHCBKlQKVFzyKLZiln7eU+5WC1Ux15RGru0jUDEh41skD9h+Lja0pV7tjyKssz3
+         IVjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682007605; x=1684599605;
+        d=1e100.net; s=20221208; t=1682007606; x=1684599606;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tmc1OFWQxJ5WWDOe2A3aVSpZm+mFWexOYU77x72mdcM=;
-        b=kVHEhC/T9luVnz06b6TIrsCHJCVeu2SkJHDnb6Ru7r3S+qtmrzxt3/e6qvyAxqVT5p
-         tyze64TrABX7YKscPIZKGk+1GxTOAJg5Oc49ORIYryFPHPsm5ua9ElDWw2X9OqQcDwqf
-         l9dAeaexbippBe/mjohwPO9GbmaZ/odKSTRDWHMj/Jcoxm3r+yhPfRllwez5nkYPsKTe
-         gFS8Xq/CqEDLOH8Vfpxv0oXyMLbfvcpo0IFVrwjz2T0EVTV8RyHRAbROoqILUaIouV2E
-         EoV6MeTowVmpZmuCnXEfdA1UuxnQWL8t3fv+OWlXyBtLpWYIBWRjmAt06iTULQf9gFEc
-         zv1w==
-X-Gm-Message-State: AAQBX9dc+UtWR1YvtnulFy2NxiIzHCawHjHv26BYiUkR9tt+I6c991rc
-	T20MjV+TLKhFYm1a+2y/WnotHQO/jQDErkDPrLUhcV43
-X-Google-Smtp-Source: AKy350YioaCFIV4/4+Y+bDYkqdMxzfE1kR9jqHSdlUGyVphKxK2gdyOY3tseKWDORfsyDffRIy3JlQ==
-X-Received: by 2002:a5d:5492:0:b0:2f8:e652:dc04 with SMTP id h18-20020a5d5492000000b002f8e652dc04mr1652070wrv.45.1682007605128;
+        bh=s5W7I6T+Lbxo5QN5hv5rfoj2DWsCzq6IRUstEIZeeEw=;
+        b=AKSqfhWFj3o8sMPMcLvXrUufHSiKsXFUJx3V5SpfUDQmVhkqw9WKjQ0ZN/gJqIyDar
+         9bbh81yfcCfGlYixnDw4wWSkm2FLsPD/WsOd0uU62VHt0KbHV89ceqi8t5BGuQwfB9I4
+         RDsM5UdiHyJ7aBCb3mRlRbLqdbV/pVuprID8p96oeuR5JL41IZxhY54fXhHVYWOsjkWe
+         ziR5WbMp0S4ZWbY3gzs0JCivQxXR/Z/m4KKJ3Xc3pfVOW76cXVbI8nE6h2CGgtEX56dC
+         p6tfjP170fakuwpkY7/5k5Ns0Si+iF9gc5NVZwkKNqZwjSTILUiPFmxaJx1QDhccYH2Z
+         dQwQ==
+X-Gm-Message-State: AAQBX9dnQFUSVXErkPe8F8RmIcevZwH/9Nb+VvabwRIb51B/RAegGzdO
+	TXp3Hk+tiiFVM4QlWroqRluqzGhEp/rBIdFdcQ60n+VA
+X-Google-Smtp-Source: AKy350YX5gTDM4+PXiTotAaO7vkRepMDwIl1BNroRVqgMplMcr0cbFr15v4LNk/pzIfIqFpLQDC3jg==
+X-Received: by 2002:adf:f084:0:b0:2f5:1e06:3fe4 with SMTP id n4-20020adff084000000b002f51e063fe4mr1743611wro.44.1682007605923;
         Thu, 20 Apr 2023 09:20:05 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id z18-20020adfe552000000b002f3e1122c1asm2371335wrm.15.2023.04.20.09.20.04
+        by smtp.gmail.com with ESMTPSA id z18-20020adfe552000000b002f3e1122c1asm2371335wrm.15.2023.04.20.09.20.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 09:20:04 -0700 (PDT)
+        Thu, 20 Apr 2023 09:20:05 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>,
 	Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next 1/2] Squash to "security, lsm: Introduce security_mptcp_add_subflow()"
-Date: Thu, 20 Apr 2023 18:19:56 +0200
-Message-Id: <20230420161957.664328-2-matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next 2/2] Squash to "selinux: Implement mptcp_add_subflow hook"
+Date: Thu, 20 Apr 2023 18:19:57 +0200
+Message-Id: <20230420161957.664328-3-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230420161957.664328-1-matthieu.baerts@tessares.net>
 References: <20230420161957.664328-1-matthieu.baerts@tessares.net>
@@ -54,19 +54,19 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3466; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=AbeWQv/vWOYHG6h4nhNbE71gFXykFrjcPzvAYtLzWEU=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkQWX5CUIpP+xhfLMawNp6tiqYjaLTmkxSCxy2M
- mO6tje+xpCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZEFl+QAKCRD2t4JPQmmg
- c0YwEADHwLHnIjDn17+fodL4FIaGZ/mdxiq+hOow8qPfiV3v8rnII28l5tYuG5BEeEDFpfihbkS
- 4KVlaUfHxJKfNBK3k0zgap1SJW6SNS1HMgNYITRTpyhS62hDcIwsxTHtbZE1eUjDzXvvRdgOcbt
- 3sLQnY6okrnbCoAHsJBPQPZh9EegdUdttPXqQsjmlHh3Y8uTn6wQpuDuwTKjDsgMAw4lPXTE3Su
- RDdMGKH7LNTsda5TVM4l6ESY4z1zIQgSwfiiizj/WPyETBZdcFfWP1azP0NG35tZpv/aap0QULk
- ZmOpZnng92XGkA7hkYi9OiAjiDaMlKQacXAZGC8f7EYJM/0XOQsPcVLfkV46z7uEBiSvEZLtT6+
- 3GLBiiiQWDqdoCPKGCL7xkKHuzk9fv30LvvLhERSX0amRrOA9OmraY3Cm4N7nXkg5lqFKKBvIax
- S+83oRQELUjz5iCiox292Tnb7WMYaw6xlANTfsBLX7SP1Y1QbHMy3qCySHeLTduvcKWkdd0fWnN
- dy4QyOfiJJzDWTpoyJc6lWj/Gfp3oZ6wyO8y/qGIK57Ci8bLeMgnS6muBdGQb77edMTVRLEM2/S
- /e3rXzpxrUxrBn41f95vAS/lOEgd72LWOoeXMQvZ0CAUtlw/37wI8yrAJy5JXoQKlastfj+BkH6 0vgh43lQ+kBttyQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3345; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=TZLSSeC4XXBUaUSjGdkIBqMTicwsUlIUjqbT+wOz4ug=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkQWX5MxDxB4NSzXcz9eFzovmDZjf6vZY0MarGJ
+ QYCHjuYCLmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZEFl+QAKCRD2t4JPQmmg
+ c0TzEACwLOZrU+Ai5d454oL6U2uE9M9T0/1TR1kBz/XzFGfqRwypBjZRvhHoi7NOD3pzm0/LQ6P
+ WwiZ+rtCgPi8LwunZNItT4h6siKjXVP+47tncG5c7TTus4jF0yHrKDd1sPsuehFXUnNBvgBWXBE
+ ARTA10OvNfj6CfVFmRq6jFTyKXvXtpR6CRzhrU980XVNkgUJsYkoIEMZg68JLuxnwn0Y60ofbK9
+ kcwttgE1jS25WkJDCSpE1VkIR8eoL7zpqlfbGlnz3S2eB+0XzbDQfbIRO41RcRnjmBJFMxpQT6U
+ knZRXfZAAxuZjaOahn/RuQLR8Gey09sCXhievBbUYZT37B/gpWw9E0M6nwfRf0UX0XUCm4uXiCJ
+ XuwvA2bmXvfnOKl9EYbfblYjHg1Xi2ma8AuzYNtZ/Eb/xVC1yDtOBTO/K8WI97hif9JkBj2/U+h
+ j0lcHQV5bZYp1XNcW/q12QmQlmcPco/GRZqQxA+x/B22Wcd6UUrZhE8N8ygZ2acB3e1e+qxLLho
+ kC7PfZh/ay4pCoHleo9bkGPZF1QgxMo9bCpToNKPHrnG6P6b6oBYCX/TZLSFI1q/f00Zg6CnA2U
+ cw1gurWGZOM07YfSPl+3PyVA7gIV+l87O3B5tW1FHOJiTZ1Ol+2c2q5fJ5g5shaAOiaJe0vIYBp SKu1eYjzZhVXhKQ==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
@@ -74,89 +74,87 @@ Apply Paul's comments from [1].
 
 For the commit message:
 
-  > Let's introduce a new LSM hook to allow the security module to relabel
-  > the subflow according to the owing process.
+  > Newly added subflows should inherit the LSM label from the associated
+  > msk socket regarless current context.
 
-  "... according to the main MPTCP socket."
+  "... from the associated main MPTCP socket regardless of the current context."
 
-  You might also want to stick with a consistent capitalization of
-  "MPTCP" in the commit description, but that is being *really* nitpicky
-  on my part ;)
+  Us SELinux folks may not always be able to make the jump from "msk" to
+  "main MPTCP socket" when we are looking through the git log in the
+  future, let's make it easier on us/me ;)
 
-  There is a suggestion for some additional comments in the hook's
-  description below, but otherwise this looks good to me.
+  > This patch implements the above copying sid and class from the msk
+  > context, deleting the existing subflow label, if any, and then
 
-And for security/security.c:
+  "... from the main MPTCP socket context, deleting ..."
 
-  > + * Update the labeling for the given MPTCP subflow, to match the one of the
-  > + * owning MPTCP socket.
+  > re-creating a new one.
 
-  I would add a sentence at the end making it clear that this hook is
-  called after the socket has been created and initialized via the
-  security_socket_create() and security_socket_post_create() LSM hooks.
+And for security/selinux/hooks.c:
 
-Link: https://lore.kernel.org/mptcp/CAHC9VhQsbSO5o+hVT-Tae-HyWMTjh2ffqQvz+pQQXkrMty7NYQ@mail.gmail.com/ [1]
+  > +       /* replace the existing subflow label deleting the existing one
+  > +        * and re-recrating a new label using the current context
+
+  "... new label using the updated context"
+
+  Let's avoid the phrase "current context" as that could imply the
+  current task, which is exactly what we are trying not to do.
+
+Link: https://lore.kernel.org/mptcp/CAHC9VhQz_ZUot1Sxa6zhzXh_ECz+rR=Nq3zzDEEL7GKvzYQziA@mail.gmail.com/ [1]
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
 
 Notes:
-    to be squashed in "security, lsm: Introduce security_mptcp_add_subflow()"
+    to be squashed in "selinux: Implement mptcp_add_subflow hook"
 
- .topmsg             | 15 +++++++++++----
- security/security.c |  4 +++-
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ .topmsg                  | 13 +++++++++----
+ security/selinux/hooks.c |  2 +-
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
 diff --git a/.topmsg b/.topmsg
-index f3241d814f47..cfd5349a3238 100644
+index d10caa1fec26..f3b93eefbcf6 100644
 --- a/.topmsg
 +++ b/.topmsg
-@@ -2,18 +2,25 @@ From: Paolo Abeni <pabeni@redhat.com>
- Subject: [PATCH] security, lsm: Introduce security_mptcp_add_subflow()
+@@ -2,11 +2,11 @@ From: Paolo Abeni <pabeni@redhat.com>
+ Subject: [PATCH] selinux: Implement mptcp_add_subflow hook
  
- MPTCP can create subflows in kernel context, and later indirectly
--expose them to user-space, via the owning mptcp socket.
-+expose them to user-space, via the owning MPTCP socket.
+ Newly added subflows should inherit the LSM label from the associated
+-msk socket regarless current context.
++MPTCP socket regardless of the current context.
  
- As discussed in the reported link, the above causes unexpected failures
- for server, MPTCP-enabled applications.
+-This patch implements the above copying sid and class from the msk
+-context, deleting the existing subflow label, if any, and then
+-re-creating a new one.
++This patch implements the above copying sid and class from the MPTCP
++socket context, deleting the existing subflow label, if any, and then
++re-creating the correct one.
  
- Let's introduce a new LSM hook to allow the security module to relabel
--the subflow according to the owing process.
-+the subflow according to the owning user-space process, via the MPTCP
-+socket owning the subflow.
+ The new helper reuses the selinux_netlbl_sk_security_free() function,
+ and the latter can end-up being called multiple times with the same
+@@ -14,3 +14,8 @@ argument; we additionally need to make it idempotent.
  
--Note that the new hook requires both the mptcp socket and the new
-+Note that the new hook requires both the MPTCP socket and the new
- subflow. This could allow future extensions, e.g. explicitly validating
--the mptcp <-> subflow linkage.
-+the MPTCP <-> subflow linkage.
- 
- Link: https://lore.kernel.org/mptcp/CAHC9VhTNh-YwiyTds=P1e3rixEDqbRTFj22bpya=+qJqfcaMfg@mail.gmail.com/
  Signed-off-by: Paolo Abeni <pabeni@redhat.com>
  Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 +---
 +v2:
 + - Address Paul's comments:
-+   - clarification around "the owning process" in the commit message
-+   - making it clear the hook has to be called after the sk init part
-+   - consistent capitalization of "MPTCP"
-diff --git a/security/security.c b/security/security.c
-index 1e99200ed0c9..d1d72a95e445 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2500,7 +2500,9 @@ EXPORT_SYMBOL(security_sctp_assoc_established);
-  * @ssk: the new subflow
-  *
-  * Update the labeling for the given MPTCP subflow, to match the one of the
-- * owning MPTCP socket.
-+ * owning MPTCP socket. This hook has to be called after the socket creation and
-+ * initialization via the security_socket_create() and
-+ * security_socket_post_create() LSM hooks.
-  *
-  * Return: Returns 0 on success or a negative error code on failure.
-  */
++   - use "MPTCP socket" instead of "msk" in the commit message
++   - "updated" context instead of "current" one in the comment
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 53cfc1cb67d2..67e6cd18ad59 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -5485,7 +5485,7 @@ static int selinux_mptcp_add_subflow(struct sock *sk, struct sock *ssk)
+ 	ssksec->sid = sksec->sid;
+ 
+ 	/* replace the existing subflow label deleting the existing one
+-	 * and re-recrating a new label using the current context
++	 * and re-recreating a new label using the updated context
+ 	 */
+ 	selinux_netlbl_sk_security_free(ssksec);
+ 	return selinux_netlbl_socket_post_create(ssk, ssk->sk_family);
 
-base-commit: fba46e506c37047424ec7f331564dc502098cd15
+base-commit: 3756c91778d89cc8a342ef4dd6df4d93c6a32c2a
 -- 
 2.39.2
 
