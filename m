@@ -1,127 +1,40 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD4C33EC
-	for <mptcp@lists.linux.dev>; Wed, 19 Apr 2023 21:30:41 +0000 (UTC)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-54fb615ac3dso19358017b3.2
-        for <mptcp@lists.linux.dev>; Wed, 19 Apr 2023 14:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1681939841; x=1684531841;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tvk3BDMxry1ipK9jIkb7whZPWk90UaY3lbkZAbRwP5Q=;
-        b=MJW0SyZPFqwSZjSpPv9dsTF6Vb8IBzlx4kCKoI+Ken23d8y7osBgfVeL/Qm+3YiOPK
-         m4W9yVN90fZAjji9fGn3dMJC+EOm0fJ/WjNIKl/iqvqmA+iepK2QRXQ9KBX4xIuMUUcT
-         VxAGbINo/4eGu7Ks90qfdYfWEZN/Bqx0jVJ2DmhDQRqVRmRkIkwGvu0289zsG68oynkl
-         8Y3heXBi+qjMMCj+ARwbHbwsgxHCaPlWX4wjzK6UXk6QW2C8hWwAa+3C3zdSQSMeHv+5
-         AGXriFuyE6AnRXGKSbsDu8KbxIJ6iNyAlzdb37mZx7KXceZp4iY3+hbkzMTcHKkeSpci
-         5RhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681939841; x=1684531841;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tvk3BDMxry1ipK9jIkb7whZPWk90UaY3lbkZAbRwP5Q=;
-        b=YuaGdyps5QjQr1Ku44bgtvLiTziMdX6DJGEnroNU+HHzUH4ksxAYeOv+4K2pOv9Lp1
-         /Ovkpx1amxhL22lT2UvT87jzOYc3flywL7IdbbdqDAiG3+nv9zfsBRMNVfo0uh9+S99H
-         V8MOJF3FuX+sP/QXAGXgHdIFlXrT3pR6Ct1cCEAPp2nybEvWeeyxUjmT27Rs3xQFPgqt
-         9JzZ37tvXP8ca1JeoZP3pAdhpJ26lRG9FxaxmN63Q+4alM5SYEfGlclMUGs+vlDzygZy
-         ZQV660rXpvEaLTvD8IUmdA7x7q+CvGWt1cyNTqjTmUAIv1nbWSB/LbAnY1sTQPobywGD
-         Lvvw==
-X-Gm-Message-State: AAQBX9cf+IedO/8Zho7AdsducnG7TiirJ6AkPQQRDJ5fBpxFxcfRBB7Q
-	KPN1FobwTNs3TBJulh/fXgpGAHbRlVNcGmmvSxeF
-X-Google-Smtp-Source: AKy350aiV7Ppniz441YlSZ2+c00+8FsnYukqiDdssbLd+Wxma6NYUlYGnP2cFtiWsz5nKfAvL/4d0Td0KowHt1ZypVE=
-X-Received: by 2002:a0d:df06:0:b0:54f:e6a:5d10 with SMTP id
- i6-20020a0ddf06000000b0054f0e6a5d10mr4814428ywe.22.1681939840790; Wed, 19 Apr
- 2023 14:30:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39BC15DA
+	for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 01:11:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37332C433EF;
+	Thu, 20 Apr 2023 01:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1681953084;
+	bh=aWpynGCqmUP+VoZfK4M4QoEqrKAm9+CWhno2Gk2xz4M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cHUjq/oeWNUY/+XoMTXKJ9eWacOtC6nAJuYL+TzSMO1daoMueSdK2Dju5WK2k0Y3M
+	 kSbuYnaiDk1AVxcOHjIN/HjPotAQ8MrKG9I8k5PH8YOSAUxN1cIAjUpqz09Fg8BuRn
+	 wtgTi6jtFqX43X+p8fTe/lr4X/QzkVnagalk3v7Pq04UuLldaSHyXzTBlLSVs34BmY
+	 D4S2XgV6TS2pUyKeoGmbzogkImBFM4f4EHrJ0IBtbk6PWfXz8wcREyasqpxQyPJdgN
+	 DDt4+RkftJyXa/YqYvMUoaKomlvzAIceCBD5k6YlywTqH0zec7LlpQEE3vaNjkaZMT
+	 sYDSQ7k/We2TA==
+Date: Wed, 19 Apr 2023 18:11:23 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, pabeni@redhat.com,
+ edumazet@google.com, matthieu.baerts@tessares.net, mptcp@lists.linux.dev
+Subject: Re: [PATCH net-next] MAINTAINERS: Resume MPTCP co-maintainer role
+Message-ID: <20230419181123.15028d0f@kernel.org>
+In-Reply-To: <20230418231318.115331-1-martineau@kernel.org>
+References: <20230418231318.115331-1-martineau@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v1-0-9d4064cb0075@tessares.net>
- <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v1-2-9d4064cb0075@tessares.net>
-In-Reply-To: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v1-2-9d4064cb0075@tessares.net>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 19 Apr 2023 17:30:30 -0400
-Message-ID: <CAHC9VhQz_ZUot1Sxa6zhzXh_ECz+rR=Nq3zzDEEL7GKvzYQziA@mail.gmail.com>
-Subject: Re: [PATCH LSM 2/2] selinux: Implement mptcp_add_subflow hook
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Eric Paris <eparis@parisplace.org>, 
-	Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 19, 2023 at 1:44=E2=80=AFPM Matthieu Baerts
-<matthieu.baerts@tessares.net> wrote:
-> From: Paolo Abeni <pabeni@redhat.com>
->
-> Newly added subflows should inherit the LSM label from the associated
-> msk socket regarless current context.
+On Tue, 18 Apr 2023 16:13:18 -0700 Mat Martineau wrote:
+> I'm returning to the MPTCP maintainer role I held for most of the
+> subsytem's history. This time I'm using my kernel.org email address.
 
-"... from the associated main MPTCP socket regardless of the current contex=
-t."
-
-Us SELinux folks may not always be able to make the jump from "msk" to
-"main MPTCP socket" when we are looking through the git log in the
-future, let's make it easier on us/me ;)
-
-> This patch implements the above copying sid and class from the msk
-> context, deleting the existing subflow label, if any, and then
-
-"... from the main MPTCP socket context, deleting ..."
-
-> re-creating a new one.
->
-> The new helper reuses the selinux_netlbl_sk_security_free() function,
-> and the latter can end-up being called multiple times with the same
-> argument; we additionally need to make it idempotent.
->
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
->  security/selinux/hooks.c    | 16 ++++++++++++++++
->  security/selinux/netlabel.c |  8 ++++++--
->  2 files changed, 22 insertions(+), 2 deletions(-)
->
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 9a5bdfc21314..53cfc1cb67d2 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -5476,6 +5476,21 @@ static void selinux_sctp_sk_clone(struct sctp_asso=
-ciation *asoc, struct sock *sk
->         selinux_netlbl_sctp_sk_clone(sk, newsk);
->  }
->
-> +static int selinux_mptcp_add_subflow(struct sock *sk, struct sock *ssk)
-> +{
-> +       struct sk_security_struct *ssksec =3D ssk->sk_security;
-> +       struct sk_security_struct *sksec =3D sk->sk_security;
-> +
-> +       ssksec->sclass =3D sksec->sclass;
-> +       ssksec->sid =3D sksec->sid;
-> +
-> +       /* replace the existing subflow label deleting the existing one
-> +        * and re-recrating a new label using the current context
-
-"... new label using the updated context"
-
-Let's avoid the phrase "current context" as that could imply the
-current task, which is exactly what we are trying not to do.
-
-> +        */
-> +       selinux_netlbl_sk_security_free(ssksec);
-> +       return selinux_netlbl_socket_post_create(ssk, ssk->sk_family);
-> +}
-> +
-
---
-paul-moore.com
+Small world, welcome back :)
