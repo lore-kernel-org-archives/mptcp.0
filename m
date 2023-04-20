@@ -1,222 +1,141 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5228C04
-	for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 16:48:31 +0000 (UTC)
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-74ab718c344so259451985a.1
-        for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 09:48:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4BE8F44
+	for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 16:55:39 +0000 (UTC)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-2f58125b957so694364f8f.3
+        for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 09:55:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682009310; x=1684601310;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qkIWak2A4gt4tfUK76u+vQRENb/aYt6+KfdjwfD4yF0=;
-        b=naCNoMt5etsGRGVmZg6X7R9HX4F5UL+J95xplxtF/6rg+GlVFsb3c+mB9NQtQZmG2c
-         G/872gl2i7X2lH580mnM+163SH3hfqVpvFK5gVtgnnEKwIrAVLbmJ+0WURNXqbG6UpX9
-         tfnGuYf6FKhcAUb4ZBWPs/X3FRQwt5xAiQBbrpMFr4No+zTOsLZCGp6M32lzzoO0H60q
-         /yY/79q/1MkajM8addf07UmD9dldIosRpMC3OFH7Ay7r2CcB4MBZSMBx8DYs2sO1Ivo8
-         haIc0SiObCgrIpKH9+WoS7FXIodBRTo8W24N9PA+eUJ9c85K/zt4S/+Hsu5H5kZwgZOp
-         jo/g==
+        d=tessares.net; s=google; t=1682009737; x=1684601737;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8COwJogh85Ubwzwgh/WUbXgMHnHM+aYpGZRMSZHXeAE=;
+        b=7735fAM0RfQN/72GfpWio7Ue3N+D6rEkT9esXjhDRUXYjmeGqg74PICYX3rX5edhG6
+         WmBo3MGCtjXZgkPGCaXq70Fsef6i3PT6zXvrfxo3mLIwZiOoiTIvkIjKezb0OBwMDqY+
+         P0bNB3DG1DqdotBnpLPl+NgcqKm+C3rFCNQg4lEdzGp4xE3K1JgKZO1hnet7cPi2COxp
+         qqmTxX09a86em2tS6txiygizTsuyc5xUAF7L1BNKOJio1npYaZmDxFwYkJt0HQuDDfzh
+         +18tegTXmZKNEW+I1swyGmdBwdQ89UkMxUJW/Z0frhcI9rK1EPoGWHvUgGJbeMjOSNHu
+         840w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682009310; x=1684601310;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qkIWak2A4gt4tfUK76u+vQRENb/aYt6+KfdjwfD4yF0=;
-        b=eYUqc3bl1vEwSv0HxBvY99SWR/PiQIPS+XBnhcbXduEvd9/8jEz12U0sYpNl0YquUH
-         aQiAwMZVHAktjw/3ftJ/tDfoRQqlPPWEnCIiR2WCGMc7Bgg+U7mkHLei8+JLpw8BFIEC
-         rKYesnvN52YQgZpirv9WOjMxOkENfUnSpq+uvTZ/oF0fbOBcaq38YiUBBdoYa9FcG6W9
-         iFPcp3GABMuDjoKKVD6Bl2v6Hcuf7omScm9pz4Gh8/xCHIHdIq3M4+x9PjavGz3HTWGP
-         gc1ha9JxNAsEMfn76M64LRZzGKLGhY2i4icTqF7qF0oPAeoxG2DTKtb8bMC0oCqLYyfs
-         q3Vg==
-X-Gm-Message-State: AAQBX9dfGLrB5U+jtiD8A3JGvbTVfdtDN3rjsNkqt4UwWFrM9PNDVofS
-	FUXTSpUZeTzDd2OnXK4eja8=
-X-Google-Smtp-Source: AKy350YlkQUPXkw0+w8pqF75MAwJsNXWC6VdzJ3PA1NW9zP8sAi4CspV522CwGupOsD71pDWK21OXA==
-X-Received: by 2002:ac8:7f94:0:b0:3e3:9185:cb15 with SMTP id z20-20020ac87f94000000b003e39185cb15mr3563327qtj.7.1682009310119;
-        Thu, 20 Apr 2023 09:48:30 -0700 (PDT)
-Received: from localhost (172.174.245.35.bc.googleusercontent.com. [35.245.174.172])
-        by smtp.gmail.com with ESMTPSA id q1-20020ac87341000000b003e4f1b3ce43sm609145qtp.50.2023.04.20.09.48.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 09:48:29 -0700 (PDT)
-Date: Thu, 20 Apr 2023 12:48:29 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Breno Leitao <leitao@debian.org>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: kuba@kernel.org, 
- Jens Axboe <axboe@kernel.dk>, 
- David Ahern <dsahern@kernel.org>, 
- Willem de Bruijn <willemb@google.com>, 
- io-uring@vger.kernel.org, 
- netdev@vger.kernel.org, 
- asml.silence@gmail.com, 
- leit@fb.com, 
- edumazet@google.com, 
- pabeni@redhat.com, 
- davem@davemloft.net, 
- dccp@vger.kernel.org, 
- mptcp@lists.linux.dev, 
- linux-kernel@vger.kernel.org, 
- matthieu.baerts@tessares.net, 
- marcelo.leitner@gmail.com
-Message-ID: <64416cdd84a8d_390ce2943b@willemb.c.googlers.com.notmuch>
-In-Reply-To: <ZEFPrGSuDopUwi9V@gmail.com>
-References: <64357608c396d_113ebd294ba@willemb.c.googlers.com.notmuch>
- <19c69021-dce3-1a4a-00eb-920d1f404cfc@kernel.dk>
- <64357bb97fb19_114b22294c4@willemb.c.googlers.com.notmuch>
- <20cb4641-c765-e5ef-41cb-252be7721ce5@kernel.dk>
- <ZDa32u9RNI4NQ7Ko@gmail.com>
- <6436c01979c9b_163b6294b4@willemb.c.googlers.com.notmuch>
- <ZDdGl/JGDoRDL8ja@gmail.com>
- <6438109fe8733_13361929472@willemb.c.googlers.com.notmuch>
- <ZD6Zw1GAZR28++3v@gmail.com>
- <643ef2643f3ce_352b2f2945d@willemb.c.googlers.com.notmuch>
- <ZEFPrGSuDopUwi9V@gmail.com>
-Subject: Re: [PATCH 0/5] add initial io_uring_cmd support for sockets
+        d=1e100.net; s=20221208; t=1682009737; x=1684601737;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8COwJogh85Ubwzwgh/WUbXgMHnHM+aYpGZRMSZHXeAE=;
+        b=cdqngnDkn9JBoTIAUV/mQZz1tqkidYhYOMYimg8FnkuS7nn3eNwtqgJQ9PdfERLffk
+         nQODmmAYpQ+JJfrloGwmW4jb7S+NpqgV9zyOl2w7+Wy947LZbDc83fCN7jiW0ghdpxRA
+         3Y9dGQh+eErzlv7j2CnQNX20hWxbZVMBBMvnQQPwjfrKgYGpX8QXtaYDQqbGQZfBMz4k
+         ZtXKv+j/poSmAmhUrF7fN2lgx97ZQSCijFWw6jiqRlA5jF89mqfZeXLZKDCYxfg1LVqW
+         geaDDG7THqr/+5NLgI0FC+YL/rgvH6nh3bzPgfeSn72uU33Ki5o2PyW3QjwSKmGKtgye
+         2sqw==
+X-Gm-Message-State: AAQBX9fg1En8FvqXudHesLvekSLByGFBouZFmczSA69eNMh5OqEX/8tp
+	rjO4CF4oC77YVR6dBrbVmTcDgA==
+X-Google-Smtp-Source: AKy350bJXlirEoh+ll5SJQuNZFSA3O6ZxUYGjwRW+yp/nsQKRvbua1otjr+kqF67Yjclfcoa7H8/Mg==
+X-Received: by 2002:adf:ebc4:0:b0:2fe:c0ea:18ad with SMTP id v4-20020adfebc4000000b002fec0ea18admr1795221wrn.47.1682009737423;
+        Thu, 20 Apr 2023 09:55:37 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:2c80:31d2:9220:ee01? ([2a02:578:8593:1200:2c80:31d2:9220:ee01])
+        by smtp.gmail.com with ESMTPSA id w13-20020adff9cd000000b002cea9d931e6sm2386104wrr.78.2023.04.20.09.55.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Apr 2023 09:55:37 -0700 (PDT)
+Message-ID: <f251507a-517e-b703-aa1d-50f6b3de8c8d@tessares.net>
+Date: Thu, 20 Apr 2023 18:55:29 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH LSM 0/2] security: SELinux/LSM label with MPTCP and accept
+Content-Language: en-GB
+To: Paul Moore <paul@paul-moore.com>
+Cc: James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Eric Paris <eparis@parisplace.org>, Paolo Abeni <pabeni@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Ondrej Mosnacek <omosnace@redhat.com>,
+ mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+References: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v1-0-9d4064cb0075@tessares.net>
+ <CAHC9VhR68fw+0oaenL08tRecLEC_oCdYcfGaN_m6PW3KZYtdTQ@mail.gmail.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <CAHC9VhR68fw+0oaenL08tRecLEC_oCdYcfGaN_m6PW3KZYtdTQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Breno Leitao wrote:
-> On Tue, Apr 18, 2023 at 03:41:24PM -0400, Willem de Bruijn wrote:
-> > Breno Leitao wrote:
-> > > On Thu, Apr 13, 2023 at 10:24:31AM -0400, Willem de Bruijn wrote:
-> > > > > How to handle these contradictory behaviour ahead of time (at callee
-> > > > > time, where the buffers will be prepared)?
-> > > > 
-> > > > Ah you found a counter-example to the simple pattern of put_user.
-> > > > 
-> > > > The answer perhaps depends on how many such counter-examples you
-> > > > encounter in the list you gave. If this is the only one, exceptions
-> > > > in the wrapper are reasonable. Not if there are many.
-> > > 
-> > > 
-> > > Hello Williem,
-> > > 
-> > > I spend sometime dealing with it, and the best way for me to figure out
-> > > how much work this is, was implementing a PoC. You can find a basic PoC
-> > > in the link below. It is not 100% complete (still need to convert 4
-> > > simple ioctls), but, it deals with the most complicated cases. The
-> > > missing parts are straighforward if we are OK with this approach.
-> > > 
-> > > 	https://github.com/leitao/linux/commits/ioctl_refactor
-> > > 
-> > > Details
-> > > =======
-> > > 
-> > > 1)  Change the ioctl callback to use kernel memory arguments. This
-> > > changes a lot of files but most of them are trivial. This is the new
-> > > ioctl callback:
-> > > 
-> > > struct proto {
-> > > 
-> > >         int                     (*ioctl)(struct sock *sk, int cmd,
-> > > -                                        unsigned long arg);
-> > > +                                        int *karg);
-> > > 
-> > > 	You can see the full changeset in the following commit (which is
-> > > 	the last in the tree above)
-> > > 	https://github.com/leitao/linux/commit/ad78da14601b078c4b6a9f63a86032467ab59bf7
-> > > 
-> > > 2) Create a wrapper (sock_skprot_ioctl()) that should be called instead
-> > > of sk->sk_prot->ioctl(). For every exception, calls a specific function
-> > > for the exception (basically ipmr_ioctl and ipmr_ioctl) (see more on 3)
-> > > 
-> > > 	This is the commit https://github.com/leitao/linux/commit/511592e549c39ef0de19efa2eb4382cac5786227
-> > > 
-> > > 3) There are two exceptions, they are ip{6}mr_ioctl() and pn_ioctl().
-> > > ip{6}mr is the hardest one, and I implemented the exception flow for it.
-> > > 
-> > > 	You could find ipmr changes here:
-> > > 	https://github.com/leitao/linux/commit/659a76dc0547ab2170023f31e20115520ebe33d9
-> > > 
-> > > Is this what you had in mind?
-> > > 
-> > > Thank you!
-> > 
-> > Thanks for the series, Breno. Yes, this looks very much what I hoped for.
-> 
-> Awesome. Thanks.
-> 
-> > The series shows two cases of ioctls: getters that return an int, and
-> > combined getter/setters that take a struct of a certain size and
-> > return the exact same.
-> >
-> > I would deduplicate the four ipmr/ip6mr cases that constitute the second
-> > type, by having a single helper for this type. sock_skprot_ioctl_struct,
-> > which takes an argument for the struct size to copy in/out.
-> 
-> Ok, that is a good advice. Thanks!
-> 
-> > Did this series cover all proto ioctls, or is this still a subset just
-> > for demonstration purposes -- and might there still be other types
-> > lurking elsewhere?
-> 
-> It does not cover all the cases. I would say it cover 80% of the cases,
-> and the hardest cases.  These are the missing cases, and what they do:
-> 
-> * pn_ioctl     (getters/setter that reads/return an int)
-> * l2tp_ioctl   (getters that return an int)
-> * dgram_ioctl  (getters that return an int)
-> * sctp_ioctl   (getters that return an int)
-> * mptcp_ioctl  (getters that return an int)
-> * dccp_ioctl   (getters that return an int)
-> * dgram_ioctl  (getters that return an int)
-> * pep_ioctl    (getters that return an int)
+Hi Paul,
 
-Thanks for the thorough review.
+On 19/04/2023 23:30, Paul Moore wrote:
+> On Wed, Apr 19, 2023 at 1:44 PM Matthieu Baerts
+> <matthieu.baerts@tessares.net> wrote:
+>>
+>> In [1], Ondrej Mosnacek explained they discovered the (userspace-facing)
+>> sockets returned by accept(2) when using MPTCP always end up with the
+>> label representing the kernel (typically system_u:system_r:kernel_t:s0),
+>> while it would make more sense to inherit the context from the parent
+>> socket (the one that is passed to accept(2)). Thanks to the
+>> participation of Paul Moore in the discussions, modifications on MPTCP
+>> side have started and the result is available here.
+>>
+>> Paolo Abeni worked hard to refactor the initialisation of the first
+>> subflow of a listen socket. The first subflow allocation is no longer
+>> done at the initialisation of the socket but later, when the connection
+>> request is received or when requested by the userspace. This was a
+>> prerequisite to proper support of SELinux/LSM labels with MPTCP and
+>> accept. The last batch containing the commit ddb1a072f858 ("mptcp: move
+>> first subflow allocation at mpc access time") [2] has been recently
+>> accepted and applied in netdev/net-next repo [3].
+>>
+>> This series of 2 patches is based on top of the lsm/next branch. Despite
+>> the fact they depend on commits that are in netdev/net-next repo to
+>> support the new feature, they can be applied in lsm/next without
+>> creating conflicts with net-next or causing build issues. These two
+>> patches on top of lsm/next still passes all the MPTCP-specific tests.
+>> The only thing is that the new feature only works properly with the
+>> patches that are on netdev/net-next. The tests with the new labels have
+>> been done on top of them.
+>>
+>> It then looks OK to us to send these patches for review on your side. We
+>> hope that's OK for you as well. If the patches look good to you and if
+>> you prefer, it is fine to apply these patches before or after having
+>> synced the lsm/next branch with Linus' tree when it will include the
+>> modifications from the netdev/net-next repo.
+>>
+>> Regarding the two patches, the first one introduces a new LSM hook
+>> called from MPTCP side when creating a new subflow socket. This hook
+>> allows the security module to relabel the subflow according to the owing
+>> process. The second one implements this new hook on the SELinux side.
+> 
+> Thank you so much for working on this, I really appreciate the help!
 
-So we have io_struct, io_int and o_int variants only. And the io_int
-can use the proposed io_struct helper that takes an explicit length
-to copy in and out.
+Thank you for the review!
 
- 
-> Here is what I am using to get the full list:
->  # ag  --no-filename -A 20 "struct proto \w* = {"  | grep .ioctl | cut -d "=" -f 2 | tr -d '\n'
-> 
->  dccp_ioctl, dccp_ioctl, dgram_ioctl, tcp_ioctl, raw_ioctl, udp_ioctl,
->  udp_ioctl, udp_ioctl, tcp_ioctl, l2tp_ioctl, rawv6_ioctl, l2tp_ioctl,
->  mptcp_ioctl, pep_ioctl, pn_ioctl, rds_ioctl, sctp_ioctl, sctp_ioctl,
->  sock_no_ioctl
-> 
-> > If this is all, this looks like a reasonable amount of code churn to me.
-> 
-> Should I proceed and create a final patch? I don't see a way to break up
-> the last patch, which changes the API , in smaller patches. I.e., the
-> last patch will be huge, right?
+We are working on a v2 addressing your comments.
 
-Good point. So be it, then.
- 
-> > Three small points
-> > 
-> > * please keep the __user annotation. Use make C=2 when unsure to warn
-> >   about mismatched annotation
-> 
-> ack!
-> 
-> > * minor: special case the ipmr (type 2) ioctls in sock_skprot_ioctl
-> >   and treat the "return int" (type 1) ioctls as the default case.
-> 
-> ack!
-> 
-> > * introduce code in a patch together with its use-case, so no separate
-> >   patches for sock_skprot_ioctl and sock_skprot_ioctl_ipmr. Either one
-> >   patch, or two, for each type of conversion.
-> 
-> I am not sure how to change the ABI (struct proto) without doing all the
-> protocol changes in the same patch. Otherwise compilation will be broken between
-> the patch that changes the "struct proto" and the patch that changes the
-> _ioctl for protocol X.  I mean, is it possible to break up changing
-> "struct proto" and the affected protocols?
-> 
-> Thank you for the review and suggestions!
-> 
-> PS: I will take some days off next week, and I am planning to send the
-> final patch when I come back.
+Just one small detail regarding these comments: I hope you don't mind if
+we use "MPTCP socket" instead of "main MPTCP socket". Per connection,
+there is one MPTCP socket and possibly multiple subflow (TCP) sockets.
+There is then no concept of "main MPTCP socket".
 
+> As far as potential merge issues with netdev/net-next and lsm/next, I
+> think we'll be okay.  I have a general policy[1] of not accepting new
+> patchsets, unless critical bugfixes, past rc5/rc6 so this would be
+> merged into lsm/next *after* the current merge window closes and
+> presumably after the netdev/net-next branch finds its way into Linus'
+> tree.
+It makes sense, we understand. These two patches were ready for a bit of
+time but we wanted to send them only after the prerequisite commits
+applied in net-next first. But that got delayed because we had a couple
+of nasty issues with them :)
 
+We hope it will not be an issue for you to maintain them in your tree
+for a couple of months but we tried to minimised the modifications in
+MPTCP code. Do not hesitate to reach us if there are some issues with them!
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
