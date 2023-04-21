@@ -1,166 +1,84 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3350B8F49
-	for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 17:17:35 +0000 (UTC)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-3f17f31c258so8717565e9.0
-        for <mptcp@lists.linux.dev>; Thu, 20 Apr 2023 10:17:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D1F28E2
+	for <mptcp@lists.linux.dev>; Fri, 21 Apr 2023 11:32:13 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-94ef0a8546fso216320966b.1
+        for <mptcp@lists.linux.dev>; Fri, 21 Apr 2023 04:32:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1682011053; x=1684603053;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+nrvmT5OFHwrUqAXKS0/0TYRQBrcHO6JC66d8fanswI=;
-        b=j6tO4jp0xdrqmgQ1bZh0uIYvt+VU7nmbselWXWzhCAG2keXa2wYyDXA833zsdXXGYm
-         uM43dk+2T7psZL6i3mzw7/RqjSnaZ7Mn/TVT/OccjDcbrWg9DUmS6QdLcDZiHSm+vpw6
-         PqBRRoRHiL9K4sVOoszbD0jj/js0/K/xR8xmWyLBfqGcVbpiiWP4tzKkScIeNh9XDCEh
-         b/CNb7KZOj2x0jlDmdCVW9YaLcjGn7TLlo1cODhUADXSM/U0Cf+CSxl82YcsEMKt9MAr
-         W4a37xXtmIA3uQz7rPKx/P2Nwu/rYaZ7e5paqNIMoKpcYnDn8/A/qpFphzghANYIolQb
-         ShUA==
+        d=tessares.net; s=google; t=1682076731; x=1684668731;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZjpV0glVC1qz8hLY+Y5AmfPOZTYmHC6QV1zpMuNkw4U=;
+        b=vBbrnXv0G2UuAZzmT7ZqkmNKQDutDR/ChXe8RSPO5j/Cm5yvhwoADo3xcSv3zDs9fK
+         KptHUFuQcp025+d3GquwPePQWcF+nP37G1/iyHu/hfSVQ2FfBDOb24MmoIKrVfR+LEIe
+         IvTGrbELuyWS+5Ynu4fXk0W+0bA6xr7LxQY6tkDSXMMDUm/+5xTpFLh16qdm8RgVMMpf
+         0c1Qo0TAA9G2FtXoO1e2R2+bkqPb7MbBkV0t418zLQwrttCBSFN2715geqk7PH82riHL
+         xEAaORv/YNsmyrtGpTI68kZPUsxkJX3MWXj4Yd4WGYcx9GMmFomNb91v9mTJMuvEQiLP
+         XeEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682011053; x=1684603053;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+nrvmT5OFHwrUqAXKS0/0TYRQBrcHO6JC66d8fanswI=;
-        b=PaV0Wd6sGo5WcJjgO7zFqzO8fAnIxUIhDfb9vGYjP0Md35oDCL2LoJ/2OvbYvAaFce
-         qM2mQvlHuMMhyn3ILbvC8skJrTdyyOy3Y6iWf34yJAPPMTe0KMiAl7dqKZ8grJ2eck0f
-         bBCXR9DwEgB5086hW9+zI5eDTFfCmd9zSdW6HyoneyGvGkFx347pKbx52zJtfJ3LnmZe
-         RkKdl52rozLzS4PPUPdZdxKm76fTomxdBmT3cgDkhUxWiBHAzuExXnVY7ePiloEap+mr
-         BUiTQsyr8VSDvaozJmHbrg01uMyNlx0vxvuS+Q40g2TPPwMkiF4yJl3b9csimqyXNKpt
-         tBbA==
-X-Gm-Message-State: AAQBX9fm93NkZc1+UZMzBQVb2IakLWAOXr3f3GgynlA92OaERPEG3XnT
-	CsQCxn9sZ3xQ1pbPgcyYADb9NQhff+8ROGzVR0+/I8hQ
-X-Google-Smtp-Source: AKy350YDPqDs+oNhq4+CzO2Ado1avKObxaMZvo+mr7qJp0MQdpGCb5Af8m8SdwPIdw95c0kV5psKeQ==
-X-Received: by 2002:adf:f88a:0:b0:2f2:79ce:4836 with SMTP id u10-20020adff88a000000b002f279ce4836mr2114862wrp.60.1682011053092;
-        Thu, 20 Apr 2023 10:17:33 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id h18-20020a5d6892000000b002f9bfac5baesm2450752wru.47.2023.04.20.10.17.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 10:17:32 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Thu, 20 Apr 2023 19:17:14 +0200
-Subject: [PATCH LSM v2 2/2] selinux: Implement mptcp_add_subflow hook
+        d=1e100.net; s=20221208; t=1682076731; x=1684668731;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZjpV0glVC1qz8hLY+Y5AmfPOZTYmHC6QV1zpMuNkw4U=;
+        b=KGWqBXG800apP7A/5PdkHbD5H3aGwZhUEmCmwLsUt8Dhuo9cMFCQ9obhUveRrVjWZl
+         4YAM7DLcgVx9dANw0eii6gnH27Uer9yQc5lS+MhDdnSopvY/e8jN7gLcdSGRN7VLItak
+         1sCWDX+DLZpYAsGVLZMnJ6naOkq3WQWiZHmvzprpJRKhCKj27M0HEgCoCMe5ulinYCiX
+         0ofEPvHE4R2jrYWHiEkKdV5T7rzCJdKvVOTUFHw5ywRVie9TU7mS32LNwoClgk4OzL4q
+         jo6LaEPLuED/8UGxQWCBUcKYmYEH1Ci8tmHBSoxUHhwPKoiIlnrRucCtbpN9ZpRVThBz
+         ubkg==
+X-Gm-Message-State: AAQBX9eRnPbvsGkIY4jSWKeMIhQKSOj3l5Bc0fr5k/dHoR0nQOMcRWyU
+	mEMIqtW1AOR10ojbCOLrQRSjE6NTB9UwJBtiyew2cEie
+X-Google-Smtp-Source: AKy350aqAOgoBJ+LHzaD76b14yW5Nd9AhpD4gKChl5svRXEn4P6WelQCmfet6c/dXJkuMPZPmiVlSw==
+X-Received: by 2002:a17:906:a10a:b0:94f:695e:b0c9 with SMTP id t10-20020a170906a10a00b0094f695eb0c9mr2115265ejy.5.1682076731338;
+        Fri, 21 Apr 2023 04:32:11 -0700 (PDT)
+Received: from [10.44.2.5] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
+        by smtp.gmail.com with ESMTPSA id z11-20020a170906074b00b0094f3c281b34sm1909650ejb.196.2023.04.21.04.32.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Apr 2023 04:32:10 -0700 (PDT)
+Message-ID: <71b42aeb-e405-d65b-6028-ce7ab0e55134@tessares.net>
+Date: Fri, 21 Apr 2023 13:32:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 mptcp-next 0/3] mptcp: add more mibs
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1681481877.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <cover.1681481877.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v2-2-e7a3c8c15676@tessares.net>
-References: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v2-0-e7a3c8c15676@tessares.net>
-In-Reply-To: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v2-0-e7a3c8c15676@tessares.net>
-To: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
- "Serge E. Hallyn" <serge@hallyn.com>, 
- Stephen Smalley <stephen.smalley.work@gmail.com>, 
- Eric Paris <eparis@parisplace.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Ondrej Mosnacek <omosnace@redhat.com>, 
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3129;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=WLhdu7VM8rRQHFyxZs5IsD7KrHV+7/B+Pjyz5LAXc28=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkQXOpmi1k2/KgRY8NOtTX9iCZ7MkaYNHhEgOGn
- ii8nlJrcKCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZEFzqQAKCRD2t4JPQmmg
- czKpEADSd17bfsUVbQ+uwJhsBgw8gyj6F3CtxsSF5KcOpGnw3lyvx9DHDX3ZY0GpnEx6uEm8Hc3
- TNVAFrZsnmASC8q2zSQmdzynSgXyktDuWkGJvFyQupfT4LRGVgiSj7/j/d2l3X9xfjhRwROizxA
- KZ7ptNIATPin22KviVmh9csEgsLTEgHmazsEI88uXKHTiKYQik0xYGxhJSM+FnDF3MaPSKP5oIV
- dXtzacqLcPJvvLRnMXxmoYW/XtTSOB3S7cnknl/gP4Bzl4k6AsZsvyZJpQLBYIbY3kyK9CxKO/U
- trvZGfaJMCgOyAeLjJIoF1tPjwG92qQIG78maTIRG4G2WF1iVufCf0zPR/lpnNPYhbVtUS+a8Q7
- Pb1xpbh3+bJ4pJ2pMImtO6S+YClntJq2rgxJ23gnQXiRzJhUHUdPwZINwkbYBBN+dNcTvXmu752
- 6hp81pkoLZ9RP7vFt0I3fCH31NiTBsr3l8NOhpLlqXIQqpQIquubMPFVaIgvWlXLsANN4E1kLE5
- oRHd4w+ASJI9zkmMdhEbkmpptsmHNiCScdbWgePbEhV8ObL7Zh2IbDsx0Rd1YIKbZaZ3SPcB5kd
- CFve8+sUXHE394KCAMiiMogopfITRpL7JyGtny7xhDB/nU65Q/3IvEw8VhbGGLtBCxr4XAa/KWN
- YgTynBW3b4sRIgg==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hi Paolo,
 
-Newly added subflows should inherit the LSM label from the associated
-MPTCP socket regardless of the current context.
+On 14/04/2023 16:19, Paolo Abeni wrote:
+> dumb cover letter for CI's sake.
+> 
+> Slould be applied only after the current tree has been crunched
+> by syzkaller for a little bit, as this will likely change quite
+> a bit the timings of some critical path, possibly hiding old races
+> and make more easy to reach other ones
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/378
 
-This patch implements the above copying sid and class from the MPTCP
-socket context, deleting the existing subflow label, if any, and then
-re-creating the correct one.
+Thank you for having looked at that!
 
-The new helper reuses the selinux_netlbl_sk_security_free() function,
-and the latter can end-up being called multiple times with the same
-argument; we additionally need to make it idempotent.
+I have a small request in patch 2/3 (and a question in 1/3 but that's a
+detail) if you don't mind.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
-v2:
- - Address Paul's comments:
-   - use "MPTCP socket" instead of "msk" in the commit message
-   - "updated" context instead of "current" one in the comment
----
- security/selinux/hooks.c    | 16 ++++++++++++++++
- security/selinux/netlabel.c |  8 ++++++--
- 2 files changed, 22 insertions(+), 2 deletions(-)
+We can also apply the patches and do the suggested improvement after if
+you prefer.
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 9a5bdfc21314..67e6cd18ad59 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -5476,6 +5476,21 @@ static void selinux_sctp_sk_clone(struct sctp_association *asoc, struct sock *sk
- 	selinux_netlbl_sctp_sk_clone(sk, newsk);
- }
- 
-+static int selinux_mptcp_add_subflow(struct sock *sk, struct sock *ssk)
-+{
-+	struct sk_security_struct *ssksec = ssk->sk_security;
-+	struct sk_security_struct *sksec = sk->sk_security;
-+
-+	ssksec->sclass = sksec->sclass;
-+	ssksec->sid = sksec->sid;
-+
-+	/* replace the existing subflow label deleting the existing one
-+	 * and re-recreating a new label using the updated context
-+	 */
-+	selinux_netlbl_sk_security_free(ssksec);
-+	return selinux_netlbl_socket_post_create(ssk, ssk->sk_family);
-+}
-+
- static int selinux_inet_conn_request(const struct sock *sk, struct sk_buff *skb,
- 				     struct request_sock *req)
- {
-@@ -7216,6 +7231,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
- 	LSM_HOOK_INIT(sctp_sk_clone, selinux_sctp_sk_clone),
- 	LSM_HOOK_INIT(sctp_bind_connect, selinux_sctp_bind_connect),
- 	LSM_HOOK_INIT(sctp_assoc_established, selinux_sctp_assoc_established),
-+	LSM_HOOK_INIT(mptcp_add_subflow, selinux_mptcp_add_subflow),
- 	LSM_HOOK_INIT(inet_conn_request, selinux_inet_conn_request),
- 	LSM_HOOK_INIT(inet_csk_clone, selinux_inet_csk_clone),
- 	LSM_HOOK_INIT(inet_conn_established, selinux_inet_conn_established),
-diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
-index 1321f15799e2..33187e38def7 100644
---- a/security/selinux/netlabel.c
-+++ b/security/selinux/netlabel.c
-@@ -155,8 +155,12 @@ void selinux_netlbl_err(struct sk_buff *skb, u16 family, int error, int gateway)
-  */
- void selinux_netlbl_sk_security_free(struct sk_security_struct *sksec)
- {
--	if (sksec->nlbl_secattr != NULL)
--		netlbl_secattr_free(sksec->nlbl_secattr);
-+	if (!sksec->nlbl_secattr)
-+		return;
-+
-+	netlbl_secattr_free(sksec->nlbl_secattr);
-+	sksec->nlbl_secattr = NULL;
-+	sksec->nlbl_state = NLBL_UNSET;
- }
- 
- /**
-
+Cheers,
+Matt
 -- 
-2.39.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
