@@ -1,45 +1,45 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFE73C05
-	for <mptcp@lists.linux.dev>; Fri, 21 Apr 2023 14:12:54 +0000 (UTC)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-506bf4cbecbso2483386a12.1
-        for <mptcp@lists.linux.dev>; Fri, 21 Apr 2023 07:12:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36C23C05
+	for <mptcp@lists.linux.dev>; Fri, 21 Apr 2023 14:15:24 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5050491cb04so2532675a12.0
+        for <mptcp@lists.linux.dev>; Fri, 21 Apr 2023 07:15:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1682086373; x=1684678373;
+        d=tessares.net; s=google; t=1682086523; x=1684678523;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5Q1bko8L41zWo98DORk6teVFcRu41OBVpPJRMTz3Ay8=;
-        b=Zltj6XWZ/p+kgx2t9HVAe6iSHosJHTYC8I4dE/2aJP8BttV4MLLLUEjzQtwlXe49z+
-         +9xmsjGGB3MBY9qWtXUEQLZ+MFJfMPSwYOzIJAMK3CQmjQSL87gq7eJ+ZkleuDX8ql7P
-         HHSB2i4pkhFD4zwRH/m3BeCT4ydJFn8s7A/jpx+nK9NUctf2WU/oWaQtX0rewUk45ykj
-         mlqMgmnwiC8WgvhGZwUUtgpTWa+StJbDl4CcVKu/7HS1Tw6kDhQ8UmGVXSeDbpjckESq
-         vIZloiZEdsa5wjmJSHZYA0I/owRxA0Uz0gAWD1j7HSTBtjz/RZVwc1rJYTf2YnpeAQ0b
-         aK7w==
+        bh=+Cd/uVQDdtf7JUKlALaDmoSf3jtQRlN4mL6CP/3aSnA=;
+        b=M1ppE5+0FOfQsrvHd0+oApcYvfQY4Nq0sYJxjMYNOY5XdOz2QmNNRa3ZSZm7eR79sY
+         MTUu3am7oJ7kbdYkNdBrwJ0boDTPQq2/BTrmtX/apDZoz0bn9byXXwipvUAyBq4CJj0Q
+         pOy4M/YuqOr3CGbDoHlpa08cKt3kdqiDw4tdX5YVJHfUpGAVl8TozRddx5qckUOIwAan
+         oR0dWfkLK24cg5Es6l7ap+o8DwHL6pExcYA8uny6pendyaQoljqWRmabHQS+aES8VKE4
+         qHI+6imNbXLk8pBMlopd8atVxTfdk8PmD1nmcBPFPZ+8nDHSUIxpN/X6DSPT4OKiSb7y
+         T05g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682086373; x=1684678373;
+        d=1e100.net; s=20221208; t=1682086523; x=1684678523;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Q1bko8L41zWo98DORk6teVFcRu41OBVpPJRMTz3Ay8=;
-        b=ghq3yGr6jyqUL4Gwvh2slw5v28HuEXyq+Q1c/dCEF4RU9nzxtTLe33n4MFRXJycq4f
-         tBQsxhWiBlsR37/RjVjpn7GD/e4//nUqfNTVskQH7wbvtOzMA5+Muxm/oHtGXtjOVDQu
-         sJ+qhK9gt+QgrX6BXk+tdHSL+iJAwzXe2elghW7P04vKAsVOUHy3sMUHuw6cMuoMgdDs
-         yg/HY4tigzhADbHmmjf6DsPsMjJcr0yojBvt+PrWhBHg6TBdAVXV+/hpYsbFfeRxcZPS
-         gyeoUYzrwYAdLFDcJUzmMO8DXI8Dkw4xY1OReq9QuyZCY0/KZ/VRzes38drtEGG72mKR
-         c85g==
-X-Gm-Message-State: AAQBX9dNeXRp8iedjGloAlpsK+TVrsYIUFt5Gi2Msj2vilj6BaAr8HHb
-	Mh4FO+bVccwETGKrwOBUlPtEtDmxRaEdy3W4wbsnhg==
-X-Google-Smtp-Source: AKy350aT5FdB/B4elsztNqufSQ7gFsNUp7dj0K/I18BoADJAfA1Ex6tzuDYKNexVZKzOukFzCwVpJQ==
-X-Received: by 2002:a17:906:2a04:b0:94e:ed5d:c864 with SMTP id j4-20020a1709062a0400b0094eed5dc864mr2652743eje.19.1682086372642;
-        Fri, 21 Apr 2023 07:12:52 -0700 (PDT)
+        bh=+Cd/uVQDdtf7JUKlALaDmoSf3jtQRlN4mL6CP/3aSnA=;
+        b=NoU3q59tFxPPkdIUueThZGkDCYKffTudcCiCvD+cfipDJpLTRjR5RF0y5dJ/WN1UVV
+         +FZ2aG7YProbfqkLsS9T3X4U1JdJfkp8/IWYcVWhFMtSPEgaE82pdSAkdiXk0lYgqMCY
+         euVnI08wdJl5V4ySerKagZX/9iLX95kHqBvntXwIpEF3/Nm5DUkx0pkybUnPi0sK2E4v
+         mzgkIIJWuNrFqZ1q1puau+nsZnWiOvqHQFZw4eB9BN9MTH4rLQ7u8gj6JgXSagYBc6D0
+         BrEijCKyPUHPqUVg0fSVrJWUNTdIxuB7D8Hk26VARFUAPOVULEWkWNPgxs5e+TCNAPEf
+         h0Bg==
+X-Gm-Message-State: AAQBX9fTiZZB+pTXoHfZNGW+3CBrJpYsJORglxoOMG/WVZIfDBRnjy2L
+	3V76byJKguvxDBz/WrtAvGbLsgTwJi1h6mAGqaY6Kw==
+X-Google-Smtp-Source: AKy350YFs8aXrDos/CAxz0UD/n3dl5y9W7uSFyGmWEoSKmifrX+yEvyGPUwEkm9e/6rmWnytgC82wQ==
+X-Received: by 2002:aa7:d887:0:b0:4fa:4a27:adba with SMTP id u7-20020aa7d887000000b004fa4a27adbamr5464933edq.22.1682086522689;
+        Fri, 21 Apr 2023 07:15:22 -0700 (PDT)
 Received: from [10.44.2.5] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id lw26-20020a170906bcda00b0094f185d82dcsm2117121ejb.21.2023.04.21.07.12.52
+        by smtp.gmail.com with ESMTPSA id l11-20020aa7d94b000000b005084014ae2bsm1880138eds.45.2023.04.21.07.15.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Apr 2023 07:12:52 -0700 (PDT)
-Message-ID: <5d85de00-08ff-508b-3fd4-4f62cd4eaa47@tessares.net>
-Date: Fri, 21 Apr 2023 16:12:52 +0200
+        Fri, 21 Apr 2023 07:15:22 -0700 (PDT)
+Message-ID: <2e9d011c-fd88-4ccf-e4fd-6d312cd5b527@tessares.net>
+Date: Fri, 21 Apr 2023 16:15:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,51 +48,59 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: selftests: mptcp: update userspace pm subflow tests: Tests
- Results
+Subject: Re: [PATCH mptcp-next v8 1/5] mptcp: only remove addrs in
+ nl_cmd_remove
 Content-Language: en-GB
-To: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-References: <177f9ca7d30f810324bf46705ac7d977461ffc2d.1681960259.git.geliang.tang@suse.com>
- <08841cc0-4d7b-417c-f33c-48322842a38f@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1681960259.git.geliang.tang@suse.com>
+ <8c56e8306c829d6ca42ec34e07448fcee21b5dc4.1681960259.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <08841cc0-4d7b-417c-f33c-48322842a38f@gmail.com>
+In-Reply-To: <8c56e8306c829d6ca42ec34e07448fcee21b5dc4.1681960259.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 20/04/2023 06:13, MPTCP CI wrote:
-> Hi Geliang,
-> 
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal (except selftest_mptcp_join):
->   - Unstable: 1 failed test(s): selftest_userspace_pm 🔴:
->   - Task: https://cirrus-ci.com/task/5458994014191616
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/5458994014191616/summary/summary.txt
-> 
-> - KVM Validation: normal (only selftest_mptcp_join):
->   - Success! ✅:
->   - Task: https://cirrus-ci.com/task/6584893921034240
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/6584893921034240/summary/summary.txt
-> 
-> - KVM Validation: debug (only selftest_mptcp_join):
->   - Unstable: 1 failed test(s): selftest_mptcp_join 🔴:
->   - Task: https://cirrus-ci.com/task/5881206479257600
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/5881206479257600/summary/summary.txt
-> 
-> - KVM Validation: debug (except selftest_mptcp_join):
->   - Unstable: 3 failed test(s): packetdrill_add_addr packetdrill_sockopts selftest_userspace_pm 🔴:
->   - Task: https://cirrus-ci.com/task/4755306572414976
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/4755306572414976/summary/summary.txt
+On 20/04/2023 05:11, Geliang Tang wrote:
+> Only send RM_ADDRS to remove addrs in mptcp_nl_cmd_remove(), add a new
+> helper mptcp_pm_remove_addrs() to do this. Use mptcp_nl_cmd_sf_destroy()
+> to delete associated subflows.
 
-Thank you for the new version.
+If you need to send a new version, can you add a bit more explanations
+to make things clear that the NL command was not supposed to delete
+subflow but only send a RM_ADDR? I think it is important because we will
+need to have this patch backported.
 
-It looks like the CI found some issues with this v8.
+Maybe something like this:
 
-I also have some comments, see the individual patches.
+  mptcp: only send RM_ADDR in nl_cmd_remove
+
+  The specifications from [1] about the "REMOVE" command say:
+
+      Announce that an address has been lost to the peer
+
+  It was then only supposed to send a RM_ADDR and not trying to delete
+  associated subflows.
+
+  A new helper mptcp_pm_remove_addrs() is then introduced to do just
+  that, compared to mptcp_pm_remove_addrs_and_subflows() also removing
+  subflows.
+
+  To delete a subflow, the userspace daemon can use the "SUB_DESTROY"
+  command, see mptcp_nl_cmd_sf_destroy().
+
+  Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
+  Link:
+https://github.com/multipath-tcp/mptcp/blob/mptcp_v0.96/include/uapi/linux/mptcp.h
+[1]
+
+WDYT?
+
+> Fixes: 9ab4807c84a4 ("mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE")
+
+Oops, I gave you the wrong sha, it should be:
+
+Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
 
 Cheers,
 Matt
