@@ -1,373 +1,104 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971DB28FA
-	for <mptcp@lists.linux.dev>; Mon, 24 Apr 2023 14:09:22 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3f19ab99540so21647145e9.2
-        for <mptcp@lists.linux.dev>; Mon, 24 Apr 2023 07:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1682345361; x=1684937361;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hc99Xfr6pVuENOSF5bpLIfHEqcxQtxjr9hf/j9uZ9wY=;
-        b=wC3fsTnBr2FXauBCpd60riPKBLYha0ovm217SPrieSpLOZN+zfHM70MXosVSTmamC2
-         e7sakwHxwqyi04qasb6ryKXM9C51vR0VdPnfIEmdj60x6EbWyyDtWm7yzatJ1g+H5qvt
-         Dwp4Ho7WH+TRYXgXkDMfwky7zgHhUPwT9EuZszzhKbx/NEIP0fDBsHPDQWvZfejx6tsb
-         +kDgiBZOl7cLTYXZzpq8mSIRGhuWgvGRwZUHKYIMTdgrfFxtIWyUId5rIFm60nAnuK/Y
-         nPYTpcdFEpcPOEHJxW1NQKMGTp64AuIVs5b9jLclQu34vNUu1ffZrVmjPyB+ABdH9+VT
-         Ze6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682345361; x=1684937361;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hc99Xfr6pVuENOSF5bpLIfHEqcxQtxjr9hf/j9uZ9wY=;
-        b=IizLPcdJ357cwflXyRhv08TVXPpQfO2RUyGd9S6sNQwq19qExEsiS0xj287VdrjPcu
-         XW92ItN7s2svoXcCraaMn9NBlkYoc+Wl7vyaZIlxDnckgJZjr+XZN4kiVdfT/7EVB7Od
-         St/ECi0+DI0fntIsHgAhyMFL8/6eKp+jwx+bTClDOZIiUif7k8nIRm5t/iAPgaL+P9OW
-         yR23f6Qx9PEkdOuR5d1WlGPa779f4sIdbwWkIc/rbmhtDldmsCNML1XH0VCYI/d3NUsw
-         IU/6ccbniiWBt3oUgKBT1zdNukRO3DS1yLT31l2dJ5YhNyThiaKNf2Rdgn3PNybGvXaQ
-         BfUA==
-X-Gm-Message-State: AAQBX9et8ZbYUloTAHxfQKql2xHvAg/wi119QAp+SMDZRtvk6Hm6jkZN
-	54lhe7XlktlUG9BWKxeOzw+1uA==
-X-Google-Smtp-Source: AKy350Yp6if0s710jV7YAiDxBgBmyafL/VgUAfLu4ekSbfbRHDF7CwwsRXQ/VWhLWQUoJmKF9Lhulw==
-X-Received: by 2002:a7b:c045:0:b0:3f1:662a:93c4 with SMTP id u5-20020a7bc045000000b003f1662a93c4mr8287706wmc.36.1682345360735;
-        Mon, 24 Apr 2023 07:09:20 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id m6-20020a05600c4f4600b003ee5fa61f45sm15729235wmq.3.2023.04.24.07.09.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Apr 2023 07:09:20 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Mon, 24 Apr 2023 16:09:09 +0200
-Subject: [PATCH 6.1 2/2] mptcp: fix accept vs worker race
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B2B7470
+	for <mptcp@lists.linux.dev>; Mon, 24 Apr 2023 23:47:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41003C433D2;
+	Mon, 24 Apr 2023 23:47:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1682380076;
+	bh=J9F/PCPmnp1zY52wgCMIuhzlda8NYNH+t0I6cl/RyUk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=PzkJY6eOWFWKCMn7NmQimKuGPAXm4hxBHkwXtiQkHooSVoYXHefvZ73Mc7N8MGLrE
+	 v86ljB/b99qdaluttzIkzYXvQxs8ptIg8t13bnkXtFzaS/OOTWJRfCffFTd4mqsak6
+	 tOyuN+QMg/QSbb9RbY1Eu4Dg9y2bng2jWARsIbAofj/LqPBRv5E6vClLk6LPkM0Jq+
+	 LGqcWgzzKbLCaV7B7/QW2/PGyEU/kLFQl8rrvQfHU8jmBNcze8dCmNZB73EAPX2LDw
+	 DoimHW22in/0hw94/p5bVvwlnEG5pVI6+n/eGvlgvHWXAhWG0RdTfbS5nv4y5YbC61
+	 BtNcYzjBc6TvQ==
+Date: Mon, 24 Apr 2023 16:47:55 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net 00/13] selftests: mptcp: skip tests when features
+ are not supported
+In-Reply-To: <20230406-mptcp-issue-368-selftests-old-kernels-v1-0-246ac567724d@tessares.net>
+Message-ID: <03935b76-591d-85af-ad97-62c5ed5acedb@kernel.org>
+References: <20230406-mptcp-issue-368-selftests-old-kernels-v1-0-246ac567724d@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230424-upstream-stable-20230424-conflicts-6-1-v1-2-b054457d3646@tessares.net>
-References: <20230424-upstream-stable-20230424-conflicts-6-1-v1-0-b054457d3646@tessares.net>
-In-Reply-To: <20230424-upstream-stable-20230424-conflicts-6-1-v1-0-b054457d3646@tessares.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Sasha Levin <sashal@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, stable@vger.kernel.org, 
- mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
- Christoph Paasch <cpaasch@apple.com>, 
- "David S. Miller" <davem@davemloft.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11567;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=ik0y/F3/ETptwHcGH47CfgtNVwu/y4XJw8FAP25SDQY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkRo2N4REjjlJE4Cy9UaAHxqQRxonA6IBed/D4C
- IhrDIqDf/2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZEaNjQAKCRD2t4JPQmmg
- c8YAD/4qk1xfzvuxTnqiAD+Cy/7eW7AqOjlNixc8Nxr/2pDArXbrb05tirMLJJNWVLy0r1FRZrL
- k07+YXecKrO/0EqOZt+MSa6STHKjRF3IWvv/NzXEveO040SuVBFj4SzUnwfkod72/UhTIzJ+NW1
- lBbKpAbOiAKnusEaJNGyEd4OvpLlaEc4db+x4VUF2V3+83/qb5242CguU3SZ94Wj0ym6zEyiRnx
- 2hAyKFqQDYRXjpERCA57MLf3oN5hrGKXFKkPS+6rEUEX+RKBhyRi0AnJPvg9tPxuv1gle1D6epP
- 8NEvPkiSxiiK4AIuwjBiHaM0/Bdxp3hiGmCXLHNHSRQ/Gh/T0N7YasOTZq/Sw/S5C+Ib6FJua3o
- 6r2yD14lgWTIcKzxAYuOZvseL966HCfxmtoAYk3Q1HAgBdgzzafN3lwtJW3GQ//2Qk+UyjcfrTA
- ZoM6RDcOUBTOPBWOsj6lNVzMqwQkn4bJT201+199zKt9C2oJoq162rkWjGtT0AsjNKZOLahwETx
- y5t356S8b5WyLWKgB/QwY8tgNz/0GhfR/n+uGqclXCv3Bm4is9XVhv1x0RJLWH/EcpHBXDw+ib+
- 5iN71YS6oSWeiaf4nY+AWfiQMIKxT3sL1097FqV+TNKgWhASSBFZ9I99r3B1yMmAkl3TnuXU91G
- 8/R5t9KuJxGgbOQ==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Fri, 7 Apr 2023, Matthieu Baerts wrote:
 
-[ Upstream commit 63740448a32eb662e05894425b47bcc5814136f4 ]
+> Selftests are supposed to run on any kernels, including the old ones not
+> supporting all MPTCP features.
+>
+> These different patches add support for older kernels. More similar
+> checks will be needed but here is a first batch not to have too many
+> patches (because each patch fixes different commits).
+>
+> I tried to minimise the modifications and do the checks from the bash
+> script not to have to detect the feature when being used in a .c file,
+> then pass the info to the bash script, skip the test, clean the
+> environment, etc.
+>
+> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-  Backports notes: one simple conflict in net/mptcp/protocol.h with
+Hi Matthieu -
 
-    commit 36b122baf6a8 ("mptcp: add subflow_v(4,6)_send_synack()")
+The "skip if MPTCP is not supported" patches (1-7) and patch 10 (missing 
+ip tool) look good to me:
 
-  Where the two commits add the signature of one function in protocol.h
-  at the same place.
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-The mptcp worker and mptcp_accept() can race, as reported by Christoph:
 
-refcount_t: addition on 0; use-after-free.
-WARNING: CPU: 1 PID: 14351 at lib/refcount.c:25 refcount_warn_saturate+0x105/0x1b0 lib/refcount.c:25
-Modules linked in:
-CPU: 1 PID: 14351 Comm: syz-executor.2 Not tainted 6.3.0-rc1-gde5e8fd0123c #11
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
-RIP: 0010:refcount_warn_saturate+0x105/0x1b0 lib/refcount.c:25
-Code: 02 31 ff 89 de e8 1b f0 a7 ff 84 db 0f 85 6e ff ff ff e8 3e f5 a7 ff 48 c7 c7 d8 c7 34 83 c6 05 6d 2d 0f 02 01 e8 cb 3d 90 ff <0f> 0b e9 4f ff ff ff e8 1f f5 a7 ff 0f b6 1d 54 2d 0f 02 31 ff 89
-RSP: 0018:ffffc90000a47bf8 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: ffff88802eae98c0 RSI: ffffffff81097d4f RDI: 0000000000000001
-RBP: ffff88802e712180 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: ffff88802eaea148 R12: ffff88802e712100
-R13: ffff88802e712a88 R14: ffff888005cb93a8 R15: ffff88802e712a88
-FS:  0000000000000000(0000) GS:ffff88803ed00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f277fd89120 CR3: 0000000035486002 CR4: 0000000000370ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __refcount_add include/linux/refcount.h:199 [inline]
- __refcount_inc include/linux/refcount.h:250 [inline]
- refcount_inc include/linux/refcount.h:267 [inline]
- sock_hold include/net/sock.h:775 [inline]
- __mptcp_close+0x4c6/0x4d0 net/mptcp/protocol.c:3051
- mptcp_close+0x24/0xe0 net/mptcp/protocol.c:3072
- inet_release+0x56/0xa0 net/ipv4/af_inet.c:429
- __sock_release+0x51/0xf0 net/socket.c:653
- sock_close+0x18/0x20 net/socket.c:1395
- __fput+0x113/0x430 fs/file_table.c:321
- task_work_run+0x96/0x100 kernel/task_work.c:179
- exit_task_work include/linux/task_work.h:38 [inline]
- do_exit+0x4fc/0x10c0 kernel/exit.c:869
- do_group_exit+0x51/0xf0 kernel/exit.c:1019
- get_signal+0x12b0/0x1390 kernel/signal.c:2859
- arch_do_signal_or_restart+0x25/0x260 arch/x86/kernel/signal.c:306
- exit_to_user_mode_loop kernel/entry/common.c:168 [inline]
- exit_to_user_mode_prepare+0x131/0x1a0 kernel/entry/common.c:203
- __syscall_exit_to_user_mode_work kernel/entry/common.c:285 [inline]
- syscall_exit_to_user_mode+0x19/0x40 kernel/entry/common.c:296
- do_syscall_64+0x46/0x90 arch/x86/entry/common.c:86
- entry_SYSCALL_64_after_hwframe+0x72/0xdc
-RIP: 0033:0x7fec4b4926a9
-Code: Unable to access opcode bytes at 0x7fec4b49267f.
-RSP: 002b:00007fec49f9dd78 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 00000000006bc058 RCX: 00007fec4b4926a9
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006bc058
-RBP: 00000000006bc050 R08: 00000000007df998 R09: 00000000007df998
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006bc05c
-R13: fffffffffffffea8 R14: 000000000000000b R15: 000000000001fe40
- </TASK>
+I have some comments on patch 8 and related, I'll reply separately on 
+those.
 
-The root cause is that the worker can force fallback to TCP the first
-mptcp subflow, actually deleting the unaccepted msk socket.
+Thanks!
 
-We can explicitly prevent the race delaying the unaccepted msk deletion
-at listener shutdown time. In case the closed subflow is later accepted,
-just drop the mptcp context and let the user-space deal with the
-paired mptcp socket.
+Mat
 
-Fixes: b6985b9b8295 ("mptcp: use the workqueue to destroy unaccepted sockets")
-Cc: stable@vger.kernel.org
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/375
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Tested-by: Christoph Paasch <cpaasch@apple.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- net/mptcp/protocol.c | 68 ++++++++++++++++++++++++++++++++++------------------
- net/mptcp/protocol.h |  1 +
- net/mptcp/subflow.c  | 22 +++++++++--------
- 3 files changed, 58 insertions(+), 33 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index a4d5072c6e98..ea46a5cb1c30 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2330,7 +2330,26 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 			      unsigned int flags)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
--	bool need_push, dispose_it;
-+	bool dispose_it, need_push = false;
-+
-+	/* If the first subflow moved to a close state before accept, e.g. due
-+	 * to an incoming reset, mptcp either:
-+	 * - if either the subflow or the msk are dead, destroy the context
-+	 *   (the subflow socket is deleted by inet_child_forget) and the msk
-+	 * - otherwise do nothing at the moment and take action at accept and/or
-+	 *   listener shutdown - user-space must be able to accept() the closed
-+	 *   socket.
-+	 */
-+	if (msk->in_accept_queue && msk->first == ssk) {
-+		if (!sock_flag(sk, SOCK_DEAD) && !sock_flag(ssk, SOCK_DEAD))
-+			return;
-+
-+		/* ensure later check in mptcp_worker() will dispose the msk */
-+		sock_set_flag(sk, SOCK_DEAD);
-+		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
-+		mptcp_subflow_drop_ctx(ssk);
-+		goto out_release;
-+	}
- 
- 	dispose_it = !msk->subflow || ssk != msk->subflow->sk;
- 	if (dispose_it)
-@@ -2366,18 +2385,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 	if (!inet_csk(ssk)->icsk_ulp_ops) {
- 		WARN_ON_ONCE(!sock_flag(ssk, SOCK_DEAD));
- 		kfree_rcu(subflow, rcu);
--	} else if (msk->in_accept_queue && msk->first == ssk) {
--		/* if the first subflow moved to a close state, e.g. due to
--		 * incoming reset and we reach here before inet_child_forget()
--		 * the TCP stack could later try to close it via
--		 * inet_csk_listen_stop(), or deliver it to the user space via
--		 * accept().
--		 * We can't delete the subflow - or risk a double free - nor let
--		 * the msk survive - or will be leaked in the non accept scenario:
--		 * fallback and let TCP cope with the subflow cleanup.
--		 */
--		WARN_ON_ONCE(sock_flag(ssk, SOCK_DEAD));
--		mptcp_subflow_drop_ctx(ssk);
- 	} else {
- 		/* otherwise tcp will dispose of the ssk and subflow ctx */
- 		if (ssk->sk_state == TCP_LISTEN) {
-@@ -2391,6 +2398,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		/* close acquired an extra ref */
- 		__sock_put(ssk);
- 	}
-+
-+out_release:
- 	release_sock(ssk);
- 
- 	sock_put(ssk);
-@@ -2445,21 +2454,14 @@ static void __mptcp_close_subflow(struct sock *sk)
- 		mptcp_close_ssk(sk, ssk, subflow);
- 	}
- 
--	/* if the MPC subflow has been closed before the msk is accepted,
--	 * msk will never be accept-ed, close it now
--	 */
--	if (!msk->first && msk->in_accept_queue) {
--		sock_set_flag(sk, SOCK_DEAD);
--		inet_sk_state_store(sk, TCP_CLOSE);
--	}
- }
- 
--static bool mptcp_check_close_timeout(const struct sock *sk)
-+static bool mptcp_should_close(const struct sock *sk)
- {
- 	s32 delta = tcp_jiffies32 - inet_csk(sk)->icsk_mtup.probe_timestamp;
- 	struct mptcp_subflow_context *subflow;
- 
--	if (delta >= TCP_TIMEWAIT_LEN)
-+	if (delta >= TCP_TIMEWAIT_LEN || mptcp_sk(sk)->in_accept_queue)
- 		return true;
- 
- 	/* if all subflows are in closed status don't bother with additional
-@@ -2667,7 +2669,7 @@ static void mptcp_worker(struct work_struct *work)
- 	 * even if it is orphaned and in FIN_WAIT2 state
- 	 */
- 	if (sock_flag(sk, SOCK_DEAD)) {
--		if (mptcp_check_close_timeout(sk)) {
-+		if (mptcp_should_close(sk)) {
- 			inet_sk_state_store(sk, TCP_CLOSE);
- 			mptcp_do_fastclose(sk);
- 		}
-@@ -2912,6 +2914,14 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 	sock_put(sk);
- }
- 
-+void __mptcp_unaccepted_force_close(struct sock *sk)
-+{
-+	sock_set_flag(sk, SOCK_DEAD);
-+	inet_sk_state_store(sk, TCP_CLOSE);
-+	mptcp_do_fastclose(sk);
-+	__mptcp_destroy_sock(sk);
-+}
-+
- static __poll_t mptcp_check_readable(struct mptcp_sock *msk)
- {
- 	/* Concurrent splices from sk_receive_queue into receive_queue will
-@@ -3759,6 +3769,18 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 			if (!ssk->sk_socket)
- 				mptcp_sock_graft(ssk, newsock);
- 		}
-+
-+		/* Do late cleanup for the first subflow as necessary. Also
-+		 * deal with bad peers not doing a complete shutdown.
-+		 */
-+		if (msk->first &&
-+		    unlikely(inet_sk_state_load(msk->first) == TCP_CLOSE)) {
-+			__mptcp_close_ssk(newsk, msk->first,
-+					  mptcp_subflow_ctx(msk->first), 0);
-+			if (unlikely(list_empty(&msk->conn_list)))
-+				inet_sk_state_store(newsk, TCP_CLOSE);
-+		}
-+
- 		release_sock(newsk);
- 	}
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 2cddd5b52e8f..441feeaeb242 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -620,6 +620,7 @@ void mptcp_sock_graft(struct sock *sk, struct socket *parent);
- struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
- bool __mptcp_close(struct sock *sk, long timeout);
- void mptcp_cancel_work(struct sock *sk);
-+void __mptcp_unaccepted_force_close(struct sock *sk);
- 
- bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
- 			   const struct mptcp_addr_info *b, bool use_port);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index d9bc4bdb94b7..67ddbf6f2e4e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -661,9 +661,12 @@ void mptcp_subflow_drop_ctx(struct sock *ssk)
- 	if (!ctx)
- 		return;
- 
--	subflow_ulp_fallback(ssk, ctx);
--	if (ctx->conn)
--		sock_put(ctx->conn);
-+	list_del(&mptcp_subflow_ctx(ssk)->node);
-+	if (inet_csk(ssk)->icsk_ulp_ops) {
-+		subflow_ulp_fallback(ssk, ctx);
-+		if (ctx->conn)
-+			sock_put(ctx->conn);
-+	}
- 
- 	kfree_rcu(ctx, rcu);
- }
-@@ -1763,6 +1766,7 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
- 	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
- 	struct mptcp_sock *msk, *next, *head = NULL;
- 	struct request_sock *req;
-+	struct sock *sk;
- 
- 	/* build a list of all unaccepted mptcp sockets */
- 	spin_lock_bh(&queue->rskq_lock);
-@@ -1778,11 +1782,12 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
- 			continue;
- 
- 		/* skip if already in list */
--		msk = mptcp_sk(subflow->conn);
-+		sk = subflow->conn;
-+		msk = mptcp_sk(sk);
- 		if (msk->dl_next || msk == head)
- 			continue;
- 
--		sock_hold(subflow->conn);
-+		sock_hold(sk);
- 		msk->dl_next = head;
- 		head = msk;
- 	}
-@@ -1796,16 +1801,13 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
- 	release_sock(listener_ssk);
- 
- 	for (msk = head; msk; msk = next) {
--		struct sock *sk = (struct sock *)msk;
-+		sk = (struct sock *)msk;
- 
- 		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
- 		next = msk->dl_next;
- 		msk->dl_next = NULL;
- 
--		/* prevent the stack from later re-schedule the worker for
--		 * this socket
--		 */
--		inet_sk_state_store(sk, TCP_CLOSE);
-+		__mptcp_unaccepted_force_close(sk);
- 		release_sock(sk);
- 
- 		/* lockdep will report a false positive ABBA deadlock
-
--- 
-2.39.2
-
+> ---
+> Matthieu Baerts (13):
+>      selftests: mptcp: connect: skip if MPTCP is not supported
+>      selftests: mptcp: pm nl: skip if MPTCP is not supported
+>      selftests: mptcp: join: skip if MPTCP is not supported
+>      selftests: mptcp: diag: skip if MPTCP is not supported
+>      selftests: mptcp: simult flows: skip if MPTCP is not supported
+>      selftests: mptcp: sockopt: skip if MPTCP is not supported
+>      selftests: mptcp: userspace pm: skip if MPTCP is not supported
+>      selftests: mptcp: lib: skip if missing symbol
+>      selftests: mptcp: connect: skip TFO tests if not supported
+>      selftests: mptcp: userspace pm: skip if 'ip' tool is unavailable
+>      selftests: mptcp: userspace pm: skip if not supported
+>      selftests: mptcp: userspace pm: skip PM listener events tests if unavailable
+>      selftests: mptcp: join: skip PM listener events tests if unavailable
+>
+> tools/testing/selftests/net/mptcp/Makefile         |  2 +-
+> tools/testing/selftests/net/mptcp/config           |  1 +
+> tools/testing/selftests/net/mptcp/diag.sh          |  4 +++
+> tools/testing/selftests/net/mptcp/mptcp_connect.sh | 10 +++++++
+> tools/testing/selftests/net/mptcp/mptcp_join.sh    | 18 ++++++++++--
+> tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 34 ++++++++++++++++++++++
+> tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  4 +++
+> tools/testing/selftests/net/mptcp/pm_netlink.sh    |  4 +++
+> tools/testing/selftests/net/mptcp/simult_flows.sh  |  4 +++
+> tools/testing/selftests/net/mptcp/userspace_pm.sh  | 17 ++++++++++-
+> 10 files changed, 94 insertions(+), 4 deletions(-)
+> ---
+> base-commit: 016e68a1441264585c15defedc5ccf883b3b4211
+> change-id: 20230406-mptcp-issue-368-selftests-old-kernels-fffd69d67d91
+>
+> Best regards,
+> -- 
+> Matthieu Baerts <matthieu.baerts@tessares.net>
+>
+>
+>
