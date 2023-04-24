@@ -1,115 +1,116 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BAB3C05
-	for <mptcp@lists.linux.dev>; Fri, 21 Apr 2023 14:17:51 +0000 (UTC)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-94ef8b88a5bso234999566b.2
-        for <mptcp@lists.linux.dev>; Fri, 21 Apr 2023 07:17:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88032596
+	for <mptcp@lists.linux.dev>; Mon, 24 Apr 2023 14:09:20 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-2fa36231b1cso2680758f8f.2
+        for <mptcp@lists.linux.dev>; Mon, 24 Apr 2023 07:09:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1682086669; x=1684678669;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qLnsrJyrCO6n+VuCLvqhZWTnCSMjOiNlh3UsSL0MFo4=;
-        b=cnAWQIB5wSqPyjTT07T3vvFQ/o86VfpSj7kO3og8/8o8t0Rz/jD8EhtTE1INzqhIEd
-         V+jrVfEa1dDyRZO+yQpw+THkH1LFBzHA+gSaMWGNLxVXwAb3RMnG8v+hq1oKiNz7WzYe
-         MGCniUylgw/RXWqaQKW/qs3m7krYigVOeWQR1dy4amMhaYQimwOcnVN3leF8GhiqqGbh
-         m5ydv98sxCsvjEQIBM0s1Rrn8y0PY7v36MSi1pptymc0XMf6ifiRcDUf6JJITTxvrEZ9
-         aw0VeKq/tRb5bT9q1/r/UjTdAktPFgqMddstUENtfNKYtjW8edN4lHgAYadVg5CEIaKw
-         21Hw==
+        d=tessares.net; s=google; t=1682345359; x=1684937359;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+e6Liem8K70XXf0wfZkdfebMBxwD1YskEbNt6re7ILo=;
+        b=oHd+l+mOls4aa6N57uHf5Xxpq5x5rluyb24AfDOtSaeZ5fKKQS6F48jmq+p2HHRsbX
+         Plc7iq4v5xT6C9c59C7ZJbsHLC4SRgTHRu1bGNpbGFUClj7RMwCEKzprE4H1WNYtPuyk
+         dGeiI4JQndwEWAjCcRGw/0MdPA8TxIjlOptWlKxNOGvNKfOTP6T+CrUXj7A978rFicHx
+         EE2eWJbDzwwQf9VuX46KDXTHI/bKTIGPkzgE0VrDMWZlKs2Fw1OV65iT1Mb02MbYMint
+         6EmGrK53XOm4MXe3Mfh58TLbUmEXqeQ1qGwvsTFRDkpXJl615O8UFFv+cW1Q05Wq0LyQ
+         u8vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682086669; x=1684678669;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qLnsrJyrCO6n+VuCLvqhZWTnCSMjOiNlh3UsSL0MFo4=;
-        b=DLoKmAjkhQwhZyscAIASUs1bCskchAWZZ4H/M/Y8WMDpn9qRWTlD0yeeHD85+tDklK
-         jwZNDz/HtYeWzbWVrVVFcNovN77cFJ1P/fpJ0Gii1BDksnYdHDh4aVlUrQIVJKBHYaYa
-         oZx4ErRi9FD2mBzOsoh/qw8PN2cke0s3k1VDOY5xrdSwFLgPVMyuB0lLeDTuDvrvrjCM
-         /ZmFDv/rYBCPY4moSO2Vr+wIFTN3X0AND0SWGDA6lbuZj9S430N55UASngmdm8I9jL7+
-         Vxjz3eW0w2DVx3Nk2V/0z4beMjBnLvEvYCiN/h7ylQKF8lEs+DB8JJ5LUA/Gr89bK+BY
-         dllA==
-X-Gm-Message-State: AAQBX9eWwpypSGLlN6kfvklr4+DnX6pBQaekfEkDilz5ABm0L0fJ+Fb3
-	jIpQIrnZtKxmwheGVTx6x8Y2sHvSELo/oeulrF1ueQ==
-X-Google-Smtp-Source: AKy350ZZzgZ+VMWZW6H3mGvAL7h9MkLsqIb6j0Yp6UG6YJRisZpfpYuWVgcALC+ngN6Gd03kJ/vzWA==
-X-Received: by 2002:a17:906:3b0e:b0:94e:f349:2a30 with SMTP id g14-20020a1709063b0e00b0094ef3492a30mr2443305ejf.58.1682086669472;
-        Fri, 21 Apr 2023 07:17:49 -0700 (PDT)
-Received: from [10.44.2.5] (84-199-106-91.ifiber.telenet-ops.be. [84.199.106.91])
-        by smtp.gmail.com with ESMTPSA id jo2-20020a170906f6c200b009538cc79241sm2116762ejb.56.2023.04.21.07.17.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Apr 2023 07:17:49 -0700 (PDT)
-Message-ID: <95c4951a-5131-eba2-ad19-11fc4d2c6b31@tessares.net>
-Date: Fri, 21 Apr 2023 16:17:48 +0200
+        d=1e100.net; s=20221208; t=1682345359; x=1684937359;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+e6Liem8K70XXf0wfZkdfebMBxwD1YskEbNt6re7ILo=;
+        b=Y/2AzTixKlWLGJnCdZb6JI5AAFfeCXpTR5YV8hwl598Oqa2q4x8J5ASi3niq664xh6
+         x/6XROYWd1Ic8JQH4AV5Hznek2GoBLhjCUDckxt25GabQcWFZtiZON9x+Prji0ggvC2g
+         hvJIP80mo8M69mIU8OGy/XQfDX/QaDrK1LN6WEGHUcPOjSt8cFboRKVKZ9rwtURdM1Hi
+         pTjAUZqBIN47QMkKTC7TFIpNZbRH+vJ044JFD46ALJIlgHHdLHDJYzTu5EemwoqhVjR2
+         J43e9Y6dxumSCfcPGZKrlaeHa/ggpRMTJceyHw506h7xg6ibIQFJLvAaAxzuQjsb17JQ
+         jqgw==
+X-Gm-Message-State: AC+VfDyG0HVz7ZETwMZYdKYw/o+yj8+XFzCHUd9BkY5k2EBJ6lQOWbrI
+	UvH9gKDyKDdlZAh117MW8XVEaw==
+X-Google-Smtp-Source: ACHHUZ6Sk/a6imDY/42Ob7uZkQeRm8HDtlOUdBWVPskn5eD4GHhjv3MyeCWkZa1HSJRHiyQisCuzDQ==
+X-Received: by 2002:a5d:48ca:0:b0:304:7ff3:9b2 with SMTP id p10-20020a5d48ca000000b003047ff309b2mr1297160wrs.39.1682345358761;
+        Mon, 24 Apr 2023 07:09:18 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id m6-20020a05600c4f4600b003ee5fa61f45sm15729235wmq.3.2023.04.24.07.09.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Apr 2023 07:09:18 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH 6.1 0/2] mptcp: Stable backports for v6.1.26
+Date: Mon, 24 Apr 2023 16:09:07 +0200
+Message-Id: <20230424-upstream-stable-20230424-conflicts-6-1-v1-0-b054457d3646@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH mptcp-next v8 5/5] selftests: mptcp: update userspace pm
- subflow tests
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1681960259.git.geliang.tang@suse.com>
- <177f9ca7d30f810324bf46705ac7d977461ffc2d.1681960259.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <177f9ca7d30f810324bf46705ac7d977461ffc2d.1681960259.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIONRmQC/z2NQQrCMBBFr1Jm7UiaphG8irhI4sQOtGnIRBFK7
+ 27qwuV7H97fQKgwCVy7DQq9WXhNDfpTB2Fy6UnIj8aglR6U0QZfWWoht6BU52fC/xDWFGcOVdB
+ ij3HQY6SLDaNR0GLeCaEvLoXpyNUlHzYXivz53d/Annu47/sX1D52g5MAAAA=
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Sasha Levin <sashal@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, stable@vger.kernel.org, 
+ mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ Christoph Paasch <cpaasch@apple.com>, 
+ "David S. Miller" <davem@davemloft.net>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1310;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=wwy461Gwfpcpa0cZnYPEfeHm78stYVLC5xvQOo8KG88=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkRo2Nf0YGcxa0eCStciXodepJljVP9g6kBTma7
+ CEO79FsFtaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZEaNjQAKCRD2t4JPQmmg
+ c4H4D/9gCiQqqb60CKjNTF36wi+DEWgTDxzCRGcWTlut9aTJfsdFhxmpPpZcXLlZDiHzyVtyBT0
+ ThyJeBiM5Z25BOChTyJOe9Q+2TkdXH7C9pw/GuumLrfsGQu0EtjVVjYqBWbqiiwNqwJNJnwQvTI
+ 9eAP9lZzv0yHBoOIdNV8jG1tcyTb+NMMQzZtZJ571QDbU6VdjZUorKNj4YU+Xyg2sv2p6Emqq9U
+ iJTfWkJZqgzk7juGZDiGeTltQpj4E0oIdYajBtyfQ2/h2ciEoRoHf7GDhiGigaFTp/Hq/Gf8XRW
+ ug2VQciqS5QRQaV+cuSEwlEvXH+pOgDupxSP1USxOoari3DtIpZBCWUHGJYy7ofnwSMNgQxPfYc
+ kbqCExlK5SgcAP7+hhKvPHFJlc0hc4MbpYwaHjovhQD1i6hHohk6wx6uZQ8LUirGUdw/3xnFWYR
+ 71q9RVss6M43voZDUz3cPnGIuDwUKTdFpI4TZKDUM8oq0lj9UCEpFW/ldHp4FU/WJ1FpB4X1RZq
+ frmhBl4IDMI2o1z1+Y9gFPqLwSaYe0Ixf6avghB16HQJvC2VLFmBu7feG3z2cIMyGD1aEeAgVqq
+ nnoTryIAgn61q1P4WeL9KjaOk3VQxggVUjxhEKLHchSp5gTvrU4P1CeSqeKr9jYSqzTa0KwyyzR
+ ngmRcMLkdCVoKcw==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+Hi Greg, Sasha,
 
-On 20/04/2023 05:11, Geliang Tang wrote:
-> Update userspace pm subflow selftests, by sending the a remove_addrs
-> command together before the remove_subflows command. This will get a
-> RM_ADDR in chk_rm_nr().
+Recently, 2 patches related to MPTCP have not been backported to v6.1
+tree due to conflicts:
 
-(what's the reason? To align with what is done by the in-kernel PM?)
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 9a9b6e9b28ab..795c141a11f5 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -923,6 +923,7 @@ do_transfer()
->  				sleep 1
->  				sp=$(grep "type:10" "$evts_ns2" |
->  				     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
-> +				ip netns exec ${connector_ns} ./pm_nl_ctl rem token $tk id $id
+ - 2a6a870e44dd ("mptcp: stops worker on unaccepted sockets at listener close") [1]
+ - 63740448a32e ("mptcp: fix accept vs worker race") [2]
 
-Also here, probably better to remove the subflow, and then send the
-ADD_ADDR not to have the other peer closing the subflow before the next
-step here below.
+I then here resolved the conflicts, documented what I did in each patch
+and ran our tests suite. Everything seems OK.
 
-But I guess it will not be possible to send the destroy after the remove
-because we will remove the local address from the list, no?
+These patches are based on top of the latest linux-stable-rc/linux-6.1.y
+version.
 
-Maybe better not to test that then? I mean: I don't really see why the
-client would need to send a remove address if the subflow was still
-working well. It would send a remove address if the linked local address
-got lost (e.g. link down) but why doing both?
+Do you mind adding these two patches to v6.1 queue please?
 
-Cheers,
-Matt
+[1] https://lore.kernel.org/r/2023042259-gravity-hate-a9a3@gregkh
+[2] https://lore.kernel.org/r/2023042215-chastise-scuba-8478@gregkh
 
->  				ip netns exec ${connector_ns} ./pm_nl_ctl dsf lip $addr lport $sp \
->  									rip $da rport $dp token $tk
->  			fi
-> @@ -3137,7 +3138,7 @@ userspace_tests()
->  		pm_nl_set_limits $ns1 0 1
->  		run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
->  		chk_join_nr 1 1 1
-> -		chk_rm_nr 0 1
-> +		chk_rm_nr 1 1
->  		kill_events_pids
->  	fi
->  }
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Paolo Abeni (2):
+      mptcp: stops worker on unaccepted sockets at listener close
+      mptcp: fix accept vs worker race
 
+ net/mptcp/protocol.c | 74 +++++++++++++++++++++++++++++++++---------------
+ net/mptcp/protocol.h |  2 ++
+ net/mptcp/subflow.c  | 80 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 130 insertions(+), 26 deletions(-)
+---
+base-commit: e4ff6ff54dea67f94036a357201b0f9807405cc6
+change-id: 20230424-upstream-stable-20230424-conflicts-6-1-f325fe76c540
+
+Best regards,
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Matthieu Baerts <matthieu.baerts@tessares.net>
+
