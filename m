@@ -1,45 +1,45 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18EEC7B
-	for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 10:28:27 +0000 (UTC)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-3f19c473b9eso76181555e9.0
-        for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 03:28:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F7F7B
+	for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 10:32:19 +0000 (UTC)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3003b97fa12so3348087f8f.2
+        for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 03:32:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1682418506; x=1685010506;
+        d=tessares.net; s=google; t=1682418738; x=1685010738;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=JEuSaO7ye0d7L/Fn6ODCec/5tPZxUWg5jzZx6TpD/xI=;
-        b=e/0fyxvqp10ZjKkYqX4sH9nrLBsrbDSaDu8D79FT7QxUJvlP28xoQcxTvbobUO2fXq
-         60HBkuopY9z4jjtLY81LSGcqwFBWbt4ed0ssfD141zxLjZIXXKHQ8wA1YglJ9D161lL1
-         5Ua/EMa0weazle7HLCSegTNU8xcw3x4zZnGelZudUtnI6oNRFPADxyXehkmiRsjIfR45
-         2oYlfZbFX8EXKAXGRce8hnrGSzwKi89hVCQsleXokpkXU+Ig6tcIBI+2lIz1AirnQV5c
-         sgQy/E9V36Apw2yzC5o35e3ejdthRgPIepOHAXNl5N9kIz4UVjb3IfCiWKEH0xmCeqB7
-         Zl7w==
+        bh=BiBTFiqj+tD6KYMSvWZyjg9cv8dyox095sVncjuwm9Y=;
+        b=YVxkyMoKarcqW++Zy0E08jgE2gy7N+ipEPCnoZH6Lyap09W6efmUMjbaZNXq9e8THC
+         RHt+NM3D+asZ+NMqFyUZ+Lrm7zLgg0qvEWU+mm96SfcHBr7SVt0036z1KewfACUHLlVP
+         svsxTpO77YPKZ5BTAqVuGwc+1iJCayCBx46GqQggxwtkznT3xvv72pk1OPL/DikJhmh7
+         1byIgna+PdfZxT5j7ABhnScQ5ti4Kf1ZqwbJa6GXehYQIkJbbCV/dduDopsQvEa/1SOH
+         SsVJckQydYc5J8kcyDnF36XNFvDh+gz+B962kzxNbkdreflhQemSKnKrFLa1w1KS27/G
+         dBLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682418506; x=1685010506;
+        d=1e100.net; s=20221208; t=1682418738; x=1685010738;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JEuSaO7ye0d7L/Fn6ODCec/5tPZxUWg5jzZx6TpD/xI=;
-        b=idhn6h7Tm6KzAHdd5uOm0wK7MKjM+rfi4um1LkkzewQp07bdrQnWNnlmp7iYSY03/T
-         TleVv/pD9zkcxnxmQWbTAOpPZctAsxDiIhxXanxf/FwbnsAxjQXNh0fbERWxTd3Bb01s
-         UWuAPPIpKf/HJeURjCqdi6i0zRLbJ8sGV0wxFvOBOhmOQmLpjXfUwL3tjKmwBN851LR+
-         NlVG9gjZR6gC+eCPpD5S92iVVmirNCf9ytqyoeTCvbhv4M7gogwUImWvKUwoohGDNqjM
-         G0G/BH3KTpR5Fw5R/ZhFIE+fmag5fCoOqh3MhopoY3Zx1E/SQzkcRyS73ajF8r0ZEDbw
-         Rk+Q==
-X-Gm-Message-State: AAQBX9dvlGdaNTMICUy2FhRr1krsKPIMn9QlqAE2CbOxS/muS5d5OFdP
-	hdropHCFdb6xYkQvbMQuY+CCvJF4hq2ewZuYCEricg==
-X-Google-Smtp-Source: AKy350aAGoZmjbJ1gbVHb/3ARhjyqFciMARUtFgF0LwICXV0V5XHCXPaJr9W1aFK2W4z2ckHZvEKAg==
-X-Received: by 2002:a5d:456e:0:b0:303:68d5:ff91 with SMTP id a14-20020a5d456e000000b0030368d5ff91mr11496695wrc.29.1682418505858;
-        Tue, 25 Apr 2023 03:28:25 -0700 (PDT)
+        bh=BiBTFiqj+tD6KYMSvWZyjg9cv8dyox095sVncjuwm9Y=;
+        b=RpRpRAUpk9/tnH/528hIAjJA2H+CUwVjgatkH6oln31mr0G1tzShWb5ykMx37QlBAA
+         RbCxEZeC+6fMVirYYclC5KjluSo03iLSqUFAuAhWZ4sKCZgpR25EErPjnWDZnjzFcT4x
+         bQ806R45S41Pf24EYWgI4T2WNn/VtPCIJp+UMJi/AYS6jPfe0bDomGcX55g/Ln6AhH/a
+         s7L/GWprMgfi15DzBzo+AxYQQTGgGz8MIgfcDpDKjXXwfllYzd/ARsyxSru2dwOi/kGi
+         alA4ljfPRAJmNKoaUQnsLPQ/KWOmKDAABps0hQSI4QSWry5k1VrmIeFO3IwfZqTqth2Z
+         Xydw==
+X-Gm-Message-State: AC+VfDyGzzUpxXXPne4LAs73UN+W4FkndpnZffb8KmNI2AZ3FYvz5zgM
+	sQ9xPaFHHn8jvWRezekAb77VZlQoPV1LxUKHhzHcCg==
+X-Google-Smtp-Source: ACHHUZ5Nr6kvjFwzzwIiMkFPwSdaJlIjpNJDkB6WSaBtOMH2QljOVjDf0dlacBzaE5857T6Fr/tmsQ==
+X-Received: by 2002:a5d:43d1:0:b0:304:8888:87ad with SMTP id v17-20020a5d43d1000000b00304888887admr1755572wrr.12.1682418737970;
+        Tue, 25 Apr 2023 03:32:17 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:61cc:5ecb:aad9:418c? ([2a02:578:8593:1200:61cc:5ecb:aad9:418c])
-        by smtp.gmail.com with ESMTPSA id j3-20020a5d5643000000b002e4cd2ec5c7sm12743613wrw.86.2023.04.25.03.28.25
+        by smtp.gmail.com with ESMTPSA id e5-20020a5d5005000000b0030469635629sm7775091wrt.62.2023.04.25.03.32.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Apr 2023 03:28:25 -0700 (PDT)
-Message-ID: <a6bf07b0-9760-dfce-e1f0-e8bc19d6839e@tessares.net>
-Date: Tue, 25 Apr 2023 12:28:24 +0200
+        Tue, 25 Apr 2023 03:32:17 -0700 (PDT)
+Message-ID: <62594b16-1797-86e2-1f9a-0d213d0b7c40@tessares.net>
+Date: Tue, 25 Apr 2023 12:32:17 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -55,47 +55,59 @@ To: Mat Martineau <martineau@kernel.org>
 Cc: mptcp@lists.linux.dev
 References: <20230406-mptcp-issue-368-selftests-old-kernels-v1-0-246ac567724d@tessares.net>
  <03935b76-591d-85af-ad97-62c5ed5acedb@kernel.org>
+ <798f7a6c-34b7-9285-8d4c-c05dd0f4936c@kernel.org>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <03935b76-591d-85af-ad97-62c5ed5acedb@kernel.org>
+In-Reply-To: <798f7a6c-34b7-9285-8d4c-c05dd0f4936c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
-
-On 25/04/2023 01:47, Mat Martineau wrote:
-> On Fri, 7 Apr 2023, Matthieu Baerts wrote:
+On 25/04/2023 02:21, Mat Martineau wrote:
+> On Mon, 24 Apr 2023, Mat Martineau wrote:
 > 
->> Selftests are supposed to run on any kernels, including the old ones not
->> supporting all MPTCP features.
+>> On Fri, 7 Apr 2023, Matthieu Baerts wrote:
 >>
->> These different patches add support for older kernels. More similar
->> checks will be needed but here is a first batch not to have too many
->> patches (because each patch fixes different commits).
+>>> Selftests are supposed to run on any kernels, including the old ones not
+>>> supporting all MPTCP features.
+>>>
+>>> These different patches add support for older kernels. More similar
+>>> checks will be needed but here is a first batch not to have too many
+>>> patches (because each patch fixes different commits).
+>>>
+>>> I tried to minimise the modifications and do the checks from the bash
+>>> script not to have to detect the feature when being used in a .c file,
+>>> then pass the info to the bash script, skip the test, clean the
+>>> environment, etc.
+>>>
+>>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
+>>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 >>
->> I tried to minimise the modifications and do the checks from the bash
->> script not to have to detect the feature when being used in a .c file,
->> then pass the info to the bash script, skip the test, clean the
->> environment, etc.
+>> Hi Matthieu -
 >>
->> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> The "skip if MPTCP is not supported" patches (1-7) and patch 10
+>> (missing ip tool) look good to me:
+>>
+>> Reviewed-by: Mat Martineau <martineau@kernel.org>
+>>
+>>
+>> I have some comments on patch 8 and related, I'll reply separately on
+>> those.
+>>
+>> Thanks!
+>>
 > 
-> Hi Matthieu -
+> One more question:
 > 
-> The "skip if MPTCP is not supported" patches (1-7) and patch 10 (missing
-> ip tool) look good to me:
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Did you check some older kernels to see how the tests behaved? So far I
+> only had the chance to try 5.4 (because it was easily available). If I
+> recall, we may have had some behavior changes along the way that could
+> cause some test failures even if features are present.
 
-Thank you for having looked at these patches!
+Yes, I previously checked on v6.1 and in between, I also checked on
+v5.15. That's why a v2 is coming :)
 
-I was already working on a v2 and these patches will be slightly
-modified. I will not add your RvB tag right now if that's OK.
-
-> I have some comments on patch 8 and related, I'll reply separately on
-> those.
-
-Thank you! I only saw one comment on patch 11/13. Did I miss something?
+I didn't check on v5.10 but I don't think it is worth trying to support
+it, mptcp_join.sh is validating a lot of unsupported features in v5.10.
+But if someone else wants to look at it, why not :)
 
 Cheers,
 Matt
