@@ -1,108 +1,136 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052577B
-	for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 07:57:34 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f199696149so20169435e9.0
-        for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 00:57:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072C17B
+	for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 08:01:47 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3010889c6ebso3239940f8f.2
+        for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 01:01:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682409453; x=1685001453;
+        d=gmail.com; s=20221208; t=1682409706; x=1685001706;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KkpjR3PJAFUzIkuX4iLPJpbLIN82iT4K6HlQdJXhdhk=;
-        b=WMglDYp2d9+t0LWOt4/XU3zsUj5IwUCZXG5hIhZalUoOn74qgkxES9bbxf/CPg7uM+
-         285dossdbtjqmC5ggAKaSPN8knoxWhhVX1vX/k+TR6gvgIblfioCy4Q75iqrmKS2IOFy
-         ZHrTHv0cRALfJ2K7e47GhnMTHq5huh6y/hmtV/r7GBYMMNKyj8MWLg4xUEjGzUDFBOor
-         pLIVixK7eQrgiIWC7qtoaRSIXgSPsLv/d6I/gp5GQIlMhOw4GitmuCkrG6/T62Cio3XJ
-         C7M6IarrguLLYV5+gXMabe62VFYSK8LD1iZCEEygXcE2ivCu9h2A73lIk7IieLfXTrMk
-         bMcA==
+        bh=RUVpugiKZx68vd0owGLI3cSps4nNwqBjVpNUTNn6+MU=;
+        b=gQmGK6lxF5RfIRw4YeRCQWVj8FqLyRzkSXU+iyEZ/5v4LgmvnqBvmGtTjJ6rd7ckdS
+         MOMWI2dmk8b21RJLtLxmNIOGctUVAkh4I626ClhIzYe9HmbJZHbqCN9wG3XGFEpqBxQU
+         Ye+54z8wYx04mFshSMETPHeUlepKM6IP4aihp1Z3uEqnzpZz6H5k9IjgxgiKRo7AdZUT
+         gZly5TdEaOP1eLUbYeomWzu5XKkn06WT7Tcu/8utz5l/t7WHUBnWE4WzyLOlfaVPk8wV
+         imMKws73DxIUGqTeDg2eKJRlpPLw7JSv5wiz5LHmnRJZladdE7/wyx9uqiFX0YBZZLyR
+         BK9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682409453; x=1685001453;
+        d=1e100.net; s=20221208; t=1682409706; x=1685001706;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KkpjR3PJAFUzIkuX4iLPJpbLIN82iT4K6HlQdJXhdhk=;
-        b=W6RrCUNT0XcECjvoavzptwWv3k4lj/J42VrgE1fksyPx8pvYb0wXp1yfZixIArMq7P
-         hd+7PwcgIrAFE57K9KdircICCMMSSq+OY8hRpN+KLgs7a/Y64QoNwLyh5dYZo5mLfcJN
-         5/wUcznQGsmJaKx3DD8zeZJHn76mTQq1PGaFXuo7pJY4iafb8s0+znD+kz5soOYatqZE
-         Q6j3IhiZhYjJN7Mx2PDO40tex+Ma2KtUNSvHDjiHNEn2/WB1y8zAXYDcrxnTtsNHPYTR
-         0Oelrz3ILPrAodQ/Q+28z1uBiJdKk1K6CytZfwGI9PAgrtvJ3MUnms6am5EdLaqy4hcP
-         HZ+w==
-X-Gm-Message-State: AAQBX9ctOIW114xzjM9loM18xzgqinGCMZaV5bBlAv4DT110BqGWpC4t
-	PS5bIAhxiD7BUYPNOM60q47Lg83cETpeihu7Mjs=
-X-Google-Smtp-Source: AKy350Z8hKCJ6P4//6WDVB6+DG67Ltld9isNBCZ8+gv2OGDF+LhPb8qkhZkRR+ixsDit5G0ovAVxkxNm/NRi+Tzammg=
-X-Received: by 2002:a05:600c:230e:b0:3ee:6cdf:c357 with SMTP id
- 14-20020a05600c230e00b003ee6cdfc357mr9215700wmo.20.1682409452897; Tue, 25 Apr
- 2023 00:57:32 -0700 (PDT)
+        bh=RUVpugiKZx68vd0owGLI3cSps4nNwqBjVpNUTNn6+MU=;
+        b=PISUwW7PwIHldRn7TLU1W2wvmCCrUVuaY2cw88AXvG7uHDq0iGn58tyVz/DNEo7BJb
+         qdCCG4YDqjMzI77akNoOZTszk2H5AhaZJ7lVzt88THurItaH5KDaSYUTf3/T9RGkGYI2
+         N3Gpe6/Tx/+0ofAcCceubiLySDtpDZE3nWCuV9ZQMHVMK8eU3WX1HMXe7s5wnlpkdQFw
+         ZGahhZZ95iqkw+Vr59ZV7DWWkVkchwpnd43ZIbD0jkg+HJ38oUhRnKYygJYW72WTSEfy
+         ydPDXak4MofhVAH5EpBjAIKUCC3A6mxiKitWtP6jKyuFGhsVRlbSa5Pl2N3E6l+vP2VJ
+         EHZw==
+X-Gm-Message-State: AAQBX9cOmFFRgffez/X2tRlTtGWK4tcg6f9ty2BCACYxasY6w5jicKMw
+	sDVlqTaoDRp4fo1jljvf7jiDBodH37My09vDG5w=
+X-Google-Smtp-Source: AKy350bbMT5aBjIw0pyLxrHHfLHuhc1BMTW97B+G09Abd7RvT7DjGG8h7oLqCXw3CAW9BRm3JwLzigoyTIkhzyn64Xg=
+X-Received: by 2002:adf:f544:0:b0:2ef:b080:829a with SMTP id
+ j4-20020adff544000000b002efb080829amr10112342wrp.11.1682409705930; Tue, 25
+ Apr 2023 01:01:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1681960259.git.geliang.tang@suse.com> <8c56e8306c829d6ca42ec34e07448fcee21b5dc4.1681960259.git.geliang.tang@suse.com>
- <2e9d011c-fd88-4ccf-e4fd-6d312cd5b527@tessares.net>
-In-Reply-To: <2e9d011c-fd88-4ccf-e4fd-6d312cd5b527@tessares.net>
+References: <cover.1681960259.git.geliang.tang@suse.com> <6c50f4b82533d9499318cad9d8c846823d7e280e.1681960259.git.geliang.tang@suse.com>
+ <7f6d74b1-86dc-2c0f-ea5a-8a1907b787cb@tessares.net>
+In-Reply-To: <7f6d74b1-86dc-2c0f-ea5a-8a1907b787cb@tessares.net>
 From: Geliang Tang <geliangtang@gmail.com>
-Date: Tue, 25 Apr 2023 15:57:25 +0800
-Message-ID: <CA+WQbwt0=5NCt2bPqnF8ZvK2khVumZPQmx_qtUATku-RVi6Evw@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v8 1/5] mptcp: only remove addrs in nl_cmd_remove
+Date: Tue, 25 Apr 2023 16:01:37 +0800
+Message-ID: <CA+WQbwtQ-nzp2MpM0JNi-raAC9nL=JpcgCcxyJSTOMfF3UA=ng@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v8 2/5] selftests: mptcp: update userspace pm
+ addr tests
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
 Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2023=E5=B9=B44=E6=
-=9C=8821=E6=97=A5=E5=91=A8=E4=BA=94 22:15=E5=86=99=E9=81=93=EF=BC=9A
+=9C=8821=E6=97=A5=E5=91=A8=E4=BA=94 22:16=E5=86=99=E9=81=93=EF=BC=9A
 >
 > Hi Geliang,
 >
 > On 20/04/2023 05:11, Geliang Tang wrote:
-> > Only send RM_ADDRS to remove addrs in mptcp_nl_cmd_remove(), add a new
-> > helper mptcp_pm_remove_addrs() to do this. Use mptcp_nl_cmd_sf_destroy(=
-)
-> > to delete associated subflows.
+> > Update userspace pm addr selftests, by sending a remove_subflows
+> > command together after the remove_addrs command.
 >
-> If you need to send a new version, can you add a bit more explanations
-> to make things clear that the NL command was not supposed to delete
-> subflow but only send a RM_ADDR? I think it is important because we will
-> need to have this patch backported.
->
-> Maybe something like this:
->
->   mptcp: only send RM_ADDR in nl_cmd_remove
->
->   The specifications from [1] about the "REMOVE" command say:
->
->       Announce that an address has been lost to the peer
->
->   It was then only supposed to send a RM_ADDR and not trying to delete
->   associated subflows.
->
->   A new helper mptcp_pm_remove_addrs() is then introduced to do just
->   that, compared to mptcp_pm_remove_addrs_and_subflows() also removing
->   subflows.
->
->   To delete a subflow, the userspace daemon can use the "SUB_DESTROY"
->   command, see mptcp_nl_cmd_sf_destroy().
->
->   Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
->   Link:
-> https://github.com/multipath-tcp/mptcp/blob/mptcp_v0.96/include/uapi/linu=
-x/mptcp.h
-> [1]
->
-> WDYT?
-
-Thanks, updated this in v9.
-
->
-> > Fixes: 9ab4807c84a4 ("mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE")
->
-> Oops, I gave you the wrong sha, it should be:
+> To help with the management of this patch, either add:
 >
 > Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
+>
+> and explain in the commit message that this is linked to the parent commi=
+t.
+
+Updated in v9.
+
+>
+> Or squash this in the previous patch.
+>
+> I think it will be clearer and easier when managing stable versions if
+> you squash this patch (2/5) with the parent commit (1/5).
+
+I prefer not to squash them, since they are in different repositories.
+
+>
+>
+> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> > ---
+> >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/te=
+sting/selftests/net/mptcp/mptcp_join.sh
+> > index 26310c17b4c6..9a9b6e9b28ab 100755
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > @@ -850,6 +850,14 @@ do_transfer()
+> >                               ip netns exec ${listener_ns} ./pm_nl_ctl =
+ann $addr token $tk id $id
+> >                               sleep 1
+> >                               ip netns exec ${listener_ns} ./pm_nl_ctl =
+rem token $tk id $id
+>
+> Please see my comment from v7, patch 7/7: should we not do the remove
+> address after having deleted the subflow? See:
+>
+> > (...) on slow environments, could we not have a situation where the
+> > REMOVE_ADDR signal is sent to the other peer, it directly reacts by
+> > removing the subflow and at the end, this "dsf" command is not doing
+> > anything, causing the test to fail because it expects the listener side
+> > to delete the address.
+> >
+> > Should you not first delete the subflow, then send the remove addr? (or
+> > skip the deletion of the subflow command and expect the client to remov=
+e
+> > the subflow?)
+>
+> So just moving the "pm_nl_ctl rem" command after "pm_nl_ctl dsf", no?
+
+Updated in v9.
+
+>
+> > +                             sp=3D$(grep "type:10" "$evts_ns1" |
+> > +                                  sed -n 's/.*\(sport:\)\([[:digit:]]*=
+\).*$/\2/p;q')
+> > +                             da=3D$(grep "type:10" "$evts_ns1" |
+> > +                                  sed -n 's/.*\(daddr6:\)\([0-9a-f:.]*=
+\).*$/\2/p;q')
+> > +                             dp=3D$(grep "type:10" "$evts_ns1" |
+> > +                                  sed -n 's/.*\(dport:\)\([[:digit:]]*=
+\).*$/\2/p;q')
+> > +                             ip netns exec ${listener_ns} ./pm_nl_ctl =
+dsf lip "::ffff:$addr" lport $sp \
+> > +                                                                     r=
+ip $da rport $dp token $tk
 >
 > Cheers,
 > Matt
