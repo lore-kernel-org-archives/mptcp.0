@@ -1,53 +1,54 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7FC7B
-	for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 08:07:27 +0000 (UTC)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-3f1957e80a2so104046335e9.1
-        for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 01:07:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A101111
+	for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 08:10:48 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3f18dacd392so32294525e9.0
+        for <mptcp@lists.linux.dev>; Tue, 25 Apr 2023 01:10:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682410045; x=1685002045;
+        d=gmail.com; s=20221208; t=1682410247; x=1685002247;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rSpb1zaBURviR2pyI194TKhII7GDMZV30WmBQ1uUAmQ=;
-        b=SqvgO5l+w4QbHvVhqovp6or4Q2ueJRBs6br1LwiiVLkRodMbLKknUBH5VECmXPlSrH
-         arbku8+fY6Ge0RMgNopnGqUuEEgljOilBzBzm5hm/38l4okfsp/21M8AMpONGXKGBB9C
-         qQlBzityBrKQe12LJleUV8JrxR9YDMhJ5m0MKQRKpKgGHZJnFQ2F+UTe3A91nWgrJluH
-         9Wgp5NcFoelkirDQUCqOWDjiQRNVWqReh5Qn9Yen/azSz5FmqOJ1Sr6utic4MaJX+pnO
-         TUofijeM6SB8PsJR84N72lv9ervXTIsFraX/qW+IoPKVsj8xlEOgs28Uq+p7MS+ak65l
-         lEfQ==
+        bh=dmDdL4LvdpZx2s8DnEmiVkIieidKk0qYCcCfZs/IEHQ=;
+        b=Lc0g4aTEnyL/9j00iu1oE856ZxHMAO/Y/h+kt3AP49RjwS73tsnsIvKitrAhEMtx52
+         3zDxPz4vPmDzpJXA9hijN20/9y1+cDtnxov9UlFYDgm8IBVoALS/BkM4tCq0wgN1JEJ8
+         l+bBS806o2oeSVSA4MIa0YBf3QL+RMoei5Fg3ovLJ30uej2IXXLCuAIwbd3oVuctkO7M
+         agIyxmlzudrDXBnb061oNqcmccSG40gAzFY8ZyLMyJ60/GrbL3XkIE8bgzqvpUp9iS1y
+         fDPzUl1CA8mkK+5KbgJQ3u295+8a1Tw3mk2lhRYGvkF6semU8+K6SGLNE954aXcf5U//
+         w9Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682410045; x=1685002045;
+        d=1e100.net; s=20221208; t=1682410247; x=1685002247;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rSpb1zaBURviR2pyI194TKhII7GDMZV30WmBQ1uUAmQ=;
-        b=IWvEOJubRGH9qNsTeTtJtZUdK3RCYcD+flv4gdN5yiUrSaMgGDZXdW+F3yPXi+mmQ7
-         EfSjOoKOjEBuPBPHsTj1H0YHJ6vYNS52klmfE3UUhZM0O7982E0Y7Kjjbq3v9u1N0XUj
-         X+dtVATuzQst5HyvmcLpy6DaB3a24hdp7DxArusV0FF9KLoDrzblRXo777GZK/8XKLCb
-         hrkPxBBcvAw44Y+ybuXcCCSKlmdziFzmB5FT+SBXDhagus3NSM8VhXoqJjvMtYzpsxvq
-         GhL1r7XtHe+aTn9XhuBabd9+7JXBFrP43KCDRUL1E/8YpOaMa2EoOALHpyp7fzCARMW2
-         UXRw==
-X-Gm-Message-State: AAQBX9dqg/4WBZW4x2mHvpAjkZvFivqgKLLZMe1sviFAVmGn4k/zYd73
-	aW3eJgFrKfDdNSfrvH7tijU22KyKLzmlmq2W0ds=
-X-Google-Smtp-Source: AKy350Ydu3a+1OE4GmmDKq8kULH32jFDjNfsNld8Y8vkkr9u116WIQ4QNqKex9JOEI5gHUF1xXWxU2ngGIl7sBXlIbQ=
-X-Received: by 2002:a05:600c:1e08:b0:3f1:7b29:ab38 with SMTP id
- ay8-20020a05600c1e0800b003f17b29ab38mr9691910wmb.11.1682410045116; Tue, 25
- Apr 2023 01:07:25 -0700 (PDT)
+        bh=dmDdL4LvdpZx2s8DnEmiVkIieidKk0qYCcCfZs/IEHQ=;
+        b=DhvFsQ5EfDN5qw7OnLr+d+6+481Vwg1qFU/4buC2Qs5XKw2C4aHgN/gDNt66uZTi0L
+         X2Ta3P5wOE4ALQeD9qQBA5pO0vy+Gi2m3Kqk2SCytZ1/FX3k0UIvN7rVb2uoNDF8WhKW
+         WZ5DQCJ7/4aj3PRkJNVnvv7oppJJiyMMuW9nJYAfr6/g+bsWJ3ckD34w5jjTKcynLIP6
+         r9FlfsJ1xs3d74QbIXWHKhmJAupx1x2V51fquEPPVu3/bBQto6w1FcW/Ux4JoAYdx/OP
+         5VnQIL/nprahqlWozn9WD4vS/B6ZGzbVPmC6ng39e1/dZjq12QStWHqX6+teRZGMr5xJ
+         wJTA==
+X-Gm-Message-State: AAQBX9cqx2mSnRmLo5WX1wJLUZdyXTXRqNpfnOEVorAfGED3kbtv8FbM
+	PsOhWSdq05Vg2M2ceyUx6rkCwfDguMS3V8b5xkA=
+X-Google-Smtp-Source: AKy350YL/VRajnKdgTHvuiDVyHPoxmD2S4H6VGCpFtoEAmYSBvTrW8UR1j9gfPc+KP0sAAm+9xKnkZ49P5mjzIiyfI4=
+X-Received: by 2002:a05:600c:ac1:b0:3f0:8108:406 with SMTP id
+ c1-20020a05600c0ac100b003f081080406mr9539557wmr.28.1682410246646; Tue, 25 Apr
+ 2023 01:10:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1681960259.git.geliang.tang@suse.com> <15a683ff3b3bd04870b0739854ffdd8c01067a76.1681960259.git.geliang.tang@suse.com>
- <812a0ac7-5a13-bf1d-762e-3946b4532ea9@tessares.net>
-In-Reply-To: <812a0ac7-5a13-bf1d-762e-3946b4532ea9@tessares.net>
+References: <cover.1681960259.git.geliang.tang@suse.com> <177f9ca7d30f810324bf46705ac7d977461ffc2d.1681960259.git.geliang.tang@suse.com>
+ <95c4951a-5131-eba2-ad19-11fc4d2c6b31@tessares.net>
+In-Reply-To: <95c4951a-5131-eba2-ad19-11fc4d2c6b31@tessares.net>
 From: Geliang Tang <geliangtang@gmail.com>
-Date: Tue, 25 Apr 2023 16:07:17 +0800
-Message-ID: <CA+WQbws7h+AYMx_WFWEN5W1_k7fcskcP=Hva-xrKzGzp3Uo+6Q@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next v8 4/5] mptcp: add addr into pm anno_list
+Date: Tue, 25 Apr 2023 16:10:38 +0800
+Message-ID: <CA+WQbwuTQ3OG3acg38MwtCUNRUSA0HArDqM4ntc3an6+oOwdDQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v8 5/5] selftests: mptcp: update userspace pm
+ subflow tests
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
 Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
@@ -59,182 +60,68 @@ Matthieu Baerts <matthieu.baerts@tessares.net> =E4=BA=8E2023=E5=B9=B44=E6=
 > Hi Geliang,
 >
 > On 20/04/2023 05:11, Geliang Tang wrote:
-> > Pass addr parameter to mptcp_pm_alloc_anno_list() instead of entry.
-> >
-> > Export remove_anno_list_by_saddr().
-> >
-> > Add address into pm anno_list in mptcp_nl_cmd_sf_create(). Remove
-> > it when connecting fails.
+> > Update userspace pm subflow selftests, by sending the a remove_addrs
+> > command together before the remove_subflows command. This will get a
+> > RM_ADDR in chk_rm_nr().
 >
-> I'm sorry to insist but here you only described what the new code is
-> doing but you didn't explain why you did that: is it to fix an issue?
->
-> Please add a "Fixes" and a "Link" like in the previous patch.
-
-Updated in v9.
-
->
-> Also, I think it was fine (and even better) to pass addr parameter to
-> mptcp_pm_alloc_anno_list() instead of entry in a dedicated commit. What
-> was missing was the reason, e.g. this is needed for the following commit
-> to be able to (...)
-
-This mptcp_pm_alloc_anno_list() code is dropped now.
-
->
-> >
+> (what's the reason? To align with what is done by the in-kernel PM?)
 > > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > > ---
-> >  net/mptcp/pm_netlink.c   | 12 ++++++------
-> >  net/mptcp/pm_userspace.c | 15 ++++++++++++++-
-> >  net/mptcp/protocol.h     |  4 +++-
-> >  3 files changed, 23 insertions(+), 8 deletions(-)
+> >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > index bb237abb99bb..d03c60f54085 100644
-> > --- a/net/mptcp/pm_netlink.c
-> > +++ b/net/mptcp/pm_netlink.c
-> > @@ -342,7 +342,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
-> >  }
-> >
-> >  bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
-> > -                           const struct mptcp_pm_addr_entry *entry)
-> > +                           const struct mptcp_addr_info *addr)
-> >  {
-> >       struct mptcp_pm_add_entry *add_entry =3D NULL;
-> >       struct sock *sk =3D (struct sock *)msk;
-> > @@ -350,7 +350,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *ms=
-k,
-> >
-> >       lockdep_assert_held(&msk->pm.lock);
-> >
-> > -     add_entry =3D mptcp_lookup_anno_list_by_saddr(msk, &entry->addr);
-> > +     add_entry =3D mptcp_lookup_anno_list_by_saddr(msk, addr);
-> >
-> >       if (add_entry) {
-> >               if (mptcp_pm_is_kernel(msk))
-> > @@ -367,7 +367,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *ms=
-k,
-> >
-> >       list_add(&add_entry->list, &msk->pm.anno_list);
-> >
-> > -     add_entry->addr =3D entry->addr;
-> > +     add_entry->addr =3D *addr;
-> >       add_entry->sock =3D msk;
-> >       add_entry->retrans_times =3D 0;
-> >
-> > @@ -574,7 +574,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(=
-struct mptcp_sock *msk)
-> >                       return;
-> >
-> >               if (local) {
-> > -                     if (mptcp_pm_alloc_anno_list(msk, local)) {
-> > +                     if (mptcp_pm_alloc_anno_list(msk, &local->addr)) =
-{
-> >                               __clear_bit(local->addr.id, msk->pm.id_av=
-ail_bitmap);
-> >                               msk->pm.add_addr_signaled++;
-> >                               mptcp_pm_announce_addr(msk, &local->addr,=
- false);
-> > @@ -1399,8 +1399,8 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct m=
-ptcp_sock *msk, unsigned int id
-> >       return 0;
-> >  }
-> >
-> > -static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
-> > -                                   const struct mptcp_addr_info *addr)
-> > +bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
-> > +                            const struct mptcp_addr_info *addr)
-> >  {
-> >       struct mptcp_pm_add_entry *entry;
-> >
-> > diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> > index a1f8d2fab08d..8c050c118ba9 100644
-> > --- a/net/mptcp/pm_userspace.c
-> > +++ b/net/mptcp/pm_userspace.c
-> > @@ -169,7 +169,7 @@ int mptcp_nl_cmd_announce(struct sk_buff *skb, stru=
-ct genl_info *info)
-> >       lock_sock((struct sock *)msk);
-> >       spin_lock_bh(&msk->pm.lock);
-> >
-> > -     if (mptcp_pm_alloc_anno_list(msk, &addr_val)) {
-> > +     if (mptcp_pm_alloc_anno_list(msk, &addr_val.addr)) {
-> >               mptcp_pm_announce_addr(msk, &addr_val.addr, false);
-> >               mptcp_pm_nl_addr_send_ack(msk);
-> >       }
-> > @@ -307,12 +307,25 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, s=
-truct genl_info *info)
-> >               goto create_err;
-> >       }
-> >
-> > +     spin_lock_bh(&msk->pm.lock);
-> > +     if (!mptcp_pm_alloc_anno_list(msk, &addr_l)) {
-> > +             spin_unlock_bh(&msk->pm.lock);
-> > +             goto create_err;
-> > +     }
-> > +     spin_unlock_bh(&msk->pm.lock);
-> > +
-> >       lock_sock(sk);
-> >
-> >       err =3D __mptcp_subflow_connect(sk, &addr_l, &addr_r);
-> >
-> >       release_sock(sk);
-> >
-> > +     if (err) {
-> > +             spin_lock_bh(&msk->pm.lock);
-> > +             remove_anno_list_by_saddr(msk, &addr_l);
-> > +             spin_unlock_bh(&msk->pm.lock);
-> > +     }
-> > +
-> >   create_err:
-> >       sock_put((struct sock *)msk);
-> >       return err;
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index 1a2772902e9d..b3942d15ade7 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -822,7 +822,7 @@ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock =
-*msk,
-> >                                struct mptcp_addr_info *rem,
-> >                                u8 bkup);
-> >  bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
-> > -                           const struct mptcp_pm_addr_entry *entry);
-> > +                           const struct mptcp_addr_info *addr);
-> >  void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
-> >  bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct =
-sock *sk);
-> >  struct mptcp_pm_add_entry *
-> > @@ -837,6 +837,8 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct mpt=
-cp_sock *msk,
-> >  int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *=
-msk,
-> >                                                  unsigned int id,
-> >                                                  u8 *flags, int *ifinde=
-x);
-> > +bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/te=
+sting/selftests/net/mptcp/mptcp_join.sh
+> > index 9a9b6e9b28ab..795c141a11f5 100755
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> > @@ -923,6 +923,7 @@ do_transfer()
+> >                               sleep 1
+> >                               sp=3D$(grep "type:10" "$evts_ns2" |
+> >                                    sed -n 's/.*\(sport:\)\([[:digit:]]*=
+\).*$/\2/p;q')
+> > +                             ip netns exec ${connector_ns} ./pm_nl_ctl=
+ rem token $tk id $id
 >
-> Please prefix the newly exported function with mptcp_pm_
+> Also here, probably better to remove the subflow, and then send the
+> ADD_ADDR not to have the other peer closing the subflow before the next
+> step here below.
 
 Updated in v9.
 
 >
-> Also, can you not declare it in the middle of the userspace ones?
-> Maybe around mptcp_pm_alloc_anno_list() or between
-> mptcp_pm_get_flags_and_ifindex_by_id() and
-> mptcp_pm_remove_addrs_and_subflows()?
+> But I guess it will not be possible to send the destroy after the remove
+> because we will remove the local address from the list, no?
+>
+> Maybe better not to test that then? I mean: I don't really see why the
+> client would need to send a remove address if the subflow was still
+> working well. It would send a remove address if the linked local address
+> got lost (e.g. link down) but why doing both?
 
-Updated in v9.
+We need to not only close the related local subflow, but also sending
+a remove address to close the subflow on the other side.
+
+Thanks,
+-Geliang
 
 >
 > Cheers,
 > Matt
 >
-> > +                            const struct mptcp_addr_info *addr);
-> >  int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token=
-,
-> >                                struct mptcp_pm_addr_entry *loc,
-> >                                struct mptcp_pm_addr_entry *rem, u8 bkup=
-);
+> >                               ip netns exec ${connector_ns} ./pm_nl_ctl=
+ dsf lip $addr lport $sp \
+> >                                                                       r=
+ip $da rport $dp token $tk
+> >                       fi
+> > @@ -3137,7 +3138,7 @@ userspace_tests()
+> >               pm_nl_set_limits $ns1 0 1
+> >               run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
+> >               chk_join_nr 1 1 1
+> > -             chk_rm_nr 0 1
+> > +             chk_rm_nr 1 1
+> >               kill_events_pids
+> >       fi
+> >  }
 >
 > --
 > Tessares | Belgium | Hybrid Access Solutions
