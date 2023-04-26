@@ -1,118 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EE84C8D
-	for <mptcp@lists.linux.dev>; Wed, 26 Apr 2023 14:36:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35E87C433EF;
-	Wed, 26 Apr 2023 14:36:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1682519761;
-	bh=I09K1AZAMfSIDHLw+pj/BWi4YndvCziNO79VEd2vO6w=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=OGB2BmTX9sl0Bg98hLJANDPZOj/bbolukfos8hk9DnssmjSDMml0+hPB09nUT/cQC
-	 oSB/ejsoMqv2OGw+y/8EdZBcqUurAGKlQ7lkNwNZUJNpDGTMq1wgJ4g2cYNNnCXftX
-	 TCrvKzejbkCx8HBDTMO0Vq4zBXXiXKM1ly/gYokAH45XpN7tpbkIsdvZzVIdFK40ED
-	 QhwO7t0VkUvWtET4Ko5Ru3nfwPkEz2DJm8BYNZzMVOIcRAsi/LxXPl0k6LqiiZre0y
-	 yoQEcmZ8dJQ10r2ZVdanCNdp9Jmb6RQtwsaeo8y/on/QAfTdohRMwaYUSgxvnMFKSb
-	 LVM5u9TwX72hw==
-Date: Wed, 26 Apr 2023 07:36:00 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net v3 1/2] selftests: mptcp: join: avoid using
- 'cmp --bytes'
-In-Reply-To: <20230404-mptcp-selftests-join-busybox-shellcheck-v3-1-eab5dd7bc996@tessares.net>
-Message-ID: <75508308-c622-654b-94b0-e08d923934cc@kernel.org>
-References: <20230404-mptcp-selftests-join-busybox-shellcheck-v3-0-eab5dd7bc996@tessares.net> <20230404-mptcp-selftests-join-busybox-shellcheck-v3-1-eab5dd7bc996@tessares.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156E16FC7
+	for <mptcp@lists.linux.dev>; Wed, 26 Apr 2023 20:49:34 +0000 (UTC)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-54fb9384c2dso90495607b3.2
+        for <mptcp@lists.linux.dev>; Wed, 26 Apr 2023 13:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1682542174; x=1685134174;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r4rJdKQ7xY8jpnF0AffukVPnUu/ms1dIRsJxDMqyrkc=;
+        b=Rgdq0t7hxHEPm1qLjVg3CBZYJc6G1wpnFDHqA1BpBJLIBTW/vQxbQAe+qv+C0FC7dJ
+         e5X2ElxCAfjdTneKY3KmjYyZp5g7E/qcF7Y7OfNqh0fIaqAF7KvNjlX/cwNnJ0ilFie6
+         TPX+91L0tbyvAMpB/UceUQomZGyeTNLOUbJekFUqRsSkyOPEoACnsyVSWrJKoih8STzf
+         zfmNiucl/dyrh9M6gp/BjyJZJHi4vACYi3jPtRm1e4bzqVIW4N8Efgt6/Hh7swhEHZdz
+         3KmbkltpQL6onE23Q25wEEkQm5xHMXIh/Z+p1fFa4XpYS6MhdCrJGwNqC61o5lk+9Nfj
+         EPsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682542174; x=1685134174;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r4rJdKQ7xY8jpnF0AffukVPnUu/ms1dIRsJxDMqyrkc=;
+        b=Y4BEsFttGehy+VEXblD12MRN7q4hTwJ9A5yCBUwU7Rrd7B4CjLlZjL0yiL674pr851
+         rmGGJKt5Ybt/ZmvnwdvlHsyznkSWsbbN/3h60ddJ3/5D0Pv/lmf3XjZWIVDg4m8GOoIN
+         +9e5Mpq+teB0wx398mMbFsQbKjxH8LrF/605/FxB++sIRHREnQmnPWyHJH/hs1vYqa2R
+         SkPiD55iYAKXqS3v/SsiVwQ+B0B0LD2aBvOyLCEk3IvHA9K6o+IQC5MNXaqefmDVzCmb
+         wjNxrloKhbyz4f95vLN60D4oDH6f2LOnm1QCYiZt3auUJBrDYkD+uf3QWKU/2cfaFyWC
+         CuvA==
+X-Gm-Message-State: AAQBX9cO6Yt3JWCjmOQ+hfiFO+/JtUgbUdQ1aZHdm6wS81CjCgUTG/lt
+	tTlsEX3+cG6HV1f024eAAZgnKGmKVrNWvrL6Qi3n
+X-Google-Smtp-Source: AKy350a12tvjCY07iukVLD60nWTYZGRcAFv0h8Sj3IbRUahlkzdfNqgEHT4Va4jn8DOd0csVprbdJ3OXk0s+6pdmkbM=
+X-Received: by 2002:a81:4fd2:0:b0:54f:8b2b:adec with SMTP id
+ d201-20020a814fd2000000b0054f8b2badecmr14188403ywb.33.1682542173844; Wed, 26
+ Apr 2023 13:49:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v1-0-9d4064cb0075@tessares.net>
+ <CAHC9VhR68fw+0oaenL08tRecLEC_oCdYcfGaN_m6PW3KZYtdTQ@mail.gmail.com> <f251507a-517e-b703-aa1d-50f6b3de8c8d@tessares.net>
+In-Reply-To: <f251507a-517e-b703-aa1d-50f6b3de8c8d@tessares.net>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 26 Apr 2023 16:49:23 -0400
+Message-ID: <CAHC9VhQqgau3rL2182bVzONHqnfN2CtCT5hz29CVzYi=gpX6+A@mail.gmail.com>
+Subject: Re: [PATCH LSM 0/2] security: SELinux/LSM label with MPTCP and accept
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Eric Paris <eparis@parisplace.org>, 
+	Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 12 Apr 2023, Matthieu Baerts wrote:
+On Thu, Apr 20, 2023 at 12:55=E2=80=AFPM Matthieu Baerts
+<matthieu.baerts@tessares.net> wrote:
+> On 19/04/2023 23:30, Paul Moore wrote:
+> > On Wed, Apr 19, 2023 at 1:44=E2=80=AFPM Matthieu Baerts
+> > <matthieu.baerts@tessares.net> wrote:
+> >>
+> >> In [1], Ondrej Mosnacek explained they discovered the (userspace-facin=
+g)
+> >> sockets returned by accept(2) when using MPTCP always end up with the
+> >> label representing the kernel (typically system_u:system_r:kernel_t:s0=
+),
+> >> while it would make more sense to inherit the context from the parent
+> >> socket (the one that is passed to accept(2)). Thanks to the
+> >> participation of Paul Moore in the discussions, modifications on MPTCP
+> >> side have started and the result is available here.
+> >>
+> >> Paolo Abeni worked hard to refactor the initialisation of the first
+> >> subflow of a listen socket. The first subflow allocation is no longer
+> >> done at the initialisation of the socket but later, when the connectio=
+n
+> >> request is received or when requested by the userspace. This was a
+> >> prerequisite to proper support of SELinux/LSM labels with MPTCP and
+> >> accept. The last batch containing the commit ddb1a072f858 ("mptcp: mov=
+e
+> >> first subflow allocation at mpc access time") [2] has been recently
+> >> accepted and applied in netdev/net-next repo [3].
+> >>
+> >> This series of 2 patches is based on top of the lsm/next branch. Despi=
+te
+> >> the fact they depend on commits that are in netdev/net-next repo to
+> >> support the new feature, they can be applied in lsm/next without
+> >> creating conflicts with net-next or causing build issues. These two
+> >> patches on top of lsm/next still passes all the MPTCP-specific tests.
+> >> The only thing is that the new feature only works properly with the
+> >> patches that are on netdev/net-next. The tests with the new labels hav=
+e
+> >> been done on top of them.
+> >>
+> >> It then looks OK to us to send these patches for review on your side. =
+We
+> >> hope that's OK for you as well. If the patches look good to you and if
+> >> you prefer, it is fine to apply these patches before or after having
+> >> synced the lsm/next branch with Linus' tree when it will include the
+> >> modifications from the netdev/net-next repo.
+> >>
+> >> Regarding the two patches, the first one introduces a new LSM hook
+> >> called from MPTCP side when creating a new subflow socket. This hook
+> >> allows the security module to relabel the subflow according to the owi=
+ng
+> >> process. The second one implements this new hook on the SELinux side.
+> >
+> > Thank you so much for working on this, I really appreciate the help!
+>
+> Thank you for the review!
+>
+> We are working on a v2 addressing your comments.
 
-> BusyBox's 'cmp' command doesn't support the '--bytes' parameter.
->
-> Some CIs -- i.e. LKFT -- use BusyBox and have the mptcp_join.sh test
-> failing [1] because their 'cmp' command doesn't support this '--bytes'
-> option:
->
->    cmp: unrecognized option '--bytes=1024'
->    BusyBox v1.35.0 () multi-call binary.
->
->    Usage: cmp [-ls] [-n NUM] FILE1 [FILE2]
->
-> Instead, 'head --bytes' can be used as this option is supported by
-> BusyBox. A temporary file is needed for this operation.
->
-> Because it is apparently quite common to use BusyBox, it is certainly
-> better to backport this fix to impacted kernels.
->
-> Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
-> Link: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.3-rc5-5-g148341f0a2f5/testrun/16088933/suite/kselftest-net-mptcp/test/net_mptcp_userspace_pm_sh/log [1]
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
-> v3:
-> - use a temp file and remove it in the cleanup phase (if we are really
->   unlucky), from Paolo.
+Thanks for getting v2 out so quickly.  I'm getting caught up on other
+issue while we're in the merge window right now, but I'll give the v2
+patchset a look in the not-to-distant future.  I'm fairly confident
+we'll get it merged this dev cycle.
 
-Thanks Matthieu, looks good to me:
+> Just one small detail regarding these comments: I hope you don't mind if
+> we use "MPTCP socket" instead of "main MPTCP socket". Per connection,
+> there is one MPTCP socket and possibly multiple subflow (TCP) sockets.
+> There is then no concept of "main MPTCP socket".
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+Sure, no problem.
 
-> v2:
-> - limit the input file, not the output of cmp...
->   (strange that on my side, I didn't reproduce the issue but the CI did)
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 13 +++++++++++--
-> 1 file changed, 11 insertions(+), 2 deletions(-)
+> > As far as potential merge issues with netdev/net-next and lsm/next, I
+> > think we'll be okay.  I have a general policy[1] of not accepting new
+> > patchsets, unless critical bugfixes, past rc5/rc6 so this would be
+> > merged into lsm/next *after* the current merge window closes and
+> > presumably after the netdev/net-next branch finds its way into Linus'
+> > tree.
 >
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index fafd19ec7e1f..555781826289 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -13,6 +13,7 @@ sout=""
-> cin=""
-> cinfail=""
-> cinsent=""
-> +tmpfile=""
-> cout=""
-> capout=""
-> ns1=""
-> @@ -171,6 +172,7 @@ cleanup()
-> {
-> 	rm -f "$cin" "$cout" "$sinfail"
-> 	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
-> +	rm -f "$tmpfile"
-> 	rm -rf $evts_ns1 $evts_ns2
-> 	cleanup_partial
-> }
-> @@ -378,9 +380,16 @@ check_transfer()
-> 			fail_test
-> 			return 1
-> 		fi
-> -		bytes="--bytes=${bytes}"
-> +
-> +		# note: BusyBox's "cmp" command doesn't support --bytes
-> +		tmpfile=$(mktemp)
-> +		head --bytes="$bytes" "$in" > "$tmpfile"
-> +		mv "$tmpfile" "$in"
-> +		head --bytes="$bytes" "$out" > "$tmpfile"
-> +		mv "$tmpfile" "$out"
-> +		tmpfile=""
-> 	fi
-> -	cmp -l "$in" "$out" ${bytes} | while read -r i a b; do
-> +	cmp -l "$in" "$out" | while read -r i a b; do
-> 		local sum=$((0${a} + 0${b}))
-> 		if [ $check_invert -eq 0 ] || [ $sum -ne $((0xff)) ]; then
-> 			echo "[ FAIL ] $what does not match (in, out):"
+> It makes sense, we understand. These two patches were ready for a bit of
+> time but we wanted to send them only after the prerequisite commits
+> applied in net-next first. But that got delayed because we had a couple
+> of nasty issues with them :)
 >
-> -- 
-> 2.39.2
->
->
->
+> We hope it will not be an issue for you to maintain them in your tree
+> for a couple of months but we tried to minimised the modifications in
+> MPTCP code. Do not hesitate to reach us if there are some issues with the=
+m!
+
+No worries, I'm happy to maintain them in either the LSM or the
+SELinux tree (I'll need to remind myself of the changes to see which
+is the best fit).
+
+--
+paul-moore.com
