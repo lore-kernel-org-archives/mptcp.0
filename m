@@ -1,153 +1,75 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156E16FC7
-	for <mptcp@lists.linux.dev>; Wed, 26 Apr 2023 20:49:34 +0000 (UTC)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-54fb9384c2dso90495607b3.2
-        for <mptcp@lists.linux.dev>; Wed, 26 Apr 2023 13:49:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1682542174; x=1685134174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r4rJdKQ7xY8jpnF0AffukVPnUu/ms1dIRsJxDMqyrkc=;
-        b=Rgdq0t7hxHEPm1qLjVg3CBZYJc6G1wpnFDHqA1BpBJLIBTW/vQxbQAe+qv+C0FC7dJ
-         e5X2ElxCAfjdTneKY3KmjYyZp5g7E/qcF7Y7OfNqh0fIaqAF7KvNjlX/cwNnJ0ilFie6
-         TPX+91L0tbyvAMpB/UceUQomZGyeTNLOUbJekFUqRsSkyOPEoACnsyVSWrJKoih8STzf
-         zfmNiucl/dyrh9M6gp/BjyJZJHi4vACYi3jPtRm1e4bzqVIW4N8Efgt6/Hh7swhEHZdz
-         3KmbkltpQL6onE23Q25wEEkQm5xHMXIh/Z+p1fFa4XpYS6MhdCrJGwNqC61o5lk+9Nfj
-         EPsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682542174; x=1685134174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r4rJdKQ7xY8jpnF0AffukVPnUu/ms1dIRsJxDMqyrkc=;
-        b=Y4BEsFttGehy+VEXblD12MRN7q4hTwJ9A5yCBUwU7Rrd7B4CjLlZjL0yiL674pr851
-         rmGGJKt5Ybt/ZmvnwdvlHsyznkSWsbbN/3h60ddJ3/5D0Pv/lmf3XjZWIVDg4m8GOoIN
-         +9e5Mpq+teB0wx398mMbFsQbKjxH8LrF/605/FxB++sIRHREnQmnPWyHJH/hs1vYqa2R
-         SkPiD55iYAKXqS3v/SsiVwQ+B0B0LD2aBvOyLCEk3IvHA9K6o+IQC5MNXaqefmDVzCmb
-         wjNxrloKhbyz4f95vLN60D4oDH6f2LOnm1QCYiZt3auUJBrDYkD+uf3QWKU/2cfaFyWC
-         CuvA==
-X-Gm-Message-State: AAQBX9cO6Yt3JWCjmOQ+hfiFO+/JtUgbUdQ1aZHdm6wS81CjCgUTG/lt
-	tTlsEX3+cG6HV1f024eAAZgnKGmKVrNWvrL6Qi3n
-X-Google-Smtp-Source: AKy350a12tvjCY07iukVLD60nWTYZGRcAFv0h8Sj3IbRUahlkzdfNqgEHT4Va4jn8DOd0csVprbdJ3OXk0s+6pdmkbM=
-X-Received: by 2002:a81:4fd2:0:b0:54f:8b2b:adec with SMTP id
- d201-20020a814fd2000000b0054f8b2badecmr14188403ywb.33.1682542173844; Wed, 26
- Apr 2023 13:49:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC681FCC
+	for <mptcp@lists.linux.dev>; Thu, 27 Apr 2023 08:43:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D10DC433D2;
+	Thu, 27 Apr 2023 08:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1682584980;
+	bh=fttL0CPp91PzpTiH+zXIDwEu+bCr/U7Kn8G4mxErfLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o4fAClIrM3xlx7NIzkS2rkkNscySdrqJ4UOyWBEMZ9k0M6ydeD9/cP0qK/jLhmqtE
+	 U3ts4xhJSOFTfiKfQDqIMDZdMhn8oolJix2fsxPye8D257Rs6AgWlZ7jgKcJ0JKNHJ
+	 A/1yPOUHsX612iwiz47SXjVc3jageT2B+uScra4k=
+Date: Thu, 27 Apr 2023 10:42:58 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: Sasha Levin <sashal@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	stable@vger.kernel.org, mptcp@lists.linux.dev,
+	Christoph Paasch <cpaasch@apple.com>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 6.1 0/2] mptcp: Stable backports for v6.1.26
+Message-ID: <2023042750-reappear-anteater-bbcf@gregkh>
+References: <20230424-upstream-stable-20230424-conflicts-6-1-v1-0-b054457d3646@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v1-0-9d4064cb0075@tessares.net>
- <CAHC9VhR68fw+0oaenL08tRecLEC_oCdYcfGaN_m6PW3KZYtdTQ@mail.gmail.com> <f251507a-517e-b703-aa1d-50f6b3de8c8d@tessares.net>
-In-Reply-To: <f251507a-517e-b703-aa1d-50f6b3de8c8d@tessares.net>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 26 Apr 2023 16:49:23 -0400
-Message-ID: <CAHC9VhQqgau3rL2182bVzONHqnfN2CtCT5hz29CVzYi=gpX6+A@mail.gmail.com>
-Subject: Re: [PATCH LSM 0/2] security: SELinux/LSM label with MPTCP and accept
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Eric Paris <eparis@parisplace.org>, 
-	Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230424-upstream-stable-20230424-conflicts-6-1-v1-0-b054457d3646@tessares.net>
 
-On Thu, Apr 20, 2023 at 12:55=E2=80=AFPM Matthieu Baerts
-<matthieu.baerts@tessares.net> wrote:
-> On 19/04/2023 23:30, Paul Moore wrote:
-> > On Wed, Apr 19, 2023 at 1:44=E2=80=AFPM Matthieu Baerts
-> > <matthieu.baerts@tessares.net> wrote:
-> >>
-> >> In [1], Ondrej Mosnacek explained they discovered the (userspace-facin=
-g)
-> >> sockets returned by accept(2) when using MPTCP always end up with the
-> >> label representing the kernel (typically system_u:system_r:kernel_t:s0=
-),
-> >> while it would make more sense to inherit the context from the parent
-> >> socket (the one that is passed to accept(2)). Thanks to the
-> >> participation of Paul Moore in the discussions, modifications on MPTCP
-> >> side have started and the result is available here.
-> >>
-> >> Paolo Abeni worked hard to refactor the initialisation of the first
-> >> subflow of a listen socket. The first subflow allocation is no longer
-> >> done at the initialisation of the socket but later, when the connectio=
-n
-> >> request is received or when requested by the userspace. This was a
-> >> prerequisite to proper support of SELinux/LSM labels with MPTCP and
-> >> accept. The last batch containing the commit ddb1a072f858 ("mptcp: mov=
-e
-> >> first subflow allocation at mpc access time") [2] has been recently
-> >> accepted and applied in netdev/net-next repo [3].
-> >>
-> >> This series of 2 patches is based on top of the lsm/next branch. Despi=
-te
-> >> the fact they depend on commits that are in netdev/net-next repo to
-> >> support the new feature, they can be applied in lsm/next without
-> >> creating conflicts with net-next or causing build issues. These two
-> >> patches on top of lsm/next still passes all the MPTCP-specific tests.
-> >> The only thing is that the new feature only works properly with the
-> >> patches that are on netdev/net-next. The tests with the new labels hav=
-e
-> >> been done on top of them.
-> >>
-> >> It then looks OK to us to send these patches for review on your side. =
-We
-> >> hope that's OK for you as well. If the patches look good to you and if
-> >> you prefer, it is fine to apply these patches before or after having
-> >> synced the lsm/next branch with Linus' tree when it will include the
-> >> modifications from the netdev/net-next repo.
-> >>
-> >> Regarding the two patches, the first one introduces a new LSM hook
-> >> called from MPTCP side when creating a new subflow socket. This hook
-> >> allows the security module to relabel the subflow according to the owi=
-ng
-> >> process. The second one implements this new hook on the SELinux side.
-> >
-> > Thank you so much for working on this, I really appreciate the help!
->
-> Thank you for the review!
->
-> We are working on a v2 addressing your comments.
+On Mon, Apr 24, 2023 at 04:09:07PM +0200, Matthieu Baerts wrote:
+> Hi Greg, Sasha,
+> 
+> Recently, 2 patches related to MPTCP have not been backported to v6.1
+> tree due to conflicts:
+> 
+>  - 2a6a870e44dd ("mptcp: stops worker on unaccepted sockets at listener close") [1]
+>  - 63740448a32e ("mptcp: fix accept vs worker race") [2]
+> 
+> I then here resolved the conflicts, documented what I did in each patch
+> and ran our tests suite. Everything seems OK.
+> 
+> These patches are based on top of the latest linux-stable-rc/linux-6.1.y
+> version.
+> 
+> Do you mind adding these two patches to v6.1 queue please?
+> 
+> [1] https://lore.kernel.org/r/2023042259-gravity-hate-a9a3@gregkh
+> [2] https://lore.kernel.org/r/2023042215-chastise-scuba-8478@gregkh
+> 
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
+> Paolo Abeni (2):
+>       mptcp: stops worker on unaccepted sockets at listener close
+>       mptcp: fix accept vs worker race
+> 
+>  net/mptcp/protocol.c | 74 +++++++++++++++++++++++++++++++++---------------
+>  net/mptcp/protocol.h |  2 ++
+>  net/mptcp/subflow.c  | 80 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+>  3 files changed, 130 insertions(+), 26 deletions(-)
+> ---
+> base-commit: e4ff6ff54dea67f94036a357201b0f9807405cc6
+> change-id: 20230424-upstream-stable-20230424-conflicts-6-1-f325fe76c540
+> 
+> Best regards,
+> -- 
+> Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Thanks for getting v2 out so quickly.  I'm getting caught up on other
-issue while we're in the merge window right now, but I'll give the v2
-patchset a look in the not-to-distant future.  I'm fairly confident
-we'll get it merged this dev cycle.
+Both now queued up, thanks.
 
-> Just one small detail regarding these comments: I hope you don't mind if
-> we use "MPTCP socket" instead of "main MPTCP socket". Per connection,
-> there is one MPTCP socket and possibly multiple subflow (TCP) sockets.
-> There is then no concept of "main MPTCP socket".
-
-Sure, no problem.
-
-> > As far as potential merge issues with netdev/net-next and lsm/next, I
-> > think we'll be okay.  I have a general policy[1] of not accepting new
-> > patchsets, unless critical bugfixes, past rc5/rc6 so this would be
-> > merged into lsm/next *after* the current merge window closes and
-> > presumably after the netdev/net-next branch finds its way into Linus'
-> > tree.
->
-> It makes sense, we understand. These two patches were ready for a bit of
-> time but we wanted to send them only after the prerequisite commits
-> applied in net-next first. But that got delayed because we had a couple
-> of nasty issues with them :)
->
-> We hope it will not be an issue for you to maintain them in your tree
-> for a couple of months but we tried to minimised the modifications in
-> MPTCP code. Do not hesitate to reach us if there are some issues with the=
-m!
-
-No worries, I'm happy to maintain them in either the LSM or the
-SELinux tree (I'll need to remind myself of the changes to see which
-is the best fit).
-
---
-paul-moore.com
+greg k-h
