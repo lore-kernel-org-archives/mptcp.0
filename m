@@ -1,75 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC681FCC
-	for <mptcp@lists.linux.dev>; Thu, 27 Apr 2023 08:43:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D10DC433D2;
-	Thu, 27 Apr 2023 08:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1682584980;
-	bh=fttL0CPp91PzpTiH+zXIDwEu+bCr/U7Kn8G4mxErfLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o4fAClIrM3xlx7NIzkS2rkkNscySdrqJ4UOyWBEMZ9k0M6ydeD9/cP0qK/jLhmqtE
-	 U3ts4xhJSOFTfiKfQDqIMDZdMhn8oolJix2fsxPye8D257Rs6AgWlZ7jgKcJ0JKNHJ
-	 A/1yPOUHsX612iwiz47SXjVc3jageT2B+uScra4k=
-Date: Thu, 27 Apr 2023 10:42:58 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Sasha Levin <sashal@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	stable@vger.kernel.org, mptcp@lists.linux.dev,
-	Christoph Paasch <cpaasch@apple.com>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 6.1 0/2] mptcp: Stable backports for v6.1.26
-Message-ID: <2023042750-reappear-anteater-bbcf@gregkh>
-References: <20230424-upstream-stable-20230424-conflicts-6-1-v1-0-b054457d3646@tessares.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8820128ED
+	for <mptcp@lists.linux.dev>; Fri, 28 Apr 2023 09:44:09 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-2fc3f1d6f8cso6083690f8f.3
+        for <mptcp@lists.linux.dev>; Fri, 28 Apr 2023 02:44:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1682675047; x=1685267047;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bX5O5UVvhTV+NkgImY0lR+4vbyOqcNBXY53k7mqT+/w=;
+        b=pVn3jvXNN9WeJkUaKY9hgbV25v+taqKpkinatoDUAgKm+wukxMujCfBYozQVjChMu0
+         70ia+0Fb1kNVuQqpv+DO6TphETGiqTD1tWVmDOLFeuIyj819zIqIywMFQQEkiXx1l6/t
+         v2AfyiDbgYSZxwR3/6LHjOU43pVMkhwxJzK964cFLqJg+W6LrYTWMSfDgvGBm8rCM7Tk
+         TNLMP3MSm+k6YZQIXBbGCN+mKmcFpYSXYd6B1J2RbMevU6UUNXtcqFPal53Igcp1TQV/
+         EK+LQre+ebxUtw4IAsPF6kZSo9YwJw+24c7G8V4zCijCHWjh3X1hug2sYFKSSuVa+6vL
+         1pUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682675047; x=1685267047;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bX5O5UVvhTV+NkgImY0lR+4vbyOqcNBXY53k7mqT+/w=;
+        b=e4wRNn8K13knEu1aN6zzslI8lAFF1rLeUJ+1/PGjsPdyZbxvYAqO2vHmLKHwwdOrxL
+         XleLCslXIz+ve3IDjaeCHVxLrICJ8ySNnoc9G+eyQLN3+bpHH5ozx+AT+fpc76KCpb0u
+         aioIiJ+PsyH7zV5hVvdw7HQqtYC5GdDNJkcMIW9iH+OAp3RQ+e0HbHgUJVOJDqxj2TIQ
+         D+NVlgkm4+DXByGS9Q66xoWgMAR/na1ynffWW9AA/B2GmfgLgkkPSspqDdAFU/L4vbUA
+         dTJScldwm0Bu0k4HiJlaO42ORBAquNPqIzwN84sMvXtOnR/DPuPU1eZH3xY2AxFdeNYL
+         1Njw==
+X-Gm-Message-State: AC+VfDxJ6OHqFCQvJu7q8MiOJ9XSzWtoUAM//CZy3vmn+Nob18GN+78M
+	4OOEZFW/9b6eUez8ScjDWVlslA==
+X-Google-Smtp-Source: ACHHUZ5UuJcy6ChE17z2A//jT2ubqD/5R+/Ow5R3u89zfSIAMODBTt5R37lKINU6lqwVySTGcquVgQ==
+X-Received: by 2002:adf:e908:0:b0:300:6473:e339 with SMTP id f8-20020adfe908000000b003006473e339mr3570603wrm.6.1682675047250;
+        Fri, 28 Apr 2023 02:44:07 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id p13-20020a7bcc8d000000b003ee63fe5203sm23817081wma.36.2023.04.28.02.44.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Apr 2023 02:44:06 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Date: Fri, 28 Apr 2023 11:43:46 +0200
+Subject: [PATCH 5.15] selftests: mptcp: join: fix "invalid address,
+ ADD_ADDR timeout"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230424-upstream-stable-20230424-conflicts-6-1-v1-0-b054457d3646@tessares.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230428-upstream-stable-20230428-mptcp-addaddrdropmib-v1-1-51bca8b26c22@tessares.net>
+X-B4-Tracking: v=1; b=H4sIAFGVS2QC/z2OwQqDMBBEf0X23JWYKpX+SvGwMdu6oDFstFjEf
+ 2/soTAwzAw8ZofEKpzgXuyg/JYkc8ihuhTQDxRejOJzBmvs1dS2xTWmRZkmTAu5kfE/THHpI5L
+ 3Wep1jpM4dObWkqlrmx0y01FidEqhH07qKGHdsCmrpvycc1R+yva784Czhu44vgoT/mykAAAA
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Sasha Levin <sashal@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ stable@vger.kernel.org, mptcp@lists.linux.dev, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2192;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=vHdKDPc+cwdQr6+1isQPwxOD8LjtsFVj28v1KGjAb48=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkS5Vm27MFh1GGlNngiErdb2tpZCAaLQdKu/SNV
+ FRE5cyNzT2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZEuVZgAKCRD2t4JPQmmg
+ c5BMEACGe5huR3/83bhZH9rMLl2NPQ5DhjMKusknl3t6Kcgvv3av6xXsLGirNPUTwhwvEV8NtT6
+ LMcENTm64HzKJHajd8mHuh9S/B/fKVqB7UMXYwQWI3XpHvgQrJoyhbfhI4mUUqCdAQZ1rragDR+
+ vT1uu1uOs687jHcAjYmbNuEoDgdOpFu0RgldiKV3WJp3hvhLOkZn00WgrDb+YNSqFe9PcDNEmrX
+ 3sGubamJA9mIVGMRi1ixa2hPSoifUg5Nx7Wx8ClchgL4bqBMe5jnEWPVYemGfZXP25hAWePQvro
+ PC+DIDe3BkLSyuSu0M6hPJaS4nptlqksOQMwPZhO+oM8XgOR47ba2zT19y/Pc0v+yCqSM65fFVF
+ 7BNC3rwmvSOYmE0pqSj4TEE65wX5nSsxaJTLF5ulqVkUxMIHZncWMVyW6qme3qRylPplXJ38ETB
+ USa7iYLB++fbXjQv/xA7YusTZtrrtGp3rX3q9uqtZz1FtHvbMXjom/m6gzZ74CeQCHj/cwwJiww
+ HDCbvRdtH7bBr1OWt8i26oBmpEFx7/D0iyk4H5H3sPqytDlnsq2SRFeKl/dvif+0FKYPcCbcLhy
+ MUUsHZ13lM75u5J/Go12wfXo149+sOFS1oKFnwIi38Xg6fCUzN0vYci3GE/tiS2kgf0tTjtds95
+ mXIJx64qtbwiEIg==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Mon, Apr 24, 2023 at 04:09:07PM +0200, Matthieu Baerts wrote:
-> Hi Greg, Sasha,
-> 
-> Recently, 2 patches related to MPTCP have not been backported to v6.1
-> tree due to conflicts:
-> 
->  - 2a6a870e44dd ("mptcp: stops worker on unaccepted sockets at listener close") [1]
->  - 63740448a32e ("mptcp: fix accept vs worker race") [2]
-> 
-> I then here resolved the conflicts, documented what I did in each patch
-> and ran our tests suite. Everything seems OK.
-> 
-> These patches are based on top of the latest linux-stable-rc/linux-6.1.y
-> version.
-> 
-> Do you mind adding these two patches to v6.1 queue please?
-> 
-> [1] https://lore.kernel.org/r/2023042259-gravity-hate-a9a3@gregkh
-> [2] https://lore.kernel.org/r/2023042215-chastise-scuba-8478@gregkh
-> 
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
-> Paolo Abeni (2):
->       mptcp: stops worker on unaccepted sockets at listener close
->       mptcp: fix accept vs worker race
-> 
->  net/mptcp/protocol.c | 74 +++++++++++++++++++++++++++++++++---------------
->  net/mptcp/protocol.h |  2 ++
->  net/mptcp/subflow.c  | 80 ++++++++++++++++++++++++++++++++++++++++++++++++++--
->  3 files changed, 130 insertions(+), 26 deletions(-)
-> ---
-> base-commit: e4ff6ff54dea67f94036a357201b0f9807405cc6
-> change-id: 20230424-upstream-stable-20230424-conflicts-6-1-f325fe76c540
-> 
-> Best regards,
-> -- 
-> Matthieu Baerts <matthieu.baerts@tessares.net>
+The "Fixes" commit mentioned below adds new MIBs counters to track some
+particular cases that have been fixed by its parent commit 150d1e06c4f1
+("mptcp: fix race in incoming ADD_ADDR option processing").
 
-Both now queued up, thanks.
+Unfortunately, one of the new MIB counter (AddAddrDrop) shares the same
+prefix as an older one (AddAddr). This breaks one selftest because it
+was doing a grep on "AddAddr" and it now gets 2 counters instead of 1.
 
-greg k-h
+This issue has been fixed upstream in a commit that was part of the same
+set but not backported to v5.15, see commit 6ef84b1517e0 ("selftests:
+mptcp: more robust signal race test"). It has not been backported
+because it was fixing multiple things, some where for >v5.15.
+
+This patch then simply extracts the only bit needed for v5.15. Now the
+test passes when validating the last stable v5.15 kernel.
+
+Fixes: f25ae162f4b3 ("mptcp: add mibs counter for ignored incoming options")
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Hi Greg, Sasha,
+Here is a fix just for v5.15, where f73c11946345 ("mptcp: add mibs
+counter for ignored incoming options") has been backported but not
+6ef84b1517e0 ("selftests: mptcp: more robust signal race test").
+Thanks!
+---
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 3be615ab1588..96a090e7f47e 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -732,7 +732,7 @@ chk_add_nr()
+ 	local dump_stats
+ 
+ 	printf "%-39s %s" " " "add"
+-	count=`ip netns exec $ns2 nstat -as | grep MPTcpExtAddAddr | awk '{print $2}'`
++	count=`ip netns exec $ns2 nstat -as MPTcpExtAddAddr | grep MPTcpExtAddAddr | awk '{print $2}'`
+ 	[ -z "$count" ] && count=0
+ 	if [ "$count" != "$add_nr" ]; then
+ 		echo "[fail] got $count ADD_ADDR[s] expected $add_nr"
+
+---
+base-commit: f48aeeaaa64c628519273f6007a745cf55b68d95
+change-id: 20230428-upstream-stable-20230428-mptcp-addaddrdropmib-b078a0442078
+
+Best regards,
+-- 
+Matthieu Baerts <matthieu.baerts@tessares.net>
+
