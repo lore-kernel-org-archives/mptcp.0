@@ -1,157 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB73B7E
-	for <mptcp@lists.linux.dev>; Thu,  4 May 2023 14:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1683209686;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A4cdyKkEPxoDEMVbGTjlqEi5Ug+DxEbcQNE++nqieDU=;
-	b=LdWdr2Np6NgEYB1MZ2LzN2Ki8rfXKaF1ecSmXQK4vObepZtDnkPinHk7fDttUGEhhf3MP/
-	WDJy0N0bnoRFDidoo57bBkE9AU508EsFmKaiX5tX2grP/pWjGvRghM8aYCjdj3k+oWircC
-	lLts9Tu11ZyXbbY6nB9uVnoRxut3ON8=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-613-sUZXQdQ6NLK5-d5ZE0vZhA-1; Thu, 04 May 2023 10:14:44 -0400
-X-MC-Unique: sUZXQdQ6NLK5-d5ZE0vZhA-1
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-6439244af99so249747b3a.2
-        for <mptcp@lists.linux.dev>; Thu, 04 May 2023 07:14:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D8063D9
+	for <mptcp@lists.linux.dev>; Thu,  4 May 2023 14:57:36 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f193ca059bso4605675e9.3
+        for <mptcp@lists.linux.dev>; Thu, 04 May 2023 07:57:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1683212255; x=1685804255;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RJDBGiLwEYzogjhdT0Gdg9AdNoO5GRDDx87dHT/2K10=;
+        b=KhenM/GnMk4WFRT9jxmJgR/io44W7MznsfbU1odS41mQc+I0e0a6/y2jBL0ourJ/z5
+         7jpDMkqrxIFL0Oe0XEeCjBPtpyKSUh5x0oOh7vQexaTj4JR/4tOP1/m1fIZhlvL14n/B
+         m9sZTTf5ehfA3vX0WBIki9I6o4ak57xkYgJbry1ehsGBcP8drxsVKmoUl350jDLDlU3e
+         x0UH+Ai/h9ILB4fcuoIdrWpwOIrq6QlfINZn4OeIIfVEhDz+83c78sZrQnk2v2VQpr7T
+         KKueKyCbgrmLovRmXZ6vv811+N2KrjQJ2SP6Zvi4iToe0x0Lx/0CphfIelUMSGwe2LYl
+         gIKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683209683; x=1685801683;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A4cdyKkEPxoDEMVbGTjlqEi5Ug+DxEbcQNE++nqieDU=;
-        b=TqHOUuOmicAEo5v8Sj9MeAgHAbwTEEKVpe/RzNK/jvjh6j4koIFAsPwVJHcIqSXvVn
-         BHBddtKkSza+fM7HqeiMSTDDoCHjnV3cCJoPlfDWItjYsxp0sTwhJOHdPoPjuLm/SEea
-         mSaN9wL00w2iTAO1L4c6UGnzMM4PcDFEYboPN888+8XUTEI8WbtKP3oslIShvTZz/4fT
-         ABQc14aGFXDsd8XS5z4AxgahC6mVsT9XgJSmO0pp/ry9t3HgjYAaKZfYM2AJEwYTlp9a
-         0iAPnwtidk+298EoW/2rNUpGboHTbEN7hL93FihRbMHTYrQpqh3kgyoXS6W0wtZ+1siS
-         g0Zw==
-X-Gm-Message-State: AC+VfDzAzmafPhdahdYUsbh8vvcwt13FrVdv1YrLoo3ohCAKYZd1v+dq
-	+UrolSlfJr38T7LOYCBW/Z6emxS/0Gw58GDOVIsLg1I1arH3jESBR+MjePaSivGGGuyt6E51uTC
-	qywV8hM2Zh16bK8SCyHOhhpGa5Q+AqGI=
-X-Received: by 2002:a05:6a00:248b:b0:643:6fa2:9bef with SMTP id c11-20020a056a00248b00b006436fa29befmr2894106pfv.20.1683209683097;
-        Thu, 04 May 2023 07:14:43 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4y7cBClrLOAGdXVFtpclUAEu+7WeDA4VqonOPsm46O5gkdhb1DHoEQcktMPokcUbxSTVmQhEARopB669XN6Qg=
-X-Received: by 2002:a05:6a00:248b:b0:643:6fa2:9bef with SMTP id
- c11-20020a056a00248b00b006436fa29befmr2894069pfv.20.1683209682774; Thu, 04
- May 2023 07:14:42 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683212255; x=1685804255;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RJDBGiLwEYzogjhdT0Gdg9AdNoO5GRDDx87dHT/2K10=;
+        b=bAmnifU/PmaD5NzlqgQkfqTOYyNVgdP6Hw30DiwTyZd+NBWBCftaNk+XHMM2AFt/77
+         VdDn7TZFxA04MwbDbbFAkz/HqHpYlyzPay90pylHDDA0s+3OGFrQBJXBJhYQ+6kF8bHX
+         uDfqSFTkJY3tN+9dqRKdTm0oX1m+20Yh6Y7DKjr+4l6wN0ZRQLEKuuxR8jCeJSS5Lbz6
+         QJFcQSwFF42M3yU3F3hk+3Z8kW+styhgd/2Rb4j4pbp/xRDB3iWWlmns7u2EJ1auuhTt
+         iAXFibtFqmrH/6B+40riR8VAy7TeoyVxPRDNc8+bN7RtnP/LTTRF1q4mEwAOiobzfe6+
+         GtNQ==
+X-Gm-Message-State: AC+VfDz/F0IK04DwMQjPWKwD8WojmxMEN9HdkIKIU11BlacG6QBeek/v
+	znOu8iy8nywOiJ5g7yCFFyuXtc7zl0f+z/qJ0E8=
+X-Google-Smtp-Source: ACHHUZ7w5o4XjY+q8XwzP1WzFWSlz7NNNnYmpq2oeCtKn5nOObwc8bKr/TWhPv/vaJ097KKEtc8pbA==
+X-Received: by 2002:a1c:4b06:0:b0:3f0:3d47:2cc5 with SMTP id y6-20020a1c4b06000000b003f03d472cc5mr17538469wma.10.1683212254837;
+        Thu, 04 May 2023 07:57:34 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:6b04:8b76:7dd3:7b25? ([2a02:578:8593:1200:6b04:8b76:7dd3:7b25])
+        by smtp.gmail.com with ESMTPSA id n6-20020a7bcbc6000000b003f33f8f0a05sm5199566wmi.9.2023.05.04.07.57.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 May 2023 07:57:34 -0700 (PDT)
+Message-ID: <67ca4d0b-f539-7269-e400-5d89ffabacea@tessares.net>
+Date: Thu, 4 May 2023 16:57:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v2-0-e7a3c8c15676@tessares.net>
-In-Reply-To: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v2-0-e7a3c8c15676@tessares.net>
-From: Ondrej Mosnacek <omosnace@redhat.com>
-Date: Thu, 4 May 2023 16:14:31 +0200
-Message-ID: <CAFqZXNt16B5A2o6fZeN5b1coNCW2m6kp7JToJFDorvPajhFyxA@mail.gmail.com>
-Subject: Re: [PATCH LSM v2 0/2] security: SELinux/LSM label with MPTCP and accept
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Eric Paris <eparis@parisplace.org>, Paolo Abeni <pabeni@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH mptcp-next v11 00/12] update userspace pm mptcp_info
+ fields
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1683195386.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <cover.1683195386.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 20, 2023 at 7:17=E2=80=AFPM Matthieu Baerts
-<matthieu.baerts@tessares.net> wrote:
->
-> In [1], Ondrej Mosnacek explained they discovered the (userspace-facing)
-> sockets returned by accept(2) when using MPTCP always end up with the
-> label representing the kernel (typically system_u:system_r:kernel_t:s0),
-> while it would make more sense to inherit the context from the parent
-> socket (the one that is passed to accept(2)). Thanks to the
-> participation of Paul Moore in the discussions, modifications on MPTCP
-> side have started and the result is available here.
->
-> Paolo Abeni worked hard to refactor the initialisation of the first
-> subflow of a listen socket. The first subflow allocation is no longer
-> done at the initialisation of the socket but later, when the connection
-> request is received or when requested by the userspace. This was a
-> prerequisite to proper support of SELinux/LSM labels with MPTCP and
-> accept. The last batch containing the commit ddb1a072f858 ("mptcp: move
-> first subflow allocation at mpc access time") [2] has been recently
-> accepted and applied in netdev/net-next repo [3].
->
-> This series of 2 patches is based on top of the lsm/next branch. Despite
-> the fact they depend on commits that are in netdev/net-next repo to
-> support the new feature, they can be applied in lsm/next without
-> creating conflicts with net-next or causing build issues. These two
-> patches on top of lsm/next still passes all the MPTCP-specific tests.
-> The only thing is that the new feature only works properly with the
-> patches that are on netdev/net-next. The tests with the new labels have
-> been done on top of them.
->
-> Regarding the two patches, the first one introduces a new LSM hook
-> called from MPTCP side when creating a new subflow socket. This hook
-> allows the security module to relabel the subflow according to the owing
-> process. The second one implements this new hook on the SELinux side.
->
-> Link: https://lore.kernel.org/netdev/CAFqZXNs2LF-OoQBUiiSEyranJUXkPLcCfBk=
-MkwFeM6qEwMKCTw@mail.gmail.com/ [1]
-> Link: https://git.kernel.org/netdev/net-next/c/ddb1a072f858 [2]
-> Link: https://lore.kernel.org/netdev/20230414-upstream-net-next-20230414-=
-mptcp-refactor-first-subflow-init-v1-0-04d177057eb9@tessares.net/ [3]
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
-> Changes in v2:
-> - Address Paul's comments, see the notes on each patch
-> - Link to v1: https://lore.kernel.org/r/20230419-upstream-lsm-next-202304=
-19-mptcp-sublows-user-ctx-v1-0-9d4064cb0075@tessares.net
->
-> ---
-> Paolo Abeni (2):
->       security, lsm: Introduce security_mptcp_add_subflow()
->       selinux: Implement mptcp_add_subflow hook
->
->  include/linux/lsm_hook_defs.h |  1 +
->  include/linux/security.h      |  6 ++++++
->  net/mptcp/subflow.c           |  6 ++++++
->  security/security.c           | 17 +++++++++++++++++
->  security/selinux/hooks.c      | 16 ++++++++++++++++
->  security/selinux/netlabel.c   |  8 ++++++--
->  6 files changed, 52 insertions(+), 2 deletions(-)
-> ---
-> base-commit: d82dcd9e21b77d338dc4875f3d4111f0db314a7c
-> change-id: 20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-eee=
-658fafcba
->
-> Best regards,
-> --
-> Matthieu Baerts <matthieu.baerts@tessares.net>
->
+Hi Geliang,
 
-I haven't yet looked closer at the code in this series, but I can at
-least confirm that with the series (applied on top of net-next) the
-selinux-testsuite now passes when run under mptcpize, with one caveat:
+On 04/05/2023 12:20, Geliang Tang wrote:
+> v11:
+>  - #1-#5 part 1, address Matt's comments in v10.
+>  - #6-#9 part 2, update pm mptcp_info
+>  - #10-#12 part 3, some cleanups.
 
-The "client" test prog in the inet_socket subtest sets the SO_SNDTIMEO
-socket option on the client socket, but the subtest takes
-significantly longer to complete than when run without mptcpize. That
-suggests to me that there is possibly some (pre-existing) issue with
-MPTCP where the send/receive timeouts are not being passed to the
-subflow socket(s), leading to a longer wait (I guess the default is
-higher?) when the timeout is expected to be hit (there are test cases
-where we expect packets to be dropped due to SELinux access controls,
-which we detect via timeout). I'm only taking a wild guess at the root
-cause here, but I hope you guys will be able to figure it out and fix
-whatever needs fixing :)
+Thank you for the v11!
 
---
-Ondrej Mosnacek
-Senior Software Engineer, Linux Security - SELinux kernel
-Red Hat, Inc.
+I just did a review of the 6 first patches that would land in -net. I
+just have some last questions regarding the 4th patch (good you did the
+squash, it was easier for me to see some issues) and the 6th one.
 
+For the modifications on the selftests side, I didn't look into details
+yet but it looks like the CI is complaining about that (maybe with a
+debug kconfig, it is way slower, we do need to use 'wait_xxx()'
+functions instead of 'sleep'?). I suggest to look at that when the first
+6 patches are merged because this second part is for net-next anyway. WDYT?
+
+Just briefly regarding this 2nd part: it is a good idea to get code out
+of "do_transfer". It might be good to create helpers to keep stuff clear
+when we declare the tests, with brief instructions, e.g.
+
+  set_userspace_pm $ns1
+  run_tests (...)
+  userspace_pm_send_add_addr (...)
+  wait_for_addr (...)
+  chk_add_nr (...)
+  userspace_pm_send_rm_addr (...)
+  wait_rm_addr (...)
+  chk_rm_nr (...)
+  kill_(...)
+
+If you see the idea.
+
+Also, I really should send all the modifications I have related to my
+"selftests: mptcp: skip tests when features are not supported" as my
+patches are for -net and they modify quite a bit mptcp_join.sh tests. I
+will try to send them tomorrow.
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
