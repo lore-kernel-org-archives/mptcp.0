@@ -1,189 +1,171 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2040279D8
-	for <mptcp@lists.linux.dev>; Thu,  4 May 2023 15:02:02 +0000 (UTC)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-3f182d745deso6573515e9.0
-        for <mptcp@lists.linux.dev>; Thu, 04 May 2023 08:02:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1683212521; x=1685804521;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yr4VCpXxO+2wIMPJRFMoYhUslJ9pjtoKz4N2w5mYgP8=;
-        b=4JCnp/k7v3UTojc1wJPY/Khqwr/ArURIlJHFosYouWUgoduTpkl2zGfWBUpC7mTPub
-         P+26DJVYyep1dkyQy6E/4NoKH8QCsRyw627TpngbujnDyXwzx4ZHVg4QoKqQbWY009Dt
-         4KQVQpIv9Ydh+IqX6HhsLRDxItg35hyOmmzD/IfqQaZC593UFaRNrh7fruN3bOiFIwmZ
-         o+OUkKerYDoSCo0QtmbzUxYcoZl74whUQx+mlegPzhEWPXvj8p0DDbVZ6xeuaSrCi3RZ
-         ko4FYH7xu0ktqxDMFoIdMAfDXbMO4QJLm5NK7P+tSFEo2nykbAtl/k15wWqNJci73B2J
-         JOMw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163A23C0A
+	for <mptcp@lists.linux.dev>; Thu,  4 May 2023 16:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1683216810;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FCERTes3cUqeH2NVPYErrzXP04o1ceM5Rm63oz0hrwA=;
+	b=Kzrhjr0y3YpjtMQdhzVwM/x6pXVJ5c8jm1upIVJ0cZax+PqJZj3DM2NJGj1tK5AdQq0zJF
+	3jNmsaqZ8yvTGtB9URcq14TauKgwL1Heh/KWVb9aSC1C1OYNIBjNcZhs/UInlH0ytaSSJ3
+	9xdIhLoEZ7dbLhn57IbMvOiuU9WyFbc=
+Received: from mail-vk1-f200.google.com (mail-vk1-f200.google.com
+ [209.85.221.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-272-yXlcMzWfM7yOFnWbvOc20w-1; Thu, 04 May 2023 12:13:28 -0400
+X-MC-Unique: yXlcMzWfM7yOFnWbvOc20w-1
+Received: by mail-vk1-f200.google.com with SMTP id 71dfb90a1353d-44fbe281e05so15974e0c.1
+        for <mptcp@lists.linux.dev>; Thu, 04 May 2023 09:13:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683212521; x=1685804521;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yr4VCpXxO+2wIMPJRFMoYhUslJ9pjtoKz4N2w5mYgP8=;
-        b=g9ZFvoldGMzaVfo+wTMETV4JpSOpKP1qWstXgFV1NfIFci2nyiW/a11Ekj3Wyj16Sm
-         0oCJGh6B1wSVXsM3pGue4ovBIu8yEtf3tyR6MuYGjYkc5jQQbzILGi3vWwUuFUrKisoI
-         raJiaQLcIjlgjo0FXrr1kKe+iEpcb+1Ftf3vQ4crtidkld080F+RfXWwmBPdWYYR73Y0
-         2LKrZB+Iva3evWRdreNmnane1M0W1k1traP8+/6CPtyVbDo7ebAcUNnY4o8qnT/svOy5
-         6O29i+0h7x+6VN1O4LAxTNbhDOVvoWgHNbZUtOuuH/+EIda2mLlG12nGvIdJ0L82NCvj
-         5MmA==
-X-Gm-Message-State: AC+VfDwhc5KT/zzItTc5tfatVFa/Sy4/SBl8nI4VZ19JI2/6EQDFcuVW
-	RbjNZfoGHipReM0k2RqQL+lgDPfMFD6Z5dPiIec=
-X-Google-Smtp-Source: ACHHUZ5R0qIn6w4XoxuHgTMJR6wCC78pk5d9XIuDBc8ETiuG+U4azZP6WB7wpVaKwUrO7+fvHO3arQ==
-X-Received: by 2002:a7b:cd04:0:b0:3da:1f6a:7b36 with SMTP id f4-20020a7bcd04000000b003da1f6a7b36mr43293wmj.0.1683212521054;
-        Thu, 04 May 2023 08:02:01 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:6b04:8b76:7dd3:7b25? ([2a02:578:8593:1200:6b04:8b76:7dd3:7b25])
-        by smtp.gmail.com with ESMTPSA id n3-20020a7bc5c3000000b003f0b1b8cd9bsm5212484wmk.4.2023.05.04.08.02.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 May 2023 08:02:00 -0700 (PDT)
-Message-ID: <0ac8d900-6bf1-5ed6-e379-c3bf0c7fc6cf@tessares.net>
-Date: Thu, 4 May 2023 17:02:00 +0200
+        d=1e100.net; s=20221208; t=1683216808; x=1685808808;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FCERTes3cUqeH2NVPYErrzXP04o1ceM5Rm63oz0hrwA=;
+        b=MeufMDfiZXce1aFwit9pAyssMLoMQev6MQenF5Ihny25PewOBdOmaZjIIT+6yLENI2
+         XZCr9Fvn6gBlF+pclgfyguti9BKqNIjbB1WRcvxeV7zy2mV+eMuSaNvOkQkRkJ4QMj5i
+         BF5YfujQk1xp8ldsMUFXXLznOV4E6ybWg5odoP7FJ8ZWC8jfu9k5STNyejThccp1kgHF
+         HWiJmmgx67+dhP3kJuDkR5K0bVqYD5vetnDha0/Xmz4MGSBzwsUFtthYyo+urpxRTjYp
+         bccv580t0xg/qY6vygu0hnyZKhjkbn2SwGxIPPpSJGgYQtPk7CxFMGHNBFWgDQhmRLsD
+         zzNw==
+X-Gm-Message-State: AC+VfDzvjl+eifZKYdHzvZY8h0QdNOt+gLGCL5v6ZENli6fERC2LA5Sx
+	rdMHWqMxcV7KKWW7KlqcU1AOXUZd7zrVjrY8hkRdcU+WW738VgA0f/vxGKEj6Qcned0M7p+q7ez
+	kXhkkVajbOsUkX4M=
+X-Received: by 2002:a1f:b646:0:b0:448:1241:47ae with SMTP id g67-20020a1fb646000000b00448124147aemr3069422vkf.1.1683216807871;
+        Thu, 04 May 2023 09:13:27 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6pUnL9fUfiStXzh1jo+rajlFzURLwzhhKGNCKNVHx6d9nP0QKmPVmXXzyvOtLVq7RYWk28Ew==
+X-Received: by 2002:a1f:b646:0:b0:448:1241:47ae with SMTP id g67-20020a1fb646000000b00448124147aemr3069388vkf.1.1683216807461;
+        Thu, 04 May 2023 09:13:27 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-244-79.dyn.eolo.it. [146.241.244.79])
+        by smtp.gmail.com with ESMTPSA id 75-20020a370b4e000000b0074df3f7e14esm11694249qkl.67.2023.05.04.09.13.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 May 2023 09:13:27 -0700 (PDT)
+Message-ID: <11201df515ec41db88ad915fd1e425e62c4f81e5.camel@redhat.com>
+Subject: Re: [PATCH LSM v2 0/2] security: SELinux/LSM label with MPTCP and
+ accept
+From: Paolo Abeni <pabeni@redhat.com>
+To: Ondrej Mosnacek <omosnace@redhat.com>, Matthieu Baerts
+	 <matthieu.baerts@tessares.net>
+Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+ "Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley
+ <stephen.smalley.work@gmail.com>, Eric Paris <eparis@parisplace.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ mptcp@lists.linux.dev,  linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org,  linux-security-module@vger.kernel.org,
+ selinux@vger.kernel.org
+Date: Thu, 04 May 2023 18:13:23 +0200
+In-Reply-To: <CAFqZXNt16B5A2o6fZeN5b1coNCW2m6kp7JToJFDorvPajhFyxA@mail.gmail.com>
+References: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v2-0-e7a3c8c15676@tessares.net>
+	 <CAFqZXNt16B5A2o6fZeN5b1coNCW2m6kp7JToJFDorvPajhFyxA@mail.gmail.com>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH mptcp-next v11 06/12] mptcp: update userspace pm infos
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1683195386.git.geliang.tang@suse.com>
- <0356f03ca8d7e6655914e26502308414d27d3ae5.1683195386.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <0356f03ca8d7e6655914e26502308414d27d3ae5.1683195386.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+On Thu, 2023-05-04 at 16:14 +0200, Ondrej Mosnacek wrote:
+> On Thu, Apr 20, 2023 at 7:17=E2=80=AFPM Matthieu Baerts
+> <matthieu.baerts@tessares.net> wrote:
+> >=20
+> > In [1], Ondrej Mosnacek explained they discovered the (userspace-facing=
+)
+> > sockets returned by accept(2) when using MPTCP always end up with the
+> > label representing the kernel (typically system_u:system_r:kernel_t:s0)=
+,
+> > while it would make more sense to inherit the context from the parent
+> > socket (the one that is passed to accept(2)). Thanks to the
+> > participation of Paul Moore in the discussions, modifications on MPTCP
+> > side have started and the result is available here.
+> >=20
+> > Paolo Abeni worked hard to refactor the initialisation of the first
+> > subflow of a listen socket. The first subflow allocation is no longer
+> > done at the initialisation of the socket but later, when the connection
+> > request is received or when requested by the userspace. This was a
+> > prerequisite to proper support of SELinux/LSM labels with MPTCP and
+> > accept. The last batch containing the commit ddb1a072f858 ("mptcp: move
+> > first subflow allocation at mpc access time") [2] has been recently
+> > accepted and applied in netdev/net-next repo [3].
+> >=20
+> > This series of 2 patches is based on top of the lsm/next branch. Despit=
+e
+> > the fact they depend on commits that are in netdev/net-next repo to
+> > support the new feature, they can be applied in lsm/next without
+> > creating conflicts with net-next or causing build issues. These two
+> > patches on top of lsm/next still passes all the MPTCP-specific tests.
+> > The only thing is that the new feature only works properly with the
+> > patches that are on netdev/net-next. The tests with the new labels have
+> > been done on top of them.
+> >=20
+> > Regarding the two patches, the first one introduces a new LSM hook
+> > called from MPTCP side when creating a new subflow socket. This hook
+> > allows the security module to relabel the subflow according to the owin=
+g
+> > process. The second one implements this new hook on the SELinux side.
+> >=20
+> > Link: https://lore.kernel.org/netdev/CAFqZXNs2LF-OoQBUiiSEyranJUXkPLcCf=
+BkMkwFeM6qEwMKCTw@mail.gmail.com/ [1]
+> > Link: https://git.kernel.org/netdev/net-next/c/ddb1a072f858 [2]
+> > Link: https://lore.kernel.org/netdev/20230414-upstream-net-next-2023041=
+4-mptcp-refactor-first-subflow-init-v1-0-04d177057eb9@tessares.net/ [3]
+> > Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> > ---
+> > Changes in v2:
+> > - Address Paul's comments, see the notes on each patch
+> > - Link to v1: https://lore.kernel.org/r/20230419-upstream-lsm-next-2023=
+0419-mptcp-sublows-user-ctx-v1-0-9d4064cb0075@tessares.net
+> >=20
+> > ---
+> > Paolo Abeni (2):
+> >       security, lsm: Introduce security_mptcp_add_subflow()
+> >       selinux: Implement mptcp_add_subflow hook
+> >=20
+> >  include/linux/lsm_hook_defs.h |  1 +
+> >  include/linux/security.h      |  6 ++++++
+> >  net/mptcp/subflow.c           |  6 ++++++
+> >  security/security.c           | 17 +++++++++++++++++
+> >  security/selinux/hooks.c      | 16 ++++++++++++++++
+> >  security/selinux/netlabel.c   |  8 ++++++--
+> >  6 files changed, 52 insertions(+), 2 deletions(-)
+> > ---
+> > base-commit: d82dcd9e21b77d338dc4875f3d4111f0db314a7c
+> > change-id: 20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-e=
+ee658fafcba
+> >=20
+> > Best regards,
+> > --
+> > Matthieu Baerts <matthieu.baerts@tessares.net>
+> >=20
+>=20
+> I haven't yet looked closer at the code in this series, but I can at
+> least confirm that with the series (applied on top of net-next) the
+> selinux-testsuite now passes when run under mptcpize, with one caveat:
+>=20
+> The "client" test prog in the inet_socket subtest sets the SO_SNDTIMEO
+> socket option on the client socket, but the subtest takes
+> significantly longer to complete than when run without mptcpize. That
+> suggests to me that there is possibly some (pre-existing) issue with
+> MPTCP where the send/receive timeouts are not being passed to the
+> subflow socket(s), leading to a longer wait (I guess the default is
+> higher?)=C2=A0
 
-On 04/05/2023 12:20, Geliang Tang wrote:
-> Increase pm subflows counter on both server side and client side when
-> userspace pm creates a new subflow, and decrease the counter when it
-> closes a subflow.
-> 
-> Increase add_addr_signaled counter in mptcp_nl_cmd_announce() when the
-> address is announced by userspace PM.
-> 
-> This modification is similar to how the in-kernel PM is updating the
-> counter: when additional subflows are created/removed.
-> 
-> Fixes: 9ab4807c84a4 ("mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE")
-> Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/329
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  net/mptcp/pm.c           | 21 +++++++++++++++++----
->  net/mptcp/pm_userspace.c |  5 +++++
->  2 files changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 7539137719ef..9ba671902e69 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -89,8 +89,15 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
->  	unsigned int subflows_max;
->  	int ret = 0;
->  
-> -	if (mptcp_pm_is_userspace(msk))
-> -		return mptcp_userspace_pm_active(msk);
-> +	if (mptcp_pm_is_userspace(msk)) {
-> +		if (mptcp_userspace_pm_active(msk)) {
-> +			spin_lock_bh(&pm->lock);
-> +			pm->subflows++;
-> +			spin_unlock_bh(&pm->lock);
-> +			return true;
-> +		}
-> +		return false;
-> +	}
->  
->  	subflows_max = mptcp_pm_get_subflows_max(msk);
->  
-> @@ -183,8 +190,14 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
->  	struct mptcp_pm_data *pm = &msk->pm;
->  	bool update_subflows;
->  
-> -	update_subflows = (subflow->request_join || subflow->mp_join) &&
-> -			  mptcp_pm_is_kernel(msk);
-> +	if (mptcp_pm_is_userspace(msk)) {
-> +		spin_lock_bh(&pm->lock);
-> +		pm->subflows--;
-> +		spin_unlock_bh(&pm->lock);
-> +		return;
-> +	}
-> +
-> +	update_subflows = (subflow->request_join || subflow->mp_join);
+Indeed the behavior you describe is due to some mptcp bug in handling
+the SO_{SND,RCV}TIMEO socket tions, and it's really unrelated to the
+initially reported selinux issue.
 
-See my question from v7: Should you not decrement the counter only if
-one of these conditions is met to keep the same behaviour as what is
-done with the in-kernel PM: 'subflows' counter only look at the
-additional subflows?
+If you could file an issue on our tracker, that would help ;)
 
-e.g.
+Thanks!
 
-  update_subflows = (subflow->request_join || subflow->mp_join);
+Paolo
 
-  if (mptcp_pm_is_userspace(msk)) {
-      if (update_subflows) {
-          (...) → pm->subflows--;
-      }
-      return;
-  }
-
-  if (!READ_ONCE(pm->work_pending) && !update_subflows)
-      return;
-
-I'm not a big fan to count only the additional subflows but I think it
-is important to keep the same behaviour with both PMs.
-
->  	if (!READ_ONCE(pm->work_pending) && !update_subflows)
->  		return;
->  
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index c50e1507ae35..98a5c81083be 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -189,6 +189,7 @@ int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
->  	spin_lock_bh(&msk->pm.lock);
->  
->  	if (mptcp_pm_alloc_anno_list(msk, &addr_val)) {
-> +		msk->pm.add_addr_signaled++;
->  		mptcp_pm_announce_addr(msk, &addr_val.addr, false);
->  		mptcp_pm_nl_addr_send_ack(msk);
->  	}
-> @@ -334,6 +335,7 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
->  		spin_unlock_bh(&msk->pm.lock);
->  		goto create_err;
->  	}
-> +	msk->pm.local_addr_used++;
-
-Maybe better to increment this counter in
-mptcp_userspace_pm_append_new_local_addr() so we do it once if the local
-doesn't already exist (when the TODO will be done).
-
->  	spin_unlock_bh(&msk->pm.lock);
->  
->  	lock_sock(sk);
-> @@ -344,8 +346,11 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
->  
->  	spin_lock_bh(&msk->pm.lock);
->  	if (err) {
-> +		msk->pm.local_addr_used--;
-
-Similar here, maybe better to do that in
-mptcp_userspace_pm_delete_local_addr()?
-
-Also by doing that, the counter will also be decremented when the
-userspace asks to destroy a subflow (and the refcount is 0).
-
->  		mptcp_pm_remove_anno_list_by_saddr(msk, &addr_l);
->  		mptcp_userspace_pm_delete_local_addr(msk, &local);
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
