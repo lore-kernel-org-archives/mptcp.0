@@ -1,177 +1,170 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E228C2CA
-	for <mptcp@lists.linux.dev>; Fri,  5 May 2023 14:16:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98104C2EF
+	for <mptcp@lists.linux.dev>; Fri,  5 May 2023 19:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1683296210;
+	s=mimecast20190719; t=1683315292;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hQtfdULdSvD0JHxZLBgiy4HejSjwOhquH5OGzliVEtg=;
-	b=grO24VD4ij9dSyRQU+dU4V5yEpXw6P/+VqoQPuZPeDAfgiFi4nOxrJhEhi5JTn76jen3pN
-	CtciU3tzTTnT6TuuVwHHU6KBVMOji9bwEIp+WQE5XtN6aFYXbXKCNYjmzTvZnFuDTCU26o
-	I9WGcxUse9Sh9ghAbIaYepZJMWbKEng=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-ta13mH76N6OVgK28QwiMYA-1; Fri, 05 May 2023 10:16:49 -0400
-X-MC-Unique: ta13mH76N6OVgK28QwiMYA-1
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-6435b907f46so974621b3a.1
-        for <mptcp@lists.linux.dev>; Fri, 05 May 2023 07:16:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683296200; x=1685888200;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hQtfdULdSvD0JHxZLBgiy4HejSjwOhquH5OGzliVEtg=;
-        b=jmn5bOi2W6CgSYjerhJd+m8qgdHVOfdV2iDDMo+cOcA9QmLI+q7XbcEj0p7H2Bnvd0
-         wQ23n/pzPia67MLms/iTYLBcCdb2zTrxd5h2eWUV/kZ5SjZgSSUHMfZS0DC8xjB2/0XD
-         sQSpwykZflOZJNBaWTVAjK+C370TQPfhQnOL+lqDQjIwDx0h3Efn0ytmJutRYPvSElcV
-         Sc22Es4ejgkUCoD4bWJ0NmJ8FWketJOZ0Q9ojOAq1Q4EO6cnTaXctgQpkv2cNx8rfH1i
-         taAHHsvugSVeC0cpBhl6WhZ1w+PFw7yMviaL9tfDgioGq0l7rQWLawQM7racXp5u5Vy6
-         HPTw==
-X-Gm-Message-State: AC+VfDztBs/DMWUus2qR8T8dJ36L6bdhFxgwz91ZgwMamoiyxYQbcHwL
-	YiQL/WO+LE/cfGp7QWj+jZzDiUBtaXOOuOq4i6Uc0PhZve/g6GQ0cdgkA7f1kl/11K5r1NUW/o6
-	3IqqSXhrgd2fu8Zvo4RqEqidm/6E/S9w=
-X-Received: by 2002:a05:6a00:1747:b0:63c:e253:a692 with SMTP id j7-20020a056a00174700b0063ce253a692mr2409783pfc.15.1683296200113;
-        Fri, 05 May 2023 07:16:40 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6mtxXj7DMVyAnEBbSIbKGOxmXfWEDkrJMvTzQz3xakLYGwlu3RNE//5PvMJFJvDrwgPGQHOJBcCZUFZi6smSg=
-X-Received: by 2002:a05:6a00:1747:b0:63c:e253:a692 with SMTP id
- j7-20020a056a00174700b0063ce253a692mr2409748pfc.15.1683296199774; Fri, 05 May
- 2023 07:16:39 -0700 (PDT)
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PILKqN7kXuoItU427+VyZis4QqtO9Zuj/Qd6VEgodSY=;
+	b=HneUPrKE2Hzb7tQLO8Wjyfq6tzHk6GVuOE1CC9rE4W+HnkQE7PBQD+lB8Ibyuht9VpJnX8
+	y2AoJXoJyrAzG1dRaFKdko52tWhOX2n0ZGEIeZ5dAjTh+w6MQt6kUzDAZt15M+RwivQxmD
+	155zxldQkm6NTfvppVBsdnihNGpl9t4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-155-wQ8ut1ScMd2ZWGjp_iEI_g-1; Fri, 05 May 2023 15:34:51 -0400
+X-MC-Unique: wQ8ut1ScMd2ZWGjp_iEI_g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 292D2857E60
+	for <mptcp@lists.linux.dev>; Fri,  5 May 2023 19:34:51 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 834E22026D25;
+	Fri,  5 May 2023 19:34:50 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Ondrej Mosnacek <omosnace@redhat.com>
+Subject: [PATCH mptcp-net] mptcp: fix connect timeout handling
+Date: Fri,  5 May 2023 21:34:44 +0200
+Message-Id: <ea1b196b90f42f6308cf82a830ac7ba5536d803d.1683315117.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx-v2-0-e7a3c8c15676@tessares.net>
- <CAFqZXNt16B5A2o6fZeN5b1coNCW2m6kp7JToJFDorvPajhFyxA@mail.gmail.com> <11201df515ec41db88ad915fd1e425e62c4f81e5.camel@redhat.com>
-In-Reply-To: <11201df515ec41db88ad915fd1e425e62c4f81e5.camel@redhat.com>
-From: Ondrej Mosnacek <omosnace@redhat.com>
-Date: Fri, 5 May 2023 16:16:28 +0200
-Message-ID: <CAFqZXNsR4cTTFbToszUhOPr5pJNET3jJMDFPXB73RD-eqRg5_Q@mail.gmail.com>
-Subject: Re: [PATCH LSM v2 0/2] security: SELinux/LSM label with MPTCP and accept
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Eric Paris <eparis@parisplace.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On Thu, May 4, 2023 at 6:13=E2=80=AFPM Paolo Abeni <pabeni@redhat.com> wrot=
-e:
-> On Thu, 2023-05-04 at 16:14 +0200, Ondrej Mosnacek wrote:
-> > On Thu, Apr 20, 2023 at 7:17=E2=80=AFPM Matthieu Baerts
-> > <matthieu.baerts@tessares.net> wrote:
-> > >
-> > > In [1], Ondrej Mosnacek explained they discovered the (userspace-faci=
-ng)
-> > > sockets returned by accept(2) when using MPTCP always end up with the
-> > > label representing the kernel (typically system_u:system_r:kernel_t:s=
-0),
-> > > while it would make more sense to inherit the context from the parent
-> > > socket (the one that is passed to accept(2)). Thanks to the
-> > > participation of Paul Moore in the discussions, modifications on MPTC=
-P
-> > > side have started and the result is available here.
-> > >
-> > > Paolo Abeni worked hard to refactor the initialisation of the first
-> > > subflow of a listen socket. The first subflow allocation is no longer
-> > > done at the initialisation of the socket but later, when the connecti=
-on
-> > > request is received or when requested by the userspace. This was a
-> > > prerequisite to proper support of SELinux/LSM labels with MPTCP and
-> > > accept. The last batch containing the commit ddb1a072f858 ("mptcp: mo=
-ve
-> > > first subflow allocation at mpc access time") [2] has been recently
-> > > accepted and applied in netdev/net-next repo [3].
-> > >
-> > > This series of 2 patches is based on top of the lsm/next branch. Desp=
-ite
-> > > the fact they depend on commits that are in netdev/net-next repo to
-> > > support the new feature, they can be applied in lsm/next without
-> > > creating conflicts with net-next or causing build issues. These two
-> > > patches on top of lsm/next still passes all the MPTCP-specific tests.
-> > > The only thing is that the new feature only works properly with the
-> > > patches that are on netdev/net-next. The tests with the new labels ha=
-ve
-> > > been done on top of them.
-> > >
-> > > Regarding the two patches, the first one introduces a new LSM hook
-> > > called from MPTCP side when creating a new subflow socket. This hook
-> > > allows the security module to relabel the subflow according to the ow=
-ing
-> > > process. The second one implements this new hook on the SELinux side.
-> > >
-> > > Link: https://lore.kernel.org/netdev/CAFqZXNs2LF-OoQBUiiSEyranJUXkPLc=
-CfBkMkwFeM6qEwMKCTw@mail.gmail.com/ [1]
-> > > Link: https://git.kernel.org/netdev/net-next/c/ddb1a072f858 [2]
-> > > Link: https://lore.kernel.org/netdev/20230414-upstream-net-next-20230=
-414-mptcp-refactor-first-subflow-init-v1-0-04d177057eb9@tessares.net/ [3]
-> > > Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> > > ---
-> > > Changes in v2:
-> > > - Address Paul's comments, see the notes on each patch
-> > > - Link to v1: https://lore.kernel.org/r/20230419-upstream-lsm-next-20=
-230419-mptcp-sublows-user-ctx-v1-0-9d4064cb0075@tessares.net
-> > >
-> > > ---
-> > > Paolo Abeni (2):
-> > >       security, lsm: Introduce security_mptcp_add_subflow()
-> > >       selinux: Implement mptcp_add_subflow hook
-> > >
-> > >  include/linux/lsm_hook_defs.h |  1 +
-> > >  include/linux/security.h      |  6 ++++++
-> > >  net/mptcp/subflow.c           |  6 ++++++
-> > >  security/security.c           | 17 +++++++++++++++++
-> > >  security/selinux/hooks.c      | 16 ++++++++++++++++
-> > >  security/selinux/netlabel.c   |  8 ++++++--
-> > >  6 files changed, 52 insertions(+), 2 deletions(-)
-> > > ---
-> > > base-commit: d82dcd9e21b77d338dc4875f3d4111f0db314a7c
-> > > change-id: 20230419-upstream-lsm-next-20230419-mptcp-sublows-user-ctx=
--eee658fafcba
-> > >
-> > > Best regards,
-> > > --
-> > > Matthieu Baerts <matthieu.baerts@tessares.net>
-> > >
-> >
-> > I haven't yet looked closer at the code in this series, but I can at
-> > least confirm that with the series (applied on top of net-next) the
-> > selinux-testsuite now passes when run under mptcpize, with one caveat:
-> >
-> > The "client" test prog in the inet_socket subtest sets the SO_SNDTIMEO
-> > socket option on the client socket, but the subtest takes
-> > significantly longer to complete than when run without mptcpize. That
-> > suggests to me that there is possibly some (pre-existing) issue with
-> > MPTCP where the send/receive timeouts are not being passed to the
-> > subflow socket(s), leading to a longer wait (I guess the default is
-> > higher?)
->
-> Indeed the behavior you describe is due to some mptcp bug in handling
-> the SO_{SND,RCV}TIMEO socket tions, and it's really unrelated to the
-> initially reported selinux issue.
+Ondrej reported a functional issue WRT timeout handling on connect
+with a nice reproducer.
 
-Definitely unrelated, just wanted to report the bug :)
+The problem is that the current mptcp connect waits for both the
+MPTCP socket level timeout, and the first subflow socket timeout.
+The latter is not influenced/touched by the exposed setsockopt().
 
-> If you could file an issue on our tracker, that would help ;)
+Overall the above makes the SO_SNDTIMEO a no-op on connect.
 
-I was about to ask where that tracker is, but then it occured to me to
-check MAINTAINERS and the link is right there, so yes, will do :)
+Since mptcp_connect is invoked via inet_stream_connect and the
+latter properly handle the MPTCP level timeout, we can address the
+issue making the nested subflow level connect always unblocking.
 
+This also allow simplifying a bit the code, dropping an ugly hack
+to handle the fastopen and custom proto_ops connect.
 
---
-Ondrej Mosnacek
-Senior Software Engineer, Linux Security - SELinux kernel
-Red Hat, Inc.
+The issues predates the blamed commit below, but the current resolution
+requires the infrastructure introduced there.
+
+Fixes: 54f1944ed6d2 ("mptcp: factor out mptcp_connect()")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/399
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+Note: there is needed follow-up correctly propagating the SYN_SENT
+-> CLOSE state transition from the first subflow to the msk socket in
+case of connect error, but that is somewhat independed/pre-existent.
+
+Sending out early for testing.
+---
+ net/mptcp/protocol.c | 29 +++++++----------------------
+ net/mptcp/protocol.h |  1 -
+ 2 files changed, 7 insertions(+), 23 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f5842f93c891..4747058a8b6b 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1734,7 +1734,6 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+ 
+ 	lock_sock(ssk);
+ 	msg->msg_flags |= MSG_DONTWAIT;
+-	msk->connect_flags = O_NONBLOCK;
+ 	msk->fastopening = 1;
+ 	ret = tcp_sendmsg_fastopen(ssk, msg, copied_syn, len, NULL);
+ 	msk->fastopening = 0;
+@@ -3672,9 +3671,9 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ 	 * acquired the subflow socket lock, too.
+ 	 */
+ 	if (msk->fastopening)
+-		err = __inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags, 1);
++		err = __inet_stream_connect(ssock, uaddr, addr_len, O_NONBLOCK, 1);
+ 	else
+-		err = inet_stream_connect(ssock, uaddr, addr_len, msk->connect_flags);
++		err = inet_stream_connect(ssock, uaddr, addr_len, O_NONBLOCK);
+ 	inet_sk(sk)->defer_connect = inet_sk(ssock->sk)->defer_connect;
+ 
+ 	/* on successful connect, the msk state will be moved to established by
+@@ -3687,12 +3686,10 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ 
+ 	mptcp_copy_inaddrs(sk, ssock->sk);
+ 
+-	/* unblocking connect, mptcp-level inet_stream_connect will error out
+-	 * without changing the socket state, update it here.
++	/* silence EINPROGRESS and let the caller inet_stream_connect
++	 * handle the connection in progress
+ 	 */
+-	if (err == -EINPROGRESS)
+-		sk->sk_socket->state = ssock->state;
+-	return err;
++	return 0;
+ }
+ 
+ static struct proto mptcp_prot = {
+@@ -3751,18 +3748,6 @@ static int mptcp_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 	return err;
+ }
+ 
+-static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+-				int addr_len, int flags)
+-{
+-	int ret;
+-
+-	lock_sock(sock->sk);
+-	mptcp_sk(sock->sk)->connect_flags = flags;
+-	ret = __inet_stream_connect(sock, uaddr, addr_len, flags, 0);
+-	release_sock(sock->sk);
+-	return ret;
+-}
+-
+ static int mptcp_listen(struct socket *sock, int backlog)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
+@@ -3917,7 +3902,7 @@ static const struct proto_ops mptcp_stream_ops = {
+ 	.owner		   = THIS_MODULE,
+ 	.release	   = inet_release,
+ 	.bind		   = mptcp_bind,
+-	.connect	   = mptcp_stream_connect,
++	.connect	   = inet_stream_connect,
+ 	.socketpair	   = sock_no_socketpair,
+ 	.accept		   = mptcp_stream_accept,
+ 	.getname	   = inet_getname,
+@@ -4012,7 +3997,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+ 	.owner		   = THIS_MODULE,
+ 	.release	   = inet6_release,
+ 	.bind		   = mptcp_bind,
+-	.connect	   = mptcp_stream_connect,
++	.connect	   = inet_stream_connect,
+ 	.socketpair	   = sock_no_socketpair,
+ 	.accept		   = mptcp_stream_accept,
+ 	.getname	   = inet6_getname,
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 8d9d87e2f840..39613bba1c46 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -300,7 +300,6 @@ struct mptcp_sock {
+ 			nodelay:1,
+ 			fastopening:1,
+ 			in_accept_queue:1;
+-	int		connect_flags;
+ 	struct work_struct work;
+ 	struct sk_buff  *ooo_last_skb;
+ 	struct rb_root  out_of_order_queue;
+-- 
+2.40.0
 
