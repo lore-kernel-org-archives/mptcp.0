@@ -1,48 +1,64 @@
-Received: from mail.lokoho.com (mail.lokoho.com [217.61.105.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361198C06
-	for <mptcp@lists.linux.dev>; Tue,  9 May 2023 10:09:29 +0000 (UTC)
-Received: by mail.lokoho.com (Postfix, from userid 1001)
-	id 950E1858DC; Tue,  9 May 2023 11:01:25 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lokoho.com; s=mail;
-	t=1683626488; bh=Z0N5VlX9/JlryGOL5I747Le9USomZJCRNNGRT3LbbKc=;
-	h=Date:From:To:Subject:From;
-	b=ZjJS8bcY4uMK1FWCtw6SLJBTPcjW6P4PomVAEq2jwldg4JspM8BnYQf0I0LBF14kM
-	 Qieb8k0Q77hjNJGyklNsxJzWzjps8N1DrAvTlt4upxlfPqwkSQ5mDcdng4L7Qk3qjq
-	 aOnAGZ4tRL8zn/kD2Sp0DtG3iBarFAHIgQcbwiNVbIeUj9ZhbrBF2InLgnjPQsQvad
-	 xE2oblwPNUSUNbDgnBBZS46vBbmhXAihLxzvrQPydMOoLaege+dzMOIex0Eqm6C2v4
-	 rbHumnzMBCBgX4kB3KnrBI8Rd5XiaD9cmy7BvBrX6yWOqS3jzsVa7QXAsJBBfn3ofO
-	 cWhUCNlekpkgg==
-Received: by mail.lokoho.com for <mptcp@lists.linux.dev>; Tue,  9 May 2023 10:01:02 GMT
-Message-ID: <20230509094945-0.1.5t.258bs.0.st4fa5eume@lokoho.com>
-Date: Tue,  9 May 2023 10:01:02 GMT
-From: "Adam Charachuta" <adam.charachuta@lokoho.com>
-To: <mptcp@lists.linux.dev>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.lokoho.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F28417FE6
+	for <mptcp@lists.linux.dev>; Tue,  9 May 2023 15:18:50 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-50bc075d6b2so11394948a12.0
+        for <mptcp@lists.linux.dev>; Tue, 09 May 2023 08:18:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1683645528; x=1686237528;
+        h=content-transfer-encoding:mime-version:subject:message-id:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xPf4cOfIg2BIlex765zXwi137rooYQ/EgU35VY2wAHg=;
+        b=B2AxrTChlyHNqJnHLb8CCxDcVLUYlljY2jNyJaYa042AB3IeqMyCfdthXQ5voA93n1
+         NNUGDnJSH+pYShRs6ZdCvxiqBxSYGUVZaVIdkFNC08YNiTDq8WWIWORBJEFB8LL10J0G
+         7v5madtG7TQUPiO8dUDo4JSHDNOnAxh6DFINgfOmWrExTQ/mFKo1mwHvhsBKhTE9B5W9
+         ijtshGRgToStz6h/kG2E3xxHPiq9kg3zkaUmKA7m8aR+sHGBwOhjZmx8DTQZngTd5dpQ
+         BXBvS7LpNxmq8q9dTIul7lbNlEuvbj/hhVNteBIJiqdKGIZjhscHHo24vjqBnGKP844Z
+         x6Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683645528; x=1686237528;
+        h=content-transfer-encoding:mime-version:subject:message-id:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xPf4cOfIg2BIlex765zXwi137rooYQ/EgU35VY2wAHg=;
+        b=TRSJNNKTjUWhGp2Y7CRHjAF43yJveAcAzbMFBtw8EFsYCY/VRuEPJ+cZCWzFYOCmQj
+         QML+HGQf9sj1lbVWKnWWigNpOcJLsSNs0QOWE17F/cU0AG1i9ZU7hejF4clPQVlSLhrb
+         R7OxE2TXeShJQ8v1Fs26FIP68GnTc1AacMiEi8Noz8j/KsOjbP5dDwLow9Y/F9uA7ksT
+         1AKfbJ9tzP5Jvt0w+mZqZ8WRqyfWB/IhQZb5nZBd2pTnOpgmZqCjeXj97Vx4eq/uMQiM
+         OywvMZqMvnfSPPogbt1s/RIV0BilqNqU8eP17US9/7FyiGeksdyXZkS6xjqv1gRMxTFs
+         DZwA==
+X-Gm-Message-State: AC+VfDw5sd0vQ/1wvhyuSXijB7APJBASrHVsiaeEU7A9BnQ022YXETdS
+	kA/fZoZ4A+fOCXTCelTe3NvZc/5qd1CnJ1WEKRqyvw==
+X-Google-Smtp-Source: ACHHUZ58FJmGjDRplIIhK8nDciJNkjbavULE8ANFmRhXaShJnS8DlOeVCHCLQ4UAcsGsA3hVY878dA==
+X-Received: by 2002:a17:907:3f25:b0:969:edf8:f73b with SMTP id hq37-20020a1709073f2500b00969edf8f73bmr2700075ejc.60.1683645527995;
+        Tue, 09 May 2023 08:18:47 -0700 (PDT)
+Received: from [127.0.0.1] ([109.139.127.142])
+        by smtp.gmail.com with ESMTPSA id hb38-20020a170907162600b009661cf921b4sm1397300ejc.202.2023.05.09.08.18.47
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 May 2023 08:18:47 -0700 (PDT)
+Date: Tue, 9 May 2023 16:18:47 +0100 (GMT+01:00)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Message-ID: <c8727f06-5521-4e1b-8958-9168f7e0e572@tessares.net>
+Subject: [Weekly meeting] no meeting today
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Correlation-ID: <c8727f06-5521-4e1b-8958-9168f7e0e572@tessares.net>
 
-Dzie=C5=84 dobry,
+Hello,
 
-zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
-=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
-o dalszych rozm=C3=B3w.=20
+Just a reminder that there is no weekly meeting today.
 
-Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
-=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
-=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
-strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
+Talk to you next week
 
-Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
-
-
-Pozdrawiam
-Adam Charachuta
+Matthieu
+--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
