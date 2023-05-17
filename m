@@ -1,45 +1,45 @@
 Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EE318B16
-	for <mptcp@lists.linux.dev>; Wed, 17 May 2023 14:26:36 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-30786c87cdaso824487f8f.2
-        for <mptcp@lists.linux.dev>; Wed, 17 May 2023 07:26:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA9B31128
+	for <mptcp@lists.linux.dev>; Wed, 17 May 2023 14:27:17 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-307664010fdso867537f8f.0
+        for <mptcp@lists.linux.dev>; Wed, 17 May 2023 07:27:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684333594; x=1686925594;
+        d=tessares.net; s=google; t=1684333635; x=1686925635;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6P9kK8o9DSUf5VKWSwRJBtmhab/49dni84ZZs5CXUM4=;
-        b=LIGc7BajH1HkXjR33W1JeY4NHOkoD3wguoLxaLAqYKhU6u6St4sxWn0unXgKCF61Jz
-         fS1ZO9cNSWVuibcoZ5T/xhkT9g2lvZdJ7UGddkzNTA22NzfL7ksxholkb8M7Zy6Tq7BT
-         MT+JmXRKa2X1FsDV9V9ekatpo6udo69FpI4xvHBvfEq+hzc4+R6f2Cg1S3hKjbUoLWbc
-         8ZrNbu/v0t7hbqx5GL4bERUJhw4qu2mzo8k/CEMqlV1cMDEbiJzzUYK3eqLQC8AvesLY
-         WXacbbA/Mg8gGHbrGNhf+FLKefLrZsezDq6pZNQOdmlDfEdSHvma7D0SJJCZYQkbDNEI
-         Kmfg==
+        bh=XyH28NhQeZA4jw9rzyyqsGMVjHc/0vTLKpbZqTGqBak=;
+        b=6OplKEt3Z25Ze4xUo8GT8X6LTvtwwGwvIu9vUISP31Rh4XvuN5h3nUji/DybO/d6XX
+         m2tB/Re6ADf3Kyh2qFyP+aNN7HgUUYfMKU+cLlh83RyBbVHR2ZWFoSsh2hBmUZH525eU
+         7vjYJ56nsLvhX+mheOPReYmZzg3rzoRxINNnDhFb9xlFEKD55UR0vcRCV0u2xMGnwzpa
+         pEZRbIW8hea7HVEP+uZelL0yKwbNtQHmOopmScFdQljA3yK/1bUYUtb5A/4xFp8p6jSd
+         b3gS4X9cDHxRm3cqohTGrxXQUe/p6TV1L3bP5ZMk2nAbTDvY6f8SotnYvGaeS1bPcKlX
+         OGzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684333594; x=1686925594;
+        d=1e100.net; s=20221208; t=1684333635; x=1686925635;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6P9kK8o9DSUf5VKWSwRJBtmhab/49dni84ZZs5CXUM4=;
-        b=VF3aP6swsRuuVPAN/sYURc4Y5GdQF9WYNQnPEdPXAZH6Y9Habm2mXsKf608KiNRli/
-         woYP57iJuICP2y2iKsoHef657JncaGWpAX2+ghlMkokrZXKftlVrKZB5AJsSFctT6ebc
-         SpqC0FdD/TY3qe7PoAXS+xq/nj2iGXwlV3PST/oJ/1xcBx5QuW3qgie//wnERPU1g5zd
-         zrLQVjrhjXvgR1qQytqVzCx+37MZKjJP7TwqcBdM0f0Si12rFQyiBY8N1+Xi0d3GDXnl
-         e8lHe4JKCUx7FH4QqM3fFdp1aS+9/kFz+j9uIV47Q2uR9qrhfl8d6Oa5NXwzTI51BDio
-         PhFA==
-X-Gm-Message-State: AC+VfDzPD/2hIyiwhPW1v7DZ3audLzVfaL89rE4K2XNIvxApPjW9h70y
-	mnlYj/GXuM9401L46moMat7fFw==
-X-Google-Smtp-Source: ACHHUZ5kUTIsySwKuBWR1XOar1ydABcUyE0VixiELblvmNZkNMrk2lsrjBbyRfLTzryJ8f2aZeCIww==
-X-Received: by 2002:adf:df81:0:b0:2ff:6906:7169 with SMTP id z1-20020adfdf81000000b002ff69067169mr788188wrl.68.1684333594415;
-        Wed, 17 May 2023 07:26:34 -0700 (PDT)
+        bh=XyH28NhQeZA4jw9rzyyqsGMVjHc/0vTLKpbZqTGqBak=;
+        b=AtEA5sH0CdEPcwvDVuh47w1sA+nahQFyq7gkl6+RiDasLUtLmko6UbMu8wYmiQS9G7
+         BYiVxlJqKYUvS5YC1Waz+dKluAyau5+E5kbuNOS7OGlG64yZzHPps8AWde8lK056nnTs
+         frOi7NFEUh0DCWh5/tXAutsAZVBrOmfEXq3WbzRqo/wP8utNktO/c7ZKuCbZgvzNNRg1
+         O4benjpkvrKlOyxu6JwjCjAYC/sX0sPrC92in2aSu/kj5Ls37Tg2+NxgJkSawFYkMprz
+         49HhE1kMv69CXvGbVK5x6C/RGnRBIRGCHIlb/ydzjf8m2L2+AemwN2YjqtypOBGj2Nc6
+         ZtaA==
+X-Gm-Message-State: AC+VfDzZ5mlLs7/v0dvPk+I6gWh2FH6hvnUM/76r7tGwU+ZXV3DxltJS
+	/YSSq5q4PugfFypqaK9a9EjA1VNy68NqoAfMyY0=
+X-Google-Smtp-Source: ACHHUZ7T2QYTJn9gwy+29jX39yPNEavtoxa5li6epVQ7HGyg62UGeRQ4VAco0HsUkvH7u0LCcSfa+w==
+X-Received: by 2002:adf:ef0d:0:b0:306:772:5c2e with SMTP id e13-20020adfef0d000000b0030607725c2emr723435wro.70.1684333635532;
+        Wed, 17 May 2023 07:27:15 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:a66b:672f:3b69:b6da? ([2a02:578:8593:1200:a66b:672f:3b69:b6da])
-        by smtp.gmail.com with ESMTPSA id w12-20020adfcd0c000000b002ffbf2213d4sm3057113wrm.75.2023.05.17.07.26.33
+        by smtp.gmail.com with ESMTPSA id e2-20020adfe382000000b00304832cd960sm3007498wrm.10.2023.05.17.07.27.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 07:26:34 -0700 (PDT)
-Message-ID: <9962f754-1d08-4982-e55e-63e25a7c365b@tessares.net>
-Date: Wed, 17 May 2023 16:26:33 +0200
+        Wed, 17 May 2023 07:27:15 -0700 (PDT)
+Message-ID: <9f2a2ed9-ed67-a55a-3868-c5183fa2123f@tessares.net>
+Date: Wed, 17 May 2023 16:27:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,81 +48,84 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-next 3/4] mptcp: track some aggregate data counters.
+Subject: Re: [PATCH mptcp-next 4/4] selftests: mptcp: explicitly tests
+ aggregate countes
 Content-Language: en-GB
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1683212362.git.pabeni@redhat.com>
- <df47acfb7e35b28e3eb4f591f182c383bc2076d7.1683212362.git.pabeni@redhat.com>
+ <b616382e36ea891a36f74a7508a004593afa8a59.1683212362.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <df47acfb7e35b28e3eb4f591f182c383bc2076d7.1683212362.git.pabeni@redhat.com>
+In-Reply-To: <b616382e36ea891a36f74a7508a004593afa8a59.1683212362.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
 On 04/05/2023 18:40, Paolo Abeni wrote:
-> Currently there are no data transfer counters accounting for all
-> the subflows used by a given MPTCP socket. The user-space can compute
-> such figures aggregating the subflow info, but that is inaccurate
-> if any subflow is closed before the MPTCP socket itself.
-> 
-> Add the new counters in the MPTCP socket itself and expose them
-> via the existing diag and sockopt. While touching mptcp_diag_fill_info(),
-> acquire the relevant locks before fetching the msk data, to ensure
-> better data consistency
+> Update the existing sockopt test-case to do some some
+> basic checks on the newly added counters.
 > 
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-
-(...)
-
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index d2aa02e28917..2265387a5db2 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -888,7 +888,9 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+> ---
+>  .../selftests/net/mptcp/mptcp_sockopt.c       | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> index ae61f39556ca..0c58de3ef339 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> @@ -51,6 +51,11 @@ struct mptcp_info {
+>  	__u8	mptcpi_local_addr_used;
+>  	__u8	mptcpi_local_addr_max;
+>  	__u8	mptcpi_csum_enabled;
+> +	__u32	mptcpi_retransmits;
+> +	__u64	mptcpi_bytes_retrans;
+> +	__u64	mptcpi_bytes_sent;
+> +	__u64	mptcpi_bytes_received;
+> +	__u64	mptcpi_bytes_acked;
+>  };
 >  
->  void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
->  {
-> +	struct sock *sk = (struct sock *)msk;
->  	u32 flags = 0;
-> +	bool slow;
+>  struct mptcp_subflow_data {
+> @@ -83,6 +88,7 @@ struct mptcp_subflow_addrs {
 >  
->  	memset(info, 0, sizeof(*info));
+>  struct so_state {
+>  	struct mptcp_info mi;
+> +	struct mptcp_info last_sample;
+>  	uint64_t mptcpi_rcv_delta;
+>  	uint64_t tcpi_rcv_delta;
+>  };
+> @@ -320,6 +326,7 @@ static void do_getsockopt_mptcp_info(struct so_state *s, int fd, size_t w)
 >  
-> @@ -914,11 +916,21 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
->  	if (READ_ONCE(msk->can_ack))
->  		flags |= MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED;
->  	info->mptcpi_flags = flags;
-> -	info->mptcpi_token = READ_ONCE(msk->token);
-> -	info->mptcpi_write_seq = READ_ONCE(msk->write_seq);
-> -	info->mptcpi_snd_una = READ_ONCE(msk->snd_una);
-> -	info->mptcpi_rcv_nxt = READ_ONCE(msk->ack_seq);
-> -	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
-> +	mptcp_data_lock(sk);
-> +	info->mptcpi_snd_una = msk->snd_una;
-> +	info->mptcpi_rcv_nxt = msk->ack_seq;
-> +	info->mptcpi_bytes_acked = msk->bytes_acked;
-> +	mptcp_data_unlock(sk);
+>  	assert(olen == sizeof(i));
+>  
+> +	s->last_sample = i;
+>  	if (s->mi.mptcpi_write_seq == 0)
+>  		s->mi = i;
+>  
+> @@ -556,6 +563,19 @@ static void process_one_client(int fd, int pipefd)
+>  	do_getsockopts(&s, fd, ret, ret2);
+>  	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
+>  		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64, s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - ret);
 
-Do you know if this could have a "bad" impact on the performances?
+To support old kernels, I guess the best is to store the "length" of the
+getsockopt(MPTCP_INFO) and only check these new following conditions if
+the "length" received from the kernel is bigger than a certain size (by
+looking at the offset of the mptcpi_retransmits field in the mptcp_info
+structure I suppose)?
 
-I mean mptcp_diag_fill_info() is also used on when dumping all the
-connections via Netlink. I guess the lock_sock_fast() should be fine
-because it is also used in tcp_get_info() but what about the data lock?
-Also OK because that's a spin lock and we only copy fields?
-
+> +	if (s.last_sample.mptcpi_bytes_sent != ret2)
+> +		xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64,
+> +		       s.last_sample.mptcpi_bytes_sent, ret2,
+> +		       s.last_sample.mptcpi_bytes_sent - ret2);
+> +	if (s.last_sample.mptcpi_bytes_received != ret)
+> +		xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64,
+> +		       s.last_sample.mptcpi_bytes_received, ret,
+> +		       s.last_sample.mptcpi_bytes_received - ret);
+> +	if (s.last_sample.mptcpi_bytes_acked != ret)
+> +		xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64,
+> +		       s.last_sample.mptcpi_bytes_acked, ret2,
+> +		       s.last_sample.mptcpi_bytes_acked - ret2);
 > +
-> +	slow = lock_sock_fast(sk);
-> +	info->mptcpi_csum_enabled = msk->csum_enabled;
-> +	info->mptcpi_token = msk->token;
-> +	info->mptcpi_write_seq = msk->write_seq;
-> +	info->mptcpi_retransmits = inet_csk(sk)->icsk_retransmits;
-> +	info->mptcpi_bytes_sent = msk->bytes_sent;
-> +	info->mptcpi_bytes_received = msk->bytes_received;
-> +	info->mptcpi_bytes_retrans = msk->bytes_retrans;
-> +	unlock_sock_fast(sk, slow);
->  }
->  EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
 
 Cheers,
 Matt
