@@ -1,45 +1,45 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5D518B16
-	for <mptcp@lists.linux.dev>; Wed, 17 May 2023 14:26:01 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-30935d343f7so796602f8f.1
-        for <mptcp@lists.linux.dev>; Wed, 17 May 2023 07:26:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EE318B16
+	for <mptcp@lists.linux.dev>; Wed, 17 May 2023 14:26:36 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-30786c87cdaso824487f8f.2
+        for <mptcp@lists.linux.dev>; Wed, 17 May 2023 07:26:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684333560; x=1686925560;
+        d=tessares.net; s=google; t=1684333594; x=1686925594;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ECHNb7Ido6bFBJqayWP2ESOWxemoPHCtte9BHpJTXI8=;
-        b=jp/BcuWfiBVZUZ4esgqrSEini9Jg/u+v9DPMiMqyp7kD84gVT0EOuqe1vGAEE46NJa
-         QYhi/uUYaufiL2hcnzHTZCWXceUvOv6zSdEXpCrhOG3cOlDFWPa4g3pKW2qyF05DMFSp
-         m4cB0he9Z9LSYMiO0pkpa3oCtQZaOrV3ggsIRD1It03i70gLasVVfR6MF5liUa8U6U4a
-         PvHLzoPkhReRpUaIfZjrpyX1h14l+qtDAK8GCY4XCp24ntZmwXHOrlWLOfmEHU9FVwsS
-         8dSPSORAyTnQ5ZuWVlGgyHN2sL0IagsJwA7FOvBVcqDVUJvEDfP2LNyjxLz/x91i6D3F
-         829w==
+        bh=6P9kK8o9DSUf5VKWSwRJBtmhab/49dni84ZZs5CXUM4=;
+        b=LIGc7BajH1HkXjR33W1JeY4NHOkoD3wguoLxaLAqYKhU6u6St4sxWn0unXgKCF61Jz
+         fS1ZO9cNSWVuibcoZ5T/xhkT9g2lvZdJ7UGddkzNTA22NzfL7ksxholkb8M7Zy6Tq7BT
+         MT+JmXRKa2X1FsDV9V9ekatpo6udo69FpI4xvHBvfEq+hzc4+R6f2Cg1S3hKjbUoLWbc
+         8ZrNbu/v0t7hbqx5GL4bERUJhw4qu2mzo8k/CEMqlV1cMDEbiJzzUYK3eqLQC8AvesLY
+         WXacbbA/Mg8gGHbrGNhf+FLKefLrZsezDq6pZNQOdmlDfEdSHvma7D0SJJCZYQkbDNEI
+         Kmfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684333560; x=1686925560;
+        d=1e100.net; s=20221208; t=1684333594; x=1686925594;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ECHNb7Ido6bFBJqayWP2ESOWxemoPHCtte9BHpJTXI8=;
-        b=WjYWaIMCW6nGVHwzecXt/IEpXZiCXwQKXQfG7lEkdiTrmS9+PGYEfWWpMwkSjsLjuT
-         pZqewPfxLVY0f31BMUgoSL9nN/MtZweRLJEqK+oZJOaGMC5KCIr+NZ9GTUXyxfatiYXF
-         i8QVRkRIFpytJsVmuelge1nb5ovIbPMT2q70RTlHJyhHlj0fvwxz+vMDuh2tenPAuyb2
-         p89frbKg6+dO/yO+sO3pxIbExyiMLs0aarJrGPabzed9JbqWZTCyxeZXGEYTAjtJSjIS
-         Ccxh7mQpxXXKBJmBjiXUJOWEUaWcZmQi6E6wzFXX/3yoCwZL/ypEoVTCG3sh7/HKo6yD
-         YHDw==
-X-Gm-Message-State: AC+VfDxAg/K8SGJdMwRI93skuMoh3mJ1U349UojMh4t4tt08wOmUvB/9
-	yOeThcPNrwmd3yYJYYv12OT+XQ==
-X-Google-Smtp-Source: ACHHUZ5oX5ijYiyu6SQ6hSkuGRjDoeGZ8FXmVVJ1zYg1fL7ZxAEWFSq+hR64Qf5okp4O+xBRmd9m1g==
-X-Received: by 2002:adf:ce07:0:b0:309:3b4a:cdf4 with SMTP id p7-20020adfce07000000b003093b4acdf4mr817396wrn.67.1684333559995;
-        Wed, 17 May 2023 07:25:59 -0700 (PDT)
+        bh=6P9kK8o9DSUf5VKWSwRJBtmhab/49dni84ZZs5CXUM4=;
+        b=VF3aP6swsRuuVPAN/sYURc4Y5GdQF9WYNQnPEdPXAZH6Y9Habm2mXsKf608KiNRli/
+         woYP57iJuICP2y2iKsoHef657JncaGWpAX2+ghlMkokrZXKftlVrKZB5AJsSFctT6ebc
+         SpqC0FdD/TY3qe7PoAXS+xq/nj2iGXwlV3PST/oJ/1xcBx5QuW3qgie//wnERPU1g5zd
+         zrLQVjrhjXvgR1qQytqVzCx+37MZKjJP7TwqcBdM0f0Si12rFQyiBY8N1+Xi0d3GDXnl
+         e8lHe4JKCUx7FH4QqM3fFdp1aS+9/kFz+j9uIV47Q2uR9qrhfl8d6Oa5NXwzTI51BDio
+         PhFA==
+X-Gm-Message-State: AC+VfDzPD/2hIyiwhPW1v7DZ3audLzVfaL89rE4K2XNIvxApPjW9h70y
+	mnlYj/GXuM9401L46moMat7fFw==
+X-Google-Smtp-Source: ACHHUZ5kUTIsySwKuBWR1XOar1ydABcUyE0VixiELblvmNZkNMrk2lsrjBbyRfLTzryJ8f2aZeCIww==
+X-Received: by 2002:adf:df81:0:b0:2ff:6906:7169 with SMTP id z1-20020adfdf81000000b002ff69067169mr788188wrl.68.1684333594415;
+        Wed, 17 May 2023 07:26:34 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:a66b:672f:3b69:b6da? ([2a02:578:8593:1200:a66b:672f:3b69:b6da])
-        by smtp.gmail.com with ESMTPSA id a8-20020a056000100800b00307d20546e6sm3263970wrx.27.2023.05.17.07.25.59
+        by smtp.gmail.com with ESMTPSA id w12-20020adfcd0c000000b002ffbf2213d4sm3057113wrm.75.2023.05.17.07.26.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 07:25:59 -0700 (PDT)
-Message-ID: <af3935bd-04c2-88ea-7349-3af4ade2ad3c@tessares.net>
-Date: Wed, 17 May 2023 16:25:59 +0200
+        Wed, 17 May 2023 07:26:34 -0700 (PDT)
+Message-ID: <9962f754-1d08-4982-e55e-63e25a7c365b@tessares.net>
+Date: Wed, 17 May 2023 16:26:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,73 +48,81 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-next 1/4] mptcp: add subflow unique id
+Subject: Re: [PATCH mptcp-next 3/4] mptcp: track some aggregate data counters.
 Content-Language: en-GB
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1683212362.git.pabeni@redhat.com>
- <456718f354d8db508b2db8590d9b055d49c728e9.1683212362.git.pabeni@redhat.com>
+ <df47acfb7e35b28e3eb4f591f182c383bc2076d7.1683212362.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <456718f354d8db508b2db8590d9b055d49c728e9.1683212362.git.pabeni@redhat.com>
+In-Reply-To: <df47acfb7e35b28e3eb4f591f182c383bc2076d7.1683212362.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 04/05/2023 18:39, Paolo Abeni wrote:
-> The user-space need to preperly account the data received/sent by
-> individual subflows. When additional subflows are created and/or
-> closed during the MPTCP socket lifetime, the information currently
-> exposed via MPTCP_TCPINFO are not enough: subflows are identifed only
-> by the sequential position inside the info dumps, and that will change
-> with the above mentioned events.
+On 04/05/2023 18:40, Paolo Abeni wrote:
+> Currently there are no data transfer counters accounting for all
+> the subflows used by a given MPTCP socket. The user-space can compute
+> such figures aggregating the subflow info, but that is inaccurate
+> if any subflow is closed before the MPTCP socket itself.
 > 
-> To solve the above problem, this patch introduces a new subflow identifier
-> that is unique inside the given mptcp socket scope.
-> 
-> The initial subflow get the id 1 and the other subflows get incremental
-> values at join time.
-> 
-> The identifier is exposed to user-space overloading tcpi_fackets in
-> MPTCP_TCPINFO.
-
-This smart idea solves the issue with MPTCP_TCPINFO but not with
-MPTCP_SUBFLOW_ADDRS. But I guess for the second one, we can easily add a
-new field in "struct mptcp_subflow_addrs", right? If yes, we can do that
-in a new dedicated commit, that's not blocking this series I think.
-
-We can add:
-
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/388
-
-(But not the "Closes" tag then)
-
+> Add the new counters in the MPTCP socket itself and expose them
+> via the existing diag and sockopt. While touching mptcp_diag_fill_info(),
+> acquire the relevant locks before fetching the msk data, to ensure
+> better data consistency
 > 
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  include/uapi/linux/mptcp.h | 3 +++
->  net/mptcp/protocol.c       | 3 +++
->  net/mptcp/protocol.h       | 5 ++++-
->  net/mptcp/sockopt.c        | 1 +
->  4 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-> index 32af2d278cb4..49bfbf85cb80 100644
-> --- a/include/uapi/linux/mptcp.h
-> +++ b/include/uapi/linux/mptcp.h
-> @@ -249,4 +249,7 @@ struct mptcp_subflow_addrs {
->  #define MPTCP_TCPINFO		2
->  #define MPTCP_SUBFLOW_ADDRS	3
+
+(...)
+
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index d2aa02e28917..2265387a5db2 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -888,7 +888,9 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
 >  
-> +/* MPTCP_TCPINFO overload obsoleted tcp fields with MPTCP-specific info */
-> +#define tcpi_subflow_id		tcpi_fackets
+>  void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+>  {
+> +	struct sock *sk = (struct sock *)msk;
+>  	u32 flags = 0;
+> +	bool slow;
+>  
+>  	memset(info, 0, sizeof(*info));
+>  
+> @@ -914,11 +916,21 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+>  	if (READ_ONCE(msk->can_ack))
+>  		flags |= MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED;
+>  	info->mptcpi_flags = flags;
+> -	info->mptcpi_token = READ_ONCE(msk->token);
+> -	info->mptcpi_write_seq = READ_ONCE(msk->write_seq);
+> -	info->mptcpi_snd_una = READ_ONCE(msk->snd_una);
+> -	info->mptcpi_rcv_nxt = READ_ONCE(msk->ack_seq);
+> -	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
+> +	mptcp_data_lock(sk);
+> +	info->mptcpi_snd_una = msk->snd_una;
+> +	info->mptcpi_rcv_nxt = msk->ack_seq;
+> +	info->mptcpi_bytes_acked = msk->bytes_acked;
+> +	mptcp_data_unlock(sk);
 
-Should we eventually add a comment next to the declaration of
-"tcpi_fackets" in include/uapi/linux/tcp.h to say that this field is
-being used by MPTCP_TCPINFO? Or this is not needed because this is field
-is only overridden when using MPTCP_TCPINFO?
+Do you know if this could have a "bad" impact on the performances?
 
-I guess it will never be removed anyway. But could it be overridden by
-another field at some points later?
+I mean mptcp_diag_fill_info() is also used on when dumping all the
+connections via Netlink. I guess the lock_sock_fast() should be fine
+because it is also used in tcp_get_info() but what about the data lock?
+Also OK because that's a spin lock and we only copy fields?
+
+> +
+> +	slow = lock_sock_fast(sk);
+> +	info->mptcpi_csum_enabled = msk->csum_enabled;
+> +	info->mptcpi_token = msk->token;
+> +	info->mptcpi_write_seq = msk->write_seq;
+> +	info->mptcpi_retransmits = inet_csk(sk)->icsk_retransmits;
+> +	info->mptcpi_bytes_sent = msk->bytes_sent;
+> +	info->mptcpi_bytes_received = msk->bytes_received;
+> +	info->mptcpi_bytes_retrans = msk->bytes_retrans;
+> +	unlock_sock_fast(sk, slow);
+>  }
+>  EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
 
 Cheers,
 Matt
