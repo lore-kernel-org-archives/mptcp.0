@@ -1,105 +1,119 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0722864C
-	for <mptcp@lists.linux.dev>; Wed, 17 May 2023 08:41:53 +0000 (UTC)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-307d20548adso274873f8f.0
-        for <mptcp@lists.linux.dev>; Wed, 17 May 2023 01:41:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDDE33F6
+	for <mptcp@lists.linux.dev>; Wed, 17 May 2023 08:48:17 +0000 (UTC)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-3f41dceb9d1so4832225e9.1
+        for <mptcp@lists.linux.dev>; Wed, 17 May 2023 01:48:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684312912; x=1686904912;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w/dLZEjNnFSckOwInJ/EgLYYrSrsCG8FW1iQOcUfGs8=;
-        b=HjsPesSgDQG7X9CKYxKn8MyYoD0XS+phsOYDLUd55DSA+hGlXH2WTyuAUoKc7McIbK
-         D/kFyF+v0jFR+yHZtLTnw4MBMEOqOncu+aoFUBHN176NRWXg5OcHydL/Jpptf6xpgW5h
-         8SzgtPfVA82JBpveXYTkC+ZR6FL/2Iw8oDipAdz/1aZxVyd79wVuuXKgE91w4pFy5iOO
-         C9F+yFNRyyqQe9pvRUFSLTCxIiMqBzrKgfFJ8Uepvywe0VdfwAXGMNEJwO1M6R5nAeCE
-         WMtbv0DnZF7fUoPEcinWgmBtmretHpTjaXJNragRKj8auEz9M5TTwLcb0VvmUs+AACq/
-         ElIg==
+        d=gmail.com; s=20221208; t=1684313296; x=1686905296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0ytoBHADfA+Ijt+15woYCdCOcVO1wHv/9fVT5N8L6m8=;
+        b=QtVEAjGnhNhR4wvDrVS9gOESfZAdbxHSTwW4TnKjWEm+6dF07to4e/GNW5z50G8aA2
+         xnne+JhEB0jZ3MNbY16tmnhlEZ1LsfQQ9TMUp4+XVD20eIZFPzQN505pa8/LmazcchzC
+         y1hbfqSznLGo3cdbhk0dnrLVU1DHiOhZIh6D8E2Hr/JeECA+ahKQJtykjCqPYinXOJwb
+         hOFKQoX/HDGbhz+GYkz7wuPTCGhmNlI5q+6NI/L/SoFojYIQQzsg5AwSB2jMKf/8Ec8H
+         KeVWFo4l+/rnKIKR29j2Y3wQ8chk/KRzOCUVEVrll4AuGAR5pg1vDxVGOcpvINuKJT/H
+         0juQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684312912; x=1686904912;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w/dLZEjNnFSckOwInJ/EgLYYrSrsCG8FW1iQOcUfGs8=;
-        b=e2UETiz8/sUGiqcYD0+wwR8wk5+WftJHefEwkEMfOOXz2gyvGSWEia5w6WkPVdyNMO
-         SYg5uhlxi/iQ4z8SSSnaKz7yzhF0hAkcoAWT5vSTj2Rbw2jN85AzVaf/nY6aIaGjPPYo
-         5fxtG70CgaQU3Md4tcN1aFidbSEJsD4yhiuSqVNj74M8ObhJTilJmEVpUtlP1owIJJ6X
-         U9nvvM8VmR/Rx913juvOXPysdIYPymrU+GUUrBhvDjf44XIyKnrByUUD2JKo+MEpGQws
-         HJjAR1gSLcnPDfquR0NSfRObu+sK10yuOcUUSt0mz9vxVtzteocVinrlSjJ3sGHZaNq+
-         J+AQ==
-X-Gm-Message-State: AC+VfDwZOZ5a8tj3wdDpngUqXx3sGBCe2MCS8uVzhL/7vCAbNWhujMIX
-	gLP6rvsPVgwUkYvg2uuLb4jNvg==
-X-Google-Smtp-Source: ACHHUZ7SXzpvf4lo+yPgSTu5hCUb+C7/i0qR/znqz2jpZo1l4/B3SdUd946Jr2kyVdmDm8Dmov4FlQ==
-X-Received: by 2002:adf:e987:0:b0:306:64b7:5413 with SMTP id h7-20020adfe987000000b0030664b75413mr28670859wrm.71.1684312912004;
-        Wed, 17 May 2023 01:41:52 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:a66b:672f:3b69:b6da? ([2a02:578:8593:1200:a66b:672f:3b69:b6da])
-        by smtp.gmail.com with ESMTPSA id r14-20020adfe68e000000b00306344eaebfsm2034669wrm.28.2023.05.17.01.41.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 01:41:51 -0700 (PDT)
-Message-ID: <74e8f7c4-15bd-7404-287d-f9cd6dccbba6@tessares.net>
-Date: Wed, 17 May 2023 10:41:50 +0200
+        d=1e100.net; s=20221208; t=1684313296; x=1686905296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0ytoBHADfA+Ijt+15woYCdCOcVO1wHv/9fVT5N8L6m8=;
+        b=Y3xEB59ySx8HEtvyLkzriXMCgC3kIw/BIMKkZ1Iin9hOQJKRz7Kn/ChX5EBi3RvwKP
+         Pc6f2eCFUQn9cexlASqRBj1S75WXChJoiONxv2qDWuDA9Hqq6OT3s3Z/yuXTPEsfqVl3
+         bo6vDlVn1buWqRNhka7rtbkCjs9+RNRCtkKjbQQ8b/eCrtGJzoLHpe7kf9y23d8KbsPT
+         eqEXtMIULPRCO8JIBlA6MB5gVQDE9y+t2eZtVRI2CUZbU8jA93R6gXwljtExoMzDWVjj
+         GAJgwuePFjKDHsi1D93OWi0Jb4hf/Yqtl1kQDUeElnT04eTRMkBYIkniWwmMxscnHYJv
+         Pdbg==
+X-Gm-Message-State: AC+VfDzq8UrBUQTXudhvwx+g8M55IgTe+68Sk66yWYTxiL8kbgP96vjd
+	RIvH5Ii8FoKHOyqUs2T+enrMhbOMJVUsrsco43Q=
+X-Google-Smtp-Source: ACHHUZ5JTXcXzETy13QnyXyOBkDbHbAyQgGkCAllDJVOt1Gv9vcPEt2WckERL+iOa+5r6WhH4bADTVi8XGgDfuiFwfA=
+X-Received: by 2002:a1c:f703:0:b0:3f1:979f:a733 with SMTP id
+ v3-20020a1cf703000000b003f1979fa733mr29629505wmh.31.1684313295843; Wed, 17
+ May 2023 01:48:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH mptcp-next 1/4] Squash to "selftests/bpf: Add bpf_first
- test"
-Content-Language: en-GB
-To: Geliang Tang <geliangtang@gmail.com>
-Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1684297911.git.geliang.tang@suse.com>
- <5ddd82f8a26cd37805ad9fdc23d16d936ab71813.1684297911.git.geliang.tang@suse.com>
- <4aa90a22-c099-b405-7ec7-da492b282fc8@tessares.net>
- <CA+WQbwugQkGJS5fQ-bgb833M3Gt21fDzmJbi-Tu=Zx5VPeuRRw@mail.gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <CA+WQbwugQkGJS5fQ-bgb833M3Gt21fDzmJbi-Tu=Zx5VPeuRRw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <a7aff063bf87d2d86207cb8fe7394251aaffd93c.1684312574.git.geliang.tang@suse.com>
+ <29ad15cb28f6a38244d401ed80bb17e289aaf5fc.1684312673.git.geliang.tang@suse.com>
+In-Reply-To: <29ad15cb28f6a38244d401ed80bb17e289aaf5fc.1684312673.git.geliang.tang@suse.com>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Wed, 17 May 2023 16:48:08 +0800
+Message-ID: <CA+WQbwu_ckQkS3jMAu3okvq+_JL_zrT6SqRt1WNJ_A-x3FLrww@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v2] Squash to "selftests/bpf: Add bpf_red test"
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+Geliang Tang <geliang.tang@suse.com> =E4=BA=8E2023=E5=B9=B45=E6=9C=8817=E6=
+=97=A5=E5=91=A8=E4=B8=89 16:41=E5=86=99=E9=81=93=EF=BC=9A
+>
+> From: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-On 17/05/2023 10:25, Geliang Tang wrote:
-> Matthieu Baerts <matthieu.baerts@tessares.net> 于2023年5月17日周三 15:59写道：
->> On 17/05/2023 06:32, Geliang Tang wrote:
+Sorry, my bad. This line shouldn't be here:)
 
-(...)
-
->>> -static void sched_cleanup(void)
->>> +static void sched_cleanup(struct nstoken *nstoken)
->>>  {
->>> -     system("sysctl -qw net.mptcp.scheduler=default");
->>> -     system("ip mptcp endpoint flush");
->>> -     system("ip link del veth1");
->>> +     char cmd[64];
->>> +
->>> +     snprintf(cmd, sizeof(cmd), "ip netns exec %s sysctl -qw net.mptcp.scheduler=default",
->>> +              NS_TEST);
->>> +     system(cmd);
->>> +     snprintf(cmd, sizeof(cmd), "ip -net %s mptcp endpoint flush", NS_TEST);
->>> +     system(cmd);
->>> +     snprintf(cmd, sizeof(cmd), "ip -net %s link del veth1", NS_TEST);
->>> +     system(cmd);
->>> +
->>> +     if (nstoken)
->>> +             close_netns(nstoken);
->>> +     SYS_NOFAIL("ip netns del " NS_TEST " &> /dev/null");
->>
->> Is it not enough to just destroy the netns? So just the two last steps.
-> 
-> Sorry, I didn't get this. Could you please explain more about it. Thanks.
-
-If you delete the netns, I guess that will remove everything associated
-to it, no? So no need to change the sysctl, flush the endpoint and
-remove the veth, no?
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+>
+> Run mptcp sched test in a dedicated netns.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  tools/testing/selftests/bpf/prog_tests/mptcp.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testi=
+ng/selftests/bpf/prog_tests/mptcp.c
+> index f0f9aa517ec1..83af690facef 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> @@ -376,7 +376,7 @@ static void test_rr(char *ns)
+>         mptcp_bpf_rr__destroy(rr_skel);
+>  }
+>
+> -static void test_red(void)
+> +static void test_red(char *ns)
+>  {
+>         struct mptcp_bpf_red *red_skel;
+>         int server_fd, client_fd;
+> @@ -392,17 +392,17 @@ static void test_red(void)
+>                 return;
+>         }
+>
+> -       sched_init("subflow", "bpf_red");
+> +       sched_init(ns, "subflow", "bpf_red");
+>         server_fd =3D start_mptcp_server(AF_INET, ADDR_1, 0, 0);
+>         client_fd =3D connect_to_fd(server_fd, 0);
+>
+>         send_data(server_fd, client_fd);
+> -       ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr 1");
+> -       ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr 2");
+> +       ASSERT_OK(has_bytes_sent(ns, ADDR_1), "has_bytes_sent addr 1");
+> +       ASSERT_OK(has_bytes_sent(ns, ADDR_2), "has_bytes_sent addr 2");
+>
+>         close(client_fd);
+>         close(server_fd);
+> -       sched_cleanup();
+> +       sched_cleanup(ns);
+>         bpf_link__destroy(link);
+>         mptcp_bpf_red__destroy(red_skel);
+>  }
+> @@ -430,7 +430,7 @@ void test_mptcp(void)
+>         if (test__start_subtest("rr"))
+>                 test_rr(NS_TEST);
+>         if (test__start_subtest("red"))
+> -               test_red();
+> +               test_red(NS_TEST);
+>
+>         if (nstoken)
+>                 close_netns(nstoken);
+> --
+> 2.35.3
+>
+>
