@@ -1,39 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A0B24E84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3A324E86
 	for <mptcp@lists.linux.dev>; Thu, 18 May 2023 16:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1684429166;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KFGJuxqD8VGO+kTq8gpWuYToWRI7nZ42EQL2yG0TTsk=;
-	b=J+qc+ubwu+GsaKRcwUeILxpPG0LaJ0MlZslbkTzLs5R0WJLFBWHiq4tsP5f6QI9bpWeCpo
-	dAhu5uRgQQ8tOkWy362ltWIcYJv47KqIFm9lVkNlKz1tvI1yYVFn/S1/pH5a0PhnV4V6XZ
-	dWpPoWNVAmh3BgXcJ0R3pYy0vK34gEQ=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qhIn9dkFFUgQzUwwWummtYxx71QHieYgSq+/f9k/L8I=;
+	b=VoD6stOT84y/BcG2VJUqLrjvBG0xhkGOd4Qc8gTaxeEsBenD4gX0CfqdUbjw0cLIo5ZCGR
+	bwK5awfl1CkYx37Vus7Gdvbet194DpH3q+Q5GG7mvAOsF7ES1B52bxIjqihD7W3yexvF12
+	w4zSP8zDej1voiXdtQvuR/8TmLYyvmE=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-487-ESnLC7YGOLCvBjqS1bpZ_A-1; Thu, 18 May 2023 12:59:24 -0400
-X-MC-Unique: ESnLC7YGOLCvBjqS1bpZ_A-1
+ us-mta-221-BA5N54e_PxurxIa7R929jQ-1; Thu, 18 May 2023 12:59:23 -0400
+X-MC-Unique: BA5N54e_PxurxIa7R929jQ-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 954E6101A552;
-	Thu, 18 May 2023 16:59:24 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DE9CF85A5A3;
+	Thu, 18 May 2023 16:59:22 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.192.55])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0AEFE492B01;
-	Thu, 18 May 2023 16:59:23 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4F729492B01;
+	Thu, 18 May 2023 16:59:22 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Christoph Paasch <cpaasch@apple.com>
-Subject: [PATCH v2 mptcp-net 2/5] mptcp: consolidate passive msk socket initialization
-Date: Thu, 18 May 2023 18:59:11 +0200
-Message-Id: <5c6c015e49545ca18e2751c5316e991ccf35d0b5.1684427027.git.pabeni@redhat.com>
-In-Reply-To: <cover.1684427027.git.pabeni@redhat.com>
-References: <cover.1684427027.git.pabeni@redhat.com>
+Subject: [PATCH v2 mptcp-net 0/5] mptcp: a bunch of data race fixes
+Date: Thu, 18 May 2023 18:59:09 +0200
+Message-Id: <cover.1684427027.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,164 +43,32 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-When the msk socket is cloned at MPC handshake time, a few
-fields are initializated in a racy way outside mptcp_sk_clone()
-and the msk socket lock.
+The patch 1 && 4 are direct response to recently reported KCSAN
+splat.
 
-The above is due historical reasons: before commit a88d0092b24b
-("mptcp: simplify subflow_syn_recv_sock()") as the first subflow socket
-carrying all the needed date was not available yet at msk creation
-time
+The patch 2 && 3 are just by code inspection of related code path.
+Patch 3/5 is there mostly to make the next one simple, even if the race
+mentioned in such patch should be real (but very tiny, if possible at
+all).
 
-We can now refactor the code moving the missing initialization bit
-under the socket lock, removing the init race and avoiding some
-code duplication.
+This iteration addresses a compile warning in patch 2/5 reported by
+kbuild bot.
 
-This will also simplify the next patch, as all msk->first write
-access are now under the msk socket lock.
+Patch 5/5 is new in this round, fixes an unrelated issue found by code
+inspection. I should have posted separatelly
 
-Fixes: 0397c6d85f9c ("mptcp: keep unaccepted MPC subflow into join list")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-v1 -> v2:
- - make mptcp_copy_inaddrs() static, fixing a W=1 compiler warning
----
- net/mptcp/protocol.c | 35 ++++++++++++++++++++++++++++-------
- net/mptcp/protocol.h |  8 ++++----
- net/mptcp/subflow.c  | 28 +---------------------------
- 3 files changed, 33 insertions(+), 38 deletions(-)
+Paolo Abeni (5):
+  mptcp: add annotations around msk->subflow accesses
+  mptcp: consolidate passive msk socket initialization
+  mptcp: fix data race around msk->first access
+  mptcp: add annotations around sk->sk_shutdown accesses
+  mptcp: fix active subflow finalization.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b96b1191763a..38709c332367 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3086,7 +3086,7 @@ static void mptcp_close(struct sock *sk, long timeout)
- 	sock_put(sk);
- }
- 
--void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
-+static void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk)
- {
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	const struct ipv6_pinfo *ssk6 = inet6_sk(ssk);
-@@ -3163,9 +3163,10 @@ static struct ipv6_pinfo *mptcp_inet6_sk(const struct sock *sk)
- }
- #endif
- 
--struct sock *mptcp_sk_clone(const struct sock *sk,
--			    const struct mptcp_options_received *mp_opt,
--			    struct request_sock *req)
-+struct sock *mptcp_sk_clone_init(const struct sock *sk,
-+				 const struct mptcp_options_received *mp_opt,
-+				 struct sock *ssk,
-+				 struct request_sock *req)
- {
- 	struct mptcp_subflow_request_sock *subflow_req = mptcp_subflow_rsk(req);
- 	struct sock *nsk = sk_clone_lock(sk, GFP_ATOMIC);
-@@ -3198,10 +3199,30 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
- 	mptcp_init_sched(msk, mptcp_sk(sk)->sched);
- 
- 	sock_reset_flag(nsk, SOCK_RCU_FREE);
--	/* will be fully established after successful MPC subflow creation */
--	inet_sk_state_store(nsk, TCP_SYN_RECV);
--
- 	security_inet_csk_clone(nsk, req);
-+
-+	/* this can't race with mptcp_close(), as the msk is
-+	 * not yet exposted to user-space
-+	 */
-+	inet_sk_state_store(nsk, TCP_ESTABLISHED);
-+
-+	/* The msk maintain a referece to each subflow in the connections list */
-+	WRITE_ONCE(msk->first, ssk);
-+	list_add(&mptcp_subflow_ctx(ssk)->node, &msk->conn_list);
-+	sock_hold(ssk);
-+
-+	/* new mpc subflow takes ownership of the newly
-+	 * created mptcp socket
-+	 */
-+	mptcp_token_accept(subflow_req, msk);
-+
-+	/* set msk addresses early to ensure mptcp_pm_get_local_id()
-+	 * uses the correct data
-+	 */
-+	mptcp_copy_inaddrs(nsk, ssk);
-+	mptcp_propagate_sndbuf(nsk, ssk);
-+
-+	mptcp_rcv_space_init(msk, ssk);
- 	bh_unlock_sock(nsk);
- 
- 	/* note: the newly allocated socket refcount is 2 now */
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 552d7b06aaa9..de94c01746dc 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -618,7 +618,6 @@ int mptcp_allow_join_id0(const struct net *net);
- unsigned int mptcp_stale_loss_cnt(const struct net *net);
- int mptcp_get_pm_type(const struct net *net);
- const char *mptcp_get_scheduler(const struct net *net);
--void mptcp_copy_inaddrs(struct sock *msk, const struct sock *ssk);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     const struct mptcp_options_received *mp_opt);
- bool __mptcp_retransmit_pending_data(struct sock *sk);
-@@ -702,9 +701,10 @@ void __init mptcp_proto_init(void);
- int __init mptcp_proto_v6_init(void);
- #endif
- 
--struct sock *mptcp_sk_clone(const struct sock *sk,
--			    const struct mptcp_options_received *mp_opt,
--			    struct request_sock *req);
-+struct sock *mptcp_sk_clone_init(const struct sock *sk,
-+				 const struct mptcp_options_received *mp_opt,
-+				 struct sock *ssk,
-+				 struct request_sock *req);
- void mptcp_get_options(const struct sk_buff *skb,
- 		       struct mptcp_options_received *mp_opt);
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 76952cf74fc0..63ac4dc621d4 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -815,38 +815,12 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 		ctx->setsockopt_seq = listener->setsockopt_seq;
- 
- 		if (ctx->mp_capable) {
--			ctx->conn = mptcp_sk_clone(listener->conn, &mp_opt, req);
-+			ctx->conn = mptcp_sk_clone_init(listener->conn, &mp_opt, child, req);
- 			if (!ctx->conn)
- 				goto fallback;
- 
- 			owner = mptcp_sk(ctx->conn);
--
--			/* this can't race with mptcp_close(), as the msk is
--			 * not yet exposted to user-space
--			 */
--			inet_sk_state_store(ctx->conn, TCP_ESTABLISHED);
--
--			/* record the newly created socket as the first msk
--			 * subflow, but don't link it yet into conn_list
--			 */
--			WRITE_ONCE(owner->first, child);
--
--			/* new mpc subflow takes ownership of the newly
--			 * created mptcp socket
--			 */
--			owner->setsockopt_seq = ctx->setsockopt_seq;
- 			mptcp_pm_new_connection(owner, child, 1);
--			mptcp_token_accept(subflow_req, owner);
--
--			/* set msk addresses early to ensure mptcp_pm_get_local_id()
--			 * uses the correct data
--			 */
--			mptcp_copy_inaddrs(ctx->conn, child);
--			mptcp_propagate_sndbuf(ctx->conn, child);
--
--			mptcp_rcv_space_init(owner, child);
--			list_add(&ctx->node, &owner->conn_list);
--			sock_hold(child);
- 
- 			/* with OoO packets we can reach here without ingress
- 			 * mpc option
+ net/mptcp/protocol.c | 111 +++++++++++++++++++++++++++----------------
+ net/mptcp/protocol.h |  14 ++++--
+ net/mptcp/subflow.c  |  28 +----------
+ 3 files changed, 81 insertions(+), 72 deletions(-)
+
 -- 
 2.40.1
 
