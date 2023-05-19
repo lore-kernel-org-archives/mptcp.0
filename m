@@ -1,127 +1,120 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8770D8C16
-	for <mptcp@lists.linux.dev>; Fri, 19 May 2023 12:04:33 +0000 (UTC)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-62382464ca3so13506016d6.1
-        for <mptcp@lists.linux.dev>; Fri, 19 May 2023 05:04:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684497872; x=1687089872;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xXTQCRIzTAW5E0IrZXpEY1NrMsXlUmAiJUSHSMZICog=;
-        b=IWQ3bVnUtL2zqD+Qrz0mvgq2dIUjJURNrEhGY0t13EjL/B5KCVnTxU8sw1CTm99u+0
-         DLmmffqZI/wMwJX3NEa8A3b20emnwQUHxBmsRMyYmjCcZDDDxpmrCV2RbbAaeodmUakR
-         57KTmORXLS63ni8QtPGzhVd/aXrAUTHELzAV8i4uxgaEyaBTLlCLRQZTZQaCTz5OPIjn
-         DWFVOiwlH+pmRVmlO4Ef1t+7M+2Z0QlTXS7xdG1XwW0Hdm6LLWnuOsnARYKQtPRnndc7
-         NosoiqI78BSLiB9crQXXVcMmwEOgNw2WNNDRy0RT/FqFTcFmWDbJBSQ7u5liCEiI7ccI
-         2a3Q==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5442CDDB1
+	for <mptcp@lists.linux.dev>; Fri, 19 May 2023 13:59:01 +0000 (UTC)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-3f450815d02so21107605e9.0
+        for <mptcp@lists.linux.dev>; Fri, 19 May 2023 06:59:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684497872; x=1687089872;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xXTQCRIzTAW5E0IrZXpEY1NrMsXlUmAiJUSHSMZICog=;
-        b=MRnifuVbUnlIN5oegiqYbOZMfd7BWKw+vO6j8ABwZeO0Fo7rXkodjASCUqAYnNjc4j
-         rKOYBUBUdoQDFN+xvnrqkWP3VHX0rEM+NnZueKeXr8lbJVJE6quNzHCFdD9c6h6Hheui
-         /WyjMdDmEKE8MBBFzvDWbK8gj67+hoHFSODDRqIbX9DljeFhMbmj4diYO+qIDr6JmuQ3
-         l7kzZZnQcUU5oaTxbbgB3D6qIYvixOei3YkEQklmdCiet2EagQmd5WacE7OICkaEgVpP
-         O8VNi3BfnjH45+WU0dloONO/4nBr2eto+kQyoAcxzkg3HD842VIKQu+NCRgwjUla+1r1
-         4MCg==
-X-Gm-Message-State: AC+VfDzoyhxqfcWL8wtHkcQM/xyIFW5Snyw5JMgoq5n3Ci0ZkXwqWBqd
-	k/L0DPGz9rYKrNNqEwYD1A==
-X-Google-Smtp-Source: ACHHUZ5nXpAoWMJMg6DhYZCYknTmyV/3JQZ1Y01OC1d5e6n1O6hm/mHaD7y4SjxXTqGfnLbHFjLBbg==
-X-Received: by 2002:a05:6214:3016:b0:621:700b:f9e9 with SMTP id ke22-20020a056214301600b00621700bf9e9mr3830382qvb.3.1684497872274;
-        Fri, 19 May 2023 05:04:32 -0700 (PDT)
-Received: from [127.0.0.1] ([52.226.113.40])
-        by smtp.gmail.com with ESMTPSA id pp22-20020a056214139600b0062106d10b9bsm1257230qvb.82.2023.05.19.05.04.31
+        d=1e100.net; s=20221208; t=1684504739; x=1687096739;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lNNTSmDF5hoxZc6Cm4zVAKpPl3Q28uUZPYvZrQqvG48=;
+        b=Ai73asgKAF5K0SomSZdup1kahk7tqLEFx2xTB+79/DJGTzdv8nAK66PbAMK7mEuDa0
+         RkiKz5OTpH5BkqJ/VLi+iznWcDZSaoUPxpoM2jyMClGEY09jDymQnT9L2ChelOThrT/3
+         UWrkej7Afo9bL42LoYSBxkmGuc7wIbbop8UnEqeMz+MWX6r2iFoh9TGQH5reXP6BW5/Q
+         +tiiptBSplBSDfIeeDm0RRtt9cuVGuS5E/bwQM19An9LlPnB+d7P5JGco0wnrDXBPxce
+         t+9rWVEwyoixfFIdXKyGGdMdcd+0grYByghivBNWL/ZPBGMOFdWXuUscoX/O2BcgyuvD
+         QZZA==
+X-Gm-Message-State: AC+VfDxz2HjBZG7bGMuUNEbiLYjXjW7tdUrgm+W9IYiid3yynqup+dCB
+	PU2GRjb7qe2nC15fK5ypraQ=
+X-Google-Smtp-Source: ACHHUZ7uK3Bd+wLiFS/lL5Nx8KB6UDUuDPZ+UyAMBBlZ+UeI7TsvR0YLV5Vw5rLK210PhKfDeTlVhw==
+X-Received: by 2002:a05:600c:2150:b0:3f5:d0ba:3c1a with SMTP id v16-20020a05600c215000b003f5d0ba3c1amr1323232wml.4.1684504739239;
+        Fri, 19 May 2023 06:58:59 -0700 (PDT)
+Received: from localhost (fwdproxy-cln-004.fbsv.net. [2a03:2880:31ff:4::face:b00c])
+        by smtp.gmail.com with ESMTPSA id e11-20020a05600c218b00b003f09d7b6e20sm2542918wme.2.2023.05.19.06.58.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 05:04:31 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <b2f6b47d2d9d23bf00211ed098c2f0d3227175cf.1684362296.git.geliang.tang@suse.com>
-References:
- <b2f6b47d2d9d23bf00211ed098c2f0d3227175cf.1684362296.git.geliang.tang@suse.com>
-Subject: =?UTF-8?Q?Re=3A_Squash_to_=22selftests/bpf=3A_Add_?=
- =?UTF-8?Q?bpf=5Fred_test=22=3A_Tests_Results?=
-Message-ID: <1be7ff2f-0b30-3a18-0b68-2d16c5f599c1@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 19 May 2023 12:04:31 +0000
+        Fri, 19 May 2023 06:58:58 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: axboe@kernel.dk,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	willemdebruijn.kernel@gmail.com,
+	courmisch@gmail.com,
+	nhorman@tuxdriver.com
+Cc: asml.silence@gmail.com,
+	alex.aring@gmail.com,
+	dccp@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	matthieu.baerts@tessares.net,
+	marcelo.leitner@gmail.com,
+	linux-wpan@vger.kernel.org,
+	linux-sctp@vger.kernel.org,
+	leit@fb.com,
+	David.Laight@ACULAB.COM,
+	dsahern@kernel.org
+Subject: [PATCH 0/1] net: ioctl: Use kernel buffer on proto ioctl callbacks
+Date: Fri, 19 May 2023 06:58:20 -0700
+Message-Id: <20230519135821.922326-1-leitao@debian.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+With the implementation of network ioctl on io_uring[1], Willem
+suggested[2] that the "struct proto" ioctls functions should be reused,
+instead of duplicating the code.
+For that, the ioctl callbacks need to be more flexible, and avoid
+operating on userspace buffers (doing get/put_user()) directly on the
+callbacks. This patch adds this flexibility, so, the io_uring plumbing
+becomes more clean, avoiding duplicating code. This may also benefit
+BPF.
 
-Thank you for your modifications, that's great!
+For that, a wrapper is created, which will copy from/to userspace, and
+the ioctl callback will rely on the wrapper to do userspace memory
+copies.
 
-Our CI did some validations and here is its report:
+I've tested this patch in three different ways:
+1) Created a simple testcase for TCP/UDP [3]
+2) Run relevant LTP tests, such as: sockioctl, setsockopt, bind, sendto,
+				    fanout, ns-udpsender, etc
+3) Run basics network selftests
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_fastopen =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6168255878922240
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6168255878922240/su=
-mmary/summary.txt
+PS: There are some `strcmp()` in the `sock_skprot_ioctl()`, that I was
+not able to find a better way to deal with it. Any feedback is
+appreciated.
 
-- {"code":404,"message":
-  - "Can't find artifacts =
-containing file conclusion.txt"}:
-  - Task: https://cirrus-ci.=
-com/task/6731205832343552
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6731205832343552/summary/summary.txt
+[1] Link: https://lore.kernel.org/all/GV1P193MB200533CC9A694C4066F4807CEA6F9@GV1P193MB2005.EURP193.PROD.OUTLOOK.COM/
+[2] Link: https://lore.kernel.org/all/6436c01979c9b_163b6294b4@willemb.c.googlers.com.notmuch/
+[3] Link: https://github.com/leitao/liburing/blob/master/test/ioctl.c
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5605305925500928
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5605305925500928/su=
-mmary/summary.txt
+Breno Leitao (1):
+  net: ioctl: Use kernel memory on protocol ioctl callbacks
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4532182576791552
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4532182576791552/summary/summary.txt
+ include/linux/mroute.h  |   4 +-
+ include/linux/mroute6.h |   4 +-
+ include/net/sock.h      |   4 +-
+ include/net/tcp.h       |   2 +-
+ include/net/udp.h       |   2 +-
+ net/core/sock.c         | 107 ++++++++++++++++++++++++++++++++++++++++
+ net/dccp/dccp.h         |   2 +-
+ net/dccp/proto.c        |  12 ++---
+ net/ieee802154/socket.c |  15 +++---
+ net/ipv4/af_inet.c      |   2 +-
+ net/ipv4/ipmr.c         |  41 +++++++--------
+ net/ipv4/raw.c          |  16 +++---
+ net/ipv4/tcp.c          |   5 +-
+ net/ipv4/udp.c          |  12 ++---
+ net/ipv6/af_inet6.c     |   2 +-
+ net/ipv6/ip6mr.c        |  43 +++++++---------
+ net/ipv6/raw.c          |  16 +++---
+ net/l2tp/l2tp_core.h    |   2 +-
+ net/l2tp/l2tp_ip.c      |   9 ++--
+ net/mptcp/protocol.c    |  11 ++---
+ net/phonet/datagram.c   |  11 ++---
+ net/phonet/pep.c        |  11 ++---
+ net/phonet/socket.c     |   2 +-
+ net/sctp/socket.c       |   8 +--
+ 24 files changed, 214 insertions(+), 129 deletions(-)
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/abe0cca432fc
+-- 
+2.34.1
 
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
