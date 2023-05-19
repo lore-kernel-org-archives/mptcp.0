@@ -1,86 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500E365F
-	for <mptcp@lists.linux.dev>; Fri, 19 May 2023 07:03:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684479820;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AO6FrKETDxtjwZlPW7uOFlquyK0V4HPBSRGqDWXQSkQ=;
-	b=Fdg6V7scPCmvJLXjwPieFzWdiF/5VRX/ZRUlxfPjITbowu4/qmHicONQq/Zwf/wW5IKiNy
-	K0vGPiAlCLESX16l9TTgFqEaomKGhIcmw9XN1NWRUYjQtpl9lZ9CyZNPtR1fjufYNTKbn7
-	7n2AgfQbHYBaXKbMBSmXzAoVREMRj8s=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-235-VFgxrK3_NWqfJvu2juTSxw-1; Fri, 19 May 2023 03:03:39 -0400
-X-MC-Unique: VFgxrK3_NWqfJvu2juTSxw-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-623a2273194so185896d6.1
-        for <mptcp@lists.linux.dev>; Fri, 19 May 2023 00:03:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4E82105
+	for <mptcp@lists.linux.dev>; Fri, 19 May 2023 08:03:46 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-96f53c06babso170029966b.3
+        for <mptcp@lists.linux.dev>; Fri, 19 May 2023 01:03:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1684483424; x=1687075424;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5Kq1KGM75ZTw21yQPIXRnjp+jexS5DH5FR0ZKnh4DmI=;
+        b=XWboN4PjdFmvnMsfDdyAbXaQiuCB9PFa7ZRKAws1bWExP8Ed7taKDG/JlQHyk4KfRE
+         SaKR4jA/lp72KMREOVO7TL8GS9Q3eMP8d5llXgxU1o2vPyy8InnX2BRuav9cm8gAJbJ0
+         Zb3pPuBKebNFH9AKWKCCxDUbmwgbMzZ3xOItCxeImZfV5KMn5uoIaa9xy6xVx1bExo3i
+         v3gwM8VSMo8Xa9eQ+fvHjFBDnzZSnh+b/SOhj9lmZMMjjMWw5oNP4OsD91LRNemATqQ+
+         LbRCOgSsXifssZryV4faMVYcOkW/p1c0DZW0QK2Csmk8aEXUu45taOwd82kqqRIxcMz2
+         hPgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684479818; x=1687071818;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=AO6FrKETDxtjwZlPW7uOFlquyK0V4HPBSRGqDWXQSkQ=;
-        b=lOVM8kZ2xTkKbH46ylmnmK/wcj4Nr5RGbWqlcrGJuFMimuAvWKB9eI3+Nrlh91pOZE
-         jXDX9PTfpAR5fgK9fE1s9v7e9rrn54ESVH65ps2qDQ6Eg/Sh5GGasBycS33coq4I2+2J
-         3BzlRi+clyyi7QYAzZ0cwBO3ny1K99h+m92lO5cXMuoXoViKTeN8B0Djy6v91hxKNO9/
-         vLdfU8Z+S7dWJrvNy0b40Hokdfx2tAzUGq3zhJJWqZmnK/r53iLvHPyvc6e07+DHElVX
-         Io2I03YYZlgjtinExu4RD503Z1Jn8J/GVEDdMCqqebp7sKes79uLtXNEEfAhNq7RO3WQ
-         e4yQ==
-X-Gm-Message-State: AC+VfDxU5F34kZ0tvq0egGFNw/p19FSUlh0dhEYE+efGK21c3IfxonF5
-	43Uk2ERpQyy7uggjszdbxgLgpzalB8VL/C79oJEytzXA1lqMppZF4p0R2XuRiInO1O9TmFg5BhT
-	UISrzzu+QdhGBZwdt2quDg9jG6tmOm3HUdAVo2UiUe3kt38Dijs557UZ3KiPAPL85I9JWpGkf
-X-Received: by 2002:a05:622a:1807:b0:3f4:e9bc:22e with SMTP id t7-20020a05622a180700b003f4e9bc022emr1827828qtc.6.1684479818367;
-        Fri, 19 May 2023 00:03:38 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6BUCiCzvfH/myFG2WFBflK6Gx/teuqCEhH/D9Vu6ZsviyVitCxU40SBkwkkR9/nJxiMj21wQ==
-X-Received: by 2002:a05:622a:1807:b0:3f4:e9bc:22e with SMTP id t7-20020a05622a180700b003f4e9bc022emr1827789qtc.6.1684479817890;
-        Fri, 19 May 2023 00:03:37 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-235-104.dyn.eolo.it. [146.241.235.104])
-        by smtp.gmail.com with ESMTPSA id t16-20020ac87610000000b003f4c8d3716asm1076035qtq.93.2023.05.19.00.03.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 00:03:37 -0700 (PDT)
-Message-ID: <d01c8817dd76a6d427a72a752eafb2027969fd38.camel@redhat.com>
-Subject: Re: mptcp: fix active subflow finalization.: Build Failure
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Fri, 19 May 2023 09:03:35 +0200
-In-Reply-To: <9cdc6ccf-3529-8fad-5a49-4c1fd8d6feeb@gmail.com>
-References: <41d7df9d8669b5fbfe70cd5551efc9245007ae6c.1684427027.git.pabeni@redhat.com>
-	 <9cdc6ccf-3529-8fad-5a49-4c1fd8d6feeb@gmail.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+        d=1e100.net; s=20221208; t=1684483424; x=1687075424;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Kq1KGM75ZTw21yQPIXRnjp+jexS5DH5FR0ZKnh4DmI=;
+        b=DyTP76HY47wuUCn/Vrj0O2qJ7Iuj3n60csbVnkMrgDt23g5Kebeig9MWUBwtNwCFmY
+         CJoUQbdy5019FiuF5rlcZVzS8JVKkMPg+L3tM0ngkuwozz64e0xvDPbxONCabm3+j0dY
+         TNltTkWKpYZ8yf6YrgaLXmYLJhwaKENNJGIPuRixWjz0BrJwVvdU5/P3OdJcawP58ZO/
+         LdSyKDOpl8abmjiagOo4TO2f8kIgbOt2nprgx7wn3Zqoo4onanAa7MiGsugZumzDeRFh
+         sOl+bnNAPcS5+sGp9EUXsacwQd8HAoYSXhVCnmc6xe3oUYiRwRGaJu5AzKU/PrHqH4oy
+         WyfQ==
+X-Gm-Message-State: AC+VfDxMFr0xaXz7S376+0z0Nk8OvgtE1S5pFC8FH7FpPRGrt7g6+hFO
+	XAhK7earMM5Sh8lFYHZc1Vbngw==
+X-Google-Smtp-Source: ACHHUZ4zXxHIdVWrDtz6l5t2hMt3QaMSdY3q2mG/jZ6l6gepWLncRLOGMy/hJH/GEnhU3FP9cUPugQ==
+X-Received: by 2002:a17:907:d86:b0:93b:5f2:36c with SMTP id go6-20020a1709070d8600b0093b05f2036cmr1085217ejc.61.1684483424437;
+        Fri, 19 May 2023 01:03:44 -0700 (PDT)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id gv24-20020a1709072bd800b00965a4350411sm1962677ejc.9.2023.05.19.01.03.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 May 2023 01:03:44 -0700 (PDT)
+Message-ID: <8c2e1871-8343-6276-6276-de5df7f4656f@tessares.net>
+Date: Fri, 19 May 2023 10:03:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: mptcp: fix active subflow finalization.: Build Failure
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <41d7df9d8669b5fbfe70cd5551efc9245007ae6c.1684427027.git.pabeni@redhat.com>
+ <9cdc6ccf-3529-8fad-5a49-4c1fd8d6feeb@gmail.com>
+ <d01c8817dd76a6d427a72a752eafb2027969fd38.camel@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <d01c8817dd76a6d427a72a752eafb2027969fd38.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2023-05-18 at 17:31 +0000, MPTCP CI wrote:
-> Hi Paolo,
->=20
-> Thank you for your modifications, that's great!
->=20
-> But sadly, our CI spotted some issues with it when trying to build it.
->=20
-> You can find more details there:
->=20
->   https://patchwork.kernel.org/project/mptcp/patch/41d7df9d8669b5fbfe70cd=
-5551efc9245007ae6c.1684427027.git.pabeni@redhat.com/
->   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/5016483061
+Hi Paolo,
 
-The failures are caused by the pre-existing sparse warning around
-mptcp_sk_clone(), that this series rename as mptcp_sk_clone_init(). I
-guess there is some CI rule to waive the error for the old/previous
-function name?!? Any idea to make it generic?
+On 19/05/2023 09:03, Paolo Abeni wrote:
+> On Thu, 2023-05-18 at 17:31 +0000, MPTCP CI wrote:
+>> Hi Paolo,
+>>
+>> Thank you for your modifications, that's great!
+>>
+>> But sadly, our CI spotted some issues with it when trying to build it.
+>>
+>> You can find more details there:
+>>
+>>   https://patchwork.kernel.org/project/mptcp/patch/41d7df9d8669b5fbfe70cd5551efc9245007ae6c.1684427027.git.pabeni@redhat.com/
+>>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/5016483061
+> 
+> The failures are caused by the pre-existing sparse warning around
+> mptcp_sk_clone(), that this series rename as mptcp_sk_clone_init(). I
+> guess there is some CI rule to waive the error for the old/previous
+> function name?!? Any idea to make it generic?
 
-/P
+Thank you for having checked!
 
+I just modified the script to whitelist the new warning:
+
+https://github.com/multipath-tcp/mptcp-upstream-validate-export-action/commit/a9d24567
+
+All green now:
+
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/5016483061/jobs/9005030178
+
+I don't think we need to make it generic. I guess we will rarely rename
+the function name and/or move it elsewhere, no?
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
