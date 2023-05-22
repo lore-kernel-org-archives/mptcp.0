@@ -1,47 +1,47 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF7D1548B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E027E134B0
 	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 16:38:35 +0000 (UTC)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-3f6042d60b5so14625945e9.2
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-3f41dceb9d1so62447475e9.1
         for <mptcp@lists.linux.dev>; Mon, 22 May 2023 09:38:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684773513; x=1687365513;
+        d=tessares.net; s=google; t=1684773514; x=1687365514;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ctJ0lqu+kiywgLz/K9/ac0x96bWCZeXMDjIdTAGCTwE=;
-        b=W+DD5E+KxJsaR9TT5p6NuCorxy7Xv2hgDRS5O7FDnGao5qeZLhfySeeZSi4oCWBmdN
-         v9EpuTB+I2Mrd/iwPjkBziDtQq4/s7YT3JN8bgQBQZYNUyMH8mZCnPceMe3TQoo4y8OV
-         +AGQd0mOXQ2D298sgwOXcHaWBrvTNLnXU/z1oOmJCxql4gpljOWURHZiwFtEDH0pc3Zj
-         FPNOBR3wYTCEYqF4GiUDuy6yna3gIuZFkLdv2MxhODd5+tIxS8tTnJ7iUUUMeULyX/Lo
-         Dm8tvdShPju11QLJFaFRytRMVYbMhr+iB0CyZzawVwlqo81ZAxGMSItHVsFHpiyam3xU
-         7AhQ==
+        bh=fgnO7zrIiXErID6aV6nh3833oyfYH+POA4h+b9GGbok=;
+        b=vJ3+KkJuV0G9r1s9N1kUVYzo1fQf2efosnP3meAD1/sAKf49NNrQ6Mbcdhjb7M+Xse
+         o0AkNGSKTNqsRM/C+9zRLlR9uKj+qGYTCtmd7o9GwyRfKwlSsKrz9q89p9YzRfhwqC55
+         KNeDHX9mHwv/UOU+kPTPS5MBYOPglYj24VsmrPR8Spy91uAIwpGODpYSQiuVyfrcUCiO
+         73+krU9+i3wwdQmFNLjKk+Yrc8fiwup658aZNDDP7O+KDiHNjWfTmhxjcpjOD9Tq1c0b
+         JXG4+ky4o15Yc4MxNhShfMHKN+w68Sx3f/2v5HUQR/G+EtfCJiTV7FhtHTOcpkYZV6Fj
+         joOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684773513; x=1687365513;
+        d=1e100.net; s=20221208; t=1684773514; x=1687365514;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ctJ0lqu+kiywgLz/K9/ac0x96bWCZeXMDjIdTAGCTwE=;
-        b=gxdBqytUvMAVf7g8KkgdPbcjLzbxNjJWutiFYMNJcD66i8muwVOsFek3S+A6B/Q1CE
-         uYTPKBi4RvMbox2t3nNCEXElxoSORll3W5YXux5qrJ10htoE4mUv87BdpOrwzVBBUPIW
-         mPbCOoaVItu2XcdARqoOYS9wpYcgESuUG8xVg+ByEyE9y8Mz9/njv9jxG/3sb6auukPp
-         70l91A4L+D6gJLEsgKVaiez6P9pXeNrryU0lLIn9TKJf0+rZcBCbi3YvG73fsBIo/WGk
-         yU7Kg7kBm7FL14Tt0LCh8rWW/JJj6i2lyXWJNKybjx0UK21FXL8jw2Eu1wGqS2EHz9y5
-         18Xw==
-X-Gm-Message-State: AC+VfDzRZHiWkIYJdCB2Odyx57aZTv7B1mXTICBVIoHatuSSyvyVaiiA
-	rgsJL0OXBtZAnFsDgkVB1ieq4a/3fKsJLeQiH2sXBA==
-X-Google-Smtp-Source: ACHHUZ52/jg1w8PhJ9uMoNwDojo53qsB4V4HShYClzTUHVTcNf90o1zz/riOZOG5anN74ekLEzGAKQ==
-X-Received: by 2002:a05:600c:24a:b0:3f5:fff8:d4f3 with SMTP id 10-20020a05600c024a00b003f5fff8d4f3mr4094404wmj.7.1684773513231;
+        bh=fgnO7zrIiXErID6aV6nh3833oyfYH+POA4h+b9GGbok=;
+        b=iwpWIQHpmYcVaD6Bm9EA/7e894p+urKDDVSH/QrC8QcSjh9OyfyXfi+XumZpIszRCV
+         CS5Noww++/eY+G/g61kwBwWp/4oYwDVMufc7IC4pmlv8oLeunGoAZPD9jEZv0PfR6qfv
+         baaFoinXlQP2NEMISqKVJrWqJTsvNd8N1HB1JmPrJM+ENkOuMegYA4+V+On4KhPuVx94
+         xzOtofnvpOZtDH7xq2lz+0AOkrieQf825G6C9uVAQgKrBzPA8MgsmqSqb18ptitjetJQ
+         9cjUCvySZkww29ZcK7/Wj3giCs+pYZXSjqFf3YocvDG9ynI1Af9GxRquGaXFBw2FXYID
+         waYA==
+X-Gm-Message-State: AC+VfDyc5IDN2DHrHTH7+kmKcD1coIDWNnGHA6f4HT4otYhNuJPwtBhX
+	fFnvef+sHYNQ72RAHLQT5QJC0CX/Pe/gdlGrra8qJA==
+X-Google-Smtp-Source: ACHHUZ7Zlcuy4XnVbsX4ihfRg6NYY41SlPYPfLbz9sCsS8fWB6eUxUyRsS0o77i5r+CU+ZoFnFBNGg==
+X-Received: by 2002:a05:600c:2284:b0:3f4:2186:91c0 with SMTP id 4-20020a05600c228400b003f4218691c0mr8639639wmf.29.1684773513957;
         Mon, 22 May 2023 09:38:33 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id z20-20020a7bc7d4000000b003f4ecf1fcbcsm12028808wmk.22.2023.05.22.09.38.32
+        by smtp.gmail.com with ESMTPSA id z20-20020a7bc7d4000000b003f4ecf1fcbcsm12028808wmk.22.2023.05.22.09.38.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 09:38:32 -0700 (PDT)
+        Mon, 22 May 2023 09:38:33 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Mon, 22 May 2023 18:38:04 +0200
-Subject: [PATCH mptcp-net v2 32/37] selftests: mptcp: join: skip fullmesh
- flag tests if not supported
+Date: Mon, 22 May 2023 18:38:05 +0200
+Subject: [PATCH mptcp-net v2 33/37] selftests: mptcp: join: skip userspace
+ PM tests if not supported
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,96 +50,140 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v2-32-50313e4f83ab@tessares.net>
+Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v2-33-50313e4f83ab@tessares.net>
 References: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
 In-Reply-To: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2756;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4437;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=3JE2VtmuvFYiO5+0ujCL4MkpZejN+7ivPNDXv3hfK+Q=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBka5pxjMrLKxcXetvWj7W6RduuVsUQ0gCQFiKcT
- xMOFB4SyISJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZGuacQAKCRD2t4JPQmmg
- cyAhEACtLolcYGBTiB58aQ3UIqUrAkyJOrfU2GJmrJVyb08vrO+vugnVfFcpJYrml/6dPz0vSx9
- 1m7X4oX9pPIBEpCdI5TdYO9mHgmiFRfWeudBrr8kXA6gtnqjGuuPnZBlKzFoG0RTQx95s/DweK/
- W/EzIfUYD73ylJzzWEkaUyoDfZu7zMLx88m60DuGzNHWPzgqspUQvyL/pH7NQcSHfrBBq22aI1v
- YRqisyaH2ef5z2bLZ8et+TcCOgqBsTB4jmGAoNqg7sku7xXpPMdnfYJ7/smt2CmmQ6ZHt3NpWJn
- JxKzp7V1mCPeDqmPxnh126npnk4RmSJPcsbd75W0tiAw5TC6MNMMqkzlfMFBy17eACxQvL38gWs
- S+kEcXf/ZnDr+iqpgTx1tpjASsSlxaaE17PaI+2qZ4RLfqwFP/rbtNo3GFCm9UIzytktIfRxpQK
- hVCF0yzdD9iXscKV/dKM1ALXK5TIS/Th1ztJxIMGi5hod5KJhxcK66xs6vTwoT0CfSbHxVSRaz5
- w87fBuD4Rd9Phesknq8a0HoTQkzDusDvM0NWliYJjaskgd75hHHyZVyzKxCC88qYU0Rs2mvLPFT
- 6Nct+6/Kh7VrO9eE9QatWcuEAJlMZYbpt0dGfMlxgaKAbV5qRLAN3ibb5vuyr2JBx9h4zAEjxoh
- 80Um8ho7YZzjeyw==
+ bh=IR6+nUSramdN+vQLIpBYa4qToBLjAlWksQGznSh9tvc=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBka5px9YHF6OfYUVJRiBpKTi6IZPdl3uDGl2P1R
+ UMfj/XlH9yJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZGuacQAKCRD2t4JPQmmg
+ cwQOEACtgcRzUPeVmJJoYXa0ti6OFEpyLNUsB3emJKiP9GVzlIloH9wGO4F5msCTW7u91dUjayE
+ oxHzJQdNJCmvpoIjp+n/VQlr6sZJCMIfLuOwIeCZWt1xlljiXERMefXKsXPIb67Lz20lnNaKRJb
+ Bhy83omN+ot1Y3Xh+kOxjc7kiKtK5Vvt4o+opGr9uvZRqWUsPKlcaVTpRWEg9XMRM30Ghj2LcRx
+ 7PoMVxxOgbnD6+KEb9rVBmI6m9Bo8Sa3tgVaoeKZMvHeHVoIkUVFMB4IdCoOoyUTfmW/EOTIraU
+ uJLCBttVfV7JtWnb8xWM4e/AICmGWvmNbKOnEPTJ6J7/Y5FKC/lIHcIP5fgWfVIKHlVm5MQRJnM
+ 0o7XwqR3gzjG4NnglG6e/QanrFkyyBLVltgLLlMQqxm9AwjWTjdrLSQMxU9JP7xx6uRkgMGrN4d
+ NM8PPpySdwTZSZ81jA9YSWwA2tmN34qy7LSqRfh52GHXnBscCVRsxiBGKJUsfbxqa7kPsUwQPdf
+ X8wyZTYsG0nb6SSPaPvZY4Jt2V8+843hhpw+J2DWfbM4GfePVKZddEzehzX4M8LqR8AnsNBOZC4
+ jVv/ASQis8gQgy19V5o8IOq+AHSS7XM1taEMjRq2mHp4aYfJSHnT20t5wEoyE4YAqfP1ZNwtC7w
+ Y6CvVyX3IhSN8bA==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 Selftests are supposed to run on any kernels, including the old ones not
 supporting all MPTCP features.
 
-One of them is the support of the fullmesh flag for the in-kernel PM
-introduced by commit 2843ff6f36db ("mptcp: remote addresses fullmesh")
-and commit 1a0d6136c5f0 ("mptcp: local addresses fullmesh").
+One of them is the support of the userspace PM introduced by commit
+4638de5aefe5 ("mptcp: handle local addrs announced by userspace PMs")
+and the following ones.
 
-It looks like there is no easy external sign we can use to predict the
-expected behaviour. We could add the flag and then check if it has been
-added but for that, and for each fullmesh test, we would need to setup a
-new environment, do the checks, clean it and then only start the test
-from yet another clean environment. To keep it simple and avoid
-introducing new issues, we look for a specific kernel version. That's
-not ideal but an acceptable solution for this case.
+It is possible to look for the MPTCP pm_type's sysctl knob to know in
+advance if the userspace PM is available.
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
-Fixes: 6a0653b96f5d ("selftests: mptcp: add fullmesh setting tests")
+Fixes: 5ac1d2d63451 ("selftests: mptcp: Add tests for userspace PM type")
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 26 ++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 3453ef733a4f..795a27933e6c 100755
+index 795a27933e6c..2783a3c59aca 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3156,7 +3156,8 @@ fullmesh_tests()
+@@ -85,7 +85,7 @@ init_partial()
+ 		ip netns add $netns || exit $ksft_skip
+ 		ip -net $netns link set lo up
+ 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
+-		ip netns exec $netns sysctl -q net.mptcp.pm_type=0
++		ip netns exec $netns sysctl -q net.mptcp.pm_type=0 2>/dev/null || true
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
+ 		if [ $checksum -eq 1 ]; then
+@@ -3249,7 +3249,8 @@ fail_tests()
+ userspace_tests()
+ {
+ 	# userspace pm type prevents add_addr
+-	if reset "userspace pm type prevents add_addr"; then
++	if reset "userspace pm type prevents add_addr" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 0 2
+@@ -3260,7 +3261,8 @@ userspace_tests()
  	fi
  
- 	# set fullmesh flag
--	if reset "set fullmesh flag test"; then
-+	if reset "set fullmesh flag test" &&
-+	   continue_if mptcp_lib_kversion_ge 5.18; then
- 		pm_nl_set_limits $ns1 4 4
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags subflow
- 		pm_nl_set_limits $ns2 4 4
-@@ -3166,7 +3167,8 @@ fullmesh_tests()
+ 	# userspace pm type does not echo add_addr without daemon
+-	if reset "userspace pm no echo w/o daemon"; then
++	if reset "userspace pm no echo w/o daemon" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 0 2
+@@ -3271,7 +3273,8 @@ userspace_tests()
  	fi
  
- 	# set nofullmesh flag
--	if reset "set nofullmesh flag test"; then
-+	if reset "set nofullmesh flag test" &&
-+	   continue_if mptcp_lib_kversion_ge 5.18; then
- 		pm_nl_set_limits $ns1 4 4
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags subflow,fullmesh
- 		pm_nl_set_limits $ns2 4 4
-@@ -3176,7 +3178,8 @@ fullmesh_tests()
+ 	# userspace pm type rejects join
+-	if reset "userspace pm type rejects join"; then
++	if reset "userspace pm type rejects join" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3281,7 +3284,8 @@ userspace_tests()
  	fi
  
- 	# set backup,fullmesh flags
--	if reset "set backup,fullmesh flags test"; then
-+	if reset "set backup,fullmesh flags test" &&
-+	   continue_if mptcp_lib_kversion_ge 5.18; then
- 		pm_nl_set_limits $ns1 4 4
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags subflow
- 		pm_nl_set_limits $ns2 4 4
-@@ -3187,7 +3190,8 @@ fullmesh_tests()
+ 	# userspace pm type does not send join
+-	if reset "userspace pm type does not send join"; then
++	if reset "userspace pm type does not send join" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3291,7 +3295,8 @@ userspace_tests()
  	fi
  
- 	# set nobackup,nofullmesh flags
--	if reset "set nobackup,nofullmesh flags test"; then
-+	if reset "set nobackup,nofullmesh flags test" &&
-+	   continue_if mptcp_lib_kversion_ge 5.18; then
- 		pm_nl_set_limits $ns1 4 4
- 		pm_nl_set_limits $ns2 4 4
- 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow,backup,fullmesh
+ 	# userspace pm type prevents mp_prio
+-	if reset "userspace pm type prevents mp_prio"; then
++	if reset "userspace pm type prevents mp_prio" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3302,7 +3307,8 @@ userspace_tests()
+ 	fi
+ 
+ 	# userspace pm type prevents rm_addr
+-	if reset "userspace pm type prevents rm_addr"; then
++	if reset "userspace pm type prevents rm_addr" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 1
+@@ -3314,7 +3320,8 @@ userspace_tests()
+ 	fi
+ 
+ 	# userspace pm add & remove address
+-	if reset_with_events "userspace pm add & remove address"; then
++	if reset_with_events "userspace pm add & remove address" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns2 1 1
+ 		run_tests $ns1 $ns2 10.0.1.1 0 userspace_1 0 slow
+@@ -3325,7 +3332,8 @@ userspace_tests()
+ 	fi
+ 
+ 	# userspace pm create destroy subflow
+-	if reset_with_events "userspace pm create destroy subflow"; then
++	if reset_with_events "userspace pm create destroy subflow" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 1
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
 
 -- 
 2.39.2
