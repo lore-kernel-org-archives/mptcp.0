@@ -1,47 +1,47 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A253D14267
-	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 16:38:15 +0000 (UTC)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-3f603ff9c02so10493145e9.2
-        for <mptcp@lists.linux.dev>; Mon, 22 May 2023 09:38:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3944414287
+	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 16:38:17 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3f608074b50so6725515e9.0
+        for <mptcp@lists.linux.dev>; Mon, 22 May 2023 09:38:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684773493; x=1687365493;
+        d=tessares.net; s=google; t=1684773495; x=1687365495;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tk0yVDpEs88McJbg0HZXb6YKKY66/dBMHpeduD3eqHE=;
-        b=I41+heYnFMvfZMB4IcM3bZalRbO1qW0xUht5tjo9xkPBgKHjoTwwugaTI+nikhuMAa
-         jA80zxP8Hmg9IWYtqzuUoItnOI3f6EY2h6eNk0QN5khbBGuCFbodmnZbwltO6bkgTFt2
-         1Wvq/N0LiMkxA7fTutBVwYLuDk+VylQGhQiAqyyDgQuPHfR7vS+NPy6RjESu+6kIO0L0
-         YLLzhvVoeu1LtBdsHXhWDneNCqKCfvNSSk9wVTxrsLpJqf5h6BNHza/oGDH7V6gMNq8k
-         OyEQxjoKNWOFv2RY7kbd6DuJ9JVS3dZH9GRhJFP/kOu3XUjFWC5753/gd29IfG6XThU5
-         hMLQ==
+        bh=EbeUnaxCToMYLf90EZg17RWGgr6qa3CnSSvyzF0rqyI=;
+        b=S5Mf2ehvJOI/YbB1CqAnv3ac/atPGB0RSDJSm5x5WeFtz2BsNe/JsjfNaZEJOM1O1v
+         adhYjnZGjBBQlw/V+bdbc6BsDVYyhzfSzSS0Ttd/97jPik03WdDm9K84wHCpL+2CIoNK
+         0b1gtbIx7Ulttk5568tQjCoykffl5Hw+zVR3UwuDm7MsVQOFc7Vc0bGqAD7aXs9w2MyX
+         +f0yJM0XbpGXMtJ40QLLbTa1tHbwEbVv1kVcGbwZWnPqrHCBv2J/yL4ZpEGeI1UvFAis
+         PRLDlfMUUOMwPJcn0Cwsgdm/hTV2VteHNQrQbXPQAzslBYlfQhpTT0G/YyaP8WcFL+vj
+         zj8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684773493; x=1687365493;
+        d=1e100.net; s=20221208; t=1684773495; x=1687365495;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tk0yVDpEs88McJbg0HZXb6YKKY66/dBMHpeduD3eqHE=;
-        b=jwBR2r+pnynojmu4R6+fryIAlSVsIEV6+pffLq1veU8OgmT55YwQ0nkjblHPs+o+15
-         Lf4HIINCZ7d4NN5K0osY3mXpsL6rn2VNOfknLpEXKbRmmZOjMeqScr2U2B+T6/WY6Hpi
-         jLXPqJzOxmzOl7PssFaitTLIkbcsqy+ppYKxiZC9fmWFUOj6SaLTY3ADODuA6m1y7kr3
-         Y1FwQGozA3+7AdPyNFoFauFCKVN4KY7Vzz2llny4uPEbtD5oiK8BBIqgFNce1bas+DGi
-         l/jXe+Hr4Tni24cWpFRGRUaO5O0l8IWPELW2G0jrlGh2aL+YH7zA57MugZiN1Q0yRqFg
-         4wbg==
-X-Gm-Message-State: AC+VfDxUDIpX7GbrDQziQwaD4jYXkJhWZi21KltYlPzv0168KN/pD+6u
-	+RWYwVcZdTv/B4m6av0WVa8re2iTjXE1GW3m26eIIw==
-X-Google-Smtp-Source: ACHHUZ4KY4JwUEdwFf1p5AH2tOXdyepdOt1OIrQBxljkKgd+EzUeh1bjr3nU/0DI+XB3/eRPLRsleQ==
-X-Received: by 2002:a1c:7709:0:b0:3f6:244:55e3 with SMTP id t9-20020a1c7709000000b003f6024455e3mr3701788wmi.35.1684773493676;
-        Mon, 22 May 2023 09:38:13 -0700 (PDT)
+        bh=EbeUnaxCToMYLf90EZg17RWGgr6qa3CnSSvyzF0rqyI=;
+        b=foj3E4tD1jhFkiOR7iAijv2bZ+aN7RjRdtr7W8up9RWaXyr0fxV5cpLwT8PlmjoNez
+         72XMcT8+NNL55hYupy17nENniu4RVnDft+bS5AXFAgZcibVesf7kiVjjCzoZ0nNfE/c5
+         3yhf6y5nPwtBl4o1CwPQekl2xgdDKdzK5JY8J3SjfRO4XLmig/JQZ3tb9xhQ/UtveVvZ
+         42Q4BGX/aU3Pw0K+FbrOZ7egQBQTQdINafq5qWVPqqw2FpD0Z3Dg9KBY7E3y4dHvvycY
+         UTCae19FmIvIgxW7RWwvPm6iTLB+0c+Dqo5fqEoeGDSGVAvOZavhEULBfhJA+kVyntFt
+         kcKw==
+X-Gm-Message-State: AC+VfDzDmGvxpzsQH4veeFlFa92quYnq+7qWevRYng5fyXumxg7s4Xas
+	8wokg4JB18LWy0CVk/wY8G6P+kEPrISE69YJ5jWtcQ==
+X-Google-Smtp-Source: ACHHUZ7h2ayKUahWR31nNiRHZou+Qd8SfCCh3OEgprMKhC5cWtkC/uCfaJNFYZWv0yCk8ni5tZYUPw==
+X-Received: by 2002:a1c:f402:0:b0:3f4:23a4:7a93 with SMTP id z2-20020a1cf402000000b003f423a47a93mr8857574wma.25.1684773495172;
+        Mon, 22 May 2023 09:38:15 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id z20-20020a7bc7d4000000b003f4ecf1fcbcsm12028808wmk.22.2023.05.22.09.38.12
+        by smtp.gmail.com with ESMTPSA id z20-20020a7bc7d4000000b003f4ecf1fcbcsm12028808wmk.22.2023.05.22.09.38.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 09:38:13 -0700 (PDT)
+        Mon, 22 May 2023 09:38:14 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Mon, 22 May 2023 18:37:36 +0200
-Subject: [PATCH mptcp-net v2 04/37] selftests: mptcp: diag: skip if MPTCP
- is not supported
+Date: Mon, 22 May 2023 18:37:38 +0200
+Subject: [PATCH mptcp-net v2 06/37] selftests: mptcp: sockopt: skip if
+ MPTCP is not supported
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,27 +50,27 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v2-4-50313e4f83ab@tessares.net>
+Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v2-6-50313e4f83ab@tessares.net>
 References: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
 In-Reply-To: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1132;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1130;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=eSP1RheZ+spFnZ1l17hgUmXgc90z52t8DvEZ1M4S+6s=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBka5pvQTDc7ifyMuL66bS9k1dYBzWf5jUzkqLuY
- riGmkM0L7qJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZGuabwAKCRD2t4JPQmmg
- c55QD/90BmO51BvEQxFIx//EU8AkP+T3WTQ+ObquX84QkJXuyq8VzINkXzi5rBlyXRGOdMmaRzI
- l0yUhVGQ5f47cOBd+uSDUu6k532mwl2m0rFiw1Yt2bTZD06zXw7eVKsEASM2G25cqfRtRMc/DEe
- pci1Ya4oU/tRDPqSK9BSeD5sRixzpPs/pZjKlPuk3GRQDYNn78Tc/bhreo4QcTmSzUFGNV5hcgx
- HrROxxeh+IJr6mj4Vp/DstJksOPqR80upGMIR6BFl1WBZqtwinVT0CXZ8WH41L9zLf/0zDmDYMD
- oRaJhgykzWU1qmkyTJFnDSlca8cFszk3Lm/pP2MOXiMQCw6+M+ihQm1LhHz46Ev+OOpL0Gg4QyZ
- JnAv6BXrKZMVWG8poaBuo85U8tNbpmG2ifASlUYSIWp0jQUKPACM31Up2VcBEae3my6gDeGOJTW
- 0zilKISxa3x4frqEPmNOYptVRpHpotjjQOF9+wSSBCpuf/NbMcV/esSy0tbQcjK3LfedlgtLuIk
- 9qCWhGMu7mgqvK5mHeLFJsm4LmsTVll/kO94OU+htqneQQjKXALzU26slMvUsfZHpIukn8A2EsF
- yzOmy7pPMWyrx92B/vv1UmQ1krq4lVSVa8FtrKDTz2bhJ+xHNfn8vnX5BjwGqqh75hwp6aYnrEE
- HApV/CzjMV4OMfQ==
+ bh=f6gNm3LpzKNwEQa/BeQWxsJzjsjQQQdbyMTTSBpnCog=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBka5pvZ+9Fg0PH2X6V6ECOMebknawAkghZC9RTO
+ 5pgbZgVg32JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZGuabwAKCRD2t4JPQmmg
+ c41AEACLfqjJHfr/cFEYMTGWk58iZUJFZv699vbm8HEBOklkxBAA4aAmoPvodNs4FQOV8StYbRt
+ D4AMTaUoy/d7xDCmcK1ymqxp5Fnr8WZ5dCs5zbsmx0omT2Mn1l4upvDYDWOBMHS55g97Lgko2AF
+ 62sR7svdhh73M1HfnwzAmiJnYXwTnUfymLLqZyxIGIfFXXp59JUAntP2DqK9JsaMADad8D9Btug
+ JiA+L/uCLIvdGLMKwFgZEJjfp4KgeuTY+u71SDGFOItFHsWAdXKKpLf5pCHw1dVrj6EPeEZGiSi
+ baoXjn5XhQqd61vGAeyhruzMPVXmo/BaKEMNauCY2VZpzrdZYoH5EHCAVRpuymqx0ldrJY4lGog
+ zDonj4RsRPLJeYUfx831y1ptAb+aKgbhD7FMTndhxLxitzYf+JmnID8TUfXGe0b2E8yA1skUxKG
+ ovuVGTMA+XrNmise4hrpNbfSWDyKEG+Es7rdDDlaW+BqB8gCp3Uo15HFRNR46CoBv8ZbaBFpXdK
+ RpUK6kzXNDVh3zFoQ4LLiPAH8TvsvGlfE6o0SVoe6sHNvvZIs+sQ/7m7HAATf8IdZLKL4PJhbj3
+ ddc5++xcbPBGsMk5djtItIdnjO9xlzgfkXfHuuAgEzasodysUtxKnvZqXEY0OERPeDQTVeb9iYV
+ cX3UwjenHvoWROg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
@@ -81,27 +81,27 @@ A new check is then added to make sure MPTCP is supported. If not, the
 test stops and is marked as "skipped".
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
-Fixes: df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
+Fixes: dc65fe82fb07 ("selftests: mptcp: add packet mark test case")
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/diag.sh | 4 ++++
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index ef628b16fe9b..4eacdb1ab962 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index 1b70c0a304ce..ff5adbb9c7f2 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
 @@ -1,6 +1,8 @@
  #!/bin/bash
  # SPDX-License-Identifier: GPL-2.0
  
 +. "$(dirname "${0}")/mptcp_lib.sh"
 +
- sec=$(date +%s)
- rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
- ns="ns1-$rndh"
-@@ -31,6 +33,8 @@ cleanup()
- 	ip netns del $ns
+ ret=0
+ sin=""
+ sout=""
+@@ -84,6 +86,8 @@ cleanup()
+ 	rm -f "$sin" "$sout"
  }
  
 +mptcp_lib_check_mptcp
