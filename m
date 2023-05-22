@@ -1,167 +1,1019 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2066.outbound.protection.outlook.com [40.107.21.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8961513ACE
-	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 13:13:06 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y4V8Hr9F0jeGjp2wjD0LZlzUsei49Zos3sDyGa2ytXt6Xi6q+58To6vz0HeopeQ/0KnZX1dLhhsviaE210oRxS8JrpWgtXhGD6k8ye9/Xj/QMsjc3/MVx/4NSgKxTakzHOCA+c6peU4/AHYVyYhKIZnnYa9XXluvLtijXAw7pgSFtGPtcBwfIzJPUOveipilVR1qZZ1eVirL5d8cBLoUlcFexuw3Tb/HwHP0HJq8aewkMBcVM5xa2Uw9dQc76VAmZcLE3TYnDcgP3YPIk3E/Ab3rhGjbdAd+6z3/HYs3D892NibW1DEsLKfCwZcIN79JipcycZl19x2NCAzYGn57HA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IVhOtI8e4Qy2DgGPK5M7nq59HK5JWdxnqckIQHMQg1c=;
- b=jmUaTRpmr2kzDiOjp+SSKjJ2LrDJGL5IzUxMLC2mk1xM8nb9WeHLcy65IF+BVQPSFnBu8wCek6cKN2950HUAPOo3QNlz43RKWaNU9srg0J/WdPFuNQhsUjyiNKyJ6sSv4pdEsBJEkova6xJBhctMvSRwdgTMs+FBmw81VEKIz0cSgfBobowFiVSYTZ0YHm3eF7xE2ooRE0NOTSmAdxmgB9OHxy9tMbdGI4Ys2OjJu9/pt7ePPtprz6LeC8umPZsdVeVRdwnKOClnmPBqyUwRX122YIuFST1+uWnxxEvmJIb2EYcn3ozt5e4/KJXp4Gwu5yB1hkZ066JuJ0ds5lh5SA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IVhOtI8e4Qy2DgGPK5M7nq59HK5JWdxnqckIQHMQg1c=;
- b=sctUn3AP/eKxsazs9bQMAaFEmm1sCSSPTFrhPSWAZjdpwMpqeZvh1UQsxS9//8zfoLwrG1AJxbBW9LR2c6fIA0uGJUWfR2sVxPeEXIuEJwRcesAvML1VWytcmYfP8ClPl5APfNPyJBSDYS5oOlIaKSSOtRKJmU4++jmVSmXzBUoOtNinNHKi+6RME5qDG3gJUnqXcR1jASi0i4QcTscPq8tf6C/yq4mUYapEq4kGBRIH6nk36d37amFkZhTbogef+/ovGnjqjdULmbjFF9vMSrXLCB4NK4OED0BqJiPLncTvMxs3K6inKUJWL8g6Ah2KJjAObszw4CL2u+l1NuU3GQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AS8PR04MB7845.eurprd04.prod.outlook.com (2603:10a6:20b:2a7::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Mon, 22 May
- 2023 13:13:03 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::423a:a30f:5342:9d35]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::423a:a30f:5342:9d35%6]) with mapi id 15.20.6411.019; Mon, 22 May 2023
- 13:13:03 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v14 5/5] selftests: mptcp: update userspace pm subflow tests
-Date: Mon, 22 May 2023 21:12:02 +0800
-Message-Id: <844d9f8c87bc733488eba77a4a77e7040e87d8ed.1684760588.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1684760588.git.geliang.tang@suse.com>
-References: <cover.1684760588.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0135.apcprd01.prod.exchangelabs.com
- (2603:1096:4:8f::15) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5FF14261
+	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 13:51:16 +0000 (UTC)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-30789a4c537so3993737f8f.0
+        for <mptcp@lists.linux.dev>; Mon, 22 May 2023 06:51:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684763474; x=1687355474;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xee5lqK7NHItHXHBorO6AiiOFvx7xs0BYnWrgvXREqo=;
+        b=fFuTXAdvnhAUP+aEbDyjBSKTsRyaLvb2uF4Y7Ij/BH3WX+iiTuC4vCKAKs19pZRiwf
+         BRvHQc1mC1EVE2m13yC1dYiMlEJc7i3v/qrvXMqUQO6VncLuhI+wU2fbbYg5p+aODIqW
+         zIulUV6DssB/mHUziKu2rpaVYdQHlKufZ2uQd4kFQeqIj8QhMRC1mKd9Tj828D8m3FDo
+         qsksRHcyFFm2cnlJj78m9+vfsCJqGFggM2JM/WCEKLrdFJts91Kj6atan51v0nb35Zli
+         kKGmgbK6NdJSl0C+KQal1eO2k8MDIKNl+WYZb4xM4lmo0/D3Rj5I2IgwFsJNWksmD96B
+         eDvQ==
+X-Gm-Message-State: AC+VfDzedH0mMS5vvce6Bsy4A2yqqerPCLCU3CFRwjTiRJ6HQwDHAjHi
+	iP/FAPDN19y4K1ZQiepiSTs=
+X-Google-Smtp-Source: ACHHUZ4TAMkaweiMhZirz98E9RYPTQsIDW902hhfytq4f8fZ13HDj6TRjwg4w6FaQJTlM7bTCJenoA==
+X-Received: by 2002:adf:e642:0:b0:306:3a47:cd78 with SMTP id b2-20020adfe642000000b003063a47cd78mr7636293wrn.71.1684763473922;
+        Mon, 22 May 2023 06:51:13 -0700 (PDT)
+Received: from localhost (fwdproxy-cln-002.fbsv.net. [2a03:2880:31ff:2::face:b00c])
+        by smtp.gmail.com with ESMTPSA id w6-20020a5d6086000000b003064600cff9sm7797623wrt.38.2023.05.22.06.51.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 May 2023 06:51:13 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <martineau@kernel.org>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>
+Cc: leit@fb.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	dccp@vger.kernel.org,
+	linux-wpan@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-sctp@vger.kernel.org
+Subject: [PATCH v2] net: ioctl: Use kernel memory on protocol ioctl callbacks
+Date: Mon, 22 May 2023 06:47:31 -0700
+Message-Id: <20230522134735.2810070-1-leitao@debian.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AS8PR04MB7845:EE_
-X-MS-Office365-Filtering-Correlation-Id: cde4f1ba-a352-4c6f-3d17-08db5ac64676
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	6LZU4XtJ0ka2zUR6FdUQGrp0mbnNcutas37715JhgfzWE0S7X71FahAdi5gY/THNlDD+dUwf35rsjxWuHDjqZqL4L9vij8S+dfCWX8RxE4tcSnHp9LxjmoRZhFfbidLuhyT3YQ6OjHU2gBaSXwgSnEk3Hm+UdNkZ3DGpD8wZSMPpH1NC9t15xEJWvy36R6WaBrjgZa/BooOL8+IJxoJfGONe14+M4vcWLqKw7pcVjxXtPh0r8o18aB08RT/S0+hJQOB5qfjmmpKwbvJIcCY/QJLDm01HOMegO6d2vYD9/ASOmKMRPIeG1K5ANbSg277SWZkLOYwbNSd75aS+MvDHTfIDn4lVQvXcFVR8Mwl+4ny8Vz7vqKf9AqJ+Vto/BkmQ8LdNoPUQrko89oufdTSxbAD1gwAFJ3H5RvMdvWMj+7BZaandgc0B3R3Ql64KukvlZuiSXTQsQF5WOl9yzE2juTgMt8nOnZY2yp648v1vij6dbdzR5R2E4DkZDMLK/6v51VgC4+b6Ldi8AGMpAWEdUGzxt3e+z6SvMd8TYuj21ko=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(39860400002)(346002)(396003)(136003)(376002)(451199021)(2906002)(15650500001)(5660300002)(83380400001)(44832011)(8676002)(8936002)(41300700001)(66946007)(66476007)(4326008)(66556008)(6916009)(316002)(36756003)(6486002)(478600001)(966005)(2616005)(6512007)(6506007)(26005)(86362001)(186003)(107886003)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jQb17MTlDTjs6YGfBG1EYTJtyj+co89X2nZKXYItRNJ6PkXOiNssXD/evRy8?=
- =?us-ascii?Q?LpC570FYIAva7intlN6XpJSgjThdt+4DQwLVE96m/RD1vS2t88Gp/xPrK75b?=
- =?us-ascii?Q?L7iHqzhofdkP9pzH+wSe4wIh8/0EjmZ/TpdCEWLvl2XqIjeMEkgJvzaHn197?=
- =?us-ascii?Q?H5VGTXdmrQGfTTxqWSNHGzwh5dW6y9HD3wOE+GgSDVsnkL9l6AjQYrDRq72N?=
- =?us-ascii?Q?U1vDRL5NlIBrA+bcBwWWmYFLqM97owG9FS2W7yfER7ym8zRUxgzFfAUG9Ivs?=
- =?us-ascii?Q?ZtVp9Lhh98tBEDxMmBJn83OKk0Kc3qVlYalLLkA+5DfwPKSG6W5Ckf7Vu/Uw?=
- =?us-ascii?Q?w+VgzDWtrw/b/uoH/d+zgfsMG28eu5wKP94o+tnYcQPbXi4MjCcUyFqVNiPA?=
- =?us-ascii?Q?KdxZMn9LK3Q96+c/kLklLoq75/DJgmWVm9owxTWLQgvucHHddrM1gFc9ihV/?=
- =?us-ascii?Q?cWVnG4izYyVleYbYSZgG8w/zaNtKqQ1grnZYceTLaPlI20uztpzVYR4CUoiK?=
- =?us-ascii?Q?JHw4lPPmqe7qC51AExOIUBEAUc1Rdsr0ctUATKYmJB90CYDuDx3j/Qm432IW?=
- =?us-ascii?Q?Ya/Q0/f2FvDA7+pWbaZVQC6Zs+1zaAk7Wwtlda7tjfM+ZjHp+KgxyjvUh3to?=
- =?us-ascii?Q?F1JoCm6czAaSAzK8GCQEHJJDLpx99pDIUnRFoaRv1afbVjUCOgN8ni9G//tj?=
- =?us-ascii?Q?xyPmN83t21jAc959lSy14z0AOuOktLVuN1qqp64qFnu9KA52GU6jpa5rTfyY?=
- =?us-ascii?Q?6OX9681/glcG+ze2O8o/8wNdRvBhxzt93Ct9/w4xewCrq864jucgloSD6sJF?=
- =?us-ascii?Q?yA24S9mn74mkTyI7kRQDg85Pk7Ox1Zaks7+vRr6aWR21WR3x9ooeyOK10lC9?=
- =?us-ascii?Q?95RO70BfhGgGT+1N6yj+9KHGIdgTduor4Iv3xD75NANCpOfbr/WU/4MaLLUw?=
- =?us-ascii?Q?AGWrcaKFHslz9v49lld9ydMXA1vUx0x0l7C8mxL+NPjDQizFVY3yNvz7AKA5?=
- =?us-ascii?Q?mAbnyFH9OeTYcy3Na1O84Udy9IEKOji2nBDEFH2vEiXHYOrpx3x1ruPS1oSy?=
- =?us-ascii?Q?xYOnbIKDVileheV9nZw4ETTWpeUtj8i5Qtlm7vQUaoD6DOyziS1VL4H+4+Vc?=
- =?us-ascii?Q?GtTjZd+9aJpHXZ+k8UthfTcZPJxmZHK4kKBQQOOvOIeoFSakHBUxFASjB8zP?=
- =?us-ascii?Q?cBhaObC686CZyTjOOQbWVao1o49h5ffTgm3IImMNpCyIj8d6e1cwJ6wB2iGf?=
- =?us-ascii?Q?ZC3lz5oz7g3RZGJzsGZnZ5JBD+S8MNeIW+NKYehs6c2QZKaoilOobLXnzCrT?=
- =?us-ascii?Q?NqbdePabJ2aARgJJg0yFmJjq8e7VeSWEBU8/EShAhwXQcPkrCeQrcS+N68ME?=
- =?us-ascii?Q?hATDqgY6uPSmQxxyVBMzq7+Pq02gboPvGs1fzshIoqnEacmllpfQtBhVOoVs?=
- =?us-ascii?Q?LzR/7jRKuYuDs5CeT/l61mYjUgG/bU3zkQWvTiVBNYVzrsttR7hX+Z6jNUOP?=
- =?us-ascii?Q?082L7IuqN0KTj1zO1RgVN0UWUyDfAWU3Sj+TRcDOsBqlkMayfJZOeBC+mJce?=
- =?us-ascii?Q?/MDiR5FvTrihueJ5Iqj7Fk9FPT6m1DeT4wNXqkT3?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cde4f1ba-a352-4c6f-3d17-08db5ac64676
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2023 13:13:03.7220
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Vy5hMZkvKRof2CH0g5hHUeJIOxd0QcOCqtaovTl0Xn12MTkOZeVGj35RkY+FM1FLCO8KKaQBjDaRM7FHiE6Ogw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7845
+Content-Transfer-Encoding: 8bit
 
-To align with what is done by the in-kernel PM, update userspace pm
-subflow selftests in mptcp_join.sh and userspace_pm.sh, by sending
-the a remove_addrs command together after the remove_subflows command.
-This will get a RM_ADDR in chk_rm_nr().
+Most of the ioctls to net protocols  operates directly on userspace
+argument (arg). Usually doing get_user()/put_user() directly in the
+ioctl callback.  This is not flexible, because it is hard to reuse these
+functions without passing userspace buffers.
 
-Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
-Fixes: 5e986ec46874 ("selftests: mptcp: userspace pm subflow tests")
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/379
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Change the "struct proto" ioctls to avoid touching userspace memory and
+operate on kernel buffers, i.e., all protocol's ioctl callbacks is
+adapted to operate on a kernel memory other than on userspace (so, no
+more {put,get}_user() and friends being called in the ioctl callback).
+
+This changes the "struct proto" ioctl format in the following way:
+
+    int                     (*ioctl)(struct sock *sk, int cmd,
+-                                        unsigned long arg);
++                                        int *karg);
+
+So, the "karg" argument, which is passed to the ioctl callback, is a
+pointer allocated to kernel space memory (inside a function wrapper -
+sk_ioctl()). This buffer (karg) may contain input argument
+(copied from userspace in a prep function) and it might return a
+value/buffer, which is copied back to userspace if necessary. There is
+not one-size-fits-all format (that is I am using 'may' above), but
+basically, there are three type of ioctls:
+
+1) Do not read from userspace, returns a result to userspace
+2) Read an input parameter from userspace, and does not return anything
+  to userspace
+3) Read an input from userspace, and return a buffer to userspace.
+
+The default case (1) (where no input parameter is given, and an "int" is
+returned to userspace) encompasses more than 90% of the cases, but there
+are two other exceptions. Here is a list of exceptions:
+
+* Protocol RAW:
+   * cmd = SIOCGETVIFCNT:
+     * input and output = struct sioc_vif_req
+   * cmd = SIOCGETSGCNT
+     * input and output = struct sioc_sg_req
+   * Explanation: for the SIOCGETVIFCNT case, userspace passes the input
+     argument, which is struct sioc_vif_req. Then the callback populates
+     the struct, which is copied back to userspace.
+
+* Protocol RAW6:
+   * cmd = SIOCGETMIFCNT_IN6
+     * input and output = struct sioc_mif_req6
+   * cmd = SIOCGETSGCNT_IN6
+     * input and output = struct sioc_sg_req6
+
+* Protocol PHONET:
+  * cmd == SIOCPNADDRESOURCE | SIOCPNDELRESOURCE
+     * input int (4 bytes)
+  * Nothing is copied back to userspace.
+
+For the exception cases, functions sk_ioctl_in{out}() will
+copy the userspace input, and copy it back to kernel space.
+
+The wrapper that prepare the buffer and put the buffer back to user is
+sk_ioctl(), so, instead of calling sk->sk_prot->ioctl(), the
+callee now calls sk_ioctl(), which will handle all cases.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+
+--
+V1 -> V2:
+   * Rename mouthful functions to have saner names
+   * Make functions statics and export sk_ioctl()
+   * Allocate kernel structures at sk_ioctl()
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh   | 3 ++-
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 3 +++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ include/linux/mroute.h  |   4 +-
+ include/linux/mroute6.h |   4 +-
+ include/net/sock.h      |   3 +-
+ include/net/tcp.h       |   2 +-
+ include/net/udp.h       |   2 +-
+ net/core/sock.c         | 112 ++++++++++++++++++++++++++++++++++++++++
+ net/dccp/dccp.h         |   2 +-
+ net/dccp/proto.c        |  12 ++---
+ net/ieee802154/socket.c |  15 +++---
+ net/ipv4/af_inet.c      |   2 +-
+ net/ipv4/ipmr.c         |  41 ++++++---------
+ net/ipv4/raw.c          |  16 +++---
+ net/ipv4/tcp.c          |   5 +-
+ net/ipv4/udp.c          |  12 ++---
+ net/ipv6/af_inet6.c     |   2 +-
+ net/ipv6/ip6mr.c        |  43 ++++++---------
+ net/ipv6/raw.c          |  16 +++---
+ net/l2tp/l2tp_core.h    |   2 +-
+ net/l2tp/l2tp_ip.c      |   9 ++--
+ net/mptcp/protocol.c    |  11 ++--
+ net/phonet/datagram.c   |  11 ++--
+ net/phonet/pep.c        |  11 ++--
+ net/phonet/socket.c     |   2 +-
+ net/sctp/socket.c       |   8 +--
+ 24 files changed, 218 insertions(+), 129 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index a42745e60976..46c2095d6e3a 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -939,6 +939,7 @@ do_transfer()
- 				     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
- 				ip netns exec ${connector_ns} ./pm_nl_ctl dsf lip $addr lport $sp \
- 									rip $da rport $dp token $tk
-+				ip netns exec ${connector_ns} ./pm_nl_ctl rem token $tk id $id
- 			fi
- 			counter=$((counter + 1))
- 			add_nr_ns2=$((add_nr_ns2 - 1))
-@@ -3210,7 +3211,7 @@ userspace_tests()
- 		pm_nl_set_limits $ns1 0 1
- 		run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
- 		chk_join_nr 1 1 1
--		chk_rm_nr 0 1
-+		chk_rm_nr 1 1
- 		kill_events_pids
- 	fi
+diff --git a/include/linux/mroute.h b/include/linux/mroute.h
+index 80b8400ab8b2..dec4815a85b2 100644
+--- a/include/linux/mroute.h
++++ b/include/linux/mroute.h
+@@ -18,7 +18,7 @@ static inline int ip_mroute_opt(int opt)
+ 
+ int ip_mroute_setsockopt(struct sock *, int, sockptr_t, unsigned int);
+ int ip_mroute_getsockopt(struct sock *, int, sockptr_t, sockptr_t);
+-int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg);
++int ipmr_ioctl(struct sock *sk, int cmd, void *arg);
+ int ipmr_compat_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
+ int ip_mr_init(void);
+ bool ipmr_rule_default(const struct fib_rule *rule);
+@@ -35,7 +35,7 @@ static inline int ip_mroute_getsockopt(struct sock *sk, int optname,
+ 	return -ENOPROTOOPT;
  }
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index b1eb7bce599d..02465ffa075f 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -621,6 +621,7 @@ test_subflows()
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip dead:beef:2::1 lport "$sport" rip\
- 	   dead:beef:2::2 rport "$client6_port" token "$server6_token" > /dev/null 2>&1
-+	ip netns exec "$ns1" ./pm_nl_ctl rem id 23 token "$server6_token" > /dev/null 2>&1
- 	sleep 0.5
- 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server6_token" "$AF_INET6"\
- 			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
-@@ -660,6 +661,7 @@ test_subflows()
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
- 	   $new4_port token "$server4_token" > /dev/null 2>&1
-+	ip netns exec "$ns1" ./pm_nl_ctl rem id 23 token "$server4_token" > /dev/null 2>&1
- 	sleep 0.5
- 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
- 			      "10.0.2.2" "$new4_port" "23" "$client_addr_id" "ns1" "ns2"
-@@ -737,6 +739,7 @@ test_subflows()
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip dead:beef:2::2 lport "$sport" rip\
- 	   dead:beef:2::1 rport $app6_port token "$client6_token" > /dev/null 2>&1
-+	ip netns exec "$ns2" ./pm_nl_ctl rem id 23 token "$client6_token" > /dev/null 2>&1
- 	sleep 0.5
- 	verify_subflow_events $client_evts $SUB_CLOSED $client6_token $AF_INET6 "dead:beef:2::2"\
- 			      "dead:beef:2::1" "$app6_port" "23" "$server_addr_id" "ns2" "ns1"
+ 
+-static inline int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg)
++static inline int ipmr_ioctl(struct sock *sk, int cmd, void *arg)
+ {
+ 	return -ENOIOCTLCMD;
+ }
+diff --git a/include/linux/mroute6.h b/include/linux/mroute6.h
+index 8f2b307fb124..1dcbf15a2206 100644
+--- a/include/linux/mroute6.h
++++ b/include/linux/mroute6.h
+@@ -29,7 +29,7 @@ struct sock;
+ extern int ip6_mroute_setsockopt(struct sock *, int, sockptr_t, unsigned int);
+ extern int ip6_mroute_getsockopt(struct sock *, int, sockptr_t, sockptr_t);
+ extern int ip6_mr_input(struct sk_buff *skb);
+-extern int ip6mr_ioctl(struct sock *sk, int cmd, void __user *arg);
++extern int ip6mr_ioctl(struct sock *sk, int cmd, void *arg);
+ extern int ip6mr_compat_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
+ extern int ip6_mr_init(void);
+ extern void ip6_mr_cleanup(void);
+@@ -48,7 +48,7 @@ int ip6_mroute_getsockopt(struct sock *sock,
+ }
+ 
+ static inline
+-int ip6mr_ioctl(struct sock *sk, int cmd, void __user *arg)
++int ip6mr_ioctl(struct sock *sk, int cmd, void *arg)
+ {
+ 	return -ENOIOCTLCMD;
+ }
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 656ea89f60ff..39a11f0f5d50 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1246,7 +1246,7 @@ struct proto {
+ 					  bool kern);
+ 
+ 	int			(*ioctl)(struct sock *sk, int cmd,
+-					 unsigned long arg);
++					 int *karg);
+ 	int			(*init)(struct sock *sk);
+ 	void			(*destroy)(struct sock *sk);
+ 	void			(*shutdown)(struct sock *sk, int how);
+@@ -2961,6 +2961,7 @@ int sock_get_timeout(long timeo, void *optval, bool old_timeval);
+ int sock_copy_user_timeval(struct __kernel_sock_timeval *tv,
+ 			   sockptr_t optval, int optlen, bool old_timeval);
+ 
++int sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
+ static inline bool sk_is_readable(struct sock *sk)
+ {
+ 	if (sk->sk_prot->sock_is_readable)
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 04a31643cda3..f784fa49d95d 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -342,7 +342,7 @@ void tcp_release_cb(struct sock *sk);
+ void tcp_wfree(struct sk_buff *skb);
+ void tcp_write_timer_handler(struct sock *sk);
+ void tcp_delack_timer_handler(struct sock *sk);
+-int tcp_ioctl(struct sock *sk, int cmd, unsigned long arg);
++int tcp_ioctl(struct sock *sk, int cmd, int *karg);
+ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb);
+ void tcp_rcv_established(struct sock *sk, struct sk_buff *skb);
+ void tcp_rcv_space_adjust(struct sock *sk);
+diff --git a/include/net/udp.h b/include/net/udp.h
+index de4b528522bb..9ff5bce33aa0 100644
+--- a/include/net/udp.h
++++ b/include/net/udp.h
+@@ -283,7 +283,7 @@ void udp_flush_pending_frames(struct sock *sk);
+ int udp_cmsg_send(struct sock *sk, struct msghdr *msg, u16 *gso_size);
+ void udp4_hwcsum(struct sk_buff *skb, __be32 src, __be32 dst);
+ int udp_rcv(struct sk_buff *skb);
+-int udp_ioctl(struct sock *sk, int cmd, unsigned long arg);
++int udp_ioctl(struct sock *sk, int cmd, int *karg);
+ int udp_init_sock(struct sock *sk);
+ int udp_pre_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len);
+ int __udp_disconnect(struct sock *sk, int flags);
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 5440e67bcfe3..a2cea95aec99 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -114,6 +114,8 @@
+ #include <linux/memcontrol.h>
+ #include <linux/prefetch.h>
+ #include <linux/compat.h>
++#include <linux/mroute.h>
++#include <linux/mroute6.h>
+ 
+ #include <linux/uaccess.h>
+ 
+@@ -138,6 +140,7 @@
+ 
+ #include <net/tcp.h>
+ #include <net/busy_poll.h>
++#include <net/phonet/phonet.h>
+ 
+ #include <linux/ethtool.h>
+ 
+@@ -4106,3 +4109,112 @@ int sock_bind_add(struct sock *sk, struct sockaddr *addr, int addr_len)
+ 	return sk->sk_prot->bind_add(sk, addr, addr_len);
+ }
+ EXPORT_SYMBOL(sock_bind_add);
++
++#ifdef CONFIG_PHONET
++/* Copy u32 value from userspace and do not return anything back */
++static int sk_ioctl_in(struct sock *sk, unsigned int cmd, void __user *arg)
++{
++	int karg;
++
++	if (get_user(karg, (u32 __user *)arg))
++		return -EFAULT;
++
++	return sk->sk_prot->ioctl(sk, cmd, &karg);
++}
++#endif
++
++#if defined(CONFIG_IP_MROUTE) || defined(CONFIG_IPV6_MROUTE)
++/* Copy 'size' bytes from userspace and return `size` back to userspace */
++static int sk_ioctl_inout(struct sock *sk, unsigned int cmd,
++			  void __user *arg, void *karg, size_t size)
++{
++	int ret;
++
++	if (copy_from_user(karg, arg, size))
++		return -EFAULT;
++
++	ret = sk->sk_prot->ioctl(sk, cmd, karg);
++	if (ret)
++		return ret;
++
++	if (copy_to_user(arg, karg, size))
++		return -EFAULT;
++
++	return 0;
++}
++#endif
++
++/* This is the most common ioctl prep function, where the result (4 bytes) is
++ * copied back to userspace if the ioctl() returns successfully. No input is
++ * copied from userspace as input argument.
++ */
++static int sk_ioctl_out(struct sock *sk, unsigned int cmd, void __user *arg)
++{
++	int ret, karg = 0;
++
++	ret = sk->sk_prot->ioctl(sk, cmd, &karg);
++	if (ret)
++		return ret;
++
++	return put_user(karg, (int __user *)arg);
++}
++
++/* A wrapper around sock ioctls, which copies the data from userspace
++ * (depending on the protocol/ioctl), and copies back the result to userspace.
++ * The main motivation for this function is to pass kernel memory to the
++ * protocol ioctl callbacks, instead of userspace memory.
++ */
++int sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
++{
++#ifdef CONFIG_IP_MROUTE
++	if (sk->sk_family == PF_INET && sk->sk_protocol == IPPROTO_RAW) {
++		switch (cmd) {
++		/* These userspace buffers will be consumed by ipmr_ioctl() */
++		case SIOCGETVIFCNT: {
++			struct sioc_vif_req buffer;
++
++			return sk_ioctl_inout(sk, cmd, arg, &buffer,
++					      sizeof(buffer));
++			}
++		case SIOCGETSGCNT: {
++			struct sioc_sg_req buffer;
++
++			return sk_ioctl_inout(sk, cmd, arg, &buffer,
++					      sizeof(buffer));
++			}
++		}
++	}
++#endif
++#ifdef CONFIG_IPV6_MROUTE
++	if (sk->sk_family == PF_INET6 && sk->sk_protocol == IPPROTO_RAW) {
++		switch (cmd) {
++		/* These userspace buffers will be consumed by ip6mr_ioctl() */
++		case SIOCGETMIFCNT_IN6: {
++			struct sioc_mif_req6 buffer;
++
++			return sk_ioctl_inout(sk, cmd, arg, &buffer,
++					      sizeof(buffer));
++			}
++		case SIOCGETSGCNT_IN6: {
++			struct sioc_mif_req6 buffer;
++
++			return sk_ioctl_inout(sk, cmd, arg, &buffer,
++					      sizeof(buffer));
++			}
++		}
++	}
++#endif
++#ifdef CONFIG_PHONET
++	if (sk->sk_family == PF_PHONET && sk->sk_protocol == PN_PROTO_PHONET) {
++		/* This userspace buffers will be consumed by pn_ioctl() */
++		switch (cmd) {
++		case SIOCPNADDRESOURCE:
++		case SIOCPNDELRESOURCE:
++			return sk_ioctl_in(sk, cmd, arg);
++		}
++	}
++#endif
++
++	return sk_ioctl_out(sk, cmd, arg);
++}
++EXPORT_SYMBOL(sk_ioctl);
+diff --git a/net/dccp/dccp.h b/net/dccp/dccp.h
+index 9ddc3a9e89e4..1f748ed1279d 100644
+--- a/net/dccp/dccp.h
++++ b/net/dccp/dccp.h
+@@ -292,7 +292,7 @@ int dccp_getsockopt(struct sock *sk, int level, int optname,
+ 		    char __user *optval, int __user *optlen);
+ int dccp_setsockopt(struct sock *sk, int level, int optname,
+ 		    sockptr_t optval, unsigned int optlen);
+-int dccp_ioctl(struct sock *sk, int cmd, unsigned long arg);
++int dccp_ioctl(struct sock *sk, int cmd, int *karg);
+ int dccp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size);
+ int dccp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int flags,
+ 		 int *addr_len);
+diff --git a/net/dccp/proto.c b/net/dccp/proto.c
+index a06b5641287a..9fc3ba4f62de 100644
+--- a/net/dccp/proto.c
++++ b/net/dccp/proto.c
+@@ -359,7 +359,7 @@ __poll_t dccp_poll(struct file *file, struct socket *sock,
+ 
+ EXPORT_SYMBOL_GPL(dccp_poll);
+ 
+-int dccp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++int dccp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	int rc = -ENOTCONN;
+ 
+@@ -370,17 +370,17 @@ int dccp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 
+ 	switch (cmd) {
+ 	case SIOCOUTQ: {
+-		int amount = sk_wmem_alloc_get(sk);
++		*karg = sk_wmem_alloc_get(sk);
+ 		/* Using sk_wmem_alloc here because sk_wmem_queued is not used by DCCP and
+ 		 * always 0, comparably to UDP.
+ 		 */
+ 
+-		rc = put_user(amount, (int __user *)arg);
++		rc = 0;
+ 	}
+ 		break;
+ 	case SIOCINQ: {
+ 		struct sk_buff *skb;
+-		unsigned long amount = 0;
++		*karg = 0;
+ 
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		if (skb != NULL) {
+@@ -388,9 +388,9 @@ int dccp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 			 * We will only return the amount of this packet since
+ 			 * that is all that will be read.
+ 			 */
+-			amount = skb->len;
++			*karg = skb->len;
+ 		}
+-		rc = put_user(amount, (int __user *)arg);
++		rc = 0;
+ 	}
+ 		break;
+ 	default:
+diff --git a/net/ieee802154/socket.c b/net/ieee802154/socket.c
+index 1fa2fe041ec0..9c124705120d 100644
+--- a/net/ieee802154/socket.c
++++ b/net/ieee802154/socket.c
+@@ -162,7 +162,7 @@ static int ieee802154_sock_ioctl(struct socket *sock, unsigned int cmd,
+ 	default:
+ 		if (!sk->sk_prot->ioctl)
+ 			return -ENOIOCTLCMD;
+-		return sk->sk_prot->ioctl(sk, cmd, arg);
++		return sk_ioctl(sk, cmd, (void __user *)arg);
+ 	}
+ }
+ 
+@@ -531,22 +531,21 @@ static int dgram_bind(struct sock *sk, struct sockaddr *uaddr, int len)
+ 	return err;
+ }
+ 
+-static int dgram_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int dgram_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	switch (cmd) {
+ 	case SIOCOUTQ:
+ 	{
+-		int amount = sk_wmem_alloc_get(sk);
++		*karg = sk_wmem_alloc_get(sk);
+ 
+-		return put_user(amount, (int __user *)arg);
++		return 0;
+ 	}
+ 
+ 	case SIOCINQ:
+ 	{
+ 		struct sk_buff *skb;
+-		unsigned long amount;
+ 
+-		amount = 0;
++		*karg = 0;
+ 		spin_lock_bh(&sk->sk_receive_queue.lock);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		if (skb) {
+@@ -554,10 +553,10 @@ static int dgram_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 			 * of this packet since that is all
+ 			 * that will be read.
+ 			 */
+-			amount = skb->len - ieee802154_hdr_length(skb);
++			*karg = skb->len - ieee802154_hdr_length(skb);
+ 		}
+ 		spin_unlock_bh(&sk->sk_receive_queue.lock);
+-		return put_user(amount, (int __user *)arg);
++		return 0;
+ 	}
+ 	}
+ 
+diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+index c4aab3aacbd8..be2ae13511da 100644
+--- a/net/ipv4/af_inet.c
++++ b/net/ipv4/af_inet.c
+@@ -978,7 +978,7 @@ int inet_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 		break;
+ 	default:
+ 		if (sk->sk_prot->ioctl)
+-			err = sk->sk_prot->ioctl(sk, cmd, arg);
++			err = sk_ioctl(sk, cmd, (void __user *)arg);
+ 		else
+ 			err = -ENOIOCTLCMD;
+ 		break;
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index eec1f6df80d8..5d6531f6a235 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -1593,13 +1593,13 @@ int ip_mroute_getsockopt(struct sock *sk, int optname, sockptr_t optval,
+ }
+ 
+ /* The IP multicast ioctl support routines. */
+-int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg)
++int ipmr_ioctl(struct sock *sk, int cmd, void *arg)
+ {
+-	struct sioc_sg_req sr;
+-	struct sioc_vif_req vr;
+ 	struct vif_device *vif;
+ 	struct mfc_cache *c;
+ 	struct net *net = sock_net(sk);
++	struct sioc_vif_req *vr;
++	struct sioc_sg_req *sr;
+ 	struct mr_table *mrt;
+ 
+ 	mrt = ipmr_get_table(net, raw_sk(sk)->ipmr_table ? : RT_TABLE_DEFAULT);
+@@ -1608,40 +1608,33 @@ int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg)
+ 
+ 	switch (cmd) {
+ 	case SIOCGETVIFCNT:
+-		if (copy_from_user(&vr, arg, sizeof(vr)))
+-			return -EFAULT;
+-		if (vr.vifi >= mrt->maxvif)
++		vr = (struct sioc_vif_req *)arg;
++		if (vr->vifi >= mrt->maxvif)
+ 			return -EINVAL;
+-		vr.vifi = array_index_nospec(vr.vifi, mrt->maxvif);
++		vr->vifi = array_index_nospec(vr->vifi, mrt->maxvif);
+ 		rcu_read_lock();
+-		vif = &mrt->vif_table[vr.vifi];
+-		if (VIF_EXISTS(mrt, vr.vifi)) {
+-			vr.icount = READ_ONCE(vif->pkt_in);
+-			vr.ocount = READ_ONCE(vif->pkt_out);
+-			vr.ibytes = READ_ONCE(vif->bytes_in);
+-			vr.obytes = READ_ONCE(vif->bytes_out);
++		vif = &mrt->vif_table[vr->vifi];
++		if (VIF_EXISTS(mrt, vr->vifi)) {
++			vr->icount = READ_ONCE(vif->pkt_in);
++			vr->ocount = READ_ONCE(vif->pkt_out);
++			vr->ibytes = READ_ONCE(vif->bytes_in);
++			vr->obytes = READ_ONCE(vif->bytes_out);
+ 			rcu_read_unlock();
+ 
+-			if (copy_to_user(arg, &vr, sizeof(vr)))
+-				return -EFAULT;
+ 			return 0;
+ 		}
+ 		rcu_read_unlock();
+ 		return -EADDRNOTAVAIL;
+ 	case SIOCGETSGCNT:
+-		if (copy_from_user(&sr, arg, sizeof(sr)))
+-			return -EFAULT;
++		sr = (struct sioc_sg_req *)arg;
+ 
+ 		rcu_read_lock();
+-		c = ipmr_cache_find(mrt, sr.src.s_addr, sr.grp.s_addr);
++		c = ipmr_cache_find(mrt, sr->src.s_addr, sr->grp.s_addr);
+ 		if (c) {
+-			sr.pktcnt = c->_c.mfc_un.res.pkt;
+-			sr.bytecnt = c->_c.mfc_un.res.bytes;
+-			sr.wrong_if = c->_c.mfc_un.res.wrong_if;
++			sr->pktcnt = c->_c.mfc_un.res.pkt;
++			sr->bytecnt = c->_c.mfc_un.res.bytes;
++			sr->wrong_if = c->_c.mfc_un.res.wrong_if;
+ 			rcu_read_unlock();
+-
+-			if (copy_to_user(arg, &sr, sizeof(sr)))
+-				return -EFAULT;
+ 			return 0;
+ 		}
+ 		rcu_read_unlock();
+diff --git a/net/ipv4/raw.c b/net/ipv4/raw.c
+index ff712bf2a98d..e394f02380b6 100644
+--- a/net/ipv4/raw.c
++++ b/net/ipv4/raw.c
+@@ -855,29 +855,29 @@ static int raw_getsockopt(struct sock *sk, int level, int optname,
+ 	return do_raw_getsockopt(sk, level, optname, optval, optlen);
+ }
+ 
+-static int raw_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int raw_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	switch (cmd) {
+ 	case SIOCOUTQ: {
+-		int amount = sk_wmem_alloc_get(sk);
+-
+-		return put_user(amount, (int __user *)arg);
++		*karg = sk_wmem_alloc_get(sk);
++		return 0;
+ 	}
+ 	case SIOCINQ: {
+ 		struct sk_buff *skb;
+-		int amount = 0;
+ 
+ 		spin_lock_bh(&sk->sk_receive_queue.lock);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		if (skb)
+-			amount = skb->len;
++			*karg = skb->len;
++		else
++			*karg = 0;
+ 		spin_unlock_bh(&sk->sk_receive_queue.lock);
+-		return put_user(amount, (int __user *)arg);
++		return 0;
+ 	}
+ 
+ 	default:
+ #ifdef CONFIG_IP_MROUTE
+-		return ipmr_ioctl(sk, cmd, (void __user *)arg);
++		return ipmr_ioctl(sk, cmd, karg);
+ #else
+ 		return -ENOIOCTLCMD;
+ #endif
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 4d6392c16b7a..8ff2c3784aab 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -599,7 +599,7 @@ __poll_t tcp_poll(struct file *file, struct socket *sock, poll_table *wait)
+ }
+ EXPORT_SYMBOL(tcp_poll);
+ 
+-int tcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++int tcp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	int answ;
+@@ -641,7 +641,8 @@ int tcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 		return -ENOIOCTLCMD;
+ 	}
+ 
+-	return put_user(answ, (int __user *)arg);
++	*karg = answ;
++	return 0;
+ }
+ EXPORT_SYMBOL(tcp_ioctl);
+ 
+diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+index aa32afd871ee..8b83a67cf852 100644
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1720,21 +1720,19 @@ static int first_packet_length(struct sock *sk)
+  *	IOCTL requests applicable to the UDP protocol
+  */
+ 
+-int udp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++int udp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	switch (cmd) {
+ 	case SIOCOUTQ:
+ 	{
+-		int amount = sk_wmem_alloc_get(sk);
+-
+-		return put_user(amount, (int __user *)arg);
++		*karg = sk_wmem_alloc_get(sk);
++		return 0;
+ 	}
+ 
+ 	case SIOCINQ:
+ 	{
+-		int amount = max_t(int, 0, first_packet_length(sk));
+-
+-		return put_user(amount, (int __user *)arg);
++		*karg = max_t(int, 0, first_packet_length(sk));
++		return 0;
+ 	}
+ 
+ 	default:
+diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
+index 2bbf13216a3d..001ba5a17af9 100644
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -579,7 +579,7 @@ int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 		prot = READ_ONCE(sk->sk_prot);
+ 		if (!prot->ioctl)
+ 			return -ENOIOCTLCMD;
+-		return prot->ioctl(sk, cmd, arg);
++		return sk_ioctl(sk, cmd, (void __user *)arg);
+ 	}
+ 	/*NOTREACHED*/
+ 	return 0;
+diff --git a/net/ipv6/ip6mr.c b/net/ipv6/ip6mr.c
+index 51cf37abd142..0b6974daa666 100644
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -1879,11 +1879,10 @@ int ip6_mroute_getsockopt(struct sock *sk, int optname, sockptr_t optval,
+ /*
+  *	The IP multicast ioctl support routines.
+  */
+-
+-int ip6mr_ioctl(struct sock *sk, int cmd, void __user *arg)
++int ip6mr_ioctl(struct sock *sk, int cmd, void *arg)
+ {
+-	struct sioc_sg_req6 sr;
+-	struct sioc_mif_req6 vr;
++	struct sioc_sg_req6 *sr;
++	struct sioc_mif_req6 *vr;
+ 	struct vif_device *vif;
+ 	struct mfc6_cache *c;
+ 	struct net *net = sock_net(sk);
+@@ -1895,40 +1894,32 @@ int ip6mr_ioctl(struct sock *sk, int cmd, void __user *arg)
+ 
+ 	switch (cmd) {
+ 	case SIOCGETMIFCNT_IN6:
+-		if (copy_from_user(&vr, arg, sizeof(vr)))
+-			return -EFAULT;
+-		if (vr.mifi >= mrt->maxvif)
++		vr = (struct sioc_mif_req6 *)arg;
++		if (vr->mifi >= mrt->maxvif)
+ 			return -EINVAL;
+-		vr.mifi = array_index_nospec(vr.mifi, mrt->maxvif);
++		vr->mifi = array_index_nospec(vr->mifi, mrt->maxvif);
+ 		rcu_read_lock();
+-		vif = &mrt->vif_table[vr.mifi];
+-		if (VIF_EXISTS(mrt, vr.mifi)) {
+-			vr.icount = READ_ONCE(vif->pkt_in);
+-			vr.ocount = READ_ONCE(vif->pkt_out);
+-			vr.ibytes = READ_ONCE(vif->bytes_in);
+-			vr.obytes = READ_ONCE(vif->bytes_out);
++		vif = &mrt->vif_table[vr->mifi];
++		if (VIF_EXISTS(mrt, vr->mifi)) {
++			vr->icount = READ_ONCE(vif->pkt_in);
++			vr->ocount = READ_ONCE(vif->pkt_out);
++			vr->ibytes = READ_ONCE(vif->bytes_in);
++			vr->obytes = READ_ONCE(vif->bytes_out);
+ 			rcu_read_unlock();
+-
+-			if (copy_to_user(arg, &vr, sizeof(vr)))
+-				return -EFAULT;
+ 			return 0;
+ 		}
+ 		rcu_read_unlock();
+ 		return -EADDRNOTAVAIL;
+ 	case SIOCGETSGCNT_IN6:
+-		if (copy_from_user(&sr, arg, sizeof(sr)))
+-			return -EFAULT;
++		sr = (struct sioc_sg_req6 *)arg;
+ 
+ 		rcu_read_lock();
+-		c = ip6mr_cache_find(mrt, &sr.src.sin6_addr, &sr.grp.sin6_addr);
++		c = ip6mr_cache_find(mrt, &sr->src.sin6_addr, &sr->grp.sin6_addr);
+ 		if (c) {
+-			sr.pktcnt = c->_c.mfc_un.res.pkt;
+-			sr.bytecnt = c->_c.mfc_un.res.bytes;
+-			sr.wrong_if = c->_c.mfc_un.res.wrong_if;
++			sr->pktcnt = c->_c.mfc_un.res.pkt;
++			sr->bytecnt = c->_c.mfc_un.res.bytes;
++			sr->wrong_if = c->_c.mfc_un.res.wrong_if;
+ 			rcu_read_unlock();
+-
+-			if (copy_to_user(arg, &sr, sizeof(sr)))
+-				return -EFAULT;
+ 			return 0;
+ 		}
+ 		rcu_read_unlock();
+diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
+index 7d0adb612bdd..51d4f2d7c596 100644
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -1117,29 +1117,29 @@ static int rawv6_getsockopt(struct sock *sk, int level, int optname,
+ 	return do_rawv6_getsockopt(sk, level, optname, optval, optlen);
+ }
+ 
+-static int rawv6_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int rawv6_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	switch (cmd) {
+ 	case SIOCOUTQ: {
+-		int amount = sk_wmem_alloc_get(sk);
+-
+-		return put_user(amount, (int __user *)arg);
++		*karg = sk_wmem_alloc_get(sk);
++		return 0;
+ 	}
+ 	case SIOCINQ: {
+ 		struct sk_buff *skb;
+-		int amount = 0;
+ 
+ 		spin_lock_bh(&sk->sk_receive_queue.lock);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		if (skb)
+-			amount = skb->len;
++			*karg = skb->len;
++		else
++			*karg = 0;
+ 		spin_unlock_bh(&sk->sk_receive_queue.lock);
+-		return put_user(amount, (int __user *)arg);
++		return 0;
+ 	}
+ 
+ 	default:
+ #ifdef CONFIG_IPV6_MROUTE
+-		return ip6mr_ioctl(sk, cmd, (void __user *)arg);
++		return ip6mr_ioctl(sk, cmd, karg);
+ #else
+ 		return -ENOIOCTLCMD;
+ #endif
+diff --git a/net/l2tp/l2tp_core.h b/net/l2tp/l2tp_core.h
+index a88e070b431d..91ebf0a3f499 100644
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -272,7 +272,7 @@ int l2tp_nl_register_ops(enum l2tp_pwtype pw_type, const struct l2tp_nl_cmd_ops
+ void l2tp_nl_unregister_ops(enum l2tp_pwtype pw_type);
+ 
+ /* IOCTL helper for IP encap modules. */
+-int l2tp_ioctl(struct sock *sk, int cmd, unsigned long arg);
++int l2tp_ioctl(struct sock *sk, int cmd, int *karg);
+ 
+ /* Extract the tunnel structure from a socket's sk_user_data pointer,
+  * validating the tunnel magic feather.
+diff --git a/net/l2tp/l2tp_ip.c b/net/l2tp/l2tp_ip.c
+index 41a74fc84ca1..2b795c1064f5 100644
+--- a/net/l2tp/l2tp_ip.c
++++ b/net/l2tp/l2tp_ip.c
+@@ -562,19 +562,18 @@ static int l2tp_ip_recvmsg(struct sock *sk, struct msghdr *msg,
+ 	return err ? err : copied;
+ }
+ 
+-int l2tp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++int l2tp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	struct sk_buff *skb;
+-	int amount;
+ 
+ 	switch (cmd) {
+ 	case SIOCOUTQ:
+-		amount = sk_wmem_alloc_get(sk);
++		*karg = sk_wmem_alloc_get(sk);
+ 		break;
+ 	case SIOCINQ:
+ 		spin_lock_bh(&sk->sk_receive_queue.lock);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+-		amount = skb ? skb->len : 0;
++		*karg = skb ? skb->len : 0;
+ 		spin_unlock_bh(&sk->sk_receive_queue.lock);
+ 		break;
+ 
+@@ -582,7 +581,7 @@ int l2tp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 		return -ENOIOCTLCMD;
+ 	}
+ 
+-	return put_user(amount, (int __user *)arg);
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(l2tp_ioctl);
+ 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 08dc53f56bc2..abcdd7cf54b3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3545,11 +3545,10 @@ static int mptcp_ioctl_outq(const struct mptcp_sock *msk, u64 v)
+ 	return (int)delta;
+ }
+ 
+-static int mptcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	bool slow;
+-	int answ;
+ 
+ 	switch (cmd) {
+ 	case SIOCINQ:
+@@ -3558,24 +3557,24 @@ static int mptcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 
+ 		lock_sock(sk);
+ 		__mptcp_move_skbs(msk);
+-		answ = mptcp_inq_hint(sk);
++		*karg = mptcp_inq_hint(sk);
+ 		release_sock(sk);
+ 		break;
+ 	case SIOCOUTQ:
+ 		slow = lock_sock_fast(sk);
+-		answ = mptcp_ioctl_outq(msk, READ_ONCE(msk->snd_una));
++		*karg = mptcp_ioctl_outq(msk, READ_ONCE(msk->snd_una));
+ 		unlock_sock_fast(sk, slow);
+ 		break;
+ 	case SIOCOUTQNSD:
+ 		slow = lock_sock_fast(sk);
+-		answ = mptcp_ioctl_outq(msk, msk->snd_nxt);
++		*karg = mptcp_ioctl_outq(msk, msk->snd_nxt);
+ 		unlock_sock_fast(sk, slow);
+ 		break;
+ 	default:
+ 		return -ENOIOCTLCMD;
+ 	}
+ 
+-	return put_user(answ, (int __user *)arg);
++	return 0;
+ }
+ 
+ static void mptcp_subflow_early_fallback(struct mptcp_sock *msk,
+diff --git a/net/phonet/datagram.c b/net/phonet/datagram.c
+index ff5f49ab236e..3aa50dc7535b 100644
+--- a/net/phonet/datagram.c
++++ b/net/phonet/datagram.c
+@@ -28,24 +28,21 @@ static void pn_sock_close(struct sock *sk, long timeout)
+ 	sk_common_release(sk);
+ }
+ 
+-static int pn_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int pn_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	struct sk_buff *skb;
+-	int answ;
+ 
+ 	switch (cmd) {
+ 	case SIOCINQ:
+ 		lock_sock(sk);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+-		answ = skb ? skb->len : 0;
++		*karg = skb ? skb->len : 0;
+ 		release_sock(sk);
+-		return put_user(answ, (int __user *)arg);
++		return 0;
+ 
+ 	case SIOCPNADDRESOURCE:
+ 	case SIOCPNDELRESOURCE: {
+-			u32 res;
+-			if (get_user(res, (u32 __user *)arg))
+-				return -EFAULT;
++			u32 res = *karg;
+ 			if (res >= 256)
+ 				return -EINVAL;
+ 			if (cmd == SIOCPNADDRESOURCE)
+diff --git a/net/phonet/pep.c b/net/phonet/pep.c
+index 83ea13a50690..faba31f2eff2 100644
+--- a/net/phonet/pep.c
++++ b/net/phonet/pep.c
+@@ -917,10 +917,9 @@ static int pep_sock_enable(struct sock *sk, struct sockaddr *addr, int len)
+ 	return 0;
+ }
+ 
+-static int pep_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int pep_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	struct pep_sock *pn = pep_sk(sk);
+-	int answ;
+ 	int ret = -ENOIOCTLCMD;
+ 
+ 	switch (cmd) {
+@@ -933,13 +932,13 @@ static int pep_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 		lock_sock(sk);
+ 		if (sock_flag(sk, SOCK_URGINLINE) &&
+ 		    !skb_queue_empty(&pn->ctrlreq_queue))
+-			answ = skb_peek(&pn->ctrlreq_queue)->len;
++			*karg = skb_peek(&pn->ctrlreq_queue)->len;
+ 		else if (!skb_queue_empty(&sk->sk_receive_queue))
+-			answ = skb_peek(&sk->sk_receive_queue)->len;
++			*karg = skb_peek(&sk->sk_receive_queue)->len;
+ 		else
+-			answ = 0;
++			*karg = 0;
+ 		release_sock(sk);
+-		ret = put_user(answ, (int __user *)arg);
++		ret = 0;
+ 		break;
+ 
+ 	case SIOCPNENABLEPIPE:
+diff --git a/net/phonet/socket.c b/net/phonet/socket.c
+index 71e2caf6ab85..967f9b4dc026 100644
+--- a/net/phonet/socket.c
++++ b/net/phonet/socket.c
+@@ -387,7 +387,7 @@ static int pn_socket_ioctl(struct socket *sock, unsigned int cmd,
+ 		return put_user(handle, (__u16 __user *)arg);
+ 	}
+ 
+-	return sk->sk_prot->ioctl(sk, cmd, arg);
++	return sk_ioctl(sk, cmd, (void __user *)arg);
+ }
+ 
+ static int pn_socket_listen(struct socket *sock, int backlog)
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index cda8c2874691..3acd6e223cd4 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -4895,7 +4895,7 @@ static struct sock *sctp_accept(struct sock *sk, int flags, int *err, bool kern)
+ }
+ 
+ /* The SCTP ioctl handler. */
+-static int sctp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int sctp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	int rc = -ENOTCONN;
+ 
+@@ -4911,7 +4911,7 @@ static int sctp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 	switch (cmd) {
+ 	case SIOCINQ: {
+ 		struct sk_buff *skb;
+-		unsigned int amount = 0;
++		*karg = 0;
+ 
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		if (skb != NULL) {
+@@ -4919,9 +4919,9 @@ static int sctp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 			 * We will only return the amount of this packet since
+ 			 * that is all that will be read.
+ 			 */
+-			amount = skb->len;
++			*karg = skb->len;
+ 		}
+-		rc = put_user(amount, (int __user *)arg);
++		rc = 0;
+ 		break;
+ 	}
+ 	default:
 -- 
-2.35.3
+2.34.1
 
