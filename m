@@ -1,47 +1,47 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE9813AFB
-	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 16:38:29 +0000 (UTC)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-3f607766059so8811005e9.3
-        for <mptcp@lists.linux.dev>; Mon, 22 May 2023 09:38:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5C814AA3
+	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 16:38:31 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3f417ea5252so43364205e9.0
+        for <mptcp@lists.linux.dev>; Mon, 22 May 2023 09:38:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684773508; x=1687365508;
+        d=tessares.net; s=google; t=1684773509; x=1687365509;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=VO13vNsQibASaYz0/KEq7RnJ1Y6pSb7vyiyDyziHYTI=;
-        b=CUhzBe/j7xwHJ2unekuVtUzW8OfgRphDfW9tekQJJtgW8FqhysHR7mRrR0dQjYwxoX
-         SIXEg9+xWqWjrLovtJ2RcEYy0iieVVrJXf9t3dV730I/ZwxNUIQzlR3BrVI/vPffuWiJ
-         1rjZkaFM5VtR/YH0c1ilBQ/uwV/V9dKQcLHRYZtN/jaXUS+kPk1lxSnnE8KfQPEIykR8
-         qA+emzujh+bg0N41M7VZpKaHqDP1uLhcpNn5pNPSs/saRne84dSVpw8fBGJY/ciXsRGZ
-         Dw0APDpog9GASGkDI6uEH9U9a3+lR94SrgVEZGMq7JEDAwkCitxduY1W5O2fUbUtEDdp
-         /QQA==
+        bh=42HnwqL8CACMjfd5k0LVN3KOk+UVz/nizwfgq7ALM7A=;
+        b=GYPiqymdbQTWS/HTOidF2uHMiYSrOHnPXXflclRrSX7sbvS/bhRnu0RhkS/KT0kSa1
+         c7fj83uqN6HXBBpPTup/aV4mt8240vLAyWi9LF3vNIC6qKO+mGc4MrgfjjCcwwxb+bKn
+         rR8Y/bf2KoWMt6bKCfzEznEbwpaFej2wx6GRCCn37joSIgi3PKgVZxlD3w0erAz5qG0q
+         J/xoeUgXsSXtGS5eKiLIgIznVISrE70zu8yLLutTjUcR816hkApfvBqiGeYjT68cAi+L
+         TYWHCRR3mWTCpe5sx47QC0SrZIVjj1lYKS1bxUUQPw7EW3VGslRS3WNf6mRWOQhefYvD
+         zohg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684773508; x=1687365508;
+        d=1e100.net; s=20221208; t=1684773509; x=1687365509;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VO13vNsQibASaYz0/KEq7RnJ1Y6pSb7vyiyDyziHYTI=;
-        b=PT7j3FSQ+65rFn+oEfD4u39DEGl10iK/8S+HsOiefF7N+4Agx0Pww3R/WDnYC17a0n
-         Y2kzfA1GMb4IdkMHkjfdL+2Cx+PdDJXHLvJWQPHQGADXIfUNFquGuuCJxZcYdHcsYnK6
-         6emyQx2AA4QdzTyvzEhHu4LkZH+TL1DKE9d/YxD87q61e3C7CToIlwmrv9VzhmBrEvqv
-         Br7+PH8Kr145dywugEkNz06gedkiIToYupDhk5LVTIOlMR0D4RYkkQTH5U6sFpYPoeZt
-         XaJscw6XraW3ZVRGeKs5f7E+Sd+dOy3oXdyNUg1eJ1CzIjaLNofETlljRjvlcCDuyDiU
-         Hwpg==
-X-Gm-Message-State: AC+VfDwNato7bJxOywa8I/t4hytmhJC1pDKEuPu/0MO7cMAxImr/2kzU
-	AeIgVl9RqTeQZYLTqoM0CqSbYlKN1JxwVSo5xla3vg==
-X-Google-Smtp-Source: ACHHUZ7+1chqGQXxrMk9h6AJ5nad1uomofa7cIj9MUErHXpFubwkOoHZi/tkfDG9yY9aUDMyn71dSg==
-X-Received: by 2002:a7b:c301:0:b0:3f4:f7c2:d681 with SMTP id k1-20020a7bc301000000b003f4f7c2d681mr8728852wmj.29.1684773507842;
-        Mon, 22 May 2023 09:38:27 -0700 (PDT)
+        bh=42HnwqL8CACMjfd5k0LVN3KOk+UVz/nizwfgq7ALM7A=;
+        b=aXRlyXcrgwrtHQl77V7W1cTarzrKax2Ktrkkv13GxfvPRtRkBDvDc9V38KMi1PL8Rp
+         47yfYJYzqgaP48RNtbF6QPSZvXVaSrXF11nqGNs07XIOxXjMIk6A1h2Yt9AYeO0lBbBH
+         0X4KEFuyLNzjSK6esEHEBbN9xeKn572f84vnX5QRCle7xgkf4AePi4dkUWXKXb2t1C50
+         EiUPS/tfMZ7JzMHuzget+hTF7RTZDJRTLrTgGWM9iAG+n7pcQ/4idOJXwy+NpVDLQ784
+         5y1pBp5mgWfmPqaRQ2SOK8MnZVE1TXtBHCsWz5hCArRLeb11OG/qTHsG6zmNdlN9U7oR
+         yCwQ==
+X-Gm-Message-State: AC+VfDytvQfi4D8ilfBkKlokhB/3LDUfuaq/jUaP6lX0EFZANxXOUODZ
+	gIoEwa4xpjcmbT8MN9xCjOyycG7fKYnTmXBZTXpo4w==
+X-Google-Smtp-Source: ACHHUZ63yRMzkcW4e/IWnpyHaIA/BtZN7XHug3TJAHFjMkrezFhi9J0rC7Sdc3+lhMO1pA7TFGg/DQ==
+X-Received: by 2002:a7b:cbc8:0:b0:3f4:28fd:83e0 with SMTP id n8-20020a7bcbc8000000b003f428fd83e0mr7969355wmi.31.1684773509113;
+        Mon, 22 May 2023 09:38:29 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id z20-20020a7bc7d4000000b003f4ecf1fcbcsm12028808wmk.22.2023.05.22.09.38.27
+        by smtp.gmail.com with ESMTPSA id z20-20020a7bc7d4000000b003f4ecf1fcbcsm12028808wmk.22.2023.05.22.09.38.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 09:38:27 -0700 (PDT)
+        Mon, 22 May 2023 09:38:28 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Mon, 22 May 2023 18:37:56 +0200
-Subject: [PATCH mptcp-net v2 24/37] selftests: mptcp: join: helpers to skip
- tests
+Date: Mon, 22 May 2023 18:37:58 +0200
+Subject: [PATCH mptcp-net v2 26/37] selftests: mptcp: join: skip test if
+ iptables/tc cmds fail
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,93 +50,215 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v2-24-50313e4f83ab@tessares.net>
+Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v2-26-50313e4f83ab@tessares.net>
 References: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
 In-Reply-To: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1846;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5730;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=ssYPH/FkF34V2hwLg74v69CAcuDlCDCX1MF9gD1eLMA=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBka5pwjDuQ+eYvFlt3JICR66IJHWORmoc41V7eH
- Gz8H/FNcTSJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZGuacAAKCRD2t4JPQmmg
- c2nKD/9QN7wzxXOQhfK8OW5mgqcZs0tpea+ITk/E62jxolWDKHmdR08kyTseHyA+IJvTRWorr9e
- /XRLcvaLAJQTgyF33CKpJApBAVUX758hMUqzjbRrRhIa19bogKFpSYCjOPb8y9dUktxwgirXby5
- OIXgL9quPFd74VGYnSggPWj1pNTr5e0V84sJPQs/Kgo4k66kNoMtvnL83qkjjb66bxBSZcEuqUG
- Vdu7lzaoNLhjanbiGAxJyunBcipq+6Xt9EO1QElWf7/DCRvNysdjgOTo++TB3YFhTYDi1NiZkFe
- 3va2hbrH6q/tQ1iC9qTIzEP0icuSXNUNvBiUx2SL8IbOSsCkaojNbg3VT/xLl73jAq9ESs0jSBa
- VP9FXMQBlpGlJHnyJJxnbC6f9WoxlHjbNlpyHQa2b6smWcrlc/hF1frbxVVFO7Zki4IVNa1F54C
- 2h1STOUNi4HrX8K6fTiywD6h2SmaC1mx4Co4GnZLWn2ZF5LWwxEF+piqq4N8e+Cd2z3jm+BGqf3
- 9ZyC4V/wsG7auD8GpcxFc0tua5P/fTHKo4pjcXNhm8ZH4x2gcEs0HE4QKa3E0J5bx8R0epnDKrS
- 2LfbCLhAzwQ9x+wz/L1NsarRB1cNs00xawNpa29ZuKK+W0W2r9CE6ej+LNDXVDwL2MNX6/NavXf
- MJpPYhq+QnjCsyQ==
+ bh=cy/7PsbQAW3ExoO+MorPGKvjY9VB5SgaKy74NoAWXZc=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBka5pxwgNOUxmDt9t3NbaqS2YAgPOU4G/LCuE6m
+ 4CmI6Ua+rmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZGuacQAKCRD2t4JPQmmg
+ c8zND/4lfjlRZO9UZxyOXXqHa0eJh+2R9ZZYdRo3L9zhzACMD2L7MCy/UD2aDlUt3Ef9mNSgANA
+ RNstNGWCMIsjqkz9WCQ7ijnW8+tEleOiKzPDGNrByAAYffXv7BQlfLf7eA9l3SVqwu52e4zR4bW
+ JT/bxZyMe6kly0Z+15/Xbf6jZcMuFK+LGqjCg5Mh8MNd0fVNDA0V3d8BGtXuNOezdtwUJswWwQ0
+ No0MdKY8jBBqjMSv+4kqiZF8TfJCNN5zOWApUy/qq80Rj4o5V6VSNoULQRCLjM2BqEgc3ifx0ST
+ YtHMyF7cXPel4+UXvnB4pNmnut/qtwo34RVTszyblpPu7Cd2FDAwsq0KJaAMp+3ScSCFy9c2DBW
+ AHMAogkudOl4jEnQeCZoslKesmR7qY4+ugacL7VeQuzTyzIypbY5xEav6aFLUUEPkdMV/rMonxQ
+ 5xjqQ1Omv20+aKAMYqEk1/jkYOtr1v+GZeN3a3mdgFVi1qGOcvtMHfaJmk1rZqdi6h8Oi+Zac4l
+ 0KKYy3dPW0tqLtB69KikW193fQdP3eEzGvhTQffNxyVDRxXGmPgnryP6UfWKGvgjcP+oxBTAyEc
+ Va1grC0e+kJpd2bLTpTtvPA/abhtOF2nSFUgu63yix0kJGAvYizcD7OX6kLjBkqIOLkOGfuBJIZ
+ sxoCuAGLcV6ctIA==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 Selftests are supposed to run on any kernels, including the old ones not
 supporting all MPTCP features.
 
-Here are some helpers that will be used to mark subtests as skipped if a
-feature is not supported. Marking as a fix for the commit introducing
-this selftest to help with the backports.
+Some tests are using IPTables and/or TC commands to force some
+behaviours. If one of these commands fails -- likely because some
+features are not available -- we should intercept the error and skip the
+tests requiring these features.
 
-While at it, also check if kallsyms feature is available as it will also
-be used in the following commits to check if MPTCP features are
-available before starting a test.
+Note that if we expect to have these features available and if
+SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var is set to 1, the tests
+will be marked as failed instead of skipped.
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
-Fixes: b08fbf241064 ("selftests: add test-cases for MPTCP MP_JOIN")
+Fixes: 8d014eaa9254 ("selftests: mptcp: add ADD_ADDR timeout test case")
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 27 +++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 88 ++++++++++++++++---------
+ 1 file changed, 57 insertions(+), 31 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 6eabde9d1164..1a8f7c6fa988 100755
+index 73c513f1e808..2ae6d99f3eb9 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -144,6 +144,7 @@ cleanup_partial()
- check_tools()
- {
- 	mptcp_lib_check_mptcp
-+	mptcp_lib_check_kallsyms
+@@ -288,11 +288,15 @@ reset_with_add_addr_timeout()
+ 	fi
  
- 	if ! ip -Version &> /dev/null; then
- 		echo "SKIP: Could not run test without ip tool"
-@@ -193,6 +194,32 @@ cleanup()
- 	cleanup_partial
+ 	ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=1
+-	ip netns exec $ns2 $tables -A OUTPUT -p tcp \
+-		-m tcp --tcp-option 30 \
+-		-m bpf --bytecode \
+-		"$CBPF_MPTCP_SUBOPTION_ADD_ADDR" \
+-		-j DROP
++
++	if ! ip netns exec $ns2 $tables -A OUTPUT -p tcp \
++			-m tcp --tcp-option 30 \
++			-m bpf --bytecode \
++			"$CBPF_MPTCP_SUBOPTION_ADD_ADDR" \
++			-j DROP; then
++		mark_as_skipped "unable to set the 'add addr' rule"
++		return 1
++	fi
  }
  
-+# $1: msg
-+print_title()
-+{
-+	printf "%03u %-36s %s" "${TEST_COUNT}" "${TEST_NAME}" "${1}"
+ # $1: test name
+@@ -336,17 +340,12 @@ reset_with_allow_join_id0()
+ #     tc action pedit offset 162 out of bounds
+ #
+ # Netfilter is used to mark packets with enough data.
+-reset_with_fail()
++setup_fail_rules()
+ {
+-	reset "${1}" || return 1
+-
+-	ip netns exec $ns1 sysctl -q net.mptcp.checksum_enabled=1
+-	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=1
+-
+ 	check_invert=1
+ 	validate_checksum=1
+-	local i="$2"
+-	local ip="${3:-4}"
++	local i="$1"
++	local ip="${2:-4}"
+ 	local tables
+ 
+ 	tables="${iptables}"
+@@ -361,15 +360,32 @@ reset_with_fail()
+ 		-p tcp \
+ 		-m length --length 150:9999 \
+ 		-m statistic --mode nth --packet 1 --every 99999 \
+-		-j MARK --set-mark 42 || exit 1
++		-j MARK --set-mark 42 || return ${ksft_skip}
+ 
+-	tc -n $ns2 qdisc add dev ns2eth$i clsact || exit 1
++	tc -n $ns2 qdisc add dev ns2eth$i clsact || return ${ksft_skip}
+ 	tc -n $ns2 filter add dev ns2eth$i egress \
+ 		protocol ip prio 1000 \
+ 		handle 42 fw \
+ 		action pedit munge offset 148 u8 invert \
+ 		pipe csum tcp \
+-		index 100 || exit 1
++		index 100 || return ${ksft_skip}
 +}
 +
-+# [ $1: fail msg ]
-+mark_as_skipped()
++reset_with_fail()
 +{
-+	local msg="${1:-"Feature not supported"}"
++	reset "${1}" || return 1
++	shift
 +
-+	mptcp_lib_fail_if_expected_feature "${msg}"
++	ip netns exec $ns1 sysctl -q net.mptcp.checksum_enabled=1
++	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=1
 +
-+	print_title "[ skip ] ${msg}"
-+	printf "\n"
-+}
++	local rc=0
++	setup_fail_rules "${@}" || rc=$?
 +
-+# $@: condition
-+continue_if()
++	if [ ${rc} -eq ${ksft_skip} ]; then
++		mark_as_skipped "unable to set the 'fail' rules"
++		return 1
++	fi
+ }
+ 
+ reset_with_events()
+@@ -384,6 +400,25 @@ reset_with_events()
+ 	evts_ns2_pid=$!
+ }
+ 
++reset_with_tcp_filter()
 +{
-+	if ! "${@}"; then
-+		mark_as_skipped
++	reset "${1}" || return 1
++	shift
++
++	local ns="${!1}"
++	local src="${2}"
++	local target="${3}"
++
++	if ! ip netns exec "${ns}" ${iptables} \
++			-A INPUT \
++			-s "${src}" \
++			-p tcp \
++			-j "${target}"; then
++		mark_as_skipped "unable to set the filter rules"
 +		return 1
 +	fi
 +}
 +
- skip_test()
+ fail_test()
  {
- 	if [ "${#only_tests_ids[@]}" -eq 0 ] && [ "${#only_tests_names[@]}" -eq 0 ]; then
+ 	ret=1
+@@ -750,15 +785,6 @@ pm_nl_check_endpoint()
+ 	fi
+ }
+ 
+-filter_tcp_from()
+-{
+-	local ns="${1}"
+-	local src="${2}"
+-	local target="${3}"
+-
+-	ip netns exec "${ns}" ${iptables} -A INPUT -s "${src}" -p tcp -j "${target}"
+-}
+-
+ do_transfer()
+ {
+ 	local listener_ns="$1"
+@@ -2029,23 +2055,23 @@ subflows_error_tests()
+ 	fi
+ 
+ 	# multiple subflows, with subflow creation error
+-	if reset "multi subflows, with failing subflow"; then
++	if reset_with_tcp_filter "multi subflows, with failing subflow" ns1 10.0.3.2 REJECT &&
++	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 0 2
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+-		filter_tcp_from $ns1 10.0.3.2 REJECT
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+ 		chk_join_nr 1 1 1
+ 	fi
+ 
+ 	# multiple subflows, with subflow timeout on MPJ
+-	if reset "multi subflows, with subflow timeout"; then
++	if reset_with_tcp_filter "multi subflows, with subflow timeout" ns1 10.0.3.2 DROP &&
++	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 0 2
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+-		filter_tcp_from $ns1 10.0.3.2 DROP
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+ 		chk_join_nr 1 1 1
+ 	fi
+@@ -2053,11 +2079,11 @@ subflows_error_tests()
+ 	# multiple subflows, check that the endpoint corresponding to
+ 	# closed subflow (due to reset) is not reused if additional
+ 	# subflows are added later
+-	if reset "multi subflows, fair usage on close"; then
++	if reset_with_tcp_filter "multi subflows, fair usage on close" ns1 10.0.3.2 REJECT &&
++	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
+ 		pm_nl_set_limits $ns1 0 1
+ 		pm_nl_set_limits $ns2 0 1
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+-		filter_tcp_from $ns1 10.0.3.2 REJECT
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
+ 
+ 		# mpj subflow will be in TW after the reset
 
 -- 
 2.39.2
