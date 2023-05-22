@@ -1,47 +1,47 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AB313AFB
-	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 16:38:27 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3f601c57d8dso13479585e9.0
-        for <mptcp@lists.linux.dev>; Mon, 22 May 2023 09:38:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CCD134B0
+	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 16:38:28 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f605d8a8a9so11272885e9.0
+        for <mptcp@lists.linux.dev>; Mon, 22 May 2023 09:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google; t=1684773506; x=1687365506;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BfALGkbdeZqYn7xN/5Z0nHmjpPlv4+uPxFOZ58/bR6w=;
-        b=xcUt8yJ+/Ivu20Zc/Ihx/i92T32pqE7DnbK+uRqYvEZxfYY1bLpIBKPZekfXnqiWW1
-         kFnqQqFoCeiWwxOKtJAX5VEH/nHPDLLt8n/RmwU2t99EeIs1ROdI4lgcv2TqevCyGDN6
-         19d15LU0v8bNFaADF2EU87OadxDS0uoJdhbzemjATAX+UsN1qA3RKVVFpF4Km04dc7/i
-         /k64a+CoTJqFfg/awkI1MXEuK4fOlopBHreIS5d2OrUtWxfETCv9WQprNk9PleL4S/wM
-         VtzkIwQCRDcDcQzXLUGPil78u+RVMHpZdLpkClq2vhFkgOb3+Wbvag4dwB3lOKS2lFzK
-         QBoQ==
+        bh=hlWfw88eYnHZQLPYDvP0JzIhuYT6IbliwX/cY1enyT4=;
+        b=4BopQGhItDmqI1i2zwL4NgwyistT3pMmBkciTZU7HKR1qPSBMKB44oNidfhNO0Q1ET
+         65YP/0QE8Bcgp2XLGUzEnppFn4Dmhx0R7M4QnatdUEomfsevBEUDazJn2CaNpY0oVeSe
+         C5thGzs1Z9XmI27wP6lmk7/PGHI1p57LajUMBIMV8rhPm4rZwA0NJ7/1sGApFFLkU124
+         6oTzeMmvO3iACsIkX+1eWbteqPkFxFuIbObbrpNMIYEwX6zDpCy3ApjGINQ5pcSWXmLW
+         GCS3HdBt0LU67YiwCm/7qwI9sVCpYOGWAkrGcsa6e0ORw85oUFijhGai3+mYaJ5oMkvm
+         wf+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20221208; t=1684773506; x=1687365506;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BfALGkbdeZqYn7xN/5Z0nHmjpPlv4+uPxFOZ58/bR6w=;
-        b=RzX8PQzl5e584w30JjzabgE34uWSgB7vZlxSDJlxOPZFx9tq6dmIi0pZtsO88JlvrT
-         M0n9PKtZuoVeVMOV6jKcUjCFmi0AREpostNlYgnY8pgSN39xvDVtTSX86h8jhYSycaDz
-         4Xb2VI56SWxT41UNinKkfCU6JBKJroc6T490ahc+JPo68YaTSPmPNPTlIVg8OAT9QHo9
-         kHE6/Ch+owQ4l0DPc09kaIOsSTCMatBsXKf8THHL7tmdt8PxLzAQ/9krCRQTTEdAP2an
-         gRpEWxGqJoliyhhX/YXoacHAkoJy8c4jsCDQl/QYjzzd+28n+0COFCw52pq8U7M/5uEd
-         PSSA==
-X-Gm-Message-State: AC+VfDxSSlavMMwNxaqFJXA7UrgllRL/dsbgvG3eBFYd2ahyLr8vnLYp
-	Qg1/8HmzH7ifPzvZCgGdAwOFLviz+Cn2GLYTygACHg==
-X-Google-Smtp-Source: ACHHUZ5hPMCBCx0Rz4yZ5W0r8UyIV7NKi4p08AK+gvUjSBwiERiGuebc6AaXkSmG6z5saNCZKv1UGw==
-X-Received: by 2002:a1c:730e:0:b0:3f4:2d85:bcda with SMTP id d14-20020a1c730e000000b003f42d85bcdamr8116087wmb.19.1684773505854;
-        Mon, 22 May 2023 09:38:25 -0700 (PDT)
+        bh=hlWfw88eYnHZQLPYDvP0JzIhuYT6IbliwX/cY1enyT4=;
+        b=AG/zTYKJ6YIy6qLLiMjuSLL3hHBlHAphTH5JoJkbMBAUJ4eHwH+ZL2cSPUFJI0aF7R
+         JBGCHgl9xuh0RgAkiC+Wo2ZOSzh6syZhmPOetTg5I4iuhjzfmWcbuPe5qSC6AK+fYprr
+         QMaVwsYo+qhLi6C+H0w988j62J8SVW97UhseRnx4GXonNt20kVHFSiZLz0r/A7EsM0dv
+         5U/Neghktxqgtl9uxgtdrWSmFqpvbuu/hbE4eKIOMw9V0AcgKJGjPHZfT6jIWPn0N2Qa
+         A2sGhBkXmjomT+pcWHwHmJrwvPTearuhCeD8tDNU3ywDgLGRzTEyX/PSWNqJ1sf1lHab
+         52rQ==
+X-Gm-Message-State: AC+VfDw3mkBLfO06XrAQPb+5iKv/xxiDksYBiDH0cCj2/rxTyIAH+nqq
+	8S5apLp6JtA5NAt0Gu97A1QZ4w+nCUOk4T5YT9kxWw==
+X-Google-Smtp-Source: ACHHUZ7S8uU4MxNs0/aBnJMvlce5McbouOD7hdFsXPxTk74YnBnqvNF4aDXPrspUuCoNweYN2Iu4OQ==
+X-Received: by 2002:a7b:ce0e:0:b0:3f5:1bca:345a with SMTP id m14-20020a7bce0e000000b003f51bca345amr7849200wmc.21.1684773506543;
+        Mon, 22 May 2023 09:38:26 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
         by smtp.gmail.com with ESMTPSA id z20-20020a7bc7d4000000b003f4ecf1fcbcsm12028808wmk.22.2023.05.22.09.38.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 09:38:25 -0700 (PDT)
+        Mon, 22 May 2023 09:38:26 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Mon, 22 May 2023 18:37:53 +0200
-Subject: [PATCH mptcp-net v2 21/37] selftests: mptcp: userspace pm: skip if
- not supported
+Date: Mon, 22 May 2023 18:37:54 +0200
+Subject: [PATCH mptcp-net v2 22/37] selftests: mptcp: userspace pm: skip PM
+ listener events tests if unavailable
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,62 +50,71 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v2-21-50313e4f83ab@tessares.net>
+Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v2-22-50313e4f83ab@tessares.net>
 References: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
 In-Reply-To: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1277;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1621;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=JbY9QbYLXxn3OEIxSLexF1YjsYYuO9zJrwO1xHi6YGI=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBka5pwwyhzyStGeeuaPSEXesFjeGWvBXg0yBIBs
- XgmCb16nAiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZGuacAAKCRD2t4JPQmmg
- c1z3EACOzUOC7BRaeHDY1BQNaLUSjlQjjiO9ZMc0XXLybmBbAlHlMP3u+gjLeCbCOqnwsgQIBVa
- Y7yvFW23rg5Jh99jJT8Luv60HLVOVr0iYXuAFAQPOb7eJpOU6iOPBM6zGjkvj/u9Hwa4IVOzWZd
- rUZEr6Hz3L4XzdaCwa3PMwYCH72wqDy0ljQ+GT6RTG6+NTUenWxGDSnst5TWPBGCFD48KvJk7Lz
- ytJnxSojqQobSG6fYUH6oNpOGaBCA+P+q2tdgNOoy+Z4dQJCxRaJjLKHoNsxuy1twnpr1nvrgVR
- GysRfuaVvglblx7ml/ce3IOQa1FZMVLYM5AGKcZnqN+vfP0XYwRNJIonJ5kk44/Sf0N3OkGFs04
- bJNgGi/l7L8odHpDQ/jAsPzoQUTeVjLxyKVWapFeBJeRlpc7sFblhlBGx2qC4L2S/eBIVJ1rHGk
- X3gFp0Hcf/5QtQ0xAiWP9sTSB59eNUHaQ34zl0sdVdmvsnPklCYR01sQFarkuJcCsXBLQ7N2zOB
- lLuhwbCbMO0lMXKbUmb/D9pnnTL0wRIdKqFroCE9c6yHG9GKppeQe7sH06nO5FS3QZiJx+vktKn
- MFMaXWlKaFHpIJau6pqYLx7jBuK2E+qO70gRWHYPSRkC/RX3ZhgUtbDv5OpKfVwuTKatpXdlRZF
- Rc+Val04rj8jZ7g==
+ bh=wo1JLrvXXpEhA/1pGr2BkFQUY2u/ZSynFAbghLPp0/k=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBka5pwBbMy7JUsdVVFJyghdyXeV7UlsaP6NMGgm
+ S/9Irr/B0iJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZGuacAAKCRD2t4JPQmmg
+ c+8QEACQJPsYLmQxjRzSB/Hw+1NuTyvXj0vCcEgu0afxSZeyJfBPtGC1HVP7Aj3kFjsG1zjgWuF
+ rQqvVa605guQ6jLUVqGp94GiyLZDUS6xFP+OXg74X+SZSv9+SGZN7hjhokVa44r5JMNPscNLkaf
+ cQVf+INqbBB+JjX7/qxV+gcmiISnZwqN7UrA2FFYzaVtBBUaor/SEs9wJfW5bV3pSKYCaLuJ0vu
+ g75j5a0FEzM4CaStHsYs29SfP+BYrCh6DgqCXs1pfjugJkdOh10Jyqm5BqfYACqXr6LhxOgTwpX
+ oG5St03ey24SlWZlvzcmfI+6k834ZaUAIOqOaN78UO3vHdkVSmmbCSPHp+0gzHt+aSxHMQjN4hX
+ Zci0zAQDhfLuT6XGMzsXVf9Wl+KlKn4T/Brw6FtUzbO4BXqUgwmL28rHTQypZQdXIkJaeyh48wl
+ 2MBFSaEu6zZOTb52Kbfv2PH9vzC+UyyGE6JIsfffIr4HHe8rR9272FJzzV9xXTpL1LvFa+cCQAf
+ gpc3IIjjKZPz2hYz9lmA9Qe5OHAJHi0N7ylau96SrbHGRNj1w2gIy81qA65grpNsxDFlG8OWjAT
+ m93hxDzYZvRlYNTRJ3FALVvRlEAlFLZPJidw7mILbDeRWLoNF5B9Jmt2DX6+zCbNVtZn1GV+FJM
+ IttLcdyJypb7D3A==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 Selftests are supposed to run on any kernels, including the old ones not
 supporting all MPTCP features.
 
-One of them is the MPTCP Userspace PM introduced by commit 4638de5aefe5
-("mptcp: handle local addrs announced by userspace PMs").
+One of them is the new listener events linked to the path-manager
+introduced by commit f8c9dfbd875b ("mptcp: add pm listener events").
 
-We can skip all these tests if the feature is not supported simply by
-looking for the MPTCP pm_type's sysctl knob.
+It is possible to look for "mptcp_event_pm_listener" in kallsyms to know
+in advance if the kernel supports this feature and skip these sub-tests
+if the feature is not supported.
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
-Fixes: 259a834fadda ("selftests: mptcp: functional tests for the userspace PM type")
+Fixes: 6c73008aa301 ("selftests: mptcp: listener test for userspace PM")
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 192ab818f292..38a1d34f7b4d 100755
+index 38a1d34f7b4d..98d9e4d2d3fc 100755
 --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
 +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -5,6 +5,11 @@
+@@ -4,6 +4,7 @@
+ . "$(dirname "${0}")/mptcp_lib.sh"
  
  mptcp_lib_check_mptcp
++mptcp_lib_check_kallsyms
  
-+if ! mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-+	echo "userspace pm tests are not supported by the kernel: SKIP"
-+	exit ${KSFT_SKIP}
-+fi
+ if ! mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 	echo "userspace pm tests are not supported by the kernel: SKIP"
+@@ -914,6 +915,11 @@ test_listener()
+ {
+ 	print_title "Listener tests"
+ 
++	if ! mptcp_lib_kallsyms_has "mptcp_event_pm_listener$"; then
++		stdbuf -o0 -e0 printf "LISTENER events                                            \t[SKIP] Not supported\n"
++		return
++	fi
 +
- ip -Version > /dev/null 2>&1
- if [ $? -ne 0 ];then
- 	echo "SKIP: Cannot not run test without ip tool"
+ 	# Capture events on the network namespace running the client
+ 	:>$client_evts
+ 
 
 -- 
 2.39.2
