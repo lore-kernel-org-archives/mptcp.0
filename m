@@ -1,94 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A581426B
-	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 13:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684763815;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fjrb07kx4muJdYSg6hex89U6fZNuDWwVyMD/4PaUa/M=;
-	b=YAf54WXOBmFnslZgog1zva2NnEi5wDnfoNNngRGKZxqJYBY/vY9uvq6NZx0gq3XMk14f5v
-	M303NYBXBZMleQGGNVJ48DJdw1ZX4cXjzxySzZbdJLkcIZrWUfreRYFzFbL3zsJca+IEOb
-	V6VnDpHtwMdGV9mEfNZV0zTt3vpv0KU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-159-88mTehgTPVm2Ek_wwW46pQ-1; Mon, 22 May 2023 09:56:52 -0400
-X-MC-Unique: 88mTehgTPVm2Ek_wwW46pQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C809F800B2A
-	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 13:56:51 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.194.191])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 58405492B0A
-	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 13:56:51 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v2 3/6] mptcp: move snd_una update earlier for fallback socket.
-Date: Mon, 22 May 2023 15:56:29 +0200
-Message-Id: <df168c47f2a89966b6f0e106ed290bb1efea5264.1684763196.git.pabeni@redhat.com>
-In-Reply-To: <cover.1684763196.git.pabeni@redhat.com>
-References: <cover.1684763196.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091C11079A
+	for <mptcp@lists.linux.dev>; Mon, 22 May 2023 14:48:54 +0000 (UTC)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ae85b71141so29878845ad.0
+        for <mptcp@lists.linux.dev>; Mon, 22 May 2023 07:48:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684766934; x=1687358934;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yaNqswEKcNGQ+LEITFnF/H4BbqKzWkEFJ1DYa/as1GQ=;
+        b=Y9BtDa+F0QVIQDP/kpIi03r3orB6f6rp74m4Y3G9NSVvMz+7CX8NUwzDGXnrpgypbm
+         p7pjEnMm3zlqPnvUbaTrE6n8LJD7jQWYfj4Y9UECh59+cyC1FFXp76uxoC0e5EsGyVkh
+         aEOCvaCH5E2s5mJORWg2gpQMQKDffUdlozlYzcrarBzefNl82cK27//4oorktpKQwVSw
+         rAjq16gmqi6gl3Vu0XqGp+Upc7X/1Ej9ae8w02QDvZ9ykoRrZSGgaMzTNkpCLrRXyysX
+         geqkzsMA7RGkZrneKEErvtYeyn9IalFmAcgv2DZ8b0M4qIt9oIFeCbNbjhSbtR4OdPzS
+         aseQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684766934; x=1687358934;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yaNqswEKcNGQ+LEITFnF/H4BbqKzWkEFJ1DYa/as1GQ=;
+        b=HgwOLDFqmnOFpa7GbEOQb8G7xYxqLzfUffRHkEIluVkLsE/H1m84Org7Ahag//xxTF
+         gVNarPc0TKurUwyLeMdE7MSN9omzZokHdRpAlNy3B0aMtVB0ZO2TgdU3bIMdD9KojPcS
+         Mhfgy5INEaGH/gTagEi1ROUCWTDVcOV3z+QOb9Yauf4Y1/dmpGcApmN7NfQYylWVXQLN
+         73s6vaE4tbtWcgQm39jfCMD2J26753OZ02FIWKyWdDlzjJXfzu/S3rkjV8pGAllK3dJW
+         cPQWGcipwBkFu/MYPAsA/wwG8LLa7jwfNDRf7gAzht6Mz4GAaC2VGox9z+53txq6nPr4
+         mTVA==
+X-Gm-Message-State: AC+VfDxoFgUa6qdOJpP9O1jBdeLfLIAr3HMhBghZP/paG/uF0DnYHouD
+	hXp/AhGqEVVe0Y/gUCxIkA==
+X-Google-Smtp-Source: ACHHUZ5hku8E46q0+2O/kS/0GuBJOelK6w7V3lyfQb5Qt72J0ATSDRxfePdTRLFhBc/6J2TFxu8zTA==
+X-Received: by 2002:a17:902:e5c8:b0:1aa:e425:2527 with SMTP id u8-20020a170902e5c800b001aae4252527mr11312754plf.21.1684766934292;
+        Mon, 22 May 2023 07:48:54 -0700 (PDT)
+Received: from [127.0.0.1] ([13.64.213.139])
+        by smtp.gmail.com with ESMTPSA id j5-20020a170902c3c500b001aface7bdd8sm2855529plj.31.2023.05.22.07.48.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 May 2023 07:48:53 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <844d9f8c87bc733488eba77a4a77e7040e87d8ed.1684760588.git.geliang.tang@suse.com>
+References:
+ <844d9f8c87bc733488eba77a4a77e7040e87d8ed.1684760588.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: update userspace pm subflow tests: Tests
+ Results
+Message-ID: <04009c5e-d4fa-6bcd-b617-4fc4630db233@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 22 May 2023 14:48:52 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-That will avoid an unneeded conditional in both the fast-path
-and in the fallback case and will simplify a bit the next
-patch.
+Hi Geliang,
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/options.c  | 6 ++++++
- net/mptcp/protocol.c | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Thank you for your modifications, that's great!
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 8a8083207be4..4bdcd2b326bd 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1119,6 +1119,12 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 		mptcp_data_lock(subflow->conn);
- 		if (sk_stream_memory_free(sk))
- 			__mptcp_check_push(subflow->conn, sk);
-+
-+		/* on fallback we just need to ignore the msk-level snd_una, as
-+		 * this is really plain TCP
-+		 */
-+		msk->snd_una = READ_ONCE(msk->snd_nxt);
-+
- 		__mptcp_data_acked(subflow->conn);
- 		mptcp_data_unlock(subflow->conn);
- 		return true;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index b2f0408a5d7c..d93c8cdeeda7 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1006,12 +1006,6 @@ static void __mptcp_clean_una(struct sock *sk)
- 	struct mptcp_data_frag *dtmp, *dfrag;
- 	u64 snd_una;
- 
--	/* on fallback we just need to ignore snd_una, as this is really
--	 * plain TCP
--	 */
--	if (__mptcp_check_fallback(msk))
--		msk->snd_una = READ_ONCE(msk->snd_nxt);
--
- 	snd_una = msk->snd_una;
- 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list) {
- 		if (after64(dfrag->data_seq + dfrag->data_len, snd_una))
--- 
-2.40.1
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_userspace_pm =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5356778448224256
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5356778448224256/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 5 failed test(s): packetdrill_add_addr packetdrill_dss =
+packetdrill_fastopen selftest_diag selftest_userspace_pm =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4653091006447616
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4653091006447616/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6482678355066880
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6482678355066880/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5778990913290240
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5778990913290240/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/5b62b7942683
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
