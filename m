@@ -1,106 +1,134 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D891F920
-	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 16:55:06 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f608ba2e06so818225e9.1
-        for <mptcp@lists.linux.dev>; Tue, 23 May 2023 09:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684860905; x=1687452905;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=21/wNpzZB4QW1BNkWfwsih5bn3hms5mNp2FoBsmiTro=;
-        b=V0YrWrFw4OzZZ1RWo0ovKORByFjM2BZXMmwx2Jt5YpCHwHspfPXW3t9PM6FCv0G5h4
-         IAP8omZ3+5V8BDqHl77ZV0bzzT77nCzjYp4j3RcvfKCBHC8Jg9TE3n/FJy86aMkOa0cv
-         6nDsZ3nxmI2IogQ0FRAziiIxlazb88y80RNIa9yyPzCXm0CRN+QCw+Y9kKEHCAH/hWow
-         y/890lsO3XnXxLiwQVEmjC5rU/gvpxqfxBS0Nu5qfJXO5kiWypPEQWFyvph4nx5Exg3j
-         z5V7bEaI6Hr/fRv+rXIiR+/okRh8PLZD7u2cd0e9ibMgOWj33si0e7p97ZMSInTZCa4z
-         EF9w==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291C61F93D
+	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 17:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1684861261;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nAEN1cIDZ3C5DaV62JXKvK1B7KcCiHM9w7pjuXmZ6SI=;
+	b=ceAFT/X9uygrqgjfXeGgpn9SVOZtmNnaOzlyLqwVSdfej1DlEDaA7puV4dLUJld7/4+trh
+	wsocrMECbf7R7eCPc21X5FtLcsCAhMlV/tgMOQ5NScPOxgDRZch3WxcqHQ+TJPZLlXK5Su
+	QW0VBbTpkZBSksaM1S/NMntm3YR/uws=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-39-0D-qngChPpqGbqLa8G2bSg-1; Tue, 23 May 2023 12:59:15 -0400
+X-MC-Unique: 0D-qngChPpqGbqLa8G2bSg-1
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-3f386bb966cso11728291cf.1
+        for <mptcp@lists.linux.dev>; Tue, 23 May 2023 09:59:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684860905; x=1687452905;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=21/wNpzZB4QW1BNkWfwsih5bn3hms5mNp2FoBsmiTro=;
-        b=YypKCjPRlQznnbEfwCIc26rF81Tyk1KxdZ7Op49YklumPHn3TUPlGiflzSb3UnYpF6
-         Unsr2+n/jLClC9wRQrNa3D+4GbvmLmae20emusSiFKUaw9vvar5goTnSCKxcDBah6Cnk
-         DCEXLYPpnOCLn1wai4jxA2B/9VJS//a6+okIT9I6nONb1cnbK61CvfY5gqbrI20xCA0d
-         ePkzI2fvUdjGu++5F6yPrYxlpNFsv1HtJ+tAfM83vBQw+KAcH/qhAcluCos0jwAQkGAH
-         4QfZVgsPWTDvjtmPB8I1Q2UpdhGfRMobwf9gtAjcDSQlI0yaKKJcwGycE3OE4PrXPA/C
-         W4UQ==
-X-Gm-Message-State: AC+VfDyRrOmPvYp9JTU9Z2v1s79UvIOliKK2TmMkraC5V+/r8gwE+8ch
-	OUkTRqPjzp0WjE5IaLOA/xTazA==
-X-Google-Smtp-Source: ACHHUZ40fM690QaCKDpTXtsZPbHxIHuohvV8Tg5rLelwWzibKPv4Jk5/JRSlhyjVT9jIgDNkDZ+pvg==
-X-Received: by 2002:a1c:6a04:0:b0:3f6:c8c:7048 with SMTP id f4-20020a1c6a04000000b003f60c8c7048mr2037021wmc.20.1684860904855;
-        Tue, 23 May 2023 09:55:04 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:6cb1:7d36:3be3:30d? ([2a02:578:8593:1200:6cb1:7d36:3be3:30d])
-        by smtp.gmail.com with ESMTPSA id d25-20020a1c7319000000b003f4ddde398csm12701652wmb.21.2023.05.23.09.55.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 09:55:04 -0700 (PDT)
-Message-ID: <c89568ea-37c5-5e64-2a5b-1ef810f5e4a0@tessares.net>
-Date: Tue, 23 May 2023 18:55:03 +0200
+        d=1e100.net; s=20221208; t=1684861148; x=1687453148;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8CtFrkW3JRVDnT4ZLVE8LbalkLx44MXM3DZ91l+Ejc0=;
+        b=amUw027fWuQi7Ln2yZZKedLE69cvo/kfsRcazk+6d+NKjgqH/Ah0Oas+HCNhKjMg5c
+         KXqzJvVd4zI9efV65sTNNtSUCU0+qxjd7Pa44/yApy9kZ3k5uNuWbFjqWB2OiOvg//oK
+         1Ma4WAaW25IwI4NfQQiZeBaDUGtpIgj7gR4D5SUGK/+CsHp9F6lpwPXP+AM01J0ksXc4
+         fwI39DMP3Gmbk3cYbKNcI8g0eEUDZJTr14We75zwgeczXyJ/oeGEMiUIuhX07EPqp1Lb
+         anWQ1x8hMTfmPtn79U19jAs8f4it+yf12+jHfxT8p9Vj+8tGz9VwYlNfvLRAWXhMInLY
+         nfag==
+X-Gm-Message-State: AC+VfDzTclTOCa1+IS+hxYFrUkK8C4dm/H4mXcof6+iRpYPEvcq8BMxH
+	wWJeHs1XokIRZj40jmZdV7z1lJBPKTcZQC7f3Pctnqd4wm5QVtlGl1CZ8tV8kIQ2YFQOFOrJeh9
+	bfDFIFIgmZ/4rqqfnAy//tLQ=
+X-Received: by 2002:a05:622a:1195:b0:3f5:1def:67f9 with SMTP id m21-20020a05622a119500b003f51def67f9mr23893678qtk.6.1684861148219;
+        Tue, 23 May 2023 09:59:08 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4zYgSqPtnT6hIT1Gig1WrcE/GoauuzxMPdsbffUaIMfCbl7Bu/sa6Lf/7f9oIan4WyB70NqA==
+X-Received: by 2002:a05:622a:1195:b0:3f5:1def:67f9 with SMTP id m21-20020a05622a119500b003f51def67f9mr23893656qtk.6.1684861147894;
+        Tue, 23 May 2023 09:59:07 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-246-0.dyn.eolo.it. [146.241.246.0])
+        by smtp.gmail.com with ESMTPSA id v10-20020a0cf90a000000b0062136626e09sm2907328qvn.57.2023.05.23.09.59.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 09:59:07 -0700 (PDT)
+Message-ID: <e53c77aade018d005dbb41e343a0afca9a793f19.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 5/6] selftests: mptcp: explicitly tests
+ aggregate counters
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+Date: Tue, 23 May 2023 18:59:05 +0200
+In-Reply-To: <7c0c7c6e-c3ba-bd6c-7dfc-c0d1de272a5a@tessares.net>
+References: <cover.1684763196.git.pabeni@redhat.com>
+	 <7e32265ebe2ed650df1373c3774656c1b62f04d4.1684763197.git.pabeni@redhat.com>
+	 <7c0c7c6e-c3ba-bd6c-7dfc-c0d1de272a5a@tessares.net>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-next v2 2/6] mptcp: introduce MPTCP_FULL_INFO
- getsockopt
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1684763196.git.pabeni@redhat.com>
- <7caed74486cdeec1c929cd2b62d3f04dd67db46e.1684763196.git.pabeni@redhat.com>
- <ee0d7408-4b5c-857f-10eb-02cb1162b5db@tessares.net>
- <1f166b0fe5d7d79682cf8bdc398c7638e1a52a72.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <1f166b0fe5d7d79682cf8bdc398c7638e1a52a72.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Tue, 2023-05-23 at 17:29 +0200, Matthieu Baerts wrote:
+>=20
+> On 22/05/2023 15:56, Paolo Abeni wrote:
+> > Update the existing sockopt test-case to do some some
+> > basic checks on the newly added counters.
+> >=20
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> >  .../selftests/net/mptcp/mptcp_sockopt.c       | 27 +++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
+> >=20
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/=
+testing/selftests/net/mptcp/mptcp_sockopt.c
+> > index ae61f39556ca..869c041c34f3 100644
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> > @@ -51,6 +51,11 @@ struct mptcp_info {
+> >  =09__u8=09mptcpi_local_addr_used;
+> >  =09__u8=09mptcpi_local_addr_max;
+> >  =09__u8=09mptcpi_csum_enabled;
+> > +=09__u32=09mptcpi_retransmits;
+> > +=09__u64=09mptcpi_bytes_retrans;
+> > +=09__u64=09mptcpi_bytes_sent;
+> > +=09__u64=09mptcpi_bytes_received;
+> > +=09__u64=09mptcpi_bytes_acked;
+> >  };
+> > =20
+> >  struct mptcp_subflow_data {
+> > @@ -83,8 +88,10 @@ struct mptcp_subflow_addrs {
+> > =20
+> >  struct so_state {
+> >  =09struct mptcp_info mi;
+> > +=09struct mptcp_info last_sample;
+> >  =09uint64_t mptcpi_rcv_delta;
+> >  =09uint64_t tcpi_rcv_delta;
+> > +=09bool pkt_stats_avail;
+> >  };
+> > =20
+> >  static void die_perror(const char *msg)
+> > @@ -320,6 +327,9 @@ static void do_getsockopt_mptcp_info(struct so_stat=
+e *s, int fd, size_t w)
+> > =20
+> >  =09assert(olen =3D=3D sizeof(i));
+>=20
+> (see below)
+>=20
+> > +=09s->pkt_stats_avail =3D olen =3D=3D sizeof(i);
+>=20
+> Good idea, it is simple! But then we should remove the assert just above.
+>=20
+> And maybe we should have here: olen >=3D sizeof(i), no?
+> Maybe we don't need to support newer kernels but it is just in case we
+> add more info later even if I guess we would modify mptcp_info if we does=
+.
+>=20
+> Also, maybe "struct mptcp_info" will be defined somewhere else and we
+> will not use the one defined here above?
 
-On 23/05/2023 18:46, Paolo Abeni wrote:
-> On Tue, 2023-05-23 at 17:31 +0200, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 22/05/2023 15:56, Paolo Abeni wrote:
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>
->> Do you mind motivating the addition of this new socket option? :)
-> 
-> Sure, I will do.
-> 
->> Also, it is not clear how we manage the different size for struct
->> tcp_info and struct mptcp_subflow_addrs but I will look at that in more
->> details later.
-> 
-> This patch does not allow for different mptcp_subflow_addrs size. I
-> hope it's not a problem??!
+Yep, I'll use:
 
-I guess it is fine, it should not change. But then it is probably better
-to add a note in mptcp.h, no?
+=09olen >=3D sizeof(i)
 
-The alternative is write something like:
+thanks!
 
- - header with the features we want + number of subflows per feature
-(and the kernel can write how many were available)
- - feature 1 (tcp_info):
-   - mptcp_subflow_data structure
-   - tcp_info for each subflow
- - feature 2 (addr):
-   - mptcp_subflow_data structure
-   - addr for each subflow
+/P
 
-So we can accept multiple features and we can pick what we want.
-
-Just an idea, maybe it is not useful or too complex to manage.
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
