@@ -1,45 +1,45 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284681E500
-	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 09:34:23 +0000 (UTC)
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3093a7b71fbso6858453f8f.2
-        for <mptcp@lists.linux.dev>; Tue, 23 May 2023 02:34:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9A21E516
+	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 09:58:28 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3f603ff9c02so15633695e9.2
+        for <mptcp@lists.linux.dev>; Tue, 23 May 2023 02:58:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684834462; x=1687426462;
+        d=tessares.net; s=google; t=1684835906; x=1687427906;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PjeScUQVu1Rike7/sLjFfzE1kG65THUKFVR1fpLAOBs=;
-        b=TA6/CuD+hFkYApQHQT4A1U2YS9W8GniLjNmxo/extqTobFn5lCWiryr82ba9bv/nEg
-         XavdWPttZSUzg6gXWj5gNPQeUWDV426r4uvxq72aExZiGnJjlW3upbqzuvzXsRiEG+jT
-         05qT9mnBRIQotjbtJmZT6qfvDXSdeAZcsPIee7nneWUObmKfqhRmmw2aV1KLSMK7Wd00
-         0HP14X5Mx/BRSgswFqVXVz2C/lgwvyR8K5iSJMXRjltLixbqKHI2WcROsZeLQB65E/wB
-         cA8Wpvw+Dt7FfPdrlvyO+R4zBhkLAUTPMc1SUj/I5RTml6eFFRfHwsG0WQRh/QO0RK7Q
-         umLg==
+        bh=nL+6QkHO6yR2KP+5MRHsFg+KPRC2y9KhSCQbZC/oBVw=;
+        b=6k8wj28V7t8QoPOwiMzT//DpRtAFL3htAPJxJ3P3bVfcIumu7JhHGOGwsNVAg5MfYC
+         MIT/fg2fSWTLJXea7MiuDqAxD3b2Lq4/sW2F4FWJICaqSOXEdP32ciuafhp0N3obh6VW
+         kn2xaqmwWQyMtfTEJyGN4j7QTyVVKm4Jvk+A7ikbHIZbTSfEGQBF5Fqu5RX9Py6OzNXQ
+         inlXJ6U5HLpC3Z7HiMYn6O88tAUIQ+TDvsA83h6+34arEnJEpcjzube2DiCSaE3QyZ8t
+         71p5D1ijcb1qXFM6ujDW5AuKuKskHTfEIAge9+s0cIOM++S0WfdPBCRiQkm58wZhD+9+
+         APVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684834462; x=1687426462;
+        d=1e100.net; s=20221208; t=1684835906; x=1687427906;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PjeScUQVu1Rike7/sLjFfzE1kG65THUKFVR1fpLAOBs=;
-        b=byzMnmfMX9hPqzJ8gwzmT/lXVlFWSLR1P7BmYssjTW4b6d9EmDyDrYjYWZR1aDJoCw
-         eAXK0vOOtwACzai9JXmqjXiu/xBHiqEqLG0UXtf6ORTnVY5kcQ2iX10kLIH8kwJCZqcb
-         0HXFM6SSHujbjl4J+ziut7gzL1CfjuwqOUdkC83K9L+i6JhTdZOyKya73UEKpaO8mKQX
-         wao1OkFuApS8ctMvStOBbg7hPimbzPmoe/uBAmP0AG3n8PrrSt8cwpCA5GoMQDwwTKt/
-         UE1eoLQUcTB5sT9YZHtmvka7+7BwcTK//7tql7QMa5fH5Bc2CI2CewLA+2PnLnzDukkP
-         fVsg==
-X-Gm-Message-State: AC+VfDzTp3rWtvIlW5gTDDiDG38XQfK/Fz26lJ6Qf1WSHHmiYY8Rs2cK
-	2dL6IWdtvLGBIC8NlijOc9rvtQ==
-X-Google-Smtp-Source: ACHHUZ5LyRi5sDVMuJrhE3PfRhWyIn0QD2Xnf3i2jz+Id+d2Xa4OB1gCKdcVc2qFW7EbR/PU3/7Jhg==
-X-Received: by 2002:a5d:44cf:0:b0:309:54b6:33b0 with SMTP id z15-20020a5d44cf000000b0030954b633b0mr9493970wrr.44.1684834461939;
-        Tue, 23 May 2023 02:34:21 -0700 (PDT)
+        bh=nL+6QkHO6yR2KP+5MRHsFg+KPRC2y9KhSCQbZC/oBVw=;
+        b=O74HqH9mPPt0tnpGp+PEMmSObU1Dvi8IsUBrQi8NieTch9X3SgUBFtixnLR0jDFsKO
+         GPQ/yyulXDKfrng98dEHMeXgt+19UUiL1depNycKx4YKzcNCGKhw0SdUcedpKR+h7HQq
+         vVt1B9rfsHyirV/Tjo5xbNjNEf1QZgfYKsuN4nNGPpjQ98YcW2u0GsmjFf58C4BGaGO0
+         u/JBfi3L1OHGvBQ/yj2ONDAiZk6eeOyLDftrbtmGiYwwO8TX0+4fihtJtvi7pc+85kAJ
+         yhkHzTIzD/R0C4dCFXdVPSjqdZe+jIGh1ShBaqzO5J2rC596F5U8dwfY7SiRd8nxqiVv
+         olMw==
+X-Gm-Message-State: AC+VfDztKxH59Dm4llxhtNwtdFbV+AfJDHSiawPmpdlohfWhg/3UKAoA
+	SlTskFc9N/dX3v4+L6JiyJ05ZA==
+X-Google-Smtp-Source: ACHHUZ6HWz5GW8YsZGz4rQ5dNsGrMUG9myHxWuddS9wJ7PQ3SXXv1U43IdUsNV0UuCf0gufmWKI7xA==
+X-Received: by 2002:a05:600c:2212:b0:3f0:a08e:811b with SMTP id z18-20020a05600c221200b003f0a08e811bmr9714251wml.13.1684835906615;
+        Tue, 23 May 2023 02:58:26 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:7ae3:96f4:110c:3f46? ([2a02:578:8593:1200:7ae3:96f4:110c:3f46])
-        by smtp.gmail.com with ESMTPSA id f5-20020a5d4dc5000000b0030644bdefd8sm10500594wru.52.2023.05.23.02.34.19
+        by smtp.gmail.com with ESMTPSA id n21-20020a7bc5d5000000b003f42a75ac2asm11211423wmk.23.2023.05.23.02.58.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 02:34:19 -0700 (PDT)
-Message-ID: <b9e72bb3-e81c-b950-97a1-97b1d6571e61@tessares.net>
-Date: Tue, 23 May 2023 11:34:19 +0200
+        Tue, 23 May 2023 02:58:26 -0700 (PDT)
+Message-ID: <1b1c4ef7-827b-de02-8e28-9bc76a3a6e25@tessares.net>
+Date: Tue, 23 May 2023 11:58:25 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,69 +48,98 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-net v2 10/37] selftests: mptcp: connect: skip transp
- tests if not supported
+Subject: Re: [PATCH mptcp-net v2 25/37] selftests: mptcp: join: skip check if
+ MIB counter not supported
 Content-Language: en-GB
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
- <20230406-mptcp-issue-368-selftests-old-kernels-v2-10-50313e4f83ab@tessares.net>
- <b27d8f3c79b0f8b019af868f33864a746439e62d.camel@redhat.com>
+ <20230406-mptcp-issue-368-selftests-old-kernels-v2-25-50313e4f83ab@tessares.net>
+ <81b89eceb464bd67bca36ac8eccba3489883014e.camel@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <b27d8f3c79b0f8b019af868f33864a746439e62d.camel@redhat.com>
+In-Reply-To: <81b89eceb464bd67bca36ac8eccba3489883014e.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/05/2023 19:26, Paolo Abeni wrote:
+Hi Paolo,
+
+On 22/05/2023 19:39, Paolo Abeni wrote:
 > On Mon, 2023-05-22 at 18:37 +0200, Matthieu Baerts wrote:
 >> Selftests are supposed to run on any kernels, including the old ones not
 >> supporting all MPTCP features.
 >>
->> One of them is the support of IP(V6)_TRANSPARENT socket option with
->> MPTCP connections introduced by commit c9406a23c116 ("mptcp: sockopt:
->> add SOL_IP freebind & transparent options").
+>> One of them is the MPTCP MIB counters introduced in commit fc518953bc9c
+>> ("mptcp: add and use MIB counter infrastructure") and more later. The
+>> MPTCP Join selftest heavily relies on these counters.
 >>
->> It is possible to look for "__ip_sock_set_tos" in kallsyms because
->> IP(V6)_TRANSPARENT socket option support has been added after TOS
->> support which came with the required infrastructure in MPTCP sockopt
->> code. To support TOS, the following function has been exported (T). Not
->> great but better than checking for a specific kernel version.
+>> If a counter is not supported by the kernel, it is not displayed when
+>> using 'nstat -z'. We can then detect that and skip the verification. A
+>> new helper (get_counter()) has been added to do the required checks and
+>> return an error if the counter is not available.
+>>
+>> Note that if we expect to have these features available and if
+>> SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var is set to 1, the tests
+>> will be marked as failed instead of skipped.
 >>
 >> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
->> Fixes: 5fb62e9cd3ad ("selftests: mptcp: add tproxy test case")
+>> Fixes: b08fbf241064 ("selftests: add test-cases for MPTCP MP_JOIN")
 >> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 >> ---
->>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 251 ++++++++++++++----------
+>>  1 file changed, 142 insertions(+), 109 deletions(-)
 >>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->> index c1f7bac19942..c6fcae6b2562 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->> @@ -144,6 +144,7 @@ cleanup()
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index 1a8f7c6fa988..73c513f1e808 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -505,11 +505,25 @@ wait_local_port_listen()
+>>  	done
 >>  }
 >>  
->>  mptcp_lib_check_mptcp
->> +mptcp_lib_check_kallsyms
->>  
->>  ip -Version > /dev/null 2>&1
->>  if [ $? -ne 0 ];then
->> @@ -695,6 +696,15 @@ run_test_transparent()
->>  		return 0
->>  	fi
->>  
->> +	# IP(V6)_TRANSPARENT has been added after TOS support which came with
->> +	# the required infrastructure in MPTCP sockopt code. To support TOS, the
->> +	# following function has been exported (T). Not great but better than
->> +	# checking for a specific kernel version.
->> +	if ! mptcp_lib_kallsyms_has "T __ip_sock_set_tos$"; then
->> +		echo "INFO: TFO not supported by the kernel: SKIP"
-> 
-> Possibly sed -e s/TFO/TOS/ ?
+>> +# $1: ns ; $2: counter
+>> +get_counter()
+>> +{
+>> +	local ns="${1}"
+>> +	local counter="${2}"
+>> +	local count
+>> +
+>> +	count=$(ip netns exec ${ns} nstat -asz "${counter}" | awk 'NR==1 {next} {print $2}')
+>> +	if [ -z "${count}" ]; then
+>> +		mptcp_lib_fail_if_expected_feature "${counter} counter"
+>> +		return 1
+>> +	fi
+>> +
+>> +	echo "${count}"
+>> +}
 
-Good catch!
+(...)
 
-In the future v3, I did s/TFO/${msg}/ to print a different message for
-v4 and v6.
+> This looks quite invasive. I would instead skip the whole mp_join tests
+> if any of the basic counters are not available - to there will be a
+> single hook/check.
+
+I agree that it is quite invasive but the idea is to backport it to
+stable. Once this is done, it should not cause troubles to do other
+backports.
+
+Also, this new helper does a few things:
+
+- It makes sure we get one counter to avoid issues we had in the past
+where some counters were sharing the same prefix, e.g. MPTcpExtRmAddr
+and MPTcpExtRmAddrDrop
+
+- When a MIB counter is missing, the checks using it are skipped
+
+- Our CI will catch typos
+
+- (getting MIB counters is now uniformed)
+
+Initially I used the helpers for counters that are more recent and for
+the ones sharing the same prefixes but that was creating quite a lot of
+commits and I was thinking it might be better to uniform them.
+
+It should not be too hard to backports: we don't really change this part
+so if there is are conflicts, it is very likely because a counter is not
+used somewhere so we don't need that chunk.
 
 Cheers,
 Matt
