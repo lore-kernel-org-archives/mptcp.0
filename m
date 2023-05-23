@@ -1,45 +1,45 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6530A1E501
-	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 10:10:05 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3090d3e9c92so7101339f8f.2
-        for <mptcp@lists.linux.dev>; Tue, 23 May 2023 03:10:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7043A1E501
+	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 10:14:42 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3f603ff9c02so15784525e9.2
+        for <mptcp@lists.linux.dev>; Tue, 23 May 2023 03:14:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684836603; x=1687428603;
+        d=tessares.net; s=google; t=1684836880; x=1687428880;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2wIiWmrQndJJobdVcvQvmioXkTTIficaPf6RxuVui14=;
-        b=whsaXm5I74xNU+FyHqAXGXbfsuNG98SKZMGIod6BLZj9swjIH0bEncJAs2e9oau0SG
-         pE0ZpNFKcSoYunQYHW3Hx+uJx5OcZCaE182p6qHItq+yanowhK7J6f2n4Y9BfZDzWD4A
-         0q3EVz86ckXBBm37gz9l/NHKnbeAWg2cRDGbtXXo2wEH5d2YuGfZjLuK1CnAugJ61ig9
-         keqoa8Mk59eZK68c3310KpcDzra/ojmjLmJnX4OKMKfyEFMWhqd59wAuOi7yERyRNREQ
-         lCduWz/jSjrDopraN+TrVByQMXKp9/dMytCY4Q0xdI5C7vY7EUzj9cb9BRigTa6aYz14
-         lcPw==
+        bh=U91vWxoi2D8XcwNBz0Eadb9O0D8etQGXBL20BiPe4YI=;
+        b=VFvGlu2fcFTUEo1sRj/FOqB2/LyhaVj2luds9ddC2YBcTozDlHYvVDSM6Xac+9hz2t
+         Pc+4Q4lNsxbKZQ5+IQeQihr6w813qWrpCFT408N6GbzlWFleq+nfodND08SsELekjvPo
+         pjJxXZuGBsoGLIsMxSSUjj+KopXCAgDtlvoA169cJILz0c6M26bJPNUawtiPkzv87Q3k
+         sxn5ofR58xvDVKIOwfijJIHhF6WizEOeOjNVd6fsDdyHDqhAWKe846NGlLDN4mm0rqmL
+         /Oolvbh8ULRKELw2XrdTQlODSHmCYo0XS2DOiltG+bIMMiT1eA+h9feAA+7lcaT0Zq+N
+         89LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684836603; x=1687428603;
+        d=1e100.net; s=20221208; t=1684836880; x=1687428880;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2wIiWmrQndJJobdVcvQvmioXkTTIficaPf6RxuVui14=;
-        b=NqWEtOx/iPzvQaxREj5qjZoELs1APUC32273JDHCKBU1idZHmR9mI6crRA5rFTKKMk
-         swEZATlL2hjNKd4DjOvmgvr66VUlAeh5BaPgZQJBonJkqWUh8U34+MlwrWExlICn6WxE
-         KKga6eJz5PDCR6b77XD/rVNWIGKWQtrnyt9Nvb4biG2FgKwZlNXoMopmKV0WjhXCo9kL
-         g3EKtcBT2jW4BpDlliBRar2ARwsau6d9ggnVWOpwEfEecbOOsyWKL/hHza+ItJOMHU4I
-         /1n4qQCX+Zph/+TUhAgDFJuw3KoZphfMXY6yYI7AnQyjBjO73/VbxT5MGfUB7fJShhBV
-         Ki0g==
-X-Gm-Message-State: AC+VfDxojq28vzB2pE/tDBGaNDhJttVT7Gd6+uBQ9LbBtY5MNA1Aq1Dy
-	Ktm2lMldAwNyv3hmK6qkO8SzPg==
-X-Google-Smtp-Source: ACHHUZ4lh2/CIjoPJfIz4KsfdlLuJszBAK0M4dCx6AcDr2UFJdOHb4d4/UvJPP/FdFDEV6c6Jw3/1Q==
-X-Received: by 2002:a05:6000:188:b0:306:44a9:76a0 with SMTP id p8-20020a056000018800b0030644a976a0mr10352493wrx.9.1684836603375;
-        Tue, 23 May 2023 03:10:03 -0700 (PDT)
+        bh=U91vWxoi2D8XcwNBz0Eadb9O0D8etQGXBL20BiPe4YI=;
+        b=Vjfm4arVFr1tOg9ODbD3G1RyKn5oqUPWVrcjhrDd0s4vhyQCtsKPWsR8/c+08YVR/O
+         D2qpD5TPD6NgO83DOMmp72L+9Pn35ZQ8dv/IgCjXhEmbV0nHyIYsd4GBPssCzo2yHNBb
+         vXOPvcckQEy6WjF6sZOC+bK90mIHHCxKp+V28X3g+pscVVaFTnnUsnO+tewFcFvWOiyD
+         fN8Pi9GgkciARJ0fQdqA3MkbO68ni1CrVYl1N0AYbAZmXgizqXBSUkb0ulNcmIDgVRu+
+         SNB9RtIA1s5wFzzyP+A0HpCB2v2XL3bbxXUf+zjcY+72mTbV8TgzyRrUreHIZg9cQ+ag
+         WkwA==
+X-Gm-Message-State: AC+VfDwuqZGew0kqJN0IAopaRfdtlj3bYIPqLToSS1kjqVqJbK4zSte0
+	cYhPb42fvcNXhmiMsEuFwIL2UXCQn4vWaLtw5sjxcA==
+X-Google-Smtp-Source: ACHHUZ6rkqiRTMdNCk5oKWcheSaIDiEyyIH0SCAWa0lCZnmZNsTVvwYO3AY8CEXXJTnlk8z1lcI+bA==
+X-Received: by 2002:a7b:c014:0:b0:3f4:fd67:6d7c with SMTP id c20-20020a7bc014000000b003f4fd676d7cmr8253056wmb.40.1684836880402;
+        Tue, 23 May 2023 03:14:40 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:7ae3:96f4:110c:3f46? ([2a02:578:8593:1200:7ae3:96f4:110c:3f46])
-        by smtp.gmail.com with ESMTPSA id p15-20020a5d458f000000b003090cb7a9e6sm10619169wrq.31.2023.05.23.03.10.02
+        by smtp.gmail.com with ESMTPSA id b10-20020adfde0a000000b0030649242b72sm10516568wrm.113.2023.05.23.03.14.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 03:10:03 -0700 (PDT)
-Message-ID: <9fd5c9fc-3926-4eef-84d5-60c85b1ed61b@tessares.net>
-Date: Tue, 23 May 2023 12:10:02 +0200
+        Tue, 23 May 2023 03:14:40 -0700 (PDT)
+Message-ID: <3c2c6992-b175-04fb-29c0-959c5a88fbda@tessares.net>
+Date: Tue, 23 May 2023 12:14:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,47 +48,99 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-net v2 26/37] selftests: mptcp: join: skip test if
- iptables/tc cmds fail
+Subject: Re: [PATCH mptcp-net v2 28/37] selftests: mptcp: join: skip Fastclose
+ tests if not supported
 Content-Language: en-GB
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
- <20230406-mptcp-issue-368-selftests-old-kernels-v2-26-50313e4f83ab@tessares.net>
- <e530b465c8aaabc0f85297ee484af62e571b1906.camel@redhat.com>
+ <20230406-mptcp-issue-368-selftests-old-kernels-v2-28-50313e4f83ab@tessares.net>
+ <e163a9ecc2d40f123f396aa1bd67e2a3f6b60b1e.camel@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <e530b465c8aaabc0f85297ee484af62e571b1906.camel@redhat.com>
+In-Reply-To: <e163a9ecc2d40f123f396aa1bd67e2a3f6b60b1e.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 22/05/2023 19:42, Paolo Abeni wrote:
-> On Mon, 2023-05-22 at 18:37 +0200, Matthieu Baerts wrote:
+On 22/05/2023 19:45, Paolo Abeni wrote:
+> On Mon, 2023-05-22 at 18:38 +0200, Matthieu Baerts wrote:
 >> Selftests are supposed to run on any kernels, including the old ones not
 >> supporting all MPTCP features.
 >>
->> Some tests are using IPTables and/or TC commands to force some
->> behaviours. If one of these commands fails -- likely because some
->> features are not available -- we should intercept the error and skip the
->> tests requiring these features.
+>> One of them is the support of MP_FASTCLOSE introduced in commit
+>> f284c0c77321 ("mptcp: implement fastclose xmit path").
+>>
+>> If the MIB counter is not available, the test cannot be verified and the
+>> behaviour will not be the expected one. So we can skip the test if the
+>> counter is missing.
+>>
+>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
+>> Fixes: 01542c9bf9ab ("selftests: mptcp: add fastclose testcase")
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 17 +++++++++++++++--
+>>  1 file changed, 15 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index 1f24495308f9..ccf52aba8a1c 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -263,6 +263,19 @@ reset()
+>>  	return 0
+>>  }
+>>  
+>> +# $1: test name ; $2: counter to check
+>> +reset_check_counter()
+>> +{
+>> +	reset "${1}" || return 1
+>> +
+>> +	local counter="${2}"
+>> +
+>> +	if ! nstat -asz "${counter}" | grep -wq "${counter}"; then
+>> +		mark_as_skipped "counter '${counter}' is not available"
+>> +		return 1
+>> +	fi
+>> +}
+>> +
+>>  # $1: test name
+>>  reset_with_cookies()
+>>  {
+>> @@ -3179,14 +3192,14 @@ fullmesh_tests()
+>>  
+>>  fastclose_tests()
+>>  {
+>> -	if reset "fastclose test"; then
+>> +	if reset_check_counter "fastclose test" "MPTcpExtMPFastcloseTx"; then
+>>  		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_client
+>>  		chk_join_nr 0 0 0
+>>  		chk_fclose_nr 1 1
+>>  		chk_rst_nr 1 1 invert
+>>  	fi
+>>  
+>> -	if reset "fastclose server test"; then
+>> +	if reset_check_counter "fastclose server test" "MPTcpExtMPFastcloseRx"; then
+>>  		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_server
+>>  		chk_join_nr 0 0 0
+>>  		chk_fclose_nr 1 1 invert
+>>
+> 
+> Here and in a few later patches, I would do the 'feature check' only
+> once at the beginning of the functional block ('fastclose_test' in this
+> case), in the most conservative way possible. The goal would be
+> minimize the conflicts caused by present/absence of such patch.
 
-(...)
+I initially did that but then it breaks the feature to start a specific
+test. Also, the ID of the tests would be different on the different
+kernels which might make the tracking of the different issues more
+difficult.
 
-> All the above tc/nf features look quite old. I thought even older them
-> mptcp itself. Do we really need to check for them?!?
+On older kernels, we already have conflicts because of all the "if reset
+(...)" I introduced one or two years ago :)
 
-It should indeed not be required but when doing the validation on older
-kernels, I had issues with 'iptables-nft'. We could also have similar
-issues if a kconfig is missing or if there is something wrong with the
-Netfilter stack.
-
-The consequence is that either the test was finishing in the middle
-(because of the "exit 1" next to some commands) or the errors were
-ignored and it was not clear why.
-
-What is mainly interesting here is that we check we can add the specific
-rules before starting a test and we stop only the subtest in case of
-issue. If it doesn't hurt, maybe safer to keep this?
+But likely, we don't need to backport such checks to know if a test can
+be started or not too far: as long as we can backport such checks to the
+last stable kernels, that's enough for the different CIs using the last
+stable version of the kselftests on older kernels.
 
 Cheers,
 Matt
