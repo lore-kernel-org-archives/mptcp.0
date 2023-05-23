@@ -1,94 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767D621CC2
-	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 17:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684863462;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UXg+vaMupeIkklAkNYBEKxYeIjDDhEdSH33BXUqlVTo=;
-	b=OdiiMUNWvPCnTnbtOv9OxMb2xuIpAVQIr7NbkRGtDr9jI7N9fVB2gnFEJ0d05vUoRrq+9y
-	cQHbq4YOLEPb9jHgqSnJIyLbpboe3gWVu0clNHkld7EugWd8kTQUDXEn2ZaKMxFqHQz8ef
-	IqOLR4J9Pkb5VqLHP34MlZFkhq4n/Xs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-659-yghK3AMiPk2H-Ywh0Bnt5w-1; Tue, 23 May 2023 13:37:35 -0400
-X-MC-Unique: yghK3AMiPk2H-Ywh0Bnt5w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2EA7E802355
-	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 17:37:35 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.138])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B1885140EBB8
-	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 17:37:34 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v3 mptcp-next 3/6] mptcp: move snd_una update earlier for fallback socket.
-Date: Tue, 23 May 2023 19:37:26 +0200
-Message-Id: <41ceb4edbe2712c1caa7b654ec30eb3299d7d078.1684863309.git.pabeni@redhat.com>
-In-Reply-To: <cover.1684863309.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9A51F93C
+	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 18:49:13 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1q1X4J-0004u0-RW; Tue, 23 May 2023 20:49:11 +0200
+Date: Tue, 23 May 2023 20:49:11 +0200
+From: Florian Westphal <fw@strlen.de>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v3 mptcp-next 4/6] mptcp: track some aggregate data
+ counters.
+Message-ID: <20230523184911.GC17561@breakpoint.cc>
 References: <cover.1684863309.git.pabeni@redhat.com>
+ <6c8b8ab79ee6526dff0cd3240e35e2e82c300a5d.1684863309.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6c8b8ab79ee6526dff0cd3240e35e2e82c300a5d.1684863309.git.pabeni@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-That will avoid an unneeded conditional in both the fast-path
-and in the fallback case and will simplify a bit the next
-patch.
+Paolo Abeni <pabeni@redhat.com> wrote:
+> Currently there are no data transfer counters accounting for all
+> the subflows used by a given MPTCP socket. The user-space can compute
+> such figures aggregating the subflow info, but that is inaccurate
+> if any subflow is closed before the MPTCP socket itself.
+> 
+> Add the new counters in the MPTCP socket itself and expose them
+> via the existing diag and sockopt. While touching mptcp_diag_fill_info(),
+> acquire the relevant locks before fetching the msk data, to ensure
+> better data consistency
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  include/uapi/linux/mptcp.h |  5 +++++
+>  net/mptcp/options.c        | 10 ++++++++--
+>  net/mptcp/protocol.c       | 12 +++++++++++-
+>  net/mptcp/protocol.h       |  4 ++++
+>  net/mptcp/sockopt.c        | 22 +++++++++++++++++-----
+>  5 files changed, 45 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+> index f4f42d88e58b..ac469625affd 100644
+> --- a/include/uapi/linux/mptcp.h
+> +++ b/include/uapi/linux/mptcp.h
+> @@ -124,6 +124,11 @@ struct mptcp_info {
+>  	__u8	mptcpi_local_addr_used;
+>  	__u8	mptcpi_local_addr_max;
+>  	__u8	mptcpi_csum_enabled;
+> +	__u32	mptcpi_retransmits;
+> +	__u64	mptcpi_bytes_retrans;
+> +	__u64	mptcpi_bytes_sent;
+> +	__u64	mptcpi_bytes_received;
+> +	__u64	mptcpi_bytes_acked;
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/options.c  | 6 ++++++
- net/mptcp/protocol.c | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 8a8083207be4..4bdcd2b326bd 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1119,6 +1119,12 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 		mptcp_data_lock(subflow->conn);
- 		if (sk_stream_memory_free(sk))
- 			__mptcp_check_push(subflow->conn, sk);
-+
-+		/* on fallback we just need to ignore the msk-level snd_una, as
-+		 * this is really plain TCP
-+		 */
-+		msk->snd_una = READ_ONCE(msk->snd_nxt);
-+
- 		__mptcp_data_acked(subflow->conn);
- 		mptcp_data_unlock(subflow->conn);
- 		return true;
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9998b2dd150e..89fee2ac84e2 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1006,12 +1006,6 @@ static void __mptcp_clean_una(struct sock *sk)
- 	struct mptcp_data_frag *dtmp, *dfrag;
- 	u64 snd_una;
- 
--	/* on fallback we just need to ignore snd_una, as this is really
--	 * plain TCP
--	 */
--	if (__mptcp_check_fallback(msk))
--		msk->snd_una = READ_ONCE(msk->snd_nxt);
--
- 	snd_una = msk->snd_una;
- 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list) {
- 		if (after64(dfrag->data_seq + dfrag->data_len, snd_una))
--- 
-2.40.1
-
+__aligned_u64 is preferred for uapi.
