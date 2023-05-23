@@ -1,149 +1,207 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7043A1E501
-	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 10:14:42 +0000 (UTC)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3f603ff9c02so15784525e9.2
-        for <mptcp@lists.linux.dev>; Tue, 23 May 2023 03:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684836880; x=1687428880;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U91vWxoi2D8XcwNBz0Eadb9O0D8etQGXBL20BiPe4YI=;
-        b=VFvGlu2fcFTUEo1sRj/FOqB2/LyhaVj2luds9ddC2YBcTozDlHYvVDSM6Xac+9hz2t
-         Pc+4Q4lNsxbKZQ5+IQeQihr6w813qWrpCFT408N6GbzlWFleq+nfodND08SsELekjvPo
-         pjJxXZuGBsoGLIsMxSSUjj+KopXCAgDtlvoA169cJILz0c6M26bJPNUawtiPkzv87Q3k
-         sxn5ofR58xvDVKIOwfijJIHhF6WizEOeOjNVd6fsDdyHDqhAWKe846NGlLDN4mm0rqmL
-         /Oolvbh8ULRKELw2XrdTQlODSHmCYo0XS2DOiltG+bIMMiT1eA+h9feAA+7lcaT0Zq+N
-         89LA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11331EA7E
+	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 13:54:25 +0000 (UTC)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3f417ea5252so51269995e9.0
+        for <mptcp@lists.linux.dev>; Tue, 23 May 2023 06:54:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684836880; x=1687428880;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1684850064; x=1687442064;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U91vWxoi2D8XcwNBz0Eadb9O0D8etQGXBL20BiPe4YI=;
-        b=Vjfm4arVFr1tOg9ODbD3G1RyKn5oqUPWVrcjhrDd0s4vhyQCtsKPWsR8/c+08YVR/O
-         D2qpD5TPD6NgO83DOMmp72L+9Pn35ZQ8dv/IgCjXhEmbV0nHyIYsd4GBPssCzo2yHNBb
-         vXOPvcckQEy6WjF6sZOC+bK90mIHHCxKp+V28X3g+pscVVaFTnnUsnO+tewFcFvWOiyD
-         fN8Pi9GgkciARJ0fQdqA3MkbO68ni1CrVYl1N0AYbAZmXgizqXBSUkb0ulNcmIDgVRu+
-         SNB9RtIA1s5wFzzyP+A0HpCB2v2XL3bbxXUf+zjcY+72mTbV8TgzyRrUreHIZg9cQ+ag
-         WkwA==
-X-Gm-Message-State: AC+VfDwuqZGew0kqJN0IAopaRfdtlj3bYIPqLToSS1kjqVqJbK4zSte0
-	cYhPb42fvcNXhmiMsEuFwIL2UXCQn4vWaLtw5sjxcA==
-X-Google-Smtp-Source: ACHHUZ6rkqiRTMdNCk5oKWcheSaIDiEyyIH0SCAWa0lCZnmZNsTVvwYO3AY8CEXXJTnlk8z1lcI+bA==
-X-Received: by 2002:a7b:c014:0:b0:3f4:fd67:6d7c with SMTP id c20-20020a7bc014000000b003f4fd676d7cmr8253056wmb.40.1684836880402;
-        Tue, 23 May 2023 03:14:40 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:7ae3:96f4:110c:3f46? ([2a02:578:8593:1200:7ae3:96f4:110c:3f46])
-        by smtp.gmail.com with ESMTPSA id b10-20020adfde0a000000b0030649242b72sm10516568wrm.113.2023.05.23.03.14.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 03:14:40 -0700 (PDT)
-Message-ID: <3c2c6992-b175-04fb-29c0-959c5a88fbda@tessares.net>
-Date: Tue, 23 May 2023 12:14:39 +0200
+        bh=1mc3JRJZXPFyTZ68DrWTJks/5tRPJ+X1/0qnu16j9u0=;
+        b=bZerbU9mOjmZNuITMLrVzup0R7bClr3uh5N95Rh1Gn5VULq6yKMLJ2psUOt53VFObp
+         PN504v5ZFOEaTmny9HfdU0HIIZntk99Rpjr7PfjeYA5KKqdN+KOpXSJ4McwlGEGWD4e/
+         3xA71usu66mw0OO5nBQeDW78N5eH5ioPUV90997pYUblWTQi48t7Wv0ODlZlZ9Evf7Hg
+         hxKn1AffqpqqHvsZUlNS1a+aec8tgRpqULZ6ZOF6teefVf69VMMJG7nnPN9fiw5KeEcg
+         2iCZNYt90Xx3kHosg5ZhV4NPZGy6gyWvbml6JJP8LG+qqkrWWgEMIjxaT28WXFUvQmNz
+         2VMg==
+X-Gm-Message-State: AC+VfDzxJMUU32PrXtGre0xBLQ/k39BRBICgPNUmQ47nZiiX0Bg7vPCj
+	Q/F+Of+xHZkgWx5olNPwcb4=
+X-Google-Smtp-Source: ACHHUZ5MUw5rOm0ITE9vg8BDUc0iTAtkxFjeM5WIw2g9raAjmkpaBHxiTeJ4Zr5YuxXaFBzLNFUnJw==
+X-Received: by 2002:a7b:cd8a:0:b0:3f6:a66:a372 with SMTP id y10-20020a7bcd8a000000b003f60a66a372mr1890685wmj.1.1684850063779;
+        Tue, 23 May 2023 06:54:23 -0700 (PDT)
+Received: from gmail.com (fwdproxy-cln-012.fbsv.net. [2a03:2880:31ff:c::face:b00c])
+        by smtp.gmail.com with ESMTPSA id o5-20020a05600c378500b003f42314832fsm11741715wmr.18.2023.05.23.06.54.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 06:54:23 -0700 (PDT)
+Date: Tue, 23 May 2023 06:54:21 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	David Ahern <dsahern@kernel.org>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <martineau@kernel.org>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>, leit@fb.com,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
+	mptcp@lists.linux.dev, linux-sctp@vger.kernel.org
+Subject: Re: [PATCH v2] net: ioctl: Use kernel memory on protocol ioctl
+ callbacks
+Message-ID: <ZGzFjQNKklyAmLaV@gmail.com>
+References: <20230522134735.2810070-1-leitao@debian.org>
+ <CAF=yD-+3SnE2gsE4S3=uxxEgW+2MCLdTLx24G72fkS=AkchCEA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-net v2 28/37] selftests: mptcp: join: skip Fastclose
- tests if not supported
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
- <20230406-mptcp-issue-368-selftests-old-kernels-v2-28-50313e4f83ab@tessares.net>
- <e163a9ecc2d40f123f396aa1bd67e2a3f6b60b1e.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <e163a9ecc2d40f123f396aa1bd67e2a3f6b60b1e.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF=yD-+3SnE2gsE4S3=uxxEgW+2MCLdTLx24G72fkS=AkchCEA@mail.gmail.com>
 
-Hi Paolo,
-
-On 22/05/2023 19:45, Paolo Abeni wrote:
-> On Mon, 2023-05-22 at 18:38 +0200, Matthieu Baerts wrote:
->> Selftests are supposed to run on any kernels, including the old ones not
->> supporting all MPTCP features.
->>
->> One of them is the support of MP_FASTCLOSE introduced in commit
->> f284c0c77321 ("mptcp: implement fastclose xmit path").
->>
->> If the MIB counter is not available, the test cannot be verified and the
->> behaviour will not be the expected one. So we can skip the test if the
->> counter is missing.
->>
->> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
->> Fixes: 01542c9bf9ab ("selftests: mptcp: add fastclose testcase")
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 17 +++++++++++++++--
->>  1 file changed, 15 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index 1f24495308f9..ccf52aba8a1c 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -263,6 +263,19 @@ reset()
->>  	return 0
->>  }
->>  
->> +# $1: test name ; $2: counter to check
->> +reset_check_counter()
->> +{
->> +	reset "${1}" || return 1
->> +
->> +	local counter="${2}"
->> +
->> +	if ! nstat -asz "${counter}" | grep -wq "${counter}"; then
->> +		mark_as_skipped "counter '${counter}' is not available"
->> +		return 1
->> +	fi
->> +}
->> +
->>  # $1: test name
->>  reset_with_cookies()
->>  {
->> @@ -3179,14 +3192,14 @@ fullmesh_tests()
->>  
->>  fastclose_tests()
->>  {
->> -	if reset "fastclose test"; then
->> +	if reset_check_counter "fastclose test" "MPTcpExtMPFastcloseTx"; then
->>  		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_client
->>  		chk_join_nr 0 0 0
->>  		chk_fclose_nr 1 1
->>  		chk_rst_nr 1 1 invert
->>  	fi
->>  
->> -	if reset "fastclose server test"; then
->> +	if reset_check_counter "fastclose server test" "MPTcpExtMPFastcloseRx"; then
->>  		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_server
->>  		chk_join_nr 0 0 0
->>  		chk_fclose_nr 1 1 invert
->>
+On Mon, May 22, 2023 at 03:26:55PM -0400, Willem de Bruijn wrote:
+> On Mon, May 22, 2023 at 9:51 AM Breno Leitao <leitao@debian.org> wrote:
+> >
+> > Most of the ioctls to net protocols  operates directly on userspace
+> > argument (arg). Usually doing get_user()/put_user() directly in the
+> > ioctl callback.  This is not flexible, because it is hard to reuse these
+> > functions without passing userspace buffers.
+> >
+> > Change the "struct proto" ioctls to avoid touching userspace memory and
+> > operate on kernel buffers, i.e., all protocol's ioctl callbacks is
+> > adapted to operate on a kernel memory other than on userspace (so, no
+> > more {put,get}_user() and friends being called in the ioctl callback).
+> >
+> > This changes the "struct proto" ioctl format in the following way:
+> >
+> >     int                     (*ioctl)(struct sock *sk, int cmd,
+> > -                                        unsigned long arg);
+> > +                                        int *karg);
+> >
+> > So, the "karg" argument, which is passed to the ioctl callback, is a
+> > pointer allocated to kernel space memory (inside a function wrapper -
+> > sk_ioctl()). This buffer (karg) may contain input argument
+> > (copied from userspace in a prep function) and it might return a
+> > value/buffer, which is copied back to userspace if necessary. There is
+> > not one-size-fits-all format (that is I am using 'may' above), but
+> > basically, there are three type of ioctls:
+> >
+> > 1) Do not read from userspace, returns a result to userspace
+> > 2) Read an input parameter from userspace, and does not return anything
+> >   to userspace
+> > 3) Read an input from userspace, and return a buffer to userspace.
+> >
+> > The default case (1) (where no input parameter is given, and an "int" is
+> > returned to userspace) encompasses more than 90% of the cases, but there
+> > are two other exceptions. Here is a list of exceptions:
+> >
+> > * Protocol RAW:
+> >    * cmd = SIOCGETVIFCNT:
+> >      * input and output = struct sioc_vif_req
+> >    * cmd = SIOCGETSGCNT
+> >      * input and output = struct sioc_sg_req
+> >    * Explanation: for the SIOCGETVIFCNT case, userspace passes the input
+> >      argument, which is struct sioc_vif_req. Then the callback populates
+> >      the struct, which is copied back to userspace.
+> >
+> > * Protocol RAW6:
+> >    * cmd = SIOCGETMIFCNT_IN6
+> >      * input and output = struct sioc_mif_req6
+> >    * cmd = SIOCGETSGCNT_IN6
+> >      * input and output = struct sioc_sg_req6
+> >
+> > * Protocol PHONET:
+> >   * cmd == SIOCPNADDRESOURCE | SIOCPNDELRESOURCE
+> >      * input int (4 bytes)
+> >   * Nothing is copied back to userspace.
+> >
+> > For the exception cases, functions sk_ioctl_in{out}() will
+> > copy the userspace input, and copy it back to kernel space.
+> >
+> > The wrapper that prepare the buffer and put the buffer back to user is
+> > sk_ioctl(), so, instead of calling sk->sk_prot->ioctl(), the
+> > callee now calls sk_ioctl(), which will handle all cases.
+> >
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
 > 
-> Here and in a few later patches, I would do the 'feature check' only
-> once at the beginning of the functional block ('fastclose_test' in this
-> case), in the most conservative way possible. The goal would be
-> minimize the conflicts caused by present/absence of such patch.
+> Going forward, please mark patches for net-next with [PATCH net-next v2]
+> 
+> > --- a/include/net/udp.h
+> > +++ b/include/net/udp.h
+> > @@ -283,7 +283,7 @@ void udp_flush_pending_frames(struct sock *sk);
+> >  int udp_cmsg_send(struct sock *sk, struct msghdr *msg, u16 *gso_size);
+> >  void udp4_hwcsum(struct sk_buff *skb, __be32 src, __be32 dst);
+> >  int udp_rcv(struct sk_buff *skb);
+> > -int udp_ioctl(struct sock *sk, int cmd, unsigned long arg);
+> > +int udp_ioctl(struct sock *sk, int cmd, int *karg);
+> >  int udp_init_sock(struct sock *sk);
+> >  int udp_pre_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len);
+> >  int __udp_disconnect(struct sock *sk, int flags);
+> > diff --git a/net/core/sock.c b/net/core/sock.c
+> > index 5440e67bcfe3..a2cea95aec99 100644
+> > --- a/net/core/sock.c
+> > +++ b/net/core/sock.c
+> > @@ -114,6 +114,8 @@
+> >  #include <linux/memcontrol.h>
+> >  #include <linux/prefetch.h>
+> >  #include <linux/compat.h>
+> > +#include <linux/mroute.h>
+> > +#include <linux/mroute6.h>
+> 
+> This is for the ioctl constants only, right.
 
-I initially did that but then it breaks the feature to start a specific
-test. Also, the ID of the tests would be different on the different
-kernels which might make the tracking of the different issues more
-difficult.
+Right.
 
-On older kernels, we already have conflicts because of all the "if reset
-(...)" I introduced one or two years ago :)
+> Then like those header files, include the uapi header, and only that,
+> to minimize the dependencies added to net/core/sock.c
 
-But likely, we don't need to backport such checks to know if a test can
-be started or not too far: as long as we can backport such checks to the
-last stable kernels, that's enough for the different CIs using the last
-stable version of the kselftests on older kernels.
+ack!
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+> 
+> >  #include <linux/uaccess.h>
+> >
+> > @@ -138,6 +140,7 @@
+> >
+> >  #include <net/tcp.h>
+> >  #include <net/busy_poll.h>
+> > +#include <net/phonet/phonet.h>
+> >
+> >  #include <linux/ethtool.h>
+> >
+> > @@ -4106,3 +4109,112 @@ int sock_bind_add(struct sock *sk, struct sockaddr *addr, int addr_len)
+> >         return sk->sk_prot->bind_add(sk, addr, addr_len);
+> >  }
+> >  EXPORT_SYMBOL(sock_bind_add);
+> > +
+> > +#ifdef CONFIG_PHONET
+> > +/* Copy u32 value from userspace and do not return anything back */
+> > +static int sk_ioctl_in(struct sock *sk, unsigned int cmd, void __user *arg)
+> 
+> The pointer can be const.
+> 
+> > +{
+> > +       int karg;
+> > +
+> > +       if (get_user(karg, (u32 __user *)arg))
+> > +               return -EFAULT;
+> 
+> The comment and cast are u32, but the datatype is int. Is there a
+> reason for that.
+
+I just copied what we have in pn_ioctl()[1]
+
+	static int pn_ioctl(struct sock *sk, int cmd, unsigned long arg)
+	{
+
+		switch (cmd) {
+		case SIOCPNADDRESOURCE:
+		case SIOCPNDELRESOURCE: {
+				u32 res;
+				if (get_user(res, (u32 __user *)arg))
+				....
+
+
+I will cast it to "int" on V3.
+
+[1] https://github.com/torvalds/linux/blob/ae8373a5add4ea39f032563cf12a02946d1e3546/net/phonet/datagram.c#L47
