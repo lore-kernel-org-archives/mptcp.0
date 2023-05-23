@@ -1,77 +1,115 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932E91F950
-	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 15:31:35 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3f603d4bc5bso28228825e9.3
-        for <mptcp@lists.linux.dev>; Tue, 23 May 2023 08:31:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684855894; x=1687447894;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UjiGyguiEZ9kBx3jjjdalNwCPc5zOmNh5CPpWxe1vBk=;
-        b=qS22CsJN8vJ6MhzULrVkCOL9vaMR6vRI62bJHTPxIVp4XyFcyP1nNJe/qHrBXqZnjD
-         0KQFwgHVhaR9W8XTsk2asiRLrucGmUwA8LTzeuRjJhUlojZABStC48xqH/UgevRdPZSf
-         kPEF9n4QOatvdsBW/O73+13uoD0LPODWt/4Civjx5lhEovfuiRRzNTyMShIjny04dBAy
-         o0QpMUaH3WoB6zhnHKG3n5SHci0PoqkojiVxiMXKYlxjoMxtFfslJLSd+O9EOIRJaGb0
-         kT8ZMaBxs2c2jr0V7Z5CWn/P8XF0PYAPQ9CdPgkiwfH5gTYPek9pGUAikU2ocefF0IeW
-         42dQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EB91F933
+	for <mptcp@lists.linux.dev>; Tue, 23 May 2023 16:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1684860333;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3zYCkb8kcoPtg1/FK93G3TJnKp4oQBoJz0eFAfFfmbo=;
+	b=ZKzx9V6+qe+zv1bCLhH9hAalX5ld9LqsZTvTCrsZL0f2saMnMG98VUnTnSEvLBGmtTe+dE
+	nWpDUlbiaWKhwlf09iblzHXfl592SL7hGffbNPEC6l2TggE4c1JneS2Etfosil+r3T1lj/
+	FxXHFi+50WAhSnF0nCb+QjHw1yoano4=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-509-iIFIvgbPOv-tHdl5GuBCzA-1; Tue, 23 May 2023 12:45:32 -0400
+X-MC-Unique: iIFIvgbPOv-tHdl5GuBCzA-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-75b1224f63aso856485a.1
+        for <mptcp@lists.linux.dev>; Tue, 23 May 2023 09:45:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684855894; x=1687447894;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UjiGyguiEZ9kBx3jjjdalNwCPc5zOmNh5CPpWxe1vBk=;
-        b=l35WrJqUEl+MGAxwLyBQRTiVMs0JMe5esDgSXgTcKQIb1ee/D6bDcH28M9mUygLPuD
-         eW5PHP1JObXRFsTaWXFcwOpsnb7IrKa54V4lXx5LtubcOttaaldVKsDhKsFdAbW5EdUW
-         8qNakhFvUE2N1BKS2mFCQr9l4oX4ridpmFJb0gdqnS0jjtTEOxQ5CJJpc/Rhq9JSBMx8
-         gFvB9Lid/ys4la6i/OZtm5aUPAEZAgJHIYEiLxzVOV3cKH/BLlsacXQtiXMGjx0xEDQW
-         S6THY3lyPNi02fDA6yx30OgAUpuHIKU6lPfLUF8xDs0rm9a9+4o0SPh6ccBe2OsCED/G
-         88uw==
-X-Gm-Message-State: AC+VfDz5HgqaJpOEhkC1+L6QTkerjMTtGeSgivFUk1rdXDsk9SiP1jkR
-	i3U3GcnvdodxVHgepWPNT8IaR8arIFqa4NTrZiWfAFxi
-X-Google-Smtp-Source: ACHHUZ4NwMU1Hn8g4O5QgsLvJwXHA9USFKcm47a1rvPS9RiA0GZDU5ohio8jne9TTrqvZlPiZWzq5A==
-X-Received: by 2002:a1c:4b0b:0:b0:3f6:67a:8826 with SMTP id y11-20020a1c4b0b000000b003f6067a8826mr4798899wma.25.1684855893806;
-        Tue, 23 May 2023 08:31:33 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:6cb1:7d36:3be3:30d? ([2a02:578:8593:1200:6cb1:7d36:3be3:30d])
-        by smtp.gmail.com with ESMTPSA id u15-20020a05600c00cf00b003f4268f51f5sm12255708wmm.0.2023.05.23.08.31.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 08:31:33 -0700 (PDT)
-Message-ID: <ee0d7408-4b5c-857f-10eb-02cb1162b5db@tessares.net>
-Date: Tue, 23 May 2023 17:31:32 +0200
+        d=1e100.net; s=20221208; t=1684860331; x=1687452331;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vqzM7aFx8Iq3DOPao9okBNB8K/IUNC4MLeA+2F53kqw=;
+        b=KtscLSWHVxCoHKdE3fIlNsoNzsXS5c5fCKbKHrIJ13v4NaIMfujKy5ksrz8XYcMgKq
+         3zDwsUzxj0Bm2bBQAxrtgDVNuMhAts65tL10dfuzn19wWxCWrT/CqXiYMEbwgqds7fUp
+         UY480RnaMQzug2/MPHg/ZE9Xmy2vbrzuthXnAABJkjsXcPYtKmK9/XNjd6shx/3ls/Tb
+         3U2NOJQqdwsqMJzFC76XKMQ7I3540AN43/KmFhPFlu9BoFTyiFdHl9qe3w1z1scVEFSY
+         7+YVouuhfv95F4b8dEkWzIDwVF2avnatun55iObFcCKhnr5cyhHBv4PJRpKCmLPL/IvT
+         Xgbg==
+X-Gm-Message-State: AC+VfDxKqJt59jB98UBn8Gqzw2kLc5Ggti8/zUAZ2PSLvA4e9elKtOfz
+	SM6wQJQNGlwfxZPDx1leL+b6nrdwjqO+pn8PYNTVPdxrR44prtlehobb0x/BwpfGPt+MMuVa9U8
+	xp7a52oyhEcR4vI/EURuJq9Q=
+X-Received: by 2002:a05:620a:838a:b0:75b:23a1:1de6 with SMTP id pb10-20020a05620a838a00b0075b23a11de6mr5050167qkn.3.1684860331622;
+        Tue, 23 May 2023 09:45:31 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7KgVzyW93oaRg2eMEHJ6+n5XybELiRsqN+AgaZUfW0PvMHM45l1XjaZbRUzAB2u95/Od20Aw==
+X-Received: by 2002:a05:620a:838a:b0:75b:23a1:1de6 with SMTP id pb10-20020a05620a838a00b0075b23a11de6mr5050145qkn.3.1684860331233;
+        Tue, 23 May 2023 09:45:31 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-246-0.dyn.eolo.it. [146.241.246.0])
+        by smtp.gmail.com with ESMTPSA id c2-20020a05620a200200b007593af0c85fsm2632337qka.88.2023.05.23.09.45.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 09:45:30 -0700 (PDT)
+Message-ID: <7e490b1f2ada9d3caaf29118f5bc2fb1484aa0ec.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 1/6] mptcp: add subflow unique id
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+Date: Tue, 23 May 2023 18:45:28 +0200
+In-Reply-To: <18e20b8f-aaf1-81ae-1f88-8572bf270098@tessares.net>
+References: <cover.1684763196.git.pabeni@redhat.com>
+	 <82dfa3a412939eb515bba411d8aa585f987e61f6.1684763196.git.pabeni@redhat.com>
+	 <18e20b8f-aaf1-81ae-1f88-8572bf270098@tessares.net>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-next v2 2/6] mptcp: introduce MPTCP_FULL_INFO
- getsockopt
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1684763196.git.pabeni@redhat.com>
- <7caed74486cdeec1c929cd2b62d3f04dd67db46e.1684763196.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <7caed74486cdeec1c929cd2b62d3f04dd67db46e.1684763196.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Tue, 2023-05-23 at 17:20 +0200, Matthieu Baerts wrote:
+> Hi Paolo,
+>=20
+> On 22/05/2023 15:56, Paolo Abeni wrote:
+> > The user-space need to preperly account the data received/sent by
+> > individual subflows. When additional subflows are created and/or
+> > closed during the MPTCP socket lifetime, the information currently
+> > exposed via MPTCP_TCPINFO are not enough: subflows are identifed only
+> > by the sequential position inside the info dumps, and that will change
+> > with the above mentioned events.
+> >=20
+> > To solve the above problem, this patch introduces a new subflow identif=
+ier
+> > that is unique inside the given mptcp socket scope.
+> >=20
+> > The initial subflow get the id 1 and the other subflows get incremental
+> > values at join time.
+> >=20
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> > v1 -> v2:
+> >  - properly set subflow_id for the first passive subflow and active sub=
+flows, too
+> >  - drop the tcpi_fackets overload
+> > ---
+>=20
+> (...)
+>=20
+> > @@ -3203,6 +3206,7 @@ struct sock *mptcp_sk_clone_init(const struct soc=
+k *sk,
+> >  =09msk->snd_nxt =3D msk->write_seq;
+> >  =09msk->snd_una =3D msk->write_seq;
+> >  =09msk->wnd_end =3D msk->snd_nxt + req->rsk_rcv_wnd;
+> > +=09msk->subflow_id++;
+>=20
+> It is a bit confusing. Just to be sure, here it would be the same to do
+>=20
+>   msk->subflow_id =3D 1;
+>=20
+> because subflow_id from the listener will be 0, right?
 
-On 22/05/2023 15:56, Paolo Abeni wrote:
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+You are right, my code above is confusing and even incorrect. I'll
+replace it with the plain assignment.
 
-Do you mind motivating the addition of this new socket option? :)
+Thanks!
 
-Also, it is not clear how we manage the different size for struct
-tcp_info and struct mptcp_subflow_addrs but I will look at that in more
-details later.
+/P
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
