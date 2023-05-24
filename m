@@ -1,45 +1,45 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9569B60870
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 13:21:13 +0000 (UTC)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-3f6094cb2ebso8047215e9.3
-        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 06:21:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE396086A
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 13:24:12 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3090d3e9c92so815106f8f.2
+        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 06:24:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684934471; x=1687526471;
+        d=tessares.net; s=google; t=1684934650; x=1687526650;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=A6wujJSWJXmdVQBgywXeqR3vQHbQetxZmwliNGAJMjk=;
-        b=JqUdh3SdKWZ/VuACXoURmCJL5TMIdqunzUC7wXmZfUSp9R7CkXhiLOPx7JVmwSvPLT
-         h+OlAB6LaTqoi4VdQDVkNXJutTWPMB4nmmW98snJhaB9yLp+ppeGxMysTxTqTELMLZmx
-         xy8F9EGKALHIH74omWxhf+y0Sw0NPKGyEdDVBGkWNhh7Ax1MMYuBfjnTTz1rAnhUf0Y8
-         VKqFjX6WhV4RwnXbM9RMBYB0r+GAyY5FyUCrgtsrUXfQu5JnciLg90hUaT6rLr1nmh0+
-         9UhJqvCvMo4iLh7LmK7XmoKcFHPXaE9Z/Z2TPUPglx2VPVQnhu+iy/uumiw6o4kLsBa6
-         Lmhg==
+        bh=rxUzLfwRmn2QPzzYe8sxEWjPfJblYoyIjOpXSO8+gQs=;
+        b=MA1smLbpYAAuBRV7o1aOPPgtE65M5R0W0ku92iKVqKUc1nb1ce/NSTztSiH8C4J4fU
+         gZtpXRE9ipD8Xd1bUI346w2yR/eGRkgYv4pNaCIhW8acFvv4tTEBcsL8JG6w4fp/7Yzf
+         +7bY3m1BRc1jbeQxF2ff4WWSqGC8yUyATL1uqmfTJg4FBW0DFg/Kch2/8UOBZsDLFxxx
+         nvkqlaN6lW1iwgEFfviKwwJ0di3FuqUkWdypJyoSW7w0ectzyYcZwNqB3i/EBsLxPXeh
+         Sy863SNBBXdch+V7971GlEUDjn3P2gSJ9IS7WfJnq/xL0KDw7hY1xphRynz87QiCkVV8
+         +xog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684934471; x=1687526471;
+        d=1e100.net; s=20221208; t=1684934650; x=1687526650;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A6wujJSWJXmdVQBgywXeqR3vQHbQetxZmwliNGAJMjk=;
-        b=RPafHEAiVOJyOg0XDD9/r07DZpONnTFnHfVp1G8pm3SL/s/rB0XP2Cl93KSmf9VAKz
-         7YpCsEddlkfxf8NGKtVPSMJT/y3wypiHolYx0pOsuzr6wW3AMRteIdT9ghYfYteWOIgo
-         Tl/GLU3l3fkKp0GTLC75r7rCj1icqUxeWCBEbD6Oyg68hwCTJ5KBl8yrXkl5A5iGm6Sv
-         MpnMhR5fV94qACvKmWbGhN7Tb8jeJIcxq+isz5RGerE+QUDmONjSCPKZqWiNh/6QaJQd
-         2eJYF4GGwRnPXMG4IxEaB8jXimm4ObTeaQTMrIutjAx8XqxNwauixDjnCM4W3yEjQfty
-         20Zw==
-X-Gm-Message-State: AC+VfDxFHPrClEsz99AfZA7nEOzjj6OdrvZjXkkdewHANjfLu4Tr56ZS
-	eRbLZXmPmYEiB9OCpAW2POod1uRbXkwAM+xnYlDIpw==
-X-Google-Smtp-Source: ACHHUZ5T32tEZjoOGoq59IE6FVdLJdxm3+Rk3PVIJmaq86UAtAlXND9xUTm28+1wEE4fNWdZ0cLiow==
-X-Received: by 2002:a05:600c:294c:b0:3f5:fa8e:aaa3 with SMTP id n12-20020a05600c294c00b003f5fa8eaaa3mr10662419wmd.28.1684934471343;
-        Wed, 24 May 2023 06:21:11 -0700 (PDT)
+        bh=rxUzLfwRmn2QPzzYe8sxEWjPfJblYoyIjOpXSO8+gQs=;
+        b=SvBvj+df6CQ39+goZ/lLCRhqeNo2EBj98r5IhFx7XXBFPSL4PYD6oov8b+5cZ6FDce
+         rGYhxAW4VsI94ZtQeiG829M+WX+OYzOOpPVbmw2f0PdcBQOhV31FmxL69uHvLoiYziDj
+         BH3fqTmQw9LrD/SzIPYWRs802AHwfklC4i2RO1Qbv+++iy9I1Ob2zTYqboVtVEIS5y1L
+         P43Jl8dx5iieNZIGqvjyUnH0XWveH9Y9Jxpe9icftONMJHZKIHv238TxzfMGi3J9ziI3
+         SgtEonTtO/PtmOasXFn49lNpP2/CQ7SzgjLNbeizv039uw50LX31z8R1E9Pk6cp70JRl
+         y38A==
+X-Gm-Message-State: AC+VfDyAKJFGtXJ0pjLhHLlPTrhzskc3HFHv5a5WCyeTeg3FifhQn1rG
+	OFzuaN/KEwQAHzErBosoAgC3TLeDi7/f14TQKhPpAQ==
+X-Google-Smtp-Source: ACHHUZ5GlKRrnJdDbzNlqurXZCJXDmo3kUzBBJ8FGaVPilzAG6gAo+QnJ225yR05CdSLDoe7yQ0j9w==
+X-Received: by 2002:a5d:5744:0:b0:306:2eab:fb8c with SMTP id q4-20020a5d5744000000b003062eabfb8cmr13007444wrw.42.1684934650294;
+        Wed, 24 May 2023 06:24:10 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:735b:1ad0:911b:4361? ([2a02:578:8593:1200:735b:1ad0:911b:4361])
-        by smtp.gmail.com with ESMTPSA id q13-20020a7bce8d000000b003f43f82001asm2344602wmj.31.2023.05.24.06.21.10
+        by smtp.gmail.com with ESMTPSA id j17-20020a5d6191000000b0030639a86f9dsm14405960wru.51.2023.05.24.06.24.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 May 2023 06:21:11 -0700 (PDT)
-Message-ID: <d0b910d4-8b8b-ae47-c8f7-267c3a1238d2@tessares.net>
-Date: Wed, 24 May 2023 15:21:10 +0200
+        Wed, 24 May 2023 06:24:09 -0700 (PDT)
+Message-ID: <f5b66a5d-4dcc-04a1-76cc-58c872c7ff37@tessares.net>
+Date: Wed, 24 May 2023 15:24:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,69 +48,46 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-next v15 3/5] mptcp: add address into userspace pm
- list
+Subject: Re: [PATCH mptcp-next v15 5/5] mptcp: update userspace pm infos
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1684915182.git.geliang.tang@suse.com>
- <b897ae1cbd3615b1304cac6f3dcefe42854f273b.1684915182.git.geliang.tang@suse.com>
+ <f6f3a1de7d640cbb4ea45fe820c042c6b134e3f2.1684915182.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <b897ae1cbd3615b1304cac6f3dcefe42854f273b.1684915182.git.geliang.tang@suse.com>
+In-Reply-To: <f6f3a1de7d640cbb4ea45fe820c042c6b134e3f2.1684915182.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 24/05/2023 10:02, Geliang Tang wrote:
-> Add the address into userspace_pm_local_addr_list when the subflow is
-> created. Make sure it can be found in mptcp_nl_cmd_remove(). And delete
-> it in the new helper mptcp_userspace_pm_delete_local_addr().
+> Increase pm subflows counter on both server side and client side when
+> userspace pm creates a new subflow, and decrease the counter when it
+> closes a subflow.
 > 
-> Add address into pm anno_list in mptcp_nl_cmd_sf_create(). Remove
-> it when connecting fails.
+> Increase add_addr_signaled counter in mptcp_nl_cmd_announce() when the
+> address is announced by userspace PM.
 > 
-> By doing this, the "REMOVE" command also works with subflows that have
-> been created via the "SUB_CREATE" command instead of restricting to
-> the addresses that have been announced via the "ANNOUNCE" command.
-> 
-> Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/379
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  net/mptcp/pm_userspace.c | 41 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 6beadea8c67d..114548b09f47 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-
+> This modification is similar to how the in-kernel PM is updating the
+> counter: when additional subflows are created/removed.
 (...)
 
-> @@ -302,12 +327,24 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
->  		goto create_err;
->  	}
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 114548b09f47..7ada9cf81c14 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -91,6 +92,7 @@ static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
 >  
-> +	local.addr = addr_l;
-> +	err = mptcp_userspace_pm_append_new_local_addr(msk, &local);
-> +	if (err < 0) {
-> +		GENL_SET_ERR_MSG(info, "did not match address and id");
-> +		goto create_err;
-> +	}
-> +
->  	lock_sock(sk);
->  
->  	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
->  
->  	release_sock(sk);
->  
-> +	spin_lock_bh(&msk->pm.lock);
-> +	if (err)
-> +		mptcp_userspace_pm_delete_local_addr(msk, &local);
-> +	spin_unlock_bh(&msk->pm.lock);
+>  	list_for_each_entry_safe(entry, tmp, &msk->pm.userspace_pm_local_addr_list, list) {
+>  		if (mptcp_addresses_equal(&entry->addr, &addr->addr, false)) {
+> +			msk->pm.local_addr_used--;
 
-I was going to ask to move the lock inside the 'if' condition but patch
-5/5 introduces a else condition which also needs the lock, all good then.
+Do you mind if I add this under the following comment with the TODO? We
+should only decrement the entry if it is the last one being used.
+
+>  			/* TODO: a refcount is needed because the entry can
+>  			 * be used multiple times (e.g. fullmesh mode).
+>  			 */
 
 Cheers,
 Matt
