@@ -1,84 +1,122 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B882560868
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 13:27:47 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-3f61530506aso6000915e9.1
-        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 06:27:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684934866; x=1687526866;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Nh1ozdqkuyL297IQzekf/SyF/gGadVxOjJloMKiRBTY=;
-        b=ndVEAQ68RD8k/baBAhUbgKQcARELDntIUkaV4k55w2PY0Upr+Sw1PWnEUe8tI1egdg
-         6unk6+tE3ulRkZdkm/TmbT+FfVDAvp3F9PD9mtPijFemmk01ttM2Jpl1aZbWsxmxpkUp
-         Mx5Vwg3i3qqdHDJDyU7+E6oGjelUG1WSJnhXJ182BgwkkXvwyMiao13zuaNfxunB5muS
-         /u9NVg/oLrx1ZS76o/KBv1vJRvyPKempoQUcr5WJDPRr1KP+kBpLxzLYjXMl0rWE+Tj9
-         Cpa/PPWWRFahjquAAD6IMC/TzN2VA7SigPIx1vHxoFrC2SeVjt60fM2uGQLBMLIhOgIE
-         Cgpw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3240160874
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 13:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1684935322;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:  references:references;
+	bh=zCDOKyN0r/L0XZvY/9Wc3rZWVgLoorOmNHjRcMJtck8=;
+	b=LOKT1H/XJ1+fAuidpJDRZ4/yLWHvwGeJ3q6uTtkqyjGOHvIayH4scbU1PtKCA/o7tIu/tP
+	N6SqQavNsGLg5ot7xH5SVlv5INXR4hcG5YW9s7x0oBTRxlzVgEwqNcnzRcasT/5Lm2AQtw
+	7Sw/i51N/amxIy7fA74yYU/IshqbUVI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-503-zcxU7Jk-PF-uK2PEgqxK0A-1; Wed, 24 May 2023 09:35:19 -0400
+X-MC-Unique: zcxU7Jk-PF-uK2PEgqxK0A-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3f4fffe7883so1693865e9.0
+        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 06:35:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684934866; x=1687526866;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nh1ozdqkuyL297IQzekf/SyF/gGadVxOjJloMKiRBTY=;
-        b=fAuwppZTZF60GerwKmOwIHWjmqEF8P3mD15HE+5GewfCyGXATjRrhU3cMGbAmp1+gy
-         1wiFPoy8+8DIxmy+H8md7ciyMUpP1Y6dywa8qrFNcQrqPGib0jL2EBxa7XD5kD9SuoNr
-         2ZFs3eE+4Ytvz+v8E8eLMTFmqlO9qayYDs4wx+YezZFk8nYDN70H4dzJ5ROLJGl96VXJ
-         HXUkQhxmnaL/FgrLCX7H/v1tQD/zI3fKMEJ0cBZDSu+mRrB27Q0zNiNTCE62kjnSh6sm
-         ociKxYJFv2DI1I+ave6Lfc/7N2UtsI8t/yie3SV78eYchor2InoSQBkRSxKTVo7F35hW
-         SCsQ==
-X-Gm-Message-State: AC+VfDxMF8QbxYVwUm0teRnSpHV1N6dXhOprrLOQRc5hwFTQ3QmDPLB8
-	WLS1O+Xwwug69Bl4OoZ8IFU2P4tgoqYTkpHAu28kyQ==
-X-Google-Smtp-Source: ACHHUZ6X6Dh4sKoRKxCl3xzh6fiXF3KUTri7gjRuPkZ4wcYFA4+7Jy6BucIjOnegjKF/wKGfW5nGWw==
-X-Received: by 2002:a7b:ce15:0:b0:3f5:ffe2:91c0 with SMTP id m21-20020a7bce15000000b003f5ffe291c0mr9461240wmc.0.1684934865643;
-        Wed, 24 May 2023 06:27:45 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:735b:1ad0:911b:4361? ([2a02:578:8593:1200:735b:1ad0:911b:4361])
-        by smtp.gmail.com with ESMTPSA id q16-20020adfdfd0000000b0030642f5da27sm14488065wrn.37.2023.05.24.06.27.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 May 2023 06:27:45 -0700 (PDT)
-Message-ID: <b1c8500d-15be-38b4-c4a6-ac5c725d97c8@tessares.net>
-Date: Wed, 24 May 2023 15:27:44 +0200
+        d=1e100.net; s=20221208; t=1684935317; x=1687527317;
+        h=mime-version:user-agent:content-transfer-encoding:references:date
+         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UEQZwDlAe1e2lzw7RC292ZOrpG2mO4rpWe5Ir91Hsww=;
+        b=JdFnJTDxxxyA6cGm8X5wzSubcg2Ttf7sS3Tf8moicUNmRA3OnunqNF1d+G2akqbZNq
+         5gmPDjM5jMX+AmR5g+LfCbGQrN6dCJ5b0s7wCZeYqf7g+xUTWm7daH4xqNPcF7DkoCy7
+         wcGuYE31eD+F7pVwxUzrxrSbd7tFtC//3SfswjTnF1HRwSrBkM9pW+O08ZyraH9Y3fXN
+         pry1naeIV0tx25Z2JCKymhlaQiZYOwFuZ1cpm7d1Uabwx+4bEkZx2zzLy5dokRD1GgKr
+         exP9Rc0I7TLyr6HL9VqTKkF6kNT7Ay7Fj+hH5UuEJ6phoKZbApoJlI2f0qOamnJTixJT
+         /8zQ==
+X-Gm-Message-State: AC+VfDwiRh61vZ+mAgV/vxnIBSZ3ugY7Jq6utFK0PhDVDa013nGCAmSh
+	lJ9+RLnFc7PCFU9E16GYqI4nfZHwYqugSvSxwowJPoDkCFAVwEIHhfsABhoCJrZjmENfcvfxBZo
+	E0KL4E085mcLyqvZgDbSFvnBmzYNW8ilb/3GFYuVUplGF4Ojs7QQSZdFpmBSyDZdvw5r0BykE
+X-Received: by 2002:a05:600c:3b19:b0:3f6:8a3:8e59 with SMTP id m25-20020a05600c3b1900b003f608a38e59mr5859344wms.1.1684935317673;
+        Wed, 24 May 2023 06:35:17 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7xSgdBZoTk4XrEGFjA1y0PbnUSea1WEbPXgWP3+eoVBXcDQJx4+hpLxpVyWjQb1BQsPsXJGQ==
+X-Received: by 2002:a05:600c:3b19:b0:3f6:8a3:8e59 with SMTP id m25-20020a05600c3b1900b003f608a38e59mr5859325wms.1.1684935317279;
+        Wed, 24 May 2023 06:35:17 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-242-207.dyn.eolo.it. [146.241.242.207])
+        by smtp.gmail.com with ESMTPSA id n20-20020a1c7214000000b003f60482024fsm2359522wmc.30.2023.05.24.06.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 May 2023 06:35:16 -0700 (PDT)
+Message-ID: <53030866af889e674647a02c37b0909ee395c9f5.camel@redhat.com>
+Subject: Fwd: Re: [PATCH v3 mptcp-next 2/6] mptcp: introduce MPTCP_FULL_INFO
+ getsockopt
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, Florian Westphal
+	 <fw@strlen.de>
+Date: Wed, 24 May 2023 15:35:15 +0200
+References: <9c4f161a53250127f0634359433ee51934606342.camel@redhat.com>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-next v15 0/5] update userspace pm mptcp_info fields
- part 1
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1684915182.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1684915182.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+oops, Matttbe noted I omitted a few recipients, re-sending...
 
-On 24/05/2023 10:02, Geliang Tang wrote:
-> v15:
->  - drop "mptcp: export remove_anno_list_by_saddr"
->  - drop MPTCP_USER_PM_FLAG_RM_* flags
->  - drop mptcp_pm_alloc_anno_list in mptcp_nl_cmd_sf_create.
+-------- Forwarded Message --------
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH v3 mptcp-next 2/6] mptcp: introduce MPTCP_FULL_INFO
+getsockopt
+Date: 05/24/2023 12:20:25 PM
 
-Thank you for the v15, it looks good to me!
+On Wed, 2023-05-24 at 11:12 +0200, Matthieu Baerts wrote:
+> On 24/05/2023 10:53, Paolo Abeni wrote:
+> > On Wed, 2023-05-24 at 10:13 +0200, Matthieu Baerts wrote:
+> > > (If we add mptcp_info (cf Paolo's email), better to strip 'subflow')
+> > >=20
+> > > > =09__u32=09=09size_subflow_full_info;         /* size of this struc=
+ture in userspace */
+> > >=20
+> > > Why do we need this field? Can we not use the option length (int __us=
+er
+> > > *optlen) provided by the userspace?
+> >=20
+> > With this we can append arbitrary/variable size mptcp_info at the end.
+>=20
+> I guess either we use a dedicated field for mptcp_info or we infer its
+> value by looking at size_full_info or optlen. It looks clearer to me
+> from the userspace point of view to have a dedicated size for mptcp_info
+> than giving twice sizeof(mptcp_subflow_tcp_info) but I'm probably
+> missing something :)
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Currently, with the existing sockopt we have the optvat pointing to
+something alike:
 
-I suggest to apply this series today. Then I will look at my series
-(selftests: mptcp: skip tests when features are not supported) and hope
-to apply it soon. Then we can look at the part 2 of this series if
-that's OK for you.
+> hdr_size | hdr | more storage |
 
-If you need a hand to rebase your series on top of mine, please tell me!
+and optlen specifying the whole optval data. We need the explicit the
+header size field, as optval must specify the whole size of the user-
+provided buffer and we need to know which part of such buffer has been
+filled by the user-space.
+
+In this case:
+
+"hdr_size" =3D=3D mptcp_subflow_full_info.size_subflow_full_info
+"hdr" =3D=3D mptcp_subflow_full_info
+"more storage" =3D=3D mptcp_info
+
+We could add a (rendundant) field inside mptcp_subflow_full_info to
+specify the user-space mptcp_info size, but that would be ...
+rendundant. Unless we drop the hdr_size and we compute that from optlen
+and the new mptcp_indo_size_user field, but that would be IMHO counter-
+intuitive.
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+
+Paolo
+
+
