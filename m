@@ -1,200 +1,262 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2040.outbound.protection.outlook.com [40.107.105.40])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3C4BE7A
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 08:03:54 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DBEyQ4yiWfccjtB8G6hVviCDvZPjqE3xwH3C30QrXvdsOZN/GSDz9gZ8FVRV7s/MOFCayNj5P/cmJDzzSXt9apH94ZgKdPwPBpGswq7vvh8WhvPNemRm23vqHLpFiSRXCke1qrOk2Hcu1QzT9b3f9nqqNxZwGoZdQaP4QXjTf3TuyDemXmgsYN0fDG3rDMFtGlTiEIW6znOYHSKR22MEPnEtpTe2C8yi8knUinSodgNnGmy2emKtzGYZFH7FfgM4SZO1wJHw9KhoxfdHi/UFbXrrIwEtqTHGu6NoMXTFXQYNBenKJHxsbg2WcqcAegXqMn6KGO+HykkMC5HZdXQ+qA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zNJbjISTuZalS2v1QmnO1FpiWON0lLzO6YKl2gn1/Vs=;
- b=aeKkB89Ydgievls/KQYhnK1n7knySeFcvy7jn0zLloG7rW7sVhVnYK+YlrMijuluJjLdi+SbXpqrCLj8Xy0qEkvoxHMAU3L46xQGtqXEpblVcYOKuxPULmOnzV0p8M2lrfBRAoJEmjPAmy4Dkccfjx308Vah6uqlkySr++7ZawAvLp5sqFXKHT4pn2FbqIuZOtGZ6QOuP/Izij2LM2XbH208f9D4BknVPrDb0ZXW2/SDAIsU/eP5Cv1fDxlJAvfTU/sU7HdwnXSdCQK/iSlftKYwTyOyusB/G2adL1RcN3B5nkNFIp9V5sM0TWwqdykAb2uaqGXngwabAYm0baHQXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zNJbjISTuZalS2v1QmnO1FpiWON0lLzO6YKl2gn1/Vs=;
- b=y4s82LhF1cICQD6LCLTVkVHavHmwnvO4qMSqqZbaRGIoLp3Gn6ihnVGS6Ccksdua3WUj2Y2Lg40EiElEe4q3c1MnDVNAYDoGhZCi/OGeTxag8x7o7uFFDsggrcQrw5UVExdvERI/f+DkPiFj+LtC7WyU+ySqCFnjDnSUIb/xRagVKudu56rgUvlyiX/biTY4eVqoymQPfFeMNfs25n/CRsq3ic2YZZF4XgLTTMT9EA51Q3NYb/2vM/E8WgoxD3qLGEdR7tMwEL1CHTC4r1ujSpmB10tt28q8NjFgZ2sXr903ERxhXVh0E4T+nuQHp68J65lUrWi7Hsazn9MeWf2xGA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by PAXPR04MB8591.eurprd04.prod.outlook.com (2603:10a6:102:21a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.15; Wed, 24 May
- 2023 08:03:51 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::423a:a30f:5342:9d35]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::423a:a30f:5342:9d35%6]) with mapi id 15.20.6433.015; Wed, 24 May 2023
- 08:03:50 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v15 5/5] mptcp: update userspace pm infos
-Date: Wed, 24 May 2023 16:02:48 +0800
-Message-Id: <f6f3a1de7d640cbb4ea45fe820c042c6b134e3f2.1684915182.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1684915182.git.geliang.tang@suse.com>
-References: <cover.1684915182.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYCPR01CA0024.jpnprd01.prod.outlook.com (2603:1096:405::36)
- To HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031288480
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 08:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1684915897;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wZHbhNIbnkqmab/V7YEpVv8t6i3D7XGG+yUIy3u+dhA=;
+	b=ebS/gcfakHJv68VGdo6PPnswud3+zrpch3sUdqoxFGNb+Uka90ceyNPr+79hNstDHLq2zh
+	9VnOrMHFhrYbSWftECkqe87h1KzA/cTqyO/GdAqWUWr2VgluRd2D5o+/88j22xOqGicAgE
+	Gf87qi/eZMR9Dd1V7m42nQNlYfENjxM=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-214-UvpfIoO2MjGlw5EJJ1Kalg-1; Wed, 24 May 2023 04:11:36 -0400
+X-MC-Unique: UvpfIoO2MjGlw5EJJ1Kalg-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f607da7cdbso1189275e9.0
+        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 01:11:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684915895; x=1687507895;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UgZ4l81sUsLfdHOTOW0JGCFPv6Nf6AS9q1Zmm5Kjj54=;
+        b=ID3OITFVqjzLjm3Paq1aqaS+xxH4TFhFpJ9ryvE8UNE1K4AWC0KHoane+GXA1ZabbV
+         yWszCQclALqj5Df+oIis/tWzhWj+G/C3PxMfSlHdMCoTzGnZcnQwuQrWPf0sL6jIBGxO
+         +MuChLBQ9FzghK+NATyZ8CytqKXFeeMSd18edQOBqVYUQc7UlAq6IlHVoZnjufYSXWNv
+         dto2c1o/HsegtY18iwtCyDzfpwfzYL0B45r3iY48ByrFbUJyrIg8r0rJKEK1rspnwAJJ
+         TzzHMbIwHJcfEr4Jhz2i+YqmV7s3jD7FwWt2RMzci/55vXbdCIZqv+Kwloxv7TEpPJ3J
+         y9jg==
+X-Gm-Message-State: AC+VfDzQ9cYrWvwUu+6YU+2d2IfcKyn5KCpobD4MFPMuppxqP3Rlm4/x
+	AanlVQE1lxOR5p5k4FqEHZ6AmEqxOy8j6VIql765UzKBfkfSd4vBmBy7cdm9+0hqg9Yhfio5CpU
+	/bRA3lSWVMc0Y1gM=
+X-Received: by 2002:a05:600c:3844:b0:3f6:d8f:63a8 with SMTP id s4-20020a05600c384400b003f60d8f63a8mr1445055wmr.0.1684915895154;
+        Wed, 24 May 2023 01:11:35 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ61Wx/pxq+qwqhch0Ev0WDNjKB3EcIa1jVZalL6LpHt+Jm6wOEFlygzVhcy7SAmxcFObweVfA==
+X-Received: by 2002:a05:600c:3844:b0:3f6:d8f:63a8 with SMTP id s4-20020a05600c384400b003f60d8f63a8mr1445028wmr.0.1684915894785;
+        Wed, 24 May 2023 01:11:34 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-242-207.dyn.eolo.it. [146.241.242.207])
+        by smtp.gmail.com with ESMTPSA id z26-20020a05600c221a00b003f60101074dsm1411831wml.33.2023.05.24.01.11.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 May 2023 01:11:34 -0700 (PDT)
+Message-ID: <b2db55ec8e8aaf06b562236150c4f111e38f6f21.camel@redhat.com>
+Subject: Re: [PATCH v3 mptcp-next 2/6] mptcp: introduce MPTCP_FULL_INFO
+ getsockopt
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, Florian Westphal
+	 <fw@strlen.de>
+Cc: mptcp@lists.linux.dev
+Date: Wed, 24 May 2023 10:11:33 +0200
+In-Reply-To: <f21e784f-8c97-f876-848b-f909d4e1daf0@tessares.net>
+References: <cover.1684863309.git.pabeni@redhat.com>
+	 <67b6345847e8f23fadaf22c14609d4d387eed952.1684863309.git.pabeni@redhat.com>
+	 <ZG0FL9XM-MFgfyQ-@strlen.de>
+	 <62d7d915a3536e9bf37770952838308d8f41ad8b.camel@redhat.com>
+	 <d48dcb197962141d36529c16f6bb365d4599846f.camel@redhat.com>
+	 <f21e784f-8c97-f876-848b-f909d4e1daf0@tessares.net>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|PAXPR04MB8591:EE_
-X-MS-Office365-Filtering-Correlation-Id: 96687c02-94f6-4283-dd8f-08db5c2d68cc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	x8SGA33QkOqPrBpAyCH7eD3Jdy26fx3Ew0GWFMgQvrovxXT/e6X5tckMinMQ3VHzZqxrkIPzCAn+MrRNePXk5ApKfh5pRmedcfOl6w9SO0bfb3CNScYTNKLDGG41TzpAgwM7U7J45tw4r5hHsRvtz6vlctmCz7ok8VNcCY6m9N9Pl7zy6MFAVKsFJHBHrfAlw+D156DQjpH9sPBMQ6eRCic3VcsTaKrOm7SNzpMeUciCVQQMhuIhm2caehc/1+aTR79brXJdBcZYtVrMdXmup8Vo5mUHAl8YN+995FmZs/zNeV3IbvbPMvWXPG+CeAYkqextY/XaRUQM3ToYbWhuNcahOAeodv66CsUKSxBtIGatZob+KYMRHktgaX9dUD22wCGXq1QqDg35Y18rrJIMpIhPK62Y/3qjy3otjbrnm+iScb+nT2aziOb2+iyamsVm99BLNBPjnmpYzskveSL/P8kQSyYYIBG+PTgDCE9Xq/1Fw0DyUNmjND1ayfUkmsXxfS0ak8oGesT6y2En+aI6KmFoLbro6j9sONKX70+DTO8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(39860400002)(376002)(396003)(136003)(366004)(451199021)(6486002)(966005)(38100700002)(186003)(6512007)(6506007)(107886003)(26005)(2616005)(83380400001)(36756003)(66556008)(66946007)(66476007)(2906002)(6916009)(4326008)(316002)(8936002)(86362001)(44832011)(8676002)(5660300002)(41300700001)(15650500001)(478600001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KTj6yYbcTXJqE8CIP7CW3PK7SJRAxjmdxygwxBocWTQo/uI+vDPPBJAAem0d?=
- =?us-ascii?Q?bEYZ2BrBEDjhmDD4yBuYSFu5B67CJjQwe/xPSgZ8PpJ6RuCdePCZYrl+Rhw7?=
- =?us-ascii?Q?XaPtlNcGbk8JEL1WC13FhcdnesFCfuJqhZdIYZGghYeI7fZRmI6SWPu4t5xN?=
- =?us-ascii?Q?TjSKbgMz/ywxDelAKRj6lMzbLlex1BF/1LQ5w5SOeOrGaWeOzBfrnztv97pS?=
- =?us-ascii?Q?ynttxbOc4l2+as2WqTW4QdApUgZ128l+2JV9l00c3cvEkCrgC86aI1u10pDH?=
- =?us-ascii?Q?xT8VRqPKgWx7OE/g3gJzdLmM4u2xTwJFHkS4XJXXmNxBQwrDJde5u7hCvLuo?=
- =?us-ascii?Q?gj+hsUbNtcOEXXKX46iSMdED3yre9NwwZnRQQ5f1P8wVi5ZnPBOLh6nanRUJ?=
- =?us-ascii?Q?UA6/wYKpDsXzqidYC9poLXLMeARdChxtm6w7uvtY9l73noeL45TKfNQVOK0r?=
- =?us-ascii?Q?AGz1pIPAaGz8HLw9M8KZMzChhG6KW1eYm8mA/a4BI44U1I9/yhfriqum3RMq?=
- =?us-ascii?Q?6XgJyRi/2s8EhsOfr2I4y/Y5u6Z4GVPLBETP+lggkrnV/J9Me6uiostNImjo?=
- =?us-ascii?Q?hUpnckqGsc3snOsebcTkDOnTKvdC0+fWtTqALj5pjcYSEeb+G+9g9cpwXhYY?=
- =?us-ascii?Q?IiK6+8rsJ0YzbaQrJ7A0i2lOPdvy+rPEPRu4J4UDo7RrrGwCsCBwu+K3Ym+W?=
- =?us-ascii?Q?flGiR3mnlFQ+Wa/ThA1Uw3xyqzLiJmrVBocOmFxm56KGPg7U/nKwo9wCe7qb?=
- =?us-ascii?Q?dZKTLiIiCVSU+0sRbC0UMl8Mrk1RvWZJJc/rpPeromwNaSzTKtw9o3Ru7PmT?=
- =?us-ascii?Q?/l1jwLDDeR4yxiZ7IcWOqKu5cL53z+EwWu63FFWq4jjSKekqj7aftuaxj1Zx?=
- =?us-ascii?Q?YCHzSX1SQgOEtEAHAitJgdA0w1GHmXmgG8H2IrboyD6CGDvpokbTkVRvDsmG?=
- =?us-ascii?Q?HxI4m0B79Q5YRFSPSyXm1j6WdAC3045Ajy9Li8rZqukghRmQzsScya2Y/Fxv?=
- =?us-ascii?Q?4D4PCroEEff3E4eZpL95MswuR68yUqTZuiP0f6KgZFU5ZMTYyoR2YLr++enn?=
- =?us-ascii?Q?PyulfjVOXLdT9xpDO5J/qmTVmZfRaLJo49zBBhGVYkimmWXkAoKxhmenRG35?=
- =?us-ascii?Q?fZGueJhMYi3lxY9hSw0QnEboVmWVGTLSrHwfZQWFopCphJMINWw1Esj9kxzg?=
- =?us-ascii?Q?RcRO8aYxAT1UZm5lvF+3We7PZ6jh5NZxBO+m7aEK2RrdGU7mCzCUx5AnR579?=
- =?us-ascii?Q?iJmDOfqHCu5+yOUxguZEIzZzGqEa+0nQVLZH41cgCVVxCf7fZ4hUjmRlTrSO?=
- =?us-ascii?Q?wFRa1I5doHM1o2P9kdSZo13fbKT/18FvOkehsVLLXVOnYCcXm/20cYtiZWKk?=
- =?us-ascii?Q?XolbTCCORm5mDJxy9DjfDjQYBBBEiNfohk6OyQ9H3tSyBju1dKzOVvCVS9cw?=
- =?us-ascii?Q?M5QIjtFwIvG/6/qDmr5aOpJO7CeAKdMLKqY9E+loGRpQdgjxBbOugKI6v66I?=
- =?us-ascii?Q?xwYydd3T4uXFSQk1TzgaWwY1pO+pcJMdAUOnkBQauMRI1T+hseIM0ZiF1/Gw?=
- =?us-ascii?Q?DD8+KjekIBLcZHQnFb4Cs+9NVJaDl2wkuLY2HTLp?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96687c02-94f6-4283-dd8f-08db5c2d68cc
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2023 08:03:50.8548
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mzYqaR7WGyHJrD6mySJx/L3aStUE/QIedRT01Izy+FDSlJ+D+teG5ZHXu0Gj6h3kStQXBTNrRIlaHSVWHyqvNQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8591
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Increase pm subflows counter on both server side and client side when
-userspace pm creates a new subflow, and decrease the counter when it
-closes a subflow.
+On Wed, 2023-05-24 at 09:36 +0200, Matthieu Baerts wrote:
+> Hi Paolo, Florian,
+>=20
+> On 24/05/2023 08:36, Paolo Abeni wrote:
+> > On Wed, 2023-05-24 at 08:34 +0200, Paolo Abeni wrote:
+> > > On Tue, 2023-05-23 at 20:25 +0200, Florian Westphal wrote:
+> > > > Paolo Abeni <pabeni@redhat.com> wrote:
+> > > > > Some user-space applications want to monitor the subflows utiliza=
+tion.
+> > > > >=20
+> > > > > Dumping the per subflow tcp_info is not enough, as the PM could c=
+lose
+> > > > > and re-create the subflows under-the-hood, fooling the accounting=
+.
+> > > > > Even checking the src/dst addresses used by each subflow could no=
+t
+> > > > > be enough, because new subflows could re-use the same address/por=
+t of
+> > > > > the just closed one.
+> > > > >=20
+> > > > > This patch introduces a new socket option, allow dumping all the =
+relevant
+> > > > > information all-at-once (everything, everywhere...), in a consist=
+ent manner.
+> > > > >=20
+> > > > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > > > > ---
+> > > > > v2 -> v3:
+> > > > >  - added missing changelog (oops)
+> > > > > ---
+> > > > >  include/uapi/linux/mptcp.h | 16 ++++++++
+> > > > >  net/mptcp/sockopt.c        | 75 ++++++++++++++++++++++++++++++++=
+++++++
+> > > > >  2 files changed, 91 insertions(+)
+> > > > >=20
+> > > > > diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptc=
+p.h
+> > > > > index 32af2d278cb4..f4f42d88e58b 100644
+> > > > > --- a/include/uapi/linux/mptcp.h
+> > > > > +++ b/include/uapi/linux/mptcp.h
+> > > > > @@ -12,6 +12,7 @@
+> > > > >  #include <linux/in.h>=09=09/* for sockaddr_in=09=09=09*/
+> > > > >  #include <linux/in6.h>=09=09/* for sockaddr_in6=09=09=09*/
+> > > > >  #include <linux/socket.h>=09/* for sockaddr_storage and sa_famil=
+y=09*/
+> > > > > +#include <linux/tcp.h>=09=09/* for tcp_info=09=09=09=09*/
+> > > > > =20
+> > > > >  #define MPTCP_SUBFLOW_FLAG_MCAP_REM=09=09_BITUL(0)
+> > > > >  #define MPTCP_SUBFLOW_FLAG_MCAP_LOC=09=09_BITUL(1)
+> > > > > @@ -244,9 +245,24 @@ struct mptcp_subflow_addrs {
+> > > > >  =09};
+> > > > >  };
+> > > > > =20
+> > > > > +struct mptcp_subflow_info {
+> > > > > +=09__u32=09=09=09=09id;
+> > > > > +=09struct mptcp_subflow_addrs=09addrs;
+> > > > > +};
+> > > > > +
+> > > > > +/* struct subflow_info is not supposed nor allowed to grow in
+> > > > > + * future versions.
+> > > > > + * If need will arise, a new socket option should be added.
+> > > > > + */
+> > > > > +struct mptcp_subflow_full_info {
+> > > > > +=09struct mptcp_subflow_info=09subflow_info;
+> > > > > +=09struct tcp_info=09=09=09tcp_info;
+> > > > > +};
+> > > >=20
+> > > > I dislike this constraint.
+> > > >=20
+> > > > Why not do something like this:
+> > > >=20
+> > > > struct mptcp_subflow_full_info {
+> > > > =09__u32=09=09size_subflow_full_info;         /* size of this struc=
+ture in userspace */
+> > > > =09__u32           num_subflows_user;              /* max subflows =
+that userspace is interested in */
+> > > > =09__u32           num_subflows_kern;              /* must be 0, se=
+t by kernel (real subflow count) */
+> > > > =09__u32=09=09num_subflows_copied;=09=09/* must be 0, set by kernel=
+ (number of subflow infos copied back)
+> > > >         __u32           size_sfinfo_kernel;=09=09/* must be 0, set =
+by kernel */
+> > > >         __u32           size_sfinfo_user;
+> > > >         __u32           size_tcpinfo_kernel;            /* must be =
+0, set by kernel */
+> > > >         __u32           size_tcpinfo_user;
+> > > > =09__aligned_u64=09subflow_info_addr;
+> > > > =09__aligned_u64=09tcp_info_addr;
+> > > > };
+> > > >=20
+> > > > userspace does:
+> > > >=20
+> > > > x =3D calloc(sizeof(struct mptcp_subflow_info), 42);
+> > > > y =3D calloc(sizeof(struct tcp_info), 42);
+> > > >=20
+> > > > struct mptcp_subflow_full_info {
+> > > > =09.size_subflow_full_info =3D sizeof(struct mptcp_subflow_full_inf=
+o),
+> > > > =09.num_subflows_user =3D 42,
+> > > > =09.size_sfinfo_user =3D sizeof(struct mptcp_subflow_info),
+> > > > =09.size_tcpinfo_user =3D sizeof(struct mptcp_subflow_info),
+> > > > =09.subflow_info_addr =3D (u64)x,
+> > > > =09.tcp_info_addr =3D (u64)y,
+> > > > };
+> > > >=20
+> > > > kernel does:
+> > > > 1. put_user() the real sizes uses by the kernel
+> > > > 2. put_user() the real subflow count
+> > > > 3. copy subflow_info_addr and tcp_info_addr addresses
+> > > > 4. treat as userspace pointers
+> > > >=20
+> > > > for each subflow, copy tcpinfo and subflow info to the
+> > > > two arrays provided by userspace.
+> > > >=20
+> > > > Kernel truncates copied data via size_sfinfo_user/size_tcpinfo_user=
+ so
+> > > > that new kernel won't populate fields that don't exist in userspace=
+.
+> > > >=20
+> > > > Kernel stops copying after 'num_subflows_user' or 'num_subflows_ker=
+n',
+> > > > whatever comes first and updates num_subflows_copied to the real co=
+pied
+> > > > value.
+> > > >=20
+> > > > This allows userspace to discover when kernel had more subflows
+> > > > but could not place the data due to lack of space in the
+> > > > userspace-provided arrays.
+> > > >=20
+> > > > This is more complicated but no need to add new MPTCP_FULL_INFO_V2/=
+V3/V4
+> > > > etc. in the future.
+> > > >=20
+> > > > What do you think?
+> > >=20
+> > > I ended-up with the current code trying to re-use as much as possible
+> > > from the existing infra - specifically the
+> > > mptcp_get_subflow_data()/mptcp_put_subflow_data() helpers.
+> > >=20
+> > > I agree the constraint on mptcp_subflow_full_info is not nice,
+> > > especially if we want to include subflow level indormation alike
+> > > local/remote address id, flags, etc...
+> > >=20
+> > > Isn't num_subflows_copied always implied? =3D=3D min(num_subflows_use=
+r,
+> > > num_subflows_kern).
+> > >=20
+> > > Otherwise LGTM, I'll try to have a spin.
+> >=20
+> > Oops, I forgot... should mptcp_subflow_full_info contain mptcp_info,
+> > too?
+>=20
+> Good point. Indeed I guess it is very likely someone who want info about
+> MPTCP subflow will also want info about the MPTCP connection.
+>=20
+> > Overall layout:
+> >=20
+> > struct mptcp_subflow_full_info {
+> > =09__u32=09=09size_subflow_full_info;         /* size of this structure=
+ in userspace */
+> > =09__u32           num_subflows_user;              /* max subflows that=
+ userspace is interested in */
+> > =09__u32           num_subflows_kern;              /* must be 0, set by=
+ kernel (real subflow count) */
+> >         __u32           size_sfinfo_kernel;=09=09/* must be 0, set by k=
+ernel */
+> >         __u32           size_sfinfo_user;
+> >         __u32           size_tcpinfo_kernel;            /* must be 0, s=
+et by kernel */
+> >         __u32           size_tcpinfo_user;
+> > =09__aligned_u64=09subflow_info_addr;
+> > =09__aligned_u64=09tcp_info_addr;
+> > =09struct mptcp_info mptcp_indo;
+>=20
+> I guess you will need a size for the mptcp_info structure, no?
+>=20
+> Maybe this should come before the previous ones?
 
-Increase add_addr_signaled counter in mptcp_nl_cmd_announce() when the
-address is announced by userspace PM.
+I'm coding the thing right now: it turns out we are better of not
+including mptcp_info inside mptcp_subflow_full_info, so the
+manipulation schema will look alike the exiting
+mptcp_{get,put}_subflow_data().
 
-This modification is similar to how the in-kernel PM is updating the
-counter: when additional subflows are created/removed.
+Also the user mptcp_info size is implied, since is always equal to =20
+*optlen - mptcp_subflow_full_info.mptcp_subflow_full_info.=20
 
-Fixes: 9ab4807c84a4 ("mptcp: netlink: Add MPTCP_PM_CMD_ANNOUNCE")
-Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/329
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- net/mptcp/pm.c           | 23 +++++++++++++++++++----
- net/mptcp/pm_userspace.c |  5 +++++
- 2 files changed, 24 insertions(+), 4 deletions(-)
+/P
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 7539137719ef..e7f944d09fcd 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -89,8 +89,15 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
- 	unsigned int subflows_max;
- 	int ret = 0;
- 
--	if (mptcp_pm_is_userspace(msk))
--		return mptcp_userspace_pm_active(msk);
-+	if (mptcp_pm_is_userspace(msk)) {
-+		if (mptcp_userspace_pm_active(msk)) {
-+			spin_lock_bh(&pm->lock);
-+			pm->subflows++;
-+			spin_unlock_bh(&pm->lock);
-+			return true;
-+		}
-+		return false;
-+	}
- 
- 	subflows_max = mptcp_pm_get_subflows_max(msk);
- 
-@@ -183,8 +190,16 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
- 	struct mptcp_pm_data *pm = &msk->pm;
- 	bool update_subflows;
- 
--	update_subflows = (subflow->request_join || subflow->mp_join) &&
--			  mptcp_pm_is_kernel(msk);
-+	update_subflows = subflow->request_join || subflow->mp_join;
-+	if (mptcp_pm_is_userspace(msk)) {
-+		if (update_subflows) {
-+			spin_lock_bh(&pm->lock);
-+			pm->subflows--;
-+			spin_unlock_bh(&pm->lock);
-+		}
-+		return;
-+	}
-+
- 	if (!READ_ONCE(pm->work_pending) && !update_subflows)
- 		return;
- 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 114548b09f47..7ada9cf81c14 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -69,6 +69,7 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 							MPTCP_PM_MAX_ADDR_ID + 1,
- 							1);
- 		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
-+		msk->pm.local_addr_used++;
- 		ret = e->addr.id;
- 	} else if (match) {
- 		ret = entry->addr.id;
-@@ -91,6 +92,7 @@ static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
- 
- 	list_for_each_entry_safe(entry, tmp, &msk->pm.userspace_pm_local_addr_list, list) {
- 		if (mptcp_addresses_equal(&entry->addr, &addr->addr, false)) {
-+			msk->pm.local_addr_used--;
- 			/* TODO: a refcount is needed because the entry can
- 			 * be used multiple times (e.g. fullmesh mode).
- 			 */
-@@ -195,6 +197,7 @@ int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
- 	spin_lock_bh(&msk->pm.lock);
- 
- 	if (mptcp_pm_alloc_anno_list(msk, &addr_val)) {
-+		msk->pm.add_addr_signaled++;
- 		mptcp_pm_announce_addr(msk, &addr_val.addr, false);
- 		mptcp_pm_nl_addr_send_ack(msk);
- 	}
-@@ -343,6 +346,8 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
- 	spin_lock_bh(&msk->pm.lock);
- 	if (err)
- 		mptcp_userspace_pm_delete_local_addr(msk, &local);
-+	else
-+		msk->pm.subflows++;
- 	spin_unlock_bh(&msk->pm.lock);
- 
-  create_err:
--- 
-2.35.3
 
