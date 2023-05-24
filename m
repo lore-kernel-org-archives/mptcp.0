@@ -1,103 +1,128 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE9F19E69
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 17:04:04 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-306dbad5182so804492f8f.1
-        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 10:04:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A266087C
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 17:04:30 +0000 (UTC)
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6238417112aso6300816d6.2
+        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 10:04:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684947842; x=1687539842;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UQuqqugWygjt37NKm5vFZ3FoQs8jD5va24AMe1h/148=;
-        b=KXwRkntR/se1HWY0CiXgoc7rUC+aLZpuVJD8tIR0kW6SGfKEG7ozoNLcSN2KQ9IyEM
-         bPsvQ2tH1kkcBlKCl/fHxCA5Hn/xnhNKSI/UMCZuSRBZXfAcToVMEI+jj7Ck97tVCeHc
-         B0xjmN9V6lltEbNvfuxjG5X3wrNzpUT4QOqWKmYXC1+e7+GAby+YDk+ecjJwg3BK7Fqh
-         IEDiaUgTKwkSamI1DZXRF2Z81UAmkg9KJV+NyxVMZWXp61Iem1Ux2p3M944S5dfDDyiR
-         4UhNWaitS7M58Hy4fAiyGFa0VopdM1Kpohyfmb0vOxCLql2iyc51qO//XovT8NRgue7q
-         7SaQ==
+        d=gmail.com; s=20221208; t=1684947869; x=1687539869;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CckaC9RqZxqmrLnN7KDWIA+8oBwymf16NFeSudB4ia4=;
+        b=iTTmhsXSIra+TrdG7SD7OUtOEe063P0THIjVhel7cLseVEUGxlKWLr1UTdRGa/AG+c
+         u/fFszl9Sbq0pEaysDpu7qDfBN0Pk1HbqYOMnpfPTYp8Td6FzPLnRI2vYNoY50B46BGm
+         kAkJeTv3NzLtV7vm8v5Zpr0t2sPtUzrvfEHlh4MDxZ43m0I1j0dwcMLEvt9y2dOaIImu
+         AiwEyRRdEc9iUIwqGfMM4gWcZG2jZxrv0jcJX1Yx3GxLSbvODYrzAFcbCZOPYxaHPGho
+         2qaS6sdlhDex/w9an4L7iy1rM5zpGyOoyQCT4lMOIw603MKcM37dr4bBuZscCFOKa+lF
+         kDjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684947842; x=1687539842;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UQuqqugWygjt37NKm5vFZ3FoQs8jD5va24AMe1h/148=;
-        b=XBwxccqaGVclWYPl2YWtXhK5KNnRazljc/ofzNvMnR5a7ARqqHOqrW2dzqB7IsiCQB
-         NQde6E28gqI0mQ6iEAUaHVa2KHcJxxjzXRVJZqScUbm0qw8twV2bEpRuhNuLjnIVtiDg
-         pAj9kZlze0mryRGsmY6BNMfK66rHZlNeA2lIXOuxVHHSWnn7Qqq+2yiHhbAPID3B6MbU
-         +/72pr3rrbrytfZl6qAo42gHoUx7fJ1gNMKcBEYlLuDnCjT27+TYECka04ZZbutpTjyt
-         ed9TkzCqw6Y2/UddpFcQeCbmg4hgAFs5V5jkXOK+jhu0qKkoQfE9NmSPunPAFeWUfKs1
-         4fSA==
-X-Gm-Message-State: AC+VfDyNuwbwz8H+V9Jz6baEGB608Akv8sy2HwRJ9iginWkQoU6vlRPR
-	zD2DFisVlJvFMxIa2hF2qN5vkGIigJ/6CRXkuOEZwA==
-X-Google-Smtp-Source: ACHHUZ4f+LlIt+JhkSxrGgkJGXXK4LRjc1FSrBdRA+PpSX6/RrTqxdE7s77TebbqkH6twPIr/Mqw3g==
-X-Received: by 2002:a5d:58d5:0:b0:309:3698:7feb with SMTP id o21-20020a5d58d5000000b0030936987febmr294268wrf.46.1684947842206;
-        Wed, 24 May 2023 10:04:02 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:f96c:b035:8e06:9e3c? ([2a02:578:8593:1200:f96c:b035:8e06:9e3c])
-        by smtp.gmail.com with ESMTPSA id e9-20020adffc49000000b003078a3f3a24sm15175053wrs.114.2023.05.24.10.04.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 May 2023 10:04:01 -0700 (PDT)
-Message-ID: <e64bd67a-af85-d573-a0dc-2d8c17837072@tessares.net>
-Date: Wed, 24 May 2023 19:04:01 +0200
+        d=1e100.net; s=20221208; t=1684947869; x=1687539869;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=CckaC9RqZxqmrLnN7KDWIA+8oBwymf16NFeSudB4ia4=;
+        b=ei5wh7vzwctdxjQNj5c81z6Gvi6KLl+4yy3rVvZRh1woyquto6I6qe5df0m0wBnv1O
+         XEFArjHXOBD/vpdJ78qKa8VK4VLP+eoE86oUAGV6eAGufvt/q7PrtqVMEOL0LA6nNgHO
+         G/A4W29iDrF9o2mdqimMhEK4kUniXhtdYzdNR4hyrD/ovybtXPYftEjX6fvrr1Ty69xm
+         5ozoovRAyz9ZNh9W7KnCqgupSOu1j8Ggi9/z14LJVV6/uZkvT91yR9IY0t9FiKAcGHei
+         vCvANIo3pksyE3GsYHMx9T1gqSh+qnQ2ZPAyaSr6t6zRTPai3SaOB1LQPFNeKuBFhPnh
+         hM4A==
+X-Gm-Message-State: AC+VfDzPXwJwxYpjg0jcuC06ghY/kA0Smu3phIkAitn0p9V1NNyTDl2q
+	XYWK3NiSIH3G1blEAGCRKQ==
+X-Google-Smtp-Source: ACHHUZ55dKVYevR52jzNii0937IFB9rRXcaEBwKF0Cdze2wZiRmQKJ9rx7cxOyJ3ypk5BCzQ1TfGww==
+X-Received: by 2002:a05:6214:2a8e:b0:625:aa48:fb76 with SMTP id jr14-20020a0562142a8e00b00625aa48fb76mr2309851qvb.64.1684947869128;
+        Wed, 24 May 2023 10:04:29 -0700 (PDT)
+Received: from [127.0.0.1] ([20.57.124.88])
+        by smtp.gmail.com with ESMTPSA id lf19-20020a0562142cd300b0061b608dc4c1sm3711683qvb.94.2023.05.24.10.04.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 May 2023 10:04:28 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <930270fbc3358d0c423357f770b679745f8dc4a8.1684935727.git.pabeni@redhat.com>
+References:
+ <930270fbc3358d0c423357f770b679745f8dc4a8.1684935727.git.pabeni@redhat.com>
+Subject: Re: selftests: mptcp: add MPTCP_FULL_INFO testcase: Tests Results
+Message-ID: <d566ed23-f307-70f7-6687-25d72dbc14ed@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 24 May 2023 17:04:28 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-net v2 00/37] selftests: mptcp: skip tests when
- features are not supported
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
-References: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20230406-mptcp-issue-368-selftests-old-kernels-v2-0-50313e4f83ab@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-(and anybody interested by this ;-) )
+Thank you for your modifications, that's great!
 
-On 22/05/2023 18:37, Matthieu Baerts wrote:
-> Selftests are supposed to run on any kernels, including the old ones not
-> supporting all MPTCP features.
+Our CI did some validations and here is its report:
 
-We discussed about this series at the meeting yesterday but I don't
-think the next steps are clear, at least not to me :-)
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_fastopen =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4503925617852416
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4503925617852416/su=
+mmary/summary.txt
 
-Here is a short recap of the current situation:
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5629825524695040
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5629825524695040/summary/summary.txt
 
-- The first patches skipping MPTCP if it is not supported have been applied.
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 4 failed test(s): packetdrill_add_addr packetdrill_dss =
+packetdrill_syscalls selftest_diag =F0=9F=94=B4:
+  - Task: =
+https://cirrus-ci.com/task/5066875571273728
+  - Summary: https://api.=
+cirrus-ci.com/v1/artifact/task/5066875571273728/summary/summary.txt
 
-- check kernel version: what about adding an env var that can be set to
-skip the versions check? So it works if a new feature is backported to
-an older kernel.
+- {"code":404,"message":
+  - "Can't find artifacts containing file =
+conclusion.txt"}:
+  - Task: https://cirrus-ci.com/task/6192775478116352
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6192775478116352/su=
+mmary/summary.txt
 
-- get_counter() to get the MIB counters: I can help the stable team with
-the backports that will not be difficult I think but will cause conflicts
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/63022ec27b06
 
-- check nf/tc issues: looks safer just in case a kconfig is missing or
-an issue with nf/tc but can be removed if you prefer (still I don't
-think we should exit in the middle of a test)
 
-- one check per block of tests around the same theme: it would indeed
-avoid re-doing the same check 2 or 3 times but it would break the IDs (+
-maybe less obvious a test might be skipped when reviewing code)
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
-- backports: at the end, we just need all these new checks to be
-backported on the last stable kernel (6.3) because that's what is used
-by the different CIs. It is fine if it is not backported after. (but
-still I can help with the backports, I'm used to :) )
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-WDYT?
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
