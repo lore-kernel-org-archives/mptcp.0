@@ -1,37 +1,37 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166C922631
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0708A22637
 	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 21:29:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684963790;
+	s=mimecast20190719; t=1684963791;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4ucgcRlYSg2xAZJv++wjCvOInGeVt2PDJQ0JcaJgXuY=;
-	b=I7QbsN9SeBGGOBB2ino/9Rgoc4cHF4h0lKCE9D10TM50QA4XwbZh1+mNHSZioWZ2kvDT7j
-	Wsj7Bw9sauASTTwxZLswGcQcBrBc82dTBTSqJjacfHPElY+wd5VJL80dILtuCl/OBNgFzu
-	3h1/SXlMzI/BFiOlmjmqAhF9PMvdgpE=
+	bh=vVS4RjYV2byUM1GSgCynlCCMVMRNMAcaJW4ukN5fdMo=;
+	b=WHB83gLflqAUHePcoUZLihUYX5wK0+VbXCLHapu+p1w6+YVbdujYOT3b6wecWb1FQJ0bo9
+	YjXxFTDBoPNv1+8gMsOsA34ZcglpiklmF6y73BDPbvxquFxInlYHBJ7QUqc9ETlX5mC5OT
+	Ax2rqhtCL0QHLOKpsNJDS9BxbsK5zWI=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-307-WgV6lE5_O0mPEfUIhaVGVA-1; Wed, 24 May 2023 17:29:47 -0400
-X-MC-Unique: WgV6lE5_O0mPEfUIhaVGVA-1
+ us-mta-48-hUAMzLZDPOCaPMKh_T5mdw-1; Wed, 24 May 2023 17:29:47 -0400
+X-MC-Unique: hUAMzLZDPOCaPMKh_T5mdw-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A8B85101A53A;
-	Wed, 24 May 2023 21:29:46 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8E51280027F;
+	Wed, 24 May 2023 21:29:47 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.193.138])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 157D6407DEC3;
-	Wed, 24 May 2023 21:29:45 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id ED940407DEC3;
+	Wed, 24 May 2023 21:29:46 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v5 mptcp-next 5/6] mptcp: introduce MPTCP_FULL_INFO getsockopt
-Date: Wed, 24 May 2023 23:29:18 +0200
-Message-Id: <400326ed4b59e6c9878fc4a406c2bf406876ee72.1684962909.git.pabeni@redhat.com>
+Subject: [PATCH v5 mptcp-next 6/6] selftests: mptcp: add MPTCP_FULL_INFO testcase
+Date: Wed, 24 May 2023 23:29:19 +0200
+Message-Id: <803034fc4f174c8180befe1e859675f99784874e.1684962909.git.pabeni@redhat.com>
 In-Reply-To: <cover.1684962909.git.pabeni@redhat.com>
 References: <cover.1684962909.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,41 +46,23 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Some user-space applications want to monitor the subflows utilization.
-
-Dumping the per subflow tcp_info is not enough, as the PM could close
-and re-create the subflows under-the-hood, fooling the accounting.
-Even checking the src/dst addresses used by each subflow could not
-be enough, because new subflows could re-use the same address/port of
-the just closed one.
-
-This patch introduces a new socket option, allow dumping all the relevant
-information all-at-once (everything, everywhere...), in a consistent manner.
+Add a testcase explicitly triggering the newly introduce
+MPTCP_FULL_INFO getsockopt.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-v4 -> v5:
- - full_info struct re-design (Florian)
- - fix build issue on 32 bit hosts
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 91 ++++++++++++++++++-
+ 1 file changed, 89 insertions(+), 2 deletions(-)
 
-v3 -> v4:
- - full_info struct re-design (Florian)
-
-v2 -> v3:
- - added missing changelog (oops)
----
- include/uapi/linux/mptcp.h |  24 +++++++
- net/mptcp/sockopt.c        | 133 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 155 insertions(+), 2 deletions(-)
-
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index a124be6ebbba..ee9c49f949a2 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -249,9 +249,33 @@ struct mptcp_subflow_addrs {
- 	};
- };
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index ff8fcdfccf76..00f3659dd1eb 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -86,9 +86,38 @@ struct mptcp_subflow_addrs {
+ #define MPTCP_SUBFLOW_ADDRS	3
+ #endif
  
++#ifndef MPTCP_FULL_INFO
 +struct mptcp_subflow_info {
 +	__u32				id;
 +	struct mptcp_subflow_addrs	addrs;
@@ -104,178 +86,113 @@ index a124be6ebbba..ee9c49f949a2 100644
 +	struct mptcp_info	mptcp_info;
 +};
 +
- /* MPTCP socket options */
- #define MPTCP_INFO		1
- #define MPTCP_TCPINFO		2
- #define MPTCP_SUBFLOW_ADDRS	3
 +#define MPTCP_FULL_INFO		4
++#endif
++
+ struct so_state {
+ 	struct mptcp_info mi;
+ 	struct mptcp_info last_sample;
++	struct tcp_info tcp_info;
++	struct mptcp_subflow_addrs addrs;
+ 	uint64_t mptcpi_rcv_delta;
+ 	uint64_t tcpi_rcv_delta;
+ 	bool pkt_stats_avail;
+@@ -365,6 +394,8 @@ static void do_getsockopt_tcp_info(struct so_state *s, int fd, size_t r, size_t
+ 		olen -= sizeof(struct mptcp_subflow_data);
+ 		assert(olen == sizeof(struct tcp_info));
  
- #endif /* _UAPI_MPTCP_H */
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 770279e0a598..b6f6fa1eb53b 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -14,7 +14,8 @@
- #include <net/mptcp.h>
- #include "protocol.h"
- 
--#define MIN_INFO_OPTLEN_SIZE	16
-+#define MIN_INFO_OPTLEN_SIZE		16
-+#define MIN_FULL_INFO_OPTLEN_SIZE	40
- 
- static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
- {
-@@ -977,7 +978,8 @@ static int mptcp_put_subflow_data(struct mptcp_subflow_data *sfd,
++		s->tcp_info = ti.ti[0];
++
+ 		if (ti.ti[0].tcpi_bytes_sent == w &&
+ 		    ti.ti[0].tcpi_bytes_received == r)
+ 			goto done;
+@@ -386,7 +417,7 @@ static void do_getsockopt_tcp_info(struct so_state *s, int fd, size_t r, size_t
+ 	do_getsockopt_bogus_sf_data(fd, MPTCP_TCPINFO);
  }
  
- static int mptcp_get_subflow_data(struct mptcp_subflow_data *sfd,
--				  char __user *optval, int __user *optlen)
-+				  char __user *optval,
-+				  int __user *optlen)
+-static void do_getsockopt_subflow_addrs(int fd)
++static void do_getsockopt_subflow_addrs(struct so_state *s, int fd)
  {
- 	int len, copylen;
+ 	struct sockaddr_storage remote, local;
+ 	socklen_t olen, rlen, llen;
+@@ -433,6 +464,7 @@ static void do_getsockopt_subflow_addrs(int fd)
  
-@@ -1158,6 +1160,131 @@ static int mptcp_getsockopt_subflow_addrs(struct mptcp_sock *msk, char __user *o
- 	return 0;
+ 	assert(memcmp(&local, &addrs.addr[0].ss_local, sizeof(local)) == 0);
+ 	assert(memcmp(&remote, &addrs.addr[0].ss_remote, sizeof(remote)) == 0);
++	s->addrs = addrs.addr[0];
+ 
+ 	memset(&addrs, 0, sizeof(addrs));
+ 
+@@ -453,13 +485,68 @@ static void do_getsockopt_subflow_addrs(int fd)
+ 	do_getsockopt_bogus_sf_data(fd, MPTCP_SUBFLOW_ADDRS);
  }
  
-+static int mptcp_get_full_info(struct mptcp_full_info *mfi,
-+			       char __user *optval,
-+			       int __user *optlen)
++static void do_getsockopt_mptcp_full_info(struct so_state *s, int fd)
 +{
-+	int len;
-+
-+	BUILD_BUG_ON(offsetof(struct mptcp_full_info, mptcp_info) !=
-+		     MIN_FULL_INFO_OPTLEN_SIZE);
-+
-+	if (get_user(len, optlen))
-+		return -EFAULT;
-+
-+	if (len < MIN_FULL_INFO_OPTLEN_SIZE)
-+		return -EINVAL;
-+
-+	memset(mfi, 0, sizeof(*mfi));
-+	if (copy_from_user(mfi, optval, MIN_FULL_INFO_OPTLEN_SIZE))
-+		return -EFAULT;
-+
-+	if (mfi->size_tcpinfo_kernel ||
-+	    mfi->size_sfinfo_kernel ||
-+	    mfi->num_subflows)
-+		return -EINVAL;
-+
-+	if (mfi->size_sfinfo_user > INT_MAX ||
-+	    mfi->size_tcpinfo_user > INT_MAX)
-+		return -EINVAL;
-+
-+	return len - MIN_FULL_INFO_OPTLEN_SIZE;
-+}
-+
-+static int mptcp_put_full_info(struct mptcp_full_info *mfi,
-+			       char __user *optval,
-+			       u32 copied,
-+			       int __user *optlen)
-+{
-+	copied += MIN_FULL_INFO_OPTLEN_SIZE;
-+	if (put_user(copied, optlen))
-+		return -EFAULT;
-+
-+	if (copy_to_user(optval, mfi, copied))
-+		return -EFAULT;
-+	return 0;
-+}
-+
-+static int mptcp_getsockopt_full_info(struct mptcp_sock *msk, char __user *optval,
-+				      int __user *optlen)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+	unsigned int sfcount = 0, copied = 0;
-+	void __user *tcpinfoptr, *sfinfoptr;
++	size_t data_size = sizeof(struct mptcp_full_info);
++	struct mptcp_subflow_info sfinfo[2];
++	struct tcp_info tcp_info[2];
 +	struct mptcp_full_info mfi;
-+	int len;
++	socklen_t olen;
++	int ret;
 +
-+	len = mptcp_get_full_info(&mfi, optval, optlen);
-+	if (len < 0)
-+		return len;
++	memset(&mfi, 0, data_size);
++	memset(tcp_info, 0, sizeof(tcp_info));
++	memset(sfinfo, 0, sizeof(sfinfo));
 +
-+	/* don't bother filling the mptcp info if there is not enough
-+	 * user-space-provided storage
-+	 */
-+	if (len > 0) {
-+		char __user *infoptr;
-+		int mptcp_info_len;
++	mfi.size_tcpinfo_user = sizeof(struct tcp_info);
++	mfi.size_sfinfo_user = sizeof(struct mptcp_subflow_info);
++	mfi.size_arrays_user = 2;
++	mfi.subflow_info = (unsigned long) &sfinfo[0];
++	mfi.tcp_info = (unsigned long) &tcp_info[0];
++	olen = data_size;
 +
-+		infoptr = optval + MIN_FULL_INFO_OPTLEN_SIZE;
-+		mptcp_info_len = min_t(unsigned int, len, sizeof(struct mptcp_info));
-+		mptcp_diag_fill_info(msk, &mfi.mptcp_info);
-+
-+		copied += mptcp_info_len;
-+	}
-+
-+	mfi.size_tcpinfo_kernel = sizeof(struct tcp_info);
-+	mfi.size_tcpinfo_user = min_t(unsigned int, mfi.size_tcpinfo_user,
-+				      sizeof(struct tcp_info));
-+	sfinfoptr = u64_to_user_ptr(mfi.subflow_info);
-+	mfi.size_sfinfo_kernel = sizeof(struct mptcp_subflow_info);
-+	mfi.size_sfinfo_user = min_t(unsigned int, mfi.size_sfinfo_user,
-+				     sizeof(struct mptcp_subflow_info));
-+	tcpinfoptr = u64_to_user_ptr(mfi.tcp_info);
-+
-+	lock_sock(sk);
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		struct mptcp_subflow_info sfinfo;
-+		struct tcp_info tcp_info;
-+
-+		if (sfcount++ >= mfi.size_arrays_user)
-+			continue;
-+
-+		/* fetch addr/tcp_info only if the user space buffers
-+		 * are wide enough
-+		 */
-+		memset(&sfinfo, 0, sizeof(sfinfo));
-+		sfinfo.id = subflow->subflow_id;
-+		if (mfi.size_sfinfo_user >
-+		    offsetof(struct mptcp_subflow_info, addrs))
-+			mptcp_get_sub_addrs(ssk, &sfinfo.addrs);
-+		if (copy_to_user(sfinfoptr, &sfinfo, mfi.size_sfinfo_user))
-+			goto fail_release;
-+
-+		if (mfi.size_tcpinfo_user) {
-+			tcp_get_info(ssk, &tcp_info);
-+			if (copy_to_user(tcpinfoptr, &tcp_info,
-+					 mfi.size_tcpinfo_user))
-+				goto fail_release;
++	ret = getsockopt(fd, SOL_MPTCP, MPTCP_FULL_INFO, &mfi, &olen);
++	if (ret < 0) {
++		if (errno == EOPNOTSUPP) {
++			fprintf(stderr, "\tMPTCP_FULL_INFO test skipped due to lack of kernel support\n");
++			return;
 +		}
-+
-+		tcpinfoptr += mfi.size_tcpinfo_user;
-+		sfinfoptr += mfi.size_sfinfo_user;
++		xerror("getsockopt MPTCP_FULL_INFO");
 +	}
-+	release_sock(sk);
 +
-+	mfi.num_subflows = sfcount;
-+	if (mptcp_put_full_info(&mfi, optval, copied, optlen))
-+		return -EFAULT;
++	assert(olen <= data_size);
++	assert(mfi.size_tcpinfo_user == mfi.size_tcpinfo_kernel);
++	assert(mfi.size_tcpinfo_user == sizeof(struct tcp_info));
++	assert(mfi.size_sfinfo_user == mfi.size_sfinfo_kernel);
++	assert(mfi.size_sfinfo_user == sizeof(struct mptcp_subflow_info));
++	assert(mfi.num_subflows == 1);
 +
-+	return 0;
++	/* Tolerate future extension to mptcp_info struct and running newer
++	 * test on top of older kernel.
++	 * Anyway any kernel supporting MPTCP_FULL_INFO must at least include
++	 * the following in mptcp_info.
++	 */
++	assert(olen > (socklen_t)__builtin_offsetof(struct mptcp_full_info, tcp_info));
++	assert(mfi.mptcp_info.mptcpi_subflows == 0);
++	assert(mfi.mptcp_info.mptcpi_bytes_sent == s->last_sample.mptcpi_bytes_sent);
++	assert(mfi.mptcp_info.mptcpi_bytes_received == s->last_sample.mptcpi_bytes_received);
 +
-+fail_release:
-+	release_sock(sk);
-+	return -EFAULT;
++	assert(sfinfo[0].id == 1);
++	assert(tcp_info[0].tcpi_bytes_sent == s->tcp_info.tcpi_bytes_sent);
++	assert(tcp_info[0].tcpi_bytes_received == s->tcp_info.tcpi_bytes_received);
++	assert(!memcmp(&sfinfo->addrs, &s->addrs, sizeof(struct mptcp_subflow_addrs)));
 +}
 +
- static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
- 				int __user *optlen, int val)
+ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
  {
-@@ -1231,6 +1358,8 @@ static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
- 	switch (optname) {
- 	case MPTCP_INFO:
- 		return mptcp_getsockopt_info(msk, optval, optlen);
-+	case MPTCP_FULL_INFO:
-+		return mptcp_getsockopt_full_info(msk, optval, optlen);
- 	case MPTCP_TCPINFO:
- 		return mptcp_getsockopt_tcpinfo(msk, optval, optlen);
- 	case MPTCP_SUBFLOW_ADDRS:
+ 	do_getsockopt_mptcp_info(s, fd, w);
+ 
+ 	do_getsockopt_tcp_info(s, fd, r, w);
+ 
+-	do_getsockopt_subflow_addrs(fd);
++	do_getsockopt_subflow_addrs(s, fd);
++
++	if (r)
++		do_getsockopt_mptcp_full_info(s, fd);
+ }
+ 
+ static void connect_one_server(int fd, int pipefd)
 -- 
 2.40.1
 
