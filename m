@@ -1,87 +1,103 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993B817ACE
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 14:17:08 +0000 (UTC)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-75b3645fb1fso82145585a.1
-        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 07:17:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCB2182C7
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 14:27:35 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3095b1b6e02so660148f8f.2
+        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 07:27:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684937827; x=1687529827;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GCmCX0G+Y7KB6WWGLfK8Skyd/yt1Z38mYhE7mbM6G2o=;
-        b=KE2h7/VVIi+o6vzQP3NjJ/hA9slZ44Y+I/fuFzerjZMjqpP80KApOIdD7RXJqTaOfj
-         wDjWRta8jJFB0Ar4LDcdJ5QR+CikzF/pssuuhqeF8XMYa7Pd7eKGDJ8AF1F/whnlRHls
-         2JcbG5F+xQiILRf53qzVUjidLQUeYYTdZG+3C3A02Pn0XyCe+vzlTYWVal7wE/N3IzKr
-         eCLf2pVqPPxmRboXzqqHxG4pKca24euYeh27uHSo360bJrEq4YZtl4bYwcVR2y2mR85w
-         +r0b55zmXSYoVJQekZIcqIomt+htaeItgTVTqNr+N4Pgix25AARKIAXbErHPC6dTSvTx
-         J3sQ==
+        d=tessares.net; s=google; t=1684938453; x=1687530453;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/7unRHo/kCLXey9B0y2lWJAoPJNB9dJ+QVZae0+A+YE=;
+        b=HDqnMuZ5u5yuZBusHCZxs2giZRsUVG9n3KJ+z8xsTvvrrQ9L/dyZlEd35aiTgOSQEI
+         4OYHmY9S4mY7cyQPndx68zM+a0ohSMPr23zfYJOQnyCSfjuaJTfsL9qFg7fnJy9eTUjj
+         JuO7jXUHXQbv5RlfINfaihyZOBT/p7pb0cVsyyo9Hg7Q2HL2RLxraR4l0THqS4xk2zIg
+         5ElVqFDHJapZB1+Sx7lj7eZkZHSF77j8FT2owK+P7oyF7UgwlGLxjjwJAP61+ATTZ8bm
+         82ualwPB9p3abHPYc6Fdd82fKy6GMx0DCSjDuVuPrLP5OLMI83Dp5SrnKUg6vn2o7lbT
+         oqfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684937827; x=1687529827;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=GCmCX0G+Y7KB6WWGLfK8Skyd/yt1Z38mYhE7mbM6G2o=;
-        b=dQyZLmibJAoOFjjIAkG76soXgTsYOvW176k7mjCF4LoReAxVHoBKavlWh4F3LMNNZQ
-         +6+tm5iSn8pDkdf17zwpwLxmy+641z6SCRC76DcksrBbeaLWo19JQohyERWNiD5OPoPL
-         qVl9mvdStjfK296GDENnQ4HKOYQbozSzCFRv2awWydkH4Vz4dFpW389WLNAjT5jsHkDJ
-         gPtA1JrBxVWP1c6q+xL0jyVNhavo4ao614qVEBX/1V/vYuC38OL4SlONgpDU9g0ajTVd
-         6rO6P0xVMQDYUtlHPFa5lGcoL8si0YFi+JmlPzw7DywqOAmRAjJ+G9OpNb9x5xSKZBpF
-         Ns4w==
-X-Gm-Message-State: AC+VfDx63RJTHX6eBsd7QXMCGbdmpwtrQQUrxW6D04N05JON6Ets49Fi
-	8lD8uHedovR7JemMANsY4A==
-X-Google-Smtp-Source: ACHHUZ4cupWKFlbAI7MHEtU6FmJHtv/Iv6fjqSLkv/R+Zq4XopaAMkOOrfGqHyOcUR6nFs876xj3lg==
-X-Received: by 2002:a05:620a:2b28:b0:75b:23a1:d860 with SMTP id do40-20020a05620a2b2800b0075b23a1d860mr9413320qkb.34.1684937827510;
-        Wed, 24 May 2023 07:17:07 -0700 (PDT)
-Received: from [127.0.0.1] ([20.42.13.55])
-        by smtp.gmail.com with ESMTPSA id c5-20020a0ce645000000b006238ac6c3f3sm3614942qvn.33.2023.05.24.07.17.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 07:17:07 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <930270fbc3358d0c423357f770b679745f8dc4a8.1684935727.git.pabeni@redhat.com>
-References:
- <930270fbc3358d0c423357f770b679745f8dc4a8.1684935727.git.pabeni@redhat.com>
-Subject: Re: selftests: mptcp: add MPTCP_FULL_INFO testcase: Build Failure
-Message-ID: <c37731c9-6c19-8ec3-69e0-db770312a397@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 24 May 2023 14:17:06 +0000
+        d=1e100.net; s=20221208; t=1684938453; x=1687530453;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/7unRHo/kCLXey9B0y2lWJAoPJNB9dJ+QVZae0+A+YE=;
+        b=NQ3Irw/qDRZIop3W75jryUosPbYvFBYMP9dy7zyB1QstHSW5wL6nJeAS300bdbamia
+         4sfki9JpDgvvpQc228G/cY7Y+Lf0SIGm4K/zwDEAM0Cc9//MxmxkJSHo9nmSl8UBwB/o
+         SHv3j71jQmvF7tcVXM4rgw3KzbY0kTTd+kdRKONrQnTwHTX9iwzXybSWrJ9uC4qchSk1
+         Z6ivprlzH8hrgRGWf9Q8+EHGH8ThxnJg0RMuTn2tpQ/xrDCn4/4oOXJGBkH1zLJXWgpF
+         7WZj3DcqMSFfZcGTQzegA94Qb6kH77jSGFGxCyMcGv1GHGmRrQTe08AtMXKemrgnUoXD
+         mDVw==
+X-Gm-Message-State: AC+VfDxCiDlBYW1rDE9ALig8xkCWRyLNgcRUi2Xgm12s6EQJZK9wsFM4
+	0mUL4vTITgSE4x92WKgL11Z0rGhzGj1RcsXwBZURdg==
+X-Google-Smtp-Source: ACHHUZ6Avyh/kDWOEQh9azRlRM/b4qM7fWc8TveWcgibbAgSrF2K+628JdxRTe/UlBN/GerpKWf2QA==
+X-Received: by 2002:a5d:65d0:0:b0:309:4ed5:b458 with SMTP id e16-20020a5d65d0000000b003094ed5b458mr11481361wrw.30.1684938453303;
+        Wed, 24 May 2023 07:27:33 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:f96c:b035:8e06:9e3c? ([2a02:578:8593:1200:f96c:b035:8e06:9e3c])
+        by smtp.gmail.com with ESMTPSA id s5-20020adfecc5000000b00307bbbecd29sm14636871wro.62.2023.05.24.07.27.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 May 2023 07:27:33 -0700 (PDT)
+Message-ID: <69ac1616-bd9b-514a-bb77-c7371b573072@tessares.net>
+Date: Wed, 24 May 2023 16:27:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH mptcp-next v15 0/5] update userspace pm mptcp_info fields
+ part 1
+Content-Language: en-GB
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1684915182.git.geliang.tang@suse.com>
+ <b1c8500d-15be-38b4-c4a6-ac5c725d97c8@tessares.net>
+In-Reply-To: <b1c8500d-15be-38b4-c4a6-ac5c725d97c8@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 24/05/2023 15:27, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 24/05/2023 10:02, Geliang Tang wrote:
+>> v15:
+>>  - drop "mptcp: export remove_anno_list_by_saddr"
+>>  - drop MPTCP_USER_PM_FLAG_RM_* flags
+>>  - drop mptcp_pm_alloc_anno_list in mptcp_nl_cmd_sf_create.
+> 
+> Thank you for the v15, it looks good to me!
+> 
+> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> 
+> I suggest to apply this series today.
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Just did, applied in our tree (fixes for -net):
 
-You can find more details there:
+New patches for t/upstream-net and t/upstream:
+- 7b19c98c1195: mptcp: only send RM_ADDR in nl_cmd_remove
+- c9fb355d4359: selftests: mptcp: update userspace pm addr tests
+- d8a70092983f: mptcp: add address into userspace pm list
+- ce75026f702c: selftests: mptcp: update userspace pm subflow tests
+- 3a08dcee555f: mptcp: update userspace pm infos
+- Results: b87768580a4d..a38ce6e2d547 (export-net)
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/930270fbc3358d0c423357f770b679745f8dc4a8.1684935727=
-.git.pabeni@redhat.com/
-  https://github.com/multipath-tcp/mptcp_net-next/a=
-ctions/runs/5069697633
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/63022ec27b=
-06
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+- Results: 0a9978390b78..ba37a83b8dc3 (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230524T141239
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230524T141239
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
