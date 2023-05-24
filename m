@@ -1,45 +1,45 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7A460840
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 12:37:19 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3f603ff9c02so7634355e9.2
-        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 05:37:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9569B60870
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 13:21:13 +0000 (UTC)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-3f6094cb2ebso8047215e9.3
+        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 06:21:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684931837; x=1687523837;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=tessares.net; s=google; t=1684934471; x=1687526471;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=tmgk7+QKFaoCuRsarHv/LwGCFnjj1Shn+Ghlbo/+4G4=;
-        b=yYyhBwgguAspOdryOYb7bW+w8Z195ER1WfC76qA3s/KEBGwOIaSJgGjwd6PbJKD1CA
-         MLbG8YYoHWqvz4spd2g2xdBtNd6EFWbn8tbVdtl7GbW2IwLokvXJoFb+rwj8sNXiFtlD
-         lom0PJiEQV8cJ9lOkJpQBdyZKj+ZPwwgNky6Q1iFGM+EN2YsqRSN69gE6duYDXGWitf/
-         F1UX1Otie1Ycy3ul5ml88rQoM3w9Jg3M5toOgEalYc5X6rjAxyfisuHoQScdhntcqkZX
-         LZZmxbMg2d4i07rvsUADOtMLQ5pPSAEbk3cuT7iIYXTiqQoBCSAwTVD9t61E4xoi99Me
-         JsMw==
+        bh=A6wujJSWJXmdVQBgywXeqR3vQHbQetxZmwliNGAJMjk=;
+        b=JqUdh3SdKWZ/VuACXoURmCJL5TMIdqunzUC7wXmZfUSp9R7CkXhiLOPx7JVmwSvPLT
+         h+OlAB6LaTqoi4VdQDVkNXJutTWPMB4nmmW98snJhaB9yLp+ppeGxMysTxTqTELMLZmx
+         xy8F9EGKALHIH74omWxhf+y0Sw0NPKGyEdDVBGkWNhh7Ax1MMYuBfjnTTz1rAnhUf0Y8
+         VKqFjX6WhV4RwnXbM9RMBYB0r+GAyY5FyUCrgtsrUXfQu5JnciLg90hUaT6rLr1nmh0+
+         9UhJqvCvMo4iLh7LmK7XmoKcFHPXaE9Z/Z2TPUPglx2VPVQnhu+iy/uumiw6o4kLsBa6
+         Lmhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684931837; x=1687523837;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20221208; t=1684934471; x=1687526471;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tmgk7+QKFaoCuRsarHv/LwGCFnjj1Shn+Ghlbo/+4G4=;
-        b=gmtVq05aw2m7LWf6LKAuNczabY4Aw37+5SR+1Ls+iERAw2H7ckSvShb5Xo9NqFh3NL
-         1lMTcT42X09aNfhI+vTQPvIuQHuemCnOZpper0m4KbTUtd68Ldp3vZ/sX5KayOpH0+FH
-         6fD3pzVOG57mddlufnofyuO5W+2KyMkvnvtuRR26DYaXlIy43vqztHWBWAkSyoTZ39pM
-         LysHfJuPdZ/F8X24lFS8UCK/QEf1Gy88tDuvLyncbYtgvvoq50s4FRdkmqjifFmvjafN
-         /9FtPOz8gOJ8UcOz8bcTpvUQmdEEBsNfCHjM0hAO6SyTvYVanSE8BniUyQu+H13YEocV
-         Zwuw==
-X-Gm-Message-State: AC+VfDwdv380JZrNy/6yCTz4Tg7qBGUxeQlYxmpXZeEHg2XZChZO2IDV
-	2z9nsWynJyfXpu7Ug2WPkMYLwcqfkYOxp5gFpOX1kw==
-X-Google-Smtp-Source: ACHHUZ42z2HPQzOzxjUGDXTahgYUpkuSraYOD0I8NNjMfTSBsXFF/sxjwPtps6O7Evl4kzs7Jp6PZQ==
-X-Received: by 2002:adf:f342:0:b0:306:3c04:e4df with SMTP id e2-20020adff342000000b003063c04e4dfmr13372244wrp.58.1684931837532;
-        Wed, 24 May 2023 05:37:17 -0700 (PDT)
+        bh=A6wujJSWJXmdVQBgywXeqR3vQHbQetxZmwliNGAJMjk=;
+        b=RPafHEAiVOJyOg0XDD9/r07DZpONnTFnHfVp1G8pm3SL/s/rB0XP2Cl93KSmf9VAKz
+         7YpCsEddlkfxf8NGKtVPSMJT/y3wypiHolYx0pOsuzr6wW3AMRteIdT9ghYfYteWOIgo
+         Tl/GLU3l3fkKp0GTLC75r7rCj1icqUxeWCBEbD6Oyg68hwCTJ5KBl8yrXkl5A5iGm6Sv
+         MpnMhR5fV94qACvKmWbGhN7Tb8jeJIcxq+isz5RGerE+QUDmONjSCPKZqWiNh/6QaJQd
+         2eJYF4GGwRnPXMG4IxEaB8jXimm4ObTeaQTMrIutjAx8XqxNwauixDjnCM4W3yEjQfty
+         20Zw==
+X-Gm-Message-State: AC+VfDxFHPrClEsz99AfZA7nEOzjj6OdrvZjXkkdewHANjfLu4Tr56ZS
+	eRbLZXmPmYEiB9OCpAW2POod1uRbXkwAM+xnYlDIpw==
+X-Google-Smtp-Source: ACHHUZ5T32tEZjoOGoq59IE6FVdLJdxm3+Rk3PVIJmaq86UAtAlXND9xUTm28+1wEE4fNWdZ0cLiow==
+X-Received: by 2002:a05:600c:294c:b0:3f5:fa8e:aaa3 with SMTP id n12-20020a05600c294c00b003f5fa8eaaa3mr10662419wmd.28.1684934471343;
+        Wed, 24 May 2023 06:21:11 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:735b:1ad0:911b:4361? ([2a02:578:8593:1200:735b:1ad0:911b:4361])
-        by smtp.gmail.com with ESMTPSA id d6-20020a5d6446000000b00307a83ea722sm14364803wrw.58.2023.05.24.05.37.17
+        by smtp.gmail.com with ESMTPSA id q13-20020a7bce8d000000b003f43f82001asm2344602wmj.31.2023.05.24.06.21.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 May 2023 05:37:17 -0700 (PDT)
-Message-ID: <a6a9cf24-c087-c07d-1396-6daae60cedad@tessares.net>
-Date: Wed, 24 May 2023 14:37:16 +0200
+        Wed, 24 May 2023 06:21:11 -0700 (PDT)
+Message-ID: <d0b910d4-8b8b-ae47-c8f7-267c3a1238d2@tessares.net>
+Date: Wed, 24 May 2023 15:21:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,79 +48,69 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH v3 mptcp-next 2/6] mptcp: introduce MPTCP_FULL_INFO
- getsockopt
+Subject: Re: [PATCH mptcp-next v15 3/5] mptcp: add address into userspace pm
+ list
 Content-Language: en-GB
-To: Florian Westphal <fw@strlen.de>
-Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1684863309.git.pabeni@redhat.com>
- <67b6345847e8f23fadaf22c14609d4d387eed952.1684863309.git.pabeni@redhat.com>
- <ZG0FL9XM-MFgfyQ-@strlen.de>
- <62d7d915a3536e9bf37770952838308d8f41ad8b.camel@redhat.com>
- <20230524095653.GD17561@breakpoint.cc>
- <477af94a-d47e-d0c2-ba42-285dc5597fa4@tessares.net>
- <20230524122256.GB12567@breakpoint.cc>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1684915182.git.geliang.tang@suse.com>
+ <b897ae1cbd3615b1304cac6f3dcefe42854f273b.1684915182.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20230524122256.GB12567@breakpoint.cc>
+In-Reply-To: <b897ae1cbd3615b1304cac6f3dcefe42854f273b.1684915182.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Florian,
+Hi Geliang,
 
-On 24/05/2023 14:22, Florian Westphal wrote:
-> Matthieu Baerts <matthieu.baerts@tessares.net> wrote:
->>> I added the "num_subflows_copied" for ease-of-use on userspace
->>> side but I agree that its not required and userspace has
->>> enough info to figure out which upper cap to use.
->>
->> If I understand properly, it means that num_subflows_user and _kern will
->> only be used to know the size of the arrays:
->>
->> - num_subflows_user: size of the arrays in the buffer
->> - num_subflows_kern: what has been written by the kernel, max _user
+On 24/05/2023 10:02, Geliang Tang wrote:
+> Add the address into userspace_pm_local_addr_list when the subflow is
+> created. Make sure it can be found in mptcp_nl_cmd_remove(). And delete
+> it in the new helper mptcp_userspace_pm_delete_local_addr().
 > 
-> This is why I had the '_copied' in my proposal :-)
+> Add address into pm anno_list in mptcp_nl_cmd_sf_create(). Remove
+> it when connecting fails.
 > 
-> With only _user and _kern:
+> By doing this, the "REMOVE" command also works with subflows that have
+> been created via the "SUB_CREATE" command instead of restricting to
+> the addresses that have been announced via the "ANNOUNCE" command.
 > 
-> _user: size of the arrays in the buffer
-> _kern: subflow count of the kernel, i.e. can be larger than _user.
+> Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
+> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/379
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  net/mptcp/pm_userspace.c | 41 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 6beadea8c67d..114548b09f47 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
 
-Thank you, that's clearer, so _kern would be the subflow count, not just
-what has been copied.
+(...)
 
->> I think it is still important to have somewhere a num_subflows field to
->> know how many subflows are attached to an MPTCP connection (also for the
->> userspace to know if it missed some info because it gave a too small
->> buffer).
-> 
-> Yes, userspace must be able to infer that it only got partial
-> information due to lack of space.
-> 
-> E.g. if userspace expects a maximum amount of 16 subflows but connection
-> has 240 subflows then num_subflows_kern is 240 and _user is 16.
-> 
-> Userspace can only access up to 16 (since thats what it
-> provided/allocated).
-> 
-> The _copied proposal would have made this easier on userspace side
-> (_user is the allocated space, _kern what the kernel would like (real
-> count), and _copied what was written out).
-> 
-> But as Paolo said userspace can infer the valid count by checking
-> if _kern > _user, so it does:
-> 
-> bool truncated = kern > user;
-> subflows_copied = truncated ? user : kern;
+> @@ -302,12 +327,24 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+>  		goto create_err;
+>  	}
+>  
+> +	local.addr = addr_l;
+> +	err = mptcp_userspace_pm_append_new_local_addr(msk, &local);
+> +	if (err < 0) {
+> +		GENL_SET_ERR_MSG(info, "did not match address and id");
+> +		goto create_err;
+> +	}
+> +
+>  	lock_sock(sk);
+>  
+>  	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
+>  
+>  	release_sock(sk);
+>  
+> +	spin_lock_bh(&msk->pm.lock);
+> +	if (err)
+> +		mptcp_userspace_pm_delete_local_addr(msk, &local);
+> +	spin_unlock_bh(&msk->pm.lock);
 
-OK then it is fine if we can use min(_user, _kern) to know the number of
-subflows written by the kernel and '_kern' for the actual number of
-subflows attached to an MPTCP connection.
-
-Maybe we should rename 'num_subflows_kern' to 'num_subflows'? and even
-'num_subflows_user' to 'num_subflows_buffer' or 'size_array(s)'?
-
-Or maybe enough with the comments from the example you provided?
+I was going to ask to move the lock inside the 'if' condition but patch
+5/5 introduces a else condition which also needs the lock, all good then.
 
 Cheers,
 Matt
