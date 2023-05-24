@@ -1,22 +1,23 @@
 Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664A4C8F4
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 09:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA73BC2FD
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 10:04:10 +0000 (UTC)
 Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
 	(envelope-from <fw@strlen.de>)
-	id 1q1lEj-0002hR-QG; Wed, 24 May 2023 11:56:53 +0200
-Date: Wed, 24 May 2023 11:56:53 +0200
+	id 1q1lLj-0002l8-LK; Wed, 24 May 2023 12:04:07 +0200
+Date: Wed, 24 May 2023 12:04:07 +0200
 From: Florian Westphal <fw@strlen.de>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Florian Westphal <fw@strlen.de>, mptcp@lists.linux.dev
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: Florian Westphal <fw@strlen.de>, Paolo Abeni <pabeni@redhat.com>,
+	mptcp@lists.linux.dev
 Subject: Re: [PATCH v3 mptcp-next 2/6] mptcp: introduce MPTCP_FULL_INFO
  getsockopt
-Message-ID: <20230524095653.GD17561@breakpoint.cc>
+Message-ID: <20230524100407.GE17561@breakpoint.cc>
 References: <cover.1684863309.git.pabeni@redhat.com>
  <67b6345847e8f23fadaf22c14609d4d387eed952.1684863309.git.pabeni@redhat.com>
  <ZG0FL9XM-MFgfyQ-@strlen.de>
- <62d7d915a3536e9bf37770952838308d8f41ad8b.camel@redhat.com>
+ <fe2191fe-6842-7662-d300-0aa88cdb9827@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -25,29 +26,69 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <62d7d915a3536e9bf37770952838308d8f41ad8b.camel@redhat.com>
+In-Reply-To: <fe2191fe-6842-7662-d300-0aa88cdb9827@tessares.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Paolo Abeni <pabeni@redhat.com> wrote:
-> Isn't num_subflows_copied always implied? == min(num_subflows_user,
-> num_subflows_kern).
+Matthieu Baerts <matthieu.baerts@tessares.net> wrote:
+> On 23/05/2023 20:25, Florian Westphal wrote:
+> > 	__u32		size_subflow_full_info;         /* size of this structure in userspace */
+> 
+> Why do we need this field? Can we not use the option length (int __user
+> *optlen) provided by the userspace?
 
-Right, userspace can infer the correct number, i.e.
-num_subflows_kern would always be the "actual" used number.
+Right, yes, we can (and should) use __user *optlen instead
+of this explicit member.
 
-num_subflows_user > num_subflows_kern:
+> >         __u32           size_sfinfo_kernel;		/* must be 0, set by kernel */
+> >         __u32           size_sfinfo_user;
+> >         __u32           size_tcpinfo_kernel;            /* must be 0, set by kernel */
+> >         __u32           size_tcpinfo_user;
+> 
+> Do we need to have the kernel and user size in different fields?
+> Is it not enough have:
+> 
+>   num_subflows;          /* will be set by the kernel */
+>   num_subflows_copied;   /* max for the user, kernel put what it did */
+>   size_sfinfo;           /* user set it, kernel put what it used: min */
+>   size_tcpinfo;          /* same */
 
-Userspace can safely access "num_subflows_kern" entries
-(contain no garbage).
+Yes, that would work too: kernel updates value to what its using.
 
-num_subflows_user < num_subflows_kern:
-Userspace can safely access "num_subflows_user" entries
-(info arrays did not have enough space for all subflows).
+I have no preference.  I used extra fields to better document
+that this is filled in by the kernel.
 
-I added the "num_subflows_copied" for ease-of-use on userspace
-side but I agree that its not required and userspace has
-enough info to figure out which upper cap to use.
+I'll let Paolo make the call.
 
-> Otherwise LGTM, I'll try to have a spin.
+> If we add mptcp_info structure as mentioned by Paolo, we are getting
+> very close the the getsockopt(MPTCP_INFO) from the fork kernel, see the
+> section "Get detailed information of your subflows":
+> 
+> https://multipath-tcp.org/pmwiki.php/Users/ConfigureMPTCP
+> 
+> And the kernel header:
+> 
+> https://github.com/multipath-tcp/mptcp/blob/mptcp_trunk/include/uapi/linux/tcp.h#L321-L366
 
-Thanks Paolo.
+Right, this is similar.
+
+> If we want to be even more future prove, why not having something more
+> flexible where the userspace puts flags of what it wants and then there
+> is a kind of TLV structure? Maybe it would be too complex to read/write?
+> 
+> 
+>   struct mptcp_tlv_info {
+>       __u32 type;
+>       __u32 length;
+>       __aligned_u64 value;
+>   };
+> 
+>   struct mptcp_full_info {
+>       __u32 flags;
+>       __u32 num_subflows;
+>       __u32 num_subflows_copied;
+>       struct mptcp_tlv_info[];   /* number has to be linked to flags */
+>   };
+
+Hmm, I think it would be better to reuse an existing scheme
+and e.g. return a netlink attribute blob in such a case,
+this would also allow sharing with the diag interface/functions.
