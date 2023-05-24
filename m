@@ -1,198 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0708A22637
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 21:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684963791;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vVS4RjYV2byUM1GSgCynlCCMVMRNMAcaJW4ukN5fdMo=;
-	b=WHB83gLflqAUHePcoUZLihUYX5wK0+VbXCLHapu+p1w6+YVbdujYOT3b6wecWb1FQJ0bo9
-	YjXxFTDBoPNv1+8gMsOsA34ZcglpiklmF6y73BDPbvxquFxInlYHBJ7QUqc9ETlX5mC5OT
-	Ax2rqhtCL0QHLOKpsNJDS9BxbsK5zWI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-48-hUAMzLZDPOCaPMKh_T5mdw-1; Wed, 24 May 2023 17:29:47 -0400
-X-MC-Unique: hUAMzLZDPOCaPMKh_T5mdw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8E51280027F;
-	Wed, 24 May 2023 21:29:47 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.193.138])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id ED940407DEC3;
-	Wed, 24 May 2023 21:29:46 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v5 mptcp-next 6/6] selftests: mptcp: add MPTCP_FULL_INFO testcase
-Date: Wed, 24 May 2023 23:29:19 +0200
-Message-Id: <803034fc4f174c8180befe1e859675f99784874e.1684962909.git.pabeni@redhat.com>
-In-Reply-To: <cover.1684962909.git.pabeni@redhat.com>
-References: <cover.1684962909.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BCD22627
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 21:56:14 +0000 (UTC)
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-623802d9bfdso2067526d6.2
+        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 14:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684965373; x=1687557373;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U+jelfPCUjVIEttxUet5gmo2YblovYR4pgF5VyxOWeE=;
+        b=efDYdh3Z5Sn3GT38Cb5hDjpCeRIYUKDapUZ4uLB9BENAcj6OmcMXMAXYSX7/A1no07
+         4bW/eciEItTWSp2fX2Hm+PGRILqO597q/3wKnL9k6B0KgQFH/173c3SMzCUF0xHssE6k
+         GO9idqGdtma7Iz5XRHNkSP1Q69gQtjTiiySeIv1PnIWj+u2J80ExUwva3HYuD0YyB/57
+         +yq68HwiE4B7+WGNgmiSVJeW1rmIR9x9kxmB5wbuVewExxgeNmI8Q1jeQH+TZVIUjimz
+         L/ORKaD+iQV/waRORlexipTRxjf73zdUffPmRyWmeeLZjdSeWdRyhGEL9Mm+4xgM/CYv
+         KpgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684965373; x=1687557373;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=U+jelfPCUjVIEttxUet5gmo2YblovYR4pgF5VyxOWeE=;
+        b=bHdJ86XXxPbAjBuIgMhXeZxZQ3igsjtjVxlsisX+tTfDIRPQYlhungHh4g6/aZ8W4a
+         XS1MEdYwE9DnQEEIZjOul8/zQIsY5RLpGeUNKBfLQQfNn4v3FoDjm8IW6Ko8Vzi0xXYc
+         jvtKDs+hXLdMoDjePUWxyST3hkqM5nl6BFKGbzdBveq/TrZCtrE3E6XolBZF3YAQDfnw
+         e7Qc1ewQPjuugejXiwsBBAH/f84IMNoQBV3EWUzpaAG3loNG6naiOeCziOCNsIFWIRm7
+         v4VWUz85Cd+/19bx0Ej1xe3rdU56YWa46TTCWyj03Q3h5XLcCCWcoh2XLf9v3J8pfwj/
+         7c7Q==
+X-Gm-Message-State: AC+VfDxLrdMVdJQeqkJIXmpDNFhcvBozylpWVOGyTb6XksbZu5NLojiA
+	5idMSg9zsZlUm5hfzHVewPmVxasMOlhy
+X-Google-Smtp-Source: ACHHUZ76merMg3uZENqXq8i0iQUp3sncZrq31hRNwww0wIHRgfBkGdmK1GFHAC2iTUPk6qTQ6oaLlA==
+X-Received: by 2002:a05:6214:21c9:b0:625:aa49:cead with SMTP id d9-20020a05621421c900b00625aa49ceadmr3613818qvh.54.1684965373567;
+        Wed, 24 May 2023 14:56:13 -0700 (PDT)
+Received: from [127.0.0.1] ([172.176.188.83])
+        by smtp.gmail.com with ESMTPSA id v16-20020a0ccd90000000b00604ee171d99sm3814469qvm.106.2023.05.24.14.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 May 2023 14:56:13 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <803034fc4f174c8180befe1e859675f99784874e.1684962909.git.pabeni@redhat.com>
+References:
+ <803034fc4f174c8180befe1e859675f99784874e.1684962909.git.pabeni@redhat.com>
+Subject: Re: selftests: mptcp: add MPTCP_FULL_INFO testcase: Build Failure
+Message-ID: <f7f02900-f7ca-dc61-e0e4-4cdb92058d39@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 24 May 2023 21:56:12 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Add a testcase explicitly triggering the newly introduce
-MPTCP_FULL_INFO getsockopt.
+Hi Paolo,
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- .../selftests/net/mptcp/mptcp_sockopt.c       | 91 ++++++++++++++++++-
- 1 file changed, 89 insertions(+), 2 deletions(-)
+Thank you for your modifications, that's great!
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index ff8fcdfccf76..00f3659dd1eb 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -86,9 +86,38 @@ struct mptcp_subflow_addrs {
- #define MPTCP_SUBFLOW_ADDRS	3
- #endif
- 
-+#ifndef MPTCP_FULL_INFO
-+struct mptcp_subflow_info {
-+	__u32				id;
-+	struct mptcp_subflow_addrs	addrs;
-+};
-+
-+struct mptcp_full_info {
-+	__u32		size_tcpinfo_kernel;	/* must be 0, set by kernel */
-+	__u32		size_tcpinfo_user;
-+	__u32		size_sfinfo_kernel;	/* must be 0, set by kernel */
-+	__u32		size_sfinfo_user;
-+	__u32		num_subflows;		/* must be 0, set by kernel (real subflow count) */
-+	__u32		size_arrays_user;	/* max subflows that userspace is interested in;
-+						 * the buffers at subflow_info/tcp_info
-+						 * are respectively at least:
-+						 *  size_arrays * size_sfinfo_user
-+						 *  size_arrays * size_tcpinfo_user
-+						 * bytes wide
-+						 */
-+	__aligned_u64		subflow_info;
-+	__aligned_u64		tcp_info;
-+	struct mptcp_info	mptcp_info;
-+};
-+
-+#define MPTCP_FULL_INFO		4
-+#endif
-+
- struct so_state {
- 	struct mptcp_info mi;
- 	struct mptcp_info last_sample;
-+	struct tcp_info tcp_info;
-+	struct mptcp_subflow_addrs addrs;
- 	uint64_t mptcpi_rcv_delta;
- 	uint64_t tcpi_rcv_delta;
- 	bool pkt_stats_avail;
-@@ -365,6 +394,8 @@ static void do_getsockopt_tcp_info(struct so_state *s, int fd, size_t r, size_t
- 		olen -= sizeof(struct mptcp_subflow_data);
- 		assert(olen == sizeof(struct tcp_info));
- 
-+		s->tcp_info = ti.ti[0];
-+
- 		if (ti.ti[0].tcpi_bytes_sent == w &&
- 		    ti.ti[0].tcpi_bytes_received == r)
- 			goto done;
-@@ -386,7 +417,7 @@ static void do_getsockopt_tcp_info(struct so_state *s, int fd, size_t r, size_t
- 	do_getsockopt_bogus_sf_data(fd, MPTCP_TCPINFO);
- }
- 
--static void do_getsockopt_subflow_addrs(int fd)
-+static void do_getsockopt_subflow_addrs(struct so_state *s, int fd)
- {
- 	struct sockaddr_storage remote, local;
- 	socklen_t olen, rlen, llen;
-@@ -433,6 +464,7 @@ static void do_getsockopt_subflow_addrs(int fd)
- 
- 	assert(memcmp(&local, &addrs.addr[0].ss_local, sizeof(local)) == 0);
- 	assert(memcmp(&remote, &addrs.addr[0].ss_remote, sizeof(remote)) == 0);
-+	s->addrs = addrs.addr[0];
- 
- 	memset(&addrs, 0, sizeof(addrs));
- 
-@@ -453,13 +485,68 @@ static void do_getsockopt_subflow_addrs(int fd)
- 	do_getsockopt_bogus_sf_data(fd, MPTCP_SUBFLOW_ADDRS);
- }
- 
-+static void do_getsockopt_mptcp_full_info(struct so_state *s, int fd)
-+{
-+	size_t data_size = sizeof(struct mptcp_full_info);
-+	struct mptcp_subflow_info sfinfo[2];
-+	struct tcp_info tcp_info[2];
-+	struct mptcp_full_info mfi;
-+	socklen_t olen;
-+	int ret;
-+
-+	memset(&mfi, 0, data_size);
-+	memset(tcp_info, 0, sizeof(tcp_info));
-+	memset(sfinfo, 0, sizeof(sfinfo));
-+
-+	mfi.size_tcpinfo_user = sizeof(struct tcp_info);
-+	mfi.size_sfinfo_user = sizeof(struct mptcp_subflow_info);
-+	mfi.size_arrays_user = 2;
-+	mfi.subflow_info = (unsigned long) &sfinfo[0];
-+	mfi.tcp_info = (unsigned long) &tcp_info[0];
-+	olen = data_size;
-+
-+	ret = getsockopt(fd, SOL_MPTCP, MPTCP_FULL_INFO, &mfi, &olen);
-+	if (ret < 0) {
-+		if (errno == EOPNOTSUPP) {
-+			fprintf(stderr, "\tMPTCP_FULL_INFO test skipped due to lack of kernel support\n");
-+			return;
-+		}
-+		xerror("getsockopt MPTCP_FULL_INFO");
-+	}
-+
-+	assert(olen <= data_size);
-+	assert(mfi.size_tcpinfo_user == mfi.size_tcpinfo_kernel);
-+	assert(mfi.size_tcpinfo_user == sizeof(struct tcp_info));
-+	assert(mfi.size_sfinfo_user == mfi.size_sfinfo_kernel);
-+	assert(mfi.size_sfinfo_user == sizeof(struct mptcp_subflow_info));
-+	assert(mfi.num_subflows == 1);
-+
-+	/* Tolerate future extension to mptcp_info struct and running newer
-+	 * test on top of older kernel.
-+	 * Anyway any kernel supporting MPTCP_FULL_INFO must at least include
-+	 * the following in mptcp_info.
-+	 */
-+	assert(olen > (socklen_t)__builtin_offsetof(struct mptcp_full_info, tcp_info));
-+	assert(mfi.mptcp_info.mptcpi_subflows == 0);
-+	assert(mfi.mptcp_info.mptcpi_bytes_sent == s->last_sample.mptcpi_bytes_sent);
-+	assert(mfi.mptcp_info.mptcpi_bytes_received == s->last_sample.mptcpi_bytes_received);
-+
-+	assert(sfinfo[0].id == 1);
-+	assert(tcp_info[0].tcpi_bytes_sent == s->tcp_info.tcpi_bytes_sent);
-+	assert(tcp_info[0].tcpi_bytes_received == s->tcp_info.tcpi_bytes_received);
-+	assert(!memcmp(&sfinfo->addrs, &s->addrs, sizeof(struct mptcp_subflow_addrs)));
-+}
-+
- static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
- {
- 	do_getsockopt_mptcp_info(s, fd, w);
- 
- 	do_getsockopt_tcp_info(s, fd, r, w);
- 
--	do_getsockopt_subflow_addrs(fd);
-+	do_getsockopt_subflow_addrs(s, fd);
-+
-+	if (r)
-+		do_getsockopt_mptcp_full_info(s, fd);
- }
- 
- static void connect_one_server(int fd, int pipefd)
--- 
-2.40.1
+But sadly, our CI spotted some issues with it when trying to build it.
 
+You can find more details there:
+
+  https://patchwork.kernel.=
+org/project/mptcp/patch/803034fc4f174c8180befe1e859675f99784874e.1684962909=
+.git.pabeni@redhat.com/
+  https://github.com/multipath-tcp/mptcp_net-next/a=
+ctions/runs/5073733505
+
+Status: failure
+Initiator: MPTCPimporter
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/d241aa733a=
+df
+
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
