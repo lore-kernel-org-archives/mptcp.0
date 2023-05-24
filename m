@@ -1,148 +1,91 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0231FDD
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 13:44:03 +0000 (UTC)
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3093d10442aso584484f8f.1
-        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 06:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684935842; x=1687527842;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OoVncuEGQqhcfC8ns5/q1QwLNpFgl05VFw7ZUCLxAeU=;
-        b=KwayabJ9XSQKO2EuegAL3fgPRxSXuLgHRgFndcXKZE/NjdR6Sws8Lnbz8B1ebXkDoo
-         HBCF5uJHLrLwcDrcx0mcfVilW1m+jHKam59rII8VHdl/1K5unxNmhbQmWzacjELq31he
-         Z0ioijZSAjh/OT3YRHr0wKkvA9aB52aJS3VH5vUzThKWzgHPXqphV8Gka8QsHs3jC+cI
-         8yLwvuCL+sY8DWxdeLb4yoemXlp76Z/oJcCJUJmdJl3w8JPY/+7RslTGnxjCSKfnyAyC
-         RFWf8UgSCp9DDPdeXYOZRi9vGZmUB7ZFkMb0yPnqETXzbUGRI4SEchh5PGVoPk6SCyeA
-         pyeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684935842; x=1687527842;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OoVncuEGQqhcfC8ns5/q1QwLNpFgl05VFw7ZUCLxAeU=;
-        b=i9tlUpjZqUkUlOLh99I3NaoStxzQDmltIIqE/lmKbIVB11N9uRAUPMsiNdjWS9yhFp
-         vhnxuNoPbB0RJepUxYaIUm7fZUPtFWyWIFZVzF7Pd6Itpz+JMbCFBOGX6pcvFuP1zk9D
-         6+qbGr+nfNJEzUIiCe6dOy5xKHgYc6quls7qKl2XDrnWyUbAAUbTAPZdBsMxhLSi8/43
-         iVtKBfOdXZOV80UigKJPmmuL7T6JUaubO2LYxmO4WPwYAKMldjCiROGPfphg5shmvrVU
-         t5rfR6Je7vz6tHvvph9m+e0wD0uoNp7dZl4z84g4P4VwxYLW1y7i3xOQK/lAKdx851rO
-         vCxg==
-X-Gm-Message-State: AC+VfDzRcQf3UJ4D9UCcn2QR5jbeR5bgOFVlcoDv/2K7/tgxht5zOu7u
-	0Qx/gDviiL/JGYSGysi0r6b7fQ==
-X-Google-Smtp-Source: ACHHUZ6aoOwHXoRBa4/hS75RpFAvM9Oi4iq7U89L8MFdk720X12GYo5DGjjHrj1xgr6Jt64gfhkdnw==
-X-Received: by 2002:a5d:58d4:0:b0:309:4f23:e52d with SMTP id o20-20020a5d58d4000000b003094f23e52dmr11697657wrf.43.1684935841860;
-        Wed, 24 May 2023 06:44:01 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:735b:1ad0:911b:4361? ([2a02:578:8593:1200:735b:1ad0:911b:4361])
-        by smtp.gmail.com with ESMTPSA id q16-20020adfdfd0000000b0030642f5da27sm14533718wrn.37.2023.05.24.06.44.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 May 2023 06:44:01 -0700 (PDT)
-Message-ID: <b93ba574-fa6b-137a-1da4-d8e3f04460df@tessares.net>
-Date: Wed, 24 May 2023 15:44:00 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FE01FDD
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 13:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1684936219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VBSSjDz/lj+Kage0DW54kB6GSFTVPu46PFKADv5CoGw=;
+	b=cXqASHkgSw36oWrd5KTJF4hAob8YxdiEmMFKS6DYFTEv4dp46KEZMbXKUKu0MdOO5usuMX
+	U9nM/svaraANyLECKTYnbdBJykRN19cqE8S71mfK7mYfF2Z/cnf1+RbAdK+gvbzW3q0CeL
+	lZbr+hHOdpJQPVCMMfLs5WzFOHUJ34I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-675-nJExkecsPRqajz8vmDuIlA-1; Wed, 24 May 2023 09:50:18 -0400
+X-MC-Unique: nJExkecsPRqajz8vmDuIlA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E27C8101A585;
+	Wed, 24 May 2023 13:50:17 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.138])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4CF0D7AE4;
+	Wed, 24 May 2023 13:50:17 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH v4 mptcp-next 0/6] mptcp: add some more diag info
+Date: Wed, 24 May 2023 15:50:05 +0200
+Message-Id: <cover.1684935727.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: Fwd: Re: [PATCH v3 mptcp-next 2/6] mptcp: introduce
- MPTCP_FULL_INFO getsockopt
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-References: <9c4f161a53250127f0634359433ee51934606342.camel@redhat.com>
- <53030866af889e674647a02c37b0909ee395c9f5.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <53030866af889e674647a02c37b0909ee395c9f5.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+This is a follow up to the topic discussed in recent pubblic mtg.
 
-On 24/05/2023 15:35, Paolo Abeni wrote:
-> oops, Matttbe noted I omitted a few recipients, re-sending...
-> 
-> -------- Forwarded Message --------
-> From: Paolo Abeni <pabeni@redhat.com>
-> To: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Subject: Re: [PATCH v3 mptcp-next 2/6] mptcp: introduce MPTCP_FULL_INFO
-> getsockopt
-> Date: 05/24/2023 12:20:25 PM
-> 
-> On Wed, 2023-05-24 at 11:12 +0200, Matthieu Baerts wrote:
->> On 24/05/2023 10:53, Paolo Abeni wrote:
->>> On Wed, 2023-05-24 at 10:13 +0200, Matthieu Baerts wrote:
->>>> (If we add mptcp_info (cf Paolo's email), better to strip 'subflow')
->>>>
->>>>> 	__u32		size_subflow_full_info;         /* size of this structure in userspace */
->>>>
->>>> Why do we need this field? Can we not use the option length (int __user
->>>> *optlen) provided by the userspace?
->>>
->>> With this we can append arbitrary/variable size mptcp_info at the end.
->>
->> I guess either we use a dedicated field for mptcp_info or we infer its
->> value by looking at size_full_info or optlen. It looks clearer to me
->> from the userspace point of view to have a dedicated size for mptcp_info
->> than giving twice sizeof(mptcp_subflow_tcp_info) but I'm probably
->> missing something :)
-> 
-> Currently, with the existing sockopt we have the optvat pointing to
-> something alike:
-> 
->> hdr_size | hdr | more storage |
-> 
-> and optlen specifying the whole optval data. We need the explicit the
-> header size field, as optval must specify the whole size of the user-
-> provided buffer and we need to know which part of such buffer has been
-> filled by the user-space.
-> 
-> In this case:
-> 
-> "hdr_size" == mptcp_subflow_full_info.size_subflow_full_info
-> "hdr" == mptcp_subflow_full_info
-> "more storage" == mptcp_info
-> 
-> We could add a (rendundant) field inside mptcp_subflow_full_info to
-> specify the user-space mptcp_info size, but that would be ...
-> rendundant. Unless we drop the hdr_size and we compute that from optlen
-> and the new mptcp_indo_size_user field, but that would be IMHO counter-
-> intuitive.
+Introduces unique id for accurate subflow stats tracking and
+aggregate mptcp counters, plus some minimal self-tests.
 
-Thank you for the explanation!
+The tests themself do not take in account support for running on
+older kernel.
 
-I think what I'm missing is how the 'mptcp_full_info' structure will
-look like at the end.
+This is on top of "mptcp: a bunch of data race fixes".
 
-I thought that the idea was to have 'struct mptcp_info' embedded in
-'struct mptcp_full_info':
+There should be non trivial conflicts with:
 
-  struct mptcp_full_info {
-      __u32           num_subflows_user;
-      (...)
-      struct mptcp_info mptcp_info;
-  };
+"mptcp: use get_retrans wrapper".
 
-In this case, it looks strange to have "size_full_info" being
-"sizeof(struct mptcp_full_info)", what we would also give to the option
-length, no?
+v3 -> v4:
+ - change binary layout for MPTCP_FULL_INFO structs (Florian)
 
-Or the option length should take into account a separated space for the
-subflow info and thus use something like this?
+v2 -> v3:
+ - address Matttbe comments on patch 1, 2 and 5, see the indivdual
+   patches changelog for the details
 
-  sizeof(struct mptcp_full_info) +
-      sizeof(mptcp_subflow_full_info) * num_subflows_user"
+v1 -> v2:
+ - introduce MPTCP_FULL_INFO instead of overloading a tcp_info field
+ - add related self-tests
+ - fix a couple of subflow_id initialization bugs
 
-where "struct mptcp_subflow_full_info contains:
-    - mptcp_subflow_info (subflow id + mptcp_subflow_addrs + maybe more
-in the future)
-    - tcp_info (which can grow as well later)
+Paolo Abeni (6):
+  mptcp: add subflow unique id
+  mptcp: introduce MPTCP_FULL_INFO getsockopt
+  mptcp: move snd_una update earlier for fallback socket.
+  mptcp: track some aggregate data counters.
+  selftests: mptcp: explicitly tests aggregate counters
+  selftests: mptcp: add MPTCP_FULL_INFO testcase
 
-Cheers,
-Matt
+ include/uapi/linux/mptcp.h                    |  30 +++
+ net/mptcp/options.c                           |  14 +-
+ net/mptcp/protocol.c                          |  24 ++-
+ net/mptcp/protocol.h                          |   9 +-
+ net/mptcp/sockopt.c                           | 187 ++++++++++++++++--
+ net/mptcp/subflow.c                           |   2 +
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 123 +++++++++++-
+ 7 files changed, 356 insertions(+), 33 deletions(-)
+
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.40.1
+
