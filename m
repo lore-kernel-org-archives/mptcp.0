@@ -1,103 +1,91 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCB2182C7
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 14:27:35 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3095b1b6e02so660148f8f.2
-        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 07:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684938453; x=1687530453;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/7unRHo/kCLXey9B0y2lWJAoPJNB9dJ+QVZae0+A+YE=;
-        b=HDqnMuZ5u5yuZBusHCZxs2giZRsUVG9n3KJ+z8xsTvvrrQ9L/dyZlEd35aiTgOSQEI
-         4OYHmY9S4mY7cyQPndx68zM+a0ohSMPr23zfYJOQnyCSfjuaJTfsL9qFg7fnJy9eTUjj
-         JuO7jXUHXQbv5RlfINfaihyZOBT/p7pb0cVsyyo9Hg7Q2HL2RLxraR4l0THqS4xk2zIg
-         5ElVqFDHJapZB1+Sx7lj7eZkZHSF77j8FT2owK+P7oyF7UgwlGLxjjwJAP61+ATTZ8bm
-         82ualwPB9p3abHPYc6Fdd82fKy6GMx0DCSjDuVuPrLP5OLMI83Dp5SrnKUg6vn2o7lbT
-         oqfw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FA419534
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 14:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1684939804;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=URxzmFlzU0NFWsixQhWby/jafc4EqR7wGMoxXNdumKI=;
+	b=Bz81MNxGLD7sNLjM69x3qBnPXn+x6e2bxSVdaHkXGHVdNGZ9beNZJV3VG4aoMB89YrOCTU
+	YoyD9KT6JXh3jb588pCFag5N8z7bJpzOW1sfAdSYKRF6T3QgREqp6d+rN/iWD0ARTitzvy
+	YsESfKQcwMGvGRKwcmG4cxwHUzNyBlc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-662-E97b7mNkMB6vPQUhG6uJNA-1; Wed, 24 May 2023 10:50:03 -0400
+X-MC-Unique: E97b7mNkMB6vPQUhG6uJNA-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3f607da7cdbso1798855e9.0
+        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 07:50:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684938453; x=1687530453;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/7unRHo/kCLXey9B0y2lWJAoPJNB9dJ+QVZae0+A+YE=;
-        b=NQ3Irw/qDRZIop3W75jryUosPbYvFBYMP9dy7zyB1QstHSW5wL6nJeAS300bdbamia
-         4sfki9JpDgvvpQc228G/cY7Y+Lf0SIGm4K/zwDEAM0Cc9//MxmxkJSHo9nmSl8UBwB/o
-         SHv3j71jQmvF7tcVXM4rgw3KzbY0kTTd+kdRKONrQnTwHTX9iwzXybSWrJ9uC4qchSk1
-         Z6ivprlzH8hrgRGWf9Q8+EHGH8ThxnJg0RMuTn2tpQ/xrDCn4/4oOXJGBkH1zLJXWgpF
-         7WZj3DcqMSFfZcGTQzegA94Qb6kH77jSGFGxCyMcGv1GHGmRrQTe08AtMXKemrgnUoXD
-         mDVw==
-X-Gm-Message-State: AC+VfDxCiDlBYW1rDE9ALig8xkCWRyLNgcRUi2Xgm12s6EQJZK9wsFM4
-	0mUL4vTITgSE4x92WKgL11Z0rGhzGj1RcsXwBZURdg==
-X-Google-Smtp-Source: ACHHUZ6Avyh/kDWOEQh9azRlRM/b4qM7fWc8TveWcgibbAgSrF2K+628JdxRTe/UlBN/GerpKWf2QA==
-X-Received: by 2002:a5d:65d0:0:b0:309:4ed5:b458 with SMTP id e16-20020a5d65d0000000b003094ed5b458mr11481361wrw.30.1684938453303;
-        Wed, 24 May 2023 07:27:33 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:f96c:b035:8e06:9e3c? ([2a02:578:8593:1200:f96c:b035:8e06:9e3c])
-        by smtp.gmail.com with ESMTPSA id s5-20020adfecc5000000b00307bbbecd29sm14636871wro.62.2023.05.24.07.27.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 May 2023 07:27:33 -0700 (PDT)
-Message-ID: <69ac1616-bd9b-514a-bb77-c7371b573072@tessares.net>
-Date: Wed, 24 May 2023 16:27:32 +0200
+        d=1e100.net; s=20221208; t=1684939802; x=1687531802;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/pq6Ox6/T+o8797dorLINAeAPjgei3elCt/UkEcIjSM=;
+        b=H2a70eLXfo1wbkDSM3ofsSDqr8HjH0gG+tX/gtSmBM+cMuU8I2lScMmAPVAg+7Jp2x
+         oaYH/TGpzUOegLNu+oJggIsccJA6ruzyECCsEnC14X//o/kh/vCAOOKSYdhrYB+Re2s7
+         JCfTjEC3z0Jk/MqQc5LcI/R5moKKAGl1OWL1XnpEN0sQ0G0NDVCRjUOl1JRPocoqBvQG
+         2hzRaCErXkMBZFPRXrFgT4eOD4yTTivBl7Y/AAxEOYsvMoZnxKAWujUAqKEearwMxrm1
+         APlDBbL0qtt/qOS12gKv1JllFtowbXLUX6i9hKOrpXuYnAoTRvlW93Yfux/WuQTzNzqz
+         Sh/w==
+X-Gm-Message-State: AC+VfDwGveencxV8uE1raCahgz9/3ORuKMqeKS1VdaZf+26LxkCa46I/
+	TOKFsByI9EFa1QnEjrMIm44F1I+KGkDYEuCj/UFsvDp15SdI+Bc1QIV3/kvJC/0DFlqZOL3gAwH
+	eQQxA9r8SHOqXHH0Khl53I7C4mlEHbxaJLpp2Sq+QeHZ+Ivs+OYFlShEHwOE5ZGWU8hClA/Rr
+X-Received: by 2002:a05:600c:4189:b0:3f4:27ff:2ed7 with SMTP id p9-20020a05600c418900b003f427ff2ed7mr2310942wmh.4.1684939801920;
+        Wed, 24 May 2023 07:50:01 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6PJruvupZrgZ+GajcPsxv0wc/QR/Wps5Czdw7/3t9V4kM9Vyq0FDthJsaKueDW2CHtzDFi5g==
+X-Received: by 2002:a05:600c:4189:b0:3f4:27ff:2ed7 with SMTP id p9-20020a05600c418900b003f427ff2ed7mr2310932wmh.4.1684939801588;
+        Wed, 24 May 2023 07:50:01 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-242-207.dyn.eolo.it. [146.241.242.207])
+        by smtp.gmail.com with ESMTPSA id i1-20020a05600c354100b003f61177faffsm4601881wmq.0.2023.05.24.07.50.00
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 May 2023 07:50:01 -0700 (PDT)
+Message-ID: <597bc9dfa8e519d699d612160de7e2fe02c28ac7.camel@redhat.com>
+Subject: Re: selftests: mptcp: add MPTCP_FULL_INFO testcase: Build Failure
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Date: Wed, 24 May 2023 16:50:00 +0200
+In-Reply-To: <c37731c9-6c19-8ec3-69e0-db770312a397@gmail.com>
+References: <930270fbc3358d0c423357f770b679745f8dc4a8.1684935727.git.pabeni@redhat.com>
+	 <c37731c9-6c19-8ec3-69e0-db770312a397@gmail.com>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-next v15 0/5] update userspace pm mptcp_info fields
- part 1
-Content-Language: en-GB
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1684915182.git.geliang.tang@suse.com>
- <b1c8500d-15be-38b4-c4a6-ac5c725d97c8@tessares.net>
-In-Reply-To: <b1c8500d-15be-38b4-c4a6-ac5c725d97c8@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+On Wed, 2023-05-24 at 14:17 +0000, MPTCP CI wrote:
+> Hi Paolo,
+>=20
+> Thank you for your modifications, that's great!
+>=20
+> But sadly, our CI spotted some issues with it when trying to build it.
+>=20
+> You can find more details there:
+>=20
+>   https://patchwork.kernel.org/project/mptcp/patch/930270fbc3358d0c423357=
+f770b679745f8dc4a8.1684935727.git.pabeni@redhat.com/
+>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/5069697633
 
-On 24/05/2023 15:27, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 24/05/2023 10:02, Geliang Tang wrote:
->> v15:
->>  - drop "mptcp: export remove_anno_list_by_saddr"
->>  - drop MPTCP_USER_PM_FLAG_RM_* flags
->>  - drop mptcp_pm_alloc_anno_list in mptcp_nl_cmd_sf_create.
-> 
-> Thank you for the v15, it looks good to me!
-> 
-> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> 
-> I suggest to apply this series today.
+sigh, 32 bit issue with:
 
-Just did, applied in our tree (fixes for -net):
+=09sfinfoptr =3D (void __force __user *)sffi.subflow_info_addr;
 
-New patches for t/upstream-net and t/upstream:
-- 7b19c98c1195: mptcp: only send RM_ADDR in nl_cmd_remove
-- c9fb355d4359: selftests: mptcp: update userspace pm addr tests
-- d8a70092983f: mptcp: add address into userspace pm list
-- ce75026f702c: selftests: mptcp: update userspace pm subflow tests
-- 3a08dcee555f: mptcp: update userspace pm infos
-- Results: b87768580a4d..a38ce6e2d547 (export-net)
+I need to use u64_to_user_ptr()
 
+I'll repost in a little time (hopefully we don't have the 24h ban
+period ;)
 
+/P
 
-- Results: 0a9978390b78..ba37a83b8dc3 (export)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230524T141239
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230524T141239
-
-Cheers,
-Matt
-
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
