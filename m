@@ -1,127 +1,96 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDA360862
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 19:56:58 +0000 (UTC)
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-397f0bb41a2so294956b6e.0
-        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 12:56:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684958217; x=1687550217;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Oec24N17XaqzentL+3A83O9Xs1wHmr6V8Euq2pVSm4g=;
-        b=Ir0S8kqva+X4czmiD08RrT6by215BMCnZty6+8Y8uGC8jF1b3iMsCAUxmpdzdZhncl
-         jd5gEGpjJ+DeDSjJ7fXEhAo6J2cRIuzawWjIvO+wJeE8z7U+uYyVcdlGXQa6JNLib6zY
-         +qgQ+ZajWjsHWzBCZkfnDirZdGEbuyVc/zlGwnMfcRJ0SFJzAKjtRjW1EsekX+S7C1Qu
-         sem3ajvxLw65lBlnfXEvEhMz+V32rsbj5Bj7fn0XUBgWdfpSvoWfhxG1gcTkvOSxaEW6
-         Q5zrrf/d9A6uQ13ksympgrw2hvTiz8TXziofRktf7t/FXxhOdGngq7wBs9yibUPnlTS0
-         BEvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684958217; x=1687550217;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Oec24N17XaqzentL+3A83O9Xs1wHmr6V8Euq2pVSm4g=;
-        b=Y84HsM8SEPdFI/GrTT9E+A29IjjKRRPCoalxud0K9Pda6CvQ33cEmDajap4/q3PkmZ
-         3sGh+OYR2RQSU/VPTOHNkDJozDUnxixjp63zSMT731sTaYBYLG76gt23l8RCeQI4MNh1
-         rrdfa6XtAaRj8FnI64PtCLF22+IFFfuGy2NWVDKgavJCmlJSmjkY4YJ2I4oT88ciXogr
-         qN2D5j6UKVnrcyQ7Aeq65q2+BIRw5ZoAHLze0JZAymhYD/ESsDzNHjok52TtVTxpS5oy
-         T1jV2468PLyGIeXuXPl7ooRoDw1G8Kaa6naGumaVPkdfVcJ5cbMBfgEhd2a6QznvBWWs
-         mKeA==
-X-Gm-Message-State: AC+VfDxCUjtThJ+g+MxeMgFgl6bz6RFo4DOMOeXCnr9ferea5/5Q0DpS
-	COYTqcQdrqfdHjrpAuj86A==
-X-Google-Smtp-Source: ACHHUZ66vs2YAwxXr5ZG0lP5EPUGVYJ7l2ve1KQu2O3yxSjgMDl4BpEX7muJ6v0kfulrPDnjTePrdw==
-X-Received: by 2002:a05:6808:8dc:b0:396:20ca:e68a with SMTP id k28-20020a05680808dc00b0039620cae68amr9069916oij.34.1684958217243;
-        Wed, 24 May 2023 12:56:57 -0700 (PDT)
-Received: from [127.0.0.1] ([70.37.166.242])
-        by smtp.gmail.com with ESMTPSA id u21-20020a056808001500b003923ef75a3dsm2280658oic.4.2023.05.24.12.56.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 12:56:56 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <930270fbc3358d0c423357f770b679745f8dc4a8.1684935727.git.pabeni@redhat.com>
-References:
- <930270fbc3358d0c423357f770b679745f8dc4a8.1684935727.git.pabeni@redhat.com>
-Subject: Re: selftests: mptcp: add MPTCP_FULL_INFO testcase: Tests Results
-Message-ID: <95bef5f9-5d73-ee9a-d53e-b9c91f03b114@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 24 May 2023 19:56:55 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2925E22627
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 21:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1684963785;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=O+oRnCzKJ6Rwiii3IRHpoxBCCIi41nsqSt6K+1B/2V8=;
+	b=aYLTvZcOxSXE/f2jtnk+6a/6HTsPzTOLNz9DYcOgbyFDItbsLP3QCRnRg6XRxolNWz70k+
+	AiFdf99ExolKMrn2XJPb0/1XQ9Om2+Nd60qWIGhvYeIWOoVlxGVJBRX8//HO/g/M0IXnTr
+	R4QFMbEXbnumDj+V4JgY9/K/RSfUsSs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-658-x3-ky-7HMZ2PwUTYOiWflg-1; Wed, 24 May 2023 17:29:42 -0400
+X-MC-Unique: x3-ky-7HMZ2PwUTYOiWflg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 49FBB800969;
+	Wed, 24 May 2023 21:29:42 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.138])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 97E1D407DEC3;
+	Wed, 24 May 2023 21:29:41 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Florian Westphal <fw@strlen.de>
+Subject: [PATCH v5 mptcp-next 0/6] mptcp: add some more diag info
+Date: Wed, 24 May 2023 23:29:13 +0200
+Message-Id: <cover.1684962909.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+This is a follow up to the topic discussed in recent pubblic mtg.
 
-Thank you for your modifications, that's great!
+Introduces unique id for accurate subflow stats tracking and
+aggregate mptcp counters, plus some minimal self-tests.
 
-Our CI did some validations and here is its report:
+The tests themself do not take in account support for running on
+older kernel.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_fastopen =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4503925617852416
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4503925617852416/su=
-mmary/summary.txt
+This is on top of "mptcp: a bunch of data race fixes".
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5629825524695040
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5629825524695040/summary/summary.txt
+There should be non trivial conflicts with:
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 4 failed test(s): packetdrill_add_addr packetdrill_dss =
-packetdrill_syscalls selftest_diag =F0=9F=94=B4:
-  - Task: =
-https://cirrus-ci.com/task/5066875571273728
-  - Summary: https://api.=
-cirrus-ci.com/v1/artifact/task/5066875571273728/summary/summary.txt
+"mptcp: use get_retrans wrapper".
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6036925308469248
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6036925308469248/su=
-mmary/summary.txt
+v4 -> v5:
+ - changed again binary layout for MPTCP_FULL_INFO structs (Matttbe)
+ - fixed 32bit build issue
+ - reordered the patches, less controversial first
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/63022ec27b06
+v3 -> v4:
+ - change binary layout for MPTCP_FULL_INFO structs (Florian)
 
+v2 -> v3:
+ - address Matttbe comments on patch 1, 2 and 5, see the indivdual
+   patches changelog for the details
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+v1 -> v2:
+ - introduce MPTCP_FULL_INFO instead of overloading a tcp_info field
+ - add related self-tests
+ - fix a couple of subflow_id initialization bugs
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+Paolo Abeni (6):
+  mptcp: move snd_una update earlier for fallback socket.
+  mptcp: track some aggregate data counters.
+  selftests: mptcp: explicitly tests aggregate counters
+  mptcp: add subflow unique id
+  mptcp: introduce MPTCP_FULL_INFO getsockopt
+  selftests: mptcp: add MPTCP_FULL_INFO testcase
 
-For more details:
+ include/uapi/linux/mptcp.h                    |  29 ++++
+ net/mptcp/options.c                           |  14 +-
+ net/mptcp/protocol.c                          |  24 ++-
+ net/mptcp/protocol.h                          |   9 +-
+ net/mptcp/sockopt.c                           | 155 +++++++++++++++++-
+ net/mptcp/subflow.c                           |   2 +
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 118 ++++++++++++-
+ 7 files changed, 332 insertions(+), 19 deletions(-)
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+-- 
+2.40.1
 
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
