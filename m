@@ -1,37 +1,37 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4FC182DE
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 13:50:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC87182D1
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 13:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684936223;
+	s=mimecast20190719; t=1684936224;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rLU/1B6wX8JT3ecBfcWiqjMgKU7SMpwmUQgxr9j/nYE=;
-	b=c0g/PxMQt1FJGekYCxvAYoO1r4loDLcDDroVSg1Jn6dXya8JGMMJpXb8CNzMYRGbUYZmTM
-	kN3UE5DKwdiCkcAC/5buUO8DOkuolGfexvmDGm2BkHV2vlfx6lh7qdTe/77dYANdiutoKQ
-	3U9jLkfr3TvU+2yFnUGBFr9dDWGToig=
+	bh=geAGlBs5dryxsl8aECEqdTyFYbGfZr9VS27CyuUAgKU=;
+	b=Y7WfuBN+fbbtcnLaY0/rkVDyiY6yBJTMI2Oo6ry1W/W7bwtc4O83ScLTh8aMpOnRzwJEP/
+	sS+ePukUm/iVI7NycqKQ4srAhuaW6ckQDaa6CdZpEvepzVIwgPhPNZbHg0YbH2tQbVFsrb
+	eYFwIEQJIvtRDKAxIcNkOqTIDiegTQY=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-133-WoqbR1SaNs-5VWUCp623Fw-1; Wed, 24 May 2023 09:50:21 -0400
-X-MC-Unique: WoqbR1SaNs-5VWUCp623Fw-1
+ us-mta-447-aHi1lq5sOR2UhAXqOquy5Q-1; Wed, 24 May 2023 09:50:23 -0400
+X-MC-Unique: aHi1lq5sOR2UhAXqOquy5Q-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 71665800888;
-	Wed, 24 May 2023 13:50:21 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 502CA8032FE;
+	Wed, 24 May 2023 13:50:23 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.193.138])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D52067AF5;
-	Wed, 24 May 2023 13:50:20 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id AF1717AF5;
+	Wed, 24 May 2023 13:50:22 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v4 mptcp-next 4/6] mptcp: track some aggregate data counters.
-Date: Wed, 24 May 2023 15:50:09 +0200
-Message-Id: <a11e844cf57d2b862924d6ba3e30f2bf0251b2fc.1684935727.git.pabeni@redhat.com>
+Subject: [PATCH v4 mptcp-next 6/6] selftests: mptcp: add MPTCP_FULL_INFO testcase
+Date: Wed, 24 May 2023 15:50:11 +0200
+Message-Id: <930270fbc3358d0c423357f770b679745f8dc4a8.1684935727.git.pabeni@redhat.com>
 In-Reply-To: <cover.1684935727.git.pabeni@redhat.com>
 References: <cover.1684935727.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,195 +46,158 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Currently there are no data transfer counters accounting for all
-the subflows used by a given MPTCP socket. The user-space can compute
-such figures aggregating the subflow info, but that is inaccurate
-if any subflow is closed before the MPTCP socket itself.
-
-Add the new counters in the MPTCP socket itself and expose them
-via the existing diag and sockopt. While touching mptcp_diag_fill_info(),
-acquire the relevant locks before fetching the msk data, to ensure
-better data consistency
+Add a testcase explicitly triggering the newly introduce
+MPTCP_FULL_INFO getsockopt.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- include/uapi/linux/mptcp.h |  5 +++++
- net/mptcp/options.c        | 10 ++++++++--
- net/mptcp/protocol.c       | 12 +++++++++++-
- net/mptcp/protocol.h       |  4 ++++
- net/mptcp/sockopt.c        | 22 +++++++++++++++++-----
- 5 files changed, 45 insertions(+), 8 deletions(-)
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 96 ++++++++++++++++++-
+ 1 file changed, 94 insertions(+), 2 deletions(-)
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 37c46cf05795..9445c5c06053 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -124,6 +124,11 @@ struct mptcp_info {
- 	__u8	mptcpi_local_addr_used;
- 	__u8	mptcpi_local_addr_max;
- 	__u8	mptcpi_csum_enabled;
-+	__u32	mptcpi_retransmits;
-+	__u64	mptcpi_bytes_retrans;
-+	__u64	mptcpi_bytes_sent;
-+	__u64	mptcpi_bytes_received;
-+	__u64	mptcpi_bytes_acked;
- };
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index ff8fcdfccf76..e74790c10558 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -86,9 +86,38 @@ struct mptcp_subflow_addrs {
+ #define MPTCP_SUBFLOW_ADDRS	3
+ #endif
  
- /*
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 4bdcd2b326bd..c254accb14de 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1026,6 +1026,12 @@ u64 __mptcp_expand_seq(u64 old_seq, u64 cur_seq)
- 	return cur_seq;
++#ifndef MPTCP_FULL_INFO
++struct mptcp_subflow_info {
++	__u32				id;
++	struct mptcp_subflow_addrs	addrs;
++};
++
++struct mptcp_subflow_full_info {
++	__u32		size_subflow_full_info;	/* size of this structure in userspace */
++	__u32		num_subflows_kern;	/* must be 0, set by kernel (real subflow count) */
++	__u32		size_tcpinfo_kernel;	/* must be 0, set by kernel */
++	__u32		size_tcpinfo_user;
++	__u32		size_sfinfo_kernel;	/* must be 0, set by kernel */
++	__u32		size_sfinfo_user;
++	__u32		num_subflows_user;	/* max subflows that userspace is interested in;
++						 * the buffers at subflow_info_addr/tcp_info_addr
++						 * are respectively at least:
++						 *  num_subflows_user * size_sfinfo_user
++						 *  num_subflows_user * size_tcpinfo_user
++						 * bytes wide
++						 */
++	__aligned_u64	subflow_info_addr;
++	__aligned_u64	tcp_info_addr;
++};
++
++#define MPTCP_FULL_INFO		4
++#endif
++
+ struct so_state {
+ 	struct mptcp_info mi;
+ 	struct mptcp_info last_sample;
++	struct tcp_info tcp_info;
++	struct mptcp_subflow_addrs addrs;
+ 	uint64_t mptcpi_rcv_delta;
+ 	uint64_t tcpi_rcv_delta;
+ 	bool pkt_stats_avail;
+@@ -365,6 +394,8 @@ static void do_getsockopt_tcp_info(struct so_state *s, int fd, size_t r, size_t
+ 		olen -= sizeof(struct mptcp_subflow_data);
+ 		assert(olen == sizeof(struct tcp_info));
+ 
++		s->tcp_info = ti.ti[0];
++
+ 		if (ti.ti[0].tcpi_bytes_sent == w &&
+ 		    ti.ti[0].tcpi_bytes_received == r)
+ 			goto done;
+@@ -386,7 +417,7 @@ static void do_getsockopt_tcp_info(struct so_state *s, int fd, size_t r, size_t
+ 	do_getsockopt_bogus_sf_data(fd, MPTCP_TCPINFO);
  }
  
-+static void __mptcp_snd_una_update(struct mptcp_sock *msk, u64 new_snd_una)
+-static void do_getsockopt_subflow_addrs(int fd)
++static void do_getsockopt_subflow_addrs(struct so_state *s, int fd)
+ {
+ 	struct sockaddr_storage remote, local;
+ 	socklen_t olen, rlen, llen;
+@@ -433,6 +464,7 @@ static void do_getsockopt_subflow_addrs(int fd)
+ 
+ 	assert(memcmp(&local, &addrs.addr[0].ss_local, sizeof(local)) == 0);
+ 	assert(memcmp(&remote, &addrs.addr[0].ss_remote, sizeof(remote)) == 0);
++	s->addrs = addrs.addr[0];
+ 
+ 	memset(&addrs, 0, sizeof(addrs));
+ 
+@@ -453,13 +485,73 @@ static void do_getsockopt_subflow_addrs(int fd)
+ 	do_getsockopt_bogus_sf_data(fd, MPTCP_SUBFLOW_ADDRS);
+ }
+ 
++struct my_mptcp_full_info {
++	struct mptcp_subflow_full_info i;
++	struct mptcp_info mi;
++};
++static void do_getsockopt_mptcp_full_info(struct so_state *s, int fd)
 +{
-+	msk->bytes_acked += new_snd_una - msk->snd_una;
-+	msk->snd_una = new_snd_una;
++	size_t data_size = sizeof(struct my_mptcp_full_info);
++	struct mptcp_subflow_info sfinfo[2];
++	struct my_mptcp_full_info mmfi;
++	struct tcp_info tcp_info[2];
++	socklen_t olen;
++	int ret;
++
++	memset(&mmfi, 0, data_size);
++	memset(tcp_info, 0, sizeof(tcp_info));
++	memset(sfinfo, 0, sizeof(sfinfo));
++
++	mmfi.i.size_subflow_full_info = sizeof(struct mptcp_subflow_full_info);
++	mmfi.i.size_tcpinfo_user = sizeof(struct tcp_info);
++	mmfi.i.size_sfinfo_user = sizeof(struct mptcp_subflow_info);
++	mmfi.i.num_subflows_user = 2;
++	mmfi.i.subflow_info_addr = (unsigned long) &sfinfo[0];
++	mmfi.i.tcp_info_addr = (unsigned long) &tcp_info[0];
++	olen = data_size;
++
++	ret = getsockopt(fd, SOL_MPTCP, MPTCP_FULL_INFO, &mmfi, &olen);
++	if (ret < 0) {
++		if (errno == EOPNOTSUPP) {
++			fprintf(stderr, "\tMPTCP_FULL_INFO test skipped due to lack of kernel support\n");
++			return;
++		}
++		xerror("getsockopt MPTCP_FULL_INFO");
++	}
++
++	assert(olen <= data_size);
++	assert(mmfi.i.size_tcpinfo_user == mmfi.i.size_tcpinfo_kernel);
++	assert(mmfi.i.size_tcpinfo_user == sizeof(struct tcp_info));
++	assert(mmfi.i.size_sfinfo_user == mmfi.i.size_sfinfo_kernel);
++	assert(mmfi.i.size_sfinfo_user == sizeof(struct mptcp_subflow_info));
++	assert(mmfi.i.num_subflows_kern == 1);
++
++	/* Tolerate future extension to mptcp_info struct and running newer
++	 * test on top of older kernel.
++	 * Anyway any kernel supporting MPTCP_FULL_INFO must at least include
++	 * the following in mptcp_info.
++	 */
++	assert(olen > (socklen_t)sizeof(struct mptcp_subflow_full_info));
++	assert(mmfi.mi.mptcpi_subflows == 0);
++	assert(mmfi.mi.mptcpi_bytes_sent == s->last_sample.mptcpi_bytes_sent);
++	assert(mmfi.mi.mptcpi_bytes_received == s->last_sample.mptcpi_bytes_received);
++
++	assert(sfinfo[0].id == 1);
++	assert(tcp_info[0].tcpi_bytes_sent == s->tcp_info.tcpi_bytes_sent);
++	assert(tcp_info[0].tcpi_bytes_received == s->tcp_info.tcpi_bytes_received);
++	assert(!memcmp(&sfinfo->addrs, &s->addrs, sizeof(struct mptcp_subflow_addrs)));
 +}
 +
- static void ack_update_msk(struct mptcp_sock *msk,
- 			   struct sock *ssk,
- 			   struct mptcp_options_received *mp_opt)
-@@ -1057,7 +1063,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
- 		__mptcp_check_push(sk, ssk);
- 
- 	if (after64(new_snd_una, old_snd_una)) {
--		msk->snd_una = new_snd_una;
-+		__mptcp_snd_una_update(msk, new_snd_una);
- 		__mptcp_data_acked(sk);
- 	}
- 	mptcp_data_unlock(sk);
-@@ -1123,7 +1129,7 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 		/* on fallback we just need to ignore the msk-level snd_una, as
- 		 * this is really plain TCP
- 		 */
--		msk->snd_una = READ_ONCE(msk->snd_nxt);
-+		__mptcp_snd_una_update(msk, READ_ONCE(msk->snd_nxt));
- 
- 		__mptcp_data_acked(subflow->conn);
- 		mptcp_data_unlock(subflow->conn);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 89fee2ac84e2..adf26b991c1e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -378,6 +378,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
- 
- 	if (MPTCP_SKB_CB(skb)->map_seq == msk->ack_seq) {
- 		/* in sequence */
-+		msk->bytes_received += copy_len;
- 		WRITE_ONCE(msk->ack_seq, msk->ack_seq + copy_len);
- 		tail = skb_peek_tail(&sk->sk_receive_queue);
- 		if (tail && mptcp_try_coalesce(sk, tail, skb))
-@@ -761,6 +762,7 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
- 			MPTCP_SKB_CB(skb)->map_seq += delta;
- 			__skb_queue_tail(&sk->sk_receive_queue, skb);
- 		}
-+		msk->bytes_received += end_seq - msk->ack_seq;
- 		msk->ack_seq = end_seq;
- 		moved = true;
- 	}
-@@ -1513,8 +1515,10 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
- 	 * that has been handed to the subflow for transmission
- 	 * and skip update in case it was old dfrag.
- 	 */
--	if (likely(after64(snd_nxt_new, msk->snd_nxt)))
-+	if (likely(after64(snd_nxt_new, msk->snd_nxt))) {
-+		msk->bytes_sent += snd_nxt_new - msk->snd_nxt;
- 		msk->snd_nxt = snd_nxt_new;
-+	}
- }
- 
- void mptcp_check_and_set_pending(struct sock *sk)
-@@ -2639,6 +2643,8 @@ static void __mptcp_retrans(struct sock *sk)
- 			msk->last_snd = ssk;
- 		}
- 	}
-+
-+	msk->bytes_retrans += len;
- 	dfrag->already_sent = max(dfrag->already_sent, len);
- 
- reset_timer:
-@@ -3153,6 +3159,10 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
- 	mptcp_pm_data_reset(msk);
- 	mptcp_ca_reset(sk);
-+	msk->bytes_acked = 0;
-+	msk->bytes_received = 0;
-+	msk->bytes_sent = 0;
-+	msk->bytes_retrans = 0;
- 
- 	WRITE_ONCE(sk->sk_shutdown, 0);
- 	sk_error_report(sk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f9180ecce5e4..0283383a09f4 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -261,10 +261,13 @@ struct mptcp_sock {
- 	u64		local_key;
- 	u64		remote_key;
- 	u64		write_seq;
-+	u64		bytes_sent;
- 	u64		snd_nxt;
-+	u64		bytes_received;
- 	u64		ack_seq;
- 	atomic64_t	rcv_wnd_sent;
- 	u64		rcv_data_fin_seq;
-+	u64		bytes_retrans;
- 	int		rmem_fwd_alloc;
- 	struct sock	*last_snd;
- 	int		snd_burst;
-@@ -273,6 +276,7 @@ struct mptcp_sock {
- 						 * recovery related fields are under data_lock
- 						 * protection
- 						 */
-+	u64		bytes_acked;
- 	u64		snd_una;
- 	u64		wnd_end;
- 	unsigned long	timer_ival;
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 59a174ee1d54..a22e2463251b 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -889,7 +889,9 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
- 
- void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ static void do_getsockopts(struct so_state *s, int fd, size_t r, size_t w)
  {
-+	struct sock *sk = (struct sock *)msk;
- 	u32 flags = 0;
-+	bool slow;
+ 	do_getsockopt_mptcp_info(s, fd, w);
  
- 	memset(info, 0, sizeof(*info));
+ 	do_getsockopt_tcp_info(s, fd, r, w);
  
-@@ -915,11 +917,21 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
- 	if (READ_ONCE(msk->can_ack))
- 		flags |= MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED;
- 	info->mptcpi_flags = flags;
--	info->mptcpi_token = READ_ONCE(msk->token);
--	info->mptcpi_write_seq = READ_ONCE(msk->write_seq);
--	info->mptcpi_snd_una = READ_ONCE(msk->snd_una);
--	info->mptcpi_rcv_nxt = READ_ONCE(msk->ack_seq);
--	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
-+	mptcp_data_lock(sk);
-+	info->mptcpi_snd_una = msk->snd_una;
-+	info->mptcpi_rcv_nxt = msk->ack_seq;
-+	info->mptcpi_bytes_acked = msk->bytes_acked;
-+	mptcp_data_unlock(sk);
+-	do_getsockopt_subflow_addrs(fd);
++	do_getsockopt_subflow_addrs(s, fd);
 +
-+	slow = lock_sock_fast(sk);
-+	info->mptcpi_csum_enabled = msk->csum_enabled;
-+	info->mptcpi_token = msk->token;
-+	info->mptcpi_write_seq = msk->write_seq;
-+	info->mptcpi_retransmits = inet_csk(sk)->icsk_retransmits;
-+	info->mptcpi_bytes_sent = msk->bytes_sent;
-+	info->mptcpi_bytes_received = msk->bytes_received;
-+	info->mptcpi_bytes_retrans = msk->bytes_retrans;
-+	unlock_sock_fast(sk, slow);
++	if (r)
++		do_getsockopt_mptcp_full_info(s, fd);
  }
- EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
  
+ static void connect_one_server(int fd, int pipefd)
 -- 
 2.40.1
 
