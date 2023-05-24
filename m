@@ -1,134 +1,210 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2080.outbound.protection.outlook.com [40.107.15.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30ACC146
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 08:29:49 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f606912ebaso7858685e9.3
-        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 01:29:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684916988; x=1687508988;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0QMsdFYmTJ5VD//yWdZm0NMb80AhHBJYDQgKo76AZyg=;
-        b=LPrDds0sK5qwacctNbftMMTVh1u361ZE5ireYF+uHaLZtGGjVtkRMylLWIz8o4frZe
-         5jb55Ow9hdGEVPTPsONoiZtQTsnSHmMOTfHYK90wIfJkETO1T2ScmFSl6N5y8oqEYYX2
-         JB5IJtVQDynjREYxgPgCkbgqAV0gSuZI3NvDS632huytmrIereUyXRDk3CV3EmXnroBR
-         sGr6WwQflaN+y+7bDqCK3oL8YNQhV5/PLCCRVUnenSlzS8m75qCR4qnAWx914GFCPLt6
-         HTnNq+3lAQc25xFXzaXkIpUeajDYS43FiL5hd+gN4B32k3bwsrkAZYfWNkBOa9WveyEj
-         CoqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684916988; x=1687508988;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0QMsdFYmTJ5VD//yWdZm0NMb80AhHBJYDQgKo76AZyg=;
-        b=BZN2+z4acefdCtI57EK86Xkl3OBL7NsUhkGL3X/0q+NoYuig4bYEKJwCyTMJK2xjiM
-         2B4eKTzwJ2NCqPCGqwa82O/2Qb3Y6e2GEzCyRKXJbxV5xokntSlob/1OntOd+siWCbPS
-         DRy43rz1SwbfUOu55bw1/Uy05eDsd6He2otSkBsJHWrRbR12yIMXJvhiXfmZIf9JYZ8D
-         yzaWmOq8Rk7ttiRFNi4mPgrFokw63kikrl7VTY3cSYCKxhStS82AOkfALiIKvVf+tM+W
-         gbxr3RmrqL5bC0JC4y5k8AHcenhwak9OEmMBfXOnn6xyZz5O10CokU7Nn4TF1GVHyQJv
-         lu3w==
-X-Gm-Message-State: AC+VfDwmYQxjP7RcVrYES29M+3g8B+bHcNXg0xyJdrpc2Tf+Z9f4occm
-	VOIorybB/CJn1O7wuDsB25xXGh9geI0gh8XLitNN9g==
-X-Google-Smtp-Source: ACHHUZ4zS3zmIP85iVbx/E8tvnbbaJPiDskg3jcr9Q0ozrAaxBH+rT3HXPPOlKyvdvgINnFmr5O6uw==
-X-Received: by 2002:a7b:c31a:0:b0:3f5:f83:4d84 with SMTP id k26-20020a7bc31a000000b003f50f834d84mr11937398wmj.31.1684916987686;
-        Wed, 24 May 2023 01:29:47 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:735b:1ad0:911b:4361? ([2a02:578:8593:1200:735b:1ad0:911b:4361])
-        by smtp.gmail.com with ESMTPSA id n25-20020a7bc5d9000000b003f42328b5d9sm1470363wmk.39.2023.05.24.01.29.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 May 2023 01:29:47 -0700 (PDT)
-Message-ID: <27730b33-6a07-7d18-c4ea-31a56b952e91@tessares.net>
-Date: Wed, 24 May 2023 10:29:46 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC4879F9
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 08:43:41 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gbqr63vDuRaBzZObC3W4SRKJqOhZQXIR00CYPXPi5Sf4pzAdUQRi5peg7DTL7G6V5q37CTJhky3p1QvyT8idUzeIi6R/TEa94nb0aihAvG+K3ZL+6gN3sfAhB9z4HSNzlMJDidvGd225mg2ME/6rS+plzB3M8P6Tum/pfXT7+cU+W0Z+nWmvxntCLf9gJytJY+wwfDBD6fDrqJHBQn0kFLxESqESrGlfa287YYfKF5kbzaNRZVnrjRp/8LzjMEYJcFtqaPMip5/mGMnZejtrzFxqQgR3cl+7W7/yBfPWZrc9Dgu8j3Jsc7l+eHsmdc4AZgMTmal0CzkTUFMDc4aAxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qlihm9n3Tcg8HBF8NHg8lozSSIe8b+8jW3oi1XAIKKk=;
+ b=RM7IAiS60/NrmaOjZ+88zLIsMkJLkKpeCC+q985Xbc9Bg7xPNw0ujubBKjGRYaS5Nh50JrRQWjAJ+uzQH8BLFHrL+E1JqNvGgk+MHOsTGl3765kjae8EIHL3/NTAyC/v7hALTnnPrNHQLh4EFPWsGIktWUEsFrcKasu4v+vrSxvt+hEHFm0Q15hORWDiz2MGV5IIu3IdFryKDnxJaHWvqqfIf98sx8q8Rz+ltvumqKNKDv4IkgYmmokpIH/DpJxT0mfhA+ohdSNGvlraj1rSNCVoeWT3rr8Uj4pKrENSQ8F6CqNGam9tSCj/UmXy6p7vZeADat4h58+dqBflNT0TAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qlihm9n3Tcg8HBF8NHg8lozSSIe8b+8jW3oi1XAIKKk=;
+ b=bsLVqq1UsDqjRps9VNsgqUd3UdLMCaUJIOCoDrTjKUFGRQA43XbKRxT2iwm9vWHuDd1vtq+8P9PVcHdKkITxx0ye82Svknfa4V5R8FBPOEr6PGiLSDbfmnUfmk0OqfKXwKdMrz5IHQfPP4E2ZbpMYyxKqtXGSYNdehJRiAx0z9C5cw1XLiO6IfcihSnP77mn4aYFbwmoL7iJV9/M3mZTbw9wECab7yBURTv25Uj7TG+Osri60z0pYpKILMjJmH7/YtuJ4wDEN4S7NUIVhLx226WCPC0tJZ99D5FwYeZEBdsSA6fbOzXKGFORF06sUdVlLBYd2J2hifnZzWmmVjF+Pg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by DU2PR04MB8647.eurprd04.prod.outlook.com (2603:10a6:10:2de::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.15; Wed, 24 May
+ 2023 08:43:38 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::423a:a30f:5342:9d35]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::423a:a30f:5342:9d35%6]) with mapi id 15.20.6433.015; Wed, 24 May 2023
+ 08:43:38 +0000
+Date: Wed, 24 May 2023 16:43:32 +0800
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v15 3/5] mptcp: add address into userspace pm
+ list
+Message-ID: <20230524084332.GA9891@bogon>
+References: <cover.1684915182.git.geliang.tang@suse.com>
+ <b897ae1cbd3615b1304cac6f3dcefe42854f273b.1684915182.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b897ae1cbd3615b1304cac6f3dcefe42854f273b.1684915182.git.geliang.tang@suse.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: TYCP286CA0065.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:31a::6) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-next] net: skip printing "link become ready" v6 msg
-Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <20230522-mptcp-skip_print_link_becomes_ready-v1-1-9d5f28f19440@tessares.net>
- <614e76ac-184e-c553-af72-084f792e60b0@kernel.org>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <614e76ac-184e-c553-af72-084f792e60b0@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DU2PR04MB8647:EE_
+X-MS-Office365-Filtering-Correlation-Id: 284c06ff-daf6-4506-fae2-08db5c32f7ef
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	j9saCXzlNE+5erp/VIsM6GBSIkdHSBASz1o2htu5e6h4rbzs67W9jC9nQrgC9fRCYQbXYApZ9Y41J4SD7KNLxG1oA3HVdX2w7DECtIGb5K0Q0V9mCBa96b9dsJd/hiE9YiKcAZjEnkt5XOuKnbjBm2xTWIYRR7F5VrdFG0rTDpRzxXklZnQ5sp1goyYEwWA3hd+KQeyXuXMBiHKRa1BWhj9P0UEpmMdvnZiCM2tOCQHG2CduFSj01FKnGxgQm0edYKR6+VEZrlEOcAo6NFSPfPQk5oP1yiNAhnRW8ybwo19MiDN1nosn16gQ/pn26JcTgjj3CUM/idpZReJvwEjuE0dpWj70CWpXWMNxzQKQFMHYMCM90RnQm0rHlxcRgxFzGdZCMjIrWmjUza9mHigOCuNq/+qmAHj1IOCE+XgUd/9ODxPlK//IjExVAh/C5wA4pOGRnJjx0+eDHAQmJQy70tCyZEyqTgXRmYudkSKp8YmkiuUAifUwarLn4t3Xf1u7dnYDorYtzqP5sA9YAL7wS5mRibxRbblTraydD/inTfg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(346002)(39860400002)(136003)(376002)(366004)(396003)(451199021)(2906002)(5660300002)(8936002)(478600001)(8676002)(44832011)(6666004)(41300700001)(66476007)(66556008)(66946007)(6916009)(316002)(33656002)(6486002)(966005)(6506007)(9686003)(6512007)(1076003)(26005)(33716001)(38100700002)(86362001)(83380400001)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?h44ZSboYUqDhHdYrTLcRuitga2ShOnj0w7q+gbXRY4DA/rKKADlckNj5EVTM?=
+ =?us-ascii?Q?teP04lBIidLP35Jdw59HyLzUCyDJ0L1C8CTNqxC8DLyNln4L7axPq/6WnmC6?=
+ =?us-ascii?Q?ifx7riHUexB89uJ+ywFRyy0UYuXkn0VAc2plg0mlYO1T6b11RgG5taCR5Km/?=
+ =?us-ascii?Q?93tZK3CqmzmbDkSh/hZMye7dVz+cqUhDuHP9ekVYBl3C+Nf2Nc9XN6qORSUz?=
+ =?us-ascii?Q?r2iGsro+MBuny5LGNVWW5timxAgfJkJpn5rHg/d9fCh4fvTDoEaNtSiy/FZW?=
+ =?us-ascii?Q?f9C4dDUj7ymrQVGWZ2+MmHNkyrCihEnindjiCiIAS6x8c8MEtaR9yjlZBLir?=
+ =?us-ascii?Q?BgRY63f+NFhmQBGsoGEgpPhw1rNRdLw8gnNDbXeZ4PUqYNzNdLQHp8eu+vdz?=
+ =?us-ascii?Q?3qIvnQ6fZwDA0KAWi9aiILCEvvVAPiAFav6gr6+BrJTTKYNQ/H9ApbIQJ0HT?=
+ =?us-ascii?Q?1/ABUMDcdfYC7yTf9ZXoHfKq7eTP2i9ve05L09Q7VkNRMgY5/KBUYECylPKg?=
+ =?us-ascii?Q?tPMumaiPzgoHnv2zHuMJuSk1wTJEIvsyRwIgq5UGInLMqh4VJ4REewW/BXER?=
+ =?us-ascii?Q?P32G6rwhojnRuyAIbrS8PKEM7DVOql2eY3w9En39aNdzoH5KaKXR+1/hHwN2?=
+ =?us-ascii?Q?s3d0kChvrqT+i3QKuCwmyEhALfmNyfAKTuJqwpMqbdhEl1qUUqjctqDoJAKL?=
+ =?us-ascii?Q?73+EannhnfLjRtad4IkBAexGKSHALi9aYhmu5KHGrvyLJqJs9Em4gS3tLOP/?=
+ =?us-ascii?Q?UZFmnbQrB/685xhdHt0nCnRXfcpkwP2m8vkdZaLz+9KwcrLcsDnxGmzA35JZ?=
+ =?us-ascii?Q?TeIK+BL1xae5pux9k27hGSQJNywntx7d0TzNeaj9Ecgew9VyY8hRD+Hh25KO?=
+ =?us-ascii?Q?/EWbjg6yP4Z9KkGG+gkUq1a5fiV3xvo0/ZUJ2WFRUKbe37jzdtaS2XBgXKDD?=
+ =?us-ascii?Q?0iB2ulsS+HdOal9npmvhc83onXDdM3eJlCmVgmnW2uH79oBym9EMe14je1kF?=
+ =?us-ascii?Q?W6ZMDq8mMgI2wjhak6dA5o4LDlmTnoI5hxslWAbDh0DsgwoZKPtfOMC4B+nO?=
+ =?us-ascii?Q?InHAqgIBrLMldm6yVnMAW7Ca781T8oJ2h4KGNraAbEWwPVFtrq8iO6TuyoYk?=
+ =?us-ascii?Q?id6oENWt5+sbymCiG72ftGdnR0puHfoKE4hDAiLQ6rcT/LhQxsuRqLsUcazd?=
+ =?us-ascii?Q?FifDiOjZHQFbmN8pCS73LaIpCwHf7ZkH66RMLxxgJnoWifU2bWpskN7PnqMB?=
+ =?us-ascii?Q?EwmE5d7s+7cizbA3yV+0IyPERPVXlj2WH0/abMpTm60jd6OnZE7NxixHogxD?=
+ =?us-ascii?Q?peD59cXp/kXK79jQbaL3LbSqFckpmDsvS8V0I7nJqHX1gqlVx+tmZFVfubeT?=
+ =?us-ascii?Q?sUddcsDJwyNhR26hoQQCCk2PKENROBEL8CR5U3KuoJG86M7I/IBZf/T4tmjA?=
+ =?us-ascii?Q?zB+pCQMtz6NMpIbjVtv5ebVF8pZG8K0HOuurxUGWzFto75lyNLjNz0uyg7nf?=
+ =?us-ascii?Q?v3xiupwAcMUoOnpzOTtcP8t2JmcnztXHrFpapGnvNv7zpU+YWoFfkP340onQ?=
+ =?us-ascii?Q?68syKJR/W97524jUrfrc3AE5lwm/d8aSslNMRzV9?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 284c06ff-daf6-4506-fae2-08db5c32f7ef
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2023 08:43:38.5635
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8xeSYDkZLjARtjP6ACxNO6xCDRRaFkfQlTBD2qlj9SWlYl4q0bZzeRsZHqg18WstXJ60UCi+aj5XATnI0h5Ocg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8647
 
-Hi Mat, Paolo,
-
-@Mat: Thank you for having reviewed this patch!
-
-@Paolo: I have a question for you below if you don't mind.
-
-On 24/05/2023 02:20, Mat Martineau wrote:
-> On Mon, 22 May 2023, Matthieu Baerts wrote:
+On Wed, May 24, 2023 at 04:02:46PM +0800, Geliang Tang wrote:
+> Add the address into userspace_pm_local_addr_list when the subflow is
+> created. Make sure it can be found in mptcp_nl_cmd_remove(). And delete
+> it in the new helper mptcp_userspace_pm_delete_local_addr().
 > 
->> This following message is printed in the console each time a network
->> device configured with an IPv6 addresses is ready to be used:
->>
->>  ADDRCONF(NETDEV_CHANGE): <iface>: link becomes ready
->>
->> When netns are being extensively used, e.g. by re-creating netns with
->> veth to discuss with each other for testing purposes like mptcp_join.sh
->> selftest is doing, it generates a lot of messages: more than 700 with
->> the latest version.
->>
->> This message can be useful in many situations but in some, it floods the
->> logs without providing any useful input. The proposition here is to have
->> a new sysctl knob to easily skip this specific message.
->>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->> ---
->> include/net/netns/ipv6.h                        | 1 +
->> net/ipv6/addrconf.c                             | 5 +++--
->> net/ipv6/sysctl_net_ipv6.c                      | 9 +++++++++
->> tools/testing/selftests/net/mptcp/mptcp_join.sh | 1 +
->> 4 files changed, 14 insertions(+), 2 deletions(-)
->>
+> Add address into pm anno_list in mptcp_nl_cmd_sf_create(). Remove
+> it when connecting fails.
+
+These two lines should be removed.
+
+Thanks,
+-Geliang
+
 > 
-> Hi Matthieu -
+> By doing this, the "REMOVE" command also works with subflows that have
+> been created via the "SUB_CREATE" command instead of restricting to
+> the addresses that have been announced via the "ANNOUNCE" command.
 > 
-> Using a sysctl for this seems like overkill. I noticed a similar change
-> for ADDRCONF(NETDEV_UP) that changed a pr_info() to pr_debug():
+> Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
+> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/379
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  net/mptcp/pm_userspace.c | 41 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
 > 
-> 7c62b8dd5ca89dabd9f455d19e663bad60951bd5
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 6beadea8c67d..114548b09f47 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -79,6 +79,30 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+>  	return ret;
+>  }
+>  
+> +/* If the subflow is closed from the other peer (not via a
+> + * subflow destroy command then), we want to keep the entry
+> + * not to assign the same ID to another address and to be
+> + * able to send RM_ADDR after the removal of the subflow.
+> + */
+> +static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
+> +						struct mptcp_pm_addr_entry *addr)
+> +{
+> +	struct mptcp_pm_addr_entry *entry, *tmp;
+> +
+> +	list_for_each_entry_safe(entry, tmp, &msk->pm.userspace_pm_local_addr_list, list) {
+> +		if (mptcp_addresses_equal(&entry->addr, &addr->addr, false)) {
+> +			/* TODO: a refcount is needed because the entry can
+> +			 * be used multiple times (e.g. fullmesh mode).
+> +			 */
+> +			list_del_rcu(&entry->list);
+> +			kfree(entry);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
+>  						   unsigned int id,
+>  						   u8 *flags, int *ifindex)
+> @@ -251,6 +275,7 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+>  	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+>  	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+>  	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
+> +	struct mptcp_pm_addr_entry local = { 0 };
+>  	struct mptcp_addr_info addr_r;
+>  	struct mptcp_addr_info addr_l;
+>  	struct mptcp_sock *msk;
+> @@ -302,12 +327,24 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+>  		goto create_err;
+>  	}
+>  
+> +	local.addr = addr_l;
+> +	err = mptcp_userspace_pm_append_new_local_addr(msk, &local);
+> +	if (err < 0) {
+> +		GENL_SET_ERR_MSG(info, "did not match address and id");
+> +		goto create_err;
+> +	}
+> +
+>  	lock_sock(sk);
+>  
+>  	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
+>  
+>  	release_sock(sk);
+>  
+> +	spin_lock_bh(&msk->pm.lock);
+> +	if (err)
+> +		mptcp_userspace_pm_delete_local_addr(msk, &local);
+> +	spin_unlock_bh(&msk->pm.lock);
+> +
+>   create_err:
+>  	sock_put((struct sock *)msk);
+>  	return err;
+> @@ -420,7 +457,11 @@ int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
+>  	ssk = mptcp_nl_find_ssk(msk, &addr_l, &addr_r);
+>  	if (ssk) {
+>  		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+> +		struct mptcp_pm_addr_entry entry = { .addr = addr_l };
+>  
+> +		spin_lock_bh(&msk->pm.lock);
+> +		mptcp_userspace_pm_delete_local_addr(msk, &entry);
+> +		spin_unlock_bh(&msk->pm.lock);
+>  		mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
+>  		mptcp_close_ssk(sk, ssk, subflow);
+>  		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
+> -- 
+> 2.35.3
 > 
-> Maybe that's more suitable?
-
-I don't know. I mean: I don't even know if this message is that useful.
-I quickly search for this message on the Internet and I found bug
-reports because this message was abnormally printed. So in these cases,
-it was a sign something else was wrong. Maybe the case in most use
-cases? Even if there are other (better) ways to track issues with
-network devices...
-
-But yes, pr_debug() would be easier :)
-
-The commit you mentioned also talk about the message I want to mute:
-
-  (...) it seems to be more interesting to hear when the addrconf
-  actually start (...)
-
-(but it doesn't say if it is that useful)
-
-
-@Paolo: should I ask on netdev which direction to take? Or send this
-patch as a RFC (and mention the doc is missing and the modification on
-the MPTCP side will be done in a separated commit + the pr_debug()
-possibility)?
-
-> If you did want to keep pursuing the sysctl, the patch would need to
-> update Documentation/networking/ip-sysctl.rst
-
-Good point, I forgot that!
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
