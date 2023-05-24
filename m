@@ -1,219 +1,179 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2041.outbound.protection.outlook.com [40.107.8.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9598A8467
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 07:36:53 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3f60e536250so9731035e9.1
-        for <mptcp@lists.linux.dev>; Wed, 24 May 2023 00:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684913811; x=1687505811;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/qtF44rJGcFM6aeDmrkuXyk0XLasc9h9LRo29olhtlA=;
-        b=r5uRJMKyV16CkwzO+xJXZh/u8vuBXxeYT08A7dxlwHnkp4B1J+uj/4J1wVpvQH6ksG
-         WDKdRqz5yNiGkW5zUCVqVGOq+Q0q+TbGZ3gzWCHM35QOD8+dJMGv+tb/x3raInlllSfJ
-         s5c+ujwW/mGI2jzVLGm1MfLQsoUKNVUmbUn1kros0ECSCHCfcXOvs63mAUurZpEkOzy2
-         DgRPLXhCDOkHuOqYq0UFHLQXyE9yHtR2c94RccaW4F5dd9sJW+GEZEgmj/b9+kSoCsGJ
-         4q9i0EzNZ9HOogxz38kAl8wYDVwU37PJGtGjT3NjuPlBet5/VPgSPWS1vtwXnjtsoDjf
-         gCtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684913811; x=1687505811;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/qtF44rJGcFM6aeDmrkuXyk0XLasc9h9LRo29olhtlA=;
-        b=Ue8CU2yAfQpNBpKWmyriK5nt4awAOSGV3/1C8KuuH50+E1Oyt8OKNqAGfShbOKUt1O
-         ZHCAi8pNha/X+/DFlLdFUK3lBP8XbXx6HlG4J/QffcwqcIvKJTYkvHZaV4E3X2JVdSsw
-         QqR5jyb1g+CuLd/mJ6gdite6suaT0BitHQFrcganzC6V6sm61r+LeCd121vpMAboW8Th
-         5ZAzM021cPvfnlS7WIfHRrhKg0As3/LhzKf8s1me/clo4wqMtL/itOrQkj3f3dLYukJC
-         pym98ff+dvFS9QEKNr5yGK8xOlHnQddnFtU4GWuqHwmNtx2J+fezqqewk/reiwoywwVc
-         6L8g==
-X-Gm-Message-State: AC+VfDwm3nEA3+t8OHUHsIbvvl4QvHBlLg5acCKSUQ6lLFjQy/ruQ3YK
-	sS+dh9ePPKonLSe7FVEyLVJ6yQ==
-X-Google-Smtp-Source: ACHHUZ7hO+GZ+cc2bwxB4LcSM2X0L0IjTsL63xmGhiZ1C/aDfzAw9ukDWq1f1dAmgghG1yaOCPZdEQ==
-X-Received: by 2002:a05:600c:3549:b0:3f5:a54:9f97 with SMTP id i9-20020a05600c354900b003f50a549f97mr12586217wmq.0.1684913811307;
-        Wed, 24 May 2023 00:36:51 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:735b:1ad0:911b:4361? ([2a02:578:8593:1200:735b:1ad0:911b:4361])
-        by smtp.gmail.com with ESMTPSA id a9-20020a5d5709000000b0030922ba6d0csm13346272wrv.45.2023.05.24.00.36.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 May 2023 00:36:50 -0700 (PDT)
-Message-ID: <f21e784f-8c97-f876-848b-f909d4e1daf0@tessares.net>
-Date: Wed, 24 May 2023 09:36:50 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2099DBE7A
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 08:03:02 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c9uwlT4OOjIcVyjfl6OCvNUWdCqDvlzXUPWBi9RISQMW6gOnZn5TfdweD9L+GqQM8qMNaYuOzllZE3kWi0H5Kkmgk5N+u38FAbOOlL4RX8arm311vuIdl0fLB+nvcKVJ6kH/MDmnMyGjhLBfeeH0zVwbN4wuuPrSil7IiciiQxZwtBE7aCkTff2rWd+7tSfEJD29pAY0f5ewuAbkNoOKiu0LWrItvRdtVjtg7BUNbcKDgXO0xyZINjWnHznKeD8R/e6v3hNg2l/EMoP8lLY7y+CGVJPS4I7XSfIveI9b+xgvsE/a9aVgsTPGDQ+5qxTVFp25H6gYagbdEsvwt/7oTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Qh7T7oenKr78ujL5a+DaylbuAD0J5c9SzgYJSfgyRPw=;
+ b=bUilmFQ9k4Sw6zmnjsoO1vtdEzgyjMlAq0GPCGa40BCRfoC3Du8ZJ12xxkukKo4ya4wUGhh4Q7R4OcOLBG3SIjxRTXiIPyDPIDOPUEoJe08I++nE9tMJOKKSU+M8g+H7ryiSjdTHOj9WrpE8QJW2MSeGOiKo83TbKz9GpfBmhz0HwRRwLD8pXIGWfIkZQZQwU36PJgsoWtZSZWHU6OfNXrClLCkFyNI2AOn7IDqRkLQDCc8XyHF00t/EON+fmjRR3o6BIyqAp26F/ZL6lWCtHEOrxsmohpJSjDY3ZhTZKEV2tkEgnEzfHd+kceGVuXhwdnG5SUUuZh5rd+IUWWf0JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qh7T7oenKr78ujL5a+DaylbuAD0J5c9SzgYJSfgyRPw=;
+ b=Abt+fBMIcZda4FQSVWlr+j+IwtOu8wtqd9ZvdGeQ16m8pXffdMVfIPES5ll6DqCi+6o+OgFaGvpdPf6TjGMxOFPpiNW/okfWq0Z9sTTY+Pr4eiwZ1656Vb4V9k05pjHQba840ynzXGy8AgUORF0X7gciKi/PaXA+7r9Jjy2mOvVNGfAQppkiuivbPUnlqaIuuNKDqT06Yl74A+e9z2qA2e6m5YcAKoMGl3hTEnp30wzDUoVrX4mT/pVNwGAJlZNgPALdvq3zsiIKLEHLIUWHbIVw1+trwi1481t762ltLhVE32+nEOHFNhKLrBoXtWgDgYY5FgdvUNqnNyWmvGEVug==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AM9PR04MB7714.eurprd04.prod.outlook.com (2603:10a6:20b:2dd::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.29; Wed, 24 May
+ 2023 08:02:59 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::423a:a30f:5342:9d35]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::423a:a30f:5342:9d35%6]) with mapi id 15.20.6433.015; Wed, 24 May 2023
+ 08:02:58 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v15 0/5] update userspace pm mptcp_info fields part 1
+Date: Wed, 24 May 2023 16:02:43 +0800
+Message-Id: <cover.1684915182.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCPR01CA0015.jpnprd01.prod.outlook.com (2603:1096:405::27)
+ To HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3 mptcp-next 2/6] mptcp: introduce MPTCP_FULL_INFO
- getsockopt
-To: Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>
-Cc: mptcp@lists.linux.dev
-References: <cover.1684863309.git.pabeni@redhat.com>
- <67b6345847e8f23fadaf22c14609d4d387eed952.1684863309.git.pabeni@redhat.com>
- <ZG0FL9XM-MFgfyQ-@strlen.de>
- <62d7d915a3536e9bf37770952838308d8f41ad8b.camel@redhat.com>
- <d48dcb197962141d36529c16f6bb365d4599846f.camel@redhat.com>
-Content-Language: en-GB
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <d48dcb197962141d36529c16f6bb365d4599846f.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AM9PR04MB7714:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0dc2d331-f3c4-4459-9074-08db5c2d49ad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	JR7e4FIcR3EZ/Hi16WfUFWSZNMO6Ru+4d/NaW18HKpjVTrB/CIcvSMAydPdDxKWajzxeFSncxjEut/iAHAKbiJM3o4ptZxPutL4EJF0C+Ade6NlDiQmBo0fuZh3ndcj+ytJAoRnPOgIk+BWiIagyahV1ZdJVsLlBRyf2QLlnKUvi+8T7DFqVu4TTziMfl60t8oB/DyJB47Q+nP5pDbJvjSf/Rd6VQSd2IkSjZefRlo5rOUpylgfwD2PHUCIGU3Ev5aqpj55iFLVNv+HaawXdL1MgiJTe9cA41sEh4jdMdjVUpAf3njPddBCmAZ7Iy32w+R/GaSQW/XcWXLznzzj2gi4enxC/27npXMo8ak1Ani8qFgFC4pMWXVP+jHa0H1lRb+vinM80Mu3fB6nkWffVfmAGCE/dlrPUO4LUWbmOsREke6gFyzXwGtNMtf8eZJaAj455VUf9EfZ/DJ+/YV+kYSACJ/J9y5h7ZGKxGPMMTrfxr6qOHEyCxvKgYmwRxXJ6J92JrdFlarImLlLlfMdgvKfpf4Q0h0sfLo4dYkEIhGpR0TJ2mj7W8C2z1k8RK4ny
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(136003)(376002)(346002)(366004)(451199021)(2906002)(15650500001)(44832011)(5660300002)(8676002)(8936002)(83380400001)(66556008)(66476007)(66946007)(41300700001)(4326008)(6916009)(36756003)(316002)(478600001)(6486002)(6666004)(26005)(2616005)(86362001)(107886003)(186003)(6512007)(6506007)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?gedDkoMRzYPrWfEvp7CGli2Pa9EuHYsEmaf1kx2QXHheXetkTPbIP0UmF0m1?=
+ =?us-ascii?Q?LPKzFX/Hc4s2UP7dX4Ka993F8Cw3G3HNlMk6HArfu/XWihik75Z8k9zOyw/2?=
+ =?us-ascii?Q?ZgM8thw5uycHNjTVGtfNGumqsMf0Xbx3WX435PpoWXfOVKocHIwjVvFTPcit?=
+ =?us-ascii?Q?8qYbI27DxoWgKLjues+jt6bZxIqdOtPZ20RL076MFU+gB/ml2IE83rYyr+/7?=
+ =?us-ascii?Q?kbq4ZmGux5UoKFcMf0cXYfiU012xspAzyBzm1yRujrCnV5pzttxzFRr9IFpd?=
+ =?us-ascii?Q?i8Xw7xTblG96K6jRTfgn5iY1l/U3AiPmA4OAWEXohXrcnlwF9QnIs4xXh2BF?=
+ =?us-ascii?Q?h71owZPEByDl02WSNA9kDl5H1//8MN0VkIVUbU1SZMUkYVnJS4DS7h4DsWnj?=
+ =?us-ascii?Q?rrwzCNdiYwrsWOKBFguIKCznLH8CZ4IiTR+hw6gpjALMPSUShEgRAY1/lySt?=
+ =?us-ascii?Q?e2x6UsaMsMxRgIYsW5sMFziubnJQolxzSb3cjvHtw5lP4a0gTJHFGllDW3Ny?=
+ =?us-ascii?Q?dTFm/bUQR+ezoWNy04BFmXvm3L2MAm+kG1e4VUd1kbnlieSdc4Njjyz0uU9r?=
+ =?us-ascii?Q?koOgSm/z0egPFw2d5rWdp+b0xrryZa4SKzD90pw6zjhg5aMhuBUviX1dg4+Z?=
+ =?us-ascii?Q?LqqkO+gl0PHmzxjdmT+ehnT14hM3CUbXGcxsILBre5GzDKep1rYcslH5Favg?=
+ =?us-ascii?Q?MyX3fQGvX/7Wv5m2d/3Q+3nbcB+HUhIZQav5H0bTLK8Z3OLsUzXqMQEUKTRr?=
+ =?us-ascii?Q?KkVUJZLEriVwKjvioA0InaCPDtnQ/VUoWlZqNYVw8cya2Abvyu39/bJCK5Qj?=
+ =?us-ascii?Q?7C2yu/yIKNcrGwYgYAHkyVqWweSYOW6uMD1Cqq4aA7E/34kVA/uqqNZ8LgR6?=
+ =?us-ascii?Q?g4Iff2FMaGQiMdtFMwVqkdZpiGIveh1/rCtvfl1CxB+EMe58zFIwUM6hpPCu?=
+ =?us-ascii?Q?7HtQv1l2oJ/Dkj1ltLqISFocB7SZoXcpN/7Hav44oJ7TMgKH8zY676E7sUi7?=
+ =?us-ascii?Q?7BYtkygyb5TKkUx3WWOLyW3FV4CFiamIJbxKIC0AnS2TnLgjRRZ71dBy4Doj?=
+ =?us-ascii?Q?NIEVkSDe8mMwI2wB4q+ZxfCDkJ7fgL4MY1aRG4t9UgalqBMyknTjNgiFlFHJ?=
+ =?us-ascii?Q?RU+7EOEpVKeI1TByvUmZuphQRWkOXPV4x0gQIDh1O5wqyvGwTInrkRiJ3fTW?=
+ =?us-ascii?Q?leNgM4Y7SQSZdEBJD8sN+dyhd7RhgCN4D4ihy/ai5DuqworMmtGXKhzQaS9u?=
+ =?us-ascii?Q?ONLn8XaC/xHimhfPbZCAXB+kIiWf5CZcQN2k1wLrcYW2XQjX9NGUvDvGR4Rd?=
+ =?us-ascii?Q?+Ce1rpfOSBheez55tpsWFQt5ot/395T6fefbnyPXIlvRy5nlfUF6YfYss6Sq?=
+ =?us-ascii?Q?Od9gnOJZSbBx83kSSNJCnP7X78x/UYVqQUVtY1yfayKs4CgQ1qJuIcTs63IG?=
+ =?us-ascii?Q?iZzAxKVr93qyOhHKcNqy5IUEH/MtrWD0MhU2Qv/65eG+mUGFILWbeawxjn9r?=
+ =?us-ascii?Q?/NBQhYIhInjpPtaOxhRrUZCLomPRZ/h+jBslasAfiSz9blaCkSu2QrgYKBds?=
+ =?us-ascii?Q?sxlj1HOI/ouLVWtWI6n2iDkM7wGdZtyl/lkF6lC6?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0dc2d331-f3c4-4459-9074-08db5c2d49ad
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2023 08:02:58.4853
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: c/IIQVgWD1CWmL/uM3FtlU21V3iBaO3748+VJezjCtUmDKq/jH+voKObwtUjujoEI0fK94+9S0GJKeZ2gu8U3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7714
 
-Hi Paolo, Florian,
+v15:
+ - drop "mptcp: export remove_anno_list_by_saddr"
+ - drop MPTCP_USER_PM_FLAG_RM_* flags
+ - drop mptcp_pm_alloc_anno_list in mptcp_nl_cmd_sf_create.
 
-On 24/05/2023 08:36, Paolo Abeni wrote:
-> On Wed, 2023-05-24 at 08:34 +0200, Paolo Abeni wrote:
->> On Tue, 2023-05-23 at 20:25 +0200, Florian Westphal wrote:
->>> Paolo Abeni <pabeni@redhat.com> wrote:
->>>> Some user-space applications want to monitor the subflows utilization.
->>>>
->>>> Dumping the per subflow tcp_info is not enough, as the PM could close
->>>> and re-create the subflows under-the-hood, fooling the accounting.
->>>> Even checking the src/dst addresses used by each subflow could not
->>>> be enough, because new subflows could re-use the same address/port of
->>>> the just closed one.
->>>>
->>>> This patch introduces a new socket option, allow dumping all the relevant
->>>> information all-at-once (everything, everywhere...), in a consistent manner.
->>>>
->>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>>> ---
->>>> v2 -> v3:
->>>>  - added missing changelog (oops)
->>>> ---
->>>>  include/uapi/linux/mptcp.h | 16 ++++++++
->>>>  net/mptcp/sockopt.c        | 75 ++++++++++++++++++++++++++++++++++++++
->>>>  2 files changed, 91 insertions(+)
->>>>
->>>> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
->>>> index 32af2d278cb4..f4f42d88e58b 100644
->>>> --- a/include/uapi/linux/mptcp.h
->>>> +++ b/include/uapi/linux/mptcp.h
->>>> @@ -12,6 +12,7 @@
->>>>  #include <linux/in.h>		/* for sockaddr_in			*/
->>>>  #include <linux/in6.h>		/* for sockaddr_in6			*/
->>>>  #include <linux/socket.h>	/* for sockaddr_storage and sa_family	*/
->>>> +#include <linux/tcp.h>		/* for tcp_info				*/
->>>>  
->>>>  #define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
->>>>  #define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
->>>> @@ -244,9 +245,24 @@ struct mptcp_subflow_addrs {
->>>>  	};
->>>>  };
->>>>  
->>>> +struct mptcp_subflow_info {
->>>> +	__u32				id;
->>>> +	struct mptcp_subflow_addrs	addrs;
->>>> +};
->>>> +
->>>> +/* struct subflow_info is not supposed nor allowed to grow in
->>>> + * future versions.
->>>> + * If need will arise, a new socket option should be added.
->>>> + */
->>>> +struct mptcp_subflow_full_info {
->>>> +	struct mptcp_subflow_info	subflow_info;
->>>> +	struct tcp_info			tcp_info;
->>>> +};
->>>
->>> I dislike this constraint.
->>>
->>> Why not do something like this:
->>>
->>> struct mptcp_subflow_full_info {
->>> 	__u32		size_subflow_full_info;         /* size of this structure in userspace */
->>> 	__u32           num_subflows_user;              /* max subflows that userspace is interested in */
->>> 	__u32           num_subflows_kern;              /* must be 0, set by kernel (real subflow count) */
->>> 	__u32		num_subflows_copied;		/* must be 0, set by kernel (number of subflow infos copied back)
->>>         __u32           size_sfinfo_kernel;		/* must be 0, set by kernel */
->>>         __u32           size_sfinfo_user;
->>>         __u32           size_tcpinfo_kernel;            /* must be 0, set by kernel */
->>>         __u32           size_tcpinfo_user;
->>> 	__aligned_u64	subflow_info_addr;
->>> 	__aligned_u64	tcp_info_addr;
->>> };
->>>
->>> userspace does:
->>>
->>> x = calloc(sizeof(struct mptcp_subflow_info), 42);
->>> y = calloc(sizeof(struct tcp_info), 42);
->>>
->>> struct mptcp_subflow_full_info {
->>> 	.size_subflow_full_info = sizeof(struct mptcp_subflow_full_info),
->>> 	.num_subflows_user = 42,
->>> 	.size_sfinfo_user = sizeof(struct mptcp_subflow_info),
->>> 	.size_tcpinfo_user = sizeof(struct mptcp_subflow_info),
->>> 	.subflow_info_addr = (u64)x,
->>> 	.tcp_info_addr = (u64)y,
->>> };
->>>
->>> kernel does:
->>> 1. put_user() the real sizes uses by the kernel
->>> 2. put_user() the real subflow count
->>> 3. copy subflow_info_addr and tcp_info_addr addresses
->>> 4. treat as userspace pointers
->>>
->>> for each subflow, copy tcpinfo and subflow info to the
->>> two arrays provided by userspace.
->>>
->>> Kernel truncates copied data via size_sfinfo_user/size_tcpinfo_user so
->>> that new kernel won't populate fields that don't exist in userspace.
->>>
->>> Kernel stops copying after 'num_subflows_user' or 'num_subflows_kern',
->>> whatever comes first and updates num_subflows_copied to the real copied
->>> value.
->>>
->>> This allows userspace to discover when kernel had more subflows
->>> but could not place the data due to lack of space in the
->>> userspace-provided arrays.
->>>
->>> This is more complicated but no need to add new MPTCP_FULL_INFO_V2/V3/V4
->>> etc. in the future.
->>>
->>> What do you think?
->>
->> I ended-up with the current code trying to re-use as much as possible
->> from the existing infra - specifically the
->> mptcp_get_subflow_data()/mptcp_put_subflow_data() helpers.
->>
->> I agree the constraint on mptcp_subflow_full_info is not nice,
->> especially if we want to include subflow level indormation alike
->> local/remote address id, flags, etc...
->>
->> Isn't num_subflows_copied always implied? == min(num_subflows_user,
->> num_subflows_kern).
->>
->> Otherwise LGTM, I'll try to have a spin.
-> 
-> Oops, I forgot... should mptcp_subflow_full_info contain mptcp_info,
-> too?
+v14:
+ - drop mptcp_pm_remove_addrs helper in patch 1
+ - add two flags in patch 4, the address entry'll be removed from
+   userspace_pm_local_addr_list only when both flags are set, by doing this,
+   it's now independent of the order of the remove_subflows command and
+   the remove_addrs command.
 
-Good point. Indeed I guess it is very likely someone who want info about
-MPTCP subflow will also want info about the MPTCP connection.
+v13:
+ - move the RM_ADDR command after the destruction of the subflow in
+   patch 2 and patch 5.
+ - drop mptcp_pm_remove_anno_list_by_saddr in mptcp_nl_cmd_sf_destroy in
+   patch 4.
+ - update userspace_pm.sh too in patch 5.
 
-> Overall layout:
-> 
-> struct mptcp_subflow_full_info {
-> 	__u32		size_subflow_full_info;         /* size of this structure in userspace */
-> 	__u32           num_subflows_user;              /* max subflows that userspace is interested in */
-> 	__u32           num_subflows_kern;              /* must be 0, set by kernel (real subflow count) */
->         __u32           size_sfinfo_kernel;		/* must be 0, set by kernel */
->         __u32           size_sfinfo_user;
->         __u32           size_tcpinfo_kernel;            /* must be 0, set by kernel */
->         __u32           size_tcpinfo_user;
-> 	__aligned_u64	subflow_info_addr;
-> 	__aligned_u64	tcp_info_addr;
-> 	struct mptcp_info mptcp_indo;
+v12:
+ - address Matt's commits in v11.
 
-I guess you will need a size for the mptcp_info structure, no?
+v11:
+ - #1-#5 part 1, address Matt's comments in v10.
+ - #6-#9 part 2, update pm mptcp_info
+ - #10-#12 part 3, some cleanups.
 
-Maybe this should come before the previous ones?
+v10:
+ - fix userspace_pm.sh errors reported by CI.
+ - fix the bug in mptcp_pm_remove_addrs in patch 1.
+ - drop msk->pm.subflow == 1 in mptcp_userspace_pm_delete_local_addr in
+   patch 3.
+ - exchange the order of "pm_nl_ctl rem" and "pm_nl_ctl dsf" in patch 2
+   and 6.
+ - update the commit logs.
 
-Cheers,
-Matt
+v9:
+ - address Matt's commets in v8.
+
+v8:
+ - address Matt's comments.
+ - split into two series, pt 2 will send later.
+
+v7:
+ - fix userspace_pm.sh errors reported by CI.
+ - only remove addrs in mptcp_nl_cmd_remove().
+
+v6:
+ - send a RM ADDR from userspace.
+
+v5:
+ - fix a memleak error reported by CI.
+ - add more delay for userspace pm tests.
+
+v4:
+ - add more patches
+ - add selftests
+
+v3:
+ - update local_addr_used and add_addr_signaled
+
+v2:
+ - hold pm locks
+
+Geliang Tang (5):
+  mptcp: only send RM_ADDR in nl_cmd_remove
+  selftests: mptcp: update userspace pm addr tests
+  mptcp: add address into userspace pm list
+  selftests: mptcp: update userspace pm subflow tests
+  mptcp: update userspace pm infos
+
+ net/mptcp/pm.c                                | 23 +++++++--
+ net/mptcp/pm_netlink.c                        | 18 +++++++
+ net/mptcp/pm_userspace.c                      | 48 ++++++++++++++++++-
+ net/mptcp/protocol.h                          |  1 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 11 ++++-
+ 5 files changed, 95 insertions(+), 6 deletions(-)
+
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.35.3
+
