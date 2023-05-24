@@ -1,37 +1,37 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015DC22635
-	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 21:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2F822627
+	for <mptcp@lists.linux.dev>; Wed, 24 May 2023 21:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684963786;
+	s=mimecast20190719; t=1684963787;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zMrtPYLc8N0yEkLzvOfgi6NGz/GHoHjbi/eai7DYQdI=;
-	b=b7neUgr4uoLRSul1kKdvH2199gTsV18bYG7xaxum4ysei+JEsZC6CvVaz4NndOBAODxGCa
-	x+V3D7EAoEJlnHBRrnRfbb/rG9OGegCcsarXCEHLjF+L/RCEeWSlXDncgKF2V5zaLbbJu2
-	/3A8cA3RAw8nj8WOQPnUCUvTZFnCQTQ=
+	bh=Gsb4908GkOnJZxmQ0qWl6DCfidAj/to7N51dZR2wTOw=;
+	b=LX+79VmBW3FTnTdrRTQx/ss1++L10eJiYQGXjTAkXvvo5+MR3kdri5E5rtc4Me9Dwh8wJU
+	AOsxf9JhVWYpgwog6G6y+i7SFTmrIj1FK+l3W5EtOOzRgwr1sUd4Sx+VCv2eQ2n3vzPf1T
+	eb+X8V3HC+eP7o5Dti2hN3F1xeq/hDQ=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-656-JawwTiFIMlmdpROjzjMOzg-1; Wed, 24 May 2023 17:29:43 -0400
-X-MC-Unique: JawwTiFIMlmdpROjzjMOzg-1
+ us-mta-645-9JUSW0CBNSO7jfr3dBUVeA-1; Wed, 24 May 2023 17:29:46 -0400
+X-MC-Unique: 9JUSW0CBNSO7jfr3dBUVeA-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B511800141;
-	Wed, 24 May 2023 21:29:43 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C3B7880027F;
+	Wed, 24 May 2023 21:29:45 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.39.193.138])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 8EE06407DEC3;
-	Wed, 24 May 2023 21:29:42 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2FDB6407DEC3;
+	Wed, 24 May 2023 21:29:45 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Florian Westphal <fw@strlen.de>
-Subject: [PATCH v5 mptcp-next 1/6] mptcp: move snd_una update earlier for fallback socket.
-Date: Wed, 24 May 2023 23:29:14 +0200
-Message-Id: <1759edf2231943dcdff5d74b4aa89ac839d0ef8e.1684962909.git.pabeni@redhat.com>
+Subject: [PATCH v5 mptcp-next 4/6] mptcp: add subflow unique id
+Date: Wed, 24 May 2023 23:29:17 +0200
+Message-Id: <a627cb92f8118c87513c9b0c66ecb348c82e1e2c.1684962909.git.pabeni@redhat.com>
 In-Reply-To: <cover.1684962909.git.pabeni@redhat.com>
 References: <cover.1684962909.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,50 +46,114 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-That will avoid an unneeded conditional in both the fast-path
-and in the fallback case and will simplify a bit the next
-patch.
+The user-space need to preperly account the data received/sent by
+individual subflows. When additional subflows are created and/or
+closed during the MPTCP socket lifetime, the information currently
+exposed via MPTCP_TCPINFO are not enough: subflows are identifed only
+by the sequential position inside the info dumps, and that will change
+with the above mentioned events.
+
+To solve the above problem, this patch introduces a new subflow identifier
+that is unique inside the given mptcp socket scope.
+
+The initial subflow get the id 1 and the other subflows get incremental
+values at join time.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/options.c  | 6 ++++++
- net/mptcp/protocol.c | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+v2 -> v3:
+ - fix msk subflow_id init (Matttbe)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 8a8083207be4..4bdcd2b326bd 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1119,6 +1119,12 @@ bool mptcp_incoming_options(struct sock *sk, struct sk_buff *skb)
- 		mptcp_data_lock(subflow->conn);
- 		if (sk_stream_memory_free(sk))
- 			__mptcp_check_push(subflow->conn, sk);
-+
-+		/* on fallback we just need to ignore the msk-level snd_una, as
-+		 * this is really plain TCP
-+		 */
-+		msk->snd_una = READ_ONCE(msk->snd_nxt);
-+
- 		__mptcp_data_acked(subflow->conn);
- 		mptcp_data_unlock(subflow->conn);
- 		return true;
+v1 -> v2:
+ - properly set subflow_id for the first passive subflow and active subflows, too
+ - drop the tcpi_fackets overload
+---
+ net/mptcp/protocol.c | 6 ++++++
+ net/mptcp/protocol.h | 5 ++++-
+ net/mptcp/subflow.c  | 2 ++
+ 3 files changed, 12 insertions(+), 1 deletion(-)
+
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 763f709fd5f5..7ecd2f250909 100644
+index 79b3059ca3ef..895eda3d79e8 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1004,12 +1004,6 @@ static void __mptcp_clean_una(struct sock *sk)
- 	struct mptcp_data_frag *dtmp, *dfrag;
- 	u64 snd_una;
+@@ -96,6 +96,7 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
+ 	list_add(&subflow->node, &msk->conn_list);
+ 	sock_hold(ssock->sk);
+ 	subflow->request_mptcp = 1;
++	subflow->subflow_id = msk->subflow_id++;
  
--	/* on fallback we just need to ignore snd_una, as this is really
--	 * plain TCP
--	 */
--	if (__mptcp_check_fallback(msk))
--		msk->snd_una = READ_ONCE(msk->snd_nxt);
--
- 	snd_una = msk->snd_una;
- 	list_for_each_entry_safe(dfrag, dtmp, &msk->rtx_queue, list) {
- 		if (after64(dfrag->data_seq + dfrag->data_len, snd_una))
+ 	/* This is the first subflow, always with id 0 */
+ 	subflow->local_id_valid = 1;
+@@ -847,6 +848,7 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
+ 	if (sk->sk_socket && !ssk->sk_socket)
+ 		mptcp_sock_graft(ssk, sk->sk_socket);
+ 
++	mptcp_subflow_ctx(ssk)->subflow_id = msk->subflow_id++;
+ 	mptcp_sockopt_sync_locked(msk, ssk);
+ 	mptcp_subflow_joined(msk, ssk);
+ 	return true;
+@@ -2775,6 +2777,7 @@ static int __mptcp_init_sock(struct sock *sk)
+ 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
+ 	WRITE_ONCE(msk->allow_infinite_fallback, true);
+ 	msk->recovery = false;
++	msk->subflow_id = 1;
+ 
+ 	mptcp_pm_data_init(msk);
+ 
+@@ -3210,6 +3213,9 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+ 	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
+ 	mptcp_init_sched(msk, mptcp_sk(sk)->sched);
+ 
++	/* passive msk is created after the first/MPC subflow */
++	msk->subflow_id = 2;
++
+ 	sock_reset_flag(nsk, SOCK_RCU_FREE);
+ 	security_inet_csk_clone(nsk, req);
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index ec733955f18e..b4b5c5004f34 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -323,7 +323,8 @@ struct mptcp_sock {
+ 		u64	rtt_us; /* last maximum rtt of subflows */
+ 	} rcvq_space;
+ 
+-	u32 setsockopt_seq;
++	u32		subflow_id;
++	u32		setsockopt_seq;
+ 	char		ca_name[TCP_CA_NAME_MAX];
+ 	struct mptcp_sock	*dl_next;
+ };
+@@ -505,6 +506,8 @@ struct mptcp_subflow_context {
+ 	u8	reset_reason:4;
+ 	u8	stale_count;
+ 
++	u32	subflow_id;
++
+ 	long	delegated_status;
+ 	unsigned long	fail_tout;
+ 
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 63ac4dc621d4..c7001a23550a 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -819,6 +819,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 			if (!ctx->conn)
+ 				goto fallback;
+ 
++			ctx->subflow_id = 1;
+ 			owner = mptcp_sk(ctx->conn);
+ 			mptcp_pm_new_connection(owner, child, 1);
+ 
+@@ -1574,6 +1575,7 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+ 	subflow->remote_id = remote_id;
+ 	subflow->request_join = 1;
+ 	subflow->request_bkup = !!(flags & MPTCP_PM_ADDR_FLAG_BACKUP);
++	subflow->subflow_id = msk->subflow_id++;
+ 	mptcp_info2sockaddr(remote, &addr, ssk->sk_family);
+ 
+ 	sock_hold(ssk);
 -- 
 2.40.1
 
