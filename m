@@ -1,99 +1,108 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152D818C11
-	for <mptcp@lists.linux.dev>; Thu, 25 May 2023 16:02:43 +0000 (UTC)
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-30a4ebbda56so2272045f8f.1
-        for <mptcp@lists.linux.dev>; Thu, 25 May 2023 09:02:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D5F19E73
+	for <mptcp@lists.linux.dev>; Thu, 25 May 2023 16:06:38 +0000 (UTC)
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-456e4f4ea83so229080e0c.3
+        for <mptcp@lists.linux.dev>; Thu, 25 May 2023 09:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1685030562; x=1687622562;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9JzndVWtb2GCJramljWrk6QTRYrhSzex1MV6j051m10=;
-        b=fWNmE1l1P9iSTkYbakQ523yGtSL17HoihEpvDouNcYjKZKgnPDBsJTUjjgimOc5tm8
-         XysUrasBnO4VvcLRQTKYMOeNqL7tDatt82HW8RtMTM0wmtIkMFbaeeLCTl1mOUslpR9e
-         nDeE+ym7pvX1XNFaZgOCkfksgzF7eFD2Fd2bxlswGJxPjSgFavjuRVPik7BOVZioBoSh
-         bFH2/woiUT/CCJofoVGpYtun2X2bUfVRZJLfZyGKwPlHa7yhDPYOccXZtSjHSPVv5XOi
-         vxvVQpf9wpOHPrEqvM4tgtEft86+yYD7s4VWq2fQsOAIWo/S5wGpr7H9VTEG+HlZLPsE
-         sXqg==
+        d=gmail.com; s=20221208; t=1685030797; x=1687622797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PTQjVZFJMl2htBgjAjUwo8aIlAxuNE/XuYEOm2kKnTQ=;
+        b=XpMqAQAAxJalriEaDTX546Y/3brDNZIWDjllLOtGdZ7RkhNk0iDJMFGbcoiYE6ieYZ
+         OKbMRGJKkXsz52ZJsnrkB0arczm7svC2EFp1RcvgEotx1Z93Q61OJx7DZVmaPGM3YQtp
+         hxiBZNxEGAbXpapu8Do2eXZS1+Qh2dnBP4tKJE8QQOKRVlKKQ93DOh9ddqv9hgjuJ+0W
+         pLqZkoCvJndyvUREwF3Bg4mERq9hUyGWH1H1bds5TPn7OWeEfufc6rkFFDv9WG/hfYdf
+         N1TZBXzmAUeEuOkQfjB8LhsRul6QvLIQNRc1yH8cWz64lW9+3KXRyzs7lMsC2sHI7evQ
+         2ukA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685030562; x=1687622562;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9JzndVWtb2GCJramljWrk6QTRYrhSzex1MV6j051m10=;
-        b=B4SC2Kxh0qwInpJNnim0yjldTt8VobEwQDyB8LiK/E2eQfx8GcNsmyLDoyGOVP6mAa
-         whqSR0Uj7QRFNaiRyVubSeMf/xhmEJ5IfXYQ7vzhUbU9wdrCxDrXkODCEk5UZvA5j6Aa
-         t/GieO639VOq5R5KAg6V01Gzsu6a2TKi520adEUQU5KyNg9pXR7V5+0/qbbJaKgs0Pvl
-         pJts0ChkzB3pSmj3a6SWt1FAfT4WZzd6BT9Ekf9drg7leI4RFO5OJ4VPAGSsXay9OUc7
-         hp8gc3eEQpPfm2XOI3VZjtEGTqJ/SUPKe/jqYAAxwisF3tclWTbm6VpBGQbbMYIC3SRL
-         Q+Xw==
-X-Gm-Message-State: AC+VfDxSLNYFWITome10cMCvXzI4NcjL57WN1SlUZHCRyf8no30aV9Tg
-	jsIPzi2X9PT4hrr+cy30DiAmEi2oJVJdNIy22vo=
-X-Google-Smtp-Source: ACHHUZ6qnXVAzzeOoIMn4Tzrdu4/RtJSbp1vkqbZGDUn0r10YM52/tHcFgh0480aItxw81N5IkY7oA==
-X-Received: by 2002:a05:6000:114c:b0:30a:bbff:de0b with SMTP id d12-20020a056000114c00b0030abbffde0bmr2145053wrx.43.1685030562083;
-        Thu, 25 May 2023 09:02:42 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:f7f1:b30b:79e4:1a7e? ([2a02:578:8593:1200:f7f1:b30b:79e4:1a7e])
-        by smtp.gmail.com with ESMTPSA id e15-20020a5d4e8f000000b00307bbbecd29sm2228827wru.62.2023.05.25.09.02.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 May 2023 09:02:41 -0700 (PDT)
-Message-ID: <8dc5e3ba-6e50-e36b-2c2a-fa67055d3603@tessares.net>
-Date: Thu, 25 May 2023 18:02:41 +0200
+        d=1e100.net; s=20221208; t=1685030797; x=1687622797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PTQjVZFJMl2htBgjAjUwo8aIlAxuNE/XuYEOm2kKnTQ=;
+        b=WTg0otoM/EWoFzRu8TrFdeVJrs9kkRScMyA9EmJbRZWDPXChnAfF0lFBbe3FioIpuq
+         XaqLQIuH+Ay7MImDfnLGeTPWuOv9osvHpBil0eqKM51cEOlNfr01B967DApoTmtWKzyw
+         StE2ga0chmMb+XiLZPo8qFdPsPzNmuNxdceFUWQwciG83DNbfVxSyoFQ6iS4KWqHc9sF
+         XdGEhdtPH0BiJD+49LQ3TGAdkz4V9F4dt5y/o3edxJiIgm7HRURDmmEc+c2RlVIY5Afv
+         cizC3mDZppX/37TVFPAj1dcDws9xthPbbjUZ5a14oFVBe20X6J79GqSHTGekLKLnbGla
+         68rw==
+X-Gm-Message-State: AC+VfDx8+9GIh8WzEt8kI24X3wDDtVxIVwgzcRUR3FWc22FA9JOxfImp
+	oEFm9fxq57Y0Gu/lHxMnQwoJ0PPBGILKiAvgG7I=
+X-Google-Smtp-Source: ACHHUZ53VhbedOtIoTjgfxe0fR2ZQYEQ+cMOtRhvGEegt7oEKztTJNywr/nJj5wpHjemDNWOECt7zc4J8aDNTRKxLs0=
+X-Received: by 2002:a67:e30b:0:b0:439:5b03:5a2 with SMTP id
+ j11-20020a67e30b000000b004395b0305a2mr3248739vsf.30.1685030797019; Thu, 25
+ May 2023 09:06:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH mptcp-next 4/4] mptcp: unify pm set_flags interfaces
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1685001897.git.geliang.tang@suse.com>
- <05ba1107fa5edf988fa07856ba359d73bf51f54b.1685001897.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <05ba1107fa5edf988fa07856ba359d73bf51f54b.1685001897.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230525125503.400797-1-leitao@debian.org> <CAF=yD-LHQNkgPb-R==53-2auVxkP9r=xqrz2A8oe61vkoDdWjg@mail.gmail.com>
+ <a1074987-c3ce-56cd-3005-beb5a3c55ef9@kernel.org>
+In-Reply-To: <a1074987-c3ce-56cd-3005-beb5a3c55ef9@kernel.org>
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date: Thu, 25 May 2023 12:06:00 -0400
+Message-ID: <CAF=yD-LXcufhJBpkEcUuphFpR1TA4=QwUXw4sKFsSiEL_mwG4Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v3] net: ioctl: Use kernel memory on protocol
+ ioctl callbacks
+To: David Ahern <dsahern@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Remi Denis-Courmont <courmisch@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexander Aring <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Matthieu Baerts <matthieu.baerts@tessares.net>, 
+	Mat Martineau <martineau@kernel.org>, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
+	Xin Long <lucien.xin@gmail.com>, leit@fb.com, axboe@kernel.dk, asml.silence@gmail.com, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, dccp@vger.kernel.org, 
+	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev, linux-sctp@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+On Thu, May 25, 2023 at 11:34=E2=80=AFAM David Ahern <dsahern@kernel.org> w=
+rote:
+>
+> On 5/25/23 9:05 AM, Willem de Bruijn wrote:
+> >> +/* A wrapper around sock ioctls, which copies the data from userspace
+> >> + * (depending on the protocol/ioctl), and copies back the result to u=
+serspace.
+> >> + * The main motivation for this function is to pass kernel memory to =
+the
+> >> + * protocol ioctl callbacks, instead of userspace memory.
+> >> + */
+> >> +int sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
+> >> +{
+> >> +       int rc =3D 1;
+> >> +
+> >> +       if (ipmr_is_sk(sk))
+> >> +               rc =3D ipmr_sk_ioctl(sk, cmd, arg);
+> >> +       else if (ip6mr_is_sk(sk))
+> >> +               rc =3D ip6mr_sk_ioctl(sk, cmd, arg);
+> >> +       else if (phonet_is_sk(sk))
+> >> +               rc =3D phonet_sk_ioctl(sk, cmd, arg);
+> >
+> > I don't understand what this buys us vs testing the sk_family,
+> > sk_protocol and cmd here.
+>
+> To keep protocol specific code out of core files is the reason I
+> suggested it.
 
-On 25/05/2023 10:07, Geliang Tang wrote:
-> This patch unifies the three PM set_flags() interfaces:
-> 
-> mptcp_pm_nl_set_flags() in mptcp/pm_netlink.c for the in-kernel PM and
-> mptcp_userspace_pm_set_flags() in mptcp/pm_userspace.c for the
-> userspace PM.
-> 
-> They'll be switched in the common PM infterface mptcp_pm_set_flags() in
-> mptcp/pm.c.
+I guess you object to demultiplexing based on per-family
+protocol and ioctl cmd constants directly in this file?
 
-(...)
+That only requires including the smaller uapi headers.
 
-> @@ -1916,34 +1948,8 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
->  
->  	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
->  		bkup = 1;
-> -	if (addr.addr.family == AF_UNSPEC) {
-> -		lookup_by_id = 1;
-> -		if (!addr.addr.id)
-> -			return -EOPNOTSUPP;
+But now net/core/sock.h now still has to add includes
+linux/mroute.h, linux/mroute6.h and net/phonet/phonet.h.
 
-If we move this, it means we could get a different error when the
-userspace PM is used. But because AF_UNSPEC should not be used anyway
-with the userspace PM, I guess that's fine. So all good, no need to change.
-
-> -	}
-> -
-> -	if (token)
-> -		return mptcp_userspace_pm_set_flags(net, token, &addr, &remote, bkup);
-
-(...)
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Aside on phonet_is_sk, if we're keeping this: this should be
+sk_is_phonet? Analogous to sk_is_tcp and such. And, it should suffice
+to  demultiplex based on the protocol family, without testing the
+type or protocol. The family is defined in protocol-independent header
+linux/socket.h. The differences between
+PN_PROTO_PHONET and PN_PROTO_PIPE should be handled inside the family
+code. So I think it is cleaner just to open-coded as `if
+(sk->sk_family =3D=3D PF_PHONET)`
