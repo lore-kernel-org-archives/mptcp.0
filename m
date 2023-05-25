@@ -1,158 +1,127 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82C13D7C
-	for <mptcp@lists.linux.dev>; Thu, 25 May 2023 16:49:19 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f6e4554453so3472005e9.3
-        for <mptcp@lists.linux.dev>; Thu, 25 May 2023 09:49:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FC03D7C
+	for <mptcp@lists.linux.dev>; Thu, 25 May 2023 16:52:01 +0000 (UTC)
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6259c242c96so5492066d6.3
+        for <mptcp@lists.linux.dev>; Thu, 25 May 2023 09:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1685033358; x=1687625358;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=396Mq62z9F2nVFk7uoWVOuSSrx+nR3o4Gcjs+Ubu2n8=;
-        b=XbkhTB1Mj6/8vo1azC5XVzN6VXrniZgRBb+HZYoNmWFua9SOMZyNF8Ki7ZPb90bBRU
-         xf1zhlkAyYVYeTjMUEna5ZetjMrH8jvhb4HOYKL8MsPWr3r1MJLfjTkCZekIDGWkIO+x
-         Ql37NYBEvd8sSMipm/W+6sNVn4KRDNlILc1p1417cf0LljJFlo5aleVrAF7sYz66C1uh
-         eX2GyO+Xct5CqMuP1f0JJkYXm8IMJD3++jATwoOApaeErMB6wZhq7L2oV/gDD58T/A5R
-         va1mc5EnmUboNmXMIUC64QxJHp15ivDjhasxfdlf/W+U88BWffsHhyiCobW2AEv0ff79
-         P5jw==
+        d=gmail.com; s=20221208; t=1685033520; x=1687625520;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aK4ybPwz5nODcLlbA7MhXXOxAwlydD7W946B7MQdP90=;
+        b=eWtJ7iF9ejSOdXIGMkPcryt9zvhK9SHRGJwsDjlTg+ACCf0xlLhFEVQ0RPGOo7ewE2
+         98hqDRH2bRadWqk9ygZAexGfBK1Ssp7/SxgAgoKQbT83UET8rNEfxNldxp/DVvEGKfcD
+         gXYbh5iHpImJf2yvFzhyvMfN7Ed19sMG+ZxvoU9yrZxQ6qh3nxTi0sWYxQxEsF3MuXZ5
+         SqbLlx3+ctr+xiD/VAt1RAZLuhMCv0zE5HGkAXBAoeuvIaNZQfhgWL1Ehng6OwDHEQhu
+         C7oR9tDxVJ/v2ZsAZ07elSMgVNvsHuUNSUzsFln3hT1KhGMqpz9Fj+p6w3skNDDyxMGS
+         nbVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685033358; x=1687625358;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=396Mq62z9F2nVFk7uoWVOuSSrx+nR3o4Gcjs+Ubu2n8=;
-        b=I2BspylLOuZg9/ybXd5b6XzDo3/6TzMukXcr0zkxhzmN8nlYxMzFrY+GSLfd5l8R3x
-         nA6zdRbar4DxI49zq2DixJS/85vB3ca7J+GzU1VzorrWiVu5n/zHFJ3jsa+E/4g3yj7z
-         h6Xf/JSDr/qnr3cgciBUxOUe54T01L+8Uzy3aGVOJT53268X410guImyVhR5mLFAWlAC
-         /+Pk5zTpa0VBkaxC3xQmx+3ZLOivMjKAYNPW5RrFTFZQi4isEw30wJqut4K1TbPDsGck
-         v4ASaQmK7/bccSLUnZPOzTL7Tw7RZYc+nPciKzQTh91uFNx59/+WzI/4E0czsyWPKfQs
-         4rEQ==
-X-Gm-Message-State: AC+VfDw+tsBkMXzI6hUtrDTHpHN4ZCoZxnpjOOZAjbr5xRb+6IzMwans
-	SKzDHxuL2qJyDG0OKZ6fvjpVAg==
-X-Google-Smtp-Source: ACHHUZ6Y4iD2oaPY5vH24oHh4ZrRVuj4UWyN/IOlgpQfdlVaRa61zfo1NE98YUuDJnWy7BsC6lHQgA==
-X-Received: by 2002:adf:ec0e:0:b0:2f0:2dfe:e903 with SMTP id x14-20020adfec0e000000b002f02dfee903mr2844029wrn.69.1685033357734;
-        Thu, 25 May 2023 09:49:17 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:f7f1:b30b:79e4:1a7e? ([2a02:578:8593:1200:f7f1:b30b:79e4:1a7e])
-        by smtp.gmail.com with ESMTPSA id e15-20020a5d4e8f000000b00307bbbecd29sm2344544wru.62.2023.05.25.09.49.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 May 2023 09:49:17 -0700 (PDT)
-Message-ID: <0a6a8553-7888-e640-692c-8332ce41323d@tessares.net>
-Date: Thu, 25 May 2023 18:49:16 +0200
+        d=1e100.net; s=20221208; t=1685033520; x=1687625520;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=aK4ybPwz5nODcLlbA7MhXXOxAwlydD7W946B7MQdP90=;
+        b=IDUpxbOMbqkpwukWZQzOp6jUMjbnyzjoJj7Bgc+CXXq3plA479tFRy3ijOapgM3NZ1
+         cyvnwSStNiiUBO9lhGtRzXv90LUepBr74t0WTNUU/mREzo7rNGDGxVMzwhKvhoASZH7R
+         uF+gYRFyh1uVy8wqdmrMg/FXuI7ydXPJTzDRLWxGf1h3fTWyuGxPROxhPtyD6uQ/rbXv
+         sKcATHALclRop1N6nE2kG8BUqiITYvp3r/ANoEUWIxepevhsf+PY1VNJoIjebe5Wxy07
+         qKZcdo1vmRyDafXXhpwDBjMxH1yPCpdaKDjRClYj4gyN5gAV8QCQPEpzLnfYZQkd6H6J
+         n8RA==
+X-Gm-Message-State: AC+VfDx5dgUgwWql8FknA9EBI0cZ5xnVs9HGNt8pI/dC/vXtb/omiREZ
+	IoK77WYJYS+qFDWlv/91zA==
+X-Google-Smtp-Source: ACHHUZ4G2YjmsWh66n8Rd/nbmzfbIEGFV+wKoKxfRmkMIyjdXKBNWaaNEqCHfidhR97q6HRHBBBB4Q==
+X-Received: by 2002:a05:6214:c6c:b0:625:aa1a:b6d4 with SMTP id t12-20020a0562140c6c00b00625aa1ab6d4mr1584734qvj.54.1685033520407;
+        Thu, 25 May 2023 09:52:00 -0700 (PDT)
+Received: from [127.0.0.1] ([40.75.119.53])
+        by smtp.gmail.com with ESMTPSA id pr1-20020a056214140100b006238cf6d2a8sm550531qvb.2.2023.05.25.09.51.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 May 2023 09:51:59 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <576f5cf229e5b91d27e8411fab1ba7223cec0c17.1684997011.git.pabeni@redhat.com>
+References:
+ <576f5cf229e5b91d27e8411fab1ba7223cec0c17.1684997011.git.pabeni@redhat.com>
+Subject: Re: selftests: mptcp: add MPTCP_FULL_INFO testcase: Tests Results
+Message-ID: <7ed3094d-8f2a-1792-cda6-48a163a068e3@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 25 May 2023 16:51:59 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v6 mptcp-next 6/6] selftests: mptcp: add MPTCP_FULL_INFO
- testcase
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-References: <cover.1684997011.git.pabeni@redhat.com>
- <576f5cf229e5b91d27e8411fab1ba7223cec0c17.1684997011.git.pabeni@redhat.com>
- <d26ed3cb-3dc3-0c7c-af56-ae0e62c403a6@tessares.net>
- <a6d754ce2b57e4827b733f885b3464cebb5c4eb2.camel@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <a6d754ce2b57e4827b733f885b3464cebb5c4eb2.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
 Hi Paolo,
 
-On 25/05/2023 18:39, Paolo Abeni wrote:
-> On Thu, 2023-05-25 at 17:22 +0200, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 25/05/2023 09:17, Paolo Abeni wrote:
->>> Add a testcase explicitly triggering the newly introduce
->>> MPTCP_FULL_INFO getsockopt.
->>
->> (...)
->>
->>> +static void do_getsockopt_mptcp_full_info(struct so_state *s, int fd)
->>> +{
->>> +	size_t data_size = sizeof(struct mptcp_full_info);
->>> +	struct mptcp_subflow_info sfinfo[2];
->>> +	struct tcp_info tcp_info[2];
->>> +	struct mptcp_full_info mfi;
->>> +	socklen_t olen;
->>> +	int ret;
->>> +
->>> +	memset(&mfi, 0, data_size);
->>> +	memset(tcp_info, 0, sizeof(tcp_info));
->>> +	memset(sfinfo, 0, sizeof(sfinfo));
->>> +
->>> +	mfi.size_tcpinfo_user = sizeof(struct tcp_info);
->>> +	mfi.size_sfinfo_user = sizeof(struct mptcp_subflow_info);
->>> +	mfi.size_arrays_user = 2;
->>> +	mfi.subflow_info = (unsigned long) &sfinfo[0];
->>> +	mfi.tcp_info = (unsigned long) &tcp_info[0];
->>> +	olen = data_size;
->>> +
->>> +	ret = getsockopt(fd, SOL_MPTCP, MPTCP_FULL_INFO, &mfi, &olen);
->>> +	if (ret < 0) {
->>> +		if (errno == EOPNOTSUPP) {
->>> +			perror("MPTCP_FULL_INFO test skipped");
->>> +			return;
->>> +		}
->>> +		xerror("getsockopt MPTCP_FULL_INFO");
->>> +	}
->>> +
->>> +	assert(olen <= data_size);
->>> +	assert(mfi.size_tcpinfo_user == mfi.size_tcpinfo_kernel);
->>> +	assert(mfi.size_tcpinfo_user == sizeof(struct tcp_info));
->>> +	assert(mfi.size_sfinfo_user == mfi.size_sfinfo_kernel);
->>> +	assert(mfi.size_sfinfo_user == sizeof(struct mptcp_subflow_info));
->>
->> Similar to the patch I sent to support old kernels, we cannot do these 4
->> last assert(), see:
->>
->> https://patchwork.kernel.org/project/mptcp/patch/20230406-mptcp-issue-368-selftests-old-kernels-v2-17-50313e4f83ab@tessares.net/
->>
->> Because we cannot guess the size of these two structures in the kernel,
-> 
-> Regarding mptcp_subflow_info we can infer it must be >=
-> sizeof(mptcp_subflow_addrs) + 4...
+Thank you for your modifications, that's great!
 
-Does that mean sizeof(mptcp_subflow_addrs) can never be modified?
+Our CI did some validations and here is its report:
 
->> I suggest to do this:
->>
->>   assert(mfi.size_tcpinfo_user > 0);
->>   assert(mfi.size_tcpinfo_kernel > 0);
->>   assert(mfi.size_sfinfo_user > 0);
->>   assert(mfi.size_sfinfo_kernel > 0);
->>
->> Better than nothing... In case of error, one would be set to 0 or we
->> would not get info from these structures below.
-> 
-> ... so we could check:
-> 
->   int min_sfinfo_size = 4 + sizeof(struct mptcp_subflow_addrs);
-> 
->   // ...
-> 
->   assert(mfi.size_tcpinfo_kernel > 0);
->   assert(mfi.size_tcpinfo_user ==
->          min(mfi.size_tcpinfo_kernel, sizeof(struct tcp_info));
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4764400553295872
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4764400553295872/summary/summary.txt
 
-Good idea to use 'min' here!
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5890300460138496
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5890300460138496/summary/summary.txt
 
->   assert(mfi.size_sfinfo_kernel >= min_sfinfo_size);    
->   assert(mfi.size_sfinfo_user ==
->          min(mfi.size_sfinfo_kernel, sizeof(struct mptcp_subflow_info));
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 2 failed test(s): packetdrill_fastopen selftest_diag =
+=F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5327350506717184
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5327350506717184/su=
+mmary/summary.txt
 
-I guess I should do the same in:
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6453250413559808
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6453250413559808/summary/summary.txt
 
-https://patchwork.kernel.org/project/mptcp/patch/20230406-mptcp-issue-368-selftests-old-kernels-v2-17-50313e4f83ab@tessares.net/
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/de1f158647f1
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
