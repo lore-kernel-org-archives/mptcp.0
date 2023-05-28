@@ -1,45 +1,45 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1727C
-	for <mptcp@lists.linux.dev>; Sun, 28 May 2023 16:25:35 +0000 (UTC)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-30a8c4afa46so1782736f8f.1
-        for <mptcp@lists.linux.dev>; Sun, 28 May 2023 09:25:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58DF2597
+	for <mptcp@lists.linux.dev>; Sun, 28 May 2023 16:37:08 +0000 (UTC)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-3f6094cb2ebso16374485e9.3
+        for <mptcp@lists.linux.dev>; Sun, 28 May 2023 09:37:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1685291133; x=1687883133;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+        d=tessares.net; s=google; t=1685291826; x=1687883826;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gvw5nTIR60XdeCT/mgT4kevdHpmKI/x+8vnz9ZcQ/BQ=;
-        b=oz/Gxj3kBZ2Oskr7tYNjQOZkHAdr0zx+2W1R0SQ+yKH+x/bB6YN7xbM8PVRnHax5/r
-         EmiC+nBg2dMY7SbTCUNh34pKklFkbpZhw+787ty/K4VlqLqInurQO4Bw9Xur5Z//1oVM
-         AwPv1uBB1FXr+RAWWNMwQGx/H/oP9YemFqU9KKbnc+fpxGyQDKk8xX0fYWOUY3dAeEv8
-         BRTvzwIZqBE+0guOy+a8tS64nET1TZQC9/c8ovbDtRdzYvTb2qlXBcKmVk0IXS9X5pOV
-         jqZFseJ11NtHL+G30k5Qe5p1eIqsCh0zInHaItd76TplmjVO1P3sej7CHRBjubDf1J5i
-         kttg==
+        bh=PiQZoEyjbagDW3WakrVJF4X0zuK1GGXAfD2iJ4WHMLc=;
+        b=x/lI2xMgm8guBebZcjaJDg4yVaFvFiVZFLlZhTg9PzXoOqqIlvuJN1KhmEP2cin87p
+         p4jELGjazp3Lgc7C1PRTR04vvFHhNPqcITPphAnGvXE32k9EPKsgVF3rl6U35S3WTU7i
+         79i4Juz9eImCQN8o+GQraoxtM5wUt2wDBZPLdvRI//Axd1DnBs2qqixkJR/tXY7QMEqM
+         KK5ak4MFk3fCaK9whFanearyxOpDGu80jrOAQZ8CgnqhlF7oBS5OpmVUFBgmjCl0iPfs
+         Sd0ZBmUhMOid5b7/fVZS/q64GFPZRVfY9Ry/4ONRYJPuLbFsENpNNFpjxXbcxM+NGjZi
+         c+tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685291133; x=1687883133;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+        d=1e100.net; s=20221208; t=1685291826; x=1687883826;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gvw5nTIR60XdeCT/mgT4kevdHpmKI/x+8vnz9ZcQ/BQ=;
-        b=Um5i+YTgLtoIzG2UlrAc+kgOzzEuafxsZixpzhX33Md4lz/hTg3wvHMuiHcnjRmUJN
-         qDKzzzlWJSMAEERa/LxCopIBvGwmzTr3wd1KvUSsgn+IbbDSCdJGsPGVCEIdVn8UjEpf
-         58T0KiqAhsevZ/HI1ze/wmh4NiT54s3S5OWTJ/nyynZSw0XjNmkqT57pRxNddsBfhVN6
-         2b4PZREzYpJwXdL+gLXiJhfVzpPpB70l4XOox1y0R6floIkijpf5+R2jDARK/q3fLnDa
-         0Ux9p1dgC4tgbpJFaX2rir4sTmaBva8RmdPix1t7a7RNmq+20OO5VKTZ++SvUiiE2Jfg
-         3seg==
-X-Gm-Message-State: AC+VfDyM/H7g/E6oh99nu8ddV0tS4cRDrAbe44sT9tqR4LfMOzAC57N/
-	EQxk9T8VT+kh+ZusfzYIeguV+Q==
-X-Google-Smtp-Source: ACHHUZ43ojf4ie9nsSprj8SidpPfVQ2trWiCiA2NTIngF9KdVCFLUvyShFOBT1YijxdVrxgmo88fnw==
-X-Received: by 2002:a5d:6584:0:b0:307:f75:f581 with SMTP id q4-20020a5d6584000000b003070f75f581mr5068616wru.18.1685291133542;
-        Sun, 28 May 2023 09:25:33 -0700 (PDT)
+        bh=PiQZoEyjbagDW3WakrVJF4X0zuK1GGXAfD2iJ4WHMLc=;
+        b=h8EMN/cSiMdBszx2NDeVwcYZUAsT+TbQRyaUTYm30hRxOOLrXw7iFS5868dFnIuilj
+         YaQKdPC5C4+DVMamBauT1ZvkaGEd0lf8VyjM8A1XNljUe3e/ChvgEmCM5UyzCDu1+0L0
+         gBgpjz7M6sw/tC0NBAgq0i8UFtKl8inqQEQ78XKaHYZtiYEZ4bB4pDH+oIe5lxSgIjQS
+         S68GAHqD+8kauDZbpPWG4tYVpbyUjA8jGgx/+GiYmnR4D2cAdiEK+Qd3W3vJdvVFJ4CH
+         BXOcq3rjnQSF16wkMH437ZWG2tX7G72LNuCoWwfa6+vDH4wzNIrwkwpeh88BXnpvbLOi
+         1f8g==
+X-Gm-Message-State: AC+VfDx72aTAgym6LvVrnahGB2kqK4MCEtgYSLphe5ySuQMpEc2cNwcx
+	sRff/o7nZds+UViNYOQFYn3ZUoFmswkStIFrSxE=
+X-Google-Smtp-Source: ACHHUZ5fOEHvovuwmLlKI7QFLsJChxjP0EUGlChen5ao3Gp0mIHgSVBaUeaHLXLWA0bpjcCBGJmAVA==
+X-Received: by 2002:a1c:7415:0:b0:3f5:fb97:eafe with SMTP id p21-20020a1c7415000000b003f5fb97eafemr7955420wmc.30.1685291826217;
+        Sun, 28 May 2023 09:37:06 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:80da:cc14:918a:5418? ([2a02:578:8593:1200:80da:cc14:918a:5418])
-        by smtp.gmail.com with ESMTPSA id o8-20020adfcf08000000b00306c5900c10sm11293093wrj.9.2023.05.28.09.25.32
+        by smtp.gmail.com with ESMTPSA id c3-20020a05600c0ac300b003f50e88ffc1sm15316191wmr.0.2023.05.28.09.37.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 28 May 2023 09:25:33 -0700 (PDT)
-Message-ID: <04729035-0947-d5ed-78f1-9b51c68a2965@tessares.net>
-Date: Sun, 28 May 2023 18:25:32 +0200
+        Sun, 28 May 2023 09:37:05 -0700 (PDT)
+Message-ID: <b707053e-013f-6c53-7dd8-d2245a82a7f8@tessares.net>
+Date: Sun, 28 May 2023 18:37:04 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,81 +48,182 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH v6 mptcp-next 0/6] mptcp: add some more diag info
+Subject: Re: Squash to "selftests/bpf: Add bpf_rr scheduler": Tests Results
 Content-Language: en-GB
+To: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
+References: <ef47cf1485fc292a8f613c3f507dab8c6e7c7a65.1685191581.git.geliang.tang@suse.com>
+ <3ea4474b-df97-b641-4f4e-fb24b84570cf@gmail.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Florian Westphal <fw@strlen.de>
-References: <cover.1684997011.git.pabeni@redhat.com>
- <b6d9968f-9406-cdca-2867-c093f393f08a@tessares.net>
-In-Reply-To: <b6d9968f-9406-cdca-2867-c093f393f08a@tessares.net>
+In-Reply-To: <3ea4474b-df97-b641-4f4e-fb24b84570cf@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Geliang,
 
-On 25/05/2023 17:18, Matthieu Baerts wrote:
-> Hi Paolo,
+Thank you for this new series.
+
+On 27/05/2023 17:28, MPTCP CI wrote:
+> Hi Geliang,
 > 
-> On 25/05/2023 09:17, Paolo Abeni wrote:
->> Sorry for the high-freq spamming. I really want to close this topic
->> and move forward.
->>
->> Introduces unique id for accurate subflow stats tracking and
->> aggregate mptcp counters, plus some minimal self-tests.
->>
->> The tests themself do not take in account support for running on
->> older kernel.
->>
->> This is on top of "mptcp: a bunch of data race fixes".
->>
->> There should be non trivial conflicts with:
->>
->> "mptcp: use get_retrans wrapper".
->>
->> v5 -> v6:
->>  - fix another compiler warning
->>
->> v4 -> v5:
->>  - changed again binary layout for MPTCP_FULL_INFO structs (Matttbe)
->>  - fixed 32bit build issue
->>  - reordered the patches, less controversial first
+> Thank you for your modifications, that's great!
 > 
-> Thank you for the new version! It looks good to me!
+> Our CI did some validations and here is its report:
 > 
-> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> - KVM Validation: normal (except selftest_mptcp_join):
+>   - Unstable: 1 failed test(s): selftest_simult_flows 🔴:
+>   - Task: https://cirrus-ci.com/task/6601570566012928
+>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/6601570566012928/summary/summary.txt
 > 
-> I'm sorry I was not confident about the previous version and I was not
-> feeling good asking you to change it!
-> I do like the last version, I hope you too :)
+> - KVM Validation: normal (only selftest_mptcp_join):
+>   - Success! ✅:
+>   - Task: https://cirrus-ci.com/task/6707669310898176
+>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/6707669310898176/summary/summary.txt
 > 
-> I have a few questions in the individual patches if you don't mind but
-> that should not be blocking the series. I can even do the modifications
-> when applying the patches if that's OK for you!
+> - KVM Validation: debug (except selftest_mptcp_join):
+>   - Unstable: 3 failed test(s): packetdrill_add_addr packetdrill_fastopen selftest_diag - Critical: 1 Call Trace(s) ❌:
+>   - Task: https://cirrus-ci.com/task/5897883124236288
+>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/5897883124236288/summary/summary.txt
+> 
+> - KVM Validation: debug (only selftest_mptcp_join):
+>   - Critical: 1 Call Trace(s) ❌:
+>   - Task: https://cirrus-ci.com/task/5003560975335424
+>   - Summary: https://api.cirrus-ci.com/v1/artifact/task/5003560975335424/summary/summary.txt
 
-Thank you for the different answers, for the instructions on how to fix
-the conflicts and again sorry for the previous reviews!
+I guess you saw it but unfortunately it looks like the public CI
+reported a `slab-use-after-free` in `__mptcp_close_ssk`
+(`net/mptcp/protocol.c:2461`) with this series:
 
-I added links to these tickets in the different patches:
+> + ./mptcp_join.sh
+> # Created /tmp/tmp.FC1TzYQDFn (size 1 KB) containing data sent by client
+> # Created /tmp/tmp.M8EVH4NZGj (size 1 KB) containing data sent by server
+> [   63.584639][   T24] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth1: link becomes ready
+> [   63.593396][   T24] IPv6: ADDRCONF(NETDEV_CHANGE): ns1eth1: link becomes ready
+> [   66.013274][   T24] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth2: link becomes ready
+> [   66.020623][   T24] IPv6: ADDRCONF(NETDEV_CHANGE): ns1eth2: link becomes ready
+> [   68.388253][    T9] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth3: link becomes ready
+> [   68.396729][    T9] IPv6: ADDRCONF(NETDEV_CHANGE): ns1eth3: link becomes ready
+> [   70.754933][   T71] IPv6: ADDRCONF(NETDEV_CHANGE): ns2eth4: link becomes ready
+> [   70.761723][   T71] IPv6: ADDRCONF(NETDEV_CHANGE): ns1eth4: link becomes ready
+> [   74.549238][  T233 ]
+> ==================================================================
+> BUG: KASAN: slab-use-after-free in __mptcp_close_ssk (net/mptcp/protocol.c:2461) 
+> Read of size 8 at addr ffff888007885388 by task mptcp_connect/233
+> 
+> CPU: 3 PID: 233 Comm: mptcp_connect Not tainted 6.4.0-rc3-gf83d4fc5e61e #1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> Call Trace:
+>  <TASK>
+> dump_stack_lvl (lib/dump_stack.c:107) 
+> print_address_description.constprop.0 (mm/kasan/report.c:352) 
+> print_report (mm/kasan/report.c:463) 
+> ? kasan_addr_to_slab (arch/x86/include/asm/bitops.h:207) 
+> ? __mptcp_close_ssk (net/mptcp/protocol.c:2461) 
+> kasan_report (mm/kasan/report.c:574) 
+> ? __mptcp_close_ssk (net/mptcp/protocol.c:2461) 
+> __mptcp_close_ssk (net/mptcp/protocol.c:2461) 
+> mptcp_destroy_common (net/mptcp/protocol.c:3313) 
+> ? __kmem_cache_free (mm/slub.c:3786) 
+> mptcp_destroy (include/net/sock.h:1471) 
+> __mptcp_destroy_sock (net/mptcp/protocol.c:2977) 
+> __mptcp_close (net/mptcp/protocol.c:3076) 
+> ? __mptcp_unaccepted_force_close (net/mptcp/protocol.c:3012) 
+> ? lockdep_hardirqs_on_prepare.part.0 (kernel/locking/lockdep.c:4273) 
+> mptcp_close (net/mptcp/protocol.c:3091) 
+> inet_release (net/ipv4/af_inet.c:427) 
+> __sock_release (net/socket.c:654) 
+> sock_close (net/socket.c:1399) 
+> __fput (fs/file_table.c:321) 
+> task_work_run (kernel/task_work.c:181 (discriminator 1)) 
+> ? task_work_func_match (kernel/task_work.c:44) 
+> ? task_work_cancel (kernel/task_work.c:147) 
+> exit_to_user_mode_prepare (include/linux/resume_user_mode.h:49) 
+> syscall_exit_to_user_mode (kernel/entry/common.c:130) 
+> do_syscall_64 (arch/x86/entry/common.c:87) 
+> entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120) 
+> RIP: 0033:0x7fb807331117
+> Code: ff e8 2d 16 02 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 41 c3 48 83 ec 18 89 7c 24 0c e8 43 b9 f7 ff
+> All code
+> ========
+>    0:	ff                   	(bad)  
+>    1:	e8 2d 16 02 00       	call   0x21633
+>    6:	66 2e 0f 1f 84 00 00 	cs nopw 0x0(%rax,%rax,1)
+>    d:	00 00 00 
+>   10:	0f 1f 00             	nopl   (%rax)
+>   13:	f3 0f 1e fa          	endbr64 
+>   17:	64 8b 04 25 18 00 00 	mov    %fs:0x18,%eax
+>   1e:	00 
+>   1f:	85 c0                	test   %eax,%eax
+>   21:	75 10                	jne    0x33
+>   23:	b8 03 00 00 00       	mov    $0x3,%eax
+>   28:	0f 05                	syscall 
+>   2a:*	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax		<-- trapping instruction
+>   30:	77 41                	ja     0x73
+>   32:	c3                   	ret    
+>   33:	48 83 ec 18          	sub    $0x18,%rsp
+>   37:	89 7c 24 0c          	mov    %edi,0xc(%rsp)
+>   3b:	e8 43 b9 f7 ff       	call   0xfffffffffff7b983
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0:	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax
+>    6:	77 41                	ja     0x49
+>    8:	c3                   	ret    
+>    9:	48 83 ec 18          	sub    $0x18,%rsp
+>    d:	89 7c 24 0c          	mov    %edi,0xc(%rsp)
+>   11:	e8 43 b9 f7 ff       	call   0xfffffffffff7b959
+> RSP: 002b:00007fff341972a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+> RAX: 0000000000000000 RBX: 0000000000000001 RCX: 00007fb807331117
+> RDX: 0000000000000000 RSI: 00007fff34195260 RDI: 0000000000000004
+> RBP: 0000000000000000 R08: 00000000050d5de2 R09: 00007fb807435280
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 0000000000000004 R14: 00007fff34197460 R15: 00007fff34197360
+>  </TASK>
+> 
+> Allocated by task 240:
+> kasan_save_stack (mm/kasan/common.c:46) 
+> kasan_set_track (mm/kasan/common.c:52) 
+> __kasan_kmalloc (mm/kasan/common.c:384) 
+> mptcp_init_sched (net/mptcp/sched.c:102) 
+> mptcp_sk_clone_init (include/linux/instrumented.h:40 (discriminator 3)) 
+> subflow_syn_recv_sock (net/mptcp/subflow.c:818) 
+> tcp_check_req (net/ipv4/tcp_minisocks.c:809) 
+> tcp_v4_rcv (net/ipv4/tcp_ipv4.c:2079) 
+> ip_protocol_deliver_rcu (net/ipv4/ip_input.c:205) 
+> ip_local_deliver_finish (include/linux/rcupdate.h:802) 
+> ip_local_deliver (include/linux/netfilter.h:303) 
+> ip_rcv (include/linux/netfilter.h:303) 
+> __netif_receive_skb_one_core (net/core/dev.c:5484) 
+> process_backlog (include/linux/rcupdate.h:802) 
+> __napi_poll.constprop.0 (net/core/dev.c:6500) 
+> net_rx_action (net/core/dev.c:6566) 
+> __do_softirq (arch/x86/include/asm/jump_label.h:27) 
+> 
+> Freed by task 233:
+> kasan_save_stack (mm/kasan/common.c:46) 
+> kasan_set_track (mm/kasan/common.c:52) 
+> kasan_save_free_info (mm/kasan/generic.c:523) 
+> ____kasan_slab_free (mm/kasan/common.c:238) 
+> slab_free_freelist_hook (mm/slub.c:1807) 
+> __kmem_cache_free (mm/slub.c:3786) 
+> mptcp_release_sched (net/mptcp/sched.c:124) 
+> __mptcp_destroy_sock (net/mptcp/protocol.c:2975) 
+> __mptcp_close (net/mptcp/protocol.c:3076) 
+> mptcp_close (net/mptcp/protocol.c:3091) 
+> inet_release (net/ipv4/af_inet.c:427) 
+> __sock_release (net/socket.c:654) 
+> sock_close (net/socket.c:1399) 
+> __fput (fs/file_table.c:321) 
+> task_work_run (kernel/task_work.c:181 (discriminator 1)) 
+> exit_to_user_mode_prepare (include/linux/resume_user_mode.h:49) 
+> syscall_exit_to_user_mode (kernel/entry/common.c:130) 
+> do_syscall_64 (arch/x86/entry/common.c:87) 
+> entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120) 
+> 
+> The buggy address belongs to the object at ffff888007885380
+>  which belongs to the cache kmalloc-96 of size 96
+> ==========================================
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues/385
-  https://github.com/multipath-tcp/mptcp_net-next/issues/388
-
-Now in our tree (feat. for net-next) with my RvB tag:
-
-New patches for t/upstream:
-- c7cb50a32f60: mptcp: move snd_una update earlier for fallback socket
-- 34d08f8b2ac9: mptcp: track some aggregate data counters
-- f8d85c73f57a: selftests: mptcp: explicitly tests aggregate counters
-- 7b8be8bf5ef4: mptcp: add subflow unique id
-- 3f1aaf669e62: mptcp: introduce MPTCP_FULL_INFO getsockopt
-- 28cb4413f233: selftests: mptcp: add MPTCP_FULL_INFO testcase
-- 91ea9989b43d: conflict in t/mptcp-use-get_retrans-wrapper
-- Results: 723979747226..e5a080352635 (export)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230528T161955
+https://cirrus-ci.com/task/5003560975335424?logs=test#L7842-L7971
 
 Cheers,
 Matt
