@@ -1,671 +1,1115 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF521F93B
-	for <mptcp@lists.linux.dev>; Tue, 30 May 2023 17:10:37 +0000 (UTC)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-973f78329e3so484233766b.3
-        for <mptcp@lists.linux.dev>; Tue, 30 May 2023 10:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1685466635; x=1688058635;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fUzmHWRmR8gQBqfaDJBL5vm0kbRb1y1K3w3T1Sc+GAc=;
-        b=44OibYjc6AT+LF27a6anpjJ5Gyz5POXF7JvmswE8QhvKjSM0Cch7I3B85lHA9/rWvr
-         zST8XVD6k/ov4VCkiEZygQimSnD2eb0nUfroXnAobLorCDdb+qY9EC5Z/2oktaDrTcGQ
-         /ZFzIm89vN9ImHsc2i/cpmoVoEZgLeHKqFlHcZtTN5DuadhdqG/N65Sp3DI2b93nvu+n
-         hMY50J/R5p99rqRSXoNZGX8RkJ1ASBEsBfRfTw/54TujCW2PrGbPhjQuJ1i5H2uKZZKd
-         qBkHwgED1kFwm0IbHXAVfKiOxpthDHNgxPpqiirgn2uYxRn/Y/CFoKMvtKxZg2vtYo/y
-         AY6A==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F65D1EA76
+	for <mptcp@lists.linux.dev>; Tue, 30 May 2023 17:54:44 +0000 (UTC)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-30ad458f085so87225f8f.0
+        for <mptcp@lists.linux.dev>; Tue, 30 May 2023 10:54:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685466635; x=1688058635;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fUzmHWRmR8gQBqfaDJBL5vm0kbRb1y1K3w3T1Sc+GAc=;
-        b=lFLvcCIectCGTUA/9p070SX+5spIbOG47ikNkPHByEa4iGsfmBvEfJ5FojHw209dJe
-         brnZAEgj8qN6ITDtTswtUsZe0sIof+I+m7E7uTiuFR5RDF4IgABDVpcH7hsGbcPgUfH+
-         bonsWMa8pCk6sLQvFK3HvfhFopijEIAQHi/xXRM4w2i2PqEzjY+ObgPRDdflxtXbodb+
-         eLDg7qZePF3fJfTQrGeFA+RxnQSGkH1IBZSmCg8RgkISBYeCyPar/uGln7mQ9jxG56/M
-         wjSxxXvqTYE3g4qqwv6RxtnvvTO/h/eCdzxy5WXBX5CEgMwjYV1PkeuUaKrnGS0EXdzC
-         4qeA==
-X-Gm-Message-State: AC+VfDxIPwOBU2ybXdTqRH+YrnW76OnR4Fvt4PM+0D4UaLqeXfNmIDBV
-	Hb9VtIVt395H6/BboFVj5unZeKIJj/mGbQdGhaE=
-X-Google-Smtp-Source: ACHHUZ6tqLOS7cYzx//bsGH/OwnHk/A5Olhb276hIliPIUxSHLQJ19kn1/wLTLypTWj8A+hS0Xt1fg==
-X-Received: by 2002:a17:907:1c84:b0:974:32e:7de9 with SMTP id nb4-20020a1709071c8400b00974032e7de9mr3817732ejc.56.1685466634576;
-        Tue, 30 May 2023 10:10:34 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id bh25-20020a170906a0d900b0096165b2703asm7515896ejb.110.2023.05.30.10.10.34
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 May 2023 10:10:34 -0700 (PDT)
-Message-ID: <a9be00dc-6c2e-0876-304f-1549bc146b36@tessares.net>
-Date: Tue, 30 May 2023 19:10:33 +0200
+        d=1e100.net; s=20221208; t=1685469283; x=1688061283;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2czzP2W4hZd6YFYU9RiZ/dJs/FEdPBTce9PnmJGBXTs=;
+        b=Iji3f7MrM1OLtSXQauLZ1hgY/6gzdITiV1rKH2JliMoAOlHkrAkpvMiW76Ls82ZxPr
+         DPxqi8I25Hju8VyYlTaNKcawA5HJ7LBykXgGjLdsT1sPnvI3FKHLCbGoMQp+c/7cJ7A1
+         OFmk2jaPkLxcI4Z4Tbs4XSsq8i19+5hBghr3m4bhEJUg3EMgHOzB+R9JGqQN7k6eLdVV
+         /DMsUtPyRmkEX70m6Fpcj5FJKtNMImjD3eMMqnbFoW/YuYq9kPGOIzs4PBjZdrCQ9Vxv
+         FAW5hxUkO5WmJzft1Oh/KNpkUqMZfXWCrhZSPTW2WQgvYKj8CCqoUSD2dEN1Mc1Pfu8Z
+         p/yw==
+X-Gm-Message-State: AC+VfDzYAWetLdb2kPM0R0VGUDhLxEW5fHCn5xwiAsJCJVa83Bv9fo6I
+	rV3SpE8gjT4+dLZzYOmLkD0=
+X-Google-Smtp-Source: ACHHUZ6zpjOm8aRbNYnAWMEuy4GAHKpicPa6dvhPI4DtG2axCEtcRUHr6A8N/xZEe3viP3Kd1TjZew==
+X-Received: by 2002:a5d:4f84:0:b0:307:f75:f581 with SMTP id d4-20020a5d4f84000000b003070f75f581mr2888883wru.18.1685469282380;
+        Tue, 30 May 2023 10:54:42 -0700 (PDT)
+Received: from localhost (fwdproxy-cln-015.fbsv.net. [2a03:2880:31ff:f::face:b00c])
+        by smtp.gmail.com with ESMTPSA id u5-20020adff885000000b0030ae16132besm4043785wrp.12.2023.05.30.10.54.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 May 2023 10:54:41 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: dsahern@kernel.org,
+	willemdebruijn.kernel@gmail.com,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <martineau@kernel.org>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>
+Cc: leit@fb.com,
+	axboe@kernel.dk,
+	asml.silence@gmail.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	dccp@vger.kernel.org,
+	linux-wpan@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-sctp@vger.kernel.org
+Subject: [PATCH net-next v4] net: ioctl: Use kernel memory on protocol ioctl callbacks
+Date: Tue, 30 May 2023 10:53:58 -0700
+Message-Id: <20230530175403.2434218-1-leitao@debian.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Content-Language: en-GB
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [Weekly meetings] MoM - 30th of May 2023
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hello everyone,
-
-Today, we just had our 243rd meeting with Christoph (Apple), Mat
-(Cruise) and myself (Tessares).
-
-
-Thanks again for this new good meeting!
-
-Here are the minutes of the meeting:
-
-
-
-Accepted patches:
-    - The list of accepted patches can be seen on PatchWork:
-      https://patchwork.kernel.org/project/mptcp/list/?state=3
-
-
-    netdev (if mptcp ML is in cc) (by: Matthieu Baerts):
-
-13257891: [net,1/8] selftests: mptcp: join: avoid using 'cmp --bytes'
-13257892: [net,2/8] selftests: mptcp: connect: skip if MPTCP is not
-supported
-13257893: [net,3/8] selftests: mptcp: pm nl: skip if MPTCP is not supported
-13257894: [net,4/8] selftests: mptcp: join: skip if MPTCP is not supported
-13257895: [net,5/8] selftests: mptcp: diag: skip if MPTCP is not supported
-13257896: [net,6/8] selftests: mptcp: simult flows: skip if MPTCP is not
-supported
-13257897: [net,7/8] selftests: mptcp: sockopt: skip if MPTCP is not
-supported
-13257898: [net,8/8] selftests: mptcp: userspace pm: skip if MPTCP is not
-supported:
-      - Series: selftests: mptcp: skip tests not supported by old
-kernels (part 1)
-      - Submitter: Matthieu Baerts
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=751679&state=*&archive=both
-
-
-    our repo (by: Geliang Tang, Paolo Abeni):
-
-13247106: [v2,mptcp-net,1/5] mptcp: add annotations around msk->subflow
-accesses
-13247107: [v2,mptcp-net,2/5] mptcp: consolidate passive msk socket
-initialization
-13247109: [v2,mptcp-net,3/5] mptcp: fix data race around msk->first access
-13247110: [v2,mptcp-net,4/5] mptcp: add annotations around
-sk->sk_shutdown accesses
-13247111: [v2,mptcp-net,5/5] mptcp: fix active subflow finalization.:
-      - Series: mptcp: a bunch of data race fixes
-      - Submitter: Paolo Abeni
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=748987&state=*&archive=both
-
-13253427: [mptcp-next,v15,1/5] mptcp: only send RM_ADDR in nl_cmd_remove
-13253428: [mptcp-next,v15,2/5] selftests: mptcp: update userspace pm
-addr tests
-13253429: [mptcp-next,v15,3/5] mptcp: add address into userspace pm list
-13253430: [mptcp-next,v15,4/5] selftests: mptcp: update userspace pm
-subflow tests
-13253431: [mptcp-next,v15,5/5] mptcp: update userspace pm infos:
-      - Series: update userspace pm mptcp_info fields part 1
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=750531&state=*&archive=both
-
-13254799: [v6,mptcp-next,1/6] mptcp: move snd_una update earlier for
-fallback socket.
-13254800: [v6,mptcp-next,2/6] mptcp: track some aggregate data counters.
-13254802: [v6,mptcp-next,3/6] selftests: mptcp: explicitly tests
-aggregate counters
-13254804: [v6,mptcp-next,4/6] mptcp: add subflow unique id
-13254805: [v6,mptcp-next,5/6] mptcp: introduce MPTCP_FULL_INFO getsockopt
-13254803: [v6,mptcp-next,6/6] selftests: mptcp: add MPTCP_FULL_INFO
-testcase:
-      - Series: mptcp: add some more diag info
-      - Submitter: Paolo Abeni
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=750868&state=*&archive=both
-
-
-
-Pending patches:
-    - The list of pending patches can be seen on PatchWork:
-      https://patchwork.kernel.org/project/mptcp/list/?state=*
-
-
-    netdev (if mptcp ML is in cc) (by: Breno Leitao):
-
-13255211: [net-next,v3] net: ioctl: Use kernel memory on protocol ioctl
-callbacks:
-      - Submitter: Breno Leitao
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20230525125503.400797-1-leitao@debian.org/
-
-
-    our repo (by: Davide Caratti, Geliang Tang, Matthieu Baerts, Paolo
-Abeni):
-
-12282219: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
-12282221: [RESEND,RFC,4/4] tcp: parse tcp options contained in reset
-packets:
-12282223: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support:
-12282225: [RESEND,1/5] tcp: make two mptcp helpers available to tcp stack
-12282227: [RESEND,5/5] mptcp: send fastclose if userspace closes socket
-with unread data:
-13070467: [mptcp-next,v4,1/2] mptcp: update mptcp_push_release
-13070468: [mptcp-next,v4,2/2] mptcp: retrans for redundant sends:
-      - State: Changes requested
-      - Series: BPF redundant scheduler, part 3
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=703615&state=*&archive=both
-      - Status: same as last week
-
-13203764: [RFC,mptcp-net-next,1/5] tools: ynl: add uns-admin-perm to
-genetlink legacy
-13203766: [RFC,mptcp-net-next,2/5] tools: ynl: fix bug in case of
-multiple nested attributes of the same type
-13203767: [RFC,mptcp-net-next,3/5] Documentation: netlink: add a YAML
-spec for mptcp
-13203768: [RFC,mptcp-net-next,4/5] mptcp: uapi: add header files
-generated from YAML spec
-13203769: [RFC,mptcp-net-next,5/5] net/mptcp: use netlink policy
-generated from YAML spec:
-      - State: Changes requested
-      - Series: YAML template for MPTCP netlink API
-      - Submitter: Davide Caratti
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=737723&state=*&archive=both
-      - Status: same as last week
-
-13240606: [mptcp-next,v13,2/7] selftests: mptcp: test userspace pm out
-of transfer
-13240607: [mptcp-next,v13,3/7] selftests: mptcp: check subflows infos
-13240608: [mptcp-next,v13,4/7] selftests: mptcp: check add_addr infos
-13240609: [mptcp-next,v13,5/7] mptcp: pass addr to mptcp_pm_alloc_anno_list
-13240610: [mptcp-next,v13,6/7] selftests: mptcp: pass fastclose to sflags
-13240611: [mptcp-next,v13,7/7] selftests: mptcp: set endpoint out of
-transfer:
-      - State: Changes requested
-      - Series: update userspace pm mptcp_info fields pt 2
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=747379&state=*&archive=both
-      - Status: same as last week: blocked by the next series ↓
-
-13250526: [mptcp-next,v14,3/5] mptcp: export remove_anno_list_by_saddr
-13250845: [mptcp-net,v2,08/37] selftests: mptcp: lib: skip if missing symbol
-13250846: [mptcp-net,v2,09/37] selftests: mptcp: lib: skip if not below
-kernel version
-13250847: [mptcp-net,v2,10/37] selftests: mptcp: connect: skip transp
-tests if not supported
-13250848: [mptcp-net,v2,11/37] selftests: mptcp: connect: skip
-disconnect tests if not supported
-13250850: [mptcp-net,v2,12/37] selftests: mptcp: connect: skip TFO tests
-if not supported
-13250849: [mptcp-net,v2,13/37] selftests: mptcp: diag: skip listen tests
-if not supported
-13250851: [mptcp-net,v2,14/37] selftests: mptcp: diag: skip inuse tests
-if not supported
-13250853: [mptcp-net,v2,15/37] selftests: mptcp: pm nl: remove hardcoded
-default limits
-13250852: [mptcp-net,v2,16/37] selftests: mptcp: pm nl: skip fullmesh
-flag checks if not supported
-13250854: [mptcp-net,v2,17/37] selftests: mptcp: sockopt: relax expected
-returned size
-13250855: [mptcp-net,v2,18/37] selftests: mptcp: sockopt: skip
-getsockopt checks if not supported
-13250856: [mptcp-net,v2,19/37] selftests: mptcp: sockopt: skip TCP_INQ
-checks if not supported
-13250857: [mptcp-net,v2,20/37] selftests: mptcp: userspace pm: skip if
-'ip' tool is unavailable
-13250858: [mptcp-net,v2,21/37] selftests: mptcp: userspace pm: skip if
-not supported
-13250859: [mptcp-net,v2,22/37] selftests: mptcp: userspace pm: skip PM
-listener events tests if unavailable
-13250860: [mptcp-net,v2,23/37] selftests: mptcp: join: use
-'iptables-legacy' if available
-13250861: [mptcp-net,v2,24/37] selftests: mptcp: join: helpers to skip tests
-13250866: [mptcp-net,v2,25/37] selftests: mptcp: join: skip check if MIB
-counter not supported
-13250862: [mptcp-net,v2,26/37] selftests: mptcp: join: skip test if
-iptables/tc cmds fail
-13250863: [mptcp-net,v2,27/37] selftests: mptcp: join: support local
-endpoint being tracked or not
-13250864: [mptcp-net,v2,28/37] selftests: mptcp: join: skip Fastclose
-tests if not supported
-13250865: [mptcp-net,v2,29/37] selftests: mptcp: join: support RM_ADDR
-for used endpoints or not
-13250867: [mptcp-net,v2,30/37] selftests: mptcp: join: skip implicit
-tests if not supported
-13250868: [mptcp-net,v2,31/37] selftests: mptcp: join: skip backup if
-set flag on ID not supported
-13250869: [mptcp-net,v2,32/37] selftests: mptcp: join: skip fullmesh
-flag tests if not supported
-13250870: [mptcp-net,v2,33/37] selftests: mptcp: join: skip userspace PM
-tests if not supported
-13250872: [mptcp-net,v2,34/37] selftests: mptcp: join: skip fail tests
-if not supported
-13250871: [mptcp-net,v2,35/37] selftests: mptcp: join: skip MPC backups
-tests if not supported
-13250873: [mptcp-net,v2,36/37] selftests: mptcp: join: skip PM listener
-tests if not supported
-13250874: [mptcp-net,v2,37/37] selftests: mptcp: join: skip mixed tests
-if not supported:
-      - State: Under review
-      - Series: selftests: mptcp: skip tests when features are not supported
-      - Submitter: Matthieu Baerts
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=749868&state=*&archive=both
-      - Status, see:
-https://lore.kernel.org/mptcp/e64bd67a-af85-d573-a0dc-2d8c17837072@tessares.net/
-          - The first patches skipping MPTCP if it is not supported have
-been applied.
-          - check kernel version: what about adding an env var that can
-be set to skip the versions check? So it works if a new feature is
-backported to an older kernel.
-          - get_counter() to get the MIB counters: I can help the stable
-team with the backports that will not be difficult I think but will
-cause conflicts
-          - check nf/tc issues: looks safer just in case a kconfig is
-missing or an issue with nf/tc but can be removed if you prefer (still I
-don't think we should exit in the middle of a test)
-          - one check per block of tests around the same theme: it would
-indeed avoid re-doing the same check 2 or 3 times but it would break the
-IDs (+maybe less obvious a test might be skipped when reviewing code)
-          - backports: at the end, we just need all these new checks to
-be backported on the last stable kernel (6.3) because that's what is
-used by the different CIs. It is fine if it is not backported after.
-(but still I can help with the backports, I'm used to :) )
-      - It looks like TC tests can report subtests, not sure how,
-doesn't seem to be TAP 13 compliant but enough for us → to be checked
-with Linaro testers
-
-13250875: [mptcp-next] net: skip printing "link become ready" v6 msg:
-      - State: Changes requested
-      - Submitter: Matthieu Baerts
-      - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20230522-mptcp-skip_print_link_becomes_ready-v1-1-9d5f28f19440@tessares.net/
-      - Matth: TODO: seems OK to send it to netdev as it is as a RFC
-
-13256270: [mptcp-next,v2,1/4] mptcp: export local_address
-13256271: [mptcp-next,v2,2/4] mptcp: unify pm get_local_id interfaces
-13256272: [mptcp-next,v2,3/4] mptcp: unify pm get_flags_and_ifindex_by_id
-13256273: [mptcp-next,v2,4/4] mptcp: unify pm set_flags interfaces:
-      - State: New
-      - Series: unify PM interfaces
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=751208&state=*&archive=both
-      - Matth: TODO: review the v2
-
-13258600: [v2,mptcp-net,1/2] mptcp: handle correctly disconnect() failures
-13258601: [v2,mptcp-net,2/2] mptcp: fix possible divide by zero in
-recvmsg():
-      - State: New
-      - Series: [v2,mptcp-net,1/2] mptcp: handle correctly disconnect()
-failures
-      - Submitter: Paolo Abeni
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=751861&state=*&archive=both
-      - Fixing issue 404 (which exists!)
-      - On top of a patch for TCP, recently applied in net:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=4faeee0cf8a5d88d63cdbc3bab124fb0e6aed08c
-
-13260021: [mptcp-next,v3,01/15] Squash to "mptcp: add struct
-mptcp_sched_ops"
-13260022: [mptcp-next,v3,02/15] Squash to "mptcp: add sched in mptcp_sock"
-13260023: [mptcp-next,v3,03/15] Squash to "mptcp: add scheduler wrappers"
-13260024: [mptcp-next,v3,04/15] mptcp: add last_snd in sched_data
-13260025: [mptcp-next,v3,05/15] mptcp: add snd_burst in sched_data
-13260026: [mptcp-next,v3,06/15] mptcp: register default scheduler
-13260044: [mptcp-next,v3,07/15] mptcp: rename __mptcp_set_timeout for
-bpf_burst
-13260045: [mptcp-next,v3,08/15] mptcp: add two wrappers for bpf_burst
-13260046: [mptcp-next,v3,09/15] mptcp: add three helpers for bpf_burst
-13260047: [mptcp-next,v3,10/15] Squash to "bpf: Add bpf_mptcp_sched_ops"
-13260048: [mptcp-next,v3,11/15] Squash to "bpf: Add
-bpf_mptcp_sched_kfunc_set"
-13260049: [mptcp-next,v3,12/15] Squash to "selftests/bpf: Add mptcp
-sched structs"
-13260050: [mptcp-next,v3,13/15] Squash to "selftests/bpf: Add bpf_rr
-scheduler"
-13260051: [mptcp-next,v3,14/15] selftests/bpf: Add bpf_burst scheduler
-13260052: [mptcp-next,v3,15/15] selftests/bpf: Add bpf_burst test:
-      - State: New
-      - Series: save sched_data at mptcp_sock
-      - Submitter: Geliang Tang
-      - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=752233&state=*&archive=both
-      - Mat will have a look
-      - Build issues might be due to squash-to patches introducing a
-function that is not used directly or something similar?
-
-
-
-
-Issues on Github:
-    https://github.com/multipath-tcp/mptcp_net-next/issues/
-
-    Recently opened (latest from the last meeting: 403):
-
-  404  syzkaller: divide error in `__tcp_select_window` [bug] [syzkaller]:
-      - Not Found?!
-      - See patches (v2) above
-      - Christoph validated the v1, validation of the v2 is coming
-
-
-    Bugs (opened, flagged as "bug" and assigned)
-
-  368  selftests: skip tests not being supported by older kernels [bug]
-[selftests] @matttbe:
-      - see patches above
-
-
-    Bugs (opened and flagged as "bug" and not assigned)
-
-  404  syzkaller: divide error in `__tcp_select_window` [bug] [syzkaller]:
-      - see patches above, assigned to Paolo
-
-  400  packetdrill: data are retransmited after the `close()` [bug]
-[packetdrill]
-  398  syzkaller: memory leak in `subflow_ulp_init` [bug] [syzkaller]
-  391  PM: userspace: unable to create additional subflows with the
-local addr ID 0 [bug]
-  379  userspace pm: ability to send `RM_ADDR` for all local IDs used (0
-included) [bug] [pm]
-  343  scheduler: react when subflow-level events pop up (ACK/RTO) [bug]
-[sched]
-  336  Issues with BPF packet scheduler [bug]
-  325  selftests: `mptcp_join`: test 18 `signal addresses race test` is
-sometimes failing [bug] [selftests]
-  324  selftests: `mptcp_join`: test 98 `fastclose test` is sometimes
-failing [bug] [selftests]
-  318  selftests: `mptcp_connect.sh` sometimes fails when validating SYN
-cookies [bug] [selftests]
-  315  Issues with backup flow [bug]
-  290  Not possible to `connect()` after a disconnect for a passive
-socket [bug]
-
-
-    In Progress (opened, new feature and assigned)
-
-  403  userspace pm: local_addr_list: use a refcount per entry
-[enhancement] [pm] @geliangtang
-  353  sockopt: uniform code to get/set values [enhancement] @matttbe
-
-  342  scheduler: area in the socket structures reserved for schedulers
-[enhancement] [sched] @geliangtang:
-      - See patches above
-
-  340  netlink: switch to YAML Netlink specs [enhancement] @dcaratti
-      - See patches above
-
-  296  Support IP_TTL & IPV6_UNICAST_HOPS [enhancement] @matttbe
-  234  Packetdrill: Support MPC+DATA+checksum error [enhancement]
-[packetdrill] @spoorva
-  167  packetdrill: add coverage for RM_ADDR [enhancement] [packetdrill]
-@dcaratti
-
-   75  BPF: packet scheduler [enhancement] [sched] @geliangtang
-      - See patches above
-
-   74  BPF: path manager [enhancement] @geliangtang
-
-
-    Assigned Questions (opened, questions and assigned)
-
-  381  Why does total throughput increase when the delay on one of the
-paths increases? [question] @matttbe
-
-
-    Open questions (opened, questions and not assigned)
-
-  395  If MPTCP primary flow is over tun interface, no subflow gets
-created [question]
-  392  Problem attempting to use all my interfaces (subflows)  [question]
-
-
-    For later (opened and not assigned assigned)
-
-  397  Doc and guidance for users [enhancement] [documentation]
-  396  ci: periodically run selftests from the export branch on stable
-kernels [enhancement] [selftests]
-  394  selftests: ability to track subtests [enhancement] [selftests]
-  389  packetdrill: increase coverage for "early `close()`" cases
-[enhancement] [packetdrill]
-  383  TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT are not implemented in
-mptcp_setsockopt_sol_tcp [enhancement]
-  350  scheduler: API changes (tasks) [enhancement] [sched]
-  349  scheduler: (un)mark a subflow as "stale" [enhancement] [sched]
-  348  scheduler: frequently probe "stale" subflow with reinjected data
-[enhancement] [sched]
-  345  scheduler: "penalise" some subflows by sending less than their
-cwnd [enhancement] [sched]
-  344  scheduler: new callback to initiate optimisations [enhancement]
-[sched]
-  337  in-kernel PM: listen socket: support "behind a NAT" use case
-[enhancement]
-  335  Server to Client subflows: option to allow joining the initial
-address and port [enhancement]
-  334  PM: in-kernel: send >1 ADD_ADDR before the establishment of a new
-subflow [enhancement]
-  333  New MIBs to help understanding issues when PM cannot create new
-subflows [enhancement]
-  332  scheduler: implement a "opportunistic retransmission"
-[enhancement] [sched]
-  298  CG Memory accounting for passive MPTCP socket [enhancement]
-  289  mptcp: audit comments for non inclusive language [enhancement]
-  273  Packetdrill: test outgoing MP_FASTCLOSE [enhancement] [packetdrill]
-  266  Packetdrill: add MP_FAIL coverage [packetdrill]
-  236  Review supported sockopts list [enhancement]
-  222  Netlink event API: add SUBFLOW_CREATED event [enhancement]
-  215  TCP Urgent pointer and MPTCP [enhancement]
-  213  add MPTCP man page [enhancement]
-  208  better handing of ssk memory pressure in the TX path [enhancement]
-  202  Add sendmsg support for ancillary data [enhancement]
-  197  more mibs needed [enhancement]
-  180  Get an update when MPTCP fall back to TCP [enhancement]
-  177  improve retransmit subflow selection [enhancement]
-  169  packetdrill: add coverage for ADD_ADDR and MP_JOIN on a different
-port [enhancement] [packetdrill]
-  150  remove completely workqueue usage [enhancement]
-  141  avoid acquiring mptcp_data_lock() twice in the receive path
-[enhancement]
-  133  PM: Closing the MPTCP connection when last subflow is not the
-initial one and its IP address is removed [enhancement]
-  128  When the last subflow is closed without DATA_FIN and msk
-Established, close msk (after a timeout) [enhancement]
-   79  allow 'force to MPTCP' mode: BPF [enhancement]
-   78  notify the application (userspace) when a subflow is
-added/removed [enhancement]
-   77  [gs]etsockopt: forward to new/existing SF [enhancement]
-   76  [gs]etsockopt per subflow: BPF [enhancement]
-   57  After a few attempts of failed MPTCP, directly fallback to TCP
-for new connections [enhancement]
-   43  [syzkaller] Change syzkaller to exercise MPTCP inet_diag
-interface [enhancement] [syzkaller]
-   41  reduce indirect call usage [enhancement]
-   24  Revisit layout of struct mptcp_subflow_context [enhancement]
-
-
-    Recently closed (since 2023-05-23)
-
-  402  syzkaller: BUG: KCSAN: data-race in `__mptcp_nmpc_socket` /
-`mptcp_stream_accept` [bug] [syzkaller]
-  401  syzkaller: BUG: KCSAN: data-race in `mptcp_check_for_eof` /
-`mptcp_poll` [bug] [syzkaller]
-  388  sockopt: `MPTCP_TCPINFO` and `MPTCP_SUBFLOW_ADDRS`: add a unique
-ID [enhancement] @pabeni
-  385  ` MPTCP_INFO`: get metrics about sent/received bytes, etc. for
-the MPTCP connections [enhancement] @pabeni
-  329  PM: userspace: update `MPTCP_INFO` fields [bug] [pm] @geliangtang
-  320  Broken SELinux/LSM labelling with MPTCP and accept(2) [bug] @pabeni
-
-
-
-FYI: Current Roadmap:
-    - Bugs:
-https://github.com/multipath-tcp/mptcp_net-next/issues?q=is%3Aissue+is%3Aopen+label%3Abug
-    - Current/Coming merge window (6.5):
-https://github.com/orgs/multipath-tcp/projects/3/views/1
-    - For later: https://github.com/orgs/multipath-tcp/projects/1/views/1
-
-
-
-Patches to send to netdev:
-
-    - Fixes for other trees: /
-
-    - Fixes for -net:
-
-        - [049c34bf3106] selftests: mptcp: join: avoid using 'cmp
---bytes' (Matthieu Baerts)
-        - [dc46d8bbcbd0] selftests: mptcp: connect: skip if MPTCP is not
-supported (Matthieu Baerts)
-        - [bbfa1d787984] selftests: mptcp: pm nl: skip if MPTCP is not
-supported (Matthieu Baerts)
-        - [4cb0ab9c7301] selftests: mptcp: join: skip if MPTCP is not
-supported (Matthieu Baerts)
-        - [eb2ef3dfe0a1] selftests: mptcp: diag: skip if MPTCP is not
-supported (Matthieu Baerts)
-        - [8e9eb0c50601] selftests: mptcp: simult flows: skip if MPTCP
-is not supported (Matthieu Baerts)
-        - [654d18564b49] selftests: mptcp: sockopt: skip if MPTCP is not
-supported (Matthieu Baerts)
-        - [3b0a67b759c4] selftests: mptcp: userspace pm: skip if MPTCP
-is not supported (Matthieu Baerts):
-            - Have been applied a few hours ago, not sync yet
-
-        - [cac87b222f5f] mptcp: fix connect timeout handling (Paolo Abeni)
-        - [cef483c0aa9e] mptcp: add annotations around msk->subflow
-accesses (Paolo Abeni)
-        - [e52ccd422513] mptcp: consolidate passive msk socket
-initialization (Paolo Abeni)
-        - [d141673331e1] mptcp: fix data race around msk->first access
-(Paolo Abeni)
-        - [4227edb53977] mptcp: add annotations around sk->sk_shutdown
-accesses (Paolo Abeni)
-        - [30b72bf0175b] mptcp: fix active subflow finalization (Paolo
-Abeni)
-        - [9ca76d9fedb6] mptcp: only send RM_ADDR in nl_cmd_remove
-(Geliang Tang)
-        - [a0d37625e42d] selftests: mptcp: update userspace pm addr
-tests (Geliang Tang)
-        - [c00725165575] mptcp: add address into userspace pm list
-(Geliang Tang)
-        - [8467eeff69da] selftests: mptcp: update userspace pm subflow
-tests (Geliang Tang)
-        - [b77c9749e92a] mptcp: update userspace pm infos (Geliang Tang):
-            - syzkaller seems happy, all these patches can be sent
-            - can be sent in 2 different series: Mat will do that
-
-    - Fixes for net-next: /
-
-    - Features for net-next:
-
-        - [c7740ced75e3] mptcp: move snd_una update earlier for fallback
-socket (Paolo Abeni)
-        - [182d2a98c6f1] mptcp: track some aggregate data counters
-(Paolo Abeni)
-        - [65b4d7cdf329] selftests: mptcp: explicitly tests aggregate
-counters (Paolo Abeni)
-        - [e06cf96ffa3f] mptcp: add subflow unique id (Paolo Abeni)
-        - [20b1483d572e] mptcp: introduce MPTCP_FULL_INFO getsockopt
-(Paolo Abeni)
-        - [7eb274a52ba9] selftests: mptcp: add MPTCP_FULL_INFO testcase
-(Paolo Abeni):
-            - have been applied recently, best to wait
-            - also best to wait to get some feedback from the person who
-opened the ticket to see if there is any issue with the new getsockopt
-and fields from MPTCP_INFO
-
-    - Features for net-next (next): /
-
-    - Features for other trees:
-
-        - [d0a544994231] security, lsm: Introduce
-security_mptcp_add_subflow() (Paolo Abeni)
-        - [861b5e2b19a5] selinux: Implement mptcp_add_subflow hook
-(Paolo Abeni):
-            - Applied in SELinux tree
-
-        - [27c721d05183] mptcp: refactor push_pending logic (Geliang Tang)
-        - [d0cf36cd6b6f] mptcp: drop last_snd and MPTCP_RESET_SCHEDULER
-(Geliang Tang)
-        - [11ac0f166261] mptcp: add struct mptcp_sched_ops (Geliang Tang)
-        - [85dfab7ffed1] mptcp: add a new sysctl scheduler (Geliang Tang)
-        - [14883db1e397] mptcp: add sched in mptcp_sock (Geliang Tang)
-        - [68cc2de5a2cd] mptcp: add scheduled in mptcp_subflow_context
-(Geliang Tang)
-        - [fe7d0e8bc044] mptcp: add sched_data_set_contexts helper
-(Geliang Tang)
-        - [024db78c7115] mptcp: add scheduler wrappers (Geliang Tang)
-        - [e12ca0391160] mptcp: use get_send wrapper (Geliang Tang)
-        - [20110fc46389] mptcp: use get_retrans wrapper (Geliang Tang)
-        - [73ae0d2c4072] bpf: Add bpf_mptcp_sched_ops (Geliang Tang)
-        - [0c1aa53923af] bpf: Add bpf_mptcp_sched_kfunc_set (Geliang Tang)
-        - [31f65005b845] selftests/bpf: Add mptcp sched structs (Geliang
-Tang)
-        - [e081e169f0b2] selftests/bpf: use random netns name for mptcp
-(Geliang Tang)
-        - [301dc3496996] selftests/bpf: add two mptcp netns helpers
-(Geliang Tang)
-        - [d1e137d4e89f] selftests/bpf: Add bpf_first scheduler (Geliang
-Tang)
-        - [de306d69865b] selftests/bpf: Add bpf_first test (Geliang Tang)
-        - [e04ae25641d4] selftests/bpf: Add bpf_bkup scheduler (Geliang
-Tang)
-        - [f457d1560ecb] selftests/bpf: Add bpf_bkup test (Geliang Tang)
-        - [2c7d44153892] selftests/bpf: Add bpf_rr scheduler (Geliang Tang)
-        - [6bbc9fa016a3] selftests/bpf: Add bpf_rr test (Geliang Tang)
-        - [f40c3940881b] selftests/bpf: Add bpf_red scheduler (Geliang Tang)
-        - [cbbe8320a7ee] selftests/bpf: Add bpf_red test (Geliang Tang):
-            - Status: same as last week (waiting for the modif in the
-sched API)
-
-
-Extra tests:
-    - news about Syzkaller? (Christoph):
-        - /
-
-    - news about interop with mptcp.org/other stacks? (?):
-        - /
-
-    - packetdrill (Davide):
-        - /
-
-    - Patchew (Davide):
-        - /
-
-    - CI (Matth):
-        - instabilities with unknown root cause (since switch to v6.4-rc1)
-
-
-
-Next meeting:
-    - Next one on Tuesday, the 6th of June.
-    - 15:30 UTC (8.30am PDT, 5.30pm CEST, 11.30pm CST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20230606
-
-
-
-Feel free to comment on these topics and suggest new ones for the next
-meeting!
-
-Talk to you on Tuesday,
-Matt
+Most of the ioctls to net protocols operates directly on userspace
+argument (arg). Usually doing get_user()/put_user() directly in the
+ioctl callback.  This is not flexible, because it is hard to reuse these
+functions without passing userspace buffers.
+
+Change the "struct proto" ioctls to avoid touching userspace memory and
+operate on kernel buffers, i.e., all protocol's ioctl callbacks is
+adapted to operate on a kernel memory other than on userspace (so, no
+more {put,get}_user() and friends being called in the ioctl callback).
+
+This changes the "struct proto" ioctl format in the following way:
+
+    int                     (*ioctl)(struct sock *sk, int cmd,
+-                                        unsigned long arg);
++                                        int *karg);
+
+So, the "karg" argument, which is passed to the ioctl callback, is a
+pointer allocated to kernel space memory (inside a function wrapper).
+This buffer (karg) may contain input argument (copied from userspace in
+a prep function) and it might return a value/buffer, which is copied
+back to userspace if necessary. There is not one-size-fits-all format
+(that is I am using 'may' above), but basically, there are three type of
+ioctls:
+
+1) Do not read from userspace, returns a result to userspace
+2) Read an input parameter from userspace, and does not return anything
+  to userspace
+3) Read an input from userspace, and return a buffer to userspace.
+
+The default case (1) (where no input parameter is given, and an "int" is
+returned to userspace) encompasses more than 90% of the cases, but there
+are two other exceptions. Here is a list of exceptions:
+
+* Protocol RAW:
+   * cmd = SIOCGETVIFCNT:
+     * input and output = struct sioc_vif_req
+   * cmd = SIOCGETSGCNT
+     * input and output = struct sioc_sg_req
+   * Explanation: for the SIOCGETVIFCNT case, userspace passes the input
+     argument, which is struct sioc_vif_req. Then the callback populates
+     the struct, which is copied back to userspace.
+
+* Protocol RAW6:
+   * cmd = SIOCGETMIFCNT_IN6
+     * input and output = struct sioc_mif_req6
+   * cmd = SIOCGETSGCNT_IN6
+     * input and output = struct sioc_sg_req6
+
+* Protocol PHONET:
+  * cmd == SIOCPNADDRESOURCE | SIOCPNDELRESOURCE
+     * input int (4 bytes)
+  * Nothing is copied back to userspace.
+
+For the exception cases, functions sock_sk_ioctl_inout() will
+copy the userspace input, and copy it back to kernel space.
+
+The wrapper that prepare the buffer and put the buffer back to user is
+sk_ioctl(), so, instead of calling sk->sk_prot->ioctl(), the callee now
+calls sk_ioctl(), which will handle all cases.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ include/linux/mroute.h      | 21 ++++++++++--
+ include/linux/mroute6.h     | 18 +++++++++--
+ include/net/phonet/phonet.h | 20 ++++++++++++
+ include/net/sock.h          |  5 ++-
+ include/net/tcp.h           |  2 +-
+ include/net/udp.h           |  2 +-
+ net/core/sock.c             | 63 ++++++++++++++++++++++++++++++++++++
+ net/dccp/dccp.h             |  2 +-
+ net/dccp/proto.c            | 12 +++----
+ net/ieee802154/socket.c     | 15 ++++-----
+ net/ipv4/af_inet.c          |  2 +-
+ net/ipv4/ipmr.c             | 63 ++++++++++++++++++++++--------------
+ net/ipv4/raw.c              | 16 +++++-----
+ net/ipv4/tcp.c              |  5 +--
+ net/ipv4/udp.c              | 12 +++----
+ net/ipv6/af_inet6.c         |  2 +-
+ net/ipv6/ip6mr.c            | 64 ++++++++++++++++++++++---------------
+ net/ipv6/raw.c              | 16 +++++-----
+ net/l2tp/l2tp_core.h        |  2 +-
+ net/l2tp/l2tp_ip.c          |  9 +++---
+ net/mptcp/protocol.c        | 11 +++----
+ net/phonet/datagram.c       | 11 +++----
+ net/phonet/pep.c            | 11 +++----
+ net/phonet/socket.c         |  2 +-
+ net/sctp/socket.c           |  8 ++---
+ 25 files changed, 265 insertions(+), 129 deletions(-)
+
+diff --git a/include/linux/mroute.h b/include/linux/mroute.h
+index 80b8400ab8b2..5e6787f700db 100644
+--- a/include/linux/mroute.h
++++ b/include/linux/mroute.h
+@@ -16,12 +16,19 @@ static inline int ip_mroute_opt(int opt)
+ 	return opt >= MRT_BASE && opt <= MRT_MAX;
+ }
+ 
++static inline int sk_is_ipmr(struct sock *sk)
++{
++	return sk->sk_family == AF_INET &&
++		inet_sk(sk)->inet_num == IPPROTO_IGMP;
++}
++
+ int ip_mroute_setsockopt(struct sock *, int, sockptr_t, unsigned int);
+ int ip_mroute_getsockopt(struct sock *, int, sockptr_t, sockptr_t);
+-int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg);
++int ipmr_ioctl(struct sock *sk, int cmd, void *arg);
+ int ipmr_compat_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
+ int ip_mr_init(void);
+ bool ipmr_rule_default(const struct fib_rule *rule);
++int ipmr_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
+ #else
+ static inline int ip_mroute_setsockopt(struct sock *sock, int optname,
+ 				       sockptr_t optval, unsigned int optlen)
+@@ -35,7 +42,7 @@ static inline int ip_mroute_getsockopt(struct sock *sk, int optname,
+ 	return -ENOPROTOOPT;
+ }
+ 
+-static inline int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg)
++static inline int ipmr_ioctl(struct sock *sk, int cmd, void *arg)
+ {
+ 	return -ENOIOCTLCMD;
+ }
+@@ -50,10 +57,20 @@ static inline int ip_mroute_opt(int opt)
+ 	return 0;
+ }
+ 
++static inline int sk_is_ipmr(struct sock *sk)
++{
++	return 0;
++}
++
+ static inline bool ipmr_rule_default(const struct fib_rule *rule)
+ {
+ 	return true;
+ }
++
++static inline int ipmr_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
++{
++	return 1;
++}
+ #endif
+ 
+ #define VIFF_STATIC 0x8000
+diff --git a/include/linux/mroute6.h b/include/linux/mroute6.h
+index 8f2b307fb124..d9095d83968c 100644
+--- a/include/linux/mroute6.h
++++ b/include/linux/mroute6.h
+@@ -29,7 +29,7 @@ struct sock;
+ extern int ip6_mroute_setsockopt(struct sock *, int, sockptr_t, unsigned int);
+ extern int ip6_mroute_getsockopt(struct sock *, int, sockptr_t, sockptr_t);
+ extern int ip6_mr_input(struct sk_buff *skb);
+-extern int ip6mr_ioctl(struct sock *sk, int cmd, void __user *arg);
++extern int ip6mr_ioctl(struct sock *sk, int cmd, void *arg);
+ extern int ip6mr_compat_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
+ extern int ip6_mr_init(void);
+ extern void ip6_mr_cleanup(void);
+@@ -48,7 +48,7 @@ int ip6_mroute_getsockopt(struct sock *sock,
+ }
+ 
+ static inline
+-int ip6mr_ioctl(struct sock *sk, int cmd, void __user *arg)
++int ip6mr_ioctl(struct sock *sk, int cmd, void *arg)
+ {
+ 	return -ENOIOCTLCMD;
+ }
+@@ -100,6 +100,12 @@ extern int ip6mr_get_route(struct net *net, struct sk_buff *skb,
+ #ifdef CONFIG_IPV6_MROUTE
+ bool mroute6_is_socket(struct net *net, struct sk_buff *skb);
+ extern int ip6mr_sk_done(struct sock *sk);
++int ip6mr_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
++static inline int sk_is_ip6mr(struct sock *sk)
++{
++	return sk->sk_family == AF_INET6 &&
++		inet_sk(sk)->inet_num == IPPROTO_ICMPV6;
++}
+ #else
+ static inline bool mroute6_is_socket(struct net *net, struct sk_buff *skb)
+ {
+@@ -109,5 +115,13 @@ static inline int ip6mr_sk_done(struct sock *sk)
+ {
+ 	return 0;
+ }
++static inline int sk_is_ip6mr(struct sock *sk)
++{
++	return 0;
++}
++static inline int ip6mr_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
++{
++	return 1;
++}
+ #endif
+ #endif
+diff --git a/include/net/phonet/phonet.h b/include/net/phonet/phonet.h
+index 862f1719b523..83215bab79c0 100644
+--- a/include/net/phonet/phonet.h
++++ b/include/net/phonet/phonet.h
+@@ -109,4 +109,24 @@ void phonet_sysctl_exit(void);
+ int isi_register(void);
+ void isi_unregister(void);
+ 
++static inline bool sk_is_phonet(struct sock *sk)
++{
++	return sk->sk_family == PF_PHONET;
++}
++
++static inline int phonet_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
++{
++	int karg;
++
++	switch (cmd) {
++	case SIOCPNADDRESOURCE:
++	case SIOCPNDELRESOURCE:
++		if (get_user(karg, (int __user *)arg))
++			return -EFAULT;
++
++		return sk->sk_prot->ioctl(sk, cmd, &karg);
++	}
++	/* A positive return value means that the ioctl was not processed */
++	return 1;
++}
+ #endif
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 656ea89f60ff..0f4876fc1ff6 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1246,7 +1246,7 @@ struct proto {
+ 					  bool kern);
+ 
+ 	int			(*ioctl)(struct sock *sk, int cmd,
+-					 unsigned long arg);
++					 int *karg);
+ 	int			(*init)(struct sock *sk);
+ 	void			(*destroy)(struct sock *sk);
+ 	void			(*shutdown)(struct sock *sk, int how);
+@@ -2961,6 +2961,9 @@ int sock_get_timeout(long timeo, void *optval, bool old_timeval);
+ int sock_copy_user_timeval(struct __kernel_sock_timeval *tv,
+ 			   sockptr_t optval, int optlen, bool old_timeval);
+ 
++int sock_ioctl_inout(struct sock *sk, unsigned int cmd,
++		     void __user *arg, void *karg, size_t size);
++int sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
+ static inline bool sk_is_readable(struct sock *sk)
+ {
+ 	if (sk->sk_prot->sock_is_readable)
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 04a31643cda3..f784fa49d95d 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -342,7 +342,7 @@ void tcp_release_cb(struct sock *sk);
+ void tcp_wfree(struct sk_buff *skb);
+ void tcp_write_timer_handler(struct sock *sk);
+ void tcp_delack_timer_handler(struct sock *sk);
+-int tcp_ioctl(struct sock *sk, int cmd, unsigned long arg);
++int tcp_ioctl(struct sock *sk, int cmd, int *karg);
+ int tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb);
+ void tcp_rcv_established(struct sock *sk, struct sk_buff *skb);
+ void tcp_rcv_space_adjust(struct sock *sk);
+diff --git a/include/net/udp.h b/include/net/udp.h
+index de4b528522bb..9ff5bce33aa0 100644
+--- a/include/net/udp.h
++++ b/include/net/udp.h
+@@ -283,7 +283,7 @@ void udp_flush_pending_frames(struct sock *sk);
+ int udp_cmsg_send(struct sock *sk, struct msghdr *msg, u16 *gso_size);
+ void udp4_hwcsum(struct sk_buff *skb, __be32 src, __be32 dst);
+ int udp_rcv(struct sk_buff *skb);
+-int udp_ioctl(struct sock *sk, int cmd, unsigned long arg);
++int udp_ioctl(struct sock *sk, int cmd, int *karg);
+ int udp_init_sock(struct sock *sk);
+ int udp_pre_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len);
+ int __udp_disconnect(struct sock *sk, int flags);
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 5440e67bcfe3..372d533ff171 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -114,6 +114,8 @@
+ #include <linux/memcontrol.h>
+ #include <linux/prefetch.h>
+ #include <linux/compat.h>
++#include <linux/mroute.h>
++#include <linux/mroute6.h>
+ 
+ #include <linux/uaccess.h>
+ 
+@@ -138,6 +140,7 @@
+ 
+ #include <net/tcp.h>
+ #include <net/busy_poll.h>
++#include <net/phonet/phonet.h>
+ 
+ #include <linux/ethtool.h>
+ 
+@@ -4106,3 +4109,63 @@ int sock_bind_add(struct sock *sk, struct sockaddr *addr, int addr_len)
+ 	return sk->sk_prot->bind_add(sk, addr, addr_len);
+ }
+ EXPORT_SYMBOL(sock_bind_add);
++
++/* Copy 'size' bytes from userspace and return `size` back to userspace */
++int sock_ioctl_inout(struct sock *sk, unsigned int cmd,
++		     void __user *arg, void *karg, size_t size)
++{
++	int ret;
++
++	if (copy_from_user(karg, arg, size))
++		return -EFAULT;
++
++	ret = sk->sk_prot->ioctl(sk, cmd, karg);
++	if (ret)
++		return ret;
++
++	if (copy_to_user(arg, karg, size))
++		return -EFAULT;
++
++	return 0;
++}
++EXPORT_SYMBOL(sock_ioctl_inout);
++
++/* This is the most common ioctl prep function, where the result (4 bytes) is
++ * copied back to userspace if the ioctl() returns successfully. No input is
++ * copied from userspace as input argument.
++ */
++static int sock_ioctl_out(struct sock *sk, unsigned int cmd, void __user *arg)
++{
++	int ret, karg = 0;
++
++	ret = sk->sk_prot->ioctl(sk, cmd, &karg);
++	if (ret)
++		return ret;
++
++	return put_user(karg, (int __user *)arg);
++}
++
++/* A wrapper around sock ioctls, which copies the data from userspace
++ * (depending on the protocol/ioctl), and copies back the result to userspace.
++ * The main motivation for this function is to pass kernel memory to the
++ * protocol ioctl callbacks, instead of userspace memory.
++ */
++int sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
++{
++	int rc = 1;
++
++	if (sk_is_ipmr(sk))
++		rc = ipmr_sk_ioctl(sk, cmd, arg);
++	else if (sk_is_ip6mr(sk))
++		rc = ip6mr_sk_ioctl(sk, cmd, arg);
++	else if (sk_is_phonet(sk))
++		rc = phonet_sk_ioctl(sk, cmd, arg);
++
++	/* If ioctl was processed, returns its value */
++	if (rc <= 0)
++		return rc;
++
++	/* Otherwise call the default handler */
++	return sock_ioctl_out(sk, cmd, arg);
++}
++EXPORT_SYMBOL(sk_ioctl);
+diff --git a/net/dccp/dccp.h b/net/dccp/dccp.h
+index 9ddc3a9e89e4..1f748ed1279d 100644
+--- a/net/dccp/dccp.h
++++ b/net/dccp/dccp.h
+@@ -292,7 +292,7 @@ int dccp_getsockopt(struct sock *sk, int level, int optname,
+ 		    char __user *optval, int __user *optlen);
+ int dccp_setsockopt(struct sock *sk, int level, int optname,
+ 		    sockptr_t optval, unsigned int optlen);
+-int dccp_ioctl(struct sock *sk, int cmd, unsigned long arg);
++int dccp_ioctl(struct sock *sk, int cmd, int *karg);
+ int dccp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size);
+ int dccp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len, int flags,
+ 		 int *addr_len);
+diff --git a/net/dccp/proto.c b/net/dccp/proto.c
+index a06b5641287a..9fc3ba4f62de 100644
+--- a/net/dccp/proto.c
++++ b/net/dccp/proto.c
+@@ -359,7 +359,7 @@ __poll_t dccp_poll(struct file *file, struct socket *sock,
+ 
+ EXPORT_SYMBOL_GPL(dccp_poll);
+ 
+-int dccp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++int dccp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	int rc = -ENOTCONN;
+ 
+@@ -370,17 +370,17 @@ int dccp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 
+ 	switch (cmd) {
+ 	case SIOCOUTQ: {
+-		int amount = sk_wmem_alloc_get(sk);
++		*karg = sk_wmem_alloc_get(sk);
+ 		/* Using sk_wmem_alloc here because sk_wmem_queued is not used by DCCP and
+ 		 * always 0, comparably to UDP.
+ 		 */
+ 
+-		rc = put_user(amount, (int __user *)arg);
++		rc = 0;
+ 	}
+ 		break;
+ 	case SIOCINQ: {
+ 		struct sk_buff *skb;
+-		unsigned long amount = 0;
++		*karg = 0;
+ 
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		if (skb != NULL) {
+@@ -388,9 +388,9 @@ int dccp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 			 * We will only return the amount of this packet since
+ 			 * that is all that will be read.
+ 			 */
+-			amount = skb->len;
++			*karg = skb->len;
+ 		}
+-		rc = put_user(amount, (int __user *)arg);
++		rc = 0;
+ 	}
+ 		break;
+ 	default:
+diff --git a/net/ieee802154/socket.c b/net/ieee802154/socket.c
+index 1fa2fe041ec0..9c124705120d 100644
+--- a/net/ieee802154/socket.c
++++ b/net/ieee802154/socket.c
+@@ -162,7 +162,7 @@ static int ieee802154_sock_ioctl(struct socket *sock, unsigned int cmd,
+ 	default:
+ 		if (!sk->sk_prot->ioctl)
+ 			return -ENOIOCTLCMD;
+-		return sk->sk_prot->ioctl(sk, cmd, arg);
++		return sk_ioctl(sk, cmd, (void __user *)arg);
+ 	}
+ }
+ 
+@@ -531,22 +531,21 @@ static int dgram_bind(struct sock *sk, struct sockaddr *uaddr, int len)
+ 	return err;
+ }
+ 
+-static int dgram_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int dgram_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	switch (cmd) {
+ 	case SIOCOUTQ:
+ 	{
+-		int amount = sk_wmem_alloc_get(sk);
++		*karg = sk_wmem_alloc_get(sk);
+ 
+-		return put_user(amount, (int __user *)arg);
++		return 0;
+ 	}
+ 
+ 	case SIOCINQ:
+ 	{
+ 		struct sk_buff *skb;
+-		unsigned long amount;
+ 
+-		amount = 0;
++		*karg = 0;
+ 		spin_lock_bh(&sk->sk_receive_queue.lock);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		if (skb) {
+@@ -554,10 +553,10 @@ static int dgram_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 			 * of this packet since that is all
+ 			 * that will be read.
+ 			 */
+-			amount = skb->len - ieee802154_hdr_length(skb);
++			*karg = skb->len - ieee802154_hdr_length(skb);
+ 		}
+ 		spin_unlock_bh(&sk->sk_receive_queue.lock);
+-		return put_user(amount, (int __user *)arg);
++		return 0;
+ 	}
+ 	}
+ 
+diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+index c4aab3aacbd8..be2ae13511da 100644
+--- a/net/ipv4/af_inet.c
++++ b/net/ipv4/af_inet.c
+@@ -978,7 +978,7 @@ int inet_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 		break;
+ 	default:
+ 		if (sk->sk_prot->ioctl)
+-			err = sk->sk_prot->ioctl(sk, cmd, arg);
++			err = sk_ioctl(sk, cmd, (void __user *)arg);
+ 		else
+ 			err = -ENOIOCTLCMD;
+ 		break;
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index eec1f6df80d8..3f0c6d602fb7 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -1547,6 +1547,28 @@ int ip_mroute_setsockopt(struct sock *sk, int optname, sockptr_t optval,
+ 	return ret;
+ }
+ 
++/* Execute if this ioctl is a special mroute ioctl */
++int ipmr_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
++{
++	switch (cmd) {
++	/* These userspace buffers will be consumed by ipmr_ioctl() */
++	case SIOCGETVIFCNT: {
++		struct sioc_vif_req buffer;
++
++		return sock_ioctl_inout(sk, cmd, arg, &buffer,
++				      sizeof(buffer));
++		}
++	case SIOCGETSGCNT: {
++		struct sioc_sg_req buffer;
++
++		return sock_ioctl_inout(sk, cmd, arg, &buffer,
++				      sizeof(buffer));
++		}
++	}
++	/* return code > 0 means that the ioctl was not executed */
++	return 1;
++}
++
+ /* Getsock opt support for the multicast routing system. */
+ int ip_mroute_getsockopt(struct sock *sk, int optname, sockptr_t optval,
+ 			 sockptr_t optlen)
+@@ -1593,13 +1615,13 @@ int ip_mroute_getsockopt(struct sock *sk, int optname, sockptr_t optval,
+ }
+ 
+ /* The IP multicast ioctl support routines. */
+-int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg)
++int ipmr_ioctl(struct sock *sk, int cmd, void *arg)
+ {
+-	struct sioc_sg_req sr;
+-	struct sioc_vif_req vr;
+ 	struct vif_device *vif;
+ 	struct mfc_cache *c;
+ 	struct net *net = sock_net(sk);
++	struct sioc_vif_req *vr;
++	struct sioc_sg_req *sr;
+ 	struct mr_table *mrt;
+ 
+ 	mrt = ipmr_get_table(net, raw_sk(sk)->ipmr_table ? : RT_TABLE_DEFAULT);
+@@ -1608,40 +1630,33 @@ int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg)
+ 
+ 	switch (cmd) {
+ 	case SIOCGETVIFCNT:
+-		if (copy_from_user(&vr, arg, sizeof(vr)))
+-			return -EFAULT;
+-		if (vr.vifi >= mrt->maxvif)
++		vr = (struct sioc_vif_req *)arg;
++		if (vr->vifi >= mrt->maxvif)
+ 			return -EINVAL;
+-		vr.vifi = array_index_nospec(vr.vifi, mrt->maxvif);
++		vr->vifi = array_index_nospec(vr->vifi, mrt->maxvif);
+ 		rcu_read_lock();
+-		vif = &mrt->vif_table[vr.vifi];
+-		if (VIF_EXISTS(mrt, vr.vifi)) {
+-			vr.icount = READ_ONCE(vif->pkt_in);
+-			vr.ocount = READ_ONCE(vif->pkt_out);
+-			vr.ibytes = READ_ONCE(vif->bytes_in);
+-			vr.obytes = READ_ONCE(vif->bytes_out);
++		vif = &mrt->vif_table[vr->vifi];
++		if (VIF_EXISTS(mrt, vr->vifi)) {
++			vr->icount = READ_ONCE(vif->pkt_in);
++			vr->ocount = READ_ONCE(vif->pkt_out);
++			vr->ibytes = READ_ONCE(vif->bytes_in);
++			vr->obytes = READ_ONCE(vif->bytes_out);
+ 			rcu_read_unlock();
+ 
+-			if (copy_to_user(arg, &vr, sizeof(vr)))
+-				return -EFAULT;
+ 			return 0;
+ 		}
+ 		rcu_read_unlock();
+ 		return -EADDRNOTAVAIL;
+ 	case SIOCGETSGCNT:
+-		if (copy_from_user(&sr, arg, sizeof(sr)))
+-			return -EFAULT;
++		sr = (struct sioc_sg_req *)arg;
+ 
+ 		rcu_read_lock();
+-		c = ipmr_cache_find(mrt, sr.src.s_addr, sr.grp.s_addr);
++		c = ipmr_cache_find(mrt, sr->src.s_addr, sr->grp.s_addr);
+ 		if (c) {
+-			sr.pktcnt = c->_c.mfc_un.res.pkt;
+-			sr.bytecnt = c->_c.mfc_un.res.bytes;
+-			sr.wrong_if = c->_c.mfc_un.res.wrong_if;
++			sr->pktcnt = c->_c.mfc_un.res.pkt;
++			sr->bytecnt = c->_c.mfc_un.res.bytes;
++			sr->wrong_if = c->_c.mfc_un.res.wrong_if;
+ 			rcu_read_unlock();
+-
+-			if (copy_to_user(arg, &sr, sizeof(sr)))
+-				return -EFAULT;
+ 			return 0;
+ 		}
+ 		rcu_read_unlock();
+diff --git a/net/ipv4/raw.c b/net/ipv4/raw.c
+index ff712bf2a98d..e394f02380b6 100644
+--- a/net/ipv4/raw.c
++++ b/net/ipv4/raw.c
+@@ -855,29 +855,29 @@ static int raw_getsockopt(struct sock *sk, int level, int optname,
+ 	return do_raw_getsockopt(sk, level, optname, optval, optlen);
+ }
+ 
+-static int raw_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int raw_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	switch (cmd) {
+ 	case SIOCOUTQ: {
+-		int amount = sk_wmem_alloc_get(sk);
+-
+-		return put_user(amount, (int __user *)arg);
++		*karg = sk_wmem_alloc_get(sk);
++		return 0;
+ 	}
+ 	case SIOCINQ: {
+ 		struct sk_buff *skb;
+-		int amount = 0;
+ 
+ 		spin_lock_bh(&sk->sk_receive_queue.lock);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		if (skb)
+-			amount = skb->len;
++			*karg = skb->len;
++		else
++			*karg = 0;
+ 		spin_unlock_bh(&sk->sk_receive_queue.lock);
+-		return put_user(amount, (int __user *)arg);
++		return 0;
+ 	}
+ 
+ 	default:
+ #ifdef CONFIG_IP_MROUTE
+-		return ipmr_ioctl(sk, cmd, (void __user *)arg);
++		return ipmr_ioctl(sk, cmd, karg);
+ #else
+ 		return -ENOIOCTLCMD;
+ #endif
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 4d6392c16b7a..8ff2c3784aab 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -599,7 +599,7 @@ __poll_t tcp_poll(struct file *file, struct socket *sock, poll_table *wait)
+ }
+ EXPORT_SYMBOL(tcp_poll);
+ 
+-int tcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++int tcp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	int answ;
+@@ -641,7 +641,8 @@ int tcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 		return -ENOIOCTLCMD;
+ 	}
+ 
+-	return put_user(answ, (int __user *)arg);
++	*karg = answ;
++	return 0;
+ }
+ EXPORT_SYMBOL(tcp_ioctl);
+ 
+diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+index aa32afd871ee..8b83a67cf852 100644
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1720,21 +1720,19 @@ static int first_packet_length(struct sock *sk)
+  *	IOCTL requests applicable to the UDP protocol
+  */
+ 
+-int udp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++int udp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	switch (cmd) {
+ 	case SIOCOUTQ:
+ 	{
+-		int amount = sk_wmem_alloc_get(sk);
+-
+-		return put_user(amount, (int __user *)arg);
++		*karg = sk_wmem_alloc_get(sk);
++		return 0;
+ 	}
+ 
+ 	case SIOCINQ:
+ 	{
+-		int amount = max_t(int, 0, first_packet_length(sk));
+-
+-		return put_user(amount, (int __user *)arg);
++		*karg = max_t(int, 0, first_packet_length(sk));
++		return 0;
+ 	}
+ 
+ 	default:
+diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
+index 2bbf13216a3d..001ba5a17af9 100644
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -579,7 +579,7 @@ int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 		prot = READ_ONCE(sk->sk_prot);
+ 		if (!prot->ioctl)
+ 			return -ENOIOCTLCMD;
+-		return prot->ioctl(sk, cmd, arg);
++		return sk_ioctl(sk, cmd, (void __user *)arg);
+ 	}
+ 	/*NOTREACHED*/
+ 	return 0;
+diff --git a/net/ipv6/ip6mr.c b/net/ipv6/ip6mr.c
+index 51cf37abd142..084e57191ba0 100644
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -1589,6 +1589,27 @@ static int ip6mr_sk_init(struct mr_table *mrt, struct sock *sk)
+ 	return err;
+ }
+ 
++int ip6mr_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
++{
++	switch (cmd) {
++	/* These userspace buffers will be consumed by ip6mr_ioctl() */
++	case SIOCGETMIFCNT_IN6: {
++		struct sioc_mif_req6 buffer;
++
++		return sock_ioctl_inout(sk, cmd, arg, &buffer,
++				      sizeof(buffer));
++		}
++	case SIOCGETSGCNT_IN6: {
++		struct sioc_mif_req6 buffer;
++
++		return sock_ioctl_inout(sk, cmd, arg, &buffer,
++				      sizeof(buffer));
++		}
++	}
++
++	return 1;
++}
++
+ int ip6mr_sk_done(struct sock *sk)
+ {
+ 	struct net *net = sock_net(sk);
+@@ -1879,11 +1900,10 @@ int ip6_mroute_getsockopt(struct sock *sk, int optname, sockptr_t optval,
+ /*
+  *	The IP multicast ioctl support routines.
+  */
+-
+-int ip6mr_ioctl(struct sock *sk, int cmd, void __user *arg)
++int ip6mr_ioctl(struct sock *sk, int cmd, void *arg)
+ {
+-	struct sioc_sg_req6 sr;
+-	struct sioc_mif_req6 vr;
++	struct sioc_sg_req6 *sr;
++	struct sioc_mif_req6 *vr;
+ 	struct vif_device *vif;
+ 	struct mfc6_cache *c;
+ 	struct net *net = sock_net(sk);
+@@ -1895,40 +1915,32 @@ int ip6mr_ioctl(struct sock *sk, int cmd, void __user *arg)
+ 
+ 	switch (cmd) {
+ 	case SIOCGETMIFCNT_IN6:
+-		if (copy_from_user(&vr, arg, sizeof(vr)))
+-			return -EFAULT;
+-		if (vr.mifi >= mrt->maxvif)
++		vr = (struct sioc_mif_req6 *)arg;
++		if (vr->mifi >= mrt->maxvif)
+ 			return -EINVAL;
+-		vr.mifi = array_index_nospec(vr.mifi, mrt->maxvif);
++		vr->mifi = array_index_nospec(vr->mifi, mrt->maxvif);
+ 		rcu_read_lock();
+-		vif = &mrt->vif_table[vr.mifi];
+-		if (VIF_EXISTS(mrt, vr.mifi)) {
+-			vr.icount = READ_ONCE(vif->pkt_in);
+-			vr.ocount = READ_ONCE(vif->pkt_out);
+-			vr.ibytes = READ_ONCE(vif->bytes_in);
+-			vr.obytes = READ_ONCE(vif->bytes_out);
++		vif = &mrt->vif_table[vr->mifi];
++		if (VIF_EXISTS(mrt, vr->mifi)) {
++			vr->icount = READ_ONCE(vif->pkt_in);
++			vr->ocount = READ_ONCE(vif->pkt_out);
++			vr->ibytes = READ_ONCE(vif->bytes_in);
++			vr->obytes = READ_ONCE(vif->bytes_out);
+ 			rcu_read_unlock();
+-
+-			if (copy_to_user(arg, &vr, sizeof(vr)))
+-				return -EFAULT;
+ 			return 0;
+ 		}
+ 		rcu_read_unlock();
+ 		return -EADDRNOTAVAIL;
+ 	case SIOCGETSGCNT_IN6:
+-		if (copy_from_user(&sr, arg, sizeof(sr)))
+-			return -EFAULT;
++		sr = (struct sioc_sg_req6 *)arg;
+ 
+ 		rcu_read_lock();
+-		c = ip6mr_cache_find(mrt, &sr.src.sin6_addr, &sr.grp.sin6_addr);
++		c = ip6mr_cache_find(mrt, &sr->src.sin6_addr, &sr->grp.sin6_addr);
+ 		if (c) {
+-			sr.pktcnt = c->_c.mfc_un.res.pkt;
+-			sr.bytecnt = c->_c.mfc_un.res.bytes;
+-			sr.wrong_if = c->_c.mfc_un.res.wrong_if;
++			sr->pktcnt = c->_c.mfc_un.res.pkt;
++			sr->bytecnt = c->_c.mfc_un.res.bytes;
++			sr->wrong_if = c->_c.mfc_un.res.wrong_if;
+ 			rcu_read_unlock();
+-
+-			if (copy_to_user(arg, &sr, sizeof(sr)))
+-				return -EFAULT;
+ 			return 0;
+ 		}
+ 		rcu_read_unlock();
+diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
+index 7d0adb612bdd..51d4f2d7c596 100644
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -1117,29 +1117,29 @@ static int rawv6_getsockopt(struct sock *sk, int level, int optname,
+ 	return do_rawv6_getsockopt(sk, level, optname, optval, optlen);
+ }
+ 
+-static int rawv6_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int rawv6_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	switch (cmd) {
+ 	case SIOCOUTQ: {
+-		int amount = sk_wmem_alloc_get(sk);
+-
+-		return put_user(amount, (int __user *)arg);
++		*karg = sk_wmem_alloc_get(sk);
++		return 0;
+ 	}
+ 	case SIOCINQ: {
+ 		struct sk_buff *skb;
+-		int amount = 0;
+ 
+ 		spin_lock_bh(&sk->sk_receive_queue.lock);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		if (skb)
+-			amount = skb->len;
++			*karg = skb->len;
++		else
++			*karg = 0;
+ 		spin_unlock_bh(&sk->sk_receive_queue.lock);
+-		return put_user(amount, (int __user *)arg);
++		return 0;
+ 	}
+ 
+ 	default:
+ #ifdef CONFIG_IPV6_MROUTE
+-		return ip6mr_ioctl(sk, cmd, (void __user *)arg);
++		return ip6mr_ioctl(sk, cmd, karg);
+ #else
+ 		return -ENOIOCTLCMD;
+ #endif
+diff --git a/net/l2tp/l2tp_core.h b/net/l2tp/l2tp_core.h
+index a88e070b431d..91ebf0a3f499 100644
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -272,7 +272,7 @@ int l2tp_nl_register_ops(enum l2tp_pwtype pw_type, const struct l2tp_nl_cmd_ops
+ void l2tp_nl_unregister_ops(enum l2tp_pwtype pw_type);
+ 
+ /* IOCTL helper for IP encap modules. */
+-int l2tp_ioctl(struct sock *sk, int cmd, unsigned long arg);
++int l2tp_ioctl(struct sock *sk, int cmd, int *karg);
+ 
+ /* Extract the tunnel structure from a socket's sk_user_data pointer,
+  * validating the tunnel magic feather.
+diff --git a/net/l2tp/l2tp_ip.c b/net/l2tp/l2tp_ip.c
+index 41a74fc84ca1..2b795c1064f5 100644
+--- a/net/l2tp/l2tp_ip.c
++++ b/net/l2tp/l2tp_ip.c
+@@ -562,19 +562,18 @@ static int l2tp_ip_recvmsg(struct sock *sk, struct msghdr *msg,
+ 	return err ? err : copied;
+ }
+ 
+-int l2tp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++int l2tp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	struct sk_buff *skb;
+-	int amount;
+ 
+ 	switch (cmd) {
+ 	case SIOCOUTQ:
+-		amount = sk_wmem_alloc_get(sk);
++		*karg = sk_wmem_alloc_get(sk);
+ 		break;
+ 	case SIOCINQ:
+ 		spin_lock_bh(&sk->sk_receive_queue.lock);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+-		amount = skb ? skb->len : 0;
++		*karg = skb ? skb->len : 0;
+ 		spin_unlock_bh(&sk->sk_receive_queue.lock);
+ 		break;
+ 
+@@ -582,7 +581,7 @@ int l2tp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 		return -ENOIOCTLCMD;
+ 	}
+ 
+-	return put_user(amount, (int __user *)arg);
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(l2tp_ioctl);
+ 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 08dc53f56bc2..abcdd7cf54b3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3545,11 +3545,10 @@ static int mptcp_ioctl_outq(const struct mptcp_sock *msk, u64 v)
+ 	return (int)delta;
+ }
+ 
+-static int mptcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	bool slow;
+-	int answ;
+ 
+ 	switch (cmd) {
+ 	case SIOCINQ:
+@@ -3558,24 +3557,24 @@ static int mptcp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 
+ 		lock_sock(sk);
+ 		__mptcp_move_skbs(msk);
+-		answ = mptcp_inq_hint(sk);
++		*karg = mptcp_inq_hint(sk);
+ 		release_sock(sk);
+ 		break;
+ 	case SIOCOUTQ:
+ 		slow = lock_sock_fast(sk);
+-		answ = mptcp_ioctl_outq(msk, READ_ONCE(msk->snd_una));
++		*karg = mptcp_ioctl_outq(msk, READ_ONCE(msk->snd_una));
+ 		unlock_sock_fast(sk, slow);
+ 		break;
+ 	case SIOCOUTQNSD:
+ 		slow = lock_sock_fast(sk);
+-		answ = mptcp_ioctl_outq(msk, msk->snd_nxt);
++		*karg = mptcp_ioctl_outq(msk, msk->snd_nxt);
+ 		unlock_sock_fast(sk, slow);
+ 		break;
+ 	default:
+ 		return -ENOIOCTLCMD;
+ 	}
+ 
+-	return put_user(answ, (int __user *)arg);
++	return 0;
+ }
+ 
+ static void mptcp_subflow_early_fallback(struct mptcp_sock *msk,
+diff --git a/net/phonet/datagram.c b/net/phonet/datagram.c
+index ff5f49ab236e..3aa50dc7535b 100644
+--- a/net/phonet/datagram.c
++++ b/net/phonet/datagram.c
+@@ -28,24 +28,21 @@ static void pn_sock_close(struct sock *sk, long timeout)
+ 	sk_common_release(sk);
+ }
+ 
+-static int pn_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int pn_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	struct sk_buff *skb;
+-	int answ;
+ 
+ 	switch (cmd) {
+ 	case SIOCINQ:
+ 		lock_sock(sk);
+ 		skb = skb_peek(&sk->sk_receive_queue);
+-		answ = skb ? skb->len : 0;
++		*karg = skb ? skb->len : 0;
+ 		release_sock(sk);
+-		return put_user(answ, (int __user *)arg);
++		return 0;
+ 
+ 	case SIOCPNADDRESOURCE:
+ 	case SIOCPNDELRESOURCE: {
+-			u32 res;
+-			if (get_user(res, (u32 __user *)arg))
+-				return -EFAULT;
++			u32 res = *karg;
+ 			if (res >= 256)
+ 				return -EINVAL;
+ 			if (cmd == SIOCPNADDRESOURCE)
+diff --git a/net/phonet/pep.c b/net/phonet/pep.c
+index 83ea13a50690..faba31f2eff2 100644
+--- a/net/phonet/pep.c
++++ b/net/phonet/pep.c
+@@ -917,10 +917,9 @@ static int pep_sock_enable(struct sock *sk, struct sockaddr *addr, int len)
+ 	return 0;
+ }
+ 
+-static int pep_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int pep_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	struct pep_sock *pn = pep_sk(sk);
+-	int answ;
+ 	int ret = -ENOIOCTLCMD;
+ 
+ 	switch (cmd) {
+@@ -933,13 +932,13 @@ static int pep_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 		lock_sock(sk);
+ 		if (sock_flag(sk, SOCK_URGINLINE) &&
+ 		    !skb_queue_empty(&pn->ctrlreq_queue))
+-			answ = skb_peek(&pn->ctrlreq_queue)->len;
++			*karg = skb_peek(&pn->ctrlreq_queue)->len;
+ 		else if (!skb_queue_empty(&sk->sk_receive_queue))
+-			answ = skb_peek(&sk->sk_receive_queue)->len;
++			*karg = skb_peek(&sk->sk_receive_queue)->len;
+ 		else
+-			answ = 0;
++			*karg = 0;
+ 		release_sock(sk);
+-		ret = put_user(answ, (int __user *)arg);
++		ret = 0;
+ 		break;
+ 
+ 	case SIOCPNENABLEPIPE:
+diff --git a/net/phonet/socket.c b/net/phonet/socket.c
+index 71e2caf6ab85..967f9b4dc026 100644
+--- a/net/phonet/socket.c
++++ b/net/phonet/socket.c
+@@ -387,7 +387,7 @@ static int pn_socket_ioctl(struct socket *sock, unsigned int cmd,
+ 		return put_user(handle, (__u16 __user *)arg);
+ 	}
+ 
+-	return sk->sk_prot->ioctl(sk, cmd, arg);
++	return sk_ioctl(sk, cmd, (void __user *)arg);
+ }
+ 
+ static int pn_socket_listen(struct socket *sock, int backlog)
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index cda8c2874691..3acd6e223cd4 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -4895,7 +4895,7 @@ static struct sock *sctp_accept(struct sock *sk, int flags, int *err, bool kern)
+ }
+ 
+ /* The SCTP ioctl handler. */
+-static int sctp_ioctl(struct sock *sk, int cmd, unsigned long arg)
++static int sctp_ioctl(struct sock *sk, int cmd, int *karg)
+ {
+ 	int rc = -ENOTCONN;
+ 
+@@ -4911,7 +4911,7 @@ static int sctp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 	switch (cmd) {
+ 	case SIOCINQ: {
+ 		struct sk_buff *skb;
+-		unsigned int amount = 0;
++		*karg = 0;
+ 
+ 		skb = skb_peek(&sk->sk_receive_queue);
+ 		if (skb != NULL) {
+@@ -4919,9 +4919,9 @@ static int sctp_ioctl(struct sock *sk, int cmd, unsigned long arg)
+ 			 * We will only return the amount of this packet since
+ 			 * that is all that will be read.
+ 			 */
+-			amount = skb->len;
++			*karg = skb->len;
+ 		}
+-		rc = put_user(amount, (int __user *)arg);
++		rc = 0;
+ 		break;
+ 	}
+ 	default:
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.34.1
+
