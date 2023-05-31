@@ -1,118 +1,74 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E11315495
-	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 14:17:02 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3f68fc6b479so59938215e9.2
-        for <mptcp@lists.linux.dev>; Wed, 31 May 2023 07:17:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41C016409
+	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 14:28:48 +0000 (UTC)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2af177f12d1so65557191fa.0
+        for <mptcp@lists.linux.dev>; Wed, 31 May 2023 07:28:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1685542621; x=1688134621;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3GTuUi9gxRLsh8kswWgOW9PlaqkRS5+59fPDJtvK0qU=;
-        b=OlvNJc3hPKuTBzDvnX3O6lDm/1VenlEdz9kIY43t2JjboeIGmtvSzJ0TMUhcMtkujS
-         GRxklB1c6NfcLxxyAAoBCK3UMSfoXU3rlAOSwp9wGnZy/TlRDnFyp6ES0yd13M/i/kmO
-         7HTTjUHHjM8AoFrmBWnAYDiWmg1sABhEhFlbbQiKtAwKj5tdjGKyHUOPPZpVIBcNPmX0
-         E6Tsts8eymvsb8F9D4SZ0oX25Bu88RMpmtbmvesfy733aQGXu2ql5WTKPU84gBCpxFas
-         LHtBVx1t3Mrn5/yOUYdPGShO0QzJOyqHOUCN+fyXj79qeqfuxYnsqDgety8ZO0e23bnL
-         s7ow==
+        d=tessares.net; s=google; t=1685543327; x=1688135327;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bqxc1gQBmFfkqN2gkqKodtkKlqw3ckKgE7BeEOJc8x0=;
+        b=tZVts0NbWTML4sVgtK/21YjfoEF5m4h1Qal0tXly8hGaLjGt66Z89kQnL4JWxS5Hrr
+         meTGkj0tm6qbRx9qc/PrMfUoNSepDWSxbuF4y2dlb+MvgEIlv11sGWBlaNiJC2t3NH1G
+         7Of8BhXlC57iB9jI+/FG8/82dJs2BKhOo2QvTgsvMuhZ2/Mg8QvEa40Synku0hoC1rkH
+         kE284EpCpa+Z8VDC6xnwTkh9aydw5vJYx5NRrMQl/I4cF3Jm7zlQ87SOWiasTnmmVLui
+         zleNllaQO3pFNK3j9nLpsDMA98c8C8vEm+tbHb5WaBUZGq2P4VHxPDPaZ/SqgFhLxkTq
+         9Gaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685542621; x=1688134621;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3GTuUi9gxRLsh8kswWgOW9PlaqkRS5+59fPDJtvK0qU=;
-        b=QsjmGJ0j2NiYvQmvDe5oAcHnMREDB5n4rLh3REwLjIUNrMMluFtrP/9HyU3KGIs3vI
-         kttHOzKUWSGl/p7+iGSZqEfmRjOrEWUN7YxEouBlmSssbaEeCbRmb+ClFi8FONpYr9XC
-         mzFVCqU+d2WZiLzurXA+6bhFaWjZ8UJ1IF0b62iydgN5b4H5bVcGe6uZUCoqRvKDD860
-         G7AtS4q6qa+MA7/8xqySDamlEKfF1a5j0nPkcksT3EralCmCuZ1laGjWzLECQHN+BYRa
-         X4/Cwjloi7Gq/jtm7z+kkL7Caje6QuJDWmyqxYoRqOZrzCtlcwHKD3jxYevYDjwSZ6+E
-         65LQ==
-X-Gm-Message-State: AC+VfDyKmXM5IJcix5PvAne9KZjjomYI3tftXiefnRYPd8zfXkaYy+qV
-	0X4L+VawEy8317Qv1HU3xa8LxU4S9UjG0my2c53Aj/5+
-X-Google-Smtp-Source: ACHHUZ4ADGN8xIwtJeZP9Du/huVvJ90Dc1n86HejLGussR4hPZLRoN3U607u9nxgpdAAXvg6fxR8KQ==
-X-Received: by 2002:a05:600c:2283:b0:3f6:1317:ca71 with SMTP id 3-20020a05600c228300b003f61317ca71mr4259681wmf.14.1685542620905;
-        Wed, 31 May 2023 07:17:00 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id bg22-20020a05600c3c9600b003f4283f5c1bsm4242215wmb.2.2023.05.31.07.17.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 07:17:00 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Wed, 31 May 2023 16:16:52 +0200
-Subject: [PATCH mptcp-net v3 32/32] Squash to "selftests: mptcp: add
- MPTCP_FULL_INFO testcase"
+        d=1e100.net; s=20221208; t=1685543327; x=1688135327;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bqxc1gQBmFfkqN2gkqKodtkKlqw3ckKgE7BeEOJc8x0=;
+        b=AjbYDa7ozDcxkvrNloYTDDu/D0oOxVjDxuXYm/7+T7uFV3q4XnXWWUjUSguEWVsB+T
+         YGlmXtcHIsmnaG/3XOFgU3LWWj6NHC53bqpY7ZcKNvWW5ImPcpWBgDWHM0CVqAn+ArR/
+         p6AOMiwg650VwCrV+SxjI+9TjXa+mYtUq3hIlgt66Zld2ts7CuY0Qkr5WrfbWhuvvPa3
+         1YifYW++GRPszEHd6PkGlytReziB9ThtKQzQzYZHascHAEEpzGE7aXPYGDDpMWdTqL+J
+         mlDtTMriOUapn/O9y6iBw8p9cqdgNMI0jPi9VbvqGb4jLFT4Rqv2HmL4kc37LLB45Ypn
+         +Gzg==
+X-Gm-Message-State: AC+VfDxZF21vz+W7SUTDGeyElGDRQC6TUwdQhiQkdUlcNT7lpqNvz4Xc
+	YbuTmiSpo6vBEQnzLczmd1DzUgncsccpiKwlBO9vLZAo
+X-Google-Smtp-Source: ACHHUZ7rwSG9CnrQeO+y90KrSffxz+g3eWD9rq89IXQMhoblHts6OqCftMVeF2hNlTswJOP9ymNoJg==
+X-Received: by 2002:a05:651c:112:b0:2ad:fef4:94f8 with SMTP id a18-20020a05651c011200b002adfef494f8mr2881705ljb.6.1685543326737;
+        Wed, 31 May 2023 07:28:46 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:b1d9:81ac:cb3:35d0? ([2a02:578:8593:1200:b1d9:81ac:cb3:35d0])
+        by smtp.gmail.com with ESMTPSA id 24-20020a05600c22d800b003f4e47c6504sm24687544wmg.21.2023.05.31.07.28.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 May 2023 07:28:46 -0700 (PDT)
+Message-ID: <355b422b-bd88-56f2-6563-c73c4d052615@tessares.net>
+Date: Wed, 31 May 2023 16:28:45 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH mptcp-next v2 0/4] unify PM interfaces
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1685067241.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <cover.1685067241.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v3-32-a1f05258292b@tessares.net>
-References: <20230406-mptcp-issue-368-selftests-old-kernels-v3-0-a1f05258292b@tessares.net>
-In-Reply-To: <20230406-mptcp-issue-368-selftests-old-kernels-v3-0-a1f05258292b@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, 
- Matthieu Baerts <matthieu.baerts@tessares.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1666;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=ziktV6RHZdI6610ED5mMHdiYrmlClKYN622Wg6NS3Y0=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkd1bEZN+BUesbfqmbSduBjn1P2B5NCTvimJ0Tw
- DBmqikTb8mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZHdWxAAKCRD2t4JPQmmg
- cw+jD/90FNy45uyS1z/v+xhgWZw4J+KYXU/a0ca9RaiMeYvdN7xb6A43w9tlwxfbscsmVqngJKv
- vvlDYY/Ko8HPJxEUarYK2edo9Tl+E8vPS5rHkSVdCQD5Ro5oq/T428+ilPpV41O/0ONiUrQni2I
- OftOd3TKiZc9q2YV7CMDtHLEQEqb/MyrxebWe0rYHE/ogT1DuLxHyqytZcDMh6EfdItKFVv0QFn
- JN1OaVHbJs/rRroyFZim/m++fKem2G9jMPT5drJmwHeZwQHUfMd4boZuwdIT17qmRqIdtaSjG5B
- 7uNaq789iHv2s1CC4rtpxOmb8g46vkR9rywd42aSO2pygZOtzDSeqdjEYEApOZiYC5tW27y7yhP
- /Wuo+2LZG4i4oc5z6U2SHqTTJn5bp0rjo+enQeYTdgUz0lFyj9GBlCP8TF3Ve9Emd9ZOMCUu/mn
- tHspx6dp5XMAngVr3i0OiCgnvKJmbV+Uo/V8SBLQ6YwGfhc17eDuBt5Bo3s3yI6jsRWQFkhmTKk
- Yt+mv6PivmDzIJFB1yofVv1OvsR4VwEEy8S5eVGo4FV82ydiSNlaSMQVcu2EvMjWr8JeST+auek
- oFVGjZYXHHw16fygqicsBFuxGLaYtKtcR9cEMDRgIaTTeB88kLADcOCNN0NsqfuXgpgHsfphbZy
- 3ldPp9WSyXaYXWg==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Relax the expected returned sizes from a getsockopt(MPTCP_FULL_INFO):
-the sizes should be positive and the user one should be the min between
-the one given by the userspace and the one from the kernelspace.
+Hi Geliang,
 
-By doing that, we support new fields added on the userspace or the
-kernelspace sides.
+On 26/05/2023 04:16, Geliang Tang wrote:
+> v2:
+>  - address Matt's comments in v1.
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
-v3:
-  - new patch (the mentioned patch has been sent and applied while the
-    v2 was still in review)
----
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Thank you for this new version! LGTM!
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index de897f77e174..5994a078a65d 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -519,10 +519,12 @@ static void do_getsockopt_mptcp_full_info(struct so_state *s, int fd)
- 	}
- 
- 	assert(olen <= data_size);
--	assert(mfi.size_tcpinfo_user == mfi.size_tcpinfo_kernel);
--	assert(mfi.size_tcpinfo_user == sizeof(struct tcp_info));
--	assert(mfi.size_sfinfo_user == mfi.size_sfinfo_kernel);
--	assert(mfi.size_sfinfo_user == sizeof(struct mptcp_subflow_info));
-+	assert(mfi.size_tcpinfo_kernel > 0);
-+	assert(mfi.size_tcpinfo_user ==
-+	       MIN(mfi.size_tcpinfo_kernel, sizeof(struct tcp_info)));
-+	assert(mfi.size_sfinfo_kernel > 0);
-+	assert(mfi.size_sfinfo_user ==
-+	       MIN(mfi.size_sfinfo_kernel, sizeof(struct mptcp_subflow_info)));
- 	assert(mfi.num_subflows == 1);
- 
- 	/* Tolerate future extension to mptcp_info struct and running newer
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
+Cheers,
+Matt
 -- 
-2.39.2
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
