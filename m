@@ -1,127 +1,104 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B046513AE1
-	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 10:28:30 +0000 (UTC)
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-75b0df7b225so360240685a.1
-        for <mptcp@lists.linux.dev>; Wed, 31 May 2023 03:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685528909; x=1688120909;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3/OkAlec4aAok0LQHGQn3afmNGuRvXisCgfyLtI2tYk=;
-        b=bPT9bdZTWAAUJCZqHSCh0iFcc8kv5SwK5gJX67xy8LF6prevgwLUd3sTztESNjW0Eq
-         qYvIiPHRtcFZIqYLb9+i5J2g3UPsB6MrOVNjiMZATpZwd8Chd03RPx56rpCWaT2/MAdA
-         dw0RjM3yJ8WJjjKaZdFAsGsFrazgAdbNXQOV1flZAsHxm8hLlnJ96w4eHGAXNixdxbvL
-         l2hycoqq65hbd999nUBywK9WnuFpzhQ7SQtmS3wKX8pUTiOpya4onU8cLEzzqK09Y176
-         uEYxxsaT6yKmgVt1RYhHNCsfk/+OIqOw2RtUYZv5+MrLdJX0MMdxwzeXofFhFMhSQk4M
-         pweA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685528909; x=1688120909;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3/OkAlec4aAok0LQHGQn3afmNGuRvXisCgfyLtI2tYk=;
-        b=ZTS9h7wYVd6g3aLwaNZY6g3lN3UBVg+3cetA4Z00ErX97uRIb4FrxPWPpUZwqnSOVA
-         8uqgAVKZKFfxQDMfof1URfVG1WAztoxfqBKQHLn2TJjQQ7YY8B5VRWuoT//HqnoVMZ4C
-         T10GHSM6FQZLK+qdxDCf0WJFrKFEgFDusecCVhF3hh+BZYei3tuh8zfsAE1jsmJErH9p
-         4zzTV2o88fF22axm1yYy3QEOsOQgXYjowByaY8oRrn87Qz+5/MZyIxXfyY18OUnUcSia
-         0QGMpPrkZbk1sYRS99KGlestH0Nqbb5X9MHXFOx9Ha6YkmxzVXuXHhaOAn+ztz1fT63k
-         2pow==
-X-Gm-Message-State: AC+VfDwtARlUb4EwWY/OALnQ2UAFuaXudh55i3/jCyt8udOv1ZcPNeVc
-	DreqxEUxv4ugcvIAsVkol+/Wcw6jMxvQ
-X-Google-Smtp-Source: ACHHUZ5fQkrxkB6WXZ65rmalfTjRWinHiNwBt/wR0Z+G9dgSykBk6cZcftidB/V/N2otJypXucYAFg==
-X-Received: by 2002:a05:620a:438b:b0:75b:23a0:d9e3 with SMTP id a11-20020a05620a438b00b0075b23a0d9e3mr5120209qkp.57.1685528909477;
-        Wed, 31 May 2023 03:28:29 -0700 (PDT)
-Received: from [127.0.0.1] ([172.177.255.3])
-        by smtp.gmail.com with ESMTPSA id x12-20020a05620a14ac00b0075cc804ee88sm3663916qkj.30.2023.05.31.03.28.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 03:28:29 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <46e0ef22b358efde64e3783c4cce79dbcc45f417.1685523463.git.geliang.tang@suse.com>
-References:
- <46e0ef22b358efde64e3783c4cce79dbcc45f417.1685523463.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: set endpoint out of transfer: Tests Results
-Message-ID: <ac196698-466a-ab58-a6aa-329e4e725c6b@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 31 May 2023 10:28:28 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8041B14290;
+	Wed, 31 May 2023 13:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685540251; x=1717076251;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4j+SR6j6Y91MTRtLsgAmtEiec0cpzY168prO2t2ffXI=;
+  b=QwiOrhxXqu8xzIkBlfyR1A4WYFd0Zlhe2q+F1oe/KDJVD4A1Js4SnhGp
+   0sneh+JEp/EW7Py/XTnxmneL3TLE3lJjknty80kmnLqYxIWc7/BPav+GX
+   yPxKCxDdCMtdxNLjNMJQF6ZmgUUxTxys7imWPJ51zVOwGcVsvWcIdbR8f
+   VDFORMg90Oh2y74i8vVuwQ3G8cIQyrVc8C9ZOaLaZYFSKpu8qAuF+OkkX
+   0hmn4dMk4x7ZnlMkZUA9H55tIXeSnAbCU/ZnMaX1GO1Nz2HxfczxHbYMN
+   +BUivC13agqRZmlw/e9aO6dzqC30ZPpf+DojIB8DD3zMD8+LHx+RHipsi
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="421005393"
+X-IronPort-AV: E=Sophos;i="6.00,207,1681196400"; 
+   d="scan'208";a="421005393"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2023 06:37:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="736673988"
+X-IronPort-AV: E=Sophos;i="6.00,207,1681196400"; 
+   d="scan'208";a="736673988"
+Received: from lkp-server01.sh.intel.com (HELO fb1ced2c09fb) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 31 May 2023 06:37:25 -0700
+Received: from kbuild by fb1ced2c09fb with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1q4M0y-0001Mx-1R;
+	Wed, 31 May 2023 13:37:24 +0000
+Date: Wed, 31 May 2023 21:36:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Breno Leitao <leitao@debian.org>, dsahern@kernel.org,
+	willemdebruijn.kernel@gmail.com,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <martineau@kernel.org>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org, leit@fb.com,
+	axboe@kernel.dk, asml.silence@gmail.com,
+	linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
+	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-sctp@vger.kernel.org
+Subject: Re: [PATCH net-next v4] net: ioctl: Use kernel memory on protocol
+ ioctl callbacks
+Message-ID: <202305312111.1m4i6rKU-lkp@intel.com>
+References: <20230530175403.2434218-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230530175403.2434218-1-leitao@debian.org>
 
-Hi Geliang,
+Hi Breno,
 
-Thank you for your modifications, that's great!
+kernel test robot noticed the following build errors:
 
-Our CI did some validations and here is its report:
+[auto build test ERROR on net-next/main]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5215260047572992
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5215260047572992/summary/summary.txt
+url:    https://github.com/intel-lab-lkp/linux/commits/Breno-Leitao/net-ioctl-Use-kernel-memory-on-protocol-ioctl-callbacks/20230531-015554
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20230530175403.2434218-1-leitao%40debian.org
+patch subject: [PATCH net-next v4] net: ioctl: Use kernel memory on protocol ioctl callbacks
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20230531/202305312111.1m4i6rKU-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 12.3.0
+reproduce (this is a W=1 build):
+        mkdir -p ~/bin
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/f97a3206f5ae59ecb0c7105225c5230b343c6c54
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Breno-Leitao/net-ioctl-Use-kernel-memory-on-protocol-ioctl-callbacks/20230531-015554
+        git checkout f97a3206f5ae59ecb0c7105225c5230b343c6c54
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=m68k olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6341159954415616
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6341159954415616/summary/summary.txt
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202305312111.1m4i6rKU-lkp@intel.com/
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6059684977704960
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6059684977704960/su=
-mmary/summary.txt
+All errors (new ones prefixed by >>):
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 2 failed test(s): packetdrill_fastopen selftest_diag =
-=F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4933785070862336
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4933785070862336/su=
-mmary/summary.txt
+   m68k-linux-ld: net/core/sock.o: in function `sk_ioctl':
+>> sock.c:(.text+0xc7e): undefined reference to `ip6mr_sk_ioctl'
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/df17924f37a2
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
