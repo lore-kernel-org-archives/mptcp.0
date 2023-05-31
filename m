@@ -1,44 +1,46 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2044.outbound.protection.outlook.com [40.107.247.44])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2052.outbound.protection.outlook.com [40.107.247.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B751FBA
-	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 08:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4A41FBA
+	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 08:59:17 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VKcQm23VBrENeg4VJQGwsjobodr1pSgVVAqeLT3WVNuiupXpmbMB6xUWkJmT8TgOJStzamJdD4u7iOOfTcmm6CjRY2SsBe91hBDUy0QUTnGviKkSnjSLhhE+Xww7CxtmZbRsad2PLEnRmm36Z34qqAgDDCqBZrXSZKUML4lZMD6twG6t5bejI/n4OpLcn9oivspct4vjoQEUIfv2j8HsTo6oxazRzBnRtOy5GhUHirATw16dcmNnYj0UU1wdGsHK0VcJXU6G23vimwHZMMM36R3KvXrn5yEkTlWLjJ554cDPBGdBvnonRGIJyKkNISy37ajAOZc3DTzanAG4z+N+Tg==
+ b=jzfzktC1vpxLaSglnTrHgJPp2duXtKvqkeRP3uF1+DhjnCj678+8JszoCQKYJ1iJuSOp4sth7ND8Swf++Y2SsxghBTJy2Bul+p7eBcWFvUecN2FA7c9599p69uaeYqScYz8cBr99PuSVmnt2/to7i39iG2qJZh4LDoG4gBsFHwQOh3cPuFdKqllKmZk4WBIMiL3ALIjpPKEBbUWjBVOBhDYgGZ4qJ45UzEdG4KcToPGrlgsVKKAc1yANwaidUelGGXpH2G/eOifzbvXzN+1/uSLl0x3T7JMYIRbApdymBA7ZLSatQS9wGekMgLBmHHyIB6tE4ap3sHwRhi3PKQl3gA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eI/7nod56xEtxKtjvYfiREpPD3qfHSjdKDUq1N/EzZc=;
- b=aCNKkD6hFsiehzRHTsy67viTqp3rFWRk9rW7HFpnOq/+hgXh1jfo4orXBwmRuq64MTUOXsJt8MJ1UDyKIhwyxRVb8tqyPGljPReWpx2pUPf1zTBD4XtMHqy6Y+OnHZhsDRmoXa9iwM7TfiIN+jS7dZ65pdz7bbH789xINNgvnuUqzJay5XgSrMQnl4bTwukUJc+6/ZzxE4zlTC/lNM8rVOELyzdcnoo1JMd9O83wY1j3Vqlr0NGxakVl7nA/0bgQe6DNHg90ZmlGcTvQPEUmrdwRphYssJXwdLO4YpijeXOeXQxA3Bu08V3Vtz1y1nKIOiRtWveu4urvqeiKzobKYQ==
+ bh=N5Yf8LUmFRPjdvu9VSJ6NwQitFke6FSDP6AXAFtLfSA=;
+ b=U48kFscM+NlUebAKnl0sfBkpMbSOQbiJvVRyJr7DaC+zAV17WAwfk3lQAdHV/rcKv0nA7P4r1yF1Ga00+EOtC7Rc2xSdenRiIdnFUxpACPjGwqWdMjxx7eT4eFgjGgY6V676nhCUow/W6awzhCQKjiXHuzlLVmn9w19u9l0qY2Q0fNOXK9ouODF+pmxldVRobk1DMw3301Qq9MrbC8aNiMKK8rzvESLGVdPE4Sx2MjjTpahUlTT5vuVB9T5zBKrU0Ry6y2K9mWGQm9hiLr2EEFs5JdQDZ336Orel94M9PpFZqrVA1OfDyVqqpom8O126nHOps/sxnI3PpFhgP5/lqg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eI/7nod56xEtxKtjvYfiREpPD3qfHSjdKDUq1N/EzZc=;
- b=kgBlliV3bvi93cTC2yCoeBZKHJqBfJSq1j8GEsXECoqcBezlU4cA6zkkZDAhgiBXb2zVA0VmYvdEBSelr+bPVUJsvxyRx5PWHF62auIFD/79A1s1d/C5bWvjyyi5AZu+19F5knEkkEHfYw+5jBps67tAvXiWpgaSlYg/KGfvd7/BrBCA0wNAsEvqfqwJZarnbExh+qmYac9mReXdhQGt34Gnu4yJS5oAXyiCqLiBV6VUtVNjKq8xmdlYlBXgNMiPr8JjCBxjnBdN2XkqfcF2MvZrzQdhzeXEAUf8esCorKZv9vORo1cny6DJYdizr9Q2tNjygjG5bTzeXU6gD//JnA==
+ bh=N5Yf8LUmFRPjdvu9VSJ6NwQitFke6FSDP6AXAFtLfSA=;
+ b=KRNdt1vO/pJtnT4k8SLeB8xksC9jZ2oNlVNH9rSHWeaDS/W7i/Y+Xh/MHnFTeHrDho6mE17JiYI4d9uwPSIeuV/zcGzMuDhUdMZzSyX9UQPed/cC6W+R8cTNeARcsVV6A4YWjr2N9K8Xf+vyXVhjv67lh1+Qar6w6L4hdlgJuTJUOjsWSYDWIZ/tYSoUOs5JERzQpnR9j7T/cqKyTCuhHkl0qS22R8QDoI923jC0SNdvm8J/2bzumvVbM/ZXIkJL0LR7uJjjhXPUZuVtN8FQXnV6pBuZKIH4GwJAtVqGU32FpiYIF1ds+nlVpNWmjLXY2LZ2+FbnYH32r/QTz9lNLg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by PA4PR04MB7902.eurprd04.prod.outlook.com (2603:10a6:102:c0::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Wed, 31 May
- 2023 08:59:05 +0000
+ 2023 08:59:12 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::423a:a30f:5342:9d35]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::423a:a30f:5342:9d35%6]) with mapi id 15.20.6433.022; Wed, 31 May 2023
- 08:59:04 +0000
+ 08:59:12 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v15 0/7] update userspace pm mptcp_info fields part 2
-Date: Wed, 31 May 2023 16:58:49 +0800
-Message-Id: <cover.1685523463.git.geliang.tang@suse.com>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v15 1/7] selftests: mptcp: skip tests when features are not supported
+Date: Wed, 31 May 2023 16:58:50 +0800
+Message-Id: <a9154ba82ed18ba04e1eb18aba99c7a84a120665.1685523463.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.35.3
+In-Reply-To: <cover.1685523463.git.geliang.tang@suse.com>
+References: <cover.1685523463.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI2P153CA0030.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:190::15) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: SI2PR01CA0005.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::23) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -48,92 +50,1600 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|PA4PR04MB7902:EE_
-X-MS-Office365-Filtering-Correlation-Id: b1661e19-be07-4bb5-1a44-08db61b54909
+X-MS-Office365-Filtering-Correlation-Id: 492f3881-a5b9-408f-30c0-08db61b54d86
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	WayleVY5HWGiYA37ZMBZiiYLEP575/l0htCI0tVMqwl+cEX5JTvgAtscY48mET+QeuMs9/DPB0o60/V/PdUT75Jjywr4s3EQQJUHXWzlUZHrg23m5potFIwSiL/GjICXGDvYIml/hSKsramrBDViE/OBXrMFe7t7ojQH7QbNtn4fghvRcJUVcrHIuh2mIAD3K4LOmR0SfpbsOPYdfOrF9J80V+xmyv/361dj1mfJjfITXfrUW4cET2vin0jMimJrXnVecp6a23WQARQFU2aw0x7YKR5PVYfPkD2XIGwXJ3Ipu59wJ7L0MZR2xmUvbLaov9AeWlNv7YWt4qxwS8dF/KcHbRQeK2YBbvq4szue+ySDTXpeQsyOYhXIL0Cs6k80rPUkvb2i9mXxNazujtIU6IrpvjLKlV+q14LTKPLYRJN4ss4pEV7edmKhsLiyCtYgpzC4R/iLmtBO4S7SbJUPJ5vn2Sc0tDrsZUsJHtytkhqEjRg9MShB0bHhjOfZmSx7D0J+QKUIhlSnjX7DcBcZt+gWiiWrGC4fyUMe8wGnCb3IByH/R1MMeMj1LcpIZdey
+	V+LNYnJArG8/UZXEguly5OSlcBb3p90AIlRhrWc830qKzd6X0/HZbtDlNCVD5BqIW7ix34jIjnWWtPLcbBxyrUxoSrSHVTb9x2JPnn1g6yF3/4tANtX/sWCL6qq2tfX6M+hAz//WUYuPUsnK2dwcnHEAyS0LRy+rEZOpPlDcbJW3AyV8eEYsR5ayXMIV2O9aTV7r7RmmbtKkARQ7Re3Lkn6WP/dhhc63qhGY+pKiF9w7A1doCCiZxCdxfIhFE4Ky3HG3iVdeDMKTtpZh9Y55W37O+EDwq+NMUCGR+6eqjNoH0NT3FGNw6SqlzCT9X04i/jLX7pGKLMJBrFB5giFKjhauiV93N1xAw38dY3OW2lx87+t2nBUnI03jUBHNaZpuiSH6EQpRPPCXU8Rj9Tbi0qbSzeYQo6eMqSek3B1mWgiVk81hQ7OVIOYM9035kKxheutp+FOBLuT+TF4ZqTrWaNTouvr1crnIrPPWmMmn4BdnluLaNkrmiCkplzm+wwTYvTvfZkO+TyvXIEPqi7EQGZ+WdYqxfBvivQE41QrdwpmDUGV91qZjivawmIt7M48P
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(346002)(376002)(136003)(366004)(39860400002)(451199021)(107886003)(2616005)(38100700002)(186003)(41300700001)(83380400001)(26005)(6506007)(6486002)(6512007)(6666004)(478600001)(4326008)(6916009)(66476007)(66946007)(316002)(5660300002)(66556008)(8676002)(8936002)(44832011)(2906002)(86362001)(36756003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(346002)(376002)(136003)(366004)(39860400002)(451199021)(2616005)(38100700002)(186003)(41300700001)(83380400001)(26005)(6506007)(6486002)(6512007)(6666004)(478600001)(4326008)(6916009)(66476007)(66946007)(316002)(5660300002)(66556008)(8676002)(8936002)(44832011)(30864003)(2906002)(86362001)(36756003)(579004)(559001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KGO1VWv45Dl0QHvm4utoEtvMYoG2wT9lP5lJ+cO3AyUxdgeoehzs4F+ZdiYu?=
- =?us-ascii?Q?qB5yQJTR8vdZ5MLjWLnUdnq/U1GCl+n6bh5gzdYLuYTx1rEPQeFw34iH1cUZ?=
- =?us-ascii?Q?BbCNHv2Iag+xK5aXax5tuBVZYyc52216D8DzqX/OkojdiyFiOrtKibPlQMkr?=
- =?us-ascii?Q?INzXUU2e+y9+lA0DaScc+HVgVI/zsffkeRxsd8qTZUeL3w7ViCnj92VawUCL?=
- =?us-ascii?Q?w2fglpIloWe7+ludK9c1P2CQmiBhXVUCLmb1TbA0oY3J47OCmyOnTJ4n6Ll5?=
- =?us-ascii?Q?DeDBT2ZCmTjNahCZPLBZIfq3iG4sT3C5veU4VNZN7ERb7fbM0J+mkTLVYrjN?=
- =?us-ascii?Q?awIXKAJb+G/rvFzVe1hn5jZW2eaaPYrZ2Or+/gtW7N0d0bZDgEbG64eZmCvI?=
- =?us-ascii?Q?uzpAsuGuO5IUglNLhh3J1Ptg7iAMf1ZvGAdLISAs8q1MJYmx/WM49h/o/1ai?=
- =?us-ascii?Q?zJuN4wTk477nx9/d5EKTecvZAEclwHHXZuc8ikKyclszhL6s+zF4N/tyQhSt?=
- =?us-ascii?Q?J1AWZICJyyQQbkl8iC0LPteSqVZO+KpJQ4oBxI/tQwVgnEiQRqOj6jGWv3bC?=
- =?us-ascii?Q?VnMK+vhCi09Ycau2SbjjEZA+mSWX01P8AfFSqfG+jW5f0dEDgIMz2hBDcioj?=
- =?us-ascii?Q?PPTEJbpIlSX0byOdB/IFtifjT88kf1119V9Byvyc4Y6cfHanjOdYbJa7MFnN?=
- =?us-ascii?Q?dKvAbejwzQwMwtGZJ16i34wiLJqxeTDMX0ZoQ95ygrPsW7VStgdM+1jIY71k?=
- =?us-ascii?Q?zh0BulXMEjxMtOY0gFD8hSnpKtZNzAeZ2X+GymosUT+dZq9phJ/3v038ie/V?=
- =?us-ascii?Q?7asl2KKQUMojkPdWPgiKZJ6ig+v/wDzx+y54I2CzgkQZj3/rQvZmNvuCio1/?=
- =?us-ascii?Q?Dwpv5G5cZCdcMe62VE3LWi4mIGN0cZUFYvDu87kS9Idp8luBhovfHB5LMyWD?=
- =?us-ascii?Q?ubb+QkJ9FTIMDE+S5VdgBe+yhHV7omWGUgoZ7NolZV6jDRazi0aj6PThohp6?=
- =?us-ascii?Q?imwZdKLB3nfWMRrJns1chvv2xVLVF67M9IcqUkyWZv78lSLUCU52gJUDbacf?=
- =?us-ascii?Q?Uw7XcjaSaHzOu+1Fwd/uMwcJ46jub79luY9h6wk4uUlEwFFrBCRK3JxM/vQx?=
- =?us-ascii?Q?BioJdbXjnQntkmtx1zuSlnL4UuilcfssnpXn+yglrwS9T8sg/4aiJeoPHC/P?=
- =?us-ascii?Q?WloCh+IZJKceJMaZqXkQFTxUC/oOg08H1zYEkDfgkICmgUDhNFBr4Jb3ubp7?=
- =?us-ascii?Q?tDDqGirbLUs8qKDy0Q9Dll97NlRv+Kx+6fWsOZMTYLd4NnI737cuSVb9xu5W?=
- =?us-ascii?Q?twGhtFP26RkoURWy2LqeMc+24xgBAXIb0kRcjmr6jj8gXE9wIKhRCo+xFEK4?=
- =?us-ascii?Q?tQSmc2p+Mz87Lc6UidHx8YuKTlHpAgzW9HmVPq3itdb9EFTKCmnaswncowr/?=
- =?us-ascii?Q?RYWbzsqTnrv5mfyK4O483aGtAIHv8xxGSjcOb/M4ohw69cFLItTs9M322Ic4?=
- =?us-ascii?Q?5esckPN5UOfWuGW21/k1uRaV/Hb90BVe1WHlH0Eu1q6/S+mbd5zVbg1LZAlh?=
- =?us-ascii?Q?EwzoKSLujWF5qGMk1pSAO1jdEqSD790PycsEsm+u?=
+	=?us-ascii?Q?3N8zkAxpm8FQ9fsvFsnG6q8aJjzc5SuWLHR0/E6ezLVDifQmFX6oBWJ5llUZ?=
+ =?us-ascii?Q?DlcXQoSln13rE+I8GIHLgTOqll2rwDB+ZXWnSfaFYEBwAcn9cFgiA60/wxga?=
+ =?us-ascii?Q?2pTypzwS3N+4ZCHRJ1esI0ewIDuygYcEdJODX0CIYE4ekfNfobE/jzRSDT3y?=
+ =?us-ascii?Q?i1bjm1JlDMxLelHlFDP5EAeDivpgEk9A6fXdWPWyyHRICBZQ+mROjPEWtsJs?=
+ =?us-ascii?Q?1XD/xpSJcefFYa5QP0kpzRWHSlynONgw0zb5qwHDF4ADdPK1j9uJ+a6/HHqr?=
+ =?us-ascii?Q?lqT+KQHSo027+khperubv3gSc//AQ0xwMH7dOQVr1NzURrywJQPCRUHWQd2x?=
+ =?us-ascii?Q?3FBEg3kEdO7rA+6hFk8xcVD4wOwG6AwjPLzE6n+yA0SucCSTQ55sJKo15pl/?=
+ =?us-ascii?Q?S+qO/6xZI2RQVmsBLpS5Syxz9sb5aKoVEj12c9445InRMa5NqFbMwyFqzoIn?=
+ =?us-ascii?Q?zatG7dS8Z/jgSa4YVgprLH7Pj1qBJ7865/hfDbXl9teClA1T1inHk21oM8WU?=
+ =?us-ascii?Q?mvAp/PozGxXqLnBp+HeZPgDlj2G6jzNErVCHsUazITF5AIkO0q/WV+QKukf3?=
+ =?us-ascii?Q?4nCUoOUdoP5DpBKtYEx79lYIn/SfrEvPbpNf15kRxbbpPkTw0UCjtBBSjOc3?=
+ =?us-ascii?Q?mMdIFruWV2psf3XYQWHMhi0VuGSbx9yH5o2CvcxpaSs+1xMTCy9TQ0xMpk0e?=
+ =?us-ascii?Q?2WTRQwHMtlGEdO/j1acx7B317KONv1iNGKxfqNZcYmLEPbVNR/6AaRzRTOuJ?=
+ =?us-ascii?Q?+QRuJGspIt7d3n+ILNtWPQ/5TA+JhXMtlvVOApoI4P7y3Ecd0PDL+LVDVLtA?=
+ =?us-ascii?Q?Imcaa1pY1aTlxtdcx1CwCgZTTU+140+/36URjqFjZTAxyS16dZ7R2drvaQPO?=
+ =?us-ascii?Q?5ujUFi2j+2ix1+MMNWf1f5nR3McvvCAKahBJ7l8HVcPgFv5A1ifekqr/GaBC?=
+ =?us-ascii?Q?gCDA6+wm8K1VwSJl9B9O7+DA6PWZ4e/K3E+SUW5miD/v267xjezPTWSQWA7Y?=
+ =?us-ascii?Q?TOtYl7zq5wYCiEu2PIeUxZ6T6JiVjXx72iKtqoRRb9y+tJ6V4mNYEgiXKrc9?=
+ =?us-ascii?Q?8EN6D29eUjQYoDBc/dB4qX9id8yDg06/5RzPTh/PNCo9EWgUUYaU8mY8S8AI?=
+ =?us-ascii?Q?T9lmzBfHlXmbXFMmS2eLBG6jp+ixAWsBCqAHEwQm/eu6nIA8+ViDa6Gte6nP?=
+ =?us-ascii?Q?Daoy5HAx4G3rRtl2jaY0dZuCm+35b+kUo6P85G28MOQ///OkTw4neYmGA+tg?=
+ =?us-ascii?Q?vCuP3vveI1+uUYkTHJBNORvhJTbzfIS7YWQD/pBPWR2nHndIlLeNCQ2+s8YE?=
+ =?us-ascii?Q?zSiBLTMSDIy2aP0NSVdN8aI01afqm+HlGFMaagAhH0X53XZF5tr7bWY9uca2?=
+ =?us-ascii?Q?hydN7P5/Qm7XPvxiWgeRHViek5Lba32qHqTKurlbCsuhU1l3YbQhlviVkWIG?=
+ =?us-ascii?Q?m9Ngfe6aMu5aweSGYilliAZG5gCZKBPB9Fo7Jo7Jwog04dsf4XlZrgstmE3j?=
+ =?us-ascii?Q?3TgP5LOoYoLfubrsmxDDXy9nFh0P+r7lLXd+hS38cBlWBKmYaT5tMCSmxWse?=
+ =?us-ascii?Q?mbIFpbunjxk07O+yKtOKDk64JLu+uM3/Wfub4b9p?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1661e19-be07-4bb5-1a44-08db61b54909
+X-MS-Exchange-CrossTenant-Network-Message-Id: 492f3881-a5b9-408f-30c0-08db61b54d86
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 08:59:04.7259
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 08:59:12.4874
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1cpiTx7meO7irybI7jQAjuW2au3aEEnJOhgWuzAMYqf6RcKW1IR0gdu4ku+isMMN9gyAe7yDOuob+k7azet6Lw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: ANEnaZNPKPxAmDbGc5DZtTKFYRm3yT3FzLhGxdcD1gpq3YEh4B4zEQ1/WnRmzUninjHGZgINXGTTtD46x9bojg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7902
 
-v15:
- - fix the failures reported by CI in v14.
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-v14:
- - rebased to "selftests: mptcp: skip tests when features are not supported".
- - patch 1 "selftests: mptcp: skip tests when features are not
-   supported, v2, patches 8-37"
+v2, patches 8-37
 
-v13:
- - fix all the failures the CI is complaining about with the debug kconfig.
- - rename endpoint_manipulation to pm_nl_set_endpoint.
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ tools/testing/selftests/net/mptcp/config      |   1 +
+ tools/testing/selftests/net/mptcp/diag.sh     |  42 +-
+ .../selftests/net/mptcp/mptcp_connect.sh      |  20 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 506 +++++++++++-------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |  59 ++
+ .../selftests/net/mptcp/mptcp_sockopt.c       |  12 +-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  20 +-
+ .../testing/selftests/net/mptcp/pm_netlink.sh |  27 +-
+ .../selftests/net/mptcp/userspace_pm.sh       |  13 +-
+ 9 files changed, 477 insertions(+), 223 deletions(-)
 
-Geliang Tang (6):
-  mptcp: pass addr to mptcp_pm_alloc_anno_list
-  selftests: mptcp: test userspace pm out of transfer
-  selftests: mptcp: check subflows infos
-  selftests: mptcp: check add_addr infos
-  selftests: mptcp: pass fastclose to sflags
-  selftests: mptcp: set endpoint out of transfer
-
-Matthieu Baerts (1):
-  selftests: mptcp: skip tests when features are not supported
-
- net/mptcp/pm_netlink.c                        |    8 +-
- net/mptcp/pm_userspace.c                      |    2 +-
- net/mptcp/protocol.h                          |    2 +-
- tools/testing/selftests/net/mptcp/config      |    1 +
- tools/testing/selftests/net/mptcp/diag.sh     |   42 +-
- .../selftests/net/mptcp/mptcp_connect.sh      |   20 +
- .../testing/selftests/net/mptcp/mptcp_join.sh | 1040 ++++++++++-------
- .../testing/selftests/net/mptcp/mptcp_lib.sh  |   59 +
- .../selftests/net/mptcp/mptcp_sockopt.c       |   12 +-
- .../selftests/net/mptcp/mptcp_sockopt.sh      |   20 +-
- .../testing/selftests/net/mptcp/pm_netlink.sh |   27 +-
- .../selftests/net/mptcp/userspace_pm.sh       |   13 +-
- 12 files changed, 784 insertions(+), 462 deletions(-)
-
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+index 38021a0dd527..6032f9b23c4c 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -1,3 +1,4 @@
++CONFIG_KALLSYMS=y
+ CONFIG_MPTCP=y
+ CONFIG_IPV6=y
+ CONFIG_MPTCP_IPV6=y
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index 4eacdb1ab962..fa9e09ad97d9 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -55,16 +55,20 @@ __chk_nr()
+ {
+ 	local command="$1"
+ 	local expected=$2
+-	local msg nr
++	local msg="$3"
++	local skip="${4:-SKIP}"
++	local nr
+ 
+-	shift 2
+-	msg=$*
+ 	nr=$(eval $command)
+ 
+ 	printf "%-50s" "$msg"
+ 	if [ $nr != $expected ]; then
+-		echo "[ fail ] expected $expected found $nr"
+-		ret=$test_cnt
++		if [ $nr = "$skip" ] && ! mptcp_lib_expect_all_features; then
++			echo "[ skip ] Feature probably not supported"
++		else
++			echo "[ fail ] expected $expected found $nr"
++			ret=$test_cnt
++		fi
+ 	else
+ 		echo "[  ok  ]"
+ 	fi
+@@ -76,12 +80,12 @@ __chk_msk_nr()
+ 	local condition=$1
+ 	shift 1
+ 
+-	__chk_nr "ss -inmHMN $ns | $condition" $*
++	__chk_nr "ss -inmHMN $ns | $condition" "$@"
+ }
+ 
+ chk_msk_nr()
+ {
+-	__chk_msk_nr "grep -c token:" $*
++	__chk_msk_nr "grep -c token:" "$@"
+ }
+ 
+ wait_msk_nr()
+@@ -119,37 +123,26 @@ wait_msk_nr()
+ 
+ chk_msk_fallback_nr()
+ {
+-		__chk_msk_nr "grep -c fallback" $*
++	__chk_msk_nr "grep -c fallback" "$@"
+ }
+ 
+ chk_msk_remote_key_nr()
+ {
+-		__chk_msk_nr "grep -c remote_key" $*
++	__chk_msk_nr "grep -c remote_key" "$@"
+ }
+ 
+ __chk_listen()
+ {
+ 	local filter="$1"
+ 	local expected=$2
++	local msg="$3"
+ 
+-	shift 2
+-	msg=$*
+-
+-	nr=$(ss -N $ns -Ml "$filter" | grep -c LISTEN)
+-	printf "%-50s" "$msg"
+-
+-	if [ $nr != $expected ]; then
+-		echo "[ fail ] expected $expected found $nr"
+-		ret=$test_cnt
+-	else
+-		echo "[  ok  ]"
+-	fi
++	__chk_nr "ss -N $ns -Ml '$filter' | grep -c LISTEN" "$expected" "$msg" 0
+ }
+ 
+ chk_msk_listen()
+ {
+ 	lport=$1
+-	local msg="check for listen socket"
+ 
+ 	# destination port search should always return empty list
+ 	__chk_listen "dport $lport" 0 "listen match for dport $lport"
+@@ -167,10 +160,9 @@ chk_msk_listen()
+ chk_msk_inuse()
+ {
+ 	local expected=$1
++	local msg="$2"
+ 	local listen_nr
+ 
+-	shift 1
+-
+ 	listen_nr=$(ss -N "${ns}" -Ml | grep -c LISTEN)
+ 	expected=$((expected + listen_nr))
+ 
+@@ -181,7 +173,7 @@ chk_msk_inuse()
+ 		sleep 0.1
+ 	done
+ 
+-	__chk_nr get_msk_inuse $expected $*
++	__chk_nr get_msk_inuse $expected "$msg" 0
+ }
+ 
+ # $1: ns, $2: port
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index c1f7bac19942..9cebe0252b78 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -144,6 +144,7 @@ cleanup()
+ }
+ 
+ mptcp_lib_check_mptcp
++mptcp_lib_check_kallsyms
+ 
+ ip -Version > /dev/null 2>&1
+ if [ $? -ne 0 ];then
+@@ -695,6 +696,15 @@ run_test_transparent()
+ 		return 0
+ 	fi
+ 
++	# IP(V6)_TRANSPARENT has been added after TOS support which came with
++	# the required infrastructure in MPTCP sockopt code. To support TOS, the
++	# following function has been exported (T). Not great but better than
++	# checking for a specific kernel version.
++	if ! mptcp_lib_kallsyms_has "T __ip_sock_set_tos$"; then
++		echo "INFO: TFO not supported by the kernel: SKIP"
++		return
++	fi
++
+ ip netns exec "$listener_ns" nft -f /dev/stdin <<"EOF"
+ flush ruleset
+ table inet mangle {
+@@ -767,6 +777,11 @@ run_tests_peekmode()
+ 
+ run_tests_mptfo()
+ {
++	if ! mptcp_lib_kallsyms_has "mptcp_fastopen_"; then
++		echo "INFO: TFO not supported by the kernel: SKIP"
++		return
++	fi
++
+ 	echo "INFO: with MPTFO start"
+ 	ip netns exec "$ns1" sysctl -q net.ipv4.tcp_fastopen=2
+ 	ip netns exec "$ns2" sysctl -q net.ipv4.tcp_fastopen=1
+@@ -787,6 +802,11 @@ run_tests_disconnect()
+ 	local old_cin=$cin
+ 	local old_sin=$sin
+ 
++	if ! mptcp_lib_kallsyms_has "mptcp_pm_data_reset$"; then
++		echo "INFO: Full disconnect not supported: SKIP"
++		return
++	fi
++
+ 	cat $cin $cin $cin > "$cin".disconnect
+ 
+ 	# force do_transfer to cope with the multiple tranmissions
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 85474e029784..b4a2c2388d2f 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -25,6 +25,8 @@ capout=""
+ ns1=""
+ ns2=""
+ ksft_skip=4
++iptables="iptables"
++ip6tables="ip6tables"
+ timeout_poll=30
+ timeout_test=$((timeout_poll * 2 + 1))
+ capture=0
+@@ -83,7 +85,7 @@ init_partial()
+ 		ip netns add $netns || exit $ksft_skip
+ 		ip -net $netns link set lo up
+ 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
+-		ip netns exec $netns sysctl -q net.mptcp.pm_type=0
++		ip netns exec $netns sysctl -q net.mptcp.pm_type=0 2>/dev/null || true
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
+ 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
+ 		if [ $checksum -eq 1 ]; then
+@@ -142,13 +144,18 @@ cleanup_partial()
+ check_tools()
+ {
+ 	mptcp_lib_check_mptcp
++	mptcp_lib_check_kallsyms
+ 
+ 	if ! ip -Version &> /dev/null; then
+ 		echo "SKIP: Could not run test without ip tool"
+ 		exit $ksft_skip
+ 	fi
+ 
+-	if ! iptables -V &> /dev/null; then
++	# Use the legacy version if available to support old kernel versions
++	if iptables-legacy -V &> /dev/null; then
++		iptables="iptables-legacy"
++		ip6tables="ip6tables-legacy"
++	elif ! iptables -V &> /dev/null; then
+ 		echo "SKIP: Could not run all tests without iptables tool"
+ 		exit $ksft_skip
+ 	fi
+@@ -187,6 +194,32 @@ cleanup()
+ 	cleanup_partial
+ }
+ 
++# $1: msg
++print_title()
++{
++	printf "%03u %-36s %s" "${TEST_COUNT}" "${TEST_NAME}" "${1}"
++}
++
++# [ $1: fail msg ]
++mark_as_skipped()
++{
++	local msg="${1:-"Feature not supported"}"
++
++	mptcp_lib_fail_if_expected_feature "${msg}"
++
++	print_title "[ skip ] ${msg}"
++	printf "\n"
++}
++
++# $@: condition
++continue_if()
++{
++	if ! "${@}"; then
++		mark_as_skipped
++		return 1
++	fi
++}
++
+ skip_test()
+ {
+ 	if [ "${#only_tests_ids[@]}" -eq 0 ] && [ "${#only_tests_names[@]}" -eq 0 ]; then
+@@ -230,6 +263,19 @@ reset()
+ 	return 0
+ }
+ 
++# $1: test name ; $2: counter to check
++reset_check_counter()
++{
++	reset "${1}" || return 1
++
++	local counter="${2}"
++
++	if ! nstat -asz "${counter}" | grep -wq "${counter}"; then
++		mark_as_skipped "counter '${counter}' is not available"
++		return 1
++	fi
++}
++
+ # $1: test name
+ reset_with_cookies()
+ {
+@@ -249,17 +295,21 @@ reset_with_add_addr_timeout()
+ 
+ 	reset "${1}" || return 1
+ 
+-	tables="iptables"
++	tables="${iptables}"
+ 	if [ $ip -eq 6 ]; then
+-		tables="ip6tables"
++		tables="${ip6tables}"
+ 	fi
+ 
+ 	ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=1
+-	ip netns exec $ns2 $tables -A OUTPUT -p tcp \
+-		-m tcp --tcp-option 30 \
+-		-m bpf --bytecode \
+-		"$CBPF_MPTCP_SUBOPTION_ADD_ADDR" \
+-		-j DROP
++
++	if ! ip netns exec $ns2 $tables -A OUTPUT -p tcp \
++			-m tcp --tcp-option 30 \
++			-m bpf --bytecode \
++			"$CBPF_MPTCP_SUBOPTION_ADD_ADDR" \
++			-j DROP; then
++		mark_as_skipped "unable to set the 'add addr' rule"
++		return 1
++	fi
+ }
+ 
+ # $1: test name
+@@ -303,22 +353,17 @@ reset_with_allow_join_id0()
+ #     tc action pedit offset 162 out of bounds
+ #
+ # Netfilter is used to mark packets with enough data.
+-reset_with_fail()
++setup_fail_rules()
+ {
+-	reset "${1}" || return 1
+-
+-	ip netns exec $ns1 sysctl -q net.mptcp.checksum_enabled=1
+-	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=1
+-
+ 	check_invert=1
+ 	validate_checksum=1
+-	local i="$2"
+-	local ip="${3:-4}"
++	local i="$1"
++	local ip="${2:-4}"
+ 	local tables
+ 
+-	tables="iptables"
++	tables="${iptables}"
+ 	if [ $ip -eq 6 ]; then
+-		tables="ip6tables"
++		tables="${ip6tables}"
+ 	fi
+ 
+ 	ip netns exec $ns2 $tables \
+@@ -328,15 +373,32 @@ reset_with_fail()
+ 		-p tcp \
+ 		-m length --length 150:9999 \
+ 		-m statistic --mode nth --packet 1 --every 99999 \
+-		-j MARK --set-mark 42 || exit 1
++		-j MARK --set-mark 42 || return ${ksft_skip}
+ 
+-	tc -n $ns2 qdisc add dev ns2eth$i clsact || exit 1
++	tc -n $ns2 qdisc add dev ns2eth$i clsact || return ${ksft_skip}
+ 	tc -n $ns2 filter add dev ns2eth$i egress \
+ 		protocol ip prio 1000 \
+ 		handle 42 fw \
+ 		action pedit munge offset 148 u8 invert \
+ 		pipe csum tcp \
+-		index 100 || exit 1
++		index 100 || return ${ksft_skip}
++}
++
++reset_with_fail()
++{
++	reset_check_counter "${1}" "MPTcpExtInfiniteMapTx" || return 1
++	shift
++
++	ip netns exec $ns1 sysctl -q net.mptcp.checksum_enabled=1
++	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=1
++
++	local rc=0
++	setup_fail_rules "${@}" || rc=$?
++
++	if [ ${rc} -eq ${ksft_skip} ]; then
++		mark_as_skipped "unable to set the 'fail' rules"
++		return 1
++	fi
+ }
+ 
+ reset_with_events()
+@@ -351,6 +413,25 @@ reset_with_events()
+ 	evts_ns2_pid=$!
+ }
+ 
++reset_with_tcp_filter()
++{
++	reset "${1}" || return 1
++	shift
++
++	local ns="${!1}"
++	local src="${2}"
++	local target="${3}"
++
++	if ! ip netns exec "${ns}" ${iptables} \
++			-A INPUT \
++			-s "${src}" \
++			-p tcp \
++			-j "${target}"; then
++		mark_as_skipped "unable to set the filter rules"
++		return 1
++	fi
++}
++
+ fail_test()
+ {
+ 	ret=1
+@@ -472,11 +553,25 @@ wait_local_port_listen()
+ 	done
+ }
+ 
+-rm_addr_count()
++# $1: ns ; $2: counter
++get_counter()
+ {
+-	local ns=${1}
++	local ns="${1}"
++	local counter="${2}"
++	local count
++
++	count=$(ip netns exec ${ns} nstat -asz "${counter}" | awk 'NR==1 {next} {print $2}')
++	if [ -z "${count}" ]; then
++		mptcp_lib_fail_if_expected_feature "${counter} counter"
++		return 1
++	fi
++
++	echo "${count}"
++}
+ 
+-	ip netns exec ${ns} nstat -as | grep MPTcpExtRmAddr | awk '{print $2}'
++rm_addr_count()
++{
++	get_counter "${1}" "MPTcpExtRmAddr"
+ }
+ 
+ # $1: ns, $2: old rm_addr counter in $ns
+@@ -499,11 +594,11 @@ wait_mpj()
+ 	local ns="${1}"
+ 	local cnt old_cnt
+ 
+-	old_cnt=$(ip netns exec ${ns} nstat -as | grep MPJoinAckRx | awk '{print $2}')
++	old_cnt=$(get_counter ${ns} "MPTcpExtMPJoinAckRx")
+ 
+ 	local i
+ 	for i in $(seq 10); do
+-		cnt=$(ip netns exec ${ns} nstat -as | grep MPJoinAckRx | awk '{print $2}')
++		cnt=$(get_counter ${ns} "MPTcpExtMPJoinAckRx")
+ 		[ "$cnt" = "${old_cnt}" ] || break
+ 		sleep 0.1
+ 	done
+@@ -703,15 +798,6 @@ pm_nl_check_endpoint()
+ 	fi
+ }
+ 
+-filter_tcp_from()
+-{
+-	local ns="${1}"
+-	local src="${2}"
+-	local target="${3}"
+-
+-	ip netns exec "${ns}" iptables -A INPUT -s "${src}" -p tcp -j "${target}"
+-}
+-
+ do_transfer()
+ {
+ 	local listener_ns="$1"
+@@ -1161,12 +1247,13 @@ chk_csum_nr()
+ 	fi
+ 
+ 	printf "%-${nr_blank}s %s" " " "sum"
+-	count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}')
+-	[ -z "$count" ] && count=0
++	count=$(get_counter ${ns1} "MPTcpExtDataCsumErr")
+ 	if [ "$count" != "$csum_ns1" ]; then
+ 		extra_msg="$extra_msg ns1=$count"
+ 	fi
+-	if { [ "$count" != $csum_ns1 ] && [ $allow_multi_errors_ns1 -eq 0 ]; } ||
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif { [ "$count" != $csum_ns1 ] && [ $allow_multi_errors_ns1 -eq 0 ]; } ||
+ 	   { [ "$count" -lt $csum_ns1 ] && [ $allow_multi_errors_ns1 -eq 1 ]; }; then
+ 		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
+ 		fail_test
+@@ -1174,12 +1261,13 @@ chk_csum_nr()
+ 		echo -n "[ ok ]"
+ 	fi
+ 	echo -n " - csum  "
+-	count=$(ip netns exec $ns2 nstat -as | grep MPTcpExtDataCsumErr | awk '{print $2}')
+-	[ -z "$count" ] && count=0
++	count=$(get_counter ${ns2} "MPTcpExtDataCsumErr")
+ 	if [ "$count" != "$csum_ns2" ]; then
+ 		extra_msg="$extra_msg ns2=$count"
+ 	fi
+-	if { [ "$count" != $csum_ns2 ] && [ $allow_multi_errors_ns2 -eq 0 ]; } ||
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif { [ "$count" != $csum_ns2 ] && [ $allow_multi_errors_ns2 -eq 0 ]; } ||
+ 	   { [ "$count" -lt $csum_ns2 ] && [ $allow_multi_errors_ns2 -eq 1 ]; }; then
+ 		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
+ 		fail_test
+@@ -1218,12 +1306,13 @@ chk_fail_nr()
+ 	fi
+ 
+ 	printf "%-${nr_blank}s %s" " " "ftx"
+-	count=$(ip netns exec $ns_tx nstat -as | grep MPTcpExtMPFailTx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
++	count=$(get_counter ${ns_tx} "MPTcpExtMPFailTx")
+ 	if [ "$count" != "$fail_tx" ]; then
+ 		extra_msg="$extra_msg,tx=$count"
+ 	fi
+-	if { [ "$count" != "$fail_tx" ] && [ $allow_tx_lost -eq 0 ]; } ||
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif { [ "$count" != "$fail_tx" ] && [ $allow_tx_lost -eq 0 ]; } ||
+ 	   { [ "$count" -gt "$fail_tx" ] && [ $allow_tx_lost -eq 1 ]; }; then
+ 		echo "[fail] got $count MP_FAIL[s] TX expected $fail_tx"
+ 		fail_test
+@@ -1232,12 +1321,13 @@ chk_fail_nr()
+ 	fi
+ 
+ 	echo -n " - failrx"
+-	count=$(ip netns exec $ns_rx nstat -as | grep MPTcpExtMPFailRx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
++	count=$(get_counter ${ns_rx} "MPTcpExtMPFailRx")
+ 	if [ "$count" != "$fail_rx" ]; then
+ 		extra_msg="$extra_msg,rx=$count"
+ 	fi
+-	if { [ "$count" != "$fail_rx" ] && [ $allow_rx_lost -eq 0 ]; } ||
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif { [ "$count" != "$fail_rx" ] && [ $allow_rx_lost -eq 0 ]; } ||
+ 	   { [ "$count" -gt "$fail_rx" ] && [ $allow_rx_lost -eq 1 ]; }; then
+ 		echo "[fail] got $count MP_FAIL[s] RX expected $fail_rx"
+ 		fail_test
+@@ -1265,10 +1355,11 @@ chk_fclose_nr()
+ 	fi
+ 
+ 	printf "%-${nr_blank}s %s" " " "ctx"
+-	count=$(ip netns exec $ns_tx nstat -as | grep MPTcpExtMPFastcloseTx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	[ "$count" != "$fclose_tx" ] && extra_msg="$extra_msg,tx=$count"
+-	if [ "$count" != "$fclose_tx" ]; then
++	count=$(get_counter ${ns_tx} "MPTcpExtMPFastcloseTx")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ "$count" != "$fclose_tx" ]; then
++		extra_msg="$extra_msg,tx=$count"
+ 		echo "[fail] got $count MP_FASTCLOSE[s] TX expected $fclose_tx"
+ 		fail_test
+ 	else
+@@ -1276,10 +1367,11 @@ chk_fclose_nr()
+ 	fi
+ 
+ 	echo -n " - fclzrx"
+-	count=$(ip netns exec $ns_rx nstat -as | grep MPTcpExtMPFastcloseRx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	[ "$count" != "$fclose_rx" ] && extra_msg="$extra_msg,rx=$count"
+-	if [ "$count" != "$fclose_rx" ]; then
++	count=$(get_counter ${ns_rx} "MPTcpExtMPFastcloseRx")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ "$count" != "$fclose_rx" ]; then
++		extra_msg="$extra_msg,rx=$count"
+ 		echo "[fail] got $count MP_FASTCLOSE[s] RX expected $fclose_rx"
+ 		fail_test
+ 	else
+@@ -1306,9 +1398,10 @@ chk_rst_nr()
+ 	fi
+ 
+ 	printf "%-${nr_blank}s %s" " " "rtx"
+-	count=$(ip netns exec $ns_tx nstat -as | grep MPTcpExtMPRstTx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ $count -lt $rst_tx ]; then
++	count=$(get_counter ${ns_tx} "MPTcpExtMPRstTx")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ $count -lt $rst_tx ]; then
+ 		echo "[fail] got $count MP_RST[s] TX expected $rst_tx"
+ 		fail_test
+ 	else
+@@ -1316,9 +1409,10 @@ chk_rst_nr()
+ 	fi
+ 
+ 	echo -n " - rstrx "
+-	count=$(ip netns exec $ns_rx nstat -as | grep MPTcpExtMPRstRx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" -lt "$rst_rx" ]; then
++	count=$(get_counter ${ns_rx} "MPTcpExtMPRstRx")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ "$count" -lt "$rst_rx" ]; then
+ 		echo "[fail] got $count MP_RST[s] RX expected $rst_rx"
+ 		fail_test
+ 	else
+@@ -1335,9 +1429,10 @@ chk_infi_nr()
+ 	local count
+ 
+ 	printf "%-${nr_blank}s %s" " " "itx"
+-	count=$(ip netns exec $ns2 nstat -as | grep InfiniteMapTx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$infi_tx" ]; then
++	count=$(get_counter ${ns2} "MPTcpExtInfiniteMapTx")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ "$count" != "$infi_tx" ]; then
+ 		echo "[fail] got $count infinite map[s] TX expected $infi_tx"
+ 		fail_test
+ 	else
+@@ -1345,9 +1440,10 @@ chk_infi_nr()
+ 	fi
+ 
+ 	echo -n " - infirx"
+-	count=$(ip netns exec $ns1 nstat -as | grep InfiniteMapRx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$infi_rx" ]; then
++	count=$(get_counter ${ns1} "MPTcpExtInfiniteMapRx")
++	if [ -z "$count" ]; then
++		echo "[skip]"
++	elif [ "$count" != "$infi_rx" ]; then
+ 		echo "[fail] got $count infinite map[s] RX expected $infi_rx"
+ 		fail_test
+ 	else
+@@ -1375,9 +1471,10 @@ chk_join_nr()
+ 	fi
+ 
+ 	printf "%03u %-36s %s" "${TEST_COUNT}" "${title}" "syn"
+-	count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinSynRx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$syn_nr" ]; then
++	count=$(get_counter ${ns1} "MPTcpExtMPJoinSynRx")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ "$count" != "$syn_nr" ]; then
+ 		echo "[fail] got $count JOIN[s] syn expected $syn_nr"
+ 		fail_test
+ 	else
+@@ -1386,9 +1483,10 @@ chk_join_nr()
+ 
+ 	echo -n " - synack"
+ 	with_cookie=$(ip netns exec $ns2 sysctl -n net.ipv4.tcp_syncookies)
+-	count=$(ip netns exec $ns2 nstat -as | grep MPTcpExtMPJoinSynAckRx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$syn_ack_nr" ]; then
++	count=$(get_counter ${ns2} "MPTcpExtMPJoinSynAckRx")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ "$count" != "$syn_ack_nr" ]; then
+ 		# simult connections exceeding the limit with cookie enabled could go up to
+ 		# synack validation as the conn limit can be enforced reliably only after
+ 		# the subflow creation
+@@ -1403,9 +1501,10 @@ chk_join_nr()
+ 	fi
+ 
+ 	echo -n " - ack"
+-	count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinAckRx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$ack_nr" ]; then
++	count=$(get_counter ${ns1} "MPTcpExtMPJoinAckRx")
++	if [ -z "$count" ]; then
++		echo "[skip]"
++	elif [ "$count" != "$ack_nr" ]; then
+ 		echo "[fail] got $count JOIN[s] ack expected $ack_nr"
+ 		fail_test
+ 	else
+@@ -1435,12 +1534,12 @@ chk_stale_nr()
+ 	local recover_nr
+ 
+ 	printf "%-${nr_blank}s %-18s" " " "stale"
+-	stale_nr=$(ip netns exec $ns nstat -as | grep MPTcpExtSubflowStale | awk '{print $2}')
+-	[ -z "$stale_nr" ] && stale_nr=0
+-	recover_nr=$(ip netns exec $ns nstat -as | grep MPTcpExtSubflowRecover | awk '{print $2}')
+-	[ -z "$recover_nr" ] && recover_nr=0
+ 
+-	if [ $stale_nr -lt $stale_min ] ||
++	stale_nr=$(get_counter ${ns} "MPTcpExtSubflowStale")
++	recover_nr=$(get_counter ${ns} "MPTcpExtSubflowRecover")
++	if [ -z "$stale_nr" ] || [ -z "$recover_nr" ]; then
++		echo "[skip]"
++	elif [ $stale_nr -lt $stale_min ] ||
+ 	   { [ $stale_max -gt 0 ] && [ $stale_nr -gt $stale_max ]; } ||
+ 	   [ $((stale_nr - recover_nr)) -ne $stale_delta ]; then
+ 		echo "[fail] got $stale_nr stale[s] $recover_nr recover[s], " \
+@@ -1475,12 +1574,12 @@ chk_add_nr()
+ 	timeout=$(ip netns exec $ns1 sysctl -n net.mptcp.add_addr_timeout)
+ 
+ 	printf "%-${nr_blank}s %s" " " "add"
+-	count=$(ip netns exec $ns2 nstat -as MPTcpExtAddAddr | grep MPTcpExtAddAddr | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-
++	count=$(get_counter ${ns2} "MPTcpExtAddAddr")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
+ 	# if the test configured a short timeout tolerate greater then expected
+ 	# add addrs options, due to retransmissions
+-	if [ "$count" != "$add_nr" ] && { [ "$timeout" -gt 1 ] || [ "$count" -lt "$add_nr" ]; }; then
++	elif [ "$count" != "$add_nr" ] && { [ "$timeout" -gt 1 ] || [ "$count" -lt "$add_nr" ]; }; then
+ 		echo "[fail] got $count ADD_ADDR[s] expected $add_nr"
+ 		fail_test
+ 	else
+@@ -1488,9 +1587,10 @@ chk_add_nr()
+ 	fi
+ 
+ 	echo -n " - echo  "
+-	count=$(ip netns exec $ns1 nstat -as MPTcpExtEchoAdd | grep MPTcpExtEchoAdd | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$echo_nr" ]; then
++	count=$(get_counter ${ns1} "MPTcpExtEchoAdd")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ "$count" != "$echo_nr" ]; then
+ 		echo "[fail] got $count ADD_ADDR echo[s] expected $echo_nr"
+ 		fail_test
+ 	else
+@@ -1499,9 +1599,10 @@ chk_add_nr()
+ 
+ 	if [ $port_nr -gt 0 ]; then
+ 		echo -n " - pt "
+-		count=$(ip netns exec $ns2 nstat -as | grep MPTcpExtPortAdd | awk '{print $2}')
+-		[ -z "$count" ] && count=0
+-		if [ "$count" != "$port_nr" ]; then
++		count=$(get_counter ${ns2} "MPTcpExtPortAdd")
++		if [ -z "$count" ]; then
++			echo "[skip]"
++		elif [ "$count" != "$port_nr" ]; then
+ 			echo "[fail] got $count ADD_ADDR[s] with a port-number expected $port_nr"
+ 			fail_test
+ 		else
+@@ -1509,10 +1610,10 @@ chk_add_nr()
+ 		fi
+ 
+ 		printf "%-${nr_blank}s %s" " " "syn"
+-		count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinPortSynRx |
+-			awk '{print $2}')
+-		[ -z "$count" ] && count=0
+-		if [ "$count" != "$syn_nr" ]; then
++		count=$(get_counter ${ns1} "MPTcpExtMPJoinPortSynRx")
++		if [ -z "$count" ]; then
++			echo -n "[skip]"
++		elif [ "$count" != "$syn_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] syn with a different \
+ 				port-number expected $syn_nr"
+ 			fail_test
+@@ -1521,10 +1622,10 @@ chk_add_nr()
+ 		fi
+ 
+ 		echo -n " - synack"
+-		count=$(ip netns exec $ns2 nstat -as | grep MPTcpExtMPJoinPortSynAckRx |
+-			awk '{print $2}')
+-		[ -z "$count" ] && count=0
+-		if [ "$count" != "$syn_ack_nr" ]; then
++		count=$(get_counter ${ns2} "MPTcpExtMPJoinPortSynAckRx")
++		if [ -z "$count" ]; then
++			echo -n "[skip]"
++		elif [ "$count" != "$syn_ack_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] synack with a different \
+ 				port-number expected $syn_ack_nr"
+ 			fail_test
+@@ -1533,10 +1634,10 @@ chk_add_nr()
+ 		fi
+ 
+ 		echo -n " - ack"
+-		count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPJoinPortAckRx |
+-			awk '{print $2}')
+-		[ -z "$count" ] && count=0
+-		if [ "$count" != "$ack_nr" ]; then
++		count=$(get_counter ${ns1} "MPTcpExtMPJoinPortAckRx")
++		if [ -z "$count" ]; then
++			echo "[skip]"
++		elif [ "$count" != "$ack_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] ack with a different \
+ 				port-number expected $ack_nr"
+ 			fail_test
+@@ -1545,10 +1646,10 @@ chk_add_nr()
+ 		fi
+ 
+ 		printf "%-${nr_blank}s %s" " " "syn"
+-		count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMismatchPortSynRx |
+-			awk '{print $2}')
+-		[ -z "$count" ] && count=0
+-		if [ "$count" != "$mis_syn_nr" ]; then
++		count=$(get_counter ${ns1} "MPTcpExtMismatchPortSynRx")
++		if [ -z "$count" ]; then
++			echo -n "[skip]"
++		elif [ "$count" != "$mis_syn_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] syn with a mismatched \
+ 				port-number expected $mis_syn_nr"
+ 			fail_test
+@@ -1557,10 +1658,10 @@ chk_add_nr()
+ 		fi
+ 
+ 		echo -n " - ack   "
+-		count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMismatchPortAckRx |
+-			awk '{print $2}')
+-		[ -z "$count" ] && count=0
+-		if [ "$count" != "$mis_ack_nr" ]; then
++		count=$(get_counter ${ns1} "MPTcpExtMismatchPortAckRx")
++		if [ -z "$count" ]; then
++			echo "[skip]"
++		elif [ "$count" != "$mis_ack_nr" ]; then
+ 			echo "[fail] got $count JOIN[s] ack with a mismatched \
+ 				port-number expected $mis_ack_nr"
+ 			fail_test
+@@ -1582,12 +1683,12 @@ chk_add_tx_nr()
+ 	timeout=$(ip netns exec $ns1 sysctl -n net.mptcp.add_addr_timeout)
+ 
+ 	printf "%-${nr_blank}s %s" " " "add TX"
+-	count=$(ip netns exec $ns1 nstat -as MPTcpExtAddAddrTx | grep MPTcpExtAddAddrTx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-
++	count=$(get_counter ${ns1} "MPTcpExtAddAddrTx")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
+ 	# if the test configured a short timeout tolerate greater then expected
+ 	# add addrs options, due to retransmissions
+-	if [ "$count" != "$add_tx_nr" ] && { [ "$timeout" -gt 1 ] || [ "$count" -lt "$add_tx_nr" ]; }; then
++	elif [ "$count" != "$add_tx_nr" ] && { [ "$timeout" -gt 1 ] || [ "$count" -lt "$add_tx_nr" ]; }; then
+ 		echo "[fail] got $count ADD_ADDR[s] TX, expected $add_tx_nr"
+ 		fail_test
+ 	else
+@@ -1595,9 +1696,10 @@ chk_add_tx_nr()
+ 	fi
+ 
+ 	echo -n " - echo TX "
+-	count=$(ip netns exec $ns2 nstat -as MPTcpExtEchoAddTx | grep MPTcpExtEchoAddTx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$echo_tx_nr" ]; then
++	count=$(get_counter ${ns2} "MPTcpExtEchoAddTx")
++	if [ -z "$count" ]; then
++		echo "[skip]"
++	elif [ "$count" != "$echo_tx_nr" ]; then
+ 		echo "[fail] got $count ADD_ADDR echo[s] TX, expected $echo_tx_nr"
+ 		fail_test
+ 	else
+@@ -1633,9 +1735,10 @@ chk_rm_nr()
+ 	fi
+ 
+ 	printf "%-${nr_blank}s %s" " " "rm "
+-	count=$(ip netns exec $addr_ns nstat -as MPTcpExtRmAddr | grep MPTcpExtRmAddr | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$rm_addr_nr" ]; then
++	count=$(get_counter ${addr_ns} "MPTcpExtRmAddr")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ "$count" != "$rm_addr_nr" ]; then
+ 		echo "[fail] got $count RM_ADDR[s] expected $rm_addr_nr"
+ 		fail_test
+ 	else
+@@ -1643,12 +1746,13 @@ chk_rm_nr()
+ 	fi
+ 
+ 	echo -n " - rmsf  "
+-	count=$(ip netns exec $subflow_ns nstat -as | grep MPTcpExtRmSubflow | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ -n "$simult" ]; then
++	count=$(get_counter ${subflow_ns} "MPTcpExtRmSubflow")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ -n "$simult" ]; then
+ 		local cnt suffix
+ 
+-		cnt=$(ip netns exec $addr_ns nstat -as | grep MPTcpExtRmSubflow | awk '{print $2}')
++		cnt=$(get_counter ${addr_ns} "MPTcpExtRmSubflow")
+ 
+ 		# in case of simult flush, the subflow removal count on each side is
+ 		# unreliable
+@@ -1657,14 +1761,12 @@ chk_rm_nr()
+ 		[ "$count" != "$rm_subflow_nr" ] && suffix="$count in [$rm_subflow_nr:$((rm_subflow_nr*2))]"
+ 		if [ $count -ge "$rm_subflow_nr" ] && \
+ 		   [ "$count" -le "$((rm_subflow_nr *2 ))" ]; then
+-			echo "[ ok ] $suffix"
++			echo -n "[ ok ] $suffix"
+ 		else
+ 			echo "[fail] got $count RM_SUBFLOW[s] expected in range [$rm_subflow_nr:$((rm_subflow_nr*2))]"
+ 			fail_test
+ 		fi
+-		return
+-	fi
+-	if [ "$count" != "$rm_subflow_nr" ]; then
++	elif [ "$count" != "$rm_subflow_nr" ]; then
+ 		echo "[fail] got $count RM_SUBFLOW[s] expected $rm_subflow_nr"
+ 		fail_test
+ 	else
+@@ -1679,9 +1781,10 @@ chk_rm_tx_nr()
+ 	local rm_addr_tx_nr=$1
+ 
+ 	printf "%-${nr_blank}s %s" " " "rm TX "
+-	count=$(ip netns exec $ns2 nstat -as MPTcpExtRmAddrTx | grep MPTcpExtRmAddrTx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$rm_addr_tx_nr" ]; then
++	count=$(get_counter ${ns2} "MPTcpExtRmAddrTx")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ "$count" != "$rm_addr_tx_nr" ]; then
+ 		echo "[fail] got $count RM_ADDR[s] expected $rm_addr_tx_nr"
+ 		fail_test
+ 	else
+@@ -1698,9 +1801,10 @@ chk_prio_nr()
+ 	local count
+ 
+ 	printf "%-${nr_blank}s %s" " " "ptx"
+-	count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPPrioTx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$mp_prio_nr_tx" ]; then
++	count=$(get_counter ${ns1} "MPTcpExtMPPrioTx")
++	if [ -z "$count" ]; then
++		echo -n "[skip]"
++	elif [ "$count" != "$mp_prio_nr_tx" ]; then
+ 		echo "[fail] got $count MP_PRIO[s] TX expected $mp_prio_nr_tx"
+ 		fail_test
+ 	else
+@@ -1708,9 +1812,10 @@ chk_prio_nr()
+ 	fi
+ 
+ 	echo -n " - prx   "
+-	count=$(ip netns exec $ns1 nstat -as | grep MPTcpExtMPPrioRx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ "$count" != "$mp_prio_nr_rx" ]; then
++	count=$(get_counter ${ns1} "MPTcpExtMPPrioRx")
++	if [ -z "$count" ]; then
++		echo "[skip]"
++	elif [ "$count" != "$mp_prio_nr_rx" ]; then
+ 		echo "[fail] got $count MP_PRIO[s] RX expected $mp_prio_nr_rx"
+ 		fail_test
+ 	else
+@@ -1821,7 +1926,7 @@ wait_attempt_fail()
+ 	while [ $time -lt $timeout_ms ]; do
+ 		local cnt
+ 
+-		cnt=$(ip netns exec $ns nstat -as TcpAttemptFails | grep TcpAttemptFails | awk '{print $2}')
++		cnt=$(get_counter ${ns} "TcpAttemptFails")
+ 
+ 		[ "$cnt" = 1 ] && return 1
+ 		time=$((time + 100))
+@@ -1914,23 +2019,23 @@ subflows_error_tests()
+ 	fi
+ 
+ 	# multiple subflows, with subflow creation error
+-	if reset "multi subflows, with failing subflow"; then
++	if reset_with_tcp_filter "multi subflows, with failing subflow" ns1 10.0.3.2 REJECT &&
++	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 0 2
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+-		filter_tcp_from $ns1 10.0.3.2 REJECT
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+ 		chk_join_nr 1 1 1
+ 	fi
+ 
+ 	# multiple subflows, with subflow timeout on MPJ
+-	if reset "multi subflows, with subflow timeout"; then
++	if reset_with_tcp_filter "multi subflows, with subflow timeout" ns1 10.0.3.2 DROP &&
++	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 0 2
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+-		filter_tcp_from $ns1 10.0.3.2 DROP
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+ 		chk_join_nr 1 1 1
+ 	fi
+@@ -1938,11 +2043,11 @@ subflows_error_tests()
+ 	# multiple subflows, check that the endpoint corresponding to
+ 	# closed subflow (due to reset) is not reused if additional
+ 	# subflows are added later
+-	if reset "multi subflows, fair usage on close"; then
++	if reset_with_tcp_filter "multi subflows, fair usage on close" ns1 10.0.3.2 REJECT &&
++	   continue_if mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
+ 		pm_nl_set_limits $ns1 0 1
+ 		pm_nl_set_limits $ns2 0 1
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+-		filter_tcp_from $ns1 10.0.3.2 REJECT
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow &
+ 
+ 		# mpj subflow will be in TW after the reset
+@@ -2043,11 +2148,18 @@ signal_address_tests()
+ 		# the peer could possibly miss some addr notification, allow retransmission
+ 		ip netns exec $ns1 sysctl -q net.mptcp.add_addr_timeout=1
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+-		chk_join_nr 3 3 3
+ 
+-		# the server will not signal the address terminating
+-		# the MPC subflow
+-		chk_add_nr 3 3
++		# It is not directly linked to the commit introducing this
++		# symbol but for the parent one which is linked anyway.
++		if ! mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
++			chk_join_nr 3 3 2
++			chk_add_nr 4 4
++		else
++			chk_join_nr 3 3 3
++			# the server will not signal the address terminating
++			# the MPC subflow
++			chk_add_nr 3 3
++		fi
+ 	fi
+ }
+ 
+@@ -2290,8 +2402,13 @@ remove_tests()
+ 		pm_nl_add_endpoint $ns2 10.0.4.2 flags subflow
+ 		run_tests $ns1 $ns2 10.0.1.1 0 -8 -8 slow
+ 		chk_join_nr 3 3 3
+-		chk_rm_tx_nr 0
+-		chk_rm_nr 0 3 simult
++
++		if mptcp_lib_kversion_ge 5.18; then
++			chk_rm_tx_nr 0
++			chk_rm_nr 0 3 simult
++		else
++			chk_rm_nr 3 3
++		fi
+ 	fi
+ 
+ 	# addresses flush
+@@ -2529,7 +2646,8 @@ v4mapped_tests()
+ 
+ mixed_tests()
+ {
+-	if reset "IPv4 sockets do not use IPv6 addresses"; then
++	if reset "IPv4 sockets do not use IPv6 addresses" &&
++	   continue_if mptcp_lib_kversion_ge 6.3; then
+ 		pm_nl_set_limits $ns1 0 1
+ 		pm_nl_set_limits $ns2 1 1
+ 		pm_nl_add_endpoint $ns1 dead:beef:2::1 flags signal
+@@ -2538,7 +2656,8 @@ mixed_tests()
+ 	fi
+ 
+ 	# Need an IPv6 mptcp socket to allow subflows of both families
+-	if reset "simult IPv4 and IPv6 subflows"; then
++	if reset "simult IPv4 and IPv6 subflows" &&
++	   continue_if mptcp_lib_kversion_ge 6.3; then
+ 		pm_nl_set_limits $ns1 0 1
+ 		pm_nl_set_limits $ns2 1 1
+ 		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal
+@@ -2547,7 +2666,8 @@ mixed_tests()
+ 	fi
+ 
+ 	# cross families subflows will not be created even in fullmesh mode
+-	if reset "simult IPv4 and IPv6 subflows, fullmesh 1x1"; then
++	if reset "simult IPv4 and IPv6 subflows, fullmesh 1x1" &&
++	   continue_if mptcp_lib_kversion_ge 6.3; then
+ 		pm_nl_set_limits $ns1 0 4
+ 		pm_nl_set_limits $ns2 1 4
+ 		pm_nl_add_endpoint $ns2 dead:beef:2::2 flags subflow,fullmesh
+@@ -2558,7 +2678,8 @@ mixed_tests()
+ 
+ 	# fullmesh still tries to create all the possibly subflows with
+ 	# matching family
+-	if reset "simult IPv4 and IPv6 subflows, fullmesh 2x2"; then
++	if reset "simult IPv4 and IPv6 subflows, fullmesh 2x2" &&
++	   continue_if mptcp_lib_kversion_ge 6.3; then
+ 		pm_nl_set_limits $ns1 0 4
+ 		pm_nl_set_limits $ns2 2 4
+ 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+@@ -2571,7 +2692,8 @@ mixed_tests()
+ backup_tests()
+ {
+ 	# single subflow, backup
+-	if reset "single subflow, backup"; then
++	if reset "single subflow, backup" &&
++	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
+ 		pm_nl_set_limits $ns1 0 1
+ 		pm_nl_set_limits $ns2 0 1
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow,backup
+@@ -2581,7 +2703,8 @@ backup_tests()
+ 	fi
+ 
+ 	# single address, backup
+-	if reset "single address, backup"; then
++	if reset "single address, backup" &&
++	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
+ 		pm_nl_set_limits $ns1 0 1
+ 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 		pm_nl_set_limits $ns2 1 1
+@@ -2592,7 +2715,8 @@ backup_tests()
+ 	fi
+ 
+ 	# single address with port, backup
+-	if reset "single address with port, backup"; then
++	if reset "single address with port, backup" &&
++	   continue_if mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
+ 		pm_nl_set_limits $ns1 0 1
+ 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port 10100
+ 		pm_nl_set_limits $ns2 1 1
+@@ -2602,14 +2726,16 @@ backup_tests()
+ 		chk_prio_nr 1 1
+ 	fi
+ 
+-	if reset "mpc backup"; then
++	if reset "mpc backup" &&
++	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
+ 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,backup
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+ 		chk_join_nr 0 0 0
+ 		chk_prio_nr 0 1
+ 	fi
+ 
+-	if reset "mpc backup both sides"; then
++	if reset "mpc backup both sides" &&
++	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
+ 		pm_nl_add_endpoint $ns1 10.0.1.1 flags subflow,backup
+ 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,backup
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+@@ -2617,14 +2743,16 @@ backup_tests()
+ 		chk_prio_nr 1 1
+ 	fi
+ 
+-	if reset "mpc switch to backup"; then
++	if reset "mpc switch to backup" &&
++	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
+ 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
+ 		chk_join_nr 0 0 0
+ 		chk_prio_nr 0 1
+ 	fi
+ 
+-	if reset "mpc switch to backup both sides"; then
++	if reset "mpc switch to backup both sides" &&
++	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
+ 		pm_nl_add_endpoint $ns1 10.0.1.1 flags subflow
+ 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
+@@ -2659,6 +2787,11 @@ verify_listener_events()
+ 			$e_saddr $e_sport
+ 	fi
+ 
++	if ! mptcp_lib_kallsyms_has "mptcp_event_pm_listener$"; then
++		printf "[skip]: event not supported\n"
++		return
++	fi
++
+ 	type=$(grep "type:$e_type," $evt |
+ 	       sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q')
+ 	family=$(grep "type:$e_type," $evt |
+@@ -2987,7 +3120,8 @@ fullmesh_tests()
+ 	fi
+ 
+ 	# set fullmesh flag
+-	if reset "set fullmesh flag test"; then
++	if reset "set fullmesh flag test" &&
++	   continue_if mptcp_lib_kversion_ge 5.18; then
+ 		pm_nl_set_limits $ns1 4 4
+ 		pm_nl_add_endpoint $ns1 10.0.2.1 flags subflow
+ 		pm_nl_set_limits $ns2 4 4
+@@ -2997,7 +3131,8 @@ fullmesh_tests()
+ 	fi
+ 
+ 	# set nofullmesh flag
+-	if reset "set nofullmesh flag test"; then
++	if reset "set nofullmesh flag test" &&
++	   continue_if mptcp_lib_kversion_ge 5.18; then
+ 		pm_nl_set_limits $ns1 4 4
+ 		pm_nl_add_endpoint $ns1 10.0.2.1 flags subflow,fullmesh
+ 		pm_nl_set_limits $ns2 4 4
+@@ -3007,7 +3142,8 @@ fullmesh_tests()
+ 	fi
+ 
+ 	# set backup,fullmesh flags
+-	if reset "set backup,fullmesh flags test"; then
++	if reset "set backup,fullmesh flags test" &&
++	   continue_if mptcp_lib_kversion_ge 5.18; then
+ 		pm_nl_set_limits $ns1 4 4
+ 		pm_nl_add_endpoint $ns1 10.0.2.1 flags subflow
+ 		pm_nl_set_limits $ns2 4 4
+@@ -3018,7 +3154,8 @@ fullmesh_tests()
+ 	fi
+ 
+ 	# set nobackup,nofullmesh flags
+-	if reset "set nobackup,nofullmesh flags test"; then
++	if reset "set nobackup,nofullmesh flags test" &&
++	   continue_if mptcp_lib_kversion_ge 5.18; then
+ 		pm_nl_set_limits $ns1 4 4
+ 		pm_nl_set_limits $ns2 4 4
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow,backup,fullmesh
+@@ -3031,14 +3168,14 @@ fullmesh_tests()
+ 
+ fastclose_tests()
+ {
+-	if reset "fastclose test"; then
++	if reset_check_counter "fastclose test" "MPTcpExtMPFastcloseTx"; then
+ 		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_client
+ 		chk_join_nr 0 0 0
+ 		chk_fclose_nr 1 1
+ 		chk_rst_nr 1 1 invert
+ 	fi
+ 
+-	if reset "fastclose server test"; then
++	if reset_check_counter "fastclose server test" "MPTcpExtMPFastcloseRx"; then
+ 		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_server
+ 		chk_join_nr 0 0 0
+ 		chk_fclose_nr 1 1 invert
+@@ -3076,7 +3213,8 @@ fail_tests()
+ userspace_tests()
+ {
+ 	# userspace pm type prevents add_addr
+-	if reset "userspace pm type prevents add_addr"; then
++	if reset "userspace pm type prevents add_addr" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 0 2
+@@ -3087,7 +3225,8 @@ userspace_tests()
+ 	fi
+ 
+ 	# userspace pm type does not echo add_addr without daemon
+-	if reset "userspace pm no echo w/o daemon"; then
++	if reset "userspace pm no echo w/o daemon" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 0 2
+@@ -3098,7 +3237,8 @@ userspace_tests()
+ 	fi
+ 
+ 	# userspace pm type rejects join
+-	if reset "userspace pm type rejects join"; then
++	if reset "userspace pm type rejects join" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3108,7 +3248,8 @@ userspace_tests()
+ 	fi
+ 
+ 	# userspace pm type does not send join
+-	if reset "userspace pm type does not send join"; then
++	if reset "userspace pm type does not send join" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3118,7 +3259,8 @@ userspace_tests()
+ 	fi
+ 
+ 	# userspace pm type prevents mp_prio
+-	if reset "userspace pm type prevents mp_prio"; then
++	if reset "userspace pm type prevents mp_prio" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3129,7 +3271,8 @@ userspace_tests()
+ 	fi
+ 
+ 	# userspace pm type prevents rm_addr
+-	if reset "userspace pm type prevents rm_addr"; then
++	if reset "userspace pm type prevents rm_addr" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 1
+@@ -3141,7 +3284,8 @@ userspace_tests()
+ 	fi
+ 
+ 	# userspace pm add & remove address
+-	if reset_with_events "userspace pm add & remove address"; then
++	if reset_with_events "userspace pm add & remove address" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns2 1 1
+ 		run_tests $ns1 $ns2 10.0.1.1 0 userspace_1 0 slow
+@@ -3152,7 +3296,8 @@ userspace_tests()
+ 	fi
+ 
+ 	# userspace pm create destroy subflow
+-	if reset_with_events "userspace pm create destroy subflow"; then
++	if reset_with_events "userspace pm create destroy subflow" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 1
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
+@@ -3164,8 +3309,10 @@ userspace_tests()
+ 
+ endpoint_tests()
+ {
++	# subflow_rebuild_header is needed to support the implicit flag
+ 	# userspace pm type prevents add_addr
+-	if reset "implicit EP"; then
++	if reset "implicit EP" &&
++	   mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
+ 		pm_nl_set_limits $ns1 2 2
+ 		pm_nl_set_limits $ns2 2 2
+ 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+@@ -3185,7 +3332,8 @@ endpoint_tests()
+ 		kill_tests_wait
+ 	fi
+ 
+-	if reset "delete and re-add"; then
++	if reset "delete and re-add" &&
++	   mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index 3286536b79d5..dcfe5eb6f7c0 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -38,3 +38,62 @@ mptcp_lib_check_mptcp() {
+ 		exit ${KSFT_SKIP}
+ 	fi
+ }
++
++mptcp_lib_check_kallsyms() {
++	if ! mptcp_lib_has_file "/proc/kallsyms"; then
++		echo "SKIP: CONFIG_KALLSYMS is missing"
++		exit ${KSFT_SKIP}
++	fi
++}
++
++# Internal: use mptcp_lib_kallsyms_has() instead
++__mptcp_lib_kallsyms_has() {
++	local sym="${1}"
++
++	mptcp_lib_check_kallsyms
++
++	grep -q " ${sym}" /proc/kallsyms
++}
++
++# $1: part of a symbol to look at, add '$' at the end for full name
++mptcp_lib_kallsyms_has() {
++	local sym="${1}"
++
++	if __mptcp_lib_kallsyms_has "${sym}"; then
++		return 0
++	fi
++
++	mptcp_lib_fail_if_expected_feature "${sym} symbol not found"
++}
++
++# $1: part of a symbol to look at, add '$' at the end for full name
++mptcp_lib_kallsyms_doesnt_have() {
++	local sym="${1}"
++
++	if ! __mptcp_lib_kallsyms_has "${sym}"; then
++		return 0
++	fi
++
++	mptcp_lib_fail_if_expected_feature "${sym} symbol has been found"
++}
++
++# !!!AVOID USING THIS!!!
++# Features might not land in the expected version and features can be backported
++#
++# $1: kernel version, e.g. 6.3
++mptcp_lib_kversion_ge() {
++	local exp_maj="${1%.*}"
++	local exp_min="${1#*.}"
++	local v maj min
++
++	v=$(uname -r | cut -d'.' -f1,2)
++	maj=${v%.*}
++	min=${v#*.}
++
++	if   [ "${maj}" -gt "${exp_maj}" ] ||
++	   { [ "${maj}" -eq "${exp_maj}" ] && [ "${min}" -ge "${exp_min}" ]; }; then
++		return 0
++	fi
++
++	mptcp_lib_fail_if_expected_feature "kernel version ${1} lower than ${v}"
++}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index 86a378731e8b..74d2ede6b68b 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -386,13 +386,13 @@ static void do_getsockopt_tcp_info(struct so_state *s, int fd, size_t r, size_t
+ 			xerror("getsockopt MPTCP_TCPINFO (tries %d, %m)");
+ 
+ 		assert(olen <= sizeof(ti));
+-		assert(ti.d.size_user == ti.d.size_kernel);
+-		assert(ti.d.size_user == sizeof(struct tcp_info));
++		assert(ti.d.size_user > 0);
++		assert(ti.d.size_kernel > 0);
+ 		assert(ti.d.num_subflows == 1);
+ 
+ 		assert(olen > (socklen_t)sizeof(struct mptcp_subflow_data));
+ 		olen -= sizeof(struct mptcp_subflow_data);
+-		assert(olen == sizeof(struct tcp_info));
++		assert(olen == ti.d.size_user);
+ 
+ 		s->tcp_info = ti.ti[0];
+ 
+@@ -440,13 +440,13 @@ static void do_getsockopt_subflow_addrs(struct so_state *s, int fd)
+ 		die_perror("getsockopt MPTCP_SUBFLOW_ADDRS");
+ 
+ 	assert(olen <= sizeof(addrs));
+-	assert(addrs.d.size_user == addrs.d.size_kernel);
+-	assert(addrs.d.size_user == sizeof(struct mptcp_subflow_addrs));
++	assert(addrs.d.size_user > 0);
++	assert(addrs.d.size_kernel > 0);
+ 	assert(addrs.d.num_subflows == 1);
+ 
+ 	assert(olen > (socklen_t)sizeof(struct mptcp_subflow_data));
+ 	olen -= sizeof(struct mptcp_subflow_data);
+-	assert(olen == sizeof(struct mptcp_subflow_addrs));
++	assert(olen == addrs.d.size_user);
+ 
+ 	llen = sizeof(local);
+ 	ret = getsockname(fd, (struct sockaddr *)&local, &llen);
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index ff5adbb9c7f2..f295a371ff14 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -87,6 +87,7 @@ cleanup()
+ }
+ 
+ mptcp_lib_check_mptcp
++mptcp_lib_check_kallsyms
+ 
+ ip -Version > /dev/null 2>&1
+ if [ $? -ne 0 ];then
+@@ -186,9 +187,14 @@ do_transfer()
+ 		local_addr="0.0.0.0"
+ 	fi
+ 
++	cmsg="TIMESTAMPNS"
++	if mptcp_lib_kallsyms_has "mptcp_ioctl$"; then
++		cmsg+=",TCPINQ"
++	fi
++
+ 	timeout ${timeout_test} \
+ 		ip netns exec ${listener_ns} \
+-			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} -c TIMESTAMPNS,TCPINQ \
++			$mptcp_connect -t ${timeout_poll} -l -M 1 -p $port -s ${srv_proto} -c "${cmsg}" \
+ 				${local_addr} < "$sin" > "$sout" &
+ 	local spid=$!
+ 
+@@ -196,7 +202,7 @@ do_transfer()
+ 
+ 	timeout ${timeout_test} \
+ 		ip netns exec ${connector_ns} \
+-			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} -c TIMESTAMPNS,TCPINQ \
++			$mptcp_connect -t ${timeout_poll} -M 2 -p $port -s ${cl_proto} -c "${cmsg}" \
+ 				$connect_addr < "$cin" > "$cout" &
+ 
+ 	local cpid=$!
+@@ -253,6 +259,11 @@ do_mptcp_sockopt_tests()
+ {
+ 	local lret=0
+ 
++	if ! mptcp_lib_kallsyms_has "mptcp_diag_fill_info$"; then
++		echo "INFO: MPTCP sockopt not supported: SKIP"
++		return
++	fi
++
+ 	ip netns exec "$ns_sbox" ./mptcp_sockopt
+ 	lret=$?
+ 
+@@ -307,6 +318,11 @@ do_tcpinq_tests()
+ {
+ 	local lret=0
+ 
++	if ! mptcp_lib_kallsyms_has "mptcp_ioctl$"; then
++		echo "INFO: TCP_INQ not supported: SKIP"
++		return
++	fi
++
+ 	local args
+ 	for args in "-t tcp" "-r tcp"; do
+ 		do_tcpinq_test $args
+diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+index 32f7533e0919..d02e0d63a8f9 100755
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -73,8 +73,12 @@ check()
+ }
+ 
+ check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "defaults addr list"
+-check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 0
++
++default_limits="$(ip netns exec $ns1 ./pm_nl_ctl limits)"
++if mptcp_lib_expect_all_features; then
++	check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 0
+ subflows 2" "defaults limits"
++fi
+ 
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.2 flags subflow dev lo
+@@ -121,12 +125,10 @@ ip netns exec $ns1 ./pm_nl_ctl flush
+ check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "flush addrs"
+ 
+ ip netns exec $ns1 ./pm_nl_ctl limits 9 1
+-check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 0
+-subflows 2" "rcv addrs above hard limit"
++check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "rcv addrs above hard limit"
+ 
+ ip netns exec $ns1 ./pm_nl_ctl limits 1 9
+-check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 0
+-subflows 2" "subflows above hard limit"
++check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "subflows above hard limit"
+ 
+ ip netns exec $ns1 ./pm_nl_ctl limits 8 8
+ check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 8
+@@ -176,14 +178,19 @@ subflow,backup 10.0.1.1" "set flags (backup)"
+ ip netns exec $ns1 ./pm_nl_ctl set 10.0.1.1 flags nobackup
+ check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
+ subflow 10.0.1.1" "          (nobackup)"
++
++# fullmesh support has been added later
+ ip netns exec $ns1 ./pm_nl_ctl set id 1 flags fullmesh
+-check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
++if ip netns exec $ns1 ./pm_nl_ctl dump | grep -q "fullmesh" ||
++   mptcp_lib_expect_all_features; then
++	check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
+ subflow,fullmesh 10.0.1.1" "          (fullmesh)"
+-ip netns exec $ns1 ./pm_nl_ctl set id 1 flags nofullmesh
+-check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
++	ip netns exec $ns1 ./pm_nl_ctl set id 1 flags nofullmesh
++	check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
+ subflow 10.0.1.1" "          (nofullmesh)"
+-ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
+-check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
++	ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
++	check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
+ subflow,backup,fullmesh 10.0.1.1" "          (backup,fullmesh)"
++fi
+ 
+ exit $ret
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 8092399d911f..98d9e4d2d3fc 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -4,11 +4,17 @@
+ . "$(dirname "${0}")/mptcp_lib.sh"
+ 
+ mptcp_lib_check_mptcp
++mptcp_lib_check_kallsyms
++
++if ! mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	echo "userspace pm tests are not supported by the kernel: SKIP"
++	exit ${KSFT_SKIP}
++fi
+ 
+ ip -Version > /dev/null 2>&1
+ if [ $? -ne 0 ];then
+ 	echo "SKIP: Cannot not run test without ip tool"
+-	exit 1
++	exit ${KSFT_SKIP}
+ fi
+ 
+ ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
+@@ -909,6 +915,11 @@ test_listener()
+ {
+ 	print_title "Listener tests"
+ 
++	if ! mptcp_lib_kallsyms_has "mptcp_event_pm_listener$"; then
++		stdbuf -o0 -e0 printf "LISTENER events                                            \t[SKIP] Not supported\n"
++		return
++	fi
++
+ 	# Capture events on the network namespace running the client
+ 	:>$client_evts
+ 
 -- 
 2.35.3
 
