@@ -1,279 +1,139 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2044.outbound.protection.outlook.com [40.107.247.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17229442
-	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 07:01:58 +0000 (UTC)
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6262be06e41so23604106d6.0
-        for <mptcp@lists.linux.dev>; Wed, 31 May 2023 00:01:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685516517; x=1688108517;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ELdaPHSVBw6JCbG+jxG73XXuerCHgPKjbl6y/4YP3Zg=;
-        b=mzAIntpbF35YCT4YLPKeHLc94zJHA1TNesOHzdo0Ov+90qkl1H9nvVHQFDUALIhE2x
-         O17mKp0B5lrKhqw75Nuw4TJanLrOvLNknoeIfU4oHOdGEpqzp4ubZVMu4E4mY7zTOvJG
-         RH+wBaSj10aLU0XL9jfnBnDtoHnbNj6QiBAKqX8DRUidrqKoFlJAH6lCFDb+yjZVGBG2
-         qhSh2n7nH/EtgxDSY3oTEXlNEYUQ8+KVIxpiMjWh3xODCtev5gakqLVMwiKhqjEz20F2
-         6XjeNXGF6EC0iAG2+3pjLIi3sY7MkDszp+pcZT7sktQtebPwbyB0UTbSJvNd1qTeBJG9
-         rNLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685516517; x=1688108517;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ELdaPHSVBw6JCbG+jxG73XXuerCHgPKjbl6y/4YP3Zg=;
-        b=PlMEznUI3CO0CBJ5jlQL0wZkPGzIXRBRXk7dA3ZmkVREvGtDKNMF/fJfJy/hblfCgs
-         mNKZu4gX7yJisvoPu1Ud5tFtagRodSKAmrKkwjvMKMSOwP7KSRqaELuNibqEMywh4Slq
-         R0Sy+cXzPrzwmfulq90tyBu+lYPrHuaPG6beetxyVzC53xlqvU5yjLuuIViuUZaCuayQ
-         5mRU/MjOxgBIar2gufzeboPiNJlyEydJrBMBYlJcgsw40eo4r0WV+8ZWKuRDmKVMcVEW
-         nB6cxNB+EptbOys3yaqz+N7RDr4VO2aSWwVd4tRhUpn24AjthqkK2Wye78lEdcXk4JBO
-         CcEQ==
-X-Gm-Message-State: AC+VfDzNPdKm8MyHy92RhhCBkqBt9ylYG7FrQOLTKeOHb5ZCJxsYdfaT
-	Xg4wDHnSjclh+wiMNDYLlRQ=
-X-Google-Smtp-Source: ACHHUZ5Cwq52/xdLHo2zn3P8yk51xmiASh4vjPC17VV1SvYgJcxk46dgO1DZqECHh9UAKH2HdKw0Bg==
-X-Received: by 2002:a05:6214:1c09:b0:625:aa49:9abb with SMTP id u9-20020a0562141c0900b00625aa499abbmr5372905qvc.63.1685516517432;
-        Wed, 31 May 2023 00:01:57 -0700 (PDT)
-Received: from localhost (172.174.245.35.bc.googleusercontent.com. [35.245.174.172])
-        by smtp.gmail.com with ESMTPSA id n4-20020a0cfbc4000000b006211a5495adsm3194049qvp.75.2023.05.31.00.01.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 00:01:56 -0700 (PDT)
-Date: Wed, 31 May 2023 03:01:56 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Breno Leitao <leitao@debian.org>, 
- dsahern@kernel.org, 
- willemdebruijn.kernel@gmail.com, 
- Remi Denis-Courmont <courmisch@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Stefan Schmidt <stefan@datenfreihafen.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Matthieu Baerts <matthieu.baerts@tessares.net>, 
- Mat Martineau <martineau@kernel.org>, 
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
- Xin Long <lucien.xin@gmail.com>
-Cc: leit@fb.com, 
- axboe@kernel.dk, 
- asml.silence@gmail.com, 
- linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, 
- dccp@vger.kernel.org, 
- linux-wpan@vger.kernel.org, 
- mptcp@lists.linux.dev, 
- linux-sctp@vger.kernel.org
-Message-ID: <6476f0e4b0182_3c8862294b2@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20230530175403.2434218-1-leitao@debian.org>
-References: <20230530175403.2434218-1-leitao@debian.org>
-Subject: RE: [PATCH net-next v4] net: ioctl: Use kernel memory on protocol
- ioctl callbacks
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B751FBA
+	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 08:59:09 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VKcQm23VBrENeg4VJQGwsjobodr1pSgVVAqeLT3WVNuiupXpmbMB6xUWkJmT8TgOJStzamJdD4u7iOOfTcmm6CjRY2SsBe91hBDUy0QUTnGviKkSnjSLhhE+Xww7CxtmZbRsad2PLEnRmm36Z34qqAgDDCqBZrXSZKUML4lZMD6twG6t5bejI/n4OpLcn9oivspct4vjoQEUIfv2j8HsTo6oxazRzBnRtOy5GhUHirATw16dcmNnYj0UU1wdGsHK0VcJXU6G23vimwHZMMM36R3KvXrn5yEkTlWLjJ554cDPBGdBvnonRGIJyKkNISy37ajAOZc3DTzanAG4z+N+Tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eI/7nod56xEtxKtjvYfiREpPD3qfHSjdKDUq1N/EzZc=;
+ b=aCNKkD6hFsiehzRHTsy67viTqp3rFWRk9rW7HFpnOq/+hgXh1jfo4orXBwmRuq64MTUOXsJt8MJ1UDyKIhwyxRVb8tqyPGljPReWpx2pUPf1zTBD4XtMHqy6Y+OnHZhsDRmoXa9iwM7TfiIN+jS7dZ65pdz7bbH789xINNgvnuUqzJay5XgSrMQnl4bTwukUJc+6/ZzxE4zlTC/lNM8rVOELyzdcnoo1JMd9O83wY1j3Vqlr0NGxakVl7nA/0bgQe6DNHg90ZmlGcTvQPEUmrdwRphYssJXwdLO4YpijeXOeXQxA3Bu08V3Vtz1y1nKIOiRtWveu4urvqeiKzobKYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eI/7nod56xEtxKtjvYfiREpPD3qfHSjdKDUq1N/EzZc=;
+ b=kgBlliV3bvi93cTC2yCoeBZKHJqBfJSq1j8GEsXECoqcBezlU4cA6zkkZDAhgiBXb2zVA0VmYvdEBSelr+bPVUJsvxyRx5PWHF62auIFD/79A1s1d/C5bWvjyyi5AZu+19F5knEkkEHfYw+5jBps67tAvXiWpgaSlYg/KGfvd7/BrBCA0wNAsEvqfqwJZarnbExh+qmYac9mReXdhQGt34Gnu4yJS5oAXyiCqLiBV6VUtVNjKq8xmdlYlBXgNMiPr8JjCBxjnBdN2XkqfcF2MvZrzQdhzeXEAUf8esCorKZv9vORo1cny6DJYdizr9Q2tNjygjG5bTzeXU6gD//JnA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by PA4PR04MB7902.eurprd04.prod.outlook.com (2603:10a6:102:c0::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Wed, 31 May
+ 2023 08:59:05 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::423a:a30f:5342:9d35]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::423a:a30f:5342:9d35%6]) with mapi id 15.20.6433.022; Wed, 31 May 2023
+ 08:59:04 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v15 0/7] update userspace pm mptcp_info fields part 2
+Date: Wed, 31 May 2023 16:58:49 +0800
+Message-Id: <cover.1685523463.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0030.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:190::15) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|PA4PR04MB7902:EE_
+X-MS-Office365-Filtering-Correlation-Id: b1661e19-be07-4bb5-1a44-08db61b54909
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	WayleVY5HWGiYA37ZMBZiiYLEP575/l0htCI0tVMqwl+cEX5JTvgAtscY48mET+QeuMs9/DPB0o60/V/PdUT75Jjywr4s3EQQJUHXWzlUZHrg23m5potFIwSiL/GjICXGDvYIml/hSKsramrBDViE/OBXrMFe7t7ojQH7QbNtn4fghvRcJUVcrHIuh2mIAD3K4LOmR0SfpbsOPYdfOrF9J80V+xmyv/361dj1mfJjfITXfrUW4cET2vin0jMimJrXnVecp6a23WQARQFU2aw0x7YKR5PVYfPkD2XIGwXJ3Ipu59wJ7L0MZR2xmUvbLaov9AeWlNv7YWt4qxwS8dF/KcHbRQeK2YBbvq4szue+ySDTXpeQsyOYhXIL0Cs6k80rPUkvb2i9mXxNazujtIU6IrpvjLKlV+q14LTKPLYRJN4ss4pEV7edmKhsLiyCtYgpzC4R/iLmtBO4S7SbJUPJ5vn2Sc0tDrsZUsJHtytkhqEjRg9MShB0bHhjOfZmSx7D0J+QKUIhlSnjX7DcBcZt+gWiiWrGC4fyUMe8wGnCb3IByH/R1MMeMj1LcpIZdey
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(346002)(376002)(136003)(366004)(39860400002)(451199021)(107886003)(2616005)(38100700002)(186003)(41300700001)(83380400001)(26005)(6506007)(6486002)(6512007)(6666004)(478600001)(4326008)(6916009)(66476007)(66946007)(316002)(5660300002)(66556008)(8676002)(8936002)(44832011)(2906002)(86362001)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KGO1VWv45Dl0QHvm4utoEtvMYoG2wT9lP5lJ+cO3AyUxdgeoehzs4F+ZdiYu?=
+ =?us-ascii?Q?qB5yQJTR8vdZ5MLjWLnUdnq/U1GCl+n6bh5gzdYLuYTx1rEPQeFw34iH1cUZ?=
+ =?us-ascii?Q?BbCNHv2Iag+xK5aXax5tuBVZYyc52216D8DzqX/OkojdiyFiOrtKibPlQMkr?=
+ =?us-ascii?Q?INzXUU2e+y9+lA0DaScc+HVgVI/zsffkeRxsd8qTZUeL3w7ViCnj92VawUCL?=
+ =?us-ascii?Q?w2fglpIloWe7+ludK9c1P2CQmiBhXVUCLmb1TbA0oY3J47OCmyOnTJ4n6Ll5?=
+ =?us-ascii?Q?DeDBT2ZCmTjNahCZPLBZIfq3iG4sT3C5veU4VNZN7ERb7fbM0J+mkTLVYrjN?=
+ =?us-ascii?Q?awIXKAJb+G/rvFzVe1hn5jZW2eaaPYrZ2Or+/gtW7N0d0bZDgEbG64eZmCvI?=
+ =?us-ascii?Q?uzpAsuGuO5IUglNLhh3J1Ptg7iAMf1ZvGAdLISAs8q1MJYmx/WM49h/o/1ai?=
+ =?us-ascii?Q?zJuN4wTk477nx9/d5EKTecvZAEclwHHXZuc8ikKyclszhL6s+zF4N/tyQhSt?=
+ =?us-ascii?Q?J1AWZICJyyQQbkl8iC0LPteSqVZO+KpJQ4oBxI/tQwVgnEiQRqOj6jGWv3bC?=
+ =?us-ascii?Q?VnMK+vhCi09Ycau2SbjjEZA+mSWX01P8AfFSqfG+jW5f0dEDgIMz2hBDcioj?=
+ =?us-ascii?Q?PPTEJbpIlSX0byOdB/IFtifjT88kf1119V9Byvyc4Y6cfHanjOdYbJa7MFnN?=
+ =?us-ascii?Q?dKvAbejwzQwMwtGZJ16i34wiLJqxeTDMX0ZoQ95ygrPsW7VStgdM+1jIY71k?=
+ =?us-ascii?Q?zh0BulXMEjxMtOY0gFD8hSnpKtZNzAeZ2X+GymosUT+dZq9phJ/3v038ie/V?=
+ =?us-ascii?Q?7asl2KKQUMojkPdWPgiKZJ6ig+v/wDzx+y54I2CzgkQZj3/rQvZmNvuCio1/?=
+ =?us-ascii?Q?Dwpv5G5cZCdcMe62VE3LWi4mIGN0cZUFYvDu87kS9Idp8luBhovfHB5LMyWD?=
+ =?us-ascii?Q?ubb+QkJ9FTIMDE+S5VdgBe+yhHV7omWGUgoZ7NolZV6jDRazi0aj6PThohp6?=
+ =?us-ascii?Q?imwZdKLB3nfWMRrJns1chvv2xVLVF67M9IcqUkyWZv78lSLUCU52gJUDbacf?=
+ =?us-ascii?Q?Uw7XcjaSaHzOu+1Fwd/uMwcJ46jub79luY9h6wk4uUlEwFFrBCRK3JxM/vQx?=
+ =?us-ascii?Q?BioJdbXjnQntkmtx1zuSlnL4UuilcfssnpXn+yglrwS9T8sg/4aiJeoPHC/P?=
+ =?us-ascii?Q?WloCh+IZJKceJMaZqXkQFTxUC/oOg08H1zYEkDfgkICmgUDhNFBr4Jb3ubp7?=
+ =?us-ascii?Q?tDDqGirbLUs8qKDy0Q9Dll97NlRv+Kx+6fWsOZMTYLd4NnI737cuSVb9xu5W?=
+ =?us-ascii?Q?twGhtFP26RkoURWy2LqeMc+24xgBAXIb0kRcjmr6jj8gXE9wIKhRCo+xFEK4?=
+ =?us-ascii?Q?tQSmc2p+Mz87Lc6UidHx8YuKTlHpAgzW9HmVPq3itdb9EFTKCmnaswncowr/?=
+ =?us-ascii?Q?RYWbzsqTnrv5mfyK4O483aGtAIHv8xxGSjcOb/M4ohw69cFLItTs9M322Ic4?=
+ =?us-ascii?Q?5esckPN5UOfWuGW21/k1uRaV/Hb90BVe1WHlH0Eu1q6/S+mbd5zVbg1LZAlh?=
+ =?us-ascii?Q?EwzoKSLujWF5qGMk1pSAO1jdEqSD790PycsEsm+u?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1661e19-be07-4bb5-1a44-08db61b54909
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 08:59:04.7259
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1cpiTx7meO7irybI7jQAjuW2au3aEEnJOhgWuzAMYqf6RcKW1IR0gdu4ku+isMMN9gyAe7yDOuob+k7azet6Lw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7902
 
-Breno Leitao wrote:
-> Most of the ioctls to net protocols operates directly on userspace
-> argument (arg). Usually doing get_user()/put_user() directly in the
-> ioctl callback.  This is not flexible, because it is hard to reuse these
-> functions without passing userspace buffers.
-> 
-> Change the "struct proto" ioctls to avoid touching userspace memory and
-> operate on kernel buffers, i.e., all protocol's ioctl callbacks is
-> adapted to operate on a kernel memory other than on userspace (so, no
-> more {put,get}_user() and friends being called in the ioctl callback).
-> 
-> This changes the "struct proto" ioctl format in the following way:
-> 
->     int                     (*ioctl)(struct sock *sk, int cmd,
-> -                                        unsigned long arg);
-> +                                        int *karg);
-> 
-> So, the "karg" argument, which is passed to the ioctl callback, is a
-> pointer allocated to kernel space memory (inside a function wrapper).
-> This buffer (karg) may contain input argument (copied from userspace in
-> a prep function) and it might return a value/buffer, which is copied
-> back to userspace if necessary. There is not one-size-fits-all format
-> (that is I am using 'may' above), but basically, there are three type of
-> ioctls:
-> 
-> 1) Do not read from userspace, returns a result to userspace
-> 2) Read an input parameter from userspace, and does not return anything
->   to userspace
-> 3) Read an input from userspace, and return a buffer to userspace.
-> 
-> The default case (1) (where no input parameter is given, and an "int" is
-> returned to userspace) encompasses more than 90% of the cases, but there
-> are two other exceptions. Here is a list of exceptions:
-> 
-> * Protocol RAW:
->    * cmd = SIOCGETVIFCNT:
->      * input and output = struct sioc_vif_req
->    * cmd = SIOCGETSGCNT
->      * input and output = struct sioc_sg_req
->    * Explanation: for the SIOCGETVIFCNT case, userspace passes the input
->      argument, which is struct sioc_vif_req. Then the callback populates
->      the struct, which is copied back to userspace.
-> 
-> * Protocol RAW6:
->    * cmd = SIOCGETMIFCNT_IN6
->      * input and output = struct sioc_mif_req6
->    * cmd = SIOCGETSGCNT_IN6
->      * input and output = struct sioc_sg_req6
-> 
-> * Protocol PHONET:
->   * cmd == SIOCPNADDRESOURCE | SIOCPNDELRESOURCE
->      * input int (4 bytes)
->   * Nothing is copied back to userspace.
-> 
-> For the exception cases, functions sock_sk_ioctl_inout() will
-> copy the userspace input, and copy it back to kernel space.
-> 
-> The wrapper that prepare the buffer and put the buffer back to user is
-> sk_ioctl(), so, instead of calling sk->sk_prot->ioctl(), the callee now
-> calls sk_ioctl(), which will handle all cases.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  include/linux/mroute.h      | 21 ++++++++++--
->  include/linux/mroute6.h     | 18 +++++++++--
->  include/net/phonet/phonet.h | 20 ++++++++++++
->  include/net/sock.h          |  5 ++-
->  include/net/tcp.h           |  2 +-
->  include/net/udp.h           |  2 +-
->  net/core/sock.c             | 63 ++++++++++++++++++++++++++++++++++++
->  net/dccp/dccp.h             |  2 +-
->  net/dccp/proto.c            | 12 +++----
->  net/ieee802154/socket.c     | 15 ++++-----
->  net/ipv4/af_inet.c          |  2 +-
->  net/ipv4/ipmr.c             | 63 ++++++++++++++++++++++--------------
->  net/ipv4/raw.c              | 16 +++++-----
->  net/ipv4/tcp.c              |  5 +--
->  net/ipv4/udp.c              | 12 +++----
->  net/ipv6/af_inet6.c         |  2 +-
->  net/ipv6/ip6mr.c            | 64 ++++++++++++++++++++++---------------
->  net/ipv6/raw.c              | 16 +++++-----
->  net/l2tp/l2tp_core.h        |  2 +-
->  net/l2tp/l2tp_ip.c          |  9 +++---
->  net/mptcp/protocol.c        | 11 +++----
->  net/phonet/datagram.c       | 11 +++----
->  net/phonet/pep.c            | 11 +++----
->  net/phonet/socket.c         |  2 +-
->  net/sctp/socket.c           |  8 ++---
->  25 files changed, 265 insertions(+), 129 deletions(-)
-> 
-> diff --git a/include/linux/mroute.h b/include/linux/mroute.h
-> index 80b8400ab8b2..5e6787f700db 100644
-> --- a/include/linux/mroute.h
-> +++ b/include/linux/mroute.h
-> @@ -16,12 +16,19 @@ static inline int ip_mroute_opt(int opt)
->  	return opt >= MRT_BASE && opt <= MRT_MAX;
->  }
->  
-> +static inline int sk_is_ipmr(struct sock *sk)
-> +{
-> +	return sk->sk_family == AF_INET &&
-> +		inet_sk(sk)->inet_num == IPPROTO_IGMP;
-> +}
-> +
->  int ip_mroute_setsockopt(struct sock *, int, sockptr_t, unsigned int);
->  int ip_mroute_getsockopt(struct sock *, int, sockptr_t, sockptr_t);
-> -int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg);
-> +int ipmr_ioctl(struct sock *sk, int cmd, void *arg);
->  int ipmr_compat_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
->  int ip_mr_init(void);
->  bool ipmr_rule_default(const struct fib_rule *rule);
-> +int ipmr_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
->  #else
->  static inline int ip_mroute_setsockopt(struct sock *sock, int optname,
->  				       sockptr_t optval, unsigned int optlen)
-> @@ -35,7 +42,7 @@ static inline int ip_mroute_getsockopt(struct sock *sk, int optname,
->  	return -ENOPROTOOPT;
->  }
->  
-> -static inline int ipmr_ioctl(struct sock *sk, int cmd, void __user *arg)
-> +static inline int ipmr_ioctl(struct sock *sk, int cmd, void *arg)
->  {
->  	return -ENOIOCTLCMD;
->  }
-> @@ -50,10 +57,20 @@ static inline int ip_mroute_opt(int opt)
->  	return 0;
->  }
->  
-> +static inline int sk_is_ipmr(struct sock *sk)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline bool ipmr_rule_default(const struct fib_rule *rule)
->  {
->  	return true;
->  }
-> +
-> +static inline int ipmr_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
-> +{
-> +	return 1;
-> +}
->  #endif
->  
->  #define VIFF_STATIC 0x8000
-> diff --git a/include/linux/mroute6.h b/include/linux/mroute6.h
-> index 8f2b307fb124..d9095d83968c 100644
-> --- a/include/linux/mroute6.h
-> +++ b/include/linux/mroute6.h
-> @@ -29,7 +29,7 @@ struct sock;
->  extern int ip6_mroute_setsockopt(struct sock *, int, sockptr_t, unsigned int);
->  extern int ip6_mroute_getsockopt(struct sock *, int, sockptr_t, sockptr_t);
->  extern int ip6_mr_input(struct sk_buff *skb);
-> -extern int ip6mr_ioctl(struct sock *sk, int cmd, void __user *arg);
-> +extern int ip6mr_ioctl(struct sock *sk, int cmd, void *arg);
->  extern int ip6mr_compat_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
->  extern int ip6_mr_init(void);
->  extern void ip6_mr_cleanup(void);
-> @@ -48,7 +48,7 @@ int ip6_mroute_getsockopt(struct sock *sock,
->  }
->  
->  static inline
-> -int ip6mr_ioctl(struct sock *sk, int cmd, void __user *arg)
-> +int ip6mr_ioctl(struct sock *sk, int cmd, void *arg)
->  {
->  	return -ENOIOCTLCMD;
->  }
-> @@ -100,6 +100,12 @@ extern int ip6mr_get_route(struct net *net, struct sk_buff *skb,
->  #ifdef CONFIG_IPV6_MROUTE
->  bool mroute6_is_socket(struct net *net, struct sk_buff *skb);
->  extern int ip6mr_sk_done(struct sock *sk);
-> +int ip6mr_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
-> +static inline int sk_is_ip6mr(struct sock *sk)
-> +{
-> +	return sk->sk_family == AF_INET6 &&
-> +		inet_sk(sk)->inet_num == IPPROTO_ICMPV6;
-> +}
+v15:
+ - fix the failures reported by CI in v14.
 
-Technically, this is just sk_is_icmpv6, which is broader than IPv6
-multicast routing.
+v14:
+ - rebased to "selftests: mptcp: skip tests when features are not supported".
+ - patch 1 "selftests: mptcp: skip tests when features are not
+   supported, v2, patches 8-37"
 
-There are no other ICMPv6 specific ioctls defined, and even if there
-were this callback would return 1 and continue. So I suppose it is
-okay.
+v13:
+ - fix all the failures the CI is complaining about with the debug kconfig.
+ - rename endpoint_manipulation to pm_nl_set_endpoint.
 
-No other concerns from me.
+Geliang Tang (6):
+  mptcp: pass addr to mptcp_pm_alloc_anno_list
+  selftests: mptcp: test userspace pm out of transfer
+  selftests: mptcp: check subflows infos
+  selftests: mptcp: check add_addr infos
+  selftests: mptcp: pass fastclose to sflags
+  selftests: mptcp: set endpoint out of transfer
 
-Two small asides, that are fine to ignore.
+Matthieu Baerts (1):
+  selftests: mptcp: skip tests when features are not supported
 
-The $PROTO_sk_ioctl functions could conceivably call directly into
-the $PROTO_ioctl functions without the indirect function pointer.
-But that would require open coding the sock_sk_ioctl_inout helpers.
+ net/mptcp/pm_netlink.c                        |    8 +-
+ net/mptcp/pm_userspace.c                      |    2 +-
+ net/mptcp/protocol.h                          |    2 +-
+ tools/testing/selftests/net/mptcp/config      |    1 +
+ tools/testing/selftests/net/mptcp/diag.sh     |   42 +-
+ .../selftests/net/mptcp/mptcp_connect.sh      |   20 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 1040 ++++++++++-------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |   59 +
+ .../selftests/net/mptcp/mptcp_sockopt.c       |   12 +-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |   20 +-
+ .../testing/selftests/net/mptcp/pm_netlink.sh |   27 +-
+ .../selftests/net/mptcp/userspace_pm.sh       |   13 +-
+ 12 files changed, 784 insertions(+), 462 deletions(-)
 
-The demux now first checks relatively unlikely multicast routing
-and phonet before falling through to the more common protocols. But
-ioctl is not a hot path operation.
-
+-- 
+2.35.3
 
