@@ -1,47 +1,47 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6B5154AC
-	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 14:17:01 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f6dfc4e01fso60169315e9.0
-        for <mptcp@lists.linux.dev>; Wed, 31 May 2023 07:17:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E11315495
+	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 14:17:02 +0000 (UTC)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3f68fc6b479so59938215e9.2
+        for <mptcp@lists.linux.dev>; Wed, 31 May 2023 07:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1685542619; x=1688134619;
+        d=tessares.net; s=google; t=1685542621; x=1688134621;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BzOqcrpp1aBwEdVLatY2wRCqPf2hNfs2AEQzf9ECYWE=;
-        b=UuwKxaKY4ZxxrjNdPGKduu2Y609ParjA0TMpgk3I7emPnJk1Tf9ds5K/ieDJdFOkUE
-         NnSUoZ/fHKodZXOGExthp7G4iMPbOMMDcclY1rrK7IQNbWD/eKmQzb3UhuqhYb9uB3zJ
-         3AJeM8wchWO2zPLMm9IkTcShSPTvoRXm8r1ZMCmhizyLsARxzRe2oifV2FI8/UGvES51
-         l/A/Z/T5Z+6soBUG2kM/Fwitman4632ovwWmXhhKzE+I3edWduRZ/cPXjQEUYEOONSQz
-         dry/ds1jM5MUvuYSIaICia2e7iPmbGB/piW5OGB2kOKpUJZWoMhZUa2NW2ytb+zk3v61
-         v+Gg==
+        bh=3GTuUi9gxRLsh8kswWgOW9PlaqkRS5+59fPDJtvK0qU=;
+        b=OlvNJc3hPKuTBzDvnX3O6lDm/1VenlEdz9kIY43t2JjboeIGmtvSzJ0TMUhcMtkujS
+         GRxklB1c6NfcLxxyAAoBCK3UMSfoXU3rlAOSwp9wGnZy/TlRDnFyp6ES0yd13M/i/kmO
+         7HTTjUHHjM8AoFrmBWnAYDiWmg1sABhEhFlbbQiKtAwKj5tdjGKyHUOPPZpVIBcNPmX0
+         E6Tsts8eymvsb8F9D4SZ0oX25Bu88RMpmtbmvesfy733aQGXu2ql5WTKPU84gBCpxFas
+         LHtBVx1t3Mrn5/yOUYdPGShO0QzJOyqHOUCN+fyXj79qeqfuxYnsqDgety8ZO0e23bnL
+         s7ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685542619; x=1688134619;
+        d=1e100.net; s=20221208; t=1685542621; x=1688134621;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BzOqcrpp1aBwEdVLatY2wRCqPf2hNfs2AEQzf9ECYWE=;
-        b=dFa4yCVltEZwDiTieOQr19aAaobtpHkFs3y2ja/Kyu0DUUeW+DOVL9z9/HNigMHfQU
-         EofALZXWNMv3KUu/VHSBx+Piuu0jWrX21AweJ7XRO1Q2t1TwwL9maxIsCNhDz7p7JNLj
-         xG/t7sujzCEIyhFKTKgasPhlDn6dIggUFb9+eLI4j2+1Q/8KV+dv0bS03G8iKPvdk/8C
-         DMz9wxbz5G+DyF8rStV4gTXdfA9umeqh1VLoX4PHJjzCB8l4yDS40VJ0oCauhE4EAW1k
-         jF2S1vGEq42ILo9ihrj8sVyibhVP1M5nKCkV0Zz6p0uQ22vvVnTXfZNo1pzvLfMQAqPN
-         bTTQ==
-X-Gm-Message-State: AC+VfDwd+a1GS5xvVxAJ5dWbYjVZNSJpUxDq4b03hoOO1U0FJl0w2unD
-	hhXJ3tL2FvH4jS+G8uITj+xyzg==
-X-Google-Smtp-Source: ACHHUZ5f/SFg4NHoy3oHdd/sxh6fAwVaUXPddpdPuEDGcGJx82pCcV9+199g29FB41DzMS/a5TP6aA==
-X-Received: by 2002:a7b:c5c1:0:b0:3f6:2ae:230e with SMTP id n1-20020a7bc5c1000000b003f602ae230emr5249953wmk.3.1685542619463;
-        Wed, 31 May 2023 07:16:59 -0700 (PDT)
+        bh=3GTuUi9gxRLsh8kswWgOW9PlaqkRS5+59fPDJtvK0qU=;
+        b=QsjmGJ0j2NiYvQmvDe5oAcHnMREDB5n4rLh3REwLjIUNrMMluFtrP/9HyU3KGIs3vI
+         kttHOzKUWSGl/p7+iGSZqEfmRjOrEWUN7YxEouBlmSssbaEeCbRmb+ClFi8FONpYr9XC
+         mzFVCqU+d2WZiLzurXA+6bhFaWjZ8UJ1IF0b62iydgN5b4H5bVcGe6uZUCoqRvKDD860
+         G7AtS4q6qa+MA7/8xqySDamlEKfF1a5j0nPkcksT3EralCmCuZ1laGjWzLECQHN+BYRa
+         X4/Cwjloi7Gq/jtm7z+kkL7Caje6QuJDWmyqxYoRqOZrzCtlcwHKD3jxYevYDjwSZ6+E
+         65LQ==
+X-Gm-Message-State: AC+VfDyKmXM5IJcix5PvAne9KZjjomYI3tftXiefnRYPd8zfXkaYy+qV
+	0X4L+VawEy8317Qv1HU3xa8LxU4S9UjG0my2c53Aj/5+
+X-Google-Smtp-Source: ACHHUZ4ADGN8xIwtJeZP9Du/huVvJ90Dc1n86HejLGussR4hPZLRoN3U607u9nxgpdAAXvg6fxR8KQ==
+X-Received: by 2002:a05:600c:2283:b0:3f6:1317:ca71 with SMTP id 3-20020a05600c228300b003f61317ca71mr4259681wmf.14.1685542620905;
+        Wed, 31 May 2023 07:17:00 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id bg22-20020a05600c3c9600b003f4283f5c1bsm4242215wmb.2.2023.05.31.07.16.58
+        by smtp.gmail.com with ESMTPSA id bg22-20020a05600c3c9600b003f4283f5c1bsm4242215wmb.2.2023.05.31.07.17.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 07:16:59 -0700 (PDT)
+        Wed, 31 May 2023 07:17:00 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Wed, 31 May 2023 16:16:50 +0200
-Subject: [PATCH mptcp-net v3 30/32] selftests: mptcp: join: uniform
- listener tests
+Date: Wed, 31 May 2023 16:16:52 +0200
+Subject: [PATCH mptcp-net v3 32/32] Squash to "selftests: mptcp: add
+ MPTCP_FULL_INFO testcase"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,112 +50,68 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v3-30-a1f05258292b@tessares.net>
+Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v3-32-a1f05258292b@tessares.net>
 References: <20230406-mptcp-issue-368-selftests-old-kernels-v3-0-a1f05258292b@tessares.net>
 In-Reply-To: <20230406-mptcp-issue-368-selftests-old-kernels-v3-0-a1f05258292b@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, 
  Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3211;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1666;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=YeEsUgrX8hLox1KFJNTucCReLP+W1L9fRF0FBuTfe0Q=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkd1bELCDAB5kZtMmoGr2VSKMKmREONwG3TCXoN
- M5Dc7tqZjCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZHdWxAAKCRD2t4JPQmmg
- c5n1EAC7W5C1wphqEDJR7HjFGfA7ieVUIH+oS/lzD5JQEkKI66j5AsZ0195AOXW0xzYhdsL43wf
- dI/W2Gq3uyArVzc2dNdV2KRmuybZEDVio9KBpLwk7Zi36cd7caR5bD53gszsdlMHgj15dlID46V
- vU5qcGK/oKemubAZq2bZneeTbrzJB0wFqRGsnz7BX4sUuYvwdjzii5T5zUIh1XSUodVvz/DWiek
- aEeOHigIFiTpVrKgHWywe4OkipI82cSPM2Yk1+Njjyo4Cr+hBOnWTbl+22pgSmBPCi98lgJz/p+
- ON8Ig4vJufw7l4tlXbeLzgxS2cEPiaceAKgIAfCB/OmioJ3iULE0rp0M9k4YNgSInwP5PQOUJ72
- IHFEwdi4y6MMd5rP73fNEjjKhCyfMfmDM2Naxmu+Dk0bhCGe1vyvllF6TGLz0REWumnYK4i94zq
- bKN7lWaJVTXT2oxcPO7jxTMXWoR3WwEtRPJYDyDYxaXNqdJtwOIzCY9jKfMXXAZYsCRe07sCq9i
- Ku5CTbZvxRYCnXtr2z7QD4MUNV6GOld0qM3G6mWe4QD0Qwy+F0g/ECUdjvTCe0r3NjvrHgnKdnU
- BPGMTbfDRp2BH7wTumOEhik7JfuB8vQwPWSTB6DNdOMAmrdYt/pK1+PwEGLnMed5kVZGhlbH8I/
- oEALsuOGh9oa+bw==
+ bh=ziktV6RHZdI6610ED5mMHdiYrmlClKYN622Wg6NS3Y0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkd1bEZN+BUesbfqmbSduBjn1P2B5NCTvimJ0Tw
+ DBmqikTb8mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZHdWxAAKCRD2t4JPQmmg
+ cw+jD/90FNy45uyS1z/v+xhgWZw4J+KYXU/a0ca9RaiMeYvdN7xb6A43w9tlwxfbscsmVqngJKv
+ vvlDYY/Ko8HPJxEUarYK2edo9Tl+E8vPS5rHkSVdCQD5Ro5oq/T428+ilPpV41O/0ONiUrQni2I
+ OftOd3TKiZc9q2YV7CMDtHLEQEqb/MyrxebWe0rYHE/ogT1DuLxHyqytZcDMh6EfdItKFVv0QFn
+ JN1OaVHbJs/rRroyFZim/m++fKem2G9jMPT5drJmwHeZwQHUfMd4boZuwdIT17qmRqIdtaSjG5B
+ 7uNaq789iHv2s1CC4rtpxOmb8g46vkR9rywd42aSO2pygZOtzDSeqdjEYEApOZiYC5tW27y7yhP
+ /Wuo+2LZG4i4oc5z6U2SHqTTJn5bp0rjo+enQeYTdgUz0lFyj9GBlCP8TF3Ve9Emd9ZOMCUu/mn
+ tHspx6dp5XMAngVr3i0OiCgnvKJmbV+Uo/V8SBLQ6YwGfhc17eDuBt5Bo3s3yI6jsRWQFkhmTKk
+ Yt+mv6PivmDzIJFB1yofVv1OvsR4VwEEy8S5eVGo4FV82ydiSNlaSMQVcu2EvMjWr8JeST+auek
+ oFVGjZYXHHw16fygqicsBFuxGLaYtKtcR9cEMDRgIaTTeB88kLADcOCNN0NsqfuXgpgHsfphbZy
+ 3ldPp9WSyXaYXWg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The alignment was different from the other tests because tabs were used
-instead of spaces.
+Relax the expected returned sizes from a getsockopt(MPTCP_FULL_INFO):
+the sizes should be positive and the user one should be the min between
+the one given by the userspace and the one from the kernelspace.
 
-While at it, also use 'echo' instead of 'printf' to print the result to
-keep the same style as done in the other sub-tests. And, even if it
-should be better with, also remove 'stdbuf' and sed's '--unbuffered'
-option because they are not used in the other subtests and they are not
-available when using a minimal environment with busybox.
+By doing that, we support new fields added on the userspace or the
+kernelspace sides.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
-Fixes: 178d023208eb ("selftests: mptcp: listener test for in-kernel PM")
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
 v3:
-  - new patch, initially to fix the alignment but while at it
+  - new patch (the mentioned patch has been sent and applied while the
+    v2 was still in review)
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 30 ++++++++++++-------------
- 1 file changed, 14 insertions(+), 16 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 9d6c4c1ecff1..26721ed7b797 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2774,43 +2774,41 @@ verify_listener_events()
- 	local family
- 	local saddr
- 	local sport
-+	local name
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index de897f77e174..5994a078a65d 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -519,10 +519,12 @@ static void do_getsockopt_mptcp_full_info(struct so_state *s, int fd)
+ 	}
  
- 	if [ $e_type = $LISTENER_CREATED ]; then
--		stdbuf -o0 -e0 printf "\t\t\t\t\t CREATE_LISTENER %s:%s"\
--			$e_saddr $e_sport
-+		name="LISTENER_CREATED"
- 	elif [ $e_type = $LISTENER_CLOSED ]; then
--		stdbuf -o0 -e0 printf "\t\t\t\t\t CLOSE_LISTENER %s:%s "\
--			$e_saddr $e_sport
-+		name="LISTENER_CLOSED"
-+	else
-+		name="$e_type"
- 	fi
+ 	assert(olen <= data_size);
+-	assert(mfi.size_tcpinfo_user == mfi.size_tcpinfo_kernel);
+-	assert(mfi.size_tcpinfo_user == sizeof(struct tcp_info));
+-	assert(mfi.size_sfinfo_user == mfi.size_sfinfo_kernel);
+-	assert(mfi.size_sfinfo_user == sizeof(struct mptcp_subflow_info));
++	assert(mfi.size_tcpinfo_kernel > 0);
++	assert(mfi.size_tcpinfo_user ==
++	       MIN(mfi.size_tcpinfo_kernel, sizeof(struct tcp_info)));
++	assert(mfi.size_sfinfo_kernel > 0);
++	assert(mfi.size_sfinfo_user ==
++	       MIN(mfi.size_sfinfo_kernel, sizeof(struct mptcp_subflow_info)));
+ 	assert(mfi.num_subflows == 1);
  
-+	printf "%-${nr_blank}s %s %s:%s " " " "$name" "$e_saddr" "$e_sport"
-+
- 	if ! mptcp_lib_kallsyms_has "mptcp_event_pm_listener$"; then
- 		printf "[skip]: event not supported\n"
- 		return
- 	fi
- 
--	type=$(grep "type:$e_type," $evt |
--	       sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q')
--	family=$(grep "type:$e_type," $evt |
--		 sed --unbuffered -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q')
--	sport=$(grep "type:$e_type," $evt |
--		sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
-+	type=$(grep "type:$e_type," $evt | sed -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q')
-+	family=$(grep "type:$e_type," $evt | sed -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q')
-+	sport=$(grep "type:$e_type," $evt | sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
- 	if [ $family ] && [ $family = $AF_INET6 ]; then
--		saddr=$(grep "type:$e_type," $evt |
--			sed --unbuffered -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
-+		saddr=$(grep "type:$e_type," $evt | sed -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
- 	else
--		saddr=$(grep "type:$e_type," $evt |
--			sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
-+		saddr=$(grep "type:$e_type," $evt | sed -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
- 	fi
- 
- 	if [ $type ] && [ $type = $e_type ] &&
- 	   [ $family ] && [ $family = $e_family ] &&
- 	   [ $saddr ] && [ $saddr = $e_saddr ] &&
- 	   [ $sport ] && [ $sport = $e_sport ]; then
--		stdbuf -o0 -e0 printf "[ ok ]\n"
-+		echo "[ ok ]"
- 		return 0
- 	fi
- 	fail_test
--	stdbuf -o0 -e0 printf "[fail]\n"
-+	echo "[fail]"
- }
- 
- add_addr_ports_tests()
+ 	/* Tolerate future extension to mptcp_info struct and running newer
 
 -- 
 2.39.2
