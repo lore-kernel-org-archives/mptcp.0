@@ -1,24 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE575200D6;
-	Wed, 31 May 2023 19:37:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A964C433A1;
-	Wed, 31 May 2023 19:37:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C14E34CD3;
+	Wed, 31 May 2023 19:37:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 884C1C433D2;
+	Wed, 31 May 2023 19:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685561837;
-	bh=RFv40zM9QJYJOLASIioGQHhhSNdv+fGArl5JAYjK2I0=;
+	s=k20201202; t=1685561838;
+	bh=eMhN4xxNMlQU6PkbhzwTVXENtyni6r0Q9UeRaOCqmVE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Cv/MUpCEWmpI8YuBDior4T9GWiqMgMUeQasZLXhPt+Ei6NCzNGJNfxAeqXYvc/MS5
-	 UhhVhVdIqHSduKzDPQIum5lUWjwP2+PD5LIlUnaMM880CWePi0oGuhj3fYeTJdjw66
-	 1SH2XR8lHaAzkUve1XN+/X1QfwNCyMj2DN13sMaJgZGxQ706OyvtbT4R6PkuVqdQNh
-	 RjXtzKL8UTbp/Iz6i8uF7Ni9n1OiVYucBmFywRh18W5BD5btFWI+a9D7yrXnoxMeh3
-	 zP0v1NZ1NPs/QEtT1+8+uzqXzxfF3pkapy3OFKU9ZvyWTOfMSfMppO7qz6UvnRXiaa
-	 QcnDzK2WHGC/w==
+	b=G1pV8Ywn8P/kOE109DImsOOVMPEvaggcIcSNIS7vUwBP8qO7cWb8PCLqohhpZBXxW
+	 kXVrNo3iZgBjyqj38LukupQxK2rmaUUzZbaeF9hJoec+S0Ud4fs35LhH1b1JRAf39y
+	 z2myDDVle3xAqOcZ5ikN2zHQNN5JJK++I4JxkahKHcNsv7OJNcaJQyn5dfP7Cc20j3
+	 8gAXCgPJRZEJESqzEyHFJMG2r/EDdhI4ovGMc2j7Sb2U/ppVBKUDlmAGM9kw9Eqo2f
+	 4i/I3TMCEZNlj6v2uUcKDvWKxm3LA9CkfgC5rhS3qsFj0BpFFb+4tMU7L/lQLGmpIN
+	 dLfeD+y+IBMRw==
 From: Mat Martineau <martineau@kernel.org>
-Date: Wed, 31 May 2023 12:37:04 -0700
-Subject: [PATCH net 2/6] mptcp: add annotations around msk->subflow
- accesses
+Date: Wed, 31 May 2023 12:37:08 -0700
+Subject: [PATCH net 6/6] mptcp: fix active subflow finalization
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -27,7 +26,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230531-send-net-20230531-v1-2-47750c420571@kernel.org>
+Message-Id: <20230531-send-net-20230531-v1-6-47750c420571@kernel.org>
 References: <20230531-send-net-20230531-v1-0-47750c420571@kernel.org>
 In-Reply-To: <20230531-send-net-20230531-v1-0-47750c420571@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
@@ -35,115 +34,92 @@ To: Matthieu Baerts <matthieu.baerts@tessares.net>,
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
  Geliang Tang <geliang.tang@suse.com>
 Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- Mat Martineau <martineau@kernel.org>, Christoph Paasch <cpaasch@apple.com>
+ Mat Martineau <martineau@kernel.org>, stable@vger.kernel.org
 X-Mailer: b4 0.12.2
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-The MPTCP can access the first subflow socket in a few spots
-outside the socket lock scope. That is actually safe, as MPTCP
-will delete the socket itself only after the msk sock close().
+Active subflow are inserted into the connection list at creation time.
+When the MPJ handshake completes successfully, a new subflow creation
+netlink event is generated correctly, but the current code wrongly
+avoid initializing a couple of subflow data.
 
-Still the such accesses causes a few KCSAN splats, as reported
-by Christoph. Silence the harmless warning adding a few annotation
-around the relevant accesses.
+The above will cause misbehavior on a few exceptional events: unneeded
+mptcp-level retransmission on msk-level sequence wrap-around and infinite
+mapping fallback even when a MPJ socket is present.
 
-Fixes: 71ba088ce0aa ("mptcp: cleanup accept and poll")
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/402
+Address the issue factoring out the needed initialization in a new helper
+and invoking the latter from __mptcp_finish_join() time for passive
+subflow and from mptcp_finish_join() for active ones.
+
+Fixes: 0530020a7c8f ("mptcp: track and update contiguous data status")
+Cc: stable@vger.kernel.org
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- net/mptcp/protocol.c | 18 ++++++++++--------
- net/mptcp/protocol.h |  6 +++++-
- 2 files changed, 15 insertions(+), 9 deletions(-)
+ net/mptcp/protocol.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9cafd3b89908..ce9de2c946b0 100644
+index af54a878ac27..67311e7d5b21 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -91,7 +91,7 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
- 		return err;
- 
- 	msk->first = ssock->sk;
--	msk->subflow = ssock;
-+	WRITE_ONCE(msk->subflow, ssock);
- 	subflow = mptcp_subflow_ctx(ssock->sk);
- 	list_add(&subflow->node, &msk->conn_list);
- 	sock_hold(ssock->sk);
-@@ -2282,7 +2282,7 @@ static void mptcp_dispose_initial_subflow(struct mptcp_sock *msk)
- {
- 	if (msk->subflow) {
- 		iput(SOCK_INODE(msk->subflow));
--		msk->subflow = NULL;
-+		WRITE_ONCE(msk->subflow, NULL);
- 	}
+@@ -825,6 +825,13 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+ 	mptcp_data_unlock(sk);
  }
  
-@@ -3136,7 +3136,7 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
- 	msk = mptcp_sk(nsk);
- 	msk->local_key = subflow_req->local_key;
- 	msk->token = subflow_req->token;
--	msk->subflow = NULL;
-+	WRITE_ONCE(msk->subflow, NULL);
- 	msk->in_accept_queue = 1;
- 	WRITE_ONCE(msk->fully_established, false);
- 	if (mp_opt->suboptions & OPTION_MPTCP_CSUMREQD)
-@@ -3184,7 +3184,7 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
- 	struct socket *listener;
- 	struct sock *newsk;
- 
--	listener = msk->subflow;
-+	listener = READ_ONCE(msk->subflow);
- 	if (WARN_ON_ONCE(!listener)) {
- 		*err = -EINVAL;
- 		return NULL;
-@@ -3736,10 +3736,10 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 
- 	pr_debug("msk=%p", msk);
- 
--	/* buggy applications can call accept on socket states other then LISTEN
-+	/* Buggy applications can call accept on socket states other then LISTEN
- 	 * but no need to allocate the first subflow just to error out.
- 	 */
--	ssock = msk->subflow;
-+	ssock = READ_ONCE(msk->subflow);
- 	if (!ssock)
- 		return -EINVAL;
- 
-@@ -3813,10 +3813,12 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 	state = inet_sk_state_load(sk);
- 	pr_debug("msk=%p state=%d flags=%lx", msk, state, msk->flags);
- 	if (state == TCP_LISTEN) {
--		if (WARN_ON_ONCE(!msk->subflow || !msk->subflow->sk))
-+		struct socket *ssock = READ_ONCE(msk->subflow);
++static void mptcp_subflow_joined(struct mptcp_sock *msk, struct sock *ssk)
++{
++	mptcp_subflow_ctx(ssk)->map_seq = READ_ONCE(msk->ack_seq);
++	WRITE_ONCE(msk->allow_infinite_fallback, false);
++	mptcp_event(MPTCP_EVENT_SUB_ESTABLISHED, msk, ssk, GFP_ATOMIC);
++}
 +
-+		if (WARN_ON_ONCE(!ssock || !ssock->sk))
- 			return 0;
+ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+@@ -839,6 +846,7 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
+ 		mptcp_sock_graft(ssk, sk->sk_socket);
  
--		return inet_csk_listen_poll(msk->subflow->sk);
-+		return inet_csk_listen_poll(ssock->sk);
+ 	mptcp_sockopt_sync_locked(msk, ssk);
++	mptcp_subflow_joined(msk, ssk);
+ 	return true;
+ }
+ 
+@@ -3485,14 +3493,16 @@ bool mptcp_finish_join(struct sock *ssk)
+ 		return false;
  	}
  
- 	if (state != TCP_SYN_SENT && state != TCP_SYN_RECV) {
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index de4667dafe59..7a1a3c35470f 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -305,7 +305,11 @@ struct mptcp_sock {
- 	struct list_head rtx_queue;
- 	struct mptcp_data_frag *first_pending;
- 	struct list_head join_list;
--	struct socket	*subflow; /* outgoing connect/listener/!mp_capable */
-+	struct socket	*subflow; /* outgoing connect/listener/!mp_capable
-+				   * The mptcp ops can safely dereference, using suitable
-+				   * ONCE annotation, the subflow outside the socket
-+				   * lock as such sock is freed after close().
-+				   */
- 	struct sock	*first;
- 	struct mptcp_pm_data	pm;
- 	struct {
+-	if (!list_empty(&subflow->node))
+-		goto out;
++	/* active subflow, already present inside the conn_list */
++	if (!list_empty(&subflow->node)) {
++		mptcp_subflow_joined(msk, ssk);
++		return true;
++	}
+ 
+ 	if (!mptcp_pm_allow_new_subflow(msk))
+ 		goto err_prohibited;
+ 
+-	/* active connections are already on conn_list.
+-	 * If we can't acquire msk socket lock here, let the release callback
++	/* If we can't acquire msk socket lock here, let the release callback
+ 	 * handle it
+ 	 */
+ 	mptcp_data_lock(parent);
+@@ -3515,11 +3525,6 @@ bool mptcp_finish_join(struct sock *ssk)
+ 		return false;
+ 	}
+ 
+-	subflow->map_seq = READ_ONCE(msk->ack_seq);
+-	WRITE_ONCE(msk->allow_infinite_fallback, false);
+-
+-out:
+-	mptcp_event(MPTCP_EVENT_SUB_ESTABLISHED, msk, ssk, GFP_ATOMIC);
+ 	return true;
+ }
+ 
 
 -- 
 2.40.1
