@@ -1,47 +1,47 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4786615491
-	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 14:16:45 +0000 (UTC)
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-30789a4c537so4179710f8f.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2751E154B8
+	for <mptcp@lists.linux.dev>; Wed, 31 May 2023 14:16:46 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-3f623adec61so61307335e9.0
         for <mptcp@lists.linux.dev>; Wed, 31 May 2023 07:16:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1685542603; x=1688134603;
+        d=tessares.net; s=google; t=1685542604; x=1688134604;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=llfmCx0H+K5+6c0HcL1PftCFSkHkGVSLgVAlN3+m0mc=;
-        b=bcpFOrQ8WKp0TO+ljdLzeVt3Z8Y8wE4qfM+d/yqVdfg5y6HUd7XN9iMKnDFgIM+BDT
-         DlxrrhpWufhUcqjg/cNuG3rL+B3nsnz/3rcwr2HX/51MXdRKsPQwmIc+82TMkFHBAwmh
-         eKFtiW4USmDKImZquMWvOetPgId+CwYrVpmS8/0Hj07sg8nfCnVJPi99ARC8Vv/oPsGl
-         HVgSUukpcp42WC1U3c+AyFHdMXtIjgWxBlC+9X+eVEfmx4cxHpB/XjBKI/yt3hB5EDtT
-         /2jPX8k3y9T5IL/cnfcu1QcnW3Q+Ej1TFwRp0eSWV2Uya29XaYmJEOgxyPXdUqgUSbq7
-         fT6Q==
+        bh=47XCLjZwP/igKiwOnLpGF0czl3I4/1icBTsjj7iWJ/o=;
+        b=XbfRWXzAGSqTy1SZjOLyFxGJgZXWU1dIuEbNYsX/X2Bkm2UycMh4qP/J9rsP6/YElj
+         /Pyi1cSr7cd7lJdHeakBBEW3eGZeleffmF3Vnf8+W9YrETHy0YGLT3bFKoVslJVIeJ2y
+         sy3/ONPU3zHRj6xG+knz11TA3WTqwTyluda/epzWGGViqkh5iyR0fHUI8AnHPrEL4A6t
+         /3dFFPxeByeDqhxSvVnz9avNoNoRAmPTVQPFc5/dqne6isXBja9jMcBL9HUYjohFMV+u
+         8p2BZhZFLYTPP6RcrNTifLv6RKEtAXrlUonLcnAssVRrEoizf1UKPQf2AjTkd6xUPJrK
+         rbRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685542603; x=1688134603;
+        d=1e100.net; s=20221208; t=1685542604; x=1688134604;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=llfmCx0H+K5+6c0HcL1PftCFSkHkGVSLgVAlN3+m0mc=;
-        b=ai4za/LyYDczx77OL+A0T4Dz9LQe7UIifN9xwxUVU7FQCEboUJa8iRUgMJdRIOMpAk
-         UXsy6iQuw8ZuG32AZqWBUNvHvinSrSY2OQtZ3hBKAULs5dxCnmnAr+u125uh7Zxn7tSD
-         gpHinWJ4B50kq/zoUpVD0tU/QEaLvQNBlsWErrI2rB77z90TjiHpPZooBA7lqNgmou9K
-         UeGJW311STUzgemj+tbpxKRt5JeyDriqK86lhUhsjhJRCCwpZgBowDXvtICEpzqmUBB4
-         ybjJ47RuzEXhPiPs8EXfTdYJHBa4oSi6qRruOoDPuOE6XPB3/QQLSUr2cS66c5LKq2VX
-         NK+w==
-X-Gm-Message-State: AC+VfDxSuUFibNVrBn3JivHwDk7T8HUFP11i6qBaiJBQXVXVp/CmnAe/
-	AFEOSOuYTwURN8/2YWywzBDJsuf15aJM6VA+C6iWnUJY
-X-Google-Smtp-Source: ACHHUZ4oXbf8yYDoQZV2lnY6ye539MBLgrM+4b0mnLVdCm9fHntv2xG9RUcUFrWfFLEjExs6M4Vehw==
-X-Received: by 2002:a05:6000:1942:b0:306:368d:8a1c with SMTP id e2-20020a056000194200b00306368d8a1cmr4219110wry.45.1685542603566;
-        Wed, 31 May 2023 07:16:43 -0700 (PDT)
+        bh=47XCLjZwP/igKiwOnLpGF0czl3I4/1icBTsjj7iWJ/o=;
+        b=L3tpdgF7V59VXR/eVCRJJHgXOERR883dbcx7l6yVj+RkbMS3aNqDQGNibvkoVNvw6D
+         8tKkTuQ1e4z2JbS6Bk2b88moML3Oy9qWCnBfNeCWeIYfOyW6TrGLe7TUiPEjbSGyrMmK
+         piYRPx0znkCPNgD1UMh28X9qx3dMQGs0eISTOMkp7pOU2A1X6TfSQMviK+ImoPzPfCW2
+         8TX2s5JvAKNxc1W2t56Y1iTvgR6+HpXgixR7UHrKy+ONQyLGKfxvCRgly7iOkrg8Q5xY
+         vPDMAu4bASoXwUDg1AVBfihUACQ4BZ4uwNznjDKmL9RgnatsQNhW0tYfLOeVMPHQ8FVk
+         yVgw==
+X-Gm-Message-State: AC+VfDxUKTS5OyOdjOxySrFtFTPcZKbO3GCpey3CYhF3V5cXtLBRKr5C
+	PG0EcnS2oN0by6YEYRHXQ1dJvIXw9x6DAlo2ml6Go1Xa
+X-Google-Smtp-Source: ACHHUZ62IFN/5yWOLIbwTu7yl6psxQXrBHM28a29VQyETnuHXj5fCm5eXI8RN29c5YC1bArsAitChg==
+X-Received: by 2002:a05:600c:c3:b0:3f6:3e4:7cc9 with SMTP id u3-20020a05600c00c300b003f603e47cc9mr4121680wmm.40.1685542604362;
+        Wed, 31 May 2023 07:16:44 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
         by smtp.gmail.com with ESMTPSA id bg22-20020a05600c3c9600b003f4283f5c1bsm4242215wmb.2.2023.05.31.07.16.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 07:16:43 -0700 (PDT)
+        Wed, 31 May 2023 07:16:44 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Wed, 31 May 2023 16:16:29 +0200
-Subject: [PATCH mptcp-net v3 09/32] selftests: mptcp: pm nl: skip fullmesh
- flag checks if not supported
+Date: Wed, 31 May 2023 16:16:30 +0200
+Subject: [PATCH mptcp-net v3 10/32] selftests: mptcp: sockopt: relax
+ expected returned size
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,79 +50,109 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v3-9-a1f05258292b@tessares.net>
+Message-Id: <20230406-mptcp-issue-368-selftests-old-kernels-v3-10-a1f05258292b@tessares.net>
 References: <20230406-mptcp-issue-368-selftests-old-kernels-v3-0-a1f05258292b@tessares.net>
 In-Reply-To: <20230406-mptcp-issue-368-selftests-old-kernels-v3-0-a1f05258292b@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, 
  Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2380;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3168;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=lMstzMhzZIe0UepJhMFOkDqpC41lAx03LiShFqM5PIA=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkd1bCFbjyxHLUyL1faF5zS6OUjyKl2sGiX+nwt
- K8wPu9SucKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZHdWwgAKCRD2t4JPQmmg
- c/rwEADehnsUsvZVjeLDwqNhwOPRXVDMHjk726gnNA54j2PoO/5MBsJQCGC/qMUkdwvOtN3Nv7u
- dZ140ZU3KFPf229ulUu56TlDt1gkkMcgqPYgThuAi8kdrNC36acmIO1KOyBgaU+JA2dgLhmYQL0
- nGoVsrwCC+0c/QXK3S34ZUggk4BD+8a+gBDIrXh2XzW6eaGoyrQDOEiY8JkcvI7mdR0ze7Gplq2
- F8kcry1h3b4zUCwKjlORPREHwfmOY+QaIqMVYM3hrLMjya5AymY8BcrwvS1GtEii7ApuN4iH3XT
- 5oXUwd2AyJ40T64v6bhnuUO4MHsyMsR8nK26HwBM6O0rV98e5A/Rrlb5Bq/4RI6IRix7ft5Bbxx
- xNc4gDRD9E9sa3rh42WEu6LNJ6hn/2bBlZqFhx8jPH3HrYvMw8ApRiDFwCtywqnpGTp2uqsmglY
- 9OuLjlDPaeLX6fIcETFCdbxvRdSys/+Zhk0JsGc+HQGIBEap0qW5L8N/cYS8ek9yp1qWu+EZ50t
- TAQdi4GdI4ZIJ907V/7yVwgAopMj/XaNgkM/2h4+OIxE3XvKoaAfz38Oi9ttwB47t8apD2dkWq3
- Kh8KOgKPN45etAMoqC+qINwPaK10wZezQK/pgGCH8pEh7kLufMbdi6nnRZOkZAVhlvLko0RUt5d
- 3bvlsn58fomU64w==
+ bh=TKFUMOATm1EJOX99mWsvUDDcv2YOqsvLTpXOJXpt/gc=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkd1bC0Tr9+nyhJmBnN1NDkHcsct0Fqj0DCwOlc
+ AVtEXVfNGWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZHdWwgAKCRD2t4JPQmmg
+ cwXuD/4nuMwzkqAWyKyYUDr2vI+2NIAjd7LILMCH40BkpTmNIMJdKg0N9zzMZKTI9tkDLU244fo
+ d+FKkzQhSvNKg+A7IPpSjBlVv7HmQq7PdL3uNJRToesMRUXdrmbNcORDkNLpr/N0cXKnd9RYuUG
+ ybGT3j3FkQlYOPYVoQ15v7HKg9sJN7pzesRUtxySrTMD/iTphayeok2a6yIb19wgKAAllspbDwu
+ lDBKHhVSP4n1SkfWlYporpJLUmaO7PAUXKnkj+BttyQq0JJMSBCpNdOxn4c7Q+dX4gWvpsIK40L
+ nlgLvALW7LhfXtwLpekkdwiirGt1IB96w1hfBAJsMbHQD6JziHwdHxie47SIeDuQ31SuxGIQ9el
+ sO482D4HN3BIRBRDlCtfGpspD60ZOWjzXhmJM49qiDqUq4g8OnF4j9KK5S4O0mqh8tk9fEGRWGd
+ yXfVTcWABNqecLiuZj8Z9qYjQcZHaT3cNDiOMZn3UfqmF4bi68+/wP4MgbntVfPXqSouONrWK7z
+ xE0GVu5pr7lfrS/XXp7QFWPJwlIa15uQJmcue7EloaHoPwWigGgJ7o08/LKZ0RFiKliG/Ay/czr
+ lhk7iNSOEk1Tze89UhVkuEW3dck+mV791ULaWfqV1Th90s+/oLjJE2vNpHoprT/KVecKdu46jTa
+ 1yKaAz9uJhQxhlw==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 Selftests are supposed to run on any kernels, including the old ones not
 supporting all MPTCP features.
 
-One of them is the fullmesh flag that can be given to the MPTCP
-in-kernel path-manager and introduced in commit 2843ff6f36db ("mptcp:
-remote addresses fullmesh").
+One of them is the getsockopt(SOL_MPTCP) to get info about the MPTCP
+connections introduced by commit 55c42fa7fa33 ("mptcp: add MPTCP_INFO
+getsockopt") and the following ones.
 
-If the flag is not visible in the dump after having set it, we don't
-check the content. Note that if we expect to have this feature and
-SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var is set to 1, we always
-check the content to avoid regressions.
+We cannot guess in advance which sizes the kernel will returned: older
+kernel can returned smaller sizes, e.g. recently the tcp_info structure
+has been modified in commit 71fc704768f6 ("tcp: add rcv_wnd and
+plb_rehash to TCP_INFO") where a new field has been added.
+
+The userspace can also expect a smaller size if it is compiled with old
+uAPI kernel headers.
+
+So for these sizes, we can only check if they are above a certain
+threshold, 0 for the moment. We can also only compared sizes with the
+ones set by the kernel.
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
-Fixes: 6da1dfdd037e ("selftests: mptcp: add set_flags tests in pm_netlink.sh")
+Fixes: ce9979129a0b ("selftests: mptcp: add mptcp getsockopt test cases")
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/pm_netlink.sh | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+v3:
+  - size_user: check if it is the min between the user and kernel sizes
+---
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 664cafc60705..d02e0d63a8f9 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -178,14 +178,19 @@ subflow,backup 10.0.1.1" "set flags (backup)"
- ip netns exec $ns1 ./pm_nl_ctl set 10.0.1.1 flags nobackup
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
- subflow 10.0.1.1" "          (nobackup)"
-+
-+# fullmesh support has been added later
- ip netns exec $ns1 ./pm_nl_ctl set id 1 flags fullmesh
--check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
-+if ip netns exec $ns1 ./pm_nl_ctl dump | grep -q "fullmesh" ||
-+   mptcp_lib_expect_all_features; then
-+	check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
- subflow,fullmesh 10.0.1.1" "          (fullmesh)"
--ip netns exec $ns1 ./pm_nl_ctl set id 1 flags nofullmesh
--check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
-+	ip netns exec $ns1 ./pm_nl_ctl set id 1 flags nofullmesh
-+	check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
- subflow 10.0.1.1" "          (nofullmesh)"
--ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
--check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
-+	ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
-+	check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
- subflow,backup,fullmesh 10.0.1.1" "          (backup,fullmesh)"
-+fi
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index 86a378731e8b..de897f77e174 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -123,6 +123,8 @@ struct so_state {
+ 	bool pkt_stats_avail;
+ };
  
- exit $ret
++#define MIN(a, b) (((a) < (b)) ? (a) : (b))
++
+ static void die_perror(const char *msg)
+ {
+ 	perror(msg);
+@@ -386,13 +388,14 @@ static void do_getsockopt_tcp_info(struct so_state *s, int fd, size_t r, size_t
+ 			xerror("getsockopt MPTCP_TCPINFO (tries %d, %m)");
+ 
+ 		assert(olen <= sizeof(ti));
+-		assert(ti.d.size_user == ti.d.size_kernel);
+-		assert(ti.d.size_user == sizeof(struct tcp_info));
++		assert(ti.d.size_kernel > 0);
++		assert(ti.d.size_user ==
++		       MIN(ti.d.size_kernel, sizeof(struct tcp_info)));
+ 		assert(ti.d.num_subflows == 1);
+ 
+ 		assert(olen > (socklen_t)sizeof(struct mptcp_subflow_data));
+ 		olen -= sizeof(struct mptcp_subflow_data);
+-		assert(olen == sizeof(struct tcp_info));
++		assert(olen == ti.d.size_user);
+ 
+ 		s->tcp_info = ti.ti[0];
+ 
+@@ -440,13 +443,14 @@ static void do_getsockopt_subflow_addrs(struct so_state *s, int fd)
+ 		die_perror("getsockopt MPTCP_SUBFLOW_ADDRS");
+ 
+ 	assert(olen <= sizeof(addrs));
+-	assert(addrs.d.size_user == addrs.d.size_kernel);
+-	assert(addrs.d.size_user == sizeof(struct mptcp_subflow_addrs));
++	assert(addrs.d.size_kernel > 0);
++	assert(addrs.d.size_user ==
++	       MIN(addrs.d.size_kernel, sizeof(struct mptcp_subflow_addrs)));
+ 	assert(addrs.d.num_subflows == 1);
+ 
+ 	assert(olen > (socklen_t)sizeof(struct mptcp_subflow_data));
+ 	olen -= sizeof(struct mptcp_subflow_data);
+-	assert(olen == sizeof(struct mptcp_subflow_addrs));
++	assert(olen == addrs.d.size_user);
+ 
+ 	llen = sizeof(local);
+ 	ret = getsockname(fd, (struct sockaddr *)&local, &llen);
 
 -- 
 2.39.2
