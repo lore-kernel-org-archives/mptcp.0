@@ -1,89 +1,62 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537B242501
-	for <mptcp@lists.linux.dev>; Thu,  1 Jun 2023 17:41:11 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3f6094cb2ebso11414055e9.3
-        for <mptcp@lists.linux.dev>; Thu, 01 Jun 2023 10:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1685641270; x=1688233270;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CjZYUVwEyAvcH1lZCIu7DyBjCApE5b4kvQFczQTAhZw=;
-        b=lM/SBVy9/wL6Y5AghoHoNyPQmgag4/6TMWdQ2HsZPwOnduimNEJaPfcmJ1j6pXY5sj
-         Vo85Fg7jBmzsYzY2tKA2Cf8eqzndpsRB7NUlTC2i0Orh/eVb5SQFyTS+esY1gFuEucor
-         mTM1/5xtIDg7GB0qFQUk+7Pa1Fw7pwZBE8Q3eWV/Mv32/OWE2VIahDCoc9yWzhBsG4ok
-         tZP/QYz0IDmBzHh1mXYrndLXOenuStFrqWoLJIznNTvZCKdzHVAC/6m2ZvuErDwosgj8
-         2eJou6T/hV3f6VDomt3H6B5GEh9MajHxfzB8MkFO6e7uJXeVfifZjTFN966EnFLhiw1A
-         C/Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685641270; x=1688233270;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=CjZYUVwEyAvcH1lZCIu7DyBjCApE5b4kvQFczQTAhZw=;
-        b=E33hDZEQ7c64QFFdCS/NzQGQ0P3EdlkVrR2MnU2oas+MCrvJSjDzCrs7QUjTD/jyNE
-         /cXL51CothgIp/UaWDGp3VbTOK+EFcSZ7+hm1JNDegIai5al/ZurdApfj13NX9wdYyiH
-         TJfg3wBrSv0AGyqw/iQUFNO0AFVLIP4+3/IVElBaaRl3rORvvwYVKjFO6Lj2sHcogNTy
-         LINP/ZYHgwoa+NouAahlyAvm/SMzxvHc8mAI0W8yBpRXgJTR4JavEuMxHZN1KDRQj8cV
-         0C1hSG/YiY040XUmjDgVTiSpbNJPEjJyICjFiRFMvWaQnLlxDd3ucx/XlxMdDuOvHqlt
-         Sr9Q==
-X-Gm-Message-State: AC+VfDyppmWJq+ss9nmY93U7F+k3CvGVSQp/ctHwNXyQePg27qIFx/T8
-	rXgK49fJ4OYUXkXkaSYlYgB9+A==
-X-Google-Smtp-Source: ACHHUZ7ZLykKAFpe8ctVnbaupHLyw861m43w9Vpmwa0TWjD4Xg9hVpLTWYy+5aWE9mYb6HHALFkDbQ==
-X-Received: by 2002:a05:600c:2318:b0:3f5:fb97:eafe with SMTP id 24-20020a05600c231800b003f5fb97eafemr95649wmo.30.1685641270218;
-        Thu, 01 Jun 2023 10:41:10 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:d0b8:9910:433a:655f? ([2a02:578:8593:1200:d0b8:9910:433a:655f])
-        by smtp.gmail.com with ESMTPSA id s4-20020a1cf204000000b003f17848673fsm3044789wmc.27.2023.06.01.10.41.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jun 2023 10:41:10 -0700 (PDT)
-Message-ID: <a1e6596b-cffd-9860-9146-f8a41defd22e@tessares.net>
-Date: Thu, 1 Jun 2023 19:41:09 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F20142501;
+	Thu,  1 Jun 2023 17:43:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FF30C433D2;
+	Thu,  1 Jun 2023 17:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685641416;
+	bh=b2gcd3dJB++dyO99vAGT9rIkgCvbeypWxYxoChQXHXY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tqHvoIYQCtkmBJcXfzi5Bifu/Ja0qfXqNcCvM0UurkX11FYxuANVpQz/bs7T1oB17
+	 y01rsU+dhuiDX460ANq1Mwmh9Jtm1Xo8RJEMZU5MU9n4gkpBz5ZoPaOGXimV0f3lOk
+	 2YRv3JH82u+zAIVBOW38Ik7Wj3bitGiT0oNQBzUichFAqwwI9tC2nVr9LhCN04FhA5
+	 4twBsPeiO9izaWy30sOF0LftUlI2ieaxfOPsk9v15dZTqxkWJVP9uzrVvcebzPd4r3
+	 NQzKJN9S883XO5iYq67+vbhfiHkDznmchHEwQ65cv65U705bdZroVMqDrPp7Gs6EkA
+	 voErZ5DxEPriw==
+Message-ID: <63ee166d-6b33-2293-4ff2-2c42d350580a@kernel.org>
+Date: Thu, 1 Jun 2023 11:43:35 -0600
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Content-Language: en-GB
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- Linux Kernel Functional Testing <lkft@linaro.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Linaro tests: parsing of the kselftests results
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.10.0
+Subject: Re: [PATCH net-next RFC] net: skip printing "link become ready" v6
+ msg
+Content-Language: en-US
+To: Stephen Hemminger <stephen@networkplumber.org>,
+ Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>,
+ Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20230601-net-next-skip_print_link_becomes_ready-v1-1-c13e64c14095@tessares.net>
+ <20230601103742.71285cf1@hermes.local>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20230601103742.71285cf1@hermes.local>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello Naresh and other people behind the lkft project,
+On 6/1/23 11:37 AM, Stephen Hemminger wrote:
+> On Thu, 01 Jun 2023 16:34:36 +0200
+> Matthieu Baerts <matthieu.baerts@tessares.net> wrote:
+> 
+>> This following message is printed in the console each time a network
+>> device configured with an IPv6 addresses is ready to be used:
+>>
+>>   ADDRCONF(NETDEV_CHANGE): <iface>: link becomes ready
+>>
+>> When netns are being extensively used -- e.g. by re-creating netns with
+>> veth to discuss with each other for testing purposes like mptcp_join.sh
+>> selftest does -- it generates a lot of messages: more than 700 when
+>> executing mptcp_join.sh with the latest version.
+> 
+> Don't add yet another network nerd knob.
+> Just change message from pr_info to pr_debug.
 
-TL;DR: how can we provide results for sub-tests like it is done with TC
-selftests?
-
-Again, thank you for running MPTCP selftests!
-
-Each MPTCP selftests script we have executes multiple sub-tests. For
-example, mptcp_join.sh has more than 100 sub-tests. On the other hand,
-the kselftests infrastructure uses TAP13 to print the results and it
-doesn't support sub-tests (TAP14 does). It means that only the end
-result is recorded: so if one sub-test fails, the whole selftest is
-marked as failed. It makes it hard to track regressions, especially if
-one sub-test always fails for some reasons, all the other sub-tests are
-then useless. We would then like to report the results of all individual
-sub-tests.
-
-I recently noticed that TC selftests consists of one script (tdc.sh)
-executing many sub-tests. Still, it looks like it can report the
-different sub-tests somehow[1]. How can we achieve the same with MPTCP
-selftests? A special output format? Writing something in a file?
-
-[1]
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.29-293-ge00a3d96f756/testrun/17160994/suite/kselftest-tc-testing/tests/
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
++1
