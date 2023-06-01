@@ -1,77 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7044253A;
-	Thu,  1 Jun 2023 17:20:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 82847C433D2;
-	Thu,  1 Jun 2023 17:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685640022;
-	bh=LZFteKwaGN0IDeCXiUlxd+NIaIwWRgoKYWH/vjTXTio=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=BVWVMTPudVpDaPw4X96jAGLIhzOHYpeug6yifgZOK2KDVZj2rHX4V5eb6R4xNnceE
-	 NG8y6eIvB7vebbavw546ZTeu8hoYzKxbRLyGKt1yk0h3F+80OHoGzMZMH28tO3trDa
-	 EosODlG+JzpzdQyY8M7BcnM5GCmqGS9jBjrbMVfYv8HmiPEBH5wndet1wrlPG93hgU
-	 UOpBH6CMR38SNziy6EQyo0dHozQLS8oUpE1CyOlY7O7zpeY/qeJpZR1MPiBygkEoxG
-	 n2ddBH5n8vhY5ANkJOLn3vBZ+tBhiUbcW1GV9vjz4ZCkmPfyw+w0tCowcvy/u9+RnK
-	 S3uFuCLJtlB1w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 613CBC395F0;
-	Thu,  1 Jun 2023 17:20:22 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A574D42501
+	for <mptcp@lists.linux.dev>; Thu,  1 Jun 2023 17:37:45 +0000 (UTC)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-64d57cd373fso1864055b3a.1
+        for <mptcp@lists.linux.dev>; Thu, 01 Jun 2023 10:37:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20221208.gappssmtp.com; s=20221208; t=1685641065; x=1688233065;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3VaooKom1fpr+/gFLUK2ePWF2zVhCHZPLzAcFMttDEM=;
+        b=MHSqsckRCpeDoAGkYMTNaUf8HXTi7i1vORvFkCxMTEUbOwF3hDPYiDc7fFQMPlAq2F
+         cXQdYOZneqJDanRwrJGT5TiAw3lSbDh/dzwSjw6g4CmcRcd2jULq+fPI64PC3km0AJ8o
+         2PjBMI8jyygfqWvpj/9HPpCKdpPk7v0MskmbjN6d7QCnag4DGEbtq3amlJSeDTwYc3zT
+         c0cV9wX4QJgURi4YJnSboQbChb1aZWzL1hvpMQc5EufEqPm6+DIaJwCYZOZ6FWPWEgmi
+         1vId6smHDNqp1/Et5J7vtutwuBFt7gM/c2cO7oARrjPxprOFoTUBsByAcCb0gBVMlPmH
+         8rkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685641065; x=1688233065;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3VaooKom1fpr+/gFLUK2ePWF2zVhCHZPLzAcFMttDEM=;
+        b=iv8+88RSOAoL/rie41L71/mv0W7mlZsPJeWusqq7LaHS8VWHG993+2fu3DwUSsCzUg
+         /7iE7CkrDdU0fC6YSmyy77ZevJq0CZSGohtvApkjSdCFQMCXolXdKYGKSzDf+VQ4aAVZ
+         gCgyfLdhHWsHXy2TeyXWQZyncW+N6s4k9RdWNbsL8VImugIX4JGeIHlWw8T0tfSgUQth
+         kO3uEtcxsPlenBXVS4Yu3STYnPHcO3OGnhmJ5ywl7G02MUSp7MrDX2RJVWFhF8XvHqcu
+         X/lwlpsVdOXd2x0tZkDxnKtWEdqtnGiGEm9Zs3UhM2xqJfVSDXBNvsmwGQlV+vsbbGpH
+         PvNg==
+X-Gm-Message-State: AC+VfDzHfyXjEv4LwAComJch9kdILTMynQrJpkbFndGAeq0pwNhLBDwL
+	OtfAnpytpUt31VmDcTudPTpv9g==
+X-Google-Smtp-Source: ACHHUZ7z6hqFz0/ybL9ukj5Ma2ElT9E2J0J2UDKTdWLYHsIJgV2YGGUXYubX2wob3APlALw7YS3Uvg==
+X-Received: by 2002:a05:6a20:3d87:b0:104:1016:dd0e with SMTP id s7-20020a056a203d8700b001041016dd0emr3075210pzi.3.1685641064841;
+        Thu, 01 Jun 2023 10:37:44 -0700 (PDT)
+Received: from hermes.local (204-195-120-218.wavecable.com. [204.195.120.218])
+        by smtp.gmail.com with ESMTPSA id s13-20020a65644d000000b0053fbacdaf59sm3139207pgv.69.2023.06.01.10.37.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jun 2023 10:37:44 -0700 (PDT)
+Date: Thu, 1 Jun 2023 10:37:42 -0700
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, Mat Martineau
+ <martineau@kernel.org>, Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC] net: skip printing "link become ready" v6
+ msg
+Message-ID: <20230601103742.71285cf1@hermes.local>
+In-Reply-To: <20230601-net-next-skip_print_link_becomes_ready-v1-1-c13e64c14095@tessares.net>
+References: <20230601-net-next-skip_print_link_becomes_ready-v1-1-c13e64c14095@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/6] mptcp: Fixes for connect timeout, access
- annotations, and subflow init
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <168564002239.14862.18397323108950816840.git-patchwork-notify@kernel.org>
-Date: Thu, 01 Jun 2023 17:20:22 +0000
-References: <20230531-send-net-20230531-v1-0-47750c420571@kernel.org>
-In-Reply-To: <20230531-send-net-20230531-v1-0-47750c420571@kernel.org>
-To: Mat Martineau <martineau@kernel.org>
-Cc: matthieu.baerts@tessares.net, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, geliang.tang@suse.com,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, omosnace@redhat.com,
- stable@vger.kernel.org, cpaasch@apple.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Thu, 01 Jun 2023 16:34:36 +0200
+Matthieu Baerts <matthieu.baerts@tessares.net> wrote:
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 31 May 2023 12:37:02 -0700 you wrote:
-> Patch 1 allows the SO_SNDTIMEO sockopt to correctly change the connect
-> timeout on MPTCP sockets.
+> This following message is printed in the console each time a network
+> device configured with an IPv6 addresses is ready to be used:
 > 
-> Patches 2-5 add READ_ONCE()/WRITE_ONCE() annotations to fix KCSAN issues.
+>   ADDRCONF(NETDEV_CHANGE): <iface>: link becomes ready
 > 
-> Patch 6 correctly initializes some subflow fields on outgoing connections.
-> 
-> [...]
+> When netns are being extensively used -- e.g. by re-creating netns with
+> veth to discuss with each other for testing purposes like mptcp_join.sh
+> selftest does -- it generates a lot of messages: more than 700 when
+> executing mptcp_join.sh with the latest version.
 
-Here is the summary with links:
-  - [net,1/6] mptcp: fix connect timeout handling
-    https://git.kernel.org/netdev/net/c/786fc1245726
-  - [net,2/6] mptcp: add annotations around msk->subflow accesses
-    https://git.kernel.org/netdev/net/c/5b825727d087
-  - [net,3/6] mptcp: consolidate passive msk socket initialization
-    https://git.kernel.org/netdev/net/c/7e8b88ec35ee
-  - [net,4/6] mptcp: fix data race around msk->first access
-    https://git.kernel.org/netdev/net/c/1b1b43ee7a20
-  - [net,5/6] mptcp: add annotations around sk->sk_shutdown accesses
-    https://git.kernel.org/netdev/net/c/6b9831bfd932
-  - [net,6/6] mptcp: fix active subflow finalization
-    https://git.kernel.org/netdev/net/c/55b47ca7d808
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Don't add yet another network nerd knob.
+Just change message from pr_info to pr_debug.
