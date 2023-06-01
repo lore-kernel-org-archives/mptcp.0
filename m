@@ -1,128 +1,77 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760824252A
-	for <mptcp@lists.linux.dev>; Thu,  1 Jun 2023 16:30:55 +0000 (UTC)
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-392116ae103so626871b6e.0
-        for <mptcp@lists.linux.dev>; Thu, 01 Jun 2023 09:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685637054; x=1688229054;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8DzGFOhisUQvEwowR5Mjr0cgPtU1f/fjssP9ET5W3a0=;
-        b=Muj0SWEpKt02RQwfO6ClUTPu5AEppVzb9x8ZLreYJftznztXLSCxMo1kWoprOnVmsV
-         3PFR60EFM9Kh3uBY2kjmfJ0O4kIw0KRwJtXVmMXe4esGczc09PoH1fOBldUEDMOfAaJR
-         ViUIneCnTSGbRnWgr2obC+weU9neAvMtaS86qNYWp2KCO1guSQuds5IDm/EFTw1Ug/Or
-         kNmTA7wEn+UWB/jRr9j12w0uMmUcDs2Znzbt591cQMdrrSiK0RL+wabV9fMjo0DkJMr7
-         4o9zi2OlDCiS8usbFh3ISpYcCeDRIpxCxXel7eEHQueXmDgZG7I/Cg2dZzpWt4xTHDNF
-         +gNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685637054; x=1688229054;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=8DzGFOhisUQvEwowR5Mjr0cgPtU1f/fjssP9ET5W3a0=;
-        b=TtZeQE4G6bvLgFlg9pt5sgXMTpNlZMacTzMZSbT30LU+BA3aTqfTfhDQA+DTduNc20
-         2XcpAFCDd+giQ2e9N8rnim0ZKDWIwK3yLA1DIChaZ7X0vFo82UYSVoMtUZOITMTU/mP7
-         VyFogr65oFfEnYTvDaeJdbMGW6/UzubPuxWNf1tngFJMVvLr3j7WJo3Xr5vPEOv5sd36
-         jSBNCMIVVKHtlzHfiJUp4s4VN2DS88+jpBVWWAdN1UtgVrMAmWDo44BTTCsWGp0Boc8r
-         P+MpoXKx1hem79poRSksuiYtj1gRtBXBcU/zklrjKHxuESPlVXyjlvvdFNrczcvcQqvr
-         bOvg==
-X-Gm-Message-State: AC+VfDweqzD99x4/cQS9LeMlCdreSKbaNTt9oVxWtH/qRv/7y3ICcKfJ
-	jXwLWSupuMECjmF47vEwYB9HTlVGog==
-X-Google-Smtp-Source: ACHHUZ6a+WS0ax0DRGzQbl/s0pNgLOD5G/wBzQ0/Rqs75xWiUtQu52g5QHx6wQJmAwb4Md1+ufycrg==
-X-Received: by 2002:a05:6808:200c:b0:398:5893:731d with SMTP id q12-20020a056808200c00b003985893731dmr7070228oiw.13.1685637054304;
-        Thu, 01 Jun 2023 09:30:54 -0700 (PDT)
-Received: from [127.0.0.1] ([172.177.36.115])
-        by smtp.gmail.com with ESMTPSA id em1-20020ad44f81000000b006263afa6ab9sm3253249qvb.144.2023.06.01.09.30.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jun 2023 09:30:53 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20230601-net-next-skip_print_link_becomes_ready-v1-1-c13e64c14095@tessares.net>
-References:
- <20230601-net-next-skip_print_link_becomes_ready-v1-1-c13e64c14095@tessares.net>
-Subject: =?UTF-8?Q?Re=3A_net=3A_skip_printing_=22link_becom?=
- =?UTF-8?Q?e_ready=22_v6_msg=3A_Tests_Results?=
-Message-ID: <a6c61bdc-266a-5a53-8f6a-782e982e3a0f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 01 Jun 2023 16:30:53 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7044253A;
+	Thu,  1 Jun 2023 17:20:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 82847C433D2;
+	Thu,  1 Jun 2023 17:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685640022;
+	bh=LZFteKwaGN0IDeCXiUlxd+NIaIwWRgoKYWH/vjTXTio=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=BVWVMTPudVpDaPw4X96jAGLIhzOHYpeug6yifgZOK2KDVZj2rHX4V5eb6R4xNnceE
+	 NG8y6eIvB7vebbavw546ZTeu8hoYzKxbRLyGKt1yk0h3F+80OHoGzMZMH28tO3trDa
+	 EosODlG+JzpzdQyY8M7BcnM5GCmqGS9jBjrbMVfYv8HmiPEBH5wndet1wrlPG93hgU
+	 UOpBH6CMR38SNziy6EQyo0dHozQLS8oUpE1CyOlY7O7zpeY/qeJpZR1MPiBygkEoxG
+	 n2ddBH5n8vhY5ANkJOLn3vBZ+tBhiUbcW1GV9vjz4ZCkmPfyw+w0tCowcvy/u9+RnK
+	 S3uFuCLJtlB1w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 613CBC395F0;
+	Thu,  1 Jun 2023 17:20:22 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/6] mptcp: Fixes for connect timeout, access
+ annotations, and subflow init
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <168564002239.14862.18397323108950816840.git-patchwork-notify@kernel.org>
+Date: Thu, 01 Jun 2023 17:20:22 +0000
+References: <20230531-send-net-20230531-v1-0-47750c420571@kernel.org>
+In-Reply-To: <20230531-send-net-20230531-v1-0-47750c420571@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: matthieu.baerts@tessares.net, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, geliang.tang@suse.com,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, omosnace@redhat.com,
+ stable@vger.kernel.org, cpaasch@apple.com
 
-Hi Matthieu,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Our CI did some validations and here is its report:
+On Wed, 31 May 2023 12:37:02 -0700 you wrote:
+> Patch 1 allows the SO_SNDTIMEO sockopt to correctly change the connect
+> timeout on MPTCP sockets.
+> 
+> Patches 2-5 add READ_ONCE()/WRITE_ONCE() annotations to fix KCSAN issues.
+> 
+> Patch 6 correctly initializes some subflow fields on outgoing connections.
+> 
+> [...]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 2 failed test(s): packetdrill_fastopen packetdrill_syscalls =
-=F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6453074252791808
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6453074252791808/su=
-mmary/summary.txt
+Here is the summary with links:
+  - [net,1/6] mptcp: fix connect timeout handling
+    https://git.kernel.org/netdev/net/c/786fc1245726
+  - [net,2/6] mptcp: add annotations around msk->subflow accesses
+    https://git.kernel.org/netdev/net/c/5b825727d087
+  - [net,3/6] mptcp: consolidate passive msk socket initialization
+    https://git.kernel.org/netdev/net/c/7e8b88ec35ee
+  - [net,4/6] mptcp: fix data race around msk->first access
+    https://git.kernel.org/netdev/net/c/1b1b43ee7a20
+  - [net,5/6] mptcp: add annotations around sk->sk_shutdown accesses
+    https://git.kernel.org/netdev/net/c/6b9831bfd932
+  - [net,6/6] mptcp: fix active subflow finalization
+    https://git.kernel.org/netdev/net/c/55b47ca7d808
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5608649322659840
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5608649322659840/su=
-mmary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5045699369238528
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5045699369238528/summary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 3 failed test(s): packetdrill_dss packetdrill_fastopen =
-selftest_diag =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6171599276081152
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6171599276081152/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/b9a7c2986f91
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
