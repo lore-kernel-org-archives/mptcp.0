@@ -1,129 +1,95 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5800E258F
-	for <mptcp@lists.linux.dev>; Fri,  2 Jun 2023 14:43:30 +0000 (UTC)
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-75b0b2d0341so235875485a.3
-        for <mptcp@lists.linux.dev>; Fri, 02 Jun 2023 07:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685717009; x=1688309009;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6QDzIkYly73Tp9FSFoyWv5CzKlHQMDs08kueyMr2OgE=;
-        b=qdweEvG9RAtDrwZUwxLPF0IA0l6ZinMb01IgGQVG4JK+SKn0YNTnm27400lCxsJvwz
-         cUvtnILVwj3l6fsHHKgEtMrvpng1dx+uZpHLtAvwncxT2sFVrK29YeCsTlD+AjIpCsEQ
-         O+Q2qqcCtmJOKwliYHpnpGLCKB35GXtDtPsz3OOvsUuBoMzJpPlmPDGReUqPixjz8rPB
-         ih6JOa8vHSvpOmeUc6R8wgTvMTh0NB8S5m98JBCjMjLiZT2dTZngJ1doqoo5dtMSyQUt
-         SJfhMnh9eJmTx1eZyEGJwqRj+7sCH1a2cMN2oeI9SkG+FUgaJyhVpMWwxIKdrJiifpaD
-         fqsA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647C61C750
+	for <mptcp@lists.linux.dev>; Fri,  2 Jun 2023 16:19:11 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f6dfc4e01fso22906885e9.0
+        for <mptcp@lists.linux.dev>; Fri, 02 Jun 2023 09:19:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685717009; x=1688309009;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6QDzIkYly73Tp9FSFoyWv5CzKlHQMDs08kueyMr2OgE=;
-        b=YmcMzuLDUw6J2WCN40PbTvSrOvg039uMCA/uMoyXmAbK78MFD7Hh9DOMGZ5lpc/C+4
-         ZphquRcxirvBw6R+Hp3xyYpRqgBQR/PwPT7YFD/wb6/nVxXsfV9K9mIVJjWytchoEdMf
-         m6MpV/0mhb3giyq0P9yxMPJBwjsa45BKJsPHX57MxawiFtpGBlipFBWUAQt4+VM1/osO
-         5+zkvBlaKk5bLfD9NffeSs2mO4MbLVz+bnr+lWEaY5Ku8FNsj6iIraHn9Sh4uRc52quY
-         o3kBaDRIIXp+FraJUqm9n6ErOU4qeyCNVdHLq+A5CPx9QbdrN3OGfEL7J1zaA3eyBmrN
-         gftw==
-X-Gm-Message-State: AC+VfDwxtP3VWw9gu6Wex3YocYMmHk9Qk70xsMUsB0/XfSh13xLtaoy4
-	d+AMeLV0E5Op2kVcKxnFgdR1L18tGQ==
-X-Google-Smtp-Source: ACHHUZ5EN9nwq1r3obfsCCcUNy0fQem5qFemZmkwYbD1mLMicmEpRgOoObctSwlVLrsAzSYrfF8x/A==
-X-Received: by 2002:a05:6214:c4c:b0:625:7c0b:4640 with SMTP id r12-20020a0562140c4c00b006257c0b4640mr14604977qvj.22.1685717007940;
-        Fri, 02 Jun 2023 07:43:27 -0700 (PDT)
-Received: from [127.0.0.1] ([172.176.188.86])
-        by smtp.gmail.com with ESMTPSA id t3-20020a0cef03000000b006255bcfca88sm913189qvr.7.2023.06.02.07.43.27
+        d=1e100.net; s=20221208; t=1685722749; x=1688314749;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Df45G13freHV7qKaooKW3cbNcYiTjIevZWnDBJV0Ngs=;
+        b=Kg1OrGPPVuqAiQED6Zqc3bIxXkBuDlqGwnSoEBB2TSIQXt0360FQ7gTMoq4G+99SIc
+         aAnF4ADPfIU4A6Tx0kha/gVgnuMJjR1WzbWmD1kFniMicSdx9gLfZ2ae2W1SvUw/AXic
+         zUVCxrysTS+bzE4JO39AEDkx7nki9bj2RrcsE2eLJB7wkX1y/3ArcWFMVcBC0Seq60HE
+         TWt39L203nN37x/0EqnRJtSqCgqgIprsJmxIILM61aLpClnrxZzSIuMUsWfqgmPh/o6s
+         vM3oOvuHn7OojIBgc1snThY9fktpak6Rx5oeGi+QKtrK7MbkHVQgPdCSTBbM+z7orWWN
+         vSOg==
+X-Gm-Message-State: AC+VfDzD76o/y3pRpyypN0iNhbemLqOy9mVFjiOxju3U/gTICnx1e/8W
+	YDAUikGSFBVKstiu6lBYRmQ=
+X-Google-Smtp-Source: ACHHUZ7V6s1LqVdQdevjsk3RKa1VPwpouEu01j6+gnTKwWbWp9RyusXrlmogJW9nb4M2BtQB8hHwHg==
+X-Received: by 2002:a5d:65c2:0:b0:30a:dfb4:e300 with SMTP id e2-20020a5d65c2000000b0030adfb4e300mr389381wrw.28.1685722749158;
+        Fri, 02 Jun 2023 09:19:09 -0700 (PDT)
+Received: from gmail.com (fwdproxy-cln-116.fbsv.net. [2a03:2880:31ff:74::face:b00c])
+        by smtp.gmail.com with ESMTPSA id k2-20020a5d4282000000b003047ea78b42sm2075225wrq.43.2023.06.02.09.19.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jun 2023 07:43:27 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20230601-net-next-skip_print_link_becomes_ready-v1-1-7ff2b88dc9b8@tessares.net>
-References:
- <20230601-net-next-skip_print_link_becomes_ready-v1-1-7ff2b88dc9b8@tessares.net>
-Subject: =?UTF-8?Q?Re=3A_ipv6=3A_lower_=22link_become_ready?=
- =?UTF-8?Q?=22=27s_level_message=3A_Tests_Results?=
-Message-ID: <2f021ef7-4321-5af3-0813-6822eb163a2a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 02 Jun 2023 14:43:26 +0000
+        Fri, 02 Jun 2023 09:19:08 -0700 (PDT)
+Date: Fri, 2 Jun 2023 09:19:06 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: dsahern@kernel.org, Remi Denis-Courmont <courmisch@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <martineau@kernel.org>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>, leit@fb.com, axboe@kernel.dk,
+	asml.silence@gmail.com, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, dccp@vger.kernel.org,
+	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-sctp@vger.kernel.org
+Subject: Re: [PATCH net-next v4] net: ioctl: Use kernel memory on protocol
+ ioctl callbacks
+Message-ID: <ZHoWeiDVoLV1VMpT@gmail.com>
+References: <20230530175403.2434218-1-leitao@debian.org>
+ <6476f0e4b0182_3c8862294b2@willemb.c.googlers.com.notmuch>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6476f0e4b0182_3c8862294b2@willemb.c.googlers.com.notmuch>
 
-Hi Matthieu,
+On Wed, May 31, 2023 at 03:01:56AM -0400, Willem de Bruijn wrote:
+> Breno Leitao wrote:
+> > +int ip6mr_sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg);
+> > +static inline int sk_is_ip6mr(struct sock *sk)
+> > +{
+> > +	return sk->sk_family == AF_INET6 &&
+> > +		inet_sk(sk)->inet_num == IPPROTO_ICMPV6;
+> > +}
+ 
+> Technically, this is just sk_is_icmpv6, which is broader than IPv6
+> multicast routing.
 
-Thank you for your modifications, that's great!
+Right, let me rename it to reflect this properly.
 
-Our CI did some validations and here is its report:
+> No other concerns from me.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5975182569897984
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5975182569897984/summary/summary.txt
+Thanks for the detailed review.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 3 failed test(s): packetdrill_fastopen packetdrill_mp_capable=
- selftest_diag =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6538132523319296
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6538132523319296/summary/summary.txt
+> Two small asides, that are fine to ignore.
+> 
+> The $PROTO_sk_ioctl functions could conceivably call directly into
+> the $PROTO_ioctl functions without the indirect function pointer.
+> But that would require open coding the sock_sk_ioctl_inout helpers.
+> 
+> The demux now first checks relatively unlikely multicast routing
+> and phonet before falling through to the more common protocols. But
+> ioctl is not a hot path operation.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5412232616476672
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5412232616476672/summary/summary.txt
+I am more than happy to open code sock_sk_ioctl_inout into protocol
+functions, but, I would prefer to do it in a follow up patch, since this
+one is close (I hope) to address the original problem. I hope it works
+for you.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5941386143334400
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5941386143334400/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/7662725df26d
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Thanks!
