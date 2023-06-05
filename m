@@ -1,74 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DA21548E;
-	Mon,  5 Jun 2023 14:20:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0138BC4339B;
-	Mon,  5 Jun 2023 14:20:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B24A5256;
+	Mon,  5 Jun 2023 23:16:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7039C433D2;
+	Mon,  5 Jun 2023 23:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685974821;
-	bh=I1+oJjUANT/Go9zAX7BnObBZrLAw1r0c46VWOubGrDI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=bG6HNIbsIjbaQ358M+LHCDYy47TG36629a0zzGZaeFLKHEXhu4MyKzpXTJ54w4Aea
-	 N5qPFaCXQI1vTj6YMiAIz3oMmZCVegokRsyjRTKteeU4xH8Wo7Rube6ebpO5rvHKXB
-	 iGn6rH3iTD0wdd+GIKZ34Tca1qocrx8N5RsB8yRbgjNoxceLgSnPNzK1Mh0xceJnCc
-	 2kvyhHHD54CV0a0lXWsoC68M6fAcbry3mAQOJinjbatzv2DstaAwYrZpk30zwB4WYI
-	 GbFjyDLRMGdhVF9gRGm4dJymuBkZdRO9TAv2h6GD4gV/E5gsRcFfCs3K3g7/gBz5bR
-	 PMAaztZ5Jim/A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D4DE9E87231;
-	Mon,  5 Jun 2023 14:20:20 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1686007012;
+	bh=N0okavvmW+hN+zvpU/6hPbUTjAPKTkWMzVLTCfODKj0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oxFFZGeRo8w3FyjbFp8iGddkfxEkSm6B7ROKwrdD+49820oQHrBDX8pULUmIFAJAW
+	 BnZ4XHz/+UUUv00BYv/XgrekfAscVRexvdC/jGjZ3AXdXdLqXsuGCdRJdqejPYNoUA
+	 +coVOUM0GUiTbFv0VbHcsO19NhI8HzXYCsYqTPN9/Wh/T0WeMv9WzauRRhAkrCPNB1
+	 7G6g4pE0SLuxuV8IbhPGSYNq3D4BTYISTw/UXwYtLMQSoh//yzHOVmmNO2cxARKvOh
+	 goVUi+tfdy0EBW0gpXZaRLvKfD1Z4PBFlmuGMfFmu5Hn4Osxm4u6KhVyC+Z+3CXFvw
+	 qfVbV/VNAWFQA==
+Date: Mon, 5 Jun 2023 16:16:50 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, David Ahern
+ <dsahern@kernel.org>, Mat Martineau <martineau@kernel.org>, Stephen
+ Hemminger <stephen@networkplumber.org>, Hideaki YOSHIFUJI
+ <yoshfuji@linux-ipv6.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] ipv6: lower "link become ready"'s level
+ message
+Message-ID: <20230605161650.4a844f42@kernel.org>
+In-Reply-To: <20230601-net-next-skip_print_link_becomes_ready-v1-1-7ff2b88dc9b8@tessares.net>
+References: <20230601-net-next-skip_print_link_becomes_ready-v1-1-7ff2b88dc9b8@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/5] mptcp: Fixes for address advertisement
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <168597482086.20055.17589676099574037923.git-patchwork-notify@kernel.org>
-Date: Mon, 05 Jun 2023 14:20:20 +0000
-References: <20230602-send-net-20230602-v1-0-fe011dfa859d@kernel.org>
-In-Reply-To: <20230602-send-net-20230602-v1-0-fe011dfa859d@kernel.org>
-To: Mat Martineau <martineau@kernel.org>
-Cc: matthieu.baerts@tessares.net, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, kishen.maloor@intel.com,
- geliang.tang@suse.com, fw@strlen.de, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This series was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Sun, 04 Jun 2023 20:25:16 -0700 you wrote:
-> Patches 1 and 2 allow address advertisements to be removed without
-> affecting current connected subflows, and updates associated self tests.
+On Fri, 02 Jun 2023 11:36:07 +0200 Matthieu Baerts wrote:
+> This following message is printed in the console each time a network
+> device configured with an IPv6 addresses is ready to be used:
 > 
-> Patches 3 and 4 correctly track (and allow removal of) addresses that
-> were implicitly announced as part of subflow creation. Also updates
-> associated self tests.
+>   ADDRCONF(NETDEV_CHANGE): <iface>: link becomes ready
 > 
-> [...]
+> When netns are being extensively used -- e.g. by re-creating netns' with
+> veth to discuss with each others for testing purposes like mptcp_join.sh
+> selftest does -- it generates a lot of messages like that: more than 700
+> when executing mptcp_join.sh with the latest version.
+> 
+> It looks like this message is not that helpful after all: maybe it can
+> be used as a sign to know if there is something wrong, e.g. if a device
+> is being regularly reconfigured by accident? But even then, there are
+> better ways to monitor and diagnose such issues.
+> 
+> When looking at commit 3c21edbd1137 ("[IPV6]: Defer IPv6 device
+> initialization until the link becomes ready.") which introduces this new
+> message, it seems it had been added to verify that the new feature was
+> working as expected. It could have then used a lower level than "info"
+> from the beginning but it was fine like that back then: 17 years ago.
+> 
+> It seems then OK today to simply lower its level, similar to commit
+> 7c62b8dd5ca8 ("net/ipv6: lower the level of "link is not ready" messages")
+> and as suggested by Mat [1], Stephen and David [2].
+> 
+> Link: https://lore.kernel.org/mptcp/614e76ac-184e-c553-af72-084f792e60b0@kernel.org/T/ [1]
+> Link: https://lore.kernel.org/netdev/68035bad-b53e-91cb-0e4a-007f27d62b05@tessares.net/T/ [2]
+> Suggested-by: Mat Martineau <martineau@kernel.org>
+> Suggested-by: Stephen Hemminger <stephen@networkplumber.org>
+> Suggested-by: David Ahern <dsahern@kernel.org>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Here is the summary with links:
-  - [net,1/5] mptcp: only send RM_ADDR in nl_cmd_remove
-    https://git.kernel.org/netdev/net/c/8b1c94da1e48
-  - [net,2/5] selftests: mptcp: update userspace pm addr tests
-    https://git.kernel.org/netdev/net/c/48d73f609dcc
-  - [net,3/5] mptcp: add address into userspace pm list
-    https://git.kernel.org/netdev/net/c/24430f8bf516
-  - [net,4/5] selftests: mptcp: update userspace pm subflow tests
-    https://git.kernel.org/netdev/net/c/6c160b636c91
-  - [net,5/5] mptcp: update userspace pm infos
-    https://git.kernel.org/netdev/net/c/77e4b94a3de6
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+This appears to have been applied as commit f69de8aa4752 ("ipv6: lower
+"link become ready"'s level message") in net-next, thank you!
