@@ -1,134 +1,74 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8575E23A8
-	for <mptcp@lists.linux.dev>; Sun,  4 Jun 2023 09:18:35 +0000 (UTC)
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-461b6c85a28so658015e0c.0
-        for <mptcp@lists.linux.dev>; Sun, 04 Jun 2023 02:18:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685870314; x=1688462314;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aox3XK8tx72aeNja1udkD88JAZ0aWEszFBLsOxbe+fI=;
-        b=rSfoJfS2X8Zx0gaX8WEMmFcIYgSg25rCZ+TYlggJeZcpKateZrWXEbic+aLXjMv2GR
-         gjjZI0N+ru+UqG9tRNfDeqiJB9NSP/YBse9KnKB4ov97mKBPgeYSpjB+I+rJFaeRquxk
-         Q8kCSN4N48veUEAxUTT3rcE0aHfP3FIjZ5UCEANBn5J4AFUCV8SdSYuZcSnKYoGqxtOA
-         x3hNvruleQUDpiRe8e2S6c9ZDbAhV10jcwWwQ9w65XG/9MX7IGHroZUMTKUtepX057C3
-         9CVX+K1Y0WwQvZQFvme2NWhA1VtLGqamnw7qtm4ZCD+1CyeTsOEc6lTtRVdp06jsDWDF
-         N9QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685870314; x=1688462314;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aox3XK8tx72aeNja1udkD88JAZ0aWEszFBLsOxbe+fI=;
-        b=S0FkKyQhEvII8e2v0FWZaVvcia8/QxZcgrWCqMd9+sucfq49u2uUhAaTQUFGgDEEFj
-         xYJHVlmSTdqAUWLaXuaUX9VrdL6JMBwQl3TY7sUhbxfrC8+mhQ38niVi9PE0etuIyEaW
-         SXNwlBvCqzV1/hEXB3/T4zoW/Agp5LXztYPK4Ti2JheRdVXl7RAYJ34+ME1VVuFXp77I
-         gWBaQB9hPfki+ST/iQTEVPG89Tb4rzIWN21nF3YPUA2pTbOsnsmMFbnpOxaPrwTZxMj+
-         zABiu0KCeK3cz6cwS0j6LJlIV3t6cGBkGf8Z3p+0DeltbCRC30fBe2wxyd+dLtPqHpdZ
-         D33A==
-X-Gm-Message-State: AC+VfDxW30PXql1aUqhTiNvpnO3UmFpK9d0Wl2ZZtZO6y7FXy2o9LB3S
-	CCY3WrwrX4oGcxJioHezDyQ0jNbRbzizC51Ch7I=
-X-Google-Smtp-Source: ACHHUZ4eCakEWsPBp89FEc1u6EWVeN0rw7V8m/x6CRpEQwG051tQBrs1bgGohAOKHeCdHM/ijFvcBlc1oEI7P0Nb/aA=
-X-Received: by 2002:a1f:45d5:0:b0:460:d627:22ca with SMTP id
- s204-20020a1f45d5000000b00460d62722camr2332346vka.1.1685870314156; Sun, 04
- Jun 2023 02:18:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5605E383;
+	Mon,  5 Jun 2023 03:25:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80613C433EF;
+	Mon,  5 Jun 2023 03:25:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1685935528;
+	bh=ykcDhIkIKHonAYObMsjSf4+ZeFZ33xoCZovgTPucXpM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=BGJ/ZPIbDyls/WgfdWnuJgS1o0PIuSCUvYDizjU+DlBBf0kis1peUHd2jc4gwhcWP
+	 UQ+qHedLhdPc6WYFMsungWipORdopstDDaDnBBrWNl/6cmVW1SKEKCRiiN4Y2oJ4rd
+	 aHXYGWWaT3u0fiX8eUOoCK5NckJn1RvAAAWdzsbVGV3e6Iv66t+wCW1J1MhHjvgV8b
+	 sAYHma8RhBkz+3y6lAgDJumWyStrxYVmg6GQsCZrkbrzV0z9q6IHpeoX8n53mYMqAO
+	 ONnZVqAr+YtiXY30j9sbtDGk5J0zxAh0IfTYi+mMn8X3FvCQnTmSgNgFmzIBECzmdb
+	 ibsrNtnbNdSbQ==
+From: Mat Martineau <martineau@kernel.org>
+Subject: [PATCH net 0/5] mptcp: Fixes for address advertisement
+Date: Sun, 04 Jun 2023 20:25:16 -0700
+Message-Id: <20230602-send-net-20230602-v1-0-fe011dfa859d@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230602163044.1820619-1-leitao@debian.org> <CAF=yD-Kk9mVWPZN50NUu8uGwEbySNS-WzvJ=1HTTcVsA6OOuvA@mail.gmail.com>
- <ZHxEX0TlXX7VV9kX@gmail.com>
-In-Reply-To: <ZHxEX0TlXX7VV9kX@gmail.com>
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date: Sun, 4 Jun 2023 11:17:56 +0200
-Message-ID: <CAF=yD-LvTDmWp+wAqwuQ7vKLT0hAHcQjV9Ef2rEag5J4cSZrkA@mail.gmail.com>
-Subject: Re: [PATCH net-next v5] net: ioctl: Use kernel memory on protocol
- ioctl callbacks
-To: Breno Leitao <leitao@debian.org>
-Cc: Remi Denis-Courmont <courmisch@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexander Aring <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>, 
-	Matthieu Baerts <matthieu.baerts@tessares.net>, Mat Martineau <martineau@kernel.org>, 
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, axboe@kernel.dk, 
-	asml.silence@gmail.com, leit@fb.com, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, dccp@vger.kernel.org, linux-wpan@vger.kernel.org, 
-	mptcp@lists.linux.dev, linux-sctp@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJxVfWQC/z2NSw6DMAxEr4K8rqUQ/r1K1UUS3OIFBsWoqoS4O
+ wkLlvNmnmYHpcik8Cx2iPRj5UVSKB8FhMnJl5DHlMEaW5nWWFSSEYU2vMngbOu7JtTG95A875T
+ QRydhyuY2r3mfmzXSh//X2wsyex/HCV7GQX6CAAAA
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Kishen Maloor <kishen.maloor@intel.com>, 
+ Geliang Tang <geliang.tang@suse.com>, Florian Westphal <fw@strlen.de>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ Mat Martineau <martineau@kernel.org>, stable@vger.kernel.org
+X-Mailer: b4 0.12.2
 
-> On Sat, Jun 03, 2023 at 10:21:50AM +0200, Willem de Bruijn wrote:
-> > On Fri, Jun 2, 2023 at 6:31=E2=80=AFPM Breno Leitao <leitao@debian.org>=
- wrote:
-> > > Signed-off-by: Breno Leitao <leitao@debian.org>
-> >
-> > Please check the checkpatch output
-> >
-> > https://patchwork.hopto.org/static/nipa/753609/13265673/checkpatch/stdo=
-ut
->
-> I am checking my current checkpatch before sending the patch, but I am
-> not seeing the problems above.
->
-> My tree is at 44c026a73be8038 ("Linux 6.4-rc3"), and I am not able to
-> reproduce the problems above.
->
->         $ scripts/checkpatch.pl v5/v5-0001-net-ioctl-Use-kernel-memory-on=
--protocol-ioctl-cal.patch
->         total: 0 errors, 0 warnings, 0 checks, 806 lines checked
->         v5/v5-0001-net-ioctl-Use-kernel-memory-on-protocol-ioctl-cal.patc=
-h has no obvious style problems and is ready for submission.
->
-> Let me investigate what options I am missing when running checkpatch.
+Patches 1 and 2 allow address advertisements to be removed without
+affecting current connected subflows, and updates associated self tests.
 
-The reference is to the checkpatch as referenced by patchwork:
+Patches 3 and 4 correctly track (and allow removal of) addresses that
+were implicitly announced as part of subflow creation. Also updates
+associated self tests.
 
-https://patchwork.kernel.org/project/netdevbpf/patch/20230602163044.1820619=
--1-leitao@debian.org/
+Patch 5 makes subflow and address announcement counters work consistently
+between the userspace and in-kernel path managers.
 
-The 80 character limit is a soft limit. But also note the CHECK
-statements on whitespace.
+Signed-off-by: Mat Martineau <martineau@kernel.org>
+---
+Geliang Tang (5):
+      mptcp: only send RM_ADDR in nl_cmd_remove
+      selftests: mptcp: update userspace pm addr tests
+      mptcp: add address into userspace pm list
+      selftests: mptcp: update userspace pm subflow tests
+      mptcp: update userspace pm infos
 
->
-> > > +/* A wrapper around sock ioctls, which copies the data from userspac=
-e
-> > > + * (depending on the protocol/ioctl), and copies back the result to =
-userspace.
-> > > + * The main motivation for this function is to pass kernel memory to=
- the
-> > > + * protocol ioctl callbacks, instead of userspace memory.
-> > > + */
-> > > +int sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
-> > > +{
-> > > +       int rc =3D 1;
-> > > +
-> > > +       if (sk_is_ipmr(sk))
-> > > +               rc =3D ipmr_sk_ioctl(sk, cmd, arg);
-> > > +       else if (sk_is_icmpv6(sk))
-> > > +               rc =3D ip6mr_sk_ioctl(sk, cmd, arg);
-> > > +       else if (sk_is_phonet(sk))
-> > > +               rc =3D phonet_sk_ioctl(sk, cmd, arg);
-> >
-> > Does this handle all phonet ioctl cases correctly?
-> >
-> > Notably pn_socket_ioctl has a SIOCPNGETOBJECT that reads and writes a u=
-16.
->
-> We are not touching  "struct proto_ops" in this patch at all.  And
-> pn_socket_ioctl() is part of "struct proto_ops".
->
->         const struct proto_ops phonet_stream_ops =3D {
->                   ...
->                   .ioctl          =3D pn_socket_ioctl,
->         }
->
-> That said, all the "struct proto_ops" ioctl calls backs continue to use
-> "unsigned long arg" with userspace information, at least for now.
+ net/mptcp/pm.c                                  | 23 +++++++++---
+ net/mptcp/pm_netlink.c                          | 18 ++++++++++
+ net/mptcp/pm_userspace.c                        | 48 ++++++++++++++++++++++++-
+ net/mptcp/protocol.h                            |  1 +
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 +++++-
+ 5 files changed, 95 insertions(+), 6 deletions(-)
+---
+base-commit: 37a826d86ff746c4eac8bd3415af19f3c9598206
+change-id: 20230602-send-net-20230602-9a26b75c40b8
 
-Ok. Perhaps good to call out in the commit message that this does not
-convert all protocol ioctl callbacks.
+Best regards,
+-- 
+Mat Martineau <martineau@kernel.org>
+
