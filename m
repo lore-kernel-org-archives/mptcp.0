@@ -1,24 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC5F137D;
-	Mon,  5 Jun 2023 03:25:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36B30C4339B;
-	Mon,  5 Jun 2023 03:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4964139B;
+	Mon,  5 Jun 2023 03:25:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F219C433A0;
+	Mon,  5 Jun 2023 03:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685935530;
-	bh=YUyzdA7qU9iJt56KPySyZzECEj2SmbL6D5w4307jOiQ=;
+	s=k20201202; t=1685935529;
+	bh=vCS+0O+llNRhLjcqsTnAJiVXReGH+K2zHMbKF1jlOBc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UwL8LFvw3KFZWf8+jR1+sKRJiG9Nx36ieuplhhpXqVDA6AmYIPbr417MJwhaGwCQk
-	 7nch5K1NMngPTcg+nm9tGjxnzLhosrd31lPQ+lZMIUkAzKQZRUq+L4ahz1TTSeMpUs
-	 ydLHIa/XFeaecJmgBP3kwPLDmMM9knJqNjCpIYYYRw+RyTE94RU/q/SRJy4BrQ4y8S
-	 CwgHbfVPX1bar+DeGr3MUrt3aEez7DZwYNIWDoMRIGH8R8tFUTNRgX2clCkYkIZHSq
-	 Zq98ndYIsw1RnmT26FAKSmP7xTQKCgW0RLAoTgVzA6IuGBhTxitrQyxD2NHGYk3kYe
-	 mUl0hx/Gu5GVQ==
+	b=u9JkjjhpBuiI/wY6qZTXlttG13d/h1RcrVbqAbBfauQK1XJJLgOlmTCOHIbHbrEO4
+	 0TE8eu1OJQ7HCWVtuHuTWL2bA5hC5+mVowI6XMdcD32kzURVb5fsFRxoKkjDky/tOH
+	 uTnGiAHT54lqTPbIObf+VQygIWjYmxUFKYnU5o6YEQY6UDbHjUd1pB6+8Xz2gLLQyY
+	 zhlI6ZJ7Q61FsiZBAxSXbI7V1BOPS4vbAUU9sYxDxKjmcosU472weRZTzzoUsi/wPD
+	 i4K+y8c1lGW86ORL6ks/36JG3f7scNPPUGld4XFVAhfJFeXrKPnKeJqKUfhkO0ZxRS
+	 2fKAB8jbxLXIQ==
 From: Mat Martineau <martineau@kernel.org>
-Date: Sun, 04 Jun 2023 20:25:20 -0700
-Subject: [PATCH net 4/5] selftests: mptcp: update userspace pm subflow
- tests
+Date: Sun, 04 Jun 2023 20:25:18 -0700
+Subject: [PATCH net 2/5] selftests: mptcp: update userspace pm addr tests
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -27,7 +26,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230602-send-net-20230602-v1-4-fe011dfa859d@kernel.org>
+Message-Id: <20230602-send-net-20230602-v1-2-fe011dfa859d@kernel.org>
 References: <20230602-send-net-20230602-v1-0-fe011dfa859d@kernel.org>
 In-Reply-To: <20230602-send-net-20230602-v1-0-fe011dfa859d@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
@@ -41,43 +40,43 @@ X-Mailer: b4 0.12.2
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-To align with what is done by the in-kernel PM, update userspace pm
-subflow selftests, by sending the a remove_addrs command together
-before the remove_subflows command. This will get a RM_ADDR in
-chk_rm_nr().
+This patch is linked to the previous commit ("mptcp: only send RM_ADDR in
+nl_cmd_remove").
+
+To align with what is done by the in-kernel PM, update userspace pm addr
+selftests, by sending a remove_subflows command together after the
+remove_addrs command.
 
 Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
-Fixes: 5e986ec46874 ("selftests: mptcp: userspace pm subflow tests")
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/379
+Fixes: 97040cf9806e ("selftests: mptcp: userspace pm address tests")
 Cc: stable@vger.kernel.org
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 651740a656f0..29f0c99d9a46 100755
+index 96f63172b8fe..651740a656f0 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -936,6 +936,7 @@ do_transfer()
+@@ -862,7 +862,15 @@ do_transfer()
+ 				     sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q')
+ 				ip netns exec ${listener_ns} ./pm_nl_ctl ann $addr token $tk id $id
  				sleep 1
- 				sp=$(grep "type:10" "$evts_ns2" |
- 				     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
-+				ip netns exec ${connector_ns} ./pm_nl_ctl rem token $tk id $id
- 				ip netns exec ${connector_ns} ./pm_nl_ctl dsf lip $addr lport $sp \
- 									rip $da rport $dp token $tk
++				sp=$(grep "type:10" "$evts_ns1" |
++				     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
++				da=$(grep "type:10" "$evts_ns1" |
++				     sed -n 's/.*\(daddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
++				dp=$(grep "type:10" "$evts_ns1" |
++				     sed -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q')
+ 				ip netns exec ${listener_ns} ./pm_nl_ctl rem token $tk id $id
++				ip netns exec ${listener_ns} ./pm_nl_ctl dsf lip "::ffff:$addr" \
++							lport $sp rip $da rport $dp token $tk
  			fi
-@@ -3150,7 +3151,7 @@ userspace_tests()
- 		pm_nl_set_limits $ns1 0 1
- 		run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
- 		chk_join_nr 1 1 1
--		chk_rm_nr 0 1
-+		chk_rm_nr 1 1
- 		kill_events_pids
- 	fi
- }
+ 
+ 			counter=$((counter + 1))
 
 -- 
 2.40.1
