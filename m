@@ -1,23 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85F3392;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AD9649;
+	Mon,  5 Jun 2023 03:25:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C621BC4339C;
 	Mon,  5 Jun 2023 03:25:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE04C4339E;
-	Mon,  5 Jun 2023 03:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685935529;
-	bh=AGqoc6MGv157ddatPMumKQShAqmAKC6YxPGxXVLm1sU=;
+	s=k20201202; t=1685935530;
+	bh=TW+GSaAsPbeCNFkCLc/u7ZS1XKsJp4Q5/TLco7Isdmc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ld+UXdP8iey+MyrFTdAZ1kVI5TPrUGa+hhPxp+YL+t6A2tYuYg46BVLyi+ARbnIFk
-	 JRIap+zTdNhpY7ZRSTSisZeqNUk5h1cmuP3ac9jlET2Tl/38M8EYJCsG8DUC7u/8FG
-	 cxgMB/57rQHbTCHmLId+x9TB+nrRdg8SzHnjmSybu275YZZ+07oDrhlFNSwevnd6PA
-	 FwpgX/uNgDCep1a80F4NkMSY0ZAJ+Ni59CwqhRwIVfAfRWYqgFrHc499z73+jw+b7d
-	 3GhxvdrMQZ2KAOyaTJFcLXyIhuxaSiS13GGt5R3XKsg5dp1HGsh7G93gBindr/GbiZ
-	 IlQtts3ewp1eg==
+	b=J0K8Izp+4z3LUxrX4gpEf5dcvUv0ebjOqKxtOQ84CAQs/S2dmrkLIvH4m4Xa87/Ts
+	 ICHjpZykY+hAM8ZBaWiivh90TFUcGQ5okaovc75vfzmRmSue6LR9EHZ64668Q2Ko3G
+	 QPzg8aTWbKYlvk4D1yeP9eYLF6YtW/oME+dJq/OMeRTKWxs+MeXar3yojjyDTgq67s
+	 DNHtUNq1MMeJrdl3O/OS8SfK1zaCKzt0e/toF6wXDWOEWxnG6JVVM1S4AbFpYuAieS
+	 xBhjJzPJEDEtNsCUIHyXlNP00WolfXDJ6nA5lQxudwnqU934DEYEYJo67Khg5nuC2f
+	 yxWbSQs1w8LSA==
 From: Mat Martineau <martineau@kernel.org>
-Date: Sun, 04 Jun 2023 20:25:17 -0700
-Subject: [PATCH net 1/5] mptcp: only send RM_ADDR in nl_cmd_remove
+Date: Sun, 04 Jun 2023 20:25:19 -0700
+Subject: [PATCH net 3/5] mptcp: add address into userspace pm list
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,7 +26,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230602-send-net-20230602-v1-1-fe011dfa859d@kernel.org>
+Message-Id: <20230602-send-net-20230602-v1-3-fe011dfa859d@kernel.org>
 References: <20230602-send-net-20230602-v1-0-fe011dfa859d@kernel.org>
 In-Reply-To: <20230602-send-net-20230602-v1-0-fe011dfa859d@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
@@ -40,86 +40,104 @@ X-Mailer: b4 0.12.2
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-The specifications from [1] about the "REMOVE" command say:
+Add the address into userspace_pm_local_addr_list when the subflow is
+created. Make sure it can be found in mptcp_nl_cmd_remove(). And delete
+it in the new helper mptcp_userspace_pm_delete_local_addr().
 
-    Announce that an address has been lost to the peer
-
-It was then only supposed to send a RM_ADDR and not trying to delete
-associated subflows.
-
-A new helper mptcp_pm_remove_addrs() is then introduced to do just
-that, compared to mptcp_pm_remove_addrs_and_subflows() also removing
-subflows.
-
-To delete a subflow, the userspace daemon can use the "SUB_DESTROY"
-command, see mptcp_nl_cmd_sf_destroy().
+By doing this, the "REMOVE" command also works with subflows that have
+been created via the "SUB_CREATE" command instead of restricting to
+the addresses that have been announced via the "ANNOUNCE" command.
 
 Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
-Link: https://github.com/multipath-tcp/mptcp/blob/mptcp_v0.96/include/uapi/linux/mptcp.h [1]
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/379
 Cc: stable@vger.kernel.org
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- net/mptcp/pm_netlink.c   | 18 ++++++++++++++++++
- net/mptcp/pm_userspace.c |  2 +-
- net/mptcp/protocol.h     |  1 +
- 3 files changed, 20 insertions(+), 1 deletion(-)
+ net/mptcp/pm_userspace.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index bc343dab5e3f..59f8f3124855 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1558,6 +1558,24 @@ static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *info)
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 6beadea8c67d..114548b09f47 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -79,6 +79,30 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
  	return ret;
  }
  
-+void mptcp_pm_remove_addrs(struct mptcp_sock *msk, struct list_head *rm_list)
++/* If the subflow is closed from the other peer (not via a
++ * subflow destroy command then), we want to keep the entry
++ * not to assign the same ID to another address and to be
++ * able to send RM_ADDR after the removal of the subflow.
++ */
++static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
++						struct mptcp_pm_addr_entry *addr)
 +{
-+	struct mptcp_rm_list alist = { .nr = 0 };
-+	struct mptcp_pm_addr_entry *entry;
++	struct mptcp_pm_addr_entry *entry, *tmp;
 +
-+	list_for_each_entry(entry, rm_list, list) {
-+		remove_anno_list_by_saddr(msk, &entry->addr);
-+		if (alist.nr < MPTCP_RM_IDS_MAX)
-+			alist.ids[alist.nr++] = entry->addr.id;
++	list_for_each_entry_safe(entry, tmp, &msk->pm.userspace_pm_local_addr_list, list) {
++		if (mptcp_addresses_equal(&entry->addr, &addr->addr, false)) {
++			/* TODO: a refcount is needed because the entry can
++			 * be used multiple times (e.g. fullmesh mode).
++			 */
++			list_del_rcu(&entry->list);
++			kfree(entry);
++			return 0;
++		}
 +	}
 +
-+	if (alist.nr) {
-+		spin_lock_bh(&msk->pm.lock);
-+		mptcp_pm_remove_addr(msk, &alist);
-+		spin_unlock_bh(&msk->pm.lock);
-+	}
++	return -EINVAL;
 +}
 +
- void mptcp_pm_remove_addrs_and_subflows(struct mptcp_sock *msk,
- 					struct list_head *rm_list)
- {
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 27a275805c06..6beadea8c67d 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -232,7 +232,7 @@ int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info)
+ int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
+ 						   unsigned int id,
+ 						   u8 *flags, int *ifindex)
+@@ -251,6 +275,7 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+ 	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+ 	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
++	struct mptcp_pm_addr_entry local = { 0 };
+ 	struct mptcp_addr_info addr_r;
+ 	struct mptcp_addr_info addr_l;
+ 	struct mptcp_sock *msk;
+@@ -302,12 +327,24 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+ 		goto create_err;
+ 	}
  
- 	list_move(&match->list, &free_list);
++	local.addr = addr_l;
++	err = mptcp_userspace_pm_append_new_local_addr(msk, &local);
++	if (err < 0) {
++		GENL_SET_ERR_MSG(info, "did not match address and id");
++		goto create_err;
++	}
++
+ 	lock_sock(sk);
  
--	mptcp_pm_remove_addrs_and_subflows(msk, &free_list);
-+	mptcp_pm_remove_addrs(msk, &free_list);
+ 	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
  
- 	release_sock((struct sock *)msk);
+ 	release_sock(sk);
  
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index c5255258bfb3..70c957bc56a8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -832,6 +832,7 @@ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   bool echo);
- int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_list);
- int mptcp_pm_remove_subflow(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_list);
-+void mptcp_pm_remove_addrs(struct mptcp_sock *msk, struct list_head *rm_list);
- void mptcp_pm_remove_addrs_and_subflows(struct mptcp_sock *msk,
- 					struct list_head *rm_list);
++	spin_lock_bh(&msk->pm.lock);
++	if (err)
++		mptcp_userspace_pm_delete_local_addr(msk, &local);
++	spin_unlock_bh(&msk->pm.lock);
++
+  create_err:
+ 	sock_put((struct sock *)msk);
+ 	return err;
+@@ -420,7 +457,11 @@ int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
+ 	ssk = mptcp_nl_find_ssk(msk, &addr_l, &addr_r);
+ 	if (ssk) {
+ 		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
++		struct mptcp_pm_addr_entry entry = { .addr = addr_l };
  
++		spin_lock_bh(&msk->pm.lock);
++		mptcp_userspace_pm_delete_local_addr(msk, &entry);
++		spin_unlock_bh(&msk->pm.lock);
+ 		mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
+ 		mptcp_close_ssk(sk, ssk, subflow);
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
 
 -- 
 2.40.1
