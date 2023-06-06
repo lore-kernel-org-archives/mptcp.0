@@ -1,136 +1,128 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56142A6EA
-	for <mptcp@lists.linux.dev>; Tue,  6 Jun 2023 10:11:59 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3f736e0c9b1so27915465e9.3
-        for <mptcp@lists.linux.dev>; Tue, 06 Jun 2023 03:11:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2831B28C3A
+	for <mptcp@lists.linux.dev>; Tue,  6 Jun 2023 10:26:31 +0000 (UTC)
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-75d461fde66so290359385a.1
+        for <mptcp@lists.linux.dev>; Tue, 06 Jun 2023 03:26:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686047191; x=1688639191;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aORjcs4E+Fi2bn8voFEN8n+x1//59UcSW1RPZziM0mg=;
+        b=fx+sGx3ccvxIV+RDfByDzZS6yBXZdNULGOtt1o/BftyPXHX7EGANI/rsTy6peQyW2C
+         4i9inNOpUH/c6Vqve5Pe4lMWcemoU7Q9VtOeSaauMHRmuZqE+QOoKn9UUGDkDmtKzzoV
+         y1duV2VNVRprDmuVgAFpFUfW5/ALiHhEe/diAL669YVhIgF5gwmPDMIQ91rjJ2P077nE
+         IRN8TvPTkeBd3rmhCSZOBCRPz4OrwKD3VTmzzsFx4edvq6Va4Cj1+XOMpUXnNoW7eTj9
+         VvJXYlX64bmF7ylL8dsKwAzHPetlg4OkcBMv9s8Wpna9xbLooSNeEneTF7SFX9FuVdKD
+         QDmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686046318; x=1688638318;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PjZD64nD9uDw2ysYWjBEluXV8UBaLP33LjAprrSBmFs=;
-        b=fRD82usRVCAYXBUf53PAwnswicLoD8ywITizMqceWvNlbhRWsfgQSM16BUs3t63jRz
-         1M8olawA82VJt1Ac1Oj2WGG0kIzHcYDQfgVxgYzhE77WSJBTN/565TO8dVRWKeRdREde
-         sFWIMhAmBtU97jttZM39A2i72JNSWZbOWvTZ9h7ty8zpkkNVe9kQsxv+sUNLNmiwfRuI
-         9A/uO3IL2TH1GWmMJg8KG91LIQFoW6SqzOqzOw8fv2KjMIZotGrwiKYkLm+guIhcVY8h
-         x/CM/fvknUZFAEAC0KyrNxH+WPztTpiMM5r5rBsZ8napcd0ETCZ6RAyziJ8wRp0hfZvc
-         4Bbw==
-X-Gm-Message-State: AC+VfDz9UrpPUbLvQCJ4f9By8D1ghj/tNqp8x4r1AeyiSo5HUWHxGkCI
-	+VgrUzkGlItt5T+Oz5tos04=
-X-Google-Smtp-Source: ACHHUZ5VuRy6tj2/a+/ZVk3bcFIrCucyH/hLYU0AvfurxedS1PxfbUZxr/R70tGP9osBH0Iu3y7fBA==
-X-Received: by 2002:a05:600c:114c:b0:3f7:6bd9:2819 with SMTP id z12-20020a05600c114c00b003f76bd92819mr1701438wmz.29.1686046317704;
-        Tue, 06 Jun 2023 03:11:57 -0700 (PDT)
-Received: from gmail.com (fwdproxy-cln-006.fbsv.net. [2a03:2880:31ff:6::face:b00c])
-        by smtp.gmail.com with ESMTPSA id z19-20020a7bc7d3000000b003f7ead9be7fsm1323903wmk.38.2023.06.06.03.11.56
+        d=1e100.net; s=20221208; t=1686047191; x=1688639191;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=aORjcs4E+Fi2bn8voFEN8n+x1//59UcSW1RPZziM0mg=;
+        b=Z360MkSWkZaTj0wPrUlKuBu5COoEKwlTrjKlfX3N7Cb9Q1n8DgFZsuTaf2i1/eUVCr
+         orrtjUUvFGS2YmA1g33XFCVc9JLpp9m6rs1Lvh42hRR2fz5UrnxrEfrEejm2YloQN26d
+         yv2AFy/Jc49A8k+0OWw6Whiq76DS8j+vTP7sQouG9/dIwqBhddJRul3uopa42Ei47jFm
+         BoacqNPAtNj+Dvx/XASi1ymukEwPGGA+NfpuPv3KPu2cgF9xIvv72oa1CB37nTq0C7Ee
+         lLahzQiO7qhe/4hN6KSOmAfPsOz9GQv/E3o5BjKP02Yw68Y9JtMnR5spLSfNiOuYzPX1
+         L/mQ==
+X-Gm-Message-State: AC+VfDzR1ECNhCpQcsN1ZloRXOSBGYJFp+pF47rfDpDDQy22OG67PW3g
+	Vgd9ZUxdj+Vp2/a8IXOFCg==
+X-Google-Smtp-Source: ACHHUZ7ztnPsGIsD1/0SKzeElyDZw+QbNtXm8bzmJRjqq9p3XU+TdlR/QBiAmMea/rdSgQmwGLYo4A==
+X-Received: by 2002:a05:620a:24d4:b0:75b:23a0:e7be with SMTP id m20-20020a05620a24d400b0075b23a0e7bemr1910443qkn.31.1686047190826;
+        Tue, 06 Jun 2023 03:26:30 -0700 (PDT)
+Received: from [127.0.0.1] ([20.49.33.117])
+        by smtp.gmail.com with ESMTPSA id a2-20020a05620a16c200b007593af0c85fsm3258873qkn.88.2023.06.06.03.26.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 03:11:57 -0700 (PDT)
-Date: Tue, 6 Jun 2023 03:11:55 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Remi Denis-Courmont <courmisch@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	David Ahern <dsahern@kernel.org>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Mat Martineau <martineau@kernel.org>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>, axboe@kernel.dk,
-	asml.silence@gmail.com, leit@fb.com, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, dccp@vger.kernel.org,
-	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-sctp@vger.kernel.org
-Subject: Re: [PATCH net-next v5] net: ioctl: Use kernel memory on protocol
- ioctl callbacks
-Message-ID: <ZH8Ga15IFIUUA7j8@gmail.com>
-References: <20230602163044.1820619-1-leitao@debian.org>
- <CAF=yD-Kk9mVWPZN50NUu8uGwEbySNS-WzvJ=1HTTcVsA6OOuvA@mail.gmail.com>
- <ZHxEX0TlXX7VV9kX@gmail.com>
- <CAF=yD-LvTDmWp+wAqwuQ7vKLT0hAHcQjV9Ef2rEag5J4cSZrkA@mail.gmail.com>
+        Tue, 06 Jun 2023 03:26:30 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <1cf433961986135e884dfc35b981c82ec6a5f528.1686041504.git.geliang.tang@suse.com>
+References:
+ <1cf433961986135e884dfc35b981c82ec6a5f528.1686041504.git.geliang.tang@suse.com>
+Subject: Re: selftests/bpf: Add bpf_stale test: Tests Results
+Message-ID: <f0363211-960d-5074-eabd-52a3b1667010@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 06 Jun 2023 10:26:29 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF=yD-LvTDmWp+wAqwuQ7vKLT0hAHcQjV9Ef2rEag5J4cSZrkA@mail.gmail.com>
 
-On Sun, Jun 04, 2023 at 11:17:56AM +0200, Willem de Bruijn wrote:
-> > On Sat, Jun 03, 2023 at 10:21:50AM +0200, Willem de Bruijn wrote:
-> > > On Fri, Jun 2, 2023 at 6:31 PM Breno Leitao <leitao@debian.org> wrote:
-> > > > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > >
-> > > Please check the checkpatch output
-> > >
-> > > https://patchwork.hopto.org/static/nipa/753609/13265673/checkpatch/stdout
-> >
-> > I am checking my current checkpatch before sending the patch, but I am
-> > not seeing the problems above.
-> >
-> > My tree is at 44c026a73be8038 ("Linux 6.4-rc3"), and I am not able to
-> > reproduce the problems above.
-> >
-> >         $ scripts/checkpatch.pl v5/v5-0001-net-ioctl-Use-kernel-memory-on-protocol-ioctl-cal.patch
-> >         total: 0 errors, 0 warnings, 0 checks, 806 lines checked
-> >         v5/v5-0001-net-ioctl-Use-kernel-memory-on-protocol-ioctl-cal.patch has no obvious style problems and is ready for submission.
-> >
-> > Let me investigate what options I am missing when running checkpatch.
-> 
-> The reference is to the checkpatch as referenced by patchwork:
-> 
-> https://patchwork.kernel.org/project/netdevbpf/patch/20230602163044.1820619-1-leitao@debian.org/
-> 
-> The 80 character limit is a soft limit. But also note the CHECK
-> statements on whitespace.
+Hi Geliang,
 
-Right. In order to enable the "CHECK" statments, we need to pass the
-"--subjective" parameter to checpatch.pl
+Thank you for your modifications, that's great!
 
-That said, I am able to reproduce the same output now, using the
-following command line:
+Our CI did some validations and here is its report:
 
-	$ scripts/checkpatch.pl --subjective --max-line-length=80
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 2 failed test(s): packetdrill_fastopen packetdrill_sockopts =
+=F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4723489714733056
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4723489714733056/su=
+mmary/summary.txt
 
-> > > > +/* A wrapper around sock ioctls, which copies the data from userspace
-> > > > + * (depending on the protocol/ioctl), and copies back the result to userspace.
-> > > > + * The main motivation for this function is to pass kernel memory to the
-> > > > + * protocol ioctl callbacks, instead of userspace memory.
-> > > > + */
-> > > > +int sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
-> > > > +{
-> > > > +       int rc = 1;
-> > > > +
-> > > > +       if (sk_is_ipmr(sk))
-> > > > +               rc = ipmr_sk_ioctl(sk, cmd, arg);
-> > > > +       else if (sk_is_icmpv6(sk))
-> > > > +               rc = ip6mr_sk_ioctl(sk, cmd, arg);
-> > > > +       else if (sk_is_phonet(sk))
-> > > > +               rc = phonet_sk_ioctl(sk, cmd, arg);
-> > >
-> > > Does this handle all phonet ioctl cases correctly?
-> > >
-> > > Notably pn_socket_ioctl has a SIOCPNGETOBJECT that reads and writes a u16.
-> >
-> > We are not touching  "struct proto_ops" in this patch at all.  And
-> > pn_socket_ioctl() is part of "struct proto_ops".
-> >
-> >         const struct proto_ops phonet_stream_ops = {
-> >                   ...
-> >                   .ioctl          = pn_socket_ioctl,
-> >         }
-> >
-> > That said, all the "struct proto_ops" ioctl calls backs continue to use
-> > "unsigned long arg" with userspace information, at least for now.
-> 
-> Ok. Perhaps good to call out in the commit message that this does not
-> convert all protocol ioctl callbacks.
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6412339574996992
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6412339574996992/summary/summary.txt
 
-Sure, let me send a V6 with this information in the patch summary.
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5849389621575680
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5849389621575680/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 2 failed test(s): packetdrill_fastopen selftest_diag =
+=F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5286439668154368
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5286439668154368/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/a49d687bcd1f
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
