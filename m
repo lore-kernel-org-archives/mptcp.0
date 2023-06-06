@@ -1,127 +1,168 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2042.outbound.protection.outlook.com [40.107.13.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE935660
-	for <mptcp@lists.linux.dev>; Tue,  6 Jun 2023 08:20:41 +0000 (UTC)
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7747df5b674so232349639f.3
-        for <mptcp@lists.linux.dev>; Tue, 06 Jun 2023 01:20:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686039641; x=1688631641;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OPRS3wLKuCADSZjN0G6/J2xxhkpkHEnS6bZPu+48IfY=;
-        b=GWVAVNGGvbldagtV8Oe15eQuJZwW2z7bHEa3RO+Ppch8qK6iKwh6gbrKW0wR4lY/TJ
-         4nJyY7CDcWwH/Kf9gsvNDkJT8V7IPLbG2eTRCH1DvcV1MRsyLw55P1NcjfBmlt+62Zrw
-         7NiTHksmUzFCwIjME00bFjoattM/GrTBzewsO5ohC+sRJY3l2pPVzVXu4hjZYO2jkFi2
-         NtBEx1W3kdvcE1uaSKNGOtq+S2FXYfAAXnUV1npENn+mTxzG9s/VliFoEb4FmSKlPzkd
-         V7eEhwK6B+lmnXw3D8tfOVmK36Sn4MMirMGR38VE6meUbkrGBcUJu47uUeKUUIUZf619
-         tY/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686039641; x=1688631641;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OPRS3wLKuCADSZjN0G6/J2xxhkpkHEnS6bZPu+48IfY=;
-        b=JbEWr0OqXsCJwwHF+3s3Mu0OvfNP+T8XTUD3gZJDLl5EHf9ZTYa2ayteZkrWzXSTRL
-         zMBdJceghm901k75GlFRQrzRnWRy6e6IQMyA/QwPhkRuc/JBXltDtsX5tGZZIpIt3uYH
-         1fAShNMLLH/x2umV7Bazy2lmQaGIPoI9qf0yQlPY/rACevcDBvLh21AoBZXrIGOgT72j
-         LRpYYpbFnMEfHD7ql8RibRl9/Bj+IMs8R0NeX/hjYCf+JlQgL6QkuolVnPLCoKjqBIyb
-         cP32klkq21/dqo1utINAn9K9RmkHIT/DdWGtdXjRYoZW0MDs3qjHTtwa0FrQiTE5vkOg
-         LUbw==
-X-Gm-Message-State: AC+VfDwkG4LJPFxVWCQIA8/QnLoFLKyfACPTWNagoLPJBBhbrCNi/FYb
-	c2w0Pjz84fJHtZMWl95dLg==
-X-Google-Smtp-Source: ACHHUZ6882GvL8jOzmdxaSIfGmTUZqvDgGLspvos0ivRDLtFXSdMx5DNlPuUHK0Qn3thslldkX+wAA==
-X-Received: by 2002:a5e:dd09:0:b0:774:9c66:cbd6 with SMTP id t9-20020a5edd09000000b007749c66cbd6mr2600959iop.17.1686039640962;
-        Tue, 06 Jun 2023 01:20:40 -0700 (PDT)
-Received: from [127.0.0.1] ([40.77.50.169])
-        by smtp.gmail.com with ESMTPSA id t3-20020a02ab83000000b0041f5a0b7f9bsm1263103jan.108.2023.06.06.01.20.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 01:20:40 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1f005b865aafc8870ca7f8a7c4cc99b7964562e3.1686033694.git.geliang.tang@suse.com>
-References:
- <1f005b865aafc8870ca7f8a7c4cc99b7964562e3.1686033694.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: Add bpf_stale test: Tests Results
-Message-ID: <3acf9802-69e6-2711-ea08-ae418fceefb6@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Jun 2023 08:20:39 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C3A3D8A
+	for <mptcp@lists.linux.dev>; Tue,  6 Jun 2023 08:59:53 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WyRCXRijuyHGmCEqHF0x/BHZt4dALNq7Q3vc3kLR6/yMacsn96bX6JEXvZhFnhKB8gzQlTaU+RdCHHw7VDuHJsOqgPjIckaObDnzR1gdl8q5ccx5g7oGs3osFlFUOHZp/Omg23ZLAx0ScCRLk3aUznZWfFOCLX5LvuR9FGZGYxVyLoAxrc6c4MVSJaiFp74Y9JgNGXPIDZv8UjtQepP46HixmOCvOqVD0D3W1UklW8TWSbq0SFkFBDQRlL9cieBJfW1T0kaZVwgsCmAXf2kuQXKZGq5zv2/cd6aEhoTjQV/b55cqH3Rr0hYiL38yT5y2F2o5Pi5s1jE0AFEk1ZJr4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2V0SuIvRxE8+9qk8Xrx3aXMaXyyqmJnoXPZsaH3YNaE=;
+ b=eUZy8EJsb6xc1NORk1wgPcLjnMVUf2aVfVIfrtROaFnegGQ6xfy4Hx8QlyeGghcWhD7CkAUJqWVlLjlhT6coO2v2BjYi7pgf+hfKL2ibY1udlB7bFcvVkSLANs6+Xhy3mtQNf73wqa9cqOPTXLWWX2dB30eyKoeh+P+J+am8jnxYTx+DpJztK0VXKaRrYqioxsrQHfwsZ+cD0BwvN12WaVIDCix/mX53MgAkyOxJuzdxvLEAkUTA/Lzdc5Bz/b+ujNIHSWW0qhMjNIq7Q3qD0XOlQie9mA4YBaYjUrP4ordZKuAy1eYZ2appSLLPAbcpUJRJ8on3/OCNTyFEPh+B+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2V0SuIvRxE8+9qk8Xrx3aXMaXyyqmJnoXPZsaH3YNaE=;
+ b=x2WmOnL7c/o4VbL6RNp3XMhm23MutKoeKVpPQ87BJTTEoT9WTY7ROvXE0UOm39b/sNuzgqwCSEYEoWtKq4iyVPnY8DLZ2RzZJVcdljDkEsLk25PoM3QVoQJs0xLQDxbHZ4ZYA6Xz7e7A1CJX+68gSJOZldJ/qTLiiXxIlizaBW4Q6mgwDSDSoWc1tr7iNVz5U8hRJrH4Ekpjua3oHO5ZLRXgUeq4+eP5m7rkUQXYRo8950DcPgZhOafLZcy0s6qBNcx1JFi9HQ++TlYWY0VtiDg9dT23gykj6jkrzOIrEdaM9du9YDmV2LV9cisLJfoGFOPgKrmKtLpAwBFozQolJw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AS8PR04MB8964.eurprd04.prod.outlook.com (2603:10a6:20b:42f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.32; Tue, 6 Jun
+ 2023 08:59:49 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::423a:a30f:5342:9d35]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::423a:a30f:5342:9d35%6]) with mapi id 15.20.6455.030; Tue, 6 Jun 2023
+ 08:59:49 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v6 00/18] BPF packet scheduler updates
+Date: Tue,  6 Jun 2023 16:59:14 +0800
+Message-Id: <cover.1686041504.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYWPR01CA0010.jpnprd01.prod.outlook.com
+ (2603:1096:400:a9::15) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AS8PR04MB8964:EE_
+X-MS-Office365-Filtering-Correlation-Id: d95d8594-3d74-4918-1c3f-08db666c618b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+sGViHjDcdhea522TvabVzmMjwCWuNVlqk4rOEyu9JlTGGMTdtRkSsf3PmXZOD8fWmFGb5YHqKKZaMEvuMzVQS/vbBR/3gHhCcAgU3jUWQplrK+k9djzOmXmc+1jlIrwXz59gAlwAKQLx9R2URlh18b4sUWcxAaWOTKD3c66RDke2gusHyJtFOdhKQnmxGu4hN5fJKb7LGrk4tMkKpbGLjV3KV200y80FwpcqF/Nwgfz7m/7gsBEEfDa2ePwwuK2R63Dc7Fk/e8amgcGLW4Mf2dipLFvmWoQTmU2bX6nruyO6F4sH4fAtAwmn72g80yNubggCcicGE4d4h7siEnvgveB/nnjuRRqIROSYGjB4Ple7kiZ3PRDMPqqHEQt1sGVThwqdgcBs1w8KcUB7yLjYSmsGNGPS2rQPmn9t28Dj90+rTKBcvTRljOvgzCh1mv/zc97a6aXD5n7aLUh/ERWhe8oJ/m0Fn+NK2NxgLP2tWQ+DWnV+jGsgqhbtQ1aPF/aB6jDwEYGfvjoi1+dEHu2q8w5aThl6JZaRisK9iRma158Y21Y6XNNG88rXfzwhHilX3KDWwTaDQ/XrlfjrTRkTg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(396003)(346002)(39860400002)(136003)(376002)(451199021)(41300700001)(8936002)(8676002)(5660300002)(6916009)(44832011)(66946007)(66556008)(66476007)(316002)(4326008)(2906002)(15650500001)(478600001)(38100700002)(186003)(26005)(6512007)(6506007)(86362001)(107886003)(6486002)(36756003)(966005)(83380400001)(2616005)(6666004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Esqd5qnEnpvK3Vq8VoMucX+3Txwq4D8s+CnqPMT0RG2whuMrQxZf3KNC70ao?=
+ =?us-ascii?Q?l+5qF3HbZMu2+zPNcvPKOysotIcsfs00e7qiCtwcGHZAXANZ8yQzxGkO/JK2?=
+ =?us-ascii?Q?bW8X1pESyosDMLz52R3bloiMtG7zDwsStOGeMuhBxyCT87FqgPOXAmRZCncb?=
+ =?us-ascii?Q?5b/DnubgwNJApcnDOpGVl3IZxPqll0W1xbndNPhuveXqS8OPTKtd2YRB8p8W?=
+ =?us-ascii?Q?cMpD1M7tauUqe8BGeex3OO7frIUBcjfixHp5SVkQvxsjqtWlN76Go204yylN?=
+ =?us-ascii?Q?fBIFf9yIihAMtQOLCk5s0rHEGGPK8mE++OIja/nWnTljWv3MVPQSpY49SeVS?=
+ =?us-ascii?Q?x8a2uCySNmjmsT8fWGbqf18iHzQSqhr8HHS6ULdkUTUQhuqFeIMpg2bs/8sQ?=
+ =?us-ascii?Q?HDsEA1mlRnO8HiDlackyGYI4Q3RNA4i0oXM8IrPWggTdJS1f/dAJn28CKZV+?=
+ =?us-ascii?Q?mUHG22SwjTFL8NCnb/Pm3L5fwTOyg/WeaRCue37CsMG8Ph9qMRFoNjn2uNhH?=
+ =?us-ascii?Q?dqzWoIE5pnyw225bwwU1kmw66GrBb7XlA94j7Ax+a4l268wWuV/zYDMHmYqk?=
+ =?us-ascii?Q?49gt3EXDrW0S/wIRX89i15JB1TxAuGxGDaBcZwJmpo5wuJ+i8zbtmaR4frLh?=
+ =?us-ascii?Q?cB9XO3fqoxBaPiv+4ZT5TF0VAxXFnIsqHPV/qeckP1XMsClSmGrZsZi3QT/f?=
+ =?us-ascii?Q?Y4PRlWemL0izbYRQPiHM+Yom8V+PrTRxfpQR6KEJ220aI51b98pF6qlXiDie?=
+ =?us-ascii?Q?fuchZcdVhc8aO/Gk8YksqFrHAADffGlf+h3SqRik9IqWLSZwlA8GSZXxANr5?=
+ =?us-ascii?Q?z29NDYRacP9FUaUFV2syj773iKQHTi7YYyF38w6qK3ofrJudl1AxCO5xiDi1?=
+ =?us-ascii?Q?S+3pqu/TGh84k/iKY0TnCPV7KxBGxUPkMJg5tUlQZhDCcKPLFMxdkbEhA5uj?=
+ =?us-ascii?Q?AJqom0YnCsZYUVqn0hyDGQ/wS5tVIHsNTHSMDGX/jA25l+XyVoxK/6pyhacY?=
+ =?us-ascii?Q?oiLlIPT9qUb010jMgrKQ7FjRY8TIgUj3HO0b/2HVvS9O7p4/8Ns7LIMQ/tFH?=
+ =?us-ascii?Q?Ba8snyAoqG0JhJuYE+gppIh3ZTSHi4u6QnW6XxLIbJ2a+TzQ5e9UI5Xd/V9d?=
+ =?us-ascii?Q?2CJX1AxMxdYinDVnTj4bLvA/tDs/tCGHz6abOenMDeSxHJL0FwKx+ywLU38Q?=
+ =?us-ascii?Q?xGcmrHC2mlZDPorJiMpMgSwbP/KQHBGjWS9YTl0AgzPnKJd3AoK+U99ET17l?=
+ =?us-ascii?Q?zTkdneNRn7kvIdp6Zxy/1+nk4H9N871WP8HARwA9gPGwgVT25exSCAoSV0wE?=
+ =?us-ascii?Q?86aAjpS47dzUy9st3S83igeKH4UJBdZ3yEWI3tFH21V3gE0apxdBsXxwqZjC?=
+ =?us-ascii?Q?rdOyeG75lBinKdQJR35jx4j8ZgaXderpl//QUmpLcI4ffkwyOwQBw1/OhaQg?=
+ =?us-ascii?Q?x7ec7bxeXd/Dt0ntAMkXsnrpTK5XgsRgGFHl+uCEodpX99SgYsJdZXCJZo4A?=
+ =?us-ascii?Q?qKjtvrsnM8nqJDEtFmrhKePgViJNfLhH98E8oiq7CA288TwsVETvkmq6DOd9?=
+ =?us-ascii?Q?eeoqiNsgrbTCJ/hDsl16H1ciru8nXVvc7S4hPqjC?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d95d8594-3d74-4918-1c3f-08db666c618b
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2023 08:59:48.8092
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ip0WEp9AiuL7c2BywY9C/CIcc1cYPeQWbtGeD4870KYvzM4m9tgsOY59+6g1VHlQ74anXzH33xACmZQlYA9c+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8964
 
-Hi Geliang,
+v6:
+ - Only update patches 14, 15. Add a helper bpf_mptcp_subflow_ctx, fix
+   bug in bpf_burst_get_retrans().
 
-Thank you for your modifications, that's great!
+v5:
+ - 1-9: save sched_data at mptcp_sock, for issues #342
+ - 10-15: add bpf_burst scheduler
+ - 16-18: add bpf_stale scheduler, for issues #349
 
-Our CI did some validations and here is its report:
+v4:
+ - drop "mptcp: add three helpers for bpf_burst", implement the helpers
+   in the bpf context directly.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6310770711986176
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6310770711986176/summary/summary.txt
+v3:
+ - address Florian's comments in v2.
+ - split into three more patches.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 3 failed test(s): packetdrill_fastopen packetdrill_mp_capable=
- selftest_diag =F0=9F=94=B4:
-  - Task: https://cirrus-ci.=
-com/task/6029295735275520
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6029295735275520/summary/summary.txt
+v2:
+ - fix this error reported by CI:
+KASAN: slab-use-after-free in __mptcp_close_ssk (net/mptcp/protocol.c:2461)
+ - add bpf burst scheduler.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5466345781854208
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5466345781854208/su=
-mmary/summary.txt
+This patchset adds sched_data pointer into mptcp_sock to to save some
+data at MPTCP and subflows levels.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4903395828432896
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4903395828432896/summary/summary.txt
+With these changes, the old patch "mptcp: register default scheduler" in
+[1] now works.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/08d4cef6dd8b
+https://patchwork.kernel.org/project/mptcp/cover/cover.1665753926.git.geliang.tang@suse.com/ [1]
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/342
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/349
 
+Geliang Tang (18):
+  Squash to "mptcp: add struct mptcp_sched_ops"
+  Squash to "mptcp: add sched in mptcp_sock"
+  Squash to "mptcp: add scheduler wrappers"
+  mptcp: add last_snd in sched_data
+  mptcp: add snd_burst in sched_data
+  mptcp: register default scheduler
+  Squash to "bpf: Add bpf_mptcp_sched_ops"
+  Squash to "selftests/bpf: Add mptcp sched structs"
+  Squash to "selftests/bpf: Add bpf_rr scheduler"
+  mptcp: rename __mptcp_set_timeout
+  mptcp: add two wrappers needed by bpf_burst
+  bpf: Add bpf_burst write accesses
+  bpf: Export more bpf_burst related functions
+  selftests/bpf: Add bpf_burst scheduler
+  selftests/bpf: Add bpf_burst test
+  bpf: Add subflow flags write access
+  selftests/bpf: Add bpf_stale scheduler
+  selftests/bpf: Add bpf_stale test
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+ include/net/mptcp.h                           |   4 +-
+ net/mptcp/bpf.c                               |  55 ++++-
+ net/mptcp/protocol.c                          |  43 ++--
+ net/mptcp/protocol.h                          |  14 +-
+ net/mptcp/sched.c                             |  67 +++++-
+ tools/testing/selftests/bpf/bpf_tcp_helpers.h |  12 +-
+ .../testing/selftests/bpf/prog_tests/mptcp.c  |  76 ++++++
+ .../selftests/bpf/progs/mptcp_bpf_burst.c     | 216 ++++++++++++++++++
+ .../selftests/bpf/progs/mptcp_bpf_rr.c        |   4 +-
+ .../selftests/bpf/progs/mptcp_bpf_stale.c     |  59 +++++
+ 10 files changed, 498 insertions(+), 52 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_stale.c
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+-- 
+2.35.3
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
