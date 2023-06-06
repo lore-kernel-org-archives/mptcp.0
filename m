@@ -1,87 +1,136 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540EA125AB
-	for <mptcp@lists.linux.dev>; Tue,  6 Jun 2023 09:35:26 +0000 (UTC)
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-75ebccc2c9bso144191185a.2
-        for <mptcp@lists.linux.dev>; Tue, 06 Jun 2023 02:35:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686044125; x=1688636125;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=41HTsPj2DMU462U3kXKByiBpHl5eqcCjysL+hg9JytI=;
-        b=H6qQsdH3I2YvdtNmMWYpeR8OOXczuBYtM0Znuns/GUUrIhNF+Xa5fyv/FHw/M3q+62
-         /hwXnPHFhNgFjQDlkKM6FwEPSSorwzLe43XquNrYRfdauG6ZyQqDoURPSbP88ZppHV0O
-         F/s1P3KLvhxrP/dx7Yvapk2797ibwYy52StTjPHGO0S+YYdarkyTlKuowHHS0+hnhpWH
-         8xD8cYmffhx3tSxxBbg2MMohdI6p5CaBVnzCAAr/Q8sGry0glBgKP/KOysOYgg8SL9jA
-         JiVniSEChof6WrPMNEwXsbfxTjYXbxsGkFNBHLdUIqkp4EXFQ/8Wn4dNM8qTZvR8WhvB
-         7Kxg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56142A6EA
+	for <mptcp@lists.linux.dev>; Tue,  6 Jun 2023 10:11:59 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3f736e0c9b1so27915465e9.3
+        for <mptcp@lists.linux.dev>; Tue, 06 Jun 2023 03:11:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686044125; x=1688636125;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=41HTsPj2DMU462U3kXKByiBpHl5eqcCjysL+hg9JytI=;
-        b=YqVF0y7WJ6gF2VkJA+8P8G7dlHYnrfzg1nXaGxbxyjzHpTCA71XfGOO/IzDwx4O+QB
-         kDi8Kb4YgBkCXq4L2khNlqNksgwLjt4m6vrqFUV/g9QgB1pVqXVYGZIaAOZe0K/iGpps
-         Bt/dVORkro87hMU+GnsbQ/eWrLJTtanqc3pwr9Kj8ecvsHn7VlyJjBqdk40o8oBxNVVB
-         +Dsar432DrUOK0+fUUJB285Muk6BBq7VvCAVmpstZpOkKIobHIm3ZU8EoklZIXq1Xmlf
-         XQuodXp/Yf+tNZMImB1Er7xz2HZqbKntPcZ1C9UhjirlmWqmkVyKM6FHEfkMlWsQ69N5
-         LvqA==
-X-Gm-Message-State: AC+VfDzhMJuqT3A8qpnC6WwcciQo6Pi7ESM4WwUB36naCRl7yVyv9D/c
-	WGEAvbWFNk6DBJmlBL0yjg==
-X-Google-Smtp-Source: ACHHUZ6xH03jJOnIu+ek3mKu1/Y50NOwoKhkt+MfR2ffGvPUnDiEy/TR/gSzNaWOWL624GGWRbBPyw==
-X-Received: by 2002:a05:620a:4496:b0:75e:680f:856d with SMTP id x22-20020a05620a449600b0075e680f856dmr1722399qkp.18.1686044124980;
-        Tue, 06 Jun 2023 02:35:24 -0700 (PDT)
-Received: from [127.0.0.1] ([20.49.36.17])
-        by smtp.gmail.com with ESMTPSA id q27-20020a05620a039b00b0075b01970aaasm259333qkm.32.2023.06.06.02.35.24
+        d=1e100.net; s=20221208; t=1686046318; x=1688638318;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PjZD64nD9uDw2ysYWjBEluXV8UBaLP33LjAprrSBmFs=;
+        b=fRD82usRVCAYXBUf53PAwnswicLoD8ywITizMqceWvNlbhRWsfgQSM16BUs3t63jRz
+         1M8olawA82VJt1Ac1Oj2WGG0kIzHcYDQfgVxgYzhE77WSJBTN/565TO8dVRWKeRdREde
+         sFWIMhAmBtU97jttZM39A2i72JNSWZbOWvTZ9h7ty8zpkkNVe9kQsxv+sUNLNmiwfRuI
+         9A/uO3IL2TH1GWmMJg8KG91LIQFoW6SqzOqzOw8fv2KjMIZotGrwiKYkLm+guIhcVY8h
+         x/CM/fvknUZFAEAC0KyrNxH+WPztTpiMM5r5rBsZ8napcd0ETCZ6RAyziJ8wRp0hfZvc
+         4Bbw==
+X-Gm-Message-State: AC+VfDz9UrpPUbLvQCJ4f9By8D1ghj/tNqp8x4r1AeyiSo5HUWHxGkCI
+	+VgrUzkGlItt5T+Oz5tos04=
+X-Google-Smtp-Source: ACHHUZ5VuRy6tj2/a+/ZVk3bcFIrCucyH/hLYU0AvfurxedS1PxfbUZxr/R70tGP9osBH0Iu3y7fBA==
+X-Received: by 2002:a05:600c:114c:b0:3f7:6bd9:2819 with SMTP id z12-20020a05600c114c00b003f76bd92819mr1701438wmz.29.1686046317704;
+        Tue, 06 Jun 2023 03:11:57 -0700 (PDT)
+Received: from gmail.com (fwdproxy-cln-006.fbsv.net. [2a03:2880:31ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id z19-20020a7bc7d3000000b003f7ead9be7fsm1323903wmk.38.2023.06.06.03.11.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 02:35:24 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1cf433961986135e884dfc35b981c82ec6a5f528.1686041504.git.geliang.tang@suse.com>
-References:
- <1cf433961986135e884dfc35b981c82ec6a5f528.1686041504.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: Add bpf_stale test: Build Failure
-Message-ID: <0a4a574c-0caf-ad80-41eb-3dcaace3eda0@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Jun 2023 09:35:24 +0000
+        Tue, 06 Jun 2023 03:11:57 -0700 (PDT)
+Date: Tue, 6 Jun 2023 03:11:55 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Remi Denis-Courmont <courmisch@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	David Ahern <dsahern@kernel.org>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <martineau@kernel.org>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>, axboe@kernel.dk,
+	asml.silence@gmail.com, leit@fb.com, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, dccp@vger.kernel.org,
+	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-sctp@vger.kernel.org
+Subject: Re: [PATCH net-next v5] net: ioctl: Use kernel memory on protocol
+ ioctl callbacks
+Message-ID: <ZH8Ga15IFIUUA7j8@gmail.com>
+References: <20230602163044.1820619-1-leitao@debian.org>
+ <CAF=yD-Kk9mVWPZN50NUu8uGwEbySNS-WzvJ=1HTTcVsA6OOuvA@mail.gmail.com>
+ <ZHxEX0TlXX7VV9kX@gmail.com>
+ <CAF=yD-LvTDmWp+wAqwuQ7vKLT0hAHcQjV9Ef2rEag5J4cSZrkA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF=yD-LvTDmWp+wAqwuQ7vKLT0hAHcQjV9Ef2rEag5J4cSZrkA@mail.gmail.com>
 
-Hi Geliang,
+On Sun, Jun 04, 2023 at 11:17:56AM +0200, Willem de Bruijn wrote:
+> > On Sat, Jun 03, 2023 at 10:21:50AM +0200, Willem de Bruijn wrote:
+> > > On Fri, Jun 2, 2023 at 6:31 PM Breno Leitao <leitao@debian.org> wrote:
+> > > > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > >
+> > > Please check the checkpatch output
+> > >
+> > > https://patchwork.hopto.org/static/nipa/753609/13265673/checkpatch/stdout
+> >
+> > I am checking my current checkpatch before sending the patch, but I am
+> > not seeing the problems above.
+> >
+> > My tree is at 44c026a73be8038 ("Linux 6.4-rc3"), and I am not able to
+> > reproduce the problems above.
+> >
+> >         $ scripts/checkpatch.pl v5/v5-0001-net-ioctl-Use-kernel-memory-on-protocol-ioctl-cal.patch
+> >         total: 0 errors, 0 warnings, 0 checks, 806 lines checked
+> >         v5/v5-0001-net-ioctl-Use-kernel-memory-on-protocol-ioctl-cal.patch has no obvious style problems and is ready for submission.
+> >
+> > Let me investigate what options I am missing when running checkpatch.
+> 
+> The reference is to the checkpatch as referenced by patchwork:
+> 
+> https://patchwork.kernel.org/project/netdevbpf/patch/20230602163044.1820619-1-leitao@debian.org/
+> 
+> The 80 character limit is a soft limit. But also note the CHECK
+> statements on whitespace.
 
-Thank you for your modifications, that's great!
+Right. In order to enable the "CHECK" statments, we need to pass the
+"--subjective" parameter to checpatch.pl
 
-But sadly, our CI spotted some issues with it when trying to build it.
+That said, I am able to reproduce the same output now, using the
+following command line:
 
-You can find more details there:
+	$ scripts/checkpatch.pl --subjective --max-line-length=80
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/1cf433961986135e884dfc35b981c82ec6a5f528.1686041504=
-.git.geliang.tang@suse.com/
-  https://github.com/multipath-tcp/mptcp_net-ne=
-xt/actions/runs/5186810224
+> > > > +/* A wrapper around sock ioctls, which copies the data from userspace
+> > > > + * (depending on the protocol/ioctl), and copies back the result to userspace.
+> > > > + * The main motivation for this function is to pass kernel memory to the
+> > > > + * protocol ioctl callbacks, instead of userspace memory.
+> > > > + */
+> > > > +int sk_ioctl(struct sock *sk, unsigned int cmd, void __user *arg)
+> > > > +{
+> > > > +       int rc = 1;
+> > > > +
+> > > > +       if (sk_is_ipmr(sk))
+> > > > +               rc = ipmr_sk_ioctl(sk, cmd, arg);
+> > > > +       else if (sk_is_icmpv6(sk))
+> > > > +               rc = ip6mr_sk_ioctl(sk, cmd, arg);
+> > > > +       else if (sk_is_phonet(sk))
+> > > > +               rc = phonet_sk_ioctl(sk, cmd, arg);
+> > >
+> > > Does this handle all phonet ioctl cases correctly?
+> > >
+> > > Notably pn_socket_ioctl has a SIOCPNGETOBJECT that reads and writes a u16.
+> >
+> > We are not touching  "struct proto_ops" in this patch at all.  And
+> > pn_socket_ioctl() is part of "struct proto_ops".
+> >
+> >         const struct proto_ops phonet_stream_ops = {
+> >                   ...
+> >                   .ioctl          = pn_socket_ioctl,
+> >         }
+> >
+> > That said, all the "struct proto_ops" ioctl calls backs continue to use
+> > "unsigned long arg" with userspace information, at least for now.
+> 
+> Ok. Perhaps good to call out in the commit message that this does not
+> convert all protocol ioctl callbacks.
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/a49d687bcd=
-1f
-
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Sure, let me send a V6 with this information in the patch summary.
