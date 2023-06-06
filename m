@@ -1,45 +1,45 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D622DBD0
-	for <mptcp@lists.linux.dev>; Tue,  6 Jun 2023 14:30:46 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-30c4775d05bso4601185f8f.2
-        for <mptcp@lists.linux.dev>; Tue, 06 Jun 2023 07:30:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6024923C74
+	for <mptcp@lists.linux.dev>; Tue,  6 Jun 2023 15:08:55 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-30ae4ec1ac7so4926881f8f.2
+        for <mptcp@lists.linux.dev>; Tue, 06 Jun 2023 08:08:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1686061844; x=1688653844;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1ganFZFDwH0y2iB/wVZU/hJTzNz61gkwHhwW94fV1tw=;
-        b=6pH1hGcm90G9h9RdLNfqDYUbyj26wiB/9+075f9Bke5g3om8r9F9Ap29TFnqrpL8in
-         q/cmQrQ8zVV3VbCNzp6Zb+AmIt8NBd07zNhbk41lKt0TkcIAFLFnh7GMORkPTk4wZ440
-         siFoyK6Y7+G/d2m24qlBzLCNitxggAA7U6QvddlrYDow3940CBO4mkKfGLEepabvIn9y
-         BPWos52xIpnkOWl3xNTpuVy+htFAPNqd7QG6+pF9UbYXBcUYiDNiDd+8AATK9ibs0F1Q
-         6IO2Qj7xUAYawd+bGvad2S48v93x6z1Gfvhw6oCw7iTu2E8zh6YKXdlsfy10WfnanZFN
-         ptmw==
+        d=tessares.net; s=google; t=1686064133; x=1688656133;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LCkdSIE782UW59BfbCfIEABhddN9BVHapDENUEfuLKs=;
+        b=AKxG/JHXjl8Uum2r/2E16HuYg8ZElK/c4+2yYppEnfDMT09GcxQF8AZ1vmkqWBCeqW
+         L21vNgMT5QF3xoWCeWqRziuHsm/lPgieSk5KxeBranar6KckkxRluWiPkS6cOvuBxqWx
+         Tn3BatCuZGabO8bXzilosw1uY844TQ0dKjvpBtP6G7QZ1SY+Ouve+PgzF3CY73meZPLs
+         UabzWDGhAgW8ZPpVsVa8v4z5Bzm3EhPaMTnNrtdLdSWVjiCYxtALHMxUjfR3ApnTNt54
+         fW7LQgi57ac6v/EzISldg4aM/pQiNsIkMRmVeFz+nZCF6ae0VkmSvKLNaHdl5+Ro1AVa
+         YtyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686061844; x=1688653844;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1ganFZFDwH0y2iB/wVZU/hJTzNz61gkwHhwW94fV1tw=;
-        b=Tv3Loy3Ca1ntGS3rTGledFlDs68ooIqSxDDvnKH96JMz16oUFVVTNgnndGzCvO2PSp
-         pneSSuDKq0OwJ3wZ/qJocPNaAw82YArJofUCYDMuYRP+lBvADxYKI1X5g21JdNb973tA
-         T3DxQhWqXS/DBWRV3ZsRdBtjOgfmwrj2ZEkFUsopBRC0NEZKDOCn1iAy8wGD+ioKoqqB
-         HmBTWzfqtXjseQpS3U9WT0eMefqHGhEJGDZPPstEZP0EzZvbvyKI3DVwKZkNDix9khtA
-         zTwDOXpsGdDTrm/T5molEKhe+/W2LLrzkdhIfWykxDUwUjj9gJ9ihLE4YQlZv14X0XjF
-         m9IQ==
-X-Gm-Message-State: AC+VfDzCpIUoGE6QgjZsvP/hS82UFFGsItFht7YFPNSxeK0tTcHBjWH6
-	qD0UlWdRNU8JO4EuPTZ1hg3tIQ==
-X-Google-Smtp-Source: ACHHUZ6RnROOA4+kHYbkumHme6DXEWTihBdXwoBzvBSL2v1LYRqA/DYhuquy79l1apqkhbzJJ4XjYA==
-X-Received: by 2002:a5d:4712:0:b0:2f7:e3aa:677a with SMTP id y18-20020a5d4712000000b002f7e3aa677amr1742889wrq.46.1686061844183;
-        Tue, 06 Jun 2023 07:30:44 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1686064133; x=1688656133;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LCkdSIE782UW59BfbCfIEABhddN9BVHapDENUEfuLKs=;
+        b=SgIMbCg066jMIqHjtol5xcc2WYbEgzeiJXVFbWZD0YHioyiAPJoaZ3CIh2TXeQle6S
+         Vn3ShesDrb/m727TQn+Nnd5mUszOgDsSQftm3zzKhSNFiGZ/nvHmTbcli8gMeYdvpErL
+         /ACdN8mgeGyAPXIgHIGbqKbPScuv+XhvKFnBmMw81ee1zDU9hwA/VzdWK2eZKZv07Xuc
+         PR6muKNPPQrbDq/7ZjBPQVq6RUVa71EkAKt1SrZjox5VWG/XyZyonkb3Nrodg9EITk+m
+         f7yGjPJ4g7ZFAX4Mh0n14GHLwpVqWf71IvucPjO9v4t8J1ls7HdughCSklFI/bnfniKO
+         B9kg==
+X-Gm-Message-State: AC+VfDw+3NpEud8Mz3alveiSRkZ40FbQvnk6l+sEAQhrT2kuMuLx+Mnm
+	lhz/it4losN3bsRTknrYjL0BsmYG5QdEPKbfySY=
+X-Google-Smtp-Source: ACHHUZ4ACJeLA9AekLA7q5tCZJqT0l4e2TLo4lmzolw8VGOK9H3/K3o3paKZX40/czpobz8zzSd+Ww==
+X-Received: by 2002:adf:ea48:0:b0:2ce:d84d:388f with SMTP id j8-20020adfea48000000b002ced84d388fmr2325882wrn.40.1686064133172;
+        Tue, 06 Jun 2023 08:08:53 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:426c:bb31:d569:3738? ([2a02:578:8593:1200:426c:bb31:d569:3738])
-        by smtp.gmail.com with ESMTPSA id p6-20020a056000018600b0030aefd11892sm12747513wrx.41.2023.06.06.07.30.43
+        by smtp.gmail.com with ESMTPSA id d8-20020adff848000000b0030ae849c70csm12902830wrq.37.2023.06.06.08.08.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Jun 2023 07:30:43 -0700 (PDT)
-Message-ID: <855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net>
-Date: Tue, 6 Jun 2023 16:30:43 +0200
+        Tue, 06 Jun 2023 08:08:52 -0700 (PDT)
+Message-ID: <88f7a06b-b044-9fdc-b3dc-4b374dbca332@tessares.net>
+Date: Tue, 6 Jun 2023 17:08:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,134 +48,98 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
+Subject: Re: 9p: MPTCP tests regressions due to new 9p features in v6.4
 Content-Language: en-GB
 To: Eric Van Hensbergen <ericvh@kernel.org>
-Cc: v9fs@lists.linux.dev, MPTCP Upstream <mptcp@lists.linux.dev>,
- regressions@lists.linux.dev
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, regressions@lists.linux.dev,
+ v9fs@lists.linux.dev
+References: <855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net>
+ <CAFkjPTnX0=-GK8sFzd4S+V2+cA8E-FAqYHNndZui2Sh_MvoHPw@mail.gmail.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: 9p: MPTCP tests regressions due to new 9p features in v6.4
+In-Reply-To: <CAFkjPTnX0=-GK8sFzd4S+V2+cA8E-FAqYHNndZui2Sh_MvoHPw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hi Eric and other 9p devs,
+Hi Eric,
 
-TL;DR: it looks like there is a (small?) problem with the new 9p
-features you recently sent and it causes MPTCP tests to be unstable. It
-is tracked there: https://github.com/multipath-tcp/mptcp_net-next/issues/400
+On 06/06/2023 16:49, Eric Van Hensbergen wrote:
+> thanks for the detailed report - I=E2=80=99ll have a look.
 
+Thank you for the quick reply!
 
-First, thank you very much for maintaining this very useful FS!
+No hurry, we can also revert these patches in our tree for the time being=
+=2E
 
-For the MPTCP subsystem, we are running various tests. Many are ran by a
-public CI [1] in a VM by using QEmu with 9p thanks to Virtme [2].
-Virtme, its dependences and a script to compile the kernel and run the
-tests are "packaged" in a Docker container which eases the deployment
-and the reproduction of issues using the same environment [3].
+> Do you know off hand
+> what cache options for 9p are in use?
 
+Sorry, I'm not sure what to look at.
 
-Since v6.4-rc1, we noticed that our public CI was reporting various
-instabilities, mainly with Packetdrill tests. Packetdrill [4] allows us
-to easily call some system calls, craft and "inject" some network
-packets and verify that the kernel generates the expected ones. It was
-difficult to reproduce the issue but after investigations, it looks like
-since v6.4-rc1, Packetdrill is slower to craft and inject packets,
-causing the kernel to retransmit packets (retransmission timeout) that
-are not expected and tests are then marked as failed. For more details,
-a ticket [5] has been opened in our public bugs tracker.
+In the VM, I see that this mount command is used:
 
-I ran a 'git bisect' and found out that it seems to be caused by the new
-9p features for 6.4:
+  /bin/mount -n -t 9p -o ro,version=3D9p2000.L,trans=3Dvirtio,access=3Dan=
+y \
+             virtme.guesttools /run/virtme/guesttools
 
-  8e15605be8ba ("Merge tag '9p-6.4-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/ericvh/v9fs")
+In virtme source, I can see these commands should be executed:
 
+  /bin/mount -n -t 9p -o ro,version=3D9p2000.L,trans=3Dvirtio,access=3Dan=
+y \
+             /dev/root /newroot/
+  mount -t 9p -o version=3D9p2000.L,trans=3Dvirtio,access=3Dany \
+        "virtme.initmount${tag:16}" "${!tag}"
 
-If I revert these commits on top of our "export" branch, I can no longer
-reproduce the bug:
+=46rom the VM, I can see:
 
-  $ git log --oneline --reverse v6.3-rc1..21e26d5e54ab
-  d9bc0d11e33b fs/9p: Consolidate file operations and add readahead and
-writeback
-  740b8bf87322 fs/9p: Remove unnecessary superblock flags
-  8142db4f2792 fs/9p: allow disable of xattr support on mount
-  46c30cb8f539 9p: Add additional debug flags and open modes
-  6deffc8924b5 fs/9p: Add new mount modes
-  1543b4c5071c fs/9p: remove writeback fid and fix per-file modes
-  4eb3117888a9 fs/9p: Rework cache modes and add new options to
-Documentation
-  21e26d5e54ab fs/9p: Fix bit operation logic error
+> # mount | grep 9p
+> /dev/root on / type 9p (ro,relatime,access=3Dany,trans=3Dvirtio)
+> virtme.guesttools on /run/virtme/guesttools type 9p (ro,relatime,access=
+=3Dany,trans=3Dvirtio)
+> virtme.initmount0 on /mptcp_net-next type 9p (rw,relatime,access=3Dany,=
+trans=3Dvirtio)
 
-'git bisect' seems to suggest the issue is due to the first commit
-d9bc0d11e33b ("fs/9p: Consolidate file operations and add readahead and
-writeback").
+And the VM is started using:
 
-It is not clear why these modifications are causing such issues because
-the Packetdrill tests are not doing intensive read and no write on the
-disk (only stdout). Not so much info has to be read from the disk: one
-small Python script (255 lines [6]) launches multiple threads, each
-executing the same bash script (22 lines [7]) launching the same
-"packetdrill" binary (1.1 MB) in a newly created and dedicated netns.
-Then each test reads a different test script of ~30 lines, e.g. [8]. I
-think most of the time the problem is seen at the end of a test. From
-what I see [9], Packetdrill tries to read the whole test script. This is
-confirmed by quickly looking at the output of strace available on the
-ticket [5].
+> /usr/bin/qemu-system-x86_64 -fsdev local,id=3Dvirtfs1,path=3D/,security=
+_model=3Dnone,readonly=3Don,multidevs=3Dremap -device virtio-9p-pci,fsdev=
+=3Dvirtfs1,mount_tag=3D/dev/root -fsdev local,id=3Dvirtfs5,path=3D/opt/vi=
+rtme/virtme/guest,security_model=3Dnone,readonly=3Don,multidevs=3Dremap -=
+device virtio-9p-pci,fsdev=3Dvirtfs5,mount_tag=3Dvirtme.guesttools -fsdev=
+ local,id=3Dvirtfs9,path=3D.,security_model=3Dnone,multidevs=3Dremap -dev=
+ice virtio-9p-pci,fsdev=3Dvirtfs9,mount_tag=3Dvirtme.initmount0 -machine =
+accel=3Dkvm:tcg -watchdog i6300esb -cpu host -parallel none -net none -ec=
+hr 1 -serial none -chardev stdio,id=3Dconsole,signal=3Doff,mux=3Don -seri=
+al chardev:console -mon chardev=3Dconsole -vga none -display none -m 2048=
+M -smp 2 -device virtio-net-pci,netdev=3Dn0 -netdev user,id=3Dn0 -kernel =
+=2Evirtme/build/arch/x86/boot/bzImage -append 'virtme_link_mods=3D.virtme=
+/build/.virtme_mods/lib/modules/0.0.0 virtme_initmount0=3D/mptcp_net-next=
+ earlyprintk=3Dserial,ttyS0,115200 console=3DttyS0 psmouse.proto=3Dexps "=
+virtme_stty_con=3Drows 59 cols 132 iutf8" TERM=3Dxterm virtme.dhcp virtme=
+_chdir=3D/mptcp_net-next rootfstype=3D9p rootflags=3Dversion=3D9p2000.L,t=
+rans=3Dvirtio,access=3Dany raid=3Dnoautodetect ro mitigations=3Doff init=3D=
+/bin/sh -- -c "mount -t tmpfs run /run;mkdir -p /run/virtme/guesttools;/b=
+in/mount -n -t 9p -o ro,version=3D9p2000.L,trans=3Dvirtio,access=3Dany vi=
+rtme.guesttools /run/virtme/guesttools;exec /run/virtme/guesttools/virtme=
+-init"'
 
+I don't see anything about the cache and nothing in the dmesg. If you
+think this info is in the dmesg, the logs are publicly available there:
 
-It is unclear to me what else I can do and share with you to help fixing
-this "regression". I can quite easily reproduce the issue on my side and
-provide more info if needed.
-
-Just in case you wish to reproduce it on your side using our docker
-container [3], it is easy:
-
-  $ cd [kernel source code]
-  $ cat <<'EOF' > .virtme-exec-run
-for z in $(seq 15); do
-  run_packetdrill_one mptcp/dss || true
-  grep -q "[l]ive packet payload:" "${OUTPUT_VIRTME}" && break
-  rm "${RESULTS_DIR}"/*.tap; done
-EOF
-  $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-This will compile the kernel in ".virtme" dir with the required .config.
-The VM will start and run a category of packetdrill tests 15 times. On
-my side, I was able to reproduce the issue with a busy machine and
-packetdrill had to run ~5 times. To stress my machine, I ran stress-ng
-in parallel (outside the VM) when the tests were being executed (after
-the compilation not to slow down everything), e.g. with
-
-  nproc2=$(nproc); nproc2=$((nproc2 * 2))
-  stress-ng --cpu "${nproc2}" --io "${nproc2}" --vm "${nproc2}" \
-            --vm-bytes 1G --timeout 60m
+https://cirrus-ci.com/task/5569063884161024?logs=3Dtest#L5626
 
 
-I hope you don't mind if I cc the regression ML: this is probably not an
-important regression but I would not have guessed the issues we had when
-running network tests were due to 9p, this report might help others with
-similar issues :)
+> Since things are slower, my first
+> suspect is the don't cache qid.version =3D=3D 0 change.=C2=A0 That can =
+be
+> overridden with a mount option but perhaps we should invert the default=
 
-#regzbot introduced: d9bc0d11e33b
+> as it is new behavior from a linux perspective.
 
+Can I easily change the default behaviour on the kernel side to try
+(without modifying the tools launching the mount commands)?
 
 Cheers,
 Matt
-
-[1] https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net
-[2] https://github.com/amluto/virtme
-[3] https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
-[4] https://github.com/google/packetdrill/
-[5] https://github.com/multipath-tcp/mptcp_net-next/issues/400
-[6]
-https://github.com/multipath-tcp/packetdrill/blob/mptcp-net-next/gtests/net/packetdrill/run_all.py
-[7]
-https://github.com/multipath-tcp/packetdrill/blob/mptcp-net-next/gtests/net/packetdrill/in_netns.sh
-[8]
-https://github.com/multipath-tcp/packetdrill/blob/mptcp-net-next/gtests/net/mptcp/dss/mpc_with_data_client.pkt
-[9]
-https://github.com/google/packetdrill/blob/master/gtests/net/packetdrill/parser.y#L168
--- 
+--=20
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
