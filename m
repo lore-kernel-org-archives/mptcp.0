@@ -1,46 +1,46 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2040.outbound.protection.outlook.com [40.107.6.40])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2046.outbound.protection.outlook.com [40.107.6.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBE87488
-	for <mptcp@lists.linux.dev>; Wed,  7 Jun 2023 11:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9707488
+	for <mptcp@lists.linux.dev>; Wed,  7 Jun 2023 11:46:09 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h3owsvKU9OGzHtPdDKZMlquFQCRQzQ1c/yUNBGAy+9mopq8D/EEnbESFSEbxJO1HUFaMsSxctoDzRBfqRxEW88eULi2wVPQLkMipvE4VaXVtR/CZ+lG2gM0JrGmJ8iBUl0S+SH2RnDVE8CwaZYMOKlgAx2sLZJ7zckCSyQnf3SQwDqkPOF5gjj/ZCrE6bdfLpF/vuqdrV1tW6F2EWOb733Mdj3UHuVzyGBbWVyKsQfq/ILIR4feH20bCWsm6kKxnLqRv7h7bAykIPZ4H6yjKmEoD44RC2LPRiqnwAVyQP2wJP0pc7ZrZMhcBhRXaKwpyTK+q4NRUbo8qw9iiML9dnA==
+ b=nFJ+VnU0oVcBLQQfx13gLY4xo2m9Dwh4ABqstPlzUiS0jCJzeroUisxbM713MWEwzNS0qlZNhPDJIopoD7672aGc4a7C7dx08SKbh2fdXK7pSawIS/gycXMFBv9i4dGcyXokYjaAhxOWCPhiwwlwXsyVxkiqN2aoksOSRiR8qw5U8DY3wRVJhcHm2H3S2jBSJw/tl2XUCp7xHjMrc/CglQ4sChOHRUBqTIZPFUOUxPsqFI+igqKrnh8iRNHft0+2B5/x6MV2C9J5pmq1Ap5Vxv9FAIG+47kIh8b1F1SC1XIlpa4CkqdSDQtYPscrsQaUXsecvc3nYTbyn7ueQjoiVg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zmPUcaSkQVSyXEZXDYocwN6iyLapH4O0310Ce4CfRfg=;
- b=B3qADvpq6FFHumEMlmHUzJOkAEJs/3eRUb3IiNnkB5jvfFl2k/MqZIMBK1IIXf7Ffecf4Jw8GY51W+PAfvoAo3a0/WPxEXriYbDttjYDlG4mArDS0RsvbnO7o+7731wTBaF74r3jzdpXzJJm/avfcXZVc7WNLhCVgXvLwiOU2Wc/MKuf7Td+SVNcNbTT71MKks0Ho9BBZigJvK87ywj4plP6JLCLEb09G6Kw1WolgbKjnvUZhADLcZPFtNUtDpR7Fh5vTFMVofQIPHoNlmca1eUoQNaCxTCSLeEz9T2iLsHwZ/e6y3+WoElabssuB5PgNJDXFhRwGwGdxBdDzUPOzw==
+ bh=zhhOAcoRWlOofnr627Z9WiHABgSCt/EoCPweAn/MeO0=;
+ b=Wz/Mq4kasBfIGmKcr8iuJGvygxEFT7IYNnsT005Ts5aP10K6BbncT0Q8xPtWV+Lq9SjzvKeCwF/N4+wRX+33kC0I8N7/CFYEy0WhuAAk+sWd0hxsj2BQkqOrBNuour2ICbUlTlELZtSqFrB8CcqJReByRvnZv4r0L/jNXEWYv5soctPa/f0Xgl0RWFfaJ17tzlTUja/MIXLQl1GUuoGoUqIZpQc3QHVZ+ikFJNTXq7NCjIVhe/uu6NiOc3ZKeSB+xFSYzodSVxCEllyItO2LhkXT3itIRgyend6p3QGhmJ3a+D/WcU3vWj1+99SNp1jsZ76LpbKsKtlcJY12KQz5wQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zmPUcaSkQVSyXEZXDYocwN6iyLapH4O0310Ce4CfRfg=;
- b=F4Sy4mEQ/s1oZnqO1WXdToMvVUEQ0Jkhdi5IExdoHTqJE4U1SvOgIXm8mAMbJIkyoIlGaPdbVbFxwv/4Z+mruN83LBmHa9ENqP7MrloSq4mtzFQGqZezdTAvwwPVKWGzgtPWWLTA9fQelt75+1/otEL0Rr9iylCiswvo7JQmbyDKFApATmpnnjL25CUOYxbgMJqIFlPJq3e6xEYDCFDu08tTuYxs0DeqrKbvGFfV74Q6GDIGkGxyiQnFww3ggCY/+DWiGmG+H91u2bGZ9QUsBb94p8h47BWNpZ9eB6KwJFtqUh8YcYPEDCG1RR35bPyk0zkgsUD79Fp3NcVsG8ypSA==
+ bh=zhhOAcoRWlOofnr627Z9WiHABgSCt/EoCPweAn/MeO0=;
+ b=Us4jRr/KV4c+GCW0zYwKXrRkYRNiMgqEdHUZHg0W33+EkYTg5+KIZjlnnx3NxGVOmvL4qkbMdXYMKsIqdk3Z11/S2DacL20iO08ahqrDJbfNkcFzP301Is7ilbvacBKKFMMOA5/oVYV4nagK5mnC6OAXszkeQ9IAOIKa4Zge1//fD7I8oebYps3H5xcNuT3uwrxLJ6gIeJkchuct/KkjfqIrVy1/wfL4YHdalUMB2LGLrln2/Ma7dmjVVVD16mvR4C3TRbyXqdX2xwzn0qLoYC7Y07OHc23kTJHj9U1i3zzJSEnINBfsL8z5pjgYqZ3evgIlkAUMsWoC28ekM+bAFg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by DB9PR04MB8281.eurprd04.prod.outlook.com (2603:10a6:10:25f::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.32; Wed, 7 Jun
- 2023 11:45:52 +0000
+ 2023 11:46:07 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::423a:a30f:5342:9d35]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::423a:a30f:5342:9d35%6]) with mapi id 15.20.6455.030; Wed, 7 Jun 2023
- 11:45:52 +0000
+ 11:46:06 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v17 5/7] selftests: mptcp: add pm_nl_set_endpoint helper
-Date: Wed,  7 Jun 2023 19:44:24 +0800
-Message-Id: <1ff39615db5be22e2a6ad043d8799dced8d9d7c6.1686138130.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v17 6/7] selftests: mptcp: pass fastclose to sflags
+Date: Wed,  7 Jun 2023 19:44:25 +0800
+Message-Id: <00b3279d1d0389d0cb35405eae07e0da4f0ccd3c.1686138130.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <cover.1686138130.git.geliang.tang@suse.com>
 References: <cover.1686138130.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0029.apcprd02.prod.outlook.com
- (2603:1096:4:1f4::20) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: TYCP286CA0272.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c9::18) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -50,330 +50,131 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DB9PR04MB8281:EE_
-X-MS-Office365-Filtering-Correlation-Id: 586d9d0d-ac99-4e01-484a-08db674cbf04
+X-MS-Office365-Filtering-Correlation-Id: d6f67c20-e5e2-481a-03b9-08db674cc7ab
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	fuoHfeyahrmJahjvfF0toVsV9CwwL9BBY1m2ktrpxD+R3akmMCPSh/Nc/WgpqfHakYBu2GSkRuPcYmDjf4EsFAc8y+OdiaTRsZT72iSSNHEjq2XHCNsqMYd6eM6V8jkUzf3cbV++SKjkYsHhE5dnK8Vmp3/WiBIUq0/ywfbFAwVNzM2QMWyoc3/OE8LFVdM6td4Hzq7gT+qFtLTdoSv7fS5swvw6oO+hqLZJk2HEZxPkD6YKDT9AVsN7d5nSZoKwiV0JmqNlBbQ5njRSPj2NsgoLEze5yDzQGKJWw252VmojJ7EXDgBzGssQ25l11/34PypzwwyjxQxHtX3AWp0unE+9axr+BBB/EecL5KIJ8ecl96yPZUgl/Rt1klYL9WTS3+cqWlpYHQ3dubl0Vff2nQg2YuTqwPXjNTCrcyZ4MIr2jIlGMI9Bw+9lGq8YQqmsFCT4xirNIAhc7TSjNmv1VvnadaVbeNSemVGmGxu9GeFNBDRKBR/5iL/sMuEG0Kpsd8mZfQph/tMEMQ8Moo7unY7mt4sXLN3erYgiBOzlgLanJY2JF1frR7seVvUeqWQn
+	+JVWKXbVfkNvlbYeKw5BDBX85cTmcczzwQ+MBE+kt2yDirzOSiIsjbKqRhEyFwoU98qThfj8AMiyNyyREm26M5h8r3uraYrNRrLyQ5ePNci6rX/zUJRu+bwnvI0TM/2YJUbnUvVAqErQZvzfEZqEDjchmgsUtk08vu7YTUpvilcI26eyZnha71DHY6tRI7LjreRi0Gh9h1blEYr7teMQa3r5Pip8Up4WbB1CHG7B+4fMs0EXCNjQsjda7wHZ0y6yjHOAP9SHNE/LW2r+6fhht8mlTviW9ZgPIsLwN2/NzckGUHWaGy9UbHdd+7DRN54suwn13whBaAvoQqqpGOIz8bjkyZFVHuvrUPaXPScmi39pu+BaXWnaFo2a4oJe/Bi/jB0cmnwtHGBwVi+EFNd3tPuQ2GF69jeiamVQmAK8uSrO6NydKAfaZK2HHoc7QBeYs8UuSsuYrLkBU1vaTKU7Yi3pFNsvTVgN8pkjlt5VfLx385TX2D32WQIH8K1ihaXHVongFX6VnLrVSCm6yqZFQzI2FlglJLyxUz8QYRQytLb6beIGpkvrk9+VHwnkXz7H
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(376002)(39860400002)(366004)(136003)(346002)(451199021)(107886003)(6512007)(6506007)(38100700002)(2616005)(41300700001)(6486002)(6666004)(186003)(26005)(83380400001)(478600001)(66556008)(6916009)(66476007)(66946007)(316002)(2906002)(8676002)(8936002)(5660300002)(4326008)(44832011)(86362001)(36756003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jPFEiquymD0UtPgIrSbD3G3H+rgQIjmvJPMsIDwbA1g9Zqb2QfsFAl4IqRTK?=
- =?us-ascii?Q?ac3+ZE/ozKRY1ovo1Rn/PX/1+PMgGfcqDA7db2IytYXAjv/fJNAP8u9o32mN?=
- =?us-ascii?Q?EKOOa7eIkz9GD57sLT59HjYd1JmY0VrxVUrlfL595VHHdolqTsYv1cgc8KI8?=
- =?us-ascii?Q?M89KvjD4TJLi3U+fhEyIB/oUSRWvbmJub0z1wwnoK7CCt3B5vgW0dDyXZrTW?=
- =?us-ascii?Q?xivtqlVZ0oqRxpB8XVibTY/VSQDVodWqEbQzedhubTftFezR5bZV9D+8UoaS?=
- =?us-ascii?Q?9LiS31LHF+cFdi5NPwZd0XWHiwDMnqzBh7Umi/Ht9jiSN4dikx5+2zHCX43F?=
- =?us-ascii?Q?70bFjKg+4rADf7yplAvFOmXmkKucmakXQxJorhMJGefRRFqcJ9I/DrjBFs4n?=
- =?us-ascii?Q?L6ZtuJ9CV3dJ6lvYfUswX3E2J2Y5j60LzkAI2cTXlpXq+24PZluIbbrh7O5x?=
- =?us-ascii?Q?n2hD3/ec68eveMoQLIcMmEjVx1qYAtFTTkSUWME/cFUg2jL22DdKKXDosms/?=
- =?us-ascii?Q?df/Zuu1+aRUFQbv0ukD2AGLaBeqHXX/7ecyMNv+Q+UYrAvYF9a8oCs2JD/gu?=
- =?us-ascii?Q?j4t//u8wy+OW+hBGJggOcfKfV/dm7HB3Zds460FbzXlIOYk07AXiiTVgQd9p?=
- =?us-ascii?Q?wJm7i8KlI0pIV9SUMLxTkWDRHS6d5cZ9TGY3BIIGPivgivSV/uUZ2RtwA8Hy?=
- =?us-ascii?Q?6k6qx6XCsrEo/h3EHoZNcWoHRyqy7jPkY1Fvz3pVVvlpRJNu2V/oQ+xjtFGQ?=
- =?us-ascii?Q?dR35JvZ6Vfhs0E+eTj+5ZOmOmOWBHRkBakXPwKjfImN+5SN3n4Fdfc2kckvD?=
- =?us-ascii?Q?K9q8FRdV0gKqdw5UX82VqqmD0DbR9uNjKcLfDYn5NKAdi0qF6LvZNX3ycWVm?=
- =?us-ascii?Q?Ec7j3PFadcjk/GQ3z8/sgM7M+NnTmNTSw6txKHLbybftEnd2ixERXTNlfa67?=
- =?us-ascii?Q?XUBRkaI2qjMd1Xto2tKqbAC7VyK0qQd+89OgALiQMlVXHsR7LADdjC/JSpSq?=
- =?us-ascii?Q?1YApWa0ttjtBwsx0yU6739sS/5YXNbT2luIAqH/90WJuu8GDDJ56erzHqwXZ?=
- =?us-ascii?Q?Gy3gi8RI9um6JHK32l3DtofNp95h0Vw0JCX78SiCej5VlwyYncz63JbhUMed?=
- =?us-ascii?Q?T8EA5UqL2kNCFJyU5kawB82VXcYJYJGopz5Xhy4Kc0W6xROhqPZ6lEt7tmjE?=
- =?us-ascii?Q?lJEmr7Y82tBouyqGmV7X8iGgubbegtcjJ/WKyoHc7X/VwSYodws3y93hcUmi?=
- =?us-ascii?Q?JEBuELp1k3qyhikOhEuH0kBAlm/WWamcZmLKRoXC91rDA1lDyygu1tkcHuQe?=
- =?us-ascii?Q?fLU59iIw8cc/f4fkICtJqcF2pl70gMt441oXS/iVoLGWXrDwJMnK/SFNxjTc?=
- =?us-ascii?Q?fnhVRdARaNOEj7MIvX48jscfJMPkLoTZ2Hb6m9VbYF7vhxNc0U7hg6pAg9yx?=
- =?us-ascii?Q?meFes0NVo2JyHnwSv3DbQQHLjlmSXM8nET0/T9f9viNIzs1bb6/sxwq6xk61?=
- =?us-ascii?Q?7xGJwhytv/0bQAFPAUJG5E8CLcqrSYcE0bhtwi6YXB5mHYB1R72xynocRutH?=
- =?us-ascii?Q?HNQIqz+loEq1szb4vhbD+qENfgQBYS3YN6dUndRm?=
+	=?us-ascii?Q?vzNr/SR9Fe+rRe7Jzr9ARzdzK+qPBwDRB7nh6MLl/yIGnVi9ll2WdHG+0iMe?=
+ =?us-ascii?Q?JvD7O4z+AVFEYdgaxQoBH20d70v4wWLAuRcPy8H1PSI1dXUBUoIYY6QiRZKM?=
+ =?us-ascii?Q?IBACaAxh+sQ1OiBfVCCG+90wfpMLcpZOQspEWFT9ICkNpr73+ZBZGYtt3QQP?=
+ =?us-ascii?Q?a0WY0kI3fyMURCZHw80TVFZ7+izaisEgI0XEbRCgI5Z4RXmZeWtOyA+lsQGg?=
+ =?us-ascii?Q?jATDiUkVzewG2ZeJOPvCWZsepPawDd/+F/7H9sUe4+l4ueh59gQL+83c33of?=
+ =?us-ascii?Q?sBVmQf/hQqI4LamhlReNpN+TE01uu8RDRyA7c2mTWB1cKIDGDKL/6mmDcfMP?=
+ =?us-ascii?Q?4UQqA945l5mSrFM6YX2akHid+luOOxyHRKfrUpoJkTPIOWybwcShbr0Wt7mU?=
+ =?us-ascii?Q?ywXngfQ5VhgWkvggz9+xLPiJGtOUVhxSaW40Lo4j288zE9EmeC0DFi2mCw5w?=
+ =?us-ascii?Q?+uFTnlPfph4VgIBCBw5xHhxLGnTi3hFPwemD0wlXpjmiCaoz9FE6k5CTGzAO?=
+ =?us-ascii?Q?8gu/oxJBpcvicvE6h1tr2BiFEULjKpZBudh+MEknGloZk9JNHwYlVN9+KDjN?=
+ =?us-ascii?Q?kKogFiHC5IGvPfLemCpYnCPmaqlssHxuJApn/1QleW9QT3lza1eMLxjebhJR?=
+ =?us-ascii?Q?KSmWpfL2dPGNy+rG4V/jxNLOL4lZ4P+x6MKpbo05wFePfGLoAaD3+XVVddI+?=
+ =?us-ascii?Q?jdmpNBAQ2VbONWH9yQKTbfD/K3I2yaBOsTHJgiphF0XZMqXERPgjM+g8/kr9?=
+ =?us-ascii?Q?n2v9hv1Ap0sTfrRp6IyshINm9FZB/4XZ5TZoUueGQdiWD7+8uW+pwFkST7Lr?=
+ =?us-ascii?Q?vFEsxcrqj9m2uXgrkF812tvkCrENaFygfwURfjgnyhhhYhS6TxYHdL1wRuvm?=
+ =?us-ascii?Q?+gE9w+HZ0rKBNAeHyV0LsZ3OaFGfDKN40ig8xSscNlQ2zWLcmNpHUhMPmMav?=
+ =?us-ascii?Q?GR3a44PrOp7S25kUwGUuKtf+HkmLWOxW2tmRBeLBlUDlfXlvPMFcF7ABGPMN?=
+ =?us-ascii?Q?N7vQNDB7miikGDI005vA7WvDts0WC2LjmDj9zU0oRe+Lfy4oe779wBHPsDSJ?=
+ =?us-ascii?Q?Pae8CN1gL9MKycYd3OBloyWwcq8hZrZLvOpc+fxczjwYnOZI8MCQhBT529ZN?=
+ =?us-ascii?Q?8c9T7TktctHllg5FBSe3wIobfUZLolG/3x24or0Hgzbuh6mRWzCJLzZwgDvk?=
+ =?us-ascii?Q?EPRre+AXrRuI0D+ZCstl3/IXThRslxZo9B48fbzxEJZWSqpUCFECS+JaQv7I?=
+ =?us-ascii?Q?L8Y+Aq6YZ+BWzv0HtiysCzRnNfN8VQnBV0L+3utGdmwG9qiQNRmJoWxOt1HD?=
+ =?us-ascii?Q?ZjY1FwDulZO92CkwOaLqRJMeOo3OqmCK9rltyDpJ669ghthtorJrkA3eYlpn?=
+ =?us-ascii?Q?6WT+rYngmIXvDTyTTVxJHHt5+WBLDrEa29vbZvijyphffnLvTgMYGYAHsarK?=
+ =?us-ascii?Q?v1ANsIKX9g7otaq4UlrkzVLne4wzGTp1semt4Lzo6/C2jbdJJgt1+nCptxGF?=
+ =?us-ascii?Q?KBlfjw+mVXaixKNZIqKemlvfu+jR6zVT6Q8CM+A0A1J4+r233sU49k6cI6+1?=
+ =?us-ascii?Q?+dNW+d0RSP396gJvKYHSC0NB6FnuEPXTtcbX2OrN?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 586d9d0d-ac99-4e01-484a-08db674cbf04
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6f67c20-e5e2-481a-03b9-08db674cc7ab
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2023 11:45:52.5019
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2023 11:46:06.9351
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RTztySVvg7t6Hv3W/poZaOc96F1AJvCKtrIS6M/YChH48ND/hmBXu6FdkRPYUYMSkVAqbKdcq+J9ELWiBThsTg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: J+Wx3H0vxzdvkJR5RzU5Zb/rETqj14vaUdlu7+HMDCJZib2602CVz/KEEvkBw/Rd9RuUTQ3BxJKiCaNAlWaNxQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8281
 
-This patch moves endpoint settings out of do_transfer() into a new
-helper pm_nl_set_endpoint(). And invoke this helper in do_transfer().
+Pass fastclose flag to the sflags argument instead of addr_nr_ns2.
+Then the fullmesh flag setting can be moved into pm_nl_set_endpoint()
+from do_transfer().
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 246 +++++++++---------
- 1 file changed, 129 insertions(+), 117 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 530b88990b76..d594df3e7897 100755
+index d594df3e7897..cd6869a3783d 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -798,126 +798,14 @@ pm_nl_check_endpoint()
- 	fi
- }
+@@ -807,6 +807,12 @@ pm_nl_set_endpoint()
+ 	local addr_nr_ns2="$5"
+ 	local sflags="${6}"
  
--do_transfer()
-+pm_nl_set_endpoint()
- {
- 	local listener_ns="$1"
- 	local connector_ns="$2"
--	local cl_proto="$3"
--	local srv_proto="$4"
--	local connect_addr="$5"
--	local test_link_fail="$6"
--	local addr_nr_ns1="$7"
--	local addr_nr_ns2="$8"
--	local speed="$9"
--	local sflags="${10}"
--
--	local port=$((10000 + TEST_COUNT - 1))
--	local cappid
--
--	:> "$cout"
--	:> "$sout"
--	:> "$capout"
--
--	if [ $capture -eq 1 ]; then
--		local capuser
--		if [ -z $SUDO_USER ] ; then
--			capuser=""
--		else
--			capuser="-Z $SUDO_USER"
--		fi
--
--		capfile=$(printf "mp_join-%02u-%s.pcap" "$TEST_COUNT" "${listener_ns}")
--
--		echo "Capturing traffic for test $TEST_COUNT into $capfile"
--		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -w $capfile > "$capout" 2>&1 &
--		cappid=$!
--
--		sleep 1
--	fi
--
--	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
--		nstat -n
--	NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
--		nstat -n
--
--	local extra_args
--	if [ $speed = "fast" ]; then
--		extra_args="-j"
--	elif [ $speed = "slow" ]; then
--		extra_args="-r 50"
--	elif [[ $speed = "speed_"* ]]; then
--		extra_args="-r ${speed:6}"
--	fi
--
--	local flags="subflow"
--	local extra_cl_args=""
--	local extra_srv_args=""
--	local trunc_size=""
--	if [[ "${addr_nr_ns2}" = "fastclose_"* ]]; then
--		if [ ${test_link_fail} -le 1 ]; then
--			echo "fastclose tests need test_link_fail argument"
--			fail_test
--			return 1
--		fi
--
--		# disconnect
--		trunc_size=${test_link_fail}
--		local side=${addr_nr_ns2:10}
--
--		if [ ${side} = "client" ]; then
--			extra_cl_args="-f ${test_link_fail}"
--			extra_srv_args="-f -1"
--		elif [ ${side} = "server" ]; then
--			extra_srv_args="-f ${test_link_fail}"
--			extra_cl_args="-f -1"
--		else
--			echo "wrong/unknown fastclose spec ${side}"
--			fail_test
--			return 1
--		fi
--		addr_nr_ns2=0
--	elif [[ "${addr_nr_ns2}" = "fullmesh_"* ]]; then
--		flags="${flags},fullmesh"
--		addr_nr_ns2=${addr_nr_ns2:9}
--	fi
--
--	extra_srv_args="$extra_args $extra_srv_args"
--	if [ "$test_link_fail" -gt 1 ];then
--		timeout ${timeout_test} \
--			ip netns exec ${listener_ns} \
--				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
--					$extra_srv_args "::" < "$sinfail" > "$sout" &
--	else
--		timeout ${timeout_test} \
--			ip netns exec ${listener_ns} \
--				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
--					$extra_srv_args "::" < "$sin" > "$sout" &
--	fi
--	local spid=$!
--
--	wait_local_port_listen "${listener_ns}" "${port}"
--
--	extra_cl_args="$extra_args $extra_cl_args"
--	if [ "$test_link_fail" -eq 0 ];then
--		timeout ${timeout_test} \
--			ip netns exec ${connector_ns} \
--				./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
--					$extra_cl_args $connect_addr < "$cin" > "$cout" &
--	elif [ "$test_link_fail" -eq 1 ] || [ "$test_link_fail" -eq 2 ];then
--		( cat "$cinfail" ; sleep 2; link_failure $listener_ns ; cat "$cinfail" ) | \
--			tee "$cinsent" | \
--			timeout ${timeout_test} \
--				ip netns exec ${connector_ns} \
--					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
--						$extra_cl_args $connect_addr > "$cout" &
--	else
--		tee "$cinsent" < "$cinfail" | \
--			timeout ${timeout_test} \
--				ip netns exec ${connector_ns} \
--					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
--						$extra_cl_args $connect_addr > "$cout" &
--	fi
--	local cpid=$!
-+	local connect_addr="$3"
-+	local addr_nr_ns1="$4"
-+	local addr_nr_ns2="$5"
-+	local sflags="${6}"
- 
- 	# let the mptcp subflow be established in background before
- 	# do endpoint manipulation
-@@ -1057,6 +945,130 @@ do_transfer()
- 			done
- 		done
- 	fi
-+}
-+
-+do_transfer()
-+{
-+	local listener_ns="$1"
-+	local connector_ns="$2"
-+	local cl_proto="$3"
-+	local srv_proto="$4"
-+	local connect_addr="$5"
-+	local test_link_fail="$6"
-+	local addr_nr_ns1="$7"
-+	local addr_nr_ns2="$8"
-+	local speed="$9"
-+	local sflags="${10}"
-+
-+	local port=$((10000 + TEST_COUNT - 1))
-+	local cappid
-+
-+	:> "$cout"
-+	:> "$sout"
-+	:> "$capout"
-+
-+	if [ $capture -eq 1 ]; then
-+		local capuser
-+		if [ -z $SUDO_USER ] ; then
-+			capuser=""
-+		else
-+			capuser="-Z $SUDO_USER"
-+		fi
-+
-+		capfile=$(printf "mp_join-%02u-%s.pcap" "$TEST_COUNT" "${listener_ns}")
-+
-+		echo "Capturing traffic for test $TEST_COUNT into $capfile"
-+		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -w $capfile > "$capout" 2>&1 &
-+		cappid=$!
-+
-+		sleep 1
-+	fi
-+
-+	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
-+		nstat -n
-+	NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
-+		nstat -n
-+
-+	local extra_args
-+	if [ $speed = "fast" ]; then
-+		extra_args="-j"
-+	elif [ $speed = "slow" ]; then
-+		extra_args="-r 50"
-+	elif [[ $speed = "speed_"* ]]; then
-+		extra_args="-r ${speed:6}"
-+	fi
-+
 +	local flags="subflow"
-+	local extra_cl_args=""
-+	local extra_srv_args=""
-+	local trunc_size=""
-+	if [[ "${addr_nr_ns2}" = "fastclose_"* ]]; then
-+		if [ ${test_link_fail} -le 1 ]; then
-+			echo "fastclose tests need test_link_fail argument"
-+			fail_test
-+			return 1
-+		fi
-+
-+		# disconnect
-+		trunc_size=${test_link_fail}
-+		local side=${addr_nr_ns2:10}
-+
-+		if [ ${side} = "client" ]; then
-+			extra_cl_args="-f ${test_link_fail}"
-+			extra_srv_args="-f -1"
-+		elif [ ${side} = "server" ]; then
-+			extra_srv_args="-f ${test_link_fail}"
-+			extra_cl_args="-f -1"
-+		else
-+			echo "wrong/unknown fastclose spec ${side}"
-+			fail_test
-+			return 1
-+		fi
-+		addr_nr_ns2=0
-+	elif [[ "${addr_nr_ns2}" = "fullmesh_"* ]]; then
++	if [[ "${addr_nr_ns2}" = "fullmesh_"* ]]; then
 +		flags="${flags},fullmesh"
 +		addr_nr_ns2=${addr_nr_ns2:9}
 +	fi
 +
-+	extra_srv_args="$extra_args $extra_srv_args"
-+	if [ "$test_link_fail" -gt 1 ];then
-+		timeout ${timeout_test} \
-+			ip netns exec ${listener_ns} \
-+				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
-+					$extra_srv_args "::" < "$sinfail" > "$sout" &
-+	else
-+		timeout ${timeout_test} \
-+			ip netns exec ${listener_ns} \
-+				./mptcp_connect -t ${timeout_poll} -l -p $port -s ${srv_proto} \
-+					$extra_srv_args "::" < "$sin" > "$sout" &
-+	fi
-+	local spid=$!
-+
-+	wait_local_port_listen "${listener_ns}" "${port}"
-+
-+	extra_cl_args="$extra_args $extra_cl_args"
-+	if [ "$test_link_fail" -eq 0 ];then
-+		timeout ${timeout_test} \
-+			ip netns exec ${connector_ns} \
-+				./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
-+					$extra_cl_args $connect_addr < "$cin" > "$cout" &
-+	elif [ "$test_link_fail" -eq 1 ] || [ "$test_link_fail" -eq 2 ];then
-+		( cat "$cinfail" ; sleep 2; link_failure $listener_ns ; cat "$cinfail" ) | \
-+			tee "$cinsent" | \
-+			timeout ${timeout_test} \
-+				ip netns exec ${connector_ns} \
-+					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
-+						$extra_cl_args $connect_addr > "$cout" &
-+	else
-+		tee "$cinsent" < "$cinfail" | \
-+			timeout ${timeout_test} \
-+				ip netns exec ${connector_ns} \
-+					./mptcp_connect -t ${timeout_poll} -p $port -s ${cl_proto} \
-+						$extra_cl_args $connect_addr > "$cout" &
-+	fi
-+	local cpid=$!
-+
-+	pm_nl_set_endpoint $listener_ns $connector_ns $connect_addr $addr_nr_ns1 $addr_nr_ns2 $sflags
+ 	# let the mptcp subflow be established in background before
+ 	# do endpoint manipulation
+ 	if [ $addr_nr_ns1 != "0" ] || [ $addr_nr_ns2 != "0" ]; then
+@@ -998,11 +1004,10 @@ do_transfer()
+ 		extra_args="-r ${speed:6}"
+ 	fi
  
- 	wait $cpid
- 	local retc=$?
+-	local flags="subflow"
+ 	local extra_cl_args=""
+ 	local extra_srv_args=""
+ 	local trunc_size=""
+-	if [[ "${addr_nr_ns2}" = "fastclose_"* ]]; then
++	if [[ "${sflags}" = "fastclose_"* ]]; then
+ 		if [ ${test_link_fail} -le 1 ]; then
+ 			echo "fastclose tests need test_link_fail argument"
+ 			fail_test
+@@ -1011,7 +1016,7 @@ do_transfer()
+ 
+ 		# disconnect
+ 		trunc_size=${test_link_fail}
+-		local side=${addr_nr_ns2:10}
++		local side=${sflags:10}
+ 
+ 		if [ ${side} = "client" ]; then
+ 			extra_cl_args="-f ${test_link_fail}"
+@@ -1024,10 +1029,6 @@ do_transfer()
+ 			fail_test
+ 			return 1
+ 		fi
+-		addr_nr_ns2=0
+-	elif [[ "${addr_nr_ns2}" = "fullmesh_"* ]]; then
+-		flags="${flags},fullmesh"
+-		addr_nr_ns2=${addr_nr_ns2:9}
+ 	fi
+ 
+ 	extra_srv_args="$extra_args $extra_srv_args"
+@@ -3134,14 +3135,14 @@ fullmesh_tests()
+ fastclose_tests()
+ {
+ 	if reset_check_counter "fastclose test" "MPTcpExtMPFastcloseTx"; then
+-		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_client
++		run_tests $ns1 $ns2 10.0.1.1 1024 0 0 fast fastclose_client
+ 		chk_join_nr 0 0 0
+ 		chk_fclose_nr 1 1
+ 		chk_rst_nr 1 1 invert
+ 	fi
+ 
+ 	if reset_check_counter "fastclose server test" "MPTcpExtMPFastcloseRx"; then
+-		run_tests $ns1 $ns2 10.0.1.1 1024 0 fastclose_server
++		run_tests $ns1 $ns2 10.0.1.1 1024 0 0 fast fastclose_server
+ 		chk_join_nr 0 0 0
+ 		chk_fclose_nr 1 1 invert
+ 		chk_rst_nr 1 1
 -- 
 2.35.3
 
