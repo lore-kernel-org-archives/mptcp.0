@@ -1,125 +1,113 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B698234D94
-	for <mptcp@lists.linux.dev>; Wed,  7 Jun 2023 15:57:28 +0000 (UTC)
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6b16cbe4fb6so3152241a34.1
-        for <mptcp@lists.linux.dev>; Wed, 07 Jun 2023 08:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686153447; x=1688745447;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zoaG5Rzvduo8yscTgK4u6u9Sk4UMkfK+tm5Z+vecUKg=;
-        b=iTIpX+vKZchATZMC4Qv8Ck5GZX0ICQVQFvWMYd8cqhu/OOi9W3flVGj88bXtK055O6
-         A5bD/Co9rlfoenOHJ6VeQ+JSCGDKj41sH/+r8EfN0Py7lHvulcBIpdAnSSW0n3I4YBla
-         4kF4ZVYQDJdMRvHF9MrzUWsmJitRESVrwlS7+wL/3lqer4ntYMHrIUjx7PRCzCDqHkwB
-         mu5RO2v1teyDdQi6xEmRtBLhUojJoFYwol2Me4frrCTTb+rTT7jzpwb+pB3HbAzbO+Vk
-         EkwOoE7N/l2UDw6xzLHgXM7ZFTw/8btv2dPamqHc086ykx17hQArbgJV01uq2e9qfwnR
-         T9Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686153447; x=1688745447;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=zoaG5Rzvduo8yscTgK4u6u9Sk4UMkfK+tm5Z+vecUKg=;
-        b=WtupleJ754JSLfT8w+TRP1cykiZ/6AZLRHRCBIvmu7FyRKyi2MJxQ2TfRHt4mr5A3K
-         tVIK2LRNpvAGq6779Bta1YeaLMW/RuofH362kPcIM7YXQPnZsj2rOgSbkVPlwVDPpHJl
-         pIjD2ySRoFk+BvPja+LZaBrlrMBA4l+n5Ympv5tUdx90R/W/Qj7P/YCS7bOkPUDYY/4s
-         JPKttolZPqMTW/ecAW/rWvgxkDoYp/q+4Rwt1nN52HhFkB6bELhIvt/Nost1yq3z8AKN
-         AnQzhPWi/hh6uX5cB+DgaOg9CaejOly2kCSXhZtV6Y+bOYJ1WXMcw047jxDXte6GYcuG
-         5F0w==
-X-Gm-Message-State: AC+VfDwHKqqD7adgaqbHznxlgSpg59ZUAOHitxhOb+B5ix35qY+mWz6p
-	FVv+CXfaWZXgu3+7vK19xw==
-X-Google-Smtp-Source: ACHHUZ6PsYTp7esfUTcpd5droC4cKzkAefAII9qNLrruFoBYJrgc8tA3ESZrwZKd9fKpM3pOMnPcVA==
-X-Received: by 2002:a05:6870:76ae:b0:1a3:32df:eddb with SMTP id dx46-20020a05687076ae00b001a332dfeddbmr4086936oab.51.1686153447567;
-        Wed, 07 Jun 2023 08:57:27 -0700 (PDT)
-Received: from [127.0.0.1] ([104.210.132.89])
-        by smtp.gmail.com with ESMTPSA id u1-20020a4aa341000000b0055b100649e4sm1443526ool.23.2023.06.07.08.57.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jun 2023 08:57:27 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230606180045.827659-1-leitao@debian.org>
-References: <20230606180045.827659-1-leitao@debian.org>
-Subject: Re: net: ioctl: Use kernel memory on protocol ioctl callbacks:
- Tests Results
-Message-ID: <db5b406f-6fc2-d439-6f0a-7d1f54660d5c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 07 Jun 2023 15:57:26 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E4538CAC
+	for <mptcp@lists.linux.dev>; Wed,  7 Jun 2023 16:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1686155622;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0oQkmYUAXPDgcyhIIv4olpmRnfX4924cXDdkf4mZPy4=;
+	b=UTrAOCfuqD1IkaPVjhzxWPQft1r6CC2X1L3Yp11HlB6rNEH2RRRGBArsSuFyGZZkVfn7wd
+	YaSiGaTHX385ToTWhjJcjSaSfkwk5UJxZ9qZ7+XFlFX7GhIaHw/Nx5NxlGzzKWVO1xlkHL
+	kPrmYvTcLzJxHXUtOw0PdLIjw/6dGYc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-643-OdXSg4sSNQmatrxvSFgOYg-1; Wed, 07 Jun 2023 12:33:41 -0400
+X-MC-Unique: OdXSg4sSNQmatrxvSFgOYg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1D88E801182
+	for <mptcp@lists.linux.dev>; Wed,  7 Jun 2023 16:33:41 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.193.14])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A0A7340D1B66
+	for <mptcp@lists.linux.dev>; Wed,  7 Jun 2023 16:33:40 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net 1/2] mptcp: fix possible list corruption on passive MPJ
+Date: Wed,  7 Jun 2023 18:33:35 +0200
+Message-Id: <f88902bdf5168d86a858575a95882e3fbbadf556.1686155270.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Breno,
+At passive MPJ time, if the msk socket lock is held by the user,
+the new subflow is appended to the msk->join_list under the msk
+data lock.
 
-Thank you for your modifications, that's great!
+In mptcp_release_cb()/__mptcp_flush_join_list(), the subflows in
+that list are moved from the join_list into the conn_list under the
+msk socket lock.
 
-Our CI did some validations and here is its report:
+Append and removal could race, possibly corrupting such list.
+Address the issue splicing the join list into a temporary one while
+still under the msk data lock.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5342605223919616
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5342605223919616/summary/summary.txt
+Found by code inspection, the race itself should be almost impossible
+to trigger in practice.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6187030154051584
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6187030154051584/su=
-mmary/summary.txt
+Fixes: 3e5014909b56 ("mptcp: cleanup MPJ subflow list handling")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5061130247208960
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5061130247208960/summary/summary.txt
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index f2e9f72c1c9a..94229a318fc1 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -854,12 +854,12 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
+ 	return true;
+ }
+ 
+-static void __mptcp_flush_join_list(struct sock *sk)
++static void __mptcp_flush_join_list(struct sock *sk, struct list_head *join_list)
+ {
+ 	struct mptcp_subflow_context *tmp, *subflow;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
+-	list_for_each_entry_safe(subflow, tmp, &msk->join_list, node) {
++	list_for_each_entry_safe(subflow, tmp, join_list, node) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 		bool slow = lock_sock_fast(ssk);
+ 
+@@ -3401,9 +3401,14 @@ static void mptcp_release_cb(struct sock *sk)
+ 	for (;;) {
+ 		unsigned long flags = (msk->cb_flags & MPTCP_FLAGS_PROCESS_CTX_NEED) |
+ 				      msk->push_pending;
++		struct list_head join_list;
++
+ 		if (!flags)
+ 			break;
+ 
++		INIT_LIST_HEAD(&join_list);
++		list_splice_init(&msk->join_list, &join_list);
++
+ 		/* the following actions acquire the subflow socket lock
+ 		 *
+ 		 * 1) can't be invoked in atomic scope
+@@ -3414,8 +3419,9 @@ static void mptcp_release_cb(struct sock *sk)
+ 		msk->push_pending = 0;
+ 		msk->cb_flags &= ~flags;
+ 		spin_unlock_bh(&sk->sk_lock.slock);
++
+ 		if (flags & BIT(MPTCP_FLUSH_JOIN_LIST))
+-			__mptcp_flush_join_list(sk);
++			__mptcp_flush_join_list(sk, &join_list);
+ 		if (flags & BIT(MPTCP_PUSH_PENDING))
+ 			__mptcp_push_pending(sk, 0);
+ 		if (flags & BIT(MPTCP_RETRANSMIT))
+-- 
+2.40.1
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6468505130762240
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6468505130762240/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/99a1c47994a4
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
