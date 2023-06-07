@@ -1,125 +1,135 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542C1139F
-	for <mptcp@lists.linux.dev>; Wed,  7 Jun 2023 13:25:11 +0000 (UTC)
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6af81142b6dso6596089a34.2
-        for <mptcp@lists.linux.dev>; Wed, 07 Jun 2023 06:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686144310; x=1688736310;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+QdCwvjgfq3Ymm6napdXTnpmYffpTsDBB6xgcUmex9s=;
-        b=FbH5imlCggsCkusvMpxOKcVUfL+PUN7Qt6EyseOT00d0criNoL/aFLZph9C328mkG5
-         0+51Hex6kEs7BVDPjPdQnwGZxNXTcA6knqQPiNivOZlqBGMAEyh9d+P05NQeGRF81fyR
-         FASeD1K8XOcygdmUwYR0Wm2GBQKY45Rfrz2uDXDdGklLTgPVY8phXnNGfPASK78hBEJo
-         5mRBplYSNLos86S9McYLd/i3b0rnhd7t5GFXGGLzxf7KQf7MCIvhFttlh27RY0hNJf71
-         1s9fPYwUlr+nzBLBO8N/jTl4LVHWDSkFV9mibst1alEIomtJftv7p/D0XPDrdLJtM6VM
-         p//Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686144310; x=1688736310;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+QdCwvjgfq3Ymm6napdXTnpmYffpTsDBB6xgcUmex9s=;
-        b=aua+1M3ltZzMUaOMbe4irSp3pUQl9nx6/xOfrVJZfAmE1x56XD73w06lftlr7Z34lB
-         4CGb/HyaM+sGJPjp8fqNWdpui6Tr1vsg++qcNZ1S2u/m35vRaXWlYY7XfuHgNjFNCDev
-         uChCTgJIEgIYJaZPqhj7iftz3RYsyfaYiAp6kDPBrQdUlx4vi5VnMbYVPkIJI7J2kdbQ
-         B8nzKII8AAdymcVBSNx17LGEDu+9ZMFFokK7bYw4xGE2mPXi2Ur5mjmunrTUPb1FyJCO
-         sAcWbJPZDYRljkFykyQ23KKKOa+TS7cekIdxarFK6oACAy66u1ycsV5uurrcgYJtVcI3
-         bVLw==
-X-Gm-Message-State: AC+VfDzwOFQRC+VFXRfPw4uOcLWFruwtaXh9eDYyI4wOuBo0lu4obMy6
-	ZnmCwohe7TcBxWNk8ZCJ+A==
-X-Google-Smtp-Source: ACHHUZ6YtGrx+vQu3qzV9Raud6Wn4dRpw52UyoSvdC50XOl74wyj8iv+4U4xLEvP9LqPUf/mvVu4uw==
-X-Received: by 2002:a9d:7849:0:b0:6b2:a879:406a with SMTP id c9-20020a9d7849000000b006b2a879406amr1531307otm.18.1686144310121;
-        Wed, 07 Jun 2023 06:25:10 -0700 (PDT)
-Received: from [127.0.0.1] ([13.66.11.150])
-        by smtp.gmail.com with ESMTPSA id z5-20020a9d7a45000000b006a62aac5736sm5421582otm.28.2023.06.07.06.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jun 2023 06:25:09 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230606180045.827659-1-leitao@debian.org>
-References: <20230606180045.827659-1-leitao@debian.org>
-Subject: Re: net: ioctl: Use kernel memory on protocol ioctl callbacks:
- Tests Results
-Message-ID: <e97d521e-10be-5f11-9f63-2275f2f6b23e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 07 Jun 2023 13:25:08 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5275A6139;
+	Wed,  7 Jun 2023 14:45:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55874C433D2;
+	Wed,  7 Jun 2023 14:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686149151;
+	bh=KYxbixY/YPcTPmWMMjEzFB2YgbL02WvqegnlW8x4q/8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iD70bf4rX5r1dba/J3aCUPj3qSHuwuhLe6KYypwKppjNruVQswPc0WhssUqXzDXxr
+	 7PFmObSTK8grCkIhUSwN6suorixLko5WIbw+HZGd61Z9uQFIfkdCwc5e1J4w2D05XL
+	 y+P4T2nMRuVKt3EGjCjMNBFlLkLjB+v5G7MmRXAxNNLvO2p/yBGffzVS27M+OLB9C4
+	 LUfC9Fx2FjoyrainzfFJjYiUvof0apI7mIwDjn1I7/bWlBvj/VdDT0ZxoKvfFjENzr
+	 zvTcZOcG5DxQtqFiM1K36FfKZzPdh1GgLTkHGglfgdyHiATbwHTpXtpovrINzKBcwW
+	 BQyN1A1x8Vv4A==
+Message-ID: <ef90361e-15b2-7ce8-fcec-21fccebe727e@kernel.org>
+Date: Wed, 7 Jun 2023 08:45:49 -0600
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.2
+Subject: Re: [PATCH net-next v6] net: ioctl: Use kernel memory on protocol
+ ioctl callbacks
+To: Breno Leitao <leitao@debian.org>,
+ Remi Denis-Courmont <courmisch@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexander Aring <alex.aring@gmail.com>,
+ Stefan Schmidt <stefan@datenfreihafen.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Matthieu Baerts <matthieu.baerts@tessares.net>,
+ Mat Martineau <martineau@kernel.org>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Xin Long <lucien.xin@gmail.com>, Ido Schimmel <idosch@idosch.org>
+Cc: axboe@kernel.dk, asml.silence@gmail.com, leit@fb.com,
+ Martin KaFai Lau <martin.lau@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Jason Xing <kernelxing@tencent.com>, Joanne Koong <joannelkoong@gmail.com>,
+ Hangyu Hua <hbh25y@gmail.com>, Guillaume Nault <gnault@redhat.com>,
+ Andrea Righi <andrea.righi@canonical.com>,
+ Wojciech Drewek <wojciech.drewek@intel.com>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+ "open list:DCCP PROTOCOL" <dccp@vger.kernel.org>,
+ "open list:IEEE 802.15.4 SUBSYSTEM" <linux-wpan@vger.kernel.org>,
+ "open list:NETWORKING [MPTCP]" <mptcp@lists.linux.dev>,
+ "open list:SCTP PROTOCOL" <linux-sctp@vger.kernel.org>
+References: <20230606180045.827659-1-leitao@debian.org>
+Content-Language: en-US
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20230606180045.827659-1-leitao@debian.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Breno,
+On 6/6/23 12:00 PM, Breno Leitao wrote:
+> Most of the ioctls to net protocols operates directly on userspace
+> argument (arg). Usually doing get_user()/put_user() directly in the
+> ioctl callback.  This is not flexible, because it is hard to reuse these
+> functions without passing userspace buffers.
+> 
+> Change the "struct proto" ioctls to avoid touching userspace memory and
+> operate on kernel buffers, i.e., all protocol's ioctl callbacks is
+> adapted to operate on a kernel memory other than on userspace (so, no
+> more {put,get}_user() and friends being called in the ioctl callback).
+> 
+> This changes the "struct proto" ioctl format in the following way:
+> 
+>     int                     (*ioctl)(struct sock *sk, int cmd,
+> -                                        unsigned long arg);
+> +                                        int *karg);
+> 
+> (Important to say that this patch does not touch the "struct proto_ops"
+> protocols)
+> 
+> So, the "karg" argument, which is passed to the ioctl callback, is a
+> pointer allocated to kernel space memory (inside a function wrapper).
+> This buffer (karg) may contain input argument (copied from userspace in
+> a prep function) and it might return a value/buffer, which is copied
+> back to userspace if necessary. There is not one-size-fits-all format
+> (that is I am using 'may' above), but basically, there are three type of
+> ioctls:
+> 
+> 1) Do not read from userspace, returns a result to userspace
+> 2) Read an input parameter from userspace, and does not return anything
+>   to userspace
+> 3) Read an input from userspace, and return a buffer to userspace.
+> 
+> The default case (1) (where no input parameter is given, and an "int" is
+> returned to userspace) encompasses more than 90% of the cases, but there
+> are two other exceptions. Here is a list of exceptions:
+> 
+> * Protocol RAW:
+>    * cmd = SIOCGETVIFCNT:
+>      * input and output = struct sioc_vif_req
+>    * cmd = SIOCGETSGCNT
+>      * input and output = struct sioc_sg_req
+>    * Explanation: for the SIOCGETVIFCNT case, userspace passes the input
+>      argument, which is struct sioc_vif_req. Then the callback populates
+>      the struct, which is copied back to userspace.
+> 
+> * Protocol RAW6:
+>    * cmd = SIOCGETMIFCNT_IN6
+>      * input and output = struct sioc_mif_req6
+>    * cmd = SIOCGETSGCNT_IN6
+>      * input and output = struct sioc_sg_req6
+> 
+> * Protocol PHONET:
+>   * cmd == SIOCPNADDRESOURCE | SIOCPNDELRESOURCE
+>      * input int (4 bytes)
+>   * Nothing is copied back to userspace.
+> 
+> For the exception cases, functions sock_sk_ioctl_inout() will
+> copy the userspace input, and copy it back to kernel space.
+> 
+> The wrapper that prepare the buffer and put the buffer back to user is
+> sk_ioctl(), so, instead of calling sk->sk_prot->ioctl(), the callee now
+> calls sk_ioctl(), which will handle all cases.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> --
 
-Thank you for your modifications, that's great!
+It looks good to me, so:
+Reviewed-by: David Ahern <dsahern@kernel.org>
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5622611925794816
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5622611925794816/summary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4509906158485504
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4509906158485504/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6748511832637440
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6748511832637440/su=
-mmary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5635806065328128
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5635806065328128/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/3a948e44bf4f
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+What kind of testing was done with the patch? Would be good to run
+through a NOS style of test suites to make sure the ipmr and ip6mr
+changes are correct. (cc'ed Ido since the mlxsw crew has a really good
+test up)
