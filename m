@@ -1,157 +1,127 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDE530B90
-	for <mptcp@lists.linux.dev>; Wed,  7 Jun 2023 12:15:31 +0000 (UTC)
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6261cb1208eso2384926d6.0
-        for <mptcp@lists.linux.dev>; Wed, 07 Jun 2023 05:15:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA12210A
+	for <mptcp@lists.linux.dev>; Wed,  7 Jun 2023 12:48:53 +0000 (UTC)
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6563ccf5151so4824823b3a.0
+        for <mptcp@lists.linux.dev>; Wed, 07 Jun 2023 05:48:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686140131; x=1688732131;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1686142132; x=1688734132;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u8XZPPmOXy+covKv0eQSNPQLMzOY+EavY6mLoP79rZc=;
-        b=RGQvr3p04xUWWIeDw2dJD14fHUEH+t2fQJULdyu1HiFLPmDI93BCxfeKaEMR6OzRbd
-         2WdXR6a5p62AeHvJvwoV1ag5/VvKU+reaumHWcxfGhuRRQrpkLx+EUKwC9srrIxu445f
-         /AZ9jWJXl4MnmsS/bFhQbMOmnD8X2eUfGQzORHyDA6I5697PukxVm6Xmbud0o0CAxHK9
-         JfXOAKYktCDvSWwqUgzrd/jtv+e9Ed6IQcXReyd+np1mX+awYFT7eDnCIFt0s3vb740y
-         FSpTAzbTFF/jMXT3fcdJMStR4lwyafdpb0sOXTsAQEDI4VventjDj0eUBgHwXMVS0Agg
-         sxQA==
+        bh=1RimvKTYsX3EflnZT+AAT0zJwKBY5VtMIJHfMVr6APQ=;
+        b=UA2/tKqkziHti7UlpKowtC1veHiB2htE2jB/bFSUCTRvfRRrHkSUR9XmtM5Yq8EaRw
+         ptzSBVP55PdOvB+94VZenaO/ax/MqRcyiNnRDcM/p45gPDSsnQ6gMGtJaHI8QMO8a7bv
+         eppGdJLEw2Kt2IAaXIE9QovcFO+e9gA6rsMkRAqTpT3mdzjbih8dfa4WYJzWH3POr15p
+         SyUZ1ZYGt6vMoKTeHujpVwRPR4+omtSIJ3dYYzr9AKIiu07elEyPHya12GXakqTNkHVc
+         HXT2CAo8c0jTMrgcMkT5pn3TXG4fseVcQHlkBfCCZt/Y1bfbizXCA4ZzY4lMh8SFH4yQ
+         VM9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686140131; x=1688732131;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=u8XZPPmOXy+covKv0eQSNPQLMzOY+EavY6mLoP79rZc=;
-        b=dR2oXMOp0m+DDYoD0nOHBLbxabLMujw0q9X6doOLYQm5Rrq13ijkio/hYOOKsJPZ2y
-         GC4MJb9nxSb2elmbR/8WU9imYBPqSdz8qMArsxMKrTPim89HGaWo+yfwR6q/bQh62GLj
-         DC33j0QaoVfeYSFYFwuCnFkQHExD/0R3EpozS+txXHgc7CgRa+7JNkehHMURdveTwrKU
-         36+Z4p9F+pbF81GuD8W+QfF3oG7+Knqq250uMyqo1x9eSAIQwFXIGE7kB2h4cxfEgpYn
-         w0+C9oFinY7wRHCJLcl/dnQjVzn1SBpchHdMxvhKzpk0kz2ZgXyFvxDzH/VaHg6NblFV
-         ze8Q==
-X-Gm-Message-State: AC+VfDx4Ni0uggoJeeey14RqfS6YttDX556UFL2JSsDxTN3nji19Qh+m
-	gauzQfsNnC37zDkdBj11nTc=
-X-Google-Smtp-Source: ACHHUZ40wZwVfAH1nA4kaYq3UbMkylR8h6hcTZi3Wc3cqIzz8ZU0CMZc79z0MEk7u52LeM2nzhofNQ==
-X-Received: by 2002:a05:6214:518b:b0:621:65de:f600 with SMTP id kl11-20020a056214518b00b0062165def600mr3011629qvb.1.1686140130585;
-        Wed, 07 Jun 2023 05:15:30 -0700 (PDT)
-Received: from localhost (172.174.245.35.bc.googleusercontent.com. [35.245.174.172])
-        by smtp.gmail.com with ESMTPSA id bz5-20020ad44c05000000b005f227de6b1bsm6029533qvb.116.2023.06.07.05.15.29
+        d=1e100.net; s=20221208; t=1686142132; x=1688734132;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=1RimvKTYsX3EflnZT+AAT0zJwKBY5VtMIJHfMVr6APQ=;
+        b=b+nCMQICirgNwyC6afe2L+eNxwFTsuSUg5UWamiV7LDqc1tcpmJLEby2xDP2mgGNTw
+         IrDH9gYQQM7TXDL4PFttTE2EAskdx7GONvuapkOnp9C8jW9Jqu4TpE2iKsmgZiv2vqYR
+         Ep3S9YE/OnbCwfWKNYi/IEUE6VmtP9CtHNJYiVVwam+RduHcexnD+dFxRYfYumV0A6wP
+         iDmYb7UZhwCTr8SVIlp9Z/ivSSlj0KSCP59ob4rOXD91xPKX5qWNPCZ2F8RUzbN+lHFL
+         FfzVCw9DTdo8EP1gPvolORAEFcP0j/Jrk77+713dq7a8iOVoUqH1cVa0NBj8jxD80mFl
+         ly1g==
+X-Gm-Message-State: AC+VfDwv4UnoCUquh0pFJtVP+rowb1kTYG/XZsdbmCjdUvml6l8lfwXn
+	ZSwknZeE56+CpyzmRms95Q==
+X-Google-Smtp-Source: ACHHUZ7Zi2WgXEgInPJ+WPbNgKctOHfOa7nAlL8/P/fePerRH94hK8p9dvMsTDhMZ7hD05wM1HqbIw==
+X-Received: by 2002:a05:6a21:7881:b0:111:26ee:8e5 with SMTP id bf1-20020a056a21788100b0011126ee08e5mr3444175pzc.62.1686142132450;
+        Wed, 07 Jun 2023 05:48:52 -0700 (PDT)
+Received: from [127.0.0.1] ([137.135.38.231])
+        by smtp.gmail.com with ESMTPSA id h13-20020a63e14d000000b0053fed3131e6sm8986641pgk.65.2023.06.07.05.48.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jun 2023 05:15:29 -0700 (PDT)
-Date: Wed, 07 Jun 2023 08:15:28 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Breno Leitao <leitao@debian.org>, 
- Remi Denis-Courmont <courmisch@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Alexander Aring <alex.aring@gmail.com>, 
- Stefan Schmidt <stefan@datenfreihafen.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- David Ahern <dsahern@kernel.org>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Matthieu Baerts <matthieu.baerts@tessares.net>, 
- Mat Martineau <martineau@kernel.org>, 
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
- Xin Long <lucien.xin@gmail.com>
-Cc: axboe@kernel.dk, 
- asml.silence@gmail.com, 
- leit@fb.com, 
- Martin KaFai Lau <martin.lau@kernel.org>, 
- Alexei Starovoitov <ast@kernel.org>, 
- Kuniyuki Iwashima <kuniyu@amazon.com>, 
- Jason Xing <kernelxing@tencent.com>, 
- Joanne Koong <joannelkoong@gmail.com>, 
- Hangyu Hua <hbh25y@gmail.com>, 
- Guillaume Nault <gnault@redhat.com>, 
- Andrea Righi <andrea.righi@canonical.com>, 
- Wojciech Drewek <wojciech.drewek@intel.com>, 
- linux-kernel@vger.kernel.org (open list), 
- netdev@vger.kernel.org (open list:NETWORKING [GENERAL]), 
- dccp@vger.kernel.org (open list:DCCP PROTOCOL), 
- linux-wpan@vger.kernel.org (open list:IEEE 802.15.4 SUBSYSTEM), 
- mptcp@lists.linux.dev (open list:NETWORKING [MPTCP]), 
- linux-sctp@vger.kernel.org (open list:SCTP PROTOCOL)
-Message-ID: <648074e0e52d9_143118294e0@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20230606180045.827659-1-leitao@debian.org>
-References: <20230606180045.827659-1-leitao@debian.org>
-Subject: RE: [PATCH net-next v6] net: ioctl: Use kernel memory on protocol
- ioctl callbacks
+        Wed, 07 Jun 2023 05:48:52 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <2673d5e34566da219d6c5d31ac385ea778e32040.1686138130.git.geliang.tang@suse.com>
+References:
+ <2673d5e34566da219d6c5d31ac385ea778e32040.1686138130.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: set endpoint out of transfer: Tests Results
+Message-ID: <bedb01c4-22e4-2aa7-4f47-40da84ecb9d5@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 07 Jun 2023 12:48:51 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
 
-Breno Leitao wrote:
-> Most of the ioctls to net protocols operates directly on userspace
-> argument (arg). Usually doing get_user()/put_user() directly in the
-> ioctl callback.  This is not flexible, because it is hard to reuse these
-> functions without passing userspace buffers.
-> 
-> Change the "struct proto" ioctls to avoid touching userspace memory and
-> operate on kernel buffers, i.e., all protocol's ioctl callbacks is
-> adapted to operate on a kernel memory other than on userspace (so, no
-> more {put,get}_user() and friends being called in the ioctl callback).
-> 
-> This changes the "struct proto" ioctl format in the following way:
-> 
->     int                     (*ioctl)(struct sock *sk, int cmd,
-> -                                        unsigned long arg);
-> +                                        int *karg);
-> 
-> (Important to say that this patch does not touch the "struct proto_ops"
-> protocols)
-> 
-> So, the "karg" argument, which is passed to the ioctl callback, is a
-> pointer allocated to kernel space memory (inside a function wrapper).
-> This buffer (karg) may contain input argument (copied from userspace in
-> a prep function) and it might return a value/buffer, which is copied
-> back to userspace if necessary. There is not one-size-fits-all format
-> (that is I am using 'may' above), but basically, there are three type of
-> ioctls:
-> 
-> 1) Do not read from userspace, returns a result to userspace
-> 2) Read an input parameter from userspace, and does not return anything
->   to userspace
-> 3) Read an input from userspace, and return a buffer to userspace.
-> 
-> The default case (1) (where no input parameter is given, and an "int" is
-> returned to userspace) encompasses more than 90% of the cases, but there
-> are two other exceptions. Here is a list of exceptions:
-> 
-> * Protocol RAW:
->    * cmd = SIOCGETVIFCNT:
->      * input and output = struct sioc_vif_req
->    * cmd = SIOCGETSGCNT
->      * input and output = struct sioc_sg_req
->    * Explanation: for the SIOCGETVIFCNT case, userspace passes the input
->      argument, which is struct sioc_vif_req. Then the callback populates
->      the struct, which is copied back to userspace.
-> 
-> * Protocol RAW6:
->    * cmd = SIOCGETMIFCNT_IN6
->      * input and output = struct sioc_mif_req6
->    * cmd = SIOCGETSGCNT_IN6
->      * input and output = struct sioc_sg_req6
-> 
-> * Protocol PHONET:
->   * cmd == SIOCPNADDRESOURCE | SIOCPNDELRESOURCE
->      * input int (4 bytes)
->   * Nothing is copied back to userspace.
-> 
-> For the exception cases, functions sock_sk_ioctl_inout() will
-> copy the userspace input, and copy it back to kernel space.
-> 
-> The wrapper that prepare the buffer and put the buffer back to user is
-> sk_ioctl(), so, instead of calling sk->sk_prot->ioctl(), the callee now
-> calls sk_ioctl(), which will handle all cases.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+Hi Geliang,
 
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4820643485581312
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4820643485581312/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5383593439002624
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5383593439002624/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5946543392423936
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5946543392423936/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6509493345845248
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6509493345845248/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/07e42421acf3
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
