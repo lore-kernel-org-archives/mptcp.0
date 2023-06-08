@@ -1,127 +1,110 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5243B3FA
-	for <mptcp@lists.linux.dev>; Thu,  8 Jun 2023 10:15:07 +0000 (UTC)
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1b04706c974so2766855ad.2
-        for <mptcp@lists.linux.dev>; Thu, 08 Jun 2023 03:15:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A408D947B
+	for <mptcp@lists.linux.dev>; Thu,  8 Jun 2023 13:21:12 +0000 (UTC)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-30aef0499b6so431242f8f.1
+        for <mptcp@lists.linux.dev>; Thu, 08 Jun 2023 06:21:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686219306; x=1688811306;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vSc/4RaHSyA60EdPfGdulCB2aceiGS7Aw7k5tGv+Xb0=;
-        b=JeFjf7o5k5VwaqPOQC61LN7a494PpgOKzY1Qt29h9gooAhXNkkjEYYTSk+O3giPGwS
-         bHtknJqYkkTNp/eRpNjCF6gIaSyXBkTHrimuDcgiFDLw/6OInUXqRnoqCTNhsOvBnpOK
-         G6Q84Tuh1n9BAKaiAjr7eGERfFrYQbnbyk/wp+mnYwHzSoXoyzC/aX4dGTxc96qVjJbU
-         nueLhrjgLEwT7NmhanNBnzqvK/zAiinqbO+sR7shVDxWsrnwn+MU+2Q5IMYd3GGq5GFD
-         tK587UXkobT7tYadX/+p8SaMSnhkcEFzL2rMdbcs1FIhE+4q6B3uBlWAJEkGG+KYxtD1
-         n0HA==
+        d=tessares.net; s=google; t=1686230470; x=1688822470;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JrLkSqBXuXFaPtOlLMxDD4QQOh/SbBZYNkY7RLKJl40=;
+        b=Yg8gZkNTI+QaGC7zmMGDlRLZgD+hwa9fiSskHeCXWMpONvKCeHrMare89xI66O5SLi
+         qK+YB2/pCdU2ZcvhUwk/heyho8yvRwZT3jCm/sW9Zvmyu/Axl2MVVJtDNK23i88wzdOT
+         ES0wozDmJ/BiEVMCeoMnk/gi+EiFTYBlT0osi/kW/uICdpFx8gH+qKC5+ERA4tZQrQzf
+         eTUeXdpalDjJSGGq0a1bSHlmQ1NHGUAZnhAmBwxlUSjVi/XvltuABc7Pf/hPDMPf35+Q
+         Y9V9Mgtaaii6YKY/VmUhattjBomXD10zXYdruNnycw+7Pe137H6WvT/12qe5id1OnlsD
+         vXQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686219306; x=1688811306;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=vSc/4RaHSyA60EdPfGdulCB2aceiGS7Aw7k5tGv+Xb0=;
-        b=XtWNAQ/GIXH1QFNNkQAwrUbynbNn9nU2yHw+b+i2muHbQ7u/do/2rqOFYP6GGzkWX0
-         tlqNmPHbaPx0ta2OkZ6Hi1+gzli8pVuGUlmQD+8IInUZbYA6d0D4UjsjzVWUww30EJSu
-         q6xJxcQM+Hbqq8MQnBdymSKx9oHCflZ4AXvHUFEnIIndT9wLiX8+BC7ghiDijFsVT8tD
-         OZcjkvEKsFIObPzuKKBvMKxxXO2YdDWEuebN3QUWBLYBd+tpCEVlZ5cNLDoJ97e9ftY+
-         TQiql+5RN56rQT1ouNfNRJevvWr9ipJ34wBCcGng6A6Ml5Djr4H41jVELnJcnYARKEAW
-         vYlg==
-X-Gm-Message-State: AC+VfDzvtnk+qalzw4thWuDeFqXjVJegZrQofny+3hcFFq9h1pZR9izd
-	6i+sLzaAuSgQqafNW1lnIcQW3/Jt7yqM
-X-Google-Smtp-Source: ACHHUZ7x6YiFlMhTp/LZRsud9qI6HcPKB564k5H5T+xK+Id/EkhuNHGwy7ir0yuRyDLb6gYWxllhrw==
-X-Received: by 2002:a17:903:2449:b0:1b0:2b0e:d3ef with SMTP id l9-20020a170903244900b001b02b0ed3efmr8678919pls.55.1686219306646;
-        Thu, 08 Jun 2023 03:15:06 -0700 (PDT)
-Received: from [127.0.0.1] ([20.172.44.48])
-        by smtp.gmail.com with ESMTPSA id t4-20020a170902a5c400b001ab0159b9edsm1053881plq.250.2023.06.08.03.15.05
+        d=1e100.net; s=20221208; t=1686230470; x=1688822470;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JrLkSqBXuXFaPtOlLMxDD4QQOh/SbBZYNkY7RLKJl40=;
+        b=G7uFVQxRIMaOGkaXAbfGLUk2HT0DJLjRoitUYqsG05VlNY+pjFmLYCYIUquoYzZXmx
+         IRf3keQEwVouaEGVh1ONtWt76i0S+Hhl9bIkFyS6tFBLCnn4FKU4ixCb+1qhsE6QXBeU
+         afe/wVZ7nYj0GF4SeA5QPzMcV54QIWzCiq/CeKCZ5vUhdB4peHlyAjUmV34R5ye1up9w
+         Wwy7PCPzTMlJnvtZHLh2y4vOiUNWTHituiZkrB3fLEGoxeB7IOmQVGMxBRaYZb6k10vE
+         NK27G8MGhixPKSqXq42Hv9iQ/RksHrUFho4cbLOIIWEs/XYorX8lUL7/f/TUb8QMi0R1
+         nUuw==
+X-Gm-Message-State: AC+VfDwqAeqzDT8GtHcmwKpcratCpeJW+1c7tnbagpVOTGARF5h8mqRp
+	8L41G4d75op3Gej0P3iYLlJJkg==
+X-Google-Smtp-Source: ACHHUZ4OOQXSdAgl30N4JRXHi0RCBmxm5KUs8n+YpjgHEKZlHmzL2uB9axV7caQ1xk9lUpBU5h/LNA==
+X-Received: by 2002:adf:edcb:0:b0:309:41d8:eec4 with SMTP id v11-20020adfedcb000000b0030941d8eec4mr7124852wro.39.1686230470319;
+        Thu, 08 Jun 2023 06:21:10 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id 16-20020a05600c021000b003f7f1b3aff1sm5001100wmi.26.2023.06.08.06.21.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jun 2023 03:15:06 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <d9dcf7a0fd779b3d24d7c10cb21b881d62b1fdc7.1686155270.git.pabeni@redhat.com>
-References:
- <d9dcf7a0fd779b3d24d7c10cb21b881d62b1fdc7.1686155270.git.pabeni@redhat.com>
-Subject: Re: mptcp: fix potential msk leak: Tests Results
-Message-ID: <8735b747-ce3a-87e1-9f1d-7f14a4621d7b@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 08 Jun 2023 10:15:05 +0000
+        Thu, 08 Jun 2023 06:21:10 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net-next 0/4] mptcp: unify PM interfaces
+Date: Thu, 08 Jun 2023 15:20:48 +0200
+Message-Id: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-0-b301717c9ff5@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALDVgWQC/z2OzQ6CMBCEX4Xs2Y0VK/68ivFQylb2wNp0i8EQ3
+ t1igoc5fJnkm5lBKTEp3KoZEr1Z+SUFDrsKfO/kSchdYahNfTSNueAYNSdyAwrlkinjvxpi9hF
+ H4fDBOCBLphScJ0V7PYdw6sg2lqCoW6eEbXLi+1We95t1LWOiwNPv0x22FXgsyxfvJHDsrQAAA
+ A==
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Geliang Tang <geliang.tang@suse.com>, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1112;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=PksWG9xpjpNR6taGD8lcKubOv6ngqDUSLnkTPjYnXCc=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkgdXFQUslVvsp15U+xKqFpBZ7y2jt7uScqvHmy
+ fcsE86kucmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZIHVxQAKCRD2t4JPQmmg
+ czyqD/9HRQx7w5GuMDuHNwmVsIBetoSufo+y5mLulkSMoxJtMUL/PDvEJL5s00rHTqFdjiIGpzK
+ hDk065KHpY7AeVH8GZX6IhkyMTYkN/XOuAc7hO9gZrh8s1AXxNb2MidpHd6Bphaq706NvaBI1U6
+ kmewaDEdPjCcQJG456ORjGdqsnxBCZpqjC1tP6mMk1E7+HiINBGPh9Qm/3wGsNArLz3Ust64X6E
+ 4DLTI34hNnTyIIkhTdDWXhfZmleIRzlRVkffF6xieuhboYVLD15n78vjWmUdLWI2hE+d/Et7aB/
+ HfaDrYyeaigUUKT4rC+UXbJk2dgjsFteWj2FJr4/gUyh4bmpzAR+30vsav/SqMjDjorb8FVMoEF
+ iHwum99/9D2IXnSzlt4l62H3BOqXClacc0nTUCypurP/L71gF07FMpW120avJrUqIlhi8ICaFWQ
+ +79mjUuj0v7UWG3DoBmIdmIuv2/ZkMDWkSlvCIYUQTJQpMVWrYDT/xLrG6+LZKm6z0rYozFyddW
+ gT1Q+f6UcwMjxN8x+ag/vgQZad7Q3GyZTGeu145qjgAZ6mI9ncZQdyJvtlZNpcFSbKHWDXCephp
+ 6Om4+lAmSFPDwk8VJ+be0PyY935h8dzFX1WFvdJOK9FG5lrwfw22CAa1tXVpVtuVSM7egc3NzyZ
+ dEhZY/hzSWreDjw==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+These patches from Geliang better isolate the two MPTCP path-managers by
+avoiding calling userspace PM functions from the in-kernel PM. Instead,
+new functions declared in pm.c directly dispatch to the right PM.
 
-Thank you for your modifications, that's great!
+In addition to have a clearer code, this also avoids a bit of duplicated
+checks.
 
-Our CI did some validations and here is its report:
+This is a refactoring, there is no behaviour change intended here.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6219316832501760
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6219316832501760/summary/summary.txt
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Geliang Tang (4):
+      mptcp: export local_address
+      mptcp: unify pm get_local_id interfaces
+      mptcp: unify pm get_flags_and_ifindex_by_id
+      mptcp: unify pm set_flags interfaces
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4811941948948480
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4811941948948480/summary/summary.txt
+ net/mptcp/pm.c           |  41 ++++++++++++++-
+ net/mptcp/pm_netlink.c   | 132 ++++++++++++++++++++---------------------------
+ net/mptcp/pm_userspace.c |   3 --
+ net/mptcp/protocol.h     |   9 +++-
+ 4 files changed, 103 insertions(+), 82 deletions(-)
+---
+base-commit: 4a56212774acf71a7356026fb11b78228a7ad24d
+change-id: 20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-497ff5de464e
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5937841855791104
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5937841855791104/summary/summary.txt
+Best regards,
+-- 
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5374891902369792
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5374891902369792/su=
-mmary/summary.txt
-
-Initiator: Matthieu Baerts
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/8579858a269b
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
