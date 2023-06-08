@@ -1,46 +1,46 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A408D947B
-	for <mptcp@lists.linux.dev>; Thu,  8 Jun 2023 13:21:12 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-30aef0499b6so431242f8f.1
-        for <mptcp@lists.linux.dev>; Thu, 08 Jun 2023 06:21:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B91612B72
+	for <mptcp@lists.linux.dev>; Thu,  8 Jun 2023 13:21:13 +0000 (UTC)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3f7368126a6so4017845e9.0
+        for <mptcp@lists.linux.dev>; Thu, 08 Jun 2023 06:21:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1686230470; x=1688822470;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JrLkSqBXuXFaPtOlLMxDD4QQOh/SbBZYNkY7RLKJl40=;
-        b=Yg8gZkNTI+QaGC7zmMGDlRLZgD+hwa9fiSskHeCXWMpONvKCeHrMare89xI66O5SLi
-         qK+YB2/pCdU2ZcvhUwk/heyho8yvRwZT3jCm/sW9Zvmyu/Axl2MVVJtDNK23i88wzdOT
-         ES0wozDmJ/BiEVMCeoMnk/gi+EiFTYBlT0osi/kW/uICdpFx8gH+qKC5+ERA4tZQrQzf
-         eTUeXdpalDjJSGGq0a1bSHlmQ1NHGUAZnhAmBwxlUSjVi/XvltuABc7Pf/hPDMPf35+Q
-         Y9V9Mgtaaii6YKY/VmUhattjBomXD10zXYdruNnycw+7Pe137H6WvT/12qe5id1OnlsD
-         vXQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686230470; x=1688822470;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=tessares.net; s=google; t=1686230471; x=1688822471;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JrLkSqBXuXFaPtOlLMxDD4QQOh/SbBZYNkY7RLKJl40=;
-        b=G7uFVQxRIMaOGkaXAbfGLUk2HT0DJLjRoitUYqsG05VlNY+pjFmLYCYIUquoYzZXmx
-         IRf3keQEwVouaEGVh1ONtWt76i0S+Hhl9bIkFyS6tFBLCnn4FKU4ixCb+1qhsE6QXBeU
-         afe/wVZ7nYj0GF4SeA5QPzMcV54QIWzCiq/CeKCZ5vUhdB4peHlyAjUmV34R5ye1up9w
-         Wwy7PCPzTMlJnvtZHLh2y4vOiUNWTHituiZkrB3fLEGoxeB7IOmQVGMxBRaYZb6k10vE
-         NK27G8MGhixPKSqXq42Hv9iQ/RksHrUFho4cbLOIIWEs/XYorX8lUL7/f/TUb8QMi0R1
-         nUuw==
-X-Gm-Message-State: AC+VfDwqAeqzDT8GtHcmwKpcratCpeJW+1c7tnbagpVOTGARF5h8mqRp
-	8L41G4d75op3Gej0P3iYLlJJkg==
-X-Google-Smtp-Source: ACHHUZ4OOQXSdAgl30N4JRXHi0RCBmxm5KUs8n+YpjgHEKZlHmzL2uB9axV7caQ1xk9lUpBU5h/LNA==
-X-Received: by 2002:adf:edcb:0:b0:309:41d8:eec4 with SMTP id v11-20020adfedcb000000b0030941d8eec4mr7124852wro.39.1686230470319;
-        Thu, 08 Jun 2023 06:21:10 -0700 (PDT)
+        bh=KhaoeTZksIn80amAPN23tQL1E6Mg1h/yTJF6X95xsdA=;
+        b=z84ZpGUZD+SoR2l0mm/WX8KCJV1wk0b43QiO/RkCyFd50gka6DenhY2SkjvX95BTJ9
+         /WyuVZmLaiSm34TCH17AS4AdNWMWEhIgVpnTw3ltoTeI+DHO39BvqbLMuY8EMAKmaaky
+         paobvax5r5jrirXch9eXe4rxOg6x1K7d1m7YWmfOyOIKgdIP/+oA0TJwE6jWovzkkdX7
+         pVa5BdoLcV3ix17y79ttEusCbrZeIeKth4TcZWw9Ym0SYizKWoSceJjhG2R8KGTBdBV9
+         ac6EU6WW0/Vz1BSFZCj07vHK+qp4iiV8epk++pot0fCMcPU1X/gc2fzHlbOJV7vXBnQg
+         UD0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686230471; x=1688822471;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KhaoeTZksIn80amAPN23tQL1E6Mg1h/yTJF6X95xsdA=;
+        b=Slr05Z5q3NXRosV/44/ia7h62Kh2pVC1Y13tOgCrktK8fxK8y/L/V4W+OqtV+go/xD
+         p0rZps2tNSBvrd/u+dQA0wGHjrA6kOohyb921m3SYJi9OBSo0dNFiUbYmyt/gPeEQHj0
+         L8aQTNCZZRuCm85QnYULMa6QD99FFrbtaOyivZfowZSPea+X5BNoGs2gSEA0DoLklAOE
+         D/XGg+MPegl8eKSXswmDn+2K6HUlQTnmeEj43IoPfZ4EOqUcvweJmaQ6a031oifV1Hrh
+         Kc3afM00s24cadcvryXG83MHl5+U+YLYGj8o8aECb7kALz1IKZkJEvEQ3hFPrVVRvugV
+         IANA==
+X-Gm-Message-State: AC+VfDyDUVmDSvRPaP219WZKvA55yAqHMPUFxVhuGKsNzXg+Q+XCiupD
+	MtigFry3sNP6+dObFBA9luQLew==
+X-Google-Smtp-Source: ACHHUZ72dlqjioyOZFlnptxRBoQkTm7II3R7lfsutEe7KQL1uH+xB/XrKBPxFMYJ5TYjmxpPVHRPYw==
+X-Received: by 2002:a05:600c:2148:b0:3f6:e13:b268 with SMTP id v8-20020a05600c214800b003f60e13b268mr1466363wml.22.1686230471465;
+        Thu, 08 Jun 2023 06:21:11 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id 16-20020a05600c021000b003f7f1b3aff1sm5001100wmi.26.2023.06.08.06.21.09
+        by smtp.gmail.com with ESMTPSA id 16-20020a05600c021000b003f7f1b3aff1sm5001100wmi.26.2023.06.08.06.21.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 08 Jun 2023 06:21:10 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH net-next 0/4] mptcp: unify PM interfaces
-Date: Thu, 08 Jun 2023 15:20:48 +0200
-Message-Id: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-0-b301717c9ff5@tessares.net>
+Date: Thu, 08 Jun 2023 15:20:49 +0200
+Subject: [PATCH net-next 1/4] mptcp: export local_address
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,10 +49,9 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALDVgWQC/z2OzQ6CMBCEX4Xs2Y0VK/68ivFQylb2wNp0i8EQ3
- t1igoc5fJnkm5lBKTEp3KoZEr1Z+SUFDrsKfO/kSchdYahNfTSNueAYNSdyAwrlkinjvxpi9hF
- H4fDBOCBLphScJ0V7PYdw6sg2lqCoW6eEbXLi+1We95t1LWOiwNPv0x22FXgsyxfvJHDsrQAAA
- A==
+Message-Id: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-1-b301717c9ff5@tessares.net>
+References: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-0-b301717c9ff5@tessares.net>
+In-Reply-To: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-0-b301717c9ff5@tessares.net>
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
@@ -60,51 +59,122 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  Geliang Tang <geliang.tang@suse.com>, 
  Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1112;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3955;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=PksWG9xpjpNR6taGD8lcKubOv6ngqDUSLnkTPjYnXCc=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkgdXFQUslVvsp15U+xKqFpBZ7y2jt7uScqvHmy
- fcsE86kucmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZIHVxQAKCRD2t4JPQmmg
- czyqD/9HRQx7w5GuMDuHNwmVsIBetoSufo+y5mLulkSMoxJtMUL/PDvEJL5s00rHTqFdjiIGpzK
- hDk065KHpY7AeVH8GZX6IhkyMTYkN/XOuAc7hO9gZrh8s1AXxNb2MidpHd6Bphaq706NvaBI1U6
- kmewaDEdPjCcQJG456ORjGdqsnxBCZpqjC1tP6mMk1E7+HiINBGPh9Qm/3wGsNArLz3Ust64X6E
- 4DLTI34hNnTyIIkhTdDWXhfZmleIRzlRVkffF6xieuhboYVLD15n78vjWmUdLWI2hE+d/Et7aB/
- HfaDrYyeaigUUKT4rC+UXbJk2dgjsFteWj2FJr4/gUyh4bmpzAR+30vsav/SqMjDjorb8FVMoEF
- iHwum99/9D2IXnSzlt4l62H3BOqXClacc0nTUCypurP/L71gF07FMpW120avJrUqIlhi8ICaFWQ
- +79mjUuj0v7UWG3DoBmIdmIuv2/ZkMDWkSlvCIYUQTJQpMVWrYDT/xLrG6+LZKm6z0rYozFyddW
- gT1Q+f6UcwMjxN8x+ag/vgQZad7Q3GyZTGeu145qjgAZ6mI9ncZQdyJvtlZNpcFSbKHWDXCephp
- 6Om4+lAmSFPDwk8VJ+be0PyY935h8dzFX1WFvdJOK9FG5lrwfw22CAa1tXVpVtuVSM7egc3NzyZ
- dEhZY/hzSWreDjw==
+ bh=l/jGQDI6Wt0DGeE+EQbUTZRRGJNBQ8M0TmciTMimsH0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkgdXF2dATrt1k6R8plFmN8YuqD23J2mPMTIU61
+ TUKbXRcPKiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZIHVxQAKCRD2t4JPQmmg
+ czfBEACo7eQ0NVkbvNrezSrhGOLT4aK9BfzKo+4EB8n96i3gUZ2j++5wVPgkILBk5SIjysunUSL
+ T/E+lXs0BNDicXhww6kGFQjltK66kKcCNaV5/h8z6dZof62rYRLjSKZOggD8ct3y/3JLSUvahNt
+ KGbYtgVqt8q7S9R1MWkBivbFQufl9irsI6KV68uK6evPOl6wlaL4R42p7BcM2OxqFrYI/cB/ib8
+ GTH3gp8vtwKdNOlknU+KzOlAkjR7amGO7FSHdki683JNae/ZK/v3vwC6ZCAtlp3WIYtM2No8fFS
+ pDpiB3olHMgqzTDOvOkNdJa/DTodXX5wy8kf7jjBePHSqoGWZMniApm0heE/Ise9CREbK8ucaGC
+ kQYgIbc7DcavGlIoStQjNP30IxJ7LTAWozqD8Mc5twi5YkEduXO+96F8py4y2dTjgTmPvx3J7Xj
+ 9VeDjiZlN59VBT8yHDDu8Wjb8zB05lO76hsL6pXCls/4eR88mggOhjY2u8/esfJjzQGqa+dLzis
+ WPqRIQyBXql7TlL60VCPfCNjUp6npDVEu4V9IN2ANcD3H+3bNJF8+6VJWtnqhm/tWFNZzEYZofS
+ Ecy1kkIXEEMcsvwvSb8acPhZk8rTamJuXuC3Kl0wft/QoWuDOJNa6ToQlbxaq2/Cr7lToV06Li1
+ lJNm86sxNBNu+6g==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-These patches from Geliang better isolate the two MPTCP path-managers by
-avoiding calling userspace PM functions from the in-kernel PM. Instead,
-new functions declared in pm.c directly dispatch to the right PM.
+From: Geliang Tang <geliang.tang@suse.com>
 
-In addition to have a clearer code, this also avoids a bit of duplicated
-checks.
+Rename local_address() with "mptcp_" prefix and export it in protocol.h.
 
-This is a refactoring, there is no behaviour change intended here.
+This function will be re-used in the common PM code (pm.c) in the
+following commit.
 
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-Geliang Tang (4):
-      mptcp: export local_address
-      mptcp: unify pm get_local_id interfaces
-      mptcp: unify pm get_flags_and_ifindex_by_id
-      mptcp: unify pm set_flags interfaces
+ net/mptcp/pm_netlink.c | 17 ++++++++---------
+ net/mptcp/protocol.h   |  1 +
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
- net/mptcp/pm.c           |  41 ++++++++++++++-
- net/mptcp/pm_netlink.c   | 132 ++++++++++++++++++++---------------------------
- net/mptcp/pm_userspace.c |   3 --
- net/mptcp/protocol.h     |   9 +++-
- 4 files changed, 103 insertions(+), 82 deletions(-)
----
-base-commit: 4a56212774acf71a7356026fb11b78228a7ad24d
-change-id: 20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-497ff5de464e
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index bc343dab5e3f..c55ed3dda0d8 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -86,8 +86,7 @@ bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
+ 	return a->port == b->port;
+ }
+ 
+-static void local_address(const struct sock_common *skc,
+-			  struct mptcp_addr_info *addr)
++void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr)
+ {
+ 	addr->family = skc->skc_family;
+ 	addr->port = htons(skc->skc_num);
+@@ -122,7 +121,7 @@ static bool lookup_subflow_by_saddr(const struct list_head *list,
+ 	list_for_each_entry(subflow, list, node) {
+ 		skc = (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
+ 
+-		local_address(skc, &cur);
++		mptcp_local_address(skc, &cur);
+ 		if (mptcp_addresses_equal(&cur, saddr, saddr->port))
+ 			return true;
+ 	}
+@@ -263,7 +262,7 @@ bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk)
+ 	struct mptcp_addr_info saddr;
+ 	bool ret = false;
+ 
+-	local_address((struct sock_common *)sk, &saddr);
++	mptcp_local_address((struct sock_common *)sk, &saddr);
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+ 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
+@@ -541,7 +540,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 		struct mptcp_addr_info mpc_addr;
+ 		bool backup = false;
+ 
+-		local_address((struct sock_common *)msk->first, &mpc_addr);
++		mptcp_local_address((struct sock_common *)msk->first, &mpc_addr);
+ 		rcu_read_lock();
+ 		entry = __lookup_addr(pernet, &mpc_addr, false);
+ 		if (entry) {
+@@ -752,7 +751,7 @@ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 		struct mptcp_addr_info local, remote;
+ 
+-		local_address((struct sock_common *)ssk, &local);
++		mptcp_local_address((struct sock_common *)ssk, &local);
+ 		if (!mptcp_addresses_equal(&local, addr, addr->port))
+ 			continue;
+ 
+@@ -1070,8 +1069,8 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+ 	/* The 0 ID mapping is defined by the first subflow, copied into the msk
+ 	 * addr
+ 	 */
+-	local_address((struct sock_common *)msk, &msk_local);
+-	local_address((struct sock_common *)skc, &skc_local);
++	mptcp_local_address((struct sock_common *)msk, &msk_local);
++	mptcp_local_address((struct sock_common *)skc, &skc_local);
+ 	if (mptcp_addresses_equal(&msk_local, &skc_local, false))
+ 		return 0;
+ 
+@@ -1491,7 +1490,7 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
+ 		if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
+ 			goto next;
+ 
+-		local_address((struct sock_common *)msk, &msk_local);
++		mptcp_local_address((struct sock_common *)msk, &msk_local);
+ 		if (!mptcp_addresses_equal(&msk_local, addr, addr->port))
+ 			goto next;
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index c5255258bfb3..6e6cffc04ced 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -638,6 +638,7 @@ void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk);
+ 
+ bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
+ 			   const struct mptcp_addr_info *b, bool use_port);
++void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr);
+ 
+ /* called with sk socket lock held */
+ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
 
-Best regards,
 -- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
+2.40.1
 
