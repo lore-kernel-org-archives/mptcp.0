@@ -1,121 +1,127 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E988256D
-	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 14:52:38 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-9745c5fed21so281227966b.3
-        for <mptcp@lists.linux.dev>; Fri, 09 Jun 2023 07:52:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56891256D
+	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 15:18:45 +0000 (UTC)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-64d18d772bdso1956616b3a.3
+        for <mptcp@lists.linux.dev>; Fri, 09 Jun 2023 08:18:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1686322356; x=1688914356;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xyjafPhGDT3XokdnI9IgCQr+AR940Y+HLCGVYn4iqwo=;
-        b=PkM7wHZ6zvRsoyT/tPwJ/xDiCialRKe8VkVnVS+0RaLHJghfG+y6coZUI0ve0hPnLs
-         /eapykhKO+ORyoKjh173X7arzO4Hfi6MGGCVeClb7ogxIcpqpcNDOGkj7bKo3ZqVaSTX
-         EwmT5nMrNbvi6lyewVGrVlmNtA8jYqxNnIrU6+IhLbgrsG3dCHKpYnO1pp67E4AOq4Nw
-         W4c7cv2mjqbJs9EC0ROd9OjeLbrnxCxrcfR91t+nTjqWyXbKp8ETWfE53jRkrV7ws7AT
-         2BfZcCBBpl6krorM+meN7DNytCKUq4VwxxL1sT/ZKVZAXTy7b/OFEJnNRAmv4Qepb2ii
-         qd1w==
+        d=gmail.com; s=20221208; t=1686323924; x=1688915924;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E/Aru7A/fwj857icYKx2DarUXXJVa5282u4b8K8w+Gk=;
+        b=YtVgqGFwPIw8FKp8V4uj9+sxrsoTTokNQDWaPOwRs++GzcxGm+uXPbvL1Qd5Kap2AI
+         yYOVEekkZLDRrOVHgEXrqrjBhaJaoxJ6/xWuRM3rT3hzH40j3sKOZG9RZ2edvFp6tGM1
+         O0Ly3SIhfHukrAPt3tnK5F3zAwrSHYQmDqMUmyipuoTbs3qOiOym+ZIaE/6VRO+lcBzO
+         OjS8rKaxNcd+r9vUvFtBIPI+gaI6l+JMA+hzG3T4SHhSos5WNigPIoVHQMxMRCttdJVf
+         jp6SCsgo09hplxKgj2XgKhHpzkKRZc1QyAnn1wNL9y/ZUmPpb5EbuleyP5f2jfGaUQ20
+         wfIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686322356; x=1688914356;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xyjafPhGDT3XokdnI9IgCQr+AR940Y+HLCGVYn4iqwo=;
-        b=KvpW2F2ldZUz76E4xs6FHRpJAepwJyBFHv+5UI+g99pV6cPdYqDJxI/jV3SrBI2E7K
-         3NhKH3bbPzY2h7iNc3D0mQXmK5RxK5tOpBzP/PpTN31Z3cjRdiUCWrsqsqGlLlDaM5ez
-         5KTs/P5EQOZMGi5JWmG5XsnjajMaHzMZgjEZjg7HB3zMRQtWrT5IbaPKxprU0Jvlz4Kx
-         x0JPPk7Ae1g/OCYiGcC7Dco5R7DIBZBT9w/I38nRAB5VUKH8IQ9QvE7Zt7ISX1eHiov3
-         6BJeJ1dGiDtz0znVP3M363nVE0D8E6aGXsJNPwhyoGuyZR8H9H7E7XzjtMOckf9UKLrF
-         YC8g==
-X-Gm-Message-State: AC+VfDwyyE+MR2YQLOuyllUed/67o9w1r5nmJXvH0yLjM9w8o27hYNVu
-	Qcj1Tb9PenZEVFyJt/0VFWS5yQ==
-X-Google-Smtp-Source: ACHHUZ5R50v5ggPNegAHdbUM1brN+kV5x8Jibhp7AODa+vBd8mQwSw19wou/Wg50PvyM3eRFRu3xpA==
-X-Received: by 2002:a17:906:eec3:b0:96a:63d4:2493 with SMTP id wu3-20020a170906eec300b0096a63d42493mr1885423ejb.40.1686322356223;
-        Fri, 09 Jun 2023 07:52:36 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id e26-20020a1709062c1a00b00974556e50a6sm1383237ejh.114.2023.06.09.07.52.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jun 2023 07:52:35 -0700 (PDT)
-Message-ID: <a0a3cc11-8ea1-f9ca-ebd9-0bc3d7a3bae9@tessares.net>
-Date: Fri, 9 Jun 2023 16:52:35 +0200
+        d=1e100.net; s=20221208; t=1686323924; x=1688915924;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=E/Aru7A/fwj857icYKx2DarUXXJVa5282u4b8K8w+Gk=;
+        b=F4IZYEXf83dH9K70tr/erEud8Iw/VX+xOa6XMcpa5ZrkA9/biCSq0bBDN0Ldnanp7s
+         TciKQuJ03vcfYPIq1UUuK/eJk7rgXCmkPFYV7Phwr8FriU13R2IcD3xCp85H+/3z63OQ
+         UfUzXv7KEUJg3lmFE9MObmaxYtNE+raA+n42+nPKFnRwPyyNsLUQ7YtfjpnV9felJ94H
+         6f1xQa3vskRbVojDYYl/VGGsir5pVO6T8n1troZWKQ2v4vBHBZEdrnFg8mJDey6kPxJ+
+         pENzt5QRkYxRHqaF/tnYMA0B4ALcxzyb10PQ8Wm3xWbRs1qBzauKjcqL38hW7eCFiRpK
+         gLiA==
+X-Gm-Message-State: AC+VfDy1uBD2QURJ09YTjs90OjFJXpwtMIiatr29KRXQaxkonXpKq0Ig
+	fDH7iDgCO7pzxWmzqDAMow==
+X-Google-Smtp-Source: ACHHUZ7jT7P+Kzb1iL5//n9MNzechru42/grEoN8zL5nbpElXJau4l3HFcooYL5XX5AdAFWjWdyhoA==
+X-Received: by 2002:a17:902:8648:b0:1b0:524b:e597 with SMTP id y8-20020a170902864800b001b0524be597mr1523912plt.2.1686323923657;
+        Fri, 09 Jun 2023 08:18:43 -0700 (PDT)
+Received: from [127.0.0.1] ([13.88.59.110])
+        by smtp.gmail.com with ESMTPSA id b9-20020a170902b60900b001b03a7a40e7sm3420815pls.19.2023.06.09.08.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 08:18:43 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <ca4ee22bcb340d3c07778259ce6c08b4d39e89d0.1686155634.git.pabeni@redhat.com>
+References:
+ <ca4ee22bcb340d3c07778259ce6c08b4d39e89d0.1686155634.git.pabeni@redhat.com>
+Subject: Re: mptcp: consolidate transition to TCP_CLOSE in
+ mptcp_do_fastclose(): Tests Results
+Message-ID: <2d275985-7e7b-b9e9-2708-5e796e08767b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 09 Jun 2023 15:18:42 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-net 2/2] mptcp: fix potential msk leak
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <f88902bdf5168d86a858575a95882e3fbbadf556.1686155270.git.pabeni@redhat.com>
- <d9dcf7a0fd779b3d24d7c10cb21b881d62b1fdc7.1686155270.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <d9dcf7a0fd779b3d24d7c10cb21b881d62b1fdc7.1686155270.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 07/06/2023 18:33, Paolo Abeni wrote:
-> An orphaned msk releases the used resources via the worker,
-> when the latter first see the msk in CLOSED status.
-> 
-> If the msk status transitions to TCP_CLOSE in the release callback
-> invoked by the worker's final release_sock(), such instance of the
-> workqueue will not take any action.
-> 
-> Additionally the MPTCP code prevents scheduling the worker once the
-> socket reaches the CLOSE status: such msk resources will be leaked.
-> 
-> The only code path that can trigger the above scenario is the
-> __mptcp_check_send_data_fin() in fallback mode. Address the issue
-> simply removing the dangerous state change: the msk will be closed
-> soon by the worker itself, triggered by MPTCP_WORK_CLOSE_SUBFLOW.
-> 
-> Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  net/mptcp/protocol.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 94229a318fc1..e93a678d057f 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2936,16 +2936,14 @@ static void __mptcp_check_send_data_fin(struct sock *sk)
->  	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
->  
->  	/* fallback socket will not get data_fin/ack, can move to the next
-> -	 * state now
-> +	 * state now. But can't set TCP_CLOSE here, as this code path is
-> +	 * reachable from the mptcp_release_cb(). Anyway the subflow will
-> +	 * close soon and the msk state will follow via WORK_CLOSE_SUBFLOW.
->  	 */
->  	if (__mptcp_check_fallback(msk)) {
->  		WRITE_ONCE(msk->snd_una, msk->write_seq);
-> -		if ((1 << sk->sk_state) & (TCPF_CLOSING | TCPF_LAST_ACK)) {
-> -			inet_sk_state_store(sk, TCP_CLOSE);
-> -			mptcp_close_wake_up(sk);
+Thank you for your modifications, that's great!
 
-Where are we going to wake up the userspace if we don't do it here for
-fallback connections?
+Our CI did some validations and here is its report:
 
-Via subflow_state_change() which will set MPTCP_WORK_EOF flag?
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5242073528401920
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5242073528401920/summary/summary.txt
 
-> -		} else if (sk->sk_state == TCP_FIN_WAIT1) {
-> +		if (sk->sk_state == TCP_FIN_WAIT1)
->  			inet_sk_state_store(sk, TCP_FIN_WAIT2);
-> -		}
->  	}
->  
->  	mptcp_for_each_subflow(msk, subflow) {
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6367973435244544
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6367973435244544/su=
+mmary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6086498458533888
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6086498458533888/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4960598551691264
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4960598551691264/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/4d0e5862922b
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
