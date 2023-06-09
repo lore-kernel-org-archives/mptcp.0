@@ -1,125 +1,136 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5931C76B
-	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 17:37:17 +0000 (UTC)
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1b0218c979cso7848325ad.3
-        for <mptcp@lists.linux.dev>; Fri, 09 Jun 2023 10:37:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0775D408DB
+	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 20:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686332237; x=1688924237;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ckk2Y8g7r0FWFfzidotqqGzHHhsnGORdq4SYRQUaGBI=;
-        b=QYBqxMSzywgUflLCkL0mVSlrJJ5wbu3R16GcPIN3SqGqZKG0g5u79kDuYzN2xfT8MV
-         qiudzPovXH/pRYYoRkn99ADn505fAbFt9cJCX7J8hopNcNSilH6dM3YrnNQ53/cV589Z
-         5ODrYYPpNar9Z8d31rrzeCz/XCnQniil2KNqYeRdAzaU4rwP9778ly/SuUFYDrXGjqWx
-         B92tbF4anDY2OlkYr4JMbSnRytuRfKpCbKC4C8UpJmJX5+bkc2xKnuYtIHwL44eLcJvm
-         lVO6d/rs+PleOoq/ttN6vD6QKsSpfURhAlB0XuO7pBCAbdcQvBz5Ai7KAxFmThva2pEp
-         TVwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686332237; x=1688924237;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Ckk2Y8g7r0FWFfzidotqqGzHHhsnGORdq4SYRQUaGBI=;
-        b=cncEPzdOYp1OlN6GkUKzJFXLI3/wMsZojXQmdmdu4yGH5o8IdqgmcC5boWPau6qZrO
-         EFZ/YSQHXkflNFrtEA6F+hLNQJMOWg2PewphyU2LGIDxG/w7A6gEStShJKrlwBo/JncK
-         m3yZD2+VHtENFTG7kUzORZa6kN53aKZnbFac61sbCCrKI1s806FNrAS07bTtbrxhdPY6
-         Ab0saCWbBoHOt/C0ze3iFlKLQ//yK5JAaO8NQu125HbePiq83Os4nWxhMuo6MCihgyn4
-         nLnCfNMlCJPsOx41TkzOb/c5/A9yZ90W0oaAfPSoETYWsDjPLi8e7D14SWKqH6lhKXwj
-         VoLg==
-X-Gm-Message-State: AC+VfDyTJxiV0imuXITg73jhjyJSYGkYW+UNBWqpkOuzOHwhWR3T4XAe
-	YcJgTcPut+xX5MNaAlGxwA==
-X-Google-Smtp-Source: ACHHUZ6N7faYO7O+YPJ9hfIexUt4jtkWqQn1xFwyp++gCp/O+Xw+OXXSxH6PXoKeT6HNKPdSCP3O3A==
-X-Received: by 2002:a17:902:f68d:b0:1b0:5425:2165 with SMTP id l13-20020a170902f68d00b001b054252165mr1894998plg.29.1686332236849;
-        Fri, 09 Jun 2023 10:37:16 -0700 (PDT)
-Received: from [127.0.0.1] ([138.91.227.57])
-        by smtp.gmail.com with ESMTPSA id az5-20020a170902a58500b001b034faf49csm2092287plb.285.2023.06.09.10.37.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 10:37:16 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1686340840; x=1717876840;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=AwzwnMbVO3rl3y00p/gpeO98vFDZVAnUq22KZ6hErmQ=;
+  b=jyn13C1ZQ3xxp3pqtqBze7Ha+LvMkFcYL/Za6NNJBFmvXCy1xPwqo9K+
+   gY0qt6pcaOhIOCIe4XOBQL16p423n0BklEsh6YUwQCeqqzaz6drhML7++
+   qam99DOMOn8HLraLXFAq6zOzcfXFasIb2puOviIs01Sc0QhxGM0fNjMGQ
+   k=;
+X-IronPort-AV: E=Sophos;i="6.00,230,1681171200"; 
+   d="scan'208";a="136187882"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-b538c141.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 20:00:37 +0000
+Received: from EX19MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
+	by email-inbound-relay-iad-1e-m6i4x-b538c141.us-east-1.amazon.com (Postfix) with ESMTPS id 84D72A11E1;
+	Fri,  9 Jun 2023 20:00:28 +0000 (UTC)
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 9 Jun 2023 20:00:27 +0000
+Received: from 88665a182662.ant.amazon.com (10.106.101.20) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.26;
+ Fri, 9 Jun 2023 20:00:21 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <leitao@debian.org>
+CC: <alex.aring@gmail.com>, <andrea.righi@canonical.com>,
+	<asml.silence@gmail.com>, <ast@kernel.org>, <axboe@kernel.dk>,
+	<courmisch@gmail.com>, <davem@davemloft.net>, <dccp@vger.kernel.org>,
+	<dsahern@kernel.org>, <edumazet@google.com>, <hbh25y@gmail.com>,
+	<joannelkoong@gmail.com>, <kernelxing@tencent.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <leit@fb.com>, <linux-kernel@vger.kernel.org>,
+	<linux-sctp@vger.kernel.org>, <linux-wpan@vger.kernel.org>,
+	<lucien.xin@gmail.com>, <marcelo.leitner@gmail.com>, <martin.lau@kernel.org>,
+	<martineau@kernel.org>, <matthieu.baerts@tessares.net>,
+	<miquel.raynal@bootlin.com>, <mptcp@lists.linux.dev>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <stefan@datenfreihafen.org>,
+	<willemb@google.com>, <willemdebruijn.kernel@gmail.com>,
+	<wojciech.drewek@intel.com>
+Subject: Re: [PATCH net-next v7] net: ioctl: Use kernel memory on protocol ioctl callbacks
+Date: Fri, 9 Jun 2023 13:00:10 -0700
+Message-ID: <20230609200010.27991-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230609152800.830401-1-leitao@debian.org>
 References: <20230609152800.830401-1-leitao@debian.org>
-Subject: Re: net: ioctl: Use kernel memory on protocol ioctl callbacks:
- Tests Results
-Message-ID: <54e69429-3a01-1730-3015-3b30946ff243@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 09 Jun 2023 17:37:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.106.101.20]
+X-ClientProxiedBy: EX19D045UWC001.ant.amazon.com (10.13.139.223) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Precedence: Bulk
 
-Hi Breno,
+From: Breno Leitao <leitao@debian.org>
+Date: Fri,  9 Jun 2023 08:27:42 -0700
+> Most of the ioctls to net protocols operates directly on userspace
+> argument (arg). Usually doing get_user()/put_user() directly in the
+> ioctl callback.  This is not flexible, because it is hard to reuse these
+> functions without passing userspace buffers.
+> 
+> Change the "struct proto" ioctls to avoid touching userspace memory and
+> operate on kernel buffers, i.e., all protocol's ioctl callbacks is
+> adapted to operate on a kernel memory other than on userspace (so, no
+> more {put,get}_user() and friends being called in the ioctl callback).
+> 
+> This changes the "struct proto" ioctl format in the following way:
+> 
+>     int                     (*ioctl)(struct sock *sk, int cmd,
+> -                                        unsigned long arg);
+> +                                        int *karg);
+> 
+> (Important to say that this patch does not touch the "struct proto_ops"
+> protocols)
+> 
+> So, the "karg" argument, which is passed to the ioctl callback, is a
+> pointer allocated to kernel space memory (inside a function wrapper).
+> This buffer (karg) may contain input argument (copied from userspace in
+> a prep function) and it might return a value/buffer, which is copied
+> back to userspace if necessary. There is not one-size-fits-all format
+> (that is I am using 'may' above), but basically, there are three type of
+> ioctls:
+> 
+> 1) Do not read from userspace, returns a result to userspace
+> 2) Read an input parameter from userspace, and does not return anything
+>   to userspace
+> 3) Read an input from userspace, and return a buffer to userspace.
+> 
+> The default case (1) (where no input parameter is given, and an "int" is
+> returned to userspace) encompasses more than 90% of the cases, but there
+> are two other exceptions. Here is a list of exceptions:
+> 
+> * Protocol RAW:
+>    * cmd = SIOCGETVIFCNT:
+>      * input and output = struct sioc_vif_req
+>    * cmd = SIOCGETSGCNT
+>      * input and output = struct sioc_sg_req
+>    * Explanation: for the SIOCGETVIFCNT case, userspace passes the input
+>      argument, which is struct sioc_vif_req. Then the callback populates
+>      the struct, which is copied back to userspace.
+> 
+> * Protocol RAW6:
+>    * cmd = SIOCGETMIFCNT_IN6
+>      * input and output = struct sioc_mif_req6
+>    * cmd = SIOCGETSGCNT_IN6
+>      * input and output = struct sioc_sg_req6
+> 
+> * Protocol PHONET:
+>   * cmd == SIOCPNADDRESOURCE | SIOCPNDELRESOURCE
+>      * input int (4 bytes)
+>   * Nothing is copied back to userspace.
+> 
+> For the exception cases, functions sock_sk_ioctl_inout() will
+> copy the userspace input, and copy it back to kernel space.
+> 
+> The wrapper that prepare the buffer and put the buffer back to user is
+> sk_ioctl(), so, instead of calling sk->sk_prot->ioctl(), the callee now
+> calls sk_ioctl(), which will handle all cases.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Reviewed-by: Willem de Bruijn <willemb@google.com>
+> Reviewed-by: David Ahern <dsahern@kernel.org>
 
-Thank you for your modifications, that's great!
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6051788479004672
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6051788479004672/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5488838525583360
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5488838525583360/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4574044851273728
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4574044851273728/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_add_addr =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5895381003796480
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5895381003796480/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/684c7cd9447c
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Thanks!
