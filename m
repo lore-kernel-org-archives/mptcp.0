@@ -1,282 +1,249 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5977713AE9
-	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 09:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686304678;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=56xWbfoptaVkipk2f+FN0tvaqlSv7XhrHt1H26OUS4E=;
-	b=MSiND9NQ5sINx7ggKfoGAxOcdgetV7NxuSTgtYYnxU7WfaA/WT8Cplg5V8uI9h3HSZgcYj
-	J1w/3J0CL8L0DPg8svvJ3HB6u+T35mBOLJOtuRVTNAmqMOOLbiCj+9KmH7js3NlAe6ewgw
-	3XhUioiZQBiN4A8JmKgXks+93zDQUEw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-161-g3NrZfjrP6uqLzLSJF6Nxw-1; Fri, 09 Jun 2023 05:57:56 -0400
-X-MC-Unique: g3NrZfjrP6uqLzLSJF6Nxw-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-3f7ecda6eefso2811465e9.1
-        for <mptcp@lists.linux.dev>; Fri, 09 Jun 2023 02:57:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686304675; x=1688896675;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=fRAVT2WcigYSoKjuo/hBJkbGKy7cbMGvxzkWYHSbgX8=;
-        b=lWxpNGwEpuMtBtl7S1z/AFSqnocVStqZewmIqU/N2ZrZOVGYM9MmKtj/RLJ+TBYPmT
-         vXAUOus/OiRffFAvsyr7KU9n3xDDKtmJYHG3G0efI+/MK3lhrkmW72R8NPqnQncRZsl0
-         yq2i9gmwp/vWqEScV2zcU1ZotpU3xfH9gYWoaG4BLdHEXdLPNQKT+XWJ+FXZTR4sCqBC
-         ougmoR6QJePiDz3MxwPbnIWss2IdJ4VQpl3oMT261ZgYsNOhGx0p4Ljbxu/lvSqE65OA
-         iU7o1S02wkqTaSU9MaNWYmI1+EnNmu9qb6Ky7ZwnQlHo3NYMn6ZZE4B5p7qoU6K3UpW7
-         xa4Q==
-X-Gm-Message-State: AC+VfDzVEDeNH9MZIJgNXHEEWYX6d8H8EZNj+IGS0eXsMCxfOmU6X/Sz
-	5RH3Expc9jh5DcIwHhVUzN/eMgzM/WvkRn9ad88nNdKLI0r9wMAwpGP9PVWO1SfASQ77XHZ6V86
-	GsVdhe6aYsr31bDsuVZoCIhY=
-X-Received: by 2002:a5d:4c88:0:b0:307:a5d1:dbb5 with SMTP id z8-20020a5d4c88000000b00307a5d1dbb5mr581819wrs.6.1686304675588;
-        Fri, 09 Jun 2023 02:57:55 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6eMUDWwGmu0lLj7jMlNEm4FFnMIaBOI5+yOf+4LGbbVggpSjsvAimMfgVTR2rpsW1QmBpZkg==
-X-Received: by 2002:a5d:4c88:0:b0:307:a5d1:dbb5 with SMTP id z8-20020a5d4c88000000b00307a5d1dbb5mr581809wrs.6.1686304675194;
-        Fri, 09 Jun 2023 02:57:55 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-250-244.dyn.eolo.it. [146.241.250.244])
-        by smtp.gmail.com with ESMTPSA id 4-20020a05600c024400b003f60101074dsm2134764wmj.33.2023.06.09.02.57.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 02:57:54 -0700 (PDT)
-Message-ID: <666004bda6ff9e3e6d65c6903c5b18f18f0e31ed.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v8 13/17] selftests/bpf: Add bpf_burst
- scheduler
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Date: Fri, 09 Jun 2023 11:57:53 +0200
-In-Reply-To: <bf747921efceb7f066a75cb2dae2ab46071b8275.1686202841.git.geliang.tang@suse.com>
-References: <cover.1686202841.git.geliang.tang@suse.com>
-	 <bf747921efceb7f066a75cb2dae2ab46071b8275.1686202841.git.geliang.tang@suse.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD39154A8
+	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 11:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686310127; x=1717846127;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=XC4ttSuarwYKRngqUt3rc871KkPXfMJF6Pta48lzLdE=;
+  b=OBl5C1CrWdM9o+yt/9PSHAoBdaKOXnvSA/5Yr6hZWDXTNzF/r30Jp7gF
+   IhYCr0aY7qGswA2MhF4ioqKX9tq1YYXbFAWLZwwVAySw69dr2feJPoWEK
+   ZNru5/NYTq6eQN9arbn84U656rvzdMpMrvCYYjt31wFjn5sP76RmFmnxm
+   1tONw1FjJ0XHAjiJzHx+IhYBuswIF73V+xSaERRRvSi4g7FsOHZkAhAu+
+   0Ed4xjvw8cinnC5KJiqUuu+qoygcjhzh2Kc+nkTJORbOyv9ISm3pkqlFG
+   HC0d/r7z3LF/OQbYF4Ys9+yMY9cQL6ILDmDuMvObXgCsnV1nV8cTwJpDj
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="355068940"
+X-IronPort-AV: E=Sophos;i="6.00,229,1681196400"; 
+   d="scan'208";a="355068940"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 04:28:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="713480715"
+X-IronPort-AV: E=Sophos;i="6.00,229,1681196400"; 
+   d="scan'208";a="713480715"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Jun 2023 04:28:46 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Fri, 9 Jun 2023 04:28:46 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Fri, 9 Jun 2023 04:28:46 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Fri, 9 Jun 2023 04:28:46 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.176)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Fri, 9 Jun 2023 04:28:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gz6QQmMJRZBvncedJu2V8f860/7V0+NNc4fmaZnH3acT2jShVbvxQciBxxlyF9izCxkflFqgBV+cRDscUJD2nohnZRqZukQ5yhcHYGhe7/JzCA3PH5MI3lIXKS3i570P+kCQEtN3bbd5mUoZp7PPy57+XMArf/mrDozqVrb/89+pe/sJODKaU8LDTuEfFu02BB95iF8JOJTu3niBCDH6nEPFGO/coLeEfkLlLULjvYpifhvr5PJHeF5Rh7dhkEZvIVvQQyXHz2Z/2R7r8N3h55+fVz5WLt3JXhDiD5H5LHjAgM8UuRUUuoowJfULAW4FwW2uuGLujHNsxa1/wEnOhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sNlCFVqOZcxOi4K7ziRSlOBqHDUdgbENFqb+fQfZifs=;
+ b=XUScpOnddU+l5YhWgRHnMTL84DMZY0N9+6fkFVFFfYVe7I9vnVnhNwWmGiYS1uauUKOG5rMxNhuBEGlgZe5lrKWCqDiNM+XIwFeKrmMZxecxv/zWHzuSIyQiKnFHqqJoZxUB0k3629Imtosd95Mx1fymz4BRy5YmfS1zB4GvKqStCMizUjXeqDlMjDUm3ySPFWMjqXHaW4YWpGMc0jx6AWeBvuAhE/dSE4Y6vLK0D2zWqHoP33c3MoE1m7+XXa06UU9cmTislYIHP4q35hFFuVbpUe7vukxbzO7fv10VW99mVFtoAZEfOpIhfpNdCBCBgaiYXEeudAa16VnvGJ/jkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SN7PR11MB7540.namprd11.prod.outlook.com (2603:10b6:806:340::7)
+ by MW4PR11MB5909.namprd11.prod.outlook.com (2603:10b6:303:168::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Fri, 9 Jun
+ 2023 11:28:45 +0000
+Received: from SN7PR11MB7540.namprd11.prod.outlook.com
+ ([fe80::9376:9c9d:424a:a0fe]) by SN7PR11MB7540.namprd11.prod.outlook.com
+ ([fe80::9376:9c9d:424a:a0fe%5]) with mapi id 15.20.6455.030; Fri, 9 Jun 2023
+ 11:28:45 +0000
+Date: Fri, 9 Jun 2023 13:25:38 +0200
+From: Larysa Zaremba <larysa.zaremba@intel.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+CC: <mptcp@lists.linux.dev>, Mat Martineau <martineau@kernel.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Geliang Tang
+	<geliang.tang@suse.com>
+Subject: Re: [PATCH net-next 1/4] mptcp: export local_address
+Message-ID: <ZIMMMkT4teqPtKBm@lincoln>
+References: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-0-b301717c9ff5@tessares.net>
+ <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-1-b301717c9ff5@tessares.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-1-b301717c9ff5@tessares.net>
+X-ClientProxiedBy: FR2P281CA0124.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:9d::18) To SN7PR11MB7540.namprd11.prod.outlook.com
+ (2603:10b6:806:340::7)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR11MB7540:EE_|MW4PR11MB5909:EE_
+X-MS-Office365-Filtering-Correlation-Id: 56b834cf-02cc-4a1d-8c30-08db68dcaf74
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: a3mg+UsLN90+AKBdveC/ApKfPPC9MKPUXwa92VwkDDjASQMEyfFYOaBXFHMMSFZo1vZRUOVbVh6U+fK1oCBzrvqJOiWE5HhsIT2HBX8I3wl8DWxs3OiLCo9fotFUOUTU0D83xnaZ/LDgpEvedC1WbNBFJOt2a/+zyWF/Zw2C7CRbEgXRkIRJiu0h4cORx/NCqRo30x/c05mkfFzaoC7yf0wo6DmXUVPe06oASbUGNhB76GUDHHAWhfAN/IgKB7WO2Ym/xP3lYLRL1SEDzwsuCnaBD/UYggg7+Q0ZsqQjXpwe0OSNPzHLKyqMUH9i/tJVYbKSQZoYqBU1Cbyami9u4V7bD9cRi2FwGt44Cn/ogOB7F5ryxAq7/o8a1iti0JCvzqH0WiTFqXyvXrzhKEVum9W5H6TfGcv+85pQuXubU9Ifk5YBLJWVy/TnYAHwFnYscZFGowAuEwi3Z87PYYJfzUN8gZpozoGlGCy63hUFX8nXYGAddeGTDbGAwZ3FI7e9YG+gOIGmqYUWIr0Q4eDnAC0jXnqDCi1ot/X3X8QoKOlwgFquteNze45PmCyNIscW
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB7540.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(136003)(346002)(366004)(376002)(396003)(39860400002)(451199021)(54906003)(478600001)(66476007)(6916009)(44832011)(8936002)(8676002)(66556008)(7416002)(2906002)(33716001)(5660300002)(86362001)(4326008)(66946007)(82960400001)(316002)(38100700002)(6506007)(41300700001)(9686003)(6512007)(26005)(186003)(83380400001)(6486002)(6666004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?26oZKTwB2djb7EDu3KxN425xONk1YEYCqwVQ5xS8g/KTsxve7sZhs29QKb7Z?=
+ =?us-ascii?Q?Ml1Goleurers0A8eA7gPCPjbmS2h0CqnX7mmEx3pmqv/dTPWh1kZ1OpG6qKe?=
+ =?us-ascii?Q?fkldTlfSeUg430tJPw1MzV7SAPN8fKsr3KAJTQY/PrH1C2LW96cDflowgdPY?=
+ =?us-ascii?Q?9ejurAhlb4Ph7jdAE0t0BKaDPhEjZfjIMICVCtlZpkFU2R6EuCp2hxFy5/sV?=
+ =?us-ascii?Q?LCzWIq4ekE0oSOvJgA/Qx7/WVWfz4rUNqksWGuLaQ8d5XQVfwXWaPIMtgt1V?=
+ =?us-ascii?Q?rmZzF/wv9UCutFh7ByaSdpPa29wctvppZJyTGeMyy0TQzs9XkU3y+XWiixLQ?=
+ =?us-ascii?Q?mkXe/z+xV5iy+fGqWc28Zr1XC28qF+UdTOrMFauCj8l2fUgjesCCMccL7Zp5?=
+ =?us-ascii?Q?tUWP70yk+0Qnbb2H1GthxnggetJGeK+Tt85fm4ok2Pdz4GDjIcimM/PLYq1o?=
+ =?us-ascii?Q?aeF9lyft4eBRy4GwStLbDsaLkHdlSjLq5ONm8R6JHPa/RWaI5pCO4Rm3qlue?=
+ =?us-ascii?Q?Co7vW3s9JmmCxan7fijZdN/Z/ChEMwNIuSNq2MxGGOVp8e0s8TwEx9JU8IV1?=
+ =?us-ascii?Q?j25gFMNeUjXpiIU3/PwiUP6LjdWACEG2epBnxCuCS/NEIqrOjqsOIlMuazg/?=
+ =?us-ascii?Q?vOFt8qxdSx3un/43oegCSgBL1QRGn27cdpAeRlGmvkSjJSCPMmp5lf1TL52h?=
+ =?us-ascii?Q?jQqqbCGrFuM7Ttd70IIIIiZ9EumQrrlkCHmJxr6pfvzYa5qIQui14XV6xIIC?=
+ =?us-ascii?Q?FyFeY4fDAn9y87KNzXGKh12WGIUfCEYaR615Q5GVSyAUGbCx9OsS7XVxyLB4?=
+ =?us-ascii?Q?f1htj7iYnHNBWxMSfXXvaMcDVmGW/Srb0aFDl8Kw8vqxAN+Qu96Ee52cdAhz?=
+ =?us-ascii?Q?OO3+8goJPtuLo1lUUdgVoGxY9NrT/OOYlQyFHocsjPirZ9xCg5fKE78t9sPP?=
+ =?us-ascii?Q?OojppoxyDqQowXFNH40CIE+fQJPlr510saCwL23TZDVhtoXsc+40YNmOD2F4?=
+ =?us-ascii?Q?IXVqctEylVjAoo1cmMzzeDbl4hfRAB/EAnwTPqrsMJwBkaiExoQvPE9PMshu?=
+ =?us-ascii?Q?QNGCg51whp3fSRbDwzg0uNpYewiDaikJDkZBOuhQuR30eUVwhRcGnsjGdhAI?=
+ =?us-ascii?Q?fwTarWI5om+nsjRi7WHadh+xYFi69t5fopBFw9RkFo7MGKkBY5p4cZlqdFh8?=
+ =?us-ascii?Q?SEi/s0+sg/wOQi5C5MsgW17ViATwfaaHNZIAPGsKQrEwWf/2aUPgQSuZQ1MA?=
+ =?us-ascii?Q?nzwILb/qCc07VtuD8aYHQ7sIVfh147H+H2/p0Jq/VopP0bHJGf4nRpLNIGN5?=
+ =?us-ascii?Q?THKL5Z3Ut4SL2ONXUsgf15em54wTqRh9MEWKB+xjp0bz7b3mYVsqiyXSYcF6?=
+ =?us-ascii?Q?VJNHzvbiDkG5cYBt6kHkVoOPmQCo/Ddm99yCHp8WSG/xf80DLC+dhNkxnaeF?=
+ =?us-ascii?Q?voVZi/MCQHg43IE1ZubtRJG7/+ciZfunJ6SPBsKlOMiU/Tsl0W6yUVZ0kEg5?=
+ =?us-ascii?Q?fVMEdnWzxenejIWP67dKa9lKWwcsgXlxMl7SETJJhDyazKmUOWyzY8mD+EFl?=
+ =?us-ascii?Q?Oj+NcGvz6wos0jjVQwX5A1By1s22fEuxlukUW24uBqTDZzDTvz4L11A72Wbr?=
+ =?us-ascii?Q?rQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56b834cf-02cc-4a1d-8c30-08db68dcaf74
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB7540.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2023 11:28:45.1962
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ov7HXzkJaDCsHw2E9QrwZfZSCBc4El6qU1HjWBZZzPcAexDgvDPg4P4u2RQAHBUo85mbQpPKfK4BldTKmxCSBIeFU1NFoGM8Zh3Wq08blnw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB5909
+X-OriginatorOrg: intel.com
 
-On Thu, 2023-06-08 at 13:46 +0800, Geliang Tang wrote:
-> This patch implements the burst BPF MPTCP scheduler, named bpf_burst,
-> which is the default scheduler in protocol.c. bpf_burst_get_send() uses
-> the same logic as mptcp_subflow_get_send() and bpf_burst_get_retrans
-> uses the same logic as mptcp_subflow_get_retrans().
->=20
+On Thu, Jun 08, 2023 at 03:20:49PM +0200, Matthieu Baerts wrote:
+> From: Geliang Tang <geliang.tang@suse.com>
+> 
+> Rename local_address() with "mptcp_" prefix and export it in protocol.h.
+> 
+> This function will be re-used in the common PM code (pm.c) in the
+> following commit.
+> 
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+
+
+Checkpatch on patchwork complains about line length exceeding 80 columns.
+But from what I see, changed files do not comply anyway.
+
+Reviewed-by: Larysa Zaremba <larysa.zaremba@intel.com>
+
 > ---
->  tools/testing/selftests/bpf/bpf_tcp_helpers.h |   5 +
->  .../selftests/bpf/progs/mptcp_bpf_burst.c     | 208 ++++++++++++++++++
->  2 files changed, 213 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
->=20
-> diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testin=
-g/selftests/bpf/bpf_tcp_helpers.h
-> index 44c356772798..927a00f663f2 100644
-> --- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> +++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
-> @@ -36,6 +36,7 @@ enum sk_pacing {
->  struct sock {
->  =09struct sock_common=09__sk_common;
->  #define sk_state=09=09__sk_common.skc_state
-> +=09int=09=09=09sk_wmem_queued;
->  =09unsigned long=09=09sk_pacing_rate;
->  =09__u32=09=09=09sk_pacing_status; /* see enum sk_pacing */
->  } __attribute__((preserve_access_index));
-> @@ -234,12 +235,15 @@ extern void tcp_cong_avoid_ai(struct tcp_sock *tp, =
-__u32 w, __u32 acked) __ksym;
->  #define MPTCP_SUBFLOWS_MAX=098
-> =20
->  struct mptcp_subflow_context {
-> +=09unsigned long avg_pacing_rate;
->  =09__u32=09backup : 1;
-> +=09__u8=09stale_count;
->  =09struct=09sock *tcp_sock;=09    /* tcp sk backpointer */
->  } __attribute__((preserve_access_index));
-> =20
->  struct mptcp_sched_data {
->  =09struct sock=09*last_snd;
-> +=09int=09=09snd_burst;
->  =09bool=09=09reinject;
->  =09struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
->  } __attribute__((preserve_access_index));
-> @@ -260,6 +264,7 @@ struct mptcp_sched_ops {
->  struct mptcp_sock {
->  =09struct inet_connection_sock=09sk;
-> =20
-> +=09__u64=09=09snd_nxt;
->  =09__u32=09=09token;
->  =09struct sock=09*first;
->  =09char=09=09ca_name[TCP_CA_NAME_MAX];
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c b/tools/=
-testing/selftests/bpf/progs/mptcp_bpf_burst.c
-> new file mode 100644
-> index 000000000000..b860fd517787
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-> @@ -0,0 +1,208 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2023, SUSE. */
-> +
-> +#include <linux/bpf.h>
-> +#include <limits.h>
-> +#include "bpf_tcp_helpers.h"
-> +
-> +char _license[] SEC("license") =3D "GPL";
-> +
-> +#define MPTCP_SEND_BURST_SIZE=0965428
-> +
-> +struct subflow_send_info {
-> +=09struct sock *ssk;
-> +=09__u64 linger_time;
-> +};
-> +
-> +static struct mptcp_subflow_context *
-> +bpf_mptcp_subflow_ctx(struct sock *ssk, struct mptcp_sched_data *data)
-> +{
-> +=09int i, nr =3D 0;
-> +
-> +=09for (i =3D 0; i < MPTCP_SUBFLOWS_MAX; i++) {
-> +=09=09if (!ssk || !data->contexts[i])
-> +=09=09=09break;
-> +
-> +=09=09if (mptcp_subflow_tcp_sock(data->contexts[i]) =3D=3D ssk) {
-> +=09=09=09nr =3D i;
-> +=09=09=09break;
-> +=09=09}
-> +=09}
-> +
-> +=09return data->contexts[nr];
-> +}
-> +
-> +static inline __u64 div_u64_rem(__u64 dividend, __u32 divisor, __u32 *re=
-mainder)
-> +{
-> +=09*remainder =3D dividend % divisor;
-> +=09return dividend / divisor;
-> +}
-> +
-> +static inline __u64 div_u64(__u64 dividend, __u32 divisor)
-> +{
-> +=09__u32 remainder;
-> +
-> +=09return div_u64_rem(dividend, divisor, &remainder);
-> +}
-> +
-> +extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow) =
-__ksym;
-> +extern void mptcp_set_timeout(struct sock *sk) __ksym;
-> +extern __u64 mptcp_wnd_end(const struct mptcp_sock *msk) __ksym;
-> +extern bool bpf_sk_stream_memory_free(const struct sock *sk) __ksym;
-> +extern bool bpf_tcp_rtx_and_write_queues_empty(const struct sock *sk) __=
-ksym;
-> +extern void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, str=
-uct sock *ssk) __ksym;
-> +
-> +#define SSK_MODE_ACTIVE=090
-> +#define SSK_MODE_BACKUP=091
-> +#define SSK_MODE_MAX=092
-> +
-> +SEC("struct_ops/mptcp_sched_burst_init")
-> +void BPF_PROG(mptcp_sched_burst_init, const struct mptcp_sock *msk)
-> +{
-> +}
-> +
-> +SEC("struct_ops/mptcp_sched_burst_release")
-> +void BPF_PROG(mptcp_sched_burst_release, const struct mptcp_sock *msk)
-> +{
-> +}
-> +
-> +void BPF_STRUCT_OPS(bpf_burst_data_init, const struct mptcp_sock *msk,
-> +=09=09    struct mptcp_sched_data *data)
-> +{
-> +=09mptcp_sched_data_set_contexts(msk, data);
-> +}
-> +
-> +static int bpf_burst_get_send(const struct mptcp_sock *msk,
-> +=09=09=09      struct mptcp_sched_data *data)
-> +{
-> +=09struct subflow_send_info send_info[SSK_MODE_MAX];
-> +=09struct mptcp_subflow_context *subflow;
-> +=09struct sock *sk =3D (struct sock *)msk;
-> +=09__u32 pace, burst, wmem;
-> +=09int i, nr_active =3D 0;
-> +=09__u64 linger_time;
-> +=09struct sock *ssk;
-> +
-> +=09/* pick the subflow with the lower wmem/wspace ratio */
-> +=09for (i =3D 0; i < SSK_MODE_MAX; ++i) {
-> +=09=09send_info[i].ssk =3D NULL;
-> +=09=09send_info[i].linger_time =3D -1;
-> +=09}
-> +
-> +=09for (i =3D 0; i < MPTCP_SUBFLOWS_MAX; i++) {
-> +=09=09if (!data->contexts[i])
-> +=09=09=09break;
-> +
-> +=09=09subflow =3D data->contexts[i];
-> +=09=09ssk =3D mptcp_subflow_tcp_sock(subflow);
-> +=09=09if (!mptcp_subflow_active(subflow))
-> +=09=09=09continue;
-> +
-> +=09=09nr_active +=3D !subflow->backup;
-> +=09=09pace =3D subflow->avg_pacing_rate;
-> +=09=09if (!pace) {
-> +=09=09=09/* init pacing rate from socket */
-> +=09=09=09subflow->avg_pacing_rate =3D ssk->sk_pacing_rate;
-> +=09=09=09pace =3D subflow->avg_pacing_rate;
-> +=09=09=09if (!pace)
-> +=09=09=09=09continue;
-> +=09=09}
-> +
-> +=09=09linger_time =3D div_u64((__u64)ssk->sk_wmem_queued << 32, pace);
-> +=09=09if (linger_time < send_info[subflow->backup].linger_time) {
-> +=09=09=09send_info[subflow->backup].ssk =3D ssk;
-> +=09=09=09send_info[subflow->backup].linger_time =3D linger_time;
-> +=09=09}
-> +=09}
-> +=09mptcp_set_timeout(sk);
-> +
-> +=09/* pick the best backup if no other subflow is active */
-> +=09if (!nr_active)
-> +=09=09send_info[SSK_MODE_ACTIVE].ssk =3D send_info[SSK_MODE_BACKUP].ssk;
-> +
-> +=09/* Get the ssk directly like this "ssk =3D send_info[SSK_MODE_ACTIVE]=
-.ssk;"
-> +=09 * will get an error:
-> +=09 *   arg#0 pointer type STRUCT sock must point to scalar, or struct w=
-ith scalar
-> +=09 * So here use bpf_mptcp_subflow_ctx() to get the subflow,
-
-May I guess you get a similar error if you do:
-
-=09subflow =3D mptcp_subflow_ctx(ssk)
-
-? (just out of sheer ignorance and curiosity)
-
-> +=09 * then use mptcp_subflow_tcp_sock() to get the ssk.
-> +=09 */
-> +=09subflow =3D mptcp_subflow_tcp_sock(send_info[SSK_MODE_ACTIVE].ssk, da=
-ta);
-> +=09ssk =3D mptcp_subflow_tcp_sock(subflow);
-
-What if you store the 'subflow' pointer in 'send_info'? Will the
-verifier splat with that? and what if we store the corresponding
-context index 'i' instead? that we avoid the 'mptcp_subflow_tcp_sock()'
-call entirely.
-
-Please, don't send directly a new version, I think it would be better
-clarify this point before updating the code
-
-thanks!
-
-Paolo
-
+>  net/mptcp/pm_netlink.c | 17 ++++++++---------
+>  net/mptcp/protocol.h   |  1 +
+>  2 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index bc343dab5e3f..c55ed3dda0d8 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -86,8 +86,7 @@ bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
+>  	return a->port == b->port;
+>  }
+>  
+> -static void local_address(const struct sock_common *skc,
+> -			  struct mptcp_addr_info *addr)
+> +void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr)
+>  {
+>  	addr->family = skc->skc_family;
+>  	addr->port = htons(skc->skc_num);
+> @@ -122,7 +121,7 @@ static bool lookup_subflow_by_saddr(const struct list_head *list,
+>  	list_for_each_entry(subflow, list, node) {
+>  		skc = (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
+>  
+> -		local_address(skc, &cur);
+> +		mptcp_local_address(skc, &cur);
+>  		if (mptcp_addresses_equal(&cur, saddr, saddr->port))
+>  			return true;
+>  	}
+> @@ -263,7 +262,7 @@ bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk)
+>  	struct mptcp_addr_info saddr;
+>  	bool ret = false;
+>  
+> -	local_address((struct sock_common *)sk, &saddr);
+> +	mptcp_local_address((struct sock_common *)sk, &saddr);
+>  
+>  	spin_lock_bh(&msk->pm.lock);
+>  	list_for_each_entry(entry, &msk->pm.anno_list, list) {
+> @@ -541,7 +540,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+>  		struct mptcp_addr_info mpc_addr;
+>  		bool backup = false;
+>  
+> -		local_address((struct sock_common *)msk->first, &mpc_addr);
+> +		mptcp_local_address((struct sock_common *)msk->first, &mpc_addr);
+>  		rcu_read_lock();
+>  		entry = __lookup_addr(pernet, &mpc_addr, false);
+>  		if (entry) {
+> @@ -752,7 +751,7 @@ int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+>  		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>  		struct mptcp_addr_info local, remote;
+>  
+> -		local_address((struct sock_common *)ssk, &local);
+> +		mptcp_local_address((struct sock_common *)ssk, &local);
+>  		if (!mptcp_addresses_equal(&local, addr, addr->port))
+>  			continue;
+>  
+> @@ -1070,8 +1069,8 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+>  	/* The 0 ID mapping is defined by the first subflow, copied into the msk
+>  	 * addr
+>  	 */
+> -	local_address((struct sock_common *)msk, &msk_local);
+> -	local_address((struct sock_common *)skc, &skc_local);
+> +	mptcp_local_address((struct sock_common *)msk, &msk_local);
+> +	mptcp_local_address((struct sock_common *)skc, &skc_local);
+>  	if (mptcp_addresses_equal(&msk_local, &skc_local, false))
+>  		return 0;
+>  
+> @@ -1491,7 +1490,7 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
+>  		if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
+>  			goto next;
+>  
+> -		local_address((struct sock_common *)msk, &msk_local);
+> +		mptcp_local_address((struct sock_common *)msk, &msk_local);
+>  		if (!mptcp_addresses_equal(&msk_local, addr, addr->port))
+>  			goto next;
+>  
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index c5255258bfb3..6e6cffc04ced 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -638,6 +638,7 @@ void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk);
+>  
+>  bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
+>  			   const struct mptcp_addr_info *b, bool use_port);
+> +void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr);
+>  
+>  /* called with sk socket lock held */
+>  int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+> 
+> -- 
+> 2.40.1
+> 
+> 
