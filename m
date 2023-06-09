@@ -1,295 +1,76 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D9316400
-	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 13:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686317926; x=1717853926;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=z8LpolJrBZD1f2xrkoa7M9ugiziI46rMa8u2i+0sn3E=;
-  b=XYbZ6icUwRk8nkwoPt2keT8WKFmK7esSkraBgJzSh0zvdMtdcQuNHk0r
-   E2jvfdvqRaOof3QLNFBgKxJKwGGuLSuneWaZBdSuXGgdM9pouVP4Y8Y9q
-   oz/xLO8vF7liYmb+2FzRQH0WlexASDvD9k1FqV8WSMVkGwXTagB2+UqPf
-   Zm0r39+j7A2mR0R8rSRwL4CDWQazOnDL1kfUCUigLSHhhW2PJNCSRNjga
-   P+7bRvIP6kp67jtuurIdDXNJ8Mi689Lgn5+XqB/pLfFmXv2vGFpSSfIWd
-   zXQ/QrCY6Ts57xbTmDE7fHw58ZBRT4yUR7CJ7FBDTkw94mocW9UYxAlY+
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="337232443"
-X-IronPort-AV: E=Sophos;i="6.00,229,1681196400"; 
-   d="scan'208";a="337232443"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 06:38:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="834648646"
-X-IronPort-AV: E=Sophos;i="6.00,229,1681196400"; 
-   d="scan'208";a="834648646"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga004.jf.intel.com with ESMTP; 09 Jun 2023 06:38:45 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 9 Jun 2023 06:38:44 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Fri, 9 Jun 2023 06:38:44 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Fri, 9 Jun 2023 06:38:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZQc3goRmHCmFtrDNXk6DgRfShGmvsbRiJAx++QXzJ29TzFl/ShLJPFL4cEMdEUobDiIQhRSpVHTvJ+GN17twGSKPVuV3lNYA7aRHHEbCFf9IF+i9kdwChmDQEgq/Sj2yq1w4LwLDGpuHteibqcpPW/0M6nQKB6NKfUv+CLial97+ryryCcKaPnzsj/pU+xwnW9XnVtEUdv/en8Z8qUQRLs+abkF3vM9Gz/ZjsNKQRzM5NFs0KJL0fulhzH3tGsynG8EvjEKQUNK5+lC3PRmFESuhCgb6ayGdWW+WK7pehTTa+c98AWVFIto3epqb+/pn3GqGNCdGqg0C9v2/fVodgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tZC1saWRRuIVXhfp5YN/CQ27g7Z0eJXjmzL+wA90N4Y=;
- b=aF1KsrHv8Nl7FdP8sXGqtyj5oaqVDU6Sin97bnTrvp5ePGEjasGW3fCOrzU8yl4N4zKIWnmTulAvvO/jhRnhjJqsShiKnDoAJhDm9QsKZIsV/oGF9VSy40Hb9URPBmM2cjRGpNN/JpOmcNpNtubD21QeqjJ3ymjVhABkIxieDBHlS5p6SrKnxNKJhaVbw1JtZngCrwcsuoyn6VDYzH99DdgqNZMbbnLQa36xLdMFdN0hTPt0ayb/3UpAmiIFBq/Fqv98RKvSWxXkixfHte7qYE7pvq8bcM0WlN3CN+xeqO8Ibw08V1w45X4d0qq6yQuGJL5MPpYIUobEeF7kcnupbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SN7PR11MB7540.namprd11.prod.outlook.com (2603:10b6:806:340::7)
- by MW6PR11MB8368.namprd11.prod.outlook.com (2603:10b6:303:246::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Fri, 9 Jun
- 2023 13:38:43 +0000
-Received: from SN7PR11MB7540.namprd11.prod.outlook.com
- ([fe80::9376:9c9d:424a:a0fe]) by SN7PR11MB7540.namprd11.prod.outlook.com
- ([fe80::9376:9c9d:424a:a0fe%5]) with mapi id 15.20.6455.030; Fri, 9 Jun 2023
- 13:38:43 +0000
-Date: Fri, 9 Jun 2023 15:35:35 +0200
-From: Larysa Zaremba <larysa.zaremba@intel.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-CC: <mptcp@lists.linux.dev>, Mat Martineau <martineau@kernel.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Geliang Tang
-	<geliang.tang@suse.com>
-Subject: Re: [PATCH net-next 4/4] mptcp: unify pm set_flags interfaces
-Message-ID: <ZIMqp+uJ9SUIHvR5@lincoln>
-References: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-0-b301717c9ff5@tessares.net>
- <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-4-b301717c9ff5@tessares.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-4-b301717c9ff5@tessares.net>
-X-ClientProxiedBy: FR0P281CA0188.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ab::9) To SN7PR11MB7540.namprd11.prod.outlook.com
- (2603:10b6:806:340::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0814317741
+	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 13:59:31 +0000 (UTC)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5151934a4e3so2750301a12.1
+        for <mptcp@lists.linux.dev>; Fri, 09 Jun 2023 06:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1686319170; x=1688911170;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/vvSs7JMvACMBUHgQcTFv60ikQ1sCFCwCe7aHgV1+Ig=;
+        b=vR+vQhaxHY5xkskYIrcipmtUeqRFbsmxiPMaSiA3OmAp7Abg1aacWa27rip2XDasTL
+         9XhNop86mLfruAUAUU+aS+22BpjSHXUD8pQjAjgy6pz8CEAZlWpUIpwkj6n5AtJvT0q/
+         eR6M4SMuqwYUuS5Bec3pdh874vkDgS8EE1ywYMFU7WPu1FMso/GCTJqixlT+Uk7FQUoc
+         3T4SEyDHnzmR+EJM5zjI2Wyh0MbJhJXMCOmKiWAm3i0Nlt5HX3022qbJwYdpxJYSB1io
+         KW7LzutTEdLaGVWB3YPt8Q+5ndiG2IkVumz3wytPoJhfOAO3/vYz9QzPcCRZLD3cR8SA
+         dT/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686319170; x=1688911170;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/vvSs7JMvACMBUHgQcTFv60ikQ1sCFCwCe7aHgV1+Ig=;
+        b=eoAarKQxw0lcIQ9jLKqtBubok6wrZfEw63vL/3Rtus+cKCmMx3IzJVLkm3HKg/uAxF
+         ktdg1dk0D4I7YApJmL6YD6Um90bx7o4rG8T9Qt5xslslxjBdtnY8xEkgKV1GYM5emXXy
+         pVUl0SG5JhX5SzfFVeltP6NpALbk6BKE8Tg80f4qZwRu6vdInKS+LTia/AWkk+7Q6cNf
+         YCFNfU8quaOCoPtiSe0ar+TdXGtSn3hGD0V335mDi6/TdZpTD7Xj1jEhZB82EenKn9ve
+         mK2f4ghm51fAFNs+zr3bgFPLTE1ebmLRgO4bRioDJzrN+FmTKRa74W+gXcMH2cQKxcqJ
+         2sKg==
+X-Gm-Message-State: AC+VfDwqcM+Fk1YMIxX1S5VWygESwgUcbJpI2rSs//t76guyh7JAOvK+
+	qvNTamqUtFe85TkYBZfhwX6OhqJKilDI4pgfaJMpBw==
+X-Google-Smtp-Source: ACHHUZ6kAu3JaM0beAf1ljrXwjHLtua7z6CuPzJwA9GYZKmwGHJ3QMi3yHVr2q69Xm20gUIPF71IjQ==
+X-Received: by 2002:a17:907:31ce:b0:957:2d2a:e8a2 with SMTP id xf14-20020a17090731ce00b009572d2ae8a2mr1726291ejb.27.1686319169850;
+        Fri, 09 Jun 2023 06:59:29 -0700 (PDT)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id f16-20020a170906825000b0096ace550467sm1330958ejx.176.2023.06.09.06.59.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Jun 2023 06:59:29 -0700 (PDT)
+Message-ID: <4996caaa-dce1-bf57-e224-2496b8231be0@tessares.net>
+Date: Fri, 9 Jun 2023 15:59:29 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR11MB7540:EE_|MW6PR11MB8368:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7e2312c6-709c-4818-8726-08db68eed755
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tKyuPXcMh/6tZ6ROCHxhfqNuVHFBjRPTBPdYp/LaPdi95h1mGqq/QlJsdqns63qSSJ43oXr/RfJjfu5OJ6BFXPJBBxCUh5j+MsHY7azvYvsrKUoke/zUxIEs3ICbfYhDA2PgJ869cEO0BMd+AE4TC2zjAreDKJiFFMSC6Oy1wGXoO5OK379lUI7mU8loHbYbmQjbeZ0Msf5wmUkjqRXfTTE2cNUEXMWTFQdcs6eBGJbsIN9LFQpMrwAWf2WyWn//NeLPxSBJHIKcpLUbWX//frnZxNTlQDYAx1pgWVH9naFIwluQU+bQvuOWa4cCN0hchpfCKQNw2f7rQ2R4V7sH9SWKi/dplMgyy/pzhBqLxn9/FPCLlRqxIUONS7D4kOalpvbg/fWwmD/42bWh54Fbs/6FdwyxVaX4UYrG6GLwi2gBvCgc0FrkBX0xK3BIS6APrhtbGMLFwhJiTKV5Ww4d4pGpKG3gyv+HqxJ+lf1JMIlpiH3GarTdp9WZpjznX+kteyidR9/RZR84b0Y90ISj3qhDxk/TN/6KKuzHJmSF5mAjpHX+YS4+aTas2y4EmBn51+6T6euIql6678eURkzJ/V8do6vnD1LhvhHAt1ntNLA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB7540.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(396003)(346002)(366004)(39860400002)(376002)(136003)(451199021)(83380400001)(7416002)(82960400001)(478600001)(8936002)(8676002)(4326008)(86362001)(66476007)(66946007)(66556008)(6916009)(5660300002)(38100700002)(41300700001)(316002)(6666004)(6486002)(2906002)(54906003)(44832011)(6512007)(33716001)(186003)(26005)(6506007)(9686003)(67856001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xgu7fJihT3nWmKhBfV7k7FPK4TIcuHziQh+PyLT8OJtCGOJYkZ0FtzhiRtz9?=
- =?us-ascii?Q?K7EVtxEx3UWP92iGDcrN7d4y8v4ObhdgEDmDYNblAO16C/ZaQxc/S4kWZ5xZ?=
- =?us-ascii?Q?xo1OuppSumsnWTW1QU0bYWkjzL0/9DHwZuz6I2wqOPAQKao2QPzmoj/d2XZr?=
- =?us-ascii?Q?DrMOJSCdZNSo5/OHx5Gnenb3QpV3TjQ8tRFcYOf4XIEho8nBE71VlePgM5OM?=
- =?us-ascii?Q?9SG7DmwLuxeZ6CvBf28A56KrlkGbLgiT+INA4uwqMLC/dw2d/F/uPN3D6JHc?=
- =?us-ascii?Q?yb8g+MKHcnUDHwCw/DbjtperhrGOlw5tVCCHzmzvOgFAdqdXLJKMjneUEzvS?=
- =?us-ascii?Q?on8ILXex9GvHV/jy3ZEvNFboC9rq4703Aau1OXjZy1RVSo8x78+WT+lZXpHu?=
- =?us-ascii?Q?BDMgM0ie9DHqjbxzrvfOWCaoowCwja8DGdfjBY5ICLUIe2EWyYSEi7bXCNif?=
- =?us-ascii?Q?qHlnudfoTgWQIiMSIcH+vBYUja3fB+9F+pngAiXh8uYMT8kRlROC1PVSxSGu?=
- =?us-ascii?Q?Qms9M3DcjbrmWdenY9O9PrwePPP+i/UN7s7/KEvrEykiGhWFHs5L+mB965G6?=
- =?us-ascii?Q?9Wbbn9unDRsUd6Qgy4UTNRQ3K31uZP+0YAjZCj9mdKJpjSVdj8l88AiIepAJ?=
- =?us-ascii?Q?EQCM5gOCUoxRrhi0iWqJ1kyGNN8nVKCWrdahXXLlGm/mKPk3G9jaq9y98hXV?=
- =?us-ascii?Q?TEDMJllsjYXV35Fa5xA5Wb8Df4KHrf4KdN6WvITcwxzQLXf6kV4flbvMIURX?=
- =?us-ascii?Q?upFSNiR7YeMPBUKAFdtbGHtBtd5O3w84hgYOlOfhBb0F6PAS//RYbUr9NhJ6?=
- =?us-ascii?Q?Uw124Ktojzgt/WWn7UfFTzBLBoSXYuZdoNmcaFDjb+/QYVNmRiEw6SyVV9Rm?=
- =?us-ascii?Q?z/RNtfTtHjUaEwtVV6ujEGoj6/HHTM3qZNBiS1pcLCXrHlfyDVmG3M9OO2aH?=
- =?us-ascii?Q?32FZ33YOQH0sZgfcO7S8bkvi+b20/R37ZKDZPMmNWWj5H/L23zNbwZq94oao?=
- =?us-ascii?Q?V2XSYyE1DHtZEs0WPmjd9meLoBDd2raBdXcmmfDTxs3RN1x9hmZPGvDDvidV?=
- =?us-ascii?Q?OJhRxxA8EvgtqTKKop3P86kfDgjHf8RNxapGe9/vb2UFImZFOwxCoKaVvas3?=
- =?us-ascii?Q?aA4jlE4gLmqR+4uyNPzNHxerSWaNmxlSpWwMJCLOaUEFi1DaQ3jYfhfc7xIm?=
- =?us-ascii?Q?ZZpVSBLwzTGl9morMJStmUreoRSDgg3ee4mgHiOdYUvXx7m/T0Y1IkXrMGGE?=
- =?us-ascii?Q?5/m1dZcDj+PmKsZ3274SsLHDvKqji3wgrH+opFW3TlY/XWYoEW9uTzx3itdT?=
- =?us-ascii?Q?g8n6agJNWuXco4iX7DfBBaeiXsL/qPnau3RyUg5q7n9Oyl9eIVSeDggMZZDZ?=
- =?us-ascii?Q?rmMjDxaz+mN6sF1BOOPcXPKdmAGmd+YITZtu05zccJzRU80NhLhfghR5oafd?=
- =?us-ascii?Q?+CvXNUy8zvEy2PeK1eUv/gKrG6LgB82/Nj2avjLkvCL1WhC74Q3kgkn4lPOd?=
- =?us-ascii?Q?atsvthqlU/OS/S2BZ8uCu2a3en9CBYZZ0i70Gip76POBlRAJMV9XXa39fFq7?=
- =?us-ascii?Q?eHwvOj85ncy5CUDjyUg6C91XqjO+ALCGm5CL4BrmJ6bnWTUbNLNDdlqtRp9+?=
- =?us-ascii?Q?Kw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e2312c6-709c-4818-8726-08db68eed755
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB7540.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2023 13:38:42.9548
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hkumhNFqSbnDw77y/KdR2TBf+UUSJoxKO/yEtPU5FSwD2eOCu4bkQ9dI7XDiFGgSMcnkPNC/wyhmueAusyDyiSWHAWH1QBIJuCwITumOii8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR11MB8368
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH mptcp-next] mptcp: consolidate transition to TCP_CLOSE in
+ mptcp_do_fastclose()
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <ca4ee22bcb340d3c07778259ce6c08b4d39e89d0.1686155634.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <ca4ee22bcb340d3c07778259ce6c08b4d39e89d0.1686155634.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 08, 2023 at 03:20:52PM +0200, Matthieu Baerts wrote:
-> From: Geliang Tang <geliang.tang@suse.com>
-> 
-> This patch unifies the three PM set_flags() interfaces:
-> 
-> mptcp_pm_nl_set_flags() in mptcp/pm_netlink.c for the in-kernel PM and
-> mptcp_userspace_pm_set_flags() in mptcp/pm_userspace.c for the
-> userspace PM.
-> 
-> They'll be switched in the common PM infterface mptcp_pm_set_flags() in
-> mptcp/pm.c based on whether token is NULL or not.
-> 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Hi Paolo,
 
-Reviewed-by: Larysa Zaremba <larysa.zaremba@intel.com>
+On 07/06/2023 18:34, Paolo Abeni wrote:
+> The MPTCP code always set the msk state to TCP_CLOSE before
+> calling performing the fast-close. Move such state transition in
+> mptcp_do_fastclose() to avoid some code duplication.
 
-> ---
->  net/mptcp/pm.c         |  9 +++++++
->  net/mptcp/pm_netlink.c | 70 +++++++++++++++++++++++++++-----------------------
->  net/mptcp/protocol.h   |  4 +++
->  3 files changed, 51 insertions(+), 32 deletions(-)
-> 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 2d04598dde05..36bf9196168b 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -433,6 +433,15 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int id
->  	return mptcp_pm_nl_get_flags_and_ifindex_by_id(msk, id, flags, ifindex);
->  }
->  
-> +int mptcp_pm_set_flags(struct net *net, struct nlattr *token,
-> +		       struct mptcp_pm_addr_entry *loc,
-> +		       struct mptcp_pm_addr_entry *rem, u8 bkup)
-> +{
-> +	if (token)
-> +		return mptcp_userspace_pm_set_flags(net, token, loc, rem, bkup);
-> +	return mptcp_pm_nl_set_flags(net, loc, bkup);
-> +}
-> +
->  void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
->  {
->  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index e8b32d369f11..13be9205d36d 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1864,18 +1864,50 @@ static int mptcp_nl_set_flags(struct net *net,
->  	return ret;
->  }
->  
-> +int mptcp_pm_nl_set_flags(struct net *net, struct mptcp_pm_addr_entry *addr, u8 bkup)
-> +{
-> +	struct pm_nl_pernet *pernet = pm_nl_get_pernet(net);
-> +	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
-> +			   MPTCP_PM_ADDR_FLAG_FULLMESH;
-> +	struct mptcp_pm_addr_entry *entry;
-> +	u8 lookup_by_id = 0;
-> +
-> +	if (addr->addr.family == AF_UNSPEC) {
-> +		lookup_by_id = 1;
-> +		if (!addr->addr.id)
-> +			return -EOPNOTSUPP;
-> +	}
-> +
-> +	spin_lock_bh(&pernet->lock);
-> +	entry = __lookup_addr(pernet, &addr->addr, lookup_by_id);
-> +	if (!entry) {
-> +		spin_unlock_bh(&pernet->lock);
-> +		return -EINVAL;
-> +	}
-> +	if ((addr->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
-> +	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
-> +		spin_unlock_bh(&pernet->lock);
-> +		return -EINVAL;
-> +	}
-> +
-> +	changed = (addr->flags ^ entry->flags) & mask;
-> +	entry->flags = (entry->flags & ~mask) | (addr->flags & mask);
-> +	*addr = *entry;
-> +	spin_unlock_bh(&pernet->lock);
-> +
-> +	mptcp_nl_set_flags(net, &addr->addr, bkup, changed);
-> +	return 0;
-> +}
-> +
->  static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
->  {
-> -	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, }, *entry;
->  	struct mptcp_pm_addr_entry remote = { .addr = { .family = AF_UNSPEC }, };
-> +	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
->  	struct nlattr *attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
->  	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
->  	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-> -	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
-> -	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
-> -			   MPTCP_PM_ADDR_FLAG_FULLMESH;
->  	struct net *net = sock_net(skb->sk);
-> -	u8 bkup = 0, lookup_by_id = 0;
-> +	u8 bkup = 0;
->  	int ret;
->  
->  	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
-> @@ -1890,34 +1922,8 @@ static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
->  
->  	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
->  		bkup = 1;
-> -	if (addr.addr.family == AF_UNSPEC) {
-> -		lookup_by_id = 1;
-> -		if (!addr.addr.id)
-> -			return -EOPNOTSUPP;
-> -	}
->  
-> -	if (token)
-> -		return mptcp_userspace_pm_set_flags(net, token, &addr, &remote, bkup);
-> -
-> -	spin_lock_bh(&pernet->lock);
-> -	entry = __lookup_addr(pernet, &addr.addr, lookup_by_id);
-> -	if (!entry) {
-> -		spin_unlock_bh(&pernet->lock);
-> -		return -EINVAL;
-> -	}
-> -	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
-> -	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
-> -		spin_unlock_bh(&pernet->lock);
-> -		return -EINVAL;
-> -	}
-> -
-> -	changed = (addr.flags ^ entry->flags) & mask;
-> -	entry->flags = (entry->flags & ~mask) | (addr.flags & mask);
-> -	addr = *entry;
-> -	spin_unlock_bh(&pernet->lock);
-> -
-> -	mptcp_nl_set_flags(net, &addr.addr, bkup, changed);
-> -	return 0;
-> +	return mptcp_pm_set_flags(net, token, &addr, &remote, bkup);
->  }
->  
->  static void mptcp_nl_mcast_send(struct net *net, struct sk_buff *nlskb, gfp_t gfp)
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 607cbd2ccb98..1e7465bb66d5 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -827,6 +827,10 @@ int mptcp_pm_nl_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int
->  int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
->  						   unsigned int id,
->  						   u8 *flags, int *ifindex);
-> +int mptcp_pm_set_flags(struct net *net, struct nlattr *token,
-> +		       struct mptcp_pm_addr_entry *loc,
-> +		       struct mptcp_pm_addr_entry *rem, u8 bkup);
-> +int mptcp_pm_nl_set_flags(struct net *net, struct mptcp_pm_addr_entry *addr, u8 bkup);
->  int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
->  				 struct mptcp_pm_addr_entry *loc,
->  				 struct mptcp_pm_addr_entry *rem, u8 bkup);
-> 
-> -- 
-> 2.40.1
-> 
-> 
+Good idea! Looks good to me.
+
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
