@@ -1,45 +1,45 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0814317741
-	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 13:59:31 +0000 (UTC)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5151934a4e3so2750301a12.1
-        for <mptcp@lists.linux.dev>; Fri, 09 Jun 2023 06:59:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22EB1640B
+	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 14:36:07 +0000 (UTC)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5149390b20aso3107388a12.3
+        for <mptcp@lists.linux.dev>; Fri, 09 Jun 2023 07:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1686319170; x=1688911170;
+        d=tessares.net; s=google; t=1686321366; x=1688913366;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/vvSs7JMvACMBUHgQcTFv60ikQ1sCFCwCe7aHgV1+Ig=;
-        b=vR+vQhaxHY5xkskYIrcipmtUeqRFbsmxiPMaSiA3OmAp7Abg1aacWa27rip2XDasTL
-         9XhNop86mLfruAUAUU+aS+22BpjSHXUD8pQjAjgy6pz8CEAZlWpUIpwkj6n5AtJvT0q/
-         eR6M4SMuqwYUuS5Bec3pdh874vkDgS8EE1ywYMFU7WPu1FMso/GCTJqixlT+Uk7FQUoc
-         3T4SEyDHnzmR+EJM5zjI2Wyh0MbJhJXMCOmKiWAm3i0Nlt5HX3022qbJwYdpxJYSB1io
-         KW7LzutTEdLaGVWB3YPt8Q+5ndiG2IkVumz3wytPoJhfOAO3/vYz9QzPcCRZLD3cR8SA
-         dT/w==
+        bh=rBhZ4C+kdY8O2arwIZWcY1guLJny/wQNtfVzTMD/6bs=;
+        b=ryGKOo09k3qZo9L+m5e+CYtp5g/aiKlFnxSVw1P8MWsNGqLr5OvzXWnyoiil+Ilj3b
+         B2M9q/Rc1CO0/65zITOgqPErBxw8ZevJpw7qz35qSgCyBX4uQJ/opjZja11t0r3eXF8g
+         53rSZ0qj5j1ZqM9gJSBqp8SCGvndm4oRCYXEpfhUx/2iimQy8ZbhKXVa3PLcUaRZOvqf
+         APgUxvvyuS9rc8hwXCYgrM6qhhX96tiYQ/Rsi47Poug3PkanDGdXJw+ZrZZOT00b3mM3
+         GPrJD9GQRf0M2Kg9vFPIlruXHsZhEkRgzWoyWN78lqem/zWLmUBWs/Esy2CPV+nx9+KE
+         dF7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686319170; x=1688911170;
+        d=1e100.net; s=20221208; t=1686321366; x=1688913366;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/vvSs7JMvACMBUHgQcTFv60ikQ1sCFCwCe7aHgV1+Ig=;
-        b=eoAarKQxw0lcIQ9jLKqtBubok6wrZfEw63vL/3Rtus+cKCmMx3IzJVLkm3HKg/uAxF
-         ktdg1dk0D4I7YApJmL6YD6Um90bx7o4rG8T9Qt5xslslxjBdtnY8xEkgKV1GYM5emXXy
-         pVUl0SG5JhX5SzfFVeltP6NpALbk6BKE8Tg80f4qZwRu6vdInKS+LTia/AWkk+7Q6cNf
-         YCFNfU8quaOCoPtiSe0ar+TdXGtSn3hGD0V335mDi6/TdZpTD7Xj1jEhZB82EenKn9ve
-         mK2f4ghm51fAFNs+zr3bgFPLTE1ebmLRgO4bRioDJzrN+FmTKRa74W+gXcMH2cQKxcqJ
-         2sKg==
-X-Gm-Message-State: AC+VfDwqcM+Fk1YMIxX1S5VWygESwgUcbJpI2rSs//t76guyh7JAOvK+
-	qvNTamqUtFe85TkYBZfhwX6OhqJKilDI4pgfaJMpBw==
-X-Google-Smtp-Source: ACHHUZ6kAu3JaM0beAf1ljrXwjHLtua7z6CuPzJwA9GYZKmwGHJ3QMi3yHVr2q69Xm20gUIPF71IjQ==
-X-Received: by 2002:a17:907:31ce:b0:957:2d2a:e8a2 with SMTP id xf14-20020a17090731ce00b009572d2ae8a2mr1726291ejb.27.1686319169850;
-        Fri, 09 Jun 2023 06:59:29 -0700 (PDT)
+        bh=rBhZ4C+kdY8O2arwIZWcY1guLJny/wQNtfVzTMD/6bs=;
+        b=GascSKXuhA7nulEebmXGvJ0wE50afaZUsh4aQt9z4TbFa1ot1Y0LuPD9bEzdLGkeSZ
+         ucDGhh83QN1lQeJ8kb4JN6n/WyysFcRtBj/NkpU79inz4wOSLQM+/4uzZOM8zIP+3z8p
+         JX/z6HbuXWAihegyqCIdWNbG55cNBQ9rAHJ1q2PZGQxNDvSNJXTNyv8HtZcMzQQ4xpuH
+         wDFKLpfQfY23Met8jIdThAzpGFh+ngnSZNcV39UwFKO/AivZjaO0EayzMiAUcyqqBkGv
+         8y6MSIG/lcne5/YIOJY9X3wAqRxN1u75OaupEHrhrfP38ftinBRofOT3a2zMQE7jZSIE
+         qZaA==
+X-Gm-Message-State: AC+VfDxPTV1gYDJ2HwzH7PEbedS+hlUIssJ7hLTZ/cwCeoj7Ofs9kZnu
+	9EZ7B3oKs2AxohxBKpCoWZWavpEeJDtsLUnUxZRU3Q==
+X-Google-Smtp-Source: ACHHUZ7P1YI9jotfG1RH4SeOs/1JOggIlXteRw9NOBRfhp4AHky8DIdRa+U/TPr1WBB/7M5Nud6gqg==
+X-Received: by 2002:a17:906:4792:b0:96f:608c:5bdf with SMTP id cw18-20020a170906479200b0096f608c5bdfmr1981753ejc.64.1686321365723;
+        Fri, 09 Jun 2023 07:36:05 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id f16-20020a170906825000b0096ace550467sm1330958ejx.176.2023.06.09.06.59.29
+        by smtp.gmail.com with ESMTPSA id t16-20020a1709066bd000b009596e7e0dbasm1357722ejs.162.2023.06.09.07.36.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jun 2023 06:59:29 -0700 (PDT)
-Message-ID: <4996caaa-dce1-bf57-e224-2496b8231be0@tessares.net>
-Date: Fri, 9 Jun 2023 15:59:29 +0200
+        Fri, 09 Jun 2023 07:36:05 -0700 (PDT)
+Message-ID: <5bddc8e7-7fe3-280e-0299-900e855f4ad0@tessares.net>
+Date: Fri, 9 Jun 2023 16:36:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -65,9 +65,18 @@ On 07/06/2023 18:34, Paolo Abeni wrote:
 > calling performing the fast-close. Move such state transition in
 > mptcp_do_fastclose() to avoid some code duplication.
 
-Good idea! Looks good to me.
+Thank you for the patch!
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Applied in our tree (feat. for net-next):
+
+New patches for t/upstream:
+- 6e7d80e97f44: mptcp: consolidate transition to TCP_CLOSE in
+mptcp_do_fastclose()
+- Results: 403607c45570..f3033b20c7e6 (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230609T143326
 
 Cheers,
 Matt
