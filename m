@@ -1,85 +1,146 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22EB1640B
-	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 14:36:07 +0000 (UTC)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5149390b20aso3107388a12.3
-        for <mptcp@lists.linux.dev>; Fri, 09 Jun 2023 07:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1686321366; x=1688913366;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rBhZ4C+kdY8O2arwIZWcY1guLJny/wQNtfVzTMD/6bs=;
-        b=ryGKOo09k3qZo9L+m5e+CYtp5g/aiKlFnxSVw1P8MWsNGqLr5OvzXWnyoiil+Ilj3b
-         B2M9q/Rc1CO0/65zITOgqPErBxw8ZevJpw7qz35qSgCyBX4uQJ/opjZja11t0r3eXF8g
-         53rSZ0qj5j1ZqM9gJSBqp8SCGvndm4oRCYXEpfhUx/2iimQy8ZbhKXVa3PLcUaRZOvqf
-         APgUxvvyuS9rc8hwXCYgrM6qhhX96tiYQ/Rsi47Poug3PkanDGdXJw+ZrZZOT00b3mM3
-         GPrJD9GQRf0M2Kg9vFPIlruXHsZhEkRgzWoyWN78lqem/zWLmUBWs/Esy2CPV+nx9+KE
-         dF7A==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78F615AA
+	for <mptcp@lists.linux.dev>; Fri,  9 Jun 2023 14:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1686321606;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IhWLk4u+qi4RHWSAAW7X1vOtxXYi9sm7ob8fZ/HJDxo=;
+	b=WfIxo6gQjI77vh7JaMjO2Ab+fzv4qcyWLh3BelXFBHy1KRSrBICp7sNrzOnYX1QR4qMFTv
+	S4bDJCUTw7iyohY/rmH4IlVLAP7cHUteYcWAAMuTwqfYHc7tQXDUPf6S6ZXD89WRAb2Sid
+	uKYqUdeiXRcYKUOeLcVWuu5zjSc8C3Q=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-658-2xHNwyvnNYuCvfM2XtunSg-1; Fri, 09 Jun 2023 10:40:04 -0400
+X-MC-Unique: 2xHNwyvnNYuCvfM2XtunSg-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-3f7ecda6eefso3379155e9.1
+        for <mptcp@lists.linux.dev>; Fri, 09 Jun 2023 07:40:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686321366; x=1688913366;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rBhZ4C+kdY8O2arwIZWcY1guLJny/wQNtfVzTMD/6bs=;
-        b=GascSKXuhA7nulEebmXGvJ0wE50afaZUsh4aQt9z4TbFa1ot1Y0LuPD9bEzdLGkeSZ
-         ucDGhh83QN1lQeJ8kb4JN6n/WyysFcRtBj/NkpU79inz4wOSLQM+/4uzZOM8zIP+3z8p
-         JX/z6HbuXWAihegyqCIdWNbG55cNBQ9rAHJ1q2PZGQxNDvSNJXTNyv8HtZcMzQQ4xpuH
-         wDFKLpfQfY23Met8jIdThAzpGFh+ngnSZNcV39UwFKO/AivZjaO0EayzMiAUcyqqBkGv
-         8y6MSIG/lcne5/YIOJY9X3wAqRxN1u75OaupEHrhrfP38ftinBRofOT3a2zMQE7jZSIE
-         qZaA==
-X-Gm-Message-State: AC+VfDxPTV1gYDJ2HwzH7PEbedS+hlUIssJ7hLTZ/cwCeoj7Ofs9kZnu
-	9EZ7B3oKs2AxohxBKpCoWZWavpEeJDtsLUnUxZRU3Q==
-X-Google-Smtp-Source: ACHHUZ7P1YI9jotfG1RH4SeOs/1JOggIlXteRw9NOBRfhp4AHky8DIdRa+U/TPr1WBB/7M5Nud6gqg==
-X-Received: by 2002:a17:906:4792:b0:96f:608c:5bdf with SMTP id cw18-20020a170906479200b0096f608c5bdfmr1981753ejc.64.1686321365723;
-        Fri, 09 Jun 2023 07:36:05 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id t16-20020a1709066bd000b009596e7e0dbasm1357722ejs.162.2023.06.09.07.36.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jun 2023 07:36:05 -0700 (PDT)
-Message-ID: <5bddc8e7-7fe3-280e-0299-900e855f4ad0@tessares.net>
-Date: Fri, 9 Jun 2023 16:36:05 +0200
+        d=1e100.net; s=20221208; t=1686321602; x=1688913602;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xaw9L4wBlSa4mZ59mHHtd3vX6V6A8A7UOmTuz6iZ3QM=;
+        b=j6u0hG9CtWTUhMNIFdBdA6fNY12B6CrPvvP0UEfWHptEW95/4YzcimWxSjV/ujLnbA
+         WFCxDbBGgu61CexFAeSlQzncQDJMrKRJuT2tZts8hv/kgDbz2qxS0VspLh7TjB7tIJf4
+         Q6ep7yKkkmxQdzJrYw6QcsZN24fFrcKp+6/3e6JYSO5/QCxYpDCMAmLDQKuS7RumrJTI
+         4Sz/DwvDix41w3IUNz4opgKDTJCxy33WNue4rn58IlRtKIdfJF7v9uP18zdINxvMeh4k
+         xmb7r6wBc0vGoq3/Pe0TI9fI6LJO/7QCEpdsBj6mBUxSvDSyq4h58GpvORHQpms1MzbB
+         ZX8w==
+X-Gm-Message-State: AC+VfDz47nu1sxlowL1YY5l0teCKbhAJOgZvAlL4Wup61RMC17rpu1rR
+	k9uWWz5plw/78eBHPxqQBf3Y9UQS0vl4nT1d+Ieg86C5F67ht4K2PayQW7zemdtOV+qavA+O7Ga
+	olDkdAheAYZ/gJ1KOSSTFz2U=
+X-Received: by 2002:a05:600c:198c:b0:3f7:f2df:4e3e with SMTP id t12-20020a05600c198c00b003f7f2df4e3emr1515486wmq.3.1686321602745;
+        Fri, 09 Jun 2023 07:40:02 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ44V5j3UZfEZQRQACfnqWKRqFCGrmmyWhnNK0FVChPcHHx7bsxos8N7YJ4x1pi4XZ9RuOdLXg==
+X-Received: by 2002:a05:600c:198c:b0:3f7:f2df:4e3e with SMTP id t12-20020a05600c198c00b003f7f2df4e3emr1515477wmq.3.1686321602446;
+        Fri, 09 Jun 2023 07:40:02 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-250-244.dyn.eolo.it. [146.241.250.244])
+        by smtp.gmail.com with ESMTPSA id 14-20020a05600c024e00b003f8044b3448sm2522999wmj.9.2023.06.09.07.40.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 07:40:02 -0700 (PDT)
+Message-ID: <4d34b373094d8415d8d6cc29af013dc508a5bf81.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v8 13/17] selftests/bpf: Add bpf_burst
+ scheduler
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Date: Fri, 09 Jun 2023 16:40:01 +0200
+In-Reply-To: <20230609133236.GA30403@localhost>
+References: <cover.1686202841.git.geliang.tang@suse.com>
+	 <bf747921efceb7f066a75cb2dae2ab46071b8275.1686202841.git.geliang.tang@suse.com>
+	 <666004bda6ff9e3e6d65c6903c5b18f18f0e31ed.camel@redhat.com>
+	 <20230609133236.GA30403@localhost>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next] mptcp: consolidate transition to TCP_CLOSE in
- mptcp_do_fastclose()
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <ca4ee22bcb340d3c07778259ce6c08b4d39e89d0.1686155634.git.pabeni@redhat.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <ca4ee22bcb340d3c07778259ce6c08b4d39e89d0.1686155634.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Fri, 2023-06-09 at 21:32 +0800, Geliang Tang wrote:
+> On Fri, Jun 09, 2023 at 11:57:53AM +0200, Paolo Abeni wrote:
+>=20
+> > May I guess you get a similar error if you do:
+> >=20
+> > =09subflow =3D mptcp_subflow_ctx(ssk)
+> >=20
+> > ? (just out of sheer ignorance and curiosity)
+>=20
+> Yes. It seems that accessing 'send_info[SSK_MODE_ACTIVE].ssk' is
+> considered unsafe in BPF context. So here we pass 'send_info[SSK_MODE_ACT=
+IVE].ssk'
+> into bpf_mptcp_subflow_ctx() to find the related subflow. Then we access =
+this
+> subflow instead of 'send_info[SSK_MODE_ACTIVE].ssk' below. This can make =
+BPF happy.
+>=20
+> >=20
+> > > +=09 * then use mptcp_subflow_tcp_sock() to get the ssk.
+> > > +=09 */
+> > > +=09subflow =3D mptcp_subflow_tcp_sock(send_info[SSK_MODE_ACTIVE].ssk=
+, data);
+> > > +=09ssk =3D mptcp_subflow_tcp_sock(subflow);
+> >=20
+> > What if you store the 'subflow' pointer in 'send_info'? Will the
+> > verifier splat with that? and what if we store the corresponding
+> > context index 'i' instead?
+>=20
+> Storing the 'subflow' or index 'i' don't work too.
 
-On 07/06/2023 18:34, Paolo Abeni wrote:
-> The MPTCP code always set the msk state to TCP_CLOSE before
-> calling performing the fast-close. Move such state transition in
-> mptcp_do_fastclose() to avoid some code duplication.
+Uhmm... I'm very surprised about 'i'. Specifically what I mean is:
 
-Thank you for the patch!
+struct subflow_send_info {
+=09unsigned int subflow_id;
+=09__u64 linger_time;
+};
 
-Applied in our tree (feat. for net-next):
+// ...
+=09for (i =3D 0; i < SSK_MODE_MAX; ++i) {
+=09=09send_info[i].ssk =3D MPTCP_SUBFLOWS_MAX;
+=09=09send_info[i].linger_time =3D -1;
+=09}
+// ...
 
-New patches for t/upstream:
-- 6e7d80e97f44: mptcp: consolidate transition to TCP_CLOSE in
-mptcp_do_fastclose()
-- Results: 403607c45570..f3033b20c7e6 (export)
+=09=09if (linger_time < send_info[subflow->backup].linger_time) {
+=09=09=09send_info[subflow->backup].subflow_id =3D i;
+=09=09=09send_info[subflow->backup].linger_time =3D linger_time;
+=09=09}
 
-Tests are now in progress:
+// ...
+=09if (send_info[SSK_MODE_ACTIVE].subflow_id =3D=3D MPTCP_SUBFLOWS_MAX)
+=09=09send_info[SSK_MODE_ACTIVE].subflow_id =3D send_info[SSK_MODE_BACKUP].=
+subflow_id;
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230609T143326
+=09if (send_info[SSK_MODE_ACTIVE].subflow_id < MPTCP_SUBFLOWS_MAX)
+=09=09subflow =3D data->context[send_info[SSK_MODE_ACTIVE].subflow_id];
+
+The last assignment should be equivalent to the already used 'subflow =3D
+data->contexts[i];'. What kind of errors do you see here?!? Could you
+please report them verbatim?
+
+>=20
+> > that we avoid the 'mptcp_subflow_tcp_sock()'
+> > call entirely.
+>=20
+> No need to avoid "mptcp_subflow_tcp_sock", we need to access both
+> 'subflow' and 'ssk' below.
+
+Yup, typo on my side above. I'm trying to avoid
+bpf_mptcp_subflow_ctx().
+
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+
+Paolo
+
