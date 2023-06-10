@@ -1,23 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2D879C1;
-	Sat, 10 Jun 2023 07:12:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 973FCC4339B;
-	Sat, 10 Jun 2023 07:12:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372D2A958;
+	Sat, 10 Jun 2023 07:12:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0A355C433D2;
+	Sat, 10 Jun 2023 07:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686381133;
-	bh=K3Igb5YMWK6KPdrjSVblOoG6UAOBqAV7a08r3ShDDlI=;
+	s=k20201202; t=1686381136;
+	bh=SV22PWx/vlOiTdejfpDBVO98csXRJ2C6VPjBezAOWzI=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=IQ7t6lO0VH0WLXPmmd/2BtTQFbjyqKPpmE2p6wL4TZy3ZaSl5W0too1n06LM7EOj6
-	 cvJvXyqILXnqz6AFieTOeXMRWvej7bH/Psy5n7hldJLsqvCOnoPqhMNiL78u00aTep
-	 FiUmD1nLAKTI4Y0SMconXCUnI1VsG1SQOimAdwEC24pyshMPrYed2Cb01xL7YiCCao
-	 V0UoE4KSLRs97MokVIs95wYe/4/AfMOjDSv+I752JLsTSGJ2m48S3cy9apXHHPtn0r
-	 Eu2wrAXfn5y/S8Mki0SSphR5IiUTXHRWwDfdCvlZvnzQR9gmbLKH+6fZ7piF/8fonF
-	 LmukqB72tqz8w==
+	b=kalzse/ySprpbv1069UkP+IVM8InxjJz5Q9SNCg8ITC9GqCb1rRaodzS1STjeVT56
+	 JnPRckLNRA2b6zKl2eQCgS84tD5db+Aldx7PUtYoiJf+w+EvVWb+yNmrQPrFWhuVdT
+	 iiIDrLd2HfeqeNMsMppyNh8RKaIcWNBzcuIP0I5jInIlWbEJ+rafZL3kfED2f2JIqQ
+	 +cD6mtH4nHbyzNkKpx8n+HCj53cSv/4RFrKrtSIeDl4OuM/qgyU4h3RAja+b4ktrio
+	 lV0qQ3F3NqM9pWATzncYPlZa7sbq0hGzpmDzUbZzd2qmx/M6ONX9RUA5BLIP0ldURd
+	 58H/vuQDRG9qg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 63D3DE1CF31;
-	Sat, 10 Jun 2023 07:12:13 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EA7DDE1CF31;
+	Sat, 10 Jun 2023 07:12:15 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -26,70 +26,42 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 00/14] selftests: mptcp: skip tests not supported by
- old kernels (part 2)
+Subject: Re: [PATCH net-next 0/4] mptcp: unify PM interfaces
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <168638113340.4960.10867122127600688062.git-patchwork-notify@kernel.org>
-Date: Sat, 10 Jun 2023 07:12:13 +0000
-References: <20230608-upstream-net-20230608-mptcp-selftests-support-old-kernels-part-2-v1-0-20997a6fd841@tessares.net>
-In-Reply-To: <20230608-upstream-net-20230608-mptcp-selftests-support-old-kernels-part-2-v1-0-20997a6fd841@tessares.net>
+ <168638113595.4960.8012275935135904829.git-patchwork-notify@kernel.org>
+Date: Sat, 10 Jun 2023 07:12:15 +0000
+References: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-0-b301717c9ff5@tessares.net>
+In-Reply-To: <20230608-upstream-net-next-20230608-mptcp-unify-pm-interfaces-v1-0-b301717c9ff5@tessares.net>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
 Cc: mptcp@lists.linux.dev, martineau@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
- dcaratti@redhat.com, dmytro@shytyi.net, imagedong@tencent.com,
- geliang.tang@suse.com, kishen.maloor@intel.com, fw@strlen.de,
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, geliang.tang@suse.com
 
 Hello:
 
-This series was applied to netdev/net.git (main)
+This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu, 08 Jun 2023 18:38:42 +0200 you wrote:
-> After a few years of increasing test coverage in the MPTCP selftests, we
-> realised [1] the last version of the selftests is supposed to run on old
-> kernels without issues.
+On Thu, 08 Jun 2023 15:20:48 +0200 you wrote:
+> These patches from Geliang better isolate the two MPTCP path-managers by
+> avoiding calling userspace PM functions from the in-kernel PM. Instead,
+> new functions declared in pm.c directly dispatch to the right PM.
 > 
-> Supporting older versions is not that easy for this MPTCP case: these
-> selftests are often validating the internals by checking packets that
-> are exchanged, when some MIB counters are incremented after some
-> actions, how connections are getting opened and closed in some cases,
-> etc. In other words, it is not limited to the socket interface between
-> the userspace and the kernelspace.
+> In addition to have a clearer code, this also avoids a bit of duplicated
+> checks.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,01/14] selftests: mptcp: lib: skip if missing symbol
-    https://git.kernel.org/netdev/net/c/673004821ab9
-  - [net,02/14] selftests: mptcp: connect: skip transp tests if not supported
-    https://git.kernel.org/netdev/net/c/07bf49401909
-  - [net,03/14] selftests: mptcp: connect: skip disconnect tests if not supported
-    https://git.kernel.org/netdev/net/c/4ad39a42da2e
-  - [net,04/14] selftests: mptcp: connect: skip TFO tests if not supported
-    https://git.kernel.org/netdev/net/c/06b03083158e
-  - [net,05/14] selftests: mptcp: diag: skip listen tests if not supported
-    https://git.kernel.org/netdev/net/c/dc97251bf0b7
-  - [net,06/14] selftests: mptcp: diag: skip inuse tests if not supported
-    https://git.kernel.org/netdev/net/c/dc93086aff04
-  - [net,07/14] selftests: mptcp: pm nl: remove hardcoded default limits
-    https://git.kernel.org/netdev/net/c/2177d0b08e42
-  - [net,08/14] selftests: mptcp: pm nl: skip fullmesh flag checks if not supported
-    https://git.kernel.org/netdev/net/c/f3761b50b8e4
-  - [net,09/14] selftests: mptcp: sockopt: relax expected returned size
-    https://git.kernel.org/netdev/net/c/8dee6ca2ac1e
-  - [net,10/14] selftests: mptcp: sockopt: skip getsockopt checks if not supported
-    https://git.kernel.org/netdev/net/c/c6f7eccc5198
-  - [net,11/14] selftests: mptcp: sockopt: skip TCP_INQ checks if not supported
-    https://git.kernel.org/netdev/net/c/b631e3a4e94c
-  - [net,12/14] selftests: mptcp: userspace pm: skip if 'ip' tool is unavailable
-    https://git.kernel.org/netdev/net/c/723d6b9b1233
-  - [net,13/14] selftests: mptcp: userspace pm: skip if not supported
-    https://git.kernel.org/netdev/net/c/f90adb033891
-  - [net,14/14] selftests: mptcp: userspace pm: skip PM listener events tests if unavailable
-    https://git.kernel.org/netdev/net/c/626cb7a5f6b8
+  - [net-next,1/4] mptcp: export local_address
+    https://git.kernel.org/netdev/net-next/c/dc886bce753c
+  - [net-next,2/4] mptcp: unify pm get_local_id interfaces
+    https://git.kernel.org/netdev/net-next/c/9bbec87ecfe8
+  - [net-next,3/4] mptcp: unify pm get_flags_and_ifindex_by_id
+    https://git.kernel.org/netdev/net-next/c/f40be0db0b76
+  - [net-next,4/4] mptcp: unify pm set_flags interfaces
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
