@@ -1,46 +1,46 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5983022602
-	for <mptcp@lists.linux.dev>; Sat, 10 Jun 2023 16:12:03 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-30c4775d05bso1909706f8f.2
-        for <mptcp@lists.linux.dev>; Sat, 10 Jun 2023 09:12:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5C122D55
+	for <mptcp@lists.linux.dev>; Sat, 10 Jun 2023 16:12:04 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-3f7f6341b99so21141505e9.2
+        for <mptcp@lists.linux.dev>; Sat, 10 Jun 2023 09:12:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1686413521; x=1689005521;
+        d=tessares.net; s=google; t=1686413524; x=1689005524;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LT4CEksVX0ymRiy2sQSk5Caolss+Jhuhlb8MjY6vjCo=;
-        b=f+9y/pES9bX6Db5eTabVKSCGpWSvNa6CK6ofO8bw41JGGQL443hKkNgxbe8rrn2ttA
-         6BEkARwLMXhwCTJZpqTVrhA7AEqbI0JVLx2Y0K491E0f+RM3QXQJ7RIEXTjdEqXYTOo/
-         40t4E3BV7rDvuQtRpphck24gvaG1zgfgizHM/ghLbZVdnnUf+oLyNUrNDqKw3I+VQw8H
-         4BTKSORIWe6CFFzwRr9FjFQeUl/No/BIG20/w73CPBx2XQ6p96EmKWvgWY7G/f6aimN1
-         +uLLpcy5eIY6gli89HyCl+YZdm7haKkJZbPuAPN/v4SDap+EC2cKDD9mEVmrObz5vTNJ
-         6VAw==
+        bh=VbmmsXne9lBZDp9Sn/ZgZd5tJQZXSAy6sdaXotYsvUM=;
+        b=OR4L99G4HwnJ1EdllP03KiFrRSjZedqP1NneYA6aNckQdAHuuEa4cCvEdIOoMUeObt
+         qPqmg7CtTZS+88WBRsNNxMOvn1Cv2Iw5CUGFmEhVvZn2NvZK5QTFm1sA/bg+vv56oFsZ
+         6T18FCKP0Pt0SlLIyETXI/7dZFJvFHDdUENMjDHaOt64g9b4wJ1cVa3z1YC0Ydg7yqyF
+         jnxPsfrDQoaImusU/ksCLldoe9zPSi7OFpOgkbHIK7cTqPo8db6zcLprkYpcvvHNufH6
+         t5EdLrq/1RMS0KP0RHtdz8hlPW2J8jU3HEDnifaVorS9XXejIJr9+MdmPi+QPsRFWHe+
+         DWqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686413521; x=1689005521;
+        d=1e100.net; s=20221208; t=1686413524; x=1689005524;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LT4CEksVX0ymRiy2sQSk5Caolss+Jhuhlb8MjY6vjCo=;
-        b=TnAuXFr2efXBheZBow2xN8vDwKa5EMr+T6pND8uTTy+1+saasqMbsvm6heiE0xpiK8
-         5bO4QreJx4kLMMrDU8bzIK8zRLUzJ+YqwvT4FqeSQYoPexW9wRyVeixx5VvHmA9FBDKK
-         1ypFJQpWXVMbHHFec7ehP7vD73yr6p7wIxZ3uBSRxuYNqxps2FXRQPH8EJG+1Qs3mr1o
-         0q2eCi+9p2MHxPEiEty/ePSv8PLTItMqAh1PPDS33aKDlA1hrD3IL3ZovO0KwOziJvOq
-         PSZGjtAw7915aR2mKYbaAjUqXgKEGp4Qe2rX8IAqxflq8jOMNm143rDVpTJfY0z7Vkmu
-         4MGw==
-X-Gm-Message-State: AC+VfDzy28XzYryQnS3Tr5gTEth8ROQYnTGuvs+Bu+VN87DguzWudpJt
-	Cj9u81t3vZ8aL66kiq4X3553cQ==
-X-Google-Smtp-Source: ACHHUZ4RkHNVJ4VrnbbHxeG4vTHIjYybF2SB9VZ5bIUNaAizAPNEl/O8/13ZfpWiSFpQKJS64Krqgg==
-X-Received: by 2002:adf:f983:0:b0:307:8c47:a266 with SMTP id f3-20020adff983000000b003078c47a266mr1383202wrr.61.1686413521539;
-        Sat, 10 Jun 2023 09:12:01 -0700 (PDT)
+        bh=VbmmsXne9lBZDp9Sn/ZgZd5tJQZXSAy6sdaXotYsvUM=;
+        b=iio3nawYMklhUAP0QTNYPnrLX8gbEApjMns/I2m/H+E/iTnR19D62FjsOCKJnd57S5
+         6sis1EEqqaIiybcck0RUDOUJqD7rxuEt60gvnqiGI0gM8SjupZwH86Gh1SgYZZyyWrjZ
+         bIwjhgdVsGsbvNALuFIA3FdiWQ8lpMeQ2tBhY0SPOpu/GqIQnUNLFdWGIB8DGPSw3Qzf
+         0ciNFy1VDvZSwr9377fn/XaRatPBVNqQShheu+TERg+n9YG+Ud0J80WY4WS4y64yQGpm
+         5r9cQw6cyid/4Dn1oeooDnDPObZDphtndlQb9izFFoxjwddAkk1BgORvskb0l8ZVUxcR
+         IBHg==
+X-Gm-Message-State: AC+VfDxUHN31WDRzh8SEwAvTpmpRnMii1s6U4trCpnX6v77LoraCKuiM
+	52yHeuHtbJ5pRyuhD7N1cpPbWg==
+X-Google-Smtp-Source: ACHHUZ7htSHEHhoR8p2Q8ku8T3iUp3nRjhQvfhpUAPmFVuD+UA1St4Rez8cT+y/aOXvH82l1XrJm4w==
+X-Received: by 2002:a5d:49ca:0:b0:309:4f23:e52d with SMTP id t10-20020a5d49ca000000b003094f23e52dmr1346961wrs.43.1686413524327;
+        Sat, 10 Jun 2023 09:12:04 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id u9-20020a5d4349000000b003079c402762sm7431145wrr.19.2023.06.10.09.12.00
+        by smtp.gmail.com with ESMTPSA id u9-20020a5d4349000000b003079c402762sm7431145wrr.19.2023.06.10.09.12.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Jun 2023 09:12:01 -0700 (PDT)
+        Sat, 10 Jun 2023 09:12:03 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Sat, 10 Jun 2023 18:11:47 +0200
-Subject: [PATCH net 12/17] selftests: mptcp: join: skip userspace PM tests
+Date: Sat, 10 Jun 2023 18:11:49 +0200
+Subject: [PATCH net 14/17] selftests: mptcp: join: skip MPC backups tests
  if not supported
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230609-upstream-net-20230610-mptcp-selftests-support-old-kernels-part-3-v1-12-2896fe2ee8a3@tessares.net>
+Message-Id: <20230609-upstream-net-20230610-mptcp-selftests-support-old-kernels-part-3-v1-14-2896fe2ee8a3@tessares.net>
 References: <20230609-upstream-net-20230610-mptcp-selftests-support-old-kernels-part-3-v1-0-2896fe2ee8a3@tessares.net>
 In-Reply-To: <20230609-upstream-net-20230610-mptcp-selftests-support-old-kernels-part-3-v1-0-2896fe2ee8a3@tessares.net>
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
@@ -63,135 +63,86 @@ Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
  linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
  Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4465;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2543;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=pRdAKvQ/dI3pvOmEdmSh0TIcHcjun8gR5paBtNjXj6g=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkhKC+mfHCv2z2GumyoDLhhYl2np1YL27gjsD8r
- G2p4sYOKnWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZISgvgAKCRD2t4JPQmmg
- c3MAEACzkX1XW63KkwRzIywwdh72ZbgMaUFu6fyrjoup03vy5yZHr8Y4/Cy7UDrDjMV9d8tBC3z
- +z2XJhPwEUqJtetwvWrArwZT2BpXlFrnl9MqnBZQctLEwcWXr/HFNBst3l7jpn0ilWf3EhKTegl
- 8aK1Vtnrq7A7VtjKVvDnOZe5lvvp55C6pIQMh2VreTsh4geRlRGRe4S3Rkhf8j9Oa1aDCda1dOy
- DPCHpvI+A5QwJHivyUj6D7q/C+fHRCdTz3tijBtJmsKjEyMJuUbVrHPMdYqJgytcYMkMmeuMFBV
- 6HDVsP7viQ5+P8TnJ/uz9/fvteJtdz6rkcRh6y4gnCFE6bstgjX667kAi6WVl7CTa5z7xSfKaRL
- Zodw7/S1GhPiGC/gd9SUbnKCyblz+eFCdVqJ66Sni2ED37wRU8lh8osbbKQZUGeP8sRgClgCluK
- 4NODSxB46dwexuF4T9ZjwqG/Pfs5BaGtXzPj4McvP2RtcMvCG86cqkv6pVGNYsGxwYbWD3Ef9ZW
- MWDHyNq2QhcLsb5re93PjxHhY23VAD2E6oPgjxRdWg+vy1ke5woIJOOmx3GpCvNfuunVtHUx8u2
- EQz1baBJXjm2ygYSRlK9iMPMjE3OygFnkZWVptXCqLldwnNfF1eF5yMVWqUrHsf0BzCQrDD8kvt
- HwULest9RIbZgbQ==
+ bh=BsRVkTeR5aGWlyqCY68sJFSqvmvIGz5WWgXLNAhE4WU=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkhKC+RaVYSNlxR0uL/RIHvGnDUPeCrdycTjaiJ
+ lgCwc13n9OJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZISgvgAKCRD2t4JPQmmg
+ c9eFD/9YTn+w5OQPaFF8RVr9ORXioVsgRjp1fbU8D+f1Sv5G1ihqj/R9TnH6GJtt+Oyo8fsHHaK
+ 5sPfdwwYSzV0eGVssqxnOhpSUaAsfTM8TDH+HKWrHClE8ZWnQatTBLCEbN+YoO4znBCTCwuKZj3
+ 62R4Ylp8uTRsZeNiDqvWH2RhGIhAvozgG8vCzpGmjgyYSQNBKXoR46Pjy8ZdfVo4Y8I+Er8YjrW
+ td2PWbHhh4sty7iEQ137yl8boK+H9QA9YCAMgO7ealZ8MvDZxwDQlrj+lPENhx8zqsmyk2p5/8q
+ QQGwvFrOAvoTQ/n73IGn5z3lpzpyucy2wzz3NQ/MaVyIVLP3Qrgmd6GjvcRamPQEuquoF+zpNvU
+ TcGuWXe2BiQPe/P647grtHygknDMtlDhptFbec+56ZDEvIuqOidz0IngXRI/iI0d/vNDM300ZPn
+ BhPzDpje+4tCNjOk13y8A5sgLc2Vk1qOXrzr5QgbIAJwArkC/kYtAwBhIkjOf3vW0avJnm2RGAw
+ TG87DFtVrbYejgSCSYAsLiAr7+ss4RuZKywsntO2Yxi4M/ySERDOH93CyDDbk3Tp9XjIq56QOIT
+ 5RUdN9ddRdRUZcRFtZTgT7Qom3D/AolPogJN+FosUnxSO6b+WRCVVX8r/BXPT2U6FYr5ILj6ajQ
+ rc7A4gzmiMXnTlg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 Selftests are supposed to run on any kernels, including the old ones not
 supporting all MPTCP features.
 
-One of them is the support of the userspace PM introduced by commit
-4638de5aefe5 ("mptcp: handle local addrs announced by userspace PMs")
-and the following ones.
+One of them is the support of sending an MP_PRIO signal for the initial
+subflow, introduced by commit c157bbe776b7 ("mptcp: allow the in kernel
+PM to set MPC subflow priority").
 
-It is possible to look for the MPTCP pm_type's sysctl knob to know in
-advance if the userspace PM is available.
+It is possible to look for "mptcp_subflow_send_ack" in kallsyms because
+it was needed to introduce the mentioned feature. So we can know in
+advance if the feature is supported instead of trying and accepting any
+results.
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
-Fixes: 5ac1d2d63451 ("selftests: mptcp: Add tests for userspace PM type")
+Fixes: 914f6a59b10f ("selftests: mptcp: add MPC backup tests")
 Cc: stable@vger.kernel.org
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 26 ++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index f8e58ebcdd54..f9161ed69b86 100755
+index 7867bad59253..554fcafd6e8a 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -84,7 +84,7 @@ init_partial()
- 		ip netns add $netns || exit $ksft_skip
- 		ip -net $netns link set lo up
- 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
--		ip netns exec $netns sysctl -q net.mptcp.pm_type=0
-+		ip netns exec $netns sysctl -q net.mptcp.pm_type=0 2>/dev/null || true
- 		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
- 		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
- 		if [ $checksum -eq 1 ]; then
-@@ -3191,7 +3191,8 @@ fail_tests()
- userspace_tests()
- {
- 	# userspace pm type prevents add_addr
--	if reset "userspace pm type prevents add_addr"; then
-+	if reset "userspace pm type prevents add_addr" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns1
- 		pm_nl_set_limits $ns1 0 2
- 		pm_nl_set_limits $ns2 0 2
-@@ -3202,7 +3203,8 @@ userspace_tests()
+@@ -2713,14 +2713,16 @@ backup_tests()
+ 		chk_prio_nr 1 1
  	fi
  
- 	# userspace pm type does not echo add_addr without daemon
--	if reset "userspace pm no echo w/o daemon"; then
-+	if reset "userspace pm no echo w/o daemon" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns2
- 		pm_nl_set_limits $ns1 0 2
- 		pm_nl_set_limits $ns2 0 2
-@@ -3213,7 +3215,8 @@ userspace_tests()
+-	if reset "mpc backup"; then
++	if reset "mpc backup" &&
++	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
+ 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,backup
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+ 		chk_join_nr 0 0 0
+ 		chk_prio_nr 0 1
  	fi
  
- 	# userspace pm type rejects join
--	if reset "userspace pm type rejects join"; then
-+	if reset "userspace pm type rejects join" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns1
- 		pm_nl_set_limits $ns1 1 1
- 		pm_nl_set_limits $ns2 1 1
-@@ -3223,7 +3226,8 @@ userspace_tests()
+-	if reset "mpc backup both sides"; then
++	if reset "mpc backup both sides" &&
++	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
+ 		pm_nl_add_endpoint $ns1 10.0.1.1 flags subflow,backup
+ 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,backup
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow
+@@ -2728,14 +2730,16 @@ backup_tests()
+ 		chk_prio_nr 1 1
  	fi
  
- 	# userspace pm type does not send join
--	if reset "userspace pm type does not send join"; then
-+	if reset "userspace pm type does not send join" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns2
- 		pm_nl_set_limits $ns1 1 1
- 		pm_nl_set_limits $ns2 1 1
-@@ -3233,7 +3237,8 @@ userspace_tests()
+-	if reset "mpc switch to backup"; then
++	if reset "mpc switch to backup" &&
++	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
+ 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
+ 		chk_join_nr 0 0 0
+ 		chk_prio_nr 0 1
  	fi
  
- 	# userspace pm type prevents mp_prio
--	if reset "userspace pm type prevents mp_prio"; then
-+	if reset "userspace pm type prevents mp_prio" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns1
- 		pm_nl_set_limits $ns1 1 1
- 		pm_nl_set_limits $ns2 1 1
-@@ -3244,7 +3249,8 @@ userspace_tests()
- 	fi
- 
- 	# userspace pm type prevents rm_addr
--	if reset "userspace pm type prevents rm_addr"; then
-+	if reset "userspace pm type prevents rm_addr" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns1
- 		set_userspace_pm $ns2
- 		pm_nl_set_limits $ns1 0 1
-@@ -3256,7 +3262,8 @@ userspace_tests()
- 	fi
- 
- 	# userspace pm add & remove address
--	if reset_with_events "userspace pm add & remove address"; then
-+	if reset_with_events "userspace pm add & remove address" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns1
- 		pm_nl_set_limits $ns2 1 1
- 		run_tests $ns1 $ns2 10.0.1.1 0 userspace_1 0 slow
-@@ -3267,7 +3274,8 @@ userspace_tests()
- 	fi
- 
- 	# userspace pm create destroy subflow
--	if reset_with_events "userspace pm create destroy subflow"; then
-+	if reset_with_events "userspace pm create destroy subflow" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns2
- 		pm_nl_set_limits $ns1 0 1
- 		run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
+-	if reset "mpc switch to backup both sides"; then
++	if reset "mpc switch to backup both sides" &&
++	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
+ 		pm_nl_add_endpoint $ns1 10.0.1.1 flags subflow
+ 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow
+ 		run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
 
 -- 
 2.40.1
