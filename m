@@ -1,184 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3061EAD3C
-	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 11:05:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686567934;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kwA7mXMAZLqn/tlO5iIPtUQQSKGMzCZNAoxbC3JnlzA=;
-	b=AGdwMxKpTE0bjwJ+FzgB9RbFPF+n8lVNVmn7esXLRSJYaWcxqWlo0N6ax+wW1fmAG0mTl0
-	OCpCn1WIJhuPsejcVzT8duWYVktRYI5D+iUM2zofIWxRZ+lT+9bl1e24D4qMQvPNmK8guC
-	oEOyDVPFMIvjnyZJtrkQhGQ/vRLx7TI=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-150-zMclwmGpNkSpdEVwKJCuZw-1; Mon, 12 Jun 2023 07:05:33 -0400
-X-MC-Unique: zMclwmGpNkSpdEVwKJCuZw-1
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-3f86a3ce946so9768691cf.1
-        for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 04:05:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE10EAD3C
+	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 11:17:30 +0000 (UTC)
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-3f9a949c012so37828591cf.0
+        for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 04:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686568649; x=1689160649;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hiVBNXCJXdhbpylgojzFJ7GdUY/5GDfGM7oQysehiso=;
+        b=JjeuwU1QwhPhRWp1U14QcNvYxy+zomYU13NKruYffp2m0SnCqzC4nm5bbamuYZTZAj
+         Lga8pLIRlPWremOGDwZrHTdb+nNJuD+7iccL8SvJf5gzQ3OiWpw2cGkMkjLuahbjzVMh
+         C75S5lIDNaZyrQsteniHnz75bA9kHl2XIxZ/vx0/uSV/jxuDXKKwL2RG9oHtKpmXTQeY
+         2jra2+JDTKAtoimeqIYaGKmH6rThK70yCd4Tu3N2KuQLn2MrRaf9VvD1iGOdJiG21YXZ
+         1Kr5i21yGGpy3bn/d3yKHGB97oAwWDdWpEcMPhv8+sC3kJFia4we0+A+/BWA6TsbuZX4
+         PeJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686567933; x=1689159933;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IUE1AwArVPpJijC06JUEMFLcBdwo3NcED4CJkEppGfk=;
-        b=iWbqoeH+ETNwJ0L33jzNCRSVA4C0PaWhLE6COrDKWN9hvosNUKViVFtBKLEXEIpf8r
-         t+yzXMfUAtBfsumvd8M78+seDdP0by8K2DvfVWYnm3Z6u6cQ5z5TYVz1R/qlAG9hi7co
-         18bA1tw470fWrq5ARvXj/nG76BoKC5my1GrTh5ZoYPSDfw4PA5djvAxvfuAIFO/Gssbk
-         LMauW4LPpW+KI2+vnl4kYHuGuw/smnhgfEfrmh4WqgZQyJx/Pi/Wp4WojRT6cnVX70Mr
-         AWXfbQMhFZeRgBmTbSBUSEFghHF2cg8OVjdfB6XqRmod05pxC7jSivKayri5JhfYOjH7
-         Vlbw==
-X-Gm-Message-State: AC+VfDxz3xFGbfz/4uA6RbFzDQ+uDnOKm0dnXwLKNp23fpKGWO9T4iMH
-	3jNNIaUyM7cuYN+I0Y/ftjPAaOvSwps7mEv/gMTukM73fWT1WdoUyl+f7O46EGSEp3PTQAVHWPw
-	x1WJh3DzCpvEYEjw=
-X-Received: by 2002:a05:622a:134a:b0:3f7:f680:c922 with SMTP id w10-20020a05622a134a00b003f7f680c922mr12240819qtk.6.1686567933288;
-        Mon, 12 Jun 2023 04:05:33 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ49t8fH4MSeI6mE0O6djBrRozSGhysyzeBmvQz6tuniCs3ErBob3RdvY8tR1LaCbto4mEoA1Q==
-X-Received: by 2002:a05:622a:134a:b0:3f7:f680:c922 with SMTP id w10-20020a05622a134a00b003f7f680c922mr12240791qtk.6.1686567932866;
-        Mon, 12 Jun 2023 04:05:32 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-250-244.dyn.eolo.it. [146.241.250.244])
-        by smtp.gmail.com with ESMTPSA id a22-20020ac844b6000000b003f6c9f8f0a8sm3290580qto.68.2023.06.12.04.05.31
+        d=1e100.net; s=20221208; t=1686568649; x=1689160649;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=hiVBNXCJXdhbpylgojzFJ7GdUY/5GDfGM7oQysehiso=;
+        b=PJc1yfI2gPIzLwzdgyUdhsj51Yr1Aa1LlT0KRPKq/Jw2ebaH9w2yzQsLQstO37Oq2S
+         QMIaiE1cC1NoiGUpz6YhADrc8J+ooIi6lT+/szIre0urLNDj1x9vN8KmLb8w0/WGWm14
+         jNPsngkBDqkpAT89GBLa1moRP9s7F+7qu56A+4eH+4rUr56inDfSWNr4scjg2n78Euug
+         6/Vud0pF0t8GcwxZc+pyqyKq1SNqewHMIQhoWTOs7NfYwkUTam+NU9ATXtG5DFbQtCmW
+         YyAzEpXitHdi7J82g2U+19iTy5gBimighvM52fa2z87Ia21vwggiYjs35VbpUtF4LpeP
+         uIMg==
+X-Gm-Message-State: AC+VfDzqKq+dHW4QWr/l4HCsjmolssy6Qv7SYgPdCkutt+tnxJhjYIAv
+	g/S9bgOdAJrBNExh/vGZjg==
+X-Google-Smtp-Source: ACHHUZ6SwEf3u8WRu+6IsBeaUO0IVJBJON0khN11j43yeVKWcgY/VGGq130VsvSoNayqlKl0RaA2JA==
+X-Received: by 2002:a05:622a:1493:b0:3f3:91bd:a46d with SMTP id t19-20020a05622a149300b003f391bda46dmr9956275qtx.8.1686568649600;
+        Mon, 12 Jun 2023 04:17:29 -0700 (PDT)
+Received: from [127.0.0.1] ([104.45.203.202])
+        by smtp.gmail.com with ESMTPSA id h1-20020ac87141000000b003ef5dc13bbbsm3312569qtp.85.2023.06.12.04.17.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 04:05:32 -0700 (PDT)
-Message-ID: <5336efd2153d4667f9d0aea52b6d67ed2685ddbf.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v8 13/17] selftests/bpf: Add bpf_burst
- scheduler
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang.tang@suse.com>
+        Mon, 12 Jun 2023 04:17:29 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Davide Caratti <dcaratti@redhat.com>
 Cc: mptcp@lists.linux.dev
-Date: Mon, 12 Jun 2023 13:05:30 +0200
-In-Reply-To: <20230610014514.GA2843@localhost>
-References: <cover.1686202841.git.geliang.tang@suse.com>
-	 <bf747921efceb7f066a75cb2dae2ab46071b8275.1686202841.git.geliang.tang@suse.com>
-	 <666004bda6ff9e3e6d65c6903c5b18f18f0e31ed.camel@redhat.com>
-	 <20230609133236.GA30403@localhost>
-	 <4d34b373094d8415d8d6cc29af013dc508a5bf81.camel@redhat.com>
-	 <20230610014514.GA2843@localhost>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <c840f47bde581fcf910f24df6d136293618ba1d6.1686564758.git.dcaratti@redhat.com>
+References:
+ <c840f47bde581fcf910f24df6d136293618ba1d6.1686564758.git.dcaratti@redhat.com>
+Subject: Re: mptcp: convert netlink from small_ops to ops: Tests Results
+Message-ID: <c4800207-3ade-1bed-5c83-25afdd102dd3@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 12 Jun 2023 11:17:28 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2023-06-10 at 09:45 +0800, Geliang Tang wrote:
-> On Fri, Jun 09, 2023 at 04:40:01PM +0200, Paolo Abeni wrote:
-> > On Fri, 2023-06-09 at 21:32 +0800, Geliang Tang wrote:
-> > > On Fri, Jun 09, 2023 at 11:57:53AM +0200, Paolo Abeni wrote:
-> > >=20
-> > > > May I guess you get a similar error if you do:
-> > > >=20
-> > > > =09subflow =3D mptcp_subflow_ctx(ssk)
-> > > >=20
-> > > > ? (just out of sheer ignorance and curiosity)
-> > >=20
-> > > Yes. It seems that accessing 'send_info[SSK_MODE_ACTIVE].ssk' is
-> > > considered unsafe in BPF context. So here we pass 'send_info[SSK_MODE=
-_ACTIVE].ssk'
-> > > into bpf_mptcp_subflow_ctx() to find the related subflow. Then we acc=
-ess this
-> > > subflow instead of 'send_info[SSK_MODE_ACTIVE].ssk' below. This can m=
-ake BPF happy.
-> > >=20
-> > > >=20
-> > > > > +=09 * then use mptcp_subflow_tcp_sock() to get the ssk.
-> > > > > +=09 */
-> > > > > +=09subflow =3D mptcp_subflow_tcp_sock(send_info[SSK_MODE_ACTIVE]=
-.ssk, data);
-> > > > > +=09ssk =3D mptcp_subflow_tcp_sock(subflow);
-> > > >=20
-> > > > What if you store the 'subflow' pointer in 'send_info'? Will the
-> > > > verifier splat with that? and what if we store the corresponding
-> > > > context index 'i' instead?
-> > >=20
-> > > Storing the 'subflow' or index 'i' don't work too.
-> >=20
-> > Uhmm... I'm very surprised about 'i'. Specifically what I mean is:
-> >=20
-> > struct subflow_send_info {
-> > =09unsigned int subflow_id;
-> > =09__u64 linger_time;
-> > };
-> >=20
-> > // ...
-> > =09for (i =3D 0; i < SSK_MODE_MAX; ++i) {
-> > =09=09send_info[i].ssk =3D MPTCP_SUBFLOWS_MAX;
-> > =09=09send_info[i].linger_time =3D -1;
-> > =09}
-> > // ...
-> >=20
-> > =09=09if (linger_time < send_info[subflow->backup].linger_time) {
-> > =09=09=09send_info[subflow->backup].subflow_id =3D i;
-> > =09=09=09send_info[subflow->backup].linger_time =3D linger_time;
-> > =09=09}
-> >=20
-> > // ...
-> > =09if (send_info[SSK_MODE_ACTIVE].subflow_id =3D=3D MPTCP_SUBFLOWS_MAX)
-> > =09=09send_info[SSK_MODE_ACTIVE].subflow_id =3D send_info[SSK_MODE_BACK=
-UP].subflow_id;
-> >=20
-> > =09if (send_info[SSK_MODE_ACTIVE].subflow_id < MPTCP_SUBFLOWS_MAX)
-> > =09=09subflow =3D data->context[send_info[SSK_MODE_ACTIVE].subflow_id];
-> >=20
-> > The last assignment should be equivalent to the already used 'subflow =
-=3D
-> > data->contexts[i];'. What kind of errors do you see here?!? Could you
-> > please report them verbatim?
->=20
-> This line "subflow =3D data->context[send_info[SSK_MODE_ACTIVE].subflow_i=
-d];" will get a error:
->=20
->   R2 is ptr_mptcp_sched_data invalid variable offset: off=3D16, var_off=
-=3D(0x0; 0x38)
+Hi Davide,
 
-I see. This looks like a verifier-imposed artificial constraint.
+Thank you for your modifications, that's great!
 
-Basically any access to:
+Our CI did some validations and here is its report:
 
-btf_type.array_field[valid_and_validated_variable_index]
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_userspace_pm =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5362070888120320
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5362070888120320/su=
+mmary/summary.txt
 
-is not allowed.
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5784283353186304
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5784283353186304/summary/summary.txt
 
-The main point of having sched_data.context exposed to the pluggable
-scheduler via mptcp_sched_data is to avoid looping through the subflows
-to fetch a given one, I think. But the above verifier constraint
-basically prevents such usage.
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6487970794962944
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6487970794962944/summary/summary.txt
 
-I think we should add an helper into the core implementing the position
-(number) to subflow (context) mapping. e.g.:
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_userspace_pm =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4658383446343680
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4658383446343680/su=
+mmary/summary.txt
 
-struct mptcp_subflow_context *mptcp_subflow_ctx_by_pos(struct mptcp_sk *msk=
-,
-=09=09=09=09=09=09=09unsigned int pos)
-{
-=09if (pos >=3D MPTCP_SUBFLOWS_MAX)
-=09=09return NULL;
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/597886de2562
 
-=09return msk->sched_data.context[pos];
-}
 
-And use such helper here instead of bpf_mptcp_subflow_ctx().=C2=A0
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
-There are a number of possible follow-ups to the above, not strictly
-related to this series, but IMHO needed before upstreaming this code:
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
--we could remove the 'context' array from the data directly visible to
-the ebpf code.=C2=A0
-- Instead we could export to the scheduler the number of subflows
-currently present into the msk socket, so the scheduler itself will not
-have to always ask for all the MPTCP_SUBFLOWS_MAX possible subflows.=C2=A0
-- we could drop entirely the data_init() scheduler operation: all the
-data should be make available/prepared by the core itself, no need to
-add an indirect call to always do the same operation.
+For more details:
 
-/P
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
