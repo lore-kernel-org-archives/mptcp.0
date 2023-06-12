@@ -1,242 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50561DDF8
-	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686585795;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NLiwTiTw8vyqTt5s4JV2eBpaXm6f2NESIrCUYQ9BJsc=;
-	b=EkVPTl0/dmxLed0GlAhrDSqZWEmY1gOtMi1/3XEZaXNoj0IPp3AqwGAx8h/m0Eth5KpBnd
-	suhUxKozQgV5vUlm9RN7xyQzOQq1Y1JNnUOflkgjNb4XufCKjs/bI6nNBjd7QNpP3J7RLH
-	IJ0+ta8WquZ5S4RXU7Yf0n9onHYn8dg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-92-kJk2BsbLPd6yPqAt1iiklg-1; Mon, 12 Jun 2023 12:02:59 -0400
-X-MC-Unique: kJk2BsbLPd6yPqAt1iiklg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7737185D53D
-	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:02:44 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 064681121314
-	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:02:43 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: consolidate fallback and non fallback state machine
-Date: Mon, 12 Jun 2023 18:02:32 +0200
-Message-Id: <f684967fa27c0d051ba3668c45f89ba1ba97a03d.1686584384.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26691DDF8
+	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:03:36 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-977e7d6945aso805966866b.2
+        for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 09:03:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1686585814; x=1689177814;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xFz8B6jFBX5jmm/9kU2CVmXTJ6Hu1ErhJc2roIPCuQU=;
+        b=gQ7ot339PV/jYLuDS9/2za1nfLQvtBbcMTaAim0igE4efiEIrFI5PgeIlMbDyr0v4k
+         dsmwWnQaR+pZ2v9Uj6nd9OZblQPfEES3tMQ0SYRsRA2F+AHBB+24W+Lg8/jwy1NUjboC
+         l2P3FptkguW7/j+DgQVEwMfMLhebRBYc9HgY3jW0yvSfetaVBkZl01NKEuxrBOY1W9tG
+         7ziw5hB+6Fn5P0tBoq4bDNicxWtRHx0ZSkGBm9b15XXLGRspj7gmwnVHxBan+7tA3yK2
+         3jawLhJetlyBnLihI1B2TUFXi53iw79gNqv3oULqjD/eO595S1EiMNX1abvTuijhEi4s
+         wiDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686585814; x=1689177814;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xFz8B6jFBX5jmm/9kU2CVmXTJ6Hu1ErhJc2roIPCuQU=;
+        b=ECM2wr17gobk/IGkMaKyt0YF0q1vDxFL1HrPM35dp9x4oLp3Zf0bD327hG1Ulx1tqQ
+         jVQwstVj7CmWr9EbaybOGTNm41dOL4A2/qWoEtSYfO6D1dyt98/IBEYXu6+86P9m9FGM
+         CBbiZ5pu+Uw5aWmIL071zJUxD7bz2xzltSoarTo4E0ZFyLGauKss89hQGRFSUj+QCF4D
+         9ikUGrhj5gajlcaoc2kRMpl5fMRtwSNZQk2GXV3aDspl7dtTP1oXLd05xK1RhzpE8+Lk
+         pSQUZ3qcL8GhEVswpCLW90rBMGTU792jrM2O2H9wNGVV6CKnIHeboElemisvyaktT2UL
+         92qg==
+X-Gm-Message-State: AC+VfDx5Q/6wIAp2FGiz5Sh+hpOL2tluTST/COrJyguwh/ZmUzzoCrG0
+	42VEGLpwX2Pym+y+cZufx8PUu7USkYNvoeNzvSo=
+X-Google-Smtp-Source: ACHHUZ5cRIpxKEv/ZobIowVvU0D1xitvgw8XH57kpkRAw5QispQamGplWrXhuCFQbZqI9B2elAOyUg==
+X-Received: by 2002:a17:906:eec5:b0:969:bac4:8e22 with SMTP id wu5-20020a170906eec500b00969bac48e22mr10299445ejb.26.1686585814420;
+        Mon, 12 Jun 2023 09:03:34 -0700 (PDT)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id e25-20020a170906081900b0094ee3e4c934sm5352694ejd.221.2023.06.12.09.03.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Jun 2023 09:03:33 -0700 (PDT)
+Message-ID: <02e82b50-4627-ff34-9a03-6957bf30e5b2@tessares.net>
+Date: Mon, 12 Jun 2023 18:03:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH mptcp-next v18 2/7] selftests: mptcp: test userspace pm
+ out of transfer
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1686554287.git.geliang.tang@suse.com>
+ <08a9ccd5c010ead677267a0bfb29869bf484ddc3.1686554287.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <08a9ccd5c010ead677267a0bfb29869bf484ddc3.1686554287.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-An orphaned msk releases the used resources via the worker,
-when the latter first see the msk in CLOSED status.
+Hi Geliang,
 
-If the msk status transitions to TCP_CLOSE in the release callback
-invoked by the worker's final release_sock(), such instance of the
-workqueue will not take any action.
+On 12/06/2023 09:19, Geliang Tang wrote:
+> This patch moves userspace pm tests out of do_transfer(). Move add
+> addrese test into a new function userspace_pm_add_addr(), and remove
+> address test into userspace_pm_rm_addr(). Move add subflow test into
+> userspace_pm_add_sf() and remove subflow into userspace_pm_rm_sf().
+> 
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 143 ++++++++++++------
+>  1 file changed, 97 insertions(+), 46 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index a7973d6a40a0..556d21c4b7a5 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -589,6 +589,26 @@ wait_rm_addr()
+>  	done
+>  }
+>  
+> +rm_sf_count()
+> +{
+> +	get_counter "${1}" "MPTcpExtRmSubflow"
+> +}
 
-Additionally the MPTCP code prevents scheduling the worker once the
-socket reaches the CLOSE status: such msk resources will be leaked.
+(I don't think we need a dedicated function but I'm fine with it)
 
-The only code path that can trigger the above scenario is the
-__mptcp_check_send_data_fin() in fallback mode.
+(...)
 
-Address the issue removing the special handling of fallback socket
-in __mptcp_check_send_data_fin(), consolidating the state machine
-for fallback and non fallback socket.
+> @@ -3283,11 +3320,18 @@ userspace_tests()
+>  	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+>  		set_userspace_pm $ns1
+>  		pm_nl_set_limits $ns2 1 1
+> -		run_tests $ns1 $ns2 10.0.1.1 0 userspace_1 0 slow
+> +		run_tests $ns1 $ns2 10.0.1.1 0 0 0 speed_10 &
+> +		local tests_pid=$!
+> +		wait_mpj $ns1
+> +		userspace_pm_add_addr 10.0.2.1 10
+> +		sleep 1
 
-Since non-fallback sockets do not send not receive data_fin, the
-mptcp code can update the msk internal status to match the next
-step in the SM every time data fin (ack) should be generated or
-received.
+(see below: move the sleep 1 in userspace_pm_add_addr()?)
 
-As a consequence we can remove a bunch of checks for fallback from
-the fastpath.
+>  		chk_join_nr 1 1 1
+>  		chk_add_nr 1 1
+> +		userspace_pm_rm_sf_addr_ns1 10.0.2.1 10
+> +		wait_rm_addr $ns1 1
 
-Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 41 +++++++++++++++--------------------------
- net/mptcp/subflow.c  | 17 ++++++++++-------
- 2 files changed, 25 insertions(+), 33 deletions(-)
+Here, just to be on the safe side, you can also call wait_rm_sf()
+because both the address and the subflow are being removed, no?
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7ffb6709cacd..8f3e50065c13 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -44,7 +44,7 @@ enum {
- static struct percpu_counter mptcp_sockets_allocated ____cacheline_aligned_in_smp;
- 
- static void __mptcp_destroy_sock(struct sock *sk);
--static void __mptcp_check_send_data_fin(struct sock *sk);
-+static void mptcp_check_send_data_fin(struct sock *sk);
- 
- DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
- static struct net_device mptcp_napi_dev;
-@@ -426,8 +426,7 @@ static bool mptcp_pending_data_fin_ack(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
--	return !__mptcp_check_fallback(msk) &&
--	       ((1 << sk->sk_state) &
-+	return ((1 << sk->sk_state) &
- 		(TCPF_FIN_WAIT1 | TCPF_CLOSING | TCPF_LAST_ACK)) &&
- 	       msk->write_seq == READ_ONCE(msk->snd_una);
- }
-@@ -585,9 +584,6 @@ static bool mptcp_check_data_fin(struct sock *sk)
- 	u64 rcv_data_fin_seq;
- 	bool ret = false;
- 
--	if (__mptcp_check_fallback(msk))
--		return ret;
--
- 	/* Need to ack a DATA_FIN received from a peer while this side
- 	 * of the connection is in ESTABLISHED, FIN_WAIT1, or FIN_WAIT2.
- 	 * msk->rcv_data_fin was set when parsing the incoming options
-@@ -625,7 +621,8 @@ static bool mptcp_check_data_fin(struct sock *sk)
- 		}
- 
- 		ret = true;
--		mptcp_send_ack(msk);
-+		if (!__mptcp_check_fallback(msk))
-+			mptcp_send_ack(msk);
- 		mptcp_close_wake_up(sk);
- 	}
- 	return ret;
-@@ -1632,7 +1629,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 	if (!mptcp_timer_pending(sk))
- 		mptcp_reset_timer(sk);
- 	if (do_check_data_fin)
--		__mptcp_check_send_data_fin(sk);
-+		mptcp_check_send_data_fin(sk);
- }
- 
- static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
-@@ -2725,8 +2722,6 @@ static void mptcp_worker(struct work_struct *work)
- 	if (unlikely((1 << state) & (TCPF_CLOSE | TCPF_LISTEN)))
- 		goto unlock;
- 
--	mptcp_check_data_fin_ack(sk);
--
- 	mptcp_check_fastclose(msk);
- 
- 	mptcp_pm_nl_work(msk);
-@@ -2734,7 +2729,8 @@ static void mptcp_worker(struct work_struct *work)
- 	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
- 		mptcp_check_for_eof(msk);
- 
--	__mptcp_check_send_data_fin(sk);
-+	mptcp_check_send_data_fin(sk);
-+	mptcp_check_data_fin_ack(sk);
- 	mptcp_check_data_fin(sk);
- 
- 	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
-@@ -2878,6 +2874,12 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
- 			pr_debug("Fallback");
- 			ssk->sk_shutdown |= how;
- 			tcp_shutdown(ssk, how);
-+
-+			/* simulate the data_fin ack reception to let the state
-+			 * machine move forward
-+			 */
-+			WRITE_ONCE(mptcp_sk(sk)->snd_una, mptcp_sk(sk)->snd_nxt);
-+			mptcp_schedule_work(sk);
- 		} else {
- 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
- 			tcp_send_ack(ssk);
-@@ -2917,7 +2919,7 @@ static int mptcp_close_state(struct sock *sk)
- 	return next & TCP_ACTION_FIN;
- }
- 
--static void __mptcp_check_send_data_fin(struct sock *sk)
-+static void mptcp_check_send_data_fin(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-@@ -2935,19 +2937,6 @@ static void __mptcp_check_send_data_fin(struct sock *sk)
- 
- 	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
- 
--	/* fallback socket will not get data_fin/ack, can move to the next
--	 * state now
--	 */
--	if (__mptcp_check_fallback(msk)) {
--		WRITE_ONCE(msk->snd_una, msk->write_seq);
--		if ((1 << sk->sk_state) & (TCPF_CLOSING | TCPF_LAST_ACK)) {
--			inet_sk_state_store(sk, TCP_CLOSE);
--			mptcp_close_wake_up(sk);
--		} else if (sk->sk_state == TCP_FIN_WAIT1) {
--			inet_sk_state_store(sk, TCP_FIN_WAIT2);
--		}
--	}
--
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *tcp_sk = mptcp_subflow_tcp_sock(subflow);
- 
-@@ -2967,7 +2956,7 @@ static void __mptcp_wr_shutdown(struct sock *sk)
- 	WRITE_ONCE(msk->write_seq, msk->write_seq + 1);
- 	WRITE_ONCE(msk->snd_data_fin_enable, 1);
- 
--	__mptcp_check_send_data_fin(sk);
-+	mptcp_check_send_data_fin(sk);
- }
- 
- static void __mptcp_destroy_sock(struct sock *sk)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index c7001a23550a..9ee3b7abbaf6 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1757,14 +1757,16 @@ static void subflow_state_change(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct sock *parent = subflow->conn;
-+	struct mptcp_sock *msk;
- 
- 	__subflow_state_change(sk);
- 
-+	msk = mptcp_sk(parent);
- 	if (subflow_simultaneous_connect(sk)) {
- 		mptcp_propagate_sndbuf(parent, sk);
- 		mptcp_do_fallback(sk);
--		mptcp_rcv_space_init(mptcp_sk(parent), sk);
--		pr_fallback(mptcp_sk(parent));
-+		mptcp_rcv_space_init(msk, sk);
-+		pr_fallback(msk);
- 		subflow->conn_finished = 1;
- 		mptcp_set_connected(parent);
- 	}
-@@ -1780,11 +1782,12 @@ static void subflow_state_change(struct sock *sk)
- 
- 	subflow_sched_work_if_closed(mptcp_sk(parent), sk);
- 
--	if (__mptcp_check_fallback(mptcp_sk(parent)) &&
--	    !subflow->rx_eof && subflow_is_done(sk)) {
--		subflow->rx_eof = 1;
--		mptcp_subflow_eof(parent);
--	}
-+	/* when the fallback subflow closes the rx side, trigger a 'dummy'
-+	 * ingress data fin, so that the msk state will follow along
-+	 */
-+	if (__mptcp_check_fallback(msk) && subflow_is_done(sk) && msk->first == sk &&
-+	    mptcp_update_rcv_data_fin(msk, READ_ONCE(msk->ack_seq), true))
-+		mptcp_schedule_work(parent);
- }
- 
- void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_ssk)
+Also, maybe the new userspace_pm_(...) functions could wait for the
+events, no? I guess we will always need to wait after having called
+these functions. So we can call wait_rm_addr() and wait_rm_sf() from
+userspace_pm_rm_sf_addr_ns1(), no?
+
+>  		chk_rm_nr 1 1 invert
+>  		kill_events_pids
+> +		wait $tests_pid
+>  	fi
+>  
+>  	# userspace pm create destroy subflow
+> @@ -3295,10 +3339,17 @@ userspace_tests()
+>  	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+>  		set_userspace_pm $ns2
+>  		pm_nl_set_limits $ns1 0 1
+> -		run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
+> +		run_tests $ns1 $ns2 10.0.1.1 0 0 0 speed_10 &
+> +		local tests_pid=$!
+> +		wait_mpj $ns2
+> +		userspace_pm_add_sf 10.0.3.2 20
+> +		sleep 1
+
+see above: move the sleep in userspace_pm_add_sf()?
+
+>  		chk_join_nr 1 1 1
+> +		userspace_pm_rm_sf_addr_ns2 10.0.3.2 20
+> +		wait_rm_sf $ns2 1
+
+see above: call wait_rm_sf() and wait_rm_addr() from
+userspace_pm_rm_sf_addr_ns2()?
+
+>  		chk_rm_nr 1 1
+>  		kill_events_pids
+> +		wait $tests_pid
+>  	fi
+>  }
+>  
+
+Cheers,
+Matt
 -- 
-2.40.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
