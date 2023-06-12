@@ -1,107 +1,171 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00FA1B8E8
-	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 14:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113D71DDF8
+	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686580024;
+	s=mimecast20190719; t=1686585771;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TFXIxALc9YVBEmlQEwJUDfU4/1DJzLjUWxucPZsWcuw=;
-	b=HyZHIEs+JVvVWKQ+VFld6rq9ey+ruxQxJmRbq3QhTsHadMKD4cg8nEYX5dX0Fnl9MANqy6
-	3TDxycCB/R7QvVnTlELqdwGP2nmiibjUTUdEG/7HPMHG4amt8sfS25S9644OyeiXViMe5V
-	xhnGKTM8jDftG7YXm4TmC0BRbZhntRo=
-Received: from mail-ua1-f69.google.com (mail-ua1-f69.google.com
- [209.85.222.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-553-wBzTMaGiNguFfDwUMDWySg-1; Mon, 12 Jun 2023 10:26:57 -0400
-X-MC-Unique: wBzTMaGiNguFfDwUMDWySg-1
-Received: by mail-ua1-f69.google.com with SMTP id a1e0cc1a2514c-78cdfb437ccso12267241.0
-        for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 07:26:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686580017; x=1689172017;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2gpOy9l3SU/hCqCdfWLS5/j2ZDsJnnmyKKOBx52ZIdw=;
-        b=Wm4d8f6ApjCEmg9kPEkVnktl0JDld0DKMpGblIbPZUmP4CayRJl3mhZ5CsVChog1p2
-         F9wjz+VXMDWZnIp4kMtyTrory750tpPNmyC6gtQN7Zpkqk+4mZGX6EdnEKi5gpEGePZz
-         NLQiRAWOtUEl6EpqfnS71hz1v64c4LCdGJdLABozXU+ZNXNE3TrREMDiMaAicqCgz3TE
-         EYP3+AQDsKg7dLKRVyuFv6L2hDAVsgZclXNfuSJ1IUUsp8W2Q3ME/ynNmdtXSu+uOsSh
-         akS4yKAmyb+WkIdMuUMH6P0ePTtI/TUoFa06HbN3LdVJWBUgIDGaI3LLwfr0dwva3pwI
-         wo3A==
-X-Gm-Message-State: AC+VfDxlqqqf+jyIC1/A1uNKRL+wN3VOTzyqrfGBq3Wk5W35JUa67lK7
-	nie8/1qf1but1q/1hnVRWXdI44DdP82R2ulbEqg9Ce0fn1pngCe+1IKRKvPt2SHJsYzWf2/PVbB
-	lqm+ZOLaHu3HBu8Y=
-X-Received: by 2002:a05:6102:83c:b0:43b:1a40:afa7 with SMTP id k28-20020a056102083c00b0043b1a40afa7mr2853886vsb.0.1686580017352;
-        Mon, 12 Jun 2023 07:26:57 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6nPEfMfIxPn1b3ZrhsSBDtyLlxJmeF0B05LF+aymHMtZYh3rEBxsiDC4e4uru5sxR8bK03FQ==
-X-Received: by 2002:a05:6102:83c:b0:43b:1a40:afa7 with SMTP id k28-20020a056102083c00b0043b1a40afa7mr2853878vsb.0.1686580017095;
-        Mon, 12 Jun 2023 07:26:57 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-250-244.dyn.eolo.it. [146.241.250.244])
-        by smtp.gmail.com with ESMTPSA id a20-20020a0ca994000000b0062de1ed9d15sm1468209qvb.102.2023.06.12.07.26.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 07:26:56 -0700 (PDT)
-Message-ID: <64d43cd38ddd96c4e077c0c36bd9cdfe67d0b821.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v2] mptcp: convert netlink from small_ops to
- ops
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=88v17oDXE8VI0UDlI7/83f2wi9zE67Qo5i6r2fkGwmo=;
+	b=Jgbli959qhdr9aGgOZa88d6mlqYtQgYQXCO/TzsRZCBUejSCeUijftQDptmiOJjqo5eX0b
+	KpLRQ5E4vSQPIx79DInqsO9goRltq8mJDUKNNxEhBHPRnD1iWH9a80SA7ZMKdquCT0kpiz
+	DD5jw7xUEFvMoKCbxTJtYXZ1cpjYNQg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-178-QZP_AvPcP7mp1oBgmc84fQ-1; Mon, 12 Jun 2023 12:02:49 -0400
+X-MC-Unique: QZP_AvPcP7mp1oBgmc84fQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 37B9F81D7B9
+	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:02:45 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id BBED51121314
+	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:02:44 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
-To: Davide Caratti <dcaratti@redhat.com>
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>, Mat Martineau
-	 <martineau@kernel.org>, mptcp@lists.linux.dev
-Date: Mon, 12 Jun 2023 16:26:53 +0200
-In-Reply-To: <ZIcjmflYHQMZ0p2H@dcaratti.users.ipa.redhat.com>
-References: <d94672114f94dc029fdb4a721d54c200521e180d.1686562577.git.dcaratti@redhat.com>
-	 <a5feec31cd5025a0357b8f60293b0879d3bb1461.camel@redhat.com>
-	 <ZIcjmflYHQMZ0p2H@dcaratti.users.ipa.redhat.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next] mptcp: drop legacy code.
+Date: Mon, 12 Jun 2023 18:02:33 +0200
+Message-Id: <3bac625cd995fdb3fc6786b599e3c413f00fc6f5.1686584494.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On Mon, 2023-06-12 at 15:54 +0200, Davide Caratti wrote:
-> On Mon, Jun 12, 2023 at 12:15:59PM +0200, Paolo Abeni wrote:
-> > On Mon, 2023-06-12 at 11:39 +0200, Davide Caratti wrote:
-> >=20
-> > > @@ -1305,7 +1384,7 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff=
- *skb, struct genl_info *info)
-> > >  =09struct mptcp_pm_addr_entry addr, *entry;
-> > >  =09int ret;
-> > > =20
-> > > -=09ret =3D mptcp_pm_parse_entry(attr, info, true, &addr);
-> > > +=09ret =3D mptcp_pm_parse_entry(attr, info, MPTCP_PM_CMD_ADD_ADDR, t=
-rue, &addr);
-> >=20
-> > Can we pass to mptcp_pm_parse_entry() directly the relevant policy
-> > instead of the cmd? it will avoid the need for mptcp_nl_cmd2policy()
-> > and possibly for the 'duplicated' definitions above.
->=20
-> this will avoid the need for mptcp_nl_cmd2policy(), but it won't probably
-> eliminate the dups in the long term, when yamlification will be in place.
-> (I need to confirm this by looking again at the tool, will let you know).
+Thanks to the previous patch we can finally drop the "temporary hack"
+used to detect rx eof.
 
-Whoops, I did not see the V3 when I first commented here, sorry! (well,
-mid-air collision mostily ;)
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+"previous patch" should be replace with a proper commit reference
+once such patch is merged on -net, unless we target both patches on
+the same tree (but this one is really net-next material, while the fix
+is for -net)
+---
+ net/mptcp/protocol.c | 49 --------------------------------------------
+ net/mptcp/protocol.h |  5 +----
+ 2 files changed, 1 insertion(+), 53 deletions(-)
 
-I *think* let the yaml-ification introduce the code duplication would
-be better, as that code is automatically generated, we can allows dups
-there. Also, if the tool will change/improve, such dups *could* be
-automatically-removed in the future.
-
-Unless is causing some problem/functional issue/unneeded complexity or
-complication, I would avoid adding the dups here.
-
-Otherwise, if any of the above is true, let's add the dups and
-whatever!
-
-/P
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 8f3e50065c13..feaedfd2b3eb 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -898,49 +898,6 @@ bool mptcp_schedule_work(struct sock *sk)
+ 	return false;
+ }
+ 
+-void mptcp_subflow_eof(struct sock *sk)
+-{
+-	if (!test_and_set_bit(MPTCP_WORK_EOF, &mptcp_sk(sk)->flags))
+-		mptcp_schedule_work(sk);
+-}
+-
+-static void mptcp_check_for_eof(struct mptcp_sock *msk)
+-{
+-	struct mptcp_subflow_context *subflow;
+-	struct sock *sk = (struct sock *)msk;
+-	int receivers = 0;
+-
+-	mptcp_for_each_subflow(msk, subflow)
+-		receivers += !subflow->rx_eof;
+-	if (receivers)
+-		return;
+-
+-	if (!(sk->sk_shutdown & RCV_SHUTDOWN)) {
+-		/* hopefully temporary hack: propagate shutdown status
+-		 * to msk, when all subflows agree on it
+-		 */
+-		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
+-
+-		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+-		sk->sk_data_ready(sk);
+-	}
+-
+-	switch (sk->sk_state) {
+-	case TCP_ESTABLISHED:
+-		inet_sk_state_store(sk, TCP_CLOSE_WAIT);
+-		break;
+-	case TCP_FIN_WAIT1:
+-		inet_sk_state_store(sk, TCP_CLOSING);
+-		break;
+-	case TCP_FIN_WAIT2:
+-		inet_sk_state_store(sk, TCP_CLOSE);
+-		break;
+-	default:
+-		return;
+-	}
+-	mptcp_close_wake_up(sk);
+-}
+-
+ static struct sock *mptcp_subflow_recv_lookup(const struct mptcp_sock *msk)
+ {
+ 	struct mptcp_subflow_context *subflow;
+@@ -2193,9 +2150,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 				break;
+ 			}
+ 
+-			if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
+-				mptcp_check_for_eof(msk);
+-
+ 			if (sk->sk_shutdown & RCV_SHUTDOWN) {
+ 				/* race breaker: the shutdown could be after the
+ 				 * previous receive queue check
+@@ -2726,9 +2680,6 @@ static void mptcp_worker(struct work_struct *work)
+ 
+ 	mptcp_pm_nl_work(msk);
+ 
+-	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
+-		mptcp_check_for_eof(msk);
+-
+ 	mptcp_check_send_data_fin(sk);
+ 	mptcp_check_data_fin_ack(sk);
+ 	mptcp_check_data_fin(sk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d2e59cf33f57..528586e2ed73 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -113,7 +113,6 @@
+ /* MPTCP socket atomic flags */
+ #define MPTCP_NOSPACE		1
+ #define MPTCP_WORK_RTX		2
+-#define MPTCP_WORK_EOF		3
+ #define MPTCP_FALLBACK_DONE	4
+ #define MPTCP_WORK_CLOSE_SUBFLOW 5
+ 
+@@ -481,14 +480,13 @@ struct mptcp_subflow_context {
+ 		send_mp_fail : 1,
+ 		send_fastclose : 1,
+ 		send_infinite_map : 1,
+-		rx_eof : 1,
+ 		remote_key_valid : 1,        /* received the peer key from */
+ 		disposable : 1,	    /* ctx can be free at ulp release time */
+ 		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
+ 		local_id_valid : 1, /* local_id is correctly initialized */
+ 		valid_csum_seen : 1,        /* at least one csum validated */
+ 		is_mptfo : 1,	    /* subflow is doing TFO */
+-		__unused : 8;
++		__unused : 9;
+ 	enum mptcp_data_avail data_avail;
+ 	bool	scheduled;
+ 	u32	remote_nonce;
+@@ -744,7 +742,6 @@ static inline u64 mptcp_expand_seq(u64 old_seq, u64 cur_seq, bool use_64bit)
+ void __mptcp_check_push(struct sock *sk, struct sock *ssk);
+ void __mptcp_data_acked(struct sock *sk);
+ void __mptcp_error_report(struct sock *sk);
+-void mptcp_subflow_eof(struct sock *sk);
+ bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, bool use_64bit);
+ static inline bool mptcp_data_fin_enabled(const struct mptcp_sock *msk)
+ {
+-- 
+2.40.1
 
