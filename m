@@ -1,217 +1,231 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB52610797
-	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 13:54:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEE119E79
+	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 14:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686578078;
+	s=mimecast20190719; t=1686579757;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=isDu2pduu+5CDySn371GBtRGUZnLyhAIThKpLV4ZXmA=;
-	b=QPCDwkiTy3/ekY3hCxUMwx9KspYgEpaAzksUBZP2gvH96IyY3fHzoxF2yu/x0y7x9CQCSq
-	9S62RTIQlughotutliVJ0Sij13SJ+GTNZZbKIzWMRG7AlswrorL3/VXUiZZqQE3a155ACG
-	MRK+nGxvL++0tRQG7ljWJOEieUSZJX0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ZapQN0ewghnQweNS5wPutS47V5vnvYjt23eqbfH1Ft0=;
+	b=fc4j66BIPIy12u4c0p4Pk6kTaWN/HyICCJ0cHc+MiZCZTBH2teYw8xXRWjL1BGWmpTdnzo
+	awiC1Y/QmrFS4TBqgXokh76/hjNV7p1Wtipg84dT1mAPdLSLqKhyO80y1UlkXHb7wAM3mM
+	KQUTh5bOomUiJv7zUm0fLD5S+PZl1W0=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-512-3T5fj9DNPxK3eT9jz0c74A-1; Mon, 12 Jun 2023 09:54:37 -0400
-X-MC-Unique: 3T5fj9DNPxK3eT9jz0c74A-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-977e6c94186so393542966b.1
-        for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 06:54:37 -0700 (PDT)
+ us-mta-355-iPVTxSAUOhKaoUgyJBL3yA-1; Mon, 12 Jun 2023 10:22:35 -0400
+X-MC-Unique: iPVTxSAUOhKaoUgyJBL3yA-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-76077669a5aso31029485a.0
+        for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 07:22:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686578075; x=1689170075;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=isDu2pduu+5CDySn371GBtRGUZnLyhAIThKpLV4ZXmA=;
-        b=cbn2rKBxrg/JTjdxsAWP9fPa4Jj7nl5Ql6L3nf7u9i/Zqocu9ZS6u11XcFi6GkMCe+
-         fMClbTEJMcQ2kbDlLAW8wFmi7tN51yvzSPVx0QVfxFZFP305kGaQRtfLPfbRCE7qYDtJ
-         ldFgXFkBJ+sECjqpQ0Kkfqqf4tMlJQuW9IgBMDcBuPw4CM53oXbVRhyutJ2/HNAeuzAO
-         Href+ZFrDMOo5lpKt7xVfqdqb0GDx6HQIU3xl2cGSWVyzYXnUcv0f30f0UrlIk+2XkEG
-         v4pUXq6QEag+aemI8sfLOZajsaS737098hUp0D9QmDfPmrYoPypUX2meGoPGHsTcRtyV
-         FdVA==
-X-Gm-Message-State: AC+VfDwtKuXAeM3aZLa4N/oF043xMOS3lpKEMp1qpPGh/E0bh8kZ6lF7
-	fsGdDLWTWUw7lkcTtlgq4X/63SXHr1ioFkar5pb9giQt7gzRdb1AKePuRKieQwxyiaKj1ZeN8RA
-	2batcXHqHHZehDOrY1pCAD5c=
-X-Received: by 2002:a17:906:db0a:b0:977:befe:d888 with SMTP id xj10-20020a170906db0a00b00977befed888mr9358936ejb.13.1686578074832;
-        Mon, 12 Jun 2023 06:54:34 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5m81mOnL1F7qspLgfXs8DjadrBpGpGUmMcGIaqxU9Bt/s0V1Xa731u/0hpnvuXxO9GpiRj5w==
-X-Received: by 2002:a17:906:db0a:b0:977:befe:d888 with SMTP id xj10-20020a170906db0a00b00977befed888mr9358915ejb.13.1686578074475;
-        Mon, 12 Jun 2023 06:54:34 -0700 (PDT)
-Received: from localhost ([81.56.90.2])
-        by smtp.gmail.com with ESMTPSA id n11-20020a1709062bcb00b00977eec7b7e8sm5249523ejg.68.2023.06.12.06.54.33
+        d=1e100.net; s=20221208; t=1686579754; x=1689171754;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mUkdp9DHjXRf3ykSsUCht7pGv2YDfc+9gReJ71VO/Us=;
+        b=eKEKV6Ntd6k6E3iXQR3xc+jilVk+L4k3lV67KS8v46k3qFdhpb7JpkS7/7S9791F46
+         tIb80ocColUcScqUO+KYzsUkhmLvyOVQkMrJPtlj3Rek8A1nW4WYbPskm0QLAEhZPNF4
+         dF/A9RUsNdrfMIjJDUJ+JB0EUfe7sjV8J5GzISK1KorFhtRgGoqEpDEr2usIXf1ESDWm
+         XRZJlqZ27P90TCKJwztuwcMBGya0EPE4LFMoNA/+qrtykM6ccD+KNCMPcbtgCMXZ4Ti3
+         yeUTeOEFdTRGZAQFhRCavJ6jlCBV+0kSpgwyYYeLh6MeBMpLbTanYDxv/KyU1UzS599g
+         iksQ==
+X-Gm-Message-State: AC+VfDw+FSUZ57SYlutMrtLDshkAUH3cqAZr+09U2+5UyEWn6hGsxp4T
+	DM2XCKOABPapKj/OYlNncN/5K+X0n0sfjutiBqakb4DAINN2OtrV0dO87uEk7pzj9F5KEJdz8y3
+	3GI/6Xg5QXIw3UwaWp7b+c/s=
+X-Received: by 2002:a37:694:0:b0:760:6bcb:5448 with SMTP id 142-20020a370694000000b007606bcb5448mr5215858qkg.0.1686579754715;
+        Mon, 12 Jun 2023 07:22:34 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6PtR5WYLSVxE6Vl6gbuHOPVNnT5KCZiAAB3q2oqP6HDFg6usSd/N2C4aWua7Osq/cK3fc/wQ==
+X-Received: by 2002:a37:694:0:b0:760:6bcb:5448 with SMTP id 142-20020a370694000000b007606bcb5448mr5215836qkg.0.1686579754387;
+        Mon, 12 Jun 2023 07:22:34 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-250-244.dyn.eolo.it. [146.241.250.244])
+        by smtp.gmail.com with ESMTPSA id f6-20020a05620a12e600b0075785052e97sm2879089qkl.95.2023.06.12.07.22.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 06:54:33 -0700 (PDT)
-Date: Mon, 12 Jun 2023 15:54:33 +0200
-From: Davide Caratti <dcaratti@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Mat Martineau <martineau@kernel.org>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2] mptcp: convert netlink from small_ops to
- ops
-Message-ID: <ZIcjmflYHQMZ0p2H@dcaratti.users.ipa.redhat.com>
-References: <d94672114f94dc029fdb4a721d54c200521e180d.1686562577.git.dcaratti@redhat.com>
- <a5feec31cd5025a0357b8f60293b0879d3bb1461.camel@redhat.com>
+        Mon, 12 Jun 2023 07:22:34 -0700 (PDT)
+Message-ID: <45ff221dfa3fce66e12bd76737c2dea8eeed7e00.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v8 13/17] selftests/bpf: Add bpf_burst
+ scheduler
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Date: Mon, 12 Jun 2023 16:22:31 +0200
+In-Reply-To: <20230612132934.GA9248@localhost>
+References: <cover.1686202841.git.geliang.tang@suse.com>
+	 <bf747921efceb7f066a75cb2dae2ab46071b8275.1686202841.git.geliang.tang@suse.com>
+	 <666004bda6ff9e3e6d65c6903c5b18f18f0e31ed.camel@redhat.com>
+	 <20230609133236.GA30403@localhost>
+	 <4d34b373094d8415d8d6cc29af013dc508a5bf81.camel@redhat.com>
+	 <20230610014514.GA2843@localhost>
+	 <5336efd2153d4667f9d0aea52b6d67ed2685ddbf.camel@redhat.com>
+	 <20230612132934.GA9248@localhost>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <a5feec31cd5025a0357b8f60293b0879d3bb1461.camel@redhat.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-hello Paolo, thanks for looking at this!
+On Mon, 2023-06-12 at 21:29 +0800, Geliang Tang wrote:
+> On Mon, Jun 12, 2023 at 01:05:30PM +0200, Paolo Abeni wrote:
+> > On Sat, 2023-06-10 at 09:45 +0800, Geliang Tang wrote:
+> > > On Fri, Jun 09, 2023 at 04:40:01PM +0200, Paolo Abeni wrote:
+> > > > On Fri, 2023-06-09 at 21:32 +0800, Geliang Tang wrote:
+> > > > > On Fri, Jun 09, 2023 at 11:57:53AM +0200, Paolo Abeni wrote:
+> > > > >=20
+> > > > > > May I guess you get a similar error if you do:
+> > > > > >=20
+> > > > > > =09subflow =3D mptcp_subflow_ctx(ssk)
+> > > > > >=20
+> > > > > > ? (just out of sheer ignorance and curiosity)
+> > > > >=20
+> > > > > Yes. It seems that accessing 'send_info[SSK_MODE_ACTIVE].ssk' is
+> > > > > considered unsafe in BPF context. So here we pass 'send_info[SSK_=
+MODE_ACTIVE].ssk'
+> > > > > into bpf_mptcp_subflow_ctx() to find the related subflow. Then we=
+ access this
+> > > > > subflow instead of 'send_info[SSK_MODE_ACTIVE].ssk' below. This c=
+an make BPF happy.
+> > > > >=20
+> > > > > >=20
+> > > > > > > +=09 * then use mptcp_subflow_tcp_sock() to get the ssk.
+> > > > > > > +=09 */
+> > > > > > > +=09subflow =3D mptcp_subflow_tcp_sock(send_info[SSK_MODE_ACT=
+IVE].ssk, data);
+> > > > > > > +=09ssk =3D mptcp_subflow_tcp_sock(subflow);
+> > > > > >=20
+> > > > > > What if you store the 'subflow' pointer in 'send_info'? Will th=
+e
+> > > > > > verifier splat with that? and what if we store the correspondin=
+g
+> > > > > > context index 'i' instead?
+> > > > >=20
+> > > > > Storing the 'subflow' or index 'i' don't work too.
+> > > >=20
+> > > > Uhmm... I'm very surprised about 'i'. Specifically what I mean is:
+> > > >=20
+> > > > struct subflow_send_info {
+> > > > =09unsigned int subflow_id;
+> > > > =09__u64 linger_time;
+> > > > };
+> > > >=20
+> > > > // ...
+> > > > =09for (i =3D 0; i < SSK_MODE_MAX; ++i) {
+> > > > =09=09send_info[i].ssk =3D MPTCP_SUBFLOWS_MAX;
+> > > > =09=09send_info[i].linger_time =3D -1;
+> > > > =09}
+> > > > // ...
+> > > >=20
+> > > > =09=09if (linger_time < send_info[subflow->backup].linger_time) {
+> > > > =09=09=09send_info[subflow->backup].subflow_id =3D i;
+> > > > =09=09=09send_info[subflow->backup].linger_time =3D linger_time;
+> > > > =09=09}
+> > > >=20
+> > > > // ...
+> > > > =09if (send_info[SSK_MODE_ACTIVE].subflow_id =3D=3D MPTCP_SUBFLOWS_=
+MAX)
+> > > > =09=09send_info[SSK_MODE_ACTIVE].subflow_id =3D send_info[SSK_MODE_=
+BACKUP].subflow_id;
+> > > >=20
+> > > > =09if (send_info[SSK_MODE_ACTIVE].subflow_id < MPTCP_SUBFLOWS_MAX)
+> > > > =09=09subflow =3D data->context[send_info[SSK_MODE_ACTIVE].subflow_=
+id];
+> > > >=20
+> > > > The last assignment should be equivalent to the already used 'subfl=
+ow =3D
+> > > > data->contexts[i];'. What kind of errors do you see here?!? Could y=
+ou
+> > > > please report them verbatim?
+> > >=20
+> > > This line "subflow =3D data->context[send_info[SSK_MODE_ACTIVE].subfl=
+ow_id];" will get a error:
+> > >=20
+> > >   R2 is ptr_mptcp_sched_data invalid variable offset: off=3D16, var_o=
+ff=3D(0x0; 0x38)
+> >=20
+> > I see. This looks like a verifier-imposed artificial constraint.
+> >=20
+> > Basically any access to:
+> >=20
+> > btf_type.array_field[valid_and_validated_variable_index]
+> >=20
+> > is not allowed.
+> >=20
+> > The main point of having sched_data.context exposed to the pluggable
+> > scheduler via mptcp_sched_data is to avoid looping through the subflows
+> > to fetch a given one, I think. But the above verifier constraint
+> > basically prevents such usage.
+> >=20
+> > I think we should add an helper into the core implementing the position
+> > (number) to subflow (context) mapping. e.g.:
+> >=20
+> > struct mptcp_subflow_context *mptcp_subflow_ctx_by_pos(struct mptcp_sk =
+*msk,
+> > =09=09=09=09=09=09=09unsigned int pos)
+> > {
+> > =09if (pos >=3D MPTCP_SUBFLOWS_MAX)
+> > =09=09return NULL;
+> >=20
+> > =09return msk->sched_data.context[pos];
+> > }
+> >=20
+> > And use such helper here instead of bpf_mptcp_subflow_ctx().=C2=A0
+>=20
+> "return msk->sched_data.contexts[pos];" will get the same error:
+>=20
+> R3 is ptr_mptcp_sock invalid variable offset: off=3D1880, var_off=3D(0x0;=
+ 0x38)
 
-On Mon, Jun 12, 2023 at 12:15:59PM +0200, Paolo Abeni wrote:
-> Hi Davide,
-> 
-> Overall LGTM, there are just a few small hints see below.
-> 
-> On Mon, 2023-06-12 at 11:39 +0200, Davide Caratti wrote:
-> > this prepares MPTCP control plane to be described as YAML spec.
-> 
-> I think the commit message should be expanded, alike
-> 
-> """
-> After the change the mptcp protocol will use per op policy. Update
-> the commands implementation to pass the relevant policy all the way
-> down to the actual impl.
-> """
-> 
-> Or whatever makes really sense ;)
+I'm sorry, I was not clear enough. I mean that the
+'mptcp_subflow_ctx_by_pos()' helper must be implemented by the kernel
+and exported/made visible to eBPF. The verifier must not see that code.
+> >=20
+> > There are a number of possible follow-ups to the above, not strictly
+> > related to this series, but IMHO needed before upstreaming this code:
+> >=20
+> > -we could remove the 'context' array from the data directly visible to
+> > the ebpf code.=C2=A0
+> > - Instead we could export to the scheduler the number of subflows
+> > currently present into the msk socket, so the scheduler itself will not
+> > have to always ask for all the MPTCP_SUBFLOWS_MAX possible subflows.=C2=
+=A0
+>=20
+> This for loop in BPF will get the "invalid variable offset" error too:
+>=20
+> for (int i =3D 0; i < number_of_subflows; i++)
+> =09contexts[i];
+>=20
+> So we have to loop from 0 to MAX like this:
+>=20
+> for (i =3D 0; i < SSK_MODE_MAX; i++)
+> =09contexts[i];
 
-Ok!
+Yep, the error you reported in the previous email hinted that. As I
+wrote
 
-[...]
-> > 
-> > +
-> > +/* MPTCP_PM_CMD_FLUSH_ADDRS - do */
-> > +static const struct nla_policy mptcp_pm_flush_addrs_nl_policy[MPTCP_PM_ADDR_ATTR_IF_IDX + 1] = {
-> > +	[MPTCP_PM_ADDR_ATTR_FAMILY] = { .type = NLA_U16, },
-> > +	[MPTCP_PM_ADDR_ATTR_ADDR4] = { .type = NLA_U32, },
-> > +	[MPTCP_PM_ADDR_ATTR_ADDR6] = { .len = 16, },
-> > +	[MPTCP_PM_ADDR_ATTR_ID] = { .type = NLA_U8, },
-> > +	[MPTCP_PM_ADDR_ATTR_PORT] = { .type = NLA_U16, },
-> > +	[MPTCP_PM_ADDR_ATTR_IF_IDX] = { .type = NLA_S32, },
-> > +	[MPTCP_PM_ADDR_ATTR_FLAGS] = { .type = NLA_U32, },
-> > +};
-> 
-> Out of sheer ignorance, to we need to declare 4 different structs with
-> the same contents? Can't we reuse a single one 4 times?
+"""
+Basically any access to:
 
-good point. Well, "per-op" implies (theoretically) that validation of the
-same attribute set can be different per-op: for example, you might want to
-remove an endpoint with 'id' equal to 0, but you can't add one having id = 0.
-The code I added is taken from the output of ynl-cli, and you might have
-noticed that I added the #define trick for "endpoint" because  the tool
-didn't generate any policy for the nested attribute...
+btf_type.array_field[valid_and_validated_variable_index]
 
-Honestly I thought it would have been sufficient to specify "aliases" in
-request/replies, like "&add_addr_attrs" and "*add_addr_attrs" :
+is not allowed.
+"""
 
-<...>
+The above should be:
 
-   -
-      name: add_addr
-      doc: Add endpoint
-      attribute-set: endpoint
-      dont-validate: [ strict ]
-      flags: [ uns-admin-perm ]
-      do:
-        request: &add_addr_attrs
-          attributes:
-            - family
-            - addr4
-            - addr6
-            - id
-            - port
-            - if_idx
-            - flags
-    -
-      name: del_addr
-      doc: Delete endpoint
-      attribute-set: endpoint
-      dont-validate: [ strict ]
-      flags: [ uns-admin-perm ]
-      do:
-        request: *add_addr_attrs
-<...>
+=09for (int i=3D0; i < data->number_of_subflows; i++) {
+=09=09context =3D mptcp_subflow_ctx_by_pos(i);
+=09=09// ...
+=09}
 
-but this generated 2 separate struct of the same type, namely
-mptcp_pm_add_addr_nl_policy and mptcp_pm_del_addr_nl_policy.
 
-[...]
+Cheers,
 
-> > @@ -1183,7 +1258,8 @@ static int mptcp_pm_parse_pm_addr_attr(struct nlattr *tb[],
-> >  
-> >  	/* no validation needed - was already done via nested policy */
-> >  	err = nla_parse_nested_deprecated(tb, MPTCP_PM_ADDR_ATTR_MAX, attr,
-> > -					  mptcp_pm_addr_policy, info->extack);
-> > +					  nla_policy,
-> > +					  info->extack);
-> 
-> Minor nit: I think we can use a single line for both 'nla_policy' and
-> 'info->extack);'
-
-yes, sure, will fix this in v4
-
-[...]
-> 
-> > @@ -1236,19 +1312,22 @@ int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
-> >  
-> >  	memset(addr, 0, sizeof(*addr));
-> >  
-> > -	return mptcp_pm_parse_pm_addr_attr(tb, attr, info, addr, true);
-> > +	return mptcp_pm_parse_pm_addr_attr(tb, attr, info, mptcp_pm_endpoint_nl_policy, addr, true);
-> >  }
-> >  
-> >  int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
-> > -			 bool require_family,
-> > +			 int cmd, bool require_family,
-> >  			 struct mptcp_pm_addr_entry *entry)
-> >  {
-> >  	struct nlattr *tb[MPTCP_PM_ADDR_ATTR_MAX + 1];
-> > +	const struct nla_policy *nla_policy = mptcp_nl_cmd2policy(cmd);
-> >  	int err;
-> 
-> Nit: reverse x-mas tree above
-
-sure, will fix it in v4
-> 
-> >  
-> >  	memset(entry, 0, sizeof(*entry));
-> >  
-> > -	err = mptcp_pm_parse_pm_addr_attr(tb, attr, info, &entry->addr, require_family);
-> > +	err = mptcp_pm_parse_pm_addr_attr(tb, attr, info,
-> > +					  nla_policy,
-> > +					  &entry->addr, require_family);
-> 
-> Nit: 
-> 					  tb, attr, info, nla_policy,
-
-sure, will fix it in v4
-
- 
-> > @@ -1305,7 +1384,7 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
-> >  	struct mptcp_pm_addr_entry addr, *entry;
-> >  	int ret;
-> >  
-> > -	ret = mptcp_pm_parse_entry(attr, info, true, &addr);
-> > +	ret = mptcp_pm_parse_entry(attr, info, MPTCP_PM_CMD_ADD_ADDR, true, &addr);
-> 
-> Can we pass to mptcp_pm_parse_entry() directly the relevant policy
-> instead of the cmd? it will avoid the need for mptcp_nl_cmd2policy()
-> and possibly for the 'duplicated' definitions above.
-
-this will avoid the need for mptcp_nl_cmd2policy(), but it won't probably
-eliminate the dups in the long term, when yamlification will be in place.
-(I need to confirm this by looking again at the tool, will let you know).
-
--- 
-davide
+Paolo
 
