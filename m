@@ -1,35 +1,35 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113D71DDF8
-	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:02:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50561DDF8
+	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686585771;
+	s=mimecast20190719; t=1686585795;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=88v17oDXE8VI0UDlI7/83f2wi9zE67Qo5i6r2fkGwmo=;
-	b=Jgbli959qhdr9aGgOZa88d6mlqYtQgYQXCO/TzsRZCBUejSCeUijftQDptmiOJjqo5eX0b
-	KpLRQ5E4vSQPIx79DInqsO9goRltq8mJDUKNNxEhBHPRnD1iWH9a80SA7ZMKdquCT0kpiz
-	DD5jw7xUEFvMoKCbxTJtYXZ1cpjYNQg=
+	bh=NLiwTiTw8vyqTt5s4JV2eBpaXm6f2NESIrCUYQ9BJsc=;
+	b=EkVPTl0/dmxLed0GlAhrDSqZWEmY1gOtMi1/3XEZaXNoj0IPp3AqwGAx8h/m0Eth5KpBnd
+	suhUxKozQgV5vUlm9RN7xyQzOQq1Y1JNnUOflkgjNb4XufCKjs/bI6nNBjd7QNpP3J7RLH
+	IJ0+ta8WquZ5S4RXU7Yf0n9onHYn8dg=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-178-QZP_AvPcP7mp1oBgmc84fQ-1; Mon, 12 Jun 2023 12:02:49 -0400
-X-MC-Unique: QZP_AvPcP7mp1oBgmc84fQ-1
+ us-mta-92-kJk2BsbLPd6yPqAt1iiklg-1; Mon, 12 Jun 2023 12:02:59 -0400
+X-MC-Unique: kJk2BsbLPd6yPqAt1iiklg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 37B9F81D7B9
-	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:02:45 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.39.192.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BBED51121314
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7737185D53D
 	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:02:44 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 064681121314
+	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 16:02:43 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next] mptcp: drop legacy code.
-Date: Mon, 12 Jun 2023 18:02:33 +0200
-Message-Id: <3bac625cd995fdb3fc6786b599e3c413f00fc6f5.1686584494.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net] mptcp: consolidate fallback and non fallback state machine
+Date: Mon, 12 Jun 2023 18:02:32 +0200
+Message-Id: <f684967fa27c0d051ba3668c45f89ba1ba97a03d.1686584384.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,130 +42,201 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Thanks to the previous patch we can finally drop the "temporary hack"
-used to detect rx eof.
+An orphaned msk releases the used resources via the worker,
+when the latter first see the msk in CLOSED status.
 
+If the msk status transitions to TCP_CLOSE in the release callback
+invoked by the worker's final release_sock(), such instance of the
+workqueue will not take any action.
+
+Additionally the MPTCP code prevents scheduling the worker once the
+socket reaches the CLOSE status: such msk resources will be leaked.
+
+The only code path that can trigger the above scenario is the
+__mptcp_check_send_data_fin() in fallback mode.
+
+Address the issue removing the special handling of fallback socket
+in __mptcp_check_send_data_fin(), consolidating the state machine
+for fallback and non fallback socket.
+
+Since non-fallback sockets do not send not receive data_fin, the
+mptcp code can update the msk internal status to match the next
+step in the SM every time data fin (ack) should be generated or
+received.
+
+As a consequence we can remove a bunch of checks for fallback from
+the fastpath.
+
+Fixes: 6e628cd3a8f7 ("mptcp: use mptcp release_cb for delayed tasks")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-"previous patch" should be replace with a proper commit reference
-once such patch is merged on -net, unless we target both patches on
-the same tree (but this one is really net-next material, while the fix
-is for -net)
----
- net/mptcp/protocol.c | 49 --------------------------------------------
- net/mptcp/protocol.h |  5 +----
- 2 files changed, 1 insertion(+), 53 deletions(-)
+ net/mptcp/protocol.c | 41 +++++++++++++++--------------------------
+ net/mptcp/subflow.c  | 17 ++++++++++-------
+ 2 files changed, 25 insertions(+), 33 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 8f3e50065c13..feaedfd2b3eb 100644
+index 7ffb6709cacd..8f3e50065c13 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -898,49 +898,6 @@ bool mptcp_schedule_work(struct sock *sk)
- 	return false;
+@@ -44,7 +44,7 @@ enum {
+ static struct percpu_counter mptcp_sockets_allocated ____cacheline_aligned_in_smp;
+ 
+ static void __mptcp_destroy_sock(struct sock *sk);
+-static void __mptcp_check_send_data_fin(struct sock *sk);
++static void mptcp_check_send_data_fin(struct sock *sk);
+ 
+ DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
+ static struct net_device mptcp_napi_dev;
+@@ -426,8 +426,7 @@ static bool mptcp_pending_data_fin_ack(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
+-	return !__mptcp_check_fallback(msk) &&
+-	       ((1 << sk->sk_state) &
++	return ((1 << sk->sk_state) &
+ 		(TCPF_FIN_WAIT1 | TCPF_CLOSING | TCPF_LAST_ACK)) &&
+ 	       msk->write_seq == READ_ONCE(msk->snd_una);
+ }
+@@ -585,9 +584,6 @@ static bool mptcp_check_data_fin(struct sock *sk)
+ 	u64 rcv_data_fin_seq;
+ 	bool ret = false;
+ 
+-	if (__mptcp_check_fallback(msk))
+-		return ret;
+-
+ 	/* Need to ack a DATA_FIN received from a peer while this side
+ 	 * of the connection is in ESTABLISHED, FIN_WAIT1, or FIN_WAIT2.
+ 	 * msk->rcv_data_fin was set when parsing the incoming options
+@@ -625,7 +621,8 @@ static bool mptcp_check_data_fin(struct sock *sk)
+ 		}
+ 
+ 		ret = true;
+-		mptcp_send_ack(msk);
++		if (!__mptcp_check_fallback(msk))
++			mptcp_send_ack(msk);
+ 		mptcp_close_wake_up(sk);
+ 	}
+ 	return ret;
+@@ -1632,7 +1629,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+ 	if (!mptcp_timer_pending(sk))
+ 		mptcp_reset_timer(sk);
+ 	if (do_check_data_fin)
+-		__mptcp_check_send_data_fin(sk);
++		mptcp_check_send_data_fin(sk);
  }
  
--void mptcp_subflow_eof(struct sock *sk)
--{
--	if (!test_and_set_bit(MPTCP_WORK_EOF, &mptcp_sk(sk)->flags))
--		mptcp_schedule_work(sk);
--}
--
--static void mptcp_check_for_eof(struct mptcp_sock *msk)
--{
--	struct mptcp_subflow_context *subflow;
--	struct sock *sk = (struct sock *)msk;
--	int receivers = 0;
--
--	mptcp_for_each_subflow(msk, subflow)
--		receivers += !subflow->rx_eof;
--	if (receivers)
--		return;
--
--	if (!(sk->sk_shutdown & RCV_SHUTDOWN)) {
--		/* hopefully temporary hack: propagate shutdown status
--		 * to msk, when all subflows agree on it
--		 */
--		WRITE_ONCE(sk->sk_shutdown, sk->sk_shutdown | RCV_SHUTDOWN);
--
--		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
--		sk->sk_data_ready(sk);
--	}
--
--	switch (sk->sk_state) {
--	case TCP_ESTABLISHED:
--		inet_sk_state_store(sk, TCP_CLOSE_WAIT);
--		break;
--	case TCP_FIN_WAIT1:
--		inet_sk_state_store(sk, TCP_CLOSING);
--		break;
--	case TCP_FIN_WAIT2:
--		inet_sk_state_store(sk, TCP_CLOSE);
--		break;
--	default:
--		return;
--	}
--	mptcp_close_wake_up(sk);
--}
--
- static struct sock *mptcp_subflow_recv_lookup(const struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -2193,9 +2150,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 				break;
- 			}
+ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
+@@ -2725,8 +2722,6 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (unlikely((1 << state) & (TCPF_CLOSE | TCPF_LISTEN)))
+ 		goto unlock;
  
--			if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
--				mptcp_check_for_eof(msk);
+-	mptcp_check_data_fin_ack(sk);
 -
- 			if (sk->sk_shutdown & RCV_SHUTDOWN) {
- 				/* race breaker: the shutdown could be after the
- 				 * previous receive queue check
-@@ -2726,9 +2680,6 @@ static void mptcp_worker(struct work_struct *work)
+ 	mptcp_check_fastclose(msk);
  
  	mptcp_pm_nl_work(msk);
+@@ -2734,7 +2729,8 @@ static void mptcp_worker(struct work_struct *work)
+ 	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
+ 		mptcp_check_for_eof(msk);
  
--	if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
--		mptcp_check_for_eof(msk);
--
- 	mptcp_check_send_data_fin(sk);
- 	mptcp_check_data_fin_ack(sk);
+-	__mptcp_check_send_data_fin(sk);
++	mptcp_check_send_data_fin(sk);
++	mptcp_check_data_fin_ack(sk);
  	mptcp_check_data_fin(sk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d2e59cf33f57..528586e2ed73 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -113,7 +113,6 @@
- /* MPTCP socket atomic flags */
- #define MPTCP_NOSPACE		1
- #define MPTCP_WORK_RTX		2
--#define MPTCP_WORK_EOF		3
- #define MPTCP_FALLBACK_DONE	4
- #define MPTCP_WORK_CLOSE_SUBFLOW 5
  
-@@ -481,14 +480,13 @@ struct mptcp_subflow_context {
- 		send_mp_fail : 1,
- 		send_fastclose : 1,
- 		send_infinite_map : 1,
--		rx_eof : 1,
- 		remote_key_valid : 1,        /* received the peer key from */
- 		disposable : 1,	    /* ctx can be free at ulp release time */
- 		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
- 		local_id_valid : 1, /* local_id is correctly initialized */
- 		valid_csum_seen : 1,        /* at least one csum validated */
- 		is_mptfo : 1,	    /* subflow is doing TFO */
--		__unused : 8;
-+		__unused : 9;
- 	enum mptcp_data_avail data_avail;
- 	bool	scheduled;
- 	u32	remote_nonce;
-@@ -744,7 +742,6 @@ static inline u64 mptcp_expand_seq(u64 old_seq, u64 cur_seq, bool use_64bit)
- void __mptcp_check_push(struct sock *sk, struct sock *ssk);
- void __mptcp_data_acked(struct sock *sk);
- void __mptcp_error_report(struct sock *sk);
--void mptcp_subflow_eof(struct sock *sk);
- bool mptcp_update_rcv_data_fin(struct mptcp_sock *msk, u64 data_fin_seq, bool use_64bit);
- static inline bool mptcp_data_fin_enabled(const struct mptcp_sock *msk)
+ 	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+@@ -2878,6 +2874,12 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
+ 			pr_debug("Fallback");
+ 			ssk->sk_shutdown |= how;
+ 			tcp_shutdown(ssk, how);
++
++			/* simulate the data_fin ack reception to let the state
++			 * machine move forward
++			 */
++			WRITE_ONCE(mptcp_sk(sk)->snd_una, mptcp_sk(sk)->snd_nxt);
++			mptcp_schedule_work(sk);
+ 		} else {
+ 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
+ 			tcp_send_ack(ssk);
+@@ -2917,7 +2919,7 @@ static int mptcp_close_state(struct sock *sk)
+ 	return next & TCP_ACTION_FIN;
+ }
+ 
+-static void __mptcp_check_send_data_fin(struct sock *sk)
++static void mptcp_check_send_data_fin(struct sock *sk)
  {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -2935,19 +2937,6 @@ static void __mptcp_check_send_data_fin(struct sock *sk)
+ 
+ 	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
+ 
+-	/* fallback socket will not get data_fin/ack, can move to the next
+-	 * state now
+-	 */
+-	if (__mptcp_check_fallback(msk)) {
+-		WRITE_ONCE(msk->snd_una, msk->write_seq);
+-		if ((1 << sk->sk_state) & (TCPF_CLOSING | TCPF_LAST_ACK)) {
+-			inet_sk_state_store(sk, TCP_CLOSE);
+-			mptcp_close_wake_up(sk);
+-		} else if (sk->sk_state == TCP_FIN_WAIT1) {
+-			inet_sk_state_store(sk, TCP_FIN_WAIT2);
+-		}
+-	}
+-
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		struct sock *tcp_sk = mptcp_subflow_tcp_sock(subflow);
+ 
+@@ -2967,7 +2956,7 @@ static void __mptcp_wr_shutdown(struct sock *sk)
+ 	WRITE_ONCE(msk->write_seq, msk->write_seq + 1);
+ 	WRITE_ONCE(msk->snd_data_fin_enable, 1);
+ 
+-	__mptcp_check_send_data_fin(sk);
++	mptcp_check_send_data_fin(sk);
+ }
+ 
+ static void __mptcp_destroy_sock(struct sock *sk)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index c7001a23550a..9ee3b7abbaf6 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1757,14 +1757,16 @@ static void subflow_state_change(struct sock *sk)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+ 	struct sock *parent = subflow->conn;
++	struct mptcp_sock *msk;
+ 
+ 	__subflow_state_change(sk);
+ 
++	msk = mptcp_sk(parent);
+ 	if (subflow_simultaneous_connect(sk)) {
+ 		mptcp_propagate_sndbuf(parent, sk);
+ 		mptcp_do_fallback(sk);
+-		mptcp_rcv_space_init(mptcp_sk(parent), sk);
+-		pr_fallback(mptcp_sk(parent));
++		mptcp_rcv_space_init(msk, sk);
++		pr_fallback(msk);
+ 		subflow->conn_finished = 1;
+ 		mptcp_set_connected(parent);
+ 	}
+@@ -1780,11 +1782,12 @@ static void subflow_state_change(struct sock *sk)
+ 
+ 	subflow_sched_work_if_closed(mptcp_sk(parent), sk);
+ 
+-	if (__mptcp_check_fallback(mptcp_sk(parent)) &&
+-	    !subflow->rx_eof && subflow_is_done(sk)) {
+-		subflow->rx_eof = 1;
+-		mptcp_subflow_eof(parent);
+-	}
++	/* when the fallback subflow closes the rx side, trigger a 'dummy'
++	 * ingress data fin, so that the msk state will follow along
++	 */
++	if (__mptcp_check_fallback(msk) && subflow_is_done(sk) && msk->first == sk &&
++	    mptcp_update_rcv_data_fin(msk, READ_ONCE(msk->ack_seq), true))
++		mptcp_schedule_work(parent);
+ }
+ 
+ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_ssk)
 -- 
 2.40.1
 
