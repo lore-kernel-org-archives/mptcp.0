@@ -1,127 +1,110 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93DE1F194
-	for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 17:25:23 +0000 (UTC)
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7606e639083so7891985a.1
-        for <mptcp@lists.linux.dev>; Mon, 12 Jun 2023 10:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686590722; x=1689182722;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dMXCAwdXZ2FDmicwRqhB/MSUahnBuKCyH5OjFXzDzcI=;
-        b=LNAC2dYo3/7t0xdDVpJuPcAx3qB8KiIz+VpVQf90btSE4h6FK5kOPLEuStTvRFv2O/
-         Y0TPaoAQUjfTAV59fZbOMtTLTv6hF04drJFSaKWB4+fCowSv8i9v7TFTSHYdGp/+1+nK
-         3eMQzmSNWQvIB39XZTA4wUGwrF3YDy2g2lZmhjMuzBQEFBIRq1ODhYVF4LmymbHDPz87
-         bln0FeqLGvW2YwvsVILIlDBBEmULLYSk0eTh700HFQ2wvWilcr2SwNcVdq+Id3gGV6tX
-         fe0xUnUvMZ7pFInXGWlTvpNTL2DE5DJN9hDCTg3dr8er7u7r37Mu/nV8Vx01W82n7xk8
-         8M/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686590722; x=1689182722;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dMXCAwdXZ2FDmicwRqhB/MSUahnBuKCyH5OjFXzDzcI=;
-        b=j5wHv8eKFEkWheUECz5Y773HvuWy1M97kuPsetoZ5dg5VcJtPjptnH6HXnXFprk5aT
-         VZOFlSULXqVinJBdh4b0IAyc66kxuiW47MfU8nO0+Wx85JuCk68OUwmU4deFEwNVg1a+
-         kDxVMIIl8lhMbduMDGKZLsjv/KHD1vYoeAv5AYxO5plMfCmPlatqeo9iCcJDVpbx/D0A
-         NsvLuOytf2RaELyRjk7dPbWtDPZ7ZYlOUOCfA7ln/9bDLrLDum7Zn1t+2an3X0oWoxpn
-         PCcSxOvK5LzPCLlrzsW0S0y/prDKLCSR5kPm4+n0uDKkbn2mTdUvv0RD+2s75U11iPEH
-         6Zww==
-X-Gm-Message-State: AC+VfDzssqCorqmHyr9PmT/JCcaPk5dGVRoQvPuznXIyGPbS0d6JpGry
-	7KHwRU/JJrBpwZmJ6UTWAg==
-X-Google-Smtp-Source: ACHHUZ5Yo0YfjgwpBHwDZ0Nqz/ZIVVkQ/sIS+YyNN8+SE7Q0rDUg7eBev05UsKEASf6XlxiskjpPTQ==
-X-Received: by 2002:a05:620a:800e:b0:760:4d89:caa0 with SMTP id ee14-20020a05620a800e00b007604d89caa0mr8618038qkb.37.1686590722524;
-        Mon, 12 Jun 2023 10:25:22 -0700 (PDT)
-Received: from [127.0.0.1] ([104.45.203.194])
-        by smtp.gmail.com with ESMTPSA id h24-20020a05620a10b800b0075772c756e0sm826722qkk.101.2023.06.12.10.25.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 10:25:22 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <f684967fa27c0d051ba3668c45f89ba1ba97a03d.1686584384.git.pabeni@redhat.com>
-References:
- <f684967fa27c0d051ba3668c45f89ba1ba97a03d.1686584384.git.pabeni@redhat.com>
-Subject: Re: mptcp: consolidate fallback and non fallback state machine:
- Tests Results
-Message-ID: <b796ac05-2fa9-487f-8ccd-134a2463e26a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Jun 2023 17:25:21 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937B34402;
+	Tue, 13 Jun 2023 00:00:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 163F1C4339B;
+	Tue, 13 Jun 2023 00:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686614424;
+	bh=ejP2zOU7tKEEXBd532d7YQRPeaxHw7CzRYHpB1izQJ4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=nmcYwxruMeSny0UTLfqbrvXR+UhnWDhCeoaMMy0oOt29NVueMD6CWC+vYalTwiYlf
+	 LvdGmAheoyR4fzkjl7lsSgvT57EN2XG5gGZ+qw1oQzHU9D0CIWfMY3j/uSYNLPjI5L
+	 QTEezCsSe8byoPifLF6vxtfoXcgf0EMU3NLaLQWHePyF2N/kXMGSdsthUIsFqyvlSY
+	 QDwpT9AvzpkabnESYSfURroMw4v0Capv6JCxOQ2/tAAGU/818TDExsK+pSPxphpZb3
+	 2V4h4v21U6qk5nRC4YxU20JmsTglh+8+4lpuGD8MSNZFoPeKoUNr4bqHkFRT3dwJee
+	 ZjSwtq/6w+RaA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E30E0E1CF31;
+	Tue, 13 Jun 2023 00:00:23 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 01/17] selftests: mptcp: lib: skip if not below kernel
+ version
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <168661442392.10094.4616497599019441750.git-patchwork-notify@kernel.org>
+Date: Tue, 13 Jun 2023 00:00:23 +0000
+References: <20230609-upstream-net-20230610-mptcp-selftests-support-old-kernels-part-3-v1-1-2896fe2ee8a3@tessares.net>
+In-Reply-To: <20230609-upstream-net-20230610-mptcp-selftests-support-old-kernels-part-3-v1-1-2896fe2ee8a3@tessares.net>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
+ fw@strlen.de, dcaratti@redhat.com, cpaasch@apple.com, geliangtang@gmail.com,
+ geliang.tang@suse.com, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, stable@vger.kernel.org
 
-Hi Paolo,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Our CI did some validations and here is its report:
+On Sat, 10 Jun 2023 18:11:36 +0200 you wrote:
+> Selftests are supposed to run on any kernels, including the old ones not
+> supporting all MPTCP features.
+> 
+> A new function is now available to easily detect if a feature is
+> missing by looking at the kernel version. That's clearly not ideal and
+> this kind of check should be avoided as soon as possible. But sometimes,
+> there are no external sign that a "feature" is available or not:
+> internal behaviours can change without modifying the uAPI and these
+> selftests are verifying the internal behaviours. Sometimes, the only
+> (easy) way to verify if the feature is present is to run the test but
+> then the validation cannot determine if there is a failure with the
+> feature or if the feature is missing. Then it looks better to check the
+> kernel version instead of having tests that can never fail. In any case,
+> we need a solution not to have a whole selftest being marked as failed
+> just because one sub-test has failed.
+> 
+> [...]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4788605378363392
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4788605378363392/summary/summary.txt
+Here is the summary with links:
+  - [net,01/17] selftests: mptcp: lib: skip if not below kernel version
+    https://git.kernel.org/netdev/net/c/b1a6a38ab8a6
+  - [net,02/17] selftests: mptcp: join: use 'iptables-legacy' if available
+    https://git.kernel.org/netdev/net/c/0c4cd3f86a40
+  - [net,03/17] selftests: mptcp: join: helpers to skip tests
+    https://git.kernel.org/netdev/net/c/cdb50525345c
+  - [net,04/17] selftests: mptcp: join: skip check if MIB counter not supported
+    (no matching commit)
+  - [net,05/17] selftests: mptcp: join: skip test if iptables/tc cmds fail
+    https://git.kernel.org/netdev/net/c/4a0b866a3f7d
+  - [net,06/17] selftests: mptcp: join: support local endpoint being tracked or not
+    https://git.kernel.org/netdev/net/c/d4c81bbb8600
+  - [net,07/17] selftests: mptcp: join: skip Fastclose tests if not supported
+    https://git.kernel.org/netdev/net/c/ae947bb2c253
+  - [net,08/17] selftests: mptcp: join: support RM_ADDR for used endpoints or not
+    https://git.kernel.org/netdev/net/c/425ba803124b
+  - [net,09/17] selftests: mptcp: join: skip implicit tests if not supported
+    https://git.kernel.org/netdev/net/c/36c4127ae8dd
+  - [net,10/17] selftests: mptcp: join: skip backup if set flag on ID not supported
+    https://git.kernel.org/netdev/net/c/07216a3c5d92
+  - [net,11/17] selftests: mptcp: join: skip fullmesh flag tests if not supported
+    https://git.kernel.org/netdev/net/c/9db34c4294af
+  - [net,12/17] selftests: mptcp: join: skip userspace PM tests if not supported
+    https://git.kernel.org/netdev/net/c/f2b492b04a16
+  - [net,13/17] selftests: mptcp: join: skip fail tests if not supported
+    https://git.kernel.org/netdev/net/c/ff8897b51894
+  - [net,14/17] selftests: mptcp: join: skip MPC backups tests if not supported
+    https://git.kernel.org/netdev/net/c/632978f0a961
+  - [net,15/17] selftests: mptcp: join: skip PM listener tests if not supported
+    https://git.kernel.org/netdev/net/c/0471bb479af0
+  - [net,16/17] selftests: mptcp: join: uniform listener tests
+    https://git.kernel.org/netdev/net/c/96b84195df61
+  - [net,17/17] selftests: mptcp: join: skip mixed tests if not supported
+    https://git.kernel.org/netdev/net/c/6673851be0fc
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6477455238627328
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6477455238627328/su=
-mmary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5914505285206016
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5914505285206016/summary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5351555331784704
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5351555331784704/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/68be28d432c3
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
