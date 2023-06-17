@@ -1,127 +1,141 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72972CA2
-	for <mptcp@lists.linux.dev>; Sat, 17 Jun 2023 00:05:31 +0000 (UTC)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-62ff1cdf079so11876216d6.0
-        for <mptcp@lists.linux.dev>; Fri, 16 Jun 2023 17:05:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686960330; x=1689552330;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gXTNqUvErmR5ySbdUwC8bhkZdam2iKZdA263XXTQX/E=;
-        b=OZIpVVc9XzRD3VxCdB5oGnWjkxlNCJhRLfX01v7oN+oKDItyTt/W0vWUwlArhMjWxx
-         YXAXeu1Z82g1ExrvQSabEsf7zzH7DTWdEvaSh4AUmhxlARmmbP7tliQmL/l96xp4uGHQ
-         pUR7NcdvxApz+Te7wTMijnGiJHCk+CIn50L0ICdiRe+qHOu9z+dZclYE8snD9iOWQS5d
-         Ddx38JKoxY+U8cmNcq5Wv7/UmnkXuqlWMMlgFkqJLq4tw7opZDjCp3BFy/ouFNyWJ8PR
-         KBwraBBsRaceY3pWTz/lrl96rVLeZb/Laxfy2AHDeantDxZnFpmWuv40A922phs1y3eE
-         MtEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686960330; x=1689552330;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gXTNqUvErmR5ySbdUwC8bhkZdam2iKZdA263XXTQX/E=;
-        b=D6hFD/t995OJhEe3AedwkhWY4feHFlDWJk61Z/WkiZ5SfPyW6qNmtOlX6eOeEJEua/
-         iWcObrW1Eul/m8WeT8Oujlgw9gKhrstV4NvXI6NyQeD0Jdt7suxjKc29zUbmKuGvXjnK
-         E/YJwMiVNuSFYEssM1kPmeS4L+PWV1ZaXlUC49owStP7YhSoLSZLUhYqs2hKkR448MqR
-         QTpfNhJE40GvW2LqcwP0mT5gQ/zs/ONi2aZuxIv2tOyZBRg7ttmptnTzdl2zrWQZMSSD
-         gypHgjqkx+Y6EGRyeJ6PDzw9+zyLFD0xuEl9qnPUAj6gwHCRExglR/o54mrXTEKofGOD
-         +Ngg==
-X-Gm-Message-State: AC+VfDwzAFybA+UswoMzrb1RKR9pCPP8ebZpbXQwaOLStXURpF26dN5R
-	/Ty3k0gGDrcDN1X5ghc7Jg==
-X-Google-Smtp-Source: ACHHUZ6XJ+ZFkebCF8NC546xBx7A2ojmeoJvmfoBvqESQr95XaWXzKYN+pOCSMsAkufTN/TtDw72Tg==
-X-Received: by 2002:ad4:5ba2:0:b0:61d:be1e:7c47 with SMTP id 2-20020ad45ba2000000b0061dbe1e7c47mr4053425qvq.11.1686960330278;
-        Fri, 16 Jun 2023 17:05:30 -0700 (PDT)
-Received: from [127.0.0.1] ([172.176.196.124])
-        by smtp.gmail.com with ESMTPSA id o19-20020a0ce413000000b0062de6537febsm520430qvl.58.2023.06.16.17.05.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jun 2023 17:05:29 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <f684967fa27c0d051ba3668c45f89ba1ba97a03d.1686584384.git.pabeni@redhat.com>
-References:
- <f684967fa27c0d051ba3668c45f89ba1ba97a03d.1686584384.git.pabeni@redhat.com>
-Subject: Re: mptcp: consolidate fallback and non fallback state machine:
- Tests Results
-Message-ID: <abff3af8-b94b-1dcc-c93c-165bf163130a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 17 Jun 2023 00:05:29 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70B6371
+	for <mptcp@lists.linux.dev>; Sat, 17 Jun 2023 00:54:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DBC2C433C0;
+	Sat, 17 Jun 2023 00:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1686963285;
+	bh=FN/9polJ3J4EH3eDiT7xh8CBEEPNlHo0u2RLwUjUuAI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=IQgFHFUbC38tcTp3ZTGYYIJ2BnbVnfkgIbqVkyXi0lniEbUIJX4p9pJoxnJbE++RD
+	 g1zpMciEKcXtWe7yW4djlX8YW2Q4M4Y8gIWdlmcwcgnz1+MpNrKgF36a+8VZByWvjA
+	 zitGMuS+e7uyoPNBJEALXrAHlk2wbh1Cl04soWXk3WdLzOlA8xys+wClhyiv+6SW38
+	 t8t5UJ6JEfp8wUxOhxStF/2XFlVW1wQVovysLXrWJMy/4nD4e881zZ+8ude2YJnxcn
+	 Ivb6EbuF4dyuDSLPeA5xLSRdhZiorf3D+spwuPr7o7DnK78gQqSdUfTvP7kzBEbwzL
+	 cp2rRBC80FAgA==
+Date: Fri, 16 Jun 2023 17:54:44 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev, pabeni@redhat.com
+Subject: Re: [PATCH mptcp-next v9 05/23] Squash to "mptcp: add scheduler
+ wrappers"
+In-Reply-To: <256cf1d3f00f5577d10f885272f1725b3302bd62.1686709116.git.geliang.tang@suse.com>
+Message-ID: <5f6d3011-63de-c7a2-3ae7-9a70b51edd73@kernel.org>
+References: <cover.1686709116.git.geliang.tang@suse.com> <256cf1d3f00f5577d10f885272f1725b3302bd62.1686709116.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Paolo,
+On Wed, 14 Jun 2023, Geliang Tang wrote:
 
-Thank you for your modifications, that's great!
+> Add sched_data into mptcp_sock too.
+> Use msk->sched_data instead of the local variable data.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/protocol.h |  1 +
+> net/mptcp/sched.c    | 14 ++++++--------
+> 2 files changed, 7 insertions(+), 8 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 4e42f52596d4..bda91399be49 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -314,6 +314,7 @@ struct mptcp_sock {
+> 				   */
+> 	struct sock	*first;
+> 	struct mptcp_pm_data	pm;
+> +	struct mptcp_sched_data sched_data;
 
-Our CI did some validations and here is its report:
+Hi Geliang -
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6606173932093440
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6606173932093440/summary/summary.txt
+If mptcp_sched_data is part of the mptcp_sock then 
+mptcp_sock->sched_data->contexts[] is stale once mptcp_sched_get_send() or 
+mptcp_sched_get_retrans() return. It's also "wasted memory" while the 
+scheduler is not running.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5339536536895488
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5339536536895488/su=
-mmary/summary.txt
+Are you moving the struct here mainly to be able to add persistent 
+scheduler data (last_snd and snd_burst) in the next two patches?
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4977933308133376
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4977933308133376/summary/summary.txt
+I'm concerned that this design is setting up the BPF scheduler to require 
+custom additions to mptcp_sched_data for many new scheduler types. Is 
+there a way to leave mptcp_sched_data unchanged, but add a new member to 
+mptcp_sock just for bpf scheduler state?
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5902486490316800
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5902486490316800/summary/summary.txt
+Is it possible to create a BPF map and store scheduler-specific key-value 
+pairs in it that are accessble by the various BPF scheduler functions?
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/963096f42347
+The basic idea is:
 
+  * struct bpf_map pointer is passed in to each BPF scheduler function
+  * If a BPF scheduler is configured for a MPTCP socket, allocate an empty 
+map. Store a struct bpf_map* in msk_sock (instead of moving sched_data).
+  * Scheduler sets up the map keys and initial values when configured
+  * The BPF get_send() functions access and update those values using bpf 
+helpers (https://man7.org/linux/man-pages/man7/bpf-helpers.7.html)
+  * When scheduler is reconfigured or socket is closed, free the map
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+This way sched_data remains temporary, and there's a new place to store 
+persistent scheduler-specific values.
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+What do you think?
 
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+- Mat
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+> 	struct mptcp_sched_ops	*sched;
+> 	struct {
+> 		u32	space;	/* bytes copied in last measurement window */
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index a15d7632abec..ca4bd53cf5d9 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -125,7 +125,6 @@ mptcp_subflow_ctx_by_pos(const struct mptcp_sock *msk, unsigned int pos)
+> int mptcp_sched_get_send(struct mptcp_sock *msk)
+> {
+> 	struct mptcp_subflow_context *subflow;
+> -	struct mptcp_sched_data data;
+>
+> 	msk_owned_by_me(msk);
+>
+> @@ -155,15 +154,14 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+> 		return 0;
+> 	}
+>
+> -	data.reinject = false;
+> -	msk->sched->data_init(msk, &data);
+> -	return msk->sched->get_subflow(msk, &data);
+> +	msk->sched_data.reinject = false;
+> +	msk->sched->data_init(msk, &msk->sched_data);
+> +	return msk->sched->get_subflow(msk, &msk->sched_data);
+> }
+>
+> int mptcp_sched_get_retrans(struct mptcp_sock *msk)
+> {
+> 	struct mptcp_subflow_context *subflow;
+> -	struct mptcp_sched_data data;
+>
+> 	msk_owned_by_me(msk);
+>
+> @@ -186,7 +184,7 @@ int mptcp_sched_get_retrans(struct mptcp_sock *msk)
+> 		return 0;
+> 	}
+>
+> -	data.reinject = true;
+> -	msk->sched->data_init(msk, &data);
+> -	return msk->sched->get_subflow(msk, &data);
+> +	msk->sched_data.reinject = true;
+> +	msk->sched->data_init(msk, &msk->sched_data);
+> +	return msk->sched->get_subflow(msk, &msk->sched_data);
+> }
+> -- 
+> 2.35.3
+>
+>
+>
