@@ -1,113 +1,127 @@
-Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4858A184C
-	for <mptcp@lists.linux.dev>; Sun, 18 Jun 2023 10:17:04 +0000 (UTC)
-Received: from pop-os.home ([86.243.2.178])
-	by smtp.orange.fr with ESMTPA
-	id AozfqabYVEYhqAozfqlrwt; Sun, 18 Jun 2023 11:46:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1687081609;
-	bh=McAeXz2J4UO1BECLY75Q24ChR053II0UqATm+dnPZxw=;
-	h=From:To:Cc:Subject:Date;
-	b=q67rMZnTDuv5OjLYdkOvp6ilJo6+ksdle57v4Zxzt272ZA4hRFtvynP0Ahhm2BKjp
-	 TRac47I8b6MwG85Lh25bHHwhWyECgazWwVDhqkilAFsspTUL3IfDCd9RNZQ4Fkt+6C
-	 OBVTMJnS3Vy4CGh+s7lbzC59py2LUrshOiGqL/VL50qmvQ6HuSLUaVOxwZ9kXfxr4A
-	 3rnm68FSGkOhi/xF263vENFM0Pc+ERxijNH0XPAgN9+vwF6EcYqMcyJD7987/B9LqY
-	 +aWlIWBlE5UUx8WZaxSD5H9A+qCE4NqpsA76hl3X/SQT3H9lFjDBkRuZiIleVWEtR5
-	 86mGZAHzlCuXQ==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 18 Jun 2023 11:46:49 +0200
-X-ME-IP: 86.243.2.178
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Mat Martineau <martineau@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH net-next] mptcp: Reorder fields in 'struct mptcp_pm_add_entry'
-Date: Sun, 18 Jun 2023 11:46:46 +0200
-Message-Id: <e47b71de54fd3e580544be56fc1bb2985c77b0f4.1687081558.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D059D1102
+	for <mptcp@lists.linux.dev>; Sun, 18 Jun 2023 10:44:11 +0000 (UTC)
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7624e71f0c8so28003285a.1
+        for <mptcp@lists.linux.dev>; Sun, 18 Jun 2023 03:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687085050; x=1689677050;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TKZfElqyGxtnmY/P27kKhglKiaXZfeKvu244lq5jiWI=;
+        b=nJosfall3jQ74GKnLTzgcnFNuKI2hUZNN3mCKWSK9i6JR+iMyLsKOTHla4ax3scMOb
+         h5mOu8WwXNZUZ0jZBBbAT2h3HU23U4QY16LnVSk4bjIwm8sIE2G7pS+OvsAluHCDDDuW
+         MdVbvNqfEPQ1HN0uj2K6JG8D01DL3pBqI2xOMr4LrqcwXQb0F+l5ykbReSTgEYFJWDAf
+         fmPLfAxr8wI4f9ZK2zhKRSEHGEzRToV44+wqfV26M66Oe1MRoyElUo5GqYpOS1D6q6+i
+         oYFdioGLombVBRtt1b4fNLIPIyr3XBP9vaWkEoy4Ytav+U9C5xGpgppSwvV3JHKKph2B
+         u8qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687085050; x=1689677050;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=TKZfElqyGxtnmY/P27kKhglKiaXZfeKvu244lq5jiWI=;
+        b=czGkNqnnbxdSTThdb/nIQVQVvXPpesuRYUe7lMuWGZIq8E9gWCEZay1rsE3JUfSd3D
+         xA/nptJTnYhUi7IyjWMAcHx7Ta8UKPnhAKXB4P8Nf4r9GI/8csq/RRmG18FzaefaS2mM
+         /oA5jF4z1ZFu31hiAGigAVV8AMTqG6SLoevcGpcV/XCxr9zkbwl2e8e22ZqI2Ez3+oTT
+         zf/Mm5v3/6u/Mx7D8j2YWqXMjmxTEMXKJZf7I5ZNSnLoQyzYHCrHF5pUlokk7o3lnY5k
+         qMZLw/nImF88Jr7R2wxU60JedvG/3fN8QRaspQ/bI9nNlvt5TSj258B2pgDTHjdmaHJ+
+         RFLw==
+X-Gm-Message-State: AC+VfDxb225gCPJa63nXWpY1P185prIwau+y3QljlyWpueSWZyMhc5+D
+	K6GSowHKUWjAkhJeIKXvcw==
+X-Google-Smtp-Source: ACHHUZ7ek4HtvCPh60HALrerhiHkEGMVK9Sv1G7QOdCFa5pk8j+hVrzl5B5dEQ/U4alyQRiepdR7JA==
+X-Received: by 2002:a05:620a:43a7:b0:762:4a1e:d5d7 with SMTP id a39-20020a05620a43a700b007624a1ed5d7mr3974989qkp.21.1687085050521;
+        Sun, 18 Jun 2023 03:44:10 -0700 (PDT)
+Received: from [127.0.0.1] ([40.75.123.254])
+        by smtp.gmail.com with ESMTPSA id w20-20020a05620a129400b007621bdc9d98sm1525702qki.87.2023.06.18.03.44.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Jun 2023 03:44:10 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <e47b71de54fd3e580544be56fc1bb2985c77b0f4.1687081558.git.christophe.jaillet@wanadoo.fr>
+References:
+ <e47b71de54fd3e580544be56fc1bb2985c77b0f4.1687081558.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: mptcp: Reorder fields in 'struct mptcp_pm_add_entry': Tests
+ Results
+Message-ID: <4ddd5704-ffad-73f1-ca88-47d27148b3c6@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 18 Jun 2023 10:44:09 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Group some variables based on their sizes to reduce hole and avoid padding.
-On x86_64, this shrinks the size of 'struct mptcp_pm_add_entry'
-from 136 to 128 bytes.
+Hi Christophe,
 
-It saves a few bytes of memory and is more cache-line friendly.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Using pahole
+Our CI did some validations and here is its report:
 
-Before:
-======
-struct mptcp_pm_add_entry {
-	struct list_head           list;                 /*     0    16 */
-	struct mptcp_addr_info     addr;                 /*    16    12 */
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6337047590338560
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6337047590338560/summary/summary.txt
 
-	/* XXX 4 bytes hole, try to pack */
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4929672706785280
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4929672706785280/summary/summary.txt
 
-	struct timer_list          add_timer;            /*    32    88 */
-	/* --- cacheline 1 boundary (64 bytes) was 56 bytes ago --- */
-	struct mptcp_sock *        sock;                 /*   120     8 */
-	/* --- cacheline 2 boundary (128 bytes) --- */
-	u8                         retrans_times;        /*   128     1 */
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5492622660206592
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5492622660206592/su=
+mmary/summary.txt
 
-	/* size: 136, cachelines: 3, members: 5 */
-	/* sum members: 125, holes: 1, sum holes: 4 */
-	/* padding: 7 */
-	/* last cacheline: 8 bytes */
-};
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6055572613627904
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6055572613627904/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/9d878583e137
 
 
-After:
-=====
-struct mptcp_pm_add_entry {
-	struct list_head           list;                 /*     0    16 */
-	struct mptcp_addr_info     addr;                 /*    16    12 */
-	u8                         retrans_times;        /*    28     1 */
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-	/* XXX 3 bytes hole, try to pack */
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-	struct timer_list          add_timer;            /*    32    88 */
-	/* --- cacheline 1 boundary (64 bytes) was 56 bytes ago --- */
-	struct mptcp_sock *        sock;                 /*   120     8 */
+For more details:
 
-	/* size: 128, cachelines: 2, members: 5 */
-	/* sum members: 125, holes: 1, sum holes: 3 */
-};
----
- net/mptcp/pm_netlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index a12a87b780f6..a56718ffdd02 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -25,9 +25,9 @@ static int pm_nl_pernet_id;
- struct mptcp_pm_add_entry {
- 	struct list_head	list;
- 	struct mptcp_addr_info	addr;
-+	u8			retrans_times;
- 	struct timer_list	add_timer;
- 	struct mptcp_sock	*sock;
--	u8			retrans_times;
- };
- 
- struct pm_nl_pernet {
--- 
-2.34.1
 
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
