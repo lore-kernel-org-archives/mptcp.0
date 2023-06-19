@@ -1,141 +1,126 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1721C8BE5
-	for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 15:05:44 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-988a076a7d3so194640766b.3
-        for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 08:05:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A2212B91
+	for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 15:57:52 +0000 (UTC)
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-3ff27d3d2f8so2923401cf.0
+        for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 08:57:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687187143; x=1689779143;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OU0QSaoC61OF2BG35PwY/nRcQLnWzEfk/vTSwZvVNto=;
-        b=tCPERYPbz0IVJwx+2cbvvgF9fI5OlO98L9mSXYhOJoNd3GstHhMvAaESaB1jj4Zrw8
-         K0cavtx4qemVim5TOPdhl9ujs9uSfT3swoNpqWvtSy+UGLssFz3JsAVRx3YJ3IudxaBP
-         Skg9oG3AAsqS5LTA19JxRv+KKFAAQRyLkPX9vtL9bBmL+HFzR5G59UssiRF16wmd7E+q
-         hN2dmdcQ/lzEJW9Gd0q1se3xlLLYp0ppfYVsc4M6ln2DKfiZ8WrBNNc+9IsRNxgw9+P7
-         8P4n6kAz+tst5fbqdgHMsQXn8DGEaM2W6VUbjjnWHDp7FVzYstQax3GbnX1xpvzWI6xe
-         aauA==
+        d=gmail.com; s=20221208; t=1687190271; x=1689782271;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LnB83ndp25vfa7fx1CYJ+7Nm89bysbQ0vTbklxZk11I=;
+        b=TWMzjY+iLPuHWlk05WcB1dvZjnLX+od55c4IkRNucaxrsHeV6SwJc5LGwzs4HXkObq
+         0h/+cfECBU74pLpTwEtpUWN8dxxk3qOKXx4q7WhOavYgLFwYN0r/VjAi6yZHVX3fd8PJ
+         eKE6toANa6lwSTkUaVJ9vGmf0CfwMWnkNxGWS+8saUOUeJAotWDQmbzAijHU8Mex38Yc
+         x/IKrWoosnUYkp+mUz++BK7eYc9CtHOuYbKRcNxwQuv1qYILH7TtWOjdcF0w9p3wkRsD
+         k1HDM1li+dM1FP8gL+MexJNyn8/Onc3JPM5n+HTxUUVcOc306hHy6MPiTpkcMJfDYoof
+         0+Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687187143; x=1689779143;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OU0QSaoC61OF2BG35PwY/nRcQLnWzEfk/vTSwZvVNto=;
-        b=UyN0Bz4I9E5yTLa4r1RE0WLfUkAd4mMju7ypKu/8p2Wo8omYThzg8TjDXCsclazGrM
-         4CEG6aAsJW9mQenEvTV0DoM3PpJQe2rKCCcnLDOE/3oBJzCXirNsUosswhEzasKLvI5t
-         qK20XoMwOAmdfVu9jYtcA6XlSVg2+gA6qvOcaBRLqQJExuA3HhkutdvlqyOpcVsCun+e
-         IHTSOKZPJhwEkRKeFR44tUZh6DSnty4ij+UGeCOgsCOCnqcZkXj30mYrU6Mfy4u5Afcx
-         tJ/qMAxbVvwmXWwmKJoJmqU6jgU2LxXiLVA0cbSXq5WtqgEU7oLU/U+RRqksrNFTwJ2d
-         TLRQ==
-X-Gm-Message-State: AC+VfDzSise3U5/Ra9S7s2WpfGUhQ/M1fg5Dz5hJffA20JnRIt0AQatI
-	B+7IIypWGWXi4D2xUwXxrND3T05MmcElPPUDUj4=
-X-Google-Smtp-Source: ACHHUZ75mHlyjesYP8SY2UoFso3r3wUFvpQCEv8Suwa26aU0Cf95fgfOe/cOu5Y0Zb6SKYJPxlWs4Q==
-X-Received: by 2002:a17:907:e87:b0:974:5487:6037 with SMTP id ho7-20020a1709070e8700b0097454876037mr10792792ejc.36.1687187142878;
-        Mon, 19 Jun 2023 08:05:42 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id m17-20020a170906259100b00969f44bbef3sm15073933ejb.11.2023.06.19.08.05.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Jun 2023 08:05:42 -0700 (PDT)
-Message-ID: <47b2f53c-50c1-b9b3-6ad0-32fb573404ac@tessares.net>
-Date: Mon, 19 Jun 2023 17:05:41 +0200
+        d=1e100.net; s=20221208; t=1687190271; x=1689782271;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LnB83ndp25vfa7fx1CYJ+7Nm89bysbQ0vTbklxZk11I=;
+        b=AoCjRljCZScCC2jvgIIgiJ0BS7DYF5OtIX7XF4D3jIuqmJkNS02sVVPT2DS95k52YI
+         xIIdz+egCuxuHOIjI3STv4felEeiYo4ZaWOywXojwd8586wsATZvKsTDwBcNSlwwnEei
+         EfmNe8TJh3DpQWVdUBgUQHQ8Hv3PAy78QE/NfetimkM8MD5MyU6sQQc3PqV42zjUbReA
+         P7PHJ7L88P8FMC53bxadkt9t/H4+nKQwrh4QbiPn7I1q9KQqeoS9Jk3kV90bFlkYN2I6
+         tQ5c+Gadk3xF+gvj6Yw4oa6K4cHCa2Y/6ZGF84oy8V8OIVTnWHYUxCvHh9/2QeyTfPxA
+         7NFA==
+X-Gm-Message-State: AC+VfDy8tsuVdOY7yZ5k9Fq8LiRHYKLcnaFIB/1GqdhvsvbodzXiDlcx
+	mH4mTHVgJ3Kd+avzMagX+w==
+X-Google-Smtp-Source: ACHHUZ47txnOgec894j64e/OP3cTV1ql0PxvePVNz3eRZDD43N+iZIwqXUb8d3Jy8y/FWqFznu7CRg==
+X-Received: by 2002:ac8:7c56:0:b0:3f9:adfa:319 with SMTP id o22-20020ac87c56000000b003f9adfa0319mr12655730qtv.64.1687190271329;
+        Mon, 19 Jun 2023 08:57:51 -0700 (PDT)
+Received: from [127.0.0.1] ([172.177.65.72])
+        by smtp.gmail.com with ESMTPSA id b5-20020ac84f05000000b003fe0a89447fsm32932qte.14.2023.06.19.08.57.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jun 2023 08:57:50 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <0dd86c4b502f4d977add42b983c0aecccef8b289.1686900596.git.geliang.tang@suse.com>
+References:
+ <0dd86c4b502f4d977add42b983c0aecccef8b289.1686900596.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: set endpoint out of transfer: Tests Results
+Message-ID: <30543239-59fb-dcd9-4031-e0a9bc554772@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 19 Jun 2023 15:57:50 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next v20 10/10] selftests: mptcp: set endpoint out
- of transfer
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1686900596.git.geliang.tang@suse.com>
- <0dd86c4b502f4d977add42b983c0aecccef8b289.1686900596.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <0dd86c4b502f4d977add42b983c0aecccef8b289.1686900596.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 16/06/2023 09:31, Geliang Tang wrote:
-> This patch adds a new flag set_endpoint_outside to control whether
-> endpoints are set in do_transfer().
-> 
-> Add a new function run_tests_bg(), in it run tests in the background
-> and set endpoint outside do_transfer().
-> 
-> Many tests can use this run_tests_bg() instead of run_tests().
+Thank you for your modifications, that's great!
 
-Thank you for the patch but I'm not sure to see the benefits of it. Do
-you mind explaining why it is interesting to do that? Is it to
-accelerate/stabilise some tests?
+Our CI did some validations and here is its report:
 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 65 ++++++++++++-------
->  1 file changed, 42 insertions(+), 23 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 89379815b619..f5a79a88131e 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -54,6 +54,7 @@ export test_linkfail=0
->  export addr_nr_ns1=0
->  export addr_nr_ns2=0
->  export sflags=""
-> +export set_endpoint_outside=0
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4730991546204160
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4730991546204160/summary/summary.txt
 
-Note that all these new variables above could be set where we need them,
-just with
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5293941499625472
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5293941499625472/summary/summary.txt
 
-  local set_endpoint_outside=${set_endpoint_outside:-0}
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6419841406468096
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6419841406468096/su=
+mmary/summary.txt
 
->  # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
->  #				  (ip6 && (ip6[74] & 0xf0) == 0x30)'"
-> @@ -1086,7 +1087,9 @@ do_transfer()
->  	fi
->  	local cpid=$!
->  
-> -	pm_nl_set_endpoint $listener_ns $connector_ns $connect_addr
-> +	if [ $set_endpoint_outside -eq 0 ]; then
-> +		pm_nl_set_endpoint $listener_ns $connector_ns $connect_addr
-> +	fi
->  
->  	wait $cpid
->  	local retc=$?
-> @@ -1203,6 +1206,22 @@ run_tests()
->  	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP ${connect_addr} ${speed}
->  }
->  
-> +run_tests_bg()
-> +{
-> +	local listener_ns="$1"
-> +	local connector_ns="$2"
-> +	local connect_addr="$3"
-> +	local speed="${4:-fast}"
-> +	local wait_join="${5:-0}"
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5856891453046784
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5856891453046784/summary/summary.txt
 
-You could also call the function with an env var:
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/c463ab649871
 
-  wait_join=1 \
-      run_tests_bg (...)
 
-In this case, run_tests_bg() will take the same arguments as run_tests()
-and you could do:
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-  set_endpoint_outside=1 \
-      run_tests "${@}" &
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-(maybe you don't even need an extra function and do such modifications
-in run_tests() directly, no? maybe it is just that I didn't understand
-why you want to do such modifications :) )
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
