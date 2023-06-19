@@ -1,45 +1,45 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A771C5250
-	for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 09:18:21 +0000 (UTC)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-51a52a7d859so2077251a12.0
-        for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 02:18:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA675BE71
+	for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 09:28:18 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5147e40bbbbso3288116a12.3
+        for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 02:28:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687166299; x=1689758299;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+        d=tessares.net; s=google; t=1687166897; x=1689758897;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/lVVFewVaE+P6JBt8Wdotx9KtVwgLlpdfuN8wwxmUvg=;
-        b=6Efu3X1Mu0xLRS0TetnRUGnzsB7NRS73QVAqSYUpcVMt8sEigWWy4pVC2BCM/kT1C3
-         ZPKI7wzG4DjiAqxN3qdGugbg/Fp8siqPVrdyKqpKDixhYfihajbuqaD/xEmqsLyrfUCX
-         B6R5IxmWDIPfdvleHQCZVRfsgENIHpEEeVnMBL+WG3Juubad9j34fHkeck1Dpc9nwREL
-         197qV1Q72zuu+GLZsFnsfX9gMC19NcOFha0Vdxig1g0uXaecus7TLpNObI/G9Uz7uHUV
-         DeuLh3Jj5ZemajuI41BrzQ1BPgvFMDqzzEgrFGLTCyl/kaYFFp7VVD4ow1+Z+NOLVrnN
-         tqzw==
+        bh=upKg2HKxFrd55tB8VQFS2TrQm9XBJRNF3Q3EFJOvwlQ=;
+        b=nlftjA7buZUGgB4y2kZPtx+HMzlW1BbIgtQwDXHtXq+z+zD/lc6byz7SQbYTYjfjxl
+         JsaodkWTFmBaa2EUDulLDEgYl0aig9suPeNm11qj/wRWfQrTNuIfiPDAdaUehecloeac
+         WQ7rlTSPiNvz0KSqLQQjwZ9cZi5v/IQWDGEj6ppywrOMm7i1ETTYizj5dAD/Rvc+hlvO
+         2MwkFVRgiWUJRkFYHtpZ6PqALBLwBWIH4uLSMygXDLx80LEMzWboFanDCAW3frBCQHdj
+         sevvnGKUfrmK+jUue7dkiT3GvN7I0Gt20vB/XPhbiCIA+UmxQ8OFccCU7ywEb/sjm+ZV
+         Erlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687166299; x=1689758299;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+        d=1e100.net; s=20221208; t=1687166897; x=1689758897;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/lVVFewVaE+P6JBt8Wdotx9KtVwgLlpdfuN8wwxmUvg=;
-        b=WAxyd2r9MEyfZAj6W6PQAijFFeJvLv+pGxKfd2QyjeUO5+pvBy53lzw7V0WSyGUv/O
-         QzbY3835aaU+pay/DLhsn+Xs/O8miRD+OWlQWvqnqorfCUobQy4ZFhydfBEIPQ5t3END
-         FpqZNWm62iVIk/a2OQG6lhrOjl4ylNSDMumYMYjJ/NX149pPZ8ebIJbTjSj/RI2QufP9
-         JUdoOl2QijC/EpLSir6b00eqxL1Jv4hlYIaT8tP3d7BdnRMUsz07ZHMvIFPo9zFHjeVv
-         t42B98X0AFsDXurvtog5Fo57j+884rTZyAzcsqUJCb35k2Cmy2ry0Hhfjb30yC28XXkv
-         qaKA==
-X-Gm-Message-State: AC+VfDzN/RZAlfCO/2s8RwR9dlc+NUf/jDhnkLESKrZ8ETYmoGz7KjRU
-	neWqDZQ/REajutlBQ5/IM4CmgFWkYrPZpzJurnz5Mw==
-X-Google-Smtp-Source: ACHHUZ6THBchPOciZYrBDo9GXXBv0bALsvJavmmSvNkniqyJ0AzQz78FewinxR+95UfJCCVkLDogXQ==
-X-Received: by 2002:a17:907:3e83:b0:987:fe18:1c58 with SMTP id hs3-20020a1709073e8300b00987fe181c58mr3884301ejc.35.1687166299288;
-        Mon, 19 Jun 2023 02:18:19 -0700 (PDT)
+        bh=upKg2HKxFrd55tB8VQFS2TrQm9XBJRNF3Q3EFJOvwlQ=;
+        b=DAflE2GPKF7YhWHP4Hir+KAbIqHu35LRF2Cmq3BtRFMiOUtuZVJVA9zp/B/9ksRCQ+
+         IuPsNzThcdhHfjkmf++6sGr4meY/bNCq3GbWs4U/wgqX1r7m1R+mdMEOngFRCd8XJx6S
+         KYSfx6aaflhMowFCb2wkh+nPWJtYqTFePSQ7i+M/csJklNQGt2U46235/vkk91y2Y992
+         werAo2NYX27LF+2vxPixE5Z2Er9AtWVV/8HhVjj7aCy1arxVrAsiiPD8FP6W7ai2zuuy
+         8u8w1S44CNcMn3nn4WuvNCD0TzQohn5tjt/PJQEy4RtXQVZy7SDjuGx4PYp5Xp+Kl4ox
+         yriA==
+X-Gm-Message-State: AC+VfDx6Em+c+hO8oZ7l+Jlv8ESAl7UeoijUrj83CvGhh+4i22s4HosS
+	gA0Blkf3S6KYhK5k9W723blULw==
+X-Google-Smtp-Source: ACHHUZ4ZQlss623x0EW1Z32QUzOHK5oBJw/cAN7KVxJdVTBEghprGgO8ZCdSwWJDhIt0425mi9Xt5A==
+X-Received: by 2002:aa7:d951:0:b0:51a:53e8:f579 with SMTP id l17-20020aa7d951000000b0051a53e8f579mr1532655eds.0.1687166896517;
+        Mon, 19 Jun 2023 02:28:16 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id o6-20020a17090611c600b00987bc81506dsm2900579eja.202.2023.06.19.02.18.18
+        by smtp.gmail.com with ESMTPSA id c7-20020aa7df07000000b00514b854c399sm12829577edy.84.2023.06.19.02.28.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Jun 2023 02:18:18 -0700 (PDT)
-Message-ID: <62f9107a-3b64-468c-b5bb-232965fbede0@tessares.net>
-Date: Mon, 19 Jun 2023 11:18:18 +0200
+        Mon, 19 Jun 2023 02:28:16 -0700 (PDT)
+Message-ID: <339738ae-a163-6f2b-0e5a-cd4f6da65cfd@tessares.net>
+Date: Mon, 19 Jun 2023 11:28:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,40 +48,61 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next] mptcp: drop legacy code.
+Subject: Re: [PATCH mptcp-net] mptcp: ensure listener is unhashed before
+ updating the sk status
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
-References: <3bac625cd995fdb3fc6786b599e3c413f00fc6f5.1686584494.git.pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Christoph Paasch <cpaasch@apple.com>
+References: <b96e12c9dd08dca94ce2539b01d0e609d472a22a.1686754464.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <3bac625cd995fdb3fc6786b599e3c413f00fc6f5.1686584494.git.pabeni@redhat.com>
+In-Reply-To: <b96e12c9dd08dca94ce2539b01d0e609d472a22a.1686754464.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat,
+Hi Paolo,
 
-On 12/06/2023 18:02, Paolo Abeni wrote:
-> Thanks to the previous patch we can finally drop the "temporary hack"
-> used to detect rx eof.
+On 14/06/2023 16:54, Paolo Abeni wrote:
+> The MPTCP protocol access the listener subflow in a lockless
+> manner in a couple of places (poll, diag). That works only if
+> the msk itself leaves the listener status only after that the
+> subflow itself has been closed/disconnected. Otherwise we risk
+> deadlock in diag, as reported by Christoph.
+> 
+> Address the issue ensuring that the first subflow (the listener
+> one) is always disconnected before updating the msk socket status.
+> 
+> Reported-by: Christoph Paasch <cpaasch@apple.com>
+> Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Thank you for the patch, it looks good to me!
 
-Thank you for the patches and the review.
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Now in our tree (both in "fixes for -net" as agreed at the last weekly
-meeting) with Mat's RvB tag, the modification asked by Mat in the commit
-message of patch 1/2, mention the name of patch 1/2 in the commit
-message of patch 2/2 and a small change in the title of patch 2/2
-because we already have a commit with the same one.
+I didn't take the modifications in mptcp_join.sh because it looks like
+temp debug you added. It makes sense to add that but we should probably
+first print the "[fail]" message and then more info (without the
+trailing whitespace reported by checkpatch.pl). Do you plan to do that
+in a later commit?
+
+> ---
+> should close issues/407 for good
+
+(for b4)
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/407
+
+Applied in our tree (fixes for -net) with my RvB tag:
 
 New patches for t/upstream-net and t/upstream:
-- 92a5d1cb400c: mptcp: consolidate fallback and non fallback state machine
-- f5dc57f26818: mptcp: drop legacy code around RX EOF
-- Results: 7c2d56234e38..3aa564399c36 (export-net)
-- Results: ce02fd8dab59..0cf78b82b67f (export)
+- 126826def96d: mptcp: ensure listener is unhashed before updating the
+sk status
+- Results: 3aa564399c36..7fe37662a6a8 (export-net)
+- Results: 0cf78b82b67f..9c3e1c09dbd3 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230619T090002
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230619T090002
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230619T092329
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230619T092329
 
 Cheers,
 Matt
