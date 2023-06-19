@@ -1,45 +1,45 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6015E125CE
-	for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 15:01:48 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-988689a5f44so169862566b.1
-        for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 08:01:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17EC8BE5
+	for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 15:04:24 +0000 (UTC)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-978863fb00fso583864466b.3
+        for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 08:04:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687186907; x=1689778907;
+        d=tessares.net; s=google; t=1687187063; x=1689779063;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6K33ctxnx96ohMAwLessJnzPHAXtfSwuNmGBOr61SYM=;
-        b=LpqHHU8umGRnJ66RaMCwo30G0N8oGMsSGzNoxqeSziZ9Rd8ZliDkom4KOfzgwYqMzz
-         YXHVYlhxOhHn89W7tMKfoAhH0mR/EH61Yv5a+CfLaw2VAbajtxwSdqCAABov+8kG0OEA
-         wHuLoQeoiERsRupKBV98tYapSHV99k9s4EyND9peG9WtOojrCH0v9seaWyGuZeiSjEV8
-         JFZ9GUDyDXjkfKf4eaIsL3uq/P3pExvOroAywfeH8agxMA7SggLloZNpQ/8s9FLYjDWC
-         3WWAJWGRa8wt1hInAKb26aaO9qJJtedb52yHHlConFNmx7+QdlbY9Z7m7Ycayl37LnIG
-         JkgA==
+        bh=t6QvF3m1QxYekAdGWxRWM/Tfd4hV+VS8NUVo31P5HoU=;
+        b=HrhnxicbpHdORGmgVGegB6SVELJIjtgKa5bwWTNLIzXuyxh1toqM8Nan8NkLO6T7A2
+         l/fOymUbOY58A54CQn4yWDi0OIcAGvUmkjIWJHCIN7fdqxPdPH7LTqR/lylRU69OQYgM
+         f8jkXNhJlmnlw0WfOOHM05S+pYDxFhKJmnVdc6ErBtW3hgN5VmYNPlzQlWZWEC/NoCX9
+         5uMV4MkO6AZFpB33o1nLZzlVv0BKZLxskmllhdsIbBz3HidcAaPvCzmvBxL9TJBvzjtJ
+         LY/TieWP/M2kxnniC1MuNdlr/nXNrlbH5BZjRNm3XdioGzB5W23Y2z3YNfIqUK2ERuuL
+         x0xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687186907; x=1689778907;
+        d=1e100.net; s=20221208; t=1687187063; x=1689779063;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6K33ctxnx96ohMAwLessJnzPHAXtfSwuNmGBOr61SYM=;
-        b=eozbhLMsQj4QxUx1X0JJrdCOSduurlj8VTVfFAXLVNdwlChdcwjBzEp7N560iCt0kb
-         yFsfXbSjUcAacXXta+N9705YTYQB/tx4H1EbkxRILLZiuE5OUGzfNZ/Shn9OW6jFHpsb
-         rtUXSgroz2NrM/XTjCP0Jeb18mQd+DVAsAAGMmL5xnrVLbhJfJdMsJXiZuvhoMsok0Yq
-         U8HHZyNHQ3tWU2TB42SWxvdMQJDBEkoay+kEB4s+hJwcvxP6r5Z4ZT1rXT6aRzooZdku
-         /6ZHKhiUGpzjSL+fBAdWS/DrVjJVw6p8N0V6rkK4xtu0h8x34Mi7PHtwBNSaxWy5Q90Z
-         kELQ==
-X-Gm-Message-State: AC+VfDz3luwplIyD5VbbVTOsniAqgPOsYYpPer39RmKA6wkq6Z3xHWdP
-	CT/1IJsjzKs4pQBsNXUH/GpqQiSR12ItCjD3aSI=
-X-Google-Smtp-Source: ACHHUZ62oqNVL5JIbqCWr35tztuT0zLqQEFAZvQG1VbZLWmK7QmgWBmzdKAO2DCA5lO+yHb/HuF5NA==
-X-Received: by 2002:a17:907:701:b0:974:6026:a316 with SMTP id xb1-20020a170907070100b009746026a316mr8757521ejb.19.1687186907062;
-        Mon, 19 Jun 2023 08:01:47 -0700 (PDT)
+        bh=t6QvF3m1QxYekAdGWxRWM/Tfd4hV+VS8NUVo31P5HoU=;
+        b=bW17DxEWKKF02FK84kHrpo8JLGr3w5toO6CCiNw/LE/ETAj+UOC7FUJEn7291TLdmA
+         rHf/QbhjqEcYRovCtvw1H72zBX8/i+y8U9E2N9LTTo2YSDWH7Wp0ImZoMMLKM6TrFq9y
+         Ga77OMubUlx/nTPcPKVXb/bEjpMSAFx67SCIZQWI+lvmF0sYkxqMlSKJp6vTgsJ+KKZz
+         cIjhVFJFWn0c+caqsmB7A/m5zpQIpGmdBF4AwRvmHoGG17GZSNNQi2ko7RVQiYcBn2/o
+         hk2OFRlNEpq6hpsT8EsXA9US/mtWLR30dU8UGwhP4OMnqnQ5oQ3jUjJ1CvWYXo1AJo5Y
+         VgVA==
+X-Gm-Message-State: AC+VfDwNtX5rx0xC4/T2IRiWo4KUPGH66+wbHmHIuVTm7B8FBMirSD5H
+	Nd3lUNELkq9MsCoqpU8KxYEfchvGP/pcDfDidiY=
+X-Google-Smtp-Source: ACHHUZ7RnoMzUJ4Bph9lD25OxUXuSLcEUGSksx0tqe0b4VhJNpgFHlzurobBXZfFQWwd0NZdPnXd7A==
+X-Received: by 2002:a17:907:86a4:b0:988:fea3:ae5a with SMTP id qa36-20020a17090786a400b00988fea3ae5amr366939ejc.47.1687187063050;
+        Mon, 19 Jun 2023 08:04:23 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id q2-20020a170906360200b0096a27dbb5b2sm14614236ejb.209.2023.06.19.08.01.46
+        by smtp.gmail.com with ESMTPSA id w19-20020a1709064a1300b00988955f7b5esm1918211eju.157.2023.06.19.08.04.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Jun 2023 08:01:46 -0700 (PDT)
-Message-ID: <bb2adfc9-640e-4c5f-ec46-87bd850e996f@tessares.net>
-Date: Mon, 19 Jun 2023 17:01:46 +0200
+        Mon, 19 Jun 2023 08:04:22 -0700 (PDT)
+Message-ID: <921d34ce-ac77-00e0-190e-16fa672734a5@tessares.net>
+Date: Mon, 19 Jun 2023 17:04:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,117 +48,75 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next v20 03/10] selftests: mptcp: check subflow and
- addr infos
+Subject: Re: [PATCH mptcp-next v20 09/10] selftests: mptcp: pass fastclose to
+ sflags
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1686900596.git.geliang.tang@suse.com>
- <91c10944663b947b6ccb8b3be5b2f8581295ba73.1686900596.git.geliang.tang@suse.com>
+ <70cf8f866f114c950f14febf9c41f0f09f4ea5c5.1686900596.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <91c10944663b947b6ccb8b3be5b2f8581295ba73.1686900596.git.geliang.tang@suse.com>
+In-Reply-To: <70cf8f866f114c950f14febf9c41f0f09f4ea5c5.1686900596.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 16/06/2023 09:30, Geliang Tang wrote:
-> This patch adds more arguments for chk_mptcp_info() to check subflows,
-> add_addr_signal and add_addr_accepted infos of different namespaces. And
-> invokes chk_mptcp_info() to check subflows infos of userspace PM tests
-> and endpoint tests.
-> 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 48 +++++++++++--------
->  1 file changed, 28 insertions(+), 20 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 3baa6ac3b03e..3811a6c3dc5d 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1832,31 +1832,32 @@ chk_subflow_nr()
+On 16/06/2023 09:31, Geliang Tang wrote:
+> Pass fastclose flag to the sflags argument instead of addr_nr_ns2.
+
+Please *always* explain the reason(s) the commit message.
+Here I guess you do that because it is clearer, right?
+
+> Then the fullmesh flag setting can be moved into pm_nl_set_endpoint()
+> from do_transfer().
+
+Just to know, do you plan to simplify this part as well? e.g. to be able
+to do something like:
+
+  fullmesh=2 (...) \
+      run_tests (...)
+
+  if [ -n "${fullmesh}" ]; then
+      flags="${flags},fullmesh"
+      addr_nr_ns2=${fullmesh}
+  fi
+
+or:
+
+  sflags=fullmesh addr_nr_ns2=2 (...) \
+      run_tests (...)
+
+and stop doing stuffs like:
+
+  if [[ "${foo}" = "bar_"* ]]; then
+      extracted_var=${foo:42}
+
+>  		extra_args="-r ${speed:6}"
+>  	fi
 >  
->  chk_mptcp_info()
->  {
-> -	local nr_info=$1
-> -	local info
-> +	local info1=$1
-> +	local nr1=$2
-> +	local info2=$3
-> +	local nr2=$4
->  	local cnt1
->  	local cnt2
->  	local dump_stats
->  
-> -	if [[ $nr_info = "subflows_"* ]]; then
-> -		info="subflows"
-> -		nr_info=${nr_info:9}
-> -	else
-> -		echo "[fail] unsupported argument: $nr_info"
-> -		fail_test
-> -		return 1
-> -	fi
-> +	printf "%-${nr_blank}s %-30s" " " "mptcp_info $info1:$info2=$nr1:$nr2"
->  
-> -	printf "%-${nr_blank}s %-30s" " " "mptcp_info $info=$nr_info"
-> +	cnt1="$(ss -N $ns1 -inmHM)"
-> +	cnt2="$(ss -N $ns2 -inmHM)"
+> -	local flags="subflow"
+>  	local extra_cl_args=""
+>  	local extra_srv_args=""
+>  	local trunc_size=""
+> -	if [[ "${addr_nr_ns2}" = "fastclose_"* ]]; then
+> +	if [[ "${sflags}" = "fastclose_"* ]]; then
+>  		if [ ${test_linkfail} -le 1 ]; then
+>  			echo "fastclose tests need test_linkfail argument"
+>  			fail_test
 
-(I don't think we need "-m" but it was already there before)
+Why not using a new "key"? e.g.
 
-> +	if [ -z "${cnt1}" ] || [ -z "${cnt2}" ]; then
-> +		mptcp_lib_fail_if_expected_feature "$info1:$info2 SS counter"
-> +		echo "[skip]"
-> +		return
+  fastclose=client \
+      run_tests (...)
 
-If I'm not mistaken, here, we are going to skip the check if:
-- "ss -M" is not supported
-- there is no (more) active MPTCP connection
+You would have here something clearer:
 
-I think that's not correct to skip the checks here because some features
-are missing for these reasons:
+  if [ -n "${fastclose}" ]; then
+      local side=${fastclose}
 
-- For "ss -M" support, it is probably best to do that in check_tools()
-function, similar to what is done in diag.sh:
-
-  if ! ss -h | grep -q MPTCP; then (...)
-
-- if there is no more active MPTCP connection, we should then assume the
-counter is 0 and not skip the check because maybe we have an issue if we
-expect to have active connections.
-
-In both cases, it is not linked to the info we are trying to grab and
-the printed message that expected features are missing is confusing (and
-wrong).
-
-=> So I think it would be better to:
-  - add a new patch checking if 'ss' supports MPTCP (can be done in
-another series)
-  - here: just assume the counter is 0 if 'ss' output is empty
-
-Also, I just remembered 'ss' will only display the counters that are
-different from 0... That's a nice thing to do to reduce the number of
-info displayed by ss but it means we cannot use 'ss' to know if the
-counter is supported by old kernels... On the other hand, all the
-counters you are getting for the moment (subflow, add_addr_signal +
-accepted) are present since kernel v5.9 so before the first LTS version
-with MPTCP support so we are good. If one day we want to get new
-counters, we will first need to check if the running kernel supports
-such counters. We can do that later. So no need to skip the tests here
-if it looks like features are missing.
-
-=> In other words, sorry for the confusion but I think it would be
-better to go back to what you were doing before: without the 'if' and by
-retrieving info in one step:
-
-  cnt1=$(ss -N $ns1 -inmHM | grep "$info1:" |
-         sed -n 's/.*\('"$info1"':\)\([[:digit:]]*\).*$/\2/p;q')
-  # 'ss' only display active connections and counters that are not 0.
-  [ -z "$cnt1" ] && cnt1=0
-
-If there is no other modifications in this v20, I can do the
-modification myself if that's OK for you. Or I can apply a Squash-to
-patch if you prefer.
+(not directly related but it is the same for speed_XX (e.g. speed_10),
+we could pass speed=10 and even speed=slow but that's for a different
+commit if you are interested to change that too ;) )
 
 Cheers,
 Matt
