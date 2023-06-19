@@ -1,153 +1,90 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4521FC4
-	for <mptcp@lists.linux.dev>; Sun, 18 Jun 2023 16:54:41 +0000 (UTC)
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-62ffb5f6aafso20484816d6.1
-        for <mptcp@lists.linux.dev>; Sun, 18 Jun 2023 09:54:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A771C5250
+	for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 09:18:21 +0000 (UTC)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-51a52a7d859so2077251a12.0
+        for <mptcp@lists.linux.dev>; Mon, 19 Jun 2023 02:18:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687107281; x=1689699281;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4sK61SVjYCcgummf/cy7pNsLb9SbPBeqU0f1FYDFMyI=;
-        b=rY8QSvEl6p4fIeB+cNXrfBx3Qi8Q0oRZm5VoS2BoCgfjuYRQQUwrdFGEDdU23IrXo0
-         chGoGHKPwP0LXmrfTl3qHlcCmo1sRYapzINEnQSow+fzi+pFn5PGiApYOrJ50HKaB68T
-         utE+yg2GnzRQ30Bj8a8L69p3c374+UtcDkNfJR34GIn05f0b7+0AmEbyApvKm1DNJWT/
-         bJcRj7sz29ir/3TzVW+gzb/qTkz7VnAPSgi9enEEZ3+K74hSxYqhdeSEvqiAsjKKoCqT
-         OzoP6N5BMK7b0x2JfdgrfrTiD4DoK57jW0lPFco02d1KYyD6s/pMa/qc2P6IX40592qx
-         JtnA==
+        d=tessares.net; s=google; t=1687166299; x=1689758299;
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/lVVFewVaE+P6JBt8Wdotx9KtVwgLlpdfuN8wwxmUvg=;
+        b=6Efu3X1Mu0xLRS0TetnRUGnzsB7NRS73QVAqSYUpcVMt8sEigWWy4pVC2BCM/kT1C3
+         ZPKI7wzG4DjiAqxN3qdGugbg/Fp8siqPVrdyKqpKDixhYfihajbuqaD/xEmqsLyrfUCX
+         B6R5IxmWDIPfdvleHQCZVRfsgENIHpEEeVnMBL+WG3Juubad9j34fHkeck1Dpc9nwREL
+         197qV1Q72zuu+GLZsFnsfX9gMC19NcOFha0Vdxig1g0uXaecus7TLpNObI/G9Uz7uHUV
+         DeuLh3Jj5ZemajuI41BrzQ1BPgvFMDqzzEgrFGLTCyl/kaYFFp7VVD4ow1+Z+NOLVrnN
+         tqzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687107281; x=1689699281;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4sK61SVjYCcgummf/cy7pNsLb9SbPBeqU0f1FYDFMyI=;
-        b=kv7asb81x/2cpdfGX+HGxtq9BwaDz4IocIC843trLJFrhQE7KApaOfE/qYZ7EJIwEv
-         LgfEB4T/tMPKFqu7/osvbEixIaNz5j0zzLgBJ9THVAhYUGZuGWq6PkmJFw+gGy/U2QwT
-         mAG7ZrF8C/fwnO6yTKCrbaDOrdhs46OKbk75UH0KHlxGYrIfWpZd1zHGwRFeqm5pfglY
-         OYjGSmUiWFrbZw7ItmhHEbtYmhcFVuw7Pz+4rjpuXTQjttBAkgvXEoLIYo2a6h01GJcb
-         m0XOHewhGN0YCHJ/Z9zZq+8Do9UGOSyhg7mqtVGUKU0QyzdDg/7wMFGKPbZGXj3C7pxe
-         ADng==
-X-Gm-Message-State: AC+VfDxpK6m6c2r7zC7BVby28OQ0G9pvTXsEGMznCv43u+m7dH2zdTRV
-	0b9+I1mIUMOK8VPrqyMRrGc=
-X-Google-Smtp-Source: ACHHUZ7rD2n8b5vnYB/xOzS5BAQNWYuxXJrQo4BmBND6gWZP6jCAnPQahStFSM7LauZ1ZKr4AefxaQ==
-X-Received: by 2002:ad4:5be2:0:b0:626:33bb:3fd3 with SMTP id k2-20020ad45be2000000b0062633bb3fd3mr8290593qvc.19.1687107280821;
-        Sun, 18 Jun 2023 09:54:40 -0700 (PDT)
-Received: from localhost (172.174.245.35.bc.googleusercontent.com. [35.245.174.172])
-        by smtp.gmail.com with ESMTPSA id t3-20020ac85303000000b003f7a54fa72fsm1857340qtn.0.2023.06.18.09.54.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Jun 2023 09:54:40 -0700 (PDT)
-Date: Sun, 18 Jun 2023 12:54:40 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: David Howells <dhowells@redhat.com>, 
- netdev@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>, 
- Alexander Duyck <alexander.duyck@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- David Ahern <dsahern@kernel.org>, 
- Matthew Wilcox <willy@infradead.org>, 
- Jens Axboe <axboe@kernel.dk>, 
- linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, 
- dccp@vger.kernel.org, 
- linux-afs@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, 
- linux-can@vger.kernel.org, 
- linux-crypto@vger.kernel.org, 
- linux-doc@vger.kernel.org, 
- linux-hams@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, 
- linux-rdma@vger.kernel.org, 
- linux-sctp@vger.kernel.org, 
- linux-wpan@vger.kernel.org, 
- linux-x25@vger.kernel.org, 
- mptcp@lists.linux.dev, 
- rds-devel@oss.oracle.com, 
- tipc-discussion@lists.sourceforge.net, 
- virtualization@lists.linux-foundation.org
-Message-ID: <648f36d02fe6e_33cfbc2944f@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20230617121146.716077-18-dhowells@redhat.com>
-References: <20230617121146.716077-1-dhowells@redhat.com>
- <20230617121146.716077-18-dhowells@redhat.com>
-Subject: RE: [PATCH net-next v2 17/17] net: Kill MSG_SENDPAGE_NOTLAST
+        d=1e100.net; s=20221208; t=1687166299; x=1689758299;
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/lVVFewVaE+P6JBt8Wdotx9KtVwgLlpdfuN8wwxmUvg=;
+        b=WAxyd2r9MEyfZAj6W6PQAijFFeJvLv+pGxKfd2QyjeUO5+pvBy53lzw7V0WSyGUv/O
+         QzbY3835aaU+pay/DLhsn+Xs/O8miRD+OWlQWvqnqorfCUobQy4ZFhydfBEIPQ5t3END
+         FpqZNWm62iVIk/a2OQG6lhrOjl4ylNSDMumYMYjJ/NX149pPZ8ebIJbTjSj/RI2QufP9
+         JUdoOl2QijC/EpLSir6b00eqxL1Jv4hlYIaT8tP3d7BdnRMUsz07ZHMvIFPo9zFHjeVv
+         t42B98X0AFsDXurvtog5Fo57j+884rTZyAzcsqUJCb35k2Cmy2ry0Hhfjb30yC28XXkv
+         qaKA==
+X-Gm-Message-State: AC+VfDzN/RZAlfCO/2s8RwR9dlc+NUf/jDhnkLESKrZ8ETYmoGz7KjRU
+	neWqDZQ/REajutlBQ5/IM4CmgFWkYrPZpzJurnz5Mw==
+X-Google-Smtp-Source: ACHHUZ6THBchPOciZYrBDo9GXXBv0bALsvJavmmSvNkniqyJ0AzQz78FewinxR+95UfJCCVkLDogXQ==
+X-Received: by 2002:a17:907:3e83:b0:987:fe18:1c58 with SMTP id hs3-20020a1709073e8300b00987fe181c58mr3884301ejc.35.1687166299288;
+        Mon, 19 Jun 2023 02:18:19 -0700 (PDT)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id o6-20020a17090611c600b00987bc81506dsm2900579eja.202.2023.06.19.02.18.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Jun 2023 02:18:18 -0700 (PDT)
+Message-ID: <62f9107a-3b64-468c-b5bb-232965fbede0@tessares.net>
+Date: Mon, 19 Jun 2023 11:18:18 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH mptcp-next] mptcp: drop legacy code.
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>
+References: <3bac625cd995fdb3fc6786b599e3c413f00fc6f5.1686584494.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <3bac625cd995fdb3fc6786b599e3c413f00fc6f5.1686584494.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-David Howells wrote:
-> Now that ->sendpage() has been removed, MSG_SENDPAGE_NOTLAST can be cleaned
-> up.  Things were converted to use MSG_MORE instead, but the protocol
-> sendpage stubs still convert MSG_SENDPAGE_NOTLAST to MSG_MORE, which is now
-> unnecessary.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: "David S. Miller" <davem@davemloft.net>
-> cc: Eric Dumazet <edumazet@google.com>
-> cc: Jakub Kicinski <kuba@kernel.org>
-> cc: Paolo Abeni <pabeni@redhat.com>
-> cc: Jens Axboe <axboe@kernel.dk>
-> cc: Matthew Wilcox <willy@infradead.org>
-> cc: bpf@vger.kernel.org
-> cc: dccp@vger.kernel.org
-> cc: linux-afs@lists.infradead.org
-> cc: linux-arm-msm@vger.kernel.org
-> cc: linux-can@vger.kernel.org
-> cc: linux-crypto@vger.kernel.org
-> cc: linux-doc@vger.kernel.org
-> cc: linux-hams@vger.kernel.org
-> cc: linux-perf-users@vger.kernel.org
-> cc: linux-rdma@vger.kernel.org
-> cc: linux-sctp@vger.kernel.org
-> cc: linux-wpan@vger.kernel.org
-> cc: linux-x25@vger.kernel.org
-> cc: mptcp@lists.linux.dev
-> cc: netdev@vger.kernel.org
-> cc: rds-devel@oss.oracle.com
-> cc: tipc-discussion@lists.sourceforge.net
-> cc: virtualization@lists.linux-foundation.org
-> ---
->  include/linux/socket.h                         | 4 +---
->  net/ipv4/tcp_bpf.c                             | 4 +++-
->  net/tls/tls_device.c                           | 3 +--
->  net/tls/tls_main.c                             | 2 +-
->  net/tls/tls_sw.c                               | 2 +-
->  tools/perf/trace/beauty/include/linux/socket.h | 1 -
->  tools/perf/trace/beauty/msg_flags.c            | 3 ---
->  7 files changed, 7 insertions(+), 12 deletions(-)
->
- 
-> @@ -90,7 +90,9 @@ static int tcp_bpf_push(struct sock *sk, struct sk_msg *msg, u32 apply_bytes,
->  {
->  	bool apply = apply_bytes;
->  	struct scatterlist *sge;
-> -	struct msghdr msghdr = { .msg_flags = flags | MSG_SPLICE_PAGES, };
-> +	struct msghdr msghdr = {
-> +		.msg_flags = flags | MSG_SPLICE_PAGES | MSG_MORE,
-> +	};
->  	struct page *page;
->  	int size, ret = 0;
->  	u32 off;
+Hi Paolo, Mat,
 
-Is it intentional to add MSG_MORE here in this patch?
+On 12/06/2023 18:02, Paolo Abeni wrote:
+> Thanks to the previous patch we can finally drop the "temporary hack"
+> used to detect rx eof.
 
-I do see that patch 3 removes this branch:
+Thank you for the patches and the review.
 
-@@ -111,9 +111,6 @@  static int tcp_bpf_push(struct sock *sk, struct sk_msg *msg, u32 apply_bytes,
- 		if (has_tx_ulp)
- 			msghdr.msg_flags |= MSG_SENDPAGE_NOPOLICY;
- 
--		if (flags & MSG_SENDPAGE_NOTLAST)
--			msghdr.msg_flags |= MSG_MORE;
--
+Now in our tree (both in "fixes for -net" as agreed at the last weekly
+meeting) with Mat's RvB tag, the modification asked by Mat in the commit
+message of patch 1/2, mention the name of patch 1/2 in the commit
+message of patch 2/2 and a small change in the title of patch 2/2
+because we already have a commit with the same one.
+
+New patches for t/upstream-net and t/upstream:
+- 92a5d1cb400c: mptcp: consolidate fallback and non fallback state machine
+- f5dc57f26818: mptcp: drop legacy code around RX EOF
+- Results: 7c2d56234e38..3aa564399c36 (export-net)
+- Results: ce02fd8dab59..0cf78b82b67f (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230619T090002
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230619T090002
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
