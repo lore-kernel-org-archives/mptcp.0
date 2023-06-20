@@ -1,105 +1,129 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F900174DD
-	for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 15:30:55 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-982a88ca610so582297666b.2
-        for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 08:30:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE4B1773F
+	for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 16:24:54 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3f900cd3f69so33674185e9.0
+        for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 09:24:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687275054; x=1689867054;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Jeq0MpD4OPxRjZm6HQjvLyMMxEiPDqvtTBVWeeNxtIM=;
-        b=DUDsOYTUK71LNfa6ree8KxIGOfMofdjmYdYdaX2aX8UrmTfJKeAdQCxK63dWU+bXZL
-         DptjhXO/kzECsuHMDssY3HfIJS4a01q6hHmAr89LCQFxvrDtCZktvGs/C/WoktKkF/c2
-         IZ3uZuxRgBNB+zP9YlPGaB9wpu0lQJp6Beo0Est9tmLcyeKYXYko3ZaZ8yKF5UBCkPB2
-         Buk3vwMX77f958eCy3jBzrZI5iJX2Hw4gPbq8fppARgVr6Z2HvL6eBEhAHikKibrM8AV
-         7+VW5Z/Z8mYWsh1l4zir9aYx/MvxzoOm2K74ajroGEnXnXT6v1pjxB4KZkZg72ZP3806
-         w2fQ==
+        d=tessares.net; s=google; t=1687278293; x=1689870293;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KZiePvQp+al3FKzqRXjxppdYvMnDeS6krGk8yswyq9Q=;
+        b=fI/g/+kKD47r49rMcbAbcJPR+NnnqJfKICsB7eL0o5deyMZKztnVC73myKB9iRtztC
+         4Hn0BVeTuQP5t3t6Vd1k5jHM9yZshtNWIibtlQifw+lCLjHcFVxKe/CwbIas9yv1JI1I
+         /o3pXsIVNndYYnHcL7rJwHZsviZxCM0bBIpwOyDEQcD9zkAgliutLs9JkDOgX9k4hQg9
+         PcdKCdRclYGW14VSRigyA/7ZedsVpVK0dpw0ck6Kq/qXcnM+dB4tt/yJ2ypTgsPovJi+
+         FB3kPB9w4ebf29536naaOnUlPMIS6Pm3IaMBt8Z0GobnS7irhx2wkgg5JppHa6/vNgU7
+         7S9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687275054; x=1689867054;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jeq0MpD4OPxRjZm6HQjvLyMMxEiPDqvtTBVWeeNxtIM=;
-        b=WXtudWhrwOiq7/gMyINA0YvYGvii2Ev3zOkrlxcGGq+gLCkIJ7NbaQfYbOBcr6luif
-         Wk1uGPvGIolEB25NfrT202OcanWo8Cgq2MmnFP4FKOuhmOBzeBY6r+HfOWUT4imlAHKN
-         RSaY5WcG6wbyi2hfCTkKicAf2MA2Huk2VB+HL8E+fEWhpuTuyAVEQlTPjuVh3d9BSPNM
-         6tFet9TmWwEYMdWKYF0WkfIMESPglRxTc461O2OdKPDnQ7EM9cB4HOZaTy3SDGfGEMxS
-         dlprEmJqsyjGDCRru4hAfEJu8n8Awcph38X9m/mJGkdORbkDutxc9ewU59bjyEOoGDpU
-         WLLA==
-X-Gm-Message-State: AC+VfDxR9cENlnHnWVlwWhlFzXyMBi/VeQRyWDs+IFJQJ4uN65o0ZrQW
-	epV9Nn/yr/UtTcfV2uhtPWheWJW1ISPvkttcB7M=
-X-Google-Smtp-Source: ACHHUZ5Xky41qkQoXh2/9tFVlYjC4XlePPqy6onqPbTFw0HyYoIabdAL0b04benutUmVZuAmEw9rZg==
-X-Received: by 2002:a17:907:7244:b0:982:985a:8be1 with SMTP id ds4-20020a170907724400b00982985a8be1mr10319147ejc.71.1687275054205;
-        Tue, 20 Jun 2023 08:30:54 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id bq26-20020a170906d0da00b0096f5b48fe43sm1591267ejb.47.2023.06.20.08.30.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Jun 2023 08:30:53 -0700 (PDT)
-Message-ID: <fdea425d-5a7e-4d85-bcfe-4e624ab25e91@tessares.net>
-Date: Tue, 20 Jun 2023 17:30:46 +0200
+        d=1e100.net; s=20221208; t=1687278293; x=1689870293;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KZiePvQp+al3FKzqRXjxppdYvMnDeS6krGk8yswyq9Q=;
+        b=JzOKNcdWwj8Q90ejJ44bgsqjmsWI2/Yy7tjt8Q4AQ8dLoW9L+sujMJTMtVl33yDRbH
+         E3zyt5gfZUZzKWoljIliSGZh/Izb+jQqA8JfyhMGRnPrCbJDZ58I5/Ct12Z58O/sLtNe
+         UVaEO775d1+ZuCkfrX2GobtetOJt62T4M3VUVNaXeIUVHt8qSss7oYgeFWaQYAtm5RJy
+         iG6i6rv1P8RRXRjJh4BSJStmvF6OGqu77HuVqPRNh7xrAebVGSEgMmSk8U9+LCYBG+MO
+         gdAIr+Goo+W3FljI88wAkXhwKnwfc8LBrCnU8GCJmN9Xeru27IGMVKXhW3M+7BH1McXB
+         tNww==
+X-Gm-Message-State: AC+VfDx77qpII18tWsw57QcLK25cYabG3ze4aHMk9VsTieieZY6120Ht
+	hmadBzRdZMIKYsfHfxhBmO1bFg==
+X-Google-Smtp-Source: ACHHUZ4X++gNkgkYQ9NR8U6rUE/PLbEipynm2A8AZLg+tAv7RRPTrtOeK0PvfcP4WlkHktxcCRMyGQ==
+X-Received: by 2002:a1c:4b0c:0:b0:3f9:b0c2:9ffb with SMTP id y12-20020a1c4b0c000000b003f9b0c29ffbmr4371716wma.27.1687278293150;
+        Tue, 20 Jun 2023 09:24:53 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id o19-20020a05600c511300b003f8fe1933e4sm15753056wms.3.2023.06.20.09.24.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jun 2023 09:24:52 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net 0/6] mptcp: fixes for 6.4
+Date: Tue, 20 Jun 2023 18:24:17 +0200
+Message-Id: <20230620-upstream-net-20230620-misc-fixes-for-v6-4-v1-0-f36aa5eae8b9@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: mptcpize with shadow socks in android
-Content-Language: en-GB
-To: parthaz lokesh <parthazlokesh@gmail.com>, mptcp@lists.linux.dev
-References: <CAJck1w2+nhbiEsa8+oYvbicruru2nsVbHNMWut1HqGrhZ5nhtw@mail.gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <CAJck1w2+nhbiEsa8+oYvbicruru2nsVbHNMWut1HqGrhZ5nhtw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALHSkWQC/z2MSQ7CMAxFr1J5jUVIByGuglikwaFeNK3stEKqe
+ ndcJFi+P7wNlIRJ4VZtILSy8pQNLqcK4hDyi5CfxuCdr13nHS6zFqEwYqaC/3RkjZj4TYppElw
+ 7bLBtKTX11Sa+AfP1QQl7CTkOh7Gcf6qjnIW+d2vuYGp47PsHY5hLqJ0AAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Florian Westphal <fw@strlen.de>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org, 
+ Christoph Paasch <cpaasch@apple.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2098;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=MNa5Zv2WFB2ZD/+VqaVhvs5aElxmpw5Mk5036ctzZRA=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkkdLTrZXGyWJzsiM93UPDbxMayZGi+q+lQqlwQ
+ lE9mY6wj3mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZJHS0wAKCRD2t4JPQmmg
+ cyhvEACAvM4cqa/ydDhDCawGPClVtar8UI4PjG6ao+G7lEP8B4oH7sP+TDEawGc4JM+1Wm9JEWB
+ /suKJ6vMWwbL7i5lqpk8a6y35pfPVl184tth9q2Gtm2uRqWyfBAxesZHuCL+TuP/Ig/PAjmI87Z
+ RqfLcg9JJgesS/cRlZfCehYRspt3IYkEUyPHW/Wemr7CkNgq4qHshmy53yTpkOVMA3ebvHHi2sB
+ aKS8kLUOLOji9GNmLxE2CrURJHUjmLu8h2MXH6+32U7kDNlQIULT99mX8Y6ch4xedJZ3rcaceCh
+ kKt8adyNx8aW+1l/2mS6N/hphYDJP73sVSclLiTM9MPWPz3qa3mGXieAatqjrHHJWP1o9PDZIcV
+ EqG4w28G/z4AvQLP6r///6Un1qNhKfB9PXejE4riUT3UAYHmzNiHVl+HfwSHOBTSfPhDaryeAvC
+ 6PcztG2KdwEVTLDMshc29RC4uXC6QDvGL7TNrX76dChRcKC5wqSKwPSlYCmwMJmhx1fRtSmVsrf
+ OyBM5p0aV5gXN25PjmfAMvbLCxjrGRC4hXTr0Fcokmqhr0ucWMDqGg1VIRbTR57UmBH/SntfJ6i
+ M72B4ZuW1k3Zo0jzzhzsgt0lyQhOxfrvH4em7QehaDO7pFj1MbxPqQ0wvl+w3+WhOZDv/H4UuJf
+ TJVoZyX5aifKV8A==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Parthaz,
+Patch 1 correctly handles disconnect() failures that can happen in some
+specific cases: now the socket state is set as unconnected as expected.
+That fixes an issue introduced in v6.2.
 
-On 20/06/2023 13:32, parthaz lokesh wrote:
-> I set up a server for MPTCPV1 using (
-> https://www.tessares.net/mptcp-proxy-setup-at-home-easier-now/ ).
-> However, for clients I'm trying to use an android smartphone with
-> kernel 5.15v.
-> Is there a way I can force tcp sockets to use mptcp sockets in android
-> smartphones?
+Patch 2 fixes a divide by zero bug in mptcp_recvmsg() with a fix similar
+to a recent one from Eric Dumazet for TCP introducing sk_wait_pending
+flag. It should address an issue present in MPTCP from almost the
+beginning, from v5.9.
 
-Good question. Personally, I don't know.
+Patch 3 fixes a possible list corruption on passive MPJ even if the race
+seems very unlikely, better be safe than sorry. The possible issue is
+present from v5.17.
 
-When I did experimentations in the past with Android devices, I had to
-modify the kernel to add MPTCP support so it was easier for me to either
-change the kernel or rebuild the application to force using MPTCP.
+Patch 4 consolidates fallback and non fallback state machines to avoid
+leaking some MPTCP sockets. The fix is likely needed for versions from
+v5.11.
 
-> I compiled shadowsocks for android, but is there a similar mptcpize
-> command as below that i can execute in android version?
-> 
-> sudo mptcpize enable shadowsocks-libev.service
+Patch 5 drops code that is no longer used after the introduction of
+patch 4/6. This is not really a fix but this patch can probably land in
+the -net tree as well not to leave unused code.
 
-mptcpize can also be used to launch a specific command, not just SystemD
-services, e.g;
+Patch 6 ensures listeners are unhashed before updating their sk status
+to avoid possible deadlocks when diag info are going to be retrieved
+with a lock. Even if it should not be visible with the way we are
+currently getting diag info, the issue is present from v5.17.
 
-  mptcpize run iperf3 -s
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Paolo Abeni (6):
+      mptcp: handle correctly disconnect() failures
+      mptcp: fix possible divide by zero in recvmsg()
+      mptcp: fix possible list corruption on passive MPJ
+      mptcp: consolidate fallback and non fallback state machine
+      mptcp: drop legacy code around RX EOF
+      mptcp: ensure listener is unhashed before updating the sk status
 
-If you launch shadowsocks manually (without the app), I guess you can
-use mptcpize. If not, you might need to modify ShadowSocks to create an
-IPPROTO_MPTCP socket. I'm sure it might be good to send a PR to add
-MPTCP support ;-)
+ net/mptcp/pm_netlink.c |   1 +
+ net/mptcp/protocol.c   | 160 ++++++++++++++++++++-----------------------------
+ net/mptcp/protocol.h   |   5 +-
+ net/mptcp/subflow.c    |  17 +++---
+ 4 files changed, 76 insertions(+), 107 deletions(-)
+---
+base-commit: 9a43827e876c9a071826cc81783aa2222b020f1d
+change-id: 20230620-upstream-net-20230620-misc-fixes-for-v6-4-55ef43802324
 
-> Any other alternative would also be fine. Can mptcpd daemon make work
-> for android also?
-
-Android is quite specific with many isolated process. I don't think
-mptcpd can be easily integrated :-/
-
-systemtap can also be used to force an application to create MPTCP
-socket but it might not be possible to do that on Android.
-Modifying the app might be the "easiest" (and proper) way.
-
-Cheers,
-Matt
+Best regards,
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Matthieu Baerts <matthieu.baerts@tessares.net>
+
