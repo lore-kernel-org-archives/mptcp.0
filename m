@@ -1,47 +1,46 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F72018AFF
-	for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 16:30:34 +0000 (UTC)
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-4f867700f36so4402034e87.0
-        for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 09:30:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C531C743
+	for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 16:30:36 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-3f9b37cd548so21759055e9.1
+        for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 09:30:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687278632; x=1689870632;
+        d=tessares.net; s=google; t=1687278634; x=1689870634;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Cw8TzJlxypWM9F2CnTaH65ECFFJEZ73AOXC4Ef09ORA=;
-        b=QcAMgkg8/jg7Gy8GFpuSNkXkN+MJwhSVyJbLQ8QwajO+7hXdCKYEDpx50cPyheT/Tg
-         AMmkUKfuDDpuHWqQRYGjFEG67Apn67LgvsmU8IrpXJUZhEg5UYuC19aeePyVqjmTNKWm
-         B/Y0NgHPpkhjbiY1m0ST2LLBB3yntYBWO6MvF6rLBQ7J8AaW8uZHuZuDtsPUsr168j9o
-         OTx1Ic6ajJdPdHWYOeBAHTLMPbuhIZdQG/rlbHQKOedyivOTZF9x/x/TgG3SlTw9ULrL
-         Lr3MW1WBMbLDd9OcqUrtyttN9IS4dA18XSEMKacaSQ9EmNa79W2MKEkN8h/Hv+nQ3rZH
-         1P9g==
+        bh=bm5QjXe0oZ1sN3o3B7gp+ZfBZHzDUDc+RJQ+ZIqrios=;
+        b=OUSg1jgqq3X31GcBAN7S/8B55r8VdE4TVxCN8WmLvW2Kr0zaDb2omj6bhzkqJFboxC
+         xV9rHAzs6j6HK6vugT4QcmhWWc47/tYXJcAMpJOdOhuDlRVdO7KLwJa5VLsBCgXKlz2d
+         XrosX6SgRGHDgrNvA4eZihNc7viY0xMdHXwEgH5SAS3LhmU9Md4t1C4wfHhdA9oamLg9
+         nZCnKpM4X9T/KaJL34KQRXf4wg8SUbpnYDFANKvkqMPWyPxAtb3AH7+JSPay9C3glvXo
+         E2n27yo+v4xqAtgRnJnjeJATxtzA08EQvoc3E6V+8IKDOqZUWYTfVpSoBpiTU7R70Qe0
+         m2Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687278632; x=1689870632;
+        d=1e100.net; s=20221208; t=1687278634; x=1689870634;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Cw8TzJlxypWM9F2CnTaH65ECFFJEZ73AOXC4Ef09ORA=;
-        b=kvKqDvWP4c6DuCh2YwcZp3oEGrX3iUcC7WK6ixht7Tq2955/zcHYtmEX3gPksB4+zQ
-         FKEdgt3dO57CpX3aHLUEv7btRV3PTCy5ui8Ws0lE6QP53t1PySS0wpHvJZ8QfZxTdQls
-         kGNyjM14jcSCSfKRAqKUJ9cZotPx0C38toguqprxLUKtvyVKRStCcjEaZnhbkg+LmyNI
-         in7PJtOiCO1ZL7R6I3dFXh3DF4MDh6bqbb8op+htqMiD2B/BxC+G2G6r/CcwM+sOrniK
-         iF70nCIUmjsmlm1e1c2jCJ+NUehsfxGjckiHwl0edeYIQQ7taC1KmRcRFJhHHhbln/4W
-         4PIA==
-X-Gm-Message-State: AC+VfDyWM6iqt+AoXRSSjz3lcUkDWfIFQ0KVjQwjdk46vVRwvn6VJpEx
-	i6RVrBa++cEDlmb7Sln83cIPLw==
-X-Google-Smtp-Source: ACHHUZ7SsG4GMmxgaGwM6m5wdeDwFVzuPmg5kzenOkvT95GYOUJB11czfQhig7z+1rQOOrASE58kpg==
-X-Received: by 2002:a19:790a:0:b0:4f8:4aee:1fac with SMTP id u10-20020a19790a000000b004f84aee1facmr6705566lfc.66.1687278632308;
-        Tue, 20 Jun 2023 09:30:32 -0700 (PDT)
+        bh=bm5QjXe0oZ1sN3o3B7gp+ZfBZHzDUDc+RJQ+ZIqrios=;
+        b=ShmdLB3du0K9qmC9UL+rqztOU6QwOG0MdsrtZJRU2SDIc3xu5aH8KJSLbVmVZifqZy
+         qnXzKJbnFijfy5DF3HXo6jLsro9pJqELck/ejykeQ4UYfZSQBh+axgQ0xdnQOVXyJ6+i
+         D6PCu6cRn6eo/FOb4P/MmvsYh5Q0rTllINeNPdAjlbUG3V9UkPNubMn1yjS3R8vQvN+X
+         iFhdoL0Hj+oGwOznC947OTkt4evI4+6iaGgv0GhdPHuFHcQhzb2NZ+CDn9wPgcJ0uMWP
+         DzzZiqy1L83EzJm3jnKw4MzaX21B7q8RNp780jsRoJKWBTI8i/DyCTs72tMV1oWpE7bt
+         c+Dg==
+X-Gm-Message-State: AC+VfDwtow8RZpTxPBuwNmGvNoktQP6XBrJCKam9Qqc48YiyFXOHekaX
+	n73ZVClJBzm3jar8LoCO8TIp1dcUHilAy2Z2GXVFEQ==
+X-Google-Smtp-Source: ACHHUZ402qZAPIQBLf0B/A1jPHKfPkA2UkdjJp5hoiuV7UKm5VufPf++rAVX4lfezV4ji54nSvz//Q==
+X-Received: by 2002:a7b:c412:0:b0:3f9:b58:df5e with SMTP id k18-20020a7bc412000000b003f90b58df5emr8899695wmi.27.1687278634490;
+        Tue, 20 Jun 2023 09:30:34 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id y7-20020a05600c364700b003f8fbe3bf7asm12064342wmq.32.2023.06.20.09.30.31
+        by smtp.gmail.com with ESMTPSA id y7-20020a05600c364700b003f8fbe3bf7asm12064342wmq.32.2023.06.20.09.30.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 09:30:32 -0700 (PDT)
+        Tue, 20 Jun 2023 09:30:34 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Tue, 20 Jun 2023 18:30:16 +0200
-Subject: [PATCH net-next 3/9] selftests: mptcp: explicitly tests aggregate
- counters
+Date: Tue, 20 Jun 2023 18:30:18 +0200
+Subject: [PATCH net-next 5/9] mptcp: introduce MPTCP_FULL_INFO getsockopt
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,7 +49,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230620-upstream-net-next-20230620-mptcp-expose-more-info-and-misc-v1-3-62b9444bfd48@tessares.net>
+Message-Id: <20230620-upstream-net-next-20230620-mptcp-expose-more-info-and-misc-v1-5-62b9444bfd48@tessares.net>
 References: <20230620-upstream-net-next-20230620-mptcp-expose-more-info-and-misc-v1-0-62b9444bfd48@tessares.net>
 In-Reply-To: <20230620-upstream-net-next-20230620-mptcp-expose-more-info-and-misc-v1-0-62b9444bfd48@tessares.net>
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
@@ -61,99 +60,244 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, 
  Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2670;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6801;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=awLfDurrvmULc5mmvI7zYCGtlKgibsGn03vwIgEXgPU=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkkdQkNw66cmfj8X9pRKxH2KmDjBcVKt+1v/+/V
- 8wgWjbyPeaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZJHUJAAKCRD2t4JPQmmg
- c5T9EACORdoVd2YO2KSq2pVhigyD8nklAEeomq+4ClUtAKDlmsWepku3TDU9HUdfKZY3+/xS9Gd
- 6TsIuSyaCUZoXB7GsxfWVhEjHYN7DWRv8SQVUvZSKh3KyGs3WhmgCEnAziBwjYngtN1HGoZe1fS
- SANm+lOtfC/dHW30zTYJ05s7MOzI/yTikjcfLcA8qTmmz8GQtCGnXJSQXpU6TknWpadRhQhJQdO
- y5/a9MzHzrFDNG5bWkKDWAzuRyHnvUlpdB+kao1OOddIZy7LVrpOMIs3AhDhvxXqTtU3HWiK2E3
- GXp0JhCseKSp4+qHIumE8c4X4cfddOpmK2z2TKCTA8R64C2NfjKVlkggJuhEiTLGxBqEm+erTip
- 7YQ8Z0inrZXSXIvQbf5EPn/UlKM0Nr88ZjwtZ2iiuMtSI9Sje2RIQUEwQ1nP7c2IkWog5M5zcYR
- vRnjN+RbLDI7Al11wflb55k+svnaXeDp7MtmxSS5Xz292Lb2zOnXohigONn4l6zENmVjPqOtFuO
- E3KgErhG9tlZpj6byt8+9tNPfikSnz6f3g85WBsS5NHVHVmKJBiPi3JrSzvRqyjGUGGLVLdx+zM
- Pjbi0RlAQraCkIy9l54yoEAvtvKZvxeTefEMLl8TpQ9XFVqH4SaZ5Tr0nRSk+WVw1ffAYGZBVxg
- j1+Esu5eL1JmZbQ==
+ bh=o/0+BDl7MSfxpBypAltz5t1ouUesepVQ+7hOMVYbpUA=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkkdQk/oUW/NimsARi9wRT/OmCrUQpj1lwskatg
+ 0bEtZ+fz7yJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZJHUJAAKCRD2t4JPQmmg
+ c4TOD/9wPj5TyMyEApib57V88k46eTBqZK2HnDn6vjvvSUpGzY/qgNPFrgJn1t5/ymJf/YeOfZm
+ c3l/5izYVWlHLBd2x+McgioJhpBlJhXL4685/IUOsXwNLxnBEOYDv+4HWLS5tIS27Okn4hL65uk
+ nH8f+R8QvZhKE72Pa4nSB5fOrpbdovIAOCXxl+ftb4CZ9V0n5hotr3A760GuODJwmwWbAnqItXE
+ twVw7M/b14qhr2ZzEG2SgsOHQxEJ57c7i73ARrAzmWxiZBgUx50O6+gPTMOQu1FhvhDjzXLjJUm
+ y5E/w3pOtIt54ReFwteO83rbTRu0YvMe2Cl2StHt5RPedMNTEzUb/2sdWBWKAXqH9I5Wm1pDKJM
+ BjmjrpeeRwTSUw9Atm8LCTYeeoMPyyiAMqeECdt49rwqWBvkE2O3oPz0N9Zgj8CWcxLPXkQUYAI
+ b2fL+8Bx7nWUrIGNmnHKkJYbrGfBLCzRHZ5Q4A0QyB+xIsloWpXgVWpxNPFfoHKj/ZGsJfa6sze
+ U7LccSvnKtQb0UOC09Kmv8NtPpHoFE/Qfa0s620wQIoUERCnPZqjO0dyrRGk/iDFdZAQ6LmHkb2
+ VAixASuJj3AuFBbSgU7BRXxmQuxRxRpm4I2ygQZztVn4Ha7wBNkLAWJIcZssUO1LRUJK6/JaK2H
+ 3kxl2q0u1S5ZA4Q==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-Update the existing sockopt test-case to do some basic checks
-on the newly added counters.
+Some user-space applications want to monitor the subflows utilization.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/385
+Dumping the per subflow tcp_info is not enough, as the PM could close
+and re-create the subflows under-the-hood, fooling the accounting.
+Even checking the src/dst addresses used by each subflow could not
+be enough, because new subflows could re-use the same address/port of
+the just closed one.
+
+This patch introduces a new socket option, allow dumping all the relevant
+information all-at-once (everything, everywhere...), in a consistent
+manner.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/388
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/mptcp_sockopt.c | 27 ++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ include/uapi/linux/mptcp.h |  24 +++++++++
+ net/mptcp/sockopt.c        | 127 ++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 149 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index b35148edbf02..5ee710b30f10 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -51,6 +51,11 @@ struct mptcp_info {
- 	__u8	mptcpi_local_addr_used;
- 	__u8	mptcpi_local_addr_max;
- 	__u8	mptcpi_csum_enabled;
-+	__u32	mptcpi_retransmits;
-+	__u64	mptcpi_bytes_retrans;
-+	__u64	mptcpi_bytes_sent;
-+	__u64	mptcpi_bytes_received;
-+	__u64	mptcpi_bytes_acked;
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index a124be6ebbba..ee9c49f949a2 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -249,9 +249,33 @@ struct mptcp_subflow_addrs {
+ 	};
  };
  
- struct mptcp_subflow_data {
-@@ -83,8 +88,10 @@ struct mptcp_subflow_addrs {
- 
- struct so_state {
- 	struct mptcp_info mi;
-+	struct mptcp_info last_sample;
- 	uint64_t mptcpi_rcv_delta;
- 	uint64_t tcpi_rcv_delta;
-+	bool pkt_stats_avail;
- };
- 
- #ifndef MIN
-@@ -322,8 +329,9 @@ static void do_getsockopt_mptcp_info(struct so_state *s, int fd, size_t w)
- 	if (ret < 0)
- 		die_perror("getsockopt MPTCP_INFO");
- 
--	assert(olen == sizeof(i));
-+	s->pkt_stats_avail = olen >= sizeof(i);
- 
-+	s->last_sample = i;
- 	if (s->mi.mptcpi_write_seq == 0)
- 		s->mi = i;
- 
-@@ -562,6 +570,23 @@ static void process_one_client(int fd, int pipefd)
- 	do_getsockopts(&s, fd, ret, ret2);
- 	if (s.mptcpi_rcv_delta != (uint64_t)ret + 1)
- 		xerror("mptcpi_rcv_delta %" PRIu64 ", expect %" PRIu64, s.mptcpi_rcv_delta, ret + 1, s.mptcpi_rcv_delta - ret);
++struct mptcp_subflow_info {
++	__u32				id;
++	struct mptcp_subflow_addrs	addrs;
++};
 +
-+	/* be nice when running on top of older kernel */
-+	if (s.pkt_stats_avail) {
-+		if (s.last_sample.mptcpi_bytes_sent != ret2)
-+			xerror("mptcpi_bytes_sent %" PRIu64 ", expect %" PRIu64,
-+			       s.last_sample.mptcpi_bytes_sent, ret2,
-+			       s.last_sample.mptcpi_bytes_sent - ret2);
-+		if (s.last_sample.mptcpi_bytes_received != ret)
-+			xerror("mptcpi_bytes_received %" PRIu64 ", expect %" PRIu64,
-+			       s.last_sample.mptcpi_bytes_received, ret,
-+			       s.last_sample.mptcpi_bytes_received - ret);
-+		if (s.last_sample.mptcpi_bytes_acked != ret)
-+			xerror("mptcpi_bytes_acked %" PRIu64 ", expect %" PRIu64,
-+			       s.last_sample.mptcpi_bytes_acked, ret2,
-+			       s.last_sample.mptcpi_bytes_acked - ret2);
-+	}
++struct mptcp_full_info {
++	__u32		size_tcpinfo_kernel;	/* must be 0, set by kernel */
++	__u32		size_tcpinfo_user;
++	__u32		size_sfinfo_kernel;	/* must be 0, set by kernel */
++	__u32		size_sfinfo_user;
++	__u32		num_subflows;		/* must be 0, set by kernel (real subflow count) */
++	__u32		size_arrays_user;	/* max subflows that userspace is interested in;
++						 * the buffers at subflow_info/tcp_info
++						 * are respectively at least:
++						 *  size_arrays * size_sfinfo_user
++						 *  size_arrays * size_tcpinfo_user
++						 * bytes wide
++						 */
++	__aligned_u64		subflow_info;
++	__aligned_u64		tcp_info;
++	struct mptcp_info	mptcp_info;
++};
 +
- 	close(fd);
+ /* MPTCP socket options */
+ #define MPTCP_INFO		1
+ #define MPTCP_TCPINFO		2
+ #define MPTCP_SUBFLOW_ADDRS	3
++#define MPTCP_FULL_INFO		4
+ 
+ #endif /* _UAPI_MPTCP_H */
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index fa5055d5b029..63f7a09335c5 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -14,7 +14,8 @@
+ #include <net/mptcp.h>
+ #include "protocol.h"
+ 
+-#define MIN_INFO_OPTLEN_SIZE	16
++#define MIN_INFO_OPTLEN_SIZE		16
++#define MIN_FULL_INFO_OPTLEN_SIZE	40
+ 
+ static struct sock *__mptcp_tcp_fallback(struct mptcp_sock *msk)
+ {
+@@ -981,7 +982,8 @@ static int mptcp_put_subflow_data(struct mptcp_subflow_data *sfd,
  }
  
+ static int mptcp_get_subflow_data(struct mptcp_subflow_data *sfd,
+-				  char __user *optval, int __user *optlen)
++				  char __user *optval,
++				  int __user *optlen)
+ {
+ 	int len, copylen;
+ 
+@@ -1162,6 +1164,125 @@ static int mptcp_getsockopt_subflow_addrs(struct mptcp_sock *msk, char __user *o
+ 	return 0;
+ }
+ 
++static int mptcp_get_full_info(struct mptcp_full_info *mfi,
++			       char __user *optval,
++			       int __user *optlen)
++{
++	int len;
++
++	BUILD_BUG_ON(offsetof(struct mptcp_full_info, mptcp_info) !=
++		     MIN_FULL_INFO_OPTLEN_SIZE);
++
++	if (get_user(len, optlen))
++		return -EFAULT;
++
++	if (len < MIN_FULL_INFO_OPTLEN_SIZE)
++		return -EINVAL;
++
++	memset(mfi, 0, sizeof(*mfi));
++	if (copy_from_user(mfi, optval, MIN_FULL_INFO_OPTLEN_SIZE))
++		return -EFAULT;
++
++	if (mfi->size_tcpinfo_kernel ||
++	    mfi->size_sfinfo_kernel ||
++	    mfi->num_subflows)
++		return -EINVAL;
++
++	if (mfi->size_sfinfo_user > INT_MAX ||
++	    mfi->size_tcpinfo_user > INT_MAX)
++		return -EINVAL;
++
++	return len - MIN_FULL_INFO_OPTLEN_SIZE;
++}
++
++static int mptcp_put_full_info(struct mptcp_full_info *mfi,
++			       char __user *optval,
++			       u32 copylen,
++			       int __user *optlen)
++{
++	copylen += MIN_FULL_INFO_OPTLEN_SIZE;
++	if (put_user(copylen, optlen))
++		return -EFAULT;
++
++	if (copy_to_user(optval, mfi, copylen))
++		return -EFAULT;
++	return 0;
++}
++
++static int mptcp_getsockopt_full_info(struct mptcp_sock *msk, char __user *optval,
++				      int __user *optlen)
++{
++	unsigned int sfcount = 0, copylen = 0;
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
++	void __user *tcpinfoptr, *sfinfoptr;
++	struct mptcp_full_info mfi;
++	int len;
++
++	len = mptcp_get_full_info(&mfi, optval, optlen);
++	if (len < 0)
++		return len;
++
++	/* don't bother filling the mptcp info if there is not enough
++	 * user-space-provided storage
++	 */
++	if (len > 0) {
++		mptcp_diag_fill_info(msk, &mfi.mptcp_info);
++		copylen += min_t(unsigned int, len, sizeof(struct mptcp_info));
++	}
++
++	mfi.size_tcpinfo_kernel = sizeof(struct tcp_info);
++	mfi.size_tcpinfo_user = min_t(unsigned int, mfi.size_tcpinfo_user,
++				      sizeof(struct tcp_info));
++	sfinfoptr = u64_to_user_ptr(mfi.subflow_info);
++	mfi.size_sfinfo_kernel = sizeof(struct mptcp_subflow_info);
++	mfi.size_sfinfo_user = min_t(unsigned int, mfi.size_sfinfo_user,
++				     sizeof(struct mptcp_subflow_info));
++	tcpinfoptr = u64_to_user_ptr(mfi.tcp_info);
++
++	lock_sock(sk);
++	mptcp_for_each_subflow(msk, subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		struct mptcp_subflow_info sfinfo;
++		struct tcp_info tcp_info;
++
++		if (sfcount++ >= mfi.size_arrays_user)
++			continue;
++
++		/* fetch addr/tcp_info only if the user space buffers
++		 * are wide enough
++		 */
++		memset(&sfinfo, 0, sizeof(sfinfo));
++		sfinfo.id = subflow->subflow_id;
++		if (mfi.size_sfinfo_user >
++		    offsetof(struct mptcp_subflow_info, addrs))
++			mptcp_get_sub_addrs(ssk, &sfinfo.addrs);
++		if (copy_to_user(sfinfoptr, &sfinfo, mfi.size_sfinfo_user))
++			goto fail_release;
++
++		if (mfi.size_tcpinfo_user) {
++			tcp_get_info(ssk, &tcp_info);
++			if (copy_to_user(tcpinfoptr, &tcp_info,
++					 mfi.size_tcpinfo_user))
++				goto fail_release;
++		}
++
++		tcpinfoptr += mfi.size_tcpinfo_user;
++		sfinfoptr += mfi.size_sfinfo_user;
++	}
++	release_sock(sk);
++
++	mfi.num_subflows = sfcount;
++	if (mptcp_put_full_info(&mfi, optval, copylen, optlen))
++		return -EFAULT;
++
++	return 0;
++
++fail_release:
++	release_sock(sk);
++	return -EFAULT;
++}
++
+ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
+ 				int __user *optlen, int val)
+ {
+@@ -1235,6 +1356,8 @@ static int mptcp_getsockopt_sol_mptcp(struct mptcp_sock *msk, int optname,
+ 	switch (optname) {
+ 	case MPTCP_INFO:
+ 		return mptcp_getsockopt_info(msk, optval, optlen);
++	case MPTCP_FULL_INFO:
++		return mptcp_getsockopt_full_info(msk, optval, optlen);
+ 	case MPTCP_TCPINFO:
+ 		return mptcp_getsockopt_tcpinfo(msk, optval, optlen);
+ 	case MPTCP_SUBFLOW_ADDRS:
 
 -- 
 2.40.1
