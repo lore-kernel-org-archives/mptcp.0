@@ -1,92 +1,135 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30586101FA
-	for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 11:50:11 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-51a426e4f4bso5475578a12.1
-        for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 04:50:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BE11FA1
+	for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 12:59:20 +0000 (UTC)
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-62fe192f7d3so44763236d6.3
+        for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 05:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687261810; x=1689853810;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4iP7EpzHzfjLyDSEX14ZrblNjd9pWqUlaITNniOSuuw=;
-        b=GtZz4WGxMBMYAGLxnAt9eriKpZznFF2hNpE/MEAezWWKM7OmSn9nQWh2hiG8w7WL7c
-         f3SLOiGoctwt4JbajpsZ/dAHGZ1u83ReJfENwtj2NOoB7O6vUQ8xTG2poUrujhMB2OeE
-         +uiA+DVIFaeQEiH/UmH5xAadmYrtOFk0GpeYxEyfeBPj+9XqbqtX+A3jwYIqGcuOew/i
-         Td1lhmgXtduypeiTwD//f8YYDSVnJylSLoc1OuqbGVdGoGqm//qNbU9nTZClMQXD++cp
-         VALo8IGWwP4/pIUZ0Fgq+yZjxMwBnKqzgCr/XwKdzG3X+PUl5SLXY8BaFnYEWeAoogMS
-         l6hg==
+        d=gmail.com; s=20221208; t=1687265960; x=1689857960;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4RvNVFujZzQ9FH/nRDQhxgK8HOnuVe0ilksjI7/FigQ=;
+        b=V7CBqsvwa7HO9941Gx9rU48fbSNnkTARJq3hU0s4FJKqNq7uyQJvuWMi48BFYirjd9
+         Z+CSYTenkWtjPExrbuK55Lr4LajYIvMVcZS1i2H4hkmnnVf92/3eU5+256AdSIU7TTh1
+         xwVepNxy0+wSCXEIn2FLnq5fwolgWObqyrXGJD4a4dArZIDrRTCCQbOXeliLMdRNukOE
+         bfBqEL3D5v18ty2Fda4DTUDINVko/+/f9bRuKWlc9As/MXSXKCsqRSAvjLHgGSN+PYBz
+         OhKP930iRzIK8HICV0ZdtEG/GKM89Wb5av0m6K808diQPwrVMMP/ZUSrK2PjzRbzzuKs
+         Xiqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687261810; x=1689853810;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4iP7EpzHzfjLyDSEX14ZrblNjd9pWqUlaITNniOSuuw=;
-        b=joMhLBzatVe7mqFdonIF8Numor9cdv9UmnzYZvW5vW6nO1jTwRRnKGm4sXs28PpCO6
-         btCVTrG0bN1VVvu+YCQ4IxlcAF/23HKtrGwD3v62WzUdpuGQsI30eHT//M8ElNOARC7w
-         OCsXQhI559RE43uvdimjHpgAa5yJG4TttKenEFr+TXI0KgrUH61N8hXpprjeYb+3lItg
-         HhwhUh0X94FJoG1v/Ebq+o4x1Nt7v4/8JRSY1ZpLkrhDiJVVtg3hQUVs4/Qqy4nQRuWd
-         xr10zTIPjO6tJBXk3TsJGnMczb7VSH2YeWxd6btgYAcMbzO04BrJJXZFuz+pwP6aXKee
-         ZuLw==
-X-Gm-Message-State: AC+VfDyY+APNid9RQLR0b3nL9WACfNuHyue6HoT4b9Tf56VleG5R7MpG
-	+AQ1hfkoJpEtOliiO6lBwlbOpTv1sIDRZLx7NEM=
-X-Google-Smtp-Source: ACHHUZ7X930FkI2LuawwDbd6OTPeNCpXfOnG00eQF3YiECtdzytqcKvBZt11EEqR0ziGumChY9gkXQ==
-X-Received: by 2002:aa7:dad2:0:b0:51a:597e:c3f2 with SMTP id x18-20020aa7dad2000000b0051a597ec3f2mr4369123eds.5.1687261810049;
-        Tue, 20 Jun 2023 04:50:10 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id dy20-20020a05640231f400b0051a3e7d7996sm1037463edb.83.2023.06.20.04.50.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Jun 2023 04:50:09 -0700 (PDT)
-Message-ID: <525a9a90-e55b-cef1-cb10-ff8352700a48@tessares.net>
-Date: Tue, 20 Jun 2023 13:50:09 +0200
+        d=1e100.net; s=20221208; t=1687265960; x=1689857960;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4RvNVFujZzQ9FH/nRDQhxgK8HOnuVe0ilksjI7/FigQ=;
+        b=Pxa901ebwqibixBXW/i0th/penQHT5ihvxeGuNOMMXKf3mmowasxDED2rSVO8+0gXL
+         K2S6PCT6Hk7VqiBCAHfQKJyCzxIFzAQfRWaFc3VfKucDYY6woJr8hYjU/hbGtG07XNH/
+         4icypK4oohiOOe9hS4SkEqSc346n+nbM+SH+sOJkIswxh/GvRzfxM9/WWdDY3ATQ3MZ7
+         YBHEV3JLBBzocRRkM1bOyuO/f/VR1jPmbuC5Eew4k4teTvHDGnbtudrN98V832wTMMz8
+         8gZrPOJmWTrHkCB/MpglK3WWflaZDXjVk/+ZWCAB1bqqNHeKgobIvcWuBCFF4/g11sN8
+         QzkA==
+X-Gm-Message-State: AC+VfDwv6V/xn1SGuVQijERorxKvkjoYFLRfCa8QxTWD7DxngzwHaPJY
+	UKWUd4aN0iYck1r96N3Rmkk=
+X-Google-Smtp-Source: ACHHUZ5DO7ilI0HCjRl4Lbeq4UH3F7W+AS3gn0PcL1py6Hb93MUCpM1EgmXOFtEL5TVj5cEqHyVw6w==
+X-Received: by 2002:a05:6214:1306:b0:628:2e08:78b7 with SMTP id pn6-20020a056214130600b006282e0878b7mr5517848qvb.31.1687265959785;
+        Tue, 20 Jun 2023 05:59:19 -0700 (PDT)
+Received: from localhost (172.174.245.35.bc.googleusercontent.com. [35.245.174.172])
+        by smtp.gmail.com with ESMTPSA id m17-20020a0cf191000000b00631ecb1052esm1216204qvl.74.2023.06.20.05.59.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jun 2023 05:59:19 -0700 (PDT)
+Date: Tue, 20 Jun 2023 08:59:18 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: David Howells <dhowells@redhat.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: dhowells@redhat.com, 
+ netdev@vger.kernel.org, 
+ Alexander Duyck <alexander.duyck@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ David Ahern <dsahern@kernel.org>, 
+ Matthew Wilcox <willy@infradead.org>, 
+ Jens Axboe <axboe@kernel.dk>, 
+ linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, 
+ dccp@vger.kernel.org, 
+ linux-afs@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, 
+ linux-can@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, 
+ linux-doc@vger.kernel.org, 
+ linux-hams@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, 
+ linux-rdma@vger.kernel.org, 
+ linux-sctp@vger.kernel.org, 
+ linux-wpan@vger.kernel.org, 
+ linux-x25@vger.kernel.org, 
+ mptcp@lists.linux.dev, 
+ rds-devel@oss.oracle.com, 
+ tipc-discussion@lists.sourceforge.net, 
+ virtualization@lists.linux-foundation.org
+Message-ID: <6491a2a6f1488_3bcfec294d7@willemb.c.googlers.com.notmuch>
+In-Reply-To: <784658.1687176327@warthog.procyon.org.uk>
+References: <648f36d02fe6e_33cfbc2944f@willemb.c.googlers.com.notmuch>
+ <20230617121146.716077-1-dhowells@redhat.com>
+ <20230617121146.716077-18-dhowells@redhat.com>
+ <784658.1687176327@warthog.procyon.org.uk>
+Subject: Re: [PATCH net-next v2 17/17] net: Kill MSG_SENDPAGE_NOTLAST
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next v20 00/10] update userspace pm mptcp_info
- fields part 2
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1686900596.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1686900596.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+David Howells wrote:
+> Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
+> 
+> > Is it intentional to add MSG_MORE here in this patch?
+> > 
+> > I do see that patch 3 removes this branch:
+> 
+> Yeah.  I think I may have tcp_bpf a bit wrong with regard to handling
+> MSG_MORE.
+> 
+> How about the attached version of tcp_bpf_push()?
+> 
+> I wonder if it's save to move the setting of MSG_SENDPAGE_NOPOLICY out of the
+> loop as I've done here.  The caller holds the socket lock.
+> 
+> Also, I'm not sure whether to take account of apply/apply_bytes when setting
+> MSG_MORE mid-message, or whether to just go on whether we've reached
+> sge->length yet.  (I'm not sure exactly how tcp_bpf works).
 
-On 16/06/2023 09:30, Geliang Tang wrote:
-> v20:
->  - #1-#8, only update the commit logs with warnings reported by checkpatch.
->  - #10 don't update the tests which needs to be slower than before.
+I'm not very familiar with it either.
 
-Thank you for the patches!
+Instead of inferring whether MSG_MORE is safe to set, as below, sufficient to
+rely on the caller to pass it when appropriate?
 
-The first 8 patches have now been applied in our tree (feat. for
-net-next) with my RvB tags and the suggested modifications for patch 3/8.
+size = min(apply_bytes, sge->length). I doubt that size < apply_bytes is
+ever intended.
 
-New patches for t/upstream:
-- 311a895fb08b: mptcp: pass addr to mptcp_pm_alloc_anno_list
-- 892a2add5178: selftests: mptcp: test userspace pm out of transfer
-- 34da8c8c875b: selftests: mptcp: check subflow and addr infos
-- 0aadb9475af5: selftests: mptcp: set FAILING_LINKS in run_tests
-- b3ec9662b408: selftests: mptcp: drop test_linkfail parameter
-- 5380de466d42: selftests: mptcp: drop addr_nr_ns1/2 parameters
-- fc162dadad12: selftests: mptcp: drop sflags parameter
-- 75bfcf686b7e: selftests: mptcp: add pm_nl_set_endpoint helper
-- Results: d937892749f1..bd3628a02b79 (export)
+And instead of this former branch
 
-Tests are now in progress:
+                if (flags & MSG_SENDPAGE_NOTLAST)
+                        msghdr.msg_flags |= MSG_MORE;
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230620T114901
+update any caller to pass MSG_MORE instead of MSG_SENDPAGE_NOTLAST, if not yet
+done so.
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+> 		msghdr.msg_flags = flags;
+> 
+> 		/* Determine if we need to set MSG_MORE. */
+> 		if (!(msghdr.msg_flags & MSG_MORE)) {
+> 			if (apply && size < apply_bytes)
+> 				msghdr.msg_flags |= MSG_MORE;
+> 			else if (!apply && size < sge->length &&
+> 				 msg->sg.start != msg->sg.end)
+> 				msghdr.msg_flags |= MSG_MORE;
+> 		}
