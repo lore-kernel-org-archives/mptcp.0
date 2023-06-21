@@ -1,47 +1,47 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E5219BAF
-	for <mptcp@lists.linux.dev>; Wed, 21 Jun 2023 17:18:35 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3f9bece8d1bso9714335e9.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3071E19BAE
+	for <mptcp@lists.linux.dev>; Wed, 21 Jun 2023 17:18:36 +0000 (UTC)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3112f256941so4129050f8f.1
         for <mptcp@lists.linux.dev>; Wed, 21 Jun 2023 10:18:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687367913; x=1689959913;
+        d=tessares.net; s=google; t=1687367914; x=1689959914;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dPp0ofcUyqkhAjCDcbfJCpnUAodJQAp8o3E5VVr+9DQ=;
-        b=M6am/+BsP/VLGCzqGlLH1bcY6aLP/WEaFoRQCsjBB6r3ux69HL5A99SgF+6s+nKBYZ
-         4KLugkENw3dhDmbHFCEuaXgAZU3mJJNVTiEcxgKAS1LhPeAXSwbF8oh2CZzta2JGyjNB
-         h7GhIfp8FV+pzGU6rpQqMv3xCssA4nuSspgeNdeoUYA5NUtnY5qSCYy6vtQmeQQ+oOtZ
-         qrMo/nSme5T+ZOpbmSy0unnK6QjncEXcZ+dZ7RQ4XFdAq/jTlrgcCr8YFl7yvYBSLQGv
-         S/i9Ig/7YJ+9BLLfaCOE0nt3Ro2EaF+2CdwpOUsq5LhzHmPCdSYkVziV3lxm9N43r+m/
-         bFvA==
+        bh=jd1BOMbJnFLwt8Atjjr36zRC7VcTomJHW26m34zzNO0=;
+        b=VAqmd8ZkDT4HeOjrGFsQRAEfCkWcIXNfQOpS5AADMDeYV6yLCNQP0XyZJVVrO8KGuy
+         wIesNstWy9Vouere+FHBlYv1qvAoPIwvxVtw0QnUsOv4P/uuvPBw3hRjSCfOT27f8inL
+         OfaoxfAdoNzsONIa8ILK0uQfyVindN2wSsxXUmp1ebRiaIEb7KXyIKSj10sKPKOPRhxr
+         FudHJJ1D3bln7YyHkPSFm8Q8btmg3yt64poxOBgliS/Suq1T/4H9Qyk+glku/EfeGDve
+         YXE5gXHlxV7EoofwtR92en+3BmLMaHRzNsQm/55WaNx/VvL1K+oo2hpjVStMqOr+1opp
+         TnAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687367913; x=1689959913;
+        d=1e100.net; s=20221208; t=1687367914; x=1689959914;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dPp0ofcUyqkhAjCDcbfJCpnUAodJQAp8o3E5VVr+9DQ=;
-        b=Clmc3TjKXvMLqhP7pIJys4XprXZAgc53D4xIByEZ55KPy67jedEb0Qy+IQGnUfm2E/
-         rzbNXZuKiwCkRr/Y+8GAI6pGo6rdl7dhj/NS4JJIjDTw23YJhKsgdFPNTnGB8pFevfIt
-         puOZACnzRAtveP5lmNjZcovC21JYgcP1VEkW1j/dGTwJFRvEo5q9vDmXVt+Rir1uoFQU
-         eR8RMJXWSXH+evakvnbHMZJ8Hbgu+pWIPcHzJ0JlfNgeo/fIPw78ApPWQiPx8mmHxzYS
-         qygTSHd4Iv0woZeJ0Vwzb44qwRpX59Yk/ImYEek43kH5gOtxCAI1QK3ZlKAIBUWVoQ4e
-         i/Pg==
-X-Gm-Message-State: AC+VfDxw+m50Tl9fAJ8U9sQmegq9n/W5wriTurYYgPOfmy8A8dpfPlV9
-	r/ekKPkyQrsR76/dsy6/Iyn26Ql6XOTEPlXMv9gqi2sV
-X-Google-Smtp-Source: ACHHUZ6C8tbw6KXJtA90PxpNml8d5XMrqcE343H7itcuyuU8aeVFGDR8ybzq3b8EG/qUPLZOxU+PwA==
-X-Received: by 2002:a05:600c:364c:b0:3f9:c82e:9d87 with SMTP id y12-20020a05600c364c00b003f9c82e9d87mr1394016wmq.13.1687367913274;
-        Wed, 21 Jun 2023 10:18:33 -0700 (PDT)
+        bh=jd1BOMbJnFLwt8Atjjr36zRC7VcTomJHW26m34zzNO0=;
+        b=YmHNjwNsOKz0gq2+ZC4njeO1ySUOYXvtw85IbXq7K6IGvWh5H73zGlnFqKaTO6Xvls
+         vdIS7ngx1njPtvOcqxs6Azs4FvN6MV3SpgavyGyBkc2xLr2ax6BqaQVhyD2agiCHOVw1
+         DBtYtERA8ZHEk9LFqshfm7MU/YV4nwF6KL5Tj92tsXkcz+ew29bWMQMAamHqKN73Lbd5
+         MMsxzk9pXzj4+Sh+4H/a1ykyh++V8ZazzF1YATLZ7ljPPRgP0gsAAbeaVInDGYfciCGZ
+         OI7mxoMjgWl6jT4rBnW3L8M0EuCtxLl8PngN+1ZXg4s9M0MfA+2eVRNDhBZ5y0TJIjqK
+         q5GQ==
+X-Gm-Message-State: AC+VfDzbx2PWytMTORAco9WUoA+ARbKDoUxRQRf/KTUb/imWSHPBkR3J
+	mMaB0n7nnAvh1MGfmSrrVnHD7axQPXDl2xMTgToNsEry
+X-Google-Smtp-Source: ACHHUZ6khoLN23TrqphyJhG+jo3ndX9B7JuYaThIO1+X5D5gwrqJ7mpovMnin7gRF8nD7OqCSQAK6A==
+X-Received: by 2002:a5d:4cd2:0:b0:30f:ce60:a3a with SMTP id c18-20020a5d4cd2000000b0030fce600a3amr10609405wrt.10.1687367914179;
+        Wed, 21 Jun 2023 10:18:34 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id f1-20020adfdb41000000b0030ae499da59sm4930027wrj.111.2023.06.21.10.18.32
+        by smtp.gmail.com with ESMTPSA id f1-20020adfdb41000000b0030ae499da59sm4930027wrj.111.2023.06.21.10.18.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jun 2023 10:18:32 -0700 (PDT)
+        Wed, 21 Jun 2023 10:18:33 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Wed, 21 Jun 2023 19:18:07 +0200
-Subject: [PATCH mptcp-next 06/18] selftests: mptcp: connect: don't stop if
- error
+Date: Wed, 21 Jun 2023 19:18:08 +0200
+Subject: [PATCH mptcp-next 07/18] selftests: mptcp: userspace pm: don't
+ stop if error
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,27 +50,27 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230621-mptcp-issue-368-selftests-subtests-v1-6-0cae453ae1fa@tessares.net>
+Message-Id: <20230621-mptcp-issue-368-selftests-subtests-v1-7-0cae453ae1fa@tessares.net>
 References: <20230621-mptcp-issue-368-selftests-subtests-v1-0-0cae453ae1fa@tessares.net>
 In-Reply-To: <20230621-mptcp-issue-368-selftests-subtests-v1-0-0cae453ae1fa@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2356;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2540;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=hCwZDxC/ahUh3GbDHB2wK455fgZOje1bl7rk8p+i4JQ=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkkzDiTHrJFbouJaxuEv1Bc8Pvxpd5lSzcG5g+N
- LUTXAjp0CmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZJMw4gAKCRD2t4JPQmmg
- c8wlD/94qq7NMRRb8xv4uWI0Powtq/A+why7/SmXWnXBkf8syPvTkUrPRdyJa/BERAwzKxzhqf8
- cz1tYrRZK9K6CKgZnJsFGKup7pMHx81hAO2GlXbJzD/Zz4X4nl17snwSwz+p219vFLj9KUYwoOG
- peZ3Yga5xQe/eODFblGVHnbsggAxJ0Bf/uNO8CKi5oSFRjjaWEQtJOQGQI7YkPUG8N2lj2s+kAp
- JFmqfZ/xLUjHlQEYHRp8vkYUKRG3LYtrmniFFh8UZXnchzeqb4Zs1ZJRMPYNj2wp/QQg75xN6jB
- fiIBob+/vNCLT2OsBlOhIhgCaTW43RPJxJB9ccLnd9MOvlr77qaSqgEdntVvLzxzYDRJUv3pW3a
- aveiiGD7vSTPC1+PtSyfSVMc6v0lxkbBiwDNeQkaOi1b3edZwGTde3Z6L9zfaLtW+92t0pDKPD4
- 3NQWKpUIMkwyL5R2MGOotjdNfeiNBR7KFx5mPuXNJ2//J8vmamemGGZwJCPyBIwa8q878mYskx2
- 3FY1lfzVOOkoFLZeX/iEs4aj4U5vvJtycd3y+Ugnp20p6UvHXZTFmtduznFyc9EdvNXBWNZvGER
- TS2IjB2CNz+boAqxV4nF/FY2tmbDkl96O6Ki9LZHJiFTF0AKaHCezSWIBmnoeFYutJhSPANH0dD
- KDRzYuuXqgDnySg==
+ bh=PsozxEb4SxEpdyVzTQmz+Pia85BGsPww+pdoW8KjXRE=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkkzDi7VMsCvLXiCZklKYcP72OCQWkp9bbPDZfq
+ YWAJ3rtrnaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZJMw4gAKCRD2t4JPQmmg
+ czgLEACidecNOyqkTZH9n2NebGAXpM2I0uYbgLogK8wtN7wEBEFssRNnii0eqrsJoKJ2P/+P6z/
+ QnJKnTKeXnrFD3D9aBwMZu3iGQ+PDys/dQtaXLosjWS4QHpYv5C4q3ZelfNnnX0cWPTfhXMePAB
+ kJRD/I7/Ay1Ydw5VQOFRuzkhqCR9Ba1CuZrfGGgZR6hl5JTmSVF7jmQGplDsUD3bRBJaIWMXo2D
+ gbXEq0CzMmzhclLlt6o1kfhtxamd78AqV86jmnFiS5CiFU10r+Cx/SK43T6AG7f6ngK5zSOJJOe
+ 4G6mHUK0iUjkAQ+ldPD3uCLkXtDDo4QxtCbgtldIN8w28JbTYjfBHgqgb1PTFfYcWieGlfeWF6k
+ 5AUVhOFczYbuALlayfkvGX/Rxpdb83ZwYQ4mXDm0dPFisaMDZRqWfbFT5/eo+cjqQLdlpt4geWp
+ 6Ye0z2LxqoXVFUkLtxh7Mm04wx8deQbEezl+x7BpxhJWl2C9zGvBKKNVbf9/dIPMxO3tXWtxILm
+ t9WsRANfM+PcInQ8ctRwsdzMC2qL/e5cyw8VkWqQeCNKV0T/eQkTV2CZ2e9T+eesgE5Jc8raH+L
+ lnXvIJtwV8+mJsegQ23+XepSCqZlSZXVilZ7stXZrbzMjUFeq+SFTF3czKAgVnh6qTMCXQqN9yf
+ QNwYvWcx2IYBQzw==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
@@ -78,84 +78,102 @@ No more tests were executed after a failure but it is still interesting
 to get results for all the tests to better understand what's still OK
 and what's not after a modification.
 
-Now we only exit earlier if the basic tests are failing: no ping going
-through namespaces or unable to transfer data on the loopback interface.
+Now we only exit earlier if the two connections cannot be established.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 27 ++++++++++++++++------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 780b8fef2261..dba58875ef4c 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -7,6 +7,7 @@ time_start=$(date +%s)
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index b180133a30af..c57ce4df4973 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -52,6 +52,7 @@ sec=$(date +%s)
+ rndh=$(printf %x "$sec")-$(mktemp -u XXXXXX)
+ ns1="ns1-$rndh"
+ ns2="ns2-$rndh"
++ret=0
  
- optstring="S:R:d:e:l:r:h4cm:f:tC"
- ret=0
-+final_ret=0
- sin=""
- sout=""
- cin_disconnect=""
-@@ -837,14 +838,25 @@ display_time()
- 	echo "Time: ${time_run} seconds"
- }
- 
--stop_if_error()
-+log_if_error()
+ print_title()
  {
- 	local msg="$1"
+@@ -257,21 +258,21 @@ check_expected_one()
+ # $@: all var names to check
+ check_expected()
+ {
+-	local ret=0
++	local rc=0
+ 	local var
  
- 	if [ ${ret} -ne 0 ]; then
- 		echo "FAIL: ${msg}" 1>&2
-+
-+		final_ret=${ret}
-+		ret=0
-+
-+		return ${final_ret}
-+	fi
-+}
-+
-+stop_if_error()
-+{
-+	if ! log_if_error "${@}"; then
- 		display_time
--		exit ${ret}
-+		exit ${final_ret}
+ 	for var in "${@}"
+ 	do
+-		check_expected_one "${var}" "${ret}" || ret=1
++		check_expected_one "${var}" "${rc}" || rc=1
+ 	done
+ 
+-	if [ ${ret} -eq 0 ]
++	if [ ${rc} -eq 0 ]
+ 	then
+ 		stdbuf -o0 -e0 printf "[OK]\n"
+ 		return 0
  	fi
+ 
+-	exit 1
++	ret=1
  }
  
-@@ -934,23 +946,24 @@ for sender in $ns1 $ns2 $ns3 $ns4;do
- 	run_tests "$ns4" $sender 10.0.3.1
- 	run_tests "$ns4" $sender dead:beef:3::1
+ verify_announce_event()
+@@ -323,7 +324,7 @@ test_announce()
+ 		stdbuf -o0 -e0 printf "[OK]\n"
+ 	else
+ 		stdbuf -o0 -e0 printf "[FAIL]\n\ttype defined: %s\n" "${type}"
+-		exit 1
++		ret=1
+ 	fi
  
--	stop_if_error "Tests with $sender as a sender have failed"
-+	log_if_error "Tests with $sender as a sender have failed"
- done
+ 	# ADD_ADDR from the client to server machine reusing the subflow port
+@@ -423,7 +424,7 @@ test_remove()
+ 		stdbuf -o0 -e0 printf "[OK]\n"
+ 	else
+ 		stdbuf -o0 -e0 printf "[FAIL]\n"
+-		exit 1
++		ret=1
+ 	fi
  
- run_tests_peekmode "saveWithPeek"
- run_tests_peekmode "saveAfterPeek"
--stop_if_error "Tests with peek mode have failed"
-+log_if_error "Tests with peek mode have failed"
+ 	# RM_ADDR using an invalid addr id should result in no action
+@@ -438,7 +439,7 @@ test_remove()
+ 		stdbuf -o0 -e0 printf "[OK]\n"
+ 	else
+ 		stdbuf -o0 -e0 printf "[FAIL]\n"
+-		exit 1
++		ret=1
+ 	fi
  
- # MPTFO (MultiPath TCP Fatopen tests)
- run_tests_mptfo
--stop_if_error "Tests with MPTFO have failed"
-+log_if_error "Tests with MPTFO have failed"
+ 	# RM_ADDR from the client to server machine
+@@ -859,7 +860,7 @@ test_prio()
+ 	[ -z "$count" ] && count=0
+ 	if [ $count != 1 ]; then
+ 		stdbuf -o0 -e0 printf "[FAIL]\n\tCount != 1: %d\n" "${count}"
+-		exit 1
++		ret=1
+ 	else
+ 		stdbuf -o0 -e0 printf "[OK]\n"
+ 	fi
+@@ -870,7 +871,7 @@ test_prio()
+ 	[ -z "$count" ] && count=0
+ 	if [ $count != 1 ]; then
+ 		stdbuf -o0 -e0 printf "[FAIL]\n\tCount != 1: %d\n" "${count}"
+-		exit 1
++		ret=1
+ 	else
+ 		stdbuf -o0 -e0 printf "[OK]\n"
+ 	fi
+@@ -961,4 +962,4 @@ test_subflows_v4_v6_mix
+ test_prio
+ test_listener
  
- # connect to ns4 ip address, ns2 should intercept/proxy
- run_test_transparent 10.0.3.1 "tproxy ipv4"
- run_test_transparent dead:beef:3::1 "tproxy ipv6"
--stop_if_error "Tests with tproxy have failed"
-+log_if_error "Tests with tproxy have failed"
- 
- run_tests_disconnect
-+log_if_error "Tests of the full disconnection have failed"
- 
- display_time
--exit $ret
-+exit ${final_ret}
+-exit 0
++exit ${ret}
 
 -- 
 2.40.1
