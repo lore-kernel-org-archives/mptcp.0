@@ -1,190 +1,67 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E00200BD
-	for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 16:30:46 +0000 (UTC)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-4f86d8a8fd4so3904233e87.3
-        for <mptcp@lists.linux.dev>; Tue, 20 Jun 2023 09:30:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687278645; x=1689870645;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y5fndaTCsd6PT3EC5CenLHxKgWi3IwLDVemBAF0BQ88=;
-        b=q2pBLSUbQwOIyGXJDJyXH9/APPG9JILYehEXGBtVrdehCMIJQPYgN1soPTaGiDFYHS
-         2mfEDoPWghy8TFmNAz91ws5zmqwlioRYdYCDUVMOFKonC4lxNmTDd2NkWzAep9oYlzt5
-         YuWq8yVVutuR3SfYpgVNj31q1qF86yxjYmLsGcTw8shdtz7JU9N+7b9Zl4ef6ZmN1auK
-         FQYUXWbcajWN8SM3HwktNLfzgQR9BhFS4TBv/H7Oc3wTfA6NyNPDTcPb6xDL4lktLVIP
-         SLeJ5EISwcVGkuFtdmi3aDeGYS2iIj6a3w3ALDAvdFlHu9JO+CqsKVg3A1kVhJ1iM+e3
-         Lj+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687278645; x=1689870645;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y5fndaTCsd6PT3EC5CenLHxKgWi3IwLDVemBAF0BQ88=;
-        b=DdHd50IQO+wGrDcikzHl5megHj6pMkJXbTPoZh6g04DLfmXYw/eU+rMRnWYVv7hVcM
-         H32CqH1RSR8ex/18JDFdpgBoAmW6vUgKlgALzP6SZNx7HsacxXi6haNjjumTleXbwbjS
-         15CGb70IblXJZNWD5tw6ZssdpYzUMkq8UL7pez+WtPd1Oo8P/NKf65vQJhI6m5yEQ2XE
-         B+965VP+9j9b1h5zVRZ1qbwh8RqdDlqGRUZlo+C+r7LYPSkbvRM/Wsx1/i9xv2jBw8BO
-         ZUWF9WiSA/Ee4WVBdRZVm6RgS07KBKfsuvTOOnqvtSL94sQPCfGX3zChqCvINkrq+2KY
-         S7ew==
-X-Gm-Message-State: AC+VfDy3kIcjy+j5nW7NizSyVShFoGyqHFnm+9on1wK30UWasItmt6BG
-	Dq1PHOaJW8bxucDFEEb9G6PrxlBmvXnIWbs23OLLgA==
-X-Google-Smtp-Source: ACHHUZ4jkZ77R/K3qBh04G50QeVYtBxMms9PSSrR07jGkUgXTykFcGyCNGGhFmqmv4gZG4x+OZBUiQ==
-X-Received: by 2002:a1c:7414:0:b0:3f9:255:aab0 with SMTP id p20-20020a1c7414000000b003f90255aab0mr8922405wmc.33.1687278633284;
-        Tue, 20 Jun 2023 09:30:33 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id y7-20020a05600c364700b003f8fbe3bf7asm12064342wmq.32.2023.06.20.09.30.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 09:30:32 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Tue, 20 Jun 2023 18:30:17 +0200
-Subject: [PATCH net-next 4/9] mptcp: add subflow unique id
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7EA3C2D;
+	Wed, 21 Jun 2023 03:40:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 88EB7C433B6;
+	Wed, 21 Jun 2023 03:40:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687318822;
+	bh=D8jvkOTPdmO0u5o55l9cr1Aye25QMAx0UYHTkGhgK08=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=llr3kw6qEFuHcHIllGiEPl2yFyAGiJ3KZJ9tkteZhuGDNAyG6Spc2RBp4KTATfblU
+	 ZB1Qcp/xu8B2b/m13U4At2RepuRZ8Br4EsWdURcJUvoquZ8XITy+pp0cufxXURbbpa
+	 D5//JacKlnU2B6Rb/byjzX9k8H+4LVReqruNY2FZ3wn87dAwnrSF005yqOkvp8bAT2
+	 29gGG7GAEZOJjc3b1RgsA380kbuxTyGAnXozOas98YJbANITKQExieRUIszZEmmgWl
+	 KNLV58Q79WGnTfq9zvyB42EcYaODat9iFagrEyakC4mlJH/z7kyzkzcH5o8AQKV79G
+	 S6UaA94++Uzaw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 48DF9E2A037;
+	Wed, 21 Jun 2023 03:40:22 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230620-upstream-net-next-20230620-mptcp-expose-more-info-and-misc-v1-4-62b9444bfd48@tessares.net>
-References: <20230620-upstream-net-next-20230620-mptcp-expose-more-info-and-misc-v1-0-62b9444bfd48@tessares.net>
-In-Reply-To: <20230620-upstream-net-next-20230620-mptcp-expose-more-info-and-misc-v1-0-62b9444bfd48@tessares.net>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3775;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=arhNlpVEVZPz8Fi4+q8mXxwbbZV5QcuvJY8S/g9f9XA=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkkdQkgn2sc06kST4kKlmP4E7In1OMaQElhhTM4
- Fde2HhL51mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZJHUJAAKCRD2t4JPQmmg
- c/TQEACChbctUUGpqNfqW7iKVf+cU20e8LkBV1ZtMd6NiWC8DiGFhVEFnTZo4b1pSwIbkcXugaL
- vFBH0+2gIGX1ysKArkv2a7oUb/4/ntrFkOcjWbwnzu9Dp6eA28rFpOVvUOU9ITkgGXjhGbGd0El
- q0QMf2i3trX5RHaPFP+CaOp8Yu77P9XOtXCXZjwzSpejgvRGbaJaaFfla6UuFWbfRKyV2rKN2sF
- Y5mFjp1Wed1II9x5RgPaqZ/Y096n434wErAQ0jDVJwK4csKybpt+Y/yx0UHGVNAF/I+tz0TNzg9
- Mz0WFp5RalQirX4o3ZPAxn++1b3JZYYPTb69IWM4RIYgENeJtvKxAy4RjkIe/h6KhH2vaROo7kw
- +sLZdWVIzc/NvHbuNyxcmU2s9c3ZPHpG2zsQ4M4+imcHYml0paN3o5bcWcalhu0S6DzoDFRSn+n
- PVFas9c+67YA+eqbjfZvz1p60itXmeL9ZEhrGs5O4Fxg+RVnNkXlrq0oD0y43Accyr5xBC9CvXB
- Bg4z3LXYNMSXXi0CJFmP/WEG1KpPTrFfH09kAIfUYpqUQ2zA5mhNg44JoMVUUt6u5n3OHxI+HUG
- jwCgWyRUO1JgQF/TsTu22wSyUgIf2RtHZFulWVdqFHpXWx2pRezZy+PMfTkNIlGUv8aHsN+zyi6
- UXlaa8sn3vedMow==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] mptcp: Reorder fields in 'struct mptcp_pm_add_entry'
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <168731882229.8371.954122790611949786.git-patchwork-notify@kernel.org>
+Date: Wed, 21 Jun 2023 03:40:22 +0000
+References: <e47b71de54fd3e580544be56fc1bb2985c77b0f4.1687081558.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <e47b71de54fd3e580544be56fc1bb2985c77b0f4.1687081558.git.christophe.jaillet@wanadoo.fr>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: matthieu.baerts@tessares.net, martineau@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hello:
 
-The user-space need to properly account the data received/sent by
-individual subflows. When additional subflows are created and/or
-closed during the MPTCP socket lifetime, the information currently
-exposed via MPTCP_TCPINFO are not enough: subflows are identified only
-by the sequential position inside the info dumps, and that will change
-with the above mentioned events.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-To solve the above problem, this patch introduces a new subflow
-identifier that is unique inside the given MPTCP socket scope.
+On Sun, 18 Jun 2023 11:46:46 +0200 you wrote:
+> Group some variables based on their sizes to reduce hole and avoid padding.
+> On x86_64, this shrinks the size of 'struct mptcp_pm_add_entry'
+> from 136 to 128 bytes.
+> 
+> It saves a few bytes of memory and is more cache-line friendly.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> 
+> [...]
 
-The initial subflow get the id 1 and the other subflows get incremental
-values at join time.
+Here is the summary with links:
+  - [net-next] mptcp: Reorder fields in 'struct mptcp_pm_add_entry'
+    https://git.kernel.org/netdev/net-next/c/92b08290859b
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/388
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- net/mptcp/protocol.c | 6 ++++++
- net/mptcp/protocol.h | 5 ++++-
- net/mptcp/subflow.c  | 2 ++
- 3 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d5b8e488bce1..4ebd6e9aa949 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -96,6 +96,7 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
- 	list_add(&subflow->node, &msk->conn_list);
- 	sock_hold(ssock->sk);
- 	subflow->request_mptcp = 1;
-+	subflow->subflow_id = msk->subflow_id++;
- 
- 	/* This is the first subflow, always with id 0 */
- 	subflow->local_id_valid = 1;
-@@ -847,6 +848,7 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
- 	if (sk->sk_socket && !ssk->sk_socket)
- 		mptcp_sock_graft(ssk, sk->sk_socket);
- 
-+	mptcp_subflow_ctx(ssk)->subflow_id = msk->subflow_id++;
- 	mptcp_sockopt_sync_locked(msk, ssk);
- 	mptcp_subflow_joined(msk, ssk);
- 	return true;
-@@ -2732,6 +2734,7 @@ static int __mptcp_init_sock(struct sock *sk)
- 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
- 	WRITE_ONCE(msk->allow_infinite_fallback, true);
- 	msk->recovery = false;
-+	msk->subflow_id = 1;
- 
- 	mptcp_pm_data_init(msk);
- 
-@@ -3160,6 +3163,9 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
- 	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
- 	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
- 
-+	/* passive msk is created after the first/MPC subflow */
-+	msk->subflow_id = 2;
-+
- 	sock_reset_flag(nsk, SOCK_RCU_FREE);
- 	security_inet_csk_clone(nsk, req);
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 27adfcc5aaa2..bb4cacd92778 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -323,7 +323,8 @@ struct mptcp_sock {
- 		u64	rtt_us; /* last maximum rtt of subflows */
- 	} rcvq_space;
- 
--	u32 setsockopt_seq;
-+	u32		subflow_id;
-+	u32		setsockopt_seq;
- 	char		ca_name[TCP_CA_NAME_MAX];
- 	struct mptcp_sock	*dl_next;
- };
-@@ -504,6 +505,8 @@ struct mptcp_subflow_context {
- 	u8	reset_reason:4;
- 	u8	stale_count;
- 
-+	u32	subflow_id;
-+
- 	long	delegated_status;
- 	unsigned long	fail_tout;
- 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 4688daa6b38b..222dfcdadf2e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -819,6 +819,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			if (!ctx->conn)
- 				goto fallback;
- 
-+			ctx->subflow_id = 1;
- 			owner = mptcp_sk(ctx->conn);
- 			mptcp_pm_new_connection(owner, child, 1);
- 
-@@ -1574,6 +1575,7 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 	subflow->remote_id = remote_id;
- 	subflow->request_join = 1;
- 	subflow->request_bkup = !!(flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-+	subflow->subflow_id = msk->subflow_id++;
- 	mptcp_info2sockaddr(remote, &addr, ssk->sk_family);
- 
- 	sock_hold(ssk);
-
+You are awesome, thank you!
 -- 
-2.40.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
