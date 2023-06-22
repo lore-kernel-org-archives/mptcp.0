@@ -1,24 +1,24 @@
 Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB75815DA
-	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 01:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC48817C8
+	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 01:36:16 +0000 (UTC)
 Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id BB374240104
-	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 03:36:01 +0200 (CEST)
+	by mout02.posteo.de (Postfix) with ESMTPS id 5E0E4240107
+	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 03:29:31 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1687397761; bh=vn5lWO9L26Hc+cT/azimR/ufDacqIFsyS9y1ITX9c+Y=;
+	t=1687397371; bh=D4Csd5WfGqhnig4L4X+fLUt56k9ygxpxQWLQs8PeNuI=;
 	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
 	 Content-Transfer-Encoding:From;
-	b=EylOBdjc7dp88u898CPNSrTu/ltrxjDY0bDTIW3B9ZkgQVwDnWo8gwTU25mdpY7HG
-	 nQ9d2vuTXWne4OWH/VNRsqjDJ7ri+vh7Ib5C1glP84wPZb/d2wpPbk3IRGalCUzlHv
-	 sP2OAcbXccVUUpgECJC6FvK2IAR1zUNgahtkTu2zqi01L17dmK5JYejsiM/2FVQ3sH
-	 4Rv9FtZiuak6UqnhnQAXATWxs4nWbqxEsYdj+YyoQx0SpjsP7TVUtH+LVYt910xIfc
-	 oMHH3FI9zZvwaXbeoh7t4yskIuCUW9RWUE7bkWV/p45QqPT1Bp8Gn3Jl+zLSs/jl+p
-	 mXl52eYvBbkQw==
+	b=mKMXtX4rHbJ8BeDf4HadpoLOj/M7gHT/VtkFQRJX1+PCs1gWNlDtsV4r4y+Z7fLww
+	 /TzWkBg/APDT22KiYMTJ2r8Q7ATdK2i89v1M72QYEU8prnFyBQe2IzhpZCrZTf2JO7
+	 gBDTbbSBRx75z4qRaXkjbh0vTmJG+Z453C5FojiNl3d4xBwSyvx9xiATpqSxaUDrHE
+	 7ElAgfla+K/MiV1LPWYJXBC0kRCcTKpwzptmBAxhXJ/HN3ayLSM/QyN8bRAhGEjABA
+	 PpdDayrGpIJ+huAIyvbwulvDTX+5w/eQSDfsWUzIbPxxdK64AJ3yvblMRukWR21RUp
+	 6BcPj8hL+LaSQ==
 Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Qmjcp1kcSz6twX;
-	Thu, 22 Jun 2023 03:35:53 +0200 (CEST)
+	by submission (posteo.de) with ESMTPSA id 4QmjTH2RS3z6tvh;
+	Thu, 22 Jun 2023 03:29:23 +0200 (CEST)
 From: Yueh-Shun Li <shamrocklee@posteo.net>
 To: Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -38,11 +38,9 @@ Cc: linux-rdma@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yueh-Shun Li <shamrocklee@posteo.net>
-Subject: [PATCH 8/8] scripts/spelling.txt: Add "transmit" patterns
-Date: Thu, 22 Jun 2023 01:26:37 +0000
-Message-Id: <20230622012627.15050-9-shamrocklee@posteo.net>
-In-Reply-To: <20230622012627.15050-1-shamrocklee@posteo.net>
-References: <20230622012627.15050-1-shamrocklee@posteo.net>
+Subject: [PATCH 0/8] Fix comment typos about "transmit"
+Date: Thu, 22 Jun 2023 01:26:21 +0000
+Message-Id: <20230622012627.15050-1-shamrocklee@posteo.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -51,42 +49,33 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add "transmit"-related patterns misspelled with the first "s" missing.
+Fix typos about "transmit" missing the first "s"
+found by searching with keyword "tram" in the first 7
+patches.
 
-Signed-off-by: Yueh-Shun Li <shamrocklee@posteo.net>
----
- scripts/spelling.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Add related patterns to "scripts/spelling.txt" in the
+last patch.
 
-diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-index f8bd6178d17b..c81e489ba4cf 100644
---- a/scripts/spelling.txt
-+++ b/scripts/spelling.txt
-@@ -1319,6 +1319,12 @@ ressource||resource
- ressources||resources
- restesting||retesting
- resumbmitting||resubmitting
-+retranmission||retransmission
-+retranmissions||retransmissions
-+retranmit||retransmit
-+retranmits||retransmits
-+retranmitted||retransmitted
-+retranmitting||retransmitting
- retransmited||retransmitted
- retreived||retrieved
- retreive||retrieve
-@@ -1553,6 +1559,11 @@ tranasction||transaction
- tranceiver||transceiver
- tranfer||transfer
- tranmission||transmission
-+tranmissions||transmissions
-+tranmit||transmit
-+tranmits||transmits
-+tranmitted||transmitted
-+tranmitting||transmitting
- transcevier||transceiver
- transciever||transceiver
- transferd||transferred
+Yueh-Shun Li (8):
+  RDMA/rxe: fix comment typo
+  i40e, xsk: fix comment typo
+  zd1211rw: fix comment typo
+  scsi: fix comment typo
+  tcp: fix comment typo
+  net/tls: fix comment typo
+  selftests: mptcp: connect: fix comment typo
+  scripts/spelling.txt: Add "transmit" patterns
+
+ drivers/infiniband/sw/rxe/rxe_verbs.h              |  2 +-
+ drivers/net/ethernet/intel/i40e/i40e_xsk.c         |  2 +-
+ drivers/net/wireless/zydas/zd1211rw/zd_usb.c       |  2 +-
+ drivers/scsi/isci/scu_task_context.h               |  2 +-
+ net/ipv4/tcp_input.c                               |  2 +-
+ net/tls/tls_device_fallback.c                      |  2 +-
+ scripts/spelling.txt                               | 11 +++++++++++
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh |  2 +-
+ 8 files changed, 18 insertions(+), 7 deletions(-)
+
 -- 
 2.38.1
 
