@@ -1,73 +1,60 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAFC1DCB0
-	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 15:43:18 +0000 (UTC)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3fa74d06d72so6930335e9.3
-        for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 08:43:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1687448597; x=1690040597;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RL2ww5BhWG5HnLODSjWyX0LPEFZNLOp9429c6VUhcsg=;
-        b=zRbtUkr47Bors4qz9RCh81gmBky2QP9LRtmLksWsD1Uo4TgICVH+R8aqVsfEPp2V9a
-         XIpfs0Zh8pP0HuP6miqH5gKXkx+ZUV1Ye5X010p22NR0br6qSJGXhe369sGD5+8hFS2j
-         ialQDyovZorm39xrj29JAWhn3g6P2Msw9yGGuUbMhmcM59lWNOfAN0w/Of+AkAybiU7z
-         XDBai01QM3HgPzJuGg5urh/WFCIJfDrcTOfOwQpPzml+SewGH2DLN7+pc0RD6sJwBfvY
-         WWeQjNjJ4Xr34R4n6u0ukNMElQhvT33U17rxMkbYLQj9NyPRyegcLcSAZ93+Gu9c6OWT
-         WlaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687448597; x=1690040597;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RL2ww5BhWG5HnLODSjWyX0LPEFZNLOp9429c6VUhcsg=;
-        b=AWu5fLpv/DxJbckfcemK43c/iULDkBspjZGV7GAVREHxw+3Rr4JQSGZgzXgO5AAFke
-         4V2SKROR1oCkzG3AmfXrVFstfYe/Q//x3J4h5Ne0xu9Y8nUiBqIbfk9dlPnwd0qw98Lz
-         z0f/MN+Aqj8BxZ9d+AE6MviN0lDTtk4q8vRF83BWBjXlgqdwca4VD4Sh7mEyV9XgNUna
-         rU81A2qvdhEFQZb3H4HmDA2NUuQ3BQGyMJZxMq/y5n+OXUav5y9+fFbK03Psp4enKCHg
-         oHpYrj/qUtaH8Ed9qyqhc5gXhPShoxJVwuqIGvv3tor35Fs805BFiyFFOOpeFg/t58ac
-         2gNg==
-X-Gm-Message-State: AC+VfDzn3bI5dl9CWFcotyvqYB9dvYTM+IPSdv/LNMCypWUunrJrnohr
-	WsZfXNWGes5a5+oTPqG1uW9fcQ==
-X-Google-Smtp-Source: ACHHUZ6TdIaTIuV2ZZvYJyiNoQhA+63sLgCnnOkLIphaq8JI7v3c6LkN6eLRdEHiz8qBU8OmVQv+GQ==
-X-Received: by 2002:a05:600c:2288:b0:3fa:3188:5ee5 with SMTP id 8-20020a05600c228800b003fa31885ee5mr1885515wmf.38.1687448596197;
-        Thu, 22 Jun 2023 08:43:16 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id w21-20020a1cf615000000b003f8126bcf34sm19043176wmc.48.2023.06.22.08.43.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jun 2023 08:43:15 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: Geliang Tang <geliang.tang@suse.com>,
-	mptcp@lists.linux.dev,
-	Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH 6.1.y] selftests: mptcp: join: fix "userspace pm add & remove address"
-Date: Thu, 22 Jun 2023 17:43:07 +0200
-Message-Id: <20230622154307.3362179-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.40.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D950200AC
+	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 17:13:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E55DC433C8;
+	Thu, 22 Jun 2023 17:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1687454008;
+	bh=G6s807a3xA5yU5/ajk/4y0YibtWH85qX0s819juhP4s=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=nvSx/jJecQ4gUyER5bT7rjdT8FBkMDYWm0azn/ifRz6TlyUii3V0p6PJDpIHhXZGx
+	 dtMe49oZ7/qjR4ltIeK7DCqqNFsReqKIYv23SmbYX9Shj8GN5CHiAHzspSyhsuj1D4
+	 x2DK508fH24VJXxwLhE7wL4wClk8t0LzSi204fC4=
+Subject: Patch "selftests: mptcp: join: fix "userspace pm add & remove address"" has been added to the 6.1-stable tree
+To: geliang.tang@suse.com,gregkh@linuxfoundation.org,matthieu.baerts@tessares.net,mptcp@lists.linux.dev
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Thu, 22 Jun 2023 19:13:10 +0200
+In-Reply-To: <20230622154307.3362179-1-matthieu.baerts@tessares.net>
+Message-ID: <2023062209-undertake-repaint-f98f@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2047; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=/COgABNFKEmpsVCn7H/JN7gcVURv0ckEQOgHuis7UI0=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBklGwLVua3X/RURsj8DnGYtHqlF+hZllNDkyTq7
- 16IaUAvspiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZJRsCwAKCRD2t4JPQmmg
- c2mqEADgCKv85HPLCHKCDN1XTe2DNRDjh4eht/LiQIl/wMOVYTUlZP8MysTkTHQCiP/k2QUNEgK
- kReldYPu8AZUVamnEOyYSHDSafth95i5hQ6icIn9jFhRR+sNJE93dwAcI8t5gPwDCdAGOKrb0yb
- 43Dmt8zdcIGEstCToazlMV3/Ezojv9NYJ4G3aXkJl2NjMcMJZ5VvaMiV/2N4YZIwt9QGuDeTeiD
- XlzKtKPQm9FLvsWlG2ZOP2CzaS2HkxB9SJFr6Q4Z08JxdyxSlWh+N33JDMitFBrRKbnpideQNSQ
- 55iJDtMwzrsRO/0aUvh+tZzvOXlEkbm4WD0atR5OMaRQZMshZIT8HzoakcZqrpwENlP56kC29KY
- FAh8bg59qUALoNiKiqy0A40rTg0uzw6GUaEWH8veuVJqf4YgPcl5/9LnBC8ZRgjszwz3bWb1fXQ
- oecPLmb9VgA+qQHc1U0M8Tr4YUCfP+oxtumNsJU7/QyRhKXJE1eoq5qkz4syxFYk4kZw1E3n8yh
- QOoo5/qJZ7h5t7OdqobMojKq9Ak8KBX7fEFsLFwaBvGrMF/RFH9nNbJ7vTS+rn5uW2Dj0Bwx//f
- e16dY2LsP3nj1ozQGWRHXFJlKa52MIcVZdKxc+BgvIeXKnQUrHttA2AYWh156vi43wZpS4vA74q pxDScUtj+Qc0Rxg==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
+
+
+This is a note to let you know that I've just added the patch titled
+
+    selftests: mptcp: join: fix "userspace pm add & remove address"
+
+to the 6.1-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     selftests-mptcp-join-fix-userspace-pm-add-remove-address.patch
+and it can be found in the queue-6.1 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From stable-owner@vger.kernel.org Thu Jun 22 17:43:24 2023
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Date: Thu, 22 Jun 2023 17:43:07 +0200
+Subject: selftests: mptcp: join: fix "userspace pm add & remove address"
+To: stable@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <20230622154307.3362179-1-matthieu.baerts@tessares.net>
+
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 
 It looks like this test was broken in v6.1 after the backport of commit
 48d73f609dcc ("selftests: mptcp: update userspace pm addr tests").
@@ -86,12 +73,11 @@ selftests in v6.3 because only IPv6 listening sockets are being created.
 Fixes: 8f0ba8ec18f5 ("selftests: mptcp: update userspace pm addr tests")
 Cc: stable@vger.kernel.org
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 5 +++--
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |    5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 2a238ae842d8..7b65003ee8cf 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
 @@ -946,11 +946,12 @@ do_transfer()
@@ -109,6 +95,10 @@ index 2a238ae842d8..7b65003ee8cf 100755
  							lport $sp rip $da rport $dp token $tk
  			fi
  
--- 
-2.40.1
 
+
+Patches currently in stable-queue which might be from stable-owner@vger.kernel.org are
+
+queue-6.1/selftests-mptcp-join-fix-userspace-pm-add-remove-address.patch
+queue-6.1/selftests-mptcp-join-skip-userspace-pm-tests-if-not-supported.patch
+queue-6.1/selftests-mptcp-join-skip-test-if-iptables-tc-cmds-fail.patch
