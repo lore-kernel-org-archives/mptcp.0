@@ -1,24 +1,24 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898AA15DA
-	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 01:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB75815DA
+	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 01:36:03 +0000 (UTC)
 Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 05982240027
-	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 03:34:02 +0200 (CEST)
+	by mout02.posteo.de (Postfix) with ESMTPS id BB374240104
+	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 03:36:01 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1687397642; bh=Qo7/utFY+AUkkN8SfWpvXJ8a9KR8TVuJ4Y5tbnHu3+4=;
+	t=1687397761; bh=vn5lWO9L26Hc+cT/azimR/ufDacqIFsyS9y1ITX9c+Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
 	 Content-Transfer-Encoding:From;
-	b=YlnlaAI34bHCUo/26vKiKD82jyDjhGAqPilEQA+TsWXapMqacndcZ234eKx3d+uD4
-	 lClYC2C17oBzQbAp2DUtxfy/whnV+TXqWJSPlXPp5/tzMRtbfo94zj4ao5/EOurRw/
-	 d1xskKMxesmeDAoGBPiSeBa/dC2Scun8sjYQWNW35OqWDsxZT+EvNff6+VxJ0jUNoR
-	 zpA5SRXTzhEcaMNYdvv926Mj55EAirapNI96d7G/6G4nbxV8pB5KcAwx40q7oltZ8g
-	 fbXhuP1yQUkQoMloTuN6m/dLee1vHWtKXaQpmWPPX1LHLiZ/8/kfY6TqVZi0M97baV
-	 TzfYmSKeffOUA==
+	b=EylOBdjc7dp88u898CPNSrTu/ltrxjDY0bDTIW3B9ZkgQVwDnWo8gwTU25mdpY7HG
+	 nQ9d2vuTXWne4OWH/VNRsqjDJ7ri+vh7Ib5C1glP84wPZb/d2wpPbk3IRGalCUzlHv
+	 sP2OAcbXccVUUpgECJC6FvK2IAR1zUNgahtkTu2zqi01L17dmK5JYejsiM/2FVQ3sH
+	 4Rv9FtZiuak6UqnhnQAXATWxs4nWbqxEsYdj+YyoQx0SpjsP7TVUtH+LVYt910xIfc
+	 oMHH3FI9zZvwaXbeoh7t4yskIuCUW9RWUE7bkWV/p45QqPT1Bp8Gn3Jl+zLSs/jl+p
+	 mXl52eYvBbkQw==
 Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4QmjZV4L7Sz6twX;
-	Thu, 22 Jun 2023 03:33:54 +0200 (CEST)
+	by submission (posteo.de) with ESMTPSA id 4Qmjcp1kcSz6twX;
+	Thu, 22 Jun 2023 03:35:53 +0200 (CEST)
 From: Yueh-Shun Li <shamrocklee@posteo.net>
 To: Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -38,9 +38,9 @@ Cc: linux-rdma@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yueh-Shun Li <shamrocklee@posteo.net>
-Subject: [PATCH 7/8] selftests: mptcp: connect: fix comment typo
-Date: Thu, 22 Jun 2023 01:26:35 +0000
-Message-Id: <20230622012627.15050-8-shamrocklee@posteo.net>
+Subject: [PATCH 8/8] scripts/spelling.txt: Add "transmit" patterns
+Date: Thu, 22 Jun 2023 01:26:37 +0000
+Message-Id: <20230622012627.15050-9-shamrocklee@posteo.net>
 In-Reply-To: <20230622012627.15050-1-shamrocklee@posteo.net>
 References: <20230622012627.15050-1-shamrocklee@posteo.net>
 Precedence: bulk
@@ -51,28 +51,42 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Spell "transmissions" properly.
-
-Found by searching for keyword "tranm".
+Add "transmit"-related patterns misspelled with the first "s" missing.
 
 Signed-off-by: Yueh-Shun Li <shamrocklee@posteo.net>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/spelling.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 773dd770a567..13561e5bc0cd 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -809,7 +809,7 @@ run_tests_disconnect()
- 
- 	cat $cin $cin $cin > "$cin".disconnect
- 
--	# force do_transfer to cope with the multiple tranmissions
-+	# force do_transfer to cope with the multiple transmissions
- 	sin="$cin.disconnect"
- 	cin="$cin.disconnect"
- 	cin_disconnect="$old_cin"
+diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+index f8bd6178d17b..c81e489ba4cf 100644
+--- a/scripts/spelling.txt
++++ b/scripts/spelling.txt
+@@ -1319,6 +1319,12 @@ ressource||resource
+ ressources||resources
+ restesting||retesting
+ resumbmitting||resubmitting
++retranmission||retransmission
++retranmissions||retransmissions
++retranmit||retransmit
++retranmits||retransmits
++retranmitted||retransmitted
++retranmitting||retransmitting
+ retransmited||retransmitted
+ retreived||retrieved
+ retreive||retrieve
+@@ -1553,6 +1559,11 @@ tranasction||transaction
+ tranceiver||transceiver
+ tranfer||transfer
+ tranmission||transmission
++tranmissions||transmissions
++tranmit||transmit
++tranmits||transmits
++tranmitted||transmitted
++tranmitting||transmitting
+ transcevier||transceiver
+ transciever||transceiver
+ transferd||transferred
 -- 
 2.38.1
 
