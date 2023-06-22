@@ -1,24 +1,24 @@
 Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BB315CC
-	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 01:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F22515CC
+	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 01:32:22 +0000 (UTC)
 Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 5FAF5240107
-	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 03:30:57 +0200 (CEST)
+	by mout02.posteo.de (Postfix) with ESMTPS id BC8AE240108
+	for <mptcp@lists.linux.dev>; Thu, 22 Jun 2023 03:32:20 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1687397457; bh=09XlL1/vCcPG0ljTp3PwBDMDDpta1CZKydZBQ7XpElA=;
+	t=1687397540; bh=V9k96scDZkwEItaNXbCiChE4dAzMQL5AXCtzZjXTyjY=;
 	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
 	 Content-Transfer-Encoding:From;
-	b=lORN+8euUeR65leU70KFB+GzuyC2mG9G1lWZj6VxVqQrqjtPfe7uox1tDXML8/kLm
-	 MqYL76DjhUw5q64r9OcfvbYB7u5lKRVuef17z4zdPW+6l3UtNWSKD9N8MX3azYjI7z
-	 McsiG5Ho9HLWEUfpkEBTa0qs8L4KHoQ/gTyt7AqiSx4oNiMFIMe6sEn/xsqZItTd7y
-	 NUqwLKpvf8dBH8zsB6c3y4Zv3BOfLq3PEX0E7j4UY8HnA7Pn1Wb57nfwLJzKSlZmA4
-	 xJz7rYQ9Pa83IwrRuWYg63QKSjaBNU/PZj48dG0g0lTnRpRc/EDN9rtE/pQNHs9/U+
-	 sKxIKVftt+uTA==
+	b=lBIvaDU2cgL+XJ78CbU1QOzvjxWxUEOE/UCb//cMF2huKX9dQgHMQFNlxekRPoZkV
+	 HUZK1HXRcoro3PqE35yhfMPdXSvAdfwuNI7/yO9gNcCHxSYvmjthu/N9D2SXh1a91i
+	 KTmjgch7Tkc+QqkXq1LScMr0WMyUtfPMWNd+plKwqUFwjrXQSq49zBDzI3t9ijrQ8L
+	 tk4CxBLMM+DiQs2x4IkwLs+l/x89XBq4AM+QOoMh7UJXuAxjx+1FEVi4bVYwYZoyNx
+	 QDArqUW9I3Xh7gF3VFK2/EMDI2k26T+GVwMe09zHKLx2GMUb7QnHUtLAIJ53wHn/78
+	 TF2ptWQ6CmU7g==
 Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4QmjVy0jmWz6tx4;
-	Thu, 22 Jun 2023 03:30:49 +0200 (CEST)
+	by submission (posteo.de) with ESMTPSA id 4QmjXY1hkqz6txl;
+	Thu, 22 Jun 2023 03:32:12 +0200 (CEST)
 From: Yueh-Shun Li <shamrocklee@posteo.net>
 To: Jason Gunthorpe <jgg@ziepe.ca>,
 	Leon Romanovsky <leon@kernel.org>,
@@ -38,9 +38,9 @@ Cc: linux-rdma@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yueh-Shun Li <shamrocklee@posteo.net>
-Subject: [PATCH 1/8] RDMA/rxe: fix comment typo
-Date: Thu, 22 Jun 2023 01:26:23 +0000
-Message-Id: <20230622012627.15050-2-shamrocklee@posteo.net>
+Subject: [PATCH 3/8] zd1211rw: fix comment typo
+Date: Thu, 22 Jun 2023 01:26:27 +0000
+Message-Id: <20230622012627.15050-4-shamrocklee@posteo.net>
 In-Reply-To: <20230622012627.15050-1-shamrocklee@posteo.net>
 References: <20230622012627.15050-1-shamrocklee@posteo.net>
 Precedence: bulk
@@ -51,28 +51,28 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Spell "retransmitting" properly.
+Spell "transmits" properly.
 
 Found by searching for keyword "tranm".
 
 Signed-off-by: Yueh-Shun Li <shamrocklee@posteo.net>
 ---
- drivers/infiniband/sw/rxe/rxe_verbs.h | 2 +-
+ drivers/net/wireless/zydas/zd1211rw/zd_usb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-index 26a20f088692..aca0f4c7a5cd 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-@@ -237,7 +237,7 @@ struct rxe_qp {
- 	atomic_t		skb_out;
- 	int			need_req_skb;
- 
--	/* Timer for retranmitting packet when ACKs have been lost. RC
-+	/* Timer for retransmitting packet when ACKs have been lost. RC
- 	 * only. The requester sets it when it is not already
- 	 * started. The responder resets it whenever an ack is
- 	 * received.
+diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
+index 850c26bc9524..8505d84eeed6 100644
+--- a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
++++ b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
+@@ -1006,7 +1006,7 @@ static void tx_urb_complete(struct urb *urb)
+  * @usb: the zd1211rw-private USB structure
+  * @skb: a &struct sk_buff pointer
+  *
+- * This function tranmits a frame to the device. It doesn't wait for
++ * This function transmits a frame to the device. It doesn't wait for
+  * completion. The frame must contain the control set and have all the
+  * control set information available.
+  *
 -- 
 2.38.1
 
