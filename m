@@ -1,74 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13685AD24;
-	Fri, 23 Jun 2023 15:12:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F081C433C9;
-	Fri, 23 Jun 2023 15:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CF5C151;
+	Fri, 23 Jun 2023 15:20:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C576C433C8;
+	Fri, 23 Jun 2023 15:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687533126;
-	bh=YYcQZGlseXwVCP6x5vAM/Qq8Z8vOikb1DJdq0Jth5Gg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ISUfUcrTT8eOjZzIDi7bXv9M5bOvSsptJEaRizHPX8Vk79/U+gljC4+gUbOu/Ve7X
-	 6UoftSAtMmnQL87QxvPPIY8Ze+cHV1/9FVfuzFfMt3HJ5PdIns2vqH1mvtCFkrTdhz
-	 XBLx5YnYlo0KEivTEIQe+pzenKN75aTns5i4hsCKMsg5fStyAAA9RKOzglDQqQyucf
-	 am1ZrDpnY0NZ7Od9f9F2CjdWpyDpw7PN8oRTRUQVzEnQq92JDBXKthooXbnwa5XtuJ
-	 PjHBk4GVtgTbT1VuvEdASv/xKoNLMcIrla0SAm/4l3+8omCVOSSip/YP6zkw4YqcbY
-	 kaWJwHsJJFp6Q==
-Date: Fri, 23 Jun 2023 08:12:05 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Yueh-Shun Li <shamrocklee@posteo.net>
-Cc: jgg@ziepe.ca, leon@kernel.org, anthony.l.nguyen@intel.com,
- davem@davemloft.net, kvalo@kernel.org, jejb@linux.ibm.com,
- pabeni@redhat.com, apw@canonical.com, joe@perches.com,
- linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- linux-wireless@vger.kernel.org, linux-scsi@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] Fix comment typos about "transmit"
-Message-ID: <20230623081205.71e07bcc@kernel.org>
-In-Reply-To: <50a88781b9e2a80588438c315167bbec@posteo.net>
-References: <20230622012627.15050-1-shamrocklee@posteo.net>
-	<168748862634.32034.1394302200661050543.git-patchwork-notify@kernel.org>
-	<50a88781b9e2a80588438c315167bbec@posteo.net>
+	s=k20201202; t=1687533627;
+	bh=p4YqjWlpHfO8CnjWmeHcdlXPNWLtBviMP1yIdFYTk8o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=O5nav8yk4i7R8Bxuad4YzSjTKcNENCreuMYJUXw2hQcEJi470MFVjfg3oVVw0Qd5B
+	 E/h3b5PsjK8WM6ySOa8Pa/un2odzdkXyXWr9Znbl/I3sSWDAAAJC/keOhPJYtwzBl5
+	 AKuzfoXv5jbkrvN+uaNgmcmcq+19En6tzkjgZKhoybY5xwMdSbmVTop5i80SreRUpC
+	 Q1vSHPV3uw7a0IWSrRUV8ZHftSVR855VD2CeVckiO2SS5ZSdTNWsfSfJRjepSvACAq
+	 7WGIg1AbbfGUUdY0FSikwshCoGNusmZ0mSTVqRJR2iG9LJJpu+cDnKf8YZGibR42a3
+	 v70BIi37bCZDA==
+Message-ID: <5c6dc00b-9e25-501f-1497-ce7f67694a0e@kernel.org>
+Date: Fri, 23 Jun 2023 08:20:25 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [RFC PATCH v2 1/4] net: wire up support for
+ file_operations->uring_cmd()
+To: Stefan Metzmacher <metze@samba.org>, Breno Leitao <leitao@debian.org>,
+ axboe@kernel.dk, asml.silence@gmail.com
+Cc: io-uring@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com,
+ Matthieu Baerts <matthieu.baerts@tessares.net>,
+ Mat Martineau <martineau@kernel.org>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Xin Long <lucien.xin@gmail.com>, leit@fb.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dccp@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-sctp@vger.kernel.org, ast@kernel.org, kuniyu@amazon.com,
+ martin.lau@kernel.org, Jason Xing <kernelxing@tencent.com>,
+ Joanne Koong <joannelkoong@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Willem de Bruijn
+ <willemb@google.com>, Guillaume Nault <gnault@redhat.com>,
+ Andrea Righi <andrea.righi@canonical.com>
+References: <20230614110757.3689731-1-leitao@debian.org>
+ <20230614110757.3689731-2-leitao@debian.org>
+ <6b5e5988-3dc7-f5d6-e447-397696c0d533@kernel.org>
+ <ZJA6AwbRWtSiJ5pL@gmail.com> <e72f4c43-02a7-936c-e755-1b23596fc312@samba.org>
+Content-Language: en-US
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <e72f4c43-02a7-936c-e755-1b23596fc312@samba.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Fri, 23 Jun 2023 08:51:39 +0000 Yueh-Shun Li wrote:
-> > Here is the summary with links:
-> >   - [1/8] RDMA/rxe: fix comment typo
-> >     (no matching commit)
-> >   - [2/8] i40e, xsk: fix comment typo
-> >     https://git.kernel.org/netdev/net-next/c/b028813ac973
-> >   - [3/8] zd1211rw: fix comment typo
-> >     (no matching commit)
-> >   - [4/8] scsi: fix comment typo
-> >     (no matching commit)
-> >   - [5/8] tcp: fix comment typo
-> >     https://git.kernel.org/netdev/net-next/c/304b1875ba02
-> >   - [6/8] net/tls: fix comment typo
-> >     https://git.kernel.org/netdev/net-next/c/a0e128ef88e4
-> >   - [7/8] selftests: mptcp: connect: fix comment typo
-> >     (no matching commit)
-> >   - [8/8] scripts/spelling.txt: Add "transmit" patterns
-> >     (no matching commit)
-> >=20
-> > You are awesome, thank you! =20
->=20
-> Should I rebase the local branch onto netdev/net-next/main
-> and send the "no matching commit" patches again?
+On 6/23/23 3:17 AM, Stefan Metzmacher wrote:
+> 
+> I'd like to keep it passed to socket layer, so that sockets could
+> implement some extra features in an async fashion.
+> 
+> What about having the function you posted below (and in v3)
+> as a default implementation if proto_ops->uring_cmd is NULL?
+> 
 
-No, not directly to netdev, at least..
-
-rdma/rxe needs to go to linux-rdma
-i40e should be picked up by Tony (CCed, no need to repost)
-zd1211rw is wireless so post it to linux-wireless
-scsi, I don't even know off the top of my head, not networking
-mptcp should be picked up by MPTCP folks (CCed, no need to repost)
-scripts, IDK who takes that, Andrew? =F0=9F=A4=B7=EF=B8=8F
+Nothing about this set needs uring_cmd added to proto ops. It adds uring
+commands which are wrappers to networking APIs. Let's keep proper APIs
+between subsystems.
