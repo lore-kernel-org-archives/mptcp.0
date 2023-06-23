@@ -1,126 +1,75 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5865C100AE
-	for <mptcp@lists.linux.dev>; Fri, 23 Jun 2023 16:13:39 +0000 (UTC)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-763c997ee0aso67498685a.3
-        for <mptcp@lists.linux.dev>; Fri, 23 Jun 2023 09:13:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687536818; x=1690128818;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K4/HWZFoUzfXbGWE5R93boLicWCdqYV2o5rBvnIsJJc=;
-        b=Qig7wqNsppIomERzwregkr1HegblAunS6DX8JLYz4yof7FPsDrfpL8kCEiKt311CEy
-         d7xH5AHEy+5jnjvqz+Pn13ICf76FSDpsxpwFMbr/ctMgrvp9NBStDVvK5JzUTmpdyKxA
-         XWIddsN8++saWNwO+xBxUFCQTy8uGN0f4zERWa8LrGXy2D4BfZKEY1WIltD/SYaJCPYL
-         V/KE77CDSD4OEMMMej/fsoaG/+k0kvilmbPM5aua7U1zSbyjVh7TyIXOjkwkMX5j6BXM
-         7v7TUQpk890HHsTEOfB4+XWhBLDrjDV1b+X06PRJN/BnnF9NQ6HwyhtkMtjeroGpAw1T
-         IzQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687536818; x=1690128818;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=K4/HWZFoUzfXbGWE5R93boLicWCdqYV2o5rBvnIsJJc=;
-        b=ALl6vEjYgdW13w1tL4kG5uoT55J6LTj7i697rmkgmxE1Fn+7+x+v3k3zDfGg+/zPX+
-         dqLzGyYrg7AGk3mVk0z2w4yTin4OW91rWeYOJ9wkwQVt/TEwwXBbR35xNbJggDB8rLZ2
-         oIwI6kpW3prLjuykSZCHGz55V/grnAIEJs+V0eXIx8YwuLcke5pRJvYyPbkKQ86T+htW
-         TBnCVGgS1kS+L7BrQFb8ReDB2AvNFjSRFtiEgJSillbauu4LFx4hSYfatkRp2punCUDq
-         0uBU8UAqs5S7D1/P0XpwFets6hiyWwEsFfzt+9mdRtDUVBVmO3JWBys7DkkTwTqOwM/N
-         mBKA==
-X-Gm-Message-State: AC+VfDwYS2NmmnRh3iqyPptqolVAYPYDf/R7lvlbJh7fRgEOquyDRRJH
-	VDprXFvrhzoiEk3ylOebjg==
-X-Google-Smtp-Source: ACHHUZ5yzY+wBL7PPMKE72vXBD4YZkp9eX+dW0VGA2ZZ6FOjryGDphOdqC4Jr2r/+TqI1ONBJZWQ8Q==
-X-Received: by 2002:a05:620a:8e84:b0:763:c017:67f2 with SMTP id rf4-20020a05620a8e8400b00763c01767f2mr7845487qkn.50.1687536818010;
-        Fri, 23 Jun 2023 09:13:38 -0700 (PDT)
-Received: from [127.0.0.1] ([172.177.65.68])
-        by smtp.gmail.com with ESMTPSA id c12-20020a05620a164c00b007624af3ece3sm4483749qko.78.2023.06.23.09.13.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jun 2023 09:13:37 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <73f793566f58e53e7c132711cd75fa7ea211d6f4.1687531836.git.pabeni@redhat.com>
-References:
- <73f793566f58e53e7c132711cd75fa7ea211d6f4.1687531836.git.pabeni@redhat.com>
-Subject: Re: mptcp: ensure subflow is unhashed before cleaning the backlog:
- Tests Results
-Message-ID: <e11f9a06-8603-59b5-fa35-5c271e265c1a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Jun 2023 16:13:36 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D836C100D0;
+	Fri, 23 Jun 2023 17:34:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B8CAC433C0;
+	Fri, 23 Jun 2023 17:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687541656;
+	bh=FLvkBTqQ4fDkpvhNSEDzGht6wnWmChrIOkilvXMac20=;
+	h=From:Subject:Date:To:Cc:From;
+	b=WyapiKWySuAzrTlb5d71tifkQ7hvUa3iH0wpVKaavCf1aqNDeCjkE8UuNjvZicpvk
+	 ClgerCiLM5oPa/BVwToSq0+4Hlww7Sh3SpdOEpHFL0Hqi5Ooxo5xW63uP+X64ICT5n
+	 y+rtV6JC55JKYzdpclNswn2re7VAXKaFlfJozsb2+lKds563kqCn0zpk8nkzyjrbth
+	 CGl3baIBVNzuNVx6qibL49afGPTtR7xnQ1q8xNp4sjrPNPGoCDpflc9zUvdhKPc4GT
+	 7fIihJaLqWqiwen8i0rUNzFqN+tL0uu7LbF2DIlugrLxmofnYFVIyOJmzhodQ/Q3hD
+	 nPucpAdRfYkYQ==
+From: Mat Martineau <martineau@kernel.org>
+Subject: [PATCH net-next 0/8] selftests: mptcp: Refactoring and minor fixes
+Date: Fri, 23 Jun 2023 10:34:06 -0700
+Message-Id: <20230623-send-net-next-20230623-v1-0-a883213c8ba9@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAI7XlWQC/z2NsQrDMAxEfyVoriCVTYf+Sung2GqjRQmSKYaQf
+ 49TaIcb3h13t4GzCTvchw2MP+KyaIfrZYA8J30zSukMNFIYbxTQWQsq165W8W8HisQ5lhgyQS9
+ PyRknS5rns85tXayewWr8kvZ9fMBvB577fgDJxfTZiwAAAA==
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang.tang@suse.com>, 
+ Yueh-Shun Li <shamrocklee@posteo.net>
+X-Mailer: b4 0.12.2
 
-Hi Paolo,
+Patch 1 moves code around for clarity and improved code reuse.
 
-Thank you for your modifications, that's great!
+Patch 2 makes use of new MPTCP info that consolidates MPTCP-level and
+subflow-level information.
 
-Our CI did some validations and here is its report:
+Patches 3-7 refactor code to favor limited-scope environment vars over
+optional parameters.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5428204190564352
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5428204190564352/summary/summary.txt
+Patch 8: typo fix
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6554104097406976
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6554104097406976/su=
-mmary/summary.txt
+Signed-off-by: Mat Martineau <martineau@kernel.org>
+---
+Geliang Tang (7):
+      selftests: mptcp: test userspace pm out of transfer
+      selftests: mptcp: check subflow and addr infos
+      selftests: mptcp: set FAILING_LINKS in run_tests
+      selftests: mptcp: drop test_linkfail parameter
+      selftests: mptcp: drop addr_nr_ns1/2 parameters
+      selftests: mptcp: drop sflags parameter
+      selftests: mptcp: add pm_nl_set_endpoint helper
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5850416655630336
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5850416655630336/su=
-mmary/summary.txt
+Yueh-Shun Li (1):
+      selftests: mptcp: connect: fix comment typo
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6220233875128320
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6220233875128320/summary/summary.txt
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh |   2 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    | 631 ++++++++++++---------
+ 2 files changed, 369 insertions(+), 264 deletions(-)
+---
+base-commit: faaa5fd30344f9a7b3816ae7a6b58ccd5a34998f
+change-id: 20230623-send-net-next-20230623-3242ec4d43c2
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/038400f3a829
+Best regards,
+-- 
+Mat Martineau <martineau@kernel.org>
 
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
