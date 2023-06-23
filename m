@@ -1,83 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1062D801;
-	Fri, 23 Jun 2023 02:50:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6FCC6C433C9;
-	Fri, 23 Jun 2023 02:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687488626;
-	bh=9EiFCNHJdUpB+XW1zu/aSkMUksAqJahEysCGpYwwpD4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=mOVmqgTDkzxHjY/uKaDRNHHy7gKk4xXwchepy/RBKuwnGRuz8kKXVdUGZvFxDmzPz
-	 8e28RgQQzGfDmaHmJ5CZIUCEHWy8MOIs+IGJq54kKbkqCmo8kcZfnlWHfCG/cpQ7t/
-	 MQl6UoXAIgGTFsYgoL5gyRtlpZiGoohwjv+gRsfU/oCd7QyvEIMzl+kpunI8vRDcou
-	 RExwmgEqUX0YrOnw+RosZ3PVJDdq13xLqhoxRRTw/6SK+Sa1GgONnFaEuv/177fnz4
-	 7vybmUpQMpWQ80Qg4SZ4AcFQB/b9h8coL/lrQOZgmgniG12C6Si1Ql29RqDwSeNqzH
-	 l+5pDpsclDNKw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 54D53C395F1;
-	Fri, 23 Jun 2023 02:50:26 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C51211F
+	for <mptcp@lists.linux.dev>; Fri, 23 Jun 2023 08:51:50 +0000 (UTC)
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 875EE240031
+	for <mptcp@lists.linux.dev>; Fri, 23 Jun 2023 10:51:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1687510302; bh=B1c7aclKQlYnbAu4S2v+VVqp1E6daoHU8MjvPcNrGNA=;
+	h=MIME-Version:Content-Transfer-Encoding:Date:From:To:Cc:Subject:
+	 Message-ID:From;
+	b=g/FFazuPoHXK0hRGWywrWG3suHsNGWkJB0tV+CHSY+gdr7TjUDRy7KN1VoyTCfnq8
+	 1ypKDAbljvq19ZK6620XsQ1i5hPA3HdwyGEDf3YhJOXQ34v8zCBZfLPMZb6zKOfpVZ
+	 dSQVS65rds9WP31vcLE6imHgkknbx7ZrCk3gHFhQSXxnGgLpUNmT1zmLom2dVAX1u/
+	 9INrxqC0tJIMaVAiDcpNoj4XQqBGV5Odt+O9t1TLgwbpnMTi+mhI04yVrHy4ohKSE2
+	 7UWn8h3J10tUu8s0xUHXYGPzkFD57BOLQfggmKBqXj4gtbL/QcXthHPvBNA4gmXmPL
+	 p+BcoUxt7Z13g==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4QnWF755Jkz9rxQ;
+	Fri, 23 Jun 2023 10:51:39 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/8] Fix comment typos about "transmit"
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <168748862634.32034.1394302200661050543.git-patchwork-notify@kernel.org>
-Date: Fri, 23 Jun 2023 02:50:26 +0000
-References: <20230622012627.15050-1-shamrocklee@posteo.net>
-In-Reply-To: <20230622012627.15050-1-shamrocklee@posteo.net>
-To: Yueh-Shun Li <shamrocklee@posteo.net>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Fri, 23 Jun 2023 08:51:39 +0000
+From: Yueh-Shun Li <shamrocklee@posteo.net>
+To: Jakub Kicinski <kuba@kernel.org>
 Cc: jgg@ziepe.ca, leon@kernel.org, anthony.l.nguyen@intel.com,
- davem@davemloft.net, kvalo@kernel.org, jejb@linux.ibm.com, kuba@kernel.org,
+ davem@davemloft.net, kvalo@kernel.org, jejb@linux.ibm.com,
  pabeni@redhat.com, apw@canonical.com, joe@perches.com,
  linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
  linux-wireless@vger.kernel.org, linux-scsi@vger.kernel.org,
  mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org,
  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8] Fix comment typos about "transmit"
+In-Reply-To: <168748862634.32034.1394302200661050543.git-patchwork-notify@kernel.org>
+References: <20230622012627.15050-1-shamrocklee@posteo.net>
+ <168748862634.32034.1394302200661050543.git-patchwork-notify@kernel.org>
+Message-ID: <50a88781b9e2a80588438c315167bbec@posteo.net>
 
-Hello:
+Dear Maintainer,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 22 Jun 2023 01:26:21 +0000 you wrote:
-> Fix typos about "transmit" missing the first "s"
-> found by searching with keyword "tram" in the first 7
-> patches.
+On 23.06.2023 04:50, patchwork-bot+netdevbpf@kernel.org wrote:
+> Hello:
 > 
-> Add related patterns to "scripts/spelling.txt" in the
-> last patch.
+> This series was applied to netdev/net-next.git (main)
+> by Jakub Kicinski <kuba@kernel.org>:
 > 
-> [...]
+> On Thu, 22 Jun 2023 01:26:21 +0000 you wrote:
+>> Fix typos about "transmit" missing the first "s"
+>> found by searching with keyword "tram" in the first 7
+>> patches.
+>> 
+>> Add related patterns to "scripts/spelling.txt" in the
+>> last patch.
+>> 
+>> [...]
 
-Here is the summary with links:
-  - [1/8] RDMA/rxe: fix comment typo
-    (no matching commit)
-  - [2/8] i40e, xsk: fix comment typo
-    https://git.kernel.org/netdev/net-next/c/b028813ac973
-  - [3/8] zd1211rw: fix comment typo
-    (no matching commit)
-  - [4/8] scsi: fix comment typo
-    (no matching commit)
-  - [5/8] tcp: fix comment typo
-    https://git.kernel.org/netdev/net-next/c/304b1875ba02
-  - [6/8] net/tls: fix comment typo
-    https://git.kernel.org/netdev/net-next/c/a0e128ef88e4
-  - [7/8] selftests: mptcp: connect: fix comment typo
-    (no matching commit)
-  - [8/8] scripts/spelling.txt: Add "transmit" patterns
-    (no matching commit)
+Thanks for merging!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> Here is the summary with links:
+>   - [1/8] RDMA/rxe: fix comment typo
+>     (no matching commit)
+>   - [2/8] i40e, xsk: fix comment typo
+>     https://git.kernel.org/netdev/net-next/c/b028813ac973
+>   - [3/8] zd1211rw: fix comment typo
+>     (no matching commit)
+>   - [4/8] scsi: fix comment typo
+>     (no matching commit)
+>   - [5/8] tcp: fix comment typo
+>     https://git.kernel.org/netdev/net-next/c/304b1875ba02
+>   - [6/8] net/tls: fix comment typo
+>     https://git.kernel.org/netdev/net-next/c/a0e128ef88e4
+>   - [7/8] selftests: mptcp: connect: fix comment typo
+>     (no matching commit)
+>   - [8/8] scripts/spelling.txt: Add "transmit" patterns
+>     (no matching commit)
+> 
+> You are awesome, thank you!
 
+Should I rebase the local branch onto netdev/net-next/main
+and send the "no matching commit" patches again?
 
+Best regards,
+
+Shamrock
