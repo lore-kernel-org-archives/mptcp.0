@@ -1,77 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BED8C02
-	for <mptcp@lists.linux.dev>; Fri, 23 Jun 2023 14:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1687531869;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=BdeFGRkd1BEYHQiCf1zWxs5S4WlKcM3ETSzOvXb/6BY=;
-	b=c9Q6Es1cxMxiWBg2N8A1CQYRVr9MhwEwsL0nv9LA4rLZE0INjG7mCswtrkZ9MzysAn3JlY
-	N4RAKAsvdeYG0LQIkUeHJ7l1m3gmgkTJtxwic9Ok6mT+uJF/rA4jgGtktw2SzjRRAT0tKZ
-	rFjA1zdEHkFmCSh2ZPCkxZS3gvyCbO8=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-46-6DD8F5cUPeePzN_NXxAEPw-1; Fri, 23 Jun 2023 10:51:08 -0400
-X-MC-Unique: 6DD8F5cUPeePzN_NXxAEPw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C848C1C07598
-	for <mptcp@lists.linux.dev>; Fri, 23 Jun 2023 14:51:07 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.183])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5824C200B402
-	for <mptcp@lists.linux.dev>; Fri, 23 Jun 2023 14:51:07 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: ensure subflow is unhashed before cleaning the backlog
-Date: Fri, 23 Jun 2023 16:51:01 +0200
-Message-Id: <73f793566f58e53e7c132711cd75fa7ea211d6f4.1687531836.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13685AD24;
+	Fri, 23 Jun 2023 15:12:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F081C433C9;
+	Fri, 23 Jun 2023 15:12:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687533126;
+	bh=YYcQZGlseXwVCP6x5vAM/Qq8Z8vOikb1DJdq0Jth5Gg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ISUfUcrTT8eOjZzIDi7bXv9M5bOvSsptJEaRizHPX8Vk79/U+gljC4+gUbOu/Ve7X
+	 6UoftSAtMmnQL87QxvPPIY8Ze+cHV1/9FVfuzFfMt3HJ5PdIns2vqH1mvtCFkrTdhz
+	 XBLx5YnYlo0KEivTEIQe+pzenKN75aTns5i4hsCKMsg5fStyAAA9RKOzglDQqQyucf
+	 am1ZrDpnY0NZ7Od9f9F2CjdWpyDpw7PN8oRTRUQVzEnQq92JDBXKthooXbnwa5XtuJ
+	 PjHBk4GVtgTbT1VuvEdASv/xKoNLMcIrla0SAm/4l3+8omCVOSSip/YP6zkw4YqcbY
+	 kaWJwHsJJFp6Q==
+Date: Fri, 23 Jun 2023 08:12:05 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Yueh-Shun Li <shamrocklee@posteo.net>
+Cc: jgg@ziepe.ca, leon@kernel.org, anthony.l.nguyen@intel.com,
+ davem@davemloft.net, kvalo@kernel.org, jejb@linux.ibm.com,
+ pabeni@redhat.com, apw@canonical.com, joe@perches.com,
+ linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-scsi@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8] Fix comment typos about "transmit"
+Message-ID: <20230623081205.71e07bcc@kernel.org>
+In-Reply-To: <50a88781b9e2a80588438c315167bbec@posteo.net>
+References: <20230622012627.15050-1-shamrocklee@posteo.net>
+	<168748862634.32034.1394302200661050543.git-patchwork-notify@kernel.org>
+	<50a88781b9e2a80588438c315167bbec@posteo.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-While tacking care of the mptcp-level listener I unintentionally
-moved the subflow level unhash after the subflow listener backlog
-cleanup.
+On Fri, 23 Jun 2023 08:51:39 +0000 Yueh-Shun Li wrote:
+> > Here is the summary with links:
+> >   - [1/8] RDMA/rxe: fix comment typo
+> >     (no matching commit)
+> >   - [2/8] i40e, xsk: fix comment typo
+> >     https://git.kernel.org/netdev/net-next/c/b028813ac973
+> >   - [3/8] zd1211rw: fix comment typo
+> >     (no matching commit)
+> >   - [4/8] scsi: fix comment typo
+> >     (no matching commit)
+> >   - [5/8] tcp: fix comment typo
+> >     https://git.kernel.org/netdev/net-next/c/304b1875ba02
+> >   - [6/8] net/tls: fix comment typo
+> >     https://git.kernel.org/netdev/net-next/c/a0e128ef88e4
+> >   - [7/8] selftests: mptcp: connect: fix comment typo
+> >     (no matching commit)
+> >   - [8/8] scripts/spelling.txt: Add "transmit" patterns
+> >     (no matching commit)
+> >=20
+> > You are awesome, thank you! =20
+>=20
+> Should I rebase the local branch onto netdev/net-next/main
+> and send the "no matching commit" patches again?
 
-That could cause some nasty race and makes the code harder to read.
+No, not directly to netdev, at least..
 
-Address the issue restoring the proper order of operations.
-
-Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f2abae254524..03a7c83bc2d2 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2957,10 +2957,10 @@ static void mptcp_check_listen_stop(struct sock *sk)
- 		return;
- 
- 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
-+	tcp_set_state(ssk, TCP_CLOSE);
- 	mptcp_subflow_queue_clean(sk, ssk);
- 	inet_csk_listen_stop(ssk);
- 	mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CLOSED);
--	tcp_set_state(ssk, TCP_CLOSE);
- 	release_sock(ssk);
- }
- 
--- 
-2.40.1
-
+rdma/rxe needs to go to linux-rdma
+i40e should be picked up by Tony (CCed, no need to repost)
+zd1211rw is wireless so post it to linux-wireless
+scsi, I don't even know off the top of my head, not networking
+mptcp should be picked up by MPTCP folks (CCed, no need to repost)
+scripts, IDK who takes that, Andrew? =F0=9F=A4=B7=EF=B8=8F
