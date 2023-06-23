@@ -1,67 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CF5C151;
-	Fri, 23 Jun 2023 15:20:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C576C433C8;
-	Fri, 23 Jun 2023 15:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1687533627;
-	bh=p4YqjWlpHfO8CnjWmeHcdlXPNWLtBviMP1yIdFYTk8o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=O5nav8yk4i7R8Bxuad4YzSjTKcNENCreuMYJUXw2hQcEJi470MFVjfg3oVVw0Qd5B
-	 E/h3b5PsjK8WM6ySOa8Pa/un2odzdkXyXWr9Znbl/I3sSWDAAAJC/keOhPJYtwzBl5
-	 AKuzfoXv5jbkrvN+uaNgmcmcq+19En6tzkjgZKhoybY5xwMdSbmVTop5i80SreRUpC
-	 Q1vSHPV3uw7a0IWSrRUV8ZHftSVR855VD2CeVckiO2SS5ZSdTNWsfSfJRjepSvACAq
-	 7WGIg1AbbfGUUdY0FSikwshCoGNusmZ0mSTVqRJR2iG9LJJpu+cDnKf8YZGibR42a3
-	 v70BIi37bCZDA==
-Message-ID: <5c6dc00b-9e25-501f-1497-ce7f67694a0e@kernel.org>
-Date: Fri, 23 Jun 2023 08:20:25 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5865C100AE
+	for <mptcp@lists.linux.dev>; Fri, 23 Jun 2023 16:13:39 +0000 (UTC)
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-763c997ee0aso67498685a.3
+        for <mptcp@lists.linux.dev>; Fri, 23 Jun 2023 09:13:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687536818; x=1690128818;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K4/HWZFoUzfXbGWE5R93boLicWCdqYV2o5rBvnIsJJc=;
+        b=Qig7wqNsppIomERzwregkr1HegblAunS6DX8JLYz4yof7FPsDrfpL8kCEiKt311CEy
+         d7xH5AHEy+5jnjvqz+Pn13ICf76FSDpsxpwFMbr/ctMgrvp9NBStDVvK5JzUTmpdyKxA
+         XWIddsN8++saWNwO+xBxUFCQTy8uGN0f4zERWa8LrGXy2D4BfZKEY1WIltD/SYaJCPYL
+         V/KE77CDSD4OEMMMej/fsoaG/+k0kvilmbPM5aua7U1zSbyjVh7TyIXOjkwkMX5j6BXM
+         7v7TUQpk890HHsTEOfB4+XWhBLDrjDV1b+X06PRJN/BnnF9NQ6HwyhtkMtjeroGpAw1T
+         IzQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687536818; x=1690128818;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=K4/HWZFoUzfXbGWE5R93boLicWCdqYV2o5rBvnIsJJc=;
+        b=ALl6vEjYgdW13w1tL4kG5uoT55J6LTj7i697rmkgmxE1Fn+7+x+v3k3zDfGg+/zPX+
+         dqLzGyYrg7AGk3mVk0z2w4yTin4OW91rWeYOJ9wkwQVt/TEwwXBbR35xNbJggDB8rLZ2
+         oIwI6kpW3prLjuykSZCHGz55V/grnAIEJs+V0eXIx8YwuLcke5pRJvYyPbkKQ86T+htW
+         TBnCVGgS1kS+L7BrQFb8ReDB2AvNFjSRFtiEgJSillbauu4LFx4hSYfatkRp2punCUDq
+         0uBU8UAqs5S7D1/P0XpwFets6hiyWwEsFfzt+9mdRtDUVBVmO3JWBys7DkkTwTqOwM/N
+         mBKA==
+X-Gm-Message-State: AC+VfDwYS2NmmnRh3iqyPptqolVAYPYDf/R7lvlbJh7fRgEOquyDRRJH
+	VDprXFvrhzoiEk3ylOebjg==
+X-Google-Smtp-Source: ACHHUZ5yzY+wBL7PPMKE72vXBD4YZkp9eX+dW0VGA2ZZ6FOjryGDphOdqC4Jr2r/+TqI1ONBJZWQ8Q==
+X-Received: by 2002:a05:620a:8e84:b0:763:c017:67f2 with SMTP id rf4-20020a05620a8e8400b00763c01767f2mr7845487qkn.50.1687536818010;
+        Fri, 23 Jun 2023 09:13:38 -0700 (PDT)
+Received: from [127.0.0.1] ([172.177.65.68])
+        by smtp.gmail.com with ESMTPSA id c12-20020a05620a164c00b007624af3ece3sm4483749qko.78.2023.06.23.09.13.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jun 2023 09:13:37 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <73f793566f58e53e7c132711cd75fa7ea211d6f4.1687531836.git.pabeni@redhat.com>
+References:
+ <73f793566f58e53e7c132711cd75fa7ea211d6f4.1687531836.git.pabeni@redhat.com>
+Subject: Re: mptcp: ensure subflow is unhashed before cleaning the backlog:
+ Tests Results
+Message-ID: <e11f9a06-8603-59b5-fa35-5c271e265c1a@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 23 Jun 2023 16:13:36 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [RFC PATCH v2 1/4] net: wire up support for
- file_operations->uring_cmd()
-To: Stefan Metzmacher <metze@samba.org>, Breno Leitao <leitao@debian.org>,
- axboe@kernel.dk, asml.silence@gmail.com
-Cc: io-uring@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com,
- Matthieu Baerts <matthieu.baerts@tessares.net>,
- Mat Martineau <martineau@kernel.org>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Xin Long <lucien.xin@gmail.com>, leit@fb.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, dccp@vger.kernel.org, mptcp@lists.linux.dev,
- linux-sctp@vger.kernel.org, ast@kernel.org, kuniyu@amazon.com,
- martin.lau@kernel.org, Jason Xing <kernelxing@tencent.com>,
- Joanne Koong <joannelkoong@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Willem de Bruijn
- <willemb@google.com>, Guillaume Nault <gnault@redhat.com>,
- Andrea Righi <andrea.righi@canonical.com>
-References: <20230614110757.3689731-1-leitao@debian.org>
- <20230614110757.3689731-2-leitao@debian.org>
- <6b5e5988-3dc7-f5d6-e447-397696c0d533@kernel.org>
- <ZJA6AwbRWtSiJ5pL@gmail.com> <e72f4c43-02a7-936c-e755-1b23596fc312@samba.org>
-Content-Language: en-US
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <e72f4c43-02a7-936c-e755-1b23596fc312@samba.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 6/23/23 3:17 AM, Stefan Metzmacher wrote:
-> 
-> I'd like to keep it passed to socket layer, so that sockets could
-> implement some extra features in an async fashion.
-> 
-> What about having the function you posted below (and in v3)
-> as a default implementation if proto_ops->uring_cmd is NULL?
-> 
+Hi Paolo,
 
-Nothing about this set needs uring_cmd added to proto ops. It adds uring
-commands which are wrappers to networking APIs. Let's keep proper APIs
-between subsystems.
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5428204190564352
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5428204190564352/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6554104097406976
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6554104097406976/su=
+mmary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5850416655630336
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5850416655630336/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6220233875128320
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6220233875128320/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/038400f3a829
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
