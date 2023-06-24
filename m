@@ -1,67 +1,24 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C806AAA
-	for <mptcp@lists.linux.dev>; Fri, 23 Jun 2023 22:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1687560970;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xQVg0pnXVfTxPUpA8yd29SmocczyZN6S+xS0BIA8ljI=;
-	b=fk1hFjmzIHFSsF+WttlzEJjCZClsKT5LxwNe0kitW1sYzNsi/WczhvT/0OelRFVa2wuhoF
-	xik8a8I0KNtMVeNAiFCov6NFsVdO8Ud87W2E4ARxUOdklkM/uFc2zvzIYzmFgjhHko7tEC
-	cAHeqeQ7xa73gVLXEBaBlq+td0fdKjQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-392-ui08z6zkOsOzsb7oEUVtzw-1; Fri, 23 Jun 2023 18:56:05 -0400
-X-MC-Unique: ui08z6zkOsOzsb7oEUVtzw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2C7B7185A78B;
-	Fri, 23 Jun 2023 22:56:04 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 240AF492C13;
-	Fri, 23 Jun 2023 22:56:01 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: netdev@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>,
-	Alexander Duyck <alexander.duyck@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	David Ahern <dsahern@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	dccp@vger.kernel.org,
-	linux-afs@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-can@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-hams@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-sctp@vger.kernel.org,
-	linux-wpan@vger.kernel.org,
-	linux-x25@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	rds-devel@oss.oracle.com,
-	tipc-discussion@lists.sourceforge.net,
-	virtualization@lists.linux-foundation.org
-Subject: [PATCH net-next v5 16/16] net: Kill MSG_SENDPAGE_NOTLAST
-Date: Fri, 23 Jun 2023 23:55:13 +0100
-Message-ID: <20230623225513.2732256-17-dhowells@redhat.com>
-In-Reply-To: <20230623225513.2732256-1-dhowells@redhat.com>
-References: <20230623225513.2732256-1-dhowells@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8886DA939;
+	Sat, 24 Jun 2023 22:40:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AD23FC433CA;
+	Sat, 24 Jun 2023 22:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1687646424;
+	bh=K86mZI8N6UbjhVQdXUNDiUpIwUPbWBlJmA42eX8wF18=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=F7usb2f7+HNAVTZ7aibl+NyDCAVTGa8OKWcPCzKHFV2gkv4u0vXCqDgwSGZTkBMW+
+	 5ZKvuh2J0ItL0Sn//21yORZRsJ4+YupoNni/rsrvSDUaaZ/FfTQVQSsDvQbSN4o0oM
+	 WNFMxKBhk75YqmCz4YlUJo7JkADVDATrQnjzEs+ANY/gAbPBWEtCn/T3GtlPw2ekQJ
+	 nenl6/EHPUGsuz3nJ+MUOaTBSy5ioPedVAIlmtGJSZGB0QOuNKfRXszpbT7IuJ2Qux
+	 ahnlvZFU1zOQ2fg6ynpfupIelDQweFSL3hkoo3YNd/LmpOiNIPBWxfjQh8KIP1z93E
+	 9utXJSw9Wakng==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8D20EC395F1;
+	Sat, 24 Jun 2023 22:40:24 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -69,147 +26,55 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+Subject: Re: [PATCH net-next 0/8] selftests: mptcp: Refactoring and minor fixes
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <168764642457.414.3013119023826690334.git-patchwork-notify@kernel.org>
+Date: Sat, 24 Jun 2023 22:40:24 +0000
+References: <20230623-send-net-next-20230623-v1-0-a883213c8ba9@kernel.org>
+In-Reply-To: <20230623-send-net-next-20230623-v1-0-a883213c8ba9@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: matthieu.baerts@tessares.net, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, geliang.tang@suse.com, shamrocklee@posteo.net
 
-Now that ->sendpage() has been removed, MSG_SENDPAGE_NOTLAST can be cleaned
-up.  Things were converted to use MSG_MORE instead, but the protocol
-sendpage stubs still convert MSG_SENDPAGE_NOTLAST to MSG_MORE, which is now
-unnecessary.
+Hello:
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: bpf@vger.kernel.org
-cc: dccp@vger.kernel.org
-cc: linux-afs@lists.infradead.org
-cc: linux-arm-msm@vger.kernel.org
-cc: linux-can@vger.kernel.org
-cc: linux-crypto@vger.kernel.org
-cc: linux-doc@vger.kernel.org
-cc: linux-hams@vger.kernel.org
-cc: linux-perf-users@vger.kernel.org
-cc: linux-rdma@vger.kernel.org
-cc: linux-sctp@vger.kernel.org
-cc: linux-wpan@vger.kernel.org
-cc: linux-x25@vger.kernel.org
-cc: mptcp@lists.linux.dev
-cc: netdev@vger.kernel.org
-cc: rds-devel@oss.oracle.com
-cc: tipc-discussion@lists.sourceforge.net
-cc: virtualization@lists.linux-foundation.org
----
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Notes:
-    ver #3)
-     - tcp_bpf is now handled by an earlier patch.
+On Fri, 23 Jun 2023 10:34:06 -0700 you wrote:
+> Patch 1 moves code around for clarity and improved code reuse.
+> 
+> Patch 2 makes use of new MPTCP info that consolidates MPTCP-level and
+> subflow-level information.
+> 
+> Patches 3-7 refactor code to favor limited-scope environment vars over
+> optional parameters.
+> 
+> [...]
 
- include/linux/socket.h                         | 4 +---
- net/tls/tls_device.c                           | 3 +--
- net/tls/tls_main.c                             | 2 +-
- net/tls/tls_sw.c                               | 2 +-
- tools/perf/trace/beauty/include/linux/socket.h | 1 -
- tools/perf/trace/beauty/msg_flags.c            | 5 +----
- 6 files changed, 5 insertions(+), 12 deletions(-)
+Here is the summary with links:
+  - [net-next,1/8] selftests: mptcp: test userspace pm out of transfer
+    https://git.kernel.org/netdev/net-next/c/4369c198e599
+  - [net-next,2/8] selftests: mptcp: check subflow and addr infos
+    https://git.kernel.org/netdev/net-next/c/d7ced753aa85
+  - [net-next,3/8] selftests: mptcp: set FAILING_LINKS in run_tests
+    https://git.kernel.org/netdev/net-next/c/be7e9786c915
+  - [net-next,4/8] selftests: mptcp: drop test_linkfail parameter
+    https://git.kernel.org/netdev/net-next/c/0c93af1f8907
+  - [net-next,5/8] selftests: mptcp: drop addr_nr_ns1/2 parameters
+    https://git.kernel.org/netdev/net-next/c/595ef566a2ef
+  - [net-next,6/8] selftests: mptcp: drop sflags parameter
+    https://git.kernel.org/netdev/net-next/c/1534f87ee0dc
+  - [net-next,7/8] selftests: mptcp: add pm_nl_set_endpoint helper
+    https://git.kernel.org/netdev/net-next/c/9e9d176df8e9
+  - [net-next,8/8] selftests: mptcp: connect: fix comment typo
+    https://git.kernel.org/netdev/net-next/c/e6b8a78ea266
 
-diff --git a/include/linux/socket.h b/include/linux/socket.h
-index 58204700018a..39b74d83c7c4 100644
---- a/include/linux/socket.h
-+++ b/include/linux/socket.h
-@@ -319,7 +319,6 @@ struct ucred {
- #define MSG_MORE	0x8000	/* Sender will send more */
- #define MSG_WAITFORONE	0x10000	/* recvmmsg(): block until 1+ packets avail */
- #define MSG_SENDPAGE_NOPOLICY 0x10000 /* sendpage() internal : do no apply policy */
--#define MSG_SENDPAGE_NOTLAST 0x20000 /* sendpage() internal : not the last page */
- #define MSG_BATCH	0x40000 /* sendmmsg(): more messages coming */
- #define MSG_EOF         MSG_FIN
- #define MSG_NO_SHARED_FRAGS 0x80000 /* sendpage() internal : page frags are not shared */
-@@ -341,8 +340,7 @@ struct ucred {
- 
- /* Flags to be cleared on entry by sendmsg and sendmmsg syscalls */
- #define MSG_INTERNAL_SENDMSG_FLAGS \
--	(MSG_SPLICE_PAGES | MSG_SENDPAGE_NOPOLICY | MSG_SENDPAGE_NOTLAST | \
--	 MSG_SENDPAGE_DECRYPTED)
-+	(MSG_SPLICE_PAGES | MSG_SENDPAGE_NOPOLICY | MSG_SENDPAGE_DECRYPTED)
- 
- /* Setsockoptions(2) level. Thanks to BSD these must match IPPROTO_xxx */
- #define SOL_IP		0
-diff --git a/net/tls/tls_device.c b/net/tls/tls_device.c
-index 840ee06f1708..2021fe557e50 100644
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -441,8 +441,7 @@ static int tls_push_data(struct sock *sk,
- 	long timeo;
- 
- 	if (flags &
--	    ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_SENDPAGE_NOTLAST |
--	      MSG_SPLICE_PAGES))
-+	    ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_SPLICE_PAGES))
- 		return -EOPNOTSUPP;
- 
- 	if (unlikely(sk->sk_err))
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index d5ed4d47b16e..b6896126bb92 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -127,7 +127,7 @@ int tls_push_sg(struct sock *sk,
- {
- 	struct bio_vec bvec;
- 	struct msghdr msg = {
--		.msg_flags = MSG_SENDPAGE_NOTLAST | MSG_SPLICE_PAGES | flags,
-+		.msg_flags = MSG_SPLICE_PAGES | flags,
- 	};
- 	int ret = 0;
- 	struct page *p;
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index 9b3aa89a4292..53f944e6d8ef 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -1194,7 +1194,7 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
- 
- 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
- 			       MSG_CMSG_COMPAT | MSG_SPLICE_PAGES |
--			       MSG_SENDPAGE_NOTLAST | MSG_SENDPAGE_NOPOLICY))
-+			       MSG_SENDPAGE_NOPOLICY))
- 		return -EOPNOTSUPP;
- 
- 	ret = mutex_lock_interruptible(&tls_ctx->tx_lock);
-diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/trace/beauty/include/linux/socket.h
-index 13c3a237b9c9..3bef212a24d7 100644
---- a/tools/perf/trace/beauty/include/linux/socket.h
-+++ b/tools/perf/trace/beauty/include/linux/socket.h
-@@ -318,7 +318,6 @@ struct ucred {
- #define MSG_MORE	0x8000	/* Sender will send more */
- #define MSG_WAITFORONE	0x10000	/* recvmmsg(): block until 1+ packets avail */
- #define MSG_SENDPAGE_NOPOLICY 0x10000 /* sendpage() internal : do no apply policy */
--#define MSG_SENDPAGE_NOTLAST 0x20000 /* sendpage() internal : not the last page */
- #define MSG_BATCH	0x40000 /* sendmmsg(): more messages coming */
- #define MSG_EOF         MSG_FIN
- #define MSG_NO_SHARED_FRAGS 0x80000 /* sendpage() internal : page frags are not shared */
-diff --git a/tools/perf/trace/beauty/msg_flags.c b/tools/perf/trace/beauty/msg_flags.c
-index ea68db08b8e7..5cdebd7ece7e 100644
---- a/tools/perf/trace/beauty/msg_flags.c
-+++ b/tools/perf/trace/beauty/msg_flags.c
-@@ -8,9 +8,6 @@
- #ifndef MSG_WAITFORONE
- #define MSG_WAITFORONE		   0x10000
- #endif
--#ifndef MSG_SENDPAGE_NOTLAST
--#define MSG_SENDPAGE_NOTLAST	   0x20000
--#endif
- #ifndef MSG_FASTOPEN
- #define MSG_FASTOPEN		0x20000000
- #endif
-@@ -50,7 +47,7 @@ static size_t syscall_arg__scnprintf_msg_flags(char *bf, size_t size,
- 	P_MSG_FLAG(NOSIGNAL);
- 	P_MSG_FLAG(MORE);
- 	P_MSG_FLAG(WAITFORONE);
--	P_MSG_FLAG(SENDPAGE_NOTLAST);
-+	P_MSG_FLAG(SPLICE_PAGES);
- 	P_MSG_FLAG(FASTOPEN);
- 	P_MSG_FLAG(CMSG_CLOEXEC);
- #undef P_MSG_FLAG
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
