@@ -1,92 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFFEA23
-	for <mptcp@lists.linux.dev>; Wed, 28 Jun 2023 10:34:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2E6BA32
+	for <mptcp@lists.linux.dev>; Wed, 28 Jun 2023 11:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1687948476;
+	s=mimecast20190719; t=1687951665;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ypdudUQRsCoF+npXHCERhNkOw78WTE67axb3jGrh7Mw=;
-	b=OnMQ6kxQPWKpJWLY9c2fOrebwUUkRVapievQJp80x26Xn70EBh0JrSAQla/SExHhl1HS9j
-	0gUG7ULUlQrfAlX6iikkmW0WYq1R4XAfyKPe6eR24nuFH+TIFQO3onyYvqC72erHw4KRI+
-	0Jxs3FhpTh2zXvNVSIOnuX65sLkuw8M=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-331-asxeb95wNCeccFIrthOC2A-1; Wed, 28 Jun 2023 06:34:34 -0400
-X-MC-Unique: asxeb95wNCeccFIrthOC2A-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7672918d8a4so2957285a.0
-        for <mptcp@lists.linux.dev>; Wed, 28 Jun 2023 03:34:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687948474; x=1690540474;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ypdudUQRsCoF+npXHCERhNkOw78WTE67axb3jGrh7Mw=;
-        b=NpT+swoumgtqsIt+4D5FqsEQS5+mxt0r9CILenyhAHDatEqmldY4I38OmsXeEE5sLm
-         i5/gntSPVFICHD1y8ZDquNC/4dCbAX6tsUSAbkVk+zJQrkG2hEVElY5E1FNjg3mgIOFP
-         Pelx3EnoyPVW6DVI+okQVA2gLAwDYUKsJ80yzgEF/JPzIIj7nSw/KHrYpfKussCfko1f
-         4W4g2zIbLAGZPavlxvMNazQOfso8iyG9ze0aWDFcwltiT+IpsAvqNIQn7wOUKZQ8f/yb
-         nEGAvye78yTS0I70zFkrm6CPXxIkEKml1FbZMJyJ77tsJoKZ3wWPspt3N8D1WSmL8jEB
-         8ong==
-X-Gm-Message-State: AC+VfDxrHl7EAiBnhdpd/9F+YClAB2TopkEiUV6QwjUPpufSpVj8jLe8
-	EBuTE5k0CTO0ZYDglu9QyB9I7QMcS9P9t3sN4zaRqktsLg1kyPJAnnn8xRaTasMcC9eqA2R4W53
-	i/TuoLuDiJyzGYZUtLAlfZO5lKf5GB+sFmnYqv2qzn+ggho6YinI+NG5JqQ+4MWQczajehUxv
-X-Received: by 2002:a05:620a:c45:b0:75b:23a1:69e4 with SMTP id u5-20020a05620a0c4500b0075b23a169e4mr38455205qki.4.1687948473784;
-        Wed, 28 Jun 2023 03:34:33 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4kGh6KsMON30yWreW3M5A2caA4nIooG3/HbSTY5JQQr/GJuPCt4s5xv5RY0PgtN/IAdJAEVw==
-X-Received: by 2002:a05:620a:c45:b0:75b:23a1:69e4 with SMTP id u5-20020a05620a0c4500b0075b23a169e4mr38455190qki.4.1687948473416;
-        Wed, 28 Jun 2023 03:34:33 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-226-127.dyn.eolo.it. [146.241.226.127])
-        by smtp.gmail.com with ESMTPSA id g7-20020ad457a7000000b00634daee6ecbsm5319556qvx.113.2023.06.28.03.34.32
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jun 2023 03:34:32 -0700 (PDT)
-Message-ID: <240bdc99624be53c70b6ef86b626102f3f1dede0.camel@redhat.com>
-Subject: Re: mptcp: fix bogus socket state update: Tests Results
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EyoDHMyIq3940cRKe3aVcrbLhJkflJApf52NkM+hlBU=;
+	b=LlbgA5N1q/gzDjsbGBT/wN6KwOLdMzZzbnx2Q/TXlLfl+9lbxXvx0i845xKGdKywC0u/fW
+	OZgvi7pTdTwdqRuOaIEYmcSsjAMxVwUcq07FUFAki0BAH5YygYC3/COECGaP45yohYPsGt
+	ip/l3o6gvx5JL0hd03bodf3QjynEdSs=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-564-uHP7wQjtOuSBLAVkm1m1Xw-1; Wed, 28 Jun 2023 07:27:42 -0400
+X-MC-Unique: uHP7wQjtOuSBLAVkm1m1Xw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B1AA23C10146;
+	Wed, 28 Jun 2023 11:27:41 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.51])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 19F0F40C2063;
+	Wed, 28 Jun 2023 11:27:40 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Date: Wed, 28 Jun 2023 12:34:30 +0200
-In-Reply-To: <ef68b1f1a0d79383565827c8f2440d9d0498db07.camel@redhat.com>
-References: <4e3c5d0b8d30cd8aa36ba591be38e5ca8958edf9.1687886219.git.pabeni@redhat.com>
-	 <08e7a375-af0d-b512-0a64-3a8489d72a76@gmail.com>
-	 <ef68b1f1a0d79383565827c8f2440d9d0498db07.camel@redhat.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+Cc: Christoph Paasch <cpaasch@apple.com>
+Subject: [PATCH mptcp-net] mptcp: do not rely on implicit state check in mptcp_listen()
+Date: Wed, 28 Jun 2023 13:27:31 +0200
+Message-Id: <9a42270be1b4d109351b22ad0331bab8051803fb.1687951613.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On Wed, 2023-06-28 at 09:12 +0200, Paolo Abeni wrote:
-> On Tue, 2023-06-27 at 18:46 +0000, MPTCP CI wrote:
-> > Hi Paolo,
-> >=20
-> > Thank you for your modifications, that's great!
-> >=20
-> > Our CI did some validations and here is its report:
-> >=20
-> > - KVM Validation: normal (except selftest_mptcp_join):
-> >   - Unstable: 2 failed test(s): mptcp_connect_mmap selftest_mptcp_conne=
-ct =F0=9F=94=B4:
-> >   - Task: https://cirrus-ci.com/task/6484223167561728
-> >   - Summary: https://api.cirrus-ci.com/v1/artifact/task/648422316756172=
-8/summary/summary.txt
->=20
-> oh wow, failures here look real. Let me investigate them...
+Since the blamed commit, closing the first subflow resets the first
+subflow socket state to SS_UNCONNECTED.
 
-Well, after some more digging I concluded this supposed 'fix' is
-actually useless and buggy. Just discard it.
+The current mptcp listen implementation relies only on such
+state to prevent touching not-fully-disconnected sockets.
 
-Sorry for the noise,
+Incoming mptcp fastclose (or paired endpoint removal) unconditionally
+closes the first subflow.
 
-Paolo
+All the above allows an incoming fastclose followed by a listen() call
+to successfully race with a blocking recvmsg(), potentially causing the
+latter to hit a divide by zero bug in cleanup_rbuf/__tcp_select_window().
+
+Address the issue explicitly checking the msk socket state in
+mptcp_listen(). An alternative solution would be moving the first
+subflow socket state update into mptcp_disconnect(), but in the long
+term the first subflow socket should be removed: better avoid relaying
+on it for internal consistency check.
+
+Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+This is basically a new version of "mptcp: fix bogus socket state update",
+but since it uses a quite different logic, no revision increase ;)
+
+Should close issues/414
+---
+ net/mptcp/protocol.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index a50eaa01ba8a..d3ff2a2c60de 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3751,6 +3751,11 @@ static int mptcp_listen(struct socket *sock, int backlog)
+ 	pr_debug("msk=%p", msk);
+ 
+ 	lock_sock(sk);
++
++	err = -EINVAL;
++	if (sock->state != SS_UNCONNECTED || sock->type != SOCK_STREAM)
++		goto unlock;
++
+ 	ssock = __mptcp_nmpc_socket(msk);
+ 	if (IS_ERR(ssock)) {
+ 		err = PTR_ERR(ssock);
+-- 
+2.40.1
 
