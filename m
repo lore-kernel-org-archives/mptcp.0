@@ -1,148 +1,128 @@
-Received: from ma-mailsvcp-mx-lapp03.apple.com (ma-mailsvcp-mx-lapp03.apple.com [17.32.222.24])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06344322E
-	for <mptcp@lists.linux.dev>; Wed, 28 Jun 2023 17:35:35 +0000 (UTC)
-Received: from rn-mailsvcp-mta-lapp01.rno.apple.com
- (rn-mailsvcp-mta-lapp01.rno.apple.com [10.225.203.149])
- by ma-mailsvcp-mx-lapp03.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) with ESMTPS id <0RWZ00TX521FN000@ma-mailsvcp-mx-lapp03.apple.com> for
- mptcp@lists.linux.dev; Wed, 28 Jun 2023 09:35:28 -0700 (PDT)
-X-Proofpoint-ORIG-GUID: q34QNOM36znqOvV-3FDwY-1BTgCF54lA
-X-Proofpoint-GUID: q34QNOM36znqOvV-3FDwY-1BTgCF54lA
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.591,18.0.957
- definitions=2023-06-28_12:2023-06-27,2023-06-28 signatures=0
-X-Proofpoint-Spam-Details: rule=interactive_user_notspam
- policy=interactive_user score=0 suspectscore=0 adultscore=0 bulkscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306280146
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com;
- h=content-type : mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=20180706;
- bh=/PJAtCD5IX/kDzYnd1lr8JWMeKto4W4jh/HtadckAis=;
- b=kLab+yeXLC1KOV1Leg9nREtBD3dzOIiSh9vxx0eZ1UOIHzythEwi+TRsHfAKQE4rLQ4M
- BSs5vnq2WJ0Uls6GrbXSjYtZqVf2MFUA91VVF/c+AgL2V61IzxfKMuDyG+RHo2y9uic5
- pCAkL3hCGXwXnb2Jn2WgvfSNwlwyxiqObbSwnBfpOicgjxnUY49yP3sp+vOYixvbnizx
- InC21bsgGjJOqbkbPfh4piegSt2H0inRyKM4CskysDcGmgUSd4FeFNBJsIW4O2HPJldx
- KCXCS8T33vTAPA71I4rIwjQdB7Aod71DNnRwlRIFo1EPb/Qn6EvGpqMr0sp0u3d8XPFy fA==
-Received: from rn-mailsvcp-mmp-lapp04.rno.apple.com
- (rn-mailsvcp-mmp-lapp04.rno.apple.com [17.179.253.17])
- by rn-mailsvcp-mta-lapp01.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) with ESMTPS id <0RWZ00YM022D1410@rn-mailsvcp-mta-lapp01.rno.apple.com>;
- Wed, 28 Jun 2023 09:35:08 -0700 (PDT)
-Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp04.rno.apple.com by
- rn-mailsvcp-mmp-lapp04.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) id <0RWZ00O001XSP300@rn-mailsvcp-mmp-lapp04.rno.apple.com>; Wed,
- 28 Jun 2023 09:35:07 -0700 (PDT)
-X-Va-A:
-X-Va-T-CD: 63633cf878a009867ff2b0b1cd43e165
-X-Va-E-CD: 485dde3f30341d8e501e0b6f5b138a1f
-X-Va-R-CD: e7abda42d7c58ac292ee43166d384ebc
-X-Va-ID: e474639e-acfc-464e-84d4-c9d95d4d8abf
-X-Va-CD: 0
-X-V-A:
-X-V-T-CD: 63633cf878a009867ff2b0b1cd43e165
-X-V-E-CD: 485dde3f30341d8e501e0b6f5b138a1f
-X-V-R-CD: e7abda42d7c58ac292ee43166d384ebc
-X-V-ID: 9f7e6e8d-507f-4efd-8454-483750e78e55
-X-V-CD: 0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.591,18.0.957
- definitions=2023-06-28_12:2023-06-27,2023-06-28 signatures=0
-Received: from smtpclient.apple ([17.192.155.222])
- by rn-mailsvcp-mmp-lapp04.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023))
- with ESMTPSA id <0RWZ00E9O22CL600@rn-mailsvcp-mmp-lapp04.rno.apple.com>; Wed,
- 28 Jun 2023 09:35:07 -0700 (PDT)
-Content-type: text/plain; charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E80AD518
+	for <mptcp@lists.linux.dev>; Wed, 28 Jun 2023 18:14:27 +0000 (UTC)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1a28de15c8aso6008fac.2
+        for <mptcp@lists.linux.dev>; Wed, 28 Jun 2023 11:14:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687976066; x=1690568066;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d6zG08RwgQVKXYq7N3l/sAjaY/H5OpmWbJuvREDFC7w=;
+        b=p51W0DnaP8jh50X7UBxTvuw0SrH2cVamgaLg4rhh10ykKMm3ZvMbUhZMhOzZp8nZ+l
+         JJ8qSSDdiTCWFLsrdDYRqZhhpGN7Ax69FNTacCEFQU3MX05jfvdTsALBdYwP/rcXpXNR
+         cplxlVnvY5w0lvooyfJSUv78oaVUU4OHZHIbwf0ziCkX6cbagK15Cm8dog8QdzA+PLcO
+         2S75FhRyw61PD6trhm3SjWSa+JQPvqd3jMyefZvtdfi9Qq6sYdgBq2WNk2tYlLF9dIyC
+         K01abSxfPktrL077cGKgW5ErouxOVNAatb9um74Jz3n9eAw9hGsRngA0KfuArI3i8QiL
+         QdIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687976066; x=1690568066;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=d6zG08RwgQVKXYq7N3l/sAjaY/H5OpmWbJuvREDFC7w=;
+        b=abhHcmR33zlGIHCNVle1Exe3wwoOYUe2H17QvjqOKhGk1HlzdAd+LKCkGg9TvmurU4
+         U7E2JqbFsnuwISxkzu5gceL4vSh6s3x75rvPJg5R9LaddZDhxOhFKxEZFQaE4fv2Tzhh
+         pYP8Zsp8AAX0epIeREkBkAjCoN/uI+EyG1zKGGT3KIj/L5tt/uczcZnEOJA9amUX3uHa
+         nnkOOBOkxPKEbz+tMZAm5tToiBmeYv5CHfv2RdZLdSkVJju5PrPb1CGmNWP9L9glY5At
+         IIUyvgvdrbXxUPqdeUCP51yRxoZwWuEhWmdkrRUXtHUed11GPZ8nHSM+UQGpm2bAg2K8
+         THWg==
+X-Gm-Message-State: AC+VfDw+Fm7FVaQNDMqCVkX0PKn6YZ6gGABKf4jSVAFP/LFi6jABRvFT
+	zAEVKIeubPnRmLpxH7OQYQ==
+X-Google-Smtp-Source: ACHHUZ4wwSRH9K0G1ic+fmzqV2FHam48yCd5VUvS19xLxzlrBE974TS0q//HG+zdhKUOEwbQoPNouw==
+X-Received: by 2002:a05:6870:b7aa:b0:1b0:691a:d377 with SMTP id ed42-20020a056870b7aa00b001b0691ad377mr4444513oab.2.1687976066028;
+        Wed, 28 Jun 2023 11:14:26 -0700 (PDT)
+Received: from [127.0.0.1] ([52.185.204.69])
+        by smtp.gmail.com with ESMTPSA id e26-20020a4ada1a000000b0054fdb673104sm4444973oou.9.2023.06.28.11.14.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Jun 2023 11:14:25 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <9a42270be1b4d109351b22ad0331bab8051803fb.1687951613.git.pabeni@redhat.com>
+References:
+ <9a42270be1b4d109351b22ad0331bab8051803fb.1687951613.git.pabeni@redhat.com>
+Subject: Re: mptcp: do not rely on implicit state check in mptcp_listen():
+ Tests Results
+Message-ID: <5398f8a7-e218-b6e8-22d1-d38befa966db@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 28 Jun 2023 18:14:24 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-version: 1.0 (Mac OS X Mail 16.0 \(3766.100.3\))
-Subject: Re: [PATCH mptcp-net] mptcp: do not rely on implicit state check in
- mptcp_listen()
-From: Christoph Paasch <cpaasch@apple.com>
-In-reply-to:
- <9a42270be1b4d109351b22ad0331bab8051803fb.1687951613.git.pabeni@redhat.com>
-Date: Wed, 28 Jun 2023 09:34:50 -0700
-Cc: mptcp@lists.linux.dev
-Content-transfer-encoding: quoted-printable
-Message-id: <54EC46E7-B042-4E13-9F18-015263E0AB57@apple.com>
-References:
- <9a42270be1b4d109351b22ad0331bab8051803fb.1687951613.git.pabeni@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-X-Mailer: Apple Mail (2.3766.100.3)
+MIME-Version: 1.0
+
+Hi Paolo,
+
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6083175428915200
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6083175428915200/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6646125382336512
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6646125382336512/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5520225475493888
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5520225475493888/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5286227335708672
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5286227335708672/su=
+mmary/summary.txt
+
+Initiator: Matthieu Baerts
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/d8d297a10c80
 
 
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
-> On Jun 28, 2023, at 4:27=E2=80=AFAM, Paolo Abeni <pabeni@redhat.com> =
-wrote:
->=20
-> Since the blamed commit, closing the first subflow resets the first
-> subflow socket state to SS_UNCONNECTED.
->=20
-> The current mptcp listen implementation relies only on such
-> state to prevent touching not-fully-disconnected sockets.
->=20
-> Incoming mptcp fastclose (or paired endpoint removal) unconditionally
-> closes the first subflow.
->=20
-> All the above allows an incoming fastclose followed by a listen() call
-> to successfully race with a blocking recvmsg(), potentially causing =
-the
-> latter to hit a divide by zero bug in =
-cleanup_rbuf/__tcp_select_window().
->=20
-> Address the issue explicitly checking the msk socket state in
-> mptcp_listen(). An alternative solution would be moving the first
-> subflow socket state update into mptcp_disconnect(), but in the long
-> term the first subflow socket should be removed: better avoid relaying
-> on it for internal consistency check.
->=20
-> Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> This is basically a new version of "mptcp: fix bogus socket state =
-update",
-> but since it uses a quite different logic, no revision increase ;)
->=20
-> Should close issues/414
-> ---
-> net/mptcp/protocol.c | 5 +++++
-> 1 file changed, 5 insertions(+)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-I=E2=80=99m running syzkaller now with this patch.
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
 
-Christoph
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
->=20
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index a50eaa01ba8a..d3ff2a2c60de 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3751,6 +3751,11 @@ static int mptcp_listen(struct socket *sock, =
-int backlog)
-> 	pr_debug("msk=3D%p", msk);
->=20
-> 	lock_sock(sk);
-> +
-> +	err =3D -EINVAL;
-> +	if (sock->state !=3D SS_UNCONNECTED || sock->type !=3D =
-SOCK_STREAM)
-> +		goto unlock;
-> +
-> 	ssock =3D __mptcp_nmpc_socket(msk);
-> 	if (IS_ERR(ssock)) {
-> 		err =3D PTR_ERR(ssock);
-> --=20
-> 2.40.1
->=20
->=20
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
