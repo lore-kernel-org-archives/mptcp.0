@@ -1,43 +1,43 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17871426A
-	for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 18:16:07 +0000 (UTC)
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-635d9e0aa6dso7680246d6.1
-        for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 11:16:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E0B1426A
+	for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 18:16:10 +0000 (UTC)
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3a0423ea74eso708782b6e.1
+        for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 11:16:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688062566; x=1690654566;
+        d=gmail.com; s=20221208; t=1688062569; x=1690654569;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
         bh=zC2NRPOd4ogvEdgvw9ZlI6fAFE9n3GkGOGebcENEMeo=;
-        b=oRHinIv45UEQgWRdR8J20hcsRxV7QNvG2OIfgbu+URQ82vz7LpViIjlJOACYofhyOD
-         CdNbfkQAY+wZnT/X2cmd0LXBvGIpsnASd1dcDrAgF9HlS3HcqvPRmu1UAf7II2F8yIM1
-         K1lEkM9OGsVicZ7/3OR98+4s+CJ4ky798hHzxSmLTeOVeg0piX6w7eLBYYxe7NCzqUhF
-         4HGz0I+q8rqSsWgvmoy2v8xTi7dstCVnfZoVZALqBn5N48yn9cMSyQ+xztgnkd5c1pcY
-         2wstdYKNhrNI67hDDS7b1NkipgrGR/6ItpPoWa9jxmlpyRpfyMzmKIQL6y6dA/S///ak
-         ICnA==
+        b=gqieHDpKEUFK9MQ5o4ZKRSERMuyjl0C9RBKrIGCqRmE97eh00VhzjCbeJkCFNwqdUi
+         cFwVhTDiBBU58ESICkyaq6jn1QaBfu6+RFhrFetz29SaX0QJj5Rq+LBaDrS712Pj402l
+         jvRID7mJYI/SENA6f48imbMOBU3ZOeSTB8bcquXjbSnF6fjeWxyFKddgTj/6n+CMFUZb
+         0IzbnMNcW+Yh5XmsRW4K3rjZDUkqPVT+v50+wGLbTQX0RTSx5f7cQH/OYGqDkW2DxyJK
+         mRK20LP8MNiXBDxGYKBy/ybdZjg3LOI9eSOTSMKbTSCQTT/Ewm1MQ6BbtzxGM53xzqJ+
+         X4QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688062566; x=1690654566;
+        d=1e100.net; s=20221208; t=1688062569; x=1690654569;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
         bh=zC2NRPOd4ogvEdgvw9ZlI6fAFE9n3GkGOGebcENEMeo=;
-        b=ElMa9yvdHMuGCihfWwo+wkSgBXBBLxXkoTyaoKyy8OtmozAp1xHHrjBlC9f2BTYyrV
-         W5IwQD1mjdAzLFFCoCGpJd5jAJXnZvok/hUFc5sGhzOauO1nVLa1zGrtfCPfDL81EwuD
-         QsNNvur0LV0KS1XPycsMcvLxqWxOYAR2Pw7ycSArwFkk2cTpgRFfUIsqFlsMIavciuUn
-         k/HAozVjZmRXtCfiMCJmpEf9/u0gMQWhVsOxsMXJ2C4X27tQVfkw+1VVwKle8m2x+UtH
-         zva1a5XYLwwnjGPmHT2omhObma74tbNezQxwpKEEY7QxGaoS2AJEirAgQjGJl60R5xo9
-         pcgQ==
-X-Gm-Message-State: ABy/qLY4UQW4tUN4LCOPKSrzKoZDm1/IgMvzaj5R4B8BgK4myTzcWKdH
-	XGhyPeGBeNxnWwLnwOcpx8WNHWNLTw==
-X-Google-Smtp-Source: APBJJlGJRzyeBkDEOr9WROVydIjI0zQ6hdSwzuAjIOoNmApXtX433RT/s7/Oj/Z4IJJ59jzP73GhJA==
-X-Received: by 2002:a05:6214:27c4:b0:62d:f515:9320 with SMTP id ge4-20020a05621427c400b0062df5159320mr432417qvb.28.1688062566228;
-        Thu, 29 Jun 2023 11:16:06 -0700 (PDT)
-Received: from [127.0.0.1] ([20.57.69.196])
-        by smtp.gmail.com with ESMTPSA id z15-20020a0ce98f000000b006300ff90e71sm7240903qvn.122.2023.06.29.11.16.05
+        b=fcr3FDcy2i9icOyXwTedSy6kKJDoFzXMFAaUeDL0DikR70Zn2nWKFJ/Cnj/LkvPkik
+         fC0Hq6UGQqE1bDPTpxX+ZrR3kjmymrhpbL66AmU4MWFBp3949Jvst+LxGZiHB4Jbq+lg
+         MszU04IJhJx9fmhZku//cy5U6U66919mtmbv753Lapj9QRQk+3UmDtYg2TRYMxPVAxBl
+         zMZOU28fhYv4ei1WCin2P7AKNYvzyrXHBjv+JBChW4m5b6FVeJ/HKAf6tWDyfmwipC1z
+         Jn3/uRjF4+99J+aRw/2NQdB6MoPrp9+JqBaLMXpCYIhMp7f4TSv5IQi/1CMO/TETIiRO
+         zxlQ==
+X-Gm-Message-State: AC+VfDyZp24rkjfHX0y+KvoipYx35oom+dzl9sxVwr6bqrcuMb0E4vc3
+	aTDNx2YbA764sH7W67EuSTc1oqL7x+p7
+X-Google-Smtp-Source: ACHHUZ77MLp20mkO44h33fVB1KXCeO2evB7R/5OgJ4fueiWP5UXxGeUDlBuev8AbFLj2t/X7xjvQ7Q==
+X-Received: by 2002:a05:6808:1149:b0:39e:60f4:1c0d with SMTP id u9-20020a056808114900b0039e60f41c0dmr245958oiu.28.1688062569445;
+        Thu, 29 Jun 2023 11:16:09 -0700 (PDT)
+Received: from [127.0.0.1] ([104.210.139.214])
+        by smtp.gmail.com with ESMTPSA id x14-20020a056808144e00b00398031b1014sm5824041oiv.26.2023.06.29.11.16.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jun 2023 11:16:05 -0700 (PDT)
+        Thu, 29 Jun 2023 11:16:08 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
@@ -46,9 +46,9 @@ Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <20230628144927.828117-3-matthieu.baerts@tessares.net>
 References: <20230628144927.828117-3-matthieu.baerts@tessares.net>
 Subject: Re: selftests: mptcp: join: colored results: Tests Results
-Message-ID: <361182f2-0f10-1739-28d8-1cc5caa0e849@gmail.com>
+Message-ID: <9b5abcdb-c251-83a6-2e5a-7b57d98556f7@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 29 Jun 2023 18:16:05 +0000
+Date: Thu, 29 Jun 2023 18:16:08 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
