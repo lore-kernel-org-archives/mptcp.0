@@ -1,45 +1,45 @@
 Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7694313AC3
-	for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 17:43:53 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-9928abc11deso117241466b.1
-        for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 10:43:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BC713AC3
+	for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 17:48:51 +0000 (UTC)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-992acf67388so102645866b.1
+        for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 10:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1688060631; x=1690652631;
+        d=tessares.net; s=google; t=1688060930; x=1690652930;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7WIgujfVzy3iociziFgr/jhTRJ/U9u7I7RxLsEMD5WY=;
-        b=3aII3b7TL+Pq8nOT+OaEQnEUWRDipDAwdBmoLiXqA9scDG3AxUny5JuB+CTNIygn4v
-         o5F8L3vzA3EWk/DEmOD1SIhV7r3uBbhp4ABtlQWxYhQ++Ii/flny82gv9gt1eE4WJtXW
-         NfHqcRjyqHT5Y42+U93V6VkDf/qJwKeLLSQZtoqSn0XJ4hw3s5wfRnp3rqHXjtVSGDFl
-         xAITR94yjhc1lZ22ymbbB6hdjByElR2tKs1GpDtO9wNGyvZgSHS6aY3xLjCWccvIQt6m
-         EE0JGgb5qLCtiQaVERBOcKZ6phhJoe6k2MkcI9FQzE3iS5HPBxpnj3YT/NHhr1jM+Y/S
-         3x7Q==
+        bh=jCOu5umcM4FreWiU3hTtxszBZZtwMtc0cYPS4oyqCjc=;
+        b=EfaH+bQQhm0gChKOT/1pB2UwuN/VmmauN8858XZjhb4ZkkxOKD/pPY+LmJuSuiu5oc
+         ULwAXlk0EirAZZVszMOvBqTvdLsepgRw+TYWf/YpZVkfR2PPGHrw87o+Ln7MV+6QNPSm
+         h2evmqvVUE/klpSlAsYY0/CRo1QttKINrACmkx7GK20bu3lJ0ZhSVOWiRblLE+0RdgE4
+         1r2jloFRKfdGpNULWcXyIsfMxaD65B3yPBsAeQYaSYE7VI2YGj0HxeubTXuu54Q/KdMx
+         ofA0tb1y4vIfFhsrdnq7+CFSqEU9WxWeiFTekKgXg1OUpODCX4btwhwgSken3TAjZR1O
+         kjMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688060631; x=1690652631;
+        d=1e100.net; s=20221208; t=1688060930; x=1690652930;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7WIgujfVzy3iociziFgr/jhTRJ/U9u7I7RxLsEMD5WY=;
-        b=jlwe8sggF4dZj9DZBaBnF0cGycSxIjr3KPvM6rTQD3j3THTvO7INbyayah8FmwL2/R
-         FbPBY5M7RAerNCi59VTzNpo2sNDchcY93m+VvrSwXvBppMv1/JxOVrmPSJ/8Wb5nR0n1
-         zJUpPMmYGCgQ/r/dbQYMQPRxvvHF2DBeAo+5E8Sh0m2rIlrW4FCdkqUz/SkLpKA/lwNK
-         spjSJRludrTI706gS4DvcY7UccwP9v0IotjMrShKWXP1gpFdZW1DdomqoE85YrB7GbGG
-         LGd1YUFy7M4m2a/SkVam79oLjDXzAP0PdCxa+mv7M0Jp0Poq5WYIEADXmD8waniQJ8c0
-         Nc5Q==
-X-Gm-Message-State: ABy/qLbmE82ZNAwB8E1zUmJ3darvnXhyWWZ0VR3oGZVyQBRHyD80gWSI
-	r+7kTzip+RN4cP40idMCL+nXtST189mVzM3rXaLWTuS5
-X-Google-Smtp-Source: APBJJlGZzXGOwehGo4Aug1+LS3JdZFtfDZGUOXmMuKo7676PYYPM/Y9shpvTz9EydmZA56yWH9BCEw==
-X-Received: by 2002:a17:906:2dca:b0:94a:9f9a:b3c4 with SMTP id h10-20020a1709062dca00b0094a9f9ab3c4mr109850eji.49.1688060631192;
-        Thu, 29 Jun 2023 10:43:51 -0700 (PDT)
+        bh=jCOu5umcM4FreWiU3hTtxszBZZtwMtc0cYPS4oyqCjc=;
+        b=AzzJvpVbp9u+Lb1frOL1FF9uMOr9Ux59cMbR6wwi3DEUKkgUnyxeLg+TD6/9Lsk1f6
+         4TL0oIYI3zJrD5b7zmw8mHt6FuoF65kN7r7bZRq/ibwwiU6rW9HXYXtitdDX6/WCfrIk
+         85p/+9mBUShUYoWcfR/1MNJORlUpgTFkS07EENyH/A83LS6jj6fduIYMngrwQSSJpTQH
+         EJVLCL3Rl2XPa/tq5RfeknWo4x455VUsFthW/GnflCSGLveu/3eJU0ToilyoV5htqsLA
+         NzWxeZiLgmM29hvkacH2QvjLZti3vox6BlYskcXMKtXX7Muwhzs6p9mhN9LO/JyFmc0e
+         BeYA==
+X-Gm-Message-State: ABy/qLZgXYn1or/5oR7ZALqhIG+b1SIRh7pD1AyP99JWggPmVtuT0BIU
+	UsY98fQP50oFMTVyolv+1rWlA6SBI/wbFz3TKucYH7X7
+X-Google-Smtp-Source: APBJJlGcORobsrJ7kRTQMM+W7+ho2f9wcSf90tBDkDunN3ripVGUaAzVHpB7HvQyfYf2URSAvGQ5Sw==
+X-Received: by 2002:a17:906:85d3:b0:974:56aa:6dce with SMTP id i19-20020a17090685d300b0097456aa6dcemr135157ejy.46.1688060930107;
+        Thu, 29 Jun 2023 10:48:50 -0700 (PDT)
 Received: from [10.120.18.108] ([84.17.46.13])
-        by smtp.gmail.com with ESMTPSA id b22-20020a17090636d600b0099293cdbc98sm1718539ejc.145.2023.06.29.10.43.50
+        by smtp.gmail.com with ESMTPSA id k25-20020a17090666d900b009821ce1ea33sm7125617ejp.7.2023.06.29.10.48.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Jun 2023 10:43:50 -0700 (PDT)
-Message-ID: <72dce095-9e4e-b9e2-0ce8-dfcfe58f7ed2@tessares.net>
-Date: Thu, 29 Jun 2023 19:43:50 +0200
+        Thu, 29 Jun 2023 10:48:49 -0700 (PDT)
+Message-ID: <833abcfe-9639-7bf4-49f3-ddc301268a62@tessares.net>
+Date: Thu, 29 Jun 2023 19:48:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,55 +48,59 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next 2/4] bpf: Add bpf_mptcpify helper
+Subject: Re: [PATCH mptcp-next 1/4] selftests: mptcp: reset all the env vars
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1688004307.git.geliang.tang@suse.com>
- <53359d2572fdd676206c35d29e823e9dffd5e9f6.1688004307.git.geliang.tang@suse.com>
+References: <cover.1688045383.git.geliang.tang@suse.com>
+ <b0879a1289735ff45305ec2a7d159666b7b5219e.1688045383.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <53359d2572fdd676206c35d29e823e9dffd5e9f6.1688004307.git.geliang.tang@suse.com>
+In-Reply-To: <b0879a1289735ff45305ec2a7d159666b7b5219e.1688045383.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 29/06/2023 04:12, Geliang Tang wrote:
-> This patch implements a new struct bpf_func_proto bpf_mptcpify_proto. And
-> define a new helper bpf_mptcpify() to mptcpify a TCP socket dynamically as
-> an MPTCP one.
+Thank you for looking at that!
 
-Nice feature, thank you for working on that!
+On 29/06/2023 15:34, Geliang Tang wrote:
+> It's better to clear all the env vars in init_partial(), to let them be
+> reset before runing the next test.
+> 
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index e6c9d5451c5b..b80c5e7b5a7b 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -101,6 +101,10 @@ init_partial()
+>  	check_invert=0
+>  	validate_checksum=$checksum
+>  	FAILING_LINKS=""
+> +	test_linkfail=0
+> +	addr_nr_ns1=0
+> +	addr_nr_ns2=0
+> +	sflags=""
 
-Is it linked to what Nicolas Rybowski looked at a few years ago? I think
-he put info in a Github ticket. Was there not an issue with this
-technique? Did you see it and fix it?
+I think it would be better to move the declaration of these variables to
+do_transfer() (or run_tests()) instead of exporting them at the
+beginning of the file, no?
 
-I didn't look at the patchset in detail but I have one question, please
-see below:
+You could do something like:
 
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index 968139f4a1ac..e439f8b5f203 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -11587,6 +11587,24 @@ const struct bpf_func_proto bpf_skc_to_mptcp_sock_proto = {
->  	.ret_btf_id	= &btf_sock_ids[BTF_SOCK_TYPE_MPTCP],
->  };
->  
-> +BPF_CALL_1(bpf_mptcpify, struct sock *, sk)
-> +{
-> +	if (sk && sk_fullsock(sk) && sk->sk_protocol == IPPROTO_TCP) {
-> +		sk->sk_protocol = IPPROTO_MPTCP;
-> +		return (unsigned long)sk;
-> +	}
+  local test_linkfail=${test_linkfail:-0}
 
-How do we ensure such modifications are done at the right moment? I
-mean: we can only change the protocol ID in very few places, before even
-creating the socket (__sock_create()?). If we change it after, we will
-break stuff: tcp ops, security labels, etc.
+So by default, it will have the value 0. But if you do
 
-I thought it was not possible to hook at the right place when Nicolas
-looked at that and/or ensure the restriction was done but I might be
-mistaken and the situation has probably changed.
+  tests_linkfail=3 \
+      run_tests (...)
+
+It will have the value 3 just for this test. WDYT?
+
+It looks better than defining the variables globally and resetting them
+elsewhere.
 
 Cheers,
 Matt
