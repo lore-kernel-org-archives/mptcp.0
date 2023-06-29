@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6F8BE71;
-	Thu, 29 Jun 2023 14:30:01 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qEsel-0004jK-Ee; Thu, 29 Jun 2023 16:29:59 +0200
-Message-ID: <3855b327-fc33-364b-f511-0d506c7c18d7@leemhuis.info>
-Date: Thu, 29 Jun 2023 16:29:59 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D88125A9
+	for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 15:08:56 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-51d946d2634so922907a12.3
+        for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 08:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1688051335; x=1690643335;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6Co6TGnRbUyF72FhFExbL3/Ya87aGV22dT08AmIx/b4=;
+        b=GLo35H3+l6KKTcuu89P6obyfJfbYMlzxWaGEOcacXaKMlUfvqo4360gmlyCU++cukV
+         xBGHDtz8g54p15lwbpDyPEH1fAid7DmwraC10KAPu/6s2gJ+fDnB115UHCYqp8FjdolP
+         s5IGQMCAPJTHwebE+KMg6AdVFakoorGGEVjj4swx3wz3N9qqluOAINqKU0Z68KkgOYPE
+         SFsMpWc7hrDevb5oDgSKDwJiBnSqGgcOzE+shtrDHC9a26AvqicpBZqv2efq+7uZb/zX
+         Q2u73NeKDObl5GRU26Irc+Z/Z1qxMPzp7eb8lH/SZSck2qdCnXNyX+Xhf2+3RrcbnkHf
+         z3AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688051335; x=1690643335;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6Co6TGnRbUyF72FhFExbL3/Ya87aGV22dT08AmIx/b4=;
+        b=K+5hUUAxVlFifaE90hhOEvxsseCoYYSVoaBNrEOQDrZ6SvP0GeTWWYCOK7hpX7FUmT
+         iuEAuMyOCPQzOtc5/3458IbI3F4g1iS8XMeJOla7uFz6cExMTfacg/DK4RLPeEPm4NDo
+         XiYRTx4aTZrfBJvBjmkCURT+b0dzOfl4O6Au7iF2iYgua9hs5x3bgTTY9KdMZVE0KozL
+         Uzbc2ekOiDrPTKZNK0QojkNPX7h2y+7oS5hL4ku++2iCrXlRSVqQbpaGz5tNV650VV24
+         y88UGihZ1ZXyETP76zYxERdiTAsR1p0BIfqzIKQhic7XHGZFEXkGycgKU3bzR+YIO45k
+         YDwQ==
+X-Gm-Message-State: AC+VfDy+Qk5pkJXnmtriCLSQ/xsTWh4yFzFYPm+PE6bJBae/sYjdjN3h
+	VlOxpZZSWxB2PMQIfzMJfmHhPw==
+X-Google-Smtp-Source: ACHHUZ7vpk+ktiHULwSBmPYToUh6X7SXv4G8tJcNC3mEu7YM123u/5SBteoYgGhGlN3nwxu/4hiepA==
+X-Received: by 2002:aa7:d4d5:0:b0:51d:3747:f88a with SMTP id t21-20020aa7d4d5000000b0051d3747f88amr11257453edr.31.1688051335257;
+        Thu, 29 Jun 2023 08:08:55 -0700 (PDT)
+Received: from [10.120.18.108] ([84.17.46.13])
+        by smtp.gmail.com with ESMTPSA id k19-20020a1709061c1300b00988b32160dfsm6850362ejg.222.2023.06.29.08.08.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Jun 2023 08:08:54 -0700 (PDT)
+Message-ID: <0a5f1944-17b9-daa4-c7ff-6aac38b362d5@tessares.net>
+Date: Thu, 29 Jun 2023 17:08:53 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -16,66 +48,70 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: 9p: MPTCP tests regressions due to new 9p features in v6.4
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, v9fs@lists.linux.dev
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net>
- <CAFkjPTnX0=-GK8sFzd4S+V2+cA8E-FAqYHNndZui2Sh_MvoHPw@mail.gmail.com>
- <88f7a06b-b044-9fdc-b3dc-4b374dbca332@tessares.net>
- <3E1DD5A9-A8CB-4951-839A-6EF229CFA8EA@icloud.com>
- <4830cc62-64fd-f74b-bbfc-b8e44e023513@leemhuis.info>
- <CAFkjPTnAV6Rngwn6voCF332CX+eUyeJd7U0GcYn9BbkBqcTkHA@mail.gmail.com>
- <0dd7af94-db5f-ab39-dc79-285de4bf0a11@tessares.net>
- <163df4ec-089d-4bff-c613-dd8a0c3b2110@leemhuis.info>
-In-Reply-To: <163df4ec-089d-4bff-c613-dd8a0c3b2110@leemhuis.info>
+Subject: Re: [PATCH mptcp-net] mptcp: do not rely on implicit state check in
+ mptcp_listen()
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Christoph Paasch <cpaasch@apple.com>
+References: <9a42270be1b4d109351b22ad0331bab8051803fb.1687951613.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <9a42270be1b4d109351b22ad0331bab8051803fb.1687951613.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688049001;12345d6e;
-X-HE-SMSGID: 1qEsel-0004jK-Ee
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+Hi Paolo, Christoph,
 
-On 22.06.23 09:53, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 13.06.23 18:27, Matthieu Baerts wrote:
->> On 13/06/2023 18:07, Eric Van Hensbergen wrote:
->>> Understood, this on top of my 9p stack, but day job has been getting
->>> in the way lately so I need to unstack there first.  Will do my best
->>> to reproduce and understand as quickly as I can -- but given its a
->>> performance regression it is likely going to be tricky to reproduce
->>> and understand, so I'm not sure how confident I am that we'll be able
->>> to close it out prior to the final -rc.
->>
->> Thank you for your message, I understand, no issue.
->> [...]
+On 28/06/2023 13:27, Paolo Abeni wrote:
+> Since the blamed commit, closing the first subflow resets the first
+> subflow socket state to SS_UNCONNECTED.
 > 
-> As Linus will likely release 6.4 on this or the following Sunday a quick
-> status inquiry so I can brief him appropriately: is there any hope the
-> regression will be resolved any time soon? Doesn't look like it from
-> this thread, but maybe I missed something.
+> The current mptcp listen implementation relies only on such
+> state to prevent touching not-fully-disconnected sockets.
 > 
->> (but I don't know what's the impact for other people of course)
+> Incoming mptcp fastclose (or paired endpoint removal) unconditionally
+> closes the first subflow.
 > 
-> Yeah, it's likely not that urgent, if the problem is just showing up in
-> some CI tests. But is that what we assume for now? Eric?
+> All the above allows an incoming fastclose followed by a listen() call
+> to successfully race with a blocking recvmsg(), potentially causing the
+> latter to hit a divide by zero bug in cleanup_rbuf/__tcp_select_window().
+> 
+> Address the issue explicitly checking the msk socket state in
+> mptcp_listen(). An alternative solution would be moving the first
+> subflow socket state update into mptcp_disconnect(), but in the long
+> term the first subflow socket should be removed: better avoid relaying
+> on it for internal consistency check.
+> 
+> Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> This is basically a new version of "mptcp: fix bogus socket state update",
+> but since it uses a quite different logic, no revision increase ;)
+> 
+> Should close issues/414
 
-6.4 is out and this is likely to take a while to get fixed given recent
-and today's replies.
+Thank you for the patch! It looks good to me!
 
-To make sure I don't see this all the time while dealing with more
-pressing issues I'm putting it on the backburner:
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-#regzbot backburner: not urgent, for now seems something that only shows
-up in one CI (and is hard to reproduce)
-#regzbot ignore-activity
+I guess we can also add:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/414
+
+Just applied in our tree (fixes for -net):
+
+New patches for t/upstream-net and t/upstream:
+- 40575a81e44f: mptcp: do not rely on implicit state check in mptcp_listen()
+- Results: 1dacd2512f3b..40787b521a4a (export-net)
+- Results: ba5bf7787049..d99b5b5a67e4 (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230629T150635
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230629T150635
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
