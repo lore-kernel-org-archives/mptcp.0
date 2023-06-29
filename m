@@ -1,115 +1,127 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EB413AC3
-	for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 17:53:19 +0000 (UTC)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-51d9865b8a2so1067294a12.3
-        for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 10:53:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17871426A
+	for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 18:16:07 +0000 (UTC)
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-635d9e0aa6dso7680246d6.1
+        for <mptcp@lists.linux.dev>; Thu, 29 Jun 2023 11:16:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1688061198; x=1690653198;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w0KGin8P8UzYHrXYBMI1TPdIZpCpfDKKBy+hYnlPAPs=;
-        b=cRBzjDWpc3CXqZXyO6hu7pqs18O90f3zaE/AGHmcIbWPCw2GvtaNMBWmGgm3wINE4b
-         QaTMcAjEnwNFYJKnA5R9EThsBJLa8wuqbxQMTYOw7vU1DWd8AQptIYk4ayY6drX9Phta
-         tFtgFDI3cBD6ctvedlt2efoF8pNbjAp8InLdy1l6SO5rMFCD13TRz+Np8wmlWRWiQc9H
-         kXi70pzrJmQ4wzaayLbrNWmgoo61wk/vito5tk/6eYMV2jeaB1f4YsgI1+VozKjYCzeY
-         umrsTYYVRSEySY7/0B9dAup12JeRIQ3C4SyF2IPJVEMvfVJ+sZBCL1PKcn9jYk8LMQzU
-         UY9g==
+        d=gmail.com; s=20221208; t=1688062566; x=1690654566;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zC2NRPOd4ogvEdgvw9ZlI6fAFE9n3GkGOGebcENEMeo=;
+        b=oRHinIv45UEQgWRdR8J20hcsRxV7QNvG2OIfgbu+URQ82vz7LpViIjlJOACYofhyOD
+         CdNbfkQAY+wZnT/X2cmd0LXBvGIpsnASd1dcDrAgF9HlS3HcqvPRmu1UAf7II2F8yIM1
+         K1lEkM9OGsVicZ7/3OR98+4s+CJ4ky798hHzxSmLTeOVeg0piX6w7eLBYYxe7NCzqUhF
+         4HGz0I+q8rqSsWgvmoy2v8xTi7dstCVnfZoVZALqBn5N48yn9cMSyQ+xztgnkd5c1pcY
+         2wstdYKNhrNI67hDDS7b1NkipgrGR/6ItpPoWa9jxmlpyRpfyMzmKIQL6y6dA/S///ak
+         ICnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688061198; x=1690653198;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w0KGin8P8UzYHrXYBMI1TPdIZpCpfDKKBy+hYnlPAPs=;
-        b=dJjGA9znJeA3MpTpVZeioAfntJsi2cXHdo5dRRMRq9q9CdQiBzY12y0M+a6ngcJYlw
-         OUUcGAL6YI0Be6OCr/s3FriT8yTydEmu9ZPAA9iS7CRFTMgKYXa/fGffaS+plRoQ1NdB
-         QqwvTNCWXI0VaTBiMF4MqvA4pc+3UxUAdjAnFrlkXlpHEo1lbyQiQYbkh8ND4B+HBiWg
-         vl0cd2YjR8Iyyn6oXA6OLpmfzNBttqoxXCUEKfb/iC+/AhDHJMuGrzr32eDbkV2/3aN2
-         LCtkxeoojKvOavEO0i3uwCW2SYrpiCO1ZochQzSwJQh2UAX3uTa/ZuXJJF9JZ3Wac5vd
-         1DLg==
-X-Gm-Message-State: ABy/qLZ+Fyx8yISbMOaUE8ypmPDsZyl83mNRERxrSQOpmXtUkHe9riO/
-	MYY8ndz+ltxqtABax6hoioeMW1llw6/XisMMlhYImMLi
-X-Google-Smtp-Source: APBJJlFGH5UypUdQxERI0jUmFz51fqpSmykcuTLw6FtI/XutedhwCS+fCkrWOy63RtAHid7hL1Tgbg==
-X-Received: by 2002:aa7:d31a:0:b0:51d:d30c:f1e3 with SMTP id p26-20020aa7d31a000000b0051dd30cf1e3mr1676edq.16.1688061198205;
-        Thu, 29 Jun 2023 10:53:18 -0700 (PDT)
-Received: from [10.120.18.108] ([84.17.46.13])
-        by smtp.gmail.com with ESMTPSA id t4-20020a05640203c400b0051ded17b30bsm36910edw.40.2023.06.29.10.53.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Jun 2023 10:53:17 -0700 (PDT)
-Message-ID: <6dd48ce6-0673-9778-83fb-f5992e1876ba@tessares.net>
-Date: Thu, 29 Jun 2023 19:53:17 +0200
+        d=1e100.net; s=20221208; t=1688062566; x=1690654566;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=zC2NRPOd4ogvEdgvw9ZlI6fAFE9n3GkGOGebcENEMeo=;
+        b=ElMa9yvdHMuGCihfWwo+wkSgBXBBLxXkoTyaoKyy8OtmozAp1xHHrjBlC9f2BTYyrV
+         W5IwQD1mjdAzLFFCoCGpJd5jAJXnZvok/hUFc5sGhzOauO1nVLa1zGrtfCPfDL81EwuD
+         QsNNvur0LV0KS1XPycsMcvLxqWxOYAR2Pw7ycSArwFkk2cTpgRFfUIsqFlsMIavciuUn
+         k/HAozVjZmRXtCfiMCJmpEf9/u0gMQWhVsOxsMXJ2C4X27tQVfkw+1VVwKle8m2x+UtH
+         zva1a5XYLwwnjGPmHT2omhObma74tbNezQxwpKEEY7QxGaoS2AJEirAgQjGJl60R5xo9
+         pcgQ==
+X-Gm-Message-State: ABy/qLY4UQW4tUN4LCOPKSrzKoZDm1/IgMvzaj5R4B8BgK4myTzcWKdH
+	XGhyPeGBeNxnWwLnwOcpx8WNHWNLTw==
+X-Google-Smtp-Source: APBJJlGJRzyeBkDEOr9WROVydIjI0zQ6hdSwzuAjIOoNmApXtX433RT/s7/Oj/Z4IJJ59jzP73GhJA==
+X-Received: by 2002:a05:6214:27c4:b0:62d:f515:9320 with SMTP id ge4-20020a05621427c400b0062df5159320mr432417qvb.28.1688062566228;
+        Thu, 29 Jun 2023 11:16:06 -0700 (PDT)
+Received: from [127.0.0.1] ([20.57.69.196])
+        by smtp.gmail.com with ESMTPSA id z15-20020a0ce98f000000b006300ff90e71sm7240903qvn.122.2023.06.29.11.16.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jun 2023 11:16:05 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230628144927.828117-3-matthieu.baerts@tessares.net>
+References: <20230628144927.828117-3-matthieu.baerts@tessares.net>
+Subject: Re: selftests: mptcp: join: colored results: Tests Results
+Message-ID: <361182f2-0f10-1739-28d8-1cc5caa0e849@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 29 Jun 2023 18:16:05 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next 1/4] selftests: mptcp: reset all the env vars
-Content-Language: en-GB
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1688045383.git.geliang.tang@suse.com>
- <b0879a1289735ff45305ec2a7d159666b7b5219e.1688045383.git.geliang.tang@suse.com>
- <833abcfe-9639-7bf4-49f3-ddc301268a62@tessares.net>
-In-Reply-To: <833abcfe-9639-7bf4-49f3-ddc301268a62@tessares.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 29/06/2023 19:48, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> Thank you for looking at that!
-> 
-> On 29/06/2023 15:34, Geliang Tang wrote:
->> It's better to clear all the env vars in init_partial(), to let them be
->> reset before runing the next test.
->>
->> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index e6c9d5451c5b..b80c5e7b5a7b 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -101,6 +101,10 @@ init_partial()
->>  	check_invert=0
->>  	validate_checksum=$checksum
->>  	FAILING_LINKS=""
->> +	test_linkfail=0
->> +	addr_nr_ns1=0
->> +	addr_nr_ns2=0
->> +	sflags=""
-> 
-> I think it would be better to move the declaration of these variables to
-> do_transfer() (or run_tests()) instead of exporting them at the
-> beginning of the file, no?
-> 
-> You could do something like:
-> 
->   local test_linkfail=${test_linkfail:-0}
-> 
-> So by default, it will have the value 0. But if you do
-> 
->   tests_linkfail=3 \
->       run_tests (...)
-> 
-> It will have the value 3 just for this test. WDYT?
-> 
-> It looks better than defining the variables globally and resetting them
-> elsewhere.
+Hi Matthieu,
 
-I forgot to say that apart from that (and it is also valid for the new
-variables you add in the other patches and even FAILING_LINKS (and maybe
-others)), the other modifications you did look good!
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- {"code":404,"message":
+  - "Can't find artifacts containing file =
+conclusion.txt"}:
+  - Task: https://cirrus-ci.com/task/6585027727720448
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6585027727720448/su=
+mmary/summary.txt
+
+- {"code":404,"message":
+  - "Can't find artifacts =
+containing file conclusion.txt"}:
+  - Task: https://cirrus-ci.=
+com/task/5368007371784192
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5368007371784192/summary/summary.txt
+
+- {"code":404,"message":
+  - "Can't find artifacts containing file =
+conclusion.txt"}:
+  - Task: https://cirrus-ci.com/task/5917564174336000
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5917564174336000/su=
+mmary/summary.txt
+
+- {"code":404,"message":
+  - "Can't find artifacts =
+containing file conclusion.txt"}:
+  - Task: https://cirrus-ci.=
+com/task/5842187364073472
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5842187364073472/summary/summary.txt
+
+Initiator: Matthieu Baerts
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/07c93e69ca2a
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
