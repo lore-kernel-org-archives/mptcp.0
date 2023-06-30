@@ -1,45 +1,45 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DBB16400
-	for <mptcp@lists.linux.dev>; Fri, 30 Jun 2023 15:00:58 +0000 (UTC)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-9891c73e0fbso342715566b.1
-        for <mptcp@lists.linux.dev>; Fri, 30 Jun 2023 08:00:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1742B168A3
+	for <mptcp@lists.linux.dev>; Fri, 30 Jun 2023 16:03:04 +0000 (UTC)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-4fb9fd28025so2570261e87.2
+        for <mptcp@lists.linux.dev>; Fri, 30 Jun 2023 09:03:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1688137256; x=1690729256;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        d=tessares.net; s=google; t=1688140982; x=1690732982;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=BTnTdp2Ze72oKlA23SNBEUbhM7oM+r6P2xd924ODGac=;
-        b=xbEXArkY36d6BnqObTD9DNeqHgEhlZCOQd3nZAK8rvagW8Jt1Vy5ysg7nb4d7NB7fr
-         hMbW111yrylPKORyuAXMAfon9C63sheO3tg54f7WHAewY2yP32VKElbyywo0ZyBBjzcC
-         s0R3RMnhqhnQ5zIBzZtGMAkV7WyxSuk9ioBJ9QyKPF4+/MZDuRZTmoBYAl7KXN1KAjot
-         MxMpaStvnl3rlQVYQ/UZ3kvmxV8T38BJ4pCL1aOdob60hKJuAonU3yjojudMYRiJLiZD
-         GoPCRkb+ej6qcIpGYIJVIrIotwXbx7CtPRvu/cm8tGB8wFGcbhKAB4ce2y9eK5ILGBC4
-         p7Pw==
+        bh=ZVgOz9x0rbCFFbKPE7AT3Y0wyF4LoN0D2krwUaiVo8Q=;
+        b=xFQXxj5k/gMaCis6UOlEZMxh54WOVgkikGuJMi39eIyJzhmUcRyslkbN/ji6dSc3pV
+         EtiSJ6XrhVq5ytsKHuJkoErDtCcETkR+sxoDbOeZeRFdXgGHTAUB1kzFiPP+P2D7ht5e
+         SYAY8pLyTT2YH30Zvi/+8hp4yKoXglXOlpGn0aAKcd8GMYqv/+Pw1tSUumz+Gz04GMux
+         3QOUrNKBlITJPEhc9rogrj/BZV9gU+JYdl9l0sYsdn1XknYsOANKbZHm8bxu6xsLSYqp
+         wy85IfsMHZUzw35YkUVVR6avPRS4PWI0NTsnKACCIMqY9X2eaRqVJ19JCmWktXcKjdvv
+         Qpfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688137256; x=1690729256;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        d=1e100.net; s=20221208; t=1688140982; x=1690732982;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BTnTdp2Ze72oKlA23SNBEUbhM7oM+r6P2xd924ODGac=;
-        b=A48FKbHTzARwo7V8ZW5KwT2ErD8J/I4T97pIYHysCOEwN+Svn7Zzo0LPVFXV6rzwr8
-         OtzX1rnfAMpwWVqSG35Vf+xzRzqy9LXS8TZeVw/9Z0QqacvBrEGud9SrIl8zuNtNaRfr
-         5GJSc4MNj6HuVIM1Pi+Kpjnu5eSewkNwal+5Wd+7l1A9Ytq1IIyBs98IBtuzDSkIetZA
-         WM5iASA8O4qsPO2gl//SO7P5dTYxp0bU2tTaIjYtrgojLZqtHKBb2JTasNo4lRKVA66u
-         kKGvQTIZHdRkgroBFtXyacx47QjjBClzmaPokPhoSsX/FnBOi4TcmFQDJ7Msobggahy8
-         IbOg==
-X-Gm-Message-State: ABy/qLb1sm6z9km8I9t4uWB1yEEXDEAlJZ0QIy3Ugrb3QCyCwtWsesm6
-	pAZ++gq5p5M0DsW1f9CvzVF75leYg6HGPyms60kuNng0
-X-Google-Smtp-Source: APBJJlEkTBkPfGXq8IAaUAUqviI011BYXHEIbNrWLvaVm7BYnxBrrY8WsOWFaVaKY1UoJ36mi4szmg==
-X-Received: by 2002:a17:906:830b:b0:988:15f4:fdba with SMTP id j11-20020a170906830b00b0098815f4fdbamr2883455ejx.14.1688137256344;
-        Fri, 30 Jun 2023 08:00:56 -0700 (PDT)
+        bh=ZVgOz9x0rbCFFbKPE7AT3Y0wyF4LoN0D2krwUaiVo8Q=;
+        b=kJNjtejFZxizt6ATqhe+7FBy6ShuwagEor7+QibxUuk3kXQhIm+QsWVfd/r+s0IQTD
+         2ZJ4g0JBcmUSd/Li0weo2JIOUpAvBlq/P7jGLorApF8xxeCwMKKUT0Yj08Os0B2CoMBM
+         9GnFt1yexsuh0xiV+c2HuURVB1NeiEMKNGoucHnl6tgQJntsI4P7sSVVVh0/m/6uqriN
+         RujvMUtNXDVkDFtEiBrKQglQoLQ57yLCshiJO95m8EsQaz/nbEVB8kzl7ffuiYZCdf0g
+         fIgyymf9fSCu6SyUWWQsvkE2kTVbRRCS77Ow+w2Dq5IWBy3F7Rop8l88E05zdvD0TrBt
+         Um5A==
+X-Gm-Message-State: ABy/qLYaKDMeeWXX3rgv1ut8fS8rTgTDcPqC2ckDWQkHr8Sl1oArQNI3
+	gn9ud2qRHh1ZKJjqyTb3gsuCRA==
+X-Google-Smtp-Source: APBJJlHgL9JWdGgbqyl7mydKZUX6JfuX3KTyBKvnY+D07zOO46zlyEttPQ/YEN9xN3DGalp6TV6shg==
+X-Received: by 2002:a05:6512:70c:b0:4fb:7b2a:78de with SMTP id b12-20020a056512070c00b004fb7b2a78demr2502015lfs.45.1688140982346;
+        Fri, 30 Jun 2023 09:03:02 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id w23-20020a17090633d700b0098cf565d98asm8020327eja.22.2023.06.30.08.00.55
+        by smtp.gmail.com with ESMTPSA id b18-20020aa7d492000000b0051da4b5bc8fsm4085227edr.20.2023.06.30.09.03.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Jun 2023 08:00:56 -0700 (PDT)
-Message-ID: <10c549f6-c83c-1a4c-415f-e2292dedb940@tessares.net>
-Date: Fri, 30 Jun 2023 17:00:55 +0200
+        Fri, 30 Jun 2023 09:03:02 -0700 (PDT)
+Message-ID: <724f9aa6-b66a-700c-a411-5aa19768af53@tessares.net>
+Date: Fri, 30 Jun 2023 18:03:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,172 +48,144 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next 14/18] selftests: mptcp: join: format subtests
- results in TAP
+Subject: Re: [PATCH iperf3] add MPTCPv1 support
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <20230621-mptcp-issue-368-selftests-subtests-v1-0-0cae453ae1fa@tessares.net>
- <20230621-mptcp-issue-368-selftests-subtests-v1-14-0cae453ae1fa@tessares.net>
- <7dad11d32d2f6afb1f27a1a730f1976164b188b1.camel@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>
+References: <298b8a39788b5b24db3abdce70323cc5a17dcbd1.1687843228.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <7dad11d32d2f6afb1f27a1a730f1976164b188b1.camel@redhat.com>
+In-Reply-To: <298b8a39788b5b24db3abdce70323cc5a17dcbd1.1687843228.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Geliang,
 
-Thank you for the reviews!
+Thank you for this, that would be helpful!
 
-On 30/06/2023 13:08, Paolo Abeni wrote:
-> On Wed, 2023-06-21 at 19:18 +0200, Matthieu Baerts wrote:
->> The current selftests infrastructure formats the results in TAP 13. This
->> version doesn't support subtests and only the end result of each
->> selftest is taken into account. It means that a single issue in a
->> subtest of a selftest containing multiple subtests forces the whole
->> selftest to be marked as failed. It also means that subtests results are
->> not tracked by CIs executing selftests.
->>
->> MPTCP selftests run hundreds of various subtests. It is then important
->> to track each of them and not one result per selftest.
->>
->> It is particularly interesting to do that when validating stable kernels
->> with the last version of the test suite: tests might fail because a
->> feature is not supported but the test didn't skip that part. In this
->> case, if subtests are not tracked, the whole selftest will be marked as
->> failed making the other subtests useless because their results are
->> ignored.
->>
->> This patch formats subtests results in TAP in mptcp_join.sh selftest.
->>
->> In this selftest and before starting each subtest, the 'reset' function
->> is called. We can then check if the previous test has passed, failed or
->> has been skipped from there.
->>
->> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 41 ++++++++++++++++++++-----
->>  1 file changed, 33 insertions(+), 8 deletions(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index e6c9d5451c5b..5c5c8b5e068f 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -39,7 +39,9 @@ evts_ns1=""
->>  evts_ns2=""
->>  evts_ns1_pid=0
->>  evts_ns2_pid=0
->> -stats_dumped=0
->> +last_test_failed=0
->> +last_test_skipped=0
->> +last_test_ignored=1
->>  
->>  declare -A all_tests
->>  declare -a only_tests_ids
->> @@ -97,7 +99,6 @@ init_partial()
->>  		fi
->>  	done
->>  
->> -	stats_dumped=0
->>  	check_invert=0
->>  	validate_checksum=$checksum
->>  	FAILING_LINKS=""
->> @@ -162,9 +163,7 @@ check_tools()
->>  	elif ! iptables -V &> /dev/null; then
->>  		echo "SKIP: Could not run all tests without iptables tool"
->>  		exit $ksft_skip
->> -	fi
->> -
->> -	if ! ip6tables -V &> /dev/null; then
->> +	elif ! ip6tables -V &> /dev/null; then
+The code looks good to me, I just have one suggestion for the commit
+message, one "typo" with the alignment and one small suggestion in the
+code. Please see below.
+
+I think you can create a new PR on esnet/iperf repo (and mention it
+replaces the one of Paolo).
+
+
+On 27/06/2023 07:20, Geliang Tang wrote:
+> The Multipath TCP (MPTCP) protocol (v1 / RFC 8684) has been added in the
+> upstream Linux kernel since v5.16.
 > 
-> The above chunk looks unrelated/unnecessary ?!? after the
+> MPTCP is strongly tied to TCP, and the kernel APIs are almost the same.
+> The only required dependency is the 'IPPROTO_MPTCP' protocol number
+> definition, which should be provided by the netinet/in.h header.
+
+I quickly looked at the comments that have been posted on Paolo's PR on
+Github and it looks like the blocking one was that the configure.ac file
+has not been modified to check if the feature was available or not.
+
+I think you should mention in the commit message that there is no need
+to check for IPPROTO_MPTCP support in configure.ac at build time, it is
+at runtime we will see if the kernel being use supports or not MPTCP.
+
+If IPPROTO_MPTCP is not supported by the kernel being tested, it is
+normal to fail because the feature is not available.
+
+The only thing I see we could do is to restrict this feature to Linux
+builds. But this can be done later if they ask for it I guess.
+
+> This patch adds a new flag --mptcp to support MPTCPv1. It can be used
+> like this:
 > 
-> 		exit $ksft_skip
+>  > iperf3 --mptcp -s
+>  > iperf3 --mptcp -c 127.0.0.1
 > 
-> above, we neither 'if' nor 'elif' will be executed ??!
-
-It is indeed a bit unrelated, it is just a small fix. Before, we had:
-
-  if iptables-legacy -V; then
-      iptables="iptables-legacy"
-      ip6tables="ip6tables-legacy"
-  elif ! iptables -V; then
-      exit error
-  fi
-
-  if ! ip6tables -V; then
-      exit error
-  fi
-
-if iptables-legacy is available, we will use "ip6tables-legacy" command
-instead of "ip6tables". So no need to look for "ip6tables" command we
-will not use (hence the "elif" instead of the "if").
-
-But I can also drop this chunk if you prefer.
-
-
->>  		echo "SKIP: Could not run all tests without ip6tables tool"
->>  		exit $ksft_skip
->>  	fi
->> @@ -213,6 +212,8 @@ mark_as_skipped()
->>  
->>  	print_title "[ skip ] ${msg}"
->>  	printf "\n"
->> +
->> +	last_test_skipped=1
->>  }
->>  
->>  # $@: condition
->> @@ -245,14 +246,32 @@ skip_test()
->>  	return 0
->>  }
->>  
->> +append_prev_results()
->> +{
->> +	if [ ${last_test_failed} -eq 1 ]; then
->> +		mptcp_lib_result_fail "${TEST_NAME}"
->> +	elif [ ${last_test_skipped} -eq 1 ]; then
->> +		mptcp_lib_result_skip "${TEST_NAME}"
->> +	elif [ ${last_test_ignored} -ne 1 ]; then
->> +		mptcp_lib_result_pass "${TEST_NAME}"
->> +	fi
->> +
->> +	last_test_failed=0
->> +	last_test_skipped=0
->> +	last_test_ignored=0
->> +}
->> +
->>  # $1: test name
->>  reset()
->>  {
->> +	append_prev_results
+> Linked: https://github.com/esnet/iperf/pull/1166
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  src/iperf.h            |  5 +++++
+>  src/iperf_api.c        |  4 ++++
+>  src/iperf_api.h        |  1 +
+>  src/iperf_client_api.c |  2 +-
+>  src/iperf_locale.c     |  1 +
+>  src/iperf_tcp.c        |  4 ++--
+>  src/iperf_tcp.h        |  1 -
+>  src/iperf_udp.c        |  2 +-
+>  src/net.c              | 14 +++++++-------
+>  src/net.h              |  4 ++--
+>  10 files changed, 24 insertions(+), 14 deletions(-)
 > 
-> Can't we dump the previous sub-test result here in tap format (when/if
-> enabled) instead of dumping them all at the end?
+> diff --git a/src/iperf.h b/src/iperf.h
+> index 0051a30..89af39b 100644
+> --- a/src/iperf.h
+> +++ b/src/iperf.h
+> @@ -63,6 +63,10 @@
+>  # endif
+>  #endif
+>  
+> +#ifndef IPPROTO_MPTCP
+> +#define IPPROTO_MPTCP 262
+> +#endif
+> +
+>  #include "timer.h"
+>  #include "queue.h"
+>  #include "cjson.h"
+> @@ -167,6 +171,7 @@ struct iperf_settings
+>      int       idle_timeout;         /* server idle time timeout */
+>      unsigned int snd_timeout; /* Timeout for sending tcp messages in active mode, in us */
+>      struct iperf_time rcv_timeout;  /* Timeout for receiving messages in active mode, in us */
+> +    int       mptcp;
+>  };
+>  
+>  struct iperf_test;
+> diff --git a/src/iperf_api.c b/src/iperf_api.c
+> index a2cd53a..e19ca38 100644
+> --- a/src/iperf_api.c
+> +++ b/src/iperf_api.c
+> @@ -1104,6 +1104,7 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
+>          {"idle-timeout", required_argument, NULL, OPT_IDLE_TIMEOUT},
+>          {"rcv-timeout", required_argument, NULL, OPT_RCV_TIMEOUT},
+>          {"snd-timeout", required_argument, NULL, OPT_SND_TIMEOUT},
+> +        {"mptcp", no_argument, NULL, OPT_MPTCP},
+>          {"debug", optional_argument, NULL, 'd'},
+>          {"help", no_argument, NULL, 'h'},
+>          {NULL, 0, NULL, 0}
+> @@ -1594,6 +1595,9 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
+>  		test->settings->connect_timeout = unit_atoi(optarg);
+>  		client_flag = 1;
+>  		break;
+> +            case OPT_MPTCP:
+> +                test->settings->mptcp = 1;
+> +                break;
 
-I guess we can: Linaro's script should catch the different subtests. But
-I don't think we should do that: from what I understood to be TAP 13
-compliant, we are supposed to write the "test plan" before displaying
-the results: so we need one line indicating the number of tests that are
-going to be done (e.g. "1..115") and before starting the first test, we
-don't know how many tests will be executed yet.
+It looks like you used spaces instead of tabs here.
 
-Also, if it is printed at the end, I can easily extract this TAP 13
-results into a dedicated file and feed it to a tracking system. I
-already added the extraction, you can see the results in the
-"tap_result" directory in cirrus-ci, e.g. for mptcp_join:
+(the whole iperf3 code doesn't look like they are using one or the other
+in a consistent way but I guess it is best to imitate what is done here
+just above/below)
 
-  - global (like before):
-https://api.cirrus-ci.com/v1/artifact/task/6071439883763712/tap_result/selftest_mptcp_join.tap
-  - subtests:
-https://api.cirrus-ci.com/v1/artifact/task/6071439883763712/tap_result/selftest_mptcp_join_subtests.tap
+>  	    case 'h':
+>  		usage_long(stdout);
+>  		exit(0);
 
-If we want to track subtests with existing TAP parsers, I think it would
-be better to keep the results at the end if that's OK.
+(...)
 
-Don't forget we can easily set SELFTESTS_MPTCP_LIB_NO_TAP=1 not to have
-this output. I would recommend to put that in a zshrc/bashrc/... :)
+> --- a/src/net.h
+> +++ b/src/net.h
+> @@ -28,8 +28,8 @@
+>  #define __NET_H
+>  
+>  int timeout_connect(int s, const struct sockaddr *name, socklen_t namelen, int timeout);
+> -int create_socket(int domain, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, struct addrinfo **server_res_out);
+> -int netdial(int domain, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, int timeout);
+> +int create_socket(int domain, int type, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, struct addrinfo **server_res_out);
+> +int netdial(int domain, int type, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, int timeout);
+>  int netannounce(int domain, int proto, const char *local, const char *bind_dev, int port);
+
+I don't know if you should rename proto to type in netannounce() as well
+just for consistency reasons. Up to you
+
+>  int Nread(int fd, char *buf, size_t count, int prot);
+>  int Nwrite(int fd, const char *buf, size_t count, int prot) /* __attribute__((hot)) */;
 
 Cheers,
 Matt
