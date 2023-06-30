@@ -1,104 +1,125 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39011FB8
-	for <mptcp@lists.linux.dev>; Fri, 30 Jun 2023 09:24:45 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-51d9890f368so1785736a12.2
-        for <mptcp@lists.linux.dev>; Fri, 30 Jun 2023 02:24:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4CF101C7
+	for <mptcp@lists.linux.dev>; Fri, 30 Jun 2023 10:25:15 +0000 (UTC)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-666e6541c98so1456357b3a.2
+        for <mptcp@lists.linux.dev>; Fri, 30 Jun 2023 03:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1688117083; x=1690709083;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X15+5kgPHp0lkBfz7qMXE5Aheh7QBhUWd/SqO44qOcE=;
-        b=5DoAsdHBlCXiV9I1R0jO5KEsU62KPqyVlzKRHGZMV7/Mn94SPA+idhMi/6Gi3WMthz
-         X3uZCM+29nHzbloKLeS7e9gneoxlcVdkmghbLsPBC4OsHcjz+rK+CG5YEsOktkx7SYqr
-         uoNh9JCdowyX7NnbvDIia7+hsFG+uz0s66L30dentzugPntgQXXP0Z9vlmoBCd6Hdmd2
-         Lh0u7NQOoxigodANPWysVOFv5hxN0BU3K/fKxLUMgu/UtzE9s4w5aHhwTYJF2n2ek945
-         wJI42crUk4yIXSWxhWUPGs16fwnj5/v/m8+8Q0qp0n04sp0hdXRusMDqMmO1J6R+tHN4
-         u74w==
+        d=gmail.com; s=20221208; t=1688120715; x=1690712715;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N7s/nQgGYue/c7JOQuifXRV9tQQ3+HxoDCi5KosKM0c=;
+        b=JIfR6d++boz754kqdngiJf+s8O1R24piMQ+huLAl7wIXLJOXukfwIqbum1KDb9lbqf
+         DLXgaIzN/QaCNKxtsm5PTCDi+flQs5FHpu2vn+6GsjRSwRc+jkPN0+TeTs+EgfUZUA6b
+         TRlhoI5UbiChl9HQUnMhy6+yiD1RZIz7mh2mZVBv2j13f8VI9PRj22dvIODFN+PozKD2
+         yfIm4QXmGMXbmAgufhAD0MxBz5nbAtEFYFNWSMhdN7BnXl3793Nyvu4xkQSfK/1EuwEd
+         4H+wag3YmfqFgRsW0TaT2mMpLDfW8pPozrQZkb20UdNqmLLrTX0PlZxf0oIt5qg+Suvt
+         0xXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688117083; x=1690709083;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X15+5kgPHp0lkBfz7qMXE5Aheh7QBhUWd/SqO44qOcE=;
-        b=Re8cIeHfmCNdggYYOVp3sFfHlQ4paET74SME52TI3S9kZLhJh5Vgyo1UlUWUhcKp8z
-         hbh9srSJe+GJWYibMXN0kUHPm8D4hE8Rkmz7HZYgzZBtZ5j4VqhQi2bSD42ShB84wFFS
-         A0g/Rz9Vk+OGqTRPRSjaf7HG4R+4X5mxUaKQM0V0s//L3QiHYANu6XtUIi8RzOUO/39c
-         T6sda65c1LOP5Cp3SywF1c2qp0XougFV5jaVyfIewD8qctrPgSXF4ZrjfECmtrsVDGs0
-         SXRHyGm0yN23BNBX/lSMSu7+nYYh+9lJ7ZDpQHf5QwjPKs8Z8OUUg1nmCdesIVURczf6
-         odwg==
-X-Gm-Message-State: ABy/qLbVKHxM5rESz0CERRbXKluvXb5NICCfxGFdpp+EwSiFcJbqvcrf
-	VgO2pScEN1ekl3k6e+o2/3zDd+VYTg7wFMoIqg7wcPcY
-X-Google-Smtp-Source: APBJJlHqEailZHdmTUArFdsp05aAvpUUe9CIsnzHClup3rOe+XpG4pgDcnuW1tganT9OoA4YZT4MSw==
-X-Received: by 2002:aa7:d04d:0:b0:51d:91ef:c836 with SMTP id n13-20020aa7d04d000000b0051d91efc836mr1149258edo.32.1688117083577;
-        Fri, 30 Jun 2023 02:24:43 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id f4-20020a056402004400b0051d9de03516sm4431953edu.52.2023.06.30.02.24.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Jun 2023 02:24:43 -0700 (PDT)
-Message-ID: <484eecec-bd6c-e3cc-0519-5e66d1d609f8@tessares.net>
-Date: Fri, 30 Jun 2023 11:24:42 +0200
+        d=1e100.net; s=20221208; t=1688120715; x=1690712715;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=N7s/nQgGYue/c7JOQuifXRV9tQQ3+HxoDCi5KosKM0c=;
+        b=h6bIgFTdwz8IJuDKLx8aQ7ofAIs/QeWPUtuOW/FZGgzfctsNe8jpxWwuRsyhVczZcC
+         ynZYA86519+WjyNmoZJA7IsPqYcjRa/ZjBv+YHL+HxfUfkcpClAOHR+5pWwbytlUjcZd
+         I1giNXCyGF8ZYy6zYU/aul77nG7o9Llc3SC9+auwjbFHOkJbbU4o6Mgs+usWva/TkKWp
+         sXwutEhrNl0+8dNv/DO8T5Na3RqaeLw6TdqLWwyW+N7ZjT1qfprdjW1LccTwr3WOnXdX
+         d/UdEE+mNp6s+c5wiRqDJt/9oB/16hIJbP8OIWE1lYqXytb6ZqBIY8hr7uaqYHFInbob
+         ftng==
+X-Gm-Message-State: ABy/qLbe8c+JmeN+Ft+ZrsMobFtJhkiTCiEFfRG767FsuSU+evzmTSfe
+	jZWqO4gsB0PfMIVsa0QZPg==
+X-Google-Smtp-Source: APBJJlEvRMNLpYcy8pLFChmc1DRJ5sP4ozzyIQlXh0BxhbZsSLEKyjZdi1PC6SXsGnBbfDnvGltUlw==
+X-Received: by 2002:a05:6a20:1005:b0:129:6cc:921d with SMTP id gs5-20020a056a20100500b0012906cc921dmr1964028pzc.54.1688120714820;
+        Fri, 30 Jun 2023 03:25:14 -0700 (PDT)
+Received: from [127.0.0.1] ([40.83.243.142])
+        by smtp.gmail.com with ESMTPSA id t18-20020aa79392000000b0067e985d2526sm5226460pfe.149.2023.06.30.03.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Jun 2023 03:25:14 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <d0352b2b949544ce4b87ceeec55109fe22f1fc26.1688092826.git.geliang.tang@suse.com>
+References:
+ <d0352b2b949544ce4b87ceeec55109fe22f1fc26.1688092826.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: add speed env var: Tests Results
+Message-ID: <e596772d-244e-26b6-b799-61548b4688d6@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 30 Jun 2023 10:25:13 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next v2 0/4] update userspace pm mptcp_info fields
- part 3
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1688092826.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1688092826.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 30/06/2023 04:42, Geliang Tang wrote:
-> v2:
->  - set all env vars as local ones as Matt suggested.
->  - update the commit logs.
-> 
-> v1:
-> - add three new env vars
-> - Patch 10 "selftests: mptcp: set endpoint out of transfer" of part 2
->  v20 is dropped.
-> 
-> Geliang Tang (4):
->   selftests: mptcp: set all env vars as local ones
->   selftests: mptcp: add fastclose env var
->   selftests: mptcp: add fullmesh env var
->   selftests: mptcp: add speed env var
+Thank you for your modifications, that's great!
 
-Thank you for the patches!
+Our CI did some validations and here is its report:
 
-Now in our tree (feat. for net-next) with the modification I suggested,
-see below:
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6734880143310848
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6734880143310848/summary/summary.txt
 
-New patches for t/upstream:
-- b7165f898f6a: selftests: mptcp: set all env vars as local ones
-- 9e29d1329e0c: selftests: mptcp: add fastclose env var
-- ee74b5fd49ee: selftests: mptcp: add fullmesh env var
-- 9b7ce494fb4e: selftests: mptcp: add speed env var
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5098806841180160
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5098806841180160/su=
+mmary/summary.txt
 
-- f2fafad6ed72: Squash to "selftests: mptcp: set all env vars as local ones"
-- 092b9bcfc8a3: conflict in t/selftests-mptcp-add-fastclose-env-var
-- 10c23ed7ed13: conflict in t/selftests-mptcp-add-fullmesh-env-var
-- d78d7b90ed35: conflict in t/selftests-mptcp-add-speed-env-var
-- Results: 89daa1420390..d7082226044f (export)
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_sockopts =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6526733881442304
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6526733881442304/su=
+mmary/summary.txt
 
-Tests are now in progress:
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4535856887758848
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4535856887758848/summary/summary.txt
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230630T092326
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/85388c998948
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
