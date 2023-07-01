@@ -1,126 +1,131 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEE9BE61
-	for <mptcp@lists.linux.dev>; Sat,  1 Jul 2023 14:02:35 +0000 (UTC)
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-676f16e0bc4so1444316b3a.0
-        for <mptcp@lists.linux.dev>; Sat, 01 Jul 2023 07:02:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688220155; x=1690812155;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XEzkC3e79Aa5HfLr8pY+ri8HMs3NJhV8Sgs8m6RponI=;
-        b=pdQ84gvbWutJTb2ru6ciqcF9+ZBD4ybNW+h4dTsql7FG5+nwxe7FrKvP1OnoO1/IKS
-         pLlBIfXIc+ffsrkXBW5wnXzRSDGWEb5eIRJYpfugWtmFx2bycTe728GODP66Q3mozOIh
-         YCoF6/4jsww3a21YHhSQcnO19E7vgxfjIZwu4KHk4OVsLA+T2ywQocZGFh3SkGTiCsfq
-         XFsYnZJO5XujWk1IA4zPh9FRysaCF5m+PAeoGMdQ0b7cMUeoKbKi5V4/0t6KBa27T7LI
-         Ao9oNtlkYcwZ4W/sDDU7/WB6WVG6UUR4c7SN8hiQdniByzE2h7MvbtCqMjdLCZGcUQmY
-         LaGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688220155; x=1690812155;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XEzkC3e79Aa5HfLr8pY+ri8HMs3NJhV8Sgs8m6RponI=;
-        b=M4LxfDFwkDDCGkCFonhJ9zWJzJS0yyWoBSpIakY8cgeRdePOCM02kK7GBEBSy0ykR0
-         XiOOt3KwmLjbBuC5BpLapUHCMEPzyFNmy9Zs3YGS5y7KYP560H6G2qEY3HvtUmbvuoYo
-         BlW0KLMRI0x7tbvdz4Jp3j0+lfN58CLsJnNqN9db1p//TMLZdnUmVwBU+7EdWEFokicB
-         YJAFecqcBCYU7o2jYQBWAtMUB2kS5xbhDNQfH7CtcdaFwL29uZrYfc4Tr/Gypg2217s6
-         e36IVurDqAgeRnrwfifZIi9C1ikDdRlTYD++1m8+3OTwOJXufXB4vpCbWD/a9D3hjZrU
-         QUxg==
-X-Gm-Message-State: AC+VfDwqixJqTjKtQzvksEgWhoc3fo1d2uQDQb2dcwB4uzfEcFoxOmOc
-	6Lumss0iH9H3L8ghbcL1ngkvvxWv9A==
-X-Google-Smtp-Source: ACHHUZ5kGOjPo9w1XgJLVsqLLtyEsvu7Yteay+eVo8r+7UFiKN/ocOkROo+BvJA1Fug0or/Cx9/ePw==
-X-Received: by 2002:a05:6a20:1446:b0:123:828f:68c with SMTP id a6-20020a056a20144600b00123828f068cmr4318829pzi.50.1688220155081;
-        Sat, 01 Jul 2023 07:02:35 -0700 (PDT)
-Received: from [127.0.0.1] ([138.91.87.31])
-        by smtp.gmail.com with ESMTPSA id c26-20020aa78e1a000000b0063f2a5a59d1sm11631393pfr.190.2023.07.01.07.02.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Jul 2023 07:02:34 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <56db1c21d35a76ebc9cc6017da64b30add33304e.1688215769.git.geliang.tang@suse.com>
-References:
- <56db1c21d35a76ebc9cc6017da64b30add33304e.1688215769.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: Add mptcpify selftest: Tests Results
-Message-ID: <01906f98-2d8c-8115-7c68-e486e77669a9@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 01 Jul 2023 14:02:33 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A59C2F0;
+	Sat,  1 Jul 2023 15:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1688225599; x=1719761599;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cWoweqh9HQSy9DFcbzQtkZLBs5ouuH7UKskhKJv6tIk=;
+  b=nes7X3AXDqKrQCF+Sf7/qJdMcgEdGEHQuO3sD5auSOgq//Sv4JxoPpzw
+   JskEimgdVK0g9WQsjBVXhzfHmOUEhx9ZtqGbFgef0Ek1LcJBmvJgZuwPJ
+   ljv8CccPQW5k54Xnh8Vq6ZGJkuFoGy4IcLrj5jKklOwpeQtkhl22bv4vq
+   LeazuXCV7A88uIEikXt4A2mhl7T6zN6GoEgnV/PqyO1LGD1jfr55xmTUc
+   dmsJb/WHRvxJHRyWzynTmmHaHFgjy+Hj3Jyz3HZ71cmfRJAeV6xwh8ffY
+   glWGmhfSN9uMd0s+5akCH71kCrlS98qbtKYJ0+ne5qIpaC5k2sGbZ7w9j
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10758"; a="342191815"
+X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
+   d="scan'208";a="342191815"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2023 08:33:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10758"; a="842203981"
+X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
+   d="scan'208";a="842203981"
+Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 01 Jul 2023 08:33:15 -0700
+Received: from kbuild by 783282924a45 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qFcb4-000G6D-0M;
+	Sat, 01 Jul 2023 15:33:14 +0000
+Date: Sat, 1 Jul 2023 23:32:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v2 2/4] bpf: Add bpf_mptcpify helper
+Message-ID: <202307012313.1sND4cvO-lkp@intel.com>
+References: <daf3d1e26f19ee83b427ef9e17183cd09fc26de6.1688215769.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <daf3d1e26f19ee83b427ef9e17183cd09fc26de6.1688215769.git.geliang.tang@suse.com>
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+kernel test robot noticed the following build errors:
 
-Our CI did some validations and here is its report:
+[auto build test ERROR on mptcp/export]
+[also build test ERROR on mptcp/export-net linus/master v6.4 next-20230630]
+[cannot apply to bpf-next/master bpf/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6011347134054400
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6011347134054400/summary/summary.txt
+url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/Squash-to-selftests-bpf-add-two-mptcp-netns-helpers/20230701-205922
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+patch link:    https://lore.kernel.org/r/daf3d1e26f19ee83b427ef9e17183cd09fc26de6.1688215769.git.geliang.tang%40suse.com
+patch subject: [PATCH mptcp-next v2 2/4] bpf: Add bpf_mptcpify helper
+config: x86_64-buildonly-randconfig-r001-20230701 (https://download.01.org/0day-ci/archive/20230701/202307012313.1sND4cvO-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230701/202307012313.1sND4cvO-lkp@intel.com/reproduce)
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6574297087475712
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6574297087475712/summary/summary.txt
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202307012313.1sND4cvO-lkp@intel.com/
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/4744709738856448
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4744709738856448/su=
-mmary/summary.txt
+All errors (new ones prefixed by >>):
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5448397180633088
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5448397180633088/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/c3be2bbd7a11
+   ld: kernel/bpf/cgroup.o: in function `cgroup_common_func_proto':
+>> kernel/bpf/cgroup.c:2512: undefined reference to `bpf_mptcpify_proto'
 
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+vim +2512 kernel/bpf/cgroup.c
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2507  
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2508  /* Common helpers for cgroup hooks. */
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2509  const struct bpf_func_proto *
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2510  cgroup_common_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2511  {
+dea6a4e1701338 Stanislav Fomichev 2022-08-23 @2512  	switch (func_id) {
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2513  	case BPF_FUNC_get_local_storage:
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2514  		return &bpf_get_local_storage_proto;
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2515  	case BPF_FUNC_get_retval:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2516  		switch (prog->expected_attach_type) {
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2517  		case BPF_CGROUP_INET_INGRESS:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2518  		case BPF_CGROUP_INET_EGRESS:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2519  		case BPF_CGROUP_SOCK_OPS:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2520  		case BPF_CGROUP_UDP4_RECVMSG:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2521  		case BPF_CGROUP_UDP6_RECVMSG:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2522  		case BPF_CGROUP_INET4_GETPEERNAME:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2523  		case BPF_CGROUP_INET6_GETPEERNAME:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2524  		case BPF_CGROUP_INET4_GETSOCKNAME:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2525  		case BPF_CGROUP_INET6_GETSOCKNAME:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2526  			return NULL;
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2527  		default:
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2528  			return &bpf_get_retval_proto;
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2529  		}
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2530  	case BPF_FUNC_set_retval:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2531  		switch (prog->expected_attach_type) {
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2532  		case BPF_CGROUP_INET_INGRESS:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2533  		case BPF_CGROUP_INET_EGRESS:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2534  		case BPF_CGROUP_SOCK_OPS:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2535  		case BPF_CGROUP_UDP4_RECVMSG:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2536  		case BPF_CGROUP_UDP6_RECVMSG:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2537  		case BPF_CGROUP_INET4_GETPEERNAME:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2538  		case BPF_CGROUP_INET6_GETPEERNAME:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2539  		case BPF_CGROUP_INET4_GETSOCKNAME:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2540  		case BPF_CGROUP_INET6_GETSOCKNAME:
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2541  			return NULL;
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2542  		default:
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2543  			return &bpf_set_retval_proto;
+bed89185af0de0 Stanislav Fomichev 2022-08-23  2544  		}
+96703c9170f3b5 Geliang Tang       2023-07-01  2545  	case BPF_FUNC_mptcpify:
+96703c9170f3b5 Geliang Tang       2023-07-01  2546  		return &bpf_mptcpify_proto;
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2547  	default:
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2548  		return NULL;
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2549  	}
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2550  }
+dea6a4e1701338 Stanislav Fomichev 2022-08-23  2551  
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
