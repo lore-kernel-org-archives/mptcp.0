@@ -1,230 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2058.outbound.protection.outlook.com [40.107.20.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2805D174C2
-	for <mptcp@lists.linux.dev>; Fri, 30 Jun 2023 17:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1688147600;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3nlgBxn/yXaYdsUQGc437JZ5qTZS7sCjkHPcZv8drxA=;
-	b=A8d0xUAGbSwiF0vH8zzOxjo2rAhEn+Cplm2pi40Yo8E/SfruDUTzRXVZGan34DlerfI9tK
-	RTj/G2NRr6ADkrLXb/X+I704it5IavzdSEPLRMZxU78/sR19cLv1kSgmII4iF8k80K3+nI
-	0f6Kr5Ul/ivWNWctxofxIanZQus8TII=
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
- [209.85.167.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-29-JcKNujCYPJqT-ZH9S5od4A-1; Fri, 30 Jun 2023 13:53:18 -0400
-X-MC-Unique: JcKNujCYPJqT-ZH9S5od4A-1
-Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-3a361b64226so253128b6e.0
-        for <mptcp@lists.linux.dev>; Fri, 30 Jun 2023 10:53:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688147598; x=1690739598;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=YBbMmmZtWyqCBW4hFvUKtlTtEZ6I/v4rqJlq0ioPULQ=;
-        b=BD4UlbhFt8sDWX8LSwn9xdr2vH9jwKLfts/hepvWefm0CHwNAbDKK199oEbWrVZ578
-         +qohcnAI72TE6MeLLq1u17iJ1r1pPbZ0b6EqQ4zYRwPeUvEyxrKkapuuNYrjI2ZjW7pV
-         nwrmEKoQhDSV0iQuU5LBd5JQoOlagRGujc9SIjfRZoSnfwjCWXgD6PaZrDmYnNkURE1g
-         LNhWb5SDGcDgHnG2x0uCdg5xx0dU2yEPgnAAZgN0TjnB+0LSkViTfsWX22akjD+Oi5dG
-         thRBYYkNL62mG8GbzBvnvAr3XPb93No6IpOd+bnvYyMhlmiTHaDmSSEUvQceqKjTk0yZ
-         XWxQ==
-X-Gm-Message-State: AC+VfDxsIIOHQrUkvg+gYU8S/nAZkZYfODeCFsgNG/zhOtNIsVtYIuWA
-	N5UdeFMn4qd1upwJMqqB3MlXCbl/gbynWJWwY0XZScA7w1YnSNookLBV5b8A2FAi+739V+cvNt3
-	KgXfKXBRmR3s83vmVBwA6c70=
-X-Received: by 2002:aca:f08b:0:b0:39c:7f77:dcf4 with SMTP id o133-20020acaf08b000000b0039c7f77dcf4mr2641754oih.1.1688147597814;
-        Fri, 30 Jun 2023 10:53:17 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6Bb5i/zLxTGon3L7WtCcaA6edUnI5bjE3NrHE0WFv/cvmLMk7Sc0dlIkDESirXrdoKylku/Q==
-X-Received: by 2002:aca:f08b:0:b0:39c:7f77:dcf4 with SMTP id o133-20020acaf08b000000b0039c7f77dcf4mr2641737oih.1.1688147597317;
-        Fri, 30 Jun 2023 10:53:17 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-247-156.dyn.eolo.it. [146.241.247.156])
-        by smtp.gmail.com with ESMTPSA id mi6-20020a056214558600b0062120b054easm3595930qvb.20.2023.06.30.10.53.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 10:53:16 -0700 (PDT)
-Message-ID: <bbaa4c3440e8421a637a2ee8820287f57b443fa3.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next 14/18] selftests: mptcp: join: format
- subtests results in TAP
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Fri, 30 Jun 2023 19:53:14 +0200
-In-Reply-To: <10c549f6-c83c-1a4c-415f-e2292dedb940@tessares.net>
-References: <20230621-mptcp-issue-368-selftests-subtests-v1-0-0cae453ae1fa@tessares.net>
-	 <20230621-mptcp-issue-368-selftests-subtests-v1-14-0cae453ae1fa@tessares.net>
-	 <7dad11d32d2f6afb1f27a1a730f1976164b188b1.camel@redhat.com>
-	 <10c549f6-c83c-1a4c-415f-e2292dedb940@tessares.net>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00683D67
+	for <mptcp@lists.linux.dev>; Sat,  1 Jul 2023 12:57:18 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eo0a4aI0JbDN2/mbX5fw3dPFo6nRlBNPv6WGizAHod3eCDjfwz/Ll87InM6xQUZDGr85C1ygye5JaSVXfHZRsTtvB5GiKS5tlf4i0MzvOGCwFdOj9u3Ntv8aoEz2thlKx+R9RdcyoKP9OROvv/WDIxaOHPE6gvqTHiRNQ3+ZglqtNrFvsroFHPCxDs7aO4oUADCjc2ZrCmhUkol67X7lFufiDlDdF+77sFqXlnccDgXf6jM54HhmRxZbJYyX+1dweNkY7NIrbK+S9GpkT69E+dUxvgdAUm633UW+hgbU4i3u0nV8wB/7QHkxuOOpoMN73yE7EGg8fHWiy3VYmCvxRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uDMQxHo22+8vX6ybz/oAgev+vyfduKDWaVP6SV6lsOw=;
+ b=iAu+nlrx+jVIfb0Terh/N+6pOv6X2OA6ygRPd2R8/m9VtxoGJao4uXsqurNzNTfX7PmLo2cOteMMNrH9Fxal8Vt8LPuh4OHEJnsR+h11FsA6CJEj7qLP0h7w8tN7YUAcY4yglNr9vak0YJi353BaA2/Douw2Ys8lUHbPKzrwFK4cJJNu7pBxvLCSaiGrJss/zqKdRQW8JPK6O0Q8o5v6X4AyLhE/i7QvEFBEyJRXwocEeb9seWUrM9sjOZpWj6sSPyNAqu4y/u/ik+KInfAB14eJAGOxXkA/9Dz5zd19D3Vv583ukTMalQOPwwHvcdWjoszEmHle8wT5f6Dai2SE8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uDMQxHo22+8vX6ybz/oAgev+vyfduKDWaVP6SV6lsOw=;
+ b=pJHhnx2+62AmjvbhXnnumLK5tWPfBMBcBbDsEkU3ZUgN/Y4NI7E2YKPEA5aYGU5GmKFLJuYtqjSB/svFsFoW6/BdlMVSNNm7yDGZuNocIMbGvcYJ+UoW3J9drBhKxrb66cikFGkAuXK8c0TNO3FsVO7sBuM7cnn9lUE6luSdeH0Lp1g6yiWyAkA/BBLnnCC1K+7IRt+V30EU7kb1tKVcpKKoLRPMH1nvatviSQAkwxZOtiAhvLy1d3shDzGndYH8kPRwLQtlt//XRcJWB5R5ulEFrSJ9hh9ywpn3sK6xH+Y31f4jHEHLchhXOVZqCLOMNduXK7KnTs+6bt3Kx+i2eg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AM9PR04MB7553.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.19; Sat, 1 Jul
+ 2023 12:57:12 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::423a:a30f:5342:9d35]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::423a:a30f:5342:9d35%6]) with mapi id 15.20.6544.019; Sat, 1 Jul 2023
+ 12:57:11 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2 0/4] BPF 'force to MPTCP'
+Date: Sat,  1 Jul 2023 20:56:56 +0800
+Message-Id: <cover.1688215769.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP301CA0010.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:400:386::13) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AM9PR04MB7553:EE_
+X-MS-Office365-Filtering-Correlation-Id: 414f7cda-1551-4fc3-738a-08db7a32ae4f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	YfbL/DlHL2oPeHjIf2aE7G6fLByogQ1kCLj4yzywGEKFzgEITztmdXlSAdrBBPwgKLdarS7WzKkG9JGtZoIMxazMx7zxcqat1zjJCX9mAqxv8QU6l0mPi5XhGWwZbyC7NtWQHojhmAMWpzXiFckBBAsP9sqUxD8uvilwSm4pFNDKtOEKjCDMH0S+41dzs9j8MG7C0tiakdr+L1f28igbtZ+U98R51nva68/KNEedeuuGxsoDtLY6b/TjE/qY4Kw2PvGJQkp91nF3q/hXx5fb3pr3M0BOpcTbjO/k9kIG+6E2IcOBytzrIIpkNGcU9jNEA2HkxK8XvmAHUbVtirp5e05EXcfm50Qk77RI1hupqoxRMkd/nujjGu5INIWPBQvhoE9l21be9oJgPHyzM01kaD1llKMNornwp9RIWpzIvCuwYHn6Mj3Nstjd2fEgT52vVntQ1SdlL04LfzGSiTMUaxAqGI3HVAg0oCsxRBerDWJ8XU8oHXB/eDvHe9QFkNDoH0yp/g2FWbdsnseuKBEvlq3EY3a+cCKBm8FnJ1WgNag=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(376002)(346002)(366004)(396003)(39860400002)(451199021)(5660300002)(8676002)(8936002)(107886003)(36756003)(478600001)(6916009)(4326008)(6666004)(6486002)(66476007)(66556008)(66946007)(316002)(6512007)(966005)(41300700001)(38100700002)(44832011)(186003)(2616005)(6506007)(26005)(83380400001)(86362001)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?4fMWJB9zEqVkjNHRqG0gCm17ewA7QDeuk1wBqqEu7lgS4ge3gO/LroErX4HD?=
+ =?us-ascii?Q?DrXAKsYEEoPuxfqJo1dMyG9PW+4Q7L0DLZ1R26xVtR8YjsN9ZyivaF/TvJXB?=
+ =?us-ascii?Q?fv3LQblVf6Ixr9xypgVwBOBTjxOGfS1O4HffmtRyylPn3l+ty+HJX2E1fSP8?=
+ =?us-ascii?Q?RHmgmQBZ3ZqoInEX6yIVvMgVspfgh22bsk54JoQ96gZyJ62b5rpufFlwsJG6?=
+ =?us-ascii?Q?st3/WY+k19JD+Rfjw+q4KjVhBH3c8dRBTZoEZMkai+PLgFigcUFDq9i3mPWI?=
+ =?us-ascii?Q?hKptSZdUsJOVeQs+ZQz1fg1hVLHTqBYdF+gyFeMWsrpGQcg3gV0Q2SJe5VQh?=
+ =?us-ascii?Q?VjBe712PWVU2YJ+aX03RoiwUY1+5xJ9/rrmhXC97WXHS8hzlKXUp5lN++LCo?=
+ =?us-ascii?Q?8WVCkw2H+l1ksseY/1pkpf4/XeHu4LNyiedkMxYA6C8VdrMz7p893GWwxxDN?=
+ =?us-ascii?Q?Yit/te5q2eel1mBYLW8jXx7MUoetxyatX5rm0+jrlUgR/tgctRc7wNDe990V?=
+ =?us-ascii?Q?2zSpWjDw/17uPlHpwpXYC35m6esdbl1c8i86wqGsGmx5R/XjyPEVOdAW4k+u?=
+ =?us-ascii?Q?R7+/05Oaz4opvu9+cbN+FyPPi6M7j8y4eEXw+itGhcH+ULLofA/ey3Ef0zj/?=
+ =?us-ascii?Q?obX/fI3B8xQ43xs9FVtKoGjbxg/ZZqHNkzleSxg6Igma5cF3bbSkFAKJQHxX?=
+ =?us-ascii?Q?eIssWUB+FZv/2FMa8kMCQjiB33/Jbtk0zqkPIIVFm5izvlnKNNof1vaeDHT+?=
+ =?us-ascii?Q?ERxX3opHK+ca/2M88JYjwJSVHM4k9F9c6S6Ne0DHQhHCL8j9FhucRH/5q64W?=
+ =?us-ascii?Q?1lVpLwEeKvDlP0YxMa8b6O+k8IwyzaBJTMJ5TJXBNCBu08dU20rUwvAvDSpc?=
+ =?us-ascii?Q?RAHGyxydyZ+Is8gdNlFL0IQfRf3F5eR3OetESE6We9x7mXerUeI00i6mRlsG?=
+ =?us-ascii?Q?2026KkQaZUcFAbP7sIMH3OGJIAkLbImMRIDyyhEPblwEy6Fyz+lT8sd/l2Ld?=
+ =?us-ascii?Q?bqdqrmNPcR9etNfktPsfo8cVI04g9GTk24g8H9mqIyf18fQws94ef32N1EdT?=
+ =?us-ascii?Q?q6Vy7cH2rHV9PZnzFFi7GmhnBUw067F2Vm2ZdtjDxb936QKDEPLiSSuVMiIA?=
+ =?us-ascii?Q?zNdaQ3RQaVujoqtQppMFyenvrx8FpQntv83WyV70GK7l+yBbie4IN0duvGYG?=
+ =?us-ascii?Q?YHD5+TZ04VH3NO1fbNNGJ0iuxAtIoTvKrQA6UKcOEEPErXWMJ7URxwhtrU5E?=
+ =?us-ascii?Q?g0Wk1arIKF9ZZAh+X9N5GsKS6Cra5kixmjVKzByjDJ0bsImw3kso/sNnpRMY?=
+ =?us-ascii?Q?XW3G9hUTCrfbuC/5gEctYYEhQ1YPtLzmX12xWVSLEfaDxy7+aU3XliO50xwO?=
+ =?us-ascii?Q?bkY7HNedAa3xh7N/2oBl+uWRw6a1Zo1PqFUska2nPrcE+dmsOrr8XKsGCnlJ?=
+ =?us-ascii?Q?yJtkAJVVrbUghj+0cKZ2i61m88wC2TZwfJNr9gUqTPl+U/TJM1xpBXcmhzMp?=
+ =?us-ascii?Q?uqSGksmZ5FKdTxXFXIBPoBLjXUUBQdUP8WkhQ4HBhSaQDcGrfGwPhKHBRLvp?=
+ =?us-ascii?Q?FvLmlvSEIpnJ4AczcVL75WnrRt/hZqLxdQiOk6Jp?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 414f7cda-1551-4fc3-738a-08db7a32ae4f
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2023 12:57:10.9829
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bx3NqIF8V65X83aHnmk6I2eR6xCRBWJJGZ3jRu/Izm+JXrPbCli950ADROaVQQTD/uFqaNsqdqechWNI7JQq8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7553
 
-On Fri, 2023-06-30 at 17:00 +0200, Matthieu Baerts wrote:
-> Hi Paolo,
->=20
-> Thank you for the reviews!
->=20
-> On 30/06/2023 13:08, Paolo Abeni wrote:
-> > On Wed, 2023-06-21 at 19:18 +0200, Matthieu Baerts wrote:
-> > > The current selftests infrastructure formats the results in TAP 13. T=
-his
-> > > version doesn't support subtests and only the end result of each
-> > > selftest is taken into account. It means that a single issue in a
-> > > subtest of a selftest containing multiple subtests forces the whole
-> > > selftest to be marked as failed. It also means that subtests results =
-are
-> > > not tracked by CIs executing selftests.
-> > >=20
-> > > MPTCP selftests run hundreds of various subtests. It is then importan=
-t
-> > > to track each of them and not one result per selftest.
-> > >=20
-> > > It is particularly interesting to do that when validating stable kern=
-els
-> > > with the last version of the test suite: tests might fail because a
-> > > feature is not supported but the test didn't skip that part. In this
-> > > case, if subtests are not tracked, the whole selftest will be marked =
-as
-> > > failed making the other subtests useless because their results are
-> > > ignored.
-> > >=20
-> > > This patch formats subtests results in TAP in mptcp_join.sh selftest.
-> > >=20
-> > > In this selftest and before starting each subtest, the 'reset' functi=
-on
-> > > is called. We can then check if the previous test has passed, failed =
-or
-> > > has been skipped from there.
-> > >=20
-> > > Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
-> > > Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> > > ---
-> > >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 41 +++++++++++++++=
-+++++-----
-> > >  1 file changed, 33 insertions(+), 8 deletions(-)
-> > >=20
-> > > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/=
-testing/selftests/net/mptcp/mptcp_join.sh
-> > > index e6c9d5451c5b..5c5c8b5e068f 100755
-> > > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > @@ -39,7 +39,9 @@ evts_ns1=3D""
-> > >  evts_ns2=3D""
-> > >  evts_ns1_pid=3D0
-> > >  evts_ns2_pid=3D0
-> > > -stats_dumped=3D0
-> > > +last_test_failed=3D0
-> > > +last_test_skipped=3D0
-> > > +last_test_ignored=3D1
-> > > =20
-> > >  declare -A all_tests
-> > >  declare -a only_tests_ids
-> > > @@ -97,7 +99,6 @@ init_partial()
-> > >  =09=09fi
-> > >  =09done
-> > > =20
-> > > -=09stats_dumped=3D0
-> > >  =09check_invert=3D0
-> > >  =09validate_checksum=3D$checksum
-> > >  =09FAILING_LINKS=3D""
-> > > @@ -162,9 +163,7 @@ check_tools()
-> > >  =09elif ! iptables -V &> /dev/null; then
-> > >  =09=09echo "SKIP: Could not run all tests without iptables tool"
-> > >  =09=09exit $ksft_skip
-> > > -=09fi
-> > > -
-> > > -=09if ! ip6tables -V &> /dev/null; then
-> > > +=09elif ! ip6tables -V &> /dev/null; then
-> >=20
-> > The above chunk looks unrelated/unnecessary ?!? after the
-> >=20
-> > =09=09exit $ksft_skip
-> >=20
-> > above, we neither 'if' nor 'elif' will be executed ??!
->=20
-> It is indeed a bit unrelated, it is just a small fix. Before, we had:
->=20
->   if iptables-legacy -V; then
->       iptables=3D"iptables-legacy"
->       ip6tables=3D"ip6tables-legacy"
->   elif ! iptables -V; then
->       exit error
->   fi
->=20
->   if ! ip6tables -V; then
->       exit error
->   fi
+v2:
+ - Address issue #79 "allow 'force to MPTCP' mode: BPF".
+ - Define the prog in patch 3 in SEC "cgroup/sock_create" instead of
+  "sockops".
+ - Update other patches correspondingly.
 
+v1:
 
-Ah, ok, I missed the first few lines of context.
->=20
-> if iptables-legacy is available, we will use "ip6tables-legacy" command
-> instead of "ip6tables". So no need to look for "ip6tables" command we
-> will not use (hence the "elif" instead of the "if").
->=20
-> But I can also drop this chunk if you prefer.
+This series depends on the two netns patches, should be inserted before
+the BPF scheduler series:
+  selftests/bpf: use random netns name for mptcp
+  selftests/bpf: add two mptcp netns helpers
+  bpf: Add bpf_mptcpify helper
+  selftests/bpf: Test bpf_mptcpify helper
+  selftests/bpf: Add mptcpify selftest
+  mptcp: refactor push_pending logic
 
-Just moving it to a new patch would be enough.
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/79
 
->=20
->=20
-> > >  =09=09echo "SKIP: Could not run all tests without ip6tables tool"
-> > >  =09=09exit $ksft_skip
-> > >  =09fi
-> > > @@ -213,6 +212,8 @@ mark_as_skipped()
-> > > =20
-> > >  =09print_title "[ skip ] ${msg}"
-> > >  =09printf "\n"
-> > > +
-> > > +=09last_test_skipped=3D1
-> > >  }
-> > > =20
-> > >  # $@: condition
-> > > @@ -245,14 +246,32 @@ skip_test()
-> > >  =09return 0
-> > >  }
-> > > =20
-> > > +append_prev_results()
-> > > +{
-> > > +=09if [ ${last_test_failed} -eq 1 ]; then
-> > > +=09=09mptcp_lib_result_fail "${TEST_NAME}"
-> > > +=09elif [ ${last_test_skipped} -eq 1 ]; then
-> > > +=09=09mptcp_lib_result_skip "${TEST_NAME}"
-> > > +=09elif [ ${last_test_ignored} -ne 1 ]; then
-> > > +=09=09mptcp_lib_result_pass "${TEST_NAME}"
-> > > +=09fi
-> > > +
-> > > +=09last_test_failed=3D0
-> > > +=09last_test_skipped=3D0
-> > > +=09last_test_ignored=3D0
-> > > +}
-> > > +
-> > >  # $1: test name
-> > >  reset()
-> > >  {
-> > > +=09append_prev_results
-> >=20
-> > Can't we dump the previous sub-test result here in tap format (when/if
-> > enabled) instead of dumping them all at the end?
->=20
-> I guess we can: Linaro's script should catch the different subtests. But
-> I don't think we should do that: from what I understood to be TAP 13
-> compliant, we are supposed to write the "test plan" before displaying
-> the results: so we need one line indicating the number of tests that are
-> going to be done (e.g. "1..115") and before starting the first test, we
-> don't know how many tests will be executed yet.
+Geliang Tang (4):
+  Squash to "selftests/bpf: add two mptcp netns helpers"
+  bpf: Add bpf_mptcpify helper
+  selftests/bpf: Test bpf_mptcpify helper
+  selftests/bpf: Add mptcpify selftest
 
-Understood. Then let's keep the layout used this revision of the
-patches.
+ include/linux/bpf.h                           |   1 +
+ include/uapi/linux/bpf.h                      |   7 +
+ kernel/bpf/cgroup.c                           |   2 +
+ net/core/filter.c                             |  18 +++
+ scripts/bpf_doc.py                            |   1 +
+ tools/include/uapi/linux/bpf.h                |   7 +
+ tools/testing/selftests/bpf/bpf_tcp_helpers.h |   1 +
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 127 +++++++++++++++---
+ tools/testing/selftests/bpf/progs/mptcpify.c  |  26 ++++
+ 9 files changed, 170 insertions(+), 20 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcpify.c
 
-
-/P
+-- 
+2.35.3
 
