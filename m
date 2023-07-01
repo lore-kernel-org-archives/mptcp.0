@@ -1,42 +1,42 @@
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A59C2F0;
-	Sat,  1 Jul 2023 15:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2719FC2EF;
+	Sat,  1 Jul 2023 16:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1688225599; x=1719761599;
+  t=1688230579; x=1719766579;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=cWoweqh9HQSy9DFcbzQtkZLBs5ouuH7UKskhKJv6tIk=;
-  b=nes7X3AXDqKrQCF+Sf7/qJdMcgEdGEHQuO3sD5auSOgq//Sv4JxoPpzw
-   JskEimgdVK0g9WQsjBVXhzfHmOUEhx9ZtqGbFgef0Ek1LcJBmvJgZuwPJ
-   ljv8CccPQW5k54Xnh8Vq6ZGJkuFoGy4IcLrj5jKklOwpeQtkhl22bv4vq
-   LeazuXCV7A88uIEikXt4A2mhl7T6zN6GoEgnV/PqyO1LGD1jfr55xmTUc
-   dmsJb/WHRvxJHRyWzynTmmHaHFgjy+Hj3Jyz3HZ71cmfRJAeV6xwh8ffY
-   glWGmhfSN9uMd0s+5akCH71kCrlS98qbtKYJ0+ne5qIpaC5k2sGbZ7w9j
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10758"; a="342191815"
+  bh=4ycQAPNnBrHXZNfvUupWiN71RCmnPp3gJKHSJVy6nZU=;
+  b=AZwL9CjlIgF+HeLzXMIOpZ8wCTU8Icmy73fTA0+WrmWf5ScCcvTkTqRq
+   fYsI7O7Px6bFgmhxo7wlFuYVV6QsDYLh1gdn9wEWzdJylKZirA09SsTgk
+   oUMOhtA15i0AMbrI1ziiihWkrWty13kP18G/Lw5sDHaZNdnLzavN96Qce
+   3idKcCocObwy6yDMjc69AsgJIZKNlgamNpn2B92UkRhBzmLOYxjE+a/lp
+   DO78IKLRL2vV89W3G/O6iKXZHTqZEZAUQ1hW6kR+K3k+nzZB4BexbKltP
+   SSctrosqIe4gkpHWe1WpZa+PDcUQ1l8h/4sANvtxTVhFXV5hxjiwAopwH
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10758"; a="342197542"
 X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
-   d="scan'208";a="342191815"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2023 08:33:18 -0700
+   d="scan'208";a="342197542"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2023 09:56:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10758"; a="842203981"
+X-IronPort-AV: E=McAfee;i="6600,9927,10758"; a="718147925"
 X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
-   d="scan'208";a="842203981"
+   d="scan'208";a="718147925"
 Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 01 Jul 2023 08:33:15 -0700
+  by orsmga002.jf.intel.com with ESMTP; 01 Jul 2023 09:56:16 -0700
 Received: from kbuild by 783282924a45 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1qFcb4-000G6D-0M;
-	Sat, 01 Jul 2023 15:33:14 +0000
-Date: Sat, 1 Jul 2023 23:32:45 +0800
+	id 1qFdtP-000G9D-34;
+	Sat, 01 Jul 2023 16:56:15 +0000
+Date: Sun, 2 Jul 2023 00:55:38 +0800
 From: kernel test robot <lkp@intel.com>
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
 Subject: Re: [PATCH mptcp-next v2 2/4] bpf: Add bpf_mptcpify helper
-Message-ID: <202307012313.1sND4cvO-lkp@intel.com>
+Message-ID: <202307020056.CI5KNYyK-lkp@intel.com>
 References: <daf3d1e26f19ee83b427ef9e17183cd09fc26de6.1688215769.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -63,68 +63,26 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/Squash-to-se
 base:   https://github.com/multipath-tcp/mptcp_net-next.git export
 patch link:    https://lore.kernel.org/r/daf3d1e26f19ee83b427ef9e17183cd09fc26de6.1688215769.git.geliang.tang%40suse.com
 patch subject: [PATCH mptcp-next v2 2/4] bpf: Add bpf_mptcpify helper
-config: x86_64-buildonly-randconfig-r001-20230701 (https://download.01.org/0day-ci/archive/20230701/202307012313.1sND4cvO-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20230701/202307012313.1sND4cvO-lkp@intel.com/reproduce)
+config: nios2-randconfig-r021-20230701 (https://download.01.org/0day-ci/archive/20230702/202307020056.CI5KNYyK-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230702/202307020056.CI5KNYyK-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202307012313.1sND4cvO-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202307020056.CI5KNYyK-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   ld: kernel/bpf/cgroup.o: in function `cgroup_common_func_proto':
->> kernel/bpf/cgroup.c:2512: undefined reference to `bpf_mptcpify_proto'
-
-
-vim +2512 kernel/bpf/cgroup.c
-
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2507  
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2508  /* Common helpers for cgroup hooks. */
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2509  const struct bpf_func_proto *
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2510  cgroup_common_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2511  {
-dea6a4e1701338 Stanislav Fomichev 2022-08-23 @2512  	switch (func_id) {
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2513  	case BPF_FUNC_get_local_storage:
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2514  		return &bpf_get_local_storage_proto;
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2515  	case BPF_FUNC_get_retval:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2516  		switch (prog->expected_attach_type) {
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2517  		case BPF_CGROUP_INET_INGRESS:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2518  		case BPF_CGROUP_INET_EGRESS:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2519  		case BPF_CGROUP_SOCK_OPS:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2520  		case BPF_CGROUP_UDP4_RECVMSG:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2521  		case BPF_CGROUP_UDP6_RECVMSG:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2522  		case BPF_CGROUP_INET4_GETPEERNAME:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2523  		case BPF_CGROUP_INET6_GETPEERNAME:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2524  		case BPF_CGROUP_INET4_GETSOCKNAME:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2525  		case BPF_CGROUP_INET6_GETSOCKNAME:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2526  			return NULL;
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2527  		default:
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2528  			return &bpf_get_retval_proto;
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2529  		}
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2530  	case BPF_FUNC_set_retval:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2531  		switch (prog->expected_attach_type) {
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2532  		case BPF_CGROUP_INET_INGRESS:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2533  		case BPF_CGROUP_INET_EGRESS:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2534  		case BPF_CGROUP_SOCK_OPS:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2535  		case BPF_CGROUP_UDP4_RECVMSG:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2536  		case BPF_CGROUP_UDP6_RECVMSG:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2537  		case BPF_CGROUP_INET4_GETPEERNAME:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2538  		case BPF_CGROUP_INET6_GETPEERNAME:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2539  		case BPF_CGROUP_INET4_GETSOCKNAME:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2540  		case BPF_CGROUP_INET6_GETSOCKNAME:
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2541  			return NULL;
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2542  		default:
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2543  			return &bpf_set_retval_proto;
-bed89185af0de0 Stanislav Fomichev 2022-08-23  2544  		}
-96703c9170f3b5 Geliang Tang       2023-07-01  2545  	case BPF_FUNC_mptcpify:
-96703c9170f3b5 Geliang Tang       2023-07-01  2546  		return &bpf_mptcpify_proto;
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2547  	default:
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2548  		return NULL;
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2549  	}
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2550  }
-dea6a4e1701338 Stanislav Fomichev 2022-08-23  2551  
+   nios2-linux-ld: kernel/bpf/cgroup.o: in function `cgroup_dev_func_proto':
+   kernel/bpf/cgroup.c:1607: undefined reference to `bpf_mptcpify_proto'
+>> nios2-linux-ld: kernel/bpf/cgroup.c:1607: undefined reference to `bpf_mptcpify_proto'
+   nios2-linux-ld: kernel/bpf/cgroup.o: in function `cg_sockopt_func_proto':
+   kernel/bpf/cgroup.c:2297: undefined reference to `bpf_mptcpify_proto'
+   nios2-linux-ld: kernel/bpf/cgroup.c:2297: undefined reference to `bpf_mptcpify_proto'
+   nios2-linux-ld: kernel/bpf/cgroup.o: in function `sysctl_func_proto':
+   kernel/bpf/cgroup.c:2155: undefined reference to `bpf_mptcpify_proto'
+   nios2-linux-ld: kernel/bpf/cgroup.o:kernel/bpf/cgroup.c:2155: more undefined references to `bpf_mptcpify_proto' follow
 
 -- 
 0-DAY CI Kernel Test Service
