@@ -1,89 +1,78 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2719FC2EF;
-	Sat,  1 Jul 2023 16:56:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1688230579; x=1719766579;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4ycQAPNnBrHXZNfvUupWiN71RCmnPp3gJKHSJVy6nZU=;
-  b=AZwL9CjlIgF+HeLzXMIOpZ8wCTU8Icmy73fTA0+WrmWf5ScCcvTkTqRq
-   fYsI7O7Px6bFgmhxo7wlFuYVV6QsDYLh1gdn9wEWzdJylKZirA09SsTgk
-   oUMOhtA15i0AMbrI1ziiihWkrWty13kP18G/Lw5sDHaZNdnLzavN96Qce
-   3idKcCocObwy6yDMjc69AsgJIZKNlgamNpn2B92UkRhBzmLOYxjE+a/lp
-   DO78IKLRL2vV89W3G/O6iKXZHTqZEZAUQ1hW6kR+K3k+nzZB4BexbKltP
-   SSctrosqIe4gkpHWe1WpZa+PDcUQ1l8h/4sANvtxTVhFXV5hxjiwAopwH
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10758"; a="342197542"
-X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
-   d="scan'208";a="342197542"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2023 09:56:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10758"; a="718147925"
-X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
-   d="scan'208";a="718147925"
-Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 01 Jul 2023 09:56:16 -0700
-Received: from kbuild by 783282924a45 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qFdtP-000G9D-34;
-	Sat, 01 Jul 2023 16:56:15 +0000
-Date: Sun, 2 Jul 2023 00:55:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-Subject: Re: [PATCH mptcp-next v2 2/4] bpf: Add bpf_mptcpify helper
-Message-ID: <202307020056.CI5KNYyK-lkp@intel.com>
-References: <daf3d1e26f19ee83b427ef9e17183cd09fc26de6.1688215769.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BEC3C2A
+	for <mptcp@lists.linux.dev>; Sun,  2 Jul 2023 17:55:24 +0000 (UTC)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-c13cb2cb428so622375276.0
+        for <mptcp@lists.linux.dev>; Sun, 02 Jul 2023 10:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688320524; x=1690912524;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=B/346nUIZErMaap4Xzifysw7agxmNBKblpAJllVen+8=;
+        b=HS1Xpu8RutGjzNf2cNefIvO40PuyEyyWN1lXpuUm3Zm6tYXGDXwbDrBzDuJeX7KOHr
+         q1UGGgd94SVTRefQw+1rgl1gQ50uEoBHL2OdSUILUjvF+1ATH9gvheGUN++hFOwLNLid
+         1XMjRZLU+9Ge2en4fJbD50bjnQdqOwyoXZfvhIPbUVY/sq6Vm6BAvUYZPRqmTRzyIG2n
+         JWXOYS2flIDtpE0mu19bw1MyMQp5M6uow+iO1HWzOXqc6Z90+aO2nBs6Bf+FGR5IBS25
+         laBmv/H9uClBFT1isqMjJFlPY+WcanwzxZg1N8ZxZIN6sqfmOEIBN1yT1YF0buNY5Ya/
+         4xig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688320524; x=1690912524;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B/346nUIZErMaap4Xzifysw7agxmNBKblpAJllVen+8=;
+        b=FbMvrQFkmkxsRWpn2Vk5KdbL5ZVzZmrhAPI7VaOrK0aWe2LgBB76p3SbnDCYOpVkyc
+         lWwvyIN5s6yeW98hzeoAYgnBTl8g/Yelw9i+8x++FxgD9Ui/xQ3Jx04qBgId0/LBmzCX
+         A5zb0fj0NZFLGXsRumpY6iyJYFWl+EffKkg509Zaqla+YXY86c3mFq1C2Rwabsx4+nnV
+         3RUCgbB7G9iHi5653MDTyptQ5gNwnrZp+6H/2EANJb3p1gM9wiIH+PhuPKikyW0JmKcr
+         TsMdBSGg138hWmrLBjm4xiUMUeIINkz1fmCXlj0gdwj30Mp4FYhIzwKYCZE0y+HcAn+G
+         fTFg==
+X-Gm-Message-State: ABy/qLZEenBC68C0pOV+hu9uaAZxSn6Y9K5PB+6OF8jIEI2meK6ofRqu
+	xi3/znnoWd6HXQluIT/LEkuKrK+avCG+GNAjI34=
+X-Google-Smtp-Source: APBJJlGKLhOT4Bu7qJ+9PV6J1mFibevhHpEsj9SgVNCYM6WTAos06S2LRQMzHrHXF1fE6Av0kYh7XbCZNh0JTIxm3q8=
+X-Received: by 2002:a25:2b88:0:b0:bd6:6e3e:3af3 with SMTP id
+ r130-20020a252b88000000b00bd66e3e3af3mr4285143ybr.3.1688320523798; Sun, 02
+ Jul 2023 10:55:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <daf3d1e26f19ee83b427ef9e17183cd09fc26de6.1688215769.git.geliang.tang@suse.com>
+From: Askar Safin <safinaskar@gmail.com>
+Date: Sun, 2 Jul 2023 20:54:47 +0300
+Message-ID: <CAPnZJGB6gk47Hw-OE2_9eSKJ0DwOzEiL+tncMJyiOD6arw6xag@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 17/18] sock: Remove ->sendpage*() in favour of sendmsg(MSG_SPLICE_PAGES)
+To: David Howells <dhowells@redhat.com>
+Cc: netdev@vger.kernel.org, Alexander Duyck <alexander.duyck@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, David Ahern <dsahern@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>, bpf@vger.kernel.org, 
+	dccp@vger.kernel.org, linux-afs@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-hams@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-sctp@vger.kernel.org, linux-wpan@vger.kernel.org, 
+	linux-x25@vger.kernel.org, mptcp@lists.linux.dev, rds-devel@oss.oracle.com, 
+	tipc-discussion@lists.sourceforge.net, 
+	virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Geliang,
+> -/* In some cases, both sendpage() and sendmsg() could have added
+> - * an skb to the write queue, but failed adding payload on it.
+> - * We need to remove it to consume less memory, but more
+> - * importantly be able to generate EPOLLOUT for Edge Trigger epoll()
+> - * users.
+> +/* In some cases, both sendmsg() could have added an skb to the write queue,
+> + * but failed adding payload on it.  We need to remove it to consume less
+> + * memory, but more importantly be able to generate EPOLLOUT for Edge Trigger
+> + * epoll() users.
+>   */
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on mptcp/export]
-[also build test ERROR on mptcp/export-net linus/master v6.4 next-20230630]
-[cannot apply to bpf-next/master bpf/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/Squash-to-selftests-bpf-add-two-mptcp-netns-helpers/20230701-205922
-base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-patch link:    https://lore.kernel.org/r/daf3d1e26f19ee83b427ef9e17183cd09fc26de6.1688215769.git.geliang.tang%40suse.com
-patch subject: [PATCH mptcp-next v2 2/4] bpf: Add bpf_mptcpify helper
-config: nios2-randconfig-r021-20230701 (https://download.01.org/0day-ci/archive/20230702/202307020056.CI5KNYyK-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 12.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20230702/202307020056.CI5KNYyK-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202307020056.CI5KNYyK-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   nios2-linux-ld: kernel/bpf/cgroup.o: in function `cgroup_dev_func_proto':
-   kernel/bpf/cgroup.c:1607: undefined reference to `bpf_mptcpify_proto'
->> nios2-linux-ld: kernel/bpf/cgroup.c:1607: undefined reference to `bpf_mptcpify_proto'
-   nios2-linux-ld: kernel/bpf/cgroup.o: in function `cg_sockopt_func_proto':
-   kernel/bpf/cgroup.c:2297: undefined reference to `bpf_mptcpify_proto'
-   nios2-linux-ld: kernel/bpf/cgroup.c:2297: undefined reference to `bpf_mptcpify_proto'
-   nios2-linux-ld: kernel/bpf/cgroup.o: in function `sysctl_func_proto':
-   kernel/bpf/cgroup.c:2155: undefined reference to `bpf_mptcpify_proto'
-   nios2-linux-ld: kernel/bpf/cgroup.o:kernel/bpf/cgroup.c:2155: more undefined references to `bpf_mptcpify_proto' follow
+There is a typo here. "Both" is redundant now
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Askar Safin
