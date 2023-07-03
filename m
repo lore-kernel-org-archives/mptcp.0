@@ -1,93 +1,119 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A84B3D6C;
-	Mon,  3 Jul 2023 10:49:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1688381346; x=1719917346;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WIUhwBnidD/ZK3tM/pVcvh48zn2SML6z2hQsMaC439g=;
-  b=NYP6GYZOIldOvTLtwhKfxB/aXLClJsCC6ryJI7f0BRIVsuvw9fTIG+4U
-   lANeBOfJf6yW3Bfw3EZYUENDsH9w3GEBaLy7BdCmQoERwkq0Jw2hKIhrP
-   zfbtCxuuoIL/rmPkXIFhPE+drufapBgi2uVOWHMrptZJrYa+5gUDdS/UO
-   1hhJsE4lbQkEaVgL9aU5iHcrmOlTAw7bDg83j0GZSLHpwjX2lTVr2+xIR
-   MCPH3fFz6gcdf5hjZq2KHP647zN9WZu79Rq3CwVH8z0bpDx9hv0rvv/GW
-   7xCE/POIY989bag2wCb2jV9/Xtz1QW3i+YuEGOLV6dZVXEy1CCGO0e/bH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10759"; a="342441798"
-X-IronPort-AV: E=Sophos;i="6.01,178,1684825200"; 
-   d="scan'208";a="342441798"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2023 03:49:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10759"; a="695773894"
-X-IronPort-AV: E=Sophos;i="6.01,178,1684825200"; 
-   d="scan'208";a="695773894"
-Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 03 Jul 2023 03:49:03 -0700
-Received: from kbuild by 783282924a45 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qGH78-000HKt-1b;
-	Mon, 03 Jul 2023 10:49:02 +0000
-Date: Mon, 3 Jul 2023 18:48:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-Subject: Re: [PATCH mptcp-next v3 2/5] net: socket: add socket_create wrapper
-Message-ID: <202307031850.054Lqlel-lkp@intel.com>
-References: <bf1cd56ede55306b3272c6b3069830ea6a189c97.1688366249.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB635DDBE
+	for <mptcp@lists.linux.dev>; Mon,  3 Jul 2023 12:58:36 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-51dd1e5a621so5782833a12.0
+        for <mptcp@lists.linux.dev>; Mon, 03 Jul 2023 05:58:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1688389114; x=1690981114;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E1GvmXvk70zLLAU38pJ9xZyOnpSvmxUVbuMvEuAjArU=;
+        b=YGFqnm92fIbwKhQw7wCUxbXD5rPHFynFqVCHafr84dyMiyLWumTyyriD1fLsrRhizy
+         qDomCaMxzNcqLs/b5L/t+f4t7XmGsoPUgXuWR4d+/01vXUKAnowxldpXOhZVJ8IplHjE
+         JIxEAm2asku23R0hh37DD+0h3LV6Ut4aK3tvuZNtNB40N4OUGKM8tE61qv+Hrf8MdBpQ
+         PCjLyEbj/hDkiL+dgs6eiMu/SlUl+YIn7osnqh90K+E+NtLZHigm85aCt8IrQ4iwrwDc
+         xTRhGlNAkvRgfXti/PNdyAI+ahzYl/cb2h/YQ7cgLkEEXQF5Hf0FUUA3HGjp22/YgN3E
+         Fhhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688389114; x=1690981114;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E1GvmXvk70zLLAU38pJ9xZyOnpSvmxUVbuMvEuAjArU=;
+        b=EW2g3zMCD2UboAIJoi6bIYAKFueb0LanHxeSVTpnNjA+wMHGWi5JRIgs1QD2H+HmYZ
+         mwmoWJkYBv/IUyq8lDhIFCZgNKabDtXqHSEa2h+Plx+PHrHPU97Yfhtb9GuP7Sj0nyS6
+         2325TR5YLrtHcgujiqT5wTMHKyBTKi/rgKzla/aFDY1fszPzZDlK5P6qMQDCJwSG0J8D
+         reIG7gMytVjEHSFVK7gj3wd1RNWLrBOv0Sl1naNnzIfXu2K8lH5kSYXuMBf6DtwOqqFc
+         y3jiDiALc4I51wEWcGUhwWysaMGKzyGM0fmkbg/QT4jZ2ea9eMKJBHzajWKaGg0VuS3t
+         Dy3Q==
+X-Gm-Message-State: ABy/qLaWkVHMvH9SuYQdb0HTqGAMVF3NvXOXUqMDLs6KhWiCYNFXYxmq
+	tL5/W/5rxNbiegRsD2xpUR00dlUNGHEPbfMlzao=
+X-Google-Smtp-Source: APBJJlH2CL5IgMpr1SvNdpTNILn4ND16G5CkxgMhe2ISnYBHGiCYh6T7tTgGXhazKX7smqhzefXGrg==
+X-Received: by 2002:aa7:da51:0:b0:51d:8835:90a1 with SMTP id w17-20020aa7da51000000b0051d883590a1mr7820784eds.30.1688389114320;
+        Mon, 03 Jul 2023 05:58:34 -0700 (PDT)
+Received: from [10.44.2.5] ([81.246.10.41])
+        by smtp.gmail.com with ESMTPSA id dy12-20020a05640231ec00b0051e0f21c43fsm1454453edb.31.2023.07.03.05.58.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jul 2023 05:58:34 -0700 (PDT)
+Message-ID: <75889293-09ec-a3e6-877d-c67154e36b74@tessares.net>
+Date: Mon, 3 Jul 2023 14:58:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf1cd56ede55306b3272c6b3069830ea6a189c97.1688366249.git.geliang.tang@suse.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH mptcp-next 2/4] bpf: Add bpf_mptcpify helper
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1688004307.git.geliang.tang@suse.com>
+ <53359d2572fdd676206c35d29e823e9dffd5e9f6.1688004307.git.geliang.tang@suse.com>
+ <72dce095-9e4e-b9e2-0ce8-dfcfe58f7ed2@tessares.net>
+ <20230703065411.GA22455@bogon>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <20230703065411.GA22455@bogon>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-kernel test robot noticed the following build warnings:
+On 03/07/2023 08:54, Geliang Tang wrote:
+> On Thu, Jun 29, 2023 at 07:43:50PM +0200, Matthieu Baerts wrote:
+>> On 29/06/2023 04:12, Geliang Tang wrote:
+>>> diff --git a/net/core/filter.c b/net/core/filter.c
+>>> index 968139f4a1ac..e439f8b5f203 100644
+>>> --- a/net/core/filter.c
+>>> +++ b/net/core/filter.c
+>>> @@ -11587,6 +11587,24 @@ const struct bpf_func_proto bpf_skc_to_mptcp_sock_proto = {
+>>>  	.ret_btf_id	= &btf_sock_ids[BTF_SOCK_TYPE_MPTCP],
+>>>  };
+>>>  
+>>> +BPF_CALL_1(bpf_mptcpify, struct sock *, sk)
+>>> +{
+>>> +	if (sk && sk_fullsock(sk) && sk->sk_protocol == IPPROTO_TCP) {
+>>> +		sk->sk_protocol = IPPROTO_MPTCP;
+>>> +		return (unsigned long)sk;
+>>> +	}
+>>
+>> How do we ensure such modifications are done at the right moment? I
+>> mean: we can only change the protocol ID in very few places, before even
+>> creating the socket (__sock_create()?). If we change it after, we will
+>> break stuff: tcp ops, security labels, etc.
+> 
+> You're right, Matt, we need to do the modifications at the very beginning
+> of sys_socket(). In v3, a new wrapper socket_create() is added, it's the
+> right place to do the modifications.
 
-[auto build test WARNING on mptcp/export]
-[also build test WARNING on mptcp/export-net bpf-next/master bpf/master linus/master v6.4 next-20230703]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thank you for this v3 and for your replies: it is clearer with your replies!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/Squash-to-selftests-bpf-add-two-mptcp-netns-helpers/20230703-144151
-base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-patch link:    https://lore.kernel.org/r/bf1cd56ede55306b3272c6b3069830ea6a189c97.1688366249.git.geliang.tang%40suse.com
-patch subject: [PATCH mptcp-next v3 2/5] net: socket: add socket_create wrapper
-config: arc-randconfig-r015-20230703 (https://download.01.org/0day-ci/archive/20230703/202307031850.054Lqlel-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 12.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20230703/202307031850.054Lqlel-lkp@intel.com/reproduce)
+I hope such wrapper can be accepted upstream :)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202307031850.054Lqlel-lkp@intel.com/
+It is then important to fail if bpf_mptcpify() is not executed at the
+beginning of this new "socket_create()" wrapper. Will it be the case?
 
-All warnings (new ones prefixed by >>):
+I guess the verifier will make sure bpf_mptcpify() is only called with a
+function having "struct socket_args" as first argument so "by accident",
+it will only be bpf_mptcpify(), right? Maybe there is a way to clearly
+mark that bpf_mptcpify() cannot be called elsewhere? Or make sure it
+fails if the socket has already been created? (maybe that's something we
+need to ask to BPF devs)
 
->> net/socket.c:1591:5: warning: no previous prototype for 'socket_create' [-Wmissing-prototypes]
-    1591 | int socket_create(struct socket_args *args, struct socket **res)
-         |     ^~~~~~~~~~~~~
+One last thing: in your v3, I think you restrict the conversion to IPv4
+only sockets, no?
 
+  (args->family == AF_INET || args->family == AF_INET6)
 
-vim +/socket_create +1591 net/socket.c
+(and I guess you saw that the kernel test robot complained about one of
+the patch because the new wrapper is not declared in the "include" dir)
 
-  1590	
-> 1591	int socket_create(struct socket_args *args, struct socket **res)
-  1592	{
-  1593		return sock_create(args->family, args->type, args->protocol, res);
-  1594	}
-  1595	EXPORT_SYMBOL(socket_create);
-  1596	
-
+Cheers,
+Matt
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
