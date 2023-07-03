@@ -1,126 +1,180 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A6CA34
-	for <mptcp@lists.linux.dev>; Mon,  3 Jul 2023 07:52:10 +0000 (UTC)
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6b72c4038b6so3258986a34.0
-        for <mptcp@lists.linux.dev>; Mon, 03 Jul 2023 00:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688370729; x=1690962729;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p2OYnAX6sWdkomy/vqCQPu1oxQQsBJE2y7KVuii15cU=;
-        b=CVGbKtlQ0+DsAgmy6Rp26JIaC+OA6otWMGEU7lcTvAxAJU+esRljhwyH6H+th9HZNi
-         61kqqjnEF6Q87Yw+khB4uYz0SaEXTcSY+nO1CpmkaHIstwYh56MUn1zGfH/MPdDqYa09
-         Y983dQqSu/ZYrNDFYxsZXYM1Cr6mJvRzy0k2XbBZoevt9g0nCpoHHpWPJoj8wJu699Et
-         lTTrqKcQKobr+VusNyHX74UNyqsklJewTDNC+NloNTdk0ZRHajLYo02f1ZZ+oD+suBaI
-         bLA3Yy/jJqpEfi4HbmVmlJTy0t3swrfI2KL3YCUDWasVWZcoX6WO0bJgX3ENcV4l1sKK
-         b8LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688370729; x=1690962729;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=p2OYnAX6sWdkomy/vqCQPu1oxQQsBJE2y7KVuii15cU=;
-        b=VJ9fjIJaLYjILYG/w0x3gp2olfVZ2f8YPDHrblu/NzclFU4b0jf7UC4GhDm8ApyFLU
-         oyEGNkX7sONM74hJ5XTO+bwgXm/OogEHYUJ8IzAxjZJ8EX8vx1nL+6KuvXVOVlkNvbZQ
-         orbtiBzizlC7DtPEvdC41xYiLCkwizx3+biPoJ+hzcolS9S7Vw5ImM6pr56F+Tz3yO8u
-         NMQjbInVynGUF2u2q2tjYJNhqOKXXUzei4FZ7cHm/NFKsB6voD+CqQSznGjB0o9R46ZA
-         nNYHqd9jJlXH5zhsY3HCqjSSFtuYwDuWdM+vKfb2OfqbkO9YVORJJTuhADPBSWp+W52p
-         +o9A==
-X-Gm-Message-State: AC+VfDzZHxHeuHWKa/tL5AKg+HohjfxXvjxRrxYHx+8eckrfFAbEtiQY
-	Bb/WGgjFUtDirEaJS4Z2LGKMfzFjPA==
-X-Google-Smtp-Source: ACHHUZ7fD9iMeD58Fi+E+FfHe19sPcoSE+zE6cyZqYfa3jHZynQ4Fx+h578aGMI4RMc5Kc00BrLZOA==
-X-Received: by 2002:a05:6830:2012:b0:6b7:1d64:ab84 with SMTP id e18-20020a056830201200b006b71d64ab84mr8527207otp.14.1688370729203;
-        Mon, 03 Jul 2023 00:52:09 -0700 (PDT)
-Received: from [127.0.0.1] ([40.84.168.146])
-        by smtp.gmail.com with ESMTPSA id v4-20020a056830140400b006b8adf1bc0csm2480362otp.33.2023.07.03.00.52.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 00:52:08 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <e8796c911cf43d2d27c7d29d152bdda8de3dd284.1688366249.git.geliang.tang@suse.com>
-References:
- <e8796c911cf43d2d27c7d29d152bdda8de3dd284.1688366249.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: Add mptcpify selftest: Tests Results
-Message-ID: <1fade44f-45f5-d063-5dec-568babe6439c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 03 Jul 2023 07:52:08 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA71E3D9E;
+	Mon,  3 Jul 2023 10:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1688378884; x=1719914884;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rpugh4B1xgPFn4/PuIXqwCZ5ungVvtdQWodCf3TM2Bg=;
+  b=Llyx64TsnWtWKcEF8RzqPkCMV9VnrHN0H27A1j3dTvKXUQkfTHz6uzmk
+   MvRmnU3KBu0WqHCqN2nY5EHZQUCZHDfcrhKM10Wxhd+SC2zHTtYZ9impR
+   N7GcotswmAjsSOP6DAF/OY5vN4gbX2cahfyls5N3hjYHAGy6OAKo1Aa0l
+   VsoJPQ1qyCHgYV3TmKVT3kZQJgIcDTt40P8VSRTK5YahTUQaoegQdGDMX
+   LD99wm1w3M5Zkm8/U3cmuQOXJX74UZm+RF6MKWG+6vVfRl6VsSElsGPx/
+   027qtXELdJteU8uy+O9y+wWLUV2bYEAfuRh8eiaIVsEVXFBt4ppd3didX
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10759"; a="352668457"
+X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
+   d="scan'208";a="352668457"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2023 03:08:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10759"; a="788475014"
+X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
+   d="scan'208";a="788475014"
+Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Jul 2023 03:08:02 -0700
+Received: from kbuild by 783282924a45 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qGGTR-000HJt-2s;
+	Mon, 03 Jul 2023 10:08:01 +0000
+Date: Mon, 3 Jul 2023 18:07:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Geliang Tang <geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next v3 2/5] net: socket: add socket_create wrapper
+Message-ID: <202307031701.pEfe6hVq-lkp@intel.com>
+References: <bf1cd56ede55306b3272c6b3069830ea6a189c97.1688366249.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bf1cd56ede55306b3272c6b3069830ea6a189c97.1688366249.git.geliang.tang@suse.com>
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+kernel test robot noticed the following build warnings:
 
-Our CI did some validations and here is its report:
+[auto build test WARNING on mptcp/export]
+[also build test WARNING on mptcp/export-net bpf-next/master bpf/master linus/master v6.4 next-20230703]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5904799128879104
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5904799128879104/summary/summary.txt
+url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/Squash-to-selftests-bpf-add-two-mptcp-netns-helpers/20230703-144151
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+patch link:    https://lore.kernel.org/r/bf1cd56ede55306b3272c6b3069830ea6a189c97.1688366249.git.geliang.tang%40suse.com
+patch subject: [PATCH mptcp-next v3 2/5] net: socket: add socket_create wrapper
+config: um-allnoconfig (https://download.01.org/0day-ci/archive/20230703/202307031701.pEfe6hVq-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
+reproduce: (https://download.01.org/0day-ci/archive/20230703/202307031701.pEfe6hVq-lkp@intel.com/reproduce)
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6467749082300416
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6467749082300416/summary/summary.txt
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202307031701.pEfe6hVq-lkp@intel.com/
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5060374198747136
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5060374198747136/su=
-mmary/summary.txt
+All warnings (new ones prefixed by >>):
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5341849175457792
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5341849175457792/su=
-mmary/summary.txt
+   In file included from net/socket.c:55:
+   In file included from include/linux/bpf-cgroup.h:5:
+   In file included from include/linux/bpf.h:31:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:26:
+   In file included from include/linux/kernel_stat.h:9:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from arch/um/include/asm/hardirq.h:5:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/um/include/asm/io.h:24:
+   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     547 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+         |                                                   ^
+   In file included from net/socket.c:55:
+   In file included from include/linux/bpf-cgroup.h:5:
+   In file included from include/linux/bpf.h:31:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:26:
+   In file included from include/linux/kernel_stat.h:9:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from arch/um/include/asm/hardirq.h:5:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/um/include/asm/io.h:24:
+   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+         |                                                   ^
+   In file included from net/socket.c:55:
+   In file included from include/linux/bpf-cgroup.h:5:
+   In file included from include/linux/bpf.h:31:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:26:
+   In file included from include/linux/kernel_stat.h:9:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from arch/um/include/asm/hardirq.h:5:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/um/include/asm/io.h:24:
+   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     584 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:692:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     692 |         readsb(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:700:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     700 |         readsw(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:708:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     708 |         readsl(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:717:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     717 |         writesb(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:726:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     726 |         writesw(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:735:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     735 |         writesl(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+>> net/socket.c:1591:5: warning: no previous prototype for function 'socket_create' [-Wmissing-prototypes]
+    1591 | int socket_create(struct socket_args *args, struct socket **res)
+         |     ^
+   net/socket.c:1591:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+    1591 | int socket_create(struct socket_args *args, struct socket **res)
+         | ^
+         | static 
+   13 warnings generated.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/de52c09fbaf4
 
+vim +/socket_create +1591 net/socket.c
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+  1590	
+> 1591	int socket_create(struct socket_args *args, struct socket **res)
+  1592	{
+  1593		return sock_create(args->family, args->type, args->protocol, res);
+  1594	}
+  1595	EXPORT_SYMBOL(socket_create);
+  1596	
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
