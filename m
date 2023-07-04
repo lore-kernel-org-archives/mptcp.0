@@ -1,47 +1,47 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FBD8C01
-	for <mptcp@lists.linux.dev>; Tue,  4 Jul 2023 20:44:58 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-3fbc244d386so65922405e9.2
-        for <mptcp@lists.linux.dev>; Tue, 04 Jul 2023 13:44:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E598F48
+	for <mptcp@lists.linux.dev>; Tue,  4 Jul 2023 20:45:00 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-3fbd33a57dcso40654185e9.0
+        for <mptcp@lists.linux.dev>; Tue, 04 Jul 2023 13:45:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1688503497; x=1691095497;
+        d=tessares.net; s=google; t=1688503499; x=1691095499;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=W2bvJB/FZnxo5jzEr4QcC8QklV4qR/ytDAB3uSZlV1s=;
-        b=tpnnQtsF4wgpEDKgyTJ6ed4dl6w5FMipqzLOw6tx3Dnaxk+xjQG7Beq2jlvysO1P7o
-         OW8iUB/ERBAFCOOGej3B6rOkfDoif4r4Zh3pxBcFoV5l93D/slqdgHtMD2sHMyAL0Bkc
-         wV0RXaI2CN8PJ1Ju2kf/7uyuIDwcmFSLunWcAYpV+/LVZNJbMNngdbffUhv2709YGwuv
-         i9qu67H0F7BTc9FEJ/BA4ZMePXsbnHoHEHUpN6yJicH12QzYzwDxeD4iSAXIT5ihNXXJ
-         xuJqQ0PCgbEg4hiEZPE455N+NDVIB+LwDqTXVv9Crk9CJVpVUE78va0Q6DB+O4Lvnbs/
-         0hvg==
+        bh=tR0k2iTRIzKE81HT+bkzTA31whTNvrU0QAZxxbGhfzQ=;
+        b=15xi3swQPtclF0IVzxdU8DYymWPRw3YydN103FbbI3bKcLpQcK2gcodSj0ldJpoz/x
+         CTdlJMITHhKF7d2wPIvy4E5tUNq3gLHaOiF/PpW5vVW4BkH3RcLSYUPoTazBEQaiMmYk
+         gqkw+t+HqHeq9ggZ/jlv7ynnl3KdzGGgJqNChq6MhEIfsLPFFYxOFgPBvjZotsB5brMe
+         S4FNLjdvY2vhtltbCGkI/KVQ+KQFWZIZ+yQd+armmcUHnmuBnjm11yz8frWFwxpIWgGV
+         wPLY8O8gfm3mN51aOTy9IMpPQAmTDgw5jiNWSqXeURFtnRFJkLaDJFPcAQw3WhMiZBk+
+         cozA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688503497; x=1691095497;
+        d=1e100.net; s=20221208; t=1688503499; x=1691095499;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=W2bvJB/FZnxo5jzEr4QcC8QklV4qR/ytDAB3uSZlV1s=;
-        b=PMaq7mQIVansj7beqchFTq4MMFk5IOz60IYPPBt2XQaWiYtDmW9rNOSAiNA/v7391N
-         I7M0knV1Venf4KCGPqwQLm4kwF/dzinQStdGv44pMGHFyWUpXIsulcx3HR7GLwgu7NGC
-         BCJCJP4RxzJ/E0LV2JfsQyCC0ex2Hr8DOWU5kTO2L12Gsmj3Rt7n63BLNExS3AqxWC9S
-         GH1R3IC/8V42GW5URfgHgSSvz6idErXpUDoq31CUuiXYGfWcU8OyCUa/cyjVDbhhhYXb
-         qGccKUsYmrHp/BTtHAc5h+xt2Pu9Iu8b+Vtos+uktVrtpfvSaSpN9Ngi/0WAs+M7lcFS
-         VwDA==
-X-Gm-Message-State: AC+VfDzfDGsaDRjRHoQLLQPIqo0wUQB/bDF4z6y5CezoTwJAYMN5TY7O
-	wzqM6zqMficRWxg4guxoiWy8Qg==
-X-Google-Smtp-Source: ACHHUZ5bU4qTTBJWpOZqM4B76rYJNoQTbEgYmNSim9mT2Ch4eVvSPN9VMvJO0RqepPhhLmrU0zRQTQ==
-X-Received: by 2002:a05:600c:ac6:b0:3f8:f1db:d206 with SMTP id c6-20020a05600c0ac600b003f8f1dbd206mr11700790wmr.25.1688503497372;
-        Tue, 04 Jul 2023 13:44:57 -0700 (PDT)
+        bh=tR0k2iTRIzKE81HT+bkzTA31whTNvrU0QAZxxbGhfzQ=;
+        b=ggJmmnel2vxwfg7A1/5QSLJ4bfQLU4Cz9xUb21O7aSCMAKrVeFP5iYSr/2uShFjZnh
+         mHuKTfmbQNXP+V+xVjbi6iJ/54N5O10RbI17YTu4A9J4Q2F24/jkrM/ijVCcdPac2To3
+         dpgWJ/m8C+vj9k0qSC8Cp2rd4s2FCKU80pPtgVIeeWlIAv8jQIg/EQ5bCFiBXUQpWFAH
+         8HcyTZv76+BVW0D8e/Ve2uBw3fPn1cNrAWQiv0gtTrorI4MSySNA48ELHG+lbLWhisUy
+         3Mi6JZf+NQ03B5B0JHuVRAvKAtdobSBxMN58bVPSwCTdmW9DmST+/1N1lRSiTo70dhxb
+         7uuQ==
+X-Gm-Message-State: AC+VfDxQtnH5jeAGuYFMkzTts90ixg5MIT8wLPP+hrhYV1ANjIQFu2Kp
+	8QAC7yEfGEZN11Jf+vMhVU4dUw==
+X-Google-Smtp-Source: ACHHUZ59IpqYXAyE8vX2lHvJFL3Mw4BiAVly33DI6yAZa2yA36XC81B5VyWVoEqSSUmlk3V86vUNFA==
+X-Received: by 2002:a7b:c3cc:0:b0:3fb:4041:fef5 with SMTP id t12-20020a7bc3cc000000b003fb4041fef5mr12204935wmj.23.1688503499207;
+        Tue, 04 Jul 2023 13:44:59 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id y4-20020a05600c364400b003fa74bff02asm115332wmq.26.2023.07.04.13.44.56
+        by smtp.gmail.com with ESMTPSA id y4-20020a05600c364400b003fa74bff02asm115332wmq.26.2023.07.04.13.44.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jul 2023 13:44:57 -0700 (PDT)
+        Tue, 04 Jul 2023 13:44:59 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Tue, 04 Jul 2023 22:44:37 +0200
-Subject: [PATCH net 5/9] selftests: mptcp: sockopt: return error if wrong
- mark
+Date: Tue, 04 Jul 2023 22:44:39 +0200
+Subject: [PATCH net 7/9] selftests: mptcp: userspace_pm: report errors with
+ 'remove' tests
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230704-upstream-net-20230704-misc-fixes-6-5-rc1-v1-5-d7e67c274ca5@tessares.net>
+Message-Id: <20230704-upstream-net-20230704-misc-fixes-6-5-rc1-v1-7-d7e67c274ca5@tessares.net>
 References: <20230704-upstream-net-20230704-misc-fixes-6-5-rc1-v1-0-d7e67c274ca5@tessares.net>
 In-Reply-To: <20230704-upstream-net-20230704-misc-fixes-6-5-rc1-v1-0-d7e67c274ca5@tessares.net>
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
@@ -62,70 +62,59 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, 
  Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1766;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1241;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=/4aVehRRev3S9W7xO/C/bt4X/bbi2VBYNMNB8ebnj08=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkpITD88GNsyzRs/Tn2r9ymESxt+KclVLdGUYpm
- d1byI6+yIOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZKSEwwAKCRD2t4JPQmmg
- c0nID/9d4QgKyGlEbMrwRLBaFKGQcBe2iolm2sR0Pv+l+rfuo8J5Xv1tBKHCOHZO+Og2P7XmlwR
- hc9j2ftf6IDaJpm8S38nnWV1QYwEWnzUgqroiN6a800Tw6vfTi6CInIZMAMuRSTk8aPn5Bquhpt
- XmIaqKbbUJHtBacCcCd4d9biN1+83oUlTlYMyLtPNIwQqbzwdtiAanCKy6onN5mQsMNBrz+dk9s
- PDu4AK3IMI/3WYlET+WCiojzkSce7xOW0jbTYkJT2C6BPjsi2fCXkdmj8C16JALj5uWSYf2zhVn
- OSGlpujXdlnIZCO8OJkOLvp8R72USRz1T6fVIUqjn0x4/Bk6nDpDzyBbyb9azy8J4b0jLssVLRH
- OIgJZQc8j5vk6d7et8sW5X0O+qHE1KHgy/KCJc5qt20KwMVpSokWzvaFEV8AiEgGDEgu9on7OEH
- JN5ZaDgFrmbIUSobBo4czJlM/IzzP9PKDyC47Mv2fSj8uvCesV5EmvpcZF+z6oHPk5BkqoAg9nU
- lF0jWWjkiMOR/uCsO2YccugMiloIOPB0lFB6wYvNzIFJ/hBUImx+acGsi1ETN3CxeOGtD/zQsqh
- cDaHYvsj3UY7bSKgtuXx39DiIH+x2iW4l00vEAfTxhV1TeklUoeHc/UxObBBols6NEOYaqRulBU
- MvrmanPtSkYfADg==
+ bh=WaDwtJkFZncOrJ2Iiu1Uelir58gdeQmDpJzveP7xvKw=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkpITDlegwxopJyC/HHSHjFuoe7Cn6retGpX9Th
+ 7hdiQt7nu2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZKSEwwAKCRD2t4JPQmmg
+ c53ZEADBQX7KvGpR+S63LrwbAUDDK876lVnsGeEJf2gJSXKhvZYB4lyqMPhcY7y4wmqPQ9WQgkA
+ 7KnJqq9DmENCzBrGObF6JX/gbH9ggBVUl/uG2JieVnF1cMKq/YPoMkvQJGSRW/X7IR8/1lhgvAO
+ wCYFdhU3QL9aw2ZP4qAtCqSsBndxxIA6T+JAaMWU0pmbb9X/8eJ9QlOWKvpxrJpBhbraErR5jLS
+ nFLYU60Ce9yjBytCESDBet3aSr6zg2YEO0UKvPFWifSAB1ykEokjbkuOFKA8clMoDwqaOKOw9Zz
+ tCynaBjZA42puB+DV8qSsbGy5yBqrYX09BHPQt9xzpY7wc5wbihA0eVdDKj16C6F4LOoVMNpViA
+ F+ZsS3h+OQCv3wQUFTQs+gSGttC7F1RHIz0hkk6szf/11W9B4xgaN4AdjR9UxDlDUtkiTPz7AL/
+ ex995RoCtwXvZSYE6bsxn+nFiIRGdbJnmupeP889l9TjqrrsuXRZMin9XJHrxvH2lkBPxmV6sjn
+ X7/mCjrHNLfdTbgGuSw+kE+XNAlooJIdICVYcY3WDp6nvUJQSknFQ2Afk3tJNd0Cc7vrnsH+2JX
+ sg99XmkddSpLyzvcy3aBzG7NJbBJmETb1b4/ZaiIW52HuSe2MwAmHarYhScEYvnguaCwxumqw18
+ U5yH0uO1OVZYITA==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When an error was detected when checking the marks, a message was
-correctly printed mentioning the error but followed by another one
-saying everything was OK and the selftest was not marked as failed as
-expected.
+A message was mentioning an issue with the "remove" tests but the
+selftest was not marked as failed.
 
-Now the 'ret' variable is directly set to 1 in order to make sure the
-exit is done with an error, similar to what is done in other functions.
-While at it, the error is correctly propagated to the caller.
+Directly exit with an error like it is done everywhere else in this
+selftest.
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
-Fixes: dc65fe82fb07 ("selftests: mptcp: add packet mark test case")
+Fixes: 259a834fadda ("selftests: mptcp: functional tests for the userspace PM type")
 Cc: stable@vger.kernel.org
 Acked-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index c21bfd7f0c01..dc8d473fc82c 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -128,6 +128,7 @@ check_mark()
- 	for v in $values; do
- 		if [ $v -ne 0 ]; then
- 			echo "FAIL: got $tables $values in ns $ns , not 0 - not all expected packets marked" 1>&2
-+			ret=1
- 			return 1
- 		fi
- 	done
-@@ -227,11 +228,11 @@ do_transfer()
- 	fi
- 
- 	if [ $local_addr = "::" ];then
--		check_mark $listener_ns 6
--		check_mark $connector_ns 6
-+		check_mark $listener_ns 6 || retc=1
-+		check_mark $connector_ns 6 || retc=1
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 841a67a7d524..b180133a30af 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -423,6 +423,7 @@ test_remove()
+ 		stdbuf -o0 -e0 printf "[OK]\n"
  	else
--		check_mark $listener_ns 4
--		check_mark $connector_ns 4
-+		check_mark $listener_ns 4 || retc=1
-+		check_mark $connector_ns 4 || retc=1
+ 		stdbuf -o0 -e0 printf "[FAIL]\n"
++		exit 1
  	fi
  
- 	check_transfer $cin $sout "file received by server"
+ 	# RM_ADDR using an invalid addr id should result in no action
+@@ -437,6 +438,7 @@ test_remove()
+ 		stdbuf -o0 -e0 printf "[OK]\n"
+ 	else
+ 		stdbuf -o0 -e0 printf "[FAIL]\n"
++		exit 1
+ 	fi
+ 
+ 	# RM_ADDR from the client to server machine
 
 -- 
 2.40.1
