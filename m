@@ -1,46 +1,47 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E67814
-	for <mptcp@lists.linux.dev>; Tue,  4 Jul 2023 20:44:54 +0000 (UTC)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3142860734aso30464f8f.1
-        for <mptcp@lists.linux.dev>; Tue, 04 Jul 2023 13:44:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE99BA4F
+	for <mptcp@lists.linux.dev>; Tue,  4 Jul 2023 20:44:55 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3fbc244d386so65921865e9.2
+        for <mptcp@lists.linux.dev>; Tue, 04 Jul 2023 13:44:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1688503492; x=1691095492;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=D7p+M80U1GYeG4EQloROMoimHvJJ+Gr6Qt5RflHkHcw=;
-        b=M1UqHfYV5iTFuBkMyx2N06hk9zHxdmUXlwD5gsZVNO7zN+QaCZgniU+y2NXMwymf87
-         99Q7D0/M0PHWAmedSvH8oRKU/jz8jNWTj5Pg1rnPAPBR6+nQ1ZGxxi10hWfFTpcDywMI
-         K6nLj6BBEZnPeDX8nD3cmPmebxU2isy4Z8s1rWwnkP/8LW1I5mAxN7c2e/sR/RgwvOga
-         WZoSO9EfD8vRcZBV7mTEbCT9lzW5F9wS0pNXVC1d/HyOhAJkTCEHcLtBkGTsnHGkYiQf
-         3MvRINDYZENsjTFWTYxMb+V4L1cb/6EvqaTsOsejleS4MmQQcerlb2sQQJEjyZcvfKCs
-         veew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688503492; x=1691095492;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=tessares.net; s=google; t=1688503493; x=1691095493;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=D7p+M80U1GYeG4EQloROMoimHvJJ+Gr6Qt5RflHkHcw=;
-        b=N0HtUKeDyQW5vgC//CajwgbLlv1RLFVo96XIKkOd+u6VkRANfW87+URoMV7hHD4Cx/
-         DvAultAvNso5XYXndFKShzwrhslCNMloR44RrGyF54bOQdLGcwza+1BS2sBaDfMwe/ni
-         EsQa8NrPjCZl4FVN98BR/CjMLlRUW/Yi7emjrUtCP37IbN6Fosm5qB++sXyLYMb5ZTDv
-         IJFKTZ/CKta8xBnB4kE1zhxiusZApwEhkCJW2YmlKF5SaYh2Yq/VERu+RzV/QnMekCKU
-         XDC5gUB4MxdjoiVsoQkKdqpvjo4tn1WZmKzC7B4CxlPuDaC3I1vy6g7ebMO2uSd0mmiy
-         gMiw==
-X-Gm-Message-State: ABy/qLZn3gzQdGS8g6foGO1OfAKubkv47eEzoYMa9z/FtCaLhvadvcFQ
-	GPYnrkUV70AGA/0rkH0d0x5GWw==
-X-Google-Smtp-Source: APBJJlGJDEcokr+GcHU+9Qf/h2qQosHMZUQwXe9EmgGzJ3+LjM6YP7JNYrs43VTmd0jc5qdA5j+VRw==
-X-Received: by 2002:adf:e6c4:0:b0:313:f000:5de6 with SMTP id y4-20020adfe6c4000000b00313f0005de6mr304722wrm.16.1688503492711;
-        Tue, 04 Jul 2023 13:44:52 -0700 (PDT)
+        bh=Q9+vtbDr/83fQnYq7vQfS8obpzLNRgRXKiB0wIBmyH0=;
+        b=dDcIwKrxO+HEq9ri/Cq6iieSfRxEKcKW4RwIVnf3DXJZpfr2p9BB2lzfQ8tHsaItOd
+         MvUD5fRsKgQsDGk+pYer9hH84a90D2cibTDaVtGQssa9gpBmTwwLaYhUqtzZwgYNmxxn
+         oR8GQxHrq8QvUBPYICwr5TvF2f63HIXmIH8IAlgwy2rKhuzUlmrhKs2OqQo1knReekkh
+         +5tOjzW4OZdWTWODHSaL+f8IOatR9FyzB/wlGd3KwAEZCU4/QC/DrLzoB1VhOD7x/CSZ
+         8SxYBdg4lXjzA7/WQwQSQ4mbbi9MJEbFzeG7FoB8PbiLPGO2ZNzG7ksaz4eyeP1hPsI2
+         /WkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688503493; x=1691095493;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q9+vtbDr/83fQnYq7vQfS8obpzLNRgRXKiB0wIBmyH0=;
+        b=Yq7FULgX7itcFJkDQX0VOwHVCt5iDq9bsvBbws302MCpgJKWgOyrhXrm2vQtQEXf04
+         a4csO7PbQDtw6gxd8+gHiis5ceyGmJlkGHtBNZr7+HPI7hr1GzwkTYfEX9S8j0TfTLdy
+         fAF6vunoo3ATnletRQDfsox3TvSTUwX1wIqlA9nDeOXmY4QXxENfRqbGJfXp+ErhXNcV
+         i6sdwFMpHul3jQGJ0oon3/BkASqUNqhIR35agZCRrPP9cDbpKHDGxgumHwgwH19usp24
+         jKQW2MoMoSE8Wvh4e3kmXwQcc1WSfNkcD2r7MiLcG1+siy347YYeU9hbbCFn+roC0h3y
+         l+jw==
+X-Gm-Message-State: AC+VfDwab03DBjLnidJHD3QBOrQIV39H3Imf0GrZShGLVGLl8wzTHYcx
+	TTRKD3SRsqOHRJ0cIZJezqWPBA==
+X-Google-Smtp-Source: ACHHUZ4CWWrnvcHozRW3+LOF08ie6qtbTcP4Cmm6gefqwBg+2lEGmq2vk5XfoPcotZhZqiqAAN1wMw==
+X-Received: by 2002:a05:600c:24d:b0:3f7:f884:7be3 with SMTP id 13-20020a05600c024d00b003f7f8847be3mr11702546wmj.4.1688503493621;
+        Tue, 04 Jul 2023 13:44:53 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id y4-20020a05600c364400b003fa74bff02asm115332wmq.26.2023.07.04.13.44.51
+        by smtp.gmail.com with ESMTPSA id y4-20020a05600c364400b003fa74bff02asm115332wmq.26.2023.07.04.13.44.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jul 2023 13:44:52 -0700 (PDT)
+        Tue, 04 Jul 2023 13:44:53 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH net 0/9] mptcp: fixes for v6.5
-Date: Tue, 04 Jul 2023 22:44:32 +0200
-Message-Id: <20230704-upstream-net-20230704-misc-fixes-6-5-rc1-v1-0-d7e67c274ca5@tessares.net>
+Date: Tue, 04 Jul 2023 22:44:33 +0200
+Subject: [PATCH net 1/9] mptcp: ensure subflow is unhashed before cleaning
+ the backlog
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,9 +50,9 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALCEpGQC/z2MQQ7CMAwEv1L5zEppaALlK4hDFQz40FDZBSFV/
- XstDj3OamcWMlZho0uzkPJXTN7VoT00VF5DfTLk7kwxxGM4hQ6fyWblYUTlGfs6ihU85MeGjAQ
- tLUqKOZxz16fUk+cm5f/Ba1dymW7rugFyB+rLfwAAAA==
+Message-Id: <20230704-upstream-net-20230704-misc-fixes-6-5-rc1-v1-1-d7e67c274ca5@tessares.net>
+References: <20230704-upstream-net-20230704-misc-fixes-6-5-rc1-v1-0-d7e67c274ca5@tessares.net>
+In-Reply-To: <20230704-upstream-net-20230704-misc-fixes-6-5-rc1-v1-0-d7e67c274ca5@tessares.net>
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -59,88 +60,62 @@ To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
  Kishen Maloor <kishen.maloor@intel.com>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org, 
- Christoph Paasch <cpaasch@apple.com>
+ Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2556;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1193;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=LrpdosI7KkBh+7o63PMBiX+cMjX7K8ZvW3l5GVO0yrY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkpITDht9FvKyasZKl31DMWpyv+rEoet2oV7wpE
- XA80Kqe93yJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZKSEwwAKCRD2t4JPQmmg
- c+2ZD/459QZCT25gHkqWmvZaw9TtfYOOfjkLuFEIFGf/8muDhYY55mTQBm3kysY70oNik16HBFH
- nJETfi3nq0oQ3BxJolaRyC2oN8QK/fgHg2VfYLV8chUw+KeL3QWLN7NgCNXgtVB4lp8pTmmixVz
- WZnMdpUkutR74JIJddykGKzmQL/XEyQ42dmkf9oQNIpQT4ujoGkKnjkQ0ZjXW6gizWTO9FO6xk/
- HmfVDFiUmDlXwJyaH2084hWbFCbiVCf00XKFgvRmEGs4xiB/RclIdPVf8QaZcI3fg5UcRxdyrql
- dqpCm8oTAlo+Qo1hb795aA2wWv/gG94DnMllM7mOwPJrdiL/TlsQWnRrc7kfR9Qe1S9A4IATC0P
- v0VBQPHFKN1Dmjg+9fYMMG3z/8mBLotJh1QB2PdqsoEvF4MKXD6L1jg6COijonfGbWE+2tAlJzJ
- 2T0hoGZDolGJzrvCTeIGkiW3X+z00+bao3BfcOgCrpw5SauPEt7ZExSYWVFoYEqpWVfNqu5rE0x
- 8pkX6/2myChEUXOOPePFDdRXwIY8rjd6vO4pO4UJi+rWqwBlG/2PTIUSAXWjqAVM1d8ms0NeTxp
- NArL+xGx3CicDjD3OVxVkgwVEzUDLlps/Fnea61gtD7Gtre3zzz78v9FMc6GHHlruqaMZnI+K38
- pCoOntMnR09+xPQ==
+ bh=78yDWCcA8nZMCwaJymS1SUQrRgt/rwieryZs2j/mBnQ=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkpITDTTJdrfCKEn0rRGWIZvU/RbuXBa0c61Ver
+ f1XK72qPSKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZKSEwwAKCRD2t4JPQmmg
+ c3OED/4yrhdxKWXDzRsPfRLPgPa5JSSeswZ5hDKLF8OS5fBmwoSdJdwsr3QS2cVZZ6pNudKf3En
+ 1IFzsMVNZmQxJPzJsens5nkKdp+++70BSMP+td5jpugtM6lj/xAHtjEBdxVnJqS7zaXFzs7Fqo/
+ AlUYpsiBK/kvqK9rsyxHoygepYVFHi3Wi2drfzJISvEc2dqBxfVaEgr0QNSk9gBBRQNAIidt8Qo
+ 4FaP6D6pcDtcTGDLHBygt6zWt0dscev9L4LonP/ot4WJG2WX/1a+UXKmiCJKZjNPPfLB5MmX9ef
+ kEhsaD1q5HB27+6yQXqFqYA0oBp1QN+bfoKFgbO1yk3X2XXojtvliebBTA3Lb5viA0nrMp9EKR9
+ GZ5cKuZIe+dtY9WnjWV3j7C2I2Z5r5Hq64P9LJUXAuWalpDw2fetRPZQ9ykcBhgt5Th3ZN7u9/2
+ HI3Z3E3KvDsJWKE9h4dQXggYe1rqNvb9DCoZSE5zAX1qk4sohtZnIL1EHHeNceeRo5nUoxYCh8Z
+ pCJ5iFOdblW4MVMPLRz4ns+JX80nqFnzgQj09Po0hM/saBgiYTV/RQJq2dgUL1g0LLKopNl/ouG
+ 3DFLTYj2Tr70Eouhwm6E5KldqAuRbT9L2g4bM7ukSEUXJ7/E0hZz6HwaAKANcmcJsWXAEaZjGZM
+ GwEc0r1z/3YRP/g==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Here is a first batch of fixes for v6.5 and older.
+From: Paolo Abeni <pabeni@redhat.com>
 
-The fixes are not linked to each others.
+While tacking care of the mptcp-level listener I unintentionally
+moved the subflow level unhash after the subflow listener backlog
+cleanup.
 
-Patch 1 ensures subflows are unhashed before cleaning the backlog to
-avoid races. This fixes another recent fix from v6.4.
+That could cause some nasty race and makes the code harder to read.
 
-Patch 2 does not rely on implicit state check in mptcp_listen() to avoid
-races when receiving an MP_FASTCLOSE. A regression from v5.17.
+Address the issue restoring the proper order of operations.
 
-The rest fixes issues in the selftests.
-
-Patch 3 makes sure errors when setting up the environment are no longer
-ignored. For v5.17+.
-
-Patch 4 uses 'iptables-legacy' if available to be able to run on older
-kernels. A fix for v5.13 and newer.
-
-Patch 5 catches errors when issues are detected with packet marks. Also
-for v5.13+.
-
-Patch 6 uses the correct variable instead of an undefined one. Even if
-there was no visible impact, it can help to find regressions later. An
-issue visible in v5.19+.
-
-Patch 7 makes sure errors with some sub-tests are reported to have the
-selftest marked as failed as expected. Also for v5.19+.
-
-Patch 8 adds a kernel config that is required to execute MPTCP
-selftests. It is valid for v5.9+.
-
-Patch 9 fixes issues when validating the userspace path-manager with
-32-bit arch, an issue affecting v5.19+.
-
+Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-Matthieu Baerts (7):
-      selftests: mptcp: connect: fail if nft supposed to work
-      selftests: mptcp: sockopt: use 'iptables-legacy' if available
-      selftests: mptcp: sockopt: return error if wrong mark
-      selftests: mptcp: userspace_pm: use correct server port
-      selftests: mptcp: userspace_pm: report errors with 'remove' tests
-      selftests: mptcp: depend on SYN_COOKIES
-      selftests: mptcp: pm_nl_ctl: fix 32-bit support
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Paolo Abeni (2):
-      mptcp: ensure subflow is unhashed before cleaning the backlog
-      mptcp: do not rely on implicit state check in mptcp_listen()
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e892673deb73..489a3defdde5 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2909,10 +2909,10 @@ static void mptcp_check_listen_stop(struct sock *sk)
+ 		return;
+ 
+ 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
++	tcp_set_state(ssk, TCP_CLOSE);
+ 	mptcp_subflow_queue_clean(sk, ssk);
+ 	inet_csk_listen_stop(ssk);
+ 	mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CLOSED);
+-	tcp_set_state(ssk, TCP_CLOSE);
+ 	release_sock(ssk);
+ }
+ 
 
- net/mptcp/protocol.c                               |  7 +++++-
- tools/testing/selftests/net/mptcp/config           |  1 +
- tools/testing/selftests/net/mptcp/mptcp_connect.sh |  3 +++
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 29 ++++++++++++----------
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c      | 10 ++++----
- tools/testing/selftests/net/mptcp/userspace_pm.sh  |  4 ++-
- 6 files changed, 34 insertions(+), 20 deletions(-)
----
-base-commit: 14bb236b29922c4f57d8c05bfdbcb82677f917c9
-change-id: 20230704-upstream-net-20230704-misc-fixes-6-5-rc1-c52608649559
-
-Best regards,
 -- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
+2.40.1
 
