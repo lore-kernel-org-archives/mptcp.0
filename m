@@ -1,445 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DF363B2
-	for <mptcp@lists.linux.dev>; Tue,  4 Jul 2023 14:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1688481667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IzV8VkEnpkh38iQnnNmRk82dCznF+IoPQECE6UQav9M=;
-	b=hDb/E42EtnR5fgdiXeRB4SbwrA+EYQ+x3IOQqh78qwEzfW+xG2Pk1tMy0sCU9A6wHYr4i3
-	B68+bZE2Pm9HCtGU7DOWYesa6qDGb8cL377X65t+/hZ21bFnC9Eh9I8In5TeYnFCNU8rT+
-	4p6FzT0o1Mh47tfE1/lYMH0UoJTRpXQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-10-Yh2NgRZDNum3xmleF_h8Hg-1; Tue, 04 Jul 2023 10:41:05 -0400
-X-MC-Unique: Yh2NgRZDNum3xmleF_h8Hg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 82DC9101146C
-	for <mptcp@lists.linux.dev>; Tue,  4 Jul 2023 14:41:05 +0000 (UTC)
-Received: from dcaratti.users.ipa.redhat.com (unknown [10.45.224.49])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 21941200B415
-	for <mptcp@lists.linux.dev>; Tue,  4 Jul 2023 14:41:05 +0000 (UTC)
-From: Davide Caratti <dcaratti@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [RFC mptcp-next v2] Documentation: netlink: add a YAML spec for mptcp
-Date: Tue,  4 Jul 2023 16:40:56 +0200
-Message-Id: <d462c557c05d60a217f14ff77cd9702ed3ccf2c5.1688481634.git.dcaratti@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591AB6D18
+	for <mptcp@lists.linux.dev>; Tue,  4 Jul 2023 16:21:39 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-307d20548adso6403828f8f.0
+        for <mptcp@lists.linux.dev>; Tue, 04 Jul 2023 09:21:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1688487698; x=1691079698;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EyHu++cEhaPCp3VvyjGuTARDtjcZgL8aNYiTavJYg/g=;
+        b=lrJGQG3dP76bOpqIXZdaSJJVpaAHPwcGtC+yHxFlNIgjkGaJEBmJ5uePYzYTy9nuVq
+         fSXZ0lkslD4+4xJNMfzgs4lRNder1Z6TrH6MxjvTnUVhq69Bi1wxnNcI0YGJz1TAKLbg
+         XbEHcMvXHFUFjQP9/hkMoMEWC82qFZuIOv0BJRDCxh0b6Odr2ljYxJYKHaCbx4NTZgHe
+         gnJmKEyaSkLKzzcwU5qTLWHmhg7hWigE5mVB1PnGMWeWjS4RA1tRLqZ/L4sfKeCb+AfT
+         tbNp2JTJKbpLRCdvR3syCxCflpClxd/xggmnwomAjFeqEsRBHq/HbXVmCqCTdnpHQJQ5
+         ALjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688487698; x=1691079698;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EyHu++cEhaPCp3VvyjGuTARDtjcZgL8aNYiTavJYg/g=;
+        b=G8clYzKBFfC/P3aICctGjRQglYZ+WrTzzgGUza8Qh9yACbRfcj9gSZMnVhZxwyJ8iP
+         alJgVSh8+ik4J/eIls1mQ2phS14EFnhdsY5Y6TPaGlkpOJOjM5W/FIv7P2qka+g2Lx2/
+         2KVH7BJNFlNE1Z78JsadzioG9FiJGixH6rVsJwDWY2+t+owT2ZsGVZVEMEwIMt80S04o
+         QHQQnkbz+umg5fImpZv9lfXcA02ENOEdX1nrT42EnixZWzrWMHXNJDT6+NgmmLKDKuGa
+         LDmHmzEE7j8Ffek1mWxAZ3jbN4fLRjQm2EmO+5MU7TZPvwutQY38Mfwuw9KKaN2S9uLK
+         W6oA==
+X-Gm-Message-State: ABy/qLaYEJWfh7g1KQaVLyYU56U/Xt42C+PXaZcY9OX20UDxoYeYg1sK
+	ocSvjSO4bRHLr3eurg+xcFeqNxOuCUYTmsRxZ2BwFg==
+X-Google-Smtp-Source: APBJJlEeU0XoQNr42nYcvquzPvkBDOF3o5gSUb/OVNsi1fTlT9HenBYyZiXJsIOncogAwNdQZ555MA==
+X-Received: by 2002:adf:f504:0:b0:30f:be04:5b5e with SMTP id q4-20020adff504000000b0030fbe045b5emr10730249wro.37.1688487697768;
+        Tue, 04 Jul 2023 09:21:37 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id f12-20020a7bc8cc000000b003fbbe41fd78sm15225326wml.10.2023.07.04.09.21.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jul 2023 09:21:37 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Date: Tue, 04 Jul 2023 18:21:26 +0200
+Subject: [PATCH mptcp-next] selftests: mptcp: pm_nl_ctl: fix 32-bit support
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230704-mptcp-issue-368-selftests-32-bits-v1-1-f4262dc1b07b@tessares.net>
+X-B4-Tracking: v=1; b=H4sIAAVHpGQC/yWNQQrCMBBFr1Jm7UCclLZ4FXGh6Y8OaAyZKIXSu
+ zfo6vEW7/+VDEVhdOpWKviq6Ts1OR46Co9ruoN1bk7ixLvR9fzKNWRWsw/YDxMbnrHCqrEXvml
+ jiGOIkHkavFDbyQVRl9/Hmf55wlLpsm07U8tzlH8AAAA=
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3167;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=c1ZDFJJMDafxgcCOpuFzAE0nBAufpK+1d2IHqkeLcCQ=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkpEcRdLAi7Zuscxj+bxmOqrBkG3l9ZE4N+ziVx
+ tjVX9fOX9iJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZKRHEQAKCRD2t4JPQmmg
+ cwyKEADUJTLBRI9AXnq5zDY/TERttv2Voj60FToY6whpeZvmtXhlk3YmTbmaAip7qDk30Wu3eDk
+ 8pzRTLRbX5jBnxOWWMoX/xWMai0euujFBoLz1ScPWkLnSCijzenoK1zWobgFOxoaJHCzfaBzKgH
+ t01mX0eiKDsAmxLXdkzF2eA9ZxAX9fMu5QMy+fEtOmcFOkezx9hGxos9NhSrM+qGqKVar/Qc67p
+ 7QVpxZJgFMQL0EZTNaJDD5B3gfqhJ0SzX1CxCFFNniGG2K9ZR6/f8rbBuPT6rVQA0gKdWxvPqME
+ MPX/BRDBU7O0hJKO82tGGBXBoMjoDhccC1tqVJW67OrkfOAvUV+g/4oivowfA8XadyNGKB5wNd2
+ mtdw7E3OpY/pvjURViwgOXP9td7GI4ncGOyqHYd0rqFzY9n6HBLybq3gNrzLwrT+x1/8NyO/6sX
+ uXkXQzdrbWiQ/PM+QOEndqeuhpBIRgm7bwa09yntcQbl/ukQCvbWF1S01aLcRC9uJoapL5SsbZu
+ mHirWnfG3/SGPd0GoA4fwt4vtwPkV2EYl2XpWFn+tH7JKZfPit1iU++v4Q78fTTEZ22cYQSwi7V
+ tPixLb6MHrgCZajaoEQW1JfA5qcN+XagshnJBfHmDKRHMQOfY+OHmxNaDtcxcgIYpZ+Q3Yfn8tX
+ pwkuUkgK9lrBNZg==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-v2: use per-op instead of global policy
+When using pm_nl_ctl to validate userspace path-manager's behaviours, it
+was failing on 32-bit architectures ~half of the time.
 
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+pm_nl_ctl was not reporting any error but the command was not doing what
+it was expected to do. As a result, the expected linked event was not
+triggered after and the test failed.
+
+This is due to the fact the token given in argument to the application
+was parsed as an integer with atoi(): in a 32-bit arch, if the number
+was bigger than INT_MAX, 2147483647 was used instead.
+
+This can simply be fixed by using strtoul() instead of atoi().
+
+The errors have been seen "by change" when manually looking at the
+results from LKFT.
+
+Fixes: 9a0b36509df0 ("selftests: mptcp: support MPTCP_PM_CMD_ANNOUNCE")
+Fixes: ecd2a77d672f ("selftests: mptcp: support MPTCP_PM_CMD_REMOVE")
+Fixes: cf8d0a6dfd64 ("selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_CREATE")
+Fixes: 57cc361b8d38 ("selftests: mptcp: support MPTCP_PM_CMD_SUBFLOW_DESTROY")
+Fixes: ca188a25d43f ("selftests: mptcp: userspace PM support for MP_PRIO signals")
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- Documentation/netlink/specs/mptcp.yaml | 384 +++++++++++++++++++++++++
- 1 file changed, 384 insertions(+)
- create mode 100644 Documentation/netlink/specs/mptcp.yaml
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/netlink/specs/mptcp.yaml b/Documentation/netlink/specs/mptcp.yaml
-new file mode 100644
-index 000000000000..3c5d4a0b48f2
---- /dev/null
-+++ b/Documentation/netlink/specs/mptcp.yaml
-@@ -0,0 +1,384 @@
-+# SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
-+
-+name: mptcp_pm
-+protocol: genetlink-legacy
-+doc: Multipath TCP.
-+
-+c-family-name: mptcp_pm_name
-+c-version-name: mptcp_pm_ver
-+max-by-define: true
-+kernel-policy: per-op
-+
-+definitions:
-+  -
-+    type: enum
-+    name: event-type
-+    enum-name: mptcp_event_type
-+    name-prefix: mptcp_event_
-+    entries:
-+     -
-+      name: unspec
-+     -
-+      name: created
-+      value: 1
-+      doc:
-+        token, family, saddr4 | saddr6, daddr4 | daddr6, sport, dport
-+        A new MPTCP connection has been created. It is the good time to
-+        allocate memory and send ADD_ADDR if needed. Depending on the
-+        traffic-patterns it can take a long time until the
-+        MPTCP_EVENT_ESTABLISHED is sent.
-+     -
-+      name: established
-+      value: 2
-+      doc:
-+        token, family, saddr4 | saddr6, daddr4 | daddr6, sport, dport
-+        A MPTCP connection is established (can start new subflows).
-+     -
-+      name: closed
-+      value: 3
-+      doc:
-+        token
-+        A MPTCP connection has stopped.
-+     -
-+      name: announced
-+      value: 6
-+      doc:
-+        token, rem_id, family, daddr4 | daddr6 [, dport]
-+        A new address has been announced by the peer.
-+     -
-+      name: removed
-+      value: 7
-+      doc:
-+        token, rem_id
-+        An address has been lost by the peer.
-+     -
-+      name: sub_established
-+      value: 10
-+      doc:
-+        token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 | daddr6, sport,
-+        dport, backup, if_idx [, error]
-+        A new subflow has been established. 'error' should not be set.
-+     -
-+      name: sub_closed
-+      value: 11
-+      doc:
-+        token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 | daddr6, sport,
-+        dport, backup, if_idx [, error]
-+        A subflow has been closed. An error (copy of sk_err) could be set if an
-+        error has been detected for this subflow.
-+     -
-+      name: sub_priority
-+      value: 13
-+      doc:
-+        token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 | daddr6, sport,
-+        dport, backup, if_idx [, error]
-+        The priority of a subflow has changed. 'error' should not be set.
-+     -
-+      name: listener_created
-+      value: 15
-+      doc:
-+        family, sport, saddr4 | saddr6
-+        A new PM listener is created.
-+     -
-+      name: listener_closed
-+      value: 16
-+      doc:
-+        family, sport, saddr4 | saddr6
-+        A PM listener is closed.
-+
-+attribute-sets:
-+  -
-+    name: address
-+    name-prefix: mptcp_pm_addr_attr_
-+    attributes:
-+      -
-+        name: unspec
-+        type: unused
-+        value: 0
-+      -
-+        name: family
-+        type: u16
-+      -
-+        name: id
-+        type: u8
-+      -
-+        name: addr4
-+        type: u32
-+        byte-order: big-endian
-+      -
-+        name: addr6
-+        type: binary
-+        checks:
-+          min-len: 16
-+      -
-+        name: port
-+        type: u16
-+        byte-order: big-endian
-+      -
-+        name: flags
-+        type: u32
-+      -
-+        name: if_idx
-+        type: s32
-+  -
-+    name: subflow-attribute
-+    name-prefix: mptcp_subflow_attr_
-+    attributes:
-+      -
-+        name: unspec
-+        type: unused
-+        value: 0
-+      -
-+        name: token_rem
-+        type: u32
-+      -
-+        name: token_loc
-+        type: u32
-+      -
-+        name: relwrite_seq
-+        type: u32
-+      -
-+        name: map_seq
-+        type: u64
-+      -
-+        name: map_sfseq
-+        type: u32
-+      -
-+        name: ssn_offset
-+        type: u32
-+      -
-+        name: map_datalen
-+        type: u16
-+      -
-+        name: flags
-+        type: u32
-+      -
-+        name: id_rem
-+        type: u8
-+      -
-+        name: id_loc
-+        type: u8
-+      -
-+        name: pad
-+        type: pad
-+  -
-+    name: endpoint
-+    attributes:
-+      -
-+        name: addr
-+        type: nest
-+        nested-attributes: address
-+  -
-+    name: attr
-+    name-prefix: mptcp_pm_attr_
-+    attributes:
-+      -
-+        name: unspec
-+        type: unused
-+        value: 0
-+      -
-+        name: addr
-+        type: nest
-+        nested-attributes: address
-+      -
-+        name: rcv_add_addrs
-+        type: u32
-+      -
-+        name: subflows
-+        type: u32
-+      -
-+        name: token
-+        type: u32
-+      -
-+        name: loc_id
-+        type: u8
-+      -
-+        name: addr_remote
-+        type: nest
-+        nested-attributes: address
-+  -
-+    name: event_attr
-+    enum-name: mptcp_event_attr
-+    name-prefix: mptcp_attr_
-+    attributes:
-+      -
-+        name: UNSPEC
-+        type: unused
-+        value: 0
-+      -
-+        name: token
-+        type: u32
-+      -
-+        name: family
-+        type: u16
-+      -
-+        name: loc_id
-+        type: u8
-+      -
-+        name: rem_id
-+        type: u8
-+      -
-+        name: saddr4
-+        type: u32
-+        byte-order: big-endian
-+      -
-+        name: saddr6
-+        type: binary
-+        checks:
-+          min-len: 16
-+      -
-+        name: daddr4
-+        type: u32
-+        byte-order: big-endian
-+      -
-+        name: daddr6
-+        type: binary
-+        checks:
-+          min-len: 16
-+      -
-+        name: sport
-+        type: u16
-+        byte-order: big-endian
-+      -
-+        name: dport
-+        type: u16
-+        byte-order: big-endian
-+      -
-+        name: backup
-+        type: u8
-+      -
-+        name: error
-+        type: u8
-+      -
-+        name: flags
-+        type: u16
-+      -
-+        name: timeout
-+        type: u32
-+      -
-+        name: if_idx
-+        type: u32
-+      -
-+        name: reset_reason
-+        type: u32
-+      -
-+        name: reset_flags
-+        type: u32
-+      -
-+        name: server_side
-+        type: u8
-+
-+operations:
-+  list:
-+    -
-+      name: unspec
-+      doc: unused
-+      value: 0
-+    -
-+      name: add_addr
-+      doc: Add endpoint
-+      attribute-set: endpoint
-+      dont-validate: [ strict ]
-+      flags: [ uns-admin-perm ]
-+      do: &add_addr_attrs
-+        request:
-+          attributes:
-+            - addr
-+    -
-+      name: del_addr
-+      doc: Delete endpoint
-+      attribute-set: endpoint
-+      dont-validate: [ strict ]
-+      flags: [ uns-admin-perm ]
-+      do: *add_addr_attrs
-+    -
-+      name: get_addr
-+      doc: Get endpoint information
-+      attribute-set: endpoint
-+      dont-validate: [ strict ]
-+      flags: [ uns-admin-perm ]
-+      do: &get_addr_attrs 
-+        request:
-+          attributes:
-+           - addr
-+        reply:
-+          attributes:
-+           - addr
-+      dump: *get_addr_attrs
-+    -
-+      name:  flush_addrs
-+      doc: flush addresses
-+      attribute-set: endpoint
-+      dont-validate: [ strict ]
-+      flags: [ uns-admin-perm ]
-+      do: *add_addr_attrs
-+    -
-+      name: set_limits
-+      doc: Set protocol limits
-+      attribute-set: attr
-+      dont-validate: [ strict ]
-+      flags: [ uns-admin-perm ]
-+      do: &mptcp_limits
-+        request:
-+          attributes:
-+            - rcv_add_addrs
-+            - subflows
-+    -
-+      name: get_limits
-+      doc: Get protocol limits
-+      attribute-set: attr
-+      dont-validate: [ strict ]
-+      do: &mptcp_get_limits
-+        request:
-+           attributes:
-+            - rcv_add_addrs
-+            - subflows
-+        reply:
-+          attributes:
-+            - rcv_add_addrs
-+            - subflows
-+    -
-+      name: set_flags
-+      doc: Change endpoint flags
-+      attribute-set: endpoint
-+      dont-validate: [ strict ]
-+      flags: [ uns-admin-perm ]
-+      do: *add_addr_attrs
-+    -
-+      name: announce
-+      doc: announce new sf
-+      attribute-set: attr
-+      dont-validate: [ strict ]
-+      flags: [ uns-admin-perm ]
-+      do: &announce_add
-+        request:
-+          attributes:
-+            - token
-+            - addr
-+    -
-+      name: announce_rm
-+      doc: announce removal
-+      attribute-set: attr
-+      dont-validate: [ strict ]
-+      flags: [ uns-admin-perm ]
-+      do: *announce_add
-+    -
-+      name: subflow_create
-+      doc: todo
-+      attribute-set: attr
-+      dont-validate: [ strict ]
-+      flags: [ uns-admin-perm ]
-+      do: &sf_create
-+        request:
-+          attributes:
-+            - addr_remote
-+            - token
-+            - addr
-+    -
-+      name: subflow_destroy
-+      doc: todo
-+      attribute-set: attr
-+      dont-validate: [ strict ]
-+      flags: [ uns-admin-perm ]
-+      do: *sf_create
-+
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index abddf4c63e79..1887bd61bd9a 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -425,7 +425,7 @@ int dsf(int fd, int pm_family, int argc, char *argv[])
+ 	}
+ 
+ 	/* token */
+-	token = atoi(params[4]);
++	token = strtoul(params[4], NULL, 10);
+ 	rta = (void *)(data + off);
+ 	rta->rta_type = MPTCP_PM_ATTR_TOKEN;
+ 	rta->rta_len = RTA_LENGTH(4);
+@@ -551,7 +551,7 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+ 	}
+ 
+ 	/* token */
+-	token = atoi(params[4]);
++	token = strtoul(params[4], NULL, 10);
+ 	rta = (void *)(data + off);
+ 	rta->rta_type = MPTCP_PM_ATTR_TOKEN;
+ 	rta->rta_len = RTA_LENGTH(4);
+@@ -598,7 +598,7 @@ int remove_addr(int fd, int pm_family, int argc, char *argv[])
+ 			if (++arg >= argc)
+ 				error(1, 0, " missing token value");
+ 
+-			token = atoi(argv[arg]);
++			token = strtoul(argv[arg], NULL, 10);
+ 			rta = (void *)(data + off);
+ 			rta->rta_type = MPTCP_PM_ATTR_TOKEN;
+ 			rta->rta_len = RTA_LENGTH(4);
+@@ -710,7 +710,7 @@ int announce_addr(int fd, int pm_family, int argc, char *argv[])
+ 			if (++arg >= argc)
+ 				error(1, 0, " missing token value");
+ 
+-			token = atoi(argv[arg]);
++			token = strtoul(argv[arg], NULL, 10);
+ 		} else
+ 			error(1, 0, "unknown keyword %s", argv[arg]);
+ 	}
+@@ -1347,7 +1347,7 @@ int set_flags(int fd, int pm_family, int argc, char *argv[])
+ 				error(1, 0, " missing token value");
+ 
+ 			/* token */
+-			token = atoi(argv[arg]);
++			token = strtoul(argv[arg], NULL, 10);
+ 		} else if (!strcmp(argv[arg], "flags")) {
+ 			char *tok, *str;
+ 
+
+---
+base-commit: 619c3c3e5a9b93d2a5f62298a592919b245db5e3
+change-id: 20230704-mptcp-issue-368-selftests-32-bits-cf7cfe2d8632
+
+Best regards,
 -- 
-2.40.1
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
