@@ -1,142 +1,83 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADCB46B6
-	for <mptcp@lists.linux.dev>; Wed,  5 Jul 2023 09:11:27 +0000 (UTC)
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-4f95bf5c493so9761807e87.3
-        for <mptcp@lists.linux.dev>; Wed, 05 Jul 2023 02:11:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1688548286; x=1691140286;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nfUemcQnaLF0hp016J63e9C5guP2BqKRmZq266rF4jM=;
-        b=x3hBpfM7bQTJDhO2TYnX6jYbvEQsYEtO1STHZ3IQD2EFhCAc+WvyB+J4pTUYDBp5WU
-         Jz1lyDEy14g6felxG41xPOjMZbGaYixN61f8xVryRdP1cMLJQDvINrC/oDOfT6mKHbH/
-         LqXJD2M02J+AfPba2KWvpc7tgoVoA1H+Y2qQBu8O/1m8U7vD1Y2l1NgNjpDqOy5irJs8
-         1Lygt8UVu3d+029fcVsojBo7f1es5/yV3bLwJtwRkU/g4LM5iv+in2IDFQ55RxvQT3UO
-         ooRgRkcSpBXkAgmEVsEBe2wVjFRVMd9Xotz3nCstp8Cm0SZcSA1QSlFeJVzCwCE5V0S7
-         cqqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688548286; x=1691140286;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nfUemcQnaLF0hp016J63e9C5guP2BqKRmZq266rF4jM=;
-        b=Y0JGsF30spAveLb3p20iS9X6FTurqb1aek7jrM37czgITIoH5/DX/M7c7VRrh5+j2z
-         WbKBzZpjzXqc/toaffv8a3/MN+dYfuEPRyt6oO8LpGEkesA3+nFMG9QXU3Y1umtkuKA1
-         qJnWX1tko11xGE7whU+j7pEw6r8hWul7AMIiZ90urQgNKovFDVz1DgNKVlhvl79l+qmY
-         hHtFYeu4UPldyTFIscXETrFG/FQBWzhM78sgveyfovS3OSZS2uFzpHsEN8ZDDc536sWr
-         49xE3NB9C/dE++1eOj02dD5N7HFfPvqSxjLQy/Q1A6ysm5ofqFWgVbNuDe4oJ4yokj+S
-         D3JA==
-X-Gm-Message-State: ABy/qLaKzlSgvyYlq70/CotLOdFYRjyXn4YVgzblbfefag0odQMZ+Lrf
-	Sqm/WIrwbXRbY7s7UibZBW+sCA==
-X-Google-Smtp-Source: APBJJlEB1ddhFhGQ8HQecIlWQh4ULH0fHM8rh8qay+0Hh9vrb9A7/s72Gh6PNUPFj0J9v4ixGgU9GQ==
-X-Received: by 2002:a2e:9649:0:b0:2b6:d2c5:4d54 with SMTP id z9-20020a2e9649000000b002b6d2c54d54mr9696939ljh.18.1688548285665;
-        Wed, 05 Jul 2023 02:11:25 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:e210:4cad:4e78:3692? ([2a02:578:8593:1200:e210:4cad:4e78:3692])
-        by smtp.gmail.com with ESMTPSA id mh4-20020a170906eb8400b0098951bb4dc3sm2984455ejb.184.2023.07.05.02.11.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jul 2023 02:11:25 -0700 (PDT)
-Message-ID: <0e153aab-5f76-c75e-677d-8a59ca4bc331@tessares.net>
-Date: Wed, 5 Jul 2023 11:11:24 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39DD20F4;
+	Wed,  5 Jul 2023 10:00:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7181EC433CA;
+	Wed,  5 Jul 2023 10:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1688551223;
+	bh=rfKwXHw/MObGrKQHHxQ3kXk+3dEtPedetkvV200qdBA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=i7DLBNU9u74goYVpIpur4MOnr3DPPgafPqv3zyjUTrOLo7DxhosmRCu1pbSZ7PvSL
+	 3Kdc6u+SuLg6v45+2FkhX37ZL0sRcMtxEuJWFVDrncyYySTIR07gr6wC67EaNlKaPp
+	 voua6jvdKjCC7vLHuyP6p45Re2YdZQ4O53jfYTzham6f1Rh+4VbPMWs3Iw5RjBBPEh
+	 nKmUBWhxKP9nCiUK/ksgfvIBWlN/+b6RMRa44F4cOhMsS7vJP8R7WoA/zg150hmlGN
+	 70LtwZSQShBCSkwxtgHIS/a+54rAzVyfoB4OGO9DGIcpdWyqM2AMYi83blCE0P1OKL
+	 OqLKfBnuiz05A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4E528C0C40E;
+	Wed,  5 Jul 2023 10:00:23 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next v11 00/11] BPF packet scheduler updates part 1
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1687827857.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1687827857.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/9] mptcp: fixes for v6.5
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <168855122331.15504.15239551564077359539.git-patchwork-notify@kernel.org>
+Date: Wed, 05 Jul 2023 10:00:23 +0000
+References: <20230704-upstream-net-20230704-misc-fixes-6-5-rc1-v1-0-d7e67c274ca5@tessares.net>
+In-Reply-To: <20230704-upstream-net-20230704-misc-fixes-6-5-rc1-v1-0-d7e67c274ca5@tessares.net>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
+ fw@strlen.de, kishen.maloor@intel.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ stable@vger.kernel.org, cpaasch@apple.com
 
-Hi Geliang, Paolo,
+Hello:
 
-On 27/06/2023 03:06, Geliang Tang wrote:
-> v11:
->  - use sk_storage instead of mptcp_storage.
->  - drop mptcp_storage.
+This series was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Thank you for the patches and the reviews!
-> https://patchwork.kernel.org/project/mptcp/cover/cover.1665753926.git.geliang.tang@suse.com/ [1]
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/342
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/349
+On Tue, 04 Jul 2023 22:44:32 +0200 you wrote:
+> Here is a first batch of fixes for v6.5 and older.
+> 
+> The fixes are not linked to each others.
+> 
+> Patch 1 ensures subflows are unhashed before cleaning the backlog to
+> avoid races. This fixes another recent fix from v6.4.
+> 
+> [...]
 
-Does this first part still close these two tickets?
+Here is the summary with links:
+  - [net,1/9] mptcp: ensure subflow is unhashed before cleaning the backlog
+    https://git.kernel.org/netdev/net/c/3fffa15bfef4
+  - [net,2/9] mptcp: do not rely on implicit state check in mptcp_listen()
+    https://git.kernel.org/netdev/net/c/0226436acf24
+  - [net,3/9] selftests: mptcp: connect: fail if nft supposed to work
+    https://git.kernel.org/netdev/net/c/221e4550454a
+  - [net,4/9] selftests: mptcp: sockopt: use 'iptables-legacy' if available
+    https://git.kernel.org/netdev/net/c/a5a5990c099d
+  - [net,5/9] selftests: mptcp: sockopt: return error if wrong mark
+    https://git.kernel.org/netdev/net/c/9ac4c28eb70c
+  - [net,6/9] selftests: mptcp: userspace_pm: use correct server port
+    https://git.kernel.org/netdev/net/c/d8566d0e0392
+  - [net,7/9] selftests: mptcp: userspace_pm: report errors with 'remove' tests
+    https://git.kernel.org/netdev/net/c/966c6c3adfb1
+  - [net,8/9] selftests: mptcp: depend on SYN_COOKIES
+    https://git.kernel.org/netdev/net/c/6c8880fcaa5c
+  - [net,9/9] selftests: mptcp: pm_nl_ctl: fix 32-bit support
+    https://git.kernel.org/netdev/net/c/61d965805026
 
-Now in our tree (feat. for other trees) + one extra patch and a squash
-of a squash. Please don't hesitate to check if everything has been done
-properly because there were quite a few manipulations to do :)
-
-- 8efabdbcaa2c: "squashed" patch 1/11 (with conflicts) in "mptcp: drop
-last_snd and MPTCP_RESET_SCHEDULER"
-- b0f6d5c5ae25: "squashed" patch 1/11 (with conflicts) in "mptcp: use
-get_send wrapper"
-- 9de04aa46c59: "squashed" patch 1/11 in "mptcp: use get_retrans wrapper"
-- Results: e77e1cb5a372..3fcf166a9c7e (export)
-
-- 6e930aa67c6e: "squashed" patch 2/11 in "mptcp: add struct mptcp_sched_ops"
-- Results: 3fcf166a9c7e..437c8b684629 (export)
-
-- f7e28c2443da: "squashed" patch 3/11 (with conflicts) in "mptcp: add
-sched_data_set_contexts helper"
-- 9dc7c0042a01: conflict in t/mptcp-add-scheduler-wrappers
-- Results: 437c8b684629..504bc1f2d42d (export)
-
-- Applied patch 4/11 with Paolo's ACK just before "bpf: Add
-bpf_mptcp_sched_ops"
-- 7f44744d88c6: mptcp: register default scheduler
-- Results: 504bc1f2d42d..d45b69d4109b (export)
-
-- 0c323c5cc341: "squashed" patch 5/11 in "bpf: Add bpf_mptcp_sched_ops"
-- Results: d45b69d4109b..1b64ad359430 (export)
-
-- 9ffacd26fad5: "squashed" patch 6/11 in "bpf: Add
-bpf_mptcp_sched_kfunc_set"
-- Results: 1b64ad359430..f95ddf57fd7e (export)
-
-- 8f050b24bd4d: "squashed" patch 7/11 in "selftests/bpf: Add mptcp sched
-structs"
-- Results: f95ddf57fd7e..b1bfdcd53258 (export)
-
-- a3eacd00bfb7: "squashed" patch 8/11 in "selftests/bpf: Add bpf_first
-scheduler"
-- Results: b1bfdcd53258..b80981f0543b (export)
-
-- bc7512c33473: "squashed" patch 9/11 in "selftests/bpf: Add bpf_bkup
-scheduler"
-- Results: b80981f0543b..e1dbf174936b (export)
-
-- 506feec3a419: "squashed" patch 10/11 in "selftests/bpf: Add bpf_rr
-scheduler"
-- Results: e1dbf174936b..c6edb7e5168c (export)
-
-- 151a85fd02ab: "squashed" patch 11/11 in "selftests/bpf: Add bpf_red
-scheduler"
-- Results: c6edb7e5168c..679a4538b06c (export)
-
-- 064c5746a0d9: "squashed" patch 12/11 (squash squash) in
-"selftests/bpf: Add bpf_rr scheduler"
-- Results: 679a4538b06c..255b06daaf0d (export)
-
-- cebedb75ff65: "squashed" patch 6/7 from BPF 'force to MPTCP' v4 series
-in "selftests/bpf: add two mptcp netns helpers"
-- Results: 255b06daaf0d..cde4fa6a0a5e (export)
-
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230705T090903
-
-Cheers,
-Matt
+You are awesome, thank you!
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
