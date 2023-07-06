@@ -1,240 +1,127 @@
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2085.outbound.protection.outlook.com [40.107.14.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF8B1FD1
-	for <mptcp@lists.linux.dev>; Thu,  6 Jul 2023 08:20:44 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oazFhdQ/7E6893WWPLBAqeRy/71NaNpYrAwlBI0G5bOkwjrbEeRn36Ca4OrICwhqpCe9A1m3jZCNzifo9BkqhxfZe1Dxdu2eKdc1AyiSWHL49jyQ6jDU0vzEy94u1T2AUWR0QMwVrZVSG7vsi1YhnvlMmHTWN/d8v56/zPdFnOmnv4jFMHS2Bd7mMacTQuyGMsKlQ6Ez4moeV3fwgjTJ+OXggDBi6pPlhlzUX6ujJTe+jhf+87J58Z1p6AdRYC6MIB8uEo3cCiYKmEmQsFm/ztpgLgfb7oUB8qbCqHvJDMTocUn+cnexbEj2mxzYolWTCf1j3mWKoEpLFJ0A8hUP8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SsSYoVTG5aWN1RB+BtJakyrG0agQSne+82NpSdcxne8=;
- b=nSBCLZskjCSXZaGm9L7Otc8Kwu9Lt3cWfJxpZjVOllmn/8e7296w+p5Be+VdOiu0qMZvR42tSILGlfH8y/fet+W4icXNrM9stSC/pZQyqlM9Bqm7PA6Lz6OlyoCIFvoMIj2vO7RVCXmw4mG2CRxLJM9mzPi6M9KiwHRGNjTQ7Hfvsq2f+/OF/nPKPRTAy+Drc20i+XI0VjcFOpCTfdlVMVpcONCO1QJIr481m+KlLZQmdWlI5CU5k12r3othRx8qSKJcU0oQmse0vJ2W8Hjq3Tvgb5UC2G3z4utFeICLbI2eT7nrOC7n1brWk+0CMssQkGeSuBrzwI4PAr61lJgddQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SsSYoVTG5aWN1RB+BtJakyrG0agQSne+82NpSdcxne8=;
- b=WL9iE5hySud+NV2s0d1XTKBnvAzZnRhFyoglleaEKvjkuzwz4p/VewVJts6vegkfP97EB7MoiiPZw8WTKQkvYu2ICHDKb/7TIgiZ+6GCzs4iTLy90XkMJJTfy5TFgOK4GFUUAQXo/1cBzBUTPH0VnN3udN/X9JAlVEE24pKOIrjvG7pn47BoW67Pl5geDGVRkKIKu1WM1CBLaE/V4Hvt8nLPKORWgjDQYjKuUYT8YeMri/un9aDodZJkKMoyBTZ9hbwRXHXuj83l3ePgG6p/pFlT7C9WYCewpRFTSJGXJcpw4VA2bVDVTCblpC6P7t4IAdb000TUo/PbtkIjjOmJuQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by DB9PR04MB10066.eurprd04.prod.outlook.com (2603:10a6:10:4c1::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.24; Thu, 6 Jul
- 2023 08:20:41 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::423a:a30f:5342:9d35]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::423a:a30f:5342:9d35%6]) with mapi id 15.20.6565.016; Thu, 6 Jul 2023
- 08:20:41 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Geliang Tang <geliang.tang@suse.com>,
-	bpf@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [RFC bpf-next v3 8/8] selftests/bpf: Add mptcpify selftest
-Date: Thu,  6 Jul 2023 16:19:47 +0800
-Message-Id: <e17aadd8e403fd4357cc184d7ad151611acc908a.1688631200.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1688631200.git.geliang.tang@suse.com>
-References: <cover.1688631200.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0018.apcprd02.prod.outlook.com
- (2603:1096:4:1f4::7) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024771872
+	for <mptcp@lists.linux.dev>; Thu,  6 Jul 2023 08:21:51 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-977e0fbd742so49113366b.2
+        for <mptcp@lists.linux.dev>; Thu, 06 Jul 2023 01:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1688631710; x=1691223710;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xrkIvyXhCXMy3E4VUJzrcYyXgFi89ekolNIFJqpyKTw=;
+        b=qwT4LGuG4UTR8nPCHVrs2AqXFG8BS1ILDA5NNc+8I8N3zVa39hjfbbzqMiRHIM15SW
+         DpmrrBIHWR0dL+G669h6kC99Vt+4/PDUMYKKQJnhHxATMPJFChPOSG/H0TTF2W+PBADj
+         52F58HjxR0yCGNxnUGyFDpAGRVazJaEZZov1gkFemwTnrPpou3Zy/LpR3vhcqxLEmvNn
+         K6mBi1cbM/sawk68owr0j30uHc5fFMhR62lCJJlvaSe+CYvCKVrSrUkd3Va1iXfsCsD6
+         1sfcgIll17r++GKWs028K8ivSjRoVOUrCwISwPJR1359g6PIZkDPZJ/lofd1+f6g8/Ej
+         cVEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688631710; x=1691223710;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xrkIvyXhCXMy3E4VUJzrcYyXgFi89ekolNIFJqpyKTw=;
+        b=g0bp2AFqyWt03tJjRHo+CVBA7TpnQafyABBPl5wO0Lf2NiGJjZj2pn+Ly6rCsFXWyX
+         +1TCNvgWX0CYuH8UBD19QXFzSFqwmeX+T2S+NNOd2EPi2ij8Olpw8rX+a6pj+Ibh5Ux4
+         GfWXWCsZ7g5CcAGj6GnOgNXLmcq3a7Trtxz9fKEayBsJGCiEtMpmiWmXPd+UuHYupyVd
+         2NVyR8cBqAU8o+1VN1vUCVaBXe8OhKtYgRrN6KuPPB7Eg7z+g+Kec17OlJwZO0ZZNOUb
+         1HlpTliI1VZB2h+A2R0mDCUXxeCQqGBpOk1QqEOuhstfArw84+bfil0SC5HnSf4I4ulH
+         cZwg==
+X-Gm-Message-State: ABy/qLa2SJ7wPdYqbg40y5lE1FIS/Pnlweoo9gO1zdVcopbDV0641eJP
+	5Ax/Hd3L/BPgHxp/f6Ac9lUvuAmaJwz2d2sTXAw8JP6a
+X-Google-Smtp-Source: APBJJlGJctF9nK855yWm6NKlpTglbqpfJ4UNvTANPe7DDrTsOw4PebWF3yyZeffian9scWSq9kX8bQ==
+X-Received: by 2002:a17:907:8f03:b0:973:d1ce:dbe8 with SMTP id wg3-20020a1709078f0300b00973d1cedbe8mr678437ejc.46.1688631709801;
+        Thu, 06 Jul 2023 01:21:49 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:7daa:6d50:9464:2ccc? ([2a02:578:8593:1200:7daa:6d50:9464:2ccc])
+        by smtp.gmail.com with ESMTPSA id c22-20020a170906529600b00992f8110a2bsm498025ejm.150.2023.07.06.01.21.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jul 2023 01:21:49 -0700 (PDT)
+Message-ID: <194f9db2-c5dc-d7b7-a237-5c458a028764@tessares.net>
+Date: Thu, 6 Jul 2023 10:21:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DB9PR04MB10066:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e6e60af-6176-4780-663f-08db7df9e312
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	HOClAb98E6znjQlJIVmxhP5BbheKM8klGHPAvVZ+7UFYQ5g9iTA2G4GgkO8KYU2J7vGn0p2WfkW2QPRq/bEU22A8n2CQOaxXYJGOM/lecldOEVBkO42wfy6xRXjKzkdEHFQ2JjsWNkoKIRFuymPbbTzmuQokYpRpK8IFH2rtUltlaElSQhnivne3djWmd+lGqKrIRPI5/6XckL06E/No7vmQuP0Rej0rAUOrfnZW3Br4s4inPfo3XLt62ZxAg6CEaPpxGJOj5supafr9xKNkt6F3fKJG5vAhp4ByzkRZcD0EqW47wXsxqMwI5Wd4Hy87OL2m62rgAFzW6s79nyr9DQmgDQqEwJtERsGiAnMRWu2OMPYTsFi10MSz70AxcZba8EaRoN5bqpJPtD5I1bSVoq9iaCZUvg6fWxX3oGeuydncOx5sHzHVTzcRmDfgPk9KNwKssG1srIL/Y0CZOy+6dD0+/kbdje9pv2oQj4ZTCbiHEHLWsVOxoBHpy2TJhBft7o/2LmeUfGdv+BsbMfqwzrsQkrPD7Fp83jqwwwdpYQwg1G1Yt8LxUGrlnq0sJNBIbs2tnQ/EgWeGEKlbl2CDqIifEfvARbSCTE4aQaeofpUji7YuiXKB0LUE2seeradn
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(366004)(39860400002)(346002)(376002)(136003)(451199021)(2906002)(41300700001)(7416002)(44832011)(8936002)(36756003)(8676002)(2616005)(186003)(6506007)(478600001)(5660300002)(26005)(6512007)(86362001)(6486002)(316002)(4326008)(66946007)(66556008)(38100700002)(66476007)(83380400001)(921005)(110136005)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Q8uVEOjvjJWiZU9zXTdDZnWHdV45Uh3ydqESdXU35U4mTEczQ2K9i3MAM1OD?=
- =?us-ascii?Q?AviNM1iqyWwLdiu5Fdc+KH3v1mgRZW6xWd70+cXzbXYjTodE/gX3M7RHzSqR?=
- =?us-ascii?Q?BVk7MgYuPtscBXcAAAokgis+j0txz15xjJVXgwSvoo0GoOXvFmzenFi+nDv/?=
- =?us-ascii?Q?oCpWNd4xu1N9FzpgocXcCYNcsz8BjdJUI0jmhfvCINPPJsgTHbXF/IXrscjT?=
- =?us-ascii?Q?N5JRQY7kQoURPSKXbJ4aLBL/cIK2O9FNr5xdBkl185xcAaz9TylUknwZ7Yyt?=
- =?us-ascii?Q?qPJemlOPy8krgFeZO+N+epD/Ic+lyNIro8G9atK2c6avrKLcgaur60mWFdCl?=
- =?us-ascii?Q?iyLu0khrxUCECk2zlftl5dNQXVm57QlYmqjXo3BVg1dxzEtwg4MY9Wm6ht2v?=
- =?us-ascii?Q?72S1/H23qrJhAw4gCXRarub4P1/l0v4ex9xuRUX4UzJQVR9/HpXBUGWV8cJj?=
- =?us-ascii?Q?qtfQY5RoUIAzfK2TWzIKmCegGKCZ6HMCorobJ1NfdnL0uLUzln5ieWJDaOb1?=
- =?us-ascii?Q?SnkRbNMHB/P3bVSJZutJuPxu3xvQJXhxp645SQQrCpqB4bZcvHbkp7yIMwcC?=
- =?us-ascii?Q?kXc2lY1LnSdjUIjWfguJdDvJGoNuSSWzs0SnuKQ6HL4AF37lfZrln9JySjRX?=
- =?us-ascii?Q?LrgzzFo1AhlYA9XtV6wTs//FtWZzwjkAJ948sPRcvlx8t9APH3Z+1TmI4EST?=
- =?us-ascii?Q?1l9HfPPEywjTe56lGcFWtvk6I8J0VDTww9rkc765k1BDpWIwIwUBRacbGXT3?=
- =?us-ascii?Q?9/oCOsFw7AGMhreOoBtN6Zu9lxQuhlYt4l2iQipeeMLGYg/eJ9k8bd6LfB27?=
- =?us-ascii?Q?ln1YqX5oX2AeyHwTpkFzGgPCTyzIRmBDemXKYAniaL1ZqDqzqRLblyW0yhPy?=
- =?us-ascii?Q?1acYTLvyWsenOZGK2hgSXbbKSyFA3DBmumEjd3/6DO1j0AeRVyA43aeQfb4s?=
- =?us-ascii?Q?UtNUiT5DNsL+jWzisTQWqbEsM8o8/IOzJxkHpq8KwSsqRE9Nr8v3Se1dQDde?=
- =?us-ascii?Q?8J4JcTRc1/h1sDHfSdIbJivVV9LR6qxBKsFFW7qrTWARYVeG6Hn85RwI3dWq?=
- =?us-ascii?Q?24MxWoUYlTzCn/ky6NVGmXdHNQc5IK94WF0AK6aSm/6JD73JEzLmqlw89eMj?=
- =?us-ascii?Q?Y1hVLnUEfF7qAzNjEAK2/RfiEAbH2vwNWsbggE7zb57TIq3P07MmJnue2BIR?=
- =?us-ascii?Q?K/oU0CZINuvrgMqaWkD6Ip4quZRmpPMzIJvR2leFDV2Fy7XMbSx44ajt8SFo?=
- =?us-ascii?Q?gjzTYe7Yvdc3fAwn9yFY5HTjyckQQKQOK9F5UiLG5tH24FyUuTwBKBIhIGSA?=
- =?us-ascii?Q?TfgpqilK+ACsZc8dvArGOiYlEDma13PXfD1mAdAugS5qdUGZszMUbfSlHICK?=
- =?us-ascii?Q?+9NN4jkKA3GjU+LoyiIqgtX3FRbdaqIQktlYBKiG+1oSDHZbRDgGCZY+5XdY?=
- =?us-ascii?Q?soWyBxmuGtFQ2U6nqxffnbB9XumRy/TpE73qljHO+tfRvyQdeHVfdNiZuxZc?=
- =?us-ascii?Q?Z0AHKOFxfKjGb6mBAeYqapjxlYGvDGS5NjexuvfI9zFCWd5VpYwe8dkBHRKy?=
- =?us-ascii?Q?/O5/BqLzev8NJpV9iHeGweDu+xKuEQzNxayP1gpc?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e6e60af-6176-4780-663f-08db7df9e312
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2023 08:20:41.6355
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ER6BeuBK0LK/Nbu4f/2EbK8wjYOsKCc/QAJj99FGCdracHjQSWECPWhDFwQdZv9EgHnWV2xIzX0VTBAyiKQLbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB10066
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [RFC bpf-next v2 8/8] selftests/bpf: Add mptcpify selftest
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1688629124.git.geliang.tang@suse.com>
+ <5c88e528d4be098c2fa73ba49bc1b20615b77a53.1688629124.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <5c88e528d4be098c2fa73ba49bc1b20615b77a53.1688629124.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch extends the MPTCP test base, add a selftest test_mptcpify()
-for the mptcpify case.
+Hi Geliang,
 
-Open and load the mptcpify test prog to mptcpify the TCP sockets
-dynamically, then use start_server() and connect_to_fd() to create a
-TCP socket, but actually what's created is an MPTCP socket, which can
-be verified through the outputs of 'ss' and 'nstat' commands.
+(without BPF ML not to disturb them for this detail)
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 91 +++++++++++++++++++
- 1 file changed, 91 insertions(+)
+On 06/07/2023 09:47, Geliang Tang wrote:
+> This patch extends the MPTCP test base, add a selftest test_mptcpify()
+> for the mptcpify case.
+> 
+> Open and load the mptcpify test prog to mptcpify the TCP sockets
+> dynamically, then use start_server() and connect_to_fd() to create a
+> TCP socket, but actually what's created is an MPTCP socket, which can
+> be verified through the output of 'ss' command.
+> 
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 91 +++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index b2a833a900c2..de05140fe638 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index b2a833a900c2..39fef907cd3e 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -6,6 +6,7 @@
- #include "cgroup_helpers.h"
- #include "network_helpers.h"
- #include "mptcp_sock.skel.h"
-+#include "mptcpify.skel.h"
- 
- char NS_TEST[32];
- 
-@@ -196,8 +197,98 @@ static void test_base(void)
- 	close(cgroup_fd);
- }
- 
-+static void send_byte(int fd)
-+{
-+	char b = 0x55;
-+
-+	ASSERT_EQ(write(fd, &b, sizeof(b)), 1, "send single byte");
-+}
-+
-+static int verify_mptcpify(void)
-+{
-+	char cmd[256];
-+	int err = 0;
-+
-+	snprintf(cmd, sizeof(cmd),
-+		 "ip netns exec %s ss -tOni | grep -q '%s'",
-+		 NS_TEST, "tcp-ulp-mptcp");
-+	if (!ASSERT_OK(system(cmd), "No tcp-ulp-mptcp found!"))
-+		err++;
-+
-+	snprintf(cmd, sizeof(cmd),
-+		 "ip netns exec %s nstat -asz %s | awk '%s' | grep -q '%s'",
-+		 NS_TEST, "MPTcpExtMPCapableSYNACKRX",
-+		 "NR==1 {next} {print $2}", "1");
-+	if (!ASSERT_OK(system(cmd), "No MPTcpExtMPCapableSYNACKRX found!"))
-+		err++;
-+
-+	return err;
-+}
-+
-+static int run_mptcpify(int cgroup_fd)
-+{
-+	int server_fd, client_fd, err = 0;
-+	struct mptcpify *mptcpify_skel;
-+
-+	mptcpify_skel = mptcpify__open_and_load();
-+	if (!ASSERT_OK_PTR(mptcpify_skel, "mptcpify__open_and_load"))
-+		return -EIO;
-+
-+	mptcpify_skel->links.mptcpify =
-+		bpf_program__attach_cgroup(mptcpify_skel->progs.mptcpify, cgroup_fd);
-+	if (!ASSERT_OK_PTR(mptcpify_skel->links.mptcpify, "bpf_program__attach_cgroup")) {
-+		err = -EIO;
-+		goto out;
-+	}
-+
-+	/* without MPTCP */
-+	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
-+	if (!ASSERT_GE(server_fd, 0, "start_server")) {
-+		err = -EIO;
-+		goto out;
-+	}
-+
-+	client_fd = connect_to_fd(server_fd, 0);
-+	if (!ASSERT_GE(client_fd, 0, "connect to fd")) {
-+		err = -EIO;
-+		goto close_server;
-+	}
-+
-+	send_byte(client_fd);
-+	err += verify_mptcpify();
-+
-+	close(client_fd);
-+close_server:
-+	close(server_fd);
-+out:
-+	mptcpify__destroy(mptcpify_skel);
-+	return err;
-+}
-+
-+static void test_mptcpify(void)
-+{
-+	struct nstoken *nstoken = NULL;
-+	int cgroup_fd;
-+
-+	cgroup_fd = test__join_cgroup("/mptcpify");
-+	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
-+		return;
-+
-+	nstoken = create_netns();
-+	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
-+		goto fail;
-+
-+	ASSERT_OK(run_mptcpify(cgroup_fd), "run_mptcpify");
-+
-+fail:
-+	cleanup_netns(nstoken);
-+	close(cgroup_fd);
-+}
-+
- void test_mptcp(void)
- {
- 	if (test__start_subtest("base"))
- 		test_base();
-+	if (test__start_subtest("mptcpify"))
-+		test_mptcpify();
- }
+(...)
+
+> +static int verify_mptcpify(void)
+> +{
+> +	char cmd[128];
+> +	int err = 0;
+> +
+> +	snprintf(cmd, sizeof(cmd),
+> +		 "ip netns exec %s ss -tOni | grep -q '%s'",
+> +		 NS_TEST, "tcp-ulp-mptcp");
+> +	if (!ASSERT_OK(system(cmd), "No tcp-ulp-mptcp found!"))
+> +		err++;
+> +
+> +	snprintf(cmd, sizeof(cmd),
+> +		 "ip netns exec %s nstat -asz %s | awk '%s' | grep -q '%s'",
+> +		 NS_TEST, "MPTcpExtMPCapableSYNACKRX",
+> +		 "NR==1 {next} {print $2}", "1");
+
+It might be safer to increase cmd size to 256 (or even 1024) because if
+I'm not mistaken, you might need here 129 chars if NS_TEST can go up to
+31 chars:
+
+> ip netns exec 1234567890123456789012345678901 nstat -asz MPTcpExtMPCapableSYNACKRX | awk 'NR==1 {next} {print $2}' | grep -q '1'
+
+That's 128 chars but without '\0'.
+
+But I don't think you need a v3 now: it is an issue just with the tests
+and also because I know most subsystems ask not to send more than one
+version per 24h ;)
+
+BTW, excellent cover-letter, thanks for that!
+
+> +	if (!ASSERT_OK(system(cmd), "No MPTcpExtMPCapableSYNACKRX found!"))
+> +		err++;
+> +
+> +	return err;
+> +}
+
+Cheers,
+Matt
 -- 
-2.35.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
