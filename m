@@ -1,28 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460F9168BC
-	for <mptcp@lists.linux.dev>; Fri,  7 Jul 2023 17:54:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31F9C433C7;
-	Fri,  7 Jul 2023 17:54:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40FF11181
+	for <mptcp@lists.linux.dev>; Fri,  7 Jul 2023 18:01:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CA48C433C8;
+	Fri,  7 Jul 2023 18:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688752457;
-	bh=rEapzgy1XAJlA8j9ba+OSwM+KqqXQnUfBT8+eQ1oDyY=;
+	s=k20201202; t=1688752884;
+	bh=nFtqUnTuwDE6NQhCWNDEi0Rmu5sP2WJu9zBIZi65m9A=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=RTKKVgUlENJRbeuLIUBG4XViG+urY75QAp3G+J2wWNrg1cl12HZl6WgXnPkjYSNLD
-	 f+YBeRfcd1BSLW9ccVHBJPkHE0T7RWGVEjrBSce+oiLE3OOxq/EW5rlNXciI+nV5MW
-	 eyTsWmqGL7rWddfDUiNs1grDtLgFVTt/fnFAt4tTjw9p4ztoStwTIYHjKu2NzsjuHR
-	 pbMwAIR1YwXZCTNDMYNSBPbynsrft0D+qNmOF6fyQHVHXS2HrKF02G0Qq1f4feQfGZ
-	 1zeiqzdrZ2cqqIJ349czKl2hDjnjVJNazgaHB2N2O3bfkyfbMQXhb7zuW3klKwSlFp
-	 dxW1ufLwTzWgw==
-Date: Fri, 7 Jul 2023 10:54:16 -0700 (PDT)
+	b=ujCiN6tlrfwxpBG84xumEuFInDtXGnZoeJ5xPn1B0DOczevs27McVqYgWWin+5Wvl
+	 jKcg89H8kk/C1nNSK3GvcT9zb6qB6YRkbZvh1B5GUCo/Yk4EnB3pJXGMWcobQvZ2rp
+	 uT52/prFyN27DUM2I3+n7kXnbRKucnx+hVmf8ejRYhebkCskvORg+cMzlSDb7XSIjS
+	 uOdwzS0zmpnUg7rbKnN6OzIx5bqP05+tZ5suWUzz7mt6xZIreUTFr1hD4VoUOxaMfM
+	 17PU0PxVd9UyV8kg5wv8vjRtwMdbOc65/I86Up26wP28vBr2T8BVjiQHKka9aXDAyT
+	 mhSH8PVFwTSfw==
+Date: Fri, 7 Jul 2023 11:01:23 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang.tang@suse.com>
+To: Geliang Tang <geliang.tang@suse.com>, Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 07/10] selftests/bpf: Add bpf_stale test
-In-Reply-To: <fdec34dec183bc427faebf45f8feb3f88a575478.1687829823.git.geliang.tang@suse.com>
-Message-ID: <be8e77a8-1fa3-230c-9bc7-6b23123a4280@kernel.org>
-References: <cover.1687829823.git.geliang.tang@suse.com> <fdec34dec183bc427faebf45f8feb3f88a575478.1687829823.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next 08/10] bpf: Export more bpf_burst related
+ functions
+In-Reply-To: <b123ce780d733db77d0821d4e9d7560f7439ded5.1687829823.git.geliang.tang@suse.com>
+Message-ID: <8c1888af-2bc2-f1ab-32b0-14b6c6f72c6a@kernel.org>
+References: <cover.1687829823.git.geliang.tang@suse.com> <b123ce780d733db77d0821d4e9d7560f7439ded5.1687829823.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -33,87 +34,101 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Tue, 27 Jun 2023, Geliang Tang wrote:
 
-> This patch adds the bpf_stale scheduler test: test_stale(). Use sysctl to
-> set net.mptcp.scheduler to use this sched. Add two veth net devices to
-> simulate the multiple addresses case. Use 'ip mptcp endpoint' command to
-> add the new endpoint ADDR_2 to PM netlink. Send data and check bytes_sent
-> of 'ss' output after it to make sure the data has been only sent on ADDR_1
-> since ADDR_2 is set as stale.
+> sk_stream_memory_free() and tcp_rtx_and_write_queues_empty() are needed
+> to export into the BPF context for bpf_burst scheduler. But these two
+> functions are inline ones. So this patch added two wrappers for them,
+> and export the wrappers in the BPF context.
+>
+> Add more bpf_burst related functions into bpf_mptcp_sched_kfunc_set to make
+> sure these helpers can be accessed from the BPF context.
 >
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> .../testing/selftests/bpf/prog_tests/mptcp.c  | 38 +++++++++++++++++++
-> 1 file changed, 38 insertions(+)
+> net/mptcp/bpf.c      | 16 ++++++++++++++++
+> net/mptcp/protocol.c |  4 ++--
+> net/mptcp/protocol.h |  4 ++++
+> 3 files changed, 22 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index 4b346eeaf8e2..851ea32dc1d0 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -11,6 +11,7 @@
-> #include "mptcp_bpf_bkup.skel.h"
-> #include "mptcp_bpf_rr.skel.h"
-> #include "mptcp_bpf_red.skel.h"
-> +#include "mptcp_bpf_stale.skel.h"
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index c580add9c7f1..a1c85605ed39 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -171,10 +171,26 @@ struct bpf_struct_ops bpf_mptcp_sched_ops = {
+> 	.name		= "mptcp_sched_ops",
+> };
 >
-> char NS_TEST[32];
->
-> @@ -488,6 +489,41 @@ static void test_red(void)
-> 	mptcp_bpf_red__destroy(red_skel);
-> }
->
-> +static void test_stale(void)
+> +bool bpf_sk_stream_memory_free(const struct sock *sk)
 > +{
-> +	struct mptcp_bpf_stale *stale_skel;
-> +	int server_fd, client_fd;
-> +	struct nstoken *nstoken;
-> +	struct bpf_link *link;
+> +	return sk_stream_memory_free(sk);
+> +}
 > +
-> +	stale_skel = mptcp_bpf_stale__open_and_load();
-> +	if (!ASSERT_OK_PTR(stale_skel, "bpf_stale__open_and_load"))
-> +		return;
-> +
-> +	link = bpf_map__attach_struct_ops(stale_skel->maps.stale);
-> +	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops")) {
-> +		mptcp_bpf_stale__destroy(stale_skel);
-> +		return;
-> +	}
-> +
-> +	nstoken = sched_init("subflow", "bpf_stale");
-> +	if (!ASSERT_OK_PTR(nstoken, "sched_init:bpf_stale"))
-> +		goto fail;
-> +	server_fd = start_mptcp_server(AF_INET, ADDR_1, 0, 0);
-> +	client_fd = connect_to_fd(server_fd, 0);
-> +
-> +	send_data(server_fd, client_fd, "bpf_stale");
-> +	ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr_1");
-> +	ASSERT_GT(has_bytes_sent(ADDR_2), 0, "has_bytes_sent addr_2");
+> +bool bpf_tcp_rtx_and_write_queues_empty(const struct sock *sk)
+> +{
+> +	return tcp_rtx_and_write_queues_empty(sk);
+> +}
 
-I don't think it is guaranteed that ADDR_2 will always be at index 1 like 
-the bpf_stale_get_subflow() expects. How about using checking for an 
-odd/even value in the last byte of the IPv4 addresses for ADDR_1/ADDR_2 
-instead?
+I'm not sure the internals of TCP should be made part of the "public API" 
+like this (any opinion here, Paolo?). Maybe they could be renamed 
+something related to the job they are doing for MPTCP, so there's more 
+flexibility to change their implementation and other BPF code doesn't 
+start depending on these for generic TCP usage.
+
+Suggest bpf_mptcp_subflow_memory_free() and 
+bpf_mptcp_subflow_queues_empty()?
 
 - Mat
 
 > +
-> +	close(client_fd);
-> +	close(server_fd);
-> +fail:
-> +	cleanup_netns(nstoken);
-> +	bpf_link__destroy(link);
-> +	mptcp_bpf_stale__destroy(stale_skel);
-> +}
-> +
-> void test_mptcp(void)
+> BTF_SET8_START(bpf_mptcp_sched_kfunc_ids)
+> BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+> BTF_ID_FLAGS(func, mptcp_sched_data_set_contexts)
+> BTF_ID_FLAGS(func, mptcp_subflow_ctx_by_pos)
+> +BTF_ID_FLAGS(func, mptcp_subflow_active)
+> +BTF_ID_FLAGS(func, mptcp_set_timeout)
+> +BTF_ID_FLAGS(func, mptcp_wnd_end)
+> +BTF_ID_FLAGS(func, bpf_sk_stream_memory_free)
+> +BTF_ID_FLAGS(func, bpf_tcp_rtx_and_write_queues_empty)
+> +BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale)
+> BTF_SET8_END(bpf_mptcp_sched_kfunc_ids)
+>
+> static const struct btf_kfunc_id_set bpf_mptcp_sched_kfunc_set = {
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 5f9f046b2124..84a82967b009 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -50,7 +50,7 @@ DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
+> static struct net_device mptcp_napi_dev;
+>
+> /* Returns end sequence number of the receiver's advertised window */
+> -static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
+> +u64 mptcp_wnd_end(const struct mptcp_sock *msk)
 > {
-> 	if (test__start_subtest("base"))
-> @@ -502,4 +538,6 @@ void test_mptcp(void)
-> 		test_rr();
-> 	if (test__start_subtest("red"))
-> 		test_red();
-> +	if (test__start_subtest("stale"))
-> +		test_stale();
+> 	return READ_ONCE(msk->wnd_end);
 > }
+> @@ -497,7 +497,7 @@ static long mptcp_timeout_from_subflow(const struct mptcp_subflow_context *subfl
+> 	       inet_csk(ssk)->icsk_timeout - jiffies : 0;
+> }
+>
+> -static void mptcp_set_timeout(struct sock *sk)
+> +void mptcp_set_timeout(struct sock *sk)
+> {
+> 	struct mptcp_subflow_context *subflow;
+> 	long tout = 0;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index bb4d50c8c398..58a634fc2fcc 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -636,6 +636,10 @@ void __mptcp_subflow_send_ack(struct sock *ssk);
+> void mptcp_subflow_reset(struct sock *ssk);
+> void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
+> void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+> +u64 mptcp_wnd_end(const struct mptcp_sock *msk);
+> +void mptcp_set_timeout(struct sock *sk);
+> +bool bpf_sk_stream_memory_free(const struct sock *sk);
+> +bool bpf_tcp_rtx_and_write_queues_empty(const struct sock *sk);
+> struct socket *__mptcp_nmpc_socket(struct mptcp_sock *msk);
+> bool __mptcp_close(struct sock *sk, long timeout);
+> void mptcp_cancel_work(struct sock *sk);
 > -- 
 > 2.35.3
 >
