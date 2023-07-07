@@ -1,47 +1,46 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02A3107B0
-	for <mptcp@lists.linux.dev>; Fri,  7 Jul 2023 16:00:30 +0000 (UTC)
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-3fb4146e8deso26258435e9.0
-        for <mptcp@lists.linux.dev>; Fri, 07 Jul 2023 09:00:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF38107AC
+	for <mptcp@lists.linux.dev>; Fri,  7 Jul 2023 16:00:28 +0000 (UTC)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-3fbfcc6dae4so11842495e9.0
+        for <mptcp@lists.linux.dev>; Fri, 07 Jul 2023 09:00:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1688745629; x=1691337629;
+        d=tessares.net; s=google; t=1688745627; x=1691337627;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8xeq8sRLnjGrw3maYyBofnm9B7mHn4a/exqLD4jwmTc=;
-        b=32ixuT399BPr82QmpUoVMxfwVZ3/QctdDTmh+zCJh48wav2HwPEeOTJpz0xwPIynwu
-         3onzW0mWuJRastGrMObIHRNwR//eXCxBWeRR/MyFV/OSuuwtxmwhAQceFzsRngAQaBwB
-         GEOEJO6nSfvitFCJREuLdaVeGAWUa2boOzVkGgouWrm561E8LHc0Y/yBZfUCZsVeacDH
-         9xq+pp7F29yzveYzmI3d5ZuXW8bIAbxiT2mZfZhrxXwsmHkFlyAioceL6SqiTZ5120AO
-         BWXmKDd90U1KXLEZCMiqj6surBntyaw3U6RYkkRWNpB/2SvOjDq0AslyrttSHWoJWvB3
-         8Zww==
+        bh=zTtNxIjGCHHZxGVoyP0zNo6ljtr4ROBSIXD5hnl6EPI=;
+        b=GBFDIZuqZ+k1SLJS2+t/+b9zYpst+cZSILhxGbnwI6AOKAIdkGNRjwK7Phu0ZiYZm0
+         WVSz9orpOJp7F1yfM5LZUrYVBShILcBIZ57nqdPOcmS8PqaKF9FD/UlV4qbfqrAnqlXs
+         x1U0qDVS6pF42w/kuP43Bh0gmlGUXLWxnhdxrbUaRXG6Sz0jg27iRZWTGJ0IR5qMQt94
+         6FbsSitWZJ2oAF7StBCLfHB0OnBfJrllADSBanGgiwV5QQcyoaCca5VN7LKG1p6+vbG7
+         u3cCeiTRlfqfmTTpXajKj16d27vhG0/MWvPlHZCVWYHhwTgB/HvAxGEcwwB+EO/JMEEW
+         tdiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688745629; x=1691337629;
+        d=1e100.net; s=20221208; t=1688745627; x=1691337627;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8xeq8sRLnjGrw3maYyBofnm9B7mHn4a/exqLD4jwmTc=;
-        b=RI/W56NuW2kFkdkmLDQTN+lH9q2G1fOiXbxdMdW8qr0EWN4d0Tt5QBGdhLU2AAp0Xi
-         wyPPKl7AFMxpCSryGj2c9AR14mb4aGjskSXCeeJYwsqRrN3WbUeIHdVXbhffc25TGK4h
-         GvyoUU/6BIM9wtU3CxH+B/uG1ZjunpZCxRwQx8Wyuoi/yD0qd3dnSacUtuJO/j24tDsy
-         7WmhRzTG0cz/XzPCsj/jSYnre3FwK2poeR0KBOak/iEm47qlmznJBwVqtCPNx6CVKYKR
-         GsPgDcOvTpJEWKs/wpe6k54Cqtqkv7U5XUsyWNMAvEOEuy49R81M+BmqAA0pjJfQUdjy
-         2Zcw==
-X-Gm-Message-State: ABy/qLYO5zLRQHbn4vrIzpTFedR3kzCEy11jmOqyQxMTenu9ELIVg8Fo
-	nldwqTWB7D9lJDfq9s4yxlGKv3hxXLQIGZEkXI/m0w==
-X-Google-Smtp-Source: APBJJlEtqA/AvWWFjpyxHNfrTPayNxny5i6iz45KgFPfFwMWVhroiDdOmn3eFlFPpWvu2S7MybKkJw==
-X-Received: by 2002:a7b:c415:0:b0:3fb:fa26:45a8 with SMTP id k21-20020a7bc415000000b003fbfa2645a8mr82831wmi.28.1688745628722;
-        Fri, 07 Jul 2023 09:00:28 -0700 (PDT)
+        bh=zTtNxIjGCHHZxGVoyP0zNo6ljtr4ROBSIXD5hnl6EPI=;
+        b=H/VE8s/FfRcXUfaN+5Zq+zh+nA2Ol6ojtwXjzOnDJaZBZUUhcGUZJBCN/1WE8Vy4A6
+         3ANQTjoEE+hwaGBN5h7hp18tEjyGJP4TsRFSbf2bj8uWro4vakbXeucPt2y7NzRexd5F
+         +IRitybNHJMgcOWKkuSmybU03vYV3fwQMDK0whD1rK6UjxNGlGcxjGkShViALt9zwbZo
+         ep1JEKVcQGQI4oDn/mJoc676gEgP/9+cZYLbIC2mkUgktRQdjVB7EvVCEASKjrJLDw8Q
+         VpPwoyNdcC3ZNeCKJ1cXFYSgY/9WDgL4fBpp9wkWGpD3G/DtOnFRmQSBkbYVz9BOgmAW
+         Wi7Q==
+X-Gm-Message-State: ABy/qLZn5AOKonfvmdF+oL+M9JiFNaiUY1a/Tnts8FjPNltiMhdL3t5N
+	0GOPGtcBdv8bjm5JPiL5ixS8pvxACCKqX6OOFj0EPg==
+X-Google-Smtp-Source: APBJJlExj8YAReO6RN4hHglYl7vdQkLGPbAPjfH53gxHOPcCrzgjORIi49fhqdivUTqHv8/K+WRqtQ==
+X-Received: by 2002:a05:600c:21d0:b0:3f9:b17a:cb61 with SMTP id x16-20020a05600c21d000b003f9b17acb61mr2541672wmj.13.1688745626892;
+        Fri, 07 Jul 2023 09:00:26 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id e11-20020a05600c108b00b003fba137857esm2829186wmd.14.2023.07.07.09.00.28
+        by smtp.gmail.com with ESMTPSA id e11-20020a05600c108b00b003fba137857esm2829186wmd.14.2023.07.07.09.00.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jul 2023 09:00:28 -0700 (PDT)
+        Fri, 07 Jul 2023 09:00:26 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Fri, 07 Jul 2023 18:00:16 +0200
-Subject: [PATCH mptcp-next 6/6] mptcp: sockopt: support IP_TTL &
- IPV6_UNICAST_HOPS
+Date: Fri, 07 Jul 2023 18:00:13 +0200
+Subject: [PATCH mptcp-next 3/6] mptcp: sockopt: get val in a generic way
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,119 +49,98 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230707-mptcp-unify-sockopt-issue-353-v1-6-693e15c06646@tessares.net>
+Message-Id: <20230707-mptcp-unify-sockopt-issue-353-v1-3-693e15c06646@tessares.net>
 References: <20230707-mptcp-unify-sockopt-issue-353-v1-0-693e15c06646@tessares.net>
 In-Reply-To: <20230707-mptcp-unify-sockopt-issue-353-v1-0-693e15c06646@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3003;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2305;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=XoXkCw/r20bM9+9XCYW29khspTN7it+40kFbty2kfIU=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkqDaYf52ikSusJ333dxjpQ6EaYg7qDs0BkfJBi
- PuYBqCrHWiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZKg2mAAKCRD2t4JPQmmg
- cxc3D/wLOQLBhgJU7A84xjw3vLRXYf/T5G+pAc40c8lQy3Us4gZ64Jz0fF13abJR+bSm16dEsYS
- qimAlOtz1bgEQwmd8aH0pfpPM7xjox3urbuyRZt79zMcq+KULfV4CYa/nz9IltAaZW+HHy2nVCG
- wucfrWfwHGjm5NH8XJSOheMlD91gIj/o9iMFb14R/rclW34OkuHR9fPk1tCXs0GN+3sNLREu0D5
- /FRhFULvyNXMyZ3iGRTWUhaJKEPb8YCOH14klx96NRmNsreAHF+VRbU4LLBkObtPVVSFEYlEeun
- 5q/KHs8XdeN0r2jLrXNT+QQ5Zi77kpDIbS8sEz7VNsyV227tzzCMlXWwsDD1o17WXPaM/ZALrI1
- yWrzlzXzenYYXM5UeJDE1jUhi/CkiPx8nl668M+Cyv01kA/TDLatI9O2/ft/HUNiTsNXYmlqbNv
- SUY4LxWWn9HVuMwO7UtiKAy+9rLi6AaE3pX8QGnpjYAQkcUFTJ7toj+CKpoiM7mSVbbMgp9C6MV
- F3KPHreoizsCImvyfhy1ET6bOq0904zBQ3SC1TEiQkLSTM0Wh/PytZU+K8MfOb7W8aQ9jJ0F4tz
- N2C6FpLbps8/ObgD6CuoApIBfZq0Cs9t450UNB+CCjkhoS2Tj5ZUQOZhJZiMGzUXwcp8FbU8RcS
- 9X0XZeqsYp3fahQ==
+ bh=e0iLFva+PCw1OnhEGzXFnqH/h3e1CqRZUxCBW8KwsTg=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkqDaYoMc+hNmFWHvnOGlLm+PalYz37wsMVmlgI
+ ZiZpOupmeyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZKg2mAAKCRD2t4JPQmmg
+ c19tEAC313B4d3jnAU+ROFcUNX/KU6Dkio0C8AcyIDWibXEIw3jWpV3SwPHiY/hPiDrNCm+AEuA
+ zw4j/TyCnYC2vrZJxN0phPRBCc4mdfyYW+1X4FM+63DPheP01ZlfE2gRCWJ8UZFGsCAqnfcEKw+
+ hLEXygSnTtdTlO2uTglUHTw2J95wzsdy5tML9I/qXWbkop/3K9tuZlnUxZ9VcAaOw/XOouRqRyF
+ FOCxxR96ZbkOj6pDYzomcoODlW7zgtf39VKk0oUxg7MH3sMBKCwn2Jq4w1Jo/s3aH2FDK7+8PmS
+ GtFsIZZ+4m0oRdrb9mhesSKeMG6zjCpOFU8gxsVYn/38ZFGuAf6LE2nMKbAy39LqeBkcALUeW5P
+ kRPnbgGAO0JFLb0Grq3Bas4VjnHRBqPmwGBvQETKwfHkX3Z1X8CODycFyKgeT5iIsPdKXAAV5L9
+ tWkQFPYdEXWHUUxFf/er+OIi4wSsXl56nQwb98Nk2bgdeEbnaoimDKqAofnj2U0z0lDxFljqSwH
+ uHiOYxhRCtsXPwjXZqfvi3PsmlOSs8kuVvxZLlbyambGpDyEPVHFwWD3b9n7ZdSdzGrMS9lQYuO
+ HszLi2T/W4i/DuiyFB6fwR19HQRn9vGs8OVs6LzrIWWAkNRMsk4cYSnoVTlmO8InCAQ0pWM0DH/
+ +7+Zp4rAR+56eSA==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This adds support for IP_TTL and IPv6_UNICAST_HOPS, the IPv6 equivalent.
+Currently, to get socket option, we deal with them case by case by
+looking at the field that has been set and copying what is done
+elsewhere in SOL_IP(V6). That's probably why there is only one being
+supported here with IP_TOS.
 
-The socket option is propagated to all subflows by default.
+Instead, we can use ip(v6)_getsockopt() to retrieve the value. By doing
+that, we can also go through the BPF et Netlink hooks if needed and we
+can easily support new options later.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/296
+While at it, also fix the variable declaration order to respect the
+reverse xmas tree convention.
+
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/353
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- net/mptcp/sockopt.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ net/mptcp/sockopt.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index a17739683fdb..cf35775179ab 100644
+index af1d30c8832d..673bcf8a97f0 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -393,6 +393,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case IP_FREEBIND:
- 		case IP_TRANSPARENT:
- 		case IP_TOS:
-+		case IP_TTL:
- 
- 		/* the following are control cmsg related */
- 		case IP_PKTINFO:
-@@ -406,7 +407,6 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case IP_RECVFRAGSIZE:
- 
- 		/* common stuff that need some love */
--		case IP_TTL:
- 		case IP_BIND_ADDRESS_NO_PORT:
- 		case IP_MTU_DISCOVER:
- 		case IP_RECVERR:
-@@ -438,6 +438,7 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case IPV6_V6ONLY:
- 		case IPV6_TRANSPARENT:
- 		case IPV6_FREEBIND:
-+		case IPV6_UNICAST_HOPS:
- 
- 		/* the following are control cmsg related */
- 		case IPV6_RECVPKTINFO:
-@@ -460,7 +461,6 @@ static bool mptcp_supported_sockopt(int level, int optname)
- 		case IPV6_TCLASS:
- 		case IPV6_PKTINFO:
- 		case IPV6_2292PKTOPTIONS:
--		case IPV6_UNICAST_HOPS:
- 		case IPV6_MTU_DISCOVER:
- 		case IPV6_MTU:
- 		case IPV6_RECVERR:
-@@ -734,6 +734,7 @@ static int mptcp_setsockopt_v4(struct mptcp_sock *msk, int optname,
- 	case IP_FREEBIND:
- 	case IP_TRANSPARENT:
- 	case IP_TOS:
-+	case IP_TTL:
- 		return mptcp_setsockopt_all_sf(msk, SOL_IP, optname, optval, optlen);
- 	}
- 
-@@ -747,6 +748,7 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
- 	case IPV6_V6ONLY:
- 	case IPV6_TRANSPARENT:
- 	case IPV6_FREEBIND:
-+	case IPV6_UNICAST_HOPS:
- 		return mptcp_setsockopt_all_sf(msk, SOL_IPV6, optname, optval, optlen);
- 	}
- 
-@@ -1322,6 +1324,7 @@ static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
- 	case IP_FREEBIND:
- 	case IP_TRANSPARENT:
- 	case IP_TOS:
-+	case IP_TTL:
- 		return mptcp_getsockopt_msk(msk, SOL_IP, optname, optval, optlen);
- 	}
- 
-@@ -1335,6 +1338,7 @@ static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
- 	case IPV6_V6ONLY:
- 	case IPV6_TRANSPARENT:
- 	case IPV6_FREEBIND:
-+	case IPV6_UNICAST_HOPS:
- 		return mptcp_getsockopt_msk(msk, SOL_IPV6, optname, optval, optlen);
- 	}
- 
-@@ -1436,6 +1440,10 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 
- 	inet_sk(ssk)->transparent = inet_sk(sk)->transparent;
- 	inet_sk(ssk)->freebind = inet_sk(sk)->freebind;
-+	inet_sk(ssk)->uc_ttl = inet_sk(sk)->uc_ttl;
-+
-+	if (ssk->sk_family == AF_INET6)
-+		inet6_sk(ssk)->hop_limit = inet6_sk(sk)->hop_limit;
+@@ -868,13 +868,31 @@ int mptcp_setsockopt(struct sock *sk, int level, int optname,
+ 	return -EOPNOTSUPP;
  }
  
- static void __mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
++static int mptcp_getsockopt_msk(struct mptcp_sock *msk, int level, int optname,
++			        char __user *optval, int __user *optlen)
++{
++	struct sock *sk = (struct sock *)msk;
++
++	/* We cannot use tcp_getsockopt() with the msk */
++	if (level == SOL_IP)
++		return ip_getsockopt(sk, level, optname, optval, optlen);
++
++	if (level == SOL_IPV6)
++		return ipv6_getsockopt(sk, level, optname, optval, optlen);
++
++	if (level == SOL_TCP)
++		return 0;
++
++	return -EOPNOTSUPP;
++}
++
+ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int optname,
+ 					  char __user *optval, int __user *optlen)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+ 	struct socket *ssock;
+-	int ret;
+ 	struct sock *ssk;
++	int ret;
+ 
+ 	lock_sock(sk);
+ 	ssk = msk->first;
+@@ -1348,11 +1366,9 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
+ 			       char __user *optval, int __user *optlen)
+ {
+-	struct sock *sk = (void *)msk;
+-
+ 	switch (optname) {
+ 	case IP_TOS:
+-		return mptcp_put_int_option(msk, optval, optlen, inet_sk(sk)->tos);
++		return mptcp_getsockopt_msk(msk, SOL_IP, optname, optval, optlen);
+ 	}
+ 
+ 	return -EOPNOTSUPP;
 
 -- 
 2.40.1
