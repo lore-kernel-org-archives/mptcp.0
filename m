@@ -1,47 +1,47 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8686010795
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E87107A5
 	for <mptcp@lists.linux.dev>; Fri,  7 Jul 2023 16:00:27 +0000 (UTC)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3fbef8ad9bbso22906225e9.0
-        for <mptcp@lists.linux.dev>; Fri, 07 Jul 2023 09:00:26 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-4fb761efa7aso3200158e87.0
+        for <mptcp@lists.linux.dev>; Fri, 07 Jul 2023 09:00:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tessares.net; s=google; t=1688745625; x=1691337625;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8yh6oBVqskWJzBOIDn0CEm0aGOBWMTOnaXA2Ph/EdEI=;
-        b=eN9LoreNOhhnWfu5Fisa6DVt2FgX2Ma9q38RtGhH5CVusZeZ8KiJL9msFSoPQDDVpC
-         A+ljZtiu6nAIoNa9L5Nn8kJmkry3SrtQRd5VdpTLvcQcN1GEkE17W1x6nNK8che9FH6Y
-         WYRWNGOyAIJXi22YbA3dI9tIFJlQBdhhC5GoRpA8pbw/ZHrdZefDmCz95+dPK/UmyLjp
-         sxFq6a7eMbDIuYr7Sb2foQwENAto6DLQYijEkLfm3eWt8TAeH7ztfsXv1nZOAlqOuayH
-         FpkGdWygx4Z+heyPRMPHvWgSUvImPtPOntf2FgjzKtRLuwWR2nA9xV3epajomgJRBA/y
-         Ua/Q==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zs40Wv0SyhVUhbgcdeM7Gg6KzSx5ZB7NtkjcYXBnZZw=;
+        b=KlkYl9N9/Itd0nGuIW0XAKhRux5HVXj+x/kI/n/6svqCb5rkZDsaUSqWqPL2AqCYAA
+         EOLl8UKJSxI9HXSxx5m6lG//RCTcf5zMp7WFNXDtEwiTVuJRKQxLjI3jCeUOTDhUretb
+         8VP+S0GQi5feUZMtoEllbbLsR/hOcaLbm+NFMHP8M7dPzF6Dc/ck7mBY7OAuNBG8H5kq
+         C84VS1zUvX+YcWM6Sa5yR1NE8li8cCgesMCNHsPnqiPVofMtqN4zYgNDfq8MDyp8QzNe
+         ZJU07HsvJeNh3QjXZmzSVDj363Qt100PheIBpRqnlBI49s9Lblo6CtiBNWuUxgBJywwW
+         4rAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20221208; t=1688745625; x=1691337625;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8yh6oBVqskWJzBOIDn0CEm0aGOBWMTOnaXA2Ph/EdEI=;
-        b=M1GpNubVz3ugUHfipSxOZn1NZWXofs93LSEZO+Is2dlD5jDPxbi54fOpFWlsg+i1wi
-         TUMXXDqZJ68ylwSUOJYLtqXdONrTa8Nm88HpaCiITJh7dMABAb3RJb8DdYIByZJO6Hah
-         rS/OkQxYdHGSYXAVQRcl5Pfu/zHStI2T2VDBSmcPlGGrifDGCNpT/KwBuWeG8Sssh4j8
-         JXjof840lKQBaPe3GQjoA5lswaH3WhJ02iqhcaY9qMoiNEsNUJISC6w9gyCyo+94frNO
-         NUG4d+ztww1Cx1KOMVfwboqCMfMmX80OkRJw5/ZNEkwyeuNw6pKCcSw4NcUsM7bu5QN5
-         MjcA==
-X-Gm-Message-State: ABy/qLaN/hJxUq7CgMt6Oi22ujno3GB0yf0cXGvOHiADTgDjazjeTcWL
-	obLy86HR0vVaX8VxSln6bS61SFI3rMg09QwM4re5Rw==
-X-Google-Smtp-Source: APBJJlGOzrZjLTmd0+DHW5iGWouLaq9mQbhR+ZKhvKxJDrW+EUT5dzs9kKo15GP2XrAlUiphGlKVWA==
-X-Received: by 2002:a1c:ed10:0:b0:3fb:b008:2002 with SMTP id l16-20020a1ced10000000b003fbb0082002mr4204004wmh.0.1688745624837;
-        Fri, 07 Jul 2023 09:00:24 -0700 (PDT)
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zs40Wv0SyhVUhbgcdeM7Gg6KzSx5ZB7NtkjcYXBnZZw=;
+        b=diTYh4KhtgglZMU3evlbliTr61bEw2VmtBorJ3B8n1smdC9nmzFEJhbWbcNdErPzEn
+         0M/lgCC4LMNEBHLh57GTmuFuda/F79WUUcipUE68LwDtsk6QkCt7+XLHDZzV21V9IrA6
+         mSnLoUT4zPaYdb3nb9v5uNKy1SeF4nT+37iv16YH1L64m4fb3i+I/xQ0CeJTXV2TnX0G
+         U0vr53aix3lympNJ/0PB8l9mJk2Roj2W9SKUfq/XNmoSTLk2vs3Hw3wcq0un7suo1A3c
+         p4CLx61B5rbEUkv6syYuaGYRFoY9J0jD7T85jrMuAsrVktPX6mSXpBMgWshFpaNdu19F
+         xJJQ==
+X-Gm-Message-State: ABy/qLaOyd6ZWz/0TiWD209YAwtB+wC5PYtUvVBdzqTPn7oe646Nz6rv
+	7Tv/ztB8WX7x7voaxdqbWgqYKNRxKC064KCuupy3Xw==
+X-Google-Smtp-Source: APBJJlGW5iU5E7kFwkawcnW3KsV6FX/Bi3GixO0iq29EivD2i9Lhhws2lqvkuEa3e2NDj26ZpAN1Hw==
+X-Received: by 2002:ac2:5f9c:0:b0:4dd:9f86:859d with SMTP id r28-20020ac25f9c000000b004dd9f86859dmr4176907lfe.13.1688745625407;
+        Fri, 07 Jul 2023 09:00:25 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id e11-20020a05600c108b00b003fba137857esm2829186wmd.14.2023.07.07.09.00.24
+        by smtp.gmail.com with ESMTPSA id e11-20020a05600c108b00b003fba137857esm2829186wmd.14.2023.07.07.09.00.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jul 2023 09:00:24 -0700 (PDT)
+        Fri, 07 Jul 2023 09:00:25 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH mptcp-next 0/6] mptcp: sockopt: uniform code to get/set
- values
-Date: Fri, 07 Jul 2023 18:00:10 +0200
-Message-Id: <20230707-mptcp-unify-sockopt-issue-353-v1-0-693e15c06646@tessares.net>
+Date: Fri, 07 Jul 2023 18:00:11 +0200
+Subject: [PATCH mptcp-next 1/6] mptcp: sockopt: move tcp_inq code to a
+ dedicated function
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,75 +50,94 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIo2qGQC/yXNQQ6CMBCF4auQWTuRtsLCqxgXbRlkYmibTkswh
- LsLuvzzku9tIJSZBO7NBpkWFo7hCHVpwE82vAh5OBp0q02rtcI5FZ+wBh4/KNG/YyrIIpXQdAa
- VHbre2d61N4LDcFYIXbbBT6dSrjVJyWTnc0yZRl5/5w/4u4HWAs99/wIBRanpmAAAAA==
+Message-Id: <20230707-mptcp-unify-sockopt-issue-353-v1-1-693e15c06646@tessares.net>
+References: <20230707-mptcp-unify-sockopt-issue-353-v1-0-693e15c06646@tessares.net>
+In-Reply-To: <20230707-mptcp-unify-sockopt-issue-353-v1-0-693e15c06646@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2121;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1804;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=hl8kG7spT5VUqKvzfAuRfcdhMWAmiaC2tihY/StGjT8=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkqDaXJuEYaymGnaKlA7SGDEDVUtfEPLTdzbG1X
- WngeERjezqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZKg2lwAKCRD2t4JPQmmg
- cz8wEACSsKk6OyjeOZBBk/KcmRrYG8Z3x4KxWMqskjt6aBz81Ovp3bn1fA0jHjXfzb2YBNmUot2
- tbfRwL7zxyFirAcDc0Y0hvVSHNH0BEVkSYMGMRQQie01RNrbmRCBIecmBjHtWqDkHTw/XKNAibW
- yU0q9KMxdyGNfhD9ncCHrbtUTAoJ2B6uCQNadBCCYoA3A/NwFAxCiURTOVLJo2tEp4DWAauLNJF
- XYEvKjqX5Xb683YIRFr0Ui5y7UxYVhDvlqzAnhwMpPu8PgLNQVw9fknsHTozYeoG764OuPGFwoZ
- ZTceD1FEpcSJ7QyaLgkc2mtslG/JOCG6+BuCEFfbRVDayUR7WGsCPw70p5cLJ7cMHccjhO0CFvr
- A02BFi7+2qt7rUn8xL4HISYLHJu9wKMGYtV+Fw5AeA45Gqr+6AqYEQ9OhXMGiUaA563mr1/yum7
- RwYu1POl+uAC5hoWC4eY5KEA2uGv3gMI8MUvmpM8/CeffTPDbtzxjIYOmWH6+SoRkxY9pffWRq5
- wwSHk4Z36ILQmCblsaR3ELTdXFjN0zQeO9+K1yeOoimGg1yZQmKS+HoQUkNcuYh5IMTQBFB7uwd
- LsEq0X05YpoFGgV5a4smm4980DYe77xCH3P+7Z31rMUbSQHiDVkGHuAGeWVYUpB60jFIzqRu69s
- xkkPm2kFODnsWcw==
+ bh=SeAojrZHb4JIp44g9i/MxXtEYOj9Oyes8H0LveEFbH8=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkqDaXidBu86G2caeF3DGj+dnEBA1jB5u2yZQrd
+ /3R468H3eGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZKg2lwAKCRD2t4JPQmmg
+ c9YnEADr3EeMQ/P0O9LFLOR/gPsZfLYOEf+xnVqMdd98PR1vV/4Y8lD2uWanGXBEPzVN/3HeXJ3
+ e441x2Hsb5OEyNEi7xBjrvUjPGrQMpe5xe+fFkNdTDUwNyU7br8Nb1NxaWHjc6JbIyf9bzhJPbm
+ aD77e8CyTpR8DLG/zigKCTCoZ3iDKJj4hSPrdsVloTd1DgQ4YdbrFXz4sV0fmdQEXidMqJKUfCt
+ qA0Y4WsImi2kM1yA3afTXdnfWNyQ4cX60pd3vaXWzZd5UyPkwPs83smRl+AFcr8iUiR+K2qr7XT
+ 7NUMd7/7wTunZ6yKGWVUHTA81G2BiZzxaUQZKxo+oub5z3C8w6MDszt7LTwz21ehw9ExW+58nPL
+ /AIoXwQ2glptPkmDAEFCMjZiFJWr4E5O0Kquj7ZhagMwfFjGh/s25Ye51HbHNvR6Tye/HpGwJHG
+ nLgglJwlidAUyOln0M88dAuhzbpNUiTqhqkPpFMxebBq1aEscGsI6/hjwFeQz0/1j1Gf8OtBZTB
+ MQFgEOObYoB5E/jrAJiKH0rG9xhmIxtF06Lajf0SnkZL0lrRe7LHcL1Pl2FrUDFmYInYCEfhn4k
+ 24+N5ITCezlwyBmXFXsQ3/oRpVmOGLWaP8mHaJO4DHow3ZvozFLdQWWs7U99pKjf2kOX76JFrtF
+ vAxj8p52BFoKoXQ==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Here is the implementation of an idea I suggested a few months ago: it
-is a factoring of the sockopt code trying to uniform it, mainly to rely
-on {ip,ipv6,tcp}_[gs]etsockopt() instead of copying what is done there
-to get and set values.
+Similar to what we have with the other TCP socket options where each of
+them are in a dedicated function.
 
-That's a first step. More might come if we are OK with the approach,
-e.g.
-
-- For SOL_TCP socket options we cannot store info in the MPTCP socket so
-  we still need to "manually" store it somewhere in the msk. Maybe we
-  could store info in the different subflows (and create a first one if
-  there is no subflow) and retrieve info from there?
-
-- For SOL_SOCKET socket options, it looks like it should be feasible to
-  do something similar to what I did here but I'm probably missing
-  something. This could clean quite a lot of code, e.g. the last commit
-  from:
-
-    https://github.com/matttbe/mptcp_net-next/commits/b4/mptcp-unify-sockopt-issue-353
-
-- To sync the socket options when a new subflow has been created, for
-  the moment, we copy info from the msk to the subflow but maybe it
-   would be fine to call some getsockopt() / setsockopt() to do the
-  sync? If we take this approach, we might want to save a list of
-  setsockopt() that have been done in the past on this socket and only
-  re-do these ones? That should help with the maintenance of these
-  socket options and ease the support of new ones.
+It is clearer like that.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-Matthieu Baerts (6):
-      mptcp: sockopt: move tcp_inq code to a dedicated function
-      mptcp: sockopt: update supported list
-      mptcp: sockopt: get val in a generic way
-      mptcp: sockopt: add missing getsockopt() options
-      mptcp: sockopt: set val in a generic way
-      mptcp: sockopt: support IP_TTL & IPV6_UNICAST_HOPS
+ net/mptcp/sockopt.c | 33 ++++++++++++++++++++-------------
+ 1 file changed, 20 insertions(+), 13 deletions(-)
 
- net/mptcp/sockopt.c | 241 ++++++++++++++++++++++++++--------------------------
- 1 file changed, 121 insertions(+), 120 deletions(-)
----
-base-commit: cde4fa6a0a5ed3effb75008ce99eb842bc448e5d
-change-id: 20230221-mptcp-unify-sockopt-issue-353-1ad56ba6b04e
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 63f7a09335c5..a46a00bf0f08 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -577,6 +577,25 @@ static bool mptcp_supported_sockopt(int level, int optname)
+ 	return false;
+ }
+ 
++static int mptcp_setsockopt_sol_tcp_inq(struct mptcp_sock *msk, sockptr_t optval,
++					unsigned int optlen)
++{
++	struct sock *sk = (struct sock *)msk;
++	int ret, val;
++
++	ret = mptcp_get_int_option(msk, optval, optlen, &val);
++	if (ret)
++		return ret;
++	if (val < 0 || val > 1)
++		return -EINVAL;
++
++	lock_sock(sk);
++	msk->recvmsg_inq = !!val;
++	release_sock(sk);
++
++	return 0;
++}
++
+ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t optval,
+ 					       unsigned int optlen)
+ {
+@@ -784,21 +803,9 @@ static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 				    sockptr_t optval, unsigned int optlen)
+ {
+-	struct sock *sk = (void *)msk;
+-	int ret, val;
+-
+ 	switch (optname) {
+ 	case TCP_INQ:
+-		ret = mptcp_get_int_option(msk, optval, optlen, &val);
+-		if (ret)
+-			return ret;
+-		if (val < 0 || val > 1)
+-			return -EINVAL;
+-
+-		lock_sock(sk);
+-		msk->recvmsg_inq = !!val;
+-		release_sock(sk);
+-		return 0;
++		return mptcp_setsockopt_sol_tcp_inq(msk, optval, optlen);
+ 	case TCP_ULP:
+ 		return -EOPNOTSUPP;
+ 	case TCP_CONGESTION:
 
-Best regards,
 -- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
+2.40.1
 
