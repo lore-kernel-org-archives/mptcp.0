@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40FF11181
-	for <mptcp@lists.linux.dev>; Fri,  7 Jul 2023 18:01:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CA48C433C8;
-	Fri,  7 Jul 2023 18:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7602A107B5
+	for <mptcp@lists.linux.dev>; Fri,  7 Jul 2023 18:09:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E38D7C433C7;
+	Fri,  7 Jul 2023 18:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1688752884;
-	bh=nFtqUnTuwDE6NQhCWNDEi0Rmu5sP2WJu9zBIZi65m9A=;
+	s=k20201202; t=1688753345;
+	bh=1BNMBcfDFZiZ4O9eAOgKo81Vrzt3+1QToS71c4QW1CM=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ujCiN6tlrfwxpBG84xumEuFInDtXGnZoeJ5xPn1B0DOczevs27McVqYgWWin+5Wvl
-	 jKcg89H8kk/C1nNSK3GvcT9zb6qB6YRkbZvh1B5GUCo/Yk4EnB3pJXGMWcobQvZ2rp
-	 uT52/prFyN27DUM2I3+n7kXnbRKucnx+hVmf8ejRYhebkCskvORg+cMzlSDb7XSIjS
-	 uOdwzS0zmpnUg7rbKnN6OzIx5bqP05+tZ5suWUzz7mt6xZIreUTFr1hD4VoUOxaMfM
-	 17PU0PxVd9UyV8kg5wv8vjRtwMdbOc65/I86Up26wP28vBr2T8BVjiQHKka9aXDAyT
-	 mhSH8PVFwTSfw==
-Date: Fri, 7 Jul 2023 11:01:23 -0700 (PDT)
+	b=gG+sYF85375tw5a0OhxORIYQbzQNUzb8CxQWucsFLB/iXrvQH+ZkaJb8yvXtSvLfL
+	 g+jT9qtuupxJGfIN3K7igAwUrgdT0VUwJECAse0Dsy0jAU9ptfAJD50hq8SfImyk74
+	 t+Bph+vE6cntzRZ9iBoYz7jJ24i4uLVZcILut+zTNNP2XIM1a+qWMLndaBjUKc6/pq
+	 x7/0YHMfNd+dPLJV6nLrP9Q+/sG3cT9S0BenZi7JDtlQjgUNrtSaoj6622Wn9PBoVQ
+	 oUlpslFee++eL3FVyDTo6E0kiaaoz5udrBdjwF5AjS9Rnkde/vwWaKx0OviQoienTR
+	 9UP1lycoTUyTQ==
+Date: Fri, 7 Jul 2023 11:09:05 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang.tang@suse.com>, Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 08/10] bpf: Export more bpf_burst related
- functions
-In-Reply-To: <b123ce780d733db77d0821d4e9d7560f7439ded5.1687829823.git.geliang.tang@suse.com>
-Message-ID: <8c1888af-2bc2-f1ab-32b0-14b6c6f72c6a@kernel.org>
-References: <cover.1687829823.git.geliang.tang@suse.com> <b123ce780d733db77d0821d4e9d7560f7439ded5.1687829823.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-next 09/10] selftests/bpf: Add bpf_burst
+ scheduler
+In-Reply-To: <a65e19eb002b474b070cc31ca471b4e1c6ef8533.1687829823.git.geliang.tang@suse.com>
+Message-ID: <7bacaa8f-6271-868e-dbf1-4f88acd7983c@kernel.org>
+References: <cover.1687829823.git.geliang.tang@suse.com> <a65e19eb002b474b070cc31ca471b4e1c6ef8533.1687829823.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,101 +34,272 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Tue, 27 Jun 2023, Geliang Tang wrote:
 
-> sk_stream_memory_free() and tcp_rtx_and_write_queues_empty() are needed
-> to export into the BPF context for bpf_burst scheduler. But these two
-> functions are inline ones. So this patch added two wrappers for them,
-> and export the wrappers in the BPF context.
->
-> Add more bpf_burst related functions into bpf_mptcp_sched_kfunc_set to make
-> sure these helpers can be accessed from the BPF context.
+> This patch implements the burst BPF MPTCP scheduler, named bpf_burst,
+> which is the default scheduler in protocol.c. bpf_burst_get_send() uses
+> the same logic as mptcp_subflow_get_send() and bpf_burst_get_retrans
+> uses the same logic as mptcp_subflow_get_retrans().
 >
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
-> net/mptcp/bpf.c      | 16 ++++++++++++++++
-> net/mptcp/protocol.c |  4 ++--
-> net/mptcp/protocol.h |  4 ++++
-> 3 files changed, 22 insertions(+), 2 deletions(-)
+> tools/testing/selftests/bpf/bpf_tcp_helpers.h |   4 +
+> .../selftests/bpf/progs/mptcp_bpf_burst.c     | 205 ++++++++++++++++++
+> 2 files changed, 209 insertions(+)
+> create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
 >
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index c580add9c7f1..a1c85605ed39 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -171,10 +171,26 @@ struct bpf_struct_ops bpf_mptcp_sched_ops = {
-> 	.name		= "mptcp_sched_ops",
-> };
+> diff --git a/tools/testing/selftests/bpf/bpf_tcp_helpers.h b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> index c749940c9103..c1d7963c3bc8 100644
+> --- a/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> +++ b/tools/testing/selftests/bpf/bpf_tcp_helpers.h
+> @@ -36,6 +36,7 @@ enum sk_pacing {
+> struct sock {
+> 	struct sock_common	__sk_common;
+> #define sk_state		__sk_common.skc_state
+> +	int			sk_wmem_queued;
+> 	unsigned long		sk_pacing_rate;
+> 	__u32			sk_pacing_status; /* see enum sk_pacing */
+> } __attribute__((preserve_access_index));
+> @@ -234,8 +235,10 @@ extern void tcp_cong_avoid_ai(struct tcp_sock *tp, __u32 w, __u32 acked) __ksym;
+> #define MPTCP_SUBFLOWS_MAX	8
 >
-> +bool bpf_sk_stream_memory_free(const struct sock *sk)
+> struct mptcp_subflow_context {
+> +	unsigned long avg_pacing_rate;
+> 	__u32	backup : 1,
+> 		stale : 1;
+> +	__u8	stale_count;
+> 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
+> } __attribute__((preserve_access_index));
+>
+> @@ -260,6 +263,7 @@ struct mptcp_sched_ops {
+> struct mptcp_sock {
+> 	struct inet_connection_sock	sk;
+>
+> +	__u64		snd_nxt;
+> 	__u32		token;
+> 	struct sock	*first;
+> 	char		ca_name[TCP_CA_NAME_MAX];
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
+> new file mode 100644
+> index 000000000000..1886e2f7aca4
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
+> @@ -0,0 +1,205 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2023, SUSE. */
+> +
+> +#include <linux/bpf.h>
+> +#include <limits.h>
+> +#include "bpf_tcp_helpers.h"
+> +
+> +char _license[] SEC("license") = "GPL";
+> +
+> +struct mptcp_burst_storage {
+> +	int snd_burst;
+> +};
+> +
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_SK_STORAGE);
+> +	__uint(map_flags, BPF_F_NO_PREALLOC);
+> +	__type(key, int);
+> +	__type(value, struct mptcp_burst_storage);
+> +} mptcp_burst_map SEC(".maps");
+> +
+> +#define MPTCP_SEND_BURST_SIZE	65428
+> +
+> +struct subflow_send_info {
+> +	__u8 subflow_id;
+> +	__u64 linger_time;
+> +};
+> +
+> +static inline __u64 div_u64_rem(__u64 dividend, __u32 divisor, __u32 *remainder)
 > +{
-> +	return sk_stream_memory_free(sk);
+> +	*remainder = dividend % divisor;
+> +	return dividend / divisor;
 > +}
 > +
-> +bool bpf_tcp_rtx_and_write_queues_empty(const struct sock *sk)
+> +static inline __u64 div_u64(__u64 dividend, __u32 divisor)
 > +{
-> +	return tcp_rtx_and_write_queues_empty(sk);
+> +	__u32 remainder;
+> +
+> +	return div_u64_rem(dividend, divisor, &remainder);
 > +}
 
-I'm not sure the internals of TCP should be made part of the "public API" 
-like this (any opinion here, Paolo?). Maybe they could be renamed 
-something related to the job they are doing for MPTCP, so there's more 
-flexibility to change their implementation and other BPF code doesn't 
-start depending on these for generic TCP usage.
+Since this is compiling to BPF rather than native code with 
+architecture-specific optimizations, I think it's better to remove 
+div_u64_rem() and keep div_u64() simple:
 
-Suggest bpf_mptcp_subflow_memory_free() and 
-bpf_mptcp_subflow_queues_empty()?
+static inline __u64 div_u64(__u64 dividend, __u32 divisor)
+{
+      return dividend / divisor;
+}
 
 - Mat
 
 > +
-> BTF_SET8_START(bpf_mptcp_sched_kfunc_ids)
-> BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
-> BTF_ID_FLAGS(func, mptcp_sched_data_set_contexts)
-> BTF_ID_FLAGS(func, mptcp_subflow_ctx_by_pos)
-> +BTF_ID_FLAGS(func, mptcp_subflow_active)
-> +BTF_ID_FLAGS(func, mptcp_set_timeout)
-> +BTF_ID_FLAGS(func, mptcp_wnd_end)
-> +BTF_ID_FLAGS(func, bpf_sk_stream_memory_free)
-> +BTF_ID_FLAGS(func, bpf_tcp_rtx_and_write_queues_empty)
-> +BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale)
-> BTF_SET8_END(bpf_mptcp_sched_kfunc_ids)
->
-> static const struct btf_kfunc_id_set bpf_mptcp_sched_kfunc_set = {
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 5f9f046b2124..84a82967b009 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -50,7 +50,7 @@ DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
-> static struct net_device mptcp_napi_dev;
->
-> /* Returns end sequence number of the receiver's advertised window */
-> -static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
-> +u64 mptcp_wnd_end(const struct mptcp_sock *msk)
-> {
-> 	return READ_ONCE(msk->wnd_end);
-> }
-> @@ -497,7 +497,7 @@ static long mptcp_timeout_from_subflow(const struct mptcp_subflow_context *subfl
-> 	       inet_csk(ssk)->icsk_timeout - jiffies : 0;
-> }
->
-> -static void mptcp_set_timeout(struct sock *sk)
-> +void mptcp_set_timeout(struct sock *sk)
-> {
-> 	struct mptcp_subflow_context *subflow;
-> 	long tout = 0;
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index bb4d50c8c398..58a634fc2fcc 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -636,6 +636,10 @@ void __mptcp_subflow_send_ack(struct sock *ssk);
-> void mptcp_subflow_reset(struct sock *ssk);
-> void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
-> void mptcp_sock_graft(struct sock *sk, struct socket *parent);
-> +u64 mptcp_wnd_end(const struct mptcp_sock *msk);
-> +void mptcp_set_timeout(struct sock *sk);
-> +bool bpf_sk_stream_memory_free(const struct sock *sk);
-> +bool bpf_tcp_rtx_and_write_queues_empty(const struct sock *sk);
-> struct socket *__mptcp_nmpc_socket(struct mptcp_sock *msk);
-> bool __mptcp_close(struct sock *sk, long timeout);
-> void mptcp_cancel_work(struct sock *sk);
+> +extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow) __ksym;
+> +extern void mptcp_set_timeout(struct sock *sk) __ksym;
+> +extern __u64 mptcp_wnd_end(const struct mptcp_sock *msk) __ksym;
+> +extern bool bpf_sk_stream_memory_free(const struct sock *sk) __ksym;
+> +extern bool bpf_tcp_rtx_and_write_queues_empty(const struct sock *sk) __ksym;
+> +extern void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk) __ksym;
+> +
+> +#define SSK_MODE_ACTIVE	0
+> +#define SSK_MODE_BACKUP	1
+> +#define SSK_MODE_MAX	2
+> +
+> +SEC("struct_ops/mptcp_sched_burst_init")
+> +void BPF_PROG(mptcp_sched_burst_init, struct mptcp_sock *msk)
+> +{
+> +}
+> +
+> +SEC("struct_ops/mptcp_sched_burst_release")
+> +void BPF_PROG(mptcp_sched_burst_release, struct mptcp_sock *msk)
+> +{
+> +	bpf_sk_storage_delete(&mptcp_burst_map, msk);
+> +}
+> +
+> +void BPF_STRUCT_OPS(bpf_burst_data_init, struct mptcp_sock *msk,
+> +		    struct mptcp_sched_data *data)
+> +{
+> +	mptcp_sched_data_set_contexts(msk, data);
+> +}
+> +
+> +static int bpf_burst_get_send(struct mptcp_sock *msk,
+> +			      const struct mptcp_sched_data *data)
+> +{
+> +	struct subflow_send_info send_info[SSK_MODE_MAX];
+> +	struct mptcp_subflow_context *subflow;
+> +	struct sock *sk = (struct sock *)msk;
+> +	struct mptcp_burst_storage *ptr;
+> +	__u32 pace, burst, wmem;
+> +	__u64 linger_time;
+> +	struct sock *ssk;
+> +	int i;
+> +
+> +	/* pick the subflow with the lower wmem/wspace ratio */
+> +	for (i = 0; i < SSK_MODE_MAX; ++i) {
+> +		send_info[i].subflow_id = MPTCP_SUBFLOWS_MAX;
+> +		send_info[i].linger_time = -1;
+> +	}
+> +
+> +	for (i = 0; i < data->subflows && i < MPTCP_SUBFLOWS_MAX; i++) {
+> +		subflow = mptcp_subflow_ctx_by_pos(data, i);
+> +		if (!subflow)
+> +			break;
+> +
+> +		ssk = mptcp_subflow_tcp_sock(subflow);
+> +		if (!mptcp_subflow_active(subflow))
+> +			continue;
+> +
+> +		pace = subflow->avg_pacing_rate;
+> +		if (!pace) {
+> +			/* init pacing rate from socket */
+> +			subflow->avg_pacing_rate = ssk->sk_pacing_rate;
+> +			pace = subflow->avg_pacing_rate;
+> +			if (!pace)
+> +				continue;
+> +		}
+> +
+> +		linger_time = div_u64((__u64)ssk->sk_wmem_queued << 32, pace);
+> +		if (linger_time < send_info[subflow->backup].linger_time) {
+> +			send_info[subflow->backup].subflow_id = i;
+> +			send_info[subflow->backup].linger_time = linger_time;
+> +		}
+> +	}
+> +	mptcp_set_timeout(sk);
+> +
+> +	/* pick the best backup if no other subflow is active */
+> +	if (send_info[SSK_MODE_ACTIVE].subflow_id == MPTCP_SUBFLOWS_MAX)
+> +		send_info[SSK_MODE_ACTIVE].subflow_id = send_info[SSK_MODE_BACKUP].subflow_id;
+> +
+> +	subflow = mptcp_subflow_ctx_by_pos(data, send_info[SSK_MODE_ACTIVE].subflow_id);
+> +	if (!subflow)
+> +		return -1;
+> +	ssk = mptcp_subflow_tcp_sock(subflow);
+> +	if (!ssk || !bpf_sk_stream_memory_free(ssk))
+> +		return -1;
+> +
+> +	burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
+> +	wmem = ssk->sk_wmem_queued;
+> +	if (!burst)
+> +		goto out;
+> +
+> +	subflow->avg_pacing_rate = div_u64((__u64)subflow->avg_pacing_rate * wmem +
+> +					   ssk->sk_pacing_rate * burst,
+> +					   burst + wmem);
+> +	ptr = bpf_sk_storage_get(&mptcp_burst_map, msk, 0,
+> +				 BPF_LOCAL_STORAGE_GET_F_CREATE);
+> +	if (ptr)
+> +		ptr->snd_burst = burst;
+> +
+> +out:
+> +	mptcp_subflow_set_scheduled(subflow, true);
+> +	return 0;
+> +}
+> +
+> +static int bpf_burst_get_retrans(struct mptcp_sock *msk,
+> +				 const struct mptcp_sched_data *data)
+> +{
+> +	int backup = MPTCP_SUBFLOWS_MAX, pick = MPTCP_SUBFLOWS_MAX, subflow_id;
+> +	struct mptcp_subflow_context *subflow;
+> +	int min_stale_count = INT_MAX;
+> +	struct sock *ssk;
+> +
+> +	for (int i = 0; i < data->subflows && i < MPTCP_SUBFLOWS_MAX; i++) {
+> +		subflow = mptcp_subflow_ctx_by_pos(data, i);
+> +		if (!subflow)
+> +			break;
+> +
+> +		if (!mptcp_subflow_active(subflow))
+> +			continue;
+> +
+> +		ssk = mptcp_subflow_tcp_sock(subflow);
+> +		/* still data outstanding at TCP level? skip this */
+> +		if (!bpf_tcp_rtx_and_write_queues_empty(ssk)) {
+> +			mptcp_pm_subflow_chk_stale(msk, ssk);
+> +			min_stale_count = min(min_stale_count, subflow->stale_count);
+> +			continue;
+> +		}
+> +
+> +		if (subflow->backup) {
+> +			if (backup == MPTCP_SUBFLOWS_MAX)
+> +				backup = i;
+> +			continue;
+> +		}
+> +
+> +		if (pick == MPTCP_SUBFLOWS_MAX)
+> +			pick = i;
+> +	}
+> +
+> +	if (pick < MPTCP_SUBFLOWS_MAX) {
+> +		subflow_id = pick;
+> +		goto out;
+> +	}
+> +	subflow_id = min_stale_count > 1 ? backup : MPTCP_SUBFLOWS_MAX;
+> +
+> +out:
+> +	subflow = mptcp_subflow_ctx_by_pos(data, subflow_id);
+> +	if (!subflow)
+> +		return -1;
+> +	mptcp_subflow_set_scheduled(subflow, true);
+> +	return 0;
+> +}
+> +
+> +int BPF_STRUCT_OPS(bpf_burst_get_subflow, struct mptcp_sock *msk,
+> +		   const struct mptcp_sched_data *data)
+> +{
+> +	if (data->reinject)
+> +		return bpf_burst_get_retrans(msk, data);
+> +	return bpf_burst_get_send(msk, data);
+> +}
+> +
+> +SEC(".struct_ops")
+> +struct mptcp_sched_ops burst = {
+> +	.init		= (void *)mptcp_sched_burst_init,
+> +	.release	= (void *)mptcp_sched_burst_release,
+> +	.data_init	= (void *)bpf_burst_data_init,
+> +	.get_subflow	= (void *)bpf_burst_get_subflow,
+> +	.name		= "bpf_burst",
+> +};
 > -- 
 > 2.35.3
 >
