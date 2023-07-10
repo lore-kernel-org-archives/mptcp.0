@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE670111BD
-	for <mptcp@lists.linux.dev>; Mon, 10 Jul 2023 12:55:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7971580C
+	for <mptcp@lists.linux.dev>; Mon, 10 Jul 2023 12:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1688993731;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=925XH7rhHy4oeT94nvedTJLpn0V7Xv3qUcI6KTOzJz0=;
-	b=Fa+x6ouuu/1OC0OVj1nlP5+AgcsFD3niAHNQOmdomi7Gs2Mbk8felShU5SlbZldz4OVXfM
-	qCU7SMZco6DvVU311YBuxhZn7kr8/syJ36n0YIItMTgM1HMWslOcROhkKTLAiCKgKhbzxO
-	OQI8IfPP/drhWRDILyZ8+3SjcihNkiw=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=UrC9q6f4wAQiDuC9mUcBejtHFHUSxiR/Q2Ex1BywahA=;
+	b=G5RlGLNbFUMuoMq6++rB3a0a1haPtOB2eARwLT6M3fBik3reX6WvNCI5Rp2hu4YgPyWoZJ
+	7PzajSLyHO5UYD/OsHbELxOtosH/Cjfw+w1YjIX14pEFpnXfs+akk9flLdzf5sy43les2y
+	sDfpnBDeMiImlS9uKVC6unvaai+kPBE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-623-YRApKD9oPF2V6HYRRULJ-Q-1; Mon, 10 Jul 2023 08:55:29 -0400
-X-MC-Unique: YRApKD9oPF2V6HYRRULJ-Q-1
+ us-mta-167-hllK6_9iPrObaER9rbbbaQ-1; Mon, 10 Jul 2023 08:55:30 -0400
+X-MC-Unique: hllK6_9iPrObaER9rbbbaQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 710DA380671E
-	for <mptcp@lists.linux.dev>; Mon, 10 Jul 2023 12:55:29 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 31EEC104458D
+	for <mptcp@lists.linux.dev>; Mon, 10 Jul 2023 12:55:30 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.225.74])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 00C89C09A09
-	for <mptcp@lists.linux.dev>; Mon, 10 Jul 2023 12:55:28 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B5E07C09A09
+	for <mptcp@lists.linux.dev>; Mon, 10 Jul 2023 12:55:29 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 09/14] mptcp: avoid additional indirection in mptcp_poll()
-Date: Mon, 10 Jul 2023 14:55:04 +0200
-Message-ID: <e3f2b0397e0d8fd03ca5c30bd34c3ddd973ba4eb.1688993569.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next 10/14] mptcp: avoid unneeded indirection in mptcp_stream_accept()
+Date: Mon, 10 Jul 2023 14:55:05 +0200
+Message-ID: <7e485259a201fdac1807c56746bd437d4335edd1.1688993569.git.pabeni@redhat.com>
 In-Reply-To: <cover.1688993569.git.pabeni@redhat.com>
 References: <cover.1688993569.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,36 +46,60 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
 We are going to remove the first subflow socket soon, so avoid
-the addictional indirection at poll() time. Instead access
+the addictional indirection at accept() time. Instead access
 directly the first subflow sock.
 
 No functional changes intended.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/mptcp/protocol.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c5da7a172ee9..4e5c9770d8d6 100644
+index 4e5c9770d8d6..00cfed1d0ebd 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -3884,12 +3884,12 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 	state = inet_sk_state_load(sk);
- 	pr_debug("msk=%p state=%d flags=%lx", msk, state, msk->flags);
- 	if (state == TCP_LISTEN) {
--		struct socket *ssock = READ_ONCE(msk->subflow);
-+		struct sock *ssk = READ_ONCE(msk->first);
+@@ -3220,17 +3220,12 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
+ 				 bool kern)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+-	struct socket *listener;
+-	struct sock *newsk;
++	struct sock *ssk, *newsk;
  
--		if (WARN_ON_ONCE(!ssock || !ssock->sk))
-+		if (WARN_ON_ONCE(!ssk))
- 			return 0;
+-	listener = READ_ONCE(msk->subflow);
+-	if (WARN_ON_ONCE(!listener)) {
+-		*err = -EINVAL;
+-		return NULL;
+-	}
++	ssk = READ_ONCE(msk->first);
  
--		return inet_csk_listen_poll(ssock->sk);
-+		return inet_csk_listen_poll(ssk);
- 	}
+-	pr_debug("msk=%p, listener=%p", msk, mptcp_subflow_ctx(listener->sk));
+-	newsk = inet_csk_accept(listener->sk, flags, err, kern);
++	pr_debug("msk=%p, listener=%p", msk, mptcp_subflow_ctx(ssk));
++	newsk = inet_csk_accept(ssk, flags, err, kern);
+ 	if (!newsk)
+ 		return NULL;
  
- 	shutdown = READ_ONCE(sk->sk_shutdown);
+@@ -3801,7 +3796,6 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 			       int flags, bool kern)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
+-	struct socket *ssock;
+ 	struct sock *newsk;
+ 	int err;
+ 
+@@ -3810,8 +3804,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 	/* Buggy applications can call accept on socket states other then LISTEN
+ 	 * but no need to allocate the first subflow just to error out.
+ 	 */
+-	ssock = READ_ONCE(msk->subflow);
+-	if (!ssock)
++	if (!READ_ONCE(msk->first))
+ 		return -EINVAL;
+ 
+ 	newsk = mptcp_accept(sock->sk, flags, &err, kern);
 -- 
 2.41.0
 
