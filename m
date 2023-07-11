@@ -1,134 +1,173 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0D6168AA
-	for <mptcp@lists.linux.dev>; Tue, 11 Jul 2023 12:43:59 +0000 (UTC)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5703d12ab9aso68381017b3.2
-        for <mptcp@lists.linux.dev>; Tue, 11 Jul 2023 05:43:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689079439; x=1691671439;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dr3lSUgu3oePgJRnnQUffOfeUlEV2prqK7kAgHSjTFU=;
-        b=N4LUE0TGXVV/Y5TgwH07P6NgO7g2pSJISWyg3NqsfPKu3Ma/ewk/AFmKuWVxrbJCNk
-         wfS0v2tP53zA2y5ODGNIQY9ISYfLjatlvSZjWMY3Rk/c1nCXJ5Mmtfev998LuFHwB13R
-         EXW0qH/+SL4buFpOmop519XKOQt5iZYEWIgt0xuJO/12yd2RBzFMbdeSMl3cQG5vt5rZ
-         M0m8R+btAfWCPrQw1uR7tzBOoVkueRLQTdMG/ZESojX9ZwSOflQo1okqkO75jk0JEd4l
-         4LOFFrUwNFTMP9dlJBBeGqHwST1GQ9f69MoWPn4ergOfQFNppZ5+1RvtuSJm4o5ywgN8
-         vUCg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACB3174FE
+	for <mptcp@lists.linux.dev>; Tue, 11 Jul 2023 12:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1689079807;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V/hfye54NC9Y8rvgbRJKKHNuMdiJjifgG0AWCaWp4QM=;
+	b=P1fMbGvQF1kPkAVpB30QVxwVntQQen6JyTTf8vsJAYZ4M5AVnbl+8d15lebhLmjZ0GlqFF
+	WWrmkVmZ1Lqqo33ZmUnQD7098yj9EcE8Tan+m8UV3if3CVM0fMQayR+XVDc2GJ7ZjJ4hhN
+	zG9hQJ3XDMURtyFNnh4vGdY0HgmV7UQ=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-210-U9ElMxGCN62NRMxMMwdpTA-1; Tue, 11 Jul 2023 08:50:06 -0400
+X-MC-Unique: U9ElMxGCN62NRMxMMwdpTA-1
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-40234d83032so11743801cf.1
+        for <mptcp@lists.linux.dev>; Tue, 11 Jul 2023 05:50:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689079439; x=1691671439;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dr3lSUgu3oePgJRnnQUffOfeUlEV2prqK7kAgHSjTFU=;
-        b=UZANVcLvbR4BAazFnmgUNiD2MGF9yTDqYGgx4oWZk12HpmcEttZK18Lszc61bQxJ5m
-         NF0Y3AWx4TKHwuYh3R0SG0CX5UanNGbPoBIdCpT37elKAVI4UqGqEN8DPF9pOAjpYzJa
-         c4GrhPIPKY8WHrfl8INzz1b3r3XIhZOqR9YUGJ6nc8cn3vtFWJjs0HYwQt/0gcnq24xd
-         iH3kBZqlavcub5pNh+BAEeHl9zMQhCliStTb+of7dnKfIcrzV/Laiqf/RschXpDys2Kf
-         02TTEA3QILLKPNlDy+/LRUBx2t0wDpj6dKiWs9fX7Q1o+XXA10tkHKw83Kh1EsGlxVmo
-         kDNQ==
-X-Gm-Message-State: ABy/qLb4THRdg58ghUIu7/QzyG0ENSzIHARvnbZ/fcMvLCQIC6HUkgw5
-	2jDTGNyyXh7vyf+kiaIoQDMn8Ekmsy3G0tYyPNjle+SVoZc=
-X-Google-Smtp-Source: APBJJlFwuhgIzxjCT5H1JTU9kAg5B0yr9s/XUvAx83MXkydI4ZqTfA6YbDmOM75dN2D2dFrFbmynoRE9YeQanTRYDCg=
-X-Received: by 2002:a25:6d88:0:b0:c61:ea22:8e1d with SMTP id
- i130-20020a256d88000000b00c61ea228e1dmr12022735ybc.48.1689079438753; Tue, 11
- Jul 2023 05:43:58 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689079806; x=1689684606;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=V/hfye54NC9Y8rvgbRJKKHNuMdiJjifgG0AWCaWp4QM=;
+        b=g7O8/QuQgOCR9EBOhKLgVXqYwJJHP9u5Go9qa0ITc9Mh662jE2xK0G2b2EBfsNxmnZ
+         xsqjmhm/cB5JbqCRG/hDMqTwMx38BGFyz81W55oykxdD74baIjbwKNTJ3v0vDSvRVbZq
+         QV0vN1RtITyYhJnbh/eRHBJR9Vqlilnsbt3FFj0DZg0yMkWw2KqULH5qwZMg0sSHGMDr
+         2t+WVoE/oGxtXNrrxZ70ZKSgGs5Ey2AnfLUMQ1oiVYoN0lF0XOyh6lYRvurFlqa487HA
+         t8euKfqWgSoWRPqTBmqQe8tB6KvJDDN14d5uUmcWxD2fqLgLRv1453zs9XCPIX3I439S
+         T+Aw==
+X-Gm-Message-State: ABy/qLaOVy+fsbt/HCUbGVumjO0y08vhvL+fGaQdF+AX0S2JffE1RMl/
+	ZKZueFuPFnlWNlXtHvU79+8XdO/iGTILOGinSVefSDbAhfBpKxTtRjrPwjPahK93LdUlTHXdBBC
+	bHuwltlDygpFzMKzE1N0vTw4=
+X-Received: by 2002:a05:622a:11c3:b0:403:b11f:2cf6 with SMTP id n3-20020a05622a11c300b00403b11f2cf6mr5570778qtk.2.1689079805948;
+        Tue, 11 Jul 2023 05:50:05 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFp+KUv9sT1h12jCtfXyYZTdDTUHeQW+Epp2buF/BnUBcMwkM2HgiReIy8FPnwL0D5SpB7lqQ==
+X-Received: by 2002:a05:622a:11c3:b0:403:b11f:2cf6 with SMTP id n3-20020a05622a11c300b00403b11f2cf6mr5570758qtk.2.1689079805586;
+        Tue, 11 Jul 2023 05:50:05 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-235-188.dyn.eolo.it. [146.241.235.188])
+        by smtp.gmail.com with ESMTPSA id t4-20020ac86a04000000b00403b3156f18sm1073073qtr.8.2023.07.11.05.50.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jul 2023 05:50:05 -0700 (PDT)
+Message-ID: <ec5fbde82d1da490192bf44682a562ee7cfa5400.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 0/6] mptcp: sockopt: uniform code to get/set
+ values
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
+Date: Tue, 11 Jul 2023 14:50:03 +0200
+In-Reply-To: <bc861997-4f71-c254-6e49-f92ba86dce67@tessares.net>
+References: <20230707-mptcp-unify-sockopt-issue-353-v1-0-693e15c06646@tessares.net>
+	 <9de27c12da208e32efc43e2b36840d941cd1575f.camel@redhat.com>
+	 <bc861997-4f71-c254-6e49-f92ba86dce67@tessares.net>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAJck1w2+nhbiEsa8+oYvbicruru2nsVbHNMWut1HqGrhZ5nhtw@mail.gmail.com>
- <fdea425d-5a7e-4d85-bcfe-4e624ab25e91@tessares.net>
-In-Reply-To: <fdea425d-5a7e-4d85-bcfe-4e624ab25e91@tessares.net>
-From: parthaz lokesh <parthazlokesh@gmail.com>
-Date: Tue, 11 Jul 2023 18:13:47 +0530
-Message-ID: <CAJck1w1pgBQN5RPjXF9crdkcrhN31z0frTwAA8ALk4uzSw0TMQ@mail.gmail.com>
-Subject: Re: mptcpize with shadow socks in android
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Matt,
+On Tue, 2023-07-11 at 12:22 +0200, Matthieu Baerts wrote:
+> On 10/07/2023 18:51, Paolo Abeni wrote:
+> > On Fri, 2023-07-07 at 18:00 +0200, Matthieu Baerts wrote:
+> > > Here is the implementation of an idea I suggested a few months ago: i=
+t
+> > > is a factoring of the sockopt code trying to uniform it, mainly to re=
+ly
+> > > on {ip,ipv6,tcp}_[gs]etsockopt() instead of copying what is done ther=
+e
+> > > to get and set values.
+> > >=20
+> > > That's a first step. More might come if we are OK with the approach,
+> > > e.g.
+> > >=20
+> > > - For SOL_TCP socket options we cannot store info in the MPTCP socket=
+ so
+> > >   we still need to "manually" store it somewhere in the msk. Maybe we
+> > >   could store info in the different subflows (and create a first one =
+if
+> > >   there is no subflow) and retrieve info from there?
+> > >=20
+> > > - For SOL_SOCKET socket options, it looks like it should be feasible =
+to
+> > >   do something similar to what I did here but I'm probably missing
+> > >   something. This could clean quite a lot of code, e.g. the last comm=
+it
+> > >   from:
+> > >=20
+> > >     https://github.com/matttbe/mptcp_net-next/commits/b4/mptcp-unify-=
+sockopt-issue-353
+> > >=20
+> > > - To sync the socket options when a new subflow has been created, for
+> > >   the moment, we copy info from the msk to the subflow but maybe it
+> > >    would be fine to call some getsockopt() / setsockopt() to do the
+> > >   sync? If we take this approach, we might want to save a list of
+> > >   setsockopt() that have been done in the past on this socket and onl=
+y
+> > >   re-do these ones? That should help with the maintenance of these
+> > >   socket options and ease the support of new ones.
+> >=20
+> > I would highly discourage this latest approach.
+>=20
+> Before going further, I want to insist on the fact that it is just an
+> idea, I didn't look at the implementation (and to be honest, I was not
+> looking at doing that now :) )
+>=20
+> > We will have to limit
+> > the list length, breaking the sync at some point.
+>=20
+> Why would we have to limit the list length and break the sync?
+>=20
+> I understand having a list might not feel good but I'm not sure what
+> else we can have.
 
-Thanks for your quick feedback. I figured out a way. Currently, the
-Android device is my client device. I'm using the redsocks client on
-the device to connect to the shadow socks server which is installed in
-the server. From the client side, I'm able to redirect any application
-traffic to redsocks where I'm  opening socket with IPPROTO_MPTCP.
-MPTCP flags are seen in pcap collected on the client. So everthings
-fine from client.
+Because otherwise syzkaller (or evil unprivileged user-space program)
+can easily exhaust the kernel memory doing a lot of setsockopt: we need
+to allocate the list entry, and we can't never flush the list.
 
-However, on the server side, I followed the tutorial from
-https://www.tessares.net/mptcp-proxy-setup-at-home-easier-now/. But,
-mptcp packets are not seen in pcap. only tcp packets are there. Do we
-have to redirect application traffic to shadowsocks to make MPTCP
-work? or just below commands should take care of redirection to socks
-and converting any tcp packets to mptcp packets? If so, it is not
-working as expected. Could you please guide?
+> > And there are few
+> > quite gray area, e.g. how errors should be handled?
+>=20
+> Same as what we have now I guess: errors are ignored :)
+> But I don't see what else we can and it doesn't feel worst than before
+> (regarding how we handle errors during the sync)
 
-Commands executed in my server:
-sudo apt install shadowsocks-libev mptcpize rng-tools5
-sudo mptcpize enable shadowsocks-libev.service
-sudo systemctl restart shadowsocks-libev.service
+Note the with the current schema sync can fail only while setting the
+CA, and even that requires a quite non trivial setup. If we start
+replying arbitrary complex sockopt sequence, I fear the we can hit
+failures much more frequently.
 
-Below is my server configuration:
-Ubuntu 22.04
-kernel 5.19v.
-enabled value is 1 from /proc/sys/net/mptcp
+>=20
+> > I also fear the
+> > "final" state of the subflow could be different from the
+> > expected/correct one for non trivial socktopt.
+>=20
+> I would expect it to be better because we would follow the "normal" flow
+> to set values. What bother me is the fact we bypass checks and directly
+> set values.=C2=A0
 
-Thanks,
-Parthaz.
+Actually we don't! Such checks are performed once for the sockopt on
+the main/initial subflow (or by the mptcp impl).
+
+IMHO it's safer then the list alternative. For passive socket the
+latter will do the full sockopt checking using a different initial sock
+internal state: the sockopt will be applied after cloning and the
+related initialization.
+
+For plain TCP sockopt value are inherited from the parent via the clone
+itself, which is quite near to what the current sync implementation is
+doing.
+
+> If the code change on the different IP/TCP/SOCKET socket
+> options side, we might (very likely) miss the fact we also need to
+> update what we are doing on the MPTCP side, e.g. if new checks or extra
+> actions (BPF/Netfilter hooks) are added later, etc. So the idea of this
+> approach is to ease the maintenance (but maybe that's not needed and/or
+> not worth it) :)
+
+The eBPF maintainer mentioned that new hooks are discouraged, IIRC ;)
 
 
-On Tue, 20 Jun 2023 at 21:00, Matthieu Baerts
-<matthieu.baerts@tessares.net> wrote:
->
-> Hi Parthaz,
->
-> On 20/06/2023 13:32, parthaz lokesh wrote:
-> > I set up a server for MPTCPV1 using (
-> > https://www.tessares.net/mptcp-proxy-setup-at-home-easier-now/ ).
-> > However, for clients I'm trying to use an android smartphone with
-> > kernel 5.15v.
-> > Is there a way I can force tcp sockets to use mptcp sockets in android
-> > smartphones?
->
-> Good question. Personally, I don't know.
->
-> When I did experimentations in the past with Android devices, I had to
-> modify the kernel to add MPTCP support so it was easier for me to either
-> change the kernel or rebuild the application to force using MPTCP.
->
-> > I compiled shadowsocks for android, but is there a similar mptcpize
-> > command as below that i can execute in android version?
-> >
-> > sudo mptcpize enable shadowsocks-libev.service
->
-> mptcpize can also be used to launch a specific command, not just SystemD
-> services, e.g;
->
->   mptcpize run iperf3 -s
->
-> If you launch shadowsocks manually (without the app), I guess you can
-> use mptcpize. If not, you might need to modify ShadowSocks to create an
-> IPPROTO_MPTCP socket. I'm sure it might be good to send a PR to add
-> MPTCP support ;-)
->
-> > Any other alternative would also be fine. Can mptcpd daemon make work
-> > for android also?
->
-> Android is quite specific with many isolated process. I don't think
-> mptcpd can be easily integrated :-/
->
-> systemtap can also be used to force an application to create MPTCP
-> socket but it might not be possible to do that on Android.
-> Modifying the app might be the "easiest" (and proper) way.
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+Cheers,
+
+Paolo
+
