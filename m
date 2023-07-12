@@ -1,105 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17362AB5A
-	for <mptcp@lists.linux.dev>; Wed, 12 Jul 2023 13:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1689169589;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LC0wimtaBcHcDuO0kA8vxwCxF55ZadzoG26BhmSHyXs=;
-	b=JO5+/qkJBJyd9WPuluYzEboTH4GXfK0MOvkclEcH3mQaYu4y8sD6RPWUgwSENGFs4k46Yd
-	MCefWJoCzS6q/oO2NLJ8YoN4fetFW+NOixqHiOqL4pQnfUCdJF2fJCCH/65TGMQ3BsaRpi
-	GwfdBlDf9yd+bhx7J8LxJ+lMwUjxePc=
-Received: from mail-vk1-f197.google.com (mail-vk1-f197.google.com
- [209.85.221.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-375-KJwg5tVPPLCleDh5pcYF5w-1; Wed, 12 Jul 2023 09:46:28 -0400
-X-MC-Unique: KJwg5tVPPLCleDh5pcYF5w-1
-Received: by mail-vk1-f197.google.com with SMTP id 71dfb90a1353d-47ec270d0ffso129390e0c.1
-        for <mptcp@lists.linux.dev>; Wed, 12 Jul 2023 06:46:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C921F199
+	for <mptcp@lists.linux.dev>; Wed, 12 Jul 2023 14:52:33 +0000 (UTC)
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-767582c6c72so683391385a.2
+        for <mptcp@lists.linux.dev>; Wed, 12 Jul 2023 07:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689173552; x=1691765552;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iCs3HnLPQTkwk3YhGUU3xbHi4ed1n854OPWgkE3f1GY=;
+        b=LKkvtZ2Ha7BoadsCtiVHGxEznVDVt/F7BGYUy0o/4rTBD7CF6qTyf4QwwaSfsdLs2k
+         sqof38vbQ+d4qFG6L5t1tqaJWCpB7/AmeJAqJw4Igeud9R7TETeyxCAv1fHfTI2pDxlR
+         s2lJDlEpjWufuJBf0oil7VIEydxNRZmhZJ2jpuJ4oTgYIgT6qMrGz7jVNTMdWBafy66k
+         KO4Ht4sfl/5apWd3ptefmiUq1FTzsgFK4lGMsz7Y9ObCiJ9YOMLJi7o4nBr9hUaPysvt
+         BdNGc1CCdiEHeYWerXLpVmL7eTcji9GdKpgQ+omxe8KoDSBPsI4M+cwv2I7XF2zo5oMK
+         QgAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689169587; x=1691761587;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+        d=1e100.net; s=20221208; t=1689173552; x=1691765552;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=LC0wimtaBcHcDuO0kA8vxwCxF55ZadzoG26BhmSHyXs=;
-        b=KMfZ0RYjb+0ACTSXmON2vkd+XviAfqJ5qTpux2+RGaMvRSjgm+oENG2sTYQkM3r+RB
-         TJ6h8DndtwvOoRY7zUi+B/6scELLy6MlLqm86sQhTzCA7Hj+XKw7+4sdt1F9cM39JqaX
-         KUrCpCD4J+qp5gmcy+PZGTddy+QUkCtsXGG0Vos8yyPaa8aQE0BTFeSPM8XgX3utIy4m
-         oYgN5MkCkKe8Daseh3osoSizx2lhLRykUzNYLYdwCT5Thm52freBnhYps2QO7gEVzEgx
-         UUCEDgiq3VLmTwhe8uTQWbHcOkw/hX++8ey6Cskr1fyiU5+WvnD40G9A+vCl/hBDiNIL
-         /Htw==
-X-Gm-Message-State: ABy/qLaZoRrUcPPhJbv9pMKJpsnx37yBjQhtvErxnUMGL1RN2aE4DUd5
-	rXf+HEll+QPfe6U37/3x98tNy/GQCPg7RL0CwxXei2alOGsXaIprjoZDOsrhHoABci/wi3NRZl0
-	g/hKhFAicZ29O9yqzmL9Nl24=
-X-Received: by 2002:a05:6102:3d12:b0:443:5da9:457e with SMTP id i18-20020a0561023d1200b004435da9457emr6697683vsv.0.1689169587502;
-        Wed, 12 Jul 2023 06:46:27 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHKtmM8q6si2jmB7xc0A4Jf9uSVWjWaTOwy9xJt5g6g82coQfEOqcOiZ8ba0ykX8r0l6LFi9A==
-X-Received: by 2002:a05:6102:3d12:b0:443:5da9:457e with SMTP id i18-20020a0561023d1200b004435da9457emr6697678vsv.0.1689169587170;
-        Wed, 12 Jul 2023 06:46:27 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-235-188.dyn.eolo.it. [146.241.235.188])
-        by smtp.gmail.com with ESMTPSA id x26-20020a0ca89a000000b00621268e14efsm2215469qva.55.2023.07.12.06.46.26
+        bh=iCs3HnLPQTkwk3YhGUU3xbHi4ed1n854OPWgkE3f1GY=;
+        b=RpC2JpBrUV4MOK/KhcRswA6EsIRXhsjcRrYX9uqTWJrTvyKwPMb/MpOXgINn0jtD9s
+         iF9P8gb3Y9V6Xw4wiWtgrgBOFCt1u10xKwPevYSWbyMLj3In8tJPpsk7iejxP3mgyynV
+         XK144qHkg/EIOUKAgwQnVWkImzvVERmqP2u7H21usfrtOY2bJOm/xgowibCLtHE4SzQw
+         anFKD2uAzfZ0MFHV6cgNixa7sKVQfWk5h16GHFLYLSlbVwUo//dr2h9ilHyjL2k3vFBY
+         OpXs298KJoxkkadQ6LaJ7XoJeYuU9mKq/B3729E2AZba9tT5WIjRe+AcyLL6mDvwqY9C
+         b8IQ==
+X-Gm-Message-State: ABy/qLaYbwra93+85FchJqWQw4RR6q00jpW+xvabLtJtIetL89z6gnSw
+	M75oIrgz7l5aQ6xaypifdWmdQveV6w==
+X-Google-Smtp-Source: APBJJlGRZCf4A0Brzjk/baVq0GFv9Hiu/uRUc8bDkQPy1JpE7SLSwfw4WMpIV3sK84AzvuR4H+swBw==
+X-Received: by 2002:a05:622a:34f:b0:403:b645:7c21 with SMTP id r15-20020a05622a034f00b00403b6457c21mr8902471qtw.46.1689173552410;
+        Wed, 12 Jul 2023 07:52:32 -0700 (PDT)
+Received: from [127.0.0.1] ([172.176.188.80])
+        by smtp.gmail.com with ESMTPSA id 7-20020ac85607000000b00401b060b264sm2316750qtr.9.2023.07.12.07.52.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 06:46:26 -0700 (PDT)
-Message-ID: <e6d6a299388b5e2324989d1063a80bbdbbd17329.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v2 0/3] selftests: mptcp: format subtests
- results in TAP (part 2)
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Wed, 12 Jul 2023 15:46:24 +0200
-In-Reply-To: <20230712-mptcp-issue-368-selftests-subtests-v2-0-c8b174c18f93@tessares.net>
-References: <20230712-mptcp-issue-368-selftests-subtests-v2-0-c8b174c18f93@tessares.net>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+        Wed, 12 Jul 2023 07:52:31 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20230712-mptcp-issue-368-selftests-subtests-v2-3-c8b174c18f93@tessares.net>
+References:
+ <20230712-mptcp-issue-368-selftests-subtests-v2-3-c8b174c18f93@tessares.net>
+Subject: Re: selftests: mptcp: join: only check for ip6tables if needed:
+ Tests Results
+Message-ID: <3caebb5b-17f2-5658-efc0-5add1752e19d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 12 Jul 2023 14:52:31 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2023-07-12 at 13:33 +0200, Matthieu Baerts wrote:
-> As discussed at a previous meeting, it might be good to print the test
-> name earlier to avoid confusions when there is an issue: sometimes the
-> error is printed at the end of the previous test and then the test name
-> is printed.
->=20
-> While at it, the code has been uniformed and it allows new features,
-> e.g. colour support, see patch 2.
->=20
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
-> Changes in v2:
-> - Address Paolo's comment in patch 1/2 to print info only if there is any=
-.
-> - Add patch 3/3, a fix for -net, a bit unrelated but discussed when
->   working on part 1
-> - Link to v1: https://lore.kernel.org/r/20230628144927.828117-1-matthieu.=
-baerts@tessares.net/
->=20
-> ---
-> Matthieu Baerts (3):
->       selftests: mptcp: join: rework detailed report
->       selftests: mptcp: join: colored results
->       selftests: mptcp: join: only check for ip6tables if needed
->=20
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 454 +++++++++++-------=
-------
->  tools/testing/selftests/net/mptcp/mptcp_lib.sh  |  38 ++
->  2 files changed, 253 insertions(+), 239 deletions(-)
-> ---
-> base-commit: 5fca7ce8c3c8d7badac7a9dd8b552bb221d91ee4
-> change-id: 20230621-mptcp-issue-368-selftests-subtests-3c29a649dcdd
->=20
-> Best regards,
+Hi Matthieu,
 
-Series LGTM, thanks Matttbe !
+Thank you for your modifications, that's great!
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5378197752119296
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5378197752119296/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5800410217185280
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5800410217185280/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_sockopts =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4674510310342656
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4674510310342656/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6504097658961920
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6504097658961920/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/ff0b68960e05
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
