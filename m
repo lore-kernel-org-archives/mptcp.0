@@ -1,119 +1,118 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA27D1F179
-	for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 19:03:05 +0000 (UTC)
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3141fa31c2bso1183615f8f.2
-        for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 12:03:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995291F179
+	for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 19:08:25 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3fbea14700bso9976105e9.3
+        for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 12:08:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1689274983; x=1691866983;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DngZium9YNJVRhCjETKR9D2bXwrG2zkugrzo7kcpi74=;
-        b=eJNIQoGOWPP82T7eEikX2KxevzaPJXAgyXNevLSMEbbldP42oCrvEMOIxV1EGwUjev
-         2GcS5Vijy3s+k8TTbwb+zXwT4JBhBUDAyUEu2+QbmlTilveqahwv/WOBTOvQhloEGsCe
-         yHbDZAGzSWBs9QZZ/AyBvaKaNsPTPeraBqTv53a/N7byfnKhJT4JPcZTnZ4SbEPuIUpC
-         Nr0r3iDLfGWPPXgaZx7/DdMUMm5lqz4FnH39kMrsgX+WvOSRtv3Qip2lOZ3X927JysZh
-         XExmm13FSQN9JdYnXq1ZDVaikG+bfLV/wqkrnL1cVp5zaZ283buMuDicDrqsm/k/RPaJ
-         5GyA==
+        d=tessares.net; s=google; t=1689275303; x=1691867303;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=anHT8NkBOltAXcbHeyf8HzLfEwyYXq4DQMoWTXq7Sc8=;
+        b=w2Hzd57mxA3jBYX7oGZeKbab32L6LL3ePNGf22FsiKTvUMbD1inkHpw1euPbyDzD31
+         Z063EviD2DviW6PPDshjF9CIgNKn9tOvZwP06u/vsfBtwr5GAVMKCand+9XLk3Eu56/I
+         yTVAXQxSgsxo2hTMphXfeh7LdQGKyUWpJae1HQr2jiJIJvFX9noJZj3eqrr3kBzWZLQy
+         bZv9+A4Vxa8HNkJ5rOEgjg9JWzqgur32l5XgFJQjBjADMuz2xH9gwDxEk30F1Mwyo0gU
+         BXbdMVDn+A846QGYlZn9ugec/l6nwmdiAfyTlMz0vR1V00KW/5ADKY9X6oasvcwrx9NB
+         U79g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689274983; x=1691866983;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DngZium9YNJVRhCjETKR9D2bXwrG2zkugrzo7kcpi74=;
-        b=Nrmj1va9hNm08GU+8ZsPiTCrDpOT3hRhuotl+zXT5mTdEL+TzqEVy5iZaF9g2ZKZhc
-         Y1NCsOJA2g39tH7+/9LTB01mNxZFKuEiC6FYJSBa2MhGao1FIw/d+o2uHi7+mJUCbQsl
-         Ypb6GLYIrDGRghZNRZz/nKA8ldRhjtzWr172WMwULp6uXPKk9rK55a7ugdLaraFPihEe
-         3KKGigjjf3SyJXdw437LrGnCfkTxm1DHoWToaGbb0JwFn0IWAL8HoKMqhi1iKwyh2q0S
-         IyTQsBnlOWNHe8OrS682ixPyf1C2SWcxjPaph3Ej/Ippp8jf919TQKyTlgUJQSbwRE63
-         2l+Q==
-X-Gm-Message-State: ABy/qLbnJFEcLyjeeVGlNPK/7gVLAZ8va9ahK+kaoWu0TWWXXSywTeol
-	kR7wkxpfxKAyKrPmd7IhEs9MKA==
-X-Google-Smtp-Source: APBJJlHnK8Hn9JCbj24jOu7iGnKo1+mfNp7iDzdNWTd6LEXJupQ0q/Po/SadrD4uYuCt4QGK7BzJhA==
-X-Received: by 2002:a5d:6085:0:b0:314:4c1d:1c0a with SMTP id w5-20020a5d6085000000b003144c1d1c0amr2044660wrt.46.1689274982950;
-        Thu, 13 Jul 2023 12:03:02 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:d855:a28a:e0c1:ddc1? ([2a02:578:8593:1200:d855:a28a:e0c1:ddc1])
-        by smtp.gmail.com with ESMTPSA id k8-20020a5d5188000000b00314172ba213sm8582332wrv.108.2023.07.13.12.03.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jul 2023 12:03:02 -0700 (PDT)
-Message-ID: <a936c2db-6c2c-2a2e-0657-9ddab3c18a2c@tessares.net>
-Date: Thu, 13 Jul 2023 21:03:01 +0200
+        d=1e100.net; s=20221208; t=1689275303; x=1691867303;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=anHT8NkBOltAXcbHeyf8HzLfEwyYXq4DQMoWTXq7Sc8=;
+        b=fZCkY53tx34Ba9ohLdNc58r50TGTXmaO51TJIbLA4rtKKQpHEqw5j0/w8A8g1NVgL8
+         TV7Kb4rN/Go7pKWXcR6fmhioFTZCZfZMTSupWSFgBzzyT8wRwRpKWB8dKYe5qYPBmMTp
+         zsOeDkkLBjHMFR9Wpf/Esa9AcOlXLEI1QRnsLcEL2jd9jRcgZhmljXCgPPij/j4n7p3+
+         vAIECDXhj0yI0XPK8zD2oBz4+uMiNqKqUL4xB/qk8iz6phm7uPaSOFk89UJ1qlQXwEvZ
+         X0NzmQSwTl3EHvRVTqja80O9YdrYHRWc45co3fiOyCZBXOFg+mTvCKvvpmcF8NnGtJLC
+         BK1Q==
+X-Gm-Message-State: ABy/qLYYxhLuygUr2oDwbzfkUUq+CuSq/uWUO/9Vs6JEcZ3tDAP0APst
+	vtLmlW6LGWX85o8k7YwAPjPlA1ZCOvuW+d4DRr4YbAD+
+X-Google-Smtp-Source: APBJJlEKYDcQ5uepfx5LbKOxY4buQOWCAUsgSvlYRATwj1J8Z0ichsUMcv4jxGD4B1j4AYyW6y9bhw==
+X-Received: by 2002:a7b:c8d2:0:b0:3fc:500:db7c with SMTP id f18-20020a7bc8d2000000b003fc0500db7cmr2187652wml.21.1689275303390;
+        Thu, 13 Jul 2023 12:08:23 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id p11-20020a1c740b000000b003fbe36a4ce6sm18988530wmc.10.2023.07.13.12.08.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jul 2023 12:08:22 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v2 0/2] selftests: mptcp: pm_nl_ctl: display
+ errors if any
+Date: Thu, 13 Jul 2023 21:08:13 +0200
+Message-Id: <20230713-mptcp-issue-368-pm_nl_ctl_ack-v2-0-eb9582b8e24b@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH mptcp-next 0/2] selftests: mptcp: pm_nl_ctl: display
- errors if any
-Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20230705-mptcp-issue-368-pm_nl_ctl_ack-v1-0-40bcff40cb6b@tessares.net>
- <3f261320-9413-187e-56ef-c64d7fc983a2@kernel.org>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <3f261320-9413-187e-56ef-c64d7fc983a2@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ1LsGQC/42NXQrCMBCEr1L22ZU0/VF88h4iJUk3NljTkI2lU
+ np3Q72Aj8PMfN8KTNERw6VYIdLs2E0+B3kowAzKPwhdnzNIIStxEg2+QjIBHfObsGrPGF6dHzu
+ Txk6ZJ2pdtrKxje57BZkRIlm37Pwb/K6elgT33A2O0xQ/u3ou98WflrlEgbXQxtpaGN3qayJmF
+ YmPnjJ827YvonpO/NkAAAA=
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1768;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=W9X59AeW9UwWfzu5xT2PxWDZFcNNuMVs4Oncq6H/vDY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBksEumLANGz5h8S7DdDuAiy91Jcpue+pJvTxYgs
+ /M4yszy0MiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZLBLpgAKCRD2t4JPQmmg
+ c1NZEAC/SBuLnU2SznHrW90x42T1LpmC4PkABKJaA/g3eAVhJrH6V1vFpzSrtzeiDRB+7I6qteS
+ xK34CoU+GNYadpOWvgHIQoU6XOHCVUWF//AgWIyX19aEEZUnmdYIo3ZRQ7/RQ1x2UQ+b45EUgWj
+ KUdbF77j7cq76fjnalXUrqBQJDPa/RErajf5cc4HX3vJtXnEQmT0O9N2Fs4hbj9ClvhDiUT6Zyv
+ iRPfUMY8ak2+C3VVXufAhEIxjscGU5/B8PhHouJcWzwGoH3lswGBBSY5Ya30gEo5UvJaxqYNyQV
+ 9CxoZ1eXpZewGfMoYHqlkR8uZFRaStTSc7mdEZ3lc1bwW5El6JleejS+qANMMBjkRqRtUJSgzyp
+ gl2+G3CKvQ8M1d+pI6Mb7pPoji+4pwvAppSEuMwqQfi23oOyyLsA6uNdAYGPWZqMm7AongSTBzO
+ l0pNnAwukohJQUAdOqodXwTls4V21g7ZwA/tI5meFzWupM0CuM5LZmh2FBVvyOHofyR+ACDOhhE
+ pQMnSqnkTjqV55EeZLEzZjzwhNcFG5MtbTfIBmvqawqI2rqu3ZshUe4TfU9040juOMDngSPBI0w
+ GeTKGUMKkSzjhFtN01ItZx/EWs64f4qLzUJmfQSR13dxTozHg1WM8RAv8UKH5BmZQBKhIS/ISiR
+ 4LIk+T6hZpa3qDA==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Mat,
+Recently, I wanted to understand why the userspace_pm.sh test was
+failing on some arch according to lkft reports. There was nothing in the
+logs apart from seeing the expected event had been missing. I then
+realised the output of pm_nl_ctl was muted but also this tool was not
+looking if there were errors after having sent some Netlink commands.
 
-On 13/07/2023 19:17, Mat Martineau wrote:
-> On Wed, 5 Jul 2023, Matthieu Baerts wrote:
-> 
->> Recently, I wanted to understand why the userspace_pm.sh test was
->> failing on some arch according to lkft reports. There was nothing in the
->> logs apart from seeing the expected event had been missing. I then
->> realised the output of pm_nl_ctl was muted but also this tool was not
->> looking if there were errors after having sent some Netlink commands.
->>
->> I don't think it is a good idea to mute the output and ignore errors,
->> especially here in the tests where we do want to validate these Netlink
->> commands. So now the tool checks for errors and the output is no longer
->> discarded.
->>
->> Note that I didn't manage to read the error message set by the kernel. I
->> think the rtattr pointer in nl_error() is wrong. I think it should get
->> info from &err->msg instead of nh. Anyway, here we at least print errno
->> and just in case someone wants to have a look, it is easy to test:
->>
->>  ./pm_nl_ctl ann 1.1.1.1 token 12 id 0
->>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> 
-> 
-> Hi Matthieu -
-> 
-> Good idea to add the relevant error output.
-> 
-> I noticed in the CI run for this patch set
-> (https://cirrus-ci.com/task/5548960819970048) that some netlink error
-> info is printed in the "OK" test results too:
-> 
-> [17:50:36.964] # flush addrs                                       [ OK ]
-> [17:50:37.070] # netlink error -22 (Invalid argument)
-> [17:50:37.076] # ./pm_nl_ctl: bailing out due to netlink error[s]
-> [17:50:37.187] # rcv addrs above hard limit                        [ OK ]
-> [17:50:37.295] # netlink error -22 (Invalid argument)
-> [17:50:37.300] # ./pm_nl_ctl: bailing out due to netlink error[s]
-> [17:50:37.413] # subflows above hard limit                         [ OK ]
-> 
-> Do you expect that with your changes?
+I don't think it is a good idea to mute the output and ignore errors,
+especially here in the tests where we do want to validate these Netlink
+commands. So now the tool checks for errors and the output is no longer
+discarded.
 
-Good catch, I didn't think about looking at pm_netlink.sh.
+Note that I didn't manage to read the error message set by the kernel. I
+think the rtattr pointer in nl_error() is wrong. I think it should get
+info from &err->msg instead of nh. Anyway, here we at least print errno
+and just in case someone wants to have a look, it is easy to test:
 
-The 3 errors I see looks normal to me:
-- trying to add an entry already there
-- trying to set the two limits above the hard limit
+  ./pm_nl_ctl ann 1.1.1.1 token 12 id 0
 
-So I guess I can mute stderr in a v2.
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Changes in v2:
+- Patch 1/2: mute expected errors in selftests
+- Link to v1: https://lore.kernel.org/r/20230705-mptcp-issue-368-pm_nl_ctl_ack-v1-0-40bcff40cb6b@tessares.net
 
-Cheers,
-Matt
+---
+Matthieu Baerts (2):
+      selftests: mptcp: pm_nl_ctl: always look for errors
+      selftests: mptcp: userspace_pm: unmute unexpected errors
+
+ tools/testing/selftests/net/mptcp/pm_netlink.sh   |   6 +-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c     |  33 ++++---
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 100 +++++++++++-----------
+ 3 files changed, 75 insertions(+), 64 deletions(-)
+---
+base-commit: 3ee02a7d38ae4c5fc98a3f833f2a6f44f4b4b15a
+change-id: 20230705-mptcp-issue-368-pm_nl_ctl_ack-bb1625f5bdda
+
+Best regards,
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Matthieu Baerts <matthieu.baerts@tessares.net>
+
