@@ -1,47 +1,47 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACEA1DDEE
-	for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 19:08:25 +0000 (UTC)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-3fbf1b82de7so7117515e9.1
-        for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 12:08:25 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39BC1F191
+	for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 19:08:26 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-3fbc656873eso10578625e9.1
+        for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 12:08:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1689275304; x=1691867304;
+        d=tessares.net; s=google; t=1689275305; x=1691867305;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XkEf6EFdzJhabJQyGb8T2pwvDzCCIpcqtYKG8mt/1Ew=;
-        b=eGdcplTcOITMMLiBj3rTHS5uBYG9jckPX9qOhiZBEGASW4JZeB9DOtqlOskYDtqepD
-         EK2Wxf/aOOwQEfScwCy6u6tVgjTVQsfg7RAuCjtTbWew0E4pOHTiWs/9BVkRqp10LV79
-         qXBnXinnl1E6f2Cwaps9hZAF9F4SgH+g6BxgwZR7pPttCYe0jYCNPqyAi8jSwzVQHkY+
-         XgYkPZjjHzVS6JZpJEGtdP75Rj3xvRfAp6AGlCCFYFW5grgBVYn/YvJMRZZkD0vLksdu
-         FUaVyFgLg4i6nhKgvid+pfiDwHjcMUyMXF3XMxb12br9c0LLOUJWNcIqV9gvWhi34L3G
-         Cjtw==
+        bh=5JWpdgqtFcguEOJ7JLAgihFTkDv6ED+BcGhrDZsfYBs=;
+        b=8odobowMtZt9WkAKL843WT9sOh5bZ9ITFjmWBRZmzEmVHuauEbLZpY3rd0kzcrSc36
+         jrX6/VFyT/T1l3QQZGHqUMJbhzrW5wyWsPlP7Rk1ThsBh9rZ9nuNeM9gcbUtidHp4lki
+         3RIltZl5p3UqJqBEl5msssSnS4XUFq1+XiXWeI+IpzB+hb8TimE8GXzK2pkqCmegaLrR
+         SOr2ogjB6jIFvzfodiDZsRV/IURtJx/6nsUgy+ANz9ovQb6a4d2mg/+YmxhFU/YHXqb6
+         QOXlP9rzxQh/8JsRUOS2UMpvqtRI27F45zuDotTTpvl9K2mGs7Qt/admop39pHeGQZV6
+         R7MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689275304; x=1691867304;
+        d=1e100.net; s=20221208; t=1689275305; x=1691867305;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XkEf6EFdzJhabJQyGb8T2pwvDzCCIpcqtYKG8mt/1Ew=;
-        b=U+QZmWLvUa7Mf6DAfm+s0nR/W8UpN2FqjEIOLJfsC550n/L5y8wJ1l1vPHsjEoSd4W
-         2tJV+sMP6CYIcc0Kf+myt3L8jNWmx8PE+J/tLIamDnLWlG0xezebfilvC0MAqPTAxkw6
-         irnU/bxGCZIgwVS90uL0TryxcvsG8V+9/W1ZkEgs6OwLTinS8royJ8rzVjkRoYmgmJ1u
-         z3VvVdaW2Z7lLK8H+R1T2KB0XksPszYuO3+QsUeXojyNPiQaoQrfEr6SPWTdDrLLBEGa
-         gT9VsZZ4l3xHQzxHx/0eEOYBwQds34FW/NKYFLn0ZYkOcaifAgq8wu508V2rdf1JfTMo
-         iBsQ==
-X-Gm-Message-State: ABy/qLZMA/bb8UY+LW/rG09LoqelqEZ/+lBHQM3V+VW7Fi8cBpx1SE98
-	8h6lXTtT/bzBojt5PTq3gHRB8gF0lWlda9LYEo+/yNnc
-X-Google-Smtp-Source: APBJJlFglKjt67gO3IwngDXdkE6xdrpay0VACsF/GX4eOj9ZlD/E9A6QM5ZkQRHI2B91v0/P/UzF+g==
-X-Received: by 2002:a1c:770a:0:b0:3fa:aeac:e978 with SMTP id t10-20020a1c770a000000b003faaeace978mr491978wmi.0.1689275303918;
-        Thu, 13 Jul 2023 12:08:23 -0700 (PDT)
+        bh=5JWpdgqtFcguEOJ7JLAgihFTkDv6ED+BcGhrDZsfYBs=;
+        b=k/yGPn4mnQK0C00sWzheQ6Bj+VPFeGVUCG7OWmrW2vWv0Gli3pk0UrqtRRBurn5/qb
+         ihg2MT0+t0B2rtj9wSGeM+DNcX8/CLewqng3u+BtsvCcfaoODfTWJoTxBhYu8fskUaWQ
+         +VVDN9ngJ/oKB5CxxNVoF+4kdJ84VSruSH8f1Ho1E2qb/q+xiSN1ECLuow0GOUvWoI5j
+         8BOzelhwHszvMjEVerp4O0Nhn+yT4TG9e3fuFynG3IPWt0II4BdmWXFujHbPfZ/Oa/U1
+         JxHEXfRwXfvVKF22e5HoEIS2oYAF6Tr01Dpy02mhbGRzdUmYSb06lUOIThZH6FPFJgJ/
+         s67w==
+X-Gm-Message-State: ABy/qLaVljeJZGc2SYcGi/3dpYZHvqKfq/RuyY4oNGOng2LMt0agvUIb
+	4fV+qFSBkk53UI3qvbHMGhetwywrqeERi0wr2A24fyoX
+X-Google-Smtp-Source: APBJJlEFIjRSFNGYa/du8brAZo0k10QmoTCExCwB50k2EfRimdRZzTb8dyP1tCsUfKJuFrJxfZjAHg==
+X-Received: by 2002:a05:600c:ad4:b0:3f9:b748:ff37 with SMTP id c20-20020a05600c0ad400b003f9b748ff37mr2698908wmr.20.1689275304743;
+        Thu, 13 Jul 2023 12:08:24 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id p11-20020a1c740b000000b003fbe36a4ce6sm18988530wmc.10.2023.07.13.12.08.23
+        by smtp.gmail.com with ESMTPSA id p11-20020a1c740b000000b003fbe36a4ce6sm18988530wmc.10.2023.07.13.12.08.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jul 2023 12:08:23 -0700 (PDT)
+        Thu, 13 Jul 2023 12:08:24 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Thu, 13 Jul 2023 21:08:14 +0200
-Subject: [PATCH mptcp-next v2 1/2] selftests: mptcp: pm_nl_ctl: always look
- for errors
+Date: Thu, 13 Jul 2023 21:08:15 +0200
+Subject: [PATCH mptcp-next v2 2/2] selftests: mptcp: userspace_pm: unmute
+ unexpected errors
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,169 +50,448 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230713-mptcp-issue-368-pm_nl_ctl_ack-v2-1-eb9582b8e24b@tessares.net>
+Message-Id: <20230713-mptcp-issue-368-pm_nl_ctl_ack-v2-2-eb9582b8e24b@tessares.net>
 References: <20230713-mptcp-issue-368-pm_nl_ctl_ack-v2-0-eb9582b8e24b@tessares.net>
 In-Reply-To: <20230713-mptcp-issue-368-pm_nl_ctl_ack-v2-0-eb9582b8e24b@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5126;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=17981;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=JGzSN426bg7ZxUIzyVHzWVEVDmDpTgF0TEvJZSyjtpE=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBksEumUsC0vcaCffRw3a+FVyVJskoZ/Odz2P7iD
- ZRr/dlpkbiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZLBLpgAKCRD2t4JPQmmg
- c9zYEADh9hQ8vlByY6OKKWA9Z2uk4CyPrxCWjYap3/4pXCn0tbzI2F1k4QTqUV6zsXR7q+kqPI5
- HNr8ZGI9Fsy7FOEqdVGSXSWwycgZt4FMn5hTSJHENqXUGT0qXRTCDQVFXqR9eI4fkLAVvKpUbrO
- KFZpjFbM6v4D2jT1rVtCPmdxD78ksH+ZRbviPAjmhHhZVJe6HQEP7WZ3d+Nf2oEwRz2lD01ZCJO
- xR0B3s7CP3lvSUrYhDv3L5zgQAz+8SczLYyOph0Gc9V31e0Dgzr2Eou/wai52EyMU0WYbyHt64K
- XSh/x0Ya4ZI04vVEE5xAkgySEe1cL184nADTsS2NTqGtOoSonSG7vff+7bmTFTEzUUqJ1m6VapH
- mLDamHFgqauZYtUzGeBJx0r1949/dnAr5AXqLe8navT/sUlFuqusUB0PVQvZvADe8hO2vvM3MRu
- Q6IV38sfHkvUcRTZgJhTOwoxie010vhmv+YLwqSZjRAXjFtLxaG1JxWfMu+mHG+M+087g7OWmjn
- RBeTp1nktMdZ2oyDHQuab5I7gWaA0pP2vB+k7SXVqKGGvjuspwHTWnJfwAk2DIU7+AWYx6dHOG1
- 18kbWxiPKyb0wISc8hHnYa36jrOmrZ1Nl5w2+1GNiJ4ZIW1OcLptk4LgyRRTOLmPawSGKaxXffw
- wVgNKDVVKvI4ERg==
+ bh=f1ktJ6IcdjCP7uq5qkFZeBHM2fQoSo4uHK6z2W4JbHk=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBksEumZVPCi37pS1w2vIN0tf7ieu+UdnLOdvGR8
+ PHB0204GnaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZLBLpgAKCRD2t4JPQmmg
+ c5tHD/4gF9wD1vgbXawlIMbPEe+LdMq4VQGbZqzCUlbVlesvS62Qopril/Qw9shA6a68AV8rwBA
+ 64FSuU06VGUjrSGBAhsb9N0qmeeOXqt2BEIKs99p0N62q/F/IxrYcSpxrT3KVliVOgif/lyz46r
+ WToR1MDUoFlj4vsXSiaLe+Pvr1njb+xIm2WieMKwu9aegY9hOyuh1Z5AXShL7L3oeBCr6nkJgng
+ 7+5tUQlVcjJEv4cx0X+dn+jZLwuliY1CnN3yho6dWDhHJmu417anKXku5HzN+XgVlT63iDvKLE3
+ At+LWUrT/gIRg32LlFmL6vHybyNiTOhM49w/hZWPeRYpbbpSZEiLDibuUdool7UZ1f1wgSlQY8q
+ Bptvoe6pl7Ttuowaw+ENZ6KuIuvtr8biMptoGSYoqfAxcHBEI8VA9zmgCMRNULN9xkORXofW3GI
+ Y72mx8o3trUk0Jtzssvxv6U2285kPQkryXI8HmyRiEZANXjkKI27sZB/GBnQM5y8UVif+j+ovsU
+ Y/HHPC/AENsNcU0z3xT3LsQkGMunfNTrHCoeygiCumW/fImNVcgn9ACeAoXAq9IiOAK+jaWFuXp
+ Zb40fA/qYXToCJBgBW5WgV1N5wzXHo95LQ+mqEQDO1jFjehotQGbe0jvseA3aWpiIiSXriUO8Ik
+ egE2+TjHpFnRcYw==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-If a Netlink command for the MPTCP path-managers is not valid, it is
-important to check if there are errors. If yes, they need to be reported
-instead of being ignored and exiting without errors.
+All pm_nl_ctl commands were muted. If there was an unexpected error with
+one of them, this was simply not visible in the logs, making the
+analysis very hard. It could also hide misuse of commands by mistake.
 
-Now if no replies are expected, an ACK from the kernelspace is asked by
-the userspace in order to always expect a reply. We can use the same
-buffer that is currently always >1024 bytes. Then we can check if there
-is an error (err->error), print it if any and report the error.
-
-After this modification, it is required to mute expected errors in
-pm_netlink.sh selftest:
-
-- when trying to add a duplicated entry
-- when trying to set the two limits above the hard limit
+Now the output is only muted when we do expect to have an error, e.g.
+when giving invalid arguments on purpose.
 
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-v2:
-  - mute expected errors in pm_netlink.sh (Mat)
----
- tools/testing/selftests/net/mptcp/pm_netlink.sh |  6 ++---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c   | 33 ++++++++++++++++---------
- 2 files changed, 25 insertions(+), 14 deletions(-)
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 100 +++++++++++-----------
+ 1 file changed, 50 insertions(+), 50 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index f32038fe1ee5..8f4ff123a7eb 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -99,7 +99,7 @@ check "ip netns exec $ns1 ./pm_nl_ctl dump" \
- "id 1 flags  10.0.1.1
- id 3 flags signal,backup 10.0.1.3" "dump addrs after del"
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 23f8959a8ea8..b25a3e33eb25 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -380,7 +380,7 @@ test_announce()
+ 	:>"$server_evts"
+ 	ip netns exec "$ns2"\
+ 	   ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id $client_addr_id dev\
+-	   ns2eth1 > /dev/null 2>&1
++	   ns2eth1
+ 	print_test "ADD_ADDR id:${client_addr_id} 10.0.2.2 (ns2) => ns1, reuse port"
+ 	sleep 0.5
+ 	verify_announce_event $server_evts $ANNOUNCED $server4_token "10.0.2.2" $client_addr_id \
+@@ -389,7 +389,7 @@ test_announce()
+ 	# ADD_ADDR6 from the client to server machine reusing the subflow port
+ 	:>"$server_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl ann\
+-	   dead:beef:2::2 token "$client6_token" id $client_addr_id dev ns2eth1 > /dev/null 2>&1
++	   dead:beef:2::2 token "$client6_token" id $client_addr_id dev ns2eth1
+ 	print_test "ADD_ADDR6 id:${client_addr_id} dead:beef:2::2 (ns2) => ns1, reuse port"
+ 	sleep 0.5
+ 	verify_announce_event "$server_evts" "$ANNOUNCED" "$server6_token" "dead:beef:2::2"\
+@@ -399,7 +399,7 @@ test_announce()
+ 	:>"$server_evts"
+ 	client_addr_id=$((client_addr_id+1))
+ 	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
+-	   $client_addr_id dev ns2eth1 port $new4_port > /dev/null 2>&1
++	   $client_addr_id dev ns2eth1 port $new4_port
+ 	print_test "ADD_ADDR id:${client_addr_id} 10.0.2.2 (ns2) => ns1, new port"
+ 	sleep 0.5
+ 	verify_announce_event "$server_evts" "$ANNOUNCED" "$server4_token" "10.0.2.2"\
+@@ -410,7 +410,7 @@ test_announce()
  
--ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3
-+ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 2>/dev/null
- check "ip netns exec $ns1 ./pm_nl_ctl get 4" "" "duplicate addr"
+ 	# ADD_ADDR from the server to client machine reusing the subflow port
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
+-	   $server_addr_id dev ns1eth2 > /dev/null 2>&1
++	   $server_addr_id dev ns1eth2
+ 	print_test "ADD_ADDR id:${server_addr_id} 10.0.2.1 (ns1) => ns2, reuse port"
+ 	sleep 0.5
+ 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
+@@ -419,7 +419,7 @@ test_announce()
+ 	# ADD_ADDR6 from the server to client machine reusing the subflow port
+ 	:>"$client_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
+-	   $server_addr_id dev ns1eth2 > /dev/null 2>&1
++	   $server_addr_id dev ns1eth2
+ 	print_test "ADD_ADDR6 id:${server_addr_id} dead:beef:2::1 (ns1) => ns2, reuse port"
+ 	sleep 0.5
+ 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "dead:beef:2::1"\
+@@ -429,7 +429,7 @@ test_announce()
+ 	:>"$client_evts"
+ 	server_addr_id=$((server_addr_id+1))
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
+-	   $server_addr_id dev ns1eth2 port $new4_port > /dev/null 2>&1
++	   $server_addr_id dev ns1eth2 port $new4_port
+ 	print_test "ADD_ADDR id:${server_addr_id} 10.0.2.1 (ns1) => ns2, new port"
+ 	sleep 0.5
+ 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
+@@ -490,7 +490,7 @@ test_remove()
+ 	# RM_ADDR from the client to server machine
+ 	:>"$server_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
+-	   $client_addr_id > /dev/null 2>&1
++	   $client_addr_id
+ 	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1"
+ 	sleep 0.5
+ 	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
+@@ -499,7 +499,7 @@ test_remove()
+ 	:>"$server_evts"
+ 	client_addr_id=$(( client_addr_id - 1 ))
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
+-	   $client_addr_id > /dev/null 2>&1
++	   $client_addr_id
+ 	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1"
+ 	sleep 0.5
+ 	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
+@@ -507,7 +507,7 @@ test_remove()
+ 	# RM_ADDR6 from the client to server machine
+ 	:>"$server_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client6_token" id\
+-	   $client_addr_id > /dev/null 2>&1
++	   $client_addr_id
+ 	print_test "RM_ADDR6 id:${client_addr_id} ns2 => ns1"
+ 	sleep 0.5
+ 	verify_remove_event "$server_evts" "$REMOVED" "$server6_token" "$client_addr_id"
+@@ -517,7 +517,7 @@ test_remove()
  
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4 flags signal
-@@ -127,10 +127,10 @@ id 8 flags signal 10.0.1.8" "id limit"
- ip netns exec $ns1 ./pm_nl_ctl flush
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "flush addrs"
+ 	# RM_ADDR from the server to client machine
+ 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server4_token" id\
+-	   $server_addr_id > /dev/null 2>&1
++	   $server_addr_id
+ 	print_test "RM_ADDR id:${server_addr_id} ns1 => ns2"
+ 	sleep 0.5
+ 	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
+@@ -526,7 +526,7 @@ test_remove()
+ 	:>"$client_evts"
+ 	server_addr_id=$(( server_addr_id - 1 ))
+ 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server4_token" id\
+-	   $server_addr_id > /dev/null 2>&1
++	   $server_addr_id
+ 	print_test "RM_ADDR id:${server_addr_id} ns1 => ns2"
+ 	sleep 0.5
+ 	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
+@@ -534,7 +534,7 @@ test_remove()
+ 	# RM_ADDR6 from the server to client machine
+ 	:>"$client_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server6_token" id\
+-	   $server_addr_id > /dev/null 2>&1
++	   $server_addr_id
+ 	print_test "RM_ADDR6 id:${server_addr_id} ns1 => ns2"
+ 	sleep 0.5
+ 	verify_remove_event "$client_evts" "$REMOVED" "$client6_token" "$server_addr_id"
+@@ -610,18 +610,18 @@ test_subflows()
  
--ip netns exec $ns1 ./pm_nl_ctl limits 9 1
-+ip netns exec $ns1 ./pm_nl_ctl limits 9 1 2>/dev/null
- check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "rcv addrs above hard limit"
+ 	# Attempt to add a listener at 10.0.2.2:<subflow-port>
+ 	ip netns exec "$ns2" ./pm_nl_ctl listen 10.0.2.2\
+-	   "$client4_port" > /dev/null 2>&1 &
++	   "$client4_port" &
+ 	local listener_pid=$!
  
--ip netns exec $ns1 ./pm_nl_ctl limits 1 9
-+ip netns exec $ns1 ./pm_nl_ctl limits 1 9 2>/dev/null
- check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "subflows above hard limit"
+ 	# ADD_ADDR from client to server machine reusing the subflow port
+ 	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
+-	   $client_addr_id > /dev/null 2>&1
++	   $client_addr_id
+ 	sleep 0.5
  
- ip netns exec $ns1 ./pm_nl_ctl limits 8 8
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index 1887bd61bd9a..49369c4a5f26 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -66,20 +66,25 @@ static int init_genl_req(char *data, int family, int cmd, int version)
- 	return off;
+ 	# CREATE_SUBFLOW from server to client machine
+ 	:>"$server_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2\
+-	   rport "$client4_port" token "$server4_token" > /dev/null 2>&1
++	   rport "$client4_port" token "$server4_token"
+ 	sleep 0.5
+ 	verify_subflow_events $server_evts $SUB_ESTABLISHED $server4_token $AF_INET "10.0.2.1" \
+ 			      "10.0.2.2" "$client4_port" "23" "$client_addr_id" "ns1" "ns2"
+@@ -635,31 +635,31 @@ test_subflows()
+ 	# DESTROY_SUBFLOW from server to client machine
+ 	:>"$server_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
+-	   "$client4_port" token "$server4_token" > /dev/null 2>&1
++	   "$client4_port" token "$server4_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
+ 			      "10.0.2.2" "$client4_port" "23" "$client_addr_id" "ns1" "ns2"
+ 
+ 	# RM_ADDR from client to server machine
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
+-	   "$client4_token" > /dev/null 2>&1
++	   "$client4_token"
+ 	sleep 0.5
+ 
+ 	# Attempt to add a listener at dead:beef:2::2:<subflow-port>
+ 	ip netns exec "$ns2" ./pm_nl_ctl listen dead:beef:2::2\
+-	   "$client6_port" > /dev/null 2>&1 &
++	   "$client6_port" &
+ 	listener_pid=$!
+ 
+ 	# ADD_ADDR6 from client to server machine reusing the subflow port
+ 	:>"$server_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl ann dead:beef:2::2 token "$client6_token" id\
+-	   $client_addr_id > /dev/null 2>&1
++	   $client_addr_id
+ 	sleep 0.5
+ 
+ 	# CREATE_SUBFLOW6 from server to client machine
+ 	:>"$server_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl csf lip dead:beef:2::1 lid 23 rip\
+-	   dead:beef:2::2 rport "$client6_port" token "$server6_token" > /dev/null 2>&1
++	   dead:beef:2::2 rport "$client6_port" token "$server6_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$server_evts" "$SUB_ESTABLISHED" "$server6_token" "$AF_INET6"\
+ 			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
+@@ -673,7 +673,7 @@ test_subflows()
+ 	# DESTROY_SUBFLOW6 from server to client machine
+ 	:>"$server_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip dead:beef:2::1 lport "$sport" rip\
+-	   dead:beef:2::2 rport "$client6_port" token "$server6_token" > /dev/null 2>&1
++	   dead:beef:2::2 rport "$client6_port" token "$server6_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server6_token" "$AF_INET6"\
+ 			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
+@@ -681,24 +681,24 @@ test_subflows()
+ 
+ 	# RM_ADDR from client to server machine
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
+-	   "$client6_token" > /dev/null 2>&1
++	   "$client6_token"
+ 	sleep 0.5
+ 
+ 	# Attempt to add a listener at 10.0.2.2:<new-port>
+ 	ip netns exec "$ns2" ./pm_nl_ctl listen 10.0.2.2\
+-	   $new4_port > /dev/null 2>&1 &
++	   $new4_port &
+ 	listener_pid=$!
+ 
+ 	# ADD_ADDR from client to server machine using a new port
+ 	:>"$server_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
+-	   $client_addr_id port $new4_port > /dev/null 2>&1
++	   $client_addr_id port $new4_port
+ 	sleep 0.5
+ 
+ 	# CREATE_SUBFLOW from server to client machine
+ 	:>"$server_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2 rport\
+-	   $new4_port token "$server4_token" > /dev/null 2>&1
++	   $new4_port token "$server4_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$server_evts" "$SUB_ESTABLISHED" "$server4_token" "$AF_INET"\
+ 			      "10.0.2.1" "10.0.2.2" "$new4_port" "23"\
+@@ -712,32 +712,32 @@ test_subflows()
+ 	# DESTROY_SUBFLOW from server to client machine
+ 	:>"$server_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
+-	   $new4_port token "$server4_token" > /dev/null 2>&1
++	   $new4_port token "$server4_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
+ 			      "10.0.2.2" "$new4_port" "23" "$client_addr_id" "ns1" "ns2"
+ 
+ 	# RM_ADDR from client to server machine
+ 	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
+-	   "$client4_token" > /dev/null 2>&1
++	   "$client4_token"
+ 
+ 	# Capture events on the network namespace running the client
+ 	:>"$client_evts"
+ 
+ 	# Attempt to add a listener at 10.0.2.1:<subflow-port>
+ 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
+-	   $app4_port > /dev/null 2>&1 &
++	   $app4_port &
+ 	listener_pid=$!
+ 
+ 	# ADD_ADDR from server to client machine reusing the subflow port
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
+-	   $server_addr_id > /dev/null 2>&1
++	   $server_addr_id
+ 	sleep 0.5
+ 
+ 	# CREATE_SUBFLOW from client to server machine
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
+-	   $app4_port token "$client4_token" > /dev/null 2>&1
++	   $app4_port token "$client4_token"
+ 	sleep 0.5
+ 	verify_subflow_events $client_evts $SUB_ESTABLISHED $client4_token $AF_INET "10.0.2.2"\
+ 			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
+@@ -750,31 +750,31 @@ test_subflows()
+ 	# DESTROY_SUBFLOW from client to server machine
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
+-	   $app4_port token "$client4_token" > /dev/null 2>&1
++	   $app4_port token "$client4_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
+ 			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
+ 
+ 	# RM_ADDR from server to client machine
+ 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
+-	   "$server4_token" > /dev/null 2>&1
++	   "$server4_token"
+ 	sleep 0.5
+ 
+ 	# Attempt to add a listener at dead:beef:2::1:<subflow-port>
+ 	ip netns exec "$ns1" ./pm_nl_ctl listen dead:beef:2::1\
+-	   $app6_port > /dev/null 2>&1 &
++	   $app6_port &
+ 	listener_pid=$!
+ 
+ 	# ADD_ADDR6 from server to client machine reusing the subflow port
+ 	:>"$client_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
+-	   $server_addr_id > /dev/null 2>&1
++	   $server_addr_id
+ 	sleep 0.5
+ 
+ 	# CREATE_SUBFLOW6 from client to server machine
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl csf lip dead:beef:2::2 lid 23 rip\
+-	   dead:beef:2::1 rport $app6_port token "$client6_token" > /dev/null 2>&1
++	   dead:beef:2::1 rport $app6_port token "$client6_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client6_token"\
+ 			      "$AF_INET6" "dead:beef:2::2"\
+@@ -789,31 +789,31 @@ test_subflows()
+ 	# DESTROY_SUBFLOW6 from client to server machine
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip dead:beef:2::2 lport "$sport" rip\
+-	   dead:beef:2::1 rport $app6_port token "$client6_token" > /dev/null 2>&1
++	   dead:beef:2::1 rport $app6_port token "$client6_token"
+ 	sleep 0.5
+ 	verify_subflow_events $client_evts $SUB_CLOSED $client6_token $AF_INET6 "dead:beef:2::2"\
+ 			      "dead:beef:2::1" "$app6_port" "23" "$server_addr_id" "ns2" "ns1"
+ 
+ 	# RM_ADDR6 from server to client machine
+ 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
+-	   "$server6_token" > /dev/null 2>&1
++	   "$server6_token"
+ 	sleep 0.5
+ 
+ 	# Attempt to add a listener at 10.0.2.1:<new-port>
+ 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
+-	   $new4_port > /dev/null 2>&1 &
++	   $new4_port &
+ 	listener_pid=$!
+ 
+ 	# ADD_ADDR from server to client machine using a new port
+ 	:>"$client_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
+-	   $server_addr_id port $new4_port > /dev/null 2>&1
++	   $server_addr_id port $new4_port
+ 	sleep 0.5
+ 
+ 	# CREATE_SUBFLOW from client to server machine
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
+-	   $new4_port token "$client4_token" > /dev/null 2>&1
++	   $new4_port token "$client4_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client4_token" "$AF_INET"\
+ 			      "10.0.2.2" "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
+@@ -826,14 +826,14 @@ test_subflows()
+ 	# DESTROY_SUBFLOW from client to server machine
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
+-	   $new4_port token "$client4_token" > /dev/null 2>&1
++	   $new4_port token "$client4_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
+ 			      "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
+ 
+ 	# RM_ADDR from server to client machine
+ 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
+-	   "$server4_token" > /dev/null 2>&1
++	   "$server4_token"
  }
  
--static void nl_error(struct nlmsghdr *nh)
-+static int nl_error(struct nlmsghdr *nh)
- {
- 	struct nlmsgerr *err = (struct nlmsgerr *)NLMSG_DATA(nh);
- 	int len = nh->nlmsg_len - sizeof(*nh);
- 	uint32_t off;
+ test_subflows_v4_v6_mix()
+@@ -842,14 +842,14 @@ test_subflows_v4_v6_mix()
  
--	if (len < sizeof(struct nlmsgerr))
-+	if (len < sizeof(struct nlmsgerr)) {
- 		error(1, 0, "netlink error message truncated %d min %ld", len,
- 		      sizeof(struct nlmsgerr));
-+		return -1;
-+	}
+ 	# Attempt to add a listener at 10.0.2.1:<subflow-port>
+ 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
+-	   $app6_port > /dev/null 2>&1 &
++	   $app6_port &
+ 	local listener_pid=$!
  
--	if (!err->error) {
-+	if (err->error) {
- 		/* check messages from kernel */
- 		struct rtattr *attrs = (struct rtattr *)NLMSG_DATA(nh);
+ 	# ADD_ADDR4 from server to client machine reusing the subflow port on
+ 	# the established v6 connection
+ 	:>"$client_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server6_token" id\
+-	   $server_addr_id dev ns1eth2 > /dev/null 2>&1
++	   $server_addr_id dev ns1eth2
+ 	print_test "ADD_ADDR4 id:${server_addr_id} 10.0.2.1 (ns1) => ns2, reuse port"
+ 	sleep 0.5
+ 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "10.0.2.1"\
+@@ -858,7 +858,7 @@ test_subflows_v4_v6_mix()
+ 	# CREATE_SUBFLOW from client to server machine
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
+-	   $app6_port token "$client6_token" > /dev/null 2>&1
++	   $app6_port token "$client6_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client6_token"\
+ 			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app6_port" "23"\
+@@ -872,7 +872,7 @@ test_subflows_v4_v6_mix()
+ 	# DESTROY_SUBFLOW from client to server machine
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
+-	   $app6_port token "$client6_token" > /dev/null 2>&1
++	   $app6_port token "$client6_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client6_token" \
+ 			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app6_port" "23"\
+@@ -880,7 +880,7 @@ test_subflows_v4_v6_mix()
  
-+		fprintf(stderr, "netlink error %d (%s)\n",
-+			err->error, strerror(-err->error));
-+
- 		while (RTA_OK(attrs, len)) {
- 			if (attrs->rta_type == NLMSGERR_ATTR_MSG)
- 				fprintf(stderr, "netlink ext ack msg: %s\n",
-@@ -91,9 +96,10 @@ static void nl_error(struct nlmsghdr *nh)
- 			}
- 			attrs = RTA_NEXT(attrs, len);
- 		}
--	} else {
--		fprintf(stderr, "netlink error %d", err->error);
-+		return -1;
- 	}
-+
-+	return 0;
+ 	# RM_ADDR from server to client machine
+ 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
+-	   "$server6_token" > /dev/null 2>&1
++	   "$server6_token"
+ 	sleep 0.5
  }
  
- static int capture_events(int fd, int event_group)
-@@ -198,7 +204,7 @@ static int capture_events(int fd, int event_group)
- 	return 0;
- }
+@@ -965,7 +965,7 @@ test_listener()
  
--/* do a netlink command and, if max > 0, fetch the reply  */
-+/* do a netlink command and, if max > 0, fetch the reply ; nh's size >1024B */
- static int do_nl_req(int fd, struct nlmsghdr *nh, int len, int max)
- {
- 	struct sockaddr_nl nladdr = { .nl_family = AF_NETLINK };
-@@ -207,12 +213,16 @@ static int do_nl_req(int fd, struct nlmsghdr *nh, int len, int max)
- 	int rem, ret;
- 	int err = 0;
+ 	# Attempt to add a listener at 10.0.2.2:<subflow-port>
+ 	ip netns exec $ns2 ./pm_nl_ctl listen 10.0.2.2\
+-		$client4_port > /dev/null 2>&1 &
++		$client4_port &
+ 	local listener_pid=$!
  
-+	/* If no expected answer, ask for an ACK to look for errors if any */
-+	if (max == 0) {
-+		nh->nlmsg_flags |= NLM_F_ACK;
-+		max = 1024;
-+	}
-+
- 	nh->nlmsg_len = len;
- 	ret = sendto(fd, data, len, 0, (void *)&nladdr, sizeof(nladdr));
- 	if (ret != len)
- 		error(1, errno, "send netlink: %uB != %uB\n", ret, len);
--	if (max == 0)
--		return 0;
+ 	sleep 0.5
+@@ -973,12 +973,12 @@ test_listener()
  
- 	addr_len = sizeof(nladdr);
- 	rem = ret = recvfrom(fd, data, max, 0, (void *)&nladdr, &addr_len);
-@@ -221,10 +231,11 @@ static int do_nl_req(int fd, struct nlmsghdr *nh, int len, int max)
+ 	# ADD_ADDR from client to server machine reusing the subflow port
+ 	ip netns exec $ns2 ./pm_nl_ctl ann 10.0.2.2 token $client4_token id\
+-		$client_addr_id > /dev/null 2>&1
++		$client_addr_id
+ 	sleep 0.5
  
- 	/* Beware: the NLMSG_NEXT macro updates the 'rem' argument */
- 	for (; NLMSG_OK(nh, rem); nh = NLMSG_NEXT(nh, rem)) {
--		if (nh->nlmsg_type == NLMSG_ERROR) {
--			nl_error(nh);
-+		if (nh->nlmsg_type == NLMSG_DONE)
-+			break;
-+
-+		if (nh->nlmsg_type == NLMSG_ERROR && nl_error(nh))
- 			err = 1;
--		}
- 	}
- 	if (err)
- 		error(1, 0, "bailing out due to netlink error[s]");
+ 	# CREATE_SUBFLOW from server to client machine
+ 	ip netns exec $ns1 ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2\
+-		rport $client4_port token $server4_token > /dev/null 2>&1
++		rport $client4_port token $server4_token
+ 	sleep 0.5
+ 
+ 	# Delete the listener from the client ns, if one was created
 
 -- 
 2.40.1
