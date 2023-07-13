@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63F52FB3
-	for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 16:44:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B5BFC433C8;
-	Thu, 13 Jul 2023 16:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAD22FB3
+	for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 16:45:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ACAFC433C7;
+	Thu, 13 Jul 2023 16:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689266663;
-	bh=6DIm7Z5lOx8O0e0xsBbfMRrDzzXjN5nLRsmrgmUqcm8=;
+	s=k20201202; t=1689266758;
+	bh=L+JxKGWb2XDC3MX/ZPY3sFpAnmB7JGasnp9+q31Ep3I=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=jXvGiJEUd51T+RbevCWasocOXSCzjSkdjAhyWCwWMTS+XFkkHWa4SRtsZXGTl4uTF
-	 IBT09cPiMlLSiblXE2/7vHNYVkbOoPu4Wl0JpOqBMYtP3sN1Akf0iExIQc+7KSUzBN
-	 eTLVP4cQgKS/bL3bWOnd15D0gabhiwcwnwICKhushMDZTciXDwckJp3g5Id8VT+vhy
-	 se9BR92gZ3FEmtlSLMOFtUAZn5jSOSUAZlp7IGJUnv4kcxVmpaYDTVPm+gnAE9y5JW
-	 jFwCDvX2gsPmAqpC1ne+QjqgGG2HvOfQT33PILRaK2MFJpTBdYI6XTW160s9WKmMzG
-	 SWApRVYdfo/ew==
-Date: Thu, 13 Jul 2023 09:44:22 -0700 (PDT)
+	b=f8t/EmAOevpgqGXJgFwHVtqd5ImdH8ZpRpXi3aQOrRlq7gmsLfFZyafq81sai7JY6
+	 0DSE6ApsnP/I3tYZYI/2hq4DruVffGqlM44K2+MLtXEnrpTOcWmM7VfNv1cdzuKrjI
+	 ofEAjw8VUyQpipUKfMmznHghvXTZ6FwONwcT5743ZbSuIxBJmPhTQvQ2yZFBWAe3nM
+	 DAD9jgsYxaOrsmfvKOjyP6kNHecwaccU+/+uFHADwQ1P+8Vo4yTJMPUMknpOZe9pNK
+	 ygEocHmATdsAzQLC2S1kbnzIF9MUif5ksx0GwKlDgKBGkhHUpGwX0M6BD0qL6mm6zr
+	 IM7hPzeaBHfqQ==
+Date: Thu, 13 Jul 2023 09:45:57 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
 Subject: Re: [PATCH mptcp-next 01/14] mptcp: more accurate NL event
  generation.
-In-Reply-To: <5b02d760-9820-31c2-6e2f-65560673cdc9@tessares.net>
-Message-ID: <466f8c99-5e4b-77ad-2e73-19541904ae1b@kernel.org>
-References: <cover.1688993569.git.pabeni@redhat.com> <2dff178d492953373f5d7215aea15676b0e6079c.1688993569.git.pabeni@redhat.com> <5b02d760-9820-31c2-6e2f-65560673cdc9@tessares.net>
+In-Reply-To: <2dff178d492953373f5d7215aea15676b0e6079c.1688993569.git.pabeni@redhat.com>
+Message-ID: <6b0f2dde-2881-f72c-3012-bd6a267f1676@kernel.org>
+References: <cover.1688993569.git.pabeni@redhat.com> <2dff178d492953373f5d7215aea15676b0e6079c.1688993569.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -32,29 +32,47 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 13 Jul 2023, Matthieu Baerts wrote:
+On Mon, 10 Jul 2023, Paolo Abeni wrote:
 
-> Hi Paolo, Mat,
+> Currently the mptcp code generate a "new listener" event even
+> if the actual listen() syscall fails. Address the issue moving
+> the event generation call under the successful branch.
 >
-> On 10/07/2023 14:54, Paolo Abeni wrote:
->> Currently the mptcp code generate a "new listener" event even
->> if the actual listen() syscall fails. Address the issue moving
->> the event generation call under the successful branch.
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+
+> ---
+> this could possibly go via -net, but is used by later patches and
+> is not really critical IMHO.
+> Eventually the additional tag would be:
+> Fixes: f8c9dfbd875b ("mptcp: add pm listener events")
+
+I replied deeper in the thread about applying this patch to -net, but I 
+need to tag it too:
+
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+> ---
+> net/mptcp/protocol.c | 3 +--
+> 1 file changed, 1 insertion(+), 2 deletions(-)
 >
-> Good catch!
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 497bc17b5223..8b5c78f582f7 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3762,10 +3762,9 @@ static int mptcp_listen(struct socket *sock, int backlog)
+> 	if (!err) {
+> 		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
+> 		mptcp_copy_inaddrs(sk, ssock->sk);
+> +		mptcp_event_pm_listener(ssock->sk, MPTCP_EVENT_LISTENER_CREATED);
+> 	}
 >
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->> this could possibly go via -net, but is used by later patches and
->> is not really critical IMHO.
->> Eventually the additional tag would be:
->> Fixes: f8c9dfbd875b ("mptcp: add pm listener events")
+> -	mptcp_event_pm_listener(ssock->sk, MPTCP_EVENT_LISTENER_CREATED);
+> -
+> unlock:
+> 	release_sock(sk);
+> 	return err;
+> -- 
+> 2.41.0
 >
-> I think it makes sense to send this to -net. If it is OK for Mat, I can
-> already apply this patch.
-
-Sure, fine to apply this one.
-
-
-- Mat
-
+>
+>
