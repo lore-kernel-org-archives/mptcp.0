@@ -1,126 +1,119 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51161F173
-	for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 17:59:45 +0000 (UTC)
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-76714caf466so91655185a.1
-        for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 10:59:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA27D1F179
+	for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 19:03:05 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3141fa31c2bso1183615f8f.2
+        for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 12:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689271184; x=1691863184;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qOOEGDM7/Lljtb19J0zxLU8koiOYrCdTyOIJP6+Au2A=;
-        b=cthwub4EZb0uVgL/4x/j6NgNTyJBZHl95ae0f4mrwnRqRW9FnHDEXkCQPuNnusK1/h
-         Kho1653YNOfFFcZg9fOrpkyc5KsJW28SfsBya9TcI6I7zyV+bUmYE6B+bFT5vfJkgfBq
-         AFgocrsLqD15DdoFYZYDtPufv6vXcreOfIRvPpx6ckcRYIWjdyiB9HWzhjtePTjRiU1j
-         osacUWnj6qHzXRPyiWJxs4/WGwFv0Cqqev9EaPuv0ZKgJXokINRvPei491QgQakFBeSs
-         Sn1fRyN60DwlqH6ueI4onuzwg8QLvD60jQVNFwNmtoOhw9KonuOyjB9eZ4U48nPO/wLz
-         0xLA==
+        d=tessares.net; s=google; t=1689274983; x=1691866983;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DngZium9YNJVRhCjETKR9D2bXwrG2zkugrzo7kcpi74=;
+        b=eJNIQoGOWPP82T7eEikX2KxevzaPJXAgyXNevLSMEbbldP42oCrvEMOIxV1EGwUjev
+         2GcS5Vijy3s+k8TTbwb+zXwT4JBhBUDAyUEu2+QbmlTilveqahwv/WOBTOvQhloEGsCe
+         yHbDZAGzSWBs9QZZ/AyBvaKaNsPTPeraBqTv53a/N7byfnKhJT4JPcZTnZ4SbEPuIUpC
+         Nr0r3iDLfGWPPXgaZx7/DdMUMm5lqz4FnH39kMrsgX+WvOSRtv3Qip2lOZ3X927JysZh
+         XExmm13FSQN9JdYnXq1ZDVaikG+bfLV/wqkrnL1cVp5zaZ283buMuDicDrqsm/k/RPaJ
+         5GyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689271184; x=1691863184;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qOOEGDM7/Lljtb19J0zxLU8koiOYrCdTyOIJP6+Au2A=;
-        b=AC69+raikAZWFL8GibKwxq68G84DqS4YGb3Hr/CtepSsXJeoj0WmSziORVYM00eqvv
-         A4pJeQ9EcXqxGzhlaVqjkNT83NrRhil+Mkn1zkkpKNsOaNF4oB64utHs65vJ2AV07fDN
-         JS9hqJ+eAb0PxiyZp1dXNHU1JhNZsfRuR8xVl6plV8a4KVOowd2zzd4pR4N24p17iWdg
-         FxXHXXIKTgVUm5oO4sEYqZgq67lgxy1/Zd2zkVBUAFrDc28OHbvRYj8Go+U0m7wAqCY4
-         FWxEQIAKUjM1GmuEa+pTiTG/4z1EBrS1bzR6iNFdvDBRaGxSw+yAOBNMBJMcyWHczTlS
-         5Y6Q==
-X-Gm-Message-State: ABy/qLZwKdzv9t9PixYnqxOMX2m9ydnTXMaTWlyM/8LFZjJUvEPIXXD4
-	rdgDueyn9iaCILrbrKLzlA==
-X-Google-Smtp-Source: APBJJlHCaj8eH+AeAH2F/qldmSe96ca3z5pYfCCyU+AqMDlMcoL7ZW5BJagSmjNXeFKNMAt96Q+SQA==
-X-Received: by 2002:a05:620a:4405:b0:765:50cd:9728 with SMTP id v5-20020a05620a440500b0076550cd9728mr2739440qkp.34.1689271184341;
-        Thu, 13 Jul 2023 10:59:44 -0700 (PDT)
-Received: from [127.0.0.1] ([172.177.134.82])
-        by smtp.gmail.com with ESMTPSA id k5-20020a05620a142500b00767cb046e40sm3070548qkj.94.2023.07.13.10.59.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jul 2023 10:59:43 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <f994b6d9cf322414f649676bf283326658fc428d.1688993570.git.pabeni@redhat.com>
-References:
- <f994b6d9cf322414f649676bf283326658fc428d.1688993570.git.pabeni@redhat.com>
-Subject: Re: mptcp: get rid of msk->subflow: Tests Results
-Message-ID: <c3159a1f-b670-5883-d07b-04070f1e5114@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Jul 2023 17:59:43 +0000
+        d=1e100.net; s=20221208; t=1689274983; x=1691866983;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DngZium9YNJVRhCjETKR9D2bXwrG2zkugrzo7kcpi74=;
+        b=Nrmj1va9hNm08GU+8ZsPiTCrDpOT3hRhuotl+zXT5mTdEL+TzqEVy5iZaF9g2ZKZhc
+         Y1NCsOJA2g39tH7+/9LTB01mNxZFKuEiC6FYJSBa2MhGao1FIw/d+o2uHi7+mJUCbQsl
+         Ypb6GLYIrDGRghZNRZz/nKA8ldRhjtzWr172WMwULp6uXPKk9rK55a7ugdLaraFPihEe
+         3KKGigjjf3SyJXdw437LrGnCfkTxm1DHoWToaGbb0JwFn0IWAL8HoKMqhi1iKwyh2q0S
+         IyTQsBnlOWNHe8OrS682ixPyf1C2SWcxjPaph3Ej/Ippp8jf919TQKyTlgUJQSbwRE63
+         2l+Q==
+X-Gm-Message-State: ABy/qLbnJFEcLyjeeVGlNPK/7gVLAZ8va9ahK+kaoWu0TWWXXSywTeol
+	kR7wkxpfxKAyKrPmd7IhEs9MKA==
+X-Google-Smtp-Source: APBJJlHnK8Hn9JCbj24jOu7iGnKo1+mfNp7iDzdNWTd6LEXJupQ0q/Po/SadrD4uYuCt4QGK7BzJhA==
+X-Received: by 2002:a5d:6085:0:b0:314:4c1d:1c0a with SMTP id w5-20020a5d6085000000b003144c1d1c0amr2044660wrt.46.1689274982950;
+        Thu, 13 Jul 2023 12:03:02 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:d855:a28a:e0c1:ddc1? ([2a02:578:8593:1200:d855:a28a:e0c1:ddc1])
+        by smtp.gmail.com with ESMTPSA id k8-20020a5d5188000000b00314172ba213sm8582332wrv.108.2023.07.13.12.03.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Jul 2023 12:03:02 -0700 (PDT)
+Message-ID: <a936c2db-6c2c-2a2e-0657-9ddab3c18a2c@tessares.net>
+Date: Thu, 13 Jul 2023 21:03:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH mptcp-next 0/2] selftests: mptcp: pm_nl_ctl: display
+ errors if any
+Content-Language: en-GB
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20230705-mptcp-issue-368-pm_nl_ctl_ack-v1-0-40bcff40cb6b@tessares.net>
+ <3f261320-9413-187e-56ef-c64d7fc983a2@kernel.org>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+In-Reply-To: <3f261320-9413-187e-56ef-c64d7fc983a2@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Mat,
 
-Thank you for your modifications, that's great!
+On 13/07/2023 19:17, Mat Martineau wrote:
+> On Wed, 5 Jul 2023, Matthieu Baerts wrote:
+> 
+>> Recently, I wanted to understand why the userspace_pm.sh test was
+>> failing on some arch according to lkft reports. There was nothing in the
+>> logs apart from seeing the expected event had been missing. I then
+>> realised the output of pm_nl_ctl was muted but also this tool was not
+>> looking if there were errors after having sent some Netlink commands.
+>>
+>> I don't think it is a good idea to mute the output and ignore errors,
+>> especially here in the tests where we do want to validate these Netlink
+>> commands. So now the tool checks for errors and the output is no longer
+>> discarded.
+>>
+>> Note that I didn't manage to read the error message set by the kernel. I
+>> think the rtattr pointer in nl_error() is wrong. I think it should get
+>> info from &err->msg instead of nh. Anyway, here we at least print errno
+>> and just in case someone wants to have a look, it is easy to test:
+>>
+>>  ./pm_nl_ctl ann 1.1.1.1 token 12 id 0
+>>
+>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> 
+> 
+> Hi Matthieu -
+> 
+> Good idea to add the relevant error output.
+> 
+> I noticed in the CI run for this patch set
+> (https://cirrus-ci.com/task/5548960819970048) that some netlink error
+> info is printed in the "OK" test results too:
+> 
+> [17:50:36.964] # flush addrs                                       [ OK ]
+> [17:50:37.070] # netlink error -22 (Invalid argument)
+> [17:50:37.076] # ./pm_nl_ctl: bailing out due to netlink error[s]
+> [17:50:37.187] # rcv addrs above hard limit                        [ OK ]
+> [17:50:37.295] # netlink error -22 (Invalid argument)
+> [17:50:37.300] # ./pm_nl_ctl: bailing out due to netlink error[s]
+> [17:50:37.413] # subflows above hard limit                         [ OK ]
+> 
+> Do you expect that with your changes?
 
-Our CI did some validations and here is its report:
+Good catch, I didn't think about looking at pm_netlink.sh.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6122328535334912
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6122328535334912/summary/summary.txt
+The 3 errors I see looks normal to me:
+- trying to add an entry already there
+- trying to set the two limits above the hard limit
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4589019657404416
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4589019657404416/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6685278488756224
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6685278488756224/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6048767019843584
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6048767019843584/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/6f392039115d
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+So I guess I can mute stderr in a v2.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
