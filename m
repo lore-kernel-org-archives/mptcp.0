@@ -1,123 +1,137 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC8F1C08
-	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 04:26:50 +0000 (UTC)
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3a1ebb79579so1195462b6e.3
-        for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 21:26:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689308810; x=1691900810;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ch444l+JkL1o0Cz0x6m1KHNFPpCXimjRYddzzcFAVVQ=;
-        b=jmMc4ZxEcId3kvnzZQffH7neS4+pbNti6pkphn8azC2KgIEpOmZkc7JfEsPu/0ZaV7
-         0BIgzxVOXUi0Kwiy4DhfG8AUIHNoRreUFaKPEpiiF1paB1t7nKHigYrDq9Fx/JCeESdY
-         FsVApk+wOFWnmrcDkbJUYgnZYJeRzwIS8BEKEuJo7M9zEr8zk+tHyUvnWf0z2YGG34/Z
-         JuW+rZqJMVQH5u1F8SZ6TisZS/t54KGDkHLjWaHeHIJOpsKQHsGqB/eobwAqtUyxXG1R
-         R6R/5kY2DGLSR5pjdd8zcGj2mf9aKR+MHP6S3a6p5GEd2ebyRYee2sUodcA2ByZT5B9h
-         0KlA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF5D7485
+	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 07:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1689321378;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=slaUONSg+DlN+ayFEMZVhhuszbKRkMcTnza/85oVWyg=;
+	b=WBs6qx85ahHKmsxnC3alSbADwXPi0lbe7cSu8ObMWPPT3h/FyL4sj4x5GYWO5ntWk5Vorr
+	HIcByamVfLUzjUpiGODGxR3Gk0YUdGtyDL0o2xrXWp7WG/8vOFXQPSAnp0ZZTmrmajp4yt
+	g6O0OUiEkitEFCBgig+IuBDrXRHbpe8=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-625-VwUffRX_OSidxPuAWho1lw-1; Fri, 14 Jul 2023 03:56:11 -0400
+X-MC-Unique: VwUffRX_OSidxPuAWho1lw-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-767d30ab094so41046185a.1
+        for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 00:56:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689308810; x=1691900810;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ch444l+JkL1o0Cz0x6m1KHNFPpCXimjRYddzzcFAVVQ=;
-        b=bQAFM8enpY5vMldOKDX3MjSZSIeYYB+maoxpA2strsK1jmi6R8g5526UtPVTRHZF0D
-         bWW8Rq/eCOEU6AvG1SPKEdrnOQRZmOqC0/SyOKyoXPJM0FozcK2wUOss3ye7+Qw2xqvi
-         zvA9AeOUa6bQUIcOtHlrO1F6m54geoyg6xvadBCqtM2cvW7IB/zQ8UaVsOiE2qbNa6GQ
-         nsBTRZ1WtCaure1kbta5Qv+tylDi8AYYsJIhfFXgm0Ml/61v2KEnVj9Iae+brzqbmV7i
-         1cv5iA3nr9hEiUyNyxMgfpZ/p0SOE0+GWcrCJuiyWkY1QR7nAY3chUqCMgT4TQiUQLY/
-         9Fsg==
-X-Gm-Message-State: ABy/qLYXU3RugKk3N1R5XABiABiUnhc2SUjiohzf0f0Jy5pFTi3kNb2r
-	EU6hWC12ECneRn2h2k3uWmQNIjIHYn/6
-X-Google-Smtp-Source: APBJJlE2aX80MxnnNWwACfsT3Ee5YvYIYkqJPKGyHzfB/EUKCWZHK3mobnFaKHo3fSpqE9qGISvFyA==
-X-Received: by 2002:a05:6808:572:b0:3a1:e85f:33ee with SMTP id j18-20020a056808057200b003a1e85f33eemr4317871oig.56.1689308809773;
-        Thu, 13 Jul 2023 21:26:49 -0700 (PDT)
-Received: from [127.0.0.1] ([104.210.139.213])
-        by smtp.gmail.com with ESMTPSA id j9-20020a056808034900b0039ee0bd8a11sm3535870oie.42.2023.07.13.21.26.48
+        d=1e100.net; s=20221208; t=1689321371; x=1691913371;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=slaUONSg+DlN+ayFEMZVhhuszbKRkMcTnza/85oVWyg=;
+        b=jwbx7AgvYWXY0a7kUIuuSqUxLmiDsgTHurc1qYSo96NNSKK0dm41VwjdG+AaRs2K8C
+         GCaJn5I0sGrYP/dFvYA7Gsy2uw0n2dGPkAaCIp+F02PXaxWSjVhD0/5oN0Ubgx+J6Oxp
+         hnSPVzeXh+1K7a/blRm9VifevTwzq6QxKwQFuv/5c75f3FJsOaTcPLj8kkpAx+qXp9CG
+         jouUiNIYsYSxGYBEslTozl4VJ9nsmIY+mx/8guyolbhE7XbiSMWrcjTqTDRyt605/aOm
+         qcgPdLRoL04cvBbywy0ly2QwFrG9JsVhhgKpAJe0a1SBc2B60yQL83G/3urgv5cfiOTv
+         8FdA==
+X-Gm-Message-State: ABy/qLYcVcmTPi5eoxB6RS/m3vl2Gi6wZnKVGKSaLC9Z9T9doV9UMY3O
+	jxqO+j4fLhLM+UfXsg8+tdqHObW9W3TqtqlFttzXTPTWK7D5ceYIzj+3sbR5eFCOvy41sDv5CoT
+	uAW6uW26yyfLnToQ=
+X-Received: by 2002:a05:620a:46aa:b0:766:3190:8052 with SMTP id bq42-20020a05620a46aa00b0076631908052mr4599750qkb.0.1689321371426;
+        Fri, 14 Jul 2023 00:56:11 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEXapRXHsT2nSqUsEGRif2238r11GXN5y/Ez68arHueu7sEEY6KOYZwO2c1VhLcxcmaQwriGQ==
+X-Received: by 2002:a05:620a:46aa:b0:766:3190:8052 with SMTP id bq42-20020a05620a46aa00b0076631908052mr4599732qkb.0.1689321371094;
+        Fri, 14 Jul 2023 00:56:11 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-235-188.dyn.eolo.it. [146.241.235.188])
+        by smtp.gmail.com with ESMTPSA id q26-20020a05620a039a00b00767b7375eadsm3582939qkm.39.2023.07.14.00.56.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jul 2023 21:26:49 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20230713-tc-selftests-lkft-v1-3-1eb4fd3a96e7@tessares.net>
-References: <20230713-tc-selftests-lkft-v1-3-1eb4fd3a96e7@tessares.net>
-Subject: Re: selftests: tc: add ConnTrack procfs kconfig: Tests Results
-Message-ID: <204fba15-3924-8ed2-fa2d-d20c561040b6@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 14 Jul 2023 04:26:48 +0000
+        Fri, 14 Jul 2023 00:56:10 -0700 (PDT)
+Message-ID: <22c30f70a632afb65b6cb2a7554e919673d48871.camel@redhat.com>
+Subject: Re: [RFC bpf-next 0/8] BPF 'force to MPTCP'
+From: Paolo Abeni <pabeni@redhat.com>
+To: Stanislav Fomichev <sdf@google.com>, Alexei Starovoitov
+	 <alexei.starovoitov@gmail.com>
+Cc: Geliang Tang <geliang.tang@suse.com>, Alexei Starovoitov
+ <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+ <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
+ KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
+ <yhs@fb.com>, KP Singh <kpsingh@kernel.org>,  Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, MPTCP Upstream
+ <mptcp@lists.linux.dev>, netdev@vger.kernel.org
+Date: Fri, 14 Jul 2023 09:56:06 +0200
+In-Reply-To: <ZLCELtTGksxGwaFZ@google.com>
+References: <cover.1688616142.git.geliang.tang@suse.com>
+	 <ZKbzs7foUw+eeNnn@google.com>
+	 <20230713054716.GA18806@localhost.localdomain>
+	 <ZLAxAc1/UXcbIJBo@google.com>
+	 <CAADnVQ+aPyWea4QUD9TFNpr43u052zuqOXzGaqmM8-EeMrW6rg@mail.gmail.com>
+	 <ZLCELtTGksxGwaFZ@google.com>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Matthieu,
+On Thu, 2023-07-13 at 16:09 -0700, Stanislav Fomichev wrote:
+> On 07/13, Alexei Starovoitov wrote:
+> > imo all 3 options including this 4th one are too hacky.
+> > I understand ld_preload limitations and desire to have it per-cgroup,
+> > but messing this much with user space feels a little bit too much.
+> > What side effects will it cause?
+>=20
+> Maybe all that is really needed is some new per-netns sysctl to automatic=
+ally
+> upgrade from IPPROTO_TCP to IPPROTO_MPTCP? Or is it too broad of a
+> brush?
 
-Thank you for your modifications, that's great!
+I think it would be actually too broad, see below...
 
-Our CI did some validations and here is its report:
+> I've also CC'd netdev for visibility...
+>=20
+> > Meaning is this enough to just change the proto?
+> > Nothing in user space later on needs to be aware the protocol is so dif=
+ferent?
+>=20
+> IIUC, if you use IPPROTO_MPTCP, you just get regular TCP until you start
+> adding extra routes (via netlink). That's why their current
+> unconditional IPPROTO_TCP->IPPROTO_MPTCP rewrite via ld_preload also some=
+what
+> works.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5826884395597824
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5826884395597824/su=
-mmary/summary.txt
+FTR, it the other way around: when using IPPROTO_MPTCP you always get
+MPTCP protocol handshake that downgrade gracefully to TCP if the peer
+does not support it. Then multiple paths can be added/enabled by
+different means, but that is another matter - a quite orthogonal one.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6389834349019136
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6389834349019136/summary/summary.txt
+The transition to TCP in currently not completely for free: active
+(client) MPTCP sockets fallen-back to TCP will keep some overhead vs
+plain TCP ones.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/4982459465465856
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4982459465465856/su=
-mmary/summary.txt
+Being able to control the IPPROTO_TCP->IPPROTO_MPTCP change on per
+socket basis do offer some advantages e.g. constraining the change to
+the sockets that are likely to complete successfully the MPTCP
+handshake.=20
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5263934442176512
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5263934442176512/summary/summary.txt
+> > I feel the consequences are too drastic to support such thing
+> > through an official/stable hook.
+> > We can consider an fmod_ret unstable hook somewhere in the kernel
+> > that bpf prog can attach to and tweak the ret value and/or args,
+> > but the production environment won't be using it.
+> > It will be a temporary gap until user space is properly converted to mp=
+tcp.
+>=20
+> Asking every app to do s/IPPROTO_TCP/IPPROTO_MPTCP/ might be annoying
+> though? (don't have a horse in this race, but have some v4->v6 migration
+> vibes from this)
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/1e1aa4d21611
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+I can do only wild guesses, but I also expect such "transition" to be
+extremely long and/or incomplete.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+
+Paolo
+
