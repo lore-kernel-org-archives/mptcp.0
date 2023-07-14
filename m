@@ -1,62 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA636AB2
-	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 08:38:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEAF6D3F
+	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 08:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1689323897;
+	s=mimecast20190719; t=1689324156;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=B+MJzAt2cWYquLOBxBywl7IwuHdw12C+frHn5ehV9tw=;
-	b=fCudkYMiHVjVgUo6wV2spwzAIIYCkTDrDgmoCgwG9sUQJ29GEHpH38necHG4tdwDO4rjGn
-	4nKwN7yRBEVfLXc+LoTZbzHYwWxfbePAnPiE+MeBtJNltqy0lkFxrh3PndvJ9x9BxoApnt
-	pp1BpyXUazLUh/uvo5+vDI5WkgLtfLQ=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=l634xzaHUpk0quf74dlb6bpWxmn2ZdmlecFLsrybRVk=;
+	b=Z1F3LWgbwrsoTzIAljZv8+lDCSgmeHz4+6D4TKo1DRFMvus4R6ZXq6akDF0Q/o2JMC7Zj7
+	lR7IlMwreOKEbBJCyhcj+zI6WmDqLIxSNX1ZJaxR32HoH7rgDQsVJjbZXevdavuj1Zhseb
+	Wios3DXuVnT50Em7ooqgSQ0KtRkj9Yw=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-261-aM096xkoN0W-_oT2SNTRaw-1; Fri, 14 Jul 2023 04:38:15 -0400
-X-MC-Unique: aM096xkoN0W-_oT2SNTRaw-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-767a1ad2175so36010985a.0
-        for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 01:38:15 -0700 (PDT)
+ us-mta-256-qaXE8h8KOHCyszlFmk8jcw-1; Fri, 14 Jul 2023 04:42:35 -0400
+X-MC-Unique: qaXE8h8KOHCyszlFmk8jcw-1
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-401df9d2dc4so3903321cf.0
+        for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 01:42:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689323895; x=1689928695;
+        d=1e100.net; s=20221208; t=1689324155; x=1691916155;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=B+MJzAt2cWYquLOBxBywl7IwuHdw12C+frHn5ehV9tw=;
-        b=KemRAy97UX7yNbVXW5jm5mHuqVf8bgvfK8Sd8IAZRXAakguavfCzcCz66wx8jgjQGT
-         eCwY6K6CLohJAOaoX/WKW87i+7ngzU1YWAieBjtLUN6j6A59XUJYQAzEZhHaHfJm1Bsx
-         O55vJcQ16HK/qKfQLwbCVze9CjWtPcCKRLqJS1EB7xuY70b29zBh8c9/FLMjrWNcAwRV
-         HnFElhowTZLRnaCjISRo2+hgMPdekCvEdV70k7Rig2Hc+c26LvUGygLz3aITJD7uJ4x8
-         D3CU/s8TweGN9+eGEYH/zZ/D/qP/cmMwmKzuDexATMDzqa/66w5MZaw47CzQ1SLgiGzK
-         9QAA==
-X-Gm-Message-State: ABy/qLYuT+T6UIkUD44CLbNsbAoFDvYMKXmvgep6X/18vBSzk0lkiQRS
-	2Fc+eNaWxHEBDFgVBnjV+snlPC6f+AeW4wZARMvdX5FDzGrDkv3E8OLYAeV+nTKKBWMEEHlp77U
-	CjzEDe/+K3b9VLPkEFI44JIU=
-X-Received: by 2002:a05:620a:1a1b:b0:767:ffb:58aa with SMTP id bk27-20020a05620a1a1b00b007670ffb58aamr4966380qkb.3.1689323895072;
-        Fri, 14 Jul 2023 01:38:15 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHBLhRcgVnab/ERDepXlQqykOombN9BpmnHbQlk1Ua8MElkEYFKnWzK71CeytruOmmff+xp7w==
-X-Received: by 2002:a05:620a:1a1b:b0:767:ffb:58aa with SMTP id bk27-20020a05620a1a1b00b007670ffb58aamr4966370qkb.3.1689323894735;
-        Fri, 14 Jul 2023 01:38:14 -0700 (PDT)
+        bh=RbIh0Bd34/R0siOsZ7qQ2uSHv4nGNMCyK2AKpix+HWo=;
+        b=Te73LCRR1eDAvu2NLQFSH2JptFGcrkkBE9BqKSZyc8Tqh3jIodu/s4oafXawmaCm2t
+         AQ3AieQxgOOBmeBA6AEi63nD8odnn73wG5noYWWLzjPYyi+wFFIUbnU8AHRXOanj35sG
+         i1PJstv1ezOejk103A0XVcXIBbdI41xSkPXmKuHxbRrVZLhmy8eXfYJTWPi20e0pFI3S
+         6Y6tITk2rv+KrPNgKGuy/R3lXLXccgHMG12DsqiZvaJxuQbIX9qSO8I96Y4kpCdWfzSN
+         bC7xbE0fwIh8M7flJ4CWfWuQH9sI1SM3cYdfzxjZQtqxu/gs/Bl2ycL6GdVIxbbNx5C7
+         nb4w==
+X-Gm-Message-State: ABy/qLZk4qjs+y6s/2NoR3VlwjDywOexG25Nbs1gdsqp+g7sOllJg2pL
+	8UqxmmHkYI0sYOkflnRcqsKeb4uPRWsnB/zsPcjFcDsLDbMKAiOubjzjosKWsJ0rlGqCFpfaa4a
+	LUjuACgsHrMjsRXQ=
+X-Received: by 2002:a05:622a:1a23:b0:403:864b:7ab8 with SMTP id f35-20020a05622a1a2300b00403864b7ab8mr4915782qtb.1.1689324155060;
+        Fri, 14 Jul 2023 01:42:35 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHCuIVTKDbhiw0ylJElwklxYNjDDNqbhzjkuTT1T8BZenJSLQQ+Z6PNJivBJW13LYXiZpRFww==
+X-Received: by 2002:a05:622a:1a23:b0:403:864b:7ab8 with SMTP id f35-20020a05622a1a2300b00403864b7ab8mr4915776qtb.1.1689324154801;
+        Fri, 14 Jul 2023 01:42:34 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-235-188.dyn.eolo.it. [146.241.235.188])
-        by smtp.gmail.com with ESMTPSA id pi21-20020a05620a379500b00767c9915e32sm3633291qkn.70.2023.07.14.01.38.13
+        by smtp.gmail.com with ESMTPSA id c6-20020ac87d86000000b0040378535dccsm3778572qtd.43.2023.07.14.01.42.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jul 2023 01:38:14 -0700 (PDT)
-Message-ID: <e34d61ba3b9197eba4b7cd63e413f6f03b40aa79.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next 03/14] mptcp: avoid additional
- __inet_stream_connect() call
+        Fri, 14 Jul 2023 01:42:34 -0700 (PDT)
+Message-ID: <a8bee177c8955e3bb7c856336cf2f5b27f7df93a.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 10/14] mptcp: avoid unneeded indirection in
+ mptcp_stream_accept()
 From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, Mat Martineau
-	 <martineau@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
 Cc: mptcp@lists.linux.dev
-Date: Fri, 14 Jul 2023 10:38:11 +0200
-In-Reply-To: <968e1118-6b2a-41fd-ce78-2f1cb7427840@tessares.net>
+Date: Fri, 14 Jul 2023 10:42:32 +0200
+In-Reply-To: <059ab23a-f925-a1c7-2a1d-a4e03714d66e@kernel.org>
 References: <cover.1688993569.git.pabeni@redhat.com>
-	 <3f427fdc84212cde2d5ad09a46925a43a4a0fae7.1688993569.git.pabeni@redhat.com>
-	 <6f46d6b1-2aa9-e56f-f473-0300c08e2788@kernel.org>
-	 <968e1118-6b2a-41fd-ce78-2f1cb7427840@tessares.net>
+	 <7e485259a201fdac1807c56746bd437d4335edd1.1688993569.git.pabeni@redhat.com>
+	 <059ab23a-f925-a1c7-2a1d-a4e03714d66e@kernel.org>
 User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -69,87 +67,53 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2023-07-13 at 11:00 +0200, Matthieu Baerts wrote:
-> Hi Paolo, Mat,
+On Wed, 2023-07-12 at 14:55 -0700, Mat Martineau wrote:
+> On Mon, 10 Jul 2023, Paolo Abeni wrote:
 >=20
-> Thank you for the series and the reviews!
->=20
-> On 12/07/2023 23:49, Mat Martineau wrote:
-> > On Mon, 10 Jul 2023, Paolo Abeni wrote:
+> > We are going to remove the first subflow socket soon, so avoid
+> > the addictional indirection at accept() time. Instead access
+> > directly the first subflow sock.
 > >=20
-> > > The mptcp protocol maintains an additional socket just to easily
-> > > invoke a few stream operations on the first subflow. One of them is
-> > > __inet_stream_connect().
->=20
-> (...)
->=20
-> > > @@ -3653,21 +3655,37 @@ static int mptcp_connect(struct sock *sk,
-> > > struct sockaddr *uaddr, int addr_len)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0/* if reaching here via the fastopen/sendmsg =
-path, the caller already
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 * acquired the subflow socket lock, too.
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 */
-> > > -=C2=A0=C2=A0=C2=A0 if (msk->fastopening)
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D __inet_stream_con=
-nect(ssock, uaddr, addr_len,
-> > > O_NONBLOCK, 1);
-> > > -=C2=A0=C2=A0=C2=A0 else
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D inet_stream_conne=
-ct(ssock, uaddr, addr_len, O_NONBLOCK);
-> > > -=C2=A0=C2=A0=C2=A0 inet_sk(sk)->defer_connect =3D inet_sk(ssock->sk)=
-->defer_connect;
-> > > +=C2=A0=C2=A0=C2=A0 if (!msk->fastopening)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lock_sock(ssk);
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0 if (ssk->sk_state !=3D TCP_CLOSE)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out;
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0 if (BPF_CGROUP_PRE_CONNECT_ENABLED(ssk)) {
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D ssk->sk_prot->pre=
-_connect(ssk, uaddr, addr_len);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 g=
-oto out;
-> > > +=C2=A0=C2=A0=C2=A0 }
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0 err =3D ssk->sk_prot->connect(ssk, uaddr, addr_le=
-n);
-> > > +=C2=A0=C2=A0=C2=A0 if (err < 0)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out;
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0 inet_sk(sk)->defer_connect =3D inet_sk(ssk)->defe=
-r_connect;
+> > No functional changes intended.
 > >=20
-> > The above code doesn't do everything __inet_stream_connect() does. Is
-> > that code omitted here because the caller of this function handles the
-> > timeouts and msk-level socket states already?
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> > net/mptcp/protocol.c | 17 +++++------------
+> > 1 file changed, 5 insertions(+), 12 deletions(-)
+> >=20
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 4e5c9770d8d6..00cfed1d0ebd 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -3220,17 +3220,12 @@ static struct sock *mptcp_accept(struct sock *s=
+k, int flags, int *err,
+> > =09=09=09=09 bool kern)
+> > {
+> > =09struct mptcp_sock *msk =3D mptcp_sk(sk);
+> > -=09struct socket *listener;
+> > -=09struct sock *newsk;
+> > +=09struct sock *ssk, *newsk;
+> >=20
+> > -=09listener =3D READ_ONCE(msk->subflow);
+> > -=09if (WARN_ON_ONCE(!listener)) {
+> > -=09=09*err =3D -EINVAL;
+> > -=09=09return NULL;
+> > -=09}
+> > +=09ssk =3D READ_ONCE(msk->first);
 >=20
-> Is it not possible to extract the code we need from
-> __inet_stream_connect() to a new function in af_inet.c? Then we can call
-> this new function from __inet_stream_connect() and here.
->=20
-> I'm always a bit worry when we duplicate code from upper layers because
-> we could miss future modifications done in the original code (we had
-> that a few times with the fork and it is hard to track and maintain).
+> There's a check for NULL msk->first in mptcp_stream_accept() below, but=
+=20
+> the analogous NULL check in this function has been removed. Should this=
+=20
+> be checking? (not sure if we have test coverage for out-of-sequence=20
+> accept() calls)
 
-Well, that kind of problems becomes order of magnitude worse with out-
-of-tree code, because nobody is aware nor interested of such code
-needs.
+The existing check above was really a pedantic one. The caller
+(mptcp_stream_accept) already checked the same field under the same
+lock scope, so only random memory corruption could change it. Note that
+mptcp_accept() can be invoked only by mptcp_stream_accept().
 
-Chances of issues here are really low:
-* mptcp code is in tree=20
-* maintainers are aware ;)
-* bpf hooks should not change
-* [most important topic] the dup code is extremely simple and small
-
-All in all, it looks reasonably safe to me.
-
-> I
-> would say that the minimum is at least to add a comment stating this
-> code is a duplication from somewhere else, just in case to make it clear
-> where we need to look at in case of issues there.
-
-I'll add the comment in v2.
+I'll a note in the commit message to explain why we can drop the check.
 
 Thanks,
 
