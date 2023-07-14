@@ -1,74 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872B91C28;
-	Fri, 14 Jul 2023 03:40:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4E040C433CA;
-	Fri, 14 Jul 2023 03:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689306023;
-	bh=qIaxLF9EaBI3XUjzGEZTW/UB155qI1yMDTOXYf+dj30=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=S8+8KSrERAWbtokp3Sw2bbPmU0UNUZu0kYSFYYb/hQz20xwOgB60oxCfWqZJakp9o
-	 kYh874Oi4U19SrroNRTDg7YXm1nsqKApnr6KdvsQdK+pvpM78WD4TRRQ4lv9Vzpsa6
-	 b9yFQXj3iSS4dW8YxiOHFi+H4ZaXXi43NvLxqAYbSEYwudpvZ/70YKbakkKRbeheTT
-	 Bo6wBq0LseWDefVvvXXnfBpFhJZ3pB7ScQ/quWiRCWNqd50I+dNdr9CaBggzvPNoy4
-	 UyjL3xH6HjZoSPAkppw/SQLFye1KkSKyIK1grVjm1gXLYTegHBTqyWQ8FsV3oiusjX
-	 6GJOABC56eZgQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3490DE4D002;
-	Fri, 14 Jul 2023 03:40:23 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC8F1C08
+	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 04:26:50 +0000 (UTC)
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3a1ebb79579so1195462b6e.3
+        for <mptcp@lists.linux.dev>; Thu, 13 Jul 2023 21:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689308810; x=1691900810;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ch444l+JkL1o0Cz0x6m1KHNFPpCXimjRYddzzcFAVVQ=;
+        b=jmMc4ZxEcId3kvnzZQffH7neS4+pbNti6pkphn8azC2KgIEpOmZkc7JfEsPu/0ZaV7
+         0BIgzxVOXUi0Kwiy4DhfG8AUIHNoRreUFaKPEpiiF1paB1t7nKHigYrDq9Fx/JCeESdY
+         FsVApk+wOFWnmrcDkbJUYgnZYJeRzwIS8BEKEuJo7M9zEr8zk+tHyUvnWf0z2YGG34/Z
+         JuW+rZqJMVQH5u1F8SZ6TisZS/t54KGDkHLjWaHeHIJOpsKQHsGqB/eobwAqtUyxXG1R
+         R6R/5kY2DGLSR5pjdd8zcGj2mf9aKR+MHP6S3a6p5GEd2ebyRYee2sUodcA2ByZT5B9h
+         0KlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689308810; x=1691900810;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ch444l+JkL1o0Cz0x6m1KHNFPpCXimjRYddzzcFAVVQ=;
+        b=bQAFM8enpY5vMldOKDX3MjSZSIeYYB+maoxpA2strsK1jmi6R8g5526UtPVTRHZF0D
+         bWW8Rq/eCOEU6AvG1SPKEdrnOQRZmOqC0/SyOKyoXPJM0FozcK2wUOss3ye7+Qw2xqvi
+         zvA9AeOUa6bQUIcOtHlrO1F6m54geoyg6xvadBCqtM2cvW7IB/zQ8UaVsOiE2qbNa6GQ
+         nsBTRZ1WtCaure1kbta5Qv+tylDi8AYYsJIhfFXgm0Ml/61v2KEnVj9Iae+brzqbmV7i
+         1cv5iA3nr9hEiUyNyxMgfpZ/p0SOE0+GWcrCJuiyWkY1QR7nAY3chUqCMgT4TQiUQLY/
+         9Fsg==
+X-Gm-Message-State: ABy/qLYXU3RugKk3N1R5XABiABiUnhc2SUjiohzf0f0Jy5pFTi3kNb2r
+	EU6hWC12ECneRn2h2k3uWmQNIjIHYn/6
+X-Google-Smtp-Source: APBJJlE2aX80MxnnNWwACfsT3Ee5YvYIYkqJPKGyHzfB/EUKCWZHK3mobnFaKHo3fSpqE9qGISvFyA==
+X-Received: by 2002:a05:6808:572:b0:3a1:e85f:33ee with SMTP id j18-20020a056808057200b003a1e85f33eemr4317871oig.56.1689308809773;
+        Thu, 13 Jul 2023 21:26:49 -0700 (PDT)
+Received: from [127.0.0.1] ([104.210.139.213])
+        by smtp.gmail.com with ESMTPSA id j9-20020a056808034900b0039ee0bd8a11sm3535870oie.42.2023.07.13.21.26.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jul 2023 21:26:49 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230713-tc-selftests-lkft-v1-3-1eb4fd3a96e7@tessares.net>
+References: <20230713-tc-selftests-lkft-v1-3-1eb4fd3a96e7@tessares.net>
+Subject: Re: selftests: tc: add ConnTrack procfs kconfig: Tests Results
+Message-ID: <204fba15-3924-8ed2-fa2d-d20c561040b6@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 14 Jul 2023 04:26:48 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/4] selftests: mptcp: join: pass args in new env
- vars
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <168930602321.1851.14129799139703386002.git-patchwork-notify@kernel.org>
-Date: Fri, 14 Jul 2023 03:40:23 +0000
-References: <20230712-upstream-net-next-20230712-selftests-mptcp-use-local-env-v1-0-f1c8b62fbf95@tessares.net>
-In-Reply-To: <20230712-upstream-net-next-20230712-selftests-mptcp-use-local-env-v1-0-f1c8b62fbf95@tessares.net>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
- geliang.tang@suse.com, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello:
+Hi Matthieu,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Thank you for your modifications, that's great!
 
-On Wed, 12 Jul 2023 18:03:15 +0200 you wrote:
-> In this series, Geliang did some refactoring in the mptcp_join.sh file.
-> 
-> Patch 1 reduces the scope of some global env vars, only used by some
-> tests: easier to deal with.
-> 
-> Patch 2 uses a dedicated env var for fastclose case instead of re-using
-> addr_nr_ns2 with embedded info, clearer.
-> 
-> [...]
+Our CI did some validations and here is its report:
 
-Here is the summary with links:
-  - [net-next,1/4] selftests: mptcp: set all env vars as local ones
-    https://git.kernel.org/netdev/net-next/c/662aa22d7dcd
-  - [net-next,2/4] selftests: mptcp: add fastclose env var
-    https://git.kernel.org/netdev/net-next/c/080b7f5733fd
-  - [net-next,3/4] selftests: mptcp: add fullmesh env var
-    https://git.kernel.org/netdev/net-next/c/4aadde088a58
-  - [net-next,4/4] selftests: mptcp: add speed env var
-    https://git.kernel.org/netdev/net-next/c/e571fb09c893
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5826884395597824
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5826884395597824/su=
+mmary/summary.txt
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6389834349019136
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6389834349019136/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/4982459465465856
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4982459465465856/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5263934442176512
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5263934442176512/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/1e1aa4d21611
 
 
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
