@@ -1,7 +1,7 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BD76FC8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC1D125AB
 	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 11:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1689334205;
@@ -9,28 +9,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4SaSXFic5JPrABMsbLBxiXqzTD9bnvv3Y577KQqkdTA=;
-	b=Jn2AAQ6gdijJAS0hswHcOFta5SUdpmOhctJpN21EE04WGWkD0kJkWL06p1ecJ6UeO0sfeo
-	1Jb92O18u/vqJJ6XBMb0skTD2grzNT1tHK2K6SneHYf/uMoFMR0JXs4a0R8xc476aSnb9j
-	TsLX+2PBPcRxxzvctHrFzWGpqe4U4TY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-16-SzYwif6xNKKkm1kmUdpmOw-1; Fri, 14 Jul 2023 07:30:02 -0400
-X-MC-Unique: SzYwif6xNKKkm1kmUdpmOw-1
+	bh=poKr2f2/qEoyTf7d74omHVhbHOtl16PWzdzTg3K1zWw=;
+	b=iFRtZYJn01DaYvQ8sz2fA/ZjBQ+dDLffkKp5abK7zOanMIHTAA0FIHOuAzZHRigrLsaInj
+	hxq6ew0Op0hR0FuWbn0dnfCSZKK9JNtp60b4sbmDFSSQiNWT1WWI7ZX1npCyViNTuPHxf3
+	E1a7Lmh0L4taMWIQWlLCfqvvA4UqFsc=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-198-xWzuf4V8OiG1HJTlgLMsvw-1; Fri, 14 Jul 2023 07:30:04 -0400
+X-MC-Unique: xWzuf4V8OiG1HJTlgLMsvw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 693608D1684
-	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 11:30:02 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A1104381495A
+	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 11:30:04 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.225.62])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EC9672166B26
-	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 11:30:01 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2FD592166B25
+	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 11:30:04 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v2 mptcp-next 07/13] mptcp: avoid additional indirection in mptcp_listen()
-Date: Fri, 14 Jul 2023 13:29:38 +0200
-Message-ID: <ff3ad706b754495b96215d5ed7876b47cc46261b.1689334116.git.pabeni@redhat.com>
+Subject: [PATCH v2 mptcp-next 10/13] mptcp: avoid additional indirection in sockopt
+Date: Fri, 14 Jul 2023 13:29:41 +0200
+Message-ID: <6ffa0a931ffb77654dd55fc80bdc1b59f7788f3d.1689334116.git.pabeni@redhat.com>
 In-Reply-To: <cover.1689334116.git.pabeni@redhat.com>
 References: <cover.1689334116.git.pabeni@redhat.com>
 Precedence: bulk
@@ -45,57 +45,115 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-We are going to remove the first subflow socket soon, so avoid
-the additional indirection via at listen() time. Instead call
-directly the recently introduced helper on the first subflow sock.
+The mptcp sockopt infrastructure unneedly uses the first subflow
+socket struct in a few spots. We are going to remove such field
+soon, so use directly the first subflow sock instead.
 
 No functional changes intended.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-v1 -> v2:
- - dropped msk backlog init chunk (Mat)
- - fixed commit message type (Mat)
----
- net/mptcp/protocol.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ net/mptcp/sockopt.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index fa62e6d2d1ac..4d9775f45dd6 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3762,6 +3762,7 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
- 	struct sock *sk = sock->sk;
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 63f7a09335c5..348475dcbc23 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -293,6 +293,7 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ {
+ 	struct sock *sk = (struct sock *)msk;
  	struct socket *ssock;
 +	struct sock *ssk;
- 	int err;
+ 	int ret;
  
- 	pr_debug("msk=%p", msk);
-@@ -3778,15 +3779,19 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 		goto unlock;
+ 	switch (optname) {
+@@ -307,16 +308,17 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
+ 			return PTR_ERR(ssock);
+ 		}
+ 
+-		ret = sock_setsockopt(ssock, SOL_SOCKET, optname, optval, optlen);
++		ssk = msk->first;
++		ret = sk_setsockopt(ssk, SOL_SOCKET, optname, optval, optlen);
+ 		if (ret == 0) {
+ 			if (optname == SO_REUSEPORT)
+-				sk->sk_reuseport = ssock->sk->sk_reuseport;
++				sk->sk_reuseport = ssk->sk_reuseport;
+ 			else if (optname == SO_REUSEADDR)
+-				sk->sk_reuse = ssock->sk->sk_reuse;
++				sk->sk_reuse = ssk->sk_reuse;
+ 			else if (optname == SO_BINDTODEVICE)
+-				sk->sk_bound_dev_if = ssock->sk->sk_bound_dev_if;
++				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
+ 			else if (optname == SO_BINDTOIFINDEX)
+-				sk->sk_bound_dev_if = ssock->sk->sk_bound_dev_if;
++				sk->sk_bound_dev_if = ssk->sk_bound_dev_if;
+ 		}
+ 		release_sock(sk);
+ 		return ret;
+@@ -391,6 +393,7 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+ 	struct sock *sk = (struct sock *)msk;
+ 	int ret = -EOPNOTSUPP;
+ 	struct socket *ssock;
++	struct sock *ssk;
+ 
+ 	switch (optname) {
+ 	case IPV6_V6ONLY:
+@@ -403,7 +406,8 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+ 			return PTR_ERR(ssock);
+ 		}
+ 
+-		ret = tcp_setsockopt(ssock->sk, SOL_IPV6, optname, optval, optlen);
++		ssk = msk->first;
++		ret = tcp_setsockopt(ssk, SOL_IPV6, optname, optval, optlen);
+ 		if (ret != 0) {
+ 			release_sock(sk);
+ 			return ret;
+@@ -413,13 +417,13 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
+ 
+ 		switch (optname) {
+ 		case IPV6_V6ONLY:
+-			sk->sk_ipv6only = ssock->sk->sk_ipv6only;
++			sk->sk_ipv6only = ssk->sk_ipv6only;
+ 			break;
+ 		case IPV6_TRANSPARENT:
+-			inet_sk(sk)->transparent = inet_sk(ssock->sk)->transparent;
++			inet_sk(sk)->transparent = inet_sk(ssk)->transparent;
+ 			break;
+ 		case IPV6_FREEBIND:
+-			inet_sk(sk)->freebind = inet_sk(ssock->sk)->freebind;
++			inet_sk(sk)->freebind = inet_sk(ssk)->freebind;
+ 			break;
+ 		}
+ 
+@@ -700,7 +704,7 @@ static int mptcp_setsockopt_sol_ip_set_transparent(struct mptcp_sock *msk, int o
+ 		return PTR_ERR(ssock);
  	}
  
-+	ssk = msk->first;
- 	inet_sk_state_store(sk, TCP_LISTEN);
- 	sock_set_flag(sk, SOCK_RCU_FREE);
+-	issk = inet_sk(ssock->sk);
++	issk = inet_sk(msk->first);
  
--	err = ssock->ops->listen(ssock, backlog);
--	inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
-+	lock_sock(ssk);
-+	err = __inet_listen_sk(ssk, backlog);
-+	release_sock(ssk);
-+	inet_sk_state_store(sk, inet_sk_state_load(ssk));
-+
- 	if (!err) {
- 		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
--		mptcp_copy_inaddrs(sk, ssock->sk);
--		mptcp_event_pm_listener(ssock->sk, MPTCP_EVENT_LISTENER_CREATED);
-+		mptcp_copy_inaddrs(sk, ssk);
-+		mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CREATED);
+ 	switch (optname) {
+ 	case IP_FREEBIND:
+@@ -865,8 +869,8 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ {
+ 	struct sock *sk = (struct sock *)msk;
+ 	struct socket *ssock;
+-	int ret;
+ 	struct sock *ssk;
++	int ret;
+ 
+ 	lock_sock(sk);
+ 	ssk = msk->first;
+@@ -881,7 +885,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ 		goto out;
  	}
  
- unlock:
+-	ret = tcp_getsockopt(ssock->sk, level, optname, optval, optlen);
++	ret = tcp_getsockopt(ssk, level, optname, optval, optlen);
+ 
+ out:
+ 	release_sock(sk);
 -- 
 2.41.0
 
