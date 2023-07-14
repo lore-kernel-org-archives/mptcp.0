@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFAB2AB35
-	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 23:21:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2416C433C7;
-	Fri, 14 Jul 2023 23:21:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116522C80
+	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 23:37:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9234AC433C8;
+	Fri, 14 Jul 2023 23:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689376885;
-	bh=gp1J6FNAvvhTGGFigG95ofZd5U1OileqxL7y7VcxpZk=;
+	s=k20201202; t=1689377855;
+	bh=AYjXebdtbYc/f7TMOTRcyumZ28Px/DcL88hJMFzIQr4=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=jJhMyMrIJVhh1uKgTOBbIdDxIHkKcVFSYWtkd9TgJa0K7Tk+U86FLVxifo62PvsjS
-	 j21RxRQggKtrX/G91TM3QoroFockBTSLdpMRJMCc/1mGRuEFiAN39N0RUXCe0UAOns
-	 vScqCMItZQ1avDh9SHQ4F5nlh8/2W7Dsfv1DZOuBsszVxvOV8Vy2u0XhPGOgOq3NtK
-	 fEQ96M/zhLPs1u83zRiutWyx+zyxRDvRFipF5FgF5w4SiIy0AqELlIR63NLxMx4L9c
-	 3gkxw68ERSPbfuhIO3Am88dTko5WQMx3kxJKRhP4NCeKn2szzccBtW/VVPkLZF9FK2
-	 gp6WYr5wxXjPQ==
-Date: Fri, 14 Jul 2023 16:21:24 -0700 (PDT)
+	b=Nk0qBJr4cEJNc8uJfxecA8G31EmX+7jXOm1dETbvlwig+wvv5tvuOwuba9zoswLzw
+	 5WbyJ1J/AKVfmejdopFYstcRm4GEyUuad5v8XMVXk2iMmBVUMKRULtB2fe1X2u5jXZ
+	 jxSG7kU1x9ThBG2uIp4FmWkf4C+PqPjjq2jatc2actAVproN7aivH68v8GMXZRQsew
+	 zxrbqiumfAZi/5DVSowuf1NS+/09TrDk9FJIwNtpOvs4IhnnxwtSlypYf0OphfHyAa
+	 Tl4LXg38V6rv439uuNt4p8M5RKHjpTAINDOmJWqg+KCg72nDxbDmZfZhBEpKbzi74L
+	 44U4OX6FsXGMg==
+Date: Fri, 14 Jul 2023 16:37:34 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp-next 06/13] net: factor out __inet_listen_sk()
- helper
-In-Reply-To: <5ed59fdc8730f5a559f126b9f78fcdf2ef64d1ce.1689334116.git.pabeni@redhat.com>
-Message-ID: <e68937af-a024-2642-585e-175b346c1bf6@kernel.org>
-References: <cover.1689334116.git.pabeni@redhat.com> <5ed59fdc8730f5a559f126b9f78fcdf2ef64d1ce.1689334116.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 0/2] selftests: mptcp: pm_nl_ctl: display
+ errors if any
+In-Reply-To: <20230713-mptcp-issue-368-pm_nl_ctl_ack-v2-0-eb9582b8e24b@tessares.net>
+Message-ID: <05f43fb0-66e2-e737-85c8-96e6aac50091@kernel.org>
+References: <20230713-mptcp-issue-368-pm_nl_ctl_ack-v2-0-eb9582b8e24b@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -32,106 +32,53 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Fri, 14 Jul 2023, Paolo Abeni wrote:
+On Thu, 13 Jul 2023, Matthieu Baerts wrote:
 
-> The mptcp protocol maintains an additional socket just to easily
-> invoke a few stream operations on the first subflow. One of them
-> is inet_listen().
+> Recently, I wanted to understand why the userspace_pm.sh test was
+> failing on some arch according to lkft reports. There was nothing in the
+> logs apart from seeing the expected event had been missing. I then
+> realised the output of pm_nl_ctl was muted but also this tool was not
+> looking if there were errors after having sent some Netlink commands.
 >
-> Factor out an helper operating directly on the (locked) struct sock,
-> to allow get rid of the above dependency in the next patch without
-> duplicating the existing code.
+> I don't think it is a good idea to mute the output and ignore errors,
+> especially here in the tests where we do want to validate these Netlink
+> commands. So now the tool checks for errors and the output is no longer
+> discarded.
 >
-> No functional changes intended.
+> Note that I didn't manage to read the error message set by the kernel. I
+> think the rtattr pointer in nl_error() is wrong. I think it should get
+> info from &err->msg instead of nh. Anyway, here we at least print errno
+> and just in case someone wants to have a look, it is easy to test:
 >
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> --
-> v1 -> v2:
-> - initialize 'err' at definition time (Mat)
+>  ./pm_nl_ctl ann 1.1.1.1 token 12 id 0
+>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
+> Changes in v2:
+> - Patch 1/2: mute expected errors in selftests
+> - Link to v1: https://lore.kernel.org/r/20230705-mptcp-issue-368-pm_nl_ctl_ack-v1-0-40bcff40cb6b@tessares.net
+>
 
-Acked-by: Mat Martineau <martineau@kernel.org>
+Thanks for the fix, v2 LGTM:
+
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 
 > ---
-> include/net/inet_common.h |  1 +
-> net/ipv4/af_inet.c        | 38 ++++++++++++++++++++++----------------
-> 2 files changed, 23 insertions(+), 16 deletions(-)
+> Matthieu Baerts (2):
+>      selftests: mptcp: pm_nl_ctl: always look for errors
+>      selftests: mptcp: userspace_pm: unmute unexpected errors
 >
-> diff --git a/include/net/inet_common.h b/include/net/inet_common.h
-> index 8e97de700991..f50a644d87a9 100644
-> --- a/include/net/inet_common.h
-> +++ b/include/net/inet_common.h
-> @@ -40,6 +40,7 @@ int inet_recvmsg(struct socket *sock, struct msghdr *msg, size_t size,
-> 		 int flags);
-> int inet_shutdown(struct socket *sock, int how);
-> int inet_listen(struct socket *sock, int backlog);
-> +int __inet_listen_sk(struct sock *sk, int backlog);
-> void inet_sock_destruct(struct sock *sk);
-> int inet_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len);
-> int inet_bind_sk(struct sock *sk, struct sockaddr *uaddr, int addr_len);
-> diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-> index 2fd23437c1d2..c59da65f19d2 100644
-> --- a/net/ipv4/af_inet.c
-> +++ b/net/ipv4/af_inet.c
-> @@ -187,24 +187,13 @@ static int inet_autobind(struct sock *sk)
-> 	return 0;
-> }
+> tools/testing/selftests/net/mptcp/pm_netlink.sh   |   6 +-
+> tools/testing/selftests/net/mptcp/pm_nl_ctl.c     |  33 ++++---
+> tools/testing/selftests/net/mptcp/userspace_pm.sh | 100 +++++++++++-----------
+> 3 files changed, 75 insertions(+), 64 deletions(-)
+> ---
+> base-commit: 3ee02a7d38ae4c5fc98a3f833f2a6f44f4b4b15a
+> change-id: 20230705-mptcp-issue-368-pm_nl_ctl_ack-bb1625f5bdda
 >
-> -/*
-> - *	Move a socket into listening state.
-> - */
-> -int inet_listen(struct socket *sock, int backlog)
-> +int __inet_listen_sk(struct sock *sk, int backlog)
-> {
-> -	struct sock *sk = sock->sk;
-> -	unsigned char old_state;
-> +	unsigned char old_state = sk->sk_state;
-> 	int err, tcp_fastopen;
->
-> -	lock_sock(sk);
-> -
-> -	err = -EINVAL;
-> -	if (sock->state != SS_UNCONNECTED || sock->type != SOCK_STREAM)
-> -		goto out;
-> -
-> -	old_state = sk->sk_state;
-> 	if (!((1 << old_state) & (TCPF_CLOSE | TCPF_LISTEN)))
-> -		goto out;
-> +		return -EINVAL;
->
-> 	WRITE_ONCE(sk->sk_max_ack_backlog, backlog);
-> 	/* Really, if the socket is already in listen state
-> @@ -227,10 +216,27 @@ int inet_listen(struct socket *sock, int backlog)
->
-> 		err = inet_csk_listen_start(sk);
-> 		if (err)
-> -			goto out;
-> +			return err;
-> +
-> 		tcp_call_bpf(sk, BPF_SOCK_OPS_TCP_LISTEN_CB, 0, NULL);
-> 	}
-> -	err = 0;
-> +	return 0;
-> +}
-> +
-> +/*
-> + *	Move a socket into listening state.
-> + */
-> +int inet_listen(struct socket *sock, int backlog)
-> +{
-> +	struct sock *sk = sock->sk;
-> +	int err = -EINVAL;
-> +
-> +	lock_sock(sk);
-> +
-> +	if (sock->state != SS_UNCONNECTED || sock->type != SOCK_STREAM)
-> +		goto out;
-> +
-> +	err = __inet_listen_sk(sk, backlog);
->
-> out:
-> 	release_sock(sk);
+> Best regards,
 > -- 
-> 2.41.0
+> Matthieu Baerts <matthieu.baerts@tessares.net>
 >
 >
 >
