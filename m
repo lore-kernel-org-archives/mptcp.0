@@ -1,84 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116522C80
-	for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 23:37:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9234AC433C8;
-	Fri, 14 Jul 2023 23:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689377855;
-	bh=AYjXebdtbYc/f7TMOTRcyumZ28Px/DcL88hJMFzIQr4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=Nk0qBJr4cEJNc8uJfxecA8G31EmX+7jXOm1dETbvlwig+wvv5tvuOwuba9zoswLzw
-	 5WbyJ1J/AKVfmejdopFYstcRm4GEyUuad5v8XMVXk2iMmBVUMKRULtB2fe1X2u5jXZ
-	 jxSG7kU1x9ThBG2uIp4FmWkf4C+PqPjjq2jatc2actAVproN7aivH68v8GMXZRQsew
-	 zxrbqiumfAZi/5DVSowuf1NS+/09TrDk9FJIwNtpOvs4IhnnxwtSlypYf0OphfHyAa
-	 Tl4LXg38V6rv439uuNt4p8M5RKHjpTAINDOmJWqg+KCg72nDxbDmZfZhBEpKbzi74L
-	 44U4OX6FsXGMg==
-Date: Fri, 14 Jul 2023 16:37:34 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 0/2] selftests: mptcp: pm_nl_ctl: display
- errors if any
-In-Reply-To: <20230713-mptcp-issue-368-pm_nl_ctl_ack-v2-0-eb9582b8e24b@tessares.net>
-Message-ID: <05f43fb0-66e2-e737-85c8-96e6aac50091@kernel.org>
-References: <20230713-mptcp-issue-368-pm_nl_ctl_ack-v2-0-eb9582b8e24b@tessares.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9247163
+	for <mptcp@lists.linux.dev>; Sat, 15 Jul 2023 00:25:56 +0000 (UTC)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-666e64e97e2so1788731b3a.1
+        for <mptcp@lists.linux.dev>; Fri, 14 Jul 2023 17:25:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689380756; x=1691972756;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ADBCr1U3MgCRPbkHsU7/gwgJUbpiAc/cwJHwrpHyC6w=;
+        b=CRMPMBLQrPaTt7xhjH1ms7QrLlObKzHS49jjyJS3RjAkecke/OHREBXc9PildCfcRW
+         0tZuwbqehqBCvdZbSAnvPmhhp6GerA/GLuYvPEhM8zTGpnmCpavwfeZY/wTJH/EUntHu
+         /rdIxX5f0eLv95v2YxSTahoNPtfa1vHRfqNJ/aQphbnd1psN544mINPlV/ksbX2pmA3S
+         kKTJ7E8wqZVCzB0zSzKUU+zMEswth9RvZEJ+j8Lg/rI/kmE+aCgSWvq5O0hhgOtuWapx
+         ok52cmaRw7gjFDWAu2z26mQSm99hyn0yYGzf2X01fpzQDCgj4rktC3+Gl5uILemxDqd2
+         J6VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689380756; x=1691972756;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ADBCr1U3MgCRPbkHsU7/gwgJUbpiAc/cwJHwrpHyC6w=;
+        b=DQgJaFCI03QkJNZjgcXDCO/3YAc9TwZ4dR13qUufwEGpWFJbtKJdP91TdAYXudtwZo
+         oW/uce8saxzGagkUjW1BwhEagxyXrGd96ORZ5AfmthXL/d8e9F54KTKBF201oKjBAQBz
+         ITVgPoxXGCdkTzOOJH3gWWdvMJ6F8BONp8jKRbpEqhbtHCKJWzaKKRlm5P4k3ms3qbvS
+         QAW4v56ykka7FEpgSzyg3gkdZnBYINkBsUidJrqPlcx2f5wc9+giSuZN1EFP8hQi12zR
+         ZVjSEHV04F/L9B3hUPMdSL1GJ4fVWKz4IRIgnuNeK847GWW3erDgakjdaVMHhXWVkjvI
+         yckA==
+X-Gm-Message-State: ABy/qLaAGWMe8aMJpocN2R32QyDdZXG4HgoQmFzKOBigjAIOALLvV4nl
+	8bjh+3Q7fL+S01MfWemeTA==
+X-Google-Smtp-Source: APBJJlGHr/rgYxuCB6gLnEQjBcHjMvzdWuse1bBs21W8iuBovBSDrslGdShDVYvAB0xD0lhcYCnc5Q==
+X-Received: by 2002:a05:6a00:1886:b0:677:bdc:cd6b with SMTP id x6-20020a056a00188600b006770bdccd6bmr6940473pfh.19.1689380756026;
+        Fri, 14 Jul 2023 17:25:56 -0700 (PDT)
+Received: from [127.0.0.1] ([13.91.161.31])
+        by smtp.gmail.com with ESMTPSA id u18-20020aa78392000000b006827c26f147sm7644917pfm.138.2023.07.14.17.25.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jul 2023 17:25:55 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <e0870b3de6c2d87f4b831ea5193d2c2bc5156b5a.1689334116.git.pabeni@redhat.com>
+References:
+ <e0870b3de6c2d87f4b831ea5193d2c2bc5156b5a.1689334116.git.pabeni@redhat.com>
+Subject: Re: mptcp: get rid of msk->subflow: Tests Results
+Message-ID: <275107f3-f277-c02a-44c3-e4734f8d81f5@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 15 Jul 2023 00:25:54 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 13 Jul 2023, Matthieu Baerts wrote:
+Hi Paolo,
 
-> Recently, I wanted to understand why the userspace_pm.sh test was
-> failing on some arch according to lkft reports. There was nothing in the
-> logs apart from seeing the expected event had been missing. I then
-> realised the output of pm_nl_ctl was muted but also this tool was not
-> looking if there were errors after having sent some Netlink commands.
->
-> I don't think it is a good idea to mute the output and ignore errors,
-> especially here in the tests where we do want to validate these Netlink
-> commands. So now the tool checks for errors and the output is no longer
-> discarded.
->
-> Note that I didn't manage to read the error message set by the kernel. I
-> think the rtattr pointer in nl_error() is wrong. I think it should get
-> info from &err->msg instead of nh. Anyway, here we at least print errno
-> and just in case someone wants to have a look, it is easy to test:
->
->  ./pm_nl_ctl ann 1.1.1.1 token 12 id 0
->
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
-> Changes in v2:
-> - Patch 1/2: mute expected errors in selftests
-> - Link to v1: https://lore.kernel.org/r/20230705-mptcp-issue-368-pm_nl_ctl_ack-v1-0-40bcff40cb6b@tessares.net
->
+Thank you for your modifications, that's great!
 
-Thanks for the fix, v2 LGTM:
+Our CI did some validations and here is its report:
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4562317090750464
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4562317090750464/summary/summary.txt
 
-> ---
-> Matthieu Baerts (2):
->      selftests: mptcp: pm_nl_ctl: always look for errors
->      selftests: mptcp: userspace_pm: unmute unexpected errors
->
-> tools/testing/selftests/net/mptcp/pm_netlink.sh   |   6 +-
-> tools/testing/selftests/net/mptcp/pm_nl_ctl.c     |  33 ++++---
-> tools/testing/selftests/net/mptcp/userspace_pm.sh | 100 +++++++++++-----------
-> 3 files changed, 75 insertions(+), 64 deletions(-)
-> ---
-> base-commit: 3ee02a7d38ae4c5fc98a3f833f2a6f44f4b4b15a
-> change-id: 20230705-mptcp-issue-368-pm_nl_ctl_ack-bb1625f5bdda
->
-> Best regards,
-> -- 
-> Matthieu Baerts <matthieu.baerts@tessares.net>
->
->
->
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5688216997593088
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5688216997593088/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6251166951014400
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6251166951014400/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5125267044171776
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5125267044171776/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/3653a7a07506
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
