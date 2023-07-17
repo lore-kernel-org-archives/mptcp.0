@@ -1,140 +1,148 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55DCA928
-	for <mptcp@lists.linux.dev>; Mon, 17 Jul 2023 08:32:10 +0000 (UTC)
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-307d20548adso4118927f8f.0
-        for <mptcp@lists.linux.dev>; Mon, 17 Jul 2023 01:32:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48819BA2E
+	for <mptcp@lists.linux.dev>; Mon, 17 Jul 2023 13:21:36 +0000 (UTC)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3fc02a92dcfso41089385e9.0
+        for <mptcp@lists.linux.dev>; Mon, 17 Jul 2023 06:21:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1689582728; x=1692174728;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IGpGIGHpL2BV0gRPe7o+mCUkh562jDYsyKn7ATcWjy4=;
-        b=l/Le4Uw/oENU8MdiPbpVIEgMsUnyY9CAc53RvkdusFs8aue63uMVlB7g8UT3sjQUUw
-         hdwwTGZffSgmh1UknkjyTdyobVcJqGY0j8K8Y+7Yp7K+W4W+FPp7QIevLmXjFv9PM9Fm
-         +AMU4wc35Pjt1wUX3RjjS5VfiD8GdwWXULTOhZWQ2lChyofxd/K2jUrM6hTHKUzumLdj
-         lWuWjk0WJR26ighG14Lk7OvIL4C3buqnJJi22YTx26uI0Yx7RyHgB1hJ9kBflO+/k0Sv
-         a4ZjCrzM+bj6gVl+yMBnAKHS5SqtRXESPDcsW3PLr4la8E5aPH/aYH/yAyKW18voAS4g
-         X3iw==
+        d=tessares.net; s=google; t=1689600095; x=1692192095;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kZ9t5dj6g2mn/10ISraEtvtL1bOiFOBSVrIZ4houIx0=;
+        b=fAh55B3H+QlRLeSufxO4qMrv9sAkGm5AziEPE9FHMmBjucGJmcJHxIp09l6OmIVrre
+         Sg13g3ToocKyg3AIUJ9IZyDoQAsL4MNA64PtSXqPQu6Aw+OJ2IvUcZd4+VWnkZBq7Vgc
+         tIXGwIKGs4uHMlwcLtNKdTTFi9nQ5FQ9kXyykZ/aRLa/BCmwnL/4y1z/xDYEuFTmZs4V
+         k2omQVSiOwWhrwGEoYvQIloesymgHi9krkz6zlRD0CpDoggURE+d1Fg4depIh33L9d6+
+         Abe9vVC2xUux2L8+yW0jsfP6YCI73AMl+0aCztV8jLyyGiFPAKO281MgIwfdc16SEQ7p
+         SKaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689582728; x=1692174728;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IGpGIGHpL2BV0gRPe7o+mCUkh562jDYsyKn7ATcWjy4=;
-        b=PcPwZNDNDy80KCdhuH4If3b/H0OzqgmLdWml4Jm1SCjVcvoN6UJF8kqBB5mV5F0eCT
-         9f8BH2tYZnZ2ZAr2vW8136W3olEbZTX87H2wlJFyVk/8GYXXfJrQEehR3O61lNpZ+bwP
-         FQG+l8UziP29E37+uZ8kvaPKH4foDNdOHPbhg5F1Jn2BT1/BfRXKPQa4sHsNsSpprJv1
-         raT31Fs/4eGtI1UBh7BL8Byu/HEMlaa+HSpTNDd/ESwpP11Km2dn+C/5uM8A42MZvFcl
-         Yt7uXPiFl2hBTlHQlAvvaNhIlBilH/RZFWQnshxlCAHr+XFpqJVtZmCuw5Kqq/yRCjj8
-         CGBQ==
-X-Gm-Message-State: ABy/qLZaNCMMSeKsqycW+zvEdeT6frETcQNv017vp3EAXOmOq+ps7VYw
-	/jHQ2+0Y96LHnK7Kput22leMOA==
-X-Google-Smtp-Source: APBJJlHVVnqlD7iFaIKgrA7nEDnmp8PC4zO1Sf7ESIkL6tmAxD4qBQpsCb0F0cPBPj5NLKAxliKaUQ==
-X-Received: by 2002:a5d:604f:0:b0:315:9c3a:43c3 with SMTP id j15-20020a5d604f000000b003159c3a43c3mr9077329wrt.15.1689582728440;
-        Mon, 17 Jul 2023 01:32:08 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id p5-20020a5d4e05000000b003143d80d11dsm18453833wrt.112.2023.07.17.01.32.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jul 2023 01:32:08 -0700 (PDT)
-Message-ID: <3a47f676-d661-0b7a-701b-c4cafdc25394@tessares.net>
-Date: Mon, 17 Jul 2023 10:32:07 +0200
+        d=1e100.net; s=20221208; t=1689600095; x=1692192095;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kZ9t5dj6g2mn/10ISraEtvtL1bOiFOBSVrIZ4houIx0=;
+        b=khj/euYljtsjFjTNCb3ry/U6HEY7ZbkwA++bw7AMEQdcFAeL2KJPcu3Mlzrsc53f6t
+         WbauGBBUru2zVkTwytR91w4UwC8SlU9MmpgwPT7UA4texwiyfwIxwX9Zu+Uc786sE5TM
+         g0APwk83foJ1uzXuOfcwi0NRplFHwAJSpeHLXy8L4ICeKOh0D9md3Xe7oC11GqWgQdp6
+         m6hUxJ5YvO3kOW9R6QsZrztohrfQltbdJENt1o9bkhB6rBh6FjoULrkipZ7CajpZgiRy
+         fixktj5Y+U4tLgTjDZ72yQQQ4TaLgvLsDFrUtzF8EmfcjtZEzlDWqlIWXpHhjOqkU98q
+         u8XQ==
+X-Gm-Message-State: ABy/qLZ4ZbArTBm43EhSWoDkDDgrApnxQ65eMPCG+mZLfi5kNyZZlSU4
+	v2gep1szQoFO5UUeCvdK+8c1OA==
+X-Google-Smtp-Source: APBJJlF1llxOyD+510ui5rEJu6KdcyF3JC253dsvNJLLHen8XU94+OzQva+9xR4jdmqSEFYSNQvqRQ==
+X-Received: by 2002:a05:6000:1112:b0:314:2735:dc13 with SMTP id z18-20020a056000111200b003142735dc13mr9691654wrw.47.1689600094897;
+        Mon, 17 Jul 2023 06:21:34 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id r8-20020a056000014800b0030fa3567541sm19249836wrx.48.2023.07.17.06.21.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jul 2023 06:21:34 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net-next 00/13] selftests: mptcp: format subtests results
+ in TAP
+Date: Mon, 17 Jul 2023 15:21:20 +0200
+Message-Id: <20230717-upstream-net-next-20230712-selftests-mptcp-subtests-v1-0-695127e0ad83@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH net 1/3] selftests: tc: set timeout to 15 minutes
-Content-Language: en-GB
-To: shaozhengchao <shaozhengchao@huawei.com>,
- Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
- Jiri Pirko <jiri@resnulli.us>, Shuah Khan <shuah@kernel.org>,
- Kees Cook <keescook@chromium.org>, "David S. Miller" <davem@davemloft.net>,
- Paul Blakey <paulb@mellanox.com>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, mptcp@lists.linux.dev
-Cc: Pedro Tammela <pctammela@mojatatu.com>,
- Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- stable@vger.kernel.org
-References: <20230713-tc-selftests-lkft-v1-0-1eb4fd3a96e7@tessares.net>
- <20230713-tc-selftests-lkft-v1-1-1eb4fd3a96e7@tessares.net>
- <bf7f8867-6b14-dd53-a6e4-2addee4a5ad8@huawei.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <bf7f8867-6b14-dd53-a6e4-2addee4a5ad8@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFBAtWQC/z2NQQqDQAxFryJZNzBG7EivUrpQJ7aBOh0mUQTx7
+ h1a2sVfPD68t4NyFla4VDtkXkXlFQvUpwrGRx/vjBIKAzlqnK8Jl6SWuZ8xspVthv9L+TkZqyn
+ OycaEugxfpDZQ64L3XXeGYk6ZJ9k+1Sv8PHA7jjccbTZ9jwAAAA==
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3252;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=YEIkMWY8UBsDvJPwG2p8rvciIBMppk1AeFtr41cYIqI=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBktUBcoNfPcTm9PUpx/4zV3hhZzoLL3BV7EdlfH
+ I7ffws/zWGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZLVAXAAKCRD2t4JPQmmg
+ c5eEEAC9Chq9qFAhmcN2pfs9lPVHogOnDHKz2CaQx7mIteDWk+pnHx3/1GYIFrj3YLMNg1VYKxD
+ SC5IpKMEBBYBAr2M+dJqh5tE3Uty1Oh4xYThAreGuFU2qOHoByLTnU+kJnJ9vHYUjvZ5Jp12V5R
+ /vFO6eL6VKz4YAkGfIyzFg9ylq8403PIXh404uqolUYlDONLwaIsugwWlkgqjzab3XAHqzAmUPU
+ ZBuWKAnAL3DPlra2LjzRI6ebBAbvUQ9lhZbA6u3aDi5ZGVDvFRbm+bGm0O5CFj7C4TXTIFO4W87
+ mp0bikLveP2wFvredGREm+t3nqFlBYdtCMOcMaW+axs7wBURn0WxKh6A0W1d/DUPP0hvXhfM1JL
+ DVMRkOtE4/h4mPdj3P0iEJ/ge/K4XVKo1A3k5vpSydlfT/8Wj1p0bXAsI5gCVER5tg2UqaJvX3b
+ W+0j+DSCAitMpKygMUM9gpcOvUI8BirTzaYy1WjXRLWdDQ1umBMNEL1Wp9EZJMS6s0kbz1zc0Ir
+ dl1mvSiKBiOiXZXu+dyPIxHmXxwWPCGzXSikRMbCrJKyHEUPtdgzZsIKSzkpU8v3eoP/3lIEvoz
+ 0UWUYhoqemgQmSGGGEAgln70W+UvomCpW5P35IzAxkN+JcySIeB1hvpygxKXko6WXxrPvNOHsyh
+ tJsbKhZT3kNM3mg==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Zhengchao Shao,
+The current selftests infrastructure formats the results in TAP 13. This
+version doesn't support subtests and only the end result of each
+selftest is taken into account. It means that a single issue in a
+subtest of a selftest containing multiple subtests forces the whole
+selftest to be marked as failed. It also means that subtests results are
+not tracked by CI executing selftests.
 
-On 14/07/2023 04:25, shaozhengchao wrote:
-> 
-> 
-> On 2023/7/14 5:16, Matthieu Baerts wrote:
->> When looking for something else in LKFT reports [1], I noticed that the
->> TC selftest ended with a timeout error:
->>
->>    not ok 1 selftests: tc-testing: tdc.sh # TIMEOUT 45 seconds
->>
->> The timeout had been introduced 3 years ago, see the Fixes commit below.
->>
->> This timeout is only in place when executing the selftests via the
->> kselftests runner scripts. I guess this is not what most TC devs are
->> using and nobody noticed the issue before.
->>
->> The new timeout is set to 15 minutes as suggested by Pedro [2]. It looks
->> like it is plenty more time than what it takes in "normal" conditions.
->>
->> Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
->> timeout per test")
->> Cc: stable@vger.kernel.org
->> Link:
->> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230711/testrun/18267241/suite/kselftest-tc-testing/test/tc-testing_tdc_sh/log [1]
->> Link:
->> https://lore.kernel.org/netdev/0e061d4a-9a23-9f58-3b35-d8919de332d7@tessares.net/T/ [2]
->> Suggested-by: Pedro Tammela <pctammela@mojatatu.com>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->> ---
->>   tools/testing/selftests/tc-testing/settings | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/tools/testing/selftests/tc-testing/settings
->> b/tools/testing/selftests/tc-testing/settings
->> new file mode 100644
->> index 000000000000..e2206265f67c
->> --- /dev/null
->> +++ b/tools/testing/selftests/tc-testing/settings
->> @@ -0,0 +1 @@
->> +timeout=900
->>
-> I remember last year when I tested all the tdc cases（qdisc + filter +
-> action + infra） in my vm machine, it took me nearly 20 minutes.
-> So I think it should be more than 1200 seconds if all cases need to be
-> tested.
+MPTCP selftests run hundreds of various subtests. It is then important
+to track each of them and not one result per selftest.
 
-Thank you for your feedback!
+It is particularly interesting to do that when validating stable kernels
+with the last version of the test suite: tests might fail because a
+feature is not supported but the test didn't skip that part. In this
+case, if subtests are not tracked, the whole selftest will be marked as
+failed making the other subtests useless because their results are
+ignored.
 
-Be careful that here, it is the timeout to run "tdc.sh" only which is
-currently limited to:
+Regarding this patch set:
 
-  ./tdc.py -c actions --nobuildebpf
-  ./tdc.py -c qdisc
+ - The two first patches modify connect and userspace_pm selftests to
+   continue executing other tests if there is an error before the end.
+   This is what is done in the other MPTCP selftests.
 
-(not "filter", nor "infra" then)
+ - Patches 3-5 are refactoring the code in userspace_pm selftest to
+   reduce duplicated code, suppress some shellcheck warnings and prepare
+   subtests' support by using new helpers.
 
-I guess for this, 15 minutes is more than enough, no?
+ - Patch 6 adds new helpers in mptcp_lib.sh to easily support printing
+   the subtests results in the different MPTCP selftests.
 
-At least on my side, I ran it in a i386 VM without KVM and it took less
-than 3 minutes [1].
+ - Patch 7-13 format subtests results in TAP 13 in the different MPTCP
+   selftests.
 
-Cheers,
-Matt
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Matthieu Baerts (13):
+      selftests: mptcp: connect: don't stop if error
+      selftests: mptcp: userspace pm: don't stop if error
+      selftests: mptcp: userspace_pm: fix shellcheck warnings
+      selftests: mptcp: userspace_pm: uniform results printing
+      selftests: mptcp: userspace_pm: reduce dup code around printf
+      selftests: mptcp: lib: format subtests results in TAP
+      selftests: mptcp: connect: format subtests results in TAP
+      selftests: mptcp: pm_netlink: format subtests results in TAP
+      selftests: mptcp: join: format subtests results in TAP
+      selftests: mptcp: diag: format subtests results in TAP
+      selftests: mptcp: simult flows: format subtests results in TAP
+      selftests: mptcp: sockopt: format subtests results in TAP
+      selftests: mptcp: userspace_pm: format subtests results in TAP
 
-[1]
-https://tuxapi.tuxsuite.com/v1/groups/community/projects/matthieu.baerts/tests/2SWHb7PJfqkUX1m8rLu3GXbsHE0/logs?format=html
+ tools/testing/selftests/net/mptcp/diag.sh          |   7 +
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh |  66 ++++++--
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    |  37 ++++-
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh     |  66 ++++++++
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  20 ++-
+ tools/testing/selftests/net/mptcp/pm_netlink.sh    |   6 +-
+ tools/testing/selftests/net/mptcp/simult_flows.sh  |   4 +
+ tools/testing/selftests/net/mptcp/userspace_pm.sh  | 181 +++++++++++++--------
+ 8 files changed, 298 insertions(+), 89 deletions(-)
+---
+base-commit: 60cc1f7d0605598b47ee3c0c2b4b6fbd4da50a06
+change-id: 20230712-upstream-net-next-20230712-selftests-mptcp-subtests-25d250d77886
+
+Best regards,
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+Matthieu Baerts <matthieu.baerts@tessares.net>
+
