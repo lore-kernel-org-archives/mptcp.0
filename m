@@ -1,45 +1,45 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B73ABA24
-	for <mptcp@lists.linux.dev>; Mon, 17 Jul 2023 13:47:46 +0000 (UTC)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3fbf1b82de7so27915655e9.1
-        for <mptcp@lists.linux.dev>; Mon, 17 Jul 2023 06:47:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83188F7D
+	for <mptcp@lists.linux.dev>; Mon, 17 Jul 2023 13:58:34 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-3fb4146e8ceso41133005e9.0
+        for <mptcp@lists.linux.dev>; Mon, 17 Jul 2023 06:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1689601664; x=1692193664;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=tessares.net; s=google; t=1689602313; x=1692194313;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ItuRb+tNdw80MoGYLCtAJ1Ky8DIPu/hihz2qGM1EmaY=;
-        b=8t0oUexLzdOWOy9tAKL39sj7JT67H3vvXwn5XFuuPY+kcfPINxeuD6/tvQrS3Pkze1
-         evI14UVz/N3xAeHpjhQ+y8ME2Kc99tl1Fb58SnbpS8P5Aav1Yc222rSzO7koG4KOQMNm
-         TufJFwjbKJ5zitW2+/ATYgzkbxKcZSbdg6c8iCwUZwX7oyG66fiEqFLXK8A+NDZ/IrI7
-         vKB4PeXXkF+ZcO6LaglF8ddTBZ5DQ8BIvzZGWABLJ2biDOXNvLoXPB1XcH8Ji76r+j0Y
-         dmboMc+p6PZMeejn6+sZp8+Jib2wwla2JEuxz88+Jhk+P+UO0lW9JSesO/zyHQKT3Z0W
-         P3Bg==
+        bh=xeUgvMA9RQfBfyHCcV8x7qZeLd22o/gOiCvQnOOXUKs=;
+        b=gbFSYsigWbZ3ko6RcAUsOFWV/4Wh7vKX+cG1uWBGq2eFWMzxjk9G/Qx8WRCwmMgnhh
+         8/NwZhyGaNg5XrJiC+8Fbd7XROEPp5+qj75f4w8u28lYpl3PaX3L9GrCnbRVY3DFepG1
+         jTS0E1PjgUXqfEjUKX15kerxZiVA6r2YvW3RG0JE40Zq26vIRydamadG1cktgEOPKJmn
+         IfQgZZaCuUGcx2+h1IR2B8vkm33pJLOoGSp7EDjPjme3xJXAx5JN7lHZ9hYzf1YB2pP2
+         oQfBwkHRrly38vlAEjdBw+HZY9llVrzgwvPJC7vjFUTYYaOaHp6K14vTw0dVZb0yhFif
+         RyDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689601664; x=1692193664;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20221208; t=1689602313; x=1692194313;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ItuRb+tNdw80MoGYLCtAJ1Ky8DIPu/hihz2qGM1EmaY=;
-        b=dsLs5gmB5IpQ8iaFXcHIhccqQVPIZzH8eSPOOOMumVOYWJdbdjd+ZkSPaUAW8LTfDQ
-         p+UqVi31eFlbmkIINWVE0Hr4GvqV3O0fPJoCllVS7bDFpbaHI82E7UOwBs+qACU8AigZ
-         TFBOngMoZTAtOrrQlhJ1CDzfOqIpxTN1+B/PZeEfz2R9HqnVKihdv3Mz1iUKuiRHu3p0
-         c1ZmRuGoXSiFSKXFW7aAKGM+z37MqjJHegpSSAqSLluH6GRE3zvQKqKQF9FqYr4vVUnf
-         mZgtiJdn5A2R8ZhQoKTNerB6hbD2oRpULyTdu/3G3XyGOM1G1ENHmotEJYo+8eoMJGvz
-         OAJg==
-X-Gm-Message-State: ABy/qLaoEU/aMqkfSQZjHqPSBAVRwbw1EUkORBw0OiJgNr+15dyxpFzg
-	4trP0ORvY/oljlMYJmpeFIJw7oW8c2hgl0ZSIYHxVw==
-X-Google-Smtp-Source: APBJJlEGzqbZToZ+j/tmwCPU+0Fv7Iv37zJsHBQXi7MFdSfgYsBZeZxo+1m2usnT7DsQi8AnflG6/Q==
-X-Received: by 2002:a05:600c:3b0a:b0:3fb:ebe2:6f5f with SMTP id m10-20020a05600c3b0a00b003fbebe26f5fmr7739600wms.13.1689601664468;
-        Mon, 17 Jul 2023 06:47:44 -0700 (PDT)
+        bh=xeUgvMA9RQfBfyHCcV8x7qZeLd22o/gOiCvQnOOXUKs=;
+        b=g2Hy2zCiD2J6xDq13jQAZZ0p3g2KfZcb6qVYWfsVaoJFtkKq1d/vE7HGQKCxpfY4+8
+         Lz8Z2f9DFuqe6GEo9dXk0i594WbmXgPa/eLkq9CRXb/lEpX3m9S6fPR/3YdNlbVV1dOD
+         XNW8dq92EB2UYF5xZgL83yuWmWcMRSsVbJhdSdsATGKEPWtIVFKk8/ws42HwEp3lWU3v
+         8Af+8Ittfubid8Wgp7pJzr2Lq//bBTX04veezEgBHzvEJ9NC7sfknRddLjBPVDMf0ywa
+         Yq/GrhTijgoMDiDtvPag2aga2EY6P9PA+ZoJ+m7eXRNlNri0knQE5HLmZLzQFjfni7dB
+         /5iA==
+X-Gm-Message-State: ABy/qLZB+guu1BqntuwBPo4tv8vIPkHIQ2jSQKuOy0rD6RuZtzCKl72G
+	0u+ttDdop7Wzk1VSoXWuP923uQ==
+X-Google-Smtp-Source: APBJJlG7S+lMM8qSHthG4tTV4lcsbYqz5qJNKs5mvW+gyGXbJmt0QoO02DWhAhJokShBj2xIUq5iNw==
+X-Received: by 2002:a05:6000:10c1:b0:314:475:bc47 with SMTP id b1-20020a05600010c100b003140475bc47mr9369537wrx.69.1689602312914;
+        Mon, 17 Jul 2023 06:58:32 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id 12-20020a05600c020c00b003fba6a0c881sm7901472wmi.43.2023.07.17.06.47.44
+        by smtp.gmail.com with ESMTPSA id z13-20020adfe54d000000b003143ac73fd0sm19498262wrm.1.2023.07.17.06.58.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jul 2023 06:47:44 -0700 (PDT)
-Message-ID: <bac62009-5c3b-52eb-9b06-7c03e9948a4f@tessares.net>
-Date: Mon, 17 Jul 2023 15:47:43 +0200
+        Mon, 17 Jul 2023 06:58:32 -0700 (PDT)
+Message-ID: <c1a76061-9ae3-0a9a-5481-dbdd981c7460@tessares.net>
+Date: Mon, 17 Jul 2023 15:58:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,65 +48,64 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH mptcp-next v2 0/2] selftests: mptcp: pm_nl_ctl: display
- errors if any
+Subject: Re: [PATCH v2 mptcp-next 00/13] mptcp: get rid of msk->subflow
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20230713-mptcp-issue-368-pm_nl_ctl_ack-v2-0-eb9582b8e24b@tessares.net>
- <05f43fb0-66e2-e737-85c8-96e6aac50091@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1689334116.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <05f43fb0-66e2-e737-85c8-96e6aac50091@kernel.org>
+In-Reply-To: <cover.1689334116.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Paolo, Mat,
 
-On 15/07/2023 01:37, Mat Martineau wrote:
-> On Thu, 13 Jul 2023, Matthieu Baerts wrote:
+On 14/07/2023 13:29, Paolo Abeni wrote:
+> The mptcp protocol maintains an additional struct socket per connection,
+> mainly to be able to use easily tcp-level struct socket operations.
 > 
->> Recently, I wanted to understand why the userspace_pm.sh test was
->> failing on some arch according to lkft reports. There was nothing in the
->> logs apart from seeing the expected event had been missing. I then
->> realised the output of pm_nl_ctl was muted but also this tool was not
->> looking if there were errors after having sent some Netlink commands.
->>
->> I don't think it is a good idea to mute the output and ignore errors,
->> especially here in the tests where we do want to validate these Netlink
->> commands. So now the tool checks for errors and the output is no longer
->> discarded.
->>
->> Note that I didn't manage to read the error message set by the kernel. I
->> think the rtattr pointer in nl_error() is wrong. I think it should get
->> info from &err->msg instead of nh. Anyway, here we at least print errno
->> and just in case someone wants to have a look, it is easy to test:
->>
->>  ./pm_nl_ctl ann 1.1.1.1 token 12 id 0
->>
->> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->> ---
->> Changes in v2:
->> - Patch 1/2: mute expected errors in selftests
->> - Link to v1:
->> https://lore.kernel.org/r/20230705-mptcp-issue-368-pm_nl_ctl_ack-v1-0-40bcff40cb6b@tessares.net
->>
+> That lead to several ill side effects, beyond the quite unfortunate/
+> confusing field name
+> - active and passive sockets behavior is incosistent, as only active
+>   ones have not NULL msk->subflow, leading to different error handling
+>   (and different error code returned to the user-space) in several
+>   places.
+> - active sockets uses an unneeded, larger amount of memory
+> - passive sockets can't successfully go through accept()/disconnect()
+>   accept()
 > 
-> Thanks for the fix, v2 LGTM:
+> This series address all the above finally getting rid of the blamed
+> field. The first patch is a minor clean-up, in the next 11 patches
+> msk->subflow usage is sistematically removed from the mptcp protocol,
+> replacing it with direct msk->first usage, eventually introducing new
+> core helpers as needed.
 > 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> The final patch finally dispose the field, and it's the only patch in
+> the series intened to produce functional changes.
 
-Thank you for your review!
+Thank you for the patches and the reviews!
 
-Now in our tree (feat. for net-next) with your RvB tag:
+Now in our tree (feat. for net-next) with Mat's RvB tag:
 
 New patches for t/upstream:
-- 5f1f8d5f478a: selftests: mptcp: pm_nl_ctl: always look for errors
-- 9ed40a078338: selftests: mptcp: userspace_pm: unmute unexpected errors
-- Results: 0c9d206ff536..87ca9f6d4f74 (export)
+- 26b3767aaa72: mptcp: avoid unneeded mptcp_token_destroy() calls
+- ae27baea9cbe: mptcp: avoid additional __inet_stream_connect() call
+- c52207f85c8f: mptcp: avoid subflow socket usage in mptcp_get_port()
+- a3beb4bf1bf4: net: factor out inet{,6}_bind_sk helpers
+- f805626e3cf4: mptcp: mptcp: avoid additional indirection in mptcp_bind()
+- 5bbcd109ff64: net: factor out __inet_listen_sk() helper
+- 86211f9d790c: mptcp: avoid additional indirection in mptcp_listen()
+- 4e7fe9d2245f: mptcp: avoid additional indirection in mptcp_poll()
+- 36d4933b1c0a: mptcp: avoid unneeded indirection in mptcp_stream_accept()
+- 6684c443b5a9: mptcp: avoid additional indirection in sockopt
+- ac388877cff7: mptcp: avoid ssock usage in
+mptcp_pm_nl_create_listen_socket()
+- 3bdc46b9f3dd: mptcp: change the mpc check helper to return a sk
+- 0b266479d09c: mptcp: get rid of msk->subflow
+- Results: 87ca9f6d4f74..a989acf037d0 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230717T134429
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230717T135639
 
 Cheers,
 Matt
