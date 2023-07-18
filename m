@@ -1,122 +1,124 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9730515A6
-	for <mptcp@lists.linux.dev>; Tue, 18 Jul 2023 01:44:12 +0000 (UTC)
-Received: from dggpeml500026.china.huawei.com (unknown [172.30.72.57])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R4hWP408BzLnp5;
-	Tue, 18 Jul 2023 09:41:37 +0800 (CST)
-Received: from [10.174.178.66] (10.174.178.66) by
- dggpeml500026.china.huawei.com (7.185.36.106) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 18 Jul 2023 09:44:03 +0800
-Message-ID: <6a643bc1-ca7f-a529-ec3c-c9a770b28f3b@huawei.com>
-Date: Tue, 18 Jul 2023 09:43:54 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996A417D4
+	for <mptcp@lists.linux.dev>; Tue, 18 Jul 2023 03:03:15 +0000 (UTC)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1b06da65bdbso3944367fac.1
+        for <mptcp@lists.linux.dev>; Mon, 17 Jul 2023 20:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689649394; x=1692241394;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K/rCkDg9OpTkw2p/OPxF8ubioJLFKpwSmS6Qbm1rW2o=;
+        b=UQzv2W3JTkXE92F/oMSzp/HksO/H8eYCDPQRj0BUULFCQQd5ACBCuY9p1WoXe4m4N/
+         UW4W4aZJzhE6oN8yv6MZRc4yutLIoQuXOduwTNe8psSpfUNkyIT0jSfWEY0+od8QLBz9
+         6xRvrk4oJCWW7LvSmRc21kVyGL10X4Q2w0/XM+8yD24CnbRxi6yio5CSrp2FuTbgr6Bo
+         K3Bma3+nuI/RnBslFEAVdckX03+Bv1Ki406e4fFx6DzoeCP+5z41TZSHFBrDdYoPC+Sg
+         wMBx8FkxClz+4s0pByMQQ+DXpbp3tg2DbxndPkGT1t6oRvGeuWyrwwb+BSNwiYeeWaOM
+         mjDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689649394; x=1692241394;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=K/rCkDg9OpTkw2p/OPxF8ubioJLFKpwSmS6Qbm1rW2o=;
+        b=XP7T0XNnUp3KptLWxgZ4LsUL8OcW8rV+sP0y3pvVcNQbvmNUAOdmIhtkCChqsd8LYM
+         PxtrfbqN3wUKAvIYYWFicbPPLptqasDBRwlgiSlrjUBMM8Yu7y9tE+GujIEGRk4haNPN
+         vaxIb5sBNjvL0JORfXL1PDP0cA8mbEITECPIYpvfizdehvLxPmiioP+4NOFDkJq0SvTA
+         sqDeDf0/lqjb4nh80hJsFHIsvrhYfXr8VDooAOoulUnE3AZUDBUqlLN7b622T6MdhnmK
+         TUzUSrPQf+MdN9mhtL/3MhlybHpLtLdtulsK7LWMXV51vuAgoaQkU+NfYzuuEaNBI2RI
+         iwvg==
+X-Gm-Message-State: ABy/qLa1B3CAJIS10QI5McoFUcqSyY+UTCfBJh8sueyttd/WOzj4Jl8S
+	c/GFSYjt9d0rGLkqYQKNTYncK/lBvw==
+X-Google-Smtp-Source: APBJJlFoO7VJqxr/LjTTAw56G1V0E0dMGWK7mcMNsTUVMThRcOJKXTOgFQfCFD9Mtcie+34ga+JMuA==
+X-Received: by 2002:a05:6870:fb87:b0:19e:7d07:ab9 with SMTP id kv7-20020a056870fb8700b0019e7d070ab9mr12958099oab.53.1689649394422;
+        Mon, 17 Jul 2023 20:03:14 -0700 (PDT)
+Received: from [127.0.0.1] ([70.37.166.240])
+        by smtp.gmail.com with ESMTPSA id y39-20020a4a982a000000b0051134f333d3sm462843ooi.16.2023.07.17.20.03.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jul 2023 20:03:13 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230713-tc-selftests-lkft-v1-3-1eb4fd3a96e7@tessares.net>
+References: <20230713-tc-selftests-lkft-v1-3-1eb4fd3a96e7@tessares.net>
+Subject: Re: selftests: tc: add ConnTrack procfs kconfig: Tests Results
+Message-ID: <1cd4c72f-5471-1fb9-ed83-a920ecbb264b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 18 Jul 2023 03:03:13 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.0.2
-Subject: Re: [PATCH net 1/3] selftests: tc: set timeout to 15 minutes
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, Jamal Hadi Salim
-	<jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko
-	<jiri@resnulli.us>, Shuah Khan <shuah@kernel.org>, Kees Cook
-	<keescook@chromium.org>, "David S. Miller" <davem@davemloft.net>, Paul Blakey
-	<paulb@mellanox.com>, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	<mptcp@lists.linux.dev>
-CC: Pedro Tammela <pctammela@mojatatu.com>, Shuah Khan
-	<skhan@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<stable@vger.kernel.org>
-References: <20230713-tc-selftests-lkft-v1-0-1eb4fd3a96e7@tessares.net>
- <20230713-tc-selftests-lkft-v1-1-1eb4fd3a96e7@tessares.net>
- <bf7f8867-6b14-dd53-a6e4-2addee4a5ad8@huawei.com>
- <3a47f676-d661-0b7a-701b-c4cafdc25394@tessares.net>
-From: shaozhengchao <shaozhengchao@huawei.com>
-In-Reply-To: <3a47f676-d661-0b7a-701b-c4cafdc25394@tessares.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.66]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500026.china.huawei.com (7.185.36.106)
-X-CFilter-Loop: Reflected
+
+Hi Matthieu,
+
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5713341499310080
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5713341499310080/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/4868916569178112
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4868916569178112/su=
+mmary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6276291452731392
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6276291452731392/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5150391545888768
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5150391545888768/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/6b73c253ad10
 
 
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-On 2023/7/17 16:32, Matthieu Baerts wrote:
-> Hi Zhengchao Shao,
-> 
-> On 14/07/2023 04:25, shaozhengchao wrote:
->>
->>
->> On 2023/7/14 5:16, Matthieu Baerts wrote:
->>> When looking for something else in LKFT reports [1], I noticed that the
->>> TC selftest ended with a timeout error:
->>>
->>>     not ok 1 selftests: tc-testing: tdc.sh # TIMEOUT 45 seconds
->>>
->>> The timeout had been introduced 3 years ago, see the Fixes commit below.
->>>
->>> This timeout is only in place when executing the selftests via the
->>> kselftests runner scripts. I guess this is not what most TC devs are
->>> using and nobody noticed the issue before.
->>>
->>> The new timeout is set to 15 minutes as suggested by Pedro [2]. It looks
->>> like it is plenty more time than what it takes in "normal" conditions.
->>>
->>> Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
->>> timeout per test")
->>> Cc: stable@vger.kernel.org
->>> Link:
->>> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230711/testrun/18267241/suite/kselftest-tc-testing/test/tc-testing_tdc_sh/log [1]
->>> Link:
->>> https://lore.kernel.org/netdev/0e061d4a-9a23-9f58-3b35-d8919de332d7@tessares.net/T/ [2]
->>> Suggested-by: Pedro Tammela <pctammela@mojatatu.com>
->>> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
->>> ---
->>>    tools/testing/selftests/tc-testing/settings | 1 +
->>>    1 file changed, 1 insertion(+)
->>>
->>> diff --git a/tools/testing/selftests/tc-testing/settings
->>> b/tools/testing/selftests/tc-testing/settings
->>> new file mode 100644
->>> index 000000000000..e2206265f67c
->>> --- /dev/null
->>> +++ b/tools/testing/selftests/tc-testing/settings
->>> @@ -0,0 +1 @@
->>> +timeout=900
->>>
->> I remember last year when I tested all the tdc cases（qdisc + filter +
->> action + infra） in my vm machine, it took me nearly 20 minutes.
->> So I think it should be more than 1200 seconds if all cases need to be
->> tested.
-> 
-> Thank you for your feedback!
-> 
-Hi Matthieu:
-> Be careful that here, it is the timeout to run "tdc.sh" only which is
-> currently limited to:
-> 
->    ./tdc.py -c actions --nobuildebpf
->    ./tdc.py -c qdisc
-> 
-> (not "filter", nor "infra" then)
-> 
-> I guess for this, 15 minutes is more than enough, no?
-> 
-15 minutes is enough for qdisc and actions. Thanks.
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-> At least on my side, I ran it in a i386 VM without KVM and it took less
-> than 3 minutes [1].
-> 
-> Cheers,
-> Matt
-> 
-> [1]
-> https://tuxapi.tuxsuite.com/v1/groups/community/projects/matthieu.baerts/tests/2SWHb7PJfqkUX1m8rLu3GXbsHE0/logs?format=html
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
 
 
-Reviewed-by: Zhengchao Shao <shaozhengchao@huawei.com>
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
