@@ -1,126 +1,105 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C01D15A9
-	for <mptcp@lists.linux.dev>; Tue, 18 Jul 2023 05:01:44 +0000 (UTC)
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6b9aadde448so4257542a34.0
-        for <mptcp@lists.linux.dev>; Mon, 17 Jul 2023 22:01:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689656503; x=1692248503;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xn7LvGX69oeDIULYMp0hI4WVr8As8zwkO6+Mcue48EY=;
-        b=jjA4TTicgAmrtW4DZ3TzUCpyVMlZrsXIbrPCEnhglxKjvZS9vhn/alFAl0+0Umr25j
-         +9PkBjn8rhx6otGm4kfYhjT+6vWcaLS6h/J1oo411JCzLnz9VlytNdlKJNKwXhPvOkN5
-         +yMfr51U8q+27qzrRoMDHYjM/Rlt6yquvtYsSsEtuyf6xSn9WGHRI8EwXpfS/i5lpdpO
-         IR3oJ5gBX8Pa88JpT8/5gojvb8mB+HDPd5N6WAGpgW7T5iR9OEAco3fH1RHaEKQ/+aiW
-         trbCTAGm4KIBRAD9539dJ6LWvI/rV9ShZI8ASD+OyJPAbiDUfvtpIyywLuDufZU1t1Mn
-         WSRg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F563101C2
+	for <mptcp@lists.linux.dev>; Tue, 18 Jul 2023 14:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1689691580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fOZj+WsDvPSgLL0GiBCF5oA8sTHLuXAX5oG+Odz1Xno=;
+	b=QDP5x9lQ5527u2Nw75GbAb1WO652mkwYc3UHAVM0X5i2Xht6qC65bafjX8r+rv7Jqv1LKm
+	Or/g8ZjzU+sJTkb9qkfvlL6x3W6KSSkXXXdJnT0V6Rix/lvpMujzGkmPHcvRiSnm44rgwm
+	zIqQeoym8ZnCzqYx9N1oGU1Q3+UEJX8=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-333-x8Q0a0_LOESx1LNxm96Wfg-1; Tue, 18 Jul 2023 10:46:19 -0400
+X-MC-Unique: x8Q0a0_LOESx1LNxm96Wfg-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2b70c44b5fdso56014741fa.1
+        for <mptcp@lists.linux.dev>; Tue, 18 Jul 2023 07:46:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689656503; x=1692248503;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xn7LvGX69oeDIULYMp0hI4WVr8As8zwkO6+Mcue48EY=;
-        b=KTO+achPVJZvwe1SVlIb/IfEmSScSY1WbOu2RGIxq12IF1wvV/xaw8s0l+xOla/8SF
-         7S6chDOG5Fyp2+8a6xOk5Fx3F7dUfg3gb0O17Yp5Yehj/aIyLI8mtn9wrqLsCdHbaBbO
-         dKVw5zmuljSHr3Hxpbd6C9SiSEIRAyEdpduMyyr4D8oXLzCIgqLL79IVbjaPF8BRNfQP
-         ngCaxdPE86DBMBzTS2LoHuWS1TnRGcNCCCmbt4K5X1hgwWagN+GeEhUWIBGCQBh81VfP
-         V6Ib7qare6zNNFFsowPtk3hWXe+bpaxBCkrfe0t0ZSEd+Ss/lGxA+gqm0chczRevxXjG
-         ldlQ==
-X-Gm-Message-State: ABy/qLYDn1iXBnyJiHpovtuIIczrYpS7Bj0dx24W9HBax7DYGyp3AUdd
-	0rk+pISJMisq3Ilsnq7l0w==
-X-Google-Smtp-Source: APBJJlGsJl8WlgkEnDn6If6LEop1lHU+R4n9lp0h/76Fi4m6P8FDvr7nTwMaN9yl6rLeFXQq6uNVgg==
-X-Received: by 2002:a05:6870:8304:b0:1b3:afdc:6c11 with SMTP id p4-20020a056870830400b001b3afdc6c11mr14125985oae.3.1689656502472;
-        Mon, 17 Jul 2023 22:01:42 -0700 (PDT)
-Received: from [127.0.0.1] ([13.66.11.144])
-        by smtp.gmail.com with ESMTPSA id u5-20020a056830118500b006b8c6eb962esm545219otq.52.2023.07.17.22.01.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jul 2023 22:01:41 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <bbc41ae5d06bfeb5de45b94f73319d22d41dd7fb.1689650435.git.geliang.tang@suse.com>
-References:
- <bbc41ae5d06bfeb5de45b94f73319d22d41dd7fb.1689650435.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: Add bpf_burst test: Tests Results
-Message-ID: <94c47f36-1487-efd9-1ff5-ad7d7439f74a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 18 Jul 2023 05:01:41 +0000
+        d=1e100.net; s=20221208; t=1689691577; x=1692283577;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fOZj+WsDvPSgLL0GiBCF5oA8sTHLuXAX5oG+Odz1Xno=;
+        b=mEqZxXw7lqhm3DdyNoMhAL2PspC0PHjnaguGT8EocoODwI8g0Qh/5ZX7RxvOHUKHfI
+         Ak6rclLVmUqnzgck1e7MHPIPLVuIcYlRjbPRv3Wl4rgDKBsggzkTJHcXeeasEtE/p8A5
+         CnkkHkbuvxLXkP+df34CQkgGk7oAc+QgcyJSAoTf9DjDNX77kd4jU3vOwJP+zW9WEa0X
+         quifE1Xnlyd2XgtVAD0EZ1ghzzqpmoUaBq1uuiGIGVxZ3weMGrnLw8MFhX4DvB7CuBVa
+         O9E18lXZ1ahF8Yjr27z/wB4D8UVUNdMdjZNiBm/DXDp36xEgfxzUVo3cFwQEr3uK+2ST
+         Ytsw==
+X-Gm-Message-State: ABy/qLYWKFi9dh8I4G5nmroaepsaqFCI5B3PmQOTrLC3KZaZfKmfH0Av
+	B9VrflsQCpQiyTZJuxxt5aJSqD8JfLinEn4tmLKm65LAwWxX6/zlGz2Qz0setx5BmpbsYgOJ6A9
+	bGAoN0PCUeHIwGFdIXXVR1hlb8QhJZVM=
+X-Received: by 2002:a05:6512:73:b0:4fa:21d5:c0a3 with SMTP id i19-20020a056512007300b004fa21d5c0a3mr10036288lfo.36.1689691577186;
+        Tue, 18 Jul 2023 07:46:17 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFQQBUI0uQK9kn8BZjjjDsvhgA2vJpwJzuToHzY/U3vGy5dFwVS6mU99tKgqJGup2DUt2igVCbomguCSp9y2jI=
+X-Received: by 2002:a05:6512:73:b0:4fa:21d5:c0a3 with SMTP id
+ i19-20020a056512007300b004fa21d5c0a3mr10036279lfo.36.1689691576857; Tue, 18
+ Jul 2023 07:46:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <cover.1680801697.git.dcaratti@redhat.com> <9414bdc6d3d0212238cec12d4f2d80894910e944.1680801697.git.dcaratti@redhat.com>
+ <85d65b14b0550b284bf641ca0db55c550e23b251.camel@redhat.com>
+In-Reply-To: <85d65b14b0550b284bf641ca0db55c550e23b251.camel@redhat.com>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Tue, 18 Jul 2023 16:46:05 +0200
+Message-ID: <CAKa-r6sF1vZbRHF6ArnD_Z6iMcnk3tf=QX+F=rguyT7==AH+Pg@mail.gmail.com>
+Subject: Re: [PATCH RFC mptcp-net-next 2/5] tools: ynl: fix bug in case of
+ multiple nested attributes of the same type
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+On Fri, Apr 7, 2023 at 10:00=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wro=
+te:
+>
+> On Thu, 2023-04-06 at 19:31 +0200, Davide Caratti wrote:
+> > when a policy contains multiple nested attributes of the same type, avo=
+id
+> > re-initializing .request and .reply members.
+>
+> It's unclear to me why we need to avoid such re-init...
+>
+> >
+> > Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+> > ---
+> >  tools/net/ynl/ynl-gen-c.py | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/net/ynl/ynl-gen-c.py b/tools/net/ynl/ynl-gen-c.py
+> > index cc2f8c945340..ba55f217a006 100755
+> > --- a/tools/net/ynl/ynl-gen-c.py
+> > +++ b/tools/net/ynl/ynl-gen-c.py
+> > @@ -812,7 +812,8 @@ class Family(SpecFamily):
+> >                      inherit =3D set()
+> >                      nested =3D spec['nested-attributes']
+> >                      if nested not in self.root_sets:
+> > -                        self.pure_nested_structs[nested] =3D Struct(se=
+lf, nested, inherited=3Dinherit)
+> > +                        if nested not in self.pure_nested_structs:
+> > +                            self.pure_nested_structs[nested] =3D Struc=
+t(self, nested, inherited=3Dinherit)
+>
+> ... and is unclear to me how the above produces the effect described in
+> the commit message :)
 
-Thank you for your modifications, that's great!
+FTR: I'm removing this patch from the series as it's already in the
+net-next tree [1]. Thanks!
 
-Our CI did some validations and here is its report:
+[1]  https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/co=
+mmit/?id=3D67c65ce762adaf3515fe0585
+--=20
+davide
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6584199117799424
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6584199117799424/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/4843437464223744
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4843437464223744/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5494449095049216
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5494449095049216/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6134261296660480
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6134261296660480/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/64a0c9c1b0b4
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
