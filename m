@@ -1,23 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3DD17ACE;
-	Wed, 19 Jul 2023 00:00:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B6929C433C9;
-	Wed, 19 Jul 2023 00:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC7C125C8;
+	Wed, 19 Jul 2023 10:20:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 208FBC433C9;
+	Wed, 19 Jul 2023 10:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689724821;
-	bh=qxxeeH4BpVPJRWJ4+RBZAoXm54CuQ1BuSkX6X7QPBno=;
+	s=k20201202; t=1689762022;
+	bh=vf8HyJJMrc8y7a7IGPiDvWuMwVrymE8dAVACw2+VXLk=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=aM26f95NosLZkRBrJfElkigefJKCG4RGcGm7yoQa0kV402AWkNwxeOcvbA5zBw1nu
-	 LH8/v9SpSyraWj2UFraGByiTEAsRpdyNSfxBjcKwf2yisrg1rf+ffy1cE5ivVwkUhL
-	 KCi1B5rnO8iIy5XRlANVrw5nNvzm4c7/6i12TsYvFy0QaR4PsXQlbG8PSZ5HSDf8MQ
-	 sd+99fC9x5txVMyehtWqt5b+s4l6E1kWLYCqTRNR/oQ0v188B61pnv/5N8Q76OlOsm
-	 Rif0k4UoJyFDOkm065tfBNTz4lEy/PdHz33ZoNduRd+mOmg4urmNR/1cWh3WhxrTv6
-	 Bssl9fiykT76w==
+	b=dyPvgc7QPw92aTMqOMCFf0EVygxyojg/kI76uXPrVf0yXopJTOOw98lV/L4NSn+uM
+	 aiHrCeLetjHDC6LImN7FStfe20PaCqqqoS5vEloINk9sRfZSte3N0XX1OYCNALUY3j
+	 Gz0Iw9hAs5SHbKzfYEa6p5rwnh+Ouj1I5/ERYOFMuuN/FQDsIzZb/oB6VyV9spijCp
+	 XW/3S7UgTEEU/RKI4atORf03n1N6zkbdHtttu7AAnaU3hxlZrji3382yGicDMzfeEa
+	 CqRPbZPMRrkK65sdBeB6Xb47afXkp40enwisLphkCSfUCSv7hZrTFsDi03F2SF5o4v
+	 dR6MxgixWCQtA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9A7C8E22AE4;
-	Wed, 19 Jul 2023 00:00:21 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 03177E21EFE;
+	Wed, 19 Jul 2023 10:20:22 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -26,45 +26,62 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/3] selftests: tc: increase timeout and add missing
- kconfig
+Subject: Re: [PATCH net-next 00/13] selftests: mptcp: format subtests results
+ in TAP
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <168972482162.23822.8375282604196078031.git-patchwork-notify@kernel.org>
-Date: Wed, 19 Jul 2023 00:00:21 +0000
-References: <20230713-tc-selftests-lkft-v1-0-1eb4fd3a96e7@tessares.net>
-In-Reply-To: <20230713-tc-selftests-lkft-v1-0-1eb4fd3a96e7@tessares.net>
+ <168976202200.10961.989071815064643315.git-patchwork-notify@kernel.org>
+Date: Wed, 19 Jul 2023 10:20:22 +0000
+References: <20230717-upstream-net-next-20230712-selftests-mptcp-subtests-v1-0-695127e0ad83@tessares.net>
+In-Reply-To: <20230717-upstream-net-next-20230712-selftests-mptcp-subtests-v1-0-695127e0ad83@tessares.net>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
- shuah@kernel.org, keescook@chromium.org, davem@davemloft.net,
- paulb@mellanox.com, marcelo.leitner@gmail.com, mptcp@lists.linux.dev,
- pctammela@mojatatu.com, skhan@linuxfoundation.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, stable@vger.kernel.org
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
+ netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-On Thu, 13 Jul 2023 23:16:43 +0200 you wrote:
-> When looking for something else in LKFT reports [1], I noticed that the
-> TC selftest ended with a timeout error:
-> 
->   not ok 1 selftests: tc-testing: tdc.sh # TIMEOUT 45 seconds
-> 
-> I also noticed most of the tests were skipped because the "teardown
-> stage" did not complete successfully. It was due to missing kconfig.
+On Mon, 17 Jul 2023 15:21:20 +0200 you wrote:
+> The current selftests infrastructure formats the results in TAP 13. This
+> version doesn't support subtests and only the end result of each
+> selftest is taken into account. It means that a single issue in a
+> subtest of a selftest containing multiple subtests forces the whole
+> selftest to be marked as failed. It also means that subtests results are
+> not tracked by CI executing selftests.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,1/3] selftests: tc: set timeout to 15 minutes
-    https://git.kernel.org/netdev/net/c/fda05798c22a
-  - [net,2/3] selftests: tc: add 'ct' action kconfig dep
-    https://git.kernel.org/netdev/net/c/719b4774a8cb
-  - [net,3/3] selftests: tc: add ConnTrack procfs kconfig
-    https://git.kernel.org/netdev/net/c/031c99e71fed
+  - [net-next,01/13] selftests: mptcp: connect: don't stop if error
+    https://git.kernel.org/netdev/net-next/c/edbc16c43b27
+  - [net-next,02/13] selftests: mptcp: userspace pm: don't stop if error
+    https://git.kernel.org/netdev/net-next/c/e141c1e8e4c1
+  - [net-next,03/13] selftests: mptcp: userspace_pm: fix shellcheck warnings
+    https://git.kernel.org/netdev/net-next/c/8320b1387a15
+  - [net-next,04/13] selftests: mptcp: userspace_pm: uniform results printing
+    https://git.kernel.org/netdev/net-next/c/e198ad759273
+  - [net-next,05/13] selftests: mptcp: userspace_pm: reduce dup code around printf
+    https://git.kernel.org/netdev/net-next/c/d8463d81652d
+  - [net-next,06/13] selftests: mptcp: lib: format subtests results in TAP
+    https://git.kernel.org/netdev/net-next/c/c4192967e62f
+  - [net-next,07/13] selftests: mptcp: connect: format subtests results in TAP
+    https://git.kernel.org/netdev/net-next/c/dd350f46e35e
+  - [net-next,08/13] selftests: mptcp: pm_netlink: format subtests results in TAP
+    https://git.kernel.org/netdev/net-next/c/d85555ac11f9
+  - [net-next,09/13] selftests: mptcp: join: format subtests results in TAP
+    https://git.kernel.org/netdev/net-next/c/7f117cd37c61
+  - [net-next,10/13] selftests: mptcp: diag: format subtests results in TAP
+    https://git.kernel.org/netdev/net-next/c/ce9902573652
+  - [net-next,11/13] selftests: mptcp: simult flows: format subtests results in TAP
+    https://git.kernel.org/netdev/net-next/c/675d99338e7a
+  - [net-next,12/13] selftests: mptcp: sockopt: format subtests results in TAP
+    https://git.kernel.org/netdev/net-next/c/9e86a297796b
+  - [net-next,13/13] selftests: mptcp: userspace_pm: format subtests results in TAP
+    https://git.kernel.org/netdev/net-next/c/f589234e1af0
 
 You are awesome, thank you!
 -- 
