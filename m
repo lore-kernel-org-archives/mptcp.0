@@ -1,91 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC7C125C8;
-	Wed, 19 Jul 2023 10:20:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 208FBC433C9;
-	Wed, 19 Jul 2023 10:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1689762022;
-	bh=vf8HyJJMrc8y7a7IGPiDvWuMwVrymE8dAVACw2+VXLk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=dyPvgc7QPw92aTMqOMCFf0EVygxyojg/kI76uXPrVf0yXopJTOOw98lV/L4NSn+uM
-	 aiHrCeLetjHDC6LImN7FStfe20PaCqqqoS5vEloINk9sRfZSte3N0XX1OYCNALUY3j
-	 Gz0Iw9hAs5SHbKzfYEa6p5rwnh+Ouj1I5/ERYOFMuuN/FQDsIzZb/oB6VyV9spijCp
-	 XW/3S7UgTEEU/RKI4atORf03n1N6zkbdHtttu7AAnaU3hxlZrji3382yGicDMzfeEa
-	 CqRPbZPMRrkK65sdBeB6Xb47afXkp40enwisLphkCSfUCSv7hZrTFsDi03F2SF5o4v
-	 dR6MxgixWCQtA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 03177E21EFE;
-	Wed, 19 Jul 2023 10:20:22 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC7B20E6
+	for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 06:34:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1689834875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/ZZFlzKfH0NWsyCVDsz5sXXbtea4wzmHcKSxIxan5KE=;
+	b=VHMEoAlN42Wr5UfSnA4BHBUL8nm50omk62stpWs9bajTj6RUdBO/R/NbXPqspIEqI1lUUc
+	Cpl+KCfPP/ChFf/NXRxJ8isx8wgg0/7qNd5gm46YluLJ1dDQzYKnN5rop9xWiafPvANOB6
+	wBjCzol6zEbSY6VuNiVldCMdipz5Mow=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-612-UEi5BR-wPvm6TQk09C6Phw-1; Thu, 20 Jul 2023 02:34:33 -0400
+X-MC-Unique: UEi5BR-wPvm6TQk09C6Phw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6893F1C0E0C0
+	for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 06:34:33 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.225])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id EBDFC1454142
+	for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 06:34:32 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next 1/2] Squash-to: "mptcp: avoid unneeded mptcp_token_destroy() call"
+Date: Thu, 20 Jul 2023 08:34:25 +0200
+Message-ID: <d79bc96a1272a1645bfd0a23035a066fb569e8c5.1689834758.git.pabeni@redhat.com>
+In-Reply-To: <cover.1689834758.git.pabeni@redhat.com>
+References: <cover.1689834758.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/13] selftests: mptcp: format subtests results
- in TAP
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <168976202200.10961.989071815064643315.git-patchwork-notify@kernel.org>
-Date: Wed, 19 Jul 2023 10:20:22 +0000
-References: <20230717-upstream-net-next-20230712-selftests-mptcp-subtests-v1-0-695127e0ad83@tessares.net>
-In-Reply-To: <20230717-upstream-net-next-20230712-selftests-mptcp-subtests-v1-0-695127e0ad83@tessares.net>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hello:
+Replace commit message with:
 
-This series was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+"""
+the mptcp protocol currently clears the msk token both at
+connect() and listen() time. That is needed to deal with failing
+connect() calls that can create a new token while leaving the sk
+in TCP_CLOSE,SS_UNCONNECTED status and thus allowing later connect()
+and/or listen() calls.
 
-On Mon, 17 Jul 2023 15:21:20 +0200 you wrote:
-> The current selftests infrastructure formats the results in TAP 13. This
-> version doesn't support subtests and only the end result of each
-> selftest is taken into account. It means that a single issue in a
-> subtest of a selftest containing multiple subtests forces the whole
-> selftest to be marked as failed. It also means that subtests results are
-> not tracked by CI executing selftests.
-> 
-> [...]
+Let's deal with such failures explcitly, cleaning the token in
+a timely manner and avoid the confusing early mptcp_token_destroy()
+"""
 
-Here is the summary with links:
-  - [net-next,01/13] selftests: mptcp: connect: don't stop if error
-    https://git.kernel.org/netdev/net-next/c/edbc16c43b27
-  - [net-next,02/13] selftests: mptcp: userspace pm: don't stop if error
-    https://git.kernel.org/netdev/net-next/c/e141c1e8e4c1
-  - [net-next,03/13] selftests: mptcp: userspace_pm: fix shellcheck warnings
-    https://git.kernel.org/netdev/net-next/c/8320b1387a15
-  - [net-next,04/13] selftests: mptcp: userspace_pm: uniform results printing
-    https://git.kernel.org/netdev/net-next/c/e198ad759273
-  - [net-next,05/13] selftests: mptcp: userspace_pm: reduce dup code around printf
-    https://git.kernel.org/netdev/net-next/c/d8463d81652d
-  - [net-next,06/13] selftests: mptcp: lib: format subtests results in TAP
-    https://git.kernel.org/netdev/net-next/c/c4192967e62f
-  - [net-next,07/13] selftests: mptcp: connect: format subtests results in TAP
-    https://git.kernel.org/netdev/net-next/c/dd350f46e35e
-  - [net-next,08/13] selftests: mptcp: pm_netlink: format subtests results in TAP
-    https://git.kernel.org/netdev/net-next/c/d85555ac11f9
-  - [net-next,09/13] selftests: mptcp: join: format subtests results in TAP
-    https://git.kernel.org/netdev/net-next/c/7f117cd37c61
-  - [net-next,10/13] selftests: mptcp: diag: format subtests results in TAP
-    https://git.kernel.org/netdev/net-next/c/ce9902573652
-  - [net-next,11/13] selftests: mptcp: simult flows: format subtests results in TAP
-    https://git.kernel.org/netdev/net-next/c/675d99338e7a
-  - [net-next,12/13] selftests: mptcp: sockopt: format subtests results in TAP
-    https://git.kernel.org/netdev/net-next/c/9e86a297796b
-  - [net-next,13/13] selftests: mptcp: userspace_pm: format subtests results in TAP
-    https://git.kernel.org/netdev/net-next/c/f589234e1af0
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-You are awesome, thank you!
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index c6cd817ee103..9e48dfbd102f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3656,6 +3656,8 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ 	 * subflow_finish_connect()
+ 	 */
+ 	if (unlikely(err && err != -EINPROGRESS)) {
++		/* avoid leaving a dangling token in an unconnected socket */
++		mptcp_token_destroy(msk);
+ 		inet_sk_state_store(sk, inet_sk_state_load(ssk));
+ 		return err;
+ 	}
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.41.0
 
