@@ -1,128 +1,262 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BDD2FA5B
-	for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 18:43:12 +0000 (UTC)
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3461053677eso3035745ab.0
-        for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 11:43:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A315B2FA2E
+	for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 18:48:24 +0000 (UTC)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3fbd33a57b6so9960055e9.2
+        for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 11:48:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689878591; x=1690483391;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/FRETh0f0lQpcfwWiZylZgbaQqUdTRgFpuQpGImv1dU=;
-        b=eymwuyWvTO3pw922oxTsk8St8j0E0IckDNfgPPJaIuJqxYM67HhrNKGh+b+vcb2PeK
-         dRl30PzO+lARZ6OvhltJAM8EcVhrZT4Du2hl6kfRhGMC86jRADpB36G2uwuPKTX/1c/s
-         z4UkWmGetD+bAxQ+kAdk+J2ZmT/MQFFd+s0FyPCNB9/IrYBk+atgjHnI6pdQAAtyFqzn
-         DBvCFfGORDvNRx5ejjex08ykiUucySA/nhhLpfFe/E4SnmvJWNGNHuKr4VPTF0F1XvZu
-         vRqT4yZG8z4A+baJ1RpWy9m5Gu+Ece67dV4FPclJWrD2hJ1AeKO/3JC+Kq5OklOM4JMP
-         Kw4w==
+        d=tessares.net; s=google; t=1689878902; x=1690483702;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kKsiVKdQ2WJeyWvQ7qAYJqbk101bKwTzA58W17c2UeY=;
+        b=iA2lNsRwmoihhOFOzi75p6I6b5mvZkFFzmamGVTmHXdIMCb350KZQN/6gjCgSgw2UC
+         oxwkjkfe44/LqTj6HHAYRkVrQjH0m1szyVYq5YjMeSp9wUIgt7Lez4VfPC4tTZxl1GOT
+         r49hmBs/J/G/E2UyWZmr48GUYER29j76kIkkJUP9Ksicyu+HEElr6w3cOtTp8tPI+H5u
+         7T4qmGjrtiY7cbK9qU04M3OiTcFGc+JX2EV8blza+Nv9C2A24GtdaHW2lrxJBHfpJG0i
+         CQ1/Hs8g6SH2tDQLALi/srctlhNTVFGEdrGnV+tdjK3IiJ3xah1WakZkmYQ+63p3s7YH
+         gbIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689878591; x=1690483391;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/FRETh0f0lQpcfwWiZylZgbaQqUdTRgFpuQpGImv1dU=;
-        b=a8AhXH15dV3jdepXkGdZ4h5XK6NBByPT88DMVouhVm8E0NyHXxOKAy3cL2L94jcTLR
-         5RzrmrSzAYvl5iWgBwPiFDILi26p36Eyvx5x9RBml84WauIiB7xSATzw3sY98E2riXwj
-         9sqgCPfWTugOzWS4Yokjj3GbAexP+OWHedrB44yMejBby9yf0OpvD2sXbB3+8owiOHxw
-         kGFHciNPSkZDROVt0dzWPyGH/h57Vp8W9zu2Kzh3pQ21cINhGBptC1oM5cnwWzVH1lGn
-         MWYEr76E134ICCMh2jDDIlb7g9oDiLMkFo8JGJXOo5EDa5ZTFj8x/viRFnQcHnFkd0Fm
-         RrZQ==
-X-Gm-Message-State: ABy/qLbi+mZmE5LCp91Z/gp9fJhWisqW8shbER12sVUueENhBuuaaZTS
-	vsKfRyqbf7klHxFRxvFYKQ==
-X-Google-Smtp-Source: APBJJlH0Y/y2tYvO6mtJoHD9b68Rdk95a7B65ixgXH1cZGs4X95HZpPmIiUItwSxvdfnEa5iGa816w==
-X-Received: by 2002:a92:c266:0:b0:346:23b0:3725 with SMTP id h6-20020a92c266000000b0034623b03725mr4931641ild.13.1689878591077;
-        Thu, 20 Jul 2023 11:43:11 -0700 (PDT)
-Received: from [127.0.0.1] ([13.86.22.97])
-        by smtp.gmail.com with ESMTPSA id e18-20020a056638021200b0042bae96eba7sm510824jaq.7.2023.07.20.11.43.10
+        d=1e100.net; s=20221208; t=1689878902; x=1690483702;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kKsiVKdQ2WJeyWvQ7qAYJqbk101bKwTzA58W17c2UeY=;
+        b=hDP24ifwgW//qSj1BrbfF/C99ITagDHPiAgv5GCdkpployBcxORbAbUuZ1W549vjCW
+         T9TJLMA6eTi5a+h6gjZPlmu86XtjSeJgYaRo14e3xGJ8HTusFMxxbKu65BPGoKKph0cg
+         JGULLXvYKM7YLP0zXJVxHTRj7cbvQo04+4A34X7ULMLqTFrx+63IyXSzspwucbuBeOyo
+         XZda3WJhKmPMrsbEyb5MFiPsNFUJnsDMMcZxYPb0dhgfUmkOub8+0zuPwBbohKcuzvCL
+         SgKtt+Z3pCZtlsrPkTT3QIAKMleBiZ0dx5oDn1p5NCwsgWk2OzNTHbv1VnIrRDnfybkv
+         bjDQ==
+X-Gm-Message-State: ABy/qLZ+Rp+vZud/aZ6A2LxdbOLW9fmVWpv2aMUdhezo0a00v15lIE/R
+	bi+3MlqANBo+YD8R0wIpTjR9EA==
+X-Google-Smtp-Source: APBJJlGwTkH/COFi6GARl8hdELCy27/fM7zj6fZftifCkVBIc5bk2OF7JmU+npeYoxCEghXCQVrviQ==
+X-Received: by 2002:a05:600c:2342:b0:3f6:1474:905 with SMTP id 2-20020a05600c234200b003f614740905mr8238744wmq.29.1689878902148;
+        Thu, 20 Jul 2023 11:48:22 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id s10-20020a1cf20a000000b003fbca942499sm4565068wmc.14.2023.07.20.11.48.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jul 2023 11:43:10 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <af7285778734d7e4f238663b457602cea05a309e.1689834758.git.pabeni@redhat.com>
-References:
- <af7285778734d7e4f238663b457602cea05a309e.1689834758.git.pabeni@redhat.com>
-Subject: =?UTF-8?Q?Re=3A_Squash-to=3A_=22mptcp=3A_avoid_add?=
- =?UTF-8?Q?itional_=5F=5Finet=5Fstream=5Fconnect=28?=
- =?UTF-8?Q?=29_call=22=3A_Tests_Results?=
-Message-ID: <6a825049-7d6d-42c0-ed98-0b9bb1328711@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 20 Jul 2023 18:43:09 +0000
+        Thu, 20 Jul 2023 11:48:21 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Date: Thu, 20 Jul 2023 20:47:50 +0200
+Subject: [PATCH net-next] mptcp: fix rcv buffer auto-tuning
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230720-upstream-net-next-20230720-mptcp-fix-rcv-buffer-auto-tuning-v1-1-175ef12b8380@tessares.net>
+X-B4-Tracking: v=1; b=H4sIAFWBuWQC/z2NSwrDMAxErxK0rsBOP6G9SunCduRUizhGlkMg5
+ O41hXYxi8cM83YoJEwFHt0OQisXXlIDe+ogvF2aCHlsDL3pz2boDdZcVMjNmEhbNsV/NWcNGSN
+ vKGFFX2MkQVd1Qa2J04TeD9f7eHE3ay00QxZq66/9Cb8/eB3HB0Jg51uXAAAA
+To: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>, 
+ Soheil Hassas Yeganeh <soheil@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6565;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=ncjsZoWoi6M3nrWIFlU5cH+KQzDb9+7q7B0CssmdtN0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkuYF0JjkkGxokg7H+uhPv/4xlOB+DfTtCaBPUb
+ 2J/OK4XwuiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZLmBdAAKCRD2t4JPQmmg
+ cw0IEADU4QQ8URvSIanWpxgjE18H/wO2HMqbCksC+dYfu6i9KtJC+1eJiJs93XJMWOdr8kOBZha
+ rPzy7rxQ09DLOnOxg/jKl6Vyv2VoCst7oxrVcoy7zpRaZT9nyv7kk5pCnKiZe4RpFAda/9XTi3T
+ TEywzuAc0Q7jqH/uXRom/PM+9k8hC2O9njGH3uqh+iSGribZCPhUYZ+T0X0s9o1m2B+ppZHQ5cg
+ S66DPTWIqU2T8Zdgt+rIxRdl6r8UIprfo4EV5vEVIFHx1AK70DVw4IDVXRrxMoFcSNv2q3XMjFb
+ GmnBj16PhBms78YIcfoJLc3AjRleVhybfeXIq8a2oARd6TdTOy04AdziqSyRkexf3KmCRnuQ21n
+ u7Zq7xL1Pjc4Htb2sIn5k0Mk1vTPwr0EbWc/5gmSIBxjXM/PKq7ZvP4WvJvtdzoqxJVJxjBnhZu
+ p56sUUPYcBUqtV7Gcg67QmH9zY/JUmm4Yp3oZNDSaH2ORGesF7L9/X20WeRgUKLCeGuIqN9kaKO
+ Uf9P1jAldKGigpNHKKTh796XaG647M0r9eUsBb9GWpBOULhlFm8ELOruAq7Kwe5CKCUYdcosI0D
+ hd9bVb7muUcC1SWnQ1NsOA4tadRcrpQnxhuWtY8xiPpdTrgyibt57aVHzwIm5jdi8M0J8TPVbIX
+ c9JS13em+AtQXOw==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+From: Paolo Abeni <pabeni@redhat.com>
 
-Thank you for your modifications, that's great!
+The MPTCP code uses the assumption that the tcp_win_from_space() helper
+does not use any TCP-specific field, and thus works correctly operating
+on an MPTCP socket.
 
-Our CI did some validations and here is its report:
+The commit dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale")
+broke such assumption, and as a consequence most MPTCP connections stall
+on zero-window event due to auto-tuning changing the rcv buffer size
+quite randomly.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6269486597144576
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6269486597144576/summary/summary.txt
+Address the issue syncing again the MPTCP auto-tuning code with the TCP
+one. To achieve that, factor out the windows size logic in socket
+independent helpers, and reuse them in mptcp_rcv_space_adjust(). The
+MPTCP level scaling_ratio is selected as the minimum one from the all
+the subflows, as a worst-case estimate.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5990205023322112
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5990205023322112/summary/summary.txt
+Fixes: dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ include/net/tcp.h    | 20 +++++++++++++++-----
+ net/mptcp/protocol.c | 15 +++++++--------
+ net/mptcp/protocol.h |  8 +++++++-
+ net/mptcp/subflow.c  |  2 +-
+ 4 files changed, 30 insertions(+), 15 deletions(-)
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_sockopts =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5427255069900800
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5427255069900800/su=
-mmary/summary.txt
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index c5fb90079920..794642fbd724 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1430,22 +1430,32 @@ void tcp_select_initial_window(const struct sock *sk, int __space,
+ 			       __u32 *window_clamp, int wscale_ok,
+ 			       __u8 *rcv_wscale, __u32 init_rcv_wnd);
+ 
+-static inline int tcp_win_from_space(const struct sock *sk, int space)
++static inline int __tcp_win_from_space(u8 scaling_ratio, int space)
+ {
+-	s64 scaled_space = (s64)space * tcp_sk(sk)->scaling_ratio;
++	s64 scaled_space = (s64)space * scaling_ratio;
+ 
+ 	return scaled_space >> TCP_RMEM_TO_WIN_SCALE;
+ }
+ 
+-/* inverse of tcp_win_from_space() */
+-static inline int tcp_space_from_win(const struct sock *sk, int win)
++static inline int tcp_win_from_space(const struct sock *sk, int space)
++{
++	return __tcp_win_from_space(tcp_sk(sk)->scaling_ratio, space);
++}
++
++/* inverse of __tcp_win_from_space() */
++static inline int __tcp_space_from_win(u8 scaling_ratio, int win)
+ {
+ 	u64 val = (u64)win << TCP_RMEM_TO_WIN_SCALE;
+ 
+-	do_div(val, tcp_sk(sk)->scaling_ratio);
++	do_div(val, scaling_ratio);
+ 	return val;
+ }
+ 
++static inline int tcp_space_from_win(const struct sock *sk, int win)
++{
++	return __tcp_space_from_win(tcp_sk(sk)->scaling_ratio, win);
++}
++
+ static inline void tcp_scaling_ratio_init(struct sock *sk)
+ {
+ 	/* Assume a conservative default of 1200 bytes of payload per 4K page.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3613489eb6e3..553828ef62df 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -90,6 +90,7 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
+ 	if (err)
+ 		return err;
+ 
++	msk->scaling_ratio = tcp_sk(ssock->sk)->scaling_ratio;
+ 	WRITE_ONCE(msk->first, ssock->sk);
+ 	WRITE_ONCE(msk->subflow, ssock);
+ 	subflow = mptcp_subflow_ctx(ssock->sk);
+@@ -1881,6 +1882,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sock *sk = (struct sock *)msk;
++	u8 scaling_ratio = U8_MAX;
+ 	u32 time, advmss = 1;
+ 	u64 rtt_us, mstamp;
+ 
+@@ -1911,9 +1913,11 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 
+ 		rtt_us = max(sf_rtt_us, rtt_us);
+ 		advmss = max(sf_advmss, advmss);
++		scaling_ratio = min(tp->scaling_ratio, scaling_ratio);
+ 	}
+ 
+ 	msk->rcvq_space.rtt_us = rtt_us;
++	msk->scaling_ratio = scaling_ratio;
+ 	if (time < (rtt_us >> 3) || rtt_us == 0)
+ 		return;
+ 
+@@ -1922,8 +1926,8 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 
+ 	if (READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_moderate_rcvbuf) &&
+ 	    !(sk->sk_userlocks & SOCK_RCVBUF_LOCK)) {
+-		int rcvmem, rcvbuf;
+ 		u64 rcvwin, grow;
++		int rcvbuf;
+ 
+ 		rcvwin = ((u64)msk->rcvq_space.copied << 1) + 16 * advmss;
+ 
+@@ -1932,18 +1936,13 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 		do_div(grow, msk->rcvq_space.space);
+ 		rcvwin += (grow << 1);
+ 
+-		rcvmem = SKB_TRUESIZE(advmss + MAX_TCP_HEADER);
+-		while (tcp_win_from_space(sk, rcvmem) < advmss)
+-			rcvmem += 128;
+-
+-		do_div(rcvwin, advmss);
+-		rcvbuf = min_t(u64, rcvwin * rcvmem,
++		rcvbuf = min_t(u64, __tcp_space_from_win(scaling_ratio, rcvwin),
+ 			       READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_rmem[2]));
+ 
+ 		if (rcvbuf > sk->sk_rcvbuf) {
+ 			u32 window_clamp;
+ 
+-			window_clamp = tcp_win_from_space(sk, rcvbuf);
++			window_clamp = __tcp_win_from_space(scaling_ratio, rcvbuf);
+ 			WRITE_ONCE(sk->sk_rcvbuf, rcvbuf);
+ 
+ 			/* Make subflows follow along.  If we do not do this, we
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 37fbe22e2433..795f422e8597 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -321,6 +321,7 @@ struct mptcp_sock {
+ 		u64	time;	/* start time of measurement window */
+ 		u64	rtt_us; /* last maximum rtt of subflows */
+ 	} rcvq_space;
++	u8		scaling_ratio;
+ 
+ 	u32		subflow_id;
+ 	u32		setsockopt_seq;
+@@ -351,9 +352,14 @@ static inline int __mptcp_rmem(const struct sock *sk)
+ 	return atomic_read(&sk->sk_rmem_alloc) - READ_ONCE(mptcp_sk(sk)->rmem_released);
+ }
+ 
++static inline int mptcp_win_from_space(const struct sock *sk, int space)
++{
++	return __tcp_win_from_space(mptcp_sk(sk)->scaling_ratio, space);
++}
++
+ static inline int __mptcp_space(const struct sock *sk)
+ {
+-	return tcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf) - __mptcp_rmem(sk));
++	return mptcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf) - __mptcp_rmem(sk));
+ }
+ 
+ static inline struct mptcp_data_frag *mptcp_send_head(const struct sock *sk)
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 9ee3b7abbaf6..ad7080fabb2f 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1359,7 +1359,7 @@ void mptcp_space(const struct sock *ssk, int *space, int *full_space)
+ 	const struct sock *sk = subflow->conn;
+ 
+ 	*space = __mptcp_space(sk);
+-	*full_space = tcp_full_space(sk);
++	*full_space = mptcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf));
+ }
+ 
+ void __mptcp_error_report(struct sock *sk)
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6553154976743424
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6553154976743424/summary/summary.txt
+---
+base-commit: b44693495af8f309b8ddec4b30833085d1c2d0c4
+change-id: 20230720-upstream-net-next-20230720-mptcp-fix-rcv-buffer-auto-tuning-bb759d4a6111
 
-Initiator: Matthieu Baerts
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/421d0a90e2b8
+Best regards,
+-- 
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
