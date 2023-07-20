@@ -1,173 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19F614A9C
-	for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 10:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1689850417;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LdGTZNsrI0EzL4VB6Sy8O6GCQOirA6TSTkpRzmDHLpg=;
-	b=CilFN/audqaEi+u+iqUthBLSH6wUZurUmKqKjrizlNrfxSPm7hzJ6UTR4bhwHqB3ACkd07
-	E07ubqBwMrrkFBHBL8xqU0lvCCzGqyjJFs7UEsMT5oeJmRtpuLbb1CM3+vOnov8LzS2GIs
-	0jO4nEoV0jH7jbilZJqLlQBnti6DyRM=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-194-IKnGlhqbNV-yPWT_juna8A-1; Thu, 20 Jul 2023 06:53:36 -0400
-X-MC-Unique: IKnGlhqbNV-yPWT_juna8A-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-767edbf73cbso17737385a.1
-        for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 03:53:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E5817AA4
+	for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 11:16:03 +0000 (UTC)
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6b9b427b4fcso523910a34.3
+        for <mptcp@lists.linux.dev>; Thu, 20 Jul 2023 04:16:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689851763; x=1690456563;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SR/FaU408GRN97gBOko14+An1offVWqFCJw6VB2yp/k=;
+        b=HPdCKOCysjkRlMD5KhxwZ2/L+B0kBo7B7VJFWa8+V/xiy+P0QIdoCv9XOe2xPDDivT
+         yq8Zf7y6JWj5N+dq8goYnypNr1zD4R5xyG2xQD43bEcIt0LMvTJyAXnA0UkL+Mm0Lc0m
+         CE9kaqxjBi8FZbhftOLP89Mwy42TA9zli/lf6CJb+HIfEjLjemRIpZh6e6W/LWriy/UT
+         wBCxr9ScQzh00rNUCPnVGlZLbs3S46lGFj5zI9yoL7h5tUs4gODSZoNeDqNV3ObK4Sls
+         kp4scIarORTbMjSd2GKDYP6NvUvSSJKE7YXLui3SPkbHapjDOsy3kzNz+EScpf//p8j3
+         tEgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689850416; x=1690455216;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+        d=1e100.net; s=20221208; t=1689851763; x=1690456563;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=87cBKJEHcbXaQFqJ15mDlM0awnHSrXBzfq89MRos6Y8=;
-        b=dcmWkRDgk1qaN9OXazN0h//w4r7BZlXrlXHgsXnbT7+6VOdLhJUd71AhDAbAh1BUb5
-         3WawvPucLtSvb16SlHb1ZDyIm+6TGSiokd5f6LjCUjnrhIquvrS5ycoMs/CEXEziPHE5
-         umEDIvpV1pF2wZysMFEGuV/0DQFa4yJ6uDIRvf94fXbTAB/kj87zwBh95ds5AyKc6LKB
-         +0sLt6vjFcuYvlj9/Fh7EakG704XoG6Q78jC8RG0yn48iRw1g8VIDzBamEYb7ZXwWtcD
-         y1YLml6yhorY5AMkGsTFVAF0XHTHRQVdYN300U02piw9MlAVkIe4+TG+oDDp8Sxoo+xX
-         76Vw==
-X-Gm-Message-State: ABy/qLYYIHjIRxnNrNLalH3XYrvsEzzxZLyHa7X/CvNdcexbg/dbK/Ki
-	EJWvWuWQNJwbw18UCAzQh7/Tn+zdNGRKwBLu9oBMuvLpm684JaK5kz0pJYRHpq3rH5Sto11IckQ
-	xSXMsNzSeNjSH7z5lyD6MgCY=
-X-Received: by 2002:a05:620a:f02:b0:765:3b58:99ab with SMTP id v2-20020a05620a0f0200b007653b5899abmr19482718qkl.4.1689850415967;
-        Thu, 20 Jul 2023 03:53:35 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlFzfDOTQouELpcEdbcA8H17ZdeppQjhqjCVi6FzZYggs6q2jC4fqAvDnZILLQlRqqgPOIbuAQ==
-X-Received: by 2002:a05:620a:f02:b0:765:3b58:99ab with SMTP id v2-20020a05620a0f0200b007653b5899abmr19482703qkl.4.1689850415594;
-        Thu, 20 Jul 2023 03:53:35 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-226-170.dyn.eolo.it. [146.241.226.170])
-        by smtp.gmail.com with ESMTPSA id c10-20020a05620a134a00b00767db1ba172sm156928qkl.31.2023.07.20.03.53.34
+        bh=SR/FaU408GRN97gBOko14+An1offVWqFCJw6VB2yp/k=;
+        b=TdQupizBGPxBd01VZjrQzhO205aBoimLIupScU4Nbv62CK+10drWNSe748a8unatex
+         aCMXD16uoGT73JfYcsUhSK8ZKVP0zNyxqQ4CMT+TkvJ0/moWHPt46H+Xh2ZD3xlA5AxM
+         2V81LvoR1XVVz1Rqs9Xg8UyiaphUTHOi2XyRzA0VN54Bs7xctg2STW6cfLdVxHOm0QLe
+         rVuVq4tKdXNQZqo/aAPSz0/eZtBZYDMnit9HjZCh0bCd+VVfoEob7Tcuegt0QEh9/FmN
+         6p3PT/oX5Df0CEWUO0dIpgPtgrtNiNMSg3HEbWgABuzG4y/EIMssG+OBlDw/s1uuvbYp
+         wWQg==
+X-Gm-Message-State: ABy/qLa+rKSLDj4qnazUflibSlk3gwCRnZb8H53ivuiSyuVbnaYocWCd
+	4WCDWWrR4lF8JmDBDwVqvw==
+X-Google-Smtp-Source: APBJJlGxxcCCcxlOFARvQFt2IDiLpw21D1ooJIzVkC9gPdlO9PCCCFWMG0tzjfm5/vcnJQVH5jFtXQ==
+X-Received: by 2002:a05:6358:9214:b0:134:c279:c829 with SMTP id d20-20020a056358921400b00134c279c829mr11835483rwb.18.1689851762602;
+        Thu, 20 Jul 2023 04:16:02 -0700 (PDT)
+Received: from [127.0.0.1] ([138.91.230.176])
+        by smtp.gmail.com with ESMTPSA id s123-20020a637781000000b005635bf2f09bsm926455pgc.42.2023.07.20.04.16.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jul 2023 03:53:35 -0700 (PDT)
-Message-ID: <deb5be81de3d430fd10c8af1687310f9705a45c6.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: fix rcv buffer auto-tuning.
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Thu, 20 Jul 2023 12:53:33 +0200
-In-Reply-To: <333c6239-bb59-abf1-b2a3-ba3d89520b9f@tessares.net>
-References: <099977f9fe49d41ee0aa2eddefe5e2e09da3a3f1.1689836587.git.pabeni@redhat.com>
-	 <333c6239-bb59-abf1-b2a3-ba3d89520b9f@tessares.net>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+        Thu, 20 Jul 2023 04:16:02 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <099977f9fe49d41ee0aa2eddefe5e2e09da3a3f1.1689836587.git.pabeni@redhat.com>
+References:
+ <099977f9fe49d41ee0aa2eddefe5e2e09da3a3f1.1689836587.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix rcv buffer auto-tuning.: Tests Results
+Message-ID: <3eb10edd-53fd-6a67-d792-a51936fc0860@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 20 Jul 2023 11:16:01 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2023-07-20 at 10:52 +0200, Matthieu Baerts wrote:
-> Hi Paolo,
->=20
-> On 20/07/2023 09:03, Paolo Abeni wrote:
-> > The MPTCP code uses the assumption that the tcp_win_from_space() helper
-> > does not use any TCP-specific field, and thus works correctly operating
-> > on an MPTCP socket.
-> > The commit dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale") br=
-oke
-> > such assumption, and as a consequence most MPTCP connections stall on
-> > zero-window event due to auto-tuning changing the rcv buffer size quite
-> > randomly.
-> > Address the issue synching again the MPTCP auto-tuning code with the TC=
-P
-> > one. To achieve that, factor out the windows size logic in socket
-> > independent helpers, and reuse them in mptcp_rcv_space_adjust(). The MP=
-TCP
-> > level scaling_ratio is selected as the minimum one from the all the sub=
-flows,
-> > as a worst-case estimate.
->=20
-> Thank you for having shared this patch!
->=20
-> > Co-developed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> > Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > ---
-> > I still see quite frequent failures on mptcp_join tests 19 && 20:
-> > 020 multi flows, signal, bidi, link fail
-> >       Info: Test file (size 12288 KB) for server
-> >       syn                                 [ ok ]
-> >       synack                              [ ok ]
-> >       ack                                 [ ok ]
-> >       add                                 [ ok ]
-> >       echo                                [ ok ]
-> >       stale                               [fail] got 0 stale[s] 0 recov=
-er[s],   expected stale in range [1..-1],  stale-recover delta 1
-> >=20
-> > I *think* such failures are still caused by dfa2f0483360 ("tcp: get
-> > rid of sysctl_tcp_adv_win_scale") because it should change (increase?) =
-the
-> > rcv buffer/adv win size, and such tests depends on the transferred file=
-s
-> > being significantly larger then the adv win. Since the current breakage=
- is
-> > pretty bad and the above needs more investigation, sharing it now.
->=20
-> I agree, fine to delay the fix of this test.
->=20
-> > @Matttbe: fill free to adjust the tag whatever it fit you better!!!
->=20
-> Thank you for having mixed the two versions :)
-> Tags look good to me (with the Fixes one)
->=20
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 9f00a0288a0a..3ab67e0dfda9 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -90,6 +90,7 @@ static int __mptcp_socket_create(struct mptcp_sock *m=
-sk)
-> >  =09if (err)
-> >  =09=09return err;
-> > =20
-> > +=09msk->scaling_ratio =3D tcp_sk(ssock->sk)->scaling_ratio;
-> >  =09WRITE_ONCE(msk->first, ssock->sk);
-> >  =09subflow =3D mptcp_subflow_ctx(ssock->sk);
-> >  =09list_add(&subflow->node, &msk->conn_list);
-> > @@ -1906,6 +1907,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_s=
-ock *msk, int copied)
-> >  {
-> >  =09struct mptcp_subflow_context *subflow;
-> >  =09struct sock *sk =3D (struct sock *)msk;
-> > +=09u8 scaling_ratio =3D 255;
->=20
-> Small detail: can I set it to U8_MAX when applying the patch?
+Hi Paolo,
 
-Sure, thanks for the cleanup!
+Thank you for your modifications, that's great!
 
-> (...)
->=20
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index 1b4457c44fe8..86cd4d9e8432 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -293,6 +293,7 @@ struct mptcp_sock {
-> >  =09bool=09=09csum_enabled;
-> >  =09bool=09=09allow_infinite_fallback;
-> >  =09u8=09=09mpc_endpoint_id;
-> > +=09u8=09=09scaling_ratio;
->=20
-> Small detail: should we declare that in "rcvq_space"?
->=20
->   msk->rcvq_space.scaling_ratio
->=20
-> It's up to you, I'm suggesting that because it is linked to the rcv
-> space stuff and I see we put variables linked to that there.
->=20
-> (I can also do the modification when applying the patch)
->=20
-> Once applied on our side, do you prefer to send it directly to netdev?
+Our CI did some validations and here is its report:
 
-To me it's the same. Whatever you prefer.
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5749017578045440
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5749017578045440/su=
+mmary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4904592647913472
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4904592647913472/su=
+mmary/summary.txt
+
+- {"code":404,"message":
+  - "Can't find artifacts =
+containing file conclusion.txt"}:
+  - Task: https://cirrus-ci.=
+com/task/6311967531466752
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6311967531466752/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5186067624624128
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5186067624624128/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/f5a06b3a8217
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-
-Paolo
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
