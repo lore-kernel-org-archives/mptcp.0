@@ -1,43 +1,43 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD8718C2D
-	for <mptcp@lists.linux.dev>; Fri, 21 Jul 2023 10:16:07 +0000 (UTC)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-1b06777596cso1340303fac.2
-        for <mptcp@lists.linux.dev>; Fri, 21 Jul 2023 03:16:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE8D1D2ED
+	for <mptcp@lists.linux.dev>; Fri, 21 Jul 2023 11:18:21 +0000 (UTC)
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5634db21a58so1222566eaf.0
+        for <mptcp@lists.linux.dev>; Fri, 21 Jul 2023 04:18:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689934566; x=1690539366;
+        d=gmail.com; s=20221208; t=1689938300; x=1690543100;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SmUGpLiVkVvIE0EZyVBtwIoDTHf8B9fTeh2Ayd0QbLo=;
-        b=CZWfqn3Vr6yWqm/YuWv1No7HD/9vvI3yxRT6xytCir3Gwv0Gcy+ni26aqDKW/1bQ9T
-         RDDHqMG2vdyZAcP2udDkf1RCl9G9+mjhmiDRlieNZz3UgKS8nnS0hUX8JEr3w4/3fTZT
-         K5uY/5i7CTgu6POx5tjBWk0Xh+6BgwahO6cIr54plibQUDBuFi+8tGTI5ykjJ2Yzi19p
-         UbElYvJQBgnYzxrPq66sgKGKZNaIy/5FZZviP3S/MY6/5SMgDbeTdLD/iRXGzWuK0YFY
-         DI2r/25TumMaxcq+SLRTDIxWDq/1IuTCe7BiyCsLQxax5lKk84fP8wAkEs7+Xhnrl/Bw
-         dFKw==
+        bh=g3vHt2qHtMgyqL2N5d44cgY5XAnTVucttc8CWSRtkUc=;
+        b=JencJ1R/wIO4QZ5sRkRi0kR3S5oIRCz2t1jpSVn6/6T3cevC/UKdyCuJKTlGDW1Buk
+         OcmPyvy+Dd0LuBBzFouoxvgOLRC2ux15UkSzU2C4sH+d8q20a9xVhO69rku6zJmk53fn
+         cL7MA1PzqFhIlsFtNJN/gqFqxTKOU5Ny3MQxxgJWlwH9Zst5b0uURJcc7uAu+KJB145r
+         FFodBZSxRlh8sTMNNeH9rHzb953cPp0uTEOQsY4dS4jYsPgX/gBf6Uy1JXDXShIWFo8Q
+         D2nF0njomeEzD7Na0iAEejppkPsJ2diccSSFiJFhtYcAwan0Pu4HdxmFkrSoxgkMDmAQ
+         Tq/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689934566; x=1690539366;
+        d=1e100.net; s=20221208; t=1689938300; x=1690543100;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=SmUGpLiVkVvIE0EZyVBtwIoDTHf8B9fTeh2Ayd0QbLo=;
-        b=DEaOaDwM9Spz5RRlv5lkFZBcqU0VkCK3zIl55eSyF+RVcFFiuWvBq0D3DmemlqaCuK
-         5tMNTXPH/8b+eebFL88/loyuRloBKypJSd8Xguzd1ukFNDF5aNL+zlZyLgJVrYO0Ec/U
-         V1KdqlafzFwjPFhT/rB0ffX1x9vww66s/DVHXYf27byNbgtGvD92TIUqsUsvY8PziW2e
-         USPqYGIsbWhdV8mjFewjUWZRc/otWgCPqsc0hJr/X+SHabv2+nwBlqBENJk3BVaGaPjD
-         cP6RLlMev8hDN+rE7mp2zIATFDU5fbpT+F1K+xUCU83iPiRUfJ79FTqHUY9YvUpbIkL0
-         nyXw==
-X-Gm-Message-State: ABy/qLY1RXNIQUlexb74q9rCXRm2b3UntZY1B+gu+jlNspXYjv+B/wM+
-	KjNOiLY8FKYbyFNBJNf6QQ==
-X-Google-Smtp-Source: APBJJlF9AkYUZLp92X3WVcP0dHXTkvbCxGMg4BqBsB78APlBqTmbsJB+gDeAJlCIpVfKlOn+EBm4Xg==
-X-Received: by 2002:a05:6870:b291:b0:1b0:80d0:b895 with SMTP id c17-20020a056870b29100b001b080d0b895mr1984225oao.12.1689934566103;
-        Fri, 21 Jul 2023 03:16:06 -0700 (PDT)
-Received: from [127.0.0.1] ([40.84.170.0])
-        by smtp.gmail.com with ESMTPSA id s2-20020a05687087c200b001b015338d52sm1380251oam.3.2023.07.21.03.16.05
+        bh=g3vHt2qHtMgyqL2N5d44cgY5XAnTVucttc8CWSRtkUc=;
+        b=aUDho0KfAqjYwkLQ7GyTFHZVyUeWIIsJLKDH4bSy/59PB6o0NLuKsoPEXcIz/PuhvJ
+         vHkUEoa3NIboYnnxqQZFPtakcKXdwlU+UeJBFzM+ZUPB9EtBeeXCe1SZ5i6/A+ln8W+P
+         42azD++/0ypG2TxhWXoj3W1MGcu269PktbiSOBN5ZqFRa2YhVesO202AQNYf6HF5jgG0
+         MdEZPgjkF/pK29NXfNVhmyI/z6sHj+bxq54aMkY7SJbd2mKvdfm5HvHCWb3smbJOl5xa
+         N2dhJtCKTE1leGVfeePz7bu7LDa8XiBa49Fhw6/aHkA1spFbfyWzoBwdiuvv8AZgDPSZ
+         7WIA==
+X-Gm-Message-State: ABy/qLbckHsn1+m02CdQdvjdIn0bGH7LskuI9rPpfaweBIW6P+K/GEY6
+	0souueUf7W9EypzCZnkGnA==
+X-Google-Smtp-Source: APBJJlGCtIgWpz+nmozUOUl+HIi2pwJqJNF8BszC8eAc8O1xhTomQasP62yrL1aV72l4ScDTBc4wMg==
+X-Received: by 2002:a4a:7019:0:b0:563:624b:430f with SMTP id r25-20020a4a7019000000b00563624b430fmr1563856ooc.1.1689938300437;
+        Fri, 21 Jul 2023 04:18:20 -0700 (PDT)
+Received: from [127.0.0.1] ([40.84.171.2])
+        by smtp.gmail.com with ESMTPSA id q2-20020a0568080a8200b003a3fa4a7b5bsm1278591oij.27.2023.07.21.04.18.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jul 2023 03:16:05 -0700 (PDT)
+        Fri, 21 Jul 2023 04:18:20 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Davide Caratti <dcaratti@redhat.com>
@@ -47,10 +47,10 @@ In-Reply-To:
  <01e81e72cbd1720e2bb210f9c32039620731933d.1689932012.git.dcaratti@redhat.com>
 References:
  <01e81e72cbd1720e2bb210f9c32039620731933d.1689932012.git.dcaratti@redhat.com>
-Subject: Re: net: mptcp: use policy generated by YAML spec: Build Failure
-Message-ID: <bb71d241-c1e8-40ca-8539-c53c8e58e46b@gmail.com>
+Subject: Re: net: mptcp: use policy generated by YAML spec: Tests Results
+Message-ID: <6447aa25-8526-9ec4-b540-9ab3bfc03c95@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 21 Jul 2023 10:16:05 +0000
+Date: Fri, 21 Jul 2023 11:18:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -62,26 +62,65 @@ Hi Davide,
 
 Thank you for your modifications, that's great!
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Our CI did some validations and here is its report:
 
-You can find more details there:
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5957906802147328
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5957906802147328/su=
+mmary/summary.txt
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/01e81e72cbd1720e2bb210f9c32039620731933d.1689932012=
-.git.dcaratti@redhat.com/
-  https://github.com/multipath-tcp/mptcp_net-next=
-/actions/runs/5621160253
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4691269406949376
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4691269406949376/summary/summary.txt
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/afb8624c61=
-f4
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6520856755568640
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6520856755568640/summary/summary.txt
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5394956848726016
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5394956848726016/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/afb8624c61f4
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
 MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Bot operated by Matthieu Baerts (Tessares)
