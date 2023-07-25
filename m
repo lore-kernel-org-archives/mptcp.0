@@ -1,73 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3C72416D;
-	Tue, 25 Jul 2023 18:35:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB7F5C43391;
-	Tue, 25 Jul 2023 18:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690310099;
-	bh=CeGxhrvZHThEsyTOEnPxSmGBdhmosALuz9k50d2C/S8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Kvfz9Lp36y6TgtEnpT2UiDb2SVPbspS7uCWkLDYO4E+KJQxrTWqGIcXNBmQPivAWM
-	 ziBT5ndTF+PXxGJ6xGn/A5R7909d5ZniwH7c2B2y06vvIBwo0SS4LtR9r5FqRR2Rrs
-	 7q4LwCalSL0ts65kEPAgKyRR6lOv8MWevy5AbSYuo9g40G85HHbvcCP/BziFw7rHOe
-	 lBqjRRWbJ9z53w3kvjIbAnDOPxnEaCyTkS9dILyAO09CSGzIPCnEqkIT41shFRPwQt
-	 rjxg2ASmURXM4YPKcKZGX+tAPWtkX0s0pfqKgB056+fG9osNz9NX/mrKH4V9GzAcwh
-	 uvWg1CkfBNMeQ==
-From: Mat Martineau <martineau@kernel.org>
-Date: Tue, 25 Jul 2023 11:34:56 -0700
-Subject: [PATCH net 2/2] mptcp: more accurate NL event generation
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB0F21D52;
+	Tue, 25 Jul 2023 18:39:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE996C433C7;
+	Tue, 25 Jul 2023 18:39:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1690310362;
+	bh=/fLrYkomR7e++1jNKJRtYrKgRl1GFbBahIfCgp09/lw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lCi+AlD89Bn50K7yO0dcmAhMhTzUp0Wtq0/0fOx5dr2wWX/GygO7lS8Tf0iVnkCJK
+	 9UYGSsn2OrmNj4PKYxLVSklO91voGLkZsc6mNW36nN77e5ItxIPAzTFF9nvaPz0EHs
+	 qyI3ng4ubUQoliW+k6qnDB36j+1dsT3UzbwjeGAo=
+Date: Tue, 25 Jul 2023 20:39:19 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Geliang Tang <geliang.tang@suse.com>, netdev@vger.kernel.org,
+	mptcp@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH net 2/2] mptcp: more accurate NL event generation
+Message-ID: <2023072513-citizen-skyward-9530@gregkh>
+References: <20230725-send-net-20230725-v1-0-6f60fe7137a9@kernel.org>
+ <20230725-send-net-20230725-v1-2-6f60fe7137a9@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230725-send-net-20230725-v1-2-6f60fe7137a9@kernel.org>
-References: <20230725-send-net-20230725-v1-0-6f60fe7137a9@kernel.org>
-In-Reply-To: <20230725-send-net-20230725-v1-0-6f60fe7137a9@kernel.org>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Geliang Tang <geliang.tang@suse.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, stable@vger.kernel.org, 
- Mat Martineau <martineau@kernel.org>
-X-Mailer: b4 0.12.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230725-send-net-20230725-v1-2-6f60fe7137a9@kernel.org>
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Tue, Jul 25, 2023 at 11:34:56AM -0700, Mat Martineau wrote:
+> From: Paolo Abeni <pabeni@redhat.com>
+> 
+> Currently the mptcp code generate a "new listener" event even
+> if the actual listen() syscall fails. Address the issue moving
+> the event generation call under the successful branch.
+> 
+> Fixes: f8c9dfbd875b ("mptcp: add pm listener events")
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Mat Martineau <martineau@kernel.org>
+> ---
+>  net/mptcp/protocol.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 3613489eb6e3..3317d1cca156 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3723,10 +3723,9 @@ static int mptcp_listen(struct socket *sock, int backlog)
+>  	if (!err) {
+>  		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
+>  		mptcp_copy_inaddrs(sk, ssock->sk);
+> +		mptcp_event_pm_listener(ssock->sk, MPTCP_EVENT_LISTENER_CREATED);
+>  	}
+>  
+> -	mptcp_event_pm_listener(ssock->sk, MPTCP_EVENT_LISTENER_CREATED);
+> -
+>  unlock:
+>  	release_sock(sk);
+>  	return err;
+> 
+> -- 
+> 2.41.0
+> 
 
-Currently the mptcp code generate a "new listener" event even
-if the actual listen() syscall fails. Address the issue moving
-the event generation call under the successful branch.
+<formletter>
 
-Fixes: f8c9dfbd875b ("mptcp: add pm listener events")
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Mat Martineau <martineau@kernel.org>
----
- net/mptcp/protocol.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3613489eb6e3..3317d1cca156 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3723,10 +3723,9 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 	if (!err) {
- 		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
- 		mptcp_copy_inaddrs(sk, ssock->sk);
-+		mptcp_event_pm_listener(ssock->sk, MPTCP_EVENT_LISTENER_CREATED);
- 	}
- 
--	mptcp_event_pm_listener(ssock->sk, MPTCP_EVENT_LISTENER_CREATED);
--
- unlock:
- 	release_sock(sk);
- 	return err;
-
--- 
-2.41.0
-
+</formletter>
