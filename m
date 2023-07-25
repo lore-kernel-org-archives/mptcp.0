@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69A023BFE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A36024163;
 	Tue, 25 Jul 2023 18:34:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3213EC433C7;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB2FC433CB;
 	Tue, 25 Jul 2023 18:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1690310099;
-	bh=lnDJDryLE/s2hFOhlSzvGG+STqo8cq44OlY3Bnve82M=;
-	h=From:Subject:Date:To:Cc:From;
-	b=DyFAMNXOEEZyWJRP3y+wbiIdmDGMYhFOVA0NpIwMKeN9AyYBZ4tPX2OFcEykoB7uP
-	 Hr8N6Ealk6wBjI/WdR3L3xHkvFShFvnrsxZAuFuCJHbhzWzksCAghjFYXpDPqHfnwu
-	 P2BAxFbdALVU1tCdo8JPfTAydKsYp3XmVPPICAznH9Vtb06XhBh0yJA9QEAYQDvcx1
-	 2zBegteRn7VKE5eFRqSJhuysw/Pj/OhSv3zMqGeg2TxOySx9SJ24eE5uCOEPQWfXi0
-	 BEn3c61e8YnsZFv4byB/LX6VtuNhY0zYSQUFHynNFqMi+lRnYmDnckpQpOHdgcrs6u
-	 R8Uy0wolpEu+w==
+	bh=QwCnG5+Z7TjpjUwNXP4jPD4RDLcuQH9RqoFnYbUu7zk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=WLf9j7bNRkk+C8wUwtTrglbCQ3trv6Z5i+Zv5RaFOU5WMeevBR/rtSw8yhsVhBBfw
+	 dyHdV38/mRlnvb23QCiusBcAHxk7+94J21m7kZ+lSCKX9ul+lGD2jsU8tePClT8+kU
+	 7uUZTlvC9zwgqNmqilX6liw03A3rTxbKOTWeQYV1Gq0bYjMsuUFlEwObeKUaadu8rH
+	 HzNOje1HztlFsHcRZvusUrku48cZorlJlRHHffHCkw8FtJNVp5kW7a6BoJhaIv7KOY
+	 c6gJebLmPrmnh7iOuvGrKkEmuZzaN5+MZYRaplzGLZsYYviKfmpcQqo4S/1amIDrCQ
+	 p3rBM5xXuYBgQ==
 From: Mat Martineau <martineau@kernel.org>
-Subject: [PATCH net 0/2] mptcp: More fixes for 6.5
-Date: Tue, 25 Jul 2023 11:34:54 -0700
-Message-Id: <20230725-send-net-20230725-v1-0-6f60fe7137a9@kernel.org>
+Date: Tue, 25 Jul 2023 11:34:55 -0700
+Subject: [PATCH net 1/2] selftests: mptcp: join: only check for ip6tables
+ if needed
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -27,9 +27,9 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAM4VwGQC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2MDcyNT3eLUvBTdvNQSXbiIqbllanKKibGRWaqFElBfQVFqWmYF2MxoJaB
- KpdjaWgDDbgfSaAAAAA==
+Message-Id: <20230725-send-net-20230725-v1-1-6f60fe7137a9@kernel.org>
+References: <20230725-send-net-20230725-v1-0-6f60fe7137a9@kernel.org>
+In-Reply-To: <20230725-send-net-20230725-v1-0-6f60fe7137a9@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -38,28 +38,36 @@ Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, stable@vger.kernel.org,
  Mat Martineau <martineau@kernel.org>
 X-Mailer: b4 0.12.3
 
-Patch 1: Better detection of ip6tables vs ip6tables-legacy tools for 
-self tests. Fix for 6.4 and newer.
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Patch 2: Only generate "new listener" event if listen operation 
-succeeds. Fix for 6.2 and newer.
+If 'iptables-legacy' is available, 'ip6tables-legacy' command will be
+used instead of 'ip6tables'. So no need to look if 'ip6tables' is
+available in this case.
 
+Fixes: 0c4cd3f86a40 ("selftests: mptcp: join: use 'iptables-legacy' if available")
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
-Matthieu Baerts (1):
-      selftests: mptcp: join: only check for ip6tables if needed
-
-Paolo Abeni (1):
-      mptcp: more accurate NL event generation
-
- net/mptcp/protocol.c                            | 3 +--
  tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 +---
- 2 files changed, 2 insertions(+), 5 deletions(-)
----
-base-commit: 284779dbf4e98753458708783af8c35630674a21
-change-id: 20230725-send-net-20230725-579ecd4326e8
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Best regards,
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index e6c9d5451c5b..3c2096ac97ef 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -162,9 +162,7 @@ check_tools()
+ 	elif ! iptables -V &> /dev/null; then
+ 		echo "SKIP: Could not run all tests without iptables tool"
+ 		exit $ksft_skip
+-	fi
+-
+-	if ! ip6tables -V &> /dev/null; then
++	elif ! ip6tables -V &> /dev/null; then
+ 		echo "SKIP: Could not run all tests without ip6tables tool"
+ 		exit $ksft_skip
+ 	fi
+
 -- 
-Mat Martineau <martineau@kernel.org>
+2.41.0
 
