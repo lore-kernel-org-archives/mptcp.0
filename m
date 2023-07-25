@@ -1,23 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B757E5;
-	Tue, 25 Jul 2023 00:20:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5C0B6C433AB;
-	Tue, 25 Jul 2023 00:20:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0241E1549F;
+	Tue, 25 Jul 2023 14:47:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA407C433C7;
+	Tue, 25 Jul 2023 14:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690244421;
-	bh=/CYJf6waf/5H+qoHbl8j40uIaY97gRV1gVYHmtkTc60=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=DY9qFiBJU1eT6ASnLKNZ7Y0v2xiqyg9ocqEnuDYE5rqHY8HBjpwZ0okTPw0rjRQQi
-	 v8Fhs7FU0DeYVqUc0LB6r1LP0gHyHpdFe9+XFpg84eEuohx5Hko9mR5j8NJPesF6xe
-	 d6zCbPZoBdkwMWaB1tSVKEWrgPnZTcl4eyXrKHtXnab2PGkJWQCuHsv75ocqUXKdx7
-	 9bKtKgQVFdV9AbOnZuxHiHmTGQ4CcYU7bmdIAPQr+9CvH0jZ3lVA58tqmh2i91oWVm
-	 rrf0cjOtufB2JXe76WMJa8D6z04boxYmw9LKsnxNROOLrgfpGebqZZLgGmLkBjol11
-	 1H7/lcDTIvVXA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 46D96E21EDD;
-	Tue, 25 Jul 2023 00:20:21 +0000 (UTC)
+	s=k20201202; t=1690296439;
+	bh=Bo0L8NVAyrHOgGQCPLhEipmIw8MhpD2MSjL5nHcNdsA=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=aTwLe2S/soCzZmmI2FjM24eQj/SpC2A5oY2AfGtxo+LczogipNM3KYOe7h0nzUYeM
+	 NIt6FPH2RkGimz1HDPBKdPgQkDOpCXPe5VN3kQ3+K7qEUIwIG7yQoe7NRPBOdEJwFm
+	 df9A9JRMsNSOZL0kqy17+5K7UXuXE3nJw0fJgBX+1Sz6DsnBHJur54LkX482WxRepE
+	 avfYJ9V0FqigXslCrZr5ruo35nt0QMfyuAFaS/e/R2BwcKVLfoBZ+X4eCdilR2aqHy
+	 0b7nt/cbddP5/Rbdv4lPFddDYWsIeNPAjVfLqAox5XCTzPDvnpePEHVRHlBmjCOVgZ
+	 1c7g/pXq5OdlQ==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -25,45 +22,40 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] mptcp: fix rcv buffer auto-tuning
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169024442128.15014.7119910740780685151.git-patchwork-notify@kernel.org>
-Date: Tue, 25 Jul 2023 00:20:21 +0000
-References: <20230720-upstream-net-next-20230720-mptcp-fix-rcv-buffer-auto-tuning-v1-1-175ef12b8380@tessares.net>
-In-Reply-To: <20230720-upstream-net-next-20230720-mptcp-fix-rcv-buffer-auto-tuning-v1-1-175ef12b8380@tessares.net>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev, edumazet@google.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, martineau@kernel.org, soheil@google.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Subject: Re: [3/8] wifi: zd1211rw: fix typo "tranmits"
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20230622012627.15050-4-shamrocklee@posteo.net>
+References: <20230622012627.15050-4-shamrocklee@posteo.net>
+To: Yueh-Shun Li <shamrocklee@posteo.net>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S . Miller" <davem@davemloft.net>,
+ "James E . J . Bottomley" <jejb@linux.ibm.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+ linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-scsi@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yueh-Shun Li <shamrocklee@posteo.net>
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <169029643392.3309254.342001893123754863.kvalo@kernel.org>
+Date: Tue, 25 Jul 2023 14:47:15 +0000 (UTC)
 
-Hello:
+Yueh-Shun Li <shamrocklee@posteo.net> wrote:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 20 Jul 2023 20:47:50 +0200 you wrote:
-> From: Paolo Abeni <pabeni@redhat.com>
+> Spell "transmits" properly.
 > 
-> The MPTCP code uses the assumption that the tcp_win_from_space() helper
-> does not use any TCP-specific field, and thus works correctly operating
-> on an MPTCP socket.
+> Found by searching for keyword "tranm".
 > 
-> The commit dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale")
-> broke such assumption, and as a consequence most MPTCP connections stall
-> on zero-window event due to auto-tuning changing the rcv buffer size
-> quite randomly.
-> 
-> [...]
+> Signed-off-by: Yueh-Shun Li <shamrocklee@posteo.net>
 
-Here is the summary with links:
-  - [net-next] mptcp: fix rcv buffer auto-tuning
-    https://git.kernel.org/netdev/net-next/c/b8dc6d6ce931
+Patch applied to wireless-next.git, thanks.
 
-You are awesome, thank you!
+2d5947830868 wifi: zd1211rw: fix typo "tranmits"
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+https://patchwork.kernel.org/project/linux-wireless/patch/20230622012627.15050-4-shamrocklee@posteo.net/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
