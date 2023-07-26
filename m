@@ -1,113 +1,125 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D62D1AA67
-	for <mptcp@lists.linux.dev>; Wed, 26 Jul 2023 16:56:02 +0000 (UTC)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-3fd190065a8so71189315e9.3
-        for <mptcp@lists.linux.dev>; Wed, 26 Jul 2023 09:56:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1690390561; x=1690995361;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OvAjR0RXHM04KUJ6xxCJ44wdutKfbrznolrywQynBpo=;
-        b=gPwP9cYRLI0/1gC41/q0Jr1CR+IIW/JfihuYlKTz6f1PIWZsBE4GWpAfaLaFhEyytR
-         CYpCDGHk9Ii3BArGl1u6QVhv99WT29cLgu4WFyRo00fiyjblJ2o8ZmEZw+fEZFXAX2qH
-         YNxbvjaDKjv2Nr6vLfYvMMFHWM1ajt7DKwKgY8OkzErEGYQGvKbUaQ/1ghfx0ImKEt42
-         mhBQcoVIx8y6MWA1uKvlnJzHMr1CItEY6WyuyjvcZlEpu2mePaEy+iKsPcpYWx8IkHg0
-         ae+ZdG4YbafgUyI3eUWg1N7kBW+JsIaCSsmHxglrEpjhQw10RPTfFREtqMaySoEc437B
-         8EWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690390561; x=1690995361;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OvAjR0RXHM04KUJ6xxCJ44wdutKfbrznolrywQynBpo=;
-        b=M3LXHZEuiJLMxQJRPnjxRSuUn1kaKbCEIlDThSmOlxdRoWzsQp9tSWoeZvFevMq5qC
-         LoNb/6UcMHAQEwy5oBUre5yoWBvNFrCXfsHQq8/M2ZVEX6q5bBgWjtOLPPYp+zlifSp7
-         maHPNpJKFMk/9y6oiujJ5kZ4vnSehj68Rm7kW6Z8V+CjZHf8/1T5LX8vnlIBzbpAhxOH
-         C0YmcukUOquKc4yLo8hkQ4616qEurD3J/qE7rztEhutKBwQSZzmuJ0Rr66IPBQETKtFR
-         bo06GuCVIYSo17f8jyvvxIecSYlEJySpr1lNBtOS3hLQPHIM26bkeRmgznUTbbGBB1bA
-         rz4A==
-X-Gm-Message-State: ABy/qLYsqPd0THZpM5BZfgwMy5w5U3F5BCD1wj+R5AdtZcyTbtX1696B
-	fshV01p8MblHvJVZD48F8xnK8w==
-X-Google-Smtp-Source: APBJJlFZaWVgnC5lijJh7fd8a8IJb7AppjBkSzd3XWZpfjlQoT2ThDwfuz0ZndSG10EC2aQOL/dPxg==
-X-Received: by 2002:a7b:cb85:0:b0:3fb:a100:2581 with SMTP id m5-20020a7bcb85000000b003fba1002581mr1972489wmi.14.1690390561164;
-        Wed, 26 Jul 2023 09:56:01 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id v4-20020adff684000000b0031431fb40fasm20339564wrp.89.2023.07.26.09.56.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 09:56:00 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B321804E
+	for <mptcp@lists.linux.dev>; Wed, 26 Jul 2023 18:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=fUdSbyMasri59LIxUKfjb5lu5YYJqsniF6+eeDt322Q=; b=DFkN7+kcpB7N73mFnnGHkptntF
+	MyxL56OIeohRI14G30XsmKj0s3vmZhE/AD7bJh8knddWtfQsfV3VeSz0D9bcumOq1hsMyngu9HgYQ
+	GL/niposaUkJBmS7Pkw5Kn0Tx6qPabY8YIQTrb0ue7SCCbqteV8F2Uy7/HHgVXPIUQuy4nFAONt9a
+	RhZRWNladuq/dGYVRt/HbTKLGLUVnfyYOcp8FtDkB6mlEwOApP1ObsVm+CPTD2MrzCtVc7WVlQ24w
+	D/eCeHDxQ3fB3lMWtwityCNHoHCkGCgolBBRmBQ4kjPm4WwOB92HuOuwvip8ulOpRb0+WJRPIgmvD
+	NKK9pRhA==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1qOit2-00BF7a-29;
+	Wed, 26 Jul 2023 18:05:24 +0000
+Date: Wed, 26 Jul 2023 11:05:24 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Joel Granados <j.granados@samsung.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
 	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	"David S . Miller" <davem@davemloft.net>
-Subject: [PATCH 5.10.y] selftests: mptcp: depend on SYN_COOKIES
-Date: Wed, 26 Jul 2023 18:55:47 +0200
-Message-Id: <20230726165547.1843478-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <2023072148-curry-reboot-ef1c@gregkh>
-References: <2023072148-curry-reboot-ef1c@gregkh>
+	Mat Martineau <martineau@kernel.org>,
+	Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Karsten Graul <kgraul@linux.ibm.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>, willy@infradead.org,
+	keescook@chromium.org, josh@joshtriplett.org,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-wpan@vger.kernel.org,
+	mptcp@lists.linux.dev, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: Re: [PATCH 11/14] networking: Update to register_net_sysctl_sz
+Message-ID: <ZMFgZHsnhrXNIQ53@bombadil.infradead.org>
+References: <20230726140635.2059334-1-j.granados@samsung.com>
+ <CGME20230726140709eucas1p2033d64aec69a1962fd7e64c57ad60adc@eucas1p2.samsung.com>
+ <20230726140635.2059334-12-j.granados@samsung.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1463; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=2V6BadWEVF2toXt/TZLyy8JYT+hyGsJg+tcwRdua7i4=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkwVATFMr+9A3nqTxhAuKGCWRGG0ZnyIEQjiCvN
- Ao3n4/D6d+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZMFQEwAKCRD2t4JPQmmg
- c1hsD/94P9qqvMpmGPeiqNVlr17wEufbCbmnR4TeyI+oH9A5ov+f9jhVA92IRu/tM+3wqfHPJi7
- qOXk2w/dvOkpimz0hXTIQb+k3IsdllPwlMxP7Uilayq3C1oP2sVqvmbrSwaQ97ZthAWrLv70+r2
- IaWE9/ey+KXKn3uvOwk8eqY6hzpr7556QyTWk5TqMs9nziWXVGuVHxyooBKrKIhZyBzNdgqq16Q
- n6oSQN4ceXA6PINVbtBSoLmbsNwe4Qbz7aPJfjkh90WCFXUs3N8iJaU+hJE87j7H8VyOkzDJ3yK
- KameI0FWPnquFhw89e20+sLOP6HAuURDfJuVKab1V2rZ0raZNeKPCZwiQsULQgiODUk2Sz95EIv
- m0Dk0MNOaJHw+v600dF2m+/+1ev1NhSYkKbYD7e2Hdzp+L3xxJpyvmkfB2d0eqGTRPsCyGuGVsB
- u7QBzrTpTP7iOd9jXZhqm7HDCLkDZSKWel1MbrmlmfmZ/+jHvBG6yD4ytVhdwZprX91iXkOOhV5
- 3eKBiGTGlFEp0Wc9xiNsxIS1N+/Iup+SLYVKH+9mKHZosHP5B5Awh2DnPYG3s4lynNE4bJ5BKD0
- ErTddcGkuqK2BmZ+AHViYdAR17YTHXpLDlP7IQ2msa92SwNil+pwEvp0Zhu5oPYGfmLATgQj1z2 7+zq4u/Ah7lb70Q==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230726140635.2059334-12-j.granados@samsung.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-commit 6c8880fcaa5c45355179b759c1d11737775e31fc upstream.
+On Wed, Jul 26, 2023 at 04:06:31PM +0200, Joel Granados wrote:
+> This is part of the effort to remove the sentinel (last empty) element
+> from the ctl_table arrays. We update to the new function and pass it the
+> array size. Care is taken to mirror the NULL assignments with a size of
+> zero (for the unprivileged users). An additional size function was added
+> to the following files in order to calculate the size of an array that
+> is defined in another file:
+>     include/net/ipv6.h
+>     net/ipv6/icmp.c
+>     net/ipv6/route.c
+>     net/ipv6/sysctl_net_ipv6.c
+> 
 
-MPTCP selftests are using TCP SYN Cookies for quite a while now, since
-v5.9.
+Same here as with the other patches, the "why" and size impact should go here.
+I'll skip mentioning that in the other patches.
 
-Some CIs don't have this config option enabled and this is causing
-issues in the tests:
+> diff --git a/net/mpls/af_mpls.c b/net/mpls/af_mpls.c
+> index bf6e81d56263..5bad14b3c71e 100644
+> --- a/net/mpls/af_mpls.c
+> +++ b/net/mpls/af_mpls.c
+> @@ -1396,6 +1396,40 @@ static const struct ctl_table mpls_dev_table[] = {
+>  	{ }
+>  };
+>  
+> +static int mpls_platform_labels(struct ctl_table *table, int write,
+> +				void *buffer, size_t *lenp, loff_t *ppos);
+> +#define MPLS_NS_SYSCTL_OFFSET(field)		\
+> +	(&((struct net *)0)->field)
+> +
+> +static const struct ctl_table mpls_table[] = {
+> +	{
+> +		.procname	= "platform_labels",
+> +		.data		= NULL,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= mpls_platform_labels,
+> +	},
+> +	{
+> +		.procname	= "ip_ttl_propagate",
+> +		.data		= MPLS_NS_SYSCTL_OFFSET(mpls.ip_ttl_propagate),
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "default_ttl",
+> +		.data		= MPLS_NS_SYSCTL_OFFSET(mpls.default_ttl),
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ONE,
+> +		.extra2		= &ttl_max,
+> +	},
+> +	{ }
+> +};
 
-  # ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP     (duration   167ms) sysctl: cannot stat /proc/sys/net/ipv4/tcp_syncookies: No such file or directory
-  # [ OK ]./mptcp_connect.sh: line 554: [: -eq: unary operator expected
+Unless we hear otherwise from networking folks, I think this move alone
+should probably go as a separate patch with no functional changes to
+make the changes easier to review / bisect.
 
-There is no impact in the results but the test is not doing what it is
-supposed to do.
-
-Fixes: fed61c4b584c ("selftests: mptcp: make 2nd net namespace use tcp syn cookies unconditionally")
-Cc: stable@vger.kernel.org
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
-Backport notes:
-  - We don't have kconfig that have been added later, that's normal.
-  - Only added the new kconfig dep then.
----
- tools/testing/selftests/net/mptcp/config | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
-index 1a4c11a444d9..8867c40258b5 100644
---- a/tools/testing/selftests/net/mptcp/config
-+++ b/tools/testing/selftests/net/mptcp/config
-@@ -6,3 +6,4 @@ CONFIG_INET_DIAG=m
- CONFIG_INET_MPTCP_DIAG=m
- CONFIG_VETH=y
- CONFIG_NET_SCH_NETEM=m
-+CONFIG_SYN_COOKIES=y
--- 
-2.40.1
-
+  Luis
