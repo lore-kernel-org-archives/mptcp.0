@@ -1,92 +1,106 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840CC174F4
-	for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 14:15:48 +0000 (UTC)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3fc0aecf15bso11395015e9.1
-        for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 07:15:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECF6174F4
+	for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 14:16:49 +0000 (UTC)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-317786befa2so1047118f8f.3
+        for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 07:16:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1690467347; x=1691072147;
+        d=tessares.net; s=google; t=1690467408; x=1691072208;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AUTyC4acFyvgFGwLwOB3Um17AnP3SMbPa7d0UPDlcYY=;
-        b=PWDHu+ZtqZH6Fam6cltbUrQF7q0zaaOWs1jJvGr5Odw6DJEFKNuFGbkBnOLaS2X6n/
-         /Wzmv9j47kgOC3srSvbyAw1v5rzYHdCw0iOEOZLbHF+w8AVFj3s6kheAN5w9urcG60bS
-         pwoXifRWAKR6AOrGz4yiEE4a/pM4Q/+OdvL62V5IlBT9+pkaDWz8QTFgGL0vkl73pYkG
-         BKAUNAO6hRCczpNQHYpC/V8hNwtd2Q1dNIpPwyY78Ew4AglYJjIjPtKn825oqRWeOIUG
-         CO4hAIriNxDrQMXCyWPjW0hoo9QZ+fpc8sFazCbws+V/N11n77bbjFJ2sxGEx6ak1KHk
-         QBgg==
+        bh=gdBiJRTVLQgSDTCqHCKJArVFV2i8PVZZ1iHZaPXIK0o=;
+        b=dRXszYkjbAvt4+7iWWT+wIEo5spzaq5kR1dbyYpG87uKy3FO+FN9vZAO67VD7b8F+o
+         uYgeM0hIbN8CAO6Jw9lLWOlZTvnBp7JxXG/r0RLWB+740/sw8WmcJHAbJUHFgj8vzgP6
+         odfxCQjT0GkN2n4R449rqr2x7vK99wM5amkxQRTZpTDbcnvMGmZd3I3iL6ksyzFWR/Cg
+         +IgzkhD0IenXu+qz1O0P7LD/oH/m2x6gWhSfRh12e5zh6uL55xbL45loAZZ7VpG1R/mi
+         ENeJ3iD4x0Wdw8yQRGibZWFxLAIssRGUECrfq7z2QKLJ/zli0e7C14yAIWpBliKS58/6
+         IxTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690467347; x=1691072147;
+        d=1e100.net; s=20221208; t=1690467408; x=1691072208;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AUTyC4acFyvgFGwLwOB3Um17AnP3SMbPa7d0UPDlcYY=;
-        b=h6+F94EDjb4WuixMVeuididxkTBzh/i9/k0fn8A7EKA7W2XcM21cfpigYl3QErvjw+
-         bU5GibiLp/5HCWITV+hn/YDl1Tsc0nvHRPEId3VsScZBcvWIBx+X6bxnXjvrdmscVoW4
-         AfypzB+J/SaAZY4xJz9Wu7QXVD8TuQQ4WPW+wdHFNslXUnMAEtXZrzIu48OR4PrI3GwV
-         n7w67BPOtTJPglS1dGzCnsvIsvEr6tvs+KyN01JWB7+0hwoVAm6oevEBzUTzFJTSEbFn
-         5lYTeOdcGOyONllZGZ21UqjkNMDCRe00Pwvn65sC+ks+CJlViK6nS/fpKHOkmCLfuSud
-         kYyw==
-X-Gm-Message-State: ABy/qLZiaO+IRYUQfiIY7NbodrRFDSoRaGHfErA9l+HknZ3E2C/+Q6Y5
-	6Qbu2JEmC0/81Jq6hvNHNP7AQg==
-X-Google-Smtp-Source: APBJJlH0/Xmo6P55SNMxQDufy7JV+SnpeOLwPYQewO3wu1mi3cf2482eqphtyLZ+haJwIV1XVQB2XA==
-X-Received: by 2002:adf:dd52:0:b0:315:964b:89b9 with SMTP id u18-20020adfdd52000000b00315964b89b9mr1742208wrm.52.1690467347111;
-        Thu, 27 Jul 2023 07:15:47 -0700 (PDT)
+        bh=gdBiJRTVLQgSDTCqHCKJArVFV2i8PVZZ1iHZaPXIK0o=;
+        b=Kv7D1o67hyL5q9uF5c25RNVrzUmUj7TSGZpHrDAkxYqzdC7S7wd4g7W6VfnijGwn7p
+         1hDsgBCk98xpaDiLF2Bba84VSGeRaECB4BeUzXzntGqWZI4nXYZW/QNs/Mgm2MbGABqv
+         EplN7nAjm+UD2pKkLI0cFZiHYF7b/55/tu/jgiJHpEGyY37NJ2bAtYgaEJicYzYLa5V4
+         LPy0kxfoRY1NiZQyiqsvSydbKPu5WlTNkTASepuqWhJJ8EhvEzzqiRfQRNBIL4TRjLQt
+         V6bBvfwVGSHFJ2aVozNAOkJr+FTua2/XvRsxlTMpBO739upu0Wf2zGyooWlsiyMrEZ8w
+         H2pg==
+X-Gm-Message-State: ABy/qLZuXYUo4rwPr7IIJsQo1Adzjvd3x8NzA0xk0XhFYw/ydI2MM0Ar
+	fA5NIzV1kroMjhi85KLlvJfNSDtWpONYwQIp38sGRA==
+X-Google-Smtp-Source: APBJJlHrSBnSw3+g+U8/tdnXFBrZ3LwZWvrv37dafUxxWaOfbueT+gAr9x1YJJ3hkciF/NwH4qBgxw==
+X-Received: by 2002:a5d:66cf:0:b0:314:336e:d4d8 with SMTP id k15-20020a5d66cf000000b00314336ed4d8mr1888603wrw.8.1690467407965;
+        Thu, 27 Jul 2023 07:16:47 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id z7-20020a5d4407000000b0031766e99429sm2145405wrq.115.2023.07.27.07.15.46
+        by smtp.gmail.com with ESMTPSA id l5-20020a05600c1d0500b003fbb1ce274fsm17284455wms.0.2023.07.27.07.16.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 07:15:46 -0700 (PDT)
+        Thu, 27 Jul 2023 07:16:47 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
 	Paolo Abeni <pabeni@redhat.com>,
+	Christoph Paasch <cpaasch@apple.com>,
 	Matthieu Baerts <matthieu.baerts@tessares.net>,
 	"David S . Miller" <davem@davemloft.net>
-Subject: [PATCH 6.1.y] mptcp: ensure subflow is unhashed before cleaning the backlog
-Date: Thu, 27 Jul 2023 16:14:57 +0200
-Message-Id: <20230727141457.2522904-1-matthieu.baerts@tessares.net>
+Subject: [PATCH 6.1.y] mptcp: do not rely on implicit state check in mptcp_listen()
+Date: Thu, 27 Jul 2023 16:16:25 +0200
+Message-Id: <20230727141625.2524544-1-matthieu.baerts@tessares.net>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <2023072102-finicky-everyday-cce4@gregkh>
-References: <2023072102-finicky-everyday-cce4@gregkh>
+In-Reply-To: <2023072119-skipping-penalize-15f0@gregkh>
+References: <2023072119-skipping-penalize-15f0@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1565; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=iINWTQLqXuf9BqfqCJJtElqlaK4/W/YWj+/Sbg1H6lY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkwnvhJx1CYP72oqfBeDwO+vY9ia3y7nJhqt7cy
- XLaV39sO/OJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZMJ74QAKCRD2t4JPQmmg
- c5OkD/9maxrV3IGumIUvnnyPk4D2Yzq+IMbPtIDnmdSlWuR9b8T+T0BWfDwgrlt4q8SNUkoebGv
- ugzpskBC6+2Tio8SHZ6jlhw8DmjubT+D2SiP27wFi1strJiugbPCDD4jykHWsGFkNC0umcN0bjZ
- 27Ji8uFgcptRtHJEgnrvZVplEKYqx0rE707PAPoE0erJ45VscV2DfnEYLZ0OzgfFRBUF2Zbt59U
- g25lIpD4G1rM+EBpYCrYCkGG8FwKMbsLHzOQSHghHdoo8K4lviBq19kENFJ8i19NmjFBeWUHbmr
- A8EJLESpQFN7EbZf/jiLBwEm9on/qpUGQRYmcTeCX1xMT/NIVZSbEL8HDAwP+hK2H0KrBoYVNFF
- KdNU5Nfil/ONPHc9O2ibK+6nrMh2vB7qxwpDf5CM1YW4iQ92XDGwqD4YT5W6OX/ATJlGXvqimpv
- 6pw3CNI29Po7JKHqFmmSWOcVMrEn4zUoT9i4IAvvRq7tlsP9A1kblZ0Jbx6a3g1J1W7B0NEKJya
- AOugPNnNqrzyirVwGDnzrIfBq117ahrPFnir/0IvvFOHXUJtNiganQzd23GlSRLccZ/ojOasF4c
- UisF++S3JQpuJYbnNBGS/yvyGcKQ1Vo4UDhryVv9I30NeZUVWHKFQYb7hF4A4eCznjiAYetzeVi PmpPum9xEu0pOSw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2262; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=Wnc4qR5ZHikHen649AXud3YY0VIToNZ0CmE0rTOAknU=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkwnw5/eLY4LKMKzYBHIw79gyhLoHy3aU2Y5wxL
+ V3QTEF2wkCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZMJ8OQAKCRD2t4JPQmmg
+ cz7yEACN1UHhWpoXRu45Io0XaahFhR0hVaY9BZi+xSEWIRV6yd80f8S3wvTfmLfXAESRxVbtR/6
+ eY84RFgb7cIaMj48ZbzThQkZvqL7hgEePlurSEQin2nQxOxTSbo/YjZCzS20QjCd/FcSkGMZd5M
+ r6d4Gcf5Xj0vth3pqwPgVMGbSmBYqEMxM+ZbZ9QRxxnzUiuARGw97YuI4yTlG0xbWqvrxFriq4+
+ qTT7aJpmeeGxvYf2mdn2OZCw4QjlJ14aW1ORv6sUXGFUNejIfef7W6QWyYqLmyCAZuLk0riHo0T
+ bpiE3HwC5YFUwqDGjb8KZ+OlVwZj13N+F6FvcB3362EVTGpDGrcP3Z+0qZtjHALFS8VqVA/BJM6
+ dDUzYMOm2Gs9+VCjNXCiCbtBcAWSkMQ6tbM1adjYglI1C2x5IdoMMJdCPpUvLCuIQeBy1oONb2p
+ nwzx1D8otLpwTSk+WVDJ4bnLv1jAgFevGezTaXv737oWFoADgFKT2iR1zyZ8axLLJ7J0m0AtqcK
+ Led9CFTpHdPuUHbfz7OrXGoR0qjBUwjPQd3VlVmCw/2FSI8fif4sLYg41haDkeWtJ82tSZyKHu2
+ JEf7IYsG6p1Uj5xnrzFQPa+DGyq1KlCjBE8MyPeJHk0jNftlUwxDyd+rFrPjhezb6pUBMnxhuFO vUZmTBvUV+2Aqeg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-commit 3fffa15bfef48b0ad6424779c03e68ae8ace5acb upstream.
+commit 0226436acf2495cde4b93e7400e5a87305c26054 upstream.
 
-While tacking care of the mptcp-level listener I unintentionally
-moved the subflow level unhash after the subflow listener backlog
-cleanup.
+Since the blamed commit, closing the first subflow resets the first
+subflow socket state to SS_UNCONNECTED.
 
-That could cause some nasty race and makes the code harder to read.
+The current mptcp listen implementation relies only on such
+state to prevent touching not-fully-disconnected sockets.
 
-Address the issue restoring the proper order of operations.
+Incoming mptcp fastclose (or paired endpoint removal) unconditionally
+closes the first subflow.
 
-Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
+All the above allows an incoming fastclose followed by a listen() call
+to successfully race with a blocking recvmsg(), potentially causing the
+latter to hit a divide by zero bug in cleanup_rbuf/__tcp_select_window().
+
+Address the issue explicitly checking the msk socket state in
+mptcp_listen(). An alternative solution would be moving the first
+subflow socket state update into mptcp_disconnect(), but in the long
+term the first subflow socket should be removed: better avoid relaying
+on it for internal consistency check.
+
+Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
 Cc: stable@vger.kernel.org
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/414
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
@@ -94,29 +108,31 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
 Backport notes:
-  - it was conflicting with a new feature not present in v6.1, see
-    commit f8c9dfbd875b ("mptcp: add pm listener events"): the call to
-    mptcp_event_pm_listener() has not been taken, only tcp_set_state()
-    has been moved here.
+  - Conflicting with a cleanup that has been done after v6.1, see commit
+    cfdcfeed6449 ("mptcp: introduce 'sk' to replace 'sock->sk' in
+    mptcp_listen()").
+  - The conflict was in the context and the new lines didn't need to be
+    adapted.
 ---
- net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/protocol.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4ca61e80f4bb..a6a5c16f2a49 100644
+index a6a5c16f2a49..b76cda4187bc 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2945,9 +2945,9 @@ static void mptcp_check_listen_stop(struct sock *sk)
- 		return;
+@@ -3752,6 +3752,11 @@ static int mptcp_listen(struct socket *sock, int backlog)
+ 	pr_debug("msk=%p", msk);
  
- 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
-+	tcp_set_state(ssk, TCP_CLOSE);
- 	mptcp_subflow_queue_clean(sk, ssk);
- 	inet_csk_listen_stop(ssk);
--	tcp_set_state(ssk, TCP_CLOSE);
- 	release_sock(ssk);
- }
- 
+ 	lock_sock(sock->sk);
++
++	err = -EINVAL;
++	if (sock->state != SS_UNCONNECTED || sock->type != SOCK_STREAM)
++		goto unlock;
++
+ 	ssock = __mptcp_nmpc_socket(msk);
+ 	if (!ssock) {
+ 		err = -EINVAL;
 -- 
 2.40.1
 
