@@ -1,162 +1,88 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2840B8489
-	for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 08:45:45 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3fbc12181b6so7594455e9.2
-        for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 01:45:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1690447544; x=1691052344;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SPg4eSQOn2RRpb0GruSim2/Tji/I9NO1lbHKuNPLzyE=;
-        b=Li+xQYt8l7QZBRrN3JoDoMNPXHcdxRSqO+ouZDeAm1gpTN0+Tz8MuEpp0q0ZmLjR/o
-         5Po1Z5CUDBijBy8vaj5nX/m1R9yw2loQVkq0SNRTLVk6oQqfaBvrqDwjwPiijAmPCdzN
-         bI6/hGI3nFxgA6Jxwiq5J++IDKYnh2dFA1sbLbAID/a/bZnfVYXd2CLM8Ikx8iuaHw98
-         UbNXP99j80XwQ04fIipyXmpP9rl6VpIAiBBgz1fbFGd2SBRmZdDpF7zdUXSsdaRreeX5
-         9+juHOCtZlT14qqv3+taomaFVdqg7xtHQ/ILTXxv4Areufv/zzdimPlgu3EXySyksTJI
-         //SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690447544; x=1691052344;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SPg4eSQOn2RRpb0GruSim2/Tji/I9NO1lbHKuNPLzyE=;
-        b=hPy8tCLBsVRztHSuwV7wXVy66xegajaMphuVRHOmflz7v5k2fuaPE1X6dw/CRNwzs8
-         8Ry4Vg8OiEE54RfcX8x0kCIPT6z0xJi4ad7c1LDPxp+09IoycmXnfuYHVMkALzH8AGNG
-         tjEV7TXDDMcD5oikwr9XZKFbCCvUsPiIfnx02VaceFSFB++TfrgaX0mCHqqx2bfKbh6M
-         72xPUwGCV7upIHRMxskW+EXEoEJ/lFSJmOwUrpNyJPi35BTThBO07RZBaXmzg+QCdJaF
-         PrFuHg/sq4BkTtqSHl86AxJxtCnSYIQxd9lxmchZbFnjlYunLwYDZ94ev1t7mFP/Lwww
-         HBJw==
-X-Gm-Message-State: ABy/qLYzHczmSpvnD+BKxg6LTYi68OfVC9wODXvOo/RoVouh32anWN5c
-	pq+X0sI6fbXlGhpjRdtYsLNlNQ==
-X-Google-Smtp-Source: APBJJlHAJk0T2S0aguib7Zc0XdepjlyrQbmzro3/9o1h0bqMPXQ5c9h/HyRDtxYLkWKPrtEO1j4TGA==
-X-Received: by 2002:adf:ef05:0:b0:315:7d2f:fc36 with SMTP id e5-20020adfef05000000b003157d2ffc36mr1232975wro.20.1690447543624;
-        Thu, 27 Jul 2023 01:45:43 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id u13-20020a5d514d000000b003172510d19dsm1352429wrt.73.2023.07.27.01.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 01:45:43 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"David S . Miller" <davem@davemloft.net>
-Subject: [PATCH 5.15.y] selftests: mptcp: sockopt: use 'iptables-legacy' if available
-Date: Thu, 27 Jul 2023 10:45:22 +0200
-Message-Id: <20230727084522.2035300-1-matthieu.baerts@tessares.net>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <2023072145-cardigan-stinger-9c9a@gregkh>
-References: <2023072145-cardigan-stinger-9c9a@gregkh>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996C5AD2E
+	for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 11:09:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1690456157;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zDiAsbzbjZf6wAiEnCZDwZjTHosyn9ThNb8HBkBPfEU=;
+	b=gLGW2b3zjtMz0kga3LlTlyJ9pFCGPkW86tutTiUg+S+rLUPksMBHCAYtdhgBtSkrSguLrl
+	BQTZ2QfAo5rXVIL5crq0Xd38EbVBqbke3rbONdPa0n1dBWVHEowPN0C2AjzabF1Ds2O/IT
+	OIXpqBspj2FAi3F7Im/dcRLDrOtSomI=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-615-hffDtHqQNrSBzmZsyQU7Ow-1; Thu, 27 Jul 2023 07:09:16 -0400
+X-MC-Unique: hffDtHqQNrSBzmZsyQU7Ow-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DBFB61C09A43;
+	Thu, 27 Jul 2023 11:09:15 +0000 (UTC)
+Received: from renaissance-vector.redhat.com (unknown [10.39.193.76])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C97E0492C13;
+	Thu, 27 Jul 2023 11:09:14 +0000 (UTC)
+From: Andrea Claudi <aclaudi@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <martineau@kernel.org>
+Subject: [PATCH mptcp-next v2 1/2] selftests: mptcp: join: fix 'delete and re-add' test
+Date: Thu, 27 Jul 2023 13:08:54 +0200
+Message-ID: <41253445a424229f014a521e9d9ade26b682bd3e.1690454072.git.aclaudi@redhat.com>
+In-Reply-To: <cover.1690454072.git.aclaudi@redhat.com>
+References: <cover.1690454072.git.aclaudi@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2796; i=matthieu.baerts@tessares.net;
- h=from:subject; bh=+k9lBRyH4O2eIEt1+k+jsFkebCcN3ieBWl9B9paW6Vw=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkwi6iyLFg36SA7RH/ecHEMjpah7erAQZtpBoAK
- KobR5U/8HmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZMIuogAKCRD2t4JPQmmg
- cwyqD/4p/B9Z4iLbxgyDMgNZyvM8aTKKE5Dsepdy7z3+N5Xzy60hPp7oMGo0SsVIJnA1GriOdPz
- lue7Qdd4Z8CxF18pb+AcX1OvJaIgM72xwu4+iUssT9DzwY6bQp5Mw4+MXG8gRc7e/BKo0Y94rVJ
- TSAaCb+fiatH4oIytgZ8eikGsYDXE+/YGxWhNlORtsmRuxhcltlk0QYnusE6m16m8GCSvv8zM/a
- LoMVJwyWCgf2rc4gM+H+F/ne4F1n0HrBomc/0tnQaUbm8qvC7oI32IyqBY6B0LXg+but7p5uzU7
- gI1U/PJPgW+Qq01GaCn27bHMxLI3f4an9pBeww8pAchFHIm2ToiDq/thnr3sti3AB3kWABnzatf
- ++Vhvl2yXndOB2wFnfjEMJnjjKTAN5i+vLo5jI35HkrYzZBWEA9J4jlQMbRD8CVUuQmTOhPNzwa
- bWPALfbJECreep3E3XzKP+CPTxuYkmVxsbZvn8CBQtkP1jpKCi5SaCQ+Ld/ffJ3ag4iJ8gWpYse
- 1stuHNBeN/7nXsesCig2cHaQGVwRbKJjsPOgMG1hbVpZ3y+QrtF1Da0i6vKchhNMBTuhAYvaaH0
- qNCULKQVm4FApsXvc5os8/CXTOaH8iDJlIsSVRPFNqXzRapQAKbsdcGUpfgYwxvNttmTxQQc4Ve lyN68VZuMB5pzUQ==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-commit a5a5990c099dd354e05e89ee77cd2dbf6655d4a1 upstream.
+mptcp_join 'delete and re-add' test fails when using ip mptcp:
 
-IPTables commands using 'iptables-nft' fail on old kernels, at least
-on v5.15 because it doesn't see the default IPTables chains:
+$ ./mptcp_join.sh -iI
+<snip>
+002 delete and re-add                    before delete[ ok ]
+                                         mptcp_info subflows=1         [ ok ]
+Error: argument "ADDRESS" is wrong: invalid for non-zero id address
+                                         after delete[fail] got 2:2 subflows expected 1
 
-  $ iptables -L
-  iptables/1.8.2 Failed to initialize nft: Protocol not supported
+This happens because endpoint delete includes an ip address while id is
+not 0, contrary to what is indicated in the ip mptcp man page:
 
-As a first step before switching to NFTables, we can use iptables-legacy
-if available.
+"When used with the delete id operation, an IFADDR is only included when
+the ID is 0."
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
-Fixes: dc65fe82fb07 ("selftests: mptcp: add packet mark test case")
-Cc: stable@vger.kernel.org
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+This fixes the issue using the $addr variable in pm_nl_del_endpoint()
+only when id is 0.
+
+Fixes: 34aa6e3bccd8 ("selftests: mptcp: add ip mptcp wrappers")
+Signed-off-by: Andrea Claudi <aclaudi@redhat.com>
 ---
-Backport notes:
-  - it was conflicting with some cleanup patches: b71dd705179c
-    ("selftests: mptcp: removed defined but unused vars") and
-    5f17f8e315ad ("selftests: mptcp: declare var as local")
-  - conflicts were in the same context but not with the code that needed
-    to be adapted.
----
- .../selftests/net/mptcp/mptcp_sockopt.sh      | 20 ++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index d5c79e4a8f1e..3432d11e0a03 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -13,13 +13,15 @@ timeout_poll=30
- timeout_test=$((timeout_poll * 2 + 1))
- mptcp_connect=""
- do_all_tests=1
-+iptables="iptables"
-+ip6tables="ip6tables"
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 0ae8cafde439..b972feb9a3a2 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -678,6 +678,7 @@ pm_nl_del_endpoint()
+ 	local addr=$3
  
- add_mark_rules()
- {
- 	local ns=$1
- 	local m=$2
- 
--	for t in iptables ip6tables; do
-+	for t in ${iptables} ${ip6tables}; do
- 		# just to debug: check we have multiple subflows connection requests
- 		ip netns exec $ns $t -A OUTPUT -p tcp --syn -m mark --mark $m -j ACCEPT
- 
-@@ -90,14 +92,14 @@ if [ $? -ne 0 ];then
- 	exit $ksft_skip
- fi
- 
--iptables -V > /dev/null 2>&1
--if [ $? -ne 0 ];then
-+# Use the legacy version if available to support old kernel versions
-+if iptables-legacy -V &> /dev/null; then
-+	iptables="iptables-legacy"
-+	ip6tables="ip6tables-legacy"
-+elif ! iptables -V &> /dev/null; then
- 	echo "SKIP: Could not run all tests without iptables tool"
- 	exit $ksft_skip
--fi
--
--ip6tables -V > /dev/null 2>&1
--if [ $? -ne 0 ];then
-+elif ! ip6tables -V &> /dev/null; then
- 	echo "SKIP: Could not run all tests without ip6tables tool"
- 	exit $ksft_skip
- fi
-@@ -107,10 +109,10 @@ check_mark()
- 	local ns=$1
- 	local af=$2
- 
--	tables=iptables
-+	tables=${iptables}
- 
- 	if [ $af -eq 6 ];then
--		tables=ip6tables
-+		tables=${ip6tables}
- 	fi
- 
- 	counters=$(ip netns exec $ns $tables -v -L OUTPUT | grep DROP)
+ 	if [ $ip_mptcp -eq 1 ]; then
++		[ $id -ne 0 ] && addr=''
+ 		ip -n $ns mptcp endpoint delete id $id $addr
+ 	else
+ 		ip netns exec $ns ./pm_nl_ctl del $id $addr
 -- 
-2.40.1
+2.41.0
 
