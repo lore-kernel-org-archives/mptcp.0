@@ -1,68 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530067C;
-	Thu, 27 Jul 2023 01:50:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8C2AEC433CA;
-	Thu, 27 Jul 2023 01:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690422621;
-	bh=okgicIMQRwa06Kn5HgLanFk5xVYeRdrGhB1xMC23kW8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=FBfMjQSScVnTtqnKNAKfTB2YfPHCfelcuPIC0YaIPGQXfNw30c+cM9u2XfQ4DA+r5
-	 ySyMLc1gqqEnZh3pbIjrnpGHasy4/mgTBOB6oze8huGrBOu/G4PrfkQvnYwF3AE1HX
-	 Gp8dVuZnW2QB+1bGV6vO6//kzytaelba8Ioh5JwLipX6DojIuWZ563PNBoh0vpd2yN
-	 vvy+HJExGCKtiO5skOPs2cAyDAL8S4ONd1I7Tpt4lpEoE6Cb6K5pecFOXmJngz+pcu
-	 Y73QgtjRe5cRtOW1yNeTCyc/tKW93BwQjvgUol0pSh4dGfFHSW8sMKpm8PLm4pY0hd
-	 WGYLZMhW+Nanw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6FA8DC691D7;
-	Thu, 27 Jul 2023 01:50:21 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2840B8489
+	for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 08:45:45 +0000 (UTC)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3fbc12181b6so7594455e9.2
+        for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 01:45:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1690447544; x=1691052344;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SPg4eSQOn2RRpb0GruSim2/Tji/I9NO1lbHKuNPLzyE=;
+        b=Li+xQYt8l7QZBRrN3JoDoMNPXHcdxRSqO+ouZDeAm1gpTN0+Tz8MuEpp0q0ZmLjR/o
+         5Po1Z5CUDBijBy8vaj5nX/m1R9yw2loQVkq0SNRTLVk6oQqfaBvrqDwjwPiijAmPCdzN
+         bI6/hGI3nFxgA6Jxwiq5J++IDKYnh2dFA1sbLbAID/a/bZnfVYXd2CLM8Ikx8iuaHw98
+         UbNXP99j80XwQ04fIipyXmpP9rl6VpIAiBBgz1fbFGd2SBRmZdDpF7zdUXSsdaRreeX5
+         9+juHOCtZlT14qqv3+taomaFVdqg7xtHQ/ILTXxv4Areufv/zzdimPlgu3EXySyksTJI
+         //SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690447544; x=1691052344;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SPg4eSQOn2RRpb0GruSim2/Tji/I9NO1lbHKuNPLzyE=;
+        b=hPy8tCLBsVRztHSuwV7wXVy66xegajaMphuVRHOmflz7v5k2fuaPE1X6dw/CRNwzs8
+         8Ry4Vg8OiEE54RfcX8x0kCIPT6z0xJi4ad7c1LDPxp+09IoycmXnfuYHVMkALzH8AGNG
+         tjEV7TXDDMcD5oikwr9XZKFbCCvUsPiIfnx02VaceFSFB++TfrgaX0mCHqqx2bfKbh6M
+         72xPUwGCV7upIHRMxskW+EXEoEJ/lFSJmOwUrpNyJPi35BTThBO07RZBaXmzg+QCdJaF
+         PrFuHg/sq4BkTtqSHl86AxJxtCnSYIQxd9lxmchZbFnjlYunLwYDZ94ev1t7mFP/Lwww
+         HBJw==
+X-Gm-Message-State: ABy/qLYzHczmSpvnD+BKxg6LTYi68OfVC9wODXvOo/RoVouh32anWN5c
+	pq+X0sI6fbXlGhpjRdtYsLNlNQ==
+X-Google-Smtp-Source: APBJJlHAJk0T2S0aguib7Zc0XdepjlyrQbmzro3/9o1h0bqMPXQ5c9h/HyRDtxYLkWKPrtEO1j4TGA==
+X-Received: by 2002:adf:ef05:0:b0:315:7d2f:fc36 with SMTP id e5-20020adfef05000000b003157d2ffc36mr1232975wro.20.1690447543624;
+        Thu, 27 Jul 2023 01:45:43 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id u13-20020a5d514d000000b003172510d19dsm1352429wrt.73.2023.07.27.01.45.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jul 2023 01:45:43 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"David S . Miller" <davem@davemloft.net>
+Subject: [PATCH 5.15.y] selftests: mptcp: sockopt: use 'iptables-legacy' if available
+Date: Thu, 27 Jul 2023 10:45:22 +0200
+Message-Id: <20230727084522.2035300-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <2023072145-cardigan-stinger-9c9a@gregkh>
+References: <2023072145-cardigan-stinger-9c9a@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2796; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=+k9lBRyH4O2eIEt1+k+jsFkebCcN3ieBWl9B9paW6Vw=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkwi6iyLFg36SA7RH/ecHEMjpah7erAQZtpBoAK
+ KobR5U/8HmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZMIuogAKCRD2t4JPQmmg
+ cwyqD/4p/B9Z4iLbxgyDMgNZyvM8aTKKE5Dsepdy7z3+N5Xzy60hPp7oMGo0SsVIJnA1GriOdPz
+ lue7Qdd4Z8CxF18pb+AcX1OvJaIgM72xwu4+iUssT9DzwY6bQp5Mw4+MXG8gRc7e/BKo0Y94rVJ
+ TSAaCb+fiatH4oIytgZ8eikGsYDXE+/YGxWhNlORtsmRuxhcltlk0QYnusE6m16m8GCSvv8zM/a
+ LoMVJwyWCgf2rc4gM+H+F/ne4F1n0HrBomc/0tnQaUbm8qvC7oI32IyqBY6B0LXg+but7p5uzU7
+ gI1U/PJPgW+Qq01GaCn27bHMxLI3f4an9pBeww8pAchFHIm2ToiDq/thnr3sti3AB3kWABnzatf
+ ++Vhvl2yXndOB2wFnfjEMJnjjKTAN5i+vLo5jI35HkrYzZBWEA9J4jlQMbRD8CVUuQmTOhPNzwa
+ bWPALfbJECreep3E3XzKP+CPTxuYkmVxsbZvn8CBQtkP1jpKCi5SaCQ+Ld/ffJ3ag4iJ8gWpYse
+ 1stuHNBeN/7nXsesCig2cHaQGVwRbKJjsPOgMG1hbVpZ3y+QrtF1Da0i6vKchhNMBTuhAYvaaH0
+ qNCULKQVm4FApsXvc5os8/CXTOaH8iDJlIsSVRPFNqXzRapQAKbsdcGUpfgYwxvNttmTxQQc4Ve lyN68VZuMB5pzUQ==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/2] mptcp: More fixes for 6.5
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169042262144.20624.14186289485941755366.git-patchwork-notify@kernel.org>
-Date: Thu, 27 Jul 2023 01:50:21 +0000
-References: <20230725-send-net-20230725-v1-0-6f60fe7137a9@kernel.org>
-In-Reply-To: <20230725-send-net-20230725-v1-0-6f60fe7137a9@kernel.org>
-To: Mat Martineau <martineau@kernel.org>
-Cc: matthieu.baerts@tessares.net, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, geliang.tang@suse.com,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, stable@vger.kernel.org
 
-Hello:
+commit a5a5990c099dd354e05e89ee77cd2dbf6655d4a1 upstream.
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+IPTables commands using 'iptables-nft' fail on old kernels, at least
+on v5.15 because it doesn't see the default IPTables chains:
 
-On Tue, 25 Jul 2023 11:34:54 -0700 you wrote:
-> Patch 1: Better detection of ip6tables vs ip6tables-legacy tools for
-> self tests. Fix for 6.4 and newer.
-> 
-> Patch 2: Only generate "new listener" event if listen operation
-> succeeds. Fix for 6.2 and newer.
-> 
-> Signed-off-by: Mat Martineau <martineau@kernel.org>
-> 
-> [...]
+  $ iptables -L
+  iptables/1.8.2 Failed to initialize nft: Protocol not supported
 
-Here is the summary with links:
-  - [net,1/2] selftests: mptcp: join: only check for ip6tables if needed
-    https://git.kernel.org/netdev/net/c/016e7ba47f33
-  - [net,2/2] mptcp: more accurate NL event generation
-    https://git.kernel.org/netdev/net/c/21d9b73a7d52
+As a first step before switching to NFTables, we can use iptables-legacy
+if available.
 
-You are awesome, thank you!
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/368
+Fixes: dc65fe82fb07 ("selftests: mptcp: add packet mark test case")
+Cc: stable@vger.kernel.org
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Backport notes:
+  - it was conflicting with some cleanup patches: b71dd705179c
+    ("selftests: mptcp: removed defined but unused vars") and
+    5f17f8e315ad ("selftests: mptcp: declare var as local")
+  - conflicts were in the same context but not with the code that needed
+    to be adapted.
+---
+ .../selftests/net/mptcp/mptcp_sockopt.sh      | 20 ++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index d5c79e4a8f1e..3432d11e0a03 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -13,13 +13,15 @@ timeout_poll=30
+ timeout_test=$((timeout_poll * 2 + 1))
+ mptcp_connect=""
+ do_all_tests=1
++iptables="iptables"
++ip6tables="ip6tables"
+ 
+ add_mark_rules()
+ {
+ 	local ns=$1
+ 	local m=$2
+ 
+-	for t in iptables ip6tables; do
++	for t in ${iptables} ${ip6tables}; do
+ 		# just to debug: check we have multiple subflows connection requests
+ 		ip netns exec $ns $t -A OUTPUT -p tcp --syn -m mark --mark $m -j ACCEPT
+ 
+@@ -90,14 +92,14 @@ if [ $? -ne 0 ];then
+ 	exit $ksft_skip
+ fi
+ 
+-iptables -V > /dev/null 2>&1
+-if [ $? -ne 0 ];then
++# Use the legacy version if available to support old kernel versions
++if iptables-legacy -V &> /dev/null; then
++	iptables="iptables-legacy"
++	ip6tables="ip6tables-legacy"
++elif ! iptables -V &> /dev/null; then
+ 	echo "SKIP: Could not run all tests without iptables tool"
+ 	exit $ksft_skip
+-fi
+-
+-ip6tables -V > /dev/null 2>&1
+-if [ $? -ne 0 ];then
++elif ! ip6tables -V &> /dev/null; then
+ 	echo "SKIP: Could not run all tests without ip6tables tool"
+ 	exit $ksft_skip
+ fi
+@@ -107,10 +109,10 @@ check_mark()
+ 	local ns=$1
+ 	local af=$2
+ 
+-	tables=iptables
++	tables=${iptables}
+ 
+ 	if [ $af -eq 6 ];then
+-		tables=ip6tables
++		tables=${ip6tables}
+ 	fi
+ 
+ 	counters=$(ip netns exec $ns $tables -v -L OUTPUT | grep DROP)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.40.1
 
