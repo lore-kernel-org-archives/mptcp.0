@@ -1,56 +1,56 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D732D1C9F9
-	for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 18:39:56 +0000 (UTC)
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5636426c1b3so907337eaf.1
-        for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 11:39:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E432E1805C
+	for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 19:33:54 +0000 (UTC)
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3a43cbb432aso1106294b6e.3
+        for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 12:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690483195; x=1691087995;
+        d=gmail.com; s=20221208; t=1690486434; x=1691091234;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wFlDGVrXzlkbQdKPWIQdviZIg4mY1MdvD110UjPZTlA=;
-        b=XBtU53ZVEWdkBsWo5IBz1dnAJn1iYq2OkYhroIyZjfs8IA1FE8SMwYtMf0K42yJtyS
-         Z6qq30+7UzvvbP5C4xsoE0Fic9KaxgKoV5mGfeIKVSDo3J1MLC23knj4zVI+AOlGcpXy
-         UD8ptrwKD4J2KmoJUxkt+/JuW63oj2B2zbjDzkAT3oiEagOWzLmM+ZT8srsr+0PK9REz
-         ZP/+G/ao7Lw1Y/Dwib+BpQ46qxiozjwzP2oHluowi7xsdt0hFqqTJKZVrN1S7zD6XWlE
-         2IAJZcZM1W4TcJbFBQiAOsho6SUVvJXeOyd8CuLk0ColwB5FKnj4oUo+vRzoa0mqnhHf
-         YD8w==
+        bh=hYfVpnroXeEk9NeuczI6auuFF5Ghza4UdnLoyeuVyI8=;
+        b=ew/6SlHVYVrpgdrGQD1m6VU7ESuMjUCw9qvP7Ai2dimR2LVR4c7iB/SFSYq7UlaKSd
+         YlJZq68Y7/6oStvd4nAamojE7bV1Fxg07/rjZFkx/BWont6UBOsjsrOrlICW4ikHfbuf
+         BhgySs1jbZDAKwG4WaA4rxXIBqZH+Wbw12UorqpCDMMe/Ua/mRVCUky0Dpk8KT9vhVsE
+         sPOApSKonqNXGvL3akr68DZ7eoD52yO4nOIMOkSkHXZhBc0gQLEONBF62FTYXhKYpBy+
+         1772bCmowaMpWF2c04/ecAF46ZDb+SMqpxPVy9OyGmSmM9sl9gpm0DgWULRDwuaXqhel
+         Hk4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690483195; x=1691087995;
+        d=1e100.net; s=20221208; t=1690486434; x=1691091234;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=wFlDGVrXzlkbQdKPWIQdviZIg4mY1MdvD110UjPZTlA=;
-        b=DhhfMOj7miUNy5WKbZmTobWsIhed78wVF6ju2cMVBGFA4f3x7ueNP0yIR9iajl6DzG
-         s19s0agHRiMFvXR6URRPxT4sUtI1pB/t/7nuJaxYvOEp//Fr0ErrfjDxNl63shGAWY4W
-         2R4/dmZkRJrBQOul6+UZapLjYpuo2h+nObE6lFERbTa8UKsnJFyNqHDbUdyPYLOX54Sp
-         gNLBw/aO32C6gLsYQ7uWwSIc/hbDoBOsxnC0PuaDcqc1CkIICu3XFwl5a7KEWjmOUwtX
-         WbPkoGIuZyBFCDimRSsba1jB6EOn9+EfkGikMKD1Hwcqo75wHjpDBqYaL7/IZ5rZowZC
-         Y9Mg==
-X-Gm-Message-State: ABy/qLYYIFmyO2HcrkGR6rmRk9I6lmH7APASUfG3iutzHQIOZGzypfDP
-	lfkRPjGhmMoJPQvDdYRgJg==
-X-Google-Smtp-Source: APBJJlEpRbyRccrZyUaG8LZVRJdHDxC+KA/mIGyQ63P8i9Qz95l8+D6ekGEqTQU2ubC1H0d4SAl6jQ==
-X-Received: by 2002:a05:6358:922:b0:134:ccde:596b with SMTP id r34-20020a056358092200b00134ccde596bmr354442rwi.12.1690483195122;
-        Thu, 27 Jul 2023 11:39:55 -0700 (PDT)
-Received: from [127.0.0.1] ([20.57.70.241])
-        by smtp.gmail.com with ESMTPSA id o18-20020ac85552000000b00403bf34266csm602916qtr.30.2023.07.27.11.39.54
+        bh=hYfVpnroXeEk9NeuczI6auuFF5Ghza4UdnLoyeuVyI8=;
+        b=bdT8RwqiH26Wec9JyrGnl55silwl84XBfboQr4fzhH7ohZ068o5JYBbY1dfbNMANp2
+         /bp/KoVxwv9qS9dxXwV67Wwth9toZH5mXY23JY/McXnaYaNkaG6siC6zBQsoUSS6RtN3
+         U0pgg2B1dgOzDyjtIKykyNTd2CA/INT0mfKO74SmGCqa9Bztfz+Vc7Kzofn9e1j6y6dA
+         L1+K3//NyfFu+0z0O2kRQVQgBrE++WRJD7yaGdK07uG2MLoOCLu4GL54TvBChw38myPk
+         J2Pil0FnMM+tWtuoSdjZaeIjaYyzCsaocVHWYhkCjY+bKzJ6f97bD7sGluNK1sBoNyJi
+         Ypfg==
+X-Gm-Message-State: ABy/qLbO7JRN/DcoppkSl8aWVdHnhUZ8OVaqbaBFcvVP5WxXo1KNErWh
+	gMCHhkKQ2o0Qi3eWEHgVmg==
+X-Google-Smtp-Source: APBJJlGiBFYiZPe00jxh2FzELw/+7cziggaknHdpKCGB9jyNoyVntSg9yWnwuP03aviy6f2A+tiP8Q==
+X-Received: by 2002:a05:6808:1708:b0:3a4:31da:34c5 with SMTP id bc8-20020a056808170800b003a431da34c5mr174579oib.39.1690486433789;
+        Thu, 27 Jul 2023 12:33:53 -0700 (PDT)
+Received: from [127.0.0.1] ([13.66.10.118])
+        by smtp.gmail.com with ESMTPSA id w14-20020a056808090e00b003a390ca26aasm973333oih.5.2023.07.27.12.33.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 11:39:54 -0700 (PDT)
+        Thu, 27 Jul 2023 12:33:53 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Andrea Claudi <aclaudi@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
 Reply-To: mptcp@lists.linux.dev
 In-Reply-To:
- <5c70132fb9512ecc42fea01c3118dc9a292791ab.1690454072.git.aclaudi@redhat.com>
+ <ee258a29aba5deeede5aa200f53a1d7e9284817a.1690478147.git.pabeni@redhat.com>
 References:
- <5c70132fb9512ecc42fea01c3118dc9a292791ab.1690454072.git.aclaudi@redhat.com>
-Subject: Re: selftests: mptcp: join: fix 'implicit EP' test: Tests Results
-Message-ID: <3bc72cd8-c7d8-34f6-c0b7-f374e8241997@gmail.com>
+ <ee258a29aba5deeede5aa200f53a1d7e9284817a.1690478147.git.pabeni@redhat.com>
+Subject: Re: mptcp: avoid bogus reset on fallback close: Tests Results
+Message-ID: <396f9b77-1241-4a4b-f19f-3046f769e15c@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Jul 2023 18:39:53 +0000
+Date: Thu, 27 Jul 2023 19:33:52 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -58,7 +58,7 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Hi Andrea,
+Hi Paolo,
 
 Thank you for your modifications, that's great!
 
@@ -67,33 +67,34 @@ Our CI did some validations and here is its report:
 - KVM Validation: normal (except selftest_mptcp_join):
   - Success! =E2=9C=85:
   - Task: https://cirrus-ci.=
-com/task/6040037498814464
+com/task/5479657076686848
   - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6040037498814464/summary/summary.txt
+com/v1/artifact/task/5479657076686848/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5901869541752832
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5901869541752832/su=
+mmary/summary.txt
+
+- {"code":404,"message":
+  - "Can't find artifacts =
+containing file conclusion.txt"}:
+  - Task: https://cirrus-ci.=
+com/task/4775969634910208
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4775969634910208/summary/summary.txt
 
 - KVM Validation: normal (only selftest_mptcp_join):
   - Success! =E2=9C=85:
   - Task: https://cirrus-ci.=
-com/task/5477087545393152
+com/task/6605556983529472
   - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5477087545393152/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/4773400103616512
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4773400103616512/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5708187203010560
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5708187203010560/summary/summary.txt
+com/v1/artifact/task/6605556983529472/summary/summary.txt
 
 Initiator: Patchew Applier
 Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/af37d841a4c2
+net-next/commits/48e86d20b7fc
 
 
 If there are some issues, you can reproduce=
