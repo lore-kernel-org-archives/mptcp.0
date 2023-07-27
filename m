@@ -1,96 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348FFE57A
-	for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 11:09:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1690456161;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=joz6eL6OZHSld/e+DBN0UOiAE0RuCst5jveOc18cRr4=;
-	b=C+ixVCm61Dr3O6cCwIDXt8HuHFwkGxlB4Nff30p/tyUCo2VuItVJhncp73nVVAAoUURC00
-	IA3vmCmOqRWsQBl49nvX5pxPg/At/Id4GYLz8YZH9yfMX6CCoFtR4a/gENXIHl5ZfpgNgU
-	A+sK+SxbUnJz0CWIm7aogJRvkKkiOdY=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-684-5hlR_UQtPeWXQCmsdhpBVQ-1; Thu, 27 Jul 2023 07:09:18 -0400
-X-MC-Unique: 5hlR_UQtPeWXQCmsdhpBVQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A0DDC38025EC;
-	Thu, 27 Jul 2023 11:09:17 +0000 (UTC)
-Received: from renaissance-vector.redhat.com (unknown [10.39.193.76])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 7B812492C13;
-	Thu, 27 Jul 2023 11:09:16 +0000 (UTC)
-From: Andrea Claudi <aclaudi@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Mat Martineau <martineau@kernel.org>
-Subject: [PATCH mptcp-next v2 2/2] selftests: mptcp: join: fix 'implicit EP' test
-Date: Thu, 27 Jul 2023 13:08:55 +0200
-Message-ID: <5c70132fb9512ecc42fea01c3118dc9a292791ab.1690454072.git.aclaudi@redhat.com>
-In-Reply-To: <cover.1690454072.git.aclaudi@redhat.com>
-References: <cover.1690454072.git.aclaudi@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F9613AC1
+	for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 12:29:42 +0000 (UTC)
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7659db6339eso35859285a.1
+        for <mptcp@lists.linux.dev>; Thu, 27 Jul 2023 05:29:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690460981; x=1691065781;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N5vFrl8byplPs6QbVMHxi1gxL3IM26HH37KSZJpmEPs=;
+        b=DdfxTuQxAcfH5Xh8uIypBtgfi4kk1DEyNiBNYKWY8k9pGyHKPtzl9c//KCusx1N/9f
+         ArcjBAAB9zSHC929THOiz7169+xmaCkyTndGI4j93lYEC9yxUXyKubUHSeVpN5kYwE1y
+         hy+Kmt9F4j4OzdwU7EG+GkK86virWN6RMQ57O+UCrA+gFu7Arl+nane0Qv+Lz/6jPvwu
+         134ZiXaY14nOdwdS2eyXfL+qwnFG2x3wAqvxnvhAIQfz3Yfu3MxAMwyeEFeOHZCFiWDm
+         y3xy61bh9adpGznF6t7HjgIV2ZfETl5bctMBkMWk00P0rSmSBbyTZQ6iiRZdODajXLpM
+         +D6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690460981; x=1691065781;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=N5vFrl8byplPs6QbVMHxi1gxL3IM26HH37KSZJpmEPs=;
+        b=gsp7WX2cEd+ewzUfvjmmJKAbHFuTqw0uOhohq/vCddlHaEZ0IqbSaG4uORUB2SUlLl
+         wTL54H+jMx5eHdtOJdI/+9uBqHhz71FW87x7bx7KHgTXfUHqXhEofSP7BgLy+lE4rSIQ
+         emQLQUDaV9Ay2pM+eNbKqekhNmSINb+yVSL2vlHEO+OXlwaHDmWabGQT1Jlmly9vU2bw
+         Tl2AH3f7wPvoIOhrxlARPbeXUIeHbOkBaSybTtRtCp84eC1DdDNGq+6kf+VReQ0nVrUx
+         51RVJwfEmqI8ZShT6ZUST8XD93j0kq8FHSy+dz3fgDpuJe62NT7SY/9SBZg6UBNma0Gg
+         r61g==
+X-Gm-Message-State: ABy/qLbnIFCajWbNDgm9W6IbvrNoYFb1zFq1gkv5iWVgPhV/ejasf6Q8
+	m0fOPLJIPDeXRbOTNOfpRA==
+X-Google-Smtp-Source: APBJJlE7lADsYUGhSCrjArYc+wqBt1wOpBlOUkwG+Wo8oJfcUPg2YGKPkuilxt8R2DumkbLSkZiCjw==
+X-Received: by 2002:a05:620a:44c6:b0:765:3c4a:6237 with SMTP id y6-20020a05620a44c600b007653c4a6237mr2965677qkp.16.1690460981461;
+        Thu, 27 Jul 2023 05:29:41 -0700 (PDT)
+Received: from [127.0.0.1] ([172.176.229.17])
+        by smtp.gmail.com with ESMTPSA id h26-20020a05620a10ba00b00767ba88f0c9sm379207qkk.7.2023.07.27.05.29.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jul 2023 05:29:41 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Andrea Claudi <aclaudi@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <5c70132fb9512ecc42fea01c3118dc9a292791ab.1690454072.git.aclaudi@redhat.com>
+References:
+ <5c70132fb9512ecc42fea01c3118dc9a292791ab.1690454072.git.aclaudi@redhat.com>
+Subject: Re: selftests: mptcp: join: fix 'implicit EP' test: Tests Results
+Message-ID: <957802f4-3c4e-1755-3f5b-2b97b2303cde@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 27 Jul 2023 12:29:40 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-mptcp_join 'implicit EP' test currently fails when using ip mptcp:
+Hi Andrea,
 
-$ ./mptcp_join.sh -iI
-<snip>
-001 implicit EP    creation[fail] expected '10.0.2.2 10.0.2.2 id 1 implicit' found '10.0.2.2 id 1 rawflags 10 '
-Error: too many addresses or duplicate one: -22.
-                   ID change is prevented[fail] expected '10.0.2.2 10.0.2.2 id 1 implicit' found '10.0.2.2 id 1 rawflags 10 '
-                   modif is allowed[fail] expected '10.0.2.2 10.0.2.2 id 1 signal' found '10.0.2.2 id 1 signal '
+Thank you for your modifications, that's great!
 
-This happens because of two reasons:
-- iproute v6.3.0 does not support the implicit flag, fixed with
-  iproute2-next commit 3a2535a41854 ("mptcp: add support for implicit
-  flag")
-- pm_nl_check_endpoint wrongly expects the ip address to be repeated two
-  times in iproute output, and does not account for a final whitespace
-  in it.
+Our CI did some validations and here is its report:
 
-This fixes the issue trimming the whitespace in the output string and
-removing the double address in the expected string.
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6266739109920768
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6266739109920768/summary/summary.txt
 
-Fixes: 34aa6e3bccd8 ("selftests: mptcp: add ip mptcp wrappers")
-Signed-off-by: Andrea Claudi <aclaudi@redhat.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5985264133210112
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5985264133210112/summary/summary.txt
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b972feb9a3a2..4938baa4c5fe 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -769,10 +769,11 @@ pm_nl_check_endpoint()
- 	fi
- 
- 	if [ $ip_mptcp -eq 1 ]; then
-+		# get line and trim trailing whitespace
- 		line=$(ip -n $ns mptcp endpoint show $id)
-+		line="${line% }"
- 		# the dump order is: address id flags port dev
--		expected_line="$addr"
--		[ -n "$addr" ] && expected_line="$expected_line $addr"
-+		[ -n "$addr" ] && expected_line="$addr"
- 		expected_line="$expected_line $id"
- 		[ -n "$_flags" ] && expected_line="$expected_line ${_flags//","/" "}"
- 		[ -n "$dev" ] && expected_line="$expected_line $dev"
--- 
-2.41.0
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4859364226367488
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4859364226367488/summary/summary.txt
 
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5422314179788800
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5422314179788800/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/2243a05ff3d4
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
