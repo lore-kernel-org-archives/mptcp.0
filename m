@@ -1,45 +1,45 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4642514283
-	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 15:55:17 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-99bed101b70so125991066b.3
-        for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 08:55:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2D114013
+	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 16:02:17 +0000 (UTC)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-99b9161b94aso324039666b.1
+        for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 09:02:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1690559715; x=1691164515;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=tessares.net; s=google; t=1690560135; x=1691164935;
+        h=content-transfer-encoding:in-reply-to:from:cc:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2BDsJeZ/Q7mDDxKjh2UMKBKrejicN4zQCXzZIHx4SEo=;
-        b=F/VsCvxgooS8Z+8br6a6n7CavdfNpXvYEXc5lADrXoJ28GtUbfSMtPElK0cwmi0aAK
-         WYFWAXv90swmwUZlxpw1hKH2vbJT9bO6+sLLUxx7Vognrpld1P6t3olT5ciHLO5IMzFW
-         bnI7pGEOIfWaci0LaPMx1Aqyp4Fbh/DT++o7grL7srfQdho+d9qKKBlx5PYM/tZduFDk
-         tBMmmLlhdbYe/ZpZC7pbuYSBqqW6HgT/VjlaWNZDPJSwerKij2qQ8JcjLskQbVGXfywZ
-         XPrJQ+8Mm+bAoMyHAS+wtHLhOJ2M8IAZdb3+ev/6moP5NgCXJhK7LBPpoWAKcVlJeA72
-         TgHg==
+        bh=tmAtfObvSn7R38c4kvxaU42I5guT2C2HsjkEtQrDePA=;
+        b=Ci+W0iIMC8PW7ejhKI0sWm9avQNueTty5UYXSUXV22t7Tmw1m12gqyOTQDi/37Ekda
+         2SVPYYPqSqvVCqDvLrfBzrZkleFKYM1sCIZZSCkCcYAQA3ZkXI5m8hIDC3Ka2+qkvfxS
+         Z+U4NGi2FIr+35ik4SfXsf0Id91J9si63sQ+eo2owADvrhMB03ZTIpp8iVMQAX28LHW1
+         i8gn36YNG31a9Uay72o/FtnzVuGXHhUVlZpS3UGMX1XeGUBT5hR2nYl/qnKwIeHxmhXZ
+         orEFVkOo2odEBWzTMh/UD2DF/W0iENrwh9bGnu7UnIya3Q2+0gpdFitgFTVAVz6IoPC4
+         y/Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690559715; x=1691164515;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20221208; t=1690560135; x=1691164935;
+        h=content-transfer-encoding:in-reply-to:from:cc:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2BDsJeZ/Q7mDDxKjh2UMKBKrejicN4zQCXzZIHx4SEo=;
-        b=B+9CUYOHD9XyE41H01za2otntNoLdY8W+/OSZrGq9jw3UAinGC89H6b7hj6o8mD+MT
-         kr4vZO6FDwp9SDaeof06B74CZt8K7pUPE/E/zFOO/MmuWuD10aJQB4dGRuCah93RFUqx
-         qyCEjKOMO1HA8GWDCyvxlZGhKAh9y/oGzotfFDxERxUTYB13hRuORDGXsd2E2essCRSW
-         aQOCRTevEzixFc7vhyOFdbcTH7pFLFlI7FT/wvd0qeZRzztnFBg9ATIJ7GJj5SF9XTn0
-         XZN7Vp4taniZg6/jjjgUxKGRLO2ETSbU89bnlf10ctTaCmNWRQUx588c/vfTLg9i7R+n
-         FcTA==
-X-Gm-Message-State: ABy/qLYB7Cv4juOzZ7y2mu65IQ+u0eWtDSXY9xum94UoEvH+xzyIGrCJ
-	EU+/faI0210DhqYLnkrgCEDm+A==
-X-Google-Smtp-Source: APBJJlH7Ioi3ik/60g8z602pHSDWlX6bY7ooZ1oWoIklY+YXe34YWcg+8fL5KiQ6aCzPuhQiDY4VMQ==
-X-Received: by 2002:a17:906:32d7:b0:99b:f3f5:9752 with SMTP id k23-20020a17090632d700b0099bf3f59752mr1345815ejk.14.1690559715141;
-        Fri, 28 Jul 2023 08:55:15 -0700 (PDT)
+        bh=tmAtfObvSn7R38c4kvxaU42I5guT2C2HsjkEtQrDePA=;
+        b=PmQrUsQcEP8dZe3Lr8aREjbJIPqVUPH3JujGk6Js3Bd2omjgU8ksFkmTuYZaBMKP1Y
+         gUkmLXtMm5GbzW5TQXqQaI0zNlTDKTZg2tuDgmMhuSHwdPkDSVoAzri1LOwkLAkp07YG
+         MMyGbyQJIbg7Nx3kxB3zXUptHNVw9EHoiEPueDUZM244V2vXOE4pLTfvI+7VCMQ/gpdR
+         IYMPKaXJYdFBAXLKigjh4Tzh7cwWFsqLVh0ACMfAShCzq1TEBU7IfB5X6N16aGNB3AWj
+         eppXqBiU7au9epTeI94YL9E9ABItlV2eqU2cS4Xqv3YSdzgcvPoIZMF4g53krHjSwipW
+         Oz0A==
+X-Gm-Message-State: ABy/qLbN/FUucRS2ljCSD7A2dbkfruH0KVTvXblOd0ccRhUiFvvixWiv
+	ZjTA1TH4uFOLXVguTmuBcU9/59ZmyRLOFfdgiWFdxQ==
+X-Google-Smtp-Source: APBJJlElHKaTeDw/ePzepaF/D5s5GG7qTlOd8m7aIETKNoR+ulkLKG9+Cp1G5v7PZYaW40BFKvTvmg==
+X-Received: by 2002:a17:906:3f44:b0:99b:ead0:2733 with SMTP id f4-20020a1709063f4400b0099bead02733mr2722399ejj.72.1690560135624;
+        Fri, 28 Jul 2023 09:02:15 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id e20-20020a17090681d400b0099b8234a9fesm2194730ejx.1.2023.07.28.08.55.14
+        by smtp.gmail.com with ESMTPSA id j20-20020a170906051400b00992b8d56f3asm2182370eja.105.2023.07.28.09.02.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jul 2023 08:55:14 -0700 (PDT)
-Message-ID: <b9ca829c-790f-82bf-f0a9-c0d81792ce01@tessares.net>
-Date: Fri, 28 Jul 2023 17:55:14 +0200
+        Fri, 28 Jul 2023 09:02:15 -0700 (PDT)
+Message-ID: <f0e3f890-b036-06ef-cb61-ed2dcbf85fe9@tessares.net>
+Date: Fri, 28 Jul 2023 18:02:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,54 +48,71 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH mptcp-next v2 08/13] mptcp: add subflow_set_stale helper
+Subject: Re: [PATCH mptcp-next v2 00/13] BPF packet scheduler updates part 2
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
+To: Geliang Tang <geliang.tang@suse.com>, Mat Martineau <martineau@kernel.org>
 References: <cover.1689650435.git.geliang.tang@suse.com>
- <94b445b3225d4f91e2d05cab0338c4367ecbabb4.1689650435.git.geliang.tang@suse.com>
- <f678a249-e191-05ca-012f-28811c520b51@kernel.org>
+Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <f678a249-e191-05ca-012f-28811c520b51@kernel.org>
+In-Reply-To: <cover.1689650435.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang, Mat,
 
-On 28/07/2023 03:30, Mat Martineau wrote:
-> On Tue, 18 Jul 2023, Geliang Tang wrote:
+On 18/07/2023 05:36, Geliang Tang wrote:
+> v2:
+> - Init nr to -1 for bpf_bkup and bpf_stale.
+> - Update has_bytes_sent() to make sure only one item showed in 'ss -it',
+>   this needs to start server with PORT_1.
+> - Rename to bpf_mptcp_subflow_memory_free() and
+>   bpf_mptcp_subflow_queues_empty().
+> - Simplify div_u64().
+> - Move mptcp_subflow_set_stale() to kernel space. stale is a bit filed,
+>   I haven't found a way to set a bit filed in BPF context yet, so set it
+>   in kernel space.
+> - Sync with new bpf_tcp_ca.c.
 > 
->> Add mptcp_subflow_set_stale() helper.
->>
-> 
-> I was trying to remember the use case for this. The closest thing I can
-> find is this:
-> 
->     => the scheduler should be able to interact with the "stale" logic
->        we have in the upstream kernel: mark a subflow as stale / back
->        active.
-> 
-> from
-> https://lore.kernel.org/mptcp/dd4363e7-d057-97e8-0b5f-8570f39aa538@tessares.net/
-> 
-> I think that need is met by the change in patch 11 to export
-> mptcp_pm_subflow_chk_stale - if a particular scheduler wants to track
-> some stale-like metric, it can do so with its own sk_storage values.
-> There's also the matter of coordinating the values of stale_count and
-> stale_rcv_tstamp.
-> 
-> My suggestion is to drop patches 8, 9, and 10 unless there's a
-> compelling reason to allow a BPF scheduler to control this bit. If
-> there's a need for it please speak up!
+> Geliang Tang (13):
+>   Squash to "bpf: Add bpf_mptcp_sched_ops"
+>   Squash to "selftests/bpf: Add bpf scheduler test"
+>   Squash to "selftests/bpf: Add bpf_first test"
+>   Squash to "selftests/bpf: Add bpf_bkup scheduler"
+>   Squash to "selftests/bpf: Add bpf_bkup test"
+>   Squash to "selftests/bpf: Add bpf_rr test"
+>   Squash to "selftests/bpf: Add bpf_red test"
+>   mptcp: add subflow_set_stale helper
+>   selftests/bpf: Add bpf_stale scheduler
+>   selftests/bpf: Add bpf_stale test
+>   bpf: Export more bpf_burst related functions
+>   selftests/bpf: Add bpf_burst scheduler
+>   selftests/bpf: Add bpf_burst test
 
-If I'm not mistaken, the 'stale' logic is currently used by the core not
-to use a subflow (when calling mptcp_subflow_active()). A packet
-scheduler might want to proactively mark a subflow as stall, e.g. if the
-latency is too high, too many retransmissions, etc. and just set the
-subflow as stale.
+Thank you for the patches and the reviews!
 
-But maybe we cannot do that because the core will reset stale in some
-conditions? Maybe we need something similar but not reusing "stale"?
+Just applied in our tree (feat. for other trees) with Mat's RvB tag on
+patch 11-13:
+
+New patches for t/upstream:
+- 53ac64c3872b: "squashed" patch 1/13 in "bpf: Add bpf_mptcp_sched_ops"
+- 0ab66f43ec70: "squashed" patch 2/13 in "selftests/bpf: Add bpf
+scheduler test"
+- 2fc5650638c1: "squashed" patch 3/13 in "selftests/bpf: Add bpf_first test"
+- e98afc8e2110: "squashed" patch 4/13 in "selftests/bpf: Add bpf_bkup
+scheduler"
+- 0a920c696b80: "squashed" patch 5/13 in "selftests/bpf: Add bpf_bkup test"
+- ca0924acae70: "squashed" patch 6/13 in "selftests/bpf: Add bpf_rr test"
+- 4dfce80db661: "squashed" patch 7/13 in "selftests/bpf: Add bpf_red test"
+- Results: b5ba626e6a54..59eafd2d73d8 (export)
+
+- fd91a6aba636: bpf: Export more bpf_burst related functions
+- ba9ff2266f7b: selftests/bpf: Add bpf_burst scheduler
+- 558ed1c12d57: selftests/bpf: Add bpf_burst test
+- Results: 59eafd2d73d8..e77fd85b3873 (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230728T160116
 
 Cheers,
 Matt
