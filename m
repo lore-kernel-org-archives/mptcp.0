@@ -1,45 +1,45 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD791C06
-	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 14:59:41 +0000 (UTC)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5222a38c0a0so2961665a12.1
-        for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 07:59:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CFD13FE7
+	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 15:15:06 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-51e429e1eabso2874268a12.2
+        for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 08:15:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1690556380; x=1691161180;
+        d=tessares.net; s=google; t=1690557305; x=1691162105;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VNN6i6we2q38vKWePDW8ZPNvwf1rLAfJf4eOPcGhvyM=;
-        b=zkP/Fm7ZgR/0dZqq+LpZeNznpeGBMStjKMjnwzfMBhlMcc1Yj93qPvfiOay8/T1fqu
-         Lf1PTv7eQ6p7dnIW97Erl1SHlC/1URaHe58B4Xx6JzV8duO+suJHIfmzXuKt9vACkq/S
-         VgovLXArP3b6JC2agnabESUXdYLXiJpjolbqi1hN9tFq/IUeBAC2gwmR/5gS+nb3k6Xd
-         /CqidB6SMn2H6XwZUWhDEEFAb9+i8DwMDsM0pFgDhUxMDaig6GqhdlP094S/4+JktA6V
-         G88H3iyOdVWeRE2vfijf/YU23c10MBG6n6/4pqSXMJp6+ww7akgpuMvyWFpHksUjgXzr
-         rPrA==
+        bh=dUsoDe1aciZkS3SYBk+FJnom/bcWm6HUHz7xtg9wGVE=;
+        b=xlBQr91VrE+fcTMQtJeL8UehPRNRDcOoL3Jb7oeY/mrCveqo1mf708pc0eDYwfspAJ
+         A+kaOd3By9dV4yBq+KBkmUafQK3E1WIz9fm1vsVKJtrzZ69uoTGDsVyPg7Xo8lpzBMV7
+         F6TD0DCllb2LydrhPW33jZF0TgI2xFAg27NxhuBNndHVKqMobgm/+RCpx6Ngqg8YxKB7
+         b83oDwxzwWX8OZXxHIXZG598ch1mn5d3uloQxGo1tY0/gZEnwuPNS6xRJH8gYeGIarEo
+         Gc73xHWp4OAegZDVNbxQI5pzehlWrR/ANJAK/2Ze7/lopQhmjJV/Vq/9Qqv6X8RhKmbK
+         ZQvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690556380; x=1691161180;
+        d=1e100.net; s=20221208; t=1690557305; x=1691162105;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VNN6i6we2q38vKWePDW8ZPNvwf1rLAfJf4eOPcGhvyM=;
-        b=ZTn1W3Qu2+ynA+0/fIOcXMYcUDfha9cA34D1kLmOTwZ5gFz+K/3OKAQrb9Li/rXI7v
-         ljxtkHwymgiFDkogFC9LOYjAp+G0EilFuXLAjANAYY51P820n3XqB+SFp4X7Hb6G2ixo
-         K6GQRD0UfuFetRI6gRv6pd04HJvf/0Fv34qbbBcfEB42fk/NlmHu4RqRqdjpoRBfXJJA
-         PL6aBU8XUSfeHb0QA78f+9zXzmL61q0WLV1ETg3Il7Wex0gDISoqAGhgJOT8l/YYygvH
-         7fPEYMFnlxNu0izAu5NkE1FAzueOMXdxHP2KUcz9fkBYfagKQlv4ryBQD9VrBV9tZgJz
-         6eLw==
-X-Gm-Message-State: ABy/qLbmaK6sNz0GvIcecdNcMkZ8rzYdcOi4ncAOBPSYxP37Yqp+4Jny
-	iWVoak/Izku48mZ92dkmLeavYA==
-X-Google-Smtp-Source: APBJJlHRy1Wkicp+QKzkOTzDezpVz6yE9GEJUlwN8xYDiZgc29ixmWnTRctj5daOL07FMoJwnOK4Og==
-X-Received: by 2002:a17:906:8a7c:b0:994:5340:22f4 with SMTP id hy28-20020a1709068a7c00b00994534022f4mr2172206ejc.6.1690556379728;
-        Fri, 28 Jul 2023 07:59:39 -0700 (PDT)
+        bh=dUsoDe1aciZkS3SYBk+FJnom/bcWm6HUHz7xtg9wGVE=;
+        b=c1HrJCoMgBQLoFRa0hBO4fOdEOS5q3I914okSvJcerG86FiiU7WVzXrKe5vilJuiu5
+         2R3NQIQPaCPjs6MALI9BwW/NkoEWUhaiN4YLyt1bvIK95vSC1MN4XLQC6tsSvXK2ey4+
+         XQ8ACPC5DYzlAUd/RViVISnuJW2GTTITW6MOfy3AC0muBrjH4oI2ahYaxVtBpoN/371G
+         wZ809IIdc+tBnAeyEystgdS+x1ZzpOVY6vJBeUAp+A+D/ZwIaWVntJWXI2AtptBR19AF
+         4apL46+hihK7/IXUSxOG85om8ksToClgflBaX7IgibgrgP8nT/VPvlFOBBO3xNulRVwY
+         sRWQ==
+X-Gm-Message-State: ABy/qLYEhfXkmq/bS3MKxYSLBMy5dtsjzvH7Lutexl2gqZxGNv/VYc4X
+	cu/+xlsOtUckvWO8JHfKmdv0dA==
+X-Google-Smtp-Source: APBJJlGrx217B3+2JoDDsOR5Pe+xG2RV8Yfclk4WQBqChj/RTKdH94R2bDDyfq5dnAZDNu9v1WPHIA==
+X-Received: by 2002:aa7:c68f:0:b0:51e:24e1:c0e9 with SMTP id n15-20020aa7c68f000000b0051e24e1c0e9mr2023024edq.10.1690557304905;
+        Fri, 28 Jul 2023 08:15:04 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id gr16-20020a170906e2d000b00977cad140a8sm2126035ejb.218.2023.07.28.07.59.39
+        by smtp.gmail.com with ESMTPSA id ba4-20020a0564021ac400b00522572f323dsm1880856edb.16.2023.07.28.08.15.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jul 2023 07:59:39 -0700 (PDT)
-Message-ID: <d9fb660d-c45f-e8e4-4995-9dba6de2d1f9@tessares.net>
-Date: Fri, 28 Jul 2023 16:59:39 +0200
+        Fri, 28 Jul 2023 08:15:04 -0700 (PDT)
+Message-ID: <1023fdeb-a45a-2e9e-cd2e-7e44e655e8fc@tessares.net>
+Date: Fri, 28 Jul 2023 17:15:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,68 +48,159 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH 6.1.y] mptcp: do not rely on implicit state check in
- mptcp_listen()
+Subject: Re: [RFC bpf-next v5] bpf: Force to MPTCP
 Content-Language: en-GB
-To: stable@vger.kernel.org, gregkh@linuxfoundation.org,
- Sasha Levin <sashal@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>,
- Christoph Paasch <cpaasch@apple.com>, "David S . Miller"
- <davem@davemloft.net>
-References: <2023072119-skipping-penalize-15f0@gregkh>
- <20230727141625.2524544-1-matthieu.baerts@tessares.net>
+To: Stanislav Fomichev <sdf@google.com>
+Cc: Paul Moore <paul@paul-moore.com>, Geliang Tang <geliang.tang@suse.com>,
+ Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <3076188eb88cca9151a2d12b50ba1e870b11ce09.1689693294.git.geliang.tang@suse.com>
+ <CAHC9VhS_LKdkEmm5_J5y34RpaRcTbg8==fpz8pMThDCjF6nYtQ@mail.gmail.com>
+ <b41babb1-f0f2-dc2f-c2e3-1870107fbd9f@tessares.net>
+ <ZMKxC+CFj4GbCklg@google.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <20230727141625.2524544-1-matthieu.baerts@tessares.net>
+In-Reply-To: <ZMKxC+CFj4GbCklg@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Greg, Sasha,
+Hi Stanislav,
 
-On 27/07/2023 16:16, Matthieu Baerts wrote:
-> From: Paolo Abeni <pabeni@redhat.com>
+On 27/07/2023 20:01, Stanislav Fomichev wrote:
+> On 07/27, Matthieu Baerts wrote:
+>> Hi Paul, Stanislav,
+>>
+>> On 18/07/2023 18:14, Paul Moore wrote:
+>>> On Tue, Jul 18, 2023 at 11:21 AM Geliang Tang <geliang.tang@suse.com> wrote:
+>>>>
+>>>> As is described in the "How to use MPTCP?" section in MPTCP wiki [1]:
+>>>>
+>>>> "Your app can create sockets with IPPROTO_MPTCP as the proto:
+>>>> ( socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP); ). Legacy apps can be
+>>>> forced to create and use MPTCP sockets instead of TCP ones via the
+>>>> mptcpize command bundled with the mptcpd daemon."
+>>>>
+>>>> But the mptcpize (LD_PRELOAD technique) command has some limitations
+>>>> [2]:
+>>>>
+>>>>  - it doesn't work if the application is not using libc (e.g. GoLang
+>>>> apps)
+>>>>  - in some envs, it might not be easy to set env vars / change the way
+>>>> apps are launched, e.g. on Android
+>>>>  - mptcpize needs to be launched with all apps that want MPTCP: we could
+>>>> have more control from BPF to enable MPTCP only for some apps or all the
+>>>> ones of a netns or a cgroup, etc.
+>>>>  - it is not in BPF, we cannot talk about it at netdev conf.
+>>>>
+>>>> So this patchset attempts to use BPF to implement functions similer to
+>>>> mptcpize.
+>>>>
+>>>> The main idea is add a hook in sys_socket() to change the protocol id
+>>>> from IPPROTO_TCP (or 0) to IPPROTO_MPTCP.
+>>>>
+>>>> [1]
+>>>> https://github.com/multipath-tcp/mptcp_net-next/wiki
+>>>> [2]
+>>>> https://github.com/multipath-tcp/mptcp_net-next/issues/79
+>>>>
+>>>> v5:
+>>>>  - add bpf_mptcpify helper.
+>>>>
+>>>> v4:
+>>>>  - use lsm_cgroup/socket_create
+>>>>
+>>>> v3:
+>>>>  - patch 8: char cmd[128]; -> char cmd[256];
+>>>>
+>>>> v2:
+>>>>  - Fix build selftests errors reported by CI
+>>>>
+>>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/79
+>>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>>>> ---
+>>>>  include/linux/bpf.h                           |   1 +
+>>>>  include/linux/lsm_hook_defs.h                 |   2 +-
+>>>>  include/linux/security.h                      |   6 +-
+>>>>  include/uapi/linux/bpf.h                      |   7 +
+>>>>  kernel/bpf/bpf_lsm.c                          |   2 +
+>>>>  net/mptcp/bpf.c                               |  20 +++
+>>>>  net/socket.c                                  |   4 +-
+>>>>  security/apparmor/lsm.c                       |   8 +-
+>>>>  security/security.c                           |   2 +-
+>>>>  security/selinux/hooks.c                      |   6 +-
+>>>>  tools/include/uapi/linux/bpf.h                |   7 +
+>>>>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 128 ++++++++++++++++--
+>>>>  tools/testing/selftests/bpf/progs/mptcpify.c  |  17 +++
+>>>>  13 files changed, 187 insertions(+), 23 deletions(-)
+>>>>  create mode 100644 tools/testing/selftests/bpf/progs/mptcpify.c
+>>>
+>>> ...
+>>>
+>>>> diff --git a/security/security.c b/security/security.c
+>>>> index b720424ca37d..bbebcddce420 100644
+>>>> --- a/security/security.c
+>>>> +++ b/security/security.c
+>>>> @@ -4078,7 +4078,7 @@ EXPORT_SYMBOL(security_unix_may_send);
+>>>>   *
+>>>>   * Return: Returns 0 if permission is granted.
+>>>>   */
+>>>> -int security_socket_create(int family, int type, int protocol, int kern)
+>>>> +int security_socket_create(int *family, int *type, int *protocol, int kern)
+>>>>  {
+>>>>         return call_int_hook(socket_create, 0, family, type, protocol, kern);
+>>>>  }
+>>>
+>>> Using the LSM to change the protocol family is not something we want
+>>> to allow.  I'm sorry, but you will need to take a different approach.
+>>
+>> @Paul: Thank you for your feedback. It makes sense and I understand.
+>>
+>> @Stanislav: Despite the fact the implementation was smaller and reusing
+>> more code, it looks like we cannot go in the direction you suggested. Do
+>> you think what Geliang suggested before in his v3 [1] can be accepted?
+>>
+>> (Note that the v3 is the same as the v1, only some fixes in the selftests.)
 > 
-> commit 0226436acf2495cde4b93e7400e5a87305c26054 upstream.
-> 
-> Since the blamed commit, closing the first subflow resets the first
-> subflow socket state to SS_UNCONNECTED.
-> 
-> The current mptcp listen implementation relies only on such
-> state to prevent touching not-fully-disconnected sockets.
-> 
-> Incoming mptcp fastclose (or paired endpoint removal) unconditionally
-> closes the first subflow.
-> 
-> All the above allows an incoming fastclose followed by a listen() call
-> to successfully race with a blocking recvmsg(), potentially causing the
-> latter to hit a divide by zero bug in cleanup_rbuf/__tcp_select_window().
-> 
-> Address the issue explicitly checking the msk socket state in
-> mptcp_listen(). An alternative solution would be moving the first
-> subflow socket state update into mptcp_disconnect(), but in the long
-> term the first subflow socket should be removed: better avoid relaying
-> on it for internal consistency check.
-> 
-> Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
-> Cc: stable@vger.kernel.org
-> Reported-by: Christoph Paasch <cpaasch@apple.com>
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/414
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
-> Backport notes:
->   - Conflicting with a cleanup that has been done after v6.1, see commit
->     cfdcfeed6449 ("mptcp: introduce 'sk' to replace 'sock->sk' in
->     mptcp_listen()").
+> We have too many hooks in networking, so something that doesn't add
+> a new one is preferable :-(
 
-Sasha just backported this commit cfdcfeed6449 ("mptcp: introduce 'sk'
-to replace 'sock->sk' in mptcp_listen()") so 0226436acf24 ("mptcp: do
-not rely on implicit state check in mptcp_listen()") can be applied
-without conflict. Thank you for that, good idea, it works for me!
+Thank you for your reply and the explanation, I understand.
 
-Please drop this patch here then.
+> Moreover, we already have a 'socket init' hook, but it runs a bit late.
+
+Indeed. And we cannot move it before the creation of the socket.
+
+> Is existing cgroup/sock completely unworkable? Is it possible to
+> expose some new bpf_upgrade_socket_to(IPPROTO_MPTCP) kfunc which would
+> call some new net_proto_family->upgrade_to(IPPROTO_MPTCP) to do the surgery?
+> Or is it too hacky?
+
+I cannot judge if it is too hacky or not but if you think it would be
+OK, please tell us :)
+
+> Another option Alexei suggested is to add some fentry-like thing:
+> 
+> noinline int update_socket_protocol(int protocol)
+> {
+> 	return protocol;
+> }
+> /* TODO: ^^^ add the above to mod_ret set */
+> 
+> int __sys_socket(int family, int type, int protocol)
+> {
+> 	...
+> 
+> 	protocol = update_socket_protocol(protocol);
+> 
+> 	...
+> }
+> 
+> But it's also too problem specific it seems? And it's not cgroup-aware.
+
+It looks like it is what Geliang did in his v6. If it is the only
+acceptable solution, I guess we can do without cgroup support. We can
+continue the discussions in his v6 if that's easier.
 
 Cheers,
 Matt
