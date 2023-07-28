@@ -1,45 +1,45 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C4C111BE
-	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 10:29:24 +0000 (UTC)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-99bd1d0cf2fso275249266b.3
-        for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 03:29:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECBDD304
+	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 11:06:10 +0000 (UTC)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-99b9421aaebso273185166b.2
+        for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 04:06:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1690540163; x=1691144963;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=tessares.net; s=google; t=1690542369; x=1691147169;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=dQu6Jvwpq/GGrKWyeLnBsxN62z0o0jvgcvGGkLRatmk=;
-        b=PLzW9yTUljezwiX63DbaddG82ABe+HQJoeT14C9Kmyis/MBFqBHuggwV9YlEvFbV2k
-         wwzlPYvZ7FmFWo6nru5ggjIvGmWkx7GeV8v3BPSpREsMbKRDkUKvS/RIy9RHdJnwtW5k
-         KQ2O3GteEK1H+dyiKA4bV3WzyyFRkQzy+ZJ7LKC0F6C9xZOeWnCHhJPWU4B773KTMpvS
-         0LRWc9+otpzEtGLTJhHdWP+CQtjlhXrl9vWjyAMDAfWRljjcfdSgoQZyEsl8cXXDymqz
-         TI/eBOewSXMVH/oZDoGW5zD9ntPKfvV0Y9kwvd30JUpXDJrz9n40e+OL8ZLgfRXm1VXL
-         VnaA==
+        bh=gu7irLLDN8UUggZ1jhF6Wf7ZiUdP/vTL0V79W+yFLU4=;
+        b=d3P/nSeS1jJ3YRG8di6ZIIxBsrjmvysWZKBHxEZl+P/7zPiVGL33MHScav/P2LCV/2
+         CtWCN76IEoX9Kycrq+nAKsKk/4Gm4iGPdZv1zMz8JAlsmYQdrLUSmSJYgVpv6dgFEDMv
+         qcedEr9CpV+SKg2qadlIskgqKTKkRlAGt2rLXZR5ARm9sooZI1J1fXz6MdJRKH0MOsXv
+         xbFSzSXTxeQbVg05MyAZCbEX4c9YT9/uk6n2l8yD2Sty2Zhopg+ukkKGMMz9N80DY3mv
+         YhcGqK0PzJ1lnZdV7dOzcydPtrlTyt3942vqJ932teBrrZsMpNSN/L8vJWzaqT3FFg9W
+         REcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690540163; x=1691144963;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20221208; t=1690542369; x=1691147169;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dQu6Jvwpq/GGrKWyeLnBsxN62z0o0jvgcvGGkLRatmk=;
-        b=FvS5d767txPA3WAsM1g5uWaq1VEgtfMtJxih1ZxFRe60GOHqCW8JzqaBt5TqORa8Qe
-         mb7K77kjE9t965BoUJfHWsYoX0pVtBUJLUNQbwMZQO5hKz8oO4003JjwbkqyESweY6uq
-         zbkUX+iqeGgXgzQ1HP/5yfkVaGt7H/NsA1/u08BK06boE4bxrGRVWLBnJ8LfiU8xsI1r
-         Fh/jOzWjButfPvw7UDERDsQyE47jfxXTBbIj2Ujv9XuN9KpHn7naiAEqAd0HKgxu5+Sj
-         RKdK5IphW61lOENyRjavxUcZ7+BAAI/9bn6KfMBXzGETPupnzRzYeW/aHPaOdUxdLaPP
-         oNBA==
-X-Gm-Message-State: ABy/qLZNYlAts8d4il9MWG8Df/UxiBUiWJdPlzIrj5S+frU+3zBKEJmP
-	FEjKL65hpEgzhUb05MFKHG7BFQ==
-X-Google-Smtp-Source: APBJJlG+UcX7aLUaQaYT7JLfWnHBSQ/XwA30WJCVTlPKpx9bcmHQVliT+ejDLX24U64mvvvNghQCjg==
-X-Received: by 2002:a17:906:3044:b0:992:a9c3:244f with SMTP id d4-20020a170906304400b00992a9c3244fmr1727269ejd.4.1690540163013;
-        Fri, 28 Jul 2023 03:29:23 -0700 (PDT)
+        bh=gu7irLLDN8UUggZ1jhF6Wf7ZiUdP/vTL0V79W+yFLU4=;
+        b=klPBalxZY1wGq2XTZ5STQO6NQobGlPl+EUA0a9KRwd2Ns/DnNQI1bw6JviW38NTpP+
+         hWSC/+91fg0cMEOmvdY/VH3Yki3EEmA8OlKLY3aVaeObBtSRvAT8BViXdLoab0D0g6/y
+         oSHnClKQYT+9CpSrf9SzoV1bJErKgRa5pAK1+M3VcNR/vkT7BGf5qDwUmssRoBM2i0jk
+         boXSzAy7dwWstmDZCz515CAGXqXBcOCJ4UUoi5plMzGnBAqNOR/iqI/3CJTyGU9PGEsb
+         ennv2/5syEO0sC2ikiCQc8/8CS/My5HAqzNxeNcuQ4Zrudba0fQfPg7kMNL531bAlaS2
+         X72w==
+X-Gm-Message-State: ABy/qLY7eXJntA2XoGEVFMDHzI2gK2h6VIiOZAIRctnxwXP/gcHA/O7q
+	QwWpoFxRHs6QLpvJBjQC+e63hpCu1xwwylb/p8AjDg==
+X-Google-Smtp-Source: APBJJlG9bcuZW9ZSl5DiPCYSb3tQiTzmuCO2q+JbHDNrskcn3CphcFL5SYQm81LRypMsE+MxMqNbSA==
+X-Received: by 2002:a17:906:11:b0:993:fe68:569c with SMTP id 17-20020a170906001100b00993fe68569cmr1622535eja.6.1690542368947;
+        Fri, 28 Jul 2023 04:06:08 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id y22-20020a17090668d600b0099251942e1esm1849834ejr.119.2023.07.28.03.29.22
+        by smtp.gmail.com with ESMTPSA id f25-20020a1709067f9900b009934855d8f1sm1893691ejr.34.2023.07.28.04.06.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jul 2023 03:29:22 -0700 (PDT)
-Message-ID: <9de77983-c553-11b5-3fc2-08a60242803c@tessares.net>
-Date: Fri, 28 Jul 2023 12:29:22 +0200
+        Fri, 28 Jul 2023 04:06:08 -0700 (PDT)
+Message-ID: <b088f630-035b-17b0-26ad-0f4e70530c2f@tessares.net>
+Date: Fri, 28 Jul 2023 13:06:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,45 +48,40 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH mptcp-next v2 0/2] selftests: fix mptcp_join test
+Subject: Re: [PATCH mptcp-net] mptcp: avoid bogus reset on fallback close
 Content-Language: en-GB
-To: Andrea Claudi <aclaudi@redhat.com>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>
-References: <cover.1690454072.git.aclaudi@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <ee258a29aba5deeede5aa200f53a1d7e9284817a.1690478147.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <cover.1690454072.git.aclaudi@redhat.com>
+In-Reply-To: <ee258a29aba5deeede5aa200f53a1d7e9284817a.1690478147.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Andrea,
+Hi Paolo,
 
-On 27/07/2023 13:08, Andrea Claudi wrote:
-> This series fixes two mptcp_join testcases when using ip mptcp:
-> - 'implicit EP' fails because of:
->   - missing iproute support for mptcp 'implicit' flag, fixed with
->     iproute2-next commit 3a2535a41854 ("mptcp: add support for implicit
->     flag")
->   - pm_nl_check_endpoint expecting two ip addresses, while only one is
->     present in the iproute output;
-> - 'delete and re-add' fails because the endpoint delete command
->   provide both id and ip address, while address should be provided only
->   if id is 0.
+On 27/07/2023 19:15, Paolo Abeni wrote:
+> Since the blamed commit, the MPTCP protocol unconditionally sends
+> TCP resets on all the subflows on disconnect().
+> 
+> That fits full-blown MPTCP sockets - to implement the fastclose
+> mechanism - but causes unexpected corruption of the data stream,
+> catched as sporadic self-tests failures.
 
-Thank you for the patches!
+Thank you for the fix! It looks good to me!
 
-Now in our tree (fixes for -net) with my RvB tag and the use of the
-right Fixes tag:
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+
+Now in our tree (fixes for -net):
 
 New patches for t/upstream-net and t/upstream:
-- 5013654dafcc: selftests: mptcp: join: fix 'delete and re-add' test
-- b2b73765f521: selftests: mptcp: join: fix 'implicit EP' test
-- Results: 401d3a99d2a9..be9e061da26c (export-net)
-- Results: 570583e20711..c4e88c45e27d (export)
+- 12ee162a0d4d: mptcp: avoid bogus reset on fallback close
+- Results: be9e061da26c..f8d0d9188a92 (export-net)
+- Results: c4e88c45e27d..b5ba626e6a54 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230728T102732
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230728T102732
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230728T105820
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230728T105820
 
 Cheers,
 Matt
