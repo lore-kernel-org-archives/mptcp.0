@@ -1,241 +1,126 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75A014283
-	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 16:06:01 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-99bcc0adab4so329126066b.2
-        for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 09:06:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4BB15495
+	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 16:33:05 +0000 (UTC)
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-78363cc070aso98454639f.1
+        for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 09:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1690560360; x=1691165160;
-        h=content-transfer-encoding:to:subject:cc:from:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1690561984; x=1691166784;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xZBrTUZfxyX45UxKSf2arRiLF5RXORIOanUk1qR+SHQ=;
-        b=WL6a8J+KM7FA1U4vsw/1G+vftpnDxBx+tJfh1IM18rgpCFty3HTvXuRCjsw7jsUOyD
-         ejhBPTws68TbC81fPP1OAjaizcuAhXiBs4jq/mBdHPPk7WzrD6HRz67sz31J67Ilb6Cs
-         MZCXNY7iueMHfHb+eRD7N4rkqrzH/jbN9qdl82MoKuOO2YGxboBQPa7TYglGAvrwU6oU
-         Rez0pXGr5Zm0YzQMsSGxQcGgZEboDh3DnVu34UXjY4xcutdQsF1LdfWDJ6WxjhuYQ81P
-         cVxZKiozhK9v+W/7sbQwn3sQkbRYreLcq3mpRhpHj0dU0MINGiy5O/VX/PCVyWeeaHBy
-         NZ2A==
+        bh=YdLUHgu5z6KLjSrV8/0wU1P7Kt8sy2KhqLKqgilamQg=;
+        b=ljMriM3Lad1/k4Uw77jDJAlCd6AeTxLxYdigk9nwImYnfEqsKBbaPZRhn1FRXyhrLW
+         K3uv7I9PS/SY269dy8N98b5ysPBiwV1bKd205ZXY5jXDv7diqhIE4Oqq5V0rnwZpvA4/
+         ZJv0s6X6TKX9+6S2KMgMFeMqTPKho4WWEO7xlDVenPbAtWIbmNgI90UpyauV0xx6uF63
+         vzbS7tptXYP2foAH6PG+z9idyXEFyOrI7C+rXIM4yLEa6H9bvUn32vYTzkcs5XSdzvbw
+         gTSiOImvyNoH9hX61eXRaFIoNSHbEpWfOVIEIbBHJdl9AifsG4CFQL8C0WjuW/xEKARP
+         LoBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690560360; x=1691165160;
-        h=content-transfer-encoding:to:subject:cc:from:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xZBrTUZfxyX45UxKSf2arRiLF5RXORIOanUk1qR+SHQ=;
-        b=LC+fh5Bzuq8Z0UBTgMh3TTfh5ZBxC9GSWsDcnNP5jLvyodwSTQHok5G9M0Qxc17lrN
-         0DIZG7HCv2cbT9kuXWbiJvi+1vfjR7Cfv/aWzkhlo6Fsv4rgxGKoSc/lNzM/VLlfaGHM
-         urgvkxDotLtBY6Xo+wm7dcjE/LlRWiiOjLUBXa6hw+i2iBC1OzoMgpw7YVFpDD7/YwIC
-         UbrHWJ/7LciJAz5yitQ/4uiwIEP6VjzJA3oRh6qN3ZVpeLOyP3Vs6Kdy8v4CQdjKTc+L
-         BBT4n+S1R9352Ujxbp18cndePaKygZi5DDnfMRahWppKA+MTea1E6sQ8YUg4VHP/7gQW
-         KyTA==
-X-Gm-Message-State: ABy/qLYjhk/YZvy1kIUFTbOObJAvdPtjGXTuIkM31HIC1dvnbE+5r8m4
-	nyw02OoYEDhK760vCJ+EmNQTlmtKO/cETHH01B9vqw==
-X-Google-Smtp-Source: APBJJlG/ykv9F11EeRkg3qaVO/6yvgVLYE3LRSZAodqjAb5RERb+24Gy4FXF2W7QWhJ2eD9UBd+LYA==
-X-Received: by 2002:a17:907:a050:b0:999:37ff:be94 with SMTP id gz16-20020a170907a05000b0099937ffbe94mr2484544ejc.71.1690560359720;
-        Fri, 28 Jul 2023 09:05:59 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id lt5-20020a170906fa8500b0098f99048053sm2241021ejb.148.2023.07.28.09.05.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jul 2023 09:05:59 -0700 (PDT)
-Message-ID: <10f49258-ae5d-58f4-be1b-8358dd00af8a@tessares.net>
-Date: Fri, 28 Jul 2023 18:05:58 +0200
+        d=1e100.net; s=20221208; t=1690561984; x=1691166784;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YdLUHgu5z6KLjSrV8/0wU1P7Kt8sy2KhqLKqgilamQg=;
+        b=T0/EXwqEapi/C43C5i/Lc6UsAihNHIgmPYrDIRCvWYq1jvPqJejJqSU/vfpaZ4zyev
+         ZqkI937JO/q4xK9ACMR24R43kk6t7v0jwhmnvwhM5iBmzDZ36UqIswRG2htqR1T4K2Ox
+         4WUPCj8LAxsiHpbKGaT3KnZLFWFfjduW6Uo59rBAkUqos5GoxjlaDDf7dbN74AB0aYZ9
+         ohVsqIcshclv1p4LE5/ezcvR2hE4M+/pcWFeaRONodLCYbFP5QBcbUq3ilQGAEL2Kckq
+         u0ioy+KgLZxbd9A466n18tXf7Kr6hp3B5uKyqrNH25aXnj+OSrmBKjT8rD72oDf2E0t6
+         ZUVQ==
+X-Gm-Message-State: ABy/qLbSfQPSmHEi8UoRUGeE3xWTUddW/FRHQ3OzP6DuPmSWYjKInQew
+	cM95FA6WxQG0oMd9QjWMqohv+TUfbA==
+X-Google-Smtp-Source: APBJJlER5fH2z+vn/vngT4PIn5w4njUF6/OzSs6UDw7SLUkVJAEli1hyy+U7eKgZogoSQDPItUaJug==
+X-Received: by 2002:a6b:7d06:0:b0:786:f47b:c063 with SMTP id c6-20020a6b7d06000000b00786f47bc063mr49381ioq.21.1690561984527;
+        Fri, 28 Jul 2023 09:33:04 -0700 (PDT)
+Received: from [127.0.0.1] ([52.173.108.2])
+        by smtp.gmail.com with ESMTPSA id g6-20020a02cd06000000b00430209d0efesm1176557jaq.59.2023.07.28.09.33.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jul 2023 09:33:04 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230728152845.1020528-1-matthieu.baerts@tessares.net>
+References: <20230728152845.1020528-1-matthieu.baerts@tessares.net>
+Subject: =?UTF-8?Q?Re=3A_Squash_to_=22selftests=3A_mptcp=3A?=
+ =?UTF-8?Q?_pm=5Fnl=5Fctl=3A_always_look_for_errors?=
+ =?UTF-8?Q?=22=3A_Tests_Results?=
+Message-ID: <ed9f3529-d905-caa4-8e52-3579c11f5acc@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 28 Jul 2023 16:33:03 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Content-Language: en-GB
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-Subject: KMemLeak when creating netns / tun dev / sending NL msg
-To: netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Matthieu,
 
-Our CI validating MPTCP tree recently reported leaks according to KMemLeak.
+Thank you for your modifications, that's great!
 
-Here are some examples of backtraces decoded with decode_stacktrace.sh:
+Our CI did some validations and here is its report:
 
------------- 8< ------------
-unreferenced object 0xffff88800ce2b000 (size 2048):
-comm "ip", pid 18556, jiffies 4296578479 (age 84.890s)
-hex dump (first 32 bytes):
-08 60 1d 18 80 88 ff ff 00 00 00 00 00 00 00 00  .`..............
-00 00 00 00 00 00 00 00 ea ff ff ff ff ff ff ff  ................
-backtrace:
-__kmalloc (include/linux/kasan.h:196)
-__register_sysctl_table (include/linux/slab.h:586)
-__devinet_sysctl_register (net/ipv4/devinet.c:2590)
-devinet_init_net (net/ipv4/devinet.c:2713)
-ops_init (net/core/net_namespace.c:136)
-setup_net (net/core/net_namespace.c:339)
-copy_net_ns (net/core/net_namespace.c:493)
-create_new_namespaces (kernel/nsproxy.c:110)
-unshare_nsproxy_namespaces (kernel/nsproxy.c:228 (discriminator 4))
-ksys_unshare (kernel/fork.c:3438)
-__x64_sys_unshare (kernel/fork.c:3507)
-do_syscall_64 (arch/x86/entry/common.c:50)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
------------- 8< ------------
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4850365917560832
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4850365917560832/summary/summary.txt
 
------------- 8< ------------
-unreferenced object 0xffff888010866900 (size 192):
-comm "ip", pid 18556, jiffies 4296578480 (age 84.901s)
-hex dump (first 32 bytes):
-00 3d 39 07 80 88 ff ff 22 01 00 00 00 00 ad de  .=9.....".......
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-backtrace:
-__kmalloc (include/linux/kasan.h:196)
-fib_default_rule_add (include/linux/slab.h:586)
-fib4_rules_init (net/ipv4/fib_rules.c:399)
-fib_net_init (net/ipv4/fib_frontend.c:1554)
-ops_init (net/core/net_namespace.c:136)
-setup_net (net/core/net_namespace.c:339)
-copy_net_ns (net/core/net_namespace.c:493)
-create_new_namespaces (kernel/nsproxy.c:110)
-unshare_nsproxy_namespaces (kernel/nsproxy.c:228 (discriminator 4))
-ksys_unshare (kernel/fork.c:3438)
-__x64_sys_unshare (kernel/fork.c:3507)
-do_syscall_64 (arch/x86/entry/common.c:50)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
------------- 8< ------------
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6539215777824768
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6539215777824768/su=
+mmary/summary.txt
 
------------- 8< ------------
-unreferenced object 0xffff88800fb5b000 (size 2048):
-comm "ip", pid 18556, jiffies 4296578502 (age 84.879s)
-hex dump (first 32 bytes):
-00 60 0f 0e 80 88 ff ff 00 00 00 00 00 00 00 00  .`..............
-00 00 00 00 00 00 00 00 ea ff ff ff ff ff ff ff  ................
-backtrace:
-__kmalloc (include/linux/kasan.h:196)
-__register_sysctl_table (include/linux/slab.h:586)
-nf_conntrack_pernet_init (net/netfilter/nf_conntrack_standalone.c:1109)
-ops_init (net/core/net_namespace.c:136)
-setup_net (net/core/net_namespace.c:339)
-copy_net_ns (net/core/net_namespace.c:493)
-create_new_namespaces (kernel/nsproxy.c:110)
-unshare_nsproxy_namespaces (kernel/nsproxy.c:228 (discriminator 4))
-ksys_unshare (kernel/fork.c:3438)
-__x64_sys_unshare (kernel/fork.c:3507)
-do_syscall_64 (arch/x86/entry/common.c:50)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
------------- 8< ------------
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5976265824403456
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5976265824403456/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5413315870982144
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5413315870982144/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/b9e61469bac0
 
 
-The majority comes from "ip" when creating a new netns but a few also
-come from "packetdrill" when creating a tun device:
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
------------- 8< ------------
-unreferenced object 0xffff8880198da000 (size 2048):
-comm "packetdrill", pid 20084, jiffies 4296651533 (age 12.029s)
-hex dump (first 32 bytes):
-08 c0 f5 05 80 88 ff ff 00 00 00 00 00 00 00 00  ................
-00 00 00 00 00 00 00 00 ea ff ff ff ff ff ff ff  ................
-backtrace:
-__kmalloc (include/linux/kasan.h:196)
-__register_sysctl_table (include/linux/slab.h:586)
-__devinet_sysctl_register (net/ipv4/devinet.c:2590)
-devinet_sysctl_register (net/ipv4/devinet.c:2630)
-inetdev_init (net/ipv4/devinet.c:286)
-inetdev_event (net/ipv4/devinet.c:1538)
-notifier_call_chain (kernel/notifier.c:95)
-register_netdevice (include/linux/notifier.h:218)
-tun_set_iff.constprop.0 (drivers/net/tun.c:2846)
-__tun_chr_ioctl (drivers/net/tun.c:3113)
-__x64_sys_ioctl (fs/ioctl.c:52)
-do_syscall_64 (arch/x86/entry/common.c:50)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
------------- 8< ------------
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
 
 
-But I can also see backtraces not mentioning sysctl, caused by "ip" when
-communicating with the kernel via netlink:
-
------------- 8< ------------
-unreferenced object 0xffff88801041ee00 (size 256):
-comm "ip", pid 18567, jiffies 4296579097 (age 84.399s)
-hex dump (first 32 bytes):
-00 40 c8 18 80 88 ff ff e0 00 00 01 00 00 00 00  .@..............
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-backtrace:
-kmalloc_trace (mm/slab_common.c:1079)
-____ip_mc_inc_group (include/linux/slab.h:582)
-ip_mc_up (net/ipv4/igmp.c:1791 (discriminator 11))
-inetdev_event (net/ipv4/devinet.c:1584)
-notifier_call_chain (kernel/notifier.c:95)
-__dev_notify_flags (net/core/dev.c:8574)
-dev_change_flags (net/core/dev.c:8609)
-do_setlink (net/core/rtnetlink.c:2867)
-__rtnl_newlink (net/core/rtnetlink.c:3655)
-rtnl_newlink (net/core/rtnetlink.c:3703)
-rtnetlink_rcv_msg (net/core/rtnetlink.c:6424)
-netlink_rcv_skb (net/netlink/af_netlink.c:2549)
-netlink_unicast (net/netlink/af_netlink.c:1340)
-netlink_sendmsg (net/netlink/af_netlink.c:1914)
-sock_sendmsg (net/socket.c:728)
-____sys_sendmsg (net/socket.c:2494)
------------- 8< ------------
-
------------- 8< ------------
-unreferenced object 0xffff88800fee4c00 (size 512):
-comm "ip", pid 18567, jiffies 4296579099 (age 84.409s)
-hex dump (first 32 bytes):
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01  ................
-80 00 00 00 00 00 00 00 ff ff ff ff ff ff ff ff  ................
-backtrace:
-kmalloc_trace (mm/slab_common.c:1079)
-ipv6_add_addr (include/linux/slab.h:582)
-add_addr (net/ipv6/addrconf.c:3108)
-addrconf_notify (include/linux/err.h:72)
-notifier_call_chain (kernel/notifier.c:95)
-__dev_notify_flags (net/core/dev.c:8574)
-dev_change_flags (net/core/dev.c:8609)
-do_setlink (net/core/rtnetlink.c:2867)
-__rtnl_newlink (net/core/rtnetlink.c:3655)
-rtnl_newlink (net/core/rtnetlink.c:3703)
-rtnetlink_rcv_msg (net/core/rtnetlink.c:6424)
-netlink_rcv_skb (net/netlink/af_netlink.c:2549)
-netlink_unicast (net/netlink/af_netlink.c:1340)
-netlink_sendmsg (net/netlink/af_netlink.c:1914)
-sock_sendmsg (net/socket.c:728)
-____sys_sendmsg (net/socket.c:2494)
------------- 8< ------------
-
-
-
-For more backtraces, please see:
-
-  https://github.com/multipath-tcp/mptcp_net-next/issues/424
-
-
-I don't have much info to share on how to reproduce the issue because we
-only see this error occasionally and only at the end of the execution of
-many different tests, when forcing a kmemleak scan.
-
-The CI creates and destroys hundreds of netns during these tests (MPTCP
-selftests + packetdrill). We don't frequently see this issue so it might
-be hard to reproduce (and could also be a false positive from kmemleak).
-
-The last time we had this issue, all tests have been executed with
-success and have been stopped when the scan had been initiated. So in
-theory, all netns and tun devices have been properly destroyed (or asked
-to be destroyed) before the scan.
-
-I don't think we had this issue before this month, maybe due to
-something new coming with v6.5-rc1? We had this issue on top of -net and
-net-next.
-
-Anybody else saw such issue with a reproducer or has a pointer on what
-could cause that? :)
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
