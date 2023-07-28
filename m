@@ -1,209 +1,112 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CFD13FE7
-	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 15:15:06 +0000 (UTC)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-51e429e1eabso2874268a12.2
-        for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 08:15:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8CA14005
+	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 15:28:59 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3fbc5d5742bso24566405e9.2
+        for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 08:28:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1690557305; x=1691162105;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dUsoDe1aciZkS3SYBk+FJnom/bcWm6HUHz7xtg9wGVE=;
-        b=xlBQr91VrE+fcTMQtJeL8UehPRNRDcOoL3Jb7oeY/mrCveqo1mf708pc0eDYwfspAJ
-         A+kaOd3By9dV4yBq+KBkmUafQK3E1WIz9fm1vsVKJtrzZ69uoTGDsVyPg7Xo8lpzBMV7
-         F6TD0DCllb2LydrhPW33jZF0TgI2xFAg27NxhuBNndHVKqMobgm/+RCpx6Ngqg8YxKB7
-         b83oDwxzwWX8OZXxHIXZG598ch1mn5d3uloQxGo1tY0/gZEnwuPNS6xRJH8gYeGIarEo
-         Gc73xHWp4OAegZDVNbxQI5pzehlWrR/ANJAK/2Ze7/lopQhmjJV/Vq/9Qqv6X8RhKmbK
-         ZQvQ==
+        d=tessares.net; s=google; t=1690558138; x=1691162938;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tVKjGVlu4pgfx6kzOiTRfi3OJprY967oBAjVfeN6gOk=;
+        b=GwEjOTuES02ROFRadjhcWP2oKtDLPfL5/qurf+DHyPms3L2kxoxtsz3DFTAPHxsmFk
+         7x1IQcN5iIQAatfIEI41KoykQGQXKVzhzuwUh0TpLT4nsc+ceoqWHryouJYnigdqGE7z
+         oATc1hqmjsKZtXQNHgKBJMF8hkmgJ2ZFto/YIL8NXhTAZpgYEvQ8aEjT5DxCYky3WE8V
+         EXsBEceKPKhoxtwXV65Wpz9TKt0hgwPeM5xK7Ut6kjZS9AmmJct2UaFh1i2d9UQy0Td4
+         UQNwKbY7FSjtHxzLLikpX2ytpCyBgOry81lm8KYTIvyRcSakQm+fzX0lOra7coAbkHYu
+         Q4jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690557305; x=1691162105;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dUsoDe1aciZkS3SYBk+FJnom/bcWm6HUHz7xtg9wGVE=;
-        b=c1HrJCoMgBQLoFRa0hBO4fOdEOS5q3I914okSvJcerG86FiiU7WVzXrKe5vilJuiu5
-         2R3NQIQPaCPjs6MALI9BwW/NkoEWUhaiN4YLyt1bvIK95vSC1MN4XLQC6tsSvXK2ey4+
-         XQ8ACPC5DYzlAUd/RViVISnuJW2GTTITW6MOfy3AC0muBrjH4oI2ahYaxVtBpoN/371G
-         wZ809IIdc+tBnAeyEystgdS+x1ZzpOVY6vJBeUAp+A+D/ZwIaWVntJWXI2AtptBR19AF
-         4apL46+hihK7/IXUSxOG85om8ksToClgflBaX7IgibgrgP8nT/VPvlFOBBO3xNulRVwY
-         sRWQ==
-X-Gm-Message-State: ABy/qLYEhfXkmq/bS3MKxYSLBMy5dtsjzvH7Lutexl2gqZxGNv/VYc4X
-	cu/+xlsOtUckvWO8JHfKmdv0dA==
-X-Google-Smtp-Source: APBJJlGrx217B3+2JoDDsOR5Pe+xG2RV8Yfclk4WQBqChj/RTKdH94R2bDDyfq5dnAZDNu9v1WPHIA==
-X-Received: by 2002:aa7:c68f:0:b0:51e:24e1:c0e9 with SMTP id n15-20020aa7c68f000000b0051e24e1c0e9mr2023024edq.10.1690557304905;
-        Fri, 28 Jul 2023 08:15:04 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id ba4-20020a0564021ac400b00522572f323dsm1880856edb.16.2023.07.28.08.15.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jul 2023 08:15:04 -0700 (PDT)
-Message-ID: <1023fdeb-a45a-2e9e-cd2e-7e44e655e8fc@tessares.net>
-Date: Fri, 28 Jul 2023 17:15:03 +0200
+        d=1e100.net; s=20221208; t=1690558138; x=1691162938;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tVKjGVlu4pgfx6kzOiTRfi3OJprY967oBAjVfeN6gOk=;
+        b=IJgBpAN2RAULG0vVFvxEB9zzmVs7OAV7LE/pQM5Cn4BpOXS5mSuPBg1uQZ/cbaYECH
+         V+niiymO8yxGK2H6wvvLQrP/FypULR7Riwd/NCKAi+pNJn+HxPy++iK5rp3irAvHVqnF
+         Z6n1pfz8F7lTgndH5IH2wawdV5/tuiGSVm0hN92KHelQVHSpABq94XRKgeQ47NJtxB1E
+         f+76V27iQxTw92mfJS9Qr0JjNz7iLXvr/cz6PkMfhJ0kCNBhnP924mr277A6I/UhiAso
+         lu3bYv9yLTzuKM0fQ/3JaNdUOSOsJmzIl4HZLYfPZ5lX4b+HCEHj/4IpMSEWY7VmPnxv
+         QuQA==
+X-Gm-Message-State: ABy/qLaV05xr4PU6fBDm3s+i+qHhiBZYu5dtttwXUQ7k1FyCuxx1c1m8
+	lWTTNaXLX6f+3gnR1CayD7ZdcoUZ5rXJ+5Dnuxg5fg==
+X-Google-Smtp-Source: APBJJlE6CP9rMnHmhH4xlv19+FW0gZAmyic+kpbAPU9kCFol61aAOWlCEc78NVY8NvRBDT4z4CUueA==
+X-Received: by 2002:adf:e586:0:b0:317:5c18:f31d with SMTP id l6-20020adfe586000000b003175c18f31dmr2138088wrm.35.1690558137794;
+        Fri, 28 Jul 2023 08:28:57 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id e15-20020a5d4e8f000000b003143c532431sm5083717wru.27.2023.07.28.08.28.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jul 2023 08:28:57 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next] Squash to "selftests: mptcp: pm_nl_ctl: always look for errors"
+Date: Fri, 28 Jul 2023 17:28:45 +0200
+Message-Id: <20230728152845.1020528-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [RFC bpf-next v5] bpf: Force to MPTCP
-Content-Language: en-GB
-To: Stanislav Fomichev <sdf@google.com>
-Cc: Paul Moore <paul@paul-moore.com>, Geliang Tang <geliang.tang@suse.com>,
- Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, apparmor@lists.ubuntu.com,
- linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <3076188eb88cca9151a2d12b50ba1e870b11ce09.1689693294.git.geliang.tang@suse.com>
- <CAHC9VhS_LKdkEmm5_J5y34RpaRcTbg8==fpz8pMThDCjF6nYtQ@mail.gmail.com>
- <b41babb1-f0f2-dc2f-c2e3-1870107fbd9f@tessares.net>
- <ZMKxC+CFj4GbCklg@google.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <ZMKxC+CFj4GbCklg@google.com>
-Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1621; i=matthieu.baerts@tessares.net;
+ h=from:subject; bh=Gy3uxWxbhLg2phvFj21JGrPbylUIP9jcJItjIRKe7oY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkw96t2Un/7iz1DaT/gR91n+jXS6o9B9iNapJ5r
+ 6Z+cClFkdeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZMPerQAKCRD2t4JPQmmg
+ c1gdEACXIS1ShFl0aYbnUSqtR++tsNlfKFfhIVZUe8YLkkbr1oLocB4L/KpI8irMh1Kf6Wm+7Be
+ oCO9paVbtVQVXIjUNkVl4HKlDUg8SFOgnqtJ6VBf8Ek+LH1KIXK1rbklffTyP2+gXclmQ1STHBf
+ +8Oyf8VPram6sV3FpNWu6fSg4WBJFGTi0jD/sMZajzPS0sii/DhyOcCB3K6cRvxTDcteDQ3jEgs
+ HP1sEPSQia9vUo1jeWuK3bZfIACcf4DgoEuOevUIZqhcyVPSoOUjY8JnzG4yq9p3hXp8dsPU8pk
+ gcIMSZs/pbk5zXocXoTGPwrS3zsYdycpgW2Yvrfh9U9jpbhWfQQvOPZjMUJcRnBP4n93YuYyPn7
+ NGzHGf3YNhYiL9w088ToQYQZ3+2C9nwVwQf9M78reIGqHxis3h40SnnFPDHKCk0YPz5Coy7FdOW
+ VQNRie/7RYrdCPPsVlxa3Nafm9eiKpNKvp6Nob1jPimCa0ZzYg4j1qRuFN68KIwdGITzy/+mrgc
+ C+1xzlIgsmbTmHEWv1MZq7NPyxC1m2J/wd3tfwJ36QzwZoJXWQZZmY6MnACtk3Ww7HCH33liOYS
+ yE4x4fCL7TGi+8kY/bRFJ5tSDcUxuQKihiPFYzbKxLChnl8gyofcQJx5HlaREIB4b3JMnSi63e1 8yftaYCD8ya0/ig==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-Hi Stanislav,
+mptcp_join.sh selftest tries to add a bad endpoint on purpose ("ID
+change is prevented") so it is normal to see this error:
 
-On 27/07/2023 20:01, Stanislav Fomichev wrote:
-> On 07/27, Matthieu Baerts wrote:
->> Hi Paul, Stanislav,
->>
->> On 18/07/2023 18:14, Paul Moore wrote:
->>> On Tue, Jul 18, 2023 at 11:21 AM Geliang Tang <geliang.tang@suse.com> wrote:
->>>>
->>>> As is described in the "How to use MPTCP?" section in MPTCP wiki [1]:
->>>>
->>>> "Your app can create sockets with IPPROTO_MPTCP as the proto:
->>>> ( socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP); ). Legacy apps can be
->>>> forced to create and use MPTCP sockets instead of TCP ones via the
->>>> mptcpize command bundled with the mptcpd daemon."
->>>>
->>>> But the mptcpize (LD_PRELOAD technique) command has some limitations
->>>> [2]:
->>>>
->>>>  - it doesn't work if the application is not using libc (e.g. GoLang
->>>> apps)
->>>>  - in some envs, it might not be easy to set env vars / change the way
->>>> apps are launched, e.g. on Android
->>>>  - mptcpize needs to be launched with all apps that want MPTCP: we could
->>>> have more control from BPF to enable MPTCP only for some apps or all the
->>>> ones of a netns or a cgroup, etc.
->>>>  - it is not in BPF, we cannot talk about it at netdev conf.
->>>>
->>>> So this patchset attempts to use BPF to implement functions similer to
->>>> mptcpize.
->>>>
->>>> The main idea is add a hook in sys_socket() to change the protocol id
->>>> from IPPROTO_TCP (or 0) to IPPROTO_MPTCP.
->>>>
->>>> [1]
->>>> https://github.com/multipath-tcp/mptcp_net-next/wiki
->>>> [2]
->>>> https://github.com/multipath-tcp/mptcp_net-next/issues/79
->>>>
->>>> v5:
->>>>  - add bpf_mptcpify helper.
->>>>
->>>> v4:
->>>>  - use lsm_cgroup/socket_create
->>>>
->>>> v3:
->>>>  - patch 8: char cmd[128]; -> char cmd[256];
->>>>
->>>> v2:
->>>>  - Fix build selftests errors reported by CI
->>>>
->>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/79
->>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
->>>> ---
->>>>  include/linux/bpf.h                           |   1 +
->>>>  include/linux/lsm_hook_defs.h                 |   2 +-
->>>>  include/linux/security.h                      |   6 +-
->>>>  include/uapi/linux/bpf.h                      |   7 +
->>>>  kernel/bpf/bpf_lsm.c                          |   2 +
->>>>  net/mptcp/bpf.c                               |  20 +++
->>>>  net/socket.c                                  |   4 +-
->>>>  security/apparmor/lsm.c                       |   8 +-
->>>>  security/security.c                           |   2 +-
->>>>  security/selinux/hooks.c                      |   6 +-
->>>>  tools/include/uapi/linux/bpf.h                |   7 +
->>>>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 128 ++++++++++++++++--
->>>>  tools/testing/selftests/bpf/progs/mptcpify.c  |  17 +++
->>>>  13 files changed, 187 insertions(+), 23 deletions(-)
->>>>  create mode 100644 tools/testing/selftests/bpf/progs/mptcpify.c
->>>
->>> ...
->>>
->>>> diff --git a/security/security.c b/security/security.c
->>>> index b720424ca37d..bbebcddce420 100644
->>>> --- a/security/security.c
->>>> +++ b/security/security.c
->>>> @@ -4078,7 +4078,7 @@ EXPORT_SYMBOL(security_unix_may_send);
->>>>   *
->>>>   * Return: Returns 0 if permission is granted.
->>>>   */
->>>> -int security_socket_create(int family, int type, int protocol, int kern)
->>>> +int security_socket_create(int *family, int *type, int *protocol, int kern)
->>>>  {
->>>>         return call_int_hook(socket_create, 0, family, type, protocol, kern);
->>>>  }
->>>
->>> Using the LSM to change the protocol family is not something we want
->>> to allow.  I'm sorry, but you will need to take a different approach.
->>
->> @Paul: Thank you for your feedback. It makes sense and I understand.
->>
->> @Stanislav: Despite the fact the implementation was smaller and reusing
->> more code, it looks like we cannot go in the direction you suggested. Do
->> you think what Geliang suggested before in his v3 [1] can be accepted?
->>
->> (Note that the v3 is the same as the v1, only some fixes in the selftests.)
-> 
-> We have too many hooks in networking, so something that doesn't add
-> a new one is preferable :-(
+   114 implicit EP
+         creation                            [ ok ]
+         mptcp_info subflows=1:1             [ ok ]
+         mptcp_info add_addr=1:1             [ ok ]
+   netlink error -22 (Invalid argument)
+   ./pm_nl_ctl: bailing out due to netlink error[s]
+         ID change is prevented              [ ok ]
+         modif is allowed                    [ ok ]
 
-Thank you for your reply and the explanation, I understand.
+We can mute the output because we expect an error.
 
-> Moreover, we already have a 'socket init' hook, but it runs a bit late.
+We also need to edit the commit message to mention mptcp_join.sh
+selftest also need to be modified, not just pm_netlink.sh.
 
-Indeed. And we cannot move it before the creation of the socket.
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
 
-> Is existing cgroup/sock completely unworkable? Is it possible to
-> expose some new bpf_upgrade_socket_to(IPPROTO_MPTCP) kfunc which would
-> call some new net_proto_family->upgrade_to(IPPROTO_MPTCP) to do the surgery?
-> Or is it too hacky?
+Notes:
+    to be squashed in "selftests: mptcp: pm_nl_ctl: always look for errors"
 
-I cannot judge if it is too hacky or not but if you think it would be
-OK, please tell us :)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Another option Alexei suggested is to add some fentry-like thing:
-> 
-> noinline int update_socket_protocol(int protocol)
-> {
-> 	return protocol;
-> }
-> /* TODO: ^^^ add the above to mod_ret set */
-> 
-> int __sys_socket(int family, int type, int protocol)
-> {
-> 	...
-> 
-> 	protocol = update_socket_protocol(protocol);
-> 
-> 	...
-> }
-> 
-> But it's also too problem specific it seems? And it's not cgroup-aware.
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index d23004ddd0b5..ee1f89a872b3 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3454,7 +3454,7 @@ endpoint_tests()
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
+ 
+-		pm_nl_add_endpoint $ns2 10.0.2.2 id 33
++		pm_nl_add_endpoint $ns2 10.0.2.2 id 33 2>/dev/null
+ 		pm_nl_check_endpoint "ID change is prevented" \
+ 			$ns2 10.0.2.2 id 1 flags implicit
+ 
 
-It looks like it is what Geliang did in his v6. If it is the only
-acceptable solution, I guess we can do without cgroup support. We can
-continue the discussions in his v6 if that's easier.
-
-Cheers,
-Matt
+base-commit: 7ba82a61fdc510b19dde7a394d08cd214e5e280a
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.40.1
+
