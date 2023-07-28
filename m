@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5031BB37
-	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 18:24:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53FC7C433C7;
-	Fri, 28 Jul 2023 18:24:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4696C1BB37
+	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 18:24:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0F34C433C8;
+	Fri, 28 Jul 2023 18:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690568673;
-	bh=Gz77RkZARYsgpklW79EQj7We1jm52OYevZL7fZyIR+g=;
+	s=k20201202; t=1690568699;
+	bh=F0cpj5eFahOn9ypg3aXKx/HpClVUIQLTE+rKq9Oo4Do=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=onK/nw9n5qS5a9olqhsgaikIm0WYbwfyrkE/uf6gKkdqPXF5UsIyYh8e8ILdH6aU/
-	 xe0yOsFpfcAbvFP2DUztoPmgccuOLZAI+m5PF6YutXu2L37DqueqgBvLzwRDg2NqSx
-	 0y0moB8sX+a5MNT7paN3lHl4oK+6Gx+LIuwFwq7yenJiRxfX5KYKZA9Ra4c/Y83F/J
-	 hf9NkoGNOQzjBhx63/b6ShqftaOnVz3ZqAQSiRN5vm5jgq6YhBVmET029ofsdFvIgN
-	 kWXdzQvSUjTZQZ0nEcuy3mYzYo+G7Oq++3/iFUDP9+wJ1qs+YNJuAIF9G8DnSS5cAo
-	 mHQW+hyG17KJQ==
-Date: Fri, 28 Jul 2023 11:24:32 -0700 (PDT)
+	b=n+9h4U2ZONMRE4P833s1w495xwWVr6SHG2yeU+EDJaHZeyoWEbsvrHjagLjL0VYtZ
+	 cAAC7ys4p+Ro8/dVx0R6NWrM18qtAT/b4naAGY2uElRwvWdRknVNPAOp/iVTqDcuZU
+	 AnRIW/5rQUXvjqlA+8qdnoZOmMDTuj8YGbxEf3hfJfmrP6mjuwGP1v+jFc2L2z+QGQ
+	 hS795srjc//VMkSngRR7ffzN0z066JIJObmsAYLko2xXRYabPcZhF9oL1oCWOJVCom
+	 rs88XgHXCq65R4gSaIiyM00vQGShxFgPSZ9PImmdbz7mG3flBSDFC1kzliNR5Gh5M0
+	 8VwplteLQk3cQ==
+Date: Fri, 28 Jul 2023 11:24:59 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: join: colored
- results"
-In-Reply-To: <20230728141833.916787-1-matthieu.baerts@tessares.net>
-Message-ID: <5466723a-9b49-04f9-0b95-defd1efadf4d@kernel.org>
-References: <20230728141833.916787-1-matthieu.baerts@tessares.net>
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: pm_nl_ctl: always
+ look for errors"
+In-Reply-To: <20230728152845.1020528-1-matthieu.baerts@tessares.net>
+Message-ID: <a473db82-70fa-7c50-478d-095b197f577c@kernel.org>
+References: <20230728152845.1020528-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,49 +34,53 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Fri, 28 Jul 2023, Matthieu Baerts wrote:
 
-> New env var to force using colours.
+> mptcp_join.sh selftest tries to add a bad endpoint on purpose ("ID
+> change is prevented") so it is normal to see this error:
 >
-> Most CIs these days support colours in the serial but they will execute
-> scripts in a non interactive mode and colours will then not be displayed
-> by default. So we need a way to force displaying them when we are in
-> this mode:
+>   114 implicit EP
+>         creation                            [ ok ]
+>         mptcp_info subflows=1:1             [ ok ]
+>         mptcp_info add_addr=1:1             [ ok ]
+>   netlink error -22 (Invalid argument)
+>   ./pm_nl_ctl: bailing out due to netlink error[s]
+>         ID change is prevented              [ ok ]
+>         modif is allowed                    [ ok ]
 >
->  SELFTESTS_MPTCP_LIB_COLOR_FORCE=1
+> We can mute the output because we expect an error.
 >
-> Note that it is still possible to force disabling them if needed via the
-> standard NO_COLOR=1 env var way.
+> We also need to edit the commit message to mention mptcp_join.sh
+> selftest also need to be modified, not just pm_netlink.sh.
 >
 > Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 > ---
 >
 > Notes:
->    to be squashed in "selftests: mptcp: join: colored results"
+>    to be squashed in "selftests: mptcp: pm_nl_ctl: always look for errors"
 >
 
-Looks ok to squash, thanks Matthieu.
+Also fine with me to squash this one, thanks for tidying up the confusing 
+output.
 
+- Mat
 
-> tools/testing/selftests/net/mptcp/mptcp_lib.sh | 5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
+> tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index 1080d5d2430b..92a5befe8039 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -10,8 +10,9 @@ readonly KSFT_TEST=$(basename "${0}" | sed 's/\.sh$//g')
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index d23004ddd0b5..ee1f89a872b3 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3454,7 +3454,7 @@ endpoint_tests()
+> 		chk_mptcp_info subflows 1 subflows 1
+> 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
 >
-> MPTCP_LIB_SUBTESTS=()
+> -		pm_nl_add_endpoint $ns2 10.0.2.2 id 33
+> +		pm_nl_add_endpoint $ns2 10.0.2.2 id 33 2>/dev/null
+> 		pm_nl_check_endpoint "ID change is prevented" \
+> 			$ns2 10.0.2.2 id 1 flags implicit
 >
-> -# only if supported and not disabled, see no-color.org
-> -if [ -t 1 ] && [ "${NO_COLOR:-}" != "1" ]; then
-> +# only if supported (or forced) and not disabled, see no-color.org
-> +if { [ -t 1 ] || [ "${SELFTESTS_MPTCP_LIB_COLOR_FORCE:-}" = "1" ]; } &&
-> +   [ "${NO_COLOR:-}" != "1" ]; then
-> 	readonly MPTCP_LIB_COLOR_RED="\E[1;31m"
-> 	readonly MPTCP_LIB_COLOR_GREEN="\E[1;32m"
-> 	readonly MPTCP_LIB_COLOR_YELLOW="\E[1;33m"
 >
-> base-commit: 18d38b0f6b8f3d12bbd55c179b87d3ab014fef48
+> base-commit: 7ba82a61fdc510b19dde7a394d08cd214e5e280a
 > -- 
 > 2.40.1
 >
