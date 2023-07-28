@@ -1,89 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FC01BB37
-	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 18:23:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28FE5C433C7;
-	Fri, 28 Jul 2023 18:23:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5031BB37
+	for <mptcp@lists.linux.dev>; Fri, 28 Jul 2023 18:24:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53FC7C433C7;
+	Fri, 28 Jul 2023 18:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690568622;
-	bh=y+S5ZuzRqN9GAnRVckqeco07cn6B3+SHiezqG6WFeNc=;
+	s=k20201202; t=1690568673;
+	bh=Gz77RkZARYsgpklW79EQj7We1jm52OYevZL7fZyIR+g=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=J30VAusKTCsw57c9rPYUH1AMlMzoqS+xNEedbH85AizYioxwVV7Ul4SvQ36GhFWA5
-	 koufAg084x+f7LnermbRmuy3wiYVb0dhlDjhSfSW/IuS7+k9bm6ho4NB91nwcm3EHQ
-	 p2nvii87uxQ/v0+esP/6ZMJ6b6AsZKvw8kcggP0be3UnawNA7JDKFYiWxuYD1xbaI9
-	 rgVW2/BBB03v9xgXXTGJXRABAnJIYtuqoo0t/3m4vWKGfyMC5VrsSxBdJrGMbMbNW2
-	 BvpDgAweW46UqvfHuPWWJset7cxwJttqkTKbJGxYQoibNC5+NZgga2S52lPmLaJZMq
-	 6EJehV4vIV++Q==
-Date: Fri, 28 Jul 2023 11:23:41 -0700 (PDT)
+	b=onK/nw9n5qS5a9olqhsgaikIm0WYbwfyrkE/uf6gKkdqPXF5UsIyYh8e8ILdH6aU/
+	 xe0yOsFpfcAbvFP2DUztoPmgccuOLZAI+m5PF6YutXu2L37DqueqgBvLzwRDg2NqSx
+	 0y0moB8sX+a5MNT7paN3lHl4oK+6Gx+LIuwFwq7yenJiRxfX5KYKZA9Ra4c/Y83F/J
+	 hf9NkoGNOQzjBhx63/b6ShqftaOnVz3ZqAQSiRN5vm5jgq6YhBVmET029ofsdFvIgN
+	 kWXdzQvSUjTZQZ0nEcuy3mYzYo+G7Oq++3/iFUDP9+wJ1qs+YNJuAIF9G8DnSS5cAo
+	 mHQW+hyG17KJQ==
+Date: Fri, 28 Jul 2023 11:24:32 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>
-cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 08/13] mptcp: add subflow_set_stale
- helper
-In-Reply-To: <b9ca829c-790f-82bf-f0a9-c0d81792ce01@tessares.net>
-Message-ID: <b2e609ac-d848-88bf-cca2-e635d7ca5ec2@kernel.org>
-References: <cover.1689650435.git.geliang.tang@suse.com> <94b445b3225d4f91e2d05cab0338c4367ecbabb4.1689650435.git.geliang.tang@suse.com> <f678a249-e191-05ca-012f-28811c520b51@kernel.org> <b9ca829c-790f-82bf-f0a9-c0d81792ce01@tessares.net>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: join: colored
+ results"
+In-Reply-To: <20230728141833.916787-1-matthieu.baerts@tessares.net>
+Message-ID: <5466723a-9b49-04f9-0b95-defd1efadf4d@kernel.org>
+References: <20230728141833.916787-1-matthieu.baerts@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-1772668913-1690568622=:84334"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---0-1772668913-1690568622=:84334
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Fri, 28 Jul 2023, Matthieu Baerts wrote:
 
-> Hi Mat,
+> New env var to force using colours.
 >
-> On 28/07/2023 03:30, Mat Martineau wrote:
->> On Tue, 18 Jul 2023, Geliang Tang wrote:
->>
->>> Add mptcp_subflow_set_stale() helper.
->>>
->>
->> I was trying to remember the use case for this. The closest thing I can
->> find is this:
->>
->>     => the scheduler should be able to interact with the "stale" logic
->>        we have in the upstream kernel: mark a subflow as stale / back
->>        active.
->>
->> from
->> https://lore.kernel.org/mptcp/dd4363e7-d057-97e8-0b5f-8570f39aa538@tessares.net/
->>
->> I think that need is met by the change in patch 11 to export
->> mptcp_pm_subflow_chk_stale - if a particular scheduler wants to track
->> some stale-like metric, it can do so with its own sk_storage values.
->> There's also the matter of coordinating the values of stale_count and
->> stale_rcv_tstamp.
->>
->> My suggestion is to drop patches 8, 9, and 10 unless there's a
->> compelling reason to allow a BPF scheduler to control this bit. If
->> there's a need for it please speak up!
+> Most CIs these days support colours in the serial but they will execute
+> scripts in a non interactive mode and colours will then not be displayed
+> by default. So we need a way to force displaying them when we are in
+> this mode:
 >
-> If I'm not mistaken, the 'stale' logic is currently used by the core not
-> to use a subflow (when calling mptcp_subflow_active()). A packet
-> scheduler might want to proactively mark a subflow as stall, e.g. if the
-> latency is too high, too many retransmissions, etc. and just set the
-> subflow as stale.
+>  SELFTESTS_MPTCP_LIB_COLOR_FORCE=1
 >
-> But maybe we cannot do that because the core will reset stale in some
-> conditions? Maybe we need something similar but not reusing "stale"?
+> Note that it is still possible to force disabling them if needed via the
+> standard NO_COLOR=1 env var way.
+>
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> ---
+>
+> Notes:
+>    to be squashed in "selftests: mptcp: join: colored results"
 >
 
-That's what I'm thinking, yes. Individual BPF schedulers could create 
-their own "skip this subflow if possible" variables in their custom 
-sk_storage structs, and those would not have the complex interactions with 
-stale_count and stale_rcv_tstamp.
+Looks ok to squash, thanks Matthieu.
 
 
-- Mat
---0-1772668913-1690568622=:84334--
+> tools/testing/selftests/net/mptcp/mptcp_lib.sh | 5 +++--
+> 1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 1080d5d2430b..92a5befe8039 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -10,8 +10,9 @@ readonly KSFT_TEST=$(basename "${0}" | sed 's/\.sh$//g')
+>
+> MPTCP_LIB_SUBTESTS=()
+>
+> -# only if supported and not disabled, see no-color.org
+> -if [ -t 1 ] && [ "${NO_COLOR:-}" != "1" ]; then
+> +# only if supported (or forced) and not disabled, see no-color.org
+> +if { [ -t 1 ] || [ "${SELFTESTS_MPTCP_LIB_COLOR_FORCE:-}" = "1" ]; } &&
+> +   [ "${NO_COLOR:-}" != "1" ]; then
+> 	readonly MPTCP_LIB_COLOR_RED="\E[1;31m"
+> 	readonly MPTCP_LIB_COLOR_GREEN="\E[1;32m"
+> 	readonly MPTCP_LIB_COLOR_YELLOW="\E[1;33m"
+>
+> base-commit: 18d38b0f6b8f3d12bbd55c179b87d3ab014fef48
+> -- 
+> 2.40.1
+>
+>
+>
