@@ -1,241 +1,140 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A729E4429
-	for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 13:56:44 +0000 (UTC)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2b9f0b7af65so8946481fa.1
-        for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 06:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1690811802; x=1691416602;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=//IuSF4aR8dDqdSUTPXRXM7wMeZmyHZKY6Im4lg/WZA=;
-        b=LmkI7deeD2ks/5C8RN/irm6cJromc4pVohQqFgm+kYIyM/FhhiHSbwR/wZtwbsAZ3Y
-         nhki4BBNcC4SYzhXv3w+vyXgnRyrS7U0A9AjcHduigl4wz3qK60pzT+Vaf22lkMNnXS5
-         GArHH+YQttOEsMC9C0qVcKcHFkAiGz5MNM5I5n0fmWRsHxGz79bc0Tr8CD0/zAm9qsGP
-         YtW2dyqPXFmRSfc8iiyhVjq211n8k2vMr8jdS4zOzLnPAxWsHwnTZ3kB2uV22HNnL9C5
-         V7jbptUdpJjN/bAWZzMx7/xvbs/CEKgqpYUZ/I0G8V2A4HzFtx+y+LqbFvaB18dskmWs
-         zf9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690811802; x=1691416602;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=//IuSF4aR8dDqdSUTPXRXM7wMeZmyHZKY6Im4lg/WZA=;
-        b=l5liO3V9bNswn8SR3WlC8g9U9Z3s9tgz/7k7+L/kStT/NF/e4ErH+zJN8ZxViKyVfI
-         kCNGqIfF2BYUhTPIKM0CoF1ImbgOlSUXemBO+pq4oiDxO7HtY+gFIzCTluhrb3uZDD8q
-         Ve6NJzhhzk+SrhnQDwoBgmgzlvgGdK0SjBmyLyFjZ/90CXSZu5NvBf3ibL5aUOSk8uq1
-         3r4J+qmqnRvMCC1RY009eg5e4jF8GhHXrt14OCTQ7taQGMEqWj148VZI+c6uZai+cuNT
-         OcMxHRfq3/bdHHkx1yFx9/0davHdz/DJqgy1R/dlufFCYsK4bP7+whf/aLgMr1iS6/a6
-         ldvg==
-X-Gm-Message-State: ABy/qLZEgdrzO6f7WUZtR9tbNjuAnW2WBuEYEwBJ4NMg9D3TxKOswFSo
-	7CaohYjSp3qYKcj0rUsQSs5BlA==
-X-Google-Smtp-Source: APBJJlHKc9Sq7znL8pmKS0GHJT9fHimiY4SCiPYkbNF+F1H/EbJPFLhADxI0WinnSPbnG2LtV5voIQ==
-X-Received: by 2002:a2e:8192:0:b0:2b6:dfef:d526 with SMTP id e18-20020a2e8192000000b002b6dfefd526mr39265ljg.11.1690811801505;
-        Mon, 31 Jul 2023 06:56:41 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:98dd:e30:7e10:82aa? ([2a02:578:8593:1200:98dd:e30:7e10:82aa])
-        by smtp.gmail.com with ESMTPSA id i9-20020a1709061cc900b0099b5a71b0bfsm6226337ejh.94.2023.07.31.06.56.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Jul 2023 06:56:41 -0700 (PDT)
-Message-ID: <b1f63c3f-5a26-4c69-af8f-216eaac19b69@tessares.net>
-Date: Mon, 31 Jul 2023 15:56:40 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34D91DDD3;
+	Mon, 31 Jul 2023 18:30:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 082BDC433C7;
+	Mon, 31 Jul 2023 18:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690828234;
+	bh=azdNP8cF85m7UDvgXMTAEEGyM/wWyMIGFgmuwIc8ul0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O1VpJucJ8qJ4G6AE1OKV3xdN/xK/FDklzv/nwqYZajcZtRy+LSUQU50X+sHs9AxvB
+	 xsU2buC2SUK4CZR3jjYJZtrydR9Bbqd9WCPwdG5zMYEjJLfGD0nXQIDtdar/ei7qKh
+	 Q4AFqyXfVyBH57dywLI4uw0Frcitouu9e42wpiwCGypovk04FOzCfl60zxzFG2eyak
+	 ANZHJkor5YlN+5saTB/xwrXYhgw16Q93h89m9IIkWKyhNAHwsbqX1ZrfONEa6iuY6k
+	 btG9dsvLFpB0/w7f/xaTE6xEYGtgYWH7rF7vGs2JSC6YVtwrN6iixwxcTNdpmmdRV2
+	 wiQHQ/+OXxCxw==
+Date: Mon, 31 Jul 2023 20:30:21 +0200
+From: Simon Horman <horms@kernel.org>
+To: Joel Granados <joel.granados@gmail.com>
+Cc: mcgrof@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Kees Cook <keescook@chromium.org>,
+	"D. Wythe" <alibuda@linux.alibaba.com>, mptcp@lists.linux.dev,
+	Jakub Kicinski <kuba@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+	Paolo Abeni <pabeni@redhat.com>, coreteam@netfilter.org,
+	Jan Karcher <jaka@linux.ibm.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	bridge@lists.linux-foundation.org,
+	linux-arm-kernel@lists.infradead.org,
+	Joerg Reuter <jreuter@yaina.de>, Julian Anastasov <ja@ssi.bg>,
+	David Ahern <dsahern@kernel.org>, netfilter-devel@vger.kernel.org,
+	Wen Gu <guwen@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+	Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+	linux-wpan@vger.kernel.org, lvs-devel@vger.kernel.org,
+	Karsten Graul <kgraul@linux.ibm.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-sctp@vger.kernel.org, Tony Lu <tonylu@linux.alibaba.com>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Ralf Baechle <ralf@linux-mips.org>, Florian Westphal <fw@strlen.de>,
+	willy@infradead.org, Heiko Carstens <hca@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>, linux-rdma@vger.kernel.org,
+	Roopa Prabhu <roopa@nvidia.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Simon Horman <horms@verge.net.au>,
+	Mat Martineau <martineau@kernel.org>, josh@joshtriplett.org,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Eric Dumazet <edumazet@google.com>, linux-hams@vger.kernel.org,
+	Wenjia Zhang <wenjia@linux.ibm.com>, linux-fsdevel@vger.kernel.org,
+	linux-s390@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>, netdev@vger.kernel.org,
+	rds-devel@oss.oracle.com, Joel Granados <j.granados@samsung.com>
+Subject: Re: [PATCH v2 03/14] sysctl: Add ctl_table_size to ctl_table_header
+Message-ID: <ZMf9vZpGE98oM9W2@kernel.org>
+References: <20230731071728.3493794-1-j.granados@samsung.com>
+ <20230731071728.3493794-4-j.granados@samsung.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [RFC bpf-next v5] bpf: Force to MPTCP
-Content-Language: en-GB
-To: Stanislav Fomichev <sdf@google.com>
-Cc: Paul Moore <paul@paul-moore.com>, Geliang Tang <geliang.tang@suse.com>,
- Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, apparmor@lists.ubuntu.com,
- linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <3076188eb88cca9151a2d12b50ba1e870b11ce09.1689693294.git.geliang.tang@suse.com>
- <CAHC9VhS_LKdkEmm5_J5y34RpaRcTbg8==fpz8pMThDCjF6nYtQ@mail.gmail.com>
- <b41babb1-f0f2-dc2f-c2e3-1870107fbd9f@tessares.net>
- <ZMKxC+CFj4GbCklg@google.com>
- <1023fdeb-a45a-2e9e-cd2e-7e44e655e8fc@tessares.net>
- <ZMPyCt2uozns776Q@google.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <ZMPyCt2uozns776Q@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230731071728.3493794-4-j.granados@samsung.com>
 
-Hi Stanislav,
+On Mon, Jul 31, 2023 at 09:17:17AM +0200, Joel Granados wrote:
+> The new ctl_table_size element will hold the size of the ctl_table
+> arrays contained in the ctl_table_header. This value should eventually
+> be passed by the callers to the sysctl register infrastructure. And
+> while this commit introduces the variable, it does not set nor use it
+> because that requires case by case considerations for each caller.
+> 
+> It provides two important things: (1) A place to put the
+> result of the ctl_table array calculation when it gets introduced for
+> each caller. And (2) the size that will be used as the additional
+> stopping criteria in the list_for_each_table_entry macro (to be added
+> when all the callers are migrated)
+> 
+> Signed-off-by: Joel Granados <j.granados@samsung.com>
+> ---
+>  include/linux/sysctl.h | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+> index 59d451f455bf..33252ad58ebe 100644
+> --- a/include/linux/sysctl.h
+> +++ b/include/linux/sysctl.h
+> @@ -159,12 +159,22 @@ struct ctl_node {
+>  	struct ctl_table_header *header;
+>  };
+>  
+> -/* struct ctl_table_header is used to maintain dynamic lists of
+> -   struct ctl_table trees. */
+> +/**
+> + * struct ctl_table_header - maintains dynamic lists of struct ctl_table trees
+> + * @ctl_table: pointer to the first element in ctl_table array
+> + * @ctl_table_size: number of elements pointed by @ctl_table
+> + * @used: The entry will never be touched when equal to 0.
+> + * @count: Upped every time something is added to @inodes and downed every time
+> + *         something is removed from inodes
+> + * @nreg: When nreg drops to 0 the ctl_table_header will be unregistered.
+> + * @rcu: Delays the freeing of the inode. Introduced with "unfuck proc_sysctl ->d_compare()"
+> + *
+> + */
 
-On 28/07/2023 18:51, Stanislav Fomichev wrote:
-> On 07/28, Matthieu Baerts wrote:
->> Hi Stanislav,
->>
->> On 27/07/2023 20:01, Stanislav Fomichev wrote:
->>> On 07/27, Matthieu Baerts wrote:
->>>> Hi Paul, Stanislav,
->>>>
->>>> On 18/07/2023 18:14, Paul Moore wrote:
->>>>> On Tue, Jul 18, 2023 at 11:21 AM Geliang Tang <geliang.tang@suse.com> wrote:
->>>>>>
->>>>>> As is described in the "How to use MPTCP?" section in MPTCP wiki [1]:
->>>>>>
->>>>>> "Your app can create sockets with IPPROTO_MPTCP as the proto:
->>>>>> ( socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP); ). Legacy apps can be
->>>>>> forced to create and use MPTCP sockets instead of TCP ones via the
->>>>>> mptcpize command bundled with the mptcpd daemon."
->>>>>>
->>>>>> But the mptcpize (LD_PRELOAD technique) command has some limitations
->>>>>> [2]:
->>>>>>
->>>>>>  - it doesn't work if the application is not using libc (e.g. GoLang
->>>>>> apps)
->>>>>>  - in some envs, it might not be easy to set env vars / change the way
->>>>>> apps are launched, e.g. on Android
->>>>>>  - mptcpize needs to be launched with all apps that want MPTCP: we could
->>>>>> have more control from BPF to enable MPTCP only for some apps or all the
->>>>>> ones of a netns or a cgroup, etc.
->>>>>>  - it is not in BPF, we cannot talk about it at netdev conf.
->>>>>>
->>>>>> So this patchset attempts to use BPF to implement functions similer to
->>>>>> mptcpize.
->>>>>>
->>>>>> The main idea is add a hook in sys_socket() to change the protocol id
->>>>>> from IPPROTO_TCP (or 0) to IPPROTO_MPTCP.
->>>>>>
->>>>>> [1]
->>>>>> https://github.com/multipath-tcp/mptcp_net-next/wiki
->>>>>> [2]
->>>>>> https://github.com/multipath-tcp/mptcp_net-next/issues/79
->>>>>>
->>>>>> v5:
->>>>>>  - add bpf_mptcpify helper.
->>>>>>
->>>>>> v4:
->>>>>>  - use lsm_cgroup/socket_create
->>>>>>
->>>>>> v3:
->>>>>>  - patch 8: char cmd[128]; -> char cmd[256];
->>>>>>
->>>>>> v2:
->>>>>>  - Fix build selftests errors reported by CI
->>>>>>
->>>>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/79
->>>>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
->>>>>> ---
->>>>>>  include/linux/bpf.h                           |   1 +
->>>>>>  include/linux/lsm_hook_defs.h                 |   2 +-
->>>>>>  include/linux/security.h                      |   6 +-
->>>>>>  include/uapi/linux/bpf.h                      |   7 +
->>>>>>  kernel/bpf/bpf_lsm.c                          |   2 +
->>>>>>  net/mptcp/bpf.c                               |  20 +++
->>>>>>  net/socket.c                                  |   4 +-
->>>>>>  security/apparmor/lsm.c                       |   8 +-
->>>>>>  security/security.c                           |   2 +-
->>>>>>  security/selinux/hooks.c                      |   6 +-
->>>>>>  tools/include/uapi/linux/bpf.h                |   7 +
->>>>>>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 128 ++++++++++++++++--
->>>>>>  tools/testing/selftests/bpf/progs/mptcpify.c  |  17 +++
->>>>>>  13 files changed, 187 insertions(+), 23 deletions(-)
->>>>>>  create mode 100644 tools/testing/selftests/bpf/progs/mptcpify.c
->>>>>
->>>>> ...
->>>>>
->>>>>> diff --git a/security/security.c b/security/security.c
->>>>>> index b720424ca37d..bbebcddce420 100644
->>>>>> --- a/security/security.c
->>>>>> +++ b/security/security.c
->>>>>> @@ -4078,7 +4078,7 @@ EXPORT_SYMBOL(security_unix_may_send);
->>>>>>   *
->>>>>>   * Return: Returns 0 if permission is granted.
->>>>>>   */
->>>>>> -int security_socket_create(int family, int type, int protocol, int kern)
->>>>>> +int security_socket_create(int *family, int *type, int *protocol, int kern)
->>>>>>  {
->>>>>>         return call_int_hook(socket_create, 0, family, type, protocol, kern);
->>>>>>  }
->>>>>
->>>>> Using the LSM to change the protocol family is not something we want
->>>>> to allow.  I'm sorry, but you will need to take a different approach.
->>>>
->>>> @Paul: Thank you for your feedback. It makes sense and I understand.
->>>>
->>>> @Stanislav: Despite the fact the implementation was smaller and reusing
->>>> more code, it looks like we cannot go in the direction you suggested. Do
->>>> you think what Geliang suggested before in his v3 [1] can be accepted?
->>>>
->>>> (Note that the v3 is the same as the v1, only some fixes in the selftests.)
->>>
->>> We have too many hooks in networking, so something that doesn't add
->>> a new one is preferable :-(
->>
->> Thank you for your reply and the explanation, I understand.
->>
->>> Moreover, we already have a 'socket init' hook, but it runs a bit late.
->>
->> Indeed. And we cannot move it before the creation of the socket.
->>
->>> Is existing cgroup/sock completely unworkable? Is it possible to
->>> expose some new bpf_upgrade_socket_to(IPPROTO_MPTCP) kfunc which would
->>> call some new net_proto_family->upgrade_to(IPPROTO_MPTCP) to do the surgery?
->>> Or is it too hacky?
->>
->> I cannot judge if it is too hacky or not but if you think it would be
->> OK, please tell us :)
-> 
-> Maybe try and see how it goes? Doing the surgery to convert from tcp
-> to mptcp is probably hard, but it seems that we should be able to
-> do something like:
-> 
-> int upgrade_to(sock, sk) {
-> 	if (sk is not a tcp one) return -EINVAL;
-> 
-> 	sk_common_release(sk);
-> 	return inet6_create(net, sock, IPPROTO_MPTCP, false);
-> }
-> 
-> ?
-> 
-> The only thing I'm not sure about is whether you can call inet6_create
-> on a socket that has seen sk_common_release'd...
+Hi Joel,
 
-Oh sorry, now I better understand your suggestion and the fact it is
-hacky. Good workaround, we can keep this in mind if there is no other
-solutions to avoid these create-release-create operations.
+Please consider also adding kernel doc entries for the other fields of
+struct ctl_table_header. According to ./scripts/kernel-doc -none
+they are:
 
->>> Another option Alexei suggested is to add some fentry-like thing:
->>>
->>> noinline int update_socket_protocol(int protocol)
->>> {
->>> 	return protocol;
->>> }
->>> /* TODO: ^^^ add the above to mod_ret set */
->>>
->>> int __sys_socket(int family, int type, int protocol)
->>> {
->>> 	...
->>>
->>> 	protocol = update_socket_protocol(protocol);
->>>
->>> 	...
->>> }
->>>
->>> But it's also too problem specific it seems? And it's not cgroup-aware.
->>
->> It looks like it is what Geliang did in his v6. If it is the only
->> acceptable solution, I guess we can do without cgroup support. We can
->> continue the discussions in his v6 if that's easier.
+  unregistering
+  ctl_table_arg
+  root
+  set
+  parent
+  node
+  inodes
+
+
+>  struct ctl_table_header {
+>  	union {
+>  		struct {
+>  			struct ctl_table *ctl_table;
+> +			int ctl_table_size;
+>  			int used;
+>  			int count;
+>  			int nreg;
+> -- 
+> 2.30.2
 > 
-> Ack, that works too, let's see how other people feel about it. I'm
-> assuming in the bpf program we can always do bpf_get_current_cgroup_id()
-> to filter by cgroup.
-
-Good point, that works too and looks enough!
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
