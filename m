@@ -1,43 +1,43 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E998611CA7
-	for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 07:17:47 +0000 (UTC)
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2b9cdbf682eso40838251fa.2
-        for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 00:17:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5915A11CA6
+	for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 07:17:49 +0000 (UTC)
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2b9bf52cd08so62008621fa.2
+        for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 00:17:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690787866; x=1691392666;
+        d=gmail.com; s=20221208; t=1690787867; x=1691392667;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=y0Ehqjwr7n7aalL24v3eoFH6zkXkMLmEA1uyOzpkdUI=;
-        b=MMJ3zmlm+ZJSjUcgcBWQWrwaggsjh94Z2AR980Bf99gKqQJUyC2ds+8t0ZeFBA6SE5
-         24bUAx+92gKv6CUrTwCkMK8kfM+dwMVGnHaj/AIXPoADG9x3rQAur+o+St1Eok7ymlce
-         AF4RpYKX37AcRilTHnU72J6udZJqoz3jQg/7wCljI1W/KcTklcvbrGsKWCJv+nVB8G5x
-         hEp+AlCxMyzzLla50oNzqDrTH/0qUVyZK/xeXS7jSsjAu2wovGv41EdSJWQh2uoqZ6Vt
-         jmE7aEISXo5G9dsumdaGNwwcCF3PIOj/Z3gamIsUiNsCIUgk2qMpgg40uc6qs9aYb63F
-         3W6A==
+        bh=FA2Np0axnCcM7zYYQ9J3PNsrfsw3IGeC9vgEKu3nCGU=;
+        b=jpMYG4ou2L8vx2RUTUVRXZn7QJd4O0UHRyIOfry+GKXNJ0D69hHzOKIYQpPA6HaqRE
+         umaqJcW9NZXGPZQINuL3wnrYgUKUIPz5ES5koMDs9pynqpjXiHO0T4X35LGLZqyvkUxt
+         y5rrXas7E/57rsua1yTM/R2vhj/Ln+GI8yIlALAZZMw+DMJp7xcL95cs4+PT6jO7lxJI
+         4in1qYNAa9Mp3ldQ5ZuTfU2Jnxvms9t8PJfqgFhC+6X45niZPOKR6/+AYAJtA4d2Uv0Q
+         yYLYFl1l8p0M4CNtbKY9eLk022rVeciWFTXU+gb6zmEVa9stfbrZfEcpkrfARkIYsZwN
+         eKjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690787866; x=1691392666;
+        d=1e100.net; s=20221208; t=1690787867; x=1691392667;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y0Ehqjwr7n7aalL24v3eoFH6zkXkMLmEA1uyOzpkdUI=;
-        b=PHWJcXxBNz7zt7rqQeaGht6ea955hJB/LqDr8A4Qo25jwu+1vx/QfqrMgsRrlDF/B/
-         Qv6CHdcOE0rnN4XzRcSRbw1QTndUemEJ3Iogq2jDADAyNM6UYTtVXikeM+VZ6bFiouBj
-         42m4ZpP7Pr5qtKS1lY/xuUeutw/9fUV3PSL9j0ITTG62jqpYzJqRQAbT3NTOWD6dAU4v
-         /bI3NEQHdEKLmjrugoakrMuDMEPcFLB2PhW4T9rZEVOHmtzGlVLngKWOTj778BH2cxGR
-         65p0l6jVwEEigFwLHNmufuQ4R7OA0WV8ealpWy4Y1KLwUCpQ3LsQ0WOtFFv+gAAjlCpw
-         gFtA==
-X-Gm-Message-State: ABy/qLa9N72aJnZ/7kKBlhNwFMd1LPnvjzI4HT13pGPVDhHwdlj/bHm4
-	K60CQSGLvL7ru7oJnAomcZs=
-X-Google-Smtp-Source: APBJJlFF1k1XPdJyinXXL06Hcxxg+HVkyLmTOsHve4wKOdZvgvUFkTAe++yLIQ35HRVigMBvfSHChA==
-X-Received: by 2002:a2e:3e17:0:b0:2b6:e2cd:20f5 with SMTP id l23-20020a2e3e17000000b002b6e2cd20f5mr6347509lja.9.1690787865727;
-        Mon, 31 Jul 2023 00:17:45 -0700 (PDT)
+        bh=FA2Np0axnCcM7zYYQ9J3PNsrfsw3IGeC9vgEKu3nCGU=;
+        b=L/Ut5oYnBTykfTrroHCWWM/CH4Yz8FbGUGegBbLYBsvIGt16pcgnUCkO1K6/oiQQd+
+         XIj8PRZCIs9Plit33oz2rRktoAi9nohE3MjeWPMg4DY1jJstZFmSWROp3lJuHrS6Thig
+         Fi34+8lJnQjuf81SUUnbrHAKDWu9jwiUHSPRIH5ZikUiQrQ5AM7a+TBut6CSEEHalmx8
+         g0StbKDwBpNWhxYQKNKSiQP/pvBGJs94V9mEkrhaVNQ6n5KfHNlT67vS0tNyBd4LI3tG
+         5Z0hp95XRsw4toeoV2KTPKdWhr7igaQ6CBHcMv66xSC/3ZzbUKgYgsaF/ky5kyES757v
+         9vwg==
+X-Gm-Message-State: ABy/qLZUOQ/L4/n6BNkxTXpb9VcDD3uwzBgpkkx0ffQckqXPhafGiRwI
+	iPrDJ8da8gIkpWk6iOO5NWQ=
+X-Google-Smtp-Source: APBJJlEUHduQ6vqONIipC16XnwJoyZYKU6g5x9FU+aI2Csu22dyES0/suPxLH7mDv/letF0OMgVMig==
+X-Received: by 2002:a2e:7c06:0:b0:2b9:c4f6:fdd with SMTP id x6-20020a2e7c06000000b002b9c4f60fddmr5409655ljc.14.1690787867211;
+        Mon, 31 Jul 2023 00:17:47 -0700 (PDT)
 Received: from localhost ([165.225.194.214])
-        by smtp.gmail.com with ESMTPSA id 3-20020a05600c22c300b003fe13c3ece7sm6432930wmg.10.2023.07.31.00.17.45
+        by smtp.gmail.com with ESMTPSA id f25-20020a1c6a19000000b003fe24da493dsm231228wmc.41.2023.07.31.00.17.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 00:17:45 -0700 (PDT)
+        Mon, 31 Jul 2023 00:17:46 -0700 (PDT)
 From: Joel Granados <joel.granados@gmail.com>
 X-Google-Original-From: Joel Granados <j.granados@samsung.com>
 To: mcgrof@kernel.org
@@ -97,11 +97,10 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,
 	Nikolay Aleksandrov <razor@blackwall.org>,
 	netdev@vger.kernel.org,
 	rds-devel@oss.oracle.com,
-	Joel Granados <j.granados@samsung.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 08/14] sysctl: Add size to register_net_sysctl function
-Date: Mon, 31 Jul 2023 09:17:22 +0200
-Message-Id: <20230731071728.3493794-9-j.granados@samsung.com>
+	Joel Granados <j.granados@samsung.com>
+Subject: [PATCH v2 09/14] ax.25: Update to register_net_sysctl_sz
+Date: Mon, 31 Jul 2023 09:17:23 +0200
+Message-Id: <20230731071728.3493794-10-j.granados@samsung.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230731071728.3493794-1-j.granados@samsung.com>
 References: <20230731071728.3493794-1-j.granados@samsung.com>
@@ -113,107 +112,34 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit adds size to the register_net_sysctl indirection function to
-facilitate the removal of the sentinel elements (last empty markers)
-from the ctl_table arrays. Though we don't actually remove any sentinels
-in this commit, register_net_sysctl* now has the capability of
-forwarding table_size for when that happens.
-
-We create a new function register_net_sysctl_sz with an extra size
-argument. A macro replaces the existing register_net_sysctl. The size in
-the macro is SIZE_MAX instead of ARRAY_SIZE to avoid compilation errors
-while we systematically migrate to register_net_sysctl_sz. Will change
-to ARRAY_SIZE in subsequent commits.
-
-Care is taken to add table_size to the stopping criteria in such a way
-that when we remove the empty sentinel element, it will continue
-stopping in the last element of the ctl_table array.
+Move from register_net_sysctl to register_net_sysctl_sz and pass the
+ARRAY_SIZE of the ctl_table array that was used to create the table
+variable. We need to move to the new function in preparation for when we
+change SIZE_MAX to ARRAY_SIZE() in the register_net_sysctl macro.
+Failing to do so would erroneously allow ARRAY_SIZE() to be called on a
+pointer. We hold off the SIZE_MAX to ARRAY_SIZE change until we have
+migrated all the relevant net sysctl registering functions to
+register_net_sysctl_sz in subsequent commits.
 
 Signed-off-by: Joel Granados <j.granados@samsung.com>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/net_namespace.h | 10 ++++++----
- net/sysctl_net.c            | 22 +++++++++++++---------
- 2 files changed, 19 insertions(+), 13 deletions(-)
+ net/ax25/sysctl_net_ax25.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
-index 78beaa765c73..e4e5fe75a281 100644
---- a/include/net/net_namespace.h
-+++ b/include/net/net_namespace.h
-@@ -469,15 +469,17 @@ void unregister_pernet_device(struct pernet_operations *);
+diff --git a/net/ax25/sysctl_net_ax25.c b/net/ax25/sysctl_net_ax25.c
+index 2154d004d3dc..db66e11e7fe8 100644
+--- a/net/ax25/sysctl_net_ax25.c
++++ b/net/ax25/sysctl_net_ax25.c
+@@ -159,7 +159,8 @@ int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
+ 		table[k].data = &ax25_dev->values[k];
  
- struct ctl_table;
- 
-+#define register_net_sysctl(net, path, table)	\
-+	register_net_sysctl_sz(net, path, table, SIZE_MAX)
- #ifdef CONFIG_SYSCTL
- int net_sysctl_init(void);
--struct ctl_table_header *register_net_sysctl(struct net *net, const char *path,
--					     struct ctl_table *table);
-+struct ctl_table_header *register_net_sysctl_sz(struct net *net, const char *path,
-+					     struct ctl_table *table, size_t table_size);
- void unregister_net_sysctl_table(struct ctl_table_header *header);
- #else
- static inline int net_sysctl_init(void) { return 0; }
--static inline struct ctl_table_header *register_net_sysctl(struct net *net,
--	const char *path, struct ctl_table *table)
-+static inline struct ctl_table_header *register_net_sysctl_sz(struct net *net,
-+	const char *path, struct ctl_table *table, size_t table_size)
- {
- 	return NULL;
- }
-diff --git a/net/sysctl_net.c b/net/sysctl_net.c
-index d9cbbb51b143..051ed5f6fc93 100644
---- a/net/sysctl_net.c
-+++ b/net/sysctl_net.c
-@@ -122,12 +122,13 @@ __init int net_sysctl_init(void)
-  *    allocated.
-  */
- static void ensure_safe_net_sysctl(struct net *net, const char *path,
--				   struct ctl_table *table)
-+				   struct ctl_table *table, size_t table_size)
- {
- 	struct ctl_table *ent;
- 
- 	pr_debug("Registering net sysctl (net %p): %s\n", net, path);
--	for (ent = table; ent->procname; ent++) {
-+	ent = table;
-+	for (size_t i = 0; i < table_size && ent->procname; ent++, i++) {
- 		unsigned long addr;
- 		const char *where;
- 
-@@ -160,21 +161,24 @@ static void ensure_safe_net_sysctl(struct net *net, const char *path,
- 	}
- }
- 
--struct ctl_table_header *register_net_sysctl(struct net *net,
--	const char *path, struct ctl_table *table)
-+struct ctl_table_header *register_net_sysctl_sz(struct net *net,
-+						const char *path,
-+						struct ctl_table *table,
-+						size_t table_size)
- {
--	int count = 0;
-+	int count;
- 	struct ctl_table *entry;
- 
- 	if (!net_eq(net, &init_net))
--		ensure_safe_net_sysctl(net, path, table);
-+		ensure_safe_net_sysctl(net, path, table, table_size);
- 
--	for (entry = table; entry->procname; entry++)
--		count++;
-+	entry = table;
-+	for (count = 0 ; count < table_size && entry->procname; entry++, count++)
-+		;
- 
- 	return __register_sysctl_table(&net->sysctls, path, table, count);
- }
--EXPORT_SYMBOL_GPL(register_net_sysctl);
-+EXPORT_SYMBOL_GPL(register_net_sysctl_sz);
- 
- void unregister_net_sysctl_table(struct ctl_table_header *header)
- {
+ 	snprintf(path, sizeof(path), "net/ax25/%s", ax25_dev->dev->name);
+-	ax25_dev->sysheader = register_net_sysctl(&init_net, path, table);
++	ax25_dev->sysheader = register_net_sysctl_sz(&init_net, path, table,
++						     ARRAY_SIZE(ax25_param_table));
+ 	if (!ax25_dev->sysheader) {
+ 		kfree(table);
+ 		return -ENOMEM;
 -- 
 2.30.2
 
