@@ -1,504 +1,387 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAA02100
-	for <mptcp@lists.linux.dev>; Sun, 30 Jul 2023 08:05:36 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3fb4146e8deso40724265e9.0
-        for <mptcp@lists.linux.dev>; Sun, 30 Jul 2023 01:05:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C041FDA
+	for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 07:17:32 +0000 (UTC)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2b9e6cc93c6so11869951fa.2
+        for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 00:17:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1690704335; x=1691309135;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TCqeCrU2BUMxCmMmdaeVjNV60zHyKZc+fhAxY8XjBeU=;
-        b=VHrrFm9h1bH0Fa9QZgFGcYoLawQmLPjdabDyJZ7nxZJwnfeH9bQgILDFCp0d83jB7Q
-         EAXmG5b9uT/86Igj/oYHgUfrff0wLs+fFJ+Vlvo3jDksPdLUnwh6t4j60uK2aIDfXw6Q
-         +ocSCQTkbby0co6GhFa4K2Vz31GLq9FAkYvD7w20SS6Z/O9HCklDpw+NuceIhlKSbKM9
-         dSJoCc1yn7lDyF1jlkqe3J+NDf2h76MsGgZ4PZGFFCJ4kYSwCkrqPQVBVxpWMb0+zeRy
-         u11uMXMr+87PC3Vn9Wz7JKliN+IUotcXtTQicj2MqwEwuTVbHtqkQTCs8hclkIQY7rcw
-         ilPw==
+        d=gmail.com; s=20221208; t=1690787850; x=1691392650;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7wceAR80ht6V8UDrNIuYtWCCNzgC5666xu1w58CAmzE=;
+        b=KsdMyLQDqJxdf7UrLyN+lgd8CyVBkzcc+3WL6Hpc6GL56/FLvLpAs3fDCKrllFB75w
+         I4xgpt3dPofWII8KOjE/gW2MpcXOpd17aPJhlBDpFxJRzFbr1vKzw7PW1AvkSsLnyUVu
+         CvdoacfbhJhD9wfsK8o8tM/Q79GXdixX3jA6DueTdYN1GEY2PWBVKEqfB1k6l8+wS4Dx
+         8S2pkXOAqhx+oaKekXDNCYYEasskPpy/q4BffiqS7SVBSYjKiMqQkTqs3u4SuPOG8kxz
+         eMAX8xJfS9me1lyz0rBWtYaolq3o98cMupXpy6BbcB3kSwOdAPGLnTOihehT1zbZeveh
+         0vQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690704335; x=1691309135;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TCqeCrU2BUMxCmMmdaeVjNV60zHyKZc+fhAxY8XjBeU=;
-        b=Y+QgmdusYAzodKj+tr/eC5H/helrkwtmbrkaCMARrPP5g5weBK4CT4RP7ojNHyB9u3
-         tikKkkmSu7NpIh5zfasr+TImIMw+83Qqqnoss912xXCTQoQDQkjsdCM3Ul9EbNeoTpQM
-         lojtIO8D7m5qNhlJYlB+2Atq1Jyjg8mqRXFYIMIVZCpGa/8aLSX3Mgl+Q4gZWMcdBTgf
-         Fss4yyj5zVldNAppKRSH5d2YpCwzh7PBYEVPFYtzdrb5ik/pXLAfnSoRE88SZ+ZlUrk5
-         5kvcrZ42tLHvuCMqqimzxbZO3Mu+UI64ZxP/q7rM/BS3PtJLQLx2AQuk2ZuVe0epe+Dr
-         hiSA==
-X-Gm-Message-State: ABy/qLaAkGRGEaJfiyCxt5bDMmVzqXGtn7xMp9wxLHbL8a96eDCu8Z3E
-	922dPaR8fGwsbnDfAhzoxgi8CcIYEX6sh+uKEROMpeoR
-X-Google-Smtp-Source: APBJJlHyTb+EVBtZRde9K2uDHYFYTa8duWkyVEV5pxg38GbEiEuvYXV6psjgb5YmCyRiguSE4NZgiA==
-X-Received: by 2002:a7b:c8ca:0:b0:3fe:1deb:86 with SMTP id f10-20020a7bc8ca000000b003fe1deb0086mr686260wml.28.1690704334598;
-        Sun, 30 Jul 2023 01:05:34 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id z7-20020a5d4407000000b0031766e99429sm9338684wrq.115.2023.07.30.01.05.33
+        d=1e100.net; s=20221208; t=1690787850; x=1691392650;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7wceAR80ht6V8UDrNIuYtWCCNzgC5666xu1w58CAmzE=;
+        b=VewBsw6ThaPlqZxvizfPr48a+oCP4deeofPV0tkQBl1MU/b19h1ZYjgHz7D+3E2MJH
+         to2ty/fzUrdl0k/c+LC37hq/ur9J3+hkST503FSetYFpxjdqeUfe5valBM8WNCggVrCw
+         gqHgYNVZ2iTRZQUa7aqNwY8u3fQxcYINhD/b8utrQLVB3d0XvZI1AeFlIbahh7E29eDf
+         DHMcUQgkRdzJ/1T4UUyRUatoPJqJuzpQ+Ej1FrQ9KIr7sBGv5NuWwSkH9Pb9Xjh4jzop
+         pIqg6Ut4i2c5SwJEqR2HNTDAXjGesznbYd5BcCN8ql4ctgn5evl+00Uo/xw+ygHLUH6Q
+         j4pw==
+X-Gm-Message-State: ABy/qLaSMF/vItZDYmK59xr9R13sd4h/H6b+QKj2u0tlhz4qSB7b7A3m
+	YI+HaQyutkWn+ZIR/XwaITs=
+X-Google-Smtp-Source: APBJJlF/lPNYS/bvFaN9r9vnFQnU14qexL+STV+XFn/6fqwu3FhW8d1iWEt1rUEWyBs0UoL8xPMTmg==
+X-Received: by 2002:a05:651c:102a:b0:2b4:47ad:8c70 with SMTP id w10-20020a05651c102a00b002b447ad8c70mr5506021ljm.11.1690787849766;
+        Mon, 31 Jul 2023 00:17:29 -0700 (PDT)
+Received: from localhost ([165.225.194.214])
+        by smtp.gmail.com with ESMTPSA id v18-20020a05600c215200b003fe0bb31a6asm7665098wml.43.2023.07.31.00.17.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jul 2023 01:05:34 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Sun, 30 Jul 2023 10:05:18 +0200
-Subject: [PATCH net-next 4/4] selftests: mptcp: userspace_pm: unmute
- unexpected errors
+        Mon, 31 Jul 2023 00:17:29 -0700 (PDT)
+From: Joel Granados <joel.granados@gmail.com>
+X-Google-Original-From: Joel Granados <j.granados@samsung.com>
+To: mcgrof@kernel.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Kees Cook <keescook@chromium.org>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	mptcp@lists.linux.dev,
+	Jakub Kicinski <kuba@kernel.org>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	coreteam@netfilter.org,
+	Jan Karcher <jaka@linux.ibm.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	bridge@lists.linux-foundation.org,
+	linux-arm-kernel@lists.infradead.org,
+	Joerg Reuter <jreuter@yaina.de>,
+	Julian Anastasov <ja@ssi.bg>,
+	David Ahern <dsahern@kernel.org>,
+	netfilter-devel@vger.kernel.org,
+	Wen Gu <guwen@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org,
+	Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+	linux-wpan@vger.kernel.org,
+	lvs-devel@vger.kernel.org,
+	Karsten Graul <kgraul@linux.ibm.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-sctp@vger.kernel.org,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Ralf Baechle <ralf@linux-mips.org>,
+	Florian Westphal <fw@strlen.de>,
+	willy@infradead.org,
+	Heiko Carstens <hca@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-rdma@vger.kernel.org,
+	Roopa Prabhu <roopa@nvidia.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Simon Horman <horms@verge.net.au>,
+	Mat Martineau <martineau@kernel.org>,
+	josh@joshtriplett.org,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Eric Dumazet <edumazet@google.com>,
+	linux-hams@vger.kernel.org,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	Xin Long <lucien.xin@gmail.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	netdev@vger.kernel.org,
+	rds-devel@oss.oracle.com,
+	Joel Granados <j.granados@samsung.com>
+Subject: [PATCH v2 00/14] sysctl: Add a size argument to register functions in sysctl
+Date: Mon, 31 Jul 2023 09:17:14 +0200
+Message-Id: <20230731071728.3493794-1-j.granados@samsung.com>
+X-Mailer: git-send-email 2.30.2
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230730-upstream-net-next-20230728-mptcp-selftests-misc-v1-4-7e9cc530a9cd@tessares.net>
-References: <20230730-upstream-net-next-20230728-mptcp-selftests-misc-v1-0-7e9cc530a9cd@tessares.net>
-In-Reply-To: <20230730-upstream-net-next-20230728-mptcp-selftests-misc-v1-0-7e9cc530a9cd@tessares.net>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=18032;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=H1E8l+IoCAAhEaKmjavXydAmcpLI1bfzXzQFw7v9eF0=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBkxhnJZCwoyc0XVy636KturOG4/ISQaXMiF8xKu
- XJ12gbqoiOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZMYZyQAKCRD2t4JPQmmg
- czhmEADvYmhoAktbkVJ/mwqGZ3oWHGRafcSdxYZsE/KZYF4LxgLao7Ctaf17vTniPNnuH9ymOn8
- gUTZO3f6qsafnV4GEbmnrqri4n2E2mQIRsQGGsv1O8NluIZvk59mO/NvoWE0qMewNd48k6VrMl4
- D/BJvZtq0tOs1/Ju74GodHmyW/AVNg4p0rt8fsPDswUYR6Ga7s6oXifBSRH7Y5zGfUFsnLkgnd4
- OaSEXn5PbKZj3hFILrI445Co9v5/fBK4dViam5SU8ePIVOKWYj1/fQmVE+/TLexZ7QUiMb5AsKL
- OyZAVU/Bh5u56eQ46UpGq1hxoCTy+DvHd+A5HT9A1aG0zrTDdZkAyj/6mqi/r5UuXEc2Y7p8XjG
- /2JFohLLvRyVIP800sfksNsY13El83NV3t8Kx8TK4lorE2fPSitiHvOGBUD15WjWxDqcc0UStyC
- 8XMMoBuINzXM5jAE3IxuhUbWaUl8UrPovamIu0PB7qJH/l3BlajdDeCBhnnE27or4OhW+ErdlxN
- 3fo7lcypOJs74Hdlwmgme6QNDjP7pdqBEOqqBKv2FVFDqgIotLWv5px5kiKIIJgafVw7sNJ0i5I
- jASS2vAkSUbLtmWfh9+Y4n5RAhDHI3L6O6V1/QiDGg64KyWXasFcpmtMS7AsycvHol8/gcoOAFW
- 4JxXdknZzbOU20Q==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-All pm_nl_ctl commands were muted. If there was an unexpected error with
-one of them, this was simply not visible in the logs, making the
-analysis very hard. It could also hide misuse of commands by mistake.
+Why?
+This is a preparation patch set that will make it easier for us to apply
+subsequent patches that will remove the sentinel element (last empty element)
+in the ctl_table arrays.
 
-Now the output is only muted when we do expect to have an error, e.g.
-when giving invalid arguments on purpose.
+In itself, it does not remove any sentinels but it is needed to bring all the
+advantages of the removal to fruition which is to help reduce the overall build
+time size of the kernel and run time memory bloat by about ~64 bytes per
+sentinel. Without this patch set we would have to put everything into one big
+commit making the review process that much longer and harder for everyone.
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 100 +++++++++++-----------
- 1 file changed, 50 insertions(+), 50 deletions(-)
+Since it is so related to the removal of the sentinel element, its worth while
+to give a bit of context on this:
+* Good summary from Luis about why we want to remove the sentinels.
+  https://lore.kernel.org/all/ZMFizKFkVxUFtSqa@bombadil.infradead.org/
+* This is a patch set that replaces register_sysctl_table with register_sysctl
+  https://lore.kernel.org/all/20230302204612.782387-1-mcgrof@kernel.org/
+* Patch set to deprecate register_sysctl_paths()
+  https://lore.kernel.org/all/20230302202826.776286-1-mcgrof@kernel.org/
+* Here there is an explicit expectation for the removal of the sentinel element.
+  https://lore.kernel.org/all/20230321130908.6972-1-frank.li@vivo.com
+* The "ARRAY_SIZE" approach was mentioned (proposed?) in this thread
+  https://lore.kernel.org/all/20220220060626.15885-1-tangmeng@uniontech.com
 
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 23f8959a8ea8..b25a3e33eb25 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -380,7 +380,7 @@ test_announce()
- 	:>"$server_evts"
- 	ip netns exec "$ns2"\
- 	   ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id $client_addr_id dev\
--	   ns2eth1 > /dev/null 2>&1
-+	   ns2eth1
- 	print_test "ADD_ADDR id:${client_addr_id} 10.0.2.2 (ns2) => ns1, reuse port"
- 	sleep 0.5
- 	verify_announce_event $server_evts $ANNOUNCED $server4_token "10.0.2.2" $client_addr_id \
-@@ -389,7 +389,7 @@ test_announce()
- 	# ADD_ADDR6 from the client to server machine reusing the subflow port
- 	:>"$server_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl ann\
--	   dead:beef:2::2 token "$client6_token" id $client_addr_id dev ns2eth1 > /dev/null 2>&1
-+	   dead:beef:2::2 token "$client6_token" id $client_addr_id dev ns2eth1
- 	print_test "ADD_ADDR6 id:${client_addr_id} dead:beef:2::2 (ns2) => ns1, reuse port"
- 	sleep 0.5
- 	verify_announce_event "$server_evts" "$ANNOUNCED" "$server6_token" "dead:beef:2::2"\
-@@ -399,7 +399,7 @@ test_announce()
- 	:>"$server_evts"
- 	client_addr_id=$((client_addr_id+1))
- 	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
--	   $client_addr_id dev ns2eth1 port $new4_port > /dev/null 2>&1
-+	   $client_addr_id dev ns2eth1 port $new4_port
- 	print_test "ADD_ADDR id:${client_addr_id} 10.0.2.2 (ns2) => ns1, new port"
- 	sleep 0.5
- 	verify_announce_event "$server_evts" "$ANNOUNCED" "$server4_token" "10.0.2.2"\
-@@ -410,7 +410,7 @@ test_announce()
- 
- 	# ADD_ADDR from the server to client machine reusing the subflow port
- 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
--	   $server_addr_id dev ns1eth2 > /dev/null 2>&1
-+	   $server_addr_id dev ns1eth2
- 	print_test "ADD_ADDR id:${server_addr_id} 10.0.2.1 (ns1) => ns2, reuse port"
- 	sleep 0.5
- 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
-@@ -419,7 +419,7 @@ test_announce()
- 	# ADD_ADDR6 from the server to client machine reusing the subflow port
- 	:>"$client_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
--	   $server_addr_id dev ns1eth2 > /dev/null 2>&1
-+	   $server_addr_id dev ns1eth2
- 	print_test "ADD_ADDR6 id:${server_addr_id} dead:beef:2::1 (ns1) => ns2, reuse port"
- 	sleep 0.5
- 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "dead:beef:2::1"\
-@@ -429,7 +429,7 @@ test_announce()
- 	:>"$client_evts"
- 	server_addr_id=$((server_addr_id+1))
- 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
--	   $server_addr_id dev ns1eth2 port $new4_port > /dev/null 2>&1
-+	   $server_addr_id dev ns1eth2 port $new4_port
- 	print_test "ADD_ADDR id:${server_addr_id} 10.0.2.1 (ns1) => ns2, new port"
- 	sleep 0.5
- 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
-@@ -490,7 +490,7 @@ test_remove()
- 	# RM_ADDR from the client to server machine
- 	:>"$server_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
--	   $client_addr_id > /dev/null 2>&1
-+	   $client_addr_id
- 	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1"
- 	sleep 0.5
- 	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
-@@ -499,7 +499,7 @@ test_remove()
- 	:>"$server_evts"
- 	client_addr_id=$(( client_addr_id - 1 ))
- 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
--	   $client_addr_id > /dev/null 2>&1
-+	   $client_addr_id
- 	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1"
- 	sleep 0.5
- 	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
-@@ -507,7 +507,7 @@ test_remove()
- 	# RM_ADDR6 from the client to server machine
- 	:>"$server_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client6_token" id\
--	   $client_addr_id > /dev/null 2>&1
-+	   $client_addr_id
- 	print_test "RM_ADDR6 id:${client_addr_id} ns2 => ns1"
- 	sleep 0.5
- 	verify_remove_event "$server_evts" "$REMOVED" "$server6_token" "$client_addr_id"
-@@ -517,7 +517,7 @@ test_remove()
- 
- 	# RM_ADDR from the server to client machine
- 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server4_token" id\
--	   $server_addr_id > /dev/null 2>&1
-+	   $server_addr_id
- 	print_test "RM_ADDR id:${server_addr_id} ns1 => ns2"
- 	sleep 0.5
- 	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
-@@ -526,7 +526,7 @@ test_remove()
- 	:>"$client_evts"
- 	server_addr_id=$(( server_addr_id - 1 ))
- 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server4_token" id\
--	   $server_addr_id > /dev/null 2>&1
-+	   $server_addr_id
- 	print_test "RM_ADDR id:${server_addr_id} ns1 => ns2"
- 	sleep 0.5
- 	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
-@@ -534,7 +534,7 @@ test_remove()
- 	# RM_ADDR6 from the server to client machine
- 	:>"$client_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server6_token" id\
--	   $server_addr_id > /dev/null 2>&1
-+	   $server_addr_id
- 	print_test "RM_ADDR6 id:${server_addr_id} ns1 => ns2"
- 	sleep 0.5
- 	verify_remove_event "$client_evts" "$REMOVED" "$client6_token" "$server_addr_id"
-@@ -610,18 +610,18 @@ test_subflows()
- 
- 	# Attempt to add a listener at 10.0.2.2:<subflow-port>
- 	ip netns exec "$ns2" ./pm_nl_ctl listen 10.0.2.2\
--	   "$client4_port" > /dev/null 2>&1 &
-+	   "$client4_port" &
- 	local listener_pid=$!
- 
- 	# ADD_ADDR from client to server machine reusing the subflow port
- 	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
--	   $client_addr_id > /dev/null 2>&1
-+	   $client_addr_id
- 	sleep 0.5
- 
- 	# CREATE_SUBFLOW from server to client machine
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2\
--	   rport "$client4_port" token "$server4_token" > /dev/null 2>&1
-+	   rport "$client4_port" token "$server4_token"
- 	sleep 0.5
- 	verify_subflow_events $server_evts $SUB_ESTABLISHED $server4_token $AF_INET "10.0.2.1" \
- 			      "10.0.2.2" "$client4_port" "23" "$client_addr_id" "ns1" "ns2"
-@@ -635,31 +635,31 @@ test_subflows()
- 	# DESTROY_SUBFLOW from server to client machine
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
--	   "$client4_port" token "$server4_token" > /dev/null 2>&1
-+	   "$client4_port" token "$server4_token"
- 	sleep 0.5
- 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
- 			      "10.0.2.2" "$client4_port" "23" "$client_addr_id" "ns1" "ns2"
- 
- 	# RM_ADDR from client to server machine
- 	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
--	   "$client4_token" > /dev/null 2>&1
-+	   "$client4_token"
- 	sleep 0.5
- 
- 	# Attempt to add a listener at dead:beef:2::2:<subflow-port>
- 	ip netns exec "$ns2" ./pm_nl_ctl listen dead:beef:2::2\
--	   "$client6_port" > /dev/null 2>&1 &
-+	   "$client6_port" &
- 	listener_pid=$!
- 
- 	# ADD_ADDR6 from client to server machine reusing the subflow port
- 	:>"$server_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl ann dead:beef:2::2 token "$client6_token" id\
--	   $client_addr_id > /dev/null 2>&1
-+	   $client_addr_id
- 	sleep 0.5
- 
- 	# CREATE_SUBFLOW6 from server to client machine
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl csf lip dead:beef:2::1 lid 23 rip\
--	   dead:beef:2::2 rport "$client6_port" token "$server6_token" > /dev/null 2>&1
-+	   dead:beef:2::2 rport "$client6_port" token "$server6_token"
- 	sleep 0.5
- 	verify_subflow_events "$server_evts" "$SUB_ESTABLISHED" "$server6_token" "$AF_INET6"\
- 			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
-@@ -673,7 +673,7 @@ test_subflows()
- 	# DESTROY_SUBFLOW6 from server to client machine
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip dead:beef:2::1 lport "$sport" rip\
--	   dead:beef:2::2 rport "$client6_port" token "$server6_token" > /dev/null 2>&1
-+	   dead:beef:2::2 rport "$client6_port" token "$server6_token"
- 	sleep 0.5
- 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server6_token" "$AF_INET6"\
- 			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
-@@ -681,24 +681,24 @@ test_subflows()
- 
- 	# RM_ADDR from client to server machine
- 	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
--	   "$client6_token" > /dev/null 2>&1
-+	   "$client6_token"
- 	sleep 0.5
- 
- 	# Attempt to add a listener at 10.0.2.2:<new-port>
- 	ip netns exec "$ns2" ./pm_nl_ctl listen 10.0.2.2\
--	   $new4_port > /dev/null 2>&1 &
-+	   $new4_port &
- 	listener_pid=$!
- 
- 	# ADD_ADDR from client to server machine using a new port
- 	:>"$server_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
--	   $client_addr_id port $new4_port > /dev/null 2>&1
-+	   $client_addr_id port $new4_port
- 	sleep 0.5
- 
- 	# CREATE_SUBFLOW from server to client machine
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2 rport\
--	   $new4_port token "$server4_token" > /dev/null 2>&1
-+	   $new4_port token "$server4_token"
- 	sleep 0.5
- 	verify_subflow_events "$server_evts" "$SUB_ESTABLISHED" "$server4_token" "$AF_INET"\
- 			      "10.0.2.1" "10.0.2.2" "$new4_port" "23"\
-@@ -712,32 +712,32 @@ test_subflows()
- 	# DESTROY_SUBFLOW from server to client machine
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
--	   $new4_port token "$server4_token" > /dev/null 2>&1
-+	   $new4_port token "$server4_token"
- 	sleep 0.5
- 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
- 			      "10.0.2.2" "$new4_port" "23" "$client_addr_id" "ns1" "ns2"
- 
- 	# RM_ADDR from client to server machine
- 	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
--	   "$client4_token" > /dev/null 2>&1
-+	   "$client4_token"
- 
- 	# Capture events on the network namespace running the client
- 	:>"$client_evts"
- 
- 	# Attempt to add a listener at 10.0.2.1:<subflow-port>
- 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
--	   $app4_port > /dev/null 2>&1 &
-+	   $app4_port &
- 	listener_pid=$!
- 
- 	# ADD_ADDR from server to client machine reusing the subflow port
- 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
--	   $server_addr_id > /dev/null 2>&1
-+	   $server_addr_id
- 	sleep 0.5
- 
- 	# CREATE_SUBFLOW from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
--	   $app4_port token "$client4_token" > /dev/null 2>&1
-+	   $app4_port token "$client4_token"
- 	sleep 0.5
- 	verify_subflow_events $client_evts $SUB_ESTABLISHED $client4_token $AF_INET "10.0.2.2"\
- 			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
-@@ -750,31 +750,31 @@ test_subflows()
- 	# DESTROY_SUBFLOW from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
--	   $app4_port token "$client4_token" > /dev/null 2>&1
-+	   $app4_port token "$client4_token"
- 	sleep 0.5
- 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
- 			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
- 
- 	# RM_ADDR from server to client machine
- 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
--	   "$server4_token" > /dev/null 2>&1
-+	   "$server4_token"
- 	sleep 0.5
- 
- 	# Attempt to add a listener at dead:beef:2::1:<subflow-port>
- 	ip netns exec "$ns1" ./pm_nl_ctl listen dead:beef:2::1\
--	   $app6_port > /dev/null 2>&1 &
-+	   $app6_port &
- 	listener_pid=$!
- 
- 	# ADD_ADDR6 from server to client machine reusing the subflow port
- 	:>"$client_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
--	   $server_addr_id > /dev/null 2>&1
-+	   $server_addr_id
- 	sleep 0.5
- 
- 	# CREATE_SUBFLOW6 from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl csf lip dead:beef:2::2 lid 23 rip\
--	   dead:beef:2::1 rport $app6_port token "$client6_token" > /dev/null 2>&1
-+	   dead:beef:2::1 rport $app6_port token "$client6_token"
- 	sleep 0.5
- 	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client6_token"\
- 			      "$AF_INET6" "dead:beef:2::2"\
-@@ -789,31 +789,31 @@ test_subflows()
- 	# DESTROY_SUBFLOW6 from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip dead:beef:2::2 lport "$sport" rip\
--	   dead:beef:2::1 rport $app6_port token "$client6_token" > /dev/null 2>&1
-+	   dead:beef:2::1 rport $app6_port token "$client6_token"
- 	sleep 0.5
- 	verify_subflow_events $client_evts $SUB_CLOSED $client6_token $AF_INET6 "dead:beef:2::2"\
- 			      "dead:beef:2::1" "$app6_port" "23" "$server_addr_id" "ns2" "ns1"
- 
- 	# RM_ADDR6 from server to client machine
- 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
--	   "$server6_token" > /dev/null 2>&1
-+	   "$server6_token"
- 	sleep 0.5
- 
- 	# Attempt to add a listener at 10.0.2.1:<new-port>
- 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
--	   $new4_port > /dev/null 2>&1 &
-+	   $new4_port &
- 	listener_pid=$!
- 
- 	# ADD_ADDR from server to client machine using a new port
- 	:>"$client_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
--	   $server_addr_id port $new4_port > /dev/null 2>&1
-+	   $server_addr_id port $new4_port
- 	sleep 0.5
- 
- 	# CREATE_SUBFLOW from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
--	   $new4_port token "$client4_token" > /dev/null 2>&1
-+	   $new4_port token "$client4_token"
- 	sleep 0.5
- 	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client4_token" "$AF_INET"\
- 			      "10.0.2.2" "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
-@@ -826,14 +826,14 @@ test_subflows()
- 	# DESTROY_SUBFLOW from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
--	   $new4_port token "$client4_token" > /dev/null 2>&1
-+	   $new4_port token "$client4_token"
- 	sleep 0.5
- 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
- 			      "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
- 
- 	# RM_ADDR from server to client machine
- 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
--	   "$server4_token" > /dev/null 2>&1
-+	   "$server4_token"
+What?
+These commits set things up so we can start removing the sentinel elements.
+They modify sysctl and net_sysctl internals so that registering a ctl_table
+that contains a sentinel gives the same result as passing a table_size
+calculated from the ctl_table array without a sentinel. We accomplish this by
+introducing a table_size argument in the same place where procname is checked
+for NULL. The idea is for it to keep stopping when it hits ->procname == NULL,
+while the sentinel is still present. And when the sentinel is removed, it will
+stop on the table_size (thx to jani.nikula@linux.intel.com for the discussion
+that led to this). This allows us to remove sentinels from one (or several)
+files at a time.
+
+These commits are part of a bigger set containing the removal of ctl_table sentinel
+(https://github.com/Joelgranados/linux/tree/tag/sysctl_remove_empty_elem_V2).
+The idea is to make the review process easier by chunking the 65+ commits into
+manageable pieces.
+
+My idea is to send out one chunk at a time so it can be reviewed separately
+from the others without the noise from parallel related sets. After this first
+chunk will come 6 that remove the sentinel element from "arch/*, drivers/*,
+fs/*, kernel/*, net/* and miscellaneous. And then a final one that removes the
+->procname == NULL check. You can see all commits here
+(https://github.com/Joelgranados/linux/tree/tag/sysctl_remove_empty_elem_V2).
+
+Commits in this chunk:
+* Preparation commits:
+    start : sysctl: Prefer ctl_table_header in proc_sysct
+    end   : sysctl: Add size argument to init_header
+  These are preparation commits that make sure that we have the
+  ctl_table_header where we need the array size.
+
+* Add size to __register_sysctl_table, __register_sysctl_init and register_sysctl
+    start : sysctl: Add a size arg to __register_sysctl_table
+    end   : sysctl: Add size arg to __register_sysctl_init
+  Here we replace the existing register functions with macros that add the
+  ARRAY_SIZE automatically. Unfortunately these macros cannot be used for the
+  register calls that pass a pointer; in this situation we add register
+  functions with an table_size argument (thx to greg@kroah.com for bringing
+  this to my attention)
+
+* Add size to register_net_sysctl
+    start : sysctl: Add size to register_net_sysctl function
+    end   : sysctl: SIZE_MAX->ARRAY_SIZE in register_net_sysctl
+  register_net_sysctl is an indirection function to the sysctl registrations
+  and needed a several commits to add table_size to all its callers. We
+  temporarily use SIZE_MAX to avoid compiler warnings while we change to
+  register_net_sysctl to register_net_sysctl_sz; we remove it with the
+  penultimate patch of this set. Finally, we make sure to adjust the calculated
+  size every time there is a check for unprivileged users.
+
+* Add size as additional stopping criteria
+    commit : sysctl: Use ctl_table_size as stopping criteria for list macro
+  We add table_size check in the main macro within proc_sysctl.c. This commit
+  allows the removal of the sentinel element by chunks.
+
+Testing:
+* Ran sysctl selftests (./tools/testing/selftests/sysctl/sysctl.sh)
+* Successfully ran this through 0-day
+
+Size saving estimates:
+A consequence of eventually removing all the sentinels (64 bytes per sentinel)
+is the bytes we save. These are *not* numbers that we will get after this patch
+set; these are the numbers that we will get after removing all the sentinels. I
+included them here because they are relevant and to get an idea of just how
+much memory we are talking about.
+  * bloat-o-meter:
+    The "yesall" configuration results save 9158 bytes (you can see the output here
+    https://lore.kernel.org/all/20230621091000.424843-1-j.granados@samsung.com/.
+    The "tiny" configuration + CONFIG_SYSCTL save 1215 bytes (you can see the
+    output here [2])
+  * memory usage:
+    As we no longer need the sentinel element within proc_sysctl.c, we save some
+    bytes in main memory as well. In my testing kernel I measured a difference of
+    6720 bytes. I include the way to measure this in [1]
+
+Comments/feedback greatly appreciated
+
+V2:
+* Dropped moving mpls_table up the af_mpls.c file. We don't need it any longer
+  as it is not really used before its current location.
+* Added/Clarified the why in several commit messages that were missing it.
+* Clarified the why in the cover letter to be "to make it easier to apply
+  subsequent patches that will remove the sentinels"
+* Added documentation for table_size
+* Added suggested by tags (Greg and Jani) to relevant commits
+
+Best
+Joel
+
+[1]
+To measure the in memory savings apply this patch on top of
+https://github.com/Joelgranados/linux/tree/tag/sysctl_remove_empty_elem_V1
+"
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 5f413bfd6271..9aa8374c0ef1 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -975,6 +975,7 @@ static struct ctl_dir *new_dir(struct ctl_table_set *set,
+        table[0].procname = new_name;
+        table[0].mode = S_IFDIR|S_IRUGO|S_IXUGO;
+        init_header(&new->header, set->dir.header.root, set, node, table, 1);
++       printk("%ld sysctl saved mem kzalloc \n", sizeof(struct ctl_table));
+
+        return new;
  }
- 
- test_subflows_v4_v6_mix()
-@@ -842,14 +842,14 @@ test_subflows_v4_v6_mix()
- 
- 	# Attempt to add a listener at 10.0.2.1:<subflow-port>
- 	ip netns exec "$ns1" ./pm_nl_ctl listen 10.0.2.1\
--	   $app6_port > /dev/null 2>&1 &
-+	   $app6_port &
- 	local listener_pid=$!
- 
- 	# ADD_ADDR4 from server to client machine reusing the subflow port on
- 	# the established v6 connection
- 	:>"$client_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server6_token" id\
--	   $server_addr_id dev ns1eth2 > /dev/null 2>&1
-+	   $server_addr_id dev ns1eth2
- 	print_test "ADD_ADDR4 id:${server_addr_id} 10.0.2.1 (ns1) => ns2, reuse port"
- 	sleep 0.5
- 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "10.0.2.1"\
-@@ -858,7 +858,7 @@ test_subflows_v4_v6_mix()
- 	# CREATE_SUBFLOW from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
--	   $app6_port token "$client6_token" > /dev/null 2>&1
-+	   $app6_port token "$client6_token"
- 	sleep 0.5
- 	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client6_token"\
- 			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app6_port" "23"\
-@@ -872,7 +872,7 @@ test_subflows_v4_v6_mix()
- 	# DESTROY_SUBFLOW from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
--	   $app6_port token "$client6_token" > /dev/null 2>&1
-+	   $app6_port token "$client6_token"
- 	sleep 0.5
- 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client6_token" \
- 			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app6_port" "23"\
-@@ -880,7 +880,7 @@ test_subflows_v4_v6_mix()
- 
- 	# RM_ADDR from server to client machine
- 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
--	   "$server6_token" > /dev/null 2>&1
-+	   "$server6_token"
- 	sleep 0.5
+@@ -1202,6 +1203,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
+                    head->ctl_table_size);
+        links->nreg = head->ctl_table_size;
+
++       printk("%ld sysctl saved mem kzalloc \n", sizeof(struct ctl_table));
+        return links;
  }
- 
-@@ -965,7 +965,7 @@ test_listener()
- 
- 	# Attempt to add a listener at 10.0.2.2:<subflow-port>
- 	ip netns exec $ns2 ./pm_nl_ctl listen 10.0.2.2\
--		$client4_port > /dev/null 2>&1 &
-+		$client4_port &
- 	local listener_pid=$!
- 
- 	sleep 0.5
-@@ -973,12 +973,12 @@ test_listener()
- 
- 	# ADD_ADDR from client to server machine reusing the subflow port
- 	ip netns exec $ns2 ./pm_nl_ctl ann 10.0.2.2 token $client4_token id\
--		$client_addr_id > /dev/null 2>&1
-+		$client_addr_id
- 	sleep 0.5
- 
- 	# CREATE_SUBFLOW from server to client machine
- 	ip netns exec $ns1 ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2\
--		rport $client4_port token $server4_token > /dev/null 2>&1
-+		rport $client4_port token $server4_token
- 	sleep 0.5
- 
- 	# Delete the listener from the client ns, if one was created
+
+"
+and then run the following bash script in the kernel:
+
+accum=0
+for n in $(dmesg | grep kzalloc | awk '{print $3}') ; do
+    echo $n
+    accum=$(calc "$accum + $n")
+done
+echo $accum
+
+[2]
+bloat-o-meter with "tiny" config:
+add/remove: 0/2 grow/shrink: 33/24 up/down: 470/-1685 (-1215)
+Function                                     old     new   delta
+insert_header                                831     966    +135
+__register_sysctl_table                      971    1092    +121
+get_links                                    177     226     +49
+put_links                                    167     186     +19
+erase_header                                  55      66     +11
+sysctl_init_bases                             59      69     +10
+setup_sysctl_set                              65      73      +8
+utsname_sysctl_init                           26      31      +5
+sld_mitigate_sysctl_init                      33      38      +5
+setup_userns_sysctls                         158     163      +5
+sched_rt_sysctl_init                          33      38      +5
+sched_fair_sysctl_init                        33      38      +5
+sched_dl_sysctl_init                          33      38      +5
+random_sysctls_init                           33      38      +5
+page_writeback_init                          122     127      +5
+oom_init                                      73      78      +5
+kernel_panic_sysctls_init                     33      38      +5
+kernel_exit_sysctls_init                      33      38      +5
+init_umh_sysctls                              33      38      +5
+init_signal_sysctls                           33      38      +5
+init_pipe_fs                                  94      99      +5
+init_fs_sysctls                               33      38      +5
+init_fs_stat_sysctls                          33      38      +5
+init_fs_namespace_sysctls                     33      38      +5
+init_fs_namei_sysctls                         33      38      +5
+init_fs_inode_sysctls                         33      38      +5
+init_fs_exec_sysctls                          33      38      +5
+init_fs_dcache_sysctls                        33      38      +5
+register_sysctl                               22      25      +3
+__register_sysctl_init                         9      12      +3
+user_namespace_sysctl_init                   149     151      +2
+sched_core_sysctl_init                        38      40      +2
+register_sysctl_mount_point                   13      15      +2
+vm_table                                    1344    1280     -64
+vm_page_writeback_sysctls                    512     448     -64
+vm_oom_kill_table                            256     192     -64
+uts_kern_table                               448     384     -64
+usermodehelper_table                         192     128     -64
+user_table                                   576     512     -64
+sld_sysctls                                  128      64     -64
+signal_debug_table                           128      64     -64
+sched_rt_sysctls                             256     192     -64
+sched_fair_sysctls                           128      64     -64
+sched_dl_sysctls                             192     128     -64
+sched_core_sysctls                            64       -     -64
+root_table                                   128      64     -64
+random_table                                 448     384     -64
+namei_sysctls                                320     256     -64
+kern_table                                  1792    1728     -64
+kern_panic_table                             128      64     -64
+kern_exit_table                              128      64     -64
+inodes_sysctls                               192     128     -64
+fs_stat_sysctls                              256     192     -64
+fs_shared_sysctls                            192     128     -64
+fs_pipe_sysctls                              256     192     -64
+fs_namespace_sysctls                         128      64     -64
+fs_exec_sysctls                              128      64     -64
+fs_dcache_sysctls                            128      64     -64
+init_header                                   85       -     -85
+Total: Before=1877669, After=1876454, chg -0.06%
+
+base:  fdf0eaf11452
+
+Joel Granados (14):
+  sysctl: Prefer ctl_table_header in proc_sysctl
+  sysctl: Use ctl_table_header in list_for_each_table_entry
+  sysctl: Add ctl_table_size to ctl_table_header
+  sysctl: Add size argument to init_header
+  sysctl: Add a size arg to __register_sysctl_table
+  sysctl: Add size to register_sysctl
+  sysctl: Add size arg to __register_sysctl_init
+  sysctl: Add size to register_net_sysctl function
+  ax.25: Update to register_net_sysctl_sz
+  netfilter: Update to register_net_sysctl_sz
+  networking: Update to register_net_sysctl_sz
+  vrf: Update to register_net_sysctl_sz
+  sysctl: SIZE_MAX->ARRAY_SIZE in register_net_sysctl
+  sysctl: Use ctl_table_size as stopping criteria for list macro
+
+ arch/arm64/kernel/armv8_deprecated.c    |  2 +-
+ arch/s390/appldata/appldata_base.c      |  2 +-
+ drivers/net/vrf.c                       |  3 +-
+ fs/proc/proc_sysctl.c                   | 90 +++++++++++++------------
+ include/linux/sysctl.h                  | 31 +++++++--
+ include/net/ipv6.h                      |  2 +
+ include/net/net_namespace.h             | 10 +--
+ ipc/ipc_sysctl.c                        |  4 +-
+ ipc/mq_sysctl.c                         |  4 +-
+ kernel/ucount.c                         |  5 +-
+ net/ax25/sysctl_net_ax25.c              |  3 +-
+ net/bridge/br_netfilter_hooks.c         |  3 +-
+ net/core/neighbour.c                    |  8 ++-
+ net/core/sysctl_net_core.c              |  3 +-
+ net/ieee802154/6lowpan/reassembly.c     |  8 ++-
+ net/ipv4/devinet.c                      |  3 +-
+ net/ipv4/ip_fragment.c                  |  3 +-
+ net/ipv4/route.c                        |  8 ++-
+ net/ipv4/sysctl_net_ipv4.c              |  3 +-
+ net/ipv4/xfrm4_policy.c                 |  3 +-
+ net/ipv6/addrconf.c                     |  3 +-
+ net/ipv6/icmp.c                         |  5 ++
+ net/ipv6/netfilter/nf_conntrack_reasm.c |  3 +-
+ net/ipv6/reassembly.c                   |  3 +-
+ net/ipv6/route.c                        | 13 ++--
+ net/ipv6/sysctl_net_ipv6.c              | 16 +++--
+ net/ipv6/xfrm6_policy.c                 |  3 +-
+ net/mpls/af_mpls.c                      |  6 +-
+ net/mptcp/ctrl.c                        |  3 +-
+ net/netfilter/ipvs/ip_vs_ctl.c          |  8 ++-
+ net/netfilter/ipvs/ip_vs_lblc.c         | 10 ++-
+ net/netfilter/ipvs/ip_vs_lblcr.c        | 10 ++-
+ net/netfilter/nf_conntrack_standalone.c |  4 +-
+ net/netfilter/nf_log.c                  |  7 +-
+ net/rds/tcp.c                           |  3 +-
+ net/sctp/sysctl.c                       |  4 +-
+ net/smc/smc_sysctl.c                    |  3 +-
+ net/sysctl_net.c                        | 26 ++++---
+ net/unix/sysctl_net_unix.c              |  3 +-
+ net/xfrm/xfrm_sysctl.c                  |  8 ++-
+ 40 files changed, 222 insertions(+), 117 deletions(-)
 
 -- 
-2.40.1
+2.30.2
 
