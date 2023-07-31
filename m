@@ -1,43 +1,43 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE6846B0
-	for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 07:17:33 +0000 (UTC)
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2b9db1de50cso22257941fa.3
-        for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 00:17:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D5246B0
+	for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 07:17:35 +0000 (UTC)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-31765aee31bso3760642f8f.1
+        for <mptcp@lists.linux.dev>; Mon, 31 Jul 2023 00:17:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690787851; x=1691392651;
+        d=gmail.com; s=20221208; t=1690787854; x=1691392654;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9/+5UTOZSoINBQX5Idlq9s7Q/YjlqMmFruSJ92+I5og=;
-        b=aa90vhrzpcWfje6OipbZcbSYmqsQOrKCRcOH+mXZEBSAe4e9SYO9KbJpgMCHttr/yA
-         zdFVQR1LOnV+D7hAiD+KrUS2ISlvjUkq+b7yUFbiR01dxQnjTtlB3gUvsDsEdzqxQBra
-         VtmXCBuFRC2NHa/MDl3j3RRH7oueh+fFARArWcE6cGtzhOQHhoEyDoaWBNB9BNxyNorT
-         Vsk7HiljVefekG81Lh7gDtS9SFSWp6bx3r/GStCaxRX7m39RSXK/U9SkwJ+la8Y3+Sa+
-         bicaAOoBwyN9hsG7EPZFDiSfvHQfnOEmdljFsJjOX5Tmk2pevqcpTLWxI8xhB+d6ZiQD
-         aq0g==
+        bh=rF1J0XzJl2jEuCsHx7nkNs1OdRX43SORnh/9oIIv32k=;
+        b=oqsIryt2GxpgDCAITNIaXCxHDdR3cVtpe2f7ZX5yNWH+iIKTDyP9HWjuJrFs2+sMti
+         nz/dszslpzNl5CmOVyIxo9flstqLOG9Lkm0NZCdBEnmTU+I1vw89cMQ0SF9WwdKUoM4I
+         XcWmm1bGPvIhG5CX3epdf8PQz1b9WroQTsn7rnMMDg3nS9g5zr+JNBzD7ERJU2+AinRX
+         MHXofl3ANcJEAvB+CVk869XpKrsp2b0FvWFR9bdzEstXBE+7GTB2bqaK0C1x6sILTPh1
+         c3jM3t7rPPIdEypAnu4qsrcw5JUJFj3cl1pq/Q4VBS9yMtigqyYg0I4nF13M1FXKdD6i
+         UhMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690787851; x=1691392651;
+        d=1e100.net; s=20221208; t=1690787854; x=1691392654;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9/+5UTOZSoINBQX5Idlq9s7Q/YjlqMmFruSJ92+I5og=;
-        b=lVRw4oHn/ZDbfPt4bTDoiBI7NhgimSbvVNjaoGSUougKNJMNUsJCY2SRSfLn+3aTp/
-         WJcSxBqJ29woKXKsy1x/ZMThfDcgutDFzz9be6pO66eNOwQlEVbQqX0jaWDaRaqq/zyV
-         En+AEKAlmz9M5kWu4GFwNASlwG66W/7aDNDqDkXlyAAy4G6bqqtTkKObF+ihISzc9GSw
-         +4Rd4qN92fNXI0ql9TMWYkOO7KpSX3QbQmUuLD30Qd8QNjrrNkKK3V4/MwSUuy6S4JCz
-         BhNJGEv1eRNs61yFkGC7nleX6Lffdiw+CEJA6hjIqH1ixssc7W3robsKSlQIIUIQA2+f
-         G08Q==
-X-Gm-Message-State: ABy/qLasBFah8i5wiw6J2EXvOzmXTiEE8ue+Su4IdS/BwMMtZPtO2DUp
-	OtB1ZM8ikaB3cGmoKOEFi1I=
-X-Google-Smtp-Source: APBJJlE6KY81A+y/Zffxll1xcr19Ku9HmdfKGgsWDibukZ1vJlgJ0JdG40X5D63FdYACFRgqNamN3g==
-X-Received: by 2002:a2e:8784:0:b0:2b9:ea5f:36b with SMTP id n4-20020a2e8784000000b002b9ea5f036bmr1193678lji.52.1690787851280;
-        Mon, 31 Jul 2023 00:17:31 -0700 (PDT)
+        bh=rF1J0XzJl2jEuCsHx7nkNs1OdRX43SORnh/9oIIv32k=;
+        b=lus6oUE4yD9R2rF0dW0A31/QQI3G1bU15bSCI1XnO7LcYnoHa1SQWzKZXOFJy8Y7Pa
+         /fxV91PS296TME70LtEx6SCl9yWe2KSAr7VQBRQpmFADJHn3942Yl7Li3QHTGM3FPE7s
+         2hu+cMMwPQri/4du5E2TYqkVeEv8Tr+9G1nJNE8TKwH9f+LJ7qHCQfjZxCQtQvje16S5
+         l7UWwONXd8NZneZNktOE3vP5KMA/YioCo7lflw7hS3hBmiyoUnTvFOKJ53Sy4JxAnp3c
+         59wNFvYdwNK0iS1kRRQTNc8kIb/kOZRHNsFBmYhxaN3Ut4tINm47/G0S5sDemfKMLxED
+         LYfw==
+X-Gm-Message-State: ABy/qLakM5FNWEOdlgDaov8dHWRkmUbN+QmVvSr5wFIbxp8MdDRBz3Oh
+	EcKSH2IgVisSttiJYEgtIj4=
+X-Google-Smtp-Source: APBJJlH/snPYxm7GXwa1Rggof5k5STEqlwm0FtiAchadIGMCtE1ufLHfEJ1/mE1z3ZZ7UCj5VHH5Tw==
+X-Received: by 2002:a5d:60cb:0:b0:316:f3f3:a1db with SMTP id x11-20020a5d60cb000000b00316f3f3a1dbmr5784721wrt.32.1690787853763;
+        Mon, 31 Jul 2023 00:17:33 -0700 (PDT)
 Received: from localhost ([165.225.194.214])
-        by smtp.gmail.com with ESMTPSA id l10-20020a5d410a000000b00317495f88fasm12011116wrp.112.2023.07.31.00.17.30
+        by smtp.gmail.com with ESMTPSA id m14-20020adffa0e000000b003177e9b2e64sm11978068wrr.90.2023.07.31.00.17.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 00:17:30 -0700 (PDT)
+        Mon, 31 Jul 2023 00:17:33 -0700 (PDT)
 From: Joel Granados <joel.granados@gmail.com>
 X-Google-Original-From: Joel Granados <j.granados@samsung.com>
 To: mcgrof@kernel.org
@@ -98,9 +98,9 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,
 	netdev@vger.kernel.org,
 	rds-devel@oss.oracle.com,
 	Joel Granados <j.granados@samsung.com>
-Subject: [PATCH v2 01/14] sysctl: Prefer ctl_table_header in proc_sysctl
-Date: Mon, 31 Jul 2023 09:17:15 +0200
-Message-Id: <20230731071728.3493794-2-j.granados@samsung.com>
+Subject: [PATCH v2 02/14] sysctl: Use ctl_table_header in list_for_each_table_entry
+Date: Mon, 31 Jul 2023 09:17:16 +0200
+Message-Id: <20230731071728.3493794-3-j.granados@samsung.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230731071728.3493794-1-j.granados@samsung.com>
 References: <20230731071728.3493794-1-j.granados@samsung.com>
@@ -112,139 +112,130 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is a preparation commit that replaces ctl_table with
-ctl_table_header as the pointer that is passed around in proc_sysctl.c.
-This will become necessary in subsequent commits when the size of the
-ctl_table array can no longer be calculated by searching for an empty
-sentinel (last empty ctl_table element) but will be carried along inside
-the ctl_table_header struct.
+We replace the ctl_table with the ctl_table_header pointer in
+list_for_each_table_entry which is the macro responsible for traversing
+the ctl_table arrays. This is a preparation commit that will make it
+easier to add the ctl_table array size (that will be added to
+ctl_table_header in subsequent commits) to the already existing loop
+logic based on empty ctl_table elements (so called sentinels).
 
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- fs/proc/proc_sysctl.c | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ fs/proc/proc_sysctl.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
 diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 5ea42653126e..94d71446da39 100644
+index 94d71446da39..884460b0385b 100644
 --- a/fs/proc/proc_sysctl.c
 +++ b/fs/proc/proc_sysctl.c
-@@ -1125,11 +1125,11 @@ static int sysctl_check_table_array(const char *path, struct ctl_table *table)
- 	return err;
+@@ -19,8 +19,8 @@
+ #include <linux/kmemleak.h>
+ #include "internal.h"
+ 
+-#define list_for_each_table_entry(entry, table) \
+-	for ((entry) = (table); (entry)->procname; (entry)++)
++#define list_for_each_table_entry(entry, header) \
++	for ((entry) = (header->ctl_table); (entry)->procname; (entry)++)
+ 
+ static const struct dentry_operations proc_sys_dentry_operations;
+ static const struct file_operations proc_sys_file_operations;
+@@ -204,7 +204,7 @@ static void init_header(struct ctl_table_header *head,
+ 	if (node) {
+ 		struct ctl_table *entry;
+ 
+-		list_for_each_table_entry(entry, table) {
++		list_for_each_table_entry(entry, head) {
+ 			node->header = head;
+ 			node++;
+ 		}
+@@ -215,7 +215,7 @@ static void erase_header(struct ctl_table_header *head)
+ {
+ 	struct ctl_table *entry;
+ 
+-	list_for_each_table_entry(entry, head->ctl_table)
++	list_for_each_table_entry(entry, head)
+ 		erase_entry(head, entry);
  }
  
--static int sysctl_check_table(const char *path, struct ctl_table *table)
-+static int sysctl_check_table(const char *path, struct ctl_table_header *header)
+@@ -242,7 +242,7 @@ static int insert_header(struct ctl_dir *dir, struct ctl_table_header *header)
+ 	err = insert_links(header);
+ 	if (err)
+ 		goto fail_links;
+-	list_for_each_table_entry(entry, header->ctl_table) {
++	list_for_each_table_entry(entry, header) {
+ 		err = insert_entry(header, entry);
+ 		if (err)
+ 			goto fail;
+@@ -1129,7 +1129,7 @@ static int sysctl_check_table(const char *path, struct ctl_table_header *header)
  {
  	struct ctl_table *entry;
  	int err = 0;
--	list_for_each_table_entry(entry, table) {
-+	list_for_each_table_entry(entry, header->ctl_table) {
+-	list_for_each_table_entry(entry, header->ctl_table) {
++	list_for_each_table_entry(entry, header) {
  		if ((entry->proc_handler == proc_dostring) ||
  		    (entry->proc_handler == proc_dobool) ||
  		    (entry->proc_handler == proc_dointvec) ||
-@@ -1159,8 +1159,7 @@ static int sysctl_check_table(const char *path, struct ctl_table *table)
- 	return err;
- }
- 
--static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table *table,
--	struct ctl_table_root *link_root)
-+static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_header *head)
- {
- 	struct ctl_table *link_table, *entry, *link;
- 	struct ctl_table_header *links;
-@@ -1170,7 +1169,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table
+@@ -1169,7 +1169,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
  
  	name_bytes = 0;
  	nr_entries = 0;
--	list_for_each_table_entry(entry, table) {
-+	list_for_each_table_entry(entry, head->ctl_table) {
+-	list_for_each_table_entry(entry, head->ctl_table) {
++	list_for_each_table_entry(entry, head) {
  		nr_entries++;
  		name_bytes += strlen(entry->procname) + 1;
  	}
-@@ -1189,12 +1188,12 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table
+@@ -1188,7 +1188,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
  	link_name = (char *)&link_table[nr_entries + 1];
  	link = link_table;
  
--	list_for_each_table_entry(entry, table) {
-+	list_for_each_table_entry(entry, head->ctl_table) {
+-	list_for_each_table_entry(entry, head->ctl_table) {
++	list_for_each_table_entry(entry, head) {
  		int len = strlen(entry->procname) + 1;
  		memcpy(link_name, entry->procname, len);
  		link->procname = link_name;
- 		link->mode = S_IFLNK|S_IRWXUGO;
--		link->data = link_root;
-+		link->data = head->root;
- 		link_name += len;
- 		link++;
- 	}
-@@ -1205,15 +1204,16 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table
- }
- 
- static bool get_links(struct ctl_dir *dir,
--	struct ctl_table *table, struct ctl_table_root *link_root)
-+		      struct ctl_table_header *header,
-+		      struct ctl_table_root *link_root)
- {
--	struct ctl_table_header *head;
-+	struct ctl_table_header *tmp_head;
+@@ -1211,7 +1211,7 @@ static bool get_links(struct ctl_dir *dir,
  	struct ctl_table *entry, *link;
  
  	/* Are there links available for every entry in table? */
--	list_for_each_table_entry(entry, table) {
-+	list_for_each_table_entry(entry, header->ctl_table) {
+-	list_for_each_table_entry(entry, header->ctl_table) {
++	list_for_each_table_entry(entry, header) {
  		const char *procname = entry->procname;
--		link = find_entry(&head, dir, procname, strlen(procname));
-+		link = find_entry(&tmp_head, dir, procname, strlen(procname));
+ 		link = find_entry(&tmp_head, dir, procname, strlen(procname));
  		if (!link)
- 			return false;
- 		if (S_ISDIR(link->mode) && S_ISDIR(entry->mode))
-@@ -1224,10 +1224,10 @@ static bool get_links(struct ctl_dir *dir,
+@@ -1224,7 +1224,7 @@ static bool get_links(struct ctl_dir *dir,
  	}
  
  	/* The checks passed.  Increase the registration count on the links */
--	list_for_each_table_entry(entry, table) {
-+	list_for_each_table_entry(entry, header->ctl_table) {
+-	list_for_each_table_entry(entry, header->ctl_table) {
++	list_for_each_table_entry(entry, header) {
  		const char *procname = entry->procname;
--		link = find_entry(&head, dir, procname, strlen(procname));
--		head->nreg++;
-+		link = find_entry(&tmp_head, dir, procname, strlen(procname));
-+		tmp_head->nreg++;
- 	}
- 	return true;
- }
-@@ -1246,13 +1246,13 @@ static int insert_links(struct ctl_table_header *head)
+ 		link = find_entry(&tmp_head, dir, procname, strlen(procname));
+ 		tmp_head->nreg++;
+@@ -1356,12 +1356,14 @@ struct ctl_table_header *__register_sysctl_table(
+ {
+ 	struct ctl_table_root *root = set->dir.header.root;
+ 	struct ctl_table_header *header;
++	struct ctl_table_header h_tmp;
+ 	struct ctl_dir *dir;
+ 	struct ctl_table *entry;
+ 	struct ctl_node *node;
+ 	int nr_entries = 0;
+ 
+-	list_for_each_table_entry(entry, table)
++	h_tmp.ctl_table = table;
++	list_for_each_table_entry(entry, (&h_tmp))
+ 		nr_entries++;
+ 
+ 	header = kzalloc(sizeof(struct ctl_table_header) +
+@@ -1471,7 +1473,7 @@ static void put_links(struct ctl_table_header *header)
  	if (IS_ERR(core_parent))
- 		return 0;
+ 		return;
  
--	if (get_links(core_parent, head->ctl_table, head->root))
-+	if (get_links(core_parent, head, head->root))
- 		return 0;
- 
- 	core_parent->header.nreg++;
- 	spin_unlock(&sysctl_lock);
- 
--	links = new_links(core_parent, head->ctl_table, head->root);
-+	links = new_links(core_parent, head);
- 
- 	spin_lock(&sysctl_lock);
- 	err = -ENOMEM;
-@@ -1260,7 +1260,7 @@ static int insert_links(struct ctl_table_header *head)
- 		goto out;
- 
- 	err = 0;
--	if (get_links(core_parent, head->ctl_table, head->root)) {
-+	if (get_links(core_parent, head, head->root)) {
- 		kfree(links);
- 		goto out;
- 	}
-@@ -1371,7 +1371,7 @@ struct ctl_table_header *__register_sysctl_table(
- 
- 	node = (struct ctl_node *)(header + 1);
- 	init_header(header, root, set, node, table);
--	if (sysctl_check_table(path, table))
-+	if (sysctl_check_table(path, header))
- 		goto fail;
- 
- 	spin_lock(&sysctl_lock);
+-	list_for_each_table_entry(entry, header->ctl_table) {
++	list_for_each_table_entry(entry, header) {
+ 		struct ctl_table_header *link_head;
+ 		struct ctl_table *link;
+ 		const char *name = entry->procname;
 -- 
 2.30.2
 
