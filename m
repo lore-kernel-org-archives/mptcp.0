@@ -1,210 +1,259 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E293B1ED40
-	for <mptcp@lists.linux.dev>; Tue,  1 Aug 2023 10:03:19 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3fbc5d5742eso59658295e9.3
-        for <mptcp@lists.linux.dev>; Tue, 01 Aug 2023 03:03:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8411E531
+	for <mptcp@lists.linux.dev>; Tue,  1 Aug 2023 10:34:44 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-51d95aed33aso7264977a12.3
+        for <mptcp@lists.linux.dev>; Tue, 01 Aug 2023 03:34:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690884198; x=1691488998;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6xzFd6kXeaygrI5Ej8/AL8nxngfv7zWbrLM3nGa6LwE=;
-        b=eXsvFh6BK+B4iuEJYMTnBcTL7rHnOTSND3P9MAnpkjJqEpLCdcVuq/3LHC8WhWxlOi
-         AYVHc0UleUBBoRaduveJnpBbMfklz/v7bfVQyhDeoiCpwWcDLTvnVdKzWsATvnXRFrIQ
-         4sxETc63wfFaT1bcwPenmbK5Cd68zjDF7/mwm/QlGSxaYKSqfPBfKA0mGUHtfQgxDKuN
-         bfckck3WXSVwZdpmMoaLqOAU0MAofGr+AO2UcfWw2DAsMdq42RxNJsTnAee8Lvikj6hM
-         UobnKUJtXdI2bFxeUV6lKnu0txtKROjJB89U3UM49XZz3hMCMQfPajpd2YztNuqg5bYr
-         w4qQ==
+        d=tessares.net; s=google; t=1690886082; x=1691490882;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EB/zwjrhe6Mbb/oL2aKt/yp6eSJzhgFioUoOzuBwpqU=;
+        b=QllG/vISbcWx90yNfL/ZY7Wcjv4ELEgjIFl/kZzkWvSBekiLrJXB9ycXXDKn+gMYh5
+         DKImeQQYKiEJwmI+ayw0uT02O4OnYSKqR44RullNDO+BiSwEfdfNRaglfHFBRJ6o86L1
+         ybBbeIRBAL71eH4Yb9IPhXWY/nzr1XO0zAgVeyqMeUxBfGk/ZBGqoG2n/LDB5ssUo5Ty
+         e5HeXFSZe4ei0lpqQHIUMaWRg6EKmlvrcYYLrEmpPGuriF9nVrNcZi5zcKww9glY2Gw4
+         U2n0RUd7LpCF7Pi6yEPlmaLqm5jLGh/hKfncZQPXbJ04OA/XLEfAFR50VgS0GMPKpt2T
+         IJJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690884198; x=1691488998;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6xzFd6kXeaygrI5Ej8/AL8nxngfv7zWbrLM3nGa6LwE=;
-        b=mDWKAyBt6J4qhxv5LUcUbSG3D41466jR9sTU6TdV1INslIHZ5y7LiKa6zc23phZQJO
-         1T91Qk/3gsj75rs9X1Q9fDBsCghc37tUVO2acYG2tKMhbXiaIn4Di5oPOLEMFfj9NRUz
-         cuBNKCLikzvda9dfcvXs7WGbL7DRRS6oa37gjznhRjhRQQfrphL26IXmtmOmBIUBU3P0
-         om54uxgrLXXYLnOft/X+H976GqAQz1d0GZTkoSgZ4j10hD9Iq7ww5jH9QdMIQvzKH3j4
-         UEr1whRux9sBDTvO3dk9Z0Z9WxnJmrpT2MjCn7qknKV4CnRGpg8yEqST601OhUIJlTnk
-         PSTQ==
-X-Gm-Message-State: ABy/qLay8zPc9Z0FNiggvpIGsihdzbrB+sfC8WmxR03LNhI/0j+NlHdZ
-	uEclPIQcc439kIQfjUP/ZlQ=
-X-Google-Smtp-Source: APBJJlHPT6WT6baqr5uMvSTuUS8XBMuz9v2AzEIRtzwB1vPwVdTIJR+TY0kuPM2KiW9G9XEqBLrTBg==
-X-Received: by 2002:a05:600c:214d:b0:3fe:20b6:41b2 with SMTP id v13-20020a05600c214d00b003fe20b641b2mr2182378wml.4.1690884197477;
-        Tue, 01 Aug 2023 03:03:17 -0700 (PDT)
-Received: from localhost (0x934e1fc8.cust.fastspeed.dk. [147.78.31.200])
-        by smtp.gmail.com with ESMTPSA id n1-20020a05600c4f8100b003fe15ac0934sm2670378wmq.1.2023.08.01.03.03.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Aug 2023 03:03:16 -0700 (PDT)
-Date: Tue, 1 Aug 2023 12:03:15 +0200
-From: Joel Granados <joel.granados@gmail.com>
-To: Simon Horman <horms@kernel.org>
-Cc: mcgrof@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Kees Cook <keescook@chromium.org>,
-	"D. Wythe" <alibuda@linux.alibaba.com>, mptcp@lists.linux.dev,
-	Jakub Kicinski <kuba@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
-	Paolo Abeni <pabeni@redhat.com>, coreteam@netfilter.org,
-	Jan Karcher <jaka@linux.ibm.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Will Deacon <will@kernel.org>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	bridge@lists.linux-foundation.org,
-	linux-arm-kernel@lists.infradead.org,
-	Joerg Reuter <jreuter@yaina.de>, Julian Anastasov <ja@ssi.bg>,
-	David Ahern <dsahern@kernel.org>, netfilter-devel@vger.kernel.org,
-	Wen Gu <guwen@linux.alibaba.com>, linux-kernel@vger.kernel.org,
-	Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-	linux-wpan@vger.kernel.org, lvs-devel@vger.kernel.org,
-	Karsten Graul <kgraul@linux.ibm.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-sctp@vger.kernel.org, Tony Lu <tonylu@linux.alibaba.com>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Ralf Baechle <ralf@linux-mips.org>, Florian Westphal <fw@strlen.de>,
-	willy@infradead.org, Heiko Carstens <hca@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>, linux-rdma@vger.kernel.org,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Simon Horman <horms@verge.net.au>,
-	Mat Martineau <martineau@kernel.org>, josh@joshtriplett.org,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Eric Dumazet <edumazet@google.com>, linux-hams@vger.kernel.org,
-	Wenjia Zhang <wenjia@linux.ibm.com>, linux-fsdevel@vger.kernel.org,
-	linux-s390@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>, netdev@vger.kernel.org,
-	rds-devel@oss.oracle.com
-Subject: Re: [PATCH v2 03/14] sysctl: Add ctl_table_size to ctl_table_header
-Message-ID: <20230801100315.ymcahsxu6qpw7kct@localhost>
-References: <20230731071728.3493794-1-j.granados@samsung.com>
- <20230731071728.3493794-4-j.granados@samsung.com>
- <ZMf9vZpGE98oM9W2@kernel.org>
- <CGME20230731190724eucas1p14cc08261cd20815797958bbebc0fafe7@eucas1p1.samsung.com>
- <ZMgGWm4sT+VqDZ3u@kernel.org>
+        d=1e100.net; s=20221208; t=1690886082; x=1691490882;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EB/zwjrhe6Mbb/oL2aKt/yp6eSJzhgFioUoOzuBwpqU=;
+        b=TQagRIM1b5oOU4zycDoUHLdwk/4aAXGMiwRHbME96ViKXbKckoZMnlsaKGbyU/S3DR
+         Xg3uTyzYkV9f3HQ5ncl1o34sv2mW5vnn6DM6OHI8j2QXUtjmeGWwCLd5elzkFaLVGOX/
+         2l8IIVnbDJ0SBaK+qYj6vHlsmuzdAcNf/eNk6ONdfJ28tzyv8177ezJlAvCnPYw1KTsp
+         JLSUr4jt7TyaQ0C0r0upCfQWHBVoIp8c/pM2mMLA67TwlKEU4SMX7ysF9+h0+2G+fjt3
+         u5+VWE2HJ9mFvvCZ63YY0bM6f0K5a0YLmIVDlc654BsQJXxBnCPAaGRy111k8tj/rKnN
+         NyzA==
+X-Gm-Message-State: ABy/qLbOpDfkmnJCwzER8di3Y01tI/QCVTfXJjUrEDJyi6PuN7SfMnSD
+	KOFDvXbXH6BDEP6uDQS86GT+OwzuT3g3kB+YK6OrMdzG
+X-Google-Smtp-Source: APBJJlFGPx9OTPcFK7yYAbjsm8xg/AsZwcoKjUSYgRkjjagHVHliPLMXd9rE96EdUU5tOZkL9dpJ/g==
+X-Received: by 2002:aa7:cf97:0:b0:522:afec:3ca5 with SMTP id z23-20020aa7cf97000000b00522afec3ca5mr2044122edx.28.1690886082597;
+        Tue, 01 Aug 2023 03:34:42 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:37df:70bd:4b59:9c74? ([2a02:578:8593:1200:37df:70bd:4b59:9c74])
+        by smtp.gmail.com with ESMTPSA id ba4-20020a0564021ac400b00522572f323dsm6630428edb.16.2023.08.01.03.34.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Aug 2023 03:34:42 -0700 (PDT)
+Message-ID: <2894c643-f883-4f18-9e4e-36c4566c5cab@tessares.net>
+Date: Tue, 1 Aug 2023 12:34:41 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="d62tnfuywe5q6aej"
-Content-Disposition: inline
-In-Reply-To: <ZMgGWm4sT+VqDZ3u@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net] mptcp: fix disconnect vs accept race
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: Christoph Paasch <cpaasch@apple.com>
+References: <68f1f65f9b5542fd200f995844f7ed71bdfbfc30.1690840586.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
+ 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
+In-Reply-To: <68f1f65f9b5542fd200f995844f7ed71bdfbfc30.1690840586.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Paolo,
 
---d62tnfuywe5q6aej
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 01/08/2023 00:25, Paolo Abeni wrote:
+> Despite commit 0ad529d9fd2b ("mptcp: fix possible divide by zero in
+> recvmsg()"), the mptcp protocol is still prone to a race between
+> disconnect() (or shutdown) and accept.
+> 
+> The root cause is that the mentioned commit checks the msk-level
+> flag, but mptcp_stream_accept() does acquire the msk-level lock,
+> as it can rely directly on the first subflow lock.
+> 
+> As reported by Christoph than can lead to a race where an msk
+> socket is accepted after that mptcp_subflow_queue_clean() releases
+> the listener socket lock and just before it takes destructive
+> actions leading to the following splat:
 
-On Mon, Jul 31, 2023 at 09:07:06PM +0200, Simon Horman wrote:
-> On Mon, Jul 31, 2023 at 08:30:34PM +0200, Simon Horman wrote:
-> > On Mon, Jul 31, 2023 at 09:17:17AM +0200, Joel Granados wrote:
-> > > The new ctl_table_size element will hold the size of the ctl_table
-> > > arrays contained in the ctl_table_header. This value should eventually
-> > > be passed by the callers to the sysctl register infrastructure. And
-> > > while this commit introduces the variable, it does not set nor use it
-> > > because that requires case by case considerations for each caller.
-> > >=20
-> > > It provides two important things: (1) A place to put the
-> > > result of the ctl_table array calculation when it gets introduced for
-> > > each caller. And (2) the size that will be used as the additional
-> > > stopping criteria in the list_for_each_table_entry macro (to be added
-> > > when all the callers are migrated)
-> > >=20
-> > > Signed-off-by: Joel Granados <j.granados@samsung.com>
-> > > ---
-> > >  include/linux/sysctl.h | 14 ++++++++++++--
-> > >  1 file changed, 12 insertions(+), 2 deletions(-)
-> > >=20
-> > > diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-> > > index 59d451f455bf..33252ad58ebe 100644
-> > > --- a/include/linux/sysctl.h
-> > > +++ b/include/linux/sysctl.h
-> > > @@ -159,12 +159,22 @@ struct ctl_node {
-> > >  	struct ctl_table_header *header;
-> > >  };
-> > > =20
-> > > -/* struct ctl_table_header is used to maintain dynamic lists of
-> > > -   struct ctl_table trees. */
-> > > +/**
-> > > + * struct ctl_table_header - maintains dynamic lists of struct ctl_t=
-able trees
-> > > + * @ctl_table: pointer to the first element in ctl_table array
-> > > + * @ctl_table_size: number of elements pointed by @ctl_table
-> > > + * @used: The entry will never be touched when equal to 0.
-> > > + * @count: Upped every time something is added to @inodes and downed=
- every time
-> > > + *         something is removed from inodes
-> > > + * @nreg: When nreg drops to 0 the ctl_table_header will be unregist=
-ered.
-> > > + * @rcu: Delays the freeing of the inode. Introduced with "unfuck pr=
-oc_sysctl ->d_compare()"
-> > > + *
-> > > + */
-> >=20
-> > Hi Joel,
-> >=20
-> > Please consider also adding kernel doc entries for the other fields of
-> > struct ctl_table_header. According to ./scripts/kernel-doc -none
-> > they are:
-> >=20
-> >   unregistering
-> >   ctl_table_arg
-> >   root
-> >   set
-> >   parent
-> >   node
-> >   inodes
->=20
-> Sorry, I now realise that I made the same comment on v1.
-> And I didn't see your response to that until after I wrote the above.
-np. I'll hold off adding this to the set until I get feedback from my
-proposal. I do this as I'm unsure about the contents of the docs.
+(...)
 
+> Address the issue by temporary removing the pending request socket
+> from the accept queue, so that racing accept() can't touch them.
+> 
+> After depleting the msk - the ssk still exists, as plain TCP sockets,
+> re-insert them into the accept queue, so that later inet_csk_listen_stop()
+> will complete the tcp socket disposal.
 
->=20
-> >=20
-> >=20
-> > >  struct ctl_table_header {
-> > >  	union {
-> > >  		struct {
-> > >  			struct ctl_table *ctl_table;
-> > > +			int ctl_table_size;
-> > >  			int used;
-> > >  			int count;
-> > >  			int nreg;
-> > > --=20
-> > > 2.30.2
-> > >=20
+Thank you for working on this fix and sharing this patch!
 
---=20
+I just have one question at the end of your patch:
 
-Joel Granados
+> Fixes: 2a6a870e44dd ("mptcp: stops worker on unaccepted sockets at listener close")
+> Reported-by: Christoph Paasch <cpaasch@apple.com>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/423
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> Note: as a net-next follow-up it would be nice to support mptcp socket
+> migration, basically duplicating part of the inet_csk_listen_stop() logic
 
---d62tnfuywe5q6aej
-Content-Type: application/pgp-signature; name="signature.asc"
+(As you know, I'm always worry when you talk about duplicating code :) )
 
------BEGIN PGP SIGNATURE-----
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index a7db82eb4eea..1ce9b1a1fb56 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -324,7 +324,6 @@ struct mptcp_sock {
+>  	u32		subflow_id;
+>  	u32		setsockopt_seq;
+>  	char		ca_name[TCP_CA_NAME_MAX];
+> -	struct mptcp_sock	*dl_next;
+>  };
+>  
+>  #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index ad7080fabb2f..9bf3c7bc1762 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1793,16 +1793,31 @@ static void subflow_state_change(struct sock *sk)
+>  void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_ssk)
+>  {
+>  	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
+> -	struct mptcp_sock *msk, *next, *head = NULL;
+> -	struct request_sock *req;
+> -	struct sock *sk;
+> +	struct request_sock *req, *head, *tail;
+> +	struct mptcp_subflow_context *subflow;
+> +	struct sock *sk, *ssk;
+>  
+> -	/* build a list of all unaccepted mptcp sockets */
+> +	/* Due to lock dependencies no relevant lock can be acquired under rskq_lock.
+> +	 * Splice the req list, so that accept() can not reach the pending ssk after
+> +	 * the listener socket is released below.
+> +	 */
+>  	spin_lock_bh(&queue->rskq_lock);
+> -	for (req = queue->rskq_accept_head; req; req = req->dl_next) {
+> -		struct mptcp_subflow_context *subflow;
+> -		struct sock *ssk = req->sk;
+> +	head = queue->rskq_accept_head;
+> +	tail = queue->rskq_accept_tail;
+> +	queue->rskq_accept_head = NULL;
+> +	queue->rskq_accept_tail = NULL;
+> +	spin_unlock_bh(&queue->rskq_lock);
+> +
+> +	if (!head)
+> +		return;
+>  
+> +	/* can't acquire the msk socket lock under the subflow one,
+> +	 * or will cause ABBA deadlock
+> +	 */
+> +	release_sock(listener_ssk);
+> +
+> +	for (req = head; req; req = req->dl_next) {
+> +		ssk = req->sk;
+>  		if (!sk_is_mptcp(ssk))
+>  			continue;
+>  
+> @@ -1810,32 +1825,10 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
+>  		if (!subflow || !subflow->conn)
+>  			continue;
+>  
+> -		/* skip if already in list */
+>  		sk = subflow->conn;
+> -		msk = mptcp_sk(sk);
+> -		if (msk->dl_next || msk == head)
+> -			continue;
+> -
+>  		sock_hold(sk);
+> -		msk->dl_next = head;
+> -		head = msk;
+> -	}
+> -	spin_unlock_bh(&queue->rskq_lock);
+> -	if (!head)
+> -		return;
+> -
+> -	/* can't acquire the msk socket lock under the subflow one,
+> -	 * or will cause ABBA deadlock
+> -	 */
+> -	release_sock(listener_ssk);
+> -
+> -	for (msk = head; msk; msk = next) {
+> -		sk = (struct sock *)msk;
+>  
+>  		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+> -		next = msk->dl_next;
+> -		msk->dl_next = NULL;
+> -
+>  		__mptcp_unaccepted_force_close(sk);
+>  		release_sock(sk);
+>  
+> @@ -1859,6 +1852,13 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
+>  
+>  	/* we are still under the listener msk socket lock */
+>  	lock_sock_nested(listener_ssk, SINGLE_DEPTH_NESTING);
+> +
+> +	/* restore the listener queue, to let the TCP code clean it up */
+> +	spin_lock_bh(&queue->rskq_lock);
+> +	WARN_ON_ONCE(queue->rskq_accept_head);
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmTI2GIACgkQupfNUreW
-QU/jnAv/XiexP2W1Y950obHBDBGWwb2QRwk7qg172MXMjFQl6+imM/lk9f2BbUyv
-yHqtlJQeHzRDFmaanGI2f0Cd5i7XkupsNoINecjz4w7t3g4pgPxjYO+KRGJoQxRx
-zfGIkM/UKYfW53TJRg0P0b9t7XnQ+yew+ZAEULLKb23ElXZ+hFXMtH8K938NEqxz
-ETsCG4rlGIO3QMm0epmk4EaMr34faYtf8fzaY6T3PshcTq+vklW7M/gHjcMkICK5
-GZM7Ijb2sU5Xd4d8hkoSpPh8TErgjuNVU2LpzlzjyC25WFM0xpPnKRDB5ENGa4m4
-ZWu67LrebJoLjoE0vJUMMfZu9PCmvQp4Wijuc/ImQA4BA8hNwsarFhYlFMPp3Ixn
-AC51TcUplS956Laxzjd51ql75jba5ul88ZGiqnkNL+IXKOjceJSKM68lVQELv1Lq
-m9Il+S1C7xVBNvDQo9yE5jA7mdju9NyxvL2UXr4sZU7Gmp8qiY5Zw4H6T6dSQy8H
-ELxemNee
-=dUoN
------END PGP SIGNATURE-----
+What prevent the accept queue to be modified between the moment it has
+been "nullified" (at the beginning of this function) and here (at the end)?
 
---d62tnfuywe5q6aej--
+I see that both the locks for the queue and the socket have been
+released and re-held in between: could this accept queue be modified in
+between if we are unlucky?
+
+I'm sure I'm missing something :)
+
+> +	queue->rskq_accept_head = head;
+> +	queue->rskq_accept_tail = tail;
+> +	spin_unlock_bh(&queue->rskq_lock);
+>  }
+>  
+>  static int subflow_ulp_init(struct sock *sk)
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
