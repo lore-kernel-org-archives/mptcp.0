@@ -1,126 +1,110 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0968F15CD
-	for <mptcp@lists.linux.dev>; Wed,  2 Aug 2023 06:19:36 +0000 (UTC)
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-1bb58b4c513so4958537fac.0
-        for <mptcp@lists.linux.dev>; Tue, 01 Aug 2023 23:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690957176; x=1691561976;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=69P0VnmetoQhvkWWJnoNX6kgjzGDOMsryTG1kKKIVMo=;
-        b=dJmBv4zTN3GwN2O77NEiGz9wO39T1sB9AP+X8xN7+0oEq9R4Q9cucRARh/TFIsoTEF
-         q46PpGmhfQEGFVdh/dqzeXdYXV5WiV5UL+JA2KGlB8s6/V5xQDoExQLWdgGjoTVKt+OR
-         2RmWgKF7a69twqiRimbCj6vpqGlvOIPFl15IqB84v3gswDr2vztQuVmdaOE7AznVtaLp
-         vk9plIJxl1zmMn7WLO2bfcY9JJ587WDiYc9BbXSsGm4NzALo1tWjVoJwHzzeoxdAD0vH
-         Ndv3EBIN+JaGan2ZNnMlcxU5IxrrFPXyf7oacHLX45TBnPlcI7H/OqnQBQc0v/0izy8j
-         i3TA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F38553A6
+	for <mptcp@lists.linux.dev>; Wed,  2 Aug 2023 08:03:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1690963403;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Oo+8dg/DBj2V+G5oZvUMnojMP7aeWCXmA1VlhFSPE34=;
+	b=P1x4Yi/ZuajV2n5EuuGhKK43K2qZN2adjihUUI80hCKq7OncUcbXnKndOLz5mZTQQyrNSw
+	2T0GJ65OXa2ed97r9W0LgXD15PNh2IJdfEYxNEKIhTETTJ8+nXdEqNfr88yr9XD850Q9nW
+	5WpLzNa0kMdta97v9/e8rLEbe2Dx1rg=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-356-mnRWds6pMKm5bUK3TaLUjQ-1; Wed, 02 Aug 2023 04:03:20 -0400
+X-MC-Unique: mnRWds6pMKm5bUK3TaLUjQ-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-76ca3baaec8so76570985a.1
+        for <mptcp@lists.linux.dev>; Wed, 02 Aug 2023 01:03:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690957176; x=1691561976;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=69P0VnmetoQhvkWWJnoNX6kgjzGDOMsryTG1kKKIVMo=;
-        b=ZPGHD3q+aglm8j5ZjeNnUwd7u/S8cVumqdTvZNuPGq9bt3IYT4Sbh7HlVOr3rE2kIx
-         gL7PCQSvEvLOP6zUNFCM4TNfrcoQkmL2e7voj9nK8Comu6KEJFbA4XebfroIVvWnNaLA
-         EOsz28IdkowXVQ1JOF28RXLmiO7fzqDY5EYFzTzf6j7BL8W6VKmZR+9fNNImHv+2Sg6T
-         7ImtFL2Og+y2An5s1XT2T2nVDycEf9uqZLXtV6xlWiqlHjpAKDT080bkZaObojHEkHPH
-         kZ+oRru6iGDckdH2P89gagK8I4u3jRlBhgxEI/82eMl3yj5TACkIdXzzipJ/9v32OcuC
-         bkKw==
-X-Gm-Message-State: ABy/qLakJZi6EymzWTrZBk7OD9oaT0msjLkubkY/5PL4ePH28wFX/+qV
-	lzCR870T94mZKWqPj7HwEw==
-X-Google-Smtp-Source: APBJJlGxSF3SI9IsnLD8tbRr50IKA96EMzLp1er68Ioi27MatJxkuw0V9Kc25IkH0im6jPAlIZA4rQ==
-X-Received: by 2002:a05:6870:14c5:b0:1ba:db23:f99b with SMTP id l5-20020a05687014c500b001badb23f99bmr19616649oab.27.1690957175605;
-        Tue, 01 Aug 2023 23:19:35 -0700 (PDT)
-Received: from [127.0.0.1] ([40.84.170.164])
-        by smtp.gmail.com with ESMTPSA id kz11-20020a05687c320b00b001bf480733c5sm361154oac.42.2023.08.01.23.19.34
+        d=1e100.net; s=20221208; t=1690963399; x=1691568199;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Oo+8dg/DBj2V+G5oZvUMnojMP7aeWCXmA1VlhFSPE34=;
+        b=itg/a2ZLxZcXGlmtRLceRFLjQJEuctK0h8/bZQXJ/erLzgmnNwY2GCzVC8MJ1aRzII
+         8UGz7lEGoRLoWb5xVKQ5YozWM+oI2TjQZOMLCy+UaJiZaAlszjVI34wVcF5uku44zMVS
+         qeKpJ2U3QKrioeSe9olsBaWfiYwlML4clb0YjJ20WQlMv0YpcZUCaNzymJymsASlmFQZ
+         KXnaZti9XC1IcXOG/93TEFaB5tNlE2S7whprBlTJ8WbtlovsBGP0SWUgWRYuC00qg8be
+         qBqEXHUSzamX3beDYF4yB+9wuptYJ3VUOou+Qbe9zfZ7FZRJVc0C0v2MyZtHOn4fGiuY
+         hXug==
+X-Gm-Message-State: ABy/qLYPxct5l0gEuSa7pC9KbymQOCVtPcX1SjKq3U2xIKv9ksWZbGVN
+	fnAvxwpoRvcsuxjW65OXR+FMPcxY+Y5GpvH0JhHfNuXkVmTu7wpdp25jDFixQ6bqTkPwmIT0x0P
+	vFqQVAgRBy9zmZO0=
+X-Received: by 2002:a05:620a:31aa:b0:767:7a4c:1b9e with SMTP id bi42-20020a05620a31aa00b007677a4c1b9emr15272974qkb.7.1690963399779;
+        Wed, 02 Aug 2023 01:03:19 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFnNAWWhSXb/HktBSfXGFmabV1fvsy307saOx2MgChsfs7xTXLkVxm9csctRpjZ4apFAXP/zg==
+X-Received: by 2002:a05:620a:31aa:b0:767:7a4c:1b9e with SMTP id bi42-20020a05620a31aa00b007677a4c1b9emr15272941qkb.7.1690963399461;
+        Wed, 02 Aug 2023 01:03:19 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-233-7.dyn.eolo.it. [146.241.233.7])
+        by smtp.gmail.com with ESMTPSA id p12-20020a05620a132c00b0076c9cc1e107sm3299044qkj.54.2023.08.02.01.03.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Aug 2023 23:19:35 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <5dc7f4dbc799ddb5937c24dc002727c0fa27b70b.1690952908.git.geliang.tang@suse.com>
-References:
- <5dc7f4dbc799ddb5937c24dc002727c0fa27b70b.1690952908.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: Add bpf_stale test: Tests Results
-Message-ID: <867c4d81-3e34-2449-b8b3-a3b5988786cf@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 02 Aug 2023 06:19:34 +0000
+        Wed, 02 Aug 2023 01:03:18 -0700 (PDT)
+Message-ID: <1b51c79c59cb3ec4be95e993be9be2e5d9441670.camel@redhat.com>
+Subject: Re: [RFC bpf-next v7 0/6] bpf: Force to MPTCP
+From: Paolo Abeni <pabeni@redhat.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Geliang Tang
+	 <geliang.tang@suse.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>,  Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,  Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh
+ <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Florent Revest
+ <revest@chromium.org>, Brendan Jackman <jackmanb@chromium.org>, Matthieu
+ Baerts <matthieu.baerts@tessares.net>, Mat Martineau
+ <martineau@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,  John
+ Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>,  "Serge E. Hallyn" <serge@hallyn.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>, Eric Paris
+ <eparis@parisplace.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan
+ <shuah@kernel.org>,  bpf@vger.kernel.org, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev,  apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org,  selinux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Date: Wed, 02 Aug 2023 10:03:12 +0200
+In-Reply-To: <20230801004323.l2npfegkq3srzff3@MacBook-Pro-8.local>
+References: <cover.1690624340.git.geliang.tang@suse.com>
+	 <20230801004323.l2npfegkq3srzff3@MacBook-Pro-8.local>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+On Mon, 2023-07-31 at 17:43 -0700, Alexei Starovoitov wrote:
 
-Thank you for your modifications, that's great!
+> I still think it's a hack, but its blast radius is nicely contained.
+> And since I cannot propose any better I'm ok with it.
+>=20
+> Patches 1-2 can be squashed into one.
+> Just like patches 3-6 as a single patch for selftests.
+>=20
+> But before proceeding I'd like an explicit ack from netdev maintainers.
 
-Our CI did some validations and here is its report:
+Just to state the obvious, I carry my personal bias on this topic due
+to my background ;)
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6597383929200640
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6597383929200640/summary/summary.txt
+My perspective is quite similar to Alexei's one: the solution is not
+extremely elegant, but is very self-contained; it looks viable to me.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4767796580581376
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4767796580581376/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5330746534002688
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5330746534002688/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5893696487424000
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5893696487424000/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/b56b7cd37f92
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+WRT the specific code, I think the additional checks on the 'protocol'
+value after the 'update_socket_protocol()' call should be dropped: the
+user space can already provide an arbitrary value there and the later
+code deal with that.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+
+Paolo
+
