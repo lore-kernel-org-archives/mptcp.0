@@ -1,128 +1,68 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701455230
-	for <mptcp@lists.linux.dev>; Wed,  2 Aug 2023 13:03:51 +0000 (UTC)
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-267fc04ec74so4940557a91.0
-        for <mptcp@lists.linux.dev>; Wed, 02 Aug 2023 06:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690981430; x=1691586230;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KWXwAvByQG5eTUgg2qfil1HvrFP87dSMKzrrKhf3Zbw=;
-        b=Y1n880QZx6aM2UC1lc4R/j3lAmuCfNU4Bnq6fAqyWXExWTG3U/Hj759+SR9RrmKpD0
-         Nu1fTox9NeZl9fzJWntnXQ2+UxFQtxkf8Ej3ldZV87tQXH+7L4ucqAWQZSP9J77qiNRr
-         gTr1TnVig5Xtz33yjp8CyI+olo7E0FcrK54gnrt8MYHI5ZtEyTutyr2NaM6f1SA8OvHv
-         M/OqygEJ+qzO5xEzWotq1OOzTqoORG+LOECmTaVTPZhPymh2u38OFkBtGpjDmDip/j2M
-         Di9y9ho4opHRMUxTBMu7Su4kYsNBqF2ZUc5rd7ZASgMfjRCCAQ1XjM1s5qX+kXpU2Xtd
-         dSzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690981430; x=1691586230;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KWXwAvByQG5eTUgg2qfil1HvrFP87dSMKzrrKhf3Zbw=;
-        b=b1YQwgqyeXZeoWZICyGBHhbMkgVquygJcH7+WojA+M0OEY5RlELa/lgsw9T1WjWd3l
-         005IbENuu8GkWn/7tPFb3aGJRJK8hb59bEMBptpSrqB40O0tOvZEiPjVzJL5oQBMI0Ys
-         UXZPZNqL3OvdD2r4hVlIm+MV+F4HK9VPEv1ALiGeODwvHQIde4ffJOIqH9/QqIbQHuOP
-         xWTntuyaNb4gGQ3fj4p+kVmOKTUpTvnVI7NeTaiw2cnOD724QP727n2PTK8C2giksYFJ
-         LXdKIxoOOsVPr0sG2vDYqV9xc2HDd4g+RUvKEF5HF1gHdQs2zOWsCvzdua3MXgux6sH1
-         wZAA==
-X-Gm-Message-State: ABy/qLYJQ7SRVnxbwJ5YWp9aS65FZoP/zrZW6mwc+XNNhlNnFxMLUIR2
-	NsvZVb7TPEMz5qDRAk/New==
-X-Google-Smtp-Source: APBJJlGRWQekG2oMi1LvMy8mvkrfCom5K5uU4WLMkxrbOLH9/9DSIB8trGgkseXu68JGX+aIol7wkA==
-X-Received: by 2002:a17:90a:4046:b0:268:5ebc:34a with SMTP id k6-20020a17090a404600b002685ebc034amr15008340pjg.16.1690981430405;
-        Wed, 02 Aug 2023 06:03:50 -0700 (PDT)
-Received: from [127.0.0.1] ([20.171.87.101])
-        by smtp.gmail.com with ESMTPSA id i4-20020a17090a64c400b0026307fa0442sm1084481pjm.49.2023.08.02.06.03.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 06:03:50 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50514D534
+	for <mptcp@lists.linux.dev>; Wed,  2 Aug 2023 16:52:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1ECC433CA;
+	Wed,  2 Aug 2023 16:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690995152;
+	bh=JbA1bT8bR4s8va/QPSIPWfn4a7cHH1H2awJP+OBydUE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=i5fOZCrjMQrlxLGZF0srcjHYsemK6PYp5n9HSMIPiV25yJmrS16MvHgElESU60ABJ
+	 5kkfhyeen1HZjawRHvlTJ3DmVitPmWlfli6KlfCXgEH573RDmth4WZxH50X4iWASBI
+	 lOzziDT7E6PmXQEn8llF/s3XCwP3npY5ACx4ZNfTCeoB2Wtz3l27coc1rZ0WNsTPTj
+	 rfFrApSzpwPhedoeoxyz9yKUh5paRJ71AMGzANvG4YgY0gHDYd4GW/9nPwWItqDIKF
+	 0JPT0tvcMn6lP50gDbNXMCnidBjsgvjRLIR2hRjNNxO54djag9FLOplX+NwTi4LsCm
+	 uOEbOHqOZHPhQ==
+Date: Wed, 2 Aug 2023 09:52:32 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
 To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <7cc369ef8c192ca7ef18b8d31a4673ea1b13261c.1690976940.git.geliang.tang@suse.com>
-References:
- <7cc369ef8c192ca7ef18b8d31a4673ea1b13261c.1690976940.git.geliang.tang@suse.com>
-Subject: =?UTF-8?Q?Re=3A_Squash_to_=22selftests/bpf=3A_Add_?=
- =?UTF-8?Q?bpf=5Fburst_scheduler=22=3A_Tests_Result?= =?UTF-8?Q?s?=
-Message-ID: <40e55e5e-108a-1bdb-0f37-26ef8ab7364e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 02 Aug 2023 13:03:49 +0000
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 1/3] Squash to "bpf: Add
+ bpf_mptcp_sched_ops"
+In-Reply-To: <aaebf8f891475fb3b946be734aff714530af09e4.1690952908.git.geliang.tang@suse.com>
+Message-ID: <93831b6d-17a9-1905-d771-5ccd67a425ae@kernel.org>
+References: <cover.1690952908.git.geliang.tang@suse.com> <aaebf8f891475fb3b946be734aff714530af09e4.1690952908.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Geliang,
+On Wed, 2 Aug 2023, Geliang Tang wrote:
 
-Thank you for your modifications, that's great!
+> No need to change subflow->stale bit-filed now, so drop the writing
+> access of it.
+>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/bpf.c | 3 ---
+> 1 file changed, 3 deletions(-)
 
-Our CI did some validations and here is its report:
+This looks ok to squash, thanks Geliang.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4780248831623168
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4780248831623168/summary/summary.txt
+- Mat
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5343198785044480
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5343198785044480/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5906148738465792
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5906148738465792/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6469098691887104
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6469098691887104/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/19006ba8d449
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+>
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index 51634efe4741..5c82cc35bfe0 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -52,9 +52,6 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
+> 	case offsetof(struct mptcp_subflow_context, scheduled):
+> 		end = offsetofend(struct mptcp_subflow_context, scheduled);
+> 		break;
+> -	case offsetofend(struct mptcp_subflow_context, map_csum_len):
+> -		end = offsetof(struct mptcp_subflow_context, data_avail);
+> -		break;
+> 	case offsetof(struct mptcp_subflow_context, avg_pacing_rate):
+> 		end = offsetofend(struct mptcp_subflow_context, avg_pacing_rate);
+> 		break;
+> -- 
+> 2.35.3
+>
+>
+>
