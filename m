@@ -1,303 +1,121 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2056.outbound.protection.outlook.com [40.107.22.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583671F92F
-	for <mptcp@lists.linux.dev>; Thu,  3 Aug 2023 13:42:14 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c1R9x/GY4VImCVetYDf3lmu1EGmWQe3rkXm5FD+BGaLyG5yGCD23HsSLj9BBpZsm5oUDAT/WZCotArLa07YJfk8mA97tOrRzyLFrRE0knHTLQCfjL5ujbKvm4MjsTMQB9aYMpRz8IpXHrub1USXE+tBk3RI6+dDpkShMgWftrP/IdPgunXDuePWu/EjESvQfGbTsMvAmUvvvbo4D6ZOTlcUp+yGKqmj9xxETATFQIoiooVIhBMIucZ/5Uatj/se/9UztjIA/ruOtR8x0QEFkzkriIHzvqD8ZblRSQstgyfIBp8W4J1jSkqT4Dazu96l1UUsNKPhaL51L/HRhIolaMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M1VBt/JAhAhmI+Q6YmiMxzFmwi+dFZb4ProetOfhOEI=;
- b=J3OWQE6h8YLe2htfX/1jlvCfAyv4D57813jY7y3/hbFR/olzT8sqM0bG39TCTsTogqxLIVju++Fyx6bE8WI8SO4ftGu1jYTnhjiG5jaDJIObnyg70BqPaYIR5j7VaQoRbhMAioiYtnKCoH1hxO56g4r/nRABfu1jTkWkKU4EaYufAeEdzaUee/vwQv8C5Amnp7vLhd/Hxp1qEK+54W0SVOoHR3ZqtO0EGJd6aXADJjklZdY9h7mMKTAgTxtU8gE+VQ40mGxk308VawNtDs9+eVSwzxVPcUlES+BYIjMjAO48xjDyxUkASuDsE8HeWyTS1naQIurrxYTskhJJTrxtoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M1VBt/JAhAhmI+Q6YmiMxzFmwi+dFZb4ProetOfhOEI=;
- b=0I6MdQ5+KrPPAX4kMZp9UjTyDNLwOfAe1ZjQmt5+ROrttRu/EMRpVp/dt7fmkaVPtwE+ij7Wc/AEzoIpaRuCmaZKWJgF0XkE/Ll4Wl7XYvYph6Xqb2rYGN6EenFIRXDX01vjiqAeAdq1ShDk7k5MZFvgKv8BFWpB0vOw1mQ+qFRRDbxJduPLXanU+v2FtzrzvKOIJsxnwEzRxWt9h61Hrq2lhE+Cv8+FcqiwozGzqM8vRg+FlTL/SS/za57BzG3/DcaVlwx11MYQ1VPPYUfGTJIXM3BQLFL71R8GpLBKuhRaUZe3UqBtNpARWsHyY2JxX/Rvda0XKNxC4i0OgLL8eQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from VI1PR0402MB3503.eurprd04.prod.outlook.com (2603:10a6:803:d::26)
- by DUZPR04MB9725.eurprd04.prod.outlook.com (2603:10a6:10:4e0::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.20; Thu, 3 Aug
- 2023 13:42:11 +0000
-Received: from VI1PR0402MB3503.eurprd04.prod.outlook.com
- ([fe80::6480:1775:c36d:b797]) by VI1PR0402MB3503.eurprd04.prod.outlook.com
- ([fe80::6480:1775:c36d:b797%5]) with mapi id 15.20.6631.046; Thu, 3 Aug 2023
- 13:42:11 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Florent Revest <revest@chromium.org>,
-	Brendan Jackman <jackmanb@chromium.org>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Mat Martineau <martineau@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Eric Paris <eparis@parisplace.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Simon Horman <horms@kernel.org>
-Cc: Geliang Tang <geliang.tang@suse.com>,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org,
-	selinux@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v9 4/4] selftests/bpf: Add mptcpify test
-Date: Thu,  3 Aug 2023 21:41:46 +0800
-Message-Id: <92ee6be5a465601ff3a2df29b6a517086e87ca3c.1691069778.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1691069778.git.geliang.tang@suse.com>
-References: <cover.1691069778.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0025.apcprd02.prod.outlook.com
- (2603:1096:4:195::21) To VI1PR0402MB3503.eurprd04.prod.outlook.com
- (2603:10a6:803:d::26)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630D9182C8
+	for <mptcp@lists.linux.dev>; Thu,  3 Aug 2023 16:27:49 +0000 (UTC)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-317c1845a07so871982f8f.2
+        for <mptcp@lists.linux.dev>; Thu, 03 Aug 2023 09:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1691080068; x=1691684868;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oivLDNLKkbgHfQKfV5yU0mJN6s95zYt0ChN5nVAL+kg=;
+        b=iErEyWVcm5qD8UsitXkSDWAF0kha9IVb7gVXRvZ/wTty/v33XUnluYoS2Z9ksAtBds
+         gen7aj3jFAW810VdGF+aigl979PWnjEBZQEvMGT9Z+04eeI8X69bhW03SsM/ZpMICc9g
+         fISVYSz3Oj1EBkrrJLHlB49eklecv1fLYgCwVW828K4W42/y8CmVXlWQe5zZeUcqI6m3
+         +ksucjVIEVkwVIR2mvTuM7LlMvNP+OXio3RrE6u0qMtMIYy7uc93vhAFF/oohiy6J9fn
+         GXFYiejB707p9khJSjRJKas8Ks6Z1G9zlT/CIvl0T+1MJtp/oG7dBfPQbet54j0SvgMA
+         1HEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691080068; x=1691684868;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oivLDNLKkbgHfQKfV5yU0mJN6s95zYt0ChN5nVAL+kg=;
+        b=Y4aVpfHg2th9OvOuKaLhtFgeNdVQt4bQVFRWk4W5LOodFsb8KaCzUQFabEzA3bHf3d
+         OPg5ndyX5QjmnUUDe3LM4Girhj3jY5QzEErFGnMCDKbKpkEA7tO6KDcpl8JclZzN97p7
+         qAQeelviLCoKzknnzGVZyKEVDUDMfs3qrwuig26nlaUmtJmnv+Ih8sbCSVkNgONqnVYJ
+         X9f7ZzaBXmJMkRVSDdg2F2u9x3cb+/MjRQcSIPUgvU7FWjBLULonV+ns4XYpYr8kXI/S
+         SKmB21Iu4jyfrrYTTSZS4ooOQFeA9wwA38y6TtTqWHZJaFE5yvwtGnjOfMrlc6UZMs7V
+         waEQ==
+X-Gm-Message-State: ABy/qLb3k0JMyBvNxQu6kM7ozjHpRpL3NsWH8kXWPSkPn+RU5zC/mXOD
+	R1LwgMSoUPmX4zdwAhcSspSUsQ==
+X-Google-Smtp-Source: APBJJlGiRMsmYRdqHCoU9ATM7nk/5tBK6TRxPWlfPRz0TrDPQ/mGmPFDHXr42BSQVKQLr8hpCIFfgA==
+X-Received: by 2002:a5d:4c8d:0:b0:317:51ff:c249 with SMTP id z13-20020a5d4c8d000000b0031751ffc249mr7649766wrs.13.1691080067890;
+        Thu, 03 Aug 2023 09:27:47 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id o10-20020a5d474a000000b003141a3c4353sm253167wrs.30.2023.08.03.09.27.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Aug 2023 09:27:47 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH net 0/4] mptcp: more fixes for v6.5
+Date: Thu, 03 Aug 2023 18:27:26 +0200
+Message-Id: <20230803-upstream-net-20230803-misc-fixes-6-5-v1-0-6671b1ab11cc@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3503:EE_|DUZPR04MB9725:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2aba6b0e-e3d6-4cea-c9c3-08db94277070
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	jbM3AFGtLekJ0htcodtwRDk3ZCytajzQsAP0GS2YLI+pmFc4kEXyI1uiHUcbUYBnPFIyk4EYqx/XqQhvAWp/HPDR14Q/YzxEO29GVU+VXNv+EJCkLzJi6SDyvefBMKb4FaqSOnTFtgXUqqeutf0MEG9yFvXl/jALMPLN7Cp+QZBl7nL0Ent5UezGD8gTjnRoy4sRigG0PT7MMiSTeFnUEAxmBSt/baGlIcQddoXxaYqH009IDttMWHK2b84qs3w0iZ/WSt2dTAJSKUy6QLGUOecy6+fa8DWjYBFA383CAD9treZMdbqDHy+hVVYIU/aJZZCh8zKZq+jznlvXka6Mz0dvGhWG9q3RezzZ/oA3n5uw+VP0zhF61dvKPf6TP35Vq/wJgmzYY2dQiLntsy5FZbdPCziOiYkQ5hsJB0UsSX02FPCwAJX3R2dvh25+xOpccK2b9g2eOfwN30Tg9qVGwD/DA8wcgF0QP5jAP2pL2c5hO3mk9IB4x+MgxrRvSmYzubAbdCUqpIoWcVtkAmX3MjSfy0+oOVG7GuyC5XoTVYnXxpUfNJiun9nuHTxCauUktXfVUAJe4BlQVrYFWh57Q9N5zcItT08ZId6Q/QvV5/2jQFTYEFM68ELS3Q7/ehev
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3503.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(396003)(39860400002)(346002)(376002)(366004)(451199021)(83380400001)(2906002)(44832011)(2616005)(86362001)(36756003)(38100700002)(921005)(41300700001)(6666004)(6486002)(110136005)(6512007)(66476007)(316002)(4326008)(66946007)(66556008)(26005)(6506007)(5660300002)(478600001)(7416002)(186003)(8676002)(8936002)(7406005)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3//oaDnJB4diOXcxtTTwf9G/K3YcmnxsTGsXLTBmFO5htHKPJP73CTziTp9A?=
- =?us-ascii?Q?azp0PnorWn0Vw70xaCHt1UlyVvDABLpREyRku3HIbXSBGBGFObVaQYxm9BPC?=
- =?us-ascii?Q?Q+f07jiIWDWz/+6I+fiSqitcnYlzXFfGi3l1uUhH1CfBacIYdD5p9lKXY9/I?=
- =?us-ascii?Q?m1YHiwqDhZQsAy9qHCrNYGcvuiI+fiTVSkiKM7cLYUx7y6y4FpJhGwNSxqPp?=
- =?us-ascii?Q?aUiV8uKNiu7tts0ygKNuGVpg/R1LMlcKc54ZUik21T/Ik+0rwuGepsxWEB6M?=
- =?us-ascii?Q?6Q5H5QYLdmt3GGd/FAC3Mho3iPbdpP1cfofexCv1RchUn1PLvfbf441peqTk?=
- =?us-ascii?Q?unEOtxJMg1CzNX3jdeSNmRkjvQPfrpmx+QT4qsVg77zRLpuhAi/AiilOSxMz?=
- =?us-ascii?Q?P+y7pM4wq6jlOJTaRD8t6K3/kahtD2Qm69MjRNuo3Rnz2FNfKYPwnIntNNcw?=
- =?us-ascii?Q?J64YaIS6XT7dfCqUq9i0YzfuIB7rVsT0LXkLxS/ej9pVIBWqaHr8BpOdhlrL?=
- =?us-ascii?Q?RGylGeJDn2KzSvS6OoBnpwTAkahLi/g4hmOmxh+ck+W5gP9y8/tKnPqKlZyC?=
- =?us-ascii?Q?BAggtU0v5MsMu2QhJd31oWDmwM2xBVHpZF1LYF2Ib1Ux7fjGHVM7xcAhRLj9?=
- =?us-ascii?Q?qMLwfWSEkYP4wbsy533q3pgkQXSMvzOaZ2RVeWPBlqPiPyo8G6NxJBrZtJTk?=
- =?us-ascii?Q?S6pZYslanyCUISsMhZDFjcOuPKdNk+y6mXuQ96UO+kPTUOcelii4KHpOSw/c?=
- =?us-ascii?Q?gv99GPp4Sz7fBG6kwPuhmRDFVIVIzOLZdQ9MJHVG5Bw8GPguWo17O531tHKa?=
- =?us-ascii?Q?BMk5wI2Q6rvZrRnqEDiXXjSmx6AtgISvpdx/P+L6zUnNr4fG+8X/TGWT74/G?=
- =?us-ascii?Q?RNtcqTk2750Aua+zy6wReV1xP0UsQ9TojOOAyxYVjZiK/qLRuR1NAL8xIWAH?=
- =?us-ascii?Q?EoxCD1E42wTQsOerfFR7dDwJ3U7gRRepLxPE77jznTUF6L8DDPYSlAGKM727?=
- =?us-ascii?Q?KR+VWg/fLvmM0zBdpalWCawcqs4sXys9ZnDKzzzqmPN+iueI9YR4Gn+DLWs2?=
- =?us-ascii?Q?R2VX19B1RBx0qR1JoVtULsT2xSrYEXTuhD+wI38D45RkMKtD6dcMEmrUuCHU?=
- =?us-ascii?Q?/MCoFTTp82cqsr38bnspLosaZpMZPK43QPI9ChoAJbPnOOFdCNO0S+BULKbP?=
- =?us-ascii?Q?poM/OvtV41uhOfT5Tb+aSueMTli5qF8DFHntLJ6EgvPJTMdFMkxPpTAKNxPy?=
- =?us-ascii?Q?vN2jWeOG/Z9srGqZiUZMtfFPOkCv6irC8Jg4H1pfwxvvvjXQKmPh6KBSW0+D?=
- =?us-ascii?Q?tFUb03kjI5wBc9mE4ZYlFYcH6obfmYf9GfRNKBTjMpm3K5sCbBPJn2AhgY0X?=
- =?us-ascii?Q?1Ryk1YzU8wrVnLmK4msQy2c2YBBlqAp5fbPSJuo5NMpe6gaFgZM/VXSmvBtl?=
- =?us-ascii?Q?KpPrwN805Gdhl52rYl2oqOzMvPeiMLiWkpzbZeeAxKj8Gg4WfmYAd8ujft/S?=
- =?us-ascii?Q?uA5Ko4dAMkFlgjcAkC9SPx/Q2j2RW7251tbfOL0YW0yf5/9kiUYm3KawXTFx?=
- =?us-ascii?Q?uxPtI/FmQDmnO5QCKP+kZNJ6wtVhYJ/fHu0N6Quk?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2aba6b0e-e3d6-4cea-c9c3-08db94277070
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3503.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2023 13:42:11.6981
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n0Qg+wTLKzG90CW2so01IrLl5nXdfIFazhfODvIUCxGYMqadPuqnDmMVgVoRhfipKnG7EhVM5rQVUwPdMxpRkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB9725
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG7Vy2QC/z2MSw6DMAwFr4K8xlLKx616FcQiBEO9IEVxqCoh7
+ o7FguW8p5kdlJOwwrvYIfFPVL7R4FEWED4+zowyGkPlqtq9XI3bqjmxXzByxntdRANO8mdFwhb
+ JNRQo+GczEFhqTXydVurAROiP4wQmfvYXewAAAA==
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>, Geliang Tang <geliang.tang@suse.com>
+Cc: Andrea Claudi <aclaudi@redhat.com>, netdev@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org, 
+ Christoph Paasch <cpaasch@apple.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1554;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=hgCwEKZgy/8nY7p2tutm9i8Gq8mlRZAT01grbY/3qkY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBky9WCazqpy0eFdeJz/pfyJ9oT+4Y4qjuQQMuHU
+ YsGuqL+9YGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZMvVggAKCRD2t4JPQmmg
+ c4tpEACMT/28Wn9oxoeqlckZ63o6dknucVWGKpYJfLf4KZFUEjwqVBxmJanigxdgq9DmJ1M3gtd
+ ustvow4UL+TaqKrnvnj7Gan1MepJpoo2V8gI3YYIPUeW+lyf3CNwdlVl/5YMkk86Hqs+1uVqCGr
+ 7bPAU0WyCLVdZcFwqoNKWac68WKTLEESOjWN8jb3RSz9yjrqTnpz9JcrZMI5wqbm9ttg3JcYmlU
+ E3UPkEVI10F34ybTjGlyGq5JrZI0tqQwvK9WqgECsDD5qYG/rlgVyeH7oYY0e7uzaFdyk94iPcx
+ LZJb0T0gVqZoXExoz6QGVmg5EqACV8lYOTwmbI6/KGADcbMh/dJF4lj7ZmmNwXrbUzM2ifOwvVa
+ 5bGc7N4eIYMwLjAkPnXW0dnWMvIR4XVjo6Pbymvh0S1y4y0npMSAGAKTu8sJ9vA3D6vd2xGjc58
+ aRR5MNjy8XOT3H1gjy31HsRuF4LUfG+/au7kzZJHqSofmYXfcQNKkBf/n4qKHYQnlQ/GojCFMjZ
+ 0xhD5xemaPvg+0JqNaVr/PkDe4Zot2MWQNMKIjJdXSqsY8Ix1hPwM4uHXM5ZMcO20HkEeZkP2bd
+ HWovI9sanLv4VE/Qp+MYunVPqgMvwieY3An9iKGQJJRgVbs/pwxY1Gt1eiCBqUrKD15k496BBit
+ DMQVKnLYAJPz4EQ==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Implement a new test program mptcpify: if the family is AF_INET or
-AF_INET6, the type is SOCK_STREAM, and the protocol ID is 0 or
-IPPROTO_TCP, set it to IPPROTO_MPTCP. It will be hooked in
-update_socket_protocol().
+Here is a new batch of fixes related to MPTCP for v6.5 and older.
 
-Extend the MPTCP test base, add a selftest test_mptcpify() for the
-mptcpify case. Open and load the mptcpify test prog to mptcpify the
-TCP sockets dynamically, then use start_server() and connect_to_fd()
-to create a TCP socket, but actually what's created is an MPTCP
-socket, which can be verified through the outputs of 'ss' and 'nstat'
-commands.
+Patches 1 and 2 fix issues with MPTCP Join selftest when manually
+launched with '-i' parameter to use 'ip mptcp' tool instead of the
+dedicated one (pm_nl_ctl). The issues have been there since v5.18.
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Thank you Andrea for your first contributions to MPTCP code in the
+upstream kernel!
+
+Patch 3 avoids corrupting the data stream when trying to reset
+connections that have fallen back to TCP. This can happen from v6.1.
+
+Patch 4 fixes a race when doing a disconnect() and an accept() in
+parallel on a listener socket. The issue only happens in rare cases if
+the user is really unlucky since a fix that landed in v6.3 but
+backported up to v6.1.
+
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 94 +++++++++++++++++++
- tools/testing/selftests/bpf/progs/mptcpify.c  | 25 +++++
- 2 files changed, 119 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/mptcpify.c
+Andrea Claudi (2):
+      selftests: mptcp: join: fix 'delete and re-add' test
+      selftests: mptcp: join: fix 'implicit EP' test
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 4407bd5c9e9a..caab3aa6a162 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -6,6 +6,7 @@
- #include "cgroup_helpers.h"
- #include "network_helpers.h"
- #include "mptcp_sock.skel.h"
-+#include "mptcpify.skel.h"
- 
- char NS_TEST[32];
- 
-@@ -195,8 +196,101 @@ static void test_base(void)
- 	close(cgroup_fd);
- }
- 
-+static void send_byte(int fd)
-+{
-+	char b = 0x55;
-+
-+	ASSERT_EQ(write(fd, &b, sizeof(b)), 1, "send single byte");
-+}
-+
-+static int verify_mptcpify(void)
-+{
-+	char cmd[256];
-+	int err = 0;
-+
-+	snprintf(cmd, sizeof(cmd),
-+		 "ip netns exec %s ss -tOni | grep -q '%s'",
-+		 NS_TEST, "tcp-ulp-mptcp");
-+	if (!ASSERT_OK(system(cmd), "No tcp-ulp-mptcp found!"))
-+		err++;
-+
-+	snprintf(cmd, sizeof(cmd),
-+		 "ip netns exec %s nstat -asz %s | awk '%s' | grep -q '%s'",
-+		 NS_TEST, "MPTcpExtMPCapableSYNACKRX",
-+		 "NR==1 {next} {print $2}", "1");
-+	if (!ASSERT_OK(system(cmd), "No MPTcpExtMPCapableSYNACKRX found!"))
-+		err++;
-+
-+	return err;
-+}
-+
-+static int run_mptcpify(int cgroup_fd)
-+{
-+	int server_fd, client_fd, prog_fd, err = 0;
-+	struct mptcpify *mptcpify_skel;
-+
-+	mptcpify_skel = mptcpify__open_and_load();
-+	if (!ASSERT_OK_PTR(mptcpify_skel, "skel_open_load"))
-+		return -EIO;
-+
-+	err = mptcpify__attach(mptcpify_skel);
-+	if (!ASSERT_OK(err, "skel_attach"))
-+		goto out;
-+
-+	prog_fd = bpf_program__fd(mptcpify_skel->progs.mptcpify);
-+	if (!ASSERT_GE(prog_fd, 0, "bpf_program__fd")) {
-+		err = -EIO;
-+		goto out;
-+	}
-+
-+	/* without MPTCP */
-+	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
-+	if (!ASSERT_GE(server_fd, 0, "start_server")) {
-+		err = -EIO;
-+		goto out;
-+	}
-+
-+	client_fd = connect_to_fd(server_fd, 0);
-+	if (!ASSERT_GE(client_fd, 0, "connect to fd")) {
-+		err = -EIO;
-+		goto close_server;
-+	}
-+
-+	send_byte(client_fd);
-+	err += verify_mptcpify();
-+
-+	close(client_fd);
-+close_server:
-+	close(server_fd);
-+out:
-+	mptcpify__destroy(mptcpify_skel);
-+	return err;
-+}
-+
-+static void test_mptcpify(void)
-+{
-+	struct nstoken *nstoken = NULL;
-+	int cgroup_fd;
-+
-+	cgroup_fd = test__join_cgroup("/mptcpify");
-+	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
-+		return;
-+
-+	nstoken = create_netns();
-+	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
-+		goto fail;
-+
-+	ASSERT_OK(run_mptcpify(cgroup_fd), "run_mptcpify");
-+
-+fail:
-+	cleanup_netns(nstoken);
-+	close(cgroup_fd);
-+}
-+
- void test_mptcp(void)
- {
- 	if (test__start_subtest("base"))
- 		test_base();
-+	if (test__start_subtest("mptcpify"))
-+		test_mptcpify();
- }
-diff --git a/tools/testing/selftests/bpf/progs/mptcpify.c b/tools/testing/selftests/bpf/progs/mptcpify.c
-new file mode 100644
-index 000000000000..9cf1febe982d
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/mptcpify.c
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2023, SUSE. */
-+
-+#include <linux/bpf.h>
-+#include <bpf/bpf_tracing.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+#define	AF_INET		2
-+#define	AF_INET6	10
-+#define	SOCK_STREAM	1
-+#define	IPPROTO_TCP	6
-+#define	IPPROTO_MPTCP	262
-+
-+SEC("fmod_ret/update_socket_protocol")
-+int BPF_PROG(mptcpify, int family, int type, int protocol)
-+{
-+	if ((family == AF_INET || family == AF_INET6) &&
-+	    type == SOCK_STREAM &&
-+	    (!protocol || protocol == IPPROTO_TCP)) {
-+		return IPPROTO_MPTCP;
-+	}
-+
-+	return protocol;
-+}
+Paolo Abeni (2):
+      mptcp: avoid bogus reset on fallback close
+      mptcp: fix disconnect vs accept race
+
+ net/mptcp/protocol.c                            |  2 +-
+ net/mptcp/protocol.h                            |  1 -
+ net/mptcp/subflow.c                             | 60 ++++++++++++-------------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  6 ++-
+ 4 files changed, 35 insertions(+), 34 deletions(-)
+---
+base-commit: 0f71c9caf26726efea674646f566984e735cc3b9
+change-id: 20230803-upstream-net-20230803-misc-fixes-6-5-6046c6ca74b6
+
+Best regards,
 -- 
-2.35.3
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
