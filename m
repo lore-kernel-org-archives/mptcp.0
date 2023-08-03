@@ -1,45 +1,45 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92FE14276
-	for <mptcp@lists.linux.dev>; Thu,  3 Aug 2023 08:02:50 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5230ac6dbc5so669037a12.3
-        for <mptcp@lists.linux.dev>; Thu, 03 Aug 2023 01:02:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE429440
+	for <mptcp@lists.linux.dev>; Thu,  3 Aug 2023 08:03:13 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-99bccc9ec02so94170066b.2
+        for <mptcp@lists.linux.dev>; Thu, 03 Aug 2023 01:03:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691049769; x=1691654569;
+        d=tessares.net; s=google; t=1691049792; x=1691654592;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=oyeiaJJUGAnaCqsFNjqE65OIC0yesXPouF4fyxelTrg=;
-        b=NxwhbTnp9xOzxdetcqaAdaX/wdTxeGr952XttQKrMwniWc9O/qxD6tD0WWkHgod3lk
-         nvA10uVuunkzixZB2du8FmhhcMLcsdQRvGrj5NsNgDGnXBBsCrT3+D1p6vA/7pwtX7zg
-         8MGLOEEe0fMrvbNqIdVvPJ/xDO8J+XtYGiGkR50nRoB2GoOFN/r1e/C4uZ5YJgfMBYYq
-         T+uzVaKKTJT/vQsLiiPT5u9hIrrC3ybM/+0eLEnXCJZ5dMkd68K8kLkUh4A9hjTyLJ+0
-         2TRqAV9ZfCDYTMqDnMYa2oh4U9CKft+Qa65Eu7FyU0BXmvH/e8fvcMOPJhhjwvN7QsN/
-         FIew==
+        bh=GrJQSNHnWu1Mk5U+4IadqjOBUP3A5seeDYi38nWCivY=;
+        b=KwkT2N3PnW/R4BDYOzR+gHZbBvaQbN2DmN4G4cp/vO9MI6hwOw43rB3gJ7xyRvAd2l
+         Xzhx0deoBlgSKZTOTDNNaMI70lQzpdhOS+A8n1V6nuBwo74OH63U9ztZQms14YeVUCM6
+         X+iC5w6tvwGk9aCZeBWjVmg27727jU47u0+/+INna0wmiQMcF4QfrqvAt1uNoOHDmfkS
+         m091u50oCxlPSRc3eUNBlYoSmPcyuYSCb4ZMV5XSGc9KFTqWzX0dERGOj0hRWNNU53ap
+         3OgGo/+Yb8SwQa4H/rX1e4W6ZRM/BuJGtE7/9RWCWeU4NGRiENn9DhIH9sLlvif5tQjZ
+         3Jzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691049769; x=1691654569;
+        d=1e100.net; s=20221208; t=1691049792; x=1691654592;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oyeiaJJUGAnaCqsFNjqE65OIC0yesXPouF4fyxelTrg=;
-        b=fdOrzahS1X3yYQrtuaHCvvuYkBPf4ZJZFJFLZFUVnOO7wjshjYCOExQ3C3hHREu8/S
-         1CRG3toD4dgBtd0iRxVGQv0Av56GpIfPPXBkSdtlRkQmDK0UvUVjBZ2F7uMByQ1KFuVz
-         v5f3OzB3yoWc6aKSQ1Ihh0ZVioZzviEc7oeFGbtr5pInQDRpT6yUABx3meGsO1tLtXIx
-         dq72qw84Ec449AtVqLnQjeDx3w8vN/xY6RV65xsS6R+7F+2BNr9tgK8q/Z/Ox42e1uSD
-         iPCC4hMjq6VifC+CRbnK5eBlV9bCnwoajPUaxfKwmEEUKxmwJgXmlNDSk6A+kmv1xa9M
-         YVpA==
-X-Gm-Message-State: ABy/qLY7yjpuWcS+xuvrnvD1KP+3mAqmLQit3EAncUusY4GGwM56WXiQ
-	PRGm8vj57TcC+AM6QN5eQjKMUQ==
-X-Google-Smtp-Source: APBJJlG/zXuNQVHI6sqTDl/HdxE/zJkMFbko/Sk+XHrssrUl1Ye5fGLe5SAEJjzorQTBzeZUfc7j+g==
-X-Received: by 2002:aa7:d3d8:0:b0:522:28fa:3009 with SMTP id o24-20020aa7d3d8000000b0052228fa3009mr6862340edr.13.1691049768861;
-        Thu, 03 Aug 2023 01:02:48 -0700 (PDT)
+        bh=GrJQSNHnWu1Mk5U+4IadqjOBUP3A5seeDYi38nWCivY=;
+        b=HHj4Kt3LYKCNptrhdAe+vxi5ISqsOXed1boQPQ2UOOu8AFhOOuBA5dK1ycegsL7ytM
+         HixmD2ygpaaQPnCBYQhMfG1SsjUn/Fi4Z3puvl1So6TfVYzPMR6MlC4CNN7IrLKhU5wX
+         6+WvwoHTgUHS/nl3v40rSPM66JldEWu2NoxLiOCJlicZ6RcRjbv0zXXzSxtUhK31IFdn
+         8vYrekS4ZeS0bscpgmROGW1LLjIuVgZLZFCNTEgy89iutWjo/ueXZR1E+hHECdsNV3XL
+         VAwixd4LWKABB78oA3+/FoxXg9mh6q7/TUKD5vd7Riku6LFJI1xkd8WUMZm8slNXpJ6F
+         uPAw==
+X-Gm-Message-State: ABy/qLYkyFTa0qB+WA1h/2mxBB5anSNRwjev5Jfbgpi37xGyyLTuOfln
+	hDJBsuiGsNkEVBbyKv21BZbJdA==
+X-Google-Smtp-Source: APBJJlFuoAgOoNZTTSWYdyf/voBRcYNotvUorgT7zRDZV0LpAzuovYP3wZXGHTzDfXBjWUDoRCCLCg==
+X-Received: by 2002:aa7:de14:0:b0:519:6a6a:7659 with SMTP id h20-20020aa7de14000000b005196a6a7659mr8036773edv.18.1691049791807;
+        Thu, 03 Aug 2023 01:03:11 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:ace8:eb44:12a0:888? ([2a02:578:8593:1200:ace8:eb44:12a0:888])
-        by smtp.gmail.com with ESMTPSA id ay9-20020a056402202900b005223d76a3e3sm9669924edb.85.2023.08.03.01.02.47
+        by smtp.gmail.com with ESMTPSA id ay9-20020a056402202900b005223d76a3e3sm9669924edb.85.2023.08.03.01.03.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Aug 2023 01:02:48 -0700 (PDT)
-Message-ID: <94791e4f-98d4-454b-ae1d-3f61ac2b46d1@tessares.net>
-Date: Thu, 3 Aug 2023 10:02:32 +0200
+        Thu, 03 Aug 2023 01:03:11 -0700 (PDT)
+Message-ID: <6bcd3193-deb2-42b6-9732-48d76eb59913@tessares.net>
+Date: Thu, 3 Aug 2023 10:03:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,7 +47,7 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v8 1/4] bpf: Add update_socket_protocol hook
+Subject: Re: [PATCH bpf-next v8 4/4] selftests/bpf: Add mptcpify test
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, Alexei Starovoitov
  <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
@@ -70,7 +70,7 @@ Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
  apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
  selinux@vger.kernel.org, linux-kselftest@vger.kernel.org
 References: <cover.1691047403.git.geliang.tang@suse.com>
- <120b307aacd1791fac016d33e112069ffb7db21a.1691047403.git.geliang.tang@suse.com>
+ <4b95511da1a9dfd1a55734e32b7b6510739a7ab7.1691047403.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -115,32 +115,30 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <120b307aacd1791fac016d33e112069ffb7db21a.1691047403.git.geliang.tang@suse.com>
+In-Reply-To: <4b95511da1a9dfd1a55734e32b7b6510739a7ab7.1691047403.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 03/08/2023 09:30, Geliang Tang wrote:
-> Add a hook named update_socket_protocol in __sys_socket(), for bpf
-> progs to attach to and update socket protocol. One user case is to
-> force legacy TCP apps to create and use MPTCP sockets instead of
-> TCP ones.
+> Implement a new test program mptcpify: if the family is AF_INET or
+> AF_INET6, the type is SOCK_STREAM, and the protocol ID is 0 or
+> IPPROTO_TCP, set it to IPPROTO_MPTCP. It will be hooked in
+> update_socket_protocol().
 > 
-> Define a mod_ret set named bpf_mptcp_fmodret_ids, add the hook
-> update_socket_protocol into this set, and register it in
-> bpf_mptcp_kfunc_init().
+> Extend the MPTCP test base, add a selftest test_mptcpify() for the
+> mptcpify case. Open and load the mptcpify test prog to mptcpify the
+> TCP sockets dynamically, then use start_server() and connect_to_fd()
+> to create a TCP socket, but actually what's created is an MPTCP
+> socket, which can be verified through the outputs of 'ss' and 'nstat'
+> commands.
 
-Thank you for having looked at that!
+Thank you for the modifications!
 
-Because it is related to MPTCP:
+For MPTCP related code, it looks good to me:
 
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-
-I don't know if your scripts to apply patches support the "Closes" tag
-but just in case:
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/79
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
 Cheers,
 Matt
