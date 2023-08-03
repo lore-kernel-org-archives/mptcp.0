@@ -1,137 +1,63 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7538F5D
-	for <mptcp@lists.linux.dev>; Thu,  3 Aug 2023 07:25:45 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-99bcfe28909so81292966b.3
-        for <mptcp@lists.linux.dev>; Thu, 03 Aug 2023 00:25:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691047544; x=1691652344;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=o26uErdiPM8cyZ9D2v+ViOshl7q7gl2ia3PBiKF1tVQ=;
-        b=5Sd5EN6NOz7z2D2OZgk9cUnenTa9vDFA93VZwbx/PSxOZVKGg+zXH/DMsCwvg6FYLq
-         4Kau1UbTo53nYX+61d8LFuG/Dl81HZtxVulXAgMub9lyOWqpQ0byRyW1twvq78teK8Ue
-         AOGwd/ZiNwFy84eXBrvTWFKV0rFw8tWhDfvzHSWOzfDU+ExFXaLQIK1/UbO6uBoXOaY6
-         J4AN7K9aAMvhkL/icsscVaejirVENbN10bMQ/zuMRVLTa8vbbeqhtIMGfJv6PeIIBvzf
-         k1/4J5T87z/K08HaNGQ545r+VOALEMYxJFDzfPsz6rTdZOWB12ZQWZa9R0AqzR0uSkXN
-         NmdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691047544; x=1691652344;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o26uErdiPM8cyZ9D2v+ViOshl7q7gl2ia3PBiKF1tVQ=;
-        b=Hg4vrfwEJF0oITu6P0Z5CUcoQBvUdkfd/jps+TyVDer23j8e+6Nv8bbEwZs7xNdmQI
-         jniDtRcQzpZZDVf+CUb0AB7X7qDifemn5u9++ssR1goX7GG3Me3k6RntyOiA+4bOdRo/
-         P2pnkEcuD96jh9zpbXuwv3+kcsX9I/0cgRBkK3zbQr5vBft04NVxRxRlH2fYLaYnIqf9
-         ZDgt91xvDSZ/wllIBJUrhN+gD+LEzR/e1EwrDijzDed0M5ErnzDAWFeMvtFjn0fnKyle
-         KtDG5pv1O/xaX3Du4X/FiURT7ZCCNmp58FixMtFnFPaPC10CVmHvEsoxRr/Ko1QevCYf
-         N9Dw==
-X-Gm-Message-State: ABy/qLZQ5aMzIe2klrykArDb9/E7SDs8fD3zHz7izSq6dCWeHO1AtbV0
-	TZuXf+6cOLQwMUFFAoKIBzi74/+/e3bEQrp2ACA=
-X-Google-Smtp-Source: APBJJlE2jH4jb0bT5AGsx9K8+r3B2ZbaheFydvI94Z4H617ePiny3qB/mHS3kLi+BeLfKx3mzrhSWw==
-X-Received: by 2002:a17:906:7492:b0:99b:ce19:ec1c with SMTP id e18-20020a170906749200b0099bce19ec1cmr5918370ejl.73.1691047543747;
-        Thu, 03 Aug 2023 00:25:43 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:ace8:eb44:12a0:888? ([2a02:578:8593:1200:ace8:eb44:12a0:888])
-        by smtp.gmail.com with ESMTPSA id sb9-20020a170906edc900b009920f18a5f0sm10009822ejb.185.2023.08.03.00.25.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Aug 2023 00:25:43 -0700 (PDT)
-Message-ID: <1bf9dba1-095a-41ae-ac25-6dc05918806f@tessares.net>
-Date: Thu, 3 Aug 2023 09:25:42 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83E9A94D
+	for <mptcp@lists.linux.dev>; Thu,  3 Aug 2023 07:26:06 +0000 (UTC)
+Received: from canpemm100004.china.huawei.com (unknown [172.30.72.57])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RGgKL1CflzNmpc;
+	Thu,  3 Aug 2023 15:22:30 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.111) by
+ canpemm100004.china.huawei.com (7.192.105.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Thu, 3 Aug 2023 15:25:56 +0800
+From: Xiang Yang <xiangyang3@huawei.com>
+To: <matthieu.baerts@tessares.net>, <martineau@kernel.org>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <mptcp@lists.linux.dev>, <xiangyang3@huawei.com>
+Subject: [PATCH -next] mptcp: fix the incorrect judgment for msk->cb_flags
+Date: Thu, 3 Aug 2023 07:24:38 +0000
+Message-ID: <20230803072438.1847500-1-xiangyang3@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 1/3] Squash to "bpf: Add bpf_mptcp_sched_ops"
-Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1690952908.git.geliang.tang@suse.com>
- <aaebf8f891475fb3b946be734aff714530af09e4.1690952908.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
- 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
-In-Reply-To: <aaebf8f891475fb3b946be734aff714530af09e4.1690952908.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.111]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm100004.china.huawei.com (7.192.105.92)
+X-CFilter-Loop: Reflected
 
-Hi Geliang,
+Coccicheck reports the error below:
+net/mptcp/protocol.c:3330:15-28: ERROR: test of a variable/field address
 
-On 02/08/2023 07:10, Geliang Tang wrote:
-> No need to change subflow->stale bit-filed now, so drop the writing
-> access of it.
+Since the address of msk->cb_flags is used in __test_and_clear_bit, the
+address should not be NULL. The judgment for if (unlikely(msk->cb_flags))
+will always be true, we should check the real value of msk->cb_flags here.
 
-Just to be sure, do I still need to apply this patch that is no longer
-part of the v2 series?
+Fixes: 65a569b03ca8 ("mptcp: optimize release_cb for the common case")
+Signed-off-by: Xiang Yang <xiangyang3@huawei.com>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-Matt
-
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  net/mptcp/bpf.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index 51634efe4741..5c82cc35bfe0 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -52,9 +52,6 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
->  	case offsetof(struct mptcp_subflow_context, scheduled):
->  		end = offsetofend(struct mptcp_subflow_context, scheduled);
->  		break;
-> -	case offsetofend(struct mptcp_subflow_context, map_csum_len):
-> -		end = offsetof(struct mptcp_subflow_context, data_avail);
-> -		break;
->  	case offsetof(struct mptcp_subflow_context, avg_pacing_rate):
->  		end = offsetofend(struct mptcp_subflow_context, avg_pacing_rate);
->  		break;
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 65ee949a8a44..fae31dab49c9 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3327,7 +3327,7 @@ static void mptcp_release_cb(struct sock *sk)
+ 
+ 	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
+ 		__mptcp_clean_una_wakeup(sk);
+-	if (unlikely(&msk->cb_flags)) {
++	if (unlikely(msk->cb_flags)) {
+ 		/* be sure to set the current sk state before tacking actions
+ 		 * depending on sk_state, that is processing MPTCP_ERROR_REPORT
+ 		 */
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.34.1
+
