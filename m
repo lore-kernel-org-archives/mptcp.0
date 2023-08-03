@@ -1,126 +1,149 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544909440
-	for <mptcp@lists.linux.dev>; Thu,  3 Aug 2023 08:02:17 +0000 (UTC)
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4039a42467fso5106461cf.3
-        for <mptcp@lists.linux.dev>; Thu, 03 Aug 2023 01:02:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92FE14276
+	for <mptcp@lists.linux.dev>; Thu,  3 Aug 2023 08:02:50 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5230ac6dbc5so669037a12.3
+        for <mptcp@lists.linux.dev>; Thu, 03 Aug 2023 01:02:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691049736; x=1691654536;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a1k48pIunvubbRRgKWWee7PC3DUwy1qn/9uG3bftQIE=;
-        b=o8fR+XCR0UEos3tr1UXZmZcDpSj9/5oOondTaLXYN1KK4zoVo71J/cg00YjXB9AARj
-         QaieR7H3w1wK5geHZtjIt+8QxdgY2RtOLND1U68ld5wMQW7MZvtvpeV9vFB3eNUxUkKj
-         IWSDR9pU6czEYbaGZayu+mgUn2Z3XD+HejzQa8jU+z4GMRgryuR+OgrTYKCvkV6wvOpV
-         nWYe+7NIkd8JKlETDgl34NHoIXfWOOqUIaVHJhIz2ICUR7tg6cEcBLRirpoOkHSBU3hu
-         exMxUAxi1xv9AOVKpi4FXHdJOiWbZDCEWVDKw7H0in4UrdY2C09vlde1iXTJw0ETetUI
-         ZIhA==
+        d=tessares.net; s=google; t=1691049769; x=1691654569;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oyeiaJJUGAnaCqsFNjqE65OIC0yesXPouF4fyxelTrg=;
+        b=NxwhbTnp9xOzxdetcqaAdaX/wdTxeGr952XttQKrMwniWc9O/qxD6tD0WWkHgod3lk
+         nvA10uVuunkzixZB2du8FmhhcMLcsdQRvGrj5NsNgDGnXBBsCrT3+D1p6vA/7pwtX7zg
+         8MGLOEEe0fMrvbNqIdVvPJ/xDO8J+XtYGiGkR50nRoB2GoOFN/r1e/C4uZ5YJgfMBYYq
+         T+uzVaKKTJT/vQsLiiPT5u9hIrrC3ybM/+0eLEnXCJZ5dMkd68K8kLkUh4A9hjTyLJ+0
+         2TRqAV9ZfCDYTMqDnMYa2oh4U9CKft+Qa65Eu7FyU0BXmvH/e8fvcMOPJhhjwvN7QsN/
+         FIew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691049736; x=1691654536;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=a1k48pIunvubbRRgKWWee7PC3DUwy1qn/9uG3bftQIE=;
-        b=S89tL0CDpiaVia6HImAtFGvTdXNzgOX285ApSRu79NbmP2AzTAshcHcGOyeXu5abE1
-         MlYZzoGlxMnZTSzdIeYeFXL4diAZAm8X6z8X8zid/0xfdGDCQt7r5+DPYAnbowIwtVFr
-         xSkw9bAFZG4KNtby+sdGR1XE9e7LeZYXAG6iylhxu1KC7deqFfdJsJjsCzJIn6rILcqp
-         VQR5ne9bl68dpClRhF6UV53tUpA05Sa24hXTBzzovRUUJIpIi4Bmz6EcTOcnerL3KU9w
-         p1Y/zzk0FSrlnXulW8BHQc7tlkjN6LBpjP/XOU031VwkueDPvkMW7AdQfXHBz2wROc0K
-         2XKQ==
-X-Gm-Message-State: ABy/qLbeytLBbBShqgMs5Sn0FGQPbcJUV0wJkiyP8xCTD6RMLvI3BytF
-	A6A7MqbN+fcxTtLDqCas+A==
-X-Google-Smtp-Source: APBJJlFuChEsTXp21VlMHDJ/zbMne69tE3zzKKJP09vsNyZvUWymuRidnM5x0oVlT9lUwAa6YlDWag==
-X-Received: by 2002:ac8:5dcb:0:b0:403:fee4:2e7f with SMTP id e11-20020ac85dcb000000b00403fee42e7fmr20136837qtx.36.1691049735960;
-        Thu, 03 Aug 2023 01:02:15 -0700 (PDT)
-Received: from [127.0.0.1] ([104.45.204.218])
-        by smtp.gmail.com with ESMTPSA id z1-20020ac83e01000000b003e3918f350dsm6054884qtf.25.2023.08.03.01.02.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Aug 2023 01:02:15 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <c5e97a0fe0e542080eccdd4f4a1e99bddeb344d1.1691045340.git.geliang.tang@suse.com>
-References:
- <c5e97a0fe0e542080eccdd4f4a1e99bddeb344d1.1691045340.git.geliang.tang@suse.com>
-Subject: Re: selftests/bpf: Add bpf_stale test: Tests Results
-Message-ID: <17d62953-01b6-f084-253c-c4eeda3ffc07@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 03 Aug 2023 08:02:15 +0000
+        d=1e100.net; s=20221208; t=1691049769; x=1691654569;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oyeiaJJUGAnaCqsFNjqE65OIC0yesXPouF4fyxelTrg=;
+        b=fdOrzahS1X3yYQrtuaHCvvuYkBPf4ZJZFJFLZFUVnOO7wjshjYCOExQ3C3hHREu8/S
+         1CRG3toD4dgBtd0iRxVGQv0Av56GpIfPPXBkSdtlRkQmDK0UvUVjBZ2F7uMByQ1KFuVz
+         v5f3OzB3yoWc6aKSQ1Ihh0ZVioZzviEc7oeFGbtr5pInQDRpT6yUABx3meGsO1tLtXIx
+         dq72qw84Ec449AtVqLnQjeDx3w8vN/xY6RV65xsS6R+7F+2BNr9tgK8q/Z/Ox42e1uSD
+         iPCC4hMjq6VifC+CRbnK5eBlV9bCnwoajPUaxfKwmEEUKxmwJgXmlNDSk6A+kmv1xa9M
+         YVpA==
+X-Gm-Message-State: ABy/qLY7yjpuWcS+xuvrnvD1KP+3mAqmLQit3EAncUusY4GGwM56WXiQ
+	PRGm8vj57TcC+AM6QN5eQjKMUQ==
+X-Google-Smtp-Source: APBJJlG/zXuNQVHI6sqTDl/HdxE/zJkMFbko/Sk+XHrssrUl1Ye5fGLe5SAEJjzorQTBzeZUfc7j+g==
+X-Received: by 2002:aa7:d3d8:0:b0:522:28fa:3009 with SMTP id o24-20020aa7d3d8000000b0052228fa3009mr6862340edr.13.1691049768861;
+        Thu, 03 Aug 2023 01:02:48 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:ace8:eb44:12a0:888? ([2a02:578:8593:1200:ace8:eb44:12a0:888])
+        by smtp.gmail.com with ESMTPSA id ay9-20020a056402202900b005223d76a3e3sm9669924edb.85.2023.08.03.01.02.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Aug 2023 01:02:48 -0700 (PDT)
+Message-ID: <94791e4f-98d4-454b-ae1d-3f61ac2b46d1@tessares.net>
+Date: Thu, 3 Aug 2023 10:02:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v8 1/4] bpf: Add update_socket_protocol hook
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Florent Revest <revest@chromium.org>, Brendan Jackman
+ <jackmanb@chromium.org>, Mat Martineau <martineau@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ John Johansen <john.johansen@canonical.com>, Paul Moore
+ <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Eric Paris <eparis@parisplace.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ selinux@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <cover.1691047403.git.geliang.tang@suse.com>
+ <120b307aacd1791fac016d33e112069ffb7db21a.1691047403.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
+ 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
+In-Reply-To: <120b307aacd1791fac016d33e112069ffb7db21a.1691047403.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 03/08/2023 09:30, Geliang Tang wrote:
+> Add a hook named update_socket_protocol in __sys_socket(), for bpf
+> progs to attach to and update socket protocol. One user case is to
+> force legacy TCP apps to create and use MPTCP sockets instead of
+> TCP ones.
+> 
+> Define a mod_ret set named bpf_mptcp_fmodret_ids, add the hook
+> update_socket_protocol into this set, and register it in
+> bpf_mptcp_kfunc_init().
 
-Our CI did some validations and here is its report:
+Thank you for having looked at that!
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5811024205447168
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5811024205447168/summary/summary.txt
+Because it is related to MPTCP:
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5248074252025856
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5248074252025856/summary/summary.txt
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/4966599275315200
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4966599275315200/su=
-mmary/summary.txt
+I don't know if your scripts to apply patches support the "Closes" tag
+but just in case:
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_mp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6373974158868480
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6373974158868480/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/2174a36d15db
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/79
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
