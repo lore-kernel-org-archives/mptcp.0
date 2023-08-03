@@ -1,250 +1,131 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC1D2417E
-	for <mptcp@lists.linux.dev>; Thu,  3 Aug 2023 16:27:53 +0000 (UTC)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3128fcd58f3so1086188f8f.1
-        for <mptcp@lists.linux.dev>; Thu, 03 Aug 2023 09:27:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F9224188
+	for <mptcp@lists.linux.dev>; Thu,  3 Aug 2023 16:32:31 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-997c4107d62so166860766b.0
+        for <mptcp@lists.linux.dev>; Thu, 03 Aug 2023 09:32:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691080072; x=1691684872;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wyY2zV5vJaOIfyB4fQkW5n9NhYmmuO2ZPGVSyZVmtMg=;
-        b=qbePPPfnLE5E4qAH1BV1jZ3I2w0UFqw7GHg+qcz81lgnRyzwbkr4gOfO3r/MN/07JP
-         yK0ubEgcerqoCtTP6BIAtvJNzs1BqO+Yz8yj/nK+QDjNb28KWk1ZpUWQyVhWhk1oZqH+
-         WtjKMxfH6f3mJCOZ4ce95a6nIzJyG1Wqa3l4eX4eOpQeP8Zy/jgtFGHcTsw6YzQj/NgO
-         qOOIRvzNowKD0Vd1RXXtzJ0cfJJihEcTN7BmEK70n0y9wejojrxytcA6ZShYWqJPq2Fo
-         ziPpAKOfqzI3O8fyFW6KS4CjDEoG/h2IsFFr9pH39JZmvRfogLjMzpLbYUfMM71MPHDB
-         4haw==
+        d=tessares.net; s=google; t=1691080350; x=1691685150;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zZ4hM/q0HPwTItwRxcoCHVMnPlLGYXjnVrDNi3oJPwE=;
+        b=PJIfwjnPcq5K/eieK0jYsUg2wrAfml1/zyNkdsiMpk1rPDmxMtUCn7dwsENu/dqBW3
+         FoJLxM41Q9oW1PUyBKo2jG8xbpeZnvhLUTgDgb5DiUni2T0PZkqIKSYgWxQi/T83nl+t
+         pXIj8Gs+zAaxvvcc7Na8cryb/+eiYqbsOrlOoJVeASeEMfPnrW8kGcmCAT2GGsLY20xL
+         4hG9PxGQDlE5UhBvMESKsvNSZJGXRl0RdmLWgDgh7Sz8WL80tV22LoCaOvaB+82V+PnM
+         d3l4SWzwU1jKUZ8cOzQBr8bJBAZsSyGuXY4DTYtSakRmcSycNP11ZBTIar8nnEiN9fTU
+         OcBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691080072; x=1691684872;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wyY2zV5vJaOIfyB4fQkW5n9NhYmmuO2ZPGVSyZVmtMg=;
-        b=lBd6oiYIxt6yiEEHYxNZWRF51oUK/EAoYdivIn7uE+OpqgAa1JGBM5MSqLBNljqTG2
-         tgJZmt/mYprCeCSBiTW5cCXQkp8vYu7EjRbvPZ6qG3BOH/i4B15pXryhishI6VCN7Qek
-         xb/2OZdaNqWz5SkgMd74AHacm1OkoxuqJ5t45rkynKpG7wL75YiaUuLmCE6Acy5jPrSR
-         eO9gUUx5CFHTxBR8q4KVDKRRxtdDWD46VK7ROJoYxCeXrKQOBKngHiC998nHCQ9hkBD9
-         fESPjOUG857quTxUkHkPlUKk3EPISe4fbKnM+XxlioT0i3rgperMV0eJIL+MUYyzCaBg
-         LbFA==
-X-Gm-Message-State: ABy/qLb50csdVuIZXharpz19R/1Bko+YLZW+XrdG33PVJIlMs1ur2joH
-	ZrrK9Jbsk1b4hmt9/d8XszVQgA==
-X-Google-Smtp-Source: APBJJlFOUzY4WZSRiAxXYt14cKpFQXdsNaYdRrHkNPWzcIugEnJx/GRXshHYrzwhcSV1nJLZnuS4cg==
-X-Received: by 2002:adf:f490:0:b0:315:a74c:f627 with SMTP id l16-20020adff490000000b00315a74cf627mr7639736wro.16.1691080072198;
-        Thu, 03 Aug 2023 09:27:52 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id o10-20020a5d474a000000b003141a3c4353sm253167wrs.30.2023.08.03.09.27.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Aug 2023 09:27:51 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Thu, 03 Aug 2023 18:27:30 +0200
-Subject: [PATCH net 4/4] mptcp: fix disconnect vs accept race
+        d=1e100.net; s=20221208; t=1691080350; x=1691685150;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zZ4hM/q0HPwTItwRxcoCHVMnPlLGYXjnVrDNi3oJPwE=;
+        b=FvWewQEouT99zR5mdeXXwNaUq071x/Q9zyyl4spLMHo1jowGyZ66e0jXYuttBMlW9E
+         EsgFxAoYZxuucoJyCa5XI33QSHWjcDabIrbS6kkXY3TrMDNOuEKWNrg9BrdqxQhAwZyx
+         48hppAf/HG/UQfJNp9lVFwtBQNFOnckTV0htresOUT4cGad9W+4q/S+GHP6bfMTFFyMD
+         whvSFIKJ1rl1vr/71RLUT8SJABIDSQjweZXNRqHa4hDTlzJyfZDmaca6JBPeVgpxfNLu
+         9uPnAIG4ifsRi/IUZRMi8CyH2nET37jVI2Nn4ClsFdFqj+epksEUREceerVHfcNfWECM
+         QAzg==
+X-Gm-Message-State: ABy/qLbpS4QRHgV6hZhXvO0VCK1BUmRJTCakP9F4B7uPlhfBCiZFF2iK
+	HSMUcGn5APHFWfAmtOWuh9DJ/A==
+X-Google-Smtp-Source: APBJJlETHyKda7hW2GukYxbJ55rLLHE6UsKThSzEkBMfo1K5a1Rljp9JtErcdrxLF+jpDxF6Hhxk4A==
+X-Received: by 2002:a17:906:109e:b0:99b:cf7a:c8d4 with SMTP id u30-20020a170906109e00b0099bcf7ac8d4mr9009697eju.18.1691080350169;
+        Thu, 03 Aug 2023 09:32:30 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:ace8:eb44:12a0:888? ([2a02:578:8593:1200:ace8:eb44:12a0:888])
+        by smtp.gmail.com with ESMTPSA id l7-20020a1709066b8700b0099c53c4407dsm51247ejr.78.2023.08.03.09.32.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Aug 2023 09:32:29 -0700 (PDT)
+Message-ID: <d3fa9b41-078b-4bb5-9f5c-d8768b787f4d@tessares.net>
+Date: Thu, 3 Aug 2023 18:32:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] mptcp: fix the incorrect judgment for msk->cb_flags
+Content-Language: en-GB
+To: Xiang Yang <xiangyang3@huawei.com>, martineau@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev
+References: <20230803072438.1847500-1-xiangyang3@huawei.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
+ 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
+In-Reply-To: <20230803072438.1847500-1-xiangyang3@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230803-upstream-net-20230803-misc-fixes-6-5-v1-4-6671b1ab11cc@tessares.net>
-References: <20230803-upstream-net-20230803-misc-fixes-6-5-v1-0-6671b1ab11cc@tessares.net>
-In-Reply-To: <20230803-upstream-net-20230803-misc-fixes-6-5-v1-0-6671b1ab11cc@tessares.net>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>, Geliang Tang <geliang.tang@suse.com>
-Cc: Andrea Claudi <aclaudi@redhat.com>, netdev@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org, 
- Christoph Paasch <cpaasch@apple.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6350;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=aKcow2E15Tjek3grxJIpgMFsqze4hMw1QTBvn16JVm8=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBky9WCZ/PIlkegmWQ+oRn1/er9lZ7+r/US1BaBo
- xry6wrvOpyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZMvVggAKCRD2t4JPQmmg
- c6r+EADDM4nK4HHbE8VttqzJEu2kc7hBHUe/O1+iQPG3XmqMkMORrSJP1OjRnmYV0NBnKGARiKJ
- /drfsn60O8gpJoMpBhOuoWhUvlXaWNTURDne8QvBuY+b04dhjLQ/K4+im9U0FQiPDRC7JMbtu/N
- VRdEBWbcSVTcLPrxqtXljnPYlpXxAGQU0UAoYA0phciVxwJkRCbXnl3pcRZqH4DW+L71cIxAGpk
- dcuuzpfXakNQ4NwWvg1kMYhgM74q9DVuVRhsvOFgfouWWg4eYk2KZBN0hF09wYUapzilA56mN0P
- o0dYXp0+OohL2LG5BzeyAjFyC/LSNbHrxkUgbR/Q2s/bQlR+OBtW74z8JrR3dq5v9ovYwxAGjLn
- Hm51kzqOkgIg8n45zIgF9X7vLzwTY04kdRmsA+kKrXen0hQlrCRS9wWGy+PIiVtXJTWS9d7D4LH
- mztuedwS5jh4zK77CJQGydo2XCwvqe3cpR5+RdsSTvXfNUa5HhCCE8n8sJM62BbNCe4bXpLg0sE
- DhBUkMig9XxKur3bdZmrdF+NE9rqmLWmn9LDbs7RfPs+4a1pXL0RWLDeFdwMSzB6QT1ST8oJPPt
- lRWH8NfWhlbwrbglyp3pMK3TRtAsgoiQefToVlOc/vzh03SIwGz40Ih4PJF41EM9c1PXCAsqLFJ
- +qc+0oELhN/D9jA==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hi Xiang Yang
 
-Despite commit 0ad529d9fd2b ("mptcp: fix possible divide by zero in
-recvmsg()"), the mptcp protocol is still prone to a race between
-disconnect() (or shutdown) and accept.
+On 03/08/2023 09:24, Xiang Yang wrote:
+> Coccicheck reports the error below:
+> net/mptcp/protocol.c:3330:15-28: ERROR: test of a variable/field address
+> 
+> Since the address of msk->cb_flags is used in __test_and_clear_bit, the
+> address should not be NULL. The judgment for if (unlikely(msk->cb_flags))
+> will always be true, we should check the real value of msk->cb_flags here.
+> 
+> Fixes: 65a569b03ca8 ("mptcp: optimize release_cb for the common case")
+> Signed-off-by: Xiang Yang <xiangyang3@huawei.com>
 
-The root cause is that the mentioned commit checks the msk-level
-flag, but mptcp_stream_accept() does acquire the msk-level lock,
-as it can rely directly on the first subflow lock.
+This Coccicheck report was useful, the optimisation in place was not
+working. But there was no impact apart from testing more conditions
+where there were no reasons to.
 
-As reported by Christoph than can lead to a race where an msk
-socket is accepted after that mptcp_subflow_queue_clean() releases
-the listener socket lock and just before it takes destructive
-actions leading to the following splat:
+The fix is then good to me but it should land in -net, not in net-next.
 
-BUG: kernel NULL pointer dereference, address: 0000000000000012
-PGD 5a4ca067 P4D 5a4ca067 PUD 37d4c067 PMD 0
-Oops: 0000 [#1] PREEMPT SMP
-CPU: 2 PID: 10955 Comm: syz-executor.5 Not tainted 6.5.0-rc1-gdc7b257ee5dd #37
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
-RIP: 0010:mptcp_stream_accept+0x1ee/0x2f0 include/net/inet_sock.h:330
-Code: 0a 09 00 48 8b 1b 4c 39 e3 74 07 e8 bc 7c 7f fe eb a1 e8 b5 7c 7f fe 4c 8b 6c 24 08 eb 05 e8 a9 7c 7f fe 49 8b 85 d8 09 00 00 <0f> b6 40 12 88 44 24 07 0f b6 6c 24 07 bf 07 00 00 00 89 ee e8 89
-RSP: 0018:ffffc90000d07dc0 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff888037e8d020 RCX: ffff88803b093300
-RDX: 0000000000000000 RSI: ffffffff833822c5 RDI: ffffffff8333896a
-RBP: 0000607f82031520 R08: ffff88803b093300 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000003e83 R12: ffff888037e8d020
-R13: ffff888037e8c680 R14: ffff888009af7900 R15: ffff888009af6880
-FS:  00007fc26d708640(0000) GS:ffff88807dd00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000012 CR3: 0000000066bc5001 CR4: 0000000000370ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- do_accept+0x1ae/0x260 net/socket.c:1872
- __sys_accept4+0x9b/0x110 net/socket.c:1913
- __do_sys_accept4 net/socket.c:1954 [inline]
- __se_sys_accept4 net/socket.c:1951 [inline]
- __x64_sys_accept4+0x20/0x30 net/socket.c:1951
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x47/0xa0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-
-Address the issue by temporary removing the pending request socket
-from the accept queue, so that racing accept() can't touch them.
-
-After depleting the msk - the ssk still exists, as plain TCP sockets,
-re-insert them into the accept queue, so that later inet_csk_listen_stop()
-will complete the tcp socket disposal.
-
-Fixes: 2a6a870e44dd ("mptcp: stops worker on unaccepted sockets at listener close")
-Cc: stable@vger.kernel.org
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/423
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- net/mptcp/protocol.h |  1 -
- net/mptcp/subflow.c  | 60 ++++++++++++++++++++++++++--------------------------
- 2 files changed, 30 insertions(+), 31 deletions(-)
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 37fbe22e2433..ba2a873a4d2e 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -325,7 +325,6 @@ struct mptcp_sock {
- 	u32		subflow_id;
- 	u32		setsockopt_seq;
- 	char		ca_name[TCP_CA_NAME_MAX];
--	struct mptcp_sock	*dl_next;
- };
- 
- #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 9ee3b7abbaf6..94ae7dd01c65 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1793,34 +1793,21 @@ static void subflow_state_change(struct sock *sk)
- void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_ssk)
- {
- 	struct request_sock_queue *queue = &inet_csk(listener_ssk)->icsk_accept_queue;
--	struct mptcp_sock *msk, *next, *head = NULL;
--	struct request_sock *req;
--	struct sock *sk;
-+	struct request_sock *req, *head, *tail;
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk, *ssk;
- 
--	/* build a list of all unaccepted mptcp sockets */
-+	/* Due to lock dependencies no relevant lock can be acquired under rskq_lock.
-+	 * Splice the req list, so that accept() can not reach the pending ssk after
-+	 * the listener socket is released below.
-+	 */
- 	spin_lock_bh(&queue->rskq_lock);
--	for (req = queue->rskq_accept_head; req; req = req->dl_next) {
--		struct mptcp_subflow_context *subflow;
--		struct sock *ssk = req->sk;
--
--		if (!sk_is_mptcp(ssk))
--			continue;
--
--		subflow = mptcp_subflow_ctx(ssk);
--		if (!subflow || !subflow->conn)
--			continue;
--
--		/* skip if already in list */
--		sk = subflow->conn;
--		msk = mptcp_sk(sk);
--		if (msk->dl_next || msk == head)
--			continue;
--
--		sock_hold(sk);
--		msk->dl_next = head;
--		head = msk;
--	}
-+	head = queue->rskq_accept_head;
-+	tail = queue->rskq_accept_tail;
-+	queue->rskq_accept_head = NULL;
-+	queue->rskq_accept_tail = NULL;
- 	spin_unlock_bh(&queue->rskq_lock);
-+
- 	if (!head)
- 		return;
- 
-@@ -1829,13 +1816,19 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
- 	 */
- 	release_sock(listener_ssk);
- 
--	for (msk = head; msk; msk = next) {
--		sk = (struct sock *)msk;
-+	for (req = head; req; req = req->dl_next) {
-+		ssk = req->sk;
-+		if (!sk_is_mptcp(ssk))
-+			continue;
-+
-+		subflow = mptcp_subflow_ctx(ssk);
-+		if (!subflow || !subflow->conn)
-+			continue;
-+
-+		sk = subflow->conn;
-+		sock_hold(sk);
- 
- 		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
--		next = msk->dl_next;
--		msk->dl_next = NULL;
--
- 		__mptcp_unaccepted_force_close(sk);
- 		release_sock(sk);
- 
-@@ -1859,6 +1852,13 @@ void mptcp_subflow_queue_clean(struct sock *listener_sk, struct sock *listener_s
- 
- 	/* we are still under the listener msk socket lock */
- 	lock_sock_nested(listener_ssk, SINGLE_DEPTH_NESTING);
-+
-+	/* restore the listener queue, to let the TCP code clean it up */
-+	spin_lock_bh(&queue->rskq_lock);
-+	WARN_ON_ONCE(queue->rskq_accept_head);
-+	queue->rskq_accept_head = head;
-+	queue->rskq_accept_tail = tail;
-+	spin_unlock_bh(&queue->rskq_lock);
- }
- 
- static int subflow_ulp_init(struct sock *sk)
+I don't know if it is needed to have a re-send just to change the subject.
 
+Cheers,
+Matt
 -- 
-2.40.1
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
