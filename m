@@ -1,45 +1,45 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA21A930
-	for <mptcp@lists.linux.dev>; Fri,  4 Aug 2023 12:27:43 +0000 (UTC)
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-307d20548adso1725678f8f.0
-        for <mptcp@lists.linux.dev>; Fri, 04 Aug 2023 05:27:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4A28F52
+	for <mptcp@lists.linux.dev>; Fri,  4 Aug 2023 12:33:50 +0000 (UTC)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-3fe4b95c371so2429355e9.1
+        for <mptcp@lists.linux.dev>; Fri, 04 Aug 2023 05:33:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691152061; x=1691756861;
+        d=tessares.net; s=google; t=1691152428; x=1691757228;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Dyg5KAONZ2gGGOow6CBBuoSMTnZE/K8UGyd0nom+ufk=;
-        b=VRvKnyUhkQtqyJ3+4OSO3FOO9VUSiscDixPHnRFg3qgD9VauGichEhXTo8b25udf49
-         SmOkMa7v0dnzrxTbWO/G31NRX3b9bCLbZ3FiexErBRv8RxIE8yhWA+2bukVdRAjU7jbn
-         oelgygEVU6OEWi95C+rx2EhNYgwD0Qez8w6Xc/d9AT+g9DPYPHDmJmBoZWCBcpkRqm8O
-         xG9Pqhd8PIYlMoghIqLBXIyrYnGRDMZwU/kSN0ACLgvuTAQmdPaETZWVzxReI4i/knmU
-         k1Yoh4xZUFEpmuJY9+zGvzQeBEOzn9Mg0iCgneZ0K1DNczL61QUHkBIlUm9oxKeGOd3s
-         UOnQ==
+        bh=CfQMaaRyCSwOXXto5dBQ2HSX5cYKoQ2hDP9sxrdYqM4=;
+        b=BRZ106NiWzQjGJ3u9Ko38bN+c/o9i5EKY2zS0Q9uRhyVJa9uewyoNLP3Hr3YCtxv+G
+         iSmeOlQzQjXsJ8sQhWfpz33Amvfn4tBGopk+MIaEhV87nopDmIE5JsLyTErWAzwLhODf
+         QsA4nAj6ZPZgj7xEswQJgSkw79ah5jA4PB+oqc29zExFb+tWxBqLyXDsAqEIr2W59K/D
+         Fix8s0nDJ6MukiHKw94YuQVjLaaxVsKI8r22JhlcbvsWFLHZ8VSFniCM4jw8gY+ge3vM
+         4IRC3Y7+4/tePIahauon3+zLrmS7wb9TY0DjHPtQGfQGPgRoC+BpJsx1nzRWFAjTlK7b
+         AjLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691152061; x=1691756861;
+        d=1e100.net; s=20221208; t=1691152428; x=1691757228;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dyg5KAONZ2gGGOow6CBBuoSMTnZE/K8UGyd0nom+ufk=;
-        b=Tgeu2zR1lLlBq+2vdXi6utKNr+j68GIJ/5cD+xV8hgfzZIBd5WtTQp/4jiukcKP07M
-         Ozd/kcEDRguG+9KUSSZve+nnX4Mm65a9tNolxsqAcm04Q8T/PO49/ATCspUDVV86LrSy
-         wpv55JL9xSATdkonR4h3A6R63QE30jFgbGPTwu4bUk1h4R/7ioqcKoFoeayZdLMfaFcD
-         qgz9qNxMURRo6oO9WE3zwqZ9PD/obSKY6/AbwvEYBk6RLDLtRj8HU19VvYqOeSSSL9Om
-         pih9Fk+yy3hMUrbY9NaeMZWDaIfFx6/Y7ZZgYmN+1m9vCiP32CWJqzwYx1iDDjYNxzux
-         mZXQ==
-X-Gm-Message-State: AOJu0YxebD97+cClR9/ynnki9WKz3rTEYwVplST8kkGSViQAH2hELNbA
-	U64HCt4jMbP+m/9tvTw0lfkPINrQOh/vaBCw0l9bog==
-X-Google-Smtp-Source: AGHT+IFLL516uhXBwBb/VQNjR/uA7SQOQHlGRy1SRHqSm+efHoelrHv3lxfryunGwNQXKWhuU+U2WA==
-X-Received: by 2002:adf:e6c3:0:b0:315:a34f:b520 with SMTP id y3-20020adfe6c3000000b00315a34fb520mr1110010wrm.71.1691152060573;
-        Fri, 04 Aug 2023 05:27:40 -0700 (PDT)
+        bh=CfQMaaRyCSwOXXto5dBQ2HSX5cYKoQ2hDP9sxrdYqM4=;
+        b=D77e2mrOnWrNZIzr//+2AVEUy+aNTh5CtfvV6sShR5IFVnv2O4s2EcQsnxNPp1R6u8
+         phA2lLH942G2Cwibx0NK8ZtJr7Lx2jor3W7TxNBuB/tV7t2ixa6p9SsgJgS2ZJumPjZP
+         mECeEAIfrVEXxAZPmAgAtoUj+FiKX8jeSK+Eqw9vrMP5+nZ/j4tbSDfKF1DNr++KHlRb
+         7syVF+Zxr+NXDaUjAQY6IMFIrkGuZbl5muZ1QlzUczG2ku4NEGTBtVwlVGU/zlsb55MU
+         /3FwgoUuuTWxf+q/W0LGJSf1s1vM6Of2q3O0GGCa1qP495xwUz+mfrL3Usv0oVFITprv
+         G67A==
+X-Gm-Message-State: AOJu0Yy1JaO0KsqIOD3vkMDWtrKUdie4U7gFtM+lqBuhk07qOZluJe4G
+	3WT9GO0lr+hCn5W7U3QsHJkGxg==
+X-Google-Smtp-Source: AGHT+IFOpfhdqJoVSDg57olWBj0uJ+aMY1t0GDTFGK6VWfAXmk9rRc2BfjVhztOuQqScsq/hN74NxA==
+X-Received: by 2002:a05:600c:1f1b:b0:3f7:e78e:8a41 with SMTP id bd27-20020a05600c1f1b00b003f7e78e8a41mr1630096wmb.18.1691152428296;
+        Fri, 04 Aug 2023 05:33:48 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id m5-20020a5d6a05000000b003140f47224csm2438096wru.15.2023.08.04.05.27.40
+        by smtp.gmail.com with ESMTPSA id t11-20020a1c770b000000b003fa8dbb7b5dsm2272620wmi.25.2023.08.04.05.33.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Aug 2023 05:27:40 -0700 (PDT)
-Message-ID: <2546268f-88cc-4fa4-844f-00a070a7c736@tessares.net>
-Date: Fri, 4 Aug 2023 14:27:39 +0200
+        Fri, 04 Aug 2023 05:33:47 -0700 (PDT)
+Message-ID: <cae87433-3457-44a4-8990-dd5cd71bd50f@tessares.net>
+Date: Fri, 4 Aug 2023 14:33:46 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,15 +47,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 1/3] Squash to "bpf: Add bpf_mptcp_sched_ops"
+Subject: Re: [PATCH mptcp-next] bpf: Add accesses to bpf_skc_to_tcp_sock
 Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>,
- Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1690952908.git.geliang.tang@suse.com>
- <aaebf8f891475fb3b946be734aff714530af09e4.1690952908.git.geliang.tang@suse.com>
- <1bf9dba1-095a-41ae-ac25-6dc05918806f@tessares.net>
- <20230803073624.GA6125@bogon>
+To: Geliang Tang <geliang.tang@suse.com>, Mat Martineau <martineau@kernel.org>
+Cc: sferlinr@redhat.com, mptcp@lists.linux.dev
+References: <322ae693257df0c5fcd8f9254e062f394fbeab88.1690963606.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -100,34 +96,52 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <20230803073624.GA6125@bogon>
+In-Reply-To: <322ae693257df0c5fcd8f9254e062f394fbeab88.1690963606.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang, Mat,
 
-On 03/08/2023 09:36, Geliang Tang wrote:
-> On Thu, Aug 03, 2023 at 09:25:42AM +0200, Matthieu Baerts wrote:
->> On 02/08/2023 07:10, Geliang Tang wrote:
->>> No need to change subflow->stale bit-filed now, so drop the writing
->>> access of it.
->>
->> Just to be sure, do I still need to apply this patch that is no longer
->> part of the v2 series?
+On 02/08/2023 10:07, Geliang Tang wrote:
+> Squash to "bpf: Add bpf_mptcp_sched_ops" II
 > 
-> Yes, this patch is still needed. Please apply it to the export branch.
+> As is reported in #417 by sferlin, we can't access tcp_sock fields in
+> BPF schedulers.
+> 
+> I gave two suggestions in the comments of #417 to solve it:
+> 
+> 1. Move the helpers which needs to access tcp_sock fields like
+> tcp_packets_in_flight() into the kernel space, call the helpers in BPF
+> context.
+> 2. Add more helpers in the kernel space to access more tcp_sock fields,
+> call the helpers in BPF context.
+> 
+> Although these can solve this issue to some extent, but they aren't the
+> best solutions.
+> 
+> A better one is using bpf_skc_to_tcp_sock() to get the tcp_sock instead
+> of using tcp_sk():
+> 
+>     tp = bpf_skc_to_tcp_sock(sk);
+> 
+> Then we can access every fields of tp and keep sferlin's patch as is.
 
-Thank you for the confirmation, the patch and the review!
+Good idea!
+
+> But this needs to add accesses to call bpf_skc_to_tcp_sock() in BPF
+> schedulers.
+
+Thank you for the patch and the review!
 
 Now in our tree:
 
 New patches for t/upstream:
-- e8eec68a01f0: "squashed" patch 1/3 in "bpf: Add bpf_mptcp_sched_ops"
-- Results: e54740d33eef..49d27f1d2549 (export)
+- db817ce80c6d: "squashed" in "bpf: Add bpf_mptcp_sched_ops"
+- Results: 49d27f1d2549..7875a2426749 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230804T122556
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230804T123239
 
 Cheers,
 Matt
