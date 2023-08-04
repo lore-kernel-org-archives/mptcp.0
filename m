@@ -1,210 +1,127 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B7BBE4A
-	for <mptcp@lists.linux.dev>; Fri,  4 Aug 2023 12:23:36 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3178fa77b27so1752435f8f.2
-        for <mptcp@lists.linux.dev>; Fri, 04 Aug 2023 05:23:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DF5A930
+	for <mptcp@lists.linux.dev>; Fri,  4 Aug 2023 12:26:55 +0000 (UTC)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-635f293884cso12215706d6.3
+        for <mptcp@lists.linux.dev>; Fri, 04 Aug 2023 05:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691151815; x=1691756615;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cimSxPn4KvMzR4R6vzyKtXlVieQ+DFxTD1qD8B/bqI8=;
-        b=qocv2klwtlsN+rn66+ldC/KZz/1txRqGvjOzQ7BlDkTdeRPzpkHjFgKrxDTPmJNJ/O
-         Buh1zpFhdWZ8MNKdNyOzUntJk943SZYb/2ntKGcdmpanZmrifaGn6kXztB1UgBDnDtiW
-         BXy2QKRC+c2pQDK+7wNKgSZS6T3aId4J/k9sNeZo2naLKA9PByZvxT7OtE5ffSU7QXBm
-         iAcZLy1cBDXnmpGvKuoaujH5agZpWfvGgqMu11UttQbA6UO8AITjlrzNZg7WeUd5rfzf
-         E7QF02yGnaLL9YxqnjhRDtMH+SdxrxAcmBgx/+vXyGvFPUfXbcaOzjDYMX9P+QIS4ADW
-         IRig==
+        d=gmail.com; s=20221208; t=1691152015; x=1691756815;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uwTPeZYhuNRcXpidHE7ODi8cjSPhJrVKG4eGh/PpjQ8=;
+        b=ETkIueJ0WcK03R+IZ25enhmIIdxRvXyzeMHdfm1Mx+CCVpKrvzYuFW56O/0SyKq72h
+         ij7my/B5oaSR0Ii1B0PAKpItguNo+I8XsqG6CnVIMoLtz9+SUyFp+hy/U/iCyaI5+DZs
+         8A6O0x+/dUOAyJzcfJmajD3k58ptx8ZyapBPXg2CFMJXDGZMtheN22p4Raogaldy15B0
+         07mlxd5AeTc0TR7IIgS35JLfmEBBXU1Hmrbl+VyfI0GwCZ/8VKTrjPzTQnkKaXHHfzGg
+         n5NDmIN+3ugRHTCQO0JFsS6KBZTO9J0qbEQ4MEbf+ua5EMHKZQQlxVMXPhR926+9FiIp
+         NShA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691151815; x=1691756615;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cimSxPn4KvMzR4R6vzyKtXlVieQ+DFxTD1qD8B/bqI8=;
-        b=OAXGj2UL5Tzk3ucpg6Bgkb7sbD6BL/eOzITppXy0sUaEV8BJvk1NTY9SFIkiabUtfg
-         C96mtXa0v2lnzrF0tPNR+cTbw9ayj3mp5X1B8JAD/f4oDLTZl9SF8UR4eSbpCrOYlEVn
-         Ii3JgNZXcMqXGR7h7MXpWKht0inHVbdIcYGHTNhZKxBnrOZOziMnIvbNiqcOI6bC+q/p
-         3UZbk2AoK6isgRFI2SEiFR+hKJDTe+f3n2s0cknmaIJziwwJDhYou9JLcmpujy1X+bOy
-         MU9TTmsWfdftz9wxAr8cq9TjQ4sKjZwWpfUMhlS0Lg0iLUuVqOq7HPIsVXzJAHSNxdj1
-         sBMw==
-X-Gm-Message-State: AOJu0YwyJWQsCnpol+KMkKE7kPtJP8FBqPo6DkjCAFmHe/9mTdZfNTAL
-	u8+g/I4cNNocEthCN2HSbyy4vA==
-X-Google-Smtp-Source: AGHT+IH0QmmQF00omC4UMZFvWgrjHFejAD6Zi1fxTqNCF0RhyVhkt++hZbJbInFVXc0Z8EbkEezbcw==
-X-Received: by 2002:a05:6000:1b06:b0:317:6639:852d with SMTP id f6-20020a0560001b0600b003176639852dmr1463451wrz.43.1691151814953;
-        Fri, 04 Aug 2023 05:23:34 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id r15-20020adfdc8f000000b00317909f9985sm2398537wrj.113.2023.08.04.05.23.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Aug 2023 05:23:34 -0700 (PDT)
-Message-ID: <772ed33e-8893-41e2-9783-4b225f0d90ca@tessares.net>
-Date: Fri, 4 Aug 2023 14:23:33 +0200
+        d=1e100.net; s=20221208; t=1691152015; x=1691756815;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uwTPeZYhuNRcXpidHE7ODi8cjSPhJrVKG4eGh/PpjQ8=;
+        b=UcnkWKoYqJ+H7ivO60KhHQd1GsAycSUtTt4/a7MOLL3MFPFRl13l92QQ2J3mjKNBaR
+         ncOc6lBI9vz7wjsuDK7bDj4SiZ/y7Ckaxn9QvmlzrZ7W6cks0ADyHegAdzbA1mbfOX+E
+         gprBtjT+2GE4nScxcht3E4p0ZSbqfp5bfFHeRfwGJmYfcoTjMe2+sr9t3nDCmtqSxYiQ
+         jg/imERDrzaguKahU6wGbftRAifMghSbPpw0AiVulh3WF1FR5e8Y7SVAp50OaGO7d0s+
+         tWWPzxZCqB78utzWRHevWAtRrhqm1RflKjY8b/o1EjFTJeXnojdSYfIkGVLBC2JaBG66
+         DuPA==
+X-Gm-Message-State: AOJu0YzCm2w40mmQKAFXdF1d4l/vIB0al79Ym+qNz77xw0A4kYzD9T4W
+	UVtEtWZwJc2+BrsdCZauYQ==
+X-Google-Smtp-Source: AGHT+IHmeMA6qWXYtqb0hhpnSBaDgwoYIXLnsO/TQkIR44PUevQXqH0qgtcrTtRR89Yic7PncuTR1A==
+X-Received: by 2002:a0c:dc8e:0:b0:626:16ba:539f with SMTP id n14-20020a0cdc8e000000b0062616ba539fmr1428507qvk.5.1691152014703;
+        Fri, 04 Aug 2023 05:26:54 -0700 (PDT)
+Received: from [127.0.0.1] ([172.177.36.119])
+        by smtp.gmail.com with ESMTPSA id j2-20020a0ce002000000b0062b76c29978sm626235qvk.6.2023.08.04.05.26.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Aug 2023 05:26:54 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <1effb0a793140532be749aebbd7912798245745e.1691125344.git.geliang.tang@suse.com>
+References:
+ <1effb0a793140532be749aebbd7912798245745e.1691125344.git.geliang.tang@suse.com>
+Subject: Re: selftests/bpf: Add mptcpify test: Tests Results
+Message-ID: <84cb97f5-daa9-c994-1f7c-04b0255bc8df@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 04 Aug 2023 12:26:53 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Weekly meetings] MoM - 1st of August 2023
-Content-Language: en-GB
-To: Geliang Tang <geliangtang@gmail.com>, Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <336e8b92-8416-44a3-917f-5fcb1ae3a919@tessares.net>
- <CA+WQbwuhjitKkgobY7vgFMSQE5JTsPpq9VjC0KEO2Ldm_TT2gQ@mail.gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
- 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
-In-Reply-To: <CA+WQbwuhjitKkgobY7vgFMSQE5JTsPpq9VjC0KEO2Ldm_TT2gQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 02/08/2023 11:34, Geliang Tang wrote:
-> Matthieu Baerts <matthieu.baerts@tessares.net> 于2023年8月2日周三 01:28写道：
+Thank you for your modifications, that's great!
 
-(...)
+Our CI did some validations and here is its report:
 
->> Patches to send to netdev:
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6058655376736256
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6058655376736256/summary/summary.txt
 
-(...)
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6621605330157568
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6621605330157568/summary/summary.txt
 
->>     - Features for other trees:
->>
->>         - [30c925a26900] mptcp: refactor push_pending logic (Geliang Tang)
->>         - [d92e7c3ac566] mptcp: drop last_snd and MPTCP_RESET_SCHEDULER
->> (Geliang Tang)
->>         - [2e2ed433f72f] mptcp: add struct mptcp_sched_ops (Geliang Tang)
->>         - [8d3528b3804d] mptcp: add a new sysctl scheduler (Geliang Tang)
->>         - [36329d82af78] mptcp: add sched in mptcp_sock (Geliang Tang)
->>         - [58b653130078] mptcp: add scheduled in mptcp_subflow_context
->> (Geliang Tang)
->>         - [b86a7f3f4f2b] mptcp: add sched_data helpers (Geliang Tang)
->>         - [1da743dfb834] mptcp: add scheduler wrappers (Geliang Tang)
->>         - [172ae1f29b25] mptcp: use get_send wrapper (Geliang Tang)
->>         - [7449b11ec26b] mptcp: use get_retrans wrapper (Geliang Tang)
->>         - [abb330dac85f] mptcp: register default scheduler (Geliang Tang):
->>             - can maybe be sent?
->>             - Mat will re-review them to see what can be sent
-> 
-> I read these bpf schedulers patches again today and found that some
-> patches need to be update:
-> 
-> 1. mptcp: drop last_snd and MPTCP_RESET_SCHEDULER
-> 
-> The commit log needs to update:
-> '''
-> mptcp_subflow_get_send(), it makes some msk->last_snd useless.
-> ->
-> mptcp_subflow_get_send(), it makes all msk->last_snd useless.
-> '''
-> 
-> 2. mptcp: add struct mptcp_sched_ops
-> 
-> The commit log needs to update:
-> '''
-> mptcp_sched_data parameter, which contains a reinject flag and a
-> mptcp_subflow_context array.
->  ->
-> mptcp_sched_data parameter, which contains a reinject flag for
-> retrans or not, a subflows number and a mptcp_subflow_context array.
-> '''
-> 
-> @Matt, could you please help me to update these commit logs? Thanks.
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5495705423314944
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5495705423314944/summary/summary.txt
 
-Thank you for having checked that!
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5233749210693632
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5233749210693632/su=
+mmary/summary.txt
 
-I just applied these modifications in our tree. While at it, I also
-updated Mat's email in these "old patches":
+Initiator: Matthieu Baerts
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/352004bd53be
 
-New patches for t/upstream:
-- 785ba39756ad: tg:msg: update requested by Geliang
-- 24db5bf84b4b: tg:msg: update requested by Geliang
-- d25098265693: tg:msg: fix Mat's email address
-- 4e6cab447490: tg:msg: fix Mat's email address
-- 827901fa9870: tg:msg: fix Mat's email address
-- 95f83ee5251f: tg:msg: fix Mat's email address
-- 7b2bd7e15d81: tg:msg: fix Mat's email address
-- f6a3e846c8c0: tg:msg: fix Mat's email address
-- e7bd30b91bad: tg:msg: fix Mat's email address
-- 554ca1bca6a0: tg:msg: fix Mat's email address
-- 2d7584de4856: tg:msg: fix Mat's email address
-- 21c4f32abcb2: tg:msg: fix Mat's email address
-- ec51dec45885: tg:msg: fix Mat's email address
-- f74165f83ed1: tg:msg: fix Mat's email address
-- 4d597c39f9b8: tg:msg: fix Mat's email address
-- 23acfa97c761: tg:msg: fix Mat's email address
-- 0f63ac824dcd: tg:msg: fix Mat's email address
-- 06e13746b715: tg:msg: fix Mat's email address
-- 84db4f5a6f57: tg:msg: fix Mat's email address
-- 8ce5149322c5: tg:msg: fix Mat's email address
-- e132cd47cce7: tg:msg: fix Mat's email address
-- c385961fa9e7: tg:msg: fix Mat's email address
-- 8ad3b922a1b1: tg:msg: fix Mat's email address
-- Results: d3ccb2956067..e54740d33eef (export)
 
-> 3. mptcp: add sched_data helpers
-> 
-> This is a BPF related patch. Maybe we can send it together with the other
-> BPF patches.
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
-Good to know, thank you! Is it the only patches from this list above
-that is BPF related and not an MPTCP refactoring that can be sent?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-> If so, can we just move this patch between the commit "mptcp: register
-> default scheduler" and "bpf: Add bpf_mptcp_sched_ops"?
-If that's OK, I will wait before moving the commit (it's a manual
-operation, always a risk to do something wrong) to see if it is really
-needed: the next step is to select which patches we can send (Mat will
-also re-review these patches). We can always select which patches we
-send and omit some as long as there are no conflicts. If there are some,
-I will do the modifications in our tree before.
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
