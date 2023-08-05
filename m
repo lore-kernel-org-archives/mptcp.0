@@ -1,159 +1,75 @@
-Received: from out-100.mta0.migadu.com (out-100.mta0.migadu.com [91.218.175.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D909622
-	for <mptcp@lists.linux.dev>; Sat,  5 Aug 2023 00:40:20 +0000 (UTC)
-Message-ID: <adb657e4-5f8a-6ecc-ac29-8168f4ca2ed9@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1691196018;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tx4PIylCl9DQLUqlVHfva86omqX7eBYd3AzAD/mghWY=;
-	b=i/vD4fWReijjUK9556DPqLzrJ8Zwky2dJOnf5Ik5fhl82vx3zINv6/O8QZAUxzOyv7I2/X
-	5p32Hn9q1ImMZuTlsvr4+c6oWKvMGWdwr8EXx84ncXcpXtiVfWcgA3d3aIaJp6iXAHirpF
-	vdLc7G7eykmRsJmg2HtIRUj6PPWFNHk=
-Date: Fri, 4 Aug 2023 17:40:09 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A7A7E2;
+	Sat,  5 Aug 2023 01:30:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BAE76C433C7;
+	Sat,  5 Aug 2023 01:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1691199023;
+	bh=pwzAgcSEzJzd2+U8fbKBX1WqagT3Y+bBXKBHZ+l48ik=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Rk6zzPclZOXAqHBB9oE9EW3EBuB+mRQuzXf9wjdj2z9h6HX+j3vJcAA/1FpQJ1isg
+	 JmQaxURcpZBXDymoODynt/ZuEAVaEjh6PO/iJk6Ts0IrxA3lgzuBgoqooHs/b2ROtL
+	 WedU6u4N7KAEDtjzTVQmCABKU8QD51L4EYk6++VjqF4Dl5MDWUREDOhvulqvYkcuOP
+	 Z+G/3ca34QpjBz1TU0DDA3VRmlc2/Q7c/F/6VBUEr6aWJTpxB3wmcxe9AMmigb0r6R
+	 KhztBNIkq70iQInZkKpqkEIjG+ykj7NKIUOGLNM5tpD+023v0txob46a0BQ0ZG9/0D
+	 UcxsIkRjI4lxQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A1DE6C64458;
+	Sat,  5 Aug 2023 01:30:23 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v11 5/5] selftests/bpf: Add mptcpify test
-Content-Language: en-US
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
- selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yonghong Song <yonghong.song@linux.dev>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
- Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Florent Revest <revest@chromium.org>, Brendan Jackman
- <jackmanb@chromium.org>, Matthieu Baerts <matthieu.baerts@tessares.net>,
- Mat Martineau <martineau@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- John Johansen <john.johansen@canonical.com>, Paul Moore
- <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>,
- Stephen Smalley <stephen.smalley.work@gmail.com>,
- Eric Paris <eparis@parisplace.org>, Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>
-References: <cover.1691125344.git.geliang.tang@suse.com>
- <1effb0a793140532be749aebbd7912798245745e.1691125344.git.geliang.tang@suse.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <1effb0a793140532be749aebbd7912798245745e.1691125344.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/4] mptcp: more fixes for v6.5
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <169119902365.19124.7615476498177445087.git-patchwork-notify@kernel.org>
+Date: Sat, 05 Aug 2023 01:30:23 +0000
+References: <20230803-upstream-net-20230803-misc-fixes-6-5-v1-0-6671b1ab11cc@tessares.net>
+In-Reply-To: <20230803-upstream-net-20230803-misc-fixes-6-5-v1-0-6671b1ab11cc@tessares.net>
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
+ geliang.tang@suse.com, aclaudi@redhat.com, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, cpaasch@apple.com
 
-On 8/3/23 10:07 PM, Geliang Tang wrote:
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index 3dc0ba2e7590..e6aafb4cfa8e 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -6,6 +6,7 @@
->   #include "cgroup_helpers.h"
->   #include "network_helpers.h"
->   #include "mptcp_sock.skel.h"
-> +#include "mptcpify.skel.h"
->   
->   char NS_TEST[32];
->   
-> @@ -185,8 +186,105 @@ static void test_base(void)
->   	close(cgroup_fd);
->   }
->   
-> +static void send_byte(int fd)
-> +{
-> +	char b = 0x55;
-> +
-> +	ASSERT_EQ(write(fd, &b, sizeof(b)), 1, "send single byte");
-> +}
-> +
-> +static int verify_mptcpify(void)
-> +{
-> +	char cmd[256];
-> +	int err = 0;
-> +
-> +	/* Output of ss:
-> +	 *
-> +	 * ESTAB 0      0          127.0.0.1:44180    127.0.0.1:42225 cubic
-> +	 * ... tcp-ulp-mptcp flags:Mmec ...
-> +	 */
-> +	snprintf(cmd, sizeof(cmd),
-> +		 "ip netns exec %s ss -tOni | grep -q '%s'",
-> +		 NS_TEST, "tcp-ulp-mptcp");
-> +	if (!ASSERT_OK(system(cmd), "No tcp-ulp-mptcp found!"))
-> +		err++;
-> +
-> +	/* Output of nstat:
-> +	 *
-> +	 * #kernel
-> +	 * MPTcpExtMPCapableSYNACKRX       1                  0.0
-> +	 */
-> +	snprintf(cmd, sizeof(cmd),
-> +		 "ip netns exec %s nstat -asz %s | awk '%s' | grep -q '%s'",
-> +		 NS_TEST, "MPTcpExtMPCapableSYNACKRX",
-> +		 "NR==1 {next} {print $2}", "1");
-> +	if (!ASSERT_OK(system(cmd), "No MPTcpExtMPCapableSYNACKRX found!"))
-> +		err++;
+Hello:
 
-The idea is to confirm the protocol has been changed. Is it more direct to use 
-getsockopt(SO_PROTOCOL) on the created fd(s)?
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-> +
-> +	return err;
-> +}
-> +
-> +static int run_mptcpify(int cgroup_fd)
-> +{
-> +	int server_fd, client_fd, err = 0;
-> +	struct mptcpify *mptcpify_skel;
-> +
-> +	mptcpify_skel = mptcpify__open_and_load();
-> +	if (!ASSERT_OK_PTR(mptcpify_skel, "skel_open_load"))
-> +		return -EIO;
+On Thu, 03 Aug 2023 18:27:26 +0200 you wrote:
+> Here is a new batch of fixes related to MPTCP for v6.5 and older.
+> 
+> Patches 1 and 2 fix issues with MPTCP Join selftest when manually
+> launched with '-i' parameter to use 'ip mptcp' tool instead of the
+> dedicated one (pm_nl_ctl). The issues have been there since v5.18.
+> 
+> Thank you Andrea for your first contributions to MPTCP code in the
+> upstream kernel!
+> 
+> [...]
 
-Although the return value does not matter much, -EIO looks weird for the error 
-from mptcpify__open_and_load(). May be 'return libbpf_get_error(mptcpify_skel);'
+Here is the summary with links:
+  - [net,1/4] selftests: mptcp: join: fix 'delete and re-add' test
+    https://git.kernel.org/netdev/net/c/aaf2123a5cf4
+  - [net,2/4] selftests: mptcp: join: fix 'implicit EP' test
+    https://git.kernel.org/netdev/net/c/c8c101ae390a
+  - [net,3/4] mptcp: avoid bogus reset on fallback close
+    https://git.kernel.org/netdev/net/c/ff18f9ef30ee
+  - [net,4/4] mptcp: fix disconnect vs accept race
+    https://git.kernel.org/netdev/net/c/511b90e39250
 
---
-pw-bot: cr
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> +
-> +	err = mptcpify__attach(mptcpify_skel);
-> +	if (!ASSERT_OK(err, "skel_attach"))
-> +		goto out;
-> +
-> +	/* without MPTCP */
-> +	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
-> +	if (!ASSERT_GE(server_fd, 0, "start_server")) {
-> +		err = -EIO;
-> +		goto out;
-> +	}
-> +
-> +	client_fd = connect_to_fd(server_fd, 0);
-> +	if (!ASSERT_GE(client_fd, 0, "connect to fd")) {
-> +		err = -EIO;
-> +		goto close_server;
-> +	}
-> +
-> +	send_byte(client_fd);
-> +	err = verify_mptcpify();
-> +
-> +	close(client_fd);
-> +close_server:
-> +	close(server_fd);
-> +out:
-> +	mptcpify__destroy(mptcpify_skel);
-> +	return err;
-> +}
-> +
 
