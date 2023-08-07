@@ -1,88 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC9811196;
-	Mon,  7 Aug 2023 15:57:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43936C433CA;
-	Mon,  7 Aug 2023 15:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691423820;
-	bh=Iopmv+W8uy8uD0k3ogKDht+ceVh8rBeVYwhjSufP83E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VU5bcDi7ArPZqb6glNgWpk5ny7460mZ0gBPyrh/PlhDGp00jUZ+35I0SFnIA1WpWs
-	 uqDS6BjdxOCSAd5LUG9Sg5A/zU7Q1TRWfJd1K5BcIw+hO10wxxlVItjcZ7KUsHLYMW
-	 JQJkDlAGLexH5OEKSY0JZtP/pDSHxryKXX9WlHHuDYsWaylWlOFsZKXP+k6n5G96m2
-	 HcI+ZFRiu7IPgw3UgQRfrFxcgh4kx3Mc5KJQqQQFfGMveeQuAy+Vf7EjTxIeigNaQK
-	 Ku0euTTi4UBE2pCD30rrMN4wDj5Clod4/Mjyi6xNdED5bPGo+D35sknmKjdcXg1kHY
-	 Pnc8+3o9eOfFw==
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-58439daf39fso50839767b3.1;
-        Mon, 07 Aug 2023 08:57:00 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzNX2K8ZHDn+Adpcb8oRu+PBW3fB+k8PHoRr3eUuGWna8MmueaB
-	dNtC673lGh6sXatMaqDdTEPDBPFfvT8aI+OT+jA=
-X-Google-Smtp-Source: AGHT+IEcbPuDjuDLG1OuOckkYLVwk/OnR5k1qorstnsiJ62vul1IfTXd1TdZqwIwEugXgCw+qf7jmNF3PcpAkZySXLY=
-X-Received: by 2002:a81:5e0b:0:b0:586:9fd4:6b84 with SMTP id
- s11-20020a815e0b000000b005869fd46b84mr10694794ywb.46.1691423819458; Mon, 07
- Aug 2023 08:56:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6B9174EF
+	for <mptcp@lists.linux.dev>; Mon,  7 Aug 2023 21:44:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=g+VsSpIIvTZp+OYSzc71ePgWKvh9dbj0dOgrtfhVY08=; b=nv3YiaN+c2/xvyBTT2Scu3RVHn
+	Tj4b/HyzInNj8yGoInNGOYxe01yyjWs033Jma+vixDeIw5QdEW3/KFTOOcij/qjKWMuu5yJugNPak
+	5bGUWL8QxbO2hds1oMmC1dHP1V6cQK2D4CaALau+vpGeX5XE9OvQJDFIO1Yi21zaO8HE2+pk34l2n
+	BVyUdtZzZvxBzsi1joxY+1qA9ciAyv62012YcPxmBErjy0ZIa5JCIYEpqbx+tuJU0O0v/7lnUWQPd
+	Rgxo3BYCj2n7RrlkjDHbuZtr8gKU8wmwOtvkewC4c71qhu+pMW57ycko0SZ5Zi0jULdqh4x1zPD/o
+	G0OdFzXQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1qT81L-000nZJ-0p;
+	Mon, 07 Aug 2023 21:44:11 +0000
+Date: Mon, 7 Aug 2023 14:44:11 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Joel Granados <joel.granados@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Kees Cook <keescook@chromium.org>,
+	"D. Wythe" <alibuda@linux.alibaba.com>, mptcp@lists.linux.dev,
+	Jakub Kicinski <kuba@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+	Paolo Abeni <pabeni@redhat.com>, coreteam@netfilter.org,
+	Jan Karcher <jaka@linux.ibm.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	bridge@lists.linux-foundation.org,
+	linux-arm-kernel@lists.infradead.org,
+	Joerg Reuter <jreuter@yaina.de>, Julian Anastasov <ja@ssi.bg>,
+	David Ahern <dsahern@kernel.org>, netfilter-devel@vger.kernel.org,
+	Wen Gu <guwen@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+	Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+	linux-wpan@vger.kernel.org, lvs-devel@vger.kernel.org,
+	Karsten Graul <kgraul@linux.ibm.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-sctp@vger.kernel.org, Tony Lu <tonylu@linux.alibaba.com>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Ralf Baechle <ralf@linux-mips.org>, Florian Westphal <fw@strlen.de>,
+	willy@infradead.org, Heiko Carstens <hca@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>, linux-rdma@vger.kernel.org,
+	Roopa Prabhu <roopa@nvidia.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Simon Horman <horms@verge.net.au>,
+	Mat Martineau <martineau@kernel.org>, josh@joshtriplett.org,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Eric Dumazet <edumazet@google.com>, linux-hams@vger.kernel.org,
+	Wenjia Zhang <wenjia@linux.ibm.com>, linux-fsdevel@vger.kernel.org,
+	linux-s390@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>, netdev@vger.kernel.org,
+	rds-devel@oss.oracle.com, Joel Granados <j.granados@samsung.com>
+Subject: Re: [PATCH v2 00/14] sysctl: Add a size argument to register
+ functions in sysctl
+Message-ID: <ZNFlqwwvE6w6HyHl@bombadil.infradead.org>
+References: <20230731071728.3493794-1-j.granados@samsung.com>
+ <ZMgpck0rjqHR74sl@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <855a232a-76d3-7e7b-b2b5-2ebc41bcadd6@tessares.net>
- <CAFkjPTnX0=-GK8sFzd4S+V2+cA8E-FAqYHNndZui2Sh_MvoHPw@mail.gmail.com>
- <88f7a06b-b044-9fdc-b3dc-4b374dbca332@tessares.net> <3E1DD5A9-A8CB-4951-839A-6EF229CFA8EA@icloud.com>
- <4830cc62-64fd-f74b-bbfc-b8e44e023513@leemhuis.info> <CAFkjPTnAV6Rngwn6voCF332CX+eUyeJd7U0GcYn9BbkBqcTkHA@mail.gmail.com>
- <bad1180f-dc6d-45d8-9acc-08edd548261a@tessares.net>
-In-Reply-To: <bad1180f-dc6d-45d8-9acc-08edd548261a@tessares.net>
-From: Eric Van Hensbergen <ericvh@kernel.org>
-Date: Mon, 7 Aug 2023 10:56:48 -0500
-X-Gmail-Original-Message-ID: <CAFkjPT=xrkc1UVVFO8Qt35iEUWDTY0MMKO+CxwosySZvpME5vQ@mail.gmail.com>
-Message-ID: <CAFkjPT=xrkc1UVVFO8Qt35iEUWDTY0MMKO+CxwosySZvpME5vQ@mail.gmail.com>
-Subject: Re: 9p: MPTCP tests regressions due to new 9p features in v6.4
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, evanhensbergen@icloud.com, 
-	MPTCP Upstream <mptcp@lists.linux.dev>, v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZMgpck0rjqHR74sl@bombadil.infradead.org>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-That's good news because I was having a horrible time reproducing it.
-I'm glad we removed that extra bit, we were thinking it was benign,
-but I guess it turns out it wasn't!
+On Mon, Jul 31, 2023 at 02:36:50PM -0700, Luis Chamberlain wrote:
+> > Joel Granados (14):
+> >   sysctl: Prefer ctl_table_header in proc_sysctl
+> >   sysctl: Use ctl_table_header in list_for_each_table_entry
+> >   sysctl: Add ctl_table_size to ctl_table_header
+> >   sysctl: Add size argument to init_header
+> >   sysctl: Add a size arg to __register_sysctl_table
+> >   sysctl: Add size to register_sysctl
+> >   sysctl: Add size arg to __register_sysctl_init
+> 
+> This is looking great thanks, I've taken the first 7 patches above
+> to sysctl-next to get more exposure / testing and since we're already
+> on rc4.
 
-     -eric
+Ok I havent't heard much more feedback from networking folks, and
+since this is mostly sysctl love I've taken in the rest of these
+patches. Thanks to Jani Nikula for the reviews and to Greg KH for
+the suggestion on simplifying things.
 
-On Mon, Aug 7, 2023 at 10:42=E2=80=AFAM Matthieu Baerts
-<matthieu.baerts@tessares.net> wrote:
->
-> Hi Eric,
->
-> On 13/06/2023 18:07, Eric Van Hensbergen wrote:
-> > Understood, this on top of my 9p stack, but day job has been getting
-> > in the way lately so I need to unstack there first.  Will do my best
-> > to reproduce and understand as quickly as I can -- but given its a
-> > performance regression it is likely going to be tricky to reproduce
-> > and understand, so I'm not sure how confident I am that we'll be able
-> > to close it out prior to the final -rc.
->
-> Good news, it looks like the bug has been fixed!
->
-> I recently noticed some new patches fixing some issues in 9p in Linus
-> tree because they were conflicting with the revert of 9p's v6.4 PR I did
-> in June to stop having random issues in our tests. I then tried
-> reproducing the issue we had on top of Linus' tree and I was not able
-> too! (but I was still able to reproduce them just before the recent fixes=
-)
->
-> After a quick git bisect, it seems the bug is fixed thanks to
-> 350cd9b95975 ("fs/9p: remove unnecessary invalidate_inode_pages2").
->
-> So we can also tell regzbot to stop tracking this:
->
-> #regzbot fix: 350cd9b95975
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+Let's see what busts in linux-next, and if anything does I can reset
+my tree back to only the first 7 patches.
+
+  Luis
