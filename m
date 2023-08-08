@@ -1,98 +1,112 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930B0382
-	for <mptcp@lists.linux.dev>; Tue,  8 Aug 2023 02:34:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=2sy570se2d1y/tNUc5KxUhtFZdHaIMpjXMloRWfAQC8=; b=LFTrjMpESf0K2WDYsgcYshMVZb
-	XVav8xxO1YOSh/f7kB16OzY0uBkVxWCZvBuYbhPMnpSryFVcJMA4U85MD7ki5SJW+wKWHz7l/i5Ud
-	asF14iLCZhDvbu3bBlUZpGHDWWZShHGraWmRr0zUN9avXuF4GiC3kbqxQlKmcOfQpYDAw17HvvUYa
-	g7VEp36XJrjJHaC6TZnT+EHhXr0jTCtQtZf/X0ow7oIwBOlWCyLO9p3mX//iCo46M6JmQGR0Xskpr
-	kQ5/2g384H8/rcW5PZkcI/7KwR40BJHcWTCqG1O79Ofbz7S65Cn4CzgMg7znP4sOgksRuXlcNy/uI
-	O/5mNnZA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1qTCXt-001YkT-2X;
-	Tue, 08 Aug 2023 02:34:05 +0000
-Date: Mon, 7 Aug 2023 19:34:05 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Joel Granados <joel.granados@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Kees Cook <keescook@chromium.org>,
-	"D. Wythe" <alibuda@linux.alibaba.com>, mptcp@lists.linux.dev,
-	Vasily Gorbik <gor@linux.ibm.com>, Paolo Abeni <pabeni@redhat.com>,
-	coreteam@netfilter.org, Jan Karcher <jaka@linux.ibm.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Will Deacon <will@kernel.org>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	bridge@lists.linux-foundation.org,
-	linux-arm-kernel@lists.infradead.org,
-	Joerg Reuter <jreuter@yaina.de>, Julian Anastasov <ja@ssi.bg>,
-	David Ahern <dsahern@kernel.org>, netfilter-devel@vger.kernel.org,
-	Wen Gu <guwen@linux.alibaba.com>, linux-kernel@vger.kernel.org,
-	Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-	linux-wpan@vger.kernel.org, lvs-devel@vger.kernel.org,
-	Karsten Graul <kgraul@linux.ibm.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-sctp@vger.kernel.org, Tony Lu <tonylu@linux.alibaba.com>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Ralf Baechle <ralf@linux-mips.org>, Florian Westphal <fw@strlen.de>,
-	willy@infradead.org, Heiko Carstens <hca@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>, linux-rdma@vger.kernel.org,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Simon Horman <horms@verge.net.au>,
-	Mat Martineau <martineau@kernel.org>, josh@joshtriplett.org,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Eric Dumazet <edumazet@google.com>, linux-hams@vger.kernel.org,
-	Wenjia Zhang <wenjia@linux.ibm.com>, linux-fsdevel@vger.kernel.org,
-	linux-s390@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>, netdev@vger.kernel.org,
-	rds-devel@oss.oracle.com, Joel Granados <j.granados@samsung.com>
-Subject: Re: [PATCH v2 00/14] sysctl: Add a size argument to register
- functions in sysctl
-Message-ID: <ZNGpnSCkVYAnfSfa@bombadil.infradead.org>
-References: <20230731071728.3493794-1-j.granados@samsung.com>
- <ZMgpck0rjqHR74sl@bombadil.infradead.org>
- <ZNFlqwwvE6w6HyHl@bombadil.infradead.org>
- <20230807190914.4ff3eb36@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D03382
+	for <mptcp@lists.linux.dev>; Tue,  8 Aug 2023 02:50:56 +0000 (UTC)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-58688a0adbbso55369567b3.0
+        for <mptcp@lists.linux.dev>; Mon, 07 Aug 2023 19:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691463055; x=1692067855;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=To5RXdgTZuuS1AHvSrlZPoAVtMBfYbQuZKe1V5PCHGU=;
+        b=hk+jDZrl3g+o4sMGmZCabtN/5AnLtuwYSMj/gPgSP5jEYRltMDEp8gR1KR3PAoQdbl
+         1mPD04e7QwuBYp8dQtUhan7IrsHCz9nRfLpKT2kV9/mlU+mh7iLzNzoUSrFPVWwipOD6
+         q1TBPuDV4nRSRSBp4V/lOBEhKgMReru3RolSHSEN0f12SXGiqxPgWA4lemQjUrXgfP0b
+         9eSMaS0Lrlh3Hp5R6eNkjFGOMxplIuqi6pgCBrEZ/rsfKVThX0JpHq6AykEIQJrm9ZkH
+         +wvjvoi0OZeiAqnoiw+ZytKa3+4s6OOqLNTXelwoIk85Wm8mUEBMLgOG45iVyn8pij86
+         aDKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691463055; x=1692067855;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=To5RXdgTZuuS1AHvSrlZPoAVtMBfYbQuZKe1V5PCHGU=;
+        b=SzL8jXtWNSFUU1crZrSsxP6zpmSxNEzsrIaY4dJREIb5A+VLpiTYTziOXgYO9YdpTe
+         4pJVr5ccuNCQLMcYNGnVQaEHFLEGdZc2Ov1PU/vHK1qCNSsRGLxb9XLVKnTGuppwlcb3
+         BrWdst6w8P8Va1rJSv6HupBxBf81TC/Sbi1b+nT5yzxSB0MdAr23a+sPrZxmaDI/W1zO
+         bUEn2HPQB5KVgUl5UBsyM1ZIvP6cVW4Tj/4i51mYH99lPBOQNA3to0TtzHX+xCYmhTgT
+         0E+IEfMjoX2Pe9scXuU9ndeVZv7wDy2b3wrqDtWXwyGzCqblx69qgf6BuSvNhUdl6w5o
+         RsWQ==
+X-Gm-Message-State: AOJu0YyhRWU7BDxVFbPIfJuY3RW6u9nGYy9PIWMH2SsbPFtpi1OiCSBX
+	dN39Q0xD8YMaOuwbRIaWNcs1JYUWSldxK8suiRg=
+X-Google-Smtp-Source: AGHT+IHSbsxoEBIVRycBoxXUeft0G8ZFjbq4hkHa5qDquFTqGRH0j9u4YIDSq+t+KyYatv1w3tPVNwgPVd1vEaLOCH8=
+X-Received: by 2002:a0d:cac5:0:b0:577:d44:a163 with SMTP id
+ m188-20020a0dcac5000000b005770d44a163mr11720738ywd.6.1691463055272; Mon, 07
+ Aug 2023 19:50:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230807190914.4ff3eb36@kernel.org>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+References: <20230731071728.3493794-1-j.granados@samsung.com>
+ <ZMgpck0rjqHR74sl@bombadil.infradead.org> <ZNFlqwwvE6w6HyHl@bombadil.infradead.org>
+ <CANnsUMG3WO_19GpnsNaXPqu6eEnpBvYUpkrf1QbHwsc9wEoCZQ@mail.gmail.com> <ZNGBrkP7J2g/BAWV@bombadil.infradead.org>
+In-Reply-To: <ZNGBrkP7J2g/BAWV@bombadil.infradead.org>
+From: Chris Maness <christopher.maness@gmail.com>
+Date: Mon, 7 Aug 2023 19:50:44 -0700
+Message-ID: <CANnsUMGRBnatKB4-3eYjb5aG7YnXDiZG6cjuwSgtjvVF6ErJNg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/14] sysctl: Add a size argument to register
+ functions in sysctl
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Alexander Aring <alex.aring@gmail.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	"D. Wythe" <alibuda@linux.alibaba.com>, David Ahern <dsahern@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Florian Westphal <fw@strlen.de>, Heiko Carstens <hca@linux.ibm.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Iurii Zaikin <yzaikin@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Karcher <jaka@linux.ibm.com>, 
+	Joel Granados <joel.granados@gmail.com>, Joel Granados <j.granados@samsung.com>, 
+	Joerg Reuter <jreuter@yaina.de>, Jozsef Kadlecsik <kadlec@netfilter.org>, Julian Anastasov <ja@ssi.bg>, 
+	Karsten Graul <kgraul@linux.ibm.com>, Kees Cook <keescook@chromium.org>, 
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Mat Martineau <martineau@kernel.org>, 
+	Matthieu Baerts <matthieu.baerts@tessares.net>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Pablo Neira Ayuso <pablo@netfilter.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Ralf Baechle <ralf@linux-mips.org>, Roopa Prabhu <roopa@nvidia.com>, 
+	Santosh Shilimkar <santosh.shilimkar@oracle.com>, Simon Horman <horms@verge.net.au>, 
+	Stefan Schmidt <stefan@datenfreihafen.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Tony Lu <tonylu@linux.alibaba.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Wen Gu <guwen@linux.alibaba.com>, 
+	Wenjia Zhang <wenjia@linux.ibm.com>, Will Deacon <will@kernel.org>, Xin Long <lucien.xin@gmail.com>, 
+	bridge@lists.linux-foundation.org, coreteam@netfilter.org, 
+	josh@joshtriplett.org, linux-arm-kernel@lists.infradead.org, 
+	linux-fsdevel@vger.kernel.org, linux-hams@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-sctp@vger.kernel.org, 
+	linux-wpan@vger.kernel.org, lvs-devel@vger.kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+	rds-devel@oss.oracle.com, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 07, 2023 at 07:09:14PM -0700, Jakub Kicinski wrote:
-> On Mon, 7 Aug 2023 14:44:11 -0700 Luis Chamberlain wrote:
-> > > This is looking great thanks, I've taken the first 7 patches above
-> > > to sysctl-next to get more exposure / testing and since we're already
-> > > on rc4.  
-> > 
-> > Ok I havent't heard much more feedback from networking folks
-> 
-> What did you expect to hear from us?
+I tried running the current mainline kernel (current Arch Linux) with
+simple single MUX socket (ax0) using LinFBB.  I was a happy camper as
+it seemed to work fine at first, then the system just slowed to a
+crawl.  I am wondering if any of these patches are addressing this
+behavior.  No kernel panic like before, but not what I was hoping for.
+I have also tried sixpack, and that explodes instantly the last time I
+have checked.   That goes all the way back to the v4 kernels.  v2 is
+fine there.
 
-Just a sanity review would be nice.
+73 de Chris KQ6UP
 
-> My only comment is to merge the internal prep changes in and then send
-> us the networking changes in the next release cycle.
+On Mon, Aug 7, 2023 at 4:43=E2=80=AFPM Luis Chamberlain <mcgrof@kernel.org>=
+ wrote:
+>
+> On Mon, Aug 07, 2023 at 04:00:49PM -0700, Chris Maness wrote:
+> > When are these likely to hit the mainline release code?
+>
+> linux-next tomorrow. The first 7 patches are scheduled for mainline
+> as they were merged + tested without any hiccups. These last few patches
+> I'll wait and see. If nothing blows up on linux-next perhaps I'll
+> include them to Linux for mainline during the next merge window.
+>
+>   Luis
 
-OK we can do that, I can soak them on linux-next from now so to be sure
-it gets wider testing. But review on those parts would be nice.
 
-  Luis
+
+--=20
+Thanks,
+Chris Maness
