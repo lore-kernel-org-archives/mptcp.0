@@ -1,210 +1,209 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2053.outbound.protection.outlook.com [40.107.6.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF38F6108
-	for <mptcp@lists.linux.dev>; Wed,  9 Aug 2023 07:13:24 +0000 (UTC)
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20230809071323euoutp015d2b996c65b2b9125c2fa606849b0eb7~5pZb-us8e0911009110euoutp01F;
-	Wed,  9 Aug 2023 07:13:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20230809071323euoutp015d2b996c65b2b9125c2fa606849b0eb7~5pZb-us8e0911009110euoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1691565203;
-	bh=pd0rkBBl239hWUg1rHcfh8BtHyeO6HyV2u6nDFSCWm0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=XJ3SeBQkhJ7ZaOnSLxtM3BytZFFQVnU3UGIPJpukUn8AgLqEqNqS+MstyY5OdroTM
-	 GdbqsR2lXlr3UHMyvKPDA5ajb5C5q9GmO7KzPcM796hL5FqKq2HOoxqmLBBjhJqVjQ
-	 Hs5UChvxttSTzpTOYv5BpP1svXsa/HlFU8gSljBw=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20230809071322eucas1p271a06df3167b4acd4d096977def3f65b~5pZbxCo9J2495924959eucas1p2V;
-	Wed,  9 Aug 2023 07:13:22 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 89.6F.11320.29C33D46; Wed,  9
-	Aug 2023 08:13:22 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20230809071322eucas1p2b1aafebde3118e2cd1df71c493c49520~5pZbFSrB30819708197eucas1p2Z;
-	Wed,  9 Aug 2023 07:13:22 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20230809071322eusmtrp20dd29928bd4576d6f2d57f097372c78e~5pZbD_dNH1895118951eusmtrp2N;
-	Wed,  9 Aug 2023 07:13:22 +0000 (GMT)
-X-AuditID: cbfec7f4-993ff70000022c38-4c-64d33c92be17
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 86.74.14344.19C33D46; Wed,  9
-	Aug 2023 08:13:21 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20230809071321eusmtip1adec89d2a0f353095405b43d46c2cce5~5pZau3MOi3046330463eusmtip1k;
-	Wed,  9 Aug 2023 07:13:21 +0000 (GMT)
-Received: from localhost (106.110.32.133) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Wed, 9 Aug 2023 08:13:21 +0100
-Date: Tue, 8 Aug 2023 15:59:53 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Chris Maness <christopher.maness@gmail.com>
-CC: Luis Chamberlain <mcgrof@kernel.org>, Alexander Aring
-	<alex.aring@gmail.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Catalin
-	Marinas <catalin.marinas@arm.com>, Christian Borntraeger
-	<borntraeger@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, David
-	Ahern <dsahern@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
-	Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>, Heiko
-	Carstens <hca@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>,
-	Iurii Zaikin <yzaikin@google.com>, Jakub Kicinski <kuba@kernel.org>, Jan
-	Karcher <jaka@linux.ibm.com>, Joerg Reuter <jreuter@yaina.de>, Jozsef
-	Kadlecsik <kadlec@netfilter.org>, Julian Anastasov <ja@ssi.bg>, Karsten
-	Graul <kgraul@linux.ibm.com>, Kees Cook <keescook@chromium.org>, Marcelo
-	Ricardo Leitner <marcelo.leitner@gmail.com>, Mat Martineau
-	<martineau@kernel.org>, Matthieu Baerts <matthieu.baerts@tessares.net>,
-	Miquel Raynal <miquel.raynal@bootlin.com>, Nikolay Aleksandrov
-	<razor@blackwall.org>, Pablo Neira Ayuso <pablo@netfilter.org>, Paolo Abeni
-	<pabeni@redhat.com>, Ralf Baechle <ralf@linux-mips.org>, Roopa Prabhu
-	<roopa@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Simon
-	Horman <horms@verge.net.au>, Stefan Schmidt <stefan@datenfreihafen.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>, Sven Schnelle
-	<svens@linux.ibm.com>, Tony Lu <tonylu@linux.alibaba.com>, Vasily Gorbik
-	<gor@linux.ibm.com>, Wen Gu <guwen@linux.alibaba.com>, Wenjia Zhang
-	<wenjia@linux.ibm.com>, Will Deacon <will@kernel.org>, Xin Long
-	<lucien.xin@gmail.com>, <bridge@lists.linux-foundation.org>,
-	<coreteam@netfilter.org>, <josh@joshtriplett.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-hams@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-	<linux-sctp@vger.kernel.org>, <linux-wpan@vger.kernel.org>,
-	<lvs-devel@vger.kernel.org>, <mptcp@lists.linux.dev>,
-	<netdev@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
-	<rds-devel@oss.oracle.com>, <willy@infradead.org>
-Subject: Re: [PATCH v2 00/14] sysctl: Add a size argument to register
- functions in sysctl
-Message-ID: <20230808135953.l2y6gj7j272434fw@localhost>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04BC1FDA
+	for <mptcp@lists.linux.dev>; Wed,  9 Aug 2023 08:19:32 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RvlDpwGa6d1Ykg9DiSPPVpn3j7gwEkS3kPlmvGBHWCSuyFkUY8ecNcNzMw3L1MS69516N3mPAr+Kii7NltpheHnufeyeuokN6wbs/x3ugtSFpUe/lH2VMIncn7BWRL/iJW7rn0d/n0yo2FqeK8Ah9MVy5rDqWaHys6A3FpN6GWb3SXM+RLP1RxUtUWasaQ6aISIU+gDNaOAgYrPdCXJkJ+wmLzy+LRMLIOE6zcqoMogMAirxig+b0qOUPewAnMvk6Sz3cxuSP1DnV/uac29R5O9iIQVGlC4FGuDIJSvn1O2/x8oxnIhc8uUTIvoexx9PmEBk05RnDWGTRPT7VOEHdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6Lo/RD4XswqmNePe8PqD+/jsdunDBnXj7mvA38u9Mts=;
+ b=X1sJiAMb2CgCygp+JwqMYkMqWrNFbpCe4B3vPE7/5UY9ZzDELVNjYTXqx72Dq1myUYbAEkuAXz3UQ5PgNenvkW/w7vhqHd4tDjKfXrmGv2zPO2RBMqmd2fN5bYfwxWYlRLQSN0Ik92ColbwHJnmldw8zzQDi1bpl/kg18iVnWM1OuqcBfjNnjKUxXWM4oERUMP8/XRWo/QzST4QipD8TBT1zfPc/B50tVO/HJ6mwxbCgS1MxeqxQoe3766Nlp+fEXbDXWm0uTZlI6GUedPBv83WNb87vuWMmvtu2TCiBVDLIN3hZr2OeSrl5J+5av3hKlwSQazMFdz9h1ghzXv0tqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6Lo/RD4XswqmNePe8PqD+/jsdunDBnXj7mvA38u9Mts=;
+ b=siZLzsUiL9RO/lu1dxrjUPgOQPDND5kYW+Nxkc7OgSP7FfEKaWfN20ZlweZzFxjV44DSJjTT32+7TsRX8mVkiRC5UrsgSxZg/dYLf9MpmQyAHtFH9WB7+wvac2Uv3PC0PerofEvxrxtgJWpVIYBK7yzNu8b0ZHSgGbI1U0jvl/JSHvmWET0zUjKRVSUDuKYpD9jUwW5eDfPHTmJKzB6sXYyX04U2GGmMqE0iHcwaVHjA25l5ftYo2RiGBEdNI3zkkLxOq0p9MIOrDmI61QPciugVWFuLAaZ2XOw4KvgJcbBUPOK89H+NvE8NMCCi4467GUzOKocdrzADri/AyiJhVg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AS8PR04MB9205.eurprd04.prod.outlook.com (2603:10a6:20b:44c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.28; Wed, 9 Aug
+ 2023 08:19:29 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::2867:7a72:20ac:5f71]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::2867:7a72:20ac:5f71%3]) with mapi id 15.20.6652.028; Wed, 9 Aug 2023
+ 08:19:28 +0000
+Date: Wed, 9 Aug 2023 16:19:44 +0800
+From: Geliang Tang <geliang.tang@suse.com>
+To: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Florent Revest <revest@chromium.org>,
+	Brendan Jackman <jackmanb@chromium.org>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <martineau@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Eric Paris <eparis@parisplace.org>, Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
+	bpf@vger.kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v11 2/5] selftests/bpf: Use random netns name
+ for mptcp
+Message-ID: <20230809081944.GA29707@bogon>
+References: <cover.1691125344.git.geliang.tang@suse.com>
+ <15d7646940fcbb8477b1be1aa11a5d5485d10b48.1691125344.git.geliang.tang@suse.com>
+ <8b706f66-2afa-b3d0-a13a-11f1ffb452fe@linux.dev>
+ <20230807064044.GA11180@localhost.localdomain>
+ <9a84e026-402d-b6d9-b6d1-57d91455da47@linux.dev>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a84e026-402d-b6d9-b6d1-57d91455da47@linux.dev>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SG2P153CA0026.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c7::13)
+ To HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="h3c25ibwzmlgmjj3"
-Content-Disposition: inline
-In-Reply-To: <CANnsUMGHnurbph9F7mex=1s0mxhwpNgeQbKJ6j1r37Qmd6LAMQ@mail.gmail.com>
-X-Originating-IP: [106.110.32.133]
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe1BUdRTH+929jwVFLwvqD4WcAI2HD8DKo0HZjNWtpodTk4OWtiN30AkW
-	hhVRixHksYE8drAkgXR1bEEeCyy4hNJCS0I8EgRFRBR5yVMx3qAL7XJ1cqb/Pud7zmd+5/zx
-	E4sko8xK8QHZQT5EJg1wpC1JXdVMw/oU72Y/j/J7TlBYN0CDIWIzdJbFU9BtNNDwV+4dBkbU
-	CQiMBUUUGEsVIshoiCZBczmGgN6qLgZ0iTkIGtMmKSjpm6Jh6Ew2ghOD9hB1aQJBT3IXBTfU
-	j2mYVwXBTNIiOB0fRUD9iUAYOZVOQKMuiQJtdwsFZb/XkNBScpeA5ssZNDwwJJKgPBclgl7V
-	EAXtJ9UkdOWPEBB1dlQEs1nVFFxLnBdBVv0DAlqVvQgqFXoK6vOPM1ClWg5KTS0Jk3XDCFKH
-	b4qgqcwZasfnCbhWNEbBWIYLdCobSDiZVUzAlbhpBtT5eQx0T/XREFmvYyC6/XV4Mm3aQ136
-	ybatXO6ZXMQ9ulaDuDO533HpEddJbnbGjSu+eJvgStPuMpyuYg2n0oZyRVluXNuQD6fNjqO5
-	qxfzTO3OLZzyfAXiii4c++zlXZbefnzAgUN8yMa3vrHcf+HsKSb4uNXhWzmFVASKWxSPLMSY
-	fQ03JBhRPLIUS9gshPuaf0LmhoQdR7g41lrgMYSTH3k8F/o7fqSEPBNhzZ0jgmya0SpO0UJR
-	hHCHZp4wT5GsM86LUdBmptl1uGG4XWRmW3Yj1o+rCLMgYqtYHNvwaEGwYXfjuKg/FgQrdjNW
-	X7/DCGyNa073kGYWsYexYqLGNCM28SqcOSc2xxbsDvx3Wg0pbOqIJ4YTKYHDcW1x28JbmD2/
-	GHfrBwihsR1XPaykBbbBg9XFjMD2eL707DPhJMLlc48ZochBWB058cx+E0ff6HlmvIMr9MnI
-	vBFml+DWh9bCoktwii5VJMRW+IdYiTC9FufcGyaVyCnthdPSXjgt7b/ThHgdVl0Z/X/sjtXn
-	hkQC+2CNZoRUISYbreBD5YH+vNxLxodtkEsD5aEy/w37ggK1yPQV6+aqx39DmYP/bDAgQowM
-	yNkkdxXkNKKVpCxIxjvaWvl83uQnsfKTHjnKhwTtDQkN4OUGtEpMOq6wcvep2Sdh/aUH+W95
-	PpgPed4lxBYrI4hgmb+qwGu+0XdEnn2oeItmtee5X5+25ReW3UAJsx9v7CeNHq8+ue+hC6j3
-	Cwz2uORZuelYXnnPraNZezuXJ7WO32yqjrMbXCHfHMV757qUOy21tv/A6aNPmyb3tHpJlyRT
-	KVcdHFy+H5r2z8n98KvAuXCvsV9Wb83cdHswle7I8FOUeDW/rXpJVrv94og2tXe9wx6j6xuu
-	ivT3I20Iu/thc1+PLmUe7PBB4fr9QK4Jc3WaS6+eemrpPuOe2RdpV9XluUyl3NU25TsQNIGX
-	dez+8t2dAXWL+5mrAcrbP1e7xfz5haIg9b21vi3O943eekm/705Dnt55vTYmf7LilTpji127
-	bYsjKd8v9XQThcil/wL+IR6jBQUAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTZxjG852ec1pgjYeL25EZQ6rLTKeFVsAXB8Ylhhz/mXOMsOEW7OwJ
-	MGmrbTHDZbFaFKkrFllACtRiRgWsFGlXL+NaZxnKEHAynRgH5TKF2DlvXARW6RaX7L/f973P
-	8+TJm7w8TtgxbiQvW6FhVQppjoAMxq/Nd95dW5x4Qxbz3CqBc9fuk+DWroehZj0B3jk3CT/Z
-	7nDBZ/0GwVyjg4C5iwUcqLyej0PDpUMYjHqGueAynEHQa3pGwPnx5yRMmOsRHH2wHHTfP0Uw
-	cmyYgF+sf5KwYFHCdFEIlOt1GHQflYOvtAKDXlcRAU3eAQKaW7pwGDh/F4MblypJGHMbcDBW
-	6zgwapkgYLDEisOw3YeB7uRfHJip7SSgx7DAgdruMQxuGUcRXC5oJaDbfpALHsvrYGy4isOz
-	a5MIyiZvcqC/eRVcfbKAQY/jMQGPK1fDkPE6DiW1Tgx+KJzigtV+lgve5+MkHOh2cSF/MA5m
-	p/w9rBff37SBsZltiHnY04UYs+0rpkLbhzMz00LGWXcbYy6a7nIZV/tbjKUpl3HUCpnfJpKY
-	pvpCkrlSd9Y/HkpgjKfaEeP4bv8HK9JFiSplroaNylKqNUmC7WKQiMQJIJLEJojE69Z/tkES
-	J4jemChjc7L3sqrojTtEWZeqdNhuLf/LtgIzqUUFIXoUxKOpWPqPe98SehTMC6NqEO180cYJ
-	DJbT557cJAIcTr8Y0JMB0SNETx2sxQIPB6Ibxo8vqnBqFX32UAH5kklqDX19cnAxKYKKpluf
-	WBYNHMpD0c2//7goCqe204W6jkXmU+tpa98dbiC1FKftF6bxwCCU7iof8TPP795LF41KA/gm
-	fXqe91IRRG2jfzZ14YGmAvrppOGf1l/Tj+fGkBGFm/4TZHoVZHoV9FLBoYT0rfn72P++36Gt
-	1ROcACfRDQ0+3IK49SiCzVXLM+VqiUgtlatzFZminUp5E/Jfg8sz7byA6h48ErkRxkNutMrv
-	HG4804sicYVSwQoi+Ekp/bIwvkyat49VKTNUuTms2o3i/Ess5kQu3an0n5ZCkyGOj4kTx8Yn
-	xMQlxK8TvMHfsvuINIzKlGrYXSy7m1X968N4QZFazPAwOzqtzRse/6sxNcTIbF6ZUmBS1ffk
-	W2tWvLA796WnfTosq5OPN4cHpyXVmE8ntyzJSp0SOno+pjpGmvo9WuNrs3nl89uWeN+9sm28
-	3HP5AaGZLS6qFJYMjmUY6q+W231LTx1O2+Jd2FGW3JpeElJ8cmSI+iR4jOm1zeyRuuSs+lB7
-	fH7fhlNtFfoLNYejZPaK9OJSRrI1paNzwCye/zxvS+Hq8s0dyuSqxk2OvUd3UQertQOdg1Et
-	bdllfOmyj3pvSG+vzUycO9ORV9WYk7LUuMbnPCGM/aK6VJ3qnJa9tzV0WUbovg+NHr7t6YEj
-	UbDSEEEG79/TeLLi3ttTyccFuDpLKhZyVGrp38teVPyiBAAA
-X-CMS-MailID: 20230809071322eucas1p2b1aafebde3118e2cd1df71c493c49520
-X-Msg-Generator: CA
-X-RootMTR: 20230808030739eucas1p2192f620771cb9655afdbcd624775b4c8
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20230808030739eucas1p2192f620771cb9655afdbcd624775b4c8
-References: <20230731071728.3493794-1-j.granados@samsung.com>
-	<ZMgpck0rjqHR74sl@bombadil.infradead.org>
-	<ZNFlqwwvE6w6HyHl@bombadil.infradead.org>
-	<CANnsUMG3WO_19GpnsNaXPqu6eEnpBvYUpkrf1QbHwsc9wEoCZQ@mail.gmail.com>
-	<ZNGBrkP7J2g/BAWV@bombadil.infradead.org>
-	<CANnsUMGRBnatKB4-3eYjb5aG7YnXDiZG6cjuwSgtjvVF6ErJNg@mail.gmail.com>
-	<ZNGv3Q5VBsS2/w4e@bombadil.infradead.org>
-	<CGME20230808030739eucas1p2192f620771cb9655afdbcd624775b4c8@eucas1p2.samsung.com>
-	<CANnsUMGHnurbph9F7mex=1s0mxhwpNgeQbKJ6j1r37Qmd6LAMQ@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AS8PR04MB9205:EE_
+X-MS-Office365-Filtering-Correlation-Id: ad76a832-76d1-4352-07d4-08db98b1596d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	THg4+BUNHYdhCgco002LMrCm53/y5SQPIzh/klQBgFvad+6eZZSNTCxHerZd9WAiLU/+YgW/pQ7gVm+UKKzZkPZqGQHoWWDHUbk7A67KHFd8+womQ//JiEoBa1qIMamPTBNLaYTH7+lF/DauwCjwDyLpBGIA4oQ1PttJLPhTiJ4XL++6+adHVwNuN6GyL31YDMESvu4YB+X/AHPUYMWqGz6tiL5J6WrmRlyNkG76fXdl9gilh0MGZR80WGsUNLYdryWN0U4Te9NrNl10QyF0N/VWLvhYLDLm6zBwdvq1tT4/O4onUPq8q5N+XrOJ+nSpPeFsa38x2n1WDVPOiMH7Zgp8v4qd18Ne8qUJv+iA7hBYgRJrJvVtg/fkf36iDXDV19X1J+g1utFa33OeKjYlA1k8TWH290ltt/3sWouqAFjuTk6HzTee0mlHRNqx+q4HEIWM6lDbb4VxYoOw/vvZ42NqPxnhdGT12lp0HZuIUYz8W01u/H2J8YFNtZp9ZvuY9TwXs98W6IyayMz/I58jnWeVDXotjO4cglfu0wTJdM9ycLghl5Cgqzq3rVH2j/46IAoCeBiZWQsy5KIzaaAMYfNwlRyplyiyPGTSuf3/4Tvl822KHYHLeHwlJ3Hj3XPl
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(39860400002)(396003)(136003)(366004)(346002)(376002)(186006)(451199021)(1800799006)(6666004)(6486002)(478600001)(83380400001)(1076003)(6506007)(53546011)(9686003)(6512007)(26005)(966005)(6916009)(66556008)(66946007)(4326008)(66476007)(38100700002)(54906003)(5660300002)(8676002)(8936002)(33716001)(41300700001)(66899021)(7416002)(44832011)(7406005)(316002)(2906002)(86362001)(33656002)(13296009)(17423001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?fOQL3NVqGvZb07AesveQgYNzyQMq4wY0q2mkLC1KQUQZc7zvw955v7xGxvsF?=
+ =?us-ascii?Q?H4jICbY170cqsaWZk+Uc83toMcDUf5CXUuib+70N4hftFbkTPYD6+u8IaXp+?=
+ =?us-ascii?Q?MpaEpaosDe1eds4zUeEHzRQTTO8F38KLiCa7yEsq2JxjSutci7aYWEHlV+as?=
+ =?us-ascii?Q?UcUUQfHgv+MXpFMu3MgCXKTE21PEcah4Bl2ajjECOlIay3zuOy1Uy5iQgpzm?=
+ =?us-ascii?Q?BFqRw1s24JsZT7DxzCCFeayH9gmRh6aW6bOprxfj+SeIa2ybovjIlj2M8T2Z?=
+ =?us-ascii?Q?zSlCO0GVF8MKdiH8C7dQ8NtsaMK9yM2aXv+79y33Ko1rKeTJMJkzvtcKZVRv?=
+ =?us-ascii?Q?Wx0G0iv+1SptNggRfGwIhL+RAGJpb1rtzVUJAXPcjaoydXXS3DXT/336f0AL?=
+ =?us-ascii?Q?ijcPinhctgc4ZKHaIypUzp6eWLcBW7UYOG/RmDksTlvJ5hobbPl4EnBgKU3Q?=
+ =?us-ascii?Q?P4UtC2Eo00bB9Emcqg10QhA9k6qF+rDwUCAJP259DZfyQlZiTtAIejrW2qNb?=
+ =?us-ascii?Q?szjYjN63MjBA8ogoI7cwQOjFBebEuUQTrS3Wvp1nVa1NYRMqPplAUek0ExOf?=
+ =?us-ascii?Q?lA579CWDJMQO1oz5t4Mqnk7EWd8lEclfqsBMTWMAhFCbfSxTowEqmNLctPxm?=
+ =?us-ascii?Q?ZSJFzDJUl96lTkX+8Gm2Q7m4xurRbeVUTTP6lFqvcsWweyFMv3QecR3oNdO2?=
+ =?us-ascii?Q?bJT+BjL8QdFlYlcdF1z9K85yNE713amEmr+RDKrR2+zVc5rv3pi9neo81qoB?=
+ =?us-ascii?Q?GKzctQZLTdDEqPYcSZDSvwblbQQ8+U4u/wOf67f5Hsztn22QhS1t3Bwi4MHJ?=
+ =?us-ascii?Q?fkAW5TRBjScTLNolBXN+6nH7KAoVItRTrjK+5bZas6eg7NpJj1XbcfOiSDcb?=
+ =?us-ascii?Q?pwZ1NHAEuEFVB7J8zlYKxP2Mp3EvmE/9P/2sXDxuvQdXn3w4tzFVPujQuoI6?=
+ =?us-ascii?Q?0Jq5pXxxvibLPu8zrgJirluiGLCWp3zi7rViuYtnqUUB3p7idaEUXOIG9IhH?=
+ =?us-ascii?Q?6jgQAXeg9uDrYo0DtBWa2gPiIUef1D6oYVxFaUiUStS0DnKJq+ctEFy2q/dy?=
+ =?us-ascii?Q?uIsHbyr6ScE4gjzbHlnd97iGzjUAmIJH/s8UtXAAv4Hp6GVWAAWBiRj791he?=
+ =?us-ascii?Q?XxqeZjdmN944BGYK/tgDESPKLabEqrfB0X6I79RkZbDXR1E/vcedxL+C7qYZ?=
+ =?us-ascii?Q?Y0QuC0k5trcV96NLw2HugwHKIlVJHLMDxTj5fp5HUT8imyL9dbpN7GIJ3ku9?=
+ =?us-ascii?Q?LWmsVP1stBpM82bXnNwF4fK8MsuYzKpgUkdZPm0uC7uL7JpmUpEluSeSmMcg?=
+ =?us-ascii?Q?t3HMQiK14OspgSrGacAehZOqpjJm9b8Arhr2va+3eAmgoeynGlowLFDwAJkG?=
+ =?us-ascii?Q?DkUUIfGPbILvpFyOE56pTI94Bn4GhHAWdgxqJKyYx8m2x+bHZSkNk6JR55Oh?=
+ =?us-ascii?Q?F/tZSsnEX4r9vOiOHAfUODUgaNDCdw/hxdNiDl49XqMuDCxRtWl7vinMX6E5?=
+ =?us-ascii?Q?38MAg8HIogKs5o3bAKU1O4nZYDOjeIvb3oaMkUzDmveWuEPUMqSO7WHPTDqo?=
+ =?us-ascii?Q?Zor0kl07p4p9tiW2RT9KJOH2APIspxJsVN48OY3P?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad76a832-76d1-4352-07d4-08db98b1596d
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2023 08:19:28.3355
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +uBv9Zptjh6Qykqn1V4dcUMfJGp7LaMLJOf8v0omwYHRm8zp/ud7WE2uE8tkVmVEHdJoltYpyki7o88x/pxB5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9205
 
---h3c25ibwzmlgmjj3
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 08, 2023 at 11:03:30PM -0700, Martin KaFai Lau wrote:
+> On 8/6/23 11:40 PM, Geliang Tang wrote:
+> > On Fri, Aug 04, 2023 at 05:23:32PM -0700, Martin KaFai Lau wrote:
+> > > On 8/3/23 10:07 PM, Geliang Tang wrote:
+> > > > Use rand() to generate a random netns name instead of using the fixed
+> > > > name "mptcp_ns" for every test.
+> > > > 
+> > > > By doing that, we can re-launch the test even if there was an issue
+> > > > removing the previous netns or if by accident, a netns with this generic
+> > > > name already existed on the system.
+> > > > 
+> > > > Note that using a different name each will also help adding more
+> > > > subtests in future commits.
+> > 
+> > Hi Martin,
+> > 
+> > I tried to run mptcp tests simultaneously, and got "Cannot create
+> > namespace file "/var/run/netns/mptcp_ns": File exists" errors sometimes.
+> > So I add this patch to fix it.
+> > 
+> > It's easy to reproduce, just run this commands in multiple terminals:
+> >   > for i in `seq 1 100`; do sudo ./test_progs -t mptcp; done
+> 
+> Not only the "-t mptcp" test. Other tests in test_progs also don't support
+> running parallel in multiple terminals. Does it really help to test the bpf
+> part of the prog_tests/mptcp.c test by running like this? If it wants to
+> exercise the other mptcp networking specific code like this, a separate
+> mptcp test is needed outside of test_progs and it won't be run in the bpf
+> CI.
+> 
+> If you agree, can you please avoid introducing unnecessary randomness to the
+> test_progs where bpf CI and most users don't run in this way?
 
-On Mon, Aug 07, 2023 at 08:07:24PM -0700, Chris Maness wrote:
-> >
-> > Are you reporting a separate regression that goes all the way back to v=
-4 kernels?
-> >
->=20
-> I am not certain what you mean by regression.
->=20
-> > > v2 is fine there.
-> >
-> > What does this mean?
->=20
-> I have to go all the way back to kernel version 2 for the serial 6PACK
-> driver to work.  If I try to use it in Kernel version 4, 5, or 6 the
-> kernel panics as soon as I attempt to connect to another station.
-Again. Have you reached out to Andreas Koensgen
-<ajk@comnets.uni-bremen.de>? Maybe he has more info on this.
+Thanks Martin. Sure, I agree. Let's drop this patch.
 
-Best
+> 
+> Also, please don't resend the patches too fast until the discussion is
+> concluded. Please give reasonable time for others to reply.
 
->=20
-> >
-> >   Luis
->=20
-> Chris KQ6UP
->=20
->=20
-> --=20
-> Thanks,
-> Chris Maness
+Sure. Please give me a clear reminder next time that it's time to resend
+a new version of the patches.
 
---=20
+> 
+> I have a high level question. In LPC 2022
+> (https://lpc.events/event/16/contributions/1354/), I recall there was idea
+> in using bpf to make other mptcp decision/policy. Any thought and progress
+> on this? This set which only uses bpf to change the protocol feels like an
+> incomplete solution.
 
-Joel Granados
+We are implementing MPTCP packet scheduler using BPF. Patches aren't
+sent to BPF mail list yet, only temporarily on our mptcp repo[1].
 
---h3c25ibwzmlgmjj3
-Content-Type: application/pgp-signature; name="signature.asc"
+Here are the patches:
 
------BEGIN PGP SIGNATURE-----
+ selftests/bpf: Add bpf_burst test
+ selftests/bpf: Add bpf_burst scheduler
+ bpf: Export more bpf_burst related functions
+ selftests/bpf: Add bpf_red test
+ selftests/bpf: Add bpf_red scheduler
+ selftests/bpf: Add bpf_rr test
+ selftests/bpf: Add bpf_rr scheduler
+ selftests/bpf: Add bpf_bkup test
+ selftests/bpf: Add bpf_bkup scheduler
+ selftests/bpf: Add bpf_first test
+ selftests/bpf: Add bpf_first scheduler
+ selftests/bpf: Add bpf scheduler test
+ selftests/bpf: add two mptcp netns helpers
+ selftests/bpf: use random netns name for mptcp
+ selftests/bpf: Add mptcp sched structs
+ bpf: Add bpf_mptcp_sched_kfunc_set
+ bpf: Add bpf_mptcp_sched_ops
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmTSSlkACgkQupfNUreW
-QU8zQQv/csq4fZgijsNRirYRY4BuHiERw8G3UuPFIPemEFB+C72FHbLDK66oqfKN
-8AvTZLmXSA90J1kikzqAhrHgXqDgl4lOVwf6XZ+n2rBYuPlay1XSyC3/RlBrDOiS
-cmddkmwrrbZpE3aW7uXV5H5eLFmnLds5C5I6Ui9bEbnJthaJGXCXTbwUXpFFh8B/
-EMsFVsOG+Ek2KycdHGtsm6Lcrst2N0+cSWLSu35IXZEi2jB22fhn2PEF0kvtrL4X
-bCQVgIPuWI4Q7PtdmMG4ewdSZFbVnbg+42EFMTGjdjOu7DkrTFMwl93/febfP84X
-oUz7KjNP/ez3A54qqcjN1YgUIQKJLhO95BZTl9ZI1eqcrsg0HuxUGd6cpWxOT1ZD
-xiJNJUhscRd1xE592veXF6+aXotpJvyEWWb39/bf1HAE0Kjr2DljSslkr8lsjQEh
-4wP3OB5LIp/YVT6urTAiHoL+vJGA3TWIMfLwSWTmvu6ePiLpFZwEpmcBQNnGzm67
-jHdxey6Y
-=slPS
------END PGP SIGNATURE-----
+If you could take a look at these patches in advance, I would greatly
+appreciate it. Any feedback is welcome.
 
---h3c25ibwzmlgmjj3--
+[1]
+https://github.com/multipath-tcp/mptcp_net-next.git
+
+-Geliang
+
+> 
