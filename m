@@ -1,43 +1,43 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4711772E
-	for <mptcp@lists.linux.dev>; Wed,  9 Aug 2023 10:50:16 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-317dcdae365so3239264f8f.1
-        for <mptcp@lists.linux.dev>; Wed, 09 Aug 2023 03:50:16 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DE2174D8
+	for <mptcp@lists.linux.dev>; Wed,  9 Aug 2023 10:50:18 +0000 (UTC)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-317c3ac7339so4754442f8f.0
+        for <mptcp@lists.linux.dev>; Wed, 09 Aug 2023 03:50:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691578214; x=1692183014;
+        d=gmail.com; s=20221208; t=1691578217; x=1692183017;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=akvTsUNH5BR7B9r/hWx35oPtJ0e++GeR0ZkfT+4F3fU=;
-        b=DIpNAVvqJjecgmHxhh/MMRMB6JQ0cQ5/pMDaa7WYGiGSlLNo2GueNm8uCnf8c4bLIg
-         Jh2/V9eDbEdRC729m+hu4ww5z5FaeN/b5Orkwci/i2SVrBx/prvWFJ+nUTp5TAka6ZWQ
-         VdOImPhuX9gff7/faPKV7lUbtH5Wa6nzUdbat0ktYNe2z5jkuFWTIQveT6P6ug2Ozlg4
-         m+3pGIbuZXaQv49t+IPpm6LcHq1/TfBEv4sUH9Kf2GTcYAwaLuI52sbUOA/8f8TWiE7g
-         8uWZnDUw085zl7p2xGYwkNfV+fRHfDxGBsZSKhPQwpO/guRzFqg8/M9IkUWjaPTZxUpR
-         WEFQ==
+        bh=/OpnfSbwwoibW9M83Wu6OD32YzFt1sk3ke/j1mk6tNI=;
+        b=Z7kTDW8wJZAdC+IpB/U2ORnyAE804kkSlEltAQZZwdGvZ9BVKvM7DLVo6R36EFLjTi
+         nVLApIwDcfSJ5845A1NxZfmAMmjU0jKcRoeGHlKQvT2Dq7E6+bxsVJsj99xYya4lr0df
+         4+kXVuJGu6okiPWjmHVXWpGboUAfMqDGp/86yDC8aTMnSCovUj2M1l/wcSiyycutyOdO
+         AdQOggbEtmdraLtGd1tmzUWoW0iv4JiWTzSmSIO+U2WS3/dQKsG+plAJLYLm70ZmGfA7
+         FznktE8uf6mrU4dQlY6dlkcZIzLRxLI8NCWE+soUQnt0zhqiNNJMYxDUDePLT219HcvD
+         HBBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691578214; x=1692183014;
+        d=1e100.net; s=20221208; t=1691578217; x=1692183017;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=akvTsUNH5BR7B9r/hWx35oPtJ0e++GeR0ZkfT+4F3fU=;
-        b=TeuDpkGkNconEi2zdKNHXFTYudj5LPEcqOBHBJF6BKd2/W8/zKqnoN0IGLeAOmjHV5
-         ISgTz2MDLlKjZtvsgspnpaE+RSdXnI6lOeu5AGeCU9tgRiXLiF+Nm0kTBF/U4r73Ar2x
-         90wnsQQ0SaBE0P/5PFZMiIgDiiGIMl2QYOHUuRiMtkhgKv8YX8/J8gdGSrZzXR3sEj9M
-         3yhIKv8qqQIocOAx0/H8NkJODVGVhHejN/D8znzA+H7/okee0Qq0F0tUiJBC2seU9tLb
-         07TI2KA+JYG54fX4E/F8NHOggmX7ZvT8sGihtPgkTOEkfRxHT/MoC0YXiI+dZaGFMU2b
-         KW6g==
-X-Gm-Message-State: AOJu0YwJmrQfto7bjlWWW9Vch1hZ2X8QvmrHIKvn2/FhzdI5HnPKeApd
-	RR5ysf8yF6Lak0qtaaxAINjum4AukRfOR65s
-X-Google-Smtp-Source: AGHT+IFXthxR30RQgpx73Zfj1dpZ+KWe6tVohuHxQB14UCF1BcuOVclJYzFEHCpt2sceIQmz/La4Nw==
-X-Received: by 2002:adf:ec85:0:b0:314:15b7:1fb5 with SMTP id z5-20020adfec85000000b0031415b71fb5mr1561622wrn.34.1691578214394;
-        Wed, 09 Aug 2023 03:50:14 -0700 (PDT)
+        bh=/OpnfSbwwoibW9M83Wu6OD32YzFt1sk3ke/j1mk6tNI=;
+        b=RX34iWI506/4mDaG4867GexpMtYbqp8evXCBaddZcWc9OGDdO3QCv9IbkNYcoGFPGw
+         Nr4sQmAOD7koSXb3jO0aGBe4H1m2Ap3PcWkr/B0MZhJcfupbgeEZd1qEGPdsxEGMXCE6
+         bgMJg4ucWtTS3LDrBJkz6MPA/5YkphOhWMrgn575zQ/7pWb3/kha+veFri4PYhaKJryh
+         inHFUZ3RXtNCYkyvuaKPhLjGf/lgyXf0goBIx0fOZboTf86l4MbUqSynC05MO2y4gzj2
+         BU7mQzQ7QO/XWmvKphPoRuRHblmPuAZzTlfCwRDVhXVEDI63ifvC8BcbFpK641ZT9gD1
+         Fz6w==
+X-Gm-Message-State: AOJu0YzBextKnKCISIZU1cxkL4n9EPvplxTSSFkFhDGtVpWLAuKuH3Nk
+	D19/IPr2SJeTfsyaQfSOfNo=
+X-Google-Smtp-Source: AGHT+IHu0u9BAcqCqiHbNAexTt+eolThSnX5DD0IXFGcW0oEJ1XKAznLFi+KExxLH6xRzKxcnBfLtQ==
+X-Received: by 2002:a5d:4a4b:0:b0:314:1270:8fc with SMTP id v11-20020a5d4a4b000000b00314127008fcmr1729029wrs.0.1691578216905;
+        Wed, 09 Aug 2023 03:50:16 -0700 (PDT)
 Received: from localhost ([165.225.194.193])
-        by smtp.gmail.com with ESMTPSA id b12-20020a05600010cc00b0031432f1528csm16319804wrx.45.2023.08.09.03.50.13
+        by smtp.gmail.com with ESMTPSA id m5-20020a5d6a05000000b003140f47224csm16400446wru.15.2023.08.09.03.50.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Aug 2023 03:50:13 -0700 (PDT)
+        Wed, 09 Aug 2023 03:50:16 -0700 (PDT)
 From: Joel Granados <joel.granados@gmail.com>
 X-Google-Original-From: Joel Granados <j.granados@samsung.com>
 To: mcgrof@kernel.org
@@ -98,9 +98,9 @@ Cc: rds-devel@oss.oracle.com,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Joel Granados <j.granados@samsung.com>
-Subject: [PATCH v3 03/14] sysctl: Add ctl_table_size to ctl_table_header
-Date: Wed,  9 Aug 2023 12:49:55 +0200
-Message-Id: <20230809105006.1198165-4-j.granados@samsung.com>
+Subject: [PATCH v3 04/14] sysctl: Add size argument to init_header
+Date: Wed,  9 Aug 2023 12:49:56 +0200
+Message-Id: <20230809105006.1198165-5-j.granados@samsung.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230809105006.1198165-1-j.granados@samsung.com>
 References: <20230809105006.1198165-1-j.granados@samsung.com>
@@ -112,52 +112,75 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The new ctl_table_size element will hold the size of the ctl_table
-arrays contained in the ctl_table_header. This value should eventually
-be passed by the callers to the sysctl register infrastructure. And
-while this commit introduces the variable, it does not set nor use it
-because that requires case by case considerations for each caller.
+In this commit, we add a table_size argument to the init_header function
+in order to initialize the ctl_table_size variable in ctl_table_header.
+Even though the size is not yet used, it is now initialized within the
+sysctl subsys. We need this commit for when we start adding the
+table_size arguments to the sysctl functions (e.g. register_sysctl,
+__register_sysctl_table and __register_sysctl_init).
 
-It provides two important things: (1) A place to put the
-result of the ctl_table array calculation when it gets introduced for
-each caller. And (2) the size that will be used as the additional
-stopping criteria in the list_for_each_table_entry macro (to be added
-when all the callers are migrated)
+Note that in __register_sysctl_table we temporarily use a calculated
+size until we add the size argument to that function in subsequent
+commits.
 
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- include/linux/sysctl.h | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ fs/proc/proc_sysctl.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 59d451f455bf..33252ad58ebe 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -159,12 +159,22 @@ struct ctl_node {
- 	struct ctl_table_header *header;
- };
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 884460b0385b..fa1438f1a355 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -188,9 +188,10 @@ static void erase_entry(struct ctl_table_header *head, struct ctl_table *entry)
  
--/* struct ctl_table_header is used to maintain dynamic lists of
--   struct ctl_table trees. */
-+/**
-+ * struct ctl_table_header - maintains dynamic lists of struct ctl_table trees
-+ * @ctl_table: pointer to the first element in ctl_table array
-+ * @ctl_table_size: number of elements pointed by @ctl_table
-+ * @used: The entry will never be touched when equal to 0.
-+ * @count: Upped every time something is added to @inodes and downed every time
-+ *         something is removed from inodes
-+ * @nreg: When nreg drops to 0 the ctl_table_header will be unregistered.
-+ * @rcu: Delays the freeing of the inode. Introduced with "unfuck proc_sysctl ->d_compare()"
-+ *
-+ */
- struct ctl_table_header {
- 	union {
- 		struct {
- 			struct ctl_table *ctl_table;
-+			int ctl_table_size;
- 			int used;
- 			int count;
- 			int nreg;
+ static void init_header(struct ctl_table_header *head,
+ 	struct ctl_table_root *root, struct ctl_table_set *set,
+-	struct ctl_node *node, struct ctl_table *table)
++	struct ctl_node *node, struct ctl_table *table, size_t table_size)
+ {
+ 	head->ctl_table = table;
++	head->ctl_table_size = table_size;
+ 	head->ctl_table_arg = table;
+ 	head->used = 0;
+ 	head->count = 1;
+@@ -973,7 +974,7 @@ static struct ctl_dir *new_dir(struct ctl_table_set *set,
+ 	memcpy(new_name, name, namelen);
+ 	table[0].procname = new_name;
+ 	table[0].mode = S_IFDIR|S_IRUGO|S_IXUGO;
+-	init_header(&new->header, set->dir.header.root, set, node, table);
++	init_header(&new->header, set->dir.header.root, set, node, table, 1);
+ 
+ 	return new;
+ }
+@@ -1197,7 +1198,8 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
+ 		link_name += len;
+ 		link++;
+ 	}
+-	init_header(links, dir->header.root, dir->header.set, node, link_table);
++	init_header(links, dir->header.root, dir->header.set, node, link_table,
++		    head->ctl_table_size);
+ 	links->nreg = nr_entries;
+ 
+ 	return links;
+@@ -1372,7 +1374,7 @@ struct ctl_table_header *__register_sysctl_table(
+ 		return NULL;
+ 
+ 	node = (struct ctl_node *)(header + 1);
+-	init_header(header, root, set, node, table);
++	init_header(header, root, set, node, table, nr_entries);
+ 	if (sysctl_check_table(path, header))
+ 		goto fail;
+ 
+@@ -1537,7 +1539,7 @@ void setup_sysctl_set(struct ctl_table_set *set,
+ {
+ 	memset(set, 0, sizeof(*set));
+ 	set->is_seen = is_seen;
+-	init_header(&set->dir.header, root, set, NULL, root_table);
++	init_header(&set->dir.header, root, set, NULL, root_table, 1);
+ }
+ 
+ void retire_sysctl_set(struct ctl_table_set *set)
 -- 
 2.30.2
 
