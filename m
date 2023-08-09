@@ -1,104 +1,84 @@
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE3E2452C
-	for <mptcp@lists.linux.dev>; Wed,  9 Aug 2023 22:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776281E507
+	for <mptcp@lists.linux.dev>; Wed,  9 Aug 2023 23:20:06 +0000 (UTC)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1bb575a6ed3so298095fac.2
+        for <mptcp@lists.linux.dev>; Wed, 09 Aug 2023 16:20:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1691621977; x=1723157977;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RyuI2BMZUzAh7hCpj+khG0s4VEHQfqKZkLnllwgYkW4=;
-  b=cXbh/zp9MKlkyUR/GhCOpkL+raT8m+YLFROKZyWWjamxzjVvbBMoKIOi
-   dXSGm523N0/hVK6SEEOquKlGcIqM1WHkfbr4eE8+AQJP8kDgV31Mz39fA
-   sdZ/2rz7hFnIO/XTEOy4Txd16wxGRb8wBAzDtaLZ2ryNT/xrCW9EAdvfI
-   g=;
-X-IronPort-AV: E=Sophos;i="6.01,160,1684800000"; 
-   d="scan'208";a="665491557"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-f323d91c.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2023 22:59:31 +0000
-Received: from EX19MTAUWA002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-	by email-inbound-relay-pdx-2b-m6i4x-f323d91c.us-west-2.amazon.com (Postfix) with ESMTPS id 171BD40DB6;
-	Wed,  9 Aug 2023 22:59:31 +0000 (UTC)
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.30; Wed, 9 Aug 2023 22:59:30 +0000
-Received: from 88665a182662.ant.amazon.com (10.106.100.32) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.30; Wed, 9 Aug 2023 22:59:28 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, Mat Martineau
-	<martineau@kernel.org>
-CC: Kuniyuki Iwashima <kuniyu@amazon.com>, Kuniyuki Iwashima
-	<kuni1840@gmail.com>, <mptcp@lists.linux.dev>, <netdev@vger.kernel.org>
-Subject: [PATCH v1 mptcp-next] mptcp: Remove unnecessary test for __mptcp_init_sock().
-Date: Wed, 9 Aug 2023 15:59:18 -0700
-Message-ID: <20230809225918.21523-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
+        d=gmail.com; s=20221208; t=1691623205; x=1692228005;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lLMKj5BHKFAcV7v3K/OnIMsb3majAhtJmnf2EsWanVs=;
+        b=hn11Eo6DBS+EjXbFvGesdQsNMEZOu1WRHaJUmaA+mpCgNmZVhA2FejLy4eM6e4zo0t
+         YnrmWK6lhpYizqMjpwygw78A3ChOD9+4ID1aj7Dwtsa8ZH63UXy4qvBLSokgGvPa9wXE
+         A3MHqtvGsPLrdwAoHabLxhtM+6nmEwYNCMHvihNszZwwI4lhvNqIFTxPz+QlbDx93JHe
+         1kvPqlh6N/FuXyuaVCgFAdzrjRcxD54+602QQu/3a9Al0uWpuCInOehhZJGRAZkX+oaR
+         FFPFSJzcz8g99TtoAM/H002+otMHPlE/fCJOWL/ZqpHhd2BGyKwiXCTWXsnbCc4wsRgV
+         sSkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691623205; x=1692228005;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lLMKj5BHKFAcV7v3K/OnIMsb3majAhtJmnf2EsWanVs=;
+        b=EskGnsRU8erR7ycTl+pHMh8F3C4x+tJVdJbRCLG0tMLmd085uG126Pk+OZC8I/+656
+         QIZvWCOWpcnYPEx1tji7ScPBO+wU2vpMu+dgafZQtTzHzX6dSw2c1MMzvV80g9Dm5anh
+         lGMCkgO5BuvNRqI5/guOJibl/KlSN15WvWHRs10FUCQlgKAukf9t8qmtfcqb42NPCcbZ
+         4W8TcDa0TiVm7ZfQjerwb7qNrjK84ZsnEaCZ7IciiZLxRMKE9iTfvnTbuPvzJUltpfoP
+         iFm4nEJKcdRzfBH27k+vWPcVe93IT5ilm53Gl8lG+6f5PyafT5u64iqhdwvLKSp80pCi
+         r5fg==
+X-Gm-Message-State: AOJu0YwMqdtLNx5tGVzTxGRiSaGStHjpKZLCZlKnPI8qoBBVX9yUHSU+
+	OHIo02GxBIsmGNBaqpkKPQ==
+X-Google-Smtp-Source: AGHT+IEfs7z3/hEiIXoG9tCpb5qir7f8cCjiyujnbFI6By83xCZR8KICAEUT2HNv1xjIjXsRG979EQ==
+X-Received: by 2002:a05:6870:e3c9:b0:1bb:6cca:3468 with SMTP id y9-20020a056870e3c900b001bb6cca3468mr821526oad.47.1691623205353;
+        Wed, 09 Aug 2023 16:20:05 -0700 (PDT)
+Received: from [127.0.0.1] ([40.84.173.225])
+        by smtp.gmail.com with ESMTPSA id y17-20020a056870381100b001bb919237cesm159811oal.3.2023.08.09.16.20.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Aug 2023 16:20:04 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20230809225918.21523-1-kuniyu@amazon.com>
+References: <20230809225918.21523-1-kuniyu@amazon.com>
+Subject: Re: mptcp: Remove unnecessary test for __mptcp_init_sock().: Build
+ Failure
+Message-ID: <eec230ed-7af2-c055-5c6e-9c70ff454188@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 09 Aug 2023 23:20:04 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.106.100.32]
-X-ClientProxiedBy: EX19D032UWB002.ant.amazon.com (10.13.139.190) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
-Precedence: Bulk
 
-__mptcp_init_sock() always returns 0 because mptcp_init_sock() used
-to return the value directly.
+Hi Kuniyuki,
 
-But after commit 18b683bff89d ("mptcp: queue data for mptcp level
-retransmission"), __mptcp_init_sock() need not return value anymore.
+Thank you for your modifications, that's great!
 
-Let's remove the unnecessary test for __mptcp_init_sock() and make
-it return void.
+But sadly, our CI spotted some issues with it when trying to build it.
 
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
----
- net/mptcp/protocol.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+You can find more details there:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 65ee949a8a44..ddafb095fc3d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2662,7 +2662,7 @@ static void mptcp_worker(struct work_struct *work)
- 	sock_put(sk);
- }
- 
--static int __mptcp_init_sock(struct sock *sk)
-+static void __mptcp_init_sock(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
-@@ -2689,8 +2689,6 @@ static int __mptcp_init_sock(struct sock *sk)
- 	/* re-use the csk retrans timer for MPTCP-level retrans */
- 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
- 	timer_setup(&sk->sk_timer, mptcp_timeout_timer, 0);
--
--	return 0;
- }
- 
- static void mptcp_ca_reset(struct sock *sk)
-@@ -2708,11 +2706,8 @@ static void mptcp_ca_reset(struct sock *sk)
- static int mptcp_init_sock(struct sock *sk)
- {
- 	struct net *net = sock_net(sk);
--	int ret;
- 
--	ret = __mptcp_init_sock(sk);
--	if (ret)
--		return ret;
-+	__mptcp_init_sock(sk);
- 
- 	if (!mptcp_is_enabled(net))
- 		return -ENOPROTOOPT;
--- 
-2.30.2
+  https://patchwork.kernel.=
+org/project/mptcp/patch/20230809225918.21523-1-kuniyu@amazon.com/
+  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/5815022877
 
+Status: failure
+Initiator: MPTCPimporter
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/e7b0047cdbb4
+
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
