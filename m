@@ -1,124 +1,126 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB151E1AC
-	for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 14:14:28 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3fe167d4a18so8933095e9.0
-        for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 07:14:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6504C200BC
+	for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 15:23:31 +0000 (UTC)
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7672303c831so75696085a.2
+        for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 08:23:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691676867; x=1692281667;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7Pnx5T+hp+P3t29yM1gJvyTdFZyBy8+oh2RnSpBz6z8=;
-        b=6ffx01endTZldYXLk7ht23rwLZ/cfqHYn/SQsI3F9cKp/7a/xOtBEMVGWR50F8jHnR
-         OpJi7Ps9lnd1okLvRcau8JukbYq4GzV4yQ+A7QFLKAzY6e7PjUIqR6/sHEKYXr1uIbiQ
-         swNfDJIWvTFZGxn2sLnYPj/dSBezkhhS/DLT6PaDHf/ekcHl6+446Ak8caIVanDiP5Ax
-         oAYt3ym0YuPh53+9dwl0fmqEfPOl0bahDFvzM8SlW+r3kMb5syv5/YeLBHbuC+suwFRY
-         /huq7RmEATvWNNXCJ3ErJBLe5Yl6EEIti27uIxPnUO98ypH+MkSdXykJve+MqFd6HHuZ
-         uD9w==
+        d=gmail.com; s=20221208; t=1691681010; x=1692285810;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R3rjC8XcJBESGUE3z4YdH/fOG4q6kanTTxeX9gHsDUY=;
+        b=p/n8sKgjfbmidY+EbFfv6tR8K+CKVmLK2NJ9H93Z4Zjs9gNuUC9DYpt/KoTdWhfTHN
+         wRZ+EWQrLOmCnmAE4MA7SQawpWrhewQxeoYpgMFRg3v3YSrQPc66YGjjQM6KiDvO2ZvB
+         bupS3/VCS9bzPwqdIN7b/renOO2o31j+kwSaHyG2nwtV9MrY7ueEjoFL+bgtaM+hJa5q
+         akdVFF138Qae43fLyX/yy2DgXlzT9xwdw24qof1pl41p0yq9CfCstisOL8GeXQgpmcVz
+         vSxDj2wCcLO5iMZ4I+MenNrQnY88zRNEkudrGtmNSj668nmwlrbHwCqF4qBBbPZ2oFdy
+         e5aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691676867; x=1692281667;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Pnx5T+hp+P3t29yM1gJvyTdFZyBy8+oh2RnSpBz6z8=;
-        b=b7MIsO1TX4SvpBIobbnGeKN45SMIb2PJuAi55syFJ8wp7qmMAHv4lfWjhzkD9X8YjC
-         u5cMwVEssKcn1SDHEgZtOk51vnYueOPI13ENnQfJFkf6gn4Aj9b9IXUMSwm2A6NCoOWf
-         iHlVXWCUGHyRxN0BXll2V5MXJBZ8ece/kyfN6eorVx+KRifS7g+6v2oTV/5dm4q4gP8q
-         DWGDd1Tfg1AOXWP97WragcQVPhrmOIJpBurq7MrTIeXmoAkK+5nXDiS8C9vJSdZSP9o3
-         QeKKA88qtSeGC0v5xvgo03OIteyW6xzQx4h7lPfhHhowZPy1/IkAytrDd803L+lWKNwo
-         r4Rg==
-X-Gm-Message-State: AOJu0YysZdyHv1NNmhwEOc4sI1vwuE3POFp8lWnynZgcpoTnHJPRXouq
-	6mtEkEsi2OxjnSxVfGJS+HBh0Gc3h6sLodQex2I=
-X-Google-Smtp-Source: AGHT+IEdG+ilWCKi4qf+cO3YByEo0X+VzoeaHNCrL8yn+hGMdsAnl11+WzIaMD13SAlEzFCAOLm+VA==
-X-Received: by 2002:adf:f803:0:b0:314:39d0:26f6 with SMTP id s3-20020adff803000000b0031439d026f6mr1967715wrp.18.1691676866794;
-        Thu, 10 Aug 2023 07:14:26 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:9609:9964:25d3:6050? ([2a02:578:8593:1200:9609:9964:25d3:6050])
-        by smtp.gmail.com with ESMTPSA id x7-20020a5d6507000000b003143b14848dsm2269215wru.102.2023.08.10.07.14.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Aug 2023 07:14:26 -0700 (PDT)
-Message-ID: <14af2af7-5d61-4211-acca-2c9f40c46421@tessares.net>
-Date: Thu, 10 Aug 2023 16:14:25 +0200
+        d=1e100.net; s=20221208; t=1691681010; x=1692285810;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=R3rjC8XcJBESGUE3z4YdH/fOG4q6kanTTxeX9gHsDUY=;
+        b=hqlMplLFCWnTISsbOU+wT8DTE5iTgVpXRMxnCfk9Gveo1OSXDvv4/XqzxvXkMNMX3N
+         gNaA5dvdkwO82xurlYAcCQgFBxVzuOXmsvx2VmmYZW2Bd4V+ustnVUF2oz9pCMw9b2a+
+         Xbtk67MJEYrY3AvdApzgbluMcOB6iPDhs9/Y3Udrlva3IZ0hVb5aD3mgvig3B5p5CpCR
+         5HTG2yOmok6uSzDscE1vhXnnX58O+t6cQkPdHx/fFM/U3WdreSOzmVt/N5WfG+qexGe4
+         qja8eV27aiQnt7XBHDDwX0Umj42W7xcrMC3ls/kiGkK7xAh5DCw+X43A0t97ohCvweHo
+         wrXg==
+X-Gm-Message-State: AOJu0YxRZ9C05nBkmwiUNL9ngD5yTgbzqHNhu96HwPYR5oSveRV37Uas
+	e1UfLiD40v7coAzeDX5T3A==
+X-Google-Smtp-Source: AGHT+IFW9mBd7+TdQD017HipJ2RIPZq9TRwZVwSjBCbkaaXkbTkZvtbTjoTWLHpAv0jRc/rcZUpE0Q==
+X-Received: by 2002:a05:620a:a0d:b0:765:aac1:100c with SMTP id i13-20020a05620a0a0d00b00765aac1100cmr2396491qka.78.1691681010177;
+        Thu, 10 Aug 2023 08:23:30 -0700 (PDT)
+Received: from [127.0.0.1] ([20.42.48.65])
+        by smtp.gmail.com with ESMTPSA id p17-20020ae9f311000000b0076c94030a2esm548033qkg.114.2023.08.10.08.23.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Aug 2023 08:23:29 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <550e3eaef481581e8c78ff4e6548bf27909b0936.1691676509.git.geliang.tang@suse.com>
+References:
+ <550e3eaef481581e8c78ff4e6548bf27909b0936.1691676509.git.geliang.tang@suse.com>
+Subject: Re: selftests/bpf: Add bpf_stale test: Tests Results
+Message-ID: <a891bf0e-d9ce-9c7a-6308-23a6c1498a52@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 10 Aug 2023 15:23:29 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: mptcp: Remove unnecessary test for __mptcp_init_sock().: Build
- Failure
-Content-Language: en-GB
-To: mptcp@lists.linux.dev, Kuniyuki Iwashima <kuniyu@amazon.com>
-References: <20230809225918.21523-1-kuniyu@amazon.com>
- <5f6a198d-ca0a-6325-70bf-1dd68ed2b2cf@gmail.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
- 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
-In-Reply-To: <5f6a198d-ca0a-6325-70bf-1dd68ed2b2cf@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Kuniyuki,
+Hi Geliang,
 
-On 10/08/2023 12:04, MPTCP CI wrote:
-> Thank you for your modifications, that's great!
-> 
-> But sadly, our CI spotted some issues with it when trying to build it.
+Thank you for your modifications, that's great!
 
-Sorry for that, Patchew[1] automatically re-applies patches when tags
-(Reviewed-By, etc.) are sent on the ML and we cannot control that. So
-here this report is exactly the same as the one you got with your
-original patch, just before I applied your patch and did the
-modifications in the other commit. So you can safely ignore this email
-and the next one.
+Our CI did some validations and here is its report:
 
-[1] https://patchew.org/MPTCP/20230809225918.21523-1-kuniyu@amazon.com/
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6331847710343168
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6331847710343168/su=
+mmary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5487422780211200
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5487422780211200/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6050372733632512
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6050372733632512/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4924472826789888
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4924472826789888/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/95a1a1a4b69b
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
