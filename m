@@ -1,45 +1,46 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C6E1E537
-	for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 08:30:55 +0000 (UTC)
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-4fe4762173bso916866e87.3
-        for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 01:30:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A6D1E51E
+	for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 09:06:45 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3fe1d462762so5772575e9.0
+        for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 02:06:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691656253; x=1692261053;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ic/FIND73BL5D8dtLTf6OFwKSIpm80u2WLfk7IAeXqo=;
-        b=FMNHtP22HRJEulWVl5/oIS/VRcw3j4qRe7US5qjvm+6uFiA2uKbbZG2HnM/zl1pDxz
-         tTvjQf3u16tpNls5Altq9hvBulEIvrHCR5UF5v8U97nTizO1kZqjPTuNKt2ZxInM418x
-         E5RuGVbDdxbE+WB0t19ZaOfG8KRMuc7gB9ZPw/4GbQxXBvFZ6dpL7GGP0o+g10XsJ5h+
-         Lq+GPodXGOKtd/2MXxcF2B3i3eRE6bp+L9Gt+BdTC/zyx+phYGqHUZpXwaXHbRa72B+2
-         bFsc/Ty376Ni5D9XOjjgAYkwanBLIHVybutXdX53zeGAi4O4Ll6R9hBsf+qLBU1aOEcA
-         E12Q==
+        d=tessares.net; s=google; t=1691658403; x=1692263203;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=sDLghxB7QcIIekAAvCwh+qYFuLXHG3c2NfBVkLYcnXI=;
+        b=vITII42dJtl1lOamYDQ2BSCHOzBqm++GoTaWYcusnDt4mgxH+5wLMvlMa3QkCVIzGZ
+         CWr9gd1gQFkO4AkHrLRcGiBFLf77Up4eWl5Nw7ag0hJeTUErqAK05RJ3rfN5DGIHmVKb
+         pczpp7hHnXGSKaY7OkyxJLwoIDSU51Bi6283+vj4M3YZnspiTYvDP0fqdV435xX3i5Wn
+         5JdX6hjzv2W6eWWh8KLhokQZpTL5lN5IBfyFis1VKw0pZSeR2Lxwdpf5AY3gcjMTtahJ
+         RURr04hZCAfVzQMprC1ujbTsj8AmFy1Fqk3BPpdqM+/VzwWAOI9brI25edqEelR+KG4f
+         Pq7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691656253; x=1692261053;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ic/FIND73BL5D8dtLTf6OFwKSIpm80u2WLfk7IAeXqo=;
-        b=RNrzZN/JsUK8XmNrwZdOoacXTw/HZyZOjn41Zzg/VVcORGpklhZistHdIt1l+y/HqT
-         TmMV3Tc/qvJks72ViTm6A5TkyIs4SMsugbsllekp7bnzm0HW7+ic4waDeD00k9fTjOL1
-         iFH0VpPoT/gFt5kxxF35GSL6PAeiMxQ4f8hnRGf0WyOSY096hE7gJ5Enz8nY5CdxXvjT
-         +OhUfVEMQ9qGWsKbmbuP9OEfjE8xBClrttHfQetuKU/8A3Irjd05WuYbaEPZKCkv84Zj
-         vtXCaOdmsEt/H0MMGS6GlpzEYqr7fCkjEOYnTt2YKfSBiNsRavoyrEdvgWFM1/0KlT+G
-         KL1A==
-X-Gm-Message-State: AOJu0Yx6tfanaye3j3TTVEIlTMlxYJCzpjwqYNFFSdq2at20tqNQJfwJ
-	V4OzZgYaBenrAb4hMziCtKKZPg==
-X-Google-Smtp-Source: AGHT+IGf5jnqKk+/Wxa0lewGnRv3LRxJbfFnKZbfVVzrPEJDu9BiLBaj/E4qhS+AnR7JHlwGGolFuw==
-X-Received: by 2002:a05:6512:ace:b0:4f4:b783:8556 with SMTP id n14-20020a0565120ace00b004f4b7838556mr1352140lfu.66.1691656253270;
-        Thu, 10 Aug 2023 01:30:53 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691658403; x=1692263203;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sDLghxB7QcIIekAAvCwh+qYFuLXHG3c2NfBVkLYcnXI=;
+        b=aX1FBObLTrf1/obxrtt8W/p0pxLvHtFp/wdhzfwz4C+CUGHMvZ2GFjj3H255djQbjh
+         2i34x0m3O/RmI2oaM9H53miBohaygBA114BEd5Qk3OKn1gvC4z6TqWgg1ItMYvsJyutR
+         Ny9hrNxHOmkPZhP96u5+6FYZewcPAmJPPQDsi09YymWXuCUEXgbDTFLQL/dGoCyzykNP
+         FcA+13M+bSIBWEeVp2yjB7jQys3sS2RIPquG8Ef+KYxjKaFObMd1j9icxUdXnOIUXv39
+         oOIYKlaYA8N4L230X6lC6NO/tTvF+e2OwmJAB2nsmoK0glwlVNG9EP4fO12UuT6Dc7pG
+         0Bsw==
+X-Gm-Message-State: AOJu0Yyx2r0o/NN2z8RtHC70pE1LZla1HU5xQa8iEzdHVJJ4ajh+sj3G
+	nn1suXxaNXAOODzyZn/gri6Ag6JRO2c1gbiwhBo=
+X-Google-Smtp-Source: AGHT+IFX9sWcyJH2wVbVJi16oAX/6mKU1XSRqj/1Gx96xMcB9h5MAQ1CQWBOkWLnVR6JYJ6H30bwLA==
+X-Received: by 2002:a7b:c4d4:0:b0:3fe:2079:196c with SMTP id g20-20020a7bc4d4000000b003fe2079196cmr1429891wmk.16.1691658403306;
+        Thu, 10 Aug 2023 02:06:43 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:99e1:a167:6a5a:9487? ([2a02:578:8593:1200:99e1:a167:6a5a:9487])
-        by smtp.gmail.com with ESMTPSA id l10-20020a7bc44a000000b003fc06169ab3sm4253012wmi.20.2023.08.10.01.30.51
+        by smtp.gmail.com with ESMTPSA id t1-20020a5d5341000000b0031763fd36c4sm1468481wrv.104.2023.08.10.02.06.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Aug 2023 01:30:52 -0700 (PDT)
-Message-ID: <8e4969e4-043d-4bda-96e9-7deed4133049@tessares.net>
-Date: Thu, 10 Aug 2023 10:30:50 +0200
+        Thu, 10 Aug 2023 02:06:42 -0700 (PDT)
+Message-ID: <d01c2210-70b3-45ca-b343-dc0c537eaede@tessares.net>
+Date: Thu, 10 Aug 2023 11:06:42 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,11 +51,12 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: mptcp: Remove unnecessary test for __mptcp_init_sock().: Build
  Failure
 Content-Language: en-GB
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 To: Kuniyuki Iwashima <kuniyu@amazon.com>, wpasupplicant.patchew@gmail.com
 Cc: mptcp@lists.linux.dev
 References: <eec230ed-7af2-c055-5c6e-9c70ff454188@gmail.com>
  <20230809233908.26135-1-kuniyu@amazon.com>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+ <8e4969e4-043d-4bda-96e9-7deed4133049@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -98,46 +100,49 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <20230809233908.26135-1-kuniyu@amazon.com>
+In-Reply-To: <8e4969e4-043d-4bda-96e9-7deed4133049@tessares.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kuniyuki,
-
-Thank you for the patch!
-
-On 10/08/2023 01:39, Kuniyuki Iwashima wrote:
-> From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-> Date: Wed, 09 Aug 2023 23:20:04 +0000
->> Hi Kuniyuki,
+On 10/08/2023 10:30, Matthieu Baerts wrote:
+> On 10/08/2023 01:39, Kuniyuki Iwashima wrote:
+>> From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+>> Date: Wed, 09 Aug 2023 23:20:04 +0000
+>>> Hi Kuniyuki,
+>>>
+>>> Thank you for your modifications, that's great!
+>>>
+>>> But sadly, our CI spotted some issues with it when trying to build it.
+>>>
+>>> You can find more details there:
+>>>
+>>>   https://patchwork.kernel.org/project/mptcp/patch/20230809225918.21523-1-kuniyu@amazon.com/
+>>>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/5815022877
+>>>
+>>> Status: failure
+>>> Initiator: MPTCPimporter
+>>> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e7b0047cdbb4
 >>
->> Thank you for your modifications, that's great!
+>> Oops, I used net-next and missed f2b529788d80 ("mptcp: add sched in
+>> mptcp_sock").
 >>
->> But sadly, our CI spotted some issues with it when trying to build it.
->>
->> You can find more details there:
->>
->>   https://patchwork.kernel.org/project/mptcp/patch/20230809225918.21523-1-kuniyu@amazon.com/
->>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/5815022877
->>
->> Status: failure
->> Initiator: MPTCPimporter
->> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e7b0047cdbb4
+>> I'll rebase on the mptcp tree.
 > 
-> Oops, I used net-next and missed f2b529788d80 ("mptcp: add sched in
-> mptcp_sock").
+> That's OK, I can apply your patch on our side before "mptcp: add sched
+> in mptcp_sock" (we will not send it to netdev before next week anyway).
+> When doing that, I will also adapt this other commit not to have the
+> compilation issue.
 > 
-> I'll rebase on the mptcp tree.
+> That way, your patch can be applied in net-next directly and our daily
+> automatic rebase will handle that without issue. I will send a reply on
+> your email including the patch where netdev ML was cced (the CI only
+> sends emails to MPTCP ML).
 
-That's OK, I can apply your patch on our side before "mptcp: add sched
-in mptcp_sock" (we will not send it to netdev before next week anyway).
-When doing that, I will also adapt this other commit not to have the
-compilation issue.
-
-That way, your patch can be applied in net-next directly and our daily
-automatic rebase will handle that without issue. I will send a reply on
-your email including the patch where netdev ML was cced (the CI only
-sends emails to MPTCP ML).
+I just noticed your patch was addressed to us with netdev ML in CC and
+not addressed to the Net maintainers. That's fine of course but I guess
+the Net maintainers will expect us to apply the patch on our side and
+send it later with other ones. I will just make it clean to the Net
+maintainers who is doing what :)
 
 Cheers,
 Matt
