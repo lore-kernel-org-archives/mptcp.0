@@ -1,46 +1,45 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A6D1E51E
-	for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 09:06:45 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3fe1d462762so5772575e9.0
-        for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 02:06:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E1E3D71
+	for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 09:51:43 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3fe1fc8768aso6428165e9.1
+        for <mptcp@lists.linux.dev>; Thu, 10 Aug 2023 02:51:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691658403; x=1692263203;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=sDLghxB7QcIIekAAvCwh+qYFuLXHG3c2NfBVkLYcnXI=;
-        b=vITII42dJtl1lOamYDQ2BSCHOzBqm++GoTaWYcusnDt4mgxH+5wLMvlMa3QkCVIzGZ
-         CWr9gd1gQFkO4AkHrLRcGiBFLf77Up4eWl5Nw7ag0hJeTUErqAK05RJ3rfN5DGIHmVKb
-         pczpp7hHnXGSKaY7OkyxJLwoIDSU51Bi6283+vj4M3YZnspiTYvDP0fqdV435xX3i5Wn
-         5JdX6hjzv2W6eWWh8KLhokQZpTL5lN5IBfyFis1VKw0pZSeR2Lxwdpf5AY3gcjMTtahJ
-         RURr04hZCAfVzQMprC1ujbTsj8AmFy1Fqk3BPpdqM+/VzwWAOI9brI25edqEelR+KG4f
-         Pq7w==
+        d=tessares.net; s=google; t=1691661101; x=1692265901;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=59/x4KHCPdPrsos6hNP/XWr2AeXg5zeVnD/4XtP2tqk=;
+        b=ije3nlhOpfwAvUDqB+H6Hq9ZfAUtO7vT50r8NtYEiWFqXAGP2AQymtsMK/vstqC0sZ
+         erEzeKcP0HP/RiKIk6WXE6R/iQflY10fYF6/L5tWZduBLRJHq40pWxSL/WnN8lp5zXic
+         QNVcmgXMNnEOBPEW2pccB9vNqeSkWjY+et68yoyR1G2qnmKZv59tOp+kMxUdDcpZvLKJ
+         u0gP+sD0WTu60LJ/p671Zjkogei5ghBBKBPvHC+mUrJghSc/RfnPNLdiIvI+zmPWUbV+
+         WLJnoTuJsda19jU9mR5cX8h+FWmpyrgtt1JZIXeW+3tOmiURx7JgU67u+ucyu4D4tWLz
+         S6nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691658403; x=1692263203;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sDLghxB7QcIIekAAvCwh+qYFuLXHG3c2NfBVkLYcnXI=;
-        b=aX1FBObLTrf1/obxrtt8W/p0pxLvHtFp/wdhzfwz4C+CUGHMvZ2GFjj3H255djQbjh
-         2i34x0m3O/RmI2oaM9H53miBohaygBA114BEd5Qk3OKn1gvC4z6TqWgg1ItMYvsJyutR
-         Ny9hrNxHOmkPZhP96u5+6FYZewcPAmJPPQDsi09YymWXuCUEXgbDTFLQL/dGoCyzykNP
-         FcA+13M+bSIBWEeVp2yjB7jQys3sS2RIPquG8Ef+KYxjKaFObMd1j9icxUdXnOIUXv39
-         oOIYKlaYA8N4L230X6lC6NO/tTvF+e2OwmJAB2nsmoK0glwlVNG9EP4fO12UuT6Dc7pG
-         0Bsw==
-X-Gm-Message-State: AOJu0Yyx2r0o/NN2z8RtHC70pE1LZla1HU5xQa8iEzdHVJJ4ajh+sj3G
-	nn1suXxaNXAOODzyZn/gri6Ag6JRO2c1gbiwhBo=
-X-Google-Smtp-Source: AGHT+IFX9sWcyJH2wVbVJi16oAX/6mKU1XSRqj/1Gx96xMcB9h5MAQ1CQWBOkWLnVR6JYJ6H30bwLA==
-X-Received: by 2002:a7b:c4d4:0:b0:3fe:2079:196c with SMTP id g20-20020a7bc4d4000000b003fe2079196cmr1429891wmk.16.1691658403306;
-        Thu, 10 Aug 2023 02:06:43 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691661101; x=1692265901;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=59/x4KHCPdPrsos6hNP/XWr2AeXg5zeVnD/4XtP2tqk=;
+        b=YbqHmnQnp1DM0Jr3updKjB2mjuV9UDgrBRU9BCOf2v573x9xQ1eKqZ35sEn+Xhg2om
+         OgjkPlX8iH9pyjI9xUIL3JowGGn4t8gPJ5JqFGgeqmKxRmsDXAGWimMMsppGtI497ULV
+         E/60DHWDZA/cNUE+3Ne/fBV2eA/opBSWbM5i3Q3C5VEkjQte66r8Pap319PFTMbeKBTT
+         c0rbKREBLjv21Gx/GA6ctW6AyXuEzBxG12AGruMX/wYJ+iH+5KqN2x/Nyc4vPA0h6UAV
+         vTa3SGEcC2wIb8R2OXHxipj3M1u3FtWihOKA5lIWNG1TBoXPdXcALi+c82JAD9M7Fs1v
+         sYZw==
+X-Gm-Message-State: AOJu0Yzi45mQFvFGQNMN2D7LFcSd6hMoboKshKvcItwb72typYUfxGK9
+	SCHzOzbh3/TVGHhvst49raHmxg==
+X-Google-Smtp-Source: AGHT+IFGjzD1FeswWe5CtwueFCkSDyNERaZBnLUD/vjFu5Xsl/a7CkiROGYuzHVXAvfy3oZ4Kypozg==
+X-Received: by 2002:a7b:cb97:0:b0:3fb:a100:2581 with SMTP id m23-20020a7bcb97000000b003fba1002581mr1708092wmi.14.1691661101419;
+        Thu, 10 Aug 2023 02:51:41 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:99e1:a167:6a5a:9487? ([2a02:578:8593:1200:99e1:a167:6a5a:9487])
-        by smtp.gmail.com with ESMTPSA id t1-20020a5d5341000000b0031763fd36c4sm1468481wrv.104.2023.08.10.02.06.42
+        by smtp.gmail.com with ESMTPSA id n24-20020a7bcbd8000000b003fbb0c01d4bsm1603826wmi.16.2023.08.10.02.51.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Aug 2023 02:06:42 -0700 (PDT)
-Message-ID: <d01c2210-70b3-45ca-b343-dc0c537eaede@tessares.net>
-Date: Thu, 10 Aug 2023 11:06:42 +0200
+        Thu, 10 Aug 2023 02:51:40 -0700 (PDT)
+Message-ID: <05c9cfb7-c704-4b72-8fa3-d280dae80c09@tessares.net>
+Date: Thu, 10 Aug 2023 11:51:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,15 +47,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: mptcp: Remove unnecessary test for __mptcp_init_sock().: Build
- Failure
+Subject: Re: [PATCH v1 mptcp-next] mptcp: Remove unnecessary test for
+ __mptcp_init_sock().
 Content-Language: en-GB
+To: Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Mat Martineau <martineau@kernel.org>
+Cc: Kuniyuki Iwashima <kuni1840@gmail.com>, mptcp@lists.linux.dev,
+ netdev@vger.kernel.org
+References: <20230809225918.21523-1-kuniyu@amazon.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>, wpasupplicant.patchew@gmail.com
-Cc: mptcp@lists.linux.dev
-References: <eec230ed-7af2-c055-5c6e-9c70ff454188@gmail.com>
- <20230809233908.26135-1-kuniyu@amazon.com>
- <8e4969e4-043d-4bda-96e9-7deed4133049@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -100,49 +99,50 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <8e4969e4-043d-4bda-96e9-7deed4133049@tessares.net>
+In-Reply-To: <20230809225918.21523-1-kuniyu@amazon.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/08/2023 10:30, Matthieu Baerts wrote:
-> On 10/08/2023 01:39, Kuniyuki Iwashima wrote:
->> From: MPTCP CI <wpasupplicant.patchew@gmail.com>
->> Date: Wed, 09 Aug 2023 23:20:04 +0000
->>> Hi Kuniyuki,
->>>
->>> Thank you for your modifications, that's great!
->>>
->>> But sadly, our CI spotted some issues with it when trying to build it.
->>>
->>> You can find more details there:
->>>
->>>   https://patchwork.kernel.org/project/mptcp/patch/20230809225918.21523-1-kuniyu@amazon.com/
->>>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/5815022877
->>>
->>> Status: failure
->>> Initiator: MPTCPimporter
->>> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e7b0047cdbb4
->>
->> Oops, I used net-next and missed f2b529788d80 ("mptcp: add sched in
->> mptcp_sock").
->>
->> I'll rebase on the mptcp tree.
-> 
-> That's OK, I can apply your patch on our side before "mptcp: add sched
-> in mptcp_sock" (we will not send it to netdev before next week anyway).
-> When doing that, I will also adapt this other commit not to have the
-> compilation issue.
-> 
-> That way, your patch can be applied in net-next directly and our daily
-> automatic rebase will handle that without issue. I will send a reply on
-> your email including the patch where netdev ML was cced (the CI only
-> sends emails to MPTCP ML).
+Hi Kuniyuki,
 
-I just noticed your patch was addressed to us with netdev ML in CC and
-not addressed to the Net maintainers. That's fine of course but I guess
-the Net maintainers will expect us to apply the patch on our side and
-send it later with other ones. I will just make it clean to the Net
-maintainers who is doing what :)
+On 10/08/2023 00:59, Kuniyuki Iwashima wrote:
+> __mptcp_init_sock() always returns 0 because mptcp_init_sock() used
+> to return the value directly.
+> 
+> But after commit 18b683bff89d ("mptcp: queue data for mptcp level
+> retransmission"), __mptcp_init_sock() need not return value anymore.
+> 
+> Let's remove the unnecessary test for __mptcp_init_sock() and make
+> it return void.
+
+Thank you for your patch, it looks good to me!
+
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+
+As the CI said (on MPTCP ML only), there is a conflict with another
+patch already in MPTCP tree that is going to be sent later. But that's
+fine, no need to rebase, it is fine to apply your patch as it is in our
+tree before the other patch and modify the latter one to avoid
+compilation issue.
+
+So just to be clear, I just applied this patch in MPTCP tree and we will
+send it to Netdev later. I hope it is OK if I change the Patchwork
+status to "Deferred". (If it is the correct status because it looks like
+the "Handled Elsewhere" status is not used in Netdev PW and the bot
+doesn't support it).
+
+pw-bot: defer
+
+
+New patches for t/upstream:
+- 769fb24aa39c: mptcp: Remove unnecessary test for __mptcp_init_sock()
+- 1ba457522bce: mptcp: fix compilation issue in "mptcp: add sched in
+mptcp_sock"
+- Results: 3a7cf9f5d51c..649448c9126d (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230810T092803
 
 Cheers,
 Matt
