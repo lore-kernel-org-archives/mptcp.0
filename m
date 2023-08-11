@@ -1,45 +1,45 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5056219EF
-	for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 20:40:31 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-319694906a4so86179f8f.2
-        for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 13:40:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2131513AC7
+	for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 20:59:52 +0000 (UTC)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3fe5c0e57d2so20847515e9.0
+        for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 13:59:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691786429; x=1692391229;
-        h=content-transfer-encoding:in-reply-to:autocrypt:cc:content-language
-         :references:to:from:subject:user-agent:mime-version:date:message-id
+        d=tessares.net; s=google; t=1691787591; x=1692392391;
+        h=content-transfer-encoding:in-reply-to:cc:autocrypt:from:references
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=W+hGnuZF195K0Kft5kotGH1yZ217MFuNsCzUQMBoQ90=;
-        b=TsNyAnE+lD+FowfM+4CfyTrlanzRgUFTXp11fTQcevkZbpZf2gS6qQwBboHWzIO4EX
-         UFUKKXMOPjcClGAFC/6S20U88hXqtgkcSjSVVKZQ0cy+05Y0HY/j3Hv0QUlcdfXUBfTG
-         rDt4g1Re/nQwtwxoanyGDqChWrUwQ1qxosA2D79h9SNmIDHsRB9BUGwCLVCbXkE4gCsm
-         /hmBJvZMsF1WeoaArZf4wjeRlowY/y3BLNP4eAmXuz+cjZlKaUwqdsrhN75O8zG+n1M5
-         t32YpkOAN5zsnxc1O7kOJD1M00Xrrg+pPlyE2UC3HymG6/ydsSbgkTgcL5cgZR3AErsf
-         sD9g==
+        bh=N3zlMwhRRDjT2iqVeJamAg40m2giTKoR+RteyaplCxQ=;
+        b=gv7ZcbdRXjbb1hUsRUWuZ8nxx5Fjybu04MvVQYeMMWJtep6TTGJL9RpNTktEPkFmEN
+         /O2FzQcW/WJQD45tyajTJuSHscjIULBtEX13lrtt0HYGiUbwVCgPH9F6cFhD5xhbV+j7
+         L98mVxKn6a9tSGu5rpSbsJW+RXFjs08Q59TQxrdSM+gep8pcBYgKJIM7eQW7sC7ZJr/N
+         4vZ0oY4VUNFtffev9qHGI1iqnLh9D1EFimq5VJwGa/dnsZDoULl22b9Dr840kU2ik2DT
+         +ZVCJJpySAeXQGJ4OxwOHaQ0Za/yv/IMo+sGDLEdouDE/aIp8eBmF5F5ZWNr3XF2L4aH
+         /egA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691786429; x=1692391229;
-        h=content-transfer-encoding:in-reply-to:autocrypt:cc:content-language
-         :references:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1691787591; x=1692392391;
+        h=content-transfer-encoding:in-reply-to:cc:autocrypt:from:references
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W+hGnuZF195K0Kft5kotGH1yZ217MFuNsCzUQMBoQ90=;
-        b=FcXQmYwmjBWnNfvRMfIUR9UFw2G6fLSMVIzq1vnJECeksfaJJDN6FMci6RG3itRStE
-         x5TcICrfLP2UJJRfcfKjynJx+yt3AVUUSlv0kzEZxdafD6ebQ832rJmuXVs1XZhO+AyB
-         aVnOzgjy7nTgudmgD87WXv+4lm5VCozmice0bcnqojQO3VZVD6hshWspE8fA2QZr4OXV
-         hBlMvUJaFK1iTtPEYkdgKysNC/F2crjvBRiZqQSxbCFOXW0czoXTp+6hI+rKH9iii8+K
-         a6VrpwYVDMkrRd8n4XelcC60FfMzlVawCtxto07CDkBUo/qD6B+k+47G8lkY9XWCWPnR
-         UwGg==
-X-Gm-Message-State: AOJu0YzXN2TjPWjwwRgJqBh1fO0a2Nixp+rGsITMjD6E7G4yZ6rVXbOL
-	gOdtkpQrxL8En8sKfjz33nun7YALoPpoWp7ZK1s83w==
-X-Google-Smtp-Source: AGHT+IGIRgT7GVUDfdS0z7YtxWaFKAJoKowj0Ezw3996vUcJDyVttc7g6Pkt+MpMQ6JLeBZ9c53x5Q==
-X-Received: by 2002:a5d:6b4f:0:b0:317:708e:1c29 with SMTP id x15-20020a5d6b4f000000b00317708e1c29mr2165328wrw.40.1691786429219;
-        Fri, 11 Aug 2023 13:40:29 -0700 (PDT)
+        bh=N3zlMwhRRDjT2iqVeJamAg40m2giTKoR+RteyaplCxQ=;
+        b=cBC8cMzfUq1AAWP4/AVZjCMX8lK4Vn+qWonq7DEpCi74tOW+6dTKaDt6wBQm/iJbjw
+         n3MmYH/TCt30R87ui4K/1cnznEmfZGG+XgshY+jLBPhgZ8vcmRp3KbVn+I/LlCy2TQF3
+         zJsRQxLt1hwljVTK9q2/Wp16E9X1OLdB+CEbw3fMWGQfncrxjokqcjPfjoKmNzv8Rk4i
+         ECi1r/CSyBrOftFAFxFG2i3psA1Jt4u0lseQ2s2KaPtLC4KrwRdRhGe1SuoXNQqdEnhR
+         pHiSii/e3lxl7a3C0vu3I93UILhVzBmsd4efA2Cb7HRWlZzo+ykJl17BzDJeICbj7A6y
+         vUGQ==
+X-Gm-Message-State: AOJu0YyBBJ8GxIsTmFRN+LHRmqAYpqbK1RRuMGUtE4t+c/kwYmZi/Y0U
+	n7968o6VHZgclDcaINFih+xLkA==
+X-Google-Smtp-Source: AGHT+IGn9s3wy5op+2tCW8xwKK8G/RQ87G+w11X+deZpKSXvfvAAVluDuLmZfFc8yQDQTa4zzO7T8w==
+X-Received: by 2002:a7b:c392:0:b0:3fe:16f4:d865 with SMTP id s18-20020a7bc392000000b003fe16f4d865mr2364398wmj.23.1691787590319;
+        Fri, 11 Aug 2023 13:59:50 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:d07c:50b8:518e:aa8e? ([2a02:578:8593:1200:d07c:50b8:518e:aa8e])
-        by smtp.gmail.com with ESMTPSA id f17-20020adff451000000b00317efb41e44sm6468448wrp.18.2023.08.11.13.40.28
+        by smtp.gmail.com with ESMTPSA id w12-20020a05600c474c00b003fe15ac0934sm6882082wmo.1.2023.08.11.13.59.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Aug 2023 13:40:28 -0700 (PDT)
-Message-ID: <b0e26fb1-bc4f-45a1-9aff-475003f04151@tessares.net>
-Date: Fri, 11 Aug 2023 22:40:27 +0200
+        Fri, 11 Aug 2023 13:59:50 -0700 (PDT)
+Message-ID: <dd871eac-d1ee-4874-9466-3986d7534f31@tessares.net>
+Date: Fri, 11 Aug 2023 22:59:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,12 +47,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Weekly meetings] MoM - 8th of August 2023
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-To: Mat Martineau <martineau@kernel.org>
-References: <dd5ca99a-df4b-4253-ae45-367e881a5eb4@tessares.net>
+Subject: Re: [PATCH mptcp-next v3 0/6] BPF packet scheduler updates part 3
 Content-Language: en-GB
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+To: Geliang Tang <geliang.tang@suse.com>, Mat Martineau <martineau@kernel.org>
+References: <cover.1691036765.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -96,50 +95,43 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <dd5ca99a-df4b-4253-ae45-367e881a5eb4@tessares.net>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <cover.1691036765.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang, Mat,
 
-On 10/08/2023 18:21, Matthieu Baerts wrote:
+On 03/08/2023 06:27, Geliang Tang wrote:
+> Geliang Tang (6):
+>   Squash to "mptcp: add sched_data helpers"
+>   Squash to "bpf: Add bpf_mptcp_sched_kfunc_set"
+>   Squash to "selftests/bpf: add two mptcp netns helpers"
+>   Squash to "selftests/bpf: Add bpf_rr scheduler"
+>   Squash to "bpf: Export more bpf_burst related functions"
+>   Squash to "selftests/bpf: Add bpf_burst scheduler"
 
-(...)
+Thank you for the patches and the reviews!
 
->     - Features for other trees:
-> 
->         - [d627333533b4] mptcp: refactor push_pending logic (Geliang Tang)
->         - [6c82fef59c01] mptcp: drop last_snd and MPTCP_RESET_SCHEDULER
-> (Geliang Tang)
->         - [e34214022d50] mptcp: add struct mptcp_sched_ops (Geliang Tang)
->         - [1a9a9a5e01f5] mptcp: add a new sysctl scheduler (Geliang Tang)
->         - [e7e924381b00] mptcp: add sched in mptcp_sock (Geliang Tang)
->         - [7ef0a0657704] mptcp: add scheduled in mptcp_subflow_context
-> (Geliang Tang)
->         - [f03f04926ad1] mptcp: add sched_data helpers (Geliang Tang)
->         - [354bd4e094bb] mptcp: add scheduler wrappers (Geliang Tang)
->         - [44505f900b4e] mptcp: use get_send wrapper (Geliang Tang)
->         - [037427cc1f31] mptcp: use get_retrans wrapper (Geliang Tang)
->         - [1644cb7a1faf] mptcp: register default scheduler (Geliang Tang):
->             - move "mptcp: add sched_data helpers" lower → TODO
-
-Just did:
+Now in our tree:
 
 New patches for t/upstream:
-- ec996909f801: Revert: "mptcp: add sched_data helpers"
-- 7d1f6c17ffd6: conflict in t/mptcp-add-scheduler-wrappers
-- 0f0b53ff04b2: mptcp: add sched_data helpers 2:
-  - I moved the new code at the end
-- 94f491eb3eba: tg:msg: remove tmp suffix
-- Results: 0c19f8d9b23d..2d42b08369ef (export)
+- a88f3f498b2f: "squashed" patch 1/6 (with conflicts) in "mptcp: add
+sched_data helpers"
+- 5d8795774463: "squashed" patch 2/6 in "bpf: Add bpf_mptcp_sched_kfunc_set"
+- be959ff059e4: "squashed" patch 3/6 in "selftests/bpf: add two mptcp
+netns helpers"
+- 1736fcc031f4: "squashed" patch 4/6 in "selftests/bpf: Add bpf_rr
+scheduler"
+- 574847a8b558: "squashed" patch 5/6 in "bpf: Export more bpf_burst
+related functions"
+- 206993ff5b4f: "squashed" patch 6/6 in "selftests/bpf: Add bpf_burst
+scheduler"
+- Results: 2d42b08369ef..03fd7c30320a (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230811T202752
-
->             - Mat will check if it is OK to send them
->             - Idea is to send them next week if possible
-
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230811T205838
 
 Cheers,
 Matt
