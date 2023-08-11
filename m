@@ -1,138 +1,163 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-71.mta0.migadu.com (out-71.mta0.migadu.com [91.218.175.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B5C329BD
-	for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 15:58:57 +0000 (UTC)
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-31783d02093so1916774f8f.0
-        for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 08:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691769536; x=1692374336;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t+XgaLGpUVP+G9qnOB0ZNXJDWKPyu+7aNgrOOBV4CXs=;
-        b=Wge3t0yMVuay4tm8zdBQ9VyeL6OLJAnYtN8V9iwiqU8TvRM5ND9ERv/8i2Y0FArvFQ
-         tyG+3O1nerD6rcqBCbg2Yxi/GEjlgN0VeHNCzZWoK8KmI2UeXphNC4ct39rAWNHhOq6n
-         g3MxOHl1F/R3iVZaFvULiNeXrTd5HPlV4+zO97TksYClBrDGyBmm4kRFzTQccpHZLLyG
-         jXFYRE99H23TempgCoan3vs01e8+KRWka4tBP479RADB9zjrIIFJ64LnP/2iwPPymaWX
-         OkJg6VAAsx3QO7crW4QlH020KhacJUh6CmeEv8xlivqVhmJYQ7RUE1o45BE134rD1wev
-         Scgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691769536; x=1692374336;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t+XgaLGpUVP+G9qnOB0ZNXJDWKPyu+7aNgrOOBV4CXs=;
-        b=fXsMb8NEXqvZOWFVHlMkb/O1rMH/iP2NSCUZHOIFAgUOVX0koSCYazHqx3cwNovojv
-         kd+YKi0uFxrZYgW9LV3rdEebfuukbaBd17QDmB2zLdoKe9yWxBzXQ6CmRTHNkxmXqgNX
-         O5h1nY2PwFqY7M4S6gEyoKiUz+QU9qFmuSfRn2l4WICeytkcHrxVOHYgytophPc0Hr8j
-         c/2Q/EppKxtvti9OlXZOKDPmd9W+uQ9h/RFMLG6cW1ey07Rty8zIoosdfzrRT1rc2Af6
-         TvgwB8piRR8kSFC+f0xbZ48XZQlwIU0TuGPYHoXrGSn6UkI7IcqoHbFE0luPGyN89y5q
-         wciQ==
-X-Gm-Message-State: AOJu0YxN8JpK3DABIiK+bQ1oWWFIvQCBuBY2ERRqnkCT7SoDKCK137tp
-	RG8GRuoQacJbVJpPh1kRKfIlYg==
-X-Google-Smtp-Source: AGHT+IH+uijgDdhfb4MCBOghDLHl+5AuYsKXMZMFSQo58jr8ReplmmJKvjmkcb9cb2D4E1oZaQweCQ==
-X-Received: by 2002:adf:dccd:0:b0:317:5a9b:fcec with SMTP id x13-20020adfdccd000000b003175a9bfcecmr1553679wrm.14.1691769536025;
-        Fri, 11 Aug 2023 08:58:56 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id m12-20020a5d4a0c000000b00317e9c05d35sm5834308wrq.85.2023.08.11.08.58.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Aug 2023 08:58:55 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Fri, 11 Aug 2023 17:57:27 +0200
-Subject: [PATCH net-next 14/14] mptcp: Remove unnecessary test for
- __mptcp_init_sock()
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF79C8468
+	for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 18:50:31 +0000 (UTC)
+Message-ID: <49f5a594-3db7-fb99-1083-7df1155d3357@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1691779829;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aTSMPU3IVVneEIppNm0unuUG3WBb/CMepnvLmC2MOQE=;
+	b=Jjy3Hxr8xfaB7kvP0hFkE6FNlEU+fNmjgZdvMgik8IBihqs5T7HAdH4Pqlni9gMLbuGSgd
+	9CiidqEcANKn2qFZX4vW2BjIZ3OLRw6Vy8Pu+rZ3DVayA0ATTCwYn/iXpIQxP3ousL0wg1
+	fbT4Op0fk3nfff5/hhL2b+/ut+BnoI0=
+Date: Fri, 11 Aug 2023 11:50:17 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Subject: Re: [PATCH bpf-next v11 2/5] selftests/bpf: Use random netns name for
+ mptcp
+Content-Language: en-US
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Florent Revest <revest@chromium.org>,
+ Brendan Jackman <jackmanb@chromium.org>,
+ Matthieu Baerts <matthieu.baerts@tessares.net>,
+ Mat Martineau <martineau@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ John Johansen <john.johansen@canonical.com>, Paul Moore
+ <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Eric Paris <eparis@parisplace.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
+ bpf@vger.kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ selinux@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <cover.1691125344.git.geliang.tang@suse.com>
+ <15d7646940fcbb8477b1be1aa11a5d5485d10b48.1691125344.git.geliang.tang@suse.com>
+ <8b706f66-2afa-b3d0-a13a-11f1ffb452fe@linux.dev>
+ <20230807064044.GA11180@localhost.localdomain>
+ <9a84e026-402d-b6d9-b6d1-57d91455da47@linux.dev>
+ <20230809081944.GA29707@bogon>
+ <ffd1bb86-ed32-3301-346a-e369219841de@linux.dev>
+ <20230811092915.GA8364@bogon>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <20230811092915.GA8364@bogon>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-14-36183269ade8@tessares.net>
-References: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-0-36183269ade8@tessares.net>
-In-Reply-To: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-0-36183269ade8@tessares.net>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- David Ahern <dsahern@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>, 
- Kuniyuki Iwashima <kuniyu@amazon.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1657;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=9eUzQsTH9C4lw0Wrk8AIKRJ6c0bqe3QPvYFbn9S2V3Q=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk1lqwU7yF3k2xiGkkBmwynf1c4Z1lknA9Khwon
- buB7uDg15eJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZNZasAAKCRD2t4JPQmmg
- c53oD/9Cm0tzdEzZtSh2bD4u/FrbdFha+H7oI7jW05zlpsFeQAA3EQLy5H58wxt8lTY6tbB3ENZ
- MHZa6zrGYtWnVl3BEO8/JPEa1wSXa2BT+Ke/fk2NRWhHV8w/7w426oiEurwvMZgpU2U/l6rlpFi
- 3vRvAO8KgA1CDraah31q+rj0LD40A//lSUC5rcG/XtrqIduqvyo/Mb0+sqQ66guhuzAPYRGj1Qk
- 3A0OAwr9kMd6ie34lrH4wle2YQnZku78y5+KjTPgKR3/m+tdn4AtwdqvsGHZsxjwRf9GwgUeXsU
- jkwWJSEN5bHVOChix6B/qGM8ziHaGa+Icc23/wR1ZMBRfhzD6i5NuljgtALxngwomGPkaMHZUCy
- 7pgM497BTMGffB7C7NPkHSuYmykvz+xAlJgcTLgLL83dweYf6NoFvRgie/vjHwBc4m+MooOJhZy
- jdGsO7K8gEB94e6a34UTYdtZAtiyUABk/qr2KYHzdU4zdOT05/7V14EJZRXdR8ZT8CakcEBP7XG
- fJdRjfUt7lnMcpGT5hKYMGqP8ZSmkTY4SN+j7kE0/8jNzYkifmuiSgp773MGvtbrDf0ONREBNBL
- Hr6lp1QGjLPxsdtKiHaEbI4NW5pl3ZmwlvQ5wKs80e9cM2+PJFX6+1Dn20Xdx8e3wrDIPF8dXbk
- eqm6CsASm8so4Og==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+X-Migadu-Flow: FLOW_OUT
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+On 8/11/23 2:29 AM, Geliang Tang wrote:
+> On Thu, Aug 10, 2023 at 10:53:38PM -0700, Martin KaFai Lau wrote:
+>> On 8/9/23 1:19 AM, Geliang Tang wrote:
+>>> On Tue, Aug 08, 2023 at 11:03:30PM -0700, Martin KaFai Lau wrote:
+>>>> On 8/6/23 11:40 PM, Geliang Tang wrote:
+>>>>> On Fri, Aug 04, 2023 at 05:23:32PM -0700, Martin KaFai Lau wrote:
+>>>>>> On 8/3/23 10:07 PM, Geliang Tang wrote:
+>>>>>>> Use rand() to generate a random netns name instead of using the fixed
+>>>>>>> name "mptcp_ns" for every test.
+>>>>>>>
+>>>>>>> By doing that, we can re-launch the test even if there was an issue
+>>>>>>> removing the previous netns or if by accident, a netns with this generic
+>>>>>>> name already existed on the system.
+>>>>>>>
+>>>>>>> Note that using a different name each will also help adding more
+>>>>>>> subtests in future commits.
+>>>>>
+>>>>> Hi Martin,
+>>>>>
+>>>>> I tried to run mptcp tests simultaneously, and got "Cannot create
+>>>>> namespace file "/var/run/netns/mptcp_ns": File exists" errors sometimes.
+>>>>> So I add this patch to fix it.
+>>>>>
+>>>>> It's easy to reproduce, just run this commands in multiple terminals:
+>>>>>     > for i in `seq 1 100`; do sudo ./test_progs -t mptcp; done
+>>>>
+>>>> Not only the "-t mptcp" test. Other tests in test_progs also don't support
+>>>> running parallel in multiple terminals. Does it really help to test the bpf
+>>>> part of the prog_tests/mptcp.c test by running like this? If it wants to
+>>>> exercise the other mptcp networking specific code like this, a separate
+>>>> mptcp test is needed outside of test_progs and it won't be run in the bpf
+>>>> CI.
+>>>>
+>>>> If you agree, can you please avoid introducing unnecessary randomness to the
+>>>> test_progs where bpf CI and most users don't run in this way?
+>>>
+>>> Thanks Martin. Sure, I agree. Let's drop this patch.
+>>
+>> Thanks you.
+>>
+>>>> I have a high level question. In LPC 2022
+>>>> (https://lpc.events/event/16/contributions/1354/), I recall there was idea
+>>>> in using bpf to make other mptcp decision/policy. Any thought and progress
+>>>> on this? This set which only uses bpf to change the protocol feels like an
+>>>> incomplete solution.
+>>>
+>>> We are implementing MPTCP packet scheduler using BPF. Patches aren't
+>>> sent to BPF mail list yet, only temporarily on our mptcp repo[1].
+>>>
+>>> Here are the patches:
+>>>
+>>>    selftests/bpf: Add bpf_burst test
+>>>    selftests/bpf: Add bpf_burst scheduler
+>>>    bpf: Export more bpf_burst related functions
+>>>    selftests/bpf: Add bpf_red test
+>>>    selftests/bpf: Add bpf_red scheduler
+>>>    selftests/bpf: Add bpf_rr test
+>>>    selftests/bpf: Add bpf_rr scheduler
+>>>    selftests/bpf: Add bpf_bkup test
+>>>    selftests/bpf: Add bpf_bkup scheduler
+>>>    selftests/bpf: Add bpf_first test
+>>>    selftests/bpf: Add bpf_first scheduler
+>>>    selftests/bpf: Add bpf scheduler test
+>>>    selftests/bpf: add two mptcp netns helpers
+>>>    selftests/bpf: use random netns name for mptcp
+>>>    selftests/bpf: Add mptcp sched structs
+>>>    bpf: Add bpf_mptcp_sched_kfunc_set
+>>>    bpf: Add bpf_mptcp_sched_ops
+>>>
+>>> If you could take a look at these patches in advance, I would greatly
+>>> appreciate it. Any feedback is welcome.
+>>>
+>>> [1]
+>>> https://github.com/multipath-tcp/mptcp_net-next.git
+>>
+>> Thanks for sharing. I did not go into the details. iiuc, the scheduler is
+>> specific to a namespace. Do you see if it is useful to have more finer
+>> control like depending on what IP address it is connected to? BPF policy is
+>> usually found more useful to have finer policy control than global or
+>> per-netns.
+>>
+>> The same question goes for the fmod_ret here in this patch. The
+>> progs/mptcpify.c selftest is as good as upgrading all TCP connections. Is it
+>> your only use case and no need for finer selection?
+> 
+> This per-netns control is just the first step. We do need finer selection. The
+> most ideal mode is to select one app to upgrade it's TCP connections only. So
+> per-cgroup control is much better than per-netns. But we haven't found a good
+> per-cgroup solution yet.
 
-__mptcp_init_sock() always returns 0 because mptcp_init_sock() used
-to return the value directly.
+Selecting an app or cgroup can sort of be done by getting the current task or 
+current cgroup (there is helper to do that). I am imagining eventually it will 
+want to decide the protocol upgrade and/or the mptcp-scheduler when the 
+destination IP is decided. This fmod_ret upgrade for all acts like a global knob 
+(sysctl) and feels like a hack or at least incomplete. However, I also don't see 
+a clean way to do that for now in the current shape.
 
-But after commit 18b683bff89d ("mptcp: queue data for mptcp level
-retransmission"), __mptcp_init_sock() need not return value anymore.
+Please respin another revision to address the earlier selftest comment on the 
+netns name. Thanks.
 
-Let's remove the unnecessary test for __mptcp_init_sock() and make
-it return void.
-
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
----
- net/mptcp/protocol.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e715771ded7c..6ea0a1da8068 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2649,7 +2649,7 @@ static void mptcp_worker(struct work_struct *work)
- 	sock_put(sk);
- }
- 
--static int __mptcp_init_sock(struct sock *sk)
-+static void __mptcp_init_sock(struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
-@@ -2676,8 +2676,6 @@ static int __mptcp_init_sock(struct sock *sk)
- 	/* re-use the csk retrans timer for MPTCP-level retrans */
- 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
- 	timer_setup(&sk->sk_timer, mptcp_timeout_timer, 0);
--
--	return 0;
- }
- 
- static void mptcp_ca_reset(struct sock *sk)
-@@ -2695,11 +2693,8 @@ static void mptcp_ca_reset(struct sock *sk)
- static int mptcp_init_sock(struct sock *sk)
- {
- 	struct net *net = sock_net(sk);
--	int ret;
- 
--	ret = __mptcp_init_sock(sk);
--	if (ret)
--		return ret;
-+	__mptcp_init_sock(sk);
- 
- 	if (!mptcp_is_enabled(net))
- 		return -ENOPROTOOPT;
-
--- 
-2.40.1
 
