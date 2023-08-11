@@ -1,47 +1,46 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6572AB55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D625729E18
 	for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 15:58:43 +0000 (UTC)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-317b31203c7so1925249f8f.2
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3fe1d462762so19328535e9.0
         for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 08:58:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691769522; x=1692374322;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k5X9dCBbAfU6DjT+NDvr2dXxeO/cfwiJDXtpifKgXlA=;
-        b=AfNHOQJ2nkB4iLHU0XVMtVVb1UTnxAlXjmudsfmcOaORZaxOvRzrr6koOLBpjL69QQ
-         tt9xfEhLwbWEL3B7zOiiJ3zwChgyoycobsJf7svUsEVpCMgPOLnp3DPZtSoOnpVwxKDb
-         18FBd+zzEuVvYjyW1rujienvRQtSWWwKZMXGN6ZfK7/X3GRIsk4s6KKUq6Iiy26aWt6H
-         gmoTwFWF9zbFCXa8wxuWHRN2D6xzLGJg8vmjzlFdVyvV9h2whRtMfhHnzPBSyY7yLkO4
-         6CnTY9+d+D8b4YjvYmH8zjFo2tLhlqIO41WsVPYxWAyBdtCH2il3OvT08DS2+ywhFiiG
-         HYtA==
+        d=tessares.net; s=google; t=1691769521; x=1692374321;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B5z06Yt1CFJHs1YhwMNSjlQXmAuLI6Alb07sLJpaCQI=;
+        b=xJCN6775UE2xvvdCfcU9nxL8IDOi2W7BPOlO8cfLITsY10Jl4lYn9tzLh1ApTrqUK6
+         7+XCKLhY2ktBeLPphniupoolGUs+/dfWQs/qEg2Q3hkIvtKhIVDnTumyt8MH62r7fpZR
+         w2f6BIq2Je1kuHlo1d6GxtGgtHpqD30uYrS2tn2t3VHEIHWf1ZE1QjGXOCjGTv9JKJyD
+         AmpUxdSRJ6nau3FOBxSa/nXd6exE9gjNVBeKRO71+StNZGdYJlVKqsZ7lBlytoL3kKEf
+         RsCj9pE8E0O6AmTZoiXYFYaVsuapbkbE9Tk10e5orWkHzSLsKzkO8V86OFAyb0EjgPNh
+         FUHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691769522; x=1692374322;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k5X9dCBbAfU6DjT+NDvr2dXxeO/cfwiJDXtpifKgXlA=;
-        b=V1C1iwOMYhScKHKWs668cHu+LC2k5LZrNaRxEGrLyBTt9PvBF6n41pgC7N8mrJ8Dt1
-         PEPJNt8KflHpRyEU/3P3ux9GUF3Gs5IR7RQ6JkdxPFi4iLymh2xSkcsAeKfXI3qRc3J7
-         qm5TpgxxgZFvBh3Oi7h+xgG3J4H29xiiugPZ5dPk4kg8qqWTsJWqwqTzdAlLx8BfkaP9
-         Z1hNQ0Vvx26jniOHX+Yt51MN2N3+W/iOsBpZeGZwQKJoxOCv2hSKvP0V2ioiMb5X4F32
-         JAtx5c7gtlwhKgeVqevO6tiQNlu8/Z17BIyPPzGJjd7LuDGbviYUR61HRZtvRxChy/B/
-         nFrg==
-X-Gm-Message-State: AOJu0YwmBSTwHpNHDNIyMG9f0xK8oasgf2B7R4DBtyUvWxRd+BXjb4Ll
-	/20d30YzaBmoC9nnmhKwRCdWTA==
-X-Google-Smtp-Source: AGHT+IGSD4ePtHDWsMuK7XQNepQL96MNQFK7TtCmw2t1Syvy1CL8jN95/AgxPjnyyfqTQtK9EQ0vVw==
-X-Received: by 2002:adf:fc0f:0:b0:314:3a3d:5d1f with SMTP id i15-20020adffc0f000000b003143a3d5d1fmr1851910wrr.19.1691769521953;
-        Fri, 11 Aug 2023 08:58:41 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691769521; x=1692374321;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B5z06Yt1CFJHs1YhwMNSjlQXmAuLI6Alb07sLJpaCQI=;
+        b=RZnjzk6SbL/ROGBuefMpUKzW+Pkj2X49arWa/XqhOLd2euMACRhok49QjO1NxcKQxt
+         DdvYcWGHgqToOAv8w2HHdGEDOZynhlxj1b6I4X7syOCNxnMoQsCEnKrqHRZN81DBXVER
+         YS17/VH220X19op3jpCAmqyRv3jYlFGhduhbQu2QCQ0zeng8mBql8VDdDj1WczMgO6xB
+         1tni5fy9p2lpskUkBxVbbre17/FwrwJWndwHxEnBD7ioSEcTKfHKnzFm7JqVT3KQcnXI
+         m3RmAc/fL3+1mK6IeEebPhK4Cs/nbrruPCbGFJ2tm+kVgVSVSAEh9pUXpV0VTNdW/u/L
+         K/OA==
+X-Gm-Message-State: AOJu0YwgzpEj+/9EGY5mJ3apgre9q99ygRphABgnT3sPrTp5OQjFtgY6
+	eAIUk/cje5nk1nBt0TTQOqS+xA==
+X-Google-Smtp-Source: AGHT+IEKCxJXBwUq8BP8z2yfXnYXNYMrJNqbAG3zTrUi+N5aZg4YJiB5Hcu+SF9qIea5qmqKF6HLoA==
+X-Received: by 2002:adf:ff92:0:b0:317:ed01:dc48 with SMTP id j18-20020adfff92000000b00317ed01dc48mr1750655wrr.9.1691769520997;
+        Fri, 11 Aug 2023 08:58:40 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id m12-20020a5d4a0c000000b00317e9c05d35sm5834308wrq.85.2023.08.11.08.58.41
+        by smtp.gmail.com with ESMTPSA id m12-20020a5d4a0c000000b00317e9c05d35sm5834308wrq.85.2023.08.11.08.58.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Aug 2023 08:58:41 -0700 (PDT)
+        Fri, 11 Aug 2023 08:58:40 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Fri, 11 Aug 2023 17:57:14 +0200
-Subject: [PATCH net-next 01/14] mptcp: avoid unneeded mptcp_token_destroy()
- calls
+Subject: [PATCH net-next 00/14] mptcp: get rid of msk->subflow
+Date: Fri, 11 Aug 2023 17:57:13 +0200
+Message-Id: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-0-36183269ade8@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,81 +49,102 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-1-36183269ade8@tessares.net>
-References: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-0-36183269ade8@tessares.net>
-In-Reply-To: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-0-36183269ade8@tessares.net>
+X-B4-Tracking: v=1; b=H4sIAFla1mQC/z2NzQrCMBCEX6Xs2YWmIlhfRTyk2U1dND9kUy2Uv
+ rtB0MMcvhn4ZgPlIqxw6TYo/BKVFBuYQwfubuPMKNQYhn449mdjcMlaC9uAkWvLWvE/hVxdxrn
+ 1RQiTx6AP1GXyz/TG0ZI5ORoduQmaPRf2sn6fr/BzwW3fP33tXeCTAAAA
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
  David Ahern <dsahern@kernel.org>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Matthieu Baerts <matthieu.baerts@tessares.net>
+ Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ Kuniyuki Iwashima <kuniyu@amazon.com>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1720;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2949;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=gXoRie7DLKf3vWVejVmTZfC//Kg+jCDe1+Txjp6fEyI=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk1lqv+r3KsHtF8v8Wo26pcmdkgVeFoZMKt2vnr
- HOE8E3VCBeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZNZarwAKCRD2t4JPQmmg
- c5hhD/0c8KK8DF9+DihPAJVsBCw7OJK4Qsqj2v1GgkbmoYkVV/vFyweuzcYBNmZTwHt0Su6nykO
- yTlwWPLLzZhhIAXBOXbC3XB7d2jkyS3h2pqF/9NcTWo8weFJ8uSMbNlAe7PnjeMAIpzPkJrEK8H
- 4YkzZK9+ntc2MMMzT73WfsF5iC+FruQYPx/OhwC6yAEVeJ23v5qxEJJojrDZJN+x51fFdQdJNF/
- QvsWBAWSLqAXLxy+4Ds9b8q8FMkIXKXIaws85ymRXZ/94L20W9rPdHHljK1Ek1hYlHbD8LJNcxO
- No80OBKqkrAXLp3LEsaADiPDGyDQSMeaWkRjFZlSj7dybAooRafbK8PZ1Da3GUJsR3Iv8cbj+9O
- cjhYtxdA6xrGd7MsTFO2pwlVGHp3NCJQyIyqoQFgpjflevMdPrfX/1kA0i/dioxVacgWg8/5uLO
- 5S0HrjyyGNyngounFXMI4f4Lsouhe0X+DgUcSLMUqyEb+Dpt3XyyIh+nZDOFc9Ivvi1pzkGYovL
- fLLChmmsbzNCGm4exod+n3UvNvo6upaYtM9NJqaT8A7u8XfsWA9bbICQ2IVtU1htskbe1U0L1Bn
- Qyhhfb59KB54aTJX647M05snl4oFlidlaSmSjVcMZKw2963aE61PrSJtRdVXw2g/wzH2L6b4HFU
- 8k5iDsBxKuQShNg==
+ bh=FAB0/54LiYDvSFBl1VEoMwafatQAJWGC5dSIRjB6s/8=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk1lquKusHro9FD9KnIi/TEocqWKA86oGQaU2T9
+ Frb0jaMRsuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZNZargAKCRD2t4JPQmmg
+ c4cpEAClCe5ahldku+Tc2o7NA4ES2GkoMV+nz0drxdGqRRWfzsdUje8EnyFcHs7XNSfWI5el+5v
+ r24QOzS6KvGLCOaDHl8zlrC+rBBPMIDZgs5Zbh0xDMEWWm3fLxwqD1r492lAsQbbTOnHSc5aVNg
+ 1uceNkDi3rtsh+eWVXL8FFJGy9C8HifkUzlLuBfnZ28xi9kDHjb7Ri7E+MJcW5KsX4wk0YqR0S6
+ XaPt/1GRxDhcXQXrjBkcBdfb2azClEbmx+yhl/XS/5Ncd/Tl8qngTSDizSU+LGg+HwGEf+/AdSE
+ o008ZCzKRntucdRqqwsBTihH9SClJIcxH3IfR52oYLPZHCsjdl7y1c+K0gM33Z6rqcYzBmepMEE
+ u9rOF1VokLKIXWeY+zP1V57KoCWOSgxaYoH4AaZyQVmNFV/8TOZFhFXEs2gwcfsZcV9ngLAwVFx
+ 3R3rHN608AaqQZWnOEoxLGw874MArmFcINXH6zO/kus1YtpEirv5y2TVTY8I/fjw25+hVHBOeXa
+ JIFT2SiCc0l9J6+6aas4YauAHJdq39fCMV35zzRnDS0NkPcQx8RERu/KV8O/2C3s7o2Few0I13P
+ pv8HkKWx7vQx1QoBDkggmGDG9HCnU0go4AIU/mR/hcM2VDj+UsqeVxluAHmu/y+mlLwpDKeZK7Y
+ lO+60jixOsH9bUQ==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Paolo Abeni <pabeni@redhat.com>
+The MPTCP protocol maintains an additional struct socket per connection,
+mainly to be able to easily use tcp-level struct socket operations.
 
-The MPTCP protocol currently clears the msk token both at connect() and
-listen() time. That is needed to deal with failing connect() calls that
-can create a new token while leaving the sk in TCP_CLOSE,SS_UNCONNECTED
-status and thus allowing later connect() and/or listen() calls.
+This leads to several side effects, beyond the quite unfortunate /
+confusing 'subflow' field name:
 
-Let's deal with such failures explicitly, cleaning the token in a timely
-manner and avoid the confusing early mptcp_token_destroy().
+- active and passive sockets behaviour is inconsistent: only active ones
+  have a not NULL msk->subflow, leading to different error handling and
+  different error code returned to the user-space in several places.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+- active sockets uses an unneeded, larger amount of memory
+
+- passive sockets can't successfully go through accept(), disconnect(),
+  accept() sequence, see [1] for more details.
+
+The 13 first patches of this series are from Paolo and address all the
+above, finally getting rid of the blamed field:
+
+- The first patch is a minor clean-up.
+
+- In the next 11 patches, msk->subflow usage is systematically removed
+  from the MPTCP protocol, replacing it with direct msk->first usage,
+  eventually introducing new core helpers when needed.
+
+- The 13th patch finally disposes the field, and it's the only patch in
+  the series intended to produce functional changes.
+
+The last and 14th patch is from Kuniyuki and it is not linked to the
+previous ones: it is a small clean-up to get rid of an unnecessary check
+in mptcp_init_sock().
+
+[1] https://github.com/multipath-tcp/mptcp_net-next/issues/290
+
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- net/mptcp/protocol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Kuniyuki Iwashima (1):
+      mptcp: Remove unnecessary test for __mptcp_init_sock()
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 48e649fe2360..abb310548c37 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3594,7 +3594,6 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
- 	if (IS_ERR(ssock))
- 		return PTR_ERR(ssock);
- 
--	mptcp_token_destroy(msk);
- 	inet_sk_state_store(sk, TCP_SYN_SENT);
- 	subflow = mptcp_subflow_ctx(ssock->sk);
- #ifdef CONFIG_TCP_MD5SIG
-@@ -3624,6 +3623,8 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
- 	 * subflow_finish_connect()
- 	 */
- 	if (unlikely(err && err != -EINPROGRESS)) {
-+		/* avoid leaving a dangling token in an unconnected socket */
-+		mptcp_token_destroy(msk);
- 		inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
- 		return err;
- 	}
-@@ -3713,7 +3714,6 @@ static int mptcp_listen(struct socket *sock, int backlog)
- 		goto unlock;
- 	}
- 
--	mptcp_token_destroy(msk);
- 	inet_sk_state_store(sk, TCP_LISTEN);
- 	sock_set_flag(sk, SOCK_RCU_FREE);
- 
+Paolo Abeni (13):
+      mptcp: avoid unneeded mptcp_token_destroy() calls
+      mptcp: avoid additional __inet_stream_connect() call
+      mptcp: avoid subflow socket usage in mptcp_get_port()
+      net: factor out inet{,6}_bind_sk helpers
+      mptcp: mptcp: avoid additional indirection in mptcp_bind()
+      net: factor out __inet_listen_sk() helper
+      mptcp: avoid additional indirection in mptcp_listen()
+      mptcp: avoid additional indirection in mptcp_poll()
+      mptcp: avoid unneeded indirection in mptcp_stream_accept()
+      mptcp: avoid additional indirection in sockopt
+      mptcp: avoid ssock usage in mptcp_pm_nl_create_listen_socket()
+      mptcp: change the mpc check helper to return a sk
+      mptcp: get rid of msk->subflow
 
+ include/net/inet_common.h |   2 +
+ include/net/ipv6.h        |   1 +
+ net/ipv4/af_inet.c        |  46 ++++++-----
+ net/ipv6/af_inet6.c       |  10 ++-
+ net/mptcp/pm_netlink.c    |  30 +++----
+ net/mptcp/protocol.c      | 194 ++++++++++++++++++++++------------------------
+ net/mptcp/protocol.h      |  15 ++--
+ net/mptcp/sockopt.c       |  65 ++++++++--------
+ 8 files changed, 186 insertions(+), 177 deletions(-)
+---
+base-commit: 80f9ad046052509d0eee9b72e11d0e8ae31b665f
+change-id: 20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-9ad15cd9cdcb
+
+Best regards,
 -- 
-2.40.1
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
