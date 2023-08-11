@@ -1,163 +1,148 @@
-Received: from out-71.mta0.migadu.com (out-71.mta0.migadu.com [91.218.175.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF79C8468
-	for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 18:50:31 +0000 (UTC)
-Message-ID: <49f5a594-3db7-fb99-1083-7df1155d3357@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1691779829;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aTSMPU3IVVneEIppNm0unuUG3WBb/CMepnvLmC2MOQE=;
-	b=Jjy3Hxr8xfaB7kvP0hFkE6FNlEU+fNmjgZdvMgik8IBihqs5T7HAdH4Pqlni9gMLbuGSgd
-	9CiidqEcANKn2qFZX4vW2BjIZ3OLRw6Vy8Pu+rZ3DVayA0ATTCwYn/iXpIQxP3ousL0wg1
-	fbT4Op0fk3nfff5/hhL2b+/ut+BnoI0=
-Date: Fri, 11 Aug 2023 11:50:17 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5056219EF
+	for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 20:40:31 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-319694906a4so86179f8f.2
+        for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 13:40:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1691786429; x=1692391229;
+        h=content-transfer-encoding:in-reply-to:autocrypt:cc:content-language
+         :references:to:from:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W+hGnuZF195K0Kft5kotGH1yZ217MFuNsCzUQMBoQ90=;
+        b=TsNyAnE+lD+FowfM+4CfyTrlanzRgUFTXp11fTQcevkZbpZf2gS6qQwBboHWzIO4EX
+         UFUKKXMOPjcClGAFC/6S20U88hXqtgkcSjSVVKZQ0cy+05Y0HY/j3Hv0QUlcdfXUBfTG
+         rDt4g1Re/nQwtwxoanyGDqChWrUwQ1qxosA2D79h9SNmIDHsRB9BUGwCLVCbXkE4gCsm
+         /hmBJvZMsF1WeoaArZf4wjeRlowY/y3BLNP4eAmXuz+cjZlKaUwqdsrhN75O8zG+n1M5
+         t32YpkOAN5zsnxc1O7kOJD1M00Xrrg+pPlyE2UC3HymG6/ydsSbgkTgcL5cgZR3AErsf
+         sD9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691786429; x=1692391229;
+        h=content-transfer-encoding:in-reply-to:autocrypt:cc:content-language
+         :references:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W+hGnuZF195K0Kft5kotGH1yZ217MFuNsCzUQMBoQ90=;
+        b=FcXQmYwmjBWnNfvRMfIUR9UFw2G6fLSMVIzq1vnJECeksfaJJDN6FMci6RG3itRStE
+         x5TcICrfLP2UJJRfcfKjynJx+yt3AVUUSlv0kzEZxdafD6ebQ832rJmuXVs1XZhO+AyB
+         aVnOzgjy7nTgudmgD87WXv+4lm5VCozmice0bcnqojQO3VZVD6hshWspE8fA2QZr4OXV
+         hBlMvUJaFK1iTtPEYkdgKysNC/F2crjvBRiZqQSxbCFOXW0czoXTp+6hI+rKH9iii8+K
+         a6VrpwYVDMkrRd8n4XelcC60FfMzlVawCtxto07CDkBUo/qD6B+k+47G8lkY9XWCWPnR
+         UwGg==
+X-Gm-Message-State: AOJu0YzXN2TjPWjwwRgJqBh1fO0a2Nixp+rGsITMjD6E7G4yZ6rVXbOL
+	gOdtkpQrxL8En8sKfjz33nun7YALoPpoWp7ZK1s83w==
+X-Google-Smtp-Source: AGHT+IGIRgT7GVUDfdS0z7YtxWaFKAJoKowj0Ezw3996vUcJDyVttc7g6Pkt+MpMQ6JLeBZ9c53x5Q==
+X-Received: by 2002:a5d:6b4f:0:b0:317:708e:1c29 with SMTP id x15-20020a5d6b4f000000b00317708e1c29mr2165328wrw.40.1691786429219;
+        Fri, 11 Aug 2023 13:40:29 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:d07c:50b8:518e:aa8e? ([2a02:578:8593:1200:d07c:50b8:518e:aa8e])
+        by smtp.gmail.com with ESMTPSA id f17-20020adff451000000b00317efb41e44sm6468448wrp.18.2023.08.11.13.40.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Aug 2023 13:40:28 -0700 (PDT)
+Message-ID: <b0e26fb1-bc4f-45a1-9aff-475003f04151@tessares.net>
+Date: Fri, 11 Aug 2023 22:40:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v11 2/5] selftests/bpf: Use random netns name for
- mptcp
-Content-Language: en-US
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Florent Revest <revest@chromium.org>,
- Brendan Jackman <jackmanb@chromium.org>,
- Matthieu Baerts <matthieu.baerts@tessares.net>,
- Mat Martineau <martineau@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- John Johansen <john.johansen@canonical.com>, Paul Moore
- <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>,
- Stephen Smalley <stephen.smalley.work@gmail.com>,
- Eric Paris <eparis@parisplace.org>, Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
- bpf@vger.kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
- selinux@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <cover.1691125344.git.geliang.tang@suse.com>
- <15d7646940fcbb8477b1be1aa11a5d5485d10b48.1691125344.git.geliang.tang@suse.com>
- <8b706f66-2afa-b3d0-a13a-11f1ffb452fe@linux.dev>
- <20230807064044.GA11180@localhost.localdomain>
- <9a84e026-402d-b6d9-b6d1-57d91455da47@linux.dev>
- <20230809081944.GA29707@bogon>
- <ffd1bb86-ed32-3301-346a-e369219841de@linux.dev>
- <20230811092915.GA8364@bogon>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <20230811092915.GA8364@bogon>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Weekly meetings] MoM - 8th of August 2023
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+To: Mat Martineau <martineau@kernel.org>
+References: <dd5ca99a-df4b-4253-ae45-367e881a5eb4@tessares.net>
+Content-Language: en-GB
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzS5NYXR0aGlldSBC
+ YWVydHMgPG1hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQ+wsGSBBMBCAA8AhsDBgsJCAcD
+ AgYVCAIJCgsEFgIDAQIeAQIXgBYhBOjLhfdodwV6bif3eva3gk9CaaBzBQJhI2BOAhkBAAoJ
+ EPa3gk9CaaBzlQMQAMa1ZmnZyJlom5NQD3JNASXQws5F+owB1xrQ365GuHA6C/dcxeTjByIW
+ pmMWnjBH22Cnu1ckswWPIdunYdxbrahHE+SGYBHhxZLoKbQlotBMTUY+cIHl8HIUjr/PpcWH
+ HuuzHwfm3Aabc6uBOlVz4dqyEWr1NRtsoB7l4B2iRv4cAIrZlVF4j5imU0TAwZxBMVW7C4Os
+ gxnxr4bwyxQqqXSIFSVhniM5GY2BsM03cmKEuduugtMZq8FCt7p0Ec9uURgNNGuDPntk+mbD
+ WoXhxiZpbMrwGbOEYqmSlixqvlonBCxLDxngxYuh66dPeeRRrRy2cJaaiNCZLWDwbZcDGtpk
+ NyFakNT0SeURhF23dNPc4rQvz4It0QDQFZucebeZephTNPDXb46WSwNM7242qS7UqfVm1OGa
+ Q8967qk36VbRe8LUJOfyNpBtO6t9R2IPJadtiOl62pCmWKUYkxtWjL+ajTkvNUT6cieVLRGz
+ UtWT6cjwL1luTT5CKf43+ehCmlefPfXR50ZEC8oh7Yens9m/acnvUL1HkAHa8SUOOoDd4fGP
+ 6Tv0T/Cq5m+HijUi5jTHrNWMO9LNbeKpcBVvG8q9B3E2G1iazEf1p4GxSKzFgwtkckhRbiQD
+ ZDTqe7aZufQ6LygbiLdjuyXeSkNDwAffVlb5V914Xzx/RzNXWo0AzsFNBFXj+ekBEADn679L
+ HWf1qcipyAekDuXlJQI/V7+oXufkMrwuIzXSBiCWBjRcc4GLRLu8emkfyGu2mLPH7u3kMF08
+ mBW1HpKKXIrT+an2dYcOFz2vBTcqYdiAUWydfnx4SZnHPaqwhjyO4WivmvuSlwzl1FH1oH4e
+ OU44kmDIPFwlPAzV7Lgv/v0/vbC5dGEyJs3XhJfpNnN/79cg6szpOxQtUkQi/X411zNBuzqk
+ FOkQr8bZqkwTu9+aNOxlTboTOf4sMxfXqUdOYgmLseWHt6J8IYYz6D8CUNXppYoVL6wFvDL5
+ ihLRlzdjPzOt1uIrOfeRsp3733/+bKxJWwdp6RBjJW87QoPYo8oGzVL8iasFvpd5yrEbL/L/
+ cdYd2eAYRja/Yg9CjHuYA/OfIrJcR8b7SutWx5lISywqZjTUiyDDBuY31lypQpg2GO/rtYxf
+ u03CJVtKsYtmip9eWDDhoB2cgxDJNbycTqEf8jCprLhLay2vgdm1bDJYuK2Ts3576/G4rmq2
+ jgDG0HtV2Ka8pSzHqRA7kXdhZwLe8JcKA/DJXzXff58hHYvzVHUvWrezBoS6H3m9aPqKyTF4
+ 1ZJPIUBUphhWyQZX45O0HvU/VcKdvoAkJb1wqkLbn7PFCoPZnLR0re7ZG4oStqMoFr9hbO5J
+ ooA6Sd4XEbcski8eXuKo8X4kMKMHmwARAQABwsFfBBgBAgAJBQJV4/npAhsMAAoJEPa3gk9C
+ aaBzlWcP/1iBsKsdHUVsxubu13nhSti9lX+Lubd0hA1crZ74Ju/k9d/X1x7deW5oT7ADwP6+
+ chbmZsACKiO3cxvqnRYlLdDNs5vMc2ACnfPL8viVfBzpZbm+elYDOpcUc/wP09Omq8EAtteo
+ vTqyY/jsmpvJDGNd/sPaus94iptiZVj11rUrMw5V/eBF5rNhrz3NlJ1WQyiN9axurTnPBhT5
+ IJZLc2LIXpCCFta+jFsXBfWL/TFHAmJf001tGPWG5UpC5LhbuttYDztOtVA9dQB2TJ3sVFgg
+ I1b7SB13KwjA+hoqst/HcFrpGnHQnOdutU61eWKGOXgpXya04+NgNj277zHjXbFeeUaXoALg
+ cu7YXcQKRqZjgbpTF6Nf4Tq9bpd7ifsf6sRflQWA9F1iRLVMD9fecx6f1ui7E2y8gm/sLpp1
+ mYweq7/ZrNftLsi+vHHJLM7D0bGOhVO7NYwpakMY/yfvUgV46i3wm49m0nyibP4Nl6X5YI1k
+ xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
+ z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
+ wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
+In-Reply-To: <dd5ca99a-df4b-4253-ae45-367e881a5eb4@tessares.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 8/11/23 2:29 AM, Geliang Tang wrote:
-> On Thu, Aug 10, 2023 at 10:53:38PM -0700, Martin KaFai Lau wrote:
->> On 8/9/23 1:19 AM, Geliang Tang wrote:
->>> On Tue, Aug 08, 2023 at 11:03:30PM -0700, Martin KaFai Lau wrote:
->>>> On 8/6/23 11:40 PM, Geliang Tang wrote:
->>>>> On Fri, Aug 04, 2023 at 05:23:32PM -0700, Martin KaFai Lau wrote:
->>>>>> On 8/3/23 10:07 PM, Geliang Tang wrote:
->>>>>>> Use rand() to generate a random netns name instead of using the fixed
->>>>>>> name "mptcp_ns" for every test.
->>>>>>>
->>>>>>> By doing that, we can re-launch the test even if there was an issue
->>>>>>> removing the previous netns or if by accident, a netns with this generic
->>>>>>> name already existed on the system.
->>>>>>>
->>>>>>> Note that using a different name each will also help adding more
->>>>>>> subtests in future commits.
->>>>>
->>>>> Hi Martin,
->>>>>
->>>>> I tried to run mptcp tests simultaneously, and got "Cannot create
->>>>> namespace file "/var/run/netns/mptcp_ns": File exists" errors sometimes.
->>>>> So I add this patch to fix it.
->>>>>
->>>>> It's easy to reproduce, just run this commands in multiple terminals:
->>>>>     > for i in `seq 1 100`; do sudo ./test_progs -t mptcp; done
->>>>
->>>> Not only the "-t mptcp" test. Other tests in test_progs also don't support
->>>> running parallel in multiple terminals. Does it really help to test the bpf
->>>> part of the prog_tests/mptcp.c test by running like this? If it wants to
->>>> exercise the other mptcp networking specific code like this, a separate
->>>> mptcp test is needed outside of test_progs and it won't be run in the bpf
->>>> CI.
->>>>
->>>> If you agree, can you please avoid introducing unnecessary randomness to the
->>>> test_progs where bpf CI and most users don't run in this way?
->>>
->>> Thanks Martin. Sure, I agree. Let's drop this patch.
->>
->> Thanks you.
->>
->>>> I have a high level question. In LPC 2022
->>>> (https://lpc.events/event/16/contributions/1354/), I recall there was idea
->>>> in using bpf to make other mptcp decision/policy. Any thought and progress
->>>> on this? This set which only uses bpf to change the protocol feels like an
->>>> incomplete solution.
->>>
->>> We are implementing MPTCP packet scheduler using BPF. Patches aren't
->>> sent to BPF mail list yet, only temporarily on our mptcp repo[1].
->>>
->>> Here are the patches:
->>>
->>>    selftests/bpf: Add bpf_burst test
->>>    selftests/bpf: Add bpf_burst scheduler
->>>    bpf: Export more bpf_burst related functions
->>>    selftests/bpf: Add bpf_red test
->>>    selftests/bpf: Add bpf_red scheduler
->>>    selftests/bpf: Add bpf_rr test
->>>    selftests/bpf: Add bpf_rr scheduler
->>>    selftests/bpf: Add bpf_bkup test
->>>    selftests/bpf: Add bpf_bkup scheduler
->>>    selftests/bpf: Add bpf_first test
->>>    selftests/bpf: Add bpf_first scheduler
->>>    selftests/bpf: Add bpf scheduler test
->>>    selftests/bpf: add two mptcp netns helpers
->>>    selftests/bpf: use random netns name for mptcp
->>>    selftests/bpf: Add mptcp sched structs
->>>    bpf: Add bpf_mptcp_sched_kfunc_set
->>>    bpf: Add bpf_mptcp_sched_ops
->>>
->>> If you could take a look at these patches in advance, I would greatly
->>> appreciate it. Any feedback is welcome.
->>>
->>> [1]
->>> https://github.com/multipath-tcp/mptcp_net-next.git
->>
->> Thanks for sharing. I did not go into the details. iiuc, the scheduler is
->> specific to a namespace. Do you see if it is useful to have more finer
->> control like depending on what IP address it is connected to? BPF policy is
->> usually found more useful to have finer policy control than global or
->> per-netns.
->>
->> The same question goes for the fmod_ret here in this patch. The
->> progs/mptcpify.c selftest is as good as upgrading all TCP connections. Is it
->> your only use case and no need for finer selection?
+Hi Mat,
+
+On 10/08/2023 18:21, Matthieu Baerts wrote:
+
+(...)
+
+>     - Features for other trees:
 > 
-> This per-netns control is just the first step. We do need finer selection. The
-> most ideal mode is to select one app to upgrade it's TCP connections only. So
-> per-cgroup control is much better than per-netns. But we haven't found a good
-> per-cgroup solution yet.
+>         - [d627333533b4] mptcp: refactor push_pending logic (Geliang Tang)
+>         - [6c82fef59c01] mptcp: drop last_snd and MPTCP_RESET_SCHEDULER
+> (Geliang Tang)
+>         - [e34214022d50] mptcp: add struct mptcp_sched_ops (Geliang Tang)
+>         - [1a9a9a5e01f5] mptcp: add a new sysctl scheduler (Geliang Tang)
+>         - [e7e924381b00] mptcp: add sched in mptcp_sock (Geliang Tang)
+>         - [7ef0a0657704] mptcp: add scheduled in mptcp_subflow_context
+> (Geliang Tang)
+>         - [f03f04926ad1] mptcp: add sched_data helpers (Geliang Tang)
+>         - [354bd4e094bb] mptcp: add scheduler wrappers (Geliang Tang)
+>         - [44505f900b4e] mptcp: use get_send wrapper (Geliang Tang)
+>         - [037427cc1f31] mptcp: use get_retrans wrapper (Geliang Tang)
+>         - [1644cb7a1faf] mptcp: register default scheduler (Geliang Tang):
+>             - move "mptcp: add sched_data helpers" lower → TODO
 
-Selecting an app or cgroup can sort of be done by getting the current task or 
-current cgroup (there is helper to do that). I am imagining eventually it will 
-want to decide the protocol upgrade and/or the mptcp-scheduler when the 
-destination IP is decided. This fmod_ret upgrade for all acts like a global knob 
-(sysctl) and feels like a hack or at least incomplete. However, I also don't see 
-a clean way to do that for now in the current shape.
+Just did:
 
-Please respin another revision to address the earlier selftest comment on the 
-netns name. Thanks.
+New patches for t/upstream:
+- ec996909f801: Revert: "mptcp: add sched_data helpers"
+- 7d1f6c17ffd6: conflict in t/mptcp-add-scheduler-wrappers
+- 0f0b53ff04b2: mptcp: add sched_data helpers 2:
+  - I moved the new code at the end
+- 94f491eb3eba: tg:msg: remove tmp suffix
+- Results: 0c19f8d9b23d..2d42b08369ef (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230811T202752
+
+>             - Mat will check if it is OK to send them
+>             - Idea is to send them next week if possible
 
 
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
