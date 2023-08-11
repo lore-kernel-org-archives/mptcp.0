@@ -1,47 +1,46 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3D32AB58
-	for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 15:58:45 +0000 (UTC)
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-4fe82ac3ab4so3292238e87.1
-        for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 08:58:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCBA360D0
+	for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 15:58:46 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3fe501e0b4cso19784315e9.1
+        for <mptcp@lists.linux.dev>; Fri, 11 Aug 2023 08:58:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1691769523; x=1692374323;
+        d=tessares.net; s=google; t=1691769525; x=1692374325;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lhePiwzsSx/PL85mddTkFwpXPwkG7Z75k06o+iuXV0A=;
-        b=v1ebNHHM6M1mmtuZYCv9hRgIOkNvxHx2SBgalyfmwDZhrfEP9IFSEcEkc4TRnRuPDv
-         Ao0uoh4HYY2as2H7y1J9ab6sbArcrdWg7SaIIeVQhpHhugrq2WkDi3Emdx/CbDhYrVBM
-         D+lPAgyFcDqUpd2x8FeKuRbhvWnEgQaGpZCWhjB7Nwi+rIIhgoiueuPj5VE12UgA0dI0
-         h3oYYd9MkdE1qfpUX72Aat2uQTVWut57m3OIDEvheqy/KjoG3gPPP9gnWHvbvLTR5cDr
-         N8aKLr3ik3cVQ/ZjSY56pHpzWz4ou7/3bqoVW9jSxs1angf6mLpdQeVnNoc+8EJP1btk
-         NF2g==
+        bh=EwluUaIaFp8xw9bbqeJza0dSEd7d6Y+8KVbDaj+RAU4=;
+        b=RPmoWFEUY34CsBWB1T3YgIpK7QheQyy4afzp1jWMob8P8SIQRh71QllzXtbBnu5ypi
+         8hFjDnYvAwUeOjangHtczaddwuBagCWIlcyDbCax8XLaMVpJp1lNqfcGtxwBpJXY0lK3
+         x/bHsUOPFYsvmYLaZv/jhe5on7mnv2jPxhfHlWoO+fxC2jYt0v2XeQeXY+kFM68ChsRJ
+         dCVBBTvuHcHF1dj0TGHrwyqkhkZmqmy16SCK1qseyFHU0T8LXOkR/m9oClhuK93fAde3
+         bTA348TQfYgGgX+cKiXtf1EF6CgXK/Q6HNB7BCuJCHCEHpLjNZPduLRaWcPWN/Mslx+0
+         TKtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691769523; x=1692374323;
+        d=1e100.net; s=20221208; t=1691769525; x=1692374325;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lhePiwzsSx/PL85mddTkFwpXPwkG7Z75k06o+iuXV0A=;
-        b=BJx7O21SQycQtsmI5jP++AW5V9NpdWr2Ymo2un+5zRx9TzgsUnTMjt+nmTe7KrPPbY
-         VvMr8a+GH46dfZDHfR0WwPArOE0ngTcqaaSnvX2yChQcqv0E+qyWJmQkKecEgQDtSq5f
-         6qvf3SFfWcmGtzDLYSzcN498gzYUYOxF38g6twHXc9EwssnxZHaf2eVwcr7Z16BkbDSJ
-         tWjj1mCmd/zmuDde7W8caBY2ZxjPOtK5avwcdJOihkr8wfoeOqFLgwGAP13qbF+ZRNZk
-         12/T6DFJ7jN/o8Jyh3deSNd7gOZTrAq/nmC5nt6DMap7hpKCHi0s/B0y9rMqdo9duE8L
-         i3Nw==
-X-Gm-Message-State: AOJu0Ywo2fLHg/sBgLEqcncXhTGfSCfFbUwcYQV21SIBdAb+MDxmiaQR
-	rkpwDOGswTrvcyxZ4Ki0AEDdwA==
-X-Google-Smtp-Source: AGHT+IEujOlzrfqvXdCg0+L8AtbpF7nTqrrFN85u705jORmwlIy3xMjlO1zC1yyK/tf3s2Jwb6Ap3Q==
-X-Received: by 2002:a05:6512:308c:b0:4fe:8c1d:9e7b with SMTP id z12-20020a056512308c00b004fe8c1d9e7bmr2115985lfd.49.1691769522977;
-        Fri, 11 Aug 2023 08:58:42 -0700 (PDT)
+        bh=EwluUaIaFp8xw9bbqeJza0dSEd7d6Y+8KVbDaj+RAU4=;
+        b=Yv7Ui2ppJZTdjWqDFESAiHM6z4Bk0X4fi1T6opL23THjVt5YHFQ7LpULKQHrUY0IeF
+         JfaOrRAz+ks0eXczWp7qyLOF63Q8quQIvgIrMHV9rSCfAN7M6v+EaGBJk7+S+BRoGdJf
+         xi1eicyY61MFhsXxdsxS14QGe8q7GBZlGp3fjKXhqTbhSseFoqzNdsFHdawn+uSMTPgR
+         ABniM9uVY1ulCvJmlfWphUtHOduf584SqtpZNRoh/ejBaqfCTJu862MDMA2rfUOXC3mq
+         z02wW3ec4Y0/2D/vzPyZUHKxhfvb2I6tFeIZSIqiA+udUQMg3SR6R0hyXqlAOsnDGrTM
+         lrOA==
+X-Gm-Message-State: AOJu0YwGGI2RWNzV+IIXeuVUmROLQiugyOwuigcs8rZb5/YjFFNVFe1G
+	d/YV/dPYcbb9IdZoVqhx08of2g==
+X-Google-Smtp-Source: AGHT+IHBz37I7lskQLuIvJ9UxsVV8epJemJB05nNf6IU/WnHy8VNp7xJ65qSymo4pOT8HF3AvfIVnA==
+X-Received: by 2002:adf:f042:0:b0:317:15f5:a1ca with SMTP id t2-20020adff042000000b0031715f5a1camr1780613wro.10.1691769524854;
+        Fri, 11 Aug 2023 08:58:44 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id m12-20020a5d4a0c000000b00317e9c05d35sm5834308wrq.85.2023.08.11.08.58.42
+        by smtp.gmail.com with ESMTPSA id m12-20020a5d4a0c000000b00317e9c05d35sm5834308wrq.85.2023.08.11.08.58.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Aug 2023 08:58:42 -0700 (PDT)
+        Fri, 11 Aug 2023 08:58:44 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Fri, 11 Aug 2023 17:57:15 +0200
-Subject: [PATCH net-next 02/14] mptcp: avoid additional
- __inet_stream_connect() call
+Date: Fri, 11 Aug 2023 17:57:17 +0200
+Subject: [PATCH net-next 04/14] net: factor out inet{,6}_bind_sk helpers
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,7 +49,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-2-36183269ade8@tessares.net>
+Message-Id: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-4-36183269ade8@tessares.net>
 References: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-0-36183269ade8@tessares.net>
 In-Reply-To: <20230811-upstream-net-next-20230811-mptcp-get-rid-of-msk-subflow-v1-0-36183269ade8@tessares.net>
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
@@ -60,135 +59,126 @@ To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3783;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3806;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=9Qe781+27wzhv16vF50KO5HsGzkjYeuVU2/sb7jT8+c=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk1lqv5fFsBgTBTnGPQG9RVKTvL3RVK7VoW1/dY
- tAt+/hU8biJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZNZarwAKCRD2t4JPQmmg
- c4sGEADj8+wJ8gLXhu4xLA3eshwVHpAUMPU6fl5G1adbkUaHa4ymSWx/xIIWUFc+BgqfFa4bUHA
- JZSHhjd5Ui/PTvxdKjznOkZlfpJJrXAke5riO8m2bkSLlAHIyh6YfaeXIZ4BqylD8FjjQi8fu/J
- Mi7HshwB5pwlR6mPcviJi8hiUV6ha9Txs/2nJ4l0uVpNw9i37VyzWW7N7S6MipOFkCiwmQrpnLo
- 0Hf69GX16W8QNlyvUxNcBcZr2KilIWTIYAYN/LvyP0TmzCKSAaQqKPqXBRwcDxus7tn3BxmRHig
- aA4FJPpHoM5XRCz5EtPtH5NNKOWWcUrsTlhiWlfKwcGqdVZwM5yTeD2U/LvEcyC43MMhUsTsBk2
- KmM8E+oeTleZtGwTWAuD/dJjtY+KrW86S1iheFW9obk9GQIJNTK8SUzzRBhmF3hdpAZKQlMcNGc
- KZfbu0kd7uPFy6vaAtDtURGiU1YWRx0GT8SNcl4BxqzalwVQaS3oF0VdQkAE3yE7XC7u3kmDsBG
- XjrvyAU9j8Au9o0OtUEbvr8FST8dYjQdG8z/il7pD4pHB5FALIw5jnDpXLIFWRf91KIIZZQAQh6
- 7XwvLCdlTkwdU3yeM4FvlDciFXTqzbUHmjQMzSh+n7cLweyaMLk6p0fdSDg138LeQLLqjXfAewy
- fztkK3c9TEI9XkQ==
+ bh=BsYDUl/DUbLVHU4Xpb77aTgJyY+cTGBHLN6ctIYlp+g=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk1lqvcGmbN1LPAIgSii681NHqkjqbG/PqT7qgh
+ uX2O1Pdu8GJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZNZarwAKCRD2t4JPQmmg
+ c9kDD/9Rkt0oclO8gRzT4WMkWSflZ5DKPreOTVjGK2jDzc+Ey2XwhTDLf34/LzizqyAiyyReo9I
+ RA4Kqa4wLste8hiIZmf69CR8WpBwgjmK4k8S9Awwi4g1Iy/21RbOtqxwcf4HprWrOJhQ/iC363F
+ TKTDGI8YHuSd9TJFB8c1YEz3aNvuD67F4n1KJ8x9V7jRqnSUCUKAFShc0KC5I5dqi86QAvV7sud
+ uPL7+fyUb70hhV3GJMrojHPgQROlTC8fQYTLV4bs2Yf52728rCx/zMS2MbvNxWkCYB310cAnDj+
+ 2hqxDhyHP6Y0pvsCs4zpXEfq1q9RW52HlM5WBA74Nru9OaLhSQsI7YIiWu09GSIJMFzV0U825vv
+ 09F5P85g/Bo0Lp5lwmKHp20P98IHU5VYzxbd5uaQB1JU9iHX/CDD9w6lWZKScdgfhVk9NMto7S2
+ zeP15nQrGFzajLSffRNsofkuRKu9DUhvMRSdxdkbTGBHR4Q0qjlvEF4VYgTs1LeZq6+tXwnPT1r
+ Z+Fynw1LmFa+TBv+KsTKA5SUcjPZ5pP3KsBAvVK0H1k7zSQiGM8v4UhTHrcjUxLYkzeIjM22I4Z
+ OxTcbrUNPVKhAJ48mQcQlyx1tL9hONyS1Aiqtcwhm2lkNjEJ0qRLWu+aXtu2sJamxLPglVCaMZV
+ p8BNC20K7enjzJg==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Paolo Abeni <pabeni@redhat.com>
 
 The mptcp protocol maintains an additional socket just to easily
-invoke a few stream operations on the first subflow. One of them is
-__inet_stream_connect().
+invoke a few stream operations on the first subflow. One of
+them is bind().
 
-We are going to remove the first subflow socket soon, so avoid
-the additional indirection via at connect time, calling directly
-into the sock-level connect() ops.
+Factor out the helpers operating directly on the struct sock, to
+allow get rid of the above dependency in the next patch without
+duplicating the existing code.
 
-The sk-level connect never return -EINPROGRESS, cleanup the error
-path accordingly. Additionally, the ssk status on error is always
-TCP_CLOSE. Avoid unneeded access to the subflow sk state.
-
-No functional change intended.
+No functional changes intended.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+Acked-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- net/mptcp/protocol.c | 49 +++++++++++++++++++++++++++++++++----------------
- 1 file changed, 33 insertions(+), 16 deletions(-)
+ include/net/inet_common.h |  1 +
+ include/net/ipv6.h        |  1 +
+ net/ipv4/af_inet.c        |  8 ++++++--
+ net/ipv6/af_inet6.c       | 10 +++++++---
+ 4 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index abb310548c37..b888d6339c80 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3589,22 +3589,24 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct socket *ssock;
- 	int err = -EINVAL;
-+	struct sock *ssk;
+diff --git a/include/net/inet_common.h b/include/net/inet_common.h
+index b86b8e21de7f..8e97de700991 100644
+--- a/include/net/inet_common.h
++++ b/include/net/inet_common.h
+@@ -42,6 +42,7 @@ int inet_shutdown(struct socket *sock, int how);
+ int inet_listen(struct socket *sock, int backlog);
+ void inet_sock_destruct(struct sock *sk);
+ int inet_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len);
++int inet_bind_sk(struct sock *sk, struct sockaddr *uaddr, int addr_len);
+ /* Don't allocate port at this moment, defer to connect. */
+ #define BIND_FORCE_ADDRESS_NO_PORT	(1 << 0)
+ /* Grab and release socket lock. */
+diff --git a/include/net/ipv6.h b/include/net/ipv6.h
+index 2acc4c808d45..22643ffc2df8 100644
+--- a/include/net/ipv6.h
++++ b/include/net/ipv6.h
+@@ -1216,6 +1216,7 @@ void inet6_cleanup_sock(struct sock *sk);
+ void inet6_sock_destruct(struct sock *sk);
+ int inet6_release(struct socket *sock);
+ int inet6_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len);
++int inet6_bind_sk(struct sock *sk, struct sockaddr *uaddr, int addr_len);
+ int inet6_getname(struct socket *sock, struct sockaddr *uaddr,
+ 		  int peer);
+ int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
+diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+index 9b2ca2fcc5a1..2fd23437c1d2 100644
+--- a/net/ipv4/af_inet.c
++++ b/net/ipv4/af_inet.c
+@@ -431,9 +431,8 @@ int inet_release(struct socket *sock)
+ }
+ EXPORT_SYMBOL(inet_release);
  
- 	ssock = __mptcp_nmpc_socket(msk);
- 	if (IS_ERR(ssock))
- 		return PTR_ERR(ssock);
+-int inet_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
++int inet_bind_sk(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ {
+-	struct sock *sk = sock->sk;
+ 	u32 flags = BIND_WITH_LOCK;
+ 	int err;
  
- 	inet_sk_state_store(sk, TCP_SYN_SENT);
--	subflow = mptcp_subflow_ctx(ssock->sk);
-+	ssk = msk->first;
-+	subflow = mptcp_subflow_ctx(ssk);
- #ifdef CONFIG_TCP_MD5SIG
- 	/* no MPTCP if MD5SIG is enabled on this socket or we may run out of
- 	 * TCP option space.
- 	 */
--	if (rcu_access_pointer(tcp_sk(ssock->sk)->md5sig_info))
-+	if (rcu_access_pointer(tcp_sk(ssk)->md5sig_info))
- 		mptcp_subflow_early_fallback(msk, subflow);
- #endif
--	if (subflow->request_mptcp && mptcp_token_new_connect(ssock->sk)) {
--		MPTCP_INC_STATS(sock_net(ssock->sk), MPTCP_MIB_TOKENFALLBACKINIT);
-+	if (subflow->request_mptcp && mptcp_token_new_connect(ssk)) {
-+		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_TOKENFALLBACKINIT);
- 		mptcp_subflow_early_fallback(msk, subflow);
- 	}
- 	if (likely(!__mptcp_check_fallback(msk)))
-@@ -3613,27 +3615,42 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
- 	/* if reaching here via the fastopen/sendmsg path, the caller already
- 	 * acquired the subflow socket lock, too.
- 	 */
--	if (msk->fastopening)
--		err = __inet_stream_connect(ssock, uaddr, addr_len, O_NONBLOCK, 1);
--	else
--		err = inet_stream_connect(ssock, uaddr, addr_len, O_NONBLOCK);
--	inet_sk(sk)->defer_connect = inet_sk(ssock->sk)->defer_connect;
-+	if (!msk->fastopening)
-+		lock_sock(ssk);
-+
-+	/* the following mirrors closely a very small chunk of code from
-+	 * __inet_stream_connect()
-+	 */
-+	if (ssk->sk_state != TCP_CLOSE)
-+		goto out;
-+
-+	if (BPF_CGROUP_PRE_CONNECT_ENABLED(ssk)) {
-+		err = ssk->sk_prot->pre_connect(ssk, uaddr, addr_len);
-+		if (err)
-+			goto out;
-+	}
-+
-+	err = ssk->sk_prot->connect(ssk, uaddr, addr_len);
-+	if (err < 0)
-+		goto out;
-+
-+	inet_sk(sk)->defer_connect = inet_sk(ssk)->defer_connect;
-+
-+out:
-+	if (!msk->fastopening)
-+		release_sock(ssk);
+@@ -454,6 +453,11 @@ int inet_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
  
- 	/* on successful connect, the msk state will be moved to established by
- 	 * subflow_finish_connect()
- 	 */
--	if (unlikely(err && err != -EINPROGRESS)) {
-+	if (unlikely(err)) {
- 		/* avoid leaving a dangling token in an unconnected socket */
- 		mptcp_token_destroy(msk);
--		inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
-+		inet_sk_state_store(sk, TCP_CLOSE);
- 		return err;
- 	}
+ 	return __inet_bind(sk, uaddr, addr_len, flags);
+ }
++
++int inet_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
++{
++	return inet_bind_sk(sock->sk, uaddr, addr_len);
++}
+ EXPORT_SYMBOL(inet_bind);
  
--	mptcp_copy_inaddrs(sk, ssock->sk);
--
--	/* silence EINPROGRESS and let the caller inet_stream_connect
--	 * handle the connection in progress
--	 */
-+	mptcp_copy_inaddrs(sk, ssk);
- 	return 0;
+ int __inet_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len,
+diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
+index 9f9c4b838664..3ec0359d5c1f 100644
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -435,10 +435,8 @@ static int __inet6_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len,
+ 	goto out;
  }
  
+-/* bind for INET6 API */
+-int inet6_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
++int inet6_bind_sk(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ {
+-	struct sock *sk = sock->sk;
+ 	u32 flags = BIND_WITH_LOCK;
+ 	const struct proto *prot;
+ 	int err = 0;
+@@ -462,6 +460,12 @@ int inet6_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 
+ 	return __inet6_bind(sk, uaddr, addr_len, flags);
+ }
++
++/* bind for INET6 API */
++int inet6_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
++{
++	return inet6_bind_sk(sock->sk, uaddr, addr_len);
++}
+ EXPORT_SYMBOL(inet6_bind);
+ 
+ int inet6_release(struct socket *sock)
 
 -- 
 2.40.1
