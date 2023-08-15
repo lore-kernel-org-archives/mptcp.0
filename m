@@ -1,128 +1,57 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C77185D
-	for <mptcp@lists.linux.dev>; Tue, 15 Aug 2023 07:44:33 +0000 (UTC)
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-56e0bd33797so1802803eaf.0
-        for <mptcp@lists.linux.dev>; Tue, 15 Aug 2023 00:44:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12F46FA9
+	for <mptcp@lists.linux.dev>; Tue, 15 Aug 2023 10:00:36 +0000 (UTC)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-51e2a6a3768so7142924a12.0
+        for <mptcp@lists.linux.dev>; Tue, 15 Aug 2023 03:00:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692085472; x=1692690272;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=++wPvuFWLBUdW3lkM6ZiZ4yjmZS+Ku1zUG7AHWeceEQ=;
-        b=GY9oeHRVKtJdJE3iAKcCUGMG6EUU+Cgnlx56YAqcFhAv3qk/aNfXuQXeuirtwHj48n
-         oX8B5+04mfX+DnaXNcKWJtw7GRf/Tszi/UTyJ/Hp0Q+zxdxqezzcoXhDV+dzf24cNzFS
-         oZ40McWLS+nS7Uafq+IRqrvNMcNFCOkGljTm2t68claJoCr/TWSZuLs/EC3wYZBM8kXO
-         Zmu94BMS18xouL3iLuuFv3sUgJon0Zgvv02mpvos24+ugul9QkqYejupYXkkezxxP1tj
-         VaJGbqaVJAHG8tj856QpmV3zn4LHUzcukSsOWI/Hm1Ytrh1awKrR9cUvv7tJ50kRSDR8
-         PcMA==
+        d=tessares.net; s=google; t=1692093634; x=1692698434;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JIHhKGLq9kYw80lI9JRwmvfdbRSIvtR1NIaGzF3K97E=;
+        b=yOeOK9cczh9h07xjUBf69IxpRX0qAmEjJGyNJJ4hV9W2DFgbIWq/4a5Kn+r6KaU3Gm
+         HZktqHybMIyW5KUcD0kSY9P42njV6UkiYYb66nYLmGZPzBjhb/B07m0jLYEvEBatVzpF
+         XAPKfvygrxpw7GJdoCGh5/TAIhcjcEYxxLMTmJFuEtBtRR5uLd1qg8Adv+bdli+j84ub
+         1rbSEzHrmSX+fanO6mNGIvDdS+lN/Nrhn70c5zWIbP1bAkd7sgMNWwOcyom/Hrn8VIL1
+         QWHWfvx42YzPRPAMunL30h+A4puNn+1sybnRwGxBihl7TfDBfQAXxC+3526yGzfYEpg/
+         ShaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692085472; x=1692690272;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=++wPvuFWLBUdW3lkM6ZiZ4yjmZS+Ku1zUG7AHWeceEQ=;
-        b=S1NlHmZ4+WoC7MvOg2/9tZBB30p0KLqD2vvZmjc7QvKbhvHbsHSHUjbCSi+bxioWAn
-         +opFVKecwMHL4ANnKaZQeNLb2/Buns+LmPTsiXrZ3z3gaXhfjObrk5yEmWAKu3qdrMFl
-         lij72f16aTiPwAhiiFpnYxm4Bj07EFuAvGsE6v9S9sVRjGKnX73LK3KuPsRp+1h3N1AW
-         ODcU+QbCPiYYKvoYsGtp3HOb54Q6Yg4C5vgjBtsy3kpL+BVWrHRQccuoaef7nekMj94I
-         JN6yQ3WGux6mY7y5APfI8EHgttg5YzPwNjtXRfIu2voNptpX5AvmDnMz6gl5HjEg6vQx
-         F+xA==
-X-Gm-Message-State: AOJu0YwKEHOiM2YcAE4JSQyu6N4qrZ2/HPJq3mPQBDbV8wUvIsHbJjaN
-	sw+i6XIGVO0SigTTgbhJug==
-X-Google-Smtp-Source: AGHT+IGz5Ky4ftfe1gcX03oxHwVyIxDBVd8DPND+6nef3cMwbaTLyOlt58qw3OaOJKbORbJF4x+Wsw==
-X-Received: by 2002:a05:6871:821:b0:1b3:caa2:eedb with SMTP id q33-20020a056871082100b001b3caa2eedbmr12930061oap.44.1692085472533;
-        Tue, 15 Aug 2023 00:44:32 -0700 (PDT)
-Received: from [127.0.0.1] ([23.102.139.111])
-        by smtp.gmail.com with ESMTPSA id x192-20020a4a41c9000000b0056d2dde4cb7sm5552329ooa.0.2023.08.15.00.44.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Aug 2023 00:44:32 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <6608f9d9fea9d2bc57ec8378a7afa4fd52c66d17.1692080803.git.geliang.tang@suse.com>
-References:
- <6608f9d9fea9d2bc57ec8378a7afa4fd52c66d17.1692080803.git.geliang.tang@suse.com>
-Subject: =?UTF-8?Q?Re=3A_Squash_to_=22selftests/bpf=3A_Add_?=
- =?UTF-8?Q?bpf=5Fburst_scheduler=22=3A_Tests_Result?= =?UTF-8?Q?s?=
-Message-ID: <f8bd6c69-5862-ee69-de25-da21e1746dea@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 15 Aug 2023 07:44:31 +0000
+        d=1e100.net; s=20221208; t=1692093634; x=1692698434;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JIHhKGLq9kYw80lI9JRwmvfdbRSIvtR1NIaGzF3K97E=;
+        b=NQLm3i/unzbespZ7q/5+LrYPKOvkzA4h7BFIPnP3FtWmZcBvaAzzwjRnxNtP/sfx7t
+         M8lttfw6Nq5NQwizLyeGAb7V7ImTPK4g/1og2TCFlWuX0BxPrzQDkNxdmqZPQRnqS0Rm
+         ClFzMIB6WGKg3rk3OkS3K1WrEQ1OA8o2zKs0YRuar/6jkM/9WV0/Cs08ZsC7geEjq/NZ
+         RxBAagHHTQsFdXeVoXLjPbAaRshfywdUfvfdg6KlipoXJJwEJ8W0NlfTnyDwUy4clItm
+         QEdLCIkndcuHx+hCzXcy+oEX4uLWagIfmVUoU+XJDtggqBg8aOXJi5KdCygYGud5qMq6
+         doFA==
+X-Gm-Message-State: AOJu0Yy7iG1S9BDkHWUDFeAEShvSc5Xx6tvk6z46ttQBvmZmg8js/F/o
+	YLeXwHDFXFKQ0ti4Gg2nxm88Vj95wLwQ9Iw+0L2y4nFKRUPd1imQO5o=
+X-Google-Smtp-Source: AGHT+IHlTZOguQqSxwJ5+ovmf3I9OugFXwTguD+sI0TTMm3R9QHaZHFtwLBi2UZSyVduuod4UPRJz6rFvc1/tR/a91A=
+X-Received: by 2002:a17:906:76d3:b0:99b:4fff:6bb with SMTP id
+ q19-20020a17090676d300b0099b4fff06bbmr10321580ejn.4.1692093634398; Tue, 15
+ Aug 2023 03:00:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Date: Tue, 15 Aug 2023 12:00:00 +0200
+Message-ID: <CAKuKrBkAiiwHsaTJKPfmmcRE8J4KdAF8qM1=EQX3tqGBmOuX=w@mail.gmail.com>
+Subject: [Weekly meetings] no meeting today
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Geliang,
+Hello,
 
-Thank you for your modifications, that's great!
+Just a reminder that there is no weekly meeting today.
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5091565979303936
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5091565979303936/summary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 2 failed test(s): packetdrill_mp_join packetdrill_sockopts =
-=F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4810091002593280
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4810091002593280/su=
-mmary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6217465886146560
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6217465886146560/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5935990909435904
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5935990909435904/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/538d21adcc61
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Talk to you next week,
+Matt
+--
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
