@@ -1,45 +1,45 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BA6D2F9
-	for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 09:15:17 +0000 (UTC)
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-3fe4cdb727cso64036605e9.0
-        for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 02:15:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8197ED307
+	for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 09:15:43 +0000 (UTC)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-3fe8a158fcbso43929345e9.2
+        for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 02:15:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692177315; x=1692782115;
+        d=tessares.net; s=google; t=1692177341; x=1692782141;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hVGddNtd/d4roBKWzuBEz2idKjWPRCM/rZpnruAEw/w=;
-        b=II+yN+zzlQpWFhDFnxde7Xpl0KO9ZX/SO1hOLTeB+RTPAtnt4fE/ZLIKyP7jZ67bAc
-         QASrKJNhB6Jnszky+ofLcirhId+cZC1rna4WjDiwhPqYNw4MMITgJBwxsSkxFmg5cPPH
-         vTm51eP+RSmzwCKbIU9/oXVQA8iLKNgLXYmgEVovQF1HWpZfgMY4QKYuqBAwLHpEu7Yp
-         8dBwiLzkXG2Dy1j9PPiYW713aCHezihcWn5nlfinwA8QxOQ0ADb4d/Xd5G/2zMZvq8Bv
-         FKQ/tZIUoPP78X0Sdpv62WkbAI4En+2lzAqF9BE+dU5JPTOuuw7yEFYOZHHPx2ZYshNv
-         yseg==
+        bh=y3v2Y8QozA2jpf8nayzJKojrNONPKK3Ae9IR+IktplI=;
+        b=4JlD3EGKsBCDuHetvIWqe7WzdCJiIv0XP6o2NP9gB8p8FoRDKDoYOTkwz4KAIDPUlc
+         iGwnmPIRPYca1lJXeg7fNlnn7ZRJYvyjfCwN/c6tXjPOZFS20Eao7HztlDCSedn8lM4c
+         6M/LJFGqzdUeHIclHIg9neZhqLEucCnazUFNE3zm4gY8ygwk3hgAmZnewSooIoarWDMo
+         xr3ttnSi5/J0avJ0pwRJrWuaKDW4PvY18xraPbTlPu5G542IWtR+rsXstkRvfYmxkoIK
+         fqdtdj75L+/2rubK7kS/v2L1IM8j/x4Cn73MI8ZZtho5e05Ti2urzvn1qmFyypzSnH07
+         kS9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692177315; x=1692782115;
+        d=1e100.net; s=20221208; t=1692177341; x=1692782141;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hVGddNtd/d4roBKWzuBEz2idKjWPRCM/rZpnruAEw/w=;
-        b=atL0iLJ1X4Qjz2GrFLS+ZPSHePTHogUQ7TObFHkOd7YLQUuL6dcMMDS13YiFTY56xw
-         VICuw/ly5hivPTb8fjC3Y79d3+D1h6fVd5PRwCqCPsOIKe73iqr46f5V+DvOYRjz9Ecm
-         wLGsUeOFz90QDFD6HEYGzO0dLptDegKYX1QriG6/61hHjPjCHbenZKeVa1XZefnI1+dD
-         0gMdYpXWyZpW+SQ3awDloO5EWlRb/UiXLVxB9KGbUvNjZKOMoesq1VPFjuebFBsRDGJV
-         thcqKeOhCZU6LRCFzW1g5p891qwLxa/nM91vSMronvGZ6oukzh4w89Pks/EYhDyeIk/K
-         Ce/g==
-X-Gm-Message-State: AOJu0YxUNrIOWBOMILIK9RilV18uIwh2spK3keRWh+Qy7QjhEHLRtaDQ
-	d7HJMMfl0TRxbLiZmvIC0cSRRQ==
-X-Google-Smtp-Source: AGHT+IFYOiTUOTWdP8a8/unHcPR/AEI8WOzRpbHfe5ubWgNk75hcXLAOv2kFSDyehbLKxbv6sThdWw==
-X-Received: by 2002:a1c:750a:0:b0:3fd:2d35:b96a with SMTP id o10-20020a1c750a000000b003fd2d35b96amr946381wmc.39.1692177315742;
-        Wed, 16 Aug 2023 02:15:15 -0700 (PDT)
+        bh=y3v2Y8QozA2jpf8nayzJKojrNONPKK3Ae9IR+IktplI=;
+        b=iICgdjs4lLDn/seHAdJHUpk9FqhyVN2ywkAnjueKrzVBvn6RnwyEzsgMvZ/KDsaAIn
+         aj7Xiq+s+nOpGkeB9H8TA9t25xtKPsSx1tRvCA5F6lKp8Z7CH1sQpCYfCd0SzfgfKpr4
+         EuONsZAdSX4P0ocfqWPiSi6V8C9yA4/23sU10Crp/n9FisXGCNdprgC87UHNCVyJMVmL
+         O6QiA3VTRrbpPQuix2J+LAeVgE0R0c3OQwhjxDFB9o7fAf005JG0Og84i8+C3r0UZqjs
+         UfAAJ1WpJ3GpGMbVUtnJGiicU7j6cke3cg/IS7jAwUrH5L9tjB6qZ9Yz21EY0VTyo3gW
+         7tAg==
+X-Gm-Message-State: AOJu0YyasLrCrC1QKv1T/2CovMp/AgTtyMXwXCMxaZIuXY9/6dT6PN0j
+	RlTNC8eLS3NsTNRA3g5MFyiCag==
+X-Google-Smtp-Source: AGHT+IGus2unfda1e4zGFPoeSCCdmK/EQDFXVyMJsGPVC0WY7VywOatpn3/qk/lGLH6b863ZKuL/Zg==
+X-Received: by 2002:a7b:c5c5:0:b0:3fe:25b3:951d with SMTP id n5-20020a7bc5c5000000b003fe25b3951dmr1081191wmk.5.1692177339203;
+        Wed, 16 Aug 2023 02:15:39 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:8c09:b284:9ea1:cfb8? ([2a02:578:8593:1200:8c09:b284:9ea1:cfb8])
-        by smtp.gmail.com with ESMTPSA id y10-20020a1c4b0a000000b003fe2f3a89d4sm20563400wma.7.2023.08.16.02.15.14
+        by smtp.gmail.com with ESMTPSA id y10-20020a1c4b0a000000b003fe2f3a89d4sm20563400wma.7.2023.08.16.02.15.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Aug 2023 02:15:15 -0700 (PDT)
-Message-ID: <2bc75e20-da61-4dbe-9cc5-fe87860c94d0@tessares.net>
-Date: Wed, 16 Aug 2023 11:15:14 +0200
+        Wed, 16 Aug 2023 02:15:38 -0700 (PDT)
+Message-ID: <1372659f-01a2-47a8-aa09-79687985bb72@tessares.net>
+Date: Wed, 16 Aug 2023 11:15:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,7 +47,7 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 net-next 09/15] inet: move inet->transparent to
+Subject: Re: [PATCH v4 net-next 13/15] inet: move inet->defer_connect to
  inet->inet_flags
 Content-Language: en-GB
 To: Eric Dumazet <edumazet@google.com>, "David S . Miller"
@@ -58,7 +58,7 @@ Cc: Simon Horman <simon.horman@corigine.com>,
  eric.dumazet@gmail.com, Simon Horman <horms@kernel.org>,
  MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20230816081547.1272409-1-edumazet@google.com>
- <20230816081547.1272409-10-edumazet@google.com>
+ <20230816081547.1272409-14-edumazet@google.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -103,7 +103,7 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <20230816081547.1272409-10-edumazet@google.com>
+In-Reply-To: <20230816081547.1272409-14-edumazet@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -112,40 +112,33 @@ Hi Eric,
 (+ Cc MPTCP ML)
 
 On 16/08/2023 10:15, Eric Dumazet wrote:
-> IP_TRANSPARENT socket option can now be set/read
-> without locking the socket.
+> Make room in struct inet_sock by removing this bit field,
+> using one available bit in inet_flags instead.
 > 
-> v2: removed unused issk variable in mptcp_setsockopt_sol_ip_set_transparent()
-> v4: rebased after commit 3f326a821b99 ("mptcp: change the mpc check helper to return a sk")
+> Also move local_port_range to fill the resulting hole,
+> saving 8 bytes on 64bit arches.
 
-Sorry for that, I didn't see your series sent to netdev was conflicting
-with the one for MPTCP I sent in parallel.
+Thank you for this cleanup!
 
 > Signed-off-by: Eric Dumazet <edumazet@google.com>
-> Cc: Paolo Abeni <pabeni@redhat.com>
 > Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 > Reviewed-by: Simon Horman <horms@kernel.org>
 > ---
->  include/net/inet_sock.h       |  6 +++---
->  include/net/ipv6.h            |  2 +-
->  include/net/route.h           |  2 +-
->  include/net/tcp.h             |  2 +-
->  net/ipv4/inet_diag.c          |  2 +-
->  net/ipv4/inet_timewait_sock.c |  2 +-
->  net/ipv4/ip_sockglue.c        | 28 +++++++++++++---------------
->  net/ipv4/tcp_input.c          |  2 +-
->  net/ipv4/tcp_minisocks.c      |  3 +--
->  net/ipv6/ipv6_sockglue.c      |  4 ++--
+>  include/net/inet_sock.h | 10 ++++------
+>  net/ipv4/af_inet.c      |  4 ++--
+>  net/ipv4/inet_diag.c    |  2 +-
+>  net/ipv4/tcp.c          | 12 +++++++-----
+>  net/ipv4/tcp_fastopen.c |  2 +-
 
 The modifications in MPTCP code...
 
->  net/mptcp/sockopt.c           | 11 +++++------
+>  net/mptcp/protocol.c    | 10 ++++++----
 
 ... look good to me!
 
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
->  11 files changed, 30 insertions(+), 34 deletions(-)
+>  6 files changed, 21 insertions(+), 19 deletions(-)
 
 Cheers,
 Matt
