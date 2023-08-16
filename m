@@ -1,45 +1,45 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E0AD539
-	for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 09:14:44 +0000 (UTC)
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-3fe4a89e7efso57114925e9.3
-        for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 02:14:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BA6D2F9
+	for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 09:15:17 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-3fe4cdb727cso64036605e9.0
+        for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 02:15:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692177283; x=1692782083;
+        d=tessares.net; s=google; t=1692177315; x=1692782115;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gVjWTBs70Hhob2JngnOgWWlZPi+W3BKkqOlo2nsVcvA=;
-        b=NXwXxzJFs7UvjLDEj+9sYcQCf/k+Zhf9EMbSGSdgOiS2KRABgbgRlcsTrEvhWZMMrJ
-         VZenX3vhPzGTCJkKdQ7uqDC83AJwsOk2+5jK8goITyDGJcO84tmJpLUy3i5Aily8ctvf
-         KmYwLKGZTqG9gt/PRvpPNrrXZ8hM/j+dy+LCT3IvnNVLFIdUzeOy99D6k/Y8AlE2jsxd
-         JnTkruv8jdcykrQ8TLXPS7oqFdxDLO+SYFbwDhQfhEaj90f83cXaLh7fyYCmzCaPF4x/
-         RHs2dZJyN5sdMma3udTV52q1n916CwUImYJGP57f/9Ev+2nAO5tQh5qQ2r6NvDenrwNo
-         FyGw==
+        bh=hVGddNtd/d4roBKWzuBEz2idKjWPRCM/rZpnruAEw/w=;
+        b=II+yN+zzlQpWFhDFnxde7Xpl0KO9ZX/SO1hOLTeB+RTPAtnt4fE/ZLIKyP7jZ67bAc
+         QASrKJNhB6Jnszky+ofLcirhId+cZC1rna4WjDiwhPqYNw4MMITgJBwxsSkxFmg5cPPH
+         vTm51eP+RSmzwCKbIU9/oXVQA8iLKNgLXYmgEVovQF1HWpZfgMY4QKYuqBAwLHpEu7Yp
+         8dBwiLzkXG2Dy1j9PPiYW713aCHezihcWn5nlfinwA8QxOQ0ADb4d/Xd5G/2zMZvq8Bv
+         FKQ/tZIUoPP78X0Sdpv62WkbAI4En+2lzAqF9BE+dU5JPTOuuw7yEFYOZHHPx2ZYshNv
+         yseg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692177283; x=1692782083;
+        d=1e100.net; s=20221208; t=1692177315; x=1692782115;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gVjWTBs70Hhob2JngnOgWWlZPi+W3BKkqOlo2nsVcvA=;
-        b=DI1wZ1llvO+bfq57Eb24aZLvo6KWiGteEGlAnsRWp12K1CVDG4//LqyXeXX+NlgZ9b
-         3BtyECJCdaLqU9YDhSaLPX5gfPFYB968MsuXJcZWZARZK+HD6l+w8rnTRDQp6ZEuH1ip
-         esnmsGQEKyfFE4e/y1i97byKocgmV6KmFz7z1xvBbgaRt13zkZlc/FA7tbWUoV7KVeX3
-         AD3C3A94fduRZHItk8G4ZHoHVjWA1+oaJTqTTkApNeQ8ZHe6TMN2HYL1MFcBvv0dcyxE
-         nElDKpHrJXb3lQ2xUz4cTdaTGIgwJY/1tD7m21sVGhK2+XsxpaCcvuOxIqO01wk1kcqU
-         r6Hw==
-X-Gm-Message-State: AOJu0YysIT2GM7pgg58wSi7hhaQpNrRvOhjfY6l/PL5BXwewcxVG+dkt
-	Y86XGpkj1fJOiyjR/0rIWXufZQ==
-X-Google-Smtp-Source: AGHT+IFm7ZZd+d+khKhc3L+1yJ0Sf6lv2AhGafE4UHL1w+aRKxbU78uBVlljnJrfS8F7sy4AigNjCQ==
-X-Received: by 2002:a05:600c:214f:b0:3fe:266f:fe28 with SMTP id v15-20020a05600c214f00b003fe266ffe28mr889662wml.14.1692177282681;
-        Wed, 16 Aug 2023 02:14:42 -0700 (PDT)
+        bh=hVGddNtd/d4roBKWzuBEz2idKjWPRCM/rZpnruAEw/w=;
+        b=atL0iLJ1X4Qjz2GrFLS+ZPSHePTHogUQ7TObFHkOd7YLQUuL6dcMMDS13YiFTY56xw
+         VICuw/ly5hivPTb8fjC3Y79d3+D1h6fVd5PRwCqCPsOIKe73iqr46f5V+DvOYRjz9Ecm
+         wLGsUeOFz90QDFD6HEYGzO0dLptDegKYX1QriG6/61hHjPjCHbenZKeVa1XZefnI1+dD
+         0gMdYpXWyZpW+SQ3awDloO5EWlRb/UiXLVxB9KGbUvNjZKOMoesq1VPFjuebFBsRDGJV
+         thcqKeOhCZU6LRCFzW1g5p891qwLxa/nM91vSMronvGZ6oukzh4w89Pks/EYhDyeIk/K
+         Ce/g==
+X-Gm-Message-State: AOJu0YxUNrIOWBOMILIK9RilV18uIwh2spK3keRWh+Qy7QjhEHLRtaDQ
+	d7HJMMfl0TRxbLiZmvIC0cSRRQ==
+X-Google-Smtp-Source: AGHT+IFYOiTUOTWdP8a8/unHcPR/AEI8WOzRpbHfe5ubWgNk75hcXLAOv2kFSDyehbLKxbv6sThdWw==
+X-Received: by 2002:a1c:750a:0:b0:3fd:2d35:b96a with SMTP id o10-20020a1c750a000000b003fd2d35b96amr946381wmc.39.1692177315742;
+        Wed, 16 Aug 2023 02:15:15 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:8c09:b284:9ea1:cfb8? ([2a02:578:8593:1200:8c09:b284:9ea1:cfb8])
-        by smtp.gmail.com with ESMTPSA id y10-20020a1c4b0a000000b003fe2f3a89d4sm20563400wma.7.2023.08.16.02.14.40
+        by smtp.gmail.com with ESMTPSA id y10-20020a1c4b0a000000b003fe2f3a89d4sm20563400wma.7.2023.08.16.02.15.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Aug 2023 02:14:42 -0700 (PDT)
-Message-ID: <73bae72c-e706-4cb6-9836-64de560d4525@tessares.net>
-Date: Wed, 16 Aug 2023 11:14:33 +0200
+        Wed, 16 Aug 2023 02:15:15 -0700 (PDT)
+Message-ID: <2bc75e20-da61-4dbe-9cc5-fe87860c94d0@tessares.net>
+Date: Wed, 16 Aug 2023 11:15:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,7 +47,7 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 net-next 05/15] inet: move inet->freebind to
+Subject: Re: [PATCH v4 net-next 09/15] inet: move inet->transparent to
  inet->inet_flags
 Content-Language: en-GB
 To: Eric Dumazet <edumazet@google.com>, "David S . Miller"
@@ -58,7 +58,7 @@ Cc: Simon Horman <simon.horman@corigine.com>,
  eric.dumazet@gmail.com, Simon Horman <horms@kernel.org>,
  MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20230816081547.1272409-1-edumazet@google.com>
- <20230816081547.1272409-6-edumazet@google.com>
+ <20230816081547.1272409-10-edumazet@google.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -103,7 +103,7 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <20230816081547.1272409-6-edumazet@google.com>
+In-Reply-To: <20230816081547.1272409-10-edumazet@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -112,74 +112,40 @@ Hi Eric,
 (+ Cc MPTCP ML)
 
 On 16/08/2023 10:15, Eric Dumazet wrote:
-> IP_FREEBIND socket option can now be set/read
+> IP_TRANSPARENT socket option can now be set/read
 > without locking the socket.
+> 
+> v2: removed unused issk variable in mptcp_setsockopt_sol_ip_set_transparent()
+> v4: rebased after commit 3f326a821b99 ("mptcp: change the mpc check helper to return a sk")
 
-Good idea, thank you for these modifications!
+Sorry for that, I didn't see your series sent to netdev was conflicting
+with the one for MPTCP I sent in parallel.
 
 > Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Cc: Paolo Abeni <pabeni@redhat.com>
 > Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 > Reviewed-by: Simon Horman <horms@kernel.org>
 > ---
->  include/net/inet_sock.h  |  5 +++--
->  include/net/ipv6.h       |  3 ++-
->  net/ipv4/inet_diag.c     |  2 +-
->  net/ipv4/ip_sockglue.c   | 21 +++++++++------------
->  net/ipv6/ipv6_sockglue.c |  4 ++--
+>  include/net/inet_sock.h       |  6 +++---
+>  include/net/ipv6.h            |  2 +-
+>  include/net/route.h           |  2 +-
+>  include/net/tcp.h             |  2 +-
+>  net/ipv4/inet_diag.c          |  2 +-
+>  net/ipv4/inet_timewait_sock.c |  2 +-
+>  net/ipv4/ip_sockglue.c        | 28 +++++++++++++---------------
+>  net/ipv4/tcp_input.c          |  2 +-
+>  net/ipv4/tcp_minisocks.c      |  3 +--
+>  net/ipv6/ipv6_sockglue.c      |  4 ++--
 
 The modifications in MPTCP code...
 
->  net/mptcp/sockopt.c      |  7 ++++---
-... looks good to me!
+>  net/mptcp/sockopt.c           | 11 +++++------
+
+... look good to me!
 
 Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
->  net/sctp/protocol.c      |  2 +-
->  7 files changed, 22 insertions(+), 22 deletions(-)
-
-(...)
-
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 21bc46acbe38ee638a2111d717b158caa317d867..ffbe2f5f5b44c3aaf588eb4b8fb3e3594bf2f71c 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -419,7 +419,8 @@ static int mptcp_setsockopt_v6(struct mptcp_sock *msk, int optname,
->  			inet_sk(sk)->transparent = inet_sk(ssk)->transparent;
->  			break;
->  		case IPV6_FREEBIND:
-> -			inet_sk(sk)->freebind = inet_sk(ssk)->freebind;
-> +			inet_assign_bit(FREEBIND, sk,
-> +					inet_test_bit(FREEBIND, ssk));
->  			break;
->  		}
->  
-> @@ -704,7 +705,7 @@ static int mptcp_setsockopt_sol_ip_set_transparent(struct mptcp_sock *msk, int o
->  
->  	switch (optname) {
->  	case IP_FREEBIND:
-> -		issk->freebind = inet_sk(sk)->freebind;
-> +		inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
->  		break;
->  	case IP_TRANSPARENT:
->  		issk->transparent = inet_sk(sk)->transparent;
-
-FYI, we are looking at simplifying this not to modify these bits
-directly but rather calling tcp_setsockopt() on the different subflows,
-e.g.:
-
-https://patchwork.kernel.org/project/mptcp/patch/20230707-mptcp-unify-sockopt-issue-353-v1-5-693e15c06646@tessares.net/
-
-But the series this patch is from is not ready yet.
-
-> @@ -1441,7 +1442,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
->  	__tcp_sock_set_nodelay(ssk, !!msk->nodelay);
->  
->  	inet_sk(ssk)->transparent = inet_sk(sk)->transparent;
-> -	inet_sk(ssk)->freebind = inet_sk(sk)->freebind;
-> +	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
->  }
->  
->  static void __mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
+>  11 files changed, 30 insertions(+), 34 deletions(-)
 
 Cheers,
 Matt
