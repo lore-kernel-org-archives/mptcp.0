@@ -1,45 +1,45 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8197ED307
-	for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 09:15:43 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-3fe8a158fcbso43929345e9.2
-        for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 02:15:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3974C8D0
+	for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 10:47:19 +0000 (UTC)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-3fe2d218eedso60084495e9.0
+        for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 03:47:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692177341; x=1692782141;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
+        d=tessares.net; s=google; t=1692182838; x=1692787638;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=y3v2Y8QozA2jpf8nayzJKojrNONPKK3Ae9IR+IktplI=;
-        b=4JlD3EGKsBCDuHetvIWqe7WzdCJiIv0XP6o2NP9gB8p8FoRDKDoYOTkwz4KAIDPUlc
-         iGwnmPIRPYca1lJXeg7fNlnn7ZRJYvyjfCwN/c6tXjPOZFS20Eao7HztlDCSedn8lM4c
-         6M/LJFGqzdUeHIclHIg9neZhqLEucCnazUFNE3zm4gY8ygwk3hgAmZnewSooIoarWDMo
-         xr3ttnSi5/J0avJ0pwRJrWuaKDW4PvY18xraPbTlPu5G542IWtR+rsXstkRvfYmxkoIK
-         fqdtdj75L+/2rubK7kS/v2L1IM8j/x4Cn73MI8ZZtho5e05Ti2urzvn1qmFyypzSnH07
-         kS9A==
+        bh=JCx8mic/YOrYGST3bPLPtwes8Nd3PHV0HUaNXoydHDY=;
+        b=K5LaVI+X2tj3fuqyYViJekiAo7lQa2V9zfxSa+6/YtVtTEHeYQyh2QHpGIhSSgxJuS
+         shgFpPrBtLexipqrmnj1GFnksHE8y1/S0MxbyOc2do1UeyzGSfPtihJ/YbZ/m7Bv0VkX
+         Psu59FUBwhsJD8YmSIXJ7wPQiYJAa/xQv6sqmaUOVpwyuGCE8KuNdfEiVKX5NrbS1UHj
+         Cb4jr6fzzB62Fb3puW4qooc1K7K4Lb9FLdPOCUQfCHm2D7S6YT9tjf8qukKJid2eAoYN
+         efHrIuXMYQQ+PQPoVvDF0EPas1BEOs786TcgJrIiQ6xLXpWouhFrr5aNSA5VzRwRjApF
+         eZTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692177341; x=1692782141;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1692182838; x=1692787638;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y3v2Y8QozA2jpf8nayzJKojrNONPKK3Ae9IR+IktplI=;
-        b=iICgdjs4lLDn/seHAdJHUpk9FqhyVN2ywkAnjueKrzVBvn6RnwyEzsgMvZ/KDsaAIn
-         aj7Xiq+s+nOpGkeB9H8TA9t25xtKPsSx1tRvCA5F6lKp8Z7CH1sQpCYfCd0SzfgfKpr4
-         EuONsZAdSX4P0ocfqWPiSi6V8C9yA4/23sU10Crp/n9FisXGCNdprgC87UHNCVyJMVmL
-         O6QiA3VTRrbpPQuix2J+LAeVgE0R0c3OQwhjxDFB9o7fAf005JG0Og84i8+C3r0UZqjs
-         UfAAJ1WpJ3GpGMbVUtnJGiicU7j6cke3cg/IS7jAwUrH5L9tjB6qZ9Yz21EY0VTyo3gW
-         7tAg==
-X-Gm-Message-State: AOJu0YyasLrCrC1QKv1T/2CovMp/AgTtyMXwXCMxaZIuXY9/6dT6PN0j
-	RlTNC8eLS3NsTNRA3g5MFyiCag==
-X-Google-Smtp-Source: AGHT+IGus2unfda1e4zGFPoeSCCdmK/EQDFXVyMJsGPVC0WY7VywOatpn3/qk/lGLH6b863ZKuL/Zg==
-X-Received: by 2002:a7b:c5c5:0:b0:3fe:25b3:951d with SMTP id n5-20020a7bc5c5000000b003fe25b3951dmr1081191wmk.5.1692177339203;
-        Wed, 16 Aug 2023 02:15:39 -0700 (PDT)
+        bh=JCx8mic/YOrYGST3bPLPtwes8Nd3PHV0HUaNXoydHDY=;
+        b=E52FsbL0+6lKHLruB6REiMVfALIc7Z4G5Lw3omgF6H9nkqOFyY39BVwWOak6D2d/5Q
+         1+A54EdlvGNq9VrgPAw+qI7pKrQbfxD+3scZYath8hrJervIk6Xz72Ty8k6MgAozAEPl
+         b/5yS5XW7MCQfyQJYicViRJmIyIB9iXbonx6GR+ZPbFJGJN8bn8+uv0LxLDhoZdpp/sp
+         lQUqQzv9oMZh/0ynN9alWyzDj1jYbuauuknVtJLqCAiB1yxcL+glHnpWMwvGGbIwt2AJ
+         EXojoeG/H6fmgDiqu0GUkJ3+WVqSTVyQy7Y090CO/C61epRNASGx9U/8L3NYlNrbhCYF
+         Hb6g==
+X-Gm-Message-State: AOJu0Yzq9oeTeq+v07/agxSlb7tds+5bI9+cmbYQ+qkd0hiWsKndLUnk
+	Yo9ZSzxKHXD65LRtzq74bKA6ukTOtV+C4bjf3f0=
+X-Google-Smtp-Source: AGHT+IHt6LhTqtdc3LYyQbzz9cP56IrrZWAmu5vtiORnRVzg51mf3DfBNz8rCIQnwBrVOJ+3jlJKBw==
+X-Received: by 2002:a05:600c:1c17:b0:3fe:485f:ed1b with SMTP id j23-20020a05600c1c1700b003fe485fed1bmr1044665wms.28.1692182837031;
+        Wed, 16 Aug 2023 03:47:17 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:8c09:b284:9ea1:cfb8? ([2a02:578:8593:1200:8c09:b284:9ea1:cfb8])
-        by smtp.gmail.com with ESMTPSA id y10-20020a1c4b0a000000b003fe2f3a89d4sm20563400wma.7.2023.08.16.02.15.38
+        by smtp.gmail.com with ESMTPSA id l24-20020a7bc458000000b003fbb25da65bsm20772377wmi.30.2023.08.16.03.47.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Aug 2023 02:15:38 -0700 (PDT)
-Message-ID: <1372659f-01a2-47a8-aa09-79687985bb72@tessares.net>
-Date: Wed, 16 Aug 2023 11:15:38 +0200
+        Wed, 16 Aug 2023 03:47:16 -0700 (PDT)
+Message-ID: <6d0f8071-b3e6-4ee2-b243-70916e4066ec@tessares.net>
+Date: Wed, 16 Aug 2023 12:47:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,18 +47,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 net-next 13/15] inet: move inet->defer_connect to
- inet->inet_flags
+Subject: Re: [PATCH mptcp-next v3 1/6] Squash to "mptcp: add sched_data
+ helpers"
 Content-Language: en-GB
-To: Eric Dumazet <edumazet@google.com>, "David S . Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <simon.horman@corigine.com>,
- Soheil Hassas Yeganeh <soheil@google.com>, netdev@vger.kernel.org,
- eric.dumazet@gmail.com, Simon Horman <horms@kernel.org>,
- MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20230816081547.1272409-1-edumazet@google.com>
- <20230816081547.1272409-14-edumazet@google.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1691036765.git.geliang.tang@suse.com>
+ <c5fabbf0010db69bbe7ed2824a8285f9401df09c.1691036765.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -103,42 +97,47 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <20230816081547.1272409-14-edumazet@google.com>
+In-Reply-To: <c5fabbf0010db69bbe7ed2824a8285f9401df09c.1691036765.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Eric,
+Hi Geliang,
 
-(+ Cc MPTCP ML)
+On 03/08/2023 06:27, Geliang Tang wrote:
+> Add "ignore -Wmissing-prototypes" for mptcp_sched_data_set_contexts()
+> and mptcp_subflow_ctx_by_pos(). Then the declarations of these functions
+> in protocol.h can be dropped.
 
-On 16/08/2023 10:15, Eric Dumazet wrote:
-> Make room in struct inet_sock by removing this bit field,
-> using one available bit in inet_flags instead.
-> 
-> Also move local_port_range to fill the resulting hole,
-> saving 8 bytes on 64bit arches.
+I just had to revert this patch because it was causing issues reported
+by the CI when using 'sparce':
 
-Thank you for this cleanup!
+> $ touch net/mptcp/sched.c && make C=1 net/mptcp/sched.o
+> net/mptcp/sched.c:203:6: warning: symbol 'mptcp_sched_data_set_contexts' was not declared. Should it be static?
+> net/mptcp/sched.c:223:30: warning: symbol 'mptcp_subflow_ctx_by_pos' was not declared. Should it be static?
 
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> ---
->  include/net/inet_sock.h | 10 ++++------
->  net/ipv4/af_inet.c      |  4 ++--
->  net/ipv4/inet_diag.c    |  2 +-
->  net/ipv4/tcp.c          | 12 +++++++-----
->  net/ipv4/tcp_fastopen.c |  2 +-
+Would it not be better to move these two functions
+(mptcp_sched_data_set_contexts - mptcp_subflow_ctx_by_pos) to
+net/mptcp/bpf.c where they are "used" with "BTF_ID_FLAGS(func, <name>)"?
 
-The modifications in MPTCP code...
+Also, when I look at other kfunc in the kernel (e.g.
+bpf_skb_set_fou_encap()), I see that they are also always declared where
+they are being "used" (BTF_ID_FLAGS(func, <name>)) but also they are
+declared with "__bpf_kfunc" and the function name is prefixed with
+"bpf_" (which makes sense if they are BPF specific). Should we not do
+the same here with these 2 functions + bpf_mptcp_subflow_queues_empty()
+(only "__bpf_kfunc" is missing for this one, it already has the prefix
+and is declared where it is "used")?
 
->  net/mptcp/protocol.c    | 10 ++++++----
 
-... look good to me!
+About the revert:
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+New patches for t/upstream:
+- 1701483e1326: Revert "Squash to "mptcp: add sched_data helpers""
+- Results: ac006cd93f91..d30c287ad522 (export)
 
->  6 files changed, 21 insertions(+), 19 deletions(-)
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230816T103753
 
 Cheers,
 Matt
