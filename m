@@ -1,74 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-13.mta1.migadu.com (out-13.mta1.migadu.com [95.215.58.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608B4168AC
-	for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 17:11:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C073AC433C8;
-	Wed, 16 Aug 2023 17:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692205884;
-	bh=6FuJKumKZIarDJCd2lzdWXy60mYxcI8+3yuey+psa68=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=KbunZ7tCEXYJm02QBS3B5AXcizfnb8yeK9jzjdEC1qZbrrLYnpqNUW1CETSkF1xw+
-	 gRa5nTcY3iVBDGHqhe/l1lu9pxFfk7Ndlag8D9W081qQ+kVQp6pBoTcpciYSrVEmXl
-	 9+axaA1izQfTsNIMFLhIZDw2BLbdSfPO/moWeIj9iszOCmH3qjccbA9i7BrJWRbGbN
-	 qH5+X7VWfZzZW0A77zYb5ZqclVkG4A5VMcw597cTbfYOFVOKq6frKY92gueL1x+0EK
-	 7Z241dbbmfpo+AfsED6CTeFsJv4lLS7LeKLob60+XDsVw2ZBohQ3ahEUMLtpcs+Yci
-	 ia5ahf5RqpZcw==
-Date: Wed, 16 Aug 2023 10:11:20 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Alexander Witte <alexander.witte@blueflag.consulting>
-cc: Matthieu Baerts <matthieu.baerts@tessares.net>, 
-    "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>
-Subject: Re: Documentation for path management plugin creation
-In-Reply-To: <174ddedd-5135-4b54-9994-897cda0b6611@tessares.net>
-Message-ID: <44973cc6-539a-6d55-2df0-aca7482758bd@kernel.org>
-References: <F3D79FEC-8248-4710-87D1-925051CE5750@blueflag.consulting> <174ddedd-5135-4b54-9994-897cda0b6611@tessares.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DC315AE5
+	for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 18:59:24 +0000 (UTC)
+Message-ID: <3590084f-bc61-b2c7-ed1b-dd4caa85fdcd@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1692212362;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PCFj1wUEPbKCUAicOTDsxyUO5WEYUOvgrXDS/ukJ/vw=;
+	b=pVduOOAy3dw3c4iuelYrt3xow2jG7+SQcWBUGfqv58WAu6NkLuNcB3VtXyyrEGaRv549MB
+	ppQQsVgUAivt2n09prjT8L27YETLhN/YnQrzxWne4u//uOPeyx4qZiZqV/FNKIyzfzL9jj
+	lkpc3ZHx2YYM6kTZCPi0DdwbLph1aLY=
+Date: Wed, 16 Aug 2023 11:59:12 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Subject: Re: [PATCH bpf-next v14 4/4] selftests/bpf: Add mptcpify test
+Content-Language: en-US
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Yonghong Song <yonghong.song@linux.dev>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
+ Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Florent Revest <revest@chromium.org>, Brendan Jackman
+ <jackmanb@chromium.org>, Matthieu Baerts <matthieu.baerts@tessares.net>,
+ Mat Martineau <martineau@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ John Johansen <john.johansen@canonical.com>, Paul Moore
+ <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Eric Paris <eparis@parisplace.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>
+References: <cover.1692147782.git.geliang.tang@suse.com>
+ <364e72f307e7bb38382ec7442c182d76298a9c41.1692147782.git.geliang.tang@suse.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <364e72f307e7bb38382ec7442c182d76298a9c41.1692147782.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 16 Aug 2023, Matthieu Baerts wrote:
+On 8/15/23 6:11 PM, Geliang Tang wrote:
+> Implement a new test program mptcpify: if the family is AF_INET or
+> AF_INET6, the type is SOCK_STREAM, and the protocol ID is 0 or
+> IPPROTO_TCP, set it to IPPROTO_MPTCP. It will be hooked in
+> update_socket_protocol().
+> 
+> Extend the MPTCP test base, add a selftest test_mptcpify() for the
+> mptcpify case. Open and load the mptcpify test prog to mptcpify the
+> TCP sockets dynamically, then use start_server() and connect_to_fd()
+> to create a TCP socket, but actually what's created is an MPTCP
+> socket, which can be verified through 'getsockopt(SOL_PROTOCOL)'
+> and 'getsockopt(MPTCP_INFO)'.
+> 
+> Acked-by: Yonghong Song <yonghong.song@linux.dev>
+> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>   .../testing/selftests/bpf/prog_tests/mptcp.c  | 116 ++++++++++++++++++
+>   tools/testing/selftests/bpf/progs/mptcpify.c  |  20 +++
+>   2 files changed, 136 insertions(+)
+>   create mode 100644 tools/testing/selftests/bpf/progs/mptcpify.c
+> 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index 3d3999067e27..68ebf9735e16 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> @@ -2,13 +2,30 @@
+>   /* Copyright (c) 2020, Tessares SA. */
+>   /* Copyright (c) 2022, SUSE. */
+>   
+> +#include <linux/mptcp.h>
+bpf CI failed 
+(https://github.com/kernel-patches/bpf/actions/runs/5882006207/job/15951617063):
 
-> Hi Alex,
->
-> On 16/08/2023 15:11, Alexander Witte wrote:
->> Apologies if this is going to the wrong place (it probably is)
->
-> You can ask general questions about mptcpd here. You can also the GitHub
-> project:
->
->  https://github.com/multipath-tcp/mptcpd
->
->> I am looking to get started understanding how to develop a custom MPTCP 
->> path manager plugin for use with mptcpd.  Can anyone point me to some 
->> documentation or anywhere to get some guidance?
->
-> You can probably find what you want on this page:
->
->  https://mptcpd.mptcp.dev
->
-> From there, you can find links to a README (Getting Started - for mptcpd
-> in general, not specific to the plugins), the wiki and the documentation
-> (API).
->
-> To create new plugins, a good starting point is this wiki page:
->
->  https://github.com/multipath-tcp/mptcpd/wiki/Plugins
->
+   /tmp/work/bpf/bpf/tools/testing/selftests/bpf/prog_tests/mptcp.c:5:10: fatal 
+error: 'linux/mptcp.h' file not found
+   #include <linux/mptcp.h>
 
-Hi Alex -
+I fixed that by copying the 'struct mptcp_info' but renamed to 'struct 
+__mptcp_info' just in case any fallout in the future.
 
-In addition to Matthieu's helpful links, I did some work last year on a 
-ndiffports plugin that might provide a useful template:
+My environment also does not have SOL_MPTCP, so I do an ifndef for it also.
 
-https://github.com/mjmartineau/mptcpd/tree/ndiffports
+> +#include <netinet/in.h>
+>   #include <test_progs.h>
+>   #include "cgroup_helpers.h"
+>   #include "network_helpers.h"
+>   #include "mptcp_sock.skel.h"
+> +#include "mptcpify.skel.h"
+>   
+>   #define NS_TEST "mptcp_ns"
+>   
+> +#ifndef IPPROTO_MPTCP
+> +#define IPPROTO_MPTCP 262
+> +#endif
+> +
+> +#ifndef MPTCP_INFO
+> +#define MPTCP_INFO		1
+> +#endif
+> +#ifndef MPTCP_INFO_FLAG_FALLBACK
+> +#define MPTCP_INFO_FLAG_FALLBACK		_BITUL(0)
 
-Compared to the in-tree plugins, the build system changes and plugin code 
-are all self-contained in one commit.
+I have to add '#include <linux/const.h>' for the _BITUL() here also....
 
-- Mat
+The set is applied. Please follow up if I make mistake on those fixes.
+
