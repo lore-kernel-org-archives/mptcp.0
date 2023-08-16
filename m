@@ -1,45 +1,45 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B11D12B95
-	for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 14:55:52 +0000 (UTC)
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-3fe8a158fcbso47073345e9.2
-        for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 07:55:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69132C8FF
+	for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 16:27:15 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3fe45481edfso68256825e9.1
+        for <mptcp@lists.linux.dev>; Wed, 16 Aug 2023 09:27:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692197751; x=1692802551;
+        d=tessares.net; s=google; t=1692203234; x=1692808034;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DPKyvMy6HNjsxTQAXmULEDrkah4znpC2wN0hqnfR+dU=;
-        b=ccbE9//xyhTLYHABFiAQ3YE4s07Oky3uWcwKM9xmp/mLNJCwIKN0aPQvcBbSXjSYMB
-         b1tt2wRlsMNHE9GFX/cX6bO7WhHXSIZM8t8SkN/S1RmtSAN02QPw75uBFevToSgR+Vqm
-         bjvOXCOtmN0oscdHx539QAfnbCP8Vdx422as7/lkQeaf4YkJozg4DoqNgCQMxME2yJzs
-         LnLr3y8b1J+gWXvHOAhEFV8ozsYCdsB68uLGW8IyI+dQmQnB0pP0+fzukO8hfU3gsLWd
-         qXdm8e2mjmeiH5j4VzuqamGsY+7psnRLwK2ppfVaOJ3k59X5tPZCI7hxGHwDLLBPbHuC
-         eWmA==
+        bh=4dNO7WOFW3djk16jymV4gGt+SUQh3JBhrESnibYjhL8=;
+        b=b7OqqTS+K6RMiXWhvzUeInFBbxabW83L0SVTPO/telueOxsxshEeHn4yWKFaJQ8eDP
+         TL2WM84upcoP5i1bQgeui4EGXZqGmLOqLqHBugW7QRIcDEfcMX3ipKA19fRAKpjjH+Y+
+         sJNEGSMcyFU9Jb/WIwjCDQhTPACl9XC14xWXUjTJS0CzZVQ488mW3ChmE26Ak8ewkqI8
+         MRqq5AX7+E1S0mbvPl/GHONlEcRHeNWIsAO0fyI/3gib2+EGhnr1I3xCKnfR7lJ4Hv2J
+         2YftM9SZUmuW+36arQGGyMtBu5do9/lCGmGPkwOdY04+6iLIPxMYURFRgkd/s3Ng/v5D
+         Caqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692197751; x=1692802551;
+        d=1e100.net; s=20221208; t=1692203234; x=1692808034;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DPKyvMy6HNjsxTQAXmULEDrkah4znpC2wN0hqnfR+dU=;
-        b=IyvS1cD6vND40muEu1chkSDtifIIcgc+BeU8suqwrUHAjF5b4osAS2Y1wfKx7npFeg
-         zCp8AZ7bEPaRVaz//6MKMGCCsDKdhY57OFgml8xSxpzAO8nAfoie3aK7FmKVG7qtazZ1
-         0Td1cMssnBi+85vbWXLldc6z28Q73lbNqG4hMp7OyBI60Y9hpQ+WCO8nIMCsuavRpVsc
-         l0R5Wj+YmfOoiMN97tzvl417/OHbGE7uTxcj/c8HNwxtTwHOwLsd8ruo+JWZUq48spgU
-         POPeXgMxG0engLa0QgJiIVUfpqQdUFd7dR/uI4YWTI8PVekaS9XMBqCKIBUIHRaUkbjp
-         w0DQ==
-X-Gm-Message-State: AOJu0YyyMPWk96p5DrkCyZnLHIRj5NjTm43WdFNyElKxgytu0XFQ3d7b
-	BTjPAqBCh+jmRHl/iH0oxubDLiS9t9HZKWiyzZ8=
-X-Google-Smtp-Source: AGHT+IFlSL6dhm5M7Ztf5Fd0Za2ZdNjaKuyMFOtpgkeDCgY/gaWIejBvmcQpSvEJtx/mWrnkJmKY2w==
-X-Received: by 2002:a05:600c:3b23:b0:3fe:2b60:b24e with SMTP id m35-20020a05600c3b2300b003fe2b60b24emr1817166wms.29.1692197750967;
-        Wed, 16 Aug 2023 07:55:50 -0700 (PDT)
+        bh=4dNO7WOFW3djk16jymV4gGt+SUQh3JBhrESnibYjhL8=;
+        b=FxjTJgVCFJcsGuEG748PUMAfWoiUdagntEMmOdAjsnrTTltrXv6s/Zq6JFYDPiAJaM
+         c58ruM1LIVxTxyrJeMb5aQ2Xu1Qm3gVGWVBuSjmZ1NTZ6srgIPosRBr2gDviyupTDfW5
+         TVQeorEQzjJjjhAh/1M5te+H4KIqZ9JB0nY6bLTHVUOoO1rZzXRMuD4qF7W+WhoIAF0P
+         deRj/zEndwAnBRpcwQWL3TQCi6gBk/dYTxdZXXDYN/gwFSR0nQBd7IW14XqEXUxRMvHe
+         wQ1/F+Ue+9l63ZmX/CzYlMBwm0XqgJVHsrlLjB3fyV5az+Rdkw8eqnSPGeUWVWaXIXs0
+         jQhw==
+X-Gm-Message-State: AOJu0YyY/6JVaKjf6NsgUlhcCLhqdysnFhIL6sho3/yDCXVvVbROHY/y
+	PxVyx4tkn4ktoMKPztt/qL+q1g==
+X-Google-Smtp-Source: AGHT+IE1ObdAgK/xb2h3Y3k3QPpN8NAj7MYx0S2WaI/1Jqaxtq45gsskNNnxPXTAdKK7pnubUdreWA==
+X-Received: by 2002:a5d:6982:0:b0:319:7b96:a1c0 with SMTP id g2-20020a5d6982000000b003197b96a1c0mr1765489wru.21.1692203233996;
+        Wed, 16 Aug 2023 09:27:13 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:9191:2283:c4d7:5cd7? ([2a02:578:8593:1200:9191:2283:c4d7:5cd7])
-        by smtp.gmail.com with ESMTPSA id l10-20020a7bc44a000000b003fc06169ab3sm24220176wmi.20.2023.08.16.07.55.50
+        by smtp.gmail.com with ESMTPSA id l6-20020adff486000000b003143867d2ebsm21875976wro.63.2023.08.16.09.27.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Aug 2023 07:55:50 -0700 (PDT)
-Message-ID: <174ddedd-5135-4b54-9994-897cda0b6611@tessares.net>
-Date: Wed, 16 Aug 2023 16:55:45 +0200
+        Wed, 16 Aug 2023 09:27:13 -0700 (PDT)
+Message-ID: <b4829a6b-9242-4fb7-bc2e-582bdee5c4e4@tessares.net>
+Date: Wed, 16 Aug 2023 18:27:13 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,11 +47,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Documentation for path management plugin creation
+Subject: Re: [PATCH mptcp-next v2 0/4] userspace pm remove id 0 subflow &
+ address
 Content-Language: en-GB
-To: Alexander Witte <alexander.witte@blueflag.consulting>,
- "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>
-References: <F3D79FEC-8248-4710-87D1-925051CE5750@blueflag.consulting>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1691564649.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -96,33 +96,27 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <F3D79FEC-8248-4710-87D1-925051CE5750@blueflag.consulting>
+In-Reply-To: <cover.1691564649.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Alex,
+Hi Geliang,
 
-On 16/08/2023 15:11, Alexander Witte wrote:
-> Apologies if this is going to the wrong place (it probably is)
+On 09/08/2023 09:06, Geliang Tang wrote:
+> v2:
+>  - fix CI errors.
+> 
+> This patchset addresses #379 and #391, add the abilities to remove id 0
+> subflow and address for userspace PM. And a selftest.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/379
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/391
 
-You can ask general questions about mptcpd here. You can also the GitHub
-project:
+Thank you for these patches!
 
-  https://github.com/multipath-tcp/mptcpd
-
-> I am looking to get started understanding how to develop a custom MPTCP path manager plugin for use with mptcpd.  Can anyone point me to some documentation or anywhere to get some guidance?
-
-You can probably find what you want on this page:
-
-  https://mptcpd.mptcp.dev
-
-From there, you can find links to a README (Getting Started - for mptcpd
-in general, not specific to the plugins), the wiki and the documentation
-(API).
-
-To create new plugins, a good starting point is this wiki page:
-
-  https://github.com/multipath-tcp/mptcpd/wiki/Plugins
+The code of the first one looks good to me, same for the first part of
+patch 2/4. Please see the comments in the individual patches for more
+details.
 
 Cheers,
 Matt
