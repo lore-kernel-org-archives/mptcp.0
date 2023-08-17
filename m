@@ -1,45 +1,45 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7676E360C7
-	for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 16:32:27 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3178dd771ceso48003f8f.2
-        for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 09:32:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9043F14289
+	for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 16:37:15 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3fe501e0b4cso677575e9.1
+        for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 09:37:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692289945; x=1692894745;
-        h=content-transfer-encoding:in-reply-to:cc:autocrypt:from:references
-         :to:content-language:subject:user-agent:mime-version:date:message-id
+        d=tessares.net; s=google; t=1692290234; x=1692895034;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=teCfLvBY95FrJKScJAANYYC+RV4m7k27uuRfGTLFmdI=;
-        b=Xd+tOvfgnalLtrL58/pNJnDzPx/WkXDRRMY11xSyVrXQl64wCKZZOzNWBohbdvO8Nm
-         3p7PQeuot8SL9vdT0GJWn1az7LiCWW04f+/Dvvy0JpL9LpFbGF1XdhbWHJYdFIyL9nzE
-         KUPqyXPXlNLgGT63tWfL8qBSm04jHeLVXXeIfoevAGFfiTCkSkky6XAMgwCv5ds1x+xu
-         MOH4nEz96na8k+rMsR83nrZCnm8INSeRM52qa7AsoonBvvL9bpVs/IABNiXpc84EyVsH
-         ICRX//tCLKVBay8FTFn7a48LJ/r/4gNCH3anwz7OfI41pN7LwXEwmsd+knURqqrfxrj6
-         Khtw==
+        bh=3U5ICqQV2cVgG134J66Q+tciQ4CRRf8+wjFNJdYoSYo=;
+        b=AZLpA6uC2Q87vRNCraHYUYvbxkSV+5dMLp4vzybeT20ExFLTvJdqe7PjJEzbYAlTb6
+         ywiyLuxWsTg0p4oh7sS9x98rxtoJgzFmGqjbkM5/xbFPVFU6O3PkvrOqeXyA8fU+TXKq
+         jJslbEVL106H8ZDP6UrUUy75/nQc9mJrNmtt8BAMeO66WzxSbF1f0sHRuVYJxFTrvAh9
+         UMz8LldJv7ghx/zFbRWX4r/Cj2XLwVAxAtDbJPUKsxFTf0SBsWrMmYa3gbNJbVpj6/lo
+         FmG1xCz4dE+GjB3pbD80wwHnuGpjo/ZGAFjDtfReB91KLySxJ1eotatdgseO6pedASri
+         SSmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692289945; x=1692894745;
-        h=content-transfer-encoding:in-reply-to:cc:autocrypt:from:references
-         :to:content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1692290234; x=1692895034;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=teCfLvBY95FrJKScJAANYYC+RV4m7k27uuRfGTLFmdI=;
-        b=Ena8amOAtjMMBqZHVBDrcHU/lm+Q2DiVQgOeB42qm70jSdzB9jpvXl++nMS5WNb5z3
-         OJdT1HIHK3z9lJkCABMQmX9+12WE6/ZmZ2jPVefnZs331qFuZTLs3QcEom6/wgWhqLxK
-         ZLzCqUK298iNMLdargtV42Qu8cFbGXKaeZV0BnhwxyaFMQN9x7iM/dE04Gq08mAHOAwj
-         gp8V8yFiOWOwVI56piNWfg/1Te82P/Vs8e3BmJTpHpMCd2XBAF/qsQlGm4s2PxdpTjmd
-         UGkMboquFWxJ1Ed5ncbKiq8GlPE2y+DaBK4cl7nM3tnxBzfqwjtYy6hUaqtbpy1ijtyY
-         K8qQ==
-X-Gm-Message-State: AOJu0YwCiIBFSyELK7W9wIwlnbyTwpF6z9lv35N+voMnpNNtvEniHccM
-	xjMgVWMo4udfXzneuSt0V9Cjz1hVWmv4/1DlYIU=
-X-Google-Smtp-Source: AGHT+IHeZNrHi2a90x5i3c+zXf0GDcQN41vRDBgzRRNgWyHW1wKFNhqXme7f/GskmhllfBuW/fkF7A==
-X-Received: by 2002:a05:6000:1010:b0:319:76ce:32ba with SMTP id a16-20020a056000101000b0031976ce32bamr12537wrx.21.1692289945181;
-        Thu, 17 Aug 2023 09:32:25 -0700 (PDT)
+        bh=3U5ICqQV2cVgG134J66Q+tciQ4CRRf8+wjFNJdYoSYo=;
+        b=LlPCJEeeNpTqekLsPbCn6vwy4pqGCt+QRiTvInuCBsUCXoJktYYs4EpkRRx8QKGM0r
+         lq1pVJ7ocf82IMDv7nSWnwTnTfPMc1Q2+wgMpTZuS/mc280NuCiap7b20WIzJVFu8omj
+         nYQGv0cORePc9A08LL6dKXAAvw1BJ59pQpRS3+0NTIG40pXVKzZ3UldhFzyfQSU6DEm2
+         atCriZ3g9hDM/A6oUiCYBK/PZn8ktp/JOUjBAhZSQ8xtQppJJ8X39OE4VZ5s2tBryxSQ
+         iuv5QfCOXPimTsS6yB7IQeWxS6nNMB0C9BVu1UQvoxZ4JFU8lLL63O8sUe0dag/fijqc
+         WqOA==
+X-Gm-Message-State: AOJu0YygY1x3HnziDRdO74WPKVK6UrTWQy4GVwqwHY4DOR9UclPM57rD
+	eB5v35kf8MasqVKQRpNEXwW7XEecRnbSFCDQ5Uo=
+X-Google-Smtp-Source: AGHT+IHigg2TYmROEczwhHM9zjJQTWuZBNYh88BuDrjoTp92qm/N2smLPVjhjDfA8p/OhJY+dLVwYQ==
+X-Received: by 2002:a05:600c:2193:b0:3fe:21a9:2feb with SMTP id e19-20020a05600c219300b003fe21a92febmr191344wme.33.1692290234091;
+        Thu, 17 Aug 2023 09:37:14 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:c88:d59b:1c03:4962? ([2a02:578:8593:1200:c88:d59b:1c03:4962])
-        by smtp.gmail.com with ESMTPSA id z2-20020adfec82000000b003141a3c4353sm4838894wrn.30.2023.08.17.09.32.24
+        by smtp.gmail.com with ESMTPSA id l22-20020a7bc456000000b003fe1afb99a9sm59723wmi.11.2023.08.17.09.37.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Aug 2023 09:32:24 -0700 (PDT)
-Message-ID: <4805687a-20b8-4669-b9a1-4fd6344cbbe4@tessares.net>
-Date: Thu, 17 Aug 2023 18:32:23 +0200
+        Thu, 17 Aug 2023 09:37:13 -0700 (PDT)
+Message-ID: <1a3dade8-a6b0-4ed8-b2bb-d83fde104751@tessares.net>
+Date: Thu, 17 Aug 2023 18:37:12 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,11 +47,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 2/3] mptcp: remove id 0 address
+Subject: Re: [PATCH mptcp-next v3 3/3] selftests: mptcp: remove id 0 subflow &
+ address
 Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1692281317.git.geliang.tang@suse.com>
- <2a2600dd6642da6d29be1df8062f7bc8637155b2.1692281317.git.geliang.tang@suse.com>
+ <4d399e6564e6a4c2ea3fda6f6f4f7ca50dd6c0ac.1692281317.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -96,126 +97,157 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <2a2600dd6642da6d29be1df8062f7bc8637155b2.1692281317.git.geliang.tang@suse.com>
+In-Reply-To: <4d399e6564e6a4c2ea3fda6f6f4f7ca50dd6c0ac.1692281317.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 17/08/2023 16:10, Geliang Tang wrote:
-> This patch adds the ability to send RM_ADDR for local ID 0. Put id 0
-> into a removing list, pass it to mptcp_pm_remove_addr() to remve id
-
-(typo: remve -> remove)
-
-> 0 address.
+> This patch adds selftests for userpsace PM to remove id 0 subflow and
+> id 0 address.
 > 
-> There is no reason not to allow the userspace to remove the initial
-> address (ID 0). This special case was not taken into account not
-> letting the userspace to delete all addresses/subflows as announced.
-
-only 'addresses' in this commit, not 'subflows', right?
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/379
-> Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
-> Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
-
-I guess the second "Fixes" is no longer needed.
-
+> A new helper userspace_pm_rm_id_0_subflow_or_address_ns2() is added,
+> in it use
+> 
+>         ./pm_nl_ctl dsf lip 10.0.1.2 lport $sp \
+> 			rip 10.0.1.1 rport $dp token $tk
+> 
+> to remove id 0 subflow, and use
+> 
+>         ./pm_nl_ctl rem token $tk id 0
+> 
+> to remove id 0 address.
+> 
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
->  net/mptcp/pm.c           |  2 +-
->  net/mptcp/pm_userspace.c | 30 +++++++++++++++++++++++++++---
->  2 files changed, 28 insertions(+), 4 deletions(-)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
 > 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index d8da5374d9e1..6c610fb494ab 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -192,7 +192,7 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk, const struct sock *ssk,
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index ee1f89a872b3..2d7ac76697bc 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3320,6 +3320,26 @@ userspace_pm_rm_sf_addr_ns2()
+>  	wait_rm_sf $ns2 1
+>  }
 >  
->  	update_subflows = subflow->request_join || subflow->mp_join;
->  	if (mptcp_pm_is_userspace(msk)) {
-> -		if (update_subflows) {
-> +		if (update_subflows || subflow->request_mptcp || subflow->mp_capable) {
+> +# $1: command (rem/dsf)
 
-I don't think we can do that: it is confusing but pm->subflows counts
-the number of "additional" subflows. Probably we should rename it...
-Anyway, it means that if we remove the initial subflow, we should not
-decrement it not to break the "user API".
+(now it is more a "type" and not a command and it can be 'subflow' or
+'address')
 
-It also means that in the selftests, if we remove the initial subflow,
-this "subflows" counter should not change (but still good to validate
-that). We can also look with 'ss' (ss -ti | grep -c tcp-ulp-mptcp) or
-getsockopt(MPTCP_FULL_INFO) (or others except MPTCP_INFO) and then
-mptcp_subflow_data->num_subflows to get the "correct" amount of
-subflows. Or only check if the remove address has been sent and received.
+> +userspace_pm_rm_id_0_subflow_or_address_ns2()
+> +{
+> +	local tk da dp sp
+> +
+> +	tk=$(sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
+> +	da=$(sed -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evts_ns2")
+> +	dp=$(sed -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
+> +	sp=$(sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
 
-(not directly related to this but I wonder if we should not expose to
-userspace if the initial subflow has been removed → I just created the
-ticket #428 on GitHub)
+Most of these parameters are only needed to remove a subflow, not to
+remove an address. Would it not be better to have two different helpers?
+Also below, just after having called this helper, there is a check on
+the "type": so fine to call different helpers from there, no?
 
->  			spin_lock_bh(&pm->lock);
->  			pm->subflows--;
->  			spin_unlock_bh(&pm->lock);
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index d042d32beb4d..3e5ac4015c8e 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -236,7 +236,31 @@ int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info)
+(see below, maybe better without the for-loop?)
+
+
+Note that if you wanted to have a helper because the "sed" command are
+not very readable, you can always have helpers to get the token, etc. e.g.
+
+  tk=$(evts_get_token "${evts_ns2}")
+
+you can even have something more generic:
+
+  # $1: info name ; $2: ns
+  evts_get_info()
+  {
+          sed -n "s/.*\(${1}:\)\([0-9.]\+\).*$/\2/p;q" "${2}"
+  }
+
+  tk=$(evts_get_info token "${evts_ns2}")
+
+But this can also be done after in commits for net-next, not like here
+for -net.
+
+> +
+> +	if [ "$1" == "subflow" ]; then
+> +		ip netns exec $ns2 ./pm_nl_ctl dsf lip 10.0.1.2 lport $sp \
+> +				rip $da rport $dp token $tk
+> +	elif [ "$1" == "address" ]; then
+> +		ip netns exec $ns2 ./pm_nl_ctl rem token $tk id 0
+> +	fi
+> +
+> +	sleep 0.5
+> +}
+> +
+>  userspace_tests()
+>  {
+>  	# userspace pm type prevents add_addr
+> @@ -3434,6 +3454,32 @@ userspace_tests()
+>  		kill_events_pids
+>  		wait $tests_pid
+>  	fi
+> +
+> +	# userspace pm remove id 0 subflow & address
+> +	for type in "subflow" "address"; do
+> +		if reset_with_events "userspace pm remove id 0 $type" &&
+
+I think it would be clearer, for the "subflow" case, to say that we
+remove the "initial subflow", not all subflows with local id 0.
+
+(see below, maybe better without the for-loop?)
+
+> +		   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+> +			set_userspace_pm $ns2
+> +			pm_nl_set_limits $ns1 0 2
+> +			speed=10 \
+> +				run_tests $ns1 $ns2 10.0.1.1 &
+> +			local tests_pid=$!
+> +			wait_mpj $ns2
+> +			userspace_pm_add_sf 10.0.2.2 0
+
+Oh I guess here you check that we can create a new subflow using ID 0 to
+validate patch 1/3, right? Maybe better to have a dedicated test  for
+that? Or modify an existing one ("userspace pm create destroy subflow")
+to add a new subflow from ID 0? → if you add this test, maybe better to
+place it just after the first patch of this series.
+
+> +			userspace_pm_add_sf 10.0.3.2 20
+> +			chk_join_nr 2 2 2
+> +			chk_mptcp_info subflows 2 subflows 2
+> +			userspace_pm_rm_id_0_subflow_or_address_ns2 "$type"
+> +			if [ "$type" == "subflow" ]; then
+
+(if you have 'if' here, I wonder if it is still interesting to have a
+for-loop here: we already have have many tests that are similar but one
+or two lines are different ; also, it might help to find the test
+without the variable)
+
+WDYT? Maybe the for loop is still better?
+
+If you split, maybe better to split the commits? From what I understood,
+removing the initial subflow was working before this series but it was
+not tested. Only sending the RM_ADDR for ID 0 was not working, right?
+Then we could have one test validating the creation of a new subflow
+with ID 0 + destroy the initial subflow. And a second one to send a
+remove address with ID 0 (or edit an existing one like "userspace pm add
+& remove address")
+
+> +				chk_rm_nr 0 1
+> +			elif [ "$type" == "address" ]; then
+> +				chk_rm_nr 1 0
+> +			fi
+> +			chk_mptcp_info subflows 2 subflows 1
+> +			kill_events_pids
+> +			wait $tests_pid
+> +		fi
+> +	done
+>  }
 >  
->  	if (!mptcp_pm_is_userspace(msk)) {
->  		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
-> -		goto remove_err;
-> +		goto out;
-> +	}
-> +
-> +	if (id_val == 0) {
-> +		struct mptcp_rm_list list = { .nr = 0 };
-> +		struct mptcp_subflow_context *subflow;
-> +		int id_0 = 0;
-
-(could be a bool: has_id_0)
-
-> +
-> +		mptcp_for_each_subflow(msk, subflow) {
-
-This should be done under the msk lock, no?
-
-(we could also look at READ_ONCE(msk->first) before iterating over all
-subflows but not sure it is worth it and probably best to do it in a
-second part, for net-next and not -net)
-
-> +			if (subflow->remote_id == 0)
-> +				id_0 = 1;
-
-You can "break" here.
-
-> +		}
-> +		if (!id_0)
-
-It would be good to add an error message, e.g.
-
-  GENL_SET_ERR_MSG(info, "address with id 0 not found")
-
-To let the userspace understanding why it was not OK.
-
-> +			goto out;
-> +
-> +		list.ids[list.nr++] = 0;
-> +
-> +		lock_sock((struct sock *)msk);
-> +		spin_lock_bh(&msk->pm.lock);
-> +		mptcp_pm_remove_addr(msk, &list);
-> +		spin_unlock_bh(&msk->pm.lock);
-> +		release_sock((struct sock *)msk);
-> +
-> +		err = 0;
-> +		goto out;
->  	}
->  
->  	lock_sock((struct sock *)msk);
+>  endpoint_tests()
 
 Cheers,
 Matt
