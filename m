@@ -1,158 +1,124 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2073.outbound.protection.outlook.com [40.107.20.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFAB125D0
-	for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 09:30:07 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-31783d02093so6504086f8f.0
-        for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 02:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692264605; x=1692869405;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a8XjHhejpnIfwfLeHHiaI8QMI7hTfyJqQhI598uiiAs=;
-        b=jEXEpvAZEyozU09fEACrxOQNHtti4aJUoXlVNklhuvwnrUHjif3O/eD9AYK4/u23CD
-         YTDAr8vGkiAG1kGCeIHO/Sg4NXZe+0RDGh15ddlSD8PhiX8MWMoTEE0eP9L7b3hqJv/w
-         kfWlWSfoPz1Yjvh9NclMxlWYvEHelHMYL/Y17NybsNz6AcifRigjZXofGV5tAcYRYzyb
-         mMH39AUXQO5LRIyLK4iszftARGkJPvbn34EgrOUXnvoTsmYrbdhCj6ttDC6ZJeANw4eX
-         gh1NiVxTTdsEEc/0AG1YYdefT1caHjxcMYKeaGXDfhNf0KIMr6UiSw7aY1a0TXK+9dd6
-         QFPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692264605; x=1692869405;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a8XjHhejpnIfwfLeHHiaI8QMI7hTfyJqQhI598uiiAs=;
-        b=X68J5yrlQ9AG7eESwGMhSIeMeK/3VYnci5852/++CWHSocRKWuh1vx5twHZJLVuH4w
-         S+lRQAAEbRfJEvSH8CmN6yndruDaYwRiOWu2a7FePURftM3/MssA1bNpsaAyipu3X7yK
-         wWgzkTsrZVEkwdVFuR18FnMhVG/UAEyy3P8rMLKTx1p+RarIhskfeWK8ULGGO7fGPyAy
-         uliH8jUSSUK/Ubjuki1l29aNv2dhs5HAyp42S4E9pEwpJYJ2/35hgsO3R2Artb7ttDfY
-         SjunctN6isRetbun2Z6yQAvFiakVBHN8aHLU6X4MSgRpa2UYp1aXmoGwIFSXfBM3PruN
-         qbCA==
-X-Gm-Message-State: AOJu0Yx0ed39bxRhu9zSk191cR3lwxpZCpFXfk6RuQ573LicOfpQP/79
-	8Cg7Twu5bSXVLrxgqF3GHpnD8GT3FA+Hy6KFxZU=
-X-Google-Smtp-Source: AGHT+IHr2D3NyOuFBeFuvBJeT/rKlwDES8dsFwLU8jI0zyNMKJZE6J3SKQ7by4pQK5Hpr3b/j9pe0Q==
-X-Received: by 2002:adf:efcb:0:b0:318:8b5:4159 with SMTP id i11-20020adfefcb000000b0031808b54159mr3719200wrp.24.1692264605515;
-        Thu, 17 Aug 2023 02:30:05 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:c88:d59b:1c03:4962? ([2a02:578:8593:1200:c88:d59b:1c03:4962])
-        by smtp.gmail.com with ESMTPSA id k1-20020a5d4281000000b00317a29af4b2sm23971934wrq.68.2023.08.17.02.30.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Aug 2023 02:30:05 -0700 (PDT)
-Message-ID: <13e5c589-d31b-462d-8c1e-afc05e70346f@tessares.net>
-Date: Thu, 17 Aug 2023 11:30:04 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255F81097B
+	for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 14:10:32 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hesUlZr2UP2tIFcqZQldYpCSHDfX3MMx0ny657lChuHBWjAFT7nGuidQtHQpNr1tzrqJQO7NMdZ/H07rWFADKoIs8utXU5ZVcXM0DiiO0gyQuUyOQK7BlJW3RXpBq05+5PAMJe6PYbd8+nbD1XW4maI1RHDmTNjNOq82BaN9TEKd0uGCVdHQgNZLeuaXLE3fK4qp8j53TTzdxDDkFR/WDdcWGZuE6k+A4ZokEdCjQ1zKOWpM+MD9fotc8VVoey79AW+C0xSde299czD5g+Pg/HdP4rB0NU/exmZa2SZXeWGdKo316yT9M3K5a/WvckOomsN+Ur/fV8easQTawfp+lw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OjBlDzqRYUYs11hWUXdYbAOjlac+SpaCTmPU5QtrUL0=;
+ b=ZqsAHmMBAKJPGK+hs26Rm29TOfzPf6csRMJatOZReBZ8s8RKMIf03+OOWhehMOM46GlpR38wAWAZqxxUNBk4y/XzdY3zQWbnW+qnz2PR4SyB39fUBVsYz7hMts65w27FBabVvX8DfGwavG1CfYGUVOdi3J52nExWZQ3pHtaU59pAnrHObmnRhM1yXNDS+uao9kh2ZBziOxnjlGl24HQK3GZLOjg/Ov/sR7FPYKp7i4+vMsTBo6w0XiXOduACp1qP9gFIo6VHqGVHQfkPsuxGFm8a12nKlb530LeE+8e2DV2ZVpt+xh3N8MoVPVWHjUISRREDl02ACt2udUDjZIkfyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OjBlDzqRYUYs11hWUXdYbAOjlac+SpaCTmPU5QtrUL0=;
+ b=s21KpRgsGDX+k7ce99VaY68G8sZlDe41jbjv8EqXd1wi6t3yeRRBu1DGhZk5FernJVWBzkNd8U8wn/56gT66wMX7JS2AV63j7EplVikgprDrCXo5y/g6c35G4FnvCyfMb/EMeD0nS5rOSRRuSpWCqZCrKR7zcVPUU8wQmHeIUo+0BcXbF5nIRoo0QL4C6WUkx8Eac4bQtu1cmwQT+PL+N77OZEVcJT8Zyd+vi+386LvqdFLE1ozI6gMtn4HNULHvDu9mfEItu7djN4gTnPnLmWMR/a5m7RHTYkaLOg6qmxih9Kfn5Hh4QG+b8AnllbAGU3vBJsG8it3ES1gUQ+3cZQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by PAXPR04MB9057.eurprd04.prod.outlook.com (2603:10a6:102:230::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.26; Thu, 17 Aug
+ 2023 14:10:29 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::2867:7a72:20ac:5f71]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::2867:7a72:20ac:5f71%3]) with mapi id 15.20.6678.031; Thu, 17 Aug 2023
+ 14:10:29 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v3 0/3] userspace pm remove id 0 subflow & address
+Date: Thu, 17 Aug 2023 22:10:46 +0800
+Message-Id: <cover.1692281317.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYAPR01CA0218.jpnprd01.prod.outlook.com
+ (2603:1096:404:11e::14) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 0/9] Update scheduler refactor commits
-Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1692080803.git.geliang.tang@suse.com>
- <ecf0e1f7-feae-e8bb-dad0-5e3a87b4aec5@kernel.org>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzS5NYXR0aGlldSBC
- YWVydHMgPG1hdHRoaWV1LmJhZXJ0c0B0ZXNzYXJlcy5uZXQ+wsGSBBMBCAA8AhsDBgsJCAcD
- AgYVCAIJCgsEFgIDAQIeAQIXgBYhBOjLhfdodwV6bif3eva3gk9CaaBzBQJhI2BOAhkBAAoJ
- EPa3gk9CaaBzlQMQAMa1ZmnZyJlom5NQD3JNASXQws5F+owB1xrQ365GuHA6C/dcxeTjByIW
- pmMWnjBH22Cnu1ckswWPIdunYdxbrahHE+SGYBHhxZLoKbQlotBMTUY+cIHl8HIUjr/PpcWH
- HuuzHwfm3Aabc6uBOlVz4dqyEWr1NRtsoB7l4B2iRv4cAIrZlVF4j5imU0TAwZxBMVW7C4Os
- gxnxr4bwyxQqqXSIFSVhniM5GY2BsM03cmKEuduugtMZq8FCt7p0Ec9uURgNNGuDPntk+mbD
- WoXhxiZpbMrwGbOEYqmSlixqvlonBCxLDxngxYuh66dPeeRRrRy2cJaaiNCZLWDwbZcDGtpk
- NyFakNT0SeURhF23dNPc4rQvz4It0QDQFZucebeZephTNPDXb46WSwNM7242qS7UqfVm1OGa
- Q8967qk36VbRe8LUJOfyNpBtO6t9R2IPJadtiOl62pCmWKUYkxtWjL+ajTkvNUT6cieVLRGz
- UtWT6cjwL1luTT5CKf43+ehCmlefPfXR50ZEC8oh7Yens9m/acnvUL1HkAHa8SUOOoDd4fGP
- 6Tv0T/Cq5m+HijUi5jTHrNWMO9LNbeKpcBVvG8q9B3E2G1iazEf1p4GxSKzFgwtkckhRbiQD
- ZDTqe7aZufQ6LygbiLdjuyXeSkNDwAffVlb5V914Xzx/RzNXWo0AzsFNBFXj+ekBEADn679L
- HWf1qcipyAekDuXlJQI/V7+oXufkMrwuIzXSBiCWBjRcc4GLRLu8emkfyGu2mLPH7u3kMF08
- mBW1HpKKXIrT+an2dYcOFz2vBTcqYdiAUWydfnx4SZnHPaqwhjyO4WivmvuSlwzl1FH1oH4e
- OU44kmDIPFwlPAzV7Lgv/v0/vbC5dGEyJs3XhJfpNnN/79cg6szpOxQtUkQi/X411zNBuzqk
- FOkQr8bZqkwTu9+aNOxlTboTOf4sMxfXqUdOYgmLseWHt6J8IYYz6D8CUNXppYoVL6wFvDL5
- ihLRlzdjPzOt1uIrOfeRsp3733/+bKxJWwdp6RBjJW87QoPYo8oGzVL8iasFvpd5yrEbL/L/
- cdYd2eAYRja/Yg9CjHuYA/OfIrJcR8b7SutWx5lISywqZjTUiyDDBuY31lypQpg2GO/rtYxf
- u03CJVtKsYtmip9eWDDhoB2cgxDJNbycTqEf8jCprLhLay2vgdm1bDJYuK2Ts3576/G4rmq2
- jgDG0HtV2Ka8pSzHqRA7kXdhZwLe8JcKA/DJXzXff58hHYvzVHUvWrezBoS6H3m9aPqKyTF4
- 1ZJPIUBUphhWyQZX45O0HvU/VcKdvoAkJb1wqkLbn7PFCoPZnLR0re7ZG4oStqMoFr9hbO5J
- ooA6Sd4XEbcski8eXuKo8X4kMKMHmwARAQABwsFfBBgBAgAJBQJV4/npAhsMAAoJEPa3gk9C
- aaBzlWcP/1iBsKsdHUVsxubu13nhSti9lX+Lubd0hA1crZ74Ju/k9d/X1x7deW5oT7ADwP6+
- chbmZsACKiO3cxvqnRYlLdDNs5vMc2ACnfPL8viVfBzpZbm+elYDOpcUc/wP09Omq8EAtteo
- vTqyY/jsmpvJDGNd/sPaus94iptiZVj11rUrMw5V/eBF5rNhrz3NlJ1WQyiN9axurTnPBhT5
- IJZLc2LIXpCCFta+jFsXBfWL/TFHAmJf001tGPWG5UpC5LhbuttYDztOtVA9dQB2TJ3sVFgg
- I1b7SB13KwjA+hoqst/HcFrpGnHQnOdutU61eWKGOXgpXya04+NgNj277zHjXbFeeUaXoALg
- cu7YXcQKRqZjgbpTF6Nf4Tq9bpd7ifsf6sRflQWA9F1iRLVMD9fecx6f1ui7E2y8gm/sLpp1
- mYweq7/ZrNftLsi+vHHJLM7D0bGOhVO7NYwpakMY/yfvUgV46i3wm49m0nyibP4Nl6X5YI1k
- xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
- z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
- wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <ecf0e1f7-feae-e8bb-dad0-5e3a87b4aec5@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|PAXPR04MB9057:EE_
+X-MS-Office365-Filtering-Correlation-Id: 314f8097-8aab-426b-e799-08db9f2bb5ed
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	gC8HCoiwLAfgMuTT7chHKIeJwtDjlb3Uunlv68Nn4S9tg9ihVPx098g5iiSJiii3fhM1WcHSuTwKFobovXnZAOwubN29AoABSoM7iYmRe0ZTMC13mB3o73nxFI1XZjrOAr1TrCUPQ3mHH0K3IcpPnt6EHCAGxLeFtRHSE0fpI0V/UnLbJCBULbCKX+BIYnWt0wpzNBophd2RCa3cq4X9dRL5AIOcc1n4E30ju+Fy3FUYaWj4mr/0eOI3PLi33/4eDAuHOfsqIBY4lsXIfhn3rZAocQ/Ts6vTaQdQomKUOKJxJie3MZlUD/DGtQB2Cgo1M7jLupvLiq2myRU1dTmnwFa2WNBlK2SxOjOhiEzpXz6Rcdvig95Nbfn0XRbE6gB4A82DwEdruJ16wWVJfUKxxSXyIzjuI3WFl3GhtH8PNjWoiz2G+FLKxDqtzoloBn5bljUMmCke9bpFtpJlDPmmAdzczl3Vg9xqFCe5YJAbgGCxKcVNS0R5awkGPu8zdzKmtui6FUMlRHmrLjomIzbxjLRJJdkd0Ob2sJao3nGDGGv2iTwt10xFFF3C8ajxrGeUz01UWqnW/MO6CD4SyCK0VCmIR5bG6ffjGdamSVeIgfc86G3xJtMwIvzV04j5vwMJTv+7z8tw3faALCbAG7I8Lw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(136003)(346002)(39860400002)(396003)(186009)(451199024)(1800799009)(2906002)(83380400001)(4744005)(26005)(86362001)(478600001)(6506007)(36756003)(107886003)(6666004)(2616005)(6486002)(6512007)(966005)(44832011)(5660300002)(41300700001)(316002)(66946007)(66476007)(66556008)(6916009)(4326008)(8676002)(8936002)(38100700002)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+jEYfucCSdyoyd3YaxolZg8LtdN6KpFVfvs/qV3RCZC+UOG95YR+fhuuDMR0?=
+ =?us-ascii?Q?nPQz8H2mlyWURLWJ7Qc2tS7X+VD5XxHIRli91LvHmABErtBZtOU9ZKs2xMp/?=
+ =?us-ascii?Q?sq9BVr7VA/ASg0gcMdtp8Ab+MEs6u3MvLGk2Jvs3ODy+gqwje1qiUnFusNSE?=
+ =?us-ascii?Q?/h1Ib13MIpIYklhrP4h+whx7Bggg3557FTYXR1Pm2g5vR3+3FIZRhLK5nhtY?=
+ =?us-ascii?Q?lgL4v2lYDm3zsBlGkAXzPgjEHj3aF8YFL4PGtHiZPawZa07mhLgP7ATPmfM1?=
+ =?us-ascii?Q?vR8zXn5hbcdyjLqx/6xCvOU+tzSMFy9p5fYF1L6P0bJ2ljv3ykJcw6azFXnk?=
+ =?us-ascii?Q?jTgc26PgjciiYW5XAhO3G/FoWfXGLwaV0x3QDLv5m28Xpywhzz0gule2LKf3?=
+ =?us-ascii?Q?RXj8vFf1ysSfmlstQrMeUrQjrJnRAVuM8tzVr7BhfnAsaI23JFQJagG/X2pH?=
+ =?us-ascii?Q?sB/ioudVTLu4sVhm6h4lEOeC0AMoiRvPP6kxPzfD1W9yQrXXK6V/ZZuwQDpK?=
+ =?us-ascii?Q?Ho83xafHW2nWcJfvA69SwfrdSMoItNr8lNG5kll60wjaT/Ghd8oCkTx3K47g?=
+ =?us-ascii?Q?DFIzIfW0aNcNFPxwEefw2i4KHiFASAX/ZDwhOYv2bTMFPfA8YpiiRz/1q/yp?=
+ =?us-ascii?Q?nKvib0Hh/lu8xx5Bvc0QRAI+cxwY4bJWSq9jqkOtWaAeMGR20jgU/KoqrzdV?=
+ =?us-ascii?Q?QFRuyZodgezBBSNcjcdEQHxob3T7pIK+tw73kDRuumrNryc+wHiUo/Rp/R89?=
+ =?us-ascii?Q?pCOX4rG/foYW70USFUOYdxesNDZ5Y/py8URR5JNOByTJa0kCQCVFXEcFw4If?=
+ =?us-ascii?Q?qK7iPjuBl6IqAjej5bZ0F0j8wcW3Qlz/Y+C2+VR3n649uzocRRXIxQEvA8E/?=
+ =?us-ascii?Q?38RjOSWnMh8GY87o6btSSIZkWis7n5COK0vokOQONCGju3izSQuDLnxxExdr?=
+ =?us-ascii?Q?1erxsm77u0XnS3Xu4jcwRFIPVJZvatOXwJ3vD8g2umMja1y4emtVBmxbrAAk?=
+ =?us-ascii?Q?LrvIt7nerYUpEB3Si+5JnwbQUddAxvzZyypSjJjjPJXbNDKud/lo1QldU4mh?=
+ =?us-ascii?Q?I//q8Yhj6361nV/0tvnObKwY02m+lejx379VfQCeZxpTLGEr69kFkHuhYBZ4?=
+ =?us-ascii?Q?osdf46QxyAVkvN4dYULGrmOqy4cf/3hKD0+Eig/oIaJglpvZOEx9mBnH9dzu?=
+ =?us-ascii?Q?Fi3IkZNZ3cUNgnwCXQ5332WlublX4MhmDzxkZd6UqZk+efoAS8GIEbMEXuP+?=
+ =?us-ascii?Q?yncSOdFvYuV6hqlRykLyWCBIqEUOpuYOlh8XyCjC3QwYKvVFk2CoajbPvzvh?=
+ =?us-ascii?Q?VrmhANuQdFTAkVtU3XdOHFINZAwnc46YKV1n6DO8nKp1KihtFu3Bl/IfFLQx?=
+ =?us-ascii?Q?ouLs/aUsr5UnaleDGv32RvwxHe5i/zRaxUxZVHcwH/HGD+w6BR3WCnkNHycK?=
+ =?us-ascii?Q?9I3K6wK9SDSyZ2PiLzjEpd4m7Q61HfWAJb1fWXCMxG1MjfpfKrAlKdGzwjV5?=
+ =?us-ascii?Q?HR8xhkk+hjy8XMUfhX7HpHRzDR9gVmwRb6MYOLPtSFrybbPVcOsSSyrlQ+Xx?=
+ =?us-ascii?Q?v5lciYHbU2RxFP420psaVCV45y5hR4/3bHvruM0r?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 314f8097-8aab-426b-e799-08db9f2bb5ed
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2023 14:10:29.2410
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1iyCaZYKFcBAYoOamZ6bbtb6U322bkbVRN8/IgndB6qakpd4d74zSGJ7i3JxPdrxkhJb1IfxnhHfA/EZvx/56A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9057
 
-Hi Geliang, Mat,
+v3:
+ - address Matt's comments in v2.
 
-On 17/08/2023 02:07, Mat Martineau wrote:
-> On Tue, 15 Aug 2023, Geliang Tang wrote:
-> 
->> Update scheduler refactor commits:
->> - drop data_init interface.
->> - call mptcp_sched_default_get_subflow in get_send/retrans.
->> - update commit logs.
->>
+v2:
+ - fix CI errors.
 
-Thank you for the patches and the review!
+This patchset addresses #379 and #391, add the abilities to remove id 0
+subflow and address for userspace PM. And a selftest.
 
-> Thanks for the changes Geliang, these look good to squash.
-> 
-> Matthieu, I think the build failures were due to the squash commits
-> being applied after the final export branch commit?
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/379
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/391
 
-It looks like they are due to the squash commits. Let's see :)
+Geliang Tang (3):
+  mptcp: allow creating id 0 subflow
+  mptcp: remove id 0 address
+  selftests: mptcp: remove id 0 subflow & address
 
-New patches for t/upstream:
-- 334385dbbaff: "squashed" patch 1/9 in "mptcp: add struct mptcp_sched_ops"
-- 72867507b737: tg:msg: update after the recent squash-to patch
+ net/mptcp/pm.c                                |  2 +-
+ net/mptcp/pm_userspace.c                      | 36 +++++++++++----
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 46 +++++++++++++++++++
+ 3 files changed, 74 insertions(+), 10 deletions(-)
 
-- b1737babf8e1: "squashed" patch 2/9 (with conflicts) in "mptcp: add
-scheduler wrappers"
-- ebc8d6bc5e46: tg:msg: update after the recent squash-to patch
-
-- eeffd6a7a5d6: "squashed" patch 3/9 (with conflicts) in "mptcp:
-register default scheduler"
-- ff14b1c54442: tg:msg: update after the recent squash-to patch
-
-- dd2afaeb7bf9: "squashed" patch 4/9 in "selftests/bpf: Add mptcp sched
-structs"
-- 28c12982dd5b: "squashed" patch 5/9 in "selftests/bpf: Add bpf_first
-scheduler"
-- 22674b47badb: "squashed" patch 6/9 in "selftests/bpf: Add bpf_bkup
-scheduler"
-- 48f4f33191d4: "squashed" patch 7/9 in "selftests/bpf: Add bpf_rr
-scheduler"
-- 658be6218f95: "squashed" patch 8/9 in "selftests/bpf: Add bpf_red
-scheduler"
-- c1714527d1e2: "squashed" patch 9/9 in "selftests/bpf: Add bpf_burst
-scheduler"
-- Results: f28cd69d6233..ca3243095d76 (export)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230817T092922
-
-Cheers,
-Matt
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.35.3
+
