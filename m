@@ -1,174 +1,158 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2068.outbound.protection.outlook.com [40.107.6.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC5419B
-	for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 04:51:20 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G+R+B5L70MRguyQd1O7GNCFlFFTEDxn3Tg1Tv7Zgvt/gwX2MaJ2e4W+omvuWsRGQxFZqpx0d1pV++N2YpSBD18nMp2bKlHvTCTgjMsOuuN9CW1uf69MBNtD5F0sV8HSCx5FaL85ptVQ7C2RZrgZMDQF7cohAiRPL8eMCcrEs8L2D3HanXsxfqsk2j0evT5BklQb/7zEAbmTjQJz94WqXMq9DDYydW68TWDaphjhwHUl1tpnHgRdavhxkXbKPBVCuWtHvoZpmNnGwvyl+ifcIfaGfXAL9aWf5RNeS21EfGQ4MKoc1YTz3xtBZrfi0YY+Q/jdAp3SZb+E5aqU3ZwzVVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zn7TxGXrGPkD8XORNhYp3Cd0Xyw4K3cMcH6dAhrYhzg=;
- b=Ld3AfCa+23gbuKKvTCW07f5vGd0INPbb/RK2wyjEdh7VyzCVCrKwNw7+hOO0g7a1plvoH+QJrQjhHRg3W4R8LxKPvwbGM/ki5BVUkSJymHogZOKyc4pq1BHumXN7/fM4HjK1eBXXy8xrtGVnfI41VEW2A/SEs1Sdo92zvR5FzQIY3//YwOmfKHuYY/S4ZZvy4qtp3bElDbFXDcQmmPlDR9qau67OBTqO/Dxym6qqEKjlPaQbXutnI2nO4JvfshN6y3ff5kOqRB9pS/JDpLMex+WHQNQ1WrJGKJ9gOd3SKJNT6pEHAAwBog50aDiZb15jCoEWq3aErEAbbna/ZTLlGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zn7TxGXrGPkD8XORNhYp3Cd0Xyw4K3cMcH6dAhrYhzg=;
- b=QDttEUKxpz7g1+WyCytNoRR3+B99HkxuW2zhMqQkDDMtRbDpZ4nEDVqzu7qsFL43Ic08/GhQlQs4h6Fne3vDTZZIdiIAoV56lpiHizIJS4FYST8dh31cvu8L//MANf+6myZKBVuiF/3VJNyg37t5btxtNZ8WoBbuztrEMe3jjz5jLl01UikO5kzKHQ2RjgLbaaXHG2KxUJbW4v/jp2BiiYUz1KEJofNvcuyfl767pAn3+2fA4wfugtVeE5rZO7mD0VPBk+KRUH4TOfg2hkfmtm0UA1WbsMhkMYocMufE2L3RE0+27bRjrF+dstatZ8N3Oyvgi9Ok/2gsU+W4QKTFug==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by DU2PR04MB8759.eurprd04.prod.outlook.com (2603:10a6:10:2e2::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.29; Thu, 17 Aug
- 2023 04:51:17 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::2867:7a72:20ac:5f71]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::2867:7a72:20ac:5f71%3]) with mapi id 15.20.6678.031; Thu, 17 Aug 2023
- 04:51:16 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next] Squash to "bpf: Add bpf_mptcp_sched_kfunc_set"
-Date: Thu, 17 Aug 2023 12:51:33 +0800
-Message-Id: <ee69d8a0379e89d8b194d753129d09d986f7e674.1692247869.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0185.apcprd01.prod.exchangelabs.com
- (2603:1096:4:189::19) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14D1DF56
+	for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 08:28:10 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3fe1d9a8ec6so4030085e9.1
+        for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 01:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1692260889; x=1692865689;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NjT6YjR1k085Z4PQDRv1hONhUEJap5CFDVXBlpQg+Ms=;
+        b=Z0h2iXHnYumuOQaOmyM6YeR7xsqncsiWMhpvoLH8yFAw5MJkg6M+cMrRT/4FVU65pO
+         VpXYR632Q/uf8YM2oljXBm6ph2WM0bWSfxbnunqWKMPTAH8svL8i1NRcZBNGNmDgq3AW
+         RTMN+sNCeIIy5sVMWqPBz02dSyMGH/B64HDsfUiR3SBfsJR5nkB0fEqkj+XSvTb+Xg/8
+         nP44ROr1Gn7/82YC1kiZZ0PhyGWmuR/hkj+0AUETqgLFkMu6HZjNgUjxpTaL225kifPS
+         /pUO4bT+L5ro7Oqsv6QFEEdlS708BrfgMwbvRNH5lOoOiiyjg9u0GUTyd5hjLWaNOIiC
+         cEPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692260889; x=1692865689;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NjT6YjR1k085Z4PQDRv1hONhUEJap5CFDVXBlpQg+Ms=;
+        b=QkISPIzwO5NtkgVMvWmqMbNSD+ibNa6ZZb71c4q0k65mgQTcyhuVLCrNYE39d+kNE4
+         WeshbjYu13C5xUa1r3bkp33VQx3AaBhACS1AIPxC3Nx5pb14hdbMolp1uiigzo8coWKp
+         5XAls8ZCHwjIqbVkTkJbk505cDS4gPNG8dJRuXQLe3SbNNJyklM5ZR+YqxDEoe5tiW3V
+         Fnouelx3d39bBmrr9AmJbcIYOeDX8L4WqcIUPkZIMg1A65bE50QjH4RzqCs1A54RFB69
+         E075X+jSAw7QtYuvZXxL6oIr1vn6rllFNiZPdVtYnp0a5X9WrcuXwO7lIW1mDRA7fPe+
+         iX/g==
+X-Gm-Message-State: AOJu0YxIXcy3tgh9gmMG39NutyV/c0NCtktuYPnnyo+GQ51BtWiFih4R
+	JuIgs6EEdpHUY38sVAhSB2YVdCnvoncPE+AmOdU=
+X-Google-Smtp-Source: AGHT+IEZo+RsU0XMMwmjGhPYYG6jdV6xWXuM8xtr4tL55K3y1J2o2OIMROF9zQXaKOw0KwkhUYSo9w==
+X-Received: by 2002:a5d:5943:0:b0:315:acbc:cab6 with SMTP id e3-20020a5d5943000000b00315acbccab6mr1513180wri.16.1692260888525;
+        Thu, 17 Aug 2023 01:28:08 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:c88:d59b:1c03:4962? ([2a02:578:8593:1200:c88:d59b:1c03:4962])
+        by smtp.gmail.com with ESMTPSA id z10-20020a5d4d0a000000b0031ad5a54bedsm1834501wrt.9.2023.08.17.01.28.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Aug 2023 01:28:08 -0700 (PDT)
+Message-ID: <19ddc11e-5bf4-499e-9c34-e264755b61d8@tessares.net>
+Date: Thu, 17 Aug 2023 10:28:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DU2PR04MB8759:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7e4c451c-1346-420e-f7ae-08db9edd9693
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	XDo6x2Ii6lKVSyxYkZBsSgwOaCsFkoeBIu178r2wdoRSZLttYK3h42CxKSu2B+fbJEXDhj9RfXd3K7QjF0S41F9yHurT3b78DNeaeFMQq2SXDn2gppXx9+LVecAP1rxKH1VC273C9s4cXKh6cuu3bAicjSqhilk6GfCDc/r/PUXCaUP03ALcpLVFkacKSKCJj+b8cMTWQBnD4qbpFe7tHbJJ057ij7Xt7IuL6jpCU1HLf1ryS89DewSPWxvzqk1i3AU8vT80F8HVxtZnRLnfphdmfTxyvwBUbsZJHcUwELxWj8Y25LkvhNAksdtCXMOtXhGShrLuPLelRpc0zpBAmcvwFpDXjXpFLWPCEG9Ro2tmqu9sBzHT9ny4V/0FeC3EnRulpoibja4dX3CrZVUIES+JLTPEjKOtsUZkU4HFVL43gApARV34CsgnSmayzAbnVYJIwhyF9F9AAbfnYwRhgQyJmTj294SGmre+T2Dh+W7toy++miR5UG+yBAhU9kRfPdlopTo+iJzE+mW7X0PDPfg5DahnDsH/ImQQQAM2JLL8ZuYce7iP5t1BDJbOXwRV
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(376002)(39860400002)(396003)(346002)(1800799009)(451199024)(186009)(2906002)(83380400001)(26005)(86362001)(478600001)(36756003)(6506007)(107886003)(6486002)(2616005)(6666004)(6512007)(44832011)(5660300002)(41300700001)(316002)(66556008)(66946007)(66476007)(6916009)(8676002)(4326008)(8936002)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?e7vVbp84Nd0i+5KlX6lU+GGei3oKEmRyoIiWhRUUw5ATqGQj8eYILNY70bqf?=
- =?us-ascii?Q?3bnPd1od+LZg/gfA9FDKKYIsysgKYQZZ00eiDuVljMNSpAg2A5y4LW9tpN9I?=
- =?us-ascii?Q?XOWbWe1eKhJjY+Fn1lmE1KBQcREbVwASWPsmkMaLQ/qcMvDcufd2Qgl+VuzI?=
- =?us-ascii?Q?fvpK65YDZBrqDTaBPTdta2XEyq3M4csBDAnvyVj5O4nuq9dTpCzHttI2L2Rp?=
- =?us-ascii?Q?Nuf/SglyTHOgLN4iMSaFwzL/dbMH1/Je14lXtjI91LoK+ZCRmTgDtrLpW/3y?=
- =?us-ascii?Q?y4YWd2q6IV+TfHqN1Od5N8VRdXVcRsGeGqDF6FTjyGRaz2e0FrmrZZT69ser?=
- =?us-ascii?Q?1WaNYHT86RdjZvDHL53vtcPikV5/A5Icwvm5KOm/Ye8Rl3ReQyqGsZWZbrge?=
- =?us-ascii?Q?m2r8AGogNYc4F08yFhtOkJEx2tM2+/l4NFcFQpOC//tcNspd0jGbmncUUPHP?=
- =?us-ascii?Q?26tzrUjKnnLGiPY6+e7kJ9fL7inhVL2iEEEj2N9Ns9CuEacRoU7sRnuhgMLs?=
- =?us-ascii?Q?3fIomVfKSt1DEdfJIiGY2enC9D+T8LedxtY6cZStBS1GwfUSEjx7+z98BZ4s?=
- =?us-ascii?Q?ycLlGRUfH3LojHCXLjJ5P95Xnt+IOn0wytK00AyxRDguGq1t77JPxOmi4bPx?=
- =?us-ascii?Q?gQnL/UPIy619eGpUhaOsBxDjefAfPlTH11T644DBih0jxaAJ46X4mpeTsBp0?=
- =?us-ascii?Q?lPqKotMD/BTItewgsu1ps86GvBkSJBPTJvlbApMF/GQmBB+2QJmNz4N3QeOE?=
- =?us-ascii?Q?Pu3m7Y95o7oiCzrzbNVveAUzUx1yL+MgXEsga7+BnSCIXBJ1FVJURwV/Sl/o?=
- =?us-ascii?Q?E7LjNUw8TzwTO29C7cRRr8ALkJ+nmkqYvn4oBCjOCP1FTFZqxkM5h7Zb+qXn?=
- =?us-ascii?Q?bqGBJDHpH/ix5/dHO94+7tpCce32D+0uIcXyHLnv2+C9B8Zz2kqyw7noKpPv?=
- =?us-ascii?Q?4iEvHuAei9P/yCjYs3JRRFCD+s3SJBdK7qihc09pN17cskk3rrwt7iJcjTFq?=
- =?us-ascii?Q?w6tOyAxlANxIQdmGjnHS9fQXe/y7Z9LiQVDyO4OpzTr/iCLJT/5sJkSdQRU6?=
- =?us-ascii?Q?StoKbAmrtp+WLGJiE+F9ZUhXYWyG8mKCLeJSDjTAvjoe5ejFLZ42P/UDERHo?=
- =?us-ascii?Q?ov7B01GdF3fJNB6BnX3UcLgJPvvwOLAKMWx8Qk2bDJ2x6i0cJm8Cb9sYZyQw?=
- =?us-ascii?Q?WWyIq71snM+zDLzTuUIIYO1kbU96jZnKUnMWyWe4tz9Zayeh2rA7D2XaQSJe?=
- =?us-ascii?Q?F6z4NdTET6VYY6lGZ0DyUjDpc3fVF5czNBHUE6Q/6sdOLGqqkETV1rrtYGnt?=
- =?us-ascii?Q?YiVx5u+Yap4cJzsNDsfjvBTPRJ4H+RtG1InC0LSSQhHcj9n5vSvMCazav40i?=
- =?us-ascii?Q?idjhrvFwJgTGA33kBsgyYoIwPfLROeYlNUkmsj1A4g2CSMapSwV99I9ZYwVE?=
- =?us-ascii?Q?KIhkM39uIXrfQiXnNxTZWViDNeQ0CyT55UNJkZrqloIYC7kY7TDgIWPPBJBQ?=
- =?us-ascii?Q?YS1FGAy1XfijXmcpE5umoQugCH+JeTeu/MIUsOVgmqpk4aOdaAsaMVi2254q?=
- =?us-ascii?Q?a/S1liBnN+ObX32Xh5vSjPSEwLRIa8CfXt6bRtMy?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e4c451c-1346-420e-f7ae-08db9edd9693
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2023 04:51:15.6155
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UsPUkR2i/+u7up6Ybhcw6P9tr4PjwrJQFlE4UbL4p1j56HDZ3FXTzGcY5t1KWXsWIYYOpRx/+H5mtubHmF1VhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8759
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v11 2/5] selftests/bpf: Use random netns name for
+ mptcp
+Content-Language: en-GB
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <cover.1691125344.git.geliang.tang@suse.com>
+ <15d7646940fcbb8477b1be1aa11a5d5485d10b48.1691125344.git.geliang.tang@suse.com>
+ <8b706f66-2afa-b3d0-a13a-11f1ffb452fe@linux.dev>
+ <20230807064044.GA11180@localhost.localdomain>
+ <9a84e026-402d-b6d9-b6d1-57d91455da47@linux.dev>
+ <20230809081944.GA29707@bogon>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
+ 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
+In-Reply-To: <20230809081944.GA29707@bogon>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The commit "bpf: Add update_socket_protocol hook" on bpf-next tree will
-conflict with the commit "bpf: Add bpf_mptcp_sched_kfunc_set". This
-patch fixes it.
+Hi Geliang,
 
-Please update the commit log:
+(only with MPTCP list)
 
-'''
-This patch adds a new struct btf_kfunc_id_set for MPTCP scheduler. Add
-mptcp_subflow_set_scheduled() and mptcp_sched_data_set_contexts() helpers
-into this id_set, and register it in bpf_mptcp_kfunc_init() to make sure
-these helpers can be accessed from the BPF context.
-'''
+On 09/08/2023 10:19, Geliang Tang wrote:
+> On Tue, Aug 08, 2023 at 11:03:30PM -0700, Martin KaFai Lau wrote:
+>> On 8/6/23 11:40 PM, Geliang Tang wrote:
+>>> On Fri, Aug 04, 2023 at 05:23:32PM -0700, Martin KaFai Lau wrote:
+>>>> On 8/3/23 10:07 PM, Geliang Tang wrote:
+>>>>> Use rand() to generate a random netns name instead of using the fixed
+>>>>> name "mptcp_ns" for every test.
+>>>>>
+>>>>> By doing that, we can re-launch the test even if there was an issue
+>>>>> removing the previous netns or if by accident, a netns with this generic
+>>>>> name already existed on the system.
+>>>>>
+>>>>> Note that using a different name each will also help adding more
+>>>>> subtests in future commits.
+>>>
+>>> Hi Martin,
+>>>
+>>> I tried to run mptcp tests simultaneously, and got "Cannot create
+>>> namespace file "/var/run/netns/mptcp_ns": File exists" errors sometimes.
+>>> So I add this patch to fix it.
+>>>
+>>> It's easy to reproduce, just run this commands in multiple terminals:
+>>>   > for i in `seq 1 100`; do sudo ./test_progs -t mptcp; done
+>>
+>> Not only the "-t mptcp" test. Other tests in test_progs also don't support
+>> running parallel in multiple terminals. Does it really help to test the bpf
+>> part of the prog_tests/mptcp.c test by running like this? If it wants to
+>> exercise the other mptcp networking specific code like this, a separate
+>> mptcp test is needed outside of test_progs and it won't be run in the bpf
+>> CI.
+>>
+>> If you agree, can you please avoid introducing unnecessary randomness to the
+>> test_progs where bpf CI and most users don't run in this way?
+> 
+> Thanks Martin. Sure, I agree. Let's drop this patch.
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- net/mptcp/bpf.c | 35 ++++++++++++++++-------------------
- 1 file changed, 16 insertions(+), 19 deletions(-)
+FYI, I'm also going to drop this patch from our tree as it doesn't seem
+needed and it causes conflicts with bpf-next (now in net-next).
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 4911293919c2..92cf6fbf8275 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -144,24 +144,6 @@ struct bpf_struct_ops bpf_mptcp_sched_ops = {
- 	.init		= bpf_mptcp_sched_init,
- 	.name		= "mptcp_sched_ops",
- };
--
--BTF_SET8_START(bpf_mptcp_sched_kfunc_ids)
--BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
--BTF_ID_FLAGS(func, mptcp_sched_data_set_contexts)
--BTF_ID_FLAGS(func, mptcp_subflow_ctx_by_pos)
--BTF_SET8_END(bpf_mptcp_sched_kfunc_ids)
--
--static const struct btf_kfunc_id_set bpf_mptcp_sched_kfunc_set = {
--	.owner	= THIS_MODULE,
--	.set	= &bpf_mptcp_sched_kfunc_ids,
--};
--
--static int __init bpf_mptcp_kfunc_init(void)
--{
--	return register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
--					 &bpf_mptcp_sched_kfunc_set);
--}
--late_initcall(bpf_mptcp_kfunc_init);
- #endif /* CONFIG_BPF_JIT */
- 
- struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
-@@ -181,8 +163,23 @@ static const struct btf_kfunc_id_set bpf_mptcp_fmodret_set = {
- 	.set   = &bpf_mptcp_fmodret_ids,
- };
- 
-+BTF_SET8_START(bpf_mptcp_sched_kfunc_ids)
-+BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
-+BTF_ID_FLAGS(func, mptcp_sched_data_set_contexts)
-+BTF_ID_FLAGS(func, mptcp_subflow_ctx_by_pos)
-+BTF_SET8_END(bpf_mptcp_sched_kfunc_ids)
-+
-+static const struct btf_kfunc_id_set bpf_mptcp_sched_kfunc_set = {
-+	.owner	= THIS_MODULE,
-+	.set	= &bpf_mptcp_sched_kfunc_ids,
-+};
-+
- static int __init bpf_mptcp_kfunc_init(void)
- {
--	return register_btf_fmodret_id_set(&bpf_mptcp_fmodret_set);
-+	int ret;
-+
-+	ret = register_btf_fmodret_id_set(&bpf_mptcp_fmodret_set);
-+	return ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
-+						&bpf_mptcp_sched_kfunc_set);
- }
- late_initcall(bpf_mptcp_kfunc_init);
+If needed, we can still re-add it later.
+
+Cheers,
+Matt
 -- 
-2.35.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
