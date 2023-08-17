@@ -1,80 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166BF3D60;
-	Wed, 16 Aug 2023 19:00:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 79FD3C433C8;
-	Wed, 16 Aug 2023 19:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8941518F
+	for <mptcp@lists.linux.dev>; Thu, 17 Aug 2023 00:08:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E859CC433C8;
+	Thu, 17 Aug 2023 00:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692212428;
-	bh=rEdul0JpWo7UI26UCX+q00I+G+ygegw9aObVQvYySQI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=HTi8CWJQFmhUdke7qA/SrQiU5COF+gwJ7Tdlwl5X9rh1Zm6plgklArcrTsArFqx5I
-	 piJ2OTVJj19Ah/2MScXA854R3eb8qaKx2WXDPNeiI08fmTpqZ+gptxBVZ7TzTmGyi2
-	 sQhmBQQb57HYAmEPaZCMdzrUG8ijso96fEUMEEFWGyChPfWKhoeuY0wVF/S3RuIpef
-	 4Uhtb5iT0vGSLoRQIBtfh9PU1BMjolhvnKpEXE9xnncDvz9wXHlnzJ0krxFsxxHVgw
-	 ZVQik7R6HdSylHFVaa1PTRyED9XhDJMGP9Pgq7c9XbPR2dxi0DJcPb/Vy55O1xY3qN
-	 iNha9n9uHj+KQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5D2BAE93B39;
-	Wed, 16 Aug 2023 19:00:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1692230882;
+	bh=zwvH/x+Ir5t4IjAIVG/jIqN/sK/nyAzFJFzFV8y16Iw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=mkZWsh6zMM8C3t6W0FhZIYQ2e7CgS4WAfcEgNgxz5B94uE0Cy9eY4w6oICGqNjPS8
+	 A4q/VtfuMrcH3XAlBxVc7Fzqv9eDv9aDYA6h7tEHL5v8k0CAB8GSwPnByhupRnIiea
+	 hYC4KExST513yfxXIbwyJLfYbo6E63SiQfIphHsZiuPgIhGWNsEaMNv5U9p7kGyo1i
+	 +NbITmPDV1/pHS3NuWsQNQ1vnAZ4I7EX2WNTb4Mqz5bCIhFdIMFb2ZfCbIa4wGlGWo
+	 pEDBozaPgowQJ7wf5pvWW0NQ2uw7PRsVAG+zBKMxSVAG88yHFRsF42Ym7GC5pb7nAM
+	 4Fr4PGu9bYPNg==
+Date: Wed, 16 Aug 2023 17:07:55 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang.tang@suse.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 0/9] Update scheduler refactor commits
+In-Reply-To: <cover.1692080803.git.geliang.tang@suse.com>
+Message-ID: <ecf0e1f7-feae-e8bb-dad0-5e3a87b4aec5@kernel.org>
+References: <cover.1692080803.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v14 0/4] bpf: Force to MPTCP
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169221242837.25657.8139131994909389115.git-patchwork-notify@kernel.org>
-Date: Wed, 16 Aug 2023 19:00:28 +0000
-References: <cover.1692147782.git.geliang.tang@suse.com>
-In-Reply-To: <cover.1692147782.git.geliang.tang@suse.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org,
- revest@chromium.org, jackmanb@chromium.org, matthieu.baerts@tessares.net,
- martineau@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, john.johansen@canonical.com,
- paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
- stephen.smalley.work@gmail.com, eparis@parisplace.org, mykolal@fb.com,
- shuah@kernel.org, horms@kernel.org, bpf@vger.kernel.org,
- netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
- linux-kselftest@vger.kernel.org
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hello:
+On Tue, 15 Aug 2023, Geliang Tang wrote:
 
-This series was applied to bpf/bpf-next.git (master)
-by Martin KaFai Lau <martin.lau@kernel.org>:
+> Update scheduler refactor commits:
+> - drop data_init interface.
+> - call mptcp_sched_default_get_subflow in get_send/retrans.
+> - update commit logs.
+>
 
-On Wed, 16 Aug 2023 09:11:55 +0800 you wrote:
-> As is described in the "How to use MPTCP?" section in MPTCP wiki [1]:
-> 
-> "Your app should create sockets with IPPROTO_MPTCP as the proto:
-> ( socket(AF_INET, SOCK_STREAM, IPPROTO_MPTCP); ). Legacy apps can be
-> forced to create and use MPTCP sockets instead of TCP ones via the
-> mptcpize command bundled with the mptcpd daemon."
-> 
-> [...]
+Thanks for the changes Geliang, these look good to squash.
 
-Here is the summary with links:
-  - [bpf-next,v14,1/4] bpf: Add update_socket_protocol hook
-    https://git.kernel.org/bpf/bpf-next/c/0dd061a6a115
-  - [bpf-next,v14,2/4] selftests/bpf: Add two mptcp netns helpers
-    https://git.kernel.org/bpf/bpf-next/c/97c9c652089b
-  - [bpf-next,v14,3/4] selftests/bpf: Fix error checks of mptcp open_and_load
-    https://git.kernel.org/bpf/bpf-next/c/207746550262
-  - [bpf-next,v14,4/4] selftests/bpf: Add mptcpify test
-    https://git.kernel.org/bpf/bpf-next/c/ddba122428a7
+Matthieu, I think the build failures were due to the squash commits being 
+applied after the final export branch commit?
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+- Mat
 
 
+> Geliang Tang (9):
+>  Squash to "mptcp: add struct mptcp_sched_ops"
+>  Squash to "mptcp: add scheduler wrappers"
+>  Squash to "mptcp: register default scheduler"
+>  Squash to "selftests/bpf: Add mptcp sched structs"
+>  Squash to "selftests/bpf: Add bpf_first scheduler"
+>  Squash to "selftests/bpf: Add bpf_bkup scheduler"
+>  Squash to "selftests/bpf: Add bpf_rr scheduler"
+>  Squash to "selftests/bpf: Add bpf_red scheduler"
+>  Squash to "selftests/bpf: Add bpf_burst scheduler"
+>
+> include/net/mptcp.h                           |  4 +--
+> net/mptcp/sched.c                             | 36 ++++---------------
+> tools/testing/selftests/bpf/bpf_tcp_helpers.h |  4 +--
+> .../selftests/bpf/progs/mptcp_bpf_bkup.c      | 11 ++----
+> .../selftests/bpf/progs/mptcp_bpf_burst.c     | 15 +++-----
+> .../selftests/bpf/progs/mptcp_bpf_first.c     | 10 ++----
+> .../selftests/bpf/progs/mptcp_bpf_red.c       |  9 ++---
+> .../selftests/bpf/progs/mptcp_bpf_rr.c        | 11 ++----
+> 8 files changed, 23 insertions(+), 77 deletions(-)
+>
+> -- 
+> 2.35.3
+>
+>
+>
