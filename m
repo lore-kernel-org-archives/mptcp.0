@@ -1,45 +1,45 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEC64689
-	for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 09:30:05 +0000 (UTC)
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3159d5e409dso1192991f8f.0
-        for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 02:30:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7DE4689
+	for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 09:34:03 +0000 (UTC)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-3fe8242fc4dso6961995e9.1
+        for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 02:34:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692351004; x=1692955804;
+        d=tessares.net; s=google; t=1692351241; x=1692956041;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=eeLGq75X9FBlRWVqjsRPQFkHv+uMi/6emkBRHUsGE68=;
-        b=zgVgTvIJrsK80UwiKIb+gVWi8lWDMgeRjXks6u5GcIxVEGMzaXXLtgVLkOUgEWo8wc
-         d7ms8fr+aZR1YgN3LMrlKPVEebdALfsIPu4mw3gHS+HIRdMr60Laq2V2NE/fnrFw//56
-         KNKuhq1WRsRTYS6+T7xH5vsmVWcOOHf2U0CujTalCKWpH/6qaIQMm6U4W6iVjVZ468pp
-         xb6LbyaGPMdH0bOBctlNKCMc2beLDDiPtRs9U4CpRHRGrC5R3lDCeZ+SJsXvQ/hDuRi+
-         JWJ0/THVzSAhcon7oud0gVpY9epttC0QnHVbmD6Ea/hiyY8OVnR4CkhrqjyYyWRq2q65
-         10Lw==
+        bh=oUmnnQ/3IMeF+egtAsM2omocz8A4esqQMh1YjgerDfk=;
+        b=FtXfqH+h7g3PVVpBZda9CgW7ja5WGmfgh8jWvZ9SjsoM3QH/dJeoOj3D8aJUsZeIyk
+         yR23tIbkH6tjNtmck4l4fiLofxY1RNsGlqYg4KFm1Dsp10gOwFr7uQV8f90ztVIjlcvJ
+         sdyn20ua6+xcu9dZb7ggooU+j3ABgDyeg/Q7ziV4/7Y13jxomSB9Hl5vYv/m5i5Fe+9K
+         +PQ5Y+3Nsj169w5blG7e42Z6Va0sOiZBxyRy3EmRXWKWOdna1n91JZ/us9j68wMKcMgp
+         PTjwBcoRiBhN2LOF2yOBswnqjrp735gFA87YZy8bOjkcJzD4cbgQP1eHsX59luW+7Gcz
+         6knQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692351004; x=1692955804;
+        d=1e100.net; s=20221208; t=1692351241; x=1692956041;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eeLGq75X9FBlRWVqjsRPQFkHv+uMi/6emkBRHUsGE68=;
-        b=g+xNQEc3lFwCeMrrj5kBph17J3NZjX2VPmfePdygaCedpM1ebVAwebsUyYB1hXRu43
-         gywIf4YHeMzWmtT8yvGInLOkZ0bJAgLiEQIcVz6BdxLHSI1gHSaJEoE0fmUezuw8Gbon
-         MwKq73FvjaIyiOKURtV8TYWVsuaisSbR6/oaGwyMiNotNjf0I/mi0ZQZcMjtE/Me/tiT
-         apjEXF9nc4q3PwOSiBxVT5cD/+vNWyUsQVGoQUpVehA/HNLs+NL7NpUQt5JSK7ERFq2x
-         6+uW3YRQ1tOPlDWJO0XVPqfDl0tsZrsXURb/3qkyGqGmxyXgUu/UtusgTalnWMwJGmXH
-         1A1w==
-X-Gm-Message-State: AOJu0Yx5uaeB1st/fW6GGod4slmE0nUra8sw0+P8SbwCKY/Sn9Pd0cdL
-	cQiuC3ACsnS/bQqLVVS3/Z06trUHG9UL9biMEvQ=
-X-Google-Smtp-Source: AGHT+IHsN+yzWjdwBW6SK5DZYfFcw5IpXNuYYTvJslONwZbPpwm7xv6iyCoycoFjGZhE9MYbhMEYBA==
-X-Received: by 2002:a05:6000:682:b0:319:7abb:4112 with SMTP id bo2-20020a056000068200b003197abb4112mr5315552wrb.21.1692351004241;
-        Fri, 18 Aug 2023 02:30:04 -0700 (PDT)
+        bh=oUmnnQ/3IMeF+egtAsM2omocz8A4esqQMh1YjgerDfk=;
+        b=C8YVfZMvmtmjsiOhg0iwYKYfhuyPmeTjwxLj3oD9B+VK6JfW90CN3qj7madjDzKjN2
+         P50o0oHWx/5H3WJsa9lzZpaF1OXQgZ7Ik5JcYkeWQHSAC3WXTn9MVkVdtfkAeizCyYRT
+         IIEwKc5HxQnsf8+g0FuKYKzqnu6I7VuoDP2c+V6B/oG0I75IXAInBNb2CUE0X9Ay1yd5
+         lDQYGFMhTIQl+uGyS/BFnS70Ga64efV5sLRFzcKO+cFrJ03n5dOM5LYQF6LOVg7G2rdU
+         NO1S3AbxzDfn/P1i1GEjgLhDbU5y+ZreoH7pNUmnvqFIsDByGAGlzbGwUcPudebNwIrw
+         7n1g==
+X-Gm-Message-State: AOJu0YwoSU/ox/U0w5QVWTkJTD5A01+MizsAj76yLcxRjTGDHKTL1imL
+	epSEH58u6D+FVGaLsqXG0UcTafvjEXUp/2YXMM8=
+X-Google-Smtp-Source: AGHT+IHCJF0fun5dOCSqoxFg+tmgugRQHbquuvJFaD2nlXPx8NkrVWy2ro8DgTO/LW96+i9/bSjS8Q==
+X-Received: by 2002:a7b:cb10:0:b0:3fe:90f:8496 with SMTP id u16-20020a7bcb10000000b003fe090f8496mr1734193wmj.1.1692351241377;
+        Fri, 18 Aug 2023 02:34:01 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id p11-20020adfe60b000000b003176c6e87b1sm2152763wrm.81.2023.08.18.02.30.02
+        by smtp.gmail.com with ESMTPSA id x22-20020a05600c21d600b003fe1cb874afsm2195852wmj.18.2023.08.18.02.34.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Aug 2023 02:30:03 -0700 (PDT)
-Message-ID: <fc630d2b-b6c4-48fa-a175-cfadb1dff604@tessares.net>
-Date: Fri, 18 Aug 2023 11:30:01 +0200
+        Fri, 18 Aug 2023 02:34:01 -0700 (PDT)
+Message-ID: <db9abb06-d74c-4e4f-bb39-380bce0b009f@tessares.net>
+Date: Fri, 18 Aug 2023 11:34:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,11 +47,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v4 5/6] mptcp: userspace pm remove id 0 address
+Subject: Re: [PATCH mptcp-next v4 6/6] selftests: mptcp: userspace pm remove
+ id 0 address
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1692342519.git.geliang.tang@suse.com>
- <3c3c0bdd3e0d8fe5be8701e38f39ce1fd3e20d3c.1692342519.git.geliang.tang@suse.com>
+ <f59ec3473deb3ebdd2a3e34bdab23ba79086b747.1692342519.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -96,105 +97,87 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <3c3c0bdd3e0d8fe5be8701e38f39ce1fd3e20d3c.1692342519.git.geliang.tang@suse.com>
+In-Reply-To: <f59ec3473deb3ebdd2a3e34bdab23ba79086b747.1692342519.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang
+Hi Geliang,
 
 On 18/08/2023 09:12, Geliang Tang wrote:
-> This patch adds the ability to send RM_ADDR for local ID 0. Put id 0
-> into a removing list, pass it to mptcp_pm_remove_addr() to remove id
-> 0 address.
+> This patch adds a selftest for userpsace PM to remove id 0 address.
 > 
-> There is no reason not to allow the userspace to remove the initial
-> address (ID 0). This special case was not taken into account not
-> letting the userspace to delete all addresses as announced.
-
-Thank you for the new version!
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/379
-> Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
+> A new helper userspace_pm_rm_id_0_address_ns2() is added, in it use
+> 
+>         ./pm_nl_ctl rem token $tk id 0
+> 
+> to remove id 0 address.
+> 
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
->  net/mptcp/pm_userspace.c | 42 +++++++++++++++++++++++++++++++++++++---
->  1 file changed, 39 insertions(+), 3 deletions(-)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 > 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index d042d32beb4d..059b672b55f7 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -236,7 +236,43 @@ int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info)
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 322adac0cb1b..1c5c0bbae38f 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3336,6 +3336,14 @@ userspace_pm_rm_id_0_subflow_ns2()
+>  	wait_rm_sf $ns2 1
+>  }
 >  
->  	if (!mptcp_pm_is_userspace(msk)) {
->  		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
-> -		goto remove_err;
-> +		goto out;
-> +	}
+> +userspace_pm_rm_id_0_address_ns2()
+> +{
+> +	local tk=$(evts_get_info token "$evts_ns2")
 > +
-> +	if (id_val == 0) {
-> +		struct mptcp_rm_list list = { .nr = 0 };
-> +		struct mptcp_subflow_context *subflow;
-> +		bool has_id_0 = false;
+> +	ip netns exec $ns2 ./pm_nl_ctl rem token $tk id 0
+> +	wait_rm_addr $ns2 1
+> +}
 > +
-> +		if (!READ_ONCE(msk->first)) {
-> +			GENL_SET_ERR_MSG(info, "no subflow in conn_list");
-> +			goto out;
-> +		}
+>  # $1: subflows in ns1 ; $2: subflows in ns2
+>  chk_subflows()
+>  {
+> @@ -3514,6 +3522,27 @@ userspace_tests()
+>  		kill_events_pids
+>  		wait $tests_pid
+>  	fi
+> +
+> +	# userspace pm remove id 0 address
+> +	if reset_with_events "userspace pm remove id 0 address" &&
+> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+> +		set_userspace_pm $ns2
+> +		pm_nl_set_limits $ns1 0 1
+> +		speed=10 \
+> +			run_tests $ns1 $ns2 10.0.1.1 &
+> +		local tests_pid=$!
+> +		wait_mpj $ns2
+> +		userspace_pm_add_sf 10.0.3.2 20
+> +		chk_join_nr 1 1 1
+> +		chk_mptcp_info subflows 1 subflows 1
+> +		chk_subflows 2 2
+> +		userspace_pm_rm_id_0_address_ns2
+> +		chk_rm_nr 1 0
+> +		chk_mptcp_info subflows 1 subflows 1
+> +		chk_subflows 1 1
 
-Sorry, my previous message was probably not clear: if (msk->first !=
-NULL), it means the initial subflow is still there and ID 0 is still
-being used. If it is no longer there, ID 0 might still be used by
-another subflow and it is required to iterate over the subflow list.
+When we only send a REMOVE_ADDR, why do we have one subflow that is
+being removed? Is it because the other peer disconnected the subflow
+linked to ID=0?
 
-But maybe easier here to skip this "optimisation" (remove this block
-above) and simply iterate over the subflow list like we would do for the
-other IDs.
-
-EDIT: mmh, if there is another subflow created with ID 0, will it be in
-msk->pm.userspace_pm_local_addr_list list? (I didn't check) If yes, it
-should also be handled the same way we do for the other subflows. In
-this case, maybe it is not needed to iterate over the different subflows
-but only the local addr list and if not found (!match), just for ID==0
-case, we check if (msk->first != NULL) and create a fake entry? Or we
-always create an entry in local_addr_list for ID == 0? (I didn't check
-what would be best)
-
-> +
-> +		spin_lock_bh(&msk->pm.lock);
-
-Is it enough? To iterate over the subflow list, you don't need the msk
-lock? (lock_sock(sk))
-
-> +		mptcp_for_each_subflow(msk, subflow) {
-> +			if (subflow->remote_id == 0) {
-> +				has_id_0 = true;
-> +				break;
-> +			}
-> +		}
-> +		spin_unlock_bh(&msk->pm.lock);
-> +
-> +		if (!has_id_0) {
-> +			GENL_SET_ERR_MSG(info, "address with id 0 not found");
-> +			goto out;
-> +		}
-> +
-> +		list.ids[list.nr++] = 0;
-> +
-> +		lock_sock((struct sock *)msk);
-> +		spin_lock_bh(&msk->pm.lock);
-> +		mptcp_pm_remove_addr(msk, &list);
-> +		spin_unlock_bh(&msk->pm.lock);
-> +		release_sock((struct sock *)msk);
-> +
-> +		err = 0;
-> +		goto out;
->  	}
->  
->  	lock_sock((struct sock *)msk);
+Do you mind checking this please?
+Because the remove address command should not result in a host sending
+both a REMOVE_ADDR and a FIN. That's up to the other host to take an
+action when the REMOVE_ADDR is received, no?
 
 Cheers,
 Matt
+
+> +		kill_events_pids
+> +		wait $tests_pid
+> +	fi
+>  }
+>  
+>  endpoint_tests()
+
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
