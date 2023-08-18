@@ -1,45 +1,45 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EFB4689
-	for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 09:05:01 +0000 (UTC)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-31427ddd3fbso640423f8f.0
-        for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 02:05:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1512C4689
+	for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 09:09:24 +0000 (UTC)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3fe4cdb727cso6866525e9.0
+        for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 02:09:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692349499; x=1692954299;
+        d=tessares.net; s=google; t=1692349763; x=1692954563;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=XNPmmPTld695wdC2gh0ik9JBKsZdYF7hlaTrtxrZYFc=;
-        b=JQzhH/IHLwHbpLOy2ypL7fGyG51f16daKCiPNgep4mHzFQ1oxQXJ7K0CELgmF/Fzdj
-         FHfTt4i7esQ6/4/NaAYfPJcja6iUncvokI6tdskuJAlwcGNQ1XtRXIvK3Ef7NG357CZv
-         JBbfa78660v13GL6EAJ38v2POYaav8ePCMk4bp7hgFyFeVuHhlw7l8jawAYXhHX2kRON
-         r5sOU/nDP7Tr7WC0AVwFIH1HsGANegiHNzmQYkL04839XByaiGB0X5319Xa9oCX6PZl5
-         9O4YPuTatpkSBmuJ4D3ZR0uUvvua0/Q+h/m7AbZmaurfDwatt6//HRw6ztA6k7o3pNSA
-         gYQg==
+        bh=8L/hDqGBPpjFsNnLJfha3rBK28uCZzuw6Oc+jfl/Ow4=;
+        b=djWYLN6/1VgG3wJTGkpkW3p+FzpKGwhHlnDogaocZdIxN6Y6XSqAmJJdGLIfZa1nlF
+         9JCYCV7NzVBh8/jPN3EOgAegAq8oyr46VKHKH1iGjD0clD4FiczCFpyJMJ3wDlYbVjr6
+         8UAITTGogDciXUwh7PrlWKN8QVukwagHBpqkhP9RL7tCt0EyVaRTpajk0fL20VwEeOMN
+         czH3LazGqIBKrpublq8BRN9BRhAnm2AUe23iwMtPqwjyY3q0EhcbbNR9DfYbcj40RJ8g
+         lk5HmVb/DIhq+3g0slGbq/IWvZdNZpesSV5QmYj3D0zlDuF4cRE5zQIUl/g4QPFyubFp
+         6/Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692349499; x=1692954299;
+        d=1e100.net; s=20221208; t=1692349763; x=1692954563;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XNPmmPTld695wdC2gh0ik9JBKsZdYF7hlaTrtxrZYFc=;
-        b=ENggnVEGU4tlu6zpj+EyhflvHScGTQmmyEmPLAvnHBAN8zQU00KjGWoKS/5BbAWBS0
-         rbvs4EbZ3NNVypuWbimL9yajNXkmlCtA8kfiSJ0czDE2lOJqcGZ7DZVxe9TXGJwCWOSD
-         5w5GAMYMnYzvIu25Ydo+3fzHGRVSBkAi9ziNZPFPlJPgvDkJbfCakr0LhD9VP86Y6cnh
-         +X7vR+1iKvQJj00gqs9EzFezNgHDf7HYCWPNYtaXTXZj+yCLjPHldi5+7f+m3PkHdo7r
-         CT+mmOh/TJN3ibXnEsoeloHmT40Nju5ETAEeX0C6CkgPoyzKjgksao4PYYvB+mqZyfUQ
-         uHCQ==
-X-Gm-Message-State: AOJu0Yxca2suS3F1QSU8XQe+WSOtrZmKvHBzAPF4BPzw+7LM9iaH4cde
-	7B+UcE9553mHBv8maxuQIdRH7Q==
-X-Google-Smtp-Source: AGHT+IEzrqOwLzF6J52ldAV32jt+MijGlPCLOsIzgC+XyoEvbXBhMX/8Ta7kOcRz0WZVNhggaGIz1Q==
-X-Received: by 2002:a05:6000:1141:b0:317:4ef8:1659 with SMTP id d1-20020a056000114100b003174ef81659mr1490364wrx.28.1692349499313;
-        Fri, 18 Aug 2023 02:04:59 -0700 (PDT)
+        bh=8L/hDqGBPpjFsNnLJfha3rBK28uCZzuw6Oc+jfl/Ow4=;
+        b=IajYAIuLO2/YgqPxw2PGDL6ESWlmABWbJ5oJ7Mb2TdCM/XtEsrSG6giGQIK4gJG1Qf
+         +LOCUOpaPqlpNcMywGV2QKM5di/KrVBIclA6I5eYcuhmuBdnGFW/7rzmwZo70iKUZv9q
+         46hrJqWq3ts56bebYSEcFRYd7BCC4J1t+w5J6czAqScPwEEAUTcaFAl2jGeYmSBx2Vbz
+         8z8DhLTRE2uH6acMnT0g8rblpOeUtFlYzXB9NGf6nh9eB7rdsseDdqhZcfUDExcDBVAS
+         tnOgQesnidi4fuqNj5tvPNz5x8z76jZTdfgypgLHznlp5gboUweha/NlZqUBKlRp9/zU
+         mswA==
+X-Gm-Message-State: AOJu0Ywc47j2QmpFJxmyzqx6Hv+sLS8scnOb1tv7GHc3FsA67plYDcOd
+	0RSINBsY540SOivH7onmeJK3Sg==
+X-Google-Smtp-Source: AGHT+IFHWA9FhNoH3O+EUMWvdYE11o2caWKN6FUhy+fMMNKx9VjClOO3obOkkSGsCuxJLXprXqUOUQ==
+X-Received: by 2002:a7b:c84b:0:b0:3fc:616:b0db with SMTP id c11-20020a7bc84b000000b003fc0616b0dbmr1748405wml.9.1692349762901;
+        Fri, 18 Aug 2023 02:09:22 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id s15-20020adfea8f000000b0031807bd3614sm2076786wrm.90.2023.08.18.02.04.58
+        by smtp.gmail.com with ESMTPSA id l6-20020adfe586000000b0031989784d96sm2107600wrm.76.2023.08.18.02.09.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Aug 2023 02:04:59 -0700 (PDT)
-Message-ID: <ae0f37fb-d5ba-4019-8fee-f5d8fb7b9366@tessares.net>
-Date: Fri, 18 Aug 2023 11:04:58 +0200
+        Fri, 18 Aug 2023 02:09:22 -0700 (PDT)
+Message-ID: <a29457aa-5b50-470c-95c7-a72ead69d02c@tessares.net>
+Date: Fri, 18 Aug 2023 11:09:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,15 +47,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 5/6] Squash to "bpf: Export more bpf_burst
- related functions"
+Subject: Re: [PATCH mptcp-next] Squash to "bpf: Add bpf_mptcp_sched_kfunc_set"
 Content-Language: en-GB
 To: Geliang Tang <geliang.tang@suse.com>
 Cc: mptcp@lists.linux.dev
-References: <cover.1691036765.git.geliang.tang@suse.com>
- <644d34afc1b3b8d72b7c87baf099417d0be561ec.1691036765.git.geliang.tang@suse.com>
- <b2f50040-0373-4e5e-b4d1-f94c40e2f2b6@tessares.net>
- <20230818083931.GA21065@bogon>
+References: <ee69d8a0379e89d8b194d753129d09d986f7e674.1692247869.git.geliang.tang@suse.com>
+ <f71d2015-aa11-473d-ae85-43e760770298@tessares.net>
+ <20230818083315.GA20788@bogon>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -100,46 +98,87 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <20230818083931.GA21065@bogon>
+In-Reply-To: <20230818083315.GA20788@bogon>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 18/08/2023 10:39, Geliang Tang wrote:
-> On Wed, Aug 16, 2023 at 01:55:01PM +0200, Matthieu Baerts wrote:
+On 18/08/2023 10:33, Geliang Tang wrote:
+> On Thu, Aug 17, 2023 at 10:58:13AM +0200, Matthieu Baerts wrote:
 >> Hi Geliang,
 >>
->> On 03/08/2023 06:27, Geliang Tang wrote:
->>> Add "ignore -Wmissing-prototypes" for bpf_mptcp_subflow_queues_empty(),
->>> drop the declarations in protocol.h.
+>> (I also have a question for you at the end)
+>>
+>> On 17/08/2023 06:51, Geliang Tang wrote:
+>>> The commit "bpf: Add update_socket_protocol hook" on bpf-next tree will
+>>> conflict with the commit "bpf: Add bpf_mptcp_sched_kfunc_set". This
+>>> patch fixes it.
+>>
+>> Thank you for the follow up!
+>>
+>>> Please update the commit log:
 >>>
->>> Drop bpf_mptcp_subflow_memory_free(), it will be defined in BPF context.
->>>
->>> Update bpf_mptcp_subflow_queues_empty().
+>>> '''
+>>> This patch adds a new struct btf_kfunc_id_set for MPTCP scheduler. Add
+>>> mptcp_subflow_set_scheduled() and mptcp_sched_data_set_contexts() helpers
+>>> into this id_set, and register it in bpf_mptcp_kfunc_init() to make sure
+>>> these helpers can be accessed from the BPF context.
+>>> '''
 >>
->> I also had to partially revert this commit.
+>> Done!
 >>
->> Maybe "__bpf_kfunc" would avoid such issues reported by Sparse?
+>> I hope everything has been applied correctly.
 >>
->>   #define __bpf_kfunc __used noinline
+>> New patches for t/upstream:
+>> - 134c0805ac94: "squashed" in "bpf: Add bpf_mptcp_sched_kfunc_set"
+>> - de64a137c29f: tg:msg: update after the recent squash-to patch
+>> - 0642c8af7143: conflict in t/bpf-Export-more-bpf_burst-related-functions
+>> - Results: 88082befad3d..f28cd69d6233 (export)
 >>
->> Do you mind looking at that please?
+>> Tests are now in progress:
+>>
+>> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230817T085246
+>>
+>> (...)
+>>
+>>> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+>>> index 4911293919c2..92cf6fbf8275 100644
+>>> --- a/net/mptcp/bpf.c
+>>> +++ b/net/mptcp/bpf.c
+>>> @@ -144,24 +144,6 @@ struct bpf_struct_ops bpf_mptcp_sched_ops = {
+>>>  	.init		= bpf_mptcp_sched_init,
+>>>  	.name		= "mptcp_sched_ops",
+>>>  };
+>>> -
+>>> -BTF_SET8_START(bpf_mptcp_sched_kfunc_ids)
+>>> -BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+>>> -BTF_ID_FLAGS(func, mptcp_sched_data_set_contexts)
+>>> -BTF_ID_FLAGS(func, mptcp_subflow_ctx_by_pos)
+>>> -BTF_SET8_END(bpf_mptcp_sched_kfunc_ids)
+>>> -
+>>> -static const struct btf_kfunc_id_set bpf_mptcp_sched_kfunc_set = {
+>>> -	.owner	= THIS_MODULE,
+>>> -	.set	= &bpf_mptcp_sched_kfunc_ids,
+>>> -};
+>>> -
+>>> -static int __init bpf_mptcp_kfunc_init(void)
+>>> -{
+>>> -	return register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+>>> -					 &bpf_mptcp_sched_kfunc_set);
+>>> -}
+>>> -late_initcall(bpf_mptcp_kfunc_init);
+>>>  #endif /* CONFIG_BPF_JIT */
+>>
+>> Do we not need to move this somewhere else?
 > 
-> Hi Matt,
-> 
-> "__bpf_kfunc" doesn't work. I have to ask BPF maintainers what to do for
-> this and hope to receive their response.
+> We should keep this "CONFIG_BPF_JIT" here. I tried to move it at the end
+> of this file, but BPF maintainer suggested me not to use "if CONFIG_BPF_JIT"
+> to include bpf_mptcp_kfunc_init. [1]
 
-Thank you for having asked!
+OK, great then!
 
-Good idea to have asked on the previous patch, I didn't see that
-netdev's CI complained about that on this one:
-
-https://patchwork.kernel.org/project/netdevbpf/patch/ac84be00f97072a46f8a72b4e2be46cbb7fa5053.1692147782.git.geliang.tang@suse.com/
-
-We can see a similar warning for update_socket_protocol() in
-netdev/build_allmodconfig_warn and netdev/build_32bit results.
+As long as there is no build error, we are all good then!
 
 Cheers,
 Matt
