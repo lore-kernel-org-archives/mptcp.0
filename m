@@ -1,45 +1,45 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1512C4689
-	for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 09:09:24 +0000 (UTC)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3fe4cdb727cso6866525e9.0
-        for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 02:09:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEC64689
+	for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 09:30:05 +0000 (UTC)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3159d5e409dso1192991f8f.0
+        for <mptcp@lists.linux.dev>; Fri, 18 Aug 2023 02:30:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692349763; x=1692954563;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
+        d=tessares.net; s=google; t=1692351004; x=1692955804;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8L/hDqGBPpjFsNnLJfha3rBK28uCZzuw6Oc+jfl/Ow4=;
-        b=djWYLN6/1VgG3wJTGkpkW3p+FzpKGwhHlnDogaocZdIxN6Y6XSqAmJJdGLIfZa1nlF
-         9JCYCV7NzVBh8/jPN3EOgAegAq8oyr46VKHKH1iGjD0clD4FiczCFpyJMJ3wDlYbVjr6
-         8UAITTGogDciXUwh7PrlWKN8QVukwagHBpqkhP9RL7tCt0EyVaRTpajk0fL20VwEeOMN
-         czH3LazGqIBKrpublq8BRN9BRhAnm2AUe23iwMtPqwjyY3q0EhcbbNR9DfYbcj40RJ8g
-         lk5HmVb/DIhq+3g0slGbq/IWvZdNZpesSV5QmYj3D0zlDuF4cRE5zQIUl/g4QPFyubFp
-         6/Qw==
+        bh=eeLGq75X9FBlRWVqjsRPQFkHv+uMi/6emkBRHUsGE68=;
+        b=zgVgTvIJrsK80UwiKIb+gVWi8lWDMgeRjXks6u5GcIxVEGMzaXXLtgVLkOUgEWo8wc
+         d7ms8fr+aZR1YgN3LMrlKPVEebdALfsIPu4mw3gHS+HIRdMr60Laq2V2NE/fnrFw//56
+         KNKuhq1WRsRTYS6+T7xH5vsmVWcOOHf2U0CujTalCKWpH/6qaIQMm6U4W6iVjVZ468pp
+         xb6LbyaGPMdH0bOBctlNKCMc2beLDDiPtRs9U4CpRHRGrC5R3lDCeZ+SJsXvQ/hDuRi+
+         JWJ0/THVzSAhcon7oud0gVpY9epttC0QnHVbmD6Ea/hiyY8OVnR4CkhrqjyYyWRq2q65
+         10Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692349763; x=1692954563;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1692351004; x=1692955804;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8L/hDqGBPpjFsNnLJfha3rBK28uCZzuw6Oc+jfl/Ow4=;
-        b=IajYAIuLO2/YgqPxw2PGDL6ESWlmABWbJ5oJ7Mb2TdCM/XtEsrSG6giGQIK4gJG1Qf
-         +LOCUOpaPqlpNcMywGV2QKM5di/KrVBIclA6I5eYcuhmuBdnGFW/7rzmwZo70iKUZv9q
-         46hrJqWq3ts56bebYSEcFRYd7BCC4J1t+w5J6czAqScPwEEAUTcaFAl2jGeYmSBx2Vbz
-         8z8DhLTRE2uH6acMnT0g8rblpOeUtFlYzXB9NGf6nh9eB7rdsseDdqhZcfUDExcDBVAS
-         tnOgQesnidi4fuqNj5tvPNz5x8z76jZTdfgypgLHznlp5gboUweha/NlZqUBKlRp9/zU
-         mswA==
-X-Gm-Message-State: AOJu0Ywc47j2QmpFJxmyzqx6Hv+sLS8scnOb1tv7GHc3FsA67plYDcOd
-	0RSINBsY540SOivH7onmeJK3Sg==
-X-Google-Smtp-Source: AGHT+IFHWA9FhNoH3O+EUMWvdYE11o2caWKN6FUhy+fMMNKx9VjClOO3obOkkSGsCuxJLXprXqUOUQ==
-X-Received: by 2002:a7b:c84b:0:b0:3fc:616:b0db with SMTP id c11-20020a7bc84b000000b003fc0616b0dbmr1748405wml.9.1692349762901;
-        Fri, 18 Aug 2023 02:09:22 -0700 (PDT)
+        bh=eeLGq75X9FBlRWVqjsRPQFkHv+uMi/6emkBRHUsGE68=;
+        b=g+xNQEc3lFwCeMrrj5kBph17J3NZjX2VPmfePdygaCedpM1ebVAwebsUyYB1hXRu43
+         gywIf4YHeMzWmtT8yvGInLOkZ0bJAgLiEQIcVz6BdxLHSI1gHSaJEoE0fmUezuw8Gbon
+         MwKq73FvjaIyiOKURtV8TYWVsuaisSbR6/oaGwyMiNotNjf0I/mi0ZQZcMjtE/Me/tiT
+         apjEXF9nc4q3PwOSiBxVT5cD/+vNWyUsQVGoQUpVehA/HNLs+NL7NpUQt5JSK7ERFq2x
+         6+uW3YRQ1tOPlDWJO0XVPqfDl0tsZrsXURb/3qkyGqGmxyXgUu/UtusgTalnWMwJGmXH
+         1A1w==
+X-Gm-Message-State: AOJu0Yx5uaeB1st/fW6GGod4slmE0nUra8sw0+P8SbwCKY/Sn9Pd0cdL
+	cQiuC3ACsnS/bQqLVVS3/Z06trUHG9UL9biMEvQ=
+X-Google-Smtp-Source: AGHT+IHsN+yzWjdwBW6SK5DZYfFcw5IpXNuYYTvJslONwZbPpwm7xv6iyCoycoFjGZhE9MYbhMEYBA==
+X-Received: by 2002:a05:6000:682:b0:319:7abb:4112 with SMTP id bo2-20020a056000068200b003197abb4112mr5315552wrb.21.1692351004241;
+        Fri, 18 Aug 2023 02:30:04 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id l6-20020adfe586000000b0031989784d96sm2107600wrm.76.2023.08.18.02.09.22
+        by smtp.gmail.com with ESMTPSA id p11-20020adfe60b000000b003176c6e87b1sm2152763wrm.81.2023.08.18.02.30.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Aug 2023 02:09:22 -0700 (PDT)
-Message-ID: <a29457aa-5b50-470c-95c7-a72ead69d02c@tessares.net>
-Date: Fri, 18 Aug 2023 11:09:21 +0200
+        Fri, 18 Aug 2023 02:30:03 -0700 (PDT)
+Message-ID: <fc630d2b-b6c4-48fa-a175-cfadb1dff604@tessares.net>
+Date: Fri, 18 Aug 2023 11:30:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,13 +47,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to "bpf: Add bpf_mptcp_sched_kfunc_set"
+Subject: Re: [PATCH mptcp-next v4 5/6] mptcp: userspace pm remove id 0 address
 Content-Language: en-GB
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-References: <ee69d8a0379e89d8b194d753129d09d986f7e674.1692247869.git.geliang.tang@suse.com>
- <f71d2015-aa11-473d-ae85-43e760770298@tessares.net>
- <20230818083315.GA20788@bogon>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1692342519.git.geliang.tang@suse.com>
+ <3c3c0bdd3e0d8fe5be8701e38f39ce1fd3e20d3c.1692342519.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -98,87 +96,102 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <20230818083315.GA20788@bogon>
+In-Reply-To: <3c3c0bdd3e0d8fe5be8701e38f39ce1fd3e20d3c.1692342519.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Geliang
 
-On 18/08/2023 10:33, Geliang Tang wrote:
-> On Thu, Aug 17, 2023 at 10:58:13AM +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> (I also have a question for you at the end)
->>
->> On 17/08/2023 06:51, Geliang Tang wrote:
->>> The commit "bpf: Add update_socket_protocol hook" on bpf-next tree will
->>> conflict with the commit "bpf: Add bpf_mptcp_sched_kfunc_set". This
->>> patch fixes it.
->>
->> Thank you for the follow up!
->>
->>> Please update the commit log:
->>>
->>> '''
->>> This patch adds a new struct btf_kfunc_id_set for MPTCP scheduler. Add
->>> mptcp_subflow_set_scheduled() and mptcp_sched_data_set_contexts() helpers
->>> into this id_set, and register it in bpf_mptcp_kfunc_init() to make sure
->>> these helpers can be accessed from the BPF context.
->>> '''
->>
->> Done!
->>
->> I hope everything has been applied correctly.
->>
->> New patches for t/upstream:
->> - 134c0805ac94: "squashed" in "bpf: Add bpf_mptcp_sched_kfunc_set"
->> - de64a137c29f: tg:msg: update after the recent squash-to patch
->> - 0642c8af7143: conflict in t/bpf-Export-more-bpf_burst-related-functions
->> - Results: 88082befad3d..f28cd69d6233 (export)
->>
->> Tests are now in progress:
->>
->> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230817T085246
->>
->> (...)
->>
->>> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
->>> index 4911293919c2..92cf6fbf8275 100644
->>> --- a/net/mptcp/bpf.c
->>> +++ b/net/mptcp/bpf.c
->>> @@ -144,24 +144,6 @@ struct bpf_struct_ops bpf_mptcp_sched_ops = {
->>>  	.init		= bpf_mptcp_sched_init,
->>>  	.name		= "mptcp_sched_ops",
->>>  };
->>> -
->>> -BTF_SET8_START(bpf_mptcp_sched_kfunc_ids)
->>> -BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
->>> -BTF_ID_FLAGS(func, mptcp_sched_data_set_contexts)
->>> -BTF_ID_FLAGS(func, mptcp_subflow_ctx_by_pos)
->>> -BTF_SET8_END(bpf_mptcp_sched_kfunc_ids)
->>> -
->>> -static const struct btf_kfunc_id_set bpf_mptcp_sched_kfunc_set = {
->>> -	.owner	= THIS_MODULE,
->>> -	.set	= &bpf_mptcp_sched_kfunc_ids,
->>> -};
->>> -
->>> -static int __init bpf_mptcp_kfunc_init(void)
->>> -{
->>> -	return register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
->>> -					 &bpf_mptcp_sched_kfunc_set);
->>> -}
->>> -late_initcall(bpf_mptcp_kfunc_init);
->>>  #endif /* CONFIG_BPF_JIT */
->>
->> Do we not need to move this somewhere else?
+On 18/08/2023 09:12, Geliang Tang wrote:
+> This patch adds the ability to send RM_ADDR for local ID 0. Put id 0
+> into a removing list, pass it to mptcp_pm_remove_addr() to remove id
+> 0 address.
 > 
-> We should keep this "CONFIG_BPF_JIT" here. I tried to move it at the end
-> of this file, but BPF maintainer suggested me not to use "if CONFIG_BPF_JIT"
-> to include bpf_mptcp_kfunc_init. [1]
+> There is no reason not to allow the userspace to remove the initial
+> address (ID 0). This special case was not taken into account not
+> letting the userspace to delete all addresses as announced.
 
-OK, great then!
+Thank you for the new version!
 
-As long as there is no build error, we are all good then!
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/379
+> Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  net/mptcp/pm_userspace.c | 42 +++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 39 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index d042d32beb4d..059b672b55f7 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -236,7 +236,43 @@ int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info)
+>  
+>  	if (!mptcp_pm_is_userspace(msk)) {
+>  		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+> -		goto remove_err;
+> +		goto out;
+> +	}
+> +
+> +	if (id_val == 0) {
+> +		struct mptcp_rm_list list = { .nr = 0 };
+> +		struct mptcp_subflow_context *subflow;
+> +		bool has_id_0 = false;
+> +
+> +		if (!READ_ONCE(msk->first)) {
+> +			GENL_SET_ERR_MSG(info, "no subflow in conn_list");
+> +			goto out;
+> +		}
+
+Sorry, my previous message was probably not clear: if (msk->first !=
+NULL), it means the initial subflow is still there and ID 0 is still
+being used. If it is no longer there, ID 0 might still be used by
+another subflow and it is required to iterate over the subflow list.
+
+But maybe easier here to skip this "optimisation" (remove this block
+above) and simply iterate over the subflow list like we would do for the
+other IDs.
+
+EDIT: mmh, if there is another subflow created with ID 0, will it be in
+msk->pm.userspace_pm_local_addr_list list? (I didn't check) If yes, it
+should also be handled the same way we do for the other subflows. In
+this case, maybe it is not needed to iterate over the different subflows
+but only the local addr list and if not found (!match), just for ID==0
+case, we check if (msk->first != NULL) and create a fake entry? Or we
+always create an entry in local_addr_list for ID == 0? (I didn't check
+what would be best)
+
+> +
+> +		spin_lock_bh(&msk->pm.lock);
+
+Is it enough? To iterate over the subflow list, you don't need the msk
+lock? (lock_sock(sk))
+
+> +		mptcp_for_each_subflow(msk, subflow) {
+> +			if (subflow->remote_id == 0) {
+> +				has_id_0 = true;
+> +				break;
+> +			}
+> +		}
+> +		spin_unlock_bh(&msk->pm.lock);
+> +
+> +		if (!has_id_0) {
+> +			GENL_SET_ERR_MSG(info, "address with id 0 not found");
+> +			goto out;
+> +		}
+> +
+> +		list.ids[list.nr++] = 0;
+> +
+> +		lock_sock((struct sock *)msk);
+> +		spin_lock_bh(&msk->pm.lock);
+> +		mptcp_pm_remove_addr(msk, &list);
+> +		spin_unlock_bh(&msk->pm.lock);
+> +		release_sock((struct sock *)msk);
+> +
+> +		err = 0;
+> +		goto out;
+>  	}
+>  
+>  	lock_sock((struct sock *)msk);
 
 Cheers,
 Matt
