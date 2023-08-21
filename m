@@ -1,23 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44631ADF3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604FF1ADCE;
 	Mon, 21 Aug 2023 22:25:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC71C43391;
-	Mon, 21 Aug 2023 22:25:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E8CC433B7;
+	Mon, 21 Aug 2023 22:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692656724;
-	bh=UWFKrgEuKj5gvqGj0uOv7arr3/5WueKv/2GS6+ChiYQ=;
+	s=k20201202; t=1692656723;
+	bh=bnVF7wxEKyiRFifLwfrCEM0L/IllcnM6/xPEkTFqHNk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=C+B+OUtEspLOOZ1YQs8pPeyBUd+WrixVByHnIBDKN85IkXWuq8bDd7q0gqbS7BHJ8
-	 teVuVb6H5unBM9qD/mw0d3Bc4JTzqiihpqs1s8tOPLwmQzViXdMLlj5AoxLKB7BdEe
-	 yIDQZoLd78hoOQzgQrTUqMhc92ongv8qCQvYYGOke2hR5yCmOEi7eqIn6vpH7L/GyW
-	 NnjhJ7QxQhhOzBeVNOdVZ6QPWzgCq4+dKCnDnpY9hVy/cqB+2o4NiIX9N07sSNtggZ
-	 M/C+owNthaw8iu5p10QVRJkvgp48UWReTa9NBl6O9MCuxz6r4ZDV+qrTE1AyHMu3Dr
-	 qHuDRiSAEApYw==
+	b=oXnU/r2QQWpb0nedNOc53foOYlFrbIiMyCf85oftoTl5ahxQhEOx58D942PoXQAFk
+	 VD8smiJBQ8JbJXI2GbabNYOGWEqd/2a1HuX2cgCgQkKWbhP5iUZRgChb5qaWpixBBk
+	 7ElIx87xVJoJvsm3rntRU85uSFbZfSKlH3NLQPRPCLawQqArVA2c7nlwT0McIav2Pl
+	 Ahr7dlSXhPMzkX8bF9YYCVWXjhbkQUJxfNfnT3ti/JnThSYKtk3s+Y0iM8BFfakhQe
+	 DgLyIUDJ71GdhJ61aLYpc45tLT2PXUEkwQJwipq39xrwgpuH+L5BEKL34BlTjlp0xH
+	 SHZMP4Xn/ViGQ==
 From: Mat Martineau <martineau@kernel.org>
-Date: Mon, 21 Aug 2023 15:25:18 -0700
-Subject: [PATCH net-next 07/10] mptcp: add scheduler wrappers
+Date: Mon, 21 Aug 2023 15:25:17 -0700
+Subject: [PATCH net-next 06/10] mptcp: add scheduled in
+ mptcp_subflow_context
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,7 +27,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230821-upstream-net-next-20230818-v1-7-0c860fb256a8@kernel.org>
+Message-Id: <20230821-upstream-net-next-20230818-v1-6-0c860fb256a8@kernel.org>
 References: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 In-Reply-To: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
@@ -38,117 +39,55 @@ X-Mailer: b4 0.12.3
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch defines two packet scheduler wrappers mptcp_sched_get_send()
-and mptcp_sched_get_retrans(), invoke get_subflow() of msk->sched in
-them.
+This patch adds a new member scheduled in struct mptcp_subflow_context,
+which will be set in the MPTCP scheduler context when the scheduler
+picks this subflow to send data.
 
-Set data->reinject to true in mptcp_sched_get_retrans(), set it false in
-mptcp_sched_get_send().
-
-If msk->sched is NULL, use default functions mptcp_subflow_get_send()
-and mptcp_subflow_get_retrans() to send data.
+Add a new helper mptcp_subflow_set_scheduled() to set this flag using
+WRITE_ONCE().
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- net/mptcp/protocol.c |  4 ++--
- net/mptcp/protocol.h |  4 ++++
- net/mptcp/sched.c    | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 54 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.h | 3 +++
+ net/mptcp/sched.c    | 6 ++++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 54a3eccfa731..9cd172d2c8d6 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1366,7 +1366,7 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
-  * returns the subflow that will transmit the next DSS
-  * additionally updates the rtx timeout
-  */
--static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
-+struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- {
- 	struct subflow_send_info send_info[SSK_MODE_MAX];
- 	struct mptcp_subflow_context *subflow;
-@@ -2204,7 +2204,7 @@ static void mptcp_timeout_timer(struct timer_list *t)
-  *
-  * A backup subflow is returned only if that is the only kind available.
-  */
--static struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk)
-+struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk)
- {
- 	struct sock *backup = NULL, *pick = NULL;
- 	struct mptcp_subflow_context *subflow;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index e7523a40132f..78562f695c46 100644
+index 548c302a757e..e7523a40132f 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -666,6 +666,10 @@ int mptcp_init_sched(struct mptcp_sock *msk,
+@@ -491,6 +491,7 @@ struct mptcp_subflow_context {
+ 		is_mptfo : 1,	    /* subflow is doing TFO */
+ 		__unused : 9;
+ 	enum mptcp_data_avail data_avail;
++	bool	scheduled;
+ 	u32	remote_nonce;
+ 	u64	thmac;
+ 	u32	local_nonce;
+@@ -663,6 +664,8 @@ void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched);
+ int mptcp_init_sched(struct mptcp_sock *msk,
+ 		     struct mptcp_sched_ops *sched);
  void mptcp_release_sched(struct mptcp_sock *msk);
- void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
- 				 bool scheduled);
-+struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk);
-+struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk);
-+int mptcp_sched_get_send(struct mptcp_sock *msk);
-+int mptcp_sched_get_retrans(struct mptcp_sock *msk);
++void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
++				 bool scheduled);
  
  static inline bool __tcp_can_send(const struct sock *ssk)
  {
 diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-index d295b92a5789..884606686cfe 100644
+index 53773668b5ee..d295b92a5789 100644
 --- a/net/mptcp/sched.c
 +++ b/net/mptcp/sched.c
-@@ -93,3 +93,51 @@ void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
- {
- 	WRITE_ONCE(subflow->scheduled, scheduled);
+@@ -87,3 +87,9 @@ void mptcp_release_sched(struct mptcp_sock *msk)
+ 
+ 	bpf_module_put(sched, sched->owner);
  }
 +
-+int mptcp_sched_get_send(struct mptcp_sock *msk)
++void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
++				 bool scheduled)
 +{
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sched_data data;
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		if (READ_ONCE(subflow->scheduled))
-+			return 0;
-+	}
-+
-+	if (!msk->sched) {
-+		struct sock *ssk;
-+
-+		ssk = mptcp_subflow_get_send(msk);
-+		if (!ssk)
-+			return -EINVAL;
-+		mptcp_subflow_set_scheduled(mptcp_subflow_ctx(ssk), true);
-+		return 0;
-+	}
-+
-+	data.reinject = false;
-+	return msk->sched->get_subflow(msk, &data);
-+}
-+
-+int mptcp_sched_get_retrans(struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sched_data data;
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		if (READ_ONCE(subflow->scheduled))
-+			return 0;
-+	}
-+
-+	if (!msk->sched) {
-+		struct sock *ssk;
-+
-+		ssk = mptcp_subflow_get_retrans(msk);
-+		if (!ssk)
-+			return -EINVAL;
-+		mptcp_subflow_set_scheduled(mptcp_subflow_ctx(ssk), true);
-+		return 0;
-+	}
-+
-+	data.reinject = true;
-+	return msk->sched->get_subflow(msk, &data);
++	WRITE_ONCE(subflow->scheduled, scheduled);
 +}
 
 -- 
