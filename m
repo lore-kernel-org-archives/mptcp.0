@@ -1,24 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C1318AE5;
-	Mon, 21 Aug 2023 22:25:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAAF2C433CC;
-	Mon, 21 Aug 2023 22:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44631ADF3;
+	Mon, 21 Aug 2023 22:25:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC71C43391;
+	Mon, 21 Aug 2023 22:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692656723;
-	bh=EtjkMo5Utfqyb2HvZTJ81wkGvDCfsqeXl+lqQcBmj0I=;
+	s=k20201202; t=1692656724;
+	bh=UWFKrgEuKj5gvqGj0uOv7arr3/5WueKv/2GS6+ChiYQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=vK/16cRIZTOf1gUU0TMhI0AXu3D9oHzRBO3GIJkMsbmoA7pNJ8S02nvP4j0Q6mJEZ
-	 YSdrnUrkJYvWlMSSONZ0osbaSgI7zOgwSohZdJiMkOGg3gBB6baNzED9dBRwyBROjJ
-	 WZOYIk0DaPQJuI1QuFuJtMMU/UdCUJnqe01kIANieTA6Dj2WvXbzF2BreJFu+hf/SP
-	 X2oXKDbknliN3GaZLEhLh3MHEYx+cvvv0W1mxD45dnrvcRvYm8L8hlkRkKKsfs76f1
-	 BLABacmaKBxw+u/DrUbQExVhuH75QuF1A7HuxJ7xoC0GdQd+TuEx8yZ/ew61H4spKe
-	 KPhkrkukT21gQ==
+	b=C+B+OUtEspLOOZ1YQs8pPeyBUd+WrixVByHnIBDKN85IkXWuq8bDd7q0gqbS7BHJ8
+	 teVuVb6H5unBM9qD/mw0d3Bc4JTzqiihpqs1s8tOPLwmQzViXdMLlj5AoxLKB7BdEe
+	 yIDQZoLd78hoOQzgQrTUqMhc92ongv8qCQvYYGOke2hR5yCmOEi7eqIn6vpH7L/GyW
+	 NnjhJ7QxQhhOzBeVNOdVZ6QPWzgCq4+dKCnDnpY9hVy/cqB+2o4NiIX9N07sSNtggZ
+	 M/C+owNthaw8iu5p10QVRJkvgp48UWReTa9NBl6O9MCuxz6r4ZDV+qrTE1AyHMu3Dr
+	 qHuDRiSAEApYw==
 From: Mat Martineau <martineau@kernel.org>
-Date: Mon, 21 Aug 2023 15:25:13 -0700
-Subject: [PATCH net-next 02/10] mptcp: drop last_snd and
- MPTCP_RESET_SCHEDULER
+Date: Mon, 21 Aug 2023 15:25:18 -0700
+Subject: [PATCH net-next 07/10] mptcp: add scheduler wrappers
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -27,7 +26,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230821-upstream-net-next-20230818-v1-2-0c860fb256a8@kernel.org>
+Message-Id: <20230821-upstream-net-next-20230818-v1-7-0c860fb256a8@kernel.org>
 References: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 In-Reply-To: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
@@ -39,124 +38,118 @@ X-Mailer: b4 0.12.3
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-Since the burst check conditions have moved out of the function
-mptcp_subflow_get_send(), it makes all msk->last_snd useless.
-This patch drops them as well as the macro MPTCP_RESET_SCHEDULER.
+This patch defines two packet scheduler wrappers mptcp_sched_get_send()
+and mptcp_sched_get_retrans(), invoke get_subflow() of msk->sched in
+them.
+
+Set data->reinject to true in mptcp_sched_get_retrans(), set it false in
+mptcp_sched_get_send().
+
+If msk->sched is NULL, use default functions mptcp_subflow_get_send()
+and mptcp_subflow_get_retrans() to send data.
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- net/mptcp/pm.c         |  9 +--------
- net/mptcp/pm_netlink.c |  3 ---
- net/mptcp/protocol.c   | 11 +----------
- net/mptcp/protocol.h   |  2 --
- 4 files changed, 2 insertions(+), 23 deletions(-)
+ net/mptcp/protocol.c |  4 ++--
+ net/mptcp/protocol.h |  4 ++++
+ net/mptcp/sched.c    | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 54 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 7dbbad1e4f55..d8da5374d9e1 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -299,15 +299,8 @@ void mptcp_pm_mp_prio_received(struct sock *ssk, u8 bkup)
- 
- 	pr_debug("subflow->backup=%d, bkup=%d\n", subflow->backup, bkup);
- 	msk = mptcp_sk(sk);
--	if (subflow->backup != bkup) {
-+	if (subflow->backup != bkup)
- 		subflow->backup = bkup;
--		mptcp_data_lock(sk);
--		if (!sock_owned_by_user(sk))
--			msk->last_snd = NULL;
--		else
--			__set_bit(MPTCP_RESET_SCHEDULER,  &msk->cb_flags);
--		mptcp_data_unlock(sk);
--	}
- 
- 	mptcp_event(MPTCP_EVENT_SUB_PRIORITY, msk, ssk, GFP_ATOMIC);
- }
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index c75d9d88a053..9661f3812682 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -472,9 +472,6 @@ static void __mptcp_pm_send_ack(struct mptcp_sock *msk, struct mptcp_subflow_con
- 
- 	slow = lock_sock_fast(ssk);
- 	if (prio) {
--		if (subflow->backup != backup)
--			msk->last_snd = NULL;
--
- 		subflow->send_mp_prio = 1;
- 		subflow->backup = backup;
- 		subflow->request_bkup = backup;
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 29c662ffcd05..f15ff80be30f 100644
+index 54a3eccfa731..9cd172d2c8d6 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1438,16 +1438,13 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 
- 	burst = min_t(int, MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
- 	wmem = READ_ONCE(ssk->sk_wmem_queued);
--	if (!burst) {
--		msk->last_snd = NULL;
-+	if (!burst)
- 		return ssk;
--	}
- 
- 	subflow = mptcp_subflow_ctx(ssk);
- 	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
- 					   READ_ONCE(ssk->sk_pacing_rate) * burst,
- 					   burst + wmem);
--	msk->last_snd = ssk;
- 	msk->snd_burst = burst;
- 	return ssk;
- }
-@@ -2379,9 +2376,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		WRITE_ONCE(msk->first, NULL);
- 
- out:
--	if (ssk == msk->last_snd)
--		msk->last_snd = NULL;
--
- 	if (need_push)
- 		__mptcp_push_pending(sk, 0);
- }
-@@ -3046,7 +3040,6 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	 * subflow
- 	 */
- 	mptcp_destroy_common(msk, MPTCP_CF_FASTCLOSE);
--	msk->last_snd = NULL;
- 	WRITE_ONCE(msk->flags, 0);
- 	msk->cb_flags = 0;
- 	msk->push_pending = 0;
-@@ -3316,8 +3309,6 @@ static void mptcp_release_cb(struct sock *sk)
- 			__mptcp_set_connected(sk);
- 		if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
- 			__mptcp_error_report(sk);
--		if (__test_and_clear_bit(MPTCP_RESET_SCHEDULER, &msk->cb_flags))
--			msk->last_snd = NULL;
- 	}
- 
- 	__mptcp_update_rmem(sk);
+@@ -1366,7 +1366,7 @@ bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
+  * returns the subflow that will transmit the next DSS
+  * additionally updates the rtx timeout
+  */
+-static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
++struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ {
+ 	struct subflow_send_info send_info[SSK_MODE_MAX];
+ 	struct mptcp_subflow_context *subflow;
+@@ -2204,7 +2204,7 @@ static void mptcp_timeout_timer(struct timer_list *t)
+  *
+  * A backup subflow is returned only if that is the only kind available.
+  */
+-static struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk)
++struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk)
+ {
+ 	struct sock *backup = NULL, *pick = NULL;
+ 	struct mptcp_subflow_context *subflow;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 38c7ea013361..cbf9a9e176b2 100644
+index e7523a40132f..78562f695c46 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -123,7 +123,6 @@
- #define MPTCP_RETRANSMIT	4
- #define MPTCP_FLUSH_JOIN_LIST	5
- #define MPTCP_CONNECTED		6
--#define MPTCP_RESET_SCHEDULER	7
+@@ -666,6 +666,10 @@ int mptcp_init_sched(struct mptcp_sock *msk,
+ void mptcp_release_sched(struct mptcp_sock *msk);
+ void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
+ 				 bool scheduled);
++struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk);
++struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk);
++int mptcp_sched_get_send(struct mptcp_sock *msk);
++int mptcp_sched_get_retrans(struct mptcp_sock *msk);
  
- struct mptcp_skb_cb {
- 	u64 map_seq;
-@@ -269,7 +268,6 @@ struct mptcp_sock {
- 	u64		rcv_data_fin_seq;
- 	u64		bytes_retrans;
- 	int		rmem_fwd_alloc;
--	struct sock	*last_snd;
- 	int		snd_burst;
- 	int		old_wspace;
- 	u64		recovery_snd_nxt;	/* in recovery mode accept up to this seq;
+ static inline bool __tcp_can_send(const struct sock *ssk)
+ {
+diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+index d295b92a5789..884606686cfe 100644
+--- a/net/mptcp/sched.c
++++ b/net/mptcp/sched.c
+@@ -93,3 +93,51 @@ void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
+ {
+ 	WRITE_ONCE(subflow->scheduled, scheduled);
+ }
++
++int mptcp_sched_get_send(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct mptcp_sched_data data;
++
++	mptcp_for_each_subflow(msk, subflow) {
++		if (READ_ONCE(subflow->scheduled))
++			return 0;
++	}
++
++	if (!msk->sched) {
++		struct sock *ssk;
++
++		ssk = mptcp_subflow_get_send(msk);
++		if (!ssk)
++			return -EINVAL;
++		mptcp_subflow_set_scheduled(mptcp_subflow_ctx(ssk), true);
++		return 0;
++	}
++
++	data.reinject = false;
++	return msk->sched->get_subflow(msk, &data);
++}
++
++int mptcp_sched_get_retrans(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct mptcp_sched_data data;
++
++	mptcp_for_each_subflow(msk, subflow) {
++		if (READ_ONCE(subflow->scheduled))
++			return 0;
++	}
++
++	if (!msk->sched) {
++		struct sock *ssk;
++
++		ssk = mptcp_subflow_get_retrans(msk);
++		if (!ssk)
++			return -EINVAL;
++		mptcp_subflow_set_scheduled(mptcp_subflow_ctx(ssk), true);
++		return 0;
++	}
++
++	data.reinject = true;
++	return msk->sched->get_subflow(msk, &data);
++}
 
 -- 
 2.41.0
