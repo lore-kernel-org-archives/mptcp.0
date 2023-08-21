@@ -1,23 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C081ADFC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696051BB2B;
+	Mon, 21 Aug 2023 22:25:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B17B0C433AB;
 	Mon, 21 Aug 2023 22:25:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 965CEC433C8;
-	Mon, 21 Aug 2023 22:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692656723;
-	bh=mCFf41OAOMZ9vigTZ31U28QDeMg6gYJIm3A8aWPJDAo=;
+	s=k20201202; t=1692656724;
+	bh=tc2xDya1T5Y4oXutUgVLxid1Ewv0x3sfXACYqZv2uGk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Acgaf8VcVt4cmcgU8e2vvMxZ0raLlT+i3htooA+dRrcwoc0H72lpT6LAuPeSp9WNJ
-	 r6FrxvHr/eOiPaGR1UObvDkeFZELvImyq+m1+2Md0U4KMwsRgyfNh7sFtHf1BRWFxa
-	 /nXaKE34Q6365r6aqAIOGY6V+JjM6Mf/xtij0Yv7i79NV2N+AZASsuC13H/c8amRnj
-	 HvSeWSNU8hPB3TJ0+KI1BAWd5kLhACw4zh/Lq7NqDYltJHAh0Fry7aFVlqAxmptFYV
-	 Q9x6vcZ+UXOHiDJWvtIfEUJEL+QnlRcP4T7dHy5n4asHOxaU0szzls/oFHf1FAyJsy
-	 1t6kSOf6bWG+w==
+	b=T1yM9POoWNazPxOCyvR0R8ILF78NsIPwSn/2pBNUVzFVlK0TbejK8//W1+OTnl5Xc
+	 jlpT2/B6+a+3spoyJI91+VDwjmvZfFAfUN/p5xMR9xioyuo8uhZhi44gWm6sDCu6ru
+	 ciCe+cPXX7IB3bnIMGxZAh776JDiiCGaWUCusDLgM3O8U3Xdan5+8zo+zoQGDoygWd
+	 1Thb68Ojgasdi8Y7MC1BOLisZrKvNuJ8bnZbwrUXtmVownnPNpiABjRzJilsu8t/Dk
+	 war49dxeLDYvZFedwwczN7nhKrLos6W3bGeYxxobiDWxJ3TN61ZD9pgD5W+aaMV5Pm
+	 z985/OjVFB3Kw==
 From: Mat Martineau <martineau@kernel.org>
-Date: Mon, 21 Aug 2023 15:25:16 -0700
-Subject: [PATCH net-next 05/10] mptcp: add sched in mptcp_sock
+Date: Mon, 21 Aug 2023 15:25:21 -0700
+Subject: [PATCH net-next 10/10] mptcp: register default scheduler
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,7 +26,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230821-upstream-net-next-20230818-v1-5-0c860fb256a8@kernel.org>
+Message-Id: <20230821-upstream-net-next-20230818-v1-10-0c860fb256a8@kernel.org>
 References: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 In-Reply-To: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
@@ -38,127 +38,153 @@ X-Mailer: b4 0.12.3
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch adds a new struct member sched in struct mptcp_sock.
-And two helpers mptcp_init_sched() and mptcp_release_sched() to
-init and release it.
+This patch defines the default packet scheduler mptcp_sched_default.
+Register it in mptcp_sched_init(), which is invoked in mptcp_proto_init().
+Skip deleting this default scheduler in mptcp_unregister_scheduler().
 
-Init it with the sysctl scheduler in mptcp_init_sock(), copy the
-scheduler from the parent in mptcp_sk_clone(), and release it in
-__mptcp_destroy_sock().
+Set msk->sched to the default scheduler when the input parameter of
+mptcp_init_sched() is NULL.
+
+Invoke mptcp_sched_default_get_subflow in get_send() and get_retrans()
+if the defaut scheduler is set or msk->sched is NULL.
 
 Acked-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- net/mptcp/protocol.c |  8 ++++++++
- net/mptcp/protocol.h |  4 ++++
- net/mptcp/sched.c    | 33 +++++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+)
+ net/mptcp/protocol.c |  1 +
+ net/mptcp/protocol.h |  1 +
+ net/mptcp/sched.c    | 55 +++++++++++++++++++++++++++++++---------------------
+ 3 files changed, 35 insertions(+), 22 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f15ff80be30f..54a3eccfa731 100644
+index 61590ff2b9ee..933b257eee02 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2697,6 +2697,7 @@ static void mptcp_ca_reset(struct sock *sk)
- static int mptcp_init_sock(struct sock *sk)
- {
- 	struct net *net = sock_net(sk);
-+	int ret;
+@@ -3965,6 +3965,7 @@ void __init mptcp_proto_init(void)
  
- 	__mptcp_init_sock(sk);
+ 	mptcp_subflow_init();
+ 	mptcp_pm_init();
++	mptcp_sched_init();
+ 	mptcp_token_init();
  
-@@ -2706,6 +2707,11 @@ static int mptcp_init_sock(struct sock *sk)
- 	if (unlikely(!net->mib.mptcp_statistics) && !mptcp_mib_alloc(net))
- 		return -ENOMEM;
- 
-+	ret = mptcp_init_sched(mptcp_sk(sk),
-+			       mptcp_sched_find(mptcp_get_scheduler(net)));
-+	if (ret)
-+		return ret;
-+
- 	set_bit(SOCK_CUSTOM_SOCKOPT, &sk->sk_socket->flags);
- 
- 	/* fetch the ca name; do it outside __mptcp_init_sock(), so that clone will
-@@ -2851,6 +2857,7 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 	mptcp_stop_timer(sk);
- 	sk_stop_timer(sk, &sk->sk_timer);
- 	msk->pm.status = 0;
-+	mptcp_release_sched(msk);
- 
- 	sk->sk_prot->destroy(sk);
- 
-@@ -3105,6 +3112,7 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
- 	msk->snd_una = msk->write_seq;
- 	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
- 	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
-+	mptcp_init_sched(msk, mptcp_sk(sk)->sched);
- 
- 	/* passive msk is created after the first/MPC subflow */
- 	msk->subflow_id = 2;
+ 	if (proto_register(&mptcp_prot, 1) != 0)
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index bfa13a50f276..548c302a757e 100644
+index 78562f695c46..7254b3562575 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -312,6 +312,7 @@ struct mptcp_sock {
- 				 * lock as such sock is freed after close().
- 				 */
- 	struct mptcp_pm_data	pm;
-+	struct mptcp_sched_ops	*sched;
- 	struct {
- 		u32	space;	/* bytes copied in last measurement window */
- 		u32	copied; /* bytes copied in this measurement window */
-@@ -659,6 +660,9 @@ void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+@@ -661,6 +661,7 @@ void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
  struct mptcp_sched_ops *mptcp_sched_find(const char *name);
  int mptcp_register_scheduler(struct mptcp_sched_ops *sched);
  void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched);
-+int mptcp_init_sched(struct mptcp_sock *msk,
-+		     struct mptcp_sched_ops *sched);
-+void mptcp_release_sched(struct mptcp_sock *msk);
- 
- static inline bool __tcp_can_send(const struct sock *ssk)
- {
++void mptcp_sched_init(void);
+ int mptcp_init_sched(struct mptcp_sock *msk,
+ 		     struct mptcp_sched_ops *sched);
+ void mptcp_release_sched(struct mptcp_sock *msk);
 diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-index c5d3bbafba71..53773668b5ee 100644
+index cac1cc1fa3b0..4ab0693c069c 100644
 --- a/net/mptcp/sched.c
 +++ b/net/mptcp/sched.c
-@@ -54,3 +54,36 @@ void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched)
- 	list_del_rcu(&sched->list);
- 	spin_unlock(&mptcp_sched_list_lock);
- }
-+
-+int mptcp_init_sched(struct mptcp_sock *msk,
-+		     struct mptcp_sched_ops *sched)
+@@ -16,6 +16,26 @@
+ static DEFINE_SPINLOCK(mptcp_sched_list_lock);
+ static LIST_HEAD(mptcp_sched_list);
+ 
++static int mptcp_sched_default_get_subflow(struct mptcp_sock *msk,
++					   struct mptcp_sched_data *data)
 +{
-+	if (!sched)
-+		goto out;
++	struct sock *ssk;
 +
-+	if (!bpf_try_module_get(sched, sched->owner))
-+		return -EBUSY;
++	ssk = data->reinject ? mptcp_subflow_get_retrans(msk) :
++			       mptcp_subflow_get_send(msk);
++	if (!ssk)
++		return -EINVAL;
 +
-+	msk->sched = sched;
-+	if (msk->sched->init)
-+		msk->sched->init(msk);
-+
-+	pr_debug("sched=%s", msk->sched->name);
-+
-+out:
++	mptcp_subflow_set_scheduled(mptcp_subflow_ctx(ssk), true);
 +	return 0;
 +}
 +
-+void mptcp_release_sched(struct mptcp_sock *msk)
-+{
-+	struct mptcp_sched_ops *sched = msk->sched;
++static struct mptcp_sched_ops mptcp_sched_default = {
++	.get_subflow	= mptcp_sched_default_get_subflow,
++	.name		= "default",
++	.owner		= THIS_MODULE,
++};
 +
-+	if (!sched)
+ /* Must be called with rcu read lock held */
+ struct mptcp_sched_ops *mptcp_sched_find(const char *name)
+ {
+@@ -50,16 +70,24 @@ int mptcp_register_scheduler(struct mptcp_sched_ops *sched)
+ 
+ void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched)
+ {
++	if (sched == &mptcp_sched_default)
 +		return;
 +
-+	msk->sched = NULL;
-+	if (sched->release)
-+		sched->release(msk);
-+
-+	bpf_module_put(sched, sched->owner);
+ 	spin_lock(&mptcp_sched_list_lock);
+ 	list_del_rcu(&sched->list);
+ 	spin_unlock(&mptcp_sched_list_lock);
+ }
+ 
++void mptcp_sched_init(void)
++{
++	mptcp_register_scheduler(&mptcp_sched_default);
 +}
++
+ int mptcp_init_sched(struct mptcp_sock *msk,
+ 		     struct mptcp_sched_ops *sched)
+ {
+ 	if (!sched)
+-		goto out;
++		sched = &mptcp_sched_default;
+ 
+ 	if (!bpf_try_module_get(sched, sched->owner))
+ 		return -EBUSY;
+@@ -70,7 +98,6 @@ int mptcp_init_sched(struct mptcp_sock *msk,
+ 
+ 	pr_debug("sched=%s", msk->sched->name);
+ 
+-out:
+ 	return 0;
+ }
+ 
+@@ -117,17 +144,9 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+ 			return 0;
+ 	}
+ 
+-	if (!msk->sched) {
+-		struct sock *ssk;
+-
+-		ssk = mptcp_subflow_get_send(msk);
+-		if (!ssk)
+-			return -EINVAL;
+-		mptcp_subflow_set_scheduled(mptcp_subflow_ctx(ssk), true);
+-		return 0;
+-	}
+-
+ 	data.reinject = false;
++	if (msk->sched == &mptcp_sched_default || !msk->sched)
++		return mptcp_sched_default_get_subflow(msk, &data);
+ 	return msk->sched->get_subflow(msk, &data);
+ }
+ 
+@@ -147,16 +166,8 @@ int mptcp_sched_get_retrans(struct mptcp_sock *msk)
+ 			return 0;
+ 	}
+ 
+-	if (!msk->sched) {
+-		struct sock *ssk;
+-
+-		ssk = mptcp_subflow_get_retrans(msk);
+-		if (!ssk)
+-			return -EINVAL;
+-		mptcp_subflow_set_scheduled(mptcp_subflow_ctx(ssk), true);
+-		return 0;
+-	}
+-
+ 	data.reinject = true;
++	if (msk->sched == &mptcp_sched_default || !msk->sched)
++		return mptcp_sched_default_get_subflow(msk, &data);
+ 	return msk->sched->get_subflow(msk, &data);
+ }
 
 -- 
 2.41.0
