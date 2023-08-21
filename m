@@ -1,46 +1,47 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87E6847C
-	for <mptcp@lists.linux.dev>; Mon, 21 Aug 2023 15:27:37 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3fe32016bc8so32839515e9.1
-        for <mptcp@lists.linux.dev>; Mon, 21 Aug 2023 08:27:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C618F8476
+	for <mptcp@lists.linux.dev>; Mon, 21 Aug 2023 15:27:36 +0000 (UTC)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-31965c94001so2987413f8f.3
+        for <mptcp@lists.linux.dev>; Mon, 21 Aug 2023 08:27:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692631655; x=1693236455;
+        d=tessares.net; s=google; t=1692631654; x=1693236454;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+hljjb3cfrRq4ndL+1CO/uD3iiUC8IzVTwhM+dZ0bUY=;
-        b=R8PT/Uowtpy/iJXLNtHR81puDZLD1dh39zf/0bPlMN0RtdqOMiK9+oMw2UP3Op3A/s
-         1x0j6fNkNCTZjWLFnKclqlPN4PAaoFDTOA9u9wIHXAW5R8vwOTudfHtKuXL+/dF5gt3J
-         wNiKg6YVgqUFf/NodUTabs2ChDejE2ux8ATeHkZwl0J+2SjjK4fXA3UX7PPEzDirzoR1
-         ChKnMPiaQk1hie5lNugoKU9GIFRiSrc3d47zWUBG9vj+X4AVeqHTsLJ4vE2X0UttspaG
-         mpNLuJCsnFfIVVc/46OsJiRCl94Mo0Dd3mvaR38mXUtpBkmsdsVk6dJM2Q8a3bcA4dKh
-         dSJg==
+        bh=Qom9yPJvuOB0nZei7EqgkCG8EelwzqY9NqWp9tSqDJ0=;
+        b=Lu/oWz2q51oH/A/nZUf7A94l0Mx1yS0berhpvAI8rahxWlwFT7A35O55oZ/6eh1HD3
+         HWJ5EuNeMSMBneKjI/yGqXihsTy348el0dd0tfdpokldxl7hvzmQTnNh6AOIC3QARRdS
+         rG/8rmhVbs0Fbnhdf/K7MeMIIUBBFHg77owzZI6i29hVDr4VaJ5QDlLo53wQ6BwWeqFt
+         0CzUN+AFOIj4xEGXCErVsChWmRm08HbwQT9cOGE8PD87gfIAVGAwM13zE8Fb8+tQiwkS
+         sHli+goZqTlROwIw0D3fs6AfYU5webgkBfAXnojlwbutO8EiqVpAUkDQesgpea/+kJ5c
+         IFww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692631655; x=1693236455;
+        d=1e100.net; s=20221208; t=1692631654; x=1693236454;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+hljjb3cfrRq4ndL+1CO/uD3iiUC8IzVTwhM+dZ0bUY=;
-        b=M5tDGJ7bV8Xlx2TVA3mAH/WW40OJtktCrV31GP+S1/icwP8GTyvqY9dElT+8vRtBE4
-         pIwmilOJsKtKefSVdMvd5yXWImDrWQg2GEiy9W31WPQvIiT6XzXNfoukSoRuLFyVyxES
-         6fDxJ120iZTamfu3Q/V7IivSRA+Dsp/kucyfnJjtZa/k5YqOIl4dfgrrWDBxKgev4wiC
-         YSf/yFHdvIRdA18HIuMa5Tkzp78rxwobSzcVtZXAFoU1R1zRkaXaxVZ2mYT1/Pm6ol/I
-         0Y6KtGUrFWqnZlVtsUL+atIHpadubQw1PhcOzDdVnj17/qE2nGHQjfCp2tPxKDkcHHY9
-         xa3Q==
-X-Gm-Message-State: AOJu0YzzhRiNY2K61L1k2UU3GM6qyEXkQIe0P1h7TOvZI4+A1soqK0KI
-	KK8ChbHq87dqj6nixifKwaxW4jxQGeNtuqhwIE2hjQ==
-X-Google-Smtp-Source: AGHT+IHhXEehHQ4vz44/ssEXW6HIEeZQf8Qf6PzZHfpnOfRMnk5eWx8wrJCzbVWp4os1Vi3cVCoY3g==
-X-Received: by 2002:a05:600c:2349:b0:3fe:18be:76f8 with SMTP id 9-20020a05600c234900b003fe18be76f8mr5427980wmq.38.1692631655523;
-        Mon, 21 Aug 2023 08:27:35 -0700 (PDT)
+        bh=Qom9yPJvuOB0nZei7EqgkCG8EelwzqY9NqWp9tSqDJ0=;
+        b=KivsLaQ8IY3b1hX3LN+sArQylrG5837qmjdfL7ZMaS4q07OugY1odcVQQXe5mlbu1R
+         fOzd3//qyH+sUrnMKI8Dv5pDertvPSQT6KZOZJbgXjZU6+dy4bTjtfM69BnGAx2PfZnz
+         +XkJcnANn/xzDrJokEINCTIZLL3WO/i4av5Yb1Gm8nmImuqbx/oJ00i+chZh9S1jSv3c
+         f1178wJ2KIOCDG5kGRUyTv3Jh4u2akQr/q2DUHXEFC6GCip0l1/XB74VfRRyhNLtmv6T
+         Ko8//iMjyYxgyNenG0N7I1lPp0o33lk8tltMbr0CCTqYnOwhDea7S18CckBkT6GdhcuX
+         pVWg==
+X-Gm-Message-State: AOJu0YzT+pyDxa29gziO1K6loMvy8Bs+ESq1YOOlHMuxTleIIun8XdyK
+	y6052KPFVutt4AxQP5iq6EhelAmGFSaQrqSa5nPZdA==
+X-Google-Smtp-Source: AGHT+IGiPFJwCBKYEBkQVxM1LzZIbNF1Pbldi3MHJZiOtmYSvSbhKzy4UDP60C3ylQnLzTPEtm/NSQ==
+X-Received: by 2002:a5d:5225:0:b0:317:708e:1c29 with SMTP id i5-20020a5d5225000000b00317708e1c29mr5323396wra.40.1692631654618;
+        Mon, 21 Aug 2023 08:27:34 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
         by smtp.gmail.com with ESMTPSA id a19-20020a5d4573000000b003143add4396sm12803959wrc.22.2023.08.21.08.27.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 21 Aug 2023 08:27:34 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Mon, 21 Aug 2023 17:27:28 +0200
-Subject: [PATCH mptcp-iproute 3/3] ss: mptcp: print missing info counters
+Date: Mon, 21 Aug 2023 17:27:27 +0200
+Subject: [PATCH mptcp-iproute 2/3] ss: mptcp: display seq related counters
+ as decimal
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,71 +50,61 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230821-mptcp-issue-415-ss-mptcp-info-6-5-v1-3-e5d91ad566ca@tessares.net>
+Message-Id: <20230821-mptcp-issue-415-ss-mptcp-info-6-5-v1-2-e5d91ad566ca@tessares.net>
 References: <20230821-mptcp-issue-415-ss-mptcp-info-6-5-v1-0-e5d91ad566ca@tessares.net>
 In-Reply-To: <20230821-mptcp-issue-415-ss-mptcp-info-6-5-v1-0-e5d91ad566ca@tessares.net>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1578;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1255;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=+JNQfl4yrYzDciGtueQ+DmcmUe5J2KPMT22uDiyB/OM=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk44JlI8EdUT7KsEH1hqcKUsqXOqxVHFcBNYws7
- fNzHCZ1Yy2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZOOCZQAKCRD2t4JPQmmg
- c5M2EADHFyjklmNcMVaTLycA/MEA97EIrhxMhT4gv0X6WdrIT3RrBgh51lVMYnw1QsnLCaYCGrc
- 3XL99VW6lqJopOfINKLfP02ShxQAePSJXT/i8Tins2wxq2cxJlEG1ANIc6ICBbPQNPFCs/Igjnf
- uWvBT9mHs03Ho+Ou7sTBhNQKLHj9OkQNpShBRKM4x9oDVGeJ0FClkPClJh3mGs8yHQkJCig3JmM
- p8m6PbEHwIO1PV8oM0LjHuMs3Sv9S2USrhIAik9bE0/6OxJYoXcllivxaXgpMGJFkDdsEoDUbku
- smN42nzjxYdyutnhhwmPJEwAVaFuaWCgT54k5+128JzLmQEfaJ51Q7iAY35rXD8+NYNSKO0ytzX
- lt5lSTE9sHf8qoCLwlJdyW3YKA1F42LQqT2WRUr0e4fnIhf6s+vb4QZPIWc1sbKG/VqDTZ5Kf2Q
- ACy8FGYLdZZaY/jmoDNv5qagB6BRt1UdpGfifvvffLpAHNBpUfw9shQnaaXJQSqmQ4UFpwMAG5/
- Qg3ibP9NgOfTPAeSlrRR4foei4s1NoTwP57mWRM6V9iodBlYmsDOUiml2xwlkXbFuKUAwE3okn5
- /eE4V17wNnyTMt9/cgDPLKHtr/YIzJkjVnAcN/yoBTCxIzad9BdtHfuI3LtWgWESizKIxiOiMIi
- E0EGtaL2sN5z9kA==
+ bh=vbXdybGQWDpAUL1i4jV1YfqMzubN5jdXKmllYmO4PAM=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk44JlT0+//fwDrzLTRJgDI2+N16FwXk1yatta6
+ laqvqEDiMGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZOOCZQAKCRD2t4JPQmmg
+ c+AwEADllRjAf5UuOcex5qJAHrU/QPijPI+ZzG/TVA5upNRSEo7OO9lte4xr47dQYHnmqi14KmL
+ nRVNHc3yvTp6As3e4hQIHRby9uIytpmVBnD621TT80QdThXfzfqANoPC00hVa+PEzQbbZG54xmA
+ FgLTu1fOm9xLvMHEGmvG9AiDR8g/qNuWmdIIUmjUb3ZF7OfPIC7CN0dWgTKm8d7nOBNtKieCqJU
+ A+ag4CPy/9gjyoKohr5xwYqVl6eFyzTfOhqCn1ae1brA/0pzYwTeNZPv/sIRQi2gsKFWoZ59OMi
+ m4Mi7HUyo4OUursjHoCjlqliOUVLIVKS6QEuHebAcpLke+Ku5neVAn0aqo6FY1529YpaYSXrb7Z
+ pfj7I7ZotI+UhbhSSzAfevyjcbQaSpLH5/2TWSFFYB0UF1rTb0NUfPPWsiQxlEeHFmT9QU5uEc5
+ fRbDpjBCrj+Pvru9IOGN21vwVUa/Fve2ByK8D8Ia279EIC1ZsZkAcrgY/lRSNPikQ9MlAtRH1zk
+ zCJRj+rmZ7RC7G513xfakjmZrthutTIGP89TOYEjsbNjtmLp+T51F1hwMOSVMBQclgYdn/XBPG4
+ WKljXAymeof33pnh2n9Lz5LL4FYDOqUt9bbar+uzbElOFPCTd+RNYiZtov2E6mX1FY4DcT4A8sy
+ lCagoyoklMNgbow==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-These new counters have been added in different kernel versions:
+This is aligned with what is printed for TCP sockets.
 
-- v5.12: local_addr_used, local_addr_max
+The main difference here is that these counters can be larger (u32 vs
+u64) but WireShark and TCPDump are also printing these MPTCP counters as
+decimal and they look fine.
 
-- v5.13: csum_enabled
+So it sounds better to do the same here with ss for those who want to
+easily count how many bytes have been exchanged between two runs without
+having to think in hexa.
 
-- v6.5: retransmits, bytes_retrans, bytes_sent, bytes_received,
-  bytes_acked
-
-It is interesting to display them if they are available.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/415
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- misc/ss.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ misc/ss.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/misc/ss.c b/misc/ss.c
-index d1779b1d..9a6188bb 100644
+index 34f82176..d1779b1d 100644
 --- a/misc/ss.c
 +++ b/misc/ss.c
-@@ -3255,6 +3255,22 @@ static void mptcp_stats_print(struct mptcp_info *s)
- 		out(" snd_una:%llu", s->mptcpi_snd_una);
+@@ -3250,11 +3250,11 @@ static void mptcp_stats_print(struct mptcp_info *s)
+ 	if (s->mptcpi_token)
+ 		out(" token:%x", s->mptcpi_token);
+ 	if (s->mptcpi_write_seq)
+-		out(" write_seq:%llx", s->mptcpi_write_seq);
++		out(" write_seq:%llu", s->mptcpi_write_seq);
+ 	if (s->mptcpi_snd_una)
+-		out(" snd_una:%llx", s->mptcpi_snd_una);
++		out(" snd_una:%llu", s->mptcpi_snd_una);
  	if (s->mptcpi_rcv_nxt)
- 		out(" rcv_nxt:%llu", s->mptcpi_rcv_nxt);
-+	if (s->mptcpi_local_addr_used)
-+		out(" local_addr_used:%u", s->mptcpi_local_addr_used);
-+	if (s->mptcpi_local_addr_max)
-+		out(" local_addr_max:%u", s->mptcpi_local_addr_max);
-+	if (s->mptcpi_csum_enabled)
-+		out(" csum_enabled:%u", s->mptcpi_csum_enabled);
-+	if (s->mptcpi_retransmits)
-+		out(" retransmits:%u", s->mptcpi_retransmits);
-+	if (s->mptcpi_bytes_retrans)
-+		out(" bytes_retrans:%llu", s->mptcpi_bytes_retrans);
-+	if (s->mptcpi_bytes_sent)
-+		out(" bytes_sent:%llu", s->mptcpi_bytes_sent);
-+	if (s->mptcpi_bytes_received)
-+		out(" bytes_received:%llu", s->mptcpi_bytes_received);
-+	if (s->mptcpi_bytes_acked)
-+		out(" bytes_acked:%llu", s->mptcpi_bytes_acked);
+-		out(" rcv_nxt:%llx", s->mptcpi_rcv_nxt);
++		out(" rcv_nxt:%llu", s->mptcpi_rcv_nxt);
  }
  
  static void mptcp_show_info(const struct nlmsghdr *nlh, struct inet_diag_msg *r,
