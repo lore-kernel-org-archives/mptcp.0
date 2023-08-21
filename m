@@ -1,23 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD0919BC1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C1318AE5;
 	Mon, 21 Aug 2023 22:25:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EE73C4339A;
-	Mon, 21 Aug 2023 22:25:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAAF2C433CC;
+	Mon, 21 Aug 2023 22:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1692656723;
-	bh=l/E+nyy0Y8DtnrpBmW/CTFj63vuiRbKjHHBK8R6u1BA=;
+	bh=EtjkMo5Utfqyb2HvZTJ81wkGvDCfsqeXl+lqQcBmj0I=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Crbx4IeWZYFleHluk0uyz/xqbbrWFGMJV94GxjI0S1HGpgaYxVoBkrGyjdB5fhHUJ
-	 QweCIF2THzfQxIsYe8Glh4fqv15YDjo9MDqnOfR3Is+AIN5vQ2QF8Vwd2zHi15xC1i
-	 iDsMcT7Dn3VsN/RblSVuTGPYQ0e6gghihsVe6CfrGlfO77k8AvFQQ7FldJZra2ON/K
-	 Tmd/pvq50KW+uiOmXmrHetpEKwwU7MqEqtyeRYHM19HFcvc7BJ7/IvkQmToxmPL4Ev
-	 quF5eTWgW6xxyoonXbCXLoByTWSOBAkA+B625DPSTmepNLdw+Z4TSkYj2/8+kVZuRg
-	 PKnFVQusLY++g==
+	b=vK/16cRIZTOf1gUU0TMhI0AXu3D9oHzRBO3GIJkMsbmoA7pNJ8S02nvP4j0Q6mJEZ
+	 YSdrnUrkJYvWlMSSONZ0osbaSgI7zOgwSohZdJiMkOGg3gBB6baNzED9dBRwyBROjJ
+	 WZOYIk0DaPQJuI1QuFuJtMMU/UdCUJnqe01kIANieTA6Dj2WvXbzF2BreJFu+hf/SP
+	 X2oXKDbknliN3GaZLEhLh3MHEYx+cvvv0W1mxD45dnrvcRvYm8L8hlkRkKKsfs76f1
+	 BLABacmaKBxw+u/DrUbQExVhuH75QuF1A7HuxJ7xoC0GdQd+TuEx8yZ/ew61H4spKe
+	 KPhkrkukT21gQ==
 From: Mat Martineau <martineau@kernel.org>
-Date: Mon, 21 Aug 2023 15:25:15 -0700
-Subject: [PATCH net-next 04/10] mptcp: add a new sysctl scheduler
+Date: Mon, 21 Aug 2023 15:25:13 -0700
+Subject: [PATCH net-next 02/10] mptcp: drop last_snd and
+ MPTCP_RESET_SCHEDULER
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,7 +27,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230821-upstream-net-next-20230818-v1-4-0c860fb256a8@kernel.org>
+Message-Id: <20230821-upstream-net-next-20230818-v1-2-0c860fb256a8@kernel.org>
 References: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 In-Reply-To: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
@@ -38,101 +39,124 @@ X-Mailer: b4 0.12.3
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch adds a new sysctl, named scheduler, to support for selection
-of different schedulers. Export mptcp_get_scheduler helper to get this
-sysctl.
+Since the burst check conditions have moved out of the function
+mptcp_subflow_get_send(), it makes all msk->last_snd useless.
+This patch drops them as well as the macro MPTCP_RESET_SCHEDULER.
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- Documentation/networking/mptcp-sysctl.rst |  8 ++++++++
- net/mptcp/ctrl.c                          | 14 ++++++++++++++
- net/mptcp/protocol.h                      |  1 +
- 3 files changed, 23 insertions(+)
+ net/mptcp/pm.c         |  9 +--------
+ net/mptcp/pm_netlink.c |  3 ---
+ net/mptcp/protocol.c   | 11 +----------
+ net/mptcp/protocol.h   |  2 --
+ 4 files changed, 2 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-index 213510698014..15f1919d640c 100644
---- a/Documentation/networking/mptcp-sysctl.rst
-+++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -74,3 +74,11 @@ stale_loss_cnt - INTEGER
- 	This is a per-namespace sysctl.
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 7dbbad1e4f55..d8da5374d9e1 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -299,15 +299,8 @@ void mptcp_pm_mp_prio_received(struct sock *ssk, u8 bkup)
  
- 	Default: 4
-+
-+scheduler - STRING
-+	Select the scheduler of your choice.
-+
-+	Support for selection of different schedulers. This is a per-namespace
-+	sysctl.
-+
-+	Default: "default"
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index ae20b7d92e28..c46c22a84d23 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -32,6 +32,7 @@ struct mptcp_pernet {
- 	u8 checksum_enabled;
- 	u8 allow_join_initial_addr_port;
- 	u8 pm_type;
-+	char scheduler[MPTCP_SCHED_NAME_MAX];
- };
+ 	pr_debug("subflow->backup=%d, bkup=%d\n", subflow->backup, bkup);
+ 	msk = mptcp_sk(sk);
+-	if (subflow->backup != bkup) {
++	if (subflow->backup != bkup)
+ 		subflow->backup = bkup;
+-		mptcp_data_lock(sk);
+-		if (!sock_owned_by_user(sk))
+-			msk->last_snd = NULL;
+-		else
+-			__set_bit(MPTCP_RESET_SCHEDULER,  &msk->cb_flags);
+-		mptcp_data_unlock(sk);
+-	}
  
- static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
-@@ -69,6 +70,11 @@ int mptcp_get_pm_type(const struct net *net)
- 	return mptcp_get_pernet(net)->pm_type;
+ 	mptcp_event(MPTCP_EVENT_SUB_PRIORITY, msk, ssk, GFP_ATOMIC);
  }
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index c75d9d88a053..9661f3812682 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -472,9 +472,6 @@ static void __mptcp_pm_send_ack(struct mptcp_sock *msk, struct mptcp_subflow_con
  
-+const char *mptcp_get_scheduler(const struct net *net)
-+{
-+	return mptcp_get_pernet(net)->scheduler;
-+}
-+
- static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- {
- 	pernet->mptcp_enabled = 1;
-@@ -77,6 +83,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- 	pernet->allow_join_initial_addr_port = 1;
- 	pernet->stale_loss_cnt = 4;
- 	pernet->pm_type = MPTCP_PM_TYPE_KERNEL;
-+	strcpy(pernet->scheduler, "default");
+ 	slow = lock_sock_fast(ssk);
+ 	if (prio) {
+-		if (subflow->backup != backup)
+-			msk->last_snd = NULL;
+-
+ 		subflow->send_mp_prio = 1;
+ 		subflow->backup = backup;
+ 		subflow->request_bkup = backup;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 29c662ffcd05..f15ff80be30f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1438,16 +1438,13 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ 
+ 	burst = min_t(int, MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
+ 	wmem = READ_ONCE(ssk->sk_wmem_queued);
+-	if (!burst) {
+-		msk->last_snd = NULL;
++	if (!burst)
+ 		return ssk;
+-	}
+ 
+ 	subflow = mptcp_subflow_ctx(ssk);
+ 	subflow->avg_pacing_rate = div_u64((u64)subflow->avg_pacing_rate * wmem +
+ 					   READ_ONCE(ssk->sk_pacing_rate) * burst,
+ 					   burst + wmem);
+-	msk->last_snd = ssk;
+ 	msk->snd_burst = burst;
+ 	return ssk;
  }
+@@ -2379,9 +2376,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		WRITE_ONCE(msk->first, NULL);
  
- #ifdef CONFIG_SYSCTL
-@@ -128,6 +135,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
- 		.extra1       = SYSCTL_ZERO,
- 		.extra2       = &mptcp_pm_type_max
- 	},
-+	{
-+		.procname = "scheduler",
-+		.maxlen	= MPTCP_SCHED_NAME_MAX,
-+		.mode = 0644,
-+		.proc_handler = proc_dostring,
-+	},
- 	{}
- };
+ out:
+-	if (ssk == msk->last_snd)
+-		msk->last_snd = NULL;
+-
+ 	if (need_push)
+ 		__mptcp_push_pending(sk, 0);
+ }
+@@ -3046,7 +3040,6 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 	 * subflow
+ 	 */
+ 	mptcp_destroy_common(msk, MPTCP_CF_FASTCLOSE);
+-	msk->last_snd = NULL;
+ 	WRITE_ONCE(msk->flags, 0);
+ 	msk->cb_flags = 0;
+ 	msk->push_pending = 0;
+@@ -3316,8 +3309,6 @@ static void mptcp_release_cb(struct sock *sk)
+ 			__mptcp_set_connected(sk);
+ 		if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
+ 			__mptcp_error_report(sk);
+-		if (__test_and_clear_bit(MPTCP_RESET_SCHEDULER, &msk->cb_flags))
+-			msk->last_snd = NULL;
+ 	}
  
-@@ -149,6 +162,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
- 	table[3].data = &pernet->allow_join_initial_addr_port;
- 	table[4].data = &pernet->stale_loss_cnt;
- 	table[5].data = &pernet->pm_type;
-+	table[6].data = &pernet->scheduler;
- 
- 	hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
- 	if (!hdr)
+ 	__mptcp_update_rmem(sk);
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 985e8f86668d..bfa13a50f276 100644
+index 38c7ea013361..cbf9a9e176b2 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -623,6 +623,7 @@ int mptcp_is_checksum_enabled(const struct net *net);
- int mptcp_allow_join_id0(const struct net *net);
- unsigned int mptcp_stale_loss_cnt(const struct net *net);
- int mptcp_get_pm_type(const struct net *net);
-+const char *mptcp_get_scheduler(const struct net *net);
- void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
- 				     const struct mptcp_options_received *mp_opt);
- bool __mptcp_retransmit_pending_data(struct sock *sk);
+@@ -123,7 +123,6 @@
+ #define MPTCP_RETRANSMIT	4
+ #define MPTCP_FLUSH_JOIN_LIST	5
+ #define MPTCP_CONNECTED		6
+-#define MPTCP_RESET_SCHEDULER	7
+ 
+ struct mptcp_skb_cb {
+ 	u64 map_seq;
+@@ -269,7 +268,6 @@ struct mptcp_sock {
+ 	u64		rcv_data_fin_seq;
+ 	u64		bytes_retrans;
+ 	int		rmem_fwd_alloc;
+-	struct sock	*last_snd;
+ 	int		snd_burst;
+ 	int		old_wspace;
+ 	u64		recovery_snd_nxt;	/* in recovery mode accept up to this seq;
 
 -- 
 2.41.0
