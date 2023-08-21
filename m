@@ -1,47 +1,25 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C618F8476
-	for <mptcp@lists.linux.dev>; Mon, 21 Aug 2023 15:27:36 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-31965c94001so2987413f8f.3
-        for <mptcp@lists.linux.dev>; Mon, 21 Aug 2023 08:27:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692631654; x=1693236454;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Qom9yPJvuOB0nZei7EqgkCG8EelwzqY9NqWp9tSqDJ0=;
-        b=Lu/oWz2q51oH/A/nZUf7A94l0Mx1yS0berhpvAI8rahxWlwFT7A35O55oZ/6eh1HD3
-         HWJ5EuNeMSMBneKjI/yGqXihsTy348el0dd0tfdpokldxl7hvzmQTnNh6AOIC3QARRdS
-         rG/8rmhVbs0Fbnhdf/K7MeMIIUBBFHg77owzZI6i29hVDr4VaJ5QDlLo53wQ6BwWeqFt
-         0CzUN+AFOIj4xEGXCErVsChWmRm08HbwQT9cOGE8PD87gfIAVGAwM13zE8Fb8+tQiwkS
-         sHli+goZqTlROwIw0D3fs6AfYU5webgkBfAXnojlwbutO8EiqVpAUkDQesgpea/+kJ5c
-         IFww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692631654; x=1693236454;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qom9yPJvuOB0nZei7EqgkCG8EelwzqY9NqWp9tSqDJ0=;
-        b=KivsLaQ8IY3b1hX3LN+sArQylrG5837qmjdfL7ZMaS4q07OugY1odcVQQXe5mlbu1R
-         fOzd3//qyH+sUrnMKI8Dv5pDertvPSQT6KZOZJbgXjZU6+dy4bTjtfM69BnGAx2PfZnz
-         +XkJcnANn/xzDrJokEINCTIZLL3WO/i4av5Yb1Gm8nmImuqbx/oJ00i+chZh9S1jSv3c
-         f1178wJ2KIOCDG5kGRUyTv3Jh4u2akQr/q2DUHXEFC6GCip0l1/XB74VfRRyhNLtmv6T
-         Ko8//iMjyYxgyNenG0N7I1lPp0o33lk8tltMbr0CCTqYnOwhDea7S18CckBkT6GdhcuX
-         pVWg==
-X-Gm-Message-State: AOJu0YzT+pyDxa29gziO1K6loMvy8Bs+ESq1YOOlHMuxTleIIun8XdyK
-	y6052KPFVutt4AxQP5iq6EhelAmGFSaQrqSa5nPZdA==
-X-Google-Smtp-Source: AGHT+IGiPFJwCBKYEBkQVxM1LzZIbNF1Pbldi3MHJZiOtmYSvSbhKzy4UDP60C3ylQnLzTPEtm/NSQ==
-X-Received: by 2002:a5d:5225:0:b0:317:708e:1c29 with SMTP id i5-20020a5d5225000000b00317708e1c29mr5323396wra.40.1692631654618;
-        Mon, 21 Aug 2023 08:27:34 -0700 (PDT)
-Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id a19-20020a5d4573000000b003143add4396sm12803959wrc.22.2023.08.21.08.27.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Aug 2023 08:27:34 -0700 (PDT)
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Mon, 21 Aug 2023 17:27:27 +0200
-Subject: [PATCH mptcp-iproute 2/3] ss: mptcp: display seq related counters
- as decimal
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0828411720;
+	Mon, 21 Aug 2023 22:25:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CE0FC433C7;
+	Mon, 21 Aug 2023 22:25:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692656722;
+	bh=W1kvItiGYBlF2AnzxBQsqMytiMS8LTkEKOGrpJ6SXhg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=NLFR7NeAPAgIvfDpIhIUeKFQBcqYETSvfCz2anh+j8I+hvxOh9FirMa3nYP7fygUg
+	 Gf4EmKXr1VSpseZWj9JOBDMyli826ZlS6WooFn9eCISSi8naxJVmFHYsxAykoOP2rh
+	 teuFsOerng1pVsgLHAiXgk9xtND3/Yo1O11sgHq3+r7Sf5r+YpH7CvMnZ8ZIHglPkK
+	 /0ghl4VulsTbb9uPIMXRlBg4h8OrxvLGUGuujSZfPVB8H1y7yTMkWdENJpIvI1DbDW
+	 nl7BRHigCDhemuiFKVZylS1KpRyNuYPnq4/xwGhA2zwJdXeJbMMeE+zI6u3FuD8kb1
+	 g9bJbAbNc0PkQ==
+From: Mat Martineau <martineau@kernel.org>
+Subject: [PATCH net-next 00/10] mptcp: Prepare MPTCP packet scheduler for
+ BPF extension
+Date: Mon, 21 Aug 2023 15:25:11 -0700
+Message-Id: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,65 +28,72 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230821-mptcp-issue-415-ss-mptcp-info-6-5-v1-2-e5d91ad566ca@tessares.net>
-References: <20230821-mptcp-issue-415-ss-mptcp-info-6-5-v1-0-e5d91ad566ca@tessares.net>
-In-Reply-To: <20230821-mptcp-issue-415-ss-mptcp-info-6-5-v1-0-e5d91ad566ca@tessares.net>
-To: mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
+X-B4-Tracking: v=1; b=H4sIAEfk42QC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDC0ML3dKC4pKi1MRc3bzUEiCuKNGFSxmlGBpaWhobmpqYmSoBDSgoSk3
+ LrAAbHq0EU64UW1sLAAcdKUt2AAAA
+To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ Geliang Tang <geliang.tang@suse.com>, Mat Martineau <martineau@kernel.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1255;
- i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=vbXdybGQWDpAUL1i4jV1YfqMzubN5jdXKmllYmO4PAM=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk44JlT0+//fwDrzLTRJgDI2+N16FwXk1yatta6
- laqvqEDiMGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZOOCZQAKCRD2t4JPQmmg
- c+AwEADllRjAf5UuOcex5qJAHrU/QPijPI+ZzG/TVA5upNRSEo7OO9lte4xr47dQYHnmqi14KmL
- nRVNHc3yvTp6As3e4hQIHRby9uIytpmVBnD621TT80QdThXfzfqANoPC00hVa+PEzQbbZG54xmA
- FgLTu1fOm9xLvMHEGmvG9AiDR8g/qNuWmdIIUmjUb3ZF7OfPIC7CN0dWgTKm8d7nOBNtKieCqJU
- A+ag4CPy/9gjyoKohr5xwYqVl6eFyzTfOhqCn1ae1brA/0pzYwTeNZPv/sIRQi2gsKFWoZ59OMi
- m4Mi7HUyo4OUursjHoCjlqliOUVLIVKS6QEuHebAcpLke+Ku5neVAn0aqo6FY1529YpaYSXrb7Z
- pfj7I7ZotI+UhbhSSzAfevyjcbQaSpLH5/2TWSFFYB0UF1rTb0NUfPPWsiQxlEeHFmT9QU5uEc5
- fRbDpjBCrj+Pvru9IOGN21vwVUa/Fve2ByK8D8Ia279EIC1ZsZkAcrgY/lRSNPikQ9MlAtRH1zk
- zCJRj+rmZ7RC7G513xfakjmZrthutTIGP89TOYEjsbNjtmLp+T51F1hwMOSVMBQclgYdn/XBPG4
- WKljXAymeof33pnh2n9Lz5LL4FYDOqUt9bbar+uzbElOFPCTd+RNYiZtov2E6mX1FY4DcT4A8sy
- lCagoyoklMNgbow==
-X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This is aligned with what is printed for TCP sockets.
+The kernel's MPTCP packet scheduler has, to date, been a one-size-fits
+all algorithm that is hard-coded. It attempts to balance latency and
+throughput when transmitting data across multiple TCP subflows, and has
+some limited tunability through sysctls. It has been a long-term goal of
+the Linux MPTCP community to support customizable packet schedulers for
+use cases that need to make different trade-offs regarding latency,
+throughput, redundancy, and other metrics. BPF is well-suited for
+configuring customized, per-packet scheduling decisions without having
+to modify the kernel or manage out-of-tree kernel modules.
 
-The main difference here is that these counters can be larger (u32 vs
-u64) but WireShark and TCPDump are also printing these MPTCP counters as
-decimal and they look fine.
+The first steps toward implementing BPF packet schedulers are to update
+the existing MPTCP transmit loops to allow more flexible scheduling
+decisions, and to add infrastructure for swappable packet schedulers.
+The existing scheduling algorithm remains the default. BPF-related
+changes will be in a future patch series.
 
-So it sounds better to do the same here with ss for those who want to
-easily count how many bytes have been exchanged between two runs without
-having to think in hexa.
+This code has been in the MPTCP development tree for quite a while,
+undergoing testing in our CI and community.
 
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Patches 1 and 2 refactor the transmit code and do some related cleanup.
+
+Patches 3-9 add infrastructure for registering and calling multiple
+schedulers.
+
+Patch 10 connects the in-kernel default scheduler to the new
+infrastructure.
+
+Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- misc/ss.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Geliang Tang (10):
+      mptcp: refactor push_pending logic
+      mptcp: drop last_snd and MPTCP_RESET_SCHEDULER
+      mptcp: add struct mptcp_sched_ops
+      mptcp: add a new sysctl scheduler
+      mptcp: add sched in mptcp_sock
+      mptcp: add scheduled in mptcp_subflow_context
+      mptcp: add scheduler wrappers
+      mptcp: use get_send wrapper
+      mptcp: use get_retrans wrapper
+      mptcp: register default scheduler
 
-diff --git a/misc/ss.c b/misc/ss.c
-index 34f82176..d1779b1d 100644
---- a/misc/ss.c
-+++ b/misc/ss.c
-@@ -3250,11 +3250,11 @@ static void mptcp_stats_print(struct mptcp_info *s)
- 	if (s->mptcpi_token)
- 		out(" token:%x", s->mptcpi_token);
- 	if (s->mptcpi_write_seq)
--		out(" write_seq:%llx", s->mptcpi_write_seq);
-+		out(" write_seq:%llu", s->mptcpi_write_seq);
- 	if (s->mptcpi_snd_una)
--		out(" snd_una:%llx", s->mptcpi_snd_una);
-+		out(" snd_una:%llu", s->mptcpi_snd_una);
- 	if (s->mptcpi_rcv_nxt)
--		out(" rcv_nxt:%llx", s->mptcpi_rcv_nxt);
-+		out(" rcv_nxt:%llu", s->mptcpi_rcv_nxt);
- }
- 
- static void mptcp_show_info(const struct nlmsghdr *nlh, struct inet_diag_msg *r,
+ Documentation/networking/mptcp-sysctl.rst |   8 +
+ include/net/mptcp.h                       |  21 +++
+ net/mptcp/Makefile                        |   2 +-
+ net/mptcp/ctrl.c                          |  14 ++
+ net/mptcp/pm.c                            |   9 +-
+ net/mptcp/pm_netlink.c                    |   3 -
+ net/mptcp/protocol.c                      | 277 +++++++++++++++++-------------
+ net/mptcp/protocol.h                      |  18 +-
+ net/mptcp/sched.c                         | 173 +++++++++++++++++++
+ 9 files changed, 393 insertions(+), 132 deletions(-)
+---
+base-commit: 7eb6deb3f55678216a6a0e956846c04958093ea5
+change-id: 20230818-upstream-net-next-20230818-2d1199315465
 
+Best regards,
 -- 
-2.40.1
+Mat Martineau <martineau@kernel.org>
 
