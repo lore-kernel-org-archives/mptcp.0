@@ -1,23 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE5517755;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB751198B0;
 	Mon, 21 Aug 2023 22:25:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6CDCC433CB;
-	Mon, 21 Aug 2023 22:25:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B6FEC43397;
+	Mon, 21 Aug 2023 22:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692656722;
-	bh=ZegXcvFdUUUbQrQhYHQhTMtH3PwvZ1GQ2Ih8qmeynjw=;
+	s=k20201202; t=1692656723;
+	bh=KL6HAUlN74y/BKjFAEiuc9d9I/kw0+Ps2Yd9sgSgLik=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=TrW6DIpLvGwjbWQZYqE/4N10iaYht1a2I04DSKCrM0jJ1sfKQDBa4lVkyRlfULrEb
-	 XfPLcfrnmAhFyjVLMZt/VUGHqSCMpOK9Ucj2QtE0e7tdle87txEIKsveTLCSmOsRZH
-	 xRajB0du2UG+uBpJ7jpCiP+oeA5o8dpj+TO2ush/GFiEB4b4lHGOINSkLThSm9VYMd
-	 GwOt8AEm85cMyugDYTvbdCBC3YsHPDZ07dRNHbHBUsRI9rduw2NV2MDExIsQeaKu33
-	 Ij8LVSaV7MNqkgiDy0slWoi9diEdM1ZN0Y3rOo8jFtgjI/eqz47+eVMfY7Alu1bxwP
-	 CvI2fAGbVBI7g==
+	b=OYfDdc+Z6RVmNE3x8h1PGcMSPI79LGfVcW2wiltI+R/36z8gsxtsurYwakpei3VXG
+	 akN7zeSg7LwlpXmVTD1cdHrg5ac7h48uChKLBgV/kJnGUcoTYnurLAsi3/Imj0L6XX
+	 1T8k7AvsmHds+qNp2K0y9zKpE2s63D0KBa4PnEt9pK19D7su5bBe3cqe4hqIDAii34
+	 kfgyFdreFHh0n9PuKyNkqofCHYfTYEoBNStoBSUvSV7QGHoWKfOLWCHK2hscTfL67a
+	 4dxBEpU2QOCBYAEWB1+V/4VxZZw+8LgS0BZlOdn4CIxZbWuuc7HJKukYZmOLACKtmg
+	 xsHryAJzrP50w==
 From: Mat Martineau <martineau@kernel.org>
-Date: Mon, 21 Aug 2023 15:25:12 -0700
-Subject: [PATCH net-next 01/10] mptcp: refactor push_pending logic
+Date: Mon, 21 Aug 2023 15:25:14 -0700
+Subject: [PATCH net-next 03/10] mptcp: add struct mptcp_sched_ops
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,7 +26,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230821-upstream-net-next-20230818-v1-1-0c860fb256a8@kernel.org>
+Message-Id: <20230821-upstream-net-next-20230818-v1-3-0c860fb256a8@kernel.org>
 References: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 In-Reply-To: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
@@ -38,271 +38,149 @@ X-Mailer: b4 0.12.3
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-To support redundant package schedulers more easily, this patch refactors
-__mptcp_push_pending() logic from:
+This patch defines struct mptcp_sched_ops, which has three struct members,
+name, owner and list, and four function pointers: init(), release() and
+get_subflow().
 
-For each dfrag:
-	While sends succeed:
-		Call the scheduler (selects subflow and msk->snd_burst)
-		Update subflow locks (push/release/acquire as needed)
-		Send the dfrag data with mptcp_sendmsg_frag()
-		Update already_sent, snd_nxt, snd_burst
-	Update msk->first_pending
-Push/release on final subflow
+The scheduler function get_subflow() have a struct mptcp_sched_data
+parameter, which contains a reinject flag for retrans or not, a subflows
+number and a mptcp_subflow_context array.
 
-->
+Add the scheduler registering, unregistering and finding functions to add,
+delete and find a packet scheduler on the global list mptcp_sched_list.
 
-While first_pending isn't empty:
-	Call the scheduler (selects subflow and msk->snd_burst)
-	Update subflow locks (push/release/acquire as needed)
-	For each pending dfrag:
-		While sends succeed:
-			Send the dfrag data with mptcp_sendmsg_frag()
-			Update already_sent, snd_nxt, snd_burst
-		Update msk->first_pending
-		Break if required by msk->snd_burst / etc
-	Push/release on final subflow
-
-Refactors __mptcp_subflow_push_pending logic from:
-
-For each dfrag:
-	While sends succeed:
-		Call the scheduler (selects subflow and msk->snd_burst)
-		Send the dfrag data with mptcp_subflow_delegate(), break
-		Send the dfrag data with mptcp_sendmsg_frag()
-		Update dfrag->already_sent, msk->snd_nxt, msk->snd_burst
-	Update msk->first_pending
-
-->
-
-While first_pending isn't empty:
-	Call the scheduler (selects subflow and msk->snd_burst)
-	Send the dfrag data with mptcp_subflow_delegate(), break
-	Send the dfrag data with mptcp_sendmsg_frag()
-	For each pending dfrag:
-		While sends succeed:
-			Send the dfrag data with mptcp_sendmsg_frag()
-			Update already_sent, snd_nxt, snd_burst
-		Update msk->first_pending
-		Break if required by msk->snd_burst / etc
-
-Move the duplicate code from __mptcp_push_pending() and
-__mptcp_subflow_push_pending() into a new helper function, named
-__subflow_push_pending(). Simplify __mptcp_push_pending() and
-__mptcp_subflow_push_pending() by invoking this helper.
-
-Also move the burst check conditions out of the function
-mptcp_subflow_get_send(), check them in __subflow_push_pending() in
-the inner "for each pending dfrag" loop.
-
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- net/mptcp/protocol.c | 153 +++++++++++++++++++++++++++------------------------
- 1 file changed, 81 insertions(+), 72 deletions(-)
+ include/net/mptcp.h  | 21 ++++++++++++++++++++
+ net/mptcp/Makefile   |  2 +-
+ net/mptcp/protocol.h |  3 +++
+ net/mptcp/sched.c    | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 81 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6019a3cf1625..29c662ffcd05 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1386,14 +1386,6 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 		       sk_stream_memory_free(msk->first) ? msk->first : NULL;
- 	}
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 3c5c68618fcc..fb996124b3d5 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -96,6 +96,27 @@ struct mptcp_out_options {
+ #endif
+ };
  
--	/* re-use last subflow, if the burst allow that */
--	if (msk->last_snd && msk->snd_burst > 0 &&
--	    sk_stream_memory_free(msk->last_snd) &&
--	    mptcp_subflow_active(mptcp_subflow_ctx(msk->last_snd))) {
--		mptcp_set_timeout(sk);
--		return msk->last_snd;
--	}
--
- 	/* pick the subflow with the lower wmem/wspace ratio */
- 	for (i = 0; i < SSK_MODE_MAX; ++i) {
- 		send_info[i].ssk = NULL;
-@@ -1499,57 +1491,86 @@ void mptcp_check_and_set_pending(struct sock *sk)
- 		mptcp_sk(sk)->push_pending |= BIT(MPTCP_PUSH_PENDING);
- }
++#define MPTCP_SCHED_NAME_MAX	16
++#define MPTCP_SUBFLOWS_MAX	8
++
++struct mptcp_sched_data {
++	bool	reinject;
++	u8	subflows;
++	struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
++};
++
++struct mptcp_sched_ops {
++	int (*get_subflow)(struct mptcp_sock *msk,
++			   struct mptcp_sched_data *data);
++
++	char			name[MPTCP_SCHED_NAME_MAX];
++	struct module		*owner;
++	struct list_head	list;
++
++	void (*init)(struct mptcp_sock *msk);
++	void (*release)(struct mptcp_sock *msk);
++} ____cacheline_aligned_in_smp;
++
+ #ifdef CONFIG_MPTCP
+ void mptcp_init(void);
  
--void __mptcp_push_pending(struct sock *sk, unsigned int flags)
-+static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
-+				  struct mptcp_sendmsg_info *info)
+diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
+index a3829ce548f9..84e531f86b82 100644
+--- a/net/mptcp/Makefile
++++ b/net/mptcp/Makefile
+@@ -2,7 +2,7 @@
+ obj-$(CONFIG_MPTCP) += mptcp.o
+ 
+ mptcp-y := protocol.o subflow.o options.o token.o crypto.o ctrl.o pm.o diag.o \
+-	   mib.o pm_netlink.o sockopt.o pm_userspace.o fastopen.o
++	   mib.o pm_netlink.o sockopt.o pm_userspace.o fastopen.o sched.o
+ 
+ obj-$(CONFIG_SYN_COOKIES) += syncookies.o
+ obj-$(CONFIG_INET_MPTCP_DIAG) += mptcp_diag.o
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index cbf9a9e176b2..985e8f86668d 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -655,6 +655,9 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
+ void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
+ 			 struct sockaddr_storage *addr,
+ 			 unsigned short family);
++struct mptcp_sched_ops *mptcp_sched_find(const char *name);
++int mptcp_register_scheduler(struct mptcp_sched_ops *sched);
++void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched);
+ 
+ static inline bool __tcp_can_send(const struct sock *ssk)
  {
--	struct sock *prev_ssk = NULL, *ssk = NULL;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
--	struct mptcp_sendmsg_info info = {
--				.flags = flags,
--	};
--	bool do_check_data_fin = false;
- 	struct mptcp_data_frag *dfrag;
--	int len;
-+	int len, copied = 0, err = 0;
- 
- 	while ((dfrag = mptcp_send_head(sk))) {
--		info.sent = dfrag->already_sent;
--		info.limit = dfrag->data_len;
-+		info->sent = dfrag->already_sent;
-+		info->limit = dfrag->data_len;
- 		len = dfrag->data_len - dfrag->already_sent;
- 		while (len > 0) {
- 			int ret = 0;
- 
--			prev_ssk = ssk;
--			ssk = mptcp_subflow_get_send(msk);
--
--			/* First check. If the ssk has changed since
--			 * the last round, release prev_ssk
--			 */
--			if (ssk != prev_ssk && prev_ssk)
--				mptcp_push_release(prev_ssk, &info);
--			if (!ssk)
--				goto out;
--
--			/* Need to lock the new subflow only if different
--			 * from the previous one, otherwise we are still
--			 * helding the relevant lock
--			 */
--			if (ssk != prev_ssk)
--				lock_sock(ssk);
--
--			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
-+			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, info);
- 			if (ret <= 0) {
--				if (ret == -EAGAIN)
--					continue;
--				mptcp_push_release(ssk, &info);
-+				err = copied ? : ret;
- 				goto out;
- 			}
- 
--			do_check_data_fin = true;
--			info.sent += ret;
-+			info->sent += ret;
-+			copied += ret;
- 			len -= ret;
- 
- 			mptcp_update_post_push(msk, dfrag, ret);
- 		}
- 		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
+diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+new file mode 100644
+index 000000000000..c5d3bbafba71
+--- /dev/null
++++ b/net/mptcp/sched.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Multipath TCP
++ *
++ * Copyright (c) 2022, SUSE.
++ */
 +
-+		if (msk->snd_burst <= 0 ||
-+		    !sk_stream_memory_free(ssk) ||
-+		    !mptcp_subflow_active(mptcp_subflow_ctx(ssk))) {
-+			err = copied;
-+			goto out;
++#define pr_fmt(fmt) "MPTCP: " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/list.h>
++#include <linux/rculist.h>
++#include <linux/spinlock.h>
++#include "protocol.h"
++
++static DEFINE_SPINLOCK(mptcp_sched_list_lock);
++static LIST_HEAD(mptcp_sched_list);
++
++/* Must be called with rcu read lock held */
++struct mptcp_sched_ops *mptcp_sched_find(const char *name)
++{
++	struct mptcp_sched_ops *sched, *ret = NULL;
++
++	list_for_each_entry_rcu(sched, &mptcp_sched_list, list) {
++		if (!strcmp(sched->name, name)) {
++			ret = sched;
++			break;
 +		}
-+		mptcp_set_timeout(sk);
 +	}
-+	err = copied;
 +
-+out:
-+	return err;
++	return ret;
 +}
 +
-+void __mptcp_push_pending(struct sock *sk, unsigned int flags)
++int mptcp_register_scheduler(struct mptcp_sched_ops *sched)
 +{
-+	struct sock *prev_ssk = NULL, *ssk = NULL;
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct mptcp_sendmsg_info info = {
-+				.flags = flags,
-+	};
-+	bool do_check_data_fin = false;
++	if (!sched->get_subflow)
++		return -EINVAL;
 +
-+	while (mptcp_send_head(sk)) {
-+		int ret = 0;
++	spin_lock(&mptcp_sched_list_lock);
++	if (mptcp_sched_find(sched->name)) {
++		spin_unlock(&mptcp_sched_list_lock);
++		return -EEXIST;
++	}
++	list_add_tail_rcu(&sched->list, &mptcp_sched_list);
++	spin_unlock(&mptcp_sched_list_lock);
 +
-+		prev_ssk = ssk;
-+		ssk = mptcp_subflow_get_send(msk);
++	pr_debug("%s registered", sched->name);
++	return 0;
++}
 +
-+		/* First check. If the ssk has changed since
-+		 * the last round, release prev_ssk
-+		 */
-+		if (ssk != prev_ssk && prev_ssk)
-+			mptcp_push_release(prev_ssk, &info);
-+		if (!ssk)
-+			goto out;
-+
-+		/* Need to lock the new subflow only if different
-+		 * from the previous one, otherwise we are still
-+		 * helding the relevant lock
-+		 */
-+		if (ssk != prev_ssk)
-+			lock_sock(ssk);
-+
-+		ret = __subflow_push_pending(sk, ssk, &info);
-+		if (ret <= 0) {
-+			if (ret == -EAGAIN)
-+				continue;
-+			mptcp_push_release(ssk, &info);
-+			goto out;
-+		}
-+		do_check_data_fin = true;
- 	}
- 
- 	/* at this point we held the socket lock for the last subflow we used */
-@@ -1570,42 +1591,30 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
- 	struct mptcp_sendmsg_info info = {
- 		.data_lock_held = true,
- 	};
--	struct mptcp_data_frag *dfrag;
- 	struct sock *xmit_ssk;
--	int len, copied = 0;
-+	int copied = 0;
- 
- 	info.flags = 0;
--	while ((dfrag = mptcp_send_head(sk))) {
--		info.sent = dfrag->already_sent;
--		info.limit = dfrag->data_len;
--		len = dfrag->data_len - dfrag->already_sent;
--		while (len > 0) {
--			int ret = 0;
--
--			/* check for a different subflow usage only after
--			 * spooling the first chunk of data
--			 */
--			xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
--			if (!xmit_ssk)
--				goto out;
--			if (xmit_ssk != ssk) {
--				mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk),
--						       MPTCP_DELEGATE_SEND);
--				goto out;
--			}
--
--			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
--			if (ret <= 0)
--				goto out;
-+	while (mptcp_send_head(sk)) {
-+		int ret = 0;
- 
--			info.sent += ret;
--			copied += ret;
--			len -= ret;
--			first = false;
--
--			mptcp_update_post_push(msk, dfrag, ret);
-+		/* check for a different subflow usage only after
-+		 * spooling the first chunk of data
-+		 */
-+		xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
-+		if (!xmit_ssk)
-+			goto out;
-+		if (xmit_ssk != ssk) {
-+			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk),
-+					       MPTCP_DELEGATE_SEND);
-+			goto out;
- 		}
--		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-+
-+		ret = __subflow_push_pending(sk, ssk, &info);
-+		first = false;
-+		if (ret <= 0)
-+			break;
-+		copied += ret;
- 	}
- 
- out:
++void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched)
++{
++	spin_lock(&mptcp_sched_list_lock);
++	list_del_rcu(&sched->list);
++	spin_unlock(&mptcp_sched_list_lock);
++}
 
 -- 
 2.41.0
