@@ -1,252 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D2C1B7D0;
-	Mon, 21 Aug 2023 22:25:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E192C433C9;
-	Mon, 21 Aug 2023 22:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692656724;
-	bh=844ERc/SpZdh5idxnvmNmp7nv/VNlGd0NRgXWs3/ito=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=MTGJcu395Hz2GYiE25yo3BBQcRQTxjtw5vTTMYDZ67tOikD843v2xu8bjZDwB+NtO
-	 BQ0HCT1eFV3fwxBF6GkqWq1XOMdeZVL5DRsXvozx9SO+avQUmyQMeXpGWcJeZVb9B8
-	 IONNolOy5HEUcygTc4vr+2EorNig3bHQy1LcwzQj1+d0EV9IGiGD97Qsma/1GDLF9T
-	 grSMYNm7ar6m6pO99q46Yy0PirdcOaoBsgDbCT0lOhCzduK2cA4++mIlrErjte/5cf
-	 9rooT4sN5/K0bETOQDqDsOWY+WJqSluqE0HIqq+iw12JhCb/7UCvsdDqi3XSrfEQTR
-	 nwUazMGjc0YJg==
-From: Mat Martineau <martineau@kernel.org>
-Date: Mon, 21 Aug 2023 15:25:19 -0700
-Subject: [PATCH net-next 08/10] mptcp: use get_send wrapper
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C121F746B
+	for <mptcp@lists.linux.dev>; Tue, 22 Aug 2023 07:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1692690218;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DOUbcuwTkt4hxD0A5qhD2Omqjw/f9iZraPkSBpFCkOY=;
+	b=BwB84KSA96SzAUVT2SA2Y3khrNY8vuzIMHyQdlDyUWrpXpTqz3pTVbAfruEWT79pZEGpeJ
+	AqQFkI6k9x4Z960Ge5j1f7d+e5Psqa8mSUT2lqo9ialHpUNLgEfMYsxKbFM2SO6VfHGwex
+	PFaeqy03zpRtiJsd7efrOkjSPq4+Kyk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-379-y9AmFg3XNi6lFTuLi_mX6g-1; Tue, 22 Aug 2023 03:43:36 -0400
+X-MC-Unique: y9AmFg3XNi6lFTuLi_mX6g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 71D151875840
+	for <mptcp@lists.linux.dev>; Tue, 22 Aug 2023 07:43:36 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.126])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0284B2026D4B
+	for <mptcp@lists.linux.dev>; Tue, 22 Aug 2023 07:43:35 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net 0/2] mptcp: fix missing close transition
+Date: Tue, 22 Aug 2023 09:43:24 +0200
+Message-ID: <cover.1692690157.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230821-upstream-net-next-20230818-v1-8-0c860fb256a8@kernel.org>
-References: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
-In-Reply-To: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- Geliang Tang <geliang.tang@suse.com>, Mat Martineau <martineau@kernel.org>
-X-Mailer: b4 0.12.3
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-From: Geliang Tang <geliang.tang@suse.com>
+This is an attempt to address the 2nd issue reported in:
 
-This patch adds the multiple subflows support for __mptcp_push_pending
-and __mptcp_subflow_push_pending. Use get_send() wrapper instead of
-mptcp_subflow_get_send() in them.
+https://github.com/multipath-tcp/mptcp_net-next/issues/427
 
-Check the subflow scheduled flags to test which subflow or subflows are
-picked by the scheduler, use them to send data.
+See the individual patch changelog for the details. The cover letter
+is here mainly to trigger the CI.
 
-Move msk_owned_by_me() and fallback checks into get_send() wrapper from
-mptcp_subflow_get_send().
+Paolo Abeni (2):
+  mptcp: move __mptcp_error_report in protocol.c
+  mptcp: process pending subflow error on close
 
-This commit allows the scheduler to set the subflow->scheduled bit in
-multiple subflows, but it does not allow for sending redundant data.
-Multiple scheduled subflows will send sequential data on each subflow.
-
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-Signed-off-by: Mat Martineau <martineau@kernel.org>
----
- net/mptcp/protocol.c | 113 +++++++++++++++++++++++++++++++--------------------
- net/mptcp/sched.c    |  13 ++++++
- 2 files changed, 81 insertions(+), 45 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9cd172d2c8d6..77e94ee82859 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1377,15 +1377,6 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	u64 linger_time;
- 	long tout = 0;
- 
--	msk_owned_by_me(msk);
--
--	if (__mptcp_check_fallback(msk)) {
--		if (!msk->first)
--			return NULL;
--		return __tcp_can_send(msk->first) &&
--		       sk_stream_memory_free(msk->first) ? msk->first : NULL;
--	}
--
- 	/* pick the subflow with the lower wmem/wspace ratio */
- 	for (i = 0; i < SSK_MODE_MAX; ++i) {
- 		send_info[i].ssk = NULL;
-@@ -1538,43 +1529,56 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 				.flags = flags,
- 	};
- 	bool do_check_data_fin = false;
-+	int push_count = 1;
- 
--	while (mptcp_send_head(sk)) {
-+	while (mptcp_send_head(sk) && (push_count > 0)) {
-+		struct mptcp_subflow_context *subflow;
- 		int ret = 0;
- 
--		prev_ssk = ssk;
--		ssk = mptcp_subflow_get_send(msk);
-+		if (mptcp_sched_get_send(msk))
-+			break;
- 
--		/* First check. If the ssk has changed since
--		 * the last round, release prev_ssk
--		 */
--		if (ssk != prev_ssk && prev_ssk)
--			mptcp_push_release(prev_ssk, &info);
--		if (!ssk)
--			goto out;
-+		push_count = 0;
- 
--		/* Need to lock the new subflow only if different
--		 * from the previous one, otherwise we are still
--		 * helding the relevant lock
--		 */
--		if (ssk != prev_ssk)
--			lock_sock(ssk);
-+		mptcp_for_each_subflow(msk, subflow) {
-+			if (READ_ONCE(subflow->scheduled)) {
-+				mptcp_subflow_set_scheduled(subflow, false);
- 
--		ret = __subflow_push_pending(sk, ssk, &info);
--		if (ret <= 0) {
--			if (ret == -EAGAIN)
--				continue;
--			mptcp_push_release(ssk, &info);
--			goto out;
-+				prev_ssk = ssk;
-+				ssk = mptcp_subflow_tcp_sock(subflow);
-+				if (ssk != prev_ssk) {
-+					/* First check. If the ssk has changed since
-+					 * the last round, release prev_ssk
-+					 */
-+					if (prev_ssk)
-+						mptcp_push_release(prev_ssk, &info);
-+
-+					/* Need to lock the new subflow only if different
-+					 * from the previous one, otherwise we are still
-+					 * helding the relevant lock
-+					 */
-+					lock_sock(ssk);
-+				}
-+
-+				push_count++;
-+
-+				ret = __subflow_push_pending(sk, ssk, &info);
-+				if (ret <= 0) {
-+					if (ret != -EAGAIN ||
-+					    (1 << ssk->sk_state) &
-+					     (TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSE))
-+						push_count--;
-+					continue;
-+				}
-+				do_check_data_fin = true;
-+			}
- 		}
--		do_check_data_fin = true;
- 	}
- 
- 	/* at this point we held the socket lock for the last subflow we used */
- 	if (ssk)
- 		mptcp_push_release(ssk, &info);
- 
--out:
- 	/* ensure the rtx timer is running */
- 	if (!mptcp_timer_pending(sk))
- 		mptcp_reset_timer(sk);
-@@ -1588,30 +1592,49 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
- 	struct mptcp_sendmsg_info info = {
- 		.data_lock_held = true,
- 	};
-+	bool keep_pushing = true;
- 	struct sock *xmit_ssk;
- 	int copied = 0;
- 
- 	info.flags = 0;
--	while (mptcp_send_head(sk)) {
-+	while (mptcp_send_head(sk) && keep_pushing) {
-+		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
- 		int ret = 0;
- 
- 		/* check for a different subflow usage only after
- 		 * spooling the first chunk of data
- 		 */
--		xmit_ssk = first ? ssk : mptcp_subflow_get_send(msk);
--		if (!xmit_ssk)
--			goto out;
--		if (xmit_ssk != ssk) {
--			mptcp_subflow_delegate(mptcp_subflow_ctx(xmit_ssk),
--					       MPTCP_DELEGATE_SEND);
-+		if (first) {
-+			mptcp_subflow_set_scheduled(subflow, false);
-+			ret = __subflow_push_pending(sk, ssk, &info);
-+			first = false;
-+			if (ret <= 0)
-+				break;
-+			copied += ret;
-+			continue;
-+		}
-+
-+		if (mptcp_sched_get_send(msk))
- 			goto out;
-+
-+		if (READ_ONCE(subflow->scheduled)) {
-+			mptcp_subflow_set_scheduled(subflow, false);
-+			ret = __subflow_push_pending(sk, ssk, &info);
-+			if (ret <= 0)
-+				keep_pushing = false;
-+			copied += ret;
- 		}
- 
--		ret = __subflow_push_pending(sk, ssk, &info);
--		first = false;
--		if (ret <= 0)
--			break;
--		copied += ret;
-+		mptcp_for_each_subflow(msk, subflow) {
-+			if (READ_ONCE(subflow->scheduled)) {
-+				xmit_ssk = mptcp_subflow_tcp_sock(subflow);
-+				if (xmit_ssk != ssk) {
-+					mptcp_subflow_delegate(subflow,
-+							       MPTCP_DELEGATE_SEND);
-+					keep_pushing = false;
-+				}
-+			}
-+		}
- 	}
- 
- out:
-diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-index 884606686cfe..078b5d44978d 100644
---- a/net/mptcp/sched.c
-+++ b/net/mptcp/sched.c
-@@ -99,6 +99,19 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_sched_data data;
- 
-+	msk_owned_by_me(msk);
-+
-+	/* the following check is moved out of mptcp_subflow_get_send */
-+	if (__mptcp_check_fallback(msk)) {
-+		if (msk->first &&
-+		    __tcp_can_send(msk->first) &&
-+		    sk_stream_memory_free(msk->first)) {
-+			mptcp_subflow_set_scheduled(mptcp_subflow_ctx(msk->first), true);
-+			return 0;
-+		}
-+		return -EINVAL;
-+	}
-+
- 	mptcp_for_each_subflow(msk, subflow) {
- 		if (READ_ONCE(subflow->scheduled))
- 			return 0;
+ net/mptcp/protocol.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/subflow.c  | 36 ------------------------------------
+ 2 files changed, 41 insertions(+), 36 deletions(-)
 
 -- 
 2.41.0
