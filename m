@@ -1,87 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81ABC1380;
-	Wed, 23 Aug 2023 01:40:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DE3D2C433C9;
-	Wed, 23 Aug 2023 01:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692754825;
-	bh=pAXq51Pv5rx97eeOazHPERneKzEPK0bqVk63gRfVb8I=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZgGtHpEq5zzIG0lyChaM9CnxXENu2ZEIyqp4CFazPlgg3dCI2tlVksPAvzlD+L79j
-	 E44tTEWu5xqyNROPMKIC36rk/8B5WH8czKB1RfakuWNn0iqzTTwpyzaaivHRExpDdM
-	 Y/xAt48Xh4Rbxq/NK3F4w1ePAmr79kOr7/V6hilirlx4xe/JGm4FVtotRVcniKx0UU
-	 A9v9oSh7vYSVqWTFhGq+A2SEtbbgSkSaqhVyhBj5rvuu0UILEGlk+3qBnKjW4x+XNK
-	 lnJwNEbVYN71H2dZM5SIELbCF24oRdHJeXVVZ1m7D4efiGuh3Wb4QrwO62uiOk6A1z
-	 lD97J89A6G+BQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C0DF7E4EAF6;
-	Wed, 23 Aug 2023 01:40:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE0920EE3
+	for <mptcp@lists.linux.dev>; Wed, 23 Aug 2023 07:24:25 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40037db2fe7so957025e9.0
+        for <mptcp@lists.linux.dev>; Wed, 23 Aug 2023 00:24:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1692775463; x=1693380263;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/WTqaO6kZcRzLug6Tf19WjfywSVMkwELLnlSRyjAmT8=;
+        b=kLBup4D3ZGwdtO+9O58+zIouEf1aTOn1JXoT2Rja+rJXtjjk2EQwp3EncfMsyO8Wv7
+         mrr4Umkc3xkIDBqlXUrsHXUzPFg4BLGR6s3c/3JIaNdesqKl3nNt20h+25q7lJNnBn1s
+         Kfh/qVojNW9UV4hBZjWM7iTjJdrg+ssZw/CNR0jeztf/k9EH0wHdZvhSmsa6qF19+TR1
+         FDW+57/Nw7+1iWvRI7pjlAmmaRnMi8y48eaUSYDL7aEB8zjp/m2oinwXbR7CCP7fUW5D
+         2WKZZCWvCz9z/lmhLqri6qyDsThPubbvKlowLSGsb0mTO1Rs5JIbarJjsBV5xzG9ue8G
+         LGCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692775463; x=1693380263;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/WTqaO6kZcRzLug6Tf19WjfywSVMkwELLnlSRyjAmT8=;
+        b=JsJVtXwL4vR59Zy7yMMEEV8pMYBS9xWL0mt552tN2bG8ZRP2+vNkHxa8VJ1RYM889e
+         daD6VGRW9s0ej/PEhqWiQN7C4d6ee6mX4WO9UHpxlt7NCVHCIt74I6yHBiBVKghZsLi8
+         Na7iVWbHZuMzpnRi/dbB20wkhhX9DVVPXVkJpmuqt1Ti6Tv2ovDyDqLnUnxtCoBDZZJJ
+         GapZYb6sHzUka25StX4GY33PfZ/4FC5ESdzjL7aFBDD6OTo8uDl61IvW/u5ko871lMez
+         ZuI1TQaz0sH+cta3xpRLqWsFt5P9C7HjchtIEJ5bqWaDkHjUFR0JiHOOGQSgpuFjOmKJ
+         Z0UQ==
+X-Gm-Message-State: AOJu0Yx2qIWQ3U+KZ/bumi6MRdDY8sUx9KUFRXRuJki1HGXhG1/dbKR5
+	qUEnPcyK5XZQBuOneL58aIAfDQ==
+X-Google-Smtp-Source: AGHT+IFWeSaGrv/qmVkcSWGdZnTMT+BHPHfZbyQxPWBUe3oCDzzm7oj9NsHDZjTcmd3kqLdWnrxneg==
+X-Received: by 2002:a5d:6087:0:b0:317:6816:578c with SMTP id w7-20020a5d6087000000b003176816578cmr8690475wrt.5.1692775463263;
+        Wed, 23 Aug 2023 00:24:23 -0700 (PDT)
+Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
+        by smtp.gmail.com with ESMTPSA id e10-20020a5d594a000000b003140f47224csm17975418wri.15.2023.08.23.00.24.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Aug 2023 00:24:22 -0700 (PDT)
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH iproute2 0/3] ss: mptcp: print new info counters
+Date: Wed, 23 Aug 2023 09:24:05 +0200
+Message-Id: <20230823-mptcp-issue-415-ss-mptcp-info-6-5-v1-0-fcaf00a03511@tessares.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/10] mptcp: Prepare MPTCP packet scheduler for
- BPF extension
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169275482578.27929.1775415054097183843.git-patchwork-notify@kernel.org>
-Date: Wed, 23 Aug 2023 01:40:25 +0000
-References: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
-In-Reply-To: <20230821-upstream-net-next-20230818-v1-0-0c860fb256a8@kernel.org>
-To: Mat Martineau <martineau@kernel.org>
-Cc: matthieu.baerts@tessares.net, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, geliang.tang@suse.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABW05WQC/42NQQ6CMBBFr0Jm7ZhOtSiuvIdhUWGQWViaTiEaw
+ t0lGPcu33/JfzMoJ2GFSzFD4klUhrAC7Qpoeh8ejNKuDNbYgznTCZ8xNxFFdWQ8kkPV3xS6AUt
+ 0WLVl5x1Z6u4G1p+YuJPX1riBxDSMmS3Uq+lF85DeW3yizX87lv7oTIQG2bUV+daVZeOvmVV9Y
+ t0HzlAvy/IBUEqbuN8AAAA=
+To: Stephen Hemminger <stephen@networkplumber.org>, netdev@vger.kernel.org
+Cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
+ Paolo Abeni <pabeni@redhat.com>, Andrea Claudi <aclaudi@redhat.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=843;
+ i=matthieu.baerts@tessares.net; h=from:subject:message-id;
+ bh=mrTQOYKjFM5k46RLNtxLCH35W5EqtHG3by5H9fu5f2M=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk5bQkDiC0BczwhiPo9lr824TStCTVgvQTr5DvV
+ qkKQNwGESaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZOW0JAAKCRD2t4JPQmmg
+ c/v5EADAIkSvJfi/eRi4LlZhDT2YaMiTwiV5GL7eZ2Rdq8L5vCxNuzsH+jyG3r8eaADVIl7K3CW
+ GPOdcce7KTDKHEZvhDXD01GxRA2X4WCt0S7ty3Eb97wE+wvbBunbLePFYxHDmVNkWDtnA1ky7cU
+ zmVlv2keVFzsBV48QaNLdEeLnW5cZrA0yjUB0fLHa263c9pJMPdTUEUDeSXWH1RZQEPNSosqDWE
+ IWC96NJzgx/2/bRObg7PnKw9RhqPBaeSWrct98gQYjegsUMZamYP9HVWuAEL3i3bWnP2eaz3QWO
+ GjYlfPkLL6WHFIEtwsuc+pCEXtxZSD98DOPPNU5ZbKlii+zCrnejqIVjobP5+FKDSHFxCO2tEnR
+ EK+rrPzX8gxVe9zTPwnSQeSOQYrq0OMOhmr2y9ErnTvUUiqlMXY/RgHjuagNvvqfiJi+hAx+wSz
+ AE1HnwopsubRfPQTjuCx2tFKcbJttdE8XXs8mwqASRjFjbTMwZzRzg6HzZW0tTqRJEBmoOpuLwa
+ D3Qyg6gBGEexlkLP1zxmXF8EhyGyPBoVQpcDfH+9HVnq2CrhF9JlDLyb8Wt258H9SHLAEf/pIgi
+ Hpwpx6M3jo/7uChvP93iDv3TcmqV34FZ8PeRm0UgexL7E3G/4s4ZSy8jFBv4Ld13n8EE2ZEMM0Z
+ huj0YYGs2xKDnlg==
+X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello:
+Some MPTCP counters from mptcp_info structure have been added in the
+kernel but not in ss.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Before adding the new counters in patch 3/3, patch 1/3 makes sure all
+unsigned counters are displayed as unsigned. Patch 2/3 displays all seq
+related counters as decimal instead of hexadecimal.
 
-On Mon, 21 Aug 2023 15:25:11 -0700 you wrote:
-> The kernel's MPTCP packet scheduler has, to date, been a one-size-fits
-> all algorithm that is hard-coded. It attempts to balance latency and
-> throughput when transmitting data across multiple TCP subflows, and has
-> some limited tunability through sysctls. It has been a long-term goal of
-> the Linux MPTCP community to support customizable packet schedulers for
-> use cases that need to make different trade-offs regarding latency,
-> throughput, redundancy, and other metrics. BPF is well-suited for
-> configuring customized, per-packet scheduling decisions without having
-> to modify the kernel or manage out-of-tree kernel modules.
-> 
-> [...]
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+Matthieu Baerts (3):
+      ss: mptcp: display info counters as unsigned
+      ss: mptcp: display seq related counters as decimal
+      ss: mptcp: print missing info counters
 
-Here is the summary with links:
-  - [net-next,01/10] mptcp: refactor push_pending logic
-    https://git.kernel.org/netdev/net-next/c/c5b4297dee91
-  - [net-next,02/10] mptcp: drop last_snd and MPTCP_RESET_SCHEDULER
-    https://git.kernel.org/netdev/net-next/c/ebc1e08f01eb
-  - [net-next,03/10] mptcp: add struct mptcp_sched_ops
-    https://git.kernel.org/netdev/net-next/c/740ebe35bd3f
-  - [net-next,04/10] mptcp: add a new sysctl scheduler
-    https://git.kernel.org/netdev/net-next/c/e3b2870b6d22
-  - [net-next,05/10] mptcp: add sched in mptcp_sock
-    https://git.kernel.org/netdev/net-next/c/1730b2b2c5a5
-  - [net-next,06/10] mptcp: add scheduled in mptcp_subflow_context
-    https://git.kernel.org/netdev/net-next/c/fce68b03086f
-  - [net-next,07/10] mptcp: add scheduler wrappers
-    https://git.kernel.org/netdev/net-next/c/07336a87fe87
-  - [net-next,08/10] mptcp: use get_send wrapper
-    https://git.kernel.org/netdev/net-next/c/0fa1b3783a17
-  - [net-next,09/10] mptcp: use get_retrans wrapper
-    https://git.kernel.org/netdev/net-next/c/ee2708aedad0
-  - [net-next,10/10] mptcp: register default scheduler
-    https://git.kernel.org/netdev/net-next/c/ed1ad86b8527
+ misc/ss.c | 34 +++++++++++++++++++++++++---------
+ 1 file changed, 25 insertions(+), 9 deletions(-)
+---
+base-commit: 872148f54e35cb13aa6c9e48e52306cd469aaa53
+change-id: 20230817-mptcp-issue-415-ss-mptcp-info-6-5-9d6fa5121fb0
 
-You are awesome, thank you!
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Matthieu Baerts <matthieu.baerts@tessares.net>
 
