@@ -1,86 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4262B577
-	for <mptcp@lists.linux.dev>; Tue, 22 Aug 2023 18:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1692727809;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N/j+wEnE2HPsRw2LlNr3EAu2lEVIba2wfuYHIy/vZyU=;
-	b=ieroOMTvkpcQvq4xoka7iccKkqJhs8Pvmx9eUwLOtnI/KPS/OjZJdCwuOrj5Of3++UBbm3
-	TWBtHiCrMuGMCga5qEE1iskYEBWYLnA/XfVk0Il03I/M52XM9Gr4P4fb66YwiNqV4wOr4Q
-	OFUQmk6rqjD/s++fqTNDIXM2cWeJiu0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-638-iaTNle0EM3m9iW6uVzP2dA-1; Tue, 22 Aug 2023 14:10:07 -0400
-X-MC-Unique: iaTNle0EM3m9iW6uVzP2dA-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-31adc3ca07aso2838977f8f.2
-        for <mptcp@lists.linux.dev>; Tue, 22 Aug 2023 11:10:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692727806; x=1693332606;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N/j+wEnE2HPsRw2LlNr3EAu2lEVIba2wfuYHIy/vZyU=;
-        b=lzBdIc0wH2/MGPyU2f0MOKcV5aCEey01HrcoDeAFLmTDvliH25l1xTzU/F4YLv1ejN
-         W3Tam9fr6eBH0Uaz4GVHic1MN1JUCjCtsKTulPv5daOWZZQZR056WU5MCcSZcxwSyX9x
-         rKpoKnClE/l9ugc3sb+W0wdJfOzXLgbCVoNXrkYmBPW/nP+JD+0dyRSEVgAu3zhpMt8W
-         wro9FJ/01mIBWBwCKrF2qqhAD0/QIqRapXrBOazCR8hCo+FNAOicKge195+WMGDUdk3N
-         ofTDmKSOb+qhCz2U4PtvvJxZkpDgwDNWa932Jjyn7jHlCY56Xz7EYAWOoM31ITl2Ie81
-         iYHw==
-X-Gm-Message-State: AOJu0Yw1OHHFXZOYlBBvv8pPyt0bJ3qZigjmoheNiHvxyxjJQ20tZ0YO
-	bngBAg5yfL4garP/liAnNgjwhBb1MP/c33O+FuI2RYypY9m74lSJ595qwZAZ7ELavXIegHNBiag
-	0AizVemEBkzMRNuz+odLTkNI=
-X-Received: by 2002:adf:e501:0:b0:31a:e376:6bd6 with SMTP id j1-20020adfe501000000b0031ae3766bd6mr7918645wrm.45.1692727806221;
-        Tue, 22 Aug 2023 11:10:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHVnsmrCZFlT++AlakwwCDFyWXUY44t82zeq1lJX0y+nHb92toB8GmdFkMQ0xyhG6EV9mJwDQ==
-X-Received: by 2002:adf:e501:0:b0:31a:e376:6bd6 with SMTP id j1-20020adfe501000000b0031ae3766bd6mr7918631wrm.45.1692727805909;
-        Tue, 22 Aug 2023 11:10:05 -0700 (PDT)
-Received: from localhost ([37.162.223.153])
-        by smtp.gmail.com with ESMTPSA id t4-20020adff604000000b003176aa612b1sm16410101wrp.38.2023.08.22.11.10.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Aug 2023 11:10:05 -0700 (PDT)
-Date: Tue, 22 Aug 2023 20:10:01 +0200
-From: Andrea Claudi <aclaudi@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-iproute 0/3] ss: mptcp: print new info counters
-Message-ID: <ZOT5+d4s4tteHvB+@renaissance-vector>
-References: <20230821-mptcp-issue-415-ss-mptcp-info-6-5-v1-0-e5d91ad566ca@tessares.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF28161;
+	Wed, 23 Aug 2023 00:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692749156; x=1724285156;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=C5Y3glfFMvFJ/RIek1TuAGhwigrdddIl+LtJBWlRitA=;
+  b=PLw73XeR/kUushjGIcSFKAR5HcRRa5shn9wpbwqKZbRFcjku+xHIJefj
+   902HstZX3c/dqDCgLGAJvfQXMXVIvpfBpwi2YvpC3uzux6r4eF6wz4Y6w
+   JKbqxUD5EWZHVFnY+V98JLg+ow4bM2SxM25my/Z+ODHG8Wq2Z6eKQA259
+   QFy7btcak+f2HzRHE7H+lF771mCTxMnNAhyDLXdR7L7tC4ET5qpVihkmi
+   XVgld/SrXn5dUFxVGdaZHZm8vjx5soChs53MDI1+/bAovE64Iw+xqfoVR
+   VhrxBJPkgLx6tMd6iWPBbTd1xr7sdTS3PgUCEOin2n3au6Kdovgc/GLnK
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="372910967"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="372910967"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 17:05:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="983070485"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="983070485"
+Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Aug 2023 17:05:51 -0700
+Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qYbNe-0000de-23;
+	Wed, 23 Aug 2023 00:05:50 +0000
+Date: Wed, 23 Aug 2023 08:05:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH mptcp-net 2/2] mptcp: process pending subflow error on
+ close
+Message-ID: <202308230746.DvdUqzMi-lkp@intel.com>
+References: <065ed2c95b4ceef822232e4d0641427af6e27092.1692690157.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230821-mptcp-issue-415-ss-mptcp-info-6-5-v1-0-e5d91ad566ca@tessares.net>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <065ed2c95b4ceef822232e4d0641427af6e27092.1692690157.git.pabeni@redhat.com>
 
-On Mon, Aug 21, 2023 at 05:27:25PM +0200, Matthieu Baerts wrote:
-> Some MPTCP counters from mptcp_info structure have been added in the
-> kernel but not in ss.
-> 
-> Before adding the new counters in patch 3/3, patch 1/3 makes sure all
-> unsigned counters are displayed as unsigned. Patch 2/3 displays all seq
-> related counters as decimal instead of hexadecimal.
-> 
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> ---
-> Matthieu Baerts (3):
->       ss: mptcp: display info counters as unsigned
->       ss: mptcp: display seq related counters as decimal
->       ss: mptcp: print missing info counters
-> 
->  misc/ss.c | 34 +++++++++++++++++++++++++---------
->  1 file changed, 25 insertions(+), 9 deletions(-)
-> ---
+Hi Paolo,
 
-For the series:
-Acked-by: Andrea Claudi <aclaudi@redhat.com>
+kernel test robot noticed the following build warnings:
 
+[auto build test WARNING on next-20230821]
+[also build test WARNING on v6.5-rc7]
+[cannot apply to linus/master v6.5-rc7 v6.5-rc6 v6.5-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Paolo-Abeni/mptcp-move-__mptcp_error_report-in-protocol-c/20230822-154511
+base:   next-20230821
+patch link:    https://lore.kernel.org/r/065ed2c95b4ceef822232e4d0641427af6e27092.1692690157.git.pabeni%40redhat.com
+patch subject: [PATCH mptcp-net 2/2] mptcp: process pending subflow error on close
+config: sparc64-randconfig-r033-20230823 (https://download.01.org/0day-ci/archive/20230823/202308230746.DvdUqzMi-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230823/202308230746.DvdUqzMi-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308230746.DvdUqzMi-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> net/mptcp/protocol.c:767:6: warning: no previous prototype for '__mptcp_subflow_error_report' [-Wmissing-prototypes]
+     767 | bool __mptcp_subflow_error_report(struct sock *sk, struct sock *ssk)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/__mptcp_subflow_error_report +767 net/mptcp/protocol.c
+
+   766	
+ > 767	bool __mptcp_subflow_error_report(struct sock *sk, struct sock *ssk)
+   768	{
+   769		int err = sock_error(ssk);
+   770		int ssk_state;
+   771	
+   772		if (!err)
+   773			return false;
+   774	
+   775		/* only propagate errors on fallen-back sockets or
+   776		 * on MPC connect
+   777		 */
+   778		if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(mptcp_sk(sk)))
+   779			return false;
+   780	
+   781		/* We need to propagate only transition to CLOSE state.
+   782		 * Orphaned socket will see such state change via
+   783		 * subflow_sched_work_if_closed() and that path will properly
+   784		 * destroy the msk as needed.
+   785		 */
+   786		ssk_state = inet_sk_state_load(ssk);
+   787		if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
+   788			inet_sk_state_store(sk, ssk_state);
+   789		WRITE_ONCE(sk->sk_err, -err);
+   790	
+   791		/* This barrier is coupled with smp_rmb() in mptcp_poll() */
+   792		smp_wmb();
+   793		sk_error_report(sk);
+   794		return true;
+   795	}
+   796	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
