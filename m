@@ -1,46 +1,46 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE0920EE3
-	for <mptcp@lists.linux.dev>; Wed, 23 Aug 2023 07:24:25 +0000 (UTC)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40037db2fe7so957025e9.0
-        for <mptcp@lists.linux.dev>; Wed, 23 Aug 2023 00:24:25 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07278BEA
+	for <mptcp@lists.linux.dev>; Wed, 23 Aug 2023 07:24:26 +0000 (UTC)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40057e09bbaso673245e9.3
+        for <mptcp@lists.linux.dev>; Wed, 23 Aug 2023 00:24:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1692775463; x=1693380263;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/WTqaO6kZcRzLug6Tf19WjfywSVMkwELLnlSRyjAmT8=;
-        b=kLBup4D3ZGwdtO+9O58+zIouEf1aTOn1JXoT2Rja+rJXtjjk2EQwp3EncfMsyO8Wv7
-         mrr4Umkc3xkIDBqlXUrsHXUzPFg4BLGR6s3c/3JIaNdesqKl3nNt20h+25q7lJNnBn1s
-         Kfh/qVojNW9UV4hBZjWM7iTjJdrg+ssZw/CNR0jeztf/k9EH0wHdZvhSmsa6qF19+TR1
-         FDW+57/Nw7+1iWvRI7pjlAmmaRnMi8y48eaUSYDL7aEB8zjp/m2oinwXbR7CCP7fUW5D
-         2WKZZCWvCz9z/lmhLqri6qyDsThPubbvKlowLSGsb0mTO1Rs5JIbarJjsBV5xzG9ue8G
-         LGCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692775463; x=1693380263;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=tessares.net; s=google; t=1692775465; x=1693380265;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/WTqaO6kZcRzLug6Tf19WjfywSVMkwELLnlSRyjAmT8=;
-        b=JsJVtXwL4vR59Zy7yMMEEV8pMYBS9xWL0mt552tN2bG8ZRP2+vNkHxa8VJ1RYM889e
-         daD6VGRW9s0ej/PEhqWiQN7C4d6ee6mX4WO9UHpxlt7NCVHCIt74I6yHBiBVKghZsLi8
-         Na7iVWbHZuMzpnRi/dbB20wkhhX9DVVPXVkJpmuqt1Ti6Tv2ovDyDqLnUnxtCoBDZZJJ
-         GapZYb6sHzUka25StX4GY33PfZ/4FC5ESdzjL7aFBDD6OTo8uDl61IvW/u5ko871lMez
-         ZuI1TQaz0sH+cta3xpRLqWsFt5P9C7HjchtIEJ5bqWaDkHjUFR0JiHOOGQSgpuFjOmKJ
-         Z0UQ==
-X-Gm-Message-State: AOJu0Yx2qIWQ3U+KZ/bumi6MRdDY8sUx9KUFRXRuJki1HGXhG1/dbKR5
-	qUEnPcyK5XZQBuOneL58aIAfDQ==
-X-Google-Smtp-Source: AGHT+IFWeSaGrv/qmVkcSWGdZnTMT+BHPHfZbyQxPWBUe3oCDzzm7oj9NsHDZjTcmd3kqLdWnrxneg==
-X-Received: by 2002:a5d:6087:0:b0:317:6816:578c with SMTP id w7-20020a5d6087000000b003176816578cmr8690475wrt.5.1692775463263;
-        Wed, 23 Aug 2023 00:24:23 -0700 (PDT)
+        bh=WevOLFXl/2i1NIjOjgq+04LHQEgQNZPLNt/G1BCNMf0=;
+        b=U4eVV2so3IUROV54x/3kMVua03DAmJXJpqPZmrgpQCOIWpHOmZRvgBiAb2o9xrxqx/
+         LpQU58/vqNkUeNV2dX+j2iAgnX/A9qE/SM3yV6S5CxtI4GN4mqWQ8hApdJfOVx7zATPr
+         ElNtTZwvBDJE29u7ZyCZnub5aSkdZmNlhxFSbXfhElBkwPhd/M3qsrI8djZgOoe4iQj6
+         f5OzFHtGFd1rUOseBKp11Vpb6EGX7PWORsPqPAOqy7+NzsooPIF7/uhBGfQSa9c5MErK
+         31mMlqj+lG3jqMGyW1dYIaGeovm8Tey92KWqz3XVbf59/OAJkieqVYGKSMbjs59DkAkF
+         CiyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692775465; x=1693380265;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WevOLFXl/2i1NIjOjgq+04LHQEgQNZPLNt/G1BCNMf0=;
+        b=cF7TYnhJOJ5SqPXdryA8Euls1bCe5PQePkusgd9mA9fazLZldgmGXFwr+91YIgHm2D
+         Y8ksvrGtczQ06445rh4Y6xxaYh8j4ICvzHD0ijpSWS9naCwwPa+ngW8sMEco8KmEfb+1
+         OmsL42/FPVqEwzo49BHN/wu/ZCMSA5QwaFdoucZea30KgoMazVMESq6OpUx4hLFLad5a
+         7Wy6qNp/T5TikyY3tYPBoQHHGJ4YfhxexMwbToCsGf80QezkeHn1Hv+gaNbZFkvpjur2
+         PKWP+9qzpn+yBxN/FDW9eVK/CALeEnDdEvwFHjkT9FvmaVKWFK6DtPf4cajo7ib4CayA
+         X+gw==
+X-Gm-Message-State: AOJu0YwdT0VJeZmP/R3z+O+BBrl92bt5kxa7OnRnXUpj7DsRcnnNi7RZ
+	4h93SVU+dfGNfY91Hlk8pEKKeQ==
+X-Google-Smtp-Source: AGHT+IHmczGIUZK3mIj2s5mua2NpDLGvwyTP49zuM+K6N9loKJri/M/EcCAz+P1L7Vnjn7GqIw2CUA==
+X-Received: by 2002:a5d:480c:0:b0:319:55a5:3435 with SMTP id l12-20020a5d480c000000b0031955a53435mr8813117wrq.64.1692775464760;
+        Wed, 23 Aug 2023 00:24:24 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id e10-20020a5d594a000000b003140f47224csm17975418wri.15.2023.08.23.00.24.21
+        by smtp.gmail.com with ESMTPSA id e10-20020a5d594a000000b003140f47224csm17975418wri.15.2023.08.23.00.24.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Aug 2023 00:24:22 -0700 (PDT)
+        Wed, 23 Aug 2023 00:24:24 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [PATCH iproute2 0/3] ss: mptcp: print new info counters
-Date: Wed, 23 Aug 2023 09:24:05 +0200
-Message-Id: <20230823-mptcp-issue-415-ss-mptcp-info-6-5-v1-0-fcaf00a03511@tessares.net>
+Date: Wed, 23 Aug 2023 09:24:06 +0200
+Subject: [PATCH iproute2 1/3] ss: mptcp: display info counters as unsigned
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,53 +49,75 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABW05WQC/42NQQ6CMBBFr0Jm7ZhOtSiuvIdhUWGQWViaTiEaw
- t0lGPcu33/JfzMoJ2GFSzFD4klUhrAC7Qpoeh8ejNKuDNbYgznTCZ8xNxFFdWQ8kkPV3xS6AUt
- 0WLVl5x1Z6u4G1p+YuJPX1riBxDSMmS3Uq+lF85DeW3yizX87lv7oTIQG2bUV+daVZeOvmVV9Y
- t0HzlAvy/IBUEqbuN8AAAA=
+Message-Id: <20230823-mptcp-issue-415-ss-mptcp-info-6-5-v1-1-fcaf00a03511@tessares.net>
+References: <20230823-mptcp-issue-415-ss-mptcp-info-6-5-v1-0-fcaf00a03511@tessares.net>
+In-Reply-To: <20230823-mptcp-issue-415-ss-mptcp-info-6-5-v1-0-fcaf00a03511@tessares.net>
 To: Stephen Hemminger <stephen@networkplumber.org>, netdev@vger.kernel.org
 Cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>, 
  Paolo Abeni <pabeni@redhat.com>, Andrea Claudi <aclaudi@redhat.com>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=843;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1919;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=mrTQOYKjFM5k46RLNtxLCH35W5EqtHG3by5H9fu5f2M=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk5bQkDiC0BczwhiPo9lr824TStCTVgvQTr5DvV
- qkKQNwGESaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZOW0JAAKCRD2t4JPQmmg
- c/v5EADAIkSvJfi/eRi4LlZhDT2YaMiTwiV5GL7eZ2Rdq8L5vCxNuzsH+jyG3r8eaADVIl7K3CW
- GPOdcce7KTDKHEZvhDXD01GxRA2X4WCt0S7ty3Eb97wE+wvbBunbLePFYxHDmVNkWDtnA1ky7cU
- zmVlv2keVFzsBV48QaNLdEeLnW5cZrA0yjUB0fLHa263c9pJMPdTUEUDeSXWH1RZQEPNSosqDWE
- IWC96NJzgx/2/bRObg7PnKw9RhqPBaeSWrct98gQYjegsUMZamYP9HVWuAEL3i3bWnP2eaz3QWO
- GjYlfPkLL6WHFIEtwsuc+pCEXtxZSD98DOPPNU5ZbKlii+zCrnejqIVjobP5+FKDSHFxCO2tEnR
- EK+rrPzX8gxVe9zTPwnSQeSOQYrq0OMOhmr2y9ErnTvUUiqlMXY/RgHjuagNvvqfiJi+hAx+wSz
- AE1HnwopsubRfPQTjuCx2tFKcbJttdE8XXs8mwqASRjFjbTMwZzRzg6HzZW0tTqRJEBmoOpuLwa
- D3Qyg6gBGEexlkLP1zxmXF8EhyGyPBoVQpcDfH+9HVnq2CrhF9JlDLyb8Wt258H9SHLAEf/pIgi
- Hpwpx6M3jo/7uChvP93iDv3TcmqV34FZ8PeRm0UgexL7E3G/4s4ZSy8jFBv4Ld13n8EE2ZEMM0Z
- huj0YYGs2xKDnlg==
+ bh=vecf6tLbR0awOgwcnlMZ2IJU00x2CO7EBpwaOMAYH40=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBk5bQkA6/aXA/o9Q7ef23/q6DnzcQDsJd53NSrt
+ GDEuP2M88GJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZOW0JAAKCRD2t4JPQmmg
+ c5nfEADfV+jsOt/z99a9BrFvIkgbaLMdTSJpkQXo8/GbQs2NAlwpXrUOo1hrzQ/Q8Dd3Jn7Dqc5
+ nQZ0fAdg7gEDJaEwyZW0ahy4bEzBXTrbL5ly8UjONg9EduX7+Zk19yu9UvudiRZoOCVDBuJ/PCg
+ tO/6kwCGigMbJ2noqs7iva+xC5cC3zFtou/33/+4nTrxjXvP+2JdjBsq3RdkesQDtmxczGTZiHv
+ kci3PUfQdP4MOV3ZTLI8mARN8EgKER5+g8VySQ4W9rI5+aifOGCRqLgqNAJhI3GUOmIknhnU9OJ
+ I6ECZoNtWvsTzG4EbZ687vbLW7xmkm7y30xKxE5GOA4QAvkNNjIL8HbU1vMi/RTcENY6NqN5h7/
+ IfA5bqbdSrcdoOyYgQDradLby3Q2v6bc3OfCO67rGh8Jh8w5X9DfWiTsNL/5u7c8nfhuBETcBJD
+ KhO+L1SURpwvnZmrowZZagoG8hhAACCtttIqI5Ne0XqEt6TW0tsoMRbn7UOkPvhwsOBCX+6Ww2V
+ wxlZHUfgBE+qP/zE1MzvBE4V2hDq99nVLoN+GwtTnDoDiNFT1PWGBEanIZFjI3Ox6a9uF0K6Ygu
+ hau4HvfXgyLHOjeGEoqFvfA4lYiAcCakuKY1Ot/P46mpkIitgnBmXIa5yPt4hUJ0eFXgElEZta2
+ Z5X8cSGVhNNnGmw==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Some MPTCP counters from mptcp_info structure have been added in the
-kernel but not in ss.
+Some counters from mptcp_info structure were stored as an unsigned
+number (u8) but displayed as a signed one.
 
-Before adding the new counters in patch 3/3, patch 1/3 makes sure all
-unsigned counters are displayed as unsigned. Patch 2/3 displays all seq
-related counters as decimal instead of hexadecimal.
+Even if it is unlikely these u8 counters -- number of subflows and
+ADD_ADDR -- have a value bigger than 2^7, it still sounds better to
+display them as unsigned.
 
+Fixes: 9c3be2c0 ("ss: mptcp: add msk diag interface support")
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Andrea Claudi <aclaudi@redhat.com>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
-Matthieu Baerts (3):
-      ss: mptcp: display info counters as unsigned
-      ss: mptcp: display seq related counters as decimal
-      ss: mptcp: print missing info counters
+ misc/ss.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
- misc/ss.c | 34 +++++++++++++++++++++++++---------
- 1 file changed, 25 insertions(+), 9 deletions(-)
----
-base-commit: 872148f54e35cb13aa6c9e48e52306cd469aaa53
-change-id: 20230817-mptcp-issue-415-ss-mptcp-info-6-5-9d6fa5121fb0
+diff --git a/misc/ss.c b/misc/ss.c
+index c71b08f9..34f82176 100644
+--- a/misc/ss.c
++++ b/misc/ss.c
+@@ -3232,17 +3232,17 @@ static void tcp_show_info(const struct nlmsghdr *nlh, struct inet_diag_msg *r,
+ static void mptcp_stats_print(struct mptcp_info *s)
+ {
+ 	if (s->mptcpi_subflows)
+-		out(" subflows:%d", s->mptcpi_subflows);
++		out(" subflows:%u", s->mptcpi_subflows);
+ 	if (s->mptcpi_add_addr_signal)
+-		out(" add_addr_signal:%d", s->mptcpi_add_addr_signal);
++		out(" add_addr_signal:%u", s->mptcpi_add_addr_signal);
+ 	if (s->mptcpi_add_addr_accepted)
+-		out(" add_addr_accepted:%d", s->mptcpi_add_addr_accepted);
++		out(" add_addr_accepted:%u", s->mptcpi_add_addr_accepted);
+ 	if (s->mptcpi_subflows_max)
+-		out(" subflows_max:%d", s->mptcpi_subflows_max);
++		out(" subflows_max:%u", s->mptcpi_subflows_max);
+ 	if (s->mptcpi_add_addr_signal_max)
+-		out(" add_addr_signal_max:%d", s->mptcpi_add_addr_signal_max);
++		out(" add_addr_signal_max:%u", s->mptcpi_add_addr_signal_max);
+ 	if (s->mptcpi_add_addr_accepted_max)
+-		out(" add_addr_accepted_max:%d", s->mptcpi_add_addr_accepted_max);
++		out(" add_addr_accepted_max:%u", s->mptcpi_add_addr_accepted_max);
+ 	if (s->mptcpi_flags & MPTCP_INFO_FLAG_FALLBACK)
+ 		out(" fallback");
+ 	if (s->mptcpi_flags & MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED)
 
-Best regards,
 -- 
-Matthieu Baerts <matthieu.baerts@tessares.net>
+2.40.1
 
