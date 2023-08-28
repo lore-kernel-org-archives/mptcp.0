@@ -1,147 +1,128 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2042.outbound.protection.outlook.com [40.107.249.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFB3634
-	for <mptcp@lists.linux.dev>; Mon, 28 Aug 2023 04:36:16 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=izHtLa41yAGCZAXKgsmcpY/5QUJOGMADcQqJA/phqMxKH43zuhB9yK5Plp29DJBAyCK7MblsNebWP2dHAVeyqY5CSGw7UJh3A7oqYn54cEY1OFUbe6oir54kibFoSAvqszcZgAdNH9AeeN4gatgcD/DAA97uvaGbDAMV1j4BWTQiHT9I3Kn+21piwbKqbJe9d10UmlX7GuUXwWjF5ZTrIIZ5wZ0SQ4I3XNeNph34sAABlPg6ddiStjUWhKu+XbUcDcq6kXajW4+fBxupYY6p4lmAmzydRtei1xkzkBQI1hjuk9UKQ3p6eVU2m8i21U15p8z8B1q2tvgF8giItOyxEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uaTGuf25Ae9PPi/JV9Vfq4U44YpWB2K+4/07fa9Pmg4=;
- b=Ijr4CN9KqoGDWqvEbZAQ7dRzt99qxEFuJBFWO1O2zcH7COZTjJcTJilliqH+1Zm1/hE2A6qz+AmFSdGEe2FO8ZrbWlxSr5oHAaFThW8GRTvNtJU1tx7GK8m9V2l7yyNj72auPUM/6g2p1pCCM2U1vubKujFA2qmNe8kow4qwkMBob1zk3vHxqpm0OaAmOeAPoe4oipzuv6+warcqHgbNEazHdy8/hLWNMduWv8lI4sJ5Jsmboxm7d1F8K/yXgufKZLr01OYM+JCb7tq0zbVilK+tISAHrwOAwk699BzvounWVrzz0IlpkkbU20Z/HklaH5UNYaxFj8kDbJCT+S1D5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uaTGuf25Ae9PPi/JV9Vfq4U44YpWB2K+4/07fa9Pmg4=;
- b=YJmKsPMfsq36z+Lg03RLxw6xY1Sbo1DW2RQT7EGH+2kuRZxTXp/tv6ifs0srxZaOScwAqoJHsVa8CknbQVA55Tdefwy3pZ+vOBVSf1uZV5ML3//FX/ACB2HS2bDXDk/cuQiOFiVLIFufDxNzODrOxOWCQ9OX2s8QfxIhUB/KoKUVbsGiH7qwLSYk4BQOTjvVLOY73XWNhrC7+r3a3wDTEIsP6vKNsjeFppo4hYRRkIBWYs49SvjU3UZ14KNs4jfCXgiGuhUIUyTbpGZ4DVonTN1t77vUBCPbAqc1QDGQJl+MY3TqaYU4paWQv4Ab10xuq7bujF9sylGVMuyKeCXIMw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by DB9PR04MB9554.eurprd04.prod.outlook.com (2603:10a6:10:302::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34; Mon, 28 Aug
- 2023 04:36:14 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::2867:7a72:20ac:5f71]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::2867:7a72:20ac:5f71%3]) with mapi id 15.20.6699.034; Mon, 28 Aug 2023
- 04:36:14 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v7 7/7] selftests: mptcp: userspace pm remove id 0 address
-Date: Mon, 28 Aug 2023 12:35:29 +0800
-Message-Id: <2778378b42d7a74fcef65dfffb80145f19c37eb8.1693197152.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1693197152.git.geliang.tang@suse.com>
-References: <cover.1693197152.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG3P274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::22)
- To HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BC2A4A
+	for <mptcp@lists.linux.dev>; Mon, 28 Aug 2023 06:48:17 +0000 (UTC)
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-76da239ba16so199101785a.3
+        for <mptcp@lists.linux.dev>; Sun, 27 Aug 2023 23:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693205296; x=1693810096;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4MB8usI9hkixOvdv6UVqPjCBrzEWdGg3DdT4Up1tTTs=;
+        b=NequS2ZBz+9uc3Ae2XU0BorO6h0qVBMVdOIOCJj0C0awA0bQv2GexcF2mbyrnvHoay
+         sgD7JFRssdLQSQk9pT66jH7JQRksGXntPRLaM8IaBQhsZzGgdX29F7B9WsEtAoVcwFrX
+         iIzMHyhzcarcyhw92Dbm1GqyPymfaerkr0vC9HtWheF4xdLaCxNoCJQL0eh071NKdmv+
+         pM4EyrMu9181WkUBBAc9hDCChwYAinFk4Gq/68PXKtna/xXRkzSuh29CpL4u9ILuvFrh
+         Pcqn+z/1fuxE5wP/xx7wOYWolMdW2Qfa5/+uf1tuM7Ge5ojp3Np7O11Nu5iM0OOJzlPJ
+         bTIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693205296; x=1693810096;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4MB8usI9hkixOvdv6UVqPjCBrzEWdGg3DdT4Up1tTTs=;
+        b=kwPJV6p+F1Cv/mwUolNdsh3G4OqEotgsr5PQrR2F+tiLJol+QFCUd9AZb6eBpkbTEE
+         OUMe6O4EnHYq0miUjXurfjgpU2TxGaz449LfZtXVZXIxLmh6SIxGrGQJbUTy5K3P+4OZ
+         TPpqJowGuZQk77qi0ia76R/6ghjvjnSlPHXXthqF8mAhngOdZ+6Q95VJGTGPnd3fQ/ER
+         aEXq/SycCzuGV4XZH1SQRIi2DOlPpSVcjdE/zEsT4haKfoI5TxwWGCXxU4koouZWxwgS
+         MkdKE8p+QMe8qaQQFQJ7Vj/pMqXccybvNaRYA7wZR6didcGHR3SHD4wxnitEEgJvmcrp
+         t+Kw==
+X-Gm-Message-State: AOJu0YyBBSgEUIwRmucupBVCD5fFL2l39kXp4lfThbXhAjoAgj0vjPJy
+	1Oe8GxPEF65YkexiOnmwMg==
+X-Google-Smtp-Source: AGHT+IGRjWu132FS/QD6gufp4CpaNV2tdDWdWkxCIpQtnCG16+NfGofeN1169koVD7awbuwelwavkg==
+X-Received: by 2002:a05:6214:9b4:b0:62f:f6ed:857e with SMTP id du20-20020a05621409b400b0062ff6ed857emr23205958qvb.55.1693205296436;
+        Sun, 27 Aug 2023 23:48:16 -0700 (PDT)
+Received: from [127.0.0.1] ([172.177.120.57])
+        by smtp.gmail.com with ESMTPSA id w17-20020a0cb551000000b0064f4f14aecesm2385279qvd.24.2023.08.27.23.48.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Aug 2023 23:48:16 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <2778378b42d7a74fcef65dfffb80145f19c37eb8.1693197152.git.geliang.tang@suse.com>
+References:
+ <2778378b42d7a74fcef65dfffb80145f19c37eb8.1693197152.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: userspace pm remove id 0 address: Tests
+ Results
+Message-ID: <3c49d14f-1925-3f9d-213f-d574d6222a28@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 28 Aug 2023 06:48:15 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DB9PR04MB9554:EE_
-X-MS-Office365-Filtering-Correlation-Id: c5cf4a48-58f1-4c36-e687-08dba7804fda
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	jIPy1RXhZKPuijYhTbnTQbXdfuO3Z4NK591EW920LP3sLfaB5d7H72jNwJAz3Ar5Uu7nc6/QlE6nqjatw0wy16g0xbSaTxfvpBYbaOuWgaQpFO1YjIx2QGwW+NHxklpLQv7mRYSF3G+VVFCSiIOZUkzfJPCVQn4cu6zS0hWhXI9S8x7mN5Xi15SUymSraBfpFTdCNte+1HMfiNVsmuJUyvsQwVRh/T6jEFiEKeuSAN0xL/sGLAJNUkUbEEb3GB47eUyPcAKvVjk9AHRVl6CjA00KDHjzKM9coKhK/xkLclODFiepNNcRKzbZDGJxg1FYpJf1Wo9iP/OeaDpHTr+3sXK4Ub5WZhXaUTxLD7KwudyoaHD6Kfrb9NP/hERdZCgwvyPsBx7iR20q6uJ1ax4+9tWaiJ/bsQlNPOWQ7+86rQs73ZetZy7eUyWbcFk7pGsw/fwOZiFdyXeUX9MgMDzE2ocQClJSUPjNHUFzwU7qllVcpnizIPg8Xv+YXW6nN3N6SsanYy2PbL0nx6b4w01kX3HWVimBjLW1lLjjvtOoXoAqUe+GLlnUvIOz7HYfI8aT
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(366004)(396003)(39850400004)(346002)(186009)(1800799009)(451199024)(41300700001)(38100700002)(6666004)(86362001)(83380400001)(478600001)(2616005)(26005)(107886003)(6512007)(6506007)(6486002)(36756003)(2906002)(6916009)(316002)(66476007)(66556008)(66946007)(5660300002)(8676002)(8936002)(4326008)(44832011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?W2zxe1kH/HbtEemNqDtv4cHdMmP2Blxi+/uw0gECFwE0K4ddE9v6EFUaatrG?=
- =?us-ascii?Q?iUy27BLagTO7g6XW/h8NfLxyric+a16RFIwguJrjcH4kEzSi/JI4opIH54jl?=
- =?us-ascii?Q?WIw5GoOagVXN0NEMv271UrBgBw2FHhhmA08gaCIWTsfjw7jVvyyD1a8CU1Vh?=
- =?us-ascii?Q?SFtD/276o8gACZkznAsj5yuO+HKcQLFoX85WqY3kal4Rsko5TKqLNmjJkJ8A?=
- =?us-ascii?Q?3b5EL17PLM8Fups4Ux7/+zQehbB57QcNA/cTEfiNDtgc+e+H7ZXfKQWQ/Jxy?=
- =?us-ascii?Q?Y7uW5SJlLqP58bnhQujVNVRG4nEGWyr+mDHgSrb9ctr3Zdv5jcKoJfhmqo4i?=
- =?us-ascii?Q?NcJBGSlCYvpKNjnnmNzZYisfM1Hj3QNVh1ndQRsQ1UvNZhR4OxWnkI85ZuPp?=
- =?us-ascii?Q?JqdVfG16irOSd9uFEKmrraBVhffC3txQZlmNpEKvfyEOQjr4q5rw6iyb63Lz?=
- =?us-ascii?Q?2WnC3ShumE8sK8YpNxt6EyvGskOH8C5Gtm9h8p+hTeAyYG8sdPIyMRljfikI?=
- =?us-ascii?Q?Q3CJ2k49iIgP4RzE5NMgYMbSalg6SCJUaDqk7kpJXbeQRocAl7ltdHLI8v/B?=
- =?us-ascii?Q?S5GBdb6MIDiXfaxjxb1nfKoouKVmct2Bme9zEfWkVtHIi0rJ9oqRdcbKToVk?=
- =?us-ascii?Q?zxl6PX5urqtkndOI6CdaDLfRlZTrYF+BOWKXyQL3e26dO31PIrSgOPRPu2Pf?=
- =?us-ascii?Q?6jSLO5eIx/29SXv3S+O8aSAGCAZHJeyRtFgEJeBLafthNUat13AcfiFvwdT5?=
- =?us-ascii?Q?AyGNkN1W4/7ZFrttzDOoSx7JTHlHY4cP/3zOq9DSfHj4IBufSpoif/VQUQTQ?=
- =?us-ascii?Q?bK5aXJSGYkGOFg9sRnyzlQZF/x80YgIBn+sD7dEA/vogzxuDyeCz9vWiJkkR?=
- =?us-ascii?Q?VHMvFYbkemjg4Y6JQxftFDQKGskZCdrNJXSqWcqcbMi+hLrpLYv/ONjSpDPZ?=
- =?us-ascii?Q?3M9rAytEMlqb47EXZb3pR4sbIHmxarZVwe3g55HxwioJSOGIhj4HYjDj07CY?=
- =?us-ascii?Q?L/EvIVisy7e/YzQQwIFZIiPxdYhNlOjDZGkF3Z8Ps9QI9zvkr9wQrYO/ueRO?=
- =?us-ascii?Q?LTMkcMjxhMy1I+8LqF8zD6DXjSIU1EBoHPKNFr6lavWv9jUcIYlHCotqoZPo?=
- =?us-ascii?Q?E8F0TrGSo4tCi1HfKhkGqiW7+SP+mGwp/RGQmvHa0VRwpEHDH2vBSVcmPUkq?=
- =?us-ascii?Q?vvZG6lFwZPN+VJtIRvIWxCHCYDGQu5CkKLmpVICjxQ+J3qiTeZacGmowehEi?=
- =?us-ascii?Q?yVIGoOqu/c9nIbrTVfhnxuYpUSUN4Y2SifNUP6OqllFRTswf8SHhrdxUBbhT?=
- =?us-ascii?Q?Yfh9oCcdlPc8K5PAe5RqwM1miv9NNy88QtNkXVNv0KSUgAFEOty1a0QXYZkg?=
- =?us-ascii?Q?4q57p4DnOAJuotah/v8uJKoqPmCJPDrL1zaWn5Xcs6x8GBdo0d9lZoWDteUh?=
- =?us-ascii?Q?9ViZ/GQ/S/3QGFVMT+Yrfbt8E8ihoFIWNzYszamDqV10gYCMMVXkLQ8lYpw7?=
- =?us-ascii?Q?D00KRGl1zfG7EJ+YCR4skgM6jL2bmBnr1PNxZnNf/nFKt8csn82DPxw9c31d?=
- =?us-ascii?Q?ctgOCq7BrmqE37vOMDWJpgi7J8ErmQ34w2GZGj2v?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5cf4a48-58f1-4c36-e687-08dba7804fda
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2023 04:36:14.1856
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v3VSreaSF+rghOGTocSkRhCY7YPUqcqO08fZCpGaEEUmq0TkQzMTL0/fTaKvoKRCo6R2UjLsphXuP7WIDdX/Rw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9554
 
-This patch adds a selftest for userpsace PM to remove id 0 address.
-Use userspace_pm_add_addr() helper to add a id 10 address, then use
-userspace_pm_rm_addr() helper to remove id 0 address.
+Hi Geliang,
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Thank you for your modifications, that's great!
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 6a5019d1f95c..c6453f29b852 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3490,6 +3490,30 @@ userspace_tests()
- 		kill_events_pids
- 		wait $tests_pid
- 	fi
-+
-+	# userspace pm remove id 0 address
-+	if reset_with_events "userspace pm remove id 0 address" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-+		set_userspace_pm $ns1
-+		pm_nl_set_limits $ns2 1 1
-+		speed=10 \
-+			run_tests $ns1 $ns2 10.0.1.1 &
-+		local tests_pid=$!
-+		wait_mpj $ns1
-+		userspace_pm_add_addr $ns1 10.0.2.1 10
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1
-+		chk_mptcp_info subflows 1 subflows 1
-+		chk_all_subflows 2 2
-+		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
-+		userspace_pm_rm_addr $ns1 0
-+		chk_rm_nr 1 0 invert
-+		chk_rst_nr 1 1 invert
-+		chk_mptcp_info subflows 1 subflows 1
-+		chk_all_subflows 1 1
-+		kill_events_pids
-+		wait $tests_pid
-+	fi
- }
- 
- endpoint_tests()
--- 
-2.35.3
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5321984666501120
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5321984666501120/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5040509689790464
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5040509689790464/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6447884573343744
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6447884573343744/su=
+mmary/summary.txt
+
+- {"code":404,"message":
+  - "Can't find artifacts =
+containing file conclusion.txt"}:
+  - Task: https://cirrus-ci.=
+com/task/6166409596633088
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6166409596633088/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/a4db10d91cb2
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
