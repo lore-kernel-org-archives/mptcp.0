@@ -1,127 +1,94 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501F4AD41
-	for <mptcp@lists.linux.dev>; Fri,  1 Sep 2023 12:22:44 +0000 (UTC)
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-794cd987ea6so66664639f.2
-        for <mptcp@lists.linux.dev>; Fri, 01 Sep 2023 05:22:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693570964; x=1694175764; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gc6AXjgCf2LTGQt7VSiz+36h1sz03JQcCfMbwKWgKkU=;
-        b=kTcdbAb4/LhLhuqSykBXqnKRz5DM3iFlJfdcJLpwHzXAcCEHYhgtlc36juVM22B5Uu
-         sbY+1hXOFp+sZ/EQphhsQBtzEOawLozt3PLegvXGIGoeCCNqbpEMVnKdoeV/wWarWVGU
-         alyc+zgRF8LFyu4xin6Mn2dMcornkvucvoNc1CrF1ZGTyXUTEbMUUD7AdirWvDqdLKio
-         g/PLhrPrwqCvGiIj6FVTZLpz1yt+RhGRfv2safJNHOIASQegSren1AF16zlibzg41svz
-         noLbGvUPwF/7LgcCDlTOGsE/yARCi61dbMD0ZPQL7i3L3GIF4IiiJR6yGx2aGAZRYBU7
-         rqRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693570964; x=1694175764;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Gc6AXjgCf2LTGQt7VSiz+36h1sz03JQcCfMbwKWgKkU=;
-        b=i/QAJ7HjzENkPDHrLOUehRoI2iql+SeiyApFU77ihIcvDV9ZROGq9TbR7v8nCtVJf3
-         WxiZcWgUnE3XIbO+AbKwtXBmYx+UbGMhvd8VPcWZGmyn2UG7fkVkwHoy4EfFD4fio+nN
-         Z+FCmSUscwZ0TC/JBURfANZCl4CyfGFySsIdNW11804M+pqPOr7dN5k2DVEaoCtfBk5P
-         IrArUFOarl7FcQs9/qk4GF2Ek41rbgL955gG7qVjNTxjrcp1FXyYivDThm4TiJhjprPa
-         b27OE8YacgtC4oFFGgpcrBwGFg51XGdWV+gPU4phOT/0SBDGtbQHlsr8lws17qRurU/T
-         kEFA==
-X-Gm-Message-State: AOJu0YwY/pU2IYf2T9tTwsG8R4B9FoSJ/fFFLJKx05DkbDYa0C0+CYSD
-	6ojIbPQ80IE8AeoFOPFM0JPUlkXJQJVS
-X-Google-Smtp-Source: AGHT+IEADue9fjtGL9wgpG5HRyKYbITJmotnfO383zQhFv3Kb7g8ebLw7YKTQOY1103aVwBteVnX1g==
-X-Received: by 2002:a5e:aa03:0:b0:791:385c:f8b0 with SMTP id s3-20020a5eaa03000000b00791385cf8b0mr2275759ioe.3.1693570964051;
-        Fri, 01 Sep 2023 05:22:44 -0700 (PDT)
-Received: from [127.0.0.1] ([13.89.26.210])
-        by smtp.gmail.com with ESMTPSA id ee21-20020a056638293500b0042b0ce92dddsm1016306jab.161.2023.09.01.05.22.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Sep 2023 05:22:43 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <382adc94e31c46ade28566d5787dd9d531329c51.1693565414.git.pabeni@redhat.com>
-References:
- <382adc94e31c46ade28566d5787dd9d531329c51.1693565414.git.pabeni@redhat.com>
-Subject: Re: mptcp: implement connection level timeout.: Tests Results
-Message-ID: <6e418bed-eba1-55e9-af23-741f6526fb32@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 01 Sep 2023 12:22:42 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42F3BA2D
+	for <mptcp@lists.linux.dev>; Fri,  1 Sep 2023 18:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1693591840;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hiHVZn9TzgrrP6XoIa/4d6trKXOSgUiOw30Wwf4AyOY=;
+	b=Le2bpnwFPmxWuS7xEpYJ1k6XTcTlqiXkx6+Usoj11HyaybhHv0Y8rD4/+NltzODpgme9Jt
+	CM4BsXQRMtqWRvfNeYWRTc21tv/ew9YTUkGASY1Xlqe2vnYaWfxkVQ2BhpzAw0WZ59SXKh
+	SlLomIulUI1Etkc0rTxQ6C5GX/IU7Xo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-56-HM341J2rMBiOpOJFET9bUg-1; Fri, 01 Sep 2023 14:10:39 -0400
+X-MC-Unique: HM341J2rMBiOpOJFET9bUg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DA1E01817905;
+	Fri,  1 Sep 2023 18:10:38 +0000 (UTC)
+Received: from dcaratti.users.ipa.redhat.com (unknown [10.45.225.49])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 12189D47819;
+	Fri,  1 Sep 2023 18:10:37 +0000 (UTC)
+From: Davide Caratti <dcaratti@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: pabeni@redhat.com,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v2 0/6] convert MPTCP to use YAML spec
+Date: Fri,  1 Sep 2023 20:10:29 +0200
+Message-Id: <cover.1693591676.git.dcaratti@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+this series converts most of the MPTCP netlink interface (plus uAPI bits)
+to use sources generated by a YAML spec file. Patch 2/6 and 6/6 have been
+individually verified with kselftests.
 
-Thank you for your modifications, that's great!
+POC:
 
-Our CI did some validations and here is its report:
+ $ sudo  ./tools/net/ynl/cli.py  --spec \
+ > Documentation/netlink/specs/mptcp.yaml --do add_addr \
+ > --json '{"addr": {"addr4": 16909061, "family": 2, "flags": 4, "id": 10, "port": 0}}'
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6412989272686592
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6412989272686592/summary/summary.txt
+ $ ip -j mptcp endpoint show id 10
+ [{"address":"1.2.3.5","id":10,"backup":true}]
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5568564342554624
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5568564342554624/su=
-mmary/summary.txt
+v2:
+- mptcp.yaml: only put values around enum "holes" (Paolo Abeni)
+-  _doit and _dumpit renames are done in a dedicate patch (Paolo Abeni)
+- removed useless nla_policy passed through parse_entry()  (Paolo Abeni)
+- renamed mptcp_pm_address_nl_policy in patch 2 (Paolo Abeni)
+- (hopefully) more comprehensible commit messages (Paolo Abeni)
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5005614389133312
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5005614389133312/summary/summary.txt
+Davide Caratti (6):
+  tools: ynl: add uns-admin-perm to genetlink legacy
+  mptcp: convert netlink from small_ops to ops
+  Documentation: netlink: add a YAML spec for mptcp
+  mptcp: uapi: use header file generated from YAML spec
+  net: mptcp: rename netlink handlers to
+    mptcp_pm_nl_<blah>_{doit,dumpit}
+  net: mptcp: use policy generated by YAML spec
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 2 failed test(s): packetdrill_mp_join packetdrill_sockopts =
-=F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6131514295975936
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6131514295975936/su=
-mmary/summary.txt
+ Documentation/netlink/genetlink-legacy.yaml |   2 +-
+ Documentation/netlink/specs/mptcp.yaml      | 394 ++++++++++++++++++++
+ include/uapi/linux/mptcp.h                  | 174 +--------
+ include/uapi/linux/mptcp_pm.h               | 149 ++++++++
+ net/mptcp/Makefile                          |   3 +-
+ net/mptcp/mptcp_pm_gen.c                    | 179 +++++++++
+ net/mptcp/mptcp_pm_gen.h                    |  58 +++
+ net/mptcp/pm_netlink.c                      | 114 +-----
+ net/mptcp/pm_userspace.c                    |   8 +-
+ net/mptcp/protocol.h                        |   6 +-
+ 10 files changed, 814 insertions(+), 273 deletions(-)
+ create mode 100644 Documentation/netlink/specs/mptcp.yaml
+ create mode 100644 include/uapi/linux/mptcp_pm.h
+ create mode 100644 net/mptcp/mptcp_pm_gen.c
+ create mode 100644 net/mptcp/mptcp_pm_gen.h
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/28508caef7ff
+-- 
+2.40.1
 
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
