@@ -1,152 +1,184 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA6BAD5F
-	for <mptcp@lists.linux.dev>; Mon,  4 Sep 2023 15:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D39DC138
+	for <mptcp@lists.linux.dev>; Mon,  4 Sep 2023 15:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693840839;
+	s=mimecast20190719; t=1693842509;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JF5dYBNHCAEIZ0U8zKwwpIKuqpHQLQHgBv+yZbPtWLA=;
-	b=a3SPd4TdF3BJxNiZtG8uE70dbHxjTBbt5KWHaUdERBrsO5qQBqSTaQaYyvMgW7wU8t3UfU
-	/3LhX65DQ9GTnJKippYE++MdSLnughWXtMHB3vYekFSi1I8OQr2TlIoW3flSxJ6KtQD/xC
-	85DZAjXkpNgTSnE9FcguZcXj4ohqz7o=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-479-ZDw4OvlTPtCAwg97Di1LlA-1; Mon, 04 Sep 2023 11:20:37 -0400
-X-MC-Unique: ZDw4OvlTPtCAwg97Di1LlA-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2bcda0aa7ffso16599171fa.1
-        for <mptcp@lists.linux.dev>; Mon, 04 Sep 2023 08:20:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693840836; x=1694445636;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JF5dYBNHCAEIZ0U8zKwwpIKuqpHQLQHgBv+yZbPtWLA=;
-        b=Q066YntfVZXDcGIBCPe8aKqbklV4Uf73dBCK67+FUU6bc7Ow6S/f7U3Vuz1WP4dzIK
-         1ElUgOIYSpUzkfNoRhDMS5MIvp6BpDgzvoazxEEbAmGt/VFd2Wao4X2SRAxHdC8OXhyT
-         lkw5RGnkzrz9tqeiDGi9zZmLK4kDRkWQTJ04Rj9mtohkj2u07uxoUJQkAUqLUl6tpCUm
-         orV3ozK+io9EpKpJVZ4x/+yitN61zlR+COEcPJ0qdA+3MB484NSL8O3nVPuoQnSLhszg
-         O3+0h7i1WAjJndmgRJqiwgSf6bA8x8upBRZFTXHNPWQdCjaD61Idqr+w03rjInXjLNJo
-         831A==
-X-Gm-Message-State: AOJu0YydFWMlgFgQjwodA1yZvmkTQzIfTcwrLHFQnY0JcRDVqsqVU9ql
-	KmRqQ6vxLRgOtgkeXXxOxF3Qlws0iS1UBopWAQavhx/CCRCKh0CCdkLjltYDjoLrefm/FWjDxpq
-	uerge7f1CSEupnlM=
-X-Received: by 2002:a2e:8093:0:b0:2ba:8127:a2c3 with SMTP id i19-20020a2e8093000000b002ba8127a2c3mr7328968ljg.34.1693840836454;
-        Mon, 04 Sep 2023 08:20:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGf2XurCcnKBJpz4D1hGv3pe5qQX3GvGjw63aLIp+Fry+lAEG9pHq01DgmPvMkz7Y0MqAwmaw==
-X-Received: by 2002:a2e:8093:0:b0:2ba:8127:a2c3 with SMTP id i19-20020a2e8093000000b002ba8127a2c3mr7328951ljg.34.1693840836082;
-        Mon, 04 Sep 2023 08:20:36 -0700 (PDT)
-Received: from localhost ([81.56.90.2])
-        by smtp.gmail.com with ESMTPSA id w22-20020a170906131600b0099d9b50d786sm6308269ejb.199.2023.09.04.08.20.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Sep 2023 08:20:35 -0700 (PDT)
-Date: Mon, 4 Sep 2023 17:20:34 +0200
-From: Davide Caratti <dcaratti@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: Re: [PATCH mptcp-next v2 2/6] mptcp: convert netlink from small_ops
- to ops
-Message-ID: <ZPX1wsXgq7FkIcz7@dcaratti.users.ipa.redhat.com>
-References: <cover.1693591676.git.dcaratti@redhat.com>
- <9079cf99466869474845cf89b55de5dfa7e01326.1693591676.git.dcaratti@redhat.com>
- <70d408aed5fe8f7a307aa024f3614d1daae6a6ad.camel@redhat.com>
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KidZoEeoTudSF5YndQBUEI9OGDKAjvAqZto6b3fleGg=;
+	b=gj/bViIHY1dw32PzOdGHxWXwdArT1K3lg+2zHPWiDq+yVhdKp4PLAIB+08fErfXAzhuvxN
+	+VNWhRMFXbf8k1Ew86OvU+MC1jHT4sElQlV7JbntrX0N7VDCiLx5ckEkgBsQ+aTzdvaH0J
+	UySD5JGoQQ+cQvpiImnGhGJGM02b8Jg=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-595-nuvRXiC3Mdyp3qJTK_dPEA-1; Mon, 04 Sep 2023 11:48:28 -0400
+X-MC-Unique: nuvRXiC3Mdyp3qJTK_dPEA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C87053C025CB
+	for <mptcp@lists.linux.dev>; Mon,  4 Sep 2023 15:48:27 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.211])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 58268493110
+	for <mptcp@lists.linux.dev>; Mon,  4 Sep 2023 15:48:27 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next v2] mptcp: add a new sysctl for make after break timeout
+Date: Mon,  4 Sep 2023 17:48:23 +0200
+Message-ID: <dfadc0c4a9bf4649c01e09d675f4de59eb409f5d.1693841118.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <70d408aed5fe8f7a307aa024f3614d1daae6a6ad.camel@redhat.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-hello Paolo, thanks for looking at this!
+The MPTCP protocol allows sockets with no alive subflows to stay
+in ESTABLISHED status for and user-defined timeout, to allow for
+later subflows creation.
 
-On Mon, Sep 04, 2023 at 11:13:15AM +0200, Paolo Abeni wrote:
-> On Fri, 2023-09-01 at 20:10 +0200, Davide Caratti wrote:
-> > in the current MPTCP control plane, all operations use a netlink
-> > attribute of the same type "MPTCP_PM_ATTR". However, add/del/get/flush
-> > operations only parse the first element in the message _ the one that
-> > describes MPTCP endpoints (that was named MPTCP_PM_ATTR_ADDR and
-> > mostly used in ADD_ADDR operations _ probably the similarity of "attr",
-> > "addr" and "add" might cause some confusion to human readers).
-> > Convert MPTCP from 'small_ops' to 'ops', thus allowing different attributes
-> > for each single operation, hopefully makes all this clearer to human
-> > readers.
-> 
-> Minor nit: I'm wondering if it would make sense factoring out only the
-> bits replacing MPTCP_PM_ATTR_ADDR with MPTCP_PM_ENDPOINT_ADDR, to make
-> it clearer what is happening here.
+Currently such timeout is constant - TCP_TIMEWAIT_LEN. Let the
+user-space configure them via a newly added sysctl, to better cope
+with busy servers and simplify (make them faster) the relevant
+pktdrill tests.
 
-I think the addition of MPTCP_PM_ENDPOINT_ADDR and its use in add/del/get/flush
-operation would have little/no sense with small_ops. It's there to avoid
-selecting an element in 'endpoint' using the same label we use to
-get the local address form 'attr'.
+Note that the new know does not apply to orphaned MPTCP socket
+waiting for the data_fin handshake completion: they always wait
+TCP_TIMEWAIT_LEN.
+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+v1 -> v2:
+ - add the doc for the new knob (Matttbe)
+ - fix a couple of bad/strange indentation (Matttbe)
+---
+ Documentation/networking/mptcp-sysctl.rst | 11 +++++++++++
+ net/mptcp/ctrl.c                          | 16 ++++++++++++++++
+ net/mptcp/protocol.c                      |  5 +++--
+ net/mptcp/protocol.h                      |  1 +
+ 4 files changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+index 15f1919d640c..f569129ea881 100644
+--- a/Documentation/networking/mptcp-sysctl.rst
++++ b/Documentation/networking/mptcp-sysctl.rst
+@@ -25,6 +25,17 @@ add_addr_timeout - INTEGER (seconds)
  
-> Likely not a big deal either ways.
-
-I'd like to keep one single patch that does the 'small_ops' ->
-'ops' conversion (to avoid adding a hidden dependency to future patches
-that will fix this patch. You know, there are those fancy tools that select
-follow-ups commits ;) ).
-
->  
-> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > index 9661f3812682..3859a206c298 100644
-> > --- a/net/mptcp/pm_netlink.c
-> > +++ b/net/mptcp/pm_netlink.c
-> > @@ -48,6 +48,53 @@ struct pm_nl_pernet {
-> >  #define MPTCP_PM_ADDR_MAX	8
-> >  #define ADD_ADDR_RETRANS_MAX	3
-> >  
-> > +const struct nla_policy mptcp_pm_address_nl_policy[MPTCP_PM_ADDR_ATTR_IF_IDX + 1] = {
-> 
-> The above is a little confusing...
-> 
-> > +	[MPTCP_PM_ADDR_ATTR_FAMILY] = { .type = NLA_U16, },
-> > +	[MPTCP_PM_ADDR_ATTR_ADDR4] = { .type = NLA_U32, },
-> > +	[MPTCP_PM_ADDR_ATTR_ADDR6] = { .len = 16, },
-> > +	[MPTCP_PM_ADDR_ATTR_ID] = { .type = NLA_U8, },
-> > +	[MPTCP_PM_ADDR_ATTR_PORT] = { .type = NLA_U16, },
-> > +	[MPTCP_PM_ADDR_ATTR_IF_IDX] = { .type = NLA_S32, },
-> > +	[MPTCP_PM_ADDR_ATTR_FLAGS] = { .type = NLA_U32, },
-> > +};
-> 
-> ... given that MPTCP_PM_ADDR_ATTR_IF_IDX is not listed last here.
-
-dood catch,
+ 	Default: 120
  
-> I guess this layout has been chosen to match what the tool generates
-> for the spec, right?
-
-no no, it's just misplaced :) . Let me fix it and I'll post v3.
-
-> 
-> What if we reorder the 'attributes' in 'operations/list' in patch 3/6
-> to respect the corresponding numeric order? would that lead to more
-> natural order here, too?
-
-in patch 3/6 they are actually respecting the numeric order: otherwise
-the uAPI would be broken (e.g. a userspace program would see a value
-change in one or more enum elements).
-
-I see that we have some spots like:
-
- 382       do: &sf_create
- 383         request:
- 384           attributes:
- 385             - addr_remote
-                     ^^^ this is out-of-order, but  the C code is generated correctly
- 386             - token
-                     ^^^ same here
- 387             - addr
-
-
-they can be fixed with in patch 3 v3, but that will have with no effect on the
-generated C code. Did I get correctly the change request?
++close_timeout - INTEGER (seconds)
++	Set the make-after-break timeout: in absence of any close or
++        shutdown syscall, MPTCP sockets will maintain the status
++        unchanged for such time, after the last subflow removal, before
++        moving to TCP_CLOSE.
++
++	The default value matches TCP_TIMEWAIT_LEN. This is a per-namespace
++	sysctl.
++
++	Default: 60
++
+ checksum_enabled - BOOLEAN
+ 	Control whether DSS checksum can be enabled.
+ 
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index c46c22a84d23..36e389326073 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -27,6 +27,7 @@ struct mptcp_pernet {
+ #endif
+ 
+ 	unsigned int add_addr_timeout;
++	unsigned int close_timeout;
+ 	unsigned int stale_loss_cnt;
+ 	u8 mptcp_enabled;
+ 	u8 checksum_enabled;
+@@ -65,6 +66,13 @@ unsigned int mptcp_stale_loss_cnt(const struct net *net)
+ 	return mptcp_get_pernet(net)->stale_loss_cnt;
+ }
+ 
++unsigned int mptcp_close_timeout(const struct sock *sk)
++{
++	if (sock_flag(sk, SOCK_DEAD))
++		return TCP_TIMEWAIT_LEN;
++	return mptcp_get_pernet(sock_net(sk))->close_timeout;
++}
++
+ int mptcp_get_pm_type(const struct net *net)
+ {
+ 	return mptcp_get_pernet(net)->pm_type;
+@@ -79,6 +87,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+ {
+ 	pernet->mptcp_enabled = 1;
+ 	pernet->add_addr_timeout = TCP_RTO_MAX;
++	pernet->close_timeout = TCP_TIMEWAIT_LEN;
+ 	pernet->checksum_enabled = 0;
+ 	pernet->allow_join_initial_addr_port = 1;
+ 	pernet->stale_loss_cnt = 4;
+@@ -141,6 +150,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
+ 		.mode = 0644,
+ 		.proc_handler = proc_dostring,
+ 	},
++	{
++		.procname = "close_timeout",
++		.maxlen = sizeof(unsigned int),
++		.mode = 0644,
++		.proc_handler = proc_dointvec_jiffies,
++	},
+ 	{}
+ };
+ 
+@@ -163,6 +178,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+ 	table[4].data = &pernet->stale_loss_cnt;
+ 	table[5].data = &pernet->pm_type;
+ 	table[6].data = &pernet->scheduler;
++	table[7].data = &pernet->close_timeout;
+ 
+ 	hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
+ 	if (!hdr)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 80d06cab8bc7..735ff5cda940 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2501,7 +2501,7 @@ static bool mptcp_close_tout_expired(const struct sock *sk)
+ 		return false;
+ 
+ 	return time_after32(tcp_jiffies32,
+-		  inet_csk(sk)->icsk_mtup.probe_timestamp + TCP_TIMEWAIT_LEN);
++		  inet_csk(sk)->icsk_mtup.probe_timestamp + mptcp_close_timeout(sk));
+ }
+ 
+ static void mptcp_check_fastclose(struct mptcp_sock *msk)
+@@ -2643,7 +2643,8 @@ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
+ 	if (!fail_tout && !inet_csk(sk)->icsk_mtup.probe_timestamp)
+ 		return;
+ 
+-	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies + TCP_TIMEWAIT_LEN;
++	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies +
++			mptcp_close_timeout(sk);
+ 
+ 	/* the close timeout takes precedence on the fail one, and here at least one of
+ 	 * them is active
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 392c2f247034..1cade49205bd 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -624,6 +624,7 @@ unsigned int mptcp_get_add_addr_timeout(const struct net *net);
+ int mptcp_is_checksum_enabled(const struct net *net);
+ int mptcp_allow_join_id0(const struct net *net);
+ unsigned int mptcp_stale_loss_cnt(const struct net *net);
++unsigned int mptcp_close_timeout(const struct sock *sk);
+ int mptcp_get_pm_type(const struct net *net);
+ const char *mptcp_get_scheduler(const struct net *net);
+ void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
+-- 
+2.41.0
 
