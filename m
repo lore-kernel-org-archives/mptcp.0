@@ -1,160 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1288C13B
-	for <mptcp@lists.linux.dev>; Mon,  4 Sep 2023 15:04:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA6BAD5F
+	for <mptcp@lists.linux.dev>; Mon,  4 Sep 2023 15:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693839871;
+	s=mimecast20190719; t=1693840839;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lcqGE561reZ/p+BmcOYrU/Wk4uiLyEG2U9GO7Lxi4Ow=;
-	b=gWsS9pSJ6rdFFaVPdhp+8e56RiaQxkAti8ijSIQ3/pFFOlMKtyHACFU/AppACTLdzondvW
-	z5KGTsxbO+WisH2LC6pUQDySkg8z26M/RD3TFV1+nj2Fk9qkowZQcGqmJkT5DTl59Wh2TB
-	RnMcvQWcRMcn/PYE9UN5JDQtTmgOQZ0=
+	bh=JF5dYBNHCAEIZ0U8zKwwpIKuqpHQLQHgBv+yZbPtWLA=;
+	b=a3SPd4TdF3BJxNiZtG8uE70dbHxjTBbt5KWHaUdERBrsO5qQBqSTaQaYyvMgW7wU8t3UfU
+	/3LhX65DQ9GTnJKippYE++MdSLnughWXtMHB3vYekFSi1I8OQr2TlIoW3flSxJ6KtQD/xC
+	85DZAjXkpNgTSnE9FcguZcXj4ohqz7o=
 Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
  [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-504-a1ZglubKMSKZ4R80FqykxQ-1; Mon, 04 Sep 2023 11:04:30 -0400
-X-MC-Unique: a1ZglubKMSKZ4R80FqykxQ-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2b04d5ed394so2603851fa.1
-        for <mptcp@lists.linux.dev>; Mon, 04 Sep 2023 08:04:30 -0700 (PDT)
+ us-mta-479-ZDw4OvlTPtCAwg97Di1LlA-1; Mon, 04 Sep 2023 11:20:37 -0400
+X-MC-Unique: ZDw4OvlTPtCAwg97Di1LlA-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2bcda0aa7ffso16599171fa.1
+        for <mptcp@lists.linux.dev>; Mon, 04 Sep 2023 08:20:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693839869; x=1694444669;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I/CSnwcnfZnXCJAiwhIZNnxkbD4OMgH906mjlc+LftQ=;
-        b=ERAZlZnFDzpQ649c94gUWGyQ9suwsScVeADqu/ZArN1qkHccPxluOSOcaevxMm8y8R
-         FsYXxr5/pKuYb/7XFd1RnUSTHby3MptU/WunFiRbDf6sKB5ky0SC5AfdsODaUDCTmleS
-         LGDzbz/a2LfSgoIccYDaad2HCadO9CJjpcAbfJLp0sAm5Km0ooLgCv7QocoKJ41meGoA
-         Sr60nT0oUvQI0TbIC6+jZawq+wsH2QYzGw9wIQLq0YYEClKSPBg5EANsO1u4X2Ht3dJY
-         Ess9H/DBWsL3P+5LyQCEa8Ixc0zBlS3hlcGCb39/a3g0ztyy6Lzjmyp93eMpLUbB2LF2
-         +w/g==
-X-Gm-Message-State: AOJu0YwQIrAgPjJdLTYrLmw2Nse8XnzmP6zKNjKbmv7lSNokRWIjrdX2
-	YxGf0MhYhV14rIOV9J2GwajXG70YMLJxbw0tLbu5XcJaQHc7mtOJJ+Bm6DayL0aOx6u39ZmJRSk
-	IFbxSMxFYhn4Cceo=
-X-Received: by 2002:a2e:9cc5:0:b0:2b9:e10b:a511 with SMTP id g5-20020a2e9cc5000000b002b9e10ba511mr5134509ljj.0.1693839868888;
-        Mon, 04 Sep 2023 08:04:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3y2ejp7UC17E4Qwn0s0e9eRLrs4Vm79PRNK0+0ne8ZmtXf+PAisjKTsM3UiLELRNy1ewQXw==
-X-Received: by 2002:a2e:9cc5:0:b0:2b9:e10b:a511 with SMTP id g5-20020a2e9cc5000000b002b9e10ba511mr5134491ljj.0.1693839868394;
-        Mon, 04 Sep 2023 08:04:28 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-254-194.dyn.eolo.it. [146.241.254.194])
-        by smtp.gmail.com with ESMTPSA id rh16-20020a17090720f000b0099cb0a7098dsm6355325ejb.19.2023.09.04.08.04.27
+        d=1e100.net; s=20221208; t=1693840836; x=1694445636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JF5dYBNHCAEIZ0U8zKwwpIKuqpHQLQHgBv+yZbPtWLA=;
+        b=Q066YntfVZXDcGIBCPe8aKqbklV4Uf73dBCK67+FUU6bc7Ow6S/f7U3Vuz1WP4dzIK
+         1ElUgOIYSpUzkfNoRhDMS5MIvp6BpDgzvoazxEEbAmGt/VFd2Wao4X2SRAxHdC8OXhyT
+         lkw5RGnkzrz9tqeiDGi9zZmLK4kDRkWQTJ04Rj9mtohkj2u07uxoUJQkAUqLUl6tpCUm
+         orV3ozK+io9EpKpJVZ4x/+yitN61zlR+COEcPJ0qdA+3MB484NSL8O3nVPuoQnSLhszg
+         O3+0h7i1WAjJndmgRJqiwgSf6bA8x8upBRZFTXHNPWQdCjaD61Idqr+w03rjInXjLNJo
+         831A==
+X-Gm-Message-State: AOJu0YydFWMlgFgQjwodA1yZvmkTQzIfTcwrLHFQnY0JcRDVqsqVU9ql
+	KmRqQ6vxLRgOtgkeXXxOxF3Qlws0iS1UBopWAQavhx/CCRCKh0CCdkLjltYDjoLrefm/FWjDxpq
+	uerge7f1CSEupnlM=
+X-Received: by 2002:a2e:8093:0:b0:2ba:8127:a2c3 with SMTP id i19-20020a2e8093000000b002ba8127a2c3mr7328968ljg.34.1693840836454;
+        Mon, 04 Sep 2023 08:20:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGf2XurCcnKBJpz4D1hGv3pe5qQX3GvGjw63aLIp+Fry+lAEG9pHq01DgmPvMkz7Y0MqAwmaw==
+X-Received: by 2002:a2e:8093:0:b0:2ba:8127:a2c3 with SMTP id i19-20020a2e8093000000b002ba8127a2c3mr7328951ljg.34.1693840836082;
+        Mon, 04 Sep 2023 08:20:36 -0700 (PDT)
+Received: from localhost ([81.56.90.2])
+        by smtp.gmail.com with ESMTPSA id w22-20020a170906131600b0099d9b50d786sm6308269ejb.199.2023.09.04.08.20.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Sep 2023 08:04:28 -0700 (PDT)
-Message-ID: <a696b90406710bbc3a0e6f58ade4468b97726a3e.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: add a new sysctl for make after break
- timeout
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: mptcp@lists.linux.dev
-Date: Mon, 04 Sep 2023 17:04:26 +0200
-In-Reply-To: <4a3f0eaa-f915-49dc-8948-a581a6e78542@tessares.net>
-References: <85f43bff28d6d080642a968c12f68f87ee4baf5c.1693835482.git.pabeni@redhat.com>
-	 <4a3f0eaa-f915-49dc-8948-a581a6e78542@tessares.net>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+        Mon, 04 Sep 2023 08:20:35 -0700 (PDT)
+Date: Mon, 4 Sep 2023 17:20:34 +0200
+From: Davide Caratti <dcaratti@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev, Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: Re: [PATCH mptcp-next v2 2/6] mptcp: convert netlink from small_ops
+ to ops
+Message-ID: <ZPX1wsXgq7FkIcz7@dcaratti.users.ipa.redhat.com>
+References: <cover.1693591676.git.dcaratti@redhat.com>
+ <9079cf99466869474845cf89b55de5dfa7e01326.1693591676.git.dcaratti@redhat.com>
+ <70d408aed5fe8f7a307aa024f3614d1daae6a6ad.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <70d408aed5fe8f7a307aa024f3614d1daae6a6ad.camel@redhat.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 2023-09-04 at 16:35 +0200, Matthieu Baerts wrote:
-> > diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> > index c46c22a84d23..b22d41729076 100644
-> > --- a/net/mptcp/ctrl.c
-> > +++ b/net/mptcp/ctrl.c
-> > @@ -27,6 +27,7 @@ struct mptcp_pernet {
-> >  #endif
-> > =20
-> >  =09unsigned int add_addr_timeout;
-> > +=09unsigned int close_timeout;
->=20
-> Sometimes, it is good to add a suffix indicating the unit being used but
-> I guess here in jiffies, we don't need that because the time is usually
-> in jiffies, right?
+hello Paolo, thanks for looking at this!
 
-I guess so. Also there is an hopefully self-documenting
-proc_dointvec_jiffies() below.
+On Mon, Sep 04, 2023 at 11:13:15AM +0200, Paolo Abeni wrote:
+> On Fri, 2023-09-01 at 20:10 +0200, Davide Caratti wrote:
+> > in the current MPTCP control plane, all operations use a netlink
+> > attribute of the same type "MPTCP_PM_ATTR". However, add/del/get/flush
+> > operations only parse the first element in the message _ the one that
+> > describes MPTCP endpoints (that was named MPTCP_PM_ATTR_ADDR and
+> > mostly used in ADD_ADDR operations _ probably the similarity of "attr",
+> > "addr" and "add" might cause some confusion to human readers).
+> > Convert MPTCP from 'small_ops' to 'ops', thus allowing different attributes
+> > for each single operation, hopefully makes all this clearer to human
+> > readers.
+> 
+> Minor nit: I'm wondering if it would make sense factoring out only the
+> bits replacing MPTCP_PM_ATTR_ADDR with MPTCP_PM_ENDPOINT_ADDR, to make
+> it clearer what is happening here.
 
-[...]
+I think the addition of MPTCP_PM_ENDPOINT_ADDR and its use in add/del/get/flush
+operation would have little/no sense with small_ops. It's there to avoid
+selecting an element in 'endpoint' using the same label we use to
+get the local address form 'attr'.
+ 
+> Likely not a big deal either ways.
 
-> > @@ -140,6 +149,12 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
-> >  =09=09.maxlen=09=3D MPTCP_SCHED_NAME_MAX,
-> >  =09=09.mode =3D 0644,
-> >  =09=09.proc_handler =3D proc_dostring,
-> > +=09},
-> > +=09=09{
->=20
-> (nit) it looks like the indentation is not OK?
+I'd like to keep one single patch that does the 'small_ops' ->
+'ops' conversion (to avoid adding a hidden dependency to future patches
+that will fix this patch. You know, there are those fancy tools that select
+follow-ups commits ;) ).
 
-c&p error. I'll fix that in v2.
+>  
+> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> > index 9661f3812682..3859a206c298 100644
+> > --- a/net/mptcp/pm_netlink.c
+> > +++ b/net/mptcp/pm_netlink.c
+> > @@ -48,6 +48,53 @@ struct pm_nl_pernet {
+> >  #define MPTCP_PM_ADDR_MAX	8
+> >  #define ADD_ADDR_RETRANS_MAX	3
+> >  
+> > +const struct nla_policy mptcp_pm_address_nl_policy[MPTCP_PM_ADDR_ATTR_IF_IDX + 1] = {
+> 
+> The above is a little confusing...
+> 
+> > +	[MPTCP_PM_ADDR_ATTR_FAMILY] = { .type = NLA_U16, },
+> > +	[MPTCP_PM_ADDR_ATTR_ADDR4] = { .type = NLA_U32, },
+> > +	[MPTCP_PM_ADDR_ATTR_ADDR6] = { .len = 16, },
+> > +	[MPTCP_PM_ADDR_ATTR_ID] = { .type = NLA_U8, },
+> > +	[MPTCP_PM_ADDR_ATTR_PORT] = { .type = NLA_U16, },
+> > +	[MPTCP_PM_ADDR_ATTR_IF_IDX] = { .type = NLA_S32, },
+> > +	[MPTCP_PM_ADDR_ATTR_FLAGS] = { .type = NLA_U32, },
+> > +};
+> 
+> ... given that MPTCP_PM_ADDR_ATTR_IF_IDX is not listed last here.
 
-> > +=09=09.procname =3D "close_timeout",
->=20
-> Do you mind documenting this new entry in
-> Documentation/networking/mptcp-sysctl.rst please?
+dood catch,
+ 
+> I guess this layout has been chosen to match what the tool generates
+> for the spec, right?
 
-I will in v2.
+no no, it's just misplaced :) . Let me fix it and I'll post v3.
 
-> Also, here as well I guess we don't need to add a suffix "_s" or "_sec"
-> for the unit because usually it is in seconds, right?
+> 
+> What if we reorder the 'attributes' in 'operations/list' in patch 3/6
+> to respect the corresponding numeric order? would that lead to more
+> natural order here, too?
 
-AFAICS almost all timeouts under net have no such suffix, I guess that
-is fine?!?
+in patch 3/6 they are actually respecting the numeric order: otherwise
+the uAPI would be broken (e.g. a userspace program would see a value
+change in one or more enum elements).
 
-> > +=09=09.maxlen =3D sizeof(unsigned int),
->=20
-> Just an idea: would it make sense to accept -1 as special case for "no
-> timeout"? (maybe not, we can always put a huge value? also I'm not sure
-> we can use proc_dointvec_jiffies() with -1 and I wonder if they handle
-> UINT_MAX with the conversion but that's a detail)
+I see that we have some spots like:
 
-I'm unsure if that above is needed. A 0 timeout will fire (almost)
-immediately, should be a reasonable enough approximation.
->=20
-> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 80d06cab8bc7..8022f00190ad 100644
-> > --- a/net/mptcp/protocol.c
-> > +++ b/net/mptcp/protocol.c
-> > @@ -2501,7 +2501,7 @@ static bool mptcp_close_tout_expired(const struct=
- sock *sk)
-> >  =09=09return false;
-> > =20
-> >  =09return time_after32(tcp_jiffies32,
-> > -=09=09  inet_csk(sk)->icsk_mtup.probe_timestamp + TCP_TIMEWAIT_LEN);
-> > +=09    inet_csk(sk)->icsk_mtup.probe_timestamp + mptcp_close_timeout(s=
-k));
->=20
-> (nit: the indentation looks strange but maybe what you wanted?)
+ 382       do: &sf_create
+ 383         request:
+ 384           attributes:
+ 385             - addr_remote
+                     ^^^ this is out-of-order, but  the C code is generated correctly
+ 386             - token
+                     ^^^ same here
+ 387             - addr
 
-Just trying to fit 80 chars, probably it's better to align to the above
-'('
 
-> > @@ -2643,7 +2643,8 @@ void mptcp_reset_tout_timer(struct mptcp_sock *ms=
-k, unsigned long fail_tout)
-> >  =09if (!fail_tout && !inet_csk(sk)->icsk_mtup.probe_timestamp)
-> >  =09=09return;
-> > =20
-> > -=09close_timeout =3D inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jif=
-fies32 + jiffies + TCP_TIMEWAIT_LEN;
-> > +=09close_timeout =3D inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jif=
-fies32 + jiffies +
-> > +=09=09=09mptcp_close_timeout(sk);
->=20
-> Do we need to do something special if mptcp_close_timeout(sk) returns 0,
-> AKA close the MPTCP connection immediately?
-
-AFAIK, not needed. mod_timer() will be fine to schedule it ASAP.
-
-Cheers,
-
-Paolo
+they can be fixed with in patch 3 v3, but that will have with no effect on the
+generated C code. Did I get correctly the change request?
 
