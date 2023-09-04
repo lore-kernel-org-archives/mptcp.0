@@ -1,45 +1,45 @@
 Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAD2C138
-	for <mptcp@lists.linux.dev>; Mon,  4 Sep 2023 15:48:46 +0000 (UTC)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-31ad779e6b3so1377093f8f.2
-        for <mptcp@lists.linux.dev>; Mon, 04 Sep 2023 08:48:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B974C144
+	for <mptcp@lists.linux.dev>; Mon,  4 Sep 2023 15:58:35 +0000 (UTC)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-31c73c21113so1326514f8f.1
+        for <mptcp@lists.linux.dev>; Mon, 04 Sep 2023 08:58:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1693842524; x=1694447324; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
+        d=tessares.net; s=google; t=1693843113; x=1694447913; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pX/4PpzmwuQBq/A6+sUwLhEfaFXZM7wbuwa2YKUWz9c=;
-        b=F3nxVdjQdG6Al+L0x39Z6JLjhhSVfW1gLHjAE0IRyhKudyO3v5jgoeA6TfVS7i07fD
-         2mjlbkHJt0datrZBHo40NidXymTHwzjMrbtqtbaJxMLLVGXJqLunKqdtxQf1MVJ5V9U6
-         67qNQvjCYbPgVtwk9yALX2e53uxTVJJ7dpAZUxdaEEUxwnn8l+i329hhihqbnmeVCD3O
-         NUKhRvzV8gSzG+rUCvESyJj6cc6iHMdbT/cgd0R7uC5CXYjh7LyPGXd3oFHcRh/PMXRE
-         jBDr1xaXQHjmRGphp6hPq/DGr3JmpL/UjdIaH5fhKgSd+Aicw56QvVkk8ezhms8PHX/z
-         Q0xQ==
+        bh=U2xYBSIEmsgx2xMQPuQkVVMFx9uO9Bngc2VcTU/2M9E=;
+        b=BpOYM2Lrqc1t4xhtEEj8iUTxvwJJqWPumt97iknYk53wMlDuqFzwVwd8x4risUy1az
+         1wHi9nsQpdfzvjDTxY8Zr4kGYWPQK02Scz/5m2p2OVhGp0ySeya7urexGGrkdqNf6YUn
+         2HuEgI7bHKkaitsMDlIlPAg7Jz2MQ72bOXQ+E3IYoZiXsihMg1WKgdS3Acarm3bcGcHB
+         gO2rxQ2UfF8bi88I2RILBORUXXPjiri/ik4ba0gooiCnNjehn6Bfcy12TjlFjO8+GLaI
+         3T03oapwpj9vC5rYyrJTaqQj/s29cYQE18IdrmFtxQ5/KaFC0iOibTQ7O73hzWoNo4mT
+         y+mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693842524; x=1694447324;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1693843113; x=1694447913;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pX/4PpzmwuQBq/A6+sUwLhEfaFXZM7wbuwa2YKUWz9c=;
-        b=guYpjxv9lPkt4vY48oWyClZ8jcHZtbFoXnaxU6DBg4QgL0Al17j7wTDS9g40vHfzl3
-         UrAF0jk/PGTnAKbK0ZmS8RcV11hJzIEZV2JIWXC1e7Yyr95hyP6Rn9EHhs2V3RW8NOh9
-         HzAzVYRnlfN6qP9VqyPdaeq9LglMVrjYp3c/eeUmkEa+meAlSKs+RJRKymc+drZzhmRk
-         mPeKpznnNBs/f5iyTG/MvrCHh/gjlyJFD5FsWVhYgPbc3TfwjH6nY7LzjaL9GYb58HW8
-         zEVQRrmrXPdGCB5ycnimxFbFLBQ4dP2h4WFvXuvVt987kuW2c+JUqjwkdEgcxq0jiMgO
-         Dqiw==
-X-Gm-Message-State: AOJu0YxCYK9J6GHTYcImLkqROyiHP/XvFZ6vrjgKI8SfoYAy/KUbxYrM
-	xjKJd7DqcU9h9aboENev3NIZQe7zz0J3XBRL2sY=
-X-Google-Smtp-Source: AGHT+IEheDr6JG2zbsRUEEpUrhXjmz8xqQOkb1OCUISKGerFrUJjeBjwTY2mxZ5HCQ0kDroyZDYKTQ==
-X-Received: by 2002:a5d:5242:0:b0:31a:e728:8682 with SMTP id k2-20020a5d5242000000b0031ae7288682mr8676432wrc.68.1693842524450;
-        Mon, 04 Sep 2023 08:48:44 -0700 (PDT)
+        bh=U2xYBSIEmsgx2xMQPuQkVVMFx9uO9Bngc2VcTU/2M9E=;
+        b=TVjQXoqama2DO5d90Ij/fMdTifqf9uuD6emR9pIi9opeDX5UDqrVdhaSmCL9UB8koU
+         gIMShve039iP1sEjRPehxXpJyvbi4JE0EN7tan3zupoZ3khcYcWzqB9pRAyvrU3dusLK
+         MhQXvA3tvHpnqJaDTnpM7uArvn9eWj8yqu5gno+Dz8UXTUXD1VnDcQvNAvv2Fs0pNZur
+         qUdFazfJKjI/7HtpY0UfWSTjKe7VF3+daSoK3zyur/T/d0dsLpsAO3V9q/BCJ/BUBkE7
+         sXTbX0DfeKgy/ceMoxMb6WT4G9+l+wKxfx2C0EQDCxbuxRl5d0OApjUqlEw6JNiH7cel
+         c9Ww==
+X-Gm-Message-State: AOJu0YxlUJ/tXuxqQ7bcwIPH72Krr0MJlW5gOEUp5mnBMJqpHJPShNvV
+	Wl1UitMUVOHF8lfvg9QjcP7+WZc8Nbeo0/MALtI=
+X-Google-Smtp-Source: AGHT+IGAUNA8lwtdSS4ADpsn4XJakMeWoWU1utO7RaS0o4UAtJxl7IjcmgYONh79LIobkzWgHfjHkQ==
+X-Received: by 2002:adf:f512:0:b0:313:e9f6:3378 with SMTP id q18-20020adff512000000b00313e9f63378mr7253163wro.4.1693843113380;
+        Mon, 04 Sep 2023 08:58:33 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id i14-20020adfdece000000b003142e438e8csm14750879wrn.26.2023.09.04.08.48.44
+        by smtp.gmail.com with ESMTPSA id y8-20020adff148000000b00317c742ca9asm14643256wro.43.2023.09.04.08.58.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Sep 2023 08:48:44 -0700 (PDT)
-Message-ID: <e0ab04b3-6d74-4871-a36a-0c2654f94178@tessares.net>
-Date: Mon, 4 Sep 2023 17:48:43 +0200
+        Mon, 04 Sep 2023 08:58:33 -0700 (PDT)
+Message-ID: <b7703287-9e04-4c9a-93a6-b50c2020c5ab@tessares.net>
+Date: Mon, 4 Sep 2023 17:58:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,14 +47,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] mptcp: add a new sysctl for make after break
- timeout
+Subject: Re: [PATCH mptcp-next v2] mptcp: add a new sysctl for make after
+ break timeout
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <85f43bff28d6d080642a968c12f68f87ee4baf5c.1693835482.git.pabeni@redhat.com>
- <4a3f0eaa-f915-49dc-8948-a581a6e78542@tessares.net>
- <a696b90406710bbc3a0e6f58ade4468b97726a3e.camel@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <dfadc0c4a9bf4649c01e09d675f4de59eb409f5d.1693841118.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -99,117 +96,94 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <a696b90406710bbc3a0e6f58ade4468b97726a3e.camel@redhat.com>
+In-Reply-To: <dfadc0c4a9bf4649c01e09d675f4de59eb409f5d.1693841118.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-Thank you for your reply!
-
-On 04/09/2023 17:04, Paolo Abeni wrote:
-> On Mon, 2023-09-04 at 16:35 +0200, Matthieu Baerts wrote:
->>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
->>> index c46c22a84d23..b22d41729076 100644
->>> --- a/net/mptcp/ctrl.c
->>> +++ b/net/mptcp/ctrl.c
->>> @@ -27,6 +27,7 @@ struct mptcp_pernet {
->>>  #endif
->>>  
->>>  	unsigned int add_addr_timeout;
->>> +	unsigned int close_timeout;
->>
->> Sometimes, it is good to add a suffix indicating the unit being used but
->> I guess here in jiffies, we don't need that because the time is usually
->> in jiffies, right?
+On 04/09/2023 17:48, Paolo Abeni wrote:
+> The MPTCP protocol allows sockets with no alive subflows to stay
+> in ESTABLISHED status for and user-defined timeout, to allow for
+> later subflows creation.
 > 
-> I guess so. Also there is an hopefully self-documenting
-> proc_dointvec_jiffies() below.
-
-I'm fine with that. At the end, it's the same behaviour as the one above
-('add_addr_timeout').
-
-(I was thinking about all the "_us" (srtt_us, etc.) variables, mostly in
-TCP but that's different: here it is maybe less common than jiffies and
-probably needed when doing the conversion from ms to µs)
-
+> Currently such timeout is constant - TCP_TIMEWAIT_LEN. Let the
+> user-space configure them via a newly added sysctl, to better cope
+> with busy servers and simplify (make them faster) the relevant
+> pktdrill tests.
 > 
-> [...]
+> Note that the new know does not apply to orphaned MPTCP socket
+> waiting for the data_fin handshake completion: they always wait
+> TCP_TIMEWAIT_LEN.
 > 
->>> @@ -140,6 +149,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
->>>  		.maxlen	= MPTCP_SCHED_NAME_MAX,
->>>  		.mode = 0644,
->>>  		.proc_handler = proc_dostring,
->>> +	},
->>> +		{
->>
->> (nit) it looks like the indentation is not OK?
-> 
-> c&p error. I'll fix that in v2.
-> 
->>> +		.procname = "close_timeout",
->>
->> Do you mind documenting this new entry in
->> Documentation/networking/mptcp-sysctl.rst please?
-> 
-> I will in v2.
-> 
->> Also, here as well I guess we don't need to add a suffix "_s" or "_sec"
->> for the unit because usually it is in seconds, right?
-> 
-> AFAICS almost all timeouts under net have no such suffix, I guess that
-> is fine?!?
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+>  - add the doc for the new knob (Matttbe)
+>  - fix a couple of bad/strange indentation (Matttbe)
 
-Yes indeed, no need to change.
+Thank you for the update!
 
+> ---
+>  Documentation/networking/mptcp-sysctl.rst | 11 +++++++++++
+>  net/mptcp/ctrl.c                          | 16 ++++++++++++++++
+>  net/mptcp/protocol.c                      |  5 +++--
+>  net/mptcp/protocol.h                      |  1 +
+>  4 files changed, 31 insertions(+), 2 deletions(-)
 > 
->>> +		.maxlen = sizeof(unsigned int),
->>
->> Just an idea: would it make sense to accept -1 as special case for "no
->> timeout"? (maybe not, we can always put a huge value? also I'm not sure
->> we can use proc_dointvec_jiffies() with -1 and I wonder if they handle
->> UINT_MAX with the conversion but that's a detail)
-> 
-> I'm unsure if that above is needed. A 0 timeout will fire (almost)
-> immediately, should be a reasonable enough approximation.
+> diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+> index 15f1919d640c..f569129ea881 100644
+> --- a/Documentation/networking/mptcp-sysctl.rst
+> +++ b/Documentation/networking/mptcp-sysctl.rst
+> @@ -25,6 +25,17 @@ add_addr_timeout - INTEGER (seconds)
+>  
+>  	Default: 120
+>  
+> +close_timeout - INTEGER (seconds)
+> +	Set the make-after-break timeout: in absence of any close or
+> +        shutdown syscall, MPTCP sockets will maintain the status
+> +        unchanged for such time, after the last subflow removal, before
+> +        moving to TCP_CLOSE.
 
-Sorry, I wanted to suggest such special case: "never close the MPTCP
-connection if there is no more subflows" (value of "-1", not "0"). But
-that's maybe not needed if we can give a huge number?
+You are using spaces for these 3 lines, the rest is OK using tabs. Did
+you switch to EMACS? :-D
 
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index 80d06cab8bc7..8022f00190ad 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -2501,7 +2501,7 @@ static bool mptcp_close_tout_expired(const struct sock *sk)
->>>  		return false;
->>>  
->>>  	return time_after32(tcp_jiffies32,
->>> -		  inet_csk(sk)->icsk_mtup.probe_timestamp + TCP_TIMEWAIT_LEN);
->>> +	    inet_csk(sk)->icsk_mtup.probe_timestamp + mptcp_close_timeout(sk));
->>
->> (nit: the indentation looks strange but maybe what you wanted?)
-> 
-> Just trying to fit 80 chars, probably it's better to align to the above
-> '('
+I can do the modification when applying the patch (if I don't forget :) )
 
-Maybe yes if you don't mind :)
+> +
+> +	The default value matches TCP_TIMEWAIT_LEN. This is a per-namespace
+> +	sysctl.
+> +
+> +	Default: 60
+> +
+>  checksum_enabled - BOOLEAN
+>  	Control whether DSS checksum can be enabled.
+>  
+> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+> index c46c22a84d23..36e389326073 100644
+> --- a/net/mptcp/ctrl.c
+> +++ b/net/mptcp/ctrl.c
 
->>> @@ -2643,7 +2643,8 @@ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
->>>  	if (!fail_tout && !inet_csk(sk)->icsk_mtup.probe_timestamp)
->>>  		return;
->>>  
->>> -	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies + TCP_TIMEWAIT_LEN;
->>> +	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies +
->>> +			mptcp_close_timeout(sk);
->>
->> Do we need to do something special if mptcp_close_timeout(sk) returns 0,
->> AKA close the MPTCP connection immediately?
-> 
-> AFAIK, not needed. mod_timer() will be fine to schedule it ASAP.
+(...)
 
-OK, easier to maintain then! :)
+> @@ -141,6 +150,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
+>  		.mode = 0644,
+>  		.proc_handler = proc_dostring,
+>  	},
+> +	{
+> +		.procname = "close_timeout",
+> +		.maxlen = sizeof(unsigned int),
 
+(just to be sure not to miss the idea which is probably not interesting)
+No need to accept negatives values and use -1 as a special case not to
+close "subflow-less" MPTCP connections?
+
+> +		.mode = 0644,
+> +		.proc_handler = proc_dointvec_jiffies,
+> +	},
+>  	{}
+>  };
+>  
 Cheers,
 Matt
 -- 
