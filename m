@@ -1,302 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563297F
-	for <mptcp@lists.linux.dev>; Sat,  2 Sep 2023 00:23:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E60C433C8;
-	Sat,  2 Sep 2023 00:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693614185;
-	bh=RtyvkOP7Q8OuoPJSawv4MopcFYEvpZMsNTm5jXOnA9o=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=IlJ5gSrz1vYsVRj81kJCmD6G2sERPw/NTNymNTwCa7UA31YAT76ynw+KCazZrJT0V
-	 VvB7923QTH9v8fbU/Rm48JpdTTdZskXopPE0Jrtmc9pnKSOGw2AhWSJrHchh0QTtXO
-	 4mCnFYfWQmaF1MO4QRcydhc2OioKzvEDkoTetZeXwGVA1PgBy5POCP3J4ZcvLufTTC
-	 fMefwy3uZynufjlR/vzINAWtWNk3ZUYJmtyhuULMqMCdDxMKytgQVRMIyznxu92e1o
-	 hpBtUrIZ7LRR+FEQJHTtlS93vU/9xLRLbL26bF6FxMuEa3yKe9HrKBQWU+aF+VpAob
-	 4gl050m0hZHRA==
-Date: Fri, 1 Sep 2023 17:23:04 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298E110F5
+	for <mptcp@lists.linux.dev>; Mon,  4 Sep 2023 08:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1693814685;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kN2nGaKxT3oSM5I6BHJg1qwLuNE0Gw4wam0V48VzXP0=;
+	b=Tj1FRnuEYeYwtLCAUZVVxl0dBVhF3UE7iXVsgoyTUo7Z/t0yWn622+HKh0rRIGS+5t2ul3
+	382fUWfTSEAJXZT+ibcmJgK2K0qg70TpapkjUqDafRnbTvtR4FeuI5L6c9FocnAGNy3VKi
+	cRtqHuNrW8eHPVEDKpkwYZwzIRZ8Sc4=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-377-hhtrLXFWPbGsVBjifW3tfQ-1; Mon, 04 Sep 2023 04:04:44 -0400
+X-MC-Unique: hhtrLXFWPbGsVBjifW3tfQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9a1be1e2b63so23036266b.0
+        for <mptcp@lists.linux.dev>; Mon, 04 Sep 2023 01:04:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693814683; x=1694419483;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CZviStE1SoWyCcSJiRMj827J4CDKVEg2O8/BwCZgl7k=;
+        b=kD84pBUvY9mTnXZT1mI20IoaR4p3+2O69HuuTSfnuaakhRNsx7paN2yXJ54moFttQW
+         5vZK+0E3rWaxlFRDEIDAyTBiwi7g0U+YZSW7XOpMfp9RYPis01IOPugb/VD1c67MmcGp
+         fBwEeMiv/Dwzap491rhOyDfp+39TlljKAL2M9moKTXfvMZ4ehkLNYY6RhWdF9C5tyzv/
+         Z2KQihdv6BEtJr5O/z7oFvA7h0Nf3p9uhGQVyICaSGUhGESYEMtVsRWzW8M7D24IaEqD
+         eqRf6a8GTsJOW60bGBl2ZPBTJhhgKO5JTLK/MiBjV6aA+dvUdBBah9FY1Vg6YhMkQi3K
+         WnkA==
+X-Gm-Message-State: AOJu0YzCnS42tHYwzuzC86fTClf/BVBZb83XPLvondMApFsYBne7qr7v
+	SRLzRbbJtV25ePy/15s9XmcxZIkzwbXPjzDW/TLKMvrusvzdAJQtxu+lIGUWcrWD4SBXJVyAhCe
+	MxJtzdSIib9Z7OxE=
+X-Received: by 2002:a17:907:a501:b0:9a6:5340:c337 with SMTP id vr1-20020a170907a50100b009a65340c337mr1263486ejc.2.1693814683386;
+        Mon, 04 Sep 2023 01:04:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGDJHo1mBYdsO83cv4FF6fKPZYRdaQ926B19jgkY8rqrm8pUk92j5bERNwgc6TgMWII1WphZw==
+X-Received: by 2002:a17:907:a501:b0:9a6:5340:c337 with SMTP id vr1-20020a170907a50100b009a65340c337mr1263474ejc.2.1693814682981;
+        Mon, 04 Sep 2023 01:04:42 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-254-194.dyn.eolo.it. [146.241.254.194])
+        by smtp.gmail.com with ESMTPSA id a3-20020a17090680c300b009a19fa8d2e9sm5708265ejx.206.2023.09.04.01.04.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Sep 2023 01:04:42 -0700 (PDT)
+Message-ID: <a6d662415bcbf613da17abed1652a2ade87db692.camel@redhat.com>
 Subject: Re: [PATCH mptcp-next v4 2/2] mptcp: implement connection level
  timeout.
-In-Reply-To: <382adc94e31c46ade28566d5787dd9d531329c51.1693565414.git.pabeni@redhat.com>
-Message-ID: <2ab5cd0e-4450-1dcc-5b02-5b3d1a4c6a81@kernel.org>
-References: <cover.1693565414.git.pabeni@redhat.com> <382adc94e31c46ade28566d5787dd9d531329c51.1693565414.git.pabeni@redhat.com>
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+Date: Mon, 04 Sep 2023 10:04:41 +0200
+In-Reply-To: <2ab5cd0e-4450-1dcc-5b02-5b3d1a4c6a81@kernel.org>
+References: <cover.1693565414.git.pabeni@redhat.com>
+	 <382adc94e31c46ade28566d5787dd9d531329c51.1693565414.git.pabeni@redhat.com>
+	 <2ab5cd0e-4450-1dcc-5b02-5b3d1a4c6a81@kernel.org>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 1 Sep 2023, Paolo Abeni wrote:
+On Fri, 2023-09-01 at 17:23 -0700, Mat Martineau wrote:
+> On Fri, 1 Sep 2023, Paolo Abeni wrote:
+> > @@ -2635,7 +2640,7 @@ void mptcp_reset_tout_timer(struct mptcp_sock *ms=
+k, unsigned long fail_tout)
+> > =09struct sock *sk =3D (struct sock *)msk;
+> > =09unsigned long timeout, close_timeout;
+> >=20
+> > -=09if (!fail_tout && !sock_flag(sk, SOCK_DEAD))
+> > +=09if (!fail_tout && !inet_csk(sk)->icsk_mtup.probe_timestamp)
+> > =09=09return;
+> >=20
+> > =09close_timeout =3D inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiff=
+ies32 + jiffies + TCP_TIMEWAIT_LEN;
+>=20
+> RFC 8684 brings up "break-before-make" scenarios in a few places, I think=
+=20
+> one use case is for VM migrations. 60 seconds seems sufficient but maybe=
+=20
+> not?
+>=20
+> There may also be scenarios with busy servers where the server-side admin=
+=20
+> may want to quickly close "zero subflow" MPTCP connections immediately (o=
+r=20
+> with a shorter timeout) if their workload does not involve=20
+> break-before-make and it's more important to free up resources quickly.
+>=20
+> Given these examples, what do you think about making this timeout=20
+> configurable via sysctl and/or sockopt?
 
-> According to RFC 8684 section 3.3:
->
->  A connection is not closed unless [...] or an implementation-specific
->  connection-level send timeout.
->
-> Currently the MPTCP protocol does not implement such timeout, and
-> connection timing-out at the TCP-level never move to close state.
->
-> Introduces a catch-up condition at subflow close time to move the
-> MPTCP socket to close, too.
->
-> That additionally allow removing similar existing inside the worker.
->
-> Finally, allow some additional timeout for plain ESTABLISHED mptcp
-> sockets, as the protocol allows creating new subflows even at that
-> point and making the connection functional again.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/430
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> v2 -> v3:
-> - fix integer overflow in mptcp_close_tout_expired()
-> v1 -> v2:
-> - really set the close timeout as need.
-> ---
-> net/mptcp/protocol.c | 84 +++++++++++++++++++++-----------------------
-> net/mptcp/protocol.h | 20 +++++++++++
-> net/mptcp/subflow.c  |  1 +
-> 3 files changed, 62 insertions(+), 43 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 33093ed87077..80d06cab8bc7 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -886,6 +886,7 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
-> 	mptcp_subflow_ctx(ssk)->subflow_id = msk->subflow_id++;
-> 	mptcp_sockopt_sync_locked(msk, ssk);
-> 	mptcp_subflow_joined(msk, ssk);
-> +	mptcp_stop_tout_timer(sk);
-> 	return true;
-> }
->
-> @@ -2363,18 +2364,15 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-> 	bool dispose_it, need_push = false;
->
-> 	/* If the first subflow moved to a close state before accept, e.g. due
-> -	 * to an incoming reset, mptcp either:
-> -	 * - if either the subflow or the msk are dead, destroy the context
-> -	 *   (the subflow socket is deleted by inet_child_forget) and the msk
-> -	 * - otherwise do nothing at the moment and take action at accept and/or
-> -	 *   listener shutdown - user-space must be able to accept() the closed
-> -	 *   socket.
-> +	 * to an incoming reset or listener shoutdown, the subflow socket is
+Yes, the idea is to add an additional sysctl. I guess we could add even
+a sockopt (MPTCP_USER_TIMEOUT) to cap the above.
 
-'shutdown'
+I did not include that here, because I intended to keep this change
+small, and the sysctl would add a bit more diffstat noise.
 
-> +	 * already deleted by inet_child_forget() the mptcp socket can't survive
-> +	 * too.
-> 	 */
-> -	if (msk->in_accept_queue && msk->first == ssk) {
-> -		if (!sock_flag(sk, SOCK_DEAD) && !sock_flag(ssk, SOCK_DEAD))
-> -			return;
-> -
-> +	if (msk->in_accept_queue && msk->first == ssk &&
-> +	    (sock_flag(sk, SOCK_DEAD) || sock_flag(ssk, SOCK_DEAD))) {
-> 		/* ensure later check in mptcp_worker() will dispose the msk */
-> +		inet_csk(sk)->icsk_mtup.probe_timestamp = tcp_jiffies32 -
-> +							  (TCP_TIMEWAIT_LEN + 1);
-> 		sock_set_flag(sk, SOCK_DEAD);
-> 		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
-> 		mptcp_subflow_drop_ctx(ssk);
-> @@ -2437,6 +2435,22 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-> out:
-> 	if (need_push)
-> 		__mptcp_push_pending(sk, 0);
-> +
-> +	/* Catch every 'all subflows closed' scenario, including peers silently
-> +	 * closing them, e.g. due to timeout.
-> +	 * For established sockets, allow an additional timeout before closing,
-> +	 * as the protocol can still create more subflows.
-> +	 */
-> +	if (list_is_singular(&msk->conn_list) && msk->first &&
-> +	    inet_sk_state_load(msk->first) == TCP_CLOSE) {
-> +		if (sk->sk_state != TCP_ESTABLISHED ||
-> +		    msk->in_accept_queue || sock_flag(sk, SOCK_DEAD)) {
-> +			inet_sk_state_store(sk, TCP_CLOSE);
-> +			mptcp_close_wake_up(sk);
-> +		} else {
-> +			mptcp_start_tout_timer(sk);
-> +		}
-> +	}
-> }
->
-> void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-> @@ -2480,23 +2494,14 @@ static void __mptcp_close_subflow(struct sock *sk)
->
-> }
->
-> -static bool mptcp_should_close(const struct sock *sk)
-> +static bool mptcp_close_tout_expired(const struct sock *sk)
-> {
-> -	s32 delta = tcp_jiffies32 - inet_csk(sk)->icsk_mtup.probe_timestamp;
-> -	struct mptcp_subflow_context *subflow;
-> -
-> -	if (delta >= TCP_TIMEWAIT_LEN || mptcp_sk(sk)->in_accept_queue)
-> -		return true;
-> +	if (!inet_csk(sk)->icsk_mtup.probe_timestamp ||
-> +	    sk->sk_state == TCP_CLOSE)
-> +		return false;
->
-> -	/* if all subflows are in closed status don't bother with additional
-> -	 * timeout
-> -	 */
-> -	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
-> -		if (inet_sk_state_load(mptcp_subflow_tcp_sock(subflow)) !=
-> -		    TCP_CLOSE)
-> -			return false;
-> -	}
-> -	return true;
-> +	return time_after32(tcp_jiffies32,
-> +		  inet_csk(sk)->icsk_mtup.probe_timestamp + TCP_TIMEWAIT_LEN);
-> }
->
-> static void mptcp_check_fastclose(struct mptcp_sock *msk)
-> @@ -2635,7 +2640,7 @@ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
-> 	struct sock *sk = (struct sock *)msk;
-> 	unsigned long timeout, close_timeout;
->
-> -	if (!fail_tout && !sock_flag(sk, SOCK_DEAD))
-> +	if (!fail_tout && !inet_csk(sk)->icsk_mtup.probe_timestamp)
-> 		return;
->
-> 	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies + TCP_TIMEWAIT_LEN;
+Cheers,
 
-RFC 8684 brings up "break-before-make" scenarios in a few places, I think 
-one use case is for VM migrations. 60 seconds seems sufficient but maybe 
-not?
+Paolo
 
-There may also be scenarios with busy servers where the server-side admin 
-may want to quickly close "zero subflow" MPTCP connections immediately (or 
-with a shorter timeout) if their workload does not involve 
-break-before-make and it's more important to free up resources quickly.
-
-Given these examples, what do you think about making this timeout 
-configurable via sysctl and/or sockopt?
-
-- Mat
-
-> @@ -2643,7 +2648,7 @@ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
-> 	/* the close timeout takes precedence on the fail one, and here at least one of
-> 	 * them is active
-> 	 */
-> -	timeout = sock_flag(sk, SOCK_DEAD) ? close_timeout : fail_tout;
-> +	timeout = inet_csk(sk)->icsk_mtup.probe_timestamp ? close_timeout : fail_tout;
->
-> 	sk_reset_timer(sk, &sk->sk_timer, timeout);
-> }
-> @@ -2662,8 +2667,6 @@ static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
-> 	mptcp_subflow_reset(ssk);
-> 	WRITE_ONCE(mptcp_subflow_ctx(ssk)->fail_tout, 0);
-> 	unlock_sock_fast(ssk, slow);
-> -
-> -	mptcp_reset_tout_timer(msk, 0);
-> }
->
-> static void mptcp_do_fastclose(struct sock *sk)
-> @@ -2700,18 +2703,14 @@ static void mptcp_worker(struct work_struct *work)
-> 	if (test_and_clear_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
-> 		__mptcp_close_subflow(sk);
->
-> -	/* There is no point in keeping around an orphaned sk timedout or
-> -	 * closed, but we need the msk around to reply to incoming DATA_FIN,
-> -	 * even if it is orphaned and in FIN_WAIT2 state
-> -	 */
-> -	if (sock_flag(sk, SOCK_DEAD)) {
-> -		if (mptcp_should_close(sk))
-> -			mptcp_do_fastclose(sk);
-> +	if (mptcp_close_tout_expired(sk)) {
-> +		mptcp_do_fastclose(sk);
-> +		mptcp_close_wake_up(sk);
-> +	}
->
-> -		if (sk->sk_state == TCP_CLOSE) {
-> -			__mptcp_destroy_sock(sk);
-> -			goto unlock;
-> -		}
-> +	if (sock_flag(sk, SOCK_DEAD) && sk->sk_state == TCP_CLOSE) {
-> +		__mptcp_destroy_sock(sk);
-> +		goto unlock;
-> 	}
->
-> 	if (test_and_clear_bit(MPTCP_WORK_RTX, &msk->flags))
-> @@ -3010,7 +3009,6 @@ bool __mptcp_close(struct sock *sk, long timeout)
->
-> cleanup:
-> 	/* orphan all the subflows */
-> -	inet_csk(sk)->icsk_mtup.probe_timestamp = tcp_jiffies32;
-> 	mptcp_for_each_subflow(msk, subflow) {
-> 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> 		bool slow = lock_sock_fast_nested(ssk);
-> @@ -3047,7 +3045,7 @@ bool __mptcp_close(struct sock *sk, long timeout)
-> 		__mptcp_destroy_sock(sk);
-> 		do_cancel_work = true;
-> 	} else {
-> -		mptcp_reset_tout_timer(msk, 0);
-> +		mptcp_start_tout_timer(sk);
-> 	}
->
-> 	return do_cancel_work;
-> @@ -3111,7 +3109,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
-> 	inet_sk_state_store(sk, TCP_CLOSE);
->
-> 	mptcp_stop_rtx_timer(sk);
-> -	sk_stop_timer(sk, &sk->sk_timer);
-> +	mptcp_stop_tout_timer(sk);
->
-> 	if (msk->token)
-> 		mptcp_event(MPTCP_EVENT_CLOSED, msk, NULL, GFP_KERNEL);
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 4fcce9ad7d04..392c2f247034 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -726,6 +726,26 @@ void mptcp_get_options(const struct sk_buff *skb,
-> void mptcp_finish_connect(struct sock *sk);
-> void __mptcp_set_connected(struct sock *sk);
-> void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout);
-> +
-> +static inline void mptcp_stop_tout_timer(struct sock *sk)
-> +{
-> +	if (!inet_csk(sk)->icsk_mtup.probe_timestamp)
-> +		return;
-> +
-> +	sk_stop_timer(sk, &sk->sk_timer);
-> +	inet_csk(sk)->icsk_mtup.probe_timestamp = 0;
-> +}
-> +
-> +static inline void mptcp_start_tout_timer(struct sock *sk)
-> +{
-> +	/* avoid 0 timestamp, at that means no close timeout */
-> +	inet_csk(sk)->icsk_mtup.probe_timestamp = tcp_jiffies32;
-> +	if (!inet_csk(sk)->icsk_mtup.probe_timestamp)
-> +		inet_csk(sk)->icsk_mtup.probe_timestamp = 1;
-> +
-> +	mptcp_reset_tout_timer(mptcp_sk(sk), 0);
-> +}
-> +
-> static inline bool mptcp_is_fully_established(struct sock *sk)
-> {
-> 	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 433f290984c8..918c1a235790 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1552,6 +1552,7 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
-> 	mptcp_sock_graft(ssk, sk->sk_socket);
-> 	iput(SOCK_INODE(sf));
-> 	WRITE_ONCE(msk->allow_infinite_fallback, false);
-> +	mptcp_stop_tout_timer(sk);
-> 	return 0;
->
-> failed_unlink:
-> -- 
-> 2.41.0
->
->
->
