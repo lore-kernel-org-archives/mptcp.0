@@ -1,109 +1,186 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4C2211C
-	for <mptcp@lists.linux.dev>; Tue,  5 Sep 2023 10:49:09 +0000 (UTC)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-31de47996c8so2085633f8f.2
-        for <mptcp@lists.linux.dev>; Tue, 05 Sep 2023 03:49:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62123CA60
+	for <mptcp@lists.linux.dev>; Tue,  5 Sep 2023 11:17:26 +0000 (UTC)
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-792623074edso64995239f.1
+        for <mptcp@lists.linux.dev>; Tue, 05 Sep 2023 04:17:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1693910947; x=1694515747; darn=lists.linux.dev;
-        h=content-transfer-encoding:autocrypt:subject:from:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JIHhKGLq9kYw80lI9JRwmvfdbRSIvtR1NIaGzF3K97E=;
-        b=utOhP0dcNq+vOmMZ6VqIPRKJxvkoGYsszhmYOdQNV+02XOpOszR1tFUJJbG3Frzfal
-         aYE9HON5PPaqSsz9TBY4WTQ8jyj9L1ixJbFSjBqCfder9DAN18rRttFgFnxiGg7EvC9E
-         fzgdLihngxqjxXXvyYAPWUrm9mPmd1bUo3tLTtSVXsB8FQ6PVhUyXeJjSUZgDLCU+zup
-         WBavFvjOmfHu16SVxLESZZJE5GncyC3wKYB80PugYVnUuz+SHLjD8PqjXDq/1yY14UIS
-         p6WiMJ17Dcb69OX8n8HK70q5kqDSGxj05ANLl4Z/Gw9Sog8vfHR6JFdSIku8vLdn8oTn
-         freg==
+        d=joelfernandes.org; s=google; t=1693912646; x=1694517446; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QFr3guuenGyb3Qn0aVjZt6j2hEqhzlyTzGXreRyxiz4=;
+        b=kXyfMVuBUXV0EtsBiiBxPOJj44acyiuVUIxPGs9iHjq4CfysA257mNl3eDvQS3Qx8r
+         7mK3jfJcsV0338Ja1x9h10Jfx52RjtDQHzHJpRGvWD2b2TFUCJbZA5mx2Kavqil/04kp
+         UxLnb4E6k97YNaw/elfHgzA6nuGKvjmGFu2rc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693910947; x=1694515747;
-        h=content-transfer-encoding:autocrypt:subject:from:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JIHhKGLq9kYw80lI9JRwmvfdbRSIvtR1NIaGzF3K97E=;
-        b=LFR34IFji6LzEX/zNyHJXIVyf8N7StA/qKERLvtQ8EB7oE+1D8W414Y/JSrn01e+XR
-         pGINQQDx+ExlWmW1ewgkgKQF2V9msvZwmSqIltmaobXj1nG3En5vaZMCHsJ8fiFwDVBs
-         dGL1Io8SdIKaxJTeiCkU6+mF6MYY0H50/65rkRxafluCE+T87k8ChwaVZ5SsHgLMzAj/
-         tQ74fAXnSizWUHmxh/HzgUXYbIhj1qlQ7piMf04vQVttgjE0CZ9Ag0TGL+Bn8MiT0h33
-         z6jXrVjberQqMb9J20efm3qGWOixHh+6I1y90Shgysczuj8iAgPCg4jACp/q70yhfvX6
-         p3LQ==
-X-Gm-Message-State: AOJu0YyWR+cw2gdgXS2TxdIyRze6UwyUcfLLbiv5I4kQmqeQnOh1FfzP
-	wa/Dmhbvfiln4t6wwn8hAaa7dYBrNb/Khg1pl3U=
-X-Google-Smtp-Source: AGHT+IEI938Oyj6gwnuA7cpCwyC7Fizxx9VlttMZFEnmKAtJX4UjwdqFPWbaDKOhUuFvswDKZEiYCg==
-X-Received: by 2002:adf:f807:0:b0:319:7b55:43ff with SMTP id s7-20020adff807000000b003197b5543ffmr8583097wrp.42.1693910947298;
-        Tue, 05 Sep 2023 03:49:07 -0700 (PDT)
-Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id c18-20020adfed92000000b003143c6e09ccsm17314414wro.16.2023.09.05.03.49.06
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Sep 2023 03:49:07 -0700 (PDT)
-Message-ID: <9fdd859b-89af-4e4a-9733-13e3ab861ffa@tessares.net>
-Date: Tue, 5 Sep 2023 12:49:06 +0200
+        d=1e100.net; s=20221208; t=1693912646; x=1694517446;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QFr3guuenGyb3Qn0aVjZt6j2hEqhzlyTzGXreRyxiz4=;
+        b=EZMBA1QFMt+Nc7HVs2iM6fQYIzbS0tqHOdtC39bNpbrkE2MBEZBkr3uaoD6S+3K/Gd
+         rfTr7LBeTCYAaSOWXAuhVStk0pHGNmVGosoR+/F4VUlSCsG2xO1vfIlnlTQdLbAW4mqW
+         NX5KfeazhwUXNYdsr0VW3y8YxeiJH6mWVNB+F8F8UxoywDWKJVvpkl3yNy6n0W6Rc9LV
+         H8zoSiJQ+Woa31sVus8T+pOSvvRmrb7QVvueuhpuXG6EoWnn/9yvFilDMr1tjSjCjCJf
+         dna4LQtulnYDQrPza7IEKCtmrieEqbG8OC3qsZcBzRnHJde0IwR78pqGy4FvQCMb8ryM
+         +kjg==
+X-Gm-Message-State: AOJu0YxHVP16jVbq2chRbwIwOWM9sFSsZiGiA5W0htImWCBhzspBra9f
+	qVVSwGIN/S9jjWOpN7AFUcCKtA==
+X-Google-Smtp-Source: AGHT+IH6ATLWvEQISqMYhYAvtisc3efnqHLoJKTqFihvNieOXuIdabwt3JbtmE5N7gFtoTpoNI0Ylw==
+X-Received: by 2002:a05:6602:19c5:b0:794:eb37:b0da with SMTP id ba5-20020a05660219c500b00794eb37b0damr10714307iob.2.1693912645977;
+        Tue, 05 Sep 2023 04:17:25 -0700 (PDT)
+Received: from localhost (156.190.123.34.bc.googleusercontent.com. [34.123.190.156])
+        by smtp.gmail.com with ESMTPSA id n7-20020a6b7207000000b0077e3acd5ea1sm4221764ioc.53.2023.09.05.04.17.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Sep 2023 04:17:25 -0700 (PDT)
+Date: Tue, 5 Sep 2023 11:17:25 +0000
+From: Joel Fernandes <joel@joelfernandes.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christoph Paasch <cpaasch@apple.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	MPTCP Upstream <mptcp@lists.linux.dev>, rcu@vger.kernel.org
+Subject: Re: kmemleak handling of kfree_rcu
+Message-ID: <20230905111725.GA3737639@google.com>
+References: <F903A825-F05F-4B77-A2B5-7356282FBA2C@apple.com>
+ <ZPZKsJUPVeHCsLQB@arm.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB, fr-BE
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Subject: [Weekly meetings] no meeting today
-Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
- 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
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZPZKsJUPVeHCsLQB@arm.com>
 
-Hello,
+On Mon, Sep 04, 2023 at 10:22:56PM +0100, Catalin Marinas wrote:
+> Hi Christoph,
+> 
+> Please try not to send html, many servers block such emails.
+> 
+> Also adding the RCU list.
+> 
+> On Wed, Aug 30, 2023 at 09:37:23AM -0700, Christoph Paasch wrote:
+> > for the MPTCP upstream project, we are running syzkaller [1] continuously to
+> > qualify our kernel changes.
+> > 
+> > We found one issue with kmemleak and its handling of kfree_rcu.
+> > 
+> > Specifically, it looks like kmemleak falsely reports memory-leaks when the
+> > object is being freed by kfree_rcu after a certain grace-period.
+> > 
+> > For example, https://github.com/multipath-tcp/mptcp_net-next/issues/398#
+> > issuecomment-1584819482 shows how the syzkaller program reliably produces a
+> > kmemleak report, although the object is not leaked (we confirmed that by simply
+> > increasing MSECS_MIN_AGE to something larger than the grace-period).
+> 
+> Not sure which RCU variant you are using but most likely the false
+> positives are caused by the original reference to the object being lost
+> and the pointer added to a new location that kmemleak does not track
+> (e.g. bnode->records[] in the tree-based variant).
+> 
+> A quick attempt (untested, not even compiled):
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
 
-Just a reminder that there is no weekly meeting today.
+I am not sure if that works. Correct me if I'm wrong but the issue is that
+the allocated pointer being RCU-freed is no longer reachable by kmemleak (it
+is scanned but not reachable), however it might still be reachable via an
+RCU reader. In such a situation, it is a false-positive.
 
-Talk to you next week,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+The correct fix then should probably be to mark the object as
+kmemleak_not_leak() until a grace period elapses. This will cause the object
+to not be reported but still be scanned until eventually the lower layers
+will remove the object from kmemleak-tracking after the grace period. Per the
+docs also, that API is used to prevent false-positives.
+
+Instead what the below diff appears to do is to mark the bnode cache as a
+kmemleak object itself, which smells a bit wrong. The bnode is not an
+allocated object in the traditional sense, it is simple an internal data
+structure. That may not solve the issue as the false-positive unreachable
+object is still unreachable.
+
+Or did I misunderstand how kmemleak works? (Quite possible).
+
+thanks,
+
+ - Joel
+
+
+> index 1449cb69a0e0..681a1eb7560a 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -53,6 +53,7 @@
+>  #include <linux/sysrq.h>
+>  #include <linux/kprobes.h>
+>  #include <linux/gfp.h>
+> +#include <linux/kmemleak.h>
+>  #include <linux/oom.h>
+>  #include <linux/smpboot.h>
+>  #include <linux/jiffies.h>
+> @@ -2934,6 +2935,7 @@ drain_page_cache(struct kfree_rcu_cpu *krcp)
+>  
+>  	llist_for_each_safe(pos, n, page_list) {
+>  		free_page((unsigned long)pos);
+> +		kmemleak_free(pos);
+>  		freed++;
+>  	}
+>  
+> @@ -2962,8 +2964,16 @@ kvfree_rcu_bulk(struct kfree_rcu_cpu *krcp,
+>  					rcu_state.name, bnode->records[i], 0);
+>  
+>  				vfree(bnode->records[i]);
+> +				/* avoid false negatives */
+> +				kmemleak_erase(&bnode->records[i]);
+>  			}
+>  		}
+> +		/*
+> +		 * Avoid kmemleak false negatives when such pointers are later
+> +		 * re-allocated.
+> +		 */
+> +		for (i = 0; i < bnode->nr_records; i++)
+> +			kmemleak_erase(&bnode->records[i]);
+>  		rcu_lock_release(&rcu_callback_map);
+>  	}
+>  
+> @@ -2972,8 +2982,10 @@ kvfree_rcu_bulk(struct kfree_rcu_cpu *krcp,
+>  		bnode = NULL;
+>  	raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>  
+> -	if (bnode)
+> +	if (bnode) {
+>  		free_page((unsigned long) bnode);
+> +		kmemleak_free(bnode);
+> +	}
+>  
+>  	cond_resched_tasks_rcu_qs();
+>  }
+> @@ -3241,6 +3253,12 @@ static void fill_page_cache_func(struct work_struct *work)
+>  			free_page((unsigned long) bnode);
+>  			break;
+>  		}
+> +
+> +		/*
+> +		 * Scan the bnode->records[] array until the objects are
+> +		 * actually freed.
+> +		 */
+> +		kmemleak_alloc(bnode, PAGE_SIZE, 0, GFP_KERNEL);
+>  	}
+>  
+>  	atomic_set(&krcp->work_in_progress, 0);
+> @@ -3308,6 +3326,11 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu **krcp,
+>  			// scenarios.
+>  			bnode = (struct kvfree_rcu_bulk_data *)
+>  				__get_free_page(GFP_KERNEL | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN);
+> +			/*
+> +			 * Scan the bnode->records[] array until the objects are
+> +			 * actually freed.
+> +			 */
+> +			kmemleak_alloc(bnode, PAGE_SIZE, 0, GFP_KERNEL);
+>  			raw_spin_lock_irqsave(&(*krcp)->lock, *flags);
+>  		}
+>  
+> 
+> -- 
+> Catalin
