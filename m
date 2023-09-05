@@ -1,125 +1,220 @@
-Received: from CAN01-YT3-obe.outbound.protection.outlook.com (mail-yt3can01on2067.outbound.protection.outlook.com [40.107.115.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rn-mailsvcp-mx-lapp01.apple.com (rn-mailsvcp-mx-lapp01.apple.com [17.179.253.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56471CA7D
-	for <mptcp@lists.linux.dev>; Tue,  5 Sep 2023 17:40:43 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T7MOHHYKCSydR6Xj86QwxaafPcnC4wzbXeymr2syD31Yl42Tg8mEX0TwNdyE6R9NIAlMqE/Rr4M2lCjoVwENJM+/UdbJkMvh0ZMEWEFUCQ8RjSL7KeU35PMBhx/s46zwIXRnsK1uGIVUbLYOP/C/kOz29/lBuZYWf7k2OV+i7v63PSJxRkBjHshFq1Zfo5fZCe6fPNMgl94KbKQ9BrEUnviWo30BL9fRv6C8KwhD2u5TPWPAQWEqQTI6WCZ5luxx/hTyFAnNJ2NcmC6+1rqYksugL0m5Jt0Ee09lL4a6wi4W9/yORj9TmGspRM1H8k9k7M3OmMfUaXWp8le/yhefeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QIdTvJHir2yl4odcX5I4geQuQY1vFslcIkUzoRykE4s=;
- b=QXH9JPe4bqbVanEHFDhI00u9DwUyU3V4tCqMGyYFpxvxZl0No2ZuZTK77sQF11rWQl6HSf2R7/RwjI1k+Tb8+radIz0jwPmHMZ8swrFUFNHWCbL6vfvMaKVNJFJl6VTOuviXqOFN9n8c0F3e04sgbOEZvRYbSShomFz5/nNj49mIcjPQFiNWWfEcBoFvCXE7uq8sq57bdMynFwZwhSdn/DQ23yptu3BCqtL3pPgwSdxWGvZyaEznOqexhq5DERMwUR5/xPz/Q1qR3bxn1m5EhikLrJ7A+HBtD9pVLYLb30oH0ccQ+LbqRHaDVPgZHc1sv97Q+MzqTS6zA1LLxvyewA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=blueflag.consulting; dmarc=pass action=none
- header.from=blueflag.consulting; dkim=pass header.d=blueflag.consulting;
- arc=none
-Received: from YT4P288MB0088.CANP288.PROD.OUTLOOK.COM (2603:10b6:b01:ef::19)
- by YT3P288MB0078.CANP288.PROD.OUTLOOK.COM (2603:10b6:b01:fb::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33; Tue, 5 Sep
- 2023 17:40:41 +0000
-Received: from YT4P288MB0088.CANP288.PROD.OUTLOOK.COM
- ([fe80::72a0:f5ae:95f1:355e]) by YT4P288MB0088.CANP288.PROD.OUTLOOK.COM
- ([fe80::72a0:f5ae:95f1:355e%7]) with mapi id 15.20.6745.030; Tue, 5 Sep 2023
- 17:40:41 +0000
-From: Alexander Witte <alexander.witte@blueflag.consulting>
-To: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>
-Subject: Subflows for specific types of traffic?
-Thread-Topic: Subflows for specific types of traffic?
-Thread-Index: AQHZ4CAW3i80IyOubkaY6+1yPQXc0A==
-Date: Tue, 5 Sep 2023 17:40:41 +0000
-Message-ID: <37779FCF-34D3-449F-B966-925845496DA5@blueflag.consulting>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=blueflag.consulting;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: YT4P288MB0088:EE_|YT3P288MB0078:EE_
-x-ms-office365-filtering-correlation-id: bafb9cad-d222-4648-40ae-08dbae37396d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 1e3GdT8XTPNZguxcAp6+6XQBPDckfzLwfufbCOYpEG2/Zgherr2VMiKP27TXBVhQOKtQpn3ZCt5lmugdeQb+YLsmqpK3ZGAzlmce5q8oVDVuKy6veH5GmuSwZ+OPyJrL9mUhCGbRPPKQOpNWOs/W/rF945ud0eLOJLFPrcG9JymrB82j6leIbBsI+hrIP9l0KIlPbAPzv7V+tYjJp5BBwVkyvj/jlyTiBtTXvZak89Ho3iSdFrPMqN+4YPFsHDj/1uFKnW2iPQVv5ARJFHbPWE6uQgVab/2wQRbXB5v+ox6oCCgpjEgFjcDxnyqxjgblV9lIC38KMVtsC6Yyjyr7H3fy/gsEU0YEyyuSnFnzFhw5BmSOmsglAFKrfVg+p7Ap4uPWFXimh2jtliqdHR66SLoOQi/cy4fVw1tfsF+VR2Fs/mq7orwG5VSzj7t25ayssLe/GJi3TduoRWXlw44q9eaQBTuVBnHromZVTO8eY+x2Or4LmmmJj8/lr45sBpuOXZE3ABrrbJGkPOS29TqvcxrHXb/pWI6CKj7MLtilFz/d+QKA+iH+3TGtcycz2pKoYIj6T1aW3RfpKhjhTgX8bvSRwFGEDUtkYqmscHGEdW52l79wOISmUlk9cy/FIQZZZ9hZ1U33bxuPlJdzbJXOpg==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT4P288MB0088.CANP288.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(366004)(39830400003)(376002)(396003)(451199024)(186009)(1800799009)(4744005)(41300700001)(44832011)(76116006)(8936002)(478600001)(71200400001)(2906002)(91956017)(66946007)(5660300002)(8676002)(64756008)(316002)(66556008)(66446008)(6916009)(66476007)(6512007)(6506007)(6486002)(2616005)(38070700005)(122000001)(86362001)(33656002)(38100700002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?ZlJLVTNHN2VGNUt1VTB6bDJUODZ2WlRGK0FJOHIrVGtjUXNqYUlSdGEza21i?=
- =?utf-8?B?WkI1V1h5dHcyOWpMMVY0anRpSVJETHp5akRxWWxDQTJjb0xiN2l5dk5ETzNW?=
- =?utf-8?B?dFF4cnF3ck9YQUkvcG1haHBoek9KdnpwYklwbUZWODlvUlVqb2RpSWYxbU9L?=
- =?utf-8?B?cWlTR3ZGYVpUdHZKMlU1SmVwaVR2UTQ2cFhIbWgrZ3RnaUdoNVh5WjlJcDRE?=
- =?utf-8?B?WlhQcWJJS21CODdrakxnTlNJY0duU3M2eUQ0VEpvaEtkYlFBTUhpTTJFaEhV?=
- =?utf-8?B?YzRuZEc4ZVVBNDlVVlhBNXZoemdZS01mR3oyMHlJNVYwQnVCVTZKdkdjR1dG?=
- =?utf-8?B?M1BzYzZQUVJlZXVpVWo0M2VyZkxoci9JN1ZKZlBSdWdxS0YzaHZrSk9BM3BN?=
- =?utf-8?B?QUNxVU5ONEhicTB0OU80UkRZa3laYjlsc1daakVPb0xEMHBRMEdDT1JiMzcv?=
- =?utf-8?B?M1p6YXRlb0FFbWcxc3pKNzJsRGR0TFE3Y1hNekYyOUtCbmo0RE9CWWZXZGtM?=
- =?utf-8?B?MERhL0ZhdW9TdXJqdm5rdTAzWlk2VjBsUS9TNHBUMXc5TGs0aXJ2bkhla3BV?=
- =?utf-8?B?dkVpTnBVMDZNYVVJNlJnY1FETFRDR0VFbHB4UzFRQlptcEh1U25QNVlQMlMx?=
- =?utf-8?B?U3BwaldOMk1GRWl2RDVmbU5QaGRKclNZbzlXTjNHbkJUNTFHTyswdkNGc2Fy?=
- =?utf-8?B?RWw3MElPOFZ1VERtRlNvWE9xRm5xQmRibHR1RnNVQURwVEtKeDdCZzQwOWV0?=
- =?utf-8?B?UXVhOU9qRWNDRi9kb2ovd3dEODhON1pNZzc1SVY4T05EQWt2V0F4eEdicFZz?=
- =?utf-8?B?eU1DU1N1TWx1MWN1WnRyNERNWjdLSHdaYTlGNXJMU21FSGs1VUg3TE55YXRL?=
- =?utf-8?B?Q09saG13NTMydzd5d1ZDR3JwVkEyeGI1all0M25qN1ZmazNYdEdSNlc5dlUv?=
- =?utf-8?B?eEFLVnA2WHNUTTMySmR2Y1ZabFhCUlIyN2JzV3ZzV1JNcGlaTDZDNXExNTN2?=
- =?utf-8?B?Z0dZeEZtMlZkTlA0dCsvV0ZrTzMxUUpGb29HcjQzSzhMN29VTzdVMG1GUXRt?=
- =?utf-8?B?T3dGZk42YWdEczJhNlV6bUdsSkp6c0syWHFWbTFzYlMxVlFXQjY3WVczU1dS?=
- =?utf-8?B?R2RxSitZR3ViQ2dKSWdGVWZGcVNyS1BZbm9FTWx1cUpRMU85b1hONDA0bnRF?=
- =?utf-8?B?THRkN1I5RFI5ekRVUkpGWG5QT2loMURoQitYNGlCcEpvNTdDY2cxTHBnbnlu?=
- =?utf-8?B?THBTUEZ4Tm1QSDF0ZVNzbVZ3Qi9pVHBPT1F2M3JvakN5OVZnTDZpV093VW0w?=
- =?utf-8?B?eThJY01WMGtXdWVVd1dkZTdFREY2UTEzczVEbXNTeU9DWDI4ZXVmRVlhbVdN?=
- =?utf-8?B?R1oxRFRrRHJjWkJzak5kRFFPTnFuVEZCUXdXQ24vdEd3ZWZnQ0pBQzdjTkNU?=
- =?utf-8?B?ZzlKcWtUc1pCUHc0L1hBVXJ2Vy9YZFdFQlF1YS9ra1NZQjUyclg4SEhJZDg1?=
- =?utf-8?B?bkxmSUp4d29wRExFWnlEQk9Nc2svNkg0MHkxdUs4eXhzam1pQjBHNzVtbkFQ?=
- =?utf-8?B?aTFPNXN6Z29BQXROTEtSSnQ1dEw4L1I2eGROTVMycjRnUG9qM3NUYjZaMk00?=
- =?utf-8?B?dTRWUXdmdi9RcURDS21weFVPbU5nbjF6anRzMERqZEV2aG4yWGZKSUZhbm9I?=
- =?utf-8?B?YmZCblhXRnR2clorbURrbEVrOS9jQkNlSFBjeWRkak96cmcyYmJpcC9XR3Yv?=
- =?utf-8?B?SFd5dnZnM2V3elRQbWZPR1FOd3htQ29IcnhBekMyMEN4Z1BoeVp6RGllQks2?=
- =?utf-8?B?dFh6SUlhbjBnZzRXQlJFc1p6WTdrMFdiK2RnZzRoSTJ5bVkzcjJneTdRSS8r?=
- =?utf-8?B?SC9QSXFmWVBXMDVaY1E0NXU2OEp6akxNSFJzYkdHekxSVEpSVWo3QnVDREtu?=
- =?utf-8?B?ekJYbmVJK291bVg0blJGSjFUUXQrUzVEWG42NDdsRzVzWHRYZHZzQjR2aktU?=
- =?utf-8?B?cE9CakZYRGI3KzlsbkJ4NEhJYm00cXVzSXpROEJzdElqMGNKTVBYT1I0Ym5V?=
- =?utf-8?B?NldvanZqY2tLUDVBVUE0dVV3bWNKbjVoL2tiNEFSOXlLRTdjalNPajBHWmtv?=
- =?utf-8?B?clovclRJRzRqKzNNb0RSbTdML1FGWnB4bWszL01zYnd1RHBRZlhESWdSQUZu?=
- =?utf-8?B?QWZ1K05WQnpNaWowVFp4QnFYdFk2S0Q4ejJmcTFOK0FNZFUrWkdhcWpkZGhH?=
- =?utf-8?B?bExTNFo3eFRzTmxEczZ5Z0o4SlFIaWtxazhnZTZZR2RZZERNVkNjQVZ5WXZY?=
- =?utf-8?Q?1GVhecVe9wBmMMq7FM?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2E01C09F1D144543BCE2F84F8F47D6FB@CANP288.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4588DDDB6
+	for <mptcp@lists.linux.dev>; Tue,  5 Sep 2023 21:22:31 +0000 (UTC)
+Received: from rn-mailsvcp-mta-lapp04.rno.apple.com
+ (rn-mailsvcp-mta-lapp04.rno.apple.com [10.225.203.152])
+ by rn-mailsvcp-mx-lapp01.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0S0J002BQ7DBR320@rn-mailsvcp-mx-lapp01.rno.apple.com>
+ for mptcp@lists.linux.dev; Tue, 05 Sep 2023 14:22:24 -0700 (PDT)
+X-Proofpoint-ORIG-GUID: zgM-JZwIdtm_HClIBeMdrDlLQrFDSdml
+X-Proofpoint-GUID: zgM-JZwIdtm_HClIBeMdrDlLQrFDSdml
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.601,18.0.957
+ definitions=2023-09-05_13:2023-09-05,2023-09-05 signatures=0
+X-Proofpoint-Spam-Details: rule=interactive_user_notspam
+ policy=interactive_user score=0 phishscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 adultscore=0 suspectscore=0 bulkscore=0 mlxlogscore=641
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2309050185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com;
+ h=content-type : mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=20180706;
+ bh=cZ1LWYLgMKgWWUz1B4qqzprrusC2rKom94gBIR8IGcc=;
+ b=M18mFSoDuGsc32XJKVEIcX/HSTiNvddVnd0eOdbA+4tGQdyudVuEz3UmUJhCZ3FV9xOm
+ YxMThm5DPIkgXPzJltUW51x+wS2tqk33bFnuOMzB9fRdISYplKOGwnGHKpahVxgsKq87
+ bG8GFA/OclRoIF7StL8YQfINGX9Gm3i6jhE9mGi/P3V7bRnZ+JX4gWCSzKRElTKBu09k
+ VX5DPDao+XOEf0p+9PuxjHBTLIWIXqT9XawQ3N57LhZdOqijN0a/2mFVC7V96rq1Pt8O
+ bU7U3mYEo/rB9L9SWij01qV86NiK8uXzyQHEB4V4esTiMbsIJkKVMo8V19x0OSQP5obr tg==
+Received: from rn-mailsvcp-mmp-lapp04.rno.apple.com
+ (rn-mailsvcp-mmp-lapp04.rno.apple.com [17.179.253.17])
+ by rn-mailsvcp-mta-lapp04.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0S0J00S6M7DA2TF0@rn-mailsvcp-mta-lapp04.rno.apple.com>;
+ Tue, 05 Sep 2023 14:22:22 -0700 (PDT)
+Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp04.rno.apple.com by
+ rn-mailsvcp-mmp-lapp04.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) id <0S0J00B0072CTF00@rn-mailsvcp-mmp-lapp04.rno.apple.com>; Tue,
+ 05 Sep 2023 14:22:22 -0700 (PDT)
+X-Va-A:
+X-Va-T-CD: de104c1c1a6dd307621bf9e83f97afa5
+X-Va-E-CD: 2b3483cc51d778a83b3be5915b056b7f
+X-Va-R-CD: 0eef42286f64395431e9696be9476630
+X-Va-ID: 7eb63d4d-13ba-4bec-8a9c-4f1cebb9b4ef
+X-Va-CD: 0
+X-V-A:
+X-V-T-CD: de104c1c1a6dd307621bf9e83f97afa5
+X-V-E-CD: 2b3483cc51d778a83b3be5915b056b7f
+X-V-R-CD: 0eef42286f64395431e9696be9476630
+X-V-ID: ba938645-e90d-4088-b04b-3b2383f25a5e
+X-V-CD: 0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.601,18.0.957
+ definitions=2023-09-05_13:2023-09-05,2023-09-05 signatures=0
+Received: from smtpclient.apple ([17.192.155.113])
+ by rn-mailsvcp-mmp-lapp04.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023))
+ with ESMTPSA id <0S0J00JHB7DAK200@rn-mailsvcp-mmp-lapp04.rno.apple.com>; Tue,
+ 05 Sep 2023 14:22:22 -0700 (PDT)
+Content-type: text/plain; charset=utf-8
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-OriginatorOrg: blueflag.consulting
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: YT4P288MB0088.CANP288.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: bafb9cad-d222-4648-40ae-08dbae37396d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2023 17:40:41.2553
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4f1904ac-547a-45c3-932d-4fa0466bd2fa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dTygUoNY0mV+9zRakWmbKK9UJZAxywAs4tc+h5kQbd5h9vS6RaBgFUK/GZHUuEwTcFHzKxXrnTOpd6QgMCXW+akEhkfEILS5wAuPXv0L050YqqM7L6jcUNX0axtpBRHH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3P288MB0078
+MIME-version: 1.0 (Mac OS X Mail 16.0 \(3774.100.2.1.2\))
+Subject: Re: kmemleak handling of kfree_rcu
+From: Christoph Paasch <cpaasch@apple.com>
+In-reply-to: <ZPZKsJUPVeHCsLQB@arm.com>
+Date: Tue, 05 Sep 2023 14:22:13 -0700
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ MPTCP Upstream <mptcp@lists.linux.dev>, rcu@vger.kernel.org
+Content-transfer-encoding: quoted-printable
+Message-id: <EDE8FE3D-043D-4A14-ACF6-71FF786C0D32@apple.com>
+References: <F903A825-F05F-4B77-A2B5-7356282FBA2C@apple.com>
+ <ZPZKsJUPVeHCsLQB@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+X-Mailer: Apple Mail (2.3774.100.2.1.2)
 
-SGkhDQoNCkNvdXBsZSBxdWVzdGlvbnMgKGJyYWNlIHlvdXJzZWxmLCB0aGV5IG1pZ2h0IGJlIGR1
-bWIpOg0KDQoxLiBJZiB3ZSB3YW50IHRvIGRpcmVjdCBzcGVjaWZpYyB0eXBlcyBvZiBhcHBsaWNh
-dGlvbiB0cmFmZmljIHRvIHNwZWNpZmljIE1QVENQIHN1YmZsb3dzLCB3b3VsZCB0aGlzIGJlIHRo
-ZSByb2xlIG9mIGEgY3VzdG9tIGRldmVsb3BlZCBwYWNrZXQgc2NoZWR1bGVyPyAgSWYgc28sIEkg
-YW0gYWxzbyBhc3N1bWluZyB0aGF0IHRoZXJlIGlzIG5vIHVzZXJzcGFjZSB3YXkgdG8gbWFrZSBj
-aGFuZ2VzIG9uIHRoZSBmbHkuLj8gIFRoZSB1c2UtY2FzZSBpcyBhcm91bmQgZGVmaW5pbmcgcnVs
-ZXMgbGlrZTogInNlbmQgYWxsIEhUVFAgdHJhZmZpYyBhY3Jvc3MgdGhlc2Ugc3BlY2lmaWMgbGlu
-a3MsIHNlbmQgYWxsIE9USEVSX1RDUCB0cmFmZmljIG9uIHRob3NlIHNwZWNpZmljIGxpbmtzIg0K
-DQoyLiBBbm90aGVyIHRoaW5nIHdlIG1pZ2h0IHdhbnQgdG8gZG8gaXMgd2VpZ2h0IHRyYWZmaWMg
-YmFzZWQgb24gc29tZSBidXNpbmVzcyBjcml0ZXJpYSBpZS4g4oCcODAlIG9mIEhUVFAgdHJhZmZp
-YyBnb2VzIG9uIHN1YiBmbG93ICMxIGFuZCAyMCUgb24gc3ViIGZsb3cgIzIgKGJlY2F1c2Ugc3Vi
-ZmxvdyAjMSB1c2VzIGEgY2hlYXBlciBjZWxsdWxhciBwcm92aWRlcuKAnSkuICBGcm9tIHJlYWRp
-bmcsIGl0IGFsc28gYXBwZWFycyBsaWtlIHRoaXMgd291bGQgYmUgdGhlIGpvYiBvZiB0aGUgcGFj
-a2V0IHNjaGVkdWxlciB3aGVyZSB3ZSBjYW5ub3QgZHluYW1pY2FsbHkgbWFrZSBjaGFuZ2VzIGZy
-b20gdXNlcnNwYWNlPw0KDQpUaGFua3MgZm9yIGFueSBoZWxwIG9yIGd1aWRhbmNlIQ0KQWxleFc=
+Hello Catalin,
+
+> On Sep 4, 2023, at 2:22=E2=80=AFPM, Catalin Marinas =
+<catalin.marinas@arm.com> wrote:
+>=20
+> Hi Christoph,
+>=20
+> Please try not to send html, many servers block such emails.
+
+Sorry for that=E2=80=A6 wasn=E2=80=99t expecting my mail-client to come =
+into my way...
+
+>=20
+> Also adding the RCU list.
+>=20
+> On Wed, Aug 30, 2023 at 09:37:23AM -0700, Christoph Paasch wrote:
+>> for the MPTCP upstream project, we are running syzkaller [1] =
+continuously to
+>> qualify our kernel changes.
+>>=20
+>> We found one issue with kmemleak and its handling of kfree_rcu.
+>>=20
+>> Specifically, it looks like kmemleak falsely reports memory-leaks =
+when the
+>> object is being freed by kfree_rcu after a certain grace-period.
+>>=20
+>> For example, =
+https://github.com/multipath-tcp/mptcp_net-next/issues/398#
+>> issuecomment-1584819482 shows how the syzkaller program reliably =
+produces a
+>> kmemleak report, although the object is not leaked (we confirmed that =
+by simply
+>> increasing MSECS_MIN_AGE to something larger than the grace-period).
+>=20
+> Not sure which RCU variant you are using but most likely the false
+> positives are caused by the original reference to the object being =
+lost
+> and the pointer added to a new location that kmemleak does not track
+> (e.g. bnode->records[] in the tree-based variant).
+>=20
+> A quick attempt (untested, not even compiled):
+
+I tried out your patch. It does resolve the false positive !
+
+However, I am occasionally getting a report of a single object being =
+leaked. When I try to visualize it with `cat =
+/sys/kernel/debug/kmemleak`, the object does not show up anymore=E2=80=A6
+
+So, something else seems to be going on here as well now.
+
+
+If you have an updated patch, let me know. I can test it.
+
+
+Thanks,
+Christoph
+
+>=20
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 1449cb69a0e0..681a1eb7560a 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -53,6 +53,7 @@
+> #include <linux/sysrq.h>
+> #include <linux/kprobes.h>
+> #include <linux/gfp.h>
+> +#include <linux/kmemleak.h>
+> #include <linux/oom.h>
+> #include <linux/smpboot.h>
+> #include <linux/jiffies.h>
+> @@ -2934,6 +2935,7 @@ drain_page_cache(struct kfree_rcu_cpu *krcp)
+>=20
+> llist_for_each_safe(pos, n, page_list) {
+> free_page((unsigned long)pos);
+> + kmemleak_free(pos);
+> freed++;
+> }
+>=20
+> @@ -2962,8 +2964,16 @@ kvfree_rcu_bulk(struct kfree_rcu_cpu *krcp,
+> rcu_state.name, bnode->records[i], 0);
+>=20
+> vfree(bnode->records[i]);
+> + /* avoid false negatives */
+> + kmemleak_erase(&bnode->records[i]);
+> }
+> }
+> + /*
+> + * Avoid kmemleak false negatives when such pointers are later
+> + * re-allocated.
+> + */
+> + for (i =3D 0; i < bnode->nr_records; i++)
+> + kmemleak_erase(&bnode->records[i]);
+> rcu_lock_release(&rcu_callback_map);
+> }
+>=20
+> @@ -2972,8 +2982,10 @@ kvfree_rcu_bulk(struct kfree_rcu_cpu *krcp,
+> bnode =3D NULL;
+> raw_spin_unlock_irqrestore(&krcp->lock, flags);
+>=20
+> - if (bnode)
+> + if (bnode) {
+> free_page((unsigned long) bnode);
+> + kmemleak_free(bnode);
+> + }
+>=20
+> cond_resched_tasks_rcu_qs();
+> }
+> @@ -3241,6 +3253,12 @@ static void fill_page_cache_func(struct =
+work_struct *work)
+> free_page((unsigned long) bnode);
+> break;
+> }
+> +
+> + /*
+> + * Scan the bnode->records[] array until the objects are
+> + * actually freed.
+> + */
+> + kmemleak_alloc(bnode, PAGE_SIZE, 0, GFP_KERNEL);
+> }
+>=20
+> atomic_set(&krcp->work_in_progress, 0);
+> @@ -3308,6 +3326,11 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu =
+**krcp,
+> // scenarios.
+> bnode =3D (struct kvfree_rcu_bulk_data *)
+> __get_free_page(GFP_KERNEL | __GFP_NORETRY | __GFP_NOMEMALLOC | =
+__GFP_NOWARN);
+> + /*
+> + * Scan the bnode->records[] array until the objects are
+> + * actually freed.
+> + */
+> + kmemleak_alloc(bnode, PAGE_SIZE, 0, GFP_KERNEL);
+> raw_spin_lock_irqsave(&(*krcp)->lock, *flags);
+> }
+>=20
+>=20
+> --=20
+> Catalin
+>=20
+
