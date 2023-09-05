@@ -1,220 +1,185 @@
-Received: from rn-mailsvcp-mx-lapp01.apple.com (rn-mailsvcp-mx-lapp01.apple.com [17.179.253.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4588DDDB6
-	for <mptcp@lists.linux.dev>; Tue,  5 Sep 2023 21:22:31 +0000 (UTC)
-Received: from rn-mailsvcp-mta-lapp04.rno.apple.com
- (rn-mailsvcp-mta-lapp04.rno.apple.com [10.225.203.152])
- by rn-mailsvcp-mx-lapp01.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) with ESMTPS id <0S0J002BQ7DBR320@rn-mailsvcp-mx-lapp01.rno.apple.com>
- for mptcp@lists.linux.dev; Tue, 05 Sep 2023 14:22:24 -0700 (PDT)
-X-Proofpoint-ORIG-GUID: zgM-JZwIdtm_HClIBeMdrDlLQrFDSdml
-X-Proofpoint-GUID: zgM-JZwIdtm_HClIBeMdrDlLQrFDSdml
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.601,18.0.957
- definitions=2023-09-05_13:2023-09-05,2023-09-05 signatures=0
-X-Proofpoint-Spam-Details: rule=interactive_user_notspam
- policy=interactive_user score=0 phishscore=0 malwarescore=0 mlxscore=0
- spamscore=0 adultscore=0 suspectscore=0 bulkscore=0 mlxlogscore=641
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309050185
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com;
- h=content-type : mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=20180706;
- bh=cZ1LWYLgMKgWWUz1B4qqzprrusC2rKom94gBIR8IGcc=;
- b=M18mFSoDuGsc32XJKVEIcX/HSTiNvddVnd0eOdbA+4tGQdyudVuEz3UmUJhCZ3FV9xOm
- YxMThm5DPIkgXPzJltUW51x+wS2tqk33bFnuOMzB9fRdISYplKOGwnGHKpahVxgsKq87
- bG8GFA/OclRoIF7StL8YQfINGX9Gm3i6jhE9mGi/P3V7bRnZ+JX4gWCSzKRElTKBu09k
- VX5DPDao+XOEf0p+9PuxjHBTLIWIXqT9XawQ3N57LhZdOqijN0a/2mFVC7V96rq1Pt8O
- bU7U3mYEo/rB9L9SWij01qV86NiK8uXzyQHEB4V4esTiMbsIJkKVMo8V19x0OSQP5obr tg==
-Received: from rn-mailsvcp-mmp-lapp04.rno.apple.com
- (rn-mailsvcp-mmp-lapp04.rno.apple.com [17.179.253.17])
- by rn-mailsvcp-mta-lapp04.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) with ESMTPS id <0S0J00S6M7DA2TF0@rn-mailsvcp-mta-lapp04.rno.apple.com>;
- Tue, 05 Sep 2023 14:22:22 -0700 (PDT)
-Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp04.rno.apple.com by
- rn-mailsvcp-mmp-lapp04.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) id <0S0J00B0072CTF00@rn-mailsvcp-mmp-lapp04.rno.apple.com>; Tue,
- 05 Sep 2023 14:22:22 -0700 (PDT)
-X-Va-A:
-X-Va-T-CD: de104c1c1a6dd307621bf9e83f97afa5
-X-Va-E-CD: 2b3483cc51d778a83b3be5915b056b7f
-X-Va-R-CD: 0eef42286f64395431e9696be9476630
-X-Va-ID: 7eb63d4d-13ba-4bec-8a9c-4f1cebb9b4ef
-X-Va-CD: 0
-X-V-A:
-X-V-T-CD: de104c1c1a6dd307621bf9e83f97afa5
-X-V-E-CD: 2b3483cc51d778a83b3be5915b056b7f
-X-V-R-CD: 0eef42286f64395431e9696be9476630
-X-V-ID: ba938645-e90d-4088-b04b-3b2383f25a5e
-X-V-CD: 0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.601,18.0.957
- definitions=2023-09-05_13:2023-09-05,2023-09-05 signatures=0
-Received: from smtpclient.apple ([17.192.155.113])
- by rn-mailsvcp-mmp-lapp04.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023))
- with ESMTPSA id <0S0J00JHB7DAK200@rn-mailsvcp-mmp-lapp04.rno.apple.com>; Tue,
- 05 Sep 2023 14:22:22 -0700 (PDT)
-Content-type: text/plain; charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C680DF72
+	for <mptcp@lists.linux.dev>; Tue,  5 Sep 2023 21:43:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D08C433C9;
+	Tue,  5 Sep 2023 21:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1693950215;
+	bh=y6yALPGpEvG7wU5Khxy7hXj/PWpx5/BglwYARbcwzv4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=VqB5GisU9YYlaFNgpfGML5LmY8YXJTvpMDOyM4Mnx5+S/6y2XrqBHPQ2CTcefaks9
+	 wBxRLxCkLq6L4M2/kgwT/w4kHdaXvA+Cv0zV5ESGRg98fkEiL4nVPxoaytyNWrjrjz
+	 f7xvhI7whzoGI76l4MVgwZbyD0YY6ZvKQ6DXOmEYMb+QiVV+jYMsb+WJw6J666C4yn
+	 aX+ds1CVjvmUBH1vrtLXaiajeO+Lb1U4bMprb0yTJwKczYB33k00iNEXp2yBI4m0oi
+	 WPos8XelGc7CbdE3X6M0uiu831Lwv/XtWWhhD9EH5uZfbxDasSJcsCCiPLN7N0e6Cu
+	 Tggb5GKxfiQhg==
+Date: Tue, 5 Sep 2023 14:43:31 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v2] mptcp: add a new sysctl for make after
+ break timeout
+In-Reply-To: <dfadc0c4a9bf4649c01e09d675f4de59eb409f5d.1693841118.git.pabeni@redhat.com>
+Message-ID: <6598f7cf-3d75-3d99-2458-6c0bc8f08a51@kernel.org>
+References: <dfadc0c4a9bf4649c01e09d675f4de59eb409f5d.1693841118.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-version: 1.0 (Mac OS X Mail 16.0 \(3774.100.2.1.2\))
-Subject: Re: kmemleak handling of kfree_rcu
-From: Christoph Paasch <cpaasch@apple.com>
-In-reply-to: <ZPZKsJUPVeHCsLQB@arm.com>
-Date: Tue, 05 Sep 2023 14:22:13 -0700
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- MPTCP Upstream <mptcp@lists.linux.dev>, rcu@vger.kernel.org
-Content-transfer-encoding: quoted-printable
-Message-id: <EDE8FE3D-043D-4A14-ACF6-71FF786C0D32@apple.com>
-References: <F903A825-F05F-4B77-A2B5-7356282FBA2C@apple.com>
- <ZPZKsJUPVeHCsLQB@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>
-X-Mailer: Apple Mail (2.3774.100.2.1.2)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hello Catalin,
+On Mon, 4 Sep 2023, Paolo Abeni wrote:
 
-> On Sep 4, 2023, at 2:22=E2=80=AFPM, Catalin Marinas =
-<catalin.marinas@arm.com> wrote:
->=20
-> Hi Christoph,
->=20
-> Please try not to send html, many servers block such emails.
-
-Sorry for that=E2=80=A6 wasn=E2=80=99t expecting my mail-client to come =
-into my way...
-
->=20
-> Also adding the RCU list.
->=20
-> On Wed, Aug 30, 2023 at 09:37:23AM -0700, Christoph Paasch wrote:
->> for the MPTCP upstream project, we are running syzkaller [1] =
-continuously to
->> qualify our kernel changes.
->>=20
->> We found one issue with kmemleak and its handling of kfree_rcu.
->>=20
->> Specifically, it looks like kmemleak falsely reports memory-leaks =
-when the
->> object is being freed by kfree_rcu after a certain grace-period.
->>=20
->> For example, =
-https://github.com/multipath-tcp/mptcp_net-next/issues/398#
->> issuecomment-1584819482 shows how the syzkaller program reliably =
-produces a
->> kmemleak report, although the object is not leaked (we confirmed that =
-by simply
->> increasing MSECS_MIN_AGE to something larger than the grace-period).
->=20
-> Not sure which RCU variant you are using but most likely the false
-> positives are caused by the original reference to the object being =
-lost
-> and the pointer added to a new location that kmemleak does not track
-> (e.g. bnode->records[] in the tree-based variant).
->=20
-> A quick attempt (untested, not even compiled):
-
-I tried out your patch. It does resolve the false positive !
-
-However, I am occasionally getting a report of a single object being =
-leaked. When I try to visualize it with `cat =
-/sys/kernel/debug/kmemleak`, the object does not show up anymore=E2=80=A6
-
-So, something else seems to be going on here as well now.
-
-
-If you have an updated patch, let me know. I can test it.
-
-
-Thanks,
-Christoph
-
->=20
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 1449cb69a0e0..681a1eb7560a 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -53,6 +53,7 @@
-> #include <linux/sysrq.h>
-> #include <linux/kprobes.h>
-> #include <linux/gfp.h>
-> +#include <linux/kmemleak.h>
-> #include <linux/oom.h>
-> #include <linux/smpboot.h>
-> #include <linux/jiffies.h>
-> @@ -2934,6 +2935,7 @@ drain_page_cache(struct kfree_rcu_cpu *krcp)
->=20
-> llist_for_each_safe(pos, n, page_list) {
-> free_page((unsigned long)pos);
-> + kmemleak_free(pos);
-> freed++;
-> }
->=20
-> @@ -2962,8 +2964,16 @@ kvfree_rcu_bulk(struct kfree_rcu_cpu *krcp,
-> rcu_state.name, bnode->records[i], 0);
->=20
-> vfree(bnode->records[i]);
-> + /* avoid false negatives */
-> + kmemleak_erase(&bnode->records[i]);
-> }
-> }
-> + /*
-> + * Avoid kmemleak false negatives when such pointers are later
-> + * re-allocated.
-> + */
-> + for (i =3D 0; i < bnode->nr_records; i++)
-> + kmemleak_erase(&bnode->records[i]);
-> rcu_lock_release(&rcu_callback_map);
-> }
->=20
-> @@ -2972,8 +2982,10 @@ kvfree_rcu_bulk(struct kfree_rcu_cpu *krcp,
-> bnode =3D NULL;
-> raw_spin_unlock_irqrestore(&krcp->lock, flags);
->=20
-> - if (bnode)
-> + if (bnode) {
-> free_page((unsigned long) bnode);
-> + kmemleak_free(bnode);
-> + }
->=20
-> cond_resched_tasks_rcu_qs();
-> }
-> @@ -3241,6 +3253,12 @@ static void fill_page_cache_func(struct =
-work_struct *work)
-> free_page((unsigned long) bnode);
-> break;
-> }
+> The MPTCP protocol allows sockets with no alive subflows to stay
+> in ESTABLISHED status for and user-defined timeout, to allow for
+> later subflows creation.
+>
+> Currently such timeout is constant - TCP_TIMEWAIT_LEN. Let the
+> user-space configure them via a newly added sysctl, to better cope
+> with busy servers and simplify (make them faster) the relevant
+> pktdrill tests.
+>
+> Note that the new know does not apply to orphaned MPTCP socket
+> waiting for the data_fin handshake completion: they always wait
+> TCP_TIMEWAIT_LEN.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> v1 -> v2:
+> - add the doc for the new knob (Matttbe)
+> - fix a couple of bad/strange indentation (Matttbe)
+> ---
+> Documentation/networking/mptcp-sysctl.rst | 11 +++++++++++
+> net/mptcp/ctrl.c                          | 16 ++++++++++++++++
+> net/mptcp/protocol.c                      |  5 +++--
+> net/mptcp/protocol.h                      |  1 +
+> 4 files changed, 31 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+> index 15f1919d640c..f569129ea881 100644
+> --- a/Documentation/networking/mptcp-sysctl.rst
+> +++ b/Documentation/networking/mptcp-sysctl.rst
+> @@ -25,6 +25,17 @@ add_addr_timeout - INTEGER (seconds)
+>
+> 	Default: 120
+>
+> +close_timeout - INTEGER (seconds)
+> +	Set the make-after-break timeout: in absence of any close or
+> +        shutdown syscall, MPTCP sockets will maintain the status
+> +        unchanged for such time, after the last subflow removal, before
+> +        moving to TCP_CLOSE.
 > +
-> + /*
-> + * Scan the bnode->records[] array until the objects are
-> + * actually freed.
-> + */
-> + kmemleak_alloc(bnode, PAGE_SIZE, 0, GFP_KERNEL);
+> +	The default value matches TCP_TIMEWAIT_LEN. This is a per-namespace
+> +	sysctl.
+> +
+> +	Default: 60
+> +
+> checksum_enabled - BOOLEAN
+> 	Control whether DSS checksum can be enabled.
+>
+> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+> index c46c22a84d23..36e389326073 100644
+> --- a/net/mptcp/ctrl.c
+> +++ b/net/mptcp/ctrl.c
+> @@ -27,6 +27,7 @@ struct mptcp_pernet {
+> #endif
+>
+> 	unsigned int add_addr_timeout;
+> +	unsigned int close_timeout;
+> 	unsigned int stale_loss_cnt;
+> 	u8 mptcp_enabled;
+> 	u8 checksum_enabled;
+> @@ -65,6 +66,13 @@ unsigned int mptcp_stale_loss_cnt(const struct net *net)
+> 	return mptcp_get_pernet(net)->stale_loss_cnt;
 > }
->=20
-> atomic_set(&krcp->work_in_progress, 0);
-> @@ -3308,6 +3326,11 @@ add_ptr_to_bulk_krc_lock(struct kfree_rcu_cpu =
-**krcp,
-> // scenarios.
-> bnode =3D (struct kvfree_rcu_bulk_data *)
-> __get_free_page(GFP_KERNEL | __GFP_NORETRY | __GFP_NOMEMALLOC | =
-__GFP_NOWARN);
-> + /*
-> + * Scan the bnode->records[] array until the objects are
-> + * actually freed.
-> + */
-> + kmemleak_alloc(bnode, PAGE_SIZE, 0, GFP_KERNEL);
-> raw_spin_lock_irqsave(&(*krcp)->lock, *flags);
-> }
->=20
->=20
-> --=20
-> Catalin
->=20
+>
+> +unsigned int mptcp_close_timeout(const struct sock *sk)
+> +{
+> +	if (sock_flag(sk, SOCK_DEAD))
+> +		return TCP_TIMEWAIT_LEN;
+> +	return mptcp_get_pernet(sock_net(sk))->close_timeout;
+> +}
+> +
+> int mptcp_get_pm_type(const struct net *net)
+> {
+> 	return mptcp_get_pernet(net)->pm_type;
+> @@ -79,6 +87,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+> {
+> 	pernet->mptcp_enabled = 1;
+> 	pernet->add_addr_timeout = TCP_RTO_MAX;
+> +	pernet->close_timeout = TCP_TIMEWAIT_LEN;
+> 	pernet->checksum_enabled = 0;
+> 	pernet->allow_join_initial_addr_port = 1;
+> 	pernet->stale_loss_cnt = 4;
+> @@ -141,6 +150,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
+> 		.mode = 0644,
+> 		.proc_handler = proc_dostring,
+> 	},
+> +	{
+> +		.procname = "close_timeout",
+> +		.maxlen = sizeof(unsigned int),
+> +		.mode = 0644,
+> +		.proc_handler = proc_dointvec_jiffies,
+> +	},
+> 	{}
+> };
+>
+> @@ -163,6 +178,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+> 	table[4].data = &pernet->stale_loss_cnt;
+> 	table[5].data = &pernet->pm_type;
+> 	table[6].data = &pernet->scheduler;
+> +	table[7].data = &pernet->close_timeout;
+>
+> 	hdr = register_net_sysctl(net, MPTCP_SYSCTL_PATH, table);
+> 	if (!hdr)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 80d06cab8bc7..735ff5cda940 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2501,7 +2501,7 @@ static bool mptcp_close_tout_expired(const struct sock *sk)
+> 		return false;
+>
+> 	return time_after32(tcp_jiffies32,
+> -		  inet_csk(sk)->icsk_mtup.probe_timestamp + TCP_TIMEWAIT_LEN);
+> +		  inet_csk(sk)->icsk_mtup.probe_timestamp + mptcp_close_timeout(sk));
 
+There's some logic to also fix up in __mptcp_close_ssk()'s SOCK_DEAD code 
+path, one lingering instance of TCP_TIMEWAIT_LEN there to switch to 
+mptcp_close_timeout().
+
+- Mat
+
+> }
+>
+> static void mptcp_check_fastclose(struct mptcp_sock *msk)
+> @@ -2643,7 +2643,8 @@ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
+> 	if (!fail_tout && !inet_csk(sk)->icsk_mtup.probe_timestamp)
+> 		return;
+>
+> -	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies + TCP_TIMEWAIT_LEN;
+> +	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies +
+> +			mptcp_close_timeout(sk);
+>
+> 	/* the close timeout takes precedence on the fail one, and here at least one of
+> 	 * them is active
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 392c2f247034..1cade49205bd 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -624,6 +624,7 @@ unsigned int mptcp_get_add_addr_timeout(const struct net *net);
+> int mptcp_is_checksum_enabled(const struct net *net);
+> int mptcp_allow_join_id0(const struct net *net);
+> unsigned int mptcp_stale_loss_cnt(const struct net *net);
+> +unsigned int mptcp_close_timeout(const struct sock *sk);
+> int mptcp_get_pm_type(const struct net *net);
+> const char *mptcp_get_scheduler(const struct net *net);
+> void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
+> -- 
+> 2.41.0
+>
+>
+>
