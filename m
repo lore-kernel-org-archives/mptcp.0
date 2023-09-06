@@ -1,35 +1,38 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0836AB7
-	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 08:30:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C340237B
+	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 08:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693989033;
+	s=mimecast20190719; t=1693989234;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OO3X6HvMiAE6OIALMYRN0J+FcObSuxDsLE3a3qJ0T3w=;
-	b=EKJcHwr36MNv2Ued8uXc5KMZ8UtS6rZUxaDLG8C2FPFfl36n1PwYNkma8KhI54OTziZokU
-	SLAczwvk5xR5+TNGL1Y1+vVO1k4eLKOEnuyCTq71NeVNiIRxeq1P+k/GG2GD0MshFzodA7
-	/TxzXR47/SfvUA/sHVMKb75isOJ6i4E=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-104-tbuln4H2PwK1XUD9VsN08g-1; Wed, 06 Sep 2023 04:30:32 -0400
-X-MC-Unique: tbuln4H2PwK1XUD9VsN08g-1
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XJ00Uj3/xJcEm0IhbKqKT6QXgacLRePPVAshT1h1Ejk=;
+	b=CcEOWpMaabeBiTmFPUZEL5Uh2r6l731sc7VKShbGdWoityo3v+OFSGOJMGHz33MqsOD9KL
+	cxez1Hv7CXArWkwfyNTWTw0NFn9ZzqxydQQiVBv37df3vZWWlcA00JWjvfs0PNhjwyfsj8
+	NmBfhTzZmdg07qGPycIYhlJHKVhztPI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-133-luSImFFmPIuGV8aHyt-l9w-1; Wed, 06 Sep 2023 04:33:52 -0400
+X-MC-Unique: luSImFFmPIuGV8aHyt-l9w-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B4B3C8164E0
-	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 08:30:31 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 14BF22999B2C
+	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 08:33:52 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.224.172])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 449221121314
-	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 08:30:31 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 749991121314
+	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 08:33:51 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v5 0/2] mptcp: fix another close hang-up
-Date: Wed,  6 Sep 2023 10:30:26 +0200
-Message-ID: <cover.1693988314.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net v5 1/2] mptcp: rename timer related helper to less confusing names
+Date: Wed,  6 Sep 2023 10:30:27 +0200
+Message-ID: <45f0018cf576ab45a603c9076489780bbd74fbce.1693988314.git.pabeni@redhat.com>
+In-Reply-To: <cover.1693988314.git.pabeni@redhat.com>
+References: <cover.1693988314.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,38 +45,194 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-If the TCP subflows close silently due to timeouts, the msk socket
-can hang-up indefinitely.
+The msk socket uses to different timeout to track close related
+events and retransmissions. The existing helpers do not indicate
+clearly which timer they actually touch, making the related code
+quite confusing.
 
-Implement an additional close timeout triggered with the last subflow
-close event and move the msk to TCP_CLOSE when it fires.
+Change the existing helpers name to avoid such confusion. No
+functional change intended.
 
-Should address issues/430 and issues/431.
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 42 +++++++++++++++++++++---------------------
+ net/mptcp/protocol.h |  2 +-
+ net/mptcp/subflow.c  |  2 +-
+ 3 files changed, 23 insertions(+), 23 deletions(-)
 
-v4 -> v5:
- - let the tout always expire for dead socks (Mat)
- - fix comment type (Mat)
- - targeting net, added fixes tag
-
-v3 -> v4:
- - fix off-by-one in timer update/check (sigh, trival math is too
-   hard:/)
-
-v2 -> v3:
- - fix int overlflow in patch 2/2
-
-v1 -> v2:
- - fix timeout timer scheduling in patch 2/2 (timeout never fired on v1)
-
-Paolo Abeni (2):
-  mptcp: rename timer related helper to less confusing names
-  mptcp: fix dangling connection hang-up
-
- net/mptcp/protocol.c | 124 +++++++++++++++++++++----------------------
- net/mptcp/protocol.h |  26 ++++++++-
- net/mptcp/subflow.c  |   3 +-
- 3 files changed, 88 insertions(+), 65 deletions(-)
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e9b74295d475..b9497712eb8f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -405,7 +405,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+ 	return false;
+ }
+ 
+-static void mptcp_stop_timer(struct sock *sk)
++static void mptcp_stop_rtx_timer(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 
+@@ -911,12 +911,12 @@ static void __mptcp_flush_join_list(struct sock *sk, struct list_head *join_list
+ 	}
+ }
+ 
+-static bool mptcp_timer_pending(struct sock *sk)
++static bool mptcp_rtx_timer_pending(struct sock *sk)
+ {
+ 	return timer_pending(&inet_csk(sk)->icsk_retransmit_timer);
+ }
+ 
+-static void mptcp_reset_timer(struct sock *sk)
++static void mptcp_reset_rtx_timer(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	unsigned long tout;
+@@ -1050,10 +1050,10 @@ static void __mptcp_clean_una(struct sock *sk)
+ out:
+ 	if (snd_una == READ_ONCE(msk->snd_nxt) &&
+ 	    snd_una == READ_ONCE(msk->write_seq)) {
+-		if (mptcp_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
+-			mptcp_stop_timer(sk);
++		if (mptcp_rtx_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
++			mptcp_stop_rtx_timer(sk);
+ 	} else {
+-		mptcp_reset_timer(sk);
++		mptcp_reset_rtx_timer(sk);
+ 	}
+ }
+ 
+@@ -1626,8 +1626,8 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+ 		mptcp_push_release(ssk, &info);
+ 
+ 	/* ensure the rtx timer is running */
+-	if (!mptcp_timer_pending(sk))
+-		mptcp_reset_timer(sk);
++	if (!mptcp_rtx_timer_pending(sk))
++		mptcp_reset_rtx_timer(sk);
+ 	if (do_check_data_fin)
+ 		mptcp_check_send_data_fin(sk);
+ }
+@@ -1690,8 +1690,8 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
+ 	if (copied) {
+ 		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
+ 			 info.size_goal);
+-		if (!mptcp_timer_pending(sk))
+-			mptcp_reset_timer(sk);
++		if (!mptcp_rtx_timer_pending(sk))
++			mptcp_reset_rtx_timer(sk);
+ 
+ 		if (msk->snd_data_fin_enable &&
+ 		    msk->snd_nxt + 1 == msk->write_seq)
+@@ -2260,7 +2260,7 @@ static void mptcp_retransmit_timer(struct timer_list *t)
+ 	sock_put(sk);
+ }
+ 
+-static void mptcp_timeout_timer(struct timer_list *t)
++static void mptcp_tout_timer(struct timer_list *t)
+ {
+ 	struct sock *sk = from_timer(sk, t, sk_timer);
+ 
+@@ -2629,14 +2629,14 @@ static void __mptcp_retrans(struct sock *sk)
+ reset_timer:
+ 	mptcp_check_and_set_pending(sk);
+ 
+-	if (!mptcp_timer_pending(sk))
+-		mptcp_reset_timer(sk);
++	if (!mptcp_rtx_timer_pending(sk))
++		mptcp_reset_rtx_timer(sk);
+ }
+ 
+ /* schedule the timeout timer for the relevant event: either close timeout
+  * or mp_fail timeout. The close timeout takes precedence on the mp_fail one
+  */
+-void mptcp_reset_timeout(struct mptcp_sock *msk, unsigned long fail_tout)
++void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+ 	unsigned long timeout, close_timeout;
+@@ -2669,7 +2669,7 @@ static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
+ 	WRITE_ONCE(mptcp_subflow_ctx(ssk)->fail_tout, 0);
+ 	unlock_sock_fast(ssk, slow);
+ 
+-	mptcp_reset_timeout(msk, 0);
++	mptcp_reset_tout_timer(msk, 0);
+ }
+ 
+ static void mptcp_do_fastclose(struct sock *sk)
+@@ -2758,7 +2758,7 @@ static void __mptcp_init_sock(struct sock *sk)
+ 
+ 	/* re-use the csk retrans timer for MPTCP-level retrans */
+ 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
+-	timer_setup(&sk->sk_timer, mptcp_timeout_timer, 0);
++	timer_setup(&sk->sk_timer, mptcp_tout_timer, 0);
+ }
+ 
+ static void mptcp_ca_reset(struct sock *sk)
+@@ -2849,8 +2849,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
+ 		} else {
+ 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
+ 			tcp_send_ack(ssk);
+-			if (!mptcp_timer_pending(sk))
+-				mptcp_reset_timer(sk);
++			if (!mptcp_rtx_timer_pending(sk))
++				mptcp_reset_rtx_timer(sk);
+ 		}
+ 		break;
+ 	}
+@@ -2933,7 +2933,7 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 
+ 	might_sleep();
+ 
+-	mptcp_stop_timer(sk);
++	mptcp_stop_rtx_timer(sk);
+ 	sk_stop_timer(sk, &sk->sk_timer);
+ 	msk->pm.status = 0;
+ 	mptcp_release_sched(msk);
+@@ -3053,7 +3053,7 @@ bool __mptcp_close(struct sock *sk, long timeout)
+ 		__mptcp_destroy_sock(sk);
+ 		do_cancel_work = true;
+ 	} else {
+-		mptcp_reset_timeout(msk, 0);
++		mptcp_reset_tout_timer(msk, 0);
+ 	}
+ 
+ 	return do_cancel_work;
+@@ -3116,7 +3116,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 	mptcp_check_listen_stop(sk);
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+ 
+-	mptcp_stop_timer(sk);
++	mptcp_stop_rtx_timer(sk);
+ 	sk_stop_timer(sk, &sk->sk_timer);
+ 
+ 	if (msk->token)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 12d70ce24843..4fcce9ad7d04 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -725,7 +725,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+ 
+ void mptcp_finish_connect(struct sock *sk);
+ void __mptcp_set_connected(struct sock *sk);
+-void mptcp_reset_timeout(struct mptcp_sock *msk, unsigned long fail_tout);
++void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout);
+ static inline bool mptcp_is_fully_established(struct sock *sk)
+ {
+ 	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 2f40c23fdb0d..433f290984c8 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1226,7 +1226,7 @@ static void mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
+ 	WRITE_ONCE(subflow->fail_tout, fail_tout);
+ 	tcp_send_ack(ssk);
+ 
+-	mptcp_reset_timeout(msk, subflow->fail_tout);
++	mptcp_reset_tout_timer(msk, subflow->fail_tout);
+ }
+ 
+ static bool subflow_check_data_avail(struct sock *ssk)
 -- 
 2.41.0
 
