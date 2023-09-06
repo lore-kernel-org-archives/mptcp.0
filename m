@@ -1,331 +1,158 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AA71368
-	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 12:41:24 +0000 (UTC)
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20230906123525euoutp01aef263d18f43afc5e0f456b68b34412b~CT2m_4MNh1721017210euoutp01T;
-	Wed,  6 Sep 2023 12:35:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20230906123525euoutp01aef263d18f43afc5e0f456b68b34412b~CT2m_4MNh1721017210euoutp01T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1694003725;
-	bh=kSfDM2PxptQrTVQMPAG5rz9E3Gh0CgYjQq2vX1wh1u8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=m+6wDQ82ef/d8/4nlWMYTE9kfnIAoWlhMhdqHBBfihfqWuP8iM3eVNlzJjRaHltMU
-	 2l4lDxXybgq/aUTbfAyOFFW1c/WG3S6g0Slu0hR8E1wgIfPIBWUX5aRY9fX8h2g49x
-	 0RiNloUw+2A+/56qP9XBwg7AqfowYcMjmZDUd1vg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20230906123525eucas1p15d5663db311f0d147c190276abfe8f84~CT2mw_TAz2306723067eucas1p1U;
-	Wed,  6 Sep 2023 12:35:25 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 5D.86.37758.C0278F46; Wed,  6
-	Sep 2023 13:35:25 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20230906123524eucas1p22d0bf30fe10ce0ee7ca45eca03ef3235~CT2mJczO42726327263eucas1p29;
-	Wed,  6 Sep 2023 12:35:24 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20230906123524eusmtrp28aa6f6cde31078bfe52b8c173cbb675a~CT2mG2adp0571505715eusmtrp2L;
-	Wed,  6 Sep 2023 12:35:24 +0000 (GMT)
-X-AuditID: cbfec7f5-815ff7000002937e-38-64f8720cdaa5
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 02.16.14344.C0278F46; Wed,  6
-	Sep 2023 13:35:24 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20230906123524eusmtip2c81fad208fd37b2f2d78a8b26ceda34c~CT2ltQB-30461004610eusmtip2c;
-	Wed,  6 Sep 2023 12:35:24 +0000 (GMT)
-Received: from localhost (106.210.248.249) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Wed, 6 Sep 2023 13:35:23 +0100
-Date: Wed, 6 Sep 2023 14:35:21 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Alexey Gladkov <legion@kernel.org>
-CC: Luis Chamberlain <mcgrof@kernel.org>, Linus Torvalds
-	<torvalds@linux-foundation.org>, Joel Granados <joel.granados@gmail.com>,
-	<linux-fsdevel@vger.kernel.org>, <rds-devel@oss.oracle.com>, "David S.
- Miller" <davem@davemloft.net>, Florian Westphal <fw@strlen.de>,
-	<willy@infradead.org>, Jan Karcher <jaka@linux.ibm.com>, Wen Gu
-	<guwen@linux.alibaba.com>, Simon Horman <horms@verge.net.au>, Tony Lu
-	<tonylu@linux.alibaba.com>, <linux-wpan@vger.kernel.org>, Matthieu Baerts
-	<matthieu.baerts@tessares.net>, Christian Borntraeger
-	<borntraeger@linux.ibm.com>, <mptcp@lists.linux.dev>, Heiko Carstens
-	<hca@linux.ibm.com>, Stefan Schmidt <stefan@datenfreihafen.org>, Will Deacon
-	<will@kernel.org>, Julian Anastasov <ja@ssi.bg>,
-	<netfilter-devel@vger.kernel.org>, Joerg Reuter <jreuter@yaina.de>,
-	<linux-kernel@vger.kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
-	<linux-sctp@vger.kernel.org>, Xin Long <lucien.xin@gmail.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, <linux-hams@vger.kernel.org>, Vasily Gorbik
-	<gor@linux.ibm.com>, <coreteam@netfilter.org>, Ralf Baechle
-	<ralf@linux-mips.org>, Steffen Klassert <steffen.klassert@secunet.com>,
-	Pablo Neira Ayuso <pablo@netfilter.org>, <keescook@chromium.org>, Roopa
-	Prabhu <roopa@nvidia.com>, David Ahern <dsahern@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Jozsef Kadlecsik <kadlec@netfilter.org>, Wenjia
-	Zhang <wenjia@linux.ibm.com>, <josh@joshtriplett.org>, Alexander Aring
-	<alex.aring@gmail.com>, Nikolay Aleksandrov <razor@blackwall.org>,
-	<netdev@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-	<linux-s390@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, "D.
-	Wythe" <alibuda@linux.alibaba.com>, Eric Dumazet <edumazet@google.com>,
- <lvs-devel@vger.kernel.org>, <linux-rdma@vger.kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Iurii Zaikin <yzaikin@google.com>, Marcelo Ricardo
- Leitner <marcelo.leitner@gmail.com>, <bridge@lists.linux-foundation.org>,
- Karsten Graul <kgraul@linux.ibm.com>, Mat Martineau <martineau@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>, Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [GIT PULL] sysctl changes for v6.6-rc1
-Message-ID: <20230906123521.xrqcmr3ilpvp2ze6@localhost>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1827C1C36
+	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 14:35:31 +0000 (UTC)
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-34c5fec2a95so12078445ab.3
+        for <mptcp@lists.linux.dev>; Wed, 06 Sep 2023 07:35:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1694010931; x=1694615731; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bGlUYGV6FKGTKrHXEc/8wfyJkTzTkG8Ak90V0Yv/IDA=;
+        b=RntEhb+J3H4sF1zcP15PQhME2je4c7TYbmpHfL9g3r1ovaCEzUObNy1J3cTP82K1J7
+         AHy/tGPIF696vvz26pu8WXPCxw1d5ODKNUiLUHuaiterQjooS+E42kh9lpTG3URpQ9YG
+         3nyAaI6U4Vv7U5o4nMGeVnlIQjThT7M6UOeoE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694010931; x=1694615731;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bGlUYGV6FKGTKrHXEc/8wfyJkTzTkG8Ak90V0Yv/IDA=;
+        b=LHtDFExf/cSlIk2y4FsXcaK5GjZGXYhZRNgbCE1lTv9jc5Aui+V75lyqXLf90bYjKB
+         oBpMw+vkP/PSjnc2L7rXqfS6BrMKgGMBYehLjhi49LALDn+jD2YEWITIcQIspTrTt5lO
+         zk1vTBfkr7JpKN9h8OVazF+Q9+FWRw6tuvbKyqAUNMwmx573T+xRYqrS0STI9UeemSO6
+         NXv6Iv7+COeGJWnTMKP4hD3IIFhtq/Tfk4cX2j0joOzphFzAXI5xdHoaGnv5rshp3OhB
+         o119MUjs3ABemwqGEaE0ZAzr0nyZqX5GXxZ/9siazaSvSuzCiExjiUXiMrzQFZ+PhwdW
+         tyOg==
+X-Gm-Message-State: AOJu0Yy8EyQgNJuDpib8UNmVA/aM/Gutxy9Abh/6g3IHveG7LtWiyDp3
+	aJsixd/W4+1+kxeBZRwLgPGm1A==
+X-Google-Smtp-Source: AGHT+IHsCY3MvLSvr8Ngr8FPPEj7HK/rV7+hrLWxXlyYEoQzLi6qAJ0h6qWiBxXIAAnxESC2vbm02Q==
+X-Received: by 2002:a05:6e02:1d11:b0:349:86f6:e94a with SMTP id i17-20020a056e021d1100b0034986f6e94amr20928744ila.3.1694010930854;
+        Wed, 06 Sep 2023 07:35:30 -0700 (PDT)
+Received: from localhost (74.120.171.34.bc.googleusercontent.com. [34.171.120.74])
+        by smtp.gmail.com with ESMTPSA id b17-20020a923411000000b0034e1acce730sm3879620ila.42.2023.09.06.07.35.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Sep 2023 07:35:29 -0700 (PDT)
+Date: Wed, 6 Sep 2023 14:35:29 +0000
+From: Joel Fernandes <joel@joelfernandes.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christoph Paasch <cpaasch@apple.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	MPTCP Upstream <mptcp@lists.linux.dev>, rcu@vger.kernel.org
+Subject: Re: kmemleak handling of kfree_rcu
+Message-ID: <20230906143529.GB1127143@google.com>
+References: <F903A825-F05F-4B77-A2B5-7356282FBA2C@apple.com>
+ <ZPZKsJUPVeHCsLQB@arm.com>
+ <20230905111725.GA3737639@google.com>
+ <ZPc+HGjmY2ZC4WO3@arm.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="l5htxkzwtgg23zjg"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZPhpedWW6RwTd9Hf@example.org>
-X-Originating-IP: [106.210.248.249]
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTZxjG851zelrQmkNh+gWMbhWJA1YBcb5TcJq4eWbMLon+ITNznZwg
-	GRRtxcvYMqR4AUWr6JDikKorhRYYiFUqm1CUe7h4CzjUlYu6FgEHVcAAKxzYTPbf733f58n3
-	PH98IlIyJvQWRSt2c0qFPEZKu1Pm6pHm98TK4cig5E4ExQ1/0WBNXAG28lQBdI1Zaag1/SGE
-	fv0xBGNlh0k415xMQaHlIAE91Z1CMKcZEbRoXwrg6tNXNDiy8xEctc8H9RUngu4TnQK4qx+g
-	4VSSGCZy4mDk+CzITFUT0Hg0Fvp/yiKgxXzc9ZDuEyjpui+A8t/qKLh/9SEBdyznaHhiTaNA
-	o1OT0JPjEEBHup6CzqJ+AtTn/yZh1FAjgKa0CRIMjU8IaNP0IKg6/LsAGouShFCdMxc0hfUU
-	vGzoRZDRe4+E2+W+UD80QUDT5UEBDJ5bAjZNMwXphlICrqcMC0FfVCCErldPaeg8/lwIBxrN
-	QkjuWA6vh11h9GWfrgljTdkmxPY11SE225TAZiW2UuzoiD9bmtdOsGXah0LWXLGYzSmJZy8b
-	/NkHjnC2JD+FZmvPvqbYW3kFLo3tA1ZzoQJ9vjDCPSySi4newymXrv7afUeLJoPceSh834GL
-	Q2QiehWYitxEmAnF15+MEanIXSRhDAjrqh7T/DCE8FDFzGUQ4YkJu2DGoh1tJSdZwuQifK8r
-	4F+R0Xqb4odShG2JxWhSRTG+uPZ29pSDZgJxc2/HFHsxfviaWjf1Hsmc8cCOvoEpgyezDDtt
-	FmKSxcwKXFCpI3n2wHWZ3dQkk8w+fEF7yRVJ5GIfnDsumly7MQE4t+AgzSddhKvTOiief8D1
-	pQ+m6mCmcDY+1n8L8Yd1uNpaOy3yxPaaUiHP8/FE2flpQzrCN8YHhPxgRFh/wEnwqlU4+W73
-	tGMtvljsmEqEmTm47bkHH3QOPmXOIPm1GB85JOHVftj4qJfSoEXaN6pp36im/a8av5bhtjOn
-	6f+tA7Be5yB5DseFhf1UDhLmo3lcvCo2ilMtU3B7ZSp5rCpeESXbHhdbgly/smG8xnkNGewv
-	ZFZEiJAV+brMnb8aW5A3pYhTcFIvcd/Cl5EScaR8/3ecMm6bMj6GU1mRj4iSzhMHhNdtlzBR
-	8t3ctxy3k1POXAmRm3cicWQT2ZrllfvxrK/ujZjMlpE567asvBz0y7Etf561+Szotvs3V/px
-	ydmDs9XG8tnPdFLLl+Vh+z+KH2WCKnIUzo3GD+/c+GIkO3iBbeBsn8Ueu3d5iF/gBumjx+9U
-	7nohS4pI+l42/+TW02t/zKxNGP2ssc/0VtahBTdfyMGwPjBgx/pvAol6OuyZ4bW6inHfuXpT
-	8PJrlUdT1g6U7tofMuv9n0NjnIsS9jh8S6o898Rm2psyotZcqQ4VrZIMb8hTc/VP41OWPgse
-	KqIXH34Usp2au3TzCVtD+Fi76ZJHiiX67ZWbQ51lTunWAaujR2bJ3xiavqR9W413WkKGm0/X
-	Te1FFFH+LpZSqh3yYH9SqZL/Ax5eSy0QBQAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe1BUZRjG+845e3ZRseWSnCEamY1SgRZYbu8mUFNDHZoGo+lCpUObnECB
-	XWYXMKxmkEXJ5RJeSlkJdjWXOySwrBCl4bCAIDdh0VyYuOyaQBIid5EW1yZn+u/3Pe/zPt/7
-	fTMvB7fPZztz9omTGKlYFM8jNxAdD1uHX9okXYz2Pqeygwsdd0hoTguEkSYFC8ZWm0loq7jF
-	hmlNNoLVhkwcCrozCKhqPIyBST/KhvqccgQ9ynkW6G4vkDBZWIYga8IF5No5BOPfjrKgX/M3
-	CcfTbWFNJYGl3I2Qr5Bj0JmVANPfn8Ggpz7XcpE6DGrGDCxo+qWdAINuCIPrjQUkmJtzCMhT
-	y3EwqSZZYDyhIWC0ehoDedE9HJZLWlnQlbOGQ0mnGYMbeSYEVzJ/ZUFndTob9KotkFd1lYD5
-	jikEp6YGcOhrcoOr99cw6KqdZcFswXYYyesm4ERJHQY/H11kg6a6kg1jC7dJGM39iw2HOuvZ
-	kGH0h5VFyzCahvBXg+iKwgpE3+1qR3RhxZf0mbRegl5ecqfrSm9idINyiE3XX36BVtUk07Ul
-	7vTvk8F0TdlRkm47vULQLaWVFs+IkM47exm9s/VjfpBUkpzEuMZKZEnBvE98QMD3EQJf4Cfk
-	+/gG7nlZ4M/zCgmKZuL3pTBSr5BP+bF9Vb0oMSP4C8UpLZaG5jwVyIZDcf0o5XIvrkAbOPbc
-	84hauXGSsBZcqAv3B1hWdqAeGBSk1TSDKMW5Nsx6qEPU8K0ifN1FcN2otr7CR0xyPanuKeMj
-	duS+SF2Uq8l1xrnf2VGDhanr7MD1peZGGrF1tuUGUpW/qR+PUYYo/eketrVgR7XnjxPW5hRK
-	P2y2mDgWfpYqfshZl224HlRx5WHSOunzlD7H+PgFX1Ozq2aUhxyUTyQpn0hS/pdklT2pBq2R
-	/J/sQWnUk7iVg6mqqmlChdhlyJFJliXEJMgEfJkoQZYsjuHvlSTUIMte1OuX6i6i0okZfjPC
-	OKgZuVk6R38q70HOhFgiZniOtne3zkfb20aLUg8yUkmUNDmekTUjf8svHsOdn9krsSyZOCnK
-	J8Db38cvQOjtLwzw5TnZhiV+I7LnxoiSmDiGSWSk//ZhHBvnNEw3Mag1eJmIoTT+/voIbceo
-	3EDUptrsuOfE27gYodoWrg4TX/9sl3fR8ked+tTAOu2PuwpCU1C264htnF7CuSTYXp4dlxWy
-	c6Bf0X/tUpYp5uSOA+Sfd/K3tHgLpJHHh4vVrV/5blp4/axGnhkujB7xHN49qBGmV8QYQx+4
-	Dhue08VsZjb/sPa0yRwRa3hlv/nwW64BODqk2+PM//x9oX48NE4vPJg8E9BgVh6QyCvZbWJc
-	IFY5XOkwvhfZEjldVpNZex5LfK194e0j4rgx08xiGjPbeUTUTqLoeB33g+53d/4R2FLU/+bN
-	p8ort9nHhr3ROx7uEnVN6KRbbjv24W4PHiGLFfm441KZ6B9l6Qk3rAQAAA==
-X-CMS-MailID: 20230906123524eucas1p22d0bf30fe10ce0ee7ca45eca03ef3235
-X-Msg-Generator: CA
-X-RootMTR: 20230906115909eucas1p2fcf08f26861b318571224dad6bf5e864
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20230906115909eucas1p2fcf08f26861b318571224dad6bf5e864
-References: <ZO5Yx5JFogGi/cBo@bombadil.infradead.org>
-	<CGME20230906115909eucas1p2fcf08f26861b318571224dad6bf5e864@eucas1p2.samsung.com>
-	<ZPhpedWW6RwTd9Hf@example.org>
+In-Reply-To: <ZPc+HGjmY2ZC4WO3@arm.com>
 
---l5htxkzwtgg23zjg
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Catalin,
 
-On Wed, Sep 06, 2023 at 01:58:49PM +0200, Alexey Gladkov wrote:
-> On Tue, Aug 29, 2023 at 01:44:55PM -0700, Luis Chamberlain wrote:
-> > The following changes since commit 06c2afb862f9da8dc5efa4b6076a0e48c3fb=
-aaa5:
-> >=20
-> >   Linux 6.5-rc1 (2023-07-09 13:53:13 -0700)
-> >=20
-> > are available in the Git repository at:
-> >=20
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git/ tags/=
-sysctl-6.6-rc1
-> >=20
-> > for you to fetch changes up to 53f3811dfd5e39507ee3aaea1be09aabce8f9c98:
-> >=20
-> >   sysctl: Use ctl_table_size as stopping criteria for list macro (2023-=
-08-15 15:26:18 -0700)
-> >=20
-> > ----------------------------------------------------------------
-> > sysctl-6.6-rc1
-> >=20
-> > Long ago we set out to remove the kitchen sink on kernel/sysctl.c array=
-s and
-> > placings sysctls to their own sybsystem or file to help avoid merge con=
-flicts.
-> > Matthew Wilcox pointed out though that if we're going to do that we mig=
-ht as
-> > well also *save* space while at it and try to remove the extra last sys=
-ctl
-> > entry added at the end of each array, a sentintel, instead of bloating =
-the
-> > kernel by adding a new sentinel with each array moved.
-> >=20
-> > Doing that was not so trivial, and has required slowing down the moves =
-of
-> > kernel/sysctl.c arrays and measuring the impact on size by each new mov=
-e.
-> >=20
-> > The complex part of the effort to help reduce the size of each sysctl i=
-s being
-> > done by the patient work of el se=F1or Don Joel Granados. A lot of this=
- is truly
-> > painful code refactoring and testing and then trying to measure the sav=
-ings of
-> > each move and removing the sentinels. Although Joel already has code wh=
-ich does
-> > most of this work, experience with sysctl moves in the past shows is we=
- need to
-> > be careful due to the slew of odd build failures that are possible due =
-to the
-> > amount of random Kconfig options sysctls use.
-> >=20
-> > To that end Joel's work is split by first addressing the major housekee=
-ping
-> > needed to remove the sentinels, which is part of this merge request. Th=
-e rest
-> > of the work to actually remove the sentinels will be done later in futu=
-re
-> > kernel releases.
->=20
-> This is very interesting for me. I'm also refactoring sysctl based on
-> discussion with Linus a while ago.
->=20
-> Could you please add me to the Cc in the next patches?
-I just sent the next batch for this set for review. You can see it here
-https://lore.kernel.org/all/20230906-jag-sysctl_remove_empty_elem_arch-v1-0=
--3935d4854248@samsung.com/
-Will add you for the next ones.
+On Tue, Sep 05, 2023 at 03:41:32PM +0100, Catalin Marinas wrote:
+> On Tue, Sep 05, 2023 at 11:17:25AM +0000, Joel Fernandes wrote:
+> > On Mon, Sep 04, 2023 at 10:22:56PM +0100, Catalin Marinas wrote:
+> > > On Wed, Aug 30, 2023 at 09:37:23AM -0700, Christoph Paasch wrote:
+> > > > for the MPTCP upstream project, we are running syzkaller [1] continuously to
+> > > > qualify our kernel changes.
+> > > > 
+> > > > We found one issue with kmemleak and its handling of kfree_rcu.
+> > > > 
+> > > > Specifically, it looks like kmemleak falsely reports memory-leaks when the
+> > > > object is being freed by kfree_rcu after a certain grace-period.
+> > > > 
+> > > > For example, https://github.com/multipath-tcp/mptcp_net-next/issues/398#
+> > > > issuecomment-1584819482 shows how the syzkaller program reliably produces a
+> > > > kmemleak report, although the object is not leaked (we confirmed that by simply
+> > > > increasing MSECS_MIN_AGE to something larger than the grace-period).
+> > > 
+> > > Not sure which RCU variant you are using but most likely the false
+> > > positives are caused by the original reference to the object being lost
+> > > and the pointer added to a new location that kmemleak does not track
+> > > (e.g. bnode->records[] in the tree-based variant).
+> > > 
+> > > A quick attempt (untested, not even compiled):
+> > > 
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > 
+> > I am not sure if that works. Correct me if I'm wrong but the issue is that
+> > the allocated pointer being RCU-freed is no longer reachable by kmemleak (it
+> > is scanned but not reachable), however it might still be reachable via an
+> > RCU reader. In such a situation, it is a false-positive.
+> 
+> Yes, with a small correction that the object being RCU-freed is not
+> scanned if it cannot be reached by kmemleak (unless explicitly marked as
+> not a leak).
 
-Best
+Yes I used wrong wording. I meant it is added to the kmemleak rbtree as
+something that needs to be reachable, but cannot be reached. Hopefully that
+makes sense.
 
->=20
-> > At first I was only going to send his first 7 patches of his patch seri=
-es,
-> > posted 1 month ago, but in retrospect due to the testing the changes ha=
-ve
-> > received in linux-next and the minor changes they make this goes with t=
-he
-> > entire set of patches Joel had planned: just sysctl house keeping. Ther=
-e are
-> > networking changes but these are part of the house keeping too.
-> >=20
-> > The preliminary math is showing this will all help reduce the overall b=
-uild
-> > time size of the kernel and run time memory consumed by the kernel by a=
-bout
-> > ~64 bytes per array where we are able to remove each sentinel in the fu=
-ture.
-> > That also means there is no more bloating the kernel with the extra ~64=
- bytes
-> > per array moved as no new sentinels are created.
-> >=20
-> > Most of this has been in linux-next for about a month, the last 7 patch=
-es took
-> > a minor refresh 2 week ago based on feedback.
-> >=20
-> > ----------------------------------------------------------------
-> > Joel Granados (14):
-> >       sysctl: Prefer ctl_table_header in proc_sysctl
-> >       sysctl: Use ctl_table_header in list_for_each_table_entry
-> >       sysctl: Add ctl_table_size to ctl_table_header
-> >       sysctl: Add size argument to init_header
-> >       sysctl: Add a size arg to __register_sysctl_table
-> >       sysctl: Add size to register_sysctl
-> >       sysctl: Add size arg to __register_sysctl_init
-> >       sysctl: Add size to register_net_sysctl function
-> >       ax.25: Update to register_net_sysctl_sz
-> >       netfilter: Update to register_net_sysctl_sz
-> >       networking: Update to register_net_sysctl_sz
-> >       vrf: Update to register_net_sysctl_sz
-> >       sysctl: SIZE_MAX->ARRAY_SIZE in register_net_sysctl
-> >       sysctl: Use ctl_table_size as stopping criteria for list macro
-> >=20
-> >  arch/arm64/kernel/armv8_deprecated.c    |  2 +-
-> >  arch/s390/appldata/appldata_base.c      |  2 +-
-> >  drivers/net/vrf.c                       |  3 +-
-> >  fs/proc/proc_sysctl.c                   | 90 +++++++++++++++++--------=
---------
-> >  include/linux/sysctl.h                  | 31 +++++++++---
-> >  include/net/ipv6.h                      |  2 +
-> >  include/net/net_namespace.h             | 10 ++--
-> >  ipc/ipc_sysctl.c                        |  4 +-
-> >  ipc/mq_sysctl.c                         |  4 +-
-> >  kernel/ucount.c                         |  5 +-
-> >  net/ax25/sysctl_net_ax25.c              |  3 +-
-> >  net/bridge/br_netfilter_hooks.c         |  3 +-
-> >  net/core/neighbour.c                    |  8 ++-
-> >  net/core/sysctl_net_core.c              |  3 +-
-> >  net/ieee802154/6lowpan/reassembly.c     |  8 ++-
-> >  net/ipv4/devinet.c                      |  3 +-
-> >  net/ipv4/ip_fragment.c                  |  3 +-
-> >  net/ipv4/route.c                        |  8 ++-
-> >  net/ipv4/sysctl_net_ipv4.c              |  3 +-
-> >  net/ipv4/xfrm4_policy.c                 |  3 +-
-> >  net/ipv6/addrconf.c                     |  3 +-
-> >  net/ipv6/icmp.c                         |  5 ++
-> >  net/ipv6/netfilter/nf_conntrack_reasm.c |  3 +-
-> >  net/ipv6/reassembly.c                   |  3 +-
-> >  net/ipv6/route.c                        |  9 ++++
-> >  net/ipv6/sysctl_net_ipv6.c              | 16 ++++--
-> >  net/ipv6/xfrm6_policy.c                 |  3 +-
-> >  net/mpls/af_mpls.c                      |  6 ++-
-> >  net/mptcp/ctrl.c                        |  3 +-
-> >  net/netfilter/ipvs/ip_vs_ctl.c          |  8 ++-
-> >  net/netfilter/ipvs/ip_vs_lblc.c         | 10 ++--
-> >  net/netfilter/ipvs/ip_vs_lblcr.c        | 10 ++--
-> >  net/netfilter/nf_conntrack_standalone.c |  4 +-
-> >  net/netfilter/nf_log.c                  |  7 +--
-> >  net/rds/tcp.c                           |  3 +-
-> >  net/sctp/sysctl.c                       |  4 +-
-> >  net/smc/smc_sysctl.c                    |  3 +-
-> >  net/sysctl_net.c                        | 26 +++++++---
-> >  net/unix/sysctl_net_unix.c              |  3 +-
-> >  net/xfrm/xfrm_sysctl.c                  |  8 ++-
-> >  40 files changed, 222 insertions(+), 113 deletions(-)
->=20
-> --=20
-> Rgrds, legion
->=20
+> > The correct fix then should probably be to mark the object as
+> > kmemleak_not_leak() until a grace period elapses. This will cause the object
+> > to not be reported but still be scanned until eventually the lower layers
+> > will remove the object from kmemleak-tracking after the grace period. Per the
+> > docs also, that API is used to prevent false-positives.
+> 
+> This should work as well but I'd use kmemleak_ignore() instead of
+> kmemleak_not_leak(). The former, apart from masking the false positive,
+> also tells kmemleak not to scan the object. After a kvfree_rcu(), the
+> object shouldn't have any valid references to other objects, so not
+> worth scanning.
 
---=20
+Yes I am also OK with that, however to me I consider the object as alive as
+long as the grace period does not end. But I agree with you and it may not be
+worth tracking them or scanning them.
 
-Joel Granados
+> > Instead what the below diff appears to do is to mark the bnode cache as a
+> > kmemleak object itself, which smells a bit wrong. The bnode is not an
+> > allocated object in the traditional sense, it is simple an internal data
+> > structure.
+> 
+> We do this in other places for objects containing pointers and which
+> aren't tracked by kmemleak (it doesn't track page allocations as there
+> would be too many leading to lots of false positives or overlapping
+> objects - the slab itself uses the page allocator). An example where we
+> do something similar is alloc_large_system_hash(). We could add a
+> wrapper API if kmemleak_alloc() feels wrong but underlying in kmemleak
+> it would use the same mechanism for recording and scanning the bnode.
 
---l5htxkzwtgg23zjg
-Content-Type: application/pgp-signature; name="signature.asc"
+Ah I see what you did, you basically made the bnode as a kmemleak object in
+its own right, and perhaps the kmemleak detector can reach the object you
+added. That actually (though sounding like a little of a hack) would work too.
+I say hack because the object you added is not an allocated object in the
+traditional sense :-D. But as you said, there is precendent for that.
 
------BEGIN PGP SIGNATURE-----
+> > That may not solve the issue as the false-positive unreachable
+> > object is still unreachable.
+> 
+> It should solve the issue as long as the bnode is reachable from the
+> root objects (e.g. the data/bss sections; I think it is via the
+> per_cpu_ptr(&krc, cpu)->bkvcache llist_head). When the bnode is scanned,
+> it will find the pointer to the RCU-freed object and mark it as
+> referenced (not a leak).
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmT4cgkACgkQupfNUreW
-QU9+Cwv+PGlN6idIMQ5c8C0f+ZfC5w4Z+JE4kmlQCz1bP2MeE/pPTaPtyWYqpG8L
-fCfed2PJj3OndPFVZ8htgmNw43rVuzq+FLpoXoS6A+GQTwt+oFYhkmEHImix1EHY
-LgHQwS53MI/8uswyrLCgFK1wB3oWOl2iSsNmafe2N9DNQnjtNMHWA45X9zejzEu3
-yIroWgdeLsDjCje7bCASIxWYMQ0mLCcHYnHhLi9t3oLmtCxrfqz/YvUoAtuUGJId
-EsmlWY0oVOSbUnAv7/CUX6Vh0zXFxtT91spcvDNl8S1araoo1HlooVdK96Odh/Ly
-hiP9KFjySgIdD5HpsT1tSMbEgdx/r1Iv8z4HWJDcpoz4vXeBJRTrdu+H4XJcvXlB
-r9R97zixnSmMaNnAIsNh37llJAYe2pmy9I9/lXAB12U/Z/WQ47aMUZCzIHcuyX8F
-RTLOFn64GT9n7pWmFNOllKMnkTWbxeCJhzmDbbndW5RhtVt5XbxCBYL8RZ9ne9PD
-fMmoGngO
-=CaN7
------END PGP SIGNATURE-----
+Right! That's what I was missing.
 
---l5htxkzwtgg23zjg--
+> Anyway, as we trust the RCU freeing implementation not to leak data, we
+> can go with your simpler suggestion of a kmemleak_ignore() call on the
+> kvfree_rcu() path. Probably even better as the object pending to be
+> freed will no longer be scanned.
+
+Sounds good and thanks a lot Catalin! Unless you beat me to it, I'll send a
+patch out along those lines by the weekend and CC you with your suggested-by
+and the reported-by from the reporter ;-). Let me know if you have a preference.
+
+thanks,
+
+ - Joel
+
