@@ -1,82 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84663A53
-	for <mptcp@lists.linux.dev>; Tue,  5 Sep 2023 22:35:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3C8DC433C7;
-	Tue,  5 Sep 2023 22:35:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693953355;
-	bh=/GWunoocQWmqOKdlBUi2iPiIIA0I5Hl4racCvDh8qfo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=Z7JjwyJcxWEA/Hm4i/3Jp1GwrbUj+5Tq2Ij+MB0TtBnDA9oX83UZ0aKt2UqQhYxge
-	 fkr9lElJJ/FKyhTxWbRZ5DdvQujsZ3S5VJitykOFRY0y2Pf4zI+lXrU7virQsNxfiw
-	 IyA9JkIzVhXlg1tDVZmP58zsrsa7u/+Yly45+O8b/AvMsHYiBKlxJN2ff06oEBTlzO
-	 UFbxxnedAEjAa5RICEl7GhwJnoCLP1c5AA1Z5i2mmTrnJ8n2TahlcfTUu9/2NLfn8L
-	 WQWOxRMOkey3yCRztx4ZyG94dAWXAtlw+9cW05ZgrC3L86BpfsL2tjIRwh42DhmAVc
-	 gZGA5jRm4VGug==
-Date: Tue, 5 Sep 2023 15:35:49 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Alexander Witte <alexander.witte@blueflag.consulting>
-cc: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>
-Subject: Re: Subflows for specific types of traffic?
-In-Reply-To: <37779FCF-34D3-449F-B966-925845496DA5@blueflag.consulting>
-Message-ID: <2686ea81-0ae3-4c3f-92fc-59cb9275829a@kernel.org>
-References: <37779FCF-34D3-449F-B966-925845496DA5@blueflag.consulting>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0836AB7
+	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 08:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1693989033;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OO3X6HvMiAE6OIALMYRN0J+FcObSuxDsLE3a3qJ0T3w=;
+	b=EKJcHwr36MNv2Ued8uXc5KMZ8UtS6rZUxaDLG8C2FPFfl36n1PwYNkma8KhI54OTziZokU
+	SLAczwvk5xR5+TNGL1Y1+vVO1k4eLKOEnuyCTq71NeVNiIRxeq1P+k/GG2GD0MshFzodA7
+	/TxzXR47/SfvUA/sHVMKb75isOJ6i4E=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-104-tbuln4H2PwK1XUD9VsN08g-1; Wed, 06 Sep 2023 04:30:32 -0400
+X-MC-Unique: tbuln4H2PwK1XUD9VsN08g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B4B3C8164E0
+	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 08:30:31 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.172])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 449221121314
+	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 08:30:31 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net v5 0/2] mptcp: fix another close hang-up
+Date: Wed,  6 Sep 2023 10:30:26 +0200
+Message-ID: <cover.1693988314.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-918701208-1693953354=:11419"
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+If the TCP subflows close silently due to timeouts, the msk socket
+can hang-up indefinitely.
 
---0-918701208-1693953354=:11419
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Implement an additional close timeout triggered with the last subflow
+close event and move the msk to TCP_CLOSE when it fires.
 
-On Tue, 5 Sep 2023, Alexander Witte wrote:
+Should address issues/430 and issues/431.
 
-> Hi!
->
-> Couple questions (brace yourself, they might be dumb):
->
+v4 -> v5:
+ - let the tout always expire for dead socks (Mat)
+ - fix comment type (Mat)
+ - targeting net, added fixes tag
 
-Hi Alexander -
+v3 -> v4:
+ - fix off-by-one in timer update/check (sigh, trival math is too
+   hard:/)
 
-No problem, happy to help.
+v2 -> v3:
+ - fix int overlflow in patch 2/2
 
-> 1. If we want to direct specific types of application traffic to 
-> specific MPTCP subflows, would this be the role of a custom developed 
-> packet scheduler?  If so, I am also assuming that there is no userspace 
-> way to make changes on the fly..?  The use-case is around defining rules 
-> like: "send all HTTP traffic across these specific links, send all 
-> OTHER_TCP traffic on those specific links"
->
+v1 -> v2:
+ - fix timeout timer scheduling in patch 2/2 (timeout never fired on v1)
 
-Each MPTCP connection only has one data stream, so in your example a HTTP 
-connection would have an entire MPTCP connection to itself. OTHER_TCP 
-traffic would be on separate MPTCP sockets.
+Paolo Abeni (2):
+  mptcp: rename timer related helper to less confusing names
+  mptcp: fix dangling connection hang-up
 
-This sounds like a job for the path manager. The connections for HTTP 
-would presumably be using well known HTTP/HTTPS ports. If your initial 
-connection is to port 80 or 443, you could establish new subflows to your 
-designated HTTP links. Initial connections to other port numbers could go 
-to dedicated non-HTTP links.
+ net/mptcp/protocol.c | 124 +++++++++++++++++++++----------------------
+ net/mptcp/protocol.h |  26 ++++++++-
+ net/mptcp/subflow.c  |   3 +-
+ 3 files changed, 88 insertions(+), 65 deletions(-)
 
-> 2. Another thing we might want to do is weight traffic based on some 
-> business criteria ie. “80% of HTTP traffic goes on sub flow #1 and 20% 
-> on sub flow #2 (because subflow #1 uses a cheaper cellular provider”). 
-> From reading, it also appears like this would be the job of the packet 
-> scheduler where we cannot dynamically make changes from userspace?
+-- 
+2.41.0
 
-Yes, this is the packet scheduler's job. We're working on a BPF packet 
-scheduler framework that would allow customizing these per-packet 
-decisions.
-
-
-- Mat
---0-918701208-1693953354=:11419--
