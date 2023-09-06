@@ -1,51 +1,23 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1827C1C36
-	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 14:35:31 +0000 (UTC)
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-34c5fec2a95so12078445ab.3
-        for <mptcp@lists.linux.dev>; Wed, 06 Sep 2023 07:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1694010931; x=1694615731; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bGlUYGV6FKGTKrHXEc/8wfyJkTzTkG8Ak90V0Yv/IDA=;
-        b=RntEhb+J3H4sF1zcP15PQhME2je4c7TYbmpHfL9g3r1ovaCEzUObNy1J3cTP82K1J7
-         AHy/tGPIF696vvz26pu8WXPCxw1d5ODKNUiLUHuaiterQjooS+E42kh9lpTG3URpQ9YG
-         3nyAaI6U4Vv7U5o4nMGeVnlIQjThT7M6UOeoE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694010931; x=1694615731;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bGlUYGV6FKGTKrHXEc/8wfyJkTzTkG8Ak90V0Yv/IDA=;
-        b=LHtDFExf/cSlIk2y4FsXcaK5GjZGXYhZRNgbCE1lTv9jc5Aui+V75lyqXLf90bYjKB
-         oBpMw+vkP/PSjnc2L7rXqfS6BrMKgGMBYehLjhi49LALDn+jD2YEWITIcQIspTrTt5lO
-         zk1vTBfkr7JpKN9h8OVazF+Q9+FWRw6tuvbKyqAUNMwmx573T+xRYqrS0STI9UeemSO6
-         NXv6Iv7+COeGJWnTMKP4hD3IIFhtq/Tfk4cX2j0joOzphFzAXI5xdHoaGnv5rshp3OhB
-         o119MUjs3ABemwqGEaE0ZAzr0nyZqX5GXxZ/9siazaSvSuzCiExjiUXiMrzQFZ+PhwdW
-         tyOg==
-X-Gm-Message-State: AOJu0Yy8EyQgNJuDpib8UNmVA/aM/Gutxy9Abh/6g3IHveG7LtWiyDp3
-	aJsixd/W4+1+kxeBZRwLgPGm1A==
-X-Google-Smtp-Source: AGHT+IHsCY3MvLSvr8Ngr8FPPEj7HK/rV7+hrLWxXlyYEoQzLi6qAJ0h6qWiBxXIAAnxESC2vbm02Q==
-X-Received: by 2002:a05:6e02:1d11:b0:349:86f6:e94a with SMTP id i17-20020a056e021d1100b0034986f6e94amr20928744ila.3.1694010930854;
-        Wed, 06 Sep 2023 07:35:30 -0700 (PDT)
-Received: from localhost (74.120.171.34.bc.googleusercontent.com. [34.171.120.74])
-        by smtp.gmail.com with ESMTPSA id b17-20020a923411000000b0034e1acce730sm3879620ila.42.2023.09.06.07.35.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Sep 2023 07:35:29 -0700 (PDT)
-Date: Wed, 6 Sep 2023 14:35:29 +0000
-From: Joel Fernandes <joel@joelfernandes.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F38EDB
+	for <mptcp@lists.linux.dev>; Wed,  6 Sep 2023 17:15:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDBABC433C8;
+	Wed,  6 Sep 2023 17:15:52 +0000 (UTC)
+Date: Wed, 6 Sep 2023 18:15:49 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Joel Fernandes <joel@joelfernandes.org>
 Cc: Christoph Paasch <cpaasch@apple.com>,
 	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
 	MPTCP Upstream <mptcp@lists.linux.dev>, rcu@vger.kernel.org
 Subject: Re: kmemleak handling of kfree_rcu
-Message-ID: <20230906143529.GB1127143@google.com>
+Message-ID: <ZPizxVT5s9JA5MPw@arm.com>
 References: <F903A825-F05F-4B77-A2B5-7356282FBA2C@apple.com>
  <ZPZKsJUPVeHCsLQB@arm.com>
  <20230905111725.GA3737639@google.com>
  <ZPc+HGjmY2ZC4WO3@arm.com>
+ <20230906143529.GB1127143@google.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -54,105 +26,120 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZPc+HGjmY2ZC4WO3@arm.com>
+In-Reply-To: <20230906143529.GB1127143@google.com>
 
-Hi Catalin,
-
-On Tue, Sep 05, 2023 at 03:41:32PM +0100, Catalin Marinas wrote:
-> On Tue, Sep 05, 2023 at 11:17:25AM +0000, Joel Fernandes wrote:
-> > On Mon, Sep 04, 2023 at 10:22:56PM +0100, Catalin Marinas wrote:
-> > > On Wed, Aug 30, 2023 at 09:37:23AM -0700, Christoph Paasch wrote:
-> > > > for the MPTCP upstream project, we are running syzkaller [1] continuously to
-> > > > qualify our kernel changes.
-> > > > 
-> > > > We found one issue with kmemleak and its handling of kfree_rcu.
-> > > > 
-> > > > Specifically, it looks like kmemleak falsely reports memory-leaks when the
-> > > > object is being freed by kfree_rcu after a certain grace-period.
-> > > > 
-> > > > For example, https://github.com/multipath-tcp/mptcp_net-next/issues/398#
-> > > > issuecomment-1584819482 shows how the syzkaller program reliably produces a
-> > > > kmemleak report, although the object is not leaked (we confirmed that by simply
-> > > > increasing MSECS_MIN_AGE to something larger than the grace-period).
-> > > 
-> > > Not sure which RCU variant you are using but most likely the false
-> > > positives are caused by the original reference to the object being lost
-> > > and the pointer added to a new location that kmemleak does not track
-> > > (e.g. bnode->records[] in the tree-based variant).
-> > > 
-> > > A quick attempt (untested, not even compiled):
-> > > 
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+On Wed, Sep 06, 2023 at 02:35:29PM +0000, Joel Fernandes wrote:
+> On Tue, Sep 05, 2023 at 03:41:32PM +0100, Catalin Marinas wrote:
+> > On Tue, Sep 05, 2023 at 11:17:25AM +0000, Joel Fernandes wrote:
+> > > The correct fix then should probably be to mark the object as
+> > > kmemleak_not_leak() until a grace period elapses. This will cause the object
+> > > to not be reported but still be scanned until eventually the lower layers
+> > > will remove the object from kmemleak-tracking after the grace period. Per the
+> > > docs also, that API is used to prevent false-positives.
 > > 
-> > I am not sure if that works. Correct me if I'm wrong but the issue is that
-> > the allocated pointer being RCU-freed is no longer reachable by kmemleak (it
-> > is scanned but not reachable), however it might still be reachable via an
-> > RCU reader. In such a situation, it is a false-positive.
+> > This should work as well but I'd use kmemleak_ignore() instead of
+> > kmemleak_not_leak(). The former, apart from masking the false positive,
+> > also tells kmemleak not to scan the object. After a kvfree_rcu(), the
+> > object shouldn't have any valid references to other objects, so not
+> > worth scanning.
 > 
-> Yes, with a small correction that the object being RCU-freed is not
-> scanned if it cannot be reached by kmemleak (unless explicitly marked as
-> not a leak).
+> Yes I am also OK with that, however to me I consider the object as alive as
+> long as the grace period does not end. But I agree with you and it may not be
+> worth tracking them or scanning them.
 
-Yes I used wrong wording. I meant it is added to the kmemleak rbtree as
-something that needs to be reachable, but cannot be reached. Hopefully that
-makes sense.
+I guess from an RCU perspective, the object is still alive. From the
+kvfree_rcu() caller perspective though, it can disappear at any point
+after the grace period, so it shouldn't rely on its content being valid
+and referencing other objects (other than transiently e.g. in RCU list
+traversal).
 
-> > The correct fix then should probably be to mark the object as
-> > kmemleak_not_leak() until a grace period elapses. This will cause the object
-> > to not be reported but still be scanned until eventually the lower layers
-> > will remove the object from kmemleak-tracking after the grace period. Per the
-> > docs also, that API is used to prevent false-positives.
+It probably only matters if we have some very long grace periods (I'm
+not up to date with the recent RCU developments). In such cases, the
+object still being scanned could introduce false negatives. That's my
+reasoning for suggesting kmemleak_ignore() rather than
+kmemleak_not_leak().
+
+> > > Instead what the below diff appears to do is to mark the bnode cache as a
+> > > kmemleak object itself, which smells a bit wrong. The bnode is not an
+> > > allocated object in the traditional sense, it is simple an internal data
+> > > structure.
+> > 
+> > We do this in other places for objects containing pointers and which
+> > aren't tracked by kmemleak (it doesn't track page allocations as there
+> > would be too many leading to lots of false positives or overlapping
+> > objects - the slab itself uses the page allocator). An example where we
+> > do something similar is alloc_large_system_hash(). We could add a
+> > wrapper API if kmemleak_alloc() feels wrong but underlying in kmemleak
+> > it would use the same mechanism for recording and scanning the bnode.
 > 
-> This should work as well but I'd use kmemleak_ignore() instead of
-> kmemleak_not_leak(). The former, apart from masking the false positive,
-> also tells kmemleak not to scan the object. After a kvfree_rcu(), the
-> object shouldn't have any valid references to other objects, so not
-> worth scanning.
+> Ah I see what you did, you basically made the bnode as a kmemleak object in
+> its own right, and perhaps the kmemleak detector can reach the object you
+> added. That actually (though sounding like a little of a hack) would work too.
+> I say hack because the object you added is not an allocated object in the
+> traditional sense :-D. But as you said, there is precendent for that.
 
-Yes I am also OK with that, however to me I consider the object as alive as
-long as the grace period does not end. But I agree with you and it may not be
-worth tracking them or scanning them.
+Even in kmemleak.c we have create_object() for the data/bss sections.
+It's just that the kmemleak_alloc() wrapper API implies some form of
+slab allocation (though it's any allocation really, not just slab).
 
-> > Instead what the below diff appears to do is to mark the bnode cache as a
-> > kmemleak object itself, which smells a bit wrong. The bnode is not an
-> > allocated object in the traditional sense, it is simple an internal data
-> > structure.
-> 
-> We do this in other places for objects containing pointers and which
-> aren't tracked by kmemleak (it doesn't track page allocations as there
-> would be too many leading to lots of false positives or overlapping
-> objects - the slab itself uses the page allocator). An example where we
-> do something similar is alloc_large_system_hash(). We could add a
-> wrapper API if kmemleak_alloc() feels wrong but underlying in kmemleak
-> it would use the same mechanism for recording and scanning the bnode.
+> Sounds good and thanks a lot Catalin! Unless you beat me to it, I'll send a
+> patch out along those lines by the weekend and CC you with your suggested-by
+> and the reported-by from the reporter ;-). Let me know if you have a preference.
 
-Ah I see what you did, you basically made the bnode as a kmemleak object in
-its own right, and perhaps the kmemleak detector can reach the object you
-added. That actually (though sounding like a little of a hack) would work too.
-I say hack because the object you added is not an allocated object in the
-traditional sense :-D. But as you said, there is precendent for that.
+I had a patch already but got distracted by a few (real) leaks reported
+while testing it. Feel free to pick it up and change _ignore to
+_not_leak if you find that more suitable. Well, it would be good for
+Christoph to test it as I haven't managed to reproduce the false
+positive.
 
-> > That may not solve the issue as the false-positive unreachable
-> > object is still unreachable.
-> 
-> It should solve the issue as long as the bnode is reachable from the
-> root objects (e.g. the data/bss sections; I think it is via the
-> per_cpu_ptr(&krc, cpu)->bkvcache llist_head). When the bnode is scanned,
-> it will find the pointer to the RCU-freed object and mark it as
-> referenced (not a leak).
+----------------------8<--------------------------
+From b25350cb6f8a906a6164b625bfd57021190cb105 Mon Sep 17 00:00:00 2001
+From: Catalin Marinas <catalin.marinas@arm.com>
+Date: Wed, 6 Sep 2023 17:52:45 +0100
+Subject: [PATCH] rcu: kmemleak: Ignore kmemleak false positives when
+ RCU-freeing objects
 
-Right! That's what I was missing.
+Since the actual slab freeing is deferred when calling kvfree_rcu(), so
+is the kmemleak_free() callback informing kmemleak of the object
+deletion. From the perspective of the kvfree_rcu() caller, the object is
+freed and it may remove any references to it. Since kmemleak does not
+scan the tree RCU internal data storing the pointer, it will report such
+objects as leaks during the grace period.
 
-> Anyway, as we trust the RCU freeing implementation not to leak data, we
-> can go with your simpler suggestion of a kmemleak_ignore() call on the
-> kvfree_rcu() path. Probably even better as the object pending to be
-> freed will no longer be scanned.
+Tell kmemleak to ignore such objects on the kvfree_call_rcu() path. Note
+that the tiny RCU implementation does not have such issue since the
+objects can be tracked from the rcu_ctrlblk structure.
 
-Sounds good and thanks a lot Catalin! Unless you beat me to it, I'll send a
-patch out along those lines by the weekend and CC you with your suggested-by
-and the reported-by from the reporter ;-). Let me know if you have a preference.
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+---
+ kernel/rcu/tree.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-thanks,
-
- - Joel
-
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index cb1caefa8bd0..2ac39b5705df 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -31,6 +31,7 @@
+ #include <linux/bitops.h>
+ #include <linux/export.h>
+ #include <linux/completion.h>
++#include <linux/kmemleak.h>
+ #include <linux/moduleparam.h>
+ #include <linux/panic.h>
+ #include <linux/panic_notifier.h>
+@@ -3388,6 +3389,14 @@ void kvfree_call_rcu(struct rcu_head *head, void *ptr)
+ 		success = true;
+ 	}
+ 
++	/*
++	 * The kvfree_rcu() caller considers the pointer freed at this point
++	 * and likely removes any references to it. Since the the actual slab
++	 * freeing (and kmemleak_free()) is deferred, tell kmemleak to ignore
++	 * this object (no scanning or false positives reporting).
++	 */
++	kmemleak_ignore(ptr);
++
+ 	// Set timer to drain after KFREE_DRAIN_JIFFIES.
+ 	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING)
+ 		schedule_delayed_monitor_work(krcp);
