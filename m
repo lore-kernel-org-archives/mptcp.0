@@ -1,154 +1,839 @@
-Received: from CAN01-YT3-obe.outbound.protection.outlook.com (mail-yt3can01on2051.outbound.protection.outlook.com [40.107.115.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5C263A
-	for <mptcp@lists.linux.dev>; Thu,  7 Sep 2023 00:35:59 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IMqe/ZDhI5oW8zSvVPJttihq62+0F2v4U/o6U04sn6Vp2kDYg+/0reKUlX0D+YqTxcAvaLhB39QTNY4XqO0CgptS/lXqwFJesVFUKHLoJ3lZoiSog6aB+/Ev5zuDcW5zQFZjeyvtXECb9F1pY2c3/lCp82TjGh0g3ds64P1wx3qiqBngse+m1GZIEagnnzfiwgdedAToxvjpCv8LAhn2MKrVpe3uCiQ14tuAnD6lybnbDcaFpbzEe93qXBskR74yBeWY8SbNcKcWryO+cvByH9HYpznHMhq1BikJFy7kjapI5lBCTT8nDAno/8cndUovraUlR9ai1H4bsGzjZXEjSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5202Fha3Twxq6bBCE94ie9iQ3t0QOIcMIGkwdUkjC0k=;
- b=bAKzfAqvsmtowKcs7a9BzM494A06s8I8/a/XN1jYaBA9xQ2p2bx4JXQgiOkztRZLCDoKIpv7BDAWiLiWk86OKiX3E3sa/O4js2I99W03E42yb/yBRqfQLLc/OfmxmXwgDgw1bAOyfFQ9buc667o0BhFuggp+ehpEDA+SHoTyhb7hMupBXXgY/Rg9yPVM6y0Wh4pbyRWsCvijfWBakRX36IGz+tgCoLJS0B5g9GeWkSo5bURsjf+mx7KmbsSAEQZENnfyVjJ9v4m2JV2tNR5YfvYcVC67SoTv5UyYBlu8TebEB41IVSDLvel7yezloYr3ZbeQOvZJK//M6DxoEaOw+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=blueflag.consulting; dmarc=pass action=none
- header.from=blueflag.consulting; dkim=pass header.d=blueflag.consulting;
- arc=none
-Received: from YT4P288MB0088.CANP288.PROD.OUTLOOK.COM (2603:10b6:b01:ef::19)
- by YQBP288MB0162.CANP288.PROD.OUTLOOK.COM (2603:10b6:c01:77::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.34; Thu, 7 Sep
- 2023 00:35:54 +0000
-Received: from YT4P288MB0088.CANP288.PROD.OUTLOOK.COM
- ([fe80::72a0:f5ae:95f1:355e]) by YT4P288MB0088.CANP288.PROD.OUTLOOK.COM
- ([fe80::72a0:f5ae:95f1:355e%7]) with mapi id 15.20.6745.030; Thu, 7 Sep 2023
- 00:35:54 +0000
-From: Alexander Witte <alexander.witte@blueflag.consulting>
-To: Mat Martineau <martineau@kernel.org>
-CC: "mptcp@lists.linux.dev" <mptcp@lists.linux.dev>
-Subject: Re: Subflows for specific types of traffic?
-Thread-Topic: Subflows for specific types of traffic?
-Thread-Index: AQHZ4CAXQwBJ0sltNkmx6Liw76nI6LAM0mKAgAGz1YA=
-Date: Thu, 7 Sep 2023 00:35:53 +0000
-Message-ID: <97EFFF48-340C-4859-9657-ED70137C2CF7@blueflag.consulting>
-References: <37779FCF-34D3-449F-B966-925845496DA5@blueflag.consulting>
- <2686ea81-0ae3-4c3f-92fc-59cb9275829a@kernel.org>
-In-Reply-To: <2686ea81-0ae3-4c3f-92fc-59cb9275829a@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=blueflag.consulting;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: YT4P288MB0088:EE_|YQBP288MB0162:EE_
-x-ms-office365-filtering-correlation-id: 8a38f6d0-f112-4db1-0ab6-08dbaf3a64fa
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- QD7KwUfPJNdLB3viOK+l/iGMminlONeCpI/JkfMuaxTJL44wy4W9pWNqFbhp+BlIp4qgHr4FZhS3mcDbppwMif8mq+MtTbrQaalWC8LVQXBeq0pqaJd3OmFAeYMAOuom8Wyk+6GE//JGV0VUf8BNcPQeNWmw8GJtY5jXulhbjnKU0LCQymWbGSa96kbvrnfFojB8mKUmfNRbHqbwLQzR1d5bbxvcmv3+eaE07pIrsiylDimYxS1JM7ixUQj3asU3TMWnj7ZQSsWqO0iZs5oAd8bi4PoX65u8/uZ62BlYmIXDPn8XjMSPBQYqQlf6r4/tp6EEsAGAVnhgPUNzvd5uoH7qLP4fkazZzd+eq1OsxX/x9eM7qH96ugAYd3Y2qi8iljHZoQ+3vKt6yueVnOvfimiVqv9FCIYqp63WakBhwMgAPOKoJc6dSb9ZSH5DwdTDEW99OTMPwsFdgreOPf2B60qybNs4umBqWXsBBTM/mVVYkjnro2x6HcTJ4CESLqGdkFHrzJqsIfOSwRmhh1uv3cPGcclmw3jE2alYGmDfuhKLHJfAdl6y2SC/6Wc81ZEY0wdCeVIqS0/gxKp8YtZF0C7qNxIp7L5vg1uED1nrn/x93s+hjqUcTNT9kms2rkc9mclc1UaceBk9i0rA1Yzs9g==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT4P288MB0088.CANP288.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(376002)(39830400003)(136003)(451199024)(186009)(1800799009)(53546011)(6486002)(6506007)(71200400001)(38100700002)(86362001)(33656002)(38070700005)(122000001)(2616005)(2906002)(6512007)(478600001)(91956017)(41300700001)(8936002)(4326008)(8676002)(5660300002)(66556008)(316002)(66476007)(6916009)(66946007)(44832011)(64756008)(66446008)(76116006)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Y2JadmZDQ1d2TkE2QmRqNVErNkVwNVF4NlJzUEdXQmdLRWJNOXQxTlB5TCtk?=
- =?utf-8?B?ekNpYXkwMGVhVnphZHdxd2NrZzRoSFFUcCtZWG5UV3B6bHd6U2RwTlpJUk9L?=
- =?utf-8?B?K0xnL05zRVZ1NmdsY2dSenJTRDc5S1BLeDdITTB5ejlqcENvNXBYN2YvUTRE?=
- =?utf-8?B?VFZtUHE1eFZ0amo1U05SZmplZGNTaUE4SVg3Yk9CVlVCalYxcmp5a2o0bkQ2?=
- =?utf-8?B?SFNwUFlhMFpvWTNtckY4dTlPdDVKNTY0SVExUlVuaWRQUGNPK1plc3hnVi81?=
- =?utf-8?B?ZCt2dnA2LzUxN20yRnFuZTdjbHd3ekxidHZMazBOazBvVDJxU1Y1ZzdGUGtl?=
- =?utf-8?B?ekEyTnlzNDc3WEtkZmRraXlBZzIzd1hpV0VKNDdTT2Q4ZFpnVzNFSUZjQWo0?=
- =?utf-8?B?OVAzVmNLemd0bEZsQ3FrYjRjTDlYcnJGSlFFVUJOWlAxVVdpRG1BT1lDcldn?=
- =?utf-8?B?QmRoN2x5ZFp0UjNzcU4vSGpVYVd1ZDAxUWR0eGp1eSt4SFZVczNpL0YvZHNs?=
- =?utf-8?B?YVF5VnV4NWhaS3RiWUFkN0pKRjVYbVpWUGt1N3N0anpGaHA1OGd4Y0FoUTR3?=
- =?utf-8?B?MUkreWF6Mk1iVThoV2JLcGsxSHBPN3MwRVczZERZM25XaFVHd29NQkdyUjJn?=
- =?utf-8?B?TlpybncvZDZ0dG9GL2pPYURzQXBzWnhCeDdTdWRTOHA2b05BNFhud21RTWhV?=
- =?utf-8?B?WkxMUDJ6NWxxcm5hRHFjNGtocnhpaXRhTHFUdzM4SkllY0g4MmJwK2UyZ2tW?=
- =?utf-8?B?bU9vRGtNTWVjUzJINXRwVWFqVTdKSmNWOCtUMS9aNzdYVHZvSTBCUHFTM2Rt?=
- =?utf-8?B?WEtFb2FiendSNi8vVmRheXI3ZVg2UGhrOGI4RnkxS3VSM0REczJVYldnY2Vi?=
- =?utf-8?B?U3NONU5GZkx2b21nU0V6ZVFlb3dwVlJQa2gxcDFUdnlmMEhjSGpweHdSRnJK?=
- =?utf-8?B?MTVIYWNPU2dJRFhNelIrMjZPTkp3amljY2FXNHJrQ3BpQmkyY2xDZFdTeFFS?=
- =?utf-8?B?WEZ4MTY0dWsyS0QyQ0dwNmpSYzQvcE0rQ1JSZEN6OWluMXAxTXgwTkdQOTVL?=
- =?utf-8?B?SzlwRUVLQ2h6bmlLS3crZVdxVzlHSkxETy84cnVuT3NleWN0a1hzeWQ2NFVj?=
- =?utf-8?B?Qys1anJuRDhIeUx3bnN1aFZ1VWdGeUJiUGhrbkNjdXZLVFFPdEN1ZHMybkpq?=
- =?utf-8?B?T256VEZPWmdadGU1NkFkcUxHVTR2a2YySWlGRURrdmVGZ0NQbmxFM3lYbDF0?=
- =?utf-8?B?Z05jSVM3cFZ5NjFOa2k3YjNlaG5MUHN5Njc4eWp1K0l0ZG90aEVMM0J3OWhj?=
- =?utf-8?B?M1R5R0VNV1BnQnFoRHZEQzFyMUpFVllCV3V2VDZzaFp1MWd1SHU3S2l3TUZU?=
- =?utf-8?B?dDRoN2MxVUpxaHZyblFRNjc3WEtRT2dGK3RUV2VIRi8xRWJjK3QyKzVlNjlY?=
- =?utf-8?B?cVVGVmw4b0VINHhBdGQ1VUpDeWVWM3o2N2hLU3B3YnV6TkxNU2Y1OUJocDhx?=
- =?utf-8?B?bFZqQWpIbHd6aTBoNVY4RytDYW5oNEJ6S1BOeUFDV0F0NnJjL1VnS3BRZ0FE?=
- =?utf-8?B?Z0IrSWcyMEJubGNDaVlpck1MbjI4N1RwOUJ0RTJWcEdwbzhQRnE4ZHYwd1o2?=
- =?utf-8?B?RldjUThlb3NjZnVadTlXczY2OGZOVDZqWTRHaGRkb1E1eVJsaWV0MFVhQ3Z4?=
- =?utf-8?B?M0p5KzRPWnNPR1VNZ004c0FUVElVN2pYT1phaGJoc05OdEU1d0dRZ202eXJz?=
- =?utf-8?B?ZElsckpQcVNwU2lsTDd6bW1rQ25mUFRoYjhsckM4OC8zYjZ3RFEzaFdYa0tL?=
- =?utf-8?B?OGNaTC85KzZZWXcvWngxTFJsaUVKOGlIejQ4OEVSdlpSN2V5U0JZUGtibG5x?=
- =?utf-8?B?N3FNT0tub00vZitXdE5WbEIyMURYSDE2TVhvOGZab0xQNXM2Y2RFcHJoMHk0?=
- =?utf-8?B?Zk0vbHVQNy93WGdZWFA5Wlh1U1lXUVpKMUVBQkRVcWl5V2MxOGVQSDlLY2hR?=
- =?utf-8?B?QXRKNGdWbmdEdlFWWGJmVnRvU2hKRStLRFF3OUxrSG5VNGVtSmI0MFR6bm5K?=
- =?utf-8?B?Sno0UWVaNzhIbnRmczZORzA0VDdvSzhHWGlQb2hGOXdvbTVDQVZRMklLV3BO?=
- =?utf-8?B?bzMzVE5acWhKMERvVjlXWmI3SGozeWhabFllcWpzQ3FMejRTVDI0NGtHbE1G?=
- =?utf-8?B?WnJuWkFRS1pRdnluK1dlbmtzQWxFTlJFMW1jSWEwdTF6NEl6dzNPemFuU0RH?=
- =?utf-8?Q?8eKB9rripB2Snx4PjBL7OOjano4Hv4Cbx/vQv/MgYw=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <12D924C7B4F07941B2D1E3ADB17DB4C9@CANP288.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0389F14F61;
+	Fri,  8 Sep 2023 18:14:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A49D0C43140;
+	Fri,  8 Sep 2023 18:14:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694196867;
+	bh=Q+Kkr+ZYm11zYNlNwZDS25MAglr6vzBpgws0ioLKZS0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bPmryIPg5gRGnNrSjKMNpmiV0nf7CADMeJGAyovOvc+/yvIH8VxWPUdoXJ0AfpQDZ
+	 T9E7YhoVgCgiSUK0aBPCrmj0rhxhxdU8HQHY9rfklj7C16yybifgz4t+o6n2+5RPLU
+	 3B/uWEK9w5VYkqzR/JrSeshmT86e/xooT0czoJN5e3aU5pZO2NODcZfxJ5xIruR70S
+	 4rlWlSq3efVZpr9NQb8E863MySw7Ot5Ye/qv0Np8kCm0L/0RXpcT2En8lytNg2t8Ha
+	 2d4KbjQBqU07NqKFVU3T9Gi+oiYYyROGhgGKylZBhvF8woIH4ble8ytXDhsv+MRiRx
+	 O4g9QmMDFjwjA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Eric Dumazet <edumazet@google.com>,
+	syzbot <syzkaller@googlegroups.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	ericvh@kernel.org,
+	lucho@ionkov.net,
+	asmadeus@codewreck.org,
+	john.fastabend@gmail.com,
+	jakub@cloudflare.com,
+	dsahern@kernel.org,
+	matthieu.baerts@tessares.net,
+	martineau@kernel.org,
+	kevin.brodsky@arm.com,
+	alexander@mihalicyn.com,
+	leitao@debian.org,
+	lucien.xin@gmail.com,
+	dhowells@redhat.com,
+	kernelxing@tencent.com,
+	andriy.shevchenko@linux.intel.com,
+	axboe@kernel.dk,
+	asml.silence@gmail.com,
+	netdev@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	bpf@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.5 19/45] net: annotate data-races around sock->ops
+Date: Fri,  8 Sep 2023 14:13:00 -0400
+Message-Id: <20230908181327.3459042-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230908181327.3459042-1-sashal@kernel.org>
+References: <20230908181327.3459042-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: blueflag.consulting
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: YT4P288MB0088.CANP288.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a38f6d0-f112-4db1-0ab6-08dbaf3a64fa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2023 00:35:53.9847
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4f1904ac-547a-45c3-932d-4fa0466bd2fa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WUtpsjolZMdTaU1liqYqXCkkGflJ0PNdDTSTYChL+Jvxv/IJeqTongVnIERP/ORsyXNcvjbstrTZ1KWmHoSkg7ZvBUWfTzAmL6ZD9YHQRSZKYsznNyQflvURUsOt5Wni
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQBP288MB0162
-Message-ID: <20230907003553.9WgHEjyxkHrJaTk_ULVbdauK6Q80kitRVI0Wnd1d97k@z>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.5.2
+Content-Transfer-Encoding: 8bit
 
-SGkgTWF0LA0KDQpBcG9sb2dpZXMgSSBoYWQgc2VudCBhIHJlcGx5IG5vdCBpbmNsdWRpbmcgdGhl
-IG1haWxpbmcgbGlzdC4gIEFueXdheSB0aGFuayB5b3UgdmVyeSBtdWNoIGZvciB0aGUgcmVzcG9u
-c2UuICANCg0KSSB0aGluayBJIGdvdCBpdC0gYSBzaW5ndWxhciBQYXRoIE1hbmFnZXIgcGx1Z2lu
-IGNhbiBhY2NvbW1vZGF0ZSB0aGUgbWFuYWdlbWVudCBvZiBzdWJmbG93cyBmb3IgbXVsdGlwbGUg
-TVBUQ1Agc29ja2V0IGNvbm5lY3Rpb25zIChhbmQgY291bGQgY29udGFpbiBsb2dpYyBzcGVjaWZp
-YyBmb3IgZWFjaCBzb2NrZXQgY29ubmVjdGlvbikuICBXZeKAmXJlIGxvb2tpbmcgdG8gZG8gYWxs
-IHRoZSBQYXRoIE1hbmFnZW1lbnQgdXNpbmcgdGhlIG1wdGNwZCBwbHVnaW4gc3lzdGVtLg0KDQpB
-cyBmb3IgdGhlIE1QVENQIEJQRiBwYWNrZXQgc2NoZWR1bGVyLCBpcyB0aGVyZSBhbnl3aGVyZSBJ
-IGNhbiBnbyB0byByZWFkIGFib3V0IHRoaXMgZnJhbWV3b3JrIGFuZCBpdHMgRVRBPyANCg0KVGhh
-bmtzIGFnYWluLA0KQWxleFcNCg0KPiBPbiBTZXAgNSwgMjAyMywgYXQgNDozNSBQTSwgTWF0IE1h
-cnRpbmVhdSA8bWFydGluZWF1QGtlcm5lbC5vcmc+IHdyb3RlOg0KPiANCj4gT24gVHVlLCA1IFNl
-cCAyMDIzLCBBbGV4YW5kZXIgV2l0dGUgd3JvdGU6DQo+IA0KPj4gSGkhDQo+PiANCj4+IENvdXBs
-ZSBxdWVzdGlvbnMgKGJyYWNlIHlvdXJzZWxmLCB0aGV5IG1pZ2h0IGJlIGR1bWIpOg0KPj4gDQo+
-IA0KPiBIaSBBbGV4YW5kZXIgLQ0KPiANCj4gTm8gcHJvYmxlbSwgaGFwcHkgdG8gaGVscC4NCj4g
-DQo+PiAxLiBJZiB3ZSB3YW50IHRvIGRpcmVjdCBzcGVjaWZpYyB0eXBlcyBvZiBhcHBsaWNhdGlv
-biB0cmFmZmljIHRvIHNwZWNpZmljIE1QVENQIHN1YmZsb3dzLCB3b3VsZCB0aGlzIGJlIHRoZSBy
-b2xlIG9mIGEgY3VzdG9tIGRldmVsb3BlZCBwYWNrZXQgc2NoZWR1bGVyPyAgSWYgc28sIEkgYW0g
-YWxzbyBhc3N1bWluZyB0aGF0IHRoZXJlIGlzIG5vIHVzZXJzcGFjZSB3YXkgdG8gbWFrZSBjaGFu
-Z2VzIG9uIHRoZSBmbHkuLj8gIFRoZSB1c2UtY2FzZSBpcyBhcm91bmQgZGVmaW5pbmcgcnVsZXMg
-bGlrZTogInNlbmQgYWxsIEhUVFAgdHJhZmZpYyBhY3Jvc3MgdGhlc2Ugc3BlY2lmaWMgbGlua3Ms
-IHNlbmQgYWxsIE9USEVSX1RDUCB0cmFmZmljIG9uIHRob3NlIHNwZWNpZmljIGxpbmtzIg0KPj4g
-DQo+IA0KPiBFYWNoIE1QVENQIGNvbm5lY3Rpb24gb25seSBoYXMgb25lIGRhdGEgc3RyZWFtLCBz
-byBpbiB5b3VyIGV4YW1wbGUgYSBIVFRQIGNvbm5lY3Rpb24gd291bGQgaGF2ZSBhbiBlbnRpcmUg
-TVBUQ1AgY29ubmVjdGlvbiB0byBpdHNlbGYuIE9USEVSX1RDUCB0cmFmZmljIHdvdWxkIGJlIG9u
-IHNlcGFyYXRlIE1QVENQIHNvY2tldHMuDQo+IA0KPiBUaGlzIHNvdW5kcyBsaWtlIGEgam9iIGZv
-ciB0aGUgcGF0aCBtYW5hZ2VyLiBUaGUgY29ubmVjdGlvbnMgZm9yIEhUVFAgd291bGQgcHJlc3Vt
-YWJseSBiZSB1c2luZyB3ZWxsIGtub3duIEhUVFAvSFRUUFMgcG9ydHMuIElmIHlvdXIgaW5pdGlh
-bCBjb25uZWN0aW9uIGlzIHRvIHBvcnQgODAgb3IgNDQzLCB5b3UgY291bGQgZXN0YWJsaXNoIG5l
-dyBzdWJmbG93cyB0byB5b3VyIGRlc2lnbmF0ZWQgSFRUUCBsaW5rcy4gSW5pdGlhbCBjb25uZWN0
-aW9ucyB0byBvdGhlciBwb3J0IG51bWJlcnMgY291bGQgZ28gdG8gZGVkaWNhdGVkIG5vbi1IVFRQ
-IGxpbmtzLg0KPiANCj4+IDIuIEFub3RoZXIgdGhpbmcgd2UgbWlnaHQgd2FudCB0byBkbyBpcyB3
-ZWlnaHQgdHJhZmZpYyBiYXNlZCBvbiBzb21lIGJ1c2luZXNzIGNyaXRlcmlhIGllLiDigJw4MCUg
-b2YgSFRUUCB0cmFmZmljIGdvZXMgb24gc3ViIGZsb3cgIzEgYW5kIDIwJSBvbiBzdWIgZmxvdyAj
-MiAoYmVjYXVzZSBzdWJmbG93ICMxIHVzZXMgYSBjaGVhcGVyIGNlbGx1bGFyIHByb3ZpZGVy4oCd
-KS4gRnJvbSByZWFkaW5nLCBpdCBhbHNvIGFwcGVhcnMgbGlrZSB0aGlzIHdvdWxkIGJlIHRoZSBq
-b2Igb2YgdGhlIHBhY2tldCBzY2hlZHVsZXIgd2hlcmUgd2UgY2Fubm90IGR5bmFtaWNhbGx5IG1h
-a2UgY2hhbmdlcyBmcm9tIHVzZXJzcGFjZT8NCj4gDQo+IFllcywgdGhpcyBpcyB0aGUgcGFja2V0
-IHNjaGVkdWxlcidzIGpvYi4gV2UncmUgd29ya2luZyBvbiBhIEJQRiBwYWNrZXQgc2NoZWR1bGVy
-IGZyYW1ld29yayB0aGF0IHdvdWxkIGFsbG93IGN1c3RvbWl6aW5nIHRoZXNlIHBlci1wYWNrZXQg
-ZGVjaXNpb25zLg0KPiANCj4gDQo+IC0gTWF0DQoNCg==
+From: Eric Dumazet <edumazet@google.com>
+
+[ Upstream commit 1ded5e5a5931bb8b31e15b63b655fe232e3416b2 ]
+
+IPV6_ADDRFORM socket option is evil, because it can change sock->ops
+while other threads might read it. Same issue for sk->sk_family
+being set to AF_INET.
+
+Adding READ_ONCE() over sock->ops reads is needed for sockets
+that might be impacted by IPV6_ADDRFORM.
+
+Note that mptcp_is_tcpsk() can also overwrite sock->ops.
+
+Adding annotations for all sk->sk_family reads will require
+more patches :/
+
+BUG: KCSAN: data-race in ____sys_sendmsg / do_ipv6_setsockopt
+
+write to 0xffff888109f24ca0 of 8 bytes by task 4470 on cpu 0:
+do_ipv6_setsockopt+0x2c5e/0x2ce0 net/ipv6/ipv6_sockglue.c:491
+ipv6_setsockopt+0x57/0x130 net/ipv6/ipv6_sockglue.c:1012
+udpv6_setsockopt+0x95/0xa0 net/ipv6/udp.c:1690
+sock_common_setsockopt+0x61/0x70 net/core/sock.c:3663
+__sys_setsockopt+0x1c3/0x230 net/socket.c:2273
+__do_sys_setsockopt net/socket.c:2284 [inline]
+__se_sys_setsockopt net/socket.c:2281 [inline]
+__x64_sys_setsockopt+0x66/0x80 net/socket.c:2281
+do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+do_syscall_64+0x41/0xc0 arch/x86/entry/common.c:80
+entry_SYSCALL_64_after_hwframe+0x63/0xcd
+
+read to 0xffff888109f24ca0 of 8 bytes by task 4469 on cpu 1:
+sock_sendmsg_nosec net/socket.c:724 [inline]
+sock_sendmsg net/socket.c:747 [inline]
+____sys_sendmsg+0x349/0x4c0 net/socket.c:2503
+___sys_sendmsg net/socket.c:2557 [inline]
+__sys_sendmmsg+0x263/0x500 net/socket.c:2643
+__do_sys_sendmmsg net/socket.c:2672 [inline]
+__se_sys_sendmmsg net/socket.c:2669 [inline]
+__x64_sys_sendmmsg+0x57/0x60 net/socket.c:2669
+do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+do_syscall_64+0x41/0xc0 arch/x86/entry/common.c:80
+entry_SYSCALL_64_after_hwframe+0x63/0xcd
+
+value changed: 0xffffffff850e32b8 -> 0xffffffff850da890
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 4469 Comm: syz-executor.1 Not tainted 6.4.0-rc5-syzkaller-00313-g4c605260bc60 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/25/2023
+
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Link: https://lore.kernel.org/r/20230808135809.2300241-1-edumazet@google.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/net.h      |   2 +-
+ net/9p/trans_fd.c        |   4 +-
+ net/core/scm.c           |   3 +-
+ net/core/skmsg.c         |   8 ++-
+ net/core/sock.c          |  24 +++++--
+ net/ipv6/ipv6_sockglue.c |   8 +--
+ net/mptcp/protocol.c     |   8 +--
+ net/socket.c             | 136 +++++++++++++++++++++++----------------
+ net/unix/scm.c           |   3 +-
+ 9 files changed, 118 insertions(+), 78 deletions(-)
+
+diff --git a/include/linux/net.h b/include/linux/net.h
+index 41c608c1b02c2..c9b4a63791a45 100644
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -123,7 +123,7 @@ struct socket {
+ 
+ 	struct file		*file;
+ 	struct sock		*sk;
+-	const struct proto_ops	*ops;
++	const struct proto_ops	*ops; /* Might change with IPV6_ADDRFORM or MPTCP. */
+ 
+ 	struct socket_wq	wq;
+ };
+diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
+index 00b684616e8d9..c4015f30f9fa7 100644
+--- a/net/9p/trans_fd.c
++++ b/net/9p/trans_fd.c
+@@ -1019,7 +1019,7 @@ p9_fd_create_tcp(struct p9_client *client, const char *addr, char *args)
+ 		}
+ 	}
+ 
+-	err = csocket->ops->connect(csocket,
++	err = READ_ONCE(csocket->ops)->connect(csocket,
+ 				    (struct sockaddr *)&sin_server,
+ 				    sizeof(struct sockaddr_in), 0);
+ 	if (err < 0) {
+@@ -1060,7 +1060,7 @@ p9_fd_create_unix(struct p9_client *client, const char *addr, char *args)
+ 
+ 		return err;
+ 	}
+-	err = csocket->ops->connect(csocket, (struct sockaddr *)&sun_server,
++	err = READ_ONCE(csocket->ops)->connect(csocket, (struct sockaddr *)&sun_server,
+ 			sizeof(struct sockaddr_un) - 1, 0);
+ 	if (err < 0) {
+ 		pr_err("%s (%d): problem connecting socket: %s: %d\n",
+diff --git a/net/core/scm.c b/net/core/scm.c
+index 3cd7dd377e53f..880027ecf5165 100644
+--- a/net/core/scm.c
++++ b/net/core/scm.c
+@@ -130,6 +130,7 @@ EXPORT_SYMBOL(__scm_destroy);
+ 
+ int __scm_send(struct socket *sock, struct msghdr *msg, struct scm_cookie *p)
+ {
++	const struct proto_ops *ops = READ_ONCE(sock->ops);
+ 	struct cmsghdr *cmsg;
+ 	int err;
+ 
+@@ -153,7 +154,7 @@ int __scm_send(struct socket *sock, struct msghdr *msg, struct scm_cookie *p)
+ 		switch (cmsg->cmsg_type)
+ 		{
+ 		case SCM_RIGHTS:
+-			if (!sock->ops || sock->ops->family != PF_UNIX)
++			if (!ops || ops->family != PF_UNIX)
+ 				goto error;
+ 			err=scm_fp_copy(cmsg, &p->fp);
+ 			if (err<0)
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index ef1a2eb6520bf..a0659fc29bcca 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -1204,13 +1204,17 @@ static int sk_psock_verdict_recv(struct sock *sk, struct sk_buff *skb)
+ static void sk_psock_verdict_data_ready(struct sock *sk)
+ {
+ 	struct socket *sock = sk->sk_socket;
++	const struct proto_ops *ops;
+ 	int copied;
+ 
+ 	trace_sk_data_ready(sk);
+ 
+-	if (unlikely(!sock || !sock->ops || !sock->ops->read_skb))
++	if (unlikely(!sock))
+ 		return;
+-	copied = sock->ops->read_skb(sk, sk_psock_verdict_recv);
++	ops = READ_ONCE(sock->ops);
++	if (!ops || !ops->read_skb)
++		return;
++	copied = ops->read_skb(sk, sk_psock_verdict_recv);
+ 	if (copied >= 0) {
+ 		struct sk_psock *psock;
+ 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index a80b6b8633edc..9d4560db7c26e 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1283,14 +1283,19 @@ int sk_setsockopt(struct sock *sk, int level, int optname,
+ 		break;
+ 
+ 	case SO_RCVLOWAT:
++		{
++		int (*set_rcvlowat)(struct sock *sk, int val) = NULL;
++
+ 		if (val < 0)
+ 			val = INT_MAX;
+-		if (sock && sock->ops->set_rcvlowat)
+-			ret = sock->ops->set_rcvlowat(sk, val);
++		if (sock)
++			set_rcvlowat = READ_ONCE(sock->ops)->set_rcvlowat;
++		if (set_rcvlowat)
++			ret = set_rcvlowat(sk, val);
+ 		else
+ 			WRITE_ONCE(sk->sk_rcvlowat, val ? : 1);
+ 		break;
+-
++		}
+ 	case SO_RCVTIMEO_OLD:
+ 	case SO_RCVTIMEO_NEW:
+ 		ret = sock_set_timeout(&sk->sk_rcvtimeo, optval,
+@@ -1388,11 +1393,16 @@ int sk_setsockopt(struct sock *sk, int level, int optname,
+ 		break;
+ 
+ 	case SO_PEEK_OFF:
+-		if (sock->ops->set_peek_off)
+-			ret = sock->ops->set_peek_off(sk, val);
++		{
++		int (*set_peek_off)(struct sock *sk, int val);
++
++		set_peek_off = READ_ONCE(sock->ops)->set_peek_off;
++		if (set_peek_off)
++			ret = set_peek_off(sk, val);
+ 		else
+ 			ret = -EOPNOTSUPP;
+ 		break;
++		}
+ 
+ 	case SO_NOFCS:
+ 		sock_valbool_flag(sk, SOCK_NOFCS, valbool);
+@@ -1825,7 +1835,7 @@ int sk_getsockopt(struct sock *sk, int level, int optname,
+ 	{
+ 		struct sockaddr_storage address;
+ 
+-		lv = sock->ops->getname(sock, (struct sockaddr *)&address, 2);
++		lv = READ_ONCE(sock->ops)->getname(sock, (struct sockaddr *)&address, 2);
+ 		if (lv < 0)
+ 			return -ENOTCONN;
+ 		if (lv < len)
+@@ -1867,7 +1877,7 @@ int sk_getsockopt(struct sock *sk, int level, int optname,
+ 		break;
+ 
+ 	case SO_PEEK_OFF:
+-		if (!sock->ops->set_peek_off)
++		if (!READ_ONCE(sock->ops)->set_peek_off)
+ 			return -EOPNOTSUPP;
+ 
+ 		v.val = READ_ONCE(sk->sk_peek_off);
+diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+index ae818ff462248..ca377159967c8 100644
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -474,8 +474,8 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
+ 				WRITE_ONCE(sk->sk_prot, &tcp_prot);
+ 				/* Paired with READ_ONCE() in tcp_(get|set)sockopt() */
+ 				WRITE_ONCE(icsk->icsk_af_ops, &ipv4_specific);
+-				sk->sk_socket->ops = &inet_stream_ops;
+-				sk->sk_family = PF_INET;
++				WRITE_ONCE(sk->sk_socket->ops, &inet_stream_ops);
++				WRITE_ONCE(sk->sk_family, PF_INET);
+ 				tcp_sync_mss(sk, icsk->icsk_pmtu_cookie);
+ 			} else {
+ 				struct proto *prot = &udp_prot;
+@@ -488,8 +488,8 @@ int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
+ 
+ 				/* Paired with READ_ONCE(sk->sk_prot) in inet6_dgram_ops */
+ 				WRITE_ONCE(sk->sk_prot, prot);
+-				sk->sk_socket->ops = &inet_dgram_ops;
+-				sk->sk_family = PF_INET;
++				WRITE_ONCE(sk->sk_socket->ops, &inet_dgram_ops);
++				WRITE_ONCE(sk->sk_family, PF_INET);
+ 			}
+ 
+ 			/* Disable all options not to allocate memory anymore,
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d80658547836f..a7d1130dfe329 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -67,11 +67,11 @@ static bool mptcp_is_tcpsk(struct sock *sk)
+ 		 * Hand the socket over to tcp so all further socket ops
+ 		 * bypass mptcp.
+ 		 */
+-		sock->ops = &inet_stream_ops;
++		WRITE_ONCE(sock->ops, &inet_stream_ops);
+ 		return true;
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	} else if (unlikely(sk->sk_prot == &tcpv6_prot)) {
+-		sock->ops = &inet6_stream_ops;
++		WRITE_ONCE(sock->ops, &inet6_stream_ops);
+ 		return true;
+ #endif
+ 	}
+@@ -3684,7 +3684,7 @@ static int mptcp_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 		goto unlock;
+ 	}
+ 
+-	err = ssock->ops->bind(ssock, uaddr, addr_len);
++	err = READ_ONCE(ssock->ops)->bind(ssock, uaddr, addr_len);
+ 	if (!err)
+ 		mptcp_copy_inaddrs(sock->sk, ssock->sk);
+ 
+@@ -3718,7 +3718,7 @@ static int mptcp_listen(struct socket *sock, int backlog)
+ 	inet_sk_state_store(sk, TCP_LISTEN);
+ 	sock_set_flag(sk, SOCK_RCU_FREE);
+ 
+-	err = ssock->ops->listen(ssock, backlog);
++	err = READ_ONCE(ssock->ops)->listen(ssock, backlog);
+ 	inet_sk_state_store(sk, inet_sk_state_load(ssock->sk));
+ 	if (!err) {
+ 		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
+diff --git a/net/socket.c b/net/socket.c
+index 2b0e54b2405c8..5d4e37595e9aa 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -136,9 +136,10 @@ static void sock_splice_eof(struct file *file);
+ static void sock_show_fdinfo(struct seq_file *m, struct file *f)
+ {
+ 	struct socket *sock = f->private_data;
++	const struct proto_ops *ops = READ_ONCE(sock->ops);
+ 
+-	if (sock->ops->show_fdinfo)
+-		sock->ops->show_fdinfo(m, sock);
++	if (ops->show_fdinfo)
++		ops->show_fdinfo(m, sock);
+ }
+ #else
+ #define sock_show_fdinfo NULL
+@@ -646,12 +647,14 @@ EXPORT_SYMBOL(sock_alloc);
+ 
+ static void __sock_release(struct socket *sock, struct inode *inode)
+ {
+-	if (sock->ops) {
+-		struct module *owner = sock->ops->owner;
++	const struct proto_ops *ops = READ_ONCE(sock->ops);
++
++	if (ops) {
++		struct module *owner = ops->owner;
+ 
+ 		if (inode)
+ 			inode_lock(inode);
+-		sock->ops->release(sock);
++		ops->release(sock);
+ 		sock->sk = NULL;
+ 		if (inode)
+ 			inode_unlock(inode);
+@@ -722,7 +725,7 @@ static noinline void call_trace_sock_send_length(struct sock *sk, int ret,
+ 
+ static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
+ {
+-	int ret = INDIRECT_CALL_INET(sock->ops->sendmsg, inet6_sendmsg,
++	int ret = INDIRECT_CALL_INET(READ_ONCE(sock->ops)->sendmsg, inet6_sendmsg,
+ 				     inet_sendmsg, sock, msg,
+ 				     msg_data_left(msg));
+ 	BUG_ON(ret == -EIOCBQUEUED);
+@@ -786,13 +789,14 @@ int kernel_sendmsg_locked(struct sock *sk, struct msghdr *msg,
+ 			  struct kvec *vec, size_t num, size_t size)
+ {
+ 	struct socket *sock = sk->sk_socket;
++	const struct proto_ops *ops = READ_ONCE(sock->ops);
+ 
+-	if (!sock->ops->sendmsg_locked)
++	if (!ops->sendmsg_locked)
+ 		return sock_no_sendmsg_locked(sk, msg, size);
+ 
+ 	iov_iter_kvec(&msg->msg_iter, ITER_SOURCE, vec, num, size);
+ 
+-	return sock->ops->sendmsg_locked(sk, msg, msg_data_left(msg));
++	return ops->sendmsg_locked(sk, msg, msg_data_left(msg));
+ }
+ EXPORT_SYMBOL(kernel_sendmsg_locked);
+ 
+@@ -1017,7 +1021,8 @@ static noinline void call_trace_sock_recv_length(struct sock *sk, int ret, int f
+ static inline int sock_recvmsg_nosec(struct socket *sock, struct msghdr *msg,
+ 				     int flags)
+ {
+-	int ret = INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
++	int ret = INDIRECT_CALL_INET(READ_ONCE(sock->ops)->recvmsg,
++				     inet6_recvmsg,
+ 				     inet_recvmsg, sock, msg,
+ 				     msg_data_left(msg), flags);
+ 	if (trace_sock_recv_length_enabled())
+@@ -1072,19 +1077,23 @@ static ssize_t sock_splice_read(struct file *file, loff_t *ppos,
+ 				unsigned int flags)
+ {
+ 	struct socket *sock = file->private_data;
++	const struct proto_ops *ops;
+ 
+-	if (unlikely(!sock->ops->splice_read))
++	ops = READ_ONCE(sock->ops);
++	if (unlikely(!ops->splice_read))
+ 		return copy_splice_read(file, ppos, pipe, len, flags);
+ 
+-	return sock->ops->splice_read(sock, ppos, pipe, len, flags);
++	return ops->splice_read(sock, ppos, pipe, len, flags);
+ }
+ 
+ static void sock_splice_eof(struct file *file)
+ {
+ 	struct socket *sock = file->private_data;
++	const struct proto_ops *ops;
+ 
+-	if (sock->ops->splice_eof)
+-		sock->ops->splice_eof(sock);
++	ops = READ_ONCE(sock->ops);
++	if (ops->splice_eof)
++		ops->splice_eof(sock);
+ }
+ 
+ static ssize_t sock_read_iter(struct kiocb *iocb, struct iov_iter *to)
+@@ -1181,13 +1190,14 @@ EXPORT_SYMBOL(vlan_ioctl_set);
+ static long sock_do_ioctl(struct net *net, struct socket *sock,
+ 			  unsigned int cmd, unsigned long arg)
+ {
++	const struct proto_ops *ops = READ_ONCE(sock->ops);
+ 	struct ifreq ifr;
+ 	bool need_copyout;
+ 	int err;
+ 	void __user *argp = (void __user *)arg;
+ 	void __user *data;
+ 
+-	err = sock->ops->ioctl(sock, cmd, arg);
++	err = ops->ioctl(sock, cmd, arg);
+ 
+ 	/*
+ 	 * If this ioctl is unknown try to hand it down
+@@ -1216,6 +1226,7 @@ static long sock_do_ioctl(struct net *net, struct socket *sock,
+ 
+ static long sock_ioctl(struct file *file, unsigned cmd, unsigned long arg)
+ {
++	const struct proto_ops  *ops;
+ 	struct socket *sock;
+ 	struct sock *sk;
+ 	void __user *argp = (void __user *)arg;
+@@ -1223,6 +1234,7 @@ static long sock_ioctl(struct file *file, unsigned cmd, unsigned long arg)
+ 	struct net *net;
+ 
+ 	sock = file->private_data;
++	ops = READ_ONCE(sock->ops);
+ 	sk = sock->sk;
+ 	net = sock_net(sk);
+ 	if (unlikely(cmd >= SIOCDEVPRIVATE && cmd <= (SIOCDEVPRIVATE + 15))) {
+@@ -1280,23 +1292,23 @@ static long sock_ioctl(struct file *file, unsigned cmd, unsigned long arg)
+ 			break;
+ 		case SIOCGSTAMP_OLD:
+ 		case SIOCGSTAMPNS_OLD:
+-			if (!sock->ops->gettstamp) {
++			if (!ops->gettstamp) {
+ 				err = -ENOIOCTLCMD;
+ 				break;
+ 			}
+-			err = sock->ops->gettstamp(sock, argp,
+-						   cmd == SIOCGSTAMP_OLD,
+-						   !IS_ENABLED(CONFIG_64BIT));
++			err = ops->gettstamp(sock, argp,
++					     cmd == SIOCGSTAMP_OLD,
++					     !IS_ENABLED(CONFIG_64BIT));
+ 			break;
+ 		case SIOCGSTAMP_NEW:
+ 		case SIOCGSTAMPNS_NEW:
+-			if (!sock->ops->gettstamp) {
++			if (!ops->gettstamp) {
+ 				err = -ENOIOCTLCMD;
+ 				break;
+ 			}
+-			err = sock->ops->gettstamp(sock, argp,
+-						   cmd == SIOCGSTAMP_NEW,
+-						   false);
++			err = ops->gettstamp(sock, argp,
++					     cmd == SIOCGSTAMP_NEW,
++					     false);
+ 			break;
+ 
+ 		case SIOCGIFCONF:
+@@ -1357,9 +1369,10 @@ EXPORT_SYMBOL(sock_create_lite);
+ static __poll_t sock_poll(struct file *file, poll_table *wait)
+ {
+ 	struct socket *sock = file->private_data;
++	const struct proto_ops *ops = READ_ONCE(sock->ops);
+ 	__poll_t events = poll_requested_events(wait), flag = 0;
+ 
+-	if (!sock->ops->poll)
++	if (!ops->poll)
+ 		return 0;
+ 
+ 	if (sk_can_busy_loop(sock->sk)) {
+@@ -1371,14 +1384,14 @@ static __poll_t sock_poll(struct file *file, poll_table *wait)
+ 		flag = POLL_BUSY_LOOP;
+ 	}
+ 
+-	return sock->ops->poll(file, sock, wait) | flag;
++	return ops->poll(file, sock, wait) | flag;
+ }
+ 
+ static int sock_mmap(struct file *file, struct vm_area_struct *vma)
+ {
+ 	struct socket *sock = file->private_data;
+ 
+-	return sock->ops->mmap(file, sock, vma);
++	return READ_ONCE(sock->ops)->mmap(file, sock, vma);
+ }
+ 
+ static int sock_close(struct inode *inode, struct file *filp)
+@@ -1728,7 +1741,7 @@ int __sys_socketpair(int family, int type, int protocol, int __user *usockvec)
+ 		goto out;
+ 	}
+ 
+-	err = sock1->ops->socketpair(sock1, sock2);
++	err = READ_ONCE(sock1->ops)->socketpair(sock1, sock2);
+ 	if (unlikely(err < 0)) {
+ 		sock_release(sock2);
+ 		sock_release(sock1);
+@@ -1789,7 +1802,7 @@ int __sys_bind(int fd, struct sockaddr __user *umyaddr, int addrlen)
+ 						   (struct sockaddr *)&address,
+ 						   addrlen);
+ 			if (!err)
+-				err = sock->ops->bind(sock,
++				err = READ_ONCE(sock->ops)->bind(sock,
+ 						      (struct sockaddr *)
+ 						      &address, addrlen);
+ 		}
+@@ -1823,7 +1836,7 @@ int __sys_listen(int fd, int backlog)
+ 
+ 		err = security_socket_listen(sock, backlog);
+ 		if (!err)
+-			err = sock->ops->listen(sock, backlog);
++			err = READ_ONCE(sock->ops)->listen(sock, backlog);
+ 
+ 		fput_light(sock->file, fput_needed);
+ 	}
+@@ -1843,6 +1856,7 @@ struct file *do_accept(struct file *file, unsigned file_flags,
+ 	struct file *newfile;
+ 	int err, len;
+ 	struct sockaddr_storage address;
++	const struct proto_ops *ops;
+ 
+ 	sock = sock_from_file(file);
+ 	if (!sock)
+@@ -1851,15 +1865,16 @@ struct file *do_accept(struct file *file, unsigned file_flags,
+ 	newsock = sock_alloc();
+ 	if (!newsock)
+ 		return ERR_PTR(-ENFILE);
++	ops = READ_ONCE(sock->ops);
+ 
+ 	newsock->type = sock->type;
+-	newsock->ops = sock->ops;
++	newsock->ops = ops;
+ 
+ 	/*
+ 	 * We don't need try_module_get here, as the listening socket (sock)
+ 	 * has the protocol module (sock->ops->owner) held.
+ 	 */
+-	__module_get(newsock->ops->owner);
++	__module_get(ops->owner);
+ 
+ 	newfile = sock_alloc_file(newsock, flags, sock->sk->sk_prot_creator->name);
+ 	if (IS_ERR(newfile))
+@@ -1869,14 +1884,13 @@ struct file *do_accept(struct file *file, unsigned file_flags,
+ 	if (err)
+ 		goto out_fd;
+ 
+-	err = sock->ops->accept(sock, newsock, sock->file->f_flags | file_flags,
++	err = ops->accept(sock, newsock, sock->file->f_flags | file_flags,
+ 					false);
+ 	if (err < 0)
+ 		goto out_fd;
+ 
+ 	if (upeer_sockaddr) {
+-		len = newsock->ops->getname(newsock,
+-					(struct sockaddr *)&address, 2);
++		len = ops->getname(newsock, (struct sockaddr *)&address, 2);
+ 		if (len < 0) {
+ 			err = -ECONNABORTED;
+ 			goto out_fd;
+@@ -1989,8 +2003,8 @@ int __sys_connect_file(struct file *file, struct sockaddr_storage *address,
+ 	if (err)
+ 		goto out;
+ 
+-	err = sock->ops->connect(sock, (struct sockaddr *)address, addrlen,
+-				 sock->file->f_flags | file_flags);
++	err = READ_ONCE(sock->ops)->connect(sock, (struct sockaddr *)address,
++				addrlen, sock->file->f_flags | file_flags);
+ out:
+ 	return err;
+ }
+@@ -2039,7 +2053,7 @@ int __sys_getsockname(int fd, struct sockaddr __user *usockaddr,
+ 	if (err)
+ 		goto out_put;
+ 
+-	err = sock->ops->getname(sock, (struct sockaddr *)&address, 0);
++	err = READ_ONCE(sock->ops)->getname(sock, (struct sockaddr *)&address, 0);
+ 	if (err < 0)
+ 		goto out_put;
+ 	/* "err" is actually length in this case */
+@@ -2071,13 +2085,15 @@ int __sys_getpeername(int fd, struct sockaddr __user *usockaddr,
+ 
+ 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
+ 	if (sock != NULL) {
++		const struct proto_ops *ops = READ_ONCE(sock->ops);
++
+ 		err = security_socket_getpeername(sock);
+ 		if (err) {
+ 			fput_light(sock->file, fput_needed);
+ 			return err;
+ 		}
+ 
+-		err = sock->ops->getname(sock, (struct sockaddr *)&address, 1);
++		err = ops->getname(sock, (struct sockaddr *)&address, 1);
+ 		if (err >= 0)
+ 			/* "err" is actually length in this case */
+ 			err = move_addr_to_user(&address, err, usockaddr,
+@@ -2227,6 +2243,7 @@ int __sys_setsockopt(int fd, int level, int optname, char __user *user_optval,
+ 		int optlen)
+ {
+ 	sockptr_t optval = USER_SOCKPTR(user_optval);
++	const struct proto_ops *ops;
+ 	char *kernel_optval = NULL;
+ 	int err, fput_needed;
+ 	struct socket *sock;
+@@ -2255,12 +2272,13 @@ int __sys_setsockopt(int fd, int level, int optname, char __user *user_optval,
+ 
+ 	if (kernel_optval)
+ 		optval = KERNEL_SOCKPTR(kernel_optval);
++	ops = READ_ONCE(sock->ops);
+ 	if (level == SOL_SOCKET && !sock_use_custom_sol_socket(sock))
+ 		err = sock_setsockopt(sock, level, optname, optval, optlen);
+-	else if (unlikely(!sock->ops->setsockopt))
++	else if (unlikely(!ops->setsockopt))
+ 		err = -EOPNOTSUPP;
+ 	else
+-		err = sock->ops->setsockopt(sock, level, optname, optval,
++		err = ops->setsockopt(sock, level, optname, optval,
+ 					    optlen);
+ 	kfree(kernel_optval);
+ out_put:
+@@ -2285,6 +2303,7 @@ int __sys_getsockopt(int fd, int level, int optname, char __user *optval,
+ 		int __user *optlen)
+ {
+ 	int max_optlen __maybe_unused;
++	const struct proto_ops *ops;
+ 	int err, fput_needed;
+ 	struct socket *sock;
+ 
+@@ -2299,12 +2318,13 @@ int __sys_getsockopt(int fd, int level, int optname, char __user *optval,
+ 	if (!in_compat_syscall())
+ 		max_optlen = BPF_CGROUP_GETSOCKOPT_MAX_OPTLEN(optlen);
+ 
++	ops = READ_ONCE(sock->ops);
+ 	if (level == SOL_SOCKET)
+ 		err = sock_getsockopt(sock, level, optname, optval, optlen);
+-	else if (unlikely(!sock->ops->getsockopt))
++	else if (unlikely(!ops->getsockopt))
+ 		err = -EOPNOTSUPP;
+ 	else
+-		err = sock->ops->getsockopt(sock, level, optname, optval,
++		err = ops->getsockopt(sock, level, optname, optval,
+ 					    optlen);
+ 
+ 	if (!in_compat_syscall())
+@@ -2332,7 +2352,7 @@ int __sys_shutdown_sock(struct socket *sock, int how)
+ 
+ 	err = security_socket_shutdown(sock, how);
+ 	if (!err)
+-		err = sock->ops->shutdown(sock, how);
++		err = READ_ONCE(sock->ops)->shutdown(sock, how);
+ 
+ 	return err;
+ }
+@@ -3324,6 +3344,7 @@ static int compat_sock_ioctl_trans(struct file *file, struct socket *sock,
+ 	void __user *argp = compat_ptr(arg);
+ 	struct sock *sk = sock->sk;
+ 	struct net *net = sock_net(sk);
++	const struct proto_ops *ops;
+ 
+ 	if (cmd >= SIOCDEVPRIVATE && cmd <= (SIOCDEVPRIVATE + 15))
+ 		return sock_ioctl(file, cmd, (unsigned long)argp);
+@@ -3333,10 +3354,11 @@ static int compat_sock_ioctl_trans(struct file *file, struct socket *sock,
+ 		return compat_siocwandev(net, argp);
+ 	case SIOCGSTAMP_OLD:
+ 	case SIOCGSTAMPNS_OLD:
+-		if (!sock->ops->gettstamp)
++		ops = READ_ONCE(sock->ops);
++		if (!ops->gettstamp)
+ 			return -ENOIOCTLCMD;
+-		return sock->ops->gettstamp(sock, argp, cmd == SIOCGSTAMP_OLD,
+-					    !COMPAT_USE_64BIT_TIME);
++		return ops->gettstamp(sock, argp, cmd == SIOCGSTAMP_OLD,
++				      !COMPAT_USE_64BIT_TIME);
+ 
+ 	case SIOCETHTOOL:
+ 	case SIOCBONDSLAVEINFOQUERY:
+@@ -3417,6 +3439,7 @@ static long compat_sock_ioctl(struct file *file, unsigned int cmd,
+ 			      unsigned long arg)
+ {
+ 	struct socket *sock = file->private_data;
++	const struct proto_ops *ops = READ_ONCE(sock->ops);
+ 	int ret = -ENOIOCTLCMD;
+ 	struct sock *sk;
+ 	struct net *net;
+@@ -3424,8 +3447,8 @@ static long compat_sock_ioctl(struct file *file, unsigned int cmd,
+ 	sk = sock->sk;
+ 	net = sock_net(sk);
+ 
+-	if (sock->ops->compat_ioctl)
+-		ret = sock->ops->compat_ioctl(sock, cmd, arg);
++	if (ops->compat_ioctl)
++		ret = ops->compat_ioctl(sock, cmd, arg);
+ 
+ 	if (ret == -ENOIOCTLCMD &&
+ 	    (cmd >= SIOCIWFIRST && cmd <= SIOCIWLAST))
+@@ -3449,7 +3472,7 @@ static long compat_sock_ioctl(struct file *file, unsigned int cmd,
+ 
+ int kernel_bind(struct socket *sock, struct sockaddr *addr, int addrlen)
+ {
+-	return sock->ops->bind(sock, addr, addrlen);
++	return READ_ONCE(sock->ops)->bind(sock, addr, addrlen);
+ }
+ EXPORT_SYMBOL(kernel_bind);
+ 
+@@ -3463,7 +3486,7 @@ EXPORT_SYMBOL(kernel_bind);
+ 
+ int kernel_listen(struct socket *sock, int backlog)
+ {
+-	return sock->ops->listen(sock, backlog);
++	return READ_ONCE(sock->ops)->listen(sock, backlog);
+ }
+ EXPORT_SYMBOL(kernel_listen);
+ 
+@@ -3481,6 +3504,7 @@ EXPORT_SYMBOL(kernel_listen);
+ int kernel_accept(struct socket *sock, struct socket **newsock, int flags)
+ {
+ 	struct sock *sk = sock->sk;
++	const struct proto_ops *ops = READ_ONCE(sock->ops);
+ 	int err;
+ 
+ 	err = sock_create_lite(sk->sk_family, sk->sk_type, sk->sk_protocol,
+@@ -3488,15 +3512,15 @@ int kernel_accept(struct socket *sock, struct socket **newsock, int flags)
+ 	if (err < 0)
+ 		goto done;
+ 
+-	err = sock->ops->accept(sock, *newsock, flags, true);
++	err = ops->accept(sock, *newsock, flags, true);
+ 	if (err < 0) {
+ 		sock_release(*newsock);
+ 		*newsock = NULL;
+ 		goto done;
+ 	}
+ 
+-	(*newsock)->ops = sock->ops;
+-	__module_get((*newsock)->ops->owner);
++	(*newsock)->ops = ops;
++	__module_get(ops->owner);
+ 
+ done:
+ 	return err;
+@@ -3519,7 +3543,7 @@ EXPORT_SYMBOL(kernel_accept);
+ int kernel_connect(struct socket *sock, struct sockaddr *addr, int addrlen,
+ 		   int flags)
+ {
+-	return sock->ops->connect(sock, addr, addrlen, flags);
++	return READ_ONCE(sock->ops)->connect(sock, addr, addrlen, flags);
+ }
+ EXPORT_SYMBOL(kernel_connect);
+ 
+@@ -3534,7 +3558,7 @@ EXPORT_SYMBOL(kernel_connect);
+ 
+ int kernel_getsockname(struct socket *sock, struct sockaddr *addr)
+ {
+-	return sock->ops->getname(sock, addr, 0);
++	return READ_ONCE(sock->ops)->getname(sock, addr, 0);
+ }
+ EXPORT_SYMBOL(kernel_getsockname);
+ 
+@@ -3549,7 +3573,7 @@ EXPORT_SYMBOL(kernel_getsockname);
+ 
+ int kernel_getpeername(struct socket *sock, struct sockaddr *addr)
+ {
+-	return sock->ops->getname(sock, addr, 1);
++	return READ_ONCE(sock->ops)->getname(sock, addr, 1);
+ }
+ EXPORT_SYMBOL(kernel_getpeername);
+ 
+@@ -3563,7 +3587,7 @@ EXPORT_SYMBOL(kernel_getpeername);
+ 
+ int kernel_sock_shutdown(struct socket *sock, enum sock_shutdown_cmd how)
+ {
+-	return sock->ops->shutdown(sock, how);
++	return READ_ONCE(sock->ops)->shutdown(sock, how);
+ }
+ EXPORT_SYMBOL(kernel_sock_shutdown);
+ 
+diff --git a/net/unix/scm.c b/net/unix/scm.c
+index f9152881d77f6..e9dde7176c8a3 100644
+--- a/net/unix/scm.c
++++ b/net/unix/scm.c
+@@ -29,10 +29,11 @@ struct sock *unix_get_socket(struct file *filp)
+ 	/* Socket ? */
+ 	if (S_ISSOCK(inode->i_mode) && !(filp->f_mode & FMODE_PATH)) {
+ 		struct socket *sock = SOCKET_I(inode);
++		const struct proto_ops *ops = READ_ONCE(sock->ops);
+ 		struct sock *s = sock->sk;
+ 
+ 		/* PF_UNIX ? */
+-		if (s && sock->ops && sock->ops->family == PF_UNIX)
++		if (s && ops && ops->family == PF_UNIX)
+ 			u_sock = s;
+ 	} else {
+ 		/* Could be an io_uring instance */
+-- 
+2.40.1
+
