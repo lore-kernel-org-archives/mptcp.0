@@ -1,45 +1,45 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A2923A4
-	for <mptcp@lists.linux.dev>; Sat,  9 Sep 2023 16:03:53 +0000 (UTC)
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2bcfd3220d3so49639721fa.2
-        for <mptcp@lists.linux.dev>; Sat, 09 Sep 2023 09:03:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C7D7460
+	for <mptcp@lists.linux.dev>; Sat,  9 Sep 2023 16:13:01 +0000 (UTC)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-401d80f4ef8so32184305e9.1
+        for <mptcp@lists.linux.dev>; Sat, 09 Sep 2023 09:13:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1694275432; x=1694880232; darn=lists.linux.dev;
+        d=tessares.net; s=google; t=1694275980; x=1694880780; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VasQe3nsdM0wzhDQpujuRvDajYSd+1YF/YB7C7ukHSg=;
-        b=mal3omNaKaSglfPF83L/2jmc8tnwImWrW+2l0yPsP21a0NIO4HEMy9EQRXwaz3u41i
-         Fvd/JHNS4QnWFKq1W94/TeTO5tczERVcsoVAbtySiuULfVDwYplLHehPZ5LzhBW4qgiK
-         SgRIBFmvOkCJPalkDRUnzRcx1jRoV4q6KXskpaiTmGRTEJqd4rT3QoL7WjPGUVMzyNCu
-         wFUCPhreatlS5gWSzI1oOEJpE/v3F6SawOp9MNOqyXBnAC6GcaM27KQJQKOJWUO6NiXa
-         yo9gNdLOK+f0WSk9KP6VD3hr4Jl8xW5gT9h1+5J5Htxr7XxBQ3wPRYnIyUk7791znOFa
-         zrJg==
+        bh=ZXaCuoFl5FbfIzBG289NAlsYAd/tsNZ/6qnm1JMGWwo=;
+        b=6o5piRUeZOSwCdW+f5n9EcZlXJQGSHpJ2SkvsmE0bYWP9z1yK2EDOfgdA1SP1JL5Ob
+         lIvdm2zd/kZ1RUzvNl+yropnNbDNCekuG8DY8XaHTT9UVI2tm+VwKFzkHzEbsLE6VRxc
+         cLV1XoQAlp4WxYp6O/5Z8lADevIwaNpI7yMXL9BqUDSxmnC29FkXNZLFIRezyHwJTPSB
+         NLHEttfqxVVRdRQ11JiUiCvkwY/AqXbi47vrmjUyKhCB438UntGUEHWcHDLOjrBa3f5S
+         AesYkt6Jezp/htCGhIPssLCaMkDUo4olGpAk9b/Z76prGjK/GOwH6eXnbHRRoYOGuedi
+         vS+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694275432; x=1694880232;
+        d=1e100.net; s=20230601; t=1694275980; x=1694880780;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VasQe3nsdM0wzhDQpujuRvDajYSd+1YF/YB7C7ukHSg=;
-        b=X6NG5iXSivxr6eb7dbVjVEgJ/Nq8WhbWncPitbAYmBlRNJU8IyHAgr+VmcHFZXWwHR
-         QuiUX0l4r7bt8bOrv4qtJXS/ao2EJD/X2pYrbfx9qbpP9iH3eOVLowMGOd/nbnNLx1z6
-         XqpeL0n5k4kKdJqfv501diJmbBeLnwyFcsY3R6reKvQqk3uC22m02idzHlZMb7Nf8g8x
-         UfulL3G8OYrdticHouGo2vXVRWFs4ziZCZgzX395IyPeJSr2KnWLPBU4mEB+EWi4V3Hh
-         A7l8y2guqwCkFL2VFtJIldNjdWZOge2L4EDn512b5jUj681Nb4Njt72fOUMzxFMMm1jl
-         sJ/g==
-X-Gm-Message-State: AOJu0YzxIerf5L76Bw63pI7dnaqUII0JKAmTj5suLIXffoYqeOI4jwji
-	XCtNBJ6OJdugO2CFDYf7Y4XkZg==
-X-Google-Smtp-Source: AGHT+IFSSefuZQJESKZTMakm/hijZpfmyyfFE+0DGNWB0gqNFiqLnAdliF64IW5E2/x202yk5bZRVA==
-X-Received: by 2002:a19:914e:0:b0:4fd:c84f:30d4 with SMTP id y14-20020a19914e000000b004fdc84f30d4mr4114187lfj.36.1694275431550;
-        Sat, 09 Sep 2023 09:03:51 -0700 (PDT)
+        bh=ZXaCuoFl5FbfIzBG289NAlsYAd/tsNZ/6qnm1JMGWwo=;
+        b=JTW2xJ2ZQPFnVAaGuxmGm0sgFhKykF9GbEMk9XHQrllKQpp9qzuJwUiiNrkAqdPi80
+         9Mok5XNP25fphjivZjKx8ENsVMrTVDpkcu1uS7yi9QHcgnlMtifehgbCPNVVbalXggKb
+         xAAJv9v7C1F8Ps0JCYgip+Jx1rOlsH66KlP5FNko2zoi1KPTBgDkbchYH3ZpUiJApBwP
+         0a41gCy7NzWHhSvEu7fNzaM7YuJHqpdjh7JlKbJvjc9HI2GCGZejFVz5IidDrtyp+3RC
+         cxM8pb4sae68OQgvPCbWWUIHXu8aHUWSf9qoWxd/5hcT3YgyeWeTN2EXQHrPZB+eB2+I
+         3wqg==
+X-Gm-Message-State: AOJu0YwqPxC9SxcWFvX3xB3AfoMD+7yGQZF/XM5cqW3TKKR+lNstT5O8
+	nIdbpV2zsCO83sKWBtTgdo5ZGIpwyjPFt0Fxe4itHA==
+X-Google-Smtp-Source: AGHT+IFsNtH1iiNQPyYUSKHYYdRDENKKs/I0mRy7NLyHL1+qehUfB/gepDRb7gCsy4cpl610w6htsw==
+X-Received: by 2002:a05:600c:1e14:b0:401:d1a3:d7f7 with SMTP id ay20-20020a05600c1e1400b00401d1a3d7f7mr4422307wmb.30.1694275980114;
+        Sat, 09 Sep 2023 09:13:00 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:91e4:ea9f:cc1e:927a? ([2a02:578:8593:1200:91e4:ea9f:cc1e:927a])
-        by smtp.gmail.com with ESMTPSA id x7-20020a19f607000000b004fe47879d93sm666222lfe.106.2023.09.09.09.03.50
+        by smtp.gmail.com with ESMTPSA id o13-20020a05600c510d00b003fee777fd84sm2173584wms.41.2023.09.09.09.12.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 Sep 2023 09:03:51 -0700 (PDT)
-Message-ID: <c3d26a5d-03d7-4c09-bbe0-dc3a02e364f2@tessares.net>
-Date: Sat, 9 Sep 2023 18:03:49 +0200
+        Sat, 09 Sep 2023 09:12:59 -0700 (PDT)
+Message-ID: <f4e8f6cc-d557-4b60-9d22-096595cd2ffb@tessares.net>
+Date: Sat, 9 Sep 2023 18:12:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,11 +47,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v5 2/2] mptcp: fix dangling connection hang-up
+Subject: Re: [PATCH mptcp-net v5 0/2] mptcp: fix another close hang-up
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1693988314.git.pabeni@redhat.com>
- <c6eb12bdaa092d1f98ae15adb99729c8192d8939.1693988314.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -96,82 +95,49 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <c6eb12bdaa092d1f98ae15adb99729c8192d8939.1693988314.git.pabeni@redhat.com>
+In-Reply-To: <cover.1693988314.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Paolo, Mat,
 
 On 06/09/2023 10:30, Paolo Abeni wrote:
-> According to RFC 8684 section 3.3:
+> If the TCP subflows close silently due to timeouts, the msk socket
+> can hang-up indefinitely.
 > 
->   A connection is not closed unless [...] or an implementation-specific
->   connection-level send timeout.
+> Implement an additional close timeout triggered with the last subflow
+> close event and move the msk to TCP_CLOSE when it fires.
 > 
-> Currently the MPTCP protocol does not implement such timeout, and
-> connection timing-out at the TCP-level never move to close state.
+> Should address issues/430 and issues/431.
 > 
-> Introduces a catch-up condition at subflow close time to move the
-> MPTCP socket to close, too.
-> 
-> That additionally allow removing similar existing inside the worker.
-> 
-> Finally, allow some additional timeout for plain ESTABLISHED mptcp
-> sockets, as the protocol allows creating new subflows even at that
-> point and making the connection functional again.
-> 
-> The issues is actually present since the beginning, but it basically
-> impossible to solve without a long chain of functional pre-requisites
-> topped by the blamed commit below.
+> v4 -> v5:
+>  - let the tout always expire for dead socks (Mat)
+>  - fix comment type (Mat)
+>  - targeting net, added fixes tag
 
-Thank you for the update!
+Thank you for your patience (sorry for the delay), the new version and
+the previous reviews! It looks good to me!
 
-(...)
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 4fcce9ad7d04..74889f072d2d 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -726,6 +726,30 @@ void mptcp_get_options(const struct sk_buff *skb,
->  void mptcp_finish_connect(struct sock *sk);
->  void __mptcp_set_connected(struct sock *sk);
->  void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout);
-> +
-> +static inline void mptcp_stop_tout_timer(struct sock *sk)
-> +{
-> +	if (!inet_csk(sk)->icsk_mtup.probe_timestamp)
-> +		return;
-> +
-> +	sk_stop_timer(sk, &sk->sk_timer);
-> +	inet_csk(sk)->icsk_mtup.probe_timestamp = 0;
-> +}
-> +
-> +static inline void mptcp_set_close_tout(struct sock *sk, unsigned long tout)
-> +{
-> +	/* avoid 0 timestamp, at that means no close timeout */
-> +	inet_csk(sk)->icsk_mtup.probe_timestamp = tout;
-> +	if (!inet_csk(sk)->icsk_mtup.probe_timestamp)
-> +		inet_csk(sk)->icsk_mtup.probe_timestamp = 1;
+(@Mat: I can add your RvB tag as well, especially because you did the
+previous reviews.)
 
-Small detail: maybe more readable with:
+I just applied these two patches in our tree (fixes for -net) with the 2
+suggestions I mentioned in a reply to patch 2/2 (still possible to undo
+them if needed).
 
-  /* avoid 0 timestamp, as that means no close timeout */
-  inet_csk(sk)->icsk_mtup.probe_timestamp = tout ? : 1;
+New patches for t/upstream-net and t/upstream:
+- 292454bf7376: mptcp: rename timer related helper to less confusing names
+- 246aefd6e9b3: mptcp: fix dangling connection hang-up
+- Results: 07a89d3454a9..c35c49bddbfc (export-net)
+- Results: 07a689bb4cbf..c23e74879d43 (export)
 
+Tests are now in progress:
 
-I can do the modification when applying the patch if that's OK.
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20230909T160908
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230909T160908
 
-> +}
-> +
-> +static inline void mptcp_start_tout_timer(struct sock *sk)
-> +{
-> +	mptcp_set_close_tout(sk, tcp_jiffies32);
-> +	mptcp_reset_tout_timer(mptcp_sk(sk), 0);
-> +}
-> +
->  static inline bool mptcp_is_fully_established(struct sock *sk)
->  {
->  	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
 Cheers,
 Matt
 -- 
