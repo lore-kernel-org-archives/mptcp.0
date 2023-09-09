@@ -1,45 +1,45 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A586FC2
-	for <mptcp@lists.linux.dev>; Sat,  9 Sep 2023 15:50:26 +0000 (UTC)
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-401d24f1f27so34090815e9.1
-        for <mptcp@lists.linux.dev>; Sat, 09 Sep 2023 08:50:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A2923A4
+	for <mptcp@lists.linux.dev>; Sat,  9 Sep 2023 16:03:53 +0000 (UTC)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2bcfd3220d3so49639721fa.2
+        for <mptcp@lists.linux.dev>; Sat, 09 Sep 2023 09:03:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1694274625; x=1694879425; darn=lists.linux.dev;
+        d=tessares.net; s=google; t=1694275432; x=1694880232; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pVOUfLS+7cbfMp6qJGYTJ7Nxk9WG/6KeYhQ+zxmFkXs=;
-        b=Kagt5IVtb3V3v6ULYLdd6CCN3s0SkA8PTioOnhnv21u6QN9pkE8PyRyj2vERX/Km2w
-         BslfAmeQn1D4wIM/c8UmdG68KSIgz0w4QP1GE04yJPeE6rHnDlEkcr7HKtBDw+asntNw
-         5SoKbDMlbX7VspvFauh9t3gYnooJSHufRwLG5jhpWrjoG7UzXorvMOLyBgaZybUfXw6a
-         2BpuSdqML8WLjgm3rRFWWobQtsz06E+1YVWLu+g31Z7KxOmNtcBMOFPRWN+yofUKIieP
-         LoX38u9J82h9LQgFJ1hlQclTZvxI5BasxQQ2rTyBK9OUMoA15cyhwcsjs/4b2Yi0nkHB
-         gvVQ==
+        bh=VasQe3nsdM0wzhDQpujuRvDajYSd+1YF/YB7C7ukHSg=;
+        b=mal3omNaKaSglfPF83L/2jmc8tnwImWrW+2l0yPsP21a0NIO4HEMy9EQRXwaz3u41i
+         Fvd/JHNS4QnWFKq1W94/TeTO5tczERVcsoVAbtySiuULfVDwYplLHehPZ5LzhBW4qgiK
+         SgRIBFmvOkCJPalkDRUnzRcx1jRoV4q6KXskpaiTmGRTEJqd4rT3QoL7WjPGUVMzyNCu
+         wFUCPhreatlS5gWSzI1oOEJpE/v3F6SawOp9MNOqyXBnAC6GcaM27KQJQKOJWUO6NiXa
+         yo9gNdLOK+f0WSk9KP6VD3hr4Jl8xW5gT9h1+5J5Htxr7XxBQ3wPRYnIyUk7791znOFa
+         zrJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694274625; x=1694879425;
+        d=1e100.net; s=20230601; t=1694275432; x=1694880232;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pVOUfLS+7cbfMp6qJGYTJ7Nxk9WG/6KeYhQ+zxmFkXs=;
-        b=LgqxM3JdzHKlbVYg5UphsCeWXKYo4u5AAUBijkGm1AJJ7swdhSY9Dw03LmiqgwlOhh
-         2Las+4zMca6QrKBapbHG85C6npDiegT9idQTxaGCSYvoQJAkT1CYDh48mog5si/HRFQ9
-         uBra95R2ADGUY4Qcufzc6WVDsj/yPXdN4gSyJb4QCZt8kWJouMC5wAJmqggi5SfNecO/
-         ZqMYAkNVWz1khSOOLmMFOEJ2RowraPeK2uCEok2j1Rzn/JiBnjJj2xVhR9eCs9LQGpcH
-         7UJOzwrwzIm8cpezEVFcmCf4dUIqtSpXCIk1lNouWKySmZGeBB3aszuTD4Xd4rtAwvx6
-         dEsw==
-X-Gm-Message-State: AOJu0Yw/C2vvGHk5wZNPVTyDd5IcYCXMMX8hlVryMwHzCjEhVfMPYrYE
-	VXEhRCEXdLKm4cwmet08bigZmkquMt1G4LXipmehAw==
-X-Google-Smtp-Source: AGHT+IE/k9eIH/+s7cGqGn0mtqYAKBpsLOs57No8h5SYa3CDCQ1hvCxq3SqZLWkjIkv/CVP5bNetxA==
-X-Received: by 2002:a05:600c:210f:b0:401:dc7c:2494 with SMTP id u15-20020a05600c210f00b00401dc7c2494mr4744337wml.27.1694274624355;
-        Sat, 09 Sep 2023 08:50:24 -0700 (PDT)
+        bh=VasQe3nsdM0wzhDQpujuRvDajYSd+1YF/YB7C7ukHSg=;
+        b=X6NG5iXSivxr6eb7dbVjVEgJ/Nq8WhbWncPitbAYmBlRNJU8IyHAgr+VmcHFZXWwHR
+         QuiUX0l4r7bt8bOrv4qtJXS/ao2EJD/X2pYrbfx9qbpP9iH3eOVLowMGOd/nbnNLx1z6
+         XqpeL0n5k4kKdJqfv501diJmbBeLnwyFcsY3R6reKvQqk3uC22m02idzHlZMb7Nf8g8x
+         UfulL3G8OYrdticHouGo2vXVRWFs4ziZCZgzX395IyPeJSr2KnWLPBU4mEB+EWi4V3Hh
+         A7l8y2guqwCkFL2VFtJIldNjdWZOge2L4EDn512b5jUj681Nb4Njt72fOUMzxFMMm1jl
+         sJ/g==
+X-Gm-Message-State: AOJu0YzxIerf5L76Bw63pI7dnaqUII0JKAmTj5suLIXffoYqeOI4jwji
+	XCtNBJ6OJdugO2CFDYf7Y4XkZg==
+X-Google-Smtp-Source: AGHT+IFSSefuZQJESKZTMakm/hijZpfmyyfFE+0DGNWB0gqNFiqLnAdliF64IW5E2/x202yk5bZRVA==
+X-Received: by 2002:a19:914e:0:b0:4fd:c84f:30d4 with SMTP id y14-20020a19914e000000b004fdc84f30d4mr4114187lfj.36.1694275431550;
+        Sat, 09 Sep 2023 09:03:51 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:91e4:ea9f:cc1e:927a? ([2a02:578:8593:1200:91e4:ea9f:cc1e:927a])
-        by smtp.gmail.com with ESMTPSA id fa14-20020a05600c518e00b00402fa98abe3sm4261564wmb.46.2023.09.09.08.50.23
+        by smtp.gmail.com with ESMTPSA id x7-20020a19f607000000b004fe47879d93sm666222lfe.106.2023.09.09.09.03.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 Sep 2023 08:50:23 -0700 (PDT)
-Message-ID: <4f8e9b17-e19a-44a3-adac-38771b5fac51@tessares.net>
-Date: Sat, 9 Sep 2023 17:50:22 +0200
+        Sat, 09 Sep 2023 09:03:51 -0700 (PDT)
+Message-ID: <c3d26a5d-03d7-4c09-bbe0-dc3a02e364f2@tessares.net>
+Date: Sat, 9 Sep 2023 18:03:49 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -124,22 +124,54 @@ On 06/09/2023 10:30, Paolo Abeni wrote:
 > impossible to solve without a long chain of functional pre-requisites
 > topped by the blamed commit below.
 
-Would it not be better to put another "Fixes" tag and mention that
-bbd49d114d57 is required for the backports?
+Thank you for the update!
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/430
-> Fixes: bbd49d114d57 ("mptcp: consolidate transition to TCP_CLOSE in mptcp_do_fastclose()")
+(...)
 
-My fear is that this patch will not be automatically selected to be
-backported below 6.5.
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 4fcce9ad7d04..74889f072d2d 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -726,6 +726,30 @@ void mptcp_get_options(const struct sk_buff *skb,
+>  void mptcp_finish_connect(struct sock *sk);
+>  void __mptcp_set_connected(struct sock *sk);
+>  void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout);
+> +
+> +static inline void mptcp_stop_tout_timer(struct sock *sk)
+> +{
+> +	if (!inet_csk(sk)->icsk_mtup.probe_timestamp)
+> +		return;
+> +
+> +	sk_stop_timer(sk, &sk->sk_timer);
+> +	inet_csk(sk)->icsk_mtup.probe_timestamp = 0;
+> +}
+> +
+> +static inline void mptcp_set_close_tout(struct sock *sk, unsigned long tout)
+> +{
+> +	/* avoid 0 timestamp, at that means no close timeout */
+> +	inet_csk(sk)->icsk_mtup.probe_timestamp = tout;
+> +	if (!inet_csk(sk)->icsk_mtup.probe_timestamp)
+> +		inet_csk(sk)->icsk_mtup.probe_timestamp = 1;
 
-Instead, I suggest to use:
+Small detail: maybe more readable with:
 
-Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
+  /* avoid 0 timestamp, as that means no close timeout */
+  inet_csk(sk)->icsk_mtup.probe_timestamp = tout ? : 1;
 
-The issue was certainly there before but hard to backport without that
-one anyway.
 
+I can do the modification when applying the patch if that's OK.
+
+> +}
+> +
+> +static inline void mptcp_start_tout_timer(struct sock *sk)
+> +{
+> +	mptcp_set_close_tout(sk, tcp_jiffies32);
+> +	mptcp_reset_tout_timer(mptcp_sk(sk), 0);
+> +}
+> +
+>  static inline bool mptcp_is_fully_established(struct sock *sk)
+>  {
+>  	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
 Cheers,
 Matt
 -- 
