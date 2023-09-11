@@ -1,45 +1,45 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9D2320A
-	for <mptcp@lists.linux.dev>; Mon, 11 Sep 2023 08:42:26 +0000 (UTC)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-401187f8071so25736965e9.0
-        for <mptcp@lists.linux.dev>; Mon, 11 Sep 2023 01:42:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB6D320A
+	for <mptcp@lists.linux.dev>; Mon, 11 Sep 2023 08:45:42 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-31c7912416bso4406009f8f.1
+        for <mptcp@lists.linux.dev>; Mon, 11 Sep 2023 01:45:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1694421745; x=1695026545; darn=lists.linux.dev;
+        d=tessares.net; s=google; t=1694421941; x=1695026741; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=W/BhMu1ddiaGN7rVE+mQh2AbsdNShTjyNO2k9io+z+U=;
-        b=UTJY/Uc1s/K2whMih/6hTb3bzEFq7A9yvAFYqg4yI0sTGo3Rr2WJIUEU7HnsQo70t2
-         SUksfSDKlKzEIv1J5E7d5imqw2WmBfMdu7hqDGiuNTkFGfV2Te5/Af+j2oGmoWwLF59e
-         e2ZtIs94NO/KPC2VKPK/m5Nk/VyPGpI+XT2stg3z3e70fAiVUsgqDc0P2XKk3vMHAHdY
-         SYKCwPFUJ4MTer16WM8YTX+2JmjKI8V9uMAPcOGcfi47f6p4ibEMatQJlQob4oVD8OaF
-         KsqGrXLsEnTA1c3M0HAVgSBSyQfNJhMG3LsZTM3jMlLVwlDS1h39tswlKtYrqYRgo39i
-         Tzag==
+        bh=A8Os+ccxFcLC/nWUEHWIyafSrKC5iJz6umLpT+gjds0=;
+        b=7FUKp1/QQM2l0hzK7v2MpOcndNkZANmgnBkHX0GyyrOSJZgNIWrYaHFLIhwtzH127U
+         yk3xRDtRzDhccI/ttnhHJ5Nk5JKNYMNb2Ym2tSFhy/C/gW1u/HI4E1p/EQFQiz2ieRmQ
+         fgD+pRSHsxqmh4vOy7KVGzxSy4H3TxV+SsBIPSf2iI4jKnY5FZDFDTfThSjf28yG+Fhq
+         4ot3wHQ2c0O7eOB9ide5sqU3i0pggRXy4BsWQQgA+SGRF4F5oos6F9X76/hb+oAqQepc
+         004S2ed4wjY1i4M+RrB4Xx6Oo9yy7ytzgz6W6oE7ZUDBvtOUMtK9jc8Zd6x2xoI3WDhu
+         hUwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694421745; x=1695026545;
+        d=1e100.net; s=20230601; t=1694421941; x=1695026741;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W/BhMu1ddiaGN7rVE+mQh2AbsdNShTjyNO2k9io+z+U=;
-        b=gUhh+0OLmZYy1HV1dGNIs6Nmr6ttxoTQFQF1lo14LMh1SyEEccrbF0fbYyClcHXRDR
-         ocrU025fcAy0r0VJvJbHKe+f0DFe+NDXfZtciXBXhJh8yVvd+fFPqgQ5OpDNRWKN1V0e
-         WwjBgBZVoRTvKPXlPV7VQy9dGaGl1+L6avfxuZvIlp3SPYd+vnnIQgdPyBmcP7xP9lpT
-         MufM4C2OwQKGw5wEgEoS0yMchlj6RZbSZZgVazTZEiM+CqB7c7FE/lMl91vAsbtUYXyR
-         fNZ5GK3flziQwebwD/Z6dKQI42q3PFzDwN9/Dw5Yk8JOdjk8Ts/vVYJhVTrB1oR0SRmS
-         6KgA==
-X-Gm-Message-State: AOJu0YwlV8Kt0MwzLzHT+yT5Jkm1UlVGF56cgg2RAIJ0teRCF95MEa8e
-	GJEum5m/u96Pz+ZDVwLf2GcMpt47WcKA9uzqGoU=
-X-Google-Smtp-Source: AGHT+IHQWjMfJpGqSORXbSASZ3N7gJeC1ozmeQp7afeKG61N3LUAuUiN+RftMKoUadWsRYj+1mE37A==
-X-Received: by 2002:a1c:720e:0:b0:3fe:1fd9:bedf with SMTP id n14-20020a1c720e000000b003fe1fd9bedfmr6060818wmc.11.1694421744681;
-        Mon, 11 Sep 2023 01:42:24 -0700 (PDT)
+        bh=A8Os+ccxFcLC/nWUEHWIyafSrKC5iJz6umLpT+gjds0=;
+        b=wp11TN/BBwGrE/+lUAuzKE3KPmvl+UV6Ax0weU6+0oG5jX2SLb+ZWbomZsrI510d6s
+         K8lI9XAwusLMgNfpqAqTinxglZ7O44a5qimFhW8xsPIdQCQjelX3Z3/BHuh7JLxvh5HP
+         r1Mi+pmjx7tYsOQsMxq52d2jLR9H0jXeaKw6qsVl2xmW30NJBa9BuwaY7wGste/9lcgF
+         E0wxNVfrJUD3yXTd06q1yzxFC/BjQlCBXO53FXqTYqeuw8MxnE7Owj5DuGbxPwt8sjkX
+         xBCIPLeRVyrhuf7UjEcSdofw8GgSAiXXR33ik+qmwu1YPrLC9HNWQVyeMMg1sqGQVjy6
+         otjw==
+X-Gm-Message-State: AOJu0YyuXmFwrtHZJWkLzfWoj6s5H76fS7lP8rAzUMERkl4DPrjB6pbi
+	3oqmf/It6rIFe07uNYsv4R3EkQ==
+X-Google-Smtp-Source: AGHT+IE6vfWs8RJq4ejyhIkaJz2CyXvCQ38iPtTwvC1IvO46sqDU0WhKKP6QtbQ1Mr/5XFS61PUd1w==
+X-Received: by 2002:a5d:6109:0:b0:315:99be:6fe4 with SMTP id v9-20020a5d6109000000b0031599be6fe4mr7840565wrt.69.1694421940847;
+        Mon, 11 Sep 2023 01:45:40 -0700 (PDT)
 Received: from [10.44.2.5] ([81.246.10.41])
-        by smtp.gmail.com with ESMTPSA id o8-20020a1c7508000000b003fe29dc0ff2sm9470206wmc.21.2023.09.11.01.42.24
+        by smtp.gmail.com with ESMTPSA id i9-20020a5d5589000000b003141e629cb6sm9316913wrv.101.2023.09.11.01.45.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 01:42:24 -0700 (PDT)
-Message-ID: <869db5c2-c1e1-46e6-8b97-ce33dfc9f7e1@tessares.net>
-Date: Mon, 11 Sep 2023 10:42:23 +0200
+        Mon, 11 Sep 2023 01:45:40 -0700 (PDT)
+Message-ID: <be858164-11cd-4ead-814a-27bb1f4e2d31@tessares.net>
+Date: Mon, 11 Sep 2023 10:45:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,13 +47,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v5 2/2] mptcp: fix dangling connection hang-up
+Subject: Re: [PATCH mptcp-next v2] mptcp: add a new sysctl for make after
+ break timeout
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1693988314.git.pabeni@redhat.com>
- <c6eb12bdaa092d1f98ae15adb99729c8192d8939.1693988314.git.pabeni@redhat.com>
- <4f8e9b17-e19a-44a3-adac-38771b5fac51@tessares.net>
- <982b3b51305db17ed5a8371c7cb3abb41c05ab97.camel@redhat.com>
+References: <dfadc0c4a9bf4649c01e09d675f4de59eb409f5d.1693841118.git.pabeni@redhat.com>
+ <b7703287-9e04-4c9a-93a6-b50c2020c5ab@tessares.net>
+ <5c4d5eefdae7992aae4a321349ec58aadbc672d9.camel@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -98,60 +98,61 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <982b3b51305db17ed5a8371c7cb3abb41c05ab97.camel@redhat.com>
+In-Reply-To: <5c4d5eefdae7992aae4a321349ec58aadbc672d9.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 11/09/2023 08:13, Paolo Abeni wrote:
-> On Sat, 2023-09-09 at 17:50 +0200, Matthieu Baerts wrote:
->> On 06/09/2023 10:30, Paolo Abeni wrote:
->>> According to RFC 8684 section 3.3:
+On 11/09/2023 08:17, Paolo Abeni wrote:
+> On Mon, 2023-09-04 at 17:58 +0200, Matthieu Baerts wrote:
+>> On 04/09/2023 17:48, Paolo Abeni wrote:
+>>> The MPTCP protocol allows sockets with no alive subflows to stay
+>>> in ESTABLISHED status for and user-defined timeout, to allow for
+>>> later subflows creation.
 >>>
->>>   A connection is not closed unless [...] or an implementation-specific
->>>   connection-level send timeout.
+>>> Currently such timeout is constant - TCP_TIMEWAIT_LEN. Let the
+>>> user-space configure them via a newly added sysctl, to better cope
+>>> with busy servers and simplify (make them faster) the relevant
+>>> pktdrill tests.
 >>>
->>> Currently the MPTCP protocol does not implement such timeout, and
->>> connection timing-out at the TCP-level never move to close state.
+>>> Note that the new know does not apply to orphaned MPTCP socket
+>>> waiting for the data_fin handshake completion: they always wait
+>>> TCP_TIMEWAIT_LEN.
 >>>
->>> Introduces a catch-up condition at subflow close time to move the
->>> MPTCP socket to close, too.
->>>
->>> That additionally allow removing similar existing inside the worker.
->>>
->>> Finally, allow some additional timeout for plain ESTABLISHED mptcp
->>> sockets, as the protocol allows creating new subflows even at that
->>> point and making the connection functional again.
->>>
->>> The issues is actually present since the beginning, but it basically
->>> impossible to solve without a long chain of functional pre-requisites
->>> topped by the blamed commit below.
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> ---
+>>> v1 -> v2:
+>>>  - add the doc for the new knob (Matttbe)
+>>>  - fix a couple of bad/strange indentation (Matttbe)
 >>
->> Would it not be better to put another "Fixes" tag and mention that
->> bbd49d114d57 is required for the backports?
+>> Thank you for the update!
+
+(...)
+
+>>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+>>> index c46c22a84d23..36e389326073 100644
+>>> --- a/net/mptcp/ctrl.c
+>>> +++ b/net/mptcp/ctrl.c
 >>
->>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/430
->>> Fixes: bbd49d114d57 ("mptcp: consolidate transition to TCP_CLOSE in mptcp_do_fastclose()")
+>> (...)
 >>
->> My fear is that this patch will not be automatically selected to be
->> backported below 6.5.
+>>> @@ -141,6 +150,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
+>>>  		.mode = 0644,
+>>>  		.proc_handler = proc_dostring,
+>>>  	},
+>>> +	{
+>>> +		.procname = "close_timeout",
+>>> +		.maxlen = sizeof(unsigned int),
 >>
->> Instead, I suggest to use:
->>
->> Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
->>
->> The issue was certainly there before but hard to backport without that
->> one anyway.
+>> (just to be sure not to miss the idea which is probably not interesting)
+>> No need to accept negatives values and use -1 as a special case not to
+>> close "subflow-less" MPTCP connections?
 > 
-> Can we keep both tags? I would like to track the dep on bbd49d114d57
-> explicitly.
+> I would prefer not adding special values. I think a large enough close
+> timeout could be really indistinguishable from "infinity" here.
 
-I don't know: if we put multiple "Fixes" tags, how is it interpreted?
-Does it mean: we backport this patch to kernel versions having all (or
-at least?) the commits mentioned in the Fixes tags?
-
-As long as it is not confusing for the stable team :)
+Indeed, fine for me!
 
 Cheers,
 Matt
