@@ -1,58 +1,58 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216AD23CE
-	for <mptcp@lists.linux.dev>; Mon, 11 Sep 2023 06:13:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974FF23CE
+	for <mptcp@lists.linux.dev>; Mon, 11 Sep 2023 06:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694412824;
+	s=mimecast20190719; t=1694413053;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5GVeRtJytrM8IXsvkIoHn/WlK0VorwM3OpJUeCX6AIs=;
-	b=IF6bR8p9XekLH7dMGo2WQcZLReS6iZZNDU5laICizU6G5fPTvytcXUJ3yUF+w31Bx7rMVw
-	tHVXfsmOwBZttHLltr36oNZrPmvUSInkC4k7ZiWNwe5DQNxKYhVAqFyRz27SS5JgZEUuNX
-	lBw/WLU+U6ya/yTvz5LB0Mrt+pCKPag=
+	bh=NwQHhIyQeGgSRO7ljEPB0yGFpgec7QXg0fT1JEUfNO0=;
+	b=jRJXXjYM7qglHbZoXpqJkhlxLGDHxrgk8jghhVgEN5a0aLnYfi/2igfXVVpWrFLovSD//O
+	JFuhNfVCVZH4Co1y3y2a9I4wJVtUeNGLsTF27w6Jvh9eHDbXouSvOgnVbq1cS2gkYGHxgj
+	u7Kh9iSZRM5bzfVXuk6wVUayvAQ91rs=
 Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
  [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-223--s6ym4jxO-qaPOcfiBY29A-1; Mon, 11 Sep 2023 02:13:43 -0400
-X-MC-Unique: -s6ym4jxO-qaPOcfiBY29A-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9a1be1e2b63so38063466b.0
-        for <mptcp@lists.linux.dev>; Sun, 10 Sep 2023 23:13:43 -0700 (PDT)
+ us-mta-459-XOtTFU6dNpiw_y8GuGK0Vg-1; Mon, 11 Sep 2023 02:17:31 -0400
+X-MC-Unique: XOtTFU6dNpiw_y8GuGK0Vg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9a9cd336c9cso101675166b.1
+        for <mptcp@lists.linux.dev>; Sun, 10 Sep 2023 23:17:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694412822; x=1695017622;
+        d=1e100.net; s=20230601; t=1694413050; x=1695017850;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=5GVeRtJytrM8IXsvkIoHn/WlK0VorwM3OpJUeCX6AIs=;
-        b=UEMRW+gwjVmbsA7Gg50DP9Y+ji0pkGGQ4wgMOmgsLvcVYKQXvPDK8bYX7iFAVaoFvG
-         zw0ENNrWdetkWDFlheuIgLFonksAj22Pac0yK6T3TgPKsxIKGxs3KoM490pLmUnKvtqI
-         pbALnRl+y3WeZZ4BS/ZYn7JQObxik3kImhwdxb0dAK1+K2hqAbVm0Ll4szStBEg17luH
-         gdrFNk4so0iV7NCgzT3Y+rlIqw7fdp/sHNHGCbR3TKqC4DM/A0CmUReOfTNKMhFTv+q+
-         8n1UPTV9w1fT9mVgfHRH5Vu7bY6R52K+n3DE9dlTe1iMoDG5fcrF6i1qxZotpznYKBP5
-         C1ww==
-X-Gm-Message-State: AOJu0YxBDmxom9s0cSQNYAb94QpteuvljGjsMjUmvGyp0FfpP/aNbbTq
-	ZgpKjG2XUVtGl4rvfj1/fuoIH8xDIbY5MlaV3bOkAzA+mJKSerlpcl217Uv+FJZobduwUZADUn7
-	prndLI2qiEeHjwMhLcqNHjTw=
-X-Received: by 2002:a17:906:2088:b0:9a5:ce62:6e1a with SMTP id 8-20020a170906208800b009a5ce626e1amr6940068ejq.1.1694412822076;
-        Sun, 10 Sep 2023 23:13:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEe3LxcYRU5mvbJFlduStFIvjhDkjOgzWYKBL+m+jkj3vOCEgqGFDJAD+6CUWbFcuh2s1vmbg==
-X-Received: by 2002:a17:906:2088:b0:9a5:ce62:6e1a with SMTP id 8-20020a170906208800b009a5ce626e1amr6940060ejq.1.1694412821739;
-        Sun, 10 Sep 2023 23:13:41 -0700 (PDT)
+        bh=WeEeE/ACdDOmhayDmquTmXw6o8aqD5lTSwqty4z6Qik=;
+        b=L93kKVTdKfMmRHU655D92fSLqz6MOhSfAwwmp8oIRyCImvHXdPt+rM14MOVIzIdFHW
+         MkYXjcHnld3Fx0a5w2DKC1LX9rQsTt/PdlY7a/ibcsQKDzc0cWtjXZ5ZHY+oNv3EscO+
+         c+r/bgBgV4E3QleW5ouLSf4YY85dnYRhwSNL3AjoFqvalPeWal8IjHT5zJiA9RZyXwWz
+         otgSqAD2rc+6ae72PtSe7Sxl16/recvLvr5S6wc4lMQFP0dqLTQpMyRSJOedFgOp/LnI
+         9ijVLxEB0hEZhiVrPfXKslXplDeZsk0dAgWGsGpxgNLWxb+Cds+StrZE3P7jxs86w3KP
+         XimA==
+X-Gm-Message-State: AOJu0YzZcirvmq1E9FG290TH26PWLj00awn+VRtL4CU+gHWpeb1gnU3T
+	LkypFcFV62ln5cOjA+QQU2VHayljAVLvOaFmxhgtvo25rN0NiP9N0MyviR8J2HAXxiRNMIWj+ce
+	AGariSdT+KMQWrryzt3D8Q24=
+X-Received: by 2002:a05:6402:35d5:b0:523:220e:a6ca with SMTP id z21-20020a05640235d500b00523220ea6camr6957410edc.3.1694413050450;
+        Sun, 10 Sep 2023 23:17:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHRMwkqQqmmFzw5hceAdxqxdOT7KuMc5mqmUhxf3IzBJp+zcfvDn9wZ0kOV1UNKrHv86CXEjw==
+X-Received: by 2002:a05:6402:35d5:b0:523:220e:a6ca with SMTP id z21-20020a05640235d500b00523220ea6camr6957396edc.3.1694413050033;
+        Sun, 10 Sep 2023 23:17:30 -0700 (PDT)
 Received: from gerbillo.redhat.com (146-241-243-166.dyn.eolo.it. [146.241.243.166])
-        by smtp.gmail.com with ESMTPSA id w20-20020a1709064a1400b00991faf3810esm4861541eju.146.2023.09.10.23.13.41
+        by smtp.gmail.com with ESMTPSA id j18-20020a50ed12000000b0052996528b81sm4131047eds.45.2023.09.10.23.17.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Sep 2023 23:13:41 -0700 (PDT)
-Message-ID: <982b3b51305db17ed5a8371c7cb3abb41c05ab97.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net v5 2/2] mptcp: fix dangling connection hang-up
+        Sun, 10 Sep 2023 23:17:29 -0700 (PDT)
+Message-ID: <5c4d5eefdae7992aae4a321349ec58aadbc672d9.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2] mptcp: add a new sysctl for make after
+ break timeout
 From: Paolo Abeni <pabeni@redhat.com>
 To: Matthieu Baerts <matthieu.baerts@tessares.net>, mptcp@lists.linux.dev
-Date: Mon, 11 Sep 2023 08:13:40 +0200
-In-Reply-To: <4f8e9b17-e19a-44a3-adac-38771b5fac51@tessares.net>
-References: <cover.1693988314.git.pabeni@redhat.com>
-	 <c6eb12bdaa092d1f98ae15adb99729c8192d8939.1693988314.git.pabeni@redhat.com>
-	 <4f8e9b17-e19a-44a3-adac-38771b5fac51@tessares.net>
+Date: Mon, 11 Sep 2023 08:17:28 +0200
+In-Reply-To: <b7703287-9e04-4c9a-93a6-b50c2020c5ab@tessares.net>
+References: <dfadc0c4a9bf4649c01e09d675f4de59eb409f5d.1693841118.git.pabeni@redhat.com>
+	 <b7703287-9e04-4c9a-93a6-b50c2020c5ab@tessares.net>
 User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -65,50 +65,91 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2023-09-09 at 17:50 +0200, Matthieu Baerts wrote:
+On Mon, 2023-09-04 at 17:58 +0200, Matthieu Baerts wrote:
 > Hi Paolo,
 >=20
-> On 06/09/2023 10:30, Paolo Abeni wrote:
-> > According to RFC 8684 section 3.3:
+> On 04/09/2023 17:48, Paolo Abeni wrote:
+> > The MPTCP protocol allows sockets with no alive subflows to stay
+> > in ESTABLISHED status for and user-defined timeout, to allow for
+> > later subflows creation.
 > >=20
-> >   A connection is not closed unless [...] or an implementation-specific
-> >   connection-level send timeout.
+> > Currently such timeout is constant - TCP_TIMEWAIT_LEN. Let the
+> > user-space configure them via a newly added sysctl, to better cope
+> > with busy servers and simplify (make them faster) the relevant
+> > pktdrill tests.
 > >=20
-> > Currently the MPTCP protocol does not implement such timeout, and
-> > connection timing-out at the TCP-level never move to close state.
+> > Note that the new know does not apply to orphaned MPTCP socket
+> > waiting for the data_fin handshake completion: they always wait
+> > TCP_TIMEWAIT_LEN.
 > >=20
-> > Introduces a catch-up condition at subflow close time to move the
-> > MPTCP socket to close, too.
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> > v1 -> v2:
+> >  - add the doc for the new knob (Matttbe)
+> >  - fix a couple of bad/strange indentation (Matttbe)
+>=20
+> Thank you for the update!
+>=20
+> > ---
+> >  Documentation/networking/mptcp-sysctl.rst | 11 +++++++++++
+> >  net/mptcp/ctrl.c                          | 16 ++++++++++++++++
+> >  net/mptcp/protocol.c                      |  5 +++--
+> >  net/mptcp/protocol.h                      |  1 +
+> >  4 files changed, 31 insertions(+), 2 deletions(-)
 > >=20
-> > That additionally allow removing similar existing inside the worker.
-> >=20
-> > Finally, allow some additional timeout for plain ESTABLISHED mptcp
-> > sockets, as the protocol allows creating new subflows even at that
-> > point and making the connection functional again.
-> >=20
-> > The issues is actually present since the beginning, but it basically
-> > impossible to solve without a long chain of functional pre-requisites
-> > topped by the blamed commit below.
+> > diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/=
+networking/mptcp-sysctl.rst
+> > index 15f1919d640c..f569129ea881 100644
+> > --- a/Documentation/networking/mptcp-sysctl.rst
+> > +++ b/Documentation/networking/mptcp-sysctl.rst
+> > @@ -25,6 +25,17 @@ add_addr_timeout - INTEGER (seconds)
+> > =20
+> >  =09Default: 120
+> > =20
+> > +close_timeout - INTEGER (seconds)
+> > +=09Set the make-after-break timeout: in absence of any close or
+> > +        shutdown syscall, MPTCP sockets will maintain the status
+> > +        unchanged for such time, after the last subflow removal, befor=
+e
+> > +        moving to TCP_CLOSE.
 >=20
-> Would it not be better to put another "Fixes" tag and mention that
-> bbd49d114d57 is required for the backports?
+> You are using spaces for these 3 lines, the rest is OK using tabs. Did
+> you switch to EMACS? :-D
 >=20
-> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/430
-> > Fixes: bbd49d114d57 ("mptcp: consolidate transition to TCP_CLOSE in mpt=
-cp_do_fastclose()")
->=20
-> My fear is that this patch will not be automatically selected to be
-> backported below 6.5.
->=20
-> Instead, I suggest to use:
->=20
-> Fixes: e16163b6e2b7 ("mptcp: refactor shutdown and close")
->=20
-> The issue was certainly there before but hard to backport without that
-> one anyway.
+> I can do the modification when applying the patch (if I don't forget :) )
 
-Can we keep both tags? I would like to track the dep on bbd49d114d57
-explicitly.
+I'll fix that in v3.
+
+> > +
+> > +=09The default value matches TCP_TIMEWAIT_LEN. This is a per-namespace
+> > +=09sysctl.
+> > +
+> > +=09Default: 60
+> > +
+> >  checksum_enabled - BOOLEAN
+> >  =09Control whether DSS checksum can be enabled.
+> > =20
+> > diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+> > index c46c22a84d23..36e389326073 100644
+> > --- a/net/mptcp/ctrl.c
+> > +++ b/net/mptcp/ctrl.c
+>=20
+> (...)
+>=20
+> > @@ -141,6 +150,12 @@ static struct ctl_table mptcp_sysctl_table[] =3D {
+> >  =09=09.mode =3D 0644,
+> >  =09=09.proc_handler =3D proc_dostring,
+> >  =09},
+> > +=09{
+> > +=09=09.procname =3D "close_timeout",
+> > +=09=09.maxlen =3D sizeof(unsigned int),
+>=20
+> (just to be sure not to miss the idea which is probably not interesting)
+> No need to accept negatives values and use -1 as a special case not to
+> close "subflow-less" MPTCP connections?
+
+I would prefer not adding special values. I think a large enough close
+timeout could be really indistinguishable from "infinity" here.
 
 Cheers,
 
