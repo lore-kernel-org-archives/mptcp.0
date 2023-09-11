@@ -1,126 +1,113 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from rn-mailsvcp-mx-lapp01.apple.com (rn-mailsvcp-mx-lapp01.apple.com [17.179.253.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA34F9E4
-	for <mptcp@lists.linux.dev>; Mon, 11 Sep 2023 16:41:28 +0000 (UTC)
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-414d37bd1e9so34350801cf.3
-        for <mptcp@lists.linux.dev>; Mon, 11 Sep 2023 09:41:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694450487; x=1695055287; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rF8OH+KsxK1szZFGkBCNT1KjVBtuPljw6JlIxvdghmw=;
-        b=VVzqN4kmNv/9nBCO3N3+Gc2dC/4ES+p1MqFiRrtrGXiZ81wAsGmmdEzOZUz2Bbf2u5
-         8CdsGzW6q047c0p6+b+w4VOE39ahfa0+ok39YtKgu0RjkUAsTCRlU4H4OOv9NTKfAUDg
-         SFikG0rGG2ulahIGqWqXSbxZPZAPzbQiU2KM7w4/BJugqpQsf1b6UOpTdBmHPC9/4Csf
-         k2WPaICamhhEgSY+mLcuqPXpNCkcYtJsPIPwGmTA2SPYSwk7G09wgVswSlszVHHLBdSC
-         3y+oopylmhFhLar4pOdRlU5Wxyi4nS7ZWSGOWhC2hMs3lNRab8pWMzHxS2XaymcHSmKT
-         HoBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694450487; x=1695055287;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=rF8OH+KsxK1szZFGkBCNT1KjVBtuPljw6JlIxvdghmw=;
-        b=eK6TLdOStTj61ea++5zjHC+MRb8eirzMeF/jD2Vhxxp6ZBrVnR1FobfnIPwnZv8XW3
-         +oR/+j908/qXqij2/gHEoWp9Q1vHPwQBCe41PtEfe0+ZIB3iRyCpS37fXTHm1MeG04WC
-         BMSJ89tMKfC3OZYOfYtenPcKmLO6aOqz4H73vlAsqbkfDWV274LYl8xj0dIe78loIkPC
-         w4uPwaz0YAitrTzuSdg7v5ELD5qehHvNbKbMUHnyfdYCB+7YjDudzGd1JEBneSd8OW2u
-         0b/pX4uV8GUDgmNuoWhkI838ZkCIpRDzvhJ+8gmjhbhNW6eRN4G5GkOZevFEYmrjajqe
-         K3jg==
-X-Gm-Message-State: AOJu0YwlG6GXmqEzP9DectprDMLopb8sYVcHzNoqlbMMqGla2/fcaaZB
-	0hQjZ84sH3uCYKpP5BKER22czLhBFeE7
-X-Google-Smtp-Source: AGHT+IHOvPax68DTWF0/Upt96srPc9eZTf6Lg81S18OFJ8irm5X3VL3bAfr/2xyMBg6KIYahz7MlJw==
-X-Received: by 2002:a05:622a:428f:b0:410:a9f8:c7e6 with SMTP id cr15-20020a05622a428f00b00410a9f8c7e6mr8892884qtb.42.1694450487110;
-        Mon, 11 Sep 2023 09:41:27 -0700 (PDT)
-Received: from [127.0.0.1] ([52.226.126.225])
-        by smtp.gmail.com with ESMTPSA id b11-20020ac812cb000000b004109fb22216sm2705122qtj.79.2023.09.11.09.41.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 09:41:26 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <fe8c2c5502b7a924bdcba6621486e1e68861f9fd.1694426964.git.pabeni@redhat.com>
-References:
- <fe8c2c5502b7a924bdcba6621486e1e68861f9fd.1694426964.git.pabeni@redhat.com>
-Subject: Re: mptcp: add a new sysctl for make after break timeout: Tests
- Results
-Message-ID: <d6eb3e7d-0f84-5665-3222-3e63c224b232@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 11 Sep 2023 16:41:26 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD79AD2E
+	for <mptcp@lists.linux.dev>; Mon, 11 Sep 2023 17:41:32 +0000 (UTC)
+Received: from rn-mailsvcp-mta-lapp01.rno.apple.com
+ (rn-mailsvcp-mta-lapp01.rno.apple.com [10.225.203.149])
+ by rn-mailsvcp-mx-lapp01.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0S0U007WI151U830@rn-mailsvcp-mx-lapp01.rno.apple.com>
+ for mptcp@lists.linux.dev; Mon, 11 Sep 2023 10:41:26 -0700 (PDT)
+X-Proofpoint-ORIG-GUID: AxE00cqSYTcr41q9ILrvttKtKORNHET4
+X-Proofpoint-GUID: AxE00cqSYTcr41q9ILrvttKtKORNHET4
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.601,18.0.957
+ definitions=2023-09-11_13:2023-09-05,2023-09-11 signatures=0
+X-Proofpoint-Spam-Details: rule=interactive_user_notspam
+ policy=interactive_user score=0 mlxscore=0 mlxlogscore=432 phishscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2309110161
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com;
+ h=content-type : mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=20180706;
+ bh=/UmKWMEBZ8YoIn4Prq5QVdDMPky+8pQEkn1Nazk9DFo=;
+ b=fQwtBZEt6NeHDFHoOrbkNVfYJFLhUipcK1KGG61WN4/oxc2pYFu/2BrzShuduSmCXwoO
+ 8Fgtw7fNGE5jsdlRFhZ1VXx0MohXzoIJlw+w5+/Pvq2AytpyXIadtp9bZ6OjxreOVvd7
+ muqozt6xqtBa4DO0coZFlEMY6Vx+fUBPDYXlthd0Uv/yWvur26bwDheUjk1733tDM6nv
+ qedrIYvbYLuUZvshEjuRSBAZNX1MWBlK09KtXHbvcICBrzm2EKDxBeXphiveIDbA7Yli
+ rgqAU876Fv/ME9td1SsqPbjDe0O0T3Dp9HP1rEMe16EJKGExuEa+85pIahEj2Ou7KTbB rQ==
+Received: from rn-mailsvcp-mmp-lapp02.rno.apple.com
+ (rn-mailsvcp-mmp-lapp02.rno.apple.com [17.179.253.15])
+ by rn-mailsvcp-mta-lapp01.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0S0U00KPX15226N0@rn-mailsvcp-mta-lapp01.rno.apple.com>;
+ Mon, 11 Sep 2023 10:41:26 -0700 (PDT)
+Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp02.rno.apple.com by
+ rn-mailsvcp-mmp-lapp02.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) id <0S0U010000JMDQ00@rn-mailsvcp-mmp-lapp02.rno.apple.com>; Mon,
+ 11 Sep 2023 10:41:26 -0700 (PDT)
+X-Va-A:
+X-Va-T-CD: 62d7da425da0fb25eb2c6e85f2f966df
+X-Va-E-CD: 2b3483cc51d778a83b3be5915b056b7f
+X-Va-R-CD: 0eef42286f64395431e9696be9476630
+X-Va-ID: daf03f73-4073-45cc-b467-f9fce56a1f6b
+X-Va-CD: 0
+X-V-A:
+X-V-T-CD: 62d7da425da0fb25eb2c6e85f2f966df
+X-V-E-CD: 2b3483cc51d778a83b3be5915b056b7f
+X-V-R-CD: 0eef42286f64395431e9696be9476630
+X-V-ID: 4176f744-5b3c-4770-bd89-f4f26dea2cf8
+X-V-CD: 0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.601,18.0.957
+ definitions=2023-09-11_13:2023-09-05,2023-09-11 signatures=0
+Received: from smtpclient.apple ([17.192.155.113])
+ by rn-mailsvcp-mmp-lapp02.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023))
+ with ESMTPSA id <0S0U00W081514M10@rn-mailsvcp-mmp-lapp02.rno.apple.com>; Mon,
+ 11 Sep 2023 10:41:26 -0700 (PDT)
+Content-type: text/plain; charset=utf-8
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+MIME-version: 1.0 (Mac OS X Mail 16.0 \(3774.100.2.1.2\))
+Subject: Re: kmemleak handling of kfree_rcu
+From: Christoph Paasch <cpaasch@apple.com>
+In-reply-to:
+ <CAEXW_YTxLRAKCpFdKOdegj0gZdBb0OH+BnJf9FGTGfPtwiPkiw@mail.gmail.com>
+Date: Mon, 11 Sep 2023 10:41:15 -0700
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ MPTCP Upstream <mptcp@lists.linux.dev>, rcu@vger.kernel.org
+Content-transfer-encoding: quoted-printable
+Message-id: <26A7E7B0-8B40-465C-9FC6-6F3D6529A591@apple.com>
+References: <F903A825-F05F-4B77-A2B5-7356282FBA2C@apple.com>
+ <ZPZKsJUPVeHCsLQB@arm.com> <EDE8FE3D-043D-4A14-ACF6-71FF786C0D32@apple.com>
+ <ZPi1LvrcGcSKBLqR@arm.com>
+ <CAEXW_YTxLRAKCpFdKOdegj0gZdBb0OH+BnJf9FGTGfPtwiPkiw@mail.gmail.com>
+To: Joel Fernandes <joel@joelfernandes.org>
+X-Mailer: Apple Mail (2.3774.100.2.1.2)
 
-Hi Paolo,
+Hello,
 
-Thank you for your modifications, that's great!
+> On Sep 10, 2023, at 4:10=E2=80=AFPM, Joel Fernandes =
+<joel@joelfernandes.org> wrote:
+>=20
+> Hi Christoph,
+>=20
+> On Wed, Sep 6, 2023 at 1:21=E2=80=AFPM Catalin Marinas =
+<catalin.marinas@arm.com> wrote:
+>>=20
+>> On Tue, Sep 05, 2023 at 02:22:13PM -0700, Christoph Paasch wrote:
+> [..]
+>>> If you have an updated patch, let me know. I can test it.
+>>=20
+>> I sent it in reply to Joel.
+>=20
+> Just checking if you got a chance to try Catalin's patch?
 
-Our CI did some validations and here is its report:
+sorry for the delay! Yes, I tested it and it works!
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6528270489878528
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6528270489878528/summary/summary.txt
+ Thanks,
+Christoph
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5261633094680576
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5261633094680576/su=
-mmary/summary.txt
+>=20
+> thanks,
+>=20
+> - Joel
+>=20
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_dss =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5824583048101888
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5824583048101888/su=
-mmary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4698683141259264
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4698683141259264/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/dda0c17574f7
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
