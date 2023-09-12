@@ -1,199 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C506179A0
-	for <mptcp@lists.linux.dev>; Tue, 12 Sep 2023 15:52:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4CE1C433C7;
-	Tue, 12 Sep 2023 15:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694533928;
-	bh=zL2eor7umb+6AK/A05ehZ6ZM7aqXEI+ls2UmbZn/6Uo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=R03QFJPTCFuVzO2ejEyGXGmwv+ytDRvAORmWJWWK1SQvE2f2i5VD4ek99/kYGHuPu
-	 0Fz0jrxiuDZXrs8HMUD7UAoB3e/Ze8L/ivOdYqTuqexIAB2eF3OenpBJiYPGI9AuUI
-	 o1hgE5qkAt30m9DYb/+OoO71tB5l74pIsSuFQmTJRQ/56ck3Bf+BLSwsItTHMx57nY
-	 97Q/aVh3gBOk+20dlbDXclfnfPOfIbDDmTTRMhb5iH0w3GNNuPe+33All2W/Bdpt7g
-	 TX2hXIq2z3j+gJy06ybWmJF5/Bt+crHi/g9WpAVNj4wh/Q7AgwPzQfsjjtl4TsNkmS
-	 Vunr4NoKzGvmg==
-Date: Tue, 12 Sep 2023 08:52:02 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v3] mptcp: add a new sysctl for make after
- break timeout
-In-Reply-To: <fe8c2c5502b7a924bdcba6621486e1e68861f9fd.1694426964.git.pabeni@redhat.com>
-Message-ID: <c527c2f7-0f84-8cf3-799c-a18eef254f8c@kernel.org>
-References: <fe8c2c5502b7a924bdcba6621486e1e68861f9fd.1694426964.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9671E1840
+	for <mptcp@lists.linux.dev>; Tue, 12 Sep 2023 17:01:46 +0000 (UTC)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-403012f276dso37320765e9.0
+        for <mptcp@lists.linux.dev>; Tue, 12 Sep 2023 10:01:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1694538104; x=1695142904; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XmsUkwx7drYNwEsuKZzFxgh6KRDPb0pyymAfUA8FO2E=;
+        b=AGSREKcZB7mexj3ZoKJWhCXwzSBUtEBGtKJgYE+QkonEpuvEQRiYvsQP7CltOz1/Ef
+         eQXBf4kCYuAkOuBUWT4KM26u1Ni55SvcXBkyyUkozsCyX6EWYHW0N39blruG10xktuw6
+         IMgoOobGNLMizrx++b4npmbvM2AkzagunCCBV3kbQdrg+NVbiH2tR9aQo+bObZ5G2x7v
+         fBnY763KnW4XRgEcA6Rq0LMoKLD4cWTR9cNJBYfKYOKjosk9M7hi6yf3oZRWJeMuL8e1
+         Ycam/LEvCIV2fRk1DyA0/9wwrUFm3dnFC4Oe9YSs0ozbTAQpI0cqiWGiC/MbNd29aly+
+         tE8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694538104; x=1695142904;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XmsUkwx7drYNwEsuKZzFxgh6KRDPb0pyymAfUA8FO2E=;
+        b=J+mPvlPO+faukJErzf1WJ01did4jpphN5Mgq0fxQycobsBUJvg8EDnJ+mbn6kNtawT
+         OI80vZK57YRuJBrP/9ObggVfvScGbZqEdG1liy7zarWKbCQfAFFF5XXI+Uc+F1rBecpM
+         Ie3NQkPsq6ce9CIfiAfp+74Ym/Bf0pae4h41l1FWRqhi6/8VUyhlXa+KQ78/ImsGX+r2
+         gsurYKQR+KcaD5WW3PWAe+gbQTHq/ZQ05goybwpPZUlPKUh2ohby4zzT2by+64dLoffp
+         ROIFDiSMvVSiaCdSPJJ+RCvINF8r1c/pVIQaZkO6zSWdgN7qln/PF6LTjjyj9O1aE1la
+         J1qg==
+X-Gm-Message-State: AOJu0YwrtrMhgpUh+0nwbH5x5M8sPwK/k8/eeW0VI3IhTDcDXPxGiZ9E
+	RmrLTDUCyqG4UpOpLdxORlYRgA==
+X-Google-Smtp-Source: AGHT+IHR09cOQzV7lmhGE0AdOIUfvpeDEmeycpjRKnLsxhwjhsOBUGU7D0lQsSyGM33Vn0zNXHR0nA==
+X-Received: by 2002:a05:600c:2814:b0:402:8896:cf09 with SMTP id m20-20020a05600c281400b004028896cf09mr44056wmb.9.1694538104429;
+        Tue, 12 Sep 2023 10:01:44 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:50fd:9518:7cfb:dc7e? ([2a02:578:8593:1200:50fd:9518:7cfb:dc7e])
+        by smtp.gmail.com with ESMTPSA id y14-20020a1c4b0e000000b003ff3b964a9asm16572727wma.39.2023.09.12.10.01.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Sep 2023 10:01:44 -0700 (PDT)
+Message-ID: <913b1918-59d9-41d4-b6c4-bfee291dbd85@tessares.net>
+Date: Tue, 12 Sep 2023 19:01:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v3] mptcp: add a new sysctl for make after
+ break timeout
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <fe8c2c5502b7a924bdcba6621486e1e68861f9fd.1694426964.git.pabeni@redhat.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
+ 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
+In-Reply-To: <fe8c2c5502b7a924bdcba6621486e1e68861f9fd.1694426964.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 11 Sep 2023, Paolo Abeni wrote:
+Hi Paolo, Mat,
 
+On 11/09/2023 12:34, Paolo Abeni wrote:
 > The MPTCP protocol allows sockets with no alive subflows to stay
 > in ESTABLISHED status for and user-defined timeout, to allow for
 > later subflows creation.
->
+> 
 > Currently such timeout is constant - TCP_TIMEWAIT_LEN. Let the
 > user-space configure them via a newly added sysctl, to better cope
 > with busy servers and simplify (make them faster) the relevant
 > pktdrill tests.
->
+> 
 > Note that the new know does not apply to orphaned MPTCP socket
 > waiting for the data_fin handshake completion: they always wait
 > TCP_TIMEWAIT_LEN.
->
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> v2 -> v3:
-> - fix doc intentation (Matttbe)
-> - use mptcp_close_timeout() in __mptcp_close_ssk, too (Mat)
 
-Hi Paolo -
+Thank you for your patch and reviews!
 
-Thanks, v3 LGTM:
+Now in our tree (feat. for net-next) with Mat's RvB tag:
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+New patches for t/upstream:
+- e9a01d8bc89c: mptcp: add a new sysctl for make after break timeout
+- Results: dbcf6d0f46fa..243780a48a72 (export)
 
+Tests are now in progress:
 
->
-> v1 -> v2:
-> - add the doc for the new knob (Matttbe)
-> - fix a couple of bad/strange indentation (Matttbe)
-> ---
-> Documentation/networking/mptcp-sysctl.rst | 11 +++++++++++
-> net/mptcp/ctrl.c                          | 16 ++++++++++++++++
-> net/mptcp/protocol.c                      |  6 +++---
-> net/mptcp/protocol.h                      |  1 +
-> 4 files changed, 31 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-> index 15f1919d640c..69975ce25a02 100644
-> --- a/Documentation/networking/mptcp-sysctl.rst
-> +++ b/Documentation/networking/mptcp-sysctl.rst
-> @@ -25,6 +25,17 @@ add_addr_timeout - INTEGER (seconds)
->
-> 	Default: 120
->
-> +close_timeout - INTEGER (seconds)
-> +	Set the make-after-break timeout: in absence of any close or
-> +	shutdown syscall, MPTCP sockets will maintain the status
-> +	unchanged for such time, after the last subflow removal, before
-> +	moving to TCP_CLOSE.
-> +
-> +	The default value matches TCP_TIMEWAIT_LEN. This is a per-namespace
-> +	sysctl.
-> +
-> +	Default: 60
-> +
-> checksum_enabled - BOOLEAN
-> 	Control whether DSS checksum can be enabled.
->
-> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index e72b518c5d02..13fe0748dde8 100644
-> --- a/net/mptcp/ctrl.c
-> +++ b/net/mptcp/ctrl.c
-> @@ -27,6 +27,7 @@ struct mptcp_pernet {
-> #endif
->
-> 	unsigned int add_addr_timeout;
-> +	unsigned int close_timeout;
-> 	unsigned int stale_loss_cnt;
-> 	u8 mptcp_enabled;
-> 	u8 checksum_enabled;
-> @@ -65,6 +66,13 @@ unsigned int mptcp_stale_loss_cnt(const struct net *net)
-> 	return mptcp_get_pernet(net)->stale_loss_cnt;
-> }
->
-> +unsigned int mptcp_close_timeout(const struct sock *sk)
-> +{
-> +	if (sock_flag(sk, SOCK_DEAD))
-> +		return TCP_TIMEWAIT_LEN;
-> +	return mptcp_get_pernet(sock_net(sk))->close_timeout;
-> +}
-> +
-> int mptcp_get_pm_type(const struct net *net)
-> {
-> 	return mptcp_get_pernet(net)->pm_type;
-> @@ -79,6 +87,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
-> {
-> 	pernet->mptcp_enabled = 1;
-> 	pernet->add_addr_timeout = TCP_RTO_MAX;
-> +	pernet->close_timeout = TCP_TIMEWAIT_LEN;
-> 	pernet->checksum_enabled = 0;
-> 	pernet->allow_join_initial_addr_port = 1;
-> 	pernet->stale_loss_cnt = 4;
-> @@ -141,6 +150,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
-> 		.mode = 0644,
-> 		.proc_handler = proc_dostring,
-> 	},
-> +	{
-> +		.procname = "close_timeout",
-> +		.maxlen = sizeof(unsigned int),
-> +		.mode = 0644,
-> +		.proc_handler = proc_dointvec_jiffies,
-> +	},
-> 	{}
-> };
->
-> @@ -163,6 +178,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
-> 	table[4].data = &pernet->stale_loss_cnt;
-> 	table[5].data = &pernet->pm_type;
-> 	table[6].data = &pernet->scheduler;
-> +	table[7].data = &pernet->close_timeout;
->
-> 	hdr = register_net_sysctl_sz(net, MPTCP_SYSCTL_PATH, table,
-> 				     ARRAY_SIZE(mptcp_sysctl_table));
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 3facdc006adc..1a0b463f8c97 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2377,8 +2377,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
-> 	if (msk->in_accept_queue && msk->first == ssk &&
-> 	    (sock_flag(sk, SOCK_DEAD) || sock_flag(ssk, SOCK_DEAD))) {
-> 		/* ensure later check in mptcp_worker() will dispose the msk */
-> -		mptcp_set_close_tout(sk, tcp_jiffies32 - (TCP_TIMEWAIT_LEN + 1));
-> 		sock_set_flag(sk, SOCK_DEAD);
-> +		mptcp_set_close_tout(sk, tcp_jiffies32 - (mptcp_close_timeout(sk) + 1));
-> 		lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
-> 		mptcp_subflow_drop_ctx(ssk);
-> 		goto out_release;
-> @@ -2506,7 +2506,7 @@ static bool mptcp_close_tout_expired(const struct sock *sk)
-> 		return false;
->
-> 	return time_after32(tcp_jiffies32,
-> -		  inet_csk(sk)->icsk_mtup.probe_timestamp + TCP_TIMEWAIT_LEN);
-> +		  inet_csk(sk)->icsk_mtup.probe_timestamp + mptcp_close_timeout(sk));
-> }
->
-> static void mptcp_check_fastclose(struct mptcp_sock *msk)
-> @@ -2649,7 +2649,7 @@ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
-> 		return;
->
-> 	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies +
-> -			TCP_TIMEWAIT_LEN;
-> +			mptcp_close_timeout(sk);
->
-> 	/* the close timeout takes precedence on the fail one, and here at least one of
-> 	 * them is active
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index aebc0cc24dad..0147419065dc 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -624,6 +624,7 @@ unsigned int mptcp_get_add_addr_timeout(const struct net *net);
-> int mptcp_is_checksum_enabled(const struct net *net);
-> int mptcp_allow_join_id0(const struct net *net);
-> unsigned int mptcp_stale_loss_cnt(const struct net *net);
-> +unsigned int mptcp_close_timeout(const struct sock *sk);
-> int mptcp_get_pm_type(const struct net *net);
-> const char *mptcp_get_scheduler(const struct net *net);
-> void mptcp_subflow_fully_established(struct mptcp_subflow_context *subflow,
-> -- 
-> 2.41.0
->
->
->
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230912T170023
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
