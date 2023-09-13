@@ -1,125 +1,52 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.socialglobal.pl (mail.socialglobal.pl [51.195.90.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29947179BA
-	for <mptcp@lists.linux.dev>; Wed, 13 Sep 2023 06:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694587163;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m8kQHufgSssee+EZROSGJ4Et2HFVLhAmO5B1AdZVqBw=;
-	b=O+B+jUZCjLJSsc4JfeZdztR6Ixz2EXO3Q12dUITy+8vIXrLtFkbyArcefikv+0+zGaWA4J
-	/7CVAGAsmdQf4LBsc2RR76OfiwHzVXXkck1MMtySWVZAYe5pt7Rle/HbMhtcbTlKlZBi4N
-	/WjQjJ1lkt+EjI6B9ksRQbRb8Yoxa+M=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-649-CPBTPxMQP3WV4ZxZcTAYVA-1; Wed, 13 Sep 2023 02:39:22 -0400
-X-MC-Unique: CPBTPxMQP3WV4ZxZcTAYVA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9a9cd336c9cso157260566b.1
-        for <mptcp@lists.linux.dev>; Tue, 12 Sep 2023 23:39:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694587161; x=1695191961;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m8kQHufgSssee+EZROSGJ4Et2HFVLhAmO5B1AdZVqBw=;
-        b=WDaIB7BCY/UqJVXHxHEdloOIISZe4ETrm3SnDyTtqbzurMgrfHXyVcf42MeGUbcCBy
-         cvkPcC5NHiVuD67tqEKFHWSmjw51C0DRUcpE96SsaMiLF5Yeqm2fVxqiYK5MzrK4LB1R
-         nbnoupxwdW/kKmYoW7yduzgYO7W5vPjovrXWQh+pW+QjBqA8A4DjG+DgUdaIYhpTN+2P
-         hm0ICWPa+W6vGfJYfDUiwFIWxg4MXt7xho7aKVhwC/sQ3CYzNP1e7hJx2NYepDCNT3QL
-         qXbkOJt2eCD1U5TD/dtS/hff7H9vDVZLKJzoyi7VQhwvs6cxaNbjQ1Z5tsPumytQzHj/
-         gTGQ==
-X-Gm-Message-State: AOJu0Yx84hZOQkpqSplZJ3yKu2ZyhpyA9xSAJuOrBhFNzt1gkzryMetI
-	UKzKAZKXWDZnjbarp17yhaRjjrDoW1Ypvii8lmap+hINwvNTFFVgeC7I+KFQtTJqiEF/0mPi7BU
-	MrGBlGEIDoohehwQ=
-X-Received: by 2002:a17:906:5187:b0:9a1:be9b:c935 with SMTP id y7-20020a170906518700b009a1be9bc935mr1128257ejk.0.1694587161138;
-        Tue, 12 Sep 2023 23:39:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFTbfVxS3RfDzqkoHhmZY9gCShfHgMnhhMEjZ0kQuaXhHShweIUGdam2jTzLfKuqsB8P4kuZg==
-X-Received: by 2002:a17:906:5187:b0:9a1:be9b:c935 with SMTP id y7-20020a170906518700b009a1be9bc935mr1128246ejk.0.1694587160764;
-        Tue, 12 Sep 2023 23:39:20 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-245-169.dyn.eolo.it. [146.241.245.169])
-        by smtp.gmail.com with ESMTPSA id n12-20020a17090695cc00b00993928e4d1bsm7884329ejy.24.2023.09.12.23.39.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Sep 2023 23:39:20 -0700 (PDT)
-Message-ID: <05b6f7916edcbac6d2d330d97ed078b7bc1d4aba.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v3 0/6] mptcp: convert netlink code to use
- YAML spec
-From: Paolo Abeni <pabeni@redhat.com>
-To: Davide Caratti <dcaratti@redhat.com>, mptcp@lists.linux.dev
-Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Wed, 13 Sep 2023 08:39:19 +0200
-In-Reply-To: <cover.1693921470.git.dcaratti@redhat.com>
-References: <cover.1693921470.git.dcaratti@redhat.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B94E1DA2B
+	for <mptcp@lists.linux.dev>; Wed, 13 Sep 2023 07:37:58 +0000 (UTC)
+Received: by mail.socialglobal.pl (Postfix, from userid 1002)
+	id 1186522452; Wed, 13 Sep 2023 07:30:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=socialglobal.pl;
+	s=mail; t=1694590246;
+	bh=XwhyqI/moZPDJ7KCfcA6Gip8fA7ZKcg5SWsKuF/26zk=;
+	h=Date:From:To:Subject:From;
+	b=By1O6fleclQlDh8sArZVMGQF3co5mIq/IFzcNydnYuPxio7qbBmnKaWEPVolmW+qy
+	 NZ7fJzvJ3QejtjA57JLeF+/TG/cv+amVbOuPl/3C8RM6yR1UPNQ29nSeoykTiZsf9A
+	 zSDqHh0wJOLczG6Bq60Cx+gsUzq/tRNcazmQziVhcSaBzYee4FkirdRWvAbuijiOmv
+	 7T+Cv1PKa0A7YupJcRfV/mdeXH6qiPx/KBa0Iv4jEgEwYKSiX73DBTZ5V9x13amc1M
+	 b3MOTZGKuRe8uzePTcbLE48tH4StORcZwN/ri8EdxzWNsONOHpWqDi/TaB8pqNmp3n
+	 Qde8fmLBfcAMw==
+Received: by mail.socialglobal.pl for <mptcp@lists.linux.dev>; Wed, 13 Sep 2023 07:30:37 GMT
+Message-ID: <20230913064500-0.1.8d.2ucd2.0.0ebyk206ex@socialglobal.pl>
+Date: Wed, 13 Sep 2023 07:30:37 GMT
+From: "Dominik Perkowski" <dominik.perkowski@socialglobal.pl>
+To: <mptcp@lists.linux.dev>
+Subject: Pozycjonowanie- informacja
+X-Mailer: mail.socialglobal.pl
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2023-09-05 at 15:53 +0200, Davide Caratti wrote:
-> this series converts most of the MPTCP netlink interface (plus uAPI bits)
-> to use sources generated by a YAML spec file. Patch 2/6 and 6/6 have been
-> individually verified with kselftests.
->=20
-> POC:
->=20
->  $ sudo  ./tools/net/ynl/cli.py  --spec \
->  > Documentation/netlink/specs/mptcp.yaml --do add_addr \
->  > --json '{"addr": {"addr4": 16909061, "family": 2, "flags": 4, "id": 10=
-, "port": 0}}'
->  -j mptcp endpoint show id 10
->  [{"address":"1.2.3.5","id":10,"backup":true}]
->=20
-> v3:
-> - add missing 'static' keyword (MPTCP CI)
-> - fix element ordering for 'attr' attributes in patch 2,
->   mptcp spec and generated C code (Paolo Abeni)
-> - removed extra newline, deuglified subjects in patch 2 and 4
->=20
-> v2:
-> - mptcp.yaml: only put values around enum "holes" (Paolo Abeni)
-> -  _doit and _dumpit renames are done in a dedicate patch (Paolo Abeni)
-> - removed useless nla_policy passed through parse_entry()  (Paolo Abeni)
-> - renamed mptcp_pm_address_nl_policy in patch 2 (Paolo Abeni)
-> - (hopefully) more comprehensible commit messages (Paolo Abeni)
->=20
-> Davide Caratti (6):
->   tools: ynl: add uns-admin-perm to genetlink legacy
->   net: mptcp: convert netlink from small_ops to ops
->   Documentation: netlink: add a YAML spec for mptcp
->   uapi: mptcp: use header file generated from YAML spec
->   net: mptcp: rename netlink handlers to
->     mptcp_pm_nl_<blah>_{doit,dumpit}
->   net: mptcp: use policy generated by YAML spec
->=20
->  Documentation/netlink/genetlink-legacy.yaml |   2 +-
->  Documentation/netlink/specs/mptcp.yaml      | 394 ++++++++++++++++++++
->  include/uapi/linux/mptcp.h                  | 174 +--------
->  include/uapi/linux/mptcp_pm.h               | 149 ++++++++
->  net/mptcp/Makefile                          |   3 +-
->  net/mptcp/mptcp_pm_gen.c                    | 179 +++++++++
->  net/mptcp/mptcp_pm_gen.h                    |  58 +++
->  net/mptcp/pm_netlink.c                      | 114 +-----
->  net/mptcp/pm_userspace.c                    |   8 +-
->  net/mptcp/protocol.h                        |   6 +-
->  10 files changed, 814 insertions(+), 273 deletions(-)
->  create mode 100644 Documentation/netlink/specs/mptcp.yaml
->  create mode 100644 include/uapi/linux/mptcp_pm.h
->  create mode 100644 net/mptcp/mptcp_pm_gen.c
->  create mode 100644 net/mptcp/mptcp_pm_gen.h
+Dzie=C5=84 dobry,=20
 
-FWIW, LGTM, TY!
+jaki=C5=9B czas temu zg=C5=82osi=C5=82a si=C4=99 do nas firma, kt=C3=B3re=
+j strona internetowa nie pozycjonowa=C5=82a si=C4=99 wysoko w wyszukiwarc=
+e Google.=20
 
-/P
+Na podstawie wykonanego przez nas audytu SEO zoptymalizowali=C5=9Bmy tre=C5=
+=9Bci na stronie pod k=C4=85tem wcze=C5=9Bniej opracowanych s=C5=82=C3=B3=
+w kluczowych. Nasz wewn=C4=99trzny system codziennie analizuje prawid=C5=82=
+owe dzia=C5=82anie witryny.  Dzi=C4=99ki indywidualnej strategii, firma z=
+dobywa coraz wi=C4=99cej Klient=C3=B3w. =20
 
-p.s. ;)
+Czy chcieliby Pa=C5=84stwo zwi=C4=99kszy=C4=87 liczb=C4=99 os=C3=B3b odwi=
+edzaj=C4=85cych stron=C4=99 internetow=C4=85 firmy? M=C3=B3g=C5=82bym prz=
+edstawi=C4=87 ofert=C4=99?=20
 
+
+Pozdrawiam serdecznie,
+Dominik Perkowski
