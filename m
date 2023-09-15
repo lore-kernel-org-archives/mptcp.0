@@ -1,140 +1,265 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2078.outbound.protection.outlook.com [40.107.21.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FDE3FEF
-	for <mptcp@lists.linux.dev>; Fri, 15 Sep 2023 07:45:47 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UkS0Rd2mMJeZ+1Da8aWIoLkURZnb4/Tbe2w+EyAAN22lOKEnxoKK2rr17GqTYEpy9c52QYB9t+gUT2xW5di+YR+fO1cl/caTNE7V43gqe3eC4C1k8Rs6SxS/f9qX+SNAxkipkEX3QNtsdSELvOZyCoWsGlkDORvC1HMStSsrF1Zd0fsxmABR/inLmvifIbVZwwjrQrohPVF1fQQVr/Ef9FQ8wwWuELohowiHWf5oNepBw2XcvjafVsL4pXloDahqyvfDmjXSrp2N+nwisHNRjgUFmdZOSoCieou+oBNzCIRW9Vm/Edp1PmjgiqIe+16641Z0MT6xDU1oytdY4k1cbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jpp/i3aXk61yYFGbObLKa/JLeNL25iavaTEjwCip/sc=;
- b=P+aQYtzcDR37OOQ35cfjKH5pOx8j+SAzDJcf2Rm/tprFUsbYmESiHhDyLRfaoDu8sECMpsdbd3G+w29+8LLLIvX12ZOW35s20IZyPxtGXSua596J6AOjL6AbwB0cxXOdv/0pjlY7CVgTGwdh04BpIRdnTqdzJQWytg+Dw9Mb7shWZpH6nspMCYJ2WViwTt+XIbFTTKyZkyVPZ6pXr9slCj8Z8fuiVYCBFSWjWvq/KaPQBiOuWSAXwgqlB8ooravaon33oNyuFrVVAfNH0HrrxRBHE4bJys1EqhF5/1hsCVhCrG2bmyPjaa3xxuKkXdxFSOUk2Nwz1MHjb6w5YwuTuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jpp/i3aXk61yYFGbObLKa/JLeNL25iavaTEjwCip/sc=;
- b=sfbxbPWiG4nUdrPmVNiG/l509U/NiamVHk/s+8PORZU2I9PMwCMFZV+2vdpNdFrCDFJH9Gd9L2vsxvf3D859M4pdOtZ4+bj6UkEA2GwkEm5UFEWHrbcbvozd5HEDHJ18hd4Xug59Ja0XokCrmPKX2XW/FArcvrHxAWm6neMiuiZ2CVgXS1UUpHJVGQLXux0p+tyRylSdVXOExGlUISgB4JntbsoC8ie1APN/JxxDtXlabhRSLZI/FRNPzZCQQQWel6+P0e6v3oeKMQhXc9vCfk2lXfFFFie0Z/CFD8wX7S7b9f8EGnRaZnoOugush6Z8LlryaaPw3EPyifkszziC7w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AM9PR04MB7524.eurprd04.prod.outlook.com (2603:10a6:20b:286::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.31; Fri, 15 Sep
- 2023 07:45:45 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::2867:7a72:20ac:5f71]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::2867:7a72:20ac:5f71%3]) with mapi id 15.20.6792.021; Fri, 15 Sep 2023
- 07:45:45 +0000
-From: Geliang Tang <geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8516BD534
+	for <mptcp@lists.linux.dev>; Fri, 15 Sep 2023 09:17:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1694769426;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=elbyOWNc4ybdN3S/qq8icElyr22uEmCQSMSsIyxBi/U=;
+	b=fQFWX/hMJeAlSWfQ13L7ZOl5QJ3Ted7E2iZep+9JQ0ETn0NE96YKkA7ko9x3yz7sa1G+4R
+	J/aZKagGu6OLJPPlbZP3K6HjvI8EsOgFgJYNKSshavVkhLRUottll8ooJ+2BUvGG5M8EXM
+	LX6HqFXj3zkvt204saz24NS7/zsAnJg=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-646-zGHfzRbwPmWaPdfEpRhNUQ-1; Fri, 15 Sep 2023 05:17:04 -0400
+X-MC-Unique: zGHfzRbwPmWaPdfEpRhNUQ-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-502e40acb78so423158e87.0
+        for <mptcp@lists.linux.dev>; Fri, 15 Sep 2023 02:17:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694769422; x=1695374222;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=z9QWX+0zzK4X9dogLW8MAPRNhJBpaPbVVllmiReHvc0=;
+        b=wbEkLas5GNWge/EbIqPqSkvo6vRuebwZ/0Vo+MBORymfWMc4vIGJc20w9J2r2Vqs9/
+         FRcibUnmOPeMR2NgWz2gRZbwlHUierKMkflxifEZKst/WxGqZaDuYretaWyWnuKd4tNv
+         wxdoCNdD9o8DdR++eADCKbB+mI707Sx7oeZhA+fE6CrmDH6V9QVJyOCxFfwNjpX5tohh
+         9imyQh/slcrIDoePRnQ6S/WtqNte6ZSSIC0L2X0qf3AWquQJ5Xvv619+ybslH8GxTqUj
+         cCeWDuUpCTmzMQ2qvAAam3aBehpt+A2nZesoBFH8s0ZkeUxGceb1BgOfHdvg/IV7iEHS
+         Y/3Q==
+X-Gm-Message-State: AOJu0YxR9vsTqkH7XQZAeWLLtiM5u5Un3PwWs7v9jJj0kZeiXxLa3lcp
+	26rjvzRn1MT1qeURtXC50ne0VuYEp3zWhDoADphlCDerKiy4yxac+gJnNstxVPQ/hN0eONebsEq
+	VHQ434EvJv0pb333NVTb/Pde31lKiOAvrHURgTXqRyeOY2dWrIZ8ItVwlofG6EA+ORozAVcPD
+X-Received: by 2002:a19:7617:0:b0:502:9b9a:195c with SMTP id c23-20020a197617000000b005029b9a195cmr853329lff.2.1694769422407;
+        Fri, 15 Sep 2023 02:17:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFLqTqtp8XHIGMeevVHjDY1iQqlWrhjVBjQB73HnBeN5cp8RV3suxt4nNNEFpGx9T9/2HDpQA==
+X-Received: by 2002:a19:7617:0:b0:502:9b9a:195c with SMTP id c23-20020a197617000000b005029b9a195cmr853318lff.2.1694769421888;
+        Fri, 15 Sep 2023 02:17:01 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-255-248.dyn.eolo.it. [146.241.255.248])
+        by smtp.gmail.com with ESMTPSA id bq14-20020a170906d0ce00b0099ddc81903asm2124893ejb.221.2023.09.15.02.17.01
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Sep 2023 02:17:01 -0700 (PDT)
+Message-ID: <b180377d752584020e9c46c939c4ea200d8d1d4e.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 3/3] mptcp: refactor sndbuf auto-tuning.
+From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v2] ss: mptcp: print out subflows_total counter
-Date: Fri, 15 Sep 2023 15:45:19 +0800
-Message-Id: <3ca520a2ce84c33ad8f9421add0b717091173a22.1694763872.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1694763508.git.geliang.tang@suse.com>
-References: <cover.1694763508.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0017.apcprd02.prod.outlook.com
- (2603:1096:4:194::17) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+Date: Fri, 15 Sep 2023 11:17:00 +0200
+In-Reply-To: <91b50314a17d427087f718d4b77aa23dd07fcde4.1694710538.git.pabeni@redhat.com>
+References: <cover.1694710538.git.pabeni@redhat.com>
+	 <91b50314a17d427087f718d4b77aa23dd07fcde4.1694710538.git.pabeni@redhat.com>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AM9PR04MB7524:EE_
-X-MS-Office365-Filtering-Correlation-Id: d994c0b9-ba3f-4531-2555-08dbb5bfc4e5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	kfFP6db8rLB4ykp0fmM6nM3/YSPrA+SPsozH3hD7/rI8nVJQbZkFaRhrQWJbVbu34hIRkXbcAppwf1FC3UTRGAI6FI4NGILnUOEbmUlZ0HDXrhMzcBjpE4u2+ppmXg4m2s+WA3E53AYAkYAwLQvAC2xo6m/Ep+V81BPnWC/f4rzGtvIal6U0K8hQGB6e8Vmi209Xc/gNgIhcKXo127j+3NEVUrpYCVl+9IpjUkWd6oF/DG6UacHkn91QTgpcXk6QGJpxXklgI5ye+IQrMCvByBdVE61EQzoeQ2RpHTjjEw0zOA37dsbSCoPDFapeebqDIfjPnaEDM+BNMbCcjE39kRxrOJOjs7LBpcndPVUMwnGKbPg3a6JdjD6v3l/jMuhJ1O0C72+xuD8o87zSOcf4nk5ILJ3t9ccEmzHAqWxcGKRBHYQPdFqb8ffr324XrD5KmdClZOhP0Jj3ts5M0ctxamtzp3qRZ73LTwxIfFG9fcBJvqW+sv6gUoysho6VId2UVHGSnLfS75kXrMIFtXSOQY1mxqQbyk63cjR1DdFONKic6ceUWB7m2KBCJZBkrl/w5zM9ZpY5ySrlw6R2MfAbDlabrUan1Jd8OO40ZrCFFss=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(136003)(39860400002)(346002)(366004)(451199024)(1800799009)(186009)(6512007)(6486002)(6666004)(2616005)(26005)(6506007)(38100700002)(86362001)(478600001)(107886003)(8676002)(66946007)(5660300002)(8936002)(66476007)(44832011)(4326008)(316002)(66556008)(2906002)(6916009)(36756003)(41300700001)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XSyf/lnsCVa3SAu8wnkF8feDRP4dVhoTVuNhg5OnpPi0RxQPVZCtcGuAgn+g?=
- =?us-ascii?Q?nWUPrd8QjwtpysVjmMDhPFxddf9hteLtYOzyb0Z1yxB7uuRFmWVpfUrznNdX?=
- =?us-ascii?Q?Z1TFMk6CeLZBaiEtGrp93jcHarC03O+7Yqa1jRwgesAREbUqqxrHt0OoNZn7?=
- =?us-ascii?Q?ba7pW8GyP2hqYiIZSBUKOGr/INMel3hJjHqDNfcgkqXqgj9PO0FhXn3zBANr?=
- =?us-ascii?Q?5kpRV6ueg0XOkXnsBSafx2l/kP2kv8IKr7sQGWv8u4N9yXOTuG/U5fqtAD5I?=
- =?us-ascii?Q?XgkfuoL1gYo5PMfVe5n1q8PliRDwpPM0QeUTwBMWsXdTWgSO+3bO3zK414uc?=
- =?us-ascii?Q?qHAnnzxmh3lPgdoHBspRBX3QlIUbjfNB6EnKRZ3cPVuAx8RCN9cmhaklG0xG?=
- =?us-ascii?Q?8STuG9cGKbPDykPZVrgw3R7gEDBcgO/R+GkG9b+V9B4fgiWUlakaNgLXdd5b?=
- =?us-ascii?Q?AcYMeQFQ8hRx4B4SIygVSKHpJXxDZzTON4Zj7LUC0dN1OdpnVOV4yeVyt4AQ?=
- =?us-ascii?Q?bzlv7PYvtP/DOaDQloszodHWGWGywvZ0mWXkjUyMRsl2xzhLExxq79tzdJCq?=
- =?us-ascii?Q?jlYScvLGHNMIQEMmacc9KrWiBoGG/SFBvhoEPS5X7iqaxGtM8k3fbFJgRojw?=
- =?us-ascii?Q?RCJtIYJuDFHfSpmTSmN56uDma9Sip34W33FtfhwG7xhIhyqOLYQtym+yOf6Q?=
- =?us-ascii?Q?xqnPtm7kZatog559gJeP+RpPkWkc/nmtBhqLX7n7UtUOv88DiU1y23nu7i4R?=
- =?us-ascii?Q?TjZ4JAETOiG8AWObIhznp/qHSK/Fl/OFkhemrNRH1Aq7HyCV2DQ3vgCNbczS?=
- =?us-ascii?Q?ncwdWE35VAn5fKODgo4emYOlrmuInr58CUalGmfbBx6mYb6XETKqSoHCWd+g?=
- =?us-ascii?Q?DmjKMwb+FcB8YTKMws5j2DkSjG6J9mRSGMQeHq5BaCpHPIBMgYE0OugCf1b1?=
- =?us-ascii?Q?noEB0uYjHiDMep3IoKVk9czt5PV/nQqkimDXhTLH0G+3tPA1CkNfhq/VSM09?=
- =?us-ascii?Q?9u7Ep8ORlVQcm/JMn/FKKYam5WTl36eo20bXUp2/wH2Egloye8GfNjDgqVAv?=
- =?us-ascii?Q?IcohWURzZ+kSFZawzwnqFgAT/v44R9laASCrWHQ2XLtzoCbbQ5oYiZ6sSRsD?=
- =?us-ascii?Q?cg6+9DPyNsODt1dlDILgbUVf9yMvr+b8OMOG07O5W4kY+v89nM2BptJwqoig?=
- =?us-ascii?Q?kN9IXceiXf/xIZogIRjCwlPSTbmpKik+0gT9OGIB7oWVnXRxy+/+vUK5TqM+?=
- =?us-ascii?Q?oo1451misTgvmHKnQCOP0n/Z/OjGeYCA6XSAclsL9pIHdIY1MGZsBEBa+Wnj?=
- =?us-ascii?Q?2VmBtnkMw9TcNt4Gx8Qi/PZKHboAy9SASc+n/OwMDlRZ4wen8J65ieODaVVZ?=
- =?us-ascii?Q?OlgCkoxDKr08eEt5pnJTEaD23nDC4GZGQOR4+EjgMEzwhBokHSYbp22Q0n/V?=
- =?us-ascii?Q?ewttpmqpbId7Xn+l4B3qJnqpkO6mhKmvvupWpYT0YjsYfWatqzSj7ZV15dwu?=
- =?us-ascii?Q?Biu//FH5zf29gDIDU9mUVz1InfjsQVSrkwsjjUPQCaz1NsxN9yKLEAmpIZEy?=
- =?us-ascii?Q?vyRjiQ12EzqNsUwow+NU+bv2CqCYcMjq7sFXuMR9CceGYRM1l+YpG577bufu?=
- =?us-ascii?Q?jQ=3D=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d994c0b9-ba3f-4531-2555-08dbb5bfc4e5
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 07:45:45.0872
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xMsB6vWgHgfl4G2+qAO1xCkP6LulnA9E+egeWo8jqilHdJY0aEtf1TAu+mOmOYE7TU6hUFJJ7ZAKHqY7EnCxrQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7524
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A new counter mptcpi_subflows_total has been added in mptcpi_flags
-to count the total amount of subflows from mptcp_info including the
-initial one. This patch prints out it into mptcp_stats output.
+On Thu, 2023-09-14 at 19:02 +0200, Paolo Abeni wrote:
+> The MPTCP protocol account for the data enqueued on all the subflows
+> to the main socket send buffer, while the send buffer auto-tuning
+> algorithm set the main socket send buffer size as the max size among
+> the subflows.
+>=20
+> That causes bad performances when at least one subflow is sndbuf
+> limited, e.g. due to very high latency, as the MPTCP scheduler can't
+> even fill such buffer.
+>=20
+> Change the send-buffer auto-tuning algorithm to compute the main socket
+> send buffer size as the sum of all the subflows buffer size.
+>=20
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/protocol.c | 25 ++++++++++++++++++++++++-
+>  net/mptcp/protocol.h | 32 +++++++++++++++++++++++++++-----
+>  net/mptcp/subflow.c  |  3 +--
+>  3 files changed, 52 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 3a905c122306..180755c8c4d1 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -891,6 +891,7 @@ static bool __mptcp_finish_join(struct mptcp_sock *ms=
+k, struct sock *ssk)
+>  =09mptcp_sockopt_sync_locked(msk, ssk);
+>  =09mptcp_subflow_joined(msk, ssk);
+>  =09mptcp_stop_tout_timer(sk);
+> +=09__mptcp_propagate_sndbuf(sk, ssk);
+>  =09return true;
+>  }
+> =20
+> @@ -2403,6 +2404,7 @@ static void __mptcp_close_ssk(struct sock *sk, stru=
+ct sock *ssk,
+>  =09=09 * disconnect should never fail
+>  =09=09 */
+>  =09=09WARN_ON_ONCE(tcp_disconnect(ssk, 0));
+> +=09=09__mptcp_propagate_sndbuf(sk, ssk);
+>  =09=09mptcp_subflow_ctx_reset(subflow);
+>  =09=09release_sock(ssk);
+> =20
+> @@ -2427,6 +2429,7 @@ static void __mptcp_close_ssk(struct sock *sk, stru=
+ct sock *ssk,
+>  =09}
+> =20
+>  out_release:
+> +=09__mptcp_update_sndbuf(sk, -subflow->cached_sndbuf);
+>  =09__mptcp_subflow_error_report(sk, ssk);
+>  =09release_sock(ssk);
+> =20
+> @@ -3214,7 +3217,7 @@ struct sock *mptcp_sk_clone_init(const struct sock =
+*sk,
+>  =09 * uses the correct data
+>  =09 */
+>  =09mptcp_copy_inaddrs(nsk, ssk);
+> -=09mptcp_propagate_sndbuf(nsk, ssk);
+> +=09__mptcp_propagate_sndbuf(nsk, ssk);
+> =20
+>  =09mptcp_rcv_space_init(msk, ssk);
+>  =09bh_unlock_sock(nsk);
+> @@ -3339,6 +3342,14 @@ void __mptcp_check_push(struct sock *sk, struct so=
+ck *ssk)
+>  =09=09__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
+>  }
+> =20
+> +static void __mptcp_tune_sndbuf(struct sock *sk)
+> +{
+> +=09struct mptcp_sock *msk =3D mptcp_sk(sk);
+> +
+> +=09__mptcp_update_sndbuf(sk, msk->delta_sndbuf);
+> +=09msk->delta_sndbuf =3D 0;
+> +}
+> +
+>  #define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
+>  =09=09=09=09      BIT(MPTCP_RETRANSMIT) | \
+>  =09=09=09=09      BIT(MPTCP_FLUSH_JOIN_LIST))
+> @@ -3392,6 +3403,8 @@ static void mptcp_release_cb(struct sock *sk)
+>  =09=09=09__mptcp_set_connected(sk);
+>  =09=09if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
+>  =09=09=09__mptcp_error_report(sk);
+> +=09=09if (__test_and_clear_bit(MPTCP_TUNE_SNDBUF, &msk->cb_flags))
+> +=09=09=09__mptcp_tune_sndbuf(sk);
+>  =09}
+> =20
+>  =09__mptcp_update_rmem(sk);
+> @@ -3437,6 +3450,15 @@ void mptcp_subflow_process_delegated(struct sock *=
+ssk)
+>  =09=09mptcp_data_unlock(sk);
+>  =09=09mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_SEND);
+>  =09}
+> +=09if (test_bit(MPTCP_DELEGATE_SNDBUF, &subflow->delegated_status)) {
+> +=09=09mptcp_data_lock(sk);
+> +=09=09if (!sock_owned_by_user(sk))
+> +=09=09=09__mptcp_propagate_sndbuf(sk, ssk);
+> +=09=09else
+> +=09=09=09__set_bit(MPTCP_TUNE_SNDBUF, &mptcp_sk(sk)->cb_flags);
+> +=09=09mptcp_data_unlock(sk);
+> +=09=09mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_SNDBUF);
+> +=09}
+>  =09if (test_bit(MPTCP_DELEGATE_ACK, &subflow->delegated_status)) {
+>  =09=09schedule_3rdack_retransmission(ssk);
+>  =09=09mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_ACK);
+> @@ -3523,6 +3545,7 @@ bool mptcp_finish_join(struct sock *ssk)
+>  =09/* active subflow, already present inside the conn_list */
+>  =09if (!list_empty(&subflow->node)) {
+>  =09=09mptcp_subflow_joined(msk, ssk);
+> +=09=09mptcp_propagate_sndbuf(parent, ssk);
+>  =09=09return true;
+>  =09}
+> =20
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index aebc0cc24dad..02fb8b22c4ee 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -123,6 +123,7 @@
+>  #define MPTCP_RETRANSMIT=094
+>  #define MPTCP_FLUSH_JOIN_LIST=095
+>  #define MPTCP_CONNECTED=09=096
+> +#define MPTCP_TUNE_SNDBUF=097
+> =20
+>  struct mptcp_skb_cb {
+>  =09u64 map_seq;
+> @@ -320,6 +321,7 @@ struct mptcp_sock {
+>  =09=09u64=09rtt_us; /* last maximum rtt of subflows */
+>  =09} rcvq_space;
+>  =09u8=09=09scaling_ratio;
+> +=09int=09=09delta_sndbuf;
+> =20
+>  =09u32=09=09subflow_id;
+>  =09u32=09=09setsockopt_seq;
+> @@ -446,6 +448,7 @@ DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_=
+delegated_actions);
+> =20
+>  #define MPTCP_DELEGATE_SEND=09=090
+>  #define MPTCP_DELEGATE_ACK=09=091
+> +#define MPTCP_DELEGATE_SNDBUF=09=092
+> =20
+>  /* MPTCP subflow context */
+>  struct mptcp_subflow_context {
+> @@ -518,6 +521,7 @@ struct mptcp_subflow_context {
+> =20
+>  =09u32=09setsockopt_seq;
+>  =09u32=09stale_rcv_tstamp;
+> +=09int     cached_sndbuf;
+> =20
+>  =09struct=09sock *tcp_sock;=09    /* tcp sk backpointer */
+>  =09struct=09sock *conn;=09    /* parent mptcp_sock */
+> @@ -780,13 +784,31 @@ static inline bool mptcp_data_fin_enabled(const str=
+uct mptcp_sock *msk)
+>  =09       READ_ONCE(msk->write_seq) =3D=3D READ_ONCE(msk->snd_nxt);
+>  }
+> =20
+> -static inline bool mptcp_propagate_sndbuf(struct sock *sk, struct sock *=
+ssk)
+> +static inline void __mptcp_update_sndbuf(struct sock *sk, int delta)
+>  {
+> -=09if ((sk->sk_userlocks & SOCK_SNDBUF_LOCK) || ssk->sk_sndbuf <=3D READ=
+_ONCE(sk->sk_sndbuf))
+> -=09=09return false;
+> +=09if (!(sk->sk_userlocks & SOCK_SNDBUF_LOCK) && delta)
+> +=09=09WRITE_ONCE(sk->sk_sndbuf, sk->sk_sndbuf + delta);
+> +}
+> +
+> +static inline void __mptcp_propagate_sndbuf(struct sock *sk, struct sock=
+ *ssk)
+> +{
+> +=09struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+> +=09int ssk_sndbuf =3D READ_ONCE(ssk->sk_sndbuf);
+> +
+> +=09__mptcp_update_sndbuf(sk, ssk_sndbuf - subflow->cached_sndbuf);
+> +=09subflow->cached_sndbuf =3D ssk_sndbuf;
+> +}
+> +
+> +static inline void mptcp_propagate_sndbuf(struct sock *sk, struct sock *=
+ssk)
+> +{
+> +=09struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(ssk);
+> +
+> +=09if (likely(READ_ONCE(ssk->sk_sndbuf) =3D=3D subflow->cached_sndbuf))
+> +=09=09return;
+> =20
+> -=09WRITE_ONCE(sk->sk_sndbuf, ssk->sk_sndbuf);
+> -=09return true;
+> +=09local_bh_disable();
+> +=09mptcp_subflow_delegate(subflow, MPTCP_DELEGATE_SNDBUF);
+> +=09local_bh_enable();
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- include/uapi/linux/mptcp.h | 1 +
- misc/ss.c                  | 2 ++
- 2 files changed, 3 insertions(+)
+I guess the above deserve a little more explainations/comments on how
+the whole schema actually works. I'll add the in the next revision.
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 159d32f0..c110c183 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -126,6 +126,7 @@ struct mptcp_info {
- 	__u64	mptcpi_bytes_sent;
- 	__u64	mptcpi_bytes_received;
- 	__u64	mptcpi_bytes_acked;
-+	__u8	mptcpi_subflows_total;
- };
- 
- /*
-diff --git a/misc/ss.c b/misc/ss.c
-index 2a584015..77fdd6e2 100644
---- a/misc/ss.c
-+++ b/misc/ss.c
-@@ -3271,6 +3271,8 @@ static void mptcp_stats_print(struct mptcp_info *s)
- 		out(" bytes_received:%llu", s->mptcpi_bytes_received);
- 	if (s->mptcpi_bytes_acked)
- 		out(" bytes_acked:%llu", s->mptcpi_bytes_acked);
-+	if (s->mptcpi_subflows_total)
-+		out(" subflows_total:%u", s->mptcpi_subflows_total);
- }
- 
- static void mptcp_show_info(const struct nlmsghdr *nlh, struct inet_diag_msg *r,
--- 
-2.35.3
+Additionally I need to update cached_sndbuf in
+mptcp_enter_memory_pressure().
+
+Cheers,
+
+Paolo
 
