@@ -1,46 +1,47 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2070.outbound.protection.outlook.com [40.107.105.70])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2072.outbound.protection.outlook.com [40.107.105.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EA23FEF
-	for <mptcp@lists.linux.dev>; Fri, 15 Sep 2023 07:45:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380163FEF
+	for <mptcp@lists.linux.dev>; Fri, 15 Sep 2023 07:45:18 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RlizqK2aZrak4VbQ7oy1D50PGiue/oD/TxLc8rDOLDcj2+A9zD0IGtXnntjJzEbNuD4Ypmip0GnbKoz/LmexeRLoVrWKTlRp1ZzT6r+auXHRC7pv7AkQV3k8wyZxHrdG5FbiOkvcCoZwrXq/84ks+XTV+20Qc1jux4HXSGHcaT8R1hQR3QmxE7cdFKybzwL0t/e6l4m3WQRsp0pyWyw71uPptYCOD4S1rH12aIx65ttxOXjUe7iblRtOP8AHsQ5RxO6+vuFIkZ37KUjP06wDKOjhe6ilFtO7vdOH6kuCeGxUIr+BfzO68y2PYbkCHO+R0xm/XkHZBrKZuAzsdn+h8g==
+ b=VcVyfa9/vluihmy5rwr/xWMkBeeYFaRT3A5FpAGcAD03irlKPRa90I+UEAeBSi/1lYqDYYCbGuzG3tI2qIwVVF9U3yNnYENdbDlLd8+R15nNDisFD3nGQtFAvhEsS/dSVbrFM8nm7/LltPuHZqIanUQe0JnHGaLQiblR2aMA3WcxelwrBc7D7Cukf+G0h/9hGd7tlq3QgEOYZ5tfm73IFJiSNF9HC+4Un+WA6kbMe2FC4z4omE/c6JbD+/X1wkM6M+HTRQOXKRyqne6/ynAvM7z/m7Wp0E1KNRlnwyzBwixPG8O4us8q/MLYnzBXnFBo093oDHCTFv2JzcBiRvr1hQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZAmRX2YE443I2a484pGYv471GMVIA7d/Gu/AgfKiw+M=;
- b=f8e7Op7PZc2tzLc1b8gz7UC/4huifnC0Y/4iU2Ay7B9XlyhIYMDaQXsuLP27rvmracW8oPh0VJdBefefoagCWHuq20HvPsDX6nfO5dg74F1lLU07BcZSBhraPgEViGYUXnHhr3V/yYznmHlhZPbYxuBeNcmyEaAgbfV4x6mZJBVeauYY8zHTot8+la46oX1Qz6q+vcufBMBLfIzpgdxIDD8KeveRV0lFoRV+TbH+bVWngxymcP4d+sk5g5GV5Fp16Aacnh+PSF39NLmcV/EUkg0KOqaKZcxFd0A5mE6NNBjxiFrQcTRvonLexbfOSC6IhKwHzWxViCpYlhqp8KhkuQ==
+ bh=NSAF9pVPQMGFCRRIZ2CWkJOpmYr2QAARJNPwTMUnHq4=;
+ b=IA8U2rKirMjAeLqjjC5xKh0sSDDKJAk9yZTlsTd+F+9efOS5nOlcW+mJu7T06w/3GZ5rDGsSy2PXLahFeO1e2woMErwplexFeoFIUEdLqJFVJfyig473kDdzqOgChAk1cWuclKUmgVuMowQazLLBi6fY3FolaR2B0KkcL6YqlaKHXdUQzmWWCqzAvJxVIT5MZI8nDdcz/rvvTGd2TKGopq/rk1k2fl/08nG2G6nTkCZ2KztG4b3cXq/zCUBYWRO1X3nnQ0MtGG7RBWrYgRDLr7WhD0OOJAk2JRa2wPGMDAjkEN6ihM5oIdSd0S2Q1TVXDIlUkxfKrbjZ1X46BoeNHg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZAmRX2YE443I2a484pGYv471GMVIA7d/Gu/AgfKiw+M=;
- b=0jbN5H8QXVJnY9DMmA/vZojIGm5p+AsuwoaAOlmvSbGCu2fVkBeICicr59wMq0pB/8Tv2mpI5dCzFfax7QqOqhiV1Uc42fJZNSt0tWIVEM4n1SucvrGuPwqKgKjkYyCP++17FpzMsg3e8x8LqQrZiN3m+hbbMLNsL8S3DepW863Nf8LY64RoS6mdob9wlsiQ8HFNARakyU4rBWkgT+vJPtaT7CAG6H7gUX24PvlxasGOkxTePGjs4UUYT+/uEChtY/4vzVs0rO8qPbHhdmdNMXzEcKwkgpQABT8FpM3KK1FiFgiBitiM9sURPHEmhsOrZa17BZEHEtQuRD86medL7g==
+ bh=NSAF9pVPQMGFCRRIZ2CWkJOpmYr2QAARJNPwTMUnHq4=;
+ b=jLvZrj7/nYgYF6nvZu2a/XxrUpGXYACm7WKSsIPiapd+0T019bf4FxbaXkexmKeGZmIVlDKAKkqvFicZGfDDkxLyX+GV9KPE1MZ+ABz4DGZ7ECRCL4yNV/dTzOqPTR/Jf5cf8X2c/IR8NEZGRw06Mm8wvTCXK95OeG3MKoah7UftwgfaImRSVwkKRFsJ5I1J4w1ND6MbrxXLXw+9G+L8iV/8K/AISOjRy6aqaC47LGflu1jVOLzCzsm0VaogeFfmpp3kjP+HIR54WjLRxqZ0JDQB5C7nAuUWG//NJbocjQoV2JykF55MnxOytKNvgpk2iUfz2TcCwSOuHt7Lft5mSg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by AM9PR04MB7524.eurprd04.prod.outlook.com (2603:10a6:20b:286::24) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.31; Fri, 15 Sep
- 2023 07:45:08 +0000
+ 2023 07:45:15 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::2867:7a72:20ac:5f71]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::2867:7a72:20ac:5f71%3]) with mapi id 15.20.6792.021; Fri, 15 Sep 2023
- 07:45:08 +0000
+ 07:45:15 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v10 4/8] selftests: mptcp: userspace pm remove id 0 subflow
-Date: Fri, 15 Sep 2023 15:45:14 +0800
-Message-Id: <3b0584bc00e11164fa28aba7af517f280d1290f9.1694763508.git.geliang.tang@suse.com>
+Cc: Geliang Tang <geliang.tang@suse.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>
+Subject: [PATCH mptcp-next v10 5/8] mptcp: userspace pm allow creating id 0 subflow
+Date: Fri, 15 Sep 2023 15:45:15 +0800
+Message-Id: <662455ce1e286ba38ae29dde19f43ed51629cd91.1694763508.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <cover.1694763508.git.geliang.tang@suse.com>
 References: <cover.1694763508.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0004.apcprd02.prod.outlook.com
- (2603:1096:4:194::14) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: SI2PR02CA0011.apcprd02.prod.outlook.com
+ (2603:1096:4:194::20) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -50,157 +51,88 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AM9PR04MB7524:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d5f4d86-4d71-400b-cefd-08dbb5bfaea5
+X-MS-Office365-Filtering-Correlation-Id: 1ee91075-ce29-4148-4161-08dbb5bfb363
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	nmyrCu5Nw+BIMu2g3+nZTpFoPKn0AtsqVbEMwmHCgylQf6JyB9FQIvVsCtRLhdLEbha0M/gDnPdKeuI26tTi9VrT+Q3DVNOGj3emcLo7Ne010wIeJiMZEFSLjsLCq3xHqZuI3yjMDOGrJby+cn3+gh4PuAfcQOX+A+hVIZMuNVdySO3zk7sLxmqKU1tbOImggYorNNuQBtJIlpe18muipoP4qvNanBkkcwKGm/fRdwDTwj+wyeXarIZwouxP5HZ85wU+MwD7nVlICmep27bnGsfM0/XR32SwTF0QUy+H1I/ZmmAPN10qDqY8h3NMfi7vY3wmyfz5FaCLyAf3P6OTjdeuiqJ4XnE+jqgq/J6NFcrrbpru7EBBhOWdhVtm9tuCaMNa7LYtmDxXVBVfGVcqv69w2O6Pi2D9X329cYa6UPVtdEAMKyXsvjVE1a9fEZh0MYCM6Odejhk6eAjgLo0SKd7okuMHMrR50c4gieeUMBoPUu+hC8YLxYNLkIDZLPzjQcw3y73H3BUXyEtqzwUVqFstVgm+Ucm33y7wm1nNxIWyguoltmOAqjOQ8S9U7rKFjfV9vPpD1tLgWAPJ0EvE3+5YzCs1MCNwwy+jVkoYFZU=
+	P4RL4m4argMJxhkXjTBeOtte93l2gq9kD4j3DrZNKt0IMbTWcrCMb0bNt0GK1Ip/gRMSWa3RP0BLXbqj64iA/cl+uqkEZI7h/9+I61M0YxVNlKXyU+G4GqZC3sKGpFryS9K6T1w7MNNhVdBJudGPHlHwGAnQQeVGA1SjtPWxxae6In41vxHbrSz0xIcKQLnoR5NekZOCF8+iFXsxtvd2X4CGrjpsb2lDnNXhV+DsAf7reF1gdDFxbQ3FO7BIXVuaKH9S4em6p4qtq7uXcqkeX9u05rf7BnSz9Wc8xW/IkjGO18hzY3xJNp7+edHjj3yoZicS3hpnezES94CYbw9VN4t2wrvA/9XSFM5PO3w2VakLo0dEk14BuLAnsK/aVsS+OKJ38P+liaAZHACNFVxr5J9zAPlVFcRPbPy+XmoEF5k3yiOX0d72yWOVbYMmre/oj3BuDjuqWCvwLpuY6unyA103N+AUZpncz1K+N3GW3oTNdIvLc6pguwqE51mz2jTANEalrCBTOal3rwpyTd0Fd6uUVHcRNDp61yxj2+zvH+isDjPVg3Sn6ZeYxpwbHhYTZEGIm+sx5+uMEzyLPa8xGh8i77mYZZbzFgdo+j5ptsM=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(136003)(39860400002)(346002)(366004)(451199024)(1800799009)(186009)(6512007)(6486002)(6666004)(2616005)(26005)(6506007)(38100700002)(86362001)(478600001)(107886003)(8676002)(66946007)(5660300002)(8936002)(66476007)(44832011)(4326008)(316002)(66556008)(2906002)(6916009)(36756003)(41300700001)(83380400001)(13296009);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(136003)(39860400002)(346002)(366004)(451199024)(1800799009)(186009)(6512007)(6486002)(2616005)(26005)(6506007)(38100700002)(86362001)(966005)(478600001)(8676002)(66946007)(5660300002)(8936002)(66476007)(44832011)(4326008)(316002)(66556008)(54906003)(2906002)(6916009)(36756003)(41300700001)(83380400001)(13296009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?5JmCZ+l8x9BcECecYWGtnZj9IcNUTWgKuz+uCJEbgdnllqzIoEtrl+V9BxcJ?=
- =?us-ascii?Q?JaPDzv8joJ+oY3cn1PmbqojDPG17sr5uVoB7XQrm+J+rPOvhtd/a0KoCYI2U?=
- =?us-ascii?Q?5JK7nw9DYpPLsFmS3UHtbr/x2gAzPyX0pZSF51emzW34d6NhN5757TFvP7Gp?=
- =?us-ascii?Q?bJATxfToxMJiP1Bn2MOROWBbofx9YMwWzYpXe70VC+RhQcIMDBvKgqf41Lyn?=
- =?us-ascii?Q?1p9/nJJP5QuCsJ2FzmxtMIHAJrygm9N6IOKgjX9mjx4c8M9k4uljXqatR5mD?=
- =?us-ascii?Q?9SqGy8zWbOCurPbL/LDnObKxKKsLCoWXUWgUsCDnr68egJP+1iQOFBaaCec6?=
- =?us-ascii?Q?eJaFMOp/mXbYnTmsSNqgsBRle8UwNvZB2jomZFX9Bu3C3vGi4xwNRdoI8i9R?=
- =?us-ascii?Q?iV1Thk9kbLgh26LE+2q1Rj35iRnJJyd/hx9VwhFfc4UJElSbJVLHQVYA7ucp?=
- =?us-ascii?Q?qAmkMLI4FHrC6pZCtN/nMDeyTjFwOyjhwUoLj+bUEK1bNeNvXS7mawsz/YzC?=
- =?us-ascii?Q?syxDF3/C1sdPfwRyLO12mLX/S9fX/nKTNgtuolgoAGzuE3c9NFFkvqrFb4Wa?=
- =?us-ascii?Q?ZK4+zJLYWhIL3gLJJ03wVZJ0JWMBL6c3UxA7fRYWYONzfQXFH9DBhL0J0cc6?=
- =?us-ascii?Q?+sEVEuxNokHo9vMwRzKCZzwEl2NP9D/jUBH3oGRJ9GWpuQ+o4IlAMegCDV7Y?=
- =?us-ascii?Q?EcTRSVXrcxKegqWdyzRP7JG0EAh2ZpzRRF1bfpb9phERwqPqj4XKMFUIL6d8?=
- =?us-ascii?Q?ivxx2nC4iL3CwIVLr5R+p0MU0kjhS2fmQtVK9eCclFH9g6DFKBiw9TwaHqqs?=
- =?us-ascii?Q?hIQf5ySnxigQtvv9Sivs2VdEIjsnBhbA3M/x6KF+WDF5ND/NOSrCx72pwDpl?=
- =?us-ascii?Q?u7AMzNIqu20ocJyX87iXVM1dviOasHAMK+j6JMx0OM1YvzdaKTJBe7+7dIRx?=
- =?us-ascii?Q?BKd1NsVWGuPNSTD0t5dlX/B7M9k5Bf/XAlAQKWdnpgzU+kRKGUHQiOyYkAig?=
- =?us-ascii?Q?cQ7FADbYB7IRBCWsW9zVcmjgVjJQov2OzgfjV7Z08dSLFMDOU8onYBoakG9Q?=
- =?us-ascii?Q?V04EJEmeGO2cKj+HyFVGI9zN78PonmFLLqJ5XUqqRKfmDkky7TXpbki8dq38?=
- =?us-ascii?Q?qNw4KoPJy2sofViUQud3LCpcXWfl3W/ifgtxZGcl3r6pgyP24x++XFXPaAls?=
- =?us-ascii?Q?xJSY/CsnNM+fDJ189Mcc28w3phXMV0p+r0lX82ZjRdl1GDS3frDk9h0r06ZW?=
- =?us-ascii?Q?ya5F8I4t9HJiiKVEShWcZIY4i2qmCEsGt6/JU7LGopfcxZPGXDruUcdebVua?=
- =?us-ascii?Q?4Gtl8XtSDQwdAgH2E4iOEUxdDSuFX8rqxENQ5rXS0zh75pXHiJ2KwqWcWyfO?=
- =?us-ascii?Q?0e+Lg1YfTTiQ4ff8jvXPQK29W81TyyvBMaGmSydRBRXfmbcM60ZbulZ9oUJd?=
- =?us-ascii?Q?L9BK+q4BYIweeAwPHNyZq94RdSZ9q2Mr58JfHpj+aoaz/QOgzHi50B85KBWZ?=
- =?us-ascii?Q?6v14+KrBmg0Kb34Tx/O6AWh02VE85ZxD9RUG5/nHxNgZFOVEv88K5LFoeXPY?=
- =?us-ascii?Q?3pDxjOK7lDvYMj7EAShOWYyQAoKLIHDpNLPi5gXgV6ywSmkJtZH9MewKc/a9?=
- =?us-ascii?Q?Fg=3D=3D?=
+	=?us-ascii?Q?rw2Wawl/dBtGwT4Jky5lekt1GFZG/odMfH/eJoShjeJjgEDTlHXGms+VJOFx?=
+ =?us-ascii?Q?z7UITzWeEmHTuKHMXPSuJw/h3JloJtkYWE6oQPhDdO+A6Zb4SuJ5Hq3200CH?=
+ =?us-ascii?Q?rp1pmIroQrLfdlwsl47xnu30jpPZiQidt8RFYqfwZP2zgB0WpZE6bc68LkVw?=
+ =?us-ascii?Q?LhJdnxHtPLsXfusTLsE83yUG2HFdi2AQpsSLaqOVIh+E9pgCA7xNbja7V6iz?=
+ =?us-ascii?Q?BnDswLwspL2wPd8w4icJuOktvg5YI5ALihaRHiIFQzKjCkHiRv2italgPl0Z?=
+ =?us-ascii?Q?AC8TBsJfGhf0ZaaJU0N16X8cQp2lR/es775G7v6lzRCDV6yx+xI44llJnBpf?=
+ =?us-ascii?Q?wJvunzR7O0eI3nb+Ls6zaA63UtnNRiMG0JqTPZph9zhm8mdwOShdet0/aKvZ?=
+ =?us-ascii?Q?a7hHd5S0wGp+QxQSklLfb+/zNoFOXlNSF36ijjMegPfzItRRMpMsrkgrGFWd?=
+ =?us-ascii?Q?cH/VqwnRbAi4sTPksEbdew4SJcf83FuZJoQ8Ep6JnZ2Ldr8CHnEm5kHHZAWB?=
+ =?us-ascii?Q?yXCdUhJwOwotq+zEAL9BkD6A+OzeE6LNoIweLXFLJ804IdpcMo5P0syHNVuQ?=
+ =?us-ascii?Q?p5dOaHMuURKSm+oqn8yHmyLkBfnxlanmm7Kj9qRQprOKtAreOdGbZPVJV6eU?=
+ =?us-ascii?Q?if/JzZERHpqU/nEsKi5k/KFbTDKzA4XHt97bYTvf34qXxzahOgiMk8oelHYf?=
+ =?us-ascii?Q?0fmXUCENYy7SA/wxf5SMjGCG+AuQFtb4etGuJZvuPYucYwC9mC+AKzxj3ydD?=
+ =?us-ascii?Q?gj7duc+5vyO8RV892spsydyg/wj7UEJtTvQDWH5rgKAZLtpCVbDcnrFdoKX6?=
+ =?us-ascii?Q?HvtMk7WqZwEEP6C7osSxJSrR1dYX4YTtJ3eDLaeHdk9FYaOegbHQGbI9UT2J?=
+ =?us-ascii?Q?ALWgIcbo0CFFfytqMCmQlGcBpBMr6B/gEa7d6nXhYPHfG7G5NEv14nl7UsIh?=
+ =?us-ascii?Q?XBtCkXFRy2ScZjj3nKZNSY9OKyM/OHVVGEj+dJROgpyPRip/xOLq2kQKcQnC?=
+ =?us-ascii?Q?ULgTyWLTinHVEK1phL/vOxmsOvCGabke5SzJRxAZ4dEVP+93XwIbelz4dBHh?=
+ =?us-ascii?Q?zvKvn1R3VfrVpnv/I/C8DbIiYmOsR55xtp+wWxNNngwSHVmGZ+R/b6vvu5Iv?=
+ =?us-ascii?Q?kWNHPti7N8NRhOP50lAH4y47NP1b6S37/2IjQ+52OxTVmisoRX9KfHC08DQl?=
+ =?us-ascii?Q?P3FosH+NF02Fta3cVIXSPHlK3PpfWYP3oeGI1lR/CbEnP14zwzju/uPC9Mdv?=
+ =?us-ascii?Q?WQqOszWUcxJKLhX7dy+nWpOX0h2LaUK+Ng1LRx0X9EiQjagbj6r4BCWEwdzD?=
+ =?us-ascii?Q?wuabSgEeKbfTKINvdY75EXa3B09YuVoAe3lU2isBVqYe7wZIOFNMMhMY9xCC?=
+ =?us-ascii?Q?6dQfI/N9fr4fm5m1x5mi5/Cxt34EooAZ3b9xVhHPIgFZb/ljfj6phBaJDOu6?=
+ =?us-ascii?Q?hTsDwdWaiabh3T0vIOpsSt+MJQQk2HIDQwJ7niNPmFSBiyZxARQT3I2zgkra?=
+ =?us-ascii?Q?cJ32SelrSZbcljUuO6DBcbGDi9oPQnHfL6sobONVu9G8WOLT9yGG45wp/WDw?=
+ =?us-ascii?Q?4Hq1C/ye3JAQ7Rd+9bzVTFko0KkqKYPyH1GrCOdnjCmTO5+Nf+t2vKrYub3N?=
+ =?us-ascii?Q?Gw=3D=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d5f4d86-4d71-400b-cefd-08dbb5bfaea5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ee91075-ce29-4148-4161-08dbb5bfb363
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 07:45:08.0162
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 07:45:15.7506
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2CBSpLruRFYpTm7zGkeAQmRun3jcGUYsf2PtWAeos2Zhd2ypyTF/b1JB1SKEwqjEv8ZYVnn01GgEgDVaCkSJ9w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: ouUxoeGLBcnUeSn+w7gpDDAKC6mAkX8fvNqn7SGPh1gjkeG/GE463h5v2yOePYxOHGCht3cRxikVwGdRrZK0Cg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7524
 
-This patch adds a selftest for userpsace PM to remove id 0 subflow. Use
-userspace_pm_add_sf() to add a subflow, and pass initial ip address to
-userspace_pm_rm_sf() to remove id 0 subflow.
+This patch drops id 0 limitation in mptcp_nl_cmd_sf_create() to allow
+creating additional subflows with the local addr ID 0.
 
-Add a new helper chk_subflows_total(), in it use the newly added counter
-mptcpi_subflows_total to get the "correct" amount of subflows, including
-the initial one. To be compatible with old 'ss' version without this
-counter, get the total subflows using this 'ss' command:
+There is no reason not to allow additional subflows from this local
+address: we should be able to create new subflows from the initial
+endpoint. This limitation was breaking fullmesh support from userspace.
 
-        ss -ti | grep -c tcp-ulp-mptcp.
-
-When closing the initial subflow in __mptcp_close_ssk(), dispose_it is
-false, then tcp_disconnect is invoked. This will send a MP_RST to close
-a subflow on the peer too. So chk_rst_nr() is added in this test, and
-chk_all_subflows after closing the initial subflow is '1 1', not '2 1'.
-
+Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/391
+Suggested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 55 ++++++++++++++++++-
- 1 file changed, 54 insertions(+), 1 deletion(-)
+ net/mptcp/pm_userspace.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 2ebe1692edeb..662800437a38 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1860,7 +1860,7 @@ chk_mptcp_info()
- 	local cnt2
- 	local dump_stats
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index b5a8aa4c1ebd..d042d32beb4d 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -307,12 +307,6 @@ int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
+ 		goto create_err;
+ 	}
  
--	print_check "mptcp_info ${info1:0:8}=$exp1:$exp2"
-+	print_check "mptcp_info ${info1:0:14}=$exp1:$exp2"
- 
- 	cnt1=$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value "$info1" "$info1")
- 	cnt2=$(ss -N $ns2 -inmHM | mptcp_lib_get_info_value "$info2" "$info2")
-@@ -1881,6 +1881,37 @@ chk_mptcp_info()
- 	fi
- }
- 
-+# $1: subflows in ns1 ; $2: subflows in ns2
-+# number of all subflows, including the initial subflow.
-+chk_subflows_total()
-+{
-+	local cnt1
-+	local cnt2
-+	local info="subflows_total"
-+
-+	if [ $(ss -N $ns1 -inmHM | mptcp_lib_get_info_value $info $info) ]; then
-+		chk_mptcp_info $info $1 $info $2
-+		return
-+	fi
-+
-+	print_check "$info $1:$2"
-+
-+	cnt1=$(ss -N $ns1 -ti | grep -c tcp-ulp-mptcp)
-+	cnt2=$(ss -N $ns2 -ti | grep -c tcp-ulp-mptcp)
-+
-+	if [ "$1" != "$cnt1" ] || [ "$2" != "$cnt2" ]; then
-+		fail_test "got subflows $cnt1:$cnt2 expected $1:$2"
-+		dump_stats=1
-+	else
-+		print_ok
-+	fi
-+
-+	if [ "$dump_stats" = 1 ]; then
-+		ss -N $ns1 -ti
-+		ss -N $ns2 -ti
-+	fi
-+}
-+
- chk_link_usage()
- {
- 	local ns=$1
-@@ -3430,6 +3461,28 @@ userspace_tests()
- 		kill_events_pids
- 		wait $tests_pid
- 	fi
-+
-+	# userspace pm remove id 0 subflow
-+	if reset_with_events "userspace pm remove id 0 subflow" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-+		set_userspace_pm $ns2
-+		pm_nl_set_limits $ns1 0 1
-+		speed=10 \
-+			run_tests $ns1 $ns2 10.0.1.1 &
-+		local tests_pid=$!
-+		wait_mpj $ns2
-+		userspace_pm_add_sf $ns2 10.0.3.2 20
-+		chk_join_nr 1 1 1
-+		chk_mptcp_info subflows 1 subflows 1
-+		chk_subflows_total 2 2
-+		userspace_pm_rm_sf $ns2 10.0.1.2
-+		chk_rm_nr 0 1
-+		chk_rst_nr 1 1 invert
-+		chk_mptcp_info subflows 1 subflows 1
-+		chk_subflows_total 1 1
-+		kill_events_pids
-+		wait $tests_pid
-+	fi
- }
- 
- endpoint_tests()
+-	if (addr_l.id == 0) {
+-		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "missing local addr id");
+-		err = -EINVAL;
+-		goto create_err;
+-	}
+-
+ 	err = mptcp_pm_parse_addr(raddr, info, &addr_r);
+ 	if (err < 0) {
+ 		NL_SET_ERR_MSG_ATTR(info->extack, raddr, "error parsing remote addr");
 -- 
 2.35.3
 
