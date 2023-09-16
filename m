@@ -1,46 +1,47 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C9412B9A
-	for <mptcp@lists.linux.dev>; Sat, 16 Sep 2023 10:53:59 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-403012f27e1so31134875e9.1
-        for <mptcp@lists.linux.dev>; Sat, 16 Sep 2023 03:53:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A694B134B5
+	for <mptcp@lists.linux.dev>; Sat, 16 Sep 2023 10:54:00 +0000 (UTC)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-404773f2501so22924465e9.0
+        for <mptcp@lists.linux.dev>; Sat, 16 Sep 2023 03:54:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1694861638; x=1695466438; darn=lists.linux.dev;
+        d=tessares.net; s=google; t=1694861639; x=1695466439; darn=lists.linux.dev;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WOY/sqAjV4zUSxnEWz+4l2rDatIUvlvXWdj0HM6CCVY=;
-        b=te5KZWr/tOqesnnv8Cj9ncFQo79z/iqO3TlYuB7LsOak4lW2XvZ2uBZVCmxBaG3W0C
-         v6joTruBlc1FCBFz22Mf0O7a9Dft8IlwZONUy82ijN36c5TASfTjFdoA/WhHtRNew4yE
-         W0RuG8Bky++BlmRmDgYBJ1zbSyQbM1F5ERbrP31xY/JdqPZl+axz5BsLELTbSnmbuSza
-         0qd2G8hDcAMKVlagv1J2+W41tXi2DO/aA90r2BDVWN57w08v+LGC1JagZnbboMKQ4hly
-         ZzZImnwG+bppSxy1ECU29eCpFx0lRJ7BPEWYgX1sj/XgQhrPSZaJ3B3QTKxPuk+bVpMj
-         kE2Q==
+        bh=uWMKdu6oGlBA228l/1n9KS3VAt8D5mHcxorttTQ05GA=;
+        b=onTNf8u0F0SqpwjnRTdnNU8z9NYH98RwtLYocTvn1MII8KoWsTMIBrJY5qS8q4Bata
+         EGopJrDnEjfRB0NwP8ISGdx1jEZ5DgvmmJNz0JncAgLTgqW0fZ7EY427vPN87xXl4emO
+         6H/+cB21aC+dKezKIxFxvPx5Hio7sQr22v3eln2dQmsU6Xb0cGtXnIy75PGSkCkX4ep4
+         Ua6EReqNEwwjfWTgIPI2WsIY5ZC89Urc9viUc5DPLD3m76R10hw89D+nxrj/TQ7uY02V
+         dAtpWgqu8E3M4HtvOyucgZbbMWfj3bUDeWp7Idnta+kbiZxBYG+wME15F/dFb4BDoOaf
+         U9Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694861638; x=1695466438;
+        d=1e100.net; s=20230601; t=1694861639; x=1695466439;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WOY/sqAjV4zUSxnEWz+4l2rDatIUvlvXWdj0HM6CCVY=;
-        b=V7JbrOaU8iGMq1DCP/qXspdbRxJPBFUUzme5FED6D+o5KYGvk18SJODzKE56kgGaax
-         qy5j6IJAenh2RMveL9c/0N6tt6XeJnhvKNlKaUzYP61aYgM2xdPyQD71khhKuKFADOuO
-         iVM/EzV+NaAGaa3XZkkFUa5Wl3Yk/FWWb/iY9h+vW0NisIq3YG9Idl6ZR90YFPbSJgrE
-         YTi4FKPNm8iGE1eZWqydytqUpRnFRSoXzRhZKpp3LAmPXyjwsyojehPLILtLHZab/68v
-         jPpIGxlmtKvb3XabU0tVm1IJ+IfNATSkXJqynxK7jTrsCpPlzp0vne3baXPKcnx70Lva
-         feBA==
-X-Gm-Message-State: AOJu0YxZqlXznIbtDMnh+EYHb4JYRQMyViE2lcxmIZJ1Z4TYib4IYiND
-	zTWjZ8n/pD5/fb70hhuxMYeA6w==
-X-Google-Smtp-Source: AGHT+IHdx6+03wALwlLa6aUnQuHEThxyzxSQi4wfPfRJ+Tc+CdiQk+bMgxnb4LTTDDWLjxZJL/mjZw==
-X-Received: by 2002:a05:600c:1d1d:b0:404:fc51:4e9f with SMTP id l29-20020a05600c1d1d00b00404fc514e9fmr848227wms.38.1694861637487;
-        Sat, 16 Sep 2023 03:53:57 -0700 (PDT)
+        bh=uWMKdu6oGlBA228l/1n9KS3VAt8D5mHcxorttTQ05GA=;
+        b=VEWNj3/jfHFzNrKccrj+ojILQuH5qgyfW6y4gB0qX5kftv0Y+PtKsYnVbh/2ITUJ/S
+         JzsJtTsRfUp+JDV2N24WSTUZnCKyx2dSjrfs3tqcQsdDpU1OhPoYoHlg/abFSzMfRK5t
+         fYdNMVMSVEWjbv1qORpu1aFBS70/gLSEDI4eAeeL12BkPokKFt6iygiaBL78D6Z2KrX8
+         IImWdPJKIfkFMOE7oSzYEBvElTQ6zXozxty1rzrzZ9qKsyRUn30b9HA4YMUV198dZIaX
+         VlsKChndtMIzdiyARZo6g5wbBV9BwKL7dXw4/ps93fezAO5HidM9Zoqh35SJgvp3VZwr
+         4GAw==
+X-Gm-Message-State: AOJu0YyBkNl8LDCQpxlXqNPw4sO/jx2XWNGnbUnzenVTQYRgwfv10GWU
+	9Jnlx87v5Gd0PO8vJMMqLwwzkg==
+X-Google-Smtp-Source: AGHT+IGqK774glaK2AjLdLVkE+1PqZuz5eH9Wgcszf2PJ29KM2yg/dFPiRnvwjBZsb8Xt3j9zLrviA==
+X-Received: by 2002:a05:600c:249:b0:402:ff8d:609b with SMTP id 9-20020a05600c024900b00402ff8d609bmr3695473wmj.33.1694861638768;
+        Sat, 16 Sep 2023 03:53:58 -0700 (PDT)
 Received: from vdi08.nix.tessares.net (static.219.156.76.144.clients.your-server.de. [144.76.156.219])
-        by smtp.gmail.com with ESMTPSA id z20-20020a7bc7d4000000b003feae747ff2sm9900743wmk.35.2023.09.16.03.53.56
+        by smtp.gmail.com with ESMTPSA id z20-20020a7bc7d4000000b003feae747ff2sm9900743wmk.35.2023.09.16.03.53.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Sep 2023 03:53:57 -0700 (PDT)
+        Sat, 16 Sep 2023 03:53:58 -0700 (PDT)
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
-Date: Sat, 16 Sep 2023 12:52:47 +0200
-Subject: [PATCH net 3/5] mptcp: process pending subflow error on close
+Date: Sat, 16 Sep 2023 12:52:48 +0200
+Subject: [PATCH net 4/5] mptcp: rename timer related helper to less
+ confusing names
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230916-upstream-net-20230915-mptcp-hanging-conn-v1-3-05d1a8b851a8@tessares.net>
+Message-Id: <20230916-upstream-net-20230915-mptcp-hanging-conn-v1-4-05d1a8b851a8@tessares.net>
 References: <20230916-upstream-net-20230915-mptcp-hanging-conn-v1-0-05d1a8b851a8@tessares.net>
 In-Reply-To: <20230916-upstream-net-20230915-mptcp-hanging-conn-v1-0-05d1a8b851a8@tessares.net>
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
@@ -59,130 +60,221 @@ To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Matthieu Baerts <matthieu.baerts@tessares.net>, stable@vger.kernel.org
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3415;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6828;
  i=matthieu.baerts@tessares.net; h=from:subject:message-id;
- bh=rdxdMoVy0CrsijRyr+7AHTMv9lxPX17lbBfXAdrgKyY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlBYlA/V7jp2UdAR1ummQors/RC6sQbjMGfs6Ah
- 9bxgcKzDFiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZQWJQAAKCRD2t4JPQmmg
- c+c/D/9DecyoVShlh2Qpntbg0GirJyOPYGcTM8Y85bP1kAbH49a4djc1lUD6FDQdyF8QINSHTA0
- sWQtPzk0yOBhkSbL3rLgikx9q+1MjeHi9V0ElbBxracI4l6yXOZ8Aq/O0wX6bJi69904DEHaC93
- mFzPS3wtpskCrFb/I8NCI9s4fKJV5gWNGt2KTnaadwb715HWfDw+5Yh92UIBGCQH8eQ0ppIX0+o
- 9HZ0VWGCIKKuw5emi2U0vfuAo5ktvZYKU0s2I89cWiLKVeuN/N0mcPJX6pgFUXyHTBSqgWPz248
- arQoGazScqsAoLB85T6hSKpqbdGCsnluQO7hfFQutjrLJjecueJF/a9Gm2lleffo8flxW+V42Ok
- 0+dM9xqz3ITO/Gv4sn8OjWJrDFTW/FixA11fS055ToJQrCN+DOH568jea5b/7tkLDkVWMcjCIF/
- TFns2aAM9vnhz8fra7WBmhOgCMdzqBJrzPftx05oBZV6W0zfHUWl/nSQKTrTkvS1CfKt9/wdbqm
- r2/lJn0RR2Y5D82x1CJCT2WomPziMIenQy2kifaVdUBKKceu0Om4ASAOQ8RcRJYcia3zwH4d2bh
- moYYKYQDNONipi606AkhMYUaF+XPNak+s/orNRz7229Uum19JAFLU3XL5dOyQkwEGtzeUyNn1fY
- 9nRzpJUse4ogShQ==
+ bh=MdXDRzXjWlApK+QTPTufQ6ZpvGH2K3dtcUOmL+Qgea0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlBYlAVm9GHZKzxl+8WRaPD6naZe1x6tFWU9ecf
+ 2RtSC4yDcWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZQWJQAAKCRD2t4JPQmmg
+ c07FEACzGddVDOpe9M1NaGWxorOCEWGV1h/SCICL8YlqpC0oRWPv6WP5hODlA3FFvXKjqubtECk
+ mCHhaRreaRYX72Fg9hFwgmlekbUPFVlGQTo1gsqh6BrK1WDtWdkxa7YOR4VBHZrsDx2xlvZ1ue6
+ BdTLZxbwOXnEO4bbrTxfa9HqqAhqPnKtyAzMXJtCs2pFGTVmC2ib2SwfFC6AHUlK4/20+pLjmMB
+ Xpr6JkmT2slZK5TnO2DdT5EKIdGHv+lmbKsGaosRmaYDqhtab+CRUHC4G3N5TyJBm2xPO5nOxMP
+ CByNTKeegnjUh7FSx073RGYE9nIrMa0Nkum2DTWUk8DKYcY1SBubi5ipthbcMSAc8EWMga75FZK
+ CuxDEW17lD1Hdf2DzDBlcDX/HHcwTaj5V6TfkozdfTzjRvmlfUBKRrBLcJOpKuGvY8LMlXB216F
+ uHtGPznaNNjq2ZJlMvEgNWEwgmiqZzyg5cCQYi6J1fH7T1UCuWx8vvmTZyDD2dap9lhiXS1fn1u
+ mrvk4MUOr4qS2GsNhiqQZkuTqwLWY6Nj8OyvdsBlUMKnntP5NzQ9N2Pb6ZWcHTa8j/roHU873YC
+ bDDt+cReEPEmndHTWtSMbWuS8lNvUJTMBRwB8YSfmVCXYvX8xGzlC5iaLI/3f6fxv786gZnnNU+
+ PxAgIUvE7xpT/2g==
 X-Developer-Key: i=matthieu.baerts@tessares.net; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-On incoming TCP reset, subflow closing could happen before error
-propagation. That in turn could cause the socket error being ignored,
-and a missing socket state transition, as reported by Daire-Byrne.
+The msk socket uses to different timeout to track close related
+events and retransmissions. The existing helpers do not indicate
+clearly which timer they actually touch, making the related code
+quite confusing.
 
-Address the issues explicitly checking for subflow socket error at
-close time. To avoid code duplication, factor-out of __mptcp_error_report()
-a new helper implementing the relevant bits.
+Change the existing helpers name to avoid such confusion. No
+functional change intended.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/429
-Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
-Cc: stable@vger.kernel.org
+This patch is linked to the next one ("mptcp: fix dangling connection
+hang-up"). The two patches are supposed to be backported together.
+
+Cc: stable@vger.kernel.org # v5.11+
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 ---
- net/mptcp/protocol.c | 63 ++++++++++++++++++++++++++++------------------------
- 1 file changed, 34 insertions(+), 29 deletions(-)
+ net/mptcp/protocol.c | 42 +++++++++++++++++++++---------------------
+ net/mptcp/protocol.h |  2 +-
+ net/mptcp/subflow.c  |  2 +-
+ 3 files changed, 23 insertions(+), 23 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 915860027b1a..1c96b8da71df 100644
+index 1c96b8da71df..c8f38f303a90 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -770,40 +770,44 @@ static bool __mptcp_ofo_queue(struct mptcp_sock *msk)
- 	return moved;
+@@ -405,7 +405,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+ 	return false;
  }
  
-+static bool __mptcp_subflow_error_report(struct sock *sk, struct sock *ssk)
-+{
-+	int err = sock_error(ssk);
-+	int ssk_state;
-+
-+	if (!err)
-+		return false;
-+
-+	/* only propagate errors on fallen-back sockets or
-+	 * on MPC connect
-+	 */
-+	if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(mptcp_sk(sk)))
-+		return false;
-+
-+	/* We need to propagate only transition to CLOSE state.
-+	 * Orphaned socket will see such state change via
-+	 * subflow_sched_work_if_closed() and that path will properly
-+	 * destroy the msk as needed.
-+	 */
-+	ssk_state = inet_sk_state_load(ssk);
-+	if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
-+		inet_sk_state_store(sk, ssk_state);
-+	WRITE_ONCE(sk->sk_err, -err);
-+
-+	/* This barrier is coupled with smp_rmb() in mptcp_poll() */
-+	smp_wmb();
-+	sk_error_report(sk);
-+	return true;
-+}
-+
- void __mptcp_error_report(struct sock *sk)
+-static void mptcp_stop_timer(struct sock *sk)
++static void mptcp_stop_rtx_timer(struct sock *sk)
  {
- 	struct mptcp_subflow_context *subflow;
- 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
  
--	mptcp_for_each_subflow(msk, subflow) {
--		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
--		int err = sock_error(ssk);
--		int ssk_state;
--
--		if (!err)
--			continue;
--
--		/* only propagate errors on fallen-back sockets or
--		 * on MPC connect
--		 */
--		if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(msk))
--			continue;
--
--		/* We need to propagate only transition to CLOSE state.
--		 * Orphaned socket will see such state change via
--		 * subflow_sched_work_if_closed() and that path will properly
--		 * destroy the msk as needed.
--		 */
--		ssk_state = inet_sk_state_load(ssk);
--		if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
--			inet_sk_state_store(sk, ssk_state);
--		WRITE_ONCE(sk->sk_err, -err);
--
--		/* This barrier is coupled with smp_rmb() in mptcp_poll() */
--		smp_wmb();
--		sk_error_report(sk);
--		break;
--	}
-+	mptcp_for_each_subflow(msk, subflow)
-+		if (__mptcp_subflow_error_report(sk, mptcp_subflow_tcp_sock(subflow)))
-+			break;
+@@ -911,12 +911,12 @@ static void __mptcp_flush_join_list(struct sock *sk, struct list_head *join_list
+ 	}
  }
  
- /* In most cases we will be able to lock the mptcp socket.  If its already
-@@ -2428,6 +2432,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+-static bool mptcp_timer_pending(struct sock *sk)
++static bool mptcp_rtx_timer_pending(struct sock *sk)
+ {
+ 	return timer_pending(&inet_csk(sk)->icsk_retransmit_timer);
+ }
+ 
+-static void mptcp_reset_timer(struct sock *sk)
++static void mptcp_reset_rtx_timer(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	unsigned long tout;
+@@ -1050,10 +1050,10 @@ static void __mptcp_clean_una(struct sock *sk)
+ out:
+ 	if (snd_una == READ_ONCE(msk->snd_nxt) &&
+ 	    snd_una == READ_ONCE(msk->write_seq)) {
+-		if (mptcp_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
+-			mptcp_stop_timer(sk);
++		if (mptcp_rtx_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
++			mptcp_stop_rtx_timer(sk);
+ 	} else {
+-		mptcp_reset_timer(sk);
++		mptcp_reset_rtx_timer(sk);
+ 	}
+ }
+ 
+@@ -1626,8 +1626,8 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+ 		mptcp_push_release(ssk, &info);
+ 
+ 	/* ensure the rtx timer is running */
+-	if (!mptcp_timer_pending(sk))
+-		mptcp_reset_timer(sk);
++	if (!mptcp_rtx_timer_pending(sk))
++		mptcp_reset_rtx_timer(sk);
+ 	if (do_check_data_fin)
+ 		mptcp_check_send_data_fin(sk);
+ }
+@@ -1690,8 +1690,8 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
+ 	if (copied) {
+ 		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
+ 			 info.size_goal);
+-		if (!mptcp_timer_pending(sk))
+-			mptcp_reset_timer(sk);
++		if (!mptcp_rtx_timer_pending(sk))
++			mptcp_reset_rtx_timer(sk);
+ 
+ 		if (msk->snd_data_fin_enable &&
+ 		    msk->snd_nxt + 1 == msk->write_seq)
+@@ -2260,7 +2260,7 @@ static void mptcp_retransmit_timer(struct timer_list *t)
+ 	sock_put(sk);
+ }
+ 
+-static void mptcp_timeout_timer(struct timer_list *t)
++static void mptcp_tout_timer(struct timer_list *t)
+ {
+ 	struct sock *sk = from_timer(sk, t, sk_timer);
+ 
+@@ -2629,14 +2629,14 @@ static void __mptcp_retrans(struct sock *sk)
+ reset_timer:
+ 	mptcp_check_and_set_pending(sk);
+ 
+-	if (!mptcp_timer_pending(sk))
+-		mptcp_reset_timer(sk);
++	if (!mptcp_rtx_timer_pending(sk))
++		mptcp_reset_rtx_timer(sk);
+ }
+ 
+ /* schedule the timeout timer for the relevant event: either close timeout
+  * or mp_fail timeout. The close timeout takes precedence on the mp_fail one
+  */
+-void mptcp_reset_timeout(struct mptcp_sock *msk, unsigned long fail_tout)
++void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+ 	unsigned long timeout, close_timeout;
+@@ -2669,7 +2669,7 @@ static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
+ 	WRITE_ONCE(mptcp_subflow_ctx(ssk)->fail_tout, 0);
+ 	unlock_sock_fast(ssk, slow);
+ 
+-	mptcp_reset_timeout(msk, 0);
++	mptcp_reset_tout_timer(msk, 0);
+ }
+ 
+ static void mptcp_do_fastclose(struct sock *sk)
+@@ -2758,7 +2758,7 @@ static void __mptcp_init_sock(struct sock *sk)
+ 
+ 	/* re-use the csk retrans timer for MPTCP-level retrans */
+ 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
+-	timer_setup(&sk->sk_timer, mptcp_timeout_timer, 0);
++	timer_setup(&sk->sk_timer, mptcp_tout_timer, 0);
+ }
+ 
+ static void mptcp_ca_reset(struct sock *sk)
+@@ -2849,8 +2849,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
+ 		} else {
+ 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
+ 			tcp_send_ack(ssk);
+-			if (!mptcp_timer_pending(sk))
+-				mptcp_reset_timer(sk);
++			if (!mptcp_rtx_timer_pending(sk))
++				mptcp_reset_rtx_timer(sk);
+ 		}
+ 		break;
+ 	}
+@@ -2933,7 +2933,7 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 
+ 	might_sleep();
+ 
+-	mptcp_stop_timer(sk);
++	mptcp_stop_rtx_timer(sk);
+ 	sk_stop_timer(sk, &sk->sk_timer);
+ 	msk->pm.status = 0;
+ 	mptcp_release_sched(msk);
+@@ -3053,7 +3053,7 @@ bool __mptcp_close(struct sock *sk, long timeout)
+ 		__mptcp_destroy_sock(sk);
+ 		do_cancel_work = true;
+ 	} else {
+-		mptcp_reset_timeout(msk, 0);
++		mptcp_reset_tout_timer(msk, 0);
  	}
  
- out_release:
-+	__mptcp_subflow_error_report(sk, ssk);
- 	release_sock(ssk);
+ 	return do_cancel_work;
+@@ -3116,7 +3116,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 	mptcp_check_listen_stop(sk);
+ 	inet_sk_state_store(sk, TCP_CLOSE);
  
- 	sock_put(ssk);
+-	mptcp_stop_timer(sk);
++	mptcp_stop_rtx_timer(sk);
+ 	sk_stop_timer(sk, &sk->sk_timer);
+ 
+ 	if (msk->token)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 7254b3562575..5e2026815c8e 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -718,7 +718,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+ 
+ void mptcp_finish_connect(struct sock *sk);
+ void __mptcp_set_connected(struct sock *sk);
+-void mptcp_reset_timeout(struct mptcp_sock *msk, unsigned long fail_tout);
++void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout);
+ static inline bool mptcp_is_fully_established(struct sock *sk)
+ {
+ 	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 2f40c23fdb0d..433f290984c8 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1226,7 +1226,7 @@ static void mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
+ 	WRITE_ONCE(subflow->fail_tout, fail_tout);
+ 	tcp_send_ack(ssk);
+ 
+-	mptcp_reset_timeout(msk, subflow->fail_tout);
++	mptcp_reset_tout_timer(msk, subflow->fail_tout);
+ }
+ 
+ static bool subflow_check_data_avail(struct sock *ssk)
 
 -- 
 2.40.1
