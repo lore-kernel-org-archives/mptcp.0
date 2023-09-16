@@ -1,145 +1,159 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2048.outbound.protection.outlook.com [40.107.241.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E7D1107
-	for <mptcp@lists.linux.dev>; Sat, 16 Sep 2023 11:38:57 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cYpqQgQ1Z2IIXNBT+3CBmxExgn78df33MfJbN44cEhXRWuK1V3npnELRgG2P7bsoMHmjzwkWjpJs0g41NrOenEezUnxdJU9QjH/EICIxC2JyR/humRohgVQX7irKH6WbKhBrBIsO1VjUKHY6CEp9J0xilCQE0r3n5PygGEeAvwgb71sZPnFZW1WejIkO9w83YMazyV7zpu8/jmcYoV23ErzQdd9B+ukmxiRaFkyMADoYOxSH9nw97uApDv/SAwSVIDPeW/M2rI7xNIVYEs28HcABt+FvCU0pkPX6d1u0j1e9f2ef6ub87HUA7gYG/hhWWdhYGkS+/P3nfkSF6U7qsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sNw0zsb4wZAmD9AaThDWqiAvjV6ZxsfKpG3uZIV1Nrg=;
- b=fn3mZtMl3EJEYDXo432CFlhtykrB129o9i3Ifbs+MF593w1/bB1pxTcvlQLEYX8gkFUIAep8SX70nnjc5ibpmA/WRKDx22oGESsapnZu1pRlUM2sIvporl+5y8THMA19q5XoilVZVprpgrE77we/igHF91btV5vbowZfK/toXxhuge1xpDW5tGY6zI6ubiWmndz0s8KXxFgHD/cqz12y+pegfxmYLKEfk2zgm3aesE2l35Cn7kBTFsGEfK7Nrl1p8w8+adXDqcR82znAeNHeYpEcybtVvsvDiI1r1bZC44LGxhRub5xW9rD1QRD4F5vOTJ/IfM2yIphodVMXnhvg0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sNw0zsb4wZAmD9AaThDWqiAvjV6ZxsfKpG3uZIV1Nrg=;
- b=J1M5pQDAN2NMktuF6T5bl9dw4xHqSE0AO9b1DkC8lZ3ihULDidRrKsoc7gIxgaVaiU4zENEzanJI0QQ20Ab4HZzkeUYhiO2Gzn3CLQQHmhdjdK2uMmLER8iFNm47N9dnpQkQaZljrMKWGGTotsKhUFJWeWN782faRfv1pmYM8pDbKn9vrE3Tp26mn6UbcWWD98MRZhyvqc45aiAy6yVu34z718yVTCXZGAuwggpN5ktCYCCLFcu5KZ2CE6WMkzGGzFhCVKKEzuMpaoAxN54Fi8FqekDeUxoq5WJTtPb+yBJcOC+1o/zzyvNmfTsGFGEUPuYPWF+fDMKollNFBeZ6hg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by DU0PR04MB9371.eurprd04.prod.outlook.com (2603:10a6:10:35a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.19; Sat, 16 Sep
- 2023 11:38:54 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::2867:7a72:20ac:5f71]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::2867:7a72:20ac:5f71%3]) with mapi id 15.20.6792.021; Sat, 16 Sep 2023
- 11:38:54 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next 7/7] selftests: mptcp: display simult in extra_msg
-Date: Sat, 16 Sep 2023 19:38:41 +0800
-Message-Id: <90054f25d522c7252a511eca430ebe326b22d346.1694864093.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1694864093.git.geliang.tang@suse.com>
-References: <cover.1694864093.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG3P274CA0005.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::17)
- To HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D469F2109
+	for <mptcp@lists.linux.dev>; Sat, 16 Sep 2023 11:49:06 +0000 (UTC)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-31ff7535aa6so1221673f8f.0
+        for <mptcp@lists.linux.dev>; Sat, 16 Sep 2023 04:49:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1694864945; x=1695469745; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QJhs20QAgAfYRPQJiJu26Y2Rso0POjK1FGZCSdR9fHE=;
+        b=4CtUEwChenwUDNL9RiYMLluRYICLegj7HYKx39ZvdrAQIU6qQjV/H1mTTP1v3ypWH6
+         5yeUMsmV0BTY19kbOzOfyz2z+1qsTEqFRiP8l8hMIVT+ZeKl+dj6wfpZ7nJwLedMrLFK
+         73oq1FVDdFy568rn9sc/vtSklnaWs8ipsHWhNkCl0KqBXVj6GJt8suE46NqpJgV6HYaT
+         HJlthzgjCQqIKVPkICV7kv7+oNJGdhymxb0bpC4gdDnk5wSfo3RnJK37TvJciOcYjB6i
+         oc6IhIg1JWWiN7MP1Q1RULynBwAVN5LFXKbPHzv64CZP4JDetk9oTr38tpBgR5B3hqzF
+         CJaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694864945; x=1695469745;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QJhs20QAgAfYRPQJiJu26Y2Rso0POjK1FGZCSdR9fHE=;
+        b=cvV5ftR7zR2Aeuk5fOmfrsuzC+My8AaRG4iLU855svsVYYfvCAxcy4uv7C6DqFvSoi
+         dBWWzVLnYjfRYnIWKLQ96NvAp0WLgOEdG/bHHnVIckyaEcNFqX20abGPweDDYIf7RYA7
+         rYxU/xpSEHA5Az9pUgTLPl2hVFBj0aSvP+hv1O4fqKebY4QP6dProRu93OiCr9AgzGz2
+         uwtHVl9Kb5peQRMc1ZKjkSgbJM4B8M80ddU+nKesOj5XSfMmGV7xHMhqE+Tsbb3mxAta
+         iEzRpiZ0iIzBxIv8zAgY+WVlzfLlIceIe0BIQ7R/f0bH8atRAQLzs66XjMonOWiC0HyI
+         kUyw==
+X-Gm-Message-State: AOJu0Yx62EllHrQDPIeBQhiSfYZ9QV7XNOTde/aqLrAF9mxMkNEczhWB
+	XU5krZhyymx8PZ86mDWXlBqN9Q==
+X-Google-Smtp-Source: AGHT+IFnXqPEYrD5oGlZOhjqn6eiXshlX3BhHLHWRjlqXXiREcdKha3lFqQ5rVOg1cMpLHpWXixl3w==
+X-Received: by 2002:adf:de90:0:b0:31f:a4fa:130a with SMTP id w16-20020adfde90000000b0031fa4fa130amr4436694wrl.14.1694864944902;
+        Sat, 16 Sep 2023 04:49:04 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:3867:6b1f:fd8b:a841? ([2a02:578:8593:1200:3867:6b1f:fd8b:a841])
+        by smtp.gmail.com with ESMTPSA id f16-20020a5d4dd0000000b0031c6cc74882sm6973645wru.107.2023.09.16.04.49.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 16 Sep 2023 04:49:04 -0700 (PDT)
+Message-ID: <d752c4cd-53af-4c7c-ab3a-6fdc7b80b23f@tessares.net>
+Date: Sat, 16 Sep 2023 13:49:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DU0PR04MB9371:EE_
-X-MS-Office365-Filtering-Correlation-Id: aea5c8c1-63f0-4c92-d073-08dbb6a981ae
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	aY8U7k1BIZWIPc/Jo8IHmNmu2A4DlKulOoSslmbDhPGFWyL0GyuQcYKi6TisyHzTUUU8+ywQaC5MtLIi9bgNeJ5S4B6z20XvMFPjCusXd2leJ+OJs6b1tRy/kF5E7Le3zAZR8J8NEc9gemV8KEc6qiU/EFFKArfkkBMzPD63XdkifbD2Ay0CjjN6EosZrNhJTj0qYyoxuMG4xU44PBToHn9/USITD8VGwuij2pHnaM1mR3A3XwjRkFYxLzm13tOMl8QCagNV3dA66Gpwaj4FmzvyGRJPQhsrQl+lash3OTgLev/3K/FIQi+3nbQA1RcPvCybfTKNUWaXyCPXeO0d11JRYdj5WOYZrjJfrxnULxJC0aCDlVTOvK+EaG3P5hUzdeCkn9l2uCxQ/4ajhtgz23A0GSAuv7zxYuZJvHslPiTGipkKG/sN17K3YNec2JP0WqrP7vDceMybS5QVCuQADyyO8bKPxukIshD9kFhRBVAO5mxRCJKDa/zAFoFA9lPcusqjJh4omDZFViNvcgVQ1u8Y2+dEMqFpJgMoESILrJIioEV3tCxpc3rbG2nBYgqst0AYJQMKiM7gkizXsQcIUczg/595aeDJ6Bi4lJ3jQuw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(366004)(396003)(39860400002)(346002)(1800799009)(451199024)(186009)(36756003)(41300700001)(38100700002)(6486002)(6666004)(86362001)(2906002)(2616005)(478600001)(83380400001)(107886003)(6506007)(6512007)(26005)(66476007)(66556008)(6916009)(316002)(66946007)(4326008)(8676002)(8936002)(5660300002)(44832011)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?uZWYCrkfsEpVFgsspCrVputT85oNtHcJY4ebg5Gp80tzK+0K72ONI9n+WgkO?=
- =?us-ascii?Q?M4sTIv4qxxQwzUDVqS2vcS5xZyi7aIhJ4Eo/4ZQKxqs9Sd7KRzLlFG8srZTA?=
- =?us-ascii?Q?3VxNmLwPEvvdCyy1pZMUiXMth7EQxXxtlsU22fG0tNAwOPtXiwwgL0Rb2oHU?=
- =?us-ascii?Q?Vg0VxKIwVjn18EIKsPIsLzP6Ebha7jZHT4FI3TQTNxnJK+wH0OOmsidNEmZW?=
- =?us-ascii?Q?aEOxfU3B6eiAihEtR+gBNfRLVd7b9m8GoYP19EyKxJwzWagIF43JQxB5ORLc?=
- =?us-ascii?Q?TB2CN2hf5mxmo9R4cKdJepUDxacmVk1LLiUnZsIZdx3x+A4iu9PofJ9emdeN?=
- =?us-ascii?Q?loWqU4cve5kT4+63y5deQhtdgUlkuPAtrITllK3VWKh2AbNVDPCY0/kLz6sS?=
- =?us-ascii?Q?wEEMyU7i81aaG+GprU8HFF6m2mdjlrvqoDsDgljYjzcKRSOzgJJ+ukxDdUiR?=
- =?us-ascii?Q?VTpJrfU8wblm1VB7XPfdh0prDlImSneJWA4/x6hSM74X7ijVROVZnAS4BVfi?=
- =?us-ascii?Q?qo/tUmQ3upM9zZzBle5QPvkDDC5SnMdiBaIT4TN3baj4uPfD55exg71R9q6b?=
- =?us-ascii?Q?Q5wXJOsmaQ5tuMYS8YUl0jnsIcxAcOJRCli6Fh/OQGoKJMasZgKuThstidKy?=
- =?us-ascii?Q?tr8D6xZsfDWpR3DkqHzhN0VDYyr106pgCwZVGoOwDefOxATijPLWvZvzCxCZ?=
- =?us-ascii?Q?Zhx6SWrZh27iiegy6xElB/2x1jw9GUZFPRkOVPDu97KocudopYZAm+71MJc3?=
- =?us-ascii?Q?rFxSqNpMthxi1C09Js5rd+F/V4Xw8cRCyom0l8159AFxcHKr2PaOZFO9/t/G?=
- =?us-ascii?Q?pIkf2EF81YLyecb4fw9BmZboUR1fQgO361t5lni/crkllwmhcjHInS3QwzGK?=
- =?us-ascii?Q?pZjcUqdXnz5HNEClZQs2uFJLrah/z5i8mnCypzZgRXIbKAebNFRwm4Rc+WJo?=
- =?us-ascii?Q?ioJryasxBN8Zz/VdZwueQZQq/SnyrXaTmdRX9a3tHjenqIaKcxlNp54VZNuk?=
- =?us-ascii?Q?RyaP1ok/csRaDZ8jNitzOFhil6yvzP9/jeaBMZ1Fo+hvhJYXtWa0xMu+4XNa?=
- =?us-ascii?Q?/ishIVtmmwjkusW/EfUPZg/wR0tgY7xdi5oe1ypb8rGj+D90GXLfHqnWDwpI?=
- =?us-ascii?Q?El/rLjuuOx5oz+n7KJb2hUUJPYEeEOGWrvAHVpEhNpYHJNSMge62cDiuHG0k?=
- =?us-ascii?Q?6ONB+tqTTn+3mdIOkMndCwXPxwNzYLjfr2WmGDavCdQLzJd1ZHoV0RjIUiXq?=
- =?us-ascii?Q?32uCoQ2u0l8ihQVHYk+UCaoG74lUkGIngkAdBa6ffQ0tT6hqkRT9RIfZwBJV?=
- =?us-ascii?Q?vFcjQnJFXOt+Ea+W88PL1RXmc0r+kk0GDLDpIKicmzhRt7Zdi3g5/hSljwEW?=
- =?us-ascii?Q?ESc1q3rgLDo5fAe0Odo88wF0xHq3VHelJnLBtjceuqfwAB8AW41e9x3RuLun?=
- =?us-ascii?Q?BwpHQe2NrKMXz8l+nnnyM8i7TgNfjfOL0ImxdePsqVC9mhGJqHJ9WmX8WH00?=
- =?us-ascii?Q?+3nFjdM4hxXiBlDV0YsRGEw4W9fVMbTmImVT1I3V4oO3uIAU+bhLGW57hxPm?=
- =?us-ascii?Q?HGTjQh+mnMYrKonxwGCgRvkXjPieERjAAU/44+pB?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aea5c8c1-63f0-4c92-d073-08dbb6a981ae
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2023 11:38:54.6145
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tyP2uOllcw/Uypj6DrWcsrZHJH9cFLlDOBBu2IYF20H2i9MkJmQsUp/aUQcd5uDO0JNtnJAiQ0KFkrePcG041Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9371
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v3 0/9] BPF packet scheduler updates part 4
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1693820153.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
+ 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
+In-Reply-To: <cover.1693820153.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Just like displaying "invert" after "Info: ", "simult" should be
-displayed too when rm_subflow_nr dosen't match the expect value in
-chk_rm_nr():
+Hi Geliang, Mat,
 
-      syn                                 [ ok ]
-      synack                              [ ok ]
-      ack                                 [ ok ]
-      add                                 [ ok ]
-      echo                                [ ok ]
-      rm                                  [ ok ]
-      rmsf                                [ ok ] 3 in [2:4]
-      Info: invert simult
+On 04/09/2023 11:39, Geliang Tang wrote:
+> v3:
+>  - store burst in msk->snd_burst instead of in sk_storage.
+>  - make mptcp_sched_data_set_contexts static.
+>  - rename mptcp_subflow_ctx_by_pos to bpf_mptcp_subflow_ctx_by_pos, and
+>    add "__bpf_kfunc" before it.
+> 
+> v2:
+>  - keep sched API unchanged.
+>  - use bpf_sk_storage_lookup to get snd_burst from BPF context.
+>  - applied after "add bpf_stale scheduler v3" serise.
+> 
+> v1:
+> 
+> There's a bug in bpf_burst. snd_burst stored in mptcp_burst_storage in
+> BPF context is not used. msk->snd_burst is still used in kernel space.
+> To fix this, add two new interfaces in mptcp_sched_ops to get and set
+> scheduler's paramters from BPF context to kernel space.
 
-      syn                                 [ ok ]
-      synack                              [ ok ]
-      ack                                 [ ok ]
-      add                                 [ ok ]
-      echo                                [ ok ]
-      rm                                  [ ok ]
-      rmsf                                [ ok ]
-      Info: invert
+Thank you for the patches and the review!
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I just applied these patches in our tree. Please make sure I correctly
+fix the different conflicts and I didn't miss any instructions.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index ee1f89a872b3..d02e53be8b31 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1766,7 +1766,9 @@ chk_rm_nr()
- 		# in case of simult flush, the subflow removal count on each side is
- 		# unreliable
- 		count=$((count + cnt))
--		[ "$count" != "$rm_subflow_nr" ] && suffix="$count in [$rm_subflow_nr:$((rm_subflow_nr*2))]"
-+		[ "$count" != "$rm_subflow_nr" ] && \
-+			suffix="$count in [$rm_subflow_nr:$((rm_subflow_nr*2))]" && \
-+			extra_msg="$extra_msg simult"
- 		if [ $count -ge "$rm_subflow_nr" ] && \
- 		   [ "$count" -le "$((rm_subflow_nr *2 ))" ]; then
- 			print_ok "$suffix"
+New patches for t/upstream:
+- 5eed4d815c41: "squashed" patch 1/9 in "bpf: Export more bpf_burst
+related functions"
+- 764bf652d4bf: "squashed" patch 2/9 (with conflicts) in "mptcp: add
+sched_data helpers"
+- 9906c014e61a: "squashed" patch 3/9 in "bpf: Add bpf_mptcp_sched_ops"
+- 816a6f2cad25: conflict in t/bpf-Add-bpf_mptcp_sched_kfunc_set
+- ff8a0c543074: "squashed" patch 4/9 (with conflicts) in "selftests/bpf:
+Add mptcp sched structs"
+- a0098f3f355d: "squashed" patch 5/9 in "selftests/bpf: Add bpf_first
+scheduler"
+- d9c7f7c37051: "squashed" patch 6/9 in "selftests/bpf: Add bpf_bkup
+scheduler"
+- 2e2e1a1bfb70: conflict in t/selftests-bpf-Add-bpf_rr-scheduler
+- 6c22024f0008: "squashed" patch 7/9 in "selftests/bpf: Add bpf_rr
+scheduler"
+- 684e5a0e4824: "squashed" patch 8/9 in "selftests/bpf: Add bpf_red
+scheduler"
+- 6b458f5734d3: conflict in t/bpf-Export-more-bpf_burst-related-functions
+- 24d78ea20a36: "squashed" patch 9/9 in "selftests/bpf: Add bpf_burst
+scheduler"
+- Results: 6b6b68bc221b..fe720f4b5da8 (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230916T114711
+
+Cheers,
+Matt
 -- 
-2.35.3
-
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
