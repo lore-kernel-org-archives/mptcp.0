@@ -1,126 +1,126 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8662411C8E
-	for <mptcp@lists.linux.dev>; Sat, 16 Sep 2023 12:51:44 +0000 (UTC)
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-69042d398b1so1649490b3a.0
-        for <mptcp@lists.linux.dev>; Sat, 16 Sep 2023 05:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1694868704; x=1695473504; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DCn+rMy3nO6mSoJhe64beMaKQ6mJQ01/SngjkX46KMU=;
-        b=WJLSwqvvGSfhQAag5UoJZyorumYu6zdxJhb+AWCYNUdUy9oZKUSMs6AnxNdLez6dNf
-         o8yVAhNbIhc6NUlnNK9aTvJ1JEg1xyiyZK95Cca4y9/VlJl0RW1cN+EU4kWRp2lB9QmM
-         jH7gKOTKWN4kpdawaMK6zX0jBRVeEGb8UMqTpSIf2Uq2Dw64kGx5o5JxP6UcnXTAanT7
-         iq2TcsT5dZRbVS/+janFqOidCk0Y0utP9jzGm45SQ6levpJmHkw8uVDQR1oXeCFv62ie
-         j1KQrspx8N7foLpbWhDD3PTLuqZUGXqPVUxsEwdkkxNYbwYA7PJhusfc/mNdLi/d3uqE
-         MVjA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C43113AF9
+	for <mptcp@lists.linux.dev>; Mon, 18 Sep 2023 08:07:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1695024436;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hn6abkxsMnCAyxEUP6Hj7XkYUcp4PiNmBPDLkuNKGqA=;
+	b=YM4mVJE2xk6+hZfAVF+vgbYjw632UkAH2RA0JOBUdp+lN8qjeFDmCMs0rZLRl9tRweeq1m
+	e9z7yX2r6NyWZNnQTn/6n4o7nW1bQ8H3aV38krzfmZiGQgkyWgmYi2q/ixoEIXssCPZBhM
+	zD1dkkvhMHT3Qy9r0ZSQ/fYcgXMU3lo=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-26-tSbuRsmKN0OIrcynifadXA-1; Mon, 18 Sep 2023 04:07:15 -0400
+X-MC-Unique: tSbuRsmKN0OIrcynifadXA-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-501c70f247cso3162802e87.1
+        for <mptcp@lists.linux.dev>; Mon, 18 Sep 2023 01:07:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694868704; x=1695473504;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=DCn+rMy3nO6mSoJhe64beMaKQ6mJQ01/SngjkX46KMU=;
-        b=PX7l/BuzYN8H9afKWcoulmSVbzhbMi4OHhVFLyF3qkAgW00FzoT0MUnPOEqvdYHQSu
-         eCEsXWFAR6/lwW+hAz9ZnhG80mOuM9dwjtX+zApGwezO8GswgnSCNmJDd255LPWw0kZy
-         Wkrf//rDXAeA+5HJsg2OTqX64Mj2cmjItR46NgakbTC2TeZ2l1+ZoT6WOP3YKgDrINSV
-         9IRu1ES6jaUx7Gyzni1867+PCnh37s6cDXi4NKz46n0PKDxCzfTTbSjtnQIr3JQ7opB2
-         uLmalL0pkBDz6W/goGsr3BN3c+XkgSqRXtB1EP8thk1mUEjEnkuXC8qheWDcA1k5GMHr
-         kkiA==
-X-Gm-Message-State: AOJu0Yw/pSHMhocn1NIVdme/c+ZRL+TiPEJihO88cONxo1aShKmvO1UD
-	fC6pJsZK9jjCRGJo5DFGFHMo8kD8Og==
-X-Google-Smtp-Source: AGHT+IGFM0gXJBCq5xsyM/N2NiPz4ClhF46eeHmtDETDBvCwE7o5D8wZVl4psR9RmuUhwCFzX9f4Wg==
-X-Received: by 2002:a05:6a00:987:b0:690:4088:95 with SMTP id u7-20020a056a00098700b0069040880095mr5345707pfg.17.1694868703605;
-        Sat, 16 Sep 2023 05:51:43 -0700 (PDT)
-Received: from [127.0.0.1] ([13.88.173.44])
-        by smtp.gmail.com with ESMTPSA id z23-20020aa785d7000000b0068fbad48817sm4458303pfn.123.2023.09.16.05.51.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Sep 2023 05:51:43 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <90054f25d522c7252a511eca430ebe326b22d346.1694864093.git.geliang.tang@suse.com>
-References:
- <90054f25d522c7252a511eca430ebe326b22d346.1694864093.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: display simult in extra_msg: Tests Results
-Message-ID: <21cb9465-f5f8-8a60-f361-7c2733c0c319@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 16 Sep 2023 12:51:42 +0000
+        d=1e100.net; s=20230601; t=1695024434; x=1695629234;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hn6abkxsMnCAyxEUP6Hj7XkYUcp4PiNmBPDLkuNKGqA=;
+        b=KfZe1l6mj/ly+BOEIXI27QPe4p5MU//whpqtZUmYVblyQWdrIBTt/kWOTV8LgmhGjh
+         L7MYUL5qrwkRJ+So8u3aCfySZA8eRzgABW48C1wV7Mg7xUMNv4gC4mp1tIRHf7j5TIvF
+         HI9U4wpidNj6xWCs1SPsZ81rcGL3bBe4Fu2nkPYhCpD5MDtdBqzCXMNVPkn67pH7XJVD
+         pDfq5Vt3ohNCszbJyE1tjTIo3jJrDvVUeDtjMbjvxBCN6JYZl6pJ8UwK5hZMbOWw0Ix4
+         x+9kA14PxDwLz7ylPEhnRXVBprgMALC2Frx7Ddm9AI7uXBIZlUBK0u3jdVCcRy6R9Lrz
+         q8rw==
+X-Gm-Message-State: AOJu0YxKiUxt0F7ynh5k3EvSmFKHZPNz19J2CfHXIH6QZ1kJL6GFDiA2
+	M3Ddpkvs/pW9mkwuzywbCdQIXGZjxZkbMwuXvXJ7Cy5Dc3CWpKk5fv1jyiOWyF79RTG0eV8+6Cl
+	BuRLWxSzpegtXuXOKrDcUWaqb28RgvFw=
+X-Received: by 2002:a05:6512:1106:b0:4fe:8ba9:4c4 with SMTP id l6-20020a056512110600b004fe8ba904c4mr8087469lfg.59.1695024433755;
+        Mon, 18 Sep 2023 01:07:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGzrDiW1sIJOK70cUs7AIrb3TqwVblKMA0WOl02IMlNoP3amTj2/jV5c/xtvzVMDeP9MiEnOVpbvyT36DLcYMI=
+X-Received: by 2002:a05:6512:1106:b0:4fe:8ba9:4c4 with SMTP id
+ l6-20020a056512110600b004fe8ba904c4mr8087450lfg.59.1695024433369; Mon, 18 Sep
+ 2023 01:07:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <cover.1693921470.git.dcaratti@redhat.com> <2a1c0acc-52d2-4ffe-8216-c6fdf3e24a5c@tessares.net>
+In-Reply-To: <2a1c0acc-52d2-4ffe-8216-c6fdf3e24a5c@tessares.net>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Mon, 18 Sep 2023 10:07:02 +0200
+Message-ID: <CAKa-r6uQaqsv7a83r1GkAzssiEcLhiuMdMUVJpnSapiL1Xv4Ow@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v3 0/6] mptcp: convert netlink code to use YAML spec
+To: Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc: mptcp@lists.linux.dev, pabeni@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+hello Matthieu
 
-Thank you for your modifications, that's great!
+On Sat, Sep 16, 2023 at 1:14=E2=80=AFPM Matthieu Baerts
+<matthieu.baerts@tessares.net> wrote:
+>
+> Hi Davide,
+>
+[...]
+> I was looking at applying them but I just noticed quite a few errors and
+> warnings reported by CheckPatch. Do you mind looking at them please?
+>
+> > Davide Caratti (6):
+> >   tools: ynl: add uns-admin-perm to genetlink legacy>   net: mptcp: con=
+vert netlink from small_ops to ops
+>
+> Spaces are used instead of tabs for the indentation in
+> include/uapi/linux/mptcp.h and net/mptcp/pm_netlink.c. This code is
+> removed later but I think it is still best to avoid having many errors
+> reported by the CI when sending them upstream.
 
-Our CI did some validations and here is its report:
+yes, and it was unintentional. Will fix that today and resend a v4.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6270259657703424
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6270259657703424/su=
-mmary/summary.txt
+>
+> >   Documentation: netlink: add a YAML spec for mptcp
+>
+> Can you add the path of the new file in the MAINTAINERS file please?
+> Also good to add a small description in the commit message, at least to
+> say that it is supposed to represent the YAML spec as currently
+> available today ("no behaviour change intended").
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 4 failed test(s): packetdrill_dss packetdrill_mp_join =
-packetdrill_regressions selftest_diag =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5988784680992768
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5988784680992768/su=
-mmary/summary.txt
+makes sense,
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4862884774150144
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4862884774150144/summary/summary.txt
+>
+> >   uapi: mptcp: use header file generated from YAML spec
+>
+> Please add a "*" in the MAINTAINERS file to handle the new one in uapi.
+>
+> Also, I guess we cannot fix:
+>
+>   Please use a blank line after function/struct/union/enum declarations
+>
+> in include/uapi/linux/mptcp_pm.h as it is auto-generated. (Maybe we
+> should add a comment about that in the commit message? But maybe it is
+> clear it is auto-generated?)
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Script error! =E2=9D=93:
-  - Task: https://cirrus-ci.=
-com/task/5425834727571456
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5425834727571456/summary/summary.txt
+this can probably be fixed in a follow-up commit for ynl-gen-c tool
+(that includes a tree-wide fix for the uAPI headers, because the issue
+might also affect all headers generated until today). The commit
+message says how we use the tool to generate sources, and the header
+file has the "do not edit" caveat line - that is sufficient IMO.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/0ca0531912ef
+> >   net: mptcp: rename netlink handlers to mptcp_pm_nl_<blah>_{doit,dumpi=
+t}
+> >   net: mptcp: use policy generated by YAML spec
+>
+> If it is OK to send a v4, please also add Paolo's ACK. I think that what
+> he meant to say but he was apparently only allowed to send acronyms :-D
 
+OK is an acronym as well AFAIK :)
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+thanks for looking at this!
+--=20
+davide
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
