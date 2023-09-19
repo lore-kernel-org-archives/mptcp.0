@@ -1,146 +1,160 @@
-Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2066.outbound.protection.outlook.com [40.107.105.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973376FB8
-	for <mptcp@lists.linux.dev>; Mon, 18 Sep 2023 13:26:42 +0000 (UTC)
-Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-99c3c8adb27so593835266b.1
-        for <mptcp@lists.linux.dev>; Mon, 18 Sep 2023 06:26:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695043601; x=1695648401; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=J8DqzhvzyGA39Yvgz+zBRm+sIYZErBZTUzgkb6fr790=;
-        b=ZZGuY2DIQwAxnWRpyZ+R3K+FDEkv9nx7RnUaB4GZ+U10gckUcqi2kADf+6ZK0OOZUA
-         d5JF3oHB5G3Sa0HL31k1pOfrG1oHh2hsUrWm9vfrqQfl19OTHOcc4iRceSimfp3QfQh7
-         ZDCZh7GAgSV5MmDwDLviFojzw+qHHJ635Ff7wtdjgQCnLG1/9BwqORKkHrsAhsqCmzY0
-         EBDzOW3GPejeg+zQE4cjKM+/gF3x877h15i/b0i4cwpT97Hsu7P/M4Eol0g39TBaJB9/
-         gdv24/NwETvD48s01sM/wlEUnu+wpiCvIrD+NJ8PhSsNRPnIVGMyMBxw4BaUAx3icUbK
-         kmaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695043601; x=1695648401;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J8DqzhvzyGA39Yvgz+zBRm+sIYZErBZTUzgkb6fr790=;
-        b=vQDYlFjfVT+NWzwwxnkuBLavIn09MfdsecPiWzuUlrk+Bs6vSq8A+INE7WlZuE0AYj
-         IXDbS8++Wh4Nf/mrb+gqiGFEfiSzB6SYDRfG0p9n0M8I0+6EAlro07zfca1g/wEHdbj1
-         FDyu+R2zv0+fOoiYD8LrxbMdqJvNNWp1xERFqv+zdTNHbJG8ATB+CCMQ4a1u70JOsG3o
-         2zWZwftMr9qbW15qy1qRQuromQwXo3leF5qogq3bx1e0gb7AtwyUb+LHOKbBW3wFk8pA
-         4GfKlL6HRxWShaaV1yYjT8v+GWlI/GLKXI6akxM/R7fO48tQox4xWMTOMasY0516uQVK
-         d4Gw==
-X-Gm-Message-State: AOJu0YxFxtQ81i5GUFxw+PKphuT0ajlsTIIL9xrgs8Wf+AcCpujFSeZc
-	DeF642vUdgdawF+iWE0BbG+7LyVponHiyOL6D103Ep/utk0=
-X-Google-Smtp-Source: AGHT+IGv+cuS54y/ErE5nGFW0PhBBF5V5HKYi2enBs4vIQaNjWZXZ6zmR+tedv60Zzbf/GLfnsSHAJ6CT+JRpZdhNeA=
-X-Received: by 2002:a17:906:20f:b0:9ad:8c4f:1f1a with SMTP id
- 15-20020a170906020f00b009ad8c4f1f1amr8325459ejd.30.1695043600498; Mon, 18 Sep
- 2023 06:26:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DEC34CC3
+	for <mptcp@lists.linux.dev>; Tue, 19 Sep 2023 04:01:51 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mWYZMFjmxF/NbyOGdQIzuGHuhp1gQZL2HIxH8eKP3PJm27GvhaFREbZJJYSXV9swyUygn20QbnB4Ku/FvPc76zNhfagwVj+27K9oQJcDVP1en/GQ/IP+EySZvtkkHUsiA6BBKw0IryePv6PzkXByFiyIl/2SuyGlqwBplvhP/RtKwP/JaEFDc4+VEYyq/pPy6BolGrxD4fO+Zp5ANhKb8K4+syBB6DV6vVsQhrNhwURazCrkefWRRCBm4qhbUIay+z6YfYUgHQVvERpSINdQr7d3WR0/NPXjUPzn3b10Zg7OE4ZKZr0PYcNslGWL6sBCG7JxHn/Wha3lXpHE2jcZWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2uqBYhQPB+BAt/U7f4jWrIgBrDRGMZa/NaM+G/0YCko=;
+ b=Ar3Bb5R2QRqKEKS1VL617bAN8YVmZTd7hxAH66VmPknfIhIxfsjyNYEazpVKtpTv3YF2xF/wo7+m/kmbAr+CKZWXZ2iM1itXQrByOe0TEVwQRmcyqdHyghVZCk2XQ6+mFdge1Yz+JGZDYS6LG6CiCOyyx/gi2Ndo0pEwhmeviyNGi2dXsHq56mddMRdcyvMto3wJd+4AomQCun+ttl/9tcvvFPtzk+1n3w0bHosuVv/XBHM6jPnVRr9jlDnifkGYARmApaPTKNlvaTHanFvGRSx0dPsl0oDZAetL4J8d3H4LDmbD2QXoP8vvjeFgetXLIszjQqY3w4dIBssyRY9aqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2uqBYhQPB+BAt/U7f4jWrIgBrDRGMZa/NaM+G/0YCko=;
+ b=Pr9LhpdA88V3+WQFlxL/TOSrJi6Nn8J4Zl5ZjI8/vVF4p+EKhmKyNhsIonhTkWNtUN1QYm3G4Rm8gX7nC/aF3FSN9BT08BidHl7EObBvAUA5qCj6OZv+ZCnhQwZsO4eqgqRV/wJTZVt0bshCOmXsbP2Pkk5x0IAaWHDdiCvG/qWHOc0nNqD2+R6pfQVYTdBtEmPfcNjuvRRMQyGV11th0irDaDbGoJ6gslKlYA1IzfmlCiwYdwem24EhbI9mf8UOBOr5oUQ6GAlUjAkGhzA0N42aq0XPyMas3jzfDujhGuVo4Yo58qY6E0JX3vH/tzH/JH/ENcAyGUEnr7SlMph0TQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AM8PR04MB7297.eurprd04.prod.outlook.com (2603:10a6:20b:1c5::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.27; Tue, 19 Sep
+ 2023 04:01:48 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::2867:7a72:20ac:5f71]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::2867:7a72:20ac:5f71%3]) with mapi id 15.20.6792.026; Tue, 19 Sep 2023
+ 04:01:47 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2 00/30] userspace pm enhancements
+Date: Tue, 19 Sep 2023 12:02:01 +0800
+Message-Id: <cover.1695095289.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR04CA0190.apcprd04.prod.outlook.com
+ (2603:1096:4:14::28) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230912233214.1518551-1-memxor@gmail.com> <20230912233214.1518551-11-memxor@gmail.com>
- <fb51f3ed-a8aa-42f1-b649-eb684235323a@tessares.net>
-In-Reply-To: <fb51f3ed-a8aa-42f1-b649-eb684235323a@tessares.net>
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Date: Mon, 18 Sep 2023 15:26:04 +0200
-Message-ID: <CAP01T76ivGmVai3WbYo3D2jiz=rLubAHEpzihYinbKYKvGpViA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 10/17] bpf: Prevent KASAN false positive with bpf_throw
-To: Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc: bpf@vger.kernel.org, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Alexander Potapenko <glider@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Yonghong Song <yonghong.song@linux.dev>, David Vernet <void@manifault.com>, 
-	Puranjay Mohan <puranjay12@gmail.com>, netdev <netdev@vger.kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, 
-	Jakub Kicinski <kuba@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AM8PR04MB7297:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b48c00c-ff18-4beb-4368-08dbb8c524c9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	pB95FY4iFa2CQHMvb7B/KzSFru/HAgsKLLk9nZIIufFf5ItvR3/qprfBxhf5I6hlOFYLXXpgU3ssUixYORzsDYTjKeXOsNPK7qSBTBdoZ5nUJyIZevvj1mWQJm/4UdIhHPq4L/xkwCGVJHf52/aNRRBlsZ+S3G3jkj0/BMIqfxZEKi2Ii+Ln+GZJ1HSjBETwNN7l2PRetO4HCICiKwT7ekFOnXPpx8WP3IF81a8WsBMSbQZb2Ab1foKRS95tGhmYutr72VqXpDVcdHMbCruvm3i7yFJLmRYyw/y4318cZuk09Ky3gyROkShHwj1pmdeQ0pbF0RWk/vR6klGyXG4/g5r04JujFoOMFi+9XN6J3NxmBkdw4qeOAuHWL7BRUKQS1iY1G7/zicuB7prOHNryNj2/pTjsKOwXFfjdJlyhn9a5PXvxRfPb7GFFmbi+eTFoybqvFAn/c12o3yXQxDaPC9bH4mF2ko5UwNmZ9ijS5C84OvXAlFX++fZPEXSzkBohgp4V3MD7DkZMmvyEnxOAB+wI8/TuZ3WrfHK6RwbkQ7u/Q7OMr+i0F8YJNyuUtdcIJ+ANCbGQUT611DtZGnVjxuVRn30NiHFcMFsY5YxzPGw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(366004)(346002)(396003)(136003)(1800799009)(186009)(451199024)(83380400001)(36756003)(2906002)(38100700002)(6506007)(41300700001)(6486002)(2616005)(66476007)(66556008)(6916009)(316002)(66946007)(6512007)(86362001)(26005)(478600001)(44832011)(6666004)(5660300002)(107886003)(8676002)(8936002)(4326008)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?gTTOyZwrfrFJp3vqqyp28dOXt5Vr01jmJELtLoYE7RLYRX3EpndigL53RSV4?=
+ =?us-ascii?Q?/NDKBLnU8ebrUr6UHV0LocyMCmzBIIuP1lwnTB3SqbC65MLtP2QuDgGqvFvY?=
+ =?us-ascii?Q?VDTPyi17YhXXW7/+CXDHJt3lVKMIjxIwbVYyGXn2DxbfGUn9mPpoEWlok+oa?=
+ =?us-ascii?Q?XiEWIIggdX0GP2js2Y+30LmwxJyUiWpojaUz+y1fHJHsptS/EbJxPx7vBWmh?=
+ =?us-ascii?Q?tojM5RDeIsdNOFAMZBKkkFRXf30ntorOpNx/7ztJh1D/1CEZn6G8biF24P2g?=
+ =?us-ascii?Q?scl60xMAjMaCjun8zkRhQ/hbTRUBActsCy/N/YOiykfFh7lI4YuLKLNrsClJ?=
+ =?us-ascii?Q?D6ts2PCAOZUC1tuaK3Lp0fREh+f+Kx3Z9NB/NxrMS3Nut7JQEjS6cyDeVYtf?=
+ =?us-ascii?Q?0tD758VcWFvxZQWzZ3j2lOwuPYuzgPOUoiYjQn0uBmboZ7msny4QJNbookfk?=
+ =?us-ascii?Q?4q++EughLpCytSg4ZoxI6OJ6ry7uYTtRBar3N7put8919Zs3RG1bdbQc3C6H?=
+ =?us-ascii?Q?DYUAQstOSS4UiuoTpMWLT9g9CeDYi7wpPy5SifirVF8E5sLvXs/QYwAvPtGl?=
+ =?us-ascii?Q?pKA0CprLfmH/PEfcAX2iMyuWSsUbklgNrc1L8Qv1CpVrNZ2oc121mXKaKXkT?=
+ =?us-ascii?Q?VLmz/hwPP0sz96qR2lwQdZ4AXfFhw4WTJvJF4JfhowJ7ZPWV2YwzREASbsTQ?=
+ =?us-ascii?Q?OUfzkWP/pcW7fJLOtoAx2TEl/Nsfqtol+LzU30EK5PGTrXhPVFw5db60g9Qi?=
+ =?us-ascii?Q?EIzvUlF1UyJk0sf62b3awrcjg5g8mThd7z2VFNvKMLs4f2jbyNbUs6GFiUxt?=
+ =?us-ascii?Q?JOJlW/Y02Uez2GZX55vB2EG0a0KGFfxlHeK3K+eF/sUkJmo28Zo8gkcLozP2?=
+ =?us-ascii?Q?1M6mjoLI3/ORn3QoNp+9iqMhGhUTYdJ6dVD+YS10yUC8nScqWC+CKHUF8WPY?=
+ =?us-ascii?Q?ubEKCO4XDUd9oZtEkViOSXTuDTMb1vKGFcqXIcIg47wEoGFwkBHX9MScA/ul?=
+ =?us-ascii?Q?eoSYJYML2ZW3PSgrdkjRvWXGuUOnOUr/G1om/scUdTDEoiZ/9MHK1OMNxuZ/?=
+ =?us-ascii?Q?yv6DjoRKEkGLcFhCSE5qPsDdKQUB/RCQN6Cmgc0C5fz9kM4JbOUagyKyX5Li?=
+ =?us-ascii?Q?+DgQvy42+4CeUBNHqAJy1KtqOp6m94mEHmTRVtpUkE2U3k8TVc76uPbZ+gFL?=
+ =?us-ascii?Q?RjuGsuB4WKinb/cqIEsY0+P8TMtHSJDa3ZNJY7wct2Ji20aB7wLbkqUU/kFP?=
+ =?us-ascii?Q?/2tkzcwgfaD8YmEcvDIZPJHnHKBmLS6qjNXFjEIu9ApG4TDFKDMqkYMfwEZR?=
+ =?us-ascii?Q?7Hkaf1GqyVR6PtyAyqLbD9XLbwAaFw1QjtRrguJoLbU+VUVlhP4mmm+qFZJs?=
+ =?us-ascii?Q?4/VSf3LZKwLjqAsJ1e7t+HC4wbaigGLVxSBYDPEHP0WO5qgTi50w1Vb0bBve?=
+ =?us-ascii?Q?iVtoVuHlkEgmlg3FufMlO7hRazqFe/UojHVXYG/3u2mLyZoG6qvdM2CFQ9jo?=
+ =?us-ascii?Q?Xvulc7yfPoWMAEo2s3OBZbRtAJByzDR41ZnPw0mH/suslnGO+aiq9ozkEssb?=
+ =?us-ascii?Q?8GhZJcUAacOEwdyAWpA3l5iAb+JNfUIo/s5XXAYs?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b48c00c-ff18-4beb-4368-08dbb8c524c9
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2023 04:01:47.1426
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5zryAW/bg2RQQW4QqI6iloY9J9yxpdRteaFXoUQjiKW4solaUqvlMnq/ysIlzzVA3W0HTp5vB6zpNXZ62syn/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7297
 
-On Mon, 18 Sept 2023 at 15:20, Matthieu Baerts
-<matthieu.baerts@tessares.net> wrote:
->
-> Hi Kumar,
->
-> (+ netdev in Cc as this patch is now in net-next tree as well ; same for
-> mptcp-next)
->
->
-> On 13/09/2023 01:32, Kumar Kartikeya Dwivedi wrote:
-> > The KASAN stack instrumentation when CONFIG_KASAN_STACK is true poisons
-> > the stack of a function when it is entered and unpoisons it when
-> > leaving. However, in the case of bpf_throw, we will never return as we
-> > switch our stack frame to the BPF exception callback. Later, this
-> > discrepancy will lead to confusing KASAN splats when kernel resumes
-> > execution on return from the BPF program.
-> >
-> > Fix this by unpoisoning everything below the stack pointer of the BPF
-> > program, which should cover the range that would not be unpoisoned. An
-> > example splat is below:
->
-> Thank you for your patch!
->
-> (...)
->
-> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> > index 78e8f4de6750..2c8e1ee97b71 100644
-> > --- a/kernel/bpf/helpers.c
-> > +++ b/kernel/bpf/helpers.c
-> > @@ -22,6 +22,7 @@
-> >  #include <linux/security.h>
-> >  #include <linux/btf_ids.h>
-> >  #include <linux/bpf_mem_alloc.h>
-> > +#include <linux/kasan.h>
-> >
-> >  #include "../../lib/kstrtox.h"
-> >
-> > @@ -2483,6 +2484,11 @@ __bpf_kfunc void bpf_throw(u64 cookie)
-> >               WARN_ON_ONCE(!ctx.aux->exception_boundary);
-> >       WARN_ON_ONCE(!ctx.bp);
-> >       WARN_ON_ONCE(!ctx.cnt);
-> > +     /* Prevent KASAN false positives for CONFIG_KASAN_STACK by unpoisoning
-> > +      * deeper stack depths than ctx.sp as we do not return from bpf_throw,
-> > +      * which skips compiler generated instrumentation to do the same.
-> > +      */
-> > +     kasan_unpoison_task_stack_below((void *)ctx.sp);
->
-> Our CI validating MPTCP tree has just reported the following error when
-> building the kernel for a 32-bit architecture:
->
->   kernel/bpf/helpers.c: In function 'bpf_throw':
->   kernel/bpf/helpers.c:2491:41: error: cast to pointer from integer of
-> different size [-Werror=int-to-pointer-cast]
->    2491 |         kasan_unpoison_task_stack_below((void *)ctx.sp);
->         |                                         ^
->   cc1: all warnings being treated as errors
->
-> Source:
-> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/6221288400/job/16882945173
->
->
-> It looks like this issue has been introduced by your patch. Are you
-> already looking at a fix?
->
+Some of my patches in ML are conflicted, rebase them into one series.
 
-Yes, my patch is responsible. So pointers here are 32-bits, while
-ctx.sp is 64-bit, hence it is complaining.
-I think long is supposed to match pointer width on all targets Linux
-supports, so doing this should fix it.
-(void*)(long)ctx.sp
+1-8: some small cleanups, v2
+9-10: address #428, add mptcpi_subflows_total
+11-17: address #379, #391, userspace pm remove id 0 subflow & address, v11
+18-20: address #403, add refcont for address entry
+21: add userspace fullmesh tests
+22-30: seltests cleanups
 
-I will send a fix for this soon.
+Geliang Tang (30):
+  mptcp: drop useless ssk in pm_subflow_check_next
+  mptcp: use mptcp_check_fallback helper
+  mptcp: use mptcp_get_ext helper
+  mptcp: use mptcp_wnd_end helper
+  mptcp: move sk assignment statement ahead
+  mptcp: define more local variables sk
+  selftests: mptcp: sockopt: drop mptcp_connect var
+  selftests: mptcp: display simult in extra_msg
+  mptcp: add mptcpi_subflows_total counter
+  selftests: mptcp: add chk_subflows_total helper
+  selftests: mptcp: add evts_get_info helper
+  selftests: mptcp: update userspace pm test helpers
+  selftests: mptcp: userspace pm remove id 0 subflow
+  mptcp: userspace pm allow creating id 0 subflow
+  selftests: mptcp: userspace pm create id 0 subflow
+  mptcp: userspace pm remove id 0 address
+  selftests: mptcp: userspace pm remove id 0 address
+  mptcp: add userspace_pm_get_entry helper
+  mptcp: add userspace pm addr entry refcount
+  mptcp: add netlink pm addr entry refcount
+  selftests: mptcp: add userspace pm fullmesh tests
+  selftests: mptcp: add mptcp_lib_kill_wait
+  selftests: mptcp: add mptcp_lib_evts_*
+  selftests: mptcp: userspace: print colored results
+  selftests: mptcp: add mptcp_lib_verify_listener_events
+  selftests: mptcp: add mptcp_lib_is_v6
+  selftests: mptcp: add mptcp_lib_get_counter
+  selftests: mptcp: add mptcp_lib_make_file
+  selftests: mptcp: add mptcp_lib_check_transfer
+  selftests: mptcp: add mptcp_lib_wait_local_port_listen
 
-Thanks
+ include/uapi/linux/mptcp.h                    |   1 +
+ net/mptcp/options.c                           |   2 +-
+ net/mptcp/pm.c                                |   2 +-
+ net/mptcp/pm_netlink.c                        |  25 +-
+ net/mptcp/pm_userspace.c                      | 139 ++++--
+ net/mptcp/protocol.c                          |   6 +-
+ net/mptcp/protocol.h                          |  14 +-
+ net/mptcp/sockopt.c                           |   4 +-
+ tools/testing/selftests/net/mptcp/diag.sh     |  23 +-
+ .../selftests/net/mptcp/mptcp_connect.sh      | 108 +---
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 460 +++++++++---------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 188 +++++++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  55 +--
+ .../selftests/net/mptcp/simult_flows.sh       |  19 +-
+ .../selftests/net/mptcp/userspace_pm.sh       | 199 +++-----
+ 15 files changed, 662 insertions(+), 583 deletions(-)
 
+-- 
+2.35.3
 
-> >       ctx.aux->bpf_exception_cb(cookie, ctx.sp, ctx.bp);
-> >  }
-> >
->
-> Cheers,
-> Matt
-> --
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
