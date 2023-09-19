@@ -1,45 +1,45 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07F063C8
-	for <mptcp@lists.linux.dev>; Tue, 19 Sep 2023 08:10:53 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-313e742a787so3470076f8f.1
-        for <mptcp@lists.linux.dev>; Tue, 19 Sep 2023 01:10:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D3E38DD5
+	for <mptcp@lists.linux.dev>; Tue, 19 Sep 2023 08:55:47 +0000 (UTC)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-400a087b0bfso57564665e9.2
+        for <mptcp@lists.linux.dev>; Tue, 19 Sep 2023 01:55:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1695111051; x=1695715851; darn=lists.linux.dev;
+        d=tessares.net; s=google; t=1695113745; x=1695718545; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ix7uRFC0/JWdbRvtkSmRqWU5+U8mO2uxfg3vdgMHHjw=;
-        b=te04idAExPncaZUJuIjN3yG/gBr0WAAz2o/gtd89QDno4/rU2JyBZvdfdEsF2lblk2
-         LZTgEkouKf4tRLhdru7HSBqUcrRzA70luYUlMjiE8hUSN+i1AFA9CMh4A7he0CkqJr1t
-         6XR5dzMniDdSUo4dqbj1mybYzwbO+AHtGI9FTFS85Dp5J7OAw8zvfbJtF5s1FVtRMJef
-         G1L7Y27Ard/3elA4Z6I+Y1fSviw4Ub6uM7BrdkJWrKx/mPtSBb6aQNeNINl1plEOGCcX
-         I0hpCgMjZDuBxTFoaQqjpHRpurA6BIBTr5a1MksXcEiqbbiIjwnuQmF45X9hKoqFCSsI
-         v+rA==
+        bh=roKxWtM8hyHh5W6pbUJT0a2MOueV/CRa3rUaV4mCMNI=;
+        b=JNlog0NXswSpnNtfPlIRec1goCkiirUuqfJBtDc48EtIbnfExC/AttCGYFBbVPZzcP
+         nc72smZIk3Xa+gOD9M2b97VTrnQMrQ1miRJiBThAByks5MxgyAkNS03Uk8/yyOLAldUA
+         DtBiDy31x2auJ9AstlA/tCWtgNOxvGHCDQi2wkHb5fbLTeiZ8XBcSN2XWFycubjYxNAX
+         mN5O5SgFspnv1eLxO9MtaK4/lYpKxAbIQX3dtE0iDDCjg4/8hMLAC/FGg8CVaWiufBuP
+         a0rRkOnFIRi6efMkl/ZnxYxtssaJd9VjLN0TmXMcIGuuscl7kR3/vHm6leHwDjRLnUQj
+         FHvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695111051; x=1695715851;
+        d=1e100.net; s=20230601; t=1695113745; x=1695718545;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ix7uRFC0/JWdbRvtkSmRqWU5+U8mO2uxfg3vdgMHHjw=;
-        b=vkv+kNGkSDwIgXJiKNjrp90NYIek0xoG02PftJqOtKKyrnBVM3s20h8dnOIyKLfgpz
-         r61VDFo454zbWTXzouiJt19utARKIJ9Tt/WkI5se1QDTP+zDJ8S/PDkcJjohQQ7awAu6
-         izl2W61PP0ItFjMQ6TKr6JlxpCV0pu8qiVlu5emCn657bRJDR5qlLHRc8BXMy4e5N2lP
-         PeOLr8y8B5JQaxImO1l6PQT7Ytz/CEJ7zlYgzr5Z2V2ozKLIhfHTYolVyPM+PWnh7X4a
-         L6WjVw91A3m9R+NdXYWvBzzz1tTx+InV+dS0Fd2h3g0eUTzkFSpEVPgMHXPb1dUFJgxa
-         c9kQ==
-X-Gm-Message-State: AOJu0YyVXio0EbMyxVIWPkUP7jZCWdumX8aHg7U60Udg0DEWc1UXHEp+
-	a5F9HH8p4m+Ou2WqbuZYmGGZArLz6PiiLV/WqVK/lg==
-X-Google-Smtp-Source: AGHT+IFlTs7v6MN2pjqS9ccLDxp+nPGofi50tkiIL6YZun8TRP7FZ7CbXWaT9ztHYxv+cuvuepePGw==
-X-Received: by 2002:a5d:678d:0:b0:321:57a5:6e6c with SMTP id v13-20020a5d678d000000b0032157a56e6cmr1510981wru.34.1695111051377;
-        Tue, 19 Sep 2023 01:10:51 -0700 (PDT)
+        bh=roKxWtM8hyHh5W6pbUJT0a2MOueV/CRa3rUaV4mCMNI=;
+        b=sHTA8rMA7ZGqjOEu+UVx/81MgXfCML2Q3rYlWmiBl3WqvLfZ1/bEe2PBhZI7lozK0T
+         MS7F6M/zw80w03y/m101AoNwfI+Foc3WgMDMf7Zn5xXrOQ8M9a2TJ0f+dk67QAGV/yNT
+         aR1X58Y4W2cu/OzfrgH4UzHlSZp09tS/WhITv55BVySTUnYyoQ1BX1NEwERII3vA9Qdb
+         fxnoJqPfFARfB3TVI2PGv8ywbgniS/bzxC2XALCAEmeqxe+XeeQmN6o1u7urxMWpwa1Q
+         qCVAXHmgiF7pMgB2Ik6EuDyaWRguRJCb+RntXbT4O/EP0o3fDeRMgeKza1wJcubZb40E
+         n63g==
+X-Gm-Message-State: AOJu0Yw+9/l7PlJRVbd3sDT2mG2zALFXAdC6clzavQh+gGIJczDkqPAJ
+	lKTKQ2oKfJJVzEC+E2Jp4AfuFps0tFIvMl5kHtA=
+X-Google-Smtp-Source: AGHT+IEaFAFrX4fPjPRVsSdkDgWTCffymmrnWwNkLFsedR2NrbugLefIZNxTt2x2ubkIyzg0RGRCKw==
+X-Received: by 2002:adf:9dc3:0:b0:320:938:300e with SMTP id q3-20020adf9dc3000000b003200938300emr6872891wre.4.1695113745333;
+        Tue, 19 Sep 2023 01:55:45 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:61d9:bcd8:32b9:948b? ([2a02:578:8593:1200:61d9:bcd8:32b9:948b])
-        by smtp.gmail.com with ESMTPSA id z15-20020adff1cf000000b003179d5aee67sm14656008wro.94.2023.09.19.01.10.50
+        by smtp.gmail.com with ESMTPSA id m7-20020a05600c280700b003fed630f560sm14546094wmb.36.2023.09.19.01.55.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Sep 2023 01:10:51 -0700 (PDT)
-Message-ID: <a6d90446-2604-451a-a148-5bd9321dc9ed@tessares.net>
-Date: Tue, 19 Sep 2023 10:10:50 +0200
+        Tue, 19 Sep 2023 01:55:45 -0700 (PDT)
+Message-ID: <d79dc0e1-8748-4a91-ac9a-967be44a9521@tessares.net>
+Date: Tue, 19 Sep 2023 10:55:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,12 +47,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: selftests: mptcp: add mptcp_lib_wait_local_port_listen: Build
- Failure
+Subject: Re: [PATCH mptcp-next v2 00/30] userspace pm enhancements
 Content-Language: en-GB, fr-BE
-To: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-References: <32a7f528dfd2ccb083f99dcec9ad8b3ba9717686.1695095289.git.geliang.tang@suse.com>
- <d9d64dbf-675e-1582-94e7-b2a74b8d585d@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1695095289.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -97,44 +95,46 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <d9d64dbf-675e-1582-94e7-b2a74b8d585d@gmail.com>
+In-Reply-To: <cover.1695095289.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your modifications!
-
-On 19/09/2023 06:45, MPTCP CI wrote:
-> Hi Geliang,
+On 19/09/2023 06:02, Geliang Tang wrote:
+> Some of my patches in ML are conflicted, rebase them into one series.
 > 
-> Thank you for your modifications, that's great!
-> 
-> But sadly, our CI spotted some issues with it when trying to build it.
-> 
-> You can find more details there:
-> 
->   https://patchwork.kernel.org/project/mptcp/patch/32a7f528dfd2ccb083f99dcec9ad8b3ba9717686.1695095289.git.geliang.tang@suse.com/
->   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/6231100070
-> 
-> Status: failure
-> Initiator: MPTCPimporter
-> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/39f55eef611a
+> 1-8: some small cleanups, v2
+> 9-10: address #428, add mptcpi_subflows_total
+> 11-17: address #379, #391, userspace pm remove id 0 subflow & address, v11
+> 18-20: address #403, add refcont for address entry
+> 21: add userspace fullmesh tests
+> 22-30: seltests cleanups
 
-It looks like this failure is not due to your patch but to another one
-from upstream [1].
+Thank you for this series, it is useful (and again sorry for the delay
+to review them). I will really try to look at them ASAP, hopefully soon.
+I had a very quick look.
 
-I sent a workaround for that in our tree:
+Please note that patches 14/30 and 16/30 will need to go to -net instead
+of net-next. I guess it's OK if the selftests linked to them go to
+net-next because I think they depend on new features you are adding
+here. I think it should not be an issue to apply these two patches
+before (maybe a small conflict with "mptcp: define more local variables
+sk" but easy to fix).
 
-- 028d1cfc930c: bpf: Fix bpf_throw warning on 32-bit arch
+One more thing: we should be able to run the last version of the
+selftests on older kernels (e.g. v5.15 and v6.1). I think with your
+modifications, we are fine (I didn't test and only quickly looked) but
+that's something to keep in mind.
 
-So no need to worry about this issue.
+(also, I think we will need to invert patches 10/30 and 11/30 because
+patch 10/30 depends on helpers introduced in the next patch if I'm not
+mistaken)
+
+Good idea to share code via the lib then having multiple copies!
 
 Cheers,
 Matt
-
-[1]
-https://lore.kernel.org/mptcp/fb51f3ed-a8aa-42f1-b649-eb684235323a@tessares.net/T/
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
