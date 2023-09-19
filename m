@@ -1,46 +1,46 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2052.outbound.protection.outlook.com [40.107.7.52])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2040.outbound.protection.outlook.com [40.107.105.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D55E31A74
-	for <mptcp@lists.linux.dev>; Tue, 19 Sep 2023 04:05:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0997331A74
+	for <mptcp@lists.linux.dev>; Tue, 19 Sep 2023 04:05:27 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bm9pUCa5tLGWO7QYfT9QWQdNbEscbTWeQ2EitH76svSfoWqHgumjqme0pmYCNZPkn41iz+zLkBPFDH9ZMYYRb7aQ2GlBRZV76qrTZ5xXSn0y1cP34joPsdsR5eG6RUYwjMw2G/I2nfz44pv5ExOTSz0+ShAb9JBFEQCH1bq8m+V6cbfuIcMns9ZEDQc7brave+Zna2b9Gva6AjgVTFpiHNBYY15Of1CKEv4ZO+CKDsuQNpvTPFifx/VimBcxLntV+CZ4OQlqwdfcWz8LePIyQkYfSm8hjdK1MAecuhaWst9RpXHXWHQSnnTKRi+Pj+zP6s+6MD7Yf+B5K/cZUg1nfA==
+ b=BtlkPz+cxKkODdTWvrM0nMPl7YpXmgvHEQpfJU/NpPZ9gvbYMRzU1dK6VGd/ymYHT/jwmu9m+NWDEAPCXXR3KbfE57JBYdf9b/qxqRW+pkjeTY3CzAeFnOkyzIRY0x/yy+zKkVnUxEGfAFHS9mN7517nZ5TtDTjyi+GIt+K0XybjwhKEkFdZIESrrRBEti1UbcykZcOiIIMdPibPnpji7fXG4IJBS0OmI4o7XLTnigdfDsZPthEv/5+SmOlmtY+FuzodQd9kAEvhEgeImPFA51zIMvc+ThN9hSba6SheTa7i5xKRg43spoMhQeQq19VjewGMTWQuIZZ8u+X07a2Cyg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6wYLGyGAoYo7LK1fEPe6VfElrhuOCAPZq92AjlOF54M=;
- b=GEUnYQdYgWw/dp0S39v3CXZnLQJhry2+M6C5kl5bEIhkD2n6m1G+19iJDFsthtfe8cZuOkjN3l+S3K8JN+4XAevuYY9xLf2x67Ydlw7CG41h5Pepjd5fhjD9buBdjS3SPR3bKWNl4vjKMeQ2068F5VKgizysju3ViW8CcR3maxNOait28eytr+9lpsCLJ7/fJndA1oiodWFne9TaNPMLeg3LR2neLlmCpaqxGclk3WDDJnuViyKPYXHultSVSehlxUeygB5bMyIpsj4KK8ZUfE2xfStVbCQUOOEU3PpHdeSkCkGKn3Wp0jG9EnsxPM8qo8iZREa8pCBEn0qhZckfPQ==
+ bh=ZiF11NXyb+/eq2Fr+9urODFByr5oasUBA34WB/Dj9Pc=;
+ b=WM/sjGijpXMNXUb8EL6S4tDxxA9JkD6OSe0zfHYkcn5CrWojAGEUHzmcb8nnhseylLgFKCO+Dcbri3SaJ17oPmeUbhtYt/UP5trpFUpbOyeJegXztQ7BFyCPByuGqT0FKyEekXKNNOpNYoFkGKXkmenyAYlfdG8qV7CBnJl41B1ku2qC3B1qill+K0gOS7sVQMjjZA4kZYppH0bU04MTqLM4xCPVx6Z58ndRmKuMu+IwDUIQNv7IS3bpDQ24AIr6WGGPcscQJnJVpjEIIwd1erXpb39us1x9fKmrB5Eqa0fPVyKxqniQjg7v+8BZL6LYxLaajD0Zk8Ee01pv2XRz9Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6wYLGyGAoYo7LK1fEPe6VfElrhuOCAPZq92AjlOF54M=;
- b=4EGzj4HLEWH9THZK6chqqogmL/DAhPyQ531mSCJMHvQGKXtrkFoLG7H8emrzI7Qe3nF8K12Nzm7ZT8zuj2juAcT6U1cf+seRdAySwaxZOWos4OPSE4L5cBem2AC/ACeTBYcUW96F0Pf+8kVw3H+kYEgRR/NPkztnizDHwBvofu+FpaNmtl5LFg1dEg9P0WERdiCNabZGdbnDLv40FmT0iVwwtANxmXY6Mr/VLn1BHzfVkK0AsdQ3ybYBTlMGWfUdKn/PsmEU6t0nfndi0mtWiJGnAIhVDU6W+U5xcWJrYWOHuarqovcuQbNx02XW3ULV9udSJBUwviIF3+0D/aOIvA==
+ bh=ZiF11NXyb+/eq2Fr+9urODFByr5oasUBA34WB/Dj9Pc=;
+ b=ylNLXUb8CIKTubiI0QtRLKFl9zjrPefpQD2XtKSkZX3oGHNJ/kJPA1Bga6tuXUkixoYynoE6NaCNho3LvC0RBkppgkHSdLc2LItOA3tii95+WbBU4ITSMfpHJZYRCxM8SRENCirWxTRd7z6CWcghcBWVI3dyyliUK91LcrzMUSXps9IVyUVoh0J307SOgL+bmvUaP3qbZjq9CuMNYcU7yjqxR924h6KAgyAqUJ2gvUD9PVYL5iPdRQrNXptF38tda4IPHBItEuReAHJR6zq+/eoBCS9ZWAzNlY645Gn7a1NK9nR+mgiQDIetUBOypU+SlkUYPYNjdDG9zK7aCjtL9w==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by AS8PR04MB8136.eurprd04.prod.outlook.com (2603:10a6:20b:3f7::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.27; Tue, 19 Sep
- 2023 04:05:11 +0000
+ 2023 04:05:23 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::2867:7a72:20ac:5f71]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::2867:7a72:20ac:5f71%3]) with mapi id 15.20.6792.026; Tue, 19 Sep 2023
- 04:05:11 +0000
+ 04:05:23 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v2 22/30] selftests: mptcp: add mptcp_lib_kill_wait
-Date: Tue, 19 Sep 2023 12:02:23 +0800
-Message-Id: <29407317f5a4783723e49d06131471a94d23e720.1695095289.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2 23/30] selftests: mptcp: add mptcp_lib_evts_*
+Date: Tue, 19 Sep 2023 12:02:24 +0800
+Message-Id: <efe189e68286a722dae730c44d1806f7c9606b38.1695095289.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <cover.1695095289.git.geliang.tang@suse.com>
 References: <cover.1695095289.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TYCP286CA0096.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b4::12) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: TYCP286CA0199.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:385::17) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -50,224 +50,359 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AS8PR04MB8136:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9be3daa4-c689-439d-a5fd-08dbb8c59ec7
+X-MS-Office365-Filtering-Correlation-Id: 2b52d233-9925-46e9-80d5-08dbb8c5a59d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	BpjwkOqNUUciYFAFZZsO7fOfUH8HliuYNC+3Jypikjx2kQxb+L38LHH1r0x2b4j7kb1hP90UMs0aRk9v+xSqvptWATtzNzllmmgsCDWD8VqKPMycAInUbI6WlILXTWbc5RhavrR0a6WmCxRov20TcQs9Eo4j2tgUkzWzyx/SwyROmMksH9jIprprWnr1yPLxdW9p2kgfBs33OM0y1ldCaJqL80EXeOSRswXHct7wgOwK3h1u/QVAcUKnA+J7WrhjHM3Fb7eDdyDLb/IwS3npDWnmFbdEpCIzN3eJRf98Qd1Dz0P7Vc3Pa7MSKBm5fKYgvwqLGay4DTtvil26X0qks8UMhkUVE0/rO6nfnImmxKI59eJ5QOBeqG3k5m7mcJ9LVELA7trc4UvqziOFSVPv5X654fe3E/vGW4irtwKzr98GZ/DRVQwayJdYPRj2M9Ide0Eet89r01YOWYSoibm2syQZNWWxnJ/aPrXvy1CTOOjI+vkm0r21Xy90pG17j+gni5a+Jy6r8ir5Fcy11AsL/tPNCbsvW4CiN62AQ5MI8X6ZmSRUhMA0TyBN16mTm0O9uKZuYRs6d+HGWtH9QASLYfDW3lqYs9+qsZhNAdONsRc=
+	GLQffilxdMQtQCMjvxafjuXsiBzQEHCFW7dw7APU6y7yd+mckc/KQzKklp4WqwXscQguqsruZDxWA4RxGUSJNwufJkk8u1mtPVKIWSFGSG+vZ67aqFRi23dj+2crKf0M6q6/nF6tnEluEuocZbT6CQ0am0Mmo2BEw0xCTYxZRDjupcQjdh63LZ9GXUnshs9F73LDnF2lp3+AsuuTLCG6xyKhSew1r31hlx+blL+8ijjDkhZQvs2CQboMyD7W0Ijj8uT0aOUxOtHRREdpzxbSNQ4jGA/XGKm/uX+f7tPNl/8UrU0a5Uz9FkCpM1klEDVyusdhacpWLymMM/fj5cF5+tCLGqcoHts+5I8ZfHiNTSeCmxTG8cbnm0pcLmtghIo9/6WtSyyFyGqzuCq6Y1HKR94wUSCrE9vde7W/AsSeCJogNRXFMDSs1WobYPoAhjRaF1uPftQsmGw8mtm0qRqy9jL1foVqKj3V/FC5tyPY4ec9WFg/51++L3y2HTDnl41tQ7LMDf/q+u61BTXaloYpmqg05XmAB/7ZcNogpNAEGoYZPMMuPDRgwGsxHmWu/TTb1VMvVQ1FK7uGuxBDYRN4gsEgmmPRzljka870QAg5hVg=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(396003)(366004)(136003)(376002)(186009)(451199024)(1800799009)(6512007)(6506007)(6666004)(26005)(83380400001)(478600001)(6486002)(107886003)(2616005)(2906002)(4326008)(66476007)(66946007)(8676002)(66556008)(5660300002)(44832011)(8936002)(6916009)(41300700001)(316002)(36756003)(86362001)(38100700002)(13296009);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(396003)(366004)(136003)(376002)(186009)(451199024)(1800799009)(6512007)(6506007)(26005)(83380400001)(478600001)(6486002)(107886003)(2616005)(2906002)(4326008)(66476007)(66946007)(8676002)(66556008)(5660300002)(44832011)(8936002)(6916009)(41300700001)(316002)(36756003)(86362001)(38100700002)(13296009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?zZ4GdhnkXgDFCpzZjkNLc+2+RHn0BIrNH4MttJCtRyU3Cr53hMmAMCFZNf4L?=
- =?us-ascii?Q?Xe73hskpzS7n55hnACMD9GUgO9A5fsmoj6M06TskNTz1ObONhDsl/iYfjdIO?=
- =?us-ascii?Q?JgJnuybF2tMNQnN3tjikXEiVJ9qbsGiRF8KLVFNmBTporFuvzNMctc2+QYdS?=
- =?us-ascii?Q?9lNtMrsKF28NOzfcaeYpdhKh8jGLH8dydxvrlAXsLTqjc2Jt9MPxFjXFD25e?=
- =?us-ascii?Q?gXFd44JuzOkBr5bwyNDbjaca81PeeQXuIIvcC2+aspBV7MikPnab8HTBB35e?=
- =?us-ascii?Q?5cGE1CNXMmhOltnONPnW1vpvAF8A7rgivqGh75yHqVaLiZ/FAojIer+zUcNs?=
- =?us-ascii?Q?GShijyeU3EzDAiF5knSm0VW2+u8XFBaiDTICJ/GygPfWGZBEqLQyGbKifNCk?=
- =?us-ascii?Q?v8+DH1J0OwCNpOuVsa7tGHRgF9kaDKiHk8k0x8Mdtx7RAVG+AExQAnr0Vea2?=
- =?us-ascii?Q?RCIAz/v7nK/tQCY5d4xTURZKDzC9QS0KKR9mxem3rE2O02gGPOGqtdKXZvFg?=
- =?us-ascii?Q?oU+V5ZvGVbSuHpRTKM69h7mYOlV+XPh/sgZB5UpABrMm1ElzPVYuC7QyyLf6?=
- =?us-ascii?Q?0CV/RFNY0SAhUPBdT+AemlScR3S3wdOaxWKSqm/lp5UKhy34sTTaCTems2g2?=
- =?us-ascii?Q?y06kzUtoVOH/BMali63AeGKT84euLJz2V8ogqgH0fhgzhDW7m6W2HoUeWhqI?=
- =?us-ascii?Q?S/VEGtiunbMoWKi1PvGAuger9IwA2n1RbN/eS2CWLAyoIqJs6x33cdDTktvM?=
- =?us-ascii?Q?w/TLYbTWVSoNN3MURxadTff8KSynGuTUHFBGQUbrI7i6ws7rK0W92OR2yPbU?=
- =?us-ascii?Q?byROhNvcQ2ro2shwYSOVxE3At+yL0C2iEyJi3unhgiNRT3Ck+pxTIeA9Nu51?=
- =?us-ascii?Q?HXfmt9f06q+t5h4wmafCqPNQhUuj+bOUcAVDG3mzYbIcK0xIVnFyqS0+z+hl?=
- =?us-ascii?Q?nYVIc5gUOeABcDosxgeu/1aRhHlHA0prB8CREdfdjRB4Wh4nIwbxSPNBbOEm?=
- =?us-ascii?Q?1ef3SH8fX6ifeOWZa9hsz4y2TAh1Qp2zr1wKNjdJsk/z+HIJBCCnd7eadonR?=
- =?us-ascii?Q?eLEpzVBBgaRDyU9NwJplsO7H4CAkc/JRfRxDdYhKO8eLBEKvfshWfyc68wux?=
- =?us-ascii?Q?+p+nwChXV4xjXwboaveHKzEXAVLRCUlExzNOsL+Z5p29wN9NTBCSkFX/SzjU?=
- =?us-ascii?Q?L+bOPcYsJuf2bF1JPvWHjw3tyFcJSm+NXgAh1CvGXpJadTRj4tTxuxKRBcx3?=
- =?us-ascii?Q?73WHs1IBQPagSmHV0JE3rudvTnD4jDT8AQzSpm7YExZAX6PIeXHVQLojSiW3?=
- =?us-ascii?Q?iXt+yLfoQgqcJ+uraDNNHclv9K5PXsnVFVsh0gSMUsvlAOBeV+RpBrNnDsG6?=
- =?us-ascii?Q?6LhSA95pw32vHiVxtogDskALgh6dJrvseZKdTCp/rPFM6kyVJHQNX02dGPmB?=
- =?us-ascii?Q?YlRL2MHNk6H4LkCCr4Qddky/KrK79Yth26Wnkq6PYFqwojYV9cIqo192KiT/?=
- =?us-ascii?Q?Er1PfjjSdt8EqVrM73GLbMjEYjX/HYJBUY2dBMkQxm4ogZtu4GcQIP843+Md?=
- =?us-ascii?Q?uYIR7L5tmeMNZwblPl6DYiV9tJ6Ua4S4dopYgJ/T?=
+	=?us-ascii?Q?Um41BDhpFkUQubjSPSpldWFF1brDiON2IKq2RgiWz36YTE5h4vhkDRPk4JCC?=
+ =?us-ascii?Q?j9V+V3+WhQ6WpQTyMG+tZbBqgx5xuijoPfDXC1c1qyLj1s8jNDqk2uP2hJyr?=
+ =?us-ascii?Q?ekL15ZQ4phgYPMQ8TYR9UQN5t9XM8xMcMZWAeXkMxnGjUVMogy/iPGlbDNLt?=
+ =?us-ascii?Q?dapcdycmlm3y3lWjm7dnFQi4sw+7lEO5ZB9VzkNkENLOTyNJXjj2rR4Dqd43?=
+ =?us-ascii?Q?Lc2vZmqgPo4D3ycfymZszX4yeCgPCN+cbZfGkg+OhIRrrv589foKWBqBBZVt?=
+ =?us-ascii?Q?baIYtJwMurrvsVDqaY9ubKajZ3Db21Kj27Gl8IwaSQaFBXKpZEqLRX/ThV5x?=
+ =?us-ascii?Q?yOWwoi3Zn7Kp/JfIPkFG5XuRrzr2vMvSaBumj9y+t/CJqH5o9vnCShDMcdwf?=
+ =?us-ascii?Q?HcA4Als/7NxLgvtDE/RajE9h8kb8UmStqrk9wMmEo3yTaoccYJuS3ThBnKz/?=
+ =?us-ascii?Q?CHNUVhkptPQcTw27Ba+zOZrDgFOsbodEl3h5/10vj9RQLrWeiwqpjv6/iROM?=
+ =?us-ascii?Q?p1mj22PQ/so1DU3uKK86z3Nh1///mdmxGWxWsWX5qIQ/8JbYQthtEXQaphHv?=
+ =?us-ascii?Q?geI2TSkoqZ+N2kyuEB/gwG8B8vyIMa1+KCKwLyVawhOCNIHTtj0ncZFb6OC+?=
+ =?us-ascii?Q?NyiDiBKhz2Mw4aBwI4CiYIsz4CbjwDTu6RGHCKWaZszkN6OwXAvcjqFowwul?=
+ =?us-ascii?Q?Ut9WfhJScr30WHK4+vBw0PLByYRS96hK/alo0C/tMRs+/iVTgkWiF54ifN8h?=
+ =?us-ascii?Q?EJuq/5uo7VRltmYenWpFPqczG+DmS+mrjEC3a2HGeeRRCwOHaTkSjNUHf0Jt?=
+ =?us-ascii?Q?/04LHv6QLYprYRgU86zZ8BbB2ERof6CymDBX+3KIQW8qw0wMQRsm2DZANu7a?=
+ =?us-ascii?Q?nWnOmIF3WtrtnBCLGTR24HVRO9It4d1freX7lYooutO85m5UWqrGEwNA1vj/?=
+ =?us-ascii?Q?W4HAiFZuuQ+x/tkr/fy+QgcErFWYa4u5r7FAUmZnrLj5a8Wmwky/JibjZP3x?=
+ =?us-ascii?Q?RnyP2xZJWN3e98AJAAjq0R/YoHRusZyUP5arIo0jm+PMnL2JZXWkYZgFV1VM?=
+ =?us-ascii?Q?2VEa3gjABg9GQsYhZw3ZhcjX3cxS6bQJNWZ4X2YtPctj/9x3yleNSTK1+BY1?=
+ =?us-ascii?Q?lzGyci8bWkeam2mEPpReNOeXqu8+zQj1zSkf5qEG83V8aV5Nvu34F836pU7w?=
+ =?us-ascii?Q?0IspK9Ewu5zHV2BEtKZMJ4yikaW+6Lh/Ka40gLgY7aZzUTPBfJ0amh76hOOE?=
+ =?us-ascii?Q?BqxgqrPGGMJa6TAHC5rF9A5ZplovH2LNyv9jJEMou+NzT8HB8aOLL49gDxtZ?=
+ =?us-ascii?Q?ccIXmgI+J531AZzvhiXlFQWWhp7Nvk+kNjraPoCwzAcIxkzBVItNq6OqmhxM?=
+ =?us-ascii?Q?ISTP9uD1V7+4luqErHr3gJ+ukunxfCeLfV5GrGGXT/TynlxG6SXP+bH4X0sk?=
+ =?us-ascii?Q?NqCtHLedBhQEc3PH9GpFUJhBQ5AY+CAJFmIw3l7S4ILDqpIdos+0umGoZZTL?=
+ =?us-ascii?Q?rZzXxT/jAyBmuhEcJqbwaFFC8htbsj3mgmPtZcVeQA/iSMaoicuGTHFgnAFa?=
+ =?us-ascii?Q?2nRe2OKPDbrf1hw3ccq9AqpesI8nJQRxKzJRnwAZ?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9be3daa4-c689-439d-a5fd-08dbb8c59ec7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b52d233-9925-46e9-80d5-08dbb8c5a59d
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2023 04:05:11.8323
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2023 04:05:23.2937
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xjMiEi42bN/4Fp74U2szAgHQntdhzthFWi2VDxccYb0YwhaGPr7v+mpcJHCsovK/R4gVMfTQmkZ2G0qrzCIjkQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: iL7TdkaTdqz61mPU3LZNuZyZr1oB+7IAoi4S+f4UhmmksvZ1FSPuK23zxIzwlIW8d7EFfc4/PwTkHR0ffXMqKA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8136
 
-Export kill_wait() helper in userspace_pm.sh into mptcp_lib.sh and
-rename it as mptcp_lib_kill_wait(). It can be used to instead of
-kill_wait() in mptcp_join.sh. Use the new helper in both scripts.
+This patch unifies "pm_nl_ctl events" related code in userspace_pm.sh
+and mptcp_join.sh into four functions: _init, _start, _kill and _remove.
+Define them in mptcp_lib.sh and use these new helper in both scripts.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 10 ++----
- .../testing/selftests/net/mptcp/mptcp_lib.sh  |  8 +++++
- .../selftests/net/mptcp/userspace_pm.sh       | 31 +++++++------------
- 3 files changed, 21 insertions(+), 28 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 54 +++++++------------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 40 ++++++++++++++
+ .../selftests/net/mptcp/userspace_pm.sh       | 31 +++--------
+ 3 files changed, 65 insertions(+), 60 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index d883c6c2426b..f335a782c793 100755
+index f335a782c793..8c708b92a942 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -682,16 +682,10 @@ wait_mpj()
+@@ -35,10 +35,6 @@ ip_mptcp=0
+ check_invert=0
+ validate_checksum=0
+ init=0
+-evts_ns1=""
+-evts_ns2=""
+-evts_ns1_pid=0
+-evts_ns2_pid=0
+ last_test_failed=0
+ last_test_skipped=0
+ last_test_ignored=1
+@@ -182,8 +178,7 @@ init() {
+ 	cin=$(mktemp)
+ 	cinsent=$(mktemp)
+ 	cout=$(mktemp)
+-	evts_ns1=$(mktemp)
+-	evts_ns2=$(mktemp)
++	mptcp_lib_evts_init
+ 
+ 	trap cleanup EXIT
+ 
+@@ -196,7 +191,7 @@ cleanup()
+ 	rm -f "$cin" "$cout" "$sinfail"
+ 	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
+ 	rm -f "$tmpfile"
+-	rm -rf $evts_ns1 $evts_ns2
++	mptcp_lib_evts_remove
+ 	cleanup_partial
+ }
+ 
+@@ -460,12 +455,7 @@ reset_with_events()
+ {
+ 	reset "${1}" || return 1
+ 
+-	:> "$evts_ns1"
+-	:> "$evts_ns2"
+-	ip netns exec $ns1 ./pm_nl_ctl events >> "$evts_ns1" 2>&1 &
+-	evts_ns1_pid=$!
+-	ip netns exec $ns2 ./pm_nl_ctl events >> "$evts_ns2" 2>&1 &
+-	evts_ns2_pid=$!
++	mptcp_lib_evts_start
+ }
+ 
+ reset_with_tcp_filter()
+@@ -682,12 +672,6 @@ wait_mpj()
  	done
  }
  
--kill_wait()
+-kill_events_pids()
 -{
--	kill $1 > /dev/null 2>&1
--	wait $1 2>/dev/null
+-	mptcp_lib_kill_wait $evts_ns1_pid
+-	mptcp_lib_kill_wait $evts_ns2_pid
 -}
 -
- kill_events_pids()
- {
--	kill_wait $evts_ns1_pid
--	kill_wait $evts_ns2_pid
-+	mptcp_lib_kill_wait $evts_ns1_pid
-+	mptcp_lib_kill_wait $evts_ns2_pid
- }
- 
  kill_tests_wait()
+ {
+ 	#shellcheck disable=SC2046
+@@ -2907,9 +2891,9 @@ add_addr_ports_tests()
+ 		chk_add_nr 1 1 1
+ 		chk_rm_nr 1 1 invert
+ 
+-		verify_listener_events $evts_ns1 $LISTENER_CREATED $AF_INET 10.0.2.1 10100
+-		verify_listener_events $evts_ns1 $LISTENER_CLOSED $AF_INET 10.0.2.1 10100
+-		kill_events_pids
++		verify_listener_events $server_evts $LISTENER_CREATED $AF_INET 10.0.2.1 10100
++		verify_listener_events $server_evts $LISTENER_CLOSED $AF_INET 10.0.2.1 10100
++		mptcp_lib_evts_kill
+ 	fi
+ 
+ 	# subflow and signal with port, remove
+@@ -3282,10 +3266,10 @@ fail_tests()
+ # $1: ns ; $2: addr ; $3: id
+ userspace_pm_add_addr()
+ {
+-	local evts=$evts_ns1
++	local evts=$server_evts
+ 	local tk
+ 
+-	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	[ "$1" == "$ns2" ] && evts=$client_evts
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 
+ 	ip netns exec $1 ./pm_nl_ctl ann $2 token $tk id $3
+@@ -3295,10 +3279,10 @@ userspace_pm_add_addr()
+ # $1: ns ; $2: id
+ userspace_pm_rm_addr()
+ {
+-	local evts=$evts_ns1
++	local evts=$server_evts
+ 	local tk
+ 
+-	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	[ "$1" == "$ns2" ] && evts=$client_evts
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 
+ 	ip netns exec $1 ./pm_nl_ctl rem token $tk id $2
+@@ -3308,10 +3292,10 @@ userspace_pm_rm_addr()
+ # $1: ns ; $2: addr ; $3: id
+ userspace_pm_add_sf()
+ {
+-	local evts=$evts_ns1
++	local evts=$server_evts
+ 	local tk da dp
+ 
+-	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	[ "$1" == "$ns2" ] && evts=$client_evts
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 	da=$(mptcp_lib_evts_get_info daddr4 "$evts")
+ 	dp=$(mptcp_lib_evts_get_info dport "$evts")
+@@ -3324,12 +3308,12 @@ userspace_pm_add_sf()
+ # $1: ns ; $2: addr $3: event type
+ userspace_pm_rm_sf()
+ {
+-	local evts=$evts_ns1
++	local evts=$server_evts
+ 	local t=${3:-1}
+ 	local ip=4
+ 	local tk da dp sp
+ 
+-	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	[ "$1" == "$ns2" ] && evts=$client_evts
+ 	if is_v6 $2; then ip=6; fi
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 	da=$(mptcp_lib_evts_get_info "daddr$ip" "$evts" $t)
+@@ -3436,7 +3420,7 @@ userspace_tests()
+ 		chk_rm_nr 1 1 invert
+ 		chk_mptcp_info subflows 0 subflows 0
+ 		chk_subflows_total 1 1
+-		kill_events_pids
++		mptcp_lib_evts_kill
+ 		wait $tests_pid
+ 	fi
+ 
+@@ -3458,7 +3442,7 @@ userspace_tests()
+ 		chk_rm_nr 1 1
+ 		chk_mptcp_info subflows 0 subflows 0
+ 		chk_subflows_total 1 1
+-		kill_events_pids
++		mptcp_lib_evts_kill
+ 		wait $tests_pid
+ 	fi
+ 
+@@ -3477,7 +3461,7 @@ userspace_tests()
+ 		chk_join_nr 1 1 1
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 2 2
+-		kill_events_pids
++		mptcp_lib_evts_kill
+ 		wait $tests_pid
+ 	fi
+ 
+@@ -3499,7 +3483,7 @@ userspace_tests()
+ 		chk_rst_nr 1 1 invert
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 1 1
+-		kill_events_pids
++		mptcp_lib_evts_kill
+ 		wait $tests_pid
+ 	fi
+ 
+@@ -3523,7 +3507,7 @@ userspace_tests()
+ 		chk_rst_nr 1 1 invert
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 1 1
+-		kill_events_pids
++		mptcp_lib_evts_kill
+ 		wait $tests_pid
+ 	fi
+ 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index bb95dd967eb3..8051ac5507dc 100644
+index 8051ac5507dc..899c21ced5a3 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -219,3 +219,11 @@ mptcp_lib_get_info_value() {
- mptcp_lib_evts_get_info() {
+@@ -220,6 +220,11 @@ mptcp_lib_evts_get_info() {
  	cat "${2}" | mptcp_lib_get_info_value "${1}" "^type:${3:-1},"
  }
+ 
++server_evts=""
++client_evts=""
++server_evts_pid=0
++client_evts_pid=0
 +
-+mptcp_lib_kill_wait() {
-+	[ $1 -eq 0 ] && return 0
+ mptcp_lib_kill_wait() {
+ 	[ $1 -eq 0 ] && return 0
+ 
+@@ -227,3 +232,38 @@ mptcp_lib_kill_wait() {
+ 	kill $1 > /dev/null 2>&1
+ 	wait $1 2>/dev/null
+ }
 +
-+	kill -SIGUSR1 $1 > /dev/null 2>&1
-+	kill $1 > /dev/null 2>&1
-+	wait $1 2>/dev/null
++mptcp_lib_evts_init() {
++	if [ -z "$server_evts" ]; then
++		server_evts=$(mktemp)
++	fi
++	if [ -z "$client_evts" ]; then
++		client_evts=$(mktemp)
++	fi
++}
++
++mptcp_lib_evts_start() {
++	:>"$server_evts"
++	:>"$client_evts"
++
++	if [ $server_evts_pid -ne 0 ]; then
++		mptcp_lib_kill_wait $server_evts_pid
++	fi
++	ip netns exec "$ns1" ./pm_nl_ctl events >> "$server_evts" 2>&1 &
++	server_evts_pid=$!
++
++	if [ $client_evts_pid -ne 0 ]; then
++		mptcp_lib_kill_wait $client_evts_pid
++	fi
++	ip netns exec "$ns2" ./pm_nl_ctl events >> "$client_evts" 2>&1 &
++	client_evts_pid=$!
++}
++
++mptcp_lib_evts_kill() {
++	mptcp_lib_kill_wait $server_evts_pid
++	mptcp_lib_kill_wait $client_evts_pid
++}
++
++mptcp_lib_evts_remove() {
++	rm -rf $server_evts $client_evts
 +}
 diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 283c62deb628..7cddf793950a 100755
+index 7cddf793950a..640273d4d7a1 100755
 --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
 +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -107,15 +107,6 @@ test_fail()
- 	mptcp_lib_result_fail "${test_name}"
- }
+@@ -33,10 +33,6 @@ AF_INET=2
+ AF_INET6=10
  
--kill_wait()
--{
--	[ $1 -eq 0 ] && return 0
--
--	kill -SIGUSR1 $1 > /dev/null 2>&1
--	kill $1 > /dev/null 2>&1
--	wait $1 2>/dev/null
--}
--
- # This function is used in the cleanup trap
- #shellcheck disable=SC2317
- cleanup()
-@@ -127,7 +118,7 @@ cleanup()
- 	for pid in $client4_pid $server4_pid $client6_pid $server6_pid\
- 		   $server_evts_pid $client_evts_pid
+ file=""
+-server_evts=""
+-client_evts=""
+-server_evts_pid=0
+-client_evts_pid=0
+ client4_pid=0
+ server4_pid=0
+ client6_pid=0
+@@ -115,18 +111,19 @@ cleanup()
+ 
+ 	# Terminate the MPTCP connection and related processes
+ 	local pid
+-	for pid in $client4_pid $server4_pid $client6_pid $server6_pid\
+-		   $server_evts_pid $client_evts_pid
++	for pid in $client4_pid $server4_pid $client6_pid $server6_pid
  	do
--		kill_wait $pid
-+		mptcp_lib_kill_wait $pid
+ 		mptcp_lib_kill_wait $pid
  	done
++	mptcp_lib_evts_kill
  
  	local netns
-@@ -209,7 +200,7 @@ make_connection()
- 	fi
- 	:>"$client_evts"
- 	if [ $client_evts_pid -ne 0 ]; then
--		kill_wait $client_evts_pid
-+		mptcp_lib_kill_wait $client_evts_pid
- 	fi
- 	ip netns exec "$ns2" ./pm_nl_ctl events >> "$client_evts" 2>&1 &
- 	client_evts_pid=$!
-@@ -218,7 +209,7 @@ make_connection()
- 	fi
- 	:>"$server_evts"
- 	if [ $server_evts_pid -ne 0 ]; then
--		kill_wait $server_evts_pid
-+		mptcp_lib_kill_wait $server_evts_pid
- 	fi
- 	ip netns exec "$ns1" ./pm_nl_ctl events >> "$server_evts" 2>&1 &
- 	server_evts_pid=$!
-@@ -623,7 +614,7 @@ test_subflows()
- 			      "10.0.2.2" "$client4_port" "23" "$client_addr_id" "ns1" "ns2"
+ 	for netns in "$ns1" "$ns2" ;do
+ 		ip netns del "$netns"
+ 	done
  
- 	# Delete the listener from the client ns, if one was created
--	kill_wait $listener_pid
-+	mptcp_lib_kill_wait $listener_pid
+-	rm -rf $file $client_evts $server_evts
++	rm -rf $file
++	mptcp_lib_evts_remove
  
- 	local sport
- 	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
-@@ -662,7 +653,7 @@ test_subflows()
- 			      "$client_addr_id" "ns1" "ns2"
+ 	_printf "Done\n"
+ }
+@@ -195,24 +192,8 @@ make_connection()
  
- 	# Delete the listener from the client ns, if one was created
--	kill_wait $listener_pid
-+	mptcp_lib_kill_wait $listener_pid
- 
- 	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
- 
-@@ -701,7 +692,7 @@ test_subflows()
- 			      "$client_addr_id" "ns1" "ns2"
- 
- 	# Delete the listener from the client ns, if one was created
--	kill_wait $listener_pid
-+	mptcp_lib_kill_wait $listener_pid
- 
- 	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
- 
-@@ -739,7 +730,7 @@ test_subflows()
- 			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
- 
- 	# Delete the listener from the server ns, if one was created
--	kill_wait $listener_pid
-+	mptcp_lib_kill_wait $listener_pid
- 
- 	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
- 
-@@ -778,7 +769,7 @@ test_subflows()
- 			      "$server_addr_id" "ns2" "ns1"
- 
- 	# Delete the listener from the server ns, if one was created
--	kill_wait $listener_pid
-+	mptcp_lib_kill_wait $listener_pid
- 
- 	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
- 
-@@ -815,7 +806,7 @@ test_subflows()
- 			      "10.0.2.2" "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
- 
- 	# Delete the listener from the server ns, if one was created
--	kill_wait $listener_pid
-+	mptcp_lib_kill_wait $listener_pid
- 
- 	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
- 
-@@ -861,7 +852,7 @@ test_subflows_v4_v6_mix()
- 			      "$server_addr_id" "ns2" "ns1"
- 
- 	# Delete the listener from the server ns, if one was created
--	kill_wait $listener_pid
-+	mptcp_lib_kill_wait $listener_pid
- 
- 	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
- 
-@@ -973,7 +964,7 @@ test_listener()
+ 	# Capture netlink events over the two network namespaces running
+ 	# the MPTCP client and server
+-	if [ -z "$client_evts" ]; then
+-		client_evts=$(mktemp)
+-	fi
+-	:>"$client_evts"
+-	if [ $client_evts_pid -ne 0 ]; then
+-		mptcp_lib_kill_wait $client_evts_pid
+-	fi
+-	ip netns exec "$ns2" ./pm_nl_ctl events >> "$client_evts" 2>&1 &
+-	client_evts_pid=$!
+-	if [ -z "$server_evts" ]; then
+-		server_evts=$(mktemp)
+-	fi
+-	:>"$server_evts"
+-	if [ $server_evts_pid -ne 0 ]; then
+-		mptcp_lib_kill_wait $server_evts_pid
+-	fi
+-	ip netns exec "$ns1" ./pm_nl_ctl events >> "$server_evts" 2>&1 &
+-	server_evts_pid=$!
++	mptcp_lib_evts_init
++	mptcp_lib_evts_start
  	sleep 0.5
  
- 	# Delete the listener from the client ns, if one was created
--	kill_wait $listener_pid
-+	mptcp_lib_kill_wait $listener_pid
- 
- 	sleep 0.5
- 	verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.2 $client4_port
+ 	# Run the server
 -- 
 2.35.3
 
