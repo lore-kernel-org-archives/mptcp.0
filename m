@@ -1,37 +1,37 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4881171F
-	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 09:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFF11171F
+	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 09:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695200962;
+	s=mimecast20190719; t=1695200964;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xbGbEZP+bHBlrVDtN4iIbIKCRUSQtj62vfsCgaJEnVM=;
-	b=F1aVR/Z3p30iN1tp5M3IdFLgAyJRf7mj7/+vFxdFY7ETSb54vS+P0wRvng4ehEEzXVS1Y8
-	cb5vFxUe90kH8S9EoI9RbwZ5GRsYvUbo4WPj3kJOqo14Za4sL6fYkEyu2h5RSjlN3LnBOx
-	dNErJEvgbLn2HrwaPqn7qavnKzECWBk=
+	bh=3spK7kfYXjBeLtRekBsY8TTdAohgmRCQPN1fCq5xwnY=;
+	b=IA6ODvq/mLawjrkKbxlq4XSKjEnN+Ccma3MmFJCM2NiQm77yailxQJIs1MVOQUAIvFIlxy
+	YP35DkA+MhXtW5aC43AGnc4+eqg1Zs+dc5J85snneRptvGdv8wAPK3qqepSu8bZu+R21Pt
+	Q2yvf/z/rST94zaMy3YyQu7pbQ1NUdw=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-678-fSrfnkRXNoGMIiLfkdWKJQ-1; Wed, 20 Sep 2023 05:09:20 -0400
-X-MC-Unique: fSrfnkRXNoGMIiLfkdWKJQ-1
+ us-mta-437-pr1XpYslMZm-Ht9zMGpx6A-1; Wed, 20 Sep 2023 05:09:22 -0400
+X-MC-Unique: pr1XpYslMZm-Ht9zMGpx6A-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8A503185A78E;
-	Wed, 20 Sep 2023 09:09:20 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6EA9C8007A4;
+	Wed, 20 Sep 2023 09:09:22 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.224.123])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E87042156701;
-	Wed, 20 Sep 2023 09:09:19 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CD8F62156701;
+	Wed, 20 Sep 2023 09:09:20 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
 Cc: Christoph Paasch <cpaasch@apple.com>
-Subject: [PATCH mptcp-next v4 2/4] mptcp: consolidate sockopt synchronization
-Date: Wed, 20 Sep 2023 11:09:10 +0200
-Message-ID: <cfc3cab1f1fe881de40b617b7f4c979e36352a95.1695200723.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next v4 3/4] mptcp: ignore notsent_lowat setting at the subflow level.
+Date: Wed, 20 Sep 2023 11:09:11 +0200
+Message-ID: <fa0d06ad82f1a8bf74c4936807f68fede2740e23.1695200723.git.pabeni@redhat.com>
 In-Reply-To: <cover.1695200723.git.pabeni@redhat.com>
 References: <cover.1695200723.git.pabeni@redhat.com>
 Precedence: bulk
@@ -46,119 +46,41 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Move the socket option synchronization for active subflows
-at subflow creation time. This allows removing the now unused
-unlocked variant of such helper.
+Any latency related tuning taking action at the subflow level does
+not really affect the user-space, as only the main MPTCP socket is
+relevant.
 
-While at that, clean-up a bit the mptcp_subflow_create_socket()
-errors path.
+Anyway any limiting setting may foul the MPTCP scheduler, not being
+able to fully use the subflow-level cwin, leading to very poor b/w
+usage.
+
+Enforce notsent_lowat to be a no-op on every subflow.
+
+Note that TCP_NOTSENT_LOWAT is currently not supported, and properly
+dealing with that will require more invasive changes.
 
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- net/mptcp/protocol.c |  2 --
- net/mptcp/sockopt.c  | 22 ----------------------
- net/mptcp/subflow.c  | 18 +++++++++---------
- 3 files changed, 9 insertions(+), 33 deletions(-)
+ net/mptcp/sockopt.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 04eda1b8f7a4..f727a7ee662d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -121,8 +121,6 @@ struct sock *__mptcp_nmpc_sk(struct mptcp_sock *msk)
- 		ret = __mptcp_socket_create(msk);
- 		if (ret)
- 			return ERR_PTR(ret);
--
--		mptcp_sockopt_sync(msk, msk->first);
- 	}
- 
- 	return msk->first;
 diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 8260202c0066..f44b364b0055 100644
+index f44b364b0055..453d6c78c25c 100644
 --- a/net/mptcp/sockopt.c
 +++ b/net/mptcp/sockopt.c
-@@ -1444,28 +1444,6 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
- }
+@@ -1450,6 +1450,12 @@ void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
  
--static void __mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
--{
--	bool slow = lock_sock_fast(ssk);
--
--	sync_socket_options(msk, ssk);
--
--	unlock_sock_fast(ssk, slow);
--}
--
--void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
--{
--	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
--
--	msk_owned_by_me(msk);
--
--	if (READ_ONCE(subflow->setsockopt_seq) != msk->setsockopt_seq) {
--		__mptcp_sockopt_sync(msk, ssk);
--
--		subflow->setsockopt_seq = msk->setsockopt_seq;
--	}
--}
--
- void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 0d860cb730b4..6102e74121c3 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1525,8 +1525,6 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 	if (addr.ss_family == AF_INET6)
- 		addrlen = sizeof(struct sockaddr_in6);
- #endif
--	mptcp_sockopt_sync(msk, ssk);
--
- 	ssk->sk_bound_dev_if = ifindex;
- 	err = kernel_bind(sf, (struct sockaddr *)&addr, addrlen);
- 	if (err)
-@@ -1637,7 +1635,7 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
+ 	msk_owned_by_me(msk);
  
- 	err = security_mptcp_add_subflow(sk, sf->sk);
- 	if (err)
--		goto release_ssk;
-+		goto err_free;
- 
- 	/* the newly created socket has to be in the same cgroup as its parent */
- 	mptcp_attach_cgroup(sk, sf->sk);
-@@ -1651,15 +1649,12 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
- 	get_net_track(net, &sf->sk->ns_tracker, GFP_KERNEL);
- 	sock_inuse_add(net, 1);
- 	err = tcp_set_ulp(sf->sk, "mptcp");
-+	if (err)
-+		goto err_free;
- 
--release_ssk:
-+	mptcp_sockopt_sync_locked(mptcp_sk(sk), sf->sk);
- 	release_sock(sf->sk);
- 
--	if (err) {
--		sock_release(sf);
--		return err;
--	}
--
- 	/* the newly created socket really belongs to the owning MPTCP master
- 	 * socket, even if for additional subflows the allocation is performed
- 	 * by a kernel workqueue. Adjust inode references, so that the
-@@ -1679,6 +1674,11 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
- 	mptcp_subflow_ops_override(sf->sk);
- 
- 	return 0;
++	/* subflows must ignore any latency-related settings: will not affect
++	 * the user-space - only the msk is relevant - but will foul the
++	 * mptcp scheduler
++	 */
++	tcp_sk(ssk)->notsent_lowat = UINT_MAX;
 +
-+err_free:
-+	release_sock(sf->sk);
-+	sock_release(sf);
-+	return err;
- }
+ 	if (READ_ONCE(subflow->setsockopt_seq) != msk->setsockopt_seq) {
+ 		sync_socket_options(msk, ssk);
  
- static struct mptcp_subflow_context *subflow_create_ctx(struct sock *sk,
 -- 
 2.41.0
 
