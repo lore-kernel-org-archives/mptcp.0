@@ -1,36 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BFE11728
-	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 09:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB50125C2
+	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 09:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695201914;
+	s=mimecast20190719; t=1695201916;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gbTe5EpYHVUn4yuJeX8YFgdVrak3gJgFCK5Tq3aE5UA=;
-	b=LLOV1PBC04iTARuVBtuyGRoGZTDMBm/pig93refzL7DBo9p7b+MHX3UZy6VPXLezZE044d
-	1ZHdPjcGYxJznPT79K7Q+tqjr+fUz4qyoSUbYY3hB6CUdtYaBvoG3AJolZTzE2963s9okE
-	oVmf+pt8PGYl3ZjIIFBTbCXul8kDEOg=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-329-XHMV8LpnPRGIsQVa1hGgsQ-1; Wed, 20 Sep 2023 05:25:12 -0400
-X-MC-Unique: XHMV8LpnPRGIsQVa1hGgsQ-1
+	bh=BkNIqQ2tFFdSoC0bRksuIr0NlVdkiMDvuMWCeMjzHnI=;
+	b=NsWnxHuflDAeNgDuQphdPohmEgIrvJ0X9rS83oSV4wR3TMIqBgwj8z5i0SoFxp12ZWq+qW
+	QZfp+e23ICOkEr+iuA2BXRnA/H1wI1WwokHdGqWJO61sZUUmCqF2NEUIwvY5THbFptrMqt
+	MjqLrbG5xhz80slwLLN0BcBdPXayswA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-433-22dH80W8PuOZNLqoITz3wg-1; Wed, 20 Sep 2023 05:25:15 -0400
+X-MC-Unique: 22dH80W8PuOZNLqoITz3wg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C170E1C09A41
-	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 09:24:56 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 656D6811E7E
+	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 09:24:58 +0000 (UTC)
 Received: from dcaratti.users.ipa.redhat.com (unknown [10.45.226.97])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id CE42640C6EC1
-	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 09:25:11 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6A10240C6EC1
+	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 09:25:14 +0000 (UTC)
 From: Davide Caratti <dcaratti@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next v4 4/6] uapi: mptcp: use header file generated from YAML spec
-Date: Wed, 20 Sep 2023 11:24:47 +0200
-Message-ID: <fc5e5f2caec739a09e8714db1285e8573a4f2b76.1695201346.git.dcaratti@redhat.com>
+Subject: [PATCH mptcp-next v4 5/6] net: mptcp: rename netlink handlers to mptcp_pm_nl_<blah>_{doit,dumpit}
+Date: Wed, 20 Sep 2023 11:24:48 +0200
+Message-ID: <f0b146b1ab23dd52ede7454ffe67f4f01d0f51e0.1695201346.git.dcaratti@redhat.com>
 In-Reply-To: <cover.1695201346.git.dcaratti@redhat.com>
 References: <cover.1695201346.git.dcaratti@redhat.com>
 Precedence: bulk
@@ -45,398 +45,271 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-generated with:
-
- $ ./tools/net/ynl/ynl-gen-c.py --mode uapi \
- > --spec Documentation/netlink/specs/mptcp.yaml \
- > --header -o include/uapi/linux/mptcp_pm.h
+so that they will match names generated from YAML spec.
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/340
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Acked-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Davide Caratti <dcaratti@redhat.com>
 ---
- MAINTAINERS                   |   2 +-
- include/uapi/linux/mptcp.h    | 182 ++--------------------------------
- include/uapi/linux/mptcp_pm.h | 149 ++++++++++++++++++++++++++++
- 3 files changed, 160 insertions(+), 173 deletions(-)
- create mode 100644 include/uapi/linux/mptcp_pm.h
+ net/mptcp/pm_netlink.c   | 48 ++++++++++++++++++++--------------------
+ net/mptcp/pm_userspace.c |  8 +++----
+ net/mptcp/protocol.h     |  8 +++----
+ 3 files changed, 32 insertions(+), 32 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 39abfeeb8dd4..4b2acea679ed 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14971,7 +14971,7 @@ F:	Documentation/netlink/specs/mptcp.yaml
- F:	Documentation/networking/mptcp-sysctl.rst
- F:	include/net/mptcp.h
- F:	include/trace/events/mptcp.h
--F:	include/uapi/linux/mptcp.h
-+F:	include/uapi/linux/mptcp*.h
- F:	net/mptcp/
- F:	tools/testing/selftests/bpf/*/*mptcp*.c
- F:	tools/testing/selftests/net/mptcp/
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 0e62937ab17c..64ecc8a3f9f2 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -23,99 +23,24 @@
- #define MPTCP_SUBFLOW_FLAG_CONNECTED		_BITUL(7)
- #define MPTCP_SUBFLOW_FLAG_MAPVALID		_BITUL(8)
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 32976cf7c82b..dc3ed337eb1f 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1334,7 +1334,7 @@ static int mptcp_nl_add_subflow_or_signal_addr(struct net *net)
+ 	return 0;
+ }
  
--enum {
--	MPTCP_SUBFLOW_ATTR_UNSPEC,
--	MPTCP_SUBFLOW_ATTR_TOKEN_REM,
--	MPTCP_SUBFLOW_ATTR_TOKEN_LOC,
--	MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ,
--	MPTCP_SUBFLOW_ATTR_MAP_SEQ,
--	MPTCP_SUBFLOW_ATTR_MAP_SFSEQ,
--	MPTCP_SUBFLOW_ATTR_SSN_OFFSET,
--	MPTCP_SUBFLOW_ATTR_MAP_DATALEN,
--	MPTCP_SUBFLOW_ATTR_FLAGS,
--	MPTCP_SUBFLOW_ATTR_ID_REM,
--	MPTCP_SUBFLOW_ATTR_ID_LOC,
--	MPTCP_SUBFLOW_ATTR_PAD,
--	__MPTCP_SUBFLOW_ATTR_MAX
--};
--
--#define MPTCP_SUBFLOW_ATTR_MAX (__MPTCP_SUBFLOW_ATTR_MAX - 1)
--
--/* netlink interface */
--#define MPTCP_PM_NAME		"mptcp_pm"
- #define MPTCP_PM_CMD_GRP_NAME	"mptcp_pm_cmds"
- #define MPTCP_PM_EV_GRP_NAME	"mptcp_pm_events"
--#define MPTCP_PM_VER		0x1
--
--/*
-- * ATTR types defined for MPTCP
-- */
--enum {
--	MPTCP_PM_ATTR_UNSPEC,
--
--	MPTCP_PM_ATTR_ADDR,				/* nested address */
--	MPTCP_PM_ATTR_RCV_ADD_ADDRS,			/* u32 */
--	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
--	MPTCP_PM_ATTR_TOKEN,				/* u32 */
--	MPTCP_PM_ATTR_LOC_ID,				/* u8 */
--	MPTCP_PM_ATTR_ADDR_REMOTE,			/* nested address */
--
--	__MPTCP_PM_ATTR_MAX
--};
--
--#define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
--
--enum {
--	MPTCP_PM_ENDPOINT_ADDR = 1,
--
--	__MPTCP_PM_ENDPOINT_MAX
--};
--
--#define MPTCP_PM_ENDPOINT_MAX (__MPTCP_PM_ENDPOINT_MAX - 1)
--
--enum {
--	MPTCP_PM_ADDR_ATTR_UNSPEC,
--
--	MPTCP_PM_ADDR_ATTR_FAMILY,			/* u16 */
--	MPTCP_PM_ADDR_ATTR_ID,				/* u8 */
--	MPTCP_PM_ADDR_ATTR_ADDR4,			/* struct in_addr */
--	MPTCP_PM_ADDR_ATTR_ADDR6,			/* struct in6_addr */
--	MPTCP_PM_ADDR_ATTR_PORT,			/* u16 */
--	MPTCP_PM_ADDR_ATTR_FLAGS,			/* u32 */
--	MPTCP_PM_ADDR_ATTR_IF_IDX,			/* s32 */
--
--	__MPTCP_PM_ADDR_ATTR_MAX
--};
+-static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+@@ -1515,7 +1515,7 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
+ 	return 0;
+ }
  
--#define MPTCP_PM_ADDR_ATTR_MAX (__MPTCP_PM_ADDR_ATTR_MAX - 1)
-+#include <linux/mptcp_pm.h>
+-static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_nl_del_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+@@ -1650,7 +1650,7 @@ static void __reset_counters(struct pm_nl_pernet *pernet)
+ 	pernet->addrs = 0;
+ }
  
--#define MPTCP_PM_ADDR_FLAG_SIGNAL			(1 << 0)
--#define MPTCP_PM_ADDR_FLAG_SUBFLOW			(1 << 1)
--#define MPTCP_PM_ADDR_FLAG_BACKUP			(1 << 2)
--#define MPTCP_PM_ADDR_FLAG_FULLMESH			(1 << 3)
--#define MPTCP_PM_ADDR_FLAG_IMPLICIT			(1 << 4)
--
--enum {
--	MPTCP_PM_CMD_UNSPEC,
--
--	MPTCP_PM_CMD_ADD_ADDR,
--	MPTCP_PM_CMD_DEL_ADDR,
--	MPTCP_PM_CMD_GET_ADDR,
--	MPTCP_PM_CMD_FLUSH_ADDRS,
--	MPTCP_PM_CMD_SET_LIMITS,
--	MPTCP_PM_CMD_GET_LIMITS,
--	MPTCP_PM_CMD_SET_FLAGS,
--	MPTCP_PM_CMD_ANNOUNCE,
--	MPTCP_PM_CMD_REMOVE,
--	MPTCP_PM_CMD_SUBFLOW_CREATE,
--	MPTCP_PM_CMD_SUBFLOW_DESTROY,
--
--	__MPTCP_PM_CMD_AFTER_LAST
--};
-+/* for backward compatibility */
-+#define	__MPTCP_PM_CMD_AFTER_LAST	__MPTCP_PM_CMD_MAX
-+#define	__MPTCP_ATTR_AFTER_LAST		__MPTCP_ATTR_MAX
+-static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_nl_flush_addrs_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+ 	LIST_HEAD(free_list);
+@@ -1706,7 +1706,7 @@ static int mptcp_nl_fill_addr(struct sk_buff *skb,
+ 	return -EMSGSIZE;
+ }
  
- #define MPTCP_INFO_FLAG_FALLBACK		_BITUL(0)
- #define MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED	_BITUL(1)
+-static int mptcp_nl_cmd_get_addr(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+@@ -1756,8 +1756,8 @@ static int mptcp_nl_cmd_get_addr(struct sk_buff *skb, struct genl_info *info)
+ 	return ret;
+ }
  
-+#define MPTCP_PM_ADDR_FLAG_SIGNAL                      (1 << 0)
-+#define MPTCP_PM_ADDR_FLAG_SUBFLOW                     (1 << 1)
-+#define MPTCP_PM_ADDR_FLAG_BACKUP                      (1 << 2)
-+#define MPTCP_PM_ADDR_FLAG_FULLMESH                    (1 << 3)
-+#define MPTCP_PM_ADDR_FLAG_IMPLICIT                    (1 << 4)
-+
- struct mptcp_info {
- 	__u8	mptcpi_subflows;
- 	__u8	mptcpi_add_addr_signal;
-@@ -138,93 +63,6 @@ struct mptcp_info {
- 	__u64	mptcpi_bytes_acked;
- };
+-static int mptcp_nl_cmd_dump_addrs(struct sk_buff *msg,
+-				   struct netlink_callback *cb)
++static int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
++				       struct netlink_callback *cb)
+ {
+ 	struct net *net = sock_net(msg->sk);
+ 	struct mptcp_pm_addr_entry *entry;
+@@ -1815,7 +1815,7 @@ static int parse_limit(struct genl_info *info, int id, unsigned int *limit)
+ }
  
--/*
-- * MPTCP_EVENT_CREATED: token, family, saddr4 | saddr6, daddr4 | daddr6,
-- *                      sport, dport
-- * A new MPTCP connection has been created. It is the good time to allocate
-- * memory and send ADD_ADDR if needed. Depending on the traffic-patterns
-- * it can take a long time until the MPTCP_EVENT_ESTABLISHED is sent.
-- *
-- * MPTCP_EVENT_ESTABLISHED: token, family, saddr4 | saddr6, daddr4 | daddr6,
-- *			    sport, dport
-- * A MPTCP connection is established (can start new subflows).
-- *
-- * MPTCP_EVENT_CLOSED: token
-- * A MPTCP connection has stopped.
-- *
-- * MPTCP_EVENT_ANNOUNCED: token, rem_id, family, daddr4 | daddr6 [, dport]
-- * A new address has been announced by the peer.
-- *
-- * MPTCP_EVENT_REMOVED: token, rem_id
-- * An address has been lost by the peer.
-- *
-- * MPTCP_EVENT_SUB_ESTABLISHED: token, family, loc_id, rem_id,
-- *                              saddr4 | saddr6, daddr4 | daddr6, sport,
-- *                              dport, backup, if_idx [, error]
-- * A new subflow has been established. 'error' should not be set.
-- *
-- * MPTCP_EVENT_SUB_CLOSED: token, family, loc_id, rem_id, saddr4 | saddr6,
-- *                         daddr4 | daddr6, sport, dport, backup, if_idx
-- *                         [, error]
-- * A subflow has been closed. An error (copy of sk_err) could be set if an
-- * error has been detected for this subflow.
-- *
-- * MPTCP_EVENT_SUB_PRIORITY: token, family, loc_id, rem_id, saddr4 | saddr6,
-- *                           daddr4 | daddr6, sport, dport, backup, if_idx
-- *                           [, error]
-- * The priority of a subflow has changed. 'error' should not be set.
-- *
-- * MPTCP_EVENT_LISTENER_CREATED: family, sport, saddr4 | saddr6
-- * A new PM listener is created.
-- *
-- * MPTCP_EVENT_LISTENER_CLOSED: family, sport, saddr4 | saddr6
-- * A PM listener is closed.
-- */
--enum mptcp_event_type {
--	MPTCP_EVENT_UNSPEC = 0,
--	MPTCP_EVENT_CREATED = 1,
--	MPTCP_EVENT_ESTABLISHED = 2,
--	MPTCP_EVENT_CLOSED = 3,
--
--	MPTCP_EVENT_ANNOUNCED = 6,
--	MPTCP_EVENT_REMOVED = 7,
--
--	MPTCP_EVENT_SUB_ESTABLISHED = 10,
--	MPTCP_EVENT_SUB_CLOSED = 11,
--
--	MPTCP_EVENT_SUB_PRIORITY = 13,
--
--	MPTCP_EVENT_LISTENER_CREATED = 15,
--	MPTCP_EVENT_LISTENER_CLOSED = 16,
--};
--
--enum mptcp_event_attr {
--	MPTCP_ATTR_UNSPEC = 0,
--
--	MPTCP_ATTR_TOKEN,	/* u32 */
--	MPTCP_ATTR_FAMILY,	/* u16 */
--	MPTCP_ATTR_LOC_ID,	/* u8 */
--	MPTCP_ATTR_REM_ID,	/* u8 */
--	MPTCP_ATTR_SADDR4,	/* be32 */
--	MPTCP_ATTR_SADDR6,	/* struct in6_addr */
--	MPTCP_ATTR_DADDR4,	/* be32 */
--	MPTCP_ATTR_DADDR6,	/* struct in6_addr */
--	MPTCP_ATTR_SPORT,	/* be16 */
--	MPTCP_ATTR_DPORT,	/* be16 */
--	MPTCP_ATTR_BACKUP,	/* u8 */
--	MPTCP_ATTR_ERROR,	/* u8 */
--	MPTCP_ATTR_FLAGS,	/* u16 */
--	MPTCP_ATTR_TIMEOUT,	/* u32 */
--	MPTCP_ATTR_IF_IDX,	/* s32 */
--	MPTCP_ATTR_RESET_REASON,/* u32 */
--	MPTCP_ATTR_RESET_FLAGS, /* u32 */
--	MPTCP_ATTR_SERVER_SIDE,	/* u8 */
--
--	__MPTCP_ATTR_AFTER_LAST
--};
--
--#define MPTCP_ATTR_MAX (__MPTCP_ATTR_AFTER_LAST - 1)
--
- /* MPTCP Reset reason codes, rfc8684 */
- #define MPTCP_RST_EUNSPEC	0
- #define MPTCP_RST_EMPTCP	1
-diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
-new file mode 100644
-index 000000000000..0c7206531eb1
---- /dev/null
-+++ b/include/uapi/linux/mptcp_pm.h
-@@ -0,0 +1,149 @@
-+/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
-+/* Do not edit directly, auto-generated from: */
-+/*	Documentation/netlink/specs/mptcp.yaml */
-+/* YNL-GEN uapi header */
-+
-+#ifndef _UAPI_LINUX_MPTCP_PM_H
-+#define _UAPI_LINUX_MPTCP_PM_H
-+
-+#define MPTCP_PM_NAME	"mptcp_pm"
-+#define MPTCP_PM_VER	1
-+
-+/**
-+ * enum mptcp_event_type
-+ * @MPTCP_EVENT_CREATED: token, family, saddr4 | saddr6, daddr4 | daddr6,
-+ *   sport, dport A new MPTCP connection has been created. It is the good time
-+ *   to allocate memory and send ADD_ADDR if needed. Depending on the
-+ *   traffic-patterns it can take a long time until the MPTCP_EVENT_ESTABLISHED
-+ *   is sent.
-+ * @MPTCP_EVENT_ESTABLISHED: token, family, saddr4 | saddr6, daddr4 | daddr6,
-+ *   sport, dport A MPTCP connection is established (can start new subflows).
-+ * @MPTCP_EVENT_CLOSED: token A MPTCP connection has stopped.
-+ * @MPTCP_EVENT_ANNOUNCED: token, rem_id, family, daddr4 | daddr6 [, dport] A
-+ *   new address has been announced by the peer.
-+ * @MPTCP_EVENT_REMOVED: token, rem_id An address has been lost by the peer.
-+ * @MPTCP_EVENT_SUB_ESTABLISHED: token, family, loc_id, rem_id, saddr4 |
-+ *   saddr6, daddr4 | daddr6, sport, dport, backup, if_idx [, error] A new
-+ *   subflow has been established. 'error' should not be set.
-+ * @MPTCP_EVENT_SUB_CLOSED: token, family, loc_id, rem_id, saddr4 | saddr6,
-+ *   daddr4 | daddr6, sport, dport, backup, if_idx [, error] A subflow has been
-+ *   closed. An error (copy of sk_err) could be set if an error has been
-+ *   detected for this subflow.
-+ * @MPTCP_EVENT_SUB_PRIORITY: token, family, loc_id, rem_id, saddr4 | saddr6,
-+ *   daddr4 | daddr6, sport, dport, backup, if_idx [, error] The priority of a
-+ *   subflow has changed. 'error' should not be set.
-+ * @MPTCP_EVENT_LISTENER_CREATED: family, sport, saddr4 | saddr6 A new PM
-+ *   listener is created.
-+ * @MPTCP_EVENT_LISTENER_CLOSED: family, sport, saddr4 | saddr6 A PM listener
-+ *   is closed.
-+ */
-+enum mptcp_event_type {
-+	MPTCP_EVENT_UNSPEC,
-+	MPTCP_EVENT_CREATED,
-+	MPTCP_EVENT_ESTABLISHED,
-+	MPTCP_EVENT_CLOSED,
-+	MPTCP_EVENT_ANNOUNCED = 6,
-+	MPTCP_EVENT_REMOVED,
-+	MPTCP_EVENT_SUB_ESTABLISHED = 10,
-+	MPTCP_EVENT_SUB_CLOSED,
-+	MPTCP_EVENT_SUB_PRIORITY = 13,
-+	MPTCP_EVENT_LISTENER_CREATED = 15,
-+	MPTCP_EVENT_LISTENER_CLOSED,
-+};
-+
-+enum {
-+	MPTCP_PM_ADDR_ATTR_UNSPEC,
-+	MPTCP_PM_ADDR_ATTR_FAMILY,
-+	MPTCP_PM_ADDR_ATTR_ID,
-+	MPTCP_PM_ADDR_ATTR_ADDR4,
-+	MPTCP_PM_ADDR_ATTR_ADDR6,
-+	MPTCP_PM_ADDR_ATTR_PORT,
-+	MPTCP_PM_ADDR_ATTR_FLAGS,
-+	MPTCP_PM_ADDR_ATTR_IF_IDX,
-+
-+	__MPTCP_PM_ADDR_ATTR_MAX
-+};
-+#define MPTCP_PM_ADDR_ATTR_MAX (__MPTCP_PM_ADDR_ATTR_MAX - 1)
-+
-+enum {
-+	MPTCP_SUBFLOW_ATTR_UNSPEC,
-+	MPTCP_SUBFLOW_ATTR_TOKEN_REM,
-+	MPTCP_SUBFLOW_ATTR_TOKEN_LOC,
-+	MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ,
-+	MPTCP_SUBFLOW_ATTR_MAP_SEQ,
-+	MPTCP_SUBFLOW_ATTR_MAP_SFSEQ,
-+	MPTCP_SUBFLOW_ATTR_SSN_OFFSET,
-+	MPTCP_SUBFLOW_ATTR_MAP_DATALEN,
-+	MPTCP_SUBFLOW_ATTR_FLAGS,
-+	MPTCP_SUBFLOW_ATTR_ID_REM,
-+	MPTCP_SUBFLOW_ATTR_ID_LOC,
-+	MPTCP_SUBFLOW_ATTR_PAD,
-+
-+	__MPTCP_SUBFLOW_ATTR_MAX
-+};
-+#define MPTCP_SUBFLOW_ATTR_MAX (__MPTCP_SUBFLOW_ATTR_MAX - 1)
-+
-+enum {
-+	MPTCP_PM_ENDPOINT_ADDR = 1,
-+
-+	__MPTCP_PM_ENDPOINT_MAX
-+};
-+#define MPTCP_PM_ENDPOINT_MAX (__MPTCP_PM_ENDPOINT_MAX - 1)
-+
-+enum {
-+	MPTCP_PM_ATTR_UNSPEC,
-+	MPTCP_PM_ATTR_ADDR,
-+	MPTCP_PM_ATTR_RCV_ADD_ADDRS,
-+	MPTCP_PM_ATTR_SUBFLOWS,
-+	MPTCP_PM_ATTR_TOKEN,
-+	MPTCP_PM_ATTR_LOC_ID,
-+	MPTCP_PM_ATTR_ADDR_REMOTE,
-+
-+	__MPTCP_PM_ATTR_MAX
-+};
-+#define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
-+
-+enum mptcp_event_attr {
-+	MPTCP_ATTR_UNSPEC,
-+	MPTCP_ATTR_TOKEN,
-+	MPTCP_ATTR_FAMILY,
-+	MPTCP_ATTR_LOC_ID,
-+	MPTCP_ATTR_REM_ID,
-+	MPTCP_ATTR_SADDR4,
-+	MPTCP_ATTR_SADDR6,
-+	MPTCP_ATTR_DADDR4,
-+	MPTCP_ATTR_DADDR6,
-+	MPTCP_ATTR_SPORT,
-+	MPTCP_ATTR_DPORT,
-+	MPTCP_ATTR_BACKUP,
-+	MPTCP_ATTR_ERROR,
-+	MPTCP_ATTR_FLAGS,
-+	MPTCP_ATTR_TIMEOUT,
-+	MPTCP_ATTR_IF_IDX,
-+	MPTCP_ATTR_RESET_REASON,
-+	MPTCP_ATTR_RESET_FLAGS,
-+	MPTCP_ATTR_SERVER_SIDE,
-+
-+	__MPTCP_ATTR_MAX
-+};
-+#define MPTCP_ATTR_MAX (__MPTCP_ATTR_MAX - 1)
-+
-+enum {
-+	MPTCP_PM_CMD_UNSPEC,
-+	MPTCP_PM_CMD_ADD_ADDR,
-+	MPTCP_PM_CMD_DEL_ADDR,
-+	MPTCP_PM_CMD_GET_ADDR,
-+	MPTCP_PM_CMD_FLUSH_ADDRS,
-+	MPTCP_PM_CMD_SET_LIMITS,
-+	MPTCP_PM_CMD_GET_LIMITS,
-+	MPTCP_PM_CMD_SET_FLAGS,
-+	MPTCP_PM_CMD_ANNOUNCE,
-+	MPTCP_PM_CMD_REMOVE,
-+	MPTCP_PM_CMD_SUBFLOW_CREATE,
-+	MPTCP_PM_CMD_SUBFLOW_DESTROY,
-+
-+	__MPTCP_PM_CMD_MAX
-+};
-+#define MPTCP_PM_CMD_MAX (__MPTCP_PM_CMD_MAX - 1)
-+
-+#endif /* _UAPI_LINUX_MPTCP_PM_H */
+ static int
+-mptcp_nl_cmd_set_limits(struct sk_buff *skb, struct genl_info *info)
++mptcp_pm_nl_set_limits_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+ 	unsigned int rcv_addrs, subflows;
+@@ -1841,7 +1841,7 @@ mptcp_nl_cmd_set_limits(struct sk_buff *skb, struct genl_info *info)
+ }
+ 
+ static int
+-mptcp_nl_cmd_get_limits(struct sk_buff *skb, struct genl_info *info)
++mptcp_pm_nl_get_limits_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+ 	struct sk_buff *msg;
+@@ -1950,7 +1950,7 @@ int mptcp_pm_nl_set_flags(struct net *net, struct mptcp_pm_addr_entry *addr, u8
+ 	return 0;
+ }
+ 
+-static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct mptcp_pm_addr_entry remote = { .addr = { .family = AF_UNSPEC }, };
+ 	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
+@@ -2314,11 +2314,11 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ 	nlmsg_free(skb);
+ }
+ 
+-static const struct genl_ops mptcp_pm_ops[] = {
++static const struct genl_ops mptcp_pm_nl_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_ADD_ADDR,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_add_addr,
++		.doit		= mptcp_pm_nl_add_addr_doit,
+ 		.policy		= mptcp_pm_endpoint_nl_policy,
+ 		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2326,7 +2326,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_DEL_ADDR,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_del_addr,
++		.doit		= mptcp_pm_nl_del_addr_doit,
+ 		.policy		= mptcp_pm_endpoint_nl_policy,
+ 		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2334,8 +2334,8 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_GET_ADDR,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_get_addr,
+-		.dumpit		= mptcp_nl_cmd_dump_addrs,
++		.doit		= mptcp_pm_nl_get_addr_doit,
++		.dumpit		= mptcp_pm_nl_get_addr_dumpit,
+ 		.policy		= mptcp_pm_endpoint_nl_policy,
+ 		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2343,7 +2343,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_FLUSH_ADDRS,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_flush_addrs,
++		.doit		= mptcp_pm_nl_flush_addrs_doit,
+ 		.policy		= mptcp_pm_endpoint_nl_policy,
+ 		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2351,7 +2351,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_SET_LIMITS,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_set_limits,
++		.doit		= mptcp_pm_nl_set_limits_doit,
+ 		.policy		= mptcp_pm_set_limits_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_SUBFLOWS,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2359,14 +2359,14 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_GET_LIMITS,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_get_limits,
++		.doit		= mptcp_pm_nl_get_limits_doit,
+ 		.policy		= mptcp_pm_set_limits_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_SUBFLOWS,
+ 	},
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_SET_FLAGS,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_set_flags,
++		.doit		= mptcp_pm_nl_set_flags_doit,
+ 		.policy		= mptcp_pm_set_flags_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_ADDR_REMOTE,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2374,7 +2374,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_ANNOUNCE,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_announce,
++		.doit		= mptcp_pm_nl_announce_doit,
+ 		.policy		= mptcp_pm_announce_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_TOKEN,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2382,7 +2382,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_REMOVE,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_remove,
++		.doit		= mptcp_pm_nl_remove_doit,
+ 		.policy		= mptcp_pm_remove_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_LOC_ID,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2390,7 +2390,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_SUBFLOW_CREATE,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_sf_create,
++		.doit		= mptcp_pm_nl_subflow_create_doit,
+ 		.policy		= mptcp_pm_subflow_create_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_ADDR_REMOTE,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2398,7 +2398,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_SUBFLOW_DESTROY,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_sf_destroy,
++		.doit		= mptcp_pm_nl_subflow_destroy_doit,
+ 		.policy		= mptcp_pm_subflow_create_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_ADDR_REMOTE,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2410,8 +2410,8 @@ static struct genl_family mptcp_genl_family __ro_after_init = {
+ 	.version	= MPTCP_PM_VER,
+ 	.netnsok	= true,
+ 	.module		= THIS_MODULE,
+-	.ops		= mptcp_pm_ops,
+-	.n_ops		= ARRAY_SIZE(mptcp_pm_ops),
++	.ops		= mptcp_pm_nl_ops,
++	.n_ops		= ARRAY_SIZE(mptcp_pm_nl_ops),
+ 	.resv_start_op	= MPTCP_PM_CMD_SUBFLOW_DESTROY + 1,
+ 	.mcgrps		= mptcp_pm_mcgrps,
+ 	.n_mcgrps	= ARRAY_SIZE(mptcp_pm_mcgrps),
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index b5a8aa4c1ebd..07f602144d5e 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -145,7 +145,7 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
+ 	return mptcp_userspace_pm_append_new_local_addr(msk, &new_entry);
+ }
+ 
+-int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
++int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+ 	struct nlattr *addr = info->attrs[MPTCP_PM_ATTR_ADDR];
+@@ -208,7 +208,7 @@ int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
+ 	return err;
+ }
+ 
+-int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info)
++int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+ 	struct nlattr *id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
+@@ -270,7 +270,7 @@ int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info)
+ 	return err;
+ }
+ 
+-int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
++int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+@@ -400,7 +400,7 @@ static struct sock *mptcp_nl_find_ssk(struct mptcp_sock *msk,
+ 	return NULL;
+ }
+ 
+-int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
++int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 3c938e3560e4..bbe3cb8f51cf 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -894,10 +894,10 @@ void mptcp_pm_remove_addrs_and_subflows(struct mptcp_sock *msk,
+ 					struct list_head *rm_list);
+ 
+ void mptcp_free_local_addr_list(struct mptcp_sock *msk);
+-int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info);
+-int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info);
+-int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info);
+-int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info);
+ 
+ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ 		 const struct sock *ssk, gfp_t gfp);
 -- 
 2.41.0
 
