@@ -1,38 +1,35 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6454A30F8E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCB430FB3
 	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 12:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695213944;
+	s=mimecast20190719; t=1695213942;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QAGhM2x9AmTbT1g/aNTGIp7MROgU4Jmcptz0HROixL4=;
-	b=JJJGYgLkxxKeffoTRfn4/h2r60ibpAMEhdHTTUbCD8FRG8znXd58ooideZjUIVDBdFqIfh
-	1zFdiKbEJkJC7CGJUDp9fJl9P4xANRSyymgVMFYvVrtqs5Unw6fWyiwswJr84gA+7pjkWD
-	30liEkhi0hAb9u6fRbWHkcvupEVQcNk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-10-wz8eHeMNMCiHUzFip6fySQ-1; Wed, 20 Sep 2023 08:45:42 -0400
-X-MC-Unique: wz8eHeMNMCiHUzFip6fySQ-1
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cGIbfzhIX6ZSIyZIa+3FwlnucdsPKPcj78y3dvKs1VI=;
+	b=aHbOmNRRKh2U7t/vGWbOy8AY+C9+SfuO42tb7SwdBfEFuW6WZxlRVeqF9x6BblIL+EXLkX
+	UHOfsEJXA8QKA9cA5FN4jEYM5VycNxk5/qcDIuZAaF31LFQBd0ZF/gdNsOq1iKb9BEMpxb
+	rwj5PndN99Lpv+Li2MlAemu30SDB6Ro=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-262-vQN5kOJqPdm6yo_V34fhVQ-1; Wed, 20 Sep 2023 08:45:41 -0400
+X-MC-Unique: vQN5kOJqPdm6yo_V34fhVQ-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8231C85A5BF
-	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 12:45:42 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.123])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 10A1310F1BE7
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0C3553C23FE5
 	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 12:45:41 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.123])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8E41B1004058
+	for <mptcp@lists.linux.dev>; Wed, 20 Sep 2023 12:45:40 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 2/4] mptcp: use plain bool instead of custom binary enum
-Date: Wed, 20 Sep 2023 14:45:35 +0200
-Message-ID: <a114bf32be09aaac7cf5acaa589b38c10e5ef985.1695208066.git.pabeni@redhat.com>
-In-Reply-To: <cover.1695208066.git.pabeni@redhat.com>
-References: <cover.1695208066.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next 0/4] mptcp: performance improvemets
+Date: Wed, 20 Sep 2023 14:45:33 +0200
+Message-ID: <cover.1695208066.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,100 +42,52 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-The 'data_avail' subflow field is already used as plain boolean,
-drop the custom binary enum type and switch to bool.
+Cool subj just to catch more attention;)
 
-No functional changed intended.
+This is a follow-up the yday mtg and to the discussion started from
+issues/437.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.h |  7 +------
- net/mptcp/subflow.c  | 12 ++++++------
- 2 files changed, 7 insertions(+), 12 deletions(-)
+The first 3 patches implement a working support for rcvlowat, with the
+intended and relevant side effect of avoiding most TCP-level immediate
+acks.
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ab775e48c11d..158b6fc19217 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -433,11 +433,6 @@ mptcp_subflow_rsk(const struct request_sock *rsk)
- 	return (struct mptcp_subflow_request_sock *)rsk;
- }
- 
--enum mptcp_data_avail {
--	MPTCP_SUBFLOW_NODATA,
--	MPTCP_SUBFLOW_DATA_AVAIL,
--};
--
- struct mptcp_delegated_action {
- 	struct napi_struct napi;
- 	struct list_head head;
-@@ -494,7 +489,7 @@ struct mptcp_subflow_context {
- 		valid_csum_seen : 1,        /* at least one csum validated */
- 		is_mptfo : 1,	    /* subflow is doing TFO */
- 		__unused : 9;
--	enum mptcp_data_avail data_avail;
-+	bool	data_avail;
- 	bool	scheduled;
- 	u32	remote_nonce;
- 	u64	thmac;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 0eae952064b1..0a4465dcf56d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1237,7 +1237,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 	struct sk_buff *skb;
- 
- 	if (!skb_peek(&ssk->sk_receive_queue))
--		WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
-+		WRITE_ONCE(subflow->data_avail, false);
- 	if (subflow->data_avail)
- 		return true;
- 
-@@ -1271,7 +1271,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			continue;
- 		}
- 
--		WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
-+		WRITE_ONCE(subflow->data_avail, true);
- 		break;
- 	}
- 	return true;
-@@ -1293,7 +1293,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 				goto reset;
- 			}
- 			mptcp_subflow_fail(msk, ssk);
--			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
-+			WRITE_ONCE(subflow->data_avail, true);
- 			return true;
- 		}
- 
-@@ -1310,7 +1310,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			while ((skb = skb_peek(&ssk->sk_receive_queue)))
- 				sk_eat_skb(ssk, skb);
- 			tcp_send_active_reset(ssk, GFP_ATOMIC);
--			WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
-+			WRITE_ONCE(subflow->data_avail, false);
- 			return false;
- 		}
- 
-@@ -1322,7 +1322,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 	subflow->map_seq = READ_ONCE(msk->ack_seq);
- 	subflow->map_data_len = skb->len;
- 	subflow->map_subflow_seq = tcp_sk(ssk)->copied_seq - subflow->ssn_offset;
--	WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_DATA_AVAIL);
-+	WRITE_ONCE(subflow->data_avail, true);
- 	return true;
- }
- 
-@@ -1334,7 +1334,7 @@ bool mptcp_subflow_data_available(struct sock *sk)
- 	if (subflow->map_valid &&
- 	    mptcp_subflow_get_map_offset(subflow) >= subflow->map_data_len) {
- 		subflow->map_valid = 0;
--		WRITE_ONCE(subflow->data_avail, MPTCP_SUBFLOW_NODATA);
-+		WRITE_ONCE(subflow->data_avail, false);
- 
- 		pr_debug("Done with mapping: seq=%u data_len=%u",
- 			 subflow->map_subflow_seq,
+The existing check in:
+
+https://elixir.bootlin.com/linux/latest/source/net/ipv4/tcp_input.c#L5534
+
+newarly always triggers immediate ack, as the any data received
+on the subflow is usually immediately moved into the msk. That is, we
+nearly always have: tp->rcv_nxt == tp->copied_seq.
+
+That causes an unneeded large amount of (tcp-level) ack. After patch
+3, MPTCP behaves much more alike plain TCP, compressing/delaying many
+unneeded immediate ack and moving some of them at recvmsg() time.
+
+Such change has quite a relevant effect on the max tput, ranging
+from -4% to + 40% depending on the specific setup.
+The small regression happens on CPU-bounded bulk transfers, with
+not-so-large write buffer and can be elimitated increasing the write
+buffer size. Even in such scenario, the overall efficency (B/W divided
+by the total CPU cycles consumed) increases.
+My personal take is that overall this for the better.
+
+The last patch gives some speed-up to the tx path, just by using the
+'correct' (or better) helper to memcpy the data from the user-space
+into the kernel buffer.
+
+Paolo Abeni (4):
+  mptcp: properly account fastopen data
+  mptcp: use plain bool instead of custom binary enum
+  mptcp: give rcvlowat some love.
+  mptcp: use copy_from_iter helpers on transmit..
+
+ net/mptcp/fastopen.c |  1 +
+ net/mptcp/protocol.c | 42 +++++++++++++++++++++++++-----------------
+ net/mptcp/protocol.h | 27 +++++++++++++++++++++------
+ net/mptcp/sockopt.c  | 31 +++++++++++++++++++++++++++++++
+ net/mptcp/subflow.c  | 24 ++++++++++++++++--------
+ 5 files changed, 94 insertions(+), 31 deletions(-)
+
 -- 
 2.41.0
 
