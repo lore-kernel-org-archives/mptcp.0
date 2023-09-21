@@ -1,134 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CFA19BC2;
-	Wed, 20 Sep 2023 20:11:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695240673; x=1726776673;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=l7BZD98a1R/UWxHb1L9HAqTrOOagCvkiMqR8MSyUT38=;
-  b=inEN5CLG3MCUoabl8oa9BnsZvoyrBN/aTxmg+fDFsQTjlIkJvI7DWw9x
-   VHShRJxG/3uZVng6hZV9LbM/a0Q3/vm7b+Afw30we9W+22mDNEb6/7AUp
-   pM/3Ws7VuXVOBUZ2ltldF+a2uwsG0IrAvmM/GrHTk+Bgltptjy5pSNbzm
-   ut1HSm8YXO+0R209JRLj7ohLs0zr35ohxjr4cGtroAr4BAseM8/8gJtP0
-   ZP6tE/rXdpZopGwCdaxUaV3qpGV1TAKo42E/ycOCDSD4muD+ue2DWfEMY
-   4IU6XEV1rkpLEgZR1UGOqpsR+sPx/E625jFn637p4YapavYrDzSlmcrkp
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="365394312"
-X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
-   d="scan'208";a="365394312"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2023 13:11:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="870511101"
-X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
-   d="scan'208";a="870511101"
-Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 20 Sep 2023 13:11:11 -0700
-Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qj3XQ-00096m-2w;
-	Wed, 20 Sep 2023 20:11:08 +0000
-Date: Thu, 21 Sep 2023 04:10:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-Subject: Re: [PATCH mptcp-next v2 04/30] mptcp: use mptcp_wnd_end helper
-Message-ID: <202309210337.Gf1gTgm6-lkp@intel.com>
-References: <61179b15016da6055cc5a33dfdaacdaa30883cfb.1695095289.git.geliang.tang@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399522032D
+	for <mptcp@lists.linux.dev>; Thu, 21 Sep 2023 23:42:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42184C433C8;
+	Thu, 21 Sep 2023 23:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695339751;
+	bh=3lznet4fUty5b7nrg8B7d0fTcP+VuQoqpmkPgeGIkiM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=A2zMNh6HMqMvUURV5oCqSOWvElSqcQw6RjJYNeQ6W8vV6QIlBRBOj3f3/VWswjeL7
+	 SQn5hz+iPpuItCPbJ4r8sY1WAkU6uxKXXeWU+Z52h/bPwWPjGaepi8zDLiqYhwzlxS
+	 /uV/9pPnXejQfLzBEJnUbnXaZw1+Z26PmLKSucKvtN+QumBWnZyyo2MRazDj1Ho9G7
+	 4iUjH3mnbCRZt2sGE/dgyN6IWgnGurWbQY9FDWNNplfVKr8Vf9LkHUbTzbnFbz4jtP
+	 YIIvK6SWoEnafOb3xODKrzjr/wOP96oxVlDVMaPO6P93zuZtihDOdwkADu7iFLJg0Y
+	 28uC20nrfYKlg==
+Date: Thu, 21 Sep 2023 16:42:25 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev, Christoph Paasch <cpaasch@apple.com>
+Subject: Re: [PATCH mptcp-next v4 1/4] mptcp: fix delegated action races.
+In-Reply-To: <93a4a1fde9b8b8e1a723ae8c2938954af9388eb5.1695200723.git.pabeni@redhat.com>
+Message-ID: <c2229739-1a72-e19e-9014-25a6d1055ced@kernel.org>
+References: <cover.1695200723.git.pabeni@redhat.com> <93a4a1fde9b8b8e1a723ae8c2938954af9388eb5.1695200723.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <61179b15016da6055cc5a33dfdaacdaa30883cfb.1695095289.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Geliang,
+On Wed, 20 Sep 2023, Paolo Abeni wrote:
 
-kernel test robot noticed the following build errors:
+> The delegated action infrastructure is prone to the following
+> race: different CPUs can try to schedule different delegated
+> actions on the same subflow at the same time.
+>
+> Each of them will check different bits via mptcp_subflow_delegate(),
+> and will try to schedule the action on the related per-cpu napi
+> instance.
+>
+> Depending on the timing, both can observe an empty delegated list
+> node, causing the same entry to be added simultaneously on two different
+> lists.
+>
+> The root cause is that the delegated actions infra does not provide
+> a single synchronization point. Address the issue reserving an additional
+> bit to mark the subflow as scheduled for delegation. Acquiring such bit
+> guarantee the caller to own the delegated list node, and being able to
+> safely schedule the subflow.
+>
+> Clear such bit only when the subflow scheduling is completed, ensuring
+> proper barrier in place.
+>
+> Additionally swap the meaning of the delegated_action bitmask, to allow
+> the usage of the existing helper to set multiple bit at once.
+>
+> Fixes: bcd97734318d ("mptcp: use delegate action to schedule 3rd ack retrans")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> net/mptcp/protocol.c | 28 ++++++++++++++--------------
+> net/mptcp/protocol.h | 35 ++++++++++++-----------------------
+> net/mptcp/subflow.c  |  6 ++++--
+> 3 files changed, 30 insertions(+), 39 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 1a0b463f8c97..04eda1b8f7a4 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3425,24 +3425,21 @@ static void schedule_3rdack_retransmission(struct sock *ssk)
+> 	sk_reset_timer(ssk, &icsk->icsk_delack_timer, timeout);
+> }
+>
+> -void mptcp_subflow_process_delegated(struct sock *ssk)
+> +void mptcp_subflow_process_delegated(struct sock *ssk, long status)
+> {
+> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+> 	struct sock *sk = subflow->conn;
+>
+> -	if (test_bit(MPTCP_DELEGATE_SEND, &subflow->delegated_status)) {
+> +	if (status & BIT(MPTCP_DELEGATE_SEND)) {
+> 		mptcp_data_lock(sk);
+> 		if (!sock_owned_by_user(sk))
+> 			__mptcp_subflow_push_pending(sk, ssk, true);
+> 		else
+> 			__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
+> 		mptcp_data_unlock(sk);
+> -		mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_SEND);
+> 	}
+> -	if (test_bit(MPTCP_DELEGATE_ACK, &subflow->delegated_status)) {
+> +	if (status & BIT(MPTCP_DELEGATE_ACK))
+> 		schedule_3rdack_retransmission(ssk);
+> -		mptcp_subflow_delegated_done(subflow, MPTCP_DELEGATE_ACK);
+> -	}
+> }
+>
+> static int mptcp_hash(struct sock *sk)
+> @@ -3968,14 +3965,17 @@ static int mptcp_napi_poll(struct napi_struct *napi, int budget)
+> 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>
+> 		bh_lock_sock_nested(ssk);
+> -		if (!sock_owned_by_user(ssk) &&
+> -		    mptcp_subflow_has_delegated_action(subflow))
+> -			mptcp_subflow_process_delegated(ssk);
+> -		/* ... elsewhere tcp_release_cb_override already processed
+> -		 * the action or will do at next release_sock().
+> -		 * In both case must dequeue the subflow here - on the same
+> -		 * CPU that scheduled it.
+> -		 */
+> +		if (!sock_owned_by_user(ssk)) {
+> +			mptcp_subflow_process_delegated(ssk, xchg(&subflow->delegated_status, 0));
+> +		} else {
+> +			/* tcp_release_cb_override already processed
+> +			 * the action or will do at next release_sock().
+> +			 * In both case must dequeue the subflow here - on the same
+> +			 * CPU that scheduled it.
+> +			 */
+> +			smp_wmb();
+> +			clear_bit(MPTCP_DELEGATE_SCHEDULED, &subflow->delegated_status);
+> +		}
+> 		bh_unlock_sock(ssk);
+> 		sock_put(ssk);
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 3c938e3560e4..7c7ad087d8ac 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -444,9 +444,11 @@ struct mptcp_delegated_action {
+>
+> DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
+>
+> -#define MPTCP_DELEGATE_SEND		0
+> -#define MPTCP_DELEGATE_ACK		1
+> +#define MPTCP_DELEGATE_SCHEDULED	0
+> +#define MPTCP_DELEGATE_SEND		1
+> +#define MPTCP_DELEGATE_ACK		2
+>
+> +#define MPTCP_DELEGATE_ACTIONS_MASK	(~BIT(MPTCP_DELEGATE_SCHEDULED))
+> /* MPTCP subflow context */
+> struct mptcp_subflow_context {
+> 	struct	list_head node;/* conn_list of subflows */
+> @@ -564,23 +566,24 @@ mptcp_subflow_get_mapped_dsn(const struct mptcp_subflow_context *subflow)
+> 	return subflow->map_seq + mptcp_subflow_get_map_offset(subflow);
+> }
+>
+> -void mptcp_subflow_process_delegated(struct sock *ssk);
+> +void mptcp_subflow_process_delegated(struct sock *ssk, long actions);
+>
+> static inline void mptcp_subflow_delegate(struct mptcp_subflow_context *subflow, int action)
+> {
+> +	long old, mask = BIT(MPTCP_DELEGATE_SCHEDULED) | BIT(action);
+> 	struct mptcp_delegated_action *delegated;
+> 	bool schedule;
+>
+> 	/* the caller held the subflow bh socket lock */
+> 	lockdep_assert_in_softirq();
+>
+> -	/* The implied barrier pairs with mptcp_subflow_delegated_done(), and
+> -	 * ensures the below list check sees list updates done prior to status
+> -	 * bit changes
+> +	/* The implied barrier pairs with tcp_release_cb_override()
+> +	 * mptcp_napi_poll(), and ensures the below list check sees list
+> +	 * updates done prior to delegated status bits changes
+> 	 */
+> -	if (!test_and_set_bit(action, &subflow->delegated_status)) {
+> -		/* still on delegated list from previous scheduling */
+> -		if (!list_empty(&subflow->delegated_node))
+> +	old = set_mask_bits(&subflow->delegated_status, 0, mask);
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.6-rc2 next-20230920]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Hi Paolo -
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/mptcp-drop-useless-ssk-in-pm_subflow_check_next/20230919-120834
-base:   linus/master
-patch link:    https://lore.kernel.org/r/61179b15016da6055cc5a33dfdaacdaa30883cfb.1695095289.git.geliang.tang%40suse.com
-patch subject: [PATCH mptcp-next v2 04/30] mptcp: use mptcp_wnd_end helper
-config: csky-allmodconfig (https://download.01.org/0day-ci/archive/20230921/202309210337.Gf1gTgm6-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230921/202309210337.Gf1gTgm6-lkp@intel.com/reproduce)
+The naming of the 'mask' variable here made it a little harder to 
+understand at first glance, as the middle arg of the set_mask_bits macro 
+is the one that does the masking (clearing) of bits. How about 'set_bits' 
+(or similar) instead.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309210337.Gf1gTgm6-lkp@intel.com/
+> +	if (!(old & BIT(MPTCP_DELEGATE_SCHEDULED))) {
+> +		if (WARN_ON_ONCE(!list_empty(&subflow->delegated_node)))
+> 			return;
+>
+> 		delegated = this_cpu_ptr(&mptcp_delegated_actions);
+> @@ -605,20 +608,6 @@ mptcp_subflow_delegated_next(struct mptcp_delegated_action *delegated)
+> 	return ret;
+> }
+>
+> -static inline bool mptcp_subflow_has_delegated_action(const struct mptcp_subflow_context *subflow)
+> -{
+> -	return !!READ_ONCE(subflow->delegated_status);
+> -}
+> -
+> -static inline void mptcp_subflow_delegated_done(struct mptcp_subflow_context *subflow, int action)
+> -{
+> -	/* pairs with mptcp_subflow_delegate, ensures delegate_node is updated before
+> -	 * touching the status bit
+> -	 */
+> -	smp_wmb();
+> -	clear_bit(action, &subflow->delegated_status);
+> -}
+> -
+> int mptcp_is_enabled(const struct net *net);
+> unsigned int mptcp_get_add_addr_timeout(const struct net *net);
+> int mptcp_is_checksum_enabled(const struct net *net);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 918c1a235790..0d860cb730b4 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1956,9 +1956,11 @@ static void subflow_ulp_clone(const struct request_sock *req,
+> static void tcp_release_cb_override(struct sock *ssk)
+> {
+> 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+> +	long status;
+>
+> -	if (mptcp_subflow_has_delegated_action(subflow))
+> -		mptcp_subflow_process_delegated(ssk);
+> +	status = set_mask_bits(&subflow->delegated_status, MPTCP_DELEGATE_ACTIONS_MASK, 0);
 
-All errors (new ones prefixed by >>):
+Can you add a comment here regarding the interaction with 
+mptcp_napi_poll()?
 
-   In file included from net/mptcp/options.c:13:
-   net/mptcp/options.c: In function 'ack_update_msk':
->> net/mptcp/options.c:1062:21: error: implicit declaration of function 'mptcp_wnd_end'; did you mean 'tcp_wnd_end'? [-Werror=implicit-function-declaration]
-    1062 |         if (after64(mptcp_wnd_end(msk), READ_ONCE(msk->snd_nxt)))
-         |                     ^~~~~~~~~~~~~
-   net/mptcp/protocol.h:141:48: note: in definition of macro 'after64'
-     141 | #define after64(seq2, seq1)     before64(seq1, seq2)
-         |                                                ^~~~
-   cc1: some warnings being treated as errors
+Thanks,
 
+Mat
 
-vim +1062 net/mptcp/options.c
-
-  1034	
-  1035	static void ack_update_msk(struct mptcp_sock *msk,
-  1036				   struct sock *ssk,
-  1037				   struct mptcp_options_received *mp_opt)
-  1038	{
-  1039		u64 new_wnd_end, new_snd_una, snd_nxt = READ_ONCE(msk->snd_nxt);
-  1040		struct sock *sk = (struct sock *)msk;
-  1041		u64 old_snd_una;
-  1042	
-  1043		mptcp_data_lock(sk);
-  1044	
-  1045		/* avoid ack expansion on update conflict, to reduce the risk of
-  1046		 * wrongly expanding to a future ack sequence number, which is way
-  1047		 * more dangerous than missing an ack
-  1048		 */
-  1049		old_snd_una = msk->snd_una;
-  1050		new_snd_una = mptcp_expand_seq(old_snd_una, mp_opt->data_ack, mp_opt->ack64);
-  1051	
-  1052		/* ACK for data not even sent yet? Ignore.*/
-  1053		if (unlikely(after64(new_snd_una, snd_nxt)))
-  1054			new_snd_una = old_snd_una;
-  1055	
-  1056		new_wnd_end = new_snd_una + tcp_sk(ssk)->snd_wnd;
-  1057	
-  1058		if (after64(new_wnd_end, msk->wnd_end))
-  1059			msk->wnd_end = new_wnd_end;
-  1060	
-  1061		/* this assumes mptcp_incoming_options() is invoked after tcp_ack() */
-> 1062		if (after64(mptcp_wnd_end(msk), READ_ONCE(msk->snd_nxt)))
-  1063			__mptcp_check_push(sk, ssk);
-  1064	
-  1065		if (after64(new_snd_una, old_snd_una)) {
-  1066			__mptcp_snd_una_update(msk, new_snd_una);
-  1067			__mptcp_data_acked(sk);
-  1068		}
-  1069		mptcp_data_unlock(sk);
-  1070	
-  1071		trace_ack_update_msk(mp_opt->data_ack,
-  1072				     old_snd_una, new_snd_una,
-  1073				     new_wnd_end, msk->wnd_end);
-  1074	}
-  1075	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
