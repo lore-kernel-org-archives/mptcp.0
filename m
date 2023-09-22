@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFA14174B
-	for <mptcp@lists.linux.dev>; Fri, 22 Sep 2023 16:17:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C80C433C8;
-	Fri, 22 Sep 2023 16:17:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD77A4176D
+	for <mptcp@lists.linux.dev>; Fri, 22 Sep 2023 16:59:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17263C433C7;
+	Fri, 22 Sep 2023 16:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695399473;
-	bh=Wmv2JgjasM45ucSctF2aeiQt2o87qHbqkIXh1kVl7bU=;
+	s=k20201202; t=1695401950;
+	bh=TCl6113yrW63g8QuiPAvTb2+GZciCI7fyYdU9EpzuHs=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=dPOqaY6SNMrMq8e6JI5hUmFD0mwsbmhhBuVPPwC5bgq1YwYT2XPj+kPS5/1LUZy+C
-	 PevAtGtFVk4GSQoZF0AEzbUN44DJFVcccSZAKS0unKOgcRRqgaaog72zbO/LeJjEkA
-	 rltEFYTPtuhSizdv6Nyhp+dr/qJ9t29UoeiavVDBwpimba3Y9fsX6ZOa9dqAy6eyY5
-	 /+MzkwUYM7SEpkZEFIVVmpjgGTU4QaFzn1gWIk0rS0r+lnCpGoLsWc69Gels2v0iRq
-	 6SCaCSrtIN66lQUzqa35wxyPhDqm8Ub+oTtV+8mOPug30xXXhZN6rInolixZdi7k3E
-	 KxBaUlD5efs9w==
-Date: Fri, 22 Sep 2023 09:17:48 -0700 (PDT)
+	b=bbiE3Ya4CtuUoudzZGT4itcFErD6qeoBUjF30Cb79+L/fIKO6OsqpeJyIIKJgISBL
+	 ATJkvQqy+Sdptk/qAh8kfISD5Y9xiZu3UwBQr6CKB2rao6RkJIfBGl+2m52VLfpLdQ
+	 XgiAPzQbTTF3zBG1GHj11D4dy+Kp3xKSpdWIn4xjgtVkAxINnczzIMlTRjWp4TpaR1
+	 VqT/I2P2X0pijYgd2c4Wn+vKS4rSOM8UjmHdvBZPVSKnwcnuyijl2cpgk4cnKJK0zc
+	 gBHfjyRpxkO8MMDqgpk++IdTK30+5U7K8pb3SVvEpHt9665nK62co3p0ytZfc+2k4T
+	 wUpMcCrBcNoYw==
+Date: Fri, 22 Sep 2023 09:59:09 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v5 mptcp-next 0/4] mptcp: misc improvement
-In-Reply-To: <cover.1695368456.git.pabeni@redhat.com>
-Message-ID: <bf5dec6d-edc8-4a71-bd56-3628d195d05c@kernel.org>
-References: <cover.1695368456.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-next 0/4] mptcp: performance improvemets
+In-Reply-To: <cover.1695208066.git.pabeni@redhat.com>
+Message-ID: <f5c987c5-25b9-a156-cedc-5646b2154588@kernel.org>
+References: <cover.1695208066.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -31,57 +31,60 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Fri, 22 Sep 2023, Paolo Abeni wrote:
+On Wed, 20 Sep 2023, Paolo Abeni wrote:
 
-> This series is a follow-up the discussion ongoing here:
+> Cool subj just to catch more attention;)
 >
-> https://github.com/multipath-tcp/mptcp_net-next/issues/437
+> This is a follow-up the yday mtg and to the discussion started from
+> issues/437.
 >
-> Daire reported several sub-optimal MPTCP behaviour on high-latency
-> links.
+> The first 3 patches implement a working support for rcvlowat, with the
+> intended and relevant side effect of avoiding most TCP-level immediate
+> acks.
 >
-> At least 3 different items stands off:
+> The existing check in:
 >
-> * notsent_lowat setting fooling the scheduler
-> * sub-optimal send buffer autotuning
-> * delayed acks being de-facto disabled due to subflow rcvlowat
+> https://elixir.bootlin.com/linux/latest/source/net/ipv4/tcp_input.c#L5534
 >
-> This series is an attempt to address the first 2 points above.
+> newarly always triggers immediate ack, as the any data received
+> on the subflow is usually immediately moved into the msk. That is, we
+> nearly always have: tp->rcv_nxt == tp->copied_seq.
 >
-> v4 -> v5:
-> - dealing with Mat feedback in patch 1/4 and 4/4
+> That causes an unneeded large amount of (tcp-level) ack. After patch
+> 3, MPTCP behaves much more alike plain TCP, compressing/delaying many
+> unneeded immediate ack and moving some of them at recvmsg() time.
+>
+> Such change has quite a relevant effect on the max tput, ranging
+> from -4% to + 40% depending on the specific setup.
+> The small regression happens on CPU-bounded bulk transfers, with
+> not-so-large write buffer and can be elimitated increasing the write
+> buffer size. Even in such scenario, the overall efficency (B/W divided
+> by the total CPU cycles consumed) increases.
+> My personal take is that overall this for the better.
+>
+> The last patch gives some speed-up to the tx path, just by using the
+> 'correct' (or better) helper to memcpy the data from the user-space
+> into the kernel buffer.
 >
 
-v5 LGTM, thanks Paolo!
+Hi Paolo -
+
+Series looks good to me, thanks for the fixes and enhancements
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-> v3 -> v4:
-> - added patch 1/4, fixing a pre-existing issue related. That patch
->   should likely go via -net, included here because the issue can not
->   manifest itself until patch 4/4.
->   Despite by best attempt to test this, I thing it would be easier
->   to just lest syzkaller crunch it more than a bit.
->
-> v2 -> v3:
-> - avoid ingremental updates, always recompute sum(ssk->sndbuf) to avoid
->   drift on memory pressure/decrease
-> - add some needed comments
->
-> v1 -> v2:
-> - fixed compiler warning in patch 3/3 && more local testing
->
 > Paolo Abeni (4):
->  mptcp: fix delegated action races.
->  mptcp: consolidate sockopt synchronization
->  mptcp: ignore notsent_lowat setting at the subflow level.
->  mptcp: refactor sndbuf auto-tuning.
+>  mptcp: properly account fastopen data
+>  mptcp: use plain bool instead of custom binary enum
+>  mptcp: give rcvlowat some love.
+>  mptcp: use copy_from_iter helpers on transmit..
 >
-> net/mptcp/protocol.c | 48 +++++++++++++++---------
-> net/mptcp/protocol.h | 89 ++++++++++++++++++++++++++++++--------------
-> net/mptcp/sockopt.c  | 33 +++++-----------
-> net/mptcp/subflow.c  | 31 ++++++++-------
-> 4 files changed, 119 insertions(+), 82 deletions(-)
+> net/mptcp/fastopen.c |  1 +
+> net/mptcp/protocol.c | 42 +++++++++++++++++++++++++-----------------
+> net/mptcp/protocol.h | 27 +++++++++++++++++++++------
+> net/mptcp/sockopt.c  | 31 +++++++++++++++++++++++++++++++
+> net/mptcp/subflow.c  | 24 ++++++++++++++++--------
+> 5 files changed, 94 insertions(+), 31 deletions(-)
 >
 > -- 
 > 2.41.0
