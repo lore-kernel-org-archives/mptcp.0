@@ -1,298 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F064819450
-	for <mptcp@lists.linux.dev>; Fri, 22 Sep 2023 07:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695368593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rAIr5HtR/rEPpRslHYlQ4TxLEblAqzJGppcJG52iTqs=;
-	b=Zh+1YPxLHZ2L2qOkTUZ9qvopjPuQmsesIVtODd/QtYJ9wQCCCEyz8tMTXoK0QbSYLo/Zqb
-	RE+flTw+IiLoM/zh6sUz0GHgdNgKCt1dH2qXJjoQuJNPCB0di4svtj1zlU1lD/5gN/KpkM
-	k0D8uQYBYMat6Fxo9sRLmehQabhMNUM=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-189-nrJyzXLnP5GprG2yX2igPQ-1; Fri, 22 Sep 2023 03:43:12 -0400
-X-MC-Unique: nrJyzXLnP5GprG2yX2igPQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DD61F1C0CCB8
-	for <mptcp@lists.linux.dev>; Fri, 22 Sep 2023 07:43:11 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.210])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6B512140273C
-	for <mptcp@lists.linux.dev>; Fri, 22 Sep 2023 07:43:11 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v5 mptcp-next 4/4] mptcp: refactor sndbuf auto-tuning.
-Date: Fri, 22 Sep 2023 09:43:02 +0200
-Message-ID: <6e31fe305493173f6c2e33f6351da074d9068a77.1695368456.git.pabeni@redhat.com>
-In-Reply-To: <cover.1695368456.git.pabeni@redhat.com>
-References: <cover.1695368456.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5DC1775C
+	for <mptcp@lists.linux.dev>; Fri, 22 Sep 2023 09:33:26 +0000 (UTC)
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3ade101217bso1179785b6e.0
+        for <mptcp@lists.linux.dev>; Fri, 22 Sep 2023 02:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695375205; x=1695980005; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O4g9yHkKXcf3wCkV7QJXJWnJ5f5QYMOe63wb1G8zrP0=;
+        b=l4nB5gjHeGU/Ze3tcMK0rXEsMQtQc5mmHYFhmTRu/NuFg0EqyVcA+wPrt/g36xoSTj
+         dyRqrcxk10Y8h+b8mUt24SykGSFYwg0yegCMSKt4BX2Op20DY21ZsOGJpI6VooVe7+zj
+         rmB8rSdJeiQ82kF3l8HMq8zaZxow4TCDkKg+0QOQ/wvJi89V4Z3t7ul3Bvuwovakb+s+
+         0QxRNizn1+vnFuwk+P1mbY5pt5ZO8gdEDrpvfNpcLyO1rX8cwOjQBbt+j3GtRLvu2eUy
+         lfMpa/0dmGnJo0EYLzdMApVaTh3OJoJO47nC/Xl5bFUWjPmysORVBgxbDcYHhKz17Ptv
+         8fJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695375205; x=1695980005;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=O4g9yHkKXcf3wCkV7QJXJWnJ5f5QYMOe63wb1G8zrP0=;
+        b=wjxBE7BdPSsCj4wlFYoXrnKndiMTIb3CbjMwUOyE6VXnFlKYsUiOMKo67UHMHIo8Qj
+         eA/zOiavXoqytyOqO6519K2EJB+jpUl1n0qOVnNC712H6z4gxww3AoTXIyP2JX6rp3Y0
+         4xaM/I8/Q9gwbyJS6S5rmKcwa5jLySk3XdIV4xMHRuJWo+3pllR5+m4v54uOx0MYwszP
+         6J0TPMYbUApsrkLda2r4MHhmY578EuUtV4yplenseLA/CxQ1CX5sYRlfTXM7UtXFNH4v
+         hpw3uveu8ipMqfjak6omqTmn3h2LC4JhsIWP+M4b+l46VhKpE9kuyYV3uFYLpYsZjq3K
+         WByQ==
+X-Gm-Message-State: AOJu0YzqHrzZdO0lWuP9D8yMeZ+CPYjKOu8Sv1RWGunywCrHBmcASFrR
+	m7H8AobiVemKScFR3dJgPQ==
+X-Google-Smtp-Source: AGHT+IET08vUcCIisZd0RfCQsf4sC0rjAPLZ6Zei+TXpQhH8oC93cJwAefEqwbqsvudgg4mAcp9l0g==
+X-Received: by 2002:a05:6808:1390:b0:3ae:1cd9:8e0 with SMTP id c16-20020a056808139000b003ae1cd908e0mr892947oiw.39.1695375205212;
+        Fri, 22 Sep 2023 02:33:25 -0700 (PDT)
+Received: from [127.0.0.1] ([13.87.245.228])
+        by smtp.gmail.com with ESMTPSA id k15-20020aa792cf000000b0068a3f861b24sm2764243pfa.195.2023.09.22.02.33.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Sep 2023 02:33:24 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <6e31fe305493173f6c2e33f6351da074d9068a77.1695368456.git.pabeni@redhat.com>
+References:
+ <6e31fe305493173f6c2e33f6351da074d9068a77.1695368456.git.pabeni@redhat.com>
+Subject: Re: mptcp: refactor sndbuf auto-tuning.: Tests Results
+Message-ID: <c10c6e5b-057d-e827-180a-1b068e8ebe77@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 22 Sep 2023 09:33:23 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-The MPTCP protocol account for the data enqueued on all the subflows
-to the main socket send buffer, while the send buffer auto-tuning
-algorithm set the main socket send buffer size as the max size among
-the subflows.
+Hi Paolo,
 
-That causes bad performances when at least one subflow is sndbuf
-limited, e.g. due to very high latency, as the MPTCP scheduler can't
-even fill such buffer.
+Thank you for your modifications, that's great!
 
-Change the send-buffer auto-tuning algorithm to compute the main socket
-send buffer size as the sum of all the subflows buffer size.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-v4 -> v5:
- - '-' -> '!=' (Mat)
- - update cache_sndbuf when setting SOCK_SNDBUF_LOCK, to avoid later
-   triggering non effective __mptcp_sync_sndbuf() potentially forever
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4631115017748480
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4631115017748480/summary/summary.txt
 
-v2 -> v3:
- - avoid ingremental updates, always recompute sum(ssk->sndbuf) to avoid
-   drift on memory pressure/decrease
----
- net/mptcp/protocol.c | 18 +++++++++++++--
- net/mptcp/protocol.h | 54 ++++++++++++++++++++++++++++++++++++++++----
- net/mptcp/sockopt.c  |  5 +++-
- net/mptcp/subflow.c  |  3 +--
- 4 files changed, 70 insertions(+), 10 deletions(-)
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6319964878012416
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6319964878012416/su=
+mmary/summary.txt
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index f727a7ee662d..0a9d00e794d4 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -891,6 +891,7 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
- 	mptcp_sockopt_sync_locked(msk, ssk);
- 	mptcp_subflow_joined(msk, ssk);
- 	mptcp_stop_tout_timer(sk);
-+	__mptcp_propagate_sndbuf(sk, ssk);
- 	return true;
- }
- 
-@@ -1077,15 +1078,16 @@ static void mptcp_enter_memory_pressure(struct sock *sk)
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	bool first = true;
- 
--	sk_stream_moderate_sndbuf(sk);
- 	mptcp_for_each_subflow(msk, subflow) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 
- 		if (first)
- 			tcp_enter_memory_pressure(ssk);
- 		sk_stream_moderate_sndbuf(ssk);
-+
- 		first = false;
- 	}
-+	__mptcp_sync_sndbuf(sk);
- }
- 
- /* ensure we get enough memory for the frag hdr, beyond some minimal amount of
-@@ -2436,6 +2438,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		WRITE_ONCE(msk->first, NULL);
- 
- out:
-+	__mptcp_sync_sndbuf(sk);
- 	if (need_push)
- 		__mptcp_push_pending(sk, 0);
- 
-@@ -3214,7 +3217,7 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
- 	 * uses the correct data
- 	 */
- 	mptcp_copy_inaddrs(nsk, ssk);
--	mptcp_propagate_sndbuf(nsk, ssk);
-+	__mptcp_propagate_sndbuf(nsk, ssk);
- 
- 	mptcp_rcv_space_init(msk, ssk);
- 	bh_unlock_sock(nsk);
-@@ -3392,6 +3395,8 @@ static void mptcp_release_cb(struct sock *sk)
- 			__mptcp_set_connected(sk);
- 		if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
- 			__mptcp_error_report(sk);
-+		if (__test_and_clear_bit(MPTCP_SYNC_SNDBUF, &msk->cb_flags))
-+			__mptcp_sync_sndbuf(sk);
- 	}
- 
- 	__mptcp_update_rmem(sk);
-@@ -3436,6 +3441,14 @@ void mptcp_subflow_process_delegated(struct sock *ssk, long status)
- 			__set_bit(MPTCP_PUSH_PENDING, &mptcp_sk(sk)->cb_flags);
- 		mptcp_data_unlock(sk);
- 	}
-+	if (status & BIT(MPTCP_DELEGATE_SNDBUF)) {
-+		mptcp_data_lock(sk);
-+		if (!sock_owned_by_user(sk))
-+			__mptcp_sync_sndbuf(sk);
-+		else
-+			__set_bit(MPTCP_SYNC_SNDBUF, &mptcp_sk(sk)->cb_flags);
-+		mptcp_data_unlock(sk);
-+	}
- 	if (status & BIT(MPTCP_DELEGATE_ACK))
- 		schedule_3rdack_retransmission(ssk);
- }
-@@ -3520,6 +3533,7 @@ bool mptcp_finish_join(struct sock *ssk)
- 	/* active subflow, already present inside the conn_list */
- 	if (!list_empty(&subflow->node)) {
- 		mptcp_subflow_joined(msk, ssk);
-+		mptcp_propagate_sndbuf(parent, ssk);
- 		return true;
- 	}
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 0fe767a3fb9c..fa27236f58cd 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -123,6 +123,7 @@
- #define MPTCP_RETRANSMIT	4
- #define MPTCP_FLUSH_JOIN_LIST	5
- #define MPTCP_CONNECTED		6
-+#define MPTCP_SYNC_SNDBUF	7
- 
- struct mptcp_skb_cb {
- 	u64 map_seq;
-@@ -447,6 +448,7 @@ DECLARE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
- #define MPTCP_DELEGATE_SCHEDULED	0
- #define MPTCP_DELEGATE_SEND		1
- #define MPTCP_DELEGATE_ACK		2
-+#define MPTCP_DELEGATE_SNDBUF		3
- 
- #define MPTCP_DELEGATE_ACTIONS_MASK	(~BIT(MPTCP_DELEGATE_SCHEDULED))
- /* MPTCP subflow context */
-@@ -520,6 +522,9 @@ struct mptcp_subflow_context {
- 
- 	u32	setsockopt_seq;
- 	u32	stale_rcv_tstamp;
-+	int     cached_sndbuf;	    /* sndbuf size when last synced with the msk sndbuf,
-+				     * protected by the msk socket lock
-+				     */
- 
- 	struct	sock *tcp_sock;	    /* tcp sk backpointer */
- 	struct	sock *conn;	    /* parent mptcp_sock */
-@@ -768,13 +773,52 @@ static inline bool mptcp_data_fin_enabled(const struct mptcp_sock *msk)
- 	       READ_ONCE(msk->write_seq) == READ_ONCE(msk->snd_nxt);
- }
- 
--static inline bool mptcp_propagate_sndbuf(struct sock *sk, struct sock *ssk)
-+static inline void __mptcp_sync_sndbuf(struct sock *sk)
- {
--	if ((sk->sk_userlocks & SOCK_SNDBUF_LOCK) || ssk->sk_sndbuf <= READ_ONCE(sk->sk_sndbuf))
--		return false;
-+	struct mptcp_subflow_context *subflow;
-+	int ssk_sndbuf, new_sndbuf;
-+
-+	if (sk->sk_userlocks & SOCK_SNDBUF_LOCK)
-+		return;
-+
-+	new_sndbuf = sock_net(sk)->ipv4.sysctl_tcp_wmem[0];
-+	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
-+		ssk_sndbuf =  READ_ONCE(mptcp_subflow_tcp_sock(subflow)->sk_sndbuf);
-+
-+		subflow->cached_sndbuf = ssk_sndbuf;
-+		new_sndbuf += ssk_sndbuf;
-+	}
-+
-+	/* the msk max wmem limit is <nr_subflows> * tcp wmem[2] */
-+	WRITE_ONCE(sk->sk_sndbuf, new_sndbuf);
-+}
-+
-+/* The called held both the msk socket and the subflow socket locks,
-+ * possibly under BH
-+ */
-+static inline void __mptcp_propagate_sndbuf(struct sock *sk, struct sock *ssk)
-+{
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-+
-+	if (READ_ONCE(ssk->sk_sndbuf) != subflow->cached_sndbuf)
-+		__mptcp_sync_sndbuf(sk);
-+}
-+
-+/* the caller held only the subflow socket lock, either in process or
-+ * BH context. Additionally this can be called under the msk data lock,
-+ * so we can't acquire such lock here: let the delegate action acquires
-+ * the needed locks in suitable order.
-+ */
-+static inline void mptcp_propagate_sndbuf(struct sock *sk, struct sock *ssk)
-+{
-+	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-+
-+	if (likely(READ_ONCE(ssk->sk_sndbuf) == subflow->cached_sndbuf))
-+		return;
- 
--	WRITE_ONCE(sk->sk_sndbuf, ssk->sk_sndbuf);
--	return true;
-+	local_bh_disable();
-+	mptcp_subflow_delegate(subflow, MPTCP_DELEGATE_SNDBUF);
-+	local_bh_enable();
- }
- 
- static inline void mptcp_write_space(struct sock *sk)
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 453d6c78c25c..7478254801e9 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -95,6 +95,7 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
- 		case SO_SNDBUFFORCE:
- 			ssk->sk_userlocks |= SOCK_SNDBUF_LOCK;
- 			WRITE_ONCE(ssk->sk_sndbuf, sk->sk_sndbuf);
-+			mptcp_subflow_ctx(ssk)->cached_sndbuf = sk->sk_sndbuf;
- 			break;
- 		case SO_RCVBUF:
- 		case SO_RCVBUFFORCE:
-@@ -1415,8 +1416,10 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 
- 	if (sk->sk_userlocks & tx_rx_locks) {
- 		ssk->sk_userlocks |= sk->sk_userlocks & tx_rx_locks;
--		if (sk->sk_userlocks & SOCK_SNDBUF_LOCK)
-+		if (sk->sk_userlocks & SOCK_SNDBUF_LOCK) {
- 			WRITE_ONCE(ssk->sk_sndbuf, sk->sk_sndbuf);
-+			mptcp_subflow_ctx(ssk)->cached_sndbuf = sk->sk_sndbuf;
-+		}
- 		if (sk->sk_userlocks & SOCK_RCVBUF_LOCK)
- 			WRITE_ONCE(ssk->sk_rcvbuf, sk->sk_rcvbuf);
- 	}
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 7b98bec4c25e..a72e710b8332 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -421,6 +421,7 @@ static bool subflow_use_different_dport(struct mptcp_sock *msk, const struct soc
- 
- void __mptcp_set_connected(struct sock *sk)
- {
-+	__mptcp_propagate_sndbuf(sk, mptcp_sk(sk)->first);
- 	if (sk->sk_state == TCP_SYN_SENT) {
- 		inet_sk_state_store(sk, TCP_ESTABLISHED);
- 		sk->sk_state_change(sk);
-@@ -472,7 +473,6 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 		return;
- 
- 	msk = mptcp_sk(parent);
--	mptcp_propagate_sndbuf(parent, sk);
- 	subflow->rel_write_seq = 1;
- 	subflow->conn_finished = 1;
- 	subflow->ssn_offset = TCP_SKB_CB(skb)->seq;
-@@ -1728,7 +1728,6 @@ static void subflow_state_change(struct sock *sk)
- 
- 	msk = mptcp_sk(parent);
- 	if (subflow_simultaneous_connect(sk)) {
--		mptcp_propagate_sndbuf(parent, sk);
- 		mptcp_do_fallback(sk);
- 		mptcp_rcv_space_init(msk, sk);
- 		pr_fallback(msk);
--- 
-2.41.0
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5757014924591104
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5757014924591104/summary/summary.txt
 
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5194064971169792
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5194064971169792/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/d8c91c576df6
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
