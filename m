@@ -1,46 +1,45 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB73818
-	for <mptcp@lists.linux.dev>; Sat, 23 Sep 2023 07:55:22 +0000 (UTC)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-501eec0a373so5614412e87.3
-        for <mptcp@lists.linux.dev>; Sat, 23 Sep 2023 00:55:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BF563B9
+	for <mptcp@lists.linux.dev>; Sat, 23 Sep 2023 08:20:13 +0000 (UTC)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-403012f27e3so36105025e9.3
+        for <mptcp@lists.linux.dev>; Sat, 23 Sep 2023 01:20:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1695455720; x=1696060520; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=O64NvoB1FxjbGCVaNSnzgxJIeuN2vjN9z1E+ICwvUnA=;
-        b=Kn95l+nZBB6+EqlUL1lcdWk3eWVCMF8tYJhRmQoEL72TL2WhNE/Rc7YboER/U8gCsD
-         qBAAB7Q04+kK9tfQRKBmuF9ny4RWuAp8cgPVe9NVZgE1kcinS31WUJespzF3XPGfeDI0
-         nV3Ht1fInOQuh3lyN4iWg+sMCjxGi/rmj6b3dG5B3eigWIIalR/QOa9ZWYF3b05dZ/5t
-         m8SDhG2BxLzvqGCuFuRifqNEhT+a/ThM41FZeCu8uhfDF9KhTZYprCV3i1kMicj0MTnL
-         ELjJ9767CWkAPcfzN1cL8tttlXbjJxwi951MmhXIFQ8RVkCcb757O46FemppwK4NMGpH
-         VAsw==
+        d=tessares.net; s=google; t=1695457211; x=1696062011; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i1VwSS+vdbq2EXjkKzFeLrLRm6rx7Zd9Gy7Tzol3T7g=;
+        b=7weKPB1gM45886VgiWguwtmYRTEuB5eyxjqdaZOJquU/uwykzqYp2GzFAPuuhVeDQJ
+         Ds1/p0t+JQZlyZ1PoflF2YFg6gQqZV9Qa2acKEY0cDapZDEBifuFIeDStvJa4OCIe94R
+         gf4awyb0fXwusUsUmayDkNRrLZdjoBA+6Zkt79DOJpLuoaqCP0T40bmMf1MnMLz4cx2A
+         3OcB7MyZY7WRx003UIq2Ipi8i5snOkniVtcz27i9PmXF2W8tf4pGnubZdq6j+x0zyovD
+         Yg+Nkfu4tJoRmRNxzIsYgRwrAndG55dT0JkHhzPgGrIqBtfpBKmZBwjhZvDaMMSsUYcT
+         gP3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695455720; x=1696060520;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O64NvoB1FxjbGCVaNSnzgxJIeuN2vjN9z1E+ICwvUnA=;
-        b=CA/R05iIC6F1BH+KDOgdSijygNwO8MhdnI8T8xpqTfBOHr2ScIGQ/5EMGul2+0YHhG
-         PoTVKQUfPI06GKHUAiPa0Xh+5eBn5Wtvo5BlvNrRXhaupbJvnpqxtWNYKuXRzEx9Vvas
-         hJdFQlwvoZF//dTIT1bolKOHNJAJWzFxsw9OMiAxskIRGRACqWV2rdMgKfOsA1Uwi9n2
-         wFSTEFssD/D22629csN0fntSH6QVHIhus9wD5JT3OcqFWkABObsjVzuWfQR0WGh6kXBU
-         GI3Q04UJKgM3xEv58+FaoLh6Z2dEHpDLtJBOfpOBpJM1ZLC227iOAvp2bAr09xFy83cy
-         TvJw==
-X-Gm-Message-State: AOJu0Yxrt1f7ZqqWVjyRv6YF+4GADkVZZFYWT0tNXKenYOZ07/YQfNf5
-	eHDHsav/NMb3xXjUvCJD/8Pf5w==
-X-Google-Smtp-Source: AGHT+IEFhTqMKU4RMr3PKHAjXloNbAXwXlReNo4bqSbxyspwaDUHb3W4RiUOAOz/jkx4taDJZd1mqg==
-X-Received: by 2002:a05:6512:318d:b0:503:367c:49c6 with SMTP id i13-20020a056512318d00b00503367c49c6mr1769454lfe.45.1695455719963;
-        Sat, 23 Sep 2023 00:55:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695457211; x=1696062011;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i1VwSS+vdbq2EXjkKzFeLrLRm6rx7Zd9Gy7Tzol3T7g=;
+        b=ZpG/TWxD/rXbb5Nrcekojgs2JKacCwQlPrtEBCGMBKrrbSrHuLj3Gz+VNlpsupTo2F
+         ND2sNWxaZHqZ4lkdipyyTE/iRfA9euIk5ShHPfdII16IjV4+mDSz9yhuoLVw3Z9LZksW
+         +QFr4G2YTm7NNFtT5q/4F4w8lefZGa93ofTHrYdot7HUe5ujjIMdkL7PBeH6bGHQJG7z
+         kZEFg5UmcBhIJy6wVySaDgr/lbw2z8pAKwaviPSx4jPYeA8VeUvttvl4Pds2rFADqxsP
+         Nx/2mLdTjesgeizPFKgCKvLAQ4pxghs/KCj+SCppuDWim20zU+AM9ooBjCdREUGT0UA0
+         HTvQ==
+X-Gm-Message-State: AOJu0YwlDBy3AwnlWAImPX+u3RB/zzIQitKKDGGsS8rgf5EQDiyi/9+S
+	MhwM2arVU0jCJ9LvLE3CaA/l6cGVsVd2sZaHQXN6ew==
+X-Google-Smtp-Source: AGHT+IHkssXNxHGGOKttdY2PRIRuugQ6H9v62onlA3DRF9jpBIRIy4zErntRCTJfUwDPmQRTc9YJRQ==
+X-Received: by 2002:a7b:c456:0:b0:402:e68f:8898 with SMTP id l22-20020a7bc456000000b00402e68f8898mr1355730wmi.0.1695457211365;
+        Sat, 23 Sep 2023 01:20:11 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:1c88:7af9:498d:bb0e? ([2a02:578:8593:1200:1c88:7af9:498d:bb0e])
-        by smtp.gmail.com with ESMTPSA id s13-20020a5d424d000000b0031f729d883asm6280626wrr.42.2023.09.23.00.55.19
+        by smtp.gmail.com with ESMTPSA id y23-20020a05600c365700b003fefe70ec9csm9378586wmq.10.2023.09.23.01.20.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Sep 2023 00:55:19 -0700 (PDT)
-Message-ID: <b0102ef9-9dd1-4622-a7ba-117dc3b14c0a@tessares.net>
-Date: Sat, 23 Sep 2023 09:55:18 +0200
+        Sat, 23 Sep 2023 01:20:11 -0700 (PDT)
+Message-ID: <8817b2da-3a3b-4626-ae94-698759b3f026@tessares.net>
+Date: Sat, 23 Sep 2023 10:20:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,11 +47,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v4 0/6] mptcp: convert netlink code to use YAML
- spec
-To: Davide Caratti <dcaratti@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1695201346.git.dcaratti@redhat.com>
+Subject: Re: [PATCH mptcp-next 0/4] mptcp: performance improvemets
 Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1695208066.git.pabeni@redhat.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -97,43 +95,58 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <cover.1695201346.git.dcaratti@redhat.com>
+In-Reply-To: <cover.1695208066.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Davide, Paolo,
+Hi Paolo, Mat,
 
-On 20/09/2023 11:24, Davide Caratti wrote:
-> this series converts most of the MPTCP netlink interface (plus uAPI bits)
-> to use sources generated by a YAML spec file. Patch 2/6 and 6/6 have been
-> individually verified with kselftests.
+On 20/09/2023 14:45, Paolo Abeni wrote:
+> Cool subj just to catch more attention;)
 > 
-> POC:
+> This is a follow-up the yday mtg and to the discussion started from
+> issues/437.
 > 
->  $ sudo  ./tools/net/ynl/cli.py  --spec \
->  > Documentation/netlink/specs/mptcp.yaml --do add_addr \
->  > --json '{"addr": {"addr4": 16909061, "family": 2, "flags": 4, "id": 10, "port": 0}}'
+> The first 3 patches implement a working support for rcvlowat, with the
+> intended and relevant side effect of avoiding most TCP-level immediate
+> acks.
 > 
->  $ ip -j mptcp endpoint show id 10
->  [{"address":"1.2.3.5","id":10,"backup":true}]
+> The existing check in:
+> 
+> https://elixir.bootlin.com/linux/latest/source/net/ipv4/tcp_input.c#L5534
+> 
+> newarly always triggers immediate ack, as the any data received
+> on the subflow is usually immediately moved into the msk. That is, we
+> nearly always have: tp->rcv_nxt == tp->copied_seq.
+> 
+> That causes an unneeded large amount of (tcp-level) ack. After patch
+> 3, MPTCP behaves much more alike plain TCP, compressing/delaying many
+> unneeded immediate ack and moving some of them at recvmsg() time.
+> 
+> Such change has quite a relevant effect on the max tput, ranging
+> from -4% to + 40% depending on the specific setup.
+> The small regression happens on CPU-bounded bulk transfers, with
+> not-so-large write buffer and can be elimitated increasing the write
+> buffer size. Even in such scenario, the overall efficency (B/W divided
+> by the total CPU cycles consumed) increases.
+> My personal take is that overall this for the better.
+> 
+> The last patch gives some speed-up to the tx path, just by using the
+> 'correct' (or better) helper to memcpy the data from the user-space
+> into the kernel buffer.
 
-Thank you for this series, the new version and the reviews!
-
-Now in our tree (feat. for net-next):
+Thank you for this nice patch set!
 
 New patches for t/upstream:
-- 9efccfde1d18: tools: ynl: add uns-admin-perm to genetlink legacy
-- 34e8d83f1515: net: mptcp: convert netlink from small_ops to ops
-- cf4a7c60248c: Documentation: netlink: add a YAML spec for mptcp
-- 25385acaa5c7: uapi: mptcp: use header file generated from YAML spec
-- 11351fc8e13b: net: mptcp: rename netlink handlers to
-mptcp_pm_nl_<blah>_{doit,dumpit}
-- 7d081cf1470a: net: mptcp: use policy generated by YAML spec
-- Results: bf9368cc6ffb..1c2adc4e573c (export)
+- 0188ee6897bb: mptcp: properly account fastopen data
+- ea3f76f3c64b: mptcp: use plain bool instead of custom binary enum
+- 03cdb460a417: mptcp: give rcvlowat some love
+- 11b40c8da614: mptcp: use copy_from_iter helpers on transmit
+- Results: 1c2adc4e573c..f2baa63004ad (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230923T075423
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20230923T080409
 
 Cheers,
 Matt
