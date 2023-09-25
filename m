@@ -1,46 +1,46 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2051.outbound.protection.outlook.com [40.107.21.51])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2087.outbound.protection.outlook.com [40.107.22.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB96B125A0
-	for <mptcp@lists.linux.dev>; Mon, 25 Sep 2023 08:44:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7C9125A0
+	for <mptcp@lists.linux.dev>; Mon, 25 Sep 2023 08:44:54 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L3lQjSOTgfexNoUMqA0MvNTZ0p5iTiIL5EiZcTJ3TLmKdTkzWLxPjyHPZovJM82WjZHTpdm9OPgzrf35SfC1HRI7ZHlUz8BmtoXWlFL7pm9P665bhi/y7/kXFmz+CkwCvnmKdTGfUPZqQdy+jEdYBVxc0diDnxLOUgk5O58RkOFXZdR+fseOaXUmUfeFb1Bwk45cBUpFZRIFIDTMGEHHyfnT+F8KuoqSfd/3XbiWpN0UVLKk2D1+pI9w0m2dzDStzwkr5cpQFUfVeZOSDiJfaZkOAYawAxVsHQP2mIJYamHEkcTl/Bo0Q6oquCBSTIni1XjpozLVWn00jbIqZP3onQ==
+ b=mJ+IuJySxm1Q7SD2+6V1DAK5cVzlNLFQYX1XW3Uq0INRFUL1oS148JpKiEWZ9FVatYqnUlKhpFcThjaixdt3bK3W/0wGY6ovJXUh3TWtE1Rl93Oky4GijS5yWFQr0DWPf8tV5/B3sKbO849USsub90clZ2h5pUt0Vh29yoCqeYwmx4dKMB5KBgEh9RW4sliWWv5aFjYrXEs/Bi86sOvrOA236UqLKox6txCnCH7Gkkoci+HL8F1xB/Fbc26lexjcbrxgZkc/6HEnYMjoIzi+cjmtLb6i8jXHkA0CWCDw+E+wuZe7FjFOJbruA9Qgqmy7MX9ZnAHtB04O5aEXDPn3sQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZGhZiuYYIVVlw+Aybh0lCrW7ROExttZPli2QbbzK4hI=;
- b=eNru2QX9/NGza1yG7t9TMm5PQAzRjXCR4TVIKD/gLuDkj70g1qnq5TcWHWQbuFTbp6knBwuLXz720tukhRJ3cFvvmUgT30LmMLVQdVBzIJzEDD6QjEz0weQRLAm+Q38A4vG9dfukkmsZh2yUssnMsYg9CzAlpr3EGNrj2CUplAXB6KSPdpvlbUFI3yUfoD1pYJZW+reEHEoeWnSj9cf162iWxUZho+lHPe+e+3zAuA6/0vzn4evlgiLSLreqF974X4AAzC1nT5Mth5BhVmXokuORTtF3D0H20Oqn0e2+CNSRJLlXK2t+rJ4gejpFWCzBFlpvW2/280abqLXYP/0YuQ==
+ bh=DfiUlnaOL6tni4TgrPOu8dYkMi9w0/0Qpz4rQ/NlGbY=;
+ b=ZapMVwqvh9ppHbUG9m1ZSN5LQ9u0WymOUysrDEfVRapMomAq4ia4RhTY5BeZMIhNQOUlhpDy7Curvtdsyck2gXxdYsN27j/S7iibpQzALB1NsF4z3jyPrBKJ64P3vo4MFrNhmy0fhRZI6S0BKuduJndT79nvaRd13YV6mT16G8mkShxGgjcAwpQ/cF87ASxjUEAiglzcF03OcEbvshBP9hqLQ8fP0mTxWKccvo4j1C633nFJlkA2NxEaZnwyuvMCRb4okDdB21bqR794oYdd01kCDDLcXrZ/NSKuFuT27S7U1Am9NOYuekcLxM0f5dl6KUuWnubIx70orMCdXAg9rg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZGhZiuYYIVVlw+Aybh0lCrW7ROExttZPli2QbbzK4hI=;
- b=bwg41+ExCmmCIE6IeYGq6eFeUDRmJCrDZtZ8MHYgBsFyWwDqTUCFYJaQdQkDYrvH16RpOD1hq8+gRbA8K4CEz5gkThJJq+uxH+5QOfp/yGBQd67g+KVdWK+UDcQ/R6k5daYbqD8p4T4wQT0Yo9zOa872P366hEiibMNIvA9fTKy4WPs5GGBthQIf/84+fetCoqS1fanqCMve4JCq9wrunUgs+WXWLt0BuSz1mq8jEaWDb2YVn8S3XqurCdd5NuAqpamum34UpBkydi6KHKO9rsx/YgOgWo1Qv5UCGu9lyJtlcrRGQ8MdiWNwQxYLetvkkGMLpJtOTCa6HQ3WGWxKYQ==
+ bh=DfiUlnaOL6tni4TgrPOu8dYkMi9w0/0Qpz4rQ/NlGbY=;
+ b=N5HxsgPjug1tSUW0djlbAWEOyyljyXzWA5eOBr754JEZyPpCQAk07v1JbLehMdbDQjPNoOUmMuV23hIjSMw9GiAQrZppkJYDMUhaJEKjIU21pUsi8WyZc4wkJqzP9KCTVR8ZIHG1NZnSoGQ3q/8/UqAezYl6vSLgYPZtOTM/atVlZOIt/xA0S9dyeHSznGFpV+3T93w8d14IgP//Cg2UsBvMVuoSs+8XOErZhR5cK+8kIkVMPpZ2w57BLjWhZUQ+NbzLx8G+X/EO/K/ReS1kOzYpg0njZUsoXBQ3OwsUnyfsr1raGyWENtZaDD65osOEWuN0BZRIlUEo9Q1xpbBfSQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7) with
+ by AS5PR04MB9825.eurprd04.prod.outlook.com (2603:10a6:20b:672::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.28; Mon, 25 Sep
- 2023 08:44:45 +0000
+ 2023 08:44:52 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::2867:7a72:20ac:5f71]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::2867:7a72:20ac:5f71%3]) with mapi id 15.20.6813.027; Mon, 25 Sep 2023
- 08:44:45 +0000
+ 08:44:52 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v3 26/29] selftests: mptcp: add mptcp_lib_get_counter
-Date: Mon, 25 Sep 2023 16:42:05 +0800
-Message-Id: <b9425bc5bbc9a0c66a0c5f026b176d5ebe0d4d53.1695631132.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v3 27/29] selftests: mptcp: add mptcp_lib_make_file
+Date: Mon, 25 Sep 2023 16:42:06 +0800
+Message-Id: <5b20fc53613f849a9e9ef3ebb132e7494476762e.1695631132.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <cover.1695631132.git.geliang.tang@suse.com>
 References: <cover.1695631132.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0039.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::9) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: SI1PR02CA0038.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::15) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -49,498 +49,179 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|PAXPR04MB8510:EE_
-X-MS-Office365-Filtering-Correlation-Id: c67d28cc-c815-430c-ebf1-08dbbda3ab08
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AS5PR04MB9825:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2f875e11-e804-43b7-0636-08dbbda3af48
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	yI1OD9PgCs/7npdh149GJrnusSCM/l1mer1+qFM3GFLNhce8twseyqbLl2+2mCBQQkk8gqscaLjhs2sp9LdKgoBAG4YM0NA/v74doznDRW835xqqLW1Vu7VA/cSWK50P4E22uAal0at2kkA1jsOVHkpb9TWEa4ZaFdiXaZWMsCQlMNMAcdS9FqUPnUi5bWUFB61UxfuJjOfo+c3uMGPNO3sgRXhNDtXY2t4u/D/fm3Iq0CUzc+1h1Va5RvdBP5OztJyfnfJ3ZcflBYT5UgoN2AIauiLZ94VsGc6afBXwn6pCtLJIrwpOU2bQWeLxCRvgHHciPiHeI9ILIR27xlNF3aS+F/B82QorXQCSRz9Odx5W+6OHQJ9WZ0eal+tBf5OjDhoocsiLLNxM41YF5+vTaelcvSWMfhU4IPpBs4VAklW9adPCWM/8nus5IG+tw/fqOCZt5rHMHstBSyd00CBSmU33cNrQtwyT0+mA8MxAxKgnKPw8EDSnSk/2Um0R1seQq5UUH509l3iv/ssAKfI/QQSyZyxg0hfD0ZQMdMiv++SV20JbAvet+umc0xiue7J6
+	N0lpEYKcjz+WnnyHV4tE9HdQyZ6dlfnrqyu5WvB/Ab12c3+1XLXdF3GEsVC0Bzwo5nfc2BHS5xWnKG+JfBfTXFpbcsky8bkJc4nWsuN61DpRODOoyBT28pWIx2TPmaS59zVzTOZnPVe/2Trla8ATbzLWiaGK7Zf8fglqFVFg5fsMMh3ScHFyfg6D9ryOrIaHsFfbcvYYzG+UnPZ8uS/T85c8nhwrbqDm9qautkYfoRsfWkhzKQQPfN5wt3u8C4Yiixcnb5BeoYKBiMVRAzMxShkCfoZPU+pt9jxesCuXPnbUQ6FlGLWeAURoNmlCo5L/r6f0FzEoGx73qXhMdkJgz451fkCvj4wfzJ/3CdA+t2mbzIXiLiPOnCc9agke1QR/D7MqrLIx8frQrfeAyMa/71GnEXCPsHjOW12EL1CV4rpuY1SXMifdkxHwVbsoKlvtMBDSIfccQCIL52ebgYR6G6EvQQPB4buHisQVYCpuGIqYd55KnTDCychB/jKrkOAUwzTfL5fE+NwrO9lTNvyuXMfVkVO4UpD/Mwnc3w0b9acfQu9vQrus2a3aaZLDPfAi
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(396003)(346002)(376002)(366004)(230922051799003)(1800799009)(186009)(451199024)(6512007)(6486002)(6666004)(6506007)(83380400001)(86362001)(38100700002)(36756003)(107886003)(2616005)(26005)(44832011)(2906002)(30864003)(8936002)(8676002)(4326008)(41300700001)(66556008)(66946007)(6916009)(316002)(66476007)(5660300002)(478600001);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(376002)(136003)(366004)(346002)(230922051799003)(451199024)(186009)(1800799009)(6512007)(6506007)(6666004)(2616005)(26005)(86362001)(66556008)(66476007)(66946007)(478600001)(6486002)(38100700002)(107886003)(83380400001)(2906002)(6916009)(8676002)(36756003)(8936002)(4326008)(44832011)(5660300002)(316002)(41300700001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fJiHEkO/iXWasBacr5Ie17SjkDrOIRNOlP4JhigSp7i+PgSZvjGpEikCVYjC?=
- =?us-ascii?Q?CHCCpE+1ekwfINHIe8Zx8O5z5ZH56GQ0nHatWkMa7nsiCP+02+A/Qg78ixcv?=
- =?us-ascii?Q?7U9ygNZ8t9HU3yw/paBowouhi1Lv/W5zqqH9eJNFIrlAIPHVnYwCKG4IGPhP?=
- =?us-ascii?Q?/sYltk5sH6Q8X2t/PijD2gftKkwPxGgDT+yIwhJmc0aTmoXysLl/l2TuJ3BE?=
- =?us-ascii?Q?J9cjXshZKabiHiueVZ1HNHvufGLibSIWKdtf7v8qPDZg2vk5r3fTN9LXb2od?=
- =?us-ascii?Q?4ehdLJ496nd/lRLUidtHIYJ1XFZnC69FmGXmf4/o5NZ0pxB3Qfwxs5Xna0i5?=
- =?us-ascii?Q?1+L9lAWL+Txh3IN+4t7i9ExlKP7qbe3xBUGyhjuPUpsp59rQ9HF8UVAfvixV?=
- =?us-ascii?Q?uZbgnATgXKjTGExLPK/IIsf52jS0HNVjv07oq3EvJosch14kT+9T31CNmygM?=
- =?us-ascii?Q?3JahZvbW9TEkbWihjptpzswMVyduqSo3+xE+rVeyJP8kt6LK3kFQnkZMnhiB?=
- =?us-ascii?Q?tDNwjM2htqFdeKQYOH/BNaTZYig7jlwyTtMf2Cc+2ZRMdcjCX0ug8ZzcNxZR?=
- =?us-ascii?Q?XL4ojDRqWaPfoet/dxuQJIvMQTkcILMyzPE0zZ9y5kTSTM8TATxX8nD23ssE?=
- =?us-ascii?Q?hXZKMsMYU5Hjof+wjZG/OWXIARP0a9RUvzZDIKkdMtSYqQAutXDCqOOE5gd9?=
- =?us-ascii?Q?IcPJyq9EEtNu8ll4Gq+JSBIU2kdg0+aDH3fN89TGA8Xcuq+1GYWZZmMW6fAD?=
- =?us-ascii?Q?7lEwRSSPWhgmvLOHtKDS0tQc0Qa1cYuT1RMwp7JXzGEE6o3EKsfZ6NBDBMDo?=
- =?us-ascii?Q?kKpciK8yhlYkzOk0TIkN8nTEkdiu8mW0fhUouNfpfddyQ3H9vHPWvxFwuxsQ?=
- =?us-ascii?Q?pvOidrgjDCxonYNbuBnOcMUm3DbzbTF3C4zrc+5n4oM66Pur3yWN4ZqHDsLi?=
- =?us-ascii?Q?bYZo7YY2mkWRnS19MlTluhB9tRPzrMOAKtF8eiB6Pb3NZKOh6hK5mqPcY2FA?=
- =?us-ascii?Q?jh7nRImH0A+CH7ts+gkuxGkHC60cd4NdVmdKot7gC5rNfqxXwPOJLjtbgypC?=
- =?us-ascii?Q?y+4+7Q3JFf1kebIoVjT2tgiHwqIgtPpB8cXZBNNgFwaPmpsk1xO0R84F24gK?=
- =?us-ascii?Q?WgSB/COuOw+UoC34LNfN7iBQ1AM8OvtLCMPAZf6h+04Yh/NtFOj1Qv98JtIb?=
- =?us-ascii?Q?9FSaxcWHj/rwucLRhJNxbWYgGi9d9Ppj/8Rpsz2bMye+uwUgzgvLzdBzlVjB?=
- =?us-ascii?Q?7fuaR5kCmRb6kNI/V4Lc7awDABHbpqGsCj4ozNDyOKnwgl5txwreR16cTNfT?=
- =?us-ascii?Q?1pzGW8N8Ch1pdo4BejeZqxcqKWe5dQgTJLPl5LS5d4WYmWJE9U2ZZSYfCKdR?=
- =?us-ascii?Q?WyVxa0nT7QIwfpTkq0wZpqh3Sqr9btPp+tJWfaasVLH1yirZ+WRfavaOh+Bn?=
- =?us-ascii?Q?4qla/Kz9737D3PPzq4aPxZDZlP2rb/93/mZGZUswfKNw3qmEeg+5I2vkRG4x?=
- =?us-ascii?Q?iNzlLcTdk6r0v9bFD0NqbotCIm2mlHanLftFOrmK3jeoauh33rRM2Uri6GWr?=
- =?us-ascii?Q?oZb1c6fJ1Gj3b2U5LAm2ivbNDLOFxVlKX7hCyEPa?=
+	=?us-ascii?Q?c/Zp2POinY+2iSB4lAz+Fov39aZ8zP73rKgX1VomwIayzIiIgesHnFZmW3pV?=
+ =?us-ascii?Q?G/ajafA69kc7NO5QVAqSdEk80yI1UKzR0T74SKmnCy6CWAnwO6xfQUnVwJkP?=
+ =?us-ascii?Q?IKD8536Mh/w3bzKEkm3GvYKbuUQZg+cpJDw/OlHcs8eCi12M0E3x5XtbvvOt?=
+ =?us-ascii?Q?BpZPDYs0dvgOLl+/PlR5YVgo5nBhNid7YJ67ZfXFqiRhNwIxp+BaC06KwVwC?=
+ =?us-ascii?Q?LlQMpgqVTrz9XnnU6DrMVB+gnY6G+3egkvPSzH2VqkjXp8pyXw5Hls1wh33T?=
+ =?us-ascii?Q?BDCCi0rc5O67mgs6s8kUImZwkF8xKNrMeahEs6tOcKx0klYkkazoeOkNLDOB?=
+ =?us-ascii?Q?3zdW7cSQf9SJADWvXitmAXs9F4FDUkshNcm6B1y0q9siiiAGupLnAjw9cUjP?=
+ =?us-ascii?Q?GEr7M1J8z5rPdf68JS7YMGEHbbUmlHJpCTbvhB8weIeOT3Z1SHsTS6ZZnrJC?=
+ =?us-ascii?Q?mIaqSuH6mFy/Hd910H1dLwNy0SvuJjRMW3XsC0I+APWqx4sSDv3oWRPK8qDk?=
+ =?us-ascii?Q?SfoYfKRNcqKY6+mEo4UmrCktiSV8w78z5Omuh5j3mRFLUGgsEgY67Z2IBRSD?=
+ =?us-ascii?Q?Cz/ydPpfi/tj5LoDz5PGCbf8ENUvclhVKesUQ57RiiEGPUSUUS+jX/2DRM4D?=
+ =?us-ascii?Q?XKlBqFDWCMoE3c859PK+EwdEXpjIkaeNDwKOwC2e8bh4MgacY1bpUuG1uCda?=
+ =?us-ascii?Q?ZmrbndkKHHHF+lk+B0oAoo/omRyzT0h3NHi6yzJh+8bROd+h37WQzIH4wb1f?=
+ =?us-ascii?Q?Jie+Q9ZgalVWHoN02K+/ojY8LrilqnAnsYHEFKgfNJUrZNiB8tRl+Ey/OZdA?=
+ =?us-ascii?Q?8bciaKku6/gETS35ZfJNG+XpQxemEsCubAdvFMM47IEsHsHiNTegoEj2a+rS?=
+ =?us-ascii?Q?a6SL3TPLVymB12yRAt2feid522PWl9kvOttHPtWDh3A5AbVBOHDTEwcnPV3I?=
+ =?us-ascii?Q?FbPjc8RZ7iG2bFIa3J/vobzPHjW8JDrllq5ieH98usXdG3YOCPWaBj/gKwk7?=
+ =?us-ascii?Q?1zytyAhv80iUl9kM0Oqp1WX0WxXZcw48RvaWyV52gpKny0TSLzWNWPtfrM+g?=
+ =?us-ascii?Q?qpNUuk6ghgUz3m0wHGjDTrUVxcPUtm9dPZeesssrWlUXW1lbjc+AX54TpdNX?=
+ =?us-ascii?Q?bhbYebwRcZGHfUnCfI1q3iUcv1ORRTRN9RvD0PRWHiVg0KCFnqLC4tZUZoU3?=
+ =?us-ascii?Q?RAiNaWfvlY7F+usZPTMZEby2GEwJ/L8UCCeQLYjhSktIOlw0pVQ6oKpElOQM?=
+ =?us-ascii?Q?EsMQsS1oicEus6WFnTm/GnJ7H267nNeJjwLudKH2/Ep83O70YDh+k6dkRCmH?=
+ =?us-ascii?Q?MGb7ooGocig3V9x2cWftgDBQ0bLBSMT2DITbkjWClPyEG2Xt9QIpuFZxw+TW?=
+ =?us-ascii?Q?t6HZALOOvVaz9iCV+zR2VttkH+baPC20raWX6q3CqcxlfHt8sMgXNXYNYcqS?=
+ =?us-ascii?Q?mtIOCdp+ViPbLSzNql77mpMYo0KhqiiELg3Brow4+Z9IGfv7V4ViDe3aU1JA?=
+ =?us-ascii?Q?It5C8jq//XHyXAjd/N86N1oKFwbZWhH2kib0bg6+4iIUNHOprmlW2gYXXoLG?=
+ =?us-ascii?Q?dZqAJ2OvyGqev6wRYe49GcyIDOHf/kH+4xXf9Bk1?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c67d28cc-c815-430c-ebf1-08dbbda3ab08
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f875e11-e804-43b7-0636-08dbbda3af48
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2023 08:44:45.3583
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2023 08:44:52.4374
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jl6juCATFmCbsva11KXwr8lkpi1PxHPIcn4Waj6xhsk7MVS3RM5kVR/X6dX2KCSjT4DDB3GBWqq0K+YeQd33eA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8510
+X-MS-Exchange-CrossTenant-UserPrincipalName: voRs5YxfT0fq0irWDcB4MR2htiuZxuYrC7gEM8voyR41UrMQn5P/3zb1xbc3+dyea6TkKaF8BR8cw2Ld2AZ/2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB9825
 
-The helper get_counter() in mptcp_join.sh and get_mib_counter() in
-mptcp_connect.sh have the same functionality, export get_counter() into
-mptcp_lib.sh and rename it as mptcp_lib_get_counter(). Use this new
-helper instead of get_counter() and get_mib_counter().
+make_file() helper in mptcp_sockopt.sh and userspace_pm.sh are the same.
+Export it into mptcp_lib.sh and rename it as mptcp_lib_kill_wait(). Use
+it in both mptcp_connect.sh and mptcp_join.sh.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- .../selftests/net/mptcp/mptcp_connect.sh      | 41 +++------
- .../testing/selftests/net/mptcp/mptcp_join.sh | 88 ++++++++-----------
- .../testing/selftests/net/mptcp/mptcp_lib.sh  | 16 ++++
- 3 files changed, 65 insertions(+), 80 deletions(-)
+ .../selftests/net/mptcp/mptcp_connect.sh       |  3 +--
+ .../testing/selftests/net/mptcp/mptcp_join.sh  |  3 +--
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh |  9 +++++++++
+ .../selftests/net/mptcp/mptcp_sockopt.sh       | 18 ++++--------------
+ .../selftests/net/mptcp/userspace_pm.sh        | 12 +-----------
+ 5 files changed, 16 insertions(+), 29 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 4cf62b2b0480..3b971d1617d8 100755
+index 3b971d1617d8..dc4a1dd3566d 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -335,21 +335,6 @@ do_ping()
- 	return 0
+@@ -592,9 +592,8 @@ make_file()
+ 	ksize=$((SIZE / 1024))
+ 	rem=$((SIZE - (ksize * 1024)))
+ 
+-	dd if=/dev/urandom of="$name" bs=1024 count=$ksize 2> /dev/null
++	mptcp_lib_make_file $name 1024 $ksize
+ 	dd if=/dev/urandom conv=notrunc of="$name" bs=1 count=$rem 2> /dev/null
+-	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
+ 
+ 	echo "Created $name (size $(du -b "$name")) containing data sent by $who"
  }
- 
--# $1: ns, $2: MIB counter
--get_mib_counter()
--{
--	local listener_ns="${1}"
--	local mib="${2}"
--
--	# strip the header
--	ip netns exec "${listener_ns}" \
--		nstat -z -a "${mib}" | \
--			tail -n+2 | \
--			while read a count c rest; do
--				echo $count
--			done
--}
--
- # $1: ns, $2: port
- wait_local_port_listen()
- {
-@@ -435,12 +420,12 @@ do_transfer()
- 			nstat -n
- 	fi
- 
--	local stat_synrx_last_l=$(get_mib_counter "${listener_ns}" "MPTcpExtMPCapableSYNRX")
--	local stat_ackrx_last_l=$(get_mib_counter "${listener_ns}" "MPTcpExtMPCapableACKRX")
--	local stat_cookietx_last=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesSent")
--	local stat_cookierx_last=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesRecv")
--	local stat_csum_err_s=$(get_mib_counter "${listener_ns}" "MPTcpExtDataCsumErr")
--	local stat_csum_err_c=$(get_mib_counter "${connector_ns}" "MPTcpExtDataCsumErr")
-+	local stat_synrx_last_l=$(mptcp_lib_get_counter "${listener_ns}" "MPTcpExtMPCapableSYNRX")
-+	local stat_ackrx_last_l=$(mptcp_lib_get_counter "${listener_ns}" "MPTcpExtMPCapableACKRX")
-+	local stat_cookietx_last=$(mptcp_lib_get_counter "${listener_ns}" "TcpExtSyncookiesSent")
-+	local stat_cookierx_last=$(mptcp_lib_get_counter "${listener_ns}" "TcpExtSyncookiesRecv")
-+	local stat_csum_err_s=$(mptcp_lib_get_counter "${listener_ns}" "MPTcpExtDataCsumErr")
-+	local stat_csum_err_c=$(mptcp_lib_get_counter "${connector_ns}" "MPTcpExtDataCsumErr")
- 
- 	timeout ${timeout_test} \
- 		ip netns exec ${listener_ns} \
-@@ -503,11 +488,11 @@ do_transfer()
- 	check_transfer $cin $sout "file received by server"
- 	rets=$?
- 
--	local stat_synrx_now_l=$(get_mib_counter "${listener_ns}" "MPTcpExtMPCapableSYNRX")
--	local stat_ackrx_now_l=$(get_mib_counter "${listener_ns}" "MPTcpExtMPCapableACKRX")
--	local stat_cookietx_now=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesSent")
--	local stat_cookierx_now=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesRecv")
--	local stat_ooo_now=$(get_mib_counter "${listener_ns}" "TcpExtTCPOFOQueue")
-+	local stat_synrx_now_l=$(mptcp_lib_get_counter "${listener_ns}" "MPTcpExtMPCapableSYNRX")
-+	local stat_ackrx_now_l=$(mptcp_lib_get_counter "${listener_ns}" "MPTcpExtMPCapableACKRX")
-+	local stat_cookietx_now=$(mptcp_lib_get_counter "${listener_ns}" "TcpExtSyncookiesSent")
-+	local stat_cookierx_now=$(mptcp_lib_get_counter "${listener_ns}" "TcpExtSyncookiesRecv")
-+	local stat_ooo_now=$(mptcp_lib_get_counter "${listener_ns}" "TcpExtTCPOFOQueue")
- 
- 	expect_synrx=$((stat_synrx_last_l))
- 	expect_ackrx=$((stat_ackrx_last_l))
-@@ -536,8 +521,8 @@ do_transfer()
- 	fi
- 
- 	if $checksum; then
--		local csum_err_s=$(get_mib_counter "${listener_ns}" "MPTcpExtDataCsumErr")
--		local csum_err_c=$(get_mib_counter "${connector_ns}" "MPTcpExtDataCsumErr")
-+		local csum_err_s=$(mptcp_lib_get_counter "${listener_ns}" "MPTcpExtDataCsumErr")
-+		local csum_err_c=$(mptcp_lib_get_counter "${connector_ns}" "MPTcpExtDataCsumErr")
- 
- 		local csum_err_s_nr=$((csum_err_s - stat_csum_err_s))
- 		if [ $csum_err_s_nr -gt 0 ]; then
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 8ef91a939c1b..26ea0919810f 100755
+index 26ea0919810f..f88168d66fdc 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -595,25 +595,9 @@ wait_local_port_listen()
- 	done
+@@ -1155,8 +1155,7 @@ make_file()
+ 	local who=$2
+ 	local size=$3
+ 
+-	dd if=/dev/urandom of="$name" bs=1024 count=$size 2> /dev/null
+-	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
++	mptcp_lib_make_file $name 1024 $size
+ 
+ 	print_info "Test file (size $size KB) for $who"
  }
- 
--# $1: ns ; $2: counter
--get_counter()
--{
--	local ns="${1}"
--	local counter="${2}"
--	local count
--
--	count=$(ip netns exec ${ns} nstat -asz "${counter}" | awk 'NR==1 {next} {print $2}')
--	if [ -z "${count}" ]; then
--		mptcp_lib_fail_if_expected_feature "${counter} counter"
--		return 1
--	fi
--
--	echo "${count}"
--}
--
- rm_addr_count()
- {
--	get_counter "${1}" "MPTcpExtRmAddr"
-+	mptcp_lib_get_counter "${1}" "MPTcpExtRmAddr"
- }
- 
- # $1: ns, $2: old rm_addr counter in $ns
-@@ -633,7 +617,7 @@ wait_rm_addr()
- 
- rm_sf_count()
- {
--	get_counter "${1}" "MPTcpExtRmSubflow"
-+	mptcp_lib_get_counter "${1}" "MPTcpExtRmSubflow"
- }
- 
- # $1: ns, $2: old rm_sf counter in $ns
-@@ -656,11 +640,11 @@ wait_mpj()
- 	local ns="${1}"
- 	local cnt old_cnt
- 
--	old_cnt=$(get_counter ${ns} "MPTcpExtMPJoinAckRx")
-+	old_cnt=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPJoinAckRx")
- 
- 	local i
- 	for i in $(seq 10); do
--		cnt=$(get_counter ${ns} "MPTcpExtMPJoinAckRx")
-+		cnt=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPJoinAckRx")
- 		[ "$cnt" = "${old_cnt}" ] || break
- 		sleep 0.1
- 	done
-@@ -1256,7 +1240,7 @@ chk_csum_nr()
- 	fi
- 
- 	print_check "sum"
--	count=$(get_counter ${ns1} "MPTcpExtDataCsumErr")
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtDataCsumErr")
- 	if [ "$count" != "$csum_ns1" ]; then
- 		extra_msg="$extra_msg ns1=$count"
- 	fi
-@@ -1269,7 +1253,7 @@ chk_csum_nr()
- 		print_ok
- 	fi
- 	print_check "csum"
--	count=$(get_counter ${ns2} "MPTcpExtDataCsumErr")
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtDataCsumErr")
- 	if [ "$count" != "$csum_ns2" ]; then
- 		extra_msg="$extra_msg ns2=$count"
- 	fi
-@@ -1313,7 +1297,7 @@ chk_fail_nr()
- 	fi
- 
- 	print_check "ftx"
--	count=$(get_counter ${ns_tx} "MPTcpExtMPFailTx")
-+	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPFailTx")
- 	if [ "$count" != "$fail_tx" ]; then
- 		extra_msg="$extra_msg,tx=$count"
- 	fi
-@@ -1327,7 +1311,7 @@ chk_fail_nr()
- 	fi
- 
- 	print_check "failrx"
--	count=$(get_counter ${ns_rx} "MPTcpExtMPFailRx")
-+	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtMPFailRx")
- 	if [ "$count" != "$fail_rx" ]; then
- 		extra_msg="$extra_msg,rx=$count"
- 	fi
-@@ -1360,7 +1344,7 @@ chk_fclose_nr()
- 	fi
- 
- 	print_check "ctx"
--	count=$(get_counter ${ns_tx} "MPTcpExtMPFastcloseTx")
-+	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPFastcloseTx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$fclose_tx" ]; then
-@@ -1371,7 +1355,7 @@ chk_fclose_nr()
- 	fi
- 
- 	print_check "fclzrx"
--	count=$(get_counter ${ns_rx} "MPTcpExtMPFastcloseRx")
-+	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtMPFastcloseRx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$fclose_rx" ]; then
-@@ -1401,7 +1385,7 @@ chk_rst_nr()
- 	fi
- 
- 	print_check "rtx"
--	count=$(get_counter ${ns_tx} "MPTcpExtMPRstTx")
-+	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPRstTx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ $count -lt $rst_tx ]; then
-@@ -1411,7 +1395,7 @@ chk_rst_nr()
- 	fi
- 
- 	print_check "rstrx"
--	count=$(get_counter ${ns_rx} "MPTcpExtMPRstRx")
-+	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtMPRstRx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" -lt "$rst_rx" ]; then
-@@ -1430,7 +1414,7 @@ chk_infi_nr()
- 	local count
- 
- 	print_check "itx"
--	count=$(get_counter ${ns2} "MPTcpExtInfiniteMapTx")
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtInfiniteMapTx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$infi_tx" ]; then
-@@ -1440,7 +1424,7 @@ chk_infi_nr()
- 	fi
- 
- 	print_check "infirx"
--	count=$(get_counter ${ns1} "MPTcpExtInfiniteMapRx")
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtInfiniteMapRx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$infi_rx" ]; then
-@@ -1469,7 +1453,7 @@ chk_join_nr()
- 	fi
- 
- 	print_check "syn"
--	count=$(get_counter ${ns1} "MPTcpExtMPJoinSynRx")
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinSynRx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$syn_nr" ]; then
-@@ -1480,7 +1464,7 @@ chk_join_nr()
- 
- 	print_check "synack"
- 	with_cookie=$(ip netns exec $ns2 sysctl -n net.ipv4.tcp_syncookies)
--	count=$(get_counter ${ns2} "MPTcpExtMPJoinSynAckRx")
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynAckRx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$syn_ack_nr" ]; then
-@@ -1497,7 +1481,7 @@ chk_join_nr()
- 	fi
- 
- 	print_check "ack"
--	count=$(get_counter ${ns1} "MPTcpExtMPJoinAckRx")
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckRx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$ack_nr" ]; then
-@@ -1530,8 +1514,8 @@ chk_stale_nr()
- 
- 	print_check "stale"
- 
--	stale_nr=$(get_counter ${ns} "MPTcpExtSubflowStale")
--	recover_nr=$(get_counter ${ns} "MPTcpExtSubflowRecover")
-+	stale_nr=$(mptcp_lib_get_counter ${ns} "MPTcpExtSubflowStale")
-+	recover_nr=$(mptcp_lib_get_counter ${ns} "MPTcpExtSubflowRecover")
- 	if [ -z "$stale_nr" ] || [ -z "$recover_nr" ]; then
- 		print_skip
- 	elif [ $stale_nr -lt $stale_min ] ||
-@@ -1568,7 +1552,7 @@ chk_add_nr()
- 	timeout=$(ip netns exec $ns1 sysctl -n net.mptcp.add_addr_timeout)
- 
- 	print_check "add"
--	count=$(get_counter ${ns2} "MPTcpExtAddAddr")
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtAddAddr")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	# if the test configured a short timeout tolerate greater then expected
-@@ -1580,7 +1564,7 @@ chk_add_nr()
- 	fi
- 
- 	print_check "echo"
--	count=$(get_counter ${ns1} "MPTcpExtEchoAdd")
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtEchoAdd")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$echo_nr" ]; then
-@@ -1591,7 +1575,7 @@ chk_add_nr()
- 
- 	if [ $port_nr -gt 0 ]; then
- 		print_check "pt"
--		count=$(get_counter ${ns2} "MPTcpExtPortAdd")
-+		count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtPortAdd")
- 		if [ -z "$count" ]; then
- 			print_skip
- 		elif [ "$count" != "$port_nr" ]; then
-@@ -1601,7 +1585,7 @@ chk_add_nr()
- 		fi
- 
- 		print_check "syn"
--		count=$(get_counter ${ns1} "MPTcpExtMPJoinPortSynRx")
-+		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinPortSynRx")
- 		if [ -z "$count" ]; then
- 			print_skip
- 		elif [ "$count" != "$syn_nr" ]; then
-@@ -1612,7 +1596,7 @@ chk_add_nr()
- 		fi
- 
- 		print_check "synack"
--		count=$(get_counter ${ns2} "MPTcpExtMPJoinPortSynAckRx")
-+		count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinPortSynAckRx")
- 		if [ -z "$count" ]; then
- 			print_skip
- 		elif [ "$count" != "$syn_ack_nr" ]; then
-@@ -1623,7 +1607,7 @@ chk_add_nr()
- 		fi
- 
- 		print_check "ack"
--		count=$(get_counter ${ns1} "MPTcpExtMPJoinPortAckRx")
-+		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinPortAckRx")
- 		if [ -z "$count" ]; then
- 			print_skip
- 		elif [ "$count" != "$ack_nr" ]; then
-@@ -1634,7 +1618,7 @@ chk_add_nr()
- 		fi
- 
- 		print_check "syn"
--		count=$(get_counter ${ns1} "MPTcpExtMismatchPortSynRx")
-+		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMismatchPortSynRx")
- 		if [ -z "$count" ]; then
- 			print_skip
- 		elif [ "$count" != "$mis_syn_nr" ]; then
-@@ -1645,7 +1629,7 @@ chk_add_nr()
- 		fi
- 
- 		print_check "ack"
--		count=$(get_counter ${ns1} "MPTcpExtMismatchPortAckRx")
-+		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMismatchPortAckRx")
- 		if [ -z "$count" ]; then
- 			print_skip
- 		elif [ "$count" != "$mis_ack_nr" ]; then
-@@ -1667,7 +1651,7 @@ chk_add_tx_nr()
- 	timeout=$(ip netns exec $ns1 sysctl -n net.mptcp.add_addr_timeout)
- 
- 	print_check "add TX"
--	count=$(get_counter ${ns1} "MPTcpExtAddAddrTx")
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtAddAddrTx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	# if the test configured a short timeout tolerate greater then expected
-@@ -1679,7 +1663,7 @@ chk_add_tx_nr()
- 	fi
- 
- 	print_check "echo TX"
--	count=$(get_counter ${ns2} "MPTcpExtEchoAddTx")
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtEchoAddTx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$echo_tx_nr" ]; then
-@@ -1717,7 +1701,7 @@ chk_rm_nr()
- 	fi
- 
- 	print_check "rm"
--	count=$(get_counter ${addr_ns} "MPTcpExtRmAddr")
-+	count=$(mptcp_lib_get_counter ${addr_ns} "MPTcpExtRmAddr")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$rm_addr_nr" ]; then
-@@ -1727,13 +1711,13 @@ chk_rm_nr()
- 	fi
- 
- 	print_check "rmsf"
--	count=$(get_counter ${subflow_ns} "MPTcpExtRmSubflow")
-+	count=$(mptcp_lib_get_counter ${subflow_ns} "MPTcpExtRmSubflow")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ -n "$simult" ]; then
- 		local cnt suffix
- 
--		cnt=$(get_counter ${addr_ns} "MPTcpExtRmSubflow")
-+		cnt=$(mptcp_lib_get_counter ${addr_ns} "MPTcpExtRmSubflow")
- 
- 		# in case of simult flush, the subflow removal count on each side is
- 		# unreliable
-@@ -1761,7 +1745,7 @@ chk_rm_tx_nr()
- 	local rm_addr_tx_nr=$1
- 
- 	print_check "rm TX"
--	count=$(get_counter ${ns2} "MPTcpExtRmAddrTx")
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtRmAddrTx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$rm_addr_tx_nr" ]; then
-@@ -1778,7 +1762,7 @@ chk_prio_nr()
- 	local count
- 
- 	print_check "ptx"
--	count=$(get_counter ${ns1} "MPTcpExtMPPrioTx")
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPPrioTx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$mp_prio_nr_tx" ]; then
-@@ -1788,7 +1772,7 @@ chk_prio_nr()
- 	fi
- 
- 	print_check "prx"
--	count=$(get_counter ${ns1} "MPTcpExtMPPrioRx")
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPPrioRx")
- 	if [ -z "$count" ]; then
- 		print_skip
- 	elif [ "$count" != "$mp_prio_nr_rx" ]; then
-@@ -1917,7 +1901,7 @@ wait_attempt_fail()
- 	while [ $time -lt $timeout_ms ]; do
- 		local cnt
- 
--		cnt=$(get_counter ${ns} "TcpAttemptFails")
-+		cnt=$(mptcp_lib_get_counter ${ns} "TcpAttemptFails")
- 
- 		[ "$cnt" = 1 ] && return 1
- 		time=$((time + 100))
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 91a17ae81cb8..0f5e34c76bb4 100644
+index 0f5e34c76bb4..7b0d03c40f89 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -328,3 +328,19 @@ mptcp_lib_verify_listener_events() {
- mptcp_lib_is_v6() {
- 	[ -z "${1##*:*}" ]
+@@ -344,3 +344,12 @@ mptcp_lib_get_counter() {
+ 
+ 	echo "${count}"
  }
 +
-+# $1: ns, $2: MIB counter
-+mptcp_lib_get_counter() {
-+	local ns="${1}"
-+	local counter="${2}"
-+	local count
++mptcp_lib_make_file() {
++	local name=$1
++	local bs=$2
++	local size=$3
 +
-+	count=$(ip netns exec ${ns} nstat -asz "${counter}" |
-+		awk 'NR==1 {next} {print $2}')
-+	if [ -z "${count}" ]; then
-+		mptcp_lib_fail_if_expected_feature "${counter} counter"
-+		return 1
-+	fi
-+
-+	echo "${count}"
++	dd if=/dev/urandom of="$name" bs=$bs count=$size 2> /dev/null
++	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
 +}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index bfa744e350ef..39128fca99dd 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -245,18 +245,6 @@ do_transfer()
+ 	return 1
+ }
+ 
+-make_file()
+-{
+-	local name=$1
+-	local who=$2
+-	local size=$3
+-
+-	dd if=/dev/urandom of="$name" bs=1024 count=$size 2> /dev/null
+-	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
+-
+-	echo "Created $name (size $size KB) containing data sent by $who"
+-}
+-
+ do_mptcp_sockopt_tests()
+ {
+ 	local lret=0
+@@ -357,8 +345,10 @@ sout=$(mktemp)
+ cin=$(mktemp)
+ cout=$(mktemp)
+ init
+-make_file "$cin" "client" 1
+-make_file "$sin" "server" 1
++mptcp_lib_make_file "$cin" 1024 1
++echo "Created $cin (size 1 KB) containing data sent by client"
++mptcp_lib_make_file "$sin" 1024 1
++echo "Created $sin (size 1 KB) containing data sent by server"
+ trap cleanup EXIT
+ 
+ run_tests $ns1 $ns2 10.0.1.1
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 98189b3f73dc..d5197d745171 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -150,22 +150,12 @@ print_title "Init"
+ print_test "Created network namespaces ns1, ns2"
+ test_pass
+ 
+-make_file()
+-{
+-	# Store a chunk of data in a file to transmit over an MPTCP connection
+-	local name=$1
+-	local ksize=1
+-
+-	dd if=/dev/urandom of="$name" bs=2 count=$ksize 2> /dev/null
+-	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
+-}
+-
+ make_connection()
+ {
+ 	if [ -z "$file" ]; then
+ 		file=$(mktemp)
+ 	fi
+-	make_file "$file" "client"
++	mptcp_lib_make_file "$file" 2 1
+ 
+ 	local is_v6=$1
+ 	local app_port=$app4_port
 -- 
 2.35.3
 
