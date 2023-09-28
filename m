@@ -1,45 +1,45 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD6515BA
-	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 20:54:56 +0000 (UTC)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-9adca291f99so1724045366b.2
-        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 13:54:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C496415BA
+	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 20:56:51 +0000 (UTC)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5041d6d8b10so21993133e87.2
+        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 13:56:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1695934495; x=1696539295; darn=lists.linux.dev;
+        d=tessares.net; s=google; t=1695934609; x=1696539409; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=If3zzTuQox6klgPTiONCSaZmvw9nCpdZZO2UC0XFde0=;
-        b=PyPTQbFsG8SezQHUNaPTmjtIrrAgt4VZlp3NI0+5iNuOaVVnvapIpBpofXZuFbpJs8
-         aUvwozR98Pv7H5EkNMY9G+Gi2eaMNUukpVWfwHn+Z+QIRsig2W5EuH6DGVrLjzDnMKDU
-         +12wyeAD3ieKcUfNDwR0ohZ4Ivqjrg2qBFKNZikn5obKXnzrFgVyjonilXSj7ZTI0MuT
-         6o3LwtqLnKNjUCKZaIHkFnL+pP0cY/mIm2rOLzA867Aub93K+fmsDuU8PDvIXfqiTyEm
-         GxnO9KQaBYowgRqUkO/qZgZtIiKWG6gZCHVKjLqz6UNkyQJ/sbt4NMGzASaQ6COTvM0Y
-         tf3w==
+        bh=vTGjh0vQVsUf+R+Ns3yz5U/L9gFQ3z2dOaFUubteweo=;
+        b=O4TAJgK4UQDMVhWC+4MNUj8UMHkLav3evmPW2QTyON26Z8TBEdm90qFjbgVzYVAwra
+         e4DIdQ4Dzc0aPyXjqJylmzFKT73aLmqK/JoMxbH0lsNb0uIOGt7EJE4V0f/oga1JFLzL
+         ybWHmuGfP0a+avJe1gL27mRtUOr86kSgsK+iw1JmhrcYze51joJx9ObfqZ99UVDLKsEI
+         zLLKp2Wm8B1tzl6nwos7DX9YRm2oS5RloBjLlX0w6twlX+tzU7DEBGnXyCih+3NNizQN
+         SSy7OYMxS9goBHJdtmy1YCf6n9V6wbB1GQA3TM3mvPFYLPly9SzrW8vjJWxftC4U5m2O
+         zq3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695934495; x=1696539295;
+        d=1e100.net; s=20230601; t=1695934609; x=1696539409;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=If3zzTuQox6klgPTiONCSaZmvw9nCpdZZO2UC0XFde0=;
-        b=tpTXIeoSmdclmxMnBQKoxnQHl5ec5VAnznJo8HEJIlhvtJ4TKrMTDGZp7i/jpnNmB1
-         BFRAwsWgeIRxSEpNCJL75slJhiFNYBQvxUghB7SXO6D88YBDePoRX1ItFTU9+5UcszpF
-         CvqEHj61dg1XTg1xBFSUL51uzUsdj9JLxq5AfzSghb1P5P88p3TK5E9NDScNbdPoLxAj
-         +/gnimI2DpP+SHR+QqaM+aPHi56X0Z10gmnCsik72gAsSwnS8gw2UjFWY6flFPz5t+YS
-         SGa9mTQooyk7kW/91VfrrMiBmzxrSeock3+69tLTc2z7iksar0t6CMp9R+b+ojqMoj9R
-         kEKw==
-X-Gm-Message-State: AOJu0YxniqVmHw+kEuYJD71LoaMS5ecctrbqNMNskIRFD8J1fBFuQl8i
-	xp8Mo9wZsi1ODbUEwSfRaC8DbUM1fEURqWf8//wryA==
-X-Google-Smtp-Source: AGHT+IFK7RemfIPsiLjS9fVoqz8lfYZApzH9BPacdODL4uXt0GkXtoD2GqplUkEX04u2i8lglGa15g==
-X-Received: by 2002:a17:906:74ca:b0:9b2:94a8:df5 with SMTP id z10-20020a17090674ca00b009b294a80df5mr2146771ejl.35.1695934495080;
-        Thu, 28 Sep 2023 13:54:55 -0700 (PDT)
+        bh=vTGjh0vQVsUf+R+Ns3yz5U/L9gFQ3z2dOaFUubteweo=;
+        b=JDgXrQhaPHsM5sD9ghybr3pKW7N6K7KVsNOwaiIoDTrjh/WUSUey4f5sfMYDALoQW9
+         uadLdmFsg0A6LQr8r4VnHsJ5IPoNH4RNEOHBiNV3THPBF/qzroH2QyogBNrVGH0WWEGy
+         O0LLeDzoMZHl2GlEXLkYOMObtGzc2s+i9c0k9K875DLnFcTNt3pd5q7NNT0sn/ifZjGQ
+         d72FVVGBpzurn1ZdtGN45mri0PeVIuR6MyJaSKyPTNAw3mJ0I4FeJy/jQ7piTa5DUFqH
+         tfUdWsWlj5bS/uKLk4wKDnV5zE2FS7fAPNbvF6cMiC6ZAqLCnpOEpS/ThmRLGaNIQk+F
+         svmw==
+X-Gm-Message-State: AOJu0Yy+0IWamBZcLlOzeBhczqZTAPZNvEPZwiMwegaG3jC0BTxIJhHC
+	o6X+o0HRxChxKGgbwmv3On3jS7si9k5uyMwefpzLlw==
+X-Google-Smtp-Source: AGHT+IGvlus12b0PSdfcAHIws6CKVP+rLS+YAHqRRXAcT+9OknZB9/mwKEFMV2nsPSO3RiiL/HsK0Q==
+X-Received: by 2002:a05:6512:2508:b0:502:a588:6609 with SMTP id be8-20020a056512250800b00502a5886609mr3011292lfb.3.1695934609336;
+        Thu, 28 Sep 2023 13:56:49 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:ff86:e30:98cd:120? ([2a02:578:8593:1200:ff86:e30:98cd:120])
-        by smtp.gmail.com with ESMTPSA id y16-20020a1709064b1000b0099bd453357esm11333547eju.41.2023.09.28.13.54.54
+        by smtp.gmail.com with ESMTPSA id ec20-20020a0564020d5400b005346a263bb1sm3950153edb.63.2023.09.28.13.56.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Sep 2023 13:54:54 -0700 (PDT)
-Message-ID: <d656468d-b34f-4d9a-a87d-0392f68a9abc@tessares.net>
-Date: Thu, 28 Sep 2023 22:54:54 +0200
+        Thu, 28 Sep 2023 13:56:49 -0700 (PDT)
+Message-ID: <060967a9-d00a-43b8-9604-7784648e4601@tessares.net>
+Date: Thu, 28 Sep 2023 22:56:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,12 +47,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 07/29] selftests: mptcp: display simult in
- extra_msg
+Subject: Re: [PATCH mptcp-next v3 11/29] selftests: mptcp: update userspace pm
+ test helpers
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1695631132.git.geliang.tang@suse.com>
- <8b0cb915b2b9c6c90751f5503df1721157880d1a.1695631132.git.geliang.tang@suse.com>
+ <b710fb0a444af95d66de887fe535d889ac53d119.1695631132.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -97,68 +97,66 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <8b0cb915b2b9c6c90751f5503df1721157880d1a.1695631132.git.geliang.tang@suse.com>
+In-Reply-To: <b710fb0a444af95d66de887fe535d889ac53d119.1695631132.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 25/09/2023 10:41, Geliang Tang wrote:
-> Just like displaying "invert" after "Info: ", "simult" should be
-> displayed too when rm_subflow_nr dosen't match the expect value in
-> chk_rm_nr():
+> This patch adds a new argument namespace to userspace_pm_add_addr() and
+> userspace_pm_add_sf() to make these two helper more versatile.
 > 
->       syn                                 [ ok ]
->       synack                              [ ok ]
->       ack                                 [ ok ]
->       add                                 [ ok ]
->       echo                                [ ok ]
->       rm                                  [ ok ]
->       rmsf                                [ ok ] 3 in [2:4]
->       Info: invert simult
-> 
->       syn                                 [ ok ]
->       synack                              [ ok ]
->       ack                                 [ ok ]
->       add                                 [ ok ]
->       echo                                [ ok ]
->       rm                                  [ ok ]
->       rmsf                                [ ok ]
->       Info: invert
-> 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index ee1f89a872b3..d02e53be8b31 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1766,7 +1766,9 @@ chk_rm_nr()
->  		# in case of simult flush, the subflow removal count on each side is
->  		# unreliable
->  		count=$((count + cnt))
-> -		[ "$count" != "$rm_subflow_nr" ] && suffix="$count in [$rm_subflow_nr:$((rm_subflow_nr*2))]"
-> +		[ "$count" != "$rm_subflow_nr" ] && \
-> +			suffix="$count in [$rm_subflow_nr:$((rm_subflow_nr*2))]" && \
-> +			extra_msg="$extra_msg simult"
+> Add two more versatile helpers for userspace pm remove subflow or address:
+> userspace_pm_rm_addr() and userspace_pm_rm_sf(). The original test helpers
+> userspace_pm_rm_sf_addr_ns1() and userspace_pm_rm_sf_addr_ns2() can be
+> replaced by these new helpers.
 
-Good idea!
+Thank you for cleaning this!
 
-I think it would be clearer to use an explicit "if":
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index def35395a254..bb95dd967eb3 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -8,6 +8,8 @@ readonly KSFT_SKIP=4
+>  # shellcheck disable=SC2155 # declare and assign separately
+>  readonly KSFT_TEST=$(basename "${0}" | sed 's/\.sh$//g')
+>  
+> +SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
 
-  if [ "$count" != "$rm_subflow_nr" ]; then
-      (...)
+Because variables are "global" by default in Bash, it might be good to
+prefix this variable with MPTCP_LIB_ (or "MPTCP_EVENT_SUB_ESTABLISHED")
+to avoid any accidental conflicts when using "too generic names". But
+then the name will be long and you will have to rename it in many places
+in userspace_pm.sh and that's not nice I think...
 
-I can do the modification when applying the patch if needed.
+If we want to keep it short, maybe easier to declare SUB_ESTABLISHED in
+both userspace_pm.sh and mptcp_join.sh. It might be better like that
+because otherwise it looks strange to only declare this one in the lib
+and not the other ones (ANNOUNCED, REMOVED, etc.).
+
+If we only need to copy it in mptcp_join.sh and userspace_pm.sh, I can
+do that when applying the patches.
 
 Cheers,
 Matt
 
->  		if [ $count -ge "$rm_subflow_nr" ] && \
->  		   [ "$count" -le "$((rm_subflow_nr *2 ))" ]; then
->  			print_ok "$suffix"
+> +
+>  MPTCP_LIB_SUBTESTS=()
+>  
+>  # only if supported (or forced) and not disabled, see no-color.org
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> index 2413059a42e5..283c62deb628 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -25,7 +25,6 @@ fi
+>  
+>  ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
+>  REMOVED=7          # MPTCP_EVENT_REMOVED
+> -SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
+>  SUB_CLOSED=11      # MPTCP_EVENT_SUB_CLOSED
+>  LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
+>  LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
 
 -- 
 Tessares | Belgium | Hybrid Access Solutions
