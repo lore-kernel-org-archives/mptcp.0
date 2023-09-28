@@ -1,45 +1,45 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C496415BA
-	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 20:56:51 +0000 (UTC)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5041d6d8b10so21993133e87.2
-        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 13:56:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C489CA79
+	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 20:58:35 +0000 (UTC)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-9ae2cc4d17eso1776586866b.1
+        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 13:58:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1695934609; x=1696539409; darn=lists.linux.dev;
+        d=tessares.net; s=google; t=1695934714; x=1696539514; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vTGjh0vQVsUf+R+Ns3yz5U/L9gFQ3z2dOaFUubteweo=;
-        b=O4TAJgK4UQDMVhWC+4MNUj8UMHkLav3evmPW2QTyON26Z8TBEdm90qFjbgVzYVAwra
-         e4DIdQ4Dzc0aPyXjqJylmzFKT73aLmqK/JoMxbH0lsNb0uIOGt7EJE4V0f/oga1JFLzL
-         ybWHmuGfP0a+avJe1gL27mRtUOr86kSgsK+iw1JmhrcYze51joJx9ObfqZ99UVDLKsEI
-         zLLKp2Wm8B1tzl6nwos7DX9YRm2oS5RloBjLlX0w6twlX+tzU7DEBGnXyCih+3NNizQN
-         SSy7OYMxS9goBHJdtmy1YCf6n9V6wbB1GQA3TM3mvPFYLPly9SzrW8vjJWxftC4U5m2O
-         zq3g==
+        bh=X50IyTxJmPObbv+FGbSzhuHA7JhRVqPE0VH1yRJBlso=;
+        b=pXXx6IXJ4IwX71tQJH3Z698vagD43toYIlAnFyXT6sOf6/tx8QFFXy0SxkyjkqmX6N
+         4aNKIuGAusK8MWOGMsHfrODwxtjUYLfJEHUO2x7RxnBIj4JfAj9NChp4EaGXt6UKxi7U
+         Tk69HKqQ5UehB1oOWTDlM//EgGuV/Va0UXsNut4371Q02WqGymMFlCdt/zN8DPwpMrx5
+         ItCxd1A9WRoV+tpT59481mh03YoH4KExQOf7kQKkU6XmRtimvbB5IsrmSWrxFkF8bEXs
+         UzURc1ixqUH7pHbv0tPSzqDB+bE2Qie9x8QqGPuAnSCeD8rg/l/bI56YCJQNonWiNU2C
+         apHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695934609; x=1696539409;
+        d=1e100.net; s=20230601; t=1695934714; x=1696539514;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vTGjh0vQVsUf+R+Ns3yz5U/L9gFQ3z2dOaFUubteweo=;
-        b=JDgXrQhaPHsM5sD9ghybr3pKW7N6K7KVsNOwaiIoDTrjh/WUSUey4f5sfMYDALoQW9
-         uadLdmFsg0A6LQr8r4VnHsJ5IPoNH4RNEOHBiNV3THPBF/qzroH2QyogBNrVGH0WWEGy
-         O0LLeDzoMZHl2GlEXLkYOMObtGzc2s+i9c0k9K875DLnFcTNt3pd5q7NNT0sn/ifZjGQ
-         d72FVVGBpzurn1ZdtGN45mri0PeVIuR6MyJaSKyPTNAw3mJ0I4FeJy/jQ7piTa5DUFqH
-         tfUdWsWlj5bS/uKLk4wKDnV5zE2FS7fAPNbvF6cMiC6ZAqLCnpOEpS/ThmRLGaNIQk+F
-         svmw==
-X-Gm-Message-State: AOJu0Yy+0IWamBZcLlOzeBhczqZTAPZNvEPZwiMwegaG3jC0BTxIJhHC
-	o6X+o0HRxChxKGgbwmv3On3jS7si9k5uyMwefpzLlw==
-X-Google-Smtp-Source: AGHT+IGvlus12b0PSdfcAHIws6CKVP+rLS+YAHqRRXAcT+9OknZB9/mwKEFMV2nsPSO3RiiL/HsK0Q==
-X-Received: by 2002:a05:6512:2508:b0:502:a588:6609 with SMTP id be8-20020a056512250800b00502a5886609mr3011292lfb.3.1695934609336;
-        Thu, 28 Sep 2023 13:56:49 -0700 (PDT)
+        bh=X50IyTxJmPObbv+FGbSzhuHA7JhRVqPE0VH1yRJBlso=;
+        b=vcw6kw6XB3kCIpi5Kooso2Qv5Np7g83zKBeXy672XbjYSv+m05kbjXhEi0ZxrKIYpM
+         YpmHUplL9tzpW1ps4LTKDMhznQBJAN2SMbLRt+gkhWhy4h5W7+M+02pCiS42Ryx9Ni4W
+         x7S2YsVM99oiYPbJFc742ZYcEBKILLPTP8TLPcjiA3QxJZXMKA9ydVc8+j/XZMs5gg+V
+         2kAKKtoTiTTn+ym/MeVQs9mMtNWHr3Bzbf+FikFy/SW4c+w2hFVtM3MV04yBFhHiL0vC
+         rhoKldCiGtceuS7hbfpdlCu+k3KHFr9trynPZAI3I9W0NOnEURCKGt0th65qfgu3h69p
+         FIbA==
+X-Gm-Message-State: AOJu0YzbI+HW+TPI2BasKVMSMbNPx3W3j5GcAakikf/X8+NgyxFu0G9C
+	vXxF9sFHEPZwla48I6J++wSkQw==
+X-Google-Smtp-Source: AGHT+IHNHO3EtCW89KHtQ9xzzPQ9k94ukzF2FvzMTDG7oAPiPyjKcxaKkm97jqW5L2mPl1CWzeEn5g==
+X-Received: by 2002:a17:906:225b:b0:9ae:7206:963c with SMTP id 27-20020a170906225b00b009ae7206963cmr2234031ejr.15.1695934713754;
+        Thu, 28 Sep 2023 13:58:33 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:ff86:e30:98cd:120? ([2a02:578:8593:1200:ff86:e30:98cd:120])
-        by smtp.gmail.com with ESMTPSA id ec20-20020a0564020d5400b005346a263bb1sm3950153edb.63.2023.09.28.13.56.48
+        by smtp.gmail.com with ESMTPSA id h9-20020a17090619c900b009ae54eba5casm11410671ejd.102.2023.09.28.13.58.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Sep 2023 13:56:49 -0700 (PDT)
-Message-ID: <060967a9-d00a-43b8-9604-7784648e4601@tessares.net>
-Date: Thu, 28 Sep 2023 22:56:48 +0200
+        Thu, 28 Sep 2023 13:58:33 -0700 (PDT)
+Message-ID: <5c715ddd-f8de-4b64-8dab-4d3ad10c456e@tessares.net>
+Date: Thu, 28 Sep 2023 22:58:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,12 +47,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 11/29] selftests: mptcp: update userspace pm
- test helpers
+Subject: Re: [PATCH mptcp-next v3 12/29] selftests: mptcp: userspace pm remove
+ id 0 subflow
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1695631132.git.geliang.tang@suse.com>
- <b710fb0a444af95d66de887fe535d889ac53d119.1695631132.git.geliang.tang@suse.com>
+ <04438bad0ef7459b1a78fa88a6cd2e2c31ebf616.1695631132.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -97,67 +97,35 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <b710fb0a444af95d66de887fe535d889ac53d119.1695631132.git.geliang.tang@suse.com>
+In-Reply-To: <04438bad0ef7459b1a78fa88a6cd2e2c31ebf616.1695631132.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 25/09/2023 10:41, Geliang Tang wrote:
-> This patch adds a new argument namespace to userspace_pm_add_addr() and
-> userspace_pm_add_sf() to make these two helper more versatile.
+> This patch adds a selftest for userpsace PM to remove id 0 subflow. Use
+> userspace_pm_add_sf() to add a subflow, and pass initial ip address to
+> userspace_pm_rm_sf() to remove id 0 subflow.
 > 
-> Add two more versatile helpers for userspace pm remove subflow or address:
-> userspace_pm_rm_addr() and userspace_pm_rm_sf(). The original test helpers
-> userspace_pm_rm_sf_addr_ns1() and userspace_pm_rm_sf_addr_ns2() can be
-> replaced by these new helpers.
+> When closing the initial subflow in __mptcp_close_ssk(), dispose_it is
+> false, then tcp_disconnect is invoked. This will send a MP_RST to close
+> a subflow on the peer too.
 
-Thank you for cleaning this!
+I don't think we should have a RST (with MP_TCPRST) when we close the
+initial subflow, no? We don't have that when we remove subflows with
+other IDs.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index def35395a254..bb95dd967eb3 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -8,6 +8,8 @@ readonly KSFT_SKIP=4
->  # shellcheck disable=SC2155 # declare and assign separately
->  readonly KSFT_TEST=$(basename "${0}" | sed 's/\.sh$//g')
->  
-> +SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
+I guess we are not handling this case properly on the kernel side. We
+should close the initial subflow normally (with FIN) like we would do
+with any other subflow IDs (and here, we cannot fully destroy it and we
+still need to keep a valid ref for msk->first).
 
-Because variables are "global" by default in Bash, it might be good to
-prefix this variable with MPTCP_LIB_ (or "MPTCP_EVENT_SUB_ESTABLISHED")
-to avoid any accidental conflicts when using "too generic names". But
-then the name will be long and you will have to rename it in many places
-in userspace_pm.sh and that's not nice I think...
-
-If we want to keep it short, maybe easier to declare SUB_ESTABLISHED in
-both userspace_pm.sh and mptcp_join.sh. It might be better like that
-because otherwise it looks strange to only declare this one in the lib
-and not the other ones (ANNOUNCED, REMOVED, etc.).
-
-If we only need to copy it in mptcp_join.sh and userspace_pm.sh, I can
-do that when applying the patches.
+> So chk_rst_nr() is added in this test, and
+> chk_all_subflows after closing the initial subflow is '1 1', not '2 1'.
 
 Cheers,
 Matt
-
-> +
->  MPTCP_LIB_SUBTESTS=()
->  
->  # only if supported (or forced) and not disabled, see no-color.org
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> index 2413059a42e5..283c62deb628 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -25,7 +25,6 @@ fi
->  
->  ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
->  REMOVED=7          # MPTCP_EVENT_REMOVED
-> -SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
->  SUB_CLOSED=11      # MPTCP_EVENT_SUB_CLOSED
->  LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
->  LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
-
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
