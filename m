@@ -1,45 +1,45 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C489CA79
-	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 20:58:35 +0000 (UTC)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-9ae2cc4d17eso1776586866b.1
-        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 13:58:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2A19CA71
+	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 21:00:57 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-9a9cd066db5so1836145766b.0
+        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 14:00:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1695934714; x=1696539514; darn=lists.linux.dev;
+        d=tessares.net; s=google; t=1695934856; x=1696539656; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=X50IyTxJmPObbv+FGbSzhuHA7JhRVqPE0VH1yRJBlso=;
-        b=pXXx6IXJ4IwX71tQJH3Z698vagD43toYIlAnFyXT6sOf6/tx8QFFXy0SxkyjkqmX6N
-         4aNKIuGAusK8MWOGMsHfrODwxtjUYLfJEHUO2x7RxnBIj4JfAj9NChp4EaGXt6UKxi7U
-         Tk69HKqQ5UehB1oOWTDlM//EgGuV/Va0UXsNut4371Q02WqGymMFlCdt/zN8DPwpMrx5
-         ItCxd1A9WRoV+tpT59481mh03YoH4KExQOf7kQKkU6XmRtimvbB5IsrmSWrxFkF8bEXs
-         UzURc1ixqUH7pHbv0tPSzqDB+bE2Qie9x8QqGPuAnSCeD8rg/l/bI56YCJQNonWiNU2C
-         apHA==
+        bh=Elrz91+AzGSM33ITIp0ZMseTcd92QHoGsMa1XxFxXMI=;
+        b=bRkiwi0IpTYlgPVwrUUwhGjC1bamKTRShAcFfHZkV3hZZh5D8E6dnNopo4JrNz+nJG
+         VpCtXf+TW2ADrUZFPfAZ2KWZdcSEz3xcsJCxyS/dhd/4Nr0Fgi9cVOhIew8e9urN0B85
+         NAdzKYln2lSfomUHDrbHBETIRzkcULd9Zau6OVFt0PgLCoQl+uMdSqDXFlMxqcVLiDc3
+         /BPBT6VJC+1b9aIGSEClE+PgvJNL8gqbHW1pfuGf9MUA5nryOHfvLNJP/jfHzt83u6jm
+         H9qj5wPl0wHECfCYXbdjMd4O2Oc/fK0MHtlthMrIINlpN7icYUsVTm1RUFCt26afOjYA
+         hATg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695934714; x=1696539514;
+        d=1e100.net; s=20230601; t=1695934856; x=1696539656;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X50IyTxJmPObbv+FGbSzhuHA7JhRVqPE0VH1yRJBlso=;
-        b=vcw6kw6XB3kCIpi5Kooso2Qv5Np7g83zKBeXy672XbjYSv+m05kbjXhEi0ZxrKIYpM
-         YpmHUplL9tzpW1ps4LTKDMhznQBJAN2SMbLRt+gkhWhy4h5W7+M+02pCiS42Ryx9Ni4W
-         x7S2YsVM99oiYPbJFc742ZYcEBKILLPTP8TLPcjiA3QxJZXMKA9ydVc8+j/XZMs5gg+V
-         2kAKKtoTiTTn+ym/MeVQs9mMtNWHr3Bzbf+FikFy/SW4c+w2hFVtM3MV04yBFhHiL0vC
-         rhoKldCiGtceuS7hbfpdlCu+k3KHFr9trynPZAI3I9W0NOnEURCKGt0th65qfgu3h69p
-         FIbA==
-X-Gm-Message-State: AOJu0YzbI+HW+TPI2BasKVMSMbNPx3W3j5GcAakikf/X8+NgyxFu0G9C
-	vXxF9sFHEPZwla48I6J++wSkQw==
-X-Google-Smtp-Source: AGHT+IHNHO3EtCW89KHtQ9xzzPQ9k94ukzF2FvzMTDG7oAPiPyjKcxaKkm97jqW5L2mPl1CWzeEn5g==
-X-Received: by 2002:a17:906:225b:b0:9ae:7206:963c with SMTP id 27-20020a170906225b00b009ae7206963cmr2234031ejr.15.1695934713754;
-        Thu, 28 Sep 2023 13:58:33 -0700 (PDT)
+        bh=Elrz91+AzGSM33ITIp0ZMseTcd92QHoGsMa1XxFxXMI=;
+        b=FximPgJ9dYynwxJys3IPwDcVvYtrv7c/G+a7v2XDNymz2YxMWcXnWTobz5H5kJ2S7a
+         s0p3Nw86uZid4qyCmGV49IUjjieXkBe0MHfrwG71CIdHh5OVnnq8MZVJ/ya19GJiI4zr
+         rgDmSLvq6xywfgWsG9OJoUpJTua7kNtWc9krRBQh1wmZAonuzJLDHVF6ykVJBMI9jaeU
+         YJx8A0S9RR733K2ow0ehT5Rw8VsqmJNmNU+AjV27haz2IuqmEW+rWiOa5aTdn/9PLCRW
+         wlbXP9w6N+q/WCoyj4zKzjw5+dvbSd1B7K1GvESBrAI/IPYsvyMq2Dpry2wvlF3Plsr9
+         sNgg==
+X-Gm-Message-State: AOJu0Yzbc8z1HSLd6brLkiEJoSCnfwlUJRpCOgOVTQuAfikdISucK/ek
+	1Wh6WKt3bwnvkTSYb1MORasUF/7XvnOoOPOd5cYomw==
+X-Google-Smtp-Source: AGHT+IEw4SgDruCOyTNMEPr36PVr9agXLzMoviXOKx7ROYvIko8lI/BTpWZ6nIlIKtWWqigqzPnUEA==
+X-Received: by 2002:a17:906:3157:b0:9a2:185b:5376 with SMTP id e23-20020a170906315700b009a2185b5376mr2181522eje.49.1695934855989;
+        Thu, 28 Sep 2023 14:00:55 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:ff86:e30:98cd:120? ([2a02:578:8593:1200:ff86:e30:98cd:120])
-        by smtp.gmail.com with ESMTPSA id h9-20020a17090619c900b009ae54eba5casm11410671ejd.102.2023.09.28.13.58.33
+        by smtp.gmail.com with ESMTPSA id ez23-20020a1709070bd700b009b285351817sm5050199ejc.116.2023.09.28.14.00.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Sep 2023 13:58:33 -0700 (PDT)
-Message-ID: <5c715ddd-f8de-4b64-8dab-4d3ad10c456e@tessares.net>
-Date: Thu, 28 Sep 2023 22:58:33 +0200
+        Thu, 28 Sep 2023 14:00:55 -0700 (PDT)
+Message-ID: <6c6bff5e-56fb-49f7-af25-d5cb1347bc63@tessares.net>
+Date: Thu, 28 Sep 2023 23:00:55 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,12 +47,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 12/29] selftests: mptcp: userspace pm remove
- id 0 subflow
+Subject: Re: [PATCH mptcp-next v3 15/29] mptcp: userspace pm remove id 0
+ address
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1695631132.git.geliang.tang@suse.com>
- <04438bad0ef7459b1a78fa88a6cd2e2c31ebf616.1695631132.git.geliang.tang@suse.com>
+ <1119bff10cfc3c6b3fe4afc410f7803f27f49f1b.1695631132.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -97,32 +97,107 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <04438bad0ef7459b1a78fa88a6cd2e2c31ebf616.1695631132.git.geliang.tang@suse.com>
+In-Reply-To: <1119bff10cfc3c6b3fe4afc410f7803f27f49f1b.1695631132.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 25/09/2023 10:41, Geliang Tang wrote:
-> This patch adds a selftest for userpsace PM to remove id 0 subflow. Use
-> userspace_pm_add_sf() to add a subflow, and pass initial ip address to
-> userspace_pm_rm_sf() to remove id 0 subflow.
+> This patch adds the ability to send RM_ADDR for local ID 0. Check
+> whether id 0 address is removed, if not, put id 0 into a removing
+> list, pass it to mptcp_pm_remove_addr() to remove id 0 address.
 > 
-> When closing the initial subflow in __mptcp_close_ssk(), dispose_it is
-> false, then tcp_disconnect is invoked. This will send a MP_RST to close
-> a subflow on the peer too.
+> There is no reason not to allow the userspace to remove the initial
+> address (ID 0). This special case was not taken into account not
+> letting the userspace to delete all addresses as announced.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/379
+> Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  net/mptcp/pm_userspace.c | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 6b8083650bc1..8d97cf475cac 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -211,6 +211,38 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+>  	return err;
+>  }
+>  
+> +static int mptcp_userspace_remove_id_zero_address(struct mptcp_sock *msk,
+> +						  struct genl_info *info)
+> +{
+> +	struct mptcp_rm_list list = { .nr = 0 };
+> +	struct mptcp_subflow_context *subflow;
+> +	struct sock *sk = (struct sock *)msk;
+> +	bool has_id_0 = false;
+> +	int err = -EINVAL;
+> +
+> +	lock_sock(sk);
+> +	spin_lock_bh(&msk->pm.lock);
 
-I don't think we should have a RST (with MP_TCPRST) when we close the
-initial subflow, no? We don't have that when we remove subflows with
-other IDs.
+Why do you need to lock the 'pm' structure? mptcp_pm_remove_addr() will
+modify the 'pm' structure but it will also do the lock, no?
 
-I guess we are not handling this case properly on the kernel side. We
-should close the initial subflow normally (with FIN) like we would do
-with any other subflow IDs (and here, we cannot fully destroy it and we
-still need to keep a valid ref for msk->first).
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		if (subflow->remote_id == 0) {
 
-> So chk_rst_nr() is added in this test, and
-> chk_all_subflows after closing the initial subflow is '1 1', not '2 1'.
+I only noticed that now but you need to look at local_id, not remote_id:
+when we send a RM_ADDR, we announce that a previously announced (local)
+address ID is now invalid → so we need to check for local IDs here.
+
+> +			has_id_0 = true;
+> +			break;
+> +		}
+> +	}
+> +	if (!has_id_0) {
+> +		GENL_SET_ERR_MSG(info, "address with id 0 not found");
+> +		goto out;
+> +	}
+> +
+> +	list.ids[list.nr++] = 0;
+> +	mptcp_pm_remove_addr(msk, &list);
+> +	err = 0;
+> +out:
+> +	spin_unlock_bh(&msk->pm.lock);
+> +	release_sock(sk);
+> +	sock_put(sk);
+
+It looks strange to me to do a 'put' here because we didn't "hold" the
+socket here in this function.
+
+Should we not do the 'sock_put(sk)' in mptcp_pm_nl_remove_doit() instead?
+
+> +	return err;
+> +}
+> +
+>  int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+>  {
+>  	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+> @@ -245,6 +277,9 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+>  		goto remove_err;
+>  	}
+>  
+> +	if (id_val == 0)
+> +		return mptcp_userspace_remove_id_zero_address(msk, info);
+
+Linked to what I said above: maybe here it would be better to have:
+
+  err = mptcp_userspace_remove_id_zero_address(msk, info);
+  goto out; // the sock_put() will be done there
+
+(rename 'remove_err' to 'out' as there is potentially no errors here)
+
+WDYT?
+
+
+> +
+>  	lock_sock(sk);
+>  
+>  	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
 
 Cheers,
 Matt
