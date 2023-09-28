@@ -1,45 +1,45 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D929CA71
-	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 21:01:05 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-9b29186e20aso1050793266b.2
-        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 14:01:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0014416407
+	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 21:12:08 +0000 (UTC)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-99c136ee106so1748888866b.1
+        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 14:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1695934863; x=1696539663; darn=lists.linux.dev;
+        d=tessares.net; s=google; t=1695935527; x=1696540327; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=tgJ34eJPOzMojrzAmb8XPlAyRLhlpL8Heapd7QY7AWo=;
-        b=3kzN7cOcm3FklRoIdVmprz+ldCcO+wKcxl8SJNz9fay/SbypT4iurxIFeM16hfWPxx
-         4ypyfuVtJ1FfRdP4geAuWmXRSfWYMsH48hq8vejgguvzW9F0xYMw5PP+NFtMQm6C9JfO
-         GOGKtgGEEo922g55Rd1irKhwIgU1omFS/BETcnJT5m/kWlYUbCnqKMIPaNhnACL659Gd
-         IMCk+LvcesEMFu7wGZ3HvTbUJG9YXNwPeN/yB76GUREqp8dLKv0tHeyzFRvGfAsu1gj8
-         Tv9ZQ7XhB8yMzy1n/MUm/beCZ8D0K9l5ikghzZOtzHrMVDadZsGge143llscd5x5IGqu
-         Ex9A==
+        bh=btmwtTn1A1G1F4JOotB+OLOZCB81N0nzg+QnC9bAMz8=;
+        b=rD+j34iOKMpImUPTZwSd5ciNWrgFxepQV8ZCm/pUToHDbHlonaFny0XGho9KayeKuF
+         t/arGglIVomKpGtblfB4Zhx/c7lSM3vFtLYEmel8Lon/uygJsWh86iQJruzuxKR343kQ
+         8i+Ej4HpkkFfLwfu+Fnkz7EQBua3tdkawlnUI9p1YOm3wVwCVriHh4AwaTCojRCC5pfB
+         7/R+ZOMdMnbwRCv/lncn0EJVR7U6QP6WGNzLoZKd1ATDkOZX9k5rUk/kZVUJ3DWYgftu
+         DY5Bcnl/EFT7llEbmmkWUtI1xdpGrUXjPmNHCXrV6QxkN8fyJtoHYLXNN5zzqoElf18a
+         toLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695934863; x=1696539663;
+        d=1e100.net; s=20230601; t=1695935527; x=1696540327;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tgJ34eJPOzMojrzAmb8XPlAyRLhlpL8Heapd7QY7AWo=;
-        b=am6q2K8L3tm4IlsnMuD+MGpoqZsUMr7EZSM+WfOtLaByYxYp4Wr/odgqILEWT7UNi0
-         8NwlVRBdE6kKCCgDT4FU8teD1JP/7DmFRLEWzSBQ4TQiQZrxuH7Ejkm2gedj8ts79D2b
-         65G0H+nW/eandyx24papMxVqtox2xaA/X1Th1NQGSlPag5tF75X0yAKY6Fp2EYsvSqgg
-         jAvhxwP9HtWBge/ITZn/yI0+/JODKymZzUPLqWg/QZQKjlF1P/BK1uqUldhGguqpzVO1
-         MFcQYRRZpeWUgFd9pBVXmTCZGUmUYSw6YMlMePorpANx7GvMzzvvuKDxSPBUT985tF51
-         P9aQ==
-X-Gm-Message-State: AOJu0YwZQs4zn2qHV2vXDPHl99shgec51SIqlN9ExR6deB8Cvt4xq/Pm
-	CBAqe4PToHwGk8vmbcK1YiGgdw==
-X-Google-Smtp-Source: AGHT+IEPPNuz7GrrQSc4WHpvDNrmFC2dP9YZ9xOjb2DIMbLiyyA4AWxliJxMBWOfBX/VJASz+iY2pw==
-X-Received: by 2002:a17:907:7786:b0:9ae:70b7:bc9f with SMTP id ky6-20020a170907778600b009ae70b7bc9fmr2186030ejc.2.1695934863613;
-        Thu, 28 Sep 2023 14:01:03 -0700 (PDT)
+        bh=btmwtTn1A1G1F4JOotB+OLOZCB81N0nzg+QnC9bAMz8=;
+        b=W39eH2vEENk5VICoCR1ZQMmw7QPUK4Pt4kGo89wNC60jfjp1+ZpnZkmmhjZvJll9Y6
+         XoszlT88b6gnuxq6HUwPYQBDa/cOH5vjIgD9ar9Jld5asslgZXJ6gKZ8w3zjG3OW1uqN
+         0c2FEHfUSI4dPRlkXQEF9q8MoQLBmqcVJPhOxzRA1nZSzeTeJUv0cCA2hfxL76vcGxcy
+         RtmiFmlHxo+vhWyTsk7ShUUc3AwIF+UPOiVvDyUcIoXqwzRIiN+DoqgM10QwhF6c0Iks
+         yo3pQzzl1pgGXc63fQ8E4uk3EOM7cGt/6BM21zskU+TYU87+Y+RMjURekDo8zWBboLsO
+         Oarw==
+X-Gm-Message-State: AOJu0YwMpTW4rVqCjPnXvCDo5OY0R0T/TTqdPC1K6BWaU7PHXuD0qe1C
+	WsGAsdVqX7z+yfVoangLWWtVpKV5NGK0yTfmxWtlvA==
+X-Google-Smtp-Source: AGHT+IGUnPePSmdVL23+OrfQVMC+oDMMC4w552pLRhJLmOWruz63Ak2GL/Oia5G/cbRpSsSja6PJBw==
+X-Received: by 2002:a17:907:270e:b0:9b2:6db8:e0fa with SMTP id w14-20020a170907270e00b009b26db8e0famr2005987ejk.41.1695935527180;
+        Thu, 28 Sep 2023 14:12:07 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:ff86:e30:98cd:120? ([2a02:578:8593:1200:ff86:e30:98cd:120])
-        by smtp.gmail.com with ESMTPSA id ez23-20020a1709070bd700b009b285351817sm5050199ejc.116.2023.09.28.14.01.03
+        by smtp.gmail.com with ESMTPSA id mh2-20020a170906eb8200b00992b2c55c67sm11403464ejb.156.2023.09.28.14.12.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Sep 2023 14:01:03 -0700 (PDT)
-Message-ID: <23c6c30d-afed-4ee0-8ee1-74004f3b6823@tessares.net>
-Date: Thu, 28 Sep 2023 23:01:03 +0200
+        Thu, 28 Sep 2023 14:12:06 -0700 (PDT)
+Message-ID: <54e302bf-806f-4d33-9180-283460e6f4d7@tessares.net>
+Date: Thu, 28 Sep 2023 23:12:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,12 +47,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 16/29] selftests: mptcp: userspace pm remove
- id 0 address
+Subject: Re: [PATCH mptcp-next v3 10/29] selftests: mptcp: add
+ chk_subflows_total helper
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1695631132.git.geliang.tang@suse.com>
- <a4881572b8700e7c6f351cc8d0f11ff75fab31ba.1695631132.git.geliang.tang@suse.com>
+ <e3811cedfae23f2486096957a95ae77fa01e2181.1695631132.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -97,67 +97,59 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <a4881572b8700e7c6f351cc8d0f11ff75fab31ba.1695631132.git.geliang.tang@suse.com>
+In-Reply-To: <e3811cedfae23f2486096957a95ae77fa01e2181.1695631132.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 25/09/2023 10:41, Geliang Tang wrote:
-> This patch adds a selftest for userpsace PM to remove id 0 address.
-> Use userspace_pm_add_addr() helper to add a id 10 address, then use
-> userspace_pm_rm_addr() helper to remove id 0 address.
+> This patch adds a new helper chk_subflows_total(), in it use the newly
+> added counter mptcpi_subflows_total to get the "correct" amount of
+> subflows, including the initial one. To be compatible with old 'ss'
+> version without this counter, get the total subflows using this 'ss'
+> command:
+> 
+>         ss -ti | grep -c tcp-ulp-mptcp.
 > 
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 37 ++++++++++++++++++-
+>  1 file changed, 36 insertions(+), 1 deletion(-)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 22aa69db87ab..aac50ef86785 100755
+> index 92285ef592fb..3e24ab7bc221 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3508,6 +3508,30 @@ userspace_tests()
->  		kill_events_pids
->  		wait $tests_pid
+> @@ -1862,7 +1862,7 @@ chk_mptcp_info()
+>  	local cnt2
+>  	local dump_stats
+>  
+> -	print_check "mptcp_info ${info1:0:8}=$exp1:$exp2"
+> +	print_check "mptcp_info ${info1:0:15}=$exp1:$exp2"
+>  
+>  	cnt1=$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value "$info1" "$info1")
+>  	cnt2=$(ss -N $ns2 -inmHM | mptcp_lib_get_info_value "$info2" "$info2")
+> @@ -1883,6 +1883,37 @@ chk_mptcp_info()
 >  	fi
-> +
-> +	# userspace pm remove id 0 address
-> +	if reset_with_events "userspace pm remove id 0 address" &&
-> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-> +		set_userspace_pm $ns1
-> +		pm_nl_set_limits $ns2 1 1
-> +		speed=10 \
-> +			run_tests $ns1 $ns2 10.0.1.1 &
-> +		local tests_pid=$!
-> +		wait_mpj $ns1
-> +		userspace_pm_add_addr $ns1 10.0.2.1 10
-> +		chk_join_nr 1 1 1
-> +		chk_add_nr 1 1
-> +		chk_mptcp_info subflows 1 subflows 1
-> +		chk_subflows_total 2 2
-> +		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
-> +		userspace_pm_rm_addr $ns1 0
-> +		chk_rm_nr 1 0 invert
-> +		chk_rst_nr 1 1 invert
-
-Why do we have RST here?
-
-Is it because a RM_ADDR is sent from ns1 and on ns2, the kernel reacts
-by sending an RST+MP_TCPRST? (or are these RST sent from ns1 just after
-the RM_ADDR?)
-
-I don't think the kernel should send a RST: sending a RM_ADDR for ID 0
-should not be different than sending it for any other IDs, no?
-
-> +		chk_mptcp_info subflows 1 subflows 1
-> +		chk_subflows_total 1 1
-> +		kill_events_pids
-> +		wait $tests_pid
-> +	fi
 >  }
 >  
->  endpoint_tests()
+> +# $1: subflows in ns1 ; $2: subflows in ns2
+> +# number of all subflows, including the initial subflow.
+> +chk_subflows_total()
+> +{
+> +	local cnt1
+> +	local cnt2
+> +	local info="subflows_total"
+> +
+> +	if [ $(ss -N $ns1 -inmHM | mptcp_lib_get_info_value $info $info) ]; then
+
+Shellcheck just told me it would be better with quotes and '-n' because
+you want to check if the output is not empty:
+
+  if [ -n "$(...)" ]
+
+Do not hesitate to use shellcheck, it is quite useful ;-)
 
 Cheers,
 Matt
