@@ -1,43 +1,43 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E481365
-	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 17:26:34 +0000 (UTC)
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-77432add7caso552446085a.2
-        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 10:26:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246C318626
+	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 20:10:21 +0000 (UTC)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-693375d2028so3180276b3a.2
+        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 13:10:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695921993; x=1696526793; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1695931821; x=1696536621; darn=lists.linux.dev;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=215Mz2CM0ne2RfO7n3kN+teT0knkUOfclEJpXvkNIHk=;
-        b=Z/yEJnmUMzPJbJnRi6YpcQK/wolN8r1yfAkyEquGAZeqOH1XMHrKEXIl5Faw/rB75P
-         V2/TG/CwWPrEuzWZHuOlqA8gCJ1G5jeDzOLvhXhGPuZiNI/XLNhczTgBstb/Vc+tHSkL
-         YcQcshhpeuSbZ+/1OMsRmb9pb7FTesSPCyDFUltuC8n0hoM/VcnJP0aOjVNS0+JNndVL
-         /6FLMADZEH/vHjKDZM16N801OQxu/W6MLdCzqdOZFCeYRI2vvital8F08lLu+7EyzlfZ
-         y/4+TMMCFY0sovw9HZ6ykTFUhgHWnPky0NwaIziKRBMBwvNXcqQz66mNFBw2wht2B69s
-         qhQg==
+        bh=86YuOO0/GWfHisLB2S2OpxRDyLRvwzZhw4vRq8eozhs=;
+        b=JLUrpkkVju1KuYAbdXbQvVyE7+NjXmzCWjcAkkrXVK8WB7Cgxc/RAIM0YEjPPmCHpE
+         TYV1G/TAFmZ2SGjxnUWg0Z+ljRLimIGmf3MSLV+oKiwhXN+b0RkeK17Sfn3j+V9ZWQGs
+         xMsLTbX/rSGnJeWwKBGYtA2hlURVAep6n/AIWXzKPoJNkMd5y65899+ADpZT7x0c3Uml
+         DU97gN4gDWnUzfOLB2wLTlkeoEXfqQsyEfGi7jN10nI6/k8/DKQLjFklSRI9ZFsaHXqJ
+         q4deXatvoxixRWn0G4idjRW3TEuhZNJdcn1/PdoD0mE8iiJS7hWv1KPAB9inu99NAaqS
+         QhjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695921993; x=1696526793;
+        d=1e100.net; s=20230601; t=1695931821; x=1696536621;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=215Mz2CM0ne2RfO7n3kN+teT0knkUOfclEJpXvkNIHk=;
-        b=GZ5B9DCpud/6wTjI2OGgwR8J9D5/3qbkbnm7aNlYgwH46mnJCBbC39VkoWXHQG/us/
-         n6WuilUALpyvTkfGsK5C2iTHtJxUJy7TL7K5weafA+xABh9AoU1/GKjQz0aJkVioRJNZ
-         KsPvFXMi6rdCmZ8k49+U4Fu5BaN+kLd6n4TOeyPXeie1/QPrLJ9MI6b/MhbvuFMmjO5/
-         t9ynh1Aggx5kk60khLhW/R5XlPd0qVJiOz+Qe7AiQ8J42kll2FX+ENTVvVjsF/zwxHk9
-         JjlMeoeDMHC2Nhccz/ARes6AbDJ1pj3/t/NRGDzkWfne2sYY6Ae7TG4FOLRbza2BHlAY
-         91sw==
-X-Gm-Message-State: AOJu0YzL2umVWNXvBN4vwRAjlMKQSSQDb1sz0EMnIqhECvAw0eBEpMtz
-	isBfgxnJVtdMZE56+0l/Uw==
-X-Google-Smtp-Source: AGHT+IEGFx/D8DhFiNxJxli310hn+OB/l1qKnpSgItWHAAZXhQaMjnBjXxDEajE2JAoWd0z15HmT+Q==
-X-Received: by 2002:a05:620a:40c4:b0:773:d4a1:c5c4 with SMTP id g4-20020a05620a40c400b00773d4a1c5c4mr2128896qko.54.1695921993314;
-        Thu, 28 Sep 2023 10:26:33 -0700 (PDT)
-Received: from [127.0.0.1] ([20.57.75.223])
-        by smtp.gmail.com with ESMTPSA id vq14-20020a05620a558e00b0076efaec147csm1908225qkn.45.2023.09.28.10.26.32
+        bh=86YuOO0/GWfHisLB2S2OpxRDyLRvwzZhw4vRq8eozhs=;
+        b=h4IoSyd+b+GlLTeysfI0WmulDi7AEKKu28TOZBlCN6Z9rr3QIP7zXxekqLvVB0Y/UB
+         KvsknBEqFzTNrZhViLXvqOA3VsZSd2cGCpfL1ajufSoKlGVz/S5u59hgPMMibRZwW/C2
+         sHwqhJqM3QpRvudjQruiDWVe3tN8WnUMgWA8xCXJVnmhhDr17loKcLVu0LptKdCdE5K3
+         RIjP+A1jnIeO313SRxyZKxK6N/rwx7p8ozZ6b0E/YjIb8FFeGqTxdBTJpc5cmMZHky92
+         wJDJ3/uEUwS1b+H3pFJ44nh9SQELP7HIkpeNkx4i0l84Vk9eXOwgYFhmvTAICEeqoV3Q
+         oG1g==
+X-Gm-Message-State: AOJu0YzkC8SbyXtTU7nzoqUcq+WCpXOP4G9Rdl7jij7Z0VNnw0meuvL/
+	ATqlDhhUwqItID5PkaxOvA==
+X-Google-Smtp-Source: AGHT+IFWjV1SG/pQPVIxaobepJ/U6zpddZob3YTXHf6/R4+ZleDNppU1yNeK20axXIg0t2qCrLfdgA==
+X-Received: by 2002:a05:6a20:5611:b0:14c:f16a:2b78 with SMTP id ir17-20020a056a20561100b0014cf16a2b78mr2131733pzc.45.1695931821387;
+        Thu, 28 Sep 2023 13:10:21 -0700 (PDT)
+Received: from [127.0.0.1] ([20.172.7.28])
+        by smtp.gmail.com with ESMTPSA id k9-20020aa792c9000000b0069353ac3d38sm1231963pfa.69.2023.09.28.13.10.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 10:26:32 -0700 (PDT)
+        Thu, 28 Sep 2023 13:10:20 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Paolo Abeni <pabeni@redhat.com>
@@ -49,9 +49,9 @@ References:
  <56f04f69f7e7c37e0a1820787f7e9063a50bf937.1695911979.git.pabeni@redhat.com>
 Subject: =?UTF-8?Q?Re=3A_Squash-to=3A_=22mptcp=3A_give_rcvl?=
  =?UTF-8?Q?owat_some_love=22=3A_Tests_Results?=
-Message-ID: <1bcdf2a2-1a49-fe15-a383-4e91e8c69e89@gmail.com>
+Message-ID: <0accaa40-1864-9cff-2b4a-f9065452a501@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 28 Sep 2023 17:26:32 +0000
+Date: Thu, 28 Sep 2023 20:10:20 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -79,11 +79,10 @@ com/task/6121534134157312
 com/v1/artifact/task/6121534134157312/summary/summary.txt
 
 - KVM Validation: debug (only selftest_mptcp_join):
-  - Script error! =E2=9D=93:
-  - Task: https://cirrus-ci.=
-com/task/5350710917726208
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5350710917726208/summary/summary.txt
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/5890237797236736
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5890237797236736/su=
+mmary/summary.txt
 
 - KVM Validation: debug (except selftest_mptcp_join):
   - Unstable: 1 failed test(s): packetdrill_sockopts =F0=9F=94=B4:
