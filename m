@@ -1,45 +1,45 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B079D9CA76
-	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 20:54:30 +0000 (UTC)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-99bdcade7fbso1698998966b.1
-        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 13:54:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD6515BA
+	for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 20:54:56 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-9adca291f99so1724045366b.2
+        for <mptcp@lists.linux.dev>; Thu, 28 Sep 2023 13:54:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1695934468; x=1696539268; darn=lists.linux.dev;
+        d=tessares.net; s=google; t=1695934495; x=1696539295; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=yuOaPpVrG6q1kYsL4e2bd/bG8/Hv7nlP3G0r8YGaklU=;
-        b=WZGFMQuKLLKqa2Xi8a1QZXllY+W7IbKEuilx8c014Ot83cRp9CizM4OevDEGxsldUM
-         5EKj5UEs7t6ZJ4x6OgcAViUxsoMExF25j8JSQyN7VwNE2BagxDogCsJsFC6HvV0x5aj4
-         g5vBNLoWYrmutmfQ7QiZKcJS6SzWZxMZ25KoA+vdYK18elefo12M4ZJ2LHts48BGwg9X
-         b6QSKY1f8BmIRLdM18phMbNy7mxv/tgX10wlSCw1N+7W3hiWx+YNFZsamvcq8GQUPLnm
-         R6ubI8ZPqW/LwGFTQOrU0WzqCOG8peIOIlL2P08utM4R/ZLMgYOe9+WjcTPA0NauKioC
-         2NsQ==
+        bh=If3zzTuQox6klgPTiONCSaZmvw9nCpdZZO2UC0XFde0=;
+        b=PyPTQbFsG8SezQHUNaPTmjtIrrAgt4VZlp3NI0+5iNuOaVVnvapIpBpofXZuFbpJs8
+         aUvwozR98Pv7H5EkNMY9G+Gi2eaMNUukpVWfwHn+Z+QIRsig2W5EuH6DGVrLjzDnMKDU
+         +12wyeAD3ieKcUfNDwR0ohZ4Ivqjrg2qBFKNZikn5obKXnzrFgVyjonilXSj7ZTI0MuT
+         6o3LwtqLnKNjUCKZaIHkFnL+pP0cY/mIm2rOLzA867Aub93K+fmsDuU8PDvIXfqiTyEm
+         GxnO9KQaBYowgRqUkO/qZgZtIiKWG6gZCHVKjLqz6UNkyQJ/sbt4NMGzASaQ6COTvM0Y
+         tf3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695934468; x=1696539268;
+        d=1e100.net; s=20230601; t=1695934495; x=1696539295;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yuOaPpVrG6q1kYsL4e2bd/bG8/Hv7nlP3G0r8YGaklU=;
-        b=hOnRmXCqslgOAXthgdcVPDi0mEG+1gj22dwchpBjjh0sA77HXPLFwEDd84pO1Jqmqb
-         VdVYQDgG/4GkBmFg3hRWKGF0SKNRsWm63d7GS9QVXRlpm6hV6qmOur6sy+YxA8iZ94tE
-         JF6IXZOCNmVi4hIbTgWeEcO+7WF/Q9y8t3TJV9QPR37uBy4E8JNwhSdh7+rzculH0z5E
-         gLpFKGx/hZX/IuGQLuKDQf82CzFml7HkCPNCgLRkE126lSSaUXtAqqW1SnO/NLeZCfGK
-         G4LdCTSHoAl5V6PnPvewZKnk27kp7Y6vFU7jNpFLrRKKGKnf3DKWo6a/bPb8Ihwj4ms4
-         MdVw==
-X-Gm-Message-State: AOJu0YxRZ3Wlk3Qu1wfYHooAxSdxrQXR9ajNPzsbi0h1gjxh/t9/odCt
-	Ex321c1NTlbe3qTF6QX19EUVWgCAOzwEiTrgF+mcDw==
-X-Google-Smtp-Source: AGHT+IHjI4NuR8lYxUrbQL2TEVqqSzmCwuBPC1+QudblYaJfD1OMAEhCUXJCojZ06A14LdF0RJ28BA==
-X-Received: by 2002:a17:907:b1a:b0:9a9:f14a:22dc with SMTP id h26-20020a1709070b1a00b009a9f14a22dcmr2380666ejl.8.1695934468388;
-        Thu, 28 Sep 2023 13:54:28 -0700 (PDT)
+        bh=If3zzTuQox6klgPTiONCSaZmvw9nCpdZZO2UC0XFde0=;
+        b=tpTXIeoSmdclmxMnBQKoxnQHl5ec5VAnznJo8HEJIlhvtJ4TKrMTDGZp7i/jpnNmB1
+         BFRAwsWgeIRxSEpNCJL75slJhiFNYBQvxUghB7SXO6D88YBDePoRX1ItFTU9+5UcszpF
+         CvqEHj61dg1XTg1xBFSUL51uzUsdj9JLxq5AfzSghb1P5P88p3TK5E9NDScNbdPoLxAj
+         +/gnimI2DpP+SHR+QqaM+aPHi56X0Z10gmnCsik72gAsSwnS8gw2UjFWY6flFPz5t+YS
+         SGa9mTQooyk7kW/91VfrrMiBmzxrSeock3+69tLTc2z7iksar0t6CMp9R+b+ojqMoj9R
+         kEKw==
+X-Gm-Message-State: AOJu0YxniqVmHw+kEuYJD71LoaMS5ecctrbqNMNskIRFD8J1fBFuQl8i
+	xp8Mo9wZsi1ODbUEwSfRaC8DbUM1fEURqWf8//wryA==
+X-Google-Smtp-Source: AGHT+IFK7RemfIPsiLjS9fVoqz8lfYZApzH9BPacdODL4uXt0GkXtoD2GqplUkEX04u2i8lglGa15g==
+X-Received: by 2002:a17:906:74ca:b0:9b2:94a8:df5 with SMTP id z10-20020a17090674ca00b009b294a80df5mr2146771ejl.35.1695934495080;
+        Thu, 28 Sep 2023 13:54:55 -0700 (PDT)
 Received: from ?IPV6:2a02:578:8593:1200:ff86:e30:98cd:120? ([2a02:578:8593:1200:ff86:e30:98cd:120])
-        by smtp.gmail.com with ESMTPSA id y16-20020a1709064b1000b0099bd453357esm11333547eju.41.2023.09.28.13.54.27
+        by smtp.gmail.com with ESMTPSA id y16-20020a1709064b1000b0099bd453357esm11333547eju.41.2023.09.28.13.54.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Sep 2023 13:54:28 -0700 (PDT)
-Message-ID: <4faab698-f464-43b4-91aa-19177a0ee77b@tessares.net>
-Date: Thu, 28 Sep 2023 22:54:27 +0200
+        Thu, 28 Sep 2023 13:54:54 -0700 (PDT)
+Message-ID: <d656468d-b34f-4d9a-a87d-0392f68a9abc@tessares.net>
+Date: Thu, 28 Sep 2023 22:54:54 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,10 +47,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 00/29] userspace pm enhancements
+Subject: Re: [PATCH mptcp-next v3 07/29] selftests: mptcp: display simult in
+ extra_msg
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1695631132.git.geliang.tang@suse.com>
+ <8b0cb915b2b9c6c90751f5503df1721157880d1a.1695631132.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matthieu.baerts@tessares.net>
 Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -95,51 +97,69 @@ Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xV1U0s853l+uo6+anPRWEUCU1ONTVXLQKe7FfcAznUnx2l03IbRLysAOHoLwAoIM59Sy2mrb
  z/qhNpC/tBl2B7Qljp2CXMYqcKL/Oyanb7XDnn1+vPj4gLuP+KC8kZfgoMMpSzSaWV3wna7a
  wFe/sIbF3NCgdrOXNVsV7t924dsAGZjP1x59Ck7vAMT9
-In-Reply-To: <cover.1695631132.git.geliang.tang@suse.com>
+In-Reply-To: <8b0cb915b2b9c6c90751f5503df1721157880d1a.1695631132.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 25/09/2023 10:41, Geliang Tang wrote:
-> v3:
->  - drop patch 4 in v2
->  - invert patch 10 and 11 in v2
->  - rebased
+> Just like displaying "invert" after "Info: ", "simult" should be
+> displayed too when rm_subflow_nr dosen't match the expect value in
+> chk_rm_nr():
+> 
+>       syn                                 [ ok ]
+>       synack                              [ ok ]
+>       ack                                 [ ok ]
+>       add                                 [ ok ]
+>       echo                                [ ok ]
+>       rm                                  [ ok ]
+>       rmsf                                [ ok ] 3 in [2:4]
+>       Info: invert simult
+> 
+>       syn                                 [ ok ]
+>       synack                              [ ok ]
+>       ack                                 [ ok ]
+>       add                                 [ ok ]
+>       echo                                [ ok ]
+>       rm                                  [ ok ]
+>       rmsf                                [ ok ]
+>       Info: invert
+> 
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index ee1f89a872b3..d02e53be8b31 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -1766,7 +1766,9 @@ chk_rm_nr()
+>  		# in case of simult flush, the subflow removal count on each side is
+>  		# unreliable
+>  		count=$((count + cnt))
+> -		[ "$count" != "$rm_subflow_nr" ] && suffix="$count in [$rm_subflow_nr:$((rm_subflow_nr*2))]"
+> +		[ "$count" != "$rm_subflow_nr" ] && \
+> +			suffix="$count in [$rm_subflow_nr:$((rm_subflow_nr*2))]" && \
+> +			extra_msg="$extra_msg simult"
 
-Thank you for the v3! And again, sorry for the delays!
+Good idea!
 
-I think patches 1-11 + 13-14 are OK to be applied (with two small
-modifications for patch 7 and 11 that I can do when applying these patches):
+I think it would be clearer to use an explicit "if":
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+  if [ "$count" != "$rm_subflow_nr" ]; then
+      (...)
 
-Please note that patch 13 will go to "Fixes for -net". Patch 14 can stay
-in "Features for net-next" due to other dependences.
-
-I have some comments about patch 12 and 16: on the wire, sending a
-remove address for ID 0 or actually removing the subflow(s) with ID 0
-should not trigger any RST (+MP_TCPRST). I guess the kernel is not
-behaving correctly if you observe them during the test (that's good you
-added that in the verification!). It means we will need more patches for
-the kernel side not to send these RST in these cases.
-
-If you send a v4, please move patch 15 (mptcp: userspace pm remove id 0
-address) to the top as this one is for -net. It is fine to keep patch 16
-where it is if it depends on other features.
-
-> 1-7: some small cleanups, v3
-> 8-9: address #428, add mptcpi_subflows_total
-> 10-16: address #379, #391, userspace pm remove id 0 subflow & address, v11
-> 17-19: address #403, add refcont for address entry
-> 20: add userspace fullmesh tests
-> 21-29: seltests cleanups
-
-Note: I didn't review patches 17-29 yet. I will try to do that ASAP (but
-very likely, not before the end of next week :-/ ).
+I can do the modification when applying the patch if needed.
 
 Cheers,
 Matt
+
+>  		if [ $count -ge "$rm_subflow_nr" ] && \
+>  		   [ "$count" -le "$((rm_subflow_nr *2 ))" ]; then
+>  			print_ok "$suffix"
+
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
