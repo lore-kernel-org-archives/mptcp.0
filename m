@@ -1,127 +1,83 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD42923AA
-	for <mptcp@lists.linux.dev>; Sat, 30 Sep 2023 09:39:09 +0000 (UTC)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1dd1714b9b6so5487170fac.0
-        for <mptcp@lists.linux.dev>; Sat, 30 Sep 2023 02:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696066749; x=1696671549; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZvAnKx2nXp9ox0Jv0OFyXrabOwd1FnwxAlUEzA9dheg=;
-        b=cj++nsB6tep6naoyhP/BHENnHRYqiHX7vlbtHlZ1Fw/DunQEd7HLtvm3NwgdZ5/r9s
-         LC8VNChbHP0IOhTx/zmorsZvoTKgR302x8R93triQlgCmajUZFa7qMFMJWEbZu2U8Tq/
-         mAqrQ7MKTb466EpYyHHK42BXIDPD0Q/0C5m4dcg6Fk8VU6qykrEfhWOqC7f4143ixeD8
-         0E8TXLlD9bsaRi4LVa0H2DI8yr3ln96JKUD1u37uwRA1Y1MChkUqsTwQ4gV6sxJ9KNdp
-         rgZ5miGdVFPFoofRf10zraQBg3xlC83EiqFHOOkM2mGxiBhfuAaYYUDHCUlFNlbnSsSq
-         JC+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696066749; x=1696671549;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZvAnKx2nXp9ox0Jv0OFyXrabOwd1FnwxAlUEzA9dheg=;
-        b=RYLss0RIW2CnkNQXEFCQ9AKjI6ZlLoTiy0mOm1V88OQRl3ICW/6p53KQHn0DeDB6uj
-         d2LA3Khw7GDVrX1TEjTxPDp6T+39gwSt4He7nvM/K4xgy5N9yiOV/JkVHMBngM42j+tu
-         10g94MfShWJiEs3nzIhZ1K8zhrJenj03soVpm+xdXOHwvn98SxaRtXDzBHfgnc6lyVzm
-         Y6xaE4X44jwBd/U5ezpqxzX4LZGMGMWBfjtGCXaqsv7EUM+nq2f4+j+kWjSUi8MlZoYV
-         bmtXZFXU447vOceHMWtsMZTwYWJ9MkKsycc5pX4k9JFVkUucuKwQsPa3Q5OndyWhRKqA
-         O0hw==
-X-Gm-Message-State: AOJu0YyB/o5dLqeJDCNKdQYRyNHSwZvTGCCtST6lViYlu3uWRYNkH+tD
-	0hD5EmtQ3zvx0XiB3ebYRA==
-X-Google-Smtp-Source: AGHT+IHswEKeqc6XxLXjTAXpLtGcsfKwVkGOq2M1CLXAw+C+kr0aMVn8OUqtKRxzwSM3NJ6ISARUeg==
-X-Received: by 2002:a05:6870:3308:b0:1be:f311:4a29 with SMTP id x8-20020a056870330800b001bef3114a29mr7322585oae.20.1696066748771;
-        Sat, 30 Sep 2023 02:39:08 -0700 (PDT)
-Received: from [127.0.0.1] ([138.91.71.30])
-        by smtp.gmail.com with ESMTPSA id r20-20020aa78b94000000b006933f85bc29sm5168395pfd.111.2023.09.30.02.39.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Sep 2023 02:39:08 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <7a8234908b8198636e231d1ce6e42ab6d5864d0e.1696062626.git.geliang.tang@suse.com>
-References:
- <7a8234908b8198636e231d1ce6e42ab6d5864d0e.1696062626.git.geliang.tang@suse.com>
-Subject: =?UTF-8?Q?Re=3A_Squash_to_=22selftests=3A_mptcp=3A?=
- =?UTF-8?Q?_update_userspace_pm_test_helpers=22=3A_?=
- =?UTF-8?Q?Tests_Results?=
-Message-ID: <ba58134b-d106-b44d-e0bc-2762a4c3da8e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 30 Sep 2023 09:39:07 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBA563DF
+	for <mptcp@lists.linux.dev>; Mon,  2 Oct 2023 09:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1696238036;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TnaxqB3aknZiecyIQh0g3wUJBNXFa6N+WpJDR99Sg2g=;
+	b=MBtQ4E4Q7Ww2mjIM8iRiKKpmZFx2W6IIFvkp40jM3Ia8FsEK+YKJXmVQFmLqNDsRRChnK4
+	Qap3L0frSnAX4qaCyardTMwjhJW2BwjnoOqCz82qvQryyBmvS29DPy8Y0uF/dq7SjyY23n
+	rGi6Yn2YaNIZwiov2dv3FktpGZz2XtY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-444-c1pWrWupMCSC0mEKGjjwTw-1; Mon, 02 Oct 2023 05:13:53 -0400
+X-MC-Unique: c1pWrWupMCSC0mEKGjjwTw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E8E4D101B041;
+	Mon,  2 Oct 2023 09:13:52 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 597742026D4B;
+	Mon,  2 Oct 2023 09:13:52 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Christoph Paasch <cpaasch@apple.com>
+Subject: [PATCH mptcp-next v2 1/2] tcp: define initial scaling factor value as a macro
+Date: Mon,  2 Oct 2023 11:13:41 +0200
+Message-ID: <c71297499300a20bc41fe9c526d4a6cad08c176f.1696237983.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Geliang,
+So that other users could access it. Notably MPTCP will use
+it in the next patch.
 
-Thank you for your modifications, that's great!
+No functional change intended.
 
-Our CI did some validations and here is its report:
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ include/net/tcp.h | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5798968668454912
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5798968668454912/summary/summary.txt
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 91688d0dadcd..8b0364b44dd9 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1453,13 +1453,15 @@ static inline int tcp_space_from_win(const struct sock *sk, int win)
+ 	return __tcp_space_from_win(tcp_sk(sk)->scaling_ratio, win);
+ }
+ 
++/* Assume a conservative default of 1200 bytes of payload per 4K page.
++ * This may be adjusted later in tcp_measure_rcv_mss().
++ */
++#define TCP_DEFAULT_SCALING_RATIO ((1200 << TCP_RMEM_TO_WIN_SCALE) / \
++				   SKB_TRUESIZE(4096))
++
+ static inline void tcp_scaling_ratio_init(struct sock *sk)
+ {
+-	/* Assume a conservative default of 1200 bytes of payload per 4K page.
+-	 * This may be adjusted later in tcp_measure_rcv_mss().
+-	 */
+-	tcp_sk(sk)->scaling_ratio = (1200 << TCP_RMEM_TO_WIN_SCALE) /
+-				    SKB_TRUESIZE(4096);
++	tcp_sk(sk)->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+ }
+ 
+ /* Note: caller must be prepared to deal with negative returns */
+-- 
+2.41.0
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4954543738322944
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4954543738322944/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_regressions =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6361918621876224
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6361918621876224/su=
-mmary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5236018715033600
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5236018715033600/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/0bc3f9bf9deb
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
