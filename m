@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A636930CF2
-	for <mptcp@lists.linux.dev>; Tue,  3 Oct 2023 16:45:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E0AC433C8;
-	Tue,  3 Oct 2023 16:45:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0835630CF2
+	for <mptcp@lists.linux.dev>; Tue,  3 Oct 2023 16:49:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0858AC433C7
+	for <mptcp@lists.linux.dev>; Tue,  3 Oct 2023 16:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696351516;
-	bh=1pdWveMouH6+xMe3uSYad8aDUnKGEZ/MrVFX2cH5/5s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FiMWQyJVm+jLVz3wkP9uwaM5aUp/N700UE1TR6nkm34/+cawSLCtDDHttk8YgInlq
-	 a93Df/9FzzHc234KCizXRpre2CEbhKIcfuQrePixTQF7W0D3Ab83nDeNQ6TO8BvKVj
-	 wuZ72IPb87dCeSlKiYIKS+hAFPF8fVHmDAZ6qzOBAMcHQlbMj1KmQEz/RQ8AU8ezvE
-	 C2zBEJ2Q1juJFe1ixyj1UPkTPq8zpOhH4xjrV7C7Hj5SA9JLTkQcQ9n6YzAF5w0caJ
-	 DfVbvww/C/qmgJTt0gGKpxNKoDD1In1PFCVUwOfLYvZw8sB8yde1Ww/3ukmU7ijhDF
-	 9cSFBdczyl1/A==
-Message-ID: <aae44a65-266c-43d9-8762-ff4e171f9334@kernel.org>
-Date: Tue, 3 Oct 2023 18:45:13 +0200
+	s=k20201202; t=1696351775;
+	bh=vk5M6jsyWfUwIjMHQOEyveHa8MXtCV7ecswhjbbPP0k=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=BLNWwojcLyYqsG9vNzkx1lje7fDSahkEtwzk5W9hExOWmSB9gwkkI3eupyqejlYqT
+	 114yAkUJeRriHqocw1uV0OH8Sv75fksTH2bgu5c/blIJ/CqHkKnv2wMv3pGxlJSQp0
+	 geOGT+S2KTC4P6VTTU5lKVLFGqhZ7HQIqwZVpbNH4EbUzFLFR6LyK2QfaX9YJOMkdU
+	 qL+TxDwEMaI/ZecVFOyfI3luuBd4qJO8ixrTWMBy9/bFfWKbDs4rOelRTnbXBvnNQD
+	 61LZOjV06IfV97Af155PdyDWZHB2ny/x4PKJrsI5TaYO3PdldCfjyho2iM8wE4Qj4j
+	 q3IAcY1jeWlIg==
+Message-ID: <28d63c96-38a4-45db-8b72-dfba3cf8b7be@kernel.org>
+Date: Tue, 3 Oct 2023 18:49:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -24,29 +24,32 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 1/2] tcp: define initial scaling factor
- value as a macro
+Subject: Re: [PATCH mptcp-net] MAINTAINERS: update Matthieu's email address
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>
-References: <c71297499300a20bc41fe9c526d4a6cad08c176f.1696237983.git.pabeni@redhat.com>
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20231003-mptcp-matt-email-v1-1-5d86d82f8c08@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Organization: Tessares
-In-Reply-To: <c71297499300a20bc41fe9c526d4a6cad08c176f.1696237983.git.pabeni@redhat.com>
+In-Reply-To: <20231003-mptcp-matt-email-v1-1-5d86d82f8c08@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hello,
 
-On 02/10/2023 11:13, Paolo Abeni wrote:
-> So that other users could access it. Notably MPTCP will use
-> it in the next patch.
+On 03/10/2023 17:29, Matthieu Baerts wrote:
+> Use my kernel.org account instead.
 > 
-> No functional change intended.
+> The other one will bounce by the end of the year.
+> 
+> Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
+> ---
+> 
+> 
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-Thank you for the new version, it looks good to me!
-
-Acked-by: Matthieu Baerts <matttbe@kernel.org>
+Mmh, sorry for that, it has been added by b4 when sending the patch
+because I created the topic before changing my user.email config. I can
+fix that when applying the patch.
 
 Cheers,
 Matt
