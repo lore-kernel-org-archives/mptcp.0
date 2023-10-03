@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94625D2EB
-	for <mptcp@lists.linux.dev>; Tue,  3 Oct 2023 16:59:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C66C433C7;
-	Tue,  3 Oct 2023 16:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D1530CF2
+	for <mptcp@lists.linux.dev>; Tue,  3 Oct 2023 17:00:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59558C433C8;
+	Tue,  3 Oct 2023 17:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696352390;
-	bh=BX1lvpezTqmvgrUexwjn4L51l4g+ESAIdiyku86MTLE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OJi30JtmekFTzYgYKScR9Sdx0bzXDDoeMsgYyNraRUIzIoVyf+ncRgh4SQCqD3z6D
-	 Ysyy8GhTWJYtLckB3uvTmwSxBxWZCwB8tW56/ks8AkNz3XNSfyfjPslngadIaUZY4w
-	 Wi7wSMDziR/48Pod0rQLxUDfSHtdvc9412uJqeAx71Qjwgl+wsvl0Oiu7oO8KlKsxW
-	 K3TilPipKj0XH+Ihm3bCvCuYEPitSuLK550qzjByVGRXTIzPNgs7Pdpr3IKQDPr/Z+
-	 QozFlrDEgirU8kuCcxGAoS4CBI9CLnHCFuw7sRGW28Fzp30fpGuQc7jEsd/Sz8pcmU
-	 djnrkGzsNOdVg==
-Message-ID: <27be4fdf-16b7-43b8-a79c-d950b69ba842@kernel.org>
-Date: Tue, 3 Oct 2023 18:59:47 +0200
+	s=k20201202; t=1696352448;
+	bh=tRCDOIouY5wyM44jl/uNXTaDeJ6LXVtgGJxFHWOr75k=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=I+qLdNsaHQnStArroWMH6ZWssgZQBF8KtLYjPgDmrThQWMrtBDOtuWft+bEua4yQQ
+	 CXXzJnIH6is9rzhbzKb3fyS6+sMLO2+FBfoFWoZqsqTffFxIGUIJQ+dtZEt0uCQbaL
+	 ptbcTiAhD8QzGyqjPO/YTw5m45rQEUvGm9uKfJuMPCY/rRHK8oiHCTJsYI1th4eljC
+	 Axsc8udFeDWzDzY0QNkY1Rhl2zBG3qjfnzoiOojJ6/Gc/l8snSf7gQoqqV3aseSDd7
+	 5z8GvwQz+awgkQg6bvU5LHFWLnSjZO56XvkwELONtT4F7xJtZnMR62FJgrnSZ6J4dd
+	 Q8LFGSuyh6n4A==
+Message-ID: <1062d675-bf2d-49c7-8d15-a6af2cb8cf0c@kernel.org>
+Date: Tue, 3 Oct 2023 19:00:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -24,54 +24,37 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 2/2] Squash-to: "mptcp: give rcvlowat some
- love"
+Subject: Re: [PATCH mptcp-net] MAINTAINERS: update Matthieu's email address
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>
-References: <c71297499300a20bc41fe9c526d4a6cad08c176f.1696237983.git.pabeni@redhat.com>
- <21dd84bd44a8d0839564bed351e7d77a16b68474.1696237983.git.pabeni@redhat.com>
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20231003-mptcp-matt-email-v1-1-5d86d82f8c08@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Organization: Tessares
-In-Reply-To: <21dd84bd44a8d0839564bed351e7d77a16b68474.1696237983.git.pabeni@redhat.com>
+In-Reply-To: <20231003-mptcp-matt-email-v1-1-5d86d82f8c08@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hello,
 
-On 02/10/2023 11:13, Paolo Abeni wrote:
-> Christoph reported a couple of serious splat caused by
-> the mentioned patch.
+On 03/10/2023 17:29, Matthieu Baerts wrote:
+> Use my kernel.org account instead.
 > 
-> mptcp_set_rcvlowat() can use msk->scaling_ratio, before
-> such field is initialized, causing a divide by zero: we
-> need to init it in the sock constructor.
-> 
-> Additionally the same function bogusly cast an msk to a
-> tcp_sock, causing memory corruption. The reproducer likely
-> clears the sk refcount for the next msk allocated into the
-> same slab.
-> 
-> The intent was to properly propagate the rcvbuf changes to
-> the subflows. Let's do that explicitly.
-> 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> --
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/442
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/443
+> The other one will bounce by the end of the year.
 
-Thank you for the patches!
+I just applied this patch not to block Mat to send other patches for -net.
 
-Now in our tree (I added patch 1/2 just before "mptcp: give rcvlowat
-some love")
+@Mat: feel free to add a RvB tag if needed (I can add it in the tree as
+well if you prefer).
 
-New patches for t/upstream:
-- 3a6e7c602676: tcp: define initial scaling factor value as a macro
-- 4b8e173a713a: "squashed" patch 2/2 in "mptcp: give rcvlowat some love"
-- Results: 3cbb19268039..ad8e597b726a (export)
+New patches for t/upstream-net and t/upstream:
+- 07a08ce3dd39: MAINTAINERS: update Matthieu's email address
+- Results: d6b1c4fef06f..1d5658e7aeb2 (export-net)
+- Results: ad8e597b726a..5475e96c3d7a (export)
 
 Tests are now in progress:
 
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231003T165758
 https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231003T165758
 
 Cheers,
