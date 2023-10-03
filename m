@@ -1,128 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486BE79E4
-	for <mptcp@lists.linux.dev>; Mon,  2 Oct 2023 09:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1696238038;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YwH14F1VO8hYubdZvT/SlXQGW2cYP91DjveWU/C/w8Y=;
-	b=TeG2/PLuDc1ZXqiBZo8DKq04mMksd+FsBIhYWUK62CYQ7UdH3tFJ7G69IJ5l6d2R/rJPax
-	VN8bckIGXQWOz6SMyLYJmhOO6kczY9ahQjShzTytnxwxrfJPQ7TrRQwW1GG729GqCFFFcw
-	h+HEfefekAQuleWEt8FYyUJrFBvg0nc=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-493-PAOTb1tuPrOYxjkJqjJ-yQ-1; Mon, 02 Oct 2023 05:13:56 -0400
-X-MC-Unique: PAOTb1tuPrOYxjkJqjJ-yQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 699171C07821;
-	Mon,  2 Oct 2023 09:13:56 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.225.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C6D4A2026D4B;
-	Mon,  2 Oct 2023 09:13:55 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>
-Subject: [PATCH mptcp-next v2 2/2] Squash-to: "mptcp: give rcvlowat some love"
-Date: Mon,  2 Oct 2023 11:13:42 +0200
-Message-ID: <21dd84bd44a8d0839564bed351e7d77a16b68474.1696237983.git.pabeni@redhat.com>
-In-Reply-To: <c71297499300a20bc41fe9c526d4a6cad08c176f.1696237983.git.pabeni@redhat.com>
-References: <c71297499300a20bc41fe9c526d4a6cad08c176f.1696237983.git.pabeni@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C5A347A2
+	for <mptcp@lists.linux.dev>; Tue,  3 Oct 2023 15:29:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392BEC433C9;
+	Tue,  3 Oct 2023 15:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696346981;
+	bh=3freshd18d+/685WHScSo2hlHcXePfoPaLhJWmIhqD0=;
+	h=From:Date:Subject:To:Cc:From;
+	b=f5B4WP9A7UCWdazekIAQ8oyZBpqVNeDQTcbT1HEnoUxlgEmQKF/AfoPhT2AXuuhgU
+	 di0m+Mrp4+oNDG+e+yjhQ4lMxiz8+f/38wVU95YDBoLK7NI93N88QjJeWdnlTikT7h
+	 kSuPK8VZs6fpVMgPn+BkA5vEuUZpvMXyaM7qK039btsvqeickI9E9WDk2d5V2UWXxL
+	 eEjk6lGTOWMjYV5rzqVlL9J1Nq7Q3mmLseOc5i91KiPgtk8dfYCIxJX5nYb9joqv3S
+	 YSXz3dwxj0Wra4DHpIDrkSqw72Pc0LW/gYOihQ3zSl5WYdzTtSGcptMM6BdMRaWgH5
+	 GcThzUYrkzuvA==
+From: Matthieu Baerts <matttbe@kernel.org>
+Date: Tue, 03 Oct 2023 17:29:25 +0200
+Subject: [PATCH mptcp-net] MAINTAINERS: update Matthieu's email address
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231003-mptcp-matt-email-v1-1-5d86d82f8c08@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAFQzHGUC/yWMQQqAMAzAviI9W5gWhvgV8VC0asHNsQ0RxL879
+ BhIckOSqJKgr26IcmrSwxdo6gqmjf0qqHNhaE1LjTGELuQpoOOcURzrjpaoE8Ns7UxQshBl0et
+ bDvDbXjKMz/MCiH3plW0AAAA=
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matttbe@kernel.org>, 
+ Matthieu Baerts <matttbe@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1506; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=3freshd18d+/685WHScSo2hlHcXePfoPaLhJWmIhqD0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlHDNkkvJ8/yp3AxWOdh404VT9APMVlswYfUiDR
+ vstc7L80WuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZRwzZAAKCRD2t4JPQmmg
+ c98vD/0ZOwKoAXE+vrdJrXneeEANGtiw/a9Hsxn/K6nlGUOR9hyHRS9blAYEkQ+cfDwVkOxQCyr
+ PJPgRZja7rFK0YviecnIHd1dA8uAkvK440bcvDB1b9jlxE1cyuATQznPlfrl4mesBQNxgVBEjWt
+ 0dGw6TPmfj5jFGfZdAu9pLcaCjyGLywLFwK5ogf50WKq/gUvzGn/kPLu0XrT/QuvYvco7HElZmF
+ vAqR+WF24IhCqSXxN+odogeCJLtYWhbygESXK0AnVT7LEyipGl0RwVTHr/rH/DoQyEUnrQoTxLG
+ UOwOITR2grVQiz9U/n7i9uE2Gnx9S1Id6Ib7I5HLgyhz346fyFg/kwnH02eeMjOfZg2gJ0MhFNw
+ eJw3CP5kimcL6LlQUfeOaZy/OUBXyrei7eas2YyIGGCnI3Bw9b3+x/v/epWsyklzB/OYcWU8mo/
+ fDL4k8/ME30x+bWVGTvUGbo7fBFAaNrX2KZvS5M/UgxFidMwGunZyz6oRuI6kymtmPhOlOVf8BK
+ dLzVRCB93BCKRij5P+60cZE+bv/W9Qs1jfCw+yRIEEy+hvbLHAglLsww8/G1PrYoCL55/5dy/3F
+ 19ZTslRNAfQuOQZyMx1VH1gEcZxLIrvnxEoH+p99dswHKCwifpMdIVtc5VRB08qgBKUOCAPCXNm
+ rKIv+1WL+z5zubg==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Christoph reported a couple of serious splat caused by
-the mentioned patch.
+Use my kernel.org account instead.
 
-mptcp_set_rcvlowat() can use msk->scaling_ratio, before
-such field is initialized, causing a divide by zero: we
-need to init it in the sock constructor.
+The other one will bounce by the end of the year.
 
-Additionally the same function bogusly cast an msk to a
-tcp_sock, causing memory corruption. The reproducer likely
-clears the sk refcount for the next msk allocated into the
-same slab.
-
-The intent was to properly propagate the rcvbuf changes to
-the subflows. Let's do that explicitly.
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
---
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/442
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/443
-
-since the above issues are introduced by the squash-to patch, I think
-we can't have the tag in the final patch.
-
-v1 -> v2:
- - use scaling_ratio define (Mat)
+Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
 ---
- net/mptcp/protocol.c |  1 +
- net/mptcp/sockopt.c  | 17 ++++++++++++++---
- 2 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6f9e116598ed..990fcf53074a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2758,6 +2758,7 @@ static void __mptcp_init_sock(struct sock *sk)
- 	msk->rmem_fwd_alloc = 0;
- 	WRITE_ONCE(msk->rmem_released, 0);
- 	msk->timer_ival = TCP_RTO_MIN;
-+	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ .mailmap    | 1 +
+ MAINTAINERS | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/.mailmap b/.mailmap
+index a0a6efe87186..c80903efec75 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -377,6 +377,7 @@ Matthew Wilcox <willy@infradead.org> <willy@debian.org>
+ Matthew Wilcox <willy@infradead.org> <willy@linux.intel.com>
+ Matthew Wilcox <willy@infradead.org> <willy@parisc-linux.org>
+ Matthias Fuchs <socketcan@esd.eu> <matthias.fuchs@esd.eu>
++Matthieu Baerts <matttbe@kernel.org> <matthieu.baerts@tessares.net>
+ Matthieu CASTET <castet.matthieu@free.fr>
+ Matti Vaittinen <mazziesaccount@gmail.com> <matti.vaittinen@fi.rohmeurope.com>
+ Matt Ranostay <matt.ranostay@konsulko.com> <matt@ranostay.consulting>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 768e5cbd5868..51ba9d8a2dfc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14958,7 +14958,7 @@ K:	macsec
+ K:	\bmdo_
  
- 	WRITE_ONCE(msk->first, NULL);
- 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 340e87195a27..6b37946b5c52 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -1473,6 +1473,7 @@ void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
-  */
- int mptcp_set_rcvlowat(struct sock *sk, int val)
- {
-+	struct mptcp_subflow_context *subflow;
- 	int space, cap;
- 
- 	if (sk->sk_userlocks & SOCK_RCVBUF_LOCK)
-@@ -1490,9 +1491,19 @@ int mptcp_set_rcvlowat(struct sock *sk, int val)
- 		return 0;
- 
- 	space = __tcp_space_from_win(mptcp_sk(sk)->scaling_ratio, val);
--	if (space > sk->sk_rcvbuf) {
--		WRITE_ONCE(sk->sk_rcvbuf, space);
--		tcp_sk(sk)->window_clamp = val;
-+	if (space <= sk->sk_rcvbuf)
-+		return 0;
-+
-+	/* propagate the rcvbuf changes to all the subflows */
-+	WRITE_ONCE(sk->sk_rcvbuf, space);
-+	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		bool slow;
-+
-+		slow = lock_sock_fast(ssk);
-+		WRITE_ONCE(ssk->sk_rcvbuf, space);
-+		tcp_sk(ssk)->window_clamp = val;
-+		unlock_sock_fast(ssk, slow);
- 	}
- 	return 0;
- }
+ NETWORKING [MPTCP]
+-M:	Matthieu Baerts <matthieu.baerts@tessares.net>
++M:	Matthieu Baerts <matttbe@kernel.org>
+ M:	Mat Martineau <martineau@kernel.org>
+ L:	netdev@vger.kernel.org
+ L:	mptcp@lists.linux.dev
+
+---
+base-commit: 9de414b56675cd517b7ea3d523dd35737e89ee94
+change-id: 20231003-mptcp-matt-email-6338e0aa66d3
+
+Best regards,
 -- 
-2.41.0
+Matthieu Baerts <matttbe@kernel.org>
 
