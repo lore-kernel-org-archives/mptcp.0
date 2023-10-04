@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D1530CF2
-	for <mptcp@lists.linux.dev>; Tue,  3 Oct 2023 17:00:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59558C433C8;
-	Tue,  3 Oct 2023 17:00:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CAE1B266
+	for <mptcp@lists.linux.dev>; Wed,  4 Oct 2023 15:56:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA3A4C433C9;
+	Wed,  4 Oct 2023 15:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696352448;
-	bh=tRCDOIouY5wyM44jl/uNXTaDeJ6LXVtgGJxFHWOr75k=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=I+qLdNsaHQnStArroWMH6ZWssgZQBF8KtLYjPgDmrThQWMrtBDOtuWft+bEua4yQQ
-	 CXXzJnIH6is9rzhbzKb3fyS6+sMLO2+FBfoFWoZqsqTffFxIGUIJQ+dtZEt0uCQbaL
-	 ptbcTiAhD8QzGyqjPO/YTw5m45rQEUvGm9uKfJuMPCY/rRHK8oiHCTJsYI1th4eljC
-	 Axsc8udFeDWzDzY0QNkY1Rhl2zBG3qjfnzoiOojJ6/Gc/l8snSf7gQoqqV3aseSDd7
-	 5z8GvwQz+awgkQg6bvU5LHFWLnSjZO56XvkwELONtT4F7xJtZnMR62FJgrnSZ6J4dd
-	 Q8LFGSuyh6n4A==
-Message-ID: <1062d675-bf2d-49c7-8d15-a6af2cb8cf0c@kernel.org>
-Date: Tue, 3 Oct 2023 19:00:47 +0200
+	s=k20201202; t=1696434964;
+	bh=TY1KsD/zA6NXRJaDfxHZ3SuExovxpoyuZHB2EUsE5rY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=P801Hd0ecjul6zXH8P3Akm7zkdpyqevqXuQ7MG6xGbCr8svupJCuO/BcVc3FYDmfH
+	 BYumUete0uFCv1wsnRlWmiOrGlLcQFtIB6oLYgSYUtlfy96KhzN5YHdqyc5sFkx5O0
+	 tSn6DrVjDWNbeUu+yAOGDzUj0dA5aSix02U5lKjhnZsDMat24Ai+5+yieJtCRPfIiT
+	 uXBb1bVULg8gmIpyRoaKYmTonHOhbgJDwjMP2DyvE5d2egDfoeELPZxB8arpQlMKRa
+	 0L24qWC2GOAEfPWpTxqGNNDRuyYLLiJ/5T0JdiLSyVYWhkq/2ugQh9arqzODuZsHQm
+	 Qe7BnVUh5K1CQ==
+Message-ID: <3f41e4a0-dade-44fc-b336-b9643444f6d0@kernel.org>
+Date: Wed, 4 Oct 2023 17:56:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -24,38 +24,30 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] MAINTAINERS: update Matthieu's email address
+Subject: Re: [PATCH mptcp-next v2] ss: mptcp: print out subflows_total counter
 Content-Language: en-GB, fr-BE
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20231003-mptcp-matt-email-v1-1-5d86d82f8c08@kernel.org>
-Cc: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1694763508.git.geliang.tang@suse.com>
+ <3ca520a2ce84c33ad8f9421add0b717091173a22.1694763872.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Organization: Tessares
-In-Reply-To: <20231003-mptcp-matt-email-v1-1-5d86d82f8c08@kernel.org>
+In-Reply-To: <3ca520a2ce84c33ad8f9421add0b717091173a22.1694763872.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Geliang,
 
-On 03/10/2023 17:29, Matthieu Baerts wrote:
-> Use my kernel.org account instead.
-> 
-> The other one will bounce by the end of the year.
+On 15/09/2023 09:45, Geliang Tang wrote:
+> A new counter mptcpi_subflows_total has been added in mptcpi_flags
+> to count the total amount of subflows from mptcp_info including the
+> initial one. This patch prints out it into mptcp_stats output.
 
-I just applied this patch not to block Mat to send other patches for -net.
+Thank you for the patch! It looks good to me:
 
-@Mat: feel free to add a RvB tag if needed (I can add it in the tree as
-well if you prefer).
+Acked-by: Matthieu Baerts <matttbe@kernel.org>
 
-New patches for t/upstream-net and t/upstream:
-- 07a08ce3dd39: MAINTAINERS: update Matthieu's email address
-- Results: d6b1c4fef06f..1d5658e7aeb2 (export-net)
-- Results: ad8e597b726a..5475e96c3d7a (export)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231003T165758
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231003T165758
+I guess this can be sent to iproute-next when the corresponding kernel
+patches are in net-next.
 
 Cheers,
 Matt
