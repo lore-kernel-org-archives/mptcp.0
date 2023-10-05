@@ -1,72 +1,253 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA12529425;
-	Thu,  5 Oct 2023 16:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6DC37C9D
+	for <mptcp@lists.linux.dev>; Thu,  5 Oct 2023 17:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHixNa63"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7DA30C433C9;
-	Thu,  5 Oct 2023 16:40:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ID8ylC66"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0BF2C433C8;
+	Thu,  5 Oct 2023 17:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696524025;
-	bh=7XaG2GVyPHp1/W38bWaJQuHP6bwhoDCUos4hHFNyh1k=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=FHixNa63p9+sq9sl9xv45dsxDc4xz16wlMyHd+TEaNB0Zs0N96RDDlqmwEYPjAaIS
-	 lxdY1eSdyyKLUY9ps3r4UXEKqpqYHkATZ5E5/fg5ZGbkD0MDFyHQ1HOT0qrqxUFIgZ
-	 OOecBBpV5yrvJwNUp+oze+Y269Y8lbXbc9mBLpLXidTc6ehVHuMFQU9o2tzdnX+fBY
-	 JllUzRVuCsvJ5zKNzbA197qjlyJUT6BZrvTLYk6R9fbfQdfLWfSC9wUzLfgycD2uTe
-	 I5/SZm74Dzy4T+Mdq2dmigJIE2UOVI1HK3VpC8H+UCJ4b2qbPx9/SlIdVv1UaLT3+e
-	 m6xBvc+eDDPww==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 67275E11F50;
-	Thu,  5 Oct 2023 16:40:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1696526315;
+	bh=tMlToK1spTwANyFl64owqd/LY8i5Dk+TtKHGdJx+1KY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ID8ylC66Y+XWuYbqOvqfAWT785nbKZKckU3Cro80IVhTx5/UMN1ltcJ1iZ77A8iRH
+	 sYOznPQ+DFemlcWjzGziGaqDBFggWOMnNnKWsjs6VpS/L7GcqwV7XVcKa0ZrOrTHYH
+	 r9xe0DB1llz0cZ63sUXMdz7/RGpmzT0XmtPUkLOXr/IkKUVzPZuH5QyXAqY95qB3/N
+	 2DzftSlu+KmuGlLnhz2kSd7yaj8QLk0wWjfB3XEgN/q/l6x6z5lVYcsqeX7dMNiDpk
+	 GjtVjGTLqLb5yVzG2Uk8B5/tsPCjTHMio8xH4gFAcatPJt1aGKiO9W0Bh1hIyt62tc
+	 7e0uwefV4e8MQ==
+From: matttbe@kernel.org
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthieu Baerts <matthieu.baerts@tessares.net>,
+	Mat Martineau <martineau@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH 6.5.y] mptcp: rename timer related helper to less confusing names
+Date: Thu,  5 Oct 2023 19:18:13 +0200
+Message-Id: <20231005171813.1831910-1-matttbe@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <2023100400-example-ashen-2013@gregkh>
+References: <2023100400-example-ashen-2013@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7082; i=matttbe@kernel.org; h=from:subject; bh=iP/M25+7srqBSQhlATuvqwDsFxNqep/eQikJ2lNc4SY=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlHu/V6OSKt3lDO0Unrft07anSZ+3zQzzK93uk7 P1iwVMMVsuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZR7v1QAKCRD2t4JPQmmg cxRfEADCNT9z2uZUkh0HrN9wF3L7waQ8VpgZKSNW2I2y9FryzmeEc6Oca8BGkip3q7qSbHx5XV8 YaviRDiSHXj5ZfDi4MTIV24B6jL7/oT3Q9hbCecE3GIn5SSl9ERm5WWJHhJD1LV89bKcJzPpJLE gL+4k7UpMG60IWbkD/AOS7jOZdP1fJxpTtlSi6gTqO7TZnweuL3H8utV0AbtNTlKK3d8vmZ4wGQ jJMlQtj+uoueeldg2GgZzg9WyfSkQuT2t6fKzOxvdrW/dgs4tgTMYM933XyoAU61+92aAAkBqlH 642X+VAm7qdZ7xEXnQg/debNrguEL67XTBi9GptZogb6/cbvk0UEZyCD/gNzqrTIKb6c6kaUowU 1ig28PS/5NiIS2Nm3OaDd8wKizf/Wsz3IYcdasrTBZpxi4NSaAJ0OCg8ExGXNGCfcz+/JqUbHSH z2ZHdpNbx/3xfmwl8trJI9gE9yyVP3P+jkiuH5l9u+SbJd7XbM9dwFaFKfHLG9wIen+A40rpkpj GELTvsP004yM3MAX6UYN+pv8z3m/bUv5iiDOnQTO3GUxnkn2OxFt3ZB2VJkIjxzIWM82XXKfIv5 ScDcVWjXgQl+5ttuTELeqrvLMstMIvnPo/qoYxax+xs/kMjWxeYT4P2nRS6+okBNGYgcowrxsFa KwOSdEB9uSh4PrQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/3] mptcp: Fixes and maintainer email update for v6.6
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169652402541.29548.3696837409901235215.git-patchwork-notify@kernel.org>
-Date: Thu, 05 Oct 2023 16:40:25 +0000
-References: <20231004-send-net-20231004-v1-0-28de4ac663ae@kernel.org>
-In-Reply-To: <20231004-send-net-20231004-v1-0-28de4ac663ae@kernel.org>
-To: Mat Martineau <martineau@kernel.org>
-Cc: matttbe@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, kishen.maloor@intel.com, fw@strlen.de,
- stable@vger.kernel.org, geliang.tang@suse.com
 
-Hello:
+From: Paolo Abeni <pabeni@redhat.com>
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+commit f6909dc1c1f4452879278128012da6c76bc186a5 upstream.
 
-On Wed, 04 Oct 2023 13:38:10 -0700 you wrote:
-> Patch 1 addresses a race condition in MPTCP "delegated actions"
-> infrastructure. Affects v5.19 and later.
-> 
-> Patch 2 removes an unnecessary restriction that did not allow additional
-> outgoing subflows using the local address of the initial MPTCP subflow.
-> v5.16 and later.
-> 
-> [...]
+The msk socket uses to different timeout to track close related
+events and retransmissions. The existing helpers do not indicate
+clearly which timer they actually touch, making the related code
+quite confusing.
 
-Here is the summary with links:
-  - [net,1/3] mptcp: fix delegated action races
-    https://git.kernel.org/netdev/net/c/a5efdbcece83
-  - [net,2/3] mptcp: userspace pm allow creating id 0 subflow
-    https://git.kernel.org/netdev/net/c/e5ed101a6028
-  - [net,3/3] MAINTAINERS: update Matthieu's email address
-    https://git.kernel.org/netdev/net/c/8eed6ee362b0
+Change the existing helpers name to avoid such confusion. No
+functional change intended.
 
-You are awesome, thank you!
+This patch is linked to the next one ("mptcp: fix dangling connection
+hang-up"). The two patches are supposed to be backported together.
+
+Cc: stable@vger.kernel.org # v5.11+
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
+---
+Backport notes:
+  - It was conflicting with e263691773cd ("mptcp: Remove unnecessary
+    test for __mptcp_init_sock()") removing code (return) in the same
+    context.
+---
+ net/mptcp/protocol.c | 42 +++++++++++++++++++++---------------------
+ net/mptcp/protocol.h |  2 +-
+ net/mptcp/subflow.c  |  2 +-
+ 3 files changed, 23 insertions(+), 23 deletions(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 6947b4b2519c..450b106eb088 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -407,7 +407,7 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+ 	return false;
+ }
+ 
+-static void mptcp_stop_timer(struct sock *sk)
++static void mptcp_stop_rtx_timer(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 
+@@ -913,12 +913,12 @@ static void __mptcp_flush_join_list(struct sock *sk, struct list_head *join_list
+ 	}
+ }
+ 
+-static bool mptcp_timer_pending(struct sock *sk)
++static bool mptcp_rtx_timer_pending(struct sock *sk)
+ {
+ 	return timer_pending(&inet_csk(sk)->icsk_retransmit_timer);
+ }
+ 
+-static void mptcp_reset_timer(struct sock *sk)
++static void mptcp_reset_rtx_timer(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	unsigned long tout;
+@@ -1052,10 +1052,10 @@ static void __mptcp_clean_una(struct sock *sk)
+ out:
+ 	if (snd_una == READ_ONCE(msk->snd_nxt) &&
+ 	    snd_una == READ_ONCE(msk->write_seq)) {
+-		if (mptcp_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
+-			mptcp_stop_timer(sk);
++		if (mptcp_rtx_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
++			mptcp_stop_rtx_timer(sk);
+ 	} else {
+-		mptcp_reset_timer(sk);
++		mptcp_reset_rtx_timer(sk);
+ 	}
+ }
+ 
+@@ -1606,8 +1606,8 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+ 
+ out:
+ 	/* ensure the rtx timer is running */
+-	if (!mptcp_timer_pending(sk))
+-		mptcp_reset_timer(sk);
++	if (!mptcp_rtx_timer_pending(sk))
++		mptcp_reset_rtx_timer(sk);
+ 	if (do_check_data_fin)
+ 		mptcp_check_send_data_fin(sk);
+ }
+@@ -1663,8 +1663,8 @@ static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool
+ 	if (copied) {
+ 		tcp_push(ssk, 0, info.mss_now, tcp_sk(ssk)->nonagle,
+ 			 info.size_goal);
+-		if (!mptcp_timer_pending(sk))
+-			mptcp_reset_timer(sk);
++		if (!mptcp_rtx_timer_pending(sk))
++			mptcp_reset_rtx_timer(sk);
+ 
+ 		if (msk->snd_data_fin_enable &&
+ 		    msk->snd_nxt + 1 == msk->write_seq)
+@@ -2235,7 +2235,7 @@ static void mptcp_retransmit_timer(struct timer_list *t)
+ 	sock_put(sk);
+ }
+ 
+-static void mptcp_timeout_timer(struct timer_list *t)
++static void mptcp_tout_timer(struct timer_list *t)
+ {
+ 	struct sock *sk = from_timer(sk, t, sk_timer);
+ 
+@@ -2607,14 +2607,14 @@ static void __mptcp_retrans(struct sock *sk)
+ reset_timer:
+ 	mptcp_check_and_set_pending(sk);
+ 
+-	if (!mptcp_timer_pending(sk))
+-		mptcp_reset_timer(sk);
++	if (!mptcp_rtx_timer_pending(sk))
++		mptcp_reset_rtx_timer(sk);
+ }
+ 
+ /* schedule the timeout timer for the relevant event: either close timeout
+  * or mp_fail timeout. The close timeout takes precedence on the mp_fail one
+  */
+-void mptcp_reset_timeout(struct mptcp_sock *msk, unsigned long fail_tout)
++void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+ 	unsigned long timeout, close_timeout;
+@@ -2647,7 +2647,7 @@ static void mptcp_mp_fail_no_response(struct mptcp_sock *msk)
+ 	WRITE_ONCE(mptcp_subflow_ctx(ssk)->fail_tout, 0);
+ 	unlock_sock_fast(ssk, slow);
+ 
+-	mptcp_reset_timeout(msk, 0);
++	mptcp_reset_tout_timer(msk, 0);
+ }
+ 
+ static void mptcp_do_fastclose(struct sock *sk)
+@@ -2736,7 +2736,7 @@ static int __mptcp_init_sock(struct sock *sk)
+ 
+ 	/* re-use the csk retrans timer for MPTCP-level retrans */
+ 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
+-	timer_setup(&sk->sk_timer, mptcp_timeout_timer, 0);
++	timer_setup(&sk->sk_timer, mptcp_tout_timer, 0);
+ 
+ 	return 0;
+ }
+@@ -2826,8 +2826,8 @@ void mptcp_subflow_shutdown(struct sock *sk, struct sock *ssk, int how)
+ 		} else {
+ 			pr_debug("Sending DATA_FIN on subflow %p", ssk);
+ 			tcp_send_ack(ssk);
+-			if (!mptcp_timer_pending(sk))
+-				mptcp_reset_timer(sk);
++			if (!mptcp_rtx_timer_pending(sk))
++				mptcp_reset_rtx_timer(sk);
+ 		}
+ 		break;
+ 	}
+@@ -2910,7 +2910,7 @@ static void __mptcp_destroy_sock(struct sock *sk)
+ 
+ 	might_sleep();
+ 
+-	mptcp_stop_timer(sk);
++	mptcp_stop_rtx_timer(sk);
+ 	sk_stop_timer(sk, &sk->sk_timer);
+ 	msk->pm.status = 0;
+ 
+@@ -3029,7 +3029,7 @@ bool __mptcp_close(struct sock *sk, long timeout)
+ 		__mptcp_destroy_sock(sk);
+ 		do_cancel_work = true;
+ 	} else {
+-		mptcp_reset_timeout(msk, 0);
++		mptcp_reset_tout_timer(msk, 0);
+ 	}
+ 
+ 	return do_cancel_work;
+@@ -3092,7 +3092,7 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 	mptcp_check_listen_stop(sk);
+ 	inet_sk_state_store(sk, TCP_CLOSE);
+ 
+-	mptcp_stop_timer(sk);
++	mptcp_stop_rtx_timer(sk);
+ 	sk_stop_timer(sk, &sk->sk_timer);
+ 
+ 	if (msk->token)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index ba2a873a4d2e..4e31b5cf4829 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -699,7 +699,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+ 
+ void mptcp_finish_connect(struct sock *sk);
+ void __mptcp_set_connected(struct sock *sk);
+-void mptcp_reset_timeout(struct mptcp_sock *msk, unsigned long fail_tout);
++void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout);
+ static inline bool mptcp_is_fully_established(struct sock *sk)
+ {
+ 	return inet_sk_state_load(sk) == TCP_ESTABLISHED &&
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index c7bd99b8e7b7..0506d33177f3 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1226,7 +1226,7 @@ static void mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
+ 	WRITE_ONCE(subflow->fail_tout, fail_tout);
+ 	tcp_send_ack(ssk);
+ 
+-	mptcp_reset_timeout(msk, subflow->fail_tout);
++	mptcp_reset_tout_timer(msk, subflow->fail_tout);
+ }
+ 
+ static bool subflow_check_data_avail(struct sock *ssk)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.40.1
 
