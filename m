@@ -1,24 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666187F
-	for <mptcp@lists.linux.dev>; Thu,  5 Oct 2023 09:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BBA20E3
+	for <mptcp@lists.linux.dev>; Thu,  5 Oct 2023 09:49:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4QjaW8Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58F18C116D3;
-	Thu,  5 Oct 2023 09:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696499191;
-	bh=tnQSjJDuvNm0C0AvLk80pFVLHlnOwed3703qOb9Vlnc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=m4QjaW8Zdo3DI3DgSChO8xYHpaUXwm4/7GuDg9rcgxeVd+1jwSdZR/L9jbeOqRLK7
-	 AP39KTMcXkYdvs7Ojyk96dJak+NU9Tl57aDrGDVDKUODuUpmakmZJ65lwoFt1P5tUI
-	 ir4AxWkNWAXcMuNi0pWbypJY+INzyU3W8YMry1aj6s/1iY/T3nJ310u1W4c/kxMq3E
-	 rpNWHjzn8yssYSMjjhyBQL/J5l1dj/H34IiiJPm2t7FKiDsR3drgkNEwXia4zNFOQ2
-	 S6cSt72yw6uMhlLVklImrznp6XqiYI243Scer5Njnq+b0wjN2fVPGYPkMHekowLgA6
-	 Y9gFQnZeAzbRA==
-Message-ID: <90e2f470-c517-4269-a280-14a02e573bf8@kernel.org>
-Date: Thu, 5 Oct 2023 11:46:28 +0200
+	dkim=pass (2048-bit key) header.d=tessares.net header.i=@tessares.net header.b="bG94rYxB"
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tessares.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tessares.net
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-9ae7383b7ecso426665866b.0
+        for <mptcp@lists.linux.dev>; Thu, 05 Oct 2023 02:49:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares.net; s=google; t=1696499383; x=1697104183; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zPaCDvEeF7faxiQpPSpKWGN+JkJ1Mq/jhRqLWO/fbXw=;
+        b=bG94rYxBKtjy15wPP3iNgnqIwRym8CrZHl8nfAmC205kMjLWRANR1atFkgT5IO9ri0
+         soNqHbg4nXdCPgL8C7jHvuCWwOWsNhfRGCGL1kNfywYnolP3LtCyah60HiHwFNV9aHu3
+         9QBbsHyBDWnT+xXCLZKrY+hZeibCaiNumZEFNG/4wea2F0EfdHX6fbOVyRwF5um4Rizf
+         CbOeYbl6zj5O2JmawvzQXh5vSmIXXj2C/VO9L2TE+kwhvJhLfjrrTnIOaeIKeRRHQrdm
+         rYh6yAsUGg/XO1j/QbK2DXetKGTk11TD9frQzzz0REEdQuoI2Mg/WNIyuEi6mnFoOtDj
+         t+QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696499383; x=1697104183;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zPaCDvEeF7faxiQpPSpKWGN+JkJ1Mq/jhRqLWO/fbXw=;
+        b=KUnX6nIqwd89RcdewgQmgeBKyXrkxHE2PbYVh/FDL1c0GpJOVoBxI5xPXwONu2JEJZ
+         BOE7cfctkHTHKP8bVcsjWTVKrHIj/055MvFRb9wyppdtN9QEtf3VdQpJzqDOuccwvg5m
+         S3PZW1d9MXYYCzs4iIlQQM5dLYmGT8wCocOmeS2d/cIcfXBft3fTRwB7L2xM11zqLFv2
+         hguY7unTXHZQzFkQvFoPDr+CdBWJEUClHddCoNV6Z1fQn0friw/GHajMzaC8+EjnO6ad
+         9YYAa2akqCfHU18gsC2OicShtr7sIC26lYQ1O/DSNmi+QhMJu/+fK21/pgygwUp/7kT1
+         Q7FQ==
+X-Gm-Message-State: AOJu0YyCRTTPEJGL4wpkBZted8U6TyWpB6Nezes2yw0hmohGLWI1V4gE
+	1faAMVyYnbzyFoqz+MEGQywhBA==
+X-Google-Smtp-Source: AGHT+IES8Dvr/dXn0+z+gvfeaCjSADExgRge4y5E9mP12ZLQNM7Rhne6zv6IgK4RH5vl1zsvjARI/g==
+X-Received: by 2002:a17:907:96ab:b0:9aa:1dc9:1474 with SMTP id hd43-20020a17090796ab00b009aa1dc91474mr744262ejc.33.1696499383181;
+        Thu, 05 Oct 2023 02:49:43 -0700 (PDT)
+Received: from ?IPV6:2a02:578:8593:1200:283b:178b:80b:7b6c? ([2a02:578:8593:1200:283b:178b:80b:7b6c])
+        by smtp.gmail.com with ESMTPSA id w13-20020a170906480d00b0098d2d219649sm892713ejq.174.2023.10.05.02.49.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Oct 2023 02:49:42 -0700 (PDT)
+Message-ID: <1af5cfe3-ce8c-4d96-a616-ad65d0ae28db@tessares.net>
+Date: Thu, 5 Oct 2023 11:49:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,17 +51,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 12/29] selftests: mptcp: userspace pm remove
- id 0 subflow
+Subject: Re: [PATCH mptcp-next v3 15/29] mptcp: userspace pm remove id 0
+ address
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@suse.com>
+To: Geliang Tang <geliang.tang@suse.com>, Matthieu Baerts <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev
 References: <cover.1695631132.git.geliang.tang@suse.com>
- <04438bad0ef7459b1a78fa88a6cd2e2c31ebf616.1695631132.git.geliang.tang@suse.com>
- <5c715ddd-f8de-4b64-8dab-4d3ad10c456e@tessares.net>
- <20231005083215.GA23632@bogon>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
+ <1119bff10cfc3c6b3fe4afc410f7803f27f49f1b.1695631132.git.geliang.tang@suse.com>
+ <6c6bff5e-56fb-49f7-af25-d5cb1347bc63@tessares.net>
+ <20231005083547.GB23632@bogon>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
+Autocrypt: addr=matthieu.baerts@tessares.net; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
  c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
@@ -46,121 +71,97 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  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
- 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
- Fe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: Tessares
-In-Reply-To: <20231005083215.GA23632@bogon>
+ 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
+In-Reply-To: <20231005083547.GB23632@bogon>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 05/10/2023 10:32, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Thu, Sep 28, 2023 at 10:58:33PM +0200, Matthieu Baerts wrote:
+On 05/10/2023 10:35, Geliang Tang wrote:
+> On Thu, Sep 28, 2023 at 11:00:55PM +0200, Matthieu Baerts wrote:
 >> Hi Geliang,
 >>
 >> On 25/09/2023 10:41, Geliang Tang wrote:
->>> This patch adds a selftest for userpsace PM to remove id 0 subflow. Use
->>> userspace_pm_add_sf() to add a subflow, and pass initial ip address to
->>> userspace_pm_rm_sf() to remove id 0 subflow.
+>>> This patch adds the ability to send RM_ADDR for local ID 0. Check
+>>> whether id 0 address is removed, if not, put id 0 into a removing
+>>> list, pass it to mptcp_pm_remove_addr() to remove id 0 address.
 >>>
->>> When closing the initial subflow in __mptcp_close_ssk(), dispose_it is
->>> false, then tcp_disconnect is invoked. This will send a MP_RST to close
->>> a subflow on the peer too.
+>>> There is no reason not to allow the userspace to remove the initial
+>>> address (ID 0). This special case was not taken into account not
+>>> letting the userspace to delete all addresses as announced.
+>>>
+>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/379
+>>> Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
+>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>>> ---
+>>>  net/mptcp/pm_userspace.c | 35 +++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 35 insertions(+)
+>>>
+>>> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+>>> index 6b8083650bc1..8d97cf475cac 100644
+>>> --- a/net/mptcp/pm_userspace.c
+>>> +++ b/net/mptcp/pm_userspace.c
+>>> @@ -211,6 +211,38 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+>>>  	return err;
+>>>  }
+>>>  
+>>> +static int mptcp_userspace_remove_id_zero_address(struct mptcp_sock *msk,
+>>> +						  struct genl_info *info)
+>>> +{
+>>> +	struct mptcp_rm_list list = { .nr = 0 };
+>>> +	struct mptcp_subflow_context *subflow;
+>>> +	struct sock *sk = (struct sock *)msk;
+>>> +	bool has_id_0 = false;
+>>> +	int err = -EINVAL;
+>>> +
+>>> +	lock_sock(sk);
+>>> +	spin_lock_bh(&msk->pm.lock);
 >>
->> I don't think we should have a RST (with MP_TCPRST) when we close the
->> initial subflow, no? We don't have that when we remove subflows with
->> other IDs.
+>> Why do you need to lock the 'pm' structure? mptcp_pm_remove_addr() will
+>> modify the 'pm' structure but it will also do the lock, no?
 > 
-> We do have a RST in "in-kernel remove id 0 subflow and address" tests,
-> we can test them like this:
+> mptcp_pm_remove_addrs will do the lock but mptcp_pm_remove_addr does need
+> the locks.
 
-Thank you for having checked!
+Ah yes, the names are confusing :)
 
-Do we have a RST if we remove another subflow than the initial one or if
-we send a RM_ADDR for another id than 0? We should have the same
-behaviour as with the other subflows/ID, no exception for the initial
-subflow/address ID 0.
-
-Is the RST sent by the host which received the RM_ADDR?
-
-> 
->         # remove id 0 subflow
->         if reset "remove id 0 subflow"; then
-
-(I think we should change the name of this test, it is confusing because
-there is no 'id 0 subflow', an ID is linked to an address. Maybe:
-"remove initial subflow")
-
->                 pm_nl_set_limits $ns1 0 1
->                 pm_nl_set_limits $ns2 0 1
->                 pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
->                 addr_nr_ns2=-9 speed=slow \
-
-Just to be sure (because 'addr_nr_ns2=-9' is really not clear): it will
-delete the endpoint linked to the address used by the initial subflow,
-right? And this should stop the subflow (TCP FIN) and send a RM_ADDR, right?
-
->                         run_tests $ns1 $ns2 10.0.1.1
->                 chk_join_nr 1 1 1
->                 chk_rm_nr 1 1
-> +               chk_rst_nr 1 1
->         fi
-> 
->         # remove id 0 address
->         if reset "remove id 0 address"; then
->                 pm_nl_set_limits $ns1 0 1
->                 pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
->                 pm_nl_set_limits $ns2 1 1
->                 addr_nr_ns1=-9 speed=slow \
-
-But then here, the behaviour should be the same as the previous test,
-no? Why is it not?
-
->                         run_tests $ns1 $ns2 10.0.1.1
->                 chk_join_nr 1 1 1
->                 chk_add_nr 1 1
->                 chk_rm_nr 1 1 invert
-> +               chk_rst_nr 1 1 invert
->         fi
-> 
-> Maybe it's OK with the RSTs.
-
-As long as the behaviour is the same as when removing another subflow
-than the initial one or sending a RM_ADDR for another ID then 0.
+Why not moving the PM lock just around mptcp_pm_remove_addr() then?
 
 Cheers,
 Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
