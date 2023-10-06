@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D1E18021
-	for <mptcp@lists.linux.dev>; Fri,  6 Oct 2023 14:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38AB18021
+	for <mptcp@lists.linux.dev>; Fri,  6 Oct 2023 14:47:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WaBsXSle"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB380C433C8;
-	Fri,  6 Oct 2023 14:47:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U0HkHiaY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65907C433CA;
+	Fri,  6 Oct 2023 14:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696603642;
-	bh=+n6SHIA9NqH6DfDfemZQmL/+btzLEpBxLvkalofOr/M=;
-	h=From:Subject:Date:To:Cc:From;
-	b=WaBsXSlex+rOETo6gLeHzWT2fbAk4JRdkx8DO7LtjdRAEbnOBwBF/RX93Kmr4cbhj
-	 EMeWsP17/9jXUUGqY8j6WpPWYr8DCq2/NWdlM36opMj5aUi2hCeFqh+Rz05H0HQBSq
-	 6sg3FUkxtAJPvJxbM8/fJVjDJG9msPMEEnCyDsP+hpHJRs0nRtVZjsJMyOmm2GsbN3
-	 DUbS9fe3susCCYQJQCX5NA/It1sQeRJMRZLQqvzmbdNeDoOe2hF5GAjlvLd4aSFSaG
-	 3YUEiFcERTf65HBfkIX0ktF4QrDEmo7I5M24sTzBOqCFFktnis5Hmu8CdML6QZ/x7N
-	 AN72XgDW0m+yA==
+	s=k20201202; t=1696603644;
+	bh=3fcCkhAMqz+B3I6N6A+aPBPxKdvX+PKIKTYR2gNeoLg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=U0HkHiaY2zrqgwm3NGEgmNnxUoe0fkHr/m3QF7JTp5Au412xT6AOgOCco2N6AdPe0
+	 IP4B+qzjglRa8a4cgnZcgDIXDebGe17rkVkAvgQnHvvrwZvMxPXtt8uLZ3dwCg9Hib
+	 EIn5d4oChvjPDrHcD88tVal0SM9PjBOXqj4YjjPwoFqopAsD1wIj3SDM2vIUq3aNPK
+	 OEfPl1VSSss4uUsBZshmFVmnZSbqCMVo9TIlsliCg5L5iK4cj9qFBHG9UBPoUmOxYU
+	 uuKCfzd8AJ1m520TbkaTmEYyvYQ3j8CkLWTVfOLmN0H/k6YoEPbaisNzQsvJavcZB5
+	 EcWhl+jU+ROjw==
 From: Matthieu Baerts <matttbe@kernel.org>
-Subject: [PATCH net-next 0/6] mptcp: convert Netlink code to use YAML spec
-Date: Fri, 06 Oct 2023 16:46:35 +0200
-Message-Id: <20231006-upstream-net-next-20231006-mptcp-ynl-v1-0-0a97f2f5410e@kernel.org>
+Date: Fri, 06 Oct 2023 16:46:36 +0200
+Subject: [PATCH net-next 1/6] tools: ynl: add uns-admin-perm to genetlink
+ legacy
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,80 +29,55 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMsdIGUC/z2N3QoCIRSEX2U51x3wBzbsVaIL07N1IE3UDUN89
- ySoi7n4GL6ZDoUyU4HT0iHTiws/4wR5WMDdbbwRsp8MSigthVhxT6VmsgEj1ZlW8V+FVF3Cd3y
- g8NoZc5XkjwbmVMq0cfvenOEnwmWMD7SV1eeAAAAA
+Message-Id: <20231006-upstream-net-next-20231006-mptcp-ynl-v1-1-0a97f2f5410e@kernel.org>
+References: <20231006-upstream-net-next-20231006-mptcp-ynl-v1-0-0a97f2f5410e@kernel.org>
+In-Reply-To: <20231006-upstream-net-next-20231006-mptcp-ynl-v1-0-0a97f2f5410e@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matttbe@kernel.org>, 
  Davide Caratti <dcaratti@redhat.com>, Paolo Abeni <pabeni@redhat.com>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2073; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=+n6SHIA9NqH6DfDfemZQmL/+btzLEpBxLvkalofOr/M=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlIB34c/8Eqk6NtaJQTsMe4Ddmj3fNYFsYZ/l2v
- UUUa+/05PuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZSAd+AAKCRD2t4JPQmmg
- cyCWD/9e+ptLG2pmBiVY/E06Ptxqw6Xo0tu5bgqlxzX/S+bks7NLNO0HVEkvBa3ixR6dxebroE1
- fJ/t1OPnzeT6GbcmuOXYWnJ5nc1qgZVLQlPDZixXDpnLbA07LC93CnMU/Wss7b3jMfK/nJV/3fM
- HAfrhaJjXTee35RBtPC3hJO0efO4w/ze7JNMKyyM8D08rngu80UzcH5iUqpOzbU1Xa6bCpbNvhR
- YaxjwEzUYPNITe5mvfdbmg4s3B5Lnylfat23RHESDyS7tnuuKu9zCfDJb7aBV+RPG8zhCO7i8DF
- D1+JoZwiYgNnFQ1xV9JzlpeFFP4GFHHlzY3o/9wUTF23HBWVXDKfG14HNEmkIiHGaId0MmoyGv+
- 2FCXxPIGiYagtSXUr2DJRxa2Ilyrp5B8ftSi9HeDLPPqGwOJW9xFFNRUAomfCl2XXCC6+ehiq4B
- z7r33y3Y6Uk0fEvGMjIzm1FghuYOjiNnpGvi+iBkS3uPt1cr5jaWdFch8/8IpTqVSrqm/7IMdvp
- q4oslILG0+CUv0sNTYPoeOBgPoiPXBAR08eA2btB/g2awasepYVwHKuS24Mu2CGIIZabxCZAujO
- O5PGfvEJ5j73ANchgFEwoKkedzq15wKwGM/Co5fJKHhq7QeATSPpKA/Oa6NljRu9k848fsBrtBm
- amD4R8uG+67pFMA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=937; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=OlciFsOMezGCfcpMdbn3iwfCcmCBig8AbhTZ5AI30SI=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlIB35+gjir0KSpcrtluW3QSFSmeGqG6trcxzPC
+ 1gqfdYyVMiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZSAd+QAKCRD2t4JPQmmg
+ cwTwD/9VMGAUtcyKPyyxXwgNRGdS5XqZ+gE6X1UR5Yz32AFQosnFyvkvoW2fTpNcIXWEWbLYpPJ
+ KHpx6pK+ZJvpBeFQ/Ptb0cJwgPGpDpqeIl1MVVFbhM+EEJ4d/5ks/jJpjZfcMaOVMpaTMBW6V1M
+ YEF4qZCy0xaEi4RQhKTnvde+SOrgNideih4BJUui/jcBg2qVbjOksZCSQuC2bzWiVglYEmI929Q
+ 50F9OX5aNcYf+PywwVG+H3Ks/JLrV/OtTgbOUiQJUaYqUCKK0sCCrw60V14XQ0AZVyb4npwDZsM
+ m6aZ/D30gulw83y/BQy2hq+8VcEQR22iTbecVjWyZq0B0hp4uGdS6RdKE2QAciyWYZeIChkF8A2
+ MqzwnxreXnNnIc/8/F/9vDR3ZlUEjyAu9LM1GET9jaqSWZ0caMTTdStoozFVJRB57bAsiOZk7Dg
+ Iu8f/qZPtcW2z12YJGFJ0Ed55aa3QyQqt6E2gBo2RWZ1u8dRSwcn7o6jtDxGEHAPr/vzH+SAo2f
+ QVaRyN7rFNOYitBUdktlinOxhm/9EtVAM0dEpRO2k8EijWN/+nl5Vb1TMieXMuT1epUkjveZuJL
+ +Q83pIEUmth1o63CnSOzwHICiYZnJ3Mjc3xezRbkSoolV46SWPCVPl43gWZmv3PQJF8NCvZW0Ct
+ vFuwInn3CjFZaYQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This series from Davide converts most of the MPTCP Netlink interface
-(plus uAPI bits) to use sources generated by YNL using a YAML spec file.
+From: Davide Caratti <dcaratti@redhat.com>
 
-This new YAML file is useful to validate the API and to generate a good
-documentation page.
+this flag maps to GENL_UNS_ADMIN_PERM and will be used by future specs.
 
-Patch 1 modifies YNL spec to support "uns-admin-perm" for genetlink
-legacy.
-
-Patch 2 converts Netlink structures from small_ops to ops to prepare the
-switch to YAML.
-
-Patch 3 adds the Netlink YAML spec for MPTCP.
-
-Patch 4 adds and uses a new header file generated from the new YAML
-spec.
-
-Patch 5 renames some handlers to match the ones generated from the YAML
-spec.
-
-Patch 6 adds and uses Netlink policies automatically generated from the
-YAML spec.
-
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
 Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
 ---
-Davide Caratti (6):
-      tools: ynl: add uns-admin-perm to genetlink legacy
-      net: mptcp: convert netlink from small_ops to ops
-      Documentation: netlink: add a YAML spec for mptcp
-      uapi: mptcp: use header file generated from YAML spec
-      net: mptcp: rename netlink handlers to mptcp_pm_nl_<blah>_{doit,dumpit}
-      net: mptcp: use policy generated by YAML spec
+ Documentation/netlink/genetlink-legacy.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- Documentation/netlink/genetlink-legacy.yaml |   2 +-
- Documentation/netlink/specs/mptcp.yaml      | 394 ++++++++++++++++++++++++++++
- MAINTAINERS                                 |   3 +-
- include/uapi/linux/mptcp.h                  | 174 +-----------
- include/uapi/linux/mptcp_pm.h               | 149 +++++++++++
- net/mptcp/Makefile                          |   3 +-
- net/mptcp/mptcp_pm_gen.c                    | 179 +++++++++++++
- net/mptcp/mptcp_pm_gen.h                    |  58 ++++
- net/mptcp/pm_netlink.c                      | 114 ++------
- net/mptcp/pm_userspace.c                    |   8 +-
- net/mptcp/protocol.h                        |   6 +-
- 11 files changed, 816 insertions(+), 274 deletions(-)
----
-base-commit: 4514aa9f56fd7acf9e4f247bd38c0642e55109f7
-change-id: 20231006-upstream-net-next-20231006-mptcp-ynl-0d3c99b1ed79
+diff --git a/Documentation/netlink/genetlink-legacy.yaml b/Documentation/netlink/genetlink-legacy.yaml
+index 12a0a045605d..c08e5e3a0aaa 100644
+--- a/Documentation/netlink/genetlink-legacy.yaml
++++ b/Documentation/netlink/genetlink-legacy.yaml
+@@ -316,7 +316,7 @@ properties:
+               description: Command flags.
+               type: array
+               items:
+-                enum: [ admin-perm ]
++                enum: [ admin-perm, uns-admin-perm ]
+             dont-validate:
+               description: Kernel attribute validation flags.
+               type: array
 
-Best regards,
 -- 
-Matthieu Baerts <matttbe@kernel.org>
+2.40.1
 
