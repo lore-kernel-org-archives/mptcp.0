@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D94618021
-	for <mptcp@lists.linux.dev>; Fri,  6 Oct 2023 14:47:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA8818021
+	for <mptcp@lists.linux.dev>; Fri,  6 Oct 2023 14:47:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYc0vGgb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41882C433C8;
-	Fri,  6 Oct 2023 14:47:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P++S3AEy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D87C433C9;
+	Fri,  6 Oct 2023 14:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696603649;
-	bh=cuafUrJcRVy2Q66jd1WS6PQHmUZaY2VMMr7lLnTd8O8=;
+	s=k20201202; t=1696603650;
+	bh=Ie7O/vWRffp+xW6oDBLzG/P6h5B/Uq4ksbSuheaQx5A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YYc0vGgbyOpBJvZjHU3p9bdyDESkJ+JI5GFE/iX/oPazMZnK8VYj48jW0C9HLbdEm
-	 q32lFahEl/0wF9XHuAc/8dXt3RjqkyZwZ4M0I1BIi+9ApGVm6fKJIg6TCwaoIAThq/
-	 i+H6x38lRdSU7qbVBZo7VeW3eUNtGAKyQECEUOSkNiPeGiBSNyhNrwD4PXu25CuWYo
-	 hiA1APATDetrgP3dP/O6fCEXzxGED5oM3E4jw3UTJsTUz1UBlB3YfhoH0bDMuQOpI9
-	 7zrJbWaTlUcuSPDYQDNaLa0GNQc7/lXFPkGEZM0MZh3vfR2d5JhTLfYadNzVbwX4xh
-	 EVl5uOoc4/IaQ==
+	b=P++S3AEyarNY/QmS5zCUPIXotVM4i1kz8ng5h32JGqtIt73rqQuJPuDShLnxlAAg6
+	 yG2ePpu6U3kHOpVWXr/kLbYUzXZekidaadiVP1qTZkkxjoYS27U11Ojf7CdIDHMx1E
+	 8Y5jx3nucWemAc5ym+agp/Q7yGTqLCi7Qq4vzALA3qMn876cfxrNRJmcvbT+qRaoQK
+	 Apo9jXuljSPfIgAVjiWK3yG5J4cHg4I+Cdoqj5+eErm1Z5FY99w5miTrUYILNGSz25
+	 DgbfZoAkx/xKV78wnStf6fE4R4WiUwbl5o9m1TOV+gJDyMnMQTqSfxgF2mMkXvsX5u
+	 lRrEiMHiLOueQ==
 From: Matthieu Baerts <matttbe@kernel.org>
-Date: Fri, 06 Oct 2023 16:46:39 +0200
-Subject: [PATCH net-next 4/6] uapi: mptcp: use header file generated from
- YAML spec
+Date: Fri, 06 Oct 2023 16:46:40 +0200
+Subject: [PATCH net-next 5/6] net: mptcp: rename netlink handlers to
+ mptcp_pm_nl_<blah>_{doit,dumpit}
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,424 +29,298 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231006-upstream-net-next-20231006-mptcp-ynl-v1-4-0a97f2f5410e@kernel.org>
+Message-Id: <20231006-upstream-net-next-20231006-mptcp-ynl-v1-5-0a97f2f5410e@kernel.org>
 References: <20231006-upstream-net-next-20231006-mptcp-ynl-v1-0-0a97f2f5410e@kernel.org>
 In-Reply-To: <20231006-upstream-net-next-20231006-mptcp-ynl-v1-0-0a97f2f5410e@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Matthieu Baerts <matttbe@kernel.org>, 
  Davide Caratti <dcaratti@redhat.com>, Paolo Abeni <pabeni@redhat.com>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12531; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=vWgtCouIRTrJ5tUZ2NkQHWyHpbxOiMYpTLs49qthVHw=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlIB35rI1XLLxLIl8wPDlU/D0YuFEG/nhc16zM9
- 8PdWaM72XuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZSAd+QAKCRD2t4JPQmmg
- c1zKD/wKkUFt+dC3YKNjl/dEPp03SVnfjYlNNiDX8pfp80WMyzTVlpttRbswDV1uzP4JANniYDa
- aRUdnGOrvxeG4Md17KZNMRZ6W74PJQo4PFIF012cEFSShJnk3gAforlLbMK9PP9swfd4FQbp6OS
- f9hNATLceJlZYQUD/WiM0J2MdmA52VhT14a+H5Xm4krHOzDPMSBmSWukCXngUU2NaUbEybcusb3
- qoq3OkOKme+a7hliBUxx69RXgCrpr8ideVyT5ycYOd/eUD/NLH4gfHsj8S9f5UEq1tSeVsNC0Dk
- Sp94D4HV/ee/47P0E+NtGhzrx+WhClDuzaPXmvZY5HQ5xFhcXx3X3qFccbYH1eo910+8iW21jtQ
- cDFFCW8bfOucBF8rfjdzIHm/E2RAP4mt9UUk4dy+Mt14XK15facBjS/VfadEu888KoSUyt15eyd
- rXUvvdmkFxar/iPGgRaEtOSZIOaJIZkVsjd/u0nXW785ehx9ZMOd3JOjhRRQTubWPIUr/ss6sk6
- NHAHYnQ6RWqKourNpKnr2unYa2GvD9Wj5gjQJhVGyrOyfc4ZHPp2SpVPrnHESHdjm8juztPsrK8
- 5rRqwGJ0E0DIBIyEc2grvcCZcMz74I2EfY1bMMU9UZmNFhL7CE8YJkIndPg86GzDWKcL5fB8eC7
- 37Zuz+3jl2AG5+w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11131; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=yVRzO2/YTZEyfWc8rNLxsJ5c6xVbSMMP4stse3H/SRk=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlIB35tgIYoOhGaIOM6UcdLHdV3GbJg9XtYIR4B
+ 6kXBWYMTv6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZSAd+QAKCRD2t4JPQmmg
+ c8/7EADjrwW8p26d2+XIt9Y/WdE8c3aBfVPP3iZ9Lw/0mZzp6trQIb+YCSjbCcSv06UP95bHdT2
+ GmaHaFcc4yJgtfWSSD3jQCQm2zigaKKfa/E19fmiJRAmHJ5bTGtgYVxNJLk9gITwt3zzkmEL8ZL
+ eP36KBDE0nW6Sh5JpMio79j5oEii+NCZt2wGcNK5VKH2zymJ66zDXfWLnWWfNHbrat5Snq00WFl
+ m0TiINZwF6XpEtpXEFVdGYfqO+5Q59S/8c5SsALiKC2h2hWkJd/MhuQPR1xQNsKKNSfS71ByesZ
+ sYQIRH1qgVpaQpvGaQg5IzLMpBG1vavMRyLPzrVqssHAMT4sfet00JuYdHOKQ+bHhkEjWe2akTw
+ Lchf//JLRxB25gi+6iDpbMvDd2RMvrGGhnjiJHgmEOX35KGRV9IEtqY9IdxMUDGhTcyDu7NcPWW
+ Zzv/CCCiScbvxVb4VMEShREIygl7SZRhSxHwG16tezbqV6vP3vL9RqkgEz0elWfT+yzd7G8lcWI
+ KITX6QEhBM6an6CjY8aMGTT/64ZHh1G8Hu8Z3qeXaLvipiP9gd4LCbVMDarZ6gUahqUxHnyZlrP
+ I+DytMNy/U+2+PPFhpzc/cqupbYMgRMpgUf46YEZymuCgKyZ0nwJt7BYg2nBw6FhCokFgyA4TNR
+ OmYd9zWZm/r5BOQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Davide Caratti <dcaratti@redhat.com>
 
-generated with:
-
- $ ./tools/net/ynl/ynl-gen-c.py --mode uapi \
- > --spec Documentation/netlink/specs/mptcp.yaml \
- > --header -o include/uapi/linux/mptcp_pm.h
+so that they will match names generated from YAML spec.
 
 Link: https://github.com/multipath-tcp/mptcp_net-next/issues/340
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Acked-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Davide Caratti <dcaratti@redhat.com>
 Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
 ---
- MAINTAINERS                   |   2 +-
- include/uapi/linux/mptcp.h    | 182 +++---------------------------------------
- include/uapi/linux/mptcp_pm.h | 149 ++++++++++++++++++++++++++++++++++
- 3 files changed, 160 insertions(+), 173 deletions(-)
+ net/mptcp/pm_netlink.c   | 48 ++++++++++++++++++++++++------------------------
+ net/mptcp/pm_userspace.c |  8 ++++----
+ net/mptcp/protocol.h     |  8 ++++----
+ 3 files changed, 32 insertions(+), 32 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d64e3c9eba3f..3441b5a0bcd6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14964,7 +14964,7 @@ F:	Documentation/netlink/specs/mptcp.yaml
- F:	Documentation/networking/mptcp-sysctl.rst
- F:	include/net/mptcp.h
- F:	include/trace/events/mptcp.h
--F:	include/uapi/linux/mptcp.h
-+F:	include/uapi/linux/mptcp*.h
- F:	net/mptcp/
- F:	tools/testing/selftests/bpf/*/*mptcp*.c
- F:	tools/testing/selftests/net/mptcp/
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 0e62937ab17c..64ecc8a3f9f2 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -23,99 +23,24 @@
- #define MPTCP_SUBFLOW_FLAG_CONNECTED		_BITUL(7)
- #define MPTCP_SUBFLOW_FLAG_MAPVALID		_BITUL(8)
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 32976cf7c82b..dc3ed337eb1f 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1334,7 +1334,7 @@ static int mptcp_nl_add_subflow_or_signal_addr(struct net *net)
+ 	return 0;
+ }
  
--enum {
--	MPTCP_SUBFLOW_ATTR_UNSPEC,
--	MPTCP_SUBFLOW_ATTR_TOKEN_REM,
--	MPTCP_SUBFLOW_ATTR_TOKEN_LOC,
--	MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ,
--	MPTCP_SUBFLOW_ATTR_MAP_SEQ,
--	MPTCP_SUBFLOW_ATTR_MAP_SFSEQ,
--	MPTCP_SUBFLOW_ATTR_SSN_OFFSET,
--	MPTCP_SUBFLOW_ATTR_MAP_DATALEN,
--	MPTCP_SUBFLOW_ATTR_FLAGS,
--	MPTCP_SUBFLOW_ATTR_ID_REM,
--	MPTCP_SUBFLOW_ATTR_ID_LOC,
--	MPTCP_SUBFLOW_ATTR_PAD,
--	__MPTCP_SUBFLOW_ATTR_MAX
--};
--
--#define MPTCP_SUBFLOW_ATTR_MAX (__MPTCP_SUBFLOW_ATTR_MAX - 1)
--
--/* netlink interface */
--#define MPTCP_PM_NAME		"mptcp_pm"
- #define MPTCP_PM_CMD_GRP_NAME	"mptcp_pm_cmds"
- #define MPTCP_PM_EV_GRP_NAME	"mptcp_pm_events"
--#define MPTCP_PM_VER		0x1
+-static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+@@ -1515,7 +1515,7 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
+ 	return 0;
+ }
  
--/*
-- * ATTR types defined for MPTCP
-- */
--enum {
--	MPTCP_PM_ATTR_UNSPEC,
-+#include <linux/mptcp_pm.h>
+-static int mptcp_nl_cmd_del_addr(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_nl_del_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+@@ -1650,7 +1650,7 @@ static void __reset_counters(struct pm_nl_pernet *pernet)
+ 	pernet->addrs = 0;
+ }
  
--	MPTCP_PM_ATTR_ADDR,				/* nested address */
--	MPTCP_PM_ATTR_RCV_ADD_ADDRS,			/* u32 */
--	MPTCP_PM_ATTR_SUBFLOWS,				/* u32 */
--	MPTCP_PM_ATTR_TOKEN,				/* u32 */
--	MPTCP_PM_ATTR_LOC_ID,				/* u8 */
--	MPTCP_PM_ATTR_ADDR_REMOTE,			/* nested address */
--
--	__MPTCP_PM_ATTR_MAX
--};
--
--#define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
--
--enum {
--	MPTCP_PM_ENDPOINT_ADDR = 1,
--
--	__MPTCP_PM_ENDPOINT_MAX
--};
--
--#define MPTCP_PM_ENDPOINT_MAX (__MPTCP_PM_ENDPOINT_MAX - 1)
--
--enum {
--	MPTCP_PM_ADDR_ATTR_UNSPEC,
--
--	MPTCP_PM_ADDR_ATTR_FAMILY,			/* u16 */
--	MPTCP_PM_ADDR_ATTR_ID,				/* u8 */
--	MPTCP_PM_ADDR_ATTR_ADDR4,			/* struct in_addr */
--	MPTCP_PM_ADDR_ATTR_ADDR6,			/* struct in6_addr */
--	MPTCP_PM_ADDR_ATTR_PORT,			/* u16 */
--	MPTCP_PM_ADDR_ATTR_FLAGS,			/* u32 */
--	MPTCP_PM_ADDR_ATTR_IF_IDX,			/* s32 */
--
--	__MPTCP_PM_ADDR_ATTR_MAX
--};
--
--#define MPTCP_PM_ADDR_ATTR_MAX (__MPTCP_PM_ADDR_ATTR_MAX - 1)
--
--#define MPTCP_PM_ADDR_FLAG_SIGNAL			(1 << 0)
--#define MPTCP_PM_ADDR_FLAG_SUBFLOW			(1 << 1)
--#define MPTCP_PM_ADDR_FLAG_BACKUP			(1 << 2)
--#define MPTCP_PM_ADDR_FLAG_FULLMESH			(1 << 3)
--#define MPTCP_PM_ADDR_FLAG_IMPLICIT			(1 << 4)
--
--enum {
--	MPTCP_PM_CMD_UNSPEC,
--
--	MPTCP_PM_CMD_ADD_ADDR,
--	MPTCP_PM_CMD_DEL_ADDR,
--	MPTCP_PM_CMD_GET_ADDR,
--	MPTCP_PM_CMD_FLUSH_ADDRS,
--	MPTCP_PM_CMD_SET_LIMITS,
--	MPTCP_PM_CMD_GET_LIMITS,
--	MPTCP_PM_CMD_SET_FLAGS,
--	MPTCP_PM_CMD_ANNOUNCE,
--	MPTCP_PM_CMD_REMOVE,
--	MPTCP_PM_CMD_SUBFLOW_CREATE,
--	MPTCP_PM_CMD_SUBFLOW_DESTROY,
--
--	__MPTCP_PM_CMD_AFTER_LAST
--};
-+/* for backward compatibility */
-+#define	__MPTCP_PM_CMD_AFTER_LAST	__MPTCP_PM_CMD_MAX
-+#define	__MPTCP_ATTR_AFTER_LAST		__MPTCP_ATTR_MAX
+-static int mptcp_nl_cmd_flush_addrs(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_nl_flush_addrs_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+ 	LIST_HEAD(free_list);
+@@ -1706,7 +1706,7 @@ static int mptcp_nl_fill_addr(struct sk_buff *skb,
+ 	return -EMSGSIZE;
+ }
  
- #define MPTCP_INFO_FLAG_FALLBACK		_BITUL(0)
- #define MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED	_BITUL(1)
+-static int mptcp_nl_cmd_get_addr(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+@@ -1756,8 +1756,8 @@ static int mptcp_nl_cmd_get_addr(struct sk_buff *skb, struct genl_info *info)
+ 	return ret;
+ }
  
-+#define MPTCP_PM_ADDR_FLAG_SIGNAL                      (1 << 0)
-+#define MPTCP_PM_ADDR_FLAG_SUBFLOW                     (1 << 1)
-+#define MPTCP_PM_ADDR_FLAG_BACKUP                      (1 << 2)
-+#define MPTCP_PM_ADDR_FLAG_FULLMESH                    (1 << 3)
-+#define MPTCP_PM_ADDR_FLAG_IMPLICIT                    (1 << 4)
-+
- struct mptcp_info {
- 	__u8	mptcpi_subflows;
- 	__u8	mptcpi_add_addr_signal;
-@@ -138,93 +63,6 @@ struct mptcp_info {
- 	__u64	mptcpi_bytes_acked;
- };
+-static int mptcp_nl_cmd_dump_addrs(struct sk_buff *msg,
+-				   struct netlink_callback *cb)
++static int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
++				       struct netlink_callback *cb)
+ {
+ 	struct net *net = sock_net(msg->sk);
+ 	struct mptcp_pm_addr_entry *entry;
+@@ -1815,7 +1815,7 @@ static int parse_limit(struct genl_info *info, int id, unsigned int *limit)
+ }
  
--/*
-- * MPTCP_EVENT_CREATED: token, family, saddr4 | saddr6, daddr4 | daddr6,
-- *                      sport, dport
-- * A new MPTCP connection has been created. It is the good time to allocate
-- * memory and send ADD_ADDR if needed. Depending on the traffic-patterns
-- * it can take a long time until the MPTCP_EVENT_ESTABLISHED is sent.
-- *
-- * MPTCP_EVENT_ESTABLISHED: token, family, saddr4 | saddr6, daddr4 | daddr6,
-- *			    sport, dport
-- * A MPTCP connection is established (can start new subflows).
-- *
-- * MPTCP_EVENT_CLOSED: token
-- * A MPTCP connection has stopped.
-- *
-- * MPTCP_EVENT_ANNOUNCED: token, rem_id, family, daddr4 | daddr6 [, dport]
-- * A new address has been announced by the peer.
-- *
-- * MPTCP_EVENT_REMOVED: token, rem_id
-- * An address has been lost by the peer.
-- *
-- * MPTCP_EVENT_SUB_ESTABLISHED: token, family, loc_id, rem_id,
-- *                              saddr4 | saddr6, daddr4 | daddr6, sport,
-- *                              dport, backup, if_idx [, error]
-- * A new subflow has been established. 'error' should not be set.
-- *
-- * MPTCP_EVENT_SUB_CLOSED: token, family, loc_id, rem_id, saddr4 | saddr6,
-- *                         daddr4 | daddr6, sport, dport, backup, if_idx
-- *                         [, error]
-- * A subflow has been closed. An error (copy of sk_err) could be set if an
-- * error has been detected for this subflow.
-- *
-- * MPTCP_EVENT_SUB_PRIORITY: token, family, loc_id, rem_id, saddr4 | saddr6,
-- *                           daddr4 | daddr6, sport, dport, backup, if_idx
-- *                           [, error]
-- * The priority of a subflow has changed. 'error' should not be set.
-- *
-- * MPTCP_EVENT_LISTENER_CREATED: family, sport, saddr4 | saddr6
-- * A new PM listener is created.
-- *
-- * MPTCP_EVENT_LISTENER_CLOSED: family, sport, saddr4 | saddr6
-- * A PM listener is closed.
-- */
--enum mptcp_event_type {
--	MPTCP_EVENT_UNSPEC = 0,
--	MPTCP_EVENT_CREATED = 1,
--	MPTCP_EVENT_ESTABLISHED = 2,
--	MPTCP_EVENT_CLOSED = 3,
--
--	MPTCP_EVENT_ANNOUNCED = 6,
--	MPTCP_EVENT_REMOVED = 7,
--
--	MPTCP_EVENT_SUB_ESTABLISHED = 10,
--	MPTCP_EVENT_SUB_CLOSED = 11,
--
--	MPTCP_EVENT_SUB_PRIORITY = 13,
--
--	MPTCP_EVENT_LISTENER_CREATED = 15,
--	MPTCP_EVENT_LISTENER_CLOSED = 16,
--};
--
--enum mptcp_event_attr {
--	MPTCP_ATTR_UNSPEC = 0,
--
--	MPTCP_ATTR_TOKEN,	/* u32 */
--	MPTCP_ATTR_FAMILY,	/* u16 */
--	MPTCP_ATTR_LOC_ID,	/* u8 */
--	MPTCP_ATTR_REM_ID,	/* u8 */
--	MPTCP_ATTR_SADDR4,	/* be32 */
--	MPTCP_ATTR_SADDR6,	/* struct in6_addr */
--	MPTCP_ATTR_DADDR4,	/* be32 */
--	MPTCP_ATTR_DADDR6,	/* struct in6_addr */
--	MPTCP_ATTR_SPORT,	/* be16 */
--	MPTCP_ATTR_DPORT,	/* be16 */
--	MPTCP_ATTR_BACKUP,	/* u8 */
--	MPTCP_ATTR_ERROR,	/* u8 */
--	MPTCP_ATTR_FLAGS,	/* u16 */
--	MPTCP_ATTR_TIMEOUT,	/* u32 */
--	MPTCP_ATTR_IF_IDX,	/* s32 */
--	MPTCP_ATTR_RESET_REASON,/* u32 */
--	MPTCP_ATTR_RESET_FLAGS, /* u32 */
--	MPTCP_ATTR_SERVER_SIDE,	/* u8 */
--
--	__MPTCP_ATTR_AFTER_LAST
--};
--
--#define MPTCP_ATTR_MAX (__MPTCP_ATTR_AFTER_LAST - 1)
--
- /* MPTCP Reset reason codes, rfc8684 */
- #define MPTCP_RST_EUNSPEC	0
- #define MPTCP_RST_EMPTCP	1
-diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
-new file mode 100644
-index 000000000000..0c7206531eb1
---- /dev/null
-+++ b/include/uapi/linux/mptcp_pm.h
-@@ -0,0 +1,149 @@
-+/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
-+/* Do not edit directly, auto-generated from: */
-+/*	Documentation/netlink/specs/mptcp.yaml */
-+/* YNL-GEN uapi header */
-+
-+#ifndef _UAPI_LINUX_MPTCP_PM_H
-+#define _UAPI_LINUX_MPTCP_PM_H
-+
-+#define MPTCP_PM_NAME	"mptcp_pm"
-+#define MPTCP_PM_VER	1
-+
-+/**
-+ * enum mptcp_event_type
-+ * @MPTCP_EVENT_CREATED: token, family, saddr4 | saddr6, daddr4 | daddr6,
-+ *   sport, dport A new MPTCP connection has been created. It is the good time
-+ *   to allocate memory and send ADD_ADDR if needed. Depending on the
-+ *   traffic-patterns it can take a long time until the MPTCP_EVENT_ESTABLISHED
-+ *   is sent.
-+ * @MPTCP_EVENT_ESTABLISHED: token, family, saddr4 | saddr6, daddr4 | daddr6,
-+ *   sport, dport A MPTCP connection is established (can start new subflows).
-+ * @MPTCP_EVENT_CLOSED: token A MPTCP connection has stopped.
-+ * @MPTCP_EVENT_ANNOUNCED: token, rem_id, family, daddr4 | daddr6 [, dport] A
-+ *   new address has been announced by the peer.
-+ * @MPTCP_EVENT_REMOVED: token, rem_id An address has been lost by the peer.
-+ * @MPTCP_EVENT_SUB_ESTABLISHED: token, family, loc_id, rem_id, saddr4 |
-+ *   saddr6, daddr4 | daddr6, sport, dport, backup, if_idx [, error] A new
-+ *   subflow has been established. 'error' should not be set.
-+ * @MPTCP_EVENT_SUB_CLOSED: token, family, loc_id, rem_id, saddr4 | saddr6,
-+ *   daddr4 | daddr6, sport, dport, backup, if_idx [, error] A subflow has been
-+ *   closed. An error (copy of sk_err) could be set if an error has been
-+ *   detected for this subflow.
-+ * @MPTCP_EVENT_SUB_PRIORITY: token, family, loc_id, rem_id, saddr4 | saddr6,
-+ *   daddr4 | daddr6, sport, dport, backup, if_idx [, error] The priority of a
-+ *   subflow has changed. 'error' should not be set.
-+ * @MPTCP_EVENT_LISTENER_CREATED: family, sport, saddr4 | saddr6 A new PM
-+ *   listener is created.
-+ * @MPTCP_EVENT_LISTENER_CLOSED: family, sport, saddr4 | saddr6 A PM listener
-+ *   is closed.
-+ */
-+enum mptcp_event_type {
-+	MPTCP_EVENT_UNSPEC,
-+	MPTCP_EVENT_CREATED,
-+	MPTCP_EVENT_ESTABLISHED,
-+	MPTCP_EVENT_CLOSED,
-+	MPTCP_EVENT_ANNOUNCED = 6,
-+	MPTCP_EVENT_REMOVED,
-+	MPTCP_EVENT_SUB_ESTABLISHED = 10,
-+	MPTCP_EVENT_SUB_CLOSED,
-+	MPTCP_EVENT_SUB_PRIORITY = 13,
-+	MPTCP_EVENT_LISTENER_CREATED = 15,
-+	MPTCP_EVENT_LISTENER_CLOSED,
-+};
-+
-+enum {
-+	MPTCP_PM_ADDR_ATTR_UNSPEC,
-+	MPTCP_PM_ADDR_ATTR_FAMILY,
-+	MPTCP_PM_ADDR_ATTR_ID,
-+	MPTCP_PM_ADDR_ATTR_ADDR4,
-+	MPTCP_PM_ADDR_ATTR_ADDR6,
-+	MPTCP_PM_ADDR_ATTR_PORT,
-+	MPTCP_PM_ADDR_ATTR_FLAGS,
-+	MPTCP_PM_ADDR_ATTR_IF_IDX,
-+
-+	__MPTCP_PM_ADDR_ATTR_MAX
-+};
-+#define MPTCP_PM_ADDR_ATTR_MAX (__MPTCP_PM_ADDR_ATTR_MAX - 1)
-+
-+enum {
-+	MPTCP_SUBFLOW_ATTR_UNSPEC,
-+	MPTCP_SUBFLOW_ATTR_TOKEN_REM,
-+	MPTCP_SUBFLOW_ATTR_TOKEN_LOC,
-+	MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ,
-+	MPTCP_SUBFLOW_ATTR_MAP_SEQ,
-+	MPTCP_SUBFLOW_ATTR_MAP_SFSEQ,
-+	MPTCP_SUBFLOW_ATTR_SSN_OFFSET,
-+	MPTCP_SUBFLOW_ATTR_MAP_DATALEN,
-+	MPTCP_SUBFLOW_ATTR_FLAGS,
-+	MPTCP_SUBFLOW_ATTR_ID_REM,
-+	MPTCP_SUBFLOW_ATTR_ID_LOC,
-+	MPTCP_SUBFLOW_ATTR_PAD,
-+
-+	__MPTCP_SUBFLOW_ATTR_MAX
-+};
-+#define MPTCP_SUBFLOW_ATTR_MAX (__MPTCP_SUBFLOW_ATTR_MAX - 1)
-+
-+enum {
-+	MPTCP_PM_ENDPOINT_ADDR = 1,
-+
-+	__MPTCP_PM_ENDPOINT_MAX
-+};
-+#define MPTCP_PM_ENDPOINT_MAX (__MPTCP_PM_ENDPOINT_MAX - 1)
-+
-+enum {
-+	MPTCP_PM_ATTR_UNSPEC,
-+	MPTCP_PM_ATTR_ADDR,
-+	MPTCP_PM_ATTR_RCV_ADD_ADDRS,
-+	MPTCP_PM_ATTR_SUBFLOWS,
-+	MPTCP_PM_ATTR_TOKEN,
-+	MPTCP_PM_ATTR_LOC_ID,
-+	MPTCP_PM_ATTR_ADDR_REMOTE,
-+
-+	__MPTCP_PM_ATTR_MAX
-+};
-+#define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
-+
-+enum mptcp_event_attr {
-+	MPTCP_ATTR_UNSPEC,
-+	MPTCP_ATTR_TOKEN,
-+	MPTCP_ATTR_FAMILY,
-+	MPTCP_ATTR_LOC_ID,
-+	MPTCP_ATTR_REM_ID,
-+	MPTCP_ATTR_SADDR4,
-+	MPTCP_ATTR_SADDR6,
-+	MPTCP_ATTR_DADDR4,
-+	MPTCP_ATTR_DADDR6,
-+	MPTCP_ATTR_SPORT,
-+	MPTCP_ATTR_DPORT,
-+	MPTCP_ATTR_BACKUP,
-+	MPTCP_ATTR_ERROR,
-+	MPTCP_ATTR_FLAGS,
-+	MPTCP_ATTR_TIMEOUT,
-+	MPTCP_ATTR_IF_IDX,
-+	MPTCP_ATTR_RESET_REASON,
-+	MPTCP_ATTR_RESET_FLAGS,
-+	MPTCP_ATTR_SERVER_SIDE,
-+
-+	__MPTCP_ATTR_MAX
-+};
-+#define MPTCP_ATTR_MAX (__MPTCP_ATTR_MAX - 1)
-+
-+enum {
-+	MPTCP_PM_CMD_UNSPEC,
-+	MPTCP_PM_CMD_ADD_ADDR,
-+	MPTCP_PM_CMD_DEL_ADDR,
-+	MPTCP_PM_CMD_GET_ADDR,
-+	MPTCP_PM_CMD_FLUSH_ADDRS,
-+	MPTCP_PM_CMD_SET_LIMITS,
-+	MPTCP_PM_CMD_GET_LIMITS,
-+	MPTCP_PM_CMD_SET_FLAGS,
-+	MPTCP_PM_CMD_ANNOUNCE,
-+	MPTCP_PM_CMD_REMOVE,
-+	MPTCP_PM_CMD_SUBFLOW_CREATE,
-+	MPTCP_PM_CMD_SUBFLOW_DESTROY,
-+
-+	__MPTCP_PM_CMD_MAX
-+};
-+#define MPTCP_PM_CMD_MAX (__MPTCP_PM_CMD_MAX - 1)
-+
-+#endif /* _UAPI_LINUX_MPTCP_PM_H */
+ static int
+-mptcp_nl_cmd_set_limits(struct sk_buff *skb, struct genl_info *info)
++mptcp_pm_nl_set_limits_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+ 	unsigned int rcv_addrs, subflows;
+@@ -1841,7 +1841,7 @@ mptcp_nl_cmd_set_limits(struct sk_buff *skb, struct genl_info *info)
+ }
+ 
+ static int
+-mptcp_nl_cmd_get_limits(struct sk_buff *skb, struct genl_info *info)
++mptcp_pm_nl_get_limits_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+ 	struct sk_buff *msg;
+@@ -1950,7 +1950,7 @@ int mptcp_pm_nl_set_flags(struct net *net, struct mptcp_pm_addr_entry *addr, u8
+ 	return 0;
+ }
+ 
+-static int mptcp_nl_cmd_set_flags(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct mptcp_pm_addr_entry remote = { .addr = { .family = AF_UNSPEC }, };
+ 	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
+@@ -2314,11 +2314,11 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ 	nlmsg_free(skb);
+ }
+ 
+-static const struct genl_ops mptcp_pm_ops[] = {
++static const struct genl_ops mptcp_pm_nl_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_ADD_ADDR,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_add_addr,
++		.doit		= mptcp_pm_nl_add_addr_doit,
+ 		.policy		= mptcp_pm_endpoint_nl_policy,
+ 		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2326,7 +2326,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_DEL_ADDR,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_del_addr,
++		.doit		= mptcp_pm_nl_del_addr_doit,
+ 		.policy		= mptcp_pm_endpoint_nl_policy,
+ 		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2334,8 +2334,8 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_GET_ADDR,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_get_addr,
+-		.dumpit		= mptcp_nl_cmd_dump_addrs,
++		.doit		= mptcp_pm_nl_get_addr_doit,
++		.dumpit		= mptcp_pm_nl_get_addr_dumpit,
+ 		.policy		= mptcp_pm_endpoint_nl_policy,
+ 		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2343,7 +2343,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_FLUSH_ADDRS,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_flush_addrs,
++		.doit		= mptcp_pm_nl_flush_addrs_doit,
+ 		.policy		= mptcp_pm_endpoint_nl_policy,
+ 		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2351,7 +2351,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_SET_LIMITS,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_set_limits,
++		.doit		= mptcp_pm_nl_set_limits_doit,
+ 		.policy		= mptcp_pm_set_limits_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_SUBFLOWS,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2359,14 +2359,14 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_GET_LIMITS,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_get_limits,
++		.doit		= mptcp_pm_nl_get_limits_doit,
+ 		.policy		= mptcp_pm_set_limits_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_SUBFLOWS,
+ 	},
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_SET_FLAGS,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_set_flags,
++		.doit		= mptcp_pm_nl_set_flags_doit,
+ 		.policy		= mptcp_pm_set_flags_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_ADDR_REMOTE,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2374,7 +2374,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_ANNOUNCE,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_announce,
++		.doit		= mptcp_pm_nl_announce_doit,
+ 		.policy		= mptcp_pm_announce_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_TOKEN,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2382,7 +2382,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_REMOVE,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_remove,
++		.doit		= mptcp_pm_nl_remove_doit,
+ 		.policy		= mptcp_pm_remove_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_LOC_ID,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2390,7 +2390,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_SUBFLOW_CREATE,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_sf_create,
++		.doit		= mptcp_pm_nl_subflow_create_doit,
+ 		.policy		= mptcp_pm_subflow_create_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_ADDR_REMOTE,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2398,7 +2398,7 @@ static const struct genl_ops mptcp_pm_ops[] = {
+ 	{
+ 		.cmd		= MPTCP_PM_CMD_SUBFLOW_DESTROY,
+ 		.validate	= GENL_DONT_VALIDATE_STRICT,
+-		.doit		= mptcp_nl_cmd_sf_destroy,
++		.doit		= mptcp_pm_nl_subflow_destroy_doit,
+ 		.policy		= mptcp_pm_subflow_create_nl_policy,
+ 		.maxattr	= MPTCP_PM_ATTR_ADDR_REMOTE,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+@@ -2410,8 +2410,8 @@ static struct genl_family mptcp_genl_family __ro_after_init = {
+ 	.version	= MPTCP_PM_VER,
+ 	.netnsok	= true,
+ 	.module		= THIS_MODULE,
+-	.ops		= mptcp_pm_ops,
+-	.n_ops		= ARRAY_SIZE(mptcp_pm_ops),
++	.ops		= mptcp_pm_nl_ops,
++	.n_ops		= ARRAY_SIZE(mptcp_pm_nl_ops),
+ 	.resv_start_op	= MPTCP_PM_CMD_SUBFLOW_DESTROY + 1,
+ 	.mcgrps		= mptcp_pm_mcgrps,
+ 	.n_mcgrps	= ARRAY_SIZE(mptcp_pm_mcgrps),
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index d042d32beb4d..0f92e5b13a8a 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -145,7 +145,7 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
+ 	return mptcp_userspace_pm_append_new_local_addr(msk, &new_entry);
+ }
+ 
+-int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
++int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+ 	struct nlattr *addr = info->attrs[MPTCP_PM_ATTR_ADDR];
+@@ -208,7 +208,7 @@ int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info)
+ 	return err;
+ }
+ 
+-int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info)
++int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+ 	struct nlattr *id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
+@@ -270,7 +270,7 @@ int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info)
+ 	return err;
+ }
+ 
+-int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info)
++int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+@@ -394,7 +394,7 @@ static struct sock *mptcp_nl_find_ssk(struct mptcp_sock *msk,
+ 	return NULL;
+ }
+ 
+-int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info)
++int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 3612545fa62e..4d6e40416f84 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -877,10 +877,10 @@ void mptcp_pm_remove_addrs_and_subflows(struct mptcp_sock *msk,
+ 					struct list_head *rm_list);
+ 
+ void mptcp_free_local_addr_list(struct mptcp_sock *msk);
+-int mptcp_nl_cmd_announce(struct sk_buff *skb, struct genl_info *info);
+-int mptcp_nl_cmd_remove(struct sk_buff *skb, struct genl_info *info);
+-int mptcp_nl_cmd_sf_create(struct sk_buff *skb, struct genl_info *info);
+-int mptcp_nl_cmd_sf_destroy(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info);
+ 
+ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ 		 const struct sock *ssk, gfp_t gfp);
 
 -- 
 2.40.1
