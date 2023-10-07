@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656C7328BE
-	for <mptcp@lists.linux.dev>; Sat,  7 Oct 2023 21:05:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FAD328BE
+	for <mptcp@lists.linux.dev>; Sat,  7 Oct 2023 21:06:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQuV424c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B7BC433C7;
-	Sat,  7 Oct 2023 21:05:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rH7jNPg8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C9ADC433C8;
+	Sat,  7 Oct 2023 21:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696712738;
-	bh=bWm2LNA+W7hZRzJREK7b96wxbOAhsX+fsT6KrYkX4NY=;
+	s=k20201202; t=1696712801;
+	bh=67rl04ioU6kmfAz99hfS2PfxQwpYwjjbuc3PuvUaDgo=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=bQuV424cX/FxBRop9LpVcg1IoILF0FRekBLJVG5xhLx6PKAjdLME6K2QS0nI0ZhmJ
-	 jtG4fFM5XSUAUj20uUFILxc4nczTGA6b2H04drgKl0xgYkx1mj5VP9fIal3Yln72Uc
-	 9FDJ3xQLKcwiy+ix4S5FKeCc8dCet96Os2gSkq5ocnHLe5wLinnSOJEKkb1UsrcNuY
-	 KYEn/V72xggVdxLHHN7rPkLc9B4XdfjguMzdRecJHoWbX4zTn+BZIp+kIPLvRQcp6T
-	 8UcykpeAdOCJDQ9Cu9cU7Zi+qMgcp47LkKuUlJ7K22P4WSvhKaZNT4JSnrdSnZJqXE
-	 t9dsfDpc1rBbQ==
-Message-ID: <144a2a63-534f-4539-9582-20a3bac2cb4d@kernel.org>
-Date: Sat, 7 Oct 2023 23:05:37 +0200
+	b=rH7jNPg8G0Fr5UIMV0+Cp6ZxmvOJv0OwRMaN7J8vShtaNRnWddLq/GAmNInXY/7Bn
+	 sVLsXmq6khaBnacwlfFmQg0FAQ/dauirgRWn1yEA36/VuyJIyR0JdTTOktc962Inb4
+	 iUYUv096ZK2sfuufrUrnNaUjhE/AwD9IPiZkYr2+pdkjPivxmHE8N9FVJgPBQsCuKQ
+	 qhodm4s3pm6aBPx3NXgu/Ic/kCwWJ0YVzh2iVgNsWHvVQ49gmQMso1bCCtMGkA1CSN
+	 ZgHIw7qBsAbAsMR4xYpRg/gPGp/jjbBwWvciaUZotTOQPKDEpjrmUNX0uA1wKl16k7
+	 UDyGcx7yb8pow==
+Message-ID: <9e517f3d-29db-4910-aafe-d09874fe3a65@kernel.org>
+Date: Sat, 7 Oct 2023 23:06:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 19/29] mptcp: add netlink pm addr entry
- refcount
+Subject: Re: [PATCH mptcp-next v3 20/29] selftests: mptcp: add userspace pm
+ fullmesh tests
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1695631132.git.geliang.tang@suse.com>
- <02f4426edd24a150ab523715135a602069244443.1695631132.git.geliang.tang@suse.com>
+ <212f56895715a7e17577076cbe3a7dff9e3ea360.1695631132.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,28 +77,98 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <02f4426edd24a150ab523715135a602069244443.1695631132.git.geliang.tang@suse.com>
+In-Reply-To: <212f56895715a7e17577076cbe3a7dff9e3ea360.1695631132.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 25/09/2023 10:41, Geliang Tang wrote:
-> This patch adds netlink PM address entry refcount. Init 'refcont' of
-> every address entry to 1. And add a new filed 'subflows' in struct
-> mptcp_pm_addr_entry, inited to 0, to store how many subflows have
-> been established on this address entry.
+> This patch adds fullmesh selftests for userspace pm both on server side
+> and on client side. For the server side test, add two endpoints with
+> fullmesh flag on ns2, then signal an address on ns1 by userspace PM to
+> trigger the fullmesh connections. For the client side test, just use
+> userspace PM to create multiple subflows to do the fullmesh connections.
 > 
-> Increase both values in mptcp_pm_create_subflow_or_signal_addr() and
-> fill_local_addresses_vec(), and decrease the counter 'refcont' in
-> __mptcp_pm_release_addr_entry() according its 'subflows' value.
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index aac50ef86785..d883c6c2426b 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3532,6 +3532,46 @@ userspace_tests()
+>  		kill_events_pids
+>  		wait $tests_pid
+>  	fi
+> +
+> +	# userspace pm server fullmesh
+> +	if reset_with_events "userspace pm server fullmesh" &&
+> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+> +		set_userspace_pm $ns1
+> +		pm_nl_set_limits $ns2 5 5
+> +		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow,fullmesh
+> +		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow,fullmesh
+> +		speed=10 \
+> +			run_tests $ns1 $ns2 10.0.1.1 &
+> +		local tests_pid=$!
+> +		wait_mpj $ns1
+> +		userspace_pm_add_addr $ns1 10.0.2.1 10
+> +		chk_join_nr 4 4 4
+> +		chk_add_nr 1 1
+> +		chk_mptcp_info subflows 4 subflows 4
+> +		chk_subflows_total 5 5
 
-Please *always* explain WHY this patch is needed.
+It is strange to me to see 5 subflows. Is it because not all endpoints
+are marked as fullmesh?
 
-When reading the code, it is not clear to me what you are trying to fix
-here: with the Netlink PM, the userspace adds and deletes endpoints, not
-specific subflows. I mean: we don't have the same issue as we have with
-the userspace PM. Or is there a different issue?
+Would it not be clearer to do a typical fullmesh cases using 2 endpoints
+(A, B) on each side? So we would have 4 subflows: A-A, A-B, B-B, B-A.
+
+> +		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
+> +		mptcp_lib_evts_kill
+> +		wait $tests_pid
+> +	fi
+> +
+> +	# userspace pm client fullmesh
+> +	if reset_with_events "userspace pm client fullmesh" &&
+> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+> +		pm_nl_set_limits $ns1 5 5
+> +		set_userspace_pm $ns2
+> +		speed=10 \
+> +			run_tests $ns1 $ns2 10.0.1.1 &
+> +		local tests_pid=$!
+> +		wait_mpj $ns1
+> +		userspace_pm_add_sf $ns2 10.0.2.2 20
+> +		userspace_pm_add_sf $ns2 10.0.3.2 30
+> +		userspace_pm_add_sf $ns2 10.0.4.2 40
+
+Same here, we should mix endpoints: here it looks like you create 4
+subflows from 4 different IPs, that's not really a "fullmesh": the same
+endpoint should be re-used multiple times to really validate the
+"fullmesh" case, e.g.
+
+ - Client has 2 endpoints: 1.1.1.1 and 2.2.2.2
+ - Server has 2 endpoints: 8.8.8.8 and 9.9.9.9
+
+We should have 2x2 subflows:
+
+ - 1.1.1.1 <-> 8.8.8.8
+ - 1.1.1.1 <-> 9.9.9.9
+ - 2.2.2.2 <-> 8.8.8.8
+ - 2.2.2.2 <-> 9.9.9.9
+
+> +		chk_join_nr 3 3 3
+> +		chk_mptcp_info subflows 3 subflows 3
+> +		chk_subflows_total 4 4
+> +		mptcp_lib_evts_kill
+> +		wait $tests_pid
+> +	fi
+>  }
+>  
+>  endpoint_tests()
 
 Cheers,
 Matt
