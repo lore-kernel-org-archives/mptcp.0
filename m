@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A04D15C3
-	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 10:56:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A0615C3
+	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 10:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VhitL+4e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D471C433C8;
-	Sun,  8 Oct 2023 10:56:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTK3PvIn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F09D7C433C7;
+	Sun,  8 Oct 2023 10:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696762613;
-	bh=a8ixLfgSg7wtA75ixUciFv+rgpM/29oHoBIEIKYW22Y=;
+	s=k20201202; t=1696762705;
+	bh=xqLJW33m0v36jeUQVMAv5c+WI1MJUNdCjfyuzDZUeqc=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=VhitL+4ekrGFY8GXUmtSHBrWAVkoFhtAQCuKssgALVFdqK2slf4Xme/EHa8Te5cPT
-	 eHCXxV9L/OofqFAtT0/JElWNYfyUhSFYPlhS3dCCB1D8FgKHHUqf2ykbfrJb5x/aWT
-	 JBXSe2eZYkf0YP9FX51W7zF1qIN76elOXzLDx/86LWPGI+wNsvJ6n4LwEUkWSe7Gn1
-	 TxPeo9XeRQLSrSrqo1l/rLK5mWnBkoSaI2VQDayUJjucJFjWyDd7OeE/yuJ9ncG9M4
-	 yovoMCLqjJZ891FyRZBp3Bpkk71CgnuWcZfOcACMDYJdCx9w00YSJPq0yMBPRZE6Oo
-	 ujdTGR7wK7cRw==
-Message-ID: <34f8061d-31ff-4a44-afe5-0c68d715eb7e@kernel.org>
-Date: Sun, 8 Oct 2023 12:56:52 +0200
+	b=RTK3PvInwaVdiihgRMwETEAVtneMh+Q/pcwCRCuwpolT9nUMpzUhTrmVID7W8f0Rl
+	 cemRLorWaRWJlRoMrCMrgNkI0HkdA25P58AVSxAKtuLwYqXY14MvQS+JokYGkou/zs
+	 0si0BA0YVzinR+2hs6VP9BMapKk21jBr+JsOJui2LYKJaKss91WIFw/+Wh9lbtqLhW
+	 Mdiyilr40pqBXm5mUTPvHWSq2meIJKKj6EYRXnK7cQ46zmCVwoJUzgewx+Qq2QaaFs
+	 OjlaB4O4EGJFEaBniqzO1D3eguYUjTJvemk5Lcktx8nUNw0c8xz1c8q0vPGFZLmgkF
+	 nb0Wx2bCFmsnQ==
+Message-ID: <f6b636ee-a790-415a-b582-393bb0bdffa0@kernel.org>
+Date: Sun, 8 Oct 2023 12:58:24 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 26/29] selftests: mptcp: add
- mptcp_lib_get_counter
+Subject: Re: [PATCH mptcp-next v3 27/29] selftests: mptcp: add
+ mptcp_lib_make_file
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1695631132.git.geliang.tang@suse.com>
- <b9425bc5bbc9a0c66a0c5f026b176d5ebe0d4d53.1695631132.git.geliang.tang@suse.com>
+ <5b20fc53613f849a9e9ef3ebb132e7494476762e.1695631132.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,21 +77,116 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <b9425bc5bbc9a0c66a0c5f026b176d5ebe0d4d53.1695631132.git.geliang.tang@suse.com>
+In-Reply-To: <5b20fc53613f849a9e9ef3ebb132e7494476762e.1695631132.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 25/09/2023 10:42, Geliang Tang wrote:
-> The helper get_counter() in mptcp_join.sh and get_mib_counter() in
-> mptcp_connect.sh have the same functionality, export get_counter() into
-> mptcp_lib.sh and rename it as mptcp_lib_get_counter(). Use this new
-> helper instead of get_counter() and get_mib_counter().
+> make_file() helper in mptcp_sockopt.sh and userspace_pm.sh are the same.
+> Export it into mptcp_lib.sh and rename it as mptcp_lib_kill_wait(). Use
+> it in both mptcp_connect.sh and mptcp_join.sh.
 
-Good idea, looks good to me!
+(...)
 
-Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> index 3b971d1617d8..dc4a1dd3566d 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> @@ -592,9 +592,8 @@ make_file()
+>  	ksize=$((SIZE / 1024))
+>  	rem=$((SIZE - (ksize * 1024)))
+>  
+> -	dd if=/dev/urandom of="$name" bs=1024 count=$ksize 2> /dev/null
+> +	mptcp_lib_make_file $name 1024 $ksize
+>  	dd if=/dev/urandom conv=notrunc of="$name" bs=1 count=$rem 2> /dev/null
+
+Mmh, why were we doing that?
+
+I guess we are missing something like "oflag=append" because this will
+write "${rem}" bytes at the beginning of the file where there is already
+some random bytes. It should write that at the end. Do you mind adding a
+commit adding "oflag=append" please?
+
+Then it means this should be done in the version of the "lib" as well
+(an optional behaviour). That may increase a bit the complexity.
+
+(Or we remove this second dd line (+ ${rem}) in a dedicated commit
+because we were not using it correctly from the beginning and we are
+fine like that (if I'm not mistaken)?)
+
+> -	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
+>  
+>  	echo "Created $name (size $(du -b "$name")) containing data sent by $who"
+>  }
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 26ea0919810f..f88168d66fdc 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -1155,8 +1155,7 @@ make_file()
+>  	local who=$2
+>  	local size=$3
+>  
+> -	dd if=/dev/urandom of="$name" bs=1024 count=$size 2> /dev/null
+> -	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
+> +	mptcp_lib_make_file $name 1024 $size
+>  
+>  	print_info "Test file (size $size KB) for $who"
+>  }
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 0f5e34c76bb4..7b0d03c40f89 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -344,3 +344,12 @@ mptcp_lib_get_counter() {
+>  
+>  	echo "${count}"
+>  }
+> +
+> +mptcp_lib_make_file() {
+> +	local name=$1
+> +	local bs=$2
+> +	local size=$3
+> +
+> +	dd if=/dev/urandom of="$name" bs=$bs count=$size 2> /dev/null
+> +	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
+> +}
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> index bfa744e350ef..39128fca99dd 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> @@ -245,18 +245,6 @@ do_transfer()
+>  	return 1
+>  }
+>  
+> -make_file()
+> -{
+> -	local name=$1
+> -	local who=$2
+> -	local size=$3
+> -
+> -	dd if=/dev/urandom of="$name" bs=1024 count=$size 2> /dev/null
+> -	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
+> -
+> -	echo "Created $name (size $size KB) containing data sent by $who"
+> -}
+> -
+>  do_mptcp_sockopt_tests()
+>  {
+>  	local lret=0
+> @@ -357,8 +345,10 @@ sout=$(mktemp)
+>  cin=$(mktemp)
+>  cout=$(mktemp)
+>  init
+> -make_file "$cin" "client" 1
+> -make_file "$sin" "server" 1
+> +mptcp_lib_make_file "$cin" 1024 1
+> +echo "Created $cin (size 1 KB) containing data sent by client"
+> +mptcp_lib_make_file "$sin" 1024 1
+> +echo "Created $sin (size 1 KB) containing data sent by server"
+
+Maybe easier to keep 'make_file()' helper to call mptcp_lib_make_file()
+and print the message?
 
 Cheers,
 Matt
