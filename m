@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F25F3C00
-	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 10:49:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEDF3C00
+	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 10:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bu+BmWp3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66EEAC433C8;
-	Sun,  8 Oct 2023 10:49:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hAu8IzBU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09BEBC433C8;
+	Sun,  8 Oct 2023 10:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696762151;
-	bh=Y0DuyWYlSECsxIcqLYYmi+DwQLP2kphO2XHYbI+Tp+w=;
+	s=k20201202; t=1696762485;
+	bh=cqMFsQGiASGKJKyzzUDQEPx0YXCXM01qgpFY7enbY2k=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=bu+BmWp3x2HUle/VJ/+YeyfSrctvWsuJ+K0NxmoagHpKpOluAqsxtjtg+HGubTxbs
-	 OWFWk0/sygLMcLhm6l5SBnTPtS2ANJp9TnQgyOEf5ImW1wjObkXLJOKIPefIMADyvT
-	 UpLgyGrVPcPlQZ6yHskuzy2uTXSVtb0e8nwPQRDydHqLrHlMxvCH21qTFtVZB6rewN
-	 E2c1f3o0jhJlgE/3tQnz+8vGSz4UzSwwAhuDLsVFjhdryT0WHGYH4hgPz41MOKIzaG
-	 RxQ6eFEzeo4waA6DIbHAO+COF3NrgokXtZYhgpZJk39dkqXqKn1rUk5v1IONiWtYg/
-	 O4OaNQEG40vAQ==
-Message-ID: <7aa3bec8-9495-4681-9ef4-ff3012714a1b@kernel.org>
-Date: Sun, 8 Oct 2023 12:49:07 +0200
+	b=hAu8IzBU30Zt71kq5SV/XRwdDc1w3yu45p1xA8iDFLENvzDmreqPwqojjYGKNm1KH
+	 0hBFoCrL55S91vd6pVBS2nzM9TWAfOCDQXu8QCCuDLWm539wgu4up6wdlueUUTBMLL
+	 9oj7v4GM5y53+YgO3+8AZgZwc7if/Hkef3sgP5xzxhDFaF2CsqmVsTW+5A4Tw5LtBz
+	 XyudRXTNkGZ3ZUv0MjUWijYXyu38j1jh4KHAzT8fomygdiCJzVEDBzMaTiWHggg1zB
+	 wygojNlpZAiXwLFFn1k1HUYpHxmQRQOzO/o+xGJdgp0ym5098ORAIKI3C9wGI0rZ3i
+	 ErhONnCmZV/BQ==
+Message-ID: <f4086286-6870-48a3-89a3-118efbea50fa@kernel.org>
+Date: Sun, 8 Oct 2023 12:54:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 21/29] selftests: mptcp: add
- mptcp_lib_kill_wait
+Subject: Re: [PATCH mptcp-next v3 22/29] selftests: mptcp: add
+ mptcp_lib_evts_*
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1695631132.git.geliang.tang@suse.com>
- <901c8e4cbae8f41a79d294c45f54f77645372df7.1695631132.git.geliang.tang@suse.com>
+ <8b57e996491a1057c9b1385797f7c96dec2225ed.1695631132.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,64 +77,139 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <901c8e4cbae8f41a79d294c45f54f77645372df7.1695631132.git.geliang.tang@suse.com>
+In-Reply-To: <8b57e996491a1057c9b1385797f7c96dec2225ed.1695631132.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 25/09/2023 10:42, Geliang Tang wrote:
-> Export kill_wait() helper in userspace_pm.sh into mptcp_lib.sh and
-> rename it as mptcp_lib_kill_wait(). It can be used to instead of
-> kill_wait() in mptcp_join.sh. Use the new helper in both scripts.
+> This patch unifies "pm_nl_ctl events" related code in userspace_pm.sh
+> and mptcp_join.sh into four functions: _init, _start, _kill and _remove.
+> Define them in mptcp_lib.sh and use these new helper in both scripts.
 
-Good idea!
-
-Just to make things 100% clear, please always start by explaining the
-reason why this patch is interesting. Here it can simply be:
-
-  To avoid duplicated code in different MPTCP selftests, we can add
-  and use helpers defined in mptcp_lib.sh.
-
-Same in the following commits. You can even copy-paste this explanation
-in the next ones.
+Good idea to avoid duplicated code!
 
 (...)
 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index bb95dd967eb3..8051ac5507dc 100644
+> index 8051ac5507dc..899c21ced5a3 100644
 > --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -219,3 +219,11 @@ mptcp_lib_get_info_value() {
->  mptcp_lib_evts_get_info() {
+> @@ -220,6 +220,11 @@ mptcp_lib_evts_get_info() {
 >  	cat "${2}" | mptcp_lib_get_info_value "${1}" "^type:${3:-1},"
 >  }
+>  
+> +server_evts=""
+> +client_evts=""
+> +server_evts_pid=0
+> +client_evts_pid=0
+
+I wonder if it wouldn't be clearer to prefix these variables with
+'mptcp_lib_': we would avoid overriding global variables by mistake from
+other fiels and it would be clearer to know where these variables have
+been defined. But I guess if we do that, we would need to do quite a few
+modifications in userspace_pm.sh and we want to avoid that, no?
+
+Or passing them as arguments to 'mptcp_lib_evts_XXX()'? It would be more
+explicit but maybe not worth it?
+
+An alternative could be to keep these variables declared in the
+different files and keep these helpers as they are here. In this case,
+it would be good to add a comment before mptcp_lib_evts_init()
+explaining that these variables are needed.
+
+Please also make sure shellcheck if happy with that, e.g. by adding a
+'?' in the variable name like ${server_evts?} or explicitly at the
+beginning of the function with something like ': "${var?}"' or ':
+"${var:?}"' if it has to be non empty, e.g.
+
+  mptcp_lib_evts_init() {
+      : "${server_evts?}"
+      : "${client_evts?}"
+
+      (...)
+  }
+
+  mptcp_lib_evts_start() {
+      : "${server_evts:?}"
+      : "${client_evts:?}"
+      : "${server_evts_pid:?}"
+      : "${client_evts_pid:?}"
+
+      (...)
+  }
+
+  mptcp_lib_evts_kill() {
+      mptcp_lib_kill_wait "${server_evts_pid:?}"
+      mptcp_lib_kill_wait "${client_evts_pid:?}"
+  }
+
+  mptcp_lib_evts_remove() {
+      rm -rf "${server_evts:?}" "${client_evts:?}"
+  }
+
 > +
-> +mptcp_lib_kill_wait() {
-
-Do you mind adding a comment just above mentioning the parameters that
-are accepted? Like it is done in other functions, e.g.:
-
-  # $1: PID
-
-> +	[ $1 -eq 0 ] && return 0
-
-Could you add "{}" (${1}) like it is done in the rest of the file, just
-to keep the uniformity? (and because it *seems* better to have an
-explicit delimiter in Bash to avoid mistakes)
-
-Also, please also add double quotes around variables ("${1}") to keep
-shellcheck happy (and because it is safer and for the uniformity).
-
+>  mptcp_lib_kill_wait() {
+>  	[ $1 -eq 0 ] && return 0
+>  
+> @@ -227,3 +232,38 @@ mptcp_lib_kill_wait() {
+>  	kill $1 > /dev/null 2>&1
+>  	wait $1 2>/dev/null
+>  }
 > +
-> +	kill -SIGUSR1 $1 > /dev/null 2>&1
-> +	kill $1 > /dev/null 2>&1
-> +	wait $1 2>/dev/null
+> +mptcp_lib_evts_init() {
+> +	if [ -z "$server_evts" ]; then
 
-(Same here and in the following commits)
+Same here and below for the {}. (see comment from patch 21/29)
 
-Regarding ShellCheck, please always run it on the different .sh scripts
-not to introduce new issues.
++ the double quotes below to keep shellcheck happy and be safer.
+
+> +		server_evts=$(mktemp)
+> +	fi
+> +	if [ -z "$client_evts" ]; then
+> +		client_evts=$(mktemp)
+> +	fi
+> +}
+> +
+> +mptcp_lib_evts_start() {
+> +	:>"$server_evts"
+> +	:>"$client_evts"
+> +
+> +	if [ $server_evts_pid -ne 0 ]; then
+> +		mptcp_lib_kill_wait $server_evts_pid
+> +	fi
+> +	ip netns exec "$ns1" ./pm_nl_ctl events >> "$server_evts" 2>&1 &
+
+I think ${ns1} and ${ns2} should be passed as argument to this function.
+
+> +	server_evts_pid=$!
+> +
+> +	if [ $client_evts_pid -ne 0 ]; then
+> +		mptcp_lib_kill_wait $client_evts_pid
+> +	fi
+> +	ip netns exec "$ns2" ./pm_nl_ctl events >> "$client_evts" 2>&1 &
+> +	client_evts_pid=$!
+> +}
+> +
+> +mptcp_lib_evts_kill() {
+> +	mptcp_lib_kill_wait $server_evts_pid
+> +	mptcp_lib_kill_wait $client_evts_pid
+
+Should we eventually set the pid to 0 after that just to be on the safe
+side?
+
+  server_evts_pid=0
+  client_evts_pid=0
+
+It was not needed before, maybe fine not to do that? Up to you (but if
+you do, please add a note in the commit message)
+
+> +}
+> +
+> +mptcp_lib_evts_remove() {
+> +	rm -rf $server_evts $client_evts
+> +}
 
 Cheers,
 Matt
