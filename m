@@ -1,192 +1,129 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2044.outbound.protection.outlook.com [40.107.20.44])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96BF9CA49
-	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 12:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B79C8E8
+	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 14:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RC1UJqtJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZsxWFmWSXzXTbz6KQDqroQ8a4SImp4uqoWFQNnwu4oiUT4lJb8cY0iHoqQyt2FtdaITIPtTE106PhoFHhtIGAcvPxnLIJYNPnyKQfsFRMIntAaXcA05O/6nb/z6kiscqJJSQ0ZenzyV+RjhEedQ5zQL+IEJwQiIC09CYsqpEOovFVhfI7jtxfQXERoFwsOUKkfAzAxbSheU/hr4OWMjepbvFRFkiEEJK1j2PAHvXvuU1oGS/FX0G+9suL90Z88G2gc1MsE0H3nxwZMrZ0iPahfTCZCKPlge83AYZEnQeeEGsYInI1q6eS3HV8alQhG8n+70aDMqZXQoOkGNEkn1Gmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZG5waajWHSjIN7C5JRA4aEyXengNXduE1zrxzJM4GQQ=;
- b=CCYxhb5XjffRSxi9NQYEBZxxjd+/dT6eHv9SToNyGmbOeT4FYHeCYedIn/oQr1XJf8S49OrrfQqPEgy4205SqeyOYzPS90TdjlNFaLfEnOeFcSs68tlFDl0Ald1T3mH4SisDZCwX3arDDUiX9VxOxeieVb3q2MqpMpcs7RkT5UxAX0AknpWbBQ7QnSJ43BFuzdXuMMjyvWZwY98WMeENtzCc2ACrv9vaiFWxE02yUz99m2AxUS55ZZ5ZdxfrQAlmrakY383pe+55ducPKFJEgM+pJgK3jf4tMn2LX7DMtj+7lVtu+mkgq6nBcQnilaCEutcU3UnRuJjElzd7pXRqiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZG5waajWHSjIN7C5JRA4aEyXengNXduE1zrxzJM4GQQ=;
- b=RC1UJqtJK9iDrRASa2CXJQ6gQzXfvxWWkO7em1BX75/19fRMg8ru6oisPyuVYza1+FlSUna+UgE1XWuntfx3u7niZ431MRXsrEJu3MjtusbOh/m90xR6eh2AT9eI8ND4QHSSa9X3CAqP999n4dLX29chz2h03SsuNqLHOqLDkomiA0Vu8bzN3TgjLjmPHCzev9jilOBPlSk5XZ4HiOKI1a46DolM3dCWqn05zzEPhJQ63dL44E4cx6eqylH+UIpro36jdrwei1jJNZkekeq7xleUpmqz9mtWlKLbcKx3MR/58lJRgOXc2d5jBte0CXpdJl4Ae20fhcdt0jRr35tvLA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by DB9PR04MB9914.eurprd04.prod.outlook.com (2603:10a6:10:4c1::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.41; Sun, 8 Oct
- 2023 12:32:00 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::3852:4f89:9891:73c8]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::3852:4f89:9891:73c8%3]) with mapi id 15.20.6838.030; Sun, 8 Oct 2023
- 12:32:00 +0000
-Date: Sun, 8 Oct 2023 20:33:13 +0800
-From: Geliang Tang <geliang.tang@suse.com>
-To: Matthieu Baerts <matttbe@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v11 1/4] mptcp: set next subflow to msk->first
-Message-ID: <20231008123313.GA8315@localhost>
-References: <cover.1696760702.git.geliang.tang@suse.com>
- <6a31565e01d3474be56bdf62c54d0c20c065c65c.1696760702.git.geliang.tang@suse.com>
- <6c266459-dbba-4bda-b868-b5bcdaf351b0@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c266459-dbba-4bda-b868-b5bcdaf351b0@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SL2P216CA0162.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:1b::14) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGTR/sct"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39BD2C433C7;
+	Sun,  8 Oct 2023 14:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696773913;
+	bh=r+kHAtGuKG0Uq8FmFEjHIdQQVxFfRqk1vuA/7M3mQvA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BGTR/sct4mZiXE8+tuAcAGDLWGG8o8tNQGeXVmnrU0pS3d5+ojmL7C75628Y7MaJ7
+	 XRrhj7T/fqCZw1SVexSskT1zTZ2mejcdXWgwShznT/LmxBPY2GO4Y0Wzp9LW16x6BF
+	 LO2P6zG+aLjkoTrrW9cuj4du3nkNAYzNzPTie25MtIJWivOuNNiYdTxIlJX/Ixo1NQ
+	 klhS6Dpz77jOc9GkKC6LOyJzz7V9sMTAglMRsGCOw4xXyg/jEabHlDIMXb9cFliiBT
+	 AgoyHESokZRV9xSK/+yjXgg/YD/4OhRQyFEmmSCipKz0CCQFVIryTAoHKqvyI6RITP
+	 8M/M628ijf8og==
+Message-ID: <ff0b0fbc-8bb1-4579-b1b9-09cc06ab734e@kernel.org>
+Date: Sun, 8 Oct 2023 16:05:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DB9PR04MB9914:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36cb287e-e863-4be1-42bc-08dbc7fa90db
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Z1c4K+CLbqwYa2TVIR/TE2V6gSWQalUf5uFImwjqDBz9dQPLEG5zWdJB2TKAIgYlfQOcWwc8sz2xju+dU+gNLFCP+b73fPKlEJjhJGHElp2Z/rrbx0oVVqIIzAXn/fqw1A4il+dhUD2yCNjx5QSUALrhNtOi2KeTEijIs6VAGlmwXmaIVbWQy7lv1epp+xVrdnCnC6zDDa+f2dvGxIzWRgmRwSNUGa2a/vX+9T8A9XJTGqUjD0dYTXx+9U3eHyiU5As9DZvdcZCtc7KziBEBFLNMlYgXoHJkzR+WvTeVCQJoYal8KbzpWVFsMkuTa8EemgnrmyIMw+SeDagLKXOsUqCucQNhPKSek4+T/JHB9Z3SaMn0Ge4o+H+MvAw5WaEiBrS1D4LmXyO//kFkvVf90tMSyHuQDjNBezC/+8PHLUO0BStaEOK0O1b0dLOAkp87qFA+EhU6ZLdQeAUJ07eX+YyAxpPyKbJP2HTI0SKgjmqN2+DPTLs+5l3Y03BeOoAsazoWrjizJGpwZQ84C+aE8rqtXMF0PPu/+e8SNzOCTwJ/me/IXAVt1Mfku3vgFWrqxn39h1xJz7fdown+0R+ts/26W2V+dAu0z58Ss2E4HTA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(136003)(396003)(39860400002)(346002)(376002)(230922051799003)(451199024)(64100799003)(1800799009)(186009)(53546011)(1076003)(26005)(8676002)(478600001)(6666004)(6512007)(6506007)(83380400001)(2906002)(4326008)(33716001)(66476007)(110136005)(66556008)(66946007)(5660300002)(6486002)(41300700001)(44832011)(316002)(8936002)(38100700002)(86362001)(33656002)(15974865002)(9686003)(18886075002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?x4ratB6FaH6QNxGZmPrNkdnPWz+zf9n8nbV2YHyVNQTVjd/dmM2VIfy/5Njy?=
- =?us-ascii?Q?+rY+qvxibDq3rH14pWKr7B6haT/D8QK9YwpXlIJFocU2Wlh4lUrBxTTMGAnt?=
- =?us-ascii?Q?yJ1ZoOnuG4rtw2P70GmpA1y3z1qY9wIh6d6xqbAn85kOl5Cs+IWKjVrtYg+c?=
- =?us-ascii?Q?XW40PkJYNfFlbp2x/XNHCdVCV52EAbGheSaYytijxoDANmHu2QhaJh07mE6/?=
- =?us-ascii?Q?0pcNxyWsnac/yaCiSGElspAJq4wSretQFc2k9mKeueUp8DlSln+b7Munb3Td?=
- =?us-ascii?Q?0ok2qCLL6uO8q2G8yfc80InuNPTg8dHRsUMCqmwCyyvJyArXvsnoRrZbTizL?=
- =?us-ascii?Q?CuFgFeasdxuqKRDDxmdwKQRL8Ev4632BAzB1iKeMSW9DTjnYJFs1Rw+Wam8h?=
- =?us-ascii?Q?yafGxMXDMF0jrydXpz/BmbWWjLVmo/LGhLxZsrLH2sfR+V1+BiHw+VNg/Pne?=
- =?us-ascii?Q?hDeGx//xRec58w2zA1Km/DM/L5HweaUO6PrVPw1m8ig3HEBhVvQEt8CoHfjt?=
- =?us-ascii?Q?5015CdXl1XXFVF+an1QcCuem4nmX+UIC8G7ov7JpJo54hzj+baYFGasOjJFl?=
- =?us-ascii?Q?U4bhfYPJI6j2pQ1R5EQvhBCJu7QuVTNkF3cm4O0FxNPfjyVxkcCKY28GRfq9?=
- =?us-ascii?Q?xDakvZLFfi5pHDsSOIoEbfbRMdw9VxEo35NUi2+VlaOFiOmNu7PPV2MjGioo?=
- =?us-ascii?Q?GMyLyRnvoGF9OEaWytQbcDYod0Lbm78jrr9UctvRgB7kHhMd9J8hE6CJVYh4?=
- =?us-ascii?Q?AR9epAicmlNNKSWre/J2rs65Xo4mwjqH2Y7w4RhhO59elZwVX+L+PMyNWuOV?=
- =?us-ascii?Q?wyrsqKgLp2URDTmmzt2paM0H/ynYgSaU/1UDsixFdj8+6tlRxpODdOBfUuHJ?=
- =?us-ascii?Q?8FHluCsPVEGisxj0ufrxirjj1TDRf9UbLeS94RMKmLWcXiKS57yg5rAtC7KG?=
- =?us-ascii?Q?kZhTvd1Bo6xjXv1QTx+BfBsUyqBtUMldRKrb2bykdR+7Aoa0JaeaAj994BEN?=
- =?us-ascii?Q?+nGLf57Jo7+aOajfzwyJM+77yINMDddtQMBLBuOW+SQZ/yCCfBItcieobAQP?=
- =?us-ascii?Q?RFEBC2OOpjLMTIzsZc+C5T5hW0MPr5rOjqWjfbyTdDkExiYPhBmZb9yRKrf6?=
- =?us-ascii?Q?4NgNwhZTvJtz/AZxUNGSVJ4CXwAzB4ukHivYxLh6BCeNw2f/X1g+A192X4Bk?=
- =?us-ascii?Q?HXYCFrImvaH2WIXdkIaPqk/7MtpwbkL5vvsLXoc1/2NRI9gkGXebL4c1yq0n?=
- =?us-ascii?Q?jIuxHrrBPk4NT6USL7Qd4Qdi4g7E63lSdkQFyXHjDBbHRseQ3c6vMG/j1RI+?=
- =?us-ascii?Q?V+Cq7E8J0Me06RWNuOvV7eKoyg0d2C2ICcNPSbJ7agvzWJW2cmTqcAc/22kb?=
- =?us-ascii?Q?H/kMBAvMEHpJIhrpkM9sgga4liQPN1fztxU/gMcYmEftEmLOkACMVKMwZQGg?=
- =?us-ascii?Q?XB0IKSRFsDO1UtC6UqBsTtfQGjxtMWp3F9kGNVlvefFRUMOl5LxuuMVFzcI6?=
- =?us-ascii?Q?oRulUoywUyKQ1+aUreikDdktcz4vVY1sqEX4QxvtbRez90Y4X0E09RQh+2Za?=
- =?us-ascii?Q?GuZPor7tMmEKbLlgDVldopPFphZMhgQKhCjjxJPj?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36cb287e-e863-4be1-42bc-08dbc7fa90db
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2023 12:31:59.5423
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LSkZbmwL1I2H0dJIQFDFXxG0lqyFipeHIOCgxKmqZnUeq0Rljo/GZW2BSbM0CBICSTBFCHNqd7gVnIHKj/orhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9914
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v11 1/4] mptcp: set next subflow to msk->first
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang.tang@suse.com>, Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1696760702.git.geliang.tang@suse.com>
+ <6a31565e01d3474be56bdf62c54d0c20c065c65c.1696760702.git.geliang.tang@suse.com>
+ <6c266459-dbba-4bda-b868-b5bcdaf351b0@kernel.org>
+ <20231008123313.GA8315@localhost>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ Fe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: Tessares
+In-Reply-To: <20231008123313.GA8315@localhost>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Oct 08, 2023 at 01:11:32PM +0200, Matthieu Baerts wrote:
-> Hi Geliang,
+Hi Geliang,
+
+On 08/10/2023 14:33, Geliang Tang wrote:
+> On Sun, Oct 08, 2023 at 01:11:32PM +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> +cc Paolo
+>>
+>> On 08/10/2023 12:27, Geliang Tang wrote:
+>>> When closing the msk->first socket in __mptcp_close_ssk(), the original
+>>> behaviour is to reset this socket. But if there's another subflow available
+>>> in this case, it's better to set the first available subflow to msk->first,
+>>> instead of resetting the msk->first.
+>>
+>> I don't think we want to do that. If I remember well, we want to keep
+>> having 'msk->first' pointing to the initial subflow for various reasons
+>> (I don't remember exactly).
+>>
+>> I think what we want to do is not to reset the initial subflow if there
+>> are other subflows still available and we don't want to set it to 'NULL'
+>> in such case.
 > 
-> +cc Paolo
+> Is it like this:
 > 
-> On 08/10/2023 12:27, Geliang Tang wrote:
-> > When closing the msk->first socket in __mptcp_close_ssk(), the original
-> > behaviour is to reset this socket. But if there's another subflow available
-> > in this case, it's better to set the first available subflow to msk->first,
-> > instead of resetting the msk->first.
-> 
-> I don't think we want to do that. If I remember well, we want to keep
-> having 'msk->first' pointing to the initial subflow for various reasons
-> (I don't remember exactly).
-> 
-> I think what we want to do is not to reset the initial subflow if there
-> are other subflows still available and we don't want to set it to 'NULL'
-> in such case.
+>        if (ssk == msk->first && !msk->pm.subflows)
+>                WRITE_ONCE(msk->first, NULL);
 
-Is it like this:
+No, we cannot set it to NULL nor release it but we should avoid the
+"reset" being sent.
 
-       if (ssk == msk->first && !msk->pm.subflows)
-               WRITE_ONCE(msk->first, NULL);
+I don't have access to the code for the moment but by looking at your
+patch, I would say you should not modify 'dispose_it' nor 'msk->first'
+but maybe check if you can avoid calling 'mptcp_subflow_ctx_reset()' if
+'!dispose_it', maybe by checking something like
+'list_is_singular(&msk->conn_list)'? (I think you should avoid looking
+at the PM structure here).
 
-This doesn't work, it will get a NULL pointer crash:
+Please tell me if it is not clear.
 
-[  390.852957] MPTCP: msk=0000000089655116 snd_data_fin_enable=1 pending=0 snd_nxt=8683552930344602029 write_seq=8683552930344602029
-[  390.852969] BUG: kernel NULL pointer dereference, address: 00000000000000a0
-[  390.852973] MPTCP: msk=0000000089655116 state=7 flags=0
-[  390.852980] #PF: supervisor read access in kernel mode
-[  390.852989] #PF: error_code(0x0000) - not-present page
-[  390.852990] MPTCP: msk=0000000089655116 rx queue empty=1:1 copied=0
-[  390.852998] PGD 0 P4D 0
-[  390.853010] Oops: 0000 [#3] PREEMPT SMP NOPTI
-[  390.853020] CPU: 6 PID: 796 Comm: kworker/6:3 Tainted: G      D            6.6.0-rc4-mptcp+ #19
-[  390.853030] Hardware name: LENOVO 20UASA0901/20UASA0901, BIOS N2WET38W (1.28 ) 08/30/2022
-[  390.853037] Workqueue: events mptcp_worker
-[  390.853056] RIP: 0010:mptcp_worker+0x113/0x3e0
-[  390.853070] Code: 83 28 fa ff ff a8 01 75 71 f0 48 0f ba 73 d8 02 0f 82 9c 01 00 00 4c 8b a3 80 00 00 00 4d 85 e4 74 18 49 8b 84 24 c0 04 00 00 <48> 8b 80 a0 00 00 00 48 85 c0 0f 85 9f 00 00 00 48 89 ef e8 b5 f2
-[  390.853079] RSP: 0018:ffffc90000527e38 EFLAGS: 00010286
-[  390.853087] RAX: 0000000000000000 RBX: ffff88815c26e0f8 RCX: 0000000000000000
-[  390.853094] RDX: 0000000100016275 RSI: 0000000000000246 RDI: ffff888108c70000
-[  390.853100] RBP: ffff88815c26dac0 R08: 0000000000000800 R09: 0000000000000400
-[  390.853106] R10: ffff88846d700000 R11: ffffffffb026f448 R12: ffff888106f5a000
-[  390.853111] R13: ffff888100099c05 R14: ffff88815c26e100 R15: ffff888103fd36c0
-[  390.853117] FS:  0000000000000000(0000) GS:ffff88846d700000(0000) knlGS:0000000000000000
-[  390.853125] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  390.853131] CR2: 00000000000000a0 CR3: 00000001a21fc002 CR4: 00000000003706e0
-[  390.853138] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  390.853144] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  390.853149] Call Trace:
-[  390.853155]  <TASK>
-[  390.853164]  ? __die_body+0x1e/0x60
-[  390.853177]  ? page_fault_oops+0x15b/0x470
-[  390.853189]  ? pollwake+0x78/0xa0
-[  390.853203]  ? __pfx_default_wake_function+0x10/0x10
-[  390.853215]  ? exc_page_fault+0x71/0x160
-[  390.853226]  ? asm_exc_page_fault+0x26/0x30
-[  390.853240]  ? mptcp_worker+0x113/0x3e0
-[  390.853253]  ? mptcp_worker+0xc8/0x3e0
-[  390.853265]  ? __schedule+0x352/0xc20
-[  390.853279]  process_scheduled_works+0x22b/0x360
-[  390.853298]  worker_thread+0x147/0x2b0
-[  390.853315]  ? __pfx_worker_thread+0x10/0x10
-[  390.853331]  kthread+0xe5/0x120
-[  390.853346]  ? __pfx_kthread+0x10/0x10
-[  390.853362]  ret_from_fork+0x31/0x40
-[  390.853372] MPTCP: msk=00000000c3583a71 state=11 flags=0
-[  390.853375]  ? __pfx_kthread+0x10/0x10
-[  390.853388]  ret_from_fork_asm+0x1b/0x30
-[  390.853412]  </TASK>
-
-Now ssk (msk->first) has been released, we must update msk->first.
-
-Thanks,
--Geliang
-
-> 
-> Could it be possible to do that instead you think?
-> 
-> Cheers,
-> Matt
-> -- 
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
