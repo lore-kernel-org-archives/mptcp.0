@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944E2C120
-	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 11:22:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8BB8487
+	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 11:25:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tr95eomC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A4E2C433C7;
-	Sun,  8 Oct 2023 11:22:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUPpoxlt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD655C433C7;
+	Sun,  8 Oct 2023 11:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696764131;
-	bh=lu6BKCigZRkzVTnP7LareUcl1nY8FoCKCZW5EQGLLQw=;
+	s=k20201202; t=1696764355;
+	bh=lsDf2a7HIYC1hZvMIt6vdvvJAbhWO2/G+PKexr64zLE=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Tr95eomCO339vcJdw+zLhxrdSrBLOSMenm1GLUA3+/AjikaFI6e1HiZeVJQJSHf81
-	 /5wtPeyWXggEl6RUZcOAsSTm1d2prCypTlVxI6PjrWQC4Q42O4DYs/yTPngrGmQMRF
-	 oSjKyJRu0VibIf3h+PDG8G8Vf7PJZbewEjCMrHyKxIpONflJyA/FK3Hivow7A5UmVP
-	 2i14iiCmCOsh8On0GnUyNxir+Rtjyzv43rbgWWTlAuvC8aMS8JhK4ljfkpUiMNgoCS
-	 zATkjaIJQsAjh/8DxZL2jGOTsABWNiXinC2xHbIhsSCEfzyvCjfcVJFifkXCej5HEm
-	 5WoVAIf2ZjBRw==
-Message-ID: <86bb8713-e4ed-4575-a272-f2111b8600b1@kernel.org>
-Date: Sun, 8 Oct 2023 13:22:08 +0200
+	b=BUPpoxlt8Q+iNBSKAB/QRi/XPwEPfNx2bnHK8J25FfnX9bdup+CY3RIV802RC1Rns
+	 jaK9UEZ24gXspgCO0BEd69kpmGW42eya/IdEh9KswDMl7Y5bKOQCDGqsxJmEVakbsv
+	 VffYiTM8CR84sucAeD8sU8WUH8AGpsUSJ3U3RJcYN++cnbQnn0WnsaHLSnschL34hF
+	 /j2HZ+P+Sik7eHFe9mv6WbzhgWDv5xJCj1NllIAHMZa/pt0ZZkg+QoE1ZAM0YQs1ZV
+	 RfUGSb7BZS8rhr0SsL4w2dAlV9Bjm+DO+GbUvxp7lnDrkglFNKgqu8iKPWky603+p5
+	 rXJzXjlNp6fkw==
+Message-ID: <01dfaf2a-e1a8-45ca-880d-be3a6e213703@kernel.org>
+Date: Sun, 8 Oct 2023 13:25:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v11 2/4] selftests: mptcp: userspace pm remove
- initial subflow
+Subject: Re: [PATCH mptcp-next v11 4/4] selftests: mptcp: userspace pm remove
+ id 0 address
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1696760702.git.geliang.tang@suse.com>
- <1c1cbfa1233832ae989bad6a4f541420f3c43fd4.1696760702.git.geliang.tang@suse.com>
+ <3738a4c89c049ae3b2832206390a39471331865d.1696760702.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,50 +77,63 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <1c1cbfa1233832ae989bad6a4f541420f3c43fd4.1696760702.git.geliang.tang@suse.com>
+In-Reply-To: <3738a4c89c049ae3b2832206390a39471331865d.1696760702.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 08/10/2023 12:27, Geliang Tang wrote:
-> This patch adds a selftest for userpsace PM to remove the initial
-> subflow. Use userspace_pm_add_sf() to add a subflow, and pass initial
-> ip address to userspace_pm_rm_sf() to remove the initial subflow.
+> This patch adds a selftest for userpsace PM to remove id 0 address.
+> Use userspace_pm_add_addr() helper to add a id 10 address, then use
+> userspace_pm_rm_addr() helper to remove id 0 address.
 > 
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index ae38b428e42e..ce691aeca99e 100755
+> index ce691aeca99e..30b9e367cefa 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3490,6 +3490,27 @@ userspace_tests()
+> @@ -3511,6 +3511,29 @@ userspace_tests()
 >  		kill_events_pids
 >  		wait $tests_pid
 >  	fi
 > +
-> +	# userspace pm remove initial subflow
-> +	if reset_with_events "userspace pm remove initial subflow" &&
+> +	# userspace pm remove id 0 address
+> +	if reset_with_events "userspace pm remove id 0 address" &&
+
+Maybe clearer to say: "userspace pm send RM_ADDR for ID 0", no?
+
 > +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-> +		set_userspace_pm $ns2
-> +		pm_nl_set_limits $ns1 0 1
+> +		set_userspace_pm $ns1
+> +		pm_nl_set_limits $ns2 1 1
 > +		speed=10 \
 > +			run_tests $ns1 $ns2 10.0.1.1 &
 > +		local tests_pid=$!
-> +		wait_mpj $ns2
-> +		userspace_pm_add_sf $ns2 10.0.3.2 20
+> +		wait_mpj $ns1
+> +		userspace_pm_add_addr $ns1 10.0.2.1 10
 > +		chk_join_nr 1 1 1
+> +		chk_add_nr 1 1
 > +		chk_mptcp_info subflows 1 subflows 1
 > +		chk_subflows_total 2 2
-> +		userspace_pm_rm_sf $ns2 10.0.1.2
-> +		chk_rm_nr 0 1
+> +		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
+> +		userspace_pm_rm_addr $ns1 0
+> +		chk_rm_nr 1 0 invert
 > +		chk_mptcp_info subflows 1 subflows 1
 > +		chk_subflows_total 2 2
 
-Can you also check that no RST has been sent please?
+(Is it really 2? I guess this is due to your patch 1/4 and we should
+have 2 subflows in total here, no?)
+
+After the server has sent a RM_ADDR for ID0, the client with the Netlink
+PM will react by closing the subflow, no? If yes, please add a comment
+explaining why the subflow has been removed after having sent a RM_ADDR
+because it can be confusing.
+
+Also, can you check that no RST has been sent?
 
 Cheers,
 Matt
