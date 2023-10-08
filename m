@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F67715C3
-	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 11:19:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944E2C120
+	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 11:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gofQEgsz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D0C3C433C7;
-	Sun,  8 Oct 2023 11:19:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tr95eomC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A4E2C433C7;
+	Sun,  8 Oct 2023 11:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696763966;
-	bh=AuokVfjLM542frsl80PMLQiDT75HsMcHfKChgCJ4T1M=;
+	s=k20201202; t=1696764131;
+	bh=lu6BKCigZRkzVTnP7LareUcl1nY8FoCKCZW5EQGLLQw=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=gofQEgszkfUy94uAVr0d50Yhh4Abxdea5y+QKx0X/j9HtfGSOo3m0IT3GHVOPY8AO
-	 1s5B8SpeZXLOw+mp9tboRCMM+6MgSU98fZgtKfdMY/4YGR+sHQOrvF0I2kMomaHyX4
-	 BAwI1pQeQjHUkYDMchmOIYLz/HtHXgzjX7IJsIehcOH0eiXRB48mwelf2vlJ6GCCKq
-	 7dPGtKAiF8MiEn8EDiiG9osy1SsaXri3B7fc7m6zWJvh2Xv17AK8/re6cPjH52bi8D
-	 2jhMpI4jewTIEOibTnmszMjb/Wle+n2pupRK0xzus9j29udBdPjYIToLB3PDVqAXQm
-	 hrOxjU67sGUvg==
-Message-ID: <5cc54621-7256-4f47-89b3-1ae71e6d0aa9@kernel.org>
-Date: Sun, 8 Oct 2023 13:19:24 +0200
+	b=Tr95eomCO339vcJdw+zLhxrdSrBLOSMenm1GLUA3+/AjikaFI6e1HiZeVJQJSHf81
+	 /5wtPeyWXggEl6RUZcOAsSTm1d2prCypTlVxI6PjrWQC4Q42O4DYs/yTPngrGmQMRF
+	 oSjKyJRu0VibIf3h+PDG8G8Vf7PJZbewEjCMrHyKxIpONflJyA/FK3Hivow7A5UmVP
+	 2i14iiCmCOsh8On0GnUyNxir+Rtjyzv43rbgWWTlAuvC8aMS8JhK4ljfkpUiMNgoCS
+	 zATkjaIJQsAjh/8DxZL2jGOTsABWNiXinC2xHbIhsSCEfzyvCjfcVJFifkXCej5HEm
+	 5WoVAIf2ZjBRw==
+Message-ID: <86bb8713-e4ed-4575-a272-f2111b8600b1@kernel.org>
+Date: Sun, 8 Oct 2023 13:22:08 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v11 3/4] mptcp: userspace pm remove id 0
- address
+Subject: Re: [PATCH mptcp-next v11 2/4] selftests: mptcp: userspace pm remove
+ initial subflow
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1696760702.git.geliang.tang@suse.com>
- <8cc9892f0516f304f146318aeb21a6e935cdec39.1696760702.git.geliang.tang@suse.com>
+ <1c1cbfa1233832ae989bad6a4f541420f3c43fd4.1696760702.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,105 +77,61 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <8cc9892f0516f304f146318aeb21a6e935cdec39.1696760702.git.geliang.tang@suse.com>
+In-Reply-To: <1c1cbfa1233832ae989bad6a4f541420f3c43fd4.1696760702.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 08/10/2023 12:27, Geliang Tang wrote:
-> This patch adds the ability to send RM_ADDR for local ID 0. Check
-> whether id 0 address is removed, if not, put id 0 into a removing
-> list, pass it to mptcp_pm_remove_addr() to remove id 0 address.
+> This patch adds a selftest for userpsace PM to remove the initial
+> subflow. Use userspace_pm_add_sf() to add a subflow, and pass initial
+> ip address to userspace_pm_rm_sf() to remove the initial subflow.
 > 
-> There is no reason not to allow the userspace to remove the initial
-> address (ID 0). This special case was not taken into account not
-> letting the userspace to delete all addresses as announced.
-
-Thank you for the next version!
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/379
-> Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
-
-(This should target mptcp-net)
-
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
->  net/mptcp/pm_userspace.c | 36 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 6b8083650bc1..ed9db6a4e228 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -211,6 +211,37 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
->  	return err;
->  }
->  
-> +static int mptcp_userspace_remove_id_zero_address(struct mptcp_sock *msk,
-> +						  struct genl_info *info)
-> +{
-> +	struct mptcp_rm_list list = { .nr = 0 };
-> +	struct mptcp_subflow_context *subflow;
-> +	struct sock *sk = (struct sock *)msk;
-> +	bool has_id_0 = false;
-> +	int err = -EINVAL;
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index ae38b428e42e..ce691aeca99e 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3490,6 +3490,27 @@ userspace_tests()
+>  		kill_events_pids
+>  		wait $tests_pid
+>  	fi
 > +
-> +	lock_sock(sk);
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		if (subflow->local_id == 0) {
-> +			has_id_0 = true;
-> +			break;
-> +		}
-> +	}
-> +	if (!has_id_0) {
-> +		GENL_SET_ERR_MSG(info, "address with id 0 not found");
-> +		goto out;
+> +	# userspace pm remove initial subflow
+> +	if reset_with_events "userspace pm remove initial subflow" &&
+> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+> +		set_userspace_pm $ns2
+> +		pm_nl_set_limits $ns1 0 1
+> +		speed=10 \
+> +			run_tests $ns1 $ns2 10.0.1.1 &
+> +		local tests_pid=$!
+> +		wait_mpj $ns2
+> +		userspace_pm_add_sf $ns2 10.0.3.2 20
+> +		chk_join_nr 1 1 1
+> +		chk_mptcp_info subflows 1 subflows 1
+> +		chk_subflows_total 2 2
+> +		userspace_pm_rm_sf $ns2 10.0.1.2
+> +		chk_rm_nr 0 1
+> +		chk_mptcp_info subflows 1 subflows 1
+> +		chk_subflows_total 2 2
 
-(here it can be 'goto remove_err')
-
-> +	}
-> +
-> +	list.ids[list.nr++] = 0;
-
-detail: I think it is best to add a new line before spin_lock_bh() and
-after spin_unlock_bh(), to clearly show the block with the "dangerous"
-section with lock/unlock.
-
-> +	spin_lock_bh(&msk->pm.lock);
-> +	mptcp_pm_remove_addr(msk, &list);
-> +	spin_unlock_bh(&msk->pm.lock);
-> +	err = 0;
-
-(and a new line here too)
-
-> +out:
-> +	release_sock(sk);
-> +	return err;
-> +}
-> +
->  int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
->  {
->  	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
-> @@ -245,6 +276,11 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
->  		goto remove_err;
->  	}
->  
-> +	if (id_val == 0) {
-> +		err = mptcp_userspace_remove_id_zero_address(msk, info);
-> +		goto remove_err;
-
-Here it is best to use 'goto out' I think because we expect not to have
-errors most of the time, no?
-
-> +	}
-> +
->  	lock_sock(sk);
->  
->  	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
+Can you also check that no RST has been sent please?
 
 Cheers,
 Matt
+
+> +		kill_events_pids
+> +		wait $tests_pid
+> +	fi
+>  }
+>  
+>  endpoint_tests()
+
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
