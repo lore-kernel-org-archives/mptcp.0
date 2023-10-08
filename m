@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F011BE74
-	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 11:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5869B8C17
+	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 11:13:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHs2CoTq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5BE3C433C7;
-	Sun,  8 Oct 2023 11:11:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BS5Vqpn4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A6FC433C7;
+	Sun,  8 Oct 2023 11:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696763495;
-	bh=rRLCWHvCrBFSXIctHxKHh7oZU33JTgN9j9o2qSWPu28=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=aHs2CoTqDyZnS66wP87/cwswaBRsZhoUN5SmrdRGLPWN2z4trkSdjLZJnbPrzjO0X
-	 +j2+nGgza+7X+/G3wBGIR9+NxrFjum8iT/EyitrRBqQkvSIdYG9tgl5JonnES3CsYZ
-	 TuWni0/cHt0luQUGTFDNqGRYOrMaroCJSTjeOO+xxGL4bDvgp4MeZK+p9fvPbh1w+u
-	 K3373FPA0aQ+XPR8z6Ez2lcYCc+zMc3hr2J8NnucNg9M5AtjJOkmSzfuYPmIp5kb/R
-	 7dl6dwCIDlTvl1MBF0XHpOn9wSF5g09WnoEtKSBs0ppCOlEdnO5sz8+3UBSllUlALk
-	 gqQ7cJydRr+kA==
-Message-ID: <6c266459-dbba-4bda-b868-b5bcdaf351b0@kernel.org>
-Date: Sun, 8 Oct 2023 13:11:32 +0200
+	s=k20201202; t=1696763581;
+	bh=22sjmg3NDMg5x91CRoULiAbkVCMwvIErKjSMU+iOlo4=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=BS5Vqpn4i0+yMM9XwVk2AgXOvw4pa0p3Cj+njf6DTUsB2EuIrXEAFtemJcS81pMhM
+	 iM0Cu3Dyn87BlBFb/sj9KvLGbnfAW9beBCuVp3xo+/p+SDnabVPLG2dimISUHgmBWm
+	 tVe+R51dcdWbAaTgt1oRH6W9Hay8lUKOLv5ykwSen+XPEiAboxtIV2AzZFQ9rkMilJ
+	 SU9+5tsK2TuArqNco2Ap17SiCUtLc/F0C5+7lE3PtaQq/y4clv+EQXAmY9yriPXMn5
+	 w+sBjdcB2rbilEtYKguEKi1T6ulDQCzALs/y9rl119x0ViDncH6TVjR3fgECvz8iJV
+	 B+1It2QConZqw==
+Message-ID: <9823308d-0e4e-423b-a9dd-1a0e8ba17fc3@kernel.org>
+Date: Sun, 8 Oct 2023 13:13:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v11 1/4] mptcp: set next subflow to msk->first
+Subject: Re: [PATCH mptcp-next v11 2/4] selftests: mptcp: userspace pm remove
+ initial subflow
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@suse.com>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1696760702.git.geliang.tang@suse.com>
- <6a31565e01d3474be56bdf62c54d0c20c065c65c.1696760702.git.geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+ <1c1cbfa1233832ae989bad6a4f541420f3c43fd4.1696760702.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,29 +77,50 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <6a31565e01d3474be56bdf62c54d0c20c065c65c.1696760702.git.geliang.tang@suse.com>
+In-Reply-To: <1c1cbfa1233832ae989bad6a4f541420f3c43fd4.1696760702.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-+cc Paolo
-
 On 08/10/2023 12:27, Geliang Tang wrote:
-> When closing the msk->first socket in __mptcp_close_ssk(), the original
-> behaviour is to reset this socket. But if there's another subflow available
-> in this case, it's better to set the first available subflow to msk->first,
-> instead of resetting the msk->first.
+> This patch adds a selftest for userpsace PM to remove the initial
+> subflow. Use userspace_pm_add_sf() to add a subflow, and pass initial
+> ip address to userspace_pm_rm_sf() to remove the initial subflow.
+> 
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index ae38b428e42e..ce691aeca99e 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3490,6 +3490,27 @@ userspace_tests()
+>  		kill_events_pids
+>  		wait $tests_pid
+>  	fi
+> +
+> +	# userspace pm remove initial subflow
+> +	if reset_with_events "userspace pm remove initial subflow" &&
+> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+> +		set_userspace_pm $ns2
+> +		pm_nl_set_limits $ns1 0 1
+> +		speed=10 \
+> +			run_tests $ns1 $ns2 10.0.1.1 &
+> +		local tests_pid=$!
+> +		wait_mpj $ns2
+> +		userspace_pm_add_sf $ns2 10.0.3.2 20
+> +		chk_join_nr 1 1 1
+> +		chk_mptcp_info subflows 1 subflows 1
+> +		chk_subflows_total 2 2
+> +		userspace_pm_rm_sf $ns2 10.0.1.2
+> +		chk_rm_nr 0 1
+> +		chk_mptcp_info subflows 1 subflows 1
+> +		chk_subflows_total 2 2
 
-I don't think we want to do that. If I remember well, we want to keep
-having 'msk->first' pointing to the initial subflow for various reasons
-(I don't remember exactly).
-
-I think what we want to do is not to reset the initial subflow if there
-are other subflows still available and we don't want to set it to 'NULL'
-in such case.
-
-Could it be possible to do that instead you think?
+Here, we should have 1 subflow in total, no?
 
 Cheers,
 Matt
