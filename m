@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E470C15C3
-	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 10:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F011BE74
+	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 11:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sf3qlNpP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FDD2C433C7;
-	Sun,  8 Oct 2023 10:59:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHs2CoTq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5BE3C433C7;
+	Sun,  8 Oct 2023 11:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696762795;
-	bh=YTxn1iGQa/faoqpqOO+m62WltzS9ATnwXZK5Do5rcNI=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=sf3qlNpPapA34YwPgWdT9h98w6nm9fF5KBJgCJ1E0BGsXKsMfFbftLbthQWBR+VN+
-	 YqOpkAWXKH4k1UNyy3ZoOuVyj8VxlQ8jWJjf/swrrtEA0eD9H9QF+QcRalvNWi9J03
-	 eMNM8ae3lXkLTKjLGReZdPdu9XmG62V3a3Xn13mHhoG4Pmpb4zbHG6XdQDT8ASkVUv
-	 dQupCIHu669aSFHUWboBohvWZZ2cftjo3A2xXHzvhBUnqSNNLL0s1IlWATeBAJMgB4
-	 grcPTBl3Wpb37/dl7q0D952/Bo1g0f0qXFI1y0qIXeF3crzCxmDDWxA3pGVArwmMOh
-	 0giht6qDa4nwA==
-Message-ID: <69e564cc-6c1e-4ed5-a5be-48cc87106c77@kernel.org>
-Date: Sun, 8 Oct 2023 12:59:54 +0200
+	s=k20201202; t=1696763495;
+	bh=rRLCWHvCrBFSXIctHxKHh7oZU33JTgN9j9o2qSWPu28=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=aHs2CoTqDyZnS66wP87/cwswaBRsZhoUN5SmrdRGLPWN2z4trkSdjLZJnbPrzjO0X
+	 +j2+nGgza+7X+/G3wBGIR9+NxrFjum8iT/EyitrRBqQkvSIdYG9tgl5JonnES3CsYZ
+	 TuWni0/cHt0luQUGTFDNqGRYOrMaroCJSTjeOO+xxGL4bDvgp4MeZK+p9fvPbh1w+u
+	 K3373FPA0aQ+XPR8z6Ez2lcYCc+zMc3hr2J8NnucNg9M5AtjJOkmSzfuYPmIp5kb/R
+	 7dl6dwCIDlTvl1MBF0XHpOn9wSF5g09WnoEtKSBs0ppCOlEdnO5sz8+3UBSllUlALk
+	 gqQ7cJydRr+kA==
+Message-ID: <6c266459-dbba-4bda-b868-b5bcdaf351b0@kernel.org>
+Date: Sun, 8 Oct 2023 13:11:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 29/29] selftests: mptcp: add
- mptcp_lib_wait_local_port_listen
+Subject: Re: [PATCH mptcp-next v11 1/4] mptcp: set next subflow to msk->first
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1695631132.git.geliang.tang@suse.com>
- <de9b9a8f31290a56012b2f2c925988e86ee83b3b.1695631132.git.geliang.tang@suse.com>
+To: Geliang Tang <geliang.tang@suse.com>
+References: <cover.1696760702.git.geliang.tang@suse.com>
+ <6a31565e01d3474be56bdf62c54d0c20c065c65c.1696760702.git.geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,56 +77,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <de9b9a8f31290a56012b2f2c925988e86ee83b3b.1695631132.git.geliang.tang@suse.com>
+In-Reply-To: <6a31565e01d3474be56bdf62c54d0c20c065c65c.1696760702.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 25/09/2023 10:42, Geliang Tang wrote:
-> wait_local_port_listen() helper is defined in diag.sh, mptcp_connect.sh,
-> mptcp_join.sh and simult_flows.sh, export it into mptcp_lib.sh and
-> rename it with mptcp_lib_ prefix. Use this new helper in all these
-> scripts.
-> 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  tools/testing/selftests/net/mptcp/diag.sh     | 23 +++----------------
->  .../selftests/net/mptcp/mptcp_connect.sh      | 19 +--------------
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 20 +---------------
->  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 18 +++++++++++++++
->  .../selftests/net/mptcp/simult_flows.sh       | 19 +--------------
->  5 files changed, 24 insertions(+), 75 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-> index 85a8ee9395b3..95b498efacd1 100755
-> --- a/tools/testing/selftests/net/mptcp/diag.sh
-> +++ b/tools/testing/selftests/net/mptcp/diag.sh
-> @@ -182,23 +182,6 @@ chk_msk_inuse()
->  	__chk_nr get_msk_inuse $expected "$msg" 0
->  }
->  
-> -# $1: ns, $2: port
-> -wait_local_port_listen()
-> -{
-> -	local listener_ns="${1}"
-> -	local port="${2}"
-> -
-> -	local port_hex i
-> -
-> -	port_hex="$(printf "%04X" "${port}")"
-> -	for i in $(seq 10); do
-> -		ip netns exec "${listener_ns}" cat /proc/net/tcp | \
++cc Paolo
 
-Here we were not looking at IPv6 (tcp6) but I guess that's OK because we
-only have IPv4 connections here in diag.sh, right?)
+On 08/10/2023 12:27, Geliang Tang wrote:
+> When closing the msk->first socket in __mptcp_close_ssk(), the original
+> behaviour is to reset this socket. But if there's another subflow available
+> in this case, it's better to set the first available subflow to msk->first,
+> instead of resetting the msk->first.
 
-Please mention that in the commit message to avoid further questions
-from the reviewers when there are ambiguities that are not explained.
+I don't think we want to do that. If I remember well, we want to keep
+having 'msk->first' pointing to the initial subflow for various reasons
+(I don't remember exactly).
 
-Other than that, it looks good to me!
+I think what we want to do is not to reset the initial subflow if there
+are other subflows still available and we don't want to set it to 'NULL'
+in such case.
 
-Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
+Could it be possible to do that instead you think?
 
 Cheers,
 Matt
