@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8300315C3
-	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 10:59:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E470C15C3
+	for <mptcp@lists.linux.dev>; Sun,  8 Oct 2023 10:59:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5tg4i+H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7728BC433C8;
-	Sun,  8 Oct 2023 10:59:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sf3qlNpP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FDD2C433C7;
+	Sun,  8 Oct 2023 10:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696762759;
-	bh=5Vtl+Oj94p5EBjQiuWmdPH6LJGazHrRnFKUQhKmt3zo=;
+	s=k20201202; t=1696762795;
+	bh=YTxn1iGQa/faoqpqOO+m62WltzS9ATnwXZK5Do5rcNI=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=f5tg4i+HJ0xgaN0RjYkjBqjZiEfAApYTaOoA4beccQicQf4b//Xc1yWIfo+5skAOF
-	 T7VetLrMs0HpdpkE9BxIj3GfXxPXaYvv2f1U6eXMwbJG/SDk95Gmtcma2UYslm48XA
-	 EMS7kmPAcKldi8LSRyMf8A9QVY4Lmh3piNMZfylvt/6gy5jn6y8+Mn6E4/a7Wdw80w
-	 QijrC8J5vUqcyZFZOJbLYbPj+POUIqiigQ4RRMtZO4YLDlKDojOnETGGFhDc+VqhWG
-	 cfFSW2ckEEzpzeYoZTnI7azNTpuq7Ugam6QKHLEr2ke26HH4vddnaI6ieE16T5KOEU
-	 BUtxRsXs17SJQ==
-Message-ID: <35b82aab-2048-40d4-bafd-d26566be0f63@kernel.org>
-Date: Sun, 8 Oct 2023 12:59:18 +0200
+	b=sf3qlNpPapA34YwPgWdT9h98w6nm9fF5KBJgCJ1E0BGsXKsMfFbftLbthQWBR+VN+
+	 YqOpkAWXKH4k1UNyy3ZoOuVyj8VxlQ8jWJjf/swrrtEA0eD9H9QF+QcRalvNWi9J03
+	 eMNM8ae3lXkLTKjLGReZdPdu9XmG62V3a3Xn13mHhoG4Pmpb4zbHG6XdQDT8ASkVUv
+	 dQupCIHu669aSFHUWboBohvWZZ2cftjo3A2xXHzvhBUnqSNNLL0s1IlWATeBAJMgB4
+	 grcPTBl3Wpb37/dl7q0D952/Bo1g0f0qXFI1y0qIXeF3crzCxmDDWxA3pGVArwmMOh
+	 0giht6qDa4nwA==
+Message-ID: <69e564cc-6c1e-4ed5-a5be-48cc87106c77@kernel.org>
+Date: Sun, 8 Oct 2023 12:59:54 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 28/29] selftests: mptcp: add
- mptcp_lib_check_transfer
+Subject: Re: [PATCH mptcp-next v3 29/29] selftests: mptcp: add
+ mptcp_lib_wait_local_port_listen
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1695631132.git.geliang.tang@suse.com>
- <a37ed95ef83e996c98a4f3e7376dc708cbffccbd.1695631132.git.geliang.tang@suse.com>
+ <de9b9a8f31290a56012b2f2c925988e86ee83b3b.1695631132.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,131 +77,56 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <a37ed95ef83e996c98a4f3e7376dc708cbffccbd.1695631132.git.geliang.tang@suse.com>
+In-Reply-To: <de9b9a8f31290a56012b2f2c925988e86ee83b3b.1695631132.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 25/09/2023 10:42, Geliang Tang wrote:
-> check_transfer() helper is defined both in mptcp_connect.sh and
-> mptcp_sockopt.sh, export it into mptcp_lib.sh and rename it with
-> mptcp_lib_ prefix. Use this new helper in both scripts.
-
-Good idea!
-
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index 7b0d03c40f89..fba62cdef2cd 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -353,3 +353,27 @@ mptcp_lib_make_file() {
->  	dd if=/dev/urandom of="$name" bs=$bs count=$size 2> /dev/null
->  	echo -e "\nMPTCP_TEST_FILE_END_MARKER" >> "$name"
->  }
-> +
-> +print_file_err()
-
-Please prefix it with "mptcp_lib_" + add a comment:
-
-  # $1: file
-
-> +{
-> +	ls -l "$1" 1>&2
-
-Please use {} around variables: "${1}"
-
-(like in the rest of the file)
-
-> +	echo "Trailing bytes are: "
-> +	tail -c 27 "$1"
-> +}
-> +
-> +mptcp_lib_check_transfer() {
-
-Please add a comment:
-
-  # $1: input file ; $2: output file ; $3: what kind of file
-
-> +	local in=$1
-
-Please use {} and quotes around variables: "${1}". Same below.
-
-> +	local out=$2
-> +	local what=$3
-> +
-> +	cmp "$in" "$out" > /dev/null 2>&1
-> +	if [ $? -ne 0 ] ;then
-
-Small detail: probably better to do this (I guess Shellcheck would
-complain if it is not done like that)
-
-  if ! cmp "$in" "$out" > /dev/null 2>&1; then
-
-> +		echo "[ FAIL ] $what does not match (in, out):"
-> +		print_file_err "$in"
-> +		print_file_err "$out"
-> +
-> +		return 1
-> +	fi
-> +
-> +	return 0
-> +}
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> index 39128fca99dd..aa4b9a4e6a56 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> @@ -135,32 +135,6 @@ check_mark()
->  	return 0
+> wait_local_port_listen() helper is defined in diag.sh, mptcp_connect.sh,
+> mptcp_join.sh and simult_flows.sh, export it into mptcp_lib.sh and
+> rename it with mptcp_lib_ prefix. Use this new helper in all these
+> scripts.
+> 
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  tools/testing/selftests/net/mptcp/diag.sh     | 23 +++----------------
+>  .../selftests/net/mptcp/mptcp_connect.sh      | 19 +--------------
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 20 +---------------
+>  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 18 +++++++++++++++
+>  .../selftests/net/mptcp/simult_flows.sh       | 19 +--------------
+>  5 files changed, 24 insertions(+), 75 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+> index 85a8ee9395b3..95b498efacd1 100755
+> --- a/tools/testing/selftests/net/mptcp/diag.sh
+> +++ b/tools/testing/selftests/net/mptcp/diag.sh
+> @@ -182,23 +182,6 @@ chk_msk_inuse()
+>  	__chk_nr get_msk_inuse $expected "$msg" 0
 >  }
 >  
-> -print_file_err()
+> -# $1: ns, $2: port
+> -wait_local_port_listen()
 > -{
-> -	ls -l "$1" 1>&2
-> -	echo "Trailing bytes are: "
-> -	tail -c 27 "$1"
-> -}
+> -	local listener_ns="${1}"
+> -	local port="${2}"
 > -
-> -check_transfer()
-> -{
-> -	local in=$1
-> -	local out=$2
-> -	local what=$3
+> -	local port_hex i
 > -
-> -	cmp "$in" "$out" > /dev/null 2>&1
-> -	if [ $? -ne 0 ] ;then
-> -		echo "[ FAIL ] $what does not match (in, out):"
-> -		print_file_err "$in"
-> -		print_file_err "$out"
-> -		ret=1
+> -	port_hex="$(printf "%04X" "${port}")"
+> -	for i in $(seq 10); do
+> -		ip netns exec "${listener_ns}" cat /proc/net/tcp | \
 
-Could you add a comment in the commit message: here it is OK to drop
-'ret=1' because it will be set in run_tests() anyway (if I'm not mistaken).
+Here we were not looking at IPv6 (tcp6) but I guess that's OK because we
+only have IPv4 connections here in diag.sh, right?)
 
-Otherwise a reviewer could think the test is no longer marked as failed
-in case of error and he might ask the question or take time to find the
-answer and we want to avoid that ;)
+Please mention that in the commit message to avoid further questions
+from the reviewers when there are ambiguities that are not explained.
 
-> -
-> -		return 1
-> -	fi
-> -
-> -	return 0
-> -}
-> -
->  do_transfer()
->  {
->  	local listener_ns="$1"
-> @@ -232,7 +206,7 @@ do_transfer()
->  		check_mark $connector_ns 4 || retc=1
->  	fi
->  
-> -	check_transfer $cin $sout "file received by server"
-> +	mptcp_lib_check_transfer $cin $sout "file received by server"
->  	rets=$?
->  
->  	mptcp_lib_result_code "${retc}" "mark ${ip}"
+Other than that, it looks good to me!
+
+Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
 
 Cheers,
 Matt
