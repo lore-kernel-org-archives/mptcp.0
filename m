@@ -1,131 +1,126 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37092374F0
-	for <mptcp@lists.linux.dev>; Mon,  9 Oct 2023 15:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC3938BAA
+	for <mptcp@lists.linux.dev>; Mon,  9 Oct 2023 16:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2lfZubW"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-65b051a28b3so29223166d6.2
-        for <mptcp@lists.linux.dev>; Mon, 09 Oct 2023 08:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696867173; x=1697471973; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B9WZgK0x8lIO9iB5a8/Kb97XD8/k6OxYFzwONU/7oLw=;
-        b=d2lfZubWhpOlZBtHIWU+MYjXedhOIhE6Z7QfFB0UywbhoNNA1Xd8+jQ9f+OYUro1dT
-         3O/pSL8OAGpADmSwNrr8di7Bf6Ni04iyeVp54M4XrRZ+8jk1GhONokdx3+y+OoVDqEZ5
-         jnFMjVBvpWd/lsQCq6XXLBD1mEKYX/qoILHQJ/xNkH826DYwbLSOtdWzOsXzLFQm13IQ
-         lVM3AWD7XTdvB+A7V6hgzV9cV9BXH6axBt6SoTrVBjA7HVlZQYIj+1K6v8pXsoAq6CZs
-         Vy4WQwTKdbYDBSmI4mXfPWoNA7Lh7P1lSbvcBr4MdFW/sJq+ryMKuhAwDn+efAIl2zkz
-         K8EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696867173; x=1697471973;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=B9WZgK0x8lIO9iB5a8/Kb97XD8/k6OxYFzwONU/7oLw=;
-        b=qefaRIncRJX89kit5+7xbHmgFfkRm97a3wu/Z9i6gbEke1+i/4jFHvGtwXGtTE+uf7
-         ikodXgqbmGmJRYsXBVjbTQTsEOcDd0RUkBnOFLNyHOV1yhP3H1u0AmeiwJWeIHfLDe15
-         ujLSv5T5GvBLF25pLgfbMQQdkuvPjFDq7A1be9FsRMD+kPJZFa66C6dxbN71nCR0HG9k
-         cvi1MwoAbz0sHUQwCsSVIgrMxbDSMTrThSXW79wrcmlFhxZzkqaZTZ/bZnXji0058rH4
-         JvY8kk4d6lV6kyHyPgHdqWJ/1YtBxCejX0sOpHAXVzdkVjuWkCCeWSmkPRwa1WupYvWy
-         3L+A==
-X-Gm-Message-State: AOJu0YylQ7Yp1zaplkQd+2guVM7ZMpsk4xURVT6PrfUo1o/HvGw6HNE6
-	9aPK7ddWMDVpysUC4to/wA==
-X-Google-Smtp-Source: AGHT+IFVYfty6/jJUnsgpxk7o9ELFMB0uVlOgFjZ3mTLgW9Dvn+igsSea4cagNUfzU/L+zKo+yA5+A==
-X-Received: by 2002:a05:6214:1fd4:b0:658:7f94:3978 with SMTP id jh20-20020a0562141fd400b006587f943978mr15041197qvb.13.1696867173086;
-        Mon, 09 Oct 2023 08:59:33 -0700 (PDT)
-Received: from [127.0.0.1] ([104.45.205.200])
-        by smtp.gmail.com with ESMTPSA id a10-20020a0ce34a000000b006575372c845sm3929617qvm.119.2023.10.09.08.59.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Oct 2023 08:59:32 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1d0e4528ab057a246fd8c60b91cffd34f277b957.1696848602.git.pabeni@redhat.com>
-References:
- <1d0e4528ab057a246fd8c60b91cffd34f277b957.1696848602.git.pabeni@redhat.com>
-Subject: Re: tcp: allow again tcp_disconnect() when threads are waiting:
- Tests Results
-Message-ID: <8710cbea-b1a2-41bf-2099-c827d10d2407@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Oct 2023 15:59:32 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jglOqobK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD579C433CD;
+	Mon,  9 Oct 2023 16:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696868002;
+	bh=6esODMROiEUAG3o4Hex9vmjCeAWOCXMNiQfNG9mTDI8=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=jglOqobKWYiSTk54wn2gqkfHiAKOCgq0FHr5ufRmyT1yn6KvXi795GQ/MLX8hfscD
+	 /ra6RfB9reOt9D4o3PL9gvPnvXLgwPsxFFDnrx+Y75z2vUJ2YalOndfxlJEwppRwzf
+	 29au1NfhFW2V6S3AJRuHfUlDJ3N2xswqs7WoDdcK7oPc0sJVjPrQWs9/CUs2FrMc5H
+	 VrsmPJZ8EU2yd4ZTndR7yN8t+c0Xtsv2kP5SNJGXyx+qeIaLD9LV/7hznuuDzieUUV
+	 JgRzVHEfgSlWM7R9VOzz5teiHYz9Gj+nNjCfQMvltJfe7fX7PRsAz6iP7vIMiYutn3
+	 IilDFgukMLlQg==
+Message-ID: <76f31a37-16b4-4e3a-8b00-fdb2c1eabfb4@kernel.org>
+Date: Mon, 9 Oct 2023 18:13:19 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v12 1/5] mptcp: avoid resetting when another
+ subflow available
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1696831239.git.geliang.tang@suse.com>
+ <2b69fa22510db02a12eb101c3e8173dda76f8133.1696831239.git.geliang.tang@suse.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ Fe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: Tessares
+In-Reply-To: <2b69fa22510db02a12eb101c3e8173dda76f8133.1696831239.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 09/10/2023 08:02, Geliang Tang wrote:
+> When closing the msk->first socket in __mptcp_close_ssk(), if there's
+> another subflow available, it's better to avoid resetting it.
+> 
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  net/mptcp/protocol.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 30e0c29ae0a4..6346a164ed66 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2396,7 +2396,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>  		goto out_release;
+>  	}
+>  
+> -	dispose_it = msk->free_first || ssk != msk->first;
+> +	dispose_it = msk->free_first || ssk != msk->first || !list_is_singular(&msk->conn_list);
+>  	if (dispose_it)
+>  		list_del(&subflow->node);
+>  
+> @@ -2446,7 +2446,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>  
+>  	sock_put(ssk);
+>  
+> -	if (ssk == msk->first)
+> +	if (ssk == msk->first && list_is_singular(&msk->conn_list))
+>  		WRITE_ONCE(msk->first, NULL);
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5338936801755136
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5338936801755136/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6183361731887104
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6183361731887104/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5057461825044480
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5057461825044480/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6464836708597760
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6464836708597760/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/75398488591a
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+I don't think we should 'dispose it' nor set 'msk->first' to NULL but
+instead, we should not call tcp_disconnect() directly: if the connection
+is still in ESTABLISHED, tcp_disconnect() will send a RST if I'm not
+mistaken. That's what we want to avoid, no?
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
