@@ -1,101 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1277747365
-	for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 17:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404BB28F0;
+	Tue, 10 Oct 2023 18:59:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="itKp9xlV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1696959673;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yv35QJZetS2K7uo9ft/T0V3hanLhfr2MmPiIw/JxWXE=;
-	b=itKp9xlVehzKmh3HcahThSTqoMqu4ZMGhfIdckSBzJ5elNHXBeKObyJWbeNK41vxzNobZH
-	V6vV1Jz3wNqkIApfUP6jbE8e0NWS9s3TPRRmJFrBubgDD7BDyYMCv+jiSk2js3IZxGMGs5
-	QBRV+cyIkA5NAPzLA8krDpfKqgCMD4s=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-695-2J8RMgFOMpyDtEzIR_iuxw-1; Tue, 10 Oct 2023 13:41:02 -0400
-X-MC-Unique: 2J8RMgFOMpyDtEzIR_iuxw-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9ae5101b152so108452466b.1
-        for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 10:41:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696959661; x=1697564461;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yv35QJZetS2K7uo9ft/T0V3hanLhfr2MmPiIw/JxWXE=;
-        b=qys+qHL1Z611n375XxaiOfPtjRXubXXl/+d068UNdo2vhU5UJVK6udP0xIKY1xe10f
-         gbJOWEo3X8E5qwWvTW7XpaGE4Bt4WLYVaoV3ijLT5H8gjHd4PBTFYj4fVlV0pttzyKzV
-         j4vzynENIWVAnq1E9uitMCpzjaCOoc9PAUW8/tdDdzRcU2uM5MV+Qs+GzgPyNgjcq9IY
-         dyuQb5oLrOs+pfVE7R6wUWG8/8vJZfxlNNuw2/jeUq7sUYruS3oATrfucXMOGKAhh5Fb
-         bOrHv8+TIB78ZTSf4YB2f3jIIiMz/6iQ7UEKvMvok+GWxolFwXAW7Duo4U36dXR1Q0xR
-         lE+A==
-X-Gm-Message-State: AOJu0YzV6k7qltziCaoNK4i/zQ8lCdAKirHRz/YPfT/nMye1kT+l3+PQ
-	+XoQ2df8boN+MpndMrUpUokgmAM26pPo5Psg7JTUc4QQcFF6qvks/+kJJjmr4X50WmWe1hCDdDz
-	qONth6c2eS01Nb9M=
-X-Received: by 2002:a17:906:20da:b0:9ad:e1e2:3595 with SMTP id c26-20020a17090620da00b009ade1e23595mr14846682ejc.7.1696959661254;
-        Tue, 10 Oct 2023 10:41:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3JDCHMsapRZEz0siGbGB9Rn9s1ONofLSNYtQxI6ShAdrhZuPLiX0Hp6kOVCRCquQqM3e29A==
-X-Received: by 2002:a17:906:20da:b0:9ad:e1e2:3595 with SMTP id c26-20020a17090620da00b009ade1e23595mr14846671ejc.7.1696959660938;
-        Tue, 10 Oct 2023 10:41:00 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-228-243.dyn.eolo.it. [146.241.228.243])
-        by smtp.gmail.com with ESMTPSA id l9-20020a170906230900b009928b4e3b9fsm8739316eja.114.2023.10.10.10.40.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Oct 2023 10:41:00 -0700 (PDT)
-Message-ID: <6ad14b4726342f2a37e0f8e95e3d681c6659242b.camel@redhat.com>
-Subject: Re: [PATCH net] tcp: allow again tcp_disconnect() when threads are
- waiting
-From: Paolo Abeni <pabeni@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ecU4MnY9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DC1FC433C7;
+	Tue, 10 Oct 2023 18:59:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1696964388;
+	bh=QjP+9QKzrymfN2C8lY1Hip1CW9eHoE7JMBdIbHB9Czk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ecU4MnY9/zXzPaOCdkPNhnTUuXhWI95KlqSPWzzLZmRpvFprf7Ugvz4/J9Arb1C3O
+	 Wh9q2HmUyWdFPy/Qm7NX1EVtWTNTSHV2ExW0G94RU7cBoXEwsFHa2gvWw8rjWN5MAr
+	 3X5DJHZo3tTaultpVLa2Gmy4WVDYcpQg4ZK0vQQM=
+Date: Tue, 10 Oct 2023 20:59:45 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>, "David S.
- Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, David
- Ahern <dsahern@kernel.org>,  mptcp@lists.linux.dev, Boris Pismenny
- <borisp@nvidia.com>, Tom Deseyn <tdeseyn@redhat.com>
-Date: Tue, 10 Oct 2023 19:40:59 +0200
-In-Reply-To: <cdb77e7ecec83398ff7d92f7aeb20e0158146a28.camel@redhat.com>
-References: <1d0e4528ab057a246fd8c60b91cffd34f277b957.1696848602.git.pabeni@redhat.com>
-	 <CANn89iKOZ89xhAsgXyygENOfRzXPhbFn4_PNdA3LUL0a5EYktA@mail.gmail.com>
-	 <cdb77e7ecec83398ff7d92f7aeb20e0158146a28.camel@redhat.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Netdev <netdev@vger.kernel.org>,
+	bpf <bpf@vger.kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: Re: [PATCH 6.1 000/162] 6.1.57-rc1 review
+Message-ID: <2023101036-relock-slogan-3b3c@gregkh>
+References: <20231009130122.946357448@linuxfoundation.org>
+ <CA+G9fYvWCf4fYuQsVLu0NdN+=W73bW1hr1hiokajktNzPFyYtA@mail.gmail.com>
+ <6447b32f-abb9-4459-aca5-3d510a66b685@kernel.org>
+ <CANn89iJ_KMA=dQWPhU8WQBc0_CvUztUBodAf-cW-2F=HMX3HJg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANn89iJ_KMA=dQWPhU8WQBc0_CvUztUBodAf-cW-2F=HMX3HJg@mail.gmail.com>
 
-On Tue, 2023-10-10 at 18:45 +0200, Paolo Abeni wrote:
-> > On Tue, 2023-10-10 at 18:21 +0200, Eric Dumazet wrote:
-> > [...]
-> >=20
-> > > > > > @@ -3092,6 +3092,7 @@ int tcp_disconnect(struct sock *sk, int f=
-lags)
-> > > > > >                 sk->sk_frag.offset =3D 0;
-> > > > > >         }
-> > > > > >         sk_error_report(sk);
-> > > > > > +       sk->sk_disconnects++;
-> > > >=20
-> > > > Should we perform this generically, from the caller ?
-> >=20
-> > Ok, I'll do that in v2.
+On Tue, Oct 10, 2023 at 07:24:08PM +0200, Eric Dumazet wrote:
+> On Tue, Oct 10, 2023 at 6:51 PM Matthieu Baerts <matttbe@kernel.org> wrote:
+> >
+> > Hi Naresh,
+> >
+> > On 09/10/2023 22:43, Naresh Kamboju wrote:
+> > > On Mon, 9 Oct 2023 at 18:46, Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > >>
+> > >> This is the start of the stable review cycle for the 6.1.57 release.
+> > >> There are 162 patches in this series, all will be posted as a response
+> > >> to this one.  If anyone has any issues with these being applied, please
+> > >> let me know.
+> > >>
+> > >> Responses should be made by Wed, 11 Oct 2023 13:00:55 +0000.
+> > >> Anything received after that time might be too late.
+> > >>
+> > >> The whole patch series can be found in one patch at:
+> > >>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.57-rc1.gz
+> > >> or in the git tree and branch at:
+> > >>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> > >> and the diffstat can be found below.
+> > >>
+> > >> thanks,
+> > >>
+> > >> greg k-h
+> > >
+> > >
+> > > The following kernel warnings were noticed several times on arm x15 devices
+> > > running stable-rc 6.1.57-rc1 while running  selftests: net: mptcp_connect.sh
+> > > and netfilter: nft_fib.sh.
+> > >
+> > > The possible unsafe locking scenario detected.
+> > >
+> > > FYI,
+> > > Stable-rc/ linux.6.1.y kernel running stable/ linux.6.5.y selftest in this case.
+> > >
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > >
+> > > kselftest: Running tests in net/mptcp
+> >
+> > Thank you for having reported the issue and having added MPTCP ML in Cc!
+> >
+> > Just to avoid confusions: the "WARNING" you shared when running
+> > 'mptcp_connect.sh' selftest appeared before creating the first MPTCP
+> > connection. It looks like there is no reference to MPTCP in the
+> > calltraces. Also, because you have the same issue with nft_fib.sh, I
+> > would say that this issue is not linked to MPTCP but rather to a recent
+> > modification in the IPv6 stack.
+> >
+> > By chance, did you start a "git bisect" to identify the commit causing
+> > this issue?
+> >
+> >
+> 
+> I think stable teams missed to backport
+> 
+> commit c486640aa710ddd06c13a7f7162126e1552e8842
+> Author: Eric Dumazet <edumazet@google.com>
+> Date:   Mon Mar 13 20:17:32 2023 +0000
+> 
+>     ipv6: remove one read_lock()/read_unlock() pair in rt6_check_neigh()
+> 
+>     rt6_check_neigh() uses read_lock() to protect n->nud_state reading.
+> 
+>     This seems overkill and causes false sharing.
+> 
+>     Signed-off-by: Eric Dumazet <edumazet@google.com>
+>     Reviewed-by: David Ahern <dsahern@kernel.org>
+>     Reviewed-by: Martin KaFai Lau <martin.lau@kernel.org>
+>     Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 
-I have to touch both calls site in __inet_stream_connect(), and the
-patch will still touch both mptcp and tcp disconnect - reverting the
-bits from 4faeee0cf8a5. The patch will not be smaller, but the
-resulting fix will centralized in single place. I guess it's still
-worthy.
+Ah, didn't know we needed that, now queued up, thanks!
 
-Cheers,
-
-Paolo
-
+greg k-h
