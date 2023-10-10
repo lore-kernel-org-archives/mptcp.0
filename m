@@ -1,27 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7720B1DFF2
-	for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 13:48:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52131DFF2
+	for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 13:48:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6qTYvKY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D46C433C8;
-	Tue, 10 Oct 2023 13:48:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NcEiKRBY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F722C433CA;
+	Tue, 10 Oct 2023 13:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696945708;
-	bh=t+S6IvIcfjPUzv3IiouUs/UhEad0/8BSBO+JDp4vmQ8=;
-	h=From:Subject:Date:To:Cc:From;
-	b=s6qTYvKY0Wc/bvv50tX73B0oCmL1YdC8WQ8qGhL6a2ZpZbgMY49PPKzGsXflpIHpf
-	 djxNdo3rbzevNi01pqTz4Xj4RIwKwSNyJg++fjfgR9yf4uUzXfhBjWKIm7mSsHPrsR
-	 PEDPqob1ql+Nm15hCYHN1dF/NxWTm5S7zFWuJQoFjlnNwCIQ/oVV/NhOqQpoghQoHz
-	 zAPYjfqclIX4QCh66J+g6Wv1IUxc6B8PX/+J8yAA97Lgb6FiMOJ947w0cylw0J2DGu
-	 VKrD6ApGsQ/VsCBfWDe0nLAyPnR72L86Tk73xMrNylJiwrswGzK3uRDmGXBv6huvtH
-	 EXB391/g38vIA==
+	s=k20201202; t=1696945710;
+	bh=ZCaEFX/+HXep647fWVUHf/PAob22/jQqSp/Cd6f/B6Y=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=NcEiKRBYw70w1S6WNjrMKjBRrMJWjBbxogqQlyAUIrpKVp/B3L0QmS9IgWkHZwDJd
+	 Rj0URR0nQ1BZXnw/tAqbw60bsikFb/i3qyeqNTC90AaRHyS2fKkHqJD6Mz/aNONWFH
+	 F9P+r3/36J/IZ4gZqpv0M0+eG4K8Tn012E9RFQqlFjH0jz3uW83A5cw9Iz9N+wnHnI
+	 xkAkXrjjDFscKFDBFOO5xUQESwioKcf0biQs4FbGf4QmBdHPTbS1kEe4BfvSLWkgyV
+	 OwQ0rmTNYDVv/Yqt7KaPTi5NIZ+zYXHHHT6He9GxfsnwroImmP2S8//UNNEwBX7eTF
+	 WfvveTTRC4q6w==
 From: Matthieu Baerts <matttbe@kernel.org>
-Subject: [PATCH mptcp-net 0/2] selftests: mptcp: join: correctly check for
+Date: Tue, 10 Oct 2023 15:48:11 +0200
+Subject: [PATCH mptcp-net 1/2] selftests: mptcp: join: correctly check for
  no RST
-Date: Tue, 10 Oct 2023 15:48:10 +0200
-Message-Id: <20231010-mptcp-remove-id-0-rst-v1-0-5ce17026f748@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -30,52 +29,72 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABpWJWUC/yWMywqEMAwAf0Vy3kCqxX38yuJBbNQc+iAtIoj/b
- nc9DsPMAZlVOMOnOUB5kywxVDCPBqZ1DAujuMrQUtsZojf6VKaEyj5uP4eEmgv2L0uzdU9jHUF
- tk/Is+//7hTsJXGA4zwu96+lscgAAAA==
+Message-Id: <20231010-mptcp-remove-id-0-rst-v1-1-5ce17026f748@kernel.org>
+References: <20231010-mptcp-remove-id-0-rst-v1-0-5ce17026f748@kernel.org>
+In-Reply-To: <20231010-mptcp-remove-id-0-rst-v1-0-5ce17026f748@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>, 
  Matthieu Baerts <matttbe@kernel.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=954; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=t+S6IvIcfjPUzv3IiouUs/UhEad0/8BSBO+JDp4vmQ8=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlJVYrZa8SAEVqmb2QqEif0uswy047ipU7iTcyB
- oQeX92JOXyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZSVWKwAKCRD2t4JPQmmg
- c1shD/0WgbaH38q+nOBI7j+uGPk8o8BOp5UvscfEoStbgAQSO/i9SRevHmbIi36AdGDsX8IItmP
- lwqzB5KA6mFDDu73X4E/XF3LvuRQR70GUIkHdB4B+bqkRzbjZx85smwK6rWq0tge78/hHxRF7ET
- x/0z+HVLejhIsLlPlZozgRZ5quks61eQ2WOTD3sQtrO1ie7M4ZqT2CZFlliu/WRRaf/ZZDYnfHo
- H5NHuk9YM4tj0k8bqubpWX7aOtLS3zB+lA1X9/qmlNGCD2SMg2B+aZ/orE3Yj7SpfgIMkkxXOt1
- sJ/CT+yeqOIrVkPyYS6TSj60Y4n8tSeBK/Ai0nNrvoDW2A+ft/1IV9GLSRpp3tnPqaIb5QRaKOf
- xsj4EAq72zIjF0GDMGM6/VsrCt4C/oQGvEKG50eL6k0oUI4bD5fRqwb/CKvDlqUAgsbnfSPYw7r
- JVjIHHOk2NeN9Z7NAHfu5EDKd1lQMIZM+yFaR/zcX5FlLd63SC+2Xtjae0zc4HR8QVRSXl1EiKY
- 1Tqpq+NjY+xXmohivxS8mGP1qMuf8fTaHXULFzED+d7lNcn9fvrQvEZbeVFG+qJReagCkXyTlk5
- YchxulywLf7gq/cbf7G8lrRoAxSVxFG0cf06nzkrhuje8KYAtFpU7d/x0pl6l8AD5AN4a3F9mT8
- 0hSmvcXI1P16RHg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1831; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=ZCaEFX/+HXep647fWVUHf/PAob22/jQqSp/Cd6f/B6Y=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlJVYr39uyD4dDBxmewtm6m8b+FYi4YIO05cF0q
+ 6PVXx4MbjuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZSVWKwAKCRD2t4JPQmmg
+ c1PIEADmyhuIY8UAmBAOlJZkgVwk5MDwst9UflNsXdK97sWjQsfJjTuujvjhhQY3Yxg/5YYDltg
+ YfMgNRgtRTz4V/RgKR5hk+MtjeDqhHE0MpXe8eafLBr3oUmuw5sAdZW27Mg+mHltk8p89rUekSY
+ uTolD8vQH9lEV73ahSJs8us2DZsqkTcUhUl6pytMOQ8D3D7oZB+NWFYB7ZD08V1UMikoe35n4zV
+ tuwbvYeScbNSl0NdZ795f6EgEHDJG2aBNyl9+2rDmKjs/hPZLcoeXiwn+dtEgV59AcJYx/F/AZb
+ slGwFLiTv14HJeQCaYhItITDufy8Ua/aXJ3M7POKUDpfyi+ldu3F6+XpSJQfx/junRlqBS2DkXo
+ UdedybvSVX3QUzKpPFkmcjggPCt61HIFOp3KyekREL/J3tftXoCPdFeTuuqrXCi+9dj3BT95HEa
+ kOa7HoV1sn9DanSoIkRNrXPAyA61ysRxwVlvBKPAHTou5XSE7Ag/r78DAUD3t9/WkyDSnVT0M3u
+ 51w/5BQIE3wSVpJpRX/gdsrINap4qnawQFoi8MYXGoEpSBUxhmMBoAG6XdNz2K4XnoqQkouOAJQ
+ GBB+oK9LiCDT8CZx1ynFEZ8XXya/qUW6bNRQIqYTK1VphxDb0IoFv13ATr8JeYbPMOdcvM8gSPf
+ 5nyZv805qK6LUDg==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When reviewing Geliang series called "userspace pm remove id 0 subflow &
-address", I wanted to check if we were generating RST when removing
-other subflows, see patch 2/2.
+The commit mentioned below was more tolerant with the number of RST seen
+during a test because in some uncontrollable situations, multiple RST
+can be generated.
 
-We don't generate such RST (except for the initial subflow but Geliang
-is working on that, see patch 2/2) but the check we used for that was
-never reporting errors for the "0 RST" case. This check is only when
-validating the checksum and it is now fixed by patch 1/2.
+But it was not taking into account the case where no RST are expected:
+this validation was then no longer reporting issues for the 0 RST case
+because it is not possible to have less than 0 RST in the counter. This
+patch fixes the issue by adding a specific condition.
 
+Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
 Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
 ---
-Matthieu Baerts (2):
-      selftests: mptcp: join: correctly check for no RST
-      selftests: mptcp: join: no RST when rm subflow/addr
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
----
-base-commit: d739ec05b2034df60065e006c64352ef530c5887
-change-id: 20231009-mptcp-remove-id-0-rst-6840f4d714d0
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index ae38b428e42e..01480663c102 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1432,7 +1432,9 @@ chk_rst_nr()
+ 	count=$(get_counter ${ns_tx} "MPTcpExtMPRstTx")
+ 	if [ -z "$count" ]; then
+ 		print_skip
+-	elif [ $count -lt $rst_tx ]; then
++	# accept more rst than expected except if we don't expect any
++	elif { [ $rst_tx -ne 0 ] && [ $count -lt $rst_tx ]; } ||
++	     { [ $rst_tx -eq 0 ] && [ $count -ne 0 ]; }; then
+ 		fail_test "got $count MP_RST[s] TX expected $rst_tx"
+ 	else
+ 		print_ok
+@@ -1442,7 +1444,9 @@ chk_rst_nr()
+ 	count=$(get_counter ${ns_rx} "MPTcpExtMPRstRx")
+ 	if [ -z "$count" ]; then
+ 		print_skip
+-	elif [ "$count" -lt "$rst_rx" ]; then
++	# accept more rst than expected except if we don't expect any
++	elif { [ $rst_rx -ne 0 ] && [ $count -lt $rst_rx ]; } ||
++	     { [ $rst_rx -eq 0 ] && [ $count -ne 0 ]; }; then
+ 		fail_test "got $count MP_RST[s] RX expected $rst_rx"
+ 	else
+ 		print_ok
 
-Best regards,
 -- 
-Matthieu Baerts <matttbe@kernel.org>
+2.40.1
 
