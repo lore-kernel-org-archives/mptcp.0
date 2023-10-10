@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52131DFF2
-	for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 13:48:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2D01DFF2
+	for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 13:48:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NcEiKRBY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F722C433CA;
-	Tue, 10 Oct 2023 13:48:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skz5Dq0s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C010CC433C9;
+	Tue, 10 Oct 2023 13:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696945710;
-	bh=ZCaEFX/+HXep647fWVUHf/PAob22/jQqSp/Cd6f/B6Y=;
+	s=k20201202; t=1696945711;
+	bh=RBFrQM1qQTXW0EqbrecY2Vzbv1s2b7ngE4Kqkd5EHpA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NcEiKRBYw70w1S6WNjrMKjBRrMJWjBbxogqQlyAUIrpKVp/B3L0QmS9IgWkHZwDJd
-	 Rj0URR0nQ1BZXnw/tAqbw60bsikFb/i3qyeqNTC90AaRHyS2fKkHqJD6Mz/aNONWFH
-	 F9P+r3/36J/IZ4gZqpv0M0+eG4K8Tn012E9RFQqlFjH0jz3uW83A5cw9Iz9N+wnHnI
-	 xkAkXrjjDFscKFDBFOO5xUQESwioKcf0biQs4FbGf4QmBdHPTbS1kEe4BfvSLWkgyV
-	 OwQ0rmTNYDVv/Yqt7KaPTi5NIZ+zYXHHHT6He9GxfsnwroImmP2S8//UNNEwBX7eTF
-	 WfvveTTRC4q6w==
+	b=skz5Dq0sqTHxHiWQzZsLgRFMoNASCQ/5gK8NuFUvkiY/BWyz/X/tOqZyOxdPrRIZ7
+	 cA9JsTId/1U95JRexBew4mWVJQOWx9EPTTUGkfqud2VidopLZJJFejzH5FqcmUw1B+
+	 B9Ti6ZqnJv9HUQ9z4OCIr3+VVEkHr1uL3h68tQQdv/9tU3Q5aBSifon90YhKcks1Yl
+	 95/27pdTuu2OJFiDbCeKbURfd4qdPiO9ZTJRoTjl5B6qD6bmDwC/nWFr1A6iJ/ga2q
+	 ZvpviWAcWWCUKR7eEVK3THsqOOom+OleYDTnF0UFecBPbimb2FYCzaGInVMvHwlWHP
+	 5l2T9+Iv4mV1g==
 From: Matthieu Baerts <matttbe@kernel.org>
-Date: Tue, 10 Oct 2023 15:48:11 +0200
-Subject: [PATCH mptcp-net 1/2] selftests: mptcp: join: correctly check for
- no RST
+Date: Tue, 10 Oct 2023 15:48:12 +0200
+Subject: [PATCH mptcp-net 2/2] selftests: mptcp: join: no RST when rm
+ subflow/addr
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,71 +29,156 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231010-mptcp-remove-id-0-rst-v1-1-5ce17026f748@kernel.org>
+Message-Id: <20231010-mptcp-remove-id-0-rst-v1-2-5ce17026f748@kernel.org>
 References: <20231010-mptcp-remove-id-0-rst-v1-0-5ce17026f748@kernel.org>
 In-Reply-To: <20231010-mptcp-remove-id-0-rst-v1-0-5ce17026f748@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>, 
  Matthieu Baerts <matttbe@kernel.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1831; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=ZCaEFX/+HXep647fWVUHf/PAob22/jQqSp/Cd6f/B6Y=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlJVYr39uyD4dDBxmewtm6m8b+FYi4YIO05cF0q
- 6PVXx4MbjuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZSVWKwAKCRD2t4JPQmmg
- c1PIEADmyhuIY8UAmBAOlJZkgVwk5MDwst9UflNsXdK97sWjQsfJjTuujvjhhQY3Yxg/5YYDltg
- YfMgNRgtRTz4V/RgKR5hk+MtjeDqhHE0MpXe8eafLBr3oUmuw5sAdZW27Mg+mHltk8p89rUekSY
- uTolD8vQH9lEV73ahSJs8us2DZsqkTcUhUl6pytMOQ8D3D7oZB+NWFYB7ZD08V1UMikoe35n4zV
- tuwbvYeScbNSl0NdZ795f6EgEHDJG2aBNyl9+2rDmKjs/hPZLcoeXiwn+dtEgV59AcJYx/F/AZb
- slGwFLiTv14HJeQCaYhItITDufy8Ua/aXJ3M7POKUDpfyi+ldu3F6+XpSJQfx/junRlqBS2DkXo
- UdedybvSVX3QUzKpPFkmcjggPCt61HIFOp3KyekREL/J3tftXoCPdFeTuuqrXCi+9dj3BT95HEa
- kOa7HoV1sn9DanSoIkRNrXPAyA61ysRxwVlvBKPAHTou5XSE7Ag/r78DAUD3t9/WkyDSnVT0M3u
- 51w/5BQIE3wSVpJpRX/gdsrINap4qnawQFoi8MYXGoEpSBUxhmMBoAG6XdNz2K4XnoqQkouOAJQ
- GBB+oK9LiCDT8CZx1ynFEZ8XXya/qUW6bNRQIqYTK1VphxDb0IoFv13ATr8JeYbPMOdcvM8gSPf
- 5nyZv805qK6LUDg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2973; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=RBFrQM1qQTXW0EqbrecY2Vzbv1s2b7ngE4Kqkd5EHpA=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlJVYrN6E7sRa+aqqddbjQaFKGSDZkugGaVSTu3
+ +8LCLNRu/GJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZSVWKwAKCRD2t4JPQmmg
+ c3EJD/9glW6p9cxvzCUlrD79rKSkidhLo3W73RwrsK/WBJbsyyic2cih4HZtWI00A/l3x6r1iH9
+ FdP09gUr1DIiWayXoznmZO7batpc6sX6QOl2LmsXPpA4E055JPJ1uNHA32tRsYJs+zo/B9bCN8k
+ IP33aO4KVWbs63kGj7Mp2+GJ8JJj8hIYpI0V38n7Ez1RKwJ09ysXUCAU9CR4oSn0G4srDraHdZL
+ lUs66RhNrQF60M/jvsWsyRPm/xX66Nrs5bEyel90c1fv0dmAXeWyi6Jlu9AQ9RxipRAsEhycscN
+ wschTi8NIaLF2j8voLGfURt+bdvqDNQqPowtGf8qtf8oCGrxGDPCnljJ4fShxtO46IbqrwA5Sgv
+ +aBnUpp4xwA9IpX0J/eHyyunaUM1BQLVQbOcv89BhyGMqbq+P3UgfcxUzsooiHh/k0DzzVHrsc9
+ uZhptSb/WysGhmKr5jpBQA18vZieTxAnjcI8wvgSAmJFUNi1z5nX+1AIUY6HZadxesCTY0od+Iz
+ ljdDeyneZvWFho6ub4SNoL3c8Sa3Z3qALfcQND8oj5n2ILQDOqcIx+V57v6u/iCUpPIGHG2jzan
+ WB3x8ASiApitRTnh/gBRS6CkvhHAYtnwmIhtvkG54LMsso5y+HmXqsrCUdX/tAS/9nvxl4vx8Vx
+ soJpwWois4juy3A==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The commit mentioned below was more tolerant with the number of RST seen
-during a test because in some uncontrollable situations, multiple RST
-can be generated.
+Recently, we noticed that some RST were wrongly generated when removing
+the initial subflow.
 
-But it was not taking into account the case where no RST are expected:
-this validation was then no longer reporting issues for the 0 RST case
-because it is not possible to have less than 0 RST in the counter. This
-patch fixes the issue by adding a specific condition.
+This patch makes sure RST are not sent when removing any subflows or any
+addresses.
 
-Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
 Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Note:
+  Please see the two TODOs in the code: two tests are expected to fail
+  but Geliang is working on a fix.
+
+  @Geliang: please include this commit (without the TODOs) in your
+  series.
+---
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index ae38b428e42e..01480663c102 100755
+index 01480663c102..ab6908b7b143 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1432,7 +1432,9 @@ chk_rst_nr()
- 	count=$(get_counter ${ns_tx} "MPTcpExtMPRstTx")
- 	if [ -z "$count" ]; then
- 		print_skip
--	elif [ $count -lt $rst_tx ]; then
-+	# accept more rst than expected except if we don't expect any
-+	elif { [ $rst_tx -ne 0 ] && [ $count -lt $rst_tx ]; } ||
-+	     { [ $rst_tx -eq 0 ] && [ $count -ne 0 ]; }; then
- 		fail_test "got $count MP_RST[s] TX expected $rst_tx"
- 	else
- 		print_ok
-@@ -1442,7 +1444,9 @@ chk_rst_nr()
- 	count=$(get_counter ${ns_rx} "MPTcpExtMPRstRx")
- 	if [ -z "$count" ]; then
- 		print_skip
--	elif [ "$count" -lt "$rst_rx" ]; then
-+	# accept more rst than expected except if we don't expect any
-+	elif { [ $rst_rx -ne 0 ] && [ $count -lt $rst_rx ]; } ||
-+	     { [ $rst_rx -eq 0 ] && [ $count -ne 0 ]; }; then
- 		fail_test "got $count MP_RST[s] RX expected $rst_rx"
- 	else
- 		print_ok
+@@ -2343,6 +2343,7 @@ remove_tests()
+ 		chk_join_nr 1 1 1
+ 		chk_rm_tx_nr 1
+ 		chk_rm_nr 1 1
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# multiple subflows, remove
+@@ -2355,6 +2356,7 @@ remove_tests()
+ 			run_tests $ns1 $ns2 10.0.1.1
+ 		chk_join_nr 2 2 2
+ 		chk_rm_nr 2 2
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# single address, remove
+@@ -2367,6 +2369,7 @@ remove_tests()
+ 		chk_join_nr 1 1 1
+ 		chk_add_nr 1 1
+ 		chk_rm_nr 1 1 invert
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# subflow and signal, remove
+@@ -2380,6 +2383,7 @@ remove_tests()
+ 		chk_join_nr 2 2 2
+ 		chk_add_nr 1 1
+ 		chk_rm_nr 1 1
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# subflows and signal, remove
+@@ -2394,6 +2398,7 @@ remove_tests()
+ 		chk_join_nr 3 3 3
+ 		chk_add_nr 1 1
+ 		chk_rm_nr 2 2
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# addresses remove
+@@ -2408,6 +2413,7 @@ remove_tests()
+ 		chk_join_nr 3 3 3
+ 		chk_add_nr 3 3
+ 		chk_rm_nr 3 3 invert
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# invalid addresses remove
+@@ -2422,6 +2428,7 @@ remove_tests()
+ 		chk_join_nr 1 1 1
+ 		chk_add_nr 3 3
+ 		chk_rm_nr 3 1 invert
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# subflows and signal, flush
+@@ -2436,6 +2443,7 @@ remove_tests()
+ 		chk_join_nr 3 3 3
+ 		chk_add_nr 1 1
+ 		chk_rm_nr 1 3 invert simult
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# subflows flush
+@@ -2455,6 +2463,7 @@ remove_tests()
+ 		else
+ 			chk_rm_nr 3 3
+ 		fi
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# addresses flush
+@@ -2469,6 +2478,7 @@ remove_tests()
+ 		chk_join_nr 3 3 3
+ 		chk_add_nr 3 3
+ 		chk_rm_nr 3 3 invert simult
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# invalid addresses flush
+@@ -2483,6 +2493,7 @@ remove_tests()
+ 		chk_join_nr 1 1 1
+ 		chk_add_nr 3 3
+ 		chk_rm_nr 3 1 invert
++		chk_rst_nr 0 0
+ 	fi
+ 
+ 	# remove id 0 subflow
+@@ -2494,6 +2505,7 @@ remove_tests()
+ 			run_tests $ns1 $ns2 10.0.1.1
+ 		chk_join_nr 1 1 1
+ 		chk_rm_nr 1 1
++		chk_rst_nr 0 0 ## TODO: currently failing, Geliang is working on a fix
+ 	fi
+ 
+ 	# remove id 0 address
+@@ -2506,6 +2518,7 @@ remove_tests()
+ 		chk_join_nr 1 1 1
+ 		chk_add_nr 1 1
+ 		chk_rm_nr 1 1 invert
++		chk_rst_nr 0 0 invert ## TODO: currently failing, Geliang is working on a fix
+ 	fi
+ }
+ 
 
 -- 
 2.40.1
