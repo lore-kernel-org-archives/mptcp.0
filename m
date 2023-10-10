@@ -1,130 +1,145 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5842FE07
-	for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 17:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC102FE3E
+	for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 17:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7huOrnx"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1c8a1541232so25677005ad.0
-        for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 10:04:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wh7YALsB"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4063bfc6c03so6615e9.0
+        for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 10:24:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696957454; x=1697562254; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1696958662; x=1697563462; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gI7aKbvWV9fjNFnI3voeTQJGfMaYkYbNlkGysY97fVw=;
-        b=J7huOrnx413Zi6L1AswPf34H/XCt9RKnr1ZiRVZ518sJ0shoft1th8EuWzsWvITWwQ
-         sQ7TTk55/U7up6YkkVL2bGfTotxd49DqVehqParv8kyLrZehqFlzYphWFUkF6blPBy9K
-         UBRAg3NOI9aIInUJW1yXDKhk7FYd6InCtRKfTd1HJyWB0S7BKYmLJ/evxHHsrl0RGmhg
-         s/0kO0wDpIpLqoq7Yg3/J5uIU3+5723Tvl1gnPMOuFqijcTLOFcwJGkFtLLxL1m36DFt
-         QK8+hIjSinLXkSBL/3So2fcoXJDAw4F4DMGkAtZ8UsbeTmW/2U/G4oUhpohMsPoBCn6n
-         +FPA==
+        bh=xB5kNO31ptUSKutse3tWEXjsvhyF99RBWYVjwQ8AbvA=;
+        b=wh7YALsBBXdnn2x44bwdFTVQXWiCx26o0/OKrO2B1nDmoRGl+pVueJZT/sA+nDlGhC
+         3qLhpwE7LNZDU0eNCDzfuQ+7m7yBh+KOZo7C/52o4EEsmgOQx4Ul2+yUSsnp5oSMUa5I
+         xm1yWrRHNIHD3uj6iNVnAp86tGTINRRfRt33tlbxSWeVjIQ3o70muA4uVFToYPNE/hJq
+         NwUiYm6Hqs0V5haOMbMGWIBl3i00NXpjk6OZzm68BzSrTQTZJvCM0btuhfsbjJ5nZxU+
+         Ir92hgZsGJ8Hxdo1fInbgWzHhGlTt5nvUfxaBnmgkU1lwnlBZymRLnaL5lTL3JrFmaMs
+         MBwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696957454; x=1697562254;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gI7aKbvWV9fjNFnI3voeTQJGfMaYkYbNlkGysY97fVw=;
-        b=AyfpECTPcYjw8z7ERbDwborMMXzBsBBVo80Rlp1PxnR9R8NAxXNwTMzPX1nRLSSUn/
-         GlquxOnGdNxSs9mjglUdDMkPpIiWUlEYa30NwhOxn8/oOlSg+L7qJ7ZXFAfEEI5SX5JE
-         N8uCXE2VtPwpVrX3D2SvLEPrgHB6DVwOQxsX39HYj5KbWsNJF3R88BPSKn6qyDLkeOLk
-         tnH0FTuENH/YiLmsSGF7UVluOVS8DetG1vI7h1bKoFK0ySETNj0lAywIRgir9mOqMP57
-         A9lTAHV2EU58HmKtTqqCgIcOsQTFaebuJRXz5nRupDHL2MQ2MO4tR1XeSt/0STWG1Bjv
-         ROGg==
-X-Gm-Message-State: AOJu0YwJAFNSLR3zL5gMuJwywQVdkFyLfwtScddxeHZazp/umGcETQbY
-	BRMZ/iLyjgoyOlLhytSCfw==
-X-Google-Smtp-Source: AGHT+IEoShsjLRiFyTEy+6OXXSmOE48MDsA2UxCBI3HDnEWiMeMOHTVSSw3ClOdx5uEnVQLbKBHlCA==
-X-Received: by 2002:a17:902:74c7:b0:1c5:6309:e1e2 with SMTP id f7-20020a17090274c700b001c56309e1e2mr19627867plt.48.1696957453443;
-        Tue, 10 Oct 2023 10:04:13 -0700 (PDT)
-Received: from [127.0.0.1] ([4.154.90.102])
-        by smtp.gmail.com with ESMTPSA id l13-20020a170902d34d00b001bb9f104328sm12048342plk.146.2023.10.10.10.04.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Oct 2023 10:04:13 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1d0e4528ab057a246fd8c60b91cffd34f277b957.1696848602.git.pabeni@redhat.com>
-References:
- <1d0e4528ab057a246fd8c60b91cffd34f277b957.1696848602.git.pabeni@redhat.com>
-Subject: Re: tcp: allow again tcp_disconnect() when threads are waiting:
- Tests Results
-Message-ID: <70ad4b7b-a21c-13a9-9b2a-5481cd957eb5@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 10 Oct 2023 17:04:12 +0000
+        d=1e100.net; s=20230601; t=1696958662; x=1697563462;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xB5kNO31ptUSKutse3tWEXjsvhyF99RBWYVjwQ8AbvA=;
+        b=E64YEkJXM/krXNinP28A2/g8tFZpFPz+bP5cXfwAjlVYfKuxGBjVOtkoSt0m6l3ONL
+         vhBtVK0xBGipHgOU1yKX/p6XMuLSRwiCM/df5A8cEQTqtGdcTMlr/Ce1BlPPIfuLsKwa
+         EhkJZUQLlueXOz2pgzJVWmGA+JLHw/uhqoSwFhI+k3FbBzk4hPcsSzFQSoShEZF9WpAq
+         1ACLTsVjAgaZje6AhMmOHuXzo48K2yQVAHK1qLArpw4fFwUv8N39AFxOFxEJmYVeTSO8
+         cW7JJjEM6FxRnrMz0QyjypTrlOkR+kGW/bdf92tEV84peASKKA63Mk9cyakg+1HWvhfa
+         N+SQ==
+X-Gm-Message-State: AOJu0YyBwSrlJWw/ppk5pb7RMz2To4AjRvPn4VoZfia5LR6pb8RRYtIE
+	POCWqYWSl++EFmh4xM3nraBWpZTS/V8opMA3IP+rRw==
+X-Google-Smtp-Source: AGHT+IHW65kerUr2q16h/XQsLBx5TUnAZCGf5RFeYJB83WXwTpqUq0HW6mE0I6kZv/CrMPkjVTR8X6392uJ6yuEKUpU=
+X-Received: by 2002:a05:600c:3c8f:b0:405:35bf:7362 with SMTP id
+ bg15-20020a05600c3c8f00b0040535bf7362mr11918wmb.0.1696958662190; Tue, 10 Oct
+ 2023 10:24:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20231009130122.946357448@linuxfoundation.org> <CA+G9fYvWCf4fYuQsVLu0NdN+=W73bW1hr1hiokajktNzPFyYtA@mail.gmail.com>
+ <6447b32f-abb9-4459-aca5-3d510a66b685@kernel.org>
+In-Reply-To: <6447b32f-abb9-4459-aca5-3d510a66b685@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 10 Oct 2023 19:24:08 +0200
+Message-ID: <CANn89iJ_KMA=dQWPhU8WQBc0_CvUztUBodAf-cW-2F=HMX3HJg@mail.gmail.com>
+Subject: Re: [PATCH 6.1 000/162] 6.1.57-rc1 review
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, 
+	conor@kernel.org, "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Netdev <netdev@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Tue, Oct 10, 2023 at 6:51=E2=80=AFPM Matthieu Baerts <matttbe@kernel.org=
+> wrote:
+>
+> Hi Naresh,
+>
+> On 09/10/2023 22:43, Naresh Kamboju wrote:
+> > On Mon, 9 Oct 2023 at 18:46, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> >>
+> >> This is the start of the stable review cycle for the 6.1.57 release.
+> >> There are 162 patches in this series, all will be posted as a response
+> >> to this one.  If anyone has any issues with these being applied, pleas=
+e
+> >> let me know.
+> >>
+> >> Responses should be made by Wed, 11 Oct 2023 13:00:55 +0000.
+> >> Anything received after that time might be too late.
+> >>
+> >> The whole patch series can be found in one patch at:
+> >>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/pat=
+ch-6.1.57-rc1.gz
+> >> or in the git tree and branch at:
+> >>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-sta=
+ble-rc.git linux-6.1.y
+> >> and the diffstat can be found below.
+> >>
+> >> thanks,
+> >>
+> >> greg k-h
+> >
+> >
+> > The following kernel warnings were noticed several times on arm x15 dev=
+ices
+> > running stable-rc 6.1.57-rc1 while running  selftests: net: mptcp_conne=
+ct.sh
+> > and netfilter: nft_fib.sh.
+> >
+> > The possible unsafe locking scenario detected.
+> >
+> > FYI,
+> > Stable-rc/ linux.6.1.y kernel running stable/ linux.6.5.y selftest in t=
+his case.
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > kselftest: Running tests in net/mptcp
+>
+> Thank you for having reported the issue and having added MPTCP ML in Cc!
+>
+> Just to avoid confusions: the "WARNING" you shared when running
+> 'mptcp_connect.sh' selftest appeared before creating the first MPTCP
+> connection. It looks like there is no reference to MPTCP in the
+> calltraces. Also, because you have the same issue with nft_fib.sh, I
+> would say that this issue is not linked to MPTCP but rather to a recent
+> modification in the IPv6 stack.
+>
+> By chance, did you start a "git bisect" to identify the commit causing
+> this issue?
+>
+>
 
-Thank you for your modifications, that's great!
+I think stable teams missed to backport
 
-Our CI did some validations and here is its report:
+commit c486640aa710ddd06c13a7f7162126e1552e8842
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Mon Mar 13 20:17:32 2023 +0000
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4553811692355584
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4553811692355584/summary/summary.txt
+    ipv6: remove one read_lock()/read_unlock() pair in rt6_check_neigh()
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_mp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5116761645776896
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5116761645776896/su=
-mmary/summary.txt
+    rt6_check_neigh() uses read_lock() to protect n->nud_state reading.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6242661552619520
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6242661552619520/su=
-mmary/summary.txt
+    This seems overkill and causes false sharing.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5679711599198208
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5679711599198208/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/0483d0f88d12
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+    Signed-off-by: Eric Dumazet <edumazet@google.com>
+    Reviewed-by: David Ahern <dsahern@kernel.org>
+    Reviewed-by: Martin KaFai Lau <martin.lau@kernel.org>
+    Signed-off-by: Jakub Kicinski <kuba@kernel.org>
