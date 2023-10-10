@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F30199BB
-	for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 12:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5234519441
+	for <mptcp@lists.linux.dev>; Tue, 10 Oct 2023 12:49:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C31Ha2c4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 626AEC433C7;
-	Tue, 10 Oct 2023 12:28:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u4S/+Fo2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F6E1C433C7;
+	Tue, 10 Oct 2023 12:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696940898;
-	bh=8/7/MDrHlV/FW0bghA3h/lPCmGh1Zc1qSklo5IMvUDw=;
+	s=k20201202; t=1696942150;
+	bh=XBBfUW/SVpUppenEkZ/gYftoOYPvXJgJoeQwgghtOao=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=C31Ha2c4MSP+E0kQ1VMqaVsi6nSvfXQin8Vdjw3kq3KQaen9i57wj7szYs2Zsnei/
-	 WKLOeXCAa9S3f2RWlLSTj0LkFs40Tde7ECZS0pi7ID3WdFaghVg1RuZ6U6fhVXCgge
-	 qCYcLCCo99cEF1qAtJ0RgYQ/6oOVMECpRQdS3JeSJXCA3xWaUDboLuYJ0WFOiyekqG
-	 WfjeO1SVKS9wbfdjeM/zp8Q3IRPFPNuO3XX0p1g96dnZB++owehLYmt0amyyqWs7P+
-	 9pCbWc45IETkQLXYEULGC5/Gp2ZNdmhssBysZsvNMmoUnWy22n7ADYG1AS+0QVrsPE
-	 cLxsRSfUg0QVg==
-Message-ID: <3b95c712-82f1-4d97-97cd-4015f23ae931@kernel.org>
-Date: Tue, 10 Oct 2023 14:28:15 +0200
+	b=u4S/+Fo2oOPge7PaXND/JNDT3YdESnOBCspS+8mqVpv8W33MKhNCLzKuo43iyVkVc
+	 JzTI92U6q+IRO2k3CFeSw6Ly41omZ3u8F+f9FJcXAFVr+/LffGxr035PcAwdAWqtZr
+	 NIeQa9U66hN9A9TcW6wgk9fg6GTZ7roDZuHFHEu7FKW9nuhQWeNCOOLznuM7mHy6yR
+	 ijXxKJPHnlp5OE0Y3/K5J9Ut5wpWnTslgVIua+RuX9Kzd5YYvFYx77FGHLmZ3sFi5P
+	 aHQ6s//pU+2BwdBcqRafPSVHRjLrT9sIjwJloFXi/m5GbHLp+vEH8lc81BZJmEMOoW
+	 uNtJddgkGiB6A==
+Message-ID: <3158efd3-ba52-4b84-9d3a-4fea9ca3bc93@kernel.org>
+Date: Tue, 10 Oct 2023 14:49:08 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,16 +26,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v11 1/4] mptcp: set next subflow to msk->first
+Subject: Re: [PATCH mptcp-next v12 1/5] mptcp: avoid resetting when another
+ subflow available
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>
 Cc: mptcp@lists.linux.dev
-References: <cover.1696760702.git.geliang.tang@suse.com>
- <6a31565e01d3474be56bdf62c54d0c20c065c65c.1696760702.git.geliang.tang@suse.com>
- <6c266459-dbba-4bda-b868-b5bcdaf351b0@kernel.org>
- <20231008123313.GA8315@localhost>
- <ff0b0fbc-8bb1-4579-b1b9-09cc06ab734e@kernel.org>
- <20231010060403.GA6593@localhost.localdomain>
+References: <cover.1696831239.git.geliang.tang@suse.com>
+ <2b69fa22510db02a12eb101c3e8173dda76f8133.1696831239.git.geliang.tang@suse.com>
+ <76f31a37-16b4-4e3a-8b00-fdb2c1eabfb4@kernel.org>
+ <20231010061320.GB6593@localhost.localdomain>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -81,81 +80,76 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <20231010060403.GA6593@localhost.localdomain>
+In-Reply-To: <20231010061320.GB6593@localhost.localdomain>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 10/10/2023 08:04, Geliang Tang wrote:
-> On Sun, Oct 08, 2023 at 04:05:10PM +0200, Matthieu Baerts wrote:
+On 10/10/2023 08:13, Geliang Tang wrote:
+> On Mon, Oct 09, 2023 at 06:13:19PM +0200, Matthieu Baerts wrote:
 >> Hi Geliang,
 >>
->> On 08/10/2023 14:33, Geliang Tang wrote:
->>> On Sun, Oct 08, 2023 at 01:11:32PM +0200, Matthieu Baerts wrote:
->>>> Hi Geliang,
->>>>
->>>> +cc Paolo
->>>>
->>>> On 08/10/2023 12:27, Geliang Tang wrote:
->>>>> When closing the msk->first socket in __mptcp_close_ssk(), the original
->>>>> behaviour is to reset this socket. But if there's another subflow available
->>>>> in this case, it's better to set the first available subflow to msk->first,
->>>>> instead of resetting the msk->first.
->>>>
->>>> I don't think we want to do that. If I remember well, we want to keep
->>>> having 'msk->first' pointing to the initial subflow for various reasons
->>>> (I don't remember exactly).
->>>>
->>>> I think what we want to do is not to reset the initial subflow if there
->>>> are other subflows still available and we don't want to set it to 'NULL'
->>>> in such case.
+>> On 09/10/2023 08:02, Geliang Tang wrote:
+>>> When closing the msk->first socket in __mptcp_close_ssk(), if there's
+>>> another subflow available, it's better to avoid resetting it.
 >>>
->>> Is it like this:
+>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>>> ---
+>>>  net/mptcp/protocol.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
 >>>
->>>        if (ssk == msk->first && !msk->pm.subflows)
->>>                WRITE_ONCE(msk->first, NULL);
-> 
-> The code:
-> 
->         if (ssk == msk->first && list_is_singular(&msk->conn_list))
->                 WRITE_ONCE(msk->first, NULL);
-> 
-> works, no NULL pointer crash with this now. I update it into v12.
-
-If I'm not mistaken, we can only set 'msk->first' back to NULL when
-closing the MPTCP connection. We cannot do that if there are other
-subflows still alive.
-
->> No, we cannot set it to NULL nor release it but we should avoid the
->> "reset" being sent.
+>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>> index 30e0c29ae0a4..6346a164ed66 100644
+>>> --- a/net/mptcp/protocol.c
+>>> +++ b/net/mptcp/protocol.c
+>>> @@ -2396,7 +2396,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>>>  		goto out_release;
+>>>  	}
+>>>  
+>>> -	dispose_it = msk->free_first || ssk != msk->first;
+>>> +	dispose_it = msk->free_first || ssk != msk->first || !list_is_singular(&msk->conn_list);
+>>>  	if (dispose_it)
+>>>  		list_del(&subflow->node);
+>>>  
+>>> @@ -2446,7 +2446,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>>>  
+>>>  	sock_put(ssk);
+>>>  
+>>> -	if (ssk == msk->first)
+>>> +	if (ssk == msk->first && list_is_singular(&msk->conn_list))
+>>>  		WRITE_ONCE(msk->first, NULL);
 >>
->> I don't have access to the code for the moment but by looking at your
->> patch, I would say you should not modify 'dispose_it' nor 'msk->first'
->> but maybe check if you can avoid calling 'mptcp_subflow_ctx_reset()' if
->> '!dispose_it', maybe by checking something like
->> 'list_is_singular(&msk->conn_list)'? (I think you should avoid looking
->> at the PM structure here).
+>> I don't think we should 'dispose it' nor set 'msk->first' to NULL but
 > 
-> Something like this, right:
-> 
->                  * disconnect should never fail
->                  */
->                 WARN_ON_ONCE(tcp_disconnect(ssk, 0));
-> -               mptcp_subflow_ctx_reset(subflow);
-> +               list_is_singular(&msk->conn_list)
-> +                       mptcp_subflow_ctx_reset(subflow);
->                 release_sock(ssk);
->  
->                 goto out;
-> 
-> This doesn't work, if we only avoid calling mptcp_subflow_ctx_reset,
-> tcp_disconnect will send a RST too.
+> That's what this patch dose. Dispose it, not set msk->first to NULL.
 
-Sorry, yes I meant to say if we should skip both, tcp_disconnect()
-included. We should only close the connection but not release it.
+Sorry, I meant: we should not 'dispose it' and we should not set
+'msk->first' to NULL if we are not closing the whole MPTCP connection.
 
-(or we need to close, then call disconnect? I didn't check that)
+>> instead, we should not call tcp_disconnect() directly: if the connection
+> 
+> But this patch lacks the code to handle:
+> 
+> 	ssk == msk->first && !list_is_singular(&msk->conn_list)
+> 
+> Is my understanding correct?
+> 
+> How about dropping list_is_singular() in the next block, something like:
+> 
+>          * For established sockets, allow an additional timeout before closing,
+>          * as the protocol can still create more subflows.
+>          */
+> -       if (list_is_singular(&msk->conn_list) && msk->first &&
+> -           inet_sk_state_load(msk->first) == TCP_CLOSE) {
+> +       if (msk->first && inet_sk_state_load(msk->first) == TCP_CLOSE) {
+>                 if (sk->sk_state != TCP_ESTABLISHED ||
+>                     msk->in_accept_queue || sock_flag(sk, SOCK_DEAD)) {
+>                         inet_sk_state_store(sk, TCP_CLOSE);
+
+I cannot tell like that, but what is important first is not to call
+'tcp_disconnect()' on a non already closed socket. So we need something
+else before the 'disconnect()'.
 
 Cheers,
 Matt
