@@ -1,143 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB90029D09
-	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 15:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF7120311
+	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 16:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=andyt.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andyt.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6QKBkIN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5BAEC433C8;
-	Wed, 11 Oct 2023 15:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697039865;
-	bh=gLko0vqzxNfPFY4Ioq6dFDNSy2uxYXQMj+dnKo35eSc=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=S6QKBkINSIE6IAEzVgfosiBsIC0XyzISHcRpikx64Q4KllTzsSMwj2Jj33mUO2wDP
-	 oRhoh1JcJ6TouSTwTl4z1Ffv7PYF1Iqo3s96Ohd7xiSVHMX8CT4GvNMkh79+Qzb4O1
-	 C6COTO1cNEELlYUzaSNf+pFpx6St28GW/z7YbT7oESSgV9wtt9OJHiXTRXITL4wXps
-	 KEziOQ/oJewZXhwb2GGIq0G2WYbVVdOLagOAvSKM/QKE1q2pbn7kRoyLt0LPuNTINy
-	 WgX6+shyV6iIpSS9T6nuQfpJnELwzW0MDJ6v+I/VGW56zmDBR9fbmPrOug5Mukqdp7
-	 Wj1CYIJhMOAvQ==
-Message-ID: <1dfb7aa0-34c2-497f-bc4d-89a8177a8d7d@kernel.org>
-Date: Wed, 11 Oct 2023 17:57:42 +0200
+	dkim=pass (2048-bit key) header.d=andyt-co.20230601.gappssmtp.com header.i=@andyt-co.20230601.gappssmtp.com header.b="dsFh4SeM"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-79fce245bf6so1529439f.1
+        for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 09:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=andyt-co.20230601.gappssmtp.com; s=20230601; t=1697040253; x=1697645053; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GGnvJ0R9vgodao2BxrVqmImUp7Ad4gi8WoMVzfAMIY8=;
+        b=dsFh4SeMYN7H5Pd4/A5ysv72y1v/F9owqPQ2Wt0NOteejpc+TTry6WbvBUwq8jFGER
+         4UoYWjhv2r3r+oPGsGEojDkXOgltWJDNSiLUCw/GJWruZHpnz6kwCZKq+DmA5Zr14DMW
+         G4Gkzsz4SjtVgK32lcJCD0PHhqtPtHP7MomkmAhX3hpjgpDp8gbMLBzDQLYGqXXnZJfT
+         lCliIb8PWOG2i4HUKVZOqWblYnJEZArbNqKCEe5YJQCn8kF9eKn3SOlZgANA8/svKb+y
+         5K/GiWQYihKBf303eboYJNjd4o5hHyV9JVoTH9DdZpT07MV7tR5vN2setI/ksVqzxkE1
+         E8fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697040253; x=1697645053;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GGnvJ0R9vgodao2BxrVqmImUp7Ad4gi8WoMVzfAMIY8=;
+        b=W06pm2IZU3tWy/kPsUR00pxb1uwOsFNANo7dx+LdS1O37ECMBlBuLTK2Q8Aaf5jnYq
+         3VSkxYqTgX1OyZKr4sglpjHolZnsteF+8EdpEh4yt4CM91sge5hU2Gxl8AvLZ67Mxgfq
+         EVX+6ciWsJz4+l/+Ih3SG0EEGc3F03j+U3xVQXMlSysqHlJpepAMddGKlqsS/5JM01g0
+         zFGRKp+wD+ZHIbpAaTkhWEpQ3ao33ayQyjc1weTkqmbmak6qCBA8gdjA1Btc8Q36leW0
+         V/DZyd1hgbjbM1a/khYUASpjnOtB6nwBKBktQW5h2NV7MkKYTgc4xmiZFfR9Cp2s2jGz
+         HDog==
+X-Gm-Message-State: AOJu0YwUoll3Owk+dx/atmIrd7YdyDbnrMetDXTbaA014md3GZJf+9Ht
+	cHWhkeeUYBMynmNn/EZZBXUA1jayrrcfCZgm/M0bwa0NI1z/CW+oHpg=
+X-Google-Smtp-Source: AGHT+IHuWf1JcOfTd9Pfi4wa0xOUBauNOIf/BRyksaOu2umj45O7NTz0qGft3ZGSOmLgyvlI7lOHJIYQRMPtPKVmPss=
+X-Received: by 2002:a5d:990f:0:b0:794:d833:4a8a with SMTP id
+ x15-20020a5d990f000000b00794d8334a8amr23125860iol.0.1697040252941; Wed, 11
+ Oct 2023 09:04:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v14 4/7] selftests: mptcp: userspace pm remove
- initial subflow
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1697031190.git.geliang.tang@suse.com>
- <ad94cfc3e206d76f8e213d66fe2a73d335927496.1697031190.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- Fe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: Tessares
-In-Reply-To: <ad94cfc3e206d76f8e213d66fe2a73d335927496.1697031190.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAGKODjrSDQ8r9_0+Kfskyj0Efx_1XQKMQO7N3LsYn2xhDGCMLQ@mail.gmail.com>
+ <ccc810ad-2880-5528-4497-5181492793b3@kernel.org>
+In-Reply-To: <ccc810ad-2880-5528-4497-5181492793b3@kernel.org>
+From: Andy Tranter <andy@andyt.co>
+Date: Thu, 12 Oct 2023 03:04:02 +1100
+Message-ID: <CAGKODjpTTMTKfWtLR44TfwMniq0AUD_sNeUweirx6_9Cmfo33g@mail.gmail.com>
+Subject: Re: mptcp - very slow start?
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Matthieu Baerts <matttbe@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Geliang,
+Hi Mat
 
-On 11/10/2023 15:34, Geliang Tang wrote:
-> This patch adds a selftest for userpsace PM to remove the initial
-> subflow. Use userspace_pm_add_sf() to add a subflow, and pass initial
-> ip address to userspace_pm_rm_sf() to remove the initial subflow.
-> 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index ab6908b7b143..e1304383057c 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3507,6 +3507,28 @@ userspace_tests()
->  		kill_events_pids
->  		wait $tests_pid
->  	fi
-> +
-> +	# userspace pm remove initial subflow
-> +	if reset_with_events "userspace pm remove initial subflow" &&
-> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-> +		set_userspace_pm $ns2
-> +		pm_nl_set_limits $ns1 0 1
-> +		speed=10 \
-> +			run_tests $ns1 $ns2 10.0.1.1 &
-> +		local tests_pid=$!
-> +		wait_mpj $ns2
-> +		userspace_pm_add_sf $ns2 10.0.3.2 20
-> +		chk_join_nr 1 1 1
-> +		chk_mptcp_info subflows 1 subflows 1
-> +		chk_subflows_total 2 2
-> +		userspace_pm_rm_sf $ns2 10.0.1.2
+Thankyou for your response.
+I'll log a more detailed issue report when I get a chance. I am busy
+for the next week, so won't be until after then I think.
 
-If this command removes the initial subflow ...
+In the meantime I was quickly able to compile 6.6.0-rc4+ for my local
+test system However the 27 second issue (for a test downloading from
+apache) still remains (note, the server is only running 6.5.7).
 
-> +		chk_rm_nr 0 1
+Incidentally, I needed to upload a large file today, so figured I'd
+mptcpize sshd on and give it a go. Was able to mptcpize rsync upload
+successfully bonding/load balancing all 4 Stalrink connections approx
+4x faster upload than normally, about 80% of their combined capacity.
+Considering the normally poor performance of vanilla sshd for file
+transfers, this is quite an achievement.
+mptcp was active with all 4 connections transferring data immediately.
+Is interesting that the reverse works as expected. I will have to
+experiment further once I get both ends on 6.6.0-rc4+.
 
-(it is a bit confusing, we could think there are RM_ADDR being sent
-here. If you need to change something else, can you add a comment here
-that we don't look at the counter linked to the RM_ADDR but to the one
-linked to the subflows that have been removed please?)
+Andy..
 
-> +		chk_rst_nr 0 0 invert
-> +		chk_mptcp_info subflows 1 subflows 1
-
-... that's normal to still have 1 "extra subflow" here but ...
-
-> +		chk_subflows_total 2 2
-
-... this should be "1 1", no? One subflow has been removed in between,
-so we should not have the same counter as before, no?
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+On Wed, 11 Oct 2023 at 04:04, Mat Martineau <martineau@kernel.org> wrote:
+>
+> On Tue, 10 Oct 2023, Andy Tranter wrote:
+>
+> > Hi
+> >
+> > I thought I'd give mptcp a go, but I've come across some confusing
+> > test results that I thought I might ask about.
+> >
+> > We have 4x residential Starlink connections, and (predictably) I've
+> > had trouble bonding them to make one big connection. But looks like
+> > mptcp might be useful as a basis to eventually create a similar end
+> > result.
+> >
+>
+> Hi Andy -
+>
+> Yes, MPTCP looks like a fit for bonding these links. It's an interesting
+> setup since Starlink connections behave differently from wired or
+> cellular links. MPTCP has a "packet scheduler" that decides which subflow
+> (in your case, which Starlink connection) to send each packet on and we
+> haven't tested that with connections like yours.
+>
+> > I have mptcp working end to end, and can see several established
+> > messages via 'ip mptcp monitor' as soon as the connection is started.
+> > For each test, I see the first connection running at 200-300mbit, but
+> > the other 3 sit at around 8.5kbps. After approx 26-28 seconds they all
+> > suddenly become active, all 4 links are utilized, presumably evenly,
+> > and bandwidth creeps up until I think we're flooding the satellite or
+> > base station and can't go any faster (lol).
+> > But is this 26-28 second delay intentional?
+> > Perhaps something is wrong with my test or environment?
+> > Seems to me that a delay of several rtt before establishing mptcp
+> > makes sense, no point for short lived connections, but 26-28 seconds
+> > seems very particular and rather excessive.
+> >
+>
+> It's not clear how much of the delay is due to MPTCP establishing
+> additional subflows vs. the packet scheduler choosing to utilize the
+> other active links after they are created.
+>
+> Could you open a GitHub issue at
+> https://github.com/multipath-tcp/mptcp_net-next/issues and provide a few
+> more details like:
+>
+>   * Which commands are you using to configure MPTCP for additional
+> subflows?
+>
+>   * What tool/program are you using for the bandwidth test (so we can try
+> to reproduce similar conditions)?
+>
+>   * Are the connection speeds you're referencing for the entire link or the
+> specific TCP subflows in this test?
+>
+>   * Output of 'ip mptcp monitor'
+>
+>
+> > I'm running 6.5.1 (Sept 2nd), so not the absolute latest but it's
+> > pretty new I think. Do you think I need to try newer?
+> > Various tcp options nor cubic vs bbr congestion control seem to make
+> > any difference.
+>
+> It could be useful to try our development branch ("export") at
+> https://github.com/multipath-tcp/mptcp_net-next/, if you're comfortable
+> building & running a custom kernel.
+>
+> That is v6.6-rc5 + net-next (networking dev branch) + MPTCP latest
+> patches. Those latest MPTCP patches include some related to latency tuning
+> and the MPTCP packet scheduler.
+>
+>
+> Thanks,
+>
+> Mat
+>
+>
