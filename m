@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4621B29B
-	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 16:48:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4A7208C6
+	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 16:53:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SOKYJ/Cd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FC6C433C8;
-	Wed, 11 Oct 2023 16:48:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DV187MNu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 553E1C433C7;
+	Wed, 11 Oct 2023 16:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697042910;
-	bh=YWRaPct8xYNnFVauDEK7TyHZ1EV+8EYwO5qYa/oGWoQ=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=SOKYJ/CdHiqyCKm6hCK5zUANgsQ8HMeRM5xj+xUIZKSuC6EfCmoW/OvlK0WNLoNmv
-	 +nTUvV34Srw34YByFtpoUZM4E/ugrE9nwu0WDbbfQM/IJ35rH8A0F0VS5ZsTLu41My
-	 QrRXIcfXPRE04IEjXGSxFdMd4BzRP6ubsKqaAoXxdijm+Cr7cwMcacJcCYq3EW7ZIR
-	 NiSXr5Lvkx1s+/ipmSyKF7fAAZNuJTxsYB7Cx5p/reD3ADXZj4vI3wYj2U9e1Sw16L
-	 x6UFHnwbxMJglZ+sjV++utiyQSkXFXqRXMghxuPqz2j+8PXanx/v6N1d2AMK889GQ+
-	 mQ4KdTrqBvuAQ==
-Message-ID: <65574720-60e3-408a-ae91-cbe1a5e5b5ba@kernel.org>
-Date: Wed, 11 Oct 2023 18:48:27 +0200
+	s=k20201202; t=1697043198;
+	bh=p4Lx+LvpQsSeXTDcj8KE5S4bnQqXGxl5s476f2Qy8iA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DV187MNuJjECJ340R46KjSHcl0lFargvtdp5tfMECdzC3QFCj+kVCe0d2QAzepCLc
+	 n7VD9wtUXg/QPGG5xqtRKz+wkJXQIFLdqvCSZaJEQ+AFNd8Klx/qDhrZy3DsCclTdg
+	 ak3EWPx60O2wEkwx64Tusr9IVhMUYjzTzABO4BNb3NpCtvAPRMw6oOVt2ZCf/0vKg0
+	 ax8wpE84teAiynzgh5qhdoPB/pvotSPplhc7tH6HqRV1JRXoVTylS8cxONfqDaBrEt
+	 Qn6eL1OXQyiKh+Slm0KBMd+2L6nsHbNa9Rg33Auna5Y0I4fYnFM5JNschG9VYwoiUY
+	 CHm0m+PpIQ9Ug==
+Message-ID: <73963454-bb2d-48b8-9202-666fc2fc5ba7@kernel.org>
+Date: Wed, 11 Oct 2023 18:53:17 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v14 7/7] selftests: mptcp: userspace pm send
- RM_ADDR for ID 0
+Subject: Re: [PATCH mptcp-next v14 3/7] mptcp: add __mptcp_subflow_disconnect
+ helper
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+To: Geliang Tang <geliang.tang@suse.com>, Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
 References: <cover.1697031190.git.geliang.tang@suse.com>
- <d17f1677d7c0b65309c98f48a8b88e909c0558a0.1697031190.git.geliang.tang@suse.com>
+ <e75487344cde69c5b754ee1fb3bd8c730d54e5de.1697031190.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,75 +78,93 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <d17f1677d7c0b65309c98f48a8b88e909c0558a0.1697031190.git.geliang.tang@suse.com>
+In-Reply-To: <e75487344cde69c5b754ee1fb3bd8c730d54e5de.1697031190.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Geliang, Paolo,
 
-On 11/10/2023 15:35, Geliang Tang wrote:
-> This patch adds a selftest for userpsace PM to remove id 0 address.
-> Use userspace_pm_add_addr() helper to add a id 10 address, then use
-> userspace_pm_rm_addr() helper to remove id 0 address.
+On 11/10/2023 15:34, Geliang Tang wrote:
+> When closing the msk->first socket in __mptcp_close_ssk(), if there's
+> another subflow available, it's better to avoid resetting it, just shut
+> down it.
 > 
+> This patch adds a new helper __mptcp_subflow_disconnect(), and reuse
+> flag MPTCP_CF_FASTCLOSE in this case. When MPTCP_CF_FASTCLOSE isn't set,
+> we invoke tcp_shutdown() instead of tcp_disconnect().
+> 
+> Co-developed-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
+>  net/mptcp/protocol.c | 28 ++++++++++++++++++++++------
+>  1 file changed, 22 insertions(+), 6 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index e1304383057c..2233b24687cf 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3529,6 +3529,31 @@ userspace_tests()
->  		kill_events_pids
->  		wait $tests_pid
->  	fi
-> +
-> +	# userspace pm send RM_ADDR for ID 0
-> +	if reset_with_events "userspace pm send RM_ADDR for ID 0" &&
-> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-> +		set_userspace_pm $ns1
-> +		pm_nl_set_limits $ns2 1 1
-> +		speed=10 \
-> +			run_tests $ns1 $ns2 10.0.1.1 &
-> +		local tests_pid=$!
-> +		wait_mpj $ns1
-> +		userspace_pm_add_addr $ns1 10.0.2.1 10
-> +		chk_join_nr 1 1 1
-> +		chk_add_nr 1 1
-> +		chk_mptcp_info subflows 1 subflows 1
-> +		chk_subflows_total 2 2
-> +		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
-> +		userspace_pm_rm_addr $ns1 0
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 30e0c29ae0a4..1a54d55f8bb2 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2366,6 +2366,26 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
+>  #define MPTCP_CF_PUSH		BIT(1)
+>  #define MPTCP_CF_FASTCLOSE	BIT(2)
+>  
+> +/* be sure to send a reset only if the caller asked for it, also
+> + * clean completely the subflow status when the subflow reaches
+> + * TCP_CLOSE state
+> + */
+> +static void __mptcp_subflow_disconnect(struct sock *ssk,
+> +				       struct mptcp_subflow_context *subflow,
+> +				       unsigned int flags)
+> +{
+> +	if (((1 << ssk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)) ||
+> +	    (flags & MPTCP_CF_FASTCLOSE)) {
+> +		/* The MPTCP code never wait on the subflow sockets, TCP-level
+> +		 * disconnect should never fail
+> +		 */
+> +		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
+> +		mptcp_subflow_ctx_reset(subflow);
+> +	} else {
+> +		tcp_shutdown(ssk, SEND_SHUTDOWN);
 
-If this commands forces the server to send a RM_ADDR to the client and
-the client, using the Netlink PM, reacts as expected by closing the
-initial subflow ...
+I didn't check in detail but should we not also call
+__mptcp_subflow_error_report()?
 
-> +		sleep 0.5
-
-(Maybe move this sleep to userspace_pm_rm_addr()? (even if the best is
-to wait for an event...))
-
-> +		chk_rm_nr 1 0 invert
-> +		chk_rst_nr 0 0 invert
-> +		chk_mptcp_info subflows 1 subflows 1
-> +		chk_subflows_total 2 2
-
-... should we not have one subflow here? (and one removed subflow with
-'chk_rm_nr 1 1 invert')
-
-Or maybe the client doesn't react by removing all subflows linked to the
-address ID that is given in the RM_ADDR? In this case, we have another
-issue :) (in the Netlink PM). We can create a new ticket if that's
-easier not to block this series.
-
-Or do we have an issue with the counter displaying 2 while it should be
-1? Or an issue with patch 3/7 not closing the subflow as expected?
+And maybe other helpers? What is done between the 'goto out' and the
+'out' label in __mptcp_close_ssk() here below? → what we do when other
+subflows are being closed.
 
 Cheers,
 Matt
+
+> +	}
+> +}
+> +
+>  /* subflow sockets can be either outgoing (connect) or incoming
+>   * (accept).
+>   *
+> @@ -2403,7 +2423,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>  	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+>  
+>  	if ((flags & MPTCP_CF_FASTCLOSE) && !__mptcp_check_fallback(msk)) {
+> -		/* be sure to force the tcp_disconnect() path,
+> +		/* be sure to force the tcp_close path
+>  		 * to generate the egress reset
+>  		 */
+>  		ssk->sk_lingertime = 0;
+> @@ -2413,11 +2433,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+>  
+>  	need_push = (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_data(sk);
+>  	if (!dispose_it) {
+> -		/* The MPTCP code never wait on the subflow sockets, TCP-level
+> -		 * disconnect should never fail
+> -		 */
+> -		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
+> -		mptcp_subflow_ctx_reset(subflow);
+> +		__mptcp_subflow_disconnect(ssk, subflow, flags);
+>  		release_sock(ssk);
+>  
+>  		goto out;
+
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
