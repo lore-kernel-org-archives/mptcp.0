@@ -1,174 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF35199C9
-	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 08:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F418FC18
+	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 08:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JArmn981"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1697011748;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fTK80oDD0Bv5gtOXZS+QKGF2fWjN9XveAlI4QWt8H7w=;
-	b=JArmn981j8fCVfHj2jTpFypzc6SoszcqTKaBv+6slA/DEHKIF5hbN2PuasPHCiq2+KE5EV
-	2XVa6A0cH/Mt13dWIIaq+lX58m5dlDngb/3TVrZllR8M5f1Zr3q2h0EDhBCmFKuzxdy5rB
-	SPLXBGJWs5bbfEYBNNqNpgTL9SSIP8E=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-147-SG1UzxeBN--MKVgyHclKQg-1; Wed, 11 Oct 2023 04:09:06 -0400
-X-MC-Unique: SG1UzxeBN--MKVgyHclKQg-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5386aefc01eso953098a12.1
-        for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 01:09:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7Wkhr+v"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-79f915e5b47so270908839f.2
+        for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 01:31:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697013063; x=1697617863; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PeZm3awpAmMTMsSQ8bX0iUcNSxmrv6teJ31jvAZX8PI=;
+        b=B7Wkhr+vfpr0PdE/Bj+9Db4pXjDS8m1Q8HsmE1fQcUiA07SyQ6g9xtT+C76Nst+QAa
+         HiS+n3t6DGNevrABwkl7Y4LJFhDC9Mr6I5jJk2Spp+UEc8LBpICgI9tzgDxu7cJY95Ub
+         pss4/kcsxg3apXpSWEi2uUejzLocIq36jFiS7JnBmWY6Fc8RtJQycdpfRGzLMeYBeyvY
+         68bvBcBaApZoYb6OFjwtoCl6nmPaHcoC3UGd0H5BiIEsKl6fqbA0QXpmntNtTI7Pk42A
+         ydg1gwy/pgE+6Ra6taO3ArxGvYXiV3B9loVzfIwGJ0pOzbSdq0ZStlMfRsm8zA6rA7RN
+         TnLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697011745; x=1697616545;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+        d=1e100.net; s=20230601; t=1697013063; x=1697617863;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Ky77DLJakT9unCG2ouOjuY2UmwPyrVoxGi1Bc0mbU6Y=;
-        b=J3exnP8Dnnjm5rAuELnjQVf+E4ssGqVHnM6WegjMkQ+TIDY8E/UqGGF89jT4SKuDEb
-         9ua2T3nx29PAfH4+o5oKZN/WcOxNqESWs76hc/IrTSBRmuYe6tlO7cNymdAdLG/lOwrH
-         gAqga9RN+97Wb8KwK8K39TX9l9+rQ050yEKLI+ssCozVvNg8Z+1xn+ZJQMHho3YtnaZw
-         1xp9dsZA6TgBrBdZTpTxGuu8ARlK+D3FWSeupP2hV0tZN9qpGLiBYZFg0+uEDCRw0Pn/
-         bLEd6RiPLyA0q+CwtBdwsHXmy4nbb+IuigQduUFxOVo13bgU2TcBhzAu07t3xC0cKiGX
-         y8nA==
-X-Gm-Message-State: AOJu0YwvHs4Ovu8wXa0c5o5eqEmN0Gp6XK7tj3eYm0hJ1K2CLV/HKKM9
-	WxVusLUSIpYULsqQdgHRKCfnMbff86EufAkr8WgIMGSV7wXumRIpsPZ/l37XPXxEaGipok6QG+k
-	YNseaI5xj3WJvJ1m1uK0ltGE=
-X-Received: by 2002:a05:6402:5191:b0:51e:5dd8:fc59 with SMTP id q17-20020a056402519100b0051e5dd8fc59mr17073831edd.1.1697011745043;
-        Wed, 11 Oct 2023 01:09:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGtCD8skJ1qwT6k72lQxXjzH0PB6NYyxOj4JA3xYKpe+EKFW2STryCS+JNRDkR+u+ZloJBmog==
-X-Received: by 2002:a05:6402:5191:b0:51e:5dd8:fc59 with SMTP id q17-20020a056402519100b0051e5dd8fc59mr17073811edd.1.1697011744636;
-        Wed, 11 Oct 2023 01:09:04 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-235-163.dyn.eolo.it. [146.241.235.163])
-        by smtp.gmail.com with ESMTPSA id u1-20020a05640207c100b005311e934765sm8558245edy.27.2023.10.11.01.09.03
+        bh=PeZm3awpAmMTMsSQ8bX0iUcNSxmrv6teJ31jvAZX8PI=;
+        b=gLQ3LNky+Bqg+raIX2cUvWS5rAATwA92Xl5fjxUlhCx1MGlE55Gv0YVsV20nzMDNzd
+         1QjcT94XoNoY7WDsWPRHC3/VRz2mPSEWhPBmZKEof55SqgD26czUqjwuXP6Ki9z/L2HC
+         C9xTNG5lWM39epYM/EWokxi7Cwm+oDVTzAB6pEv5etmrHYzYpU4bQQlBLqHR1Yvnsl6U
+         lie7k79svs9TiCrsVWl43wNI3RfpskYquojHscFmh+LaYJEUCA26jDzbxpUUMXUnXQOw
+         1h3jkyc7OExH5GAcNHMK5a8g1tPCT7pO0Z8eO9DmCElXOd1vUwcW4hZcTSktKHuL4dZ0
+         z7WA==
+X-Gm-Message-State: AOJu0Yzs8zT8sguh0sQ5IvqzcaJ6JDbHiz6ENgiqsoldec/ejgoala9h
+	vzFUtZoOJLgyh9BILTOXHA==
+X-Google-Smtp-Source: AGHT+IEXJEbexUDzGl5fbU/EuULLNGG86EI3z12EGNHgiCiWkB3r+w/IgZcnawrBy4YY5oryt9op0A==
+X-Received: by 2002:a6b:5c04:0:b0:79f:99b6:63 with SMTP id z4-20020a6b5c04000000b0079f99b60063mr23834029ioh.9.1697013063556;
+        Wed, 11 Oct 2023 01:31:03 -0700 (PDT)
+Received: from [127.0.0.1] ([13.89.135.33])
+        by smtp.gmail.com with ESMTPSA id m6-20020a056638408600b0043194542229sm693287jam.52.2023.10.11.01.31.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 01:09:04 -0700 (PDT)
-Message-ID: <5be14d802956c3c7128614dab2bd7165cd46988f.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next] Squash to "mptcp: avoid resetting when
- another subflow available"
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Date: Wed, 11 Oct 2023 10:09:02 +0200
-In-Reply-To: <cfa0382eb429ef762c6c862c2cd7c6d4dc6d2441.1697006323.git.geliang.tang@suse.com>
-References: <cfa0382eb429ef762c6c862c2cd7c6d4dc6d2441.1697006323.git.geliang.tang@suse.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+        Wed, 11 Oct 2023 01:31:03 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <f3b95e47e3dbed840960548aebaa8d954372db41.1697008693.git.pabeni@redhat.com>
+References:
+ <f3b95e47e3dbed840960548aebaa8d954372db41.1697008693.git.pabeni@redhat.com>
+Subject: Re: tcp: allow again tcp_disconnect() when threads are waiting:
+ Tests Results
+Message-ID: <35c4df47-b9fa-778f-2a89-c59114b92541@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 11 Oct 2023 08:31:02 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2023-10-11 at 14:39 +0800, Geliang Tang wrote:
-> Invoke mptcp_subflow_shutdown() as Paolo suggested.
->=20
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  net/mptcp/protocol.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
->=20
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index a94e1f519788..977bae817e62 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2396,11 +2396,17 @@ static void __mptcp_close_ssk(struct sock *sk, st=
-ruct sock *ssk,
->  =09=09goto out_release;
->  =09}
-> =20
-> -=09dispose_it =3D msk->free_first || ssk !=3D msk->first ||
-> -=09=09     !list_is_singular(&msk->conn_list);
-> +=09dispose_it =3D msk->free_first || ssk !=3D msk->first;
->  =09if (dispose_it)
->  =09=09list_del(&subflow->node);
-> =20
-> +=09if (!dispose_it &&
-> +=09    !list_empty(&msk->conn_list) &&
-> +=09    !list_is_singular(&msk->conn_list)) {
-> +=09=09mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
+Hi Paolo,
+
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4809685430173696
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4809685430173696/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5372635383595008
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5372635383595008/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6498535290437632
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6498535290437632/su=
+mmary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5935585337016320
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5935585337016320/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/79b9130a599e
 
 
-I think there was a misunderstanding. I intended suggesting using
-tcp_shutdown(). Note that mptcp_subflow_shutdown() for established msk
-is intended to carry the MPTCP-level data fin, while here we want to
-only to close the subflow.
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-I think it's better to let the mptcp_close_ssk() caller specify this
-behavior via the 'flags' value. It looks like the already existing
-flags are enough: we want this behavior if and only if '!(flags &
-MPTCP_CF_FASTCLOSE)'.
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-All in all, something like the following (untested, based on the
-current export branch) should do:
----
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 30e0c29ae0a4..2dabc118d78d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2366,6 +2366,26 @@ bool __mptcp_retransmit_pending_data(struct sock *sk=
-)
- #define MPTCP_CF_PUSH=09=09BIT(1)
- #define MPTCP_CF_FASTCLOSE=09BIT(2)
-=20
-+/* be sure to send a reset only if the caller asked for it, also
-+ * clean completely the subflow status when the subflow reaches
-+ * TCP_CLOSE state
-+ */
-+static void __mptcp_subflow_disconnect(struct sock *ssk,=20
-+=09=09=09=09       struct mptcp_subflow_context *subflow,
-+=09=09=09=09       unsigned int flags)
-+{
-+=09if (((1 << ssk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)) ||
-+=09    (flags & MPTCP_CF_FASTCLOSE)) {
-+=09=09/* The MPTCP code never wait on the subflow sockets, TCP-level
-+=09=09 * disconnect should never fail
-+=09=09 */
-+=09=09WARN_ON_ONCE(tcp_disconnect(ssk, 0));
-+=09=09mptcp_subflow_ctx_reset(subflow);
-+=09} else {
-+=09=09tcp_shutdown(ssk, SEND_SHUTDOWN);
-+=09}
-+}
-+
- /* subflow sockets can be either outgoing (connect) or incoming
-  * (accept).
-  *
-@@ -2403,8 +2423,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct=
- sock *ssk,
- =09lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
-=20
- =09if ((flags & MPTCP_CF_FASTCLOSE) && !__mptcp_check_fallback(msk)) {
--=09=09/* be sure to force the tcp_disconnect() path,
--=09=09 * to generate the egress reset
-+=09=09/* be sure to force the tcp_close path to generate
-+=09=09 * the egress reset
- =09=09 */
- =09=09ssk->sk_lingertime =3D 0;
- =09=09sock_set_flag(ssk, SOCK_LINGER);
-@@ -2413,13 +2433,8 @@ static void __mptcp_close_ssk(struct sock *sk, struc=
-t sock *ssk,
-=20
- =09need_push =3D (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_dat=
-a(sk);
- =09if (!dispose_it) {
--=09=09/* The MPTCP code never wait on the subflow sockets, TCP-level
--=09=09 * disconnect should never fail
--=09=09 */
--=09=09WARN_ON_ONCE(tcp_disconnect(ssk, 0));
--=09=09mptcp_subflow_ctx_reset(subflow);
-+=09=09__mptcp_subflow_disconnect(ssk, subflow, flags);
- =09=09release_sock(ssk);
--
- =09=09goto out;
- =09}
-=20
+For more details:
 
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
