@@ -1,86 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE73D39A
-	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 01:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552EE39A;
+	Wed, 11 Oct 2023 01:08:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tm7LjkJi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F522C433C7;
-	Wed, 11 Oct 2023 01:00:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1oKeHYL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76EA7C433C8;
+	Wed, 11 Oct 2023 01:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696986003;
-	bh=T+b/IOMoU64cR6hgB+noM0h9K3w4K7Y8hXvtzmdbkc0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=tm7LjkJiETBMcSUYGNHc17H9bLMyJwehyUWbHszn2jP29o4Cn9awsM1nZjhf4evjz
-	 qgfpdWC9NcU/YS0RWyr/ftMmZDMmjDA+rTRr/NdnHlEXXzc2HUdatxEoAM9EzgZBnX
-	 YxWscI1Z9ZZ6Sf6uslXhjKBpMbLTJzBaRB/5iCtAzAASH0aPQ7KX/zH6eFs1zaWHFs
-	 ed741qlzxNqM9yhFk1H+Bmxy3e0h55WTXXQHgTJJT/gX62JN+j8qKtMW1SX1UOpwWN
-	 2yqsHD81o9GljOtVpQrxRvawnz8ESDIR92VR8sEx6A5fc3rtR/KpRCivZRF3CXN+3u
-	 /BBKudF34wreg==
-Date: Tue, 10 Oct 2023 18:00:02 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] tcp: check mptcp-level constraints for backlog
- calescing
-In-Reply-To: <b41dd0ae28701666ba2c59170acedaafdb41726c.1696439853.git.pabeni@redhat.com>
-Message-ID: <e830af72-4c3a-fa52-4eb0-b35e48bf9d1c@kernel.org>
-References: <b41dd0ae28701666ba2c59170acedaafdb41726c.1696439853.git.pabeni@redhat.com>
+	s=k20201202; t=1696986520;
+	bh=q6kCuKw1p9zMOPVBO4PESzKHHtd8rxfLWiEaydvuP8U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=T1oKeHYLIwOvj57maEkeiU/sXMyjNjKzGbBivTqn4jMWhhrkRgl1WQseQhT+j7T1J
+	 p1bQTwIR7EObse0T5HRmZCu7IRKc/8TRGWMZgFYVeOxyFsfLv0nNpNgl0kjL3h2Q4B
+	 CF2/Z8D8SFqAkRWT1dPQ5z3yptR2sjXGrqMLr5XasZQvfgGCKdgKa1/cmXKpvMenO9
+	 y3tqU+lDsjTfxLgmxnplB3hrrNnZ5dkVKrcQTE/95DYEsE5yG4502IMg6gf7s0Z1YA
+	 PpX04tiF6vebL7346+zM9Zut/sqGj3Zy0M5kksvXP+WYxtTzmORvMsJ4ElYY/VmbmF
+	 UFPC5+0MCdDwg==
+Date: Tue, 10 Oct 2023 18:08:39 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Mat
+ Martineau <martineau@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>
+Subject: Re: [PATCH net-next 3/6] Documentation: netlink: add a YAML spec
+ for mptcp
+Message-ID: <20231010180839.0617d61d@kernel.org>
+In-Reply-To: <20231010-upstream-net-next-20231006-mptcp-ynl-v1-3-18dd117e8f50@kernel.org>
+References: <20231010-upstream-net-next-20231006-mptcp-ynl-v1-0-18dd117e8f50@kernel.org>
+	<20231010-upstream-net-next-20231006-mptcp-ynl-v1-3-18dd117e8f50@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 4 Oct 2023, Paolo Abeni wrote:
+On Tue, 10 Oct 2023 21:21:44 +0200 Matthieu Baerts wrote:
+> +definitions:
+> +  -
+> +    type: enum
+> +    name: event-type
+> +    enum-name: mptcp_event_type
+> +    name-prefix: mptcp_event_
 
-> The MPTCP protocol can acquire the subflow-level socket lock, and
-> cause the tcp backlog usage. When inserting new skb into the
-> backlog, the stack will try to coalesce them.
->
-> Currently we have no check in place to ensure that such coalescing
-> will respect the MPTCP-level DSS, and that may cause data stream
-> corruption as reported by Christoph.
->
-> Address the issue adding the relevant admission check for coalescing
-> in tcp_add_backlog().
->
-> Note the issue is not easy to reproduce, as the MPTCP protocol tries
-> hard to avoid acquiring the subflow-level socket lock.
->
-> Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
-> Reported-by: Christoph Paasch <cpaasch@apple.com>
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/420
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/ipv4/tcp_ipv4.c | 1 +
-> 1 file changed, 1 insertion(+)
->
-> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> index f13eb7e23d03..52b6a0b22086 100644
-> --- a/net/ipv4/tcp_ipv4.c
-> +++ b/net/ipv4/tcp_ipv4.c
-> @@ -1869,6 +1869,7 @@ bool tcp_add_backlog(struct sock *sk, struct sk_buff *skb,
-> #ifdef CONFIG_TLS_DEVICE
-> 	    tail->decrypted != skb->decrypted ||
-> #endif
-> +	    mptcp_skb_can_collapse(tail, skb) ||
+I think you can use - instead of _ here.
+For consistency with other families?
 
-Hi Paolo -
+> +    entries:
+> +     -
+> +      name: unspec
+> +      value: 0
 
-Shouldn't this be !mptcp_skb_can_collapse()?
+90% sure enums still start at 0, only attrs and msgs now default to 1.
 
-Also, the subject line needs the 'o' in "coalescing".
+> +     -
+> +      name: announced
+> +      value: 6
+> +      doc:
+> +        token, rem_id, family, daddr4 | daddr6 [, dport]
+> +        A new address has been announced by the peer.
+> +     -
+> +      name: removed
+> +      value: 7
 
-- Mat
+Follows 6 so no need for value?
 
-> 	    thtail->doff != th->doff ||
-> 	    memcmp(thtail + 1, th + 1, hdrlen - sizeof(*th)))
-> 		goto no_coalesce;
-> -- 
-> 2.41.0
->
->
->
+> +      doc:
+> +        token, rem_id
+> +        An address has been lost by the peer.
+> +     -
+> +      name: sub_established
+
+Similarly for names we generally recommend - as a separator.
+Looks more natural in places where it's used as a string, eg Python.
+Well, I guess at least to me it does :)
+
+> +      value: 10
+> +      doc:
+> +        token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 | daddr6, sport,
+> +        dport, backup, if_idx [, error]
+> +        A new subflow has been established. 'error' should not be set.
+> +     -
+> +      name: sub_closed
+> +      value: 11
+
+and here, /value/d, s/_/-/
+
+> +      doc:
+> +        token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 | daddr6, sport,
+> +        dport, backup, if_idx [, error]
+> +        A subflow has been closed. An error (copy of sk_err) could be set if an
+> +        error has been detected for this subflow.
+
+> +attribute-sets:
+> +  -
+> +    name: address
+> +    name-prefix: mptcp_pm_addr_attr_
+> +    attributes:
+> +      -
+> +        name: unspec
+> +        type: unused
+> +        value: 0
+> +      -
+> +        name: family
+> +        type: u16
+> +      -
+> +        name: id
+> +        type: u8
+> +      -
+> +        name: addr4
+> +        type: u32
+> +        byte-order: big-endian
+> +      -
+> +        name: addr6
+> +        type: binary
+> +        checks:
+> +          min-len: 16
+
+Do you not want the exact length for this?
+If YNL doesn't support something just LMK, we add stuff as needed..
