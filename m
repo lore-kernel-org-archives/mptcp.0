@@ -1,89 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE891F18A
-	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 15:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849602031D
+	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 15:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEe416sA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1697037823;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2tzKJKmmiHgpmcwwc5VDA2d6SZCk2lq2AEu1KZ7V8Ec=;
-	b=UEe416sAuu85V1gsN6PyveiKMaMuvk2HJ0QPpuJ2VUk15yABspBV32n1THV2iXWL+fhvsk
-	HvWSL2ATufL+FY2LQBetZOYYwfKBGXombx3IcZQsywGvxWWE09orPrBGs4Qa9pd+aWrqeG
-	S73V+LSI7PYT2+uyuyQJuRcgPFVKQzM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-247-8zfdfu8MMh2KFl_qlzmVKw-1; Wed, 11 Oct 2023 11:23:42 -0400
-X-MC-Unique: 8zfdfu8MMh2KFl_qlzmVKw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 59EFA86893E
-	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 15:23:35 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.225.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DB9F5492B04
-	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 15:23:34 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v2] tcp: check mptcp-level constraints for backlog coalescing
-Date: Wed, 11 Oct 2023 17:23:13 +0200
-Message-ID: <f1e771e52c4dce3db4884ac0e629d363d1676b75.1697037788.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A26tUmnd"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-58111e624bdso2252849eaf.3
+        for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 08:37:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697038652; x=1697643452; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mpcXw/HMpyRzGaLoQl4RDgRAI5fGZchKgs7KNRKDKGs=;
+        b=A26tUmndZ+ikaUkCaZJsIKJey4P7bU0xNKksiFp8moHkaOjJcE7wHdCRjas5AVqFFv
+         rjwc8osTkwIjHWQn7UhseNBVBI6K/7/yP6ixr+I5E1TG2IBKX0rhF5BgVniU3tdRAlLu
+         jy4CycBOb6TApEHphlQNzgQz2BuOQHMpGmvn2AFDavc8Et287D63XbRxe9HA7gvpYMVq
+         nW0fwosU87/YPUvysBp7FsS1MtU05tICuPz1SMN7xCvZh56V3BxXGYlGFRa8lM5wiXwx
+         VrwY/3inZ2B9nIEtw0BXxGuTeca68je1K31RXorm14FAVJWS8B/HU77KGLLnmrhKjaXR
+         Ua7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697038652; x=1697643452;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mpcXw/HMpyRzGaLoQl4RDgRAI5fGZchKgs7KNRKDKGs=;
+        b=BO0k/pv6JQLqUUice3viAfFUh6r8HAHnoyLfxX6KYyXgddt05VCyg8LZLA77r/SSNy
+         7BzgOhASsVY368M//UMZcKOnKyGJu/pILRNjEKBWt45m2OVkAeg3qBiuQJIehOtZry8L
+         j2vWRKZlqqmQ+4zNtZSwPZ+Glgd7TiUSm61/Yqd8vZ4w+LVEanjSFmXgkI2S129/GveR
+         xdF+gNq2Wdo8p4E7C/d4sStj2MaapLt+aO7V6srFwAbxgUzrCRmS3KsgRZZOp+P83y94
+         ShWfLeAbbA7TtMX0PhwgEGmltUxlSAqbvN9p4osTbC8ld+V3D8Hlns4pQFZTxt8VOsDo
+         mNLQ==
+X-Gm-Message-State: AOJu0YzisU4kzL2LcewdkxR/Otz64xNAwjpEnlPzVlLHGwBIb6oFjvKb
+	/2VK5FcFHufPYs/pkC4495MjWpZbpQ==
+X-Google-Smtp-Source: AGHT+IF0ZlEQItS4KyrI6KMOmJ64w7PSW9fw7Da4MgCELP6+Y3tdh11bSAlzqdHP/FBy6e8loV/WFQ==
+X-Received: by 2002:a4a:dd03:0:b0:581:3fd3:cc48 with SMTP id m3-20020a4add03000000b005813fd3cc48mr6288546oou.1.1697038652492;
+        Wed, 11 Oct 2023 08:37:32 -0700 (PDT)
+Received: from [127.0.0.1] ([40.84.171.53])
+        by smtp.gmail.com with ESMTPSA id p124-20020a4a4882000000b0057de3e449c8sm2379931ooa.8.2023.10.11.08.37.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Oct 2023 08:37:32 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <d17f1677d7c0b65309c98f48a8b88e909c0558a0.1697031190.git.geliang.tang@suse.com>
+References:
+ <d17f1677d7c0b65309c98f48a8b88e909c0558a0.1697031190.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: userspace pm send RM_ADDR for ID 0: Tests
+ Results
+Message-ID: <c6d8fbf6-d81c-5e53-25d8-44215237cb8b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 11 Oct 2023 15:37:31 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-The MPTCP protocol can acquire the subflow-level socket lock and
-cause the tcp backlog usage. When inserting new skbs into the
-backlog, the stack will try to coalesce them.
+Hi Geliang,
 
-Currently, we have no check in place to ensure that such coalescing
-will respect the MPTCP-level DSS, and that may cause data stream
-corruption, as reported by Christoph.
+Thank you for your modifications, that's great!
 
-Address the issue by adding the relevant admission check for coalescing
-in tcp_add_backlog().
+Our CI did some validations and here is its report:
 
-Note the issue is not easy to reproduce, as the MPTCP protocol tries
-hard to avoid acquiring the subflow-level socket lock.
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5994835887259648
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5994835887259648/summary/summary.txt
 
-Fixes: 648ef4b88673 ("mptcp: Implement MPTCP receive path")
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/420
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-v1 -> v2:
-  - !coalesce (mat)
-  - typo in commit message (mat)
----
- net/ipv4/tcp_ipv4.c | 1 +
- 1 file changed, 1 insertion(+)
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6432463807840256
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6432463807840256/summary/summary.txt
 
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index a441740616d7..4d66a8ab3b98 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1870,6 +1870,7 @@ bool tcp_add_backlog(struct sock *sk, struct sk_buff *skb,
- #ifdef CONFIG_TLS_DEVICE
- 	    tail->decrypted != skb->decrypted ||
- #endif
-+	    !mptcp_skb_can_collapse(tail, skb) ||
- 	    thtail->doff != th->doff ||
- 	    memcmp(thtail + 1, th + 1, hdrlen - sizeof(*th)))
- 		goto no_coalesce;
--- 
-2.41.0
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5306563900997632
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5306563900997632/summary/summary.txt
 
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5025088924286976
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5025088924286976/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/a5d21f5759cf
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
