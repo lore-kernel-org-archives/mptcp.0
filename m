@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126461EA8B
-	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 15:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB90029D09
+	for <mptcp@lists.linux.dev>; Wed, 11 Oct 2023 15:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNPeV0jy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08644C433C8;
-	Wed, 11 Oct 2023 15:45:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6QKBkIN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5BAEC433C8;
+	Wed, 11 Oct 2023 15:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697039121;
-	bh=743rOXhACjWq3dbcHghDx6Nlh/UasbmpL3VvrEWv/Cg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XNPeV0jy+Mc25SsZtC/3HQT+L4thTAMp9TCBgPLjHJj7SaFJsqi7EDCDsypji8Ya8
-	 aEgyTBxJFbGmH4R6WRiumomHC3HuheWrqa+iLwCLWAR3UDIEImL5Lo3c0a2FV3BNyL
-	 nCCSizy1zVVewj975NnBrLURUmOgRJaOFGMiX5FFbU6GCdFSl0WNcGspdGHfGwePZ6
-	 ifmJgNbH+IE5EpWRBLUGW4gHFAWmgZSSKBkICmPk2J3L3ggu/7OutxAeHFX5HH3QM7
-	 Hf+hzehxYmBWTJSOcZNQUQTgg0cNtc3+dVDrFtAu9aNQsOY5eShq7kCSO+ZKwgHT8T
-	 gxlYkYzREGEhQ==
-Message-ID: <d8269e83-c67e-4ebe-9c07-650812879f06@kernel.org>
-Date: Wed, 11 Oct 2023 17:45:19 +0200
+	s=k20201202; t=1697039865;
+	bh=gLko0vqzxNfPFY4Ioq6dFDNSy2uxYXQMj+dnKo35eSc=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=S6QKBkINSIE6IAEzVgfosiBsIC0XyzISHcRpikx64Q4KllTzsSMwj2Jj33mUO2wDP
+	 oRhoh1JcJ6TouSTwTl4z1Ffv7PYF1Iqo3s96Ohd7xiSVHMX8CT4GvNMkh79+Qzb4O1
+	 C6COTO1cNEELlYUzaSNf+pFpx6St28GW/z7YbT7oESSgV9wtt9OJHiXTRXITL4wXps
+	 KEziOQ/oJewZXhwb2GGIq0G2WYbVVdOLagOAvSKM/QKE1q2pbn7kRoyLt0LPuNTINy
+	 WgX6+shyV6iIpSS9T6nuQfpJnELwzW0MDJ6v+I/VGW56zmDBR9fbmPrOug5Mukqdp7
+	 Wj1CYIJhMOAvQ==
+Message-ID: <1dfb7aa0-34c2-497f-bc4d-89a8177a8d7d@kernel.org>
+Date: Wed, 11 Oct 2023 17:57:42 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,14 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 1/2] selftests: mptcp: join: correctly check for
- no RST
+Subject: Re: [PATCH mptcp-next v14 4/7] selftests: mptcp: userspace pm remove
+ initial subflow
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@suse.com>
-References: <20231010-mptcp-remove-id-0-rst-v1-0-5ce17026f748@kernel.org>
- <20231010-mptcp-remove-id-0-rst-v1-1-5ce17026f748@kernel.org>
- <681b720f-35b5-e70b-cac5-e31342891865@kernel.org>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1697031190.git.geliang.tang@suse.com>
+ <ad94cfc3e206d76f8e213d66fe2a73d335927496.1697031190.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -79,64 +77,64 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <681b720f-35b5-e70b-cac5-e31342891865@kernel.org>
+In-Reply-To: <ad94cfc3e206d76f8e213d66fe2a73d335927496.1697031190.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang,
 
-On 11/10/2023 03:10, Mat Martineau wrote:
-> On Tue, 10 Oct 2023, Matthieu Baerts wrote:
+On 11/10/2023 15:34, Geliang Tang wrote:
+> This patch adds a selftest for userpsace PM to remove the initial
+> subflow. Use userspace_pm_add_sf() to add a subflow, and pass initial
+> ip address to userspace_pm_rm_sf() to remove the initial subflow.
 > 
->> The commit mentioned below was more tolerant with the number of RST seen
->> during a test because in some uncontrollable situations, multiple RST
->> can be generated.
->>
->> But it was not taking into account the case where no RST are expected:
->> this validation was then no longer reporting issues for the 0 RST case
->> because it is not possible to have less than 0 RST in the counter. This
->> patch fixes the issue by adding a specific condition.
->>
->> Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose
->> test-cases")
->> Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
->> ---
->> tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++++--
->> 1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index ae38b428e42e..01480663c102 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -1432,7 +1432,9 @@ chk_rst_nr()
->>     count=$(get_counter ${ns_tx} "MPTcpExtMPRstTx")
->>     if [ -z "$count" ]; then
->>         print_skip
->> -    elif [ $count -lt $rst_tx ]; then
->> +    # accept more rst than expected except if we don't expect any
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 > 
-> That comment is tricky to say out loud :)
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index ab6908b7b143..e1304383057c 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3507,6 +3507,28 @@ userspace_tests()
+>  		kill_events_pids
+>  		wait $tests_pid
+>  	fi
+> +
+> +	# userspace pm remove initial subflow
+> +	if reset_with_events "userspace pm remove initial subflow" &&
+> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+> +		set_userspace_pm $ns2
+> +		pm_nl_set_limits $ns1 0 1
+> +		speed=10 \
+> +			run_tests $ns1 $ns2 10.0.1.1 &
+> +		local tests_pid=$!
+> +		wait_mpj $ns2
+> +		userspace_pm_add_sf $ns2 10.0.3.2 20
+> +		chk_join_nr 1 1 1
+> +		chk_mptcp_info subflows 1 subflows 1
+> +		chk_subflows_total 2 2
+> +		userspace_pm_rm_sf $ns2 10.0.1.2
 
-:)
+If this command removes the initial subflow ...
 
-> Patch 1 LGTM:
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> +		chk_rm_nr 0 1
 
-Thank you for the review!
+(it is a bit confusing, we could think there are RM_ADDR being sent
+here. If you need to change something else, can you add a comment here
+that we don't look at the counter linked to the RM_ADDR but to the one
+linked to the subflows that have been removed please?)
 
-This first patch (only) is now in our tree (fixes for -net):
+> +		chk_rst_nr 0 0 invert
+> +		chk_mptcp_info subflows 1 subflows 1
 
-New patches for t/upstream-net and t/upstream:
-- f9a2bee98398: selftests: mptcp: join: correctly check for no RST
-- Results: 7e387ea2e5df..08ccf8391935 (export-net)
-- Results: f2323eb0be41..a3a484f2dee3 (export)
+... that's normal to still have 1 "extra subflow" here but ...
 
-Tests are now in progress:
+> +		chk_subflows_total 2 2
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231011T154102
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231011T154102
+... this should be "1 1", no? One subflow has been removed in between,
+so we should not have the same counter as before, no?
 
 Cheers,
 Matt
