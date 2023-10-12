@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A715266B9
-	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 14:36:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DDA262B8
+	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 14:36:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZkYc7epG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8DE0C433C7;
-	Thu, 12 Oct 2023 14:36:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8phIeN8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 142EBC433C8;
+	Thu, 12 Oct 2023 14:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697121361;
-	bh=Ak3VHXKg51+xEnkF0BYvxBxZZslmbbYVYiUhik1t2ks=;
+	s=k20201202; t=1697121380;
+	bh=Qxot/5W7Aciy0JrQYWY8qrczuPNGzyS2XUD4S8IoY1M=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=ZkYc7epG9kd8D89DV744+e2xpHzM0KhWcHhjBvnPpy2d7U1aLDsnMdWkJBxGONgGM
-	 E4GOFtYwRzCPDE6m2nYBEV15GOtJ9fYPMEKcEnNEsUNKMseN95CH56k8k1rJfSqNaH
-	 xWNy4xYiEocArkIKhWYGTJtaBt8h5io05+cWprR1MrXlBWYafiFbu41xgGSnetE2qk
-	 RoOvhfgoUTwv16yguqPc4lRcXkuGhSnecmWkf//n5nhqc8ZHQnGwzx29cXeW+QkSII
-	 Dj9S1bSXPkb+u1VHOe7p2GnJ6brkmOozT7jR7ZDDTreysHh4lJTrRfSLBWk7aDfxRy
-	 clKXdKOK2n9VQ==
-Message-ID: <99e62e52-bbc1-4331-8f54-561cc207718b@kernel.org>
-Date: Thu, 12 Oct 2023 16:35:59 +0200
+	b=S8phIeN8Y4Z4cb3pYBVSD72hbImtiwJcyLEc7/muEbwMLiQJwJGIx6f2pS9AYCpuJ
+	 VS5i8Xy3b6sNJ6hUy5jQ0/47Om98TH6+W3BjSt7TRi8HEFN6ykLg16ZXirDFNEVaUv
+	 zyscvVvD9+9aQX1VwVMlrn/T9h8YXm1n5qrBAnZ3/7Pr5fKDPLA+vjPMk+g3FSDN7w
+	 GP6HobyGWSeRKyPC3x0aSGVf+7eulBfEi4tcAYG9JuE6/mY5IchYt/rnAOhknuyaD4
+	 BSlFLldne5TKbovku9c4bYBMqTQ9ZHTMZhnUi3Eatntr9YqC6eKbkbtlmZvvji2FL4
+	 7TMQWDLBUu+Dg==
+Message-ID: <7821576c-08c7-4b78-9ed9-1a5c28ea647b@kernel.org>
+Date: Thu, 12 Oct 2023 16:36:19 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v15 4/7] selftests: mptcp: userspace pm remove
- initial subflow
+Subject: Re: [PATCH mptcp-next v15 1/7] selftests: mptcp: join: no RST when rm
+ subflow/addr
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1697100600.git.geliang.tang@suse.com>
- <f13919cfd0f090a63d05a9b3d7e769416a2c27d1.1697100600.git.geliang.tang@suse.com>
+ <cc3f501a23445c34189d0e40aceb1fd312319c31.1697100600.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,82 +77,55 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <f13919cfd0f090a63d05a9b3d7e769416a2c27d1.1697100600.git.geliang.tang@suse.com>
+In-Reply-To: <cc3f501a23445c34189d0e40aceb1fd312319c31.1697100600.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 12/10/2023 10:52, Geliang Tang wrote:
-> This patch adds a selftest for userpsace PM to remove the initial
-> subflow. Use userspace_pm_add_sf() to add a subflow, and pass initial
-> ip address to userspace_pm_rm_sf() to remove the initial subflow.
+On 12/10/2023 10:51, Geliang Tang wrote:
+> From: Matthieu Baerts <matttbe@kernel.org>
 > 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
+> Recently, we noticed that some RST were wrongly generated when removing
+> the initial subflow.
 > 
+> This patch makes sure RST are not sent when removing any subflows or any
+> addresses.
+
+(...)
+
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index ab6908b7b143..154978481409 100755
+> index 01480663c102..ab6908b7b143 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3507,6 +3507,32 @@ userspace_tests()
->  		kill_events_pids
->  		wait $tests_pid
+
+(...)
+
+> @@ -2494,6 +2505,7 @@ remove_tests()
+>  			run_tests $ns1 $ns2 10.0.1.1
+>  		chk_join_nr 1 1 1
+>  		chk_rm_nr 1 1
+> +		chk_rst_nr 0 0 ## TODO: currently failing, Geliang is working on a fix
+
+In your next version (if any), please remove this TODO and the one below
+and move this patch after "mptcp: add __mptcp_subflow_disconnect helper"
+
+We can do that now that the issue has been fixed by this other patch.
+
 >  	fi
-> +
-> +	# userspace pm remove initial subflow
-> +	if reset_with_events "userspace pm remove initial subflow" &&
-> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-> +		set_userspace_pm $ns2
-> +		pm_nl_set_limits $ns1 0 1
-> +		speed=10 \
-> +			run_tests $ns1 $ns2 10.0.1.1 &
-> +		local tests_pid=$!
-> +		wait_mpj $ns2
-> +		userspace_pm_add_sf $ns2 10.0.3.2 20
-> +		chk_join_nr 1 1 1
-> +		chk_mptcp_info subflows 1 subflows 1
-> +		chk_subflows_total 2 2
-> +		userspace_pm_rm_sf $ns2 10.0.1.2
-> +		# we don't look at the counter linked to the RM_ADDR but
-> +		# to the one linked to the subflows that have been removed
-> +		chk_rm_nr 0 1
-> +		chk_rst_nr 0 0 invert
-> +		chk_mptcp_info subflows 1 subflows 1
-> +		# No subflow removed in ns1, one
-> +		# subflow has been removed in ns2
-> +		chk_subflows_total 2 1
-
-We should really have "1 1" here: on both the client and the server
-side, the initial subflow is being closed, so we should only have one
-counter. Same comment on patch 7/7.
-
-Maybe my suggestion from patch 3/7 will fix this issue.
-
-Also, how are you checking this locally: with and without SS supporting
-'subflows_total' counter?
-
-Please note that the CI complained about these two tests (and the 2
-others I mentioned before with 'subflows_total'). I suspect that you
-also need to modify "chk_subflows_total()" and use 'state established'
-filter for ss:
-
-  ss -N (...) -ti state established
-
-No?
+>  
+>  	# remove id 0 address
+> @@ -2506,6 +2518,7 @@ remove_tests()
+>  		chk_join_nr 1 1 1
+>  		chk_add_nr 1 1
+>  		chk_rm_nr 1 1 invert
+> +		chk_rst_nr 0 0 invert ## TODO: currently failing, Geliang is working on a fix
+>  	fi
+>  }
+>  
 
 Cheers,
 Matt
-
-> +		kill_events_pids
-> +		wait $tests_pid
-> +	fi
->  }
->  
->  endpoint_tests()
-
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
