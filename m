@@ -1,122 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64E71D526
-	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 14:36:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2434273D7
+	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 15:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIB4peZR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5D18C433C7;
-	Thu, 12 Oct 2023 14:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697121399;
-	bh=0BFNo+tDLu1H+ZtjzyrNMbnYiZiWevuPRTHQpZtuteI=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=BIB4peZRGEC2GEBmbEKAuB6H+aPusuMlIGhBwrYBrp+SKMeI8gyvSL8s/m4pm0M+1
-	 PMCIwTKr9nI9CdQN78rKFBQsdvRwWRh6oCD/gAhOPUmQw4D08YhBQk/lRDdfb9+xnV
-	 wJ39Fmg9myF1bX2tQ0tYdSqTpbGLHUw6RFeam9rN6WcBeovlMDHZ3fWo2i5svTD+70
-	 2NuRBPjUe5qgwi3MNi62KI4eokdaLxvc3DCa1VdZ84CMkNzt5ECfcmxo1ccl4Qd7+J
-	 efo/n7Das92G+P8IPYPxZiFYYBBUVy7kAIgCybzlbsa5vqCvhW3lDmcBp6gH9ux3rA
-	 bkxna8v2z0Gmw==
-Message-ID: <5598412e-d08b-4fb7-8fef-893815e70405@kernel.org>
-Date: Thu, 12 Oct 2023 16:36:38 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uw2aTZZv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1697125684;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pMcBmFXyvAodRLwp0H3NOT4HNW0dBqilUJShPXxSQgk=;
+	b=Uw2aTZZv+cUFbiAPDeKWiZx6l/sxm6UxDfIywCAkcM0i2pviupiXmFw2BCnW6WEpXvhC8t
+	mZpWXqMT3sLL6vYQNhAuqNsP8oMlUvLep3IsmZHY5qxhcD2AsLo9e0Hi3TYy6ozcV8KLmF
+	BGA8ggft4Dzw5cjvwhQGv2r7rT7AUA8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-622-bx2KdMC_Nmy9KgzDTGOpEg-1; Thu, 12 Oct 2023 11:47:53 -0400
+X-MC-Unique: bx2KdMC_Nmy9KgzDTGOpEg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2A6DF3806624
+	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 15:47:53 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.226.51])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id ACBB840C6F79
+	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 15:47:52 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH v2 mptcp-net] mptcp: more conservative check for zero probes.
+Date: Thu, 12 Oct 2023 17:47:43 +0200
+Message-ID: <0ee2a306b00ef868b993e2426d9d51e14882bd72.1697125647.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v15 3/7] Squash to "mptcp: add
- mptcpi_subflows_total counter"
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <cover.1697100600.git.geliang.tang@suse.com>
- <6e9e20ed1350ac793b682042ae32be6808c1a1e4.1697100600.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- Fe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: Tessares
-In-Reply-To: <6e9e20ed1350ac793b682042ae32be6808c1a1e4.1697100600.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Geliang,
+Christoph reported that the MPTCP protocol can find the subflow-level
+write queue unexpectedly not empty while crafting a zero-window probe,
+hitting a warning:
 
-Thank you for the new version!
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 188 at net/mptcp/protocol.c:1312 mptcp_sendmsg_frag+0xc06/0xe70
+Modules linked in:
+CPU: 0 PID: 188 Comm: kworker/0:2 Not tainted 6.6.0-rc2-g1176aa719d7a #47
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+Workqueue: events mptcp_worker
+RIP: 0010:mptcp_sendmsg_frag+0xc06/0xe70 net/mptcp/protocol.c:1312
+RAX: 47d0530de347ff6a RBX: 47d0530de347ff6b RCX: ffff8881015d3c00
+RDX: ffff8881015d3c00 RSI: 47d0530de347ff6b RDI: 47d0530de347ff6b
+RBP: 47d0530de347ff6b R08: ffffffff8243c6a8 R09: ffffffff82042d9c
+R10: 0000000000000002 R11: ffffffff82056850 R12: ffff88812a13d580
+R13: 0000000000000001 R14: ffff88812b375e50 R15: ffff88812bbf3200
+FS:  0000000000000000(0000) GS:ffff88813bc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000695118 CR3: 0000000115dfc001 CR4: 0000000000170ef0
+Call Trace:
+ <TASK>
+ __subflow_push_pending+0xa4/0x420 net/mptcp/protocol.c:1545
+ __mptcp_push_pending+0x128/0x3b0 net/mptcp/protocol.c:1614
+ mptcp_release_cb+0x218/0x5b0 net/mptcp/protocol.c:3391
+ release_sock+0xf6/0x100 net/core/sock.c:3521
+ mptcp_worker+0x6e8/0x8f0 net/mptcp/protocol.c:2746
+ process_scheduled_works+0x341/0x690 kernel/workqueue.c:2630
+ worker_thread+0x3a7/0x610 kernel/workqueue.c:2784
+ kthread+0x143/0x180 kernel/kthread.c:388
+ ret_from_fork+0x4d/0x60 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:304
+ </TASK>
 
-On 12/10/2023 10:52, Geliang Tang wrote:
-> When the socket shuts down, it's state is TCPF_FIN_WAIT2. Add this into
+The root cause of the issue is that expectations are wrong: e.g. due
+to MPTCP-level re-injection we can hit the critical condition.
 
-Good point, but is it not first TCP_FIN_WAIT1? (then FIN_WAIT2, etc.)
+Explicitly avoid the zero-window probe when the subflow write queue
+is not empty and drop the related warning.
 
-> __mptcp_has_initial_subflow.
-> 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  net/mptcp/protocol.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 6508179e94a6..ccb97b747527 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -1081,7 +1081,8 @@ static inline bool __mptcp_has_initial_subflow(const struct mptcp_sock *msk)
->  {
->  	struct sock *ssk = READ_ONCE(msk->first);
->  
-> -	return ssk && inet_sk_state_load(ssk) != TCP_CLOSE;
-> +	return ssk &&
-> +	       !((1 << inet_sk_state_load(ssk)) & (TCPF_FIN_WAIT2 | TCPF_CLOSE));
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/444
+Fixes: f70cad1085d1 ("mptcp: stop relying on tcp_tx_skb_cache")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+v1 -> v2:
+ - drop additional, obsoleted warn_on() (Mat)
+---
+ net/mptcp/protocol.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-I see that we decrement "msk->pm.subflows" when we start closing the
-subflow. To be coherent with this counter -- and also because there are
-more "close/closing" state, should we not have:
-
-   inet_sk_state_load(ssk) != TCP_ESTABLISHED;
-
-Cheers,
-Matt
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 30e0c29ae0a4..48aa4045cb0d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1297,7 +1297,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	if (copy == 0) {
+ 		u64 snd_una = READ_ONCE(msk->snd_una);
+ 
+-		if (snd_una != msk->snd_nxt) {
++		if (snd_una != msk->snd_nxt || tcp_write_queue_tail(ssk)) {
+ 			tcp_remove_empty_skb(ssk);
+ 			return 0;
+ 		}
+@@ -1305,11 +1305,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 		zero_window_probe = true;
+ 		data_seq = snd_una - 1;
+ 		copy = 1;
+-
+-		/* all mptcp-level data is acked, no skbs should be present into the
+-		 * ssk write queue
+-		 */
+-		WARN_ON_ONCE(reuse_skb);
+ 	}
+ 
+ 	copy = min_t(size_t, copy, info->limit - info->sent);
+@@ -1338,7 +1333,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 	if (reuse_skb) {
+ 		TCP_SKB_CB(skb)->tcp_flags &= ~TCPHDR_PSH;
+ 		mpext->data_len += copy;
+-		WARN_ON_ONCE(zero_window_probe);
+ 		goto out;
+ 	}
+ 
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+2.41.0
+
