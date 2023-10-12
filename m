@@ -1,130 +1,170 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C86DDB6
-	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 10:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598A91EA95
+	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 14:15:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPIHMhrt"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1c9d922c039so6522555ad.3
-        for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 03:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697105376; x=1697710176; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q9oNAodwKYmmSCiQhVR9VO4itO3ZADHIV2hOsMFnu30=;
-        b=IPIHMhrtNtG79XIBAYIq/OpLmOIp/3hU3mUwCwrDMmFHrAADiVuCPSkOEptco4FkuE
-         GJ5IFKhvz4nHti6tzmJQYAYLB8t1neJXt9Akzc6QD+2N6TnULlR09siKLOqvuY/8o/Nm
-         oeGo6D8png4WK8rlj/v1Iu6UkfyidP5PCetzkLy1nL2lfNsQiZ/V8YO+GOat4PA1Q8O0
-         l5Li/BQE3rU1MCirBDRQ2quVQFSpXBN7cnqOm4Qu9SZkwg5gcXZQv7rJPHYf07JKJCML
-         7fZBaNOKnZYm9pgweNKmpqDUz6PbKCmvLCNA7wPPer6W3+w3D0wjzzQ6HzbqnJ+uIR8P
-         hbuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697105376; x=1697710176;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Q9oNAodwKYmmSCiQhVR9VO4itO3ZADHIV2hOsMFnu30=;
-        b=V7ZDJpxf2uko2+FSLLcFTXN6q7VrWaAOzwoMQps+6KJTVNod++wv7PdzUlKOmih8dx
-         Gx9VquLVtnHb/4SSwxnHgQexjUoicjBSUBSnzrev1KhO0NVpmNkG9oWkI2ieUGNe2i8k
-         IGh4dftimBHjQbunucLv3xQ/A00sOUQUWOD4PWXlxmXTT7SF/ZitxWbaLbJZB6blpwc4
-         1JTtPZhEFrldslhU/ajJKuBVupve0iNCBlLodu+IpohBwKq/k6NjfyU5l1t1u4PlGReZ
-         DOoNcb4EtG/4XtaftZhelNr45Bkrzc/gRSTZOOinsLpq4GbldB/XKHPF/8nHSISaTM6a
-         yDNQ==
-X-Gm-Message-State: AOJu0YxAubJczaEOtqSpBAwN31fFL5rVyIymucyDBowPZr/L66bdmGE8
-	f1YrYLi/vQbGsZNsd6/s0A==
-X-Google-Smtp-Source: AGHT+IGNmjnC9iwGdZOKQQUWlalYY1vCbUyRWjKUVXZBDATn/UoDUMyNwswX56SODvMp5JVTLDGJeQ==
-X-Received: by 2002:a17:902:ea09:b0:1c5:d747:a124 with SMTP id s9-20020a170902ea0900b001c5d747a124mr31073995plg.9.1697105376130;
-        Thu, 12 Oct 2023 03:09:36 -0700 (PDT)
-Received: from [127.0.0.1] ([13.88.117.51])
-        by smtp.gmail.com with ESMTPSA id e3-20020a170902ed8300b001c73701bd17sm1573484plj.4.2023.10.12.03.09.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 03:09:35 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <befa0cf195bb4ec5f638ec8da893173fd0e805fd.1697100600.git.geliang.tang@suse.com>
-References:
- <befa0cf195bb4ec5f638ec8da893173fd0e805fd.1697100600.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: userspace pm send RM_ADDR for ID 0: Tests
- Results
-Message-ID: <745aed52-85cb-7c8a-cfdb-f7471ae09cca@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Oct 2023 10:09:34 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9bQeEZg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2026C433C7;
+	Thu, 12 Oct 2023 14:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697120130;
+	bh=cDwPyE2G9VnNDzAmqYsaAR7S9xCOKP/9xzz/GFUutAg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=O9bQeEZgI2BXknaYUInGvAyV2y9R86qCEeYAkVgGp9QL6pRyherJFa6mZnl6dlrZ3
+	 x7kC5iCZ9mOWI0aYyXn1CmGtRZaGpclYbyytOHJnGKDKlN5LzOv7oGUC6nlNziQIM+
+	 VXwOD/77DSKkvxjGIkiGr7wyMs7dJy9G6JbP8SrM8bWDv7VEJJyuiNNrm1WtdhF6oa
+	 6h7tU1KViXGV71B7i+6D4w0+bWLNDXlPhl21so9kpxKhRUFrczSLr9aoADg81Aw+UK
+	 suPMdv0XsXkBI8ejx1Giv+8xcDDoHk1Rqyl8yIF33XGLZA3HQ60jwxH5w5tujgo6SJ
+	 mp2wNTL/cApvw==
+Message-ID: <d8619684-ae62-4f10-9d6b-735b334a8cfd@kernel.org>
+Date: Thu, 12 Oct 2023 16:15:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v14 3/7] mptcp: add __mptcp_subflow_disconnect
+ helper
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1697031190.git.geliang.tang@suse.com>
+ <e75487344cde69c5b754ee1fb3bd8c730d54e5de.1697031190.git.geliang.tang@suse.com>
+ <73963454-bb2d-48b8-9202-666fc2fc5ba7@kernel.org>
+ <20231012090350.GA30030@localhost.localdomain>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ Fe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: Tessares
+In-Reply-To: <20231012090350.GA30030@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 12/10/2023 11:03, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Wed, Oct 11, 2023 at 06:53:17PM +0200, Matthieu Baerts wrote:
+>> Hi Geliang, Paolo,
+>>
+>> On 11/10/2023 15:34, Geliang Tang wrote:
+>>> When closing the msk->first socket in __mptcp_close_ssk(), if there's
+>>> another subflow available, it's better to avoid resetting it, just shut
+>>> down it.
+>>>
+>>> This patch adds a new helper __mptcp_subflow_disconnect(), and reuse
+>>> flag MPTCP_CF_FASTCLOSE in this case. When MPTCP_CF_FASTCLOSE isn't set,
+>>> we invoke tcp_shutdown() instead of tcp_disconnect().
+>>>
+>>> Co-developed-by: Paolo Abeni <pabeni@redhat.com>
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>>> ---
+>>>  net/mptcp/protocol.c | 28 ++++++++++++++++++++++------
+>>>  1 file changed, 22 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>> index 30e0c29ae0a4..1a54d55f8bb2 100644
+>>> --- a/net/mptcp/protocol.c
+>>> +++ b/net/mptcp/protocol.c
+>>> @@ -2366,6 +2366,26 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
+>>>  #define MPTCP_CF_PUSH		BIT(1)
+>>>  #define MPTCP_CF_FASTCLOSE	BIT(2)
+>>>  
+>>> +/* be sure to send a reset only if the caller asked for it, also
+>>> + * clean completely the subflow status when the subflow reaches
+>>> + * TCP_CLOSE state
+>>> + */
+>>> +static void __mptcp_subflow_disconnect(struct sock *ssk,
+>>> +				       struct mptcp_subflow_context *subflow,
+>>> +				       unsigned int flags)
+>>> +{
+>>> +	if (((1 << ssk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)) ||
+>>> +	    (flags & MPTCP_CF_FASTCLOSE)) {
+>>> +		/* The MPTCP code never wait on the subflow sockets, TCP-level
+>>> +		 * disconnect should never fail
+>>> +		 */
+>>> +		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
+>>> +		mptcp_subflow_ctx_reset(subflow);
+>>> +	} else {
+>>> +		tcp_shutdown(ssk, SEND_SHUTDOWN);
+>>
+>> I didn't check in detail but should we not also call
+>> __mptcp_subflow_error_report()?
+> 
+> When the socket shuts down, it's state is TCPF_FIN_WAIT2.
+> __mptcp_subflow_error_report will return and do nothing in this case:
+> 
+>       if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(mptcp_sk(sk)))
+>               return false;
+> 
+> So no need to call __mptcp_subflow_error_report.
+> 
+>>
+>> And maybe other helpers? What is done between the 'goto out' and the
+>> 'out' label in __mptcp_close_ssk() here below? → what we do when other
+>> subflows are being closed.
+> 
+> No need to go the following path too:
+> 
+>         sock_put(ssk);
+> 
+>         if (ssk == msk->first)
+>                 WRITE_ONCE(msk->first, NULL);
+> 
+> So we can keep this patch as it.
 
-Our CI did some validations and here is its report:
+Thank you for having check the two cases!
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6202261332819968
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6202261332819968/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4794886449266688
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4794886449266688/su=
-mmary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5223938112880640
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5223938112880640/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5920786356109312
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5920786356109312/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/216ab3a32b79
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+All good then!
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
