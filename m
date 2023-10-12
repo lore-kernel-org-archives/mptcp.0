@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DDA262B8
-	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 14:36:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64E71D526
+	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 14:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8phIeN8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 142EBC433C8;
-	Thu, 12 Oct 2023 14:36:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIB4peZR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5D18C433C7;
+	Thu, 12 Oct 2023 14:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697121380;
-	bh=Qxot/5W7Aciy0JrQYWY8qrczuPNGzyS2XUD4S8IoY1M=;
+	s=k20201202; t=1697121399;
+	bh=0BFNo+tDLu1H+ZtjzyrNMbnYiZiWevuPRTHQpZtuteI=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=S8phIeN8Y4Z4cb3pYBVSD72hbImtiwJcyLEc7/muEbwMLiQJwJGIx6f2pS9AYCpuJ
-	 VS5i8Xy3b6sNJ6hUy5jQ0/47Om98TH6+W3BjSt7TRi8HEFN6ykLg16ZXirDFNEVaUv
-	 zyscvVvD9+9aQX1VwVMlrn/T9h8YXm1n5qrBAnZ3/7Pr5fKDPLA+vjPMk+g3FSDN7w
-	 GP6HobyGWSeRKyPC3x0aSGVf+7eulBfEi4tcAYG9JuE6/mY5IchYt/rnAOhknuyaD4
-	 BSlFLldne5TKbovku9c4bYBMqTQ9ZHTMZhnUi3Eatntr9YqC6eKbkbtlmZvvji2FL4
-	 7TMQWDLBUu+Dg==
-Message-ID: <7821576c-08c7-4b78-9ed9-1a5c28ea647b@kernel.org>
-Date: Thu, 12 Oct 2023 16:36:19 +0200
+	b=BIB4peZRGEC2GEBmbEKAuB6H+aPusuMlIGhBwrYBrp+SKMeI8gyvSL8s/m4pm0M+1
+	 PMCIwTKr9nI9CdQN78rKFBQsdvRwWRh6oCD/gAhOPUmQw4D08YhBQk/lRDdfb9+xnV
+	 wJ39Fmg9myF1bX2tQ0tYdSqTpbGLHUw6RFeam9rN6WcBeovlMDHZ3fWo2i5svTD+70
+	 2NuRBPjUe5qgwi3MNi62KI4eokdaLxvc3DCa1VdZ84CMkNzt5ECfcmxo1ccl4Qd7+J
+	 efo/n7Das92G+P8IPYPxZiFYYBBUVy7kAIgCybzlbsa5vqCvhW3lDmcBp6gH9ux3rA
+	 bkxna8v2z0Gmw==
+Message-ID: <5598412e-d08b-4fb7-8fef-893815e70405@kernel.org>
+Date: Thu, 12 Oct 2023 16:36:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v15 1/7] selftests: mptcp: join: no RST when rm
- subflow/addr
+Subject: Re: [PATCH mptcp-next v15 3/7] Squash to "mptcp: add
+ mptcpi_subflows_total counter"
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 References: <cover.1697100600.git.geliang.tang@suse.com>
- <cc3f501a23445c34189d0e40aceb1fd312319c31.1697100600.git.geliang.tang@suse.com>
+ <6e9e20ed1350ac793b682042ae32be6808c1a1e4.1697100600.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,52 +77,43 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <cc3f501a23445c34189d0e40aceb1fd312319c31.1697100600.git.geliang.tang@suse.com>
+In-Reply-To: <6e9e20ed1350ac793b682042ae32be6808c1a1e4.1697100600.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 12/10/2023 10:51, Geliang Tang wrote:
-> From: Matthieu Baerts <matttbe@kernel.org>
+Thank you for the new version!
+
+On 12/10/2023 10:52, Geliang Tang wrote:
+> When the socket shuts down, it's state is TCPF_FIN_WAIT2. Add this into
+
+Good point, but is it not first TCP_FIN_WAIT1? (then FIN_WAIT2, etc.)
+
+> __mptcp_has_initial_subflow.
 > 
-> Recently, we noticed that some RST were wrongly generated when removing
-> the initial subflow.
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  net/mptcp/protocol.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> This patch makes sure RST are not sent when removing any subflows or any
-> addresses.
-
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 01480663c102..ab6908b7b143 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-
-(...)
-
-> @@ -2494,6 +2505,7 @@ remove_tests()
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 1 1 1
->  		chk_rm_nr 1 1
-> +		chk_rst_nr 0 0 ## TODO: currently failing, Geliang is working on a fix
-
-In your next version (if any), please remove this TODO and the one below
-and move this patch after "mptcp: add __mptcp_subflow_disconnect helper"
-
-We can do that now that the issue has been fixed by this other patch.
-
->  	fi
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 6508179e94a6..ccb97b747527 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -1081,7 +1081,8 @@ static inline bool __mptcp_has_initial_subflow(const struct mptcp_sock *msk)
+>  {
+>  	struct sock *ssk = READ_ONCE(msk->first);
 >  
->  	# remove id 0 address
-> @@ -2506,6 +2518,7 @@ remove_tests()
->  		chk_join_nr 1 1 1
->  		chk_add_nr 1 1
->  		chk_rm_nr 1 1 invert
-> +		chk_rst_nr 0 0 invert ## TODO: currently failing, Geliang is working on a fix
->  	fi
->  }
->  
+> -	return ssk && inet_sk_state_load(ssk) != TCP_CLOSE;
+> +	return ssk &&
+> +	       !((1 << inet_sk_state_load(ssk)) & (TCPF_FIN_WAIT2 | TCPF_CLOSE));
+
+I see that we decrement "msk->pm.subflows" when we start closing the
+subflow. To be coherent with this counter -- and also because there are
+more "close/closing" state, should we not have:
+
+   inet_sk_state_load(ssk) != TCP_ESTABLISHED;
 
 Cheers,
 Matt
