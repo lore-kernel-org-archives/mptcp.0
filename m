@@ -1,171 +1,229 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2053.outbound.protection.outlook.com [40.107.7.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A967ED531
-	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 08:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAA920B1E
+	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 09:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cYiNUVcl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1697100885;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TffABJtiDsX5bnNFtMTkGIJNzRQsedPwRWktA4HZF8s=;
-	b=cYiNUVclUFn2my8J2KvPOTLH4NN8ijW87/RycafMWehi7r8z99M0Z5JU6bqb5xG9MWowBk
-	xSEbX2xUQdUzJX2cBmbb4psw05hyTFCbUEU5vrydJ4TSw/kD5pIwfPtpiLGqbFhTy7wZHp
-	6kaEZafuWf/tAJDyiLK08ERZ9TWICdA=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-611-UI0merWnP6O-PqxNi-uxyw-1; Thu, 12 Oct 2023 04:54:43 -0400
-X-MC-Unique: UI0merWnP6O-PqxNi-uxyw-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9b989422300so11095466b.0
-        for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 01:54:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697100882; x=1697705682;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cSXUguEqVrbrPzLm2P9AbUA6GuZyBE4aTFs+odhXlwg=;
-        b=rgFw9cHsbkeCnwpQioliFEaLsjHdp6fu2w3KB+mkn3yxf4geabHweto/aqjmUT/bar
-         w3vnTzxVqd4YUY7Iz2XDmaAo4waqGoTLwhNOCrYp/U4PWxot45SYjn0HJ6jPIEkfA5D/
-         U7O6iXkCAfmp6lShg0meIEOJ4OMES1K+HnzJmKzAPVIW4uHK1+xmvCpTUCoeHIMl1UL9
-         vQ6DkVMfSIyJId6Ab86o/ZdCixzPnb8a7umBSqqWaw/exGPMRVA1IMRMjWM08igSXvAr
-         vd5HM97XFdQvgs3/SaBfrjZGUwpAL6Q9I9q46ZR+3DGGA3qYokUzhhD/2cJJxP0GRo6J
-         POUg==
-X-Gm-Message-State: AOJu0Yz1YYNK06zPYIUY9x8qRoMojTVAJKfAO1oT+Sv8hqK6evYGDsqw
-	2+CpEFpWaTdHrkdMPNyzqDYtnw2X+wPa5y1k9rJYCKTTwC1MPmvaikboLeH/Adl+SpxXca/rR1P
-	2qTFsJCQCSnzfRXdUe+vRpao=
-X-Received: by 2002:a17:906:100c:b0:9ae:6da8:181c with SMTP id 12-20020a170906100c00b009ae6da8181cmr18284980ejm.7.1697100882500;
-        Thu, 12 Oct 2023 01:54:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFF3JTIDvTcAQtNJKPHMm2ZwX5ev+opzDM5Kmp8zD1zUUpebSU/1ZDgJL4roqq+1SD+YDE6Yg==
-X-Received: by 2002:a17:906:100c:b0:9ae:6da8:181c with SMTP id 12-20020a170906100c00b009ae6da8181cmr18284968ejm.7.1697100882114;
-        Thu, 12 Oct 2023 01:54:42 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-228-181.dyn.eolo.it. [146.241.228.181])
-        by smtp.gmail.com with ESMTPSA id dx12-20020a170906a84c00b009b977bea1dcsm10797462ejb.23.2023.10.12.01.54.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 01:54:41 -0700 (PDT)
-Message-ID: <362f62cf2ff58f49b0aae625c4d0b583ad94964b.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net] mptcp: more conservative check for zero
- probes.
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-Date: Thu, 12 Oct 2023 10:54:40 +0200
-In-Reply-To: <ba718077-7fb8-2ed7-ffc4-33b68508a1e9@kernel.org>
-References: <036c68f42c3d071ce7e52ef69ffec650c3301268.1697040427.git.pabeni@redhat.com>
-	 <ba718077-7fb8-2ed7-ffc4-33b68508a1e9@kernel.org>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="kB8FaI/V"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CGDnGIFhy06oD36bFGAVjsWAfZ0F+e4HvK8PFzDKfpmAPhSlX93uNb+k+KWQbTNIaXf2HT5w5Mgm6LfMimGKgc8JBtrivCdciSb2bk23CeJstCI7lTz+qnWJzYQdG2+stEmWakoZvP4luFiNF2jFHeUrlba77XWAqEEjo6D9tXN4m457/BB1NlDlo1WezaET6TkZBj5/jSQjwgLfHcxlBWowCgGIqteZYGH/vIr99aTO2DJsRFpopKopHx7t75f+J5pSgSCHJ0MOpRENY21p2ctPNnqxCMx9xrpl95NrDOX9ONWI/NxunwouMGbWyofpKAyB+R8vnp6/lFqN7DkAYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mX4Ok0/vOYbLbhevHSxlF/uYYYXaZE5EjgO6mm9vrkU=;
+ b=UJ2L1+zWHK9/VwUXW6wnMGyPV3vGHM8NAQNEc/Ak+kopGBfr7uUYMqxXRCpx2LcmNEK3thOdP3VeUc+SYg4qGUNezGJ55uA9afP9mp+EHev4Rh8Uky4y+n5dR9hsTy8w/bFV4GEUtIjoG3dQ9prhle2MQKhcLt3iEOxRcxHXspyxduCasawbw830kCEtt1jtWUTNdo+cABKgWvPwOttFgk4dQ5c2JFEDBYqnCF2iK7j6iRvJ+keEsZpDX8IIEKxZ5l8zYqreaLyQlnEnbvWl542ixNqyr6tarzCwD+Q0DmewtCzVKY+ofCHTxbCNFeLxrwsJ/x6e2yscbQWlXmiYpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mX4Ok0/vOYbLbhevHSxlF/uYYYXaZE5EjgO6mm9vrkU=;
+ b=kB8FaI/VXtwEbU7srUHdo6VZQSDIJWZffAStQqXRa1umO8S5gffxRW1HEIJLXZ+HKNsY2GgzsyVz70WTucVP8GdTnmcuQxqlEQ7oZzc/p46W+76HwOOs0bOzDcdhGf2JF89/sfzLmVkOlhWi6ng+9JRpaErgpTTs3BOJv1Srm3ZGW7j39nDDjzSKeiKCzi/aJDau4LNsoFA3JoCl8rpk0E+CbwtC5t6naQlCGfRf71Y/9ZPRZRzHjM2tkHsoCPzSzlhMeJ+KVI3h2owkpZ8Rl1sJLaxt/VnZNqSCGV06mJAyv6gmoNFX8KTJ1vdDUB5zTH/sk9OyF7cymcY4ZdpdeQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AS8PR04MB8964.eurprd04.prod.outlook.com (2603:10a6:20b:42f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.42; Thu, 12 Oct
+ 2023 09:02:36 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::3852:4f89:9891:73c8]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::3852:4f89:9891:73c8%3]) with mapi id 15.20.6863.032; Thu, 12 Oct 2023
+ 09:02:36 +0000
+Date: Thu, 12 Oct 2023 17:03:50 +0800
+From: Geliang Tang <geliang.tang@suse.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v14 3/7] mptcp: add __mptcp_subflow_disconnect
+ helper
+Message-ID: <20231012090350.GA30030@localhost.localdomain>
+References: <cover.1697031190.git.geliang.tang@suse.com>
+ <e75487344cde69c5b754ee1fb3bd8c730d54e5de.1697031190.git.geliang.tang@suse.com>
+ <73963454-bb2d-48b8-9202-666fc2fc5ba7@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <73963454-bb2d-48b8-9202-666fc2fc5ba7@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SG2PR06CA0199.apcprd06.prod.outlook.com (2603:1096:4:1::31)
+ To HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AS8PR04MB8964:EE_
+X-MS-Office365-Filtering-Correlation-Id: f1b85549-8269-4a54-063a-08dbcb01fa02
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	p+2bFBoOh1nsXM1DcWcjGrqqzufk8o8/6aJMfl/O7W2Q3piCuA10tKyIGlIew2FrpXPrS3gKvtShcMw7QSvc66Wlzb4kuURJaPeC/gg/IK2T36cXGEjgEYSMHEcgc/2NkmXvWaIMQg7bC7jcfC9JJ6yO/5hmJrhQc1XeeOHuJS2eQBNONE98Ort3/OqHo7q3Bz7HmQpsK56JTYhxDX5shweV1Jk5T5EiA18B+7QWlIdslEC4B9XHmeZpVwmVGBZsX46AmUmoWUjcZhXS5Q6VAZvvceVPj4WFX8b053r3R7MWvXQCUxyh3OAukTShXA8guByzvWex8BjuZOxkbn3nZRz0E7aoHH0GshH1RGkhRDHJQJTYBdpHfTFHsm4+OwCTD5a27ifjboIj5cRiv6BYa9rdb13DNvwpysBq0foLEJt9ZBZLLLhkQgbU6BfjH9TEEYc43EnT6gFVG22PJPNGYF0mW5pgoQluUDs6MgW9rTAbkvPzeBZSlnOQdDYhMBoMh3b3MpG+OrP7HJSjWLQTv1BRBRHij7O0NgW3HhwIPpqjHqlmEqCMXD7i+go29twRnKsNEGTHoslrUG6a+pbi1TZ94qvD897CPR+hze/9lXs=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(346002)(136003)(376002)(39860400002)(230922051799003)(64100799003)(186009)(451199024)(1800799009)(1076003)(6666004)(53546011)(6512007)(6506007)(478600001)(38100700002)(66946007)(33656002)(6916009)(6486002)(15974865002)(66476007)(66556008)(316002)(83380400001)(2906002)(8936002)(4326008)(8676002)(41300700001)(5660300002)(44832011)(86362001)(9686003)(18886075002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dUxZN240TVAzNUtzWHRWTThrTjZNQVZZRzlWcWlGRDdPSGpIbnFhZi9QYURq?=
+ =?utf-8?B?RitQWDlSb3l6NkdaYXVLNWxyQWgyWWxzWkJadmxvWU9TbUZxejgxSEg2VEE1?=
+ =?utf-8?B?TzBOQXBkYWFrMHU0Zm1ZcjZqZithOE4xYXl4dlRmVEJWMDdvdjE0SkVMdVF4?=
+ =?utf-8?B?ZlVnV2dmUHZTMUpMVjZxYk9EUUQ3c2hvZFhZZlV3L25RVFYzNVJLMXBPTmpt?=
+ =?utf-8?B?Y2d0bjJTcTJhb1p2ZUhZSnVIZ2wwQjN1a3VaQVlITUlCK3AyODN5OXY4TTYv?=
+ =?utf-8?B?ZVZ2UEIzcktrMHh5SWVyRm5hTmZXN0NWQXFRZHhwYmdzM1R1dk1MRmorb1Zm?=
+ =?utf-8?B?YVpidkNlNTkvWkdGYmpTVzBlV2R6MmRZWVhhTXVlQVVrc2xzUkhNTzVaU2tY?=
+ =?utf-8?B?bnZuT0tML0hNZXZURnEwbEg5SzR4ZERGN3FodXlUYm1KbHVzb01tUHFGZm9X?=
+ =?utf-8?B?eHh6WTVSWUs1TjB2M2xBSTM1MXhsNytSUDNmNEdmV2Z1Q2RQMWJWUFlmSTB6?=
+ =?utf-8?B?ZkJtRVhrUzlCN29LMTNGR09YZldRZTUvMmpKZ0p4RUdkSFdqNW54RVNjTFBx?=
+ =?utf-8?B?ZVc4NWgzTmlkeU95U0g0dTludnZKV2RlWVRYVWpaYUVJUWg4UFZrcFF1dWZ0?=
+ =?utf-8?B?eHRmbmlKUDErTmZvUWxGeFV4dkY4WDAxZHcybGRvU01TYlNmSEs0dzVCQWhx?=
+ =?utf-8?B?SlMyWjJlM0lHUmowNnhaM2s5MmlMbk1yaFh0K1pnZVBqVmFNRjkvdWd2QUxY?=
+ =?utf-8?B?aWs5NkZxem01ekVYRnZrRGdrRFV4M2pQSFhRc2M0cUhJVEo1K0F4a2lvTEhM?=
+ =?utf-8?B?Sk5KdXdhYnlaSDJROWJzUGNsZ1lzbDcyanFqS2hmWGNyS0YwN041TEZDUkl1?=
+ =?utf-8?B?U3FpSkwxeUdCdzNXK3B0TXpaVHV6eFBoblhtMko0dzhiV0kyamoycXU1dWFo?=
+ =?utf-8?B?UjUzN05Yd1hVKzV2WUJvU3RvWkoxVUpSNUp2dVg4N3d4TTd5dkJmSnk1UHhT?=
+ =?utf-8?B?MGc5TnBIK2o5VzFxd0tRNTBEV2RWRlR0clJJUFhoUnNESGplanhBa1JuUisx?=
+ =?utf-8?B?M2padTlUMGp6bEVyUTcySjd0akhYSWxHdTJjcTlmV2FCTXJvWUMxOW5pbFJT?=
+ =?utf-8?B?cWZxSGdHM3h1WmFSVWpLM1FwdTRzZjdoL1poYzBBWkVTc2hMUUM0Y0pHbDU0?=
+ =?utf-8?B?a2lXUFBab2VQalk4Qk0vaVl0cTN3Q0xwNnYyNWtiZWdQSXp2dS8vbzB3YUxn?=
+ =?utf-8?B?aGJubGVGUjNNb2JQRFZZczMwR3lPVE9BRWFlVks1N1dSYUl0UDFtZmRmMkVQ?=
+ =?utf-8?B?cjhWSlF2aWczZkpDb21qYjR0WVNTS3oxbXJobCtqSUJqZ2hZVkx6Z0N4L3hE?=
+ =?utf-8?B?Z3NldjRKbmMrSVZGRDFWMnltUGw2OXNjN2JueVRRSzIyWHNWNk9vaDhQd1pq?=
+ =?utf-8?B?RzhVdjJvRHFTci83WEJFRnFtOVFtS2tIMnVFTVNFaEdEMVFkSCswcmZSc3Vn?=
+ =?utf-8?B?M3kxK1JKV1E3R3YzMm85bVQzRlFDN3BWWWt0Q21HL0pYTnJ1SDd4L2Rnc1Fy?=
+ =?utf-8?B?aTZGRGV3alFESUF1aE5ML1BkOFNVaFRGMkZKV25uempZUlRUVGdYeUJZRE9X?=
+ =?utf-8?B?ZTZkMnQyL0h6ZnNYK1ZCZDRWTUo3TUc2MWJuMHdxTzhmWVpnSVIrdjR0T0xW?=
+ =?utf-8?B?aWtVWTNiOWhITmg4QlhCbkpRZjVPNGNOd25IdzV3RmxTbkhSNFROMEtLQmU1?=
+ =?utf-8?B?MkVCam5KRnV4UEU5eEFvL2pZdklQYzlUcTFZQXFvRkFYL1Y0RmdCaFQ0cmcy?=
+ =?utf-8?B?MHNEVTYyYVVsclBjUVJqSDMvYTBMOTN5TFQ5emZnNzZ2YXNrbE1pNGNBekFR?=
+ =?utf-8?B?M2NpazVlZndNZ0xxd040dUdBT1JLS1VxeXYzdWVhUnNNd0RUQTB0eHJkMElP?=
+ =?utf-8?B?Y0w1VURGR0wxYUJQbm16b3BWSkVJMnQ0elMzYyt5cGlBWDhNSmFScVRrM29x?=
+ =?utf-8?B?VzNNb3ZCaWE2UzRTRlV2Z05KMEJJcXhWd0tFbGErQktrM3J5bnFleWZXa1Uw?=
+ =?utf-8?B?TTJMelFjWEwxQmE2U09adWFIN0JqTGtjeDZTbU5ISW0zb3JVaTJXL1pmUktG?=
+ =?utf-8?B?VzM5QlZHaUtLUlYwMENiMUJQaUVlOHZSc0FJajNSNlJqcTJCYWpoQlZBZHJK?=
+ =?utf-8?Q?HQ2wJayLOwqOplO2gPt4uBB0ZgkXPdYBnX8ikL0urHwM?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1b85549-8269-4a54-063a-08dbcb01fa02
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2023 09:02:35.9905
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AFp4RzAat+gY/HaULzkLb8byyX5hxCMaS9eLgp2JEc+Ahf8TfVmIbH8Z/fRbxlGGmqqzPkS3M8ynMUT0jb55sA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8964
 
-On Wed, 2023-10-11 at 15:06 -0700, Mat Martineau wrote:
-> On Wed, 11 Oct 2023, Paolo Abeni wrote:
->=20
-> > Christoph reported that the MPTCP protocol can find the subflow-level
-> > write queue unexpectedly not empty while crafting a zero-window probe,
-> > hitting a warning:
-> >=20
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 0 PID: 188 at net/mptcp/protocol.c:1312 mptcp_sendmsg_fra=
-g+0xc06/0xe70
-> > Modules linked in:
-> > CPU: 0 PID: 188 Comm: kworker/0:2 Not tainted 6.6.0-rc2-g1176aa719d7a #=
-47
-> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el=
-7 04/01/2014
-> > Workqueue: events mptcp_worker
-> > RIP: 0010:mptcp_sendmsg_frag+0xc06/0xe70 net/mptcp/protocol.c:1312
-> > RAX: 47d0530de347ff6a RBX: 47d0530de347ff6b RCX: ffff8881015d3c00
-> > RDX: ffff8881015d3c00 RSI: 47d0530de347ff6b RDI: 47d0530de347ff6b
-> > RBP: 47d0530de347ff6b R08: ffffffff8243c6a8 R09: ffffffff82042d9c
-> > R10: 0000000000000002 R11: ffffffff82056850 R12: ffff88812a13d580
-> > R13: 0000000000000001 R14: ffff88812b375e50 R15: ffff88812bbf3200
-> > FS:  0000000000000000(0000) GS:ffff88813bc00000(0000) knlGS:00000000000=
-00000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000695118 CR3: 0000000115dfc001 CR4: 0000000000170ef0
-> > Call Trace:
-> > <TASK>
-> > __subflow_push_pending+0xa4/0x420 net/mptcp/protocol.c:1545
-> > __mptcp_push_pending+0x128/0x3b0 net/mptcp/protocol.c:1614
-> > mptcp_release_cb+0x218/0x5b0 net/mptcp/protocol.c:3391
-> > release_sock+0xf6/0x100 net/core/sock.c:3521
-> > mptcp_worker+0x6e8/0x8f0 net/mptcp/protocol.c:2746
-> > process_scheduled_works+0x341/0x690 kernel/workqueue.c:2630
-> > worker_thread+0x3a7/0x610 kernel/workqueue.c:2784
-> > kthread+0x143/0x180 kernel/kthread.c:388
-> > ret_from_fork+0x4d/0x60 arch/x86/kernel/process.c:147
-> > ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:304
-> > </TASK>
-> >=20
-> > The root cause of the issue is that expectations are wrong: e.g. due
-> > to MPTCP-level re-injection we can hit the critical condition.
-> >=20
-> > Explicitly avoid the zero-window probe when the subflow write queue
-> > is not empty and drop the related warning.
-> >=20
-> > Reported-by: Christoph Paasch <cpaasch@apple.com>
-> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/444
-> > Fixes: f70cad1085d1 ("mptcp: stop relying on tcp_tx_skb_cache")
+Hi Matt,
+
+On Wed, Oct 11, 2023 at 06:53:17PM +0200, Matthieu Baerts wrote:
+> Hi Geliang, Paolo,
+> 
+> On 11/10/2023 15:34, Geliang Tang wrote:
+> > When closing the msk->first socket in __mptcp_close_ssk(), if there's
+> > another subflow available, it's better to avoid resetting it, just shut
+> > down it.
+> > 
+> > This patch adds a new helper __mptcp_subflow_disconnect(), and reuse
+> > flag MPTCP_CF_FASTCLOSE in this case. When MPTCP_CF_FASTCLOSE isn't set,
+> > we invoke tcp_shutdown() instead of tcp_disconnect().
+> > 
+> > Co-developed-by: Paolo Abeni <pabeni@redhat.com>
 > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 > > ---
-> > net/mptcp/protocol.c | 7 +------
-> > 1 file changed, 1 insertion(+), 6 deletions(-)
-> >=20
+> >  net/mptcp/protocol.c | 28 ++++++++++++++++++++++------
+> >  1 file changed, 22 insertions(+), 6 deletions(-)
+> > 
 > > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> > index 30e0c29ae0a4..88404a9837d7 100644
+> > index 30e0c29ae0a4..1a54d55f8bb2 100644
 > > --- a/net/mptcp/protocol.c
 > > +++ b/net/mptcp/protocol.c
-> > @@ -1297,7 +1297,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, st=
-ruct sock *ssk,
-> > =09if (copy =3D=3D 0) {
-> > =09=09u64 snd_una =3D READ_ONCE(msk->snd_una);
-> >=20
-> > -=09=09if (snd_una !=3D msk->snd_nxt) {
-> > +=09=09if (snd_una !=3D msk->snd_nxt || tcp_write_queue_tail(ssk)) {
-> > =09=09=09tcp_remove_empty_skb(ssk);
-> > =09=09=09return 0;
-> > =09=09}
-> > @@ -1305,11 +1305,6 @@ static int mptcp_sendmsg_frag(struct sock *sk, s=
-truct sock *ssk,
-> > =09=09zero_window_probe =3D true;
-> > =09=09data_seq =3D snd_una - 1;
-> > =09=09copy =3D 1;
-> > -
-> > -=09=09/* all mptcp-level data is acked, no skbs should be present into=
- the
-> > -=09=09 * ssk write queue
-> > -=09=09 */
-> > -=09=09WARN_ON_ONCE(reuse_skb);
->=20
-> Hi Paolo -
->=20
-> At this point, both reuse_skb and zero_window_probe are 'true' if that=20
-> warning was printing.
->=20
-> There's a WARN_ON_ONCE(zero_window_probe) later in this function that wil=
-l=20
-> also fire under these conditions. Looks like that one needs to be removed=
-=20
-> too.
+> > @@ -2366,6 +2366,26 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
+> >  #define MPTCP_CF_PUSH		BIT(1)
+> >  #define MPTCP_CF_FASTCLOSE	BIT(2)
+> >  
+> > +/* be sure to send a reset only if the caller asked for it, also
+> > + * clean completely the subflow status when the subflow reaches
+> > + * TCP_CLOSE state
+> > + */
+> > +static void __mptcp_subflow_disconnect(struct sock *ssk,
+> > +				       struct mptcp_subflow_context *subflow,
+> > +				       unsigned int flags)
+> > +{
+> > +	if (((1 << ssk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)) ||
+> > +	    (flags & MPTCP_CF_FASTCLOSE)) {
+> > +		/* The MPTCP code never wait on the subflow sockets, TCP-level
+> > +		 * disconnect should never fail
+> > +		 */
+> > +		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
+> > +		mptcp_subflow_ctx_reset(subflow);
+> > +	} else {
+> > +		tcp_shutdown(ssk, SEND_SHUTDOWN);
+> 
+> I didn't check in detail but should we not also call
+> __mptcp_subflow_error_report()?
 
-I intentionally left the other warning in place, mainly for irrational
-reasons - it makes me feel safer, even if it's impossible to
-trigger/useless.
+When the socket shuts down, it's state is TCPF_FIN_WAIT2.
+__mptcp_subflow_error_report will return and do nothing in this case:
 
-I'll post v2 with such warn removed, thanks!
+      if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(mptcp_sk(sk)))
+              return false;
 
-Paolo
+So no need to call __mptcp_subflow_error_report.
 
+> 
+> And maybe other helpers? What is done between the 'goto out' and the
+> 'out' label in __mptcp_close_ssk() here below? → what we do when other
+> subflows are being closed.
+
+No need to go the following path too:
+
+        sock_put(ssk);
+
+        if (ssk == msk->first)
+                WRITE_ONCE(msk->first, NULL);
+
+So we can keep this patch as it.
+
+Thanks,
+-Geliang
+
+> 
+> Cheers,
+> Matt
+> 
+> > +	}
+> > +}
+> > +
+> >  /* subflow sockets can be either outgoing (connect) or incoming
+> >   * (accept).
+> >   *
+> > @@ -2403,7 +2423,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+> >  	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+> >  
+> >  	if ((flags & MPTCP_CF_FASTCLOSE) && !__mptcp_check_fallback(msk)) {
+> > -		/* be sure to force the tcp_disconnect() path,
+> > +		/* be sure to force the tcp_close path
+> >  		 * to generate the egress reset
+> >  		 */
+> >  		ssk->sk_lingertime = 0;
+> > @@ -2413,11 +2433,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+> >  
+> >  	need_push = (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_data(sk);
+> >  	if (!dispose_it) {
+> > -		/* The MPTCP code never wait on the subflow sockets, TCP-level
+> > -		 * disconnect should never fail
+> > -		 */
+> > -		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
+> > -		mptcp_subflow_ctx_reset(subflow);
+> > +		__mptcp_subflow_disconnect(ssk, subflow, flags);
+> >  		release_sock(ssk);
+> >  
+> >  		goto out;
+> 
+> -- 
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
