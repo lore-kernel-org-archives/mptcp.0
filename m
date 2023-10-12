@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598A91EA95
-	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 14:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A715266B9
+	for <mptcp@lists.linux.dev>; Thu, 12 Oct 2023 14:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9bQeEZg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2026C433C7;
-	Thu, 12 Oct 2023 14:15:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZkYc7epG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8DE0C433C7;
+	Thu, 12 Oct 2023 14:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697120130;
-	bh=cDwPyE2G9VnNDzAmqYsaAR7S9xCOKP/9xzz/GFUutAg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=O9bQeEZgI2BXknaYUInGvAyV2y9R86qCEeYAkVgGp9QL6pRyherJFa6mZnl6dlrZ3
-	 x7kC5iCZ9mOWI0aYyXn1CmGtRZaGpclYbyytOHJnGKDKlN5LzOv7oGUC6nlNziQIM+
-	 VXwOD/77DSKkvxjGIkiGr7wyMs7dJy9G6JbP8SrM8bWDv7VEJJyuiNNrm1WtdhF6oa
-	 6h7tU1KViXGV71B7i+6D4w0+bWLNDXlPhl21so9kpxKhRUFrczSLr9aoADg81Aw+UK
-	 suPMdv0XsXkBI8ejx1Giv+8xcDDoHk1Rqyl8yIF33XGLZA3HQ60jwxH5w5tujgo6SJ
-	 mp2wNTL/cApvw==
-Message-ID: <d8619684-ae62-4f10-9d6b-735b334a8cfd@kernel.org>
-Date: Thu, 12 Oct 2023 16:15:27 +0200
+	s=k20201202; t=1697121361;
+	bh=Ak3VHXKg51+xEnkF0BYvxBxZZslmbbYVYiUhik1t2ks=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=ZkYc7epG9kd8D89DV744+e2xpHzM0KhWcHhjBvnPpy2d7U1aLDsnMdWkJBxGONgGM
+	 E4GOFtYwRzCPDE6m2nYBEV15GOtJ9fYPMEKcEnNEsUNKMseN95CH56k8k1rJfSqNaH
+	 xWNy4xYiEocArkIKhWYGTJtaBt8h5io05+cWprR1MrXlBWYafiFbu41xgGSnetE2qk
+	 RoOvhfgoUTwv16yguqPc4lRcXkuGhSnecmWkf//n5nhqc8ZHQnGwzx29cXeW+QkSII
+	 Dj9S1bSXPkb+u1VHOe7p2GnJ6brkmOozT7jR7ZDDTreysHh4lJTrRfSLBWk7aDfxRy
+	 clKXdKOK2n9VQ==
+Message-ID: <99e62e52-bbc1-4331-8f54-561cc207718b@kernel.org>
+Date: Thu, 12 Oct 2023 16:35:59 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,15 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v14 3/7] mptcp: add __mptcp_subflow_disconnect
- helper
+Subject: Re: [PATCH mptcp-next v15 4/7] selftests: mptcp: userspace pm remove
+ initial subflow
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1697031190.git.geliang.tang@suse.com>
- <e75487344cde69c5b754ee1fb3bd8c730d54e5de.1697031190.git.geliang.tang@suse.com>
- <73963454-bb2d-48b8-9202-666fc2fc5ba7@kernel.org>
- <20231012090350.GA30030@localhost.localdomain>
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1697100600.git.geliang.tang@suse.com>
+ <f13919cfd0f090a63d05a9b3d7e769416a2c27d1.1697100600.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -80,91 +77,82 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <20231012090350.GA30030@localhost.localdomain>
+In-Reply-To: <f13919cfd0f090a63d05a9b3d7e769416a2c27d1.1697100600.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 12/10/2023 11:03, Geliang Tang wrote:
-> Hi Matt,
+On 12/10/2023 10:52, Geliang Tang wrote:
+> This patch adds a selftest for userpsace PM to remove the initial
+> subflow. Use userspace_pm_add_sf() to add a subflow, and pass initial
+> ip address to userspace_pm_rm_sf() to remove the initial subflow.
 > 
-> On Wed, Oct 11, 2023 at 06:53:17PM +0200, Matthieu Baerts wrote:
->> Hi Geliang, Paolo,
->>
->> On 11/10/2023 15:34, Geliang Tang wrote:
->>> When closing the msk->first socket in __mptcp_close_ssk(), if there's
->>> another subflow available, it's better to avoid resetting it, just shut
->>> down it.
->>>
->>> This patch adds a new helper __mptcp_subflow_disconnect(), and reuse
->>> flag MPTCP_CF_FASTCLOSE in this case. When MPTCP_CF_FASTCLOSE isn't set,
->>> we invoke tcp_shutdown() instead of tcp_disconnect().
->>>
->>> Co-developed-by: Paolo Abeni <pabeni@redhat.com>
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
->>> ---
->>>  net/mptcp/protocol.c | 28 ++++++++++++++++++++++------
->>>  1 file changed, 22 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index 30e0c29ae0a4..1a54d55f8bb2 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -2366,6 +2366,26 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
->>>  #define MPTCP_CF_PUSH		BIT(1)
->>>  #define MPTCP_CF_FASTCLOSE	BIT(2)
->>>  
->>> +/* be sure to send a reset only if the caller asked for it, also
->>> + * clean completely the subflow status when the subflow reaches
->>> + * TCP_CLOSE state
->>> + */
->>> +static void __mptcp_subflow_disconnect(struct sock *ssk,
->>> +				       struct mptcp_subflow_context *subflow,
->>> +				       unsigned int flags)
->>> +{
->>> +	if (((1 << ssk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)) ||
->>> +	    (flags & MPTCP_CF_FASTCLOSE)) {
->>> +		/* The MPTCP code never wait on the subflow sockets, TCP-level
->>> +		 * disconnect should never fail
->>> +		 */
->>> +		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
->>> +		mptcp_subflow_ctx_reset(subflow);
->>> +	} else {
->>> +		tcp_shutdown(ssk, SEND_SHUTDOWN);
->>
->> I didn't check in detail but should we not also call
->> __mptcp_subflow_error_report()?
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> When the socket shuts down, it's state is TCPF_FIN_WAIT2.
-> __mptcp_subflow_error_report will return and do nothing in this case:
-> 
->       if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(mptcp_sk(sk)))
->               return false;
-> 
-> So no need to call __mptcp_subflow_error_report.
-> 
->>
->> And maybe other helpers? What is done between the 'goto out' and the
->> 'out' label in __mptcp_close_ssk() here below? → what we do when other
->> subflows are being closed.
-> 
-> No need to go the following path too:
-> 
->         sock_put(ssk);
-> 
->         if (ssk == msk->first)
->                 WRITE_ONCE(msk->first, NULL);
-> 
-> So we can keep this patch as it.
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index ab6908b7b143..154978481409 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3507,6 +3507,32 @@ userspace_tests()
+>  		kill_events_pids
+>  		wait $tests_pid
+>  	fi
+> +
+> +	# userspace pm remove initial subflow
+> +	if reset_with_events "userspace pm remove initial subflow" &&
+> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+> +		set_userspace_pm $ns2
+> +		pm_nl_set_limits $ns1 0 1
+> +		speed=10 \
+> +			run_tests $ns1 $ns2 10.0.1.1 &
+> +		local tests_pid=$!
+> +		wait_mpj $ns2
+> +		userspace_pm_add_sf $ns2 10.0.3.2 20
+> +		chk_join_nr 1 1 1
+> +		chk_mptcp_info subflows 1 subflows 1
+> +		chk_subflows_total 2 2
+> +		userspace_pm_rm_sf $ns2 10.0.1.2
+> +		# we don't look at the counter linked to the RM_ADDR but
+> +		# to the one linked to the subflows that have been removed
+> +		chk_rm_nr 0 1
+> +		chk_rst_nr 0 0 invert
+> +		chk_mptcp_info subflows 1 subflows 1
+> +		# No subflow removed in ns1, one
+> +		# subflow has been removed in ns2
+> +		chk_subflows_total 2 1
 
-Thank you for having check the two cases!
+We should really have "1 1" here: on both the client and the server
+side, the initial subflow is being closed, so we should only have one
+counter. Same comment on patch 7/7.
 
-All good then!
+Maybe my suggestion from patch 3/7 will fix this issue.
+
+Also, how are you checking this locally: with and without SS supporting
+'subflows_total' counter?
+
+Please note that the CI complained about these two tests (and the 2
+others I mentioned before with 'subflows_total'). I suspect that you
+also need to modify "chk_subflows_total()" and use 'state established'
+filter for ss:
+
+  ss -N (...) -ti state established
+
+No?
 
 Cheers,
 Matt
+
+> +		kill_events_pids
+> +		wait $tests_pid
+> +	fi
+>  }
+>  
+>  endpoint_tests()
+
 -- 
 Tessares | Belgium | Hybrid Access Solutions
 www.tessares.net
