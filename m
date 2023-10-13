@@ -1,109 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC5010946
-	for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 08:31:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9C8101FD
+	for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 09:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iFKoADrf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 050D2C433C8;
-	Fri, 13 Oct 2023 08:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697185915;
-	bh=6EajTK4bXzpK0KJghD8PFNxZzf2sdKzVjUPQ6fQyTO8=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=iFKoADrf+fO8jrJx6REhRFloSlgVHuIUQ3Zt0XskZIdoY881WWcBfxKqp/Ge+bs4/
-	 ZY5A00nFSao/ZCi6n3n0DFDcOTjYNUZJke0aKMyn9T3Sc3dYcbFSSDcRbpL5xQNuzy
-	 6HRZcXSKfXHzUM/nToe0XuQ6S9FgqQr6Df4jix/tnodL5BTTGvL/fixkKKqsYz3Uk/
-	 6KYf8GpaFwPSMcIPSEVlqSfQKzPSnlE4JADI7EMkN4kP86Drf9VbsKM2YvjISK0nJ+
-	 Y+Wfugczenn1rJ0uXU/g7jwzjrExRUs6akY6RGHWYMvRbSPz8UrjX+p7MCf6COmtSG
-	 wfh0Gf2clB1ow==
-Message-ID: <8b9e4a05-7b65-4b2a-b4d9-3c5b03a894f9@kernel.org>
-Date: Fri, 13 Oct 2023 10:31:52 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SuXk3ZF8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1697189116;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fjn1YV4eLF+7JWF9dlwWrMJB0WcDm1Pdq0sVQRaGc5A=;
+	b=SuXk3ZF8OQnS5jK8xD218puQY2peS9JxPg0amEbyaGnjAmd5EZu87FRwhc5nKZ6FwnTY8Q
+	PMyyARMY2vRs+pTeYQ07JvCbB+WNtpKWPCJ1rMsuNnc2a3ZEff4O0HYJVHkr6wS29ZemSF
+	K+9VI0yMHlRA0bdJ3nh4Bz5JpVzuMk0=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-640-jDljjX25NtClz0dViU-8Gg-1; Fri, 13 Oct 2023 05:25:14 -0400
+X-MC-Unique: jDljjX25NtClz0dViU-8Gg-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9ae56805c41so37058366b.0
+        for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 02:25:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697189113; x=1697793913;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Fjn1YV4eLF+7JWF9dlwWrMJB0WcDm1Pdq0sVQRaGc5A=;
+        b=Mo5CaGInDCj8Vb9C6erYOgn7c4G8vASejS0oqi13VxD1WLjbVMzuMoF7bF09qPkb8A
+         /txfUDuDI745LCDIJ/LdGSKjBdbs7NyvB6mzn4nOtsuswso8L9hMzu3Q6QUGHQnQFscc
+         u9cMRCBEFMa6FlR7PXugOgcy2Bhg+5u/GLTOLk9x529k/CpNQEpq+aORhW12ivsDJMpZ
+         QDb/i2IlnWMfLmKhK01L/Wp71AICeASp+qICv++dKHF7XjoNkGpJq93iissn5fSK1IFd
+         gZsm/7FI0mJYYUoWbo71pwKVOL0dpWZPx7dx9AP+Hw73YKfD0JnAuY0lMaYwj3EPrfbp
+         VfGw==
+X-Gm-Message-State: AOJu0YxoyuYQHTGiaBSgnZ/xGfYUdMnBM0q3EjV7ZLIHzYy7+pYPaidw
+	ptIUNkYhmY8Eqwq6sUy/AxTABWVLUfB7q9iOMCoxrPjG6MCInzRcCm1DnV7o89j8Lv5XaAuaG67
+	HFgjx/9U9H47QxGc9kgf9v5M=
+X-Received: by 2002:a17:906:ce:b0:9b2:bf2d:6b66 with SMTP id 14-20020a17090600ce00b009b2bf2d6b66mr18193334eji.7.1697189113494;
+        Fri, 13 Oct 2023 02:25:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGr+837x+kVjqot8JEkZBODUszPSIhc19ogZqkkNL0o9Wua7mSF4xzNk4myf/cU55dU3/8I2Q==
+X-Received: by 2002:a17:906:ce:b0:9b2:bf2d:6b66 with SMTP id 14-20020a17090600ce00b009b2bf2d6b66mr18193324eji.7.1697189113148;
+        Fri, 13 Oct 2023 02:25:13 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-235-54.dyn.eolo.it. [146.241.235.54])
+        by smtp.gmail.com with ESMTPSA id t24-20020a1709066bd800b009b29668fce7sm12072519ejs.113.2023.10.13.02.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Oct 2023 02:25:12 -0700 (PDT)
+Message-ID: <8918fc5c5d112b6cbfd0ac28345a1c33afcb09b9.camel@redhat.com>
+Subject: Re: [PATCH v2 net] tcp: allow again tcp_disconnect() when threads
+ are waiting
+From: Paolo Abeni <pabeni@redhat.com>
+To: Xin Guo <guoxin0309@gmail.com>, Eric Dumazet <edumazet@google.com>
+Cc: netdev@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>, "David S.
+ Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, David
+ Ahern <dsahern@kernel.org>,  mptcp@lists.linux.dev, Boris Pismenny
+ <borisp@nvidia.com>, Tom Deseyn <tdeseyn@redhat.com>
+Date: Fri, 13 Oct 2023 11:25:11 +0200
+In-Reply-To: <CAMaK5_ii38_Ze2uBmcyX8rnntEi35kXJ47yhxZvCb-ks0bMbxw@mail.gmail.com>
+References: <f3b95e47e3dbed840960548aebaa8d954372db41.1697008693.git.pabeni@redhat.com>
+	 <CANn89iL_nbz9Cg1LP6c8amvvGbwBMFRxmtE_b6CF8WyLGt3MnA@mail.gmail.com>
+	 <CAMaK5_ii38_Ze2uBmcyX8rnntEi35kXJ47yhxZvCb-ks0bMbxw@mail.gmail.com>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v16 0/8] userspace pm remove id 0 subflow &
- address
-To: Geliang Tang <geliang.tang@suse.com>, Paolo Abeni <pabeni@redhat.com>
-References: <cover.1697175899.git.geliang.tang@suse.com>
-Content-Language: en-GB, fr-BE
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- Fe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: Tessares
-In-Reply-To: <cover.1697175899.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang, Paolo,
+Hi,
 
-On 13/10/2023 07:46, Geliang Tang wrote:
-> v16:
->  - address Matt's comments in v15.
+On Fri, 2023-10-13 at 12:42 +0800, Xin Guo wrote:
+> In my view, this patch is NOT so good, and it seems that trying to fix
+> a problem temporarily without knowing its root cause,
 
-Thank you for the new version! It looks good to me!
+First thing first, please avoid top posting when replying to the ML.
 
-Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
+I don't follow the above statement. The root case of the problem
+addressed here is stated in the commit message: the blamed commit
+explicitly disables a functionality used by the user-space. We must
+avoid breaking the user-space.
 
-I plan to apply 'mptcp: userspace pm send RM_ADDR for ID 0' to the
-"-net" part of the tree. I'm not sure about "mptcp: add
-__mptcp_subflow_disconnect helper".
+> because sk_wait_event function should know nothing about the other
+> functions were called or not,
+> but now this patch added a logic to let sk_wait_event know the
+> specific tcp_dissconnect function was called by other threads or NOT,
+> honestly speaking, it is NOT a good designation,
 
-@Paolo: are you still OK with "mptcp: add __mptcp_subflow_disconnect
-helper" commit?
+Why?
 
-Do you think we should send that to "-net"? The patch looks OK to me but
-on the other hand, it is not a big issue to reset the initial subflow
-(but not ideal). WDYT?
+> so what is root cause about the problem which [0] commit want to fix?
+
+The mentioned commit changelog is quite descriptive about the problem,
+please read it.
+
+> can we have a way to fix it directly instead of denying
+> tcp_disconnect() when threads are waiting?
+
+Yes, this patch.
+
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+
+Paolo
+
