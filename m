@@ -1,112 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9C8101FD
-	for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 09:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB9E613A
+	for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 09:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SuXk3ZF8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1697189116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fjn1YV4eLF+7JWF9dlwWrMJB0WcDm1Pdq0sVQRaGc5A=;
-	b=SuXk3ZF8OQnS5jK8xD218puQY2peS9JxPg0amEbyaGnjAmd5EZu87FRwhc5nKZ6FwnTY8Q
-	PMyyARMY2vRs+pTeYQ07JvCbB+WNtpKWPCJ1rMsuNnc2a3ZEff4O0HYJVHkr6wS29ZemSF
-	K+9VI0yMHlRA0bdJ3nh4Bz5JpVzuMk0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-640-jDljjX25NtClz0dViU-8Gg-1; Fri, 13 Oct 2023 05:25:14 -0400
-X-MC-Unique: jDljjX25NtClz0dViU-8Gg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9ae56805c41so37058366b.0
-        for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 02:25:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mS2algJp"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-777252c396bso120654985a.2
+        for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 02:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697189330; x=1697794130; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cb06IdBo6NpAxeSqcy5XteUP1U18gmYJdqozR5EPB7M=;
+        b=mS2algJp5Ytvn1ZzG2+JgUCh6s3nW722DSNazKuSWUrWXE8p3cBhZcyeNFzemXc+1O
+         m/NYQBr7WZ60g/iB7AVszwE8/DzdbAmVQO91cxn5icGvuiPW7UM2SK85tELedaxy682J
+         pJITH3rPHFzrxcWbI+65q91ypEWGhKP/xlues4hBjUQ9AgsQ6iGvBDZ+Upz8HKksilkz
+         Jr02wYc/jKc73eKqhezd996T57rkwY4WddqVcRZdzDp6kn+QuwkOqQt9N/OyYGrYM7aF
+         ILZvWAYzEx05BZEnmwiD0YMlR80Nr8vt7wZi3SDeYkwWVoKpdMCADZzRDQjlSaN5nm3a
+         yM/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697189113; x=1697793913;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fjn1YV4eLF+7JWF9dlwWrMJB0WcDm1Pdq0sVQRaGc5A=;
-        b=Mo5CaGInDCj8Vb9C6erYOgn7c4G8vASejS0oqi13VxD1WLjbVMzuMoF7bF09qPkb8A
-         /txfUDuDI745LCDIJ/LdGSKjBdbs7NyvB6mzn4nOtsuswso8L9hMzu3Q6QUGHQnQFscc
-         u9cMRCBEFMa6FlR7PXugOgcy2Bhg+5u/GLTOLk9x529k/CpNQEpq+aORhW12ivsDJMpZ
-         QDb/i2IlnWMfLmKhK01L/Wp71AICeASp+qICv++dKHF7XjoNkGpJq93iissn5fSK1IFd
-         gZsm/7FI0mJYYUoWbo71pwKVOL0dpWZPx7dx9AP+Hw73YKfD0JnAuY0lMaYwj3EPrfbp
-         VfGw==
-X-Gm-Message-State: AOJu0YxoyuYQHTGiaBSgnZ/xGfYUdMnBM0q3EjV7ZLIHzYy7+pYPaidw
-	ptIUNkYhmY8Eqwq6sUy/AxTABWVLUfB7q9iOMCoxrPjG6MCInzRcCm1DnV7o89j8Lv5XaAuaG67
-	HFgjx/9U9H47QxGc9kgf9v5M=
-X-Received: by 2002:a17:906:ce:b0:9b2:bf2d:6b66 with SMTP id 14-20020a17090600ce00b009b2bf2d6b66mr18193334eji.7.1697189113494;
-        Fri, 13 Oct 2023 02:25:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGr+837x+kVjqot8JEkZBODUszPSIhc19ogZqkkNL0o9Wua7mSF4xzNk4myf/cU55dU3/8I2Q==
-X-Received: by 2002:a17:906:ce:b0:9b2:bf2d:6b66 with SMTP id 14-20020a17090600ce00b009b2bf2d6b66mr18193324eji.7.1697189113148;
-        Fri, 13 Oct 2023 02:25:13 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-235-54.dyn.eolo.it. [146.241.235.54])
-        by smtp.gmail.com with ESMTPSA id t24-20020a1709066bd800b009b29668fce7sm12072519ejs.113.2023.10.13.02.25.12
+        d=1e100.net; s=20230601; t=1697189330; x=1697794130;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=cb06IdBo6NpAxeSqcy5XteUP1U18gmYJdqozR5EPB7M=;
+        b=lv8WtP/JzpvEy8K+EEEd5RXH6b2ngIeDmTEr73tSrC+dLkXWcu78mTHgr7PGhlcZ0m
+         oqBxIc2fd0OnMAXn4tEAmtFp+9KQ4Mkrafxd3kxe04Ek9ECI4yLHRUiM07FgJMNN+kkf
+         O+mvrkvJ1uSylX2oZZ7NOzGHGFISCPulGKo6E9auJ8Mn6ZSD3kIbT9u4J6o6yumNNt1d
+         NQByq3fucANvtwvSf2067AgdycjsAeA5x0Z7osxSrY1JluXwgbcdSl8iAAQ9qn9AHJ7T
+         ct8c3eIP+SilTa13dd1Szu3iUAbqj/g92T+nWaIMNABLdzbrk/a3YXt+k7AA1WAXk6/1
+         hdkA==
+X-Gm-Message-State: AOJu0YzzkTV7upxBmQlAMUoJ1rdm2rtv8ci0PGn22P9x38yK4wt4rJrP
+	x0sfjUFe5Ys823QahY6/fQ==
+X-Google-Smtp-Source: AGHT+IErtz3yfC5CSuj8iK8EKoudE0OqpajaQU4jOjEcLrem32xpUE/gWx4IV+jZiqyjc2Ar9l2wMw==
+X-Received: by 2002:a05:620a:40d2:b0:774:1474:a819 with SMTP id g18-20020a05620a40d200b007741474a819mr29068851qko.71.1697189329913;
+        Fri, 13 Oct 2023 02:28:49 -0700 (PDT)
+Received: from [127.0.0.1] ([172.177.155.159])
+        by smtp.gmail.com with ESMTPSA id t27-20020a05620a035b00b0076ef3e6e6a4sm486097qkm.42.2023.10.13.02.28.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Oct 2023 02:25:12 -0700 (PDT)
-Message-ID: <8918fc5c5d112b6cbfd0ac28345a1c33afcb09b9.camel@redhat.com>
-Subject: Re: [PATCH v2 net] tcp: allow again tcp_disconnect() when threads
- are waiting
-From: Paolo Abeni <pabeni@redhat.com>
-To: Xin Guo <guoxin0309@gmail.com>, Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>, "David S.
- Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, David
- Ahern <dsahern@kernel.org>,  mptcp@lists.linux.dev, Boris Pismenny
- <borisp@nvidia.com>, Tom Deseyn <tdeseyn@redhat.com>
-Date: Fri, 13 Oct 2023 11:25:11 +0200
-In-Reply-To: <CAMaK5_ii38_Ze2uBmcyX8rnntEi35kXJ47yhxZvCb-ks0bMbxw@mail.gmail.com>
-References: <f3b95e47e3dbed840960548aebaa8d954372db41.1697008693.git.pabeni@redhat.com>
-	 <CANn89iL_nbz9Cg1LP6c8amvvGbwBMFRxmtE_b6CF8WyLGt3MnA@mail.gmail.com>
-	 <CAMaK5_ii38_Ze2uBmcyX8rnntEi35kXJ47yhxZvCb-ks0bMbxw@mail.gmail.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+        Fri, 13 Oct 2023 02:28:49 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <71949d82783458d066f4d49bdc5a0e24d8687e04.1697182955.git.geliang.tang@suse.com>
+References:
+ <71949d82783458d066f4d49bdc5a0e24d8687e04.1697182955.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: add mptcp_lib_wait_local_port_listen: Tests
+ Results
+Message-ID: <5ee51fbd-c733-933c-3ba1-3bff7ecda252@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 Oct 2023 09:28:49 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Geliang,
 
-On Fri, 2023-10-13 at 12:42 +0800, Xin Guo wrote:
-> In my view, this patch is NOT so good, and it seems that trying to fix
-> a problem temporarily without knowing its root cause,
+Thank you for your modifications, that's great!
 
-First thing first, please avoid top posting when replying to the ML.
+Our CI did some validations and here is its report:
 
-I don't follow the above statement. The root case of the problem
-addressed here is stated in the commit message: the blamed commit
-explicitly disables a functionality used by the user-space. We must
-avoid breaking the user-space.
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6377983343067136
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6377983343067136/summary/summary.txt
 
-> because sk_wait_event function should know nothing about the other
-> functions were called or not,
-> but now this patch added a logic to let sk_wait_event know the
-> specific tcp_dissconnect function was called by other threads or NOT,
-> honestly speaking, it is NOT a good designation,
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5533558412935168
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5533558412935168/su=
+mmary/summary.txt
 
-Why?
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4970608459513856
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4970608459513856/summary/summary.txt
 
-> so what is root cause about the problem which [0] commit want to fix?
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6096508366356480
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6096508366356480/summary/summary.txt
 
-The mentioned commit changelog is quite descriptive about the problem,
-please read it.
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/8e7e41edfd76
 
-> can we have a way to fix it directly instead of denying
-> tcp_disconnect() when threads are waiting?
 
-Yes, this patch.
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-
-Paolo
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
