@@ -1,155 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8746FB4
-	for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 10:46:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADCC125A0
+	for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 11:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gD00SOk8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45EACC433C8;
-	Fri, 13 Oct 2023 10:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697193971;
-	bh=UYyJCa2kgnkomPAqDm21fjQi8CwJkLy1dnHfgGoER8U=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=gD00SOk8hYXV+JZTTA0nfC0+o/pq573lukTh3Y2pfqknyug2btNtZJBBycWLi5fBj
-	 GZiFOmFZ6D17dfhFvoA/ZhRgynlLi8073GZigdeDEUTf43tL0lmvQoIJ7SDwq15UJT
-	 OL6iLU4iqWrgvvLt7hosoPaL5JuuvkvHDzP1X0bzuQldcJ2gklP8fpZJBa+cQnZzKW
-	 zRe150XjkeF4NQB0iUaK8hJ5kCvi987BOStmPTpwvpctcUVm8lUl8j7zo4R3khisE0
-	 9Rb0D2+Odhn12wGPP1As0GBLIYyjr/1i7ilG98lj8Bt06Q+f2l4MLAcFdSUlxt3I0d
-	 pndFgGxvH6UZw==
-Message-ID: <b7f0d827-ff8f-4348-be2b-c33e56b736ff@kernel.org>
-Date: Fri, 13 Oct 2023 12:46:07 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNUI7n7h"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1c88b467ef8so15979375ad.0
+        for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 04:13:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697195637; x=1697800437; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nQyalBVkUaqcwr+nL0/QIFhb4TvEvz+JvC9FVQEsWQs=;
+        b=UNUI7n7hkP2PkMIo20+uFmZ3+dKxpi8TRWgF7FNmOu7pYMQqYXKVx3N/zSuAmxxtjA
+         UDrk4MkDXJOhMlSuayLTsVzAfa91HjPSfSvF07SFRnaXL898FY+ROmRIPMTzlC1eWt8e
+         on0xdV0Bu262xFyK1a+gsDVL1LO8Bgb1/RDe+t8Dg/C6fjXrGandncold+sEro4zZfIX
+         HJP4P+MdSJZ/txx5uzi1sxrvfPm5sCJ6KcM9y/AG2r+jzSve2uw65RDjUNIxW6XDLUk0
+         aS5nIZ9aLxnL+F4X3WO0y61VBsB1V+tTVU8+tNuEcevp73vwk95WE1wGZ0Mru7TM8MgN
+         ICIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697195637; x=1697800437;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nQyalBVkUaqcwr+nL0/QIFhb4TvEvz+JvC9FVQEsWQs=;
+        b=ajDN4J6o43uJnpJ5xnAeDhW1OMaWr8PcmI/pINyTImGIuqY7UP6otlpFQtgR+o7QfW
+         eqCIK8BPGMUqY1H2XJnolhagFEPqrAwC2RIXyG9JAH3zagGxgsDiijsIvGT0YgMHXTa4
+         NEKmsxzXACkiefCC3e50gIeQazf724L59RHosgih6eFWvM+PvWqPGw2WsYP/e4PF/yi0
+         Ymz8cnTTSR9LLGwu9Yb4Q+rv0kzo0BdFpaBz5xTpd4mFnKQ3asa3k19UYerM4JZSZE6k
+         YA5a3MXj91T75DSYDYiltkiMVFB6CVO8Rw9oZcdOS8NEbizNHg7kdw5+MtuGkMRtwvEE
+         jUqA==
+X-Gm-Message-State: AOJu0YwIRZ+8+S6/wB6b9QpDJYg5SLTwSR4i7OybqKGB1UhC6cjrYN/L
+	umNBCSabFUZ3iwaGec1daA==
+X-Google-Smtp-Source: AGHT+IHu8TPBOSqBE44N/AB+5l3VqzPmcfNWF7O0tRuAEJevaG7NMA1miCh4YydLCIyxVhbpAC2sIw==
+X-Received: by 2002:a17:902:b607:b0:1bb:b74c:88f6 with SMTP id b7-20020a170902b60700b001bbb74c88f6mr21473535pls.16.1697195636810;
+        Fri, 13 Oct 2023 04:13:56 -0700 (PDT)
+Received: from [127.0.0.1] ([138.91.70.1])
+        by smtp.gmail.com with ESMTPSA id u9-20020a170902a60900b001c56157f062sm3626443plq.227.2023.10.13.04.13.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Oct 2023 04:13:56 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <36fe14dbd444daf86a22cfa5fb50d590324e7b58.1697190267.git.dcaratti@redhat.com>
+References:
+ <36fe14dbd444daf86a22cfa5fb50d590324e7b58.1697190267.git.dcaratti@redhat.com>
+Subject: =?UTF-8?Q?Re=3A_Squash_to=3A_=22net=3A_mptcp=3A_us?=
+ =?UTF-8?Q?e_policy_generated_by_YAML_spec=22=3A_Te?=
+ =?UTF-8?Q?sts_Results?=
+Message-ID: <edb395ff-39bb-6d1d-be74-5e32e366a582@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 Oct 2023 11:13:55 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v16 3/8] Squash to "mptcp: add
- mptcpi_subflows_total counter"
-Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang.tang@suse.com>,
- mptcp@lists.linux.dev
-References: <cover.1697175899.git.geliang.tang@suse.com>
- <4f136ef2b23fb55e2e42397f1e07e74b355d5f61.1697175899.git.geliang.tang@suse.com>
- <e3769002c1ff6139f9359413cd1ad415e593a3f2.camel@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- Fe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: Tessares
-In-Reply-To: <e3769002c1ff6139f9359413cd1ad415e593a3f2.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Davide,
 
-On 13/10/2023 12:32, Paolo Abeni wrote:
-> Hi,
-> 
-> On Fri, 2023-10-13 at 13:46 +0800, Geliang Tang wrote:
->> Update __mptcp_has_initial_subflow().
->>
->> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
->> ---
->>  net/mptcp/protocol.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index 6508179e94a6..1fb4ac3727c4 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -1081,7 +1081,7 @@ static inline bool __mptcp_has_initial_subflow(const struct mptcp_sock *msk)
->>  {
->>  	struct sock *ssk = READ_ONCE(msk->first);
->>  
->> -	return ssk && inet_sk_state_load(ssk) != TCP_CLOSE;
->> +	return ssk && inet_sk_state_load(ssk) == TCP_ESTABLISHED;
-> 
-> I think the above is not correct, __mptcp_has_initial_subflow() will
-> return false before connect completes and/or for listener sockets.
+Thank you for your modifications, that's great!
 
-Please note that __mptcp_has_initial_subflow() is there just to count
-the number of subflows. It is being used with 'msk->pm.subflows' and it
-is supposed to have the same "behaviour". Then I don't think we should
-increment the subflow counter for listener sockets, no?
+Our CI did some validations and here is its report:
 
-> You can list explicitly add the valid states with something alike:
-> 
-> 	(1 << inet_sk_state_load(ssk)) & (TCPF_ESTABLISHED |
-> TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_LISTEN | TCPF_CLOSE_WAIT)
-> 
-> I'm unsure if we should include CLOSE_WAIT here: the remote has shut
-> down, but this end can still send data...
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5677417939861504
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5677417939861504/summary/summary.txt
 
-Maybe better, no? As long as the behaviour is similar to the one with
-'msk->pm.subflows'.
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Script error! =E2=9D=93:
+  - Task: https://cirrus-ci.=
+com/task/5141953440907264
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5141953440907264/summary/summary.txt
 
-> Side important note: you are too fast :) There are a lot of in-flight
-> patches, and it's difficult to follow each series consistently. I
-> suggest to focus on a small subset - possibly on a single series at the
-> time.
-> 
-> e.g. The first 2 patches in this series are IMHO ready to be merged
-> [*]. If Mat could apply them, you could follow-up with the remaining
-> bits of this series.
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5194619055505408
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5194619055505408/summary/summary.txt
 
-Sure, I can do that.
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5743465154215936
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5743465154215936/su=
+mmary/summary.txt
 
-Regarding patch 1/8, do you think we should send that to "-net"? The
-patch looks OK to me but on the other hand, it is not a big issue to
-reset the initial subflow (but not ideal) if we fear regressions due to
-this patch. WDYT?
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/6a5c7957b315
 
-> [*] modulo some expansion to the changelog of patch 1, but that could
-> happen even after merging IMHO.
 
-Indeed. But we might forget :)
-So if you have any suggestions, do not hesitate to share them :-)
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
