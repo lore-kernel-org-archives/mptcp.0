@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CCB13FF6
-	for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 11:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACDA29A9
+	for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 15:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEOA4Ibc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4479AC433C8;
-	Fri, 13 Oct 2023 11:54:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FU+QsxKV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07AA4C433C8;
+	Fri, 13 Oct 2023 15:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697198053;
-	bh=eXP3NIU1vuBsEbwK0EnHCe3lP1OuA20e9hlYtRjB2Q0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HEOA4IbcYpk9CkDpcIfo4HhfbEQi8MsT/tZg0tGHpKvao5DawwwL5ut4iwdrqh47m
-	 7w4EtHo4rJAtDk9wkcwI2l8QsPJiLQd3VUklSyHG/frSYljEUU9SBD2zVhchIFnNTb
-	 dPtdwpmz8ESEHJec1rInYYrcm52UonPAA1VSp9GxLm+PPnGe4r2jDcpmB/B05n3jOP
-	 5fPdMrjvK79cBzz32e5bpAL7kY7i2us1Gacv/fjXEJGq0vBy1qMW81D+J1FCGpL3Rb
-	 ie6NzD7S1qrosPxgv7ZfBGPIBwZkPOdHn+WqqUHyK2bcBdsGVVimLvIXpv5Ce4NliF
-	 Eyyfl4ToDQQ1Q==
-Message-ID: <182b6946-11a9-46e8-b123-aab473ad5898@kernel.org>
-Date: Fri, 13 Oct 2023 13:54:11 +0200
+	s=k20201202; t=1697209619;
+	bh=5h2SeIuu4Lylkn29RgrgqAGhOnO+UoU9jYcBQYt0OBU=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=FU+QsxKVL/Flak8GUwXwkPdZ4i/NJvn6/33d0WLJQGRjC0LE88s4IDwaVEGS6D3Dw
+	 wuCKizFpZVkubG2VDqrzwOTJsR3xT3RBUiyDQzyNj97sEqkVRMTX2KN6xpt6EIegZT
+	 rMh0hUnP5sLe6ESfeR4uE6Sfk6oKTuNPyKulmKJTqsgnkqZ+0nvPepbVuWqnQeyz5k
+	 98pGXlLFDbo7B6iVYrbkHe3qOIE3QGZkBiKE6TLK1C12N3p9jtSfGBB+39O43uewwl
+	 DGfWxw2rVwZc9OHlAZOqMnSDWHLdyXkqlS4FrGKZmDHLZq6DhvE89PCvUrLrp4lyJ0
+	 O++l5d0i/eskQ==
+Message-ID: <ee31bfb2-9fe0-4d20-ad6f-1627d048613d@kernel.org>
+Date: Fri, 13 Oct 2023 17:06:54 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,15 +26,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v16 0/8] userspace pm remove id 0 subflow &
- address
+Subject: Re: [PATCH mptcp-next] Squash to: "net: mptcp: use policy generated
+ by YAML spec"
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1697175899.git.geliang.tang@suse.com>
- <8b9e4a05-7b65-4b2a-b4d9-3c5b03a894f9@kernel.org>
- <b783f33b-ae88-4509-9b9e-53736fd4dd5a@kernel.org>
- <20231013113006.GA29962@bogon>
+To: Davide Caratti <dcaratti@redhat.com>, mptcp@lists.linux.dev
+References: <36fe14dbd444daf86a22cfa5fb50d590324e7b58.1697190267.git.dcaratti@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -80,74 +76,23 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <20231013113006.GA29962@bogon>
+In-Reply-To: <36fe14dbd444daf86a22cfa5fb50d590324e7b58.1697190267.git.dcaratti@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Davide,
 
-On 13/10/2023 13:30, Geliang Tang wrote:
-> On Fri, Oct 13, 2023 at 11:36:36AM +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 13/10/2023 10:31, Matthieu Baerts wrote:
->>> Hi Geliang, Paolo,
->>>
->>> On 13/10/2023 07:46, Geliang Tang wrote:
->>>> v16:
->>>>  - address Matt's comments in v15.
->>>
->>> Thank you for the new version! It looks good to me!
->>>
->>> Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
->>
->> Mmh, I missed the errors reported by the CI:
->>
->> not ok 112 - mptcp_join: userspace pm add & remove address
->> not ok 113 - mptcp_join: userspace pm create destroy subflow
->> not ok 115 - mptcp_join: userspace pm remove initial subflow
->> not ok 116 - mptcp_join: userspace pm send RM_ADDR for ID 0
->>
->> Do you mind looking at that, please?
-> 
-> I can't reproduce these errors. All tests passed on my side.
-> 
-> I run this command on my Thinkpad laptop:
-> 
-> docker run \
-> 	-e INPUT_BUILD_SKIP_PERF=1 \
-> 	-e INPUT_BUILD_SKIP_PACKETDRILL=1 \
-> 	-v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
->         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-> 	auto-debug
-> 
-> And this is my .virtme-exec-run:
-> 
->   run_selftest_one ./mptcp_join.sh -u
-> 
-> Every tests passed.
+On 13/10/2023 11:45, Davide Caratti wrote:
+> as per Jakub's review, a newer YAML spec is going to validate addr6
+> with NLA_POLICY_EXACT_LEN(16)
 
-Thank you for looking at that!
+I'm not sure to understand your modification: is it just a test patch to
+check that the CI is OK with the modifications, or do you want to have
+this patch included in the tree?
 
-Maybe try to reproduce the issue in a loop using:
-
-  run_loop run_selftest_one ./mptcp_join.sh -u
-
-> Is there a difference between my test environment and CI?
-
-The public CI is very likely a slower environment that what you have on
-your side. To help to simulate such environment, when the tests start
-(because not needed before), I usually run 'stress-ng' in parallel:
-
-  nproc=$(nproc); nproc2=$((nproc * 2))
-  stress-ng --cpu "${nproc2}" --iomix "${nproc2}" --vm "${nproc2}"
---vm-bytes 1G --timeout 60m
-
-If it is not enough, I also change the priority of the VM:
-
-  sudo renice 20 <pid of qemu>
-
-I hope it will help!
+Because I guess we cannot just accept this patch, we also need a
+modification of the YAML spec and the YNL tool. Then this file you
+modified here will be re-generated, and we will get this new result, no?
 
 Cheers,
 Matt
