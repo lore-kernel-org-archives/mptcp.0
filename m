@@ -1,163 +1,156 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2052.outbound.protection.outlook.com [40.107.7.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2D111720
-	for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 11:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CCB13FF6
+	for <mptcp@lists.linux.dev>; Fri, 13 Oct 2023 11:54:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="M8nlhbBi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YFpLz5keheMBhVXhtwdBpddabhxJZIwqsbfH8zmDpd+xPf84hy78dvIHS+TXdIZ+c4tfqbh32HvtE9O7/1FZs8OlUkuDYa29COqaJTPIowz8uaiOokzfns1i/DO0z7KdaKGw58Mq30E/1/s81SLK6qqsjlow9Fe5usHLWOCN+GpcXOXmf/JckAXCwnDKk811Fm9Pwjz6xATWgSzhh/GwgZLPlqMCUHUxbRlAf+gFZqVAUC9eujqUjDB8iSkRtqmidBM07vIjKLjM9DzLMQCmQcBWCJoTf06VkSuwlm+n8eHYEjee1YQvi76eLkKxkQPP8W5In0SwYo/pjB/+9Frd2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cx5vtHcIA5jq1QcQbawVsVfT9UEjY1ZMvLvTV5k68Ak=;
- b=TUAlxbIha70ig9+07cxjidLllFNlGQLCNSD7zl5YLdcD0E3YOJlpjmN4GsNSUEdGbT3zbZTTP1uBvkedeK1iMHB4A/WWPbvCgbwbDoKE3+qh1hLAL2X5D+08s7DxaU4R1qN6YTLNwRMi/PbszdezqXkQe1m/77oQxbZG25a6kYVR0UbtIi2k/fY7qlt6mivOaUOOas3/bzw8RuuBTpH8PpYb0bk1zxJkBem7acLwo/AHGghAIZl1+523d/xHIYs0UZVK/7MJiZ49pAEpt7HyxahjntMKUU3NZGE7mVbwuRoWoJoEugNRrI3BKfbzCWYZYMSDzOjdnYVMQXpXm7NTgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cx5vtHcIA5jq1QcQbawVsVfT9UEjY1ZMvLvTV5k68Ak=;
- b=M8nlhbBiO4eWe2vvrfMSfUhF/CJm/AbQQ3u8Ec1ZBEWPB6xpzETZGBb9qvlBkweUjCbYWtuwPfhNy7o0OOuEV3Jrwp9D5Y2QxyExdkeUsgt+J//7rkamBhtXhkvl+tkS8Zlo/qXz8W1APoOc8p5f9cW3DtDWK35UzDyJeobrVxQEMGfD6/g7kUrcGNEYXUpXptCdLSSBsCQv4T1c8pc4QMfZe+SDHtpR3J2kxPRyZl4To2Wm9rEMtEmhb/lkWtNhN3rbUxVSu7I2UWP167spUkwDPPzW/i9eYZSbA2fDXgS3mACV+gH9xt0ML9CSfQlPOARC7ktckvBUpX5Z3strHw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by DU2PR04MB8806.eurprd04.prod.outlook.com (2603:10a6:10:2e1::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.46; Fri, 13 Oct
- 2023 11:28:50 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::3852:4f89:9891:73c8]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::3852:4f89:9891:73c8%3]) with mapi id 15.20.6863.032; Fri, 13 Oct 2023
- 11:28:49 +0000
-Date: Fri, 13 Oct 2023 19:30:06 +0800
-From: Geliang Tang <geliang.tang@suse.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v16 0/8] userspace pm remove id 0 subflow &
- address
-Message-ID: <20231013113006.GA29962@bogon>
-References: <cover.1697175899.git.geliang.tang@suse.com>
- <8b9e4a05-7b65-4b2a-b4d9-3c5b03a894f9@kernel.org>
- <b783f33b-ae88-4509-9b9e-53736fd4dd5a@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b783f33b-ae88-4509-9b9e-53736fd4dd5a@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI2PR02CA0036.apcprd02.prod.outlook.com
- (2603:1096:4:195::15) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEOA4Ibc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4479AC433C8;
+	Fri, 13 Oct 2023 11:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697198053;
+	bh=eXP3NIU1vuBsEbwK0EnHCe3lP1OuA20e9hlYtRjB2Q0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HEOA4IbcYpk9CkDpcIfo4HhfbEQi8MsT/tZg0tGHpKvao5DawwwL5ut4iwdrqh47m
+	 7w4EtHo4rJAtDk9wkcwI2l8QsPJiLQd3VUklSyHG/frSYljEUU9SBD2zVhchIFnNTb
+	 dPtdwpmz8ESEHJec1rInYYrcm52UonPAA1VSp9GxLm+PPnGe4r2jDcpmB/B05n3jOP
+	 5fPdMrjvK79cBzz32e5bpAL7kY7i2us1Gacv/fjXEJGq0vBy1qMW81D+J1FCGpL3Rb
+	 ie6NzD7S1qrosPxgv7ZfBGPIBwZkPOdHn+WqqUHyK2bcBdsGVVimLvIXpv5Ce4NliF
+	 Eyyfl4ToDQQ1Q==
+Message-ID: <182b6946-11a9-46e8-b123-aab473ad5898@kernel.org>
+Date: Fri, 13 Oct 2023 13:54:11 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DU2PR04MB8806:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8db14cd-d41f-464c-7a9d-08dbcbdf9208
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	cNLBBA3kEUTlluFdPrS642MuosB5WpVCRfeAjaOgTER7vI7nYwGSTeqTLDy0/L7jklwNSusaX1rtABZdwjfSZkySUuMtDPmcmvHoTshrle8GKTi2mdeR76Yi1RnxiQkcd5AOOojXjPApY1TK9p6hOwBw0lyFwKBTr4NME3tJafZb+zlIFBUmiINvQB5BoJxpazEwL8xLyxJiwwgKvvVIS7no5Tu8XkqpMOSVBQHbjep0p5nt8DcmacjBto4hDM+RS+xW1AIdI5cxPqkSUBOtA2cJU6dYTb9Hdx3hmuWCoDWzhOzdvk5qEwVbV0UtqAxuV+ayLm4ABtp2DcHAuwWOf6P+cwajfBdPqJdtmnyrc3F6TkF72P0Et3++/B+cCz/yGACL0XoL1sdpBJqdALFxiXg5O5PDiLC9axDNzTaVzhf3OELueRoUaQcmrq1rFNrbw/EawGWB+DHGPgPpl3SFhHzQUU9lB2RiyaCzjoIotAgjV+be5PysevH+47mcQ5pWfWSwJ7GMkah2p/rbWwbnY/mHpke4rN7csjl8Kp7q/3BQfCuAi5T5f9DipKC92FNPqKyrRMyFEadQTT1d55pVEaKrKBsjPDa5NrYF8NAbsDYGXOTGU0NWTsK9YpStOdyV
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(39850400004)(136003)(376002)(366004)(396003)(346002)(230922051799003)(186009)(64100799003)(1800799009)(451199024)(2906002)(6486002)(66946007)(38100700002)(8936002)(33716001)(6916009)(316002)(66476007)(6666004)(6506007)(9686003)(6512007)(66556008)(478600001)(83380400001)(53546011)(1076003)(4326008)(8676002)(44832011)(26005)(33656002)(15974865002)(86362001)(41300700001)(5660300002)(13296009)(18886075002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tSVd934FCQDCY37UoQ8tPUDMvs/8IKGP9rpn4N5XYc+Uu7+5yy3UuOLrVRNH?=
- =?us-ascii?Q?5rL62lyJs8DXgvJf2at4PPi3z4RGaLHqBGps8AepAxhHy08Kk9AXSSLMXPAV?=
- =?us-ascii?Q?Hchc8Qzn1svyd7HYLmY5dK17Unlg9HGkDt0gPpV4qwT2HEI9AGOg/mzBxtvK?=
- =?us-ascii?Q?S451NzfdkkqluGNRd4L85F0n9zBrA0Kn46PEJ/nzWcVJrd96fxp9T1fGDiix?=
- =?us-ascii?Q?Be8+P9bxw/ekB0+IJbh12wHNzylv3QUGCTxTFqKiIU+IPg5lvlpFS0si5GJc?=
- =?us-ascii?Q?riT1Bh1bLibv0UAyqI6oaVn+vRzqVeYX5Cfeppdh32SXBTyUeeqR0x64TrXj?=
- =?us-ascii?Q?mIbhPYtAmkUZqaJg1evA6Rzxc6D+++l1t9N9B0x8y/QYjp94Ge0MQj/gF7WJ?=
- =?us-ascii?Q?bSOD1lScX03+IUeYKin6DAnR0tVU8XzE5mFYtM8xmsvmz8CwTghKUrUlH2vo?=
- =?us-ascii?Q?kwRgzGaR+7VNN2Jf65Qo2kjcgm9dgmIgXpGPnfMwPw3q+094+SpAbWX4Gp1O?=
- =?us-ascii?Q?8wDweioKzOqTB5HSHAmFoTgFAoG4V/Ae7zeOzCwzaG/dujtStD+jRaEsP+cW?=
- =?us-ascii?Q?pN5Oe90luQ0E/c5o1/zSlFgdRMCNwCRk6pBhbiwdqCE+gWJeij1d8EwsNEPC?=
- =?us-ascii?Q?nmeD4Gn3uXh6H2JEckaQImMuIhQserKAHKCQ7BXOFtPb6NJBrNfe0ZAJpEHK?=
- =?us-ascii?Q?ECuVaPGI0vZGMSmMEVzGf8n+Uj1YUS/MQPQ7TeFkcGPkdWcBm4brzm14WK69?=
- =?us-ascii?Q?8L0F8zgL2uUGzFe2Ve4UMAqCI1wbXW42aIxf524LH+M91CnkWaKX/hOOfXlv?=
- =?us-ascii?Q?hMKe6g2wc2FhVbugqUvbPFsPzDw1WpF4Hu1woPyy7yMrhinJtm4XbWYxDPQ2?=
- =?us-ascii?Q?lFaljHN620rF5yrJL4N+qFwPBgMDMhjXU21Qck1h67/4DBjeZvi8W8NpRL6I?=
- =?us-ascii?Q?QkPKFvZiNyHfZ6T/p8vZ0IoVUKbpexReC3YEemEIeYsYr2a5CdxVuEHNEfb8?=
- =?us-ascii?Q?NjWMHHURr2hGeyfsDTCCqtmpLjFZpUr7g6gvcNJfhgHAX+lBquAAmpOBHL1N?=
- =?us-ascii?Q?hlV20eJ1JVtMHm6phNfnQhTJdorBo7Spas0B8Rij46knCx31uwSJx8MFUEyZ?=
- =?us-ascii?Q?0nwe5aOa7iaLDsYXLpTeF9vJr0S4q91+So2ugWjLsMBObk4HUE2JSJTBad2b?=
- =?us-ascii?Q?ewgf86JJRXa5vPeZuRu4Rbve+xM7iCs2nEolwWH70Pp3J4ts83QohFkQAkAP?=
- =?us-ascii?Q?D8mE4JAE/F8aBJ9VpDTKQK7MI17AFzaPNoFZIteQBpvFVLqb6hVPaVnXedT3?=
- =?us-ascii?Q?BsIO1QjtrhEmIGQ4mob9AsU5TcLCNATL3+hvRnGQWjXMOC0b9SSaELshYlmR?=
- =?us-ascii?Q?20l3GbHGP+/FXvlfhFBl91gjvxa7pksWFo+xjm8SljaPECKvJglFm70IURvX?=
- =?us-ascii?Q?NnduA1xy0/+bVOVKTEAuEbHjbmOIydsIyP8tgngC5Wb4KsBar4nxRbpiGhZX?=
- =?us-ascii?Q?ttLu/QCRK47azVpdhFkXp/OPh6c3qMCERpuK+tnZwr9KmuoIArYwChysmOR/?=
- =?us-ascii?Q?dOVM451JgVDU4z3zp1zu7LV8/D8rdVNIgTGFLuPG?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8db14cd-d41f-464c-7a9d-08dbcbdf9208
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2023 11:28:49.2972
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LD06z5oc/EVSVsdTKh5OhaYPSXDXi6CapT+UJ1HExPuU9zyDH6lPd1SahNhsKysxHoPe3ROayEqlLW7jpjf4/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8806
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v16 0/8] userspace pm remove id 0 subflow &
+ address
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1697175899.git.geliang.tang@suse.com>
+ <8b9e4a05-7b65-4b2a-b4d9-3c5b03a894f9@kernel.org>
+ <b783f33b-ae88-4509-9b9e-53736fd4dd5a@kernel.org>
+ <20231013113006.GA29962@bogon>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ Fe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: Tessares
+In-Reply-To: <20231013113006.GA29962@bogon>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 13, 2023 at 11:36:36AM +0200, Matthieu Baerts wrote:
-> Hi Geliang,
+Hi Geliang,
+
+On 13/10/2023 13:30, Geliang Tang wrote:
+> On Fri, Oct 13, 2023 at 11:36:36AM +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 13/10/2023 10:31, Matthieu Baerts wrote:
+>>> Hi Geliang, Paolo,
+>>>
+>>> On 13/10/2023 07:46, Geliang Tang wrote:
+>>>> v16:
+>>>>  - address Matt's comments in v15.
+>>>
+>>> Thank you for the new version! It looks good to me!
+>>>
+>>> Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
+>>
+>> Mmh, I missed the errors reported by the CI:
+>>
+>> not ok 112 - mptcp_join: userspace pm add & remove address
+>> not ok 113 - mptcp_join: userspace pm create destroy subflow
+>> not ok 115 - mptcp_join: userspace pm remove initial subflow
+>> not ok 116 - mptcp_join: userspace pm send RM_ADDR for ID 0
+>>
+>> Do you mind looking at that, please?
 > 
-> On 13/10/2023 10:31, Matthieu Baerts wrote:
-> > Hi Geliang, Paolo,
-> > 
-> > On 13/10/2023 07:46, Geliang Tang wrote:
-> >> v16:
-> >>  - address Matt's comments in v15.
-> > 
-> > Thank you for the new version! It looks good to me!
-> > 
-> > Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
+> I can't reproduce these errors. All tests passed on my side.
 > 
-> Mmh, I missed the errors reported by the CI:
+> I run this command on my Thinkpad laptop:
 > 
-> not ok 112 - mptcp_join: userspace pm add & remove address
-> not ok 113 - mptcp_join: userspace pm create destroy subflow
-> not ok 115 - mptcp_join: userspace pm remove initial subflow
-> not ok 116 - mptcp_join: userspace pm send RM_ADDR for ID 0
+> docker run \
+> 	-e INPUT_BUILD_SKIP_PERF=1 \
+> 	-e INPUT_BUILD_SKIP_PACKETDRILL=1 \
+> 	-v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+>         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+> 	auto-debug
 > 
-> Do you mind looking at that, please?
-
-I can't reproduce these errors. All tests passed on my side.
-
-I run this command on my Thinkpad laptop:
-
-docker run \
-	-e INPUT_BUILD_SKIP_PERF=1 \
-	-e INPUT_BUILD_SKIP_PACKETDRILL=1 \
-	-v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-	auto-debug
-
-And this is my .virtme-exec-run:
-
-  run_selftest_one ./mptcp_join.sh -u
-
-Every tests passed.
-
-Is there a difference between my test environment and CI?
-
-Thanks,
--Geliang
-
+> And this is my .virtme-exec-run:
 > 
-> I wonder if I should not revert some patches (for the moment) or disable
-> some checks: these errors are visible on other builds, and we are
-> missing real issues.
+>   run_selftest_one ./mptcp_join.sh -u
 > 
-> Cheers,
-> Matt
-> -- 
-> Tessares | Belgium | Hybrid Access Solutions
-> www.tessares.net
+> Every tests passed.
+
+Thank you for looking at that!
+
+Maybe try to reproduce the issue in a loop using:
+
+  run_loop run_selftest_one ./mptcp_join.sh -u
+
+> Is there a difference between my test environment and CI?
+
+The public CI is very likely a slower environment that what you have on
+your side. To help to simulate such environment, when the tests start
+(because not needed before), I usually run 'stress-ng' in parallel:
+
+  nproc=$(nproc); nproc2=$((nproc * 2))
+  stress-ng --cpu "${nproc2}" --iomix "${nproc2}" --vm "${nproc2}"
+--vm-bytes 1G --timeout 60m
+
+If it is not enough, I also change the priority of the VM:
+
+  sudo renice 20 <pid of qemu>
+
+I hope it will help!
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
