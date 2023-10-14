@@ -1,125 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C49224EE;
-	Fri, 13 Oct 2023 17:28:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6055512B76;
+	Sat, 14 Oct 2023 00:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFuQYjJi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C085C433C9;
-	Fri, 13 Oct 2023 17:28:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g51YRqoZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F0620C433C8;
+	Sat, 14 Oct 2023 00:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697218109;
-	bh=a34qxta5xmju0t0eTmUvQCez4rNhvxoftWs6RmB0Oow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rFuQYjJiAuaa2RNowqH1PqNcVggRje2Dzp/JfuvYdnavOnrGv27hwTFH6qH1uucF4
-	 VcLp0nUV664Mo6lDlL9YrWakBRtJ47+96t4jLmw2B3pFBN7fhAo/oMQGRga6XkimfI
-	 R7It5TMS3D74Ive/T10KWst3+CN0VpjRjaOzPodBkG6ry5zkDUtplBpncwnfj6ReOO
-	 Gbdk9ROhVJ+LLgMUIuR9vYYEXaX/K7c8VdIHd/7VpBKdlLY2T3QtvbIPFkO6S8ehTJ
-	 RGiaVQFef7eiSSYZlYhOCJ+nn9i4QfZLYBBjPicAhEFGqHr4SCfZgETkpatcMQzqFl
-	 5I9YkIWEJAzGQ==
-Date: Fri, 13 Oct 2023 19:28:23 +0200
-From: Simon Horman <horms@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <martineau@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>
-Subject: Re: [PATCH net-next 4/6] uapi: mptcp: use header file generated from
- YAML spec
-Message-ID: <20231013172823.GR29570@kernel.org>
-References: <20231010-upstream-net-next-20231006-mptcp-ynl-v1-0-18dd117e8f50@kernel.org>
- <20231010-upstream-net-next-20231006-mptcp-ynl-v1-4-18dd117e8f50@kernel.org>
+	s=k20201202; t=1697241625;
+	bh=T/rhZgLqYprt6fGDBRWjkewervZRhxFXZK11xFRoG48=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=g51YRqoZQFdKTLWefjb7FB1fJ5GU/xOeaL+cbcb5u//lJiOJRZTAnoIL+mNKk64SU
+	 oWPkp7T72LjO4a7eynB1UHRKifz4Kjpu5N7aONqTPeY8ctB9IvxfZAe6ThBp4eel+Z
+	 gVTrYerK/iNxy+6J3hol/Q5U4bK41Y0p847ZNexRX4R/dXpj9yYwXfUWoa9vzRorp2
+	 RsrdnNgpArtGRwprTBWBjargsWSu9cQF5L+T/Wi2aD0hOZagAKoaFYcPPqPrz3Lief
+	 VKrxUDt5hzdwPRhfnND1nVQ3xH0K8LTrV6e8G+GdZPj1O3pe9Gajmw7aBjv5Cdv++1
+	 wMCb4TFmLMRYA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C9FBBE1F66C;
+	Sat, 14 Oct 2023 00:00:24 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231010-upstream-net-next-20231006-mptcp-ynl-v1-4-18dd117e8f50@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 net] tcp: allow again tcp_disconnect() when threads are
+ waiting
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <169724162482.10042.15716452478916528903.git-patchwork-notify@kernel.org>
+Date: Sat, 14 Oct 2023 00:00:24 +0000
+References: <f3b95e47e3dbed840960548aebaa8d954372db41.1697008693.git.pabeni@redhat.com>
+In-Reply-To: <f3b95e47e3dbed840960548aebaa8d954372db41.1697008693.git.pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, ayush.sawal@chelsio.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, dsahern@kernel.org,
+ mptcp@lists.linux.dev, borisp@nvidia.com, tdeseyn@redhat.com
 
-On Tue, Oct 10, 2023 at 09:21:45PM +0200, Matthieu Baerts wrote:
-> From: Davide Caratti <dcaratti@redhat.com>
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Wed, 11 Oct 2023 09:20:55 +0200 you wrote:
+> As reported by Tom, .NET and applications build on top of it rely
+> on connect(AF_UNSPEC) to async cancel pending I/O operations on TCP
+> socket.
 > 
-> generated with:
+> The blamed commit below caused a regression, as such cancellation
+> can now fail.
 > 
->  $ ./tools/net/ynl/ynl-gen-c.py --mode uapi \
->  > --spec Documentation/netlink/specs/mptcp.yaml \
->  > --header -o include/uapi/linux/mptcp_pm.h
-> 
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/340
-> Acked-by: Paolo Abeni <pabeni@redhat.com>
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-> Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
+> [...]
 
-...
+Here is the summary with links:
+  - [v2,net] tcp: allow again tcp_disconnect() when threads are waiting
+    https://git.kernel.org/netdev/net/c/419ce133ab92
 
-> diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
-> new file mode 100644
-> index 000000000000..0c7206531eb1
-> --- /dev/null
-> +++ b/include/uapi/linux/mptcp_pm.h
-> @@ -0,0 +1,149 @@
-> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
-> +/* Do not edit directly, auto-generated from: */
-> +/*	Documentation/netlink/specs/mptcp.yaml */
-> +/* YNL-GEN uapi header */
-> +
-> +#ifndef _UAPI_LINUX_MPTCP_PM_H
-> +#define _UAPI_LINUX_MPTCP_PM_H
-> +
-> +#define MPTCP_PM_NAME	"mptcp_pm"
-> +#define MPTCP_PM_VER	1
-> +
-> +/**
-> + * enum mptcp_event_type
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Hi Davide and Matthieu,
 
-I understand that is autogenerated.
-But it is missing an entry here for @MPTCP_EVENT_UNSPEC.
-Can that be addressed somehow?
-
-> + * @MPTCP_EVENT_CREATED: token, family, saddr4 | saddr6, daddr4 | daddr6,
-> + *   sport, dport A new MPTCP connection has been created. It is the good time
-> + *   to allocate memory and send ADD_ADDR if needed. Depending on the
-> + *   traffic-patterns it can take a long time until the MPTCP_EVENT_ESTABLISHED
-> + *   is sent.
-> + * @MPTCP_EVENT_ESTABLISHED: token, family, saddr4 | saddr6, daddr4 | daddr6,
-> + *   sport, dport A MPTCP connection is established (can start new subflows).
-> + * @MPTCP_EVENT_CLOSED: token A MPTCP connection has stopped.
-> + * @MPTCP_EVENT_ANNOUNCED: token, rem_id, family, daddr4 | daddr6 [, dport] A
-> + *   new address has been announced by the peer.
-> + * @MPTCP_EVENT_REMOVED: token, rem_id An address has been lost by the peer.
-> + * @MPTCP_EVENT_SUB_ESTABLISHED: token, family, loc_id, rem_id, saddr4 |
-> + *   saddr6, daddr4 | daddr6, sport, dport, backup, if_idx [, error] A new
-> + *   subflow has been established. 'error' should not be set.
-> + * @MPTCP_EVENT_SUB_CLOSED: token, family, loc_id, rem_id, saddr4 | saddr6,
-> + *   daddr4 | daddr6, sport, dport, backup, if_idx [, error] A subflow has been
-> + *   closed. An error (copy of sk_err) could be set if an error has been
-> + *   detected for this subflow.
-> + * @MPTCP_EVENT_SUB_PRIORITY: token, family, loc_id, rem_id, saddr4 | saddr6,
-> + *   daddr4 | daddr6, sport, dport, backup, if_idx [, error] The priority of a
-> + *   subflow has changed. 'error' should not be set.
-> + * @MPTCP_EVENT_LISTENER_CREATED: family, sport, saddr4 | saddr6 A new PM
-> + *   listener is created.
-> + * @MPTCP_EVENT_LISTENER_CLOSED: family, sport, saddr4 | saddr6 A PM listener
-> + *   is closed.
-> + */
-> +enum mptcp_event_type {
-> +	MPTCP_EVENT_UNSPEC,
-> +	MPTCP_EVENT_CREATED,
-> +	MPTCP_EVENT_ESTABLISHED,
-> +	MPTCP_EVENT_CLOSED,
-> +	MPTCP_EVENT_ANNOUNCED = 6,
-> +	MPTCP_EVENT_REMOVED,
-> +	MPTCP_EVENT_SUB_ESTABLISHED = 10,
-> +	MPTCP_EVENT_SUB_CLOSED,
-> +	MPTCP_EVENT_SUB_PRIORITY = 13,
-> +	MPTCP_EVENT_LISTENER_CREATED = 15,
-> +	MPTCP_EVENT_LISTENER_CLOSED,
-> +};
-
-...
