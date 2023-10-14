@@ -1,68 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6055512B76;
-	Sat, 14 Oct 2023 00:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4AB7482
+	for <mptcp@lists.linux.dev>; Sat, 14 Oct 2023 11:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g51YRqoZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F0620C433C8;
-	Sat, 14 Oct 2023 00:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697241625;
-	bh=T/rhZgLqYprt6fGDBRWjkewervZRhxFXZK11xFRoG48=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=g51YRqoZQFdKTLWefjb7FB1fJ5GU/xOeaL+cbcb5u//lJiOJRZTAnoIL+mNKk64SU
-	 oWPkp7T72LjO4a7eynB1UHRKifz4Kjpu5N7aONqTPeY8ctB9IvxfZAe6ThBp4eel+Z
-	 gVTrYerK/iNxy+6J3hol/Q5U4bK41Y0p847ZNexRX4R/dXpj9yYwXfUWoa9vzRorp2
-	 RsrdnNgpArtGRwprTBWBjargsWSu9cQF5L+T/Wi2aD0hOZagAKoaFYcPPqPrz3Lief
-	 VKrxUDt5hzdwPRhfnND1nVQ3xH0K8LTrV6e8G+GdZPj1O3pe9Gajmw7aBjv5Cdv++1
-	 wMCb4TFmLMRYA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C9FBBE1F66C;
-	Sat, 14 Oct 2023 00:00:24 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b0hRndqV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1697283478;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q7OKQnwlDTZH7fc4ejRpfuY4K+3qj8VyeLuTkuv/YT4=;
+	b=b0hRndqVkZXyRS2AOwigUS3NmKX35gYxt1WHWITNraMyxnv1axknG/1Pfm98CZOAGhXnGN
+	wAOVABT2VVgHHZ8rP7F8sUTKhMJxeFb3TBO1f7pjCzsPC4wf/n1PjKOS/jXX/KehihbwBy
+	yW8EIcJc+Htgv0dIBCYxUBtuGPRgXPg=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-220-UveOFCLlOWWDOsWacolESQ-1; Sat, 14 Oct 2023 07:37:57 -0400
+X-MC-Unique: UveOFCLlOWWDOsWacolESQ-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-50796a717f7so1899276e87.3
+        for <mptcp@lists.linux.dev>; Sat, 14 Oct 2023 04:37:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697283475; x=1697888275;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q7OKQnwlDTZH7fc4ejRpfuY4K+3qj8VyeLuTkuv/YT4=;
+        b=eUDOSon6+iuRFVWXDUdE73RxeSyv0xWazBlgJhSuCzovZgrTxarPiqezIADFIkBXTF
+         DKGIa7QQ932GzVjsu+LD0tTjTmLcCPpj15/Uj3qbHPQwryhRVqFDRWlcrr0M9Rkc0m7l
+         zZlAWZXGWoNJeDSAD+8Co6r7yxOLRw820KKvdwyEcDXW7lTFtzQjN07/KPjv2GglvNGy
+         s/WurcRPeIJMXVYcR+6rN6vyudFK0gNOMsFU07G9bcEbvU50oy9CpzK+s5OZ9Ir8+cSu
+         /0RZ5KVtNnmDPdBpaSWWClC30hPFAXR/axcRU6CR7AazT/V+P2Ike90WHODe91TXNghN
+         4bGQ==
+X-Gm-Message-State: AOJu0YwY6+Y1mDlJgN8/3iJac8hCLE4okVEPncNTQt4RPI1SwsCQddew
+	rO6MnfX/jIvHZ4C7Oh4OtOQlmX9K0HgVOyk1sR3LJwjTn50uHEeR/lqU5HJzRtUtrtvww1Z62Ei
+	rkJlTuHI2HGnn2L1TDA8ltBZ+s2nIzNc=
+X-Received: by 2002:a05:6512:32d1:b0:500:c292:e44e with SMTP id f17-20020a05651232d100b00500c292e44emr28662163lfg.54.1697283475639;
+        Sat, 14 Oct 2023 04:37:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHUFtQ6aw9XDovPqLFwY8Aolbb7Mfxyb/ninQMxSK4uIoJcgAKOlzcZJRVXLp7OZ8LMV+1Ilz7gTIWednQhLPc=
+X-Received: by 2002:a05:6512:32d1:b0:500:c292:e44e with SMTP id
+ f17-20020a05651232d100b00500c292e44emr28662154lfg.54.1697283475322; Sat, 14
+ Oct 2023 04:37:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 net] tcp: allow again tcp_disconnect() when threads are
- waiting
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169724162482.10042.15716452478916528903.git-patchwork-notify@kernel.org>
-Date: Sat, 14 Oct 2023 00:00:24 +0000
-References: <f3b95e47e3dbed840960548aebaa8d954372db41.1697008693.git.pabeni@redhat.com>
-In-Reply-To: <f3b95e47e3dbed840960548aebaa8d954372db41.1697008693.git.pabeni@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, ayush.sawal@chelsio.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, dsahern@kernel.org,
- mptcp@lists.linux.dev, borisp@nvidia.com, tdeseyn@redhat.com
+References: <20231010-upstream-net-next-20231006-mptcp-ynl-v1-0-18dd117e8f50@kernel.org>
+ <20231010-upstream-net-next-20231006-mptcp-ynl-v1-4-18dd117e8f50@kernel.org> <20231013172823.GR29570@kernel.org>
+In-Reply-To: <20231013172823.GR29570@kernel.org>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Sat, 14 Oct 2023 13:37:43 +0200
+Message-ID: <CAKa-r6uYbhF3zZrDaZdCE1fo4A8WF0MHNGmLS21fh11WcSfqOg@mail.gmail.com>
+Subject: Re: [PATCH net-next 4/6] uapi: mptcp: use header file generated from
+ YAML spec
+To: Simon Horman <horms@kernel.org>
+Cc: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Mat Martineau <martineau@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+hello Simon, thanks for reading!
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+On Fri, Oct 13, 2023 at 7:30=E2=80=AFPM Simon Horman <horms@kernel.org> wro=
+te:
+>
+> On Tue, Oct 10, 2023 at 09:21:45PM +0200, Matthieu Baerts wrote:
+> > From: Davide Caratti <dcaratti@redhat.com>
+> >
+> > generated with:
+> >
+> >  $ ./tools/net/ynl/ynl-gen-c.py --mode uapi \
+> >  > --spec Documentation/netlink/specs/mptcp.yaml \
+> >  > --header -o include/uapi/linux/mptcp_pm.h
 
-On Wed, 11 Oct 2023 09:20:55 +0200 you wrote:
-> As reported by Tom, .NET and applications build on top of it rely
-> on connect(AF_UNSPEC) to async cancel pending I/O operations on TCP
-> socket.
-> 
-> The blamed commit below caused a regression, as such cancellation
-> can now fail.
-> 
-> [...]
+[...]
 
-Here is the summary with links:
-  - [v2,net] tcp: allow again tcp_disconnect() when threads are waiting
-    https://git.kernel.org/netdev/net/c/419ce133ab92
+> > +/**
+> > + * enum mptcp_event_type
+>
+> Hi Davide and Matthieu,
+>
+> I understand that is autogenerated.
+> But it is missing an entry here for @MPTCP_EVENT_UNSPEC.
+> Can that be addressed somehow?
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+probably it just needs
+    doc: unused event
 
+in the YAML file, I will add it and regenerate the uAPI header
+--=20
+davide
 
