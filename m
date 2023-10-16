@@ -1,131 +1,135 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F5515491
-	for <mptcp@lists.linux.dev>; Mon, 16 Oct 2023 08:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E538923775
+	for <mptcp@lists.linux.dev>; Mon, 16 Oct 2023 11:34:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKUVOfph"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-77409065623so244572085a.0
-        for <mptcp@lists.linux.dev>; Mon, 16 Oct 2023 01:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697444962; x=1698049762; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1DpIYK5mF0MSnRsETEFqEC2eVSBzsJx/NgGHPZWC4yY=;
-        b=UKUVOfph89JWydIzGev9nIXiBOQtSthlNZ1kTrnjOiBahqsfbIzcoLE0ZVApshPj+n
-         zwRwYgdGxtlZGDXdJ77GJGU9LapxxVwA+Cwbbqot3sn2AaROW1x475Xx3mDhqy4VBnPW
-         rX+ggOAg3rhRf9KL43kjHaWg8Nva5cPQNjS+DCFEkbOr7N8zS4lwiJKXOydEAnhI+6cP
-         p1R4mtvIbOQV9OFJFZuJlrn0xxg1cuRGbiek2U0HxIGEuaJqR3dJIoowHG65CbVmucun
-         3epdYwtSUgutHNPlWQ9DqmtmH3d0XkZF6GGIhetUOe2kq4EyJGI3PKf9vUWutnTzHAfB
-         tgGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697444962; x=1698049762;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1DpIYK5mF0MSnRsETEFqEC2eVSBzsJx/NgGHPZWC4yY=;
-        b=sIl/rkGzIIv5/REviw3vcjsr2t4aJDU9Y4a6DYrYOguoyr7xXtQAThTHCu6gtYaKFW
-         ov9gT8M8f9hUvQXbCTKm0uvgeNh4eHMAb96Enw+pBl8NCme+evlTfMwL2O2aEUeoDlZE
-         cYnhYyg5Z95+ScfGLofJpvdzpIhG6qHNEPvDLj0ypxoYs8WK/oIKcQ9RIcJ61gFxT13y
-         cOYw6hCl/GAl3muPCkwb3Vvm+JsGu+yAtTLiBLckKO8yKn9XanjeTM+EIrGLAQXyG9lU
-         cC1DHiAdGrhQ/PT8uzX3kH0ABFcsukpzNGmDg3il5pBHcJ0bkJQnUCyoHsptPifdOVQN
-         VI7w==
-X-Gm-Message-State: AOJu0YwUiV5ZUCX0FFFl0XhJ2DayrSBxw9t4F1FSUUr2XUw91Xo5TahV
-	cGC6AlkvyHzD1Cx8JnnEkA==
-X-Google-Smtp-Source: AGHT+IGMhZSGRywjmbxrwL/wYQiTf+RSUr35RLzfp8HggxfAq2SAmrz9OPed+GtnPBrsY3rCNYs/+g==
-X-Received: by 2002:a05:620a:a01:b0:774:19cf:f3e3 with SMTP id i1-20020a05620a0a0100b0077419cff3e3mr29064751qka.76.1697444962462;
-        Mon, 16 Oct 2023 01:29:22 -0700 (PDT)
-Received: from [127.0.0.1] ([20.57.41.232])
-        by smtp.gmail.com with ESMTPSA id ou33-20020a05620a622100b00767d572d651sm2825213qkn.87.2023.10.16.01.29.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Oct 2023 01:29:21 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <eecafe25f06b1ee7174d9a2b06fd6774441503ee.1697431973.git.geliang.tang@suse.com>
-References:
- <eecafe25f06b1ee7174d9a2b06fd6774441503ee.1697431973.git.geliang.tang@suse.com>
-Subject: =?UTF-8?Q?Re=3A_Squash_to_=22selftests=3A_mptcp=3A?=
- =?UTF-8?Q?_userspace_pm_create_id_0_subflow=22=3A_?=
- =?UTF-8?Q?Tests_Results?=
-Message-ID: <a6d26a0f-9ba2-a4a0-9c21-ce36ebe8710d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Oct 2023 08:29:21 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoUwnAAG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24E2C433C7;
+	Mon, 16 Oct 2023 11:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697456048;
+	bh=DWZkB5XsFgsMufclBv27WVlqbxRNxeaHJlLv2ZbPuIQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EoUwnAAGwwEoI7hDfD6F+DnZxeXYwgBOs6kwlYHRDbGOD7jLlRAE1j0pZ1aRVVfOL
+	 gWbIkByUyhjuKtGjtZVCD2LRgwzvB93lNrbJBQH73KOf2VwEZ/NtUPyGM/RKD5UGNT
+	 PahjFPpSezi4bnzfzGK37MhK+nUDGBk80JdzLII3Q4v/4Y2+zH3rqB6cnqMBXoe5wQ
+	 M7bfFK3D7j2cpGTgytfeLE+1S9NMXGgS62LaTYcMkUdRKuvPvkrkUO58vKb1Ft0Oy0
+	 IoS5k/X8DZ4YtDTbl9vHorXs0Qeo2duuV//rXnswWwa+7Ie5JkwyCQOT8qa8iiO6m/
+	 qRePDNwmSHA+A==
+Message-ID: <439ff464-675a-40d7-9c1b-3e8224a23be2@kernel.org>
+Date: Mon, 16 Oct 2023 13:34:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next] Squash to: "net: mptcp: use policy generated
+ by YAML spec"
+Content-Language: en-GB, fr-BE
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <36fe14dbd444daf86a22cfa5fb50d590324e7b58.1697190267.git.dcaratti@redhat.com>
+ <ee31bfb2-9fe0-4d20-ad6f-1627d048613d@kernel.org>
+ <CAKa-r6vwzXYMcn7aP_ap+aHsApCngjwBRraUEk=zQSV2WngJ3g@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ Fe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: Tessares
+In-Reply-To: <CAKa-r6vwzXYMcn7aP_ap+aHsApCngjwBRraUEk=zQSV2WngJ3g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Davide,
 
-Thank you for your modifications, that's great!
+On 13/10/2023 17:53, Davide Caratti wrote:
+> hello Matthieu,
+> 
+> On Fri, Oct 13, 2023 at 5:07 PM Matthieu Baerts <matttbe@kernel.org> wrote:
+>>
+>> Hi Davide,
+>>
+> 
+>>
+>> I'm not sure to understand your modification: is it just a test patch to
+>> check that the CI is OK with the modifications, or do you want to have
+>> this patch included in the tree?
+> 
+> yes the goal was to check NLA_POLICY_EXACT_LEN() with CI (we already
+> have it, but better to double check on top of the whole series).
+> By the way , I see a failure but it doesn't seem real (I hope :) )
 
-Our CI did some validations and here is its report:
+Good!
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4578649421119488
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4578649421119488/su=
-mmary/summary.txt
+>> Because I guess we cannot just accept this patch, we also need a
+>> modification of the YAML spec and the YNL tool. Then this file you
+>> modified here will be re-generated, and we will get this new result, no?
+> 
+> right, I have a series ready that also includes the parser of
+> 'exact-len:' key in specfiles (and a de-uglified yaml spec, as per
+> Jakub's comment). If you are ok with it, I will send this series
+> directly to netdev - then, 'export' and 'net-next' will slightly
+> differ until the next merge. Let me know if that is ok for you,
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6267499281383424
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6267499281383424/su=
-mmary/summary.txt
+I would prefer to have squash-to patches, so we can easily review the
+modifications and apply them in our tree before sending them to
+'net-next' (or this last step in parallel). Also, by doing that, the
+MPTCP CI will be able to validate the modifications.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5141599374540800
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5141599374540800/summary/summary.txt
+If a different version is applied in net-next, the MPTCP tree will no
+longer be in sync: it means the CI might not be able to automatically
+sync with net-next and manual steps might be required.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5704549327962112
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5704549327962112/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/73c27f3a33d9
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+But if the series had a lot of modifications and having squash-to
+patches no longer make sense, we can work around that: reverting the
+different patches one by one, resolving manually the conflicts, etc. I
+can also try to apply a v2, but again, with manually steps :)
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
