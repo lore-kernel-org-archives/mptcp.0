@@ -1,96 +1,131 @@
-Received: from out-194.mta0.migadu.com (out-194.mta0.migadu.com [91.218.175.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0676515EBA
-	for <mptcp@lists.linux.dev>; Mon, 16 Oct 2023 07:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F5515491
+	for <mptcp@lists.linux.dev>; Mon, 16 Oct 2023 08:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VIpktDha"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1697441027;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wKbra8FNzhZFX6d/ectQwvnFj0yJ/7rECU5VKdxro4I=;
-	b=VIpktDhamewNfbgo0JcR7/xvfKaH7U6syYUsoioQdCLwVApszkE+kw7qyU27DKDVTjq5jF
-	FerK4OyjkfI3IGrMrVzsAzQbaCqnByyw9Xt+2u+8OOHjF1QxyGp7hVnmzR8gwOFYlyzd92
-	amZZdj0usZDyhfzu4OrsxY8eb5wW6MA=
-From: Geliang Tang <geliang.tang@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v2 2/3] selftests: mptcp: fix wait_rm_addr/sf parameters
-Date: Mon, 16 Oct 2023 15:21:23 +0800
-Message-Id: <6b2e6b713d130a23e1c103acaba5aad3809e93ba.1697431973.git.geliang.tang@suse.com>
-In-Reply-To: <cover.1697431973.git.geliang.tang@suse.com>
-References: <cover.1697431973.git.geliang.tang@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKUVOfph"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-77409065623so244572085a.0
+        for <mptcp@lists.linux.dev>; Mon, 16 Oct 2023 01:29:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697444962; x=1698049762; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1DpIYK5mF0MSnRsETEFqEC2eVSBzsJx/NgGHPZWC4yY=;
+        b=UKUVOfph89JWydIzGev9nIXiBOQtSthlNZ1kTrnjOiBahqsfbIzcoLE0ZVApshPj+n
+         zwRwYgdGxtlZGDXdJ77GJGU9LapxxVwA+Cwbbqot3sn2AaROW1x475Xx3mDhqy4VBnPW
+         rX+ggOAg3rhRf9KL43kjHaWg8Nva5cPQNjS+DCFEkbOr7N8zS4lwiJKXOydEAnhI+6cP
+         p1R4mtvIbOQV9OFJFZuJlrn0xxg1cuRGbiek2U0HxIGEuaJqR3dJIoowHG65CbVmucun
+         3epdYwtSUgutHNPlWQ9DqmtmH3d0XkZF6GGIhetUOe2kq4EyJGI3PKf9vUWutnTzHAfB
+         tgGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697444962; x=1698049762;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=1DpIYK5mF0MSnRsETEFqEC2eVSBzsJx/NgGHPZWC4yY=;
+        b=sIl/rkGzIIv5/REviw3vcjsr2t4aJDU9Y4a6DYrYOguoyr7xXtQAThTHCu6gtYaKFW
+         ov9gT8M8f9hUvQXbCTKm0uvgeNh4eHMAb96Enw+pBl8NCme+evlTfMwL2O2aEUeoDlZE
+         cYnhYyg5Z95+ScfGLofJpvdzpIhG6qHNEPvDLj0ypxoYs8WK/oIKcQ9RIcJ61gFxT13y
+         cOYw6hCl/GAl3muPCkwb3Vvm+JsGu+yAtTLiBLckKO8yKn9XanjeTM+EIrGLAQXyG9lU
+         cC1DHiAdGrhQ/PT8uzX3kH0ABFcsukpzNGmDg3il5pBHcJ0bkJQnUCyoHsptPifdOVQN
+         VI7w==
+X-Gm-Message-State: AOJu0YwUiV5ZUCX0FFFl0XhJ2DayrSBxw9t4F1FSUUr2XUw91Xo5TahV
+	cGC6AlkvyHzD1Cx8JnnEkA==
+X-Google-Smtp-Source: AGHT+IGMhZSGRywjmbxrwL/wYQiTf+RSUr35RLzfp8HggxfAq2SAmrz9OPed+GtnPBrsY3rCNYs/+g==
+X-Received: by 2002:a05:620a:a01:b0:774:19cf:f3e3 with SMTP id i1-20020a05620a0a0100b0077419cff3e3mr29064751qka.76.1697444962462;
+        Mon, 16 Oct 2023 01:29:22 -0700 (PDT)
+Received: from [127.0.0.1] ([20.57.41.232])
+        by smtp.gmail.com with ESMTPSA id ou33-20020a05620a622100b00767d572d651sm2825213qkn.87.2023.10.16.01.29.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Oct 2023 01:29:21 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <eecafe25f06b1ee7174d9a2b06fd6774441503ee.1697431973.git.geliang.tang@suse.com>
+References:
+ <eecafe25f06b1ee7174d9a2b06fd6774441503ee.1697431973.git.geliang.tang@suse.com>
+Subject: =?UTF-8?Q?Re=3A_Squash_to_=22selftests=3A_mptcp=3A?=
+ =?UTF-8?Q?_userspace_pm_create_id_0_subflow=22=3A_?=
+ =?UTF-8?Q?Tests_Results?=
+Message-ID: <a6d26a0f-9ba2-a4a0-9c21-ce36ebe8710d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 16 Oct 2023 08:29:21 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: Geliang Tang <geliang.tang@suse.com>
+Hi Geliang,
 
-The second input parameter of 'wait_rm_addr/sf $1 1' is misused. If it's
-1, wait_rm_addr/sf will never break, and will loop ten times, then
-'wait_rm_addr/sf' equals to 'sleep 1'. This delay time is too long,
-which can sometimes make the tests failures.
+Thank you for your modifications, that's great!
 
-A better way to use wait_rm_addr/sf is to use rm_addr/sf_count to obtain
-the current value, and then pass into wait_rm_addr/sf.
+Our CI did some validations and here is its report:
 
-Fixes: 4369c198e599 ("selftests: mptcp: test userspace pm out of transfer")
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4578649421119488
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4578649421119488/su=
+mmary/summary.txt
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 1fc33bb3aba1..b1386b07e312 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3311,12 +3311,14 @@ userspace_pm_rm_addr()
- {
- 	local evts=$evts_ns1
- 	local tk
-+	local cnt
- 
- 	[ "$1" == "$ns2" ] && evts=$evts_ns2
- 	tk=$(mptcp_lib_evts_get_info token "$evts")
- 
-+	cnt=$(rm_addr_count ${1})
- 	ip netns exec $1 ./pm_nl_ctl rem token $tk id $2
--	wait_rm_addr $1 1
-+	wait_rm_addr $1 "${cnt}"
- }
- 
- # $1: ns ; $2: addr ; $3: id
-@@ -3342,6 +3344,7 @@ userspace_pm_rm_sf()
- 	local t=${3:-1}
- 	local ip=4
- 	local tk da dp sp
-+	local cnt
- 
- 	[ "$1" == "$ns2" ] && evts=$evts_ns2
- 	if is_v6 $2; then ip=6; fi
-@@ -3350,9 +3353,10 @@ userspace_pm_rm_sf()
- 	dp=$(mptcp_lib_evts_get_info dport "$evts" $t)
- 	sp=$(mptcp_lib_evts_get_info sport "$evts" $t)
- 
-+	cnt=$(rm_sf_count ${1})
- 	ip netns exec $1 ./pm_nl_ctl dsf lip $2 lport $sp \
- 				rip $da rport $dp token $tk
--	wait_rm_sf $1 1
-+	wait_rm_sf $1 "${cnt}"
- }
- 
- userspace_tests()
--- 
-2.35.3
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6267499281383424
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6267499281383424/su=
+mmary/summary.txt
 
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5141599374540800
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5141599374540800/summary/summary.txt
+
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5704549327962112
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5704549327962112/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/73c27f3a33d9
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
