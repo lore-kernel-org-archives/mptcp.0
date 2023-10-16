@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E538923775
-	for <mptcp@lists.linux.dev>; Mon, 16 Oct 2023 11:34:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EB02511C
+	for <mptcp@lists.linux.dev>; Mon, 16 Oct 2023 11:53:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoUwnAAG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24E2C433C7;
-	Mon, 16 Oct 2023 11:34:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjPQZZsP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8242C433C7;
+	Mon, 16 Oct 2023 11:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697456048;
-	bh=DWZkB5XsFgsMufclBv27WVlqbxRNxeaHJlLv2ZbPuIQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EoUwnAAGwwEoI7hDfD6F+DnZxeXYwgBOs6kwlYHRDbGOD7jLlRAE1j0pZ1aRVVfOL
-	 gWbIkByUyhjuKtGjtZVCD2LRgwzvB93lNrbJBQH73KOf2VwEZ/NtUPyGM/RKD5UGNT
-	 PahjFPpSezi4bnzfzGK37MhK+nUDGBk80JdzLII3Q4v/4Y2+zH3rqB6cnqMBXoe5wQ
-	 M7bfFK3D7j2cpGTgytfeLE+1S9NMXGgS62LaTYcMkUdRKuvPvkrkUO58vKb1Ft0Oy0
-	 IoS5k/X8DZ4YtDTbl9vHorXs0Qeo2duuV//rXnswWwa+7Ie5JkwyCQOT8qa8iiO6m/
-	 qRePDNwmSHA+A==
-Message-ID: <439ff464-675a-40d7-9c1b-3e8224a23be2@kernel.org>
-Date: Mon, 16 Oct 2023 13:34:06 +0200
+	s=k20201202; t=1697457221;
+	bh=+FgU1FKs1TJY3cLsNGlFUWALGwxDwRzfQ7SMRC3t3tE=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=TjPQZZsPnD6aOR6GW3JtC6jc0m5izcfDvvqfPH6E5CI/AF6OhsG7dj4uMlnQfRhBK
+	 NxlM6bhNpGkddOdPL2skUT792AFWmpQIvdjM4D73aAIhilxQvvm3S7KObg8HFGDEHM
+	 MBh6BLJPRvofR8KidiYhdt6kcRsnmZJs+f+KCyZ1cX51oAyrqvtzx1jAuD+7ZZYXEK
+	 jE9LX0QwmkXcPxMYx0uzt+aIqDztttLAEONyQYaMe0J4BvVjW5O6FJa3BJGsZpp4PQ
+	 llbhkSUCyaGDbv1N773HVZRf7NV2l32SpOGKT8S3LONKoaBT2nIRQc8rNtw4atHndZ
+	 yVIQTRBXOXyJA==
+Message-ID: <68dcded0-6821-4c51-9031-f3cce40d98ce@kernel.org>
+Date: Mon, 16 Oct 2023 13:53:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,14 +26,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to: "net: mptcp: use policy generated
- by YAML spec"
+Subject: Re: [PATCH mptcp-next v16 3/8] Squash to "mptcp: add
+ mptcpi_subflows_total counter"
 Content-Language: en-GB, fr-BE
-To: Davide Caratti <dcaratti@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <36fe14dbd444daf86a22cfa5fb50d590324e7b58.1697190267.git.dcaratti@redhat.com>
- <ee31bfb2-9fe0-4d20-ad6f-1627d048613d@kernel.org>
- <CAKa-r6vwzXYMcn7aP_ap+aHsApCngjwBRraUEk=zQSV2WngJ3g@mail.gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+References: <cover.1697175899.git.geliang.tang@suse.com>
+ <4f136ef2b23fb55e2e42397f1e07e74b355d5f61.1697175899.git.geliang.tang@suse.com>
+ <e3769002c1ff6139f9359413cd1ad415e593a3f2.camel@redhat.com>
+ <b7f0d827-ff8f-4348-be2b-c33e56b736ff@kernel.org>
+ <5f72f297be7687b86eec5ac19ef51c8a3df98048.camel@redhat.com>
+Cc: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -79,54 +81,135 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: Tessares
-In-Reply-To: <CAKa-r6vwzXYMcn7aP_ap+aHsApCngjwBRraUEk=zQSV2WngJ3g@mail.gmail.com>
+In-Reply-To: <5f72f297be7687b86eec5ac19ef51c8a3df98048.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Davide,
+Hi Paolo,
 
-On 13/10/2023 17:53, Davide Caratti wrote:
-> hello Matthieu,
-> 
-> On Fri, Oct 13, 2023 at 5:07 PM Matthieu Baerts <matttbe@kernel.org> wrote:
+Thank you for your replies!
+
+On 13/10/2023 17:35, Paolo Abeni wrote:
+> On Fri, 2023-10-13 at 12:46 +0200, Matthieu Baerts wrote:
+>> On 13/10/2023 12:32, Paolo Abeni wrote:
+>>> Hi,
+>>>
+>>> On Fri, 2023-10-13 at 13:46 +0800, Geliang Tang wrote:
+>>>> Update __mptcp_has_initial_subflow().
+>>>>
+>>>> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+>>>> ---
+>>>>  net/mptcp/protocol.h | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>>>> index 6508179e94a6..1fb4ac3727c4 100644
+>>>> --- a/net/mptcp/protocol.h
+>>>> +++ b/net/mptcp/protocol.h
+>>>> @@ -1081,7 +1081,7 @@ static inline bool __mptcp_has_initial_subflow(const struct mptcp_sock *msk)
+>>>>  {
+>>>>  	struct sock *ssk = READ_ONCE(msk->first);
+>>>>  
+>>>> -	return ssk && inet_sk_state_load(ssk) != TCP_CLOSE;
+>>>> +	return ssk && inet_sk_state_load(ssk) == TCP_ESTABLISHED;
+>>>
+>>> I think the above is not correct, __mptcp_has_initial_subflow() will
+>>> return false before connect completes and/or for listener sockets.
 >>
->> Hi Davide,
+>> Please note that __mptcp_has_initial_subflow() is there just to count
+>> the number of subflows. It is being used with 'msk->pm.subflows' and it
+>> is supposed to have the same "behaviour". Then I don't think we should
+>> increment the subflow counter for listener sockets, no?
+> 
+> If the goal is giving an accurate count of the total number of
+> subflows, I think we should: the msk listener has 1 subflow: the tcp
+> listener.
+
+Good point! I was thinking about subflows that were visible on the wire,
+but yes, there is a subflow there.
+
+If we look at 'ss' output, we will also see one TCP subflow (with ulp
+mptcp) for this listener socket, so displaying 1 for the total number of
+subflows would make more sense.
+
+So yes, we should add TCPF_LISTEN.
+
+>>> You can list explicitly add the valid states with something alike:
+>>>
+>>> 	(1 << inet_sk_state_load(ssk)) & (TCPF_ESTABLISHED |
+>>> TCPF_SYN_SENT | TCPF_SYN_RECV | TCPF_LISTEN | TCPF_CLOSE_WAIT)
+>>>
+>>> I'm unsure if we should include CLOSE_WAIT here: the remote has shut
+>>> down, but this end can still send data...
 >>
+>> Maybe better, no? As long as the behaviour is similar to the one with
+>> 'msk->pm.subflows'.
 > 
+> If we keep the way we account for MPJ subflows as a reference
+> CLOSE_WAIT status must be excluded. I agree/now see it's the better
+> option.
+
+OK, so no CLOSE_WAIT, right?
+
+>>> Side important note: you are too fast :) There are a lot of in-flight
+>>> patches, and it's difficult to follow each series consistently. I
+>>> suggest to focus on a small subset - possibly on a single series at the
+>>> time.
+>>>
+>>> e.g. The first 2 patches in this series are IMHO ready to be merged
+>>> [*]. If Mat could apply them, you could follow-up with the remaining
+>>> bits of this series.
 >>
->> I'm not sure to understand your modification: is it just a test patch to
->> check that the CI is OK with the modifications, or do you want to have
->> this patch included in the tree?
+>> Sure, I can do that.
+>>
+>> Regarding patch 1/8, do you think we should send that to "-net"? The
+>> patch looks OK to me but on the other hand, it is not a big issue to
+>> reset the initial subflow (but not ideal) if we fear regressions due to
+>> this patch. WDYT?
 > 
-> yes the goal was to check NLA_POLICY_EXACT_LEN() with CI (we already
-> have it, but better to double check on top of the whole series).
-> By the way , I see a failure but it doesn't seem real (I hope :) )
+> I think both patch 1 & 2 should go via -net, but I'm not 110% sure
+> there will be not regressions free. Perhaps we can let stage a bit in
+> our tree?
 
-Good!
+Sure, good idea!
 
->> Because I guess we cannot just accept this patch, we also need a
->> modification of the YAML spec and the YNL tool. Then this file you
->> modified here will be re-generated, and we will get this new result, no?
+I can apply these patches now.
+
+>>> [*] modulo some expansion to the changelog of patch 1, but that could
+>>> happen even after merging IMHO.
+>>
+>> Indeed. But we might forget :)
+>> So if you have any suggestions, do not hesitate to share them :-)
 > 
-> right, I have a series ready that also includes the parser of
-> 'exact-len:' key in specfiles (and a de-uglified yaml spec, as per
-> Jakub's comment). If you are ok with it, I will send this series
-> directly to netdev - then, 'export' and 'net-next' will slightly
-> differ until the next merge. Let me know if that is ok for you,
+> I would re-phrase the commit message roughly as follow:
+> 
+> """
+> When closing the first subflow, the MPTCP protocol unconditionally
+> calls tcp_disconnect(), which in turn generates a reset if the subflow
+> is established. 
+> 
+> That is unexpected and different from what MPTCP does with MPJ
+> subflows, where resets are generated only on FASTCLOSE and other edge
+> scenarios.
+> 
+> We can't reuse for the first subflow the same code in place for MPJ
+> subflows, as MPTCP clean them up completely via a tcp_close() call,
+> while must keep the first subflow socket alive for later re-usage, due
+> to implementation constraints.
+> 
+> This patch adds a new helper __mptcp_subflow_disconnect() that
+> encapsulates, a logic similar to tcp_close, issuing a reset only when
+> the MPTCP_CF_FASTCLOSE flag is set, and performing a clean shutdown
+> otherwise.
+> """
 
-I would prefer to have squash-to patches, so we can easily review the
-modifications and apply them in our tree before sending them to
-'net-next' (or this last step in parallel). Also, by doing that, the
-MPTCP CI will be able to validate the modifications.
+I suggest to also modify the title, something like:
 
-If a different version is applied in net-next, the MPTCP tree will no
-longer be in sync: it means the CI might not be able to automatically
-sync with net-next and manual steps might be required.
+    mptcp: avoid sending RST when closing the initial subflow
 
-But if the series had a lot of modifications and having squash-to
-patches no longer make sense, we can work around that: reverting the
-different patches one by one, resolving manually the conflicts, etc. I
-can also try to apply a v2, but again, with manually steps :)
+And this Fixes tag:
+
+    Fixes: c2b2ae3925b6 ("mptcp: handle correctly disconnect() failures")
 
 Cheers,
 Matt
