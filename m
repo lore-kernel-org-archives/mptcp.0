@@ -1,131 +1,77 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A981FD5
-	for <mptcp@lists.linux.dev>; Tue, 17 Oct 2023 04:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D633C6B4;
+	Tue, 17 Oct 2023 08:58:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crfzIZNz"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-77409065623so303920285a.0
-        for <mptcp@lists.linux.dev>; Mon, 16 Oct 2023 21:08:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697515719; x=1698120519; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uKMECeapINOlbqvTjQlcMsdmk9e5HLsQ6AupVx6huH0=;
-        b=crfzIZNzrhrcgrgycsXdSkh2PM6wZle87FO2BrClfSBz8lTMx6AVamcvuUOfJ4U60V
-         VniLNkVjvDlyIuOdafTGr7ViXbJB1EW+eGskyOV8a+HsOeMskWwvOrKYPSz12fM4Jmo2
-         PYNtw/4y4dbG707UjFNaXAipnARAE+x4t6579suWfx6ikayYT7ZlWAbtnf7bNVRMhItV
-         lbKXmkXBOK3uGIMg7JLBUkwqCTTGmdEqS9T1SX883HOU+Tqj8OShKiHGN16Sf4B5dRfi
-         OHohvoeiUfz8MbEXU/Dx8U2lrF0AEctBgUzayDp/QnZ8KLJZkCtKDG7OBTBxTmQNd1xn
-         bToA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697515719; x=1698120519;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uKMECeapINOlbqvTjQlcMsdmk9e5HLsQ6AupVx6huH0=;
-        b=IIAXdnIV7Z8DAJVHq7ZnGh+V6iHm/NJAUtKZo3Awsqa/qO7jY+BY5YySe/wxN5gJhi
-         nw15UaJ0QCdCFQgcalnhBOU0wfoRUURp7+9dAKTbmMOu4vqpGu4+REO0iCM+Wat/hiBu
-         M0c8sUu/Vqq2T1S/eLagC9OD/dqwI4qPyMFjBspt7xBRfhedozx7PBXMggl5+3QmD53w
-         IHVzKbS1TarCxAp7kFXpWlHId782ctqX/ZMhlmQ8x4TeGOzkQGXPmozcOVADgjIRsflG
-         NwA5O07/kcSJHq5/vRXZjptKbjG3atyUtx4LDccbnS7D/rbrmpvRKUj0IgB90uIy7L8W
-         jBSA==
-X-Gm-Message-State: AOJu0Yy/ngMYmxfUjrNjluU23WEWfOczajVqvgs5sBijAHAFWx/1sT0o
-	zYajGif/s2tnjgfxpYCvWjqKesfD6g==
-X-Google-Smtp-Source: AGHT+IHG+EPP9+sZj57YMuVWDYbboyt7DupYBexnigH+ammx6xaxjkhmJhPXb5IXJ+ksGTNRa4KSBw==
-X-Received: by 2002:a05:620a:2406:b0:774:16fc:65eb with SMTP id d6-20020a05620a240600b0077416fc65ebmr1360078qkn.4.1697515719253;
-        Mon, 16 Oct 2023 21:08:39 -0700 (PDT)
-Received: from [127.0.0.1] ([20.57.44.125])
-        by smtp.gmail.com with ESMTPSA id u22-20020a05620a085600b00767d572d651sm316532qku.87.2023.10.16.21.08.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Oct 2023 21:08:38 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <d85a4f247289d84da2c6a8235afc46fa144a91e7.1697511436.git.geliang.tang@suse.com>
-References:
- <d85a4f247289d84da2c6a8235afc46fa144a91e7.1697511436.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: userspace pm send RM_ADDR for ID 0: Tests
- Results
-Message-ID: <dd43ecbb-0915-fb87-4013-8ae173d3f8a7@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Oct 2023 04:08:38 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZmMzkaT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA962C433C9;
+	Tue, 17 Oct 2023 08:58:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697533096;
+	bh=ai4SUF4E5CkgY9PAcDU6r0weDFiwnBjcYowBmrlv3lU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OZmMzkaThqW4ml7KX+DSLpxf5Riq/6HRRf1y+pDlc6bVlVgkj5HJnQWmRl5S9+5Yr
+	 Ceu0/hDxJPbxeK0KyucKWMTRHl/fIZAnOvNYH/Hn8vkEL54evdkj+5Ve5nmfW6Ebjn
+	 2q0qb2olb3hNPy5hnSgCIY/DtBBB1scf8IGiD8J1ZCPMvJD+cIp7NeLABFdr77AKJr
+	 5dP7LzQu2h2VYzfCh7Sy8viaxjLfYsrh7DAU79PSmgJeYkLyyepqFQIuioB7cr6Yg3
+	 ZO47ij2TuOqLsq0ycH7JCpewBytdNDJmsdIqIgAjXkOLOBpCHZ8cQ+szSz2JNb5n02
+	 Q0YgBAYQzuf5w==
+Date: Tue, 17 Oct 2023 10:58:13 +0200
+From: Simon Horman <horms@kernel.org>
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mat Martineau <martineau@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 4/6] uapi: mptcp: use header file generated from
+ YAML spec
+Message-ID: <20231017085813.GP1751252@kernel.org>
+References: <20231010-upstream-net-next-20231006-mptcp-ynl-v1-0-18dd117e8f50@kernel.org>
+ <20231010-upstream-net-next-20231006-mptcp-ynl-v1-4-18dd117e8f50@kernel.org>
+ <20231013172823.GR29570@kernel.org>
+ <CAKa-r6uYbhF3zZrDaZdCE1fo4A8WF0MHNGmLS21fh11WcSfqOg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKa-r6uYbhF3zZrDaZdCE1fo4A8WF0MHNGmLS21fh11WcSfqOg@mail.gmail.com>
 
-Hi Geliang,
+On Sat, Oct 14, 2023 at 01:37:43PM +0200, Davide Caratti wrote:
+> hello Simon, thanks for reading!
+> 
+> On Fri, Oct 13, 2023 at 7:30 PM Simon Horman <horms@kernel.org> wrote:
+> >
+> > On Tue, Oct 10, 2023 at 09:21:45PM +0200, Matthieu Baerts wrote:
+> > > From: Davide Caratti <dcaratti@redhat.com>
+> > >
+> > > generated with:
+> > >
+> > >  $ ./tools/net/ynl/ynl-gen-c.py --mode uapi \
+> > >  > --spec Documentation/netlink/specs/mptcp.yaml \
+> > >  > --header -o include/uapi/linux/mptcp_pm.h
+> 
+> [...]
+> 
+> > > +/**
+> > > + * enum mptcp_event_type
+> >
+> > Hi Davide and Matthieu,
+> >
+> > I understand that is autogenerated.
+> > But it is missing an entry here for @MPTCP_EVENT_UNSPEC.
+> > Can that be addressed somehow?
+> 
+> probably it just needs
+>     doc: unused event
+> 
+> in the YAML file, I will add it and regenerate the uAPI header
 
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6363765940158464
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6363765940158464/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4956391056605184
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4956391056605184/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5519341010026496
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5519341010026496/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6082290963447808
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6082290963447808/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/32eeb039f540
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Thanks!
