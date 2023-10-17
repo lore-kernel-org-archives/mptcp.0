@@ -1,29 +1,29 @@
-Received: from out-208.mta0.migadu.com (out-208.mta0.migadu.com [91.218.175.208])
+Received: from out-203.mta0.migadu.com (out-203.mta0.migadu.com [91.218.175.203])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D242A747B
-	for <mptcp@lists.linux.dev>; Tue, 17 Oct 2023 03:02:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463807481
+	for <mptcp@lists.linux.dev>; Tue, 17 Oct 2023 03:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HiaMuVi7"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WOSnVqLw"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1697511775;
+	t=1697511777;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hruKWFCuorRBxKiqSVsrMYwzR8lWujoEH52eawy1Alo=;
-	b=HiaMuVi77ti3CGs2Rv4og/0NTas8PQ2cIdLK8Y8xPNHBXNEE+rlGkXQH+Rqda3oJRR0uzh
-	cz+sslrl48Q2Wbx951Cx41bqB1J7LEq/RQEa0gYPQ/91opwLq0zdVBJ4z54E2jIFzD/COt
-	hd6FPjvVg2pGJnWnmF+u40jru60PQ+I=
+	bh=i/3vUxr1J2aq5pv+HHKWWqG1NBDvCyErjmH6SiUBc5k=;
+	b=WOSnVqLwz86/Pi6PiQBHAdvqCXGuTre3VC+t7aIzIuCBuxf4CPJTdvcPhx9gmt6myHhMQl
+	w82c8ScX6SpFgL9b3bAYGKxZGFq/lrM58cdz2OcACOd36idLEYlL8iLAMzOxWFdefWSCV4
+	ms5WtdYUnjIcpj/7UX4UZ79eFrY62P8=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v17 6/9] selftests: mptcp: userspace pm remove initial subflow
-Date: Tue, 17 Oct 2023 11:00:25 +0800
-Message-Id: <483be63536ffbc7821666c17b1f627c2a4742bf8.1697511436.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v17 7/9] mptcp: userspace pm send RM_ADDR for ID 0
+Date: Tue, 17 Oct 2023 11:00:26 +0800
+Message-Id: <9b271203764b94eebc7d9c412d4949e7ce1dc208.1697511436.git.geliang.tang@suse.com>
 In-Reply-To: <cover.1697511436.git.geliang.tang@suse.com>
 References: <cover.1697511436.git.geliang.tang@suse.com>
 Precedence: bulk
@@ -37,50 +37,78 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch adds a selftest for userpsace PM to remove the initial
-subflow. Use userspace_pm_add_sf() to add a subflow, and pass initial
-ip address to userspace_pm_rm_sf() to remove the initial subflow.
+This patch adds the ability to send RM_ADDR for local ID 0. Check
+whether id 0 address is removed, if not, put id 0 into a removing
+list, pass it to mptcp_pm_remove_addr() to remove id 0 address.
 
+There is no reason not to allow the userspace to remove the initial
+address (ID 0). This special case was not taken into account not
+letting the userspace to delete all addresses as announced.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/379
+Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ net/mptcp/pm_userspace.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 6c2c47ce11ad..68fb7aa12fef 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3513,6 +3513,30 @@ userspace_tests()
- 		kill_events_pids
- 		wait $tests_pid
- 	fi
-+
-+	# userspace pm remove initial subflow
-+	if reset_with_events "userspace pm remove initial subflow" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-+		set_userspace_pm $ns2
-+		pm_nl_set_limits $ns1 0 1
-+		speed=5 \
-+			run_tests $ns1 $ns2 10.0.1.1 &
-+		local tests_pid=$!
-+		wait_mpj $ns2
-+		userspace_pm_add_sf $ns2 10.0.3.2 20
-+		chk_join_nr 1 1 1
-+		chk_mptcp_info subflows 1 subflows 1
-+		chk_subflows_total 2 2
-+		userspace_pm_rm_sf $ns2 10.0.1.2
-+		# we don't look at the counter linked to the RM_ADDR but
-+		# to the one linked to the subflows that have been removed
-+		chk_rm_nr 0 1
-+		chk_rst_nr 0 0 invert
-+		chk_mptcp_info subflows 1 subflows 1
-+		chk_subflows_total 1 1
-+		kill_events_pids
-+		wait $tests_pid
-+	fi
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 6b8083650bc1..ea50e694125d 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -211,6 +211,40 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return err;
  }
  
- endpoint_tests()
++static int mptcp_userspace_remove_id_zero_address(struct mptcp_sock *msk,
++						  struct genl_info *info)
++{
++	struct mptcp_rm_list list = { .nr = 0 };
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
++	bool has_id_0 = false;
++	int err = -EINVAL;
++
++	lock_sock(sk);
++	mptcp_for_each_subflow(msk, subflow) {
++		if (subflow->local_id == 0) {
++			has_id_0 = true;
++			break;
++		}
++	}
++	if (!has_id_0) {
++		GENL_SET_ERR_MSG(info, "address with id 0 not found");
++		goto remove_err;
++	}
++
++	list.ids[list.nr++] = 0;
++
++	spin_lock_bh(&msk->pm.lock);
++	mptcp_pm_remove_addr(msk, &list);
++	spin_unlock_bh(&msk->pm.lock);
++
++	err = 0;
++
++remove_err:
++	release_sock(sk);
++	return err;
++}
++
+ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+@@ -245,6 +279,11 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ 		goto remove_err;
+ 	}
+ 
++	if (id_val == 0) {
++		err = mptcp_userspace_remove_id_zero_address(msk, info);
++		goto remove_err;
++	}
++
+ 	lock_sock(sk);
+ 
+ 	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
 -- 
 2.35.3
 
