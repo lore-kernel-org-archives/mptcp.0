@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4011C3C
-	for <mptcp@lists.linux.dev>; Sun, 22 Oct 2023 23:06:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318E363CE
+	for <mptcp@lists.linux.dev>; Sun, 22 Oct 2023 23:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxBxqfb1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C65F1C433C8;
-	Sun, 22 Oct 2023 23:06:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4+G7oBG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C883BC433C7;
+	Sun, 22 Oct 2023 23:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698016007;
-	bh=+CufhiAi9wQz73djSyDFF66d3+QvuU+l+qNBcgKUIYY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PxBxqfb1M0e3sUC/F414iMSplT+ZfNB/On2M24rdOpJJC6wamskSwyqGREmwbd3ET
-	 Gc61TGDojN7uSwHzporTnl/IYvbSf4P99KpjxfZFL2X7JIOSLOB+APBDuxOVMLgntY
-	 hqLcN5m5Kc/ExB39qXJUWLA2lTGkLUOFzuv3/HeMrbkTxbNu0C+A7bjchdQErbTAOk
-	 BtUIXYjMT4+xiTVIBDA9AdvL8StFH8JIkExbbnXC+sLVRJfCc03LCoEtPQHgwIe0ik
-	 6PzobQnOw9Yes+JXy3DlRGiUBmv1HUnreTYzLuY0hbMV34LLk+YZrqfYVgNi1rkYv1
-	 X35ZpwwZObG3w==
-Message-ID: <de18b56a-4a05-4838-b9ca-081b00f7a225@kernel.org>
-Date: Mon, 23 Oct 2023 01:06:42 +0200
+	s=k20201202; t=1698016576;
+	bh=UknpXJtSC+2OBc/vb4SzcZX/ZPAnsQ+Wo3245yVh8Zs=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=n4+G7oBGnwh2gg2OeXUz83y768CVYOuPsyPAgbPERm4SLcJnTRbLeFgOzEMRxcE5k
+	 EOyYbkVBjJ7w8xTHuL6UF3ji57BdndS6ZlmGUW01UOmpgmStacm65zjXa1WwDAykGq
+	 GMPoNOZtKKlAu8eq2d5agH9sYbA6//TQHeBc0Wk8JkV1MITxEZq1OyQIj1QhsNoDk4
+	 SDw/O6PyT6jqbpmL72em/5tWboBVTgxkcMskefcYFsLiY2MJhmiBbiODBvN9T8SqAJ
+	 uG0lsWnmP3VCedq9rXe+rLph+qJy4hxNWyfQbF/U6awSq7dxfA9hBqzqehYB1w6IGh
+	 bsqWQvrSHYOwQ==
+Message-ID: <1f296a8e-f7cc-497d-9d36-6545e7c0a7a8@kernel.org>
+Date: Mon, 23 Oct 2023 01:16:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -28,11 +28,12 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH mptcp-next v17 0/9] userspace pm remove id 0 subflow &
  address
+Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang.tang@linux.dev>, mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>
 References: <cover.1697511436.git.geliang.tang@suse.com>
-Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
+ <de18b56a-4a05-4838-b9ca-081b00f7a225@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -76,64 +77,74 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0JY6d
  glzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHazlzVb
  Fe7fduHbABmYz9cefQpO7wDE/Q==
-In-Reply-To: <cover.1697511436.git.geliang.tang@suse.com>
+Organization: NGI
+In-Reply-To: <de18b56a-4a05-4838-b9ca-081b00f7a225@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 17/10/2023 05:00, Geliang Tang wrote:
-> From: Geliang Tang <geliang.tang@suse.com>
+On 23/10/2023 01:06, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> v17:
->  - include "fix userspace pm CI failures" series.
->  - update __mptcp_has_initial_subflow as Paolo suggested.
->  - update chk_subflows_total.
->  - update selftests.
+> On 17/10/2023 05:00, Geliang Tang wrote:
+>> From: Geliang Tang <geliang.tang@suse.com>
+>>
+>> v17:
+>>  - include "fix userspace pm CI failures" series.
+>>  - update __mptcp_has_initial_subflow as Paolo suggested.
+>>  - update chk_subflows_total.
+>>  - update selftests.
+> 
+> Thank you for the new version, it looks good to me!
+> 
+> Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
+> 
+> Now in our tree: a part in 'fixes for -net' and the rest in 'features
+> for net-next' and this has caused conflicts, please see below:
+> 
+> New patches for t/upstream-net and t/upstream:
+> - 20c92e1b1473: selftests: mptcp: run userspace pm tests slower
+> - 54b8c59e976f: selftests: mptcp: fix wait_rm_addr/sf parameters
+> - a9f72db763e0: mptcp: userspace pm send RM_ADDR for ID 0
+>   - Note that I renamed the new helper to keep the 'mptcp_userspace_pm_'
+>     prefix we can find in other helpers in this file.
+> - Results: 9a34fc4dbad6..a1d8e0942055 (export-net)
+> 
+> Conflicts:
+> - 9f7653e25504: conflict in
+> t/net-mptcp-rename-netlink-handlers-to-mptcp_pm_nl_-blah-_-doit-dumpit
+> - 1dae6c24941f: conflict in t/mptcp-define-more-local-variables-sk
+> - bff6a9fde262: conflict in
+> t/selftests-mptcp-update-userspace-pm-test-helpers
+> - Results: 65682b5b41eb..554ef3499597 (export)
+> 
+> Squash-to patches:
+> - 964ed0906f76: "squashed" patch 3/9 in "selftests: mptcp: userspace pm
+> create id 0 subflow"
+> - 6a9ab12adf72: "squashed" patch 4/9 in "mptcp: add
+> mptcpi_subflows_total counter"
+> - a65a15f44388: "squashed" patch 5/9 in "selftests: mptcp: add
+> chk_subflows_total helper"
+> - e5424462cd82: tg:msg: update after the recent squash-to patch
+> - Results: 554ef3499597..7592debc8c8b (export)
+> 
+> New patches for t/upstream:
+> - 492717f096ae: mptcp: userspace pm rename remove_err to out
+> - 702694cb477d: selftests: mptcp: userspace pm send RM_ADDR for ID 0
 
-Thank you for the new version, it looks good to me!
-
-Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
-
-Now in our tree: a part in 'fixes for -net' and the rest in 'features
-for net-next' and this has caused conflicts, please see below:
-
-New patches for t/upstream-net and t/upstream:
-- 20c92e1b1473: selftests: mptcp: run userspace pm tests slower
-- 54b8c59e976f: selftests: mptcp: fix wait_rm_addr/sf parameters
-- a9f72db763e0: mptcp: userspace pm send RM_ADDR for ID 0
-  - Note that I renamed the new helper to keep the 'mptcp_userspace_pm_'
-    prefix we can find in other helpers in this file.
-- Results: 9a34fc4dbad6..a1d8e0942055 (export-net)
-
-Conflicts:
-- 9f7653e25504: conflict in
-t/net-mptcp-rename-netlink-handlers-to-mptcp_pm_nl_-blah-_-doit-dumpit
-- 1dae6c24941f: conflict in t/mptcp-define-more-local-variables-sk
-- bff6a9fde262: conflict in
-t/selftests-mptcp-update-userspace-pm-test-helpers
-- Results: 65682b5b41eb..554ef3499597 (export)
-
-Squash-to patches:
-- 964ed0906f76: "squashed" patch 3/9 in "selftests: mptcp: userspace pm
-create id 0 subflow"
-- 6a9ab12adf72: "squashed" patch 4/9 in "mptcp: add
-mptcpi_subflows_total counter"
-- a65a15f44388: "squashed" patch 5/9 in "selftests: mptcp: add
-chk_subflows_total helper"
-- e5424462cd82: tg:msg: update after the recent squash-to patch
-- Results: 554ef3499597..7592debc8c8b (export)
+Oops, I forgot patch 6/9. Just added before "selftests: mptcp: userspace
+pm send RM_ADDR for ID 0":
 
 New patches for t/upstream:
-- 492717f096ae: mptcp: userspace pm rename remove_err to out
-- 702694cb477d: selftests: mptcp: userspace pm send RM_ADDR for ID 0
-- Results: 7592debc8c8b..1b6c8d99ae9c (export)
-
+- 4118c35872b6: selftests: mptcp: userspace pm remove initial subflow
+- ee73a6e81efa: conflict in
+t/selftests-mptcp-userspace-pm-send-RM_ADDR-for-ID-0
+- Results: 1b6c8d99ae9c..368681114ab6 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231022T222301
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231022T230418
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231022T231456
 
 Cheers,
-Mat
+Matt
