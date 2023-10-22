@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9398D533
-	for <mptcp@lists.linux.dev>; Sun, 22 Oct 2023 23:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810A1D533
+	for <mptcp@lists.linux.dev>; Sun, 22 Oct 2023 23:49:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbzqJyKy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDEF9C433C8;
-	Sun, 22 Oct 2023 23:30:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NEYACEHJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61C93C433C8;
+	Sun, 22 Oct 2023 23:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698017458;
-	bh=d1e5QsSLL5V/4N2H5ywPMfvd2SxISQcYX9r3WpNcnp4=;
+	s=k20201202; t=1698018539;
+	bh=azbMYlTDFKUGzVE7Y/NGqOMxZVRmM3LMWcFKe1Dchdc=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=NbzqJyKynV5OOb2tUkwo77gN/fkEQag8cfzGE9KNjdaoUMmMTY2WTLmdtUfix79CP
-	 6vZFIjJf8tuDVAcdBKAUU4PaWdH/JV97pm0nFw7pz3i6LvCgn2ed/7pGJKXjc9tWIm
-	 JCJip0syIMHL8+LT9rW9xA43NAEJ0bF8PsdPLwv90kzJZ0FGX9FVQluTmDlEH5hH0R
-	 eToR20aMay7t1se/oe6L9OBNzIeQoxuZhtj8+bi3JxGZ1SapB8/ffqtwma/EMs1TUK
-	 Ii9oWzEQVX1oXXaWxABdNJzZNXTFreIoNjNmbqA9WVdBQ8UOYvNY1CQ5zOvrVR7gLJ
-	 CiZYQshh28vYA==
-Message-ID: <3c13ae8a-7a12-495d-909c-12def126887c@kernel.org>
-Date: Mon, 23 Oct 2023 01:30:56 +0200
+	b=NEYACEHJ+uFZgVJdOFzX3FZqFQDBflybvRcfUMx+MFi62ePI6dfffj/wg7IzUS7Kk
+	 gWEdZWdsdirFiiX+Cew7YdfNCOdLOomAF+ES/LcRoj3oYeZLkkYdz2vPCWYZcu2Tjj
+	 /OqGGHBeZbHIQa6XQIVv3wNihUSJuW6hmjdhb3mJJ9Y26Lcg2RYyaTy08BNN2KLXOA
+	 kOz23dgNlUBIU7DPuogZDu1FXeDJdp3m0QESw+njP5b89kwfPtpo7THkePIrsSQC/S
+	 /1KthXm1WLyDM40nOobeLDCFcztk1erCQoCr/BTgt3AwD30i3SxuUL6x+9LRnx+heh
+	 79iQV5sNuxiyQ==
+Message-ID: <81569ea8-7e8e-41be-bed1-ee4e690fd987@kernel.org>
+Date: Mon, 23 Oct 2023 01:48:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -83,13 +83,40 @@ Hi Geliang,
 On 13/10/2023 09:44, Geliang Tang wrote:
 > v4:
 >  - address Matt's comments in "userspace pm enhancements" v3.
+> 
+> Geliang Tang (7):
+>   selftests: mptcp: add mptcp_lib_kill_wait
+>   selftests: mptcp: add mptcp_lib_is_v6
+>   selftests: mptcp: add mptcp_lib_get_counter
 
-Thank you for the new version!
+I also had to fix issues reported by shellcheck here.
 
-There is just a typo in patch 5/7, but that's OK, I can fix that when
-applying the patches.
+>   selftests: mptcp: add missing oflag=append
+>   selftests: mptcp: add mptcp_lib_make_file
 
-Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
+I fixed the typo I mentioned + an issue reported by shellcheck.
+
+>   selftests: mptcp: add mptcp_lib_check_transfer
+>   selftests: mptcp: add mptcp_lib_wait_local_port_listen
+
+Same here for shellcheck. Please do not forget to check it for
+mptcp_lib.sh file.
+
+Now in our tree:
+
+New patches for t/upstream:
+- ec838300161b: selftests: mptcp: add mptcp_lib_kill_wait
+- d26bafd10cc7: selftests: mptcp: add mptcp_lib_is_v6
+- 658015046fcb: selftests: mptcp: add mptcp_lib_get_counter
+- 791d4f09923b: selftests: mptcp: add missing oflag=append
+- ef38fe1854bb: selftests: mptcp: add mptcp_lib_make_file
+- e7970ee8a1e4: selftests: mptcp: add mptcp_lib_check_transfer
+- 9e33f3558049: selftests: mptcp: add mptcp_lib_wait_local_port_listen
+- Results: 368681114ab6..6e09c1eb6d4b (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231022T234648
 
 Cheers,
 Matt
