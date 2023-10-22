@@ -1,100 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B875E8831
-	for <mptcp@lists.linux.dev>; Sun, 22 Oct 2023 17:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53655692
+	for <mptcp@lists.linux.dev>; Sun, 22 Oct 2023 21:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHPvdWMe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C029C433C7;
-	Sun, 22 Oct 2023 17:06:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dnXPq2pg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 094E8C433C7;
+	Sun, 22 Oct 2023 21:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697994369;
-	bh=Ke0HpsxxQ/bi9eepYBBPUXX05YID8cjRifxwEGNWSqQ=;
+	s=k20201202; t=1698010251;
+	bh=cJKipLrselcpMdrSz/vmccEeuyxXEFH847h7gpLEAtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XHPvdWMeIqCk89Uj9e/68+R2PcUlh6+prvSAy5b3u0kkETHdLFJAhdZ4KLMCVNgvP
-	 2YeIGL1iaJEz66NOhCdIN828//BMAwndWA2xNFv1FBzx2LmzHzpDX/6Eqo6C8ZzrRA
-	 R9gQSWguNyHFkyu+0FD1KUAMXvunUobidQzwYjcric5GoH8AniBGfOPuhwJ2feLvoz
-	 M53jE72ryrrxYv2OlsZdr/9E0iWNWHBeF9Pw+cTqSuxOcXOD1vLiEYYNIy7Ng2XgyW
-	 tvoMeiDxvP4pffLQkVjGznixSUEmPGUj8SUzsVSw1Wa55Psb7Miz2UQ1nYsVx5Qicr
-	 a6CnhFb4jEhmw==
+	b=dnXPq2pgTuN7S/CvKFFIUm9bLafivSZeP60vFRBLPkjXvLDqEEQX4hxVYvyIxMrEH
+	 QoSWfq8QhP0dLDhu4n3YUUeWipjNUjx5Qt+s8mtxhvV3oujoO3T4pSy/Zp+jDku2wM
+	 X9iVi3row0CBH6q6EFMR/rnrHMd/dTVOz8/BiiGc/5sI9l5pQCcLCF1akYqQMFgZ/8
+	 +UoyuDCJE8Xwziq4Vb0MfinOOdhR2o86xqUAaGE1ehSw8yfqztYbRtsLCVkRY/1AhY
+	 XG17PdLknGglVQXBgcBkRX7UtrylYEM1GFfvXgwDP1+ruTs1FsLHt+rxKJMCi+EFuF
+	 wN1WaN64jxCng==
 From: Matthieu Baerts <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	Geliang Tang <geliang.tang@suse.com>,
 	Matthieu Baerts <matttbe@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Mat Martineau <martineau@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.5.y] selftests: mptcp: join: correctly check for no RST
-Date: Sun, 22 Oct 2023 19:05:46 +0200
-Message-Id: <20231022170546.2809827-1-matttbe@kernel.org>
+Subject: [PATCH 6.1.y] mptcp: avoid sending RST when closing the initial subflow
+Date: Sun, 22 Oct 2023 23:30:13 +0200
+Message-Id: <20231022213013.3391376-1-matttbe@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <2023102034-patience-flaring-b32f@gregkh>
-References: <2023102034-patience-flaring-b32f@gregkh>
+In-Reply-To: <2023102022-wrongness-buddhism-fcf4@gregkh>
+References: <2023102022-wrongness-buddhism-fcf4@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2504; i=matttbe@kernel.org; h=from:subject; bh=Ke0HpsxxQ/bi9eepYBBPUXX05YID8cjRifxwEGNWSqQ=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlNVZq2w242HC4dsMcljkCZni5dkfefOeoLTs1s hvea28jmDuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZTVWagAKCRD2t4JPQmmg c+utEADif7LAHKayMQSryVqrUlbwiWwvUrNUSiiiT1o5phIaaoXKmlWPBWtM35asSGB4lrum8/0 7ot1X3EM2Oa0OMeM4GEQG2koKFRg+23wyiwUbL3JiCHbBAnZE1ZChDQ5qA7RLvUaQMsg+0DxtfY shVRt5XrKlVNrQyxrMM8Zybwvde9MjhAxyM1UheYSM3/oRQ7WIVg84vaGWsXXX7m1Hqa7sC/kjF ZU+8eCLT8woOlxzZoYTeLo/i2eE2DS6u7tbDjtHThPfbL/LdZ2aWxR8GewzIRxp4iyPRGM7ZkpP 0J3L/xdQ4n8Zatqnk41X3AwkVtM0UVCMT4IDSCcPR4mxKqQDA3D3PQpj9AvstlWYCjVL0Mh+ZiP N2HIWvPiBWDIVhe05iPLofvU81sh7RFJjNXDccbG6eHh9h6UTA+jQfTiExM4dX9F+nswp2lFI7Q vDGIm5BRkz3MAiNR0LDzEor1t5piBtLTTb4L0b1U11yNa0cl7hwe1jSupoteZJUxnYLRKvT37In DKcFxdyQOR3Mxh9oz1MBg8hsIPXG/4jQqHVLE7zZsSOqvJgfhVg2wAPvSzyYWtVbKk33lsXEjSo xngQmW8kX/ec/O4pK4Fb7HSuAL1qzEPvBY5jYyU2qxRrpQQZBJ1kds/4INaqP4T6UVkzKapgi62 5ygEzIbxfc4dkuw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3650; i=matttbe@kernel.org; h=from:subject; bh=3LmFOfhIncKJW+CCSaxy924+XH3LVK6xPojXs2JdxoU=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlNZRlJrBe7LsKV7N3Hh26He5w2fnKJdraNDKPl q5LkC4SZEKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZTWUZQAKCRD2t4JPQmmg cyjxD/9OS+AK1qdvXZ3p+qMFqZnGfiFRdTuew84eFRljxR2bIwdcbcfgwa3Nxe/aaim0T4fFgbH kUnffz9fNgVnouZftYGtnrjgcFFMQullVY1MPpoyW7RgfMb7V9VneKnvKQCeMUzbn0qyr/WqLPJ ney4XMZqXl3ezVSAo2YWlI0qb3kYjtR84sJ0vGR4rGQzqd1w5lJ7JlSypf6bOxA82mSlgituqK5 pgXhMLpVuE6DhaRvBcgf3yORd2MZvUNeVreXB6+fSQ/Agp6m1JOZT5ex9bUa9rO1b5BvyPfXbV4 xWxdaaigMfKJzbIDLCijBsKFukSQ8CUkIdnE6/JkF5JcXbhGB5IXXQyd350PoXBa74Rex0u7rUp xstOuTElOb9LAn/kCuv8UhRjVkf0SGO6It3RM4Mq5oIqVGpACdMMCi2sesVQ8FEFlO+t9o99IZe PKVjanSBrGwhKNRaDPGDIusk9hL6UjolOj64Zfz6VK2i7/iiazObahL8MGo4ZfvadWob7kpA3pQ GSSsyVwCU0QMgPmM2+Qk2dPRN3rLki9hhzM6v/soAs9R2lhbIPdBsjMyz9AIznGUsdo4pluzYmR 9AoY28jQ4yriDJ2V1FjLB9fJ68MNnQob6b3ttcb+uygE5utUNW8+YrWpUTM6ODE+0rpL2nlDCm3 QszfbcwksQQdR/A==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-commit b134a5805455d1886662a6516c965cdb9df9fbcc upstream.
+From: Geliang Tang <geliang.tang@suse.com>
 
-The commit mentioned below was more tolerant with the number of RST seen
-during a test because in some uncontrollable situations, multiple RST
-can be generated.
+commit 14c56686a64c65ba716ff48f1f4b19c85f4cb2a9 upstream.
 
-But it was not taking into account the case where no RST are expected:
-this validation was then no longer reporting issues for the 0 RST case
-because it is not possible to have less than 0 RST in the counter. This
-patch fixes the issue by adding a specific condition.
+When closing the first subflow, the MPTCP protocol unconditionally
+calls tcp_disconnect(), which in turn generates a reset if the subflow
+is established.
 
-Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
+That is unexpected and different from what MPTCP does with MPJ
+subflows, where resets are generated only on FASTCLOSE and other edge
+scenarios.
+
+We can't reuse for the first subflow the same code in place for MPJ
+subflows, as MPTCP clean them up completely via a tcp_close() call,
+while must keep the first subflow socket alive for later re-usage, due
+to implementation constraints.
+
+This patch adds a new helper __mptcp_subflow_disconnect() that
+encapsulates, a logic similar to tcp_close, issuing a reset only when
+the MPTCP_CF_FASTCLOSE flag is set, and performing a clean shutdown
+otherwise.
+
+Fixes: c2b2ae3925b6 ("mptcp: handle correctly disconnect() failures")
 Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
+Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
+Co-developed-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
-Link: https://lore.kernel.org/r/20231018-send-net-20231018-v1-1-17ecb002e41d@kernel.org
+Link: https://lore.kernel.org/r/20231018-send-net-20231018-v1-4-17ecb002e41d@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
 ---
 Backport notes:
-  - Two conflicts due to 03668c65d153 ("selftests: mptcp: join: rework
-    detailed report") introduced in v6.6. In previous versions, the
-    messages are directly printed with echo. Here we only need to modify
-    the conditions for the 'elif'.
+  - One conflict due to 39880bd808ad ("mptcp: get rid of msk->subflow")
+    introduced in v6.6. In previous versions, the socket state needs to
+    be set to SS_UNCONNECTED.
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 5e55af3e9d5f..621b1964ea6f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1383,7 +1383,9 @@ chk_rst_nr()
- 	count=$(get_counter ${ns_tx} "MPTcpExtMPRstTx")
- 	if [ -z "$count" ]; then
- 		echo -n "[skip]"
--	elif [ $count -lt $rst_tx ]; then
-+	# accept more rst than expected except if we don't expect any
-+	elif { [ $rst_tx -ne 0 ] && [ $count -lt $rst_tx ]; } ||
-+	     { [ $rst_tx -eq 0 ] && [ $count -ne 0 ]; }; then
- 		echo "[fail] got $count MP_RST[s] TX expected $rst_tx"
- 		fail_test
- 	else
-@@ -1394,7 +1396,9 @@ chk_rst_nr()
- 	count=$(get_counter ${ns_rx} "MPTcpExtMPRstRx")
- 	if [ -z "$count" ]; then
- 		echo -n "[skip]"
--	elif [ "$count" -lt "$rst_rx" ]; then
-+	# accept more rst than expected except if we don't expect any
-+	elif { [ $rst_rx -ne 0 ] && [ $count -lt $rst_rx ]; } ||
-+	     { [ $rst_rx -eq 0 ] && [ $count -ne 0 ]; }; then
- 		echo "[fail] got $count MP_RST[s] RX expected $rst_rx"
- 		fail_test
- 	else
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 881e05193ac9..0a66181b56cd 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2374,6 +2374,26 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
+ #define MPTCP_CF_PUSH		BIT(1)
+ #define MPTCP_CF_FASTCLOSE	BIT(2)
+ 
++/* be sure to send a reset only if the caller asked for it, also
++ * clean completely the subflow status when the subflow reaches
++ * TCP_CLOSE state
++ */
++static void __mptcp_subflow_disconnect(struct sock *ssk,
++				       struct mptcp_subflow_context *subflow,
++				       unsigned int flags)
++{
++	if (((1 << ssk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN)) ||
++	    (flags & MPTCP_CF_FASTCLOSE)) {
++		/* The MPTCP code never wait on the subflow sockets, TCP-level
++		 * disconnect should never fail
++		 */
++		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
++		mptcp_subflow_ctx_reset(subflow);
++	} else {
++		tcp_shutdown(ssk, SEND_SHUTDOWN);
++	}
++}
++
+ /* subflow sockets can be either outgoing (connect) or incoming
+  * (accept).
+  *
+@@ -2411,7 +2431,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	lock_sock_nested(ssk, SINGLE_DEPTH_NESTING);
+ 
+ 	if ((flags & MPTCP_CF_FASTCLOSE) && !__mptcp_check_fallback(msk)) {
+-		/* be sure to force the tcp_disconnect() path,
++		/* be sure to force the tcp_close path
+ 		 * to generate the egress reset
+ 		 */
+ 		ssk->sk_lingertime = 0;
+@@ -2421,12 +2441,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 
+ 	need_push = (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_data(sk);
+ 	if (!dispose_it) {
+-		/* The MPTCP code never wait on the subflow sockets, TCP-level
+-		 * disconnect should never fail
+-		 */
+-		WARN_ON_ONCE(tcp_disconnect(ssk, 0));
++		__mptcp_subflow_disconnect(ssk, subflow, flags);
+ 		msk->subflow->state = SS_UNCONNECTED;
+-		mptcp_subflow_ctx_reset(subflow);
+ 		release_sock(ssk);
+ 
+ 		goto out;
 -- 
 2.40.1
 
