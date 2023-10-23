@@ -1,26 +1,25 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB221C6BD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555F921367;
 	Mon, 23 Oct 2023 20:45:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oe+NX9Pq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A60C433AB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1wWymDL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0DC5C433BF;
 	Mon, 23 Oct 2023 20:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1698093934;
-	bh=U+qfHVKzSdXpb5Nt3mGZCOI198lAElT+RKzcKjn/PiY=;
+	bh=nyM3qAj+dX1T3E9H0rifWU8fe8+YDlZJN+C5xNnbe3k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=oe+NX9Pqh48cHlP94ZQURZ6ZFJY+eg6/vpMO1JiIW+OcOZbq97x0xz9jlo14Au0HJ
-	 6peL/N3oX1U0H61PYnv/+Xmmt5N74v0NQuthBMYTMPFRNmVshW7HZRMQl5UeIv92Sq
-	 BbiHXYZsnGd5KLNUcHR9wS5Os9PrClNUBpnLWZ5KXHq9Wa9qnlIAuevey0xsK7q6bE
-	 KsZzdiuHQpU2GKYjxIEHjTXnSgUZOFmwQezaXFOxYLgJRh9v6T1nhw+s7qpwa8Spse
-	 oMAZjfXr5BCp/xUZLMIDQfKtHJt7UlUS7oLxUVwnAO9NAoQmUOX0Tl2HSW921LtxzO
-	 zrHspQP60CAbQ==
+	b=I1wWymDL3fU0T+6vNwsjqY0DkcksJ9N4aeDmHX/AhfE48rRuu5PqJPgvdrTejr0tJ
+	 FUduwY8o4JXaqn/lQCiJcHmrftQmaWeRs56F3/Q/AbcaDRVaoqe1vhl4mDfE+drBkS
+	 Rqga52dP/JCnkpsJSdoGSrqY4m30iU4vbt23Pp9lfDY8zJY2O6MEG7/e5fJIKWw36K
+	 Fmsr9Y19FDES/dp8aWwjuLRK8g/sQOhpLAfJPy5b36gAwGrCYNPXjr2c2kB6kQ2/q6
+	 cWm5pEt3zA9TuQy/E6+S8HV9M4pBy0ey9HJ+yXmK0o5qUfhWUHfbfS5M94By44F/Iq
+	 ui/CP9Li3iJIQ==
 From: Mat Martineau <martineau@kernel.org>
-Date: Mon, 23 Oct 2023 13:44:37 -0700
-Subject: [PATCH net-next 4/9] tcp: define initial scaling factor value as a
- macro
+Date: Mon, 23 Oct 2023 13:44:40 -0700
+Subject: [PATCH net-next 7/9] mptcp: consolidate sockopt synchronization
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,7 +28,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231023-send-net-next-20231023-2-v1-4-9dc60939d371@kernel.org>
+Message-Id: <20231023-send-net-next-20231023-2-v1-7-9dc60939d371@kernel.org>
 References: <20231023-send-net-next-20231023-2-v1-0-9dc60939d371@kernel.org>
 In-Reply-To: <20231023-send-net-next-20231023-2-v1-0-9dc60939d371@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, 
@@ -41,43 +40,121 @@ X-Mailer: b4 0.12.4
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-So that other users could access it. Notably MPTCP will use
-it in the next patch.
+Move the socket option synchronization for active subflows
+at subflow creation time. This allows removing the now unused
+unlocked variant of such helper.
 
-No functional change intended.
+While at that, clean-up a bit the mptcp_subflow_create_socket()
+errors path.
 
-Acked-by: Matthieu Baerts <matttbe@kernel.org>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- include/net/tcp.h | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ net/mptcp/protocol.c |  2 --
+ net/mptcp/sockopt.c  | 22 ----------------------
+ net/mptcp/subflow.c  | 18 +++++++++---------
+ 3 files changed, 9 insertions(+), 33 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 39b731c900dd..993b7fcd4e46 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1489,13 +1489,15 @@ static inline int tcp_space_from_win(const struct sock *sk, int win)
- 	return __tcp_space_from_win(tcp_sk(sk)->scaling_ratio, win);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 5489f024dd7e..e44a3da12b96 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -121,8 +121,6 @@ struct sock *__mptcp_nmpc_sk(struct mptcp_sock *msk)
+ 		ret = __mptcp_socket_create(msk);
+ 		if (ret)
+ 			return ERR_PTR(ret);
+-
+-		mptcp_sockopt_sync(msk, msk->first);
+ 	}
+ 
+ 	return msk->first;
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index d15891e23f45..abf0645cb65d 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1444,28 +1444,6 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
  }
  
-+/* Assume a conservative default of 1200 bytes of payload per 4K page.
-+ * This may be adjusted later in tcp_measure_rcv_mss().
-+ */
-+#define TCP_DEFAULT_SCALING_RATIO ((1200 << TCP_RMEM_TO_WIN_SCALE) / \
-+				   SKB_TRUESIZE(4096))
-+
- static inline void tcp_scaling_ratio_init(struct sock *sk)
+-static void __mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
+-{
+-	bool slow = lock_sock_fast(ssk);
+-
+-	sync_socket_options(msk, ssk);
+-
+-	unlock_sock_fast(ssk, slow);
+-}
+-
+-void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
+-{
+-	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+-
+-	msk_owned_by_me(msk);
+-
+-	if (READ_ONCE(subflow->setsockopt_seq) != msk->setsockopt_seq) {
+-		__mptcp_sockopt_sync(msk, ssk);
+-
+-		subflow->setsockopt_seq = msk->setsockopt_seq;
+-	}
+-}
+-
+ void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
  {
--	/* Assume a conservative default of 1200 bytes of payload per 4K page.
--	 * This may be adjusted later in tcp_measure_rcv_mss().
--	 */
--	tcp_sk(sk)->scaling_ratio = (1200 << TCP_RMEM_TO_WIN_SCALE) /
--				    SKB_TRUESIZE(4096);
-+	tcp_sk(sk)->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 080b16426222..df208666fd19 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1533,8 +1533,6 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+ 	if (addr.ss_family == AF_INET6)
+ 		addrlen = sizeof(struct sockaddr_in6);
+ #endif
+-	mptcp_sockopt_sync(msk, ssk);
+-
+ 	ssk->sk_bound_dev_if = ifindex;
+ 	err = kernel_bind(sf, (struct sockaddr *)&addr, addrlen);
+ 	if (err)
+@@ -1645,7 +1643,7 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
+ 
+ 	err = security_mptcp_add_subflow(sk, sf->sk);
+ 	if (err)
+-		goto release_ssk;
++		goto err_free;
+ 
+ 	/* the newly created socket has to be in the same cgroup as its parent */
+ 	mptcp_attach_cgroup(sk, sf->sk);
+@@ -1659,15 +1657,12 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
+ 	get_net_track(net, &sf->sk->ns_tracker, GFP_KERNEL);
+ 	sock_inuse_add(net, 1);
+ 	err = tcp_set_ulp(sf->sk, "mptcp");
++	if (err)
++		goto err_free;
+ 
+-release_ssk:
++	mptcp_sockopt_sync_locked(mptcp_sk(sk), sf->sk);
+ 	release_sock(sf->sk);
+ 
+-	if (err) {
+-		sock_release(sf);
+-		return err;
+-	}
+-
+ 	/* the newly created socket really belongs to the owning MPTCP master
+ 	 * socket, even if for additional subflows the allocation is performed
+ 	 * by a kernel workqueue. Adjust inode references, so that the
+@@ -1687,6 +1682,11 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
+ 	mptcp_subflow_ops_override(sf->sk);
+ 
+ 	return 0;
++
++err_free:
++	release_sock(sf->sk);
++	sock_release(sf);
++	return err;
  }
  
- /* Note: caller must be prepared to deal with negative returns */
+ static struct mptcp_subflow_context *subflow_create_ctx(struct sock *sk,
 
 -- 
 2.41.0
