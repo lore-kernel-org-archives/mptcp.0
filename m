@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BA71D699;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB221C6BD;
 	Mon, 23 Oct 2023 20:45:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MuZf/ooW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E656C433C8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oe+NX9Pq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A60C433AB;
 	Mon, 23 Oct 2023 20:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1698093934;
-	bh=8wxbLJ82zryvI+nAd9SdZ5WA2SwnODFY54TmSNRVFHc=;
+	bh=U+qfHVKzSdXpb5Nt3mGZCOI198lAElT+RKzcKjn/PiY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=MuZf/ooWATbZqGzxeqHWTqnZGEh5pVW2FMB4GGNcZCWP9hyrg5Ee4gw5OrMUnAd8d
-	 VCB9qZuS33YFxgSaxCRGeG+RnE7zj8ysuDRmSV1v4/NY7cQGFMUHh8vkR4IJzC67Ns
-	 pYgdCduvSRZk4zvB/KGkwWQPExOT5TPQzao2tkz3U0d30Qp+0lZLj0RFP+XhBlUffR
-	 b/bbUK2nbQYv1TosseAMJwdRfDT3Fm5Ab7UEy+RxHNFht4kPMAE3G39sgQlvte5dkr
-	 oTSfW65swyjV4VnrGxx27d4k28uz/YWUEMeIzrdPIIqFFXy598wQ6gOcVaRF9Z64QZ
-	 TkIOsOxZPJG0g==
+	b=oe+NX9Pqh48cHlP94ZQURZ6ZFJY+eg6/vpMO1JiIW+OcOZbq97x0xz9jlo14Au0HJ
+	 6peL/N3oX1U0H61PYnv/+Xmmt5N74v0NQuthBMYTMPFRNmVshW7HZRMQl5UeIv92Sq
+	 BbiHXYZsnGd5KLNUcHR9wS5Os9PrClNUBpnLWZ5KXHq9Wa9qnlIAuevey0xsK7q6bE
+	 KsZzdiuHQpU2GKYjxIEHjTXnSgUZOFmwQezaXFOxYLgJRh9v6T1nhw+s7qpwa8Spse
+	 oMAZjfXr5BCp/xUZLMIDQfKtHJt7UlUS7oLxUVwnAO9NAoQmUOX0Tl2HSW921LtxzO
+	 zrHspQP60CAbQ==
 From: Mat Martineau <martineau@kernel.org>
-Date: Mon, 23 Oct 2023 13:44:39 -0700
-Subject: [PATCH net-next 6/9] mptcp: use copy_from_iter helpers on transmit
+Date: Mon, 23 Oct 2023 13:44:37 -0700
+Subject: [PATCH net-next 4/9] tcp: define initial scaling factor value as a
+ macro
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -28,7 +29,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231023-send-net-next-20231023-2-v1-6-9dc60939d371@kernel.org>
+Message-Id: <20231023-send-net-next-20231023-2-v1-4-9dc60939d371@kernel.org>
 References: <20231023-send-net-next-20231023-2-v1-0-9dc60939d371@kernel.org>
 In-Reply-To: <20231023-send-net-next-20231023-2-v1-0-9dc60939d371@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, 
@@ -40,59 +41,43 @@ X-Mailer: b4 0.12.4
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-The perf traces show an high cost for the MPTCP transmit path memcpy.
+So that other users could access it. Notably MPTCP will use
+it in the next patch.
 
-It turn out that the helper currently in use carries quite a bit
-of unneeded overhead, e.g. to map/unmap the memory pages.
+No functional change intended.
 
-Moving to the 'copy_from_iter' variant removes such overhead and
-additionally gains the no-cache support.
-
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+Acked-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- net/mptcp/protocol.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ include/net/tcp.h | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7036e30c449f..5489f024dd7e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1760,6 +1760,18 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
- 	return ret;
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 39b731c900dd..993b7fcd4e46 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1489,13 +1489,15 @@ static inline int tcp_space_from_win(const struct sock *sk, int win)
+ 	return __tcp_space_from_win(tcp_sk(sk)->scaling_ratio, win);
  }
  
-+static int do_copy_data_nocache(struct sock *sk, int copy,
-+				struct iov_iter *from, char *to)
-+{
-+	if (sk->sk_route_caps & NETIF_F_NOCACHE_COPY) {
-+		if (!copy_from_iter_full_nocache(to, copy, from))
-+			return -EFAULT;
-+	} else if (!copy_from_iter_full(to, copy, from)) {
-+		return -EFAULT;
-+	}
-+	return 0;
-+}
++/* Assume a conservative default of 1200 bytes of payload per 4K page.
++ * This may be adjusted later in tcp_measure_rcv_mss().
++ */
++#define TCP_DEFAULT_SCALING_RATIO ((1200 << TCP_RMEM_TO_WIN_SCALE) / \
++				   SKB_TRUESIZE(4096))
 +
- static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ static inline void tcp_scaling_ratio_init(struct sock *sk)
  {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
-@@ -1833,11 +1845,10 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		if (!sk_wmem_schedule(sk, total_ts))
- 			goto wait_for_memory;
+-	/* Assume a conservative default of 1200 bytes of payload per 4K page.
+-	 * This may be adjusted later in tcp_measure_rcv_mss().
+-	 */
+-	tcp_sk(sk)->scaling_ratio = (1200 << TCP_RMEM_TO_WIN_SCALE) /
+-				    SKB_TRUESIZE(4096);
++	tcp_sk(sk)->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+ }
  
--		if (copy_page_from_iter(dfrag->page, offset, psize,
--					&msg->msg_iter) != psize) {
--			ret = -EFAULT;
-+		ret = do_copy_data_nocache(sk, psize, &msg->msg_iter,
-+					   page_address(dfrag->page) + offset);
-+		if (ret)
- 			goto do_error;
--		}
- 
- 		/* data successfully copied into the write queue */
- 		sk_forward_alloc_add(sk, -total_ts);
+ /* Note: caller must be prepared to deal with negative returns */
 
 -- 
 2.41.0
