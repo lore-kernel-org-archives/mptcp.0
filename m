@@ -1,25 +1,25 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04567381D5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941A438F83;
 	Wed, 25 Oct 2023 23:37:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEQwBWiv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8E61C4339A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bLmFDtEW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1951C433C9;
 	Wed, 25 Oct 2023 23:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698277033;
-	bh=nH9eSRyr97sQBl762zJNIzDebdiVrUxjMr2kzANZ30Q=;
+	s=k20201202; t=1698277034;
+	bh=x0HBeQb2k3AZMmRAEAWGa+ksnu67qnn8G3b35KG4pEI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=TEQwBWiv3PqdP6EucXStiNrBQBPq5C0GLm1tMMjh/06ed4iiLN/zC4qxMEKf17HQV
-	 UnHa9bqhig2LYDlUXIwQuRosMhvkKQonDA3B2D0ZhiLV6WIV5zyDq7rZwdbnt2k8q7
-	 Wak+Zz/zOwd02R5sq4fX4IroqW6OIr+Zql9lrpn/q4eEaPGWFh5P/9UAU5mavOQRvT
-	 P/9b6pV5FTj0GL6Hih2zzBRUNYiGklKPcEcXoVcHjt8Tp4ojcKQ99do6nUHGkBHbO7
-	 cUv00xLM/c9Pin0yD/kVYuclK7utG3Nvkwgz8b4qaUYtJWF5PUc7Q8L3wzzwZvqRBE
-	 Er84urt2PUR0Q==
+	b=bLmFDtEWgY3z4+mF12hT7+gdzbuFfMYTV/a6QY0WQTqUHN4EVmTXkQU4FWtksAhsN
+	 29VMBNC4jpgirlQQVC8Jrfi8V6fOdI/muwLWh+Bx0xZio4EAt7Zz05QoCn9QPrYASc
+	 FdSePWXdP5ILqqV8pm3gg/Da44hU/PuHYPBg8GT2ZnpdkrIlH64l8anVg796iT/LKp
+	 kNp0TQAd1i8lRh6qZ6rk1mXc2QK+gCTEaBzoEcIRares/Nx0WcK7X97iWLUSKGQne3
+	 +XUwrGR2ACS/onJgOXizzWlxShfpZzKouGSrytv52PcdETsKnkUC66LsaUIJVD5HVe
+	 5LLlLOpReA7jQ==
 From: Mat Martineau <martineau@kernel.org>
-Date: Wed, 25 Oct 2023 16:37:08 -0700
-Subject: [PATCH net-next 07/10] mptcp: move sk assignment statement ahead
+Date: Wed, 25 Oct 2023 16:37:09 -0700
+Subject: [PATCH net-next 08/10] mptcp: define more local variables sk
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -28,7 +28,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231025-send-net-next-20231025-v1-7-db8f25f798eb@kernel.org>
+Message-Id: <20231025-send-net-next-20231025-v1-8-db8f25f798eb@kernel.org>
 References: <20231025-send-net-next-20231025-v1-0-db8f25f798eb@kernel.org>
 In-Reply-To: <20231025-send-net-next-20231025-v1-0-db8f25f798eb@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, 
@@ -42,23 +42,30 @@ X-Mailer: b4 0.12.4
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-If we move the sk assignment statement ahead in mptcp_nl_cmd_sf_create()
-or mptcp_nl_cmd_sf_destroy(), right after the msk null-check statements,
-sk can be used after the create_err or destroy_err labels instead of
-open-coding it again.
+'(struct sock *)msk' is used several times in mptcp_nl_cmd_announce(),
+mptcp_nl_cmd_remove() or mptcp_userspace_pm_set_flags() in pm_userspace.c,
+it's worth adding a local variable sk to point it.
 
 Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- net/mptcp/pm_userspace.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/mptcp/pm_userspace.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 25fa37ac3620..7bb2b29e5b96 100644
+index 7bb2b29e5b96..5c01b9bc619a 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -335,6 +335,8 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+@@ -152,6 +152,7 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 	struct mptcp_pm_addr_entry addr_val;
+ 	struct mptcp_sock *msk;
+ 	int err = -EINVAL;
++	struct sock *sk;
+ 	u32 token_val;
+ 
+ 	if (!addr || !token) {
+@@ -167,6 +168,8 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
  		return err;
  	}
  
@@ -66,26 +73,39 @@ index 25fa37ac3620..7bb2b29e5b96 100644
 +
  	if (!mptcp_pm_is_userspace(msk)) {
  		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
- 		goto create_err;
-@@ -352,8 +354,6 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 		goto create_err;
+ 		goto announce_err;
+@@ -190,7 +193,7 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 		goto announce_err;
  	}
  
--	sk = (struct sock *)msk;
--
- 	if (!mptcp_pm_addr_families_match(sk, &addr_l, &addr_r)) {
- 		GENL_SET_ERR_MSG(info, "families mismatch");
- 		err = -EINVAL;
-@@ -381,7 +381,7 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+-	lock_sock((struct sock *)msk);
++	lock_sock(sk);
+ 	spin_lock_bh(&msk->pm.lock);
+ 
+ 	if (mptcp_pm_alloc_anno_list(msk, &addr_val.addr)) {
+@@ -200,11 +203,11 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
  	spin_unlock_bh(&msk->pm.lock);
+-	release_sock((struct sock *)msk);
++	release_sock(sk);
  
-  create_err:
+ 	err = 0;
+  announce_err:
 -	sock_put((struct sock *)msk);
 +	sock_put(sk);
  	return err;
  }
  
-@@ -458,6 +458,8 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
+@@ -251,6 +254,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ 	struct mptcp_sock *msk;
+ 	LIST_HEAD(free_list);
+ 	int err = -EINVAL;
++	struct sock *sk;
+ 	u32 token_val;
+ 	u8 id_val;
+ 
+@@ -268,6 +272,8 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
  		return err;
  	}
  
@@ -93,24 +113,76 @@ index 25fa37ac3620..7bb2b29e5b96 100644
 +
  	if (!mptcp_pm_is_userspace(msk)) {
  		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
- 		goto destroy_err;
-@@ -487,7 +489,6 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 		goto destroy_err;
+ 		goto remove_err;
+@@ -278,7 +284,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ 		goto remove_err;
  	}
  
--	sk = (struct sock *)msk;
- 	lock_sock(sk);
- 	ssk = mptcp_nl_find_ssk(msk, &addr_l, &addr_r);
- 	if (ssk) {
-@@ -507,7 +508,7 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 	release_sock(sk);
+-	lock_sock((struct sock *)msk);
++	lock_sock(sk);
  
- destroy_err:
+ 	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
+ 		if (entry->addr.id == id_val) {
+@@ -289,7 +295,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	if (!match) {
+ 		GENL_SET_ERR_MSG(info, "address with specified id not found");
+-		release_sock((struct sock *)msk);
++		release_sock(sk);
+ 		goto remove_err;
+ 	}
+ 
+@@ -297,15 +303,15 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	mptcp_pm_remove_addrs(msk, &free_list);
+ 
+-	release_sock((struct sock *)msk);
++	release_sock(sk);
+ 
+ 	list_for_each_entry_safe(match, entry, &free_list, list) {
+-		sock_kfree_s((struct sock *)msk, match, sizeof(*match));
++		sock_kfree_s(sk, match, sizeof(*match));
+ 	}
+ 
+ 	err = 0;
+  remove_err:
 -	sock_put((struct sock *)msk);
 +	sock_put(sk);
  	return err;
  }
  
+@@ -518,6 +524,7 @@ int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
+ {
+ 	struct mptcp_sock *msk;
+ 	int ret = -EINVAL;
++	struct sock *sk;
+ 	u32 token_val;
+ 
+ 	token_val = nla_get_u32(token);
+@@ -526,6 +533,8 @@ int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
+ 	if (!msk)
+ 		return ret;
+ 
++	sk = (struct sock *)msk;
++
+ 	if (!mptcp_pm_is_userspace(msk))
+ 		goto set_flags_err;
+ 
+@@ -533,11 +542,11 @@ int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
+ 	    rem->addr.family == AF_UNSPEC)
+ 		goto set_flags_err;
+ 
+-	lock_sock((struct sock *)msk);
++	lock_sock(sk);
+ 	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc->addr, &rem->addr, bkup);
+-	release_sock((struct sock *)msk);
++	release_sock(sk);
+ 
+ set_flags_err:
+-	sock_put((struct sock *)msk);
++	sock_put(sk);
+ 	return ret;
+ }
 
 -- 
 2.41.0
