@@ -1,84 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7299C31A92;
-	Wed, 25 Oct 2023 19:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C6337CAD;
+	Wed, 25 Oct 2023 23:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dnd0eggR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E6FE9C433C9;
-	Wed, 25 Oct 2023 19:50:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHx2IQSs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00F83C433CC;
+	Wed, 25 Oct 2023 23:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698263425;
-	bh=HLU3b2GLkMtECIXBFhOEcYQW9+OOCtm46MgkMy7Sqqc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=dnd0eggRFfcXRGO4avZUwQY5pukekB5e70EYtI1tGc4OP4+htspjMQAzOmLTQ2gLZ
-	 x8qmMpfHK4ovfRnz/9jZ0c6mX+zHQ+V+H+jrVaIt2g9Ko5Qu33MQY1YPaML9+Knt+/
-	 tncIpsyYqup7sy2b1Nwj2LhcZlN2zJCiUnXBR4Pyan9aLs9uVLO+9Y2le3IVvF2j4u
-	 TC+HUcmvchyiZd+qNU4hdgGWUOmbT/xR12sa8NZNjjVn6gpvJ7vgX7ONyvOj42Zb2I
-	 fzoN6AkFRdD2Hdw8oLEHQRRCUhY2c9pnf7PqC66APi/J4nDarQYGGdOQpsx7T7NpKB
-	 P/tTlJwM4BnKg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CD775E11F58;
-	Wed, 25 Oct 2023 19:50:24 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1698277032;
+	bh=FSAtE+zTZHOTHK+nbnYCG0cPYtBr9fiZYXPBuLJCWXg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=gHx2IQSsCfscN2H0LDbAUTDY3Z26HwWwJooRc1L78El1Meb+mUwcIpSFRXwgMEzve
+	 u+k5hy4P6Fmi/lXr/8YSJzVeCejhg0SUWqbZ2QXUYs9ayMxRrXVZipzJA0nyv4fc0b
+	 kKwoOCNO5j2xPXDBLT5XatCcr2rcCmgzjOBWUvKKU9xwpXPQPg+LvRJ1vBZzptVqX/
+	 60PhWaaPuna//1x1AVlG587JshjkP+w3wlXMf7Lbpx9MceSjkrT/WBRMPnAmPIzrly
+	 NAb6/ILLuVYFnE0T6x5PnR5qfMRGPAMyYcGLmiU07d/CP1Vw6KYKJFP5xj0mfLlchE
+	 h5XJLzrWDCgZA==
+From: Mat Martineau <martineau@kernel.org>
+Subject: [PATCH net-next 00/10] mptcp: Fixes and cleanup for v6.7
+Date: Wed, 25 Oct 2023 16:37:01 -0700
+Message-Id: <20231025-send-net-next-20231025-v1-0-db8f25f798eb@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/9] mptcp: Features and fixes for v6.7
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169826342483.24198.5669935259131850057.git-patchwork-notify@kernel.org>
-Date: Wed, 25 Oct 2023 19:50:24 +0000
-References: <20231023-send-net-next-20231023-2-v1-0-9dc60939d371@kernel.org>
-In-Reply-To: <20231023-send-net-next-20231023-2-v1-0-9dc60939d371@kernel.org>
-To: Mat Martineau <martineau@kernel.org>
-Cc: matttbe@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- mptcp@lists.linux.dev
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ2mOWUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2NDAyNT3eLUvBTdvNQSIK4o0YULmyWlGKSmGqVYpJinKAE1FxSlpmVWgA2
+ OVoIpV4qtrQUA+M7qI3IAAAA=
+To: Matthieu Baerts <matttbe@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Geliang Tang <geliang.tang@suse.com>, 
+ Kishen Maloor <kishen.maloor@intel.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ Mat Martineau <martineau@kernel.org>, stable@vger.kernel.org
+X-Mailer: b4 0.12.4
 
-Hello:
+This series includes three initial patches that we had queued in our
+mptcp-net branch, but given the likely timing of net/net-next syncs this
+week, the need to avoid introducing branch conflicts, and another batch
+of net-next patches pending in the mptcp tree, the most practical route
+is to send everything for net-next.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Patches 1 & 2 fix some intermittent selftest failures by adjusting timing.
 
-On Mon, 23 Oct 2023 13:44:33 -0700 you wrote:
-> Patch 1 adds a configurable timeout for the MPTCP connection when all
-> subflows are closed, to support break-before-make use cases.
-> 
-> Patch 2 is a fix for a 1-byte error in rx data counters with MPTCP
-> fastopen connections.
-> 
-> Patch 3 is a minor code cleanup.
-> 
-> [...]
+Patch 3 removes an unneccessary userspace path manager restriction on
+the removal of subflows with subflow ID 0.
 
-Here is the summary with links:
-  - [net-next,1/9] mptcp: add a new sysctl for make after break timeout
-    https://git.kernel.org/netdev/net-next/c/d866ae9aaa43
-  - [net-next,2/9] mptcp: properly account fastopen data
-    https://git.kernel.org/netdev/net-next/c/bf0e96108fb6
-  - [net-next,3/9] mptcp: use plain bool instead of custom binary enum
-    https://git.kernel.org/netdev/net-next/c/f1f26512a9bf
-  - [net-next,4/9] tcp: define initial scaling factor value as a macro
-    https://git.kernel.org/netdev/net-next/c/849ee75a38b2
-  - [net-next,5/9] mptcp: give rcvlowat some love
-    https://git.kernel.org/netdev/net-next/c/5684ab1a0eff
-  - [net-next,6/9] mptcp: use copy_from_iter helpers on transmit
-    https://git.kernel.org/netdev/net-next/c/0ffe8e749040
-  - [net-next,7/9] mptcp: consolidate sockopt synchronization
-    https://git.kernel.org/netdev/net-next/c/a1ab24e5fc4a
-  - [net-next,8/9] mptcp: ignore notsent_lowat setting at the subflow level
-    https://git.kernel.org/netdev/net-next/c/9fdc779331bd
-  - [net-next,9/9] mptcp: refactor sndbuf auto-tuning
-    https://git.kernel.org/netdev/net-next/c/8005184fd1ca
+The remainder of the patches are all cleanup or selftest changes:
 
-You are awesome, thank you!
+Patches 4-8 clean up kernel code by removing unused parameters, making
+more consistent use of existing helper functions, and reducing extra
+casting of socket pointers.
+
+Patch 9 removes an unused variable in a selftest script.
+
+Patch 10 adds a little more detail to some mptcp_join test output.
+
+Signed-off-by: Mat Martineau <martineau@kernel.org>
+---
+Geliang Tang (10):
+      selftests: mptcp: run userspace pm tests slower
+      selftests: mptcp: fix wait_rm_addr/sf parameters
+      mptcp: userspace pm send RM_ADDR for ID 0
+      mptcp: drop useless ssk in pm_subflow_check_next
+      mptcp: use mptcp_check_fallback helper
+      mptcp: use mptcp_get_ext helper
+      mptcp: move sk assignment statement ahead
+      mptcp: define more local variables sk
+      selftests: mptcp: sockopt: drop mptcp_connect var
+      selftests: mptcp: display simult in extra_msg
+
+ net/mptcp/pm.c                                     |  2 +-
+ net/mptcp/pm_userspace.c                           | 81 +++++++++++++++++-----
+ net/mptcp/protocol.c                               |  6 +-
+ net/mptcp/protocol.h                               |  4 +-
+ net/mptcp/sockopt.c                                |  2 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    | 23 ++++--
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  1 -
+ 7 files changed, 88 insertions(+), 31 deletions(-)
+---
+base-commit: 8846f9a04b10b7f61214425409838d764df7080d
+change-id: 20231025-send-net-next-20231025-6bd0ee2d8d7d
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Mat Martineau <martineau@kernel.org>
 
