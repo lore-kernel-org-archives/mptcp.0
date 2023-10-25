@@ -1,93 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B7028DA5
-	for <mptcp@lists.linux.dev>; Wed, 25 Oct 2023 13:49:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C76D1A27D
+	for <mptcp@lists.linux.dev>; Wed, 25 Oct 2023 16:41:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZIMKdvWD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WouiDUtx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1698241750;
+	s=mimecast20190719; t=1698252068;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dPiIMmMbY1cYYJxNL7uiR3SQUAm2eaV8B5kbDdQQO6A=;
-	b=ZIMKdvWDBC4AD5QVXRNBBYlB9cWQ/2F478XbHut/c3Xq2uMzC9uR1OcqfaErJlYFV913Zu
-	xGJhZN8ggsO+FaYD33ZZ5aZjgDgkwYuNw77sHxAxLgT1DXm+Shid4nVBn1LvcWc5o3n/rS
-	2OPG5imZX+938QVE9aibs5MxXoyVr9E=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=45p4m02wDHtfK/5rEeQxDQTRj1TqzHPqRAnek6DIdIw=;
+	b=WouiDUtxwLJg06sC2h1CrjRLQCWO9xMuo40Yx132a5p0A8mnWVq9O/q8SKOyqpzDQwCNE+
+	pjZKD2T3TwZ16Q8Fm2ZLG+9GoF6pEA/LZcyIwqdEHsQCXBD/NufgY1yLf32CJiEOvnGcXo
+	OhPG6fyPpNWP8hvlirwOAJRxEEKIOo8=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-34-50BbLF8SNOeLKeRhlOhGrQ-1; Wed, 25 Oct 2023 09:48:58 -0400
-X-MC-Unique: 50BbLF8SNOeLKeRhlOhGrQ-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-507d2e15086so1308164e87.1
-        for <mptcp@lists.linux.dev>; Wed, 25 Oct 2023 06:48:58 -0700 (PDT)
+ us-mta-567-5i96ItG5MLuDB56YwHSJVg-1; Wed, 25 Oct 2023 12:41:06 -0400
+X-MC-Unique: 5i96ItG5MLuDB56YwHSJVg-1
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-5b79f96718eso669973a12.0
+        for <mptcp@lists.linux.dev>; Wed, 25 Oct 2023 09:41:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698241737; x=1698846537;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=C+FBy7j+UscI5hRgAfAFa6mgEZdbgMkSmr4F2qKqMP0=;
-        b=T15hvTH57yfMcfmOPkaU/r9+FO+ffy53UA8RkDw5ITQWYokUguCkg3gyL7LJI/xE4S
-         p6B2HNM0PzzZxYl/gqKAcGRz59AjWIYMJIzUGbM9mW9Zw5+YVF0J+RtHK5u3/v9HA9Li
-         QGaJqOHMpYjAWzWxxpDZXlZXHC3YF7Fejs5BZwt2LZe1xmlZL57jQCDOh/i1bWS5wqZL
-         WBxbNijACoXGTx/4f03fVlN2gQrM2odCOPmHuihN6NqNrs1wgxFyHxIoKsDfgwJKEys+
-         W3BGOIv2l7h2x0oNVEDckmaNSEw+e3+F04PhOKnDxTrtkR9/4abaj+djvpYFHqDNhfII
-         kTgQ==
-X-Gm-Message-State: AOJu0YxGtScnMUjJjUju4AZGwyAs6ew2plbnDpnaMIb7Bx3wBi5C1+Gm
-	sdy2zUTw7uFEUmMbrxHe/RoZyk+FUvbxvBl8WWNW9iAtGuXzgH3zqmK3srL6oG0mMJXmiWWUSdy
-	WjUHBTVS72HIPa5k=
-X-Received: by 2002:a05:6512:3b21:b0:508:1a11:16e6 with SMTP id f33-20020a0565123b2100b005081a1116e6mr909667lfv.2.1698241737509;
-        Wed, 25 Oct 2023 06:48:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGELiz73Ars3ifhTm/Nm0fTnz/Fa2njbwHuQw0/bI4RiuAtJNEZN3536/KqPyQZgv+4JK1wXA==
-X-Received: by 2002:a05:6512:3b21:b0:508:1a11:16e6 with SMTP id f33-20020a0565123b2100b005081a1116e6mr909640lfv.2.1698241737075;
-        Wed, 25 Oct 2023 06:48:57 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-235-10.dyn.eolo.it. [146.241.235.10])
-        by smtp.gmail.com with ESMTPSA id b59-20020a509f41000000b005402b190108sm6260252edf.39.2023.10.25.06.48.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 06:48:56 -0700 (PDT)
-Message-ID: <bfd0a37b09540fd3cf4107f9bea1b9efb70d5b33.camel@redhat.com>
-Subject: Re: [PATCH net-next 1/9] mptcp: add a new sysctl for make after
- break timeout
-From: Paolo Abeni <pabeni@redhat.com>
-To: Jakub Kicinski <kuba@kernel.org>, Mat Martineau <martineau@kernel.org>
-Cc: Matthieu Baerts <matttbe@kernel.org>, "David S. Miller"
-	 <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	netdev@vger.kernel.org, mptcp@lists.linux.dev
-Date: Wed, 25 Oct 2023 15:48:08 +0200
-In-Reply-To: <20231024175454.11b3305b@kernel.org>
-References: <20231023-send-net-next-20231023-2-v1-0-9dc60939d371@kernel.org>
-	 <20231023-send-net-next-20231023-2-v1-1-9dc60939d371@kernel.org>
-	 <20231024175454.11b3305b@kernel.org>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+        d=1e100.net; s=20230601; t=1698252066; x=1698856866;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=45p4m02wDHtfK/5rEeQxDQTRj1TqzHPqRAnek6DIdIw=;
+        b=Z4gEqax8wk3Bf96tSZHUpos28/cprl88+PKGjIVUst5Cr7RPb8jbcl29BXdAAyoX0Z
+         UWNSxI+KGLoAOISCgfMnxfwFKNQzAW9ooXDPZKAEM5nxxCc9HaZGwQFFT1P4P+L766WO
+         x8UdNYH5VUIR4yBfIq2hLgE7P6czxLLYfQgA+547QFguvnS+4/bg5CQcV2mElcQtCinS
+         +cMeWrNYZ7xpcjGPmbWTbjGnDU+YkLkykE/vgSqx+vbisZebxcPGi6UUGGGMHxsuSo3D
+         w1EC//KjzrU3usSpS0822tvimtlqILEYS30lwFNMGjTR/bWjluW8AnlhrWkp8MJZOX90
+         LJrQ==
+X-Gm-Message-State: AOJu0YyUeBullvdvPISdd6kqrUF4wCTdVNM9E2iNLtD2iUBeotTuPYmU
+	JvtPsX/CQms4+3qhbMZDTsqC87GrhBKfw0xXXTXFkFkj/lO5+d6emwvflXC2LtBF3DmMoaO6nxn
+	H/wGuxkHhVL7QBIxs/LTVEpR6wLB/47I=
+X-Received: by 2002:a05:6a20:8f1a:b0:17b:a34d:5b56 with SMTP id b26-20020a056a208f1a00b0017ba34d5b56mr193002pzk.19.1698252065841;
+        Wed, 25 Oct 2023 09:41:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSMFtLZF6hT2B6SagLd1tIs/d8nGPwGyqXWu2J7MgBFAHiktU0p9lRUP2Jys/EDmwvtCDM7p7RBF0in80bIiM=
+X-Received: by 2002:a05:6a20:8f1a:b0:17b:a34d:5b56 with SMTP id
+ b26-20020a056a208f1a00b0017ba34d5b56mr192979pzk.19.1698252065453; Wed, 25 Oct
+ 2023 09:41:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20231023-send-net-next-20231023-1-v2-0-16b1f701f900@kernel.org>
+ <20231023-send-net-next-20231023-1-v2-5-16b1f701f900@kernel.org>
+ <20231024125956.341ef4ef@kernel.org> <a29b6917-d578-35c4-978d-d57a3bccd63f@kernel.org>
+ <20231024164936.41ae6f3c@kernel.org>
+In-Reply-To: <20231024164936.41ae6f3c@kernel.org>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Wed, 25 Oct 2023 18:40:52 +0200
+Message-ID: <CAKa-r6vCj+gPEUKpv7AsXqM77N6pB0evuh7myHq=585RA3oD5g@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 5/7] uapi: mptcp: use header file generated
+ from YAML spec
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Matthieu Baerts <matttbe@kernel.org>, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+	Simon Horman <horms@kernel.org>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2023-10-24 at 17:54 -0700, Jakub Kicinski wrote:
-> On Mon, 23 Oct 2023 13:44:34 -0700 Mat Martineau wrote:
-> > +=09=09.procname =3D "close_timeout",
-> > +=09=09.maxlen =3D sizeof(unsigned int),
-> > +=09=09.mode =3D 0644,
-> > +=09=09.proc_handler =3D proc_dointvec_jiffies,
->=20
-> Silly question - proc_dointvec_jiffies() works fine for unsigned types?
+hello,
 
-AFAICS, yes: proc_dointvec_jiffies() internally uses
-__do_proc_dointvec(), which parses the buffer to a 'long' local
-variable and then do_proc_dointvec_jiffies_conv() converts it to
-integer taking care of possible overflows.
+thanks for looking at this.
 
-Cheers,
+On Tue, Oct 24, 2023 at 10:00=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> w=
+rote:
+>
+> > On Mon, 23 Oct 2023 11:17:09 -0700 Mat Martineau wrote:
+> >> +/* for backward compatibility */
+> >> +#define     __MPTCP_PM_CMD_AFTER_LAST       __MPTCP_PM_CMD_MAX
+> >> +#define     __MPTCP_ATTR_AFTER_LAST         __MPTCP_ATTR_MAX
+> >
+> > Do you want to intentionally move to the normal naming or would you
+> > prefer to keep the old names?
 
-Paolo
+given that nobody should use them, I'd prefer to move to the normal
+naming and drop the old definitions (_MPTCP_PM_CMD_AFTER_LAST and
+__MPTCP_ATTR_AFTER_LAST). I was unsure if I could do the drop thing
+actually, because applications using them would break the build then _
+hence these two "backward compatibility" lines.
+
+For the operation list, I see it's about exposing
+
+cmd-cnt-name
+
+to [ge]netlink*.yaml, and then do:
+
+  9 max-by-define: true
+ 10 kernel-policy: per-op
+ 11 cmd-cnt-name: --mptcp-pm-cmd-after-last    <-- this
+ 12
+ 13 definitions:
+
+the generated MPTCP #define(s) are the same as the ones we have in
+net-next now: no need to specify __MPTCP_PM_CMD_MAX anymore.
+
+For the attributes, I thought I could use  'attr-cnt-name' like:
+
+169     name: attr
+170     name-prefix: mptcp-pm-attr-
+171     attr-cnt-name: --mptcp-attr-after-last <-- this
+172     attributes:
+
+as described in the [ge]netlink schema, but the tool seems to just ignore i=
+t.
+--=20
+davide
+
+
+
+
+
+On Wed, Oct 25, 2023 at 1:49=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+>
+> On Tue, 24 Oct 2023 16:30:27 -0700 (PDT) Mat Martineau wrote:
+> > I'm not sure if you're offering to add the feature or are asking us (we=
+ll,
+> > Davide) to implement it :)
+>
+> Either way is fine, Davide seems to have tackled the extensions in patche=
+s
+> 1 and 2, so he may want to do it himself. Otherwise I'm more than happy
+> to type and send the patch :)
+>
+
+> Let's make sure we update documentation, tho, in this case:
+> Documentation/userspace-api/netlink/c-code-gen.rst
+>
 
