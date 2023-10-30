@@ -1,56 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360E63FB00
-	for <mptcp@lists.linux.dev>; Fri, 27 Oct 2023 23:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C686E611E;
+	Mon, 30 Oct 2023 06:32:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1bQyUpO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70273C433C8;
-	Fri, 27 Oct 2023 23:27:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCxBo5/X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C14C9C433C7;
+	Mon, 30 Oct 2023 06:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698449228;
-	bh=Buh2L4iH/pnkVg7TEz8yEZU6OePmbwGub2ypuDCOnHY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=M1bQyUpOQ4MvFbt+2Aho45+zHre+Hyp4uraeS7sHh4wbDz+yrD1Mk5eJFMhmNR8OM
-	 mIehq1Wn5AqXpnD45m6IdcbMqVSpu+v9/z+v1wc89/sYQtIBnDr1jWP+sHx0DYFZCI
-	 GTyyc9+oUoBSzyvhDZyhMQXO4vUAuhRgNQ17xriXq97yp4ithnqCMwu8oeFl8qvhSZ
-	 90qdbSAOaVRedhR0NyO0CBB4mSQE4pBM7rh0CbIMXe107CptgYK8vIT2onxFQZV835
-	 ay3pWBuaXof7qghX4nNp1UwYYIpyHpRvLY8ZbD8USm9bWCJhUZWah12dVeJ2bw7rCv
-	 QgKoRl9EMGPKA==
-Date: Fri, 27 Oct 2023 16:27:07 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Davide Caratti <dcaratti@redhat.com>
-cc: mptcp@lists.linux.dev, matttbe@kernel.org
-Subject: Re: [PATCH mptcp-next 1/2] Squash-to: "Documentation: netlink: add
- a YAML spec for mptcp"
-In-Reply-To: <a7bddec718e2702960829e550875401c4ef0e0f4.1698395496.git.dcaratti@redhat.com>
-Message-ID: <da8df25f-84f4-9346-49f0-ccedda967b1a@kernel.org>
-References: <a7bddec718e2702960829e550875401c4ef0e0f4.1698395496.git.dcaratti@redhat.com>
+	s=k20201202; t=1698647569;
+	bh=uS06Ju+9wQb63NgRCk5gVWNfgyaCuxPX5b/orf5IjmE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dCxBo5/Xa+NR+4PuGzSnGslLviQ8+mEi+dfnLv7k4/E9Ri+6a3bd9QleAbB7U+G+D
+	 2y3JjB44cT27EAp0Tx4XLhvD9u04SIQLVjwIcUOnZIybPaWC3IKr5pT0NsVL/AVVF5
+	 jaEg6QMxLr7R8qRiBxZpeR3REZaWKLHj+HV1FqxyJD0wjAcp3g6A6iFQKvi/mAnz3Z
+	 NyD69S9Gbd3q7uvKLv5cerZK0jPYgyRb2hz1CxEY+//yv+XUEsyrsRloWHsudO7hRC
+	 6nbo5OHBava38kh1ktcTkDSydx82Jvy1cPE+fUYBAkV1rYZvcphTRhFDfrlxSyzwNR
+	 A5+gfksBg245Q==
+Date: Sun, 29 Oct 2023 23:32:47 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: Matthieu Baerts <matttbe@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, netdev@vger.kernel.org, mptcp@lists.linux.dev, Geliang
+ Tang <geliang.tang@suse.com>
+Subject: Re: [PATCH net-next 00/15] mptcp: More selftest coverage and code
+ cleanup for net-next
+Message-ID: <20231029233247.51cd95aa@kernel.org>
+In-Reply-To: <20231027-send-net-next-2023107-v1-0-03eff9452957@kernel.org>
+References: <20231027-send-net-next-2023107-v1-0-03eff9452957@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 27 Oct 2023, Davide Caratti wrote:
+On Fri, 27 Oct 2023 15:57:01 -0700 Mat Martineau wrote:
+> Patches 1-5 and 7-8 add selftest coverage (and an associated subflow
+> counter in the kernel) to validate the recently-updated handling of
+> subflows with ID 0.
+> 
+> Patch 6 renames a label in the userspace path manager for clarity.
+> 
+> Patches 9-11 and 13-15 factor out common selftest code by moving certain
+> functions to mptcp_lib.sh
+> 
+> Patch 12 makes sure the random data file generated for selftest
+> payloads has the intended size.
 
-> add cmd-cnt-name and attr-cnt-name to generate _MPTCP_PM_CMD_AFTER_LAST
-> and __MPTCP_ATTR_AFTER_LAST respectively.
->
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-> ---
-> Documentation/netlink/specs/mptcp.yaml | 2 ++
-> 1 file changed, 2 insertions(+)
->
-
-Hi Davide -
-
-Thanks for sending these directly to netdev, I see that the changes are 
-already merged:
-
-https://lore.kernel.org/netdev/12d4ed0116d8883cf4b533b856f3125a34e56749.1698415310.git.dcaratti@redhat.com/
+I was finalizing the PR already when you posted, sorry :(
 
 
-- Mat
+## Form letter - net-next-closed
+
+The merge window for v6.7 has begun and we have already posted our pull
+request. Therefore net-next is closed for new drivers, features, code
+refactoring and optimizations. We are currently accepting bug fixes only.
+
+Please repost when net-next reopens after Nov 12th.
+
+RFC patches sent for review only are obviously welcome at any time.
+
+See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
+-- 
+pw-bot: defer
