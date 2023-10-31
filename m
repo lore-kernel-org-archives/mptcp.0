@@ -1,128 +1,116 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB29D1945A
-	for <mptcp@lists.linux.dev>; Tue, 31 Oct 2023 17:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979AED2ED
+	for <mptcp@lists.linux.dev>; Tue, 31 Oct 2023 17:31:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9OpLneG"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3b2f4a5ccebso3845078b6e.3
-        for <mptcp@lists.linux.dev>; Tue, 31 Oct 2023 10:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698773317; x=1699378117; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7aORqrhRWOLpAEUA4oXTImTbbIoK08aVXmDnBtrgqmk=;
-        b=W9OpLneGfbX+J0fcxdFY8/G5dML6lg8M6fPf1kwgDaZuT7gSDPeJAIUEIZEMxUZ36P
-         OCrEmFZjx01NwuR7RJfUumKKaQTAmAGcuoeK58iTvbogPslcdhzhohI+n/T9i99t8s00
-         xTBGOB1XkBieAoLTzHGfS8/Nu2Z34WXzgdRP3IvDWEkFGwFqHMvF9x56BkXPLAkDYKHQ
-         +vnFBj3dIh482CbNhcDU+/b+DnCQMnqoDbWU4bQkl9Jtuo7sLM+LXWqDNRdJMWsbkcGl
-         aRX14HaGu0iq//5IlAw0ic+7OLjNMeK/Ea5wfLpMotp4bCHoRkRgqGaSRdxUH+0uEsO6
-         vlpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698773317; x=1699378117;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7aORqrhRWOLpAEUA4oXTImTbbIoK08aVXmDnBtrgqmk=;
-        b=gpH3zCAhbSntYXnkpl+DaWluOcJ6KVI/LTYDOl1mPariC0HGBwQCr5gzD/g9oV8s7I
-         H+SPRe/jvB4KEmZq8YEknUBDj+ZyYGG2HvwAY6O1z5uZ0M4qI287sSAp1Lq7xuWHi1Xm
-         4PwvEzHFQ79y20eZYCt657isfNJiTfBeOBHU+QYPNrEV4hHqWeiWqw+o+Fe/V1XG8P0P
-         mGSqDvd2z+g+hAsvTFN8PVa144OQOTWgw66FqtQSoVhBaHzXNAXBzC2SY97FoUoCw+9l
-         iOFAIdakGjQ7DfYHlVykK8YuCwzRTbKfJ8LZs2KQmJYhcmItH2SAA6gKt/QgW/TirZbz
-         UYLg==
-X-Gm-Message-State: AOJu0Yyd9yajeCqe0T/TQ523vnUGnokDX6UhvUVHdNpkQ6JWLaqe48mp
-	SkjnDi7Qkte8oQpfnTYcmw==
-X-Google-Smtp-Source: AGHT+IGHqfjTlLbEoNFhGhswZx6nPumDMMiPi3ZkD094RysBJuCCMmLMO6TgccjCco8oPnjtp+3DXg==
-X-Received: by 2002:a54:4690:0:b0:3a7:aabc:738f with SMTP id k16-20020a544690000000b003a7aabc738fmr13138977oic.39.1698773316732;
-        Tue, 31 Oct 2023 10:28:36 -0700 (PDT)
-Received: from [127.0.0.1] ([40.84.171.7])
-        by smtp.gmail.com with ESMTPSA id d15-20020a05680808ef00b003b2e2d134a5sm324455oic.35.2023.10.31.10.28.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Oct 2023 10:28:36 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20231031-bpf-compil-err-css-v1-1-e2244c637835@kernel.org>
-References: <20231031-bpf-compil-err-css-v1-1-e2244c637835@kernel.org>
-Subject: Re: bpf: fix compilation error without CGROUPS: Tests Results
-Message-ID: <473766be-908c-fb6d-7912-a603a0dc2b31@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 31 Oct 2023 17:28:35 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sN6pgfoa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48DE5C433C8;
+	Tue, 31 Oct 2023 17:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698773466;
+	bh=1CvX8sGA86MzW+o2VD9dk9Rz6GUAAKNfE33+VmefrKo=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=sN6pgfoalgBdeGBOjtyN26San0mvOdYW1J2UqeAD1WDmgh5Isk7/VsIIS/4wfM9OG
+	 SPFbxHA+k29EeezB3Zs9+ZKBqPwzg+Nqt8a7DUd3/AQT0wwguhB4FF18xmrKIKhz4l
+	 sDXhQ0lmJza1zupZkC30UkSEkrK2ObmbIC51b49z9TmkAmhtn51Bo3xBV+9Wy0zpC+
+	 VLfMDTtW7jtelyTut5wCVFiSDmLwmgZsashhgv2Sc1nmoxyTOVpvdXtDMxMBfQVdBH
+	 xYgUB1uDtd/sdv+VQ0c1+7/DSc9BgEYBXv6Qf4sUMPitoW+Njx2vFeSSnreWMpozCs
+	 xqlxhUkHqPbBw==
+Message-ID: <8d9ff6ee-562c-4705-9037-bad741d4a229@kernel.org>
+Date: Tue, 31 Oct 2023 18:31:02 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: mptcp: deal with large GSO size.: Build Failure
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <ce93989da39fd2e47baa4506fbbf4c2049c2da13.1698416467.git.pabeni@redhat.com>
+ <7dafaff8-20c1-be33-8044-e05d01a1399d@gmail.com>
+ <69ab206d701874dd5ac39c45ef27affe1a67517a.camel@redhat.com>
+Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+In-Reply-To: <69ab206d701874dd5ac39c45ef27affe1a67517a.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hi Paolo,
 
-Thank you for your modifications, that's great!
+On 27/10/2023 16:59, Paolo Abeni wrote:
+> On Fri, 2023-10-27 at 14:42 +0000, MPTCP CI wrote:
+>> Hi Paolo,
+>>
+>> Thank you for your modifications, that's great!
+>>
+>> But sadly, our CI spotted some issues with it when trying to build it.
+>>
+>> You can find more details there:
+>>
+>>   https://patchwork.kernel.org/project/mptcp/patch/ce93989da39fd2e47baa4506fbbf4c2049c2da13.1698416467.git.pabeni@redhat.com/
+>>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/6668654076
+>>
+>> Status: failure
+>> Initiator: MPTCPimporter
+>> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/3ec0ab8000a0
+> 
+> It looks like the (upstream) tree is broken:
+> 
+>  kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_new':
+>   kernel/bpf/task_iter.c:919:14: error: 'CSS_TASK_ITER_PROCS'
+> undeclared (first use in this function)
+>     919 |         case CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED:
+>         |              ^~~~~~~~~~~~~~~~~~~
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5146402590818304
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5146402590818304/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6272302497660928
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6272302497660928/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5990827520950272
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5990827520950272/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4864927614107648
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4864927614107648/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/5a24ddd35f49
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+Indeed, there is an issue on BPF side. I sent a patch a few hours ago[1]
+and re-launched the CI: now it is all good!
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
+Matt
+
+[1] https://lore.kernel.org/mptcp/ZUEzzc%2FSod8OR28B@krava/T/
