@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135A62033B
-	for <mptcp@lists.linux.dev>; Tue, 31 Oct 2023 17:33:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB935134BA
+	for <mptcp@lists.linux.dev>; Tue, 31 Oct 2023 17:40:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcVoxgQF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6368C433C9;
-	Tue, 31 Oct 2023 17:33:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ji9VkH8t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA19FC433C8;
+	Tue, 31 Oct 2023 17:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698773588;
-	bh=m4V0xhjyHd2rrNek1+RC6z9VWdQJEhGG5WCW1riL4T0=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=PcVoxgQF7QfUkDpz4aPa7b7ZrzvBZPtGm7n2xCMbZa925FO14TjWsv86+7HaJsKpp
-	 trG4QUQzi1DWcExZb/VTRmOrs6iY+litsD2tWwIp07b43Z+GEmPt8dOGe3MZethXBo
-	 FhYRqrbZ7I95bKAwJD3PBVSleCab3Pzi/hD3PcB8FWLKC8j9uuHkXzcvigl7H3o7J8
-	 kmtAGbeDwksc7gnGlkPiIOrsjO547vImX8bKU8+RU0pK+06DrGnD0IfUe94uOahad+
-	 CrOn+F030gDRZ1amNN0dWOL4xL5krpYiwHZW435imJqFUm54s91ug403JSz12ZnkBc
-	 F8JU5pgUTTEVg==
-Message-ID: <da620046-fe43-458b-ba15-ca54e35552c1@kernel.org>
-Date: Tue, 31 Oct 2023 18:33:05 +0100
+	s=k20201202; t=1698774006;
+	bh=JZItaePmvhaY/XjwuYjBffv7Mg5j6nMLPkJtCDZ+3fg=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=ji9VkH8tR/GossN1RMMCGDv90nxgwwWcLSfrCcmoe1jTTL3t4a+lbf+AxjlyOPHbT
+	 EPtr4xa0iYLz1d1GchPBhR8IdQyMQ+9RYOSS15zaWIHk2UPn+C/64TYAGuT3msMnbC
+	 ZhFVqXVZuX73zztZT5ME33d4+5wQb0gTeiK/7bVZy5g5R3ubrVv/6911gCMYK1A9yv
+	 e/FSRhquanjyzzFXQefBuOuU/p81R3WozebWwNFbFG+3+ZnluxQjVfkjyJIu4QBZ3o
+	 dYefDwWetE3Avl9BK6ikQhqxeUjWEuIULZBhwz+e3bfEDStNTF0hgziejmM22pwTfb
+	 JkoH7zB2/Dn/g==
+Message-ID: <977c6859-bd51-4dec-916e-faff929bcae0@kernel.org>
+Date: Tue, 31 Oct 2023 18:40:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,13 +26,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: net/mptcp: don't overwrite sock_ops in mptcp_is_tcpsk(): Build
- Failure
+Subject: Re: [PATCH mptcp-next v3 00/29] userspace pm enhancements
 Content-Language: en-GB, fr-BE
-To: Davide Caratti <dcaratti@redhat.com>
-References: <a2581b975c0c5bec417b2dd5e0b014acd7770e14.1698764762.git.dcaratti@redhat.com>
- <a8a904bb-c84d-7fcd-b04b-afbd7d810768@gmail.com>
-Cc: mptcp@lists.linux.dev
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <cover.1695631132.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,30 +74,62 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-In-Reply-To: <a8a904bb-c84d-7fcd-b04b-afbd7d810768@gmail.com>
+In-Reply-To: <cover.1695631132.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Davide,
+Hi Geliang,
 
-On 31/10/2023 16:31, MPTCP CI wrote:
-> Thank you for your modifications, that's great!
-> 
-> But sadly, our CI spotted some issues with it when trying to build it.
-> 
-> You can find more details there:
-> 
->   https://patchwork.kernel.org/project/mptcp/patch/a2581b975c0c5bec417b2dd5e0b014acd7770e14.1698764762.git.dcaratti@redhat.com/
->   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/6708756766
-> 
-> Status: failure
-> Initiator: MPTCPimporter
-> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/ece97d6ac360
+On 25/09/2023 10:41, Geliang Tang wrote:
 
-As discussed at the weekly meeting, this issue was due to one upstream.
+(...)
 
-A fix for that has been added to our tree, and the CI is no longer
-complaining about your patch now!
+> Geliang Tang (29):
+>   mptcp: drop useless ssk in pm_subflow_check_next
+>   mptcp: use mptcp_check_fallback helper
+>   mptcp: use mptcp_get_ext helper
+>   mptcp: move sk assignment statement ahead
+>   mptcp: define more local variables sk
+>   selftests: mptcp: sockopt: drop mptcp_connect var
+>   selftests: mptcp: display simult in extra_msg
+>   mptcp: add mptcpi_subflows_total counter
+>   selftests: mptcp: add evts_get_info helper
+>   selftests: mptcp: add chk_subflows_total helper
+>   selftests: mptcp: update userspace pm test helpers
+>   selftests: mptcp: userspace pm remove id 0 subflow
+>   mptcp: userspace pm allow creating id 0 subflow
+>   selftests: mptcp: userspace pm create id 0 subflow
+>   mptcp: userspace pm remove id 0 address
+>   selftests: mptcp: userspace pm remove id 0 address
+>   mptcp: add userspace_pm_get_entry helper
+>   mptcp: add userspace pm addr entry refcount
+>   mptcp: add netlink pm addr entry refcount
+>   selftests: mptcp: add userspace pm fullmesh tests
+>   selftests: mptcp: add mptcp_lib_kill_wait
+>   selftests: mptcp: add mptcp_lib_evts_*
+>   selftests: mptcp: userspace: print colored results
+>   selftests: mptcp: add mptcp_lib_verify_listener_events
+>   selftests: mptcp: add mptcp_lib_is_v6
+>   selftests: mptcp: add mptcp_lib_get_counter
+>   selftests: mptcp: add mptcp_lib_make_file
+>   selftests: mptcp: add mptcp_lib_check_transfer
+>   selftests: mptcp: add mptcp_lib_wait_local_port_listen
+
+
+These patches are still listed in patchwork:
+
+13397525: [mptcp-next,v3,17/29] mptcp: add userspace_pm_get_entry helper
+13397526: [mptcp-next,v3,18/29] mptcp: add userspace pm addr entry refcount
+13397527: [mptcp-next,v3,19/29] mptcp: add netlink pm addr entry refcount
+13397528: [mptcp-next,v3,20/29] selftests: mptcp: add userspace pm
+fullmesh tests
+13397530: [mptcp-next,v3,22/29] selftests: mptcp: add mptcp_lib_evts_*
+13397531: [mptcp-next,v3,23/29] selftests: mptcp: userspace: print
+
+@Geliang: just to know what's the status, do you plan to still work on them?
+
+No hurry at all (especially now that net-next is closed) but it is just
+to know what's the current status ;-)
 
 Cheers,
 Matt
