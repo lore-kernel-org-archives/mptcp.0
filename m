@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979AED2ED
-	for <mptcp@lists.linux.dev>; Tue, 31 Oct 2023 17:31:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135A62033B
+	for <mptcp@lists.linux.dev>; Tue, 31 Oct 2023 17:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sN6pgfoa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48DE5C433C8;
-	Tue, 31 Oct 2023 17:31:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcVoxgQF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6368C433C9;
+	Tue, 31 Oct 2023 17:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698773466;
-	bh=1CvX8sGA86MzW+o2VD9dk9Rz6GUAAKNfE33+VmefrKo=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=sN6pgfoalgBdeGBOjtyN26San0mvOdYW1J2UqeAD1WDmgh5Isk7/VsIIS/4wfM9OG
-	 SPFbxHA+k29EeezB3Zs9+ZKBqPwzg+Nqt8a7DUd3/AQT0wwguhB4FF18xmrKIKhz4l
-	 sDXhQ0lmJza1zupZkC30UkSEkrK2ObmbIC51b49z9TmkAmhtn51Bo3xBV+9Wy0zpC+
-	 VLfMDTtW7jtelyTut5wCVFiSDmLwmgZsashhgv2Sc1nmoxyTOVpvdXtDMxMBfQVdBH
-	 xYgUB1uDtd/sdv+VQ0c1+7/DSc9BgEYBXv6Qf4sUMPitoW+Njx2vFeSSnreWMpozCs
-	 xqlxhUkHqPbBw==
-Message-ID: <8d9ff6ee-562c-4705-9037-bad741d4a229@kernel.org>
-Date: Tue, 31 Oct 2023 18:31:02 +0100
+	s=k20201202; t=1698773588;
+	bh=m4V0xhjyHd2rrNek1+RC6z9VWdQJEhGG5WCW1riL4T0=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=PcVoxgQF7QfUkDpz4aPa7b7ZrzvBZPtGm7n2xCMbZa925FO14TjWsv86+7HaJsKpp
+	 trG4QUQzi1DWcExZb/VTRmOrs6iY+litsD2tWwIp07b43Z+GEmPt8dOGe3MZethXBo
+	 FhYRqrbZ7I95bKAwJD3PBVSleCab3Pzi/hD3PcB8FWLKC8j9uuHkXzcvigl7H3o7J8
+	 kmtAGbeDwksc7gnGlkPiIOrsjO547vImX8bKU8+RU0pK+06DrGnD0IfUe94uOahad+
+	 CrOn+F030gDRZ1amNN0dWOL4xL5krpYiwHZW435imJqFUm54s91ug403JSz12ZnkBc
+	 F8JU5pgUTTEVg==
+Message-ID: <da620046-fe43-458b-ba15-ca54e35552c1@kernel.org>
+Date: Tue, 31 Oct 2023 18:33:05 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: mptcp: deal with large GSO size.: Build Failure
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <ce93989da39fd2e47baa4506fbbf4c2049c2da13.1698416467.git.pabeni@redhat.com>
- <7dafaff8-20c1-be33-8044-e05d01a1399d@gmail.com>
- <69ab206d701874dd5ac39c45ef27affe1a67517a.camel@redhat.com>
+Subject: Re: net/mptcp: don't overwrite sock_ops in mptcp_is_tcpsk(): Build
+ Failure
 Content-Language: en-GB, fr-BE
+To: Davide Caratti <dcaratti@redhat.com>
+References: <a2581b975c0c5bec417b2dd5e0b014acd7770e14.1698764762.git.dcaratti@redhat.com>
+ <a8a904bb-c84d-7fcd-b04b-afbd7d810768@gmail.com>
+Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -76,41 +77,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-In-Reply-To: <69ab206d701874dd5ac39c45ef27affe1a67517a.camel@redhat.com>
+In-Reply-To: <a8a904bb-c84d-7fcd-b04b-afbd7d810768@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Davide,
 
-On 27/10/2023 16:59, Paolo Abeni wrote:
-> On Fri, 2023-10-27 at 14:42 +0000, MPTCP CI wrote:
->> Hi Paolo,
->>
->> Thank you for your modifications, that's great!
->>
->> But sadly, our CI spotted some issues with it when trying to build it.
->>
->> You can find more details there:
->>
->>   https://patchwork.kernel.org/project/mptcp/patch/ce93989da39fd2e47baa4506fbbf4c2049c2da13.1698416467.git.pabeni@redhat.com/
->>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/6668654076
->>
->> Status: failure
->> Initiator: MPTCPimporter
->> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/3ec0ab8000a0
+On 31/10/2023 16:31, MPTCP CI wrote:
+> Thank you for your modifications, that's great!
 > 
-> It looks like the (upstream) tree is broken:
+> But sadly, our CI spotted some issues with it when trying to build it.
 > 
->  kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_new':
->   kernel/bpf/task_iter.c:919:14: error: 'CSS_TASK_ITER_PROCS'
-> undeclared (first use in this function)
->     919 |         case CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED:
->         |              ^~~~~~~~~~~~~~~~~~~
+> You can find more details there:
+> 
+>   https://patchwork.kernel.org/project/mptcp/patch/a2581b975c0c5bec417b2dd5e0b014acd7770e14.1698764762.git.dcaratti@redhat.com/
+>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/6708756766
+> 
+> Status: failure
+> Initiator: MPTCPimporter
+> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/ece97d6ac360
 
-Indeed, there is an issue on BPF side. I sent a patch a few hours ago[1]
-and re-launched the CI: now it is all good!
+As discussed at the weekly meeting, this issue was due to one upstream.
+
+A fix for that has been added to our tree, and the CI is no longer
+complaining about your patch now!
 
 Cheers,
 Matt
-
-[1] https://lore.kernel.org/mptcp/ZUEzzc%2FSod8OR28B@krava/T/
