@@ -1,134 +1,127 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2076.outbound.protection.outlook.com [40.107.21.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473501841
-	for <mptcp@lists.linux.dev>; Wed,  1 Nov 2023 03:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28167F
+	for <mptcp@lists.linux.dev>; Wed,  1 Nov 2023 04:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxSuRFmk"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-32f78dcf036so260230f8f.0
-        for <mptcp@lists.linux.dev>; Tue, 31 Oct 2023 20:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698810908; x=1699415708; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JB0/maXrKhTyio7d/n+oJLiXoE4Nk47OqpdEbHEpM+Q=;
-        b=UxSuRFmkd/HcDXrQTYlZc0l6qwagnxBxkjzR0PXO4oHdseXE1vv8aXtN6urJp2YbxY
-         VVIvJSWib5XM49ace9uNBVMatkUUQvGbrCN6oFeu26L9M9I5hoqCvd39QEWoyelfFXJG
-         EMFFnwdj57JQQOqev7BNprbJ30uMOYH6BrQ5NSf5EgXJ0WtHgE50IEFWU0Qvf5KC5fVG
-         ZboR/36J3YCtz6W6HFZ/6inXwK+Hpuc1puRfWUmgLC3yhhGrg9eOFW5Vx27rDD5wse9y
-         kvwHQbfkouIxZQDMLpPTBYlRozeNjh65ZgJqrQyKfrINN/dwoOkEghSsnvC0rm6560pT
-         hr0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698810908; x=1699415708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JB0/maXrKhTyio7d/n+oJLiXoE4Nk47OqpdEbHEpM+Q=;
-        b=UOsj577iXfKQfCkuy4thtJ8Ju5pZmZre1QCMEzGcfNhMd7I4xLeCtkFxDD+XefkIAM
-         bMxz9RHmmquF8eUf2B+aoH7e431QFNqEoeQZKuaas+Hf1c3M5tOB3FR0JzFcUNKfOmfi
-         x1+dRFYLzV9aQA5vTztDahfJ2XlntlqROMbbPNBU0sEebTW9sIIjApbDPWGbZwah9bHa
-         ekhaS45561vrD4UikNaxIpNMu7F3qZ/vEXRis1Kwxk5Wi5upXOgfWYdY+/gAj/u/g23a
-         N3OSp17EMExxPZANjI/Zj3TskeEMJlVvXRQsdStEYujFTGE3bPJu7FlYsIFcrPiXGtNc
-         gj5A==
-X-Gm-Message-State: AOJu0YzEfpoJWU28vBNQvpfLUOyr3+gTmd3vIedIQhXw8EAG7eAm44lk
-	7eKPDZW82F65PzyZo1+v0cmhAY3EEQRbd1kgnCk=
-X-Google-Smtp-Source: AGHT+IEr7KyXAJEpInft+c9ZhQlYvVmFJWyLpzhcsVLEkhcHWsrXKsLbILhZlE1rMBSUuUxgrsGXTN9cMIGNRYTrhyM=
-X-Received: by 2002:a05:6000:154b:b0:32f:811c:dfc4 with SMTP id
- 11-20020a056000154b00b0032f811cdfc4mr5397720wry.4.1698810907910; Tue, 31 Oct
- 2023 20:55:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="23+aLkUx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZTq4GTIURuN8Iv5nlz7W2l6qmhTRU6MMkKa2qEaTC/HEsaHXBTT5qFysE1gaTG3Avn3swCqjgSg5vHS8ivyCHtvCVcAf05OYR70l40KpdKbnVVd8soHRZBhStAwqf5bdvNUqM2nHTbNoxSq4mQ1HKnm3Lm4QvZgDu6Sd7o0I1JwYvBvYqQF9bAZCEcAdoWkQLlB7+fkNn35MKbQWE8wp43ubWGo8Amp6+dLz1mBbXFO5h0s4eVByqss6IUSgmy6TVvFu+a+W1b/3lCKWkjJAFHKb8fRu8pBVXDWYGHE7Iuyc5B7CJ0PhGIUodScg/spb0GI7XGOWJimz3514axOYGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+Mgvz9YeA+KP6cJlIK4hGAGG2PpwHNntvTpfNDo1ASw=;
+ b=FdwPWBumOZqhg/Tmsj4Fa0TNiJEf1fuk5bhGB4ei3hqUn68IEKYrPNc4sUyE0x5sHwqrLxyliDeZniWrJ+rpI/i+CTU+0+rWf8ABsDZ9jJKpeLNI8bxqxJ69f6y01iO+LWwT/Gojvsy9QFXfUYbtsKDfgTBdF/xE/iWVbO9kTLxjINzbe4uAmtwpEoyPuVZyXuR9JwnTVeYYiA7Fs4/IFgVpQ6bxo9cJGT3XVxVNnwEuPr5y4rgkOOnOiyjkxKMCamGwB88rLxvSetqEPdvsIK+qdcO6YM9IWYNdgE+VI7blABTPREETD0g7STn4xwKCsKpOz0JSiKgTr3lSavC11g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+Mgvz9YeA+KP6cJlIK4hGAGG2PpwHNntvTpfNDo1ASw=;
+ b=23+aLkUxwHRCUchfI5/AwjKfOOLQOFN0nQwhvw+tMxVuX9+uX9bNPGn8UhRZUPwIMGRXMGJlnWm3aEMUnENWG+76wQgtBqD3V9cuK+BkKygTISlsPnXPk3IY28lsaBIQS3QvjGchJ57dzPX0IfDf3VCJQYKfsYUrfq7O5HD3MkXgi5IXfpYnruxww6C4uT6wNO0JhPyu2XxlC4H6spWuPFZ3j0ySeiVSmkU5SiEFYR+1V6ydPyAgz48yM2Z+ZXct9rp84V1QRhYtnsbkYXZpMp8O+a9o+xF9HDsP2w0JoGLHjJVrY6UhHHXrBnMMZsdfadNsDSg+2A5mNSJtdN8mhQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by VI1PR04MB7070.eurprd04.prod.outlook.com (2603:10a6:800:123::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.18; Wed, 1 Nov
+ 2023 04:38:21 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::1c4a:15f4:3b93:e235]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::1c4a:15f4:3b93:e235%6]) with mapi id 15.20.6933.011; Wed, 1 Nov 2023
+ 04:38:21 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next 0/9] add refcount for address entry
+Date: Wed,  1 Nov 2023 12:38:15 +0800
+Message-Id: <cover.1698813419.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0118.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:40::22) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231031-bpf-compil-err-css-v1-1-e2244c637835@kernel.org> <ZUEzzc/Sod8OR28B@krava>
-In-Reply-To: <ZUEzzc/Sod8OR28B@krava>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 31 Oct 2023 20:54:56 -0700
-Message-ID: <CAADnVQKCNFxcpE9Y250iwd8E4+t_Pror0AuRaoRYepUkXj56UA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: fix compilation error without CGROUPS
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Matthieu Baerts <matttbe@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Chuyi Zhou <zhouchuyi@bytedance.com>, 
-	Tejun Heo <tj@kernel.org>, bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	MPTCP Upstream <mptcp@lists.linux.dev>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|VI1PR04MB7070:EE_
+X-MS-Office365-Filtering-Correlation-Id: c3d18971-c25c-4d8c-f49d-08dbda94602a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	/OdcIf/iqh3kPkz+7D4owjGiH76ZKhVCEZlUHKlOmA2p+Fl5kRdZJbDNyi3vaSVxYhl4Dekius90/FhNpzEV+2/FrBeIApf9WWAroM9we375bvVFsne5wrhBnnpNteZnOEg3NqWTpnh15/j8SsElFauxF1Y6a8XqXtsRWuQfdF0+ffuPjurzsE6HIpJHbCuKozpx6FJFwa/Dtt1TykRUDzkiEmhXKYWbAU3IcFCbM38Kx2GCHXfKrAEtsQcurlHlCitH5aG+dRvH60FUJ5awIixNtyr8kzvx/KU8UN2sJ8tp7f5pHHU/AbJXGtvqAkjMsArK6FSX0/sn8O11fqEPJgbV0gSg18ZuVEgd3y/mX+4xKlZJj8xjvBpl8jZQ5WsFsTALziGOjS2/qJStQvbHQMZts1cI4rTgdz3jfqPAL15M2q5WK0QPHllL0NcmVm1voq40UimN+6M9Uy5UfdwXmfqAqJ7b3MkrxlgXJYt6OSW0kWNyIJ+YmDNdvxhQHH6L6a9CCH8cgsj6ZTwa6RiMPSQrUiKzNTPGwjlgjqaFYK7kQAw+VrDah/8DKB/WdR+fWVGW3OTwK2XwLVmpCOvf6bBdu+HrTQTgnyLOeYeRV9c=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(346002)(376002)(366004)(136003)(230922051799003)(186009)(451199024)(1800799009)(64100799003)(44832011)(38100700002)(66556008)(66946007)(66476007)(36756003)(2906002)(6916009)(41300700001)(316002)(8676002)(8936002)(83380400001)(4326008)(6512007)(26005)(86362001)(107886003)(5660300002)(2616005)(4744005)(6666004)(478600001)(6506007)(6486002)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nhDpeD6KpyBiDrK4N0fopfOzdiqeYli47cNIeh1rOl6gh8j2V3aOZEbMUMkc?=
+ =?us-ascii?Q?wcpKq2uJLzcVs9qfzrg7b+DBYG4HsN/WwQxSugJBXvn16vU84lTgw8oEr3A8?=
+ =?us-ascii?Q?royqE4rSQdgK6AQ2uI0+k7qjN5/8kfIZJDKpR4nm5Guo+3EgDf2j9JIIJgGH?=
+ =?us-ascii?Q?I6qKvv8jHFxaDOB4kP4fBqaUttVuQIooe052CH2aP+07Zpro+LHIRWl5Glc4?=
+ =?us-ascii?Q?+knbp0/+4JfzCudfeMdz01V4gUTgw0iMrGEA0vOGTvvkmJ/iuH0Kv2Qeh2v9?=
+ =?us-ascii?Q?Ig9SNCIK6DhoOHjqAniT2GWAmNr89UUQe9bCnv0fjO3YpDwRvsVinz1ntS5Q?=
+ =?us-ascii?Q?mZR1VraDHLW82zDlmsgEJgBL1XDfHlwslFiwRKda306XWDs9AVCRrZECepsm?=
+ =?us-ascii?Q?PHniupzgu2AnitmUAlO86nTvDNZtmo/fTpRS+yq+9fqzqJseLxPtHnOqQb0L?=
+ =?us-ascii?Q?p8ZdR+h7fC/DF8U68q02YHS3aeLUMxEXEwBrvMDuh+cuHKu2LaNgcbE7d6FY?=
+ =?us-ascii?Q?XZX30wGM+u0nPwLDl1wa+zFU1ri2qgCnv67rUAWmOgP/8lDjiuzPZgP9L0Nf?=
+ =?us-ascii?Q?AL89DibJ2Albd4q56puEToNqHu+LjnFqV0CG4JJ2le3RraiIdE8DMsniRpNY?=
+ =?us-ascii?Q?OAC07N9qGbUUxdqWY3b0i+Dx/IGmylIkG8Kfqb4N/9j+imYMmWW/qWjhIJQO?=
+ =?us-ascii?Q?8CbhLIwtOO4riWOuvUenP0yUt1XfR6cxu0JL2pZHndCRtQEqnMljOdyzEgJo?=
+ =?us-ascii?Q?aPeu6N6crGNAxz4dPiTgOy7zJOSRWEtweKaMqNhylUEMhlEkcIgIfQJtjn9I?=
+ =?us-ascii?Q?wEx0fHfo6Fa7WORUgiKzdvoqqo6WTI8/Kfwfq2C+FvbnxCL7+dqY4okseU9i?=
+ =?us-ascii?Q?sHx+2pg4XFs7d22Bwb1vkH61LPfI5m0HAnmyDuxI2SstoDdOaYqBCEyYeGQz?=
+ =?us-ascii?Q?0ettXjHTpbO1PLV83w5jU3eqnsAfB9pInOWJnGB374lHXCokHSiKVinkysCr?=
+ =?us-ascii?Q?VLrBKqWBROqw70vqvDNVxZ1autuUhSd/RyKeP+DwcPAy3cDJSB2+9N5eG/KQ?=
+ =?us-ascii?Q?x1+8yNXIkGe0ASCbdMXRRkJN6YYyXNohVhY3G+LjZh/mPdYUgyT+ezJI5SrS?=
+ =?us-ascii?Q?ro8lu8Sce5DKFmscNONrLwWQM6AdhslTXaHlvxJMwzx7AqDSCrVQUGUo4Vg/?=
+ =?us-ascii?Q?xHFcIqB/Wln2WfSNiV3dlm5EjaFXFJH9tBuJjzpytySBbh0B9AAz2SiwY4uM?=
+ =?us-ascii?Q?u90fygD4KLKE11+NtN5COQoaD8F7T4Ds9tGC1/kNlpY1a3Ep+SKLooHzsFGy?=
+ =?us-ascii?Q?d4qebQjN1J+7xT6NYT7waHVsE44tHvErJAOdNN706Q6ODpHIExLcRUTZMkDb?=
+ =?us-ascii?Q?0ZfKlEudfeiEGeq5pTe5Y3cWBugHM5AWPMmly8S3buUSEuw/IQIDNN9T1YDs?=
+ =?us-ascii?Q?AsfYXsQzLQ2FO1lQ3QfPVDq9LJeCUuNTz0B25Xk6IwT08nhNv2gSXnOb4Ri8?=
+ =?us-ascii?Q?lHMsXgdPqWVS6q1/iRcgw78Ta/1tyos1ukNCKbI8TAWrDQrd3k22u9eeN/TI?=
+ =?us-ascii?Q?n8NUpIftkg+ufl2cEuEiPI8W3j/Bm9BMv1+bJY3l?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3d18971-c25c-4d8c-f49d-08dbda94602a
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2023 04:38:20.8951
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Yxlk7vjWsbLaz0aJw5HQomLEW4sSVXFWTM3jtgOgYT33tvb7d2UTThn//vtfyhpaofwiAtRaCoTWMleYyINqlw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7070
 
-On Tue, Oct 31, 2023 at 10:05=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wro=
-te:
->
-> On Tue, Oct 31, 2023 at 04:49:34PM +0100, Matthieu Baerts wrote:
-> > Our MPTCP CI complained [1] -- and KBuild too -- that it was no longer
-> > possible to build the kernel without CONFIG_CGROUPS:
-> >
-> >   kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_new':
-> >   kernel/bpf/task_iter.c:919:14: error: 'CSS_TASK_ITER_PROCS' undeclare=
-d (first use in this function)
-> >     919 |         case CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED:
-> >         |              ^~~~~~~~~~~~~~~~~~~
-> >   kernel/bpf/task_iter.c:919:14: note: each undeclared identifier is re=
-ported only once for each function it appears in
-> >   kernel/bpf/task_iter.c:919:36: error: 'CSS_TASK_ITER_THREADED' undecl=
-ared (first use in this function)
-> >     919 |         case CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED:
-> >         |                                    ^~~~~~~~~~~~~~~~~~~~~~
-> >   kernel/bpf/task_iter.c:927:60: error: invalid application of 'sizeof'=
- to incomplete type 'struct css_task_iter'
-> >     927 |         kit->css_it =3D bpf_mem_alloc(&bpf_global_ma, sizeof(=
-struct css_task_iter));
-> >         |                                                            ^~=
-~~~~
-> >   kernel/bpf/task_iter.c:930:9: error: implicit declaration of function=
- 'css_task_iter_start'; did you mean 'task_seq_start'? [-Werror=3Dimplicit-=
-function-declaration]
-> >     930 |         css_task_iter_start(css, flags, kit->css_it);
-> >         |         ^~~~~~~~~~~~~~~~~~~
-> >         |         task_seq_start
-> >   kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_next':
-> >   kernel/bpf/task_iter.c:940:16: error: implicit declaration of functio=
-n 'css_task_iter_next'; did you mean 'class_dev_iter_next'? [-Werror=3Dimpl=
-icit-function-declaration]
-> >     940 |         return css_task_iter_next(kit->css_it);
-> >         |                ^~~~~~~~~~~~~~~~~~
-> >         |                class_dev_iter_next
-> >   kernel/bpf/task_iter.c:940:16: error: returning 'int' from a function=
- with return type 'struct task_struct *' makes pointer from integer without=
- a cast [-Werror=3Dint-conversion]
-> >     940 |         return css_task_iter_next(kit->css_it);
-> >         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >   kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_destroy':
-> >   kernel/bpf/task_iter.c:949:9: error: implicit declaration of function=
- 'css_task_iter_end' [-Werror=3Dimplicit-function-declaration]
-> >     949 |         css_task_iter_end(kit->css_it);
-> >         |         ^~~~~~~~~~~~~~~~~
-> >
-> > This patch simply surrounds with a #ifdef the new code requiring CGroup=
-s
-> > support. It seems enough for the compiler and this is similar to
-> > bpf_iter_css_{new,next,destroy}() functions where no other #ifdef have
-> > been added in kernel/bpf/helpers.c and in the selftests.
-> >
-> > Fixes: 9c66dc94b62a ("bpf: Introduce css_task open-coded iterator kfunc=
-s")
-> > Link: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/6665=
-206927
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202310260528.aHWgVFqq-lkp=
-@intel.com/
-> > Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
->
-> Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
+Add refcount for address entry.
 
-I believe this patch has the same issue as Arnd's patch:
-https://lore.kernel.org/all/CAADnVQL-zoFPPOVu3nM981gKxRu7Q3G3LTRsKstJEeahpo=
-R1RQ@mail.gmail.com/
+Geliang Tang (9):
+  selftests: mptcp: add mptcp_lib_evts_*
+  selftests: mptcp: userspace: print colored results
+  mptcp: dup an entry when removing it
+  mptcp: add userspace_pm_get_entry helper
+  mptcp: add userspace pm addr entry refcount
+  mptcp: flush userspace addrs list
+  selftests: mptcp: flush userspace addrs list
+  selftests: mptcp: rm userspace addr with randowly order
+  mptcp: add netlink pm addr entry refcount
 
-I'd like to merge the fix asap. Please make it a complete fix.
+ net/mptcp/pm_netlink.c                        | 21 ++++--
+ net/mptcp/pm_userspace.c                      | 72 ++++++++++++++++---
+ net/mptcp/protocol.h                          |  3 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 72 +++++++++----------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 63 ++++++++++++++++
+ .../selftests/net/mptcp/userspace_pm.sh       | 50 +++++--------
+ 6 files changed, 193 insertions(+), 88 deletions(-)
+
+-- 
+2.35.3
+
