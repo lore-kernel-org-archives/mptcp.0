@@ -1,147 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83329373
-	for <mptcp@lists.linux.dev>; Thu,  2 Nov 2023 00:51:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6515258;
+	Thu,  2 Nov 2023 06:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gsNXGi0+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2DB9C433CB;
-	Thu,  2 Nov 2023 00:51:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQhccwjF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2ACC3C433AD;
+	Thu,  2 Nov 2023 06:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698886282;
-	bh=8mXeW8624Ck3mKPx5ZdNIpvruDw0X6oX8QuxuLJxXAA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=gsNXGi0+2IheOU2dpzBLarSZ/xlh6cpot6xkyAqBRKYogTPGT3feikKMof8ui279W
-	 2yH0oSh8i8d6hfZmwdsxb7cReFlyKmmjubREOYdO7yxYfjgmpTtGd+jUJaJxYr1oek
-	 MRugcUtSGUuqKRrwDVME2WWDtczM3gevuwIOY4D9O+vqi5iUyhxvcR75QkSa1S70yK
-	 klCO2TWFbd/N74vHUc2CK62wFfk3kqC55yLKHjPhXzUpxkW1dcJ/ixooKq5GRdULsV
-	 2/gf9g1fXAQTDGteZipUzVJAz36a3SnUgTVFUqSzyVjkrPcFHP3p4fhIb4HX8ttM1D
-	 Z+9P1eC3VdQww==
-Date: Wed, 1 Nov 2023 17:51:20 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Davide Caratti <dcaratti@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] net/mptcp: don't overwrite sock_ops in
- mptcp_is_tcpsk()
-In-Reply-To: <a2581b975c0c5bec417b2dd5e0b014acd7770e14.1698764762.git.dcaratti@redhat.com>
-Message-ID: <79c895c8-2089-3d54-2495-3c19341db8f1@kernel.org>
-References: <a2581b975c0c5bec417b2dd5e0b014acd7770e14.1698764762.git.dcaratti@redhat.com>
+	s=k20201202; t=1698904825;
+	bh=5Qas+HFTiqzVDkX8McUzv1By9wmnnhxEMbccqZ++u+U=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=aQhccwjFXbgFDng+kpQMi+bxm1bBNmU6eWx5dsev1b7WRp+TczXxtetoZTKweQfTW
+	 JCk/05d8qC2TzJHdcS68LvtI6OuWo/TQBSU66jbLhX1fS+dptakFzeCbezRVxJM6aB
+	 R862WZfIeNVGbtieparl3YFAjuchiiQ9T3nAr9LwUTrvHXUPOBC5uWWQfqxn/ZJtz2
+	 GTFuEaWcqmjUp9c8AQd0cnZLMiwOlOTNSNijBIJAPrsC9CPQSaEifMDeR5ImE4lNpI
+	 SNmLi7JSFOtnKq82rsOrDdn+Ae1GHDhXKWPMOtUWHq1A8aIAtSGNnKcg33ppKCaPjV
+	 BSosLcIapxaxQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0E216E00094;
+	Thu,  2 Nov 2023 06:00:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCHv2 bpf-next] bpf: fix compilation error without CGROUPS
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <169890482505.9002.10852784674164703819.git-patchwork-notify@kernel.org>
+Date: Thu, 02 Nov 2023 06:00:25 +0000
+References: <20231101181601.1493271-1-jolsa@kernel.org>
+In-Reply-To: <20231101181601.1493271-1-jolsa@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, lkp@intel.com,
+ bpf@vger.kernel.org, kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+ john.fastabend@gmail.com, kpsingh@chromium.org, sdf@google.com,
+ haoluo@google.com, laoar.shao@gmail.com, tj@kernel.org,
+ linux-kernel@vger.kernel.org, mptcp@lists.linux.dev
 
-On Tue, 31 Oct 2023, Davide Caratti wrote:
+Hello:
 
-> Eric suggests:
->
-> > The fact that mptcp_is_tcpsk() was able to write over sock->ops was a
-> > bit strange to me.
-> > mptcp_is_tcpsk() should answer a question, with a read-only argument.
->
-> re-factor code to avoid overwriting sock_ops inside that function. Also,
-> change the helper name to reflect the semantic, and to disambiguate from
-> its dual sk_is_mptcp().
->
-> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/432
-> Suggested-by: Eric Dumazet <edumazet@google.com>
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-> ---
-> net/mptcp/protocol.c | 38 ++++++++++++++++++--------------------
-> 1 file changed, 18 insertions(+), 20 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 0ad507ac6bc7..9a9f8acd979e 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -55,28 +55,15 @@ u64 mptcp_wnd_end(const struct mptcp_sock *msk)
-> 	return READ_ONCE(msk->wnd_end);
-> }
->
-> -static bool mptcp_is_tcpsk(struct sock *sk)
-> +static const struct proto_ops *mptcp_get_fallback_tcp_ops(const struct sock *sk)
-> {
-> -	struct socket *sock = sk->sk_socket;
-> -
-> -	if (unlikely(sk->sk_prot == &tcp_prot)) {
-> -		/* we are being invoked after mptcp_accept() has
-> -		 * accepted a non-mp-capable flow: sk is a tcp_sk,
-> -		 * not an mptcp one.
-> -		 *
-> -		 * Hand the socket over to tcp so all further socket ops
-> -		 * bypass mptcp.
-> -		 */
-> -		WRITE_ONCE(sock->ops, &inet_stream_ops);
-> -		return true;
-> +	if (unlikely(sk->sk_prot == &tcp_prot))
-> +		return &inet_stream_ops;
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> -	} else if (unlikely(sk->sk_prot == &tcpv6_prot)) {
-> -		WRITE_ONCE(sock->ops, &inet6_stream_ops);
-> -		return true;
-> +	else if (unlikely(sk->sk_prot == &tcpv6_prot))
-> +		return &inet6_stream_ops;
-> #endif
-> -	}
-> -
-> -	return false;
-> +	return NULL;
-> }
->
-> static int __mptcp_socket_create(struct mptcp_sock *msk)
-> @@ -3832,6 +3819,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
-> 			       int flags, bool kern)
-> {
-> 	struct mptcp_sock *msk = mptcp_sk(sock->sk);
-> +	const struct proto_ops *fallback_ops;
-> 	struct sock *ssk, *newsk;
-> 	int err;
->
-> @@ -3851,7 +3839,8 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
-> 	lock_sock(newsk);
->
-> 	__inet_accept(sock, newsock, newsk);
-> -	if (!mptcp_is_tcpsk(newsock->sk)) {
-> +	fallback_ops = mptcp_get_fallback_tcp_ops(newsock->sk);
-> +	if (!fallback_ops) {
-> 		struct mptcp_sock *msk = mptcp_sk(newsk);
-> 		struct mptcp_subflow_context *subflow;
->
-> @@ -3877,6 +3866,15 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
-> 			if (unlikely(list_is_singular(&msk->conn_list)))
-> 				inet_sk_state_store(newsk, TCP_CLOSE);
-> 		}
-> +	} else {
-> +		/* we are being invoked after mptcp_accept() has
-> +		 * accepted a non-mp-capable flow: sk is a tcp_sk,
-> +		 * not an mptcp one.
-> +		 *
-> +		 * Hand the socket over to tcp so all further socket ops
-> +		 * bypass mptcp.
-> +		 */
-> +		WRITE_ONCE(newsock->sk->sk_socket->ops, fallback_ops);
+This patch was applied to bpf/bpf.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-Hi Davide -
+On Wed,  1 Nov 2023 19:16:01 +0100 you wrote:
+> From: Matthieu Baerts <matttbe@kernel.org>
+> 
+> Our MPTCP CI complained [1] -- and KBuild too -- that it was no longer
+> possible to build the kernel without CONFIG_CGROUPS:
+> 
+>   kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_new':
+>   kernel/bpf/task_iter.c:919:14: error: 'CSS_TASK_ITER_PROCS' undeclared (first use in this function)
+>     919 |         case CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED:
+>         |              ^~~~~~~~~~~~~~~~~~~
+>   kernel/bpf/task_iter.c:919:14: note: each undeclared identifier is reported only once for each function it appears in
+>   kernel/bpf/task_iter.c:919:36: error: 'CSS_TASK_ITER_THREADED' undeclared (first use in this function)
+>     919 |         case CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED:
+>         |                                    ^~~~~~~~~~~~~~~~~~~~~~
+>   kernel/bpf/task_iter.c:927:60: error: invalid application of 'sizeof' to incomplete type 'struct css_task_iter'
+>     927 |         kit->css_it = bpf_mem_alloc(&bpf_global_ma, sizeof(struct css_task_iter));
+>         |                                                            ^~~~~~
+>   kernel/bpf/task_iter.c:930:9: error: implicit declaration of function 'css_task_iter_start'; did you mean 'task_seq_start'? [-Werror=implicit-function-declaration]
+>     930 |         css_task_iter_start(css, flags, kit->css_it);
+>         |         ^~~~~~~~~~~~~~~~~~~
+>         |         task_seq_start
+>   kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_next':
+>   kernel/bpf/task_iter.c:940:16: error: implicit declaration of function 'css_task_iter_next'; did you mean 'class_dev_iter_next'? [-Werror=implicit-function-declaration]
+>     940 |         return css_task_iter_next(kit->css_it);
+>         |                ^~~~~~~~~~~~~~~~~~
+>         |                class_dev_iter_next
+>   kernel/bpf/task_iter.c:940:16: error: returning 'int' from a function with return type 'struct task_struct *' makes pointer from integer without a cast [-Werror=int-conversion]
+>     940 |         return css_task_iter_next(kit->css_it);
+>         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_destroy':
+>   kernel/bpf/task_iter.c:949:9: error: implicit declaration of function 'css_task_iter_end' [-Werror=implicit-function-declaration]
+>     949 |         css_task_iter_end(kit->css_it);
+>         |         ^~~~~~~~~~~~~~~~~
+> 
+> [...]
 
-From your comment in the meeting about using a different helper to 
-determine if it's a MPTCP or TCP sk, I think the idea is to get rid of the 
-helper function (rather than rename) and then include the ipv4/ipv6 logic 
-in this block of code? That approach sounds good to me.
+Here is the summary with links:
+  - [PATCHv2,bpf-next] bpf: fix compilation error without CGROUPS
+    https://git.kernel.org/bpf/bpf/c/05670f81d128
 
-If that doesn't work out, another option is to rename the helper function 
-to something that meets Eric's criteria (avoiding "mptcp_is_xxx()" or 
-"mptcp_get_xxx()" names).
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-- Mat
 
-> 	}
-> 	release_sock(newsk);
->
-> -- 
-> 2.41.0
->
->
->
