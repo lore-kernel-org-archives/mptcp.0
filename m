@@ -1,61 +1,60 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A877128E04
-	for <mptcp@lists.linux.dev>; Mon,  6 Nov 2023 15:27:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B822EAFB
+	for <mptcp@lists.linux.dev>; Mon,  6 Nov 2023 22:13:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vws+RQtw"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5a7fb84f6ceso48915157b3.1
-        for <mptcp@lists.linux.dev>; Mon, 06 Nov 2023 07:27:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IvLMGWZ8"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-79f82b26abfso153964039f.1
+        for <mptcp@lists.linux.dev>; Mon, 06 Nov 2023 14:13:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699284429; x=1699889229; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1699308824; x=1699913624; darn=lists.linux.dev;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VxTDVYdrRDtrLnbdGFef47/MY80RoGo3ClmYXtKHtE0=;
-        b=Vws+RQtwdglJFboXROxSXayu/DT383aliPGwDa3fssQR+aMvomNnpRMVczHbsLsK8S
-         TxI5m4yhNb03PlKobQoojTAK45JVMnEbxNv7Wf+fv39Ukgkfo2imY1D+Un+NfNT+QYZ1
-         1RBhoPzAmCrfuNeAbWbOSSYq4WGKBxvSBkbQKcuRk/SBUll8v958PXGNRhMN893fiOJt
-         AKXU0EN3q/z3DbCflbRkX11stBAmHFVKtT2nt4NY6B/KjDzBw0SGx9ao6WGfSa/BfLUY
-         Ke5AqFO+P9kQseU8JuriIy7K25ESUV/ajNZnDHyvmJYqcHkOuAjHyDsrx7Rx0Xc/D0X3
-         DjKA==
+        bh=aIirWkUrSTbcsmCG+Rm9M3YfapK9eYEl8Ch1Id8KXAg=;
+        b=IvLMGWZ8osKbkTFzpOJZejK16WrAdDfQgJZVG4Ob11KXmw6jKzW14ru1Zu8a2Icers
+         AobZau3P0X5pfZig4/tzBVaxVugCmLLol6jaK4DKN8m49Bb6n9ydG/YvCT3YBXZXCS2a
+         yJ6KpJ4ATh4WMbuOi4fnzmqQY4jxmj91/MFvDxLLF3BdoMHjeAauqeNPhyUkDUD8z4N/
+         HVTfSnUaU8llfB7MofP/5nd9TP67ejgfJ/1H5y4mqUzTg/nVBtAuE1SIOYtiK/VrCDEw
+         7lY7VjzQcY5edh42pQbWa9D/o9/35kBvxiBfO643K3RNyTccHNrw9RBQReY11TXHRfY1
+         l1wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699284429; x=1699889229;
+        d=1e100.net; s=20230601; t=1699308824; x=1699913624;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=VxTDVYdrRDtrLnbdGFef47/MY80RoGo3ClmYXtKHtE0=;
-        b=CGjsqPg5qic+Kl3vCzOE+ySGmgCe79RhJhcEGj5GBPwLjT9cErI0a3TcSo5DZjc9N9
-         cj2SsRDw5fSKbW8LXoMJOXyXKPkzyY7ePlBCkDiP9ooyR3CewscDWth3gDmT3np2nm5U
-         axJ/DzvnUR+UWm0eFMeZzmU+UNUszYnDNqNnS6Ssbift5x6RsxElMfjcFzntPirKuNI7
-         UP489lXxomAd98gFsxFSEAEJ66vTL4NYkSDFOSIUqZ9ksDRJTh9h0u0fCoZ6VD7BXt/Z
-         8mWirIeVUZGWKf3UtL9YvRuvWFwlkAYBt6XElA/UhpT5y7Z1BgMhAnIZROaiirLiXnXf
-         Cygw==
-X-Gm-Message-State: AOJu0YzcvGj3AnjszpR+2FUHNp3HqF/qzIUaPY7K36E84DQ8TfTPJHZU
-	Z6+i7Vwf6knqaY4kEqHerQ==
-X-Google-Smtp-Source: AGHT+IGFOC+FePsmW6pHXdir8830YX4mIwuzHfC4d4lN9gpqouGqp5w6Kg+gmtXY3C7mNBrRQ79rJQ==
-X-Received: by 2002:a0d:eb03:0:b0:5b3:2128:5667 with SMTP id u3-20020a0deb03000000b005b321285667mr8057769ywe.6.1699284429520;
-        Mon, 06 Nov 2023 07:27:09 -0800 (PST)
-Received: from [127.0.0.1] ([20.57.44.130])
-        by smtp.gmail.com with ESMTPSA id lg21-20020a056214549500b0065b24c08994sm3508604qvb.128.2023.11.06.07.27.08
+        bh=aIirWkUrSTbcsmCG+Rm9M3YfapK9eYEl8Ch1Id8KXAg=;
+        b=epD6HAA/ZdtBHCihmKGK5GHHAkHmLCS7UCXqlAwbsoNAAmtUeX3v6c+WgjoKpytm7p
+         oTJ6cSJdAeaM48mzfxFH2Olxwy1P/ruiUEdjkHtDQVU6rTxUqebgrFv4TY4m3j+QGvuc
+         88n0NjOREps5KFGSbkGeWxTMC+xqkCKdnLvLCTh+/bRJ8CP5mWhv3WwjcJXHnSQu+Ohr
+         b4M9FGe5l0/CUELZ2NcEUzOKLdwWN9f7a6hJbWU8SpOucU3dUJC1fDLO3FORBwLVCUVM
+         TpM5yVjrMwx1Uy62IB2RmS7zezaT/mU66RQG6efNz7v6jyiRSze2B941HUbi9UlC5URJ
+         1Wfw==
+X-Gm-Message-State: AOJu0YyR7zTN+sxxFHN/EvYYa+ygqp+6ulYJA06AJuPfzTo8c9HRgUd9
+	VmBBRulc/1xB5DL8WO/hNQ==
+X-Google-Smtp-Source: AGHT+IH+TNp0rA+gepsQu2I8fqyfw3MLI2scqAwG9q7tTaPIitaD262KJt8LlKw6nwJ+J9VciSTu8Q==
+X-Received: by 2002:a05:6602:2a51:b0:7a9:61fa:9605 with SMTP id k17-20020a0566022a5100b007a961fa9605mr37917811iov.5.1699308824146;
+        Mon, 06 Nov 2023 14:13:44 -0800 (PST)
+Received: from [127.0.0.1] ([13.67.150.240])
+        by smtp.gmail.com with ESMTPSA id f2-20020a02b782000000b0043a1483abc9sm2324021jam.74.2023.11.06.14.13.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Nov 2023 07:27:09 -0800 (PST)
+        Mon, 06 Nov 2023 14:13:43 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@suse.com>
 Cc: mptcp@lists.linux.dev
 Reply-To: mptcp@lists.linux.dev
 In-Reply-To:
- <3350eaf14a073538bf491f93fc852cd02ab0875a.1699280113.git.pabeni@redhat.com>
+ <1fbdbfebd7caa8052b764e3d78fa9fb8f41f03b9.1699086300.git.geliang.tang@suse.com>
 References:
- <3350eaf14a073538bf491f93fc852cd02ab0875a.1699280113.git.pabeni@redhat.com>
-Subject: Re: mptcp: fix possible NULL pointer dereference on close: Tests
- Results
-Message-ID: <845dfd45-687a-b808-24f1-f81677c6abf4@gmail.com>
+ <1fbdbfebd7caa8052b764e3d78fa9fb8f41f03b9.1699086300.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: add mptcp_lib_init_ns: Tests Results
+Message-ID: <0ba3f5de-a36e-77a4-3c7e-b66db9269a24@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Nov 2023 15:27:08 +0000
+Date: Mon, 06 Nov 2023 22:13:43 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -63,7 +62,7 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Hi Paolo,
+Hi Geliang,
 
 Thank you for your modifications, that's great!
 
@@ -72,33 +71,34 @@ Our CI did some validations and here is its report:
 - KVM Validation: normal (except selftest_mptcp_join):
   - Success! =E2=9C=85:
   - Task: https://cirrus-ci.=
-com/task/5967971751821312
+com/task/4943139908091904
   - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5967971751821312/summary/summary.txt
+com/v1/artifact/task/4943139908091904/summary/summary.txt
 
 - KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/4701334356623360
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4701334356623360/su=
-mmary/summary.txt
+  - Critical: KMemLeak =E2=9D=8C:
+  - Task: https://cirrus-ci.=
+com/task/6631989768355840
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6631989768355840/summary/summary.txt
 
 - KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
+  - Critical: KMemLeak =E2=9D=8C:
   - Task: https://cirrus-ci.=
-com/task/6530921705242624
+com/task/5506089861513216
   - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6530921705242624/summary/summary.txt
+com/v1/artifact/task/5506089861513216/summary/summary.txt
 
 - KVM Validation: normal (only selftest_mptcp_join):
   - Success! =E2=9C=85:
   - Task: https://cirrus-ci.=
-com/task/5405021798400000
+com/task/6069039814934528
   - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5405021798400000/summary/summary.txt
+com/v1/artifact/task/6069039814934528/summary/summary.txt
 
-Initiator: Patchew Applier
+Initiator: Matthieu Baerts
 Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/78fb6e638f64
+net-next/commits/e05a56ecc88a
 
 
 If there are some issues, you can reproduce=
