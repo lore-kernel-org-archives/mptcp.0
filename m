@@ -1,123 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB60FC8CB
-	for <mptcp@lists.linux.dev>; Mon,  6 Nov 2023 07:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SIl5sOzf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699255317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SKCb7j93O5+k3DYA1HT8hxFiN3yXykSBVbaRzKZG6V4=;
-	b=SIl5sOzfVezwECVuuptN4JVB02iQ6qLo7cflZACcilbgU/5zV5CE5crypvhoHbeljOvGSo
-	IC2FCGe0sV/wILBFB7mKRxeeR11FdwwEttZNlsENFmxnIOW9S8HVmQUJbIZ49UgRUQnWdB
-	TW46vz4cWNb9xCUHmINsuw2J9OCIRfw=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-394-9MRpDRS_Pg-hnEk2IPzcwA-1; Mon, 06 Nov 2023 02:21:56 -0500
-X-MC-Unique: 9MRpDRS_Pg-hnEk2IPzcwA-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9bfacbcabb1so46695966b.0
-        for <mptcp@lists.linux.dev>; Sun, 05 Nov 2023 23:21:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05FB9471
+	for <mptcp@lists.linux.dev>; Mon,  6 Nov 2023 08:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5af5b532d8fso47753797b3.2
+        for <mptcp@lists.linux.dev>; Mon, 06 Nov 2023 00:06:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699255315; x=1699860115;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SKCb7j93O5+k3DYA1HT8hxFiN3yXykSBVbaRzKZG6V4=;
-        b=C2QqyLPczn1MhaNijGTJPYz6hpA3adHfo7gesqhCqaSWw3639PPykCTN3naapCcX8G
-         aI8g4j9IR5MfZcIlqkvCUtw0EpKJaaSj69uHV1jwkbCGIhEshlpHV8//5D8ASACv/JXX
-         H9rXSNr2/9iqvGaKNH9Uvp9kSTv37fYbyoyiUjWdswGKhIrur/0HdjwVxrL+dB6VLkhp
-         X0lYUj6KhIDl9yveijF/wRz19oQOvBBnczvTwr1MBdOHWJPfG4y42Or5GUmAKz9AQk1D
-         HEQltgz1FdC1auTFxjJaruXy223/x+W7hces3aF/xyZl/pR5/G7CscFa91Dv+DjaDA/Y
-         D2kA==
-X-Gm-Message-State: AOJu0YzBQIedGn3O/4CeborsGXtehQjvX9QnXpfoXmxYctRHk2NkFXkw
-	H4G7qIu9ZUJMkhfwiURdnpmHV9aLioj9OfCNmatxMx+3Snhr/UpiPDbAyt4q/BZGGki/R1YAk8V
-	n9HIZ2u2/bAaCm0c=
-X-Received: by 2002:a17:907:9405:b0:9be:4cf4:d62e with SMTP id dk5-20020a170907940500b009be4cf4d62emr22188329ejc.5.1699255315010;
-        Sun, 05 Nov 2023 23:21:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEU1r8gmj5wdUh868MkTx5PNpvkzvIaFCpYSIZRndI//1jn2fPteHU3WC9GWE5hvhvaitsemg==
-X-Received: by 2002:a17:907:9405:b0:9be:4cf4:d62e with SMTP id dk5-20020a170907940500b009be4cf4d62emr22188318ejc.5.1699255314698;
-        Sun, 05 Nov 2023 23:21:54 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-226-133.dyn.eolo.it. [146.241.226.133])
-        by smtp.gmail.com with ESMTPSA id fi3-20020a170906da0300b0099ce188be7fsm3769236ejb.3.2023.11.05.23.21.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Nov 2023 23:21:54 -0800 (PST)
-Message-ID: <1831224a48dfbf54fb45fa56fce826d1d312700f.camel@redhat.com>
-Subject: Re: [PATCH net-next 9/9] mptcp: refactor sndbuf auto-tuning
-From: Paolo Abeni <pabeni@redhat.com>
-To: Eric Dumazet <edumazet@google.com>, Mat Martineau <martineau@kernel.org>
-Cc: Matthieu Baerts <matttbe@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- netdev@vger.kernel.org,  mptcp@lists.linux.dev
-Date: Mon, 06 Nov 2023 08:21:52 +0100
-In-Reply-To: <CANn89iLZUA6S2a=K8GObnS62KK6Jt4B7PsAs7meMFooM8xaTgw@mail.gmail.com>
-References: <20231023-send-net-next-20231023-2-v1-0-9dc60939d371@kernel.org>
-	 <20231023-send-net-next-20231023-2-v1-9-9dc60939d371@kernel.org>
-	 <CANn89iLZUA6S2a=K8GObnS62KK6Jt4B7PsAs7meMFooM8xaTgw@mail.gmail.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+        d=1e100.net; s=20230601; t=1699257988; x=1699862788;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GEegE8ckZG10k1Ra1Y/drVVKgI3ZUf2FMeALzLcJgsk=;
+        b=d6QDOw3qc5Iiw3hxRU5IhOszskpEUuQKr++erYtNwNAoeiiZ2xvAkANYefCWONtPNq
+         wW+6n166qzujnwTFVmLYfrGmV6zE6MI1FdEtVraO8AluEg2SmQEhtGRoKM5qoEWkwWNn
+         +PGaWDm8zkmFxfjrD1tDuf0vWZvN8HbhgGkzaWcmuYlBbygQ5VZC3tzE3NM3iIjRk+O7
+         KDA5WsMcVlcNfF9eT8tvtKBIIv4HjXP3f524OP+5FQ60plyQ4APHFcZ8k+GmwEIs4iH6
+         qOtCKI1sRlH7dSGhV5ktEGnBDBcEg9ULtr5b9M/vhBf5stdcIgH2gH9ZHAiddLiSl0py
+         y0dA==
+X-Gm-Message-State: AOJu0YxZcay5G41oPdzvnTU64xV5V3q+7fI4cNpDOToXk/sHkHjum6Zy
+	8k9ESygRbt9oexkfgP4ECDJ0gV224/M94w==
+X-Google-Smtp-Source: AGHT+IGkztefUv8tnwmmyV+tTtPJaj7aJhExzoHwqT/ecIVBOOw37Nna3ASX/U6o/mf5sR2z/GN5NA==
+X-Received: by 2002:a81:5c02:0:b0:595:be7:a38 with SMTP id q2-20020a815c02000000b005950be70a38mr10112921ywb.49.1699257988341;
+        Mon, 06 Nov 2023 00:06:28 -0800 (PST)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id d15-20020a0ddb0f000000b0059bd8447721sm3967796ywe.21.2023.11.06.00.06.27
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Nov 2023 00:06:27 -0800 (PST)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-d852b28ec3bso4458135276.2
+        for <mptcp@lists.linux.dev>; Mon, 06 Nov 2023 00:06:27 -0800 (PST)
+X-Received: by 2002:a5b:748:0:b0:d9a:4bc3:226d with SMTP id
+ s8-20020a5b0748000000b00d9a4bc3226dmr29092496ybq.34.1699257987652; Mon, 06
+ Nov 2023 00:06:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <20231101181601.1493271-1-jolsa@kernel.org>
+In-Reply-To: <20231101181601.1493271-1-jolsa@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 6 Nov 2023 09:06:15 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUK4iRF7rTrSypEcbGTO0SnBUFDqT_HA9B7Pj62wTbYAw@mail.gmail.com>
+Message-ID: <CAMuHMdUK4iRF7rTrSypEcbGTO0SnBUFDqT_HA9B7Pj62wTbYAw@mail.gmail.com>
+Subject: Re: [PATCHv2 bpf-next] bpf: fix compilation error without CGROUPS
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, kernel test robot <lkp@intel.com>, bpf@vger.kernel.org, 
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Yafang Shao <laoar.shao@gmail.com>, 
+	Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	MPTCP Upstream <mptcp@lists.linux.dev>, Matthieu Baerts <matttbe@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, Nov 1, 2023 at 7:16=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+> From: Matthieu Baerts <matttbe@kernel.org>
+> Our MPTCP CI complained [1] -- and KBuild too -- that it was no longer
+> possible to build the kernel without CONFIG_CGROUPS:
+>
+>   kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_new':
+>   kernel/bpf/task_iter.c:919:14: error: 'CSS_TASK_ITER_PROCS' undeclared =
+(first use in this function)
+>     919 |         case CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED:
+>         |              ^~~~~~~~~~~~~~~~~~~
+>   kernel/bpf/task_iter.c:919:14: note: each undeclared identifier is repo=
+rted only once for each function it appears in
+>   kernel/bpf/task_iter.c:919:36: error: 'CSS_TASK_ITER_THREADED' undeclar=
+ed (first use in this function)
+>     919 |         case CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED:
+>         |                                    ^~~~~~~~~~~~~~~~~~~~~~
+>   kernel/bpf/task_iter.c:927:60: error: invalid application of 'sizeof' t=
+o incomplete type 'struct css_task_iter'
+>     927 |         kit->css_it =3D bpf_mem_alloc(&bpf_global_ma, sizeof(st=
+ruct css_task_iter));
+>         |                                                            ^~~~=
+~~
+>   kernel/bpf/task_iter.c:930:9: error: implicit declaration of function '=
+css_task_iter_start'; did you mean 'task_seq_start'? [-Werror=3Dimplicit-fu=
+nction-declaration]
+>     930 |         css_task_iter_start(css, flags, kit->css_it);
+>         |         ^~~~~~~~~~~~~~~~~~~
+>         |         task_seq_start
+>   kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_next':
+>   kernel/bpf/task_iter.c:940:16: error: implicit declaration of function =
+'css_task_iter_next'; did you mean 'class_dev_iter_next'? [-Werror=3Dimplic=
+it-function-declaration]
+>     940 |         return css_task_iter_next(kit->css_it);
+>         |                ^~~~~~~~~~~~~~~~~~
+>         |                class_dev_iter_next
+>   kernel/bpf/task_iter.c:940:16: error: returning 'int' from a function w=
+ith return type 'struct task_struct *' makes pointer from integer without a=
+ cast [-Werror=3Dint-conversion]
+>     940 |         return css_task_iter_next(kit->css_it);
+>         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_destroy':
+>   kernel/bpf/task_iter.c:949:9: error: implicit declaration of function '=
+css_task_iter_end' [-Werror=3Dimplicit-function-declaration]
+>     949 |         css_task_iter_end(kit->css_it);
+>         |         ^~~~~~~~~~~~~~~~~
+>
+> This patch simply surrounds with a #ifdef the new code requiring CGroups
+> support. It seems enough for the compiler and this is similar to
+> bpf_iter_css_{new,next,destroy}() functions where no other #ifdef have
+> been added in kernel/bpf/helpers.c and in the selftests.
+>
+> Fixes: 9c66dc94b62a ("bpf: Introduce css_task open-coded iterator kfuncs"=
+)
+> Link: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/666520=
+6927
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202310260528.aHWgVFqq-lkp@i=
+ntel.com/
+> Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
+> [ added missing ifdefs for BTF_ID cgroup definitions ]
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-On Thu, 2023-11-02 at 18:19 +0100, Eric Dumazet wrote:
-> On Mon, Oct 23, 2023 at 10:45=E2=80=AFPM Mat Martineau <martineau@kernel.=
-org> wrote:
-> >=20
-> > From: Paolo Abeni <pabeni@redhat.com>
-> >=20
-> > The MPTCP protocol account for the data enqueued on all the subflows
-> > to the main socket send buffer, while the send buffer auto-tuning
-> > algorithm set the main socket send buffer size as the max size among
-> > the subflows.
-> >=20
-> > That causes bad performances when at least one subflow is sndbuf
-> > limited, e.g. due to very high latency, as the MPTCP scheduler can't
-> > even fill such buffer.
-> >=20
-> > Change the send-buffer auto-tuning algorithm to compute the main socket
-> > send buffer size as the sum of all the subflows buffer size.
-> >=20
-> > Reviewed-by: Mat Martineau <martineau@kernel.org>
-> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > Signed-off-by: Mat Martineau <martineau@kernel.org
->=20
-> ...
->=20
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index df208666fd19..2b43577f952e 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -421,6 +421,7 @@ static bool subflow_use_different_dport(struct mptc=
-p_sock *msk, const struct soc
-> >=20
-> >  void __mptcp_set_connected(struct sock *sk)
-> >  {
-> > +       __mptcp_propagate_sndbuf(sk, mptcp_sk(sk)->first);
->=20
-> ->first can be NULL here, according to syzbot.
+Thank you, this (finally, reported first on Oct 20!) fixes the build of
+e.g. m68k/defconfig.
 
-I'm sorry for the latency on my side, I had a different kind of crash
-to handle here.
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Do you have a syzkaller report available? Or the call trace landing
-here?
+Gr{oetje,eeting}s,
 
-Thanks!
+                        Geert
 
-Paolo
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
