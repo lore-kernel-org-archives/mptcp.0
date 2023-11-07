@@ -1,130 +1,127 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F07C11C8B
-	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 09:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F502D795
+	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 11:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elq/DSxC"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-66d17bdabe1so38459066d6.0
-        for <mptcp@lists.linux.dev>; Tue, 07 Nov 2023 01:50:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699350622; x=1699955422; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BRx2s+L2bnEAyMqfr7w5kyicSbTM13ji6fBuqLYe1Io=;
-        b=elq/DSxC+iHMw9TDDpUGQRx04JX3Azi0hwdnIj0UQ4qAk6vbpgACg03E7Qlah+90XB
-         GFSMSrLG8Cv+kmqAG0d+6Jx2D8qXNtuP6CSy1UC9JIw5oDOxNmfg+XKzQi1cA3O0rL3b
-         M8R+SbTwjoLM9WxmOuPemeBLB9Euk9DxuHKJTWhE8MykrukX71nznjBRZCOsimNOhOFI
-         MzMeNGbAAhTUz3/r4Pt8e1JGDnfL4sOxLO9hBijlA+ZnycqvFm0JwBYRGqQvaFVSKTsc
-         jj2nLxtf37ULLMyNaWS66pIGz7YfmKR/0oX3BdSVdcQoRWTiDcn0Hy/F59zxZFyOR5Dp
-         V+kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699350622; x=1699955422;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=BRx2s+L2bnEAyMqfr7w5kyicSbTM13ji6fBuqLYe1Io=;
-        b=mcVUYFX2u2Wk2L8FRJWK1t9pzvFzvNixtJSZ6gk3NTSbzRA4gLw1WVBh2NURF/01Qt
-         S6PFJtilZrFec0zO5hCKqHF9Aq/Ma8cGNNWIcFuUSze7KzmG/PG4EV7wZn3VbERUe54J
-         QAfAcYLtw55F7ElXyp7kBuLNkHwj/mbi7ABCODvxfhg5v33pTGmD822LKLi6EYyTib6y
-         aszXNU39lO+zAyb8JNxEr2Q20CfgJgSb7irYKaOYFK2MSx720aYzyd2kis+ISHOhVfq+
-         Hrl/4Fyko4LCuxdYhtnuN22cdJbM3AuEXMJy238AU3dWAAGkI04CeFpx3gbbpOJyLX4F
-         BF3g==
-X-Gm-Message-State: AOJu0YzVnkhMgLezHLypIw3Ji8/Vf2FotquHZmSxLCuzY0bpJGaKUvZ2
-	PuPxBW0Zy9W75gBxWdydjkcIuTJOcg==
-X-Google-Smtp-Source: AGHT+IG7qA/E5iNbeGm5F0Qgv5Lenrih0YFWTAW45z/4b5XPVarJWk+QsuBUlALXUnBMAd+Ksyss5g==
-X-Received: by 2002:a05:6214:240d:b0:655:d9b1:7980 with SMTP id fv13-20020a056214240d00b00655d9b17980mr44192691qvb.62.1699350621772;
-        Tue, 07 Nov 2023 01:50:21 -0800 (PST)
-Received: from [127.0.0.1] ([40.76.119.2])
-        by smtp.gmail.com with ESMTPSA id cw12-20020ad44dcc000000b00670e7ae4964sm4212533qvb.91.2023.11.07.01.50.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Nov 2023 01:50:21 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <125303e29562b201f1f6f441ba5289b1904bacbf.1699344621.git.geliang.tang@suse.com>
-References:
- <125303e29562b201f1f6f441ba5289b1904bacbf.1699344621.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: rm userspace addr with random order: Tests
- Results
-Message-ID: <1dc3c5b9-3300-cb62-abde-295ee0973c19@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 07 Nov 2023 09:50:21 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5dvKv4m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B99D7C433C7;
+	Tue,  7 Nov 2023 11:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699356142;
+	bh=LpKUac0OOde+Mb8qWkpVPA6FDWFXssHaj8VUnkwRm0w=;
+	h=Date:To:From:Subject:Cc:From;
+	b=R5dvKv4mleNqgMf8BwdiAYBNzxXsO954zfAXjNQI08/DVCRuId8l9Xk3LlXbs2ANm
+	 X4n3Y0aMGx8oZGLoA7H8DQCk87AwuiW26C7d7z4ayip78qWZG18ArWIOf2GjfNY9H/
+	 TLaNUUzJGsQRocnZOAX7a2zv/mf7fsyhpUy1XCjIunYCPOMbkccjafAayTMGezy0uZ
+	 n+GTIzh0W2+Ae4+m8u91fSlBpMPM8mk7DMqBqJr9NIaBEpU8qqP1pTzKymGstxA1OD
+	 SA4LJjwtZoovELg9yhpqoyVk0Dlc9jGtpAwqRV9vuOYVustF2ZRTuwaiYqWfgOXA7Z
+	 8ZdvOVS4dV1kA==
+Message-ID: <a7a3675a-4531-4559-bea2-c7689317764a@kernel.org>
+Date: Tue, 7 Nov 2023 12:22:19 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-GB, fr-BE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sasha Levin <sashal@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Subject: mptcp: commits to backports from 6.7-rc1
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Cc: stable <stable@vger.kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>,
+ Mat Martineau <martineau@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Greg, Sasha,
 
-Thank you for your modifications, that's great!
+This is to let you know that 3 patches from MPTCP tree have been applied
+in Linus' tree and don't have their "Cc: stable":
 
-Our CI did some validations and here is its report:
+  - f4a75e9d1100 ("selftests: mptcp: run userspace pm tests slower")
+    - for >= 6.5
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_add_addr =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5264642000289792
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5264642000289792/su=
-mmary/summary.txt
+  - 9168ea02b898 ("selftests: mptcp: fix wait_rm_addr/sf parameters")
+    - for >= 6.5
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_add_addr =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4983167023579136
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4983167023579136/su=
-mmary/summary.txt
+  - 84c531f54ad9 ("mptcp: userspace pm send RM_ADDR for ID 0")
+    - for >= 5.19
+    - note that the 'Fixes' tag is missing:
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6390541907132416
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6390541907132416/summary/summary.txt
+        Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6604862150934528
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6604862150934528/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/f83e9c69fce5
+This is not urgent, but do you mind adding them to the list of backports
+when you will look at the commits to backport from the future v6.7-rc1,
+please?
 
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+A bit more explanations: these patches were ready after the last Netdev
+pull request for v6.6. We sent them via 'net-next' to have them in Linus
+tree quicker, and also because other patches for the next version
+(net-next) required them. Netdev maintainers stripped the "Cc: stable"
+we added because it looked strange to have them in their PR containing
+new features for v6.7: please see [1] for more details.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+Note that by accident, the 3rd patch got its 'Fixes' tag stripped as
+well, see [2] (patch) and [3] (commit). Feel free to re-add it in the
+commits for stable if it is easy to do, but it is fine without if not.
 
-For more details:
+  Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Thank you for your work!
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
+
+[1]
+https://lore.kernel.org/all/20231025-send-net-next-20231025-v1-0-db8f25f798eb@kernel.org/
+[2]
+https://lore.kernel.org/netdev/20231025-send-net-next-20231025-v1-3-db8f25f798eb@kernel.org/
+[3]
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=84c531f54ad9
