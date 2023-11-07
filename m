@@ -1,131 +1,68 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B822EAFB
-	for <mptcp@lists.linux.dev>; Mon,  6 Nov 2023 22:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A82315A4
+	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 01:07:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IvLMGWZ8"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-79f82b26abfso153964039f.1
-        for <mptcp@lists.linux.dev>; Mon, 06 Nov 2023 14:13:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699308824; x=1699913624; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aIirWkUrSTbcsmCG+Rm9M3YfapK9eYEl8Ch1Id8KXAg=;
-        b=IvLMGWZ8osKbkTFzpOJZejK16WrAdDfQgJZVG4Ob11KXmw6jKzW14ru1Zu8a2Icers
-         AobZau3P0X5pfZig4/tzBVaxVugCmLLol6jaK4DKN8m49Bb6n9ydG/YvCT3YBXZXCS2a
-         yJ6KpJ4ATh4WMbuOi4fnzmqQY4jxmj91/MFvDxLLF3BdoMHjeAauqeNPhyUkDUD8z4N/
-         HVTfSnUaU8llfB7MofP/5nd9TP67ejgfJ/1H5y4mqUzTg/nVBtAuE1SIOYtiK/VrCDEw
-         7lY7VjzQcY5edh42pQbWa9D/o9/35kBvxiBfO643K3RNyTccHNrw9RBQReY11TXHRfY1
-         l1wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699308824; x=1699913624;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aIirWkUrSTbcsmCG+Rm9M3YfapK9eYEl8Ch1Id8KXAg=;
-        b=epD6HAA/ZdtBHCihmKGK5GHHAkHmLCS7UCXqlAwbsoNAAmtUeX3v6c+WgjoKpytm7p
-         oTJ6cSJdAeaM48mzfxFH2Olxwy1P/ruiUEdjkHtDQVU6rTxUqebgrFv4TY4m3j+QGvuc
-         88n0NjOREps5KFGSbkGeWxTMC+xqkCKdnLvLCTh+/bRJ8CP5mWhv3WwjcJXHnSQu+Ohr
-         b4M9FGe5l0/CUELZ2NcEUzOKLdwWN9f7a6hJbWU8SpOucU3dUJC1fDLO3FORBwLVCUVM
-         TpM5yVjrMwx1Uy62IB2RmS7zezaT/mU66RQG6efNz7v6jyiRSze2B941HUbi9UlC5URJ
-         1Wfw==
-X-Gm-Message-State: AOJu0YyR7zTN+sxxFHN/EvYYa+ygqp+6ulYJA06AJuPfzTo8c9HRgUd9
-	VmBBRulc/1xB5DL8WO/hNQ==
-X-Google-Smtp-Source: AGHT+IH+TNp0rA+gepsQu2I8fqyfw3MLI2scqAwG9q7tTaPIitaD262KJt8LlKw6nwJ+J9VciSTu8Q==
-X-Received: by 2002:a05:6602:2a51:b0:7a9:61fa:9605 with SMTP id k17-20020a0566022a5100b007a961fa9605mr37917811iov.5.1699308824146;
-        Mon, 06 Nov 2023 14:13:44 -0800 (PST)
-Received: from [127.0.0.1] ([13.67.150.240])
-        by smtp.gmail.com with ESMTPSA id f2-20020a02b782000000b0043a1483abc9sm2324021jam.74.2023.11.06.14.13.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Nov 2023 14:13:43 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXnnGVQv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC453C433C7;
+	Tue,  7 Nov 2023 01:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699319266;
+	bh=3PQ4ACUm7bzebKtZHGiqrUL0eIuUyiLoknz3mTvgzXs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=WXnnGVQvw7LwswNvjvAF0mLfj6N7NLw/uhc1Fs+bl2uef3XZd6QfW2mbTQF2C88Uf
+	 gx+uHT4imSbBjNWmViQ4uNgYh851kF61xLnIobfYsqe7rnhQSfQBdUTtp3VZZ4i7B+
+	 +NrE18ykhhKHZ/joW71P4MlEVpyVflduyz9wJ11m5NSDfrSEH4MTrIloexmL6AC0Fd
+	 JWTxG1U8ysESw9EmhiFSQ2rqQG2AJrPD0eV7LbtgPpgRk4uV8Q5GMdl9AU6R6m7l88
+	 NMQaqlIi1YfrPddvy9JPLGXPSSOjRcT0bC+b1SecSg8bjasNQyaOuQdZ2HOBwxubFF
+	 PEysJEfUQ28DQ==
+Date: Mon, 6 Nov 2023 17:07:45 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
 To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1fbdbfebd7caa8052b764e3d78fa9fb8f41f03b9.1699086300.git.geliang.tang@suse.com>
-References:
- <1fbdbfebd7caa8052b764e3d78fa9fb8f41f03b9.1699086300.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: add mptcp_lib_init_ns: Tests Results
-Message-ID: <0ba3f5de-a36e-77a4-3c7e-b66db9269a24@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Nov 2023 22:13:43 +0000
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net] mptcp: add validity check for sending
+ RM_ADDR
+In-Reply-To: <02d38d6b7a98765bf516c90541d4f2a911f428ce.1699014584.git.geliang.tang@suse.com>
+Message-ID: <aced43b2-0ece-264f-a314-698ccb2299da@kernel.org>
+References: <02d38d6b7a98765bf516c90541d4f2a911f428ce.1699014584.git.geliang.tang@suse.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Geliang,
+On Fri, 3 Nov 2023, Geliang Tang wrote:
 
-Thank you for your modifications, that's great!
+> This patch adds the validity check for sending RM_ADDRs for userspace PM
+> in mptcp_pm_remove_addrs(), only send a RM_ADDR when the address is in the
+> anno_list or conn_list.
+>
+> Fixes: 8b1c94da1e48 ("mptcp: only send RM_ADDR in nl_cmd_remove")
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> net/mptcp/pm_netlink.c | 5 +++--
+> 1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 1529ec358815..bf4d96f6f99a 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1515,8 +1515,9 @@ void mptcp_pm_remove_addrs(struct mptcp_sock *msk, struct list_head *rm_list)
+> 	struct mptcp_pm_addr_entry *entry;
+>
+> 	list_for_each_entry(entry, rm_list, list) {
+> -		remove_anno_list_by_saddr(msk, &entry->addr);
+> -		if (alist.nr < MPTCP_RM_IDS_MAX)
+> +		if ((remove_anno_list_by_saddr(msk, &entry->addr) ||
+> +		     lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) &&
+> +		    alist.nr < MPTCP_RM_IDS_MAX)
+> 			alist.ids[alist.nr++] = entry->addr.id;
+> 	}
 
-Our CI did some validations and here is its report:
+Looks good to me, thanks Geliang.
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4943139908091904
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4943139908091904/summary/summary.txt
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Critical: KMemLeak =E2=9D=8C:
-  - Task: https://cirrus-ci.=
-com/task/6631989768355840
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6631989768355840/summary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Critical: KMemLeak =E2=9D=8C:
-  - Task: https://cirrus-ci.=
-com/task/5506089861513216
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5506089861513216/summary/summary.txt
-
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6069039814934528
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6069039814934528/summary/summary.txt
-
-Initiator: Matthieu Baerts
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/e05a56ecc88a
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
