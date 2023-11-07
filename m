@@ -1,142 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DDF38D
-	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 01:44:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3C41873
+	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 02:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLBAtJb3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C253BC433C7;
-	Tue,  7 Nov 2023 01:44:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699321489;
-	bh=v7/QqP90YwrrK3yc3rbLiRRS4tbSX3kyI0tHw3uIIcg=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=FLBAtJb3dcGMS0u/7P+CVSr8gvxnyC1cgaGfMSfMEmJUMYTMIyvAaL/qm5zbhhURu
-	 FrcsTPqbZZxPm5+0g0ozgSeoOlJyvWnS6tRzIcg11kTTVcAFFxWOqxxrthV+dRVlpW
-	 bkDaXymQ16+1CbqazzuvEJL9pyGL3RKtLX2w/95gplVA1ixSs0HHPfbSDCPyxN2/Z9
-	 XGl65XaoIyBUSUm0l79yGfdZ+JSBkOlmyIcRnDoGPjtU6gr0jOci68HaQj/aw+4CD6
-	 ZPWMrCyFhETXz+pUAxhzBYqYKyRDG2ltwnsCWePTjDCdJfYjfGceX8iidkKr+8vbHn
-	 LzuFEbngewItA==
-Date: Mon, 6 Nov 2023 17:44:49 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>
-Subject: Re: [PATCH mptcp-net] mptcp: fix possible NULL pointer dereference
- on close
-In-Reply-To: <3350eaf14a073538bf491f93fc852cd02ab0875a.1699280113.git.pabeni@redhat.com>
-Message-ID: <4d50ae35-689b-5223-75c5-1b1845ab6211@kernel.org>
-References: <3350eaf14a073538bf491f93fc852cd02ab0875a.1699280113.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcSqNMVE"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-777719639adso335715985a.3
+        for <mptcp@lists.linux.dev>; Mon, 06 Nov 2023 18:20:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699323618; x=1699928418; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lVc6i0hL/SrUe1J731aihEr6YO3a2a9l64D++O6etUI=;
+        b=NcSqNMVEblfD8RCY6HxK4jC2NCGMbLO/7dGaHbsH75wzjMakOox4Zh1JsdQYMSpBcr
+         w7Kdpg56d4qOrCpRKLMH7lI61BmHl9xRs+j+KpH5/c/1r8jwiZMbeETlmgRBklljWXzU
+         5U1NPY0UG63rsyDmi2h7BTWm2b5zjy5y9xSxcLnG27TxoNy4ZpVl7i96Hfb4CzC3pMd8
+         yKfBGR0qm2j8ew3pweI02CchlXKtvo4uo0w1gWocdItgV8h9o8x7DZWVP15YUSZCDPYD
+         Lr+WtqmliZPvnp+IoZnGdI+SePN4aSTpqhLSh3Dnaee79cctP8yUqD/1Y7PhUHfH2E0E
+         q8Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699323618; x=1699928418;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lVc6i0hL/SrUe1J731aihEr6YO3a2a9l64D++O6etUI=;
+        b=fCm9jkMimhrimnOw6GLzfP7vLFsL1aHYIhHwMI3pATmvZ0BdydLfazMxcWtfpW3Prp
+         oKiS9tP4iYoA7kHLMVk5T3AyPABf37SFr2clHjEYFYxkV7BQV6eoT/5Pisgn5raGe/Vj
+         IcND6ist2EL0LtsbYlNiPVsLeb4l8BD5zWUbh2O+bStFYp3W5M93gSUFz4BI+Gi0aVZd
+         1B0GduMIjhnHEYFXekZtwUTsIv06Dg2K7vvHlRwDUhGwjbCOLi3VZtMKFQF7CdPcxbxe
+         pG3UnKNRUvq9dWbzX7FNgUvbqZxtdF1lwcHx41Btxn7VuJzAW046ju3LzYHLGKdjQyb5
+         oxhA==
+X-Gm-Message-State: AOJu0YyAAJIoOphW9rqOB9Qeb/MHNTTVdk5X6nsEGG57LZAtfO6zd+SF
+	EHCCdajMQTkYLDwMmTSRqu6HhPySBzpL
+X-Google-Smtp-Source: AGHT+IH8dw3y4D5OmiKZcqHVbF3RLE6UwFJUJFkwVDW2lg/JKWG4jLsKbc4ebqcgvvmARsmNZx0t1A==
+X-Received: by 2002:a05:620a:9009:b0:778:991f:2f78 with SMTP id rk9-20020a05620a900900b00778991f2f78mr24403812qkn.38.1699323617807;
+        Mon, 06 Nov 2023 18:20:17 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.36.16])
+        by smtp.gmail.com with ESMTPSA id z19-20020a05620a101300b007671b599cf5sm3799284qkj.40.2023.11.06.18.20.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Nov 2023 18:20:17 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <02d38d6b7a98765bf516c90541d4f2a911f428ce.1699014584.git.geliang.tang@suse.com>
+References:
+ <02d38d6b7a98765bf516c90541d4f2a911f428ce.1699014584.git.geliang.tang@suse.com>
+Subject: Re: mptcp: add validity check for sending RM_ADDR: Tests Results
+Message-ID: <069f599c-a98b-b7b4-4cda-0ca23215f496@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 07 Nov 2023 02:20:16 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 6 Nov 2023, Paolo Abeni wrote:
+Hi Geliang,
 
-> After the blamed commit below, the MPTCP release callback
-> can dereference the first subflow pointer, even at socket
-> release time.
->
-> In such scenario such subflow is already released and the pointer
-> zeroed, causing the following splat:
->
-> general protection fault, probably for non-canonical address 0xdffffc00000000f2: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: null-ptr-deref in range [0x0000000000000790-0x0000000000000797]
-> CPU: 1 PID: 26719 Comm: syz-executor.2 Not tainted 6.6.0-syzkaller-10102-gff269e2cd5ad #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/09/2023
-> RIP: 0010:mptcp_subflow_ctx net/mptcp/protocol.h:542 [inline]
-> RIP: 0010:__mptcp_propagate_sndbuf net/mptcp/protocol.h:813 [inline]
-> RIP: 0010:__mptcp_set_connected+0x57/0x3e0 net/mptcp/subflow.c:424
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8a62323c
-> RDX: 00000000000000f2 RSI: ffffffff8a630116 RDI: 0000000000000790
-> RBP: ffff88803334b100 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000001 R11: 0000000000000034 R12: ffff88803334b198
-> R13: ffff888054f0b018 R14: 0000000000000000 R15: ffff88803334b100
-> FS:  0000000000000000(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fbcb4f75198 CR3: 000000006afb5000 CR4: 00000000003506f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
-> <TASK>
-> mptcp_release_cb+0xa2c/0xc40 net/mptcp/protocol.c:3405
-> release_sock+0xba/0x1f0 net/core/sock.c:3537
-> mptcp_close+0x32/0xf0 net/mptcp/protocol.c:3084
-> inet_release+0x132/0x270 net/ipv4/af_inet.c:433
-> inet6_release+0x4f/0x70 net/ipv6/af_inet6.c:485
-> __sock_release+0xae/0x260 net/socket.c:659
-> sock_close+0x1c/0x20 net/socket.c:1419
-> __fput+0x270/0xbb0 fs/file_table.c:394
-> task_work_run+0x14d/0x240 kernel/task_work.c:180
-> exit_task_work include/linux/task_work.h:38 [inline]
-> do_exit+0xa92/0x2a20 kernel/exit.c:876
-> do_group_exit+0xd4/0x2a0 kernel/exit.c:1026
-> get_signal+0x23ba/0x2790 kernel/signal.c:2900
-> arch_do_signal_or_restart+0x90/0x7f0 arch/x86/kernel/signal.c:309
-> exit_to_user_mode_loop kernel/entry/common.c:168 [inline]
-> exit_to_user_mode_prepare+0x11f/0x240 kernel/entry/common.c:204
-> __syscall_exit_to_user_mode_work kernel/entry/common.c:285 [inline]
-> syscall_exit_to_user_mode+0x1d/0x60 kernel/entry/common.c:296
-> do_syscall_64+0x4b/0x110 arch/x86/entry/common.c:88
-> entry_SYSCALL_64_after_hwframe+0x63/0x6b
-> RIP: 0033:0x7fb515e7cae9
-> Code: Unable to access opcode bytes at 0x7fb515e7cabf.
-> RSP: 002b:00007fb516c560c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-> RAX: 000000000000003c RBX: 00007fb515f9c120 RCX: 00007fb515e7cae9
-> RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000000000006
-> RBP: 00007fb515ec847a R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 000000000000006e R14: 00007fb515f9c120 R15: 00007ffc631eb968
-> </TASK>
->
-> Address the issue explicitly checking msk->first before tacking
-> action.
->
-> Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
-> Reported-by: syzbot+9dfbaedb6e6baca57a32@syzkaller.appspotmail.com
-> Reported-by: Eric Dumazet <edumazet@google.com>
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/454
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/protocol.c | 5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 0ad507ac6bc7..1490fd724036 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3399,9 +3399,10 @@ static void mptcp_release_cb(struct sock *sk)
-> 		__mptcp_clean_una_wakeup(sk);
-> 	if (unlikely(msk->cb_flags)) {
-> 		/* be sure to set the current sk state before tacking actions
+Thank you for your modifications, that's great!
 
-(taking?)
+Our CI did some validations and here is its report:
 
-> -		 * depending on sk_state, that is processing MPTCP_ERROR_REPORT
-> +		 * depending on sk_state (MPTCP_ERROR_REPORT)
-> +		 * On sk release avoid actions depending on the first subflow
-> 		 */
-> -		if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags))
-> +		if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags) && msk->first)
-> 			__mptcp_set_connected(sk);
-> 		if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
-> 			__mptcp_error_report(sk);
-> -- 
-> 2.41.0
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/4609094967885824
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4609094967885824/su=
+mmary/summary.txt
 
-Hi Paolo -
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6297944828149760
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6297944828149760/summary/summary.txt
 
-This does address the call stack that syzbot triggered. Are you sure 
-enough that the only way to reach __mptcp_set_connected() with msk->first 
-== NULL is when mptcp_set_connected() encountered a locked socket and had 
-to defer the call? It seems like that *should* be the case but it's not 
-obvious to me that it's impossible in every other scenario.
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5734994874728448
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5734994874728448/summary/summary.txt
 
-Checking for NULL inside __mptcp_set_connected() could catch more edge 
-cases. If you're confident that there are no other edge cases it would 
-help to note that in either the commit message or comment.
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5172044921307136
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5172044921307136/summary/summary.txt
 
-- Mat
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/f51f98faccc2
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
