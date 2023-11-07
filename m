@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAD43E460
-	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 21:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C7C2A1BB
+	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 21:21:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cX2OA43q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5781EC433C8;
-	Tue,  7 Nov 2023 21:12:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1y3Gaku"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8777CC433C8;
+	Tue,  7 Nov 2023 21:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699391541;
-	bh=86BtTYFzfYAyxVG5rWYojcQ27Mi1+OV2DQHCBhA0pr4=;
+	s=k20201202; t=1699392069;
+	bh=3Ap80iMVm3t6WkDN0+HnyOgGh10WT8Xc30iGeMcocwM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cX2OA43q2Ujg8DaYri5zjKWsA8/gBDTORjtNAzycnfArOPcebSmH8tE+36ABU/kK1
-	 UrP7nSkIOnqfDk1S9TaY7LZcY1b1a6zESyEIkx/atd5noSf7an5LFZTiNGdCj+ihw3
-	 D+sP2ndGop8DeqNjmNGKzB2cr+KXu2Z2m1Ex/Tp7a9QhHyOEV1cArtsicBD6xHqTc+
-	 kkVwwCzTK5Y+DBuUDstJCi/dky3Shj3QJF8dQNEPdv1tp03W4THU8FcCKo4er/lSIi
-	 YG2vcOdhsGJwbf6TqCBiePfb1IDkYtih4CGAT2fjht3+BJGHqIwRBpSRWVpiSVMCKq
-	 Jo2yn/OhZEc3w==
-Message-ID: <0acde784-2d42-42ee-8a43-510f89f7ab39@kernel.org>
-Date: Tue, 7 Nov 2023 22:12:18 +0100
+	b=k1y3GakuDjOJQM6OSH/abAzA2qRF7hz9oBz6epnoHh0/2LXzViNrU8fpV82pCA51x
+	 fsmtjasgmlLPUqDk/xYfdRVoqYxg8A0nc8JO1kIdps0HK1R6O35LvBHWTCMZVhz0XC
+	 lKSC6+bcMCt52A3XCZoaqDp0qksl6B7zkJxz4Cbg6ej3fIf7E/uWtyXAWlwTga9Rm2
+	 iEwUwzycwuy7CBPOj+uy1a+By+POqRm5e6FwYaIGZgbfKvPGaL2pvgXMOm7omws2Rx
+	 MdWCoINKlj3d+sD977J74Zh67OMjbAKt1qombgDYBmXMHjeE3a5SWIQAFvTCmpsbUz
+	 zhiUAljYbpZsw==
+Message-ID: <03b00d70-75ef-4cfa-8bb9-fc4523acdda9@kernel.org>
+Date: Tue, 7 Nov 2023 22:21:06 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,11 +26,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] mptcp: deal with large GSO size.
+Subject: Re: [PATCH mptcp-net v2] mptcp: fix possible NULL pointer dereference
+ on close
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
-Cc: Christoph Paasch <cpaasch@apple.com>, mptcp@lists.linux.dev
-References: <ce93989da39fd2e47baa4506fbbf4c2049c2da13.1698416467.git.pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+ Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <c872b639f2c3c9b6b20ec46d3a109bde6ab7b5f5.1699376301.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -75,31 +77,35 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-In-Reply-To: <ce93989da39fd2e47baa4506fbbf4c2049c2da13.1698416467.git.pabeni@redhat.com>
+In-Reply-To: <c872b639f2c3c9b6b20ec46d3a109bde6ab7b5f5.1699376301.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat,
+Hi Paolo, Eric, Mat,
 
-On 27/10/2023 16:21, Paolo Abeni wrote:
-> After the blamed commit below, the TCP sockets (and the MPTCP subflows)
-> can build egress packets larger then 64K. That exceeds the maximum DSS
-> data size, the length being misrepresent on the wire and the stream being
-> corrupted, as later observed on the receiver:
+On 07/11/2023 17:58, Paolo Abeni wrote:
+> After the blamed commit below, the MPTCP release callback can
+> dereference the first subflow pointer via __mptcp_set_connected()
+> and send buffer auto-tuning. Such pointer is always expected to be
+> valid, except at socket destruction time, when the first subflow is
+> deleted and the pointer zeroed.
+> 
+> If the connect event is handled by the release callback while the
+> msk socket is finally released, MPTCP hits the following splat:
 
-Thank you for the patch and the review!
+Thank you for the patch and the reviews!
 
-Now in our tree (fix for -net) with Mat's RvB tag:
+This patch is now in our tree (fixes for -net) with Eric and Mat's RvB tags:
 
 New patches for t/upstream-net and t/upstream:
-- 6ee098165aec: mptcp: deal with large GSO size
-- Results: 9fa919e1e582..f1fb06db6c5f (export-net)
-- Results: fd17d7e00023..58f8fd527fbf (export)
+- 40b5e6f7d0b7: mptcp: fix possible NULL pointer dereference on close
+- Results: f1fb06db6c5f..4ce71da6e4a0 (export-net)
+- Results: 58f8fd527fbf..8f6ba7dc0295 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231107T210949
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231107T210949
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231107T211850
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231107T211850
 
 Cheers,
 Matt
