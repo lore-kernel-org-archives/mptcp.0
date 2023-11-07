@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C7C2A1BB
-	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 21:21:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729862A1C1
+	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 21:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1y3Gaku"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8777CC433C8;
-	Tue,  7 Nov 2023 21:21:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VL717HIl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D233C433C8;
+	Tue,  7 Nov 2023 21:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699392069;
-	bh=3Ap80iMVm3t6WkDN0+HnyOgGh10WT8Xc30iGeMcocwM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=k1y3GakuDjOJQM6OSH/abAzA2qRF7hz9oBz6epnoHh0/2LXzViNrU8fpV82pCA51x
-	 fsmtjasgmlLPUqDk/xYfdRVoqYxg8A0nc8JO1kIdps0HK1R6O35LvBHWTCMZVhz0XC
-	 lKSC6+bcMCt52A3XCZoaqDp0qksl6B7zkJxz4Cbg6ej3fIf7E/uWtyXAWlwTga9Rm2
-	 iEwUwzycwuy7CBPOj+uy1a+By+POqRm5e6FwYaIGZgbfKvPGaL2pvgXMOm7omws2Rx
-	 MdWCoINKlj3d+sD977J74Zh67OMjbAKt1qombgDYBmXMHjeE3a5SWIQAFvTCmpsbUz
-	 zhiUAljYbpZsw==
-Message-ID: <03b00d70-75ef-4cfa-8bb9-fc4523acdda9@kernel.org>
-Date: Tue, 7 Nov 2023 22:21:06 +0100
+	s=k20201202; t=1699392275;
+	bh=bArmibJ65qGuh5mh84X92rFmGan9UbDsxJCCfJj7ac0=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=VL717HIlLk7TDalOBK7XrssIiDdWUCR66xWFg9JQHrR45/G895B9XSa85ShKbo8w4
+	 Hbcec/i3qIOsW9SLyRyUsWpooFj/cgsm0ufbqJr+r4Q36Xu+LvymQBIpYTvz3eeQ9h
+	 rO1tZuuK3XozZeIlRQs5YMq3imPS2urBK6RNXgW0NieM+YZt3CJ3RTVT6YW8fl5gSy
+	 hcBfIZrDIrGGrZvCN7i4niMo1ycTDTsA+8Xr/5V5y8oU/9A18HsG3YjX6KJgyW7HRX
+	 O9XEewDh7ztxUIt4idt95Em0U/zD63UA9Xsw3O9j01oeO9BkJAlun5HEkIGkQQGsgV
+	 G23u0Fl92ww1A==
+Message-ID: <ce946690-573f-42fe-935b-4ccb1b73e4bc@kernel.org>
+Date: Tue, 7 Nov 2023 22:24:32 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,13 +26,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v2] mptcp: fix possible NULL pointer dereference
- on close
+Subject: Re: [PATCH mptcp-net] mptcp: add validity check for sending RM_ADDR
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
- Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang.tang@suse.com>, Mat Martineau <martineau@kernel.org>
+References: <02d38d6b7a98765bf516c90541d4f2a911f428ce.1699014584.git.geliang.tang@suse.com>
 Cc: mptcp@lists.linux.dev
-References: <c872b639f2c3c9b6b20ec46d3a109bde6ab7b5f5.1699376301.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,35 +75,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-In-Reply-To: <c872b639f2c3c9b6b20ec46d3a109bde6ab7b5f5.1699376301.git.pabeni@redhat.com>
+In-Reply-To: <02d38d6b7a98765bf516c90541d4f2a911f428ce.1699014584.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Eric, Mat,
+Hi Geliang, Mat,
 
-On 07/11/2023 17:58, Paolo Abeni wrote:
-> After the blamed commit below, the MPTCP release callback can
-> dereference the first subflow pointer via __mptcp_set_connected()
-> and send buffer auto-tuning. Such pointer is always expected to be
-> valid, except at socket destruction time, when the first subflow is
-> deleted and the pointer zeroed.
-> 
-> If the connect event is handled by the release callback while the
-> msk socket is finally released, MPTCP hits the following splat:
+On 03/11/2023 13:31, Geliang Tang wrote:
+> This patch adds the validity check for sending RM_ADDRs for userspace PM
+> in mptcp_pm_remove_addrs(), only send a RM_ADDR when the address is in the
+> anno_list or conn_list.
 
-Thank you for the patch and the reviews!
+Thank you for the patch and the review!
 
-This patch is now in our tree (fixes for -net) with Eric and Mat's RvB tags:
+Now in our tree (fixes for -net) with Mat's RvB tag:
 
 New patches for t/upstream-net and t/upstream:
-- 40b5e6f7d0b7: mptcp: fix possible NULL pointer dereference on close
-- Results: f1fb06db6c5f..4ce71da6e4a0 (export-net)
-- Results: 58f8fd527fbf..8f6ba7dc0295 (export)
+- 1df4971eb5ab: mptcp: add validity check for sending RM_ADDR
+- Results: 4ce71da6e4a0..688025cbce11 (export-net)
+- Results: 8f6ba7dc0295..15e4d31937fc (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231107T211850
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231107T211850
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231107T212152
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231107T212152
 
 Cheers,
 Matt
