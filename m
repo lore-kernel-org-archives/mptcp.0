@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729862A1C1
-	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 21:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78BA30F83
+	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 21:35:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VL717HIl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D233C433C8;
-	Tue,  7 Nov 2023 21:24:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGMlzbpO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77057C433C7;
+	Tue,  7 Nov 2023 21:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699392275;
-	bh=bArmibJ65qGuh5mh84X92rFmGan9UbDsxJCCfJj7ac0=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=VL717HIlLk7TDalOBK7XrssIiDdWUCR66xWFg9JQHrR45/G895B9XSa85ShKbo8w4
-	 Hbcec/i3qIOsW9SLyRyUsWpooFj/cgsm0ufbqJr+r4Q36Xu+LvymQBIpYTvz3eeQ9h
-	 rO1tZuuK3XozZeIlRQs5YMq3imPS2urBK6RNXgW0NieM+YZt3CJ3RTVT6YW8fl5gSy
-	 hcBfIZrDIrGGrZvCN7i4niMo1ycTDTsA+8Xr/5V5y8oU/9A18HsG3YjX6KJgyW7HRX
-	 O9XEewDh7ztxUIt4idt95Em0U/zD63UA9Xsw3O9j01oeO9BkJAlun5HEkIGkQQGsgV
-	 G23u0Fl92ww1A==
-Message-ID: <ce946690-573f-42fe-935b-4ccb1b73e4bc@kernel.org>
-Date: Tue, 7 Nov 2023 22:24:32 +0100
+	s=k20201202; t=1699392925;
+	bh=vs09yAGJyCSSDyvgYZhLXSBPxs6YHVqGH+7bpuXRKQY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=tGMlzbpObza8gSLPVJ0M6hzvzyYjAUuHLGI4VXFVI+L1rD9Zi2lvsoZMkQejLFK63
+	 1r1MK4ymbOJcw3PQZtB7sqNgBdzt5qVOd8CfayShK7q/tYn6IAwvFJ5hKEBa1BxYrA
+	 RsqyFWSOtVCsGzjCXDkp0tEJHdJ5C/QRbE5K/4I41lAY0r2capRZnhomgkioT9Vzzg
+	 562f8j4y0qf5l73tBLY+zPa7/w9EneJjyRIZEi4w7uHq+dRHMCTEop1Hp8GWW0tz5M
+	 Le8bi2pF86QXD0RhGZxkgMhYDCopVUXr34X/x5LPYko+EAl7MHSXOLKmd6fvNzZT86
+	 /mWAC3C+W6TqQ==
+Message-ID: <2791c293-f344-46de-b32f-ba8d6bb34b21@kernel.org>
+Date: Tue, 7 Nov 2023 22:35:22 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,11 +26,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] mptcp: add validity check for sending RM_ADDR
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add
+ mptcp_lib_get_counter"
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@suse.com>, Mat Martineau <martineau@kernel.org>
-References: <02d38d6b7a98765bf516c90541d4f2a911f428ce.1699014584.git.geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <7cb131ce1dae4445c05b2955744c63a2d8a1c058.1699275225.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -75,30 +75,69 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-In-Reply-To: <02d38d6b7a98765bf516c90541d4f2a911f428ce.1699014584.git.geliang.tang@suse.com>
+In-Reply-To: <7cb131ce1dae4445c05b2955744c63a2d8a1c058.1699275225.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Mat,
+Hi Geliang,
 
-On 03/11/2023 13:31, Geliang Tang wrote:
-> This patch adds the validity check for sending RM_ADDRs for userspace PM
-> in mptcp_pm_remove_addrs(), only send a RM_ADDR when the address is in the
-> anno_list or conn_list.
+On 06/11/2023 13:55, Geliang Tang wrote:
+> Please add this line into the commit log:
+> 
+> '''
+> Use this helper in test_prio() in userspace_pm.sh too instead of
+> open-coding.
+> '''
 
-Thank you for the patch and the review!
+Good idea!
 
-Now in our tree (fixes for -net) with Mat's RvB tag:
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+>  tools/testing/selftests/net/mptcp/userspace_pm.sh | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> index f9156f544ebf..8d95ea94c019 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -874,7 +874,7 @@ test_prio()
+>  
+>  	# Check TX
+>  	print_test "MP_PRIO TX"
+> -	count=$(ip netns exec "$ns2" nstat -as | grep MPTcpExtMPPrioTx | awk '{print $2}')
+> +	count=$(mptcp_lib_get_counter "$ns2" "MPTcpExtMPPrioTx")
+>  	[ -z "$count" ] && count=0
 
-New patches for t/upstream-net and t/upstream:
-- 1df4971eb5ab: mptcp: add validity check for sending RM_ADDR
-- Results: 4ce71da6e4a0..688025cbce11 (export-net)
-- Results: 8f6ba7dc0295..15e4d31937fc (export)
+mptcp_lib_get_counter() should only return an empty string if the
+counter doesn't exist on the tested kernel. So if you use this helper,
+it doesn't really make sense to have this check. Or keep it and skip the
+test.
 
-Tests are now in progress:
+>  	if [ $count != 1 ]; then
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231107T212152
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231107T212152
+So I think it would be better to follow the same style as in mptcp_join.sh:
+
+  count=$(mptcp_lib_get_counter ...)
+  if [ -z "$count" ]; then
+          print_skip
+  elif [ "$count" != (...) ]; then
+          (...)
+
+WDYT?
+
+>  		test_fail "Count != 1: ${count}"
+> @@ -884,7 +884,7 @@ test_prio()
+>  
+>  	# Check RX
+>  	print_test "MP_PRIO RX"
+> -	count=$(ip netns exec "$ns1" nstat -as | grep MPTcpExtMPPrioRx | awk '{print $2}')
+> +	count=$(mptcp_lib_get_counter "$ns1" "MPTcpExtMPPrioRx")
+>  	[ -z "$count" ] && count=0
+>  	if [ $count != 1 ]; then
+
+Same here.
+
+>  		test_fail "Count != 1: ${count}"
 
 Cheers,
 Matt
