@@ -1,127 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F502D795
-	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 11:22:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82391347A6
+	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 14:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5dvKv4m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B99D7C433C7;
-	Tue,  7 Nov 2023 11:22:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699356142;
-	bh=LpKUac0OOde+Mb8qWkpVPA6FDWFXssHaj8VUnkwRm0w=;
-	h=Date:To:From:Subject:Cc:From;
-	b=R5dvKv4mleNqgMf8BwdiAYBNzxXsO954zfAXjNQI08/DVCRuId8l9Xk3LlXbs2ANm
-	 X4n3Y0aMGx8oZGLoA7H8DQCk87AwuiW26C7d7z4ayip78qWZG18ArWIOf2GjfNY9H/
-	 TLaNUUzJGsQRocnZOAX7a2zv/mf7fsyhpUy1XCjIunYCPOMbkccjafAayTMGezy0uZ
-	 n+GTIzh0W2+Ae4+m8u91fSlBpMPM8mk7DMqBqJr9NIaBEpU8qqP1pTzKymGstxA1OD
-	 SA4LJjwtZoovELg9yhpqoyVk0Dlc9jGtpAwqRV9vuOYVustF2ZRTuwaiYqWfgOXA7Z
-	 8ZdvOVS4dV1kA==
-Message-ID: <a7a3675a-4531-4559-bea2-c7689317764a@kernel.org>
-Date: Tue, 7 Nov 2023 12:22:19 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="elevwnzQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1699369148;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sYTjNdwiO3GnpnFD/zQifiWfCI2CB8JjC/IxwUqeieY=;
+	b=elevwnzQwlk//UV1cv39l+NEFWn8uR3pxDImwKR71+rJQ+U3GFEXGv+PB9xribXvPmGrA+
+	zpcwYzeTX8m9jTr8jrAVVdm29suUp4nJP8+J6knZDNcIdDCZ5dHt5lE4/Auoi3Q3da9vVR
+	KBKeaU8Rny1yn4b/Po/oQA95oqNK05A=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-657-WcD9t6TWOQyggbszrvWBvA-1; Tue, 07 Nov 2023 09:59:02 -0500
+X-MC-Unique: WcD9t6TWOQyggbszrvWBvA-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5435b614a0cso784571a12.1
+        for <mptcp@lists.linux.dev>; Tue, 07 Nov 2023 06:59:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699369141; x=1699973941;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sYTjNdwiO3GnpnFD/zQifiWfCI2CB8JjC/IxwUqeieY=;
+        b=gv9kSrJjDjBw9DlVpko7hpDrwOQ1r+wt6HYhxaM7jmp9Hh8Qv5AJm1CXfIJ1p1mDtw
+         hu5BwqQ3FYcOZERFwEgu1+zVQq/5ngp6KE6GfF60PfYBG+15LaJ43F+Aa9lCnLVcQbCl
+         FuJsIEpYNnTQKes1dPgjwqvMzIZAajyiJUeL1UvXdSBmb6GpyLDxEmOfOT9xKAHlo9wI
+         hGVUP5x5xRpRxw0SchJ3jbkFCBFdYc/F4Do+a8d828Sub9E7e1NJt/nxt3gDUwxAFPVK
+         1VWRMFBSH4g2rbvwQCSCDVwRbdSmmLqnGDJJgyqcJa5QVSkmKN46EcXmJbbIhZQifSPC
+         0qLw==
+X-Gm-Message-State: AOJu0YxKjEw7yd6Jo/HjG1ulrRpH5qPBaV8ZRVWI6KVELNyAUEQkCUnK
+	Oy7omKUNOlYVfLoFTNeWaPz/rz7sBkaC1LgjblSeU5ynveVv0vewD8nXHm/WEPL/j+DZ7tGgw/G
+	Ez292J2lMo3/mMck=
+X-Received: by 2002:a17:907:6d02:b0:9c4:4b20:44a5 with SMTP id sa2-20020a1709076d0200b009c44b2044a5mr29589606ejc.4.1699369141191;
+        Tue, 07 Nov 2023 06:59:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHwd3gFJDDsjK6TqZpI9XtYd8PlhoQjF7fnRS1dTpx3Si6j5wmwz+LMpPCBZ0r4GhaYBHDvLg==
+X-Received: by 2002:a17:907:6d02:b0:9c4:4b20:44a5 with SMTP id sa2-20020a1709076d0200b009c44b2044a5mr29589597ejc.4.1699369140806;
+        Tue, 07 Nov 2023 06:59:00 -0800 (PST)
+Received: from gerbillo.redhat.com (host-82-55-195-172.retail.telecomitalia.it. [82.55.195.172])
+        by smtp.gmail.com with ESMTPSA id x9-20020a1709064a8900b009a19701e7b5sm1144758eju.96.2023.11.07.06.59.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Nov 2023 06:59:00 -0800 (PST)
+Message-ID: <af0b44d9ca35964d3754dc1bd372a423cb695e4a.camel@redhat.com>
+Subject: Re: [PATCH mptcp-net] mptcp: fix possible NULL pointer dereference
+ on close
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>
+Date: Tue, 07 Nov 2023 15:58:59 +0100
+In-Reply-To: <4d50ae35-689b-5223-75c5-1b1845ab6211@kernel.org>
+References: <3350eaf14a073538bf491f93fc852cd02ab0875a.1699280113.git.pabeni@redhat.com>
+	 <4d50ae35-689b-5223-75c5-1b1845ab6211@kernel.org>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB, fr-BE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sasha Levin <sashal@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Subject: mptcp: commits to backports from 6.7-rc1
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Cc: stable <stable@vger.kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>,
- Mat Martineau <martineau@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Greg, Sasha,
+On Mon, 2023-11-06 at 17:44 -0800, Mat Martineau wrote:
+> This does address the call stack that syzbot triggered. Are you sure=20
+> enough that the only way to reach __mptcp_set_connected() with msk->first=
+=20
+> =3D=3D NULL is when mptcp_set_connected() encountered a locked socket and=
+ had=20
+> to defer the call? It seems like that *should* be the case but it's not=
+=20
+> obvious to me that it's impossible in every other scenario.
 
-This is to let you know that 3 patches from MPTCP tree have been applied
-in Linus' tree and don't have their "Cc: stable":
+AFAIK, yes. msk->first is freed and the pointer is set to NULL only at
+sk destruction time, by: __mptcp_destroy_sock() -> mptcp_destroy() ->
+mptcp_destroy_common() -> __mptcp_close_ssk()
 
-  - f4a75e9d1100 ("selftests: mptcp: run userspace pm tests slower")
-    - for >= 6.5
+The commit message intended to point to the above even if a very very
+terse way.
 
-  - 9168ea02b898 ("selftests: mptcp: fix wait_rm_addr/sf parameters")
-    - for >= 6.5
-
-  - 84c531f54ad9 ("mptcp: userspace pm send RM_ADDR for ID 0")
-    - for >= 5.19
-    - note that the 'Fixes' tag is missing:
-
-        Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
-
-This is not urgent, but do you mind adding them to the list of backports
-when you will look at the commits to backport from the future v6.7-rc1,
-please?
+Putting the check in release callback - in an unlikely branch - was
+intentional to avoid unneeded conditional in all the other cases.=20
 
 
-A bit more explanations: these patches were ready after the last Netdev
-pull request for v6.6. We sent them via 'net-next' to have them in Linus
-tree quicker, and also because other patches for the next version
-(net-next) required them. Netdev maintainers stripped the "Cc: stable"
-we added because it looked strange to have them in their PR containing
-new features for v6.7: please see [1] for more details.
+Please let me know if I should repost with a more verbose commit
+message (and addressing the typo you noticed).
 
-Note that by accident, the 3rd patch got its 'Fixes' tag stripped as
-well, see [2] (patch) and [3] (commit). Feel free to re-add it in the
-commits for stable if it is easy to do, but it is fine without if not.
+Thanks,
 
-  Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
+Paolo
 
-Thank you for your work!
-
-Cheers,
-Matt
-
-[1]
-https://lore.kernel.org/all/20231025-send-net-next-20231025-v1-0-db8f25f798eb@kernel.org/
-[2]
-https://lore.kernel.org/netdev/20231025-send-net-next-20231025-v1-3-db8f25f798eb@kernel.org/
-[3]
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=84c531f54ad9
