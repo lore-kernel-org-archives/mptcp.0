@@ -1,143 +1,104 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2067.outbound.protection.outlook.com [40.107.22.67])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900E9107BD
-	for <mptcp@lists.linux.dev>; Wed,  8 Nov 2023 10:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B0C12E68
+	for <mptcp@lists.linux.dev>; Wed,  8 Nov 2023 10:44:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Q6G87csF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ARLjYnelGYjtmCPaMGg6QmhuZHMnY+RWDb0T2sB65GXha4A4AI8e0hkrvouqRHjS7EBQThdVz7O0Y0vZy9D+9luEnqnLs/h+Ns/JIXlUsSJqwIooZsZII8A2oeiBAZpNv/VgDipOnNUDX6OhFLU+9GDptYZZzn+wYCZ58VQNY53zXb+bYZrXrFv9evwgkFEvVXEk4tWfe0nGXkQIugEz7i8CjL8gLFKOb5eo/5Pduc8A8KtAhIjPsJEh+1222wOg49xPEpjgS9QGMlQ7aC1vJFnQD6kXXbXlL4oHXWXnsFUNNYWlB0nXQxgb8J2jJjMmH8M/yW06SALMoqJLA2jROw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lAZl4qv+VvEpAVv5iEFa6I1nD+rmJ5wyL3eEFKNH3bQ=;
- b=I7QKx32lWiUNzTJOgNDz/UKUHatAU5vF1cpyvktlUZPQ4Z8LkY8kC/EyJH3pZMlDpu9aHLR8f4x87w5ycuMeQ2xQQo1q6doiVGblDNZFLcSfsKt6j+8jzzlytaMU2NsJSIpZjKYdcp8Z6YLAmJGdQ7P3kd5BonRp0BmB8o1xHi8kNoFxmNdTrqJKjSis/dcT5NtxPfzs0tJt1xf2smxX0TIIJGytDy56VGX239RpB3FvOxDtGzeIxrMYJURCSnGQLzvPs4Z3al8rPb1YmUHqICRU8BD0D/kTO03z1pSbbiHBMA20PCryeUoxZmqnkZJTlqXM9Uo17FnCyFkDCFlCQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lAZl4qv+VvEpAVv5iEFa6I1nD+rmJ5wyL3eEFKNH3bQ=;
- b=Q6G87csFMoxDHcZ5UYfX6O8kVOD7xOVzc2C38f4RTETkvAYeDGbkztP31+0JLsU1+4Z80G4/A/vLcAk/30EdzXrfWdGfz+T5nCkhTWt7q0jH7JF5pZE5I6xZrLnscqUTJeCP+xImWXzsGbttLVtc4kMXCp8YPTxyCmPM3R8qGlAZDRorBgGX2Zb84fGa7eDTW96JkkFPTFY2SC6AsE+hRpqbj5XbA6EKnSag9KY8hvnnhnlQ54mNi2fAfgZUMxDWln72Wr7MExO+IPFetOMcgdg4olViUxSTHi6Lg7fhCeWXxC58xSXBmqcLjhpw+Gijjofij+n/VoJSKJKovH+FTA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AM9PR04MB8113.eurprd04.prod.outlook.com (2603:10a6:20b:3b5::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.18; Wed, 8 Nov
- 2023 10:05:07 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::7102:259:f268:5321]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::7102:259:f268:5321%6]) with mapi id 15.20.6977.011; Wed, 8 Nov 2023
- 10:05:07 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next] Squash to "mptcp: add netlink pm addr entry refcount, v7"
-Date: Wed,  8 Nov 2023 18:05:13 +0800
-Message-Id: <6f0b31e09a2129aad69c0e7d5ed11c4f4c095a6f.1699437907.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0038.apcprd02.prod.outlook.com
- (2603:1096:4:196::22) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pmUVpDPw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26E37C433CD;
+	Wed,  8 Nov 2023 10:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699440278;
+	bh=hq9ua4uKNSfLKXnq+qc3JSWuL8uaql/07mhi+yabgmM=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=pmUVpDPwIHHSw7Cs11bWRWsxsiGCHTFwgp77Yz9dr2rwWT6L7figLw7/wNFl9aaZz
+	 HlAxNB2dsKv8DX4razMwsK4LDaA3EqAQSDP7RtBVyxVn9n+iIfHn9sAPzYSR8IGkoc
+	 B6w+jQ5nBkM35toxELdN5/EvCBLoEw5v7XwFMaFkAxrzqlQiAcGVYp0EsY38xiBNwC
+	 1MdFKhtTRZl4jW+O8nJ/1f5Vii8fS5XiDzCKWU4zSIJ8wZDCLneilSHqyo4+Zdn01W
+	 vpqeVGDCBzJQzBtxhCWv8NH1TSYi+6SFa7SYhya6+W75AECj6cglX5AFfeXkPyCj6a
+	 G8fhzjvJvs9fw==
+Message-ID: <96259f34-44f7-497d-91c7-2d827241ea43@kernel.org>
+Date: Wed, 8 Nov 2023 11:44:35 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AM9PR04MB8113:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb7ce8ea-50ed-44ec-1b34-08dbe0422f4f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	9guVHNeUfCglINHONojSA/Nu7G83CvboIP7YHr4cc3k/L3UDYZwXeZcx2w6SUKlQsVPTnU3hr1tsRbWmA15CdPMOU4AxYKYz2yW6Cv9eh0+CDqGtyPotfEBaLayxNwVxTrN07h2ngouxC1wHDX1YyXQtXheYwnaFoUbPedb3eNzHrZXGOmByiP9rjpL7T06E3fGIzPSJcJfkhd6Awfzq/PTRSOE11976mD3crXUMSIFXfm159sU0Crh0HL2fVGszqLqec3S62jtrBv508/I64qkJZH8BGSGVS+1fjrB/RynZJsboP5vd0vspTI+5mOZH0LAUbh4K1kvtvugSDMbROCfYHUuWfflBcL3/tUHhsEvH9rEZGLKNA4vNh4qtMvSJkjtHWOIq9ENThSNiMQBEsTZyIkJRIyLHVf5UAtP63fInv09LaXiOUmNh2DtrCBhyDguqraDVrmahXpFzZYH0cn22tpS/KM8WVcPQY+n3orKkAO+GeatJ9e0USkVM/1rvsAG7BHoFW9BawugN9kNiQMADcorjKi779llz1j5TbTZTvSJLRPwVgvui3mNmUzgr08DAwh7lszSSDGT/e8QYPf+bUY0nVN3vvavaH25ST9s=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(396003)(136003)(376002)(346002)(230922051799003)(1800799009)(186009)(64100799003)(451199024)(6506007)(2616005)(6512007)(6666004)(6486002)(107886003)(478600001)(83380400001)(26005)(2906002)(44832011)(5660300002)(41300700001)(66946007)(66556008)(66476007)(8676002)(4326008)(316002)(8936002)(6916009)(38100700002)(36756003)(86362001)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fsJb15BuZ3sEnUAjp99YaXGO2Mvyy1hGPD57Q+GxmjY5XvkKJW2E6nf4odU2?=
- =?us-ascii?Q?gO6C3roKi9g1xlCODPrTwwvUNzstkBes+LuB2r6+PXCfL6BIK4p3+PS2hnEL?=
- =?us-ascii?Q?YfBnO8vqUvq/mxB+XeteZcssvS2Ufwi5SEW/fk+qKkX4FYXs8xXKzQLjjbXd?=
- =?us-ascii?Q?ptqAmlzXGvp13kRMzGlCDceMF91RSlLJyiHt7vgoM2H1xDa5bDAD/CoWweGr?=
- =?us-ascii?Q?Ja0VJDpWE+0zsQkcVTRksPNv1wGZcXHD7kZlhTXQ5AKTcM1PRQ4106fWGIKq?=
- =?us-ascii?Q?ah3vzdQ2UxS6oYdXRFUQmSE9sI7XCn7BYBJyiik1gimCxMkJwlPUOPVCU/uz?=
- =?us-ascii?Q?P/OiA9yUmLHdZsDz9iZPIyZDQNWxEkcMlHSxGNP73JdDVDfmLpLJcgQY1TLS?=
- =?us-ascii?Q?mE2TcbXvMNUmMOAVZ0eC/x/C3CVPsoA/VoZZkP/DWg/XQbYR+4jIrntV3ibF?=
- =?us-ascii?Q?vJX7yNAv5ENeUR7HGZ9H9M1wHvLe8+Ki0tuNubmB9mDm6DCFUhRk/PnlqUCI?=
- =?us-ascii?Q?afs2eRPTd2YYvDXrd7o2CT77F5O/3WpIgEogBt4zvWMtqcMZdUfbfewaCEhG?=
- =?us-ascii?Q?+Ct6TAeht5h5MoGQ2eyGIGSh7NpyJFvk6J3RM4pXTvtKcLIfxBYhPaRINTFN?=
- =?us-ascii?Q?97Tfb1FjZseow2kon9ki8kOxl7c2noSZc2XzjnmwwKFBPMCkyVTuogOFC9jK?=
- =?us-ascii?Q?tNMqClikEmwFyXWpitOTAyrnvdq5eU63aIBQEte/fGEhnJno841qem9pX5dV?=
- =?us-ascii?Q?XWYxkp991KD6nXLTzx2B8kbSo/fbeUBh1UxOwscGbFZmFEd9Tu3XI8r+IxOw?=
- =?us-ascii?Q?Bz7P7O6ldP09aykXw9yUcnXazrcAnmNAncE9kixbQSMEh0alCJTiff0GHKj9?=
- =?us-ascii?Q?xsSD3CMBlMrio9fAhua19ydNnhsPCKdyaeoUDpaNwTu/2cboIMYqPh4jZxqq?=
- =?us-ascii?Q?Y6Pv5svgJbZxnAE8X5qo67Xk0KwRwEND9e39IQpBifYCGQN2BVcRGn5UAJ+r?=
- =?us-ascii?Q?gwuad5GYnWSocTePaMi05ruGWI/SKTSYl9kh5mEHtTHXoHV0eB/1HpaShHV6?=
- =?us-ascii?Q?Vwutle79zQBdiYCFdEg/ieczp45bu/ECVy8ZntPY/wA3LGmPijUpj+kZKuEZ?=
- =?us-ascii?Q?elPlsLlrcleKAg3Nc1/ishJ1uGe27424DU9711expZEpZGr1Wa6i7eIdvwxO?=
- =?us-ascii?Q?KTn8iTvVKJj3qBA4Tzd/xec1RVUvSfI6TKSouf9bChngRFfQf6k+w1dDt+4v?=
- =?us-ascii?Q?rv6LLqDTrug+1x/wWm1Ctwzjxz4xL9VK51fbJYw3nkxKtkaFsF4vc70fSKMK?=
- =?us-ascii?Q?swT7+mMo7Zfoj/XB8gFs2pge8BOpphCcDGAuIFcKME48TGtrjrhABmGBU9/p?=
- =?us-ascii?Q?IUL5Hbpiemlfrw87Ex96eGn3ZnenFWWTycgbE0xPGPI40Hyv7v1vWnbfIOZa?=
- =?us-ascii?Q?DETszxeZhoGLDASCIB52Obsk0JljZgf826ckSzHEwMrWtU20gLDFMP70MfZe?=
- =?us-ascii?Q?ehPaO2+f9H3LIcXnv96ixfwaG5FztYFPlWcw3/04BIFB5TZpqlGt/6Melnap?=
- =?us-ascii?Q?rxldIAclSe1qaQRkLuk9eZDvFDdm8FE7a3s6vuAOfS5i67wlPPkMpfqudHMC?=
- =?us-ascii?Q?SQ=3D=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb7ce8ea-50ed-44ec-1b34-08dbe0422f4f
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2023 10:05:07.3225
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZNW0OxcRFoXWg5GIR8/zcYb1MSg/+XZs/UA5DX//OxJnQXi7ErU533xIxBPtKrWZQs+QMhzNMuqtwCfK/OgZ6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8113
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v2] Squash to "selftests: mptcp: add
+ mptcp_lib_get_counter"
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
+References: <a345cc5ff04729307b7b5b3a26f81e4e653dbefb.1699408002.git.geliang.tang@suse.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+In-Reply-To: <a345cc5ff04729307b7b5b3a26f81e4e653dbefb.1699408002.git.geliang.tang@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Squash to:
-[mptcp-next,v7,20/22] mptcp: add netlink pm addr entry refcount
+Hi Geliang,
 
-Fix pm_netlink errors reported by CI:
+On 08/11/2023 02:47, Geliang Tang wrote:
+> Please add this line into the commit log:
+> 
+> '''
+> Use this helper in test_prio() in userspace_pm.sh too instead of
+> open-coding.
+> '''
 
-Unstable: 1 failed test(s): selftest_pm_netlink
+Thank you for the new version. It looks good to me!
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- net/mptcp/pm_netlink.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+New patches for t/upstream:
+- e26f5d7bb384: Squash to "selftests: mptcp: add mptcp_lib_get_counter"
+- 0b2fef7131ad: tg:msg: update after the recent squash-to patch
+- Results: 15e4d31937fc..4d89b70d7306 (export)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 636fc822a257..06b67e6b80a4 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -533,8 +533,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 			return;
- 
- 		if (local) {
--			if (mptcp_pm_alloc_anno_list(msk, &local->addr) &&
--			    refcount_inc_not_zero(&local->refcnt)) {
-+			if (mptcp_pm_alloc_anno_list(msk, &local->addr)) {
- 				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
- 				msk->pm.add_addr_signaled++;
- 				mptcp_pm_announce_addr(msk, &local->addr, false);
-@@ -1294,7 +1293,8 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
- 		goto out_free;
- 	}
- 
--	mptcp_nl_add_subflow_or_signal_addr(sock_net(skb->sk));
-+	if (refcount_inc_not_zero(&entry->refcnt))
-+		mptcp_nl_add_subflow_or_signal_addr(sock_net(skb->sk));
- 	return 0;
- 
- out_free:
--- 
-2.35.3
+Tests are now in progress:
 
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231108T104316
+
+Cheers,
+Matt
