@@ -1,143 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2068.outbound.protection.outlook.com [40.107.22.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78BA30F83
-	for <mptcp@lists.linux.dev>; Tue,  7 Nov 2023 21:35:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FC110E8
+	for <mptcp@lists.linux.dev>; Wed,  8 Nov 2023 01:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGMlzbpO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77057C433C7;
-	Tue,  7 Nov 2023 21:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699392925;
-	bh=vs09yAGJyCSSDyvgYZhLXSBPxs6YHVqGH+7bpuXRKQY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=tGMlzbpObza8gSLPVJ0M6hzvzyYjAUuHLGI4VXFVI+L1rD9Zi2lvsoZMkQejLFK63
-	 1r1MK4ymbOJcw3PQZtB7sqNgBdzt5qVOd8CfayShK7q/tYn6IAwvFJ5hKEBa1BxYrA
-	 RsqyFWSOtVCsGzjCXDkp0tEJHdJ5C/QRbE5K/4I41lAY0r2capRZnhomgkioT9Vzzg
-	 562f8j4y0qf5l73tBLY+zPa7/w9EneJjyRIZEi4w7uHq+dRHMCTEop1Hp8GWW0tz5M
-	 Le8bi2pF86QXD0RhGZxkgMhYDCopVUXr34X/x5LPYko+EAl7MHSXOLKmd6fvNzZT86
-	 /mWAC3C+W6TqQ==
-Message-ID: <2791c293-f344-46de-b32f-ba8d6bb34b21@kernel.org>
-Date: Tue, 7 Nov 2023 22:35:22 +0100
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AoX6scfD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VurAJQrzqlbKxhFwVOxOamOuQ0J4pLXBIur2MnFOMSyaVVD0db6Yyqm3czBEkOIYWp8RwHI1yDqp++AXkkoPoYZ+FljjudCm19H8ZypNosZufZM1eZR/j2R3OjDVJkrcXeNGi7pCOLdAeTFmK7gZE1/xaOVDM+kRNArRIH0hNzUKuXOVg3x7BgUXYMCUtYUJKHFEaUv37zN8q0L+Csaquh2O1dT1aOcuDC5MwDruHk/8iXxuXkdw8TvsGKc7v1HRzNDKUjdcnsIwEBESZfoNHhdAwwgxZB4o1XgoapdNRQFVTdaxLmMKh1Se6c2545rTWDW0zpliJolV98fg2i6QrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7Gv9HIJZEzyVoCuvq0bOQPQM31M7SKLoytanobYqjGw=;
+ b=gIZVST4YhRu/2plxAr/4VL7zr9/uKTTkdl6wemDwaTQc/GhBu1TuA8rwGp9++OYS/CMXX7E/xs8DCKS43+yRavL5bplGhcOcjTfyoOPeP1SzzXy1thfs9scB/qmTZ4dIwTpPS9JgHFIdrQ7R5t6QEwNk8rVfBeTHS/PRetBTzpS3+Kx+CtB6Ac66fKp8hvctXSrqULrXOnGEn3IULNTnsQ6m2bjVEUbeE02NwxY6AOKHBgkX/IGNz5RslfDhYbmZ3whKQWu3G/M3ZHunD+qSVMFtIiljOX+n0OHBz0jk7+oY9LBdSMAb+Z5NAyj3fNpmeGSmKzZk6Udyuw3rzMwqDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Gv9HIJZEzyVoCuvq0bOQPQM31M7SKLoytanobYqjGw=;
+ b=AoX6scfD9/DzUREuHTg+hjSpQpYGAgxFDn2mgrKm4bg/PvK4JCi4ABg31YKSRebQk8r0QPVao7ZDXz6fin6jPV6jB2fk7zaUba/63zRnb6NGVvgHC5s6QI1jq+QszqWtJ6IGije2lel1I1F4TxkgqCj5iljzF7pGN9fog6fBft7Kjsu/ffoLmCeUmO1PZbQ0vGARgEvzBd9XA0xr5mx9NlQbVMuHXA7q9l6JX6n4vRrCac9GHORUiyS0qBiWSMdNq0P0EVeYptm3J3fz/sfTms4wGJBbuX3mrPY4aOTieuWZwejxM7tLHQyBeqAiZAg1L7hXFWlJO2linRm6QoPdiQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by DB9PR04MB9721.eurprd04.prod.outlook.com (2603:10a6:10:4c1::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.13; Wed, 8 Nov
+ 2023 01:47:13 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::7102:259:f268:5321]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::7102:259:f268:5321%6]) with mapi id 15.20.6977.011; Wed, 8 Nov 2023
+ 01:47:13 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2] Squash to "selftests: mptcp: add mptcp_lib_get_counter"
+Date: Wed,  8 Nov 2023 09:47:09 +0800
+Message-Id: <a345cc5ff04729307b7b5b3a26f81e4e653dbefb.1699408002.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP286CA0325.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3b7::8) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add
- mptcp_lib_get_counter"
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <7cb131ce1dae4445c05b2955744c63a2d8a1c058.1699275225.git.geliang.tang@suse.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-In-Reply-To: <7cb131ce1dae4445c05b2955744c63a2d8a1c058.1699275225.git.geliang.tang@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DB9PR04MB9721:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1a24344-a678-4c24-e2ab-08dbdffca072
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	SpvyGIX6EU5skviU3af8FYNAyEKU/PYIPrpL22WsxQv7gmk8sT2TflS3INsZGp9vwA1g0b5eVcCPsgwgoqU5VW84hMV9e4qt/bR6gGwRz3DKfF4Kj4trn2cCQc1I5i/JIjnEdB5gkT7SilLl+dW+4QNflyIqn2kXgBNqIoPd5F9eDHkoMuB5YHHhBoCfr8HgeWCNuY+6dYS9U9t/wIUnuUZEThzBCvvXroIAzthcnwGh8dzStqIL/LNf3RfyCRrfADnjw9zkZiOQpbUrsfi/Ja1/tl8Qd9XTz5jrSM8IEMEW1hgSBu8yhbAHk9NXciDXC9UD/cQR35T6673MbsBB+4+/1L2jbmdVSuriYY2wabud9yNFeltocbxEKNJvZCOFhLqTtGAl+QmK2J3YWJkXtwnEI/9R85UIlAOL2dxXiqoMoIhspzJQiwKEtbdyQeVGpDUJKHnmG+h4RJRGTzyZ/bsbrEz13UWc1hHjs0OnkI3CRinnFdUNKJFT/5UCfJvvFJZU/GBxfbqEZOuSMMmU+VS0bsLutMlWA3bfrxqSddI9tiuY0rrcJRdOiMgRiwIO/sFEb5G4AqCTgJf92P2DeV+m7JTKhp2j7lt17rsKlyA=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(136003)(39860400002)(366004)(396003)(230922051799003)(186009)(64100799003)(1800799009)(451199024)(107886003)(2616005)(6512007)(36756003)(38100700002)(86362001)(2906002)(5660300002)(83380400001)(26005)(6666004)(478600001)(4326008)(6506007)(316002)(6916009)(66476007)(66556008)(66946007)(8936002)(8676002)(41300700001)(44832011)(6486002)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nCee0OvYdBk19WsTfeaTyWLmOEwz4s7eSBS7FoY2JYYLvtnnonBU9uXcMHNt?=
+ =?us-ascii?Q?PI83Va7Qg+YF9jgYvaHkfhhMkb2uxIEk6u8iI0UO+Xw+uViL2Xv9sC8a98JV?=
+ =?us-ascii?Q?+MdiFjYn/hlNHWh36V1vDfeKJONPtqsMBRxxqQ9yUJc8sS2mPetl/8NSjEcs?=
+ =?us-ascii?Q?bD6M/2vSU7GRpn/TtlwxEiUo6OKk7A4TtuQEtqdeJCGkZYVCW8HWMMO7ndNT?=
+ =?us-ascii?Q?oWl22yAnkkE3fI1B2x88DNaALNtxpZv/wbNgdDld0EspypwTqlFJJbtwCwWy?=
+ =?us-ascii?Q?6WWC43xGRhKuzZH+apCN683VoQjbN2s12o5vbHKY2K77J5M9cnTHPdjm/fKe?=
+ =?us-ascii?Q?ARsCKzTSKlqrqijtAAUk/aNYVRmI1snub8rsEPq+d7LIILFW7XzgXkm4KCI2?=
+ =?us-ascii?Q?YtrRXvEKx3UTYKYH6vyTkYZiWLnUgfZ/IdizvaAEFVmiMEryfrZYPmRmvHE1?=
+ =?us-ascii?Q?DHDA9PGXb6d2Zqapuk2b7/c+6GfUckM/Dk8PvibW58SKkhKrWY9kicYfCcfd?=
+ =?us-ascii?Q?Nt3ZN848Pm3rc+j9QWnDE/VgjwlAfikK8t8jcuxdfoclvNcr5d+aktirJa8i?=
+ =?us-ascii?Q?jGOmGnusBA1rCuLJGIjD6scT/CmnKfJC2wywnpriofKTdx2fmklLt5xcf76E?=
+ =?us-ascii?Q?sSeDP0mpbTXPoYiMgWlc2gsg1ZMGrqfRaPdNQvzibZ4fW41xcIT7HO/olmJZ?=
+ =?us-ascii?Q?gemMx/qu7WLq2apNJ70wOYbDKn9dFrNdykK6m28Z5xuYI6//tDp7S2nuB/ra?=
+ =?us-ascii?Q?1/WWLGyk/n+yULWPFRU5gmxnH8zAY2QOkqwS1Y0Qu41kMIM8bY6g3zhGk0qt?=
+ =?us-ascii?Q?Enjru9ek77CvfxZUvJUkkv9J8LYKWNh4RugEFLBRkjGOlCi6cCtboDDcmiNB?=
+ =?us-ascii?Q?OwB4F33Q30ATAsBQQiNQj14uYG8mMlw2hGWsxiQ+f64RiTuASE01Tb+Nz3dp?=
+ =?us-ascii?Q?mFEpDNp5ozOoVNh2SbZwecpapGGuPvUANYcttI7mnRvhJ+InH97x4tM46I7u?=
+ =?us-ascii?Q?5kq7cMdox8paatOtMrxvGe78KNrxT1dtZlseAyzbw0WSPfnbsumitFxWF1c6?=
+ =?us-ascii?Q?lcL10JxEdIPQ1+LFSRG1W/I03FFRUVx3pRJMDybCRKUcTB5hxAXCqRWx1/NI?=
+ =?us-ascii?Q?VrhAP/d/DLami0gQVpNuLEnS3meD7f6yL0mhmXq0pZAj+jemc52G8JVgsdxI?=
+ =?us-ascii?Q?n+Nw/EZji5kLsHU5kHVqGLh/b9E8HTOMCJllC0uSSEWdiAkQN6XaYarMPS7x?=
+ =?us-ascii?Q?J6khLIeMr+m5RhV5TxmWEOICCEcvICQ3ZER6MtUvPAxqFYrskSX8jPmvloH4?=
+ =?us-ascii?Q?XzpNegyz/PcgRODSrSZDdxgQbeRbym+aORL/+vuWM/BeykSBvm44QG/87dbW?=
+ =?us-ascii?Q?MGJcZc182L4gvuQ+Zlp8I9zEqBAlJ58njKk14vRdhucBGMoxr+1m9EaiEDEH?=
+ =?us-ascii?Q?OzzrGE+k91+Mp+3FXsd7I4z70XpVoTOSN5yQcP0dYpo2BCTVdcoPaR/sQyHN?=
+ =?us-ascii?Q?m+kC2WXkLKmjkdgSSwhfSXIfxpwyWuCDREwrbIvRHfElQYAnWRb0I6s+PYu0?=
+ =?us-ascii?Q?sktwjRSEEEoi8Yn9pNu5Y5tr5gjX0Y9LxZYVRULFaFle6QKplGHzCVPNPyxt?=
+ =?us-ascii?Q?OA=3D=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1a24344-a678-4c24-e2ab-08dbdffca072
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2023 01:47:12.8609
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: exd6rGXPniqE9ZV58tKYGmrUcbBdCCzQr7vsL4dds2dPW5/B88FTokCYjOrzzLCTEboJnl5up0z+RhlWNleGrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9721
 
-Hi Geliang,
+Please add this line into the commit log:
 
-On 06/11/2023 13:55, Geliang Tang wrote:
-> Please add this line into the commit log:
-> 
-> '''
-> Use this helper in test_prio() in userspace_pm.sh too instead of
-> open-coding.
-> '''
+'''
+Use this helper in test_prio() in userspace_pm.sh too instead of
+open-coding.
+'''
 
-Good idea!
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+---
+ v2:
+ - add test_skip
+---
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  tools/testing/selftests/net/mptcp/userspace_pm.sh | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> index f9156f544ebf..8d95ea94c019 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -874,7 +874,7 @@ test_prio()
->  
->  	# Check TX
->  	print_test "MP_PRIO TX"
-> -	count=$(ip netns exec "$ns2" nstat -as | grep MPTcpExtMPPrioTx | awk '{print $2}')
-> +	count=$(mptcp_lib_get_counter "$ns2" "MPTcpExtMPPrioTx")
->  	[ -z "$count" ] && count=0
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index f9156f544ebf..6167837f48e1 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -874,9 +874,10 @@ test_prio()
+ 
+ 	# Check TX
+ 	print_test "MP_PRIO TX"
+-	count=$(ip netns exec "$ns2" nstat -as | grep MPTcpExtMPPrioTx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ $count != 1 ]; then
++	count=$(mptcp_lib_get_counter "$ns2" "MPTcpExtMPPrioTx")
++	if [ -z "$count" ]; then
++		test_skip
++	elif [ $count != 1 ]; then
+ 		test_fail "Count != 1: ${count}"
+ 	else
+ 		test_pass
+@@ -884,9 +885,10 @@ test_prio()
+ 
+ 	# Check RX
+ 	print_test "MP_PRIO RX"
+-	count=$(ip netns exec "$ns1" nstat -as | grep MPTcpExtMPPrioRx | awk '{print $2}')
+-	[ -z "$count" ] && count=0
+-	if [ $count != 1 ]; then
++	count=$(mptcp_lib_get_counter "$ns1" "MPTcpExtMPPrioRx")
++	if [ -z "$count" ]; then
++		test_skip
++	elif [ $count != 1 ]; then
+ 		test_fail "Count != 1: ${count}"
+ 	else
+ 		test_pass
+-- 
+2.35.3
 
-mptcp_lib_get_counter() should only return an empty string if the
-counter doesn't exist on the tested kernel. So if you use this helper,
-it doesn't really make sense to have this check. Or keep it and skip the
-test.
-
->  	if [ $count != 1 ]; then
-
-So I think it would be better to follow the same style as in mptcp_join.sh:
-
-  count=$(mptcp_lib_get_counter ...)
-  if [ -z "$count" ]; then
-          print_skip
-  elif [ "$count" != (...) ]; then
-          (...)
-
-WDYT?
-
->  		test_fail "Count != 1: ${count}"
-> @@ -884,7 +884,7 @@ test_prio()
->  
->  	# Check RX
->  	print_test "MP_PRIO RX"
-> -	count=$(ip netns exec "$ns1" nstat -as | grep MPTcpExtMPPrioRx | awk '{print $2}')
-> +	count=$(mptcp_lib_get_counter "$ns1" "MPTcpExtMPPrioRx")
->  	[ -z "$count" ] && count=0
->  	if [ $count != 1 ]; then
-
-Same here.
-
->  		test_fail "Count != 1: ${count}"
-
-Cheers,
-Matt
