@@ -1,92 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FC93B78F
-	for <mptcp@lists.linux.dev>; Fri, 10 Nov 2023 20:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518693B789
+	for <mptcp@lists.linux.dev>; Fri, 10 Nov 2023 22:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cavWxfIt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699647882;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jdmJ9b7RsmqsMruglvss8aVa42vN2w9jicZyzhv4pes=;
-	b=cavWxfItU2OwmAusZgoJtJeFZsNZZ74xRc9eZeSxx2O+cp0nRT7swjzNkmLxeMjbNtOHG5
-	HXgzKyOPgf+UQ3QCOcYEiO7vNFkppdAIc+Qft7whbgPWx1dECQUjya9hudRZC0JJXPPw0+
-	wHbFQT4tTKDJCDiLMK2gJcixqDMXtis=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-347-nQtSP3KAORq8b7WwKL3f_A-1; Fri, 10 Nov 2023 15:24:41 -0500
-X-MC-Unique: nQtSP3KAORq8b7WwKL3f_A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 47E5485A58A
-	for <mptcp@lists.linux.dev>; Fri, 10 Nov 2023 20:24:41 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.3])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C7ABB40C6EB9
-	for <mptcp@lists.linux.dev>; Fri, 10 Nov 2023 20:24:40 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] selftests: mptcp: fix fastclose with csum failure
-Date: Fri, 10 Nov 2023 21:24:36 +0100
-Message-ID: <720d67a275179d96aba05cccd56a98f10da47aa1.1699647725.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVEgmn+y"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7a93b7fedb8so88468239f.3
+        for <mptcp@lists.linux.dev>; Fri, 10 Nov 2023 14:53:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699656798; x=1700261598; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WvdAVUVdtC6riEu72SJP39aHPCa9YXqt1UH0U8F68gE=;
+        b=YVEgmn+y2G8GA8d76SvdHBvbKIk0dmVT/2+dzqlAJtlSSP5ri+Nrm1FLGyrhjk78Yx
+         uz47TvHBXiDdPIbrOzDLOl+4qHihJHNg62AwNcRIoUG2CXFf+V3xJ8QM7w9VJSz6ew0Z
+         i/dHOZcgVCIxGxQH0e+MX1xbqkSSFF8Zy9seDKkiENH/uLlUI1jVMXViMv1m6RKs9Gmv
+         dwwftjj/Cq5u2U01GaQjaGOWiqUmcWlX8S4VGMnN+k3iDeukL5AAhIZ02lx6j/Y13qF5
+         gLAHtEIYLRaUW+cfDWDpbajwx7plSiCRaJUtkybY3dMY1r1Wn5+1TOyeM8i7rRna9Psx
+         wACw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699656798; x=1700261598;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WvdAVUVdtC6riEu72SJP39aHPCa9YXqt1UH0U8F68gE=;
+        b=BrPrLmVRAzacN+q9fj6btzTilte2GZitZE+9W8nnWPBR/iRPlHGneIzLJNwrKXXtty
+         BSZ03/JFgaW+d9u9NTmG5Cbj16MPjIQDpE1ah6RXfHGzReUIz0yFq/MsKZT8TnE3Ifp7
+         vXMCrk731UITVnkhoIB9RqmKaogW8DVqGCp4zNqVzQd7cW250xdRxueHmA+13VIU9gKF
+         lKLZp9+wfAHtUYrBxZsUyzdQuycYq9Uf5jWpm6DO2KLDWE8SNmCHBFnjQl+aMeCBeDAp
+         I8pwFF4OhCCmNxH3Wf/A1mzUO/LBESHF06xCsWCiEltJd2UIPPlYlQvWet9J2GqnZAbS
+         erXg==
+X-Gm-Message-State: AOJu0YwMjPUHelhxjVj106n8yb4OyjePrjOM7dKb5RBoaRjUwJ7z9OzK
+	mvTAUZFrGUv4edlDXQGUNQHCfogIOw==
+X-Google-Smtp-Source: AGHT+IEWvNJ7CAecMUwFnLaMexkK8DZeqwYw/WAr6jw6LoZb93aOpSiBJXZQggBmLPmLbc8Jn6pV+w==
+X-Received: by 2002:a05:6602:3e91:b0:79f:bb82:7a7 with SMTP id el17-20020a0566023e9100b0079fbb8207a7mr811228iob.2.1699656798303;
+        Fri, 10 Nov 2023 14:53:18 -0800 (PST)
+Received: from [127.0.0.1] ([40.86.13.176])
+        by smtp.gmail.com with ESMTPSA id dl7-20020a056638278700b0042b068d921esm116051jab.16.2023.11.10.14.53.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Nov 2023 14:53:17 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <720d67a275179d96aba05cccd56a98f10da47aa1.1699647725.git.pabeni@redhat.com>
+References:
+ <720d67a275179d96aba05cccd56a98f10da47aa1.1699647725.git.pabeni@redhat.com>
+Subject: Re: selftests: mptcp: fix fastclose with csum failure: Tests
+ Results
+Message-ID: <1582db89-b2b0-5f3d-c922-f7d64ee7d782@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 10 Nov 2023 22:53:17 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Running the mp_join selftest manually with the following command line:
+Hi Paolo,
 
-  ./mptcp_join.sh -z -C
+Thank you for your modifications, that's great!
 
-lead to some failures:
+Our CI did some validations and here is its report:
 
-  002 fastclose server test
-  # ...
-  rtx                                 [fail] got 1 MP_RST[s] TX expected 0
-  # ...
-  rstrx                               [fail] got 1 MP_RST[s] RX expected 0
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6328130965602304
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6328130965602304/summary/summary.txt
 
-the problem is really in the wrong expectations for the RST checks
-implied by the csum validation. Note that the same check is repeated
-explicitly in the same test-case, with the correct expectation and
-pass successfully.
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_sockopts =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5316114733858816
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5316114733858816/su=
+mmary/summary.txt
 
-Address the issue explicitly setting the correct expectation for
-the failing checks.
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5927627949604864
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5927627949604864/summary/summary.txt
 
-Reported-by: Reported-by: Xiumei Mu <xmu@redhat.com>
-Fixes: ("6bf41020b72b selftests: mptcp: update and extend fastclose test-cases")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5358215681015808
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5358215681015808/su=
+mmary/summary.txt
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 995280882428..1606474232f6 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3220,7 +3220,7 @@ fastclose_tests()
- 	if reset_check_counter "fastclose server test" "MPTcpExtMPFastcloseRx"; then
- 		test_linkfail=1024 fastclose=server \
- 			run_tests $ns1 $ns2 10.0.1.1
--		chk_join_nr 0 0 0
-+		chk_join_nr 0 0 0 0 0 0 1
- 		chk_fclose_nr 1 1 invert
- 		chk_rst_nr 1 1
- 	fi
--- 
-2.41.0
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/288abdfafe00
 
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
