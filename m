@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904E918645
-	for <mptcp@lists.linux.dev>; Mon, 13 Nov 2023 09:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AB61A58D
+	for <mptcp@lists.linux.dev>; Mon, 13 Nov 2023 09:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHcHsSIj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 828B0C433C8;
-	Mon, 13 Nov 2023 09:15:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBGWuFOj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFEE9C433C8;
+	Mon, 13 Nov 2023 09:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699866959;
-	bh=krllP80hqNtb+fUbFk4200Av78b11g92iyvTST30T+4=;
+	s=k20201202; t=1699868678;
+	bh=m0JI3+q267rcmRMDUpoU7zfqT4pT8rbCu2HLRBS26Mg=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=kHcHsSIj5FJHnFdlMDCqQ2Q3GDKDYWF8XoEXZyqRpfYtXIqoURuprrTpa3YLxeRZ2
-	 kr1E4qRM0DVTu0Kmk0GkQJRpOe+rt/6urixA3P9pkP9tkA/siVLNZv595GCUVvALF2
-	 h739gcffI/t8Rj+8cskVlhJEfIKmxIvuNq6Q+vJ7VzZ0gzrn2I8qE0njtTa/Vp1Rl3
-	 PJnq+o4RJztnzu02MMfr+BPuMXcJ/YYqy4Hp7wi7SlxkO+twc4X2+a8FL0KePzfC7x
-	 q0+9xNmX70hO++6iCys3VsKANXM8H66pKqtQ4U3Jf8yLJUZ0NLVB5CjHtuvk+hHuVC
-	 2+8iOw3buZ/Pg==
-Message-ID: <14523a78-3f0f-46d3-b1b8-170a19acab23@kernel.org>
-Date: Mon, 13 Nov 2023 10:15:55 +0100
+	b=dBGWuFOj0pFUVRCcb6QtCbo0j6fSmJHyeVMvLxMGm92WL7fotZ6FgPwgxXuCeMzjS
+	 /e8uugChunRpTzpzD6uLvTY7G6l2dTBWp6SA1aZbl0Xqy3aYr6SCSKFJs7sKie2/Ko
+	 nDQoYqZc6lj5s7zSvlspcizo9DnlaTM44S2PxnrX2xiagQEC4Wf8SSWgO3nZXPbzJU
+	 hKCXcPxsd2sIzr7t3GlfV+KtS7CCgOtx6i/gLz1GFquabSjg5Ev0eK9d81O8zgvv6H
+	 AMf3o9vb6hBppkM+ptECC8pZshypcQKxMVEliXxmUycIL6H6LFkmosrbmZ374pfZPY
+	 E4cF1udfvm1Qg==
+Message-ID: <e0e4b2fb-c924-40d1-bb61-9c54918bd3be@kernel.org>
+Date: Mon, 13 Nov 2023 10:44:36 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -98,87 +98,23 @@ On 10/11/2023 21:24, Paolo Abeni wrote:
 > implied by the csum validation. Note that the same check is repeated
 > explicitly in the same test-case, with the correct expectation and
 > pass successfully.
+> 
+> Address the issue explicitly setting the correct expectation for
+> the failing checks.
 
-Good catch! LGTM:
+Thank you for the patch!
 
-Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
+Now in our tree (fixes for -net):
 
-Note that I was a bit confused to see the CI complaining about this test
-while not testing it with '-C':
+New patches for t/upstream-net and t/upstream:
+- 925598813f6a: selftests: mptcp: fix fastclose with csum failure
+- Results: cecbfe325d48..5d8953c9cae1 (export-net)
+- Results: 69a6cbb603df..2d9a700b962e (export)
 
-> # 103 fastclose server test
-> #       Info: Test file (size 1024 KB) for client
-> #       Info: Test file (size 1024 KB) for server
-> # copyfd_io_poll: poll timed out (events: POLLIN 1, POLLOUT 4)
-> # [fail] client exit code 2, server 0
-> # Server ns stats
-> # TcpPassiveOpens                 1                  0.0
-> # TcpEstabResets                  1                  0.0
-> # TcpInSegs                       6                  0.0
-> # TcpOutSegs                      7                  0.0
-> # TcpOutRsts                      2                  0.0
-> # TcpExtTCPPureAcks               2                  0.0
-> # TcpExtTCPOrigDataSent           2                  0.0
-> # TcpExtTCPDelivered              2                  0.0
-> # MPTcpExtMPCapableSYNRX          1                  0.0
-> # MPTcpExtMPCapableACKRX          1                  0.0
-> # MPTcpExtMPFastcloseTx           1                  0.0
-> # MPTcpExtMPRstTx                 1                  0.0
-> # Client ns stats
-> # TcpActiveOpens                  1                  0.0
-> # TcpEstabResets                  1                  0.0
-> # TcpInSegs                       7                  0.0
-> # TcpOutSegs                      10                 0.0
-> # TcpExtTCPPureAcks               2                  0.0
-> # TcpExtTCPOrigDataSent           7                  0.0
-> # TcpExtTCPDelivered              7                  0.0
-> # MPTcpExtMPCapableSYNTX          1                  0.0
-> # MPTcpExtMPCapableSYNACKRX       1                  0.0
-> # 
-> # netns ns1-654eb1d7-Nk17nk socket stat for 10102:
-> # Netid State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
-> # TcpPassiveOpens                 1                  0.0
-> # TcpEstabResets                  1                  0.0
-> # TcpInSegs                       6                  0.0
-> # TcpOutSegs                      7                  0.0
-> # TcpOutRsts                      2                  0.0
-> # TcpExtTCPPureAcks               2                  0.0
-> # TcpExtTCPOrigDataSent           2                  0.0
-> # TcpExtTCPDelivered              2                  0.0
-> # MPTcpExtMPCapableSYNRX          1                  0.0
-> # MPTcpExtMPCapableACKRX          1                  0.0
-> # MPTcpExtMPFastcloseTx           1                  0.0
-> # MPTcpExtMPRstTx                 1                  0.0
-> # 
-> # netns ns2-654eb1d7-Nk17nk socket stat for 10102:
-> # Netid State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
-> # TcpActiveOpens                  1                  0.0
-> # TcpEstabResets                  1                  0.0
-> # TcpInSegs                       7                  0.0
-> # TcpOutSegs                      10                 0.0
-> # TcpExtTCPPureAcks               2                  0.0
-> # TcpExtTCPOrigDataSent           7                  0.0
-> # TcpExtTCPDelivered              7                  0.0
-> # MPTcpExtMPCapableSYNTX          1                  0.0
-> # MPTcpExtMPCapableSYNACKRX       1                  0.0
-> #       syn                                 [ ok ]
-> #       synack                              [ ok ]
-> #       ack                                 [ ok ]
-> #       ctx                                 [ ok ]
-> #       fclzrx                              [fail] got 0 MP_FASTCLOSE[s] RX expected 1
-> #       Info: invert,rx=0
-> #       rtx                                 [ ok ]
-> #       rstrx                               [fail] got 0 MP_RST[s] RX expected 1
+Tests are now in progress:
 
-See:
-https://api.cirrus-ci.com/v1/artifact/task/5358215681015808/summary/summary.txt
-
-But the error is different here because the client got an error (poll
-timed out). It looks like it is similar to a known issue:
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/324
-
-So all good, I can apply your patch!
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231113T094142
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231113T094142
 
 Cheers,
 Matt
