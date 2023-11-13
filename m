@@ -1,51 +1,50 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2041.outbound.protection.outlook.com [40.107.8.41])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2088.outbound.protection.outlook.com [40.107.8.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7906B8466
-	for <mptcp@lists.linux.dev>; Mon, 13 Nov 2023 02:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9BA79D8
+	for <mptcp@lists.linux.dev>; Mon, 13 Nov 2023 02:49:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VzOZfGUB"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FxYuFdKJ"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wt3qHa82VCPWJa+HLO9f4pDhv6oHUvpfeZCV02Tw1pEcKZk3jzdS4W8vitlJ793KOTg2YzhUAsSizw2L++fMh9u+6p+uDo6ie0m0/0MwBYr0HNlVtTarPXpDei0Kc4iXPuAKKG+0Snfteyz6xInILlGKpLSOmbVg6rgwa9CoVB1Ef5w6GjuN0TH4XOJYzEpTNWOOw9jcH0dYQsbkI8iQ7ANjAQ3rQplCJ41pa1ZWoXU0zqmR/fMCT0sbZfxMByqsLmfGujlmD1e9Alxt4P+93bfG93aBPLpYRMv4dd5DLveCxUEzetd3DLeLCgiBgpINCiUfFcD/JtW0DvYsgKy24A==
+ b=P0d60Pg6lhrFR8kXRaJ0t5iYu+w1nRxZcpRpV06U1i55CCPcjb4vqc3uEvktEsALB8J2caOPldo0xdb09hUjd8mAgl4OsuGNkL/IsNBABDYcZPmddlA7xsjm2AY3X+ZU+saDVdXalebu2XRch2lNJUp+zulikS2UZAwZk7Vu7HATUULuQhSgcIk+vdreq6o5QinNLrMdPrtQuB9N23ygCaFF59twliCO7g/hU2hcEfLY5LmBOV2/5cC1zCW77KvTRnb86eJg6zHAA/eNduXZgqFaHwlZ4HJ5xC2iKGSb0cQ8f0oRPNDySoP7LHDrXkjgFPGUcsFgpYSjqReqe4AJXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=im0w7CtP3iX8S7SAEQ/Bujr0mMzfVUiEcCrdAu32FXs=;
- b=ma8wyabwt8mMXNFbfYJG0lHQN5V5VPzKde3wSI7r26hunMTMVSN35yx6v5gA9cawm+jdE6lZ9m5duBJB64l688KkaEaTUg+XJgl1cniEgY9qFEW3e3r9SVCceFGzvNyk7bBjS6zIa+HC61rAsSusdpnyFD4MYH8ueBhXCzshrL1qTB+X7SaBour4NaD4DiEiIr+UCxorkZd32eadqyOKDsWRBRdRGrggGJGGSP5dpq602t9f1LePcmrLp7sAkjnuOes7HBjHpYvNWkDmMIdb3NCz9cBP93sqhJH7bXZKiDOUUTkBZ1Klsmt5RJhHYuM/HCOmVxXKzu6eujil8hBKjA==
+ bh=GWWUSY9xk98fgltOIrmPyL+RfYmmMYbkdDqwVfSOL28=;
+ b=ADIoEvc+8OTmT1h4mZ8xnET04mlMrd8eY6yhpTdqI/Iqs/A/JsyGshnw1SpzkAVzi66jf8/drX9XA+zhEcj/pngx3dg7hghJZ08iT9zhLrLQQ2kxZrufg7Kbdc8zTkbW0iPo489tL55LVL5mqCqVAmoS1bUGnTu5TsrXQy9goP34TvOw00DPZ0ZClPTeB4th9dwEjymQ96xYgOAAgOK+ZAv3uzlGW+JV3wIyODO9FQp1jxVvUcXT66R7GvfMaUVUGfRlzXHYugReR04XCJPCVVNNTboNdefciAwF0fsfCKWmUaxSatrpOuFhTSPT6sFjKg+JHRrM2ezE8zNVJhFATg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=im0w7CtP3iX8S7SAEQ/Bujr0mMzfVUiEcCrdAu32FXs=;
- b=VzOZfGUB4TJmoOv+hkURjnZTu8PBzQJeeQ5WrRRhDs6HfNmSaZLX7EJRge5sGiT7Yw2PaHKHNjPi/mhufsP5r7rO0b5SmeOBHbBbQHjXxltTwXxHpt4rsX4Nn2qcvXWMUO0TPjIxmnfcmdVRIsqxo5FiTu4/Fypkjy7SwE7zCnxcpy9ZwIbc6XtZx3Nu87+8vPn9udofV7oX6bT83TtOHDlR6O75EdXtgP3pv8OX5q9PaOqVrqVyiq2ie2K9w+B41KGBetXrD+Nh8VJjU7mF/QVMSGJ51Pfy3n3uWsqZ/5OXfAx2FWYGD1JHhI8Qw0hNPKVNrvndT3JXNsU8C/XRxw==
+ bh=GWWUSY9xk98fgltOIrmPyL+RfYmmMYbkdDqwVfSOL28=;
+ b=FxYuFdKJbWfmipOnvyPc3GD+K2Uo0fFSkj5pr7rlCVq9wnsG8h1xX4HKUO3zYzujkNXdLzcqFwXXtZ85KX4bZS/uHFDGjlv/XgTsi4WyKpt+jYMZ3S2riU47p6DCy00qFteLvD0UtE4GLl46myAAgC2Ev5S2TBi3UiNYE6cUlnJSSqxbYmgqc3Jx3Cx6q1Z4mKwIOlFvS0XM1FrWbyQhmkNG9En2Rckzq1U6B5Q5uYbcJ/qHW6EHZwK1/mpBuTOGs5VFtRUtD3l/jKsRaMZaBmHkR1Ux8AFH6HbQOz95MsFls8Xo2wniTc3sn+y/bg+hEocnoBieoaxwZToRd3xI/Q==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by DUZPR04MB10038.eurprd04.prod.outlook.com (2603:10a6:10:4db::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.14; Mon, 13 Nov
- 2023 02:49:05 +0000
+ 2023 02:49:11 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::7102:259:f268:5321]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::7102:259:f268:5321%7]) with mapi id 15.20.7002.014; Mon, 13 Nov 2023
- 02:49:05 +0000
+ 02:49:11 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v8 01/22] mptcp: export pm_nl_get_pernet_from_msk
-Date: Mon, 13 Nov 2023 10:48:45 +0800
-Message-Id: <71823334a778427da97eeff2211990cb349233d9.1699843617.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v8 02/22] mptcp: drop mptcp_pm_get_* helpers
+Date: Mon, 13 Nov 2023 10:48:46 +0800
+Message-Id: <1a60ab6883e572b274c91ca2d0c3775c1917da41.1699843617.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <cover.1699843617.git.geliang.tang@suse.com>
 References: <cover.1699843617.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0026.apcprd02.prod.outlook.com
- (2603:1096:4:1f4::11) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+X-ClientProxiedBy: SI2P153CA0001.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::7)
+ To HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -54,134 +53,284 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DUZPR04MB10038:EE_
-X-MS-Office365-Filtering-Correlation-Id: 250a3b04-3274-4de1-a3b4-08dbe3f319c2
+X-MS-Office365-Filtering-Correlation-Id: 51287eaf-32aa-438f-c2a4-08dbe3f31d91
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	qaEw2+E8VFO1tlkLQPX+H/akfDEfjFe0RcBgspmeGJQTmusaF8fY+N7inUiU/ZCmnyRB0i55paQ6rIXzlhJh9c4vFevcPaC4/582X7PAPwtQhCQ9AghKHfHdQDztvmyl+HXTs37+HzQWsv8WJ0Ae45MBEeWF9PWm2aTVzl+lbXgYEtrx0t7H6s62PjxvL6QFL4cHgt9B/bXBQVICoVpKoyn7rYDv0/AltYT/c5DojidrwaGRg30PShXqBuxmf+OTr8P9tdt/9SGjpVF1j1VPd4ZheDTx+HU4FCab72KKGtmY2xvzZOpQsqKPw4vfFf16LmueCHbIfke139BVLyIIaNZWnBhny7BE+Vr+YHPdJ6XEB2j/D8JYhlzHTcw0qVlhN2HHd8MCJx83qITqzr4G/R6SPBda8zwM213+n/EwStrSzH+k5QHVhv0WJLLqC0eNptiRM9i4jcINeZDGaVlLokZJEttWIkxOhR4w3MLBKKBhoeSbpA3rFnNc49uySLWXY+cC9BHPhvIAQGeYlss01X52l3CbYjjsHSwvWM0nvuKWRoQ1TampfBQ75gl9587O
+	CYGhzOwo5OoCzZDvtwz0Hmeg5BUnoGuS1rX7oPbh6VprsfhWUqkU5YZjFkbk+ktW0oqvf/TjMKCx0LeJP+rfCdFKw0Am0ILrRgx7LJVf2ipZrfxGbqjdqTB0/tQfhjRX7kO+WZptT0+Z/lN2TanHetNLLq57aEAhPlL2u1wZUBfCn7quMhKOOidVwA8tM/zMaV3q92e2lGi4OyKXkHB9mTi9OV+SHjccLy98OFw1jRatE/qPgK5ihnsE1WPdb4hwhEtd5CboFzNk22TWtrGd7qsiWz0A3AgReQTY4n/yuSq/XH2DQScpMC6Pd7iXj2omnaCbGAcR6a2Fu/kob0g6C3wdPU/DK3+ePmtDwjio1eDDGfKn1txFSHWX/pLYcthKppzBDJ3nJ/+hH1P2yLYHXT+WW8NNjTJcHeMJYewKvngvYPoG71exe+uHcWHcXp59OPR2v/+pSHh1+tgU10ArwPtxgHr+9XAYiACcUaWXc7bZi7Iy5LCye5ULtiHHjFG5h+jSOMm5EaHjInvsWBjPANg3KWWR/AOE7jAvAPSfSJ65yKjueNQcUlMDk6HTb2yKP0nhpCOn8drXG36Hjh70eBg17wWtUnlEGjzVGuJXjrWqOzIYGbXxHTR0sur/yMK+
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(376002)(366004)(346002)(396003)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(2906002)(5660300002)(41300700001)(38100700002)(36756003)(6666004)(86362001)(2616005)(107886003)(478600001)(26005)(6506007)(6512007)(6486002)(83380400001)(4326008)(8676002)(8936002)(44832011)(6916009)(316002)(66946007)(66556008)(66476007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(376002)(366004)(346002)(396003)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(2906002)(5660300002)(41300700001)(38100700002)(36756003)(6666004)(86362001)(2616005)(107886003)(478600001)(26005)(6506007)(6512007)(6486002)(83380400001)(4326008)(8676002)(8936002)(44832011)(6916009)(316002)(66946007)(66556008)(66476007)(309714004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SJt+ZcwLlT2EDD0pa0EuwcbjiGRZqBUgYpusukloi9W1a68XGArwIF9BkrKm?=
- =?us-ascii?Q?+ATnGQ/2AKOmkPLValpISXtJyputuplZxKBDV4Qj0vbfNu/xlvs6petlnQVW?=
- =?us-ascii?Q?/I8je4/O9Fc2sfHFLpWGL+CrdYCvuOsfaJIiRLxK10AK64pQ2wnvNA9TiD79?=
- =?us-ascii?Q?ZGO4riF6iUiz+Cp+L9OKESJh/NEJvD5CaKzOBtgySZgXq7utzgDTnjLvcM7d?=
- =?us-ascii?Q?J6PdWenxCPknEHqXGl8CLxLrDixZfmplq4LMUJBqfvWQ8imuCttRekJoo38z?=
- =?us-ascii?Q?DxA2Hh9yVrGXDOZ8UZnR314IpkLmPZFKOOH1jvHDXsluAmqO/Rve4+8e+kL5?=
- =?us-ascii?Q?U3wLwdiJIKZbnRD3xzxlbej0zBBlM23qim+r6+BnCu6rSLCS9TFIQbXt+AU8?=
- =?us-ascii?Q?3jHUhB/LX/zc44vknWx4ym9yA34gWIOE1CM5BD94gW8RdBe5IkhIuG9CSN5I?=
- =?us-ascii?Q?7nt+/0PehqxOB18nbcXm3UnTtFEXfHVrj+Pq6y6ZbnwxNG4izaoMQkPRBoZF?=
- =?us-ascii?Q?dRrjxZMDH9ILeB0iULdjHkepDaS4sDHiPNAb89oNYPweQAMcBLeKVhIh8svl?=
- =?us-ascii?Q?Tkhd2ocPnidNKTo1xWikJ4nSnOxeiRTeuXmf2lmgMGbrPxI4vytbovc1orB6?=
- =?us-ascii?Q?G2BhV1m2u+MmsLQV02BCiQwDGmVnZJ2Eq8u5IZZVrLVji/EV9/poDT+BVstj?=
- =?us-ascii?Q?HZvRAGFypH0PQN6ITBn61CGW0LSs8OeN+CZq8CC1hkfp9pTWtiPwUz0HvLQY?=
- =?us-ascii?Q?KhFo0yVb1TpGVAhJ4wJSsGq8eo4VBZGtMTEkRkyP46iAT1o8WG0vyQmqcjYy?=
- =?us-ascii?Q?wJktrNNLleI7MH03i/jtP301bB7kwIFmLK73duqSyrYOv+YrapAUkTMmDvOn?=
- =?us-ascii?Q?hLrbZPqnlURikOkgBEJGcRd7P0vYmwbFEPjJkxrOFM/QCYOyUEoZeyM41ORE?=
- =?us-ascii?Q?kAXagsU3ZL+fMWdriO9nCNHNpUDHonkf8sMn1svjSYlpYxI7VUltoKNcgism?=
- =?us-ascii?Q?MeR/KGOndqTr0hNUU0V8za/y5oCQIwUK/gYKPbDHHLFdxzGgb5B+LoMB8lb/?=
- =?us-ascii?Q?SfZiUVDutpNXGZRP7CWFi1D9BeG5ICbrk+b0fmkCWWAYp3rAaJ4FbBB6vB6x?=
- =?us-ascii?Q?u0c0XE6+A3g8Bj7+z6szlrXJZlb+hPWJX8NTigmX3mYQ6QoDZ+Cq9P/VYM3q?=
- =?us-ascii?Q?6THwcDNuYUGfJfWPTnLHKJNBuy5oE+owj5gJxgaCMsChpUQWopELJ9lQVH7D?=
- =?us-ascii?Q?rToD+3p4oaCy+C8uqUHNvxJ6huKGpGAEZ9SwuAEfnNLmbJW/YseiTHINmI9+?=
- =?us-ascii?Q?h7fJ4gCJGijdkXafkoiejNokETqiN5/Uy2YPEmSdqfZtHDrb0RX8YZJ3MK1Y?=
- =?us-ascii?Q?1CKU6/Ro2gPAlUmK+a712c4LPj8xAdOEOPgDtbfyzN2d8YP1sIqweNM53DFo?=
- =?us-ascii?Q?+sk+WbRXg2CltCj6lX2SSE1I8VSnVXXBG7Ld97DS9tacWjHthPTmsae21O/o?=
- =?us-ascii?Q?t/CsKXWPSOec1U4q4szX1jlvikOEY/jLew7qJvlYmcpRKGW0nryve7WPY3Pc?=
- =?us-ascii?Q?33MGYqV4xcSUggBWd2QO30BwmO+NkAdX9x+OIxxh?=
+	=?us-ascii?Q?yjcCHVej/ph+V9tA/mFqf592YpK6iquJtKfW0qBgnDj6Ydo+2P1iOaC2Nldd?=
+ =?us-ascii?Q?IDVnT6y5yL2WhJGxh4fYH5LCXI/Ls5luTlhuYMC8HUCOW2Mn+41Bh1Zis6k6?=
+ =?us-ascii?Q?Y1U7evo94Q6H+VDjgqsnKnSqY+AEwdL/BvnIJ7LBpVhectIezDdi68ArQZHZ?=
+ =?us-ascii?Q?oeM31xqiHdl6BC4UNSpc3cD9kX7Nz7n5Gt3GVxd5WvviFwe8Y9ZxxlimwCXg?=
+ =?us-ascii?Q?N+EDA1KbYnDB937H1+abZhfrroVSZbBUiiypmRV+hQ7kytaJtgCXcIVeB4fJ?=
+ =?us-ascii?Q?6/IOvdkJ2dremdDJ2U8OHpoIRQx7xlS3e7DkPniF8TqymecNygbkzzHbd/gq?=
+ =?us-ascii?Q?+7ATDWAgGNofPT2VpQkL/WHXtzWR+Ddbr8jYXnLdNfIGZgj6vwr4AsDQQ9GQ?=
+ =?us-ascii?Q?n94bY7ipeOQC8+YrE/RcqlymihmUXRKXgE2H/huZaXUjf33DRbLafYWb0Aqs?=
+ =?us-ascii?Q?PtftqK/0Dn28LZIJX4qVSr2kqmbNQvmxnCZCFKmEb5NqYCSR3e+qhAOFVD3V?=
+ =?us-ascii?Q?QQyNnwOv85KiB52BM9cYvV1dGvbFv13H28A3lRW95nrXf4bYqyIBTqjt2BpJ?=
+ =?us-ascii?Q?P3gPcalsZGHkFIkl3FF67g00f1LSmS34JV5rBTQZw3SNZggdsGNStndZkQad?=
+ =?us-ascii?Q?HKLP8uhOENWE3voEMVKxyjoSoioN4hm5xI6kpYWBDXouFKcCagaA4KZMpOnw?=
+ =?us-ascii?Q?m6rDf+A4cNaYbVXLT1IiDArei/8xfaVSktddUpaiEgoRdqM1xYV6aBn/a2zg?=
+ =?us-ascii?Q?ol+8rNBhIoLx1dyp9CNc1oDvO6KF9/U7OpypxdMOw8aaqD48sLNlPhx4HPs8?=
+ =?us-ascii?Q?1M864gMjv0KnzaPqDvV8uV8g4OgeVBQ2rvF5DoOeAXVs7dmpVt2YyyLM2zIX?=
+ =?us-ascii?Q?d/KqG3zmqfdSZMCq0HSJrzJGbIKdDd2K3ISsGTM97KiHZxPnENm0CXgUudu/?=
+ =?us-ascii?Q?AhE7Hxuv3CEGdA4ExA6KRqfmJgWx/p+U0W93eYNV3tmr4QhsuQMeOZtlilzJ?=
+ =?us-ascii?Q?bp//Q2xf9oizLrAUcbcejARgMlgxgLLlqVawwwKFCHy32bN0DbVIWhnwFN5f?=
+ =?us-ascii?Q?SUyDtUnmgjbr6OREBVo4jz4HbaOlNHLbS6MwhPtuA2xWX7m/vTI6K0f7WKW0?=
+ =?us-ascii?Q?PUKNnXFATcVWK+NGNAZvrbaUXzgsCf4cihKKq4QiPEnt4XtHnWEu67ZU5zDr?=
+ =?us-ascii?Q?jeqmjbrFI5zAvEcgdSQfc7mdjJRCsR7vvW+ijfalEqbLeO722HfqUNTgRUwv?=
+ =?us-ascii?Q?YwsHft8C7u6NZywO5vw0FSeBFs0KX5vFqErDVMQcWYSoF73nGkaD0M72gOaU?=
+ =?us-ascii?Q?rZzKUzhaqGSn9sY3vMnU3cE0YJWp0kV+PTEjYbzEm/+W/G53JCqKQOley959?=
+ =?us-ascii?Q?Z5OX1TDilsjAts1BDhsxD+xB0+Beyl9p1hWaCM14T7+GAbwhdh1fHULqYgDG?=
+ =?us-ascii?Q?//6XZFXcXldGtFM57HXEYexZPxHbnEJOkhT9Bd7s6ky08EvrJJlODpUDh0k8?=
+ =?us-ascii?Q?Tz2+Xroa7vkIntyq3rrAx81FF2OEYUtE8m71N8gVR4ixpqtLbiWaAMz08Ybj?=
+ =?us-ascii?Q?mepq85r5RdirMRer9Q75kwokXycRonQcCJOSUIp2?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 250a3b04-3274-4de1-a3b4-08dbe3f319c2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51287eaf-32aa-438f-c2a4-08dbe3f31d91
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2023 02:49:05.2862
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2023 02:49:11.8673
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2UKsEvWK/j1mI0e26kqXvYDIKlyJ1wBpvWBSzShxnav2s50nmFONaArmFUsayG0IPPN3UhEUE+eYxbomTuQd4w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: nnB5hh8+wVj8sMWXEekFnRVHGqvK4qdcWrQJLfS/4vB/peLhfgL2pg3/tv35vru6Xast8XP3ib2q+Z1PC0LQ2A==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB10038
 
-This patch moves struct pm_nl_pernet from pm_netlink.c to protocol.h,
-and export pm_nl_get_pernet_from_msk() helper.
+Drop four mptcp_pm_get_* helpers:
 
-Then every fields of struct pm_nl_pernet can be accessed everywhere,
-not only being limited in pm_netlink.c.
+	mptcp_pm_get_add_addr_signal_max();
+	mptcp_pm_get_add_addr_accept_max();
+	mptcp_pm_get_subflows_max();
+	mptcp_pm_get_local_addr_max();
+
+The helper pm_nl_get_pernet_from_msk() now can be used to replace each of
+them.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- net/mptcp/pm_netlink.c | 17 ++---------------
- net/mptcp/protocol.h   | 17 +++++++++++++++++
- 2 files changed, 19 insertions(+), 15 deletions(-)
+ net/mptcp/pm.c         | 12 +++++-----
+ net/mptcp/pm_netlink.c | 50 +++++++++---------------------------------
+ net/mptcp/protocol.h   |  8 +++----
+ net/mptcp/sockopt.c    |  9 ++++----
+ 4 files changed, 25 insertions(+), 54 deletions(-)
 
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 4ae19113b8eb..48ff7ce20890 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -85,6 +85,7 @@ void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ssk, int
+ 
+ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+ {
++	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+ 	struct mptcp_pm_data *pm = &msk->pm;
+ 	unsigned int subflows_max;
+ 	int ret = 0;
+@@ -99,7 +100,7 @@ bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+ 		return false;
+ 	}
+ 
+-	subflows_max = mptcp_pm_get_subflows_max(msk);
++	subflows_max = READ_ONCE(pernet->subflows_max);
+ 
+ 	pr_debug("msk=%p subflows=%d max=%d allow=%d", msk, pm->subflows,
+ 		 subflows_max, READ_ONCE(pm->accept_subflow));
+@@ -496,6 +497,7 @@ bool mptcp_pm_addr_families_match(const struct sock *sk,
+ 
+ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+ {
++	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+ 	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
+ 	struct mptcp_pm_data *pm = &msk->pm;
+ 
+@@ -508,17 +510,17 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+ 	WRITE_ONCE(pm->pm_type, pm_type);
+ 
+ 	if (pm_type == MPTCP_PM_TYPE_KERNEL) {
+-		bool subflows_allowed = !!mptcp_pm_get_subflows_max(msk);
++		bool subflows_allowed = !!READ_ONCE(pernet->subflows_max);
+ 
+ 		/* pm->work_pending must be only be set to 'true' when
+ 		 * pm->pm_type is set to MPTCP_PM_TYPE_KERNEL
+ 		 */
+ 		WRITE_ONCE(pm->work_pending,
+-			   (!!mptcp_pm_get_local_addr_max(msk) &&
++			   (!!READ_ONCE(pernet->local_addr_max) &&
+ 			    subflows_allowed) ||
+-			   !!mptcp_pm_get_add_addr_signal_max(msk));
++			   !!READ_ONCE(pernet->add_addr_signal_max));
+ 		WRITE_ONCE(pm->accept_addr,
+-			   !!mptcp_pm_get_add_addr_accept_max(msk) &&
++			   !!READ_ONCE(pernet->add_addr_accept_max) &&
+ 			   subflows_allowed);
+ 		WRITE_ONCE(pm->accept_subflow, subflows_allowed);
+ 	} else {
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index bf4d96f6f99a..1dcf104d7a01 100644
+index 1dcf104d7a01..dbf040e39af4 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -31,20 +31,6 @@ struct mptcp_pm_add_entry {
- 	struct mptcp_sock	*sock;
- };
+@@ -183,43 +183,11 @@ select_signal_address(struct pm_nl_pernet *pernet, const struct mptcp_sock *msk)
+ 	return ret;
+ }
  
--struct pm_nl_pernet {
--	/* protects pernet updates */
--	spinlock_t		lock;
--	struct list_head	local_addr_list;
--	unsigned int		addrs;
--	unsigned int		stale_loss_cnt;
--	unsigned int		add_addr_signal_max;
--	unsigned int		add_addr_accept_max;
--	unsigned int		local_addr_max;
--	unsigned int		subflows_max;
--	unsigned int		next_id;
--	DECLARE_BITMAP(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
--};
+-unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk)
+-{
+-	const struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
 -
- #define MPTCP_PM_ADDR_MAX	8
- #define ADD_ADDR_RETRANS_MAX	3
- 
-@@ -53,11 +39,12 @@ static struct pm_nl_pernet *pm_nl_get_pernet(const struct net *net)
- 	return net_generic(net, pm_nl_pernet_id);
- }
- 
--static struct pm_nl_pernet *
-+struct pm_nl_pernet *
- pm_nl_get_pernet_from_msk(const struct mptcp_sock *msk)
+-	return READ_ONCE(pernet->add_addr_signal_max);
+-}
+-EXPORT_SYMBOL_GPL(mptcp_pm_get_add_addr_signal_max);
+-
+-unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk)
+-{
+-	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+-
+-	return READ_ONCE(pernet->add_addr_accept_max);
+-}
+-EXPORT_SYMBOL_GPL(mptcp_pm_get_add_addr_accept_max);
+-
+-unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk)
+-{
+-	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+-
+-	return READ_ONCE(pernet->subflows_max);
+-}
+-EXPORT_SYMBOL_GPL(mptcp_pm_get_subflows_max);
+-
+-unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk)
+-{
+-	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+-
+-	return READ_ONCE(pernet->local_addr_max);
+-}
+-EXPORT_SYMBOL_GPL(mptcp_pm_get_local_addr_max);
+-
+ bool mptcp_pm_nl_check_work_pending(struct mptcp_sock *msk)
  {
- 	return pm_nl_get_pernet(sock_net((struct sock *)msk));
- }
-+EXPORT_SYMBOL_GPL(pm_nl_get_pernet_from_msk);
+ 	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
  
- bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
- 			   const struct mptcp_addr_info *b, bool use_port)
+-	if (msk->pm.subflows == mptcp_pm_get_subflows_max(msk) ||
++	if (msk->pm.subflows == READ_ONCE(pernet->subflows_max) ||
+ 	    (find_next_and_bit(pernet->id_bitmap, msk->pm.id_avail_bitmap,
+ 			       MPTCP_PM_MAX_ADDR_ID + 1, 0) == MPTCP_PM_MAX_ADDR_ID + 1)) {
+ 		WRITE_ONCE(msk->pm.work_pending, false);
+@@ -404,6 +372,7 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
+ 					      bool fullmesh,
+ 					      struct mptcp_addr_info *addrs)
+ {
++	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+ 	bool deny_id0 = READ_ONCE(msk->pm.remote_deny_join_id0);
+ 	struct sock *sk = (struct sock *)msk, *ssk;
+ 	struct mptcp_subflow_context *subflow;
+@@ -411,7 +380,7 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
+ 	unsigned int subflows_max;
+ 	int i = 0;
+ 
+-	subflows_max = mptcp_pm_get_subflows_max(msk);
++	subflows_max = READ_ONCE(pernet->subflows_max);
+ 	remote_address((struct sock_common *)sk, &remote);
+ 
+ 	/* Non-fullmesh endpoint, fill in the single entry
+@@ -514,9 +483,9 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 
+ 	pernet = pm_nl_get_pernet(sock_net(sk));
+ 
+-	add_addr_signal_max = mptcp_pm_get_add_addr_signal_max(msk);
+-	local_addr_max = mptcp_pm_get_local_addr_max(msk);
+-	subflows_max = mptcp_pm_get_subflows_max(msk);
++	add_addr_signal_max = READ_ONCE(pernet->add_addr_signal_max);
++	local_addr_max = READ_ONCE(pernet->local_addr_max);
++	subflows_max = READ_ONCE(pernet->subflows_max);
+ 
+ 	/* do lazy endpoint usage accounting for the MPC subflows */
+ 	if (unlikely(!(msk->pm.status & BIT(MPTCP_PM_MPC_ENDPOINT_ACCOUNTED))) && msk->first) {
+@@ -621,7 +590,7 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ 	int i = 0;
+ 
+ 	pernet = pm_nl_get_pernet_from_msk(msk);
+-	subflows_max = mptcp_pm_get_subflows_max(msk);
++	subflows_max = READ_ONCE(pernet->subflows_max);
+ 
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+@@ -664,6 +633,7 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ 
+ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ {
++	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+ 	struct mptcp_addr_info addrs[MPTCP_PM_ADDR_MAX];
+ 	struct sock *sk = (struct sock *)msk;
+ 	unsigned int add_addr_accept_max;
+@@ -671,8 +641,8 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ 	unsigned int subflows_max;
+ 	int i, nr;
+ 
+-	add_addr_accept_max = mptcp_pm_get_add_addr_accept_max(msk);
+-	subflows_max = mptcp_pm_get_subflows_max(msk);
++	add_addr_accept_max = READ_ONCE(pernet->add_addr_accept_max);
++	subflows_max = READ_ONCE(pernet->subflows_max);
+ 
+ 	pr_debug("accepted %d:%d remote family %d",
+ 		 msk->pm.add_addr_accepted, add_addr_accept_max,
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 8529b3ae55e9..c38a2126071b 100644
+index c38a2126071b..88f5b422f941 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -1026,6 +1026,23 @@ void __init mptcp_pm_nl_init(void);
- void mptcp_pm_nl_work(struct mptcp_sock *msk);
- void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
- 				     const struct mptcp_rm_list *rm_list);
+@@ -1043,15 +1043,13 @@ struct pm_nl_pernet {
+ 
+ struct pm_nl_pernet *
+ pm_nl_get_pernet_from_msk(const struct mptcp_sock *msk);
+-unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk);
+-unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
+-unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
+-unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk);
+ 
+ /* called under PM lock */
+ static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
+ {
+-	if (--msk->pm.subflows < mptcp_pm_get_subflows_max(msk))
++	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
 +
-+struct pm_nl_pernet {
-+	/* protects pernet updates */
-+	spinlock_t		lock;
-+	struct list_head	local_addr_list;
-+	unsigned int		addrs;
-+	unsigned int		stale_loss_cnt;
-+	unsigned int		add_addr_signal_max;
-+	unsigned int		add_addr_accept_max;
-+	unsigned int		local_addr_max;
-+	unsigned int		subflows_max;
-+	unsigned int		next_id;
-+	DECLARE_BITMAP(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
-+};
-+
-+struct pm_nl_pernet *
-+pm_nl_get_pernet_from_msk(const struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
++	if (--msk->pm.subflows < READ_ONCE(pernet->subflows_max))
+ 		WRITE_ONCE(msk->pm.accept_subflow, true);
+ }
+ 
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index cabe856b2a45..8d63df5ded50 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -893,6 +893,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ 
+ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ {
++	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+ 	struct sock *sk = (struct sock *)msk;
+ 	u32 flags = 0;
+ 	bool slow;
+@@ -910,13 +911,13 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	/* The following limits only make sense for the in-kernel PM */
+ 	if (mptcp_pm_is_kernel(msk)) {
+ 		info->mptcpi_subflows_max =
+-			mptcp_pm_get_subflows_max(msk);
++			READ_ONCE(pernet->subflows_max);
+ 		info->mptcpi_add_addr_signal_max =
+-			mptcp_pm_get_add_addr_signal_max(msk);
++			READ_ONCE(pernet->add_addr_signal_max);
+ 		info->mptcpi_add_addr_accepted_max =
+-			mptcp_pm_get_add_addr_accept_max(msk);
++			READ_ONCE(pernet->add_addr_accept_max);
+ 		info->mptcpi_local_addr_max =
+-			mptcp_pm_get_local_addr_max(msk);
++			READ_ONCE(pernet->local_addr_max);
+ 	}
+ 
+ 	if (__mptcp_check_fallback(msk))
 -- 
 2.35.3
 
