@@ -1,50 +1,50 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2087.outbound.protection.outlook.com [40.107.6.87])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2065.outbound.protection.outlook.com [40.107.22.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6512612D
-	for <mptcp@lists.linux.dev>; Tue, 14 Nov 2023 06:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA0E612A
+	for <mptcp@lists.linux.dev>; Tue, 14 Nov 2023 06:40:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="xoQB7dTr"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="26vrFSrz"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VMthuBynYIFUUQcRhqEjF8TY9lcYjsI/zS1K2rRSuBX12KOG7RZsH7ELlAVJUN4mt5kcdFm/B4GyERv/+Zsu+L8r3znH+ZUsa+/gSGED60aCmwfeYDsyutIwQ7cK0XNTpp6qSsECK1SYxi8LsU/bWdvFDqkxB/8otLf3Zwi5WrXRjqNAFQBlAvoiGXS3dcdYAwmY7kO/wDLNar1p869JiUUk3K9VPqUE/arhZQ/uE/D9qOdo3NU8Ar1876cZbPvpRlL2nvR5Umlfb19lKo+2jBCzxsUosmAQKBdtXuK9vPG+WbMYyHii1cwpYtQ0eaHJWS2yvHed4v7SV6PsJM8jbA==
+ b=Ob/Y8v8tpdEUAoa5Wy6M1HBqoK/L6TgbDecpJIRWVJmwZuXzM8alD3at+/NbMfz5vnKcnG3C2Zmvi5oHSnuo1k0OLPh16ESkQ+u+eZ8HnOUiRZf9Brk9/fundWghaRj02aChzZhtxCYonS75VfQwUdxnssw8zJSHC9nXQ8bOhjsusrEptgX6RYz7Fe3nuX1Zm9wP1yl7JuRCz2OUiNSJXDf7yjwdvTFht1S4Yx1tbWRxy9OnlSIrrnV4UG7dfG9Q4JeTti919cX2MHr1ZDcPVK4dWIYVug2TjsmI77Zt4wCxOPerPjFtgmitU/8I0RgprdbesNvT8n5qxgoqGVG50Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZiPIx91PM4eFoIGvm9qwP2zqSLV31oIvgLoyNyBYWug=;
- b=Of+RBJ5I0VFb+GUT4VnXGndsGeaZrdRKEJh9dDnN0SnH8IlAWo52fJHRA7f7UIVoRpoT8fOtu0hExo5sY6hLVJYPlsy/MrQK8beAj6iBAWzesNkgeuuFBcwJ8sPIgGQgeAXxs13xD2UohPRqt1PBcNUPWk6xf8SIxzaTiOeVWt7kuXETNzFDP0F0cqFmnTiqdYsw7d8Jwa9QRJbgGo2wbgrYS0eGJwdvkISS02F537KaHRDQlI1h73gQj4Q0CVig2Dj1NfeYurR3BS8vj6r+KKpvP8WDGCggEv5uzk7tKqHQrdt0wWCoDGlNT319xQ/PlVIog+UgznEAapKKxtRobQ==
+ bh=zYr1NMFMKvfGcN0MRxRaig0LTgbAKiIHMgkQ7i4xZF0=;
+ b=IzQKKpejcRwMsA34ihEsjLpDne7BWzYZ104h1ZJjTqrQpxQJN5Zf63Pk+LhlYJSizZvuH6vwUVE0aYFo6+xbzW6Szn7T6oS0KrSfIqHlnIvF+kpccbFlrmmY1lJ1KUl+u7tJTZXenxh4G0ifG3vXlMnENFowKqk94Fr0lx5gSlwETLY+AKVoHHgLHihiysFgY6bOGSe3V2rn2IAwkJTPuL1/BivgZCXnP2T2Y9W4VX1cA8+mJ2v1efU/S5rSBiNalwsVyM45k0UPhGCvqpCWrqeXlHb/x9+I1Jlahc98UXBUlOmSK64Bqi2AxvBQGpzPVkihYVBbwy5ywReN0zJBeg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZiPIx91PM4eFoIGvm9qwP2zqSLV31oIvgLoyNyBYWug=;
- b=xoQB7dTrVUa5QXKes0fiC0G4vAb/fftJG5Df7g/ghhvcxRQ2X4Sl9mF0TIZJl8AitAgQXN4cqTVrAMXlCS3nS05O/K2kwXnPL638d1189zF2cIQgnLUU5V8jHB7mHjyqlM6febUHF0VoKkvBgVjpWk2IfSyfXpzyv3Xpdy1/WRBLx63Xfbcz15zIYMlQ1ML0un7GWr9scTKHUUISe0epqQugHqVrYfSlNOcKpO7CV7gkEGWCkkzUWtGe2sqW1izx3KfKlO7iIDBK3C2p+FJOUYzp0eawxaqgVnFF4XrO9sRyMgRj84dmLXWMIUeV09h+TBGAGGqUhnexIK2Kjz5y3g==
+ bh=zYr1NMFMKvfGcN0MRxRaig0LTgbAKiIHMgkQ7i4xZF0=;
+ b=26vrFSrzKHlX84ucrMGRhM6Bq0COwEvFXucammE5/dJ02B/wdomwkDwQGhVGrov0iLJNIK6uQfbpd+vhCBthZFxZYeoIC4CIrv/+PX6r3XE+PMrKBphewnrzhe//hKGswZDefpJJiwV1ljfKWL+UpTqDEhPwI1S03hqIUJXSQoD65+pplmF2lVpPHmHYh/apKlpG8cjdI1T1POhFs0vMPzihJVY2GPynF8CSvES4gxdKaLqKn0Vjp5p3stu5zYDxXlxEhRPj3V8W7W9GyH7OntBiqycbnKxdYopPBgDAPjJjIPtKgABCXOWlX9qQ5FRe6HSjeuzh9L6k/SrB0jEBUQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by AS8PR04MB8932.eurprd04.prod.outlook.com (2603:10a6:20b:42f::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.17; Tue, 14 Nov
- 2023 06:40:42 +0000
+ 2023 06:40:49 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::7102:259:f268:5321]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::7102:259:f268:5321%7]) with mapi id 15.20.7002.014; Tue, 14 Nov 2023
- 06:40:42 +0000
+ 06:40:49 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v2 22/32] selftests: mptcp: sockopt: print out test counter
-Date: Tue, 14 Nov 2023 14:35:41 +0800
-Message-Id: <fa1bc505a2eeeaf89379ab487811d9693f8c0b0c.1699943337.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2 23/32] selftests: mptcp: netlink: print out test counter
+Date: Tue, 14 Nov 2023 14:35:42 +0800
+Message-Id: <35afa66e1298c8910c5de48c9cffa811f0275883.1699943337.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <cover.1699943337.git.geliang.tang@suse.com>
 References: <cover.1699943337.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TYCP286CA0048.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b5::11) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: TYCP286CA0251.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:456::20) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -54,138 +54,90 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AS8PR04MB8932:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7a83927e-3efa-4a17-3f70-08dbe4dc9f19
+X-MS-Office365-Filtering-Correlation-Id: 8dcc254c-0a4c-41d6-2fb5-08dbe4dca37c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	kKaIAUbzO/mzMkihv/fdGFaTeWehNAfUXzeflvhNpUgbahkywGe38zNlnd4DgEoSD+Np+8mjaeCkmVqCllPwQBJOY4vY7JTydZrLiISazjlVyd8J/coTAK6+sKRN6dY4nY9A4DAW4kBXgk0ig9FguQ13JXNH+zxoxFQuzkM01MTTdt6V9606n94mLzNaaCr89iYULTng2VuxpfBqYSE7r1dfCFg3cGjxiwIT/1YxSaLmT71yg+Vl4Q8p1VWml+2KUu5MhXD7BuHeZM86w8HsfKke+53fYJbmNGIt/TmLemmoou0dRxImuthx8YAET3Fz0tmYNPj1ytdqDDcqzhhM7Dm7ADQq4MNhBwGc0dw+IY7mD6rE0l08QCft3XOY3dVnK1+BFRgRBtmnUwG95Ov+zi5mfgEbZsgDIBqS6TLVH0hC52YCHdtBMpZ8vbeK81WfjAImaeDZf+ijmFRSYcsdUDQbq58DQ1lZa5NbnglNfbNrQrX16L8GYAsIutwGGcu5+slCpVAjIghssKkdKPnesXZvIy0DvBM1d0+I9t23gJfTud81PCFkULSY3sBZG0Jx
+	wScCKtDjrKwqn7A8rlzEetoSEQhg9E17Ln1KhqtSkiOnvu7QHcVdNMDTF4hVecKGQDAdLD7Rzm2zug21mwA0RGDSFjz7dnKuUQWsE018tF+UetQB40J0sYOBJsxuBYknsITtVL3d5xjIOZULDUt2P9otvHkNEoXhgvtN/Vc6FI5FksICVby/iTppi+4c+WgrB6HQbQdmdf3ZlLOywTKhZj20hh8Rizer2ajpmxxH/vlI/IHbntbBZ4+ZZ2tWpbeTHn2rEIZ0y1CDT/TmnMpJaFb/OP3fjFMvaVzfWKLTtrd6gQhPrhItaL9a1563MZQyO8N9waLEDHGjdZvhiqDgV8Jmo6rwQhqQ75KzHD3jfNl58EhGIPfBt6ZcOQWY/SulxNtHQ+9kOwRbML87uqI29wk7NKGvU8aeP/coqV7yeDQrgbWaRv+6Cu0/B9KiYBG6jAjcA7LLknlG1sWRJlE6KuYAIGTEl15Xg3ypjqqP+COpwljDjba5LxXaLMik6ySOTrJSgns+iclulVe5lwTYa/KTEQMj/gJwbmVa3JNbwMKr5FDxalfWk0EXbusB2spS
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(136003)(396003)(376002)(366004)(230922051799003)(451199024)(1800799009)(64100799003)(186009)(107886003)(5660300002)(2616005)(26005)(6506007)(6512007)(44832011)(83380400001)(2906002)(478600001)(41300700001)(6916009)(66946007)(36756003)(316002)(66476007)(66556008)(8936002)(4326008)(8676002)(6486002)(86362001)(38100700002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(136003)(396003)(376002)(366004)(230922051799003)(451199024)(1800799009)(64100799003)(186009)(107886003)(5660300002)(2616005)(26005)(6506007)(6512007)(44832011)(6666004)(83380400001)(2906002)(478600001)(41300700001)(6916009)(66946007)(36756003)(316002)(66476007)(66556008)(8936002)(4326008)(8676002)(6486002)(86362001)(38100700002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BXGWIlJOUk9YJ+iDUuAP3+AI/Uwyjq3AV+6FzOJUcp3OdhGht4izEUVP9NQc?=
- =?us-ascii?Q?10ZW0R+MYi6B4KJlz739j2RKA185nSVtPLO+/d4PX/c9xQnihtebWNe4f0sm?=
- =?us-ascii?Q?XIovRaIYS2sUp1v9RTC9Tu2KksDc9yRz1e6BazXmpQbp8qdogB1qV4kEBPwo?=
- =?us-ascii?Q?Mm2BP3ok4CFsoF4IW3drJqyLBQFVh6YJHe576B5oNpWyGuJ/voQ6uIBcAVgN?=
- =?us-ascii?Q?hE7CVv0UGufI1uaBujZU0invwvFr/y8zV87rceGh0JsJ8WyFnDxfVik8/QdJ?=
- =?us-ascii?Q?S5UB4JpCZAvOolbltUHFgj4NiVuyXDMMhAKGUrNr7Mp2Uj0bDnfsqoqYDwOb?=
- =?us-ascii?Q?ZOB3tvN/dps7J+VwJP7B9YWSzYBCOZDaT5KWGkgChvlkkmHYPhTJ6HqixxD+?=
- =?us-ascii?Q?pFqXcj0qxy54nwW195CFYwWAEEdT9WOlqDEwwcPDSdQ+EMZ78nKuraPsGD7E?=
- =?us-ascii?Q?hfsh6iShBXJp3inqLwo0UodiJHhzUuU9wk4O0YlYgc53krGUOIbg7RjRuDv0?=
- =?us-ascii?Q?jrHBZxxS0WTlpoT+OJYUxibapqdS0FpM6H/zAB//v9cumfMXzHPcZjSjNRvN?=
- =?us-ascii?Q?bxhyo//rOnNsz2CVlzBWVz9stQKS1bh9qu8eaD9/d/gYEob49wUTy1t/vNbo?=
- =?us-ascii?Q?ZMEjxiGKHnd+bxkRpPsNS8hTzfxmdEniKtWvVpxcQNOl8LsRiaUs6UAyeMtQ?=
- =?us-ascii?Q?MFJqdlfNy/rgrTkNf2YVlZtMU7RIx1T/PUEcUsRQYcm7jvuEtk2w5iNiyP1E?=
- =?us-ascii?Q?+tFfHNl8dYNnoCf9Ooqvz/h38w50xQk0LakDPZ5nRE5Kl16hKob032gSzfjX?=
- =?us-ascii?Q?nYIQqAx6mrBfDJDB2nX4TFY79HhFCGP1SFCY3Z/0UyN6yHxb/8N54tnoaBtm?=
- =?us-ascii?Q?xOk9AL42TDUQJwqpQLrQbo37OzS3/qRhl2tzn4TuARPPNSZiCYEep/t7D4l4?=
- =?us-ascii?Q?T3YvQqQR1rBzcFBfZQRUEFyz9NSNysM68Z6/nBZTmg/ynxiuySG5wUj0SHOe?=
- =?us-ascii?Q?i/AcBhSLdiTo5rIeMHoZH9cXVElVYz0LCnPKIlxkx0nl4oXu+C7e0RccOsEJ?=
- =?us-ascii?Q?LXglf5eA0KDk8u61MF1HS1hQip9WwluJcH0kGUTw5rhIXAcr/Eh1xhVOEmKo?=
- =?us-ascii?Q?ptv4v3TdS8IgP0hxUEmrqhqazipC4Zo6Fzhw2ZTdylsYtHakHXTjNiSU5lcE?=
- =?us-ascii?Q?izetpM3lnZu/pAjOSs5p09L1mSDs4wBXBaojTV7j7+4TKleA1rARnGEFVmvM?=
- =?us-ascii?Q?BUDiXEm9Qbk5FdVSSvNp4e6H8UkTJHoDZufkd0TNRJPQVYJX3q7rvGbwJT0d?=
- =?us-ascii?Q?frdbR5t7o8ja4n6dgj5Kp7wG0OvS03lrN6KvrqrQYfz/TR1Oz5Yx3FlTVzfv?=
- =?us-ascii?Q?6a9lQx4sh12CNgP9XcKlFqArHYZte9r9W8uSgOZG+dpKGFHS6pDKIsHirE7F?=
- =?us-ascii?Q?VFkmKZGXfPhtM74melfXMeThvqtIVLc+OOYn52dQU3yUoA0rQdKZGmdPxA1E?=
- =?us-ascii?Q?RL+KTyb2QmFUlrF+tf39GHW1QnNud3DH50qAq7/XCU7Ge7jW1t5zuO5AaCBm?=
- =?us-ascii?Q?M2ow2IR9QXTiabLEw9CjYQyOmZEA4OiVn2QN4iW0?=
+	=?us-ascii?Q?U3AdGCnAM7LbGZux6LBDkPo6cdxZPJ4F2+Kg2yFfx/r2KVIIAaM/QrC7NAqo?=
+ =?us-ascii?Q?TPyXCMayEDVrGGG+6GukByk7+ihLt7XcpH1R0d3JtS6biCTeUJb2lW3v53ox?=
+ =?us-ascii?Q?AFqyy5Gyp//yZqIo4a6TsH3+dne56ghgT/Be4NdUsXTgOSxxbRCtLwiOtgKC?=
+ =?us-ascii?Q?AgTohCJQg461/cOQHNFLM1yuGXbAc01PfGkFTFXNginQa/xCOXgFu+8aoZzz?=
+ =?us-ascii?Q?ETpD1aozrxbFVLRUdQIcPPqmxN/u6HEJyRiSzsvLHVE/i+WtzeifWp98a6Le?=
+ =?us-ascii?Q?PwlZIx1KCJl6Md8Em9b3CxWeNf2nZaWw0asoTzIEIoSKOpbduxokZB8/nlqm?=
+ =?us-ascii?Q?VlUoCi2hM4gT96AI1fxSAngLFbli9BVK09MTNFK7j9CInFMPIT43kOOmLpEK?=
+ =?us-ascii?Q?U5RGHVYibTlU9ygB8AEhBdD3A7pCaovYn49pnmXByLO5w8ENKoFWcKYBYBlA?=
+ =?us-ascii?Q?miCQt9jhYJE6Td2TIjvChV6+ccW4WKpEEV2DbFUZEX05PrxW1Kqt+Q4CuY7f?=
+ =?us-ascii?Q?2/EG+YX0biOFCxRYfIgXoadtyg1RbYGAi6KK68OvCwsFjssNitJFspbn6ItA?=
+ =?us-ascii?Q?xPEJbM0Wza7nv9Y7Fji2IlTEKUkLzhRjAjFTptNm687xauBPGlXSTplrJMq8?=
+ =?us-ascii?Q?CsGVPASlFfTRjsSO2Id4k6EnA+fjuDxhLZjNkAEBpG3N9cW1pz/LtugV1U/w?=
+ =?us-ascii?Q?sI9Kdx9KnelqSV59HsMZVjHUjfp9qm0kes0jlBC/sM7QuxAaeksO3CQlcUcO?=
+ =?us-ascii?Q?u/ke36HN5kLvLcd6/oKIAYG/0kFKij2lMEqWVk7QEqhXyTY47IEDxxmZkiBX?=
+ =?us-ascii?Q?VxZ8GK3qy4LNMBslWZeZEC3BaGvJ+J/XAvmXOvikoZMssS7Q3WwVDcjtYD4t?=
+ =?us-ascii?Q?3y5PfCu41iSkEOhXKcCFjVSALjKHDqZ1JS229jGUjPOYCmwqDLiqmpNnJvdG?=
+ =?us-ascii?Q?ZA2LRABviS47jfeqIXqPPKIpjkIdY/z5FDtLF62rE2UIJnpyDlxlLUYR9psy?=
+ =?us-ascii?Q?Cv+Q7r74u5miZYLyVyUMTRENtn590uTensrWhLoRG9GSY6x5pKOpEDA0PvAx?=
+ =?us-ascii?Q?oLNE8M1cTKj2583ULsiZmi99ns15vHuCv4J5A/aHdu/T+KM+EecyOswWtaI0?=
+ =?us-ascii?Q?GT8LHWKA047D9j0ZWxcJ4jTNNVUOT2ow+/qPcc6lay1StnXTQyYdZOkv2zci?=
+ =?us-ascii?Q?R/70nQ5603EivORv6RZ5xejLp5JCiZREWlWWREUo7v7RmIAu69paPXsv9+eP?=
+ =?us-ascii?Q?tyfHoRBK0hH4ylYm++POgNFCmeLjTL9LdxRn91eWlXOj6I0LcAwIUv64+sQc?=
+ =?us-ascii?Q?gsH7RhtvUlQvcqC/7IQPMBwOL8jLJ/nhciq5cAex61WzArBPXXi8wH6jw7+G?=
+ =?us-ascii?Q?l6T2sxG8xt6ghnbYaTHiNtOzArWCHsvZzZGYkwm0P46lrBX4cMU8Edkwa1rs?=
+ =?us-ascii?Q?oE+03QRttWtuM1Ix2JFk6smmEadC9t/d4rjVDbnyJU9Yc8vtpnr97XAanKV7?=
+ =?us-ascii?Q?viN9g32FFV9asVVJG3xcHxtKlQNKdwHct6Pcb4YqkvDP2+bSfpI2m2VHdjf7?=
+ =?us-ascii?Q?Q+zt3TXRNRb6XiW5xR3xEC9xJY5Iy+Jdo7QsfOFw?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a83927e-3efa-4a17-3f70-08dbe4dc9f19
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8dcc254c-0a4c-41d6-2fb5-08dbe4dca37c
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2023 06:40:41.9683
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2023 06:40:49.1133
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RUOhKChwrcAyxGkGkTZj+qi9ZfNF0Tr4Juegz6zY4CjljkThJg2noASFSV//xuEguzTDVNOg2epz9vaSsJPAfg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: q4fPMq6P7wOILb7+6sMFEHyiMHFy2eo5zwokGzptRR5MENAqzy+ea3KyLsY03wKdsAF1AEbKXxy5Qms2DAKo7g==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8932
 
-This patch prints out TEST_COUNT for every tests in script
-mptcp_sockopt.sh.
+This patch prints out TEST_COUNT for every tests in script pm_netlink.sh.
 
 The output looks like:
 
- 01 transfer ipv4                                                [ OK ]
- 02 mark ipv4                                                    [ OK ]
- 03 transfer ipv6                                                [ OK ]
- 04 mark ipv6                                                    [ OK ]
- PASS: all packets had packet mark set
- 05 sockopt v4                                                   [ OK ]
- 06 sockopt v6                                                   [ OK ]
- PASS: SOL_MPTCP getsockopt has expected information
- 07 TCP_INQ: -t tcp                                              [ OK ]
- PASS: TCP_INQ cmsg/ioctl -t tcp
- 08 TCP_INQ: -6 -t tcp                                           [ OK ]
- PASS: TCP_INQ cmsg/ioctl -6 -t tcp
- 09 TCP_INQ: -r tcp                                              [ OK ]
- PASS: TCP_INQ cmsg/ioctl -r tcp
- 10 TCP_INQ: -6 -r tcp                                           [ OK ]
+  1 defaults addr list                        [ OK ]
+  2 simple add/get addr                       [ OK ]
+  3 dump addrs                                [ OK ]
+  4 simple del addr                           [ OK ]
+  5 dump addrs after del                      [ OK ]
+  6 duplicate addr                            [ OK ]
+  7 id addr increment                         [ OK ]
+  8 hard addr limit                           [ OK ]
+  9 above hard addr limit                     [ OK ]
 
 Having test counters helps to quickly identify issues when looking at a
 long list of output logs and results.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- .../testing/selftests/net/mptcp/mptcp_sockopt.sh  | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ tools/testing/selftests/net/mptcp/pm_netlink.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index d03f9f9daa39..2aff01813058 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -173,7 +173,8 @@ do_transfer()
- 	wait $spid
- 	local rets=$?
+diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+index 32265d4ecb41..e89b78e7d4a0 100755
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -45,6 +45,8 @@ ip netns exec $ns1 sysctl -q net.mptcp.enabled=1
  
--	printf "%-25s %35s" "transfer ${ip}" " "
-+	TEST_COUNT=$((TEST_COUNT+1))
-+	printf "%02u %-25s %35s" "$TEST_COUNT" "transfer ${ip}" " "
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
- 		echo " client exit code $retc, server $rets" 1>&2
- 		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
-@@ -189,7 +190,8 @@ do_transfer()
- 	fi
- 	mptcp_lib_print_ok "[ OK ]"
- 
--	printf "%-25s %35s" "mark ${ip}" " "
-+	TEST_COUNT=$((TEST_COUNT+1))
-+	printf "%02u %-25s %35s" "$TEST_COUNT" "mark ${ip}" " "
- 	if [ $local_addr = "::" ];then
- 		check_mark $listener_ns 6 || retc=1
- 		check_mark $connector_ns 6 || retc=1
-@@ -236,7 +238,8 @@ do_mptcp_sockopt_tests()
- 	ip netns exec "$ns3" ./mptcp_sockopt
- 	lret=$?
- 
--	printf "%-25s %35s" "sockopt v4" " "
-+	TEST_COUNT=$((TEST_COUNT+1))
-+	printf "%02u %-25s %35s" "$TEST_COUNT" "sockopt v4" " "
- 	if [ $lret -ne 0 ]; then
- 		echo "FAIL: SOL_MPTCP getsockopt" 1>&2
- 		mptcp_lib_result_fail "sockopt v4"
-@@ -249,7 +252,8 @@ do_mptcp_sockopt_tests()
- 	ip netns exec "$ns3" ./mptcp_sockopt -6
- 	lret=$?
- 
--	printf "%-25s %35s" "sockopt v6" " "
-+	TEST_COUNT=$((TEST_COUNT+1))
-+	printf "%02u %-25s %35s" "$TEST_COUNT" "sockopt v6" " "
- 	if [ $lret -ne 0 ]; then
- 		echo "FAIL: SOL_MPTCP getsockopt (ipv6)" 1>&2
- 		mptcp_lib_result_fail "sockopt v6"
-@@ -279,7 +283,8 @@ run_tests()
- 
- do_tcpinq_test()
+ check()
  {
--	printf "%-25s %35s" "TCP_INQ: $*" " "
 +	TEST_COUNT=$((TEST_COUNT+1))
-+	printf "%02u %-25s %35s" "$TEST_COUNT" "TCP_INQ: $*" " "
- 	ip netns exec "$ns3" ./mptcp_inq "$@"
- 	local lret=$?
- 	if [ $lret -ne 0 ];then
++	printf "%2u " "$TEST_COUNT"
+ 	# ${*} doesn't work here since there're spaces in some arguments.
+ 	mptcp_lib_check "${1}" "${2}" "${3}"
+ 	local rc=$?
 -- 
 2.35.3
 
