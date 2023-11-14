@@ -1,50 +1,50 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2059.outbound.protection.outlook.com [40.107.22.59])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2058.outbound.protection.outlook.com [40.107.22.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D50612D
-	for <mptcp@lists.linux.dev>; Tue, 14 Nov 2023 06:39:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25742612A
+	for <mptcp@lists.linux.dev>; Tue, 14 Nov 2023 06:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UsJBrQ7R"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NIdRVl3t"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fBTIQAn4n8J61sLqhdAPpkvC8dge/fvDbsyWbXga7Ni4VP8Y/VKIHmTBBrkoU30QiEBo/BV5eNWcoGPc4dNUfWEXl2ORQFqusGzOYKUE16jwrzck+trRq2rgs/j2ln/1Djkb7eHKuQvLdBYw8oBYtcMKXCDZLyEOON645KAWdtTHEOOHnP1SZy/Pfhb42Gg/64evQry/QvEH/0aG8Yo8arBmIgWlFVXTQyRUS1KPBmjyanrT3957oLoZzeLZ4FxE4zgdGepmwJl2Nnyyi1Rr+HTZ9h6YSSsAuB3a/56smgitDKNpjI7saqCfxGK9ov09K7YRL1cuAj/Zv6yfkD+eDg==
+ b=BpO8QkBdsnKyrW4rwUD7cC7hHK2L9HIk9+Eqh6rIw9pbnxxLzx6c5IMFJm2gpU0F3B37Y89owGrbV4hknYyjanPnSoN8CEQVlXmy7Ml/6tox0mkVMSmiUhT6v4RH67l/9IDUuIz2aHQBp4bfj2RvnQKHv21ydQPk9Q+/iIMptdbButr8CnegM/RgiHwofE9me5uWEZ6cJY6tGrEV/+VjVJ4t/xmtXF2ga549QrHoUs/Y4qP8/WDfGiTlLOiFeiq6RAaY7ubisMw+GV4FZKkzEnvTgu5VZZ3/5O26Er/Op7tK+vbsCa0KsSfpt0B+46V5Jih47noiuyMsBvIOy/kH1g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GByRMhoJmYKTOwoDzD3yf4AzdlJtmvjNU7vpI0qa3p0=;
- b=jTuwa57g5ws71YHn7vLuBDmeS0xKRQkVdYJ3M2s68IlF0MKtp6Y29V+TfDfpVK+wxo7wmt8CPGl4h5T9p3ZlEqoUV0CcTT+vjJOzQKtfQyIr3D1GRobXc1cDvKqdSFDJHtmDlU5dYNdOVJKQLsy0xjaG7/3QvFUbLxFfTqEymClrDWXKQKNxyM/arbZ0je6XDKDhjWUrwM8WqdSIBhH+w/+ie+OpnQwDdAPp5nJ+0+gL/lEFffJSEsa65OfxUSFA9xpwwD/cQy/IaEbpS/NIEkxTsr+tW/svvRkX7EDYsZ7/QL0LdYw59Yw64JCPkXnbL2xvpYkJug6D0wrzvMQo5A==
+ bh=z3pTcZmlnDgqtBPn6QYPKyX74olCJio0G4PnQmr+Rq4=;
+ b=lwpBVz5Q3XBvh3+zSCbI92cSqwYfc7cjXzkFPcq4LcfJifaX1foRZhnQV/XFlq+biweGMuz2r/UZpV6JBb1I09zvhJpkKXEiPVQC6Wd4wES1gcJhR+Btyk7MqaPZb5O+6UV98AGKCPxYJMGOYmoej8ePayCal7gXPE7/Czjy5ER9vVyUlpESw/FXsSOMnzbjKeWZAhAX8qzFEcN1edoJ8fJFGKvHXioGu1WXjSkNm0n0GK41IK7fA8DvdDzzUaU5xc9dBMRgufafdQIi3ZfzUmtXXfxshcqjjAQxuahpS2rFCNCIbgYENBcWPUW9l3X00wYQ2jX48qo2y6acYUi+Yw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GByRMhoJmYKTOwoDzD3yf4AzdlJtmvjNU7vpI0qa3p0=;
- b=UsJBrQ7Rbs9uvTGzlcvz7St1OnXXb9Tj9JA1xmWiDIEFQNVV7wdoGW90CBzs2ZIdfEBPHvXvKQo6je8j+YhlmH3n4jJkbJfy7YHLZs/dMCYx1Po78oKg+EPDBHnfmJuTjUNBI805w2HgT+QdsWf5t/ULeJtPrs6LGv1ViRfAJvq0cG6w5nVd6a0rynwW/oQLXNMA+UWpxWcfwvCwgV/qiqkrYpRSNlYcGhk6StXUboY4tWNpLX9nYxtbm6zeB04kuhXdwgScZKsSaLJXk+fLz9Af8FAaOxYbA7S4r8D7MoTyTMcBZobXJaPRS7Vaj3BpDY5/SAhDIOe3lM/hggiV4Q==
+ bh=z3pTcZmlnDgqtBPn6QYPKyX74olCJio0G4PnQmr+Rq4=;
+ b=NIdRVl3tRl3FZAw+wgIoI+03MxO9BtxWmw5B+DYx1+WkfEhe77wZBbFk+dbV9jIFTAWYbUwFVrWSKeev+Ita2xktJio3uX5tVuKvnS68di0KW8+yI0c8I7vGzBnNgFkSIFV0Gal8Z/LY7xpPXjGDmix+VSD9ReGhF+5oXTj0gkqaC7nnw1ENWhNUGGGhxJktdt7k+UzLpQu2dPW7aPVkBkVA/847tP8AWH10v3PYa8RkLTQu1VJhvOspVvEwj9msEpa5eTCTO69tTrWJ7m6/3POeMr2Ae2sRm063qFxMHb4xacWbfs1ZaBg0hcvX9MALgERSTRIiFYESDS7FTjHQkg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
  by DB9PR04MB8480.eurprd04.prod.outlook.com (2603:10a6:10:2c6::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.17; Tue, 14 Nov
- 2023 06:39:15 +0000
+ 2023 06:39:24 +0000
 Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::7102:259:f268:5321]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
  ([fe80::7102:259:f268:5321%7]) with mapi id 15.20.7002.014; Tue, 14 Nov 2023
- 06:39:15 +0000
+ 06:39:24 +0000
 From: Geliang Tang <geliang.tang@suse.com>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v2 10/32] selftests: mptcp: unify namespace names
-Date: Tue, 14 Nov 2023 14:35:29 +0800
-Message-Id: <16952ce5c8f2b17bfc683940ee96bf62d97a0789.1699943337.git.geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v2 11/32] selftests: mptcp: add mptcp_lib_ns_* helpers
+Date: Tue, 14 Nov 2023 14:35:30 +0800
+Message-Id: <8eda57c54159909bc1ca77d991fe3640f917ae7d.1699943337.git.geliang.tang@suse.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <cover.1699943337.git.geliang.tang@suse.com>
 References: <cover.1699943337.git.geliang.tang@suse.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TYAPR01CA0213.jpnprd01.prod.outlook.com
- (2603:1096:404:29::33) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-ClientProxiedBy: TYAPR01CA0216.jpnprd01.prod.outlook.com
+ (2603:1096:404:29::36) To HE1PR0402MB3497.eurprd04.prod.outlook.com
  (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -54,280 +54,394 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|DB9PR04MB8480:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f0b3acb-9305-4958-c8d7-08dbe4dc6b85
+X-MS-Office365-Filtering-Correlation-Id: 8f5db98d-25ec-4ff5-c2ad-08dbe4dc70b5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	T5j9oB3j6II1lKx453UVVHmkHQ/nvPCnh3ZdDKzDAz/rjGl5uMMSoDTHPvs08Hmap1BcD9v0tBgvcJLyqLeUKLRCMk8cTLTjTbihezHbS14xAzHhuw8Tw+FfZK9dJCp8w3h7ibIW+4e0PCwNb12pvCxOCB/wODtYvnxSzCOVbQqypcjOtkbJKfBoeua+MLNZ+Gu7e9GcEKqJqZbOuPQVLsU5WHpiG7oMfwFzcRCp2jU8HUysQkhxDT4JISADJl+Z9khNbHHfTc/RZ3fZ7cPtQ23sJvHvFFNWe9Yb7MehXTpqkZI2CCtsx1ui1g13LpHe0FaElsrqwT0jpvQViLqD/HbyuVhwhbTrOHjwpPl+FA3DkiXaKJMfKH7UEHaOymzzaUNeajNOs2Rhzbp+3qao2mN51xw1u7n3sdvTSPENoAsBY9HFGHX14xO42V9VQatH/ujm2yIc9YaXShuqeJXOcLE77+NubyhJOjUJbAZJ7t2yeN7X568AzdfHTcxzcu1o2pdxWuJRbGV1wBS/PjkBFbUkSKkBAo9mL8+iUWzbsHmvGS5ol7f9jvwLafoyHkcP
+	rsL83rgprQZXx1cRMaRBmmVpjvP3+jII5nSGY8l73zHXWashubAe8YQHzXiDcWz7fr35UbPEstqD1UsxlOufApFllH9/IusoBZlM199qHw/qMfseD4i5Ug0YFTpGbsHu6UQR/VEbBmal1tItUeHt/2CPifNIbONCowe/wIYq4kUuFe9ZqpZ0o6jWTRLeeDwiQc3u/GRhGwBhgRwYEfydNyC05mTbHbfsUtXhHGM4eRDrN1srC2rcIxR56xWvEqoAELQjDetdixCdVmTvflYLyKDTjPx8wnn+VWtAStq+Cl272wAW+D3Vb2+owJ97Il45LfQjzo6ZDOfq2RW9Lw/hnkT+4/j/DlOGHUa1+TywKcIFujRPpRisiAUSlRPUbrm5H8Mnjx4o0WCOD9qU+Md6la3kEQTZ4qtSjxzgH3jgZYyBJuUGV876rSDEGqtB4nZ2k5Ok2h3oQRUHypaBFPnEjbTWMT/SA2JOqLXbSYEc90NfSjNfqrOPPKLl7FVv0JuDSvFQTLEwiy/eOdk8U2c62jsrmdGs4MuAwcshIN380jf+98d6f0sgDVhCegarGZzg
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(39860400002)(396003)(366004)(136003)(230922051799003)(1800799009)(64100799003)(451199024)(186009)(2906002)(41300700001)(38100700002)(66476007)(66556008)(478600001)(6486002)(86362001)(66946007)(6512007)(2616005)(26005)(107886003)(6506007)(6666004)(83380400001)(8936002)(8676002)(4326008)(44832011)(5660300002)(316002)(36756003)(6916009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?C54b/mXLZ2blXmNagfstdX/9WYumkWJE7AVRWiPjxDPUCbvrxFxPztbnR9V9?=
- =?us-ascii?Q?Y8VSs9FnrZn26jakI1eB6fGg4pi8c755aa9ArJ0SuUZU7f7in7wuT3LKY+cp?=
- =?us-ascii?Q?w/Lb7tsJ3txAyxttY6c36lGm2rdSeRV4oLi7QaqHnFgzhg9cSSg3QKnIjS9/?=
- =?us-ascii?Q?oorSU6raAgfcuI55ccMdw1FX6LBgzkMYS2GkVW4WZXrqbNoEC8zYhFFrj9uV?=
- =?us-ascii?Q?y/hMDwB/XYEMGgU+S7qc2YgpUFQ2D+Nl/NVyrHiDK2fXq9M4hgDTYyHEQikO?=
- =?us-ascii?Q?2zzwsfvID2svEvSAk71wbFe/YZ4i36S71iG3EeLb4azOuLMc+CGginIC5Zk5?=
- =?us-ascii?Q?zO2NxQ11PFv/c3JHomhWQXVn8KajXCSrfl8z/K9pRMp7wAlCScC/Q3jvVhKm?=
- =?us-ascii?Q?cH822SIyuLXrC/VpLOJnqE+cKhfEUboiPqBIRw80yCnnu2zE1ACzVAsCs7tk?=
- =?us-ascii?Q?gQ0xrOzn5g169d+0yarvRcdk6+e2sanSJCjz4Kj1iNluWA7HuEH7K1jRDn2G?=
- =?us-ascii?Q?EXkc3H/IqmrcmemhGMpx/2i/N5bHYQ8ZElJac/XI2JeenCAI1f9EoQ8pVO5r?=
- =?us-ascii?Q?D37c2Wa3YmCyO3pMTiMiN0Lh2o/qrN78O+hbxBUYLg1sDNbVfM9uLFA8S9oI?=
- =?us-ascii?Q?DZGVJ+zr8Uyux4a6kVgvyo6dGx5Srs1a8TXkEV9pJub14Vl23AUzqAxLt1+4?=
- =?us-ascii?Q?c1E9YqdR4xsJNiRTSvhTY9tTjBp/tVzwf7/huZibMNmKt9BTP31hYuc/hDEU?=
- =?us-ascii?Q?++fFtXvh3eQ3XOLG2Px/43c1yM+CEVAZ3brh51Rb3rT7oPiTBSzIjbfciGtE?=
- =?us-ascii?Q?r0AV3j5a5vjuw24+Xu0RCs6eHNiWz823mCUqZtOe3CwKSU/DJGDgOnQvYkwf?=
- =?us-ascii?Q?SlR5vLRXe9EOj3raB9PA9eulnwZOkmB0fDwym2Fhem5/ArLUmcWJC74QeLyW?=
- =?us-ascii?Q?A8vvgFP9Al4BTCu/W2NOuEnIilrt9rJGBot7lGa0g+7i0Ho3BkWfJ6wY6PYm?=
- =?us-ascii?Q?KXP0z31OKBfjxUmcL+9xUeeibjiAmkz6+sZX+96ZdlhS35fiYNAW1hF7nHJI?=
- =?us-ascii?Q?pMuLq6Yu6P0clEpNwXZlln7YQu2dW5g9wrr0qDHZy8PJSY+kDIOyZNqzoudx?=
- =?us-ascii?Q?klhRNFDRMjiEUlTOEPOM2XxirPrFse5KwYT8D8dTZ6yQrnEKx5PbfMq+zxLH?=
- =?us-ascii?Q?+bOMgR/Vnsva2ADw0WKoIl1TLusGGyqygCGiGmsCrB+y60eezdTifkiwYg9A?=
- =?us-ascii?Q?DGstYafQNmtS6D35T5Q9zo89/gs3xLRZxHaNDB4zklSuN7nQ3mbKDvfbtpwX?=
- =?us-ascii?Q?wGW5L5gPne989eP55Spd/MhBE+7R6Qi46ywXArrLCz+4RnMYxt4lJMXTtbnU?=
- =?us-ascii?Q?suHY/NKTuuVa/dXYOGbrjRRYv1eyWV6Z+nDyp0yY6YqMMa4f63NJoJ/rJiXx?=
- =?us-ascii?Q?p//eVpre/Y0ZPsUHLHCYPFL4ZxJuFmnl7q19yUrTrXuqOERrf26kWHr0UpFF?=
- =?us-ascii?Q?pOR7PHRZYodMisCaFvBJY84yI9ed6ynZeeAinmcoUm4Gz56rcdJPZPbKX0cP?=
- =?us-ascii?Q?3wivomAP8ysfeUbAcdYX4jYYThbBS9fUeyaTc7Xx?=
+	=?us-ascii?Q?+eK4H8UCkSHl0L7FvSdvgPx0FQTdfTsh5vh1pdBH8gfCxUV8nkzN+D0SBjY1?=
+ =?us-ascii?Q?KubAvv1Z18B8wu2MWwRCkSCAEKGAemSz1LeM9yqW8WeakvgQlOGmIrSBoCM2?=
+ =?us-ascii?Q?kihty/pGygBiNf5HcIDH9+1EmMrraZfx1fskvGmf/04lCd2VlaNWU73Sx4aI?=
+ =?us-ascii?Q?X5I8M2PgBdA4JaZScCscZlOx4nsZBNJP2MpEmJdX4B6onC7J6ImaLWmdHaL1?=
+ =?us-ascii?Q?zyhO0UUTpKrAly6TT7Lc5yAlTHUIl/89ao/OBybZAsv2/vHIwXeSp+PZLea1?=
+ =?us-ascii?Q?43gPePre5MzaWWsRBpbV2uTBuHl0fHFWDHYnJV4YOZ1wALwBfjJB378pbHnz?=
+ =?us-ascii?Q?sWHjKvrWMOEaagw31/HDwLtukF9z44/ECpF/XY8qezavRftA3ZQbdV0b983O?=
+ =?us-ascii?Q?ref+A1u0c+ztAJc4qSHMDpXiFA17PJn4dv0n+vdM55vqzd+DlO31FgAUMfNr?=
+ =?us-ascii?Q?S/m/ZX3YM+wH97QJh8jUordBrzo1qMpv9Ad21WU8vI2iS9AirXEdSAwUv/Wi?=
+ =?us-ascii?Q?UgyVa6/t5cIuhqrmES0RR0BCW8IvtXKPjE0rdTelJf8Z/LiDkztc/QYJpD7/?=
+ =?us-ascii?Q?tLUPFQhLG7ehWm+c1RbJR7qMqWDnz1Mr9NECTqa7vK1LicNxdLZ8M5h4c6Oo?=
+ =?us-ascii?Q?G3ylXJ9Cn0Dz99nIRGfFFAo+25EJCkVQXY2B9zmKhf2/37fkwEtja1tSlN7i?=
+ =?us-ascii?Q?DADYxj7Xe3m02Cad7EUhmRcBbikGQ49Xk+nAtWvrQbooscIDYjCfWwe0j/7y?=
+ =?us-ascii?Q?ELGM85G65AnppHHMIK2CUeNjrINR7Hz1M69eIpOxV4f1JrrgfK4PaBl8MrMj?=
+ =?us-ascii?Q?Y7+JDy4DlSvpOzyvcFpO2JvoLQiG6SVFPKmfPLJpowS/PljXz2g3O1XlscRk?=
+ =?us-ascii?Q?T27l3Pe5cizSr4skwNGnk39nZo8hx31ik71l0bwgAcepKDl5MLPyDu8vQeiK?=
+ =?us-ascii?Q?hvzYMu8bYEXOOHNfHLYkJoB1ZKLAdjvfsSRDWLJUlx6N6EBKr3PMDT7GU9ae?=
+ =?us-ascii?Q?K3WppOjjtW43P/JGnPfRfJ5dW1iB/RI70BSrpFbtXhn0ofFOpMLV5O282fVh?=
+ =?us-ascii?Q?PHvccnx8KVPjgUDn5HfNinpNylPUNPcuzcqXfLg2KNQklLIy4soaT6Oh+KeK?=
+ =?us-ascii?Q?EACFTEdopJ6lQuvKj75YtbhHpwDUoV5uLFWIBtIACv2iqQZ+AxSpv54iMkTl?=
+ =?us-ascii?Q?LsCqTki1PdfDust7A8BVWV+SVnXUfAUp+f/xgZTkCh51EdpESdiEVKjZ/X1c?=
+ =?us-ascii?Q?yADyOnCmYVbBStlzsYLkR2vh5AZpW9BK1ekCKhhTEGLXkB7Z+IdkLU6ekcKN?=
+ =?us-ascii?Q?lU8+kSBX4St6jeqX5UPYAShhYd6mhVMuhepEB5skCLitAXmmyAM636xWoUpF?=
+ =?us-ascii?Q?Cp0deANV3rNVuQXbPFeXcBfFdw0pi78IATmtfXURcpfTW/ytybUbSarbwnFO?=
+ =?us-ascii?Q?a8fm76louUSCflBycv3YgnhhUlzPuoBScRFu6SRu3uxfeg9PZX94RNeVWvzm?=
+ =?us-ascii?Q?OYgR5KSYlauKqxNRFnC6K0NhsSdVpTFi5XNSftsZeCAqToh01b4AWQM0mV2s?=
+ =?us-ascii?Q?aVYtcqp6F1UM2dCuC9DaV0TlMDFDw+nOHRJHIpw8?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f0b3acb-9305-4958-c8d7-08dbe4dc6b85
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f5db98d-25ec-4ff5-c2ad-08dbe4dc70b5
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2023 06:39:15.4802
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2023 06:39:24.1818
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NUtAf+mRakstdjC9R8gk8MDJKYcI+7eRbHlXk/0qI4MSoZZkjMFNvD0QXbVd56a7Fvws5wM4TeY9c4/1M2dNbw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: kDxUT0Q9/3RJCSHkee0FnHfSe8/x9pgIsSajCoC6Tk6EaIFZnXL7nXuev22BAqjT8xGmI9YSQWGfkDzWW4FWfg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8480
 
-Most scripts use ns1, ns2, ns3 and ns4 as namespace names, but ns and
-ns_sbox are used in diag.sh and mptcp_sockopt.sh. To maintain consistency
-with other scripts, this patch renames these variables:
-
-    ns        -> ns1         in diag.sh
-    ns_sbox   -> ns3         in mptcp_sockopt.sh
+Add helpers mptcp_lib_ns_init() and mptcp_lib_ns_exit() in mptcp_lib.sh to
+init all namespaces ns1, ns2, ns3 and ns4. Then every test script can
+invoke these helpers and use all namespaces.
 
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 ---
- tools/testing/selftests/net/mptcp/diag.sh     | 46 +++++++++----------
- .../selftests/net/mptcp/mptcp_sockopt.sh      | 12 ++---
- 2 files changed, 29 insertions(+), 29 deletions(-)
+ tools/testing/selftests/net/mptcp/diag.sh     |  8 ++---
+ .../selftests/net/mptcp/mptcp_connect.sh      | 18 ++--------
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 19 ++--------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 36 +++++++++++++++++++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      | 15 ++------
+ .../testing/selftests/net/mptcp/pm_netlink.sh |  8 ++---
+ .../selftests/net/mptcp/simult_flows.sh       | 18 ++--------
+ .../selftests/net/mptcp/userspace_pm.sh       | 13 ++-----
+ 8 files changed, 50 insertions(+), 85 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 300aec419dd6..bc3f24c454be 100755
+index bc3f24c454be..3119811018fc 100755
 --- a/tools/testing/selftests/net/mptcp/diag.sh
 +++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -5,7 +5,7 @@
+@@ -3,9 +3,7 @@
  
- sec=$(date +%s)
- rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
--ns="ns1-$rndh"
-+ns1="ns1-$rndh"
+ . "$(dirname "${0}")/mptcp_lib.sh"
+ 
+-sec=$(date +%s)
+-rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+-ns1="ns1-$rndh"
++mptcp_lib_ns_init
  ksft_skip=4
  test_cnt=1
  timeout_poll=100
-@@ -17,19 +17,19 @@ flush_pids()
- 	# give it some time
- 	sleep 1.1
- 
--	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGUSR1 &>/dev/null
-+	ip netns pids "${ns1}" | xargs --no-run-if-empty kill -SIGUSR1 &>/dev/null
- 
- 	for _ in $(seq 10); do
--		[ -z "$(ip netns pids "${ns}")" ] && break
-+		[ -z "$(ip netns pids "${ns1}")" ] && break
- 		sleep 0.1
- 	done
- }
- 
- cleanup()
+@@ -29,7 +27,7 @@ cleanup()
  {
--	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGKILL &>/dev/null
-+	ip netns pids "${ns1}" | xargs --no-run-if-empty kill -SIGKILL &>/dev/null
+ 	ip netns pids "${ns1}" | xargs --no-run-if-empty kill -SIGKILL &>/dev/null
  
--	ip netns del $ns
-+	ip netns del $ns1
+-	ip netns del $ns1
++	mptcp_lib_ns_exit
  	mptcp_lib_cleanup
  }
  
-@@ -48,7 +48,7 @@ fi
- 
- get_msk_inuse()
- {
--	ip netns exec $ns cat /proc/net/protocols | awk '$1~/^MPTCP$/{print $3}'
-+	ip netns exec $ns1 cat /proc/net/protocols | awk '$1~/^MPTCP$/{print $3}'
- }
- 
- __chk_nr()
-@@ -83,7 +83,7 @@ __chk_msk_nr()
- 	local condition=$1
- 	shift 1
- 
--	__chk_nr "ss -inmHMN $ns | $condition" "$@"
-+	__chk_nr "ss -inmHMN $ns1 | $condition" "$@"
- }
- 
- chk_msk_nr()
-@@ -104,7 +104,7 @@ wait_msk_nr()
- 	msg=$*
- 
- 	while [ $i -lt $timeout ]; do
--		nr=$(ss -inmHMN $ns | $condition)
-+		nr=$(ss -inmHMN $ns1 | $condition)
- 		[ $nr == $expected ] && break;
- 		[ $nr -gt $max ] && max=$nr
- 		i=$((i + 1))
-@@ -143,7 +143,7 @@ __chk_listen()
- 	local expected=$2
- 	local msg="$3"
- 
--	__chk_nr "ss -N $ns -Ml '$filter' | grep -c LISTEN" "$expected" "$msg" 0
-+	__chk_nr "ss -N $ns1 -Ml '$filter' | grep -c LISTEN" "$expected" "$msg" 0
- }
- 
- chk_msk_listen()
-@@ -169,7 +169,7 @@ chk_msk_inuse()
- 	local msg="$2"
- 	local listen_nr
- 
--	listen_nr=$(ss -N "${ns}" -Ml | grep -c LISTEN)
-+	listen_nr=$(ss -N "${ns1}" -Ml | grep -c LISTEN)
- 	expected=$((expected + listen_nr))
- 
- 	for _ in $(seq 10); do
-@@ -197,24 +197,24 @@ wait_connected()
+@@ -197,8 +195,6 @@ wait_connected()
  }
  
  trap cleanup EXIT
--ip netns add $ns
--ip -n $ns link set dev lo up
-+ip netns add $ns1
-+ip -n $ns1 link set dev lo up
+-ip netns add $ns1
+-ip -n $ns1 link set dev lo up
  
  echo "a" | \
  	timeout ${timeout_test} \
--		ip netns exec $ns \
-+		ip netns exec $ns1 \
- 			./mptcp_connect -p 10000 -l -t ${timeout_poll} -w 20 \
- 				0.0.0.0 >/dev/null &
--mptcp_lib_wait_local_port_listen $ns 10000
-+mptcp_lib_wait_local_port_listen $ns1 10000
- chk_msk_nr 0 "no msk on netns creation"
- chk_msk_listen 10000
- 
- echo "b" | \
- 	timeout ${timeout_test} \
--		ip netns exec $ns \
-+		ip netns exec $ns1 \
- 			./mptcp_connect -p 10000 -r 0 -t ${timeout_poll} -w 20 \
- 				127.0.0.1 >/dev/null &
--wait_connected $ns 10000
-+wait_connected $ns1 10000
- chk_msk_nr 2 "after MPC handshake "
- chk_msk_remote_key_nr 2 "....chk remote_key"
- chk_msk_fallback_nr 0 "....chk no fallback"
-@@ -225,16 +225,16 @@ chk_msk_inuse 0 "....chk 0 msk in use after flush"
- 
- echo "a" | \
- 	timeout ${timeout_test} \
--		ip netns exec $ns \
-+		ip netns exec $ns1 \
- 			./mptcp_connect -p 10001 -l -s TCP -t ${timeout_poll} -w 20 \
- 				0.0.0.0 >/dev/null &
--mptcp_lib_wait_local_port_listen $ns 10001
-+mptcp_lib_wait_local_port_listen $ns1 10001
- echo "b" | \
- 	timeout ${timeout_test} \
--		ip netns exec $ns \
-+		ip netns exec $ns1 \
- 			./mptcp_connect -p 10001 -r 0 -t ${timeout_poll} -w 20 \
- 				127.0.0.1 >/dev/null &
--wait_connected $ns 10001
-+wait_connected $ns1 10001
- chk_msk_fallback_nr 1 "check fallback"
- chk_msk_inuse 1 "....chk 1 msk in use"
- flush_pids
-@@ -245,16 +245,16 @@ NR_CLIENTS=100
- for I in `seq 1 $NR_CLIENTS`; do
- 	echo "a" | \
- 		timeout ${timeout_test} \
--			ip netns exec $ns \
-+			ip netns exec $ns1 \
- 				./mptcp_connect -p $((I+10001)) -l -w 20 \
- 					-t ${timeout_poll} 0.0.0.0 >/dev/null &
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 5e28292e1889..5e0263e691a8 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -120,12 +120,7 @@ while getopts "$optstring" option;do
+ 	esac
  done
--mptcp_lib_wait_local_port_listen $ns $((NR_CLIENTS + 10001))
-+mptcp_lib_wait_local_port_listen $ns1 $((NR_CLIENTS + 10001))
  
- for I in `seq 1 $NR_CLIENTS`; do
- 	echo "b" | \
- 		timeout ${timeout_test} \
--			ip netns exec $ns \
-+			ip netns exec $ns1 \
- 				./mptcp_connect -p $((I+10001)) -w 20 \
- 					-t ${timeout_poll} 127.0.0.1 >/dev/null &
- done
+-sec=$(date +%s)
+-rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+-ns1="ns1-$rndh"
+-ns2="ns2-$rndh"
+-ns3="ns3-$rndh"
+-ns4="ns4-$rndh"
++mptcp_lib_ns_init
+ 
+ TEST_COUNT=0
+ TEST_GROUP=""
+@@ -137,11 +132,7 @@ cleanup()
+ 	rm -f "$sin" "$sout"
+ 	rm -f "$capout"
+ 
+-	local netns
+-	for netns in "$ns1" "$ns2" "$ns3" "$ns4";do
+-		ip netns del $netns
+-		rm -f /tmp/$netns.{nstat,out}
+-	done
++	mptcp_lib_ns_exit
+ 	mptcp_lib_cleanup
+ }
+ 
+@@ -163,11 +154,6 @@ cin_disconnect="$cin".disconnect
+ cout_disconnect="$cout".disconnect
+ trap cleanup EXIT
+ 
+-for i in "$ns1" "$ns2" "$ns3" "$ns4";do
+-	ip netns add $i || exit $ksft_skip
+-	ip -net $i link set lo up
+-done
+-
+ #  "$ns1"              ns2                    ns3                     ns4
+ # ns1eth2    ns2eth1   ns2eth3      ns3eth2   ns3eth4       ns4eth3
+ #                           - drop 1% ->            reorder 25%
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 9ad8c600e58f..52a4080b32d9 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -21,8 +21,6 @@ cinsent=""
+ tmpfile=""
+ cout=""
+ capout=""
+-ns1=""
+-ns2=""
+ ksft_skip=4
+ iptables="iptables"
+ ip6tables="ip6tables"
+@@ -78,21 +76,12 @@ init_partial()
+ {
+ 	capout=$(mktemp)
+ 
+-	local sec rndh
+-	sec=$(date +%s)
+-	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+-
+-	ns1="ns1-$rndh"
+-	ns2="ns2-$rndh"
++	mptcp_lib_ns_init
+ 
+ 	local netns
+ 	for netns in "$ns1" "$ns2"; do
+-		ip netns add $netns || exit $ksft_skip
+-		ip -net $netns link set lo up
+ 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
+ 		ip netns exec $netns sysctl -q net.mptcp.pm_type=0 2>/dev/null || true
+-		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
+-		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
+ 		if [ $checksum -eq 1 ]; then
+ 			ip netns exec $netns sysctl -q net.mptcp.checksum_enabled=1
+ 		fi
+@@ -137,11 +126,7 @@ cleanup_partial()
+ {
+ 	rm -f "$capout"
+ 
+-	local netns
+-	for netns in "$ns1" "$ns2"; do
+-		ip netns del $netns
+-		rm -f /tmp/$netns.{nstat,out}
+-	done
++	mptcp_lib_ns_exit
+ }
+ 
+ check_tools()
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index 09d948f45f59..d1bd8aa02c2e 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -463,6 +463,42 @@ mptcp_lib_verify_listener_events() {
+ 	mptcp_lib_check_expected "type" "family" "saddr" "sport"
+ }
+ 
++rndh=""
++ns1=""
++ns2=""
++ns3=""
++ns4=""
++
++mptcp_lib_ns_init() {
++	local sec
++
++	sec=$(date +%s)
++	rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
++
++	ns1="ns1-$rndh"
++	ns2="ns2-$rndh"
++	ns3="ns3-$rndh"
++	ns4="ns4-$rndh"
++
++	local netns
++	for netns in "$ns1" "$ns2" "$ns3" "$ns4"; do
++		ip netns add $netns || exit ${ksft_skip}
++		ip -net $netns link set lo up
++
++		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
++		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
++	done
++}
++
++mptcp_lib_ns_exit()
++{
++	local netns
++	for netns in "$ns1" "$ns2" "$ns3" "$ns4"; do
++		ip netns del $netns
++		rm -f /tmp/$netns.{nstat,out}
++	done
++}
++
+ mptcp_lib_cleanup()
+ {
+ 	echo "cleanup"
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 45e5b5810a6a..b82f7b0b85bc 100755
+index b82f7b0b85bc..ff49ee9b9cc2 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -17,7 +17,7 @@ sec=$(date +%s)
- rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
- ns1="ns1-$rndh"
- ns2="ns2-$rndh"
--ns_sbox="ns_sbox-$rndh"
-+ns3="ns3-$rndh"
+@@ -13,11 +13,7 @@ timeout_test=$((timeout_poll * 2 + 1))
+ iptables="iptables"
+ ip6tables="ip6tables"
+ 
+-sec=$(date +%s)
+-rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+-ns1="ns1-$rndh"
+-ns2="ns2-$rndh"
+-ns3="ns3-$rndh"
++mptcp_lib_ns_init
  
  add_mark_rules()
  {
-@@ -40,7 +40,7 @@ add_mark_rules()
- init()
+@@ -41,11 +37,7 @@ init()
  {
  	local netns
--	for netns in "$ns1" "$ns2" "$ns_sbox";do
-+	for netns in "$ns1" "$ns2" "$ns3";do
- 		ip netns add $netns || exit $ksft_skip
- 		ip -net $netns link set lo up
+ 	for netns in "$ns1" "$ns2" "$ns3";do
+-		ip netns add $netns || exit $ksft_skip
+-		ip -net $netns link set lo up
  		ip netns exec $netns sysctl -q net.mptcp.enabled=1
-@@ -79,7 +79,7 @@ init()
+-		ip netns exec $netns sysctl -q net.ipv4.conf.all.rp_filter=0
+-		ip netns exec $netns sysctl -q net.ipv4.conf.default.rp_filter=0
+ 	done
+ 
+ 	local i
+@@ -78,10 +70,7 @@ init()
+ 
  cleanup()
  {
- 	local netns
--	for netns in "$ns1" "$ns2" "$ns_sbox"; do
-+	for netns in "$ns1" "$ns2" "$ns3"; do
- 		ip netns del $netns
- 	done
+-	local netns
+-	for netns in "$ns1" "$ns2" "$ns3"; do
+-		ip netns del $netns
+-	done
++	mptcp_lib_ns_exit
  	rm -f "$cin" "$cout"
-@@ -240,7 +240,7 @@ do_mptcp_sockopt_tests()
- 		return
- 	fi
+ 	rm -f "$sin" "$sout"
+ 	mptcp_lib_cleanup
+diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+index 75c7594dbd71..32265d4ecb41 100755
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -23,13 +23,11 @@ while getopts "$optstring" option;do
+ 	esac
+ done
  
--	ip netns exec "$ns_sbox" ./mptcp_sockopt
-+	ip netns exec "$ns3" ./mptcp_sockopt
- 	lret=$?
+-sec=$(date +%s)
+-rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+-ns1="ns1-$rndh"
++mptcp_lib_ns_init
  
- 	if [ $lret -ne 0 ]; then
-@@ -251,7 +251,7 @@ do_mptcp_sockopt_tests()
- 	fi
- 	mptcp_lib_result_pass "sockopt v4"
- 
--	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
-+	ip netns exec "$ns3" ./mptcp_sockopt -6
- 	lret=$?
- 
- 	if [ $lret -ne 0 ]; then
-@@ -282,7 +282,7 @@ run_tests()
- 
- do_tcpinq_test()
+ cleanup()
  {
--	ip netns exec "$ns_sbox" ./mptcp_inq "$@"
-+	ip netns exec "$ns3" ./mptcp_inq "$@"
- 	local lret=$?
- 	if [ $lret -ne 0 ];then
- 		ret=$lret
+-	ip netns del $ns1
++	mptcp_lib_ns_exit
+ 	mptcp_lib_cleanup
+ }
+ 
+@@ -43,8 +41,6 @@ fi
+ 
+ trap cleanup EXIT
+ 
+-ip netns add $ns1 || exit $ksft_skip
+-ip -net $ns1 link set lo up
+ ip netns exec $ns1 sysctl -q net.mptcp.enabled=1
+ 
+ check()
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index 3536c7160ce5..c1a21cd8c076 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -3,11 +3,7 @@
+ 
+ . "$(dirname "${0}")/mptcp_lib.sh"
+ 
+-sec=$(date +%s)
+-rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+-ns1="ns1-$rndh"
+-ns2="ns2-$rndh"
+-ns3="ns3-$rndh"
++mptcp_lib_ns_init
+ capture=false
+ ksft_skip=4
+ timeout_poll=30
+@@ -29,10 +25,7 @@ cleanup()
+ 	rm -f "$large" "$small"
+ 	rm -f "$capout"
+ 
+-	local netns
+-	for netns in "$ns1" "$ns2" "$ns3";do
+-		ip netns del $netns
+-	done
++	mptcp_lib_ns_exit
+ 	mptcp_lib_cleanup
+ }
+ 
+@@ -64,13 +57,6 @@ setup()
+ 
+ 	trap cleanup EXIT
+ 
+-	for i in "$ns1" "$ns2" "$ns3";do
+-		ip netns add $i || exit $ksft_skip
+-		ip -net $i link set lo up
+-		ip netns exec $i sysctl -q net.ipv4.conf.all.rp_filter=0
+-		ip netns exec $i sysctl -q net.ipv4.conf.default.rp_filter=0
+-	done
+-
+ 	ip link add ns1eth1 netns "$ns1" type veth peer name ns2eth1 netns "$ns2"
+ 	ip link add ns1eth2 netns "$ns1" type veth peer name ns2eth2 netns "$ns2"
+ 	ip link add ns2eth3 netns "$ns2" type veth peer name ns3eth1 netns "$ns3"
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 22812292b00f..22a436c4a77a 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -44,11 +44,7 @@ app6_port=50004
+ client_addr_id=${RANDOM:0:2}
+ server_addr_id=${RANDOM:0:2}
+ 
+-sec=$(date +%s)
+-rndh=$(printf %x "$sec")-$(mktemp -u XXXXXX)
+-ns1="ns1-$rndh"
+-ns2="ns2-$rndh"
+-TEST_NAME=""
++mptcp_lib_ns_init
+ 
+ _printf() {
+ 	stdbuf -o0 -e0 printf "${@}"
+@@ -106,10 +102,7 @@ cleanup()
+ 	done
+ 	mptcp_lib_evts_kill
+ 
+-	local netns
+-	for netns in "$ns1" "$ns2" ;do
+-		ip netns del "$netns"
+-	done
++	mptcp_lib_ns_exit
+ 
+ 	rm -rf $file
+ 	mptcp_lib_evts_remove
+@@ -122,8 +115,6 @@ trap cleanup EXIT
+ 
+ # Create and configure network namespaces for testing
+ for i in "$ns1" "$ns2" ;do
+-	ip netns add "$i" || exit 1
+-	ip -net "$i" link set lo up
+ 	ip netns exec "$i" sysctl -q net.mptcp.enabled=1
+ 	ip netns exec "$i" sysctl -q net.mptcp.pm_type=1
+ done
 -- 
 2.35.3
 
