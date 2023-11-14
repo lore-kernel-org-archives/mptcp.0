@@ -1,174 +1,131 @@
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2079.outbound.protection.outlook.com [40.107.15.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8487A405ED
-	for <mptcp@lists.linux.dev>; Tue, 14 Nov 2023 14:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD1341A82
+	for <mptcp@lists.linux.dev>; Tue, 14 Nov 2023 16:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Se/6Ect9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mbQNUb7BOtcgrCh2nwZ6sj+7K8/n2oADUhmukMPkc2KM6a+fkePKg0pgp3aBHj7zJDfed/1zM9vhbRTVUWu5WV9Z2zrPQanCiJYD7fx8J/NgNwPjlciALh/PA843TFt8iZRiM9F0s8BUVLR5C92Cqj4WA5iM10aS92l23RKN8UJI4fwdkDGjbXEg1a9GuMwloq2WjEXfwHWLte02QT7neFKdhT/4LcukFCwYK/82VcMjcEglD9soW+leLuuI9roc+vgZjrrNLmfkR3BXtsqvpHTZvT8+9nJuTDLjn26lb/JSltSc84kcSmub1Ai52LYSnqMh2R+mlAzHddCha15ywA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6Oz4uWQpY8tWOYclP247E2z0aafyujG0vIIFGZDS8b0=;
- b=JuMqzE754xvTaI4cJBqeuHkif/jyUCTGPHu5Bt8+PGKDFnx25DTau1L1VhQVCUFwtSYTxajABOdPb4FTlAHh+UWh3LLnULfeZuRRLTRxmPEBZ10U2+Khb7PbxzT2XLcWOT1Trqc9xPjr6OgIXn7ESQ7s8U9CZZ/FvY7Yp6DB8P4sMZt3enfkxPvZs1KXdLPtRpstWZ5X55tta0aWt09qbYUerjDtbQV9+uqCQ3qXLIj2ffN1Z+7LPVkWULmR/pl/NmnH7pe/KX76+MNC36Y8KPZaH+h4/HVOSy30P8Cdb55vQrEiqNC7HZZY6pww0yovEWWffydfHucwbrsT1wIhMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Oz4uWQpY8tWOYclP247E2z0aafyujG0vIIFGZDS8b0=;
- b=Se/6Ect9AMCRv0MK1VZp2t2jLLLL05+TvLSE2xuG4+a7GMgFSjF7EL+s5qJ2avwFl00Hu2qqYgRjhlRsDH8jLOUq+e1V85ajkN9b3D0kMFr37483oOyH4h6q3zguQAtgLJJfsREGs9EhpomGZs0ok1mM257WIN2WydGhYL2zaUd0OlsX7mO6CGQSGGy0uyCnGuY5yplmaIc87ktupFdIAKhiwSJGWptaPjSg520oeK5sLZ0jPAo6yOgW+vWQSkeOFDbQcHT+LRROjHPuR22I97OnXDXCQnA0ADBlhucyUniEV4Q9rWol1vxFmPHXme25LP8d14ZbrQkVCUQp+15/Xw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by PAXPR04MB8704.eurprd04.prod.outlook.com (2603:10a6:102:21f::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.17; Tue, 14 Nov
- 2023 14:56:56 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::7102:259:f268:5321]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::7102:259:f268:5321%7]) with mapi id 15.20.7002.014; Tue, 14 Nov 2023
- 14:56:56 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-net v2] selftests: mptcp: join: fix subflow_send_ack lookup
-Date: Tue, 14 Nov 2023 22:57:08 +0800
-Message-Id: <f343a6ca7d627b4092a284dbc6724f34e6f8c491.1699973683.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYAPR01CA0079.jpnprd01.prod.outlook.com
- (2603:1096:404:2c::19) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKGhzF/1"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6707401e1edso34288486d6.1
+        for <mptcp@lists.linux.dev>; Tue, 14 Nov 2023 08:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699977950; x=1700582750; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZIQBMPetNAKnXrFYIMkLvF6uF94sorzqFTHKHJEj1xY=;
+        b=DKGhzF/1nCodo22ZgNPIQfnzW0icAUHWKGrK/6nQ85hJqaQHBRxmYQgQJg0KMtAuNo
+         nUH144hib0jbemdrFNfZs83MfNKoaBcxwufNEK0vJwWRY3ticIwcUbMOTp0bh55h5ED5
+         yxygEG3I23czgYAeWAkVbXvtAtenQOT0dXi9cYRhmvwLDvWVxwYlEsEkyImuqKlnUXRn
+         JQ5g/eCMFoAFA/3XanUm3f6od1HP+V+YckjdVscftIpP0vExziNV6c5G7T8q8i0UODW9
+         SLDe8AqAp00nuOpRs1GA+n80mOSiMZbryFdhIBAQRNoo062riUE4/yQq9c7DNj134LYB
+         edLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699977950; x=1700582750;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZIQBMPetNAKnXrFYIMkLvF6uF94sorzqFTHKHJEj1xY=;
+        b=HUbn/adcRKo94tbAAe+awhN079gYnF5ZdZiQgoc3axDNfdxtZLqbiqi16+6PU0z6PF
+         DzFoe0awpd88i3dREC8KyJ8Ti5COPU+dwyf4XlCSB3sCCV3BoTnJuNulbqvsUSV8xZZm
+         YZCCrn4ZPkzjvhXsgkSsCrZk4BaV4qQ2w0zulmbVZ44l9nSlao3Nc3npMtJfwXPrlPw7
+         tVnHqNXnU7x+9DOv2q1k8QWrVH8S4zwAo7xw8Qk4LFCz6GdwW9VdoHOc3BPlXdstRlrp
+         idWFaKXqSeAt7EKDg5ms8O5Bx04Tdh1ceTgjsnArTnuyh2QOqAf7LFUNtu/sVvSCRMIt
+         rUHw==
+X-Gm-Message-State: AOJu0Yw47OfehnREDdp8h55qYWWFEGgClQ1sYEuEUFkMQH+zLpBdMBPH
+	lximeFfzwMqSFzz7kfqBWA==
+X-Google-Smtp-Source: AGHT+IEIjSbpGiSjKcU6L73BjC1B5KyvdiHe80Pyf3xT+22T5CGOVDppi8Nsny3Im0jnqAkSmcwrDg==
+X-Received: by 2002:a0c:ec81:0:b0:66d:bc21:814c with SMTP id u1-20020a0cec81000000b0066dbc21814cmr2508502qvo.65.1699977949752;
+        Tue, 14 Nov 2023 08:05:49 -0800 (PST)
+Received: from [127.0.0.1] ([20.51.206.96])
+        by smtp.gmail.com with ESMTPSA id k12-20020a0cfd6c000000b0066d05ed3778sm3015485qvs.56.2023.11.14.08.05.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Nov 2023 08:05:49 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <f343a6ca7d627b4092a284dbc6724f34e6f8c491.1699973683.git.geliang.tang@suse.com>
+References:
+ <f343a6ca7d627b4092a284dbc6724f34e6f8c491.1699973683.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: join: fix subflow_send_ack lookup: Tests
+ Results
+Message-ID: <781d9baf-ac94-4822-f85c-9852b2203ed2@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Nov 2023 16:05:48 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|PAXPR04MB8704:EE_
-X-MS-Office365-Filtering-Correlation-Id: c57ada64-0688-45fa-580f-08dbe521f1bb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	bge8DT73f7cnd313Y3+1G9R4G8kk8ttTmTmxWCY7QVgVpMTk7Zt1hm/ghNOJMHPdl1sGpIyMNBXhZCMaAQlFhDM9Grw8peOKCjIpcrj95QA2NV2t7h30TRm4ehEXseEOgSg81FSFtoV30MEFGK9W1q4mN3zT7KK4AHkw1tsn7qAfykbNZLsZz8GlJhSC6UoPhLlEJJy/cbrKiKolSDAjaslhXr/QjdU7AvhztPw6aE+BI8J8tzs56qYsgw/tOLTKPc5kNzp8fuwu4qVpaQ5EUwk4xK8NzonK2LYYmlMRXNuq2YA9cBGQTGbHFP1K64F0lID6mjBlfezJESk/wMeU+1OXTsUZuSJlH9Ac65E3WYVWFDtmxCea5BlwwpA9ZfclIefwlcDspU8+oxz9U2AZmi6zLtyQPDB2kbA9067MlmXohxHb69V0OdF2X74eMeZ7bJPimyyQOcDZ3nBaLB0XGYHkjN21AaflVfq3X7Xzftq6hiL9bVqzWpS7DyxWDz5skte2rVmX+v1NjmcxrVacdabVro7XSdnFyQYzkunmLUDSUa5MUZ68YKTW/rncU5x/26ywKLxy3ZLIfvjbYcW2FX9LIhPREreSuqTk8Sp6HyU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(39860400002)(396003)(366004)(346002)(230922051799003)(64100799003)(451199024)(1800799009)(186009)(2906002)(41300700001)(8676002)(4326008)(66476007)(316002)(8936002)(6916009)(66556008)(86362001)(5660300002)(44832011)(36756003)(83380400001)(478600001)(66946007)(6486002)(6512007)(6666004)(6506007)(26005)(2616005)(107886003)(38100700002)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?HlXMhZtGd1SiODycTKUN0KAMHmmVA2fE5jGpRlEFFp7dmOCo87xUP6qSTv/s?=
- =?us-ascii?Q?lh6sPJ+AY9Z9lmxdqjvlp+stbhUjfgn7B4wrG7Tu1ZX8L+DOF4rfOzHhTJ8w?=
- =?us-ascii?Q?USw/NpX6Lf45kSXMlni1+KsjRBZXCcAzSh83btKLyDBHoEf7OsUm47Rydaor?=
- =?us-ascii?Q?ZmUsxM3Uga/4PiTFgzV0GGvkjg+bz6qZp8eSBd5xHlhGsVOnD51/FVm0cLg7?=
- =?us-ascii?Q?2ar1HD8Fx9bR0W2L2bw7s4WY24ZBrLNjkQ0ym4VhaLHwvu7Ypb8Kr6psAiUa?=
- =?us-ascii?Q?26kavFGOCwdzYjlWj5C1sR4hvyF5l+zBGz78p+m60pLPQR3DVdzdxpwM+gsO?=
- =?us-ascii?Q?fYpwp3A3w8M2zqq0hDF7x8QbImOZ7tK0Blr231Xhn3grvKLF7X6Mixv+kT+j?=
- =?us-ascii?Q?BEWcnWahE1hqYhp289eSaj0uK8CW7PnxtNLx/XwYWXEqtkKjIsHEmJlE6ZQX?=
- =?us-ascii?Q?q1Mq+Ulk0mAwt3QPIQHv3tty+aMh9jObVaqv0z6yG/+lMj+FgSQZ1dTGS7UD?=
- =?us-ascii?Q?Zu7ApXbNMJjSDX4tobDI2XR+xGeV6VBsZBlKpcMJVWiJjrnmlm7lht4lEP79?=
- =?us-ascii?Q?+MvoeELqAHh4J7T5C1FjKBqOmjOgL3t+cTIRdSbJ5VK3z/iFxAHcAqCBKr1H?=
- =?us-ascii?Q?xDqpOQ9MMWwHzvO7SnXNCJzhdFzsZww+FNKuBV87SVPG5tMapO/xP9BQbt3J?=
- =?us-ascii?Q?LIwC1V7DZlI75CxkuLSNFRGAbZHIuG/38F+BcB2v8H9BXAP/G7MdN8Ansrk1?=
- =?us-ascii?Q?PCslgZ0NgG8XdGZ2U+yaRUoKu6ZaVXkAle2x4lA8MyaipT+ETWaU8quW4k4j?=
- =?us-ascii?Q?BRYuySdXadHGumewVSQgDbPIzkQJ78orKUFC/0eZDts7Q45LbViUs//ux043?=
- =?us-ascii?Q?YQBa7ezvbISou3y69RzT/8NzCK5MDtT9k0RfNOfRDymPIt4ndIW38+OkSqSs?=
- =?us-ascii?Q?9siZpMTO/5j+1g4Q9G+9eueELxt3GnHZ200ssl6M4xQ1kXfiiPPZVYDczVep?=
- =?us-ascii?Q?uMZCe0p8PZV0eEam611pTaJD0AEjMBgf3SP37NuhYCLiPxLrmR/CP4p4OjtW?=
- =?us-ascii?Q?TthEUGtQSUKeeK4qUryOIIEe88r7mH5r1969e+oM1ADrcocRyPZiy1YaEd6M?=
- =?us-ascii?Q?f6GHaiSRygRPwsgyEUO9X4mJ2dxa+cCUW5SU+H/6R5S/YYQzyZzod2QrTtMn?=
- =?us-ascii?Q?JiOd0i/9txb+QqnV2/F+K9OFLfObwNwz6ENPQdJD3QQHT0lo9I+4tXaqpsQl?=
- =?us-ascii?Q?tTVurVgEllWnfvcQsTsO4gHACLfbdAqe935a+ZLd8aZ6VAn34j8qWDK3W9DA?=
- =?us-ascii?Q?OKqQS9fUEDFR1TIt3Tno6jgGVk6JyLMFAJ8oql2nckxA+NHDAvo5c5NHAFty?=
- =?us-ascii?Q?4WaxZ2stTMNqVrW39KhsDUnWjA7DDjjgzwQYZRl6HwrfkDOFVvhxP5+IPU6T?=
- =?us-ascii?Q?zCuHxwHosSFaJjwDUjZbGt+YKe/nmYGXVFDdIbK4YlaWZuMrmUNeO/lq4R3Z?=
- =?us-ascii?Q?7PYLqPGhweh8JTcUcPLVe7jHCQjTCSEY26zkt8KPSZ9JGHB0yvlpnuJNP0BI?=
- =?us-ascii?Q?KMDOpXSwPtJELwMzaQkQU/ZgmsVSZ/2Y2C0xY48u8+ZVjZkl2OgwiaZx6NmI?=
- =?us-ascii?Q?XA=3D=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c57ada64-0688-45fa-580f-08dbe521f1bb
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2023 14:56:55.7232
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 78ktjOPMy9Cvugerjq8EG/4Q+NQ4iFBqliQ8fys8m6la7M+HxvIiXPdlHV4a8Gikim/+RUgeZ9MKXAEnPGwGcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8704
 
-MPC backups tests will skip unexpected sometimes, since static functions
-like mptcp_subflow_send_ack may also be listed in /proc/kallsyms, with a
-'t' in front of it, not 'T' ('T' is for a global function):
+Hi Geliang,
 
- > grep "mptcp_subflow_send_ack" /proc/kallsyms
+Thank you for your modifications, that's great!
 
- 0000000000000000 T __pfx___mptcp_subflow_send_ack
- 0000000000000000 T __mptcp_subflow_send_ack
- 0000000000000000 t __pfx_mptcp_subflow_send_ack
- 0000000000000000 t mptcp_subflow_send_ack
+Our CI did some validations and here is its report:
 
-In this case, mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"
-will be false, MPC backups tests will skip. This is not what we expected.
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/4901440322273280
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/4901440322273280/summary/summary.txt
 
-The correct logic here should be: if mptcp_subflow_send_ack is not a
-global function in /proc/kallsyms, do these MPC backups tests. So a 'T'
-must be added in front of mptcp_subflow_send_ack.
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5464390275694592
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5464390275694592/summary/summary.txt
 
-Fixes: 632978f0a961 ("selftests: mptcp: join: skip MPC backups tests if not supported")
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
-v2:
- - Update commit log, fix typos in it.
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6590290182537216
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6590290182537216/su=
+mmary/summary.txt
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 1606474232f6..6fbc70332caa 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2755,7 +2755,7 @@ backup_tests()
- 	fi
- 
- 	if reset "mpc backup" &&
--	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
-+	   continue_if mptcp_lib_kallsyms_doesnt_have "T mptcp_subflow_send_ack$"; then
- 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,backup
- 		speed=slow \
- 			run_tests $ns1 $ns2 10.0.1.1
-@@ -2764,7 +2764,7 @@ backup_tests()
- 	fi
- 
- 	if reset "mpc backup both sides" &&
--	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
-+	   continue_if mptcp_lib_kallsyms_doesnt_have "T mptcp_subflow_send_ack$"; then
- 		pm_nl_add_endpoint $ns1 10.0.1.1 flags subflow,backup
- 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,backup
- 		speed=slow \
-@@ -2774,7 +2774,7 @@ backup_tests()
- 	fi
- 
- 	if reset "mpc switch to backup" &&
--	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
-+	   continue_if mptcp_lib_kallsyms_doesnt_have "T mptcp_subflow_send_ack$"; then
- 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow
- 		sflags=backup speed=slow \
- 			run_tests $ns1 $ns2 10.0.1.1
-@@ -2783,7 +2783,7 @@ backup_tests()
- 	fi
- 
- 	if reset "mpc switch to backup both sides" &&
--	   continue_if mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"; then
-+	   continue_if mptcp_lib_kallsyms_doesnt_have "T mptcp_subflow_send_ack$"; then
- 		pm_nl_add_endpoint $ns1 10.0.1.1 flags subflow
- 		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow
- 		sflags=backup speed=slow \
--- 
-2.35.3
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6027340229115904
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6027340229115904/summary/summary.txt
 
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/553a2c18d727
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (Tessares)
