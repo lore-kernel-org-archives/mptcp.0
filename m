@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D8E26AFB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCA72C1B5;
 	Tue, 14 Nov 2023 19:58:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4v4YEyf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B55DC433C9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ao/9ADTQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1316C433CD;
 	Tue, 14 Nov 2023 19:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1699991904;
-	bh=r8vdc2sO9ivYzf7WKYhTi9NfS8lSq9i5gO2UFDbm2Sg=;
+	bh=3nxf7EPJGiWrtANdeVsAVUQatublwgN7sjJQYmQ7+Bw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=s4v4YEyfhozyiVRqIZif+foPKfCIG/DWWM+TJav67RbyRM63sujxaR7fbP654pJeH
-	 QlfU05h7hUiMErMO/d0LwYBbzEEQ+AV/ei239ar7P8bvjzYFB1RIzBnCkLrHwsuE0x
-	 DKugV2RcCEoYzyqA8fF72V8onfbN5tkOqK8MRKjv21VdmtvfanZ6b7yGH0Wcb0tIA6
-	 Kb63i7vyWNg6DeFysljNLi3W9bOd6qDK+0AROX5Fr3nLMdvxCutQyo+EWfqzSrUwRJ
-	 JQ/Vm6EsOebtB8Bsh9+9vBE+IiC3EVQSQpq9mPN7r3Xrz0eMczfLL9AZ+UwCu0h2Yn
-	 bV7+r7lBHTmsg==
+	b=ao/9ADTQuRRDo+DF62JmG/VKI80jffyL8jbMnbuPS+SsrSEWA3dd6Xfu9C3c+aSLi
+	 ATX/BxRR7KU1R5124N4+Ku2NPr5wdfR6syXKujYCe5ZDGhePTEKLWCjRzkSLacxqSi
+	 7av1x8KXb5i5e/BlSr/yjceu+Gc9bdIgR1BpVZ7B82cWn/QgPAh+Hn22bRRZzwxAPw
+	 dznbam+sO4atX1dMKLnGDfgSSfnCWivt3Mgx8GSxQnekZvPsAeaZW0tA+5GcVKwGTc
+	 bRQXOoR7Pu6Bu3WE5NqJsmFMjSCAYlkHZgezIBczN8bhvwWTKscCTT6GAcYXppdSxh
+	 BhCGThZGccF4w==
 From: Mat Martineau <martineau@kernel.org>
-Date: Tue, 14 Nov 2023 11:56:44 -0800
-Subject: [PATCH net-next v2 02/15] selftests: mptcp: add evts_get_info
- helper
+Date: Tue, 14 Nov 2023 11:56:46 -0800
+Subject: [PATCH net-next v2 04/15] selftests: mptcp: update userspace pm
+ test helpers
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231114-send-net-next-2023107-v2-2-b650a477362c@kernel.org>
+Message-Id: <20231114-send-net-next-2023107-v2-4-b650a477362c@kernel.org>
 References: <20231114-send-net-next-2023107-v2-0-b650a477362c@kernel.org>
 In-Reply-To: <20231114-send-net-next-2023107-v2-0-b650a477362c@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, 
@@ -41,291 +41,184 @@ X-Mailer: b4 0.12.4
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch adds a new helper get_info_value(), using 'sed' command to
-parse the value of the given item name in the line with the given keyword,
-to make chk_mptcp_info() and pedit_action_pkts() more readable.
+This patch adds a new argument namespace to userspace_pm_add_addr() and
+userspace_pm_add_sf() to make these two helper more versatile.
 
-Also add another helper evts_get_info() to use get_info_value() to parse
-the output of 'pm_nl_ctl events' command, to make all the userspace pm
-selftests more readable, both in mptcp_join.sh and userspace_pm.sh.
+Add two more versatile helpers for userspace pm remove subflow or address:
+userspace_pm_rm_addr() and userspace_pm_rm_sf(). The original test helpers
+userspace_pm_rm_sf_addr_ns1() and userspace_pm_rm_sf_addr_ns2() can be
+replaced by these new helpers.
 
 Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh   | 19 +++--
- tools/testing/selftests/net/mptcp/mptcp_lib.sh    | 10 +++
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 86 ++++++++++-------------
- 3 files changed, 57 insertions(+), 58 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 102 ++++++++++++------------
+ 1 file changed, 50 insertions(+), 52 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 75a2438efdf3..f064803071f1 100755
+index 2130e3b7790f..494aee8574fb 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1869,10 +1869,8 @@ chk_mptcp_info()
- 
- 	print_check "mptcp_info ${info1:0:8}=$exp1:$exp2"
- 
--	cnt1=$(ss -N $ns1 -inmHM | grep "$info1:" |
--	       sed -n 's/.*\('"$info1"':\)\([[:digit:]]*\).*$/\2/p;q')
--	cnt2=$(ss -N $ns2 -inmHM | grep "$info2:" |
--	       sed -n 's/.*\('"$info2"':\)\([[:digit:]]*\).*$/\2/p;q')
-+	cnt1=$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value "$info1" "$info1")
-+	cnt2=$(ss -N $ns2 -inmHM | mptcp_lib_get_info_value "$info2" "$info2")
- 	# 'ss' only display active connections and counters that are not 0.
- 	[ -z "$cnt1" ] && cnt1=0
- 	[ -z "$cnt2" ] && cnt2=0
-@@ -2848,13 +2846,13 @@ verify_listener_events()
- 		return
+@@ -2847,6 +2847,7 @@ backup_tests()
  	fi
+ }
  
--	type=$(grep "type:$e_type," $evt | sed -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q')
--	family=$(grep "type:$e_type," $evt | sed -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q')
--	sport=$(grep "type:$e_type," $evt | sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
-+	type=$(mptcp_lib_evts_get_info type "$evt" "$e_type")
-+	family=$(mptcp_lib_evts_get_info family "$evt" "$e_type")
-+	sport=$(mptcp_lib_evts_get_info sport "$evt" "$e_type")
- 	if [ $family ] && [ $family = $AF_INET6 ]; then
--		saddr=$(grep "type:$e_type," $evt | sed -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
-+		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" "$e_type")
- 	else
--		saddr=$(grep "type:$e_type," $evt | sed -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
-+		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" "$e_type")
++SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
+ LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
+ LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
+ 
+@@ -3307,75 +3308,70 @@ fail_tests()
  	fi
+ }
  
- 	if [ $type ] && [ $type = $e_type ] &&
-@@ -3249,8 +3247,7 @@ fastclose_tests()
- pedit_action_pkts()
++# $1: ns ; $2: addr ; $3: id
+ userspace_pm_add_addr()
  {
- 	tc -n $ns2 -j -s action show action pedit index 100 | \
--		grep "packets" | \
--		sed 's/.*"packets":\([0-9]\+\),.*/\1/'
-+		mptcp_lib_get_info_value \"packets\" packets
- }
+-	local addr=$1
+-	local id=$2
++	local evts=$evts_ns1
+ 	local tk
  
- fail_tests()
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 92a5befe8039..56cbd57abbae 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -207,3 +207,13 @@ mptcp_lib_result_print_all_tap() {
- 		printf "%s\n" "${subtest}"
- 	done
- }
+-	tk=$(grep "type:1," "$evts_ns1" |
+-	     sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q')
+-	ip netns exec $ns1 ./pm_nl_ctl ann $addr token $tk id $id
++	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	tk=$(mptcp_lib_evts_get_info token "$evts")
 +
-+# get the value of keyword $1 in the line marked by keyword $2
-+mptcp_lib_get_info_value() {
-+	grep "${2}" | sed -n 's/.*\('"${1}"':\)\([0-9a-f:.]*\).*$/\2/p;q'
-+}
++	ip netns exec $1 ./pm_nl_ctl ann $2 token $tk id $3
+ 	sleep 1
+ }
+ 
+-userspace_pm_rm_sf_addr_ns1()
++# $1: ns ; $2: id
++userspace_pm_rm_addr()
+ {
+-	local addr=$1
+-	local id=$2
+-	local tk sp da dp
+-	local cnt_addr cnt_sf
+-
+-	tk=$(grep "type:1," "$evts_ns1" |
+-	     sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q')
+-	sp=$(grep "type:10" "$evts_ns1" |
+-	     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
+-	da=$(grep "type:10" "$evts_ns1" |
+-	     sed -n 's/.*\(daddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
+-	dp=$(grep "type:10" "$evts_ns1" |
+-	     sed -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q')
+-	cnt_addr=$(rm_addr_count ${ns1})
+-	cnt_sf=$(rm_sf_count ${ns1})
+-	ip netns exec $ns1 ./pm_nl_ctl rem token $tk id $id
+-	ip netns exec $ns1 ./pm_nl_ctl dsf lip "::ffff:$addr" \
+-				lport $sp rip $da rport $dp token $tk
+-	wait_rm_addr $ns1 "${cnt_addr}"
+-	wait_rm_sf $ns1 "${cnt_sf}"
++	local evts=$evts_ns1
++	local tk
++	local cnt
 +
-+# $1: info name ; $2: evts_ns ; $3: event type
-+mptcp_lib_evts_get_info() {
-+	mptcp_lib_get_info_value "${1}" "^type:${3:-1}," < "${2}"
-+}
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index b25a3e33eb25..2413059a42e5 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -247,14 +247,11 @@ make_connection()
- 	local server_token
- 	local server_serverside
- 
--	client_token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$client_evts")
--	client_port=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$client_evts")
--	client_serverside=$(sed --unbuffered -n 's/.*\(server_side:\)\([[:digit:]]*\).*$/\2/p;q'\
--				      "$client_evts")
--	server_token=$(grep "type:1," "$server_evts" |
--		       sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q')
--	server_serverside=$(grep "type:1," "$server_evts" |
--			    sed --unbuffered -n 's/.*\(server_side:\)\([[:digit:]]*\).*$/\2/p;q')
-+	client_token=$(mptcp_lib_evts_get_info token "$client_evts")
-+	client_port=$(mptcp_lib_evts_get_info sport "$client_evts")
-+	client_serverside=$(mptcp_lib_evts_get_info server_side "$client_evts")
-+	server_token=$(mptcp_lib_evts_get_info token "$server_evts")
-+	server_serverside=$(mptcp_lib_evts_get_info server_side "$server_evts")
- 
- 	print_test "Established IP${is_v6} MPTCP Connection ns2 => ns1"
- 	if [ "$client_token" != "" ] && [ "$server_token" != "" ] && [ "$client_serverside" = 0 ] &&
-@@ -340,16 +337,16 @@ verify_announce_event()
- 	local dport
- 	local id
- 
--	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
-+	type=$(mptcp_lib_evts_get_info type "$evt" $e_type)
-+	token=$(mptcp_lib_evts_get_info token "$evt" $e_type)
- 	if [ "$e_af" = "v6" ]
- 	then
--		addr=$(sed --unbuffered -n 's/.*\(daddr6:\)\([0-9a-f:.]*\).*$/\2/p;q' "$evt")
-+		addr=$(mptcp_lib_evts_get_info daddr6 "$evt" $e_type)
- 	else
--		addr=$(sed --unbuffered -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evt")
-+		addr=$(mptcp_lib_evts_get_info daddr4 "$evt" $e_type)
- 	fi
--	dport=$(sed --unbuffered -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	id=$(sed --unbuffered -n 's/.*\(rem_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
-+	dport=$(mptcp_lib_evts_get_info dport "$evt" $e_type)
-+	id=$(mptcp_lib_evts_get_info rem_id "$evt" $e_type)
- 
- 	check_expected "type" "token" "addr" "dport" "id"
++	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	tk=$(mptcp_lib_evts_get_info token "$evts")
++
++	cnt=$(rm_addr_count ${1})
++	ip netns exec $1 ./pm_nl_ctl rem token $tk id $2
++	wait_rm_addr $1 "${cnt}"
  }
-@@ -367,7 +364,7 @@ test_announce()
- 	   $client_addr_id dev ns2eth1 > /dev/null 2>&1
  
- 	local type
--	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$server_evts")
-+	type=$(mptcp_lib_evts_get_info type "$server_evts")
- 	print_test "ADD_ADDR 10.0.2.2 (ns2) => ns1, invalid token"
- 	if [ "$type" = "" ]
- 	then
-@@ -446,9 +443,9 @@ verify_remove_event()
- 	local token
- 	local id
++# $1: ns ; $2: addr ; $3: id
+ userspace_pm_add_sf()
+ {
+-	local addr=$1
+-	local id=$2
++	local evts=$evts_ns1
+ 	local tk da dp
  
--	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	id=$(sed --unbuffered -n 's/.*\(rem_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
-+	type=$(mptcp_lib_evts_get_info type "$evt" $e_type)
-+	token=$(mptcp_lib_evts_get_info token "$evt" $e_type)
-+	id=$(mptcp_lib_evts_get_info rem_id "$evt" $e_type)
- 
- 	check_expected "type" "token" "id"
+-	tk=$(sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
+-	da=$(sed -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evts_ns2")
+-	dp=$(sed -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
+-	ip netns exec $ns2 ./pm_nl_ctl csf lip $addr lid $id \
++	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	tk=$(mptcp_lib_evts_get_info token "$evts")
++	da=$(mptcp_lib_evts_get_info daddr4 "$evts")
++	dp=$(mptcp_lib_evts_get_info dport "$evts")
++
++	ip netns exec $1 ./pm_nl_ctl csf lip $2 lid $3 \
+ 				rip $da rport $dp token $tk
+ 	sleep 1
  }
-@@ -466,7 +463,7 @@ test_remove()
- 	   $client_addr_id > /dev/null 2>&1
- 	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1, invalid token"
- 	local type
--	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$server_evts")
-+	type=$(mptcp_lib_evts_get_info type "$server_evts")
- 	if [ "$type" = "" ]
- 	then
- 		test_pass
-@@ -479,7 +476,7 @@ test_remove()
- 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
- 	   $invalid_id > /dev/null 2>&1
- 	print_test "RM_ADDR id:${invalid_id} ns2 => ns1, invalid id"
--	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$server_evts")
-+	type=$(mptcp_lib_evts_get_info type "$server_evts")
- 	if [ "$type" = "" ]
- 	then
- 		test_pass
-@@ -583,19 +580,19 @@ verify_subflow_events()
- 		fi
- 	fi
  
--	type=$(sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	token=$(sed --unbuffered -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	family=$(sed --unbuffered -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	dport=$(sed --unbuffered -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	locid=$(sed --unbuffered -n 's/.*\(loc_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
--	remid=$(sed --unbuffered -n 's/.*\(rem_id:\)\([[:digit:]]*\).*$/\2/p;q' "$evt")
-+	type=$(mptcp_lib_evts_get_info type "$evt" $e_type)
-+	token=$(mptcp_lib_evts_get_info token "$evt" $e_type)
-+	family=$(mptcp_lib_evts_get_info family "$evt" $e_type)
-+	dport=$(mptcp_lib_evts_get_info dport "$evt" $e_type)
-+	locid=$(mptcp_lib_evts_get_info loc_id "$evt" $e_type)
-+	remid=$(mptcp_lib_evts_get_info rem_id "$evt" $e_type)
- 	if [ "$family" = "$AF_INET6" ]
- 	then
--		saddr=$(sed --unbuffered -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q' "$evt")
--		daddr=$(sed --unbuffered -n 's/.*\(daddr6:\)\([0-9a-f:.]*\).*$/\2/p;q' "$evt")
-+		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" $e_type)
-+		daddr=$(mptcp_lib_evts_get_info daddr6 "$evt" $e_type)
- 	else
--		saddr=$(sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q' "$evt")
--		daddr=$(sed --unbuffered -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evt")
-+		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" $e_type)
-+		daddr=$(mptcp_lib_evts_get_info daddr4 "$evt" $e_type)
- 	fi
+-userspace_pm_rm_sf_addr_ns2()
++# $1: ns ; $2: addr $3: event type
++userspace_pm_rm_sf()
+ {
+-	local addr=$1
+-	local id=$2
++	local evts=$evts_ns1
++	local t=${3:-1}
++	local ip=4
+ 	local tk da dp sp
+-	local cnt_addr cnt_sf
+-
+-	tk=$(sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
+-	da=$(sed -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evts_ns2")
+-	dp=$(sed -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
+-	sp=$(grep "type:10" "$evts_ns2" |
+-	     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
+-	cnt_addr=$(rm_addr_count ${ns2})
+-	cnt_sf=$(rm_sf_count ${ns2})
+-	ip netns exec $ns2 ./pm_nl_ctl rem token $tk id $id
+-	ip netns exec $ns2 ./pm_nl_ctl dsf lip $addr lport $sp \
++	local cnt
++
++	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	if is_v6 $2; then ip=6; fi
++	tk=$(mptcp_lib_evts_get_info token "$evts")
++	da=$(mptcp_lib_evts_get_info "daddr$ip" "$evts" $t)
++	dp=$(mptcp_lib_evts_get_info dport "$evts" $t)
++	sp=$(mptcp_lib_evts_get_info sport "$evts" $t)
++
++	cnt=$(rm_sf_count ${1})
++	ip netns exec $1 ./pm_nl_ctl dsf lip $2 lport $sp \
+ 				rip $da rport $dp token $tk
+-	wait_rm_addr $ns2 "${cnt_addr}"
+-	wait_rm_sf $ns2 "${cnt_sf}"
++	wait_rm_sf $1 "${cnt}"
+ }
  
- 	check_expected "type" "token" "daddr" "dport" "family" "saddr" "locid" "remid"
-@@ -630,7 +627,7 @@ test_subflows()
- 	kill_wait $listener_pid
- 
- 	local sport
--	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$server_evts")
-+	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW from server to client machine
- 	:>"$server_evts"
-@@ -668,7 +665,7 @@ test_subflows()
- 	# Delete the listener from the client ns, if one was created
- 	kill_wait $listener_pid
- 
--	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$server_evts")
-+	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW6 from server to client machine
- 	:>"$server_evts"
-@@ -707,7 +704,7 @@ test_subflows()
- 	# Delete the listener from the client ns, if one was created
- 	kill_wait $listener_pid
- 
--	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$server_evts")
-+	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW from server to client machine
- 	:>"$server_evts"
-@@ -745,7 +742,7 @@ test_subflows()
- 	# Delete the listener from the server ns, if one was created
- 	kill_wait $listener_pid
- 
--	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$client_evts")
-+	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW from client to server machine
- 	:>"$client_evts"
-@@ -784,7 +781,7 @@ test_subflows()
- 	# Delete the listener from the server ns, if one was created
- 	kill_wait $listener_pid
- 
--	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$client_evts")
-+	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW6 from client to server machine
- 	:>"$client_evts"
-@@ -821,7 +818,7 @@ test_subflows()
- 	# Delete the listener from the server ns, if one was created
- 	kill_wait $listener_pid
- 
--	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$client_evts")
-+	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW from client to server machine
- 	:>"$client_evts"
-@@ -867,7 +864,7 @@ test_subflows_v4_v6_mix()
- 	# Delete the listener from the server ns, if one was created
- 	kill_wait $listener_pid
- 
--	sport=$(sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q' "$client_evts")
-+	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW from client to server machine
- 	:>"$client_evts"
-@@ -933,18 +930,13 @@ verify_listener_events()
- 		print_test "CLOSE_LISTENER $e_saddr:$e_sport"
- 	fi
- 
--	type=$(grep "type:$e_type," $evt |
--	       sed --unbuffered -n 's/.*\(type:\)\([[:digit:]]*\).*$/\2/p;q')
--	family=$(grep "type:$e_type," $evt |
--		 sed --unbuffered -n 's/.*\(family:\)\([[:digit:]]*\).*$/\2/p;q')
--	sport=$(grep "type:$e_type," $evt |
--		sed --unbuffered -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
-+	type=$(mptcp_lib_evts_get_info type $evt $e_type)
-+	family=$(mptcp_lib_evts_get_info family $evt $e_type)
-+	sport=$(mptcp_lib_evts_get_info sport $evt $e_type)
- 	if [ $family ] && [ $family = $AF_INET6 ]; then
--		saddr=$(grep "type:$e_type," $evt |
--			sed --unbuffered -n 's/.*\(saddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
-+		saddr=$(mptcp_lib_evts_get_info saddr6 $evt $e_type)
- 	else
--		saddr=$(grep "type:$e_type," $evt |
--			sed --unbuffered -n 's/.*\(saddr4:\)\([0-9.]*\).*$/\2/p;q')
-+		saddr=$(mptcp_lib_evts_get_info saddr4 $evt $e_type)
- 	fi
- 
- 	check_expected "type" "family" "saddr" "sport"
+ userspace_tests()
+@@ -3462,13 +3458,14 @@ userspace_tests()
+ 			run_tests $ns1 $ns2 10.0.1.1 &
+ 		local tests_pid=$!
+ 		wait_mpj $ns1
+-		userspace_pm_add_addr 10.0.2.1 10
++		userspace_pm_add_addr $ns1 10.0.2.1 10
+ 		chk_join_nr 1 1 1
+ 		chk_add_nr 1 1
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 2 2
+ 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
+-		userspace_pm_rm_sf_addr_ns1 10.0.2.1 10
++		userspace_pm_rm_addr $ns1 10
++		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $SUB_ESTABLISHED
+ 		chk_rm_nr 1 1 invert
+ 		chk_mptcp_info subflows 0 subflows 0
+ 		chk_subflows_total 1 1
+@@ -3485,11 +3482,12 @@ userspace_tests()
+ 			run_tests $ns1 $ns2 10.0.1.1 &
+ 		local tests_pid=$!
+ 		wait_mpj $ns2
+-		userspace_pm_add_sf 10.0.3.2 20
++		userspace_pm_add_sf $ns2 10.0.3.2 20
+ 		chk_join_nr 1 1 1
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 2 2
+-		userspace_pm_rm_sf_addr_ns2 10.0.3.2 20
++		userspace_pm_rm_addr $ns2 20
++		userspace_pm_rm_sf $ns2 10.0.3.2 $SUB_ESTABLISHED
+ 		chk_rm_nr 1 1
+ 		chk_mptcp_info subflows 0 subflows 0
+ 		chk_subflows_total 1 1
 
 -- 
 2.41.0
