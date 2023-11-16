@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C1A4433;
-	Thu, 16 Nov 2023 00:31:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645F74680;
+	Thu, 16 Nov 2023 00:31:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ku9tf0tW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94711C433CA;
-	Thu, 16 Nov 2023 00:31:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T057VahD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB7AC433D9;
+	Thu, 16 Nov 2023 00:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700094711;
-	bh=bfJE6HiF3+FAp9zrybQcVB6vSbN1zDCfxLnLX/6Ihz0=;
+	s=k20201202; t=1700094712;
+	bh=T1r+5rFukXYSQtyoFZ71FJEbFqecAb3fG9hUGf4rVBo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ku9tf0tWlafbUe5MXjdGPYgg8oFAXD0gVWAYAVKGmU+tYexAMLKCFzLQje9wG0I6Z
-	 c25r7ZTM2usLv3RntUSS+7GfZEfzqLWCojEmUfuOC9M80smQ9iH96B3SHyBGoGrYr3
-	 UYf0gd5p3FSE8okTPMfnArb0BVV77wNp/yrb9DRr8TzHmg9W/cy/aMP/zrYgnkjYcJ
-	 9mUrXHkXbsF75sJyttMTwKgLZM3ZMEnAu7W6h8COqad0fd4PLrS64UWlgmT0LU26yJ
-	 pDAkILyycCG+gW69jn2TrEOsc4KmewoIxxERoVk3pDh4VTq/09K0qHWBj9Yd8Ds1AY
-	 4f6qoXaV9e/Uw==
+	b=T057VahD8FsRKjHBNX1xXx0BzOtdofC+C6Sk/dXV/PkU2eEFYCB2lLXulzSR4ow48
+	 arzSSHM9DemldIGgJ64qbWGUgCU5+ZMAjCh2eH2WaTj3Z0z/lM0OQJHCdspKalQEOF
+	 OLHe2dcFAj0aIp9Tq8qnvfzw31MgE/N/3ZyJZcNox7yan/R7W337XAcDf0YdF9PuFf
+	 NErjy7zaIKS9EuOO8FOXlM057iCaeOrqQzEBnOZUkTlzB3KfoQCVr0gwh13IXr1GmP
+	 58+wiB3x5slKfAOWt6Yi4IqI1hAHUu5ccyyNIHOiyt6OYxxZypVT0LCmOMkGCUtTNG
+	 y2pRKpIL2vkYw==
 From: Mat Martineau <martineau@kernel.org>
-Date: Wed, 15 Nov 2023 16:31:33 -0800
-Subject: [PATCH net-next v3 05/15] selftests: mptcp: userspace pm create id
- 0 subflow
+Date: Wed, 15 Nov 2023 16:31:35 -0800
+Subject: [PATCH net-next v3 07/15] selftests: mptcp: userspace pm remove
+ initial subflow
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231115-send-net-next-2023107-v3-5-1ef58145a882@kernel.org>
+Message-Id: <20231115-send-net-next-2023107-v3-7-1ef58145a882@kernel.org>
 References: <20231115-send-net-next-2023107-v3-0-1ef58145a882@kernel.org>
 In-Reply-To: <20231115-send-net-next-2023107-v3-0-1ef58145a882@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, 
@@ -41,29 +41,30 @@ X-Mailer: b4 0.12.4
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch adds a selftest to create id 0 subflow. Pass id 0 to the
-helper userspace_pm_add_sf() to create id 0 subflow. chk_mptcp_info
-shows one subflow but chk_subflows_total shows two subflows in each
-namespace.
+This patch adds a selftest for userspace PM to remove the initial
+subflow.
+
+Use userspace_pm_add_sf() to add a subflow, and pass initial IP address
+to userspace_pm_rm_sf() to remove the initial subflow.
 
 Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 494aee8574fb..6c2c47ce11ad 100755
+index 6c2c47ce11ad..68fb7aa12fef 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3494,6 +3494,25 @@ userspace_tests()
+@@ -3513,6 +3513,30 @@ userspace_tests()
  		kill_events_pids
  		wait $tests_pid
  	fi
 +
-+	# userspace pm create id 0 subflow
-+	if reset_with_events "userspace pm create id 0 subflow" &&
++	# userspace pm remove initial subflow
++	if reset_with_events "userspace pm remove initial subflow" &&
 +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
 +		set_userspace_pm $ns2
 +		pm_nl_set_limits $ns1 0 1
@@ -71,12 +72,17 @@ index 494aee8574fb..6c2c47ce11ad 100755
 +			run_tests $ns1 $ns2 10.0.1.1 &
 +		local tests_pid=$!
 +		wait_mpj $ns2
-+		chk_mptcp_info subflows 0 subflows 0
-+		chk_subflows_total 1 1
-+		userspace_pm_add_sf $ns2 10.0.3.2 0
++		userspace_pm_add_sf $ns2 10.0.3.2 20
 +		chk_join_nr 1 1 1
 +		chk_mptcp_info subflows 1 subflows 1
 +		chk_subflows_total 2 2
++		userspace_pm_rm_sf $ns2 10.0.1.2
++		# we don't look at the counter linked to the RM_ADDR but
++		# to the one linked to the subflows that have been removed
++		chk_rm_nr 0 1
++		chk_rst_nr 0 0 invert
++		chk_mptcp_info subflows 1 subflows 1
++		chk_subflows_total 1 1
 +		kill_events_pids
 +		wait $tests_pid
 +	fi
