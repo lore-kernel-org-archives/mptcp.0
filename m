@@ -1,130 +1,97 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3419315C6
-	for <mptcp@lists.linux.dev>; Sun, 19 Nov 2023 04:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57D1199BD;
+	Sun, 19 Nov 2023 20:10:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENLjSCXm"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-66d87554434so6723616d6.2
-        for <mptcp@lists.linux.dev>; Sat, 18 Nov 2023 20:39:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700368756; x=1700973556; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hu5Sfg8j+XZ+P8XABQlH+Eo6WMIqT9Dd2Gc7lrXYNvw=;
-        b=ENLjSCXmOHvAazeC9MAkcz2sfvLlYUMeg3Zp83cT7L+N3AkTQWDAuUIybEoL3x7sTZ
-         tvZ6UWSvWVch2hEzR8OGIu0l7BO9pWkBEemG1Ai9D3uZLePUdzIQr4SL4mO35jzoZhwU
-         WO9NIzsw/NVOa3PERVbas1sV+MqpFmhBog9VyTcyDdcbLKqneUxIzFCaGzwcZzQoxbh2
-         gN3g648j54XzQEqxb/m45Gl08gt06LGoaO3zrLSEl0ahbPJEyKld2SmfN0wTPBeYwJWM
-         yrKmZ5PXPsOHnSmxk/yZb5ysAgz1ItWLvd5ubJQCJUail9TMc50ynQ5gxTQdb2j2P6LG
-         bmkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700368756; x=1700973556;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hu5Sfg8j+XZ+P8XABQlH+Eo6WMIqT9Dd2Gc7lrXYNvw=;
-        b=nSvwgNeDNCWerXZMcVcMuR0K5o7mGllrBb8aSkfGC87hHkcow8EFanDhqSP7PcvZc/
-         SEm3udX0EdzuuiqqVIInqS3hRLMdby5bBJjQQ8C/EkZlh3CBq875uYGQlMlLsneWx9u3
-         dDYVvYgKzT7JVlIqVnnUEI8hgpVqp+afkmY+LRpjKmx/0YQ6UNNCFY4Xq2DkE2P0+jU+
-         zgoHMhifV2qid9h/z6UO3mWck3Ji04+II29wBsAerEjzUzJUyyynz6G61xqvJC1bwMpZ
-         47tVp3A9kaWIwVwJVlXSiaJqEqJuKrgmUqhZi5rYLaaYfUinsGAwSF/6galtafA2h1vY
-         PpcQ==
-X-Gm-Message-State: AOJu0YxPnsAjSTvFuOax0aL3QAyGtv4XvNbC6YcyJVEISkWGEQ2JASLh
-	dbXvCisykyMlUASmOeLrW+c/8JPW+w==
-X-Google-Smtp-Source: AGHT+IG43NZMdYDMmfVy/no9hz2s0c9H1zAbYepXEKeXiqC+1VwNZHog4rrHmTyJgLY1wL+I+vf2PQ==
-X-Received: by 2002:a05:6214:f2e:b0:677:fba2:21e2 with SMTP id iw14-20020a0562140f2e00b00677fba221e2mr5333599qvb.65.1700368756055;
-        Sat, 18 Nov 2023 20:39:16 -0800 (PST)
-Received: from [127.0.0.1] ([172.183.131.21])
-        by smtp.gmail.com with ESMTPSA id v6-20020a0ccd86000000b0065b0771f2edsm1880196qvm.136.2023.11.18.20.39.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Nov 2023 20:39:15 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20231119033006.442271-1-kuba@kernel.org>
-References: <20231119033006.442271-1-kuba@kernel.org>
-Subject: Re: net: fill in MODULE_DESCRIPTION()s for SOCK_DIAG modules:
- Tests Results
-Message-ID: <a001a72e-117e-2e17-9eac-92a2e8fa874f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 19 Nov 2023 04:39:14 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j45PWymq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 13EC5C433C7;
+	Sun, 19 Nov 2023 20:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700424624;
+	bh=RfcmcSJXbNshmCCmuIQ3OLjalTX/zBZa+mvG0+u9+OQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=j45PWymqb1xFb4zs9J1IsJFg8HnooUak2A+BOQquFgMsnDmBkA/r2GHxyRsPbiMwz
+	 1tNm/mpxE8jdAzOzOV0JVzh3Jxst2rwdYWekOb0BZS79Q+FAdSbcgfP64yy/KALD48
+	 4icnL9dHKIgrw3/g/JXuDxTwdS2H+tl3Mp9JuplIkuE9q4gOnDksLeVWDeEsXUwRhW
+	 K5xrICNaBvCnx/1/YmlSa67kSdLhrRcRkVbW2Q+ewBH3dnrW4KVZ2VnUpRWJN+9yAn
+	 gWbzAnqavepenz6VDL01VAXVw74N1vt1X0fkZTp//ZFghNrjM3ZXsOR3tnocCGNZXB
+	 7r7xXBklox58g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ED963C4316B;
+	Sun, 19 Nov 2023 20:10:23 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: fill in MODULE_DESCRIPTION()s for SOCK_DIAG modules
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170042462396.21508.74186037666655435.git-patchwork-notify@kernel.org>
+Date: Sun, 19 Nov 2023 20:10:23 +0000
+References: <20231119033006.442271-1-kuba@kernel.org>
+In-Reply-To: <20231119033006.442271-1-kuba@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
+ pabeni@redhat.com, dsahern@kernel.org, matttbe@kernel.org,
+ martineau@kernel.org, marcelo.leitner@gmail.com, lucien.xin@gmail.com,
+ kgraul@linux.ibm.com, wenjia@linux.ibm.com, jaka@linux.ibm.com,
+ alibuda@linux.alibaba.com, tonylu@linux.alibaba.com, guwen@linux.alibaba.com,
+ jmaloy@redhat.com, ying.xue@windriver.com, sgarzare@redhat.com,
+ bjorn@kernel.org, magnus.karlsson@intel.com, maciej.fijalkowski@intel.com,
+ kuniyu@amazon.com, mptcp@lists.linux.dev, linux-sctp@vger.kernel.org,
+ linux-s390@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+ virtualization@lists.linux.dev, bpf@vger.kernel.org
 
-Hi Jakub,
+Hello:
 
-Thank you for your modifications, that's great!
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Our CI did some validations and here is its report:
+On Sat, 18 Nov 2023 19:30:06 -0800 you wrote:
+> W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
+> Add descriptions to all the sock diag modules in one fell swoop.
+> 
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+> CC: dsahern@kernel.org
+> CC: matttbe@kernel.org
+> CC: martineau@kernel.org
+> CC: marcelo.leitner@gmail.com
+> CC: lucien.xin@gmail.com
+> CC: kgraul@linux.ibm.com
+> CC: wenjia@linux.ibm.com
+> CC: jaka@linux.ibm.com
+> CC: alibuda@linux.alibaba.com
+> CC: tonylu@linux.alibaba.com
+> CC: guwen@linux.alibaba.com
+> CC: jmaloy@redhat.com
+> CC: ying.xue@windriver.com
+> CC: sgarzare@redhat.com
+> CC: bjorn@kernel.org
+> CC: magnus.karlsson@intel.com
+> CC: maciej.fijalkowski@intel.com
+> CC: kuniyu@amazon.com
+> CC: mptcp@lists.linux.dev
+> CC: linux-sctp@vger.kernel.org
+> CC: linux-s390@vger.kernel.org
+> CC: tipc-discussion@lists.sourceforge.net
+> CC: virtualization@lists.linux.dev
+> CC: bpf@vger.kernel.org
+> 
+> [...]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6162446965014528
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6162446965014528/summary/summary.txt
+Here is the summary with links:
+  - [net] net: fill in MODULE_DESCRIPTION()s for SOCK_DIAG modules
+    https://git.kernel.org/netdev/net/c/938dbead34cd
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5599497011593216
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5599497011593216/summary/summary.txt
-
-- {"code":404,"message":
-  - "Can't find artifacts containing file =
-conclusion.txt"}:
-  - Task: https://cirrus-ci.com/task/4526373662883840
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4526373662883840/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6725396918435840
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6725396918435840/summary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/8a3276e47eea
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (Tessares)
