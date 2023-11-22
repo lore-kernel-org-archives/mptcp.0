@@ -1,100 +1,276 @@
-Received: from fallback13.i.mail.ru (fallback13.i.mail.ru [79.137.243.65])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734984D123
-	for <mptcp@lists.linux.dev>; Wed, 22 Nov 2023 16:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=internet.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=internet.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088434C3A7
+	for <mptcp@lists.linux.dev>; Wed, 22 Nov 2023 16:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=internet.ru header.i=@internet.ru header.b="CE3lysTB";
-	dkim=pass (2048-bit key) header.d=internet.ru header.i=@internet.ru header.b="TZnVj++v"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
-	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=mMZ4qe/MufKevhwKQLb4XCF//0aIccmJETgmXQs68wo=;
-	t=1700670077;x=1700760077; 
-	b=CE3lysTBsDk1IJQuycl+UvGNttVq8q6z3m1tFCmXxuYah2osL9+lqnczhnSpVI41UGhZytIKhd4eg1B6XkXAjIuuhdsDskyjEBL3+08cMZ7HMtGaVNPG3iKYspS5Qd3hN8z7smxbU+PQAU3EMhH/4fpppYUcvFYAFo1eIllvDt6JCQhUfyGJ/NJ5MDBf/HUcaNwKFT3EoOlngbi2GRCwQYkiZUiJCD0r09I2eL7I2s7ojB+za56DPqXcJq5pnIujj1Vd5ReGiNLgWRcATdYiF7/0DmbTFENyIx39bDNuHvlxV/gUkQZNOaOxl1gqkRssnqgXRUK0gji42xWpwIhFBQ==;
-Received: from [10.161.55.49] (port=48420 helo=smtpng1.i.mail.ru)
-	by fallback13.i.mail.ru with esmtp (envelope-from <max@internet.ru>)
-	id 1r5pdj-006BsO-Vk
-	for mptcp@lists.linux.dev; Wed, 22 Nov 2023 18:59:48 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
-	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=mMZ4qe/MufKevhwKQLb4XCF//0aIccmJETgmXQs68wo=;
-	t=1700668787;x=1700758787; 
-	b=TZnVj++vzwLkV6sfGsodJIDDrZk20wsTBA/2Hf4xp/0vI0iR/Nl6ATb8cWikpDXstUKC43Zse+75vPT9rOH+CsreYMxyd00HNjItxfPw9jad9CCDc/c92IWlJnldaur2iZTbRpRUT9zm5UYKdxjFp0m/CcJ088KNmggdJxMS/c2lrDquBgUvicpLxYMjpXs6JewOnQH97waHCdNHp37RNEQFPUYTGkjsLkgFJ8WCUbOzenmmoIbB12qighZmBgYzwRQNGfr/Cjsr5zl8TPDyCkNSaVjZGQBCHocGFfHIdg3ChM69h9es1EkQCy9W0WlOcd2PYIXw4eLH4UtZV4LjHQ==;
-Received: by smtpng1.m.smailru.net with esmtpa (envelope-from <max@internet.ru>)
-	id 1r5pdb-0002rH-Q6; Wed, 22 Nov 2023 18:59:40 +0300
-From: Maxim Galaganov <max@internet.ru>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QN/tPbjc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700670079;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vQLsQ0r/TeV7H9X2zPwi3NqM0JqiDUzmzc6tgUA1q/c=;
+	b=QN/tPbjcl1Pov35eMMtsic+pZoyMwfAWBjf2CWkGnVQ8QOy2J/RA+Sbzx0r16231BEdSJx
+	jP1uPQOVOIkqxykfrR00S8BzpFSyeXSzTqT0l+5o37lWwC6enoIPonGi01noi6bwjVR0fi
+	hizO5n3Iyj7CwGR1L211A/MMISJjdjQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-288-TDnRQK1LMumD9K5YF6XiiA-1; Wed,
+ 22 Nov 2023 11:21:18 -0500
+X-MC-Unique: TDnRQK1LMumD9K5YF6XiiA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 205EF28EA6F2
+	for <mptcp@lists.linux.dev>; Wed, 22 Nov 2023 16:21:18 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.207])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7F2F8492BE0
+	for <mptcp@lists.linux.dev>; Wed, 22 Nov 2023 16:21:17 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Cc: Maxim Galaganov <max@internet.ru>
-Subject: [PATCH mptcp-next 2/2] selftests/net: add MPTCP coverage for IP_LOCAL_PORT_RANGE
-Date: Wed, 22 Nov 2023 18:59:19 +0300
-Message-ID: <20231122155919.11393-3-max@internet.ru>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231122155919.11393-1-max@internet.ru>
-References: <20231122155919.11393-1-max@internet.ru>
+Subject: [PATCH mptcp-net v2] mptcp: fix inconsistent state on fastopen race
+Date: Wed, 22 Nov 2023 17:21:12 +0100
+Message-ID: <7237df51ca90d9692f133823a3a6071ee87ba02d.1700667812.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-7564579A: EEAE043A70213CC8
-X-77F55803: 4F1203BC0FB41BD9FEA8E122FE2215F5F9A7F26A9461D4801668790ACF3513421867C24CE74E72BB5FE18E9CBFBE7C0749595627237A030DB35728C0F0432A41F07C4114B69F52B92890F9C47E136152
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE78F7806334BA34DD4EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006371DF52D98DC3592C48638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8A69ED5C5BCF5D3B8FCC2540E947146226F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE7328B01A8D746D8839FA2833FD35BB23D9E625A9149C048EEB28585415E75ADA9F04B652EEC242312D2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8B44DFDAE72D78788F389733CBF5DBD5E9B5C8C57E37DE458B9E9CE733340B9D5F3BBE47FD9DD3FB595F5C1EE8F4F765FC3A703B70628EAD7BE2021AF6380DFAD18AA50765F790063735872C767BF85DA227C277FBC8AE2E8B895CADBD5EF1EE27EFF80C71ABB335746BA297DBC24807EABDAD6C7F3747799A
-X-C1DE0DAB: 0D63561A33F958A553BB7EF17E3C77E2E22301315A8F93B2DCC402196A0CE6E1F87CCE6106E1FC07E67D4AC08A07B9B01DAA61796BF5227B9C5DF10A05D560A950611B66E3DA6D700B0A020F03D25A09D2DCF9CF1F528DBCCB5012B2E24CD356
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF6789EC4FCDEBBC101C87FB8AA82DB67D49D0BF2AAB791813447DA6E5D4A68408C69CBF34C6AF1FF588AD3775A6B0C834C65EA8E46CD9AE619801BC1E0607620340B08DDBC5CE87D002C26D483E81D6BEA5ED0C00A4B096A39697699CFF2E0C50CC2E138FFB4ACBED
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojGZhPsaRkbblfKTVpvF6JdA==
-X-Mailru-Sender: 689FA8AB762F7393590D8C940224AE334D974532C77D78A0ACCA6F5B7CEB67ABE94AC9D29F4E5226FD262907200E8C52FB559BB5D741EB96C728B2FC74FAA16AD7A14DD9E34ECE7467EA787935ED9F1B
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B4C412E14AEF4742E1D915F33BAFA678CC53B93FBE07102DFC049FFFDB7839CE9E432D8BDF4FB0405F83E25376A5BAB7ED39525C1B8DEA9C82BC136391F456C3FB
-X-7FA49CB5: 0D63561A33F958A513372EFACD8ECAF7D48813DFF84AA9C4003398D44B157586CACD7DF95DA8FC8BD5E8D9A59859A8B653555A62B7CAD886
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5xhPKz0ZEsZ5k6NOOPWz5QAiZSCXKGQRq3/7KxbCLSB2ESzQkaOXqCBFZPLWFrEGlV1shfWe2EVcxl5toh0c/aCGOghz/frdRhzMe95NxDFdjNtV51DQSTBn4UV4nD80eQ==
-X-Mailru-MI: C000000000000800
-X-Mras: Ok
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Since previous commit, MPTCP has support for IP_BIND_ADDRESS_NO_PORT and
-IP_LOCAL_PORT_RANGE sockopts.
+The netlink PM can race with fastopen self-connect attempts, shutting
+down the first subflow via:
 
-Add ip4_mptcp and ip6_mptcp fixture variants to ip_local_port_range
-selftest to provide selftest coverage for these sockopts.
+MPTCP_PM_CMD_DEL_ADDR -> mptcp_nl_remove_id_zero_address ->
+  mptcp_pm_nl_rm_subflow_received -> mptcp_close_ssk
 
-Signed-off-by: Maxim Galaganov <max@internet.ru>
+and transitioning such subflow to FIN_WAIT1 status before the syn-ack
+packet is processed. The MPTCP code does not react to such state change,
+leaving the connection in not-fallback status and the subflow handshake
+uncompleted, triggering the following splat:
+
+WARNING: CPU: 0 PID: 10630 at net/mptcp/subflow.c:1405 subflow_data_ready+0x39f/0x690 net/mptcp/subflow.c:1405
+Modules linked in:
+CPU: 0 PID: 10630 Comm: kworker/u4:11 Not tainted 6.6.0-syzkaller-14500-g1c41041124bd #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/09/2023
+Workqueue: bat_events batadv_nc_worker
+RIP: 0010:subflow_data_ready+0x39f/0x690 net/mptcp/subflow.c:1405
+Code: 18 89 ee e8 e3 d2 21 f7 40 84 ed 75 1f e8 a9 d7 21 f7 44 89 fe bf 07 00 00 00 e8 0c d3 21 f7 41 83 ff 07 74 07 e8 91 d7 21 f7 <0f> 0b e8 8a d7 21 f7 48 89 df e8 d2 b2 ff ff 31 ff 89 c5 89 c6 e8
+RSP: 0018:ffffc90000007448 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff888031efc700 RCX: ffffffff8a65baf4
+RDX: ffff888043222140 RSI: ffffffff8a65baff RDI: 0000000000000005
+RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000007
+R10: 000000000000000b R11: 0000000000000000 R12: 1ffff92000000e89
+R13: ffff88807a534d80 R14: ffff888021c11a00 R15: 000000000000000b
+FS:  0000000000000000(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa19a0ffc81 CR3: 000000007a2db000 CR4: 00000000003506f0
+DR0: 000000000000d8dd DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ tcp_data_ready+0x14c/0x5b0 net/ipv4/tcp_input.c:5128
+ tcp_data_queue+0x19c3/0x5190 net/ipv4/tcp_input.c:5208
+ tcp_rcv_state_process+0x11ef/0x4e10 net/ipv4/tcp_input.c:6844
+ tcp_v4_do_rcv+0x369/0xa10 net/ipv4/tcp_ipv4.c:1929
+ tcp_v4_rcv+0x3888/0x3b30 net/ipv4/tcp_ipv4.c:2329
+ ip_protocol_deliver_rcu+0x9f/0x480 net/ipv4/ip_input.c:205
+ ip_local_deliver_finish+0x2e4/0x510 net/ipv4/ip_input.c:233
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ NF_HOOK include/linux/netfilter.h:308 [inline]
+ ip_local_deliver+0x1b6/0x550 net/ipv4/ip_input.c:254
+ dst_input include/net/dst.h:461 [inline]
+ ip_rcv_finish+0x1c4/0x2e0 net/ipv4/ip_input.c:449
+ NF_HOOK include/linux/netfilter.h:314 [inline]
+ NF_HOOK include/linux/netfilter.h:308 [inline]
+ ip_rcv+0xce/0x440 net/ipv4/ip_input.c:569
+ __netif_receive_skb_one_core+0x115/0x180 net/core/dev.c:5527
+ __netif_receive_skb+0x1f/0x1b0 net/core/dev.c:5641
+ process_backlog+0x101/0x6b0 net/core/dev.c:5969
+ __napi_poll.constprop.0+0xb4/0x540 net/core/dev.c:6531
+ napi_poll net/core/dev.c:6600 [inline]
+ net_rx_action+0x956/0xe90 net/core/dev.c:6733
+ __do_softirq+0x21a/0x968 kernel/softirq.c:553
+ do_softirq kernel/softirq.c:454 [inline]
+ do_softirq+0xaa/0xe0 kernel/softirq.c:441
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0xf8/0x120 kernel/softirq.c:381
+ spin_unlock_bh include/linux/spinlock.h:396 [inline]
+ batadv_nc_purge_paths+0x1ce/0x3c0 net/batman-adv/network-coding.c:471
+ batadv_nc_worker+0x9b1/0x10e0 net/batman-adv/network-coding.c:722
+ process_one_work+0x884/0x15c0 kernel/workqueue.c:2630
+ process_scheduled_works kernel/workqueue.c:2703 [inline]
+ worker_thread+0x8b9/0x1290 kernel/workqueue.c:2784
+ kthread+0x33c/0x440 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+ </TASK>
+
+To address the issue, catch the racing subflow state change and
+use it to cause the MPTCP fallback. Such fallback is also used to
+cause the first subflow state propagation to the msk socket via
+mptcp_set_connected(). After this change, the first subflow can
+additionally propagate the TCP_FIN_WAIT1 state, so rename the
+helper accordingly.
+
+Finally, if the state propagation is delayed to the msk release
+callback, the first subflow can change to a different state in between.
+Cache the relevant target state in a new msk-level field and use
+such value to update the msk state at release time.
+
+Fixes: 1e777f39b4d7 ("mptcp: add MSG_FASTOPEN sendmsg flag support")
+Reported-by: syzbot+c53d4d3ddb327e80bc51@syzkaller.appspotmail.com
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/458
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
- tools/testing/selftests/net/ip_local_port_range.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+v1 -> v2:
+ - when the release_cb is not used, do not cache the new state (Mat)
+ - rename the TCP_CONNECTED bit (Mat)
+---
+ net/mptcp/protocol.c |  6 +++---
+ net/mptcp/protocol.h |  9 ++++++---
+ net/mptcp/subflow.c  | 28 +++++++++++++++++-----------
+ 3 files changed, 26 insertions(+), 17 deletions(-)
 
-diff --git a/tools/testing/selftests/net/ip_local_port_range.c b/tools/testing/selftests/net/ip_local_port_range.c
-index 75e3fdacdf73..0f217a1cc837 100644
---- a/tools/testing/selftests/net/ip_local_port_range.c
-+++ b/tools/testing/selftests/net/ip_local_port_range.c
-@@ -146,6 +146,12 @@ FIXTURE_VARIANT_ADD(ip_local_port_range, ip4_stcp) {
- 	.so_protocol	= IPPROTO_SCTP,
- };
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 6956fde61c68..199b2e09f1ac 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3402,12 +3402,12 @@ static void mptcp_release_cb(struct sock *sk)
+ 	if (__test_and_clear_bit(MPTCP_CLEAN_UNA, &msk->cb_flags))
+ 		__mptcp_clean_una_wakeup(sk);
+ 	if (unlikely(msk->cb_flags)) {
+-		/* be sure to set the current sk state before taking actions
++		/* be sure to sync the msk state before taking actions
+ 		 * depending on sk_state (MPTCP_ERROR_REPORT)
+ 		 * On sk release avoid actions depending on the first subflow
+ 		 */
+-		if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags) && msk->first)
+-			__mptcp_set_connected(sk);
++		if (__test_and_clear_bit(MPTCP_SYNC_STATE, &msk->cb_flags) && msk->first)
++			__mptcp_sync_state(sk, msk->pending_state);
+ 		if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
+ 			__mptcp_error_report(sk);
+ 		if (__test_and_clear_bit(MPTCP_SYNC_SNDBUF, &msk->cb_flags))
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 8529b3ae55e9..ac11044bef1d 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -124,7 +124,7 @@
+ #define MPTCP_ERROR_REPORT	3
+ #define MPTCP_RETRANSMIT	4
+ #define MPTCP_FLUSH_JOIN_LIST	5
+-#define MPTCP_CONNECTED		6
++#define MPTCP_SYNC_STATE	6
+ #define MPTCP_SYNC_SNDBUF	7
  
-+FIXTURE_VARIANT_ADD(ip_local_port_range, ip4_mptcp) {
-+	.so_domain	= AF_INET,
-+	.so_type	= SOCK_STREAM,
-+	.so_protocol	= IPPROTO_MPTCP,
-+};
-+
- FIXTURE_VARIANT_ADD(ip_local_port_range, ip6_tcp) {
- 	.so_domain	= AF_INET6,
- 	.so_type	= SOCK_STREAM,
-@@ -164,6 +170,12 @@ FIXTURE_VARIANT_ADD(ip_local_port_range, ip6_stcp) {
- 	.so_protocol	= IPPROTO_SCTP,
- };
+ struct mptcp_skb_cb {
+@@ -296,6 +296,9 @@ struct mptcp_sock {
+ 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
+ 	bool		csum_enabled;
+ 	bool		allow_infinite_fallback;
++	u8		pending_state; /* A subflow asked to set this sk_state,
++					* protected by the msk data lock
++					*/
+ 	u8		mpc_endpoint_id;
+ 	u8		recvmsg_inq:1,
+ 			cork:1,
+@@ -733,7 +736,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+ 		       struct mptcp_options_received *mp_opt);
  
-+FIXTURE_VARIANT_ADD(ip_local_port_range, ip6_mptcp) {
-+	.so_domain	= AF_INET6,
-+	.so_type	= SOCK_STREAM,
-+	.so_protocol	= IPPROTO_MPTCP,
-+};
-+
- TEST_F(ip_local_port_range, invalid_option_value)
+ void mptcp_finish_connect(struct sock *sk);
+-void __mptcp_set_connected(struct sock *sk);
++void __mptcp_sync_state(struct sock *sk, int state);
+ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout);
+ 
+ static inline void mptcp_stop_tout_timer(struct sock *sk)
+@@ -1129,7 +1132,7 @@ static inline bool subflow_simultaneous_connect(struct sock *sk)
  {
- 	__u16 val16;
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+ 
+-	return sk->sk_state == TCP_ESTABLISHED &&
++	return (1 << sk->sk_state) & (TCPF_ESTABLISHED | TCPF_FIN_WAIT1) &&
+ 	       is_active_ssk(subflow) &&
+ 	       !subflow->conn_finished;
+ }
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index a4f3c27f0309..6d7684c35e93 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -419,22 +419,28 @@ static bool subflow_use_different_dport(struct mptcp_sock *msk, const struct soc
+ 	return inet_sk(sk)->inet_dport != inet_sk((struct sock *)msk)->inet_dport;
+ }
+ 
+-void __mptcp_set_connected(struct sock *sk)
++void __mptcp_sync_state(struct sock *sk, int state)
+ {
+-	__mptcp_propagate_sndbuf(sk, mptcp_sk(sk)->first);
++	struct mptcp_sock *msk = mptcp_sk(sk);
++
++	__mptcp_propagate_sndbuf(sk, msk->first);
+ 	if (sk->sk_state == TCP_SYN_SENT) {
+-		inet_sk_state_store(sk, TCP_ESTABLISHED);
++		inet_sk_state_store(sk, state);
+ 		sk->sk_state_change(sk);
+ 	}
+ }
+ 
+-static void mptcp_set_connected(struct sock *sk)
++static void mptcp_propagate_state(struct sock *sk, struct sock *ssk)
+ {
++	struct mptcp_sock *msk = mptcp_sk(sk);
++
+ 	mptcp_data_lock(sk);
+-	if (!sock_owned_by_user(sk))
+-		__mptcp_set_connected(sk);
+-	else
+-		__set_bit(MPTCP_CONNECTED, &mptcp_sk(sk)->cb_flags);
++	if (!sock_owned_by_user(sk)) {
++		__mptcp_sync_state(sk, ssk->sk_state);
++	} else {
++		msk->pending_state = ssk->sk_state;
++		__set_bit(MPTCP_SYNC_STATE, &msk->cb_flags);
++	}
+ 	mptcp_data_unlock(sk);
+ }
+ 
+@@ -496,7 +502,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 		subflow_set_remote_key(msk, subflow, &mp_opt);
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVEACK);
+ 		mptcp_finish_connect(sk);
+-		mptcp_set_connected(parent);
++		mptcp_propagate_state(parent, sk);
+ 	} else if (subflow->request_join) {
+ 		u8 hmac[SHA256_DIGEST_SIZE];
+ 
+@@ -540,7 +546,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 	} else if (mptcp_check_fallback(sk)) {
+ fallback:
+ 		mptcp_rcv_space_init(msk, sk);
+-		mptcp_set_connected(parent);
++		mptcp_propagate_state(parent, sk);
+ 	}
+ 	return;
+ 
+@@ -1740,7 +1746,7 @@ static void subflow_state_change(struct sock *sk)
+ 		mptcp_rcv_space_init(msk, sk);
+ 		pr_fallback(msk);
+ 		subflow->conn_finished = 1;
+-		mptcp_set_connected(parent);
++		mptcp_propagate_state(parent, sk);
+ 	}
+ 
+ 	/* as recvmsg() does not acquire the subflow socket for ssk selection
 -- 
-2.42.0
+2.41.0
 
