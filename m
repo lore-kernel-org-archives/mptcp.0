@@ -1,183 +1,69 @@
-Received: from mail-pl1-f206.google.com (mail-pl1-f206.google.com [209.85.214.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fallback20.i.mail.ru (fallback20.i.mail.ru [79.137.243.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF29956454
-	for <mptcp@lists.linux.dev>; Wed, 22 Nov 2023 15:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by mail-pl1-f206.google.com with SMTP id d9443c01a7336-1cc1ddb34ccso77529375ad.1
-        for <mptcp@lists.linux.dev>; Wed, 22 Nov 2023 07:43:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700667804; x=1701272604;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CFtPKhGMv7Zp9VrcApbcd7/gxkt/GNlZA4pzGmzIan8=;
-        b=N4sGezShBpVYMA56WeN4jMZY60D1+h8SKfH/iUUVNb50+b45vS8pJbsWygfxY6W5H5
-         iZF72ovL36XUYovm2nYFFIoXwsrpgtarLYk8sNEY51O8b/OFjbZhCV3THHtnlfJE7+n4
-         CXgBqpjPMWysiPaWHdJzb8WdjLUHj3p/NnGZtto+RNYxhdj/s6IUQJEpWMmcWrK683iL
-         oLBvjyR/BswqhmraPVSZrJaqR4uJ/TpkHyds7omwXGSLJ0/AYGGGivFwGrWLVGFcA9+t
-         bUXrgeKWhCFuke1M8eURz2JEcDFL+Mjm8nv+fPN6xdx54V0u9ORlPNw91utCXNfUylvF
-         NPOA==
-X-Gm-Message-State: AOJu0YzJqOaYV8SweigsogaEKcBAu9ZdOS67Jj1aIO0Stf1dsEgga5RI
-	WcB92yT25+WlbEq8kYi4nRIUZysGPn352TCyRFZvKxzLVVFa
-X-Google-Smtp-Source: AGHT+IEEUVismXgXQPXvJLbbHx9YueCHRh2KYjXyV83BjC6BUyockrT+FCGd/iWadtfdDaLPRHxLNfKsAoUnBPg4posJAtd+c1Ll
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC1457860
+	for <mptcp@lists.linux.dev>; Wed, 22 Nov 2023 16:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=internet.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=internet.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=internet.ru header.i=@internet.ru header.b="QgZk/SrL";
+	dkim=pass (2048-bit key) header.d=internet.ru header.i=@internet.ru header.b="F73aw7Kx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
+	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=zeGgf3Qth+xKFRFWJSjo5kWY1xkQA97A3YI2A/JyMCQ=;
+	t=1700670066;x=1700760066; 
+	b=QgZk/SrL2fdYhZnY1rcHMd1e7JruAkpvnMis9tgp5iVWUyDX7cRxrf6WlQ8iSZojxOQbw1bM2Cn8lEgrLh0rVJpHTuU5hNlvI8V3ADPPZpAAHI4jfwszIwrqvQFAx+euSWnxyVG0f5jcYWgLM0BdDlVR7ekifo/LuHanMwYKB/wZ58n7muo834npoD6LgAOQwTdc84pb3V/bzIFF9xFjxWd0kGCn5eBkdem1YzzzNWlm9HlADfBXUrv6ywjCrqGt/XN6KXke8ntrnCTdo/BDvLYaSeEMsP6z6yCepQvBO8lqV545N9gOi/xvvwIub9uQGPUlqlEldnzcrl6yV1QsBA==;
+Received: from [10.161.55.49] (port=36680 helo=smtpng1.i.mail.ru)
+	by fallback20.i.mail.ru with esmtp (envelope-from <max@internet.ru>)
+	id 1r5pdi-00ExD2-PI
+	for mptcp@lists.linux.dev; Wed, 22 Nov 2023 18:59:46 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
+	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=zeGgf3Qth+xKFRFWJSjo5kWY1xkQA97A3YI2A/JyMCQ=;
+	t=1700668786;x=1700758786; 
+	b=F73aw7KxB+XqH7ZL9vqz3z2R6WSr+qa/MeIw7BeFLoK432ESWmXMcTsJRC2JyzAkjt0vwSAr3DPhM8LhjQzlsHx/nEzASFCFqlWIvskVTqeQVXiHsGckhU8Di+ZzQJEMH5MFSnOroKdQhEMATJdTfZJ9QdXF7nxq5vta0BYFzfed8FmaoMfVElOAzaxA3qbtyRmCBMNXlFQWWDFRAG0stNfvmNU9YY6WTuvWX18W7kfB2ybVzk4YhM+BlYxMwDPCLwdanO+Qul8mAMvDxXLAMQXl8vIoTkO6npWRD3+FQi6PRG40/tEKkvslIrReyuqPn2FMxFxq6N3ucsosIfHsFQ==;
+Received: by smtpng1.m.smailru.net with esmtpa (envelope-from <max@internet.ru>)
+	id 1r5pda-0002rH-TS; Wed, 22 Nov 2023 18:59:39 +0300
+From: Maxim Galaganov <max@internet.ru>
+To: mptcp@lists.linux.dev
+Cc: Maxim Galaganov <max@internet.ru>
+Subject: [PATCH mptcp-next 0/2] more sockopts for ephemeral ports 
+Date: Wed, 22 Nov 2023 18:59:17 +0300
+Message-ID: <20231122155919.11393-1-max@internet.ru>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a17:903:18f:b0:1cf:5085:cfa1 with SMTP id
- z15-20020a170903018f00b001cf5085cfa1mr727262plg.13.1700667803849; Wed, 22 Nov
- 2023 07:43:23 -0800 (PST)
-Date: Wed, 22 Nov 2023 07:43:23 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000545a26060abf943b@google.com>
-Subject: [syzbot] [mptcp?] KMSAN: uninit-value in mptcp_incoming_options
-From: syzbot <syzbot+b834a6b2decad004cfa1@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, martineau@kernel.org, 
-	matthieu.baerts@tessares.net, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD92D71B79D2A671AE613047E28574C7AC18326F837F6E57241182A05F538085040E52AB9AEA8EBD1BEB320E76D8E793D31BAB66114F7F7E66E3546CD1220D9C1CD
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7353CFE866E745C13EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006371D5B197C6EC5B4BE8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8CB67BF0F319DEAA15484F61D9782DB0B6F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE71AE4D56B06699BBC9FA2833FD35BB23D9E625A9149C048EE9647ADFADE5905B16FD1C55BDD38FC3FD2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8BE4E369F5EA069656A471835C12D1D977C4224003CC8364762BB6847A3DEAEFB0F43C7A68FF6260569E8FC8737B5C224952D31B9D28593E51E827F84554CEF50127C277FBC8AE2E8BA83251EDC214901ED5E8D9A59859A8B6221D5A8161B58CB575ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
+X-C1DE0DAB: 0D63561A33F958A55DC79174EBA796B6E22301315A8F93B20B20E296A036D37AF87CCE6106E1FC07E67D4AC08A07B9B0CE135D2742255B359C5DF10A05D560A950611B66E3DA6D700B0A020F03D25A09D2DCF9CF1F528DBCCB5012B2E24CD356
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF8286EE0A2BD7D035EC281DDFC2D2BBE2330B12A1448E0041AB8E9534C8EAD0E149BEE304256398FC88AD3775A6B0C83494EAC4D7BED3391030434BAE171160EC40B08DDBC5CE87D002C26D483E81D6BEA5ED0C00A4B096A39697699CFF2E0C50CC2E138FFB4ACBED
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojGZhPsaRkbblSTS3KUsd8Pg==
+X-Mailru-Sender: 689FA8AB762F7393590D8C940224AE331078C45332DBC00ACB57656F220E89A0E94AC9D29F4E5226FD262907200E8C52FB559BB5D741EB96C728B2FC74FAA16AD7A14DD9E34ECE7467EA787935ED9F1B
+X-Mras: Ok
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B4C412E14AEF4742E1D915F33BAFA678CC5A563C885C477193049FFFDB7839CE9E432D8BDF4FB0405FF0A8EBEA3893ED864038DD57198F3A5541778B34530362F1
+X-7FA49CB5: 0D63561A33F958A53926C63B2186154B27416624FBC6C030B0F5796CF55D51D0CACD7DF95DA8FC8BD5E8D9A59859A8B6A096F61ED9298604
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5xhPKz0ZEsZ5k6NOOPWz5QAiZSCXKGQRq3/7KxbCLSB2ESzQkaOXqCBFZPLWFrEGlV1shfWe2EVcxl5toh0c/aCGOghz/frdRhzMe95NxDFdjNtV51DQSTDHaFGb5ZtolA==
+X-Mailru-MI: C000000000000800
+X-Mras: Ok
 
-Hello,
+Support useful sockopts that allow fine control over ephemeral port
+usage.
 
-syzbot found the following issue on:
+Maxim Galaganov (2):
+  mptcp: sockopt: support IP_LOCAL_PORT_RANGE and
+    IP_BIND_ADDRESS_NO_PORT
+  selftests/net: add MPTCP coverage for IP_LOCAL_PORT_RANGE
 
-HEAD commit:    c2d5304e6c64 Merge tag 'platform-drivers-x86-v6.7-2' of gi..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=1536e3d4e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e32016b84cf917ca
-dashboard link: https://syzkaller.appspot.com/bug?extid=b834a6b2decad004cfa1
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11469724e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13934aaf680000
+ net/mptcp/sockopt.c                           | 29 ++++++++++++++++++-
+ .../selftests/net/ip_local_port_range.c       | 12 ++++++++
+ 2 files changed, 40 insertions(+), 1 deletion(-)
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/23ea827adf3b/disk-c2d5304e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/0f964ac588f5/vmlinux-c2d5304e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b061be889285/bzImage-c2d5304e.xz
+-- 
+2.42.0
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b834a6b2decad004cfa1@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in mptcp_incoming_options+0xc93/0x3a80 net/mptcp/options.c:1197
- mptcp_incoming_options+0xc93/0x3a80 net/mptcp/options.c:1197
- tcp_data_queue+0xb4/0x7f20 net/ipv4/tcp_input.c:5141
- tcp_rcv_established+0x1132/0x2600 net/ipv4/tcp_input.c:6155
- tcp_v4_do_rcv+0x8a8/0xff0 net/ipv4/tcp_ipv4.c:1906
- tcp_v4_rcv+0x4ce0/0x51a0 net/ipv4/tcp_ipv4.c:2329
- ip_protocol_deliver_rcu+0x264/0x1300 net/ipv4/ip_input.c:205
- ip_local_deliver_finish+0x2b8/0x440 net/ipv4/ip_input.c:233
- NF_HOOK include/linux/netfilter.h:314 [inline]
- ip_local_deliver+0x21f/0x490 net/ipv4/ip_input.c:254
- dst_input include/net/dst.h:461 [inline]
- ip_rcv_finish net/ipv4/ip_input.c:449 [inline]
- NF_HOOK include/linux/netfilter.h:314 [inline]
- ip_rcv+0x476/0x770 net/ipv4/ip_input.c:569
- __netif_receive_skb_one_core net/core/dev.c:5529 [inline]
- __netif_receive_skb+0x1a6/0x5a0 net/core/dev.c:5643
- process_backlog+0x480/0x8b0 net/core/dev.c:5971
- __napi_poll+0xe3/0x970 net/core/dev.c:6533
- napi_poll net/core/dev.c:6602 [inline]
- net_rx_action+0x884/0x16d0 net/core/dev.c:6735
- __do_softirq+0x1b7/0x7c3 kernel/softirq.c:553
- do_softirq+0x9a/0xf0 kernel/softirq.c:454
- __local_bh_enable_ip+0x99/0xa0 kernel/softirq.c:381
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- rcu_read_unlock_bh include/linux/rcupdate.h:817 [inline]
- __dev_queue_xmit+0x24ff/0x5130 net/core/dev.c:4373
- dev_queue_xmit include/linux/netdevice.h:3112 [inline]
- neigh_hh_output include/net/neighbour.h:526 [inline]
- neigh_output include/net/neighbour.h:540 [inline]
- ip_finish_output2+0x14be/0x1b40 net/ipv4/ip_output.c:235
- __ip_finish_output+0x266/0x720
- ip_finish_output+0x4b/0x550 net/ipv4/ip_output.c:323
- NF_HOOK_COND include/linux/netfilter.h:303 [inline]
- ip_output+0x15f/0x3e0 net/ipv4/ip_output.c:433
- dst_output include/net/dst.h:451 [inline]
- ip_local_out net/ipv4/ip_output.c:129 [inline]
- __ip_queue_xmit+0x1c02/0x1e00 net/ipv4/ip_output.c:535
- ip_queue_xmit+0x60/0x80 net/ipv4/ip_output.c:549
- __tcp_transmit_skb+0x3b26/0x4c40 net/ipv4/tcp_output.c:1462
- tcp_transmit_skb net/ipv4/tcp_output.c:1480 [inline]
- tcp_write_xmit+0x3e0f/0x8940 net/ipv4/tcp_output.c:2792
- __tcp_push_pending_frames+0xc4/0x380 net/ipv4/tcp_output.c:2977
- tcp_push+0x755/0x7a0 net/ipv4/tcp.c:736
- mptcp_push_release net/mptcp/protocol.c:1489 [inline]
- __mptcp_push_pending+0x8bc/0xde0 net/mptcp/protocol.c:1624
- mptcp_sendmsg+0x1e90/0x2300 net/mptcp/protocol.c:1890
- inet_sendmsg+0x105/0x190 net/ipv4/af_inet.c:847
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- ____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584
- ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638
- __sys_sendmmsg+0x3c4/0x950 net/socket.c:2724
- __do_sys_sendmmsg net/socket.c:2753 [inline]
- __se_sys_sendmmsg net/socket.c:2750 [inline]
- __x64_sys_sendmmsg+0xbc/0x120 net/socket.c:2750
- do_syscall_x64 arch/x86/entry/common.c:51 [inline]
- do_syscall_64+0x44/0x110 arch/x86/entry/common.c:82
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-Uninit was stored to memory at:
- mptcp_parse_option net/mptcp/options.c:110 [inline]
- mptcp_get_options+0x2d86/0x2e60 net/mptcp/options.c:396
- mptcp_incoming_options+0x124/0x3a80 net/mptcp/options.c:1139
- tcp_data_queue+0xb4/0x7f20 net/ipv4/tcp_input.c:5141
- tcp_rcv_established+0x1132/0x2600 net/ipv4/tcp_input.c:6155
- tcp_v4_do_rcv+0x8a8/0xff0 net/ipv4/tcp_ipv4.c:1906
- tcp_v4_rcv+0x4ce0/0x51a0 net/ipv4/tcp_ipv4.c:2329
- ip_protocol_deliver_rcu+0x264/0x1300 net/ipv4/ip_input.c:205
- ip_local_deliver_finish+0x2b8/0x440 net/ipv4/ip_input.c:233
- NF_HOOK include/linux/netfilter.h:314 [inline]
- ip_local_deliver+0x21f/0x490 net/ipv4/ip_input.c:254
- dst_input include/net/dst.h:461 [inline]
- ip_rcv_finish net/ipv4/ip_input.c:449 [inline]
- NF_HOOK include/linux/netfilter.h:314 [inline]
- ip_rcv+0x476/0x770 net/ipv4/ip_input.c:569
- __netif_receive_skb_one_core net/core/dev.c:5529 [inline]
- __netif_receive_skb+0x1a6/0x5a0 net/core/dev.c:5643
- process_backlog+0x480/0x8b0 net/core/dev.c:5971
- __napi_poll+0xe3/0x970 net/core/dev.c:6533
- napi_poll net/core/dev.c:6602 [inline]
- net_rx_action+0x884/0x16d0 net/core/dev.c:6735
- __do_softirq+0x1b7/0x7c3 kernel/softirq.c:553
-
-Local variable mp_opt created at:
- mptcp_incoming_options+0x9b/0x3a80 net/mptcp/options.c:1116
- tcp_data_queue+0xb4/0x7f20 net/ipv4/tcp_input.c:5141
-
-CPU: 0 PID: 5031 Comm: syz-executor376 Not tainted 6.7.0-rc2-syzkaller-00014-gc2d5304e6c64 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
