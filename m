@@ -1,287 +1,258 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2064.outbound.protection.outlook.com [40.107.21.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46EF1CAB6
-	for <mptcp@lists.linux.dev>; Wed, 22 Nov 2023 11:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4256D2576D
+	for <mptcp@lists.linux.dev>; Wed, 22 Nov 2023 13:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="lPUyAA/W"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T7bWWHLl0wOBO1j+ShiuPc+54WF7SThkG1Qy+TrKo0MQlAmvi7urqaMgUVwydyka5XT8TlbgBu4Cqy7e7Zu7yYIRRf5GwBpP3/WQ4DdcJlsoYomX/PdvZsfBwTD3byfC97ynHsJPS/a/WLqAFUrNtb0oJ9lfOKy6ykICOd+nEG/n0eM4cuOxAHz6GSnUzFV3Xk/LMC3LEs/Q9/yV2X/4FHfHgvcvL3Nc1N5DTe0mwJFm6Z9vOd6niFKM/qJxpKqjqUjzZp5Zrhs2RvHKG/vp1D+tQ//1Eh1IOjFfH4nHlKC0qgJA2HIGB995wTKvqbxSvHYGVsX3rAo/AZajPgGkcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=REVfFsoMxM5W3bfwncBbfAOpHcuaKeU03wO/aUM2aCo=;
- b=jDqNSdMmHZLCvFLRd6tw+KP6Y+VAThrblOseaerfZD0Cn5Zke60jf83/nPUDbfpZjkDp1U5TeE7hXxt6+whe2GfNwrrsa4aPPTCufKj2xqmOQQQIvbWoJrHQO9ZCpMlKpxVK4H6Zi3RCgJQ3WgjDoBBsV9FY1Q4+zJDZ5hVG+cTEocf+3Omv48KUdCN5GcGYnDoHi8WFDZ3Uo3nU+6zOEFiTSafdq21dYebBAHBeo0nyfd3FXWqPeul7QU/Z9+UFtUcFfpCX2hvbzD7VHyqlRvOJfonlWcogMVgUYxkF7u+68JJsLYqNU/GN/O9Zo4GZOFMYnZzKYKRLWQhXGJwJAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=REVfFsoMxM5W3bfwncBbfAOpHcuaKeU03wO/aUM2aCo=;
- b=lPUyAA/W6O74pT6RaKJPcpZMUE/RJU+R2niBc8xxN4T2qRYKD/YQyqBGa27ESeQIvZ5CHdKQ3lAM0n3pVfQnjDWRfUJ0IZzmP+ESAKK3zEW3Ub6BiQ8ge2IxQsQbRPw1PKi5QZKXkijE8peBCuem+ei03Zyl2xRUv8Ku2dJJqM3UfavBdelwKIabGCveuyzuQJiKFGjLBUTOMZvryE2s4H7zx7KSKCyd7lrWzyJhwfoe+rJ+qOwBo2Fu3DUW/MHq1zHNqS0Wpr3AxTyZN/uUXbTExKp7Duiu9ncLoBVG/toHLSTV07eJwGDXlt8N95s/SufT/EeWjHqSB64o5Alq9w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
- by AM9PR04MB8858.eurprd04.prod.outlook.com (2603:10a6:20b:409::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.18; Wed, 22 Nov
- 2023 11:34:55 +0000
-Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::7102:259:f268:5321]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
- ([fe80::7102:259:f268:5321%7]) with mapi id 15.20.7025.017; Wed, 22 Nov 2023
- 11:34:55 +0000
-From: Geliang Tang <geliang.tang@suse.com>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next v4 33/33] selftests: mptcp: netlink: fix positions of newline
-Date: Wed, 22 Nov 2023 19:31:21 +0800
-Message-Id: <bf8c6d2142b5362dd9d6eab1c32ad573d3558657.1700652422.git.geliang.tang@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1700652422.git.geliang.tang@suse.com>
-References: <cover.1700652422.git.geliang.tang@suse.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYCP301CA0008.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:400:386::6) To HE1PR0402MB3497.eurprd04.prod.outlook.com
- (2603:10a6:7:83::14)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RwAeQcgn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700659551;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6h7B2BG5nkVc2JI1Ak1gOm1h4dtSa8wuI5aIMuSiqcU=;
+	b=RwAeQcgnFi8VQUC6ZV7DIaJF36nUJ6dcCG1r8uxUfqNZNKRS+ZA4SMsEUykJD6PiN7x77s
+	pTGKYsPoOANSIGSW4Cw6344btSlGucgw1zqfZkMJB9D+AEqBDnmy3VZy5eeVLylOiZfU4J
+	KRL2VttCL6u8DqJPGqZR3zyIu3kF1Hs=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-106-Cc18jyQ0N-Wd9xuW6Ppohg-1; Wed, 22 Nov 2023 08:25:49 -0500
+X-MC-Unique: Cc18jyQ0N-Wd9xuW6Ppohg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9ff9b339e8cso43498566b.1
+        for <mptcp@lists.linux.dev>; Wed, 22 Nov 2023 05:25:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700659548; x=1701264348;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P8jvIKnF6irVy4FhFGCSbAIt3a6g91RjQxYYVpcJl+8=;
+        b=PdyLlhWDsjnZrGWMKexFEC4fADhBWRNcG6nUYmjraUL8vNGEdLhgSEvT653zM/xLUR
+         CZBoiaIRAu+gEzTYcuYxnn4L+Sa3Ur8ad3smQTFoBPf2x1BhhNc7iDmRhgPivQozou0D
+         IPgXHxUNa7yE0Sa1eIsjv7CrtLdFkmufj0r1C3A4F+FqLxMBTyfiqo8f7PTEqtxFanKK
+         A+ib8sthZvrgM3lxWu3pp/6AtUuvUMoPNZuow8dVudMGF8pciCxJu1LCqUocpJCEpYHT
+         rG8kyADt+p7EgIw5Z3F/pcJUSU2mI3tVcCyezrF7BogXaWlsUpz5T4CtSPmGe8OZZsfc
+         aViQ==
+X-Gm-Message-State: AOJu0YwwJuSC/ixGvI+c+d1pkvTKWv4s+Jy98piwLf+DKtzW9HRkInnj
+	pYPJDWJomGgUaJHPpyqE8Ai4uvd9os4I0ETHMoRkOgQZPnRNoTOHWjJKBykd5R0WoB1syL9WuDC
+	jrPwtOc8z9wtxygm4mypQI/c=
+X-Received: by 2002:a17:906:25e:b0:a01:ae7b:d190 with SMTP id 30-20020a170906025e00b00a01ae7bd190mr1272073ejl.5.1700659548281;
+        Wed, 22 Nov 2023 05:25:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF6O4ad/JmSUoKGy+PsvKFDtEc18ubqFCn4mkQIE4lfW93xtxZ/GNoSOSIkwokNUADyc3QCwg==
+X-Received: by 2002:a17:906:25e:b0:a01:ae7b:d190 with SMTP id 30-20020a170906025e00b00a01ae7bd190mr1272054ejl.5.1700659547781;
+        Wed, 22 Nov 2023 05:25:47 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-248-230.dyn.eolo.it. [146.241.248.230])
+        by smtp.gmail.com with ESMTPSA id w20-20020a1709064a1400b009fc927023bcsm4522738eju.34.2023.11.22.05.25.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Nov 2023 05:25:47 -0800 (PST)
+Message-ID: <0e7b905ea6f9934786df272dd6dc96e8c6786a2c.camel@redhat.com>
+Subject: Re: [PATCH mptcp-net] mptcp: fix inconsistent state on fastopen race
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+Date: Wed, 22 Nov 2023 14:25:46 +0100
+In-Reply-To: <24ff0e7e-0ed6-469f-0aff-1451b152a997@kernel.org>
+References: <c753d1520719374102ea5064d3f8eac46135a165.1700050135.git.pabeni@redhat.com>
+	 <24ff0e7e-0ed6-469f-0aff-1451b152a997@kernel.org>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AM9PR04MB8858:EE_
-X-MS-Office365-Filtering-Correlation-Id: 11937c92-b7af-4f78-5c90-08dbeb4f0c7c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Tb8vIxlUteNVjkBOuQTCqILiigvz2cd7eEl8YLHa6AwnyFG0ApFPG0Astzf/+ZK6CHuYczhlnh5tlAfo/bLUKxKF6o77+p7YVK5Ioqr460IH9CTkDoi5QyEZKWFN4LFvBT6vKaED5k/GwYBMH2ijRqHgwPOz+W7woW9s+OL/EdVZySwrgYTlYz5+cgyJHdZO+G+Krl4x8esc68PSjMVQYGyxASJjwMLJ0ynAbzdATT87mddqvCZC7xsZI5mMb5oWNMbJL9nA6bqWKPX5z6Bu2h+QBEAhNzUzZDaEigtJQTAB+lwI2fFguQCd1V4bWuQmUM4bCJxSIqeTtKZKiG0XxS4v4hA2tDLR5m3gvTpOHhhtB0gqHoC4HbQi5vQnJOjjXjU9s0bSy6Ors3mxaA5dNGTchBL5qgd8/lk5EKnbb3uaqJeJ6I9LPCN7jwCZdKxUpT/6QChMFpiFig6LBblyTx2iqC+BH9/29tz1M6U97eIAWgpOKF2D395NEvXQBiBufVlhgq9UOTm/hg6vEdU1cc9jCrQrb/mneTsYkCSjwKYQoDpspQawrxuAbfSIunwUlpUyHkYKzc0COUgxBChKAb6s4iT/nWy5pKTPTk6F8xQ=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(39860400002)(396003)(346002)(366004)(230922051799003)(186009)(1800799012)(451199024)(64100799003)(5660300002)(36756003)(8936002)(44832011)(8676002)(478600001)(6486002)(86362001)(4326008)(6512007)(316002)(6916009)(66476007)(66946007)(66556008)(41300700001)(38100700002)(2906002)(83380400001)(26005)(2616005)(107886003)(6666004)(6506007)(13296009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1U8EKC0t9ZcHvr3/nPiuN3tAr/0+yo/10xHTShMsgeSCvZ5EkSH278kK1GvW?=
- =?us-ascii?Q?/KQWMmeffo5dNRnf4Zb4n3NQdkHbAcztNE4tBcy91TjwXzleOLmUe+wztVfI?=
- =?us-ascii?Q?tkf1PcqvKj2CYF5wopYiw8fAS+fm8G9HVZ4VXL0HbN5yC6ijMm6BUrAE4QWf?=
- =?us-ascii?Q?YBhqfR1f0D9blilRfu9Cpjxwz1EOh7XH4CERgNpzE4btuKFp+ZOrJSmTV867?=
- =?us-ascii?Q?360VrmXx+ScEOsjdbdCl5WWQOq0XM2g3NJeoVIHWQxcFz1r3uJd+vHl+05w1?=
- =?us-ascii?Q?JbS2iukawkUMRzfd5H0yUa3gNlQnv2Z7g2zVVmWl4Xsk4YaBsTyq/2mUI3nx?=
- =?us-ascii?Q?7TH12bpt3woa9J0Tp32RGtBnny1G4t5EHXoeYq36TlPiTww1G73Mzcs3VxLE?=
- =?us-ascii?Q?rQIhKAB6HdXq4djgd6nDzfQr7L5Bxk6YQ4r+sXE6qpMz21bq1egUlVRZP2se?=
- =?us-ascii?Q?FFjRJqIqOr4RYDWtEzIHV9B0xXM49kZX2CNiv6QhPt7hyNPKHQnxc03xZNfe?=
- =?us-ascii?Q?IFWkgTUIpE3YnmVZFBilcp9quK+9JKKpkMJICP32PEVLVTU2J8CFwHIgr3FN?=
- =?us-ascii?Q?C/1WF/PsjYdM9W59cT+JuoHEIpMzZO1onA3KN9setDyrHdFxGO0+ZitwlVEv?=
- =?us-ascii?Q?3b1e9RaRcj9pRZHN7Wpf/tkLV8b0J/3vI0Bm4xbzhEH4fdzp9N0F7v/W0Vsg?=
- =?us-ascii?Q?GrcufaJB09jcMlIHELPmYb/s9w/Qj85WoIfwvcef+fzd1PgtoKceuA6bAV3L?=
- =?us-ascii?Q?rWSQzmND1fdb2HHjWU29lEhae5r6d1PXd0mlrJBhFs1imtGKOw2wv5GgXcRA?=
- =?us-ascii?Q?b2k395ncFGeaco3w4ZfbsxLIgvqYJnbdwljx43nnpqwKoTaGfO5td1nWCNfd?=
- =?us-ascii?Q?IbaGtmaGJK2/JYADwzS2CKAIidvB4ZAHxwMDZywakeAtpGXRcAxJEyc+EJIp?=
- =?us-ascii?Q?i6hGzaWp3/SROPC3rx2Co8ZSxH8pVFeoGsqwdY+zEr2X7FfC/YXxSNd+UKNt?=
- =?us-ascii?Q?fBptzudbgejHp8rODylrXORNj2Oa+1TOgkgpaHNyM9otRlVIIAAVXx8K+1TX?=
- =?us-ascii?Q?+Jd4hgQZijzhmqvVIhST0xELe874bbGHXxhHOJBFrLJZtJHemAmjJKpgZP+k?=
- =?us-ascii?Q?0a3CiWqQFvtcij/2O8kk9WhDDk8C4d6MYDey4KbEnncIbqjM5R5/Zx293dy9?=
- =?us-ascii?Q?+sCkmrshn+/0lzGLIYlVyh+FoHwGNBhdsoTVH/H0EHv3fBRZpeM51LkDXWmw?=
- =?us-ascii?Q?o2XANmo9HIvVwdxnctdwvi+JFMUO/58vPyKsfPvFBxtQWF348141wn+LwRBr?=
- =?us-ascii?Q?CnAk0ftWAVmTW+ZgTL/UElyT1g3SJPSehC4hBAvpC4aqEPOW76sAGhPZ8xoy?=
- =?us-ascii?Q?YamSyie32EJhY8qkS0PQVVwIR0zjxsnqi/GqvfolMksadXLvOD1Rvb92HF7q?=
- =?us-ascii?Q?Jnv5w1oLWW2okvL9LfBv+mLtDCyLOntsITuB4Cw1nKNCLrfy+ZSsCjE5vtex?=
- =?us-ascii?Q?i0RTBess9G1GGx8bsBEWq1IeiCC/yVfvJ30y2B1v++UL8DrgJfaaL/nGRwTD?=
- =?us-ascii?Q?HGsncYOug/dKklKWCLo/AzEbN3+Y9Gw9GDlBstcKF0Zdu4qlt8G6z2t0z7mr?=
- =?us-ascii?Q?kA=3D=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11937c92-b7af-4f78-5c90-08dbeb4f0c7c
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2023 11:34:55.0031
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lHnTW2zaSCA2oFcRE5vhPHgnFBVAEbzIXLYS1RFp/BMkuGg/YhutqUuepskKnhAeXQGLgCkkv6ErkLJnI+hgug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8858
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some positions of the new line are arranged a bit strangely in script
-pm_netlink.sh. For example, the output of 'pm_nl_ctl limits':
+On Fri, 2023-11-17 at 12:10 -0800, Mat Martineau wrote:
+> On Wed, 15 Nov 2023, Paolo Abeni wrote:
+>=20
+> > The netlink PM can race with fastopen self-connect attempts, shutting
+> > down the first subflow via:
+> >=20
+> > MPTCP_PM_CMD_DEL_ADDR -> mptcp_nl_remove_id_zero_address ->
+> >  mptcp_pm_nl_rm_subflow_received -> mptcp_close_ssk
+> >=20
+> > and transitioning such subflow to FIN_WAIT1 status before the syn-ack
+> > packet is processed. The MPTCP code does not react to such state change=
+,
+> > leaving the connection in not-fallback status and the subflow handshake
+> > uncompleted, triggering the following splat:
+> >=20
+> > WARNING: CPU: 0 PID: 10630 at net/mptcp/subflow.c:1405 subflow_data_rea=
+dy+0x39f/0x690 net/mptcp/subflow.c:1405
+> > Modules linked in:
+> > CPU: 0 PID: 10630 Comm: kworker/u4:11 Not tainted 6.6.0-syzkaller-14500=
+-g1c41041124bd #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS=
+ Google 10/09/2023
+> > Workqueue: bat_events batadv_nc_worker
+> > RIP: 0010:subflow_data_ready+0x39f/0x690 net/mptcp/subflow.c:1405
+> > Code: 18 89 ee e8 e3 d2 21 f7 40 84 ed 75 1f e8 a9 d7 21 f7 44 89 fe bf=
+ 07 00 00 00 e8 0c d3 21 f7 41 83 ff 07 74 07 e8 91 d7 21 f7 <0f> 0b e8 8a =
+d7 21 f7 48 89 df e8 d2 b2 ff ff 31 ff 89 c5 89 c6 e8
+> > RSP: 0018:ffffc90000007448 EFLAGS: 00010246
+> > RAX: 0000000000000000 RBX: ffff888031efc700 RCX: ffffffff8a65baf4
+> > RDX: ffff888043222140 RSI: ffffffff8a65baff RDI: 0000000000000005
+> > RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000007
+> > R10: 000000000000000b R11: 0000000000000000 R12: 1ffff92000000e89
+> > R13: ffff88807a534d80 R14: ffff888021c11a00 R15: 000000000000000b
+> > FS:  0000000000000000(0000) GS:ffff8880b9800000(0000) knlGS:00000000000=
+00000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00007fa19a0ffc81 CR3: 000000007a2db000 CR4: 00000000003506f0
+> > DR0: 000000000000d8dd DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+> > Call Trace:
+> > <IRQ>
+> > tcp_data_ready+0x14c/0x5b0 net/ipv4/tcp_input.c:5128
+> > tcp_data_queue+0x19c3/0x5190 net/ipv4/tcp_input.c:5208
+> > tcp_rcv_state_process+0x11ef/0x4e10 net/ipv4/tcp_input.c:6844
+> > tcp_v4_do_rcv+0x369/0xa10 net/ipv4/tcp_ipv4.c:1929
+> > tcp_v4_rcv+0x3888/0x3b30 net/ipv4/tcp_ipv4.c:2329
+> > ip_protocol_deliver_rcu+0x9f/0x480 net/ipv4/ip_input.c:205
+> > ip_local_deliver_finish+0x2e4/0x510 net/ipv4/ip_input.c:233
+> > NF_HOOK include/linux/netfilter.h:314 [inline]
+> > NF_HOOK include/linux/netfilter.h:308 [inline]
+> > ip_local_deliver+0x1b6/0x550 net/ipv4/ip_input.c:254
+> > dst_input include/net/dst.h:461 [inline]
+> > ip_rcv_finish+0x1c4/0x2e0 net/ipv4/ip_input.c:449
+> > NF_HOOK include/linux/netfilter.h:314 [inline]
+> > NF_HOOK include/linux/netfilter.h:308 [inline]
+> > ip_rcv+0xce/0x440 net/ipv4/ip_input.c:569
+> > __netif_receive_skb_one_core+0x115/0x180 net/core/dev.c:5527
+> > __netif_receive_skb+0x1f/0x1b0 net/core/dev.c:5641
+> > process_backlog+0x101/0x6b0 net/core/dev.c:5969
+> > __napi_poll.constprop.0+0xb4/0x540 net/core/dev.c:6531
+> > napi_poll net/core/dev.c:6600 [inline]
+> > net_rx_action+0x956/0xe90 net/core/dev.c:6733
+> > __do_softirq+0x21a/0x968 kernel/softirq.c:553
+> > do_softirq kernel/softirq.c:454 [inline]
+> > do_softirq+0xaa/0xe0 kernel/softirq.c:441
+> > </IRQ>
+> > <TASK>
+> > __local_bh_enable_ip+0xf8/0x120 kernel/softirq.c:381
+> > spin_unlock_bh include/linux/spinlock.h:396 [inline]
+> > batadv_nc_purge_paths+0x1ce/0x3c0 net/batman-adv/network-coding.c:471
+> > batadv_nc_worker+0x9b1/0x10e0 net/batman-adv/network-coding.c:722
+> > process_one_work+0x884/0x15c0 kernel/workqueue.c:2630
+> > process_scheduled_works kernel/workqueue.c:2703 [inline]
+> > worker_thread+0x8b9/0x1290 kernel/workqueue.c:2784
+> > kthread+0x33c/0x440 kernel/kthread.c:388
+> > ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+> > ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+> > </TASK>
+> >=20
+> > To address the issue, catch the racing subflow state change and
+> > use it to cause the MPTCP fallback. Such fallback is also used to
+> > cause the first subflow state propagation to the msk socket via
+> > mptcp_set_connected(). After this change, the first subflow can
+> > additionally propagate the TCP_FIN_WAIT1 state, so rename the
+> > helper accordingly.
+> >=20
+> > Finally, if the state propagation is delayed to the msk release
+> > callback, the first subflow can change to a different state in between.
+> > Cache the relevant target state in a new msk-level field and use
+> > such value to update the msk state at release time.
+> >=20
+> > Fixes: 1e777f39b4d7 ("mptcp: add MSG_FASTOPEN sendmsg flag support")
+> > Reported-by: syzbot+c53d4d3ddb327e80bc51@syzkaller.appspotmail.com
+> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/458
+> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > ---
+> > Note: we can probably avoid the splat even preventing the PM from
+> > removing any address/subflow before reaching the fully established
+> > status, but we still miss catching a relevant state change.
+>=20
+> Hi Paolo -
+>=20
+> It's useful to be able to remove a subflow that is unable (or slow) to=20
+> connect, so I think the approach in this patch is better.
+>=20
+> > ---
+> > net/mptcp/protocol.c |  2 +-
+> > net/mptcp/protocol.h |  7 +++++--
+> > net/mptcp/subflow.c  | 23 ++++++++++++++---------
+> > 3 files changed, 20 insertions(+), 12 deletions(-)
+> >=20
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 6956fde61c68..1eea04b11227 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -3407,7 +3407,7 @@ static void mptcp_release_cb(struct sock *sk)
+> > =09=09 * On sk release avoid actions depending on the first subflow
+> > =09=09 */
+> > =09=09if (__test_and_clear_bit(MPTCP_CONNECTED, &msk->cb_flags) && msk-=
+>first)
+> > -=09=09=09__mptcp_set_connected(sk);
+> > +=09=09=09__mptcp_propagate_state(sk);
+>=20
+> As part of my suggestion below (adding new state as a 2nd arg), it would=
+=20
+> be good to clear msk->pending_state here.
 
-                                                     "accept 0
-subflows 2" "defaults limits"
+I think that would not be needed, as we clear the relevant cb_flags bit
+when taking action: the __test_and_clear_bit() above. Additionally
+clearing pending_state would be IMHO rendundant.
 
-This one can be refactored using $'...\n...':
+>=20
+> > =09=09if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
+> > =09=09=09__mptcp_error_report(sk);
+> > =09=09if (__test_and_clear_bit(MPTCP_SYNC_SNDBUF, &msk->cb_flags))
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index 8529b3ae55e9..0148600e4f6d 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -296,6 +296,9 @@ struct mptcp_sock {
+> > =09bool=09=09use_64bit_ack; /* Set when we received a 64-bit DSN */
+> > =09bool=09=09csum_enabled;
+> > =09bool=09=09allow_infinite_fallback;
+> > +=09u8=09=09pending_state; /* A subflow asked to set this sk_state,
+> > +=09=09=09=09=09* protected by the msk data lock
+> > +=09=09=09=09=09*/
+> > =09u8=09=09mpc_endpoint_id;
+> > =09u8=09=09recvmsg_inq:1,
+> > =09=09=09cork:1,
+> > @@ -733,7 +736,7 @@ void mptcp_get_options(const struct sk_buff *skb,
+> > =09=09       struct mptcp_options_received *mp_opt);
+> >=20
+> > void mptcp_finish_connect(struct sock *sk);
+> > -void __mptcp_set_connected(struct sock *sk);
+> > +void __mptcp_propagate_state(struct sock *sk);
+> > void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_=
+tout);
+> >=20
+> > static inline void mptcp_stop_tout_timer(struct sock *sk)
+> > @@ -1129,7 +1132,7 @@ static inline bool subflow_simultaneous_connect(s=
+truct sock *sk)
+> > {
+> > =09struct mptcp_subflow_context *subflow =3D mptcp_subflow_ctx(sk);
+> >=20
+> > -=09return sk->sk_state =3D=3D TCP_ESTABLISHED &&
+> > +=09return (1 << sk->sk_state) & (TCPF_ESTABLISHED | TCPF_FIN_WAIT1) &&
+> > =09       is_active_ssk(subflow) &&
+> > =09       !subflow->conn_finished;
+>=20
+> is_active_ssk() will return true on joins as well - does it make sense to=
+=20
+> force a fallback in that case?
 
-        $'accept 0\nsubflows 2' "defaults limits"
+Right, not much! I think we should close the subflow. Note that
+triggering a self connect on a subflow is very hard. AFAICS the only
+way to get there is the remote sending an ADD_ADDR with port to a local
+address, and the local kernel binding to such port at connect time by
+random chance.
 
-For longer output results, such as the output of 'pm_nl_ctl dump':
+In any case this looks like a separate fix?
 
-                                        "id 1 flags  10.0.1.1
-id 3 flags signal,backup 10.0.1.3
-id 4 flags signal 10.0.1.4
-id 5 flags signal 10.0.1.5
-id 6 flags signal 10.0.1.6
-id 7 flags signal 10.0.1.7
-id 8 flags signal 10.0.1.8" "id limit"
+Ack to all the other suggestions!
 
-This one can be refactored using "$(printf '%s\n' "..." "...")":
+Cheers,
 
-        "$(printf '%s\n' "id 1 flags  10.0.1.1" \
-        "id 3 flags signal,backup 10.0.1.3" \
-        "id 4 flags signal 10.0.1.4" "id 5 flags signal 10.0.1.5" \
-        "id 6 flags signal 10.0.1.6" \
-        "id 7 flags signal 10.0.1.7" "id 8 flags signal 10.0.1.8")" \
-        "id limit"
-
-This patch uses such methods to rearrange the outputs into different lines.
-
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
----
- .../testing/selftests/net/mptcp/pm_netlink.sh | 80 +++++++++----------
- 1 file changed, 38 insertions(+), 42 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index d68353c18996..06446cec7f55 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -61,8 +61,8 @@ check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "defaults addr list"
- 
- default_limits="$(ip netns exec $ns1 ./pm_nl_ctl limits)"
- if mptcp_lib_expect_all_features; then
--	check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 0
--subflows 2" "defaults limits"
-+	check "ip netns exec $ns1 ./pm_nl_ctl limits" \
-+		$'accept 0\nsubflows 2' "defaults limits"
- fi
- 
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
-@@ -71,15 +71,15 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 flags signal,backup
- check "ip netns exec $ns1 ./pm_nl_ctl get 1" "id 1 flags  10.0.1.1" "simple add/get addr"
- 
- check "ip netns exec $ns1 ./pm_nl_ctl dump" \
--"id 1 flags  10.0.1.1
--id 2 flags subflow dev lo 10.0.1.2
--id 3 flags signal,backup 10.0.1.3" "dump addrs"
-+	"$(printf '%s\n' "id 1 flags  10.0.1.1" \
-+	"id 2 flags subflow dev lo 10.0.1.2" "id 3 flags signal,backup 10.0.1.3")" \
-+	"dump addrs"
- 
- ip netns exec $ns1 ./pm_nl_ctl del 2
- check "ip netns exec $ns1 ./pm_nl_ctl get 2" "" "simple del addr"
- check "ip netns exec $ns1 ./pm_nl_ctl dump" \
--"id 1 flags  10.0.1.1
--id 3 flags signal,backup 10.0.1.3" "dump addrs after del"
-+	$'id 1 flags  10.0.1.1\nid 3 flags signal,backup 10.0.1.3' \
-+	"dump addrs after del"
- 
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 2>/dev/null
- check "ip netns exec $ns1 ./pm_nl_ctl get 4" "" "duplicate addr"
-@@ -98,13 +98,11 @@ for i in `seq 10 255`; do
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9 id $i
- 	ip netns exec $ns1 ./pm_nl_ctl del $i
- done
--check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1
--id 3 flags signal,backup 10.0.1.3
--id 4 flags signal 10.0.1.4
--id 5 flags signal 10.0.1.5
--id 6 flags signal 10.0.1.6
--id 7 flags signal 10.0.1.7
--id 8 flags signal 10.0.1.8" "id limit"
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-+	"$(printf '%s\n' "id 1 flags  10.0.1.1" "id 3 flags signal,backup 10.0.1.3" \
-+	"id 4 flags signal 10.0.1.4" "id 5 flags signal 10.0.1.5" "id 6 flags signal 10.0.1.6" \
-+	"id 7 flags signal 10.0.1.7" "id 8 flags signal 10.0.1.8")" \
-+	"id limit"
- 
- ip netns exec $ns1 ./pm_nl_ctl flush
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "flush addrs"
-@@ -116,8 +114,7 @@ ip netns exec $ns1 ./pm_nl_ctl limits 1 9 2>/dev/null
- check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "subflows above hard limit"
- 
- ip netns exec $ns1 ./pm_nl_ctl limits 8 8
--check "ip netns exec $ns1 ./pm_nl_ctl limits" "accept 8
--subflows 8" "set limits"
-+check "ip netns exec $ns1 ./pm_nl_ctl limits" $'accept 8\nsubflows 8' "set limits"
- 
- ip netns exec $ns1 ./pm_nl_ctl flush
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
-@@ -128,14 +125,11 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.5 id 254
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.6
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.7
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.8
--check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.1.1
--id 2 flags  10.0.1.2
--id 3 flags  10.0.1.7
--id 4 flags  10.0.1.8
--id 100 flags  10.0.1.3
--id 101 flags  10.0.1.4
--id 254 flags  10.0.1.5
--id 255 flags  10.0.1.6" "set ids"
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-+	"$(printf '%s\n' "id 1 flags  10.0.1.1" "id 2 flags  10.0.1.2" "id 3 flags  10.0.1.7" \
-+	"id 4 flags  10.0.1.8" "id 100 flags  10.0.1.3" "id 101 flags  10.0.1.4" \
-+	"id 254 flags  10.0.1.5" "id 255 flags  10.0.1.6")" \
-+	"set ids"
- 
- ip netns exec $ns1 ./pm_nl_ctl flush
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.1
-@@ -146,36 +140,38 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.5 id 253
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.6
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.7
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.8
--check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags  10.0.0.1
--id 2 flags  10.0.0.4
--id 3 flags  10.0.0.6
--id 4 flags  10.0.0.7
--id 5 flags  10.0.0.8
--id 253 flags  10.0.0.5
--id 254 flags  10.0.0.2
--id 255 flags  10.0.0.3" "wrap-around ids"
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-+	"$(printf '%s\n' "id 1 flags  10.0.0.1" "id 2 flags  10.0.0.4" "id 3 flags  10.0.0.6" \
-+	"id 4 flags  10.0.0.7" "id 5 flags  10.0.0.8" "id 253 flags  10.0.0.5" \
-+	"id 254 flags  10.0.0.2" "id 255 flags  10.0.0.3")" \
-+	"wrap-around ids"
- 
- ip netns exec $ns1 ./pm_nl_ctl flush
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1 flags subflow
- ip netns exec $ns1 ./pm_nl_ctl set 10.0.1.1 flags backup
--check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
--subflow,backup 10.0.1.1" "set flags (backup)"
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-+	"id 1 flags subflow,backup 10.0.1.1" \
-+	"set flags (backup)"
- ip netns exec $ns1 ./pm_nl_ctl set 10.0.1.1 flags nobackup
--check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
--subflow 10.0.1.1" "          (nobackup)"
-+check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-+	"id 1 flags subflow 10.0.1.1" \
-+	"          (nobackup)"
- 
- # fullmesh support has been added later
- ip netns exec $ns1 ./pm_nl_ctl set id 1 flags fullmesh
- if ip netns exec $ns1 ./pm_nl_ctl dump | grep -q "fullmesh" ||
-    mptcp_lib_expect_all_features; then
--	check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
--subflow,fullmesh 10.0.1.1" "          (fullmesh)"
-+	check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-+		"id 1 flags subflow,fullmesh 10.0.1.1" \
-+		"          (fullmesh)"
- 	ip netns exec $ns1 ./pm_nl_ctl set id 1 flags nofullmesh
--	check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
--subflow 10.0.1.1" "          (nofullmesh)"
-+	check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-+		"id 1 flags subflow 10.0.1.1" \
-+		"          (nofullmesh)"
- 	ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
--	check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
--subflow,backup,fullmesh 10.0.1.1" "          (backup,fullmesh)"
-+	check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-+		"id 1 flags subflow,backup,fullmesh 10.0.1.1" \
-+		"          (backup,fullmesh)"
- fi
- 
- mptcp_lib_result_print_all_tap
--- 
-2.35.3
+Paolo
 
