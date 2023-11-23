@@ -1,148 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DC818B11
-	for <mptcp@lists.linux.dev>; Thu, 23 Nov 2023 08:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EED24A05
+	for <mptcp@lists.linux.dev>; Thu, 23 Nov 2023 13:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YCogy334"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700726464;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nqxxpO20DwF1ycS2h4LaBq4ml6/wu7DgjNv/ugSrwY8=;
-	b=YCogy334Regvvsmqe4luqft5NhBvZi5KjpUMfgJj7pVEncuAyFDheO8SE7Bj8I14LUYJwv
-	FlPxReM/75Ct64HWATC7GIscIBzKfvW6UEJ5J6SBdTgwKoAv7bJmFRkdo/uZ5jmJBULs8y
-	GMdfX7vYalPQkoEEp6XWsJMPbX0rmrk=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-100-7R6UY00uOnqugx2f1DiHWQ-1; Thu, 23 Nov 2023 03:01:01 -0500
-X-MC-Unique: 7R6UY00uOnqugx2f1DiHWQ-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a02225ee165so11334066b.1
-        for <mptcp@lists.linux.dev>; Thu, 23 Nov 2023 00:01:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jz2utdna"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-1e9c9d181d6so524500fac.0
+        for <mptcp@lists.linux.dev>; Thu, 23 Nov 2023 05:18:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700745498; x=1701350298; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yQkxBP9pvcJtwwx8JYEjoo5d3XnlIQFI3v2Y10w+oIA=;
+        b=Jz2utdnasA0ZyrCFA80eEgo1HOyShNCoDim4lOOjZupcjc14n5T26Y/yINgpqfltaE
+         d5Qu4EXssWavXGvD1OUKo6+ebPLMYzgrGzczpfhqGfdmraBGnrW76DQ07bX6xwVVHsQt
+         zLi2iXv6pYT7goXMCBqBgONGfONkEvDnxaHKBro60+gXZUPqE/UuKkaoPk6ZABFzAJoi
+         ptp9xFnuHT9F5YqgaqbYxLf93Cgd4FttA98YgMKQwlEedBiU/+lRGfw86V2Ih2vwrb/t
+         K6w7uWn/OihcnaDjhY/lgeXCn7lnfj83TjpG0A9u8HTOcfT8ttRMdiYGVKxIIf/flNDu
+         8oaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700726460; x=1701331260;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fc0JVrpQ0q+qWvy2uYw78zXNtmSoaii+jhiF+Na6Xz0=;
-        b=cSMrEgnQ5QKVK5z2K1B/6E5OmxiXpKWdNrj+MeLul1m5SKaJC5T+bfk3ZDOzD6GdaC
-         74yauVrCb6AXsQCi4nHVSVE9gToy+AQGPph25VzRQKWENoIuuAH4xowC9lPWWOPuNwW8
-         K6OT+Zs6HOhP6kebTCi/9EEbXNar0OpVO/EPHT0il9DscIkM1VyWZkfuJyP3TtZg0pKW
-         z3srz1fBb1xElCo+pDNYW6k+CoO6tmLX2J1mUzToOXMv7s+stiYOrmtC8OVArVcvE6qo
-         aQcAQAXyW3urP52zVM9KJHPUIGGortmvUQv2ayQ8hHe213NQlt0EYE9DbSRlI/kenDfZ
-         iWBw==
-X-Gm-Message-State: AOJu0YyZ1RTatfz4DNoYj6fWRHL5YARfZ9ml3YUKyRVAJGBkn4spikuR
-	n6abQ/4aDea3zuLS9b6bzxs8NPGjCUFFWVOlLVgycL0sqHRz/1GibN43QgX0sYZ8m6lCu/XAo+F
-	y/zc+bxqu4jZObXU=
-X-Received: by 2002:a05:6402:27cd:b0:544:3944:d7cd with SMTP id c13-20020a05640227cd00b005443944d7cdmr3887476ede.2.1700726459834;
-        Thu, 23 Nov 2023 00:00:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFeZEd7t22xXOJeCp2tazrytapW1GyPswmje6vnKsa5mT4uEKyU7gzX90EOT+fC2hdRju6uwg==
-X-Received: by 2002:a05:6402:27cd:b0:544:3944:d7cd with SMTP id c13-20020a05640227cd00b005443944d7cdmr3887441ede.2.1700726459453;
-        Thu, 23 Nov 2023 00:00:59 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-241-213.dyn.eolo.it. [146.241.241.213])
-        by smtp.gmail.com with ESMTPSA id bc18-20020a056402205200b00532eba07773sm363428edb.25.2023.11.23.00.00.58
+        d=1e100.net; s=20230601; t=1700745498; x=1701350298;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yQkxBP9pvcJtwwx8JYEjoo5d3XnlIQFI3v2Y10w+oIA=;
+        b=iibUqctyBPlgbMWAA29Gn//PU40JELGfyNL22khoVKI2deTByRWoMjQe+GwaYsaarM
+         HcO9X+wnFkrzriQMph4O5pl8WRJpUN2Ammvwp3YahN8wi2YwmQURz+yLhA3KhRc5r4ri
+         1JMd4wGybIpCaRXx/70EFlMKG7kK0fsJoPZk3XpLRaNV5c76Ncd+sgFegtSfnGZpciim
+         Kz7JoQ8XUJZERJp6wdyfpHqd+f+ZxWba/5P2BOLjO7NUnpL2OsfYTtlrSnHwi6g5qhGi
+         mz/WRLZPwW8v3YszYq9nH0v8w4X3DvMfyBrxdB0toOd/npd11l6XCwEiF15b0tXZFshR
+         0GiA==
+X-Gm-Message-State: AOJu0YxWDDaZKp7GWyxrS2EeKjsy6kEiBunHP4k9mxBJWtJXnhZ2GRip
+	aIrZNGD5yY5XU5bP719CT/187pzPbQ==
+X-Google-Smtp-Source: AGHT+IESDYYw8oo26EyAs880lLXai8dcp6VLOb3dwstyngubm1AgzjL/Qj3NR9+JJ1fhIEvEavulxg==
+X-Received: by 2002:a05:6870:7e0c:b0:1ea:cdcb:5a2b with SMTP id wx12-20020a0568707e0c00b001eacdcb5a2bmr7028606oab.54.1700745498583;
+        Thu, 23 Nov 2023 05:18:18 -0800 (PST)
+Received: from [127.0.0.1] ([40.67.133.159])
+        by smtp.gmail.com with ESMTPSA id j12-20020ac8550c000000b0041cb787ff41sm465542qtq.67.2023.11.23.05.18.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Nov 2023 00:00:58 -0800 (PST)
-Message-ID: <193463799264cd58373df81b6e93cc4091c83ca5.camel@redhat.com>
-Subject: Re: [syzbot] [mptcp?] KMSAN: uninit-value in mptcp_incoming_options
-From: Paolo Abeni <pabeni@redhat.com>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	syzbot+b834a6b2decad004cfa1@syzkaller.appspotmail.com
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
- linux-kernel@vger.kernel.org, martineau@kernel.org,
- matthieu.baerts@tessares.net,  matttbe@kernel.org, mptcp@lists.linux.dev,
- netdev@vger.kernel.org,  syzkaller-bugs@googlegroups.com
-Date: Thu, 23 Nov 2023 09:00:57 +0100
-In-Reply-To: <20231123004834.58534-1-kuniyu@amazon.com>
-References: <000000000000545a26060abf943b@google.com>
-	 <20231123004834.58534-1-kuniyu@amazon.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+        Thu, 23 Nov 2023 05:18:17 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@suse.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <bf8c6d2142b5362dd9d6eab1c32ad573d3558657.1700652422.git.geliang.tang@suse.com>
+References:
+ <bf8c6d2142b5362dd9d6eab1c32ad573d3558657.1700652422.git.geliang.tang@suse.com>
+Subject: Re: selftests: mptcp: netlink: fix positions of newline: Build
+ Failure
+Message-ID: <2ac33b1d-27b3-9cdf-aa73-77eae8fb8c52@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 23 Nov 2023 13:18:17 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 1
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi.
+Hi Geliang,
 
-On Wed, 2023-11-22 at 16:48 -0800, Kuniyuki Iwashima wrote:
-> From: syzbot <syzbot+b834a6b2decad004cfa1@syzkaller.appspotmail.com>
-> Date: Wed, 22 Nov 2023 07:43:23 -0800
-> > Hello,
-> >=20
-> > syzbot found the following issue on:
-> >=20
-> > HEAD commit:    c2d5304e6c64 Merge tag 'platform-drivers-x86-v6.7-2' of=
- gi..
-> > git tree:       upstream
-> > console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D1536e3d4e80=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3De32016b84cf=
-917ca
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3Db834a6b2decad=
-004cfa1
-> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for D=
-ebian) 2.40
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D11469724e=
-80000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D13934aaf680=
-000
-> >=20
-> > Downloadable assets:
-> > disk image: https://storage.googleapis.com/syzbot-assets/23ea827adf3b/d=
-isk-c2d5304e.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/0f964ac588f5/vmli=
-nux-c2d5304e.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/b061be889285=
-/bzImage-c2d5304e.xz
-> >=20
-> > IMPORTANT: if you fix the issue, please add the following tag to the co=
-mmit:
-> > Reported-by: syzbot+b834a6b2decad004cfa1@syzkaller.appspotmail.com
-> >=20
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> > BUG: KMSAN: uninit-value in mptcp_incoming_options+0xc93/0x3a80 net/mpt=
-cp/options.c:1197
->=20
-> #syz test git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t c2d5304e6c648ebcf653bace7e51e0e6742e46c8
->=20
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index cd15ec73073e..01066aa7e67d 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -370,6 +370,7 @@ void mptcp_get_options(const struct sk_buff *skb,
-> =20
->  =09/* initialize option status */
->  =09mp_opt->suboptions =3D 0;
-> +=09mp_opt->use_ack =3D 0;
-> =20
->  =09length =3D (th->doff * 4) - sizeof(struct tcphdr);
->  =09ptr =3D (const unsigned char *)(th + 1);
->=20
+Thank you for your modifications, that's great!
 
-Thanks for the patch! AFAICS it should work, but I think the variant
-proposed by Edward:
+But sadly, our CI spotted some issues with it when trying to build it.
 
-https://lore.kernel.org/netdev/tencent_B0E02F1D6C009450E8D6EC06CC6C7B5E6C0A=
-@qq.com/
+You can find more details there:
 
-should be better, adding the additional instruction only in the code
-path needing it.=20
+  https://patchwork.kernel.=
+org/project/mptcp/patch/bf8c6d2142b5362dd9d6eab1c32ad573d3558657.1700652422=
+.git.geliang.tang@suse.com/
+  https://github.com/multipath-tcp/mptcp_net-ne=
+xt/actions/runs/6970218965
 
-Thank!
+Status: failure
+Initiator: matttbe
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/0cae163093=
+e3
 
-Paolo
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
 
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts =
+(Tessares)
