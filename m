@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECBD3C467
-	for <mptcp@lists.linux.dev>; Mon, 27 Nov 2023 18:10:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44273C46C
+	for <mptcp@lists.linux.dev>; Mon, 27 Nov 2023 18:16:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9KWsW5r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0893FC433C8;
-	Mon, 27 Nov 2023 18:10:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nm/uMaF8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31B6CC433C7;
+	Mon, 27 Nov 2023 18:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701108641;
-	bh=FFTMAuz7pPHzf8FqOpeNuVkwmpGDIsxc+AVux9YvyIM=;
+	s=k20201202; t=1701109014;
+	bh=v2mYzDBec4K/B6qNKk/sKclmwsg2+U1pEsG6CitU9AQ=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=A9KWsW5rvt6pn022aIcfv4VHEdGWNJCnPtz7t1v7ZuY898sOKNvNNQMP95q1oCwby
-	 /YiEwZiQlMoE9sH27i4aPI9lWvpG4IST8AA69+RZaGzOgTxyk0ufIktS0TVpOlhe+5
-	 RaYeAwVzvMvm4EjbgCX2UFlyHwhCEODoB8zwOPayuJ38m8MH92hOqK54QHc+CuGnAz
-	 hoUClFk9yI7mUPLlxORuHje86J36oycjuTToTbLQkwki1Dct3qYm+SvdlLc8Lztgle
-	 4XPc66Rp/qCmLTtPM79VgL5P7BN6GS7myjGpWnPX855dNY8+1H29pdfK6RpB62z9p+
-	 h34A4K5952c1A==
-Date: Mon, 27 Nov 2023 10:10:40 -0800 (PST)
+	b=Nm/uMaF8s78VZ6dChO5VCLxGp+ngwQYf+EYJ3CvY9Z3K++D20/xmdQHvBr++sB36k
+	 MkU+ofrvWnz7ahixRgOmvtjxLKtNwYBg9c46+XBWEsFRe9FoZHmEQdUUfx9ODLhKRA
+	 iy6yFzWp4VJjIGzh/c7ie1zDXxvJTjQ96gpHtKxeOeeCPcZkLppa7ElInW+bS2BORJ
+	 MXiRJSwpCT0+Vcp4y3DRT4WuzmINQOYuufs3XGSpdu2wd/YlpstbOTOxqaPNlTQoOQ
+	 FKAT3QPJP7UKNeOjE7szbst2EVK/eUuzlCai9W4xz1KCr28eJBcZAOmbZSpYgkvLRk
+	 zWo80UwdC0vug==
+Date: Mon, 27 Nov 2023 10:16:53 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matttbe@kernel.org>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net v2] mptcp: fix inconsistent state on fastopen
- race
-In-Reply-To: <7237df51ca90d9692f133823a3a6071ee87ba02d.1700667812.git.pabeni@redhat.com>
-Message-ID: <40317ed6-983d-57cc-9580-d036edaf9ab4@kernel.org>
-References: <7237df51ca90d9692f133823a3a6071ee87ba02d.1700667812.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net] mptcp: fill in missing MODULE_DESCRIPTION()
+In-Reply-To: <20231127-mptcp-module-desc-v1-1-d2209921bf9e@kernel.org>
+Message-ID: <4dcca91b-ed31-72fc-5552-7754c420b612@kernel.org>
+References: <20231127-mptcp-module-desc-v1-1-d2209921bf9e@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,107 +33,49 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, 22 Nov 2023, Paolo Abeni wrote:
+On Mon, 27 Nov 2023, Matthieu Baerts wrote:
 
-> The netlink PM can race with fastopen self-connect attempts, shutting
-> down the first subflow via:
+> W=1 builds warn on missing MODULE_DESCRIPTION, add them here in MPTCP.
 >
-> MPTCP_PM_CMD_DEL_ADDR -> mptcp_nl_remove_id_zero_address ->
->  mptcp_pm_nl_rm_subflow_received -> mptcp_close_ssk
+> Only two were missing: two modules with different KUint tests for MPTCP.
 >
-> and transitioning such subflow to FIN_WAIT1 status before the syn-ack
-> packet is processed. The MPTCP code does not react to such state change,
-> leaving the connection in not-fallback status and the subflow handshake
-> uncompleted, triggering the following splat:
->
-> WARNING: CPU: 0 PID: 10630 at net/mptcp/subflow.c:1405 subflow_data_ready+0x39f/0x690 net/mptcp/subflow.c:1405
-> Modules linked in:
-> CPU: 0 PID: 10630 Comm: kworker/u4:11 Not tainted 6.6.0-syzkaller-14500-g1c41041124bd #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/09/2023
-> Workqueue: bat_events batadv_nc_worker
-> RIP: 0010:subflow_data_ready+0x39f/0x690 net/mptcp/subflow.c:1405
-> Code: 18 89 ee e8 e3 d2 21 f7 40 84 ed 75 1f e8 a9 d7 21 f7 44 89 fe bf 07 00 00 00 e8 0c d3 21 f7 41 83 ff 07 74 07 e8 91 d7 21 f7 <0f> 0b e8 8a d7 21 f7 48 89 df e8 d2 b2 ff ff 31 ff 89 c5 89 c6 e8
-> RSP: 0018:ffffc90000007448 EFLAGS: 00010246
-> RAX: 0000000000000000 RBX: ffff888031efc700 RCX: ffffffff8a65baf4
-> RDX: ffff888043222140 RSI: ffffffff8a65baff RDI: 0000000000000005
-> RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000007
-> R10: 000000000000000b R11: 0000000000000000 R12: 1ffff92000000e89
-> R13: ffff88807a534d80 R14: ffff888021c11a00 R15: 000000000000000b
-> FS:  0000000000000000(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fa19a0ffc81 CR3: 000000007a2db000 CR4: 00000000003506f0
-> DR0: 000000000000d8dd DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
-> Call Trace:
-> <IRQ>
-> tcp_data_ready+0x14c/0x5b0 net/ipv4/tcp_input.c:5128
-> tcp_data_queue+0x19c3/0x5190 net/ipv4/tcp_input.c:5208
-> tcp_rcv_state_process+0x11ef/0x4e10 net/ipv4/tcp_input.c:6844
-> tcp_v4_do_rcv+0x369/0xa10 net/ipv4/tcp_ipv4.c:1929
-> tcp_v4_rcv+0x3888/0x3b30 net/ipv4/tcp_ipv4.c:2329
-> ip_protocol_deliver_rcu+0x9f/0x480 net/ipv4/ip_input.c:205
-> ip_local_deliver_finish+0x2e4/0x510 net/ipv4/ip_input.c:233
-> NF_HOOK include/linux/netfilter.h:314 [inline]
-> NF_HOOK include/linux/netfilter.h:308 [inline]
-> ip_local_deliver+0x1b6/0x550 net/ipv4/ip_input.c:254
-> dst_input include/net/dst.h:461 [inline]
-> ip_rcv_finish+0x1c4/0x2e0 net/ipv4/ip_input.c:449
-> NF_HOOK include/linux/netfilter.h:314 [inline]
-> NF_HOOK include/linux/netfilter.h:308 [inline]
-> ip_rcv+0xce/0x440 net/ipv4/ip_input.c:569
-> __netif_receive_skb_one_core+0x115/0x180 net/core/dev.c:5527
-> __netif_receive_skb+0x1f/0x1b0 net/core/dev.c:5641
-> process_backlog+0x101/0x6b0 net/core/dev.c:5969
-> __napi_poll.constprop.0+0xb4/0x540 net/core/dev.c:6531
-> napi_poll net/core/dev.c:6600 [inline]
-> net_rx_action+0x956/0xe90 net/core/dev.c:6733
-> __do_softirq+0x21a/0x968 kernel/softirq.c:553
-> do_softirq kernel/softirq.c:454 [inline]
-> do_softirq+0xaa/0xe0 kernel/softirq.c:441
-> </IRQ>
-> <TASK>
-> __local_bh_enable_ip+0xf8/0x120 kernel/softirq.c:381
-> spin_unlock_bh include/linux/spinlock.h:396 [inline]
-> batadv_nc_purge_paths+0x1ce/0x3c0 net/batman-adv/network-coding.c:471
-> batadv_nc_worker+0x9b1/0x10e0 net/batman-adv/network-coding.c:722
-> process_one_work+0x884/0x15c0 kernel/workqueue.c:2630
-> process_scheduled_works kernel/workqueue.c:2703 [inline]
-> worker_thread+0x8b9/0x1290 kernel/workqueue.c:2784
-> kthread+0x33c/0x440 kernel/kthread.c:388
-> ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
-> ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
-> </TASK>
->
-> To address the issue, catch the racing subflow state change and
-> use it to cause the MPTCP fallback. Such fallback is also used to
-> cause the first subflow state propagation to the msk socket via
-> mptcp_set_connected(). After this change, the first subflow can
-> additionally propagate the TCP_FIN_WAIT1 state, so rename the
-> helper accordingly.
->
-> Finally, if the state propagation is delayed to the msk release
-> callback, the first subflow can change to a different state in between.
-> Cache the relevant target state in a new msk-level field and use
-> such value to update the msk state at release time.
->
-> Fixes: 1e777f39b4d7 ("mptcp: add MSG_FASTOPEN sendmsg flag support")
-> Reported-by: syzbot+c53d4d3ddb327e80bc51@syzkaller.appspotmail.com
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/458
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
 > ---
-> v1 -> v2:
-> - when the release_cb is not used, do not cache the new state (Mat)
-> - rename the TCP_CONNECTED bit (Mat)
+> net/mptcp/crypto_test.c | 1 +
+> net/mptcp/token_test.c  | 1 +
+> 2 files changed, 2 insertions(+)
 
-Thanks Paolo, v2 LGTM:
+Looks good:
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-
-
+>
+> diff --git a/net/mptcp/crypto_test.c b/net/mptcp/crypto_test.c
+> index 017248dea038..220414e5c850 100644
+> --- a/net/mptcp/crypto_test.c
+> +++ b/net/mptcp/crypto_test.c
+> @@ -70,3 +70,4 @@ static struct kunit_suite mptcp_crypto_suite = {
+> kunit_test_suite(mptcp_crypto_suite);
+>
+> MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("KUnit tests for MPTCP Crypto");
+> diff --git a/net/mptcp/token_test.c b/net/mptcp/token_test.c
+> index 0758865ab658..bfff53e668da 100644
+> --- a/net/mptcp/token_test.c
+> +++ b/net/mptcp/token_test.c
+> @@ -143,3 +143,4 @@ static struct kunit_suite mptcp_token_suite = {
+> kunit_test_suite(mptcp_token_suite);
+>
+> MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("KUnit tests for MPTCP Token");
+>
 > ---
-> net/mptcp/protocol.c |  6 +++---
-> net/mptcp/protocol.h |  9 ++++++---
-> net/mptcp/subflow.c  | 28 +++++++++++++++++-----------
-> 3 files changed, 26 insertions(+), 17 deletions(-)
+> base-commit: e7a5909d8593c93796bd85913fda617a08dfce7b
+> change-id: 20231127-mptcp-module-desc-f74500c2fd86
+>
+> Best regards,
+> -- 
+> Matthieu Baerts <matttbe@kernel.org>
+>
+>
 >
