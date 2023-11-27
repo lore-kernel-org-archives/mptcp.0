@@ -1,132 +1,190 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A81B39FF3
-	for <mptcp@lists.linux.dev>; Fri, 24 Nov 2023 18:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBCD16416;
+	Mon, 27 Nov 2023 12:29:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeixPQp1"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-53fa455cd94so1467265a12.2
-        for <mptcp@lists.linux.dev>; Fri, 24 Nov 2023 10:19:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700849991; x=1701454791; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SGM5B/zVm3m5wksmiF/GT/v9sa4KNKqX+HsYk5l7sTc=;
-        b=TeixPQp1sH6rjywSrApGEEp7EoP9RrFnAxNgRDeiu3OcA5pkE4MlLXaF87YoxWVX9p
-         wZg/aRAfyVz99EjMxsOQaqVeSfE5IxQYo3nwm5RAdbmE7CVkUxK2UCVknFjZJgCRDbTU
-         10JMLJBW31tm/El98zgiiRQXeawWIy082LktlTPcXG8bxzqdJCl32e0wa+1yhKISY515
-         2dV6XgrjONKkd+6viU0gqX6CHuULLbkS+gOFPgcw/QtLiyfqKWQM6EDkoVTE2OO6nZtS
-         of+nXI/XbwSRgqIpLe6hmoBgNfg9Xx6R3xKh5G9GuovO9Tfda2/mzlrXaXehknsZlDyH
-         odeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700849991; x=1701454791;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SGM5B/zVm3m5wksmiF/GT/v9sa4KNKqX+HsYk5l7sTc=;
-        b=gIa6QLvo56HnKHkoh+UGjuvL+YK5D0lFwH58eD1S6hdhSCXNWm7DlD+rwbkp6tmMwW
-         FD8JoVLN0NSK68d+F/eHy5G1YTgpIJ2OuW9OH5L+shU3BFDK31xEfmTROwqfnupqDDya
-         v0cUMgaQH6qMo0l4b2oKGcQQZgd9uWyK+XH2gND9iarpWPjZnRCw3HJ07foAdMpVYlbA
-         gTYL9ngB0PtNBQe/5xaWXkhWiSzzoQLm6ZXFSvANFF6gNCCelMHCJCH11wb16Mz9FzDv
-         xY0FeeE7n1cXDu4agaNQQVNS4Xe4q8MjNF/f18DXPQ2Kvas2XznNJl8vB9SbowfIDL49
-         yGjw==
-X-Gm-Message-State: AOJu0YyCFO85fixOEg0eYe+izfic9zyb8UBNEIFTGdN1Q2IY9ywFwU9k
-	V27SW8iJS/m/Xlvs85JERZ+REKVUGw==
-X-Google-Smtp-Source: AGHT+IG7TJy1ysmwOhjkw47W7CO/7fhAsGnKMGhPXeR0UW8pP61LIWYAwrRsoXfpAQ71EiVvfALHKQ==
-X-Received: by 2002:a17:90a:bb89:b0:27d:198:fcc2 with SMTP id v9-20020a17090abb8900b0027d0198fcc2mr3944922pjr.33.1700849991092;
-        Fri, 24 Nov 2023 10:19:51 -0800 (PST)
-Received: from [127.0.0.1] ([13.88.100.227])
-        by smtp.gmail.com with ESMTPSA id s5-20020a17090a5d0500b00280469602bcsm3475263pji.2.2023.11.24.10.19.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Nov 2023 10:19:50 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <16b3bbadb28abcca8a16ac51c915b5b10085cf36.1700841412.git.geliang.tang@suse.com>
-References:
- <16b3bbadb28abcca8a16ac51c915b5b10085cf36.1700841412.git.geliang.tang@suse.com>
-Subject: =?UTF-8?Q?Re=3A_Squash_to_=22selftests=3A_mptcp=3A?=
- =?UTF-8?Q?_add_mptcp=5Flib=5Fcheck=5Ftransfer=22?=
- =?UTF-8?Q?=3A_Tests_Results?=
-Message-ID: <8b8c2cab-be72-61ac-32f8-1e6863b7ca72@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Nov 2023 18:19:49 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="faBhkNcZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C7A0C433C7;
+	Mon, 27 Nov 2023 12:29:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701088192;
+	bh=PiZRO1SG/+v1197piJzNlutqwuYFIV33BwcNtwlceR0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=faBhkNcZ6Lg/lPlwJkGVkf3gt1DsbP3fiUtDbFqMmIyD2CIwYudF9I0yiGyWoAMPv
+	 TjAYJcfSgZRj/d0qxaQHXWaNM57CBqaJ1XYTvzWx3mazA38R3CdI2wPqbrpHZxFRE7
+	 Azdz6Po2DlfhUxh+Rps/mC/ZpCgmG6iXTnkTXiUApJc4Pmbpq+7ztNhBt1PMuY9VTy
+	 smsJmhIq3gttUpuc0LXpq4ctPcgTWysTNZ52hI9zK8qaJdTIFD5Jm/D4D5/wEU9s3D
+	 SD8ohFDDCw4jv8xTjusc8v/a6AoOvDI+K2P7Keq0B10Zyium49wr6Ym+JPKe4tiGCQ
+	 u3sC8dSwwrEmQ==
+Message-ID: <7418fa0c-c0c2-4615-ba55-f148ceb82328@kernel.org>
+Date: Mon, 27 Nov 2023 13:29:46 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net 4/4] selftests/net: mptcp: fix uninitialized variable
+ warnings
+Content-Language: en-GB, fr-BE
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, netdev@vger.kernel.org
+Cc: davem@davemloft.net, kuba@kernel.org, edumazet@google.com,
+ pabeni@redhat.com, linux-kselftest@vger.kernel.org,
+ Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20231124171645.1011043-1-willemdebruijn.kernel@gmail.com>
+ <20231124171645.1011043-5-willemdebruijn.kernel@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+In-Reply-To: <20231124171645.1011043-5-willemdebruijn.kernel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Willem,
 
-Thank you for your modifications, that's great!
+(+ cc MPTCP list)
 
-Our CI did some validations and here is its report:
+On 24/11/2023 18:15, Willem de Bruijn wrote:
+> From: Willem de Bruijn <willemb@google.com>
+> 
+> Same init_rng() in both tests. The function reads /dev/urandom to
+> initialize srand(). In case of failure, it falls back onto the
+> entropy in the uninitialized variable. Not sure if this is on purpose.
+> But failure reading urandom should be rare, so just fail hard. While
+> at it, convert to getrandom(). Which man 4 random suggests is simpler
+> and more robust.
+> 
+>     mptcp_inq.c:525:6:
+>     mptcp_connect.c:1131:6:
+> 
+>     error: variable 'foo' is used uninitialized
+>     whenever 'if' condition is false
+>     [-Werror,-Wsometimes-uninitialized]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4534944538558464
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4534944538558464/su=
-mmary/summary.txt
+Thank you for the patch!
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4781943947001856
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4781943947001856/summary/summary.txt
+It looks good to me:
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6581402502692864
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6581402502692864/summary/summary.txt
+Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6570048135888896
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6570048135888896/su=
-mmary/summary.txt
+> Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
+> Fixes: b51880568f20 ("selftests: mptcp: add inq test case")
+> Cc: Florian Westphal <fw@strlen.de>
+> Signed-off-by: Willem de Bruijn <willemb@google.com>
+> 
+> ----
+> 
+> When input is randomized because this is expected to meaningfully
+> explore edge cases, should we also add
+> 1. logging the random seed to stdout and
+> 2. adding a command line argument to replay from a specific seed
+> I can do this in net-next, if authors find it useful in this case.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/00f10d68f33f
+I think we should have done that from the beginning, otherwise we cannot
+easily reproduce these edge cases. To be honest, I don't think this
+technique helped to find bugs, and it was probably used here as a good
+habit to increase the coverage. But on the other hand, we might not
+realise some inputs are randomised and can cause instabilities in the
+tests because we don't print anything about that.
 
+So I would say that the minimal thing to do is to log the random seed.
+But it might not be that easy to do, for example 'mptcp_connect' is used
+a lot of time by the .sh scripts: printing this seed number each time
+'mptcp_connect' is started will "flood" the logs. Maybe we should only
+print that at the end, in case of errors: e.g. in xerror() and
+die_perror() for example, but I see 'exit(1)' is directly used in other
+places...
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+That's more code to change, but if it is still OK for you to do that,
+please also note that you will need to log this to stderr: mptcp_connect
+prints what has been received from the other peer to stdout.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+Because it is more than just adding a 'printf()', I just created a
+ticket in our bug tracker, so anybody can look at that and check all the
+details about that:
 
-For more details:
+https://github.com/multipath-tcp/mptcp_net-next/issues/462
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 11 ++++-------
+>  tools/testing/selftests/net/mptcp/mptcp_inq.c     | 11 ++++-------
+>  2 files changed, 8 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index c7f9ebeebc2c5..d2043ec3bf6d6 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
 
+(...)
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+> @@ -1125,15 +1126,11 @@ int main_loop_s(int listensock)
+>  
+>  static void init_rng(void)
+>  {
+> -	int fd = open("/dev/urandom", O_RDONLY);
+>  	unsigned int foo;
+>  
+> -	if (fd > 0) {
+
+I just realised that here, we could have fd == 0 which is a valid value.
+I don't think we would have that when executing the selftests, but
+that's another reason to change this :)
+
+> -		int ret = read(fd, &foo, sizeof(foo));
+> -
+> -		if (ret < 0)
+> -			srand(fd + foo);
+> -		close(fd);
+> +	if (getrandom(&foo, sizeof(foo), 0) == -1) {
+> +		perror("getrandom");
+> +		exit(1);
+>  	}
+>  
+>  	srand(foo);
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts =
-(Tessares)
+Matt
