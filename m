@@ -1,191 +1,91 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C81231A73
-	for <mptcp@lists.linux.dev>; Mon, 27 Nov 2023 15:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335D831739
+	for <mptcp@lists.linux.dev>; Mon, 27 Nov 2023 16:16:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLfblz1W"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-77d72aeae3bso185192585a.1
-        for <mptcp@lists.linux.dev>; Mon, 27 Nov 2023 07:46:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701099993; x=1701704793; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dQn+nfZn0k/15RIKJDHqgnJW9L0h46ZKz5egxGpypNQ=;
-        b=lLfblz1WHlp0/7TJczisjX8JasNx3J3CRz2lmTYSHOxDeFrbWjKfAFWRjcXqek1arB
-         1iTR6N7ai1kkbBG7n/6TxbzyPQlyT1wU/Ihea3QKMr2sTyLlgIzrRRAxtvfJmRjCU2Vt
-         Q/UyhT6mdMGn4PejyoZg2fWl6/WB3LGCk4FvhHwQG0d66HDLyKEthrNTnRldDRhJBBsq
-         5+dkU0OvNgbu9/xPOwbcmmlzCQsKYiejEAl9s+BXruzO1vv83f3AUtn0BDmpe1kCFdaO
-         C4xCKobASnZU6/ySUFwc/NjZ5qArUQsGVJyLXSaKHUMRN4Oba+h201SrO08x4Mo+4GMW
-         3Nww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701099993; x=1701704793;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dQn+nfZn0k/15RIKJDHqgnJW9L0h46ZKz5egxGpypNQ=;
-        b=im8x772VHdYNJ9XieOaO79+hHX97eAF/UAzAwEpxVF+3rSv6OnVQmPBZoLb2ApV6BA
-         ZpTuBudRK6LNJHQFGgMwoNYVibkxw1O7nBAku9FVhfjh/1zgBAeJy0ikUH72T4FcRGkI
-         ips16pYJ4SAStALxK7ZFlmf6cRQ67e33SOF0CTMV/rBJ/lZ6Hj/LwFmayNFyojwfF9Ex
-         XRwaq9zzX1f6iFIxqkHh94NRkNE450KA2EN+1LcvBaERgq0z0Uy5k4Uvct6qdw/LR+KL
-         SzVRHtReP6gEQW5QUy2mac7WgXAo8Wufh02x1hm7enVVZOf15YZG1wNAG/EPNZyA7CF5
-         PNSQ==
-X-Gm-Message-State: AOJu0YxYljq4p+ZyvcDpgfZAFwkh8xjF1VBvU/87htEvj6nGzG4bdVTP
-	em8kurH24X1n5/zYCkoGlQU=
-X-Google-Smtp-Source: AGHT+IE3MaWwPx811HWE6Z1JCLCB7GQvQMZYVYPljdxgpiA3wP6Lhn644czcnNQd2UEdF76Ej2je9Q==
-X-Received: by 2002:a05:620a:4895:b0:777:457:34be with SMTP id ea21-20020a05620a489500b00777045734bemr12809491qkb.24.1701099992822;
-        Mon, 27 Nov 2023 07:46:32 -0800 (PST)
-Received: from localhost (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
-        by smtp.gmail.com with ESMTPSA id g12-20020a05620a13cc00b0077580becd52sm3781679qkl.103.2023.11.27.07.46.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Nov 2023 07:46:32 -0800 (PST)
-Date: Mon, 27 Nov 2023 10:46:32 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- netdev@vger.kernel.org
-Cc: davem@davemloft.net, 
- kuba@kernel.org, 
- edumazet@google.com, 
- pabeni@redhat.com, 
- linux-kselftest@vger.kernel.org, 
- Willem de Bruijn <willemb@google.com>, 
- Florian Westphal <fw@strlen.de>, 
- MPTCP Upstream <mptcp@lists.linux.dev>
-Message-ID: <6564b9d831e24_8a1ac29498@willemb.c.googlers.com.notmuch>
-In-Reply-To: <7418fa0c-c0c2-4615-ba55-f148ceb82328@kernel.org>
-References: <20231124171645.1011043-1-willemdebruijn.kernel@gmail.com>
- <20231124171645.1011043-5-willemdebruijn.kernel@gmail.com>
- <7418fa0c-c0c2-4615-ba55-f148ceb82328@kernel.org>
-Subject: Re: [PATCH net 4/4] selftests/net: mptcp: fix uninitialized variable
- warnings
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBX7omkH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D239BC433C7;
+	Mon, 27 Nov 2023 16:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701101812;
+	bh=QI8deKgZLIwsN+61V/wIKxI7cbndjn5y2Ew3ho/exuE=;
+	h=From:Date:Subject:To:Cc:From;
+	b=QBX7omkHz0a/3Lv50hIvCu9cM1oyhZqi0BPfYoB8ML2CDQovoWlc0wurEMH7O0lue
+	 +pC68DtgTMrRkqJt8UM+6bCipC6R08hkZFMTU5AcHyMS7Ldxpvf5oc4mwxGH6etRgV
+	 8nj8glHvxsU97O13h9hmCSfxcWlZemoNmhQwggXY8v5ryTWLgUz9LRmkSqJD8peNO5
+	 ftr7iuI9Wnv94cSovSRbegG8AoJT1F2j24Rvv72V5edkUJPCkqhqna7Iq5QHkeS87j
+	 g5+UqIBuh0yo6kx06oMYgAc0ehJh15tL7fftiswRVc40gUPnEdfKKZQz1fRB6P5AnR
+	 mJqILXemC+ovA==
+From: Matthieu Baerts <matttbe@kernel.org>
+Date: Mon, 27 Nov 2023 17:16:23 +0100
+Subject: [PATCH mptcp-net] mptcp: fill in missing MODULE_DESCRIPTION()
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20231127-mptcp-module-desc-v1-1-d2209921bf9e@kernel.org>
+X-B4-Tracking: v=1; b=H4sIANbAZGUC/yWMWwqAIBAArxL73YLak64SfYSutVAmWhFEd0/qc
+ 2BmbogUmCJ02Q2BTo68uQQyz0DPo5sI2SQGJVQhpWpw9bv2uG7mWAgNRY22KSshtLKmrSF1PpD
+ l63v28OuOdhie5wUxXQxTbgAAAA==
+To: mptcp@lists.linux.dev
+Cc: Matthieu Baerts <matttbe@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1192; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=QI8deKgZLIwsN+61V/wIKxI7cbndjn5y2Ew3ho/exuE=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlZMDzCzzPjGmFTstRW6xQKEOEPcH6vxr63rY+l
+ HdGfrRtK82JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZWTA8wAKCRD2t4JPQmmg
+ c+NcD/9c1iuo6+6GUmhdF6z8IaONtSmgtsoz7eRnF9Fr9Q4Zj7VXKO2yOvDkMTblqstrcqfZeoN
+ zdi83HdjdIjGi8khA51c6BHddZFM2XEqpDB6VT6ErIb7FtB0R3Cv2li3Y9V4AFjnFpTWUsYN+UI
+ AhwRisAoyB9mFKPV0h/NCJ1FwCbgNKmhcQY87ST2kp+ZcN8xJNhQWYTeUBr2KAzMxUdfooPXli+
+ YS9VoMpBmOmELaGPUbSl+M+d/8RncSJA+vPEubeba2INXebeUaBcCkka0X0fL5joxJ6qgXbZwPq
+ fsImsQ94WO9fEHNpK+1HYyWVnw9O2bIeCmFZX+3oiWTFND/U4pi9StSDvd8czwdJSInehnS6yxX
+ HU1phCYKKOgrKLbUtmLaHupdifbTWGTwPp4pX3gMF8oKaShfzMMnBjtMd8e//rQKD66x0138cyX
+ 9Arp1KxdY+uBnDJIV8sJzJeYlbglWCyx2eOsae2HdS7MDkJ6v2UHtvoq+uFtoZptJT2ltViW4ry
+ 5Z1Leui1ajIQvzAajqU8hIbqV9cDJV8LUbhR0QST/UQ4fssmZ63elUBkdjv9JSj9jYHGa4qI1dl
+ Hg32YlBkyxZY9pzLx9ZqfxS3hBF9A3uCzmpw5MLe3ZeIGZOA9V9BE4MeMjocR0xiFPOOpNcvqEA
+ fCoCFIkiqQNBUMQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Matthieu Baerts wrote:
-> Hi Willem,
-> 
-> (+ cc MPTCP list)
-> 
-> On 24/11/2023 18:15, Willem de Bruijn wrote:
-> > From: Willem de Bruijn <willemb@google.com>
-> > 
-> > Same init_rng() in both tests. The function reads /dev/urandom to
-> > initialize srand(). In case of failure, it falls back onto the
-> > entropy in the uninitialized variable. Not sure if this is on purpose.
-> > But failure reading urandom should be rare, so just fail hard. While
-> > at it, convert to getrandom(). Which man 4 random suggests is simpler
-> > and more robust.
-> > 
-> >     mptcp_inq.c:525:6:
-> >     mptcp_connect.c:1131:6:
-> > 
-> >     error: variable 'foo' is used uninitialized
-> >     whenever 'if' condition is false
-> >     [-Werror,-Wsometimes-uninitialized]
-> 
-> Thank you for the patch!
-> 
-> It looks good to me:
-> 
-> Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
-> 
-> > Fixes: 048d19d444be ("mptcp: add basic kselftest for mptcp")
-> > Fixes: b51880568f20 ("selftests: mptcp: add inq test case")
-> > Cc: Florian Westphal <fw@strlen.de>
-> > Signed-off-by: Willem de Bruijn <willemb@google.com>
-> > 
-> > ----
-> > 
-> > When input is randomized because this is expected to meaningfully
-> > explore edge cases, should we also add
-> > 1. logging the random seed to stdout and
-> > 2. adding a command line argument to replay from a specific seed
-> > I can do this in net-next, if authors find it useful in this case.
-> 
-> I think we should have done that from the beginning, otherwise we cannot
-> easily reproduce these edge cases. To be honest, I don't think this
-> technique helped to find bugs, and it was probably used here as a good
-> habit to increase the coverage. But on the other hand, we might not
-> realise some inputs are randomised and can cause instabilities in the
-> tests because we don't print anything about that.
-> 
-> So I would say that the minimal thing to do is to log the random seed.
-> But it might not be that easy to do, for example 'mptcp_connect' is used
-> a lot of time by the .sh scripts: printing this seed number each time
-> 'mptcp_connect' is started will "flood" the logs. Maybe we should only
-> print that at the end, in case of errors: e.g. in xerror() and
-> die_perror() for example, but I see 'exit(1)' is directly used in other
-> places...
-> 
-> That's more code to change, but if it is still OK for you to do that,
-> please also note that you will need to log this to stderr: mptcp_connect
-> prints what has been received from the other peer to stdout.
-> 
-> Because it is more than just adding a 'printf()', I just created a
-> ticket in our bug tracker, so anybody can look at that and check all the
-> details about that:
-> 
-> https://github.com/multipath-tcp/mptcp_net-next/issues/462
+W=1 builds warn on missing MODULE_DESCRIPTION, add them here in MPTCP.
 
-Thanks for the detailed feedback, Matthieu!
+Only two were missing: two modules with different KUint tests for MPTCP.
 
-Another option to avoid flooding the logs might be to choose a pseudo
-random number in the script and pass the explicit value mptcp_connect.
+Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
+---
+ net/mptcp/crypto_test.c | 1 +
+ net/mptcp/token_test.c  | 1 +
+ 2 files changed, 2 insertions(+)
 
-I haven't looked closely, but for transport layer tests it is likely
-that the payload is entirely ignored. Bar perhaps checksum coverage.
-If it does not increase code coverage, randomization can also just be
-turned off.
+diff --git a/net/mptcp/crypto_test.c b/net/mptcp/crypto_test.c
+index 017248dea038..220414e5c850 100644
+--- a/net/mptcp/crypto_test.c
++++ b/net/mptcp/crypto_test.c
+@@ -70,3 +70,4 @@ static struct kunit_suite mptcp_crypto_suite = {
+ kunit_test_suite(mptcp_crypto_suite);
  
-> > ---
-> >  tools/testing/selftests/net/mptcp/mptcp_connect.c | 11 ++++-------
-> >  tools/testing/selftests/net/mptcp/mptcp_inq.c     | 11 ++++-------
-> >  2 files changed, 8 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> > index c7f9ebeebc2c5..d2043ec3bf6d6 100644
-> > --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> > +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> 
-> (...)
-> 
-> > @@ -1125,15 +1126,11 @@ int main_loop_s(int listensock)
-> >  
-> >  static void init_rng(void)
-> >  {
-> > -	int fd = open("/dev/urandom", O_RDONLY);
-> >  	unsigned int foo;
-> >  
-> > -	if (fd > 0) {
-> 
-> I just realised that here, we could have fd == 0 which is a valid value.
-> I don't think we would have that when executing the selftests, but
-> that's another reason to change this :)
-> 
-> > -		int ret = read(fd, &foo, sizeof(foo));
-> > -
-> > -		if (ret < 0)
-> > -			srand(fd + foo);
-> > -		close(fd);
-> > +	if (getrandom(&foo, sizeof(foo), 0) == -1) {
-> > +		perror("getrandom");
-> > +		exit(1);
-> >  	}
-> >  
-> >  	srand(foo);
-> 
-> Cheers,
-> Matt
+ MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("KUnit tests for MPTCP Crypto");
+diff --git a/net/mptcp/token_test.c b/net/mptcp/token_test.c
+index 0758865ab658..bfff53e668da 100644
+--- a/net/mptcp/token_test.c
++++ b/net/mptcp/token_test.c
+@@ -143,3 +143,4 @@ static struct kunit_suite mptcp_token_suite = {
+ kunit_test_suite(mptcp_token_suite);
+ 
+ MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("KUnit tests for MPTCP Token");
 
+---
+base-commit: e7a5909d8593c93796bd85913fda617a08dfce7b
+change-id: 20231127-mptcp-module-desc-f74500c2fd86
+
+Best regards,
+-- 
+Matthieu Baerts <matttbe@kernel.org>
 
