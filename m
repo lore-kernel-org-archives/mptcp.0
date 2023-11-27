@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2E03AC21
-	for <mptcp@lists.linux.dev>; Mon, 27 Nov 2023 17:56:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFA13AC21
+	for <mptcp@lists.linux.dev>; Mon, 27 Nov 2023 17:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u77mdksg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D146C433C7;
-	Mon, 27 Nov 2023 17:56:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9/C/GZf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D117FC433C7;
+	Mon, 27 Nov 2023 17:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701107783;
-	bh=NtkkqG0KXxTNQk3W1az+AF31aP5f84pjg6kBhk4b300=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=u77mdksgN5VSXD6VMKnD3MNLqXmpvBa5ycIjXX0pT0gp1pPtc6kS92SCIytphlZOC
-	 Gkc0LM/Esrtoc0FNmD7Y7BACJHxNLHkIVQtt/HUAwDHfRdDtkBP37KHU69MyONI8a4
-	 0gWHp1jVIHLesALMsSOCxty21nIH19c/kw2horYqzvNVdjp4S4I24nrZhsdrYUn9z6
-	 nEnEbxvSHSjHXeliEKuW2BUEfE1ujvCbqsMXn93DGkTrvfgcvSOM3yL5wfMrhXdkgI
-	 1vjcMNNKBhG35z9tqUBeQDDYvkWgVfmFnm04GuYI9D3br6DZ+1viqGLn8rDI/7m0t6
-	 TEyOCxS38WkEw==
-Message-ID: <7d1dfb5d-d82b-4320-8934-a44eb04a7434@kernel.org>
-Date: Mon, 27 Nov 2023 18:56:10 +0100
+	s=k20201202; t=1701107787;
+	bh=DI50VC6Zv3MI5eItgNU9lOIdqnJG5ljZ5O66P8NNwOU=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=Y9/C/GZfomBfSOsbuBUSMCLt6YRlgwzhrqmtOafW5Q8DxVtOqunIg1u8Ulq6fVCd8
+	 83hMUyv1irLVvIpdtIa0fX7aFmFrE8eXaI0aEI6MpaZ4ht4m3qYMJjSwI9m5EoEmAo
+	 QB5tQLBk5FAdl4Jy8ZpR73D/M+RbVJSrOicBajj5z9RbyCUBgYLsPc2nz2CusK7ahv
+	 PXU4nCEb/GXFhdmJQbu+jZfncEf+XmIVwNl88qG8FzTaOijAwA+8CKQnAf1MKSZL4Z
+	 30QTnpFhpaPVL17UAfiLiQrVOP1DFe12yTo9wM91udcKkCCgWje+mdB+/Cd8nB7Tcm
+	 ca7vcpouzX2SA==
+Message-ID: <0e31b42f-4a12-4a9d-b0d5-effe1281ff8a@kernel.org>
+Date: Mon, 27 Nov 2023 18:56:26 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: Add bpf_burst
- scheduler"
+Subject: Re: [PATCH mptcp-next v2] Squash to "selftests: mptcp: add
+ mptcp_lib_check_transfer"
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Cc: kernel test robot <yujie.liu@intel.com>
-References: <14a1120c9bc792ead2b926208ce85b5f10cb99fd.1700624540.git.geliang.tang@suse.com>
+References: <16b3bbadb28abcca8a16ac51c915b5b10085cf36.1700841412.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,26 +76,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <14a1120c9bc792ead2b926208ce85b5f10cb99fd.1700624540.git.geliang.tang@suse.com>
+In-Reply-To: <16b3bbadb28abcca8a16ac51c915b5b10085cf36.1700841412.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 22/11/2023 04:42, Geliang Tang wrote:
-> Fix the bpf selftests build error:
-> 
-> progs/mptcp_bpf_burst.c:37:18: error: no member named 'write_seq' in 'struct tcp_sock'
->         return tp ? tp->write_seq == tp->snd_nxt : true;
->                     ~~  ^
-> 1 error generated.
-> make: *** [Makefile:614: tools/testing/selftests/bpf/mptcp_bpf_burst.bpf.o] Error 1
-> make: *** Waiting for unfinished jobs....
+On 24/11/2023 16:57, Geliang Tang wrote:
+> Keep consistency with other functions in mptcp_lib.sh.
 
-Thank you for the patch, now in our tree:
+Good idea, thank you for the patch!
+
+> Use KSFT_PASS and KSFT_FAIL.
+> 
+> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+> ---
+> v2:
+>  - Use KSFT_PASS and KSFT_FAIL.
+
+In fact, I prefer and applied the v1: these KSFT_{PASS,FAIL,SKIP}
+variables are the exit code we can use when using the selftests
+framework. That's what we can pass to "exit", but I don't think it
+doesn't really apply to function return code, and it is currently not
+used for that.
 
 New patches for t/upstream:
-- bd37dad396df: "squashed" in "selftests/bpf: Add bpf_burst scheduler"
+- 44d5ff2290a9: "squashed" in "selftests: mptcp: add
+mptcp_lib_check_transfer"
 - Results: d4787f01696d..1ee636354037 (export)
 
 Tests are now in progress:
