@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646B43AC21
-	for <mptcp@lists.linux.dev>; Mon, 27 Nov 2023 17:55:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2E03AC21
+	for <mptcp@lists.linux.dev>; Mon, 27 Nov 2023 17:56:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tynnn9fa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E843BC433C7;
-	Mon, 27 Nov 2023 17:55:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u77mdksg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D146C433C7;
+	Mon, 27 Nov 2023 17:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701107757;
-	bh=EO7RExMppa/NJdoYOpoK3sb78zKLIAvLwm/Re8zzpmM=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Tynnn9faAzhx4o8Snvp/rkUhwWNHbe/7VZW4JuZiPwvKNZ1MAdHw9v+TyJMQ9+a1D
-	 8napIWFtG6c7oI41NghmVlMXsrWladjJSle6MbVrYnUJVgIlLC00iS91dKgilse+xZ
-	 ZI1bYukG97SuPXWOI6o00PMBQvyWiluk/XrZz/1wjDn9Rt+ovygboL445PSbzF1zqn
-	 TUDOQ5q7mzs+8LXNTeD7ftJKcdaLLHq6SHZWB6lH1JxyK889L3TUIysmlVYAtP+09N
-	 uv6RobwwWtsfrsFm7JyEkW9BBySQNcj8cAW3lu4fQTZfCPale9qz82trcDFu4fAlTw
-	 X9k5pzbJb3qtA==
-Message-ID: <7010718b-737f-43f2-9312-88c14709cc4d@kernel.org>
-Date: Mon, 27 Nov 2023 18:55:54 +0100
+	s=k20201202; t=1701107783;
+	bh=NtkkqG0KXxTNQk3W1az+AF31aP5f84pjg6kBhk4b300=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=u77mdksgN5VSXD6VMKnD3MNLqXmpvBa5ycIjXX0pT0gp1pPtc6kS92SCIytphlZOC
+	 Gkc0LM/Esrtoc0FNmD7Y7BACJHxNLHkIVQtt/HUAwDHfRdDtkBP37KHU69MyONI8a4
+	 0gWHp1jVIHLesALMsSOCxty21nIH19c/kw2horYqzvNVdjp4S4I24nrZhsdrYUn9z6
+	 nEnEbxvSHSjHXeliEKuW2BUEfE1ujvCbqsMXn93DGkTrvfgcvSOM3yL5wfMrhXdkgI
+	 1vjcMNNKBhG35z9tqUBeQDDYvkWgVfmFnm04GuYI9D3br6DZ+1viqGLn8rDI/7m0t6
+	 TEyOCxS38WkEw==
+Message-ID: <7d1dfb5d-d82b-4320-8934-a44eb04a7434@kernel.org>
+Date: Mon, 27 Nov 2023 18:56:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,11 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add
- chk_subflows_total helper"
+Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: Add bpf_burst
+ scheduler"
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <4bcf528d5ec4163c0ed64bc62566d8574e7f09d1.1700277365.git.geliang.tang@suse.com>
+Cc: kernel test robot <yujie.liu@intel.com>
+References: <14a1120c9bc792ead2b926208ce85b5f10cb99fd.1700624540.git.geliang.tang@suse.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -76,26 +77,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4bcf528d5ec4163c0ed64bc62566d8574e7f09d1.1700277365.git.geliang.tang@suse.com>
+In-Reply-To: <14a1120c9bc792ead2b926208ce85b5f10cb99fd.1700624540.git.geliang.tang@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 18/11/2023 04:16, Geliang Tang wrote:
-> Add missing "local dump_stats".
+On 22/11/2023 04:42, Geliang Tang wrote:
+> Fix the bpf selftests build error:
 > 
-> Otherwise, no place to set 0 to dump_stats, if a test fails. Then
-> unexpected dump infos will be showed in all the subsequent outputs
-> of chk_subflows_total().
-
-Good catch!
+> progs/mptcp_bpf_burst.c:37:18: error: no member named 'write_seq' in 'struct tcp_sock'
+>         return tp ? tp->write_seq == tp->snd_nxt : true;
+>                     ~~  ^
+> 1 error generated.
+> make: *** [Makefile:614: tools/testing/selftests/bpf/mptcp_bpf_burst.bpf.o] Error 1
+> make: *** Waiting for unfinished jobs....
 
 Thank you for the patch, now in our tree:
 
 New patches for t/upstream:
-- 45047d0dc10f: "squashed" in "selftests: mptcp: add chk_subflows_total
-helper"
+- bd37dad396df: "squashed" in "selftests/bpf: Add bpf_burst scheduler"
 - Results: d4787f01696d..1ee636354037 (export)
 
 Tests are now in progress:
