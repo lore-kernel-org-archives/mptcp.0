@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87ACF58AC2;
-	Tue, 28 Nov 2023 23:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BE55C08D;
+	Tue, 28 Nov 2023 23:19:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnzU9NMM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39E9FC433CA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWUVx0OU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B59A4C433CC;
 	Tue, 28 Nov 2023 23:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1701213563;
-	bh=Jv4RGt/HbPFT2xzKIHcm3F2VRGKa/g8ZrBp8a7B7iWE=;
+	bh=zQBP+gO/zNtR8Z2rDy2qVbB1lybcc8PLIpGPvXHYkIU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KnzU9NMMk5lKFkbFb50YHt49OVFagqcvme3jNMOwamanhtSsTZ/ek+/hEqUzkqwdv
-	 aVDjCf+H/bWIN3ud35qGgZGrg6iVF3kygNfMhPBKni484cCThAPsK/NhzLPFEMpajL
-	 DyP+wB3hcI9S8mo+iRTpbq0AyFbck80enT2uFyL/EQyO1FNY016IRx0oWZ+sORxpqp
-	 7qw1Zi6kUVdnKI7BpS5iRkBzKCzvBnxUuhSP0rEd+dv5fGRKvVhyAFSb4iRqAPCQ7u
-	 xx6elbSp+ww13GVtxRfC56zov+Cblwp8TS29PA4KJD2v29kuDSSYmoeNjraLIrmnCG
-	 SQpBnIRi+XqXw==
+	b=gWUVx0OUjlSZHkHWD7ZiYSUZG8QTha2jMO6hkvi9TIXOpE4tQBDaL3xoGJBaJkkzl
+	 GiawVWF43rpjVlLVVd1OInOKn7Ks5AVnUIiZkW3ws5P4s5Nz90TtKQrAudb1uRuTPo
+	 hxHXXZ96iAw+xcBCdvAzGDiUtnuX2wVWXJ4H8Mo0HWu3ZTSuiRbTWGNO8FHwtu7+un
+	 GkT/CZ11wjSZvZ5SXnOyN2g+Br84AE8HQdTipVgt25pGdV3APrabw99bf3kkBdQji6
+	 mqfTPEdB8iPkjuAl0kPmCWdY5a2jqUkBt35XGINJkrwv92q1aw8aPhAOfmXuRgGDvl
+	 s5cUvN5OG3R3Q==
 From: Mat Martineau <martineau@kernel.org>
-Date: Tue, 28 Nov 2023 15:18:47 -0800
-Subject: [PATCH net-next v4 03/15] selftests: mptcp: add chk_subflows_total
- helper
+Date: Tue, 28 Nov 2023 15:18:49 -0800
+Subject: [PATCH net-next v4 05/15] selftests: mptcp: userspace pm create id
+ 0 subflow
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231128-send-net-next-2023107-v4-3-8d6b94150f6b@kernel.org>
+Message-Id: <20231128-send-net-next-2023107-v4-5-8d6b94150f6b@kernel.org>
 References: <20231128-send-net-next-2023107-v4-0-8d6b94150f6b@kernel.org>
 In-Reply-To: <20231128-send-net-next-2023107-v4-0-8d6b94150f6b@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, 
@@ -41,105 +41,48 @@ X-Mailer: b4 0.12.4
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch adds a new helper chk_subflows_total(), in it use the newly
-added counter mptcpi_subflows_total to get the "correct" amount of
-subflows, including the initial one.
-
-To be compatible with old 'ss' or kernel versions not supporting this
-counter, get the total subflows by listing TCP connections that are
-MPTCP subflows:
-
-    ss -ti state state established state syn-sent state syn-recv |
-        grep -c tcp-ulp-mptcp.
+This patch adds a selftest to create id 0 subflow. Pass id 0 to the
+helper userspace_pm_add_sf() to create id 0 subflow. chk_mptcp_info
+shows one subflow but chk_subflows_total shows two subflows in each
+namespace.
 
 Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 42 ++++++++++++++++++++++++-
- 1 file changed, 41 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index d24b0e5e73ef..566fa0f6506f 100755
+index 6d84c7f5296a..4357a46ca3f3 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1867,7 +1867,7 @@ chk_mptcp_info()
- 	local cnt2
- 	local dump_stats
- 
--	print_check "mptcp_info ${info1:0:8}=$exp1:$exp2"
-+	print_check "mptcp_info ${info1:0:15}=$exp1:$exp2"
- 
- 	cnt1=$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value "$info1" "$info1")
- 	cnt2=$(ss -N $ns2 -inmHM | mptcp_lib_get_info_value "$info2" "$info2")
-@@ -1888,6 +1888,42 @@ chk_mptcp_info()
+@@ -3495,6 +3495,25 @@ userspace_tests()
+ 		kill_events_pids
+ 		wait $tests_pid
  	fi
++
++	# userspace pm create id 0 subflow
++	if reset_with_events "userspace pm create id 0 subflow" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++		set_userspace_pm $ns2
++		pm_nl_set_limits $ns1 0 1
++		speed=5 \
++			run_tests $ns1 $ns2 10.0.1.1 &
++		local tests_pid=$!
++		wait_mpj $ns2
++		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
++		userspace_pm_add_sf $ns2 10.0.3.2 0
++		chk_join_nr 1 1 1
++		chk_mptcp_info subflows 1 subflows 1
++		chk_subflows_total 2 2
++		kill_events_pids
++		wait $tests_pid
++	fi
  }
  
-+# $1: subflows in ns1 ; $2: subflows in ns2
-+# number of all subflows, including the initial subflow.
-+chk_subflows_total()
-+{
-+	local cnt1
-+	local cnt2
-+	local info="subflows_total"
-+	local dump_stats
-+
-+	# if subflows_total counter is supported, use it:
-+	if [ -n "$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value $info $info)" ]; then
-+		chk_mptcp_info $info $1 $info $2
-+		return
-+	fi
-+
-+	print_check "$info $1:$2"
-+
-+	# if not, count the TCP connections that are in fact MPTCP subflows
-+	cnt1=$(ss -N $ns1 -ti state established state syn-sent state syn-recv |
-+	       grep -c tcp-ulp-mptcp)
-+	cnt2=$(ss -N $ns2 -ti state established state syn-sent state syn-recv |
-+	       grep -c tcp-ulp-mptcp)
-+
-+	if [ "$1" != "$cnt1" ] || [ "$2" != "$cnt2" ]; then
-+		fail_test "got subflows $cnt1:$cnt2 expected $1:$2"
-+		dump_stats=1
-+	else
-+		print_ok
-+	fi
-+
-+	if [ "$dump_stats" = 1 ]; then
-+		ss -N $ns1 -ti
-+		ss -N $ns2 -ti
-+	fi
-+}
-+
- chk_link_usage()
- {
- 	local ns=$1
-@@ -3431,10 +3467,12 @@ userspace_tests()
- 		chk_join_nr 1 1 1
- 		chk_add_nr 1 1
- 		chk_mptcp_info subflows 1 subflows 1
-+		chk_subflows_total 2 2
- 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
- 		userspace_pm_rm_sf_addr_ns1 10.0.2.1 10
- 		chk_rm_nr 1 1 invert
- 		chk_mptcp_info subflows 0 subflows 0
-+		chk_subflows_total 1 1
- 		kill_events_pids
- 		wait $tests_pid
- 	fi
-@@ -3451,9 +3489,11 @@ userspace_tests()
- 		userspace_pm_add_sf 10.0.3.2 20
- 		chk_join_nr 1 1 1
- 		chk_mptcp_info subflows 1 subflows 1
-+		chk_subflows_total 2 2
- 		userspace_pm_rm_sf_addr_ns2 10.0.3.2 20
- 		chk_rm_nr 1 1
- 		chk_mptcp_info subflows 0 subflows 0
-+		chk_subflows_total 1 1
- 		kill_events_pids
- 		wait $tests_pid
- 	fi
+ endpoint_tests()
 
 -- 
 2.43.0
