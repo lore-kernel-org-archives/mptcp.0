@@ -1,92 +1,110 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AE358AD9
-	for <mptcp@lists.linux.dev>; Tue, 28 Nov 2023 14:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E34A51;
+	Tue, 28 Nov 2023 23:19:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVgPoOU/"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-77bc5d8490dso322764085a.2
-        for <mptcp@lists.linux.dev>; Tue, 28 Nov 2023 06:39:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701182351; x=1701787151; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Aiw8xePiLNMnnXZkNs1EiCD/sqyGBbTrhUEwTJWbZd8=;
-        b=YVgPoOU/KiYp/JqjNZVyME9cp2bWzblruqeI8xCs03wQ6eAO5nbBU2Afsv1C9Id0tO
-         Ek7C5JcjyQZN2qUsqE+4sOzKQ+7VN9LCKaHBd/gXLdF2vj9v3/slUcQHJzKACpuNuW+P
-         I0W+SEHOqwdBGay3IChKve39H6xaISl2z7xcUxULF+Bs+LXDTL2kaksdTMj4warKqMLF
-         8XcOcIOQO89zXr3tCzvK5h0bAHUiuLhP6LxUJ3M2Rpe+kVvJjwOd/oghbaaneeTu4dvu
-         mpdW9hPA6tfSvytsoPdOyhWEqaeLgGV2MWgiM0dORlVvT68OYWx6h753MWA2zenEIyM9
-         udXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701182351; x=1701787151;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Aiw8xePiLNMnnXZkNs1EiCD/sqyGBbTrhUEwTJWbZd8=;
-        b=YXUQvNkIBNQCJNp2Ziacoo0uF8Ltzlt8cD8WD0f6D9hPXCRBwWb8/7O3hm30GyddvV
-         jJWVfWVdcE+7eR6T4Xko7Eruwlpa+6mi9pruN1yvZ4ajqFDjMYgL4aBowiuFB+HUHIP8
-         jmRWYinQKK46HcR/zwUXRxXctFjJfrvjbKQxhqdwyGSqeM0x2Shx4MFl1D5fsl5AvGAv
-         hhFSeGDe4DKZZVprm4suXHGmMX2kObDA/avQ+20C8XdFKHWQQ/BoJ29Pu7hIHf5/MtpA
-         ZA3osjuZRY0h575hk977Z3Tplc5mFlW67o8DANMBNfBkvcxHelXejs+dYUylXinn1sur
-         fXlg==
-X-Gm-Message-State: AOJu0YzOk7ovCtKJN5aXN9wykx7K9jGIV6yb98kdCetsKaNEHXdjV39D
-	uyFVTVbRyrPVn336MTloVLyfHcC7K8XO
-X-Google-Smtp-Source: AGHT+IHkpxVawfMF4yQUbh83jnSqy1UImhSrk8h0cPotuLvLbqLmAJD+37AlZBL1WdgKuNCdSy7ffA==
-X-Received: by 2002:a05:620a:4382:b0:77d:5f48:9e7 with SMTP id a2-20020a05620a438200b0077d5f4809e7mr17071285qkp.74.1701182349073;
-        Tue, 28 Nov 2023 06:39:09 -0800 (PST)
-Received: from [127.0.0.1] ([20.55.15.20])
-        by smtp.gmail.com with ESMTPSA id tx10-20020a05620a3f0a00b0076f1d8b1c2dsm4525672qkn.12.2023.11.28.06.39.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Nov 2023 06:39:08 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <0b59f639265bcd844b1d51597ffd5e172127732a.1701180777.git.geliang.tang@suse.com>
-References:
- <0b59f639265bcd844b1d51597ffd5e172127732a.1701180777.git.geliang.tang@suse.com>
-Subject: Re: selftests: mptcp: join: check CURRESTAB counters: Build
- Failure
-Message-ID: <7daa24c3-b562-9e81-0531-98b393b0d112@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 28 Nov 2023 14:39:08 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcB5nDHY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71876C433C8;
+	Tue, 28 Nov 2023 23:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701213562;
+	bh=hhcwRip5QXrstPbex+rljitmLtgeBa7S/t+VzvU+UvA=;
+	h=From:Subject:Date:To:Cc:From;
+	b=XcB5nDHYtLQFLReliPAOTzuyl16NX7ENIEzxjRrZR6xSjLhjhIiFhyv4UPKVInKrO
+	 0pGCz/FVKdRUDPui+HJCAsiMzXZwvKKaUGY7kZY5URODCNZx6MQm+9pIdExKaC/xHR
+	 85lg80xSwixFL4QeA7FjX3cXeiXwdSoqFY9Ov0ez2k8nnOJLW09fzqSI4WUYI4xC8x
+	 DEsZPk6yAIvddgaFWPFi2iKUKykZnP139mMK6MDdRCjVwFOi6oXeoXUUmgwh93KUJ5
+	 Kuv9W+G8gPa5CZK9pOD0BD2xoojaZ1MJUx/fZklDfPWqjSpiX535u5JgfIRrOGpk0o
+	 BFen7hyRICQ+g==
+From: Mat Martineau <martineau@kernel.org>
+Subject: [PATCH net-next v4 00/15] mptcp: More selftest coverage and code
+ cleanup for net-next
+Date: Tue, 28 Nov 2023 15:18:44 -0800
+Message-Id: <20231128-send-net-next-2023107-v4-0-8d6b94150f6b@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFR1ZmUC/4XNSwrCMBAG4KtI1kaSSdKkrryHuIjtpA1KKkkpl
+ dK7GyqiIsXFLP55fDORhNFjIvvNRCIOPvku5CC3G1K1NjRIfZ0zAQaCM9A0YahpwD7X2NNnW9M
+ SnK0KbUrNOMm3t4jOj4t7JK9tcsqT1qe+i/fl4cCX+R974JRRJtC5UioolT5cMAa87rrYLOQAb
+ 4ZzucZAZs6FYlZqLQqofhjxyag1RmSGo1OGS2WNgS9mnucH2wWi51MBAAA=
+To: Matthieu Baerts <matttbe@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang.tang@suse.com>
+X-Mailer: b4 0.12.4
 
-Hi Geliang,
+Patches 1-5 and 7-8 add selftest coverage (and an associated subflow
+counter in the kernel) to validate the recently-updated handling of
+subflows with ID 0.
 
-Thank you for your modifications, that's great!
+Patch 6 renames a label in the userspace path manager for clarity.
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Patches 9-11 and 13-15 factor out common selftest code by moving certain
+functions to mptcp_lib.sh
 
-You can find more details there:
+Patch 12 makes sure the random data file generated for selftest
+payloads has the intended size.
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/0b59f639265bcd844b1d51597ffd5e172127732a.1701180777=
-.git.geliang.tang@suse.com/
-  https://github.com/multipath-tcp/mptcp_net-ne=
-xt/actions/runs/7020263867
+Signed-off-by: Mat Martineau <martineau@kernel.org>
+---
+Changes in v4:
+- Include Geliang's fixup for patch 3, to fix test script variable scope
+- Include Geliang's fixup for patch 14 for consistent whitespace
+- Rebased
+- Link to v3: https://lore.kernel.org/r/20231115-send-net-next-2023107-v3-0-1ef58145a882@kernel.org
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/9fc088de65=
-72
+Changes in v3:
+- Include Geliang's fixup for patch 11, to include test_prio in the refactor
+- Rebased
+- Link to v2: https://lore.kernel.org/r/20231114-send-net-next-2023107-v2-0-b650a477362c@kernel.org
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
+Changes in v2:
+- Rebased on current net-next (v1 was deferred due to net-next PR timing)
+- Link to v1: https://lore.kernel.org/r/20231027-send-net-next-2023107-v1-0-03eff9452957@kernel.org
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+---
+Geliang Tang (15):
+      mptcp: add mptcpi_subflows_total counter
+      selftests: mptcp: add evts_get_info helper
+      selftests: mptcp: add chk_subflows_total helper
+      selftests: mptcp: update userspace pm test helpers
+      selftests: mptcp: userspace pm create id 0 subflow
+      mptcp: userspace pm rename remove_err to out
+      selftests: mptcp: userspace pm remove initial subflow
+      selftests: mptcp: userspace pm send RM_ADDR for ID 0
+      selftests: mptcp: add mptcp_lib_kill_wait
+      selftests: mptcp: add mptcp_lib_is_v6
+      selftests: mptcp: add mptcp_lib_get_counter
+      selftests: mptcp: add missing oflag=append
+      selftests: mptcp: add mptcp_lib_make_file
+      selftests: mptcp: add mptcp_lib_check_transfer
+      selftests: mptcp: add mptcp_lib_wait_local_port_listen
+
+ include/uapi/linux/mptcp.h                         |   1 +
+ net/mptcp/pm_userspace.c                           |   8 +-
+ net/mptcp/protocol.h                               |   9 +
+ net/mptcp/sockopt.c                                |   2 +
+ tools/testing/selftests/net/mptcp/diag.sh          |  23 +-
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 110 ++----
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    | 376 ++++++++++++---------
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh     |  91 +++++
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  39 +--
+ tools/testing/selftests/net/mptcp/simult_flows.sh  |  19 +-
+ tools/testing/selftests/net/mptcp/userspace_pm.sh  | 143 ++++----
+ 11 files changed, 409 insertions(+), 412 deletions(-)
+---
+base-commit: a379972973a80924b1d03443e20f113ff76a94c7
+change-id: 20231027-send-net-next-2023107-92fac6789701
+
+Best regards,
+-- 
+Mat Martineau <martineau@kernel.org>
+
