@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5894757331;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87ACF58AC2;
 	Tue, 28 Nov 2023 23:19:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3FZG34E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0809C433C9;
-	Tue, 28 Nov 2023 23:19:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnzU9NMM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39E9FC433CA;
+	Tue, 28 Nov 2023 23:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701213562;
-	bh=M5u5ricN8dE0dpJH5QiswSnk5V2Np+4+FdicUPsxrdo=;
+	s=k20201202; t=1701213563;
+	bh=Jv4RGt/HbPFT2xzKIHcm3F2VRGKa/g8ZrBp8a7B7iWE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=h3FZG34EvFsQSarSI30iTTptlqmytgUki36OkcBrAUSJWbS2yuMNw9WJnOeKb3Qwk
-	 irMyEDQWnTPCLOHEm5QTT+eztECBHD3YaDi1qQ4tBwt01LOHuJEXb3sCpaqVzMuPvk
-	 dDeqZx+q/0ZXHTXKVzh2xCIq0a9vto2iBjyWvyL5QOFTDimxdPDRD50T9Br+DURYsD
-	 ByA2Y45CeoP6Dsub1QNzvSrkLZHyp7vTvsWziD/G6cCKPtK92paiBEbRQU/5/PSAav
-	 VVVB3nJvfDPu0rw3Ey+6aWJWazeTWIyRXdG7lop/16QCuWTu3bsQKi2mUL2SX9BafV
-	 lZryyftbfmDUg==
+	b=KnzU9NMMk5lKFkbFb50YHt49OVFagqcvme3jNMOwamanhtSsTZ/ek+/hEqUzkqwdv
+	 aVDjCf+H/bWIN3ud35qGgZGrg6iVF3kygNfMhPBKni484cCThAPsK/NhzLPFEMpajL
+	 DyP+wB3hcI9S8mo+iRTpbq0AyFbck80enT2uFyL/EQyO1FNY016IRx0oWZ+sORxpqp
+	 7qw1Zi6kUVdnKI7BpS5iRkBzKCzvBnxUuhSP0rEd+dv5fGRKvVhyAFSb4iRqAPCQ7u
+	 xx6elbSp+ww13GVtxRfC56zov+Cblwp8TS29PA4KJD2v29kuDSSYmoeNjraLIrmnCG
+	 SQpBnIRi+XqXw==
 From: Mat Martineau <martineau@kernel.org>
-Date: Tue, 28 Nov 2023 15:18:45 -0800
-Subject: [PATCH net-next v4 01/15] mptcp: add mptcpi_subflows_total counter
+Date: Tue, 28 Nov 2023 15:18:47 -0800
+Subject: [PATCH net-next v4 03/15] selftests: mptcp: add chk_subflows_total
+ helper
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -28,7 +29,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231128-send-net-next-2023107-v4-1-8d6b94150f6b@kernel.org>
+Message-Id: <20231128-send-net-next-2023107-v4-3-8d6b94150f6b@kernel.org>
 References: <20231128-send-net-next-2023107-v4-0-8d6b94150f6b@kernel.org>
 In-Reply-To: <20231128-send-net-next-2023107-v4-0-8d6b94150f6b@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, 
@@ -40,77 +41,105 @@ X-Mailer: b4 0.12.4
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-If the initial subflow has been removed, we cannot know without checking
-other counters, e.g. ss -ti <filter> | grep -c tcp-ulp-mptcp or
-getsockopt(SOL_MPTCP, MPTCP_FULL_INFO, ...) (or others except MPTCP_INFO
-of course) and then check mptcp_subflow_data->num_subflows to get the
-total amount of subflows.
+This patch adds a new helper chk_subflows_total(), in it use the newly
+added counter mptcpi_subflows_total to get the "correct" amount of
+subflows, including the initial one.
 
-This patch adds a new counter mptcpi_subflows_total in mptcpi_flags to
-store the total amount of subflows, including the initial one. A new
-helper __mptcp_has_initial_subflow() is added to check whether the
-initial subflow has been removed or not. With this helper, we can then
-compute the total amount of subflows from mptcp_info by doing something
-like:
+To be compatible with old 'ss' or kernel versions not supporting this
+counter, get the total subflows by listing TCP connections that are
+MPTCP subflows:
 
-    mptcpi_subflows_total = mptcpi_subflows +
-            __mptcp_has_initial_subflow(msk).
+    ss -ti state state established state syn-sent state syn-recv |
+        grep -c tcp-ulp-mptcp.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/428
 Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
 ---
- include/uapi/linux/mptcp.h | 1 +
- net/mptcp/protocol.h       | 9 +++++++++
- net/mptcp/sockopt.c        | 2 ++
- 3 files changed, 12 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 42 ++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index a6451561f3f8..74cfe496891e 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -57,6 +57,7 @@ struct mptcp_info {
- 	__u64	mptcpi_bytes_sent;
- 	__u64	mptcpi_bytes_received;
- 	__u64	mptcpi_bytes_acked;
-+	__u8	mptcpi_subflows_total;
- };
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index d24b0e5e73ef..566fa0f6506f 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1867,7 +1867,7 @@ chk_mptcp_info()
+ 	local cnt2
+ 	local dump_stats
  
- /* MPTCP Reset reason codes, rfc8684 */
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index fe6f2d399ee8..458a2d7bb0dd 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1072,6 +1072,15 @@ static inline void __mptcp_do_fallback(struct mptcp_sock *msk)
- 	set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
+-	print_check "mptcp_info ${info1:0:8}=$exp1:$exp2"
++	print_check "mptcp_info ${info1:0:15}=$exp1:$exp2"
+ 
+ 	cnt1=$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value "$info1" "$info1")
+ 	cnt2=$(ss -N $ns2 -inmHM | mptcp_lib_get_info_value "$info2" "$info2")
+@@ -1888,6 +1888,42 @@ chk_mptcp_info()
+ 	fi
  }
  
-+static inline bool __mptcp_has_initial_subflow(const struct mptcp_sock *msk)
++# $1: subflows in ns1 ; $2: subflows in ns2
++# number of all subflows, including the initial subflow.
++chk_subflows_total()
 +{
-+	struct sock *ssk = READ_ONCE(msk->first);
++	local cnt1
++	local cnt2
++	local info="subflows_total"
++	local dump_stats
 +
-+	return ssk && ((1 << inet_sk_state_load(ssk)) &
-+		       (TCPF_ESTABLISHED | TCPF_SYN_SENT |
-+			TCPF_SYN_RECV | TCPF_LISTEN));
++	# if subflows_total counter is supported, use it:
++	if [ -n "$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value $info $info)" ]; then
++		chk_mptcp_info $info $1 $info $2
++		return
++	fi
++
++	print_check "$info $1:$2"
++
++	# if not, count the TCP connections that are in fact MPTCP subflows
++	cnt1=$(ss -N $ns1 -ti state established state syn-sent state syn-recv |
++	       grep -c tcp-ulp-mptcp)
++	cnt2=$(ss -N $ns2 -ti state established state syn-sent state syn-recv |
++	       grep -c tcp-ulp-mptcp)
++
++	if [ "$1" != "$cnt1" ] || [ "$2" != "$cnt2" ]; then
++		fail_test "got subflows $cnt1:$cnt2 expected $1:$2"
++		dump_stats=1
++	else
++		print_ok
++	fi
++
++	if [ "$dump_stats" = 1 ]; then
++		ss -N $ns1 -ti
++		ss -N $ns2 -ti
++	fi
 +}
 +
- static inline void mptcp_do_fallback(struct sock *ssk)
+ chk_link_usage()
  {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 353680733700..cabe856b2a45 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -938,6 +938,8 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
- 	info->mptcpi_bytes_sent = msk->bytes_sent;
- 	info->mptcpi_bytes_received = msk->bytes_received;
- 	info->mptcpi_bytes_retrans = msk->bytes_retrans;
-+	info->mptcpi_subflows_total = info->mptcpi_subflows +
-+		__mptcp_has_initial_subflow(msk);
- 	unlock_sock_fast(sk, slow);
- }
- EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
+ 	local ns=$1
+@@ -3431,10 +3467,12 @@ userspace_tests()
+ 		chk_join_nr 1 1 1
+ 		chk_add_nr 1 1
+ 		chk_mptcp_info subflows 1 subflows 1
++		chk_subflows_total 2 2
+ 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
+ 		userspace_pm_rm_sf_addr_ns1 10.0.2.1 10
+ 		chk_rm_nr 1 1 invert
+ 		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
+ 		kill_events_pids
+ 		wait $tests_pid
+ 	fi
+@@ -3451,9 +3489,11 @@ userspace_tests()
+ 		userspace_pm_add_sf 10.0.3.2 20
+ 		chk_join_nr 1 1 1
+ 		chk_mptcp_info subflows 1 subflows 1
++		chk_subflows_total 2 2
+ 		userspace_pm_rm_sf_addr_ns2 10.0.3.2 20
+ 		chk_rm_nr 1 1
+ 		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
+ 		kill_events_pids
+ 		wait $tests_pid
+ 	fi
 
 -- 
 2.43.0
