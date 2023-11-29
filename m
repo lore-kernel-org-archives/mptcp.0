@@ -1,97 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+Received: from fallback17.i.mail.ru (fallback17.i.mail.ru [79.137.243.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19F71D54B;
-	Wed, 29 Nov 2023 12:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3005D1DA20
+	for <mptcp@lists.linux.dev>; Wed, 29 Nov 2023 12:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=internet.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=internet.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mht1em9O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701259317; x=1732795317;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bzZMqiipEbDP/SUHUKSuLr4DHbGRjmdIc61Ru02KCbQ=;
-  b=Mht1em9O+DUmNunxnoZdwO1HUzpsBFyXkDnSD1NqcqUWfyMi7zL9We6f
-   1U1zTogP9BGNGKswnJAvZ4eWlJCfwkt930ehLYex3c47jChHSYmyiqzTl
-   2vInpxCs9tFZnfP/a6TBm5gsz3OA82wjP0NrHvJbckZCcJwck2EHiCSTa
-   sPdaZudHXa3tTg1Kk8CevnMhW7NqZWKlgbysG4hC9TErne5jKJzo8ACLG
-   4YQbpHMiz5nrlM+1tchISBWXGuzAMEnOnp8pyXDIkbS0JXKXwCA2fbRVE
-   d/dv3+pAOWh6SCkAidyINk6BE3rJ6chuNP+G80LNY7WNiTPRtwSlC0UQ2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="372515839"
-X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
-   d="scan'208";a="372515839"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 04:01:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="762295539"
-X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
-   d="scan'208";a="762295539"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 29 Nov 2023 04:01:52 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1r8JGH-0000CK-3C;
-	Wed, 29 Nov 2023 12:01:49 +0000
-Date: Wed, 29 Nov 2023 20:01:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Geliang Tang <geliang.tang@suse.com>
-Subject: Re: [PATCH mptcp-next v2 3/4] mptcp: add a ftrace callback for
- tcp_set_state
-Message-ID: <202311291902.gD0Y21iG-lkp@intel.com>
-References: <4323a04943500dce8c072c49ce50b21591357876.1701230012.git.geliang.tang@suse.com>
+	dkim=pass (2048-bit key) header.d=internet.ru header.i=@internet.ru header.b="kJgEBbgu";
+	dkim=pass (2048-bit key) header.d=internet.ru header.i=@internet.ru header.b="QDAkd4DV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru; s=mail4;
+	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=d5uMyVb+Irr7SQ1AaYd3cA1fRkbPprhHcpOL9Zgwscc=;
+	t=1701259835;x=1701349835; 
+	b=kJgEBbgu85noXdXWAeriUK1e7Lz+2drRz1S3hC7MuAMHtWzEAMGQtWCEFtJRxGWHoxfNmXt+eJvXb8PMYlXFIvKQgc9zGDr/gr2Ioawdz2aL1i2IPL4iR7FBHYj6y7mGFmwLxxg0gUhA+n3/bntpR1577CFIIpTryQNwPqofdFB2jNkDvh3LCR5Rz4gP5vHy74RbAcG6MCckh4Zj6VuNu0Tku+UIiNUlw6HNg+WezuWGe7XbgI7SK5ZaZ6v1d1YXSYtWA48KXw/LHgkq1OSl/UVwlJNPp23F50s7p6JF7DsLxw8ddML2mhkwoklYZ+ag0TNBi8UXYPlOgsDWeA6DaQ==;
+Received: from [10.12.4.19] (port=40298 helo=smtp43.i.mail.ru)
+	by fallback17.i.mail.ru with esmtp (envelope-from <max@internet.ru>)
+	id 1r8Ipb-00EsJJ-0i
+	for mptcp@lists.linux.dev; Wed, 29 Nov 2023 14:34:15 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=internet.ru
+	; s=mail4; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
+	X-Cloud-Ids:Disposition-Notification-To;
+	bh=d5uMyVb+Irr7SQ1AaYd3cA1fRkbPprhHcpOL9Zgwscc=; t=1701257655; x=1701347655; 
+	b=QDAkd4DVoKhpethUa/n7FCT8n83fZZ31NrdOjZwAhBog4DXetWBYatOUo+RB9M5dlyUAeHczuDo
+	TCcVEnXU3ql55R5a/i7NXzpixlAJTtQtHz1LxGTeD586cBailyRdn91ncRyS1G6wgGfy3kJGSWZWH
+	bBEe3ivPxhIVeRoSGQGbi+Gf/0mp/IBXmifOgpGKITVfsfsnN8zInqPgUHYyqKWZIXnXfdT1Ormo0
+	248MnPSKOlzXp7TfzgVCZ12olfoUGnOzHQ0f7JHP+26hellgJMdtp03CQkTxvyPKBx4DIqYxPARL4
+	w2f6u5JJWpNDvdTk39zCyarCpWRfXN1gid0w==;
+Received: by smtp43.i.mail.ru with esmtpa (envelope-from <max@internet.ru>)
+	id 1r8IpS-00Gl5I-1w; Wed, 29 Nov 2023 14:34:07 +0300
+From: Maxim Galaganov <max@internet.ru>
+To: mptcp@lists.linux.dev
+Cc: Maxim Galaganov <max@internet.ru>
+Subject: [PATCH v2 mptcp-next 0/3] more sockopts for ephemeral ports
+Date: Wed, 29 Nov 2023 14:34:00 +0300
+Message-ID: <20231129113403.157953-1-max@internet.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4323a04943500dce8c072c49ce50b21591357876.1701230012.git.geliang.tang@suse.com>
+Content-Transfer-Encoding: 8bit
+X-Mailru-Src: smtp
+X-7564579A: B8F34718100C35BD
+X-77F55803: 4F1203BC0FB41BD9D2A6479154BC7F417A3ADCF799DE78622B6E7AFD5C732E26182A05F53808504095D39887D8F9F4C3D882986293B50465915F96F56A5990BF6656EC6F9E6CC462
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE78CB87876C5D626D4EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006376A27C8034CCD05E58638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D871198838380DEBFC33FF4F69654778BF6F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE7E4DF6D1C10F22F599FA2833FD35BB23D9E625A9149C048EE140C956E756FBB7AE5D25F19253116ADD2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8BF80095D1E17F4578A471835C12D1D977C4224003CC8364762BB6847A3DEAEFB0F43C7A68FF6260569E8FC8737B5C22494854413538E1713FE827F84554CEF50127C277FBC8AE2E8BA83251EDC214901ED5E8D9A59859A8B68A0907C648FB30DE089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
+X-C1DE0DAB: 0D63561A33F958A5E1A5EA8B0B2365AA6340F1FE64E119E57478B1A17D57F5CCF87CCE6106E1FC07E67D4AC08A07B9B013BDA61BF53F5E1D9C5DF10A05D560A950611B66E3DA6D700B0A020F03D25A091D471462564A2E19CB5012B2E24CD356
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF8139AD36C59ED323BC34760715AA8FDFC70284A4BA32C14E6169F0DC3BE31F936DD3C4C1BE61872B153AE024B6FD08442CB56E2BFF5AA7AF7604434C90907D2140B08DDBC5CE87D002C26D483E81D6BEA5ED0C00A4B096A39697699CFF2E0C50CC2E138FFB4ACBED
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojxXIty/pLbajr58ac6SbFJQ==
+X-Mailru-Sender: 689FA8AB762F7393590D8C940224AE338C2EE61B1AF0761771FAF35DC9FB6A1DE94AC9D29F4E5226FD262907200E8C52FB559BB5D741EB96C728B2FC74FAA16AD7A14DD9E34ECE7467EA787935ED9F1B
+X-Mras: Ok
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B487EF4F2ACC83E26BD6E5864C7F64BC8EDB4BF2F3B7547FEE049FFFDB7839CE9EF53F02DB5938BDCCFB6451FC5C26D90B1C35A34725E9D80F5ACCAAC5F73E5FA0
+X-7FA49CB5: 0D63561A33F958A51BB60F2AF9DDC589893A44B116EBA221D273B990A68716FBCACD7DF95DA8FC8BD5E8D9A59859A8B60BDB06C55397FC47
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5xhPKz0ZEsZ5k6NOOPWz5QAiZSCXKGQRq3/7KxbCLSB2ESzQkaOXqCBFZPLWFrEGlV1shfWe2EVcxl5toh0c/aCGOghz/frdRhzMe95NxDFddY4eMfORNHNb5Yph1NVX8A==
+X-Mailru-MI: C000000000000800
+X-Mras: Ok
 
-Hi Geliang,
+Support useful sockopts that allow fine control over ephemeral port
+usage.
 
-kernel test robot noticed the following build warnings:
+v2:
+ - Add patch 1/3 with function name change (Mat)
+ - Fixup checkpatch errors in patch 2/3 (Mat)
 
-[auto build test WARNING on mptcp/export]
-[also build test WARNING on mptcp/export-net linus/master v6.7-rc3 next-20231129]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Maxim Galaganov (3):
+  mptcp: rename mptcp_setsockopt_sol_ip_set_transparent()
+  mptcp: sockopt: support IP_LOCAL_PORT_RANGE and
+    IP_BIND_ADDRESS_NO_PORT
+  selftests/net: add MPTCP coverage for IP_LOCAL_PORT_RANGE
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/mptcp-add-a-current-established-counter/20231129-131030
-base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-patch link:    https://lore.kernel.org/r/4323a04943500dce8c072c49ce50b21591357876.1701230012.git.geliang.tang%40suse.com
-patch subject: [PATCH mptcp-next v2 3/4] mptcp: add a ftrace callback for tcp_set_state
-config: x86_64-randconfig-005-20231129 (https://download.01.org/0day-ci/archive/20231129/202311291902.gD0Y21iG-lkp@intel.com/config)
-compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231129/202311291902.gD0Y21iG-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311291902.gD0Y21iG-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> net/mptcp/trace.c:57:8: warning: unused variable 'func_name' [-Wunused-variable]
-           char *func_name = "tcp_set_state";
-                 ^
-   1 warning generated.
-
-
-vim +/func_name +57 net/mptcp/trace.c
-
-    54	
-    55	static __init int mptcp_ftrace_init(void)
-    56	{
-  > 57		char *func_name = "tcp_set_state";
+ net/mptcp/sockopt.c                           | 35 ++++++++++++++++---
+ .../selftests/net/ip_local_port_range.c       | 12 +++++++
+ 2 files changed, 43 insertions(+), 4 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
