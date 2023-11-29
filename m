@@ -1,262 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00205DF3E;
-	Tue, 28 Nov 2023 23:19:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959BDEDD
+	for <mptcp@lists.linux.dev>; Wed, 29 Nov 2023 01:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iyfuQP1I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53224C433CA;
-	Tue, 28 Nov 2023 23:19:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZxhLrtm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B03FC433C7;
+	Wed, 29 Nov 2023 01:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701213566;
-	bh=1XN/I1kZkN32KXb+R/XnFkiHn6l73eA81vFJum33p+Q=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=iyfuQP1IBhmg1+nRjvPXqJIfhPWPXQZXh7nMCPSrZwbHmzwniyoFuQxuIRRQr7BRA
-	 agRpuiuBJSaPKvcp8rwGoEwZ+QSuPUqVycIhxIhmKYUfOZmyKzRz/aDemUD6Ao5Mm1
-	 zTprB+eVCI4wTRO6hjz10uTBYF5QEqKIJvlNKZJE43DAYQKeC01Beo/UT6atTgaeex
-	 fC47E+bMK28MFPr7/babSpWuZzzlHJ0g7GeZtEQe33ChFJjiIZiouYw/uYHVT6bK6Z
-	 Azl2rtjBtjP2xSTY/UZMeEyZuqqHZSlLc4HUI2GSsJWumh36w8AKAaHe7v0iWJ5iQ4
-	 s21/KbJIdzTBg==
+	s=k20201202; t=1701220545;
+	bh=Oer/sHPXbNQmhA9nNzO8QCgogdsTpXFewpvEvhcN7EQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=iZxhLrtmdHiFzobmmAxIkQS8a9D8+XfUVLKjKAtVyhQRxBLa7jgpGIR3qpyeGdD/u
+	 zdil3QMJvQF7ACjgWTe5JDKz6tsxn8bI8pejRt6mSSd1+QC9jlJbthhIWJU6/YRVDX
+	 fimSO8Xheox2OeZD0l3q9L0CnglCAkumuIgzyw2waAP6MVbpHT3ZOzNOLG2Vr0se49
+	 wnA52sX4e6qcHuan5ZYw2cGFRP/aEK6WmPIMcQDj+IfhTkNdDDNQhLXFOAjYjdsFYm
+	 FoAMeuzJbJ++dgcJ8H/m2iduHSM9pF+m2l3u8ejxoMl6/TmxMqtNd/Y4+gwm6wl11m
+	 YqvkmaIaBwAYg==
+Date: Tue, 28 Nov 2023 17:15:44 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
-Date: Tue, 28 Nov 2023 15:18:59 -0800
-Subject: [PATCH net-next v4 15/15] selftests: mptcp: add
- mptcp_lib_wait_local_port_listen
+To: Maxim Galaganov <max@internet.ru>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: sockopt: support IP_LOCAL_PORT_RANGE
+ and IP_BIND_ADDRESS_NO_PORT
+In-Reply-To: <20231122155919.11393-2-max@internet.ru>
+Message-ID: <727f8306-eb3b-2f00-a915-ef51641bdce6@kernel.org>
+References: <20231122155919.11393-1-max@internet.ru> <20231122155919.11393-2-max@internet.ru>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231128-send-net-next-2023107-v4-15-8d6b94150f6b@kernel.org>
-References: <20231128-send-net-next-2023107-v4-0-8d6b94150f6b@kernel.org>
-In-Reply-To: <20231128-send-net-next-2023107-v4-0-8d6b94150f6b@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang.tang@suse.com>
-X-Mailer: b4 0.12.4
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-From: Geliang Tang <geliang.tang@suse.com>
+On Wed, 22 Nov 2023, Maxim Galaganov wrote:
 
-To avoid duplicated code in different MPTCP selftests, we can add
-and use helpers defined in mptcp_lib.sh.
+> Support for IP_BIND_ADDRESS_NO_PORT sockopt was introduced in
 
-wait_local_port_listen() helper is defined in diag.sh, mptcp_connect.sh,
-mptcp_join.sh and simult_flows.sh, export it into mptcp_lib.sh and
-rename it with mptcp_lib_ prefix. Use this new helper in all these
-scripts.
+Hi Maxim -
 
-Note: We only have IPv4 connections in this helper, not looking at IPv6
-(tcp6) but that's OK because we only have IPv4 connections here in diag.sh.
+Thanks for the patches!
 
-Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-Signed-off-by: Mat Martineau <martineau@kernel.org>
----
- tools/testing/selftests/net/mptcp/diag.sh          | 23 +++-------------------
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 19 +-----------------
- tools/testing/selftests/net/mptcp/mptcp_join.sh    | 20 +------------------
- tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 18 +++++++++++++++++
- tools/testing/selftests/net/mptcp/simult_flows.sh  | 19 +-----------------
- 5 files changed, 24 insertions(+), 75 deletions(-)
+> 90c337da1524 ("inet: add IP_BIND_ADDRESS_NO_PORT to overcome bind(0)
+> limitations"). Recently ca571e2eb7eb ("inet: move
+> inet->bind_address_no_port to inet->inet_flags") allowed its value to be
+> accessed without locking the socket.
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 85a8ee9395b3..95b498efacd1 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -182,23 +182,6 @@ chk_msk_inuse()
- 	__chk_nr get_msk_inuse $expected "$msg" 0
- }
- 
--# $1: ns, $2: port
--wait_local_port_listen()
--{
--	local listener_ns="${1}"
--	local port="${2}"
--
--	local port_hex i
--
--	port_hex="$(printf "%04X" "${port}")"
--	for i in $(seq 10); do
--		ip netns exec "${listener_ns}" cat /proc/net/tcp | \
--			awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) {rc=0; exit}} END {exit rc}" &&
--			break
--		sleep 0.1
--	done
--}
--
- wait_connected()
- {
- 	local listener_ns="${1}"
-@@ -222,7 +205,7 @@ echo "a" | \
- 		ip netns exec $ns \
- 			./mptcp_connect -p 10000 -l -t ${timeout_poll} -w 20 \
- 				0.0.0.0 >/dev/null &
--wait_local_port_listen $ns 10000
-+mptcp_lib_wait_local_port_listen $ns 10000
- chk_msk_nr 0 "no msk on netns creation"
- chk_msk_listen 10000
- 
-@@ -245,7 +228,7 @@ echo "a" | \
- 		ip netns exec $ns \
- 			./mptcp_connect -p 10001 -l -s TCP -t ${timeout_poll} -w 20 \
- 				0.0.0.0 >/dev/null &
--wait_local_port_listen $ns 10001
-+mptcp_lib_wait_local_port_listen $ns 10001
- echo "b" | \
- 	timeout ${timeout_test} \
- 		ip netns exec $ns \
-@@ -266,7 +249,7 @@ for I in `seq 1 $NR_CLIENTS`; do
- 				./mptcp_connect -p $((I+10001)) -l -w 20 \
- 					-t ${timeout_poll} 0.0.0.0 >/dev/null &
- done
--wait_local_port_listen $ns $((NR_CLIENTS + 10001))
-+mptcp_lib_wait_local_port_listen $ns $((NR_CLIENTS + 10001))
- 
- for I in `seq 1 $NR_CLIENTS`; do
- 	echo "b" | \
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 537f180aa51e..7898d62fce0b 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -310,23 +310,6 @@ do_ping()
- 	return 0
- }
- 
--# $1: ns, $2: port
--wait_local_port_listen()
--{
--	local listener_ns="${1}"
--	local port="${2}"
--
--	local port_hex i
--
--	port_hex="$(printf "%04X" "${port}")"
--	for i in $(seq 10); do
--		ip netns exec "${listener_ns}" cat /proc/net/tcp* | \
--			awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) {rc=0; exit}} END {exit rc}" &&
--			break
--		sleep 0.1
--	done
--}
--
- do_transfer()
- {
- 	local listener_ns="$1"
-@@ -408,7 +391,7 @@ do_transfer()
- 				$extra_args $local_addr < "$sin" > "$sout" &
- 	local spid=$!
- 
--	wait_local_port_listen "${listener_ns}" "${port}"
-+	mptcp_lib_wait_local_port_listen "${listener_ns}" "${port}"
- 
- 	local start
- 	start=$(date +%s%3N)
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 420e4b3f9ad0..8362ea454af3 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -580,24 +580,6 @@ link_failure()
- 	done
- }
- 
--# $1: ns, $2: port
--wait_local_port_listen()
--{
--	local listener_ns="${1}"
--	local port="${2}"
--
--	local port_hex
--	port_hex="$(printf "%04X" "${port}")"
--
--	local i
--	for i in $(seq 10); do
--		ip netns exec "${listener_ns}" cat /proc/net/tcp* | \
--			awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) {rc=0; exit}} END {exit rc}" &&
--			break
--		sleep 0.1
--	done
--}
--
- rm_addr_count()
- {
- 	mptcp_lib_get_counter "${1}" "MPTcpExtRmAddr"
-@@ -1082,7 +1064,7 @@ do_transfer()
- 	fi
- 	local spid=$!
- 
--	wait_local_port_listen "${listener_ns}" "${port}"
-+	mptcp_lib_wait_local_port_listen "${listener_ns}" "${port}"
- 
- 	extra_cl_args="$extra_args $extra_cl_args"
- 	if [ "$test_linkfail" -eq 0 ];then
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 86f4003ab6f6..022262a2cfe0 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -280,3 +280,21 @@ mptcp_lib_check_transfer() {
- 
- 	return 0
- }
-+
-+# $1: ns, $2: port
-+mptcp_lib_wait_local_port_listen() {
-+	local listener_ns="${1}"
-+	local port="${2}"
-+
-+	local port_hex
-+	port_hex="$(printf "%04X" "${port}")"
-+
-+	local _
-+	for _ in $(seq 10); do
-+		ip netns exec "${listener_ns}" cat /proc/net/tcp* | \
-+			awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) \
-+			     {rc=0; exit}} END {exit rc}" &&
-+			break
-+		sleep 0.1
-+	done
-+}
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index ce9203b817f8..ae8ad5d6fb9d 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -123,23 +123,6 @@ setup()
- 	grep -q ' kmemleak_init$\| lockdep_init$\| kasan_init$\| prove_locking$' /proc/kallsyms && slack=$((slack+550))
- }
- 
--# $1: ns, $2: port
--wait_local_port_listen()
--{
--	local listener_ns="${1}"
--	local port="${2}"
--
--	local port_hex i
--
--	port_hex="$(printf "%04X" "${port}")"
--	for i in $(seq 10); do
--		ip netns exec "${listener_ns}" cat /proc/net/tcp* | \
--			awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) {rc=0; exit}} END {exit rc}" &&
--			break
--		sleep 0.1
--	done
--}
--
- do_transfer()
- {
- 	local cin=$1
-@@ -179,7 +162,7 @@ do_transfer()
- 				0.0.0.0 < "$sin" > "$sout" &
- 	local spid=$!
- 
--	wait_local_port_listen "${ns3}" "${port}"
-+	mptcp_lib_wait_local_port_listen "${ns3}" "${port}"
- 
- 	timeout ${timeout_test} \
- 		ip netns exec ${ns1} \
+checkpatch.pl is failing in the CI since it expects the word "commit" 
+before each abbreviated hash. Please add that in each of the cases where 
+there's a <sha> ("title") pattern.
 
--- 
-2.43.0
+>
+> Support for (newer) IP_LOCAL_PORT_RANGE sockopt was introduced in
+> 91d0b78c5177 ("inet: Add IP_LOCAL_PORT_RANGE socket option"). In the
+> same series a selftest was added in ae5439658cce ("selftests/net: Cover
+> the IP_LOCAL_PORT_RANGE socket option"). This selftest also covers the
+> IP_BIND_ADDRESS_NO_PORT sockopt.
+>
+> This patch enables getsockopt()/setsockopt() on MPTCP sockets for these
+> socket options, syncing set values to subflows in sync_socket_options().
+> Ephemeral port range is synced to subflows, enabling NAT usecase
+> described in 91d0b78c5177.
+>
+> Signed-off-by: Maxim Galaganov <max@internet.ru>
+> ---
+> net/mptcp/sockopt.c | 29 ++++++++++++++++++++++++++++-
+> 1 file changed, 28 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index cabe856b2a45..53f27354412f 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -440,6 +440,8 @@ static bool mptcp_supported_sockopt(int level, int optname)
+> 		/* should work fine */
+> 		case IP_FREEBIND:
+> 		case IP_TRANSPARENT:
+> +		case IP_BIND_ADDRESS_NO_PORT:
+> +		case IP_LOCAL_PORT_RANGE:
+>
+> 		/* the following are control cmsg related */
+> 		case IP_PKTINFO:
+> @@ -455,7 +457,6 @@ static bool mptcp_supported_sockopt(int level, int optname)
+> 		/* common stuff that need some love */
+> 		case IP_TOS:
+> 		case IP_TTL:
+> -		case IP_BIND_ADDRESS_NO_PORT:
+> 		case IP_MTU_DISCOVER:
+> 		case IP_RECVERR:
+>
+> @@ -688,6 +689,7 @@ static int mptcp_setsockopt_sol_ip_set_transparent(struct mptcp_sock *msk, int o
 
+This function is no longer specific to IP_TRANSPARENT (and never really 
+was), can you add a 3rd patch renaming it to 
+mptcp_setsockopt_sol_ip_set()?
+
+> {
+> 	struct sock *sk = (struct sock *)msk;
+> 	struct sock *ssk;
+> +	bool slow;
+> 	int err;
+>
+> 	err = ip_setsockopt(sk, SOL_IP, optname, optval, optlen);
+
+The code otherwise looks good to me. The port range could already be 
+configured by sysctl, so there don't appear to be any concerns with the 
+path managers handling a non-default range. And the options are validated 
+here in the call to ip_setsockopt().
+
+Thanks,
+
+Mat
+
+> @@ -710,6 +712,16 @@ static int mptcp_setsockopt_sol_ip_set_transparent(struct mptcp_sock *msk, int o
+> 		inet_assign_bit(TRANSPARENT, ssk,
+> 				inet_test_bit(TRANSPARENT, sk));
+> 		break;
+> +	case IP_BIND_ADDRESS_NO_PORT:
+> +		inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk,
+> +				inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+> +		break;
+> +	case IP_LOCAL_PORT_RANGE:
+> +		slow = lock_sock_fast(ssk);
+> +		inet_sk(ssk)->local_port_range.lo = inet_sk(sk)->local_port_range.lo;
+> +		inet_sk(ssk)->local_port_range.hi = inet_sk(sk)->local_port_range.hi;
+> +		unlock_sock_fast(ssk, slow);
+> +		break;
+> 	default:
+> 		release_sock(sk);
+> 		WARN_ON_ONCE(1);
+> @@ -755,6 +767,8 @@ static int mptcp_setsockopt_v4(struct mptcp_sock *msk, int optname,
+> 	switch (optname) {
+> 	case IP_FREEBIND:
+> 	case IP_TRANSPARENT:
+> +	case IP_BIND_ADDRESS_NO_PORT:
+> +	case IP_LOCAL_PORT_RANGE:
+> 		return mptcp_setsockopt_sol_ip_set_transparent(msk, optname, optval, optlen);
+> 	case IP_TOS:
+> 		return mptcp_setsockopt_v4_set_tos(msk, optname, optval, optlen);
+> @@ -1346,10 +1360,20 @@ static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
+> 			       char __user *optval, int __user *optlen)
+> {
+> 	struct sock *sk = (void *)msk;
+> +	bool slow;
+> +	int val;
+>
+> 	switch (optname) {
+> 	case IP_TOS:
+> 		return mptcp_put_int_option(msk, optval, optlen, READ_ONCE(inet_sk(sk)->tos));
+> +	case IP_BIND_ADDRESS_NO_PORT:
+> +		return mptcp_put_int_option(msk, optval, optlen,
+> +				inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+> +	case IP_LOCAL_PORT_RANGE:
+> +		slow = lock_sock_fast(sk);
+> +		val = inet_sk(sk)->local_port_range.hi << 16 | inet_sk(sk)->local_port_range.lo;
+> +		unlock_sock_fast(sk, slow);
+> +		return mptcp_put_int_option(msk, optval, optlen, val);
+> 	}
+>
+> 	return -EOPNOTSUPP;
+> @@ -1450,6 +1474,9 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+>
+> 	inet_assign_bit(TRANSPARENT, ssk, inet_test_bit(TRANSPARENT, sk));
+> 	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
+> +	inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk, inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+> +	inet_sk(ssk)->local_port_range.lo = inet_sk(sk)->local_port_range.lo;
+> +	inet_sk(ssk)->local_port_range.hi = inet_sk(sk)->local_port_range.hi;
+> }
+>
+> void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
+> -- 
+> 2.42.0
+>
+>
+>
