@@ -1,203 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2051.outbound.protection.outlook.com [40.107.20.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9C412B71
-	for <mptcp@lists.linux.dev>; Wed, 29 Nov 2023 09:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2461C288
+	for <mptcp@lists.linux.dev>; Wed, 29 Nov 2023 11:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BI0pMc0U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701248892;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KxV7zwx5P3shLsAbPcH2ugmzUF1Po9aSTDeKdQgg9OU=;
-	b=BI0pMc0U81hut8j7w1pXTjzr2gc5KIcqrLE2JZBKDDoZjzeEWjFKvpKZegm/8qYH3or4y0
-	ZK2/ZlQpDN2tsn81cQLk3iUmHf3adAZ4RHs5SVtWdguJH3uWOcriWf54Opo63rfO+SIqtS
-	Nk/rRyTqFi8glF2CzAgpHpbl96fcBBU=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-sbPuI7W-OsqExp_BV9EEDg-1; Wed, 29 Nov 2023 04:08:10 -0500
-X-MC-Unique: sbPuI7W-OsqExp_BV9EEDg-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-544f174ccccso525985a12.0
-        for <mptcp@lists.linux.dev>; Wed, 29 Nov 2023 01:08:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701248889; x=1701853689;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=vAqL0FYjRrVr29BPqr9AVquQiikVkav3gAAZLHFyc1A=;
-        b=srboCqDPiXBbOxWypjHoLhR9nexCqG4PG+gfOcG4snU5d7kmyokgfc+DEh6QfFHQG6
-         18Wq9+QoXiXh+8uy7tPrT1ZoUMe5YcC+GTAenznFXNYwpbJddh9/UM7ba7McsNQGY1Ky
-         2R+0Mi6Nz2padlD65q2z4JDNII3EihkUaXR0liHQ9Uy850QQXGEHh8w853iwVbRVfO2j
-         iCED54roAh2aRAM/itbjvbuPBF/JhDDI1ildMN26+LJ5CBWe6RWJcpUKWs8VVg0fT2lQ
-         1uEqgt/TZ2dhIAIGujpQdmjOZVWwyxR/OFCzh2KGNAgLBPKZoLOiOyxmHYcZ16rZ4CCu
-         PabQ==
-X-Gm-Message-State: AOJu0YwTPprvXy67JuDg9gxiIoufoljY2OIL4gTs3TkGu8okuBd5PH33
-	dWiToIiaqEs+13h2Gda32j9NjZQ0eAGuyDWpwKuf+KHULYgJyPD3KVPUNV6aLXtpR9YC5z5BYSN
-	oPbtcyne2+E4x279V0iXHNLM=
-X-Received: by 2002:a05:6402:1d4b:b0:546:efd8:7f05 with SMTP id dz11-20020a0564021d4b00b00546efd87f05mr13549191edb.1.1701248888857;
-        Wed, 29 Nov 2023 01:08:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE6whtXQ/L0fEaRDaAjwa/aNzzeggZJmtDYwcFvvSJHAKZoyWLbs4EpLru5dmZHU3nR9WizGQ==
-X-Received: by 2002:a05:6402:1d4b:b0:546:efd8:7f05 with SMTP id dz11-20020a0564021d4b00b00546efd87f05mr13549169edb.1.1701248888433;
-        Wed, 29 Nov 2023 01:08:08 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-245-93.dyn.eolo.it. [146.241.245.93])
-        by smtp.gmail.com with ESMTPSA id j12-20020a05640211cc00b0054b1e553268sm4949250edw.57.2023.11.29.01.08.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Nov 2023 01:08:07 -0800 (PST)
-Message-ID: <17c718e88009e0731dd4172f6f73aa9d7010cf51.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v2 3/4] mptcp: add a ftrace callback for
- tcp_set_state
-From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-Date: Wed, 29 Nov 2023 10:08:06 +0100
-In-Reply-To: <4323a04943500dce8c072c49ce50b21591357876.1701230012.git.geliang.tang@suse.com>
-References: <cover.1701230012.git.geliang.tang@suse.com>
-	 <4323a04943500dce8c072c49ce50b21591357876.1701230012.git.geliang.tang@suse.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="V7qvNJPz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JqhMPgMZ/3JG//eBnrq7ahZ/xFv2kj1g5tZYDCg79KIukS2MR7zUGehPUzE9z6Z3BIjBTA856tcalA2PfIm92IAjwkHKLqIljChqBBQPC+U9qhm/S0Nd9cVVjDxwYaS7WNi05NfTz3acVW9G3F4feodx50PycWVKljl0SnELUgbTCzSYp8p91A6E4cSMqMDmt/sDbCnbx/8E7mpqc4or/6vKnxUvv2vSbXx5var+ql3NFpnlVZiBVBQYEVrHfo2gLjWu/pykUT8a8bEwHqH3u/kliNgf2njdbQmTiX1e6x2B2DvLcdwnRiwLNejW08TIJ0/OqPnelG3ej+0sV/5N5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JuOPg3apuhWcJvjmcIlBjY7HX3E5npWt4IjoX82hVkc=;
+ b=OmOn/C2BVPaAXCilHl9buAgxMxgbHhWpT5IszlCO/1+IQ3/0sPiT/6ljRmBjTsQeUFNe9Gk0iG/haKHRayxMvUzhXzO/+J4VgsR9LvLrysxaiMmy0CRoak081PMNuV1l8Ig9xK7zObLRhYAbzccKcRfwGxudCQKOYWcLp/N72JV1Pw0wsxluCxdu1aMY4gC/oonr1qNwzayVfR6cVwzeNvoBQn6FGaZHyRpk7voKgtMNnZyr+VqkQXpFtxJoFmG6jjhxpTFjoy8OldLYj8r0x/A//sjHgqXCFWPdEnLJXMXmi5pCYwRMVz5mMGgqcNPo5b2c1YE5QS3bPuFSs4Pb0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JuOPg3apuhWcJvjmcIlBjY7HX3E5npWt4IjoX82hVkc=;
+ b=V7qvNJPzMTfrgWfNleXSontkuDv035Q2fIc6vFWHeKPla3/q6Dq+IhKGDl00VK7/WmeFI7u9mt658wo2a/X1tQrR9pt53uLpWtwD9b2nbUmLrrVU0pA5Lc+vbZ3TSG02Pwg0jmZPAc64qz4A7v9kssvwa0Jxd654mlil1CVKWPYz9Vm42tZF/NGjDtMzEBdPONINlCWNlTKOyoQCIJf12Rfs6DbDwy7z79I4JBlhBNYKPIvrcPpg40C14sHdgFA51Gx0nv+8KwRoXc1rYuYH+hvS/fukGc6iVWnKEJPkLeG42vfQhql5EU2mMMOJCPaEGjstnQrmoXgX2wpWaMWfgg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com (2603:10a6:7:83::14)
+ by AS1PR04MB9333.eurprd04.prod.outlook.com (2603:10a6:20b:4df::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.22; Wed, 29 Nov
+ 2023 11:10:31 +0000
+Received: from HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::7102:259:f268:5321]) by HE1PR0402MB3497.eurprd04.prod.outlook.com
+ ([fe80::7102:259:f268:5321%7]) with mapi id 15.20.7046.015; Wed, 29 Nov 2023
+ 11:10:30 +0000
+From: Geliang Tang <geliang.tang@suse.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@suse.com>
+Subject: [PATCH mptcp-next v3 0/5] add MPTCP_MIB_CURRESTAB
+Date: Wed, 29 Nov 2023 19:10:47 +0800
+Message-Id: <cover.1701256112.git.geliang.tang@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYAPR01CA0049.jpnprd01.prod.outlook.com
+ (2603:1096:404:2b::13) To HE1PR0402MB3497.eurprd04.prod.outlook.com
+ (2603:10a6:7:83::14)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1PR0402MB3497:EE_|AS1PR04MB9333:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7b8c80a2-aad2-4f9d-5009-08dbf0cbcbfa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Im5RIWbKkx3fT1G1tuNO7M8mept6+TMgtxouOPoSXRsPgos/zy/B/spGPvSOe0iB74N9L7aYRcSvPEFVcYuMR2rifTXHKnpUXIHOslNP759PwADs5rT1T/PdGM8oczSvnQ5GlshF7vOrfXaWUF4UDmIXz+A7jykLZ0+ppcIA+lwEwFyPHjd0gp4Lqy6vNpFmx24cOtVwMTkHNkNDn5NryvTS94l/m/3hEl4YdIOrCPBnofGWqW27MAVwANkv+oExtZrl+aG4ckpVHC/TvYHaxOTCg7U8faChOqSr9Kn+5GZhIVpSqC38z1Y+WTs7WZeCWuQxk0b0/UVTOFshvP9DNmAFGgPaOwcwZ/XSNxgfCLBNXlKgAlgMGIcGUdDsZxDnN13aVwXBS/xRmDaFjhos6dmYA6G0zvm5syki5h0s6Cz9xtdyLa0b3Xndy80flU1zM49EP0EFrTqZX+xtpH5e65VSG0Vwjpk5wZDvaWNzlh7sC7M6ZlkfAfc3nU7BMLgoVBidw+h4t9MygMLi/Y12/p3GTJ+dTFghDcCWGi1UKz820gzRFniVtTBa/Y+dtfCJJFcA6277pLxlov9fyxQAgRqdkUy2edDxmfbkT8hrTjhy1dRJ8Q/9GfK4DLM/dEvtdMoXdapZRWSlqnUslojNjA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(376002)(346002)(136003)(39860400002)(230922051799003)(230273577357003)(230173577357003)(451199024)(186009)(64100799003)(1800799012)(107886003)(6512007)(2616005)(26005)(6506007)(6666004)(478600001)(83380400001)(2906002)(4744005)(5660300002)(41300700001)(6486002)(966005)(66946007)(44832011)(8676002)(8936002)(6916009)(66556008)(316002)(66476007)(4326008)(38100700002)(86362001)(36756003)(13296009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Rn6EWoeFlW8F4LqiVmH3XfettyL/cvt4KkdXs7+UPM2WyTvIi4AaAA8CoMsp?=
+ =?us-ascii?Q?SiOFES8kdjSd1J6rffNllXIqG7sbkx5lrbekzo5kud0xhbDJzhyV0YiUEuA8?=
+ =?us-ascii?Q?wCPohQgLjXUYPMD8GOrJvTK5GavQzhHouzn1GJ0Vp0Gso34YgyREMp5hVmRb?=
+ =?us-ascii?Q?/q9sfnr+mrmB2FP2+0+UXZBFpd3zrVsOfNAJ3OvQTm450KoxQm5eLCSLNRG0?=
+ =?us-ascii?Q?v6zugNjwcH9yEoYtLs2Qrek2YuWAFj2aBO5BPuie5ExBHdvii7eXfaQMVQHz?=
+ =?us-ascii?Q?WCudFSCGbhXDJ+KaobmYL6tBNofLmK4LPmeqifuXpo4NyTFyyHDJ2rbtVLZ4?=
+ =?us-ascii?Q?pCQZEpKVioo/6NE12Y/dvUl6SDBvPtjxOJBZYaM0EMLY6cAEgaDduJpV2/dC?=
+ =?us-ascii?Q?hjq0Nl80dySqhn48WubywKTb26lBdh6/TJnbuCYj5UOfwG1YAe25uxAs8Fsl?=
+ =?us-ascii?Q?w+8qfIF2rcLK/Hqo2mqJhyBf6Q+boB/GqwPDhAaUSRLY/UxkDDbAQXdOvwPF?=
+ =?us-ascii?Q?/rxYbP14hf+WSQm8EHHs+nClGhiF4IG3FpuAWGHE0qF1NKyYm74DpC2xjY35?=
+ =?us-ascii?Q?DIjUs8YR3Wp9Cx7BHErmcwe2iyjiWI6IK1ndH1cqNUfPTz9hQF2FbVbv27Ka?=
+ =?us-ascii?Q?mPB7+AMdY8i2xU3I1ivS8i5dg4ADK9Az3idNAkaxydXV+KtK3zEER0MzNDh/?=
+ =?us-ascii?Q?lMJgCQh0aHZKotqMEloUL9u7EaBa1eybrfdO+vH9/7CmHLjcdcz+ibETA30V?=
+ =?us-ascii?Q?SbSnVz+KK/lBblRIcdfhXovwe/iOuW9yTTYWT+8NJAWO6X9QMKJwa301eP3f?=
+ =?us-ascii?Q?F5L9JFZjZF5HdZ7eXTRVHtF+/WD6cVbmkMhwFIOUpMorMfTiKSs6B8V7IN/t?=
+ =?us-ascii?Q?v6EvrE6A0Y9Jhq/j3nndq0cm5UZi0JKHR8uTocGCsA384278OqBSoKCXlNGS?=
+ =?us-ascii?Q?W1E7YY7k8qVROrxd0ObM9yikQm0/O4oxD+S1hHzUtxeIxeMXZkYfNvxbI+C4?=
+ =?us-ascii?Q?PDu7BIZAzg2lejdiCeYh7eihnEOytEEhXpzeM+BjJOtNfA+PusWErPtjhD0O?=
+ =?us-ascii?Q?XKseCZSPFkPIJRWApgNSFHznt7h2CFfYw3XijFYgOxOmBA86FIJ++hF1/hvo?=
+ =?us-ascii?Q?k5Oc4N+Jm3Eict/xnoBqVX8xc35kGzfpF/3M7gxULAneN+SedzwHubY14zfJ?=
+ =?us-ascii?Q?L1zUyafBWKrY58fsvNpArOT8hpr4tGbKhpM4TjjSIm4owCbKs9TpTYFov6Ni?=
+ =?us-ascii?Q?nfpcsP/Q3KilFwsXD2usdPHe8UlbIgWZrepn7limeUUbrBWgVusRhBrWnKsA?=
+ =?us-ascii?Q?pfzvWKkgBaTEmcIlqbR+qFQWTBn6eMGHfbNEFja0nKFfFGbRXYlKjBnDoqIz?=
+ =?us-ascii?Q?KvcwRRx/wkcHOBjy9bRzb4WoFAE+oc/Ai6IjGgFHC2OkCLucNqV/il7dnAou?=
+ =?us-ascii?Q?ey/am6oojUCuf+bNGOy+SKS1fOsyWA2HOqVm6rLzp4k1ggtUSuWo7cSQw/oX?=
+ =?us-ascii?Q?yKXuFFrF7ZuZbITi19vCdeeyKhxgVLI5efulJvkC0Ct4rq3z/BmhiPoLh1sO?=
+ =?us-ascii?Q?HvxAET3+EyVKcQEYEntoCoCoqex1IE7uxWU+aUW59gGTprfLG3bpDyz6pV7f?=
+ =?us-ascii?Q?GQ=3D=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b8c80a2-aad2-4f9d-5009-08dbf0cbcbfa
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2023 11:10:30.6064
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: w8O/3It4PGepD4YTfrlyLCA+HvjiiMAsalgU0Jes38E6xKloyWiy/Ks2A48YYc+0cRiVBJuWyayBdkZbzJBMhQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9333
 
-On Wed, 2023-11-29 at 12:08 +0800, Geliang Tang wrote:
-> This patch adds a new function mptcp_check_state(), in it if switch from
-> or to ESTABLISH state, increment or decrement the newly added counter
-> MPTCP_MIB_CURRESTAB.
->=20
-> Instead of invoking mptcp_check_state() in tcp_set_state() directly, here
-> add a new file trace.c, in it use ftrace to hook a callback function to
-> tcp_set_state(), named mptcp_state_callback(). mptcp_check_state() is
-> invoked in the callback function.
->=20
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/460
-> Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-> ---
->  net/mptcp/Makefile |  1 +
->  net/mptcp/trace.c  | 64 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 65 insertions(+)
->  create mode 100644 net/mptcp/trace.c
->=20
-> diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-> index 67cd565bb321..bf88bdb222b3 100644
-> --- a/net/mptcp/Makefile
-> +++ b/net/mptcp/Makefile
-> @@ -14,3 +14,4 @@ mptcp_token_test-objs :=3D token_test.o
->  obj-$(CONFIG_MPTCP_KUNIT_TEST) +=3D mptcp_crypto_test.o mptcp_token_test=
-.o
-> =20
->  obj-$(CONFIG_BPF_SYSCALL) +=3D bpf.o
-> +obj-$(CONFIG_FUNCTION_TRACER) +=3D trace.o
-> diff --git a/net/mptcp/trace.c b/net/mptcp/trace.c
-> new file mode 100644
-> index 000000000000..7dc33ff88813
-> --- /dev/null
-> +++ b/net/mptcp/trace.c
-> @@ -0,0 +1,64 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Multipath TCP
-> + *
-> + * Copyright (c) 2023, SUSE.
-> + */
-> +
-> +#define pr_fmt(fmt) "MPTCP: " fmt
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/ftrace.h>
-> +#include <net/sock.h>
-> +#include <net/mptcp.h>
-> +#include "protocol.h"
-> +#include "mib.h"
-> +
-> +static void mptcp_check_state(struct sock *sk, int oldstate, int state)
-> +{
-> +=09switch (state) {
-> +=09case TCP_ESTABLISHED:
-> +=09=09if (oldstate !=3D TCP_ESTABLISHED)
-> +=09=09=09MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_CURRESTAB);
-> +=09=09break;
-> +
-> +=09default:
-> +=09=09if (oldstate =3D=3D TCP_ESTABLISHED)
-> +=09=09=09MPTCP_DEC_STATS(sock_net(sk), MPTCP_MIB_CURRESTAB);
-> +=09}
-> +}
-> +
-> +static void mptcp_state_callback(unsigned long ip,
-> +=09=09=09=09 unsigned long parent_ip,
-> +=09=09=09=09 struct ftrace_ops *op,
-> +=09=09=09=09 struct ftrace_regs *fregs)
-> +{
-> +=09int oldstate, state;
-> +=09struct sock *sk;
-> +
-> +=09sk =3D (struct sock *)ftrace_regs_get_argument(fregs, 0);
-> +=09if (!sk)
-> +=09=09return;
-> +
-> +=09oldstate =3D sk->sk_state;
-> +=09state =3D (int)ftrace_regs_get_argument(fregs, 1);
-> +
-> +=09if (sk_is_mptcp(sk))
-> +=09=09mptcp_check_state(sk, oldstate, state);
-> +}
-> +
-> +static struct ftrace_ops mptcp_state_ops =3D {
-> +=09.func=09=09=3D mptcp_state_callback,
-> +=09.flags=09=09=3D FTRACE_OPS_FL_SAVE_REGS,
-> +};
-> +
-> +static __init int mptcp_ftrace_init(void)
-> +{
-> +=09char *func_name =3D "tcp_set_state";
-> +=09int ret;
-> +
-> +=09ret =3D ftrace_set_filter(&mptcp_state_ops, func_name,
-> +=09=09=09=09strlen(func_name), 0);
-> +=09return ret ?: register_ftrace_function(&mptcp_state_ops);
-> +}
-> +late_initcall(mptcp_ftrace_init);
+v3:
+- add mptcp_set_state helper
 
-I think this is not the correct approach.
+v2:
+- use ftrace_regs_get_argument instead of regs_get_kernel_argument to
+  fix build warnings reported kernel test robot.
 
-I think we must avoid using ftrace to plug an hook from a builtin
-feature into another builtin kernel feature.
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/460
 
-Additionally this is tracing tcp socket state change, not mptcp
-sockets.
+Geliang Tang (5):
+  mptcp: add mib counter dec helper
+  mptcp: add a current established counter
+  mptcp: add mptcp_set_state helper
+  mptcp: use mptcp_set_state
+  selftests: mptcp: join: check CURRESTAB counters
 
-A cleaner solution would be adding in protocol.c a mptcp_set_state()
-helper that does set the msk state to the provided value and does the
-MPTCP_MIB_CURRESTAB accounting.
+ net/mptcp/mib.c                               |  1 +
+ net/mptcp/mib.h                               |  8 +++
+ net/mptcp/pm_netlink.c                        |  3 +
+ net/mptcp/protocol.c                          | 57 ++++++++++++-------
+ net/mptcp/protocol.h                          |  1 +
+ net/mptcp/subflow.c                           |  2 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 34 +++++++++++
+ 7 files changed, 86 insertions(+), 20 deletions(-)
 
-Then replacing all the 'inet_sk_state_store()' calls under net/mptcp
-with the new helper call. I already checked all of them are under the
-msk socket lock, so such substitution is safe.
-
-There is only one exception:
-
-=09inet_sk_state_store(newsk, TCP_LISTEN);
-
-in mptcp_pm_nl_create_listen_socket(). You can either:
-
-* avoid replacing such call with the new helper, as the old status is
-known to be TCP_CLOSE, hence will not affect the count (just drop a
-comment there)
-
-* (possibly better) do the replace even there, adding the relevant msk
-socket lock around such call.
-
-Cheers,
-
-Paolo
+-- 
+2.35.3
 
