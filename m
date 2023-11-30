@@ -1,26 +1,31 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E6B1641F;
-	Thu, 30 Nov 2023 04:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F94134C3
+	for <mptcp@lists.linux.dev>; Thu, 30 Nov 2023 11:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sgny+WTf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E8D51C433C9;
-	Thu, 30 Nov 2023 04:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701318034;
-	bh=s5khtu7LDfx8Kc1hS9gJ6am7MTLlXPnlFHZ4L8nETB4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Sgny+WTfK00A9lIauSt/JqV6zIEYMyH8BVg9/sh87s/xleTmpqMuPqOBlLkER0rCE
-	 UuFJUJ7nTfuep3r5jGJtg+KCgXG1Jrk66A1oLyXod9v7DpYd9Po+39oHjidVf0TfZY
-	 ZWG2rl/MH847u4E71vXYOUEj6EaGX+aMaBNjZg9A7eCe/NMeeXg5x+lHYRSaDctQaS
-	 /C8D1mMJLHv/QLLVB+MhJbsmvkcHoXBRw71yAl2plA7U65uhB/+41Ene9rNHlnCEzf
-	 CwWzLvoudgQONUDMh3vq46Bsk/dD+8MnDZZ8BNkIaIcoEqNK5BhpQUJf1C4IY0+0kD
-	 nWUITxMykN3VA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D68DAE00090;
-	Thu, 30 Nov 2023 04:20:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MFXTVHYS"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1701344410;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NTo/KQQFEKB5cdC4RkdHzgx+ceXO4URIfFSeciyVXgs=;
+	b=MFXTVHYSusV951Pk3RANkK8fDKmFQhh0f2WLnLM2w6iRGcJypKsSJdweM4/q8UmShh6cUe
+	g3qSWgsly4267aI1BBSHideSViWxAPHERuXetOoRr/5HqM73y6Aw3i4WrYjZPYrZYcuAqr
+	Zr7jyp6PJpWMopPWw3+LjnbtqiZo7YA=
+From: Geliang Tang <geliang.tang@linux.dev>
+To: David Ahern <dsahern@kernel.org>
+Cc: Geliang Tang <geliang.tang@linux.dev>,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH iproute2-next] ss: mptcp: print out subflows_total counter
+Date: Thu, 30 Nov 2023 19:40:36 +0800
+Message-Id: <ecf501dce539b4cc77e450d510c0414eec4bba7f.1701344289.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -28,71 +33,48 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v4 00/15] mptcp: More selftest coverage and code
- cleanup for net-next
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170131803386.31156.11737105854609497588.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Nov 2023 04:20:33 +0000
-References: <20231128-send-net-next-2023107-v4-0-8d6b94150f6b@kernel.org>
-In-Reply-To: <20231128-send-net-next-2023107-v4-0-8d6b94150f6b@kernel.org>
-To: Mat Martineau <martineau@kernel.org>
-Cc: matttbe@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, geliang.tang@suse.com
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
+A new counter mptcpi_subflows_total has been added in mptcpi_flags
+to count the total amount of subflows from mptcp_info including the
+initial one into kernel in this commit:
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+  6ebf6f90ab4a ("mptcp: add mptcpi_subflows_total counter")
 
-On Tue, 28 Nov 2023 15:18:44 -0800 you wrote:
-> Patches 1-5 and 7-8 add selftest coverage (and an associated subflow
-> counter in the kernel) to validate the recently-updated handling of
-> subflows with ID 0.
-> 
-> Patch 6 renames a label in the userspace path manager for clarity.
-> 
-> Patches 9-11 and 13-15 factor out common selftest code by moving certain
-> functions to mptcp_lib.sh
-> 
-> [...]
+This patch prints out this counter into mptcp_stats output.
 
-Here is the summary with links:
-  - [net-next,v4,01/15] mptcp: add mptcpi_subflows_total counter
-    https://git.kernel.org/netdev/net-next/c/6ebf6f90ab4a
-  - [net-next,v4,02/15] selftests: mptcp: add evts_get_info helper
-    https://git.kernel.org/netdev/net-next/c/06848c0f341e
-  - [net-next,v4,03/15] selftests: mptcp: add chk_subflows_total helper
-    https://git.kernel.org/netdev/net-next/c/80775412882e
-  - [net-next,v4,04/15] selftests: mptcp: update userspace pm test helpers
-    https://git.kernel.org/netdev/net-next/c/757c828ce949
-  - [net-next,v4,05/15] selftests: mptcp: userspace pm create id 0 subflow
-    https://git.kernel.org/netdev/net-next/c/b2e2248f365a
-  - [net-next,v4,06/15] mptcp: userspace pm rename remove_err to out
-    https://git.kernel.org/netdev/net-next/c/b3ac570aae6b
-  - [net-next,v4,07/15] selftests: mptcp: userspace pm remove initial subflow
-    https://git.kernel.org/netdev/net-next/c/e3b47e460b4b
-  - [net-next,v4,08/15] selftests: mptcp: userspace pm send RM_ADDR for ID 0
-    https://git.kernel.org/netdev/net-next/c/b9fb176081fb
-  - [net-next,v4,09/15] selftests: mptcp: add mptcp_lib_kill_wait
-    https://git.kernel.org/netdev/net-next/c/bdbef0a6ff10
-  - [net-next,v4,10/15] selftests: mptcp: add mptcp_lib_is_v6
-    https://git.kernel.org/netdev/net-next/c/b850f2c7dd85
-  - [net-next,v4,11/15] selftests: mptcp: add mptcp_lib_get_counter
-    https://git.kernel.org/netdev/net-next/c/61c131f5d4d2
-  - [net-next,v4,12/15] selftests: mptcp: add missing oflag=append
-    https://git.kernel.org/netdev/net-next/c/119931cc88ce
-  - [net-next,v4,13/15] selftests: mptcp: add mptcp_lib_make_file
-    https://git.kernel.org/netdev/net-next/c/3a96dea9f887
-  - [net-next,v4,14/15] selftests: mptcp: add mptcp_lib_check_transfer
-    https://git.kernel.org/netdev/net-next/c/9d9095bbc24d
-  - [net-next,v4,15/15] selftests: mptcp: add mptcp_lib_wait_local_port_listen
-    https://git.kernel.org/netdev/net-next/c/9369777c2939
+Acked-by: Matthieu Baerts <matttbe@kernel.org>
+Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
+---
+ include/uapi/linux/mptcp.h | 1 +
+ misc/ss.c                  | 2 ++
+ 2 files changed, 3 insertions(+)
 
-You are awesome, thank you!
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 99b55575..c2e6f3be 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -55,6 +55,7 @@ struct mptcp_info {
+ 	__u64	mptcpi_bytes_sent;
+ 	__u64	mptcpi_bytes_received;
+ 	__u64	mptcpi_bytes_acked;
++	__u8	mptcpi_subflows_total;
+ };
+ 
+ /* MPTCP Reset reason codes, rfc8684 */
+diff --git a/misc/ss.c b/misc/ss.c
+index 7e67dbe4..67363ec0 100644
+--- a/misc/ss.c
++++ b/misc/ss.c
+@@ -3239,6 +3239,8 @@ static void mptcp_stats_print(struct mptcp_info *s)
+ 		out(" bytes_received:%llu", s->mptcpi_bytes_received);
+ 	if (s->mptcpi_bytes_acked)
+ 		out(" bytes_acked:%llu", s->mptcpi_bytes_acked);
++	if (s->mptcpi_subflows_total)
++		out(" subflows_total:%u", s->mptcpi_subflows_total);
+ }
+ 
+ static void mptcp_show_info(const struct nlmsghdr *nlh, struct inet_diag_msg *r,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.35.3
 
