@@ -1,80 +1,190 @@
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F94134C3
-	for <mptcp@lists.linux.dev>; Thu, 30 Nov 2023 11:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F25619AF
+	for <mptcp@lists.linux.dev>; Fri,  1 Dec 2023 23:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MFXTVHYS"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1701344410;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NTo/KQQFEKB5cdC4RkdHzgx+ceXO4URIfFSeciyVXgs=;
-	b=MFXTVHYSusV951Pk3RANkK8fDKmFQhh0f2WLnLM2w6iRGcJypKsSJdweM4/q8UmShh6cUe
-	g3qSWgsly4267aI1BBSHideSViWxAPHERuXetOoRr/5HqM73y6Aw3i4WrYjZPYrZYcuAqr
-	Zr7jyp6PJpWMopPWw3+LjnbtqiZo7YA=
-From: Geliang Tang <geliang.tang@linux.dev>
-To: David Ahern <dsahern@kernel.org>
-Cc: Geliang Tang <geliang.tang@linux.dev>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	Matthieu Baerts <matttbe@kernel.org>
-Subject: [PATCH iproute2-next] ss: mptcp: print out subflows_total counter
-Date: Thu, 30 Nov 2023 19:40:36 +0800
-Message-Id: <ecf501dce539b4cc77e450d510c0414eec4bba7f.1701344289.git.geliang.tang@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/wImNuG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD4B6C433C7;
+	Fri,  1 Dec 2023 23:59:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701475140;
+	bh=9tPKWOkRO8owZeyy1EAII49G49FbYaME94JQOpd3o58=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=o/wImNuGpW7BuhdM8dfKD31ZTtEnlC7BQ7pJMya9a4UvQVzc77qaCQhG/bcTmnszp
+	 HYiithnZ6aq4ekmOS7qRUP/B5DkvzwyU6ltDYWXHSfWtk4q1gVNjvgLcoedhn74t/p
+	 khBziA6lTbOPLOlXT9HcbdblU7D5NR+xVoXtA3lO/Gn+vVAzXCuwte/5n1Q6LEifn5
+	 8Wosum0btb4MRCLRAKpdxYL5mE1pBqAti+b8GoPDBbBAqhxcHZdDLAwKSbp2W4dh95
+	 HjOud47Q0UEsJCN4fxXj+gdSYKWjaRz4/TAFCIHI2VhF9v4uzh+8vgZp+Jk4io0q9q
+	 KMHwzUm6xNcrA==
+Date: Fri, 1 Dec 2023 15:59:00 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Maxim Galaganov <max@internet.ru>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 mptcp-next 2/3] mptcp: sockopt: support IP_LOCAL_PORT_RANGE
+ and IP_BIND_ADDRESS_NO_PORT
+In-Reply-To: <7d400717-0bfd-5dcc-3ea7-fc12db4c4759@kernel.org>
+Message-ID: <2da11695-1691-bf06-4554-427b18820a97@kernel.org>
+References: <20231129113403.157953-1-max@internet.ru> <20231129113403.157953-3-max@internet.ru> <7d400717-0bfd-5dcc-3ea7-fc12db4c4759@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-A new counter mptcpi_subflows_total has been added in mptcpi_flags
-to count the total amount of subflows from mptcp_info including the
-initial one into kernel in this commit:
+On Wed, 29 Nov 2023, Mat Martineau wrote:
 
-  6ebf6f90ab4a ("mptcp: add mptcpi_subflows_total counter")
+> On Wed, 29 Nov 2023, Maxim Galaganov wrote:
+>
+>> Support for IP_BIND_ADDRESS_NO_PORT sockopt was introduced in [1].
+>> Recently [2] allowed its value to be accessed without locking the
+>> socket.
+>> 
+>> Support for (newer) IP_LOCAL_PORT_RANGE sockopt was introduced in [3].
+>> In the same series a selftest was added in [4]. This selftest also
+>> covers the IP_BIND_ADDRESS_NO_PORT sockopt.
+>> 
+>> This patch enables getsockopt()/setsockopt() on MPTCP sockets for these
+>> socket options, syncing set values to subflows in sync_socket_options().
+>> Ephemeral port range is synced to subflows, enabling NAT usecase
+>> described in [3].
+>> 
+>> [1] commit 90c337da1524 ("inet: add IP_BIND_ADDRESS_NO_PORT to overcome
+>> bind(0) limitations")
+>> [2] commit ca571e2eb7eb ("inet: move inet->bind_address_no_port to
+>> inet->inet_flags")
+>> [3] commit 91d0b78c5177 ("inet: Add IP_LOCAL_PORT_RANGE socket option")
+>> [4] commit ae5439658cce ("selftests/net: Cover the IP_LOCAL_PORT_RANGE
+>> socket option")
+>> 
+>> Signed-off-by: Maxim Galaganov <max@internet.ru>
+>
+> Thanks for the v2 Maxim, looks good to me:
+>
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+>
 
-This patch prints out this counter into mptcp_stats output.
+Now that I've signed off on this, I see that there's work going on to 
+change the implementation of local_port_range:
 
-Acked-by: Matthieu Baerts <matttbe@kernel.org>
-Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
----
- include/uapi/linux/mptcp.h | 1 +
- misc/ss.c                  | 2 ++
- 2 files changed, 3 insertions(+)
+https://lore.kernel.org/netdev/a4f5b61c9cd44eada41d8f09d3848806@AcuMS.aculab.com/
 
-diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-index 99b55575..c2e6f3be 100644
---- a/include/uapi/linux/mptcp.h
-+++ b/include/uapi/linux/mptcp.h
-@@ -55,6 +55,7 @@ struct mptcp_info {
- 	__u64	mptcpi_bytes_sent;
- 	__u64	mptcpi_bytes_received;
- 	__u64	mptcpi_bytes_acked;
-+	__u8	mptcpi_subflows_total;
- };
- 
- /* MPTCP Reset reason codes, rfc8684 */
-diff --git a/misc/ss.c b/misc/ss.c
-index 7e67dbe4..67363ec0 100644
---- a/misc/ss.c
-+++ b/misc/ss.c
-@@ -3239,6 +3239,8 @@ static void mptcp_stats_print(struct mptcp_info *s)
- 		out(" bytes_received:%llu", s->mptcpi_bytes_received);
- 	if (s->mptcpi_bytes_acked)
- 		out(" bytes_acked:%llu", s->mptcpi_bytes_acked);
-+	if (s->mptcpi_subflows_total)
-+		out(" subflows_total:%u", s->mptcpi_subflows_total);
- }
- 
- static void mptcp_show_info(const struct nlmsghdr *nlh, struct inet_diag_msg *r,
--- 
-2.35.3
+I think it makes sense to do a v3 of this series if a version of David's 
+patch gets merged soon (I expect a v2 as he got some feedback from me and 
+some others). I'll watch for progress with his patch on netdev.
 
+
+- Mat
+
+>> ---
+>> net/mptcp/sockopt.c | 29 ++++++++++++++++++++++++++++-
+>> 1 file changed, 28 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+>> index a4bf337e6f77..a164a3e21be4 100644
+>> --- a/net/mptcp/sockopt.c
+>> +++ b/net/mptcp/sockopt.c
+>> @@ -440,6 +440,8 @@ static bool mptcp_supported_sockopt(int level, int 
+>> optname)
+>> 		/* should work fine */
+>> 		case IP_FREEBIND:
+>> 		case IP_TRANSPARENT:
+>> +		case IP_BIND_ADDRESS_NO_PORT:
+>> +		case IP_LOCAL_PORT_RANGE:
+>>
+>> 		/* the following are control cmsg related */
+>> 		case IP_PKTINFO:
+>> @@ -455,7 +457,6 @@ static bool mptcp_supported_sockopt(int level, int 
+>> optname)
+>> 		/* common stuff that need some love */
+>> 		case IP_TOS:
+>> 		case IP_TTL:
+>> -		case IP_BIND_ADDRESS_NO_PORT:
+>> 		case IP_MTU_DISCOVER:
+>> 		case IP_RECVERR:
+>> 
+>> @@ -688,6 +689,7 @@ static int mptcp_setsockopt_sol_ip_set(struct 
+>> mptcp_sock *msk, int optname,
+>> {
+>> 	struct sock *sk = (struct sock *)msk;
+>> 	struct sock *ssk;
+>> +	bool slow;
+>> 	int err;
+>>
+>> 	err = ip_setsockopt(sk, SOL_IP, optname, optval, optlen);
+>> @@ -710,6 +712,16 @@ static int mptcp_setsockopt_sol_ip_set(struct 
+>> mptcp_sock *msk, int optname,
+>> 		inet_assign_bit(TRANSPARENT, ssk,
+>> 				inet_test_bit(TRANSPARENT, sk));
+>> 		break;
+>> +	case IP_BIND_ADDRESS_NO_PORT:
+>> +		inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk,
+>> +				inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+>> +		break;
+>> +	case IP_LOCAL_PORT_RANGE:
+>> +		slow = lock_sock_fast(ssk);
+>> +		inet_sk(ssk)->local_port_range.lo = 
+>> inet_sk(sk)->local_port_range.lo;
+>> +		inet_sk(ssk)->local_port_range.hi = 
+>> inet_sk(sk)->local_port_range.hi;
+>> +		unlock_sock_fast(ssk, slow);
+>> +		break;
+>> 	default:
+>> 		release_sock(sk);
+>> 		WARN_ON_ONCE(1);
+>> @@ -755,6 +767,8 @@ static int mptcp_setsockopt_v4(struct mptcp_sock *msk, 
+>> int optname,
+>> 	switch (optname) {
+>> 	case IP_FREEBIND:
+>> 	case IP_TRANSPARENT:
+>> +	case IP_BIND_ADDRESS_NO_PORT:
+>> +	case IP_LOCAL_PORT_RANGE:
+>> 		return mptcp_setsockopt_sol_ip_set(msk, optname, optval, 
+>> optlen);
+>> 	case IP_TOS:
+>> 		return mptcp_setsockopt_v4_set_tos(msk, optname, optval, 
+>> optlen);
+>> @@ -1346,10 +1360,20 @@ static int mptcp_getsockopt_v4(struct mptcp_sock 
+>> *msk, int optname,
+>> 			       char __user *optval, int __user *optlen)
+>> {
+>> 	struct sock *sk = (void *)msk;
+>> +	bool slow;
+>> +	int val;
+>>
+>> 	switch (optname) {
+>> 	case IP_TOS:
+>> 		return mptcp_put_int_option(msk, optval, optlen, 
+>> READ_ONCE(inet_sk(sk)->tos));
+>> +	case IP_BIND_ADDRESS_NO_PORT:
+>> +		return mptcp_put_int_option(msk, optval, optlen,
+>> +				inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+>> +	case IP_LOCAL_PORT_RANGE:
+>> +		slow = lock_sock_fast(sk);
+>> +		val = inet_sk(sk)->local_port_range.hi << 16 | 
+>> inet_sk(sk)->local_port_range.lo;
+>> +		unlock_sock_fast(sk, slow);
+>> +		return mptcp_put_int_option(msk, optval, optlen, val);
+>> 	}
+>>
+>> 	return -EOPNOTSUPP;
+>> @@ -1450,6 +1474,9 @@ static void sync_socket_options(struct mptcp_sock 
+>> *msk, struct sock *ssk)
+>>
+>> 	inet_assign_bit(TRANSPARENT, ssk, inet_test_bit(TRANSPARENT, sk));
+>> 	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
+>> +	inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk, 
+>> inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+>> +	inet_sk(ssk)->local_port_range.lo = inet_sk(sk)->local_port_range.lo;
+>> +	inet_sk(ssk)->local_port_range.hi = inet_sk(sk)->local_port_range.hi;
+>> }
+>> 
+>> void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
+>> -- 
+>> 2.43.0
+>> 
+>> 
+>> 
+>
