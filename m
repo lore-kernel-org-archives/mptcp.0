@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B7935EF6;
-	Mon,  4 Dec 2023 20:36:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7AC2E62C;
+	Mon,  4 Dec 2023 20:37:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGFqefgP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B74FC433CB;
-	Mon,  4 Dec 2023 20:36:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="giuZdwZp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADC51C433C7;
+	Mon,  4 Dec 2023 20:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701722193;
-	bh=5aaVddaxnZ8/nE7jtW/8lqmeta3wu189jxHfWgQbNzs=;
+	s=k20201202; t=1701722229;
+	bh=pp8Z0ECkAh4aGEddlUYiYkyA1y99/QIm+0eQy7iwlDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tGFqefgP9MKZ83rtRL0dtF64fgNPtHm1OGFbVwUkkNbUFRN46SBMYbov1210SZOuQ
-	 1X5s1sOLq3ZWa708xJjlSEGBs/jGasijqdIBRvX7RPVKZJMnANND8zzUxLOkrVuOhE
-	 he9aFlKBa/gRfjus0Iks048ex3V9+XejS+rAjIDYVMzGQBu3NmLZrpKPbYvhMjcq6/
-	 2NFs1zbJiS/l6dJwRtN7RhR7V/CatSqG9CTwihSHEfP8w9Tz6bZkZkzUeRi0q+r9yO
-	 ohigYDBABLy1R6Z+AKBec5UkFYm3qG2SceduVH6oM2OxF+DTc2Y88ffzJtaxWVjTcc
-	 /Q6kB4tGCSbhQ==
+	b=giuZdwZpCHAjrOEAyTJXE4NW3ZvfwsCHeedDloX2QNIKDdBw3rnBx5/F5wBHkU+Op
+	 wuW61nMLeIdAP+ZBkfTRmCT+i5Qc1T/xYqC490z+4zLSjGyG2N+PIrgbIKUZcIDPB0
+	 wwLnisE3HR2WWeEX/gZSkGIQu10Mf/02buHem59MwcDkxM3fLpMnl7Yin/WtH80iWw
+	 wmJJZ1GB7lDi0u1fSEWDv8zAKfKaN8rml923zJRkvf5WK573JDgFem5/YjJDmq3S1o
+	 J9nurA0IyneJpdfB1Pq51f3GLp5KopuDnZlcXwoSG/QY8yjW8oyXs6Zxpy6QdKyobI
+	 yQEqtZnmCEZKg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -31,12 +31,12 @@ Cc: Edward Adam Davis <eadavis@qq.com>,
 	kuba@kernel.org,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.15 04/10] mptcp: fix uninit-value in mptcp_incoming_options
-Date: Mon,  4 Dec 2023 15:36:01 -0500
-Message-ID: <20231204203616.2094529-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 3/7] mptcp: fix uninit-value in mptcp_incoming_options
+Date: Mon,  4 Dec 2023 15:36:46 -0500
+Message-ID: <20231204203656.2094777-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231204203616.2094529-1-sashal@kernel.org>
-References: <20231204203616.2094529-1-sashal@kernel.org>
+In-Reply-To: <20231204203656.2094777-1-sashal@kernel.org>
+References: <20231204203656.2094777-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.141
+X-stable-base: Linux 5.10.202
 Content-Transfer-Encoding: 8bit
 
 From: Edward Adam Davis <eadavis@qq.com>
@@ -64,11 +64,11 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index aa4b0cf7c6380..012e0e352276f 100644
+index 64afe71e2129a..c389d7e47135d 100644
 --- a/net/mptcp/options.c
 +++ b/net/mptcp/options.c
-@@ -103,6 +103,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 			mp_opt->suboptions |= OPTION_MPTCP_DSS;
+@@ -92,6 +92,7 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 			mp_opt->dss = 1;
  			mp_opt->use_map = 1;
  			mp_opt->mpc_map = 1;
 +			mp_opt->use_ack = 0;
