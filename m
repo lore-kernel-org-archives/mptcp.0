@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9815C2557A
-	for <mptcp@lists.linux.dev>; Mon,  4 Dec 2023 17:10:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784EE171D9
+	for <mptcp@lists.linux.dev>; Mon,  4 Dec 2023 17:15:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0Xzrz4D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 244DAC433C8;
-	Mon,  4 Dec 2023 17:10:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nbcp+1sF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F098C433C7;
+	Mon,  4 Dec 2023 17:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701709823;
-	bh=YR/hmORs40bOwutnE0kxfgxASc4el/ec79Q0iW8E48I=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=n0Xzrz4DaQ8JklaL1Uk0jkZOB/Q2kf0o4gNtq66LtdoeKgrXaASnLoj8+ZKZk33re
-	 +ChRG+b3Y6+RkdcQA8u93bWqs5lpDZBo/cPAADhgaqQOAacjBXiaSzrlwDsiwYRABH
-	 NLzxkGwT8pgsH96pt8xl7j2kkhATN2zH5QbSWSo3vgGpPd8ebjBBioygzxubVzqP5D
-	 KgJkw1Kl2uywJgbWeg8AKWTFZCtNHZiOEl39dp5F+YXgusEVI7TeoIcdZg07bj23Ww
-	 FYxA87j8XPSxRiZOZGKJXjkSvsLhgN9mgDaYMOE2gjlHVHOQ5PJWF9alYAvdWa+mcN
-	 Kfr0sejlKVcDg==
-Message-ID: <10d91c48-8a7e-427c-b04b-34002ddc1744@kernel.org>
-Date: Mon, 4 Dec 2023 18:10:18 +0100
+	s=k20201202; t=1701710152;
+	bh=UJOzKHdvkKQr+Y0e67TtWYs/cwg/7PzhlJovT6LZghc=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=Nbcp+1sFpMAyqqos4Vwx1+u6NTFEDz8RzHoRYyzQzsMmjh1cCKdj6BfdcqXHjitwz
+	 pAJnD1NEmGzt3kQ/w54xV9TNhCcbwFFdf8DySxt3Oq0KK+KGBp+sB3in8/ZeNRbkYY
+	 Ac8wfnElpQNX9FFtAAzvdNrBBTWvWBL/BQEPAgx0a7f02FMydRiiUS6x9l524W2W8b
+	 ZAKUj3V1pIaWOR1j0gjX0RwHU1hAiTONvzF2CO6dzprW32nmMmi6/3gJFbjlUDVpt+
+	 YZfXT2C3qYXFTnhHqh+cacb0oTp2om/cxmx/jKj7zcggwwA6WMo4mjxJzvelDT/NH+
+	 AmrkW+9C3iSxA==
+Message-ID: <97f4f402-e8d3-4770-8992-f344f7dafd34@kernel.org>
+Date: Mon, 4 Dec 2023 18:15:48 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,11 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v2] selftests: mptcp: join: fix subflow_send_ack
- lookup
-To: Geliang Tang <geliang.tang@suse.com>, mptcp@lists.linux.dev
-References: <f343a6ca7d627b4092a284dbc6724f34e6f8c491.1699973683.git.geliang.tang@suse.com>
+Subject: Re: [PATCH mptcp-net v2] mptcp: fix inconsistent state on fastopen
+ race
 Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
+References: <7237df51ca90d9692f133823a3a6071ee87ba02d.1700667812.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -76,43 +77,36 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f343a6ca7d627b4092a284dbc6724f34e6f8c491.1699973683.git.geliang.tang@suse.com>
+In-Reply-To: <7237df51ca90d9692f133823a3a6071ee87ba02d.1700667812.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo, Mat,
 
-On 14/11/2023 15:57, Geliang Tang wrote:
-> MPC backups tests will skip unexpected sometimes, since static functions
-> like mptcp_subflow_send_ack may also be listed in /proc/kallsyms, with a
-> 't' in front of it, not 'T' ('T' is for a global function):
+On 22/11/2023 17:21, Paolo Abeni wrote:
+> The netlink PM can race with fastopen self-connect attempts, shutting
+> down the first subflow via:
 > 
->  > grep "mptcp_subflow_send_ack" /proc/kallsyms
+> MPTCP_PM_CMD_DEL_ADDR -> mptcp_nl_remove_id_zero_address ->
+>   mptcp_pm_nl_rm_subflow_received -> mptcp_close_ssk
 > 
->  0000000000000000 T __pfx___mptcp_subflow_send_ack
->  0000000000000000 T __mptcp_subflow_send_ack
->  0000000000000000 t __pfx_mptcp_subflow_send_ack
->  0000000000000000 t mptcp_subflow_send_ack
-> 
-> In this case, mptcp_lib_kallsyms_doesnt_have "mptcp_subflow_send_ack$"
-> will be false, MPC backups tests will skip. This is not what we expected.
-> 
-> The correct logic here should be: if mptcp_subflow_send_ack is not a
-> global function in /proc/kallsyms, do these MPC backups tests. So a 'T'
-> must be added in front of mptcp_subflow_send_ack.
+> and transitioning such subflow to FIN_WAIT1 status before the syn-ack
+> packet is processed. The MPTCP code does not react to such state change,
+> leaving the connection in not-fallback status and the subflow handshake
+> uncompleted, triggering the following splat:
+Thank you for the patch and the review!
 
-With a bit of delay -- sorry for that -- I just applied your patch in
-our tree (fixes for -net):
+Now in our tree (fixes for -net) with a bit of delay (sorry for that):
 
 New patches for t/upstream-net and t/upstream:
-- 6fb578086535: selftests: mptcp: join: fix subflow_send_ack lookup
-- Results: 77d946064d59..8ec51043b53f (export-net)
-- Results: 5a37296ad9fd..8fa5c227980d (export)
+- 1ed82ee83068: mptcp: fix inconsistent state on fastopen race
+- Results: 8ec51043b53f..cea6555e919d (export-net)
+- Results: 8fa5c227980d..90689d8a1056 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231204T170318
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231204T170318
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231204T171310
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231204T171310
 
 Cheers,
 Matt
