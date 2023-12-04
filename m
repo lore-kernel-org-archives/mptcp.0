@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516152E63B
-	for <mptcp@lists.linux.dev>; Mon,  4 Dec 2023 17:18:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D1B2FC29
+	for <mptcp@lists.linux.dev>; Mon,  4 Dec 2023 18:36:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyDj8U/Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35095C433C7;
-	Mon,  4 Dec 2023 17:18:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jSCHwTXs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30509C433C8;
+	Mon,  4 Dec 2023 18:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701710334;
-	bh=xelW4CplZ+4DTGQGCpIUpfSxF840HcMPvtOgSI2cigc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eyDj8U/QQ+4LgpaNpspa9Zp+ZiS+czDa/y/PbEC5d3GiGMUneQx++CcQi6Drql4PB
-	 0LVgmfHrMbBPRR1KL5Q8FGM81o0+NN2XI0PFL6FVoLAtUZviEunBvKc8F73yqw+kyh
-	 c/qDbSvuPuWQM9RHCpjYd5TfuuBV+w1irlyH2+xLiUtZhHOKKAo/boCBssGPnN2DAf
-	 VCzA2ybWcsEOFwzuqIBsla4g3tKFWF1NIsAqVpXyFmXABigHChSkS7EkL9ryThAZ4I
-	 N/1vBLokLOlF7hfepyV5n6iJqX2bPmKxMCketoxzS3W6c3Grk6oBTB6lARowbcJgbu
-	 TOYfMKIXcpXMw==
-Message-ID: <57bfe7b3-59c2-480b-be7e-28561c7aeb7e@kernel.org>
-Date: Mon, 4 Dec 2023 18:18:51 +0100
+	s=k20201202; t=1701714978;
+	bh=K0SKNhqRrP0V22+V3aBCeipCTxJwxvFeHOJSHuhUC4Y=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=jSCHwTXs934ZZ7bI/0jyLg6h8FwKvZsNzUoFPdJBqCupqzIoGtoqA3iT/is0E3I+8
+	 nUbpE3aoBQchAbZ+G7f/GQctc9A0Rb0uiMdcdtqtOsWNNYMXanOby0zmvbl7PNlyZh
+	 8CIlw8Q87p7S8bqe4vWiRBoF99fPX31/s4EdtwbkHi3vRxprNytrGMBYIfWTP7Z+CM
+	 h7oafCAzeXVe6q9H+cgDdkOmvra05sHtcXLL9P3v0tUDlVCGfqdfS0okb2pZCc/xbO
+	 SimHP3zpphsTc0yAlbAXF4OPhtdUgVdrJDs+2gc3Tkk4atrlSP/vTX28A5Kg5iUiEP
+	 yDo8IsNDEzBeQ==
+Message-ID: <6437bb51-786a-4315-a11f-ddb353c7c3e3@kernel.org>
+Date: Mon, 4 Dec 2023 19:36:15 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] mptcp: fill in missing MODULE_DESCRIPTION()
+Subject: Re: [PATCH mptcp-net-next] mptcp: cleanup state propagation.
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+References: <240a97d522887a938faeb24a6a3e3a9ed24570b1.1700667908.git.pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
-References: <20231127-mptcp-module-desc-v1-1-d2209921bf9e@kernel.org>
- <4dcca91b-ed31-72fc-5552-7754c420b612@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,42 +76,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4dcca91b-ed31-72fc-5552-7754c420b612@kernel.org>
+In-Reply-To: <240a97d522887a938faeb24a6a3e3a9ed24570b1.1700667908.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Paolo, Mat,
 
-On 27/11/2023 19:16, Mat Martineau wrote:
-> On Mon, 27 Nov 2023, Matthieu Baerts wrote:
-> 
->> W=1 builds warn on missing MODULE_DESCRIPTION, add them here in MPTCP.
->>
->> Only two were missing: two modules with different KUint tests for MPTCP.
->>
->> Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
->> ---
->> net/mptcp/crypto_test.c | 1 +
->> net/mptcp/token_test.c  | 1 +
->> 2 files changed, 2 insertions(+)
-> 
-> Looks good:
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-Thank you for the review!
+On 22/11/2023 17:21, Paolo Abeni wrote:
+> When propagating the first subflow state via the release_cb, the
+> msk must actually take to 2 separate actions: state sync-up and
+> send buffer sync-up. Relaying on the specific flags instead of
+> bounding both in __mptcp_sync_state(), allows cleaning up a bit
+> the code.
 
-Now in our tree (fixes for -net -- like similar changes that have been
-done recently in the -net tree):
+Thank you for the patch and the review! Now in our tree (feat. for
+net-next):
 
-New patches for t/upstream-net and t/upstream:
-- b19e20f82601: mptcp: fill in missing MODULE_DESCRIPTION()
-- Results: cea6555e919d..3b4aab119303 (export-net)
-- Results: 90689d8a1056..b1ca2c54c539 (export)
+New patches for t/upstream:
+- 55cd89098414: mptcp: cleanup state propagation
+- Results: b1ca2c54c539..3050a643425e (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231204T171711
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231204T171711
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231204T183518
 
 Cheers,
 Matt
