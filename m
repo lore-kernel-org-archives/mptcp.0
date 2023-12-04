@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784EE171D9
-	for <mptcp@lists.linux.dev>; Mon,  4 Dec 2023 17:15:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516152E63B
+	for <mptcp@lists.linux.dev>; Mon,  4 Dec 2023 17:18:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nbcp+1sF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F098C433C7;
-	Mon,  4 Dec 2023 17:15:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyDj8U/Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35095C433C7;
+	Mon,  4 Dec 2023 17:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701710152;
-	bh=UJOzKHdvkKQr+Y0e67TtWYs/cwg/7PzhlJovT6LZghc=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=Nbcp+1sFpMAyqqos4Vwx1+u6NTFEDz8RzHoRYyzQzsMmjh1cCKdj6BfdcqXHjitwz
-	 pAJnD1NEmGzt3kQ/w54xV9TNhCcbwFFdf8DySxt3Oq0KK+KGBp+sB3in8/ZeNRbkYY
-	 Ac8wfnElpQNX9FFtAAzvdNrBBTWvWBL/BQEPAgx0a7f02FMydRiiUS6x9l524W2W8b
-	 ZAKUj3V1pIaWOR1j0gjX0RwHU1hAiTONvzF2CO6dzprW32nmMmi6/3gJFbjlUDVpt+
-	 YZfXT2C3qYXFTnhHqh+cacb0oTp2om/cxmx/jKj7zcggwwA6WMo4mjxJzvelDT/NH+
-	 AmrkW+9C3iSxA==
-Message-ID: <97f4f402-e8d3-4770-8992-f344f7dafd34@kernel.org>
-Date: Mon, 4 Dec 2023 18:15:48 +0100
+	s=k20201202; t=1701710334;
+	bh=xelW4CplZ+4DTGQGCpIUpfSxF840HcMPvtOgSI2cigc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eyDj8U/QQ+4LgpaNpspa9Zp+ZiS+czDa/y/PbEC5d3GiGMUneQx++CcQi6Drql4PB
+	 0LVgmfHrMbBPRR1KL5Q8FGM81o0+NN2XI0PFL6FVoLAtUZviEunBvKc8F73yqw+kyh
+	 c/qDbSvuPuWQM9RHCpjYd5TfuuBV+w1irlyH2+xLiUtZhHOKKAo/boCBssGPnN2DAf
+	 VCzA2ybWcsEOFwzuqIBsla4g3tKFWF1NIsAqVpXyFmXABigHChSkS7EkL9ryThAZ4I
+	 N/1vBLokLOlF7hfepyV5n6iJqX2bPmKxMCketoxzS3W6c3Grk6oBTB6lARowbcJgbu
+	 TOYfMKIXcpXMw==
+Message-ID: <57bfe7b3-59c2-480b-be7e-28561c7aeb7e@kernel.org>
+Date: Mon, 4 Dec 2023 18:18:51 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v2] mptcp: fix inconsistent state on fastopen
- race
+Subject: Re: [PATCH mptcp-net] mptcp: fill in missing MODULE_DESCRIPTION()
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
-References: <7237df51ca90d9692f133823a3a6071ee87ba02d.1700667812.git.pabeni@redhat.com>
+To: Mat Martineau <martineau@kernel.org>
 Cc: mptcp@lists.linux.dev
+References: <20231127-mptcp-module-desc-v1-1-d2209921bf9e@kernel.org>
+ <4dcca91b-ed31-72fc-5552-7754c420b612@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,36 +77,42 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7237df51ca90d9692f133823a3a6071ee87ba02d.1700667812.git.pabeni@redhat.com>
+In-Reply-To: <4dcca91b-ed31-72fc-5552-7754c420b612@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Mat,
+Hi Mat,
 
-On 22/11/2023 17:21, Paolo Abeni wrote:
-> The netlink PM can race with fastopen self-connect attempts, shutting
-> down the first subflow via:
+On 27/11/2023 19:16, Mat Martineau wrote:
+> On Mon, 27 Nov 2023, Matthieu Baerts wrote:
 > 
-> MPTCP_PM_CMD_DEL_ADDR -> mptcp_nl_remove_id_zero_address ->
->   mptcp_pm_nl_rm_subflow_received -> mptcp_close_ssk
+>> W=1 builds warn on missing MODULE_DESCRIPTION, add them here in MPTCP.
+>>
+>> Only two were missing: two modules with different KUint tests for MPTCP.
+>>
+>> Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
+>> ---
+>> net/mptcp/crypto_test.c | 1 +
+>> net/mptcp/token_test.c  | 1 +
+>> 2 files changed, 2 insertions(+)
 > 
-> and transitioning such subflow to FIN_WAIT1 status before the syn-ack
-> packet is processed. The MPTCP code does not react to such state change,
-> leaving the connection in not-fallback status and the subflow handshake
-> uncompleted, triggering the following splat:
-Thank you for the patch and the review!
+> Looks good:
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+Thank you for the review!
 
-Now in our tree (fixes for -net) with a bit of delay (sorry for that):
+Now in our tree (fixes for -net -- like similar changes that have been
+done recently in the -net tree):
 
 New patches for t/upstream-net and t/upstream:
-- 1ed82ee83068: mptcp: fix inconsistent state on fastopen race
-- Results: 8ec51043b53f..cea6555e919d (export-net)
-- Results: 8fa5c227980d..90689d8a1056 (export)
+- b19e20f82601: mptcp: fill in missing MODULE_DESCRIPTION()
+- Results: cea6555e919d..3b4aab119303 (export-net)
+- Results: 90689d8a1056..b1ca2c54c539 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231204T171310
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231204T171310
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231204T171711
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231204T171711
 
 Cheers,
 Matt
