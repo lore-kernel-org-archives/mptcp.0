@@ -1,29 +1,29 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF0B14F6F
-	for <mptcp@lists.linux.dev>; Tue,  5 Dec 2023 07:03:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8649415AE0
+	for <mptcp@lists.linux.dev>; Tue,  5 Dec 2023 07:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bnNYDc97"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W1ICkCep"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1701759810;
+	t=1701759812;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OtdihN2qTzJDHy87Xwj42b0HcvuCBrxUSrd4eh7uHgY=;
-	b=bnNYDc97inTy8qw2v/qVWJr/r2Xbgp6/W6E1S/slgEblMjjc2oxihOlLlcAk4fLulL2pZ1
-	UZpAtzeeymFnLa3RLYX9vfhutZv2+GgbrOKWfl36hgPWw9zvDXGIG8YWP6GrrPTbRSJf9L
-	+CGY2oI+j+Fab3Uqg+QkkgOy+hBqet4=
+	bh=twa+zf++T2p1ks/c8QavHDePfhiK0c35fL1o4rTAweI=;
+	b=W1ICkCepTe4txuCIdH+fRcprmpeiaVhTVD64LuVTM60IpVu+xaBzvQleIsY/BE8/j20yGt
+	iAuzu1DFE3OSHouv0O40Feaha28UCIIfieSMB/BIMPKgvkUqH8o9nD/TTybrZXsSszEA/F
+	V2f1WiGuRQmVwIK1t1HcFUpOaBtJ8lQ=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v5 13/33] selftests: mptcp: connect: print colored output
-Date: Tue,  5 Dec 2023 15:01:00 +0800
-Message-Id: <9cc26a5f783587deaf7ab5982e8dc4a0f0b2f1dc.1701759405.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v5 14/33] selftests: mptcp: sockopt: print every test result
+Date: Tue,  5 Dec 2023 15:01:01 +0800
+Message-Id: <60b81e1e81a4f57d3e7429511bbf7fdcd05e8a6d.1701759405.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1701759405.git.geliang.tang@linux.dev>
 References: <cover.1701759405.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,120 +35,124 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Use mptcp_lib_print_info() and _ok() helpers in script mptcp_connect.sh
-to print test results with colors.
+Only total test results are printed out in mptcp_sockopt.sh:
 
-Having colors helps to quickly identify issues when looking at a long
-list of output logs and results.
+ PASS: all packets had packet mark set
+ PASS: SOL_MPTCP getsockopt has expected information
+ PASS: TCP_INQ cmsg/ioctl -t tcp
+ PASS: TCP_INQ cmsg/ioctl -6 -t tcp
+ PASS: TCP_INQ cmsg/ioctl -r tcp
+ PASS: TCP_INQ cmsg/ioctl -6 -r tcp
+
+This patch prints more info for every test result in each test
+group:
+
+ transfer ipv4                                                [ OK ]
+ mark ipv4                                                    [ OK ]
+ transfer ipv6                                                [ OK ]
+ mark ipv6                                                    [ OK ]
+ PASS: all packets had packet mark set
+ sockopt v4                                                   [ OK ]
+ sockopt v6                                                   [ OK ]
+ PASS: SOL_MPTCP getsockopt has expected information
+ TCP_INQ: -t tcp                                              [ OK ]
+ PASS: TCP_INQ cmsg/ioctl -t tcp
+ TCP_INQ: -6 -t tcp                                           [ OK ]
+ PASS: TCP_INQ cmsg/ioctl -6 -t tcp
+ TCP_INQ: -r tcp                                              [ OK ]
+ PASS: TCP_INQ cmsg/ioctl -r tcp
+ TCP_INQ: -6 -r tcp                                           [ OK ]
+ PASS: TCP_INQ cmsg/ioctl -6 -r tcp
+ TCP_INQ: -r tcp -t tcp                                       [ OK ]
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- .../selftests/net/mptcp/mptcp_connect.sh      | 24 ++++++++++---------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index cf9548e190b1..e566b57d5cc1 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -242,7 +242,8 @@ check_mptcp_disabled()
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index 2290b3290214..8cee8bc6d6e5 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -152,6 +152,7 @@ do_transfer()
+ 	wait $spid
+ 	local rets=$?
  
- 	# net.mptcp.enabled should be enabled by default
- 	if [ "$(ip netns exec ${disabled_ns} sysctl net.mptcp.enabled | awk '{ print $3 }')" -ne 1 ]; then
--		echo -e "net.mptcp.enabled sysctl is not 1 by default\t\t[ FAIL ]"
-+		echo -n -e "net.mptcp.enabled sysctl is not 1 by default\t\t"
-+		mptcp_lib_print_err "\t\t   [ FAIL ]"
- 		mptcp_lib_result_fail "net.mptcp.enabled sysctl is not 1 by default"
- 		ret=1
- 		return 1
-@@ -255,13 +256,15 @@ check_mptcp_disabled()
- 	ip netns delete ${disabled_ns}
++	printf "%-25s %35s" "transfer ${ip}" " "
+ 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
+ 		echo " client exit code $retc, server $rets" 1>&2
+ 		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
+@@ -160,12 +161,15 @@ do_transfer()
+ 		echo -e "\nnetns ${connector_ns} socket stat for ${port}:" 1>&2
+ 		ip netns exec ${connector_ns} ss -Menita 1>&2 -o "dport = :$port"
  
- 	if [ ${err} -eq 0 ]; then
--		echo -e "New MPTCP socket cannot be blocked via sysctl\t\t[ FAIL ]"
-+		echo -n -e "New MPTCP socket cannot be blocked via sysctl\t\t"
-+		mptcp_lib_print_err "\t\t   [ FAIL ]"
- 		mptcp_lib_result_fail "New MPTCP socket cannot be blocked via sysctl"
++		mptcp_lib_print_err "[ FAIL ]"
+ 		mptcp_lib_result_fail "transfer ${ip}"
+ 
  		ret=1
  		return 1
  	fi
++	mptcp_lib_print_ok "[ OK ]"
  
--	echo -e "New MPTCP socket can be blocked via sysctl\t\t[ OK ]"
-+	echo -n -e "New MPTCP socket can be blocked via sysctl\t\t"
-+	mptcp_lib_print_ok "\t\t   [ OK ]"
- 	mptcp_lib_result_pass "New MPTCP socket can be blocked via sysctl"
- 	return 0
- }
-@@ -477,7 +480,7 @@ do_transfer()
- 	fi
++	printf "%-25s %35s" "mark ${ip}" " "
+ 	if [ $local_addr = "::" ];then
+ 		check_mark $listener_ns 6 || retc=1
+ 		check_mark $connector_ns 6 || retc=1
+@@ -181,8 +185,10 @@ do_transfer()
+ 	mptcp_lib_result_code "${rets}" "transfer ${ip}"
  
- 	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
--		printf "[ OK ]"
+ 	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
 +		mptcp_lib_print_ok "[ OK ]"
- 		mptcp_lib_result_pass "${TEST_GROUP}: ${result_msg}"
- 	else
- 		mptcp_lib_result_fail "${TEST_GROUP}: ${result_msg}"
-@@ -508,7 +511,6 @@ do_transfer()
- 			"${expect_ackrx}" "${stat_ackrx_now_l}"
+ 		return 0
  	fi
++	mptcp_lib_print_err "[ FAIL ]"
  
--	echo
- 	cat "$capout"
- 	[ $retc -eq 0 ] && [ $rets -eq 0 ]
+ 	return 1
  }
-@@ -684,7 +686,7 @@ EOF
+@@ -211,23 +217,27 @@ do_mptcp_sockopt_tests()
+ 	ip netns exec "$ns3" ./mptcp_sockopt
+ 	lret=$?
+ 
++	printf "%-25s %35s" "sockopt v4" " "
+ 	if [ $lret -ne 0 ]; then
+ 		echo "FAIL: SOL_MPTCP getsockopt" 1>&2
+ 		mptcp_lib_result_fail "sockopt v4"
+ 		ret=$lret
  		return
  	fi
++	mptcp_lib_print_ok "[ OK ]"
+ 	mptcp_lib_result_pass "sockopt v4"
  
--	echo "INFO: test $msg"
-+	mptcp_lib_print_info "INFO: test $msg"
+ 	ip netns exec "$ns3" ./mptcp_sockopt -6
+ 	lret=$?
  
- 	TEST_COUNT=10000
- 	local extra_args="-o TRANSPARENT"
-@@ -711,7 +713,7 @@ run_tests_peekmode()
- 	local peekmode="$1"
- 
- 	TEST_GROUP="peek mode: ${peekmode}"
--	echo "INFO: with peek mode: ${peekmode}"
-+	mptcp_lib_print_info "INFO: with peek mode: ${peekmode}"
- 	run_tests_lo "$ns1" "$ns1" 10.0.1.1 1 "-P ${peekmode}"
- 	run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1 "-P ${peekmode}"
- }
-@@ -726,7 +728,7 @@ run_tests_mptfo()
++	printf "%-25s %35s" "sockopt v6" " "
+ 	if [ $lret -ne 0 ]; then
+ 		echo "FAIL: SOL_MPTCP getsockopt (ipv6)" 1>&2
+ 		mptcp_lib_result_fail "sockopt v6"
+ 		ret=$lret
  		return
  	fi
- 
--	echo "INFO: with MPTFO start"
-+	mptcp_lib_print_info "INFO: with MPTFO start"
- 	ip netns exec "$ns1" sysctl -q net.ipv4.tcp_fastopen=2
- 	ip netns exec "$ns2" sysctl -q net.ipv4.tcp_fastopen=1
- 
-@@ -738,7 +740,7 @@ run_tests_mptfo()
- 
- 	ip netns exec "$ns1" sysctl -q net.ipv4.tcp_fastopen=0
- 	ip netns exec "$ns2" sysctl -q net.ipv4.tcp_fastopen=0
--	echo "INFO: with MPTFO end"
-+	mptcp_lib_print_info "INFO: with MPTFO end"
++	mptcp_lib_print_ok "[ OK ]"
+ 	mptcp_lib_result_pass "sockopt v6"
  }
  
- run_tests_disconnect()
-@@ -762,7 +764,7 @@ run_tests_disconnect()
- 	cin_disconnect="$old_cin"
- 	connect_per_transfer=3
+@@ -250,6 +260,7 @@ run_tests()
  
--	echo "INFO: disconnect"
-+	mptcp_lib_print_info "INFO: disconnect"
- 	run_tests_lo "$ns1" "$ns1" 10.0.1.1 1 "-I 3 -i $old_cin"
- 	run_tests_lo "$ns1" "$ns1" dead:beef:1::1 1 "-I 3 -i $old_cin"
+ do_tcpinq_test()
+ {
++	printf "%-25s %35s" "TCP_INQ: $*" " "
+ 	ip netns exec "$ns3" ./mptcp_inq "$@"
+ 	local lret=$?
+ 	if [ $lret -ne 0 ];then
+@@ -258,6 +269,7 @@ do_tcpinq_test()
+ 		mptcp_lib_result_fail "TCP_INQ: $*"
+ 		return $lret
+ 	fi
++	mptcp_lib_print_ok "[ OK ]"
  
-@@ -811,7 +813,7 @@ check_mptcp_disabled
- 
- stop_if_error "The kernel configuration is not valid for MPTCP"
- 
--echo "INFO: validating network environment with pings"
-+mptcp_lib_print_info "INFO: validating network environment with pings"
- for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
- 	do_ping "$ns1" $sender 10.0.1.1
- 	do_ping "$ns1" $sender dead:beef:1::1
+ 	echo "PASS: TCP_INQ cmsg/ioctl $@"
+ 	mptcp_lib_result_pass "TCP_INQ: $*"
 -- 
 2.35.3
 
