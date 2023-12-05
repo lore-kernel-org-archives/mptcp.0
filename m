@@ -1,29 +1,29 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C68E12B76
-	for <mptcp@lists.linux.dev>; Tue,  5 Dec 2023 07:03:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8436B14F6F
+	for <mptcp@lists.linux.dev>; Tue,  5 Dec 2023 07:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IXez5LrJ"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QBfLzOWk"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1701759832;
+	t=1701759834;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wMbThuJkcXWh6LypkzH5CCnUy/y6MvPDOPLrmnTztCY=;
-	b=IXez5LrJ75Kg9or9vHbNV6XBJngMwfi4zcSjXX3L2WMitWCeQ4rjLU7INSxQiexfRmbCEf
-	EaWumIboYqFqD0PG1KDYZS8MjCl/knbOLDLZzms0fix6o2ttuOQ9cgXlPuNd1on7j5D0+T
-	uPE+A2OciT5lrHLLO4qjJjTdbRFSCHI=
+	bh=ataSPt5ipz+NSG2/OE/cX21Vukt98slcHn/yEbNy4nM=;
+	b=QBfLzOWkboC0dbPB4d9Ua9AaT3Z5Y13TZvIg0ZhXCcgqlhVFtZseahbALgkDAfC0kGIkJ8
+	m3D3hiXPhHDZ1SrewQWDbKcnjyeWWkdDH7j6H76T+4xDnhcJsan9MckHvkbWJABII+0Ec0
+	6vVs5RKM5WWsCqzgFz+pm62o/ZrUmrE=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v5 27/33] selftests: mptcp: export cin/cout/sin/sout vars
-Date: Tue,  5 Dec 2023 15:01:14 +0800
-Message-Id: <5b9a2d7ab5274184c27881a0803df2e8a6296e84.1701759405.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v5 28/33] selftests: mptcp: join: change capture/checksum as bool
+Date: Tue,  5 Dec 2023 15:01:15 +0800
+Message-Id: <b40e1c5479b9fdd05f9a6441a60cdf839a308cf8.1701759405.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1701759405.git.geliang.tang@linux.dev>
 References: <cover.1701759405.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,192 +35,100 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Export cin, cout, sin and sout vars into mptcp_lib.sh as public vars.
-Then they can be used in all test scripts unified.
+To maintain consistency with other scripts, this patch changes vars
+'capture' and 'checksum' as bool vars in mptcp_join.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 10 ----------
- tools/testing/selftests/net/mptcp/mptcp_join.sh    | 12 ++----------
- tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 10 ++++++++++
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 10 ----------
- tools/testing/selftests/net/mptcp/simult_flows.sh  |  5 -----
- 5 files changed, 12 insertions(+), 35 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 22 +++++++++----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index b0a8edace8f8..aeedd822490c 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -7,11 +7,7 @@ time_start=$(date +%s)
- 
- optstring="S:R:d:e:l:r:h4cm:f:tC"
- final_ret=0
--sin=""
--sout=""
- cin_disconnect=""
--cin=""
--cout=""
- ksft_skip=4
- capture=false
- timeout_poll=30
-@@ -128,8 +124,6 @@ TEST_GROUP=""
- cleanup()
- {
- 	rm -f "$cin_disconnect" "$cout_disconnect"
--	rm -f "$cin" "$cout"
--	rm -f "$sin" "$sout"
- 	rm -f "$capout"
- 
- 	mptcp_lib_ns_exit
-@@ -138,10 +132,6 @@ cleanup()
- 
- mptcp_lib_check_tools "ip" "ss"
- 
--sin=$(mktemp)
--sout=$(mktemp)
--cin=$(mktemp)
--cout=$(mktemp)
- capout=$(mktemp)
- cin_disconnect="$cin".disconnect
- cout_disconnect="$cout".disconnect
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 57b6fb008997..a2f595d70a92 100755
+index a2f595d70a92..d998c4a9cb07 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -12,14 +12,10 @@
- 
- . "$(dirname "${0}")/mptcp_lib.sh"
- 
--sin=""
- sinfail=""
--sout=""
--cin=""
- cinfail=""
- cinsent=""
- tmpfile=""
--cout=""
- capout=""
- ksft_skip=4
- timeout_poll=30
-@@ -132,11 +128,7 @@ init() {
- 
- 	mptcp_lib_check_tools "ip" "ss" "iptables"
- 
--	sin=$(mktemp)
--	sout=$(mktemp)
--	cin=$(mktemp)
- 	cinsent=$(mktemp)
--	cout=$(mktemp)
- 	mptcp_lib_evts_init
- 
- 	trap cleanup EXIT
-@@ -147,8 +139,8 @@ init() {
- 
- cleanup()
- {
--	rm -f "$cin" "$cout" "$sinfail"
--	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
-+	rm -f "$sinfail"
-+	rm -f "$cinsent" "$cinfail"
- 	rm -f "$tmpfile"
- 	mptcp_lib_evts_remove
- 	cleanup_partial
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index a6880e1d0593..56aaa5350cb2 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -25,6 +25,11 @@ TEST_NAME=""
- 
- MPTCP_LIB_SUBTESTS=()
- 
-+sin=$(mktemp)
-+sout=$(mktemp)
-+cin=$(mktemp)
-+cout=$(mktemp)
-+
- # only if supported (or forced) and not disabled, see no-color.org
- if { [ -t 1 ] || [ "${SELFTESTS_MPTCP_LIB_COLOR_FORCE:-}" = "1" ]; } &&
-    [ "${NO_COLOR:-}" != "1" ]; then
-@@ -559,9 +564,14 @@ mptcp_lib_check_tools() {
- 
- mptcp_lib_cleanup() {
- 	: "${check_output_err:?}"
-+	: "${sin:?}"
-+	: "${sout:?}"
-+	: "${cin:?}"
-+	: "${cout:?}"
- 
- 	echo "cleanup"
- 	rm -f $check_output_err
-+	rm -f "$sin" "$sout" "$cin" "$cout"
- }
- 
- echo -e "\n${KSFT_TEST}\n"
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index de051a49745b..ec829165d562 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -3,10 +3,6 @@
- 
- . "$(dirname "${0}")/mptcp_lib.sh"
- 
--sin=""
--sout=""
--cin=""
--cout=""
+@@ -20,11 +20,11 @@ capout=""
  ksft_skip=4
  timeout_poll=30
  timeout_test=$((timeout_poll * 2 + 1))
-@@ -69,8 +65,6 @@ init()
- cleanup()
- {
- 	mptcp_lib_ns_exit
--	rm -f "$cin" "$cout"
--	rm -f "$sin" "$sout"
- 	mptcp_lib_cleanup
+-capture=0
+-checksum=0
++capture=false
++checksum=false
+ ip_mptcp=0
+ check_invert=0
+-validate_checksum=0
++validate_checksum=false
+ init=0
+ last_test_failed=0
+ last_test_skipped=0
+@@ -76,7 +76,7 @@ init_partial()
+ 	for netns in "$ns1" "$ns2"; do
+ 		ip netns exec $netns sysctl -q net.mptcp.enabled=1
+ 		ip netns exec $netns sysctl -q net.mptcp.pm_type=0 2>/dev/null || true
+-		if [ $checksum -eq 1 ]; then
++		if $checksum; then
+ 			ip netns exec $netns sysctl -q net.mptcp.checksum_enabled=1
+ 		fi
+ 	done
+@@ -325,7 +325,7 @@ reset_with_checksum()
+ 	ip netns exec $ns1 sysctl -q net.mptcp.checksum_enabled=$ns1_enable
+ 	ip netns exec $ns2 sysctl -q net.mptcp.checksum_enabled=$ns2_enable
+ 
+-	validate_checksum=1
++	validate_checksum=true
  }
  
-@@ -311,10 +305,6 @@ do_tcpinq_tests()
- 	return $?
- }
- 
--sin=$(mktemp)
--sout=$(mktemp)
--cin=$(mktemp)
--cout=$(mktemp)
- init
- make_file "$cin" "client" 1
- make_file "$sin" "server" 1
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index b82c083c934e..03e88b6c47d0 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -12,8 +12,6 @@ bail=0
- slack=50
- large=""
- small=""
--sout=""
--cout=""
- capout=""
- size=0
- 
-@@ -26,7 +24,6 @@ usage() {
- 
- cleanup()
+ reset_with_allow_join_id0()
+@@ -358,7 +358,7 @@ reset_with_allow_join_id0()
+ setup_fail_rules()
  {
--	rm -f "$cout" "$sout"
- 	rm -f "$large" "$small"
- 	rm -f "$capout"
+ 	check_invert=1
+-	validate_checksum=1
++	validate_checksum=true
+ 	local i="$1"
+ 	local ip="${2:-4}"
+ 	local tables
+@@ -957,7 +957,7 @@ do_transfer()
+ 	:> "$sout"
+ 	:> "$capout"
  
-@@ -46,8 +43,6 @@ setup()
- {
- 	large=$(mktemp)
- 	small=$(mktemp)
--	sout=$(mktemp)
--	cout=$(mktemp)
- 	capout=$(mktemp)
- 	size=$((2 * 2048 * 4096))
+-	if [ $capture -eq 1 ]; then
++	if $capture; then
+ 		local capuser
+ 		if [ -z $SUDO_USER ] ; then
+ 			capuser=""
+@@ -1059,7 +1059,7 @@ do_transfer()
+ 	wait $spid
+ 	local rets=$?
  
+-	if [ $capture -eq 1 ]; then
++	if $capture; then
+ 	    sleep 1
+ 	    kill $cappid
+ 	fi
+@@ -1447,7 +1447,7 @@ chk_join_nr()
+ 	else
+ 		print_ok
+ 	fi
+-	if [ $validate_checksum -eq 1 ]; then
++	if $validate_checksum; then
+ 		chk_csum_nr $csum_ns1 $csum_ns2
+ 		chk_fail_nr $fail_nr $fail_nr
+ 		chk_rst_nr $rst_nr $rst_nr
+@@ -3643,10 +3643,10 @@ while getopts "${all_tests_args}cCih" opt; do
+ 			tests+=("${all_tests[${opt}]}")
+ 			;;
+ 		c)
+-			capture=1
++			capture=true
+ 			;;
+ 		C)
+-			checksum=1
++			checksum=true
+ 			;;
+ 		i)
+ 			ip_mptcp=1
 -- 
 2.35.3
 
