@@ -1,129 +1,193 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A654668B6B
-	for <mptcp@lists.linux.dev>; Tue,  5 Dec 2023 18:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A8A482C3
+	for <mptcp@lists.linux.dev>; Wed,  6 Dec 2023 16:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePT/y6RV"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-77dce4d41d5so324541885a.3
-        for <mptcp@lists.linux.dev>; Tue, 05 Dec 2023 10:19:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701800386; x=1702405186; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S4qHY+gIX4ijJuNB4Wtu1689XLtNDl84X2aNhC5n+gQ=;
-        b=ePT/y6RVPJ7Sj/3UpuCWXkeah2ExOPi03+cbz1QnjL9PNUJNzhgjpQFWKx9XUfY0a8
-         KXaK/0iplqASgMw0jUi+z0ta9Fja+ABLV9LrUqhDG2kpgy5MMsFWoPwAdwE1mVgLaU03
-         +YwF/HDZtGn5R0nXd0Z/dcNgF1c71LMhGwJ2DmmYPnSx/qczxYfw85KrTz8yRTor8CeN
-         kmgyFEi7grIRMuEE73VMYVXMFpCRT3WuK73igHE4TrHNjw2Zb7LA7CZ01FOa2EOmc5/D
-         rfeYaAeuXalWPUphtcHz8s/KoGr6Z96yf1yGE57qUm4pFSu/SlapMnqKtLUPk+bl1Ts9
-         XqeQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NViArxLt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701880252;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CF9xDq2UtZcORBXhGqhwL4rzFeB+eZn04EHFmQgnCck=;
+	b=NViArxLtvbyrYsa1NMFarqNG9STT9htpJi9UlNqB3Jb9Pvw9Vrv6MO3E04qfHwOussju4I
+	eAARLEtNj2h97mjKA0J6FHZXNEqAWzULlv/b/OM7efaDmzk/Fn+8sbPm63zEWa6Y87hCa5
+	JSw87lSMQc78djOYWYCciwanzMx7shA=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-68-0n3ltW8bNI6XbVe9TeUGtQ-1; Wed, 06 Dec 2023 11:30:51 -0500
+X-MC-Unique: 0n3ltW8bNI6XbVe9TeUGtQ-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ca0187da0bso29021401fa.2
+        for <mptcp@lists.linux.dev>; Wed, 06 Dec 2023 08:30:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701800386; x=1702405186;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=S4qHY+gIX4ijJuNB4Wtu1689XLtNDl84X2aNhC5n+gQ=;
-        b=woRQ0NO9/k0z8GNKa/RIUpxyeSKPOxNYK0MyNym/x7gPDGrXemFxw5bDsvNPYjoi/+
-         PUVRRCjiuOpuBNhaqYwmmsP1C6xy3GMHtjR5Zq7KBQ6Ge057q/SHAHjytdhu03GfTjl9
-         aKF0Y1XIcclaLtoKlKB7vdSuOxiLovKJHWjep3GTL9fFZfmKWHmFaRJBTFKdxPywNLKV
-         ApPMLl5twXxZr+5SdVHzHVNPpHkDd08HZf6Nqp8GRn1iBXuYWvNWixySMzBBDAg3T3Cc
-         n6tATq9M59/3evUz4EJGaLApKj0kSMk/+aWXfR/Z8RpigH1d4X5/ZGnUwiNZie9BXVdY
-         R8Ww==
-X-Gm-Message-State: AOJu0YyNod1Ts5+ntZzIyahlBc/emBio36dGi/7GZXpFG5lRcGxXF4Uz
-	xdu3MKLchTbalcmxkwY24w==
-X-Google-Smtp-Source: AGHT+IHSrH6B8H0wqmdi6NM9ffQkN1kdmczrWmEjX4Sxc4n+txQEXbNla3eSB7YU/1LiX/rrpQ5IAw==
-X-Received: by 2002:a37:ef12:0:b0:77e:fba3:7577 with SMTP id j18-20020a37ef12000000b0077efba37577mr1428380qkk.111.1701800386457;
-        Tue, 05 Dec 2023 10:19:46 -0800 (PST)
-Received: from [127.0.0.1] ([20.81.159.110])
-        by smtp.gmail.com with ESMTPSA id m6-20020a05620a24c600b0077edde498d3sm3556746qkn.89.2023.12.05.10.19.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Dec 2023 10:19:45 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Davide Caratti <dcaratti@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20231205091221.2657807-1-dcaratti@redhat.com>
-References: <20231205091221.2657807-1-dcaratti@redhat.com>
-Subject: Re: mptcp: don't overwrite sock_ops in mptcp_is_tcpsk(): Tests
- Results
-Message-ID: <033e3701-8501-a11b-181b-3d7453410883@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 05 Dec 2023 18:19:45 +0000
+        d=1e100.net; s=20230601; t=1701880248; x=1702485048;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CF9xDq2UtZcORBXhGqhwL4rzFeB+eZn04EHFmQgnCck=;
+        b=HMFXK7RwgkDvUdZZQ7YphrUZIOSqMSycbAhyvHxM1uY2OHaNs1PVVHW/MQVL550Su9
+         LYIKNzbXqytcbVMhAObHAbE3By5YG9Uuq3UsJyTpqqyKwKXlLTGTZCVYa+QjlFrG4eFL
+         wffjs4Ej4hqQlYi0LjtDXJqaV6UgUWYH3Rnjg59iNO+MAZPGNi/Nqy5DUq7M7Pg/AvBF
+         MFfLdMcnh+9r1A6Ihuedh8AnhR3+hDivvArlR7SqBqV36/l7AJewsrLs6/nmW670rDC9
+         POF7bXyXH3NHIsarDUcD5BxernwQ19mMOO1UzldFUiqkYsOF04UeuDfS3QX/4LPMSQFM
+         QMpQ==
+X-Gm-Message-State: AOJu0YxL3npYE8SzL80+vf8GUGaYJYYSqAZU185Ngp1WrblE1WNtrycp
+	DpAR4Tcsx2s8qhol/AwvR97hceT5Ex/dFfLwOFPZ3MqWu01mU++99Dxg47z1o2Ui3rvz2/dgpg6
+	IF89s9q8Nq6NCZu+A65RYDLxp6YP669Q=
+X-Received: by 2002:a2e:97d1:0:b0:2c9:f68f:685e with SMTP id m17-20020a2e97d1000000b002c9f68f685emr465763ljj.79.1701880248157;
+        Wed, 06 Dec 2023 08:30:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEGzGh1SBFPDaFzk3VJCFmgroi2i52WYTiIucfz9HiyRbzVrRGAMWVVpi9KIJTjs8XNn1NiOrtYEo2+M0sPJh0=
+X-Received: by 2002:a2e:97d1:0:b0:2c9:f68f:685e with SMTP id
+ m17-20020a2e97d1000000b002c9f68f685emr465751ljj.79.1701880246893; Wed, 06 Dec
+ 2023 08:30:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20231205091221.2657807-1-dcaratti@redhat.com> <6992069ecb5fbe9468435bd6376bd94a75f877d0.camel@redhat.com>
+In-Reply-To: <6992069ecb5fbe9468435bd6376bd94a75f877d0.camel@redhat.com>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Wed, 6 Dec 2023 17:30:35 +0100
+Message-ID: <CAKa-r6tcbNeQTRee52JO4bPZ54tO-zLUio7qz5vVkOrhrEKHNg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v2] mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Davide,
+hi Paolo, thanks for reviewing!
 
-Thank you for your modifications, that's great!
+On Tue, Dec 5, 2023 at 6:10=E2=80=AFPM Paolo Abeni <pabeni@redhat.com> wrot=
+e:
+>
+> Hi,
+>
+> On Tue, 2023-12-05 at 10:12 +0100, Davide Caratti wrote:
+> > Eric Dumazet suggests:
 
-Our CI did some validations and here is its report:
+[...]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5343194284556288
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5343194284556288/summary/summary.txt
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index 6956fde61c68d..31822a4fb16e8 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -55,28 +55,16 @@ u64 mptcp_wnd_end(const struct mptcp_sock *msk)
+> >       return READ_ONCE(msk->wnd_end);
+> >  }
+> >
+> > -static bool mptcp_is_tcpsk(struct sock *sk)
+> > +static const struct proto_ops *mptcp_fallback_tcp_ops(const struct soc=
+k *sk)
+> >  {
+> > -     struct socket *sock =3D sk->sk_socket;
+> > -
+> > -     if (unlikely(sk->sk_prot =3D=3D &tcp_prot)) {
+> > -             /* we are being invoked after mptcp_accept() has
+> > -              * accepted a non-mp-capable flow: sk is a tcp_sk,
+> > -              * not an mptcp one.
+> > -              *
+> > -              * Hand the socket over to tcp so all further socket ops
+> > -              * bypass mptcp.
+> > -              */
+> > -             WRITE_ONCE(sock->ops, &inet_stream_ops);
+> > -             return true;
+> > +     if (sk->sk_prot =3D=3D &tcp_prot)
+> > +             return &inet_stream_ops;
+> >  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> > -     } else if (unlikely(sk->sk_prot =3D=3D &tcpv6_prot)) {
+> > -             WRITE_ONCE(sock->ops, &inet6_stream_ops);
+> > -             return true;
+> > +     else if (sk->sk_prot =3D=3D &tcpv6_prot)
+> > +             return &inet6_stream_ops;
+> >  #endif
+> > -     }
+> > -
+> > -     return false;
+> > +     WARN_ON_ONCE(1);
+> > +     return sk->sk_socket->ops;
+>
+> minor nit: you can avoid an additional conditional changing the order
+> of the above tests:
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5061719307845632
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5061719307845632/summary/summary.txt
+it's not avoided, it's just evaluated inside the WARN_ON_ONCE() :-)
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/6187619214688256
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6187619214688256/su=
-mmary/summary.txt
+>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>         if (sk->sk_prot =3D=3D &tcpv6_prot)
+>                 return &inet6_stream_ops;
+>  #endif
+>
+>         WARN_ON_ONCE(sk->sk_prot !=3D &tcp_prot);
+>         return &inet_stream_ops;
+>
+> Returning &inet_stream_ops for non tcpv4 sockets would likely lead to
+> later problems, but that warn is there only to protect from unknown/not
+> foreseen serious bugs. Anything that happens after such warn is really
+> doomed and even the 'return sk->sk_socket->ops;' present in the current
+> form of this patch will cause trouble later.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6469094191398912
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6469094191398912/summary/summary.txt
+I cowardly decided to let the helper return the current value of ->ops
+with the WARN_ON(1) line, with the goal of analyzing the splat on a
+live system, with the hope of not doing it on a crashed kernel. But
+then it didn't happen on a 5 iterations of kselftests + packetdrill,
+so... probably we can shorten the function like you suggested, i.e.:
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/d8d6f517221b
+WARN_ON_ONCE(sk->sk_prot !=3D &tcp_prot);
+return &inet_stream_ops;
 
+[...]
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+> > @@ -3849,18 +3798,36 @@ static int mptcp_stream_accept(struct socket *s=
+ock, struct socket *newsock,
+> >       if (!ssk)
+> >               return -EINVAL;
+> >
+> > -     newsk =3D mptcp_accept(ssk, flags, &err, kern);
+> > +     pr_debug("ssk=3D%p, listener=3D%p", ssk, mptcp_subflow_ctx(ssk));
+> > +     newsk =3D inet_csk_accept(ssk, flags, &err, kern);
+> >       if (!newsk)
+> >               return err;
+> >
+> > -     lock_sock(newsk);
+> > -
+> > -     __inet_accept(sock, newsock, newsk);
+> > -     if (!mptcp_is_tcpsk(newsock->sk)) {
+> > -             struct mptcp_sock *msk =3D mptcp_sk(newsk);
+> > +     pr_debug("newsk=3D%p, subflow is mptcp=3D%d", newsk, sk_is_mptcp(=
+newsk));
+> > +     if (sk_is_mptcp(newsk)) {
+> >               struct mptcp_subflow_context *subflow;
+> > +             struct sock *new_mptcp_sock;
+> > +
+> > +             subflow =3D mptcp_subflow_ctx(newsk);
+> > +             new_mptcp_sock =3D subflow->conn;
+> > +
+> > +             /* is_mptcp should be false if subflow->conn is missing, =
+see
+> > +              * subflow_syn_recv_sock()
+> > +              */
+> > +             if (WARN_ON_ONCE(!new_mptcp_sock)) {
+> > +                     tcp_sk(newsk)->is_mptcp =3D 0;
+> > +                     goto out;
+>
+> very minor nit: the label 'out' above could possibly be renamed to
+> something more descriptive, e.g. 'fallback'.
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+right, I'll send a v3 in the next hours.
 
-For more details:
+> In any case:
+>
+> Acked-by: Paolo Abeni <pabeni@redhat.com>
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+thanks a lot!
+--=20
+davide
 
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
