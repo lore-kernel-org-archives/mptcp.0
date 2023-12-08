@@ -1,30 +1,30 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A3712E64
-	for <mptcp@lists.linux.dev>; Fri,  8 Dec 2023 10:07:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5BB12B83
+	for <mptcp@lists.linux.dev>; Fri,  8 Dec 2023 10:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sPf2IpbV"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qLgpDYCW"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702030050;
+	t=1702030051;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/or5oUWmDpXENm1x0X3HSQlL3UyP6fkZnnkAVM7KcHo=;
-	b=sPf2IpbVNxE/Vf4FGMEoVky2VrsjR0l72VuzZgoR3/2MtJ2OJnfHkc5McGyXMxAB3xqOVq
-	/JzegMnpnh5nekPVMoFUtGSqqBhJ84mt3O1ILEbaqnGhZzwysG9yMb4Brlq5V5ln/czVnP
-	c/uDhauS06xzRgj5FNbD9qKTZ/lQ1s4=
+	bh=aQqGLMxuM5dWO4qSaG2HLVKv0JRCGoyUt4YP/CLCUTA=;
+	b=qLgpDYCW4UKBmRjL4N2qC0nejI4kJyL2t/sk6pPn8SihDx2ZHSmDoC7DdCfqrchhZ9q22I
+	xSQzKcjFGsq0eofKpkMLwVLwTl8c/P9v+MF9+A4U6X1LB6Lye0uExHWR+IV9GC/3/6VS0y
+	g9U7OG5JF4XGcHC4abiaPzA/IewDsdY=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@suse.com>,
 	Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v14 24/25] mptcp: add userspace pm addr entry refcount
-Date: Fri,  8 Dec 2023 18:07:37 +0800
-Message-Id: <08ee5448fc4ecb8f77a79f5fd0919f3c18f66e02.1702029539.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v14 25/25] selftests: mptcp: rm userspace addr with random order
+Date: Fri,  8 Dec 2023 18:07:38 +0800
+Message-Id: <f3c586dd3de891bc855edf58627907b035b89dce.1702029539.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702029538.git.geliang.tang@linux.dev>
 References: <cover.1702029538.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -38,117 +38,34 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-This patch adds the refcount of addree entry in userspace PM. Add a new
-counter 'refcnt' in struct mptcp_pm_addr_entry, initiated to 1.
+Previously, when deleting a userspace address and subflow, it was necessary
+to follow the current order of deleting the address and then deleting the
+subflow. With this series of changes, addresses and subflows can be deleted
+in any order. This patch uses random numbers to add this type of tests.
 
-Increase this counter when an address is announced or a subflow is created
-in mptcp_pm_nl_announce_doit() and mptcp_pm_nl_subflow_create_doit(). And
-decrease it when an address is removed or a subflow is closed in
-mptcp_pm_nl_remove_doit() and mptcp_userspace_pm_delete_local_addr(). If
-the counter reaches to 1, free this entry.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/403
-Fixes: 24430f8bf516 ("mptcp: add address into userspace pm list")
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_userspace.c | 33 +++++++++++++++++++++++----------
- net/mptcp/protocol.h     |  2 ++
- 2 files changed, 25 insertions(+), 10 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index eed1b351e307..eba78968e5b3 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -82,6 +82,7 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 		__set_bit(e->addr.id, pernet->id_bitmap);
- 		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
- 		msk->pm.local_addr_used++;
-+		refcount_set(&e->refcnt, 1);
- 		ret = e->addr.id;
- 		goto append_err;
- 	}
-@@ -107,12 +108,11 @@ static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
- 
- 	entry = mptcp_userspace_pm_get_entry(msk, &addr->addr, false, false);
- 	if (entry) {
--		/* TODO: a refcount is needed because the entry can
--		 * be used multiple times (e.g. fullmesh mode).
--		 */
--		list_del_rcu(&entry->list);
--		kfree(entry);
--		msk->pm.local_addr_used--;
-+		if (!refcount_dec_not_one(&entry->refcnt)) {
-+			list_del_rcu(&entry->list);
-+			kfree(entry);
-+			msk->pm.local_addr_used--;
-+		}
- 		return 0;
- 	}
- 
-@@ -213,6 +213,11 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
- 	spin_lock_bh(&msk->pm.lock);
- 
- 	if (mptcp_pm_alloc_anno_list(msk, &addr_val.addr)) {
-+		struct mptcp_pm_addr_entry *entry;
-+
-+		entry = mptcp_userspace_pm_get_entry(msk, &addr_val.addr, false, false);
-+		if (entry && !refcount_inc_not_zero(&entry->refcnt))
-+			pr_debug("userspace pm uninitialized entry");
- 		msk->pm.add_addr_signaled++;
- 		mptcp_pm_announce_addr(msk, &addr_val.addr, false);
- 		mptcp_pm_nl_addr_send_ack(msk);
-@@ -318,8 +323,10 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 
- 	mptcp_pm_remove_addrs(msk, &free_list);
- 
--	list_del_rcu(&match->list);
--	kfree(match);
-+	if (!refcount_dec_not_one(&match->refcnt)) {
-+		list_del_rcu(&match->list);
-+		kfree(match);
-+	}
- 
- 	release_sock(sk);
- 
-@@ -405,10 +412,16 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 	release_sock(sk);
- 
- 	spin_lock_bh(&msk->pm.lock);
--	if (err)
-+	if (err) {
- 		mptcp_userspace_pm_delete_local_addr(msk, &local);
--	else
-+	} else {
-+		struct mptcp_pm_addr_entry *entry;
-+
-+		entry = mptcp_userspace_pm_get_entry(msk, &addr_l, false, false);
-+		if (entry && !refcount_inc_not_zero(&entry->refcnt))
-+			pr_debug("userspace pm uninitialized entry");
- 		msk->pm.subflows++;
-+	}
- 	spin_unlock_bh(&msk->pm.lock);
- 
-  create_err:
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 493ee1871eed..5b33d7279654 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -8,6 +8,7 @@
- #define __MPTCP_PROTOCOL_H
- 
- #include <linux/random.h>
-+#include <linux/refcount.h>
- #include <net/tcp.h>
- #include <net/inet_connection_sock.h>
- #include <uapi/linux/mptcp.h>
-@@ -244,6 +245,7 @@ struct mptcp_pm_addr_entry {
- 	u8			flags;
- 	int			ifindex;
- 	struct socket		*lsk;
-+	refcount_t		refcnt;
- };
- 
- struct mptcp_data_frag {
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index a6f60f3896d5..491b852f55fb 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3501,11 +3501,12 @@ userspace_tests()
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 2 2
+ 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
+-		userspace_pm_rm_addr $ns1 10
+ 		if [ $((RANDOM%2)) -eq 0 ]; then
++			userspace_pm_rm_addr $ns1 10
+ 			userspace_pm_rm_sf $ns1 ::ffff:10.0.2.1 $SUB_ESTABLISHED
+ 		else
+ 			userspace_pm_rm_sf $ns1 10.0.2.1 $SUB_ESTABLISHED
++			userspace_pm_rm_addr $ns1 10
+ 		fi
+ 		chk_rm_nr 1 1 invert
+ 		chk_mptcp_info subflows 0 subflows 0
 -- 
 2.35.3
 
