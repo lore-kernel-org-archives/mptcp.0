@@ -1,12 +1,12 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BCB12E7D
-	for <mptcp@lists.linux.dev>; Fri,  8 Dec 2023 10:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8955912B74
+	for <mptcp@lists.linux.dev>; Fri,  8 Dec 2023 10:07:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ASmS+3Bu"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MRjc3Thv"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
 	t=1702030039;
@@ -14,16 +14,16 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CU3e2Gh+sal9WlF3Jam4Kyqeznu14l4lh5iIEm6wp1I=;
-	b=ASmS+3Buhd6pIufVEmFprGCrmNFSfmiB2xLl/dlDVsbBf6OV1LLIrRfA0YaRlYsGyjMsSG
-	iW2gpBJhRjU3C455Qdlxwa9OLIwVKCCHN7kAmX2SdZYl0nMs2b0N8C3NZexvbkGRE8OZuP
-	SlXY/7oIIrRmP9FmKvdeNwVwyv8RBeo=
+	bh=DA0B/WxYL0Fr/S5CYhGClSumO+0rO/50LqqEy5nH5jU=;
+	b=MRjc3ThvPfHjRaJzmHj6k29k7r/L3xkQdiyJMnDjoSXoV0H+l8lEjYqDvt8tNFcvmqZ9DM
+	N02EOkhlstZSed8dt5MXcG/S0BV5uMNHErfBx1qfcjRbd8vksd4y9pRzfqtj0nzqypdBRf
+	m6pEBCL6/QyvvXo8jic6+ds6vE1dPkw=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v14 12/25] mptcp: check addrs list in userspace_pm_get_local_id
-Date: Fri,  8 Dec 2023 18:07:25 +0800
-Message-Id: <ce35336c3860acc35d3828b5ee12ea5cdf29ad05.1702029538.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v14 13/25] selftests: mptcp: dump after creating id 0 subflow
+Date: Fri,  8 Dec 2023 18:07:26 +0800
+Message-Id: <b75b512c997af0544c1bbeb0aa8063266121b018.1702029538.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702029538.git.geliang.tang@linux.dev>
 References: <cover.1702029538.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,44 +35,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Before adding a new entry in mptcp_userspace_pm_get_local_id(), it's
-better to check whether this address is already in userspace pm local
-address list. If it's in the list, no need to add a new entry, just
-return it's address ID and use this address.
+The output of dump command after creating a ID 0 subflow should be
+empty. Since ID 0 address doesn't list by dump command. This patch
+uses check_output() helper to check whether the output is empty in
+"userspace pm create id 0 subflow" test.
 
-Fixes: 8b20137012d9 ("mptcp: read attributes of addr entries managed by userspace PMs")
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_userspace.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index c9dc25fa8540..489bb0e61118 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -136,10 +136,21 @@ int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
- int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
- 				    struct mptcp_addr_info *skc)
- {
--	struct mptcp_pm_addr_entry new_entry;
-+	struct mptcp_pm_addr_entry *entry = NULL, *e, new_entry;
- 	__be16 msk_sport =  ((struct inet_sock *)
- 			     inet_sk((struct sock *)msk))->inet_sport;
- 
-+	spin_lock_bh(&msk->pm.lock);
-+	list_for_each_entry(e, &msk->pm.userspace_pm_local_addr_list, list) {
-+		if (mptcp_addresses_equal(&e->addr, skc, false)) {
-+			entry = e;
-+			break;
-+		}
-+	}
-+	spin_unlock_bh(&msk->pm.lock);
-+	if (entry)
-+		return entry->addr.id;
-+
- 	memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry));
- 	new_entry.addr = *skc;
- 	new_entry.addr.id = 0;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 16710e4b89d5..3a105f7239b8 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3518,6 +3518,8 @@ userspace_tests()
+ 		chk_mptcp_info subflows 0 subflows 0
+ 		chk_subflows_total 1 1
+ 		userspace_pm_add_sf $ns2 10.0.3.2 0
++		check_output "pm_nl_show_endpoints $ns2" \
++			     "" "      dump addrs id 0 subflow"
+ 		chk_join_nr 1 1 1
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 2 2
 -- 
 2.35.3
 
