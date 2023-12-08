@@ -1,29 +1,29 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC59134A4
-	for <mptcp@lists.linux.dev>; Fri,  8 Dec 2023 10:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC2412B74
+	for <mptcp@lists.linux.dev>; Fri,  8 Dec 2023 10:07:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R1KZo08N"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AqIvitlv"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702030036;
+	t=1702030037;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LP1C8/HImQQd6UwwwVrAuIEW6juQTxQcMv1BIo+r+Wk=;
-	b=R1KZo08NRr+S/mraHlpsc7oIrPx0oSqcR8D3ik9UOTeTnVeJ2IR/FH9IGSYgcLGmtH3mS+
-	gQIyGcZ4z60Jv55DPl2J9euhX412Ym/qyUaiA0mMNsK4BEYUCYL3FnSeNbQfi2Mf/jUrdX
-	xynW1+Wc4d+LXR3TKq/AOERm7njMpsY=
+	bh=Ch0GW7CPQBWJTz8hM4TA8X5hiOfZveb0r8onZzXhKOE=;
+	b=AqIvitlv4s8JjzEeUHsBgu2SxbdHEYbI1tye/aKa6CoF2jVfdfhn96oN1pnUQ4dxOULO79
+	QZYQQyrsS11s7e6w2osS0Nu29GArOKKKGKJppMsPWTDqYDpL8Ej+KfEr0Ml52c3EJ60Jqh
+	V1uPtjKk8hq07muO87VRRyGmqIaotlk=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v14 09/25] selftests: mptcp: dump userspace addrs list
-Date: Fri,  8 Dec 2023 18:07:22 +0800
-Message-Id: <aabd77eb7139500cff4fdca47910b2e80fb8d3af.1702029538.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v14 10/25] mptcp: set set_id flag when parsing addr
+Date: Fri,  8 Dec 2023 18:07:23 +0800
+Message-Id: <cce075b0a261f28f872ed693170a8fab741ee192.1702029538.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702029538.git.geliang.tang@linux.dev>
 References: <cover.1702029538.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,134 +35,185 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This patch tests newly added dump command for the userspace PM. Add
-two new tests for userspace pm dump address and subflow. Use the
-helpers userspace_pm_add_addr() and userspace_pm_add_sf() to add an
-address and a suflow.
+When userspace PM requires to create an ID 0 subflow in "userspace pm
+create id 0 subflow" test like this:
 
-Similar to check() in pm_netlink.sh, add a new helper check_output()
-in mptcp_join.sh to check the output of the given commands. Use it to
-check the outputs of dump commands.
+        userspace_pm_add_sf $ns2 10.0.3.2 0
 
+An Id 1 subflow, in fact, is created.
+
+Since in mptcp_pm_nl_append_new_local_addr(), 'id 0' will be treated as
+no ID is set by userspace, and will allocate a new ID immediately:
+
+     if (!e->addr.id)
+             e->addr.id = find_next_zero_bit(pernet->id_bitmap,
+                                             MPTCP_PM_MAX_ADDR_ID + 1,
+                                             1);
+
+To solve this issue, a 'set_id' flag is needed to distinguish between
+whether userspace has set an ID 0 or whether userspace has not set any
+address.
+
+This patch adds a new parameter 'set_id' for mptcp_pm_parse_entry() and
+mptcp_pm_parse_pm_addr_attr(), and pass a 'set_id' flag to them. If an
+address id is set from userspace, this flag will be set as true.
+
+Fixes: e5ed101a6028 ("mptcp: userspace pm allow creating id 0 subflow")
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 75 +++++++++++++++++++
- 1 file changed, 75 insertions(+)
+ net/mptcp/pm_netlink.c   | 26 ++++++++++++++++----------
+ net/mptcp/pm_userspace.c |  6 ++++--
+ net/mptcp/protocol.h     |  3 ++-
+ 3 files changed, 22 insertions(+), 13 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 3cd066e6e2b0..16710e4b89d5 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -21,6 +21,7 @@ cinfail=""
- cinsent=""
- tmpfile=""
- cout=""
-+check_output_err=""
- capout=""
- ns1=""
- ns2=""
-@@ -186,6 +187,7 @@ init() {
- 	cout=$(mktemp)
- 	evts_ns1=$(mktemp)
- 	evts_ns2=$(mktemp)
-+	check_output_err=$(mktemp)
- 
- 	trap cleanup EXIT
- 
-@@ -199,6 +201,7 @@ cleanup()
- 	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
- 	rm -f "$tmpfile"
- 	rm -rf $evts_ns1 $evts_ns2
-+	rm -f $check_output_err
- 	cleanup_partial
- }
- 
-@@ -3356,6 +3359,32 @@ userspace_pm_rm_sf()
- 	wait_rm_sf $1 "${cnt}"
- }
- 
-+check_output() {
-+	: "${check_output_err:?}"
-+	: "${ret:?}"
-+
-+	local cmd="$1"
-+	local expected="$2"
-+	local msg="$3"
-+	local out=`$cmd 2>$check_output_err`
-+	local cmd_ret=$?
-+
-+	printf "%-42s" "$msg"
-+	if [ $cmd_ret -ne 0 ]; then
-+		mptcp_lib_print_err "[ FAIL ] command execution '$cmd' stderr "
-+		cat $check_output_err
-+		ret=${KSFT_FAIL}
-+		return $cmd_ret
-+	elif [ "$out" = "$expected" ]; then
-+		mptcp_lib_print_ok "[ OK ]"
-+		return 0
-+	else
-+		mptcp_lib_print_err "[ FAIL ] expected '$expected' got '$out'"
-+		ret=${KSFT_FAIL}
-+		return 1
-+	fi
-+}
-+
- userspace_tests()
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 489a7723efc4..6cf93ff508c6 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1111,7 +1111,8 @@ static int mptcp_pm_parse_pm_addr_attr(struct nlattr *tb[],
+ 				       const struct nlattr *attr,
+ 				       struct genl_info *info,
+ 				       struct mptcp_addr_info *addr,
+-				       bool require_family)
++				       bool require_family,
++				       bool *set_id)
  {
- 	# userspace pm type prevents add_addr
-@@ -3545,6 +3574,52 @@ userspace_tests()
- 		kill_events_pids
- 		wait $tests_pid
- 	fi
-+
-+	# userspace pm dump address
-+	if reset_with_events "userspace pm dump address" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-+		set_userspace_pm $ns1
-+		pm_nl_set_limits $ns2 1 1
-+		speed=5 \
-+			run_tests $ns1 $ns2 10.0.1.1 &
-+		local tests_pid=$!
-+		wait_mpj $ns1
-+		userspace_pm_add_addr $ns1 10.0.2.1 10
-+		chk_join_nr 1 1 1
-+		chk_add_nr 1 1
-+		chk_mptcp_info subflows 1 subflows 1
-+		chk_subflows_total 2 2
-+		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
-+		local dump="id 10 flags signal 10.0.2.1"
-+		[ $ip_mptcp -eq 1 ] && dump="10.0.2.1 id 10 signal "
-+		check_output "pm_nl_show_endpoints $ns1" \
-+			     "$dump" "      dump addrs signal"
-+		kill_events_pids
-+		wait $tests_pid
-+	fi
-+
-+	# userspace pm dump subflow
-+	if reset_with_events "userspace pm dump subflow" &&
-+	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-+		set_userspace_pm $ns2
-+		pm_nl_set_limits $ns1 0 1
-+		speed=5 \
-+			run_tests $ns1 $ns2 10.0.1.1 &
-+		local tests_pid=$!
-+		wait_mpj $ns2
-+		chk_mptcp_info subflows 0 subflows 0
-+		chk_subflows_total 1 1
-+		userspace_pm_add_sf $ns2 10.0.3.2 20
-+		chk_join_nr 1 1 1
-+		chk_mptcp_info subflows 1 subflows 1
-+		chk_subflows_total 2 2
-+		local dump="id 20 flags subflow 10.0.3.2"
-+		[ $ip_mptcp -eq 1 ] && dump="10.0.3.2 id 20 subflow "
-+		check_output "pm_nl_show_endpoints $ns2" \
-+			     "$dump" "      dump addrs subflow"
-+		kill_events_pids
-+		wait $tests_pid
-+	fi
+ 	int err, addr_addr;
+ 
+@@ -1126,8 +1127,11 @@ static int mptcp_pm_parse_pm_addr_attr(struct nlattr *tb[],
+ 	if (err)
+ 		return err;
+ 
+-	if (tb[MPTCP_PM_ADDR_ATTR_ID])
++	if (tb[MPTCP_PM_ADDR_ATTR_ID]) {
+ 		addr->id = nla_get_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
++		if (set_id)
++			*set_id = true;
++	}
+ 
+ 	if (!tb[MPTCP_PM_ADDR_ATTR_FAMILY]) {
+ 		if (!require_family)
+@@ -1175,19 +1179,20 @@ int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
+ 
+ 	memset(addr, 0, sizeof(*addr));
+ 
+-	return mptcp_pm_parse_pm_addr_attr(tb, attr, info, addr, true);
++	return mptcp_pm_parse_pm_addr_attr(tb, attr, info, addr, true, NULL);
  }
  
- endpoint_tests()
+ int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
+ 			 bool require_family,
+-			 struct mptcp_pm_addr_entry *entry)
++			 struct mptcp_pm_addr_entry *entry,
++			 bool *set_id)
+ {
+ 	struct nlattr *tb[MPTCP_PM_ADDR_ATTR_MAX + 1];
+ 	int err;
+ 
+ 	memset(entry, 0, sizeof(*entry));
+ 
+-	err = mptcp_pm_parse_pm_addr_attr(tb, attr, info, &entry->addr, require_family);
++	err = mptcp_pm_parse_pm_addr_attr(tb, attr, info, &entry->addr, require_family, set_id);
+ 	if (err)
+ 		return err;
+ 
+@@ -1242,9 +1247,10 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+ 	struct mptcp_pm_addr_entry addr, *entry;
++	bool set_id = false;
+ 	int ret;
+ 
+-	ret = mptcp_pm_parse_entry(attr, info, true, &addr);
++	ret = mptcp_pm_parse_entry(attr, info, true, &addr, &set_id);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -1426,7 +1432,7 @@ int mptcp_pm_nl_del_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 	unsigned int addr_max;
+ 	int ret;
+ 
+-	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
++	ret = mptcp_pm_parse_entry(attr, info, false, &addr, NULL);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -1619,7 +1625,7 @@ int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 	void *reply;
+ 	int ret;
+ 
+-	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
++	ret = mptcp_pm_parse_entry(attr, info, false, &addr, NULL);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -1869,12 +1875,12 @@ int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
+ 	u8 bkup = 0;
+ 	int ret;
+ 
+-	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
++	ret = mptcp_pm_parse_entry(attr, info, false, &addr, NULL);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	if (attr_rem) {
+-		ret = mptcp_pm_parse_entry(attr_rem, info, false, &remote);
++		ret = mptcp_pm_parse_entry(attr_rem, info, false, &remote, NULL);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index de10be21bf26..3d4258d2e269 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -156,6 +156,7 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 	struct nlattr *addr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	struct mptcp_pm_addr_entry addr_val;
+ 	struct mptcp_sock *msk;
++	bool set_id = false;
+ 	int err = -EINVAL;
+ 	struct sock *sk;
+ 	u32 token_val;
+@@ -180,7 +181,7 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 		goto announce_err;
+ 	}
+ 
+-	err = mptcp_pm_parse_entry(addr, info, true, &addr_val);
++	err = mptcp_pm_parse_entry(addr, info, true, &addr_val, &set_id);
+ 	if (err < 0) {
+ 		GENL_SET_ERR_MSG(info, "error parsing local address");
+ 		goto announce_err;
+@@ -323,6 +324,7 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ 	struct mptcp_addr_info addr_r;
+ 	struct mptcp_addr_info addr_l;
+ 	struct mptcp_sock *msk;
++	bool set_id = false;
+ 	int err = -EINVAL;
+ 	struct sock *sk;
+ 	u32 token_val;
+@@ -347,7 +349,7 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ 		goto create_err;
+ 	}
+ 
+-	err = mptcp_pm_parse_entry(laddr, info, true, &local);
++	err = mptcp_pm_parse_entry(laddr, info, true, &local, &set_id);
+ 	if (err < 0) {
+ 		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
+ 		goto create_err;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 3ab4a4f1bf81..ab125ccab313 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -885,7 +885,8 @@ int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
+ 			struct mptcp_addr_info *addr);
+ int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
+ 			 bool require_family,
+-			 struct mptcp_pm_addr_entry *entry);
++			 struct mptcp_pm_addr_entry *entry,
++			 bool *set_id);
+ bool mptcp_pm_addr_families_match(const struct sock *sk,
+ 				  const struct mptcp_addr_info *loc,
+ 				  const struct mptcp_addr_info *rem);
 -- 
 2.35.3
 
