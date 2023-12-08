@@ -1,29 +1,29 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBCF134BD
-	for <mptcp@lists.linux.dev>; Fri,  8 Dec 2023 10:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75697134A4
+	for <mptcp@lists.linux.dev>; Fri,  8 Dec 2023 10:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="I20h6lO0"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hx95sV5l"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702030031;
+	t=1702030033;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nAdOXS7bifqnu8TOSySJ3rRIU6ky+MuyESsJd+iKU+k=;
-	b=I20h6lO0TJfKISOS/GkR0b89n+C0epdwE+1O8cc/392Pf+rhpZacu3UKC/aU4nryaADJn5
-	0+ZJwK8j3yvsQniFDHaq0shvDr+jDQVswrwkEUWoNmPaRr3KfqAbQhKzek7yVOF7ROOGtM
-	DIEWwtgRrvULazr5fg6nwSGjLj304gM=
+	bh=RqqS0iQEoA3bV8e0aTeRjxNaDYguqGuxLUxyorre9w8=;
+	b=hx95sV5lg44GFkdrUJuYdiyQiOIL6pYzM1ZS5y2tOafL/F14HuX67A82SvgzMWOy7shvM9
+	Aa2YxMBvXMNYSrhiI2R0U5dM8vB2F+xVnzHVD4z3/d5kmUVgswj6bdnnsTPyPPlbSIZ592
+	oTK3OzOq9822i1uVdrrkA2ROUHlFDEE=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v14 04/25] mptcp: add userspace_pm_lookup_addr_by_id helper
-Date: Fri,  8 Dec 2023 18:07:17 +0800
-Message-Id: <b43476964bb6e461ad16dcda1c07ada34f3e9195.1702029538.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v14 06/25] mptcp: dump addrs in userspace pm list
+Date: Fri,  8 Dec 2023 18:07:19 +0800
+Message-Id: <c4e0b884beb2f6dac38792d4881c1c1943a329ad.1702029538.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702029538.git.geliang.tang@linux.dev>
 References: <cover.1702029538.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,81 +35,83 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Corresponding __lookup_addr_by_id() helper in the in-kernel netlink PM,
-this patch adds a new helper mptcp_userspace_pm_lookup_addr_by_id() to
-lookup the address entry with the given id on the userspace pm local
-address list.
+This patch adds a new function __userspace_pm_lookup_addr_by_id() to lookup
+the address entry by the given id in the userspace local addresses list.
+Invoke it when dumping addresses from netlink commands.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_userspace.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ net/mptcp/pm_netlink.c   |  9 +++++++--
+ net/mptcp/pm_userspace.c | 25 +++++++++++++++++++++++++
+ net/mptcp/protocol.h     |  2 ++
+ 3 files changed, 34 insertions(+), 2 deletions(-)
 
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 1c85d711a86e..489a7723efc4 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1676,8 +1676,13 @@ int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
+ 	for (i = id; i < MPTCP_PM_MAX_ADDR_ID + 1; i++) {
+ 		if (test_bit(i, pernet->id_bitmap)) {
+ 			entry = __lookup_addr_by_id(pernet, i);
+-			if (!entry)
+-				break;
++			if (!entry) {
++				spin_unlock_bh(&pernet->lock);
++				entry = __userspace_pm_lookup_addr_by_id(net, i);
++				spin_lock_bh(&pernet->lock);
++				if (!entry)
++					break;
++			}
+ 
+ 			if (entry->addr.id <= id)
+ 				continue;
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index b3a606a5e182..6999296cd5db 100644
+index 6999296cd5db..5e45e36ce1d3 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -25,6 +25,18 @@ void mptcp_free_local_addr_list(struct mptcp_sock *msk)
- 	}
+@@ -549,3 +549,28 @@ int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
+ 	sock_put(sk);
+ 	return ret;
  }
- 
-+static struct mptcp_pm_addr_entry *
-+mptcp_userspace_pm_lookup_addr_by_id(struct mptcp_sock *msk, unsigned int id)
++
++struct mptcp_pm_addr_entry *
++__userspace_pm_lookup_addr_by_id(struct net *net, unsigned int id)
 +{
-+	struct mptcp_pm_addr_entry *entry;
++	struct mptcp_pm_addr_entry *entry = NULL;
++	long s_slot = 0, s_num = 0;
++	struct mptcp_sock *msk;
 +
-+	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
-+		if (entry->addr.id == id)
-+			return entry;
++	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
++		struct sock *sk = (struct sock *)msk;
++
++		if (mptcp_pm_is_userspace(msk)) {
++			lock_sock(sk);
++			spin_lock_bh(&msk->pm.lock);
++			entry = mptcp_userspace_pm_lookup_addr_by_id(msk, id);
++			spin_unlock_bh(&msk->pm.lock);
++			release_sock(sk);
++		}
++
++		sock_put(sk);
++		cond_resched();
 +	}
-+	return NULL;
-+}
 +
- static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 						    struct mptcp_pm_addr_entry *entry)
- {
-@@ -107,15 +119,10 @@ int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
- 						   unsigned int id,
- 						   u8 *flags, int *ifindex)
- {
--	struct mptcp_pm_addr_entry *entry, *match = NULL;
-+	struct mptcp_pm_addr_entry *match;
++	return entry;
++}
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 8296bdf58f90..3ab4a4f1bf81 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1025,6 +1025,8 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
++struct mptcp_pm_addr_entry *
++__userspace_pm_lookup_addr_by_id(struct net *net, unsigned int id);
  
- 	spin_lock_bh(&msk->pm.lock);
--	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
--		if (id == entry->addr.id) {
--			match = entry;
--			break;
--		}
--	}
-+	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id);
- 	spin_unlock_bh(&msk->pm.lock);
- 	if (match) {
- 		*flags = match->flags;
-@@ -247,7 +254,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
- 	struct nlattr *id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
--	struct mptcp_pm_addr_entry *match = NULL;
-+	struct mptcp_pm_addr_entry *match;
- 	struct mptcp_pm_addr_entry *entry;
- 	struct mptcp_sock *msk;
- 	LIST_HEAD(free_list);
-@@ -284,13 +291,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 
- 	lock_sock(sk);
- 
--	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
--		if (entry->addr.id == id_val) {
--			match = entry;
--			break;
--		}
--	}
--
-+	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id_val);
- 	if (!match) {
- 		GENL_SET_ERR_MSG(info, "address with specified id not found");
- 		release_sock(sk);
+ void __init mptcp_pm_nl_init(void);
+ void mptcp_pm_nl_work(struct mptcp_sock *msk);
 -- 
 2.35.3
 
