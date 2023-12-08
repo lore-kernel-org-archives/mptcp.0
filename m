@@ -1,29 +1,29 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E29412E64
-	for <mptcp@lists.linux.dev>; Fri,  8 Dec 2023 10:07:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1FF12E7D
+	for <mptcp@lists.linux.dev>; Fri,  8 Dec 2023 10:07:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="toCTlL9u"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DajwfSyv"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702030040;
+	t=1702030041;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=b2MIZ0kBrVrlWjeqSW49xldVFtC7raNdDU8hm2sc0Tg=;
-	b=toCTlL9u92AFpjepHHcLK0sPLNLAgYzdYhtvRyooqmlKXQh+lemgBwMe4JjJbBKSmd8nIi
-	xD55cHWdF0EicJ+8QYKAJWKdPwZM+1BqoXrGU+g2SePlIGBDaspV2hoY/MapFQJQNZHZN8
-	H8xAMDoqHruyYVlHgY5qcJ9ATZpSuiU=
+	bh=rcFTUZP/KE9qWXB+Uj6s2KCozyPNoNZSqitLTBvTgiE=;
+	b=DajwfSyvXDtsHhlUL00JInM9LJhv5gshPEHS1bc+SgKg+NSDrz7XWn885i/0X0ZJEg1Pdn
+	I0QF6Uklu5sH834iQITTUeBGCM5ovNvYNZO9IjCCesSt51LU8PsDX3mmjjVohgdFpSRhyS
+	GrPlwXh1djIk5i89JgJRvgUCG//KyBA=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v14 14/25] mptcp: map v4 address to v6 when destroying subflow
-Date: Fri,  8 Dec 2023 18:07:27 +0800
-Message-Id: <9804e377e2db617669eac40b4f7b6bca6a595aeb.1702029539.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v14 15/25] selftests: mptcp: rm subflow with v4/v4mapped addr
+Date: Fri,  8 Dec 2023 18:07:28 +0800
+Message-Id: <6ddcab72b1db14263349b7fb79f54dd33839eb03.1702029539.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702029538.git.geliang.tang@linux.dev>
 References: <cover.1702029538.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,36 +35,48 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-In mptcp_pm_nl_subflow_destroy_doit(), before checking local address
-family with remote address family, map an IPv4 address to an IPv6 address
-if the pair is a v4-mapped address.
+Now both a v4 address and a v4-mapped address are supported when
+destroying a userspace pm subflow, this patch adds random tests for both
+addresses.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_userspace.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 489bb0e61118..ce3d5dd8d34d 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -502,6 +502,16 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 		goto destroy_err;
- 	}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 3a105f7239b8..49416324b4c2 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3342,12 +3342,13 @@ userspace_pm_rm_sf()
+ {
+ 	local evts=$evts_ns1
+ 	local t=${3:-1}
+-	local ip=4
++	local ip
+ 	local tk da dp sp
+ 	local cnt
  
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	if (addr_l.family == AF_INET && ipv6_addr_v4mapped(&addr_r.addr6)) {
-+		ipv6_addr_set_v4mapped(addr_l.addr.s_addr, &addr_l.addr6);
-+		addr_l.family = AF_INET6;
-+	}
-+	if (addr_r.family == AF_INET && ipv6_addr_v4mapped(&addr_l.addr6)) {
-+		ipv6_addr_set_v4mapped(addr_r.addr.s_addr, &addr_r.addr6);
-+		addr_r.family = AF_INET6;
-+	}
-+#endif
- 	if (addr_l.family != addr_r.family) {
- 		GENL_SET_ERR_MSG(info, "address families do not match");
- 		err = -EINVAL;
+ 	[ "$1" == "$ns2" ] && evts=$evts_ns2
+-	if mptcp_lib_is_v6 $2; then ip=6; fi
++	[ -n "$(mptcp_lib_evts_get_info "saddr4" "$evts" $t)" ] && ip=4
++	[ -n "$(mptcp_lib_evts_get_info "saddr6" "$evts" $t)" ] && ip=6
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 	da=$(mptcp_lib_evts_get_info "daddr$ip" "$evts" $t)
+ 	dp=$(mptcp_lib_evts_get_info dport "$evts" $t)
+@@ -3476,7 +3477,11 @@ userspace_tests()
+ 		chk_subflows_total 2 2
+ 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
+ 		userspace_pm_rm_addr $ns1 10
+-		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $SUB_ESTABLISHED
++		if [ $((RANDOM%2)) -eq 0 ]; then
++			userspace_pm_rm_sf $ns1 ::ffff:10.0.2.1 $SUB_ESTABLISHED
++		else
++			userspace_pm_rm_sf $ns1 10.0.2.1 $SUB_ESTABLISHED
++		fi
+ 		chk_rm_nr 1 1 invert
+ 		chk_mptcp_info subflows 0 subflows 0
+ 		chk_subflows_total 1 1
 -- 
 2.35.3
 
