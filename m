@@ -1,47 +1,47 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FC746BBC
-	for <mptcp@lists.linux.dev>; Mon, 11 Dec 2023 13:38:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD4748CD6
+	for <mptcp@lists.linux.dev>; Mon, 11 Dec 2023 14:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJKuCW1R"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d0c4d84bf6so24921385ad.1
-        for <mptcp@lists.linux.dev>; Mon, 11 Dec 2023 05:38:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I26lWjJK"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-425b9acaf80so15220611cf.1
+        for <mptcp@lists.linux.dev>; Mon, 11 Dec 2023 06:54:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702301921; x=1702906721; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1702306498; x=1702911298; darn=lists.linux.dev;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZMDeXYAEqlHG5T2KgMAWPQOKaOtxzgUtLmKprimQzqE=;
-        b=aJKuCW1Rwo5rTWQvs2aRFNs51ChBJQ0EnOqrvznSMcqgPAq3vdpFpkuIWzuJIVT1ZH
-         M+OID5dlbL0aiuvWH0aJ14nrO1l74zy/9vgf0YEw1v6I7F3XxKCx6kZrSIfwcc6uy57d
-         /NatsI/z4YLc+CUXwCZfAzLftomlh0LSCiOiedKEschZcBmjQfLR6d6YHvuBsr4ICKiD
-         +b9UQfivbYtHXTTktbX3Cn6xZRU+gl8HmeZs9kpHTtEluB6PDjBkfmejxqq+ND6G3RjO
-         r55dR70b1UUnGQ0sNkkCL75tvliR+jlk5TuEmASdeoSG9/1MdnldCJZSmKlEqHEw27Fs
-         E+7A==
+        bh=aoBV20V65mLxXZ0Ofw2p/luklntXe3U3RqvtapZBn+k=;
+        b=I26lWjJKX+7wWbc9VPxen2DGf2XqeaPi+piNYHkqCo4sGwDcLP5OZtpCi8vNnoDYGL
+         8oguGAyYaL/zLHC/95JfUXLcP2fCZsIpxCXXEF9ntWq5UK6t9FURZwfgP48oaahtKymf
+         2Rija/VObMY+ozO0G0lTgirPIQJQF6hIr7JoryqbFt58UxTAz1lMdn2YeTrPzk5ymzDn
+         9kK6NUmHvN1urSnmorez/HPc4xFnZvDxjG+hbMfmGWCMtmJlhvGChWC2RmqWWguncCVy
+         p3VwWo9JoHqhmTGRKrxdgWgmZf0b9/3x/geTMvILsOCKr+qA4OPjRu0FYcf8IfnyFMrl
+         w6WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702301921; x=1702906721;
+        d=1e100.net; s=20230601; t=1702306498; x=1702911298;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ZMDeXYAEqlHG5T2KgMAWPQOKaOtxzgUtLmKprimQzqE=;
-        b=Y8kBfYfj2kRlJKdCCQXHG3HSzcPpbzGuw9b7oupuivhLj7qo7PmayP3bgR8Dd27lef
-         jVhtKQuZ5h7NlmlKSNr06aBSfPLa7CqCt3mR3OqS0b0OUIAJhSYXslNynZ3SUX04NoVQ
-         83/pLIsoSKZLeR7fVT/g7g1mJu9lP7/GpMXWaf53ecTAMxnW5YiwpYP/B3ED8KoW+g/8
-         rngdQMm+/zYL4DcTj4qsrtkb/hocWg0eALBKWRFF/5jF3pd+XVPm0B6oeCjYCcu4nXl6
-         XPA1cdWLIgl3VOHmFA8QAHFxrZ5HJVS8RT0/CUQ9xtRoMrdwq6rblpT1suNcqJUalQHt
-         6pGQ==
-X-Gm-Message-State: AOJu0YwzIT9UbwSxGWJBGARLUwYjQSMx/2/2t58VRWOgKkYCnzZftEzT
-	D/svuOJ/IKTfgcrjeUcPZQ==
-X-Google-Smtp-Source: AGHT+IHd5GTNPpE6Ej3bWxDxomJA4wMoVnjYPvJBv0fvDB/HGUh2ySMzxsFlFCrx7CECs+Y/oCJAyQ==
-X-Received: by 2002:a17:903:245:b0:1d0:94ed:f84f with SMTP id j5-20020a170903024500b001d094edf84fmr2231099plh.26.1702301920914;
-        Mon, 11 Dec 2023 05:38:40 -0800 (PST)
-Received: from [127.0.0.1] ([13.91.68.210])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170902ee4d00b001cfc2d024edsm6628649plo.29.2023.12.11.05.38.40
+        bh=aoBV20V65mLxXZ0Ofw2p/luklntXe3U3RqvtapZBn+k=;
+        b=BLwc/eGFNRhm1xVJQIMHxhMuIVFwZMFVv/D5hCu69x5R9qfmqHI1LZ3P7NPxYI4zJ/
+         4UKKn+EiqLHZx6DqRY+27/qJBrOmpB5266rwLEOjBGHWaws4edya9VReiWdQ/Z20xDpU
+         MoWvUOXg1NfOScfgTCaFxGQXZPRKQqSSFk+RVkCGDWo6JIpt91MDz/kB/ImyJYwydg62
+         rl/Ty63NrKVGKjECuAawXY9HqaYWoszw7cYtwDVfN5c4rXDsR8YweQxyuJenU7EyWbNE
+         2s98eXPW2KfKA1ZaYANxIhiwli0jSTXKMJPNuBBtfJ2beVFVI0VYmBPrUN7mzvkdotJr
+         CxrA==
+X-Gm-Message-State: AOJu0YywtSm1T6wCWBL4dN9GNraDusHx4lUNMo9zmSPUtumHfHqg5zcx
+	HBzhP7pmcXkx66ypocu0vw==
+X-Google-Smtp-Source: AGHT+IEZXWuF1QkhXE6wq79NHQYWVs36WS+O6UXtebUU4qSHCiLSFhalp34p5bpOTvZJSjSSocltAA==
+X-Received: by 2002:ac8:5cc8:0:b0:425:4043:18bb with SMTP id s8-20020ac85cc8000000b00425404318bbmr7750706qta.110.1702306497928;
+        Mon, 11 Dec 2023 06:54:57 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.50.148])
+        by smtp.gmail.com with ESMTPSA id cj10-20020a05622a258a00b004259bbf166esm3165745qtb.63.2023.12.11.06.54.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Dec 2023 05:38:40 -0800 (PST)
+        Mon, 11 Dec 2023 06:54:57 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Maxim Galaganov <max@internet.ru>
@@ -51,9 +51,9 @@ In-Reply-To: <20231211120309.20752-4-max@internet.ru>
 References: <20231211120309.20752-4-max@internet.ru>
 Subject: Re: selftests/net: add MPTCP coverage for IP_LOCAL_PORT_RANGE:
  Tests Results
-Message-ID: <18a7a797-9b92-ff46-a232-b0af49ffc986@gmail.com>
+Message-ID: <d2b03177-e22e-8922-e34a-4b0e1bc47e94@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 11 Dec 2023 13:38:39 +0000
+Date: Mon, 11 Dec 2023 14:54:56 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -69,32 +69,32 @@ Our CI did some validations and here is its report:
 
 - KVM Validation: normal (except selftest_mptcp_join):
   - Unstable: 1 failed test(s): packetdrill_fastclose =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5814574327267328
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5814574327267328/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_fastclose =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6377524280688640
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6377524280688640/su=
+  - Task: https://cirrus-ci.com/task/6679698382520320
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6679698382520320/su=
 mmary/summary.txt
 
 - KVM Validation: normal (only selftest_mptcp_join):
   - Success! =E2=9C=85:
   - Task: https://cirrus-ci.=
-com/task/5251624373846016
+com/task/4639004801368064
   - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5251624373846016/summary/summary.txt
+com/v1/artifact/task/4639004801368064/summary/summary.txt
+
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_fastclose =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5764904708210688
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5764904708210688/su=
+mmary/summary.txt
 
 - KVM Validation: debug (only selftest_mptcp_join):
   - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4970149397135360
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4970149397135360/su=
+  - Task: https://cirrus-ci.com/task/5201954754789376
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5201954754789376/su=
 mmary/summary.txt
 
 Initiator: Patchew Applier
 Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/36ace3f14b75
+com/multipath-tcp/mptcp_net-next/commits/8c7bf89c57a8
 
 
 If there are some issues, you can reproduce them using the same environment=
