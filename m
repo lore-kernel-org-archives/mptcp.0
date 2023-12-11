@@ -1,77 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A497F8
-	for <mptcp@lists.linux.dev>; Sat,  9 Dec 2023 01:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23B320DC6
+	for <mptcp@lists.linux.dev>; Mon, 11 Dec 2023 08:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PyiyoxpR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E20F1C433C8;
-	Sat,  9 Dec 2023 01:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702085271;
-	bh=PPVkD8wLrixpbH5mBl4EYMw//6Pfox5aU9OROspcBwI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=PyiyoxpRbh6+eQeZ65wbq83hKuvXviFbNQ6SINezI1D2pFitb2PnCQKAg3Eu2OgVK
-	 8PzSJ4u3w6M/M7/tsU4Cn+KKjhCKTWmBOG8UadmxQsljLulfBVcSyTfL2lsqJS64s0
-	 7KzDcva4WIOuUITQtRMueBHM/XtqLSB/Aj1aniIXr4XMprQwpwdHqa9D/owRlt6FNi
-	 obCiqextZyR0S9i0y46yjE3jqmu/fHREQaqqhzR39p/ZFOHdj4+lg6++kQiDzPHOyi
-	 NbmX0x4ZXOyLjdSv22QusDgdXZOOBZoyhxbfLZWx3+Gxk6MykdOh84ZSsqagnXT3L4
-	 exjBQQMqcXhHQ==
-Date: Fri, 8 Dec 2023 17:27:51 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang.tang@suse.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v3 0/5] add MPTCP_MIB_CURRESTAB
-In-Reply-To: <cover.1701256112.git.geliang.tang@suse.com>
-Message-ID: <eb5cf3d6-67f8-f6c0-b1fe-c3ff0e6133e4@kernel.org>
-References: <cover.1701256112.git.geliang.tang@suse.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V6Wb8LIv"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1702282497;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=o6TnUO/BC9EbP2M/JzxkntoSb5HSHOAMkn3uR+MJ2cI=;
+	b=V6Wb8LIv+bBMCiMQ0mOJtNHft1MRKF7hTIGW7AS3My50xmv9KRkcnAVEgM2wqOmz92kH3B
+	pK1QyizqwTsKnrzkMO3vVcVSPgJRijSZ461VS+sPXGCcvqdfgJ3GUU2hUUBrmjc/kItk9m
+	tEEDOByl/VWdGO7mXHYMg1SSCH3sPNM=
+From: Geliang Tang <geliang.tang@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next 00/12] dump for userspace pm
+Date: Mon, 11 Dec 2023 16:15:22 +0800
+Message-Id: <cover.1702282411.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 29 Nov 2023, Geliang Tang wrote:
+Address Mat's comments in "userspace pm enhancements" v14.
 
-> v3:
-> - add mptcp_set_state helper
+Geliang Tang (12):
+  mptcp: add mptcp_pm_nl_put_entry_msg helper
+  mptcp: implement mptcp_userspace_pm_dump_addr
+  mptcp: dump addrs in userspace pm list
+  mptcp: check userspace pm subflow flag
+  selftests: mptcp: add userspace pm subflow flag
+  selftests: mptcp: dump userspace addrs list
+  mptcp: add userspace_pm_lookup_addr_by_id helper
+  mptcp: add mptcp_pm_nl_put_entry_info helper
+  mptcp: implement mptcp_userspace_pm_get_addr
+  mptcp: get addr in userspace pm list
+  selftests: mptcp: add token for get_addr
+  selftests: mptcp: userspace pm get addr tests
 
-Hi Geliang -
+ net/mptcp/mptcp_pm_gen.c                      |  5 +-
+ net/mptcp/mptcp_pm_gen.h                      |  2 +-
+ net/mptcp/pm_netlink.c                        | 94 +++++++++++++------
+ net/mptcp/pm_userspace.c                      | 94 +++++++++++++++----
+ net/mptcp/protocol.h                          |  9 ++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 91 ++++++++++++++++++
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 22 ++++-
+ 7 files changed, 266 insertions(+), 51 deletions(-)
 
-Could you rebase this so it applies to the current export branch?
+-- 
+2.35.3
 
-Thanks,
-
-Mat
-
-
->
-> v2:
-> - use ftrace_regs_get_argument instead of regs_get_kernel_argument to
->  fix build warnings reported kernel test robot.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/460
->
-> Geliang Tang (5):
->  mptcp: add mib counter dec helper
->  mptcp: add a current established counter
->  mptcp: add mptcp_set_state helper
->  mptcp: use mptcp_set_state
->  selftests: mptcp: join: check CURRESTAB counters
->
-> net/mptcp/mib.c                               |  1 +
-> net/mptcp/mib.h                               |  8 +++
-> net/mptcp/pm_netlink.c                        |  3 +
-> net/mptcp/protocol.c                          | 57 ++++++++++++-------
-> net/mptcp/protocol.h                          |  1 +
-> net/mptcp/subflow.c                           |  2 +-
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 34 +++++++++++
-> 7 files changed, 86 insertions(+), 20 deletions(-)
->
-> -- 
-> 2.35.3
->
->
->
