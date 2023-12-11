@@ -1,29 +1,29 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050EC20B1F
-	for <mptcp@lists.linux.dev>; Mon, 11 Dec 2023 08:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DCE20B3C
+	for <mptcp@lists.linux.dev>; Mon, 11 Dec 2023 08:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Asw2EyiO"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vslq4jAE"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702282506;
+	t=1702282505;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jfbY6NHx8yf+OVnbcQQQ+kO/YUzrTmEXh1LUG7HLsqI=;
-	b=Asw2EyiOmEtjJ50tXOPWNf09cHSUf4ISX5u4RbkcUdl2QpIR7+Va4ZMhyT64cnyIOzSkI4
-	WCc89ePirecE61nyt4TGogxPAnaZShMmx6Q0umPWOTXskrPBFN6e/OfC1lPpndnVupz0cS
-	9kxhno6MMkzNGHuHk+7HEhWMnjJABM4=
+	bh=LP1C8/HImQQd6UwwwVrAuIEW6juQTxQcMv1BIo+r+Wk=;
+	b=vslq4jAEflhJlVWFuZxZ5hQlW/h2ZDo1FoE+33b8+PtJhPWXnbvdMpBgr6KUo6wR0sbCsI
+	/8224ZpE1iqvoWGSMqRDajc2lpFVMgzldh4YM0pvV6CDkqkU+OVCm3yP43EtFyp1tDPS3T
+	7JDqHAecrXCcUnTCFefb79D/BKu9sdM=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next 07/12] mptcp: add userspace_pm_lookup_addr_by_id helper
-Date: Mon, 11 Dec 2023 16:15:29 +0800
-Message-Id: <693307ca502e79c1b7394f4a08a955840a6eea32.1702282411.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next 06/12] selftests: mptcp: dump userspace addrs list
+Date: Mon, 11 Dec 2023 16:15:28 +0800
+Message-Id: <1cd53673c6135b5ebaab2ac87ba9f8fd628d20f4.1702282411.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702282411.git.geliang.tang@linux.dev>
 References: <cover.1702282411.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,78 +35,134 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Corresponding __lookup_addr_by_id() helper in the in-kernel netlink PM,
-this patch adds a new helper mptcp_userspace_pm_lookup_addr_by_id() to
-lookup the address entry with the given id on the userspace pm local
-address list.
+This patch tests newly added dump command for the userspace PM. Add
+two new tests for userspace pm dump address and subflow. Use the
+helpers userspace_pm_add_addr() and userspace_pm_add_sf() to add an
+address and a suflow.
+
+Similar to check() in pm_netlink.sh, add a new helper check_output()
+in mptcp_join.sh to check the output of the given commands. Use it to
+check the outputs of dump commands.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_userspace.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index c3e01a764105..2a5ba2826262 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -105,19 +105,26 @@ static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
- 	return -EINVAL;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 3cd066e6e2b0..16710e4b89d5 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -21,6 +21,7 @@ cinfail=""
+ cinsent=""
+ tmpfile=""
+ cout=""
++check_output_err=""
+ capout=""
+ ns1=""
+ ns2=""
+@@ -186,6 +187,7 @@ init() {
+ 	cout=$(mktemp)
+ 	evts_ns1=$(mktemp)
+ 	evts_ns2=$(mktemp)
++	check_output_err=$(mktemp)
+ 
+ 	trap cleanup EXIT
+ 
+@@ -199,6 +201,7 @@ cleanup()
+ 	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
+ 	rm -f "$tmpfile"
+ 	rm -rf $evts_ns1 $evts_ns2
++	rm -f $check_output_err
+ 	cleanup_partial
  }
  
-+static struct mptcp_pm_addr_entry *
-+mptcp_userspace_pm_lookup_addr_by_id(struct mptcp_sock *msk, unsigned int id)
-+{
-+	struct mptcp_pm_addr_entry *entry;
+@@ -3356,6 +3359,32 @@ userspace_pm_rm_sf()
+ 	wait_rm_sf $1 "${cnt}"
+ }
+ 
++check_output() {
++	: "${check_output_err:?}"
++	: "${ret:?}"
 +
-+	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
-+		if (entry->addr.id == id)
-+			return entry;
-+	}
-+	return NULL;
++	local cmd="$1"
++	local expected="$2"
++	local msg="$3"
++	local out=`$cmd 2>$check_output_err`
++	local cmd_ret=$?
++
++	printf "%-42s" "$msg"
++	if [ $cmd_ret -ne 0 ]; then
++		mptcp_lib_print_err "[ FAIL ] command execution '$cmd' stderr "
++		cat $check_output_err
++		ret=${KSFT_FAIL}
++		return $cmd_ret
++	elif [ "$out" = "$expected" ]; then
++		mptcp_lib_print_ok "[ OK ]"
++		return 0
++	else
++		mptcp_lib_print_err "[ FAIL ] expected '$expected' got '$out'"
++		ret=${KSFT_FAIL}
++		return 1
++	fi
 +}
 +
- int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
- 						   unsigned int id,
- 						   u8 *flags, int *ifindex)
+ userspace_tests()
  {
--	struct mptcp_pm_addr_entry *entry, *match = NULL;
-+	struct mptcp_pm_addr_entry *match;
+ 	# userspace pm type prevents add_addr
+@@ -3545,6 +3574,52 @@ userspace_tests()
+ 		kill_events_pids
+ 		wait $tests_pid
+ 	fi
++
++	# userspace pm dump address
++	if reset_with_events "userspace pm dump address" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++		set_userspace_pm $ns1
++		pm_nl_set_limits $ns2 1 1
++		speed=5 \
++			run_tests $ns1 $ns2 10.0.1.1 &
++		local tests_pid=$!
++		wait_mpj $ns1
++		userspace_pm_add_addr $ns1 10.0.2.1 10
++		chk_join_nr 1 1 1
++		chk_add_nr 1 1
++		chk_mptcp_info subflows 1 subflows 1
++		chk_subflows_total 2 2
++		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
++		local dump="id 10 flags signal 10.0.2.1"
++		[ $ip_mptcp -eq 1 ] && dump="10.0.2.1 id 10 signal "
++		check_output "pm_nl_show_endpoints $ns1" \
++			     "$dump" "      dump addrs signal"
++		kill_events_pids
++		wait $tests_pid
++	fi
++
++	# userspace pm dump subflow
++	if reset_with_events "userspace pm dump subflow" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++		set_userspace_pm $ns2
++		pm_nl_set_limits $ns1 0 1
++		speed=5 \
++			run_tests $ns1 $ns2 10.0.1.1 &
++		local tests_pid=$!
++		wait_mpj $ns2
++		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
++		userspace_pm_add_sf $ns2 10.0.3.2 20
++		chk_join_nr 1 1 1
++		chk_mptcp_info subflows 1 subflows 1
++		chk_subflows_total 2 2
++		local dump="id 20 flags subflow 10.0.3.2"
++		[ $ip_mptcp -eq 1 ] && dump="10.0.3.2 id 20 subflow "
++		check_output "pm_nl_show_endpoints $ns2" \
++			     "$dump" "      dump addrs subflow"
++		kill_events_pids
++		wait $tests_pid
++	fi
+ }
  
- 	spin_lock_bh(&msk->pm.lock);
--	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
--		if (id == entry->addr.id) {
--			match = entry;
--			break;
--		}
--	}
-+	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id);
- 	spin_unlock_bh(&msk->pm.lock);
- 	if (match) {
- 		*flags = match->flags;
-@@ -249,7 +256,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
- 	struct nlattr *id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
--	struct mptcp_pm_addr_entry *match = NULL;
-+	struct mptcp_pm_addr_entry *match;
- 	struct mptcp_pm_addr_entry *entry;
- 	struct mptcp_sock *msk;
- 	LIST_HEAD(free_list);
-@@ -286,13 +293,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 
- 	lock_sock(sk);
- 
--	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
--		if (entry->addr.id == id_val) {
--			match = entry;
--			break;
--		}
--	}
--
-+	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id_val);
- 	if (!match) {
- 		GENL_SET_ERR_MSG(info, "address with specified id not found");
- 		release_sock(sk);
+ endpoint_tests()
 -- 
 2.35.3
 
