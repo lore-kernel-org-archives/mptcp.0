@@ -1,31 +1,29 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE2A20B3C
-	for <mptcp@lists.linux.dev>; Mon, 11 Dec 2023 08:18:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF00F20B2D
+	for <mptcp@lists.linux.dev>; Mon, 11 Dec 2023 08:21:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AHnUiK+4"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="k9xviA0n"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702282719;
+	t=1702282889;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5aMKIp+uwEBCZF3v+smv/pJGzeCPZUM618HVj4CFZXM=;
-	b=AHnUiK+4M/uL4siJq1iHqG/zKgXpU8+be5pN/w501r7tpl26ARbH7u+dE+4SeB0VbUTxvD
-	iOiBQR6LzGfLYKHAhlRLRqLnDPLjV0veyveqZaWmKw8UXy4timYVGBK7rsnrELDD68AaWW
-	9d2DzqRuk6+tuTXk7yUEC97v7/Fjihs=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=UHn1ldZilvpkFxyJLkqRg5LKxqCWOCrhtk6IbXRmQPw=;
+	b=k9xviA0nX6WS0rAbCCVv3bt/nkUeeGzcZpU99lf+H6OXSVSCS21aOcEyAwyUO4kTVjJxCK
+	eEEbA07pbpev4vIn81W0xM0nLaT7h/w6prJAahSPrfcQCNY96lSu6pYs5L1ATyvXVzTURb
+	CcQTlsP5gVVuLVf7Ai9OldWTOf+eKZk=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v4 5/5] selftests: mptcp: join: check CURRESTAB counters
-Date: Mon, 11 Dec 2023 16:19:17 +0800
-Message-Id: <c9e4a8d33fd053688cded770ff95c52dc19a95af.1702282650.git.geliang.tang@linux.dev>
-In-Reply-To: <cover.1702282650.git.geliang.tang@linux.dev>
-References: <cover.1702282650.git.geliang.tang@linux.dev>
+Cc: Geliang Tang <geliang.tang@linux.dev>,
+	Mat Martineau <martineau@kernel.org>
+Subject: [PATCH mptcp-next] mailmap: add entries for Geliang Tang
+Date: Mon, 11 Dec 2023 16:22:15 +0800
+Message-Id: <887df28eb56432c25ae6cc64da4817667562a020.1702282928.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,133 +33,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This patch adds a new helper chk_cestab_nr() to check the current
-established connections counter MIB_CURRESTAB. Set the newly added
-variables cestab_ns1 and cestab_ns2 to indicate how many connections
-are expected in ns1 or ns2.
+Map Geliang's old mail addresses to his @linux.dev one.
 
-Invoke check_cestab() to check the counter during the connection in
-do_transfer() and invoke chk_cestab_nr() to re-check it when the
-connectin closed. These checks are embedded in add_tests().
-
+Suggested-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 45 ++++++++++++++++---
- 1 file changed, 40 insertions(+), 5 deletions(-)
+ .mailmap | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 87590a43b50d..3cd066e6e2b0 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -56,6 +56,8 @@ unset FAILING_LINKS
- unset test_linkfail
- unset addr_nr_ns1
- unset addr_nr_ns2
-+unset cestab_ns1
-+unset cestab_ns2
- unset sflags
- unset fastclose
- unset fullmesh
-@@ -976,6 +978,33 @@ pm_nl_set_endpoint()
- 	fi
- }
- 
-+chk_cestab_nr()
-+{
-+	local ns=$1
-+	local cestab=$2
-+	local count
-+
-+	print_check "cestab $cestab"
-+	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPCurrEstab")
-+	if [ -z "$count" ]; then
-+		print_skip
-+	elif [ "$count" != "$cestab" ]; then
-+		fail_test "got $count current establish[s] expected $cestab"
-+	else
-+		print_ok
-+	fi
-+}
-+
-+check_cestab()
-+{
-+	if [ -n "${cestab_ns1}" ]; then
-+		chk_cestab_nr $1 1
-+	fi
-+	if [ -n "${cestab_ns2}" ]; then
-+		chk_cestab_nr $2 1
-+	fi
-+}
-+
- do_transfer()
- {
- 	local listener_ns="$1"
-@@ -1089,6 +1118,7 @@ do_transfer()
- 	local cpid=$!
- 
- 	pm_nl_set_endpoint $listener_ns $connector_ns $connect_addr
-+	check_cestab $listener_ns $connector_ns
- 
- 	wait $cpid
- 	local retc=$?
-@@ -2477,47 +2507,52 @@ add_tests()
- 	if reset "add single subflow"; then
- 		pm_nl_set_limits $ns1 0 1
- 		pm_nl_set_limits $ns2 0 1
--		addr_nr_ns2=1 speed=slow \
-+		addr_nr_ns2=1 speed=slow cestab_ns2=1 \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 1 1 1
-+		chk_cestab_nr $ns2 0
- 	fi
- 
- 	# add signal address
- 	if reset "add signal address"; then
- 		pm_nl_set_limits $ns1 0 1
- 		pm_nl_set_limits $ns2 1 1
--		addr_nr_ns1=1 speed=slow \
-+		addr_nr_ns1=1 speed=slow cestab_ns1=1 \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 1 1 1
- 		chk_add_nr 1 1
-+		chk_cestab_nr $ns1 0
- 	fi
- 
- 	# add multiple subflows
- 	if reset "add multiple subflows"; then
- 		pm_nl_set_limits $ns1 0 2
- 		pm_nl_set_limits $ns2 0 2
--		addr_nr_ns2=2 speed=slow \
-+		addr_nr_ns2=2 speed=slow cestab_ns2=1 \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 2 2 2
-+		chk_cestab_nr $ns2 0
- 	fi
- 
- 	# add multiple subflows IPv6
- 	if reset "add multiple subflows IPv6"; then
- 		pm_nl_set_limits $ns1 0 2
- 		pm_nl_set_limits $ns2 0 2
--		addr_nr_ns2=2 speed=slow \
-+		addr_nr_ns2=2 speed=slow cestab_ns2=1 \
- 			run_tests $ns1 $ns2 dead:beef:1::1
- 		chk_join_nr 2 2 2
-+		chk_cestab_nr $ns2 0
- 	fi
- 
- 	# add multiple addresses IPv6
- 	if reset "add multiple addresses IPv6"; then
- 		pm_nl_set_limits $ns1 0 2
- 		pm_nl_set_limits $ns2 2 2
--		addr_nr_ns1=2 speed=slow \
-+		addr_nr_ns1=2 speed=slow cestab_ns1=1 \
- 			run_tests $ns1 $ns2 dead:beef:1::1
- 		chk_join_nr 2 2 2
- 		chk_add_nr 2 2
-+		chk_cestab_nr $ns1 0
- 	fi
- }
- 
+diff --git a/.mailmap b/.mailmap
+index 43031441b2d9..4ea59eb7aa07 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -190,6 +190,10 @@ Gao Xiang <xiang@kernel.org> <gaoxiang25@huawei.com>
+ Gao Xiang <xiang@kernel.org> <hsiangkao@aol.com>
+ Gao Xiang <xiang@kernel.org> <hsiangkao@linux.alibaba.com>
+ Gao Xiang <xiang@kernel.org> <hsiangkao@redhat.com>
++Geliang Tang <geliang.tang@linux.dev> <geliang.tang@suse.com>
++Geliang Tang <geliang.tang@linux.dev> <geliangtang@xiaomi.com>
++Geliang Tang <geliang.tang@linux.dev> <geliangtang@gmail.com>
++Geliang Tang <geliang.tang@linux.dev> <geliangtang@163.com>
+ Georgi Djakov <djakov@kernel.org> <georgi.djakov@linaro.org>
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com> <geraldsc@de.ibm.com>
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com> <gerald.schaefer@de.ibm.com>
 -- 
 2.35.3
 
