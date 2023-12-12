@@ -1,61 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7961973171
-	for <mptcp@lists.linux.dev>; Tue, 12 Dec 2023 17:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5674B5B5D5
+	for <mptcp@lists.linux.dev>; Tue, 12 Dec 2023 18:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SEuQxchW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JL7k6+ws"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702403948;
+	s=mimecast20190719; t=1702405714;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ytemWEr4/gSOQfJoa6MiJ0J4+7/aRWtQh5KPdBI/BI0=;
-	b=SEuQxchWIBbijUHQeUt4wYIoITVGlFRo7IPgU3uQwErdEJp2snKxSLOIgl5jNaEURhOYsL
-	KC7kKYjhwTR4JdmaTsZAeV0f/LGCsLEiXISon6HNUrYK3EJKHdCAQjz+YCo+v3+7gLhg2/
-	kOglrN80egK5mPgUMWe+VJdp82cuZmI=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=IO8//ck1ydOpcdOqve9O1peJ0pMgYh80N1pyfBjiPRc=;
+	b=JL7k6+wsZh7L/I0BBPjbsL1cB3o+b5B3/FQcGBcYjNHwm0FjisNGqROG8TD0cTjp/2Y1lu
+	FLD41QNhsSqeKfk8kHL4aY+8uoPwu2Fdd2eeH+zHLePlRYLsZzERBOpXCCYaSsz/1nmRq8
+	4wlNM/k+tR7ZuVesx/3eoQbyx/Pde0c=
+Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com
+ [209.85.217.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-520-neXltUMCOR64338wXF1foQ-1; Tue, 12 Dec 2023 12:59:06 -0500
-X-MC-Unique: neXltUMCOR64338wXF1foQ-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a1e27c6de0eso127457966b.1
-        for <mptcp@lists.linux.dev>; Tue, 12 Dec 2023 09:59:06 -0800 (PST)
+ us-mta-137-F2-bXvrpOOm7yJGQhmFOWg-1; Tue, 12 Dec 2023 13:28:32 -0500
+X-MC-Unique: F2-bXvrpOOm7yJGQhmFOWg-1
+Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-464856836fdso686985137.0
+        for <mptcp@lists.linux.dev>; Tue, 12 Dec 2023 10:28:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702403945; x=1703008745;
+        d=1e100.net; s=20230601; t=1702405712; x=1703010512;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ML3j3zu2hO9OTqq5AfN7pTjPJXN7uKjOU8WV2iCDJRE=;
-        b=Xuu82F9+fv7YFz8FzusOy6kqkx85UoDhko2GZKW+AVUi9ayp32AmG865yumlf/Js1P
-         szdMdda0EmC6YdE9fs2EMRQioFnyloimUmj5N1UUoPTd1asPiXFNLWQXkdPBMf/QPigW
-         +NNLWx34WbWxw+650JWy4YnvgL4N5nWhSmIgOfpjOozJ4+zkdMx2ItnGBMIsQ/tewU28
-         Q+5nKU7i9yFeETKXVSl+2rjNd9+nMBpRoGluUDy3c1+fg1S2mn/9mwoCCE3eJ+rDFm2q
-         gpZWUGXiNYyUVt5T9seyjMkJ1FGgn5M5rShSAZ00bj4lcKxGU1aXHjw9uBx80hz2lBV/
-         DtUg==
-X-Gm-Message-State: AOJu0YwjyErtngW544tXXvYVm+yjt2O/x5IeMMj6ogB8V3RckPSogWYh
-	WNt/iVxcTRf1sITczKOYkpwt9p5d3SoTotFNJ0ExuAEbe2+xrpVHtf6DvL0Cq1fGSkG61NUTsAH
-	CMxuKMg3HLf/jSqpW62y6H74=
-X-Received: by 2002:a17:907:c207:b0:a18:96e3:ae2a with SMTP id ti7-20020a170907c20700b00a1896e3ae2amr7340768ejc.5.1702403945415;
-        Tue, 12 Dec 2023 09:59:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEqLCy8nmUJtfLcmyoksIRPRvtks513vhU+UAuUFx5fOB54fmgCq3t6/7Nc4XA+D/w/iDRJqQ==
-X-Received: by 2002:a17:907:c207:b0:a18:96e3:ae2a with SMTP id ti7-20020a170907c20700b00a1896e3ae2amr7340758ejc.5.1702403945112;
-        Tue, 12 Dec 2023 09:59:05 -0800 (PST)
+        bh=IO8//ck1ydOpcdOqve9O1peJ0pMgYh80N1pyfBjiPRc=;
+        b=q+CtqlRZFx8UrncZ9r6vtJa50UVoeUVu4Pb5ZLhM6UkphiYSnRnTVC7FeOfWY5jsFW
+         T/1AcGMtfGOREBFMNs8fssF7WYdxkOuVQuktOwhP7Wf0Orry9H9231yq8wFxSDNjpLb8
+         r/v5yWo3vxeJll2zP26FAWzJlnF8r+YMAUXmMuxIWHL8Z7+YlI06Clovz9/Ne6Tz9njS
+         JRPomUpQiLnGEskGyfrIfFgNUoJ8Q2sZb5kK/r54h8DbmR/Wu02Li/Q50L4lXxrC1miy
+         LH/waKgXP/Pyqn+HzzPyEdd8DKx3KOMYz3JCiEgbPi+CdZGbDRpkLUGxYiA3oVF06loO
+         WFaw==
+X-Gm-Message-State: AOJu0Yx2UQxybnUAhlt5aPGf3++Gz+B9/wPDWCS2d9MDQMIarWWqzeQi
+	sO2UNLfe11OfStXhCTI7HR93JzOoPEpecIi3HsnPJrI9VR6zEGuYvHchqliqTQ9QL+wIrlSGz0y
+	CxZ9LtZHdBSMVJQ4=
+X-Received: by 2002:a67:ef86:0:b0:464:8891:d315 with SMTP id r6-20020a67ef86000000b004648891d315mr8166493vsp.1.1702405712247;
+        Tue, 12 Dec 2023 10:28:32 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHYM1M4xZ39YIXkxBjEeaHrenQ7aBZXlZ6unu+G+e8I+5ByzTjM+QInBjLdCBYIYNdwJ7nIJg==
+X-Received: by 2002:a67:ef86:0:b0:464:8891:d315 with SMTP id r6-20020a67ef86000000b004648891d315mr8166480vsp.1.1702405711979;
+        Tue, 12 Dec 2023 10:28:31 -0800 (PST)
 Received: from gerbillo.redhat.com (146-241-249-182.dyn.eolo.it. [146.241.249.182])
-        by smtp.gmail.com with ESMTPSA id vh6-20020a170907d38600b00a0180de2797sm6568960ejc.74.2023.12.12.09.59.04
+        by smtp.gmail.com with ESMTPSA id w12-20020ab0650c000000b007abc40a9543sm901927uam.20.2023.12.12.10.28.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 09:59:04 -0800 (PST)
-Message-ID: <5fd48ec858c8a43977293f8b938de2ef796a2197.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next v4 3/5] mptcp: add mptcp_set_state helper
+        Tue, 12 Dec 2023 10:28:31 -0800 (PST)
+Message-ID: <5d2f53bbf89f2c3626b76caeef30fa5965f79f28.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v2] mptcp: don't overwrite sock_ops in
+ mptcp_is_tcpsk()
 From: Paolo Abeni <pabeni@redhat.com>
-To: Geliang Tang <geliang.tang@linux.dev>, mptcp@lists.linux.dev
-Date: Tue, 12 Dec 2023 18:59:03 +0100
-In-Reply-To: <912d0df208a0fe5d146620cbc8f121b5e68e4985.1702282650.git.geliang.tang@linux.dev>
-References: <cover.1702282650.git.geliang.tang@linux.dev>
-	 <912d0df208a0fe5d146620cbc8f121b5e68e4985.1702282650.git.geliang.tang@linux.dev>
+To: Davide Caratti <dcaratti@redhat.com>, mptcp@lists.linux.dev
+Date: Tue, 12 Dec 2023 19:28:29 +0100
+In-Reply-To: <dfaab45e985a326de8bd075ced1ab39211521939.camel@redhat.com>
+References: <784668db3e21351c91f4f312720059c6fa5cc15d.1702290281.git.dcaratti@redhat.com>
+	 <dfaab45e985a326de8bd075ced1ab39211521939.camel@redhat.com>
 User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -68,54 +69,21 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2023-12-11 at 16:19 +0800, Geliang Tang wrote:
-> This patch adds a new function mptcp_set_state(), in it if switch from
-> or to ESTABLISH state, increment or decrement the newly added counter
-> MPTCP_MIB_CURRESTAB.
->=20
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/460
-> Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
-> ---
->  net/mptcp/protocol.c | 19 +++++++++++++++++++
->  net/mptcp/protocol.h |  1 +
->  2 files changed, 20 insertions(+)
->=20
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 4fc038d29623..23727f7394b6 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2885,6 +2885,25 @@ void mptcp_subflow_shutdown(struct sock *sk, struc=
-t sock *ssk, int how)
->  =09release_sock(ssk);
->  }
-> =20
-> +void mptcp_set_state(struct sock *sk, int state)
-> +{
-> +=09int oldstate =3D sk->sk_state;
-> +
-> +=09switch (state) {
-> +=09case TCP_ESTABLISHED:
-> +=09=09if (oldstate !=3D TCP_ESTABLISHED)
-> +=09=09=09MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_CURRESTAB);
-> +=09=09break;
-> +
-> +=09default:
-> +=09=09if (oldstate =3D=3D TCP_ESTABLISHED)
-> +=09=09=09MPTCP_DEC_STATS(sock_net(sk), MPTCP_MIB_CURRESTAB);
-> +=09}
-> +
-> +=09inet_sk_state_store(sk, state);
-> +}
-> +EXPORT_SYMBOL_GPL(mptcp_set_state);
+On Tue, 2023-12-12 at 17:56 +0100, Paolo Abeni wrote:
+> btw the CI failures look real, but unrelated ?!?
 
-I think there is no need to export this symbol.
+They are triggered by a recent upstream commit:
 
-And possibly the patches 1-4 could be squashed together - at very least
-patch 1 and 2.
+commit 3d501dd326fb1c73f1b8206d4c6e1d7b15c07e27
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Tue Dec 5 16:18:41 2023 +0000
 
-Other then that LGTM!
+    tcp: do not accept ACK of bytes we never sent
 
-Thanks,
+but the root cause is a pktdrill script bug: the ack field was not set
+correctly on some injected packets. I'll send a patch.
+
+Cheers,
 
 Paolo
 
