@@ -1,128 +1,131 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE6122063
-	for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 18:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KsruSkHt"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d35a721340so4290955ad.2
-        for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 10:15:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702491305; x=1703096105; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3LFQfVuyTd50SaImooFNf2XpWoSgK7HE9kQXfM452xI=;
-        b=KsruSkHtjfwICwji+ABKqoultH+8RpNCJnNq2i/PnDukbKANI4A/KZq+ZAbX5o6Nle
-         bYOhHjv3qRDYupxOPdDTlRaazGCNit26KBXs5Z3edBuForjgoP7ULLE155f7MQXRR+S7
-         7w89R56gI/PxCf0evvO2yfI8wxb8BjRfs+4xNa/6Io62jvetl5Rj18lyfQcQ8xuxxigF
-         Q2nECvo4522gPgdKdngffRs+PIcqTNfb6kROFFixrUNIxkeC6aRJrk69E9ZfGIJQR4l1
-         X906mNdTuxanQUXh2Ulk3gEqP814cYsqGHz4ab2JEcz/hsfIBnUx4FTW7eHIYKQVY7Js
-         4gaQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4468D3A8D7
+	for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 18:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-5c66a69ec8eso6632373a12.3
+        for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 10:23:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702491305; x=1703096105;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3LFQfVuyTd50SaImooFNf2XpWoSgK7HE9kQXfM452xI=;
-        b=eMS4ZlV74xFPeOeRrfoOv0V+k9prkBi7vHuSgRF1LBE/XhWODHaOqQjqYiTiY7KOY2
-         JNJ0xHRc5ynMJGWx+dLeEaugZ2Ld2mAcCSBweXCtOFu0UD7KuEYHXBoIWFF6upd3LRlu
-         ZCk2fyDdj1y/0BYiD3ds/+vhSLr3rLoERSjWGBnfxhg3HcjOSL9WUgR+ZMVMNq+hvOTU
-         uRzaZg98SC+nM0eoluOqvwpWSznE9yEm90jBEamH8p9xTLt7YCan9JJgaKYBRNY3Hzpd
-         TFbU9mH8vi63SfBpO39BHy1B+o26BVae+yCCSaipBpAiXRU4zuez8zvDeAcRP/d9wzsQ
-         99Iw==
-X-Gm-Message-State: AOJu0YzRljTrxW2uNKGVlrU6zwydGcqw1xY/JRfZ1OuvBlYMrhO4++wz
-	G4ZWb+z55rYABj0KOTmcWHIgbwS0QA==
-X-Google-Smtp-Source: AGHT+IFdM4EUh2vaK9rhrWOhXOFRWlKLGCXAH4w3j2bkZ3jjA5C2gNSTWARVB2tM80SOOxpMLmnTwg==
-X-Received: by 2002:a17:902:7848:b0:1d3:6255:6c9b with SMTP id e8-20020a170902784800b001d362556c9bmr292551pln.3.1702491304841;
-        Wed, 13 Dec 2023 10:15:04 -0800 (PST)
-Received: from [127.0.0.1] ([20.49.55.68])
-        by smtp.gmail.com with ESMTPSA id t13-20020a1709027fcd00b001d051725d09sm1864879plb.241.2023.12.13.10.15.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 10:15:04 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Maxim Galaganov <max@internet.ru>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20231211120309.20752-4-max@internet.ru>
-References: <20231211120309.20752-4-max@internet.ru>
-Subject: Re: selftests/net: add MPTCP coverage for IP_LOCAL_PORT_RANGE:
- Tests Results
-Message-ID: <c53b7178-5cec-554a-7ceb-0223b868df42@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 Dec 2023 18:15:03 +0000
+        d=1e100.net; s=20230601; t=1702491805; x=1703096605;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=18MV4utO26KMcyyUVPOX8kfYPMir6GGoQ5g8BbWiBNI=;
+        b=FyO9fKxK/BMqcKBzrn0aMKYcBf+Xchiuzqjd+9FoTbxmOcZBWHwjBQ4Yut3E+Vo8/d
+         kFQu8wsMnp13IcZUPe06ezoiz4sl2XvAQKexXBtDJidJMWwx52RHKppd/xLZpYrhKXo+
+         P1tGJwEehvf3NnNm4ArNaSr9w+JplgWzzJAfcCZlsP4/gzqgYjaAjeRFFAES9sA+0ZvX
+         qkjTC3OiaMCjKR5zQZwvLEoA6m0DdGC4jSffa5N2Y4b5/J37TqISTrC/kqrmn4Mu4nJL
+         eMq3kFIk4xZxuKK8uvxseD3oSAAg265wGiuo7IWyhu0TTUPcliH1KJLthAupxmsHR1rW
+         003w==
+X-Gm-Message-State: AOJu0Yy0/ZvyxxUjfKFqBnEqZfefPqv021rIsZf5eqt8OguUwA00HzBW
+	lZAOGW02ffrFxLin8fHMOTLgLxJ+IuyPQFCDWXh0xQOVUhav
+X-Google-Smtp-Source: AGHT+IGIa45ExPstKQuR/yxnoGGuZkZIIkWkUufzcicGWZ3zuob0ec3M1TL/yFgtjCaCQIR/9LN/zWv3i6I5KqILafCqYHDXGixX
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Received: by 2002:a63:e712:0:b0:5ca:4528:d217 with SMTP id
+ b18-20020a63e712000000b005ca4528d217mr283408pgi.6.1702491805662; Wed, 13 Dec
+ 2023 10:23:25 -0800 (PST)
+Date: Wed, 13 Dec 2023 10:23:25 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004f4579060c68431b@google.com>
+Subject: [syzbot] [mptcp?] WARNING in mptcp_check_listen_stop
+From: syzbot <syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, martineau@kernel.org, matttbe@kernel.org, 
+	mptcp@lists.linux.dev, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Maxim,
+Hello,
 
-Thank you for your modifications, that's great!
+syzbot found the following issue on:
 
-Our CI did some validations and here is its report:
+HEAD commit:    2513974cc3e1 Merge branch 'stmmac-bug-fixes'
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1237863ee80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b50bd31249191be8
+dashboard link: https://syzkaller.appspot.com/bug?extid=5a01c3a666e726bc8752
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_simult_flows =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6183200901300224
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6183200901300224/su=
-mmary/summary.txt
+Unfortunately, I don't have any reproducer for this issue yet.
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5620250947878912
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5620250947878912/summary/summary.txt
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/fbf7f04433a8/disk-2513974c.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/f839967d18d6/vmlinux-2513974c.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/10f6c15a1f15/bzImage-2513974c.xz
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_regressions =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6746150854721536
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6746150854721536/su=
-mmary/summary.txt
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4520739320102912
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4520739320102912/su=
-mmary/summary.txt
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 27574 at net/mptcp/protocol.c:2999 mptcp_check_listen_stop.part.0+0x17b/0x240 net/mptcp/protocol.c:2999
+Modules linked in:
+CPU: 0 PID: 27574 Comm: syz-executor.2 Not tainted 6.7.0-rc4-syzkaller-00167-g2513974cc3e1 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023
+RIP: 0010:mptcp_check_listen_stop.part.0+0x17b/0x240 net/mptcp/protocol.c:2999
+Code: 00 00 00 0f b6 45 12 88 44 24 20 44 0f b6 6c 24 20 bf 0a 00 00 00 44 89 ee e8 c1 66 24 f7 41 80 fd 0a 74 2b e8 86 6b 24 f7 90 <0f> 0b 90 e8 7d 6b 24 f7 48 b8 00 00 00 00 00 fc ff df 49 c7 04 04
+RSP: 0018:ffffc9001500fce0 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff88803f651880 RCX: ffffffff8a63221f
+RDX: ffff8880545f1dc0 RSI: ffffffff8a63222a RDI: 0000000000000001
+RBP: ffff888025953400 R08: 0000000000000001 R09: 000000000000000a
+R10: 0000000000000007 R11: 0000000000000002 R12: 1ffff92002a01f9c
+R13: 0000000000000007 R14: ffff88803f651892 R15: 000000000000000a
+FS:  0000555556b7b480(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b31f25000 CR3: 0000000027e0c000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ mptcp_check_listen_stop net/mptcp/protocol.c:3032 [inline]
+ __mptcp_close+0x888/0xa10 net/mptcp/protocol.c:3020
+ mptcp_close+0x28/0xf0 net/mptcp/protocol.c:3087
+ inet_release+0x132/0x270 net/ipv4/af_inet.c:433
+ inet6_release+0x4f/0x70 net/ipv6/af_inet6.c:485
+ __sock_release+0xae/0x260 net/socket.c:659
+ sock_close+0x1c/0x20 net/socket.c:1419
+ __fput+0x270/0xbb0 fs/file_table.c:394
+ __fput_sync+0x47/0x50 fs/file_table.c:475
+ __do_sys_close fs/open.c:1590 [inline]
+ __se_sys_close fs/open.c:1575 [inline]
+ __x64_sys_close+0x87/0xf0 fs/open.c:1575
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+RIP: 0033:0x7f398e47ba9a
+Code: 48 3d 00 f0 ff ff 77 48 c3 0f 1f 80 00 00 00 00 48 83 ec 18 89 7c 24 0c e8 03 7f 02 00 8b 7c 24 0c 89 c2 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 36 89 d7 89 44 24 0c e8 63 7f 02 00 8b 44 24
+RSP: 002b:00007ffcd1957d90 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007f398e47ba9a
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00007f398e59d980 R08: 0000001b32320000 R09: 0000000000000033
+R10: 000000008a82179f R11: 0000000000000293 R12: 00000000002addf7
+R13: ffffffffffffffff R14: 00007f398e000000 R15: 00000000002adab6
+ </TASK>
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b039ca39ebf1
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-For more details:
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+If you want to undo deduplication, reply with:
+#syz undup
