@@ -1,129 +1,114 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9FA224DF
-	for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 10:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED5823740
+	for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 11:09:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4PHoYqY"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-425c6157762so23967311cf.2
-        for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 02:27:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702463219; x=1703068019; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lav23bLFOwapuHtwwLJf7PRysyfR3LeCRbSXoGl6EbE=;
-        b=c4PHoYqYm5FVBpUaM70VtMCuSLdT/+XvJkLN/wtK6D9Ou2RsSgg7KvHmyNZ2TqKuUT
-         fXyjbdUBfWEYTVbeg9ZixXY6gMi/rDOFWoqLy4KmImtZIhLMgqDKYXKW2UziAuMw1lbk
-         WeDfPU8BwsmCzF8NghsTPQiMS4nFNNhJ2RNNYCvbbzkK8KRbpTaqvwLNLJghjb993olA
-         bc5ri0XHaIo3sbNyQqX1VJWsVWF25ZlN09pvujxuPu5upsKfjoSavmjzZnSNpOZt3Sth
-         Hqss3W7r3cFxkNSCIBrhUAxqnVzW5yn8fL1tydPPB17yC8wiKCk3fEamD9tn6rD1RTEL
-         gkOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702463219; x=1703068019;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lav23bLFOwapuHtwwLJf7PRysyfR3LeCRbSXoGl6EbE=;
-        b=pFsfSEVdyJ5aMljVtJo3/tEW3kFExADPY14/Nu9mH8kgG6pDV3z/koLf+BBm1QTWy3
-         LVGXVjweyHpVOpMET2zPRbUGzvLB9TAZh7jxDKIgVs5AQuOej7PrBJDHjiVG3MCAkcXH
-         wqU1h+x3Ql4l4dkjg0mTEBVyXqPQXFCiTMUiXx8oRjjY9FSgjwDmRj9JcSGIKTm+0BIu
-         mWA0nVblXKuaiUCLqmZ4dLc7EKUak7NqpR2QC8jsjsCLiLEQJm8BH/mhN7DvENbJiQV6
-         APAfzgi0NuxZXUUiD3opbPcLnraIF1lvsMGDM4QDK0z4IT9tymAB/+ftPiy0P7vA02gg
-         awUA==
-X-Gm-Message-State: AOJu0YyRptgBCd2xJe9Mg8vWJU8MsmtEGmOBthsc4VEVApIZUEXlqdQV
-	CpfqJD/UTvQX+cGvBRUxObgxl3h1Mw==
-X-Google-Smtp-Source: AGHT+IGR2EZL9Zkf/QQ52FfxFxzK0MLrlH1ek8cMQT3XAxXHlY1YvEIZB0BfzMiaSu8vYOcN8VVdZw==
-X-Received: by 2002:ac8:7f0d:0:b0:425:4043:96f3 with SMTP id f13-20020ac87f0d000000b00425404396f3mr11405611qtk.128.1702463219126;
-        Wed, 13 Dec 2023 02:26:59 -0800 (PST)
-Received: from [127.0.0.1] ([172.183.131.21])
-        by smtp.gmail.com with ESMTPSA id ih8-20020a05622a6a8800b004259b46eb93sm4710546qtb.4.2023.12.13.02.26.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 02:26:58 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@linux.dev>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <6b76a198cc11f69bf8c4621f1c8a5cd0c9d1a6ff.1702446832.git.geliang.tang@linux.dev>
-References:
- <6b76a198cc11f69bf8c4621f1c8a5cd0c9d1a6ff.1702446832.git.geliang.tang@linux.dev>
-Subject: Re: selftests: mptcp: check CURRESTAB counters: Tests Results
-Message-ID: <ca279c3b-dc9b-1ff1-b069-c2a3e677011d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 Dec 2023 10:26:57 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DuRuPXmk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C55C433C8;
+	Wed, 13 Dec 2023 11:09:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702465784;
+	bh=LVFqAsW6Nutm+f8joKL5IaalvYEwHjGyReE6hGtZtqg=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=DuRuPXmkA0Pb1rRIKiN4afWvDrMGiv+BCuWHh0EiY20g0r9CuyWL0flrXCz4V8PPL
+	 hPCGE1Vixe0ERWG2k3ghyU5sR2LZog7J5GCL8sliTRSycvyFxPXG0xWp5ItL10VZb2
+	 iODh4JKyhpPwZcWZsuivPvODnoeusZIHQUBGl8iLrc4dIldJOXaWfhCygyKDV0rXkp
+	 E8gt3i9TE/YySLVSHoy/CBxmspzGfbkTySMY0FDd56yQ7TGKYNb7arJaa2wOjILIzk
+	 amWenFD1YAxmqKi5Y7J2kYN5QvmnscHhtHkBBCj0Dmuv4Gzw/CB6NJOaPBFYdJLpAg
+	 cBuW7kfL3ax3A==
+Message-ID: <bc307ed6-4581-4a75-9235-6270350162af@kernel.org>
+Date: Wed, 13 Dec 2023 12:09:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v2] mptcp: don't overwrite sock_ops in
+ mptcp_is_tcpsk()
+Content-Language: en-GB, fr-BE
+To: Davide Caratti <dcaratti@redhat.com>, Paolo Abeni <pabeni@redhat.com>
+References: <784668db3e21351c91f4f312720059c6fa5cc15d.1702290281.git.dcaratti@redhat.com>
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <784668db3e21351c91f4f312720059c6fa5cc15d.1702290281.git.dcaratti@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Davide, Paolo,
 
-Thank you for your modifications, that's great!
+On 11/12/2023 11:29, Davide Caratti wrote:
+> Eric Dumazet suggests:
+> 
+>  > The fact that mptcp_is_tcpsk() was able to write over sock->ops was a
+>  > bit strange to me.
+>  > mptcp_is_tcpsk() should answer a question, with a read-only argument.
+> 
+> re-factor code to avoid overwriting sock_ops inside that function. Also,
+> change the helper name to reflect the semantics and to disambiguate from
+> its dual, sk_is_mptcp(). While at it, collapse mptcp_stream_accept() and
+> mptcp_accept() into a single function, where fallback / non-fallback are
+> separated into a single sk_is_mptcp() conditional.
 
-Our CI did some validations and here is its report:
+Thank you for the patch and the review!
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_mp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6631721181904896
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6631721181904896/su=
-mmary/summary.txt
+Now in our tree (feat. for net-next):
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6445764398809088
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6445764398809088/summary/summary.txt
+New patches for t/upstream:
+- 65304cb7d742: mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()
+- Results: a1a139446105..bfda5dfb6a94 (export)
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_diag =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5716927507595264
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5716927507595264/su=
-mmary/summary.txt
+Tests are now in progress:
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5153977554173952
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5153977554173952/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b2a1bf454a5d
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231213T110841
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
