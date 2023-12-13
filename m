@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F3223765
-	for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 11:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E351F24B36
+	for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 11:43:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efGX1q1r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 331E0C433C7;
-	Wed, 13 Dec 2023 11:25:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBssAhbq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A621C433C8;
+	Wed, 13 Dec 2023 11:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702466715;
-	bh=x4WX8gEZZH+J8DBzl7WfiTfETpUVhyx9nI96hJqnGLo=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=efGX1q1risGCY39RCRL0tPi/6EaUgFiyktPWqdZHNKGXd7No3B8FqrD3mcop5NL98
-	 mvf/myfK/40aE62dUbyeDx52J+d3FlrIU+1bRUccLxGFcBNNIdN/FL0XXAoGpzQ2j4
-	 bMX7leDn0Iv6KYFYT4yqMEWg/FhUpoaeNgzOtmj1jA2KiXMAJRpXSY09DiehCsgJR1
-	 LHdsF8QQ2GicoUrPz4iecT2vxb4R92UBoAsgeLtwOy1c5sQQpDL8x9xXkm0FrHHQ/Y
-	 kjmES13MVRWWiiQSvQDhD1qclfEM3zFKepEjZS67VD21KdbWSSok/9bphiIW0h4i7/
-	 gDcwt2KFGM9yA==
-Message-ID: <b62b361c-60f1-402e-8e93-2fd0ec826dd9@kernel.org>
-Date: Wed, 13 Dec 2023 12:25:11 +0100
+	s=k20201202; t=1702467838;
+	bh=uBLnlT3wO2gPHOKHBTh6gz2kIYmz+VD9NPgr44jSmiE=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=hBssAhbqj/fkb+RyVQPi6rSNgpmCciuVsoAlWvbEUn7LR9tmd9Hr/5zxmrifWBgvg
+	 59LvuttkntRBo6dETDq0kGvwekoWec4OHcLX25bmLsB9X3dw8vNtx9dqeIT/wTl75r
+	 eUerXy7yoQgz3EFwN1sTOlgQKo2/JDRcZc6aECwA8bZ8IMI/vQgwwutsdSFjPGcvQJ
+	 cIH9skodBKXKSplxuPAvuZMesy9WTuGHySxEdv/ufnFeTUeSYeiRh4d07W4WIgkiBb
+	 ZNHfd3s7fExh4e76HwWKKkZKNxkDVksPilIA1hXzl1VAaV5Z8bKDfTi6Y2Gjj7vGoc
+	 heK5+cFVheCjw==
+Message-ID: <ee4dedf0-a0b8-43ea-b12f-12fabe449013@kernel.org>
+Date: Wed, 13 Dec 2023 12:43:55 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v5 2/3] mptcp: use mptcp_set_state
+Subject: Re: [PATCH mptcp-next v5 3/3] selftests: mptcp: check CURRESTAB
+ counters
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@linux.dev>, Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@linux.dev>, mptcp@lists.linux.dev
 References: <cover.1702446832.git.geliang.tang@linux.dev>
- <d6ac6b189ca025dd510455c37daa17fa98db8259.1702446832.git.geliang.tang@linux.dev>
-Cc: mptcp@lists.linux.dev
+ <6b76a198cc11f69bf8c4621f1c8a5cd0c9d1a6ff.1702446832.git.geliang.tang@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,52 +77,90 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d6ac6b189ca025dd510455c37daa17fa98db8259.1702446832.git.geliang.tang@linux.dev>
+In-Reply-To: <6b76a198cc11f69bf8c4621f1c8a5cd0c9d1a6ff.1702446832.git.geliang.tang@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Paolo,
+Hi Geliang,
 
 On 13/12/2023 06:56, Geliang Tang wrote:
-> This patch replaces all the 'inet_sk_state_store()' calls under net/mptcp
-> with the new helper mptcp_set_state().
+> This patch adds a new helper chk_cestab_nr() to check the current
+> established connections counter MIB_CURRESTAB. Set the newly added
+> variables cestab_ns1 and cestab_ns2 to indicate how many connections
+> are expected in ns1 or ns2.
+> 
+> Invoke check_cestab() to check the counter during the connection in
+> do_transfer() and invoke chk_cestab_nr() to re-check it when the
+> connectin closed. These checks are embedded in add_tests().
 > 
 > Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 > ---
->  net/mptcp/pm_netlink.c |  3 +++
->  net/mptcp/protocol.c   | 38 +++++++++++++++++++-------------------
->  net/mptcp/subflow.c    |  2 +-
->  3 files changed, 23 insertions(+), 20 deletions(-)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 45 ++++++++++++++++---
+>  1 file changed, 40 insertions(+), 5 deletions(-)
 > 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index bf4d96f6f99a..b93683b5e618 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1048,6 +1048,9 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
->  	if (err)
->  		return err;
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 87590a43b50d..3cd066e6e2b0 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+
+(...)
+
+>  unset fullmesh
+> @@ -976,6 +978,33 @@ pm_nl_set_endpoint()
+>  	fi
+>  }
 >  
-> +	/* avoid replacing inet_sk_state_store with mptcp_set_state here, as the
-> +	 * old status is known to be TCP_CLOSE, hence will not affect the count.
-> +	 */
->  	inet_sk_state_store(newsk, TCP_LISTEN);
+> +chk_cestab_nr()
+> +{
+> +	local ns=$1
+> +	local cestab=$2
+> +	local count
+> +
+> +	print_check "cestab $cestab"
+> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPCurrEstab")
+> +	if [ -z "$count" ]; then
+> +		print_skip
+> +	elif [ "$count" != "$cestab" ]; then
+> +		fail_test "got $count current establish[s] expected $cestab"
+> +	else
+> +		print_ok
+> +	fi
+> +}
+> +
+> +check_cestab()
+> +{
+> +	if [ -n "${cestab_ns1}" ]; then
+> +		chk_cestab_nr $1 1
+> +	fi
+> +	if [ -n "${cestab_ns2}" ]; then
+> +		chk_cestab_nr $2 1
 
-Why not calling mptcp_set_state() here as well? I agree that it will do
-nothing more than calling inet_sk_state_store(), but maybe better for
-the uniformity?
+Maybe clearer to add a comment (or use local variables?) to say what is
+$1 and $2, no?
 
-Also, mptcp_set_state() function name is generic: it is not specific to
-change a counter (even if it is what it does *for the moment*). Using it
-here could even be useful for extensions done in BPF (a useful hook), maybe?
+And maybe best to replace 1 by the value of cestab_ns[12]?
 
-Anyway, this is not blocking the series. I can apply it, and we can fix
-that later with a Squash-to patch if needed.
+  chk_cestab_nr ${2} ${cestab_ns2}
 
-A small detail: I think the 'Closes' tag should be added on this patch,
-not the previous one. (I will try not to forget to fix that when
-applying the patch)
+(but we only create one MPTCP connection at a time... it is just that
+'cestab_ns2' seems to refer to a counter, not an action
+'chk_cestab_ns2'? Or use it as a counter?)
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/460
+> +	fi
+> +}
+> +
+>  do_transfer()
+>  {
+>  	local listener_ns="$1"
+
+In this selftest, we only create one MPTCP connection at a time. Should
+we not test this feature in diag.sh as well/instead? Similar to what we
+do with chk_msk_inuse(). WDYT?
+
+We can also do that after having reviewed and applied your series
+modifying the selftests if it is easier.
+
+Anyway, that's not blocking the series.
 
 Cheers,
 Matt
