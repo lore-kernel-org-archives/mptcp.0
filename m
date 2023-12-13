@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED5823740
-	for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 11:09:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F3223765
+	for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 11:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DuRuPXmk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C55C433C8;
-	Wed, 13 Dec 2023 11:09:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efGX1q1r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 331E0C433C7;
+	Wed, 13 Dec 2023 11:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702465784;
-	bh=LVFqAsW6Nutm+f8joKL5IaalvYEwHjGyReE6hGtZtqg=;
+	s=k20201202; t=1702466715;
+	bh=x4WX8gEZZH+J8DBzl7WfiTfETpUVhyx9nI96hJqnGLo=;
 	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=DuRuPXmkA0Pb1rRIKiN4afWvDrMGiv+BCuWHh0EiY20g0r9CuyWL0flrXCz4V8PPL
-	 hPCGE1Vixe0ERWG2k3ghyU5sR2LZog7J5GCL8sliTRSycvyFxPXG0xWp5ItL10VZb2
-	 iODh4JKyhpPwZcWZsuivPvODnoeusZIHQUBGl8iLrc4dIldJOXaWfhCygyKDV0rXkp
-	 E8gt3i9TE/YySLVSHoy/CBxmspzGfbkTySMY0FDd56yQ7TGKYNb7arJaa2wOjILIzk
-	 amWenFD1YAxmqKi5Y7J2kYN5QvmnscHhtHkBBCj0Dmuv4Gzw/CB6NJOaPBFYdJLpAg
-	 cBuW7kfL3ax3A==
-Message-ID: <bc307ed6-4581-4a75-9235-6270350162af@kernel.org>
-Date: Wed, 13 Dec 2023 12:09:38 +0100
+	b=efGX1q1risGCY39RCRL0tPi/6EaUgFiyktPWqdZHNKGXd7No3B8FqrD3mcop5NL98
+	 mvf/myfK/40aE62dUbyeDx52J+d3FlrIU+1bRUccLxGFcBNNIdN/FL0XXAoGpzQ2j4
+	 bMX7leDn0Iv6KYFYT4yqMEWg/FhUpoaeNgzOtmj1jA2KiXMAJRpXSY09DiehCsgJR1
+	 LHdsF8QQ2GicoUrPz4iecT2vxb4R92UBoAsgeLtwOy1c5sQQpDL8x9xXkm0FrHHQ/Y
+	 kjmES13MVRWWiiQSvQDhD1qclfEM3zFKepEjZS67VD21KdbWSSok/9bphiIW0h4i7/
+	 gDcwt2KFGM9yA==
+Message-ID: <b62b361c-60f1-402e-8e93-2fd0ec826dd9@kernel.org>
+Date: Wed, 13 Dec 2023 12:25:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,11 +26,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2] mptcp: don't overwrite sock_ops in
- mptcp_is_tcpsk()
+Subject: Re: [PATCH mptcp-next v5 2/3] mptcp: use mptcp_set_state
 Content-Language: en-GB, fr-BE
-To: Davide Caratti <dcaratti@redhat.com>, Paolo Abeni <pabeni@redhat.com>
-References: <784668db3e21351c91f4f312720059c6fa5cc15d.1702290281.git.dcaratti@redhat.com>
+To: Geliang Tang <geliang.tang@linux.dev>, Paolo Abeni <pabeni@redhat.com>
+References: <cover.1702446832.git.geliang.tang@linux.dev>
+ <d6ac6b189ca025dd510455c37daa17fa98db8259.1702446832.git.geliang.tang@linux.dev>
 Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
@@ -77,36 +77,52 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <784668db3e21351c91f4f312720059c6fa5cc15d.1702290281.git.dcaratti@redhat.com>
+In-Reply-To: <d6ac6b189ca025dd510455c37daa17fa98db8259.1702446832.git.geliang.tang@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Davide, Paolo,
+Hi Geliang, Paolo,
 
-On 11/12/2023 11:29, Davide Caratti wrote:
-> Eric Dumazet suggests:
+On 13/12/2023 06:56, Geliang Tang wrote:
+> This patch replaces all the 'inet_sk_state_store()' calls under net/mptcp
+> with the new helper mptcp_set_state().
 > 
->  > The fact that mptcp_is_tcpsk() was able to write over sock->ops was a
->  > bit strange to me.
->  > mptcp_is_tcpsk() should answer a question, with a read-only argument.
+> Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
+> ---
+>  net/mptcp/pm_netlink.c |  3 +++
+>  net/mptcp/protocol.c   | 38 +++++++++++++++++++-------------------
+>  net/mptcp/subflow.c    |  2 +-
+>  3 files changed, 23 insertions(+), 20 deletions(-)
 > 
-> re-factor code to avoid overwriting sock_ops inside that function. Also,
-> change the helper name to reflect the semantics and to disambiguate from
-> its dual, sk_is_mptcp(). While at it, collapse mptcp_stream_accept() and
-> mptcp_accept() into a single function, where fallback / non-fallback are
-> separated into a single sk_is_mptcp() conditional.
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index bf4d96f6f99a..b93683b5e618 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1048,6 +1048,9 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+>  	if (err)
+>  		return err;
+>  
+> +	/* avoid replacing inet_sk_state_store with mptcp_set_state here, as the
+> +	 * old status is known to be TCP_CLOSE, hence will not affect the count.
+> +	 */
+>  	inet_sk_state_store(newsk, TCP_LISTEN);
 
-Thank you for the patch and the review!
+Why not calling mptcp_set_state() here as well? I agree that it will do
+nothing more than calling inet_sk_state_store(), but maybe better for
+the uniformity?
 
-Now in our tree (feat. for net-next):
+Also, mptcp_set_state() function name is generic: it is not specific to
+change a counter (even if it is what it does *for the moment*). Using it
+here could even be useful for extensions done in BPF (a useful hook), maybe?
 
-New patches for t/upstream:
-- 65304cb7d742: mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()
-- Results: a1a139446105..bfda5dfb6a94 (export)
+Anyway, this is not blocking the series. I can apply it, and we can fix
+that later with a Squash-to patch if needed.
 
-Tests are now in progress:
+A small detail: I think the 'Closes' tag should be added on this patch,
+not the previous one. (I will try not to forget to fix that when
+applying the patch)
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231213T110841
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/460
 
 Cheers,
 Matt
