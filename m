@@ -1,110 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD2C25568
-	for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 11:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1696C3A8DD
+	for <mptcp@lists.linux.dev>; Wed, 13 Dec 2023 17:07:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLp3q9zd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2506FC433C7;
-	Wed, 13 Dec 2023 11:52:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdxRgAM/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C3F8C433C8;
+	Wed, 13 Dec 2023 17:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702468321;
-	bh=/OzZ40Cdd3wlDRtKGUCnef/4LVaUq1UXjprGZv3Srao=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=NLp3q9zdkk5N5Qxocud8f32SXzlHls0vdP4L22AS+F5JFOvdCWEkJzxjUxg0AJdkx
-	 LNBG8otkJAb4gxLAfGdgV84Zler7EfeBCqsOhU4/p83rJTn0ho9xbBWXdEcDfj/gUx
-	 xccv56bZTAyjNmP+0s15SOu8S30zETynxV3x+96Y2uRnMTBBTdxRe+5/W9mMF8cQMG
-	 T4PJjLXh1zsDKShLtaHqnD+TXc4R5OSmaMmAfAJqDA7VmRgPdjfeyl28ZV+l/uKssP
-	 Z67TeTJbM+Ql1qnvyIyYgAfpjh7j6J9HfZexfBHSOFVVni6+SRLCiNnTwtWCOH2p1i
-	 u45i4vHMoiY2Q==
-Message-ID: <01d51473-41da-449e-b954-a1695fde1dbf@kernel.org>
-Date: Wed, 13 Dec 2023 12:51:59 +0100
+	s=k20201202; t=1702487249;
+	bh=zvxoEqmqnkmD6ZEcHXKpJAZNd2GFkLijYK0Xcr1qhhs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=VdxRgAM/FQw71u2sth2ub2asxip1yQ+Ki8V7dpx01XQMd8MLILDdwf9HfdZ83Gfc/
+	 R/SnJ2BdX4jn2T/VgQXcStinucvjvAqJc6SwCYlWgnYm9QDNluKVTL4DFijvrMv1PD
+	 ft/8ELPiUUEQ5+Zg4QeJWq1Pvjyp2jHBkZSbrdXSHlK/fT68f5YGd6JbV+gj54chhq
+	 IJmhkNPuZWmQKHRqGLf7wRvKv2AFkCtTRRLYT3M3K9Gbyt2pnNCilVPgn9EcE7WOvY
+	 jL6Ioh5DApzyzSTsnWFNPGOxFDgSWqASozpmPQc9a8vjTgrTqUiejwgPGEh2q31r0P
+	 OKNuvO2IoHaQg==
+Date: Wed, 13 Dec 2023 09:07:28 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Maxim Galaganov <max@internet.ru>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v3 mptcp-next 2/3] mptcp: sockopt: support IP_LOCAL_PORT_RANGE
+ and IP_BIND_ADDRESS_NO_PORT
+In-Reply-To: <20231211120309.20752-3-max@internet.ru>
+Message-ID: <b4346c70-d040-8836-db89-ab1e1246ba45@kernel.org>
+References: <20231211120309.20752-1-max@internet.ru> <20231211120309.20752-3-max@internet.ru>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v5 0/3] add MPTCP_MIB_CURRESTAB
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@linux.dev>
-References: <cover.1702446832.git.geliang.tang@linux.dev>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <cover.1702446832.git.geliang.tang@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Geliang, Paolo,
+On Mon, 11 Dec 2023, Maxim Galaganov wrote:
 
-On 13/12/2023 06:56, Geliang Tang wrote:
-> v5:
-> - merge first three patches into one as Paolo suggested.
-> - drop "EXPORT_SYMBOL_GPL(mptcp_set_state);" as Paolo suggested.
+> Support for IP_BIND_ADDRESS_NO_PORT sockopt was introduced in [1].
+> Recently [2] allowed its value to be accessed without locking the
+> socket.
+>
+> Support for (newer) IP_LOCAL_PORT_RANGE sockopt was introduced in [3].
+> In the same series a selftest was added in [4]. This selftest also
+> covers the IP_BIND_ADDRESS_NO_PORT sockopt.
+>
+> This patch enables getsockopt()/setsockopt() on MPTCP sockets for these
+> socket options, syncing set values to subflows in sync_socket_options().
+> Ephemeral port range is synced to subflows, enabling NAT usecase
+> described in [3].
+>
+> [1] commit 90c337da1524 ("inet: add IP_BIND_ADDRESS_NO_PORT to overcome
+> bind(0) limitations")
+> [2] commit ca571e2eb7eb ("inet: move inet->bind_address_no_port to
+> inet->inet_flags")
+> [3] commit 91d0b78c5177 ("inet: Add IP_LOCAL_PORT_RANGE socket option")
+> [4] commit ae5439658cce ("selftests/net: Cover the IP_LOCAL_PORT_RANGE
+> socket option")
+>
+> Signed-off-by: Maxim Galaganov <max@internet.ru>
 
-Thank you for the new version and the reviews!
+v3 looks good, thanks Maxim!
 
-I just applied it as is in our tree (feat. for net-next), with just a
-few modifications in the commit messages (s/connectin/connection/ in
-patch 3, moved the "Closes" tag from patch 1 to patch 2 and added
-Paolo's ACK and my RvB tags):
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-New patches for t/upstream:
-- 2392f842bb49: mptcp: add mptcp_set_state
-- d2b2599f8558: mptcp: use mptcp_set_state
-- a4a27026e6f7: selftests: mptcp: check CURRESTAB counters
-- Results: bfda5dfb6a94..68bf16e584a7 (export)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231213T115101
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+> ---
+> net/mptcp/sockopt.c | 21 ++++++++++++++++++++-
+> 1 file changed, 20 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index a4bf337e6f77..c40f1428e602 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -440,6 +440,8 @@ static bool mptcp_supported_sockopt(int level, int optname)
+> 		/* should work fine */
+> 		case IP_FREEBIND:
+> 		case IP_TRANSPARENT:
+> +		case IP_BIND_ADDRESS_NO_PORT:
+> +		case IP_LOCAL_PORT_RANGE:
+>
+> 		/* the following are control cmsg related */
+> 		case IP_PKTINFO:
+> @@ -455,7 +457,6 @@ static bool mptcp_supported_sockopt(int level, int optname)
+> 		/* common stuff that need some love */
+> 		case IP_TOS:
+> 		case IP_TTL:
+> -		case IP_BIND_ADDRESS_NO_PORT:
+> 		case IP_MTU_DISCOVER:
+> 		case IP_RECVERR:
+>
+> @@ -710,6 +711,14 @@ static int mptcp_setsockopt_sol_ip_set(struct mptcp_sock *msk, int optname,
+> 		inet_assign_bit(TRANSPARENT, ssk,
+> 				inet_test_bit(TRANSPARENT, sk));
+> 		break;
+> +	case IP_BIND_ADDRESS_NO_PORT:
+> +		inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk,
+> +				inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+> +		break;
+> +	case IP_LOCAL_PORT_RANGE:
+> +		WRITE_ONCE(inet_sk(ssk)->local_port_range,
+> +			   READ_ONCE(inet_sk(sk)->local_port_range));
+> +		break;
+> 	default:
+> 		release_sock(sk);
+> 		WARN_ON_ONCE(1);
+> @@ -755,6 +764,8 @@ static int mptcp_setsockopt_v4(struct mptcp_sock *msk, int optname,
+> 	switch (optname) {
+> 	case IP_FREEBIND:
+> 	case IP_TRANSPARENT:
+> +	case IP_BIND_ADDRESS_NO_PORT:
+> +	case IP_LOCAL_PORT_RANGE:
+> 		return mptcp_setsockopt_sol_ip_set(msk, optname, optval, optlen);
+> 	case IP_TOS:
+> 		return mptcp_setsockopt_v4_set_tos(msk, optname, optval, optlen);
+> @@ -1350,6 +1361,12 @@ static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
+> 	switch (optname) {
+> 	case IP_TOS:
+> 		return mptcp_put_int_option(msk, optval, optlen, READ_ONCE(inet_sk(sk)->tos));
+> +	case IP_BIND_ADDRESS_NO_PORT:
+> +		return mptcp_put_int_option(msk, optval, optlen,
+> +				inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+> +	case IP_LOCAL_PORT_RANGE:
+> +		return mptcp_put_int_option(msk, optval, optlen,
+> +				READ_ONCE(inet_sk(sk)->local_port_range));
+> 	}
+>
+> 	return -EOPNOTSUPP;
+> @@ -1450,6 +1467,8 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+>
+> 	inet_assign_bit(TRANSPARENT, ssk, inet_test_bit(TRANSPARENT, sk));
+> 	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
+> +	inet_assign_bit(BIND_ADDRESS_NO_PORT, ssk, inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
+> +	WRITE_ONCE(inet_sk(ssk)->local_port_range, READ_ONCE(inet_sk(sk)->local_port_range));
+> }
+>
+> void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk)
+> -- 
+> 2.43.0
+>
+>
