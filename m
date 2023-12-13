@@ -1,106 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1D877B48;
-	Wed, 13 Dec 2023 23:29:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A28277B22;
+	Wed, 13 Dec 2023 23:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyTHFcVd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4F83C433C8;
-	Wed, 13 Dec 2023 23:28:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4YDMVWu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 781C1C433C7;
+	Wed, 13 Dec 2023 23:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702510140;
-	bh=bQFS5XIbCiYEO8ACxFU8M1epjSvbP3micQbdreXRNEg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DyTHFcVdvnwyPTAz8hNe757eUfiHu+4P6+ZOLZQ2Mx1KupCeTwW+Xv88d6n4zVhIm
-	 GviGtf6/1XVrQqCU717NWQKUjUkdiM2Ob0HJnXZpK3G2vkgrILJZh3PfUnC948YFR9
-	 viY5iMTvX1IDebcTDQd7mIL/QMEjB3FR/29Whq4d1/yNkuDht2ApcR5ZizuMILmXCZ
-	 L9drv0zZfOd+1/IQDrS00xSGMe29trGakJFSd/nU8Kos+mMGTfZt2Bu1rWJoSRJSwI
-	 H9uEzob7SCOvd1vS8G/HskwAYGVvB+603fQFV+WRxQq08BXChWIAMpD4QRUWpkjGek
-	 NUot+Hle1k+Rg==
-From: Jakub Kicinski <kuba@kernel.org>
-To: davem@davemloft.net
-Cc: netdev@vger.kernel.org,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	donald.hunter@gmail.com,
-	Jakub Kicinski <kuba@kernel.org>,
-	matttbe@kernel.org,
-	martineau@kernel.org,
-	dcaratti@redhat.com,
-	mptcp@lists.linux.dev
-Subject: [PATCH net-next 3/3] netlink: specs: mptcp: rename the MPTCP path management(?) spec
-Date: Wed, 13 Dec 2023 15:28:22 -0800
-Message-ID: <20231213232822.2950853-4-kuba@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231213232822.2950853-1-kuba@kernel.org>
-References: <20231213232822.2950853-1-kuba@kernel.org>
+	s=k20201202; t=1702510699;
+	bh=2ISA+cC2LLV7GFwI/SuSnWSerVWCrNM+D6Zx2ToixF8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=T4YDMVWu4JzqNWJudSyUd98/0dp9Z4FQuX2M2y28NQR9RUns/qY08HDHRGxbNrh/W
+	 9we65k/s7WqTYMgk1tbZajzhSPM/0YW5KXw46jKUstdgSKQGPQF/b7vwYJpnVt2MIF
+	 jr2usHdv1z3j087A/hUz9ww7dEKABh06sCOHX1MxLN62GW4t5iWXbKENP0nT5F4n79
+	 VtemLIr2YCSTbGkwXxggKRB5TGlInFsdc/DIDt0uNPY2eyGtcaTh3NTH6tYa9r+RpG
+	 xw518DvoPKqstIrONBKtVc8zWGXXyt7aouoHUQ+kmGyu8c6L5raF40khOg2lC06WP1
+	 WPy0p4aPDvWDw==
+Date: Wed, 13 Dec 2023 15:38:18 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+cc: davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com, 
+    pabeni@redhat.com, donald.hunter@gmail.com, matttbe@kernel.org, 
+    dcaratti@redhat.com, mptcp@lists.linux.dev
+Subject: Re: [PATCH net-next 3/3] netlink: specs: mptcp: rename the MPTCP
+ path management(?) spec
+In-Reply-To: <20231213232822.2950853-4-kuba@kernel.org>
+Message-ID: <03869802-eb14-ed32-e9d7-53b17a74904f@kernel.org>
+References: <20231213232822.2950853-1-kuba@kernel.org> <20231213232822.2950853-4-kuba@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-We assume in handful of places that the name of the spec is
-the same as the name of the family. We could fix that but
-it seems like a fair assumption to make. Rename the MPTCP
-spec instead.
+On Wed, 13 Dec 2023, Jakub Kicinski wrote:
 
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
-CC: matttbe@kernel.org
-CC: martineau@kernel.org
-CC: dcaratti@redhat.com
-CC: mptcp@lists.linux.dev
----
- Documentation/netlink/specs/{mptcp.yaml => mptcp_pm.yaml} | 0
- include/uapi/linux/mptcp_pm.h                             | 2 +-
- net/mptcp/mptcp_pm_gen.c                                  | 2 +-
- net/mptcp/mptcp_pm_gen.h                                  | 2 +-
- 4 files changed, 3 insertions(+), 3 deletions(-)
- rename Documentation/netlink/specs/{mptcp.yaml => mptcp_pm.yaml} (100%)
+> We assume in handful of places that the name of the spec is
+> the same as the name of the family. We could fix that but
+> it seems like a fair assumption to make. Rename the MPTCP
+> spec instead.
+>
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+> CC: matttbe@kernel.org
+> CC: martineau@kernel.org
+> CC: dcaratti@redhat.com
+> CC: mptcp@lists.linux.dev
+> ---
+> Documentation/netlink/specs/{mptcp.yaml => mptcp_pm.yaml} | 0
+> include/uapi/linux/mptcp_pm.h                             | 2 +-
+> net/mptcp/mptcp_pm_gen.c                                  | 2 +-
+> net/mptcp/mptcp_pm_gen.h                                  | 2 +-
+> 4 files changed, 3 insertions(+), 3 deletions(-)
+> rename Documentation/netlink/specs/{mptcp.yaml => mptcp_pm.yaml} (100%)
+>
 
-diff --git a/Documentation/netlink/specs/mptcp.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
-similarity index 100%
-rename from Documentation/netlink/specs/mptcp.yaml
-rename to Documentation/netlink/specs/mptcp_pm.yaml
-diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
-index b5d11aece408..50589e5dd6a3 100644
---- a/include/uapi/linux/mptcp_pm.h
-+++ b/include/uapi/linux/mptcp_pm.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
- /* Do not edit directly, auto-generated from: */
--/*	Documentation/netlink/specs/mptcp.yaml */
-+/*	Documentation/netlink/specs/mptcp_pm.yaml */
- /* YNL-GEN uapi header */
- 
- #ifndef _UAPI_LINUX_MPTCP_PM_H
-diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
-index a2325e70ddab..670da7822e6c 100644
---- a/net/mptcp/mptcp_pm_gen.c
-+++ b/net/mptcp/mptcp_pm_gen.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
- /* Do not edit directly, auto-generated from: */
--/*	Documentation/netlink/specs/mptcp.yaml */
-+/*	Documentation/netlink/specs/mptcp_pm.yaml */
- /* YNL-GEN kernel source */
- 
- #include <net/netlink.h>
-diff --git a/net/mptcp/mptcp_pm_gen.h b/net/mptcp/mptcp_pm_gen.h
-index 10579d184587..ac9fc7225b6a 100644
---- a/net/mptcp/mptcp_pm_gen.h
-+++ b/net/mptcp/mptcp_pm_gen.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
- /* Do not edit directly, auto-generated from: */
--/*	Documentation/netlink/specs/mptcp.yaml */
-+/*	Documentation/netlink/specs/mptcp_pm.yaml */
- /* YNL-GEN kernel header */
- 
- #ifndef _LINUX_MPTCP_PM_GEN_H
--- 
-2.43.0
+Hi Jakub -
 
+The renaming here is fine. "path management" is the right expansion of 
+"pm" in this context, so you can remove the "(?)" from the summary line.
+
+
+Reviewed-by: Mat Martineau <martineau@kernel.org>
