@@ -1,75 +1,97 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DB33F8C2
-	for <mptcp@lists.linux.dev>; Thu, 14 Dec 2023 11:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6F75C8FD
+	for <mptcp@lists.linux.dev>; Thu, 14 Dec 2023 15:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L08Z/RfU"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40c2a444311so77122855e9.2
-        for <mptcp@lists.linux.dev>; Thu, 14 Dec 2023 03:12:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702552353; x=1703157153; darn=lists.linux.dev;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DGDHADo7C3NaDRc+ZRm9nq6QxuOQpyaoDXW27f7Yvxg=;
-        b=L08Z/RfUYZBN6YOeUi+xvpKH0cuPVTGzHMq3pCADBs/ueD7ivHd3dpFQCVsRTYzpie
-         Ie+fP5odkT+uhPS98SbULPZRJfHZj20rt0hYVro2LJAYuV0zK/TF7ar0t1x6ZZfDI6Q1
-         TmX+9AAFrsPxt6bG3+AhRfNopGDKvxeinnG3BwJrnV140X6rXgu1i5fKYTzT4jO8mHfd
-         RNF7+/Ap77g0RhWpu8kULb09h0+eaWZjUN14AsNZz07N5W9pwPKUMfml7pNFRzqHXXlZ
-         D4gW4eHg1DYNqyReSIM7S4Hdoo7ayRBMmhCWBPo3xLYNADRzSGT9yy5lm97F2JCucOWf
-         4pag==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FHWUNi80"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702567114;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uouXIP/mY6V89mn8ffGDizGjbA5gvdMVTlnAPaRcEZY=;
+	b=FHWUNi80hOmW+A3goryKJ+eRrjsMvUmr7q7Po0pWNzKYMhXCeF92ATRrhhUvLuyjH4ZvmF
+	slm7BQQ1/ZZNhWAOzvraPbjPDmho4ozO5TvlY1jPqku7gGbjcvH0BpjdEWELdyU0DMx1wg
+	kzgcws6nLscM9olVpje0z7kMeUrqdwg=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-508-0k3SxAZPOS-3f_6QAFiP6g-1; Thu, 14 Dec 2023 10:18:31 -0500
+X-MC-Unique: 0k3SxAZPOS-3f_6QAFiP6g-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a1f72871acdso134445166b.0
+        for <mptcp@lists.linux.dev>; Thu, 14 Dec 2023 07:18:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702552353; x=1703157153;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DGDHADo7C3NaDRc+ZRm9nq6QxuOQpyaoDXW27f7Yvxg=;
-        b=nDDtTouEORqhnYovAQmnLlx74EcmcP0iQZqsTDrEv9bzDky3AW74Uaa4s5pMfV7ONE
-         RwScemRBEyGxK5l6Fb3U/fsxKyXhjtuDhsosxWCxgqWvjLsYMVS+HC7O8xce2D1qtZnp
-         Jp8PRpy5df+o9s1nSV081uqSvBW9UCnODv4KAfBge0KjKIEW3sZ5eT5Ivkkl+SKzMUyX
-         VFzCytdq3SKMOXLd9RSmWBivEPnMcOyh4jcLwOIlGY6KBhg8J+OFp2xO5v6pAaK2l50h
-         Z14DXRo9jQjYWtPQwORX2CNNtWNwfDyEC2OPPG92DLAMf85t2Pf1bzj1NPOYPNTFcoYM
-         6Z8A==
-X-Gm-Message-State: AOJu0YwAhT6ui1FSXLANILWufBRBy3fBsyUVZ0kHB4fs/QuRzZrkzS8F
-	i3q5ON5SzuLuSFf/JfK0Br5i+GMpOUA4dQ==
-X-Google-Smtp-Source: AGHT+IHQq2H06/ajaLzf9ecb2zQvKQDlKeASRQe+NPs3P0RofX1vL7E9lJ60bUJ0sWpUFLobinZ3yA==
-X-Received: by 2002:a05:600c:4fd6:b0:40c:38e2:8e51 with SMTP id o22-20020a05600c4fd600b0040c38e28e51mr2872515wmq.13.1702552352652;
-        Thu, 14 Dec 2023 03:12:32 -0800 (PST)
-Received: from imac ([2a02:8010:60a0:0:7840:ddbd:bbf:1e8f])
-        by smtp.gmail.com with ESMTPSA id q14-20020a05600c46ce00b0040c4c9c52a3sm12581213wmo.12.2023.12.14.03.12.31
+        d=1e100.net; s=20230601; t=1702567110; x=1703171910;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uouXIP/mY6V89mn8ffGDizGjbA5gvdMVTlnAPaRcEZY=;
+        b=EgkQ907bigL/OrABkEF8unOt5VnzF0cUw4x9y+rSt7Q3P3NBS+yWQqWqZ5PZc+Qszl
+         XLeg/Gjb4KhCHBiqOsibAe+iYLLXYhyeZ/I1bPWt7vI+BK1yEqF7lBk/5zduHmpRXpzd
+         uZnHU6f/Vh1K1RmWOKYn8baTq/Jpf5kXwiagHMFv3DbZJXWwt00eIzmEBdeIKt8V9uej
+         PDdAbbzAfQ8XOuvEh0DvhspOTLxEJdUPNpeOqbZ/ZoWDo/AH7j72jVaFPbvrRM8AezOq
+         WHSDaNmBJXQ6vtVKgFmEZy5wcOFR7R4Q91cHO9et42rVOmjA9wPXk7+iY/A3tG35GPkq
+         JFJQ==
+X-Gm-Message-State: AOJu0YzfY8CZnReEveImC4sORMISXfoiiPbp2I+bvzFpGMgj2piAK9Xv
+	yOTeXIbZhq228w7XAD7H+7yrAhLRhUfGEquY0zGyvF7SoT+3IrlJEkuXplseGNvCongmhapSPYl
+	18CYXoYS+mbumFfY=
+X-Received: by 2002:a17:907:d384:b0:a1b:1daf:8270 with SMTP id vh4-20020a170907d38400b00a1b1daf8270mr11509604ejc.5.1702567110030;
+        Thu, 14 Dec 2023 07:18:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHbLh6Ckh+2C7wi9l0Q+FDN5slGlIEm9FPCvaL/O8/HwM1PTKqTgUfLgM/T/AGEUxS/XBLhng==
+X-Received: by 2002:a17:907:d384:b0:a1b:1daf:8270 with SMTP id vh4-20020a170907d38400b00a1b1daf8270mr11509595ejc.5.1702567109820;
+        Thu, 14 Dec 2023 07:18:29 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-252-36.dyn.eolo.it. [146.241.252.36])
+        by smtp.gmail.com with ESMTPSA id sn24-20020a170906629800b00a2310f34d0asm725097ejc.196.2023.12.14.07.18.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 03:12:31 -0800 (PST)
-From: Donald Hunter <donald.hunter@gmail.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net,  netdev@vger.kernel.org,  edumazet@google.com,
-  pabeni@redhat.com,  matttbe@kernel.org,  martineau@kernel.org,
-  dcaratti@redhat.com,  mptcp@lists.linux.dev
-Subject: Re: [PATCH net-next 3/3] netlink: specs: mptcp: rename the MPTCP
- path management(?) spec
-In-Reply-To: <20231213232822.2950853-4-kuba@kernel.org> (Jakub Kicinski's
-	message of "Wed, 13 Dec 2023 15:28:22 -0800")
-Date: Thu, 14 Dec 2023 08:42:48 +0000
-Message-ID: <m2o7et5g53.fsf@gmail.com>
-References: <20231213232822.2950853-1-kuba@kernel.org>
-	<20231213232822.2950853-4-kuba@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        Thu, 14 Dec 2023 07:18:29 -0800 (PST)
+Message-ID: <4837d1401e1610764eeea7446280de87d51912f6.camel@redhat.com>
+Subject: Re: [syzbot] [mptcp?] WARNING in mptcp_check_listen_stop
+From: Paolo Abeni <pabeni@redhat.com>
+To: syzbot <syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com>, 
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+ linux-kernel@vger.kernel.org, martineau@kernel.org, matttbe@kernel.org, 
+ mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+Date: Thu, 14 Dec 2023 16:18:27 +0100
+In-Reply-To: <000000000000703582060c68aeab@google.com>
+References: <000000000000703582060c68aeab@google.com>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Mimecast-Spam-Score: 1
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Jakub Kicinski <kuba@kernel.org> writes:
+On Wed, 2023-12-13 at 10:53 -0800, syzbot wrote:
+> syzbot has found a reproducer for the following issue on:
+>=20
+> HEAD commit:    2513974cc3e1 Merge branch 'stmmac-bug-fixes'
+> git tree:       net
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D116337fae8000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Db50bd31249191=
+be8
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D5a01c3a666e726b=
+c8752
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for D=
+ebian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1119061ee80=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D110ca006e8000=
+0
 
-> We assume in handful of places that the name of the spec is
-> the same as the name of the family. We could fix that but
-> it seems like a fair assumption to make. Rename the MPTCP
-> spec instead.
->
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+It looks like tcp_diag_destroy is closing the listener subflow, while
+the mptcp stack is not expecting anyone to touch it while in listener
+status. I guess we can relax the mptcp_check_listen_stop checks.
 
-Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
+/P=20
+
