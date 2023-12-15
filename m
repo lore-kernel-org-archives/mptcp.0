@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E862EAEA
-	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 13:56:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45160315BC
+	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 14:28:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNcKveNl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A86D8C433C7;
-	Fri, 15 Dec 2023 13:56:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTo0Bask"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4EF9C433C7;
+	Fri, 15 Dec 2023 14:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702648608;
-	bh=caPViVQTmG3gp3ijYK0bqeI3RUbWWTxpP97RTfBZKIU=;
+	s=k20201202; t=1702650483;
+	bh=XY5DdI3SLqMSN52c7W73yW5zhBeJT9CEEbZYMLZ0uBc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cNcKveNlxSDxYrQIDitoAJMrXjz2lrEhHdYLtptRtGNpw6abco2i89mAa1Ueyc/jz
-	 YxNihhXaHhsO4c6nNeskvgydQS9rSbx1uEL7MEJjeu3ojJka+LhD98uzviZgtJAVHS
-	 UiWL86pNZ91ltFLGLvRRNvOPqzSYZ99TYtSC8YNTDwA6FJdIQel2UCsNIE4BxkhNhl
-	 IXS68/7l4903iv3IEdDAk/L5mEWHcEYUxn0aZfIoemef+obGKFwIBlMLM5+1l4pryo
-	 UsWwrGBq3oCn2QI+C9VOzIEdjwZPv6vui+M4zAmxdvWVGeYz/QbEPAdvDUUhfppTf/
-	 u7wXY+chGl4wA==
-Message-ID: <4ed1d1bb-dfb3-4533-8a84-8aa40b002df4@kernel.org>
-Date: Fri, 15 Dec 2023 14:56:42 +0100
+	b=UTo0BaskFbuY2qzQtJhv+HN46Os4rzsHOiMf2/TjwdKInFKlKadbg5W9j+4xg3JgO
+	 cSWn/jqjPd/3j9vRVvMm+rohxsMuz6qD+272nFbgVy6VT8/1QCJLemLKlc/xDAqq7d
+	 JuYVntzM53QompVnlFDzKV0tRgMSWuuO2PN2tg7EJJg4oJNgfB7744ge7pf5KkFAeX
+	 ro/uTE542v9MhGVP9qflZCEeyCKYkLcHozdf3/7lEdIs4bh+3XRDGOhqp/xcT7ydP4
+	 b0Ijx8w1gwbni7SnVT5FFFAgmz43lM0vsuv74vG1UK0UGckU37a28bvEQsgXWjTa8v
+	 y+t59jkBYNX1A==
+Message-ID: <5453f2ff-0e37-49c5-b0e7-ccf1446af3c4@kernel.org>
+Date: Fri, 15 Dec 2023 15:28:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -28,9 +28,11 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 mptcp-next 0/3] more sockopts for ephemeral ports
 Content-Language: en-GB, fr-BE
-To: Maxim Galaganov <max@internet.ru>, Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
+To: Maxim Galaganov <max@internet.ru>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>
 References: <20231211120309.20752-1-max@internet.ru>
+ <4ed1d1bb-dfb3-4533-8a84-8aa40b002df4@kernel.org>
+ <98dd35f4-8e96-4916-99c2-f8687dd66f75@internet.ru>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -76,43 +78,50 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20231211120309.20752-1-max@internet.ru>
+In-Reply-To: <98dd35f4-8e96-4916-99c2-f8687dd66f75@internet.ru>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Maxim, Mat,
+Hi Maxim,
 
-On 11/12/2023 13:03, Maxim Galaganov wrote:
-> Support useful sockopts that allow fine control over ephemeral port
-> usage.
+On 15/12/2023 15:15, Maxim Galaganov wrote:
+> On 15.12.2023 16:56, Matthieu Baerts wrote:
+>> Hi Maxim, Mat,
+>>
+>> On 11/12/2023 13:03, Maxim Galaganov wrote:
+>>> Support useful sockopts that allow fine control over ephemeral port
+>>> usage.
+>>>
+>>> v3:
+>>>   - Change patch 2/3 with regards to commit d9f28735af87 ("Use
+>>>     READ/WRITE_ONCE() for IP local_port_range.")
+>>>   - Drop Mat's Reviewed-By tag in patch 2/3 because of changes
+>>
+>> Thank you for the patches and the reviews!
+>>
+>> Please note that 'b4' is telling me that your emails are not properly
+>> signed by your SMTP server:
+>>
+>>    BADSIG: DKIM/internet.ru
+>>
+>> That's not blocking here, but it could be a sign someone is trying to
+>> forge the sender address.
 > 
-> v3:
->  - Change patch 2/3 with regards to commit d9f28735af87 ("Use
->    READ/WRITE_ONCE() for IP local_port_range.")
->  - Drop Mat's Reviewed-By tag in patch 2/3 because of changes
+> This is because of DKIM expiration (DKIM-Signature header contains t=
+> and x= tags, that make signature invalid after some time). It is
+> reasonably effective to prevent DKIM replay attacks, also can be done by
+> rotating DKIM selectors (gmail does that, IIRC).
+> 
+> Running b4 with -d flag tells:
+> DKIM: x= value is past (b'1702386232')
+> 
+> Otherwise header and body hashes should verify OK here..
 
-Thank you for the patches and the reviews!
+Thank you for having checked that! I already saw that before [1], but I
+forgot about that!
 
-Please note that 'b4' is telling me that your emails are not properly
-signed by your SMTP server:
-
-  BADSIG: DKIM/internet.ru
-
-That's not blocking here, but it could be a sign someone is trying to
-forge the sender address.
-
-These patches have been added in our tree: feat. for net-next.
-
-New patches for t/upstream:
-- 250382904050: mptcp: rename mptcp_setsockopt_sol_ip_set_transparent()
-- be6fee83fad1: mptcp: sockopt: support IP_LOCAL_PORT_RANGE and
-IP_BIND_ADDRESS_NO_PORT
-- 5df30926310b: selftests/net: add MPTCP coverage for IP_LOCAL_PORT_RANGE
-- Results: e2b8a59f008f..84d8fb414b2a (export)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231215T134806
+[1]
+https://lore.kernel.org/tools/ddeefd4d0323df0948565fea2ffb55793fdcc8dc@linux.dev/
 
 Cheers,
 Matt
