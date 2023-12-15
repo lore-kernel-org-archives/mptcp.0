@@ -1,82 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B2465EC4;
-	Thu, 14 Dec 2023 17:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15315EC0;
+	Fri, 15 Dec 2023 01:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="On1rQijo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702574738; x=1734110738;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jMw7RRpHVs9kaxegVgNIhrUhV/V/APavpUBnfUCm8/0=;
-  b=On1rQijo+NhTEjRmCrfROI26ehRH07MKW5hWx8atNsPoLFuzMttNJeqm
-   7zeGKXSOSKvLt18zhxnGQB5DHdObJX+2r52Pan39tCh/bn/tdnCD0HREq
-   266Ol7Vxoh7nW2wg+LS1Y4Ea+MZPA3OQkfQ589N2s+DmjZjvPnZni53jo
-   tZ7SqRz7A7fc+expfpyL92sL7jES/BY9z+H+XXT95X1/KO9yugbAUDrGK
-   q8EUydyvp/7UFk9gHcNJ26Q6FXImrSkUD+0dxoavAZofmCUkZtP3bkMZd
-   NVFmKMtmXUVeDR+qcyWwq/iNptp+UR7brLQOphUJ4tgPgt2QHsOUgpoRU
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="481345181"
-X-IronPort-AV: E=Sophos;i="6.04,276,1695711600"; 
-   d="scan'208";a="481345181"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 09:25:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="803361479"
-X-IronPort-AV: E=Sophos;i="6.04,276,1695711600"; 
-   d="scan'208";a="803361479"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 14 Dec 2023 09:25:34 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rDpSg-000MOA-1z;
-	Thu, 14 Dec 2023 17:25:31 +0000
-Date: Fri, 15 Dec 2023 01:24:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	edumazet@google.com, pabeni@redhat.com, donald.hunter@gmail.com,
-	Jakub Kicinski <kuba@kernel.org>, matttbe@kernel.org,
-	martineau@kernel.org, dcaratti@redhat.com, mptcp@lists.linux.dev
-Subject: Re: [PATCH net-next 3/3] netlink: specs: mptcp: rename the MPTCP
- path management(?) spec
-Message-ID: <202312150140.ST22T64E-lkp@intel.com>
-References: <20231213232822.2950853-4-kuba@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mhz4KChy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 631EAC433C7;
+	Fri, 15 Dec 2023 01:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702605459;
+	bh=UuZFxFlwbmpPRrY5GjCKO15m/OziS7jzWA1yhdKyjpg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Mhz4KChyjqOwCF0PuvM4eeXrQ0SD83vRKyzMbvKYpzi3LIB6qG3m23P9ph+vB9125
+	 YLFR7otIdKJmoTPezyRxPMnucwGKNgOMrUqLKxzdBQxmykBjXCLRo9ydJJjgHb6cTC
+	 j8vVtwFVqTf1q+HrCEPw7P4Al2qAGL1Ia1aT4UOW0E/qyQ37BUv0cQAHuX/xUIe+Yj
+	 uV2t8PlDo3nIM8ERMO6aZilfG5ZDgguF786aYpeWjj0KMZvjwJ0zkkvDKP0dPo2RcR
+	 bYjUuuA+mnOQG08cUXFuXSzpvhY5WLXTd172tP5Ydx24sWMimx1823nlWpYggTC8ZO
+	 UA9r1LY3V/rSA==
+From: Jakub Kicinski <kuba@kernel.org>
+To: davem@davemloft.net
+Cc: netdev@vger.kernel.org,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	donald.hunter@gmail.com,
+	Jakub Kicinski <kuba@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	matttbe@kernel.org,
+	dcaratti@redhat.com,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next v2 3/3] netlink: specs: mptcp: rename the MPTCP path management spec
+Date: Thu, 14 Dec 2023 17:57:35 -0800
+Message-ID: <20231215015735.3419974-4-kuba@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231215015735.3419974-1-kuba@kernel.org>
+References: <20231215015735.3419974-1-kuba@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231213232822.2950853-4-kuba@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Jakub,
+We assume in handful of places that the name of the spec is
+the same as the name of the family. We could fix that but
+it seems like a fair assumption to make. Rename the MPTCP
+spec instead.
 
-kernel test robot noticed the following build warnings:
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+v2:
+ - fix MAINTAINERS (build bot)
+ - remove the (?) in the title
 
-[auto build test WARNING on net-next/main]
+CC: matttbe@kernel.org
+CC: dcaratti@redhat.com
+CC: mptcp@lists.linux.dev
+---
+ Documentation/netlink/specs/{mptcp.yaml => mptcp_pm.yaml} | 0
+ MAINTAINERS                                               | 2 +-
+ include/uapi/linux/mptcp_pm.h                             | 2 +-
+ net/mptcp/mptcp_pm_gen.c                                  | 2 +-
+ net/mptcp/mptcp_pm_gen.h                                  | 2 +-
+ 5 files changed, 4 insertions(+), 4 deletions(-)
+ rename Documentation/netlink/specs/{mptcp.yaml => mptcp_pm.yaml} (100%)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jakub-Kicinski/netlink-specs-ovs-remove-fixed-header-fields-from-attrs/20231214-073118
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20231213232822.2950853-4-kuba%40kernel.org
-patch subject: [PATCH net-next 3/3] netlink: specs: mptcp: rename the MPTCP path management(?) spec
-reproduce: (https://download.01.org/0day-ci/archive/20231215/202312150140.ST22T64E-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312150140.ST22T64E-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/netlink/specs/mptcp.yaml
-
+diff --git a/Documentation/netlink/specs/mptcp.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
+similarity index 100%
+rename from Documentation/netlink/specs/mptcp.yaml
+rename to Documentation/netlink/specs/mptcp_pm.yaml
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2c09e713284d..b2d8fcf067fd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15085,7 +15085,7 @@ W:	https://github.com/multipath-tcp/mptcp_net-next/wiki
+ B:	https://github.com/multipath-tcp/mptcp_net-next/issues
+ T:	git https://github.com/multipath-tcp/mptcp_net-next.git export-net
+ T:	git https://github.com/multipath-tcp/mptcp_net-next.git export
+-F:	Documentation/netlink/specs/mptcp.yaml
++F:	Documentation/netlink/specs/mptcp_pm.yaml
+ F:	Documentation/networking/mptcp-sysctl.rst
+ F:	include/net/mptcp.h
+ F:	include/trace/events/mptcp.h
+diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
+index b5d11aece408..50589e5dd6a3 100644
+--- a/include/uapi/linux/mptcp_pm.h
++++ b/include/uapi/linux/mptcp_pm.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
+ /* Do not edit directly, auto-generated from: */
+-/*	Documentation/netlink/specs/mptcp.yaml */
++/*	Documentation/netlink/specs/mptcp_pm.yaml */
+ /* YNL-GEN uapi header */
+ 
+ #ifndef _UAPI_LINUX_MPTCP_PM_H
+diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
+index a2325e70ddab..670da7822e6c 100644
+--- a/net/mptcp/mptcp_pm_gen.c
++++ b/net/mptcp/mptcp_pm_gen.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
+ /* Do not edit directly, auto-generated from: */
+-/*	Documentation/netlink/specs/mptcp.yaml */
++/*	Documentation/netlink/specs/mptcp_pm.yaml */
+ /* YNL-GEN kernel source */
+ 
+ #include <net/netlink.h>
+diff --git a/net/mptcp/mptcp_pm_gen.h b/net/mptcp/mptcp_pm_gen.h
+index 10579d184587..ac9fc7225b6a 100644
+--- a/net/mptcp/mptcp_pm_gen.h
++++ b/net/mptcp/mptcp_pm_gen.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
+ /* Do not edit directly, auto-generated from: */
+-/*	Documentation/netlink/specs/mptcp.yaml */
++/*	Documentation/netlink/specs/mptcp_pm.yaml */
+ /* YNL-GEN kernel header */
+ 
+ #ifndef _LINUX_MPTCP_PM_GEN_H
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
