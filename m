@@ -1,67 +1,111 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5145539D
-	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 03:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7b725f0a886so35016139f.0
-        for <mptcp@lists.linux.dev>; Thu, 14 Dec 2023 19:20:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702610404; x=1703215204;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AQyEELprIDEbtTkUwA4nnT0Wu1uDLHkRLspT1Fn6XJU=;
-        b=kY+BEVKYZfF+b+cND9JTuF8o8aOquAYVyYSKgOJMfCYbqrxhVjW17AK74ueko8GJ0u
-         VCcx3J3bSMf5ybKYNNmOW5QFryS57CN0zqUqxdlHbjXLEbd3j2efRVmkwA//9y2v2gZa
-         FJ2PodNcaENScDKQ1JahSUA/aic0WLfi3nUC7gfuqcNNeyOOFZYrpbS40g+xqDlqK6Yw
-         Q/o2H1Fm8DAka0afnSUlgfGh71gdj9AKcarQM7OPq3TGlnwqBTMNOQUBwNm3zKlD7Vyt
-         f//g63+QuBBcy7J0N9iAKt3BolhfmnohCsDrJWjpTrIHOht8v1lv3FLJ+Z+dpJGaCCcT
-         sQXg==
-X-Gm-Message-State: AOJu0Yz0pMv4VP0ShqpDwUACZ4F10apE4v450+ewOVakYBDb5FJ01KD5
-	bFaYd3eIpwQuVN1K1D9p4olPXh2FCdhb5akYm5YwVkvDpmAN
-X-Google-Smtp-Source: AGHT+IFSmETvZ2PGKq7WWyYsYOvKShW8hfRpSuc2mR/bEUzi09+1SVucE9q4C1zxr0q4t9qCRzcJUHC049ncKK4A2KARey/PGRpF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14D21A705
+	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 09:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PAwxbUMM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702631538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tWff2um6McdoPsE962MpW5AyGTdqvznZkA+dCh/vU08=;
+	b=PAwxbUMMKeO28ETQU7ATrmQEhcaK4TmKCozpLOU+cPxzXPxJDPxloME31OVLTAM8Hm2wmw
+	bcwk2o4kZ29qqE9/9cjHUr3lrr21k0r/o2II8iBxVut1m8rZMr8hDQiC+SkQQKvXZELcY/
+	EbT1ZoS1UUa6wQyqZiBWmPWrglcK9ZY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-614--utJEHkTOuOxnBXc0qn1vg-1; Fri, 15 Dec 2023 04:12:15 -0500
+X-MC-Unique: -utJEHkTOuOxnBXc0qn1vg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 972DF85A589
+	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 09:12:15 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.176])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 254B8C1596E
+	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 09:12:15 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net] mptcp: prevent tcp diag from closing listener subflows
+Date: Fri, 15 Dec 2023 10:12:11 +0100
+Message-ID: <f6371f65b1ebabc0f308528494ec39c9bdf786fd.1702631517.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2720:b0:468:fbcd:15a9 with SMTP id
- m32-20020a056638272000b00468fbcd15a9mr184105jav.1.1702610404132; Thu, 14 Dec
- 2023 19:20:04 -0800 (PST)
-Date: Thu, 14 Dec 2023 19:20:04 -0800
-In-Reply-To: <0000000000004f4579060c68431b@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000544e17060c83e034@google.com>
-Subject: Re: [syzbot] [mptcp?] WARNING in mptcp_check_listen_stop
-From: syzbot <syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, martineau@kernel.org, 
-	matthieu.baerts@tessares.net, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-syzbot has bisected this issue to:
+The MPTCP protocol does not expect that any other entity could change
+the first subflow status when such socket is listening.
+Unfortunately the TCP diag interface allows aborting any TCP socket,
+including MPTCP listeners subflows. As reported by syzbot, that trigger
+a WARN() and could lead to later bigger trouble.
 
-commit 57fc0f1ceaa4016354cf6f88533e20b56190e41a
-Author: Paolo Abeni <pabeni@redhat.com>
-Date:   Tue Jun 20 16:24:23 2023 +0000
+The MPTCP protocol needs to do some MPTCP-level cleanup actions to
+properly shutdown the listener. To keep the fix simple, prevent
+entirely the diag interface from stopping such listeners.
 
-    mptcp: ensure listener is unhashed before updating the sk status
+We could refine the diag callback in a later, larger patch targeting
+net-next.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1279cb71e80000
-start commit:   2513974cc3e1 Merge branch 'stmmac-bug-fixes'
-git tree:       net
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1179cb71e80000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1679cb71e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b50bd31249191be8
-dashboard link: https://syzkaller.appspot.com/bug?extid=5a01c3a666e726bc8752
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1119061ee80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=110ca006e80000
-
-Reported-by: syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com
 Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
+Closes: https://lore.kernel.org/netdev/0000000000004f4579060c68431b@google.com/
+Reported-by: syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/subflow.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 64302a1ac306..1f98bec264a6 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1981,6 +1981,17 @@ static void tcp_release_cb_override(struct sock *ssk)
+ 	tcp_release_cb(ssk);
+ }
+ 
++static int tcp_abort_override(struct sock *ssk, int err)
++{
++	/* closing a listener subflow requires a great deal of care.
++	 * keep it simple and just prevent such operation
++	 */
++	if (inet_sk_state_load(ssk) == TCP_LISTEN)
++		return -EINVAL;
++
++	return tcp_abort(ssk, err);
++}
++
+ static struct tcp_ulp_ops subflow_ulp_ops __read_mostly = {
+ 	.name		= "mptcp",
+ 	.owner		= THIS_MODULE,
+@@ -2025,6 +2036,7 @@ void __init mptcp_subflow_init(void)
+ 
+ 	tcp_prot_override = tcp_prot;
+ 	tcp_prot_override.release_cb = tcp_release_cb_override;
++	tcp_prot_override.diag_destroy = tcp_abort_override;
+ 
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ 	/* In struct mptcp_subflow_request_sock, we assume the TCP request sock
+@@ -2060,6 +2072,7 @@ void __init mptcp_subflow_init(void)
+ 
+ 	tcpv6_prot_override = tcpv6_prot;
+ 	tcpv6_prot_override.release_cb = tcp_release_cb_override;
++	tcpv6_prot_override.diag_destroy = tcp_abort_override;
+ #endif
+ 
+ 	mptcp_diag_subflow_init(&subflow_ulp_ops);
+-- 
+2.42.0
+
