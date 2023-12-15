@@ -1,111 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14D21A705
-	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 09:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B0424B23
+	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 11:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PAwxbUMM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702631538;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tWff2um6McdoPsE962MpW5AyGTdqvznZkA+dCh/vU08=;
-	b=PAwxbUMMKeO28ETQU7ATrmQEhcaK4TmKCozpLOU+cPxzXPxJDPxloME31OVLTAM8Hm2wmw
-	bcwk2o4kZ29qqE9/9cjHUr3lrr21k0r/o2II8iBxVut1m8rZMr8hDQiC+SkQQKvXZELcY/
-	EbT1ZoS1UUa6wQyqZiBWmPWrglcK9ZY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-614--utJEHkTOuOxnBXc0qn1vg-1; Fri, 15 Dec 2023 04:12:15 -0500
-X-MC-Unique: -utJEHkTOuOxnBXc0qn1vg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 972DF85A589
-	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 09:12:15 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.176])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 254B8C1596E
-	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 09:12:15 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: prevent tcp diag from closing listener subflows
-Date: Fri, 15 Dec 2023 10:12:11 +0100
-Message-ID: <f6371f65b1ebabc0f308528494ec39c9bdf786fd.1702631517.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqAgWki9"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-67efbd06f43so3795666d6.3
+        for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 03:10:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702638648; x=1703243448; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TXotY1z8tHG/cmo/jNf6NN9WirUx08uunIFZz1RCN0k=;
+        b=VqAgWki9KzCE7wugkwwMtbfFd7TGLK4UwaUbQHc82E1e/GpTyyFjb85SUKZudtfeig
+         E2nwjPSfaPnlYa5ccB2pDY55Cu09KP0UET92mGQ2i1522qA8K5D39Wb77T+o/ExJ53VN
+         8R8FEySY/dda7waCbUTlKy/8RGPI5mWUKNhRZGiUSjgTxNO7t3iZ9ZAfm++4NSCvKMCg
+         Ie9+dE+qSU4G1TCu/wPj/ZT0CKnWgQphQWJn/Mes5ZiP2Dp9AStkv7sJjLbl1OGh9HWK
+         QSpSBJ87/jyWGUyXJ+L+2Nz2RxksECwz2i9a5hT7f5X5NWrtogjaqL4kJWARNuqzZXRd
+         63mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702638648; x=1703243448;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=TXotY1z8tHG/cmo/jNf6NN9WirUx08uunIFZz1RCN0k=;
+        b=MIuwe9PwDOOuEiu25Oh2zDaXwF9lFmElLRifFMuA/9Yv7RgqP4S3/XVEB7PI0v2Wx3
+         CfgMOS5DLz2FejurTaXgaVI2yB+9cmteuM75eD6kgJqofN0EXuKdGF36hzSZc3LaL114
+         Zn36E+KcaP8bn4rlYCYonY7tYCuRqAh7umkO3HyYe/JZj0i/MwasGrPnx7S5iQDNJ9eL
+         2HtNT/ST1wT3E0LCXSGHlgLo8i+spzQm2iF8yxjyZfD7RNeZPleSDlTy7TqBgORzD+P+
+         7cmvHpJwyBrgBXk5XEEPP0Mfa338RKv2DTnDBpDSH0jjGg2EG3wlbO7Tf4uCYHyLrrVj
+         UnPg==
+X-Gm-Message-State: AOJu0YxGZEJLM83aPt7vvNddFUafNfFGtgTkpHhcVLnV/lINxFLHb5SF
+	s3PdCM674cworboOMtZj4A==
+X-Google-Smtp-Source: AGHT+IEIJb7jAoIfMpI3TPauG5zbulYrsoeQjgvahF34FN9zkSSBuYRBORsagLcGUu/Xq08Bkj1lFw==
+X-Received: by 2002:a0c:fb0a:0:b0:67e:ffba:8279 with SMTP id c10-20020a0cfb0a000000b0067effba8279mr3820872qvp.103.1702638647923;
+        Fri, 15 Dec 2023 03:10:47 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.121.20])
+        by smtp.gmail.com with ESMTPSA id ff17-20020a0562140bd100b0067ae405e0a8sm593477qvb.57.2023.12.15.03.10.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Dec 2023 03:10:47 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <f6371f65b1ebabc0f308528494ec39c9bdf786fd.1702631517.git.pabeni@redhat.com>
+References:
+ <f6371f65b1ebabc0f308528494ec39c9bdf786fd.1702631517.git.pabeni@redhat.com>
+Subject: Re: mptcp: prevent tcp diag from closing listener subflows: Tests
+ Results
+Message-ID: <82051172-7b1f-3f21-f027-4e0bcbce991b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 15 Dec 2023 11:10:46 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-The MPTCP protocol does not expect that any other entity could change
-the first subflow status when such socket is listening.
-Unfortunately the TCP diag interface allows aborting any TCP socket,
-including MPTCP listeners subflows. As reported by syzbot, that trigger
-a WARN() and could lead to later bigger trouble.
+Hi Paolo,
 
-The MPTCP protocol needs to do some MPTCP-level cleanup actions to
-properly shutdown the listener. To keep the fix simple, prevent
-entirely the diag interface from stopping such listeners.
+Thank you for your modifications, that's great!
 
-We could refine the diag callback in a later, larger patch targeting
-net-next.
+Our CI did some validations and here is its report:
 
-Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
-Closes: https://lore.kernel.org/netdev/0000000000004f4579060c68431b@google.com/
-Reported-by: syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/subflow.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+- KVM Validation: normal (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/6646535530741760
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/6646535530741760/summary/summary.txt
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 64302a1ac306..1f98bec264a6 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1981,6 +1981,17 @@ static void tcp_release_cb_override(struct sock *ssk)
- 	tcp_release_cb(ssk);
- }
- 
-+static int tcp_abort_override(struct sock *ssk, int err)
-+{
-+	/* closing a listener subflow requires a great deal of care.
-+	 * keep it simple and just prevent such operation
-+	 */
-+	if (inet_sk_state_load(ssk) == TCP_LISTEN)
-+		return -EINVAL;
-+
-+	return tcp_abort(ssk, err);
-+}
-+
- static struct tcp_ulp_ops subflow_ulp_ops __read_mostly = {
- 	.name		= "mptcp",
- 	.owner		= THIS_MODULE,
-@@ -2025,6 +2036,7 @@ void __init mptcp_subflow_init(void)
- 
- 	tcp_prot_override = tcp_prot;
- 	tcp_prot_override.release_cb = tcp_release_cb_override;
-+	tcp_prot_override.diag_destroy = tcp_abort_override;
- 
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	/* In struct mptcp_subflow_request_sock, we assume the TCP request sock
-@@ -2060,6 +2072,7 @@ void __init mptcp_subflow_init(void)
- 
- 	tcpv6_prot_override = tcpv6_prot;
- 	tcpv6_prot_override.release_cb = tcp_release_cb_override;
-+	tcpv6_prot_override.diag_destroy = tcp_abort_override;
- #endif
- 
- 	mptcp_diag_subflow_init(&subflow_ulp_ops);
--- 
-2.42.0
+- KVM Validation: normal (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5666210654715904
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5666210654715904/summary/summary.txt
 
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5731741856432128
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5731741856432128/summary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5168791903010816
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5168791903010816/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/23b0f9732a26
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
