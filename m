@@ -1,91 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A7C3FE40;
-	Fri, 15 Dec 2023 16:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A6933D7
+	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 16:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQaX8NIH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBB61C433C9;
-	Fri, 15 Dec 2023 16:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702656299;
-	bh=mEEyQsmCIMqT+EIvuVvdc3euGh/zmow8EeCo+TKdPoI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=DQaX8NIHovESKeQHduownHwMEP6hKSiwqfTNrSbRob8tHe0iy5+a0MbS3K36UW0LB
-	 Bx+EKlsXdWwe1njy+BjfIkn465pMaqn5fF30hAaOVJuzv1pK0x+xI/Nu4gexzQBnH6
-	 g+uCLgTs1YUz0cKDLcCrNlgmz9+7QBpGDoHbp6FJDEuLzUWT++XzSNeNwUG6tynLua
-	 WKiaZUDrnndRuFowgNUA+caZbJIfg4ncGKSShMfiU8PwE6EPalE1XLMhVXFWkNvXN9
-	 4wc6GUHWCW0Rr9WpwcTnjJKbPCjED5waZBJz+5OarHKz5RqHGuY6JKnJERYw0g2Owg
-	 MY4lXLluw0BRg==
-From: Matthieu Baerts <matttbe@kernel.org>
-Date: Fri, 15 Dec 2023 17:04:27 +0100
-Subject: [PATCH net 4/4] mailmap: add entries for Geliang Tang
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g/r66hbO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702657859;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yQoVlu2nC3An3NXDh3aukCzIW+oEg+vtzuLTT5pCuio=;
+	b=g/r66hbOn54WBLvjzBeTJiMJygwIEbeNzQjFnOc3wzLJWLxRiwnzAR5YqRYedRapXrdv2/
+	N0Jg0f7Y+D+CFWzE7UsP8bXnszfDILsoTATvQJ8TN5rV9wO4jaQTeQzVeQUhtIkTYDyYKI
+	euJJUzcbBG0UaajJ7IOTtWVMinB/zM8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-74-xgjx5ebPNnO7BpuU2ckHgw-1; Fri, 15 Dec 2023 11:30:57 -0500
+X-MC-Unique: xgjx5ebPNnO7BpuU2ckHgw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a1df644f6a8so17421066b.1
+        for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 08:30:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702657856; x=1703262656;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l47iqiC+/jd6DzBvapq6KCKEODC/7oCia1TsB160jc0=;
+        b=eXGVFE+e65bBQex7/+3DP0yB3IJyVdDCzSxNazvY10GXVE8Adi2Jq08fXAfzhV/ITx
+         eRwCJsfrdBlXBAm9HceGxRNajJg7OubVqTfw8FROvR6piqpDdX82/2KZPPLhMXchtQgo
+         3wJMyvbnaNzGxF6B0Oi0FFW+QsFdiGdaFLqnhjmMycDmVcExLLjVH9sMIJQi83C8Vl2m
+         f3i+g3uM1HHy3mk1kU8gLLzSTtS5edMbHCnyy1gD1Lc894VSb2eWn5OCNASYnKm1R1ux
+         JYa94LhwOwejj8Dm9TGuTiSv2kGcTXwTQfBdIg5rUSL+7Diyyh9w3xg2eM7nGodTr+Eu
+         2KdA==
+X-Gm-Message-State: AOJu0Yx97Wab/h6RsrlAHTdOgHx48LWsU1FSASDGvE4JW+Xz+0yuGCrl
+	wbR1WEmskG+Fy2gQYwlKY+YW6SOjYiUVSI7QO7djavK49SAql0Np6vrh4Xwk6ir1no2pSRntLQY
+	XeKMvirJu5hXyhX4=
+X-Received: by 2002:a17:907:d109:b0:a1e:3c8f:bc9e with SMTP id uy9-20020a170907d10900b00a1e3c8fbc9emr12779648ejc.0.1702657856590;
+        Fri, 15 Dec 2023 08:30:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGdT92bIkAk90pZjr7y230oX5Xp/tUHdPgR3pufCBcwomYy2OmtSEWlVNWb8az3vNJ/mpQ4nQ==
+X-Received: by 2002:a17:907:d109:b0:a1e:3c8f:bc9e with SMTP id uy9-20020a170907d10900b00a1e3c8fbc9emr12779635ejc.0.1702657856279;
+        Fri, 15 Dec 2023 08:30:56 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-255-162.dyn.eolo.it. [146.241.255.162])
+        by smtp.gmail.com with ESMTPSA id cx7-20020a170907168700b009fc576e26e6sm10807345ejd.80.2023.12.15.08.30.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Dec 2023 08:30:55 -0800 (PST)
+Message-ID: <79875f13de371fe527ff695b69a5f8a84aab2a59.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next v5 2/3] mptcp: use mptcp_set_state
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matttbe@kernel.org>, Geliang Tang
+ <geliang.tang@linux.dev>
+Cc: mptcp@lists.linux.dev
+Date: Fri, 15 Dec 2023 17:30:54 +0100
+In-Reply-To: <b62b361c-60f1-402e-8e93-2fd0ec826dd9@kernel.org>
+References: <cover.1702446832.git.geliang.tang@linux.dev>
+	 <d6ac6b189ca025dd510455c37daa17fa98db8259.1702446832.git.geliang.tang@linux.dev>
+	 <b62b361c-60f1-402e-8e93-2fd0ec826dd9@kernel.org>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231215-upstream-net-20231215-mptcp-misc-fixes-v1-4-91d20266d525@kernel.org>
-References: <20231215-upstream-net-20231215-mptcp-misc-fixes-v1-0-91d20266d525@kernel.org>
-In-Reply-To: <20231215-upstream-net-20231215-mptcp-misc-fixes-v1-0-91d20266d525@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>, 
- Benjamin Hesmans <benjamin.hesmans@tessares.net>, 
- Dmytro Shytyi <dmytro@shytyi.net>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Matthieu Baerts <matttbe@kernel.org>, 
- Geliang Tang <geliang.tang@linux.dev>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1162; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=F+SFbQ1h53EM63JkYmEA4FqecIVJLbDI7sWcAXIJA8A=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlfHkbBU0vL8oo3TD8O7+05tLkIK3rTr1TIpgbC
- XH5/mXP5q2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZXx5GwAKCRD2t4JPQmmg
- c1bdD/9Df8lKXoEqQTB1znSsnUo6yQt/h0EVbLpP4kcIVAtsQWlJeJ6bXZEyP5u1ONR6N+b95oK
- NOccqbP9Nkl/60ZWH5XdRKEpM9NMDSNwukvKZwDMEkm9pA8Hn5Fs5wqs3TH5wYNNJKUFMcNv91E
- uVzCLPzLGgUAbKSe5zNAimEci0SIQEX8H4Hc87rY89TwDbWimwHNyPwvCqHrSCe8MRRG+mlXbrG
- N3Inf3AtVwF8AAjwisUTVOSJKkD1hAx+SKZQne973WYOAUXuVytOjZnoEXXL4phVrtFVJQu6wRc
- 3ydVuWfPf2dVw583zyH8E6ku0HqQeCVwPJOICdfK+GzIiJhxBh6f7UZpL5a1or39U/poT83BOiQ
- yr35vOCGqC2+zjbkRGv6VLkLoopQi4slPXiD+JEYY/wSgpQO+SyNDwyKLNiSR3h7YAMgTqmERkp
- aSaP3lL5vnLaUvUxscO5rayZ/nA7rw3YXvgaFkl5drMDzzByqjjiw/rI078MWqpVAuMCZMNnLhD
- /VsJfbEacNnLU4cRObB5n3xS6vtH6Q66ge4NqMkyFKJ8A69z1lbxB5cZGnVdy9Fcd6a9v8SkgTD
- AjsgHx8g3l+f/JBO1KMd80xk+PAJpY3yvYt5ShHTMmt5vsFTXq8+BVPjhHJ3iFyXCRopBSDOC4S
- km518yJZ7BevPXg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <geliang.tang@linux.dev>
+On Wed, 2023-12-13 at 12:25 +0100, Matthieu Baerts wrote:
+> Hi Geliang, Paolo,
+>=20
+> On 13/12/2023 06:56, Geliang Tang wrote:
+> > This patch replaces all the 'inet_sk_state_store()' calls under net/mpt=
+cp
+> > with the new helper mptcp_set_state().
+> >=20
+> > Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
+> > ---
+> >  net/mptcp/pm_netlink.c |  3 +++
+> >  net/mptcp/protocol.c   | 38 +++++++++++++++++++-------------------
+> >  net/mptcp/subflow.c    |  2 +-
+> >  3 files changed, 23 insertions(+), 20 deletions(-)
+> >=20
+> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> > index bf4d96f6f99a..b93683b5e618 100644
+> > --- a/net/mptcp/pm_netlink.c
+> > +++ b/net/mptcp/pm_netlink.c
+> > @@ -1048,6 +1048,9 @@ static int mptcp_pm_nl_create_listen_socket(struc=
+t sock *sk,
+> >  =09if (err)
+> >  =09=09return err;
+> > =20
+> > +=09/* avoid replacing inet_sk_state_store with mptcp_set_state here, a=
+s the
+> > +=09 * old status is known to be TCP_CLOSE, hence will not affect the c=
+ount.
+> > +=09 */
+> >  =09inet_sk_state_store(newsk, TCP_LISTEN);
+>=20
+> Why not calling mptcp_set_state() here as well? I agree that it will do
+> nothing more than calling inet_sk_state_store(), but maybe better for
+> the uniformity?
 
-Map Geliang's old mail addresses to his @linux.dev one.
+mptcp_set_state() needs to be called under the msk socket lock, while
+we can avoid that for inet_sk_state_store() - with some care.
 
-Suggested-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
-Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
----
- .mailmap | 4 ++++
- 1 file changed, 4 insertions(+)
+The above code is outside the msk socket lock scope. We can extend it,
+but will make the patch more noisy - all other chunks are simple helper
+replacements.
 
-diff --git a/.mailmap b/.mailmap
-index 3ac1c12545f2..68e72a6017a0 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -191,6 +191,10 @@ Gao Xiang <xiang@kernel.org> <gaoxiang25@huawei.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@aol.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@linux.alibaba.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@redhat.com>
-+Geliang Tang <geliang.tang@linux.dev> <geliang.tang@suse.com>
-+Geliang Tang <geliang.tang@linux.dev> <geliangtang@xiaomi.com>
-+Geliang Tang <geliang.tang@linux.dev> <geliangtang@gmail.com>
-+Geliang Tang <geliang.tang@linux.dev> <geliangtang@163.com>
- Georgi Djakov <djakov@kernel.org> <georgi.djakov@linaro.org>
- Gerald Schaefer <gerald.schaefer@linux.ibm.com> <geraldsc@de.ibm.com>
- Gerald Schaefer <gerald.schaefer@linux.ibm.com> <gerald.schaefer@de.ibm.com>
+If we want this change, we can add a pre-req patch moving
+inet_sk_state_store() under the socket lock.
 
--- 
-2.40.1
+Cheers,
+
+Paolo
+
+> Also, mptcp_set_state() function name is generic: it is not specific to
+> change a counter (even if it is what it does *for the moment*). Using it
+> here could even be useful for extensions done in BPF (a useful hook), may=
+be?
+
+Yes, that was the idea: with time we can consolidate in=20
+mptcp_set_state() more actions. e.g. token destruction.
+
+
+Cheers,
+
+Paolo
 
