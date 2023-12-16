@@ -1,117 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA3E10EE
-	for <mptcp@lists.linux.dev>; Sat, 16 Dec 2023 00:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D32310F1
+	for <mptcp@lists.linux.dev>; Sat, 16 Dec 2023 01:41:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcYZ/vJa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51EACC433C8;
-	Sat, 16 Dec 2023 00:47:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C91heBba"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4355C433C7;
+	Sat, 16 Dec 2023 01:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702687641;
-	bh=gwmwY3MJpXURfKFbsPxP1+hiatBBhV8ZfKXWdY/dUNg=;
+	s=k20201202; t=1702690901;
+	bh=9VMHWhifUzA01VpubFLnmHdMb7YQNMTOCrM6L3wbYC0=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=FcYZ/vJa+KCkC2kjxrUCXbivFbvLmcAVBiBW6MCUg0KC+S+g1pDnogmexNM4i0vK0
-	 VbHPM03f6kGXSNaJpmagOBu86HJoDXxcldB6zerXnVsY5gf5xA304OETJzfPTYJHy7
-	 iPCQj7ZRHHosIP3exhOlW2LSUjd15MEla3dRGb5+krgQjB6lo21reSPCw6r4pENDpY
-	 vnhO0JJYnOrmenh4ZvZQXV3AW6glrxcENFgrdYfuKnnlm39x3j3e68zgAt8qOE1hlE
-	 k+kZ5vRdhBZY900QL3xI68ut/6kD+GDC59wbG2eqFh8OkSoJqHSr6MKc4uKGc2N0LN
-	 dvnlxq2HOHrZQ==
-Date: Fri, 15 Dec 2023 16:47:20 -0800 (PST)
+	b=C91heBbayk9DJZmVoi1D3NHhkpXwHBl+/JMlkeIOWmbGtEpLTgrBVMgO4bjn4//PJ
+	 k6qmhLzrVO5DepmOORL1a9J3KsY9za0i1dURdUjWxQHp1UWNQepi/EwO6u7l0AHTtU
+	 b21orP2AIRHCJw8D1uaRnGOlhwqXwK/BwwUam+TfOvIXATaWoSVHrpvu3jBV9ALP/r
+	 qvpUOCF+I307OKad4LfwyPA8YIfNQhOuUVhUknKopXIIviJXDiIveOlbeiuVtN1cUO
+	 x/BknTaNYCXF7HvtsrL77fc16uwsQBxCR8rt2cbOaXwKG4q6D+ArKfGO0S/Gc8tq+r
+	 dHMUhJTtY0+2g==
+Date: Fri, 15 Dec 2023 17:41:40 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@linux.dev>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] mptcp: prevent tcp diag from closing listener
- subflows
-In-Reply-To: <f6371f65b1ebabc0f308528494ec39c9bdf786fd.1702631517.git.pabeni@redhat.com>
-Message-ID: <f8f6d53f-4fcb-2531-4fa6-b0afbeb0eabc@kernel.org>
-References: <f6371f65b1ebabc0f308528494ec39c9bdf786fd.1702631517.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-next 02/12] mptcp: implement
+ mptcp_userspace_pm_dump_addr
+In-Reply-To: <9e4c62819fcc70f6051fab05dd6e1beffbd8ee0f.1702282411.git.geliang.tang@linux.dev>
+Message-ID: <d43df5a3-e0ba-3c80-2826-8e864bbc1774@kernel.org>
+References: <cover.1702282411.git.geliang.tang@linux.dev> <9e4c62819fcc70f6051fab05dd6e1beffbd8ee0f.1702282411.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Fri, 15 Dec 2023, Paolo Abeni wrote:
+On Mon, 11 Dec 2023, Geliang Tang wrote:
 
-> The MPTCP protocol does not expect that any other entity could change
-> the first subflow status when such socket is listening.
-> Unfortunately the TCP diag interface allows aborting any TCP socket,
-> including MPTCP listeners subflows. As reported by syzbot, that trigger
-> a WARN() and could lead to later bigger trouble.
+> This patch implements mptcp_userspace_pm_dump_addr() to dump addresses
+> from userspace pm address list. For each msk in this net, if userspace
+> PM is enabled in it, traverse each address entry in address list, put
+> every entry to userspace using mptcp_pm_nl_put_entry_msg().
 >
-> The MPTCP protocol needs to do some MPTCP-level cleanup actions to
-> properly shutdown the listener. To keep the fix simple, prevent
-> entirely the diag interface from stopping such listeners.
->
-> We could refine the diag callback in a later, larger patch targeting
-> net-next.
->
-> Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
-> Closes: https://lore.kernel.org/netdev/0000000000004f4579060c68431b@google.com/
-> Reported-by: syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 > ---
-> net/mptcp/subflow.c | 13 +++++++++++++
-> 1 file changed, 13 insertions(+)
+> net/mptcp/pm_userspace.c | 29 +++++++++++++++++++++++++++++
+> net/mptcp/protocol.h     |  2 ++
+> 2 files changed, 31 insertions(+)
 >
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 64302a1ac306..1f98bec264a6 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1981,6 +1981,17 @@ static void tcp_release_cb_override(struct sock *ssk)
-> 	tcp_release_cb(ssk);
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index efecbe3cf415..6f659a78c637 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -550,3 +550,32 @@ int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
+> 	sock_put(sk);
+> 	return ret;
 > }
->
-> +static int tcp_abort_override(struct sock *ssk, int err)
-> +{
-> +	/* closing a listener subflow requires a great deal of care.
-> +	 * keep it simple and just prevent such operation
-> +	 */
-> +	if (inet_sk_state_load(ssk) == TCP_LISTEN)
-> +		return -EINVAL;
 > +
-> +	return tcp_abort(ssk, err);
+> +int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+> +				 struct netlink_callback *cb)
 
-Hi Paolo -
+Hi Geliang -
 
-I looked around the code to see if there might be issues with an 
-unexpected tcp_abort on non-listening subflow sockets. Closest code I 
-found was mptcp_subflow_reset(), and the main difference seems to be 
-giving the msk a chance to clean up:
+The entire list of entries may not fit in one skb. The cb struct is used 
+to store context so the netlink framework can call the dump function 
+multiple times to fill multiple skbs. This is why the original 
+mptcp_pm_nl_get_addr_dumpit() reads and stores the id to/from cb->args[0]. 
+That cb->args[0] context is used to skip the ids that have already been 
+dumped.
 
- 	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags))
- 		mptcp_schedule_work(sk);
+With the function body below, if the list does not fit in one skb it will 
+do the same thing on every call and create duplicate entries, and will 
+never return 0 to tell the caller that it is finished.
 
-Worthwhile to add that in this override function?
+There is also nothing in the netlink output to indicate which MPTCP 
+connection each subflow id is associated with, or whether the entry is 
+from a userspace-managed socket or the in-kernel pm, so the dumped 
+information is not useful to a userspace PM.
+
+Netlink dump commands can have attributes in the request (see 
+netdev_nl_napi_get_dumpit()), I think it will be simpler to add a 
+connection token to the dump request and only dump the id list for that 
+single MPTCP connection.
 
 - Mat
 
-> +}
+
+> +{
+> +	struct net *net = sock_net(msg->sk);
+> +	struct mptcp_pm_addr_entry *entry;
+> +	long s_slot = 0, s_num = 0;
+> +	struct mptcp_sock *msk;
 > +
-> static struct tcp_ulp_ops subflow_ulp_ops __read_mostly = {
-> 	.name		= "mptcp",
-> 	.owner		= THIS_MODULE,
-> @@ -2025,6 +2036,7 @@ void __init mptcp_subflow_init(void)
+> +	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
+> +		struct sock *sk = (struct sock *)msk;
+> +
+> +		if (mptcp_pm_is_userspace(msk)) {
+> +			lock_sock(sk);
+> +			spin_lock_bh(&msk->pm.lock);
+> +			list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
+> +				if (mptcp_pm_nl_put_entry_msg(msg, cb, entry))
+> +					break;
+> +			}
+> +			spin_unlock_bh(&msk->pm.lock);
+> +			release_sock(sk);
+> +		}
+> +
+> +		sock_put(sk);
+> +		cond_resched();
+> +	}
+> +
+> +	return msg->len;
+> +}
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 23d4742f3f30..a05a6745bc31 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -1028,6 +1028,8 @@ int mptcp_pm_nl_put_entry_msg(struct sk_buff *msg,
+> int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+> int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+> int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+> +int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+> +				 struct netlink_callback *cb);
 >
-> 	tcp_prot_override = tcp_prot;
-> 	tcp_prot_override.release_cb = tcp_release_cb_override;
-> +	tcp_prot_override.diag_destroy = tcp_abort_override;
->
-> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> 	/* In struct mptcp_subflow_request_sock, we assume the TCP request sock
-> @@ -2060,6 +2072,7 @@ void __init mptcp_subflow_init(void)
->
-> 	tcpv6_prot_override = tcpv6_prot;
-> 	tcpv6_prot_override.release_cb = tcp_release_cb_override;
-> +	tcpv6_prot_override.diag_destroy = tcp_abort_override;
-> #endif
->
-> 	mptcp_diag_subflow_init(&subflow_ulp_ops);
+> void __init mptcp_pm_nl_init(void);
+> void mptcp_pm_nl_work(struct mptcp_sock *msk);
 > -- 
-> 2.42.0
+> 2.35.3
 >
 >
 >
