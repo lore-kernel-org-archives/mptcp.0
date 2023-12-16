@@ -1,129 +1,117 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBB13FB28
-	for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 19:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA3E10EE
+	for <mptcp@lists.linux.dev>; Sat, 16 Dec 2023 00:47:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTF2cPm/"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-67ac4fc7217so7541996d6.0
-        for <mptcp@lists.linux.dev>; Fri, 15 Dec 2023 11:21:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702668064; x=1703272864; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oom/s+QTPlQKC20j9ZqsZ5RAhlYB0d9JdaWb4LdfX24=;
-        b=aTF2cPm/nOLzaUA91diBF2nWhmluvQRLhN+XhLMrGWx8zUyXT8iG1FghHAiCeN8G5A
-         /wLSnRHzN0cLlnSD8H+lCeD/IP9Gi658/63IKARAfyZnoOPiK68WJiobRHzlSaDGpl+G
-         PJLf/j7DVlbNm0RuHcob44vohIbBbXev+WRBNpW4lm9ruCHyqkDJ/5c4fapv4mZ2sqeO
-         MOX2CX+220K2kHAruSdB3bYrlXWI6ViH3/dYWCIxY5jTXmLyn9zpCbtmcr5VwzLJxwht
-         5jekVewzuBu+hQvHS+vngOyoccbgfdhH7yJCb6lHRiM2MP+JXvpSMY4jVIgYmW684JWn
-         u/mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702668064; x=1703272864;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oom/s+QTPlQKC20j9ZqsZ5RAhlYB0d9JdaWb4LdfX24=;
-        b=X3yR5too+mS95FSBhqA7zGYNo8XEwgCm9xOFOCD4RF0boYcCxJUfvg2/juawUQkz4k
-         n1a0a9PxP7fu2dLHTqZEakf89qKqpMS7xtN0yNniFihZmWQWEikg6/m5pdw5jnoM7HA0
-         4Dkeb5qobPHrR7Nh8+ENBTDgXA7K27NpKxpQZmgn6XmoZX+Fyx6qaDCKDWJ0RLiTLkrZ
-         WzmJNU4vjwIWYmfi2h+xp7LoJ3/qRMzT0AgJnBOcW+DluqCgJnukH13eBr8WwzvdtTzX
-         my69T/RdOfOLMFACi0IBoJPtqQqlyG5nxS2CFpUUUctq0CTKLqC0xM4hf6uNWatwXDhe
-         cSbQ==
-X-Gm-Message-State: AOJu0YyTFgr+GUYvejQJSiEx/rzmnvrh+eJJwSqjwzMD6G2eCLpYvTOu
-	DT94GpeE0C7FA3A4HrxHAQ==
-X-Google-Smtp-Source: AGHT+IG+UiN6bn9zlPmzTlK4y5Yi1bBECLTgK57hXVkAWvJmE+zdFWpj9ZV4mCH8JZWpPj1c8mOQUA==
-X-Received: by 2002:a05:6214:27c7:b0:67f:5aa:4d26 with SMTP id ge7-20020a05621427c700b0067f05aa4d26mr4840716qvb.96.1702668063495;
-        Fri, 15 Dec 2023 11:21:03 -0800 (PST)
-Received: from [127.0.0.1] ([20.55.214.166])
-        by smtp.gmail.com with ESMTPSA id w7-20020a056214012700b0067aab230ed9sm304444qvs.21.2023.12.15.11.21.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 11:21:03 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20231215-mptcp-reviewers-geliang-v1-1-3fec5a0f8eac@kernel.org>
-References: <20231215-mptcp-reviewers-geliang-v1-1-3fec5a0f8eac@kernel.org>
-Subject: Re: MAINTAINERS: add Geliang as reviewer for MPTCP: Tests Results
-Message-ID: <6e9d5fb8-c267-41aa-fead-b9027f78aa8a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 15 Dec 2023 19:21:02 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcYZ/vJa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51EACC433C8;
+	Sat, 16 Dec 2023 00:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702687641;
+	bh=gwmwY3MJpXURfKFbsPxP1+hiatBBhV8ZfKXWdY/dUNg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=FcYZ/vJa+KCkC2kjxrUCXbivFbvLmcAVBiBW6MCUg0KC+S+g1pDnogmexNM4i0vK0
+	 VbHPM03f6kGXSNaJpmagOBu86HJoDXxcldB6zerXnVsY5gf5xA304OETJzfPTYJHy7
+	 iPCQj7ZRHHosIP3exhOlW2LSUjd15MEla3dRGb5+krgQjB6lo21reSPCw6r4pENDpY
+	 vnhO0JJYnOrmenh4ZvZQXV3AW6glrxcENFgrdYfuKnnlm39x3j3e68zgAt8qOE1hlE
+	 k+kZ5vRdhBZY900QL3xI68ut/6kD+GDC59wbG2eqFh8OkSoJqHSr6MKc4uKGc2N0LN
+	 dvnlxq2HOHrZQ==
+Date: Fri, 15 Dec 2023 16:47:20 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net] mptcp: prevent tcp diag from closing listener
+ subflows
+In-Reply-To: <f6371f65b1ebabc0f308528494ec39c9bdf786fd.1702631517.git.pabeni@redhat.com>
+Message-ID: <f8f6d53f-4fcb-2531-4fa6-b0afbeb0eabc@kernel.org>
+References: <f6371f65b1ebabc0f308528494ec39c9bdf786fd.1702631517.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Matthieu,
+On Fri, 15 Dec 2023, Paolo Abeni wrote:
 
-Thank you for your modifications, that's great!
+> The MPTCP protocol does not expect that any other entity could change
+> the first subflow status when such socket is listening.
+> Unfortunately the TCP diag interface allows aborting any TCP socket,
+> including MPTCP listeners subflows. As reported by syzbot, that trigger
+> a WARN() and could lead to later bigger trouble.
+>
+> The MPTCP protocol needs to do some MPTCP-level cleanup actions to
+> properly shutdown the listener. To keep the fix simple, prevent
+> entirely the diag interface from stopping such listeners.
+>
+> We could refine the diag callback in a later, larger patch targeting
+> net-next.
+>
+> Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
+> Closes: https://lore.kernel.org/netdev/0000000000004f4579060c68431b@google.com/
+> Reported-by: syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> net/mptcp/subflow.c | 13 +++++++++++++
+> 1 file changed, 13 insertions(+)
+>
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 64302a1ac306..1f98bec264a6 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1981,6 +1981,17 @@ static void tcp_release_cb_override(struct sock *ssk)
+> 	tcp_release_cb(ssk);
+> }
+>
+> +static int tcp_abort_override(struct sock *ssk, int err)
+> +{
+> +	/* closing a listener subflow requires a great deal of care.
+> +	 * keep it simple and just prevent such operation
+> +	 */
+> +	if (inet_sk_state_load(ssk) == TCP_LISTEN)
+> +		return -EINVAL;
+> +
+> +	return tcp_abort(ssk, err);
 
-Our CI did some validations and here is its report:
+Hi Paolo -
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5636453443567616
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5636453443567616/summary/summary.txt
+I looked around the code to see if there might be issues with an 
+unexpected tcp_abort on non-listening subflow sockets. Closest code I 
+found was mptcp_subflow_reset(), and the main difference seems to be 
+giving the msk a chance to clean up:
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4792028513435648
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4792028513435648/su=
-mmary/summary.txt
+ 	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags))
+ 		mptcp_schedule_work(sk);
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6199403396988928
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6199403396988928/summary/summary.txt
+Worthwhile to add that in this override function?
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5073503490146304
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5073503490146304/summary/summary.txt
+- Mat
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/006888d29030
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+> +}
+> +
+> static struct tcp_ulp_ops subflow_ulp_ops __read_mostly = {
+> 	.name		= "mptcp",
+> 	.owner		= THIS_MODULE,
+> @@ -2025,6 +2036,7 @@ void __init mptcp_subflow_init(void)
+>
+> 	tcp_prot_override = tcp_prot;
+> 	tcp_prot_override.release_cb = tcp_release_cb_override;
+> +	tcp_prot_override.diag_destroy = tcp_abort_override;
+>
+> #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> 	/* In struct mptcp_subflow_request_sock, we assume the TCP request sock
+> @@ -2060,6 +2072,7 @@ void __init mptcp_subflow_init(void)
+>
+> 	tcpv6_prot_override = tcpv6_prot;
+> 	tcpv6_prot_override.release_cb = tcp_release_cb_override;
+> +	tcpv6_prot_override.diag_destroy = tcp_abort_override;
+> #endif
+>
+> 	mptcp_diag_subflow_init(&subflow_ulp_ops);
+> -- 
+> 2.42.0
+>
+>
+>
