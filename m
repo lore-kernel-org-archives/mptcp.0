@@ -1,31 +1,31 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65007107BA
-	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 08:48:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6099612B8F
+	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 09:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l3CzIGMP"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CduSA2Fj"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702889322;
+	t=1702891513;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/JI/9I57H0eOWgiEBhYSFYEzjGXiHYZyh+DjWzvywok=;
-	b=l3CzIGMP8diMyCyvRpHH1E/No1itEkJfjLsfsLz/6Ccv3Iqz9ghC2X08Wg7AIc5ApEhWFL
-	hk5l53Uf22SYEGZvi2qWUn8/9TYAPcoJhmWxHH3rAtG1JhVtNAhts92oNg+3JZIk0wakyM
-	OpqkMSdLy4P4sv5d45R+UkGpiUk3jv4=
+	bh=DpSBD9N/x5aEGxIPRRsMeG+JJ/FV1c5vPkV2EXAaxMg=;
+	b=CduSA2Fj5BfzqY9/Ao4zSg49gBxs9qdJTtSFBo4pGm6bP0Z9pRnEFRN7KqFZoLmDqrMXbP
+	f1J0KN+78eiofWElLrq/SxUJ92D+xGt96Kp5lxr1eRpBFy6t69R2zx3HnVZ4n8485GdztD
+	GEwgPTT6Poj4UMIk1GHD7SGoYIbWc1o=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next 5/5] selftests: mptcp: diag: check CURRESTAB counters
-Date: Mon, 18 Dec 2023 16:47:17 +0800
-Message-Id: <573a8f55b47fb4aa35dfdfc49f1984ab7d232781.1702889134.git.geliang.tang@linux.dev>
-In-Reply-To: <cover.1702889134.git.geliang.tang@linux.dev>
-References: <cover.1702889134.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v2 01/15] mptcp: add mptcp_pm_nl_put_entry_msg helper
+Date: Mon, 18 Dec 2023 17:23:30 +0800
+Message-Id: <e8838803fb1baad12b567833ed0b5c759ade8325.1702891194.git.geliang.tang@linux.dev>
+In-Reply-To: <cover.1702891194.git.geliang.tang@linux.dev>
+References: <cover.1702891194.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,92 +35,93 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This patch adds a new helper chk_msk_cestab() to check the current
-established connections counter MIB_CURRESTAB in diag.sh. Invoke it
-to check the counter during the connection after every chk_msk_inuse().
-
----
-Note: chk_msk_cestab() and chk_cestab_nr() will be replaced by
-mptcp_lib_chk_cestab_nr() in subsequent patches after the commit
-"selftests: mptcp: diag: print colored output"
----
+Extract the genlmsg related code from mptcp_pm_nl_get_addr_dumpit() into
+a new helper mptcp_pm_nl_put_entry_msg(). It will be used in the userspace
+PM dump_addr().
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- tools/testing/selftests/net/mptcp/diag.sh | 30 +++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ net/mptcp/pm_netlink.c | 35 ++++++++++++++++++++++++-----------
+ net/mptcp/protocol.h   |  3 +++
+ 2 files changed, 27 insertions(+), 11 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 95b498efacd1..aa341f40363c 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -182,6 +182,30 @@ chk_msk_inuse()
- 	__chk_nr get_msk_inuse $expected "$msg" 0
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index c84cc0908cfc..43062cd23ba3 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1658,6 +1658,29 @@ static int mptcp_nl_fill_addr(struct sk_buff *skb,
+ 	return -EMSGSIZE;
  }
  
-+# $1: ns, $2: cestab nr
-+chk_msk_cestab()
++int mptcp_pm_nl_put_entry_msg(struct sk_buff *msg,
++			      struct netlink_callback *cb,
++			      struct mptcp_pm_addr_entry *entry)
 +{
-+	local ns=$1
-+	local cestab=$2
-+	local count
-+	local msg="....chk $2 cestab"
-+	test_cnt=$((test_cnt+1))
++	void *hdr;
++	int ret;
 +
-+	printf "%-50s" "$msg"
++	hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
++			  cb->nlh->nlmsg_seq, &mptcp_genl_family,
++			  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
++	if (!hdr)
++		return -EMSGSIZE;
 +
-+	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPCurrEstab")
-+	if [ -z "$count" ]; then
-+		echo "[ skip ]"
-+		mptcp_lib_result_skip "${msg}"
-+	elif [ "$count" != "$cestab" ]; then
-+		echo "[ fail ] got $count current establish[s] expected $cestab"
-+		ret=${KSFT_FAIL}
-+	else
-+		echo "[  ok  ]"
-+		mptcp_lib_result_pass "$msg"
-+	fi
++	ret = mptcp_nl_fill_addr(msg, entry);
++	if (ret < 0) {
++		genlmsg_cancel(msg, hdr);
++		return ret;
++	}
++
++	genlmsg_end(msg, hdr);
++	return 0;
 +}
 +
- wait_connected()
+ int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
  {
- 	local listener_ns="${1}"
-@@ -219,9 +243,11 @@ chk_msk_nr 2 "after MPC handshake "
- chk_msk_remote_key_nr 2 "....chk remote_key"
- chk_msk_fallback_nr 0 "....chk no fallback"
- chk_msk_inuse 2 "....chk 2 msk in use"
-+chk_msk_cestab $ns 2
- flush_pids
+ 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+@@ -1715,7 +1738,6 @@ int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
+ 	struct mptcp_pm_addr_entry *entry;
+ 	struct pm_nl_pernet *pernet;
+ 	int id = cb->args[0];
+-	void *hdr;
+ 	int i;
  
- chk_msk_inuse 0 "....chk 0 msk in use after flush"
-+chk_msk_cestab $ns 0
+ 	pernet = pm_nl_get_pernet(net);
+@@ -1730,19 +1752,10 @@ int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
+ 			if (entry->addr.id <= id)
+ 				continue;
  
- echo "a" | \
- 	timeout ${timeout_test} \
-@@ -237,9 +263,11 @@ echo "b" | \
- wait_connected $ns 10001
- chk_msk_fallback_nr 1 "check fallback"
- chk_msk_inuse 1 "....chk 1 msk in use"
-+chk_msk_cestab $ns 1
- flush_pids
+-			hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
+-					  cb->nlh->nlmsg_seq, &mptcp_genl_family,
+-					  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
+-			if (!hdr)
+-				break;
+-
+-			if (mptcp_nl_fill_addr(msg, entry) < 0) {
+-				genlmsg_cancel(msg, hdr);
++			if (mptcp_pm_nl_put_entry_msg(msg, cb, entry))
+ 				break;
+-			}
  
- chk_msk_inuse 0 "....chk 0 msk in use after flush"
-+chk_msk_cestab $ns 0
- 
- NR_CLIENTS=100
- for I in `seq 1 $NR_CLIENTS`; do
-@@ -261,9 +289,11 @@ done
- 
- wait_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
- chk_msk_inuse $((NR_CLIENTS*2)) "....chk many msk in use"
-+chk_msk_cestab $ns 200
- flush_pids
- 
- chk_msk_inuse 0 "....chk 0 msk in use after flush"
-+chk_msk_cestab $ns 0
- 
- mptcp_lib_result_print_all_tap
- exit $ret
+ 			id = entry->addr.id;
+-			genlmsg_end(msg, hdr);
+ 		}
+ 	}
+ 	spin_unlock_bh(&pernet->lock);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index f7b9c1b995df..23d4742f3f30 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1022,6 +1022,9 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+ 			      bool *drop_other_suboptions);
+ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 			     struct mptcp_rm_list *rm_list);
++int mptcp_pm_nl_put_entry_msg(struct sk_buff *msg,
++			      struct netlink_callback *cb,
++			      struct mptcp_pm_addr_entry *entry);
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
 -- 
 2.35.3
 
