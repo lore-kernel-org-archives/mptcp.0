@@ -1,29 +1,29 @@
 Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7018311724
-	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 09:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5C311C82
+	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 09:25:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XmG/Qd/4"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IZNwkyVB"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702891522;
+	t=1702891525;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ERiB6Pet9ivx6wj4QdFsUs/qDRxTIgiskMJwm/GxbRs=;
-	b=XmG/Qd/4gEHlJ7f1O04xF/260rMr/oGbmUVnOduV+dEBWcs7qFkjPw813eFcxRbx78qiCv
-	Gn9HfX7HMwKBWVKu/HI/abZbcub8e2ijIkcziedPvXW+muuCC1AAatKT8vtvQOZRAGlfM0
-	uAMjFkQsOdC6XQdfr1QpiuWGDIZL5XY=
+	bh=z/Ii6GsSUtx5/gkFNNJl6jtYbkzb/prif7eMb5oRvzo=;
+	b=IZNwkyVBeg5u+u875IgqBisP+MxzqEB7GgvsBEhKg5dHY0xRs8UcQ59RE6Bnxc/1d+kVAL
+	a0XLZQU/bo7zGfbkKUT69+omj3Aulsfp1WyYYfSuzH0sxTeE3QCo9vbI/WDY9m9mjZdN7l
+	0izvlOqKmTnr8aeOtPzPnbnz/v+J4oc=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v2 08/15] selftests: mptcp: add check_output helper
-Date: Mon, 18 Dec 2023 17:23:37 +0800
-Message-Id: <8fbe47ba2065f6c2d659ccda914965d00bd84c34.1702891194.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v2 09/15] selftests: mptcp: dump userspace addrs list
+Date: Mon, 18 Dec 2023 17:23:38 +0800
+Message-Id: <ba34e9e0768bae351bf9ed29e783b4ed64593c35.1702891194.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702891194.git.geliang.tang@linux.dev>
 References: <cover.1702891194.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,73 +35,90 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Similar to check() in pm_netlink.sh, add a new helper check_output()
-in mptcp_join.sh to check the output of the given commands.
+This patch adds a new helper userspace_pm_dump() to dump addresses
+for the userspace PM. Add two new tests for userspace pm dump address
+and subflow. Use userspace_pm_add_addr() and userspace_pm_add_sf() to
+add an address and a suflow.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 3a5b63026191..25d3f32644ed 100755
+index 25d3f32644ed..403200394aa7 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -21,6 +21,7 @@ cinfail=""
- cinsent=""
- tmpfile=""
- cout=""
-+check_output_err=""
- capout=""
- ns1=""
- ns2=""
-@@ -186,6 +187,7 @@ init() {
- 	cout=$(mktemp)
- 	evts_ns1=$(mktemp)
- 	evts_ns2=$(mktemp)
-+	check_output_err=$(mktemp)
- 
- 	trap cleanup EXIT
- 
-@@ -199,6 +201,7 @@ cleanup()
- 	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
- 	rm -f "$tmpfile"
- 	rm -rf $evts_ns1 $evts_ns2
-+	rm -f $check_output_err
- 	cleanup_partial
- }
- 
-@@ -3357,6 +3360,30 @@ userspace_pm_rm_sf()
+@@ -3360,6 +3360,18 @@ userspace_pm_rm_sf()
  	wait_rm_sf $1 "${cnt}"
  }
  
-+check_output()
++# $1: ns
++userspace_pm_dump()
 +{
-+	local cmd="$1"
-+	local expected="$2"
-+	local msg="$3"
-+	local out=`$cmd 2>$check_output_err`
-+	local cmd_ret=$?
++	local evts=$evts_ns1
++	local tk
 +
-+	printf "%-42s" "$msg"
-+	if [ $cmd_ret -ne 0 ]; then
-+		mptcp_lib_print_err "[ FAIL ] command execution '$cmd' stderr "
-+		cat $check_output_err
-+		ret=${KSFT_FAIL}
-+		return $cmd_ret
-+	elif [ "$out" = "$expected" ]; then
-+		mptcp_lib_print_ok "[ OK ]"
-+		return 0
-+	else
-+		mptcp_lib_print_err "[ FAIL ] expected '$expected' got '$out'"
-+		ret=${KSFT_FAIL}
-+		return 1
-+	fi
++	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	tk=$(mptcp_lib_evts_get_info token "$evts")
++
++	ip netns exec $1 ./pm_nl_ctl dump token $tk
 +}
 +
- userspace_tests()
+ check_output()
  {
- 	# userspace pm type prevents add_addr
+ 	local cmd="$1"
+@@ -3573,6 +3585,50 @@ userspace_tests()
+ 		kill_events_pids
+ 		wait $tests_pid
+ 	fi
++
++	# userspace pm dump address
++	if reset_with_events "userspace pm dump address" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++		set_userspace_pm $ns1
++		pm_nl_set_limits $ns2 1 1
++		speed=5 \
++			run_tests $ns1 $ns2 10.0.1.1 &
++		local tests_pid=$!
++		wait_mpj $ns1
++		userspace_pm_add_addr $ns1 10.0.2.1 10
++		chk_join_nr 1 1 1
++		chk_add_nr 1 1
++		chk_mptcp_info subflows 1 subflows 1
++		chk_subflows_total 2 2
++		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
++		local dump="id 10 flags signal 10.0.2.1"
++		check_output "userspace_pm_dump $ns1" \
++			     "$dump" "      dump addrs signal"
++		kill_events_pids
++		wait $tests_pid
++	fi
++
++	# userspace pm dump subflow
++	if reset_with_events "userspace pm dump subflow" &&
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++		set_userspace_pm $ns2
++		pm_nl_set_limits $ns1 0 1
++		speed=5 \
++			run_tests $ns1 $ns2 10.0.1.1 &
++		local tests_pid=$!
++		wait_mpj $ns2
++		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
++		userspace_pm_add_sf $ns2 10.0.3.2 20
++		chk_join_nr 1 1 1
++		chk_mptcp_info subflows 1 subflows 1
++		chk_subflows_total 2 2
++		local dump="id 20 flags subflow 10.0.3.2"
++		check_output "userspace_pm_dump $ns2" \
++			     "$dump" "      dump addrs subflow"
++		kill_events_pids
++		wait $tests_pid
++	fi
+ }
+ 
+ endpoint_tests()
 -- 
 2.35.3
 
