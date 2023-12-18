@@ -1,29 +1,29 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60006107B0
-	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 08:48:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59108107B7
+	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 08:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FAOY/tif"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cX3DekId"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702889318;
+	t=1702889319;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wiKp+yp9sD3/MgmOWyQTCXqF1hHLdh1xASrwowdCyY4=;
-	b=FAOY/tif3jfXNwVdAneXQYqiiHMUPLmHqMCRM/1tPQdQCz+MjTquVSAOUI/3t3cHE15rQW
-	m4LExUDWJGm6NsC6Kz7lct6d90JXUumg+UyeBpxUG5+dMZViTKSd1pUrtgGydl9xtfz9Nq
-	JpBYT90pHid6Ak0LlPEFSE8Ums61OE8=
+	bh=oq1x055y/ZPL/0misyDl/EbFgbm8C7ER63akTSQlvnU=;
+	b=cX3DekIdkLaDaicRZznxiyjhWVuUhGl9A14NLbyLwzAKsCCs7G4E8XnRyUdv4aIcBMLmwK
+	kElQKu9juUmuM3LI4wJjxaqe0OXeUXg71ywi/KVCKJ1Fw3WKwnJ6vFMkoj+wolR+/wbIOA
+	q5L/7SVH9Av6R0u9ojZPABcJyFRT6RQ=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next 1/5] Squash to "mptcp: use mptcp_set_state" 1
-Date: Mon, 18 Dec 2023 16:47:13 +0800
-Message-Id: <85ce8b86865dc6fd8c984ef126dd6872baa028db.1702889134.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next 2/5] mptcp: move inet_sk_state_store under lock
+Date: Mon, 18 Dec 2023 16:47:14 +0800
+Message-Id: <84b7f01dcee92c4c1ae00523baa5f98f0cb64671.1702889134.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702889134.git.geliang.tang@linux.dev>
 References: <cover.1702889134.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,27 +35,48 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Remove the comment.
+This patch moves inet_sk_state_store() under the socket lock in
+mptcp_pm_nl_create_listen_socket(). This is a pre-req patch for
+using mptcp_set_state() instead of inet_sk_state_store().
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_netlink.c | 3 ---
- 1 file changed, 3 deletions(-)
+ net/mptcp/pm_netlink.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index b93683b5e618..bf4d96f6f99a 100644
+index bf4d96f6f99a..0e6da322c8f2 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -1048,9 +1048,6 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 	if (err)
- 		return err;
+@@ -1030,9 +1030,10 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
  
--	/* avoid replacing inet_sk_state_store with mptcp_set_state here, as the
--	 * old status is known to be TCP_CLOSE, hence will not affect the count.
--	 */
+ 	lock_sock(newsk);
+ 	ssk = __mptcp_nmpc_sk(mptcp_sk(newsk));
+-	release_sock(newsk);
+-	if (IS_ERR(ssk))
++	if (IS_ERR(ssk)) {
++		release_sock(newsk);
+ 		return PTR_ERR(ssk);
++	}
+ 
+ 	mptcp_info2sockaddr(&entry->addr, &addr, entry->addr.family);
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+@@ -1045,10 +1046,14 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 	else if (ssk->sk_family == AF_INET6)
+ 		err = inet6_bind_sk(ssk, (struct sockaddr *)&addr, addrlen);
+ #endif
+-	if (err)
++	if (err) {
++		release_sock(newsk);
+ 		return err;
++	}
+ 
  	inet_sk_state_store(newsk, TCP_LISTEN);
++	release_sock(newsk);
++
  	lock_sock(ssk);
  	err = __inet_listen_sk(ssk, backlog);
+ 	if (!err)
 -- 
 2.35.3
 
