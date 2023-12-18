@@ -1,111 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2063.outbound.protection.outlook.com [40.107.243.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3B0498A8
-	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 16:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262E85A853
+	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 16:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xp6wUO8E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AC65C433C8;
-	Mon, 18 Dec 2023 16:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702916834;
-	bh=w55sZH9CK0xHKG+9Q9rKZyoVlmWlvozM6sOgM4FHNdM=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Xp6wUO8EdtQSF+M6LLm8ErjkKrfhdNG4H1rYbH5S9MPRpZB/tZyOSE1bt7Dt/nbhI
-	 PQ8iE+pmsNmouk76G7d2E6/yLR/SryesSzLdTkaMvRCYW3j9yqKe81iq7NFsxt+PNi
-	 AVlXUK1sYMmjQ6F9o0Smgke69arJ3HVtOHEtkUaWYdvXsF2xurBj5ak72sgNnuMrLt
-	 AyTOmfy6wX4poy+0C59O9pJJ0m29YK1AKG6ajmIpirBfUf66qQvDazY/s9RXaRrWsj
-	 nQzThww3yQJ52PvBu8td+KW5zhWovsjxQiEw+fyXsHdimBnAqbltrKggBzB9CqFg9w
-	 XRsohQ5oR0RNg==
-Message-ID: <b47a8e32-7f93-4d55-9fd1-af2e449ba891@kernel.org>
-Date: Mon, 18 Dec 2023 17:27:12 +0100
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gxpme1rG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YmyzzvQGgwSvGvn3pVFkxQu4OJUg5syQXlKvBq6bP9iN5xflUUwBpuyb/V+RXvR7LYcIXmV8JK8AtefLReU9NOfnwCAqPv/yfwY2e20AFryM0dL9NMfXlpA+M6ZTM7tCmfQbm89uzDscX4fVjSlJo92pTjLfiKSAig7NPn57y6nByYN9SavmDMpOX14m5LhE8BwQok8wEEQvowu2UtcNkKQ+ToiRA+8WnaD8HZQFIpzh7x7Y3v028pDTa3vy3PqDqwBe+gDX2/3arzw91CDVSFCccRFhDgQ/5P6DArhOw5Am0za/Be2x7grXRYzfY2aTyUC0tlgl4LlzkmjAOcD3Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7Kwc3/8SYDtQVOv3ru71aD4CcYLEMJatGPzhXxJy9y8=;
+ b=httPRjZzFyI6bBmQa3OIMMBUsuaxkI9PiAwnRNa0ZQHDQGSr0EDxTxZVtUYhFpMNZv4sfgqgyeiwiROWejdhQyPXkML1YTsz/LDlqqFffQ4CgI8WJKEdU5ud4W2nk98MtlXDFuWagNwPuZOug1cLjq0gScbXCKjVhGYkgdrNUoYdTVhjYYqXgJrkH8cR53vtm1Ao3YJB+L8rRFaWMZfKZRfHFR5mHfVqSy+yTYf/REkX5W8xSczqX7CV5vEgK3a/J0077k1u3f95K/PULbiQMO4GUYjzBCe0Hcv12h/GID6kWjMBfzPDWu6TqHLXyLarka25btmut6gmkFFYIVqUlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Kwc3/8SYDtQVOv3ru71aD4CcYLEMJatGPzhXxJy9y8=;
+ b=gxpme1rGzHX57qcW3Erp1jdgjUqzCNh0rEcUdc6WbkqITB7qlmbXPlLNb2uxw4U5T10DUD7v8sio7GMZdX4pm5YxDsnU5GZXOYocCxazNFN4LkSMng5WCYCKiSWUvfQTIGgIdQkM+WKueLinHeaaInu9mxBgfGLdfl08XIbYvpEkEqB9b3xQKvoO+H9b2Y3g8ldvevhFUeic8nIDA81U6znPtNKGWWJEpdVaSECS/o0asw6K8bQOmsLYD5OKgoqKQeJ8cEMtlH74mNYUx/MtXSy+BocNC2Un+WK0OpQeXGnZuAjdj9C5o3Y9S3gpFbuqVph1eOy32L8V7MFJnKC3GQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6179.namprd12.prod.outlook.com (2603:10b6:930:24::22)
+ by CY8PR12MB7266.namprd12.prod.outlook.com (2603:10b6:930:56::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.38; Mon, 18 Dec
+ 2023 16:31:15 +0000
+Received: from CY5PR12MB6179.namprd12.prod.outlook.com
+ ([fe80::fef2:f63d:326c:f63f]) by CY5PR12MB6179.namprd12.prod.outlook.com
+ ([fe80::fef2:f63d:326c:f63f%5]) with mapi id 15.20.7091.034; Mon, 18 Dec 2023
+ 16:31:14 +0000
+Date: Mon, 18 Dec 2023 18:31:10 +0200
+From: Ido Schimmel <idosch@nvidia.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, davem@davemloft.net,
+	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+	nhorman@tuxdriver.com, matttbe@kernel.org, martineau@kernel.org,
+	yotam.gi@gmail.com, jiri@resnulli.us, jacob.e.keller@intel.com,
+	johannes@sipsolutions.net, fw@strlen.de
+Subject: Re: [PATCH net-next] genetlink: Use internal flags for multicast
+ groups
+Message-ID: <ZYBzzsZfUOkXGdpI@shredder>
+References: <20231217075348.4040051-1-idosch@nvidia.com>
+ <ZYAvBdhiAnR9dIi3@smile.fi.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZYAvBdhiAnR9dIi3@smile.fi.intel.com>
+X-ClientProxiedBy: LO4P265CA0185.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:311::14) To CY5PR12MB6179.namprd12.prod.outlook.com
+ (2603:10b6:930:24::22)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 4/5] Squash to "selftests: mptcp: check
- CURRESTAB counters"
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@linux.dev>, mptcp@lists.linux.dev
-References: <cover.1702889134.git.geliang.tang@linux.dev>
- <361f60bc545f2b190bbbb6fbfb05e13b1a73d7a8.1702889134.git.geliang.tang@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <361f60bc545f2b190bbbb6fbfb05e13b1a73d7a8.1702889134.git.geliang.tang@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6179:EE_|CY8PR12MB7266:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9aa92d64-5359-4ba1-265d-08dbffe6c0c8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	0i+LNCqJUZhs3TB+Sry93pywX+fTLNXLdc8p1MSTuatOLZmOG9Z7qsIDXhcvVVcZyLmyMSzd8wKeRWh8eJ9J7sxhPY8PK07pzkb+hR4J73e33N6oEcG9DnvI4/O+sOHwXBiRUBZsJG1BQaESeoWFPqOOhLCrEe0GFZH5O+xXYT5AC+iplR3aK6FlpUxDguS4pQD2Osbr04+Okb8SfeUMVFO99MFRvo8wYxcEuEqDjsjIBDQJlhmAamckpn1+aET/55CkbaYcopxgp19jsQvjHWh+5gYRSXn23E7PJDhclcZ24evlw1uD9QtzX0wi47eT8Uu6XtKcHx5I0q2Qc+mwDe3DBw5gSE2YJ1KVUH6VTD+NOYvq/l45kJBVd+AZyxErcQplWEaaYBjXv/Zmoaw/wna3LjnfvoD3nZM7X7HIuoiTI+T039bD5gAYvKR7XiFWHC69UHDhJX2qsQ1H1X6J0W7P/uw2QAus5tRTFxhQcqTC7kJZ9xvVMnMw/SMrt6r5F3Qo6ugXx5Nm+pwVOD/PEcI0QG2E12fc1OpD17Yb9qXXcIehNepsmDdCKYDZuzqm
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6179.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(39860400002)(376002)(346002)(136003)(396003)(366004)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(8936002)(4326008)(8676002)(38100700002)(5660300002)(2906002)(6512007)(9686003)(6666004)(66946007)(6916009)(83380400001)(316002)(66556008)(4744005)(66476007)(7416002)(41300700001)(478600001)(6486002)(6506007)(26005)(86362001)(33716001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?HVoZef0ANTgcJxtNogsMfqlSQvRRWLEmzUbwf2M7aMDEDczLVbPck2mRKUVT?=
+ =?us-ascii?Q?IE6/yjJWc7JiTRKl4QY1NOI/yf4vL2w6EiN7fmrIlwjulzP3eKkNg0OpT54t?=
+ =?us-ascii?Q?vM4x7/nj1IHLVUnl69APCjofctyg7qRmC5L0Jkyf24EkOg3X1WSTGqn+lsx+?=
+ =?us-ascii?Q?seWAnDi8QIIWMtdcBw9odqTJUrss97P2IImIo5+wyQqSXaaTNuOrLhGk51Br?=
+ =?us-ascii?Q?tzyPM5PkOSZQUmO26n08Ax+JuOoGAvmPZuVbtl1dx+PAbESNOo0xmWAW3cJ1?=
+ =?us-ascii?Q?2zIqnIXM7jKJNNgXYPaWlDtzNmZxz4qBJEgVkvuD3MZLXOGCvqKwbACepxSG?=
+ =?us-ascii?Q?/atlUOsuMwRF4Q5KTQfub9foiiYNSet3N9QXVZuKie/3bTCi8HrroR3uqrRr?=
+ =?us-ascii?Q?jSBLVi/ZgndygRzUmEmU4kuVyC3UkJMqMCZ0+0ChG1xZUjs2uDWALExHU7+H?=
+ =?us-ascii?Q?JJA5iIGwS+Ih6bO13dwjoIVY60RZeTK82DnXdZKD2JiFgOnv+S4oZ08R4Kr1?=
+ =?us-ascii?Q?CyjK9YtTJlOUYBjRf0Z7dMra9EzELSRz0yCjeFIUKKblTbZAzHd9ivs35O1S?=
+ =?us-ascii?Q?lZcerb2Du5OmoQjv2emsgL2g9BfTn66jxKHmnTRhgKvVbGGFAo+VnjOPjC7N?=
+ =?us-ascii?Q?UiDcbcZOPnAwIKYl33NvpQHegShD9oRQtQZrwiFqmoc7hSqa58vnoQcYq9JZ?=
+ =?us-ascii?Q?wwhhoXrYGuMr9FBY9wPPpGNtNpMn9PVvPJ6TqvVOPH0Jwj/dh00r6ieVDsr8?=
+ =?us-ascii?Q?blV67DBpVHzDnw0xBp+JXL08MSfsyiZqgNojNTkVTevrjunUbT8DjUM8ccx3?=
+ =?us-ascii?Q?s2R13rOSQiMZAzBAGdgmxsXnKEJ0dAXzWWd7pPITYKjdA1VtZv99NyeNHEDx?=
+ =?us-ascii?Q?yhjX2bxBB5N/yN0nk1TC2E2KU+dBHe0TALW/pPv32qAbYj9D68BOaHccrKuu?=
+ =?us-ascii?Q?ZHHwknFvAvWBiUc+ySjY9MpuRA48OWApBvEi9KinU+AUgoeM4KCp3LbDCDbI?=
+ =?us-ascii?Q?5CB7EJrZzrA0RC+QRFkqHw8x0MWySu2XbmttNVTSZGt1GVxgeBUaSo3bdMpU?=
+ =?us-ascii?Q?iF9AEfEhuH/HXBu21p2nL3P2LOqQfvIaYQ6VnSdWPphKfWCy+xGDsNJ5aanW?=
+ =?us-ascii?Q?sUSVBkhCT2JbIqwQymgSZ70V+kBVhgHHjCNfwwCc8IlCGMs824Lx4QZ8fVrX?=
+ =?us-ascii?Q?8GZTo8q2505dvUu7XOORsOSf3MENBHJDy5q+GITwR2QxLHHptPhtSZr7JVTi?=
+ =?us-ascii?Q?Vx+R0W69Jk4SCMXs7Al6nyrzv7zV3KHkzIsys34wTVzohhI/BVMHXx4NCLyy?=
+ =?us-ascii?Q?OpQ47EEc6rZqf9TaWOjrwTTzcx0AexFcuL/uzl12MgVzz1sV828OsQbOvFN9?=
+ =?us-ascii?Q?NSiWKE6yFXv9npHRu8RDvAJmjVHKZTGFWuTd9Moo32UQmw8bKp/KKqjkrSax?=
+ =?us-ascii?Q?p1Tvvp1OkzydtWkSDoqjsYY4ek8bw7r2yRvD8CmcB31UMCSff0wBVFVrHVEF?=
+ =?us-ascii?Q?rR9vdk7WXckdm8pWf0O2uqokpzfVM3yzQbeRaa+SlHsR5wWreqj8bVraPT6w?=
+ =?us-ascii?Q?oTVxW8vB+H+CNMOgGhNrYNIEgtNHPa1+MIr5nmIl?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9aa92d64-5359-4ba1-265d-08dbffe6c0c8
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6179.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2023 16:31:14.7102
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zH6n3lcBgXhV/RjK6ksk0nOd90LeoVKTKD9mNk6m9waTLa3R+P8hx9ucCPH5A3sg3tU0fgjlzY9l7FgGNKjwdA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7266
 
-Hi Geliang,
-
-On 18/12/2023 09:47, Geliang Tang wrote:
-> Add a comment for check_cestab(), and use cestab_ns1/cestab_ns2 in it as
-> Matt suggested.
+On Mon, Dec 18, 2023 at 01:37:41PM +0200, Andy Shevchenko wrote:
+> No functional, but documentation changes...
 > 
-> Please update the subject as:
+> So, I suggest to have these flags being described
 > 
-> '''
-> selftests: mptcp: join: check CURRESTAB counters
-> '''
+> /* ... */
+> #define FLAG1
+> 
+> /* ... */
+> #define FLAG2
 
-Thank you, I just applied this patch. I will wait for Paolo's ACK for
-1-3/5 and I have a question on patch 5/5.
+OK, thanks. I will squash the following diff into v2:
 
-- c36edd021eb1: "squashed" patch 4/5 in "selftests: mptcp: check
-CURRESTAB counters"
-- f111e119a46d: tg:msg: add 'join:' prefix
-- Results: 84d8fb414b2a..1097ead7bcb9 (export)
-
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231218T162532
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+diff --git a/include/net/genetlink.h b/include/net/genetlink.h
+index 5a402fd24817..bd6a6ffdec76 100644
+--- a/include/net/genetlink.h
++++ b/include/net/genetlink.h
+@@ -8,7 +8,9 @@
+ 
+ #define GENLMSG_DEFAULT_SIZE (NLMSG_DEFAULT_SIZE - GENL_HDRLEN)
+ 
++/* Binding to multicast group requires %CAP_NET_ADMIN */
+ #define GENL_MCAST_CAP_NET_ADMIN       BIT(0)
++/* Binding to multicast group requires %CAP_SYS_ADMIN */
+ #define GENL_MCAST_CAP_SYS_ADMIN       BIT(1)
+ 
+ /**
