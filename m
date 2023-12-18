@@ -1,138 +1,120 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2063.outbound.protection.outlook.com [40.107.243.63])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262E85A853
-	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 16:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52AD6498A2
+	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 16:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gxpme1rG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YmyzzvQGgwSvGvn3pVFkxQu4OJUg5syQXlKvBq6bP9iN5xflUUwBpuyb/V+RXvR7LYcIXmV8JK8AtefLReU9NOfnwCAqPv/yfwY2e20AFryM0dL9NMfXlpA+M6ZTM7tCmfQbm89uzDscX4fVjSlJo92pTjLfiKSAig7NPn57y6nByYN9SavmDMpOX14m5LhE8BwQok8wEEQvowu2UtcNkKQ+ToiRA+8WnaD8HZQFIpzh7x7Y3v028pDTa3vy3PqDqwBe+gDX2/3arzw91CDVSFCccRFhDgQ/5P6DArhOw5Am0za/Be2x7grXRYzfY2aTyUC0tlgl4LlzkmjAOcD3Aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7Kwc3/8SYDtQVOv3ru71aD4CcYLEMJatGPzhXxJy9y8=;
- b=httPRjZzFyI6bBmQa3OIMMBUsuaxkI9PiAwnRNa0ZQHDQGSr0EDxTxZVtUYhFpMNZv4sfgqgyeiwiROWejdhQyPXkML1YTsz/LDlqqFffQ4CgI8WJKEdU5ud4W2nk98MtlXDFuWagNwPuZOug1cLjq0gScbXCKjVhGYkgdrNUoYdTVhjYYqXgJrkH8cR53vtm1Ao3YJB+L8rRFaWMZfKZRfHFR5mHfVqSy+yTYf/REkX5W8xSczqX7CV5vEgK3a/J0077k1u3f95K/PULbiQMO4GUYjzBCe0Hcv12h/GID6kWjMBfzPDWu6TqHLXyLarka25btmut6gmkFFYIVqUlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Kwc3/8SYDtQVOv3ru71aD4CcYLEMJatGPzhXxJy9y8=;
- b=gxpme1rGzHX57qcW3Erp1jdgjUqzCNh0rEcUdc6WbkqITB7qlmbXPlLNb2uxw4U5T10DUD7v8sio7GMZdX4pm5YxDsnU5GZXOYocCxazNFN4LkSMng5WCYCKiSWUvfQTIGgIdQkM+WKueLinHeaaInu9mxBgfGLdfl08XIbYvpEkEqB9b3xQKvoO+H9b2Y3g8ldvevhFUeic8nIDA81U6znPtNKGWWJEpdVaSECS/o0asw6K8bQOmsLYD5OKgoqKQeJ8cEMtlH74mNYUx/MtXSy+BocNC2Un+WK0OpQeXGnZuAjdj9C5o3Y9S3gpFbuqVph1eOy32L8V7MFJnKC3GQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com (2603:10b6:930:24::22)
- by CY8PR12MB7266.namprd12.prod.outlook.com (2603:10b6:930:56::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.38; Mon, 18 Dec
- 2023 16:31:15 +0000
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::fef2:f63d:326c:f63f]) by CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::fef2:f63d:326c:f63f%5]) with mapi id 15.20.7091.034; Mon, 18 Dec 2023
- 16:31:14 +0000
-Date: Mon, 18 Dec 2023 18:31:10 +0200
-From: Ido Schimmel <idosch@nvidia.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
-	nhorman@tuxdriver.com, matttbe@kernel.org, martineau@kernel.org,
-	yotam.gi@gmail.com, jiri@resnulli.us, jacob.e.keller@intel.com,
-	johannes@sipsolutions.net, fw@strlen.de
-Subject: Re: [PATCH net-next] genetlink: Use internal flags for multicast
- groups
-Message-ID: <ZYBzzsZfUOkXGdpI@shredder>
-References: <20231217075348.4040051-1-idosch@nvidia.com>
- <ZYAvBdhiAnR9dIi3@smile.fi.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZYAvBdhiAnR9dIi3@smile.fi.intel.com>
-X-ClientProxiedBy: LO4P265CA0185.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:311::14) To CY5PR12MB6179.namprd12.prod.outlook.com
- (2603:10b6:930:24::22)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UwlwsCLY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702918460;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8Ow/CBU6TdgejPtzvZ7Xz1uoKmK9S8/MdQCWKi9j900=;
+	b=UwlwsCLYCVGOz1L/cCIuhZ7JW6bSXHMYNgBMJLhxjwXzwqKaItKSZPGARm8GpVLFou4Z7N
+	wNfF+NmHUk9u45eew5WTqGI9/gi9E5ZOhhEb6UZyj8/SuEJnlMIZ4SEGz0KeqzGgcIbJ9L
+	PE5xuUv9qfvXvDa+s9MsbTnLH8UjqBE=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-663-jFAXTtTcNIWlrOzP32vIrw-1; Mon, 18 Dec 2023 11:54:19 -0500
+X-MC-Unique: jFAXTtTcNIWlrOzP32vIrw-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2cc794df910so1076831fa.1
+        for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 08:54:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702918457; x=1703523257;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tp6e6o/ABkQ82EX5xmW1+gZ0UfWYfoqdf4xRfYbmzeQ=;
+        b=lRlkTRswuelKQQheqeQxnDrVPcpB1ax0gOMBQa8l93h5ht6RVme6N870PM2tUdzi5h
+         JJnFmqRjRnvyq2VXXEYHLsIl4Gx77IjjSlyJtz+8fOUCzVsQbiGAgYjiVbuEik3zt1Q2
+         rVJFh587M1Gc9LVdKdyrBrrUlwHLbP1wDxQiVuuaxSvNn3YmgxXJOg5/7czhQRQOH/re
+         qsMfLFsDSOix1vUZ15EqwtxMItlqb5hIRJ02R/T2DUqXJXvMzv5PyQ26tfLbXlk47bTL
+         yAFem/FS3Y/ZUeTOFP7WJc1cvsnZXBA/iH7vzoByzIeQb2gWhKWM0prGtmH0KHbL0BT5
+         03fA==
+X-Gm-Message-State: AOJu0YyqOYtDyTYWIqT8chr6B6elMZwBiXtg1gRvN/4YX3T28e7K7XAn
+	6dPtOum7ZjjH7rMs8NTZma72WVVujf4vv3beqhONUC/WnvpHfm480UviLXeOdrY89ViWT4T7ICR
+	IMfV0kDdKzw08VC4=
+X-Received: by 2002:a05:651c:211e:b0:2c9:e7cb:fe8e with SMTP id a30-20020a05651c211e00b002c9e7cbfe8emr18318124ljq.2.1702918457531;
+        Mon, 18 Dec 2023 08:54:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFbR9JBxBrY//rOPWprnxz2Vz9rxNiOtgEG1YXNBrDCH/GW6JOQKZgag4Wam0vTu4snsLSahQ==
+X-Received: by 2002:a05:651c:211e:b0:2c9:e7cb:fe8e with SMTP id a30-20020a05651c211e00b002c9e7cbfe8emr18318112ljq.2.1702918457161;
+        Mon, 18 Dec 2023 08:54:17 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-253-3.dyn.eolo.it. [146.241.253.3])
+        by smtp.gmail.com with ESMTPSA id dh6-20020a0564021d2600b0055338547cc1sm1610499edb.70.2023.12.18.08.54.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Dec 2023 08:54:16 -0800 (PST)
+Message-ID: <4c1e2e407e2b6721b4ca0aad73746c8ea13f2753.camel@redhat.com>
+Subject: Re: [PATCH mptcp-next 2/5] mptcp: move inet_sk_state_store under
+ lock
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geliang Tang <geliang.tang@linux.dev>, mptcp@lists.linux.dev
+Date: Mon, 18 Dec 2023 17:54:15 +0100
+In-Reply-To: <84b7f01dcee92c4c1ae00523baa5f98f0cb64671.1702889134.git.geliang.tang@linux.dev>
+References: <cover.1702889134.git.geliang.tang@linux.dev>
+	 <84b7f01dcee92c4c1ae00523baa5f98f0cb64671.1702889134.git.geliang.tang@linux.dev>
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6179:EE_|CY8PR12MB7266:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9aa92d64-5359-4ba1-265d-08dbffe6c0c8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	0i+LNCqJUZhs3TB+Sry93pywX+fTLNXLdc8p1MSTuatOLZmOG9Z7qsIDXhcvVVcZyLmyMSzd8wKeRWh8eJ9J7sxhPY8PK07pzkb+hR4J73e33N6oEcG9DnvI4/O+sOHwXBiRUBZsJG1BQaESeoWFPqOOhLCrEe0GFZH5O+xXYT5AC+iplR3aK6FlpUxDguS4pQD2Osbr04+Okb8SfeUMVFO99MFRvo8wYxcEuEqDjsjIBDQJlhmAamckpn1+aET/55CkbaYcopxgp19jsQvjHWh+5gYRSXn23E7PJDhclcZ24evlw1uD9QtzX0wi47eT8Uu6XtKcHx5I0q2Qc+mwDe3DBw5gSE2YJ1KVUH6VTD+NOYvq/l45kJBVd+AZyxErcQplWEaaYBjXv/Zmoaw/wna3LjnfvoD3nZM7X7HIuoiTI+T039bD5gAYvKR7XiFWHC69UHDhJX2qsQ1H1X6J0W7P/uw2QAus5tRTFxhQcqTC7kJZ9xvVMnMw/SMrt6r5F3Qo6ugXx5Nm+pwVOD/PEcI0QG2E12fc1OpD17Yb9qXXcIehNepsmDdCKYDZuzqm
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6179.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(39860400002)(376002)(346002)(136003)(396003)(366004)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(8936002)(4326008)(8676002)(38100700002)(5660300002)(2906002)(6512007)(9686003)(6666004)(66946007)(6916009)(83380400001)(316002)(66556008)(4744005)(66476007)(7416002)(41300700001)(478600001)(6486002)(6506007)(26005)(86362001)(33716001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?HVoZef0ANTgcJxtNogsMfqlSQvRRWLEmzUbwf2M7aMDEDczLVbPck2mRKUVT?=
- =?us-ascii?Q?IE6/yjJWc7JiTRKl4QY1NOI/yf4vL2w6EiN7fmrIlwjulzP3eKkNg0OpT54t?=
- =?us-ascii?Q?vM4x7/nj1IHLVUnl69APCjofctyg7qRmC5L0Jkyf24EkOg3X1WSTGqn+lsx+?=
- =?us-ascii?Q?seWAnDi8QIIWMtdcBw9odqTJUrss97P2IImIo5+wyQqSXaaTNuOrLhGk51Br?=
- =?us-ascii?Q?tzyPM5PkOSZQUmO26n08Ax+JuOoGAvmPZuVbtl1dx+PAbESNOo0xmWAW3cJ1?=
- =?us-ascii?Q?2zIqnIXM7jKJNNgXYPaWlDtzNmZxz4qBJEgVkvuD3MZLXOGCvqKwbACepxSG?=
- =?us-ascii?Q?/atlUOsuMwRF4Q5KTQfub9foiiYNSet3N9QXVZuKie/3bTCi8HrroR3uqrRr?=
- =?us-ascii?Q?jSBLVi/ZgndygRzUmEmU4kuVyC3UkJMqMCZ0+0ChG1xZUjs2uDWALExHU7+H?=
- =?us-ascii?Q?JJA5iIGwS+Ih6bO13dwjoIVY60RZeTK82DnXdZKD2JiFgOnv+S4oZ08R4Kr1?=
- =?us-ascii?Q?CyjK9YtTJlOUYBjRf0Z7dMra9EzELSRz0yCjeFIUKKblTbZAzHd9ivs35O1S?=
- =?us-ascii?Q?lZcerb2Du5OmoQjv2emsgL2g9BfTn66jxKHmnTRhgKvVbGGFAo+VnjOPjC7N?=
- =?us-ascii?Q?UiDcbcZOPnAwIKYl33NvpQHegShD9oRQtQZrwiFqmoc7hSqa58vnoQcYq9JZ?=
- =?us-ascii?Q?wwhhoXrYGuMr9FBY9wPPpGNtNpMn9PVvPJ6TqvVOPH0Jwj/dh00r6ieVDsr8?=
- =?us-ascii?Q?blV67DBpVHzDnw0xBp+JXL08MSfsyiZqgNojNTkVTevrjunUbT8DjUM8ccx3?=
- =?us-ascii?Q?s2R13rOSQiMZAzBAGdgmxsXnKEJ0dAXzWWd7pPITYKjdA1VtZv99NyeNHEDx?=
- =?us-ascii?Q?yhjX2bxBB5N/yN0nk1TC2E2KU+dBHe0TALW/pPv32qAbYj9D68BOaHccrKuu?=
- =?us-ascii?Q?ZHHwknFvAvWBiUc+ySjY9MpuRA48OWApBvEi9KinU+AUgoeM4KCp3LbDCDbI?=
- =?us-ascii?Q?5CB7EJrZzrA0RC+QRFkqHw8x0MWySu2XbmttNVTSZGt1GVxgeBUaSo3bdMpU?=
- =?us-ascii?Q?iF9AEfEhuH/HXBu21p2nL3P2LOqQfvIaYQ6VnSdWPphKfWCy+xGDsNJ5aanW?=
- =?us-ascii?Q?sUSVBkhCT2JbIqwQymgSZ70V+kBVhgHHjCNfwwCc8IlCGMs824Lx4QZ8fVrX?=
- =?us-ascii?Q?8GZTo8q2505dvUu7XOORsOSf3MENBHJDy5q+GITwR2QxLHHptPhtSZr7JVTi?=
- =?us-ascii?Q?Vx+R0W69Jk4SCMXs7Al6nyrzv7zV3KHkzIsys34wTVzohhI/BVMHXx4NCLyy?=
- =?us-ascii?Q?OpQ47EEc6rZqf9TaWOjrwTTzcx0AexFcuL/uzl12MgVzz1sV828OsQbOvFN9?=
- =?us-ascii?Q?NSiWKE6yFXv9npHRu8RDvAJmjVHKZTGFWuTd9Moo32UQmw8bKp/KKqjkrSax?=
- =?us-ascii?Q?p1Tvvp1OkzydtWkSDoqjsYY4ek8bw7r2yRvD8CmcB31UMCSff0wBVFVrHVEF?=
- =?us-ascii?Q?rR9vdk7WXckdm8pWf0O2uqokpzfVM3yzQbeRaa+SlHsR5wWreqj8bVraPT6w?=
- =?us-ascii?Q?oTVxW8vB+H+CNMOgGhNrYNIEgtNHPa1+MIr5nmIl?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9aa92d64-5359-4ba1-265d-08dbffe6c0c8
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6179.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2023 16:31:14.7102
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zH6n3lcBgXhV/RjK6ksk0nOd90LeoVKTKD9mNk6m9waTLa3R+P8hx9ucCPH5A3sg3tU0fgjlzY9l7FgGNKjwdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7266
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 18, 2023 at 01:37:41PM +0200, Andy Shevchenko wrote:
-> No functional, but documentation changes...
-> 
-> So, I suggest to have these flags being described
-> 
-> /* ... */
-> #define FLAG1
-> 
-> /* ... */
-> #define FLAG2
+On Mon, 2023-12-18 at 16:47 +0800, Geliang Tang wrote:
+> This patch moves inet_sk_state_store() under the socket lock in
+> mptcp_pm_nl_create_listen_socket(). This is a pre-req patch for
+> using mptcp_set_state() instead of inet_sk_state_store().
+>=20
+> Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
+> ---
+>  net/mptcp/pm_netlink.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index bf4d96f6f99a..0e6da322c8f2 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1030,9 +1030,10 @@ static int mptcp_pm_nl_create_listen_socket(struct=
+ sock *sk,
+> =20
+>  =09lock_sock(newsk);
+>  =09ssk =3D __mptcp_nmpc_sk(mptcp_sk(newsk));
+> -=09release_sock(newsk);
+> -=09if (IS_ERR(ssk))
+> +=09if (IS_ERR(ssk)) {
+> +=09=09release_sock(newsk);
+>  =09=09return PTR_ERR(ssk);
+> +=09}
+> =20
+>  =09mptcp_info2sockaddr(&entry->addr, &addr, entry->addr.family);
+>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+> @@ -1045,10 +1046,14 @@ static int mptcp_pm_nl_create_listen_socket(struc=
+t sock *sk,
+>  =09else if (ssk->sk_family =3D=3D AF_INET6)
+>  =09=09err =3D inet6_bind_sk(ssk, (struct sockaddr *)&addr, addrlen);
+>  #endif
+> -=09if (err)
+> +=09if (err) {
+> +=09=09release_sock(newsk);
+>  =09=09return err;
+> +=09}
+> =20
+>  =09inet_sk_state_store(newsk, TCP_LISTEN);
 
-OK, thanks. I will squash the following diff into v2:
+If you move 'inet_sk_state_store(newsk, TCP_LISTEN);' just before the
+'__mptcp_nmpc_sk()' call, the overall patch should be significantly
+smaller.
 
-diff --git a/include/net/genetlink.h b/include/net/genetlink.h
-index 5a402fd24817..bd6a6ffdec76 100644
---- a/include/net/genetlink.h
-+++ b/include/net/genetlink.h
-@@ -8,7 +8,9 @@
- 
- #define GENLMSG_DEFAULT_SIZE (NLMSG_DEFAULT_SIZE - GENL_HDRLEN)
- 
-+/* Binding to multicast group requires %CAP_NET_ADMIN */
- #define GENL_MCAST_CAP_NET_ADMIN       BIT(0)
-+/* Binding to multicast group requires %CAP_SYS_ADMIN */
- #define GENL_MCAST_CAP_SYS_ADMIN       BIT(1)
- 
- /**
+Cheers,
+
+Paolo
+
