@@ -1,26 +1,28 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5D4347C9;
-	Sun, 17 Dec 2023 21:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8767E107AD
+	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 08:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwho3piZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 68143C433C9;
-	Sun, 17 Dec 2023 21:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702846912;
-	bh=QooiDWtDhrpz9KdYagYeUGjZiKuPYATavk/3k5xXyp8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gwho3piZAAly6/OHoTjCp6MoVralueg4Dj0dCyHEs1XLaDov40fuWQ3LYSa8VdbXE
-	 8VN8yK0s6mgkmHuJRvgH2gxERaNd4A06MPE8ub4ue3xLSfbjU80XwjtbkBII2cYQJ9
-	 AMZg0Tsa143QEKrHtlqAs+cKEOtLaBbejUpmrXFySQTcI7n7KaHySBnaluB/9pfpoo
-	 1/y/WIoEFxZqxzw/WpD1cYWbgEId4tvvz1M4gQ7Q5PK4+HaB4n6mpS4cfIRk6Nhxf9
-	 KGy4oikN1Td3oKA43T6mbTdctVxWb1AaiJ5+PJn8YP6tMwLqCeBv28DGiiDTip9sL6
-	 s6QpJrqz8EXcQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4E6C1C04DD9;
-	Sun, 17 Dec 2023 21:01:52 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qD/XzWAc"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1702889317;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5VCa8MyC6eT2krNf42MmfIbAxKBfhihS737xIg3aFhA=;
+	b=qD/XzWAc9WvXW/yC16ZgNe5JQihgW9tZCE+mdOirBykCOR71HV4Efty4paQnDC+ytQy/gb
+	gAAB7McGFRsqB7DCcdkcwmmihigWWqRSK6mQjlikMxEMFz7lbIkXC9qdLzMrnkpbm7qj01
+	u/wwQjxkgwFRferKAqgxQkc3X0vK/t4=
+From: Geliang Tang <geliang.tang@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next 0/5] fixes for CURRESTAB
+Date: Mon, 18 Dec 2023 16:47:12 +0800
+Message-Id: <cover.1702889134.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -28,51 +30,22 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/4] mptcp: misc. fixes for v6.7
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170284691231.19159.11595245549872933441.git-patchwork-notify@kernel.org>
-Date: Sun, 17 Dec 2023 21:01:52 +0000
-References: <20231215-upstream-net-20231215-mptcp-misc-fixes-v1-0-91d20266d525@kernel.org>
-In-Reply-To: <20231215-upstream-net-20231215-mptcp-misc-fixes-v1-0-91d20266d525@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
- benjamin.hesmans@tessares.net, dmytro@shytyi.net, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- geliang.tang@linux.dev, stable@vger.kernel.org,
- syzbot+c53d4d3ddb327e80bc51@syzkaller.appspotmail.com
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
+Address Matt & Paolo's comments for CURRESTAB series.
 
-This series was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
+Geliang Tang (5):
+  Squash to "mptcp: use mptcp_set_state" 1
+  mptcp: move inet_sk_state_store under lock
+  Squash to "mptcp: use mptcp_set_state" 2
+  Squash to "selftests: mptcp: check CURRESTAB counters"
+  selftests: mptcp: diag: check CURRESTAB counters
 
-On Fri, 15 Dec 2023 17:04:23 +0100 you wrote:
-> Here are a few fixes related to MPTCP:
-> 
-> Patch 1 avoids skipping some subtests of the MPTCP Join selftest by
-> mistake when using older versions of GCC. This fixes a patch introduced
-> in v6.4, backported up to v6.1.
-> 
-> Patch 2 fixes an inconsistent state when using MPTCP + FastOpen. A fix
-> for v6.2.
-> 
-> [...]
+ net/mptcp/pm_netlink.c                        | 16 +++++-----
+ tools/testing/selftests/net/mptcp/diag.sh     | 30 +++++++++++++++++++
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  5 ++--
+ 3 files changed, 42 insertions(+), 9 deletions(-)
 
-Here is the summary with links:
-  - [net,1/4] selftests: mptcp: join: fix subflow_send_ack lookup
-    https://git.kernel.org/netdev/net/c/c8f021eec581
-  - [net,2/4] mptcp: fix inconsistent state on fastopen race
-    https://git.kernel.org/netdev/net/c/4fd19a307016
-  - [net,3/4] mptcp: fill in missing MODULE_DESCRIPTION()
-    https://git.kernel.org/netdev/net/c/a8f570b24797
-  - [net,4/4] mailmap: add entries for Geliang Tang
-    https://git.kernel.org/netdev/net/c/356c71c46169
-
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.35.3
 
