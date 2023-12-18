@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832F936AEA
-	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 16:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3B0498A8
+	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 16:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7EFClwS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 845A7C433C8;
-	Mon, 18 Dec 2023 16:22:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xp6wUO8E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AC65C433C8;
+	Mon, 18 Dec 2023 16:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702916526;
-	bh=mt+2AIleIzwqepJwUoPGcQ+bh62074XGg43fdk7hg7o=;
+	s=k20201202; t=1702916834;
+	bh=w55sZH9CK0xHKG+9Q9rKZyoVlmWlvozM6sOgM4FHNdM=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=e7EFClwST7qAyJ79Z7yUOhwVI30X9Megs2X3jTbzwjfrcnaCW/KdOhoLfSeEjpE46
-	 By/XzZW5R8sKFCDdmBiY0S3s5pu4uAoE/3CbhAI9i2LT4LfSwu/9y/fw0SgcMcwSaZ
-	 J6pArfor5oq0PXfz9ESPSHALc7CL5zsihauz6rq6698IZipWJpWKXNwA/Lghegk9D9
-	 6DiNYuiS73/+z2kv5CAP0zc/FL6NjKH+MFfkLh0BhwayPMG5s75bDMsm+yE9scua0R
-	 SjHxi8MxKt55RCLhqpSWPWrlrpNiEhxk5vlwEwEiQWGQKwvt7huYQ+t47nf8VCNtrB
-	 dHP5djqYbASgg==
-Message-ID: <0809cd74-cbef-4bee-b0f8-9893b6a8c413@kernel.org>
-Date: Mon, 18 Dec 2023 17:22:03 +0100
+	b=Xp6wUO8EdtQSF+M6LLm8ErjkKrfhdNG4H1rYbH5S9MPRpZB/tZyOSE1bt7Dt/nbhI
+	 PQ8iE+pmsNmouk76G7d2E6/yLR/SryesSzLdTkaMvRCYW3j9yqKe81iq7NFsxt+PNi
+	 AVlXUK1sYMmjQ6F9o0Smgke69arJ3HVtOHEtkUaWYdvXsF2xurBj5ak72sgNnuMrLt
+	 AyTOmfy6wX4poy+0C59O9pJJ0m29YK1AKG6ajmIpirBfUf66qQvDazY/s9RXaRrWsj
+	 nQzThww3yQJ52PvBu8td+KW5zhWovsjxQiEw+fyXsHdimBnAqbltrKggBzB9CqFg9w
+	 XRsohQ5oR0RNg==
+Message-ID: <b47a8e32-7f93-4d55-9fd1-af2e449ba891@kernel.org>
+Date: Mon, 18 Dec 2023 17:27:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 5/5] selftests: mptcp: diag: check CURRESTAB
- counters
+Subject: Re: [PATCH mptcp-next 4/5] Squash to "selftests: mptcp: check
+ CURRESTAB counters"
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang.tang@linux.dev>, mptcp@lists.linux.dev
 References: <cover.1702889134.git.geliang.tang@linux.dev>
- <573a8f55b47fb4aa35dfdfc49f1984ab7d232781.1702889134.git.geliang.tang@linux.dev>
+ <361f60bc545f2b190bbbb6fbfb05e13b1a73d7a8.1702889134.git.geliang.tang@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,145 +77,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <573a8f55b47fb4aa35dfdfc49f1984ab7d232781.1702889134.git.geliang.tang@linux.dev>
+In-Reply-To: <361f60bc545f2b190bbbb6fbfb05e13b1a73d7a8.1702889134.git.geliang.tang@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 18/12/2023 09:47, Geliang Tang wrote:
-> This patch adds a new helper chk_msk_cestab() to check the current
-> established connections counter MIB_CURRESTAB in diag.sh. Invoke it
-> to check the counter during the connection after every chk_msk_inuse().
-
-Thank you for this new test!
-
-> ---
-> Note: chk_msk_cestab() and chk_cestab_nr() will be replaced by
-> mptcp_lib_chk_cestab_nr() in subsequent patches after the commit
-> "selftests: mptcp: diag: print colored output"
-
-Thank you for the note!
-
-(a note should be after the last Signed-off-by or added with 'git notes'
-+ 'git format-patch --notes')
-
-> ---
+> Add a comment for check_cestab(), and use cestab_ns1/cestab_ns2 in it as
+> Matt suggested.
 > 
-> Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
-> ---
->  tools/testing/selftests/net/mptcp/diag.sh | 30 +++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
+> Please update the subject as:
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-> index 95b498efacd1..aa341f40363c 100755
-> --- a/tools/testing/selftests/net/mptcp/diag.sh
-> +++ b/tools/testing/selftests/net/mptcp/diag.sh
-> @@ -182,6 +182,30 @@ chk_msk_inuse()
->  	__chk_nr get_msk_inuse $expected "$msg" 0
->  }
->  
-> +# $1: ns, $2: cestab nr
-> +chk_msk_cestab()> +{
-> +	local ns=$1
-> +	local cestab=$2
-> +	local count
-> +	local msg="....chk $2 cestab"
-> +	test_cnt=$((test_cnt+1))
+> '''
+> selftests: mptcp: join: check CURRESTAB counters
+> '''
 
-Not sure if it is useful, but usually we increment it at the end, and we
-return it in case of failure.
+Thank you, I just applied this patch. I will wait for Paolo's ACK for
+1-3/5 and I have a question on patch 5/5.
 
-> +
-> +	printf "%-50s" "$msg"
-> +
-> +	count=$(mptcp_lib_get_counter ${ns} "MPTcpExtMPCurrEstab")
-> +	if [ -z "$count" ]; then
-> +		echo "[ skip ]"
-> +		mptcp_lib_result_skip "${msg}"
-> +	elif [ "$count" != "$cestab" ]; then
-> +		echo "[ fail ] got $count current establish[s] expected $cestab"
-> +		ret=${KSFT_FAIL}
-> +	else
-> +		echo "[  ok  ]"
-> +		mptcp_lib_result_pass "$msg"
-> +	fi
+- c36edd021eb1: "squashed" patch 4/5 in "selftests: mptcp: check
+CURRESTAB counters"
+- f111e119a46d: tg:msg: add 'join:' prefix
+- Results: 84d8fb414b2a..1097ead7bcb9 (export)
 
-Can you not use __chk_nr() instead?
+Tests are now in progress:
 
-> chk_msk_cestab()
-> {
->     local ns=$1
->     local cestab=$2
-> 
->     __chk_nr "mptcp_lib_get_counter ${ns} MPTcpExtMPCurrEstab" "${cestab}" "....chk ${cestab} cestab" ""
-> }
-
-I didn't check but I guess you will have to replace this line in
-__chk_nr(), from:
-
-  local skip="${4:-SKIP}"
-
-to:
-
-  local skip="${4-SKIP}"
-
-(so it will only replace $4 by "SKIP" if it is not defined, even if it
-is empty)
-
-> +}
-> +
->  wait_connected()
->  {
->  	local listener_ns="${1}"
-> @@ -219,9 +243,11 @@ chk_msk_nr 2 "after MPC handshake "
->  chk_msk_remote_key_nr 2 "....chk remote_key"
->  chk_msk_fallback_nr 0 "....chk no fallback"
->  chk_msk_inuse 2 "....chk 2 msk in use"
-> +chk_msk_cestab $ns 2
->  flush_pids
->  
->  chk_msk_inuse 0 "....chk 0 msk in use after flush"
-> +chk_msk_cestab $ns 0
->  
->  echo "a" | \
->  	timeout ${timeout_test} \
-> @@ -237,9 +263,11 @@ echo "b" | \
->  wait_connected $ns 10001
->  chk_msk_fallback_nr 1 "check fallback"
->  chk_msk_inuse 1 "....chk 1 msk in use"
-> +chk_msk_cestab $ns 1
->  flush_pids
->  
->  chk_msk_inuse 0 "....chk 0 msk in use after flush"
-> +chk_msk_cestab $ns 0
->  
->  NR_CLIENTS=100
->  for I in `seq 1 $NR_CLIENTS`; do
-> @@ -261,9 +289,11 @@ done
->  
->  wait_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
->  chk_msk_inuse $((NR_CLIENTS*2)) "....chk many msk in use"
-> +chk_msk_cestab $ns 200
-
-The CI complained about this test:
-
-https://api.cirrus-ci.com/v1/artifact/task/4992211134185472/summary/summary.txt
-
-But the previous test also failed:
-
->   ....chk many msk in use        [ fail ] expected 252 found 239
->   ....chk 200 cestab             [ fail ] got 176 current establish[s] expected 200
-
-Maybe just unlucky this time?
-
->  flush_pids
->  
->  chk_msk_inuse 0 "....chk 0 msk in use after flush"
-> +chk_msk_cestab $ns 0
->  
->  mptcp_lib_result_print_all_tap
->  exit $ret
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231218T162532
 
 Cheers,
 Matt
