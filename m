@@ -1,29 +1,29 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509C611720
-	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 09:25:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF0011CAA
+	for <mptcp@lists.linux.dev>; Mon, 18 Dec 2023 09:25:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="e5PwgIEH"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xx0SDC5C"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702891518;
+	t=1702891520;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gjqYl5HjrE/PcyKOI4j2xbJwPljHGTqCFh0OUGGn4/o=;
-	b=e5PwgIEHhS1yISTADxEaACw9B5LzBgYCmjXZolcGmRGMZ6oedxO5GpBxGKqXHInivgFvV9
-	kSQzO4tNlWRToKmNNlFpK26Nh2jluIoU6NsCEDx2ubqkHazJ4IVMFDP+ZQpI/ZNbs8JQh/
-	vRoPJzG59uI8NXntZtMdxIFkhPfm7Ds=
+	bh=iCRljyM6OH4MsBLRN/q3Q8fR6iBdnpBdYGMdYVR28SY=;
+	b=Xx0SDC5CpXCCKo13ZUhXGQnywFeVtVbORf8KOoUh9rFWnN/ekN/UIwAp9urSYB4Nu61bEH
+	beUpGhaIB/GKAxI0Hhd8PmOv3ODEM6j5F+eZxIGRgo01mphYmKfb5FGAC2LDqtmCp8PW1w
+	pPtnSnmSFgnm5jRdLsOgoKByGsgB5EQ=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v2 05/15] mptcp: add token for get-addr in yaml
-Date: Mon, 18 Dec 2023 17:23:34 +0800
-Message-Id: <b3df0e7bfddc2db05589a5a7702f80bb54f31cff.1702891194.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v2 06/15] selftests: mptcp: add userspace pm subflow flag
+Date: Mon, 18 Dec 2023 17:23:35 +0800
+Message-Id: <b5ecd3fdcdbfc5096423c8849b951ea690bc3df0.1702891194.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702891194.git.geliang.tang@linux.dev>
 References: <cover.1702891194.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,90 +35,39 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This patch adds token paramenter together with addr in get-addr section
-in mptcp.yaml, then use the following commands to update mptcp_pm_gen.c
-and mptcp_pm_gen.h:
-
-./tools/net/ynl/ynl-gen-c.py --mode kernel \
-        --spec Documentation/netlink/specs/mptcp.yaml --source \
-        -o net/mptcp/mptcp_pm_gen.c
-./tools/net/ynl/ynl-gen-c.py --mode kernel \
-        --spec Documentation/netlink/specs/mptcp.yaml --header \
-        -o net/mptcp/mptcp_pm_gen.h
+This patch adds the address flag MPTCP_PM_ADDR_FLAG_SUBFLOW in csf() in
+pm_nl_ctl.c when subflow is created by a userspace PM.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- Documentation/netlink/specs/mptcp.yaml | 5 ++++-
- net/mptcp/mptcp_pm_gen.c               | 7 ++++---
- net/mptcp/mptcp_pm_gen.h               | 2 +-
- 3 files changed, 9 insertions(+), 5 deletions(-)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/netlink/specs/mptcp.yaml b/Documentation/netlink/specs/mptcp.yaml
-index 49f90cfb4698..cc731dbaa427 100644
---- a/Documentation/netlink/specs/mptcp.yaml
-+++ b/Documentation/netlink/specs/mptcp.yaml
-@@ -292,20 +292,23 @@ operations:
-     -
-       name: get-addr
-       doc: Get endpoint information
--      attribute-set: endpoint
-+      attribute-set: attr
-       dont-validate: [ strict ]
-       flags: [ uns-admin-perm ]
-       do: &get-addr-attrs
-         request:
-           attributes:
-            - addr
-+           - token
-         reply:
-           attributes:
-            - addr
-+           - token
-       dump:
-         reply:
-          attributes:
-            - addr
-+           - token
-     -
-       name:  flush-addrs
-       doc: flush addresses
-diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
-index a2325e70ddab..69c8857b4c5d 100644
---- a/net/mptcp/mptcp_pm_gen.c
-+++ b/net/mptcp/mptcp_pm_gen.c
-@@ -32,8 +32,9 @@ const struct nla_policy mptcp_pm_del_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1]
- };
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 49369c4a5f26..e97856323ec3 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -453,6 +453,7 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+ 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
+ 		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
+ 		  1024];
++	u_int32_t flags = MPTCP_PM_ADDR_FLAG_SUBFLOW;
+ 	const char *params[5];
+ 	struct nlmsghdr *nh;
+ 	struct rtattr *addr;
+@@ -558,6 +559,13 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+ 			off += NLMSG_ALIGN(rta->rta_len);
+ 		}
  
- /* MPTCP_PM_CMD_GET_ADDR - do */
--const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1] = {
--	[MPTCP_PM_ENDPOINT_ADDR] = NLA_POLICY_NESTED(mptcp_pm_address_nl_policy),
-+const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ATTR_TOKEN + 1] = {
-+	[MPTCP_PM_ATTR_ADDR] = NLA_POLICY_NESTED(mptcp_pm_address_nl_policy),
-+	[MPTCP_PM_ATTR_TOKEN] = { .type = NLA_U32, },
- };
- 
- /* MPTCP_PM_CMD_FLUSH_ADDRS - do */
-@@ -110,7 +111,7 @@ const struct genl_ops mptcp_pm_nl_ops[11] = {
- 		.doit		= mptcp_pm_nl_get_addr_doit,
- 		.dumpit		= mptcp_pm_nl_get_addr_dumpit,
- 		.policy		= mptcp_pm_get_addr_nl_policy,
--		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
-+		.maxattr	= MPTCP_PM_ATTR_TOKEN,
- 		.flags		= GENL_UNS_ADMIN_PERM,
- 	},
- 	{
-diff --git a/net/mptcp/mptcp_pm_gen.h b/net/mptcp/mptcp_pm_gen.h
-index 10579d184587..3963c55950b7 100644
---- a/net/mptcp/mptcp_pm_gen.h
-+++ b/net/mptcp/mptcp_pm_gen.h
-@@ -18,7 +18,7 @@ extern const struct nla_policy mptcp_pm_add_addr_nl_policy[MPTCP_PM_ENDPOINT_ADD
- 
- extern const struct nla_policy mptcp_pm_del_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1];
- 
--extern const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1];
-+extern const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ATTR_TOKEN + 1];
- 
- extern const struct nla_policy mptcp_pm_flush_addrs_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1];
++		/* addr flags */
++		rta = (void *)(data + off);
++		rta->rta_type = MPTCP_PM_ADDR_ATTR_FLAGS;
++		rta->rta_len = RTA_LENGTH(4);
++		memcpy(RTA_DATA(rta), &flags, 4);
++		off += NLMSG_ALIGN(rta->rta_len);
++
+ 		addr->rta_len = off - addr_start;
+ 	}
  
 -- 
 2.35.3
