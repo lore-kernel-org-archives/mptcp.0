@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CF318622
-	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 12:21:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA4017982
+	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 12:28:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVg66B5k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C84B8C433C8;
-	Tue, 19 Dec 2023 12:20:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eSfMbUPK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81097C433C8;
+	Tue, 19 Dec 2023 12:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702988460;
-	bh=UafF3N5rnWVBegRWMXaI0wHmTfdivvSZlsws79xUps0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=gVg66B5k1Oe2htyIyLLwsWI5f2lliAWDYPK8NHbHy/xUpEhcPr+f0mfBX7MNuAuwm
-	 867kS960S7MGVw+k7A7vAPnqSbvVlAP1dQj1aSSgaxVOHP6TFOeKh6gBRLmeP1AKWe
-	 SPTAwTcyOZuP2HX0puCjmXrmGCC8BYLN5YD1sZrC3V6dCDMGTWTTh0Q8QG/+9wxCUU
-	 w3REsVjmOpA45Lr5fm4ctvJhWdPLhb7UOeRMCfqhZ9ftP7xaA7nrZ/eB8lJ4OL5TvU
-	 QuoTmhVbadVsmCTDKc43G5pDP2u2GlIoRFX/3YLNKV7YFTei33n/PCZHZ48C+XPqPQ
-	 mxnUm/dQe+1Ow==
-Message-ID: <a0bb8dbc-3495-4ba3-b35f-35d0950e8a5e@kernel.org>
-Date: Tue, 19 Dec 2023 13:20:58 +0100
+	s=k20201202; t=1702988903;
+	bh=BPzciyq8wlPpV5co9yMIJAYh+5d4wnMw5+H9B5Cnzt0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eSfMbUPKsVOVPhp2J4ol7Q+9UguWYHtWPjtOFiZxzmmhHU6/Pae0U9S8aWdWp9DAc
+	 wlcAJZGyATYFcyDl0EPMuxhcVFoIPyxpFeGvVTz2YdFvQVWH3lpVcypGw1NsPlCbd+
+	 Nqg+F4Ou6DhuuMRdch2osVVbuHYfS/zUvq2EuGpCX3ozCtykl3RSBEvlqnI+Vx0TAk
+	 rqXUR9EE/Thbe8Q0fAmLlxPRBD0b9eDZ+/+Uf4iwuyeaCgas/sAdy1+f42fPOsmFlP
+	 e0rx3EdBKMxrcbxA2sOJO3Qy8eqgs0xcEQh+Rkswur18JNJQL9BfnFGLZXYg4A/Pg5
+	 If3fc/vnVhKgA==
+Message-ID: <3cacaa5d-3951-4bbf-a7df-070021903510@kernel.org>
+Date: Tue, 19 Dec 2023 13:28:15 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,11 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: selftests: mptcp: userspace pm get addr tests: Build Failure
+Subject: Re: [PATCH mptcp-net] MAINTAINERS: add Geliang as reviewer for MPTCP
 Content-Language: en-GB, fr-BE
-To: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@linux.dev>
-References: <9a8034c76311d8871fb8d9e69aefc459b2e607ec.1702973751.git.geliang.tang@linux.dev>
- <d840fc7f-e78d-2718-c9ff-74b8551ae7d3@gmail.com>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@linux.dev>,
+ Mat Martineau <martineau@kernel.org>
+References: <20231215-mptcp-reviewers-geliang-v1-1-3fec5a0f8eac@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -76,38 +77,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d840fc7f-e78d-2718-c9ff-74b8551ae7d3@gmail.com>
+In-Reply-To: <20231215-mptcp-reviewers-geliang-v1-1-3fec5a0f8eac@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Geliang, Mat,
 
-On 19/12/2023 12:07, MPTCP CI wrote:
-> Hi Geliang,
+On 15/12/2023 15:45, Matthieu Baerts wrote:
+> For a long time now, Geliang has contributed to a lot of code and
+> reviews related to MPTCP. So let's reflect that in the MAINTAINERS file.
 > 
-> Thank you for your modifications, that's great!
-> 
-> But sadly, our CI spotted some issues with it when trying to build it.
-> 
-> You can find more details there:
-> 
->   https://patchwork.kernel.org/project/mptcp/patch/9a8034c76311d8871fb8d9e69aefc459b2e607ec.1702973751.git.geliang.tang@linux.dev/
->   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/7260823965
-> 
-> Status: failure
-> Initiator: MPTCPimporter
-> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/8745a4886c7f
+> This should also encourage patch submitters to add him to the CC list.
 
-This one is different from the previous one (BPF related error, see the
-patch I sent a few hours ago), and it seems to be a valid issue:
+Thank you for your ACK!
 
->    net/mptcp/pm_netlink.c:1656:5: error: no previous prototype for 'mptcp_pm_nl_get_addr' [-Werror=missing-prototypes]
->    1656 | int mptcp_pm_nl_get_addr(struct sk_buff *skb, struct genl_info *info)
->         |     ^~~~~~~~~~~~~~~~~~~~
->   cc1: all warnings being treated as errors
+Now in our tree ("fixes" for -net):
 
-mptcp_pm_nl_get_addr() should indeed be declared as static in "mptcp:
-get addr in userspace pm list" commit.
+New patches for t/upstream-net and t/upstream:
+- 6f7b2f2a1d67: MAINTAINERS: add Geliang as reviewer for MPTCP
+- Results: e16ff7eaad4e..c09cb0246e41 (export-net)
+- Results: 79ba5831f60e..9adfb88a4930 (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231219T122647
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231219T122647
 
 Cheers,
 Matt
