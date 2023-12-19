@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA4017982
-	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 12:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F96318628
+	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 12:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eSfMbUPK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81097C433C8;
-	Tue, 19 Dec 2023 12:28:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N4frGbSr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAE23C433C8;
+	Tue, 19 Dec 2023 12:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702988903;
-	bh=BPzciyq8wlPpV5co9yMIJAYh+5d4wnMw5+H9B5Cnzt0=;
+	s=k20201202; t=1702989501;
+	bh=kH+0GVVuvb/Kbsy6vz2Yn1VYDFGZgd9ihb/vgjhAxp8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eSfMbUPKsVOVPhp2J4ol7Q+9UguWYHtWPjtOFiZxzmmhHU6/Pae0U9S8aWdWp9DAc
-	 wlcAJZGyATYFcyDl0EPMuxhcVFoIPyxpFeGvVTz2YdFvQVWH3lpVcypGw1NsPlCbd+
-	 Nqg+F4Ou6DhuuMRdch2osVVbuHYfS/zUvq2EuGpCX3ozCtykl3RSBEvlqnI+Vx0TAk
-	 rqXUR9EE/Thbe8Q0fAmLlxPRBD0b9eDZ+/+Uf4iwuyeaCgas/sAdy1+f42fPOsmFlP
-	 e0rx3EdBKMxrcbxA2sOJO3Qy8eqgs0xcEQh+Rkswur18JNJQL9BfnFGLZXYg4A/Pg5
-	 If3fc/vnVhKgA==
-Message-ID: <3cacaa5d-3951-4bbf-a7df-070021903510@kernel.org>
-Date: Tue, 19 Dec 2023 13:28:15 +0100
+	b=N4frGbSrxSeaiEHe0Si6sL3w8RA+iSnSntuqAFTFm3FEXAuqDfUrvydbrjTDJmfDA
+	 XwHOE1YKH0f8dLvYZFRb8uVtTk1SPVlM52uIK0R8TLJFCf4Ggu5Io5UFu59Go/FL9R
+	 m3wJrfO6kXRimTwy+z1KvbTMsPz7oLAB+Q82nQ2KOTWVCStOpVI2u7fxwatAgdTsIN
+	 C8eVKpcJBr96tmOB5pYHPZNP1zHa77Xnrg9VM4Qb4naIzxwn4pOv98RRhr2RlgVG9s
+	 joIFGtrHCXM8PziWE+S69hVNIq+2ypkQxJA3oZE8fWr3eC1WfaFZFiRIlAQKyAtA14
+	 1pihln6Spi6mw==
+Message-ID: <8d75b638-9d21-4ca9-af28-5f2c7caa0632@kernel.org>
+Date: Tue, 19 Dec 2023 13:38:19 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] MAINTAINERS: add Geliang as reviewer for MPTCP
+Subject: Re: [PATCH mptcp-next 2/5] mptcp: move inet_sk_state_store under lock
 Content-Language: en-GB, fr-BE
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@linux.dev>,
- Mat Martineau <martineau@kernel.org>
-References: <20231215-mptcp-reviewers-geliang-v1-1-3fec5a0f8eac@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Geliang Tang <geliang.tang@linux.dev>, mptcp@lists.linux.dev
+References: <cover.1702889134.git.geliang.tang@linux.dev>
+ <84b7f01dcee92c4c1ae00523baa5f98f0cb64671.1702889134.git.geliang.tang@linux.dev>
+ <4c1e2e407e2b6721b4ca0aad73746c8ea13f2753.camel@redhat.com>
+ <2a3ded63-0abe-4f9e-a4d2-8d9342b25467@kernel.org>
+ <ce5132c6a8e90c44835e0ed05ffe4e093dcd703a.camel@redhat.com>
+ <d2663469f30b05f4b38d250dd50678148cb55f44.camel@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,31 +81,52 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20231215-mptcp-reviewers-geliang-v1-1-3fec5a0f8eac@kernel.org>
+In-Reply-To: <d2663469f30b05f4b38d250dd50678148cb55f44.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Mat,
+Hi Paolo
 
-On 15/12/2023 15:45, Matthieu Baerts wrote:
-> For a long time now, Geliang has contributed to a lot of code and
-> reviews related to MPTCP. So let's reflect that in the MAINTAINERS file.
+On 19/12/2023 09:05, Paolo Abeni wrote:
+> On Tue, 2023-12-19 at 08:57 +0100, Paolo Abeni wrote:
+>> On Mon, 2023-12-18 at 18:29 +0100, Matthieu Baerts wrote:
+>>> That's what I had in mind, but I was not sure if there would be an issue
+>>> in case of error (and I didn't check), etc.
+>>>
+>>> But if there is no issue, best to move it there indeed!
+>>
+>> If __mptcp_nmpc_sk() errors out - or any other check in
+>> mptcp_pm_nl_create_listen_socket() - the newsk will be released just
+>> after by __mptcp_pm_release_addr_entry() so there should be any issues.
 > 
-> This should also encourage patch submitters to add him to the CC list.
+> ... except that such release will call mptcp_close() on the mptcp
+> socket. If the error happens in inet_bind_sk() or inet6_bind_sk(), the
+> msk state will be TCP_LISTEN, the first subflow will be already created
+> - by __mptcp_nmpc_sk() - and the latter socket status will be
+> TCP_CLOSE, causing a warn in mptcp_close() ->
+> mptcp_check_listen_stop().
+> 
+> I *think* it's would be better special-case this status change here
+> using keep using inet_sk_state_store()
 
-Thank you for your ACK!
+Thank you for having checked, it was feeling suspicious :)
 
-Now in our tree ("fixes" for -net):
+I agree, we should then keep inet_sk_state_store() for the moment. Then,
+I suggest updating the comment, from:
 
-New patches for t/upstream-net and t/upstream:
-- 6f7b2f2a1d67: MAINTAINERS: add Geliang as reviewer for MPTCP
-- Results: e16ff7eaad4e..c09cb0246e41 (export-net)
-- Results: 79ba5831f60e..9adfb88a4930 (export)
+  avoid replacing inet_sk_state_store with mptcp_set_state here, as the
+  old status is known to be TCP_CLOSE, hence will not affect the count.
 
-Tests are now in progress:
+to:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20231219T122647
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20231219T122647
+  We don't use mptcp_set_state() here because it needs to be called
+  under the msk socket lock. For the moment, that will not bring
+  anything more than only calling inet_sk_state_store(), because the old
+  status is known (TCP_CLOSE).
+
+(or something similar)
+
+WDYT?
 
 Cheers,
 Matt
