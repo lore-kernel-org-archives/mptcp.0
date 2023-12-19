@@ -1,136 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA2A374F2;
-	Tue, 19 Dec 2023 16:45:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE2D3A8DB;
+	Tue, 19 Dec 2023 21:38:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IEuMeH37"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C2CEC433C7;
-	Tue, 19 Dec 2023 16:45:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gkc7AUaq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A159C433C8;
+	Tue, 19 Dec 2023 21:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703004327;
-	bh=nypmG4eQWxWTu2jgpEEtKA39tKF27oe3kdI/qgJjzSA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=IEuMeH37WNUbs6Pc5uITDOybTrTuZHndDPTvKZOptrSwpZVAMgffEC98oO8F0rJzC
-	 wgvq7NlfiATKuUPLN1uUjtI7/nwqme7+ocfoKW2FOhxUAVrH/araTMAKExsdwzzlOS
-	 rX+OK3oIAyIcfDgzSoyb7v6ywNg0MPYDgErPcjLI7btGaB8ui4KrAXnE0/dsXvjpc0
-	 StuOqXkB9AdxYjcwiUryh4f1AUs//o0sFQbnR3iRDySvyupdw56PFn3kf4WM1zKW7p
-	 HNuTbuZNbNMHcLvkbz2eSPge4Q0DoEw8AvSo9egvyDikFm1f2szGwq3blq7qRzjBcJ
-	 4E2DrtlKwulKw==
-Date: Tue, 19 Dec 2023 08:45:26 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-cc: Matthieu Baerts <matttbe@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-    edumazet@google.com, andrii@kernel.org, ast@kernel.org, 
-    bpf@vger.kernel.org, daniel@iogearbox.net, kuni1840@gmail.com, 
-    martin.lau@linux.dev, netdev@vger.kernel.org, mptcp@lists.linux.dev
-Subject: Re: [PATCH v6 bpf-next 3/6] bpf: tcp: Handle BPF SYN Cookie in
- skb_steal_sock().
-In-Reply-To: <20231215023707.41864-1-kuniyu@amazon.com>
-Message-ID: <7d00ad25-abaa-191d-8e80-32674377b053@kernel.org>
-References: <CANn89i+8e8VJ8cJX6vwLFhtj=BmT233nNr=F9H3nFs8BZgTbsQ@mail.gmail.com> <20231215023707.41864-1-kuniyu@amazon.com>
+	s=k20201202; t=1703021897;
+	bh=OTUYQIOoV+0YKQKbrrxB0SoB7Y//YH3bCks8wgeg91U=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Gkc7AUaqKaN/KT+QKupBNCx6Q6ja1xYr973gIT7ENGaK+bkOl4CMgrdIZUVrKnzNX
+	 Uyd3XIff9fMlEe9QOzydvKbS+s4CRXMI7b8AEKk2qA6TjMcBjXxgfOQ7Oqzxnvol2s
+	 okc6jKgTccOTE2OGMqJaf4HH2XHR0W0BgcWEqs8SGFyla7bOelARtDk5P4NndAGC1m
+	 3/S7VWotqWk0n+rbm/pPLemMFyHggL4gUsmjXHJZB0iib7+TDuk0b5TyaZXJcW2UfI
+	 h8H3ZonCr+5MhahMeBrUL6mjjph37QxJ6mpRjfnd6DRGXvFjDQeWUfPeZy9+CLc4Yw
+	 pY2GVgpSH+HIA==
+From: Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH net-next 0/4] mptcp: cleanup and support more ephemeral
+ ports sockopts
+Date: Tue, 19 Dec 2023 22:31:03 +0100
+Message-Id: <20231219-upstream-net-next-20231219-mptcp-sockopts-ephemeral-ports-v1-0-2b13bedfcaf8@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-1783165707-1703004327=:23967"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJcLgmUC/z2NQQrCMBBFr1Jm7YCT2qJeRboIcbRBkwwzUQqld
+ zcIuviLx4f3VjDWyAbnbgXld7RYcgPadRBmn++M8doY3N715OiEL7Gq7BNmrm1Lxf+VpAZBK+F
+ RpBqyzJxY/ROlaOPxMAzO8bGnkaD5RfkWl2/7Aj8bTNv2AaDe25KVAAAA
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Matthieu Baerts <matttbe@kernel.org>, 
+ Davide Caratti <dcaratti@redhat.com>, Maxim Galaganov <max@internet.ru>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1224; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=OTUYQIOoV+0YKQKbrrxB0SoB7Y//YH3bCks8wgeg91U=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlgg1GgJ2hrXIcmnM6OfCZnROIMuN6eedUzJXtc
+ CC6277Z1R6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZYINRgAKCRD2t4JPQmmg
+ cx0eD/9xC9Pfdlve6uheSVii3I4/4GqaRLnXpZQyN9x1/nrmfzHGSiHh41ttRd50K8VTmlJ2USS
+ W02ur6sGocBW0/nTw+nF+Zoe7lGCMPoQMqfBcpjMMi00JQzcUStW+smQghN2QQQYsI+SaMY3/L3
+ 5rb3GeqslJePZQYDbw4Bn2pZVmECWvIKcVm06IKsXdVCY+XDW77vWpEAOpa5HjA8EyNT7/ePpry
+ K6+pULHEwEi78cprUxkFm0dyuFJu95JVrNWqXiao7L/IVhEJPWj3z2GCHk42+jIV8Wcuk+dOMug
+ MwfjWeXkheVUvg5MTsu3N17dRYqmwTkQFbO4la66UcIwxVj6k24S3liC6bRiw5rE/7fNdp05GR1
+ TKRIH/EY3pnBsYTRat+u6TNZCXAEQgliN5W2uszBsXXCgbX1UVrlCIKQqDKrgBIsA4zkP4wNdSn
+ WVuIxlHHX7KgDbL7CQ6HrSqjIlf3mq3arsvURzWmWUDPyixbI836H6l57dYPgUg38JYqB2L/p2b
+ MHvWDinffxoy4xo27oRY/JRefeqRtvqvCx0Wf3/P7kL/hm3UlbFERoR2TSpg9v6JCtZfCaUzN6z
+ hd/nsc6rhUjSMYb5UNA3BMZuJnF5ar02jVwH/1Ddc9i27kj33xyCSdrYTjdhjiTePrl4HPnQRLz
+ h/koSFzxkEEe1Ig==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Patch 1 is a cleanup one: mptcp_is_tcpsk() helper was modifying sock_ops
+in some cases which is unexpected with that name.
 
---0-1783165707-1703004327=:23967
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Patch 2 to 4 add support for two socket options: IP_LOCAL_PORT_RANGE and
+IP_BIND_ADDRESS_NO_PORT. The first one is a preparation patch, the
+second one adds the support while the last one modifies an existing
+selftest to validate the new features.
 
-On Fri, 15 Dec 2023, Kuniyuki Iwashima wrote:
+Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
+---
+Davide Caratti (1):
+      mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()
 
-> From: Eric Dumazet <edumazet@google.com>
-> Date: Thu, 14 Dec 2023 17:31:15 +0100
->> On Thu, Dec 14, 2023 at 4:56 PM Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
->>>
->>> We will support arbitrary SYN Cookie with BPF.
->>>
->>> If BPF prog validates ACK and kfunc allocates a reqsk, it will
->>> be carried to TCP stack as skb->sk with req->syncookie 1.  Also,
->>> the reqsk has its listener as req->rsk_listener with no refcnt
->>> taken.
->>>
->>> When the TCP stack looks up a socket from the skb, we steal
->>> inet_reqsk(skb->sk)->rsk_listener in skb_steal_sock() so that
->>> the skb will be processed in cookie_v[46]_check() with the
->>> listener.
->>>
->>> Note that we do not clear skb->sk and skb->destructor so that we
->>> can carry the reqsk to cookie_v[46]_check().
->>>
->>> Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
->>> ---
->>>  include/net/request_sock.h | 15 +++++++++++++--
->>>  1 file changed, 13 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/include/net/request_sock.h b/include/net/request_sock.h
->>> index 26c630c40abb..8839133d6f6b 100644
->>> --- a/include/net/request_sock.h
->>> +++ b/include/net/request_sock.h
->>> @@ -101,10 +101,21 @@ static inline struct sock *skb_steal_sock(struct sk_buff *skb,
->>>         }
->>>
->>>         *prefetched = skb_sk_is_prefetched(skb);
->>> -       if (*prefetched)
->>> +       if (*prefetched) {
->>> +#if IS_ENABLED(CONFIG_SYN_COOKIES)
->>> +               if (sk->sk_state == TCP_NEW_SYN_RECV && inet_reqsk(sk)->syncookie) {
->>> +                       struct request_sock *req = inet_reqsk(sk);
->>> +
->>> +                       *refcounted = false;
->>> +                       sk = req->rsk_listener;
->>> +                       req->rsk_listener = NULL;
->>
->> I am not sure about interactions with MPTCP.
->>
->> I would be nice to have their feedback.
->
-> Matthieu, Mat, Paolo, could you double check if the change
-> above is sane ?
-> https://lore.kernel.org/bpf/20231214155424.67136-4-kuniyu@amazon.com/
+Maxim Galaganov (3):
+      mptcp: rename mptcp_setsockopt_sol_ip_set_transparent()
+      mptcp: sockopt: support IP_LOCAL_PORT_RANGE and IP_BIND_ADDRESS_NO_PORT
+      selftests/net: add MPTCP coverage for IP_LOCAL_PORT_RANGE
 
-Hi Kuniyuki -
+ net/mptcp/protocol.c                              | 108 +++++++++-------------
+ net/mptcp/sockopt.c                               |  27 +++++-
+ tools/testing/selftests/net/ip_local_port_range.c |  12 +++
+ 3 files changed, 79 insertions(+), 68 deletions(-)
+---
+base-commit: 62ed78f3baff396bd928ee77077580c5aa940149
+change-id: 20231219-upstream-net-next-20231219-mptcp-sockopts-ephemeral-ports-645522e83161
 
-Yes, we will take a look. Haven't had time to look in detail yet but I 
-wanted to let you know we saw your message and will follow up.
+Best regards,
+-- 
+Matthieu Baerts <matttbe@kernel.org>
 
-- Mat
-
-
->
->
-> Short sumamry:
->
-> With this series, tc could allocate reqsk to skb->sk and set a
-> listener to reqsk->rsk_listener, then __inet_lookup_skb() returns
-> a listener in the same reuseport group, and skb is processed in the
-> listener function flow, especially cookie_v[46]_check().
->
-> The only difference here is that skb->sk has reqsk, which does not
-> have rsk_listener.
->
->
->>
->>> +                       return sk;
->>> +               }
->>> +#endif
->>>                 *refcounted = sk_is_refcounted(sk);
->>> -       else
->>> +       } else {
->>>                 *refcounted = true;
->>> +       }
->>>
->>>         skb->destructor = NULL;
->>>         skb->sk = NULL;
->>> --
->>> 2.30.2
->
->
---0-1783165707-1703004327=:23967--
