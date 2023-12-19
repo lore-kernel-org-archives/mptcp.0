@@ -1,29 +1,29 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D96518EB4
-	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 13:32:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C8A18EB4
+	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 13:32:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fLMj53LB"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PZX/8NBr"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702992736;
+	t=1702992739;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vHAtBrVBlDiFGmyhokRjvJgccoJ4OhnMHw61tt3i9uU=;
-	b=fLMj53LBqMSCS4IOoa0QCa0eFJ63RbvxEQXXDFg/t9G0KMcMKM+OjCw7T9qX6u6Tucpg62
-	9O01e2ndIyWRoEeb/o4oy57SWttmZw4vb0jbDJejs0Cmu2iLqDHCwFew5gmmkq5X3dBko3
-	G0T6/q3qmVoK8Xin+t9byjZ+SZyPQrs=
+	bh=9YLvVFOoCNrJSE4AAms04hq4jtYeWYnHs4+hrwO8rGs=;
+	b=PZX/8NBrFJ02qCIHOFkGDRWGOzG3vdHgxxKTd2O4oROBHsiKcq6mI7GxdHe7QrbUDWHBb/
+	JElYZaj2OH117YV6ZOBnN+gcog2ZhTr1dNsointimQp3IExBSlfF2A8Jyhh2sy0znVxX7h
+	T239V8m9Jo7eCTyi9ubfdqEL/GnyjzU=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v4 12/14] mptcp: get addr in userspace pm list
-Date: Tue, 19 Dec 2023 21:32:16 +0800
-Message-Id: <4f4aad4f48938e3dbbbdc6ed2150ab601b2087f6.1702992525.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v4 13/14] selftests: mptcp: add token for get_addr
+Date: Tue, 19 Dec 2023 21:32:17 +0800
+Message-Id: <83901180f6e86b0b6f131637dea0f67f86c8c19b.1702992525.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702992525.git.geliang.tang@linux.dev>
 References: <cover.1702992525.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,45 +35,63 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This patch renames mptcp_pm_nl_get_addr_doit() to in-kernel netlink
-PM get addr function mptcp_pm_nl_get_addr(). If a token is gotten in
-mptcp_pm_nl_get_addr_doit(), that means a userspace PM is used. So
-invoke mptcp_userspace_pm_get_addr() to get addr in userspace PM list.
-Otherwise, invoke mptcp_pm_nl_get_addr().
+The command get_addr() of pm_nl_ctl can be used like this in in-kernel PM:
+
+	pm_nl_ctl get $id
+
+This patch adds token argument for it to support userspace PM:
+
+	pm_nl_ctl get $id token $token
+
+If 'token $token' is passed to get_addr(), copy it into the kernel netlink.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_netlink.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 7ae67bdc224b..42deebeb7b4f 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1650,7 +1650,7 @@ int mptcp_nl_fill_addr(struct sk_buff *skb,
- 	return -EMSGSIZE;
- }
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 8d7d1b4ed28e..7426a2cbd4a0 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -1087,6 +1087,7 @@ int get_addr(int fd, int pm_family, int argc, char *argv[])
+ 		  1024];
+ 	struct rtattr *rta, *nest;
+ 	struct nlmsghdr *nh;
++	u_int32_t token = 0;
+ 	int nest_start;
+ 	u_int8_t id;
+ 	int off = 0;
+@@ -1097,10 +1098,12 @@ int get_addr(int fd, int pm_family, int argc, char *argv[])
+ 			    MPTCP_PM_VER);
  
--int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
-+static int mptcp_pm_nl_get_addr(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
- 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
-@@ -1700,6 +1700,14 @@ int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
- 	return ret;
- }
+ 	/* the only argument is the address id */
+-	if (argc != 3)
++	if (argc != 3 && argc != 5)
+ 		syntax(argv);
  
-+int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
-+{
-+	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
-+		return mptcp_userspace_pm_get_addr(skb, info);
+ 	id = atoi(argv[2]);
++	if (argc == 5 && !strcmp(argv[3], "token"))
++		token = strtoul(argv[4], NULL, 10);
+ 
+ 	nest_start = off;
+ 	nest = (void *)(data + off);
+@@ -1116,6 +1119,15 @@ int get_addr(int fd, int pm_family, int argc, char *argv[])
+ 	off += NLMSG_ALIGN(rta->rta_len);
+ 	nest->rta_len = off - nest_start;
+ 
++	/* token */
++	if (token) {
++		rta = (void *)(data + off);
++		rta->rta_type = MPTCP_PM_ATTR_TOKEN;
++		rta->rta_len = RTA_LENGTH(4);
++		memcpy(RTA_DATA(rta), &token, 4);
++		off += NLMSG_ALIGN(rta->rta_len);
++	}
 +
-+	return mptcp_pm_nl_get_addr(skb, info);
-+}
-+
- static int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
- 				 struct netlink_callback *cb)
- {
+ 	print_addrs(nh, pm_family, do_nl_req(fd, nh, off, sizeof(data)));
+ 	return 0;
+ }
 -- 
 2.35.3
 
