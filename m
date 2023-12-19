@@ -1,29 +1,29 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CD018EAE
-	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 13:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0140718EAE
+	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 13:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YdV9DvQX"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uNISF+dP"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1702992720;
+	t=1702992723;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iCRljyM6OH4MsBLRN/q3Q8fR6iBdnpBdYGMdYVR28SY=;
-	b=YdV9DvQX9xlPacukgQs4POTheR0+1ls6CI1zVgb3/wT7op4r+ayLlC1n8UOzpjE+4pPGMp
-	3ClrK9dJfbOMIwjNh0p26Tf+bdVKZKoWyQc7REouo03dJsZ1VLlxyEEHoq+1/B1fhR46JQ
-	vbV6DrImH33htzF/3ffRAnnAWTCeZMg=
+	bh=IUNLUS9kjQsNN5jTynBv12p6pFgdSs7eV0RbzSa0hYU=;
+	b=uNISF+dPpIOO+1hz9/AodASGNSTdLQ6A9yaBDdp7DSYYrTt7Ke+vEPidYcVSdCYJF2Utyv
+	qF/BFLoouOZzlFr5rtC8124rdnQHd39NwEtXeZwEEuAMlaf3p5BrwI42nFXIhJzhALBwpQ
+	pQsNY7i1H+2mKdHMZIQXBQ4X4eZ9pRo=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v4 06/14] selftests: mptcp: add userspace pm subflow flag
-Date: Tue, 19 Dec 2023 21:32:10 +0800
-Message-Id: <47ab9d72264d936429d2a77996ef676c92034f2c.1702992525.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v4 07/14] selftests: mptcp: add token for dump_addr
+Date: Tue, 19 Dec 2023 21:32:11 +0800
+Message-Id: <51929f0e03d2275c7c0c6b94f268768fd9d58b61.1702992525.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1702992525.git.geliang.tang@linux.dev>
 References: <cover.1702992525.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,40 +35,59 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This patch adds the address flag MPTCP_PM_ADDR_FLAG_SUBFLOW in csf() in
-pm_nl_ctl.c when subflow is created by a userspace PM.
+The command dump_addr() of pm_nl_ctl can be used like this in in-kernel PM:
+
+        pm_nl_ctl dump
+
+This patch adds token argument for it to support userspace PM:
+
+        pm_nl_ctl dump token $token
+
+If 'token $token' is passed to dump_addr(), copy it into the kernel
+netlink.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index 49369c4a5f26..e97856323ec3 100644
+index e97856323ec3..8d7d1b4ed28e 100644
 --- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
 +++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -453,6 +453,7 @@ int csf(int fd, int pm_family, int argc, char *argv[])
- 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
- 		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
+@@ -1127,8 +1127,16 @@ int dump_addrs(int fd, int pm_family, int argc, char *argv[])
  		  1024];
-+	u_int32_t flags = MPTCP_PM_ADDR_FLAG_SUBFLOW;
- 	const char *params[5];
+ 	pid_t pid = getpid();
  	struct nlmsghdr *nh;
- 	struct rtattr *addr;
-@@ -558,6 +559,13 @@ int csf(int fd, int pm_family, int argc, char *argv[])
- 			off += NLMSG_ALIGN(rta->rta_len);
- 		}
++	u_int32_t token = 0;
++	struct rtattr *rta;
+ 	int off = 0;
  
-+		/* addr flags */
-+		rta = (void *)(data + off);
-+		rta->rta_type = MPTCP_PM_ADDR_ATTR_FLAGS;
-+		rta->rta_len = RTA_LENGTH(4);
-+		memcpy(RTA_DATA(rta), &flags, 4);
-+		off += NLMSG_ALIGN(rta->rta_len);
++	if (argc != 2 && argc != 4)
++		syntax(argv);
 +
- 		addr->rta_len = off - addr_start;
- 	}
++	if (argc == 4 && !strcmp(argv[2], "token"))
++		token = strtoul(argv[3], NULL, 10);
++
+ 	memset(data, 0, sizeof(data));
+ 	nh = (void *)data;
+ 	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_GET_ADDR,
+@@ -1138,6 +1146,15 @@ int dump_addrs(int fd, int pm_family, int argc, char *argv[])
+ 	nh->nlmsg_pid = pid;
+ 	nh->nlmsg_len = off;
  
++	/* token */
++	if (token) {
++		rta = (void *)(data + off);
++		rta->rta_type = MPTCP_PM_ATTR_TOKEN;
++		rta->rta_len = RTA_LENGTH(4);
++		memcpy(RTA_DATA(rta), &token, 4);
++		off += NLMSG_ALIGN(rta->rta_len);
++	}
++
+ 	print_addrs(nh, pm_family, do_nl_req(fd, nh, off, sizeof(data)));
+ 	return 0;
+ }
 -- 
 2.35.3
 
