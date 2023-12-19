@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D20E168DF
-	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 12:19:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CF318622
+	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 12:21:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPeaGwnq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D127C433C7;
-	Tue, 19 Dec 2023 12:19:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVg66B5k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C84B8C433C8;
+	Tue, 19 Dec 2023 12:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702988351;
-	bh=8f1BMgeetkkYWTh5ux3PeU7NwPtmSXeY5vHfjExbAYU=;
+	s=k20201202; t=1702988460;
+	bh=UafF3N5rnWVBegRWMXaI0wHmTfdivvSZlsws79xUps0=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=nPeaGwnqQ+2BxcKEizh6r8SffS3uecWuwr528wN48ppfGdulRSlYzQ/BiPXmggF18
-	 aJ4fVdq6ggVH/3O1HuKxSCpqPpbM51bQZakie3c6c+fcy+q56K8MbKGbS13YwunfFv
-	 Sv5m+gUCiUjTafW4/lnjYFutSKzWsb6tcgxuyRiYRtFgJTuQItx6nZiFCEp44TyLjx
-	 peMXS4ByfU/IWy+ZrlcMnbitx4itJnS1lIwXAjwbo92dKyVmN2yXl5GedbfS141Y2G
-	 F44iLV0VAtJG6q176Q39WcgttVW1/jmpcpyQUyvgYTr8Ft7kFwYIBRupbFW5tEtJCo
-	 WI0gVyYYL6hQQ==
-Message-ID: <bc321f71-87d2-4e57-8d96-8299a4b49585@kernel.org>
-Date: Tue, 19 Dec 2023 13:19:09 +0100
+	b=gVg66B5k1Oe2htyIyLLwsWI5f2lliAWDYPK8NHbHy/xUpEhcPr+f0mfBX7MNuAuwm
+	 867kS960S7MGVw+k7A7vAPnqSbvVlAP1dQj1aSSgaxVOHP6TFOeKh6gBRLmeP1AKWe
+	 SPTAwTcyOZuP2HX0puCjmXrmGCC8BYLN5YD1sZrC3V6dCDMGTWTTh0Q8QG/+9wxCUU
+	 w3REsVjmOpA45Lr5fm4ctvJhWdPLhb7UOeRMCfqhZ9ftP7xaA7nrZ/eB8lJ4OL5TvU
+	 QuoTmhVbadVsmCTDKc43G5pDP2u2GlIoRFX/3YLNKV7YFTei33n/PCZHZ48C+XPqPQ
+	 mxnUm/dQe+1Ow==
+Message-ID: <a0bb8dbc-3495-4ba3-b35f-35d0950e8a5e@kernel.org>
+Date: Tue, 19 Dec 2023 13:20:58 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,11 +26,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: selftests: mptcp: userspace pm get addr tests: Tests Results
+Subject: Re: selftests: mptcp: userspace pm get addr tests: Build Failure
 Content-Language: en-GB, fr-BE
 To: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@linux.dev>
 References: <9a8034c76311d8871fb8d9e69aefc459b2e607ec.1702973751.git.geliang.tang@linux.dev>
- <d2437e93-da05-48a4-27cc-1da68120c532@gmail.com>
+ <d840fc7f-e78d-2718-c9ff-74b8551ae7d3@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -76,46 +76,38 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d2437e93-da05-48a4-27cc-1da68120c532@gmail.com>
+In-Reply-To: <d840fc7f-e78d-2718-c9ff-74b8551ae7d3@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 19/12/2023 11:55, MPTCP CI wrote:
+On 19/12/2023 12:07, MPTCP CI wrote:
 > Hi Geliang,
 > 
 > Thank you for your modifications, that's great!
 > 
-> Our CI did some validations and here is its report:
+> But sadly, our CI spotted some issues with it when trying to build it.
 > 
-> - {"code":404,"message":
->   - "Can't find artifacts containing file conclusion.txt"}:
->   - Task: https://cirrus-ci.com/task/4651956644347904
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/4651956644347904/summary/summary.txt
+> You can find more details there:
 > 
-> - {"code":404,"message":
->   - "Can't find artifacts containing file conclusion.txt"}:
->   - Task: https://cirrus-ci.com/task/6340806504611840
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/6340806504611840/summary/summary.txt
+>   https://patchwork.kernel.org/project/mptcp/patch/9a8034c76311d8871fb8d9e69aefc459b2e607ec.1702973751.git.geliang.tang@linux.dev/
+>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/7260823965
 > 
-> - {"code":404,"message":
->   - "Can't find artifacts containing file conclusion.txt"}:
->   - Task: https://cirrus-ci.com/task/5777856551190528
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/5777856551190528/summary/summary.txt
-> 
-> - {"code":404,"message":
->   - "Can't find artifacts containing file conclusion.txt"}:
->   - Task: https://cirrus-ci.com/task/5214906597769216
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/5214906597769216/summary/summary.txt
-> 
-> Initiator: Patchew Applier
+> Status: failure
+> Initiator: MPTCPimporter
 > Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/8745a4886c7f
 
-Please ignore this one: I just updated our CI config to ignore "skipped"
-tests (because we reached our monthly limit on the public CI).
+This one is different from the previous one (BPF related error, see the
+patch I sent a few hours ago), and it seems to be a valid issue:
 
-Please note that this series has not been validated by the CI!
+>    net/mptcp/pm_netlink.c:1656:5: error: no previous prototype for 'mptcp_pm_nl_get_addr' [-Werror=missing-prototypes]
+>    1656 | int mptcp_pm_nl_get_addr(struct sk_buff *skb, struct genl_info *info)
+>         |     ^~~~~~~~~~~~~~~~~~~~
+>   cc1: all warnings being treated as errors
+
+mptcp_pm_nl_get_addr() should indeed be declared as static in "mptcp:
+get addr in userspace pm list" commit.
 
 Cheers,
 Matt
