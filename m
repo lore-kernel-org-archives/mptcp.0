@@ -1,102 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCC3C8DB
-	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 08:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F260125B2
+	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 08:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vz/ayHA2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702973105;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="psZYG4N5"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1702974026;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V/+vOW0n5EEuYBZY77nbcXgUDyissPPrOhwo2KeC+FY=;
-	b=Vz/ayHA228ZQcZqDEnidb6FCWYk9RdLfgGRNz3WT/nU3kXlmrd0whH1e4NFjh+JtULSy45
-	3srWo+zccSw3VAtRiTzPLaqzwhooqbV/No0JCOtRoSZLW8oJLOl+WazqXpqbKcLupPGP2h
-	OIsSuurzyGkLxj6Xg9vYcJ8wZtHf/2w=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-464-rBFHQdcTOt6yI46-Viw_cQ-1; Tue, 19 Dec 2023 03:05:04 -0500
-X-MC-Unique: rBFHQdcTOt6yI46-Viw_cQ-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-55348311ad0so326042a12.1
-        for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 00:05:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702973103; x=1703577903;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V/+vOW0n5EEuYBZY77nbcXgUDyissPPrOhwo2KeC+FY=;
-        b=S50Sno/IwztREl0QMrub5hWA1150YiXvjzPQQtDNTyC7xEHsqOAeHODIbLh9HA6Bp5
-         iUZR0bTolJNHwuqsAqcVR5uHHLoh304XPYGTq/69ElnWnNHYWdkkacBMFLPFnG3gUCvW
-         +gknGlOCAWK2J8GISRXv2G24Ux6z2XJGcDHtYRfcdHYmTBTcAhWTXHZyuZIuvzEmf1TM
-         cMlFqUujpVRAWR6DJRATV5mp5M6b1JgqJF/bP4LiIDfsqvwqsr2iltYhk+yQSptSLcXY
-         XNEo1P4lR+wPSI5dXt3QksAhkVzwU5fk93QlZJ82u2NRrhsSOHzdJycNfVNg8AKScuuf
-         zg1w==
-X-Gm-Message-State: AOJu0YzF42iF+2roGPaYf+anTShTa5hyt0TL+QzKfGDhwgHVNlcDNB9M
-	py7H/1aqjT0h/+75jK4mPDgUdWjd895q1CzYRSBZ2UH65v3+jdnYhj9KBSWu0/Jp3r/rGyxnXwe
-	ODNZL07iDYhoC4rUVdxNnpdY=
-X-Received: by 2002:a17:907:d109:b0:a1e:3c8f:bc9e with SMTP id uy9-20020a170907d10900b00a1e3c8fbc9emr19021859ejc.0.1702973103014;
-        Tue, 19 Dec 2023 00:05:03 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IECQJfoUWFGfRvK1IVv+7FfwPWNSZ4uxcszL1YtlbRCWiC2lt2sVpaoixifkpsA238Z3Wp5Jg==
-X-Received: by 2002:a17:907:d109:b0:a1e:3c8f:bc9e with SMTP id uy9-20020a170907d10900b00a1e3c8fbc9emr19021841ejc.0.1702973102641;
-        Tue, 19 Dec 2023 00:05:02 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-246-245.dyn.eolo.it. [146.241.246.245])
-        by smtp.gmail.com with ESMTPSA id y5-20020a170906524500b00a23552d55ebsm2405269ejm.88.2023.12.19.00.05.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 00:05:02 -0800 (PST)
-Message-ID: <d2663469f30b05f4b38d250dd50678148cb55f44.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next 2/5] mptcp: move inet_sk_state_store under
- lock
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Geliang Tang <geliang.tang@linux.dev>, mptcp@lists.linux.dev
-Date: Tue, 19 Dec 2023 09:05:01 +0100
-In-Reply-To: <ce5132c6a8e90c44835e0ed05ffe4e093dcd703a.camel@redhat.com>
-References: <cover.1702889134.git.geliang.tang@linux.dev>
-	 <84b7f01dcee92c4c1ae00523baa5f98f0cb64671.1702889134.git.geliang.tang@linux.dev>
-	 <4c1e2e407e2b6721b4ca0aad73746c8ea13f2753.camel@redhat.com>
-	 <2a3ded63-0abe-4f9e-a4d2-8d9342b25467@kernel.org>
-	 <ce5132c6a8e90c44835e0ed05ffe4e093dcd703a.camel@redhat.com>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ACI71Xvoi63LHD3D7SMlqvwSdeSksHTa52wkThWVwJE=;
+	b=psZYG4N5oaRkBQXc2uxI1t0siYG5f69KGAvHe1vaGdu1DE1BhiXFV+MqsG1peZdI+SH9IS
+	QLHyMz5gDAYAa6WvD2OGsBZeg/4yhN+IEJwr/EjULjyihr3AtZDjRKhS0HFD+aCztNr/13
+	S0GEZMkC9VkvAAeShK4HCjAkAvS+enc=
+From: Geliang Tang <geliang.tang@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v3 00/14] dump for userspace pm
+Date: Tue, 19 Dec 2023 16:19:11 +0800
+Message-Id: <cover.1702973751.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 2023-12-19 at 08:57 +0100, Paolo Abeni wrote:
-> On Mon, 2023-12-18 at 18:29 +0100, Matthieu Baerts wrote:
-> > That's what I had in mind, but I was not sure if there would be an issu=
-e
-> > in case of error (and I didn't check), etc.
-> >=20
-> > But if there is no issue, best to move it there indeed!
->=20
-> If __mptcp_nmpc_sk() errors out - or any other check in
-> mptcp_pm_nl_create_listen_socket() - the newsk will be released just
-> after by __mptcp_pm_release_addr_entry() so there should be any issues.
+v3:
+ - fix the errors reported by CI in v2:
 
-... except that such release will call mptcp_close() on the mptcp
-socket. If the error happens in inet_bind_sk() or inet6_bind_sk(), the
-msk state will be TCP_LISTEN, the first subflow will be already created
-- by __mptcp_nmpc_sk() - and the latter socket status will be
-TCP_CLOSE, causing a warn in mptcp_close() ->
-mptcp_check_listen_stop().
+[10:55:51.288] [  897.523894][ T5664] BUG: sleeping function called from invalid context at include/linux/sched/mm.h:306
+[10:55:51.288] [  897.532157][ T5664] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 5664, name: pm_nl_ctl
+[10:55:51.289] [  897.539503][ T5664] preempt_count: 201, expected: 0
 
-I *think* it's would be better special-case this status change here
-using keep using inet_sk_state_store()
+ - drop mptcp_pm_nl_put_entry_msg and mptcp_pm_nl_put_entry_info
+   helpers. 
 
-Cheers,
+v2:
+Address Mat's comments in v1:
+ - patch 2: pass token to dump_addr too.
+ - patch 2: add back id in mptcp_userspace_pm_dump_addr().
+ - patch 5: pdate mptcp.yaml
 
-Paolo
+v1:
+Address Mat's comments in "userspace pm enhancements" v14.
 
+Geliang Tang (14):
+  mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
+  mptcp: implement mptcp_userspace_pm_dump_addr
+  mptcp: dump addrs in userspace pm list
+  mptcp: check userspace pm subflow flag
+  mptcp: add token for get-addr in yaml
+  selftests: mptcp: add userspace pm subflow flag
+  selftests: mptcp: add token for dump_addr
+  selftests: mptcp: add check_output helper
+  selftests: mptcp: dump userspace addrs list
+  mptcp: add userspace_pm_lookup_addr_by_id helper
+  mptcp: implement mptcp_userspace_pm_get_addr
+  mptcp: get addr in userspace pm list
+  selftests: mptcp: add token for get_addr
+  selftests: mptcp: userspace pm get addr tests
+
+ Documentation/netlink/specs/mptcp.yaml        |   5 +-
+ net/mptcp/mptcp_pm_gen.c                      |   7 +-
+ net/mptcp/mptcp_pm_gen.h                      |   2 +-
+ net/mptcp/pm_netlink.c                        |  29 +++-
+ net/mptcp/pm_userspace.c                      | 158 ++++++++++++++++--
+ net/mptcp/protocol.h                          |   8 +
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  99 +++++++++++
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  39 ++++-
+ 8 files changed, 315 insertions(+), 32 deletions(-)
+
+-- 
+2.35.3
 
