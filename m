@@ -1,91 +1,68 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F5112B60
-	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 08:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2E414276
+	for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 09:27:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpJrLmxa"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6cea0fd9b53so2087652b3a.1
-        for <mptcp@lists.linux.dev>; Tue, 19 Dec 2023 00:41:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702975293; x=1703580093; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KvC643+BRVHv3PUOhUqOi4lPnfKXw3gSiReMya3+FAc=;
-        b=CpJrLmxaeer1upJRaagt6a8z3zcgaVcYhQm74hmADIlnOH402cofVtl0qelxFXwC2v
-         eL/7fSeg0tLphp1CfgMzg+UQ+gmz7jOm6OvcZCuBukJcECO+IwkKNl/6i7+yAEUEvt2u
-         DkNErg8ow/MFnOOMkfZfEpPVGK01KHl/Mh8hX8AXi15if2Lhl58P+Q3OFmFXrrZtZyV2
-         0geDH3KEsjolzed56pTumwmno2KSHByDbFtTgi3wW/0fPGmAmaY3xn5qR2UQQn+0HMGo
-         XTydkmw3AngTdlbAPRuAsya8D8xy3HmNrSIpUOjJCeguh9x4mvCm8lthSHAvkIykqXmb
-         teJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702975293; x=1703580093;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KvC643+BRVHv3PUOhUqOi4lPnfKXw3gSiReMya3+FAc=;
-        b=OotCX7Zx4/czEZycof9X83tJ4wP+qqeySd2NcoM3zLet+0cFuygtY4uQO9RqxKCy9f
-         UCW93lAtaNZz3Dh7tSOZlNEqL/oDw6Z/UcZH0aXUCMzU6i7XblidfnoPhT94i71Qq9rs
-         YMvB6q8Il8Mgu4YkHKGIME0U1M/jdyTwFyFea/CqO+9h+sF/H8fs6tTePgQ+Uy+VzDEg
-         tTD06A/y5JDqmUgSX1p7h37mTWQIe8YLEsNNQqIAzXDjHmSANf7qU3j4/Ezni7jRl7vc
-         tjaI/eeA3kpZaMZtgkAh0mSLEKg08RDx8BMiCEnI53RG/QRIO+aLOQXNMGpgCobAlyki
-         5LGA==
-X-Gm-Message-State: AOJu0YwmBmj18G+XRxj4y1V34uvT512cF8s25jjH/15q/8ontDR762+K
-	8819qLmqk85yzZCmaHq6+2D952KsBA==
-X-Google-Smtp-Source: AGHT+IFVVPBs8N26cnDzUJXjWm2PchSG+N5EF96WzOtvlB+0cIkzohfPQd8e4rikuR3eTZu4atgdNA==
-X-Received: by 2002:a05:6a21:3398:b0:18f:1db6:bdf9 with SMTP id yy24-20020a056a21339800b0018f1db6bdf9mr9713471pzb.21.1702975293133;
-        Tue, 19 Dec 2023 00:41:33 -0800 (PST)
-Received: from [127.0.0.1] ([52.157.3.100])
-        by smtp.gmail.com with ESMTPSA id i3-20020a17090a2ac300b0028b3539cd97sm1020173pjg.20.2023.12.19.00.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 00:41:32 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@linux.dev>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <9a8034c76311d8871fb8d9e69aefc459b2e607ec.1702973751.git.geliang.tang@linux.dev>
-References:
- <9a8034c76311d8871fb8d9e69aefc459b2e607ec.1702973751.git.geliang.tang@linux.dev>
-Subject: Re: selftests: mptcp: userspace pm get addr tests: Build Failure
-Message-ID: <a2b72c6a-1598-7057-da95-c35324f5cd01@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 19 Dec 2023 08:41:32 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0w4LEF9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABF84C433C7;
+	Tue, 19 Dec 2023 09:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702978046;
+	bh=T3wW0NCaQQeMc6EbF39nsEHBN7K8GUL/moC+syjJwQU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=i0w4LEF98ZOvrJNhFuCHcufoF+HKrZmm3DYBFXmB0sjtTKl7KsoVKeOXrmaVAmsaT
+	 QkdGyQDpRORqc8ZSKTEzb2QD6JFYPXjKnuzVyS26q5TtlWpal1n4seCn9hPn9dkYOA
+	 n5tExnRecUzQil0Ke6FHjA/lOjpQepkirue+YxChXN4UkPtnRywHVReRoeryrAUHxA
+	 uKda/RIzA+E6MzLqiZ8pCG3OGimTbQMhkeOOJXmYCWzKETBuIlbUKSCH63qKPqUsee
+	 h1F+rgcwP6yHKzrEdGSlszhBlZpgZ1OmimFeVomXy550nombp8KbuxiuDqHA69OMEd
+	 DXDqpoPU/b5hA==
+From: Matthieu Baerts <matttbe@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@linux.dev>,
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH mptcp-next] Squash to "bpf: Add bpf_mptcp_sched_ops"
+Date: Tue, 19 Dec 2023 10:27:05 +0100
+Message-Id: <20231219092705.4120179-1-matttbe@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=885; i=matttbe@kernel.org; h=from:subject; bh=T3wW0NCaQQeMc6EbF39nsEHBN7K8GUL/moC+syjJwQU=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlgWHpg5/1zU1T4oixhqIrr/CTIb6wQMARTw2Za c/UL36zKECJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZYFh6QAKCRD2t4JPQmmg c3kUD/9UYdSurlc+F3BLpxBiw/7ywPtAdit4z80ROt7FLLbGW83Nx25h4apJZ9OAafn0wQdVS/D gWeC96p3ZW4D+6W/Qbk6u1RPEy4WLw1Xh4yTVXxhcrZdKn08jqS+ND3SGDW9eJnBd24KOoR1pFj 1T/8Dam2EQXCh2y76XKaT5AAqSoKLdcoLJmb2dbnMFWZ0XKsSa1yVQFR/ScwWNSCYQKCzPR/O8V 7E4cP96XhAk4p0sRPfsDGyZkV82qN4MwMPW2VZACyNrtOkaG3qRKgGh+qp6MgSbWybo7KhNMT48 t8WdOATo499f0JqYzlSpRemoZZYH2HrNpCAjYKmeEZwvM5vegHyezbdxYerPoX29AafAKNs1RyA CWyECW7MMnZOU7S2BsCDAtgOhWPMLakULyVa+2mJ2mR3tDOk5elWDbcYO6qqA+BV7J1Y1EpOst8 5LR7Kk0B5UmnWULH6PL03T26nG0VvsSNCU/1lUkuBwMyWrVm+EklizGjDMCG+6yzl1bqKKbUrEX myNX+4q45Z9LPvdMgZSJra3r9d4CXEuXpRNUuwVwRd8PZ8fVdHaMIOT39YKT5GMHTnjD2Lennkz /R4ryKoIh2f/bBSlum9QxnVdFpTsAwKZKCEnUcM6rxgRe+56BUuxuVoC0gmUmwCl6znhYSR13eH bU2JvtRY+iZdhKA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+This fixes a compilation issue that we have in our tree after having
+synced with upstream. See the Fixes commit for more details.
 
-Thank you for your modifications, that's great!
+Fixes: 4cbb270e115b ("bpf: take into account BPF token when fetching helper protos")
+Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
+---
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Notes:
+    to be squashed in "bpf: Add bpf_mptcp_sched_ops"
 
-You can find more details there:
+ net/mptcp/bpf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  https://patchwork.kernel.=
-org/project/mptcp/patch/9a8034c76311d8871fb8d9e69aefc459b2e607ec.1702973751=
-.git.geliang.tang@linux.dev/
-  https://github.com/multipath-tcp/mptcp_net-n=
-ext/actions/runs/7259311767
+diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+index 6b61dd54e69f..dfcaaf0e07dd 100644
+--- a/net/mptcp/bpf.c
++++ b/net/mptcp/bpf.c
+@@ -35,7 +35,7 @@ bpf_mptcp_sched_get_func_proto(enum bpf_func_id func_id,
+ 	case BPF_FUNC_skc_to_tcp_sock:
+ 		return &bpf_skc_to_tcp_sock_proto;
+ 	default:
+-		return bpf_base_func_proto(func_id);
++		return bpf_base_func_proto(func_id, prog);
+ 	}
+ }
+ 
 
-Status: failure
-Initiator: MPTCPimporter
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/f1dcab0253=
-90
+base-commit: 5763f7d7b0e50d486c63e51c0495459f2eb93d2d
+-- 
+2.40.1
 
-Feel free to reply to this email if you cannot access logs, if you need
-some support to fix the error, if this doesn't seem to be caused by your
-modifications or if the error is a false positive one.
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
