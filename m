@@ -1,29 +1,29 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA9D79C2
-	for <mptcp@lists.linux.dev>; Wed, 20 Dec 2023 02:09:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9977495
+	for <mptcp@lists.linux.dev>; Wed, 20 Dec 2023 02:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rImyGfo5"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="a3vMMrOZ"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703038153;
+	t=1703038155;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3LpL09mwuFyPdpkVkbo2KkfSfX+OHNFhvm1G+wdEAwE=;
-	b=rImyGfo5r5TdTGmXSF/PbdL7ADVWMUHrtWU6VCK/ilEmyEXMPwjNZCzMwUwXCTloh4hepQ
-	qg67zNKb8QHW1NVLE/Ol6Pi3qF2ls0iOh9+UhjhvxV8GdXfyZJJDzZ5eQI1wsrcRUC/fR3
-	OQtswpQbtqz4mEJX6lFygA8xiRp0kxo=
+	bh=DyGvSnMWYEUvSa6sdfPlSTGj3VxBxlfnXKokTfIugTI=;
+	b=a3vMMrOZl5qVm9J4Kxt2RTJdHlHA11Jb2TzHZ9y/FzJ8+PiYqWMYcdLAzO32dhN32/PHlc
+	iHlxHzsdM2AzKNApPT7dtaO9DMaK+YlgClL/nZ3VeoftGalG2te96JVMfpM9Uf4pglZukE
+	BvbSlHKR7UMplVSPx6lXRxFOJmUFV+Q=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v3 1/2] Squash to "mptcp: use mptcp_set_state"
-Date: Wed, 20 Dec 2023 10:08:16 +0800
-Message-Id: <e64c4d985eee49763c14b53c9ea30d3affec471e.1703036129.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v3 2/2] selftests: mptcp: diag: check CURRESTAB counters
+Date: Wed, 20 Dec 2023 10:08:17 +0800
+Message-Id: <e2980e1677fc4cade97771b6218f1bea928408e5.1703036129.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1703036129.git.geliang.tang@linux.dev>
 References: <cover.1703036129.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,30 +35,80 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Update the comment.
+This patch adds a new helper chk_msk_cestab() to check the current
+established connections counter MIB_CURRESTAB in diag.sh. Invoke it
+to check the counter during the connection after every chk_msk_inuse().
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_netlink.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/diag.sh | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index b93683b5e618..661c226dad18 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1048,8 +1048,10 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 	if (err)
- 		return err;
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index 95b498efacd1..04fcb8a077c9 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -56,7 +56,7 @@ __chk_nr()
+ 	local command="$1"
+ 	local expected=$2
+ 	local msg="$3"
+-	local skip="${4:-SKIP}"
++	local skip="${4-SKIP}"
+ 	local nr
  
--	/* avoid replacing inet_sk_state_store with mptcp_set_state here, as the
--	 * old status is known to be TCP_CLOSE, hence will not affect the count.
-+	/* We don't use mptcp_set_state() here because it needs to be called
-+	 * under the msk socket lock. For the moment, that will not bring
-+	 * anything more than only calling inet_sk_state_store(), because the
-+	 * old status is known (TCP_CLOSE).
- 	 */
- 	inet_sk_state_store(newsk, TCP_LISTEN);
- 	lock_sock(ssk);
+ 	nr=$(eval $command)
+@@ -182,6 +182,15 @@ chk_msk_inuse()
+ 	__chk_nr get_msk_inuse $expected "$msg" 0
+ }
+ 
++# $1: cestab nr
++chk_msk_cestab()
++{
++	local cestab=$1
++
++	__chk_nr "mptcp_lib_get_counter ${ns} MPTcpExtMPCurrEstab" \
++		 "${cestab}" "....chk ${cestab} cestab" ""
++}
++
+ wait_connected()
+ {
+ 	local listener_ns="${1}"
+@@ -219,9 +228,11 @@ chk_msk_nr 2 "after MPC handshake "
+ chk_msk_remote_key_nr 2 "....chk remote_key"
+ chk_msk_fallback_nr 0 "....chk no fallback"
+ chk_msk_inuse 2 "....chk 2 msk in use"
++chk_msk_cestab 2
+ flush_pids
+ 
+ chk_msk_inuse 0 "....chk 0 msk in use after flush"
++chk_msk_cestab 0
+ 
+ echo "a" | \
+ 	timeout ${timeout_test} \
+@@ -237,9 +248,11 @@ echo "b" | \
+ wait_connected $ns 10001
+ chk_msk_fallback_nr 1 "check fallback"
+ chk_msk_inuse 1 "....chk 1 msk in use"
++chk_msk_cestab 1
+ flush_pids
+ 
+ chk_msk_inuse 0 "....chk 0 msk in use after flush"
++chk_msk_cestab 0
+ 
+ NR_CLIENTS=100
+ for I in `seq 1 $NR_CLIENTS`; do
+@@ -261,9 +274,11 @@ done
+ 
+ wait_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
+ chk_msk_inuse $((NR_CLIENTS*2)) "....chk many msk in use"
++chk_msk_cestab $((NR_CLIENTS*2))
+ flush_pids
+ 
+ chk_msk_inuse 0 "....chk 0 msk in use after flush"
++chk_msk_cestab 0
+ 
+ mptcp_lib_result_print_all_tap
+ exit $ret
 -- 
 2.35.3
 
