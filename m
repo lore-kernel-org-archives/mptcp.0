@@ -1,178 +1,212 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2050.outbound.protection.outlook.com [40.107.244.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641CB21361
-	for <mptcp@lists.linux.dev>; Wed, 20 Dec 2023 10:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E083741847
+	for <mptcp@lists.linux.dev>; Wed, 20 Dec 2023 15:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jj3jG2Sf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703067770;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sPjOj5+3IbswkMBk5a3dR6rDf6VmDEAd/bulLNLFh9g=;
-	b=Jj3jG2Sf3teVTPtYMu7YgNdV9OvNhArdj7H3owtg/PojXe0B0tIp+3LtAvR53jJBzBlwVe
-	JcpHEzqr1oSlqFwFHakLhQAug/hDQCTimIgtz8kWm52ZHfaODE469xZkmNS7N50suuGN9l
-	VAbAchdlnq5ZlbawwC2WnQwf9fcaJvk=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-499-CiucVgUeNRyJ6gqhAfDrbg-1; Wed, 20 Dec 2023 05:22:48 -0500
-X-MC-Unique: CiucVgUeNRyJ6gqhAfDrbg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a24901893abso22601466b.1
-        for <mptcp@lists.linux.dev>; Wed, 20 Dec 2023 02:22:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703067767; x=1703672567;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3tenCflcvwHDUupcimFI6COHvWVks/d4mt7BRqPCBH0=;
-        b=g12ESHMccpIoLj9BkBgH1WSHH/xdF9VvvP+qzRbc9Z1Jqg0RcwSJiTl3mVZXaSEM2R
-         hjXeg9yf/kcuHxr5EXKUqo5Uc0DZFX+hE/gNcEq5qNHMfUuqA9WH2Tjmy9wOt0d5VDGf
-         ge284KF2fBIeQ2plA3qjkIWMVs63Rkas9kxxBT7gddgBPjAo/Zdzj249wEYFu88/2vhi
-         KMtS3ASBlTye5+Z07Hj+A9ysQCztTJ1HZhVCg8IT/KaCp8SVmwR2dr912reOMW+wBcuE
-         DB/Cpuw7Kor5Pa635uGzRlqT031Zv25pv6jC8A+ooM31Ae5q6nBc4VyncPpBsBwLULns
-         Yfvw==
-X-Gm-Message-State: AOJu0YzFv98ztQ/LfIN2RsLKfYgwovWMQHjfgOL17TEeyvoSEX0ILQPZ
-	Ntk/CRxmfcLrQGGHL9VCbdXrpjPZWuQk8+BEaVxPW9MQiDQqcq1TrVaKu/HBibBnm5C1M2wUfjZ
-	VB+lMRKGY5Q9RU1c=
-X-Received: by 2002:a17:907:72c3:b0:a23:679c:4683 with SMTP id du3-20020a17090772c300b00a23679c4683mr4746669ejc.4.1703067767638;
-        Wed, 20 Dec 2023 02:22:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGtUPRbx8MOeVOB8yA1mqeocJegsUUHrUmn8bGLwalPKHDnymDVFdMN/bgsTjAY0nQT2gkKMA==
-X-Received: by 2002:a17:907:72c3:b0:a23:679c:4683 with SMTP id du3-20020a17090772c300b00a23679c4683mr4746660ejc.4.1703067767211;
-        Wed, 20 Dec 2023 02:22:47 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-246-245.dyn.eolo.it. [146.241.246.245])
-        by smtp.gmail.com with ESMTPSA id i19-20020a170906265300b00a234c5d0834sm4115922ejc.175.2023.12.20.02.22.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Dec 2023 02:22:46 -0800 (PST)
-Message-ID: <533e8e80c4db4ecd34a2c49dd3de3e76810afe22.camel@redhat.com>
-Subject: Re: [PATCH v6 bpf-next 3/6] bpf: tcp: Handle BPF SYN Cookie in
- skb_steal_sock().
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <martineau@kernel.org>, Kuniyuki Iwashima
- <kuniyu@amazon.com>
-Cc: Matthieu Baerts <matttbe@kernel.org>, edumazet@google.com, 
- andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
- daniel@iogearbox.net,  kuni1840@gmail.com, martin.lau@linux.dev,
- netdev@vger.kernel.org,  mptcp@lists.linux.dev
-Date: Wed, 20 Dec 2023 11:22:45 +0100
-In-Reply-To: <7d00ad25-abaa-191d-8e80-32674377b053@kernel.org>
-References: <CANn89i+8e8VJ8cJX6vwLFhtj=BmT233nNr=F9H3nFs8BZgTbsQ@mail.gmail.com>
-	 <20231215023707.41864-1-kuniyu@amazon.com>
-	 <7d00ad25-abaa-191d-8e80-32674377b053@kernel.org>
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PyQUt+Nw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jryKU7J1q/oPFW1oN2luxDFctNBQKGPW+Qzgql+MygvPnGDee8Kywj+kp37CSTnpciRwq/FbAiAYt2/2XbHB7XRiN35dgK0WvSe3XzRharSoJJR6db8vr7nHx05+geFo0kbQTikSiwP7jIc8iCcgGVPJRtpQrROlb5BMiIa97PN2TR7F6CVsq/1yGRkG+S1R3BxkG4lUaOZyvE5J9GeKpwtKD4XN92zeEFTFl+/XCPVPiZw8rW4YgM/K4I8nrFCR/ny01yshsEkEyIEDjOMwXUmEki123uIhqWJ4jpLF1+OfnS1IlTGVkYuz464Wr2djvE7ug1BsB2wPNyXnvL2ttg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zBTVw/HQIpXGTytmriUlDEa/fMu6JgpMASZWTKwMBFM=;
+ b=QD7Pw8Cr8axNj+vCwdo8CWY65RJ3tZROkeq4a6VmQf5Fcg2JQHo9+q26v6emlzhlzvqN/l5a0blRU2sfSZKxPowj94GXr1KnbUVexYcpqdsOxOesVoxVxEtnsA4w4smhqM+3TFtde+XTT74z+SDYk/0bN6qKho/4o2X47GMchpUzCCtKP/alLwWIfk/raYO62kptxL3jwrE7CCDYVVwQ/tg7WR1Gw3Xjhn/7qaVhJvirt3DSiGageAxP3+BVDfcXMUdw8CbJ+s5yvfMEmaahi8kztuTU1jJ5EiMitNyvrIg0UZ7+a4KyCCYMr3QYwCgcO8RFwlTuuukalD2RN7Qwpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zBTVw/HQIpXGTytmriUlDEa/fMu6JgpMASZWTKwMBFM=;
+ b=PyQUt+NwuLgcaE7LOxMJjeuhCMAPYoEYIDImX5Ua0BCQYxIlTSYp3VzUl/qQSeEyiBpWoyEFVWSktD1uOiUXHGCdzkMjCDgqFt5hLkE3Q8dkvHKTIvzQi40gPp+xxIvvryJGscVVJp386qJfrlnC2nNud4Zn6Ocp3RMjUvhyLvpQ27Ahhmw9VvnQhi6DMbTGZwg5FyQ7fFXTipDazSm+AGgFNCw5a/ZKQf1oe9/mdWQgZgJFkVF28aZmV7wtsmTf3UyKyjA4gyK1WtQeXPUeBIqK8JIDptbKvV56IJKUwpqd8zrCXwYcwMlGjQIMTxfSyZiT0TEdxol9A/kYunzdgA==
+Received: from CY5PR18CA0059.namprd18.prod.outlook.com (2603:10b6:930:13::22)
+ by DM4PR12MB7598.namprd12.prod.outlook.com (2603:10b6:8:10a::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.38; Wed, 20 Dec
+ 2023 15:45:04 +0000
+Received: from CY4PEPF0000EE38.namprd03.prod.outlook.com
+ (2603:10b6:930:13:cafe::b4) by CY5PR18CA0059.outlook.office365.com
+ (2603:10b6:930:13::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.18 via Frontend
+ Transport; Wed, 20 Dec 2023 15:45:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CY4PEPF0000EE38.mail.protection.outlook.com (10.167.242.12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7113.14 via Frontend Transport; Wed, 20 Dec 2023 15:45:04 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 20 Dec
+ 2023 07:44:55 -0800
+Received: from dev-r-vrt-155.mtr.labs.mlnx (10.126.231.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Wed, 20 Dec 2023 07:44:51 -0800
+From: Ido Schimmel <idosch@nvidia.com>
+To: <netdev@vger.kernel.org>, <mptcp@lists.linux.dev>
+CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<edumazet@google.com>, <nhorman@tuxdriver.com>, <matttbe@kernel.org>,
+	<martineau@kernel.org>, <yotam.gi@gmail.com>, <jiri@resnulli.us>,
+	<jacob.e.keller@intel.com>, <johannes@sipsolutions.net>,
+	<andriy.shevchenko@linux.intel.com>, <fw@strlen.de>, Ido Schimmel
+	<idosch@nvidia.com>
+Subject: [PATCH net-next v2] genetlink: Use internal flags for multicast groups
+Date: Wed, 20 Dec 2023 17:43:58 +0200
+Message-ID: <20231220154358.2063280-1-idosch@nvidia.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE38:EE_|DM4PR12MB7598:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c4d9d4f-0380-4051-45e2-08dc0172a2b3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	VDpFHUt6XMA3F46EyAr6GAypICDJhH9zSXqi277+AfzVU4TXLiNtz25wzExxXBnevNZ5ZGi5lp2iPpuBUwmnqM94x970x2KZp+Rii/ecKqt6QmVXrbU/Lcy+c4FWTeZPotM6QMFgN+RpxHxoYTO0Xk/Il0EDmxMtugjjBp38E8cytkOf2JbNoYtGsn2Tim7RDmXnBvDsXS93B1C6zNb/yw2/3WhvusrzGhaKSPv87jt2dLP6LBw648ZjtzDt8Fp23BZTQST1KithYMYWl7j5xHdF1n2i5L1fSM9P2kI8PMru6TVpRz5LagC+mtwgLGdR02EyJnaACVqa3nQq8x8vwzBOe3dZx4a/bAKPEX9L7rl91eSJTFABXd/z5YO1wNdWoQjrbXQO63PwueaAr6lrx06HFV6pNIsFcyUESm2HodI/4YHuTQlHASt679ohOL5yTBb7VYvO6AtC/1lZCEcjBE/txWPpASLU6BdrgTe3KFbHDPQ2gF0WzdJdjzJhabm9LL6wEi2ZCGME/zaLZVgd/UuK994ngnNBapZHR8UI8gGIjl5gG0JJQ7w3qqcpL/SVp+9lf4YhTSWeQ2TSWy2AIK7rDqpUUAUoN1tTv3KAydPg7BF2DLpCko1Dthk657TgtIpkuroA+J84H49EbEPt3lb91U4hRsVCAdBLkuB4aBfQREutuMLdZn/hxQXVzOo4fmi71Sq6Izd+lrOtsmWT0ZO9FOQAlN3Ivu/MGXkZ7FRXbbaf9jxPowGDwOONVmvH
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(346002)(376002)(396003)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(82310400011)(46966006)(40470700004)(36840700001)(40480700001)(36756003)(40460700003)(107886003)(478600001)(2616005)(8936002)(16526019)(54906003)(110136005)(70206006)(70586007)(316002)(2906002)(4326008)(1076003)(8676002)(426003)(336012)(36860700001)(47076005)(26005)(86362001)(7416002)(5660300002)(41300700001)(7636003)(356005)(83380400001)(82740400003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2023 15:45:04.6231
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c4d9d4f-0380-4051-45e2-08dc0172a2b3
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE38.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7598
 
-On Tue, 2023-12-19 at 08:45 -0800, Mat Martineau wrote:
-> On Fri, 15 Dec 2023, Kuniyuki Iwashima wrote:
->=20
-> > From: Eric Dumazet <edumazet@google.com>
-> > Date: Thu, 14 Dec 2023 17:31:15 +0100
-> > > On Thu, Dec 14, 2023 at 4:56=E2=80=AFPM Kuniyuki Iwashima <kuniyu@ama=
-zon.com> wrote:
-> > > >=20
-> > > > We will support arbitrary SYN Cookie with BPF.
-> > > >=20
-> > > > If BPF prog validates ACK and kfunc allocates a reqsk, it will
-> > > > be carried to TCP stack as skb->sk with req->syncookie 1.  Also,
-> > > > the reqsk has its listener as req->rsk_listener with no refcnt
-> > > > taken.
-> > > >=20
-> > > > When the TCP stack looks up a socket from the skb, we steal
-> > > > inet_reqsk(skb->sk)->rsk_listener in skb_steal_sock() so that
-> > > > the skb will be processed in cookie_v[46]_check() with the
-> > > > listener.
-> > > >=20
-> > > > Note that we do not clear skb->sk and skb->destructor so that we
-> > > > can carry the reqsk to cookie_v[46]_check().
-> > > >=20
-> > > > Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-> > > > ---
-> > > >  include/net/request_sock.h | 15 +++++++++++++--
-> > > >  1 file changed, 13 insertions(+), 2 deletions(-)
-> > > >=20
-> > > > diff --git a/include/net/request_sock.h b/include/net/request_sock.=
-h
-> > > > index 26c630c40abb..8839133d6f6b 100644
-> > > > --- a/include/net/request_sock.h
-> > > > +++ b/include/net/request_sock.h
-> > > > @@ -101,10 +101,21 @@ static inline struct sock *skb_steal_sock(str=
-uct sk_buff *skb,
-> > > >         }
-> > > >=20
-> > > >         *prefetched =3D skb_sk_is_prefetched(skb);
-> > > > -       if (*prefetched)
-> > > > +       if (*prefetched) {
-> > > > +#if IS_ENABLED(CONFIG_SYN_COOKIES)
-> > > > +               if (sk->sk_state =3D=3D TCP_NEW_SYN_RECV && inet_re=
-qsk(sk)->syncookie) {
-> > > > +                       struct request_sock *req =3D inet_reqsk(sk)=
-;
-> > > > +
-> > > > +                       *refcounted =3D false;
-> > > > +                       sk =3D req->rsk_listener;
-> > > > +                       req->rsk_listener =3D NULL;
-> > >=20
-> > > I am not sure about interactions with MPTCP.
-> > >=20
-> > > I would be nice to have their feedback.
-> >=20
-> > Matthieu, Mat, Paolo, could you double check if the change
-> > above is sane ?
-> > https://lore.kernel.org/bpf/20231214155424.67136-4-kuniyu@amazon.com/
->=20
-> Hi Kuniyuki -
->=20
-> Yes, we will take a look. Haven't had time to look in detail yet but I=20
-> wanted to let you know we saw your message and will follow up.
+As explained in commit e03781879a0d ("drop_monitor: Require
+'CAP_SYS_ADMIN' when joining "events" group"), the "flags" field in the
+multicast group structure reuses uAPI flags despite the field not being
+exposed to user space. This makes it impossible to extend its use
+without adding new uAPI flags, which is inappropriate for internal
+kernel checks.
 
-I'm sorry for the late reply.
+Solve this by adding internal flags (i.e., "GENL_MCAST_*") and convert
+the existing users to use them instead of the uAPI flags.
 
-AFAICS, from mptcp perspective, the main differences from built-in
-cookie validation are:
+Tested using the reproducers in commit 44ec98ea5ea9 ("psample: Require
+'CAP_NET_ADMIN' when joining "packets" group") and commit e03781879a0d
+("drop_monitor: Require 'CAP_SYS_ADMIN' when joining "events" group").
 
-- cookie allocation via mptcp_subflow_reqsk_alloc() and cookie
-'finalization' via cookie_tcp_reqsk_init() /
-mptcp_subflow_init_cookie_req(req, sk, skb) could refer 2 different
-listeners - within the same REUSEPORT group.
+No functional changes intended.
 
-- incoming pure syn packets will not land into the TCP stack, so
-af_ops->route_req will not happen.
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+---
+v2:
+* Add a comment for each flag
+---
+ include/net/genetlink.h | 9 ++++++---
+ net/core/drop_monitor.c | 2 +-
+ net/mptcp/pm_netlink.c  | 2 +-
+ net/netlink/genetlink.c | 4 ++--
+ net/psample/psample.c   | 2 +-
+ 5 files changed, 11 insertions(+), 8 deletions(-)
 
-I think both the above are problematic form mptcp.=C2=A0
-
-Potentially we can have both mptcp-enabled and plain tcp socket with
-the same reuseport group.=20
-
-Currently the mptcp code assumes the listener is mptcp
-cookie_tcp_reqsk_init(), the req is mptcp, too. I think we could fix
-this at the mptcp level, but no patch ready at the moment.
-
-Even the missing call to route_req() is problematic, as we use that to
-fetch required information from the initial syn for MP_JOIN subflows -
-yep, unfortunately mptcp needs to track of some state across MPJ syn
-and MPJ 3rd ack reception.
-
-Fixing this last item looks more difficult. I think it would be safer
-and simpler to avoid mptcp support for generic syncookie and ev enable
-it later - after we address things on the mptcp side.
-
-@Eric, were you looking to something else and/or more specific?
-
-Thanks!
-
-Paolo
-
+diff --git a/include/net/genetlink.h b/include/net/genetlink.h
+index 85c63d4f16dd..e61469129402 100644
+--- a/include/net/genetlink.h
++++ b/include/net/genetlink.h
+@@ -8,16 +8,19 @@
+ 
+ #define GENLMSG_DEFAULT_SIZE (NLMSG_DEFAULT_SIZE - GENL_HDRLEN)
+ 
++/* Binding to multicast group requires %CAP_NET_ADMIN */
++#define GENL_MCAST_CAP_NET_ADMIN	BIT(0)
++/* Binding to multicast group requires %CAP_SYS_ADMIN */
++#define GENL_MCAST_CAP_SYS_ADMIN	BIT(1)
++
+ /**
+  * struct genl_multicast_group - generic netlink multicast group
+  * @name: name of the multicast group, names are per-family
+- * @flags: GENL_* flags (%GENL_ADMIN_PERM or %GENL_UNS_ADMIN_PERM)
+- * @cap_sys_admin: whether %CAP_SYS_ADMIN is required for binding
++ * @flags: GENL_MCAST_* flags
+  */
+ struct genl_multicast_group {
+ 	char			name[GENL_NAMSIZ];
+ 	u8			flags;
+-	u8			cap_sys_admin:1;
+ };
+ 
+ struct genl_split_ops;
+diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+index b240d9aae4a6..b0f221d658be 100644
+--- a/net/core/drop_monitor.c
++++ b/net/core/drop_monitor.c
+@@ -183,7 +183,7 @@ static struct sk_buff *reset_per_cpu_data(struct per_cpu_dm_data *data)
+ }
+ 
+ static const struct genl_multicast_group dropmon_mcgrps[] = {
+-	{ .name = "events", .cap_sys_admin = 1 },
++	{ .name = "events", .flags = GENL_MCAST_CAP_SYS_ADMIN, },
+ };
+ 
+ static void send_dm_alert(struct work_struct *work)
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index bf4d96f6f99a..272e93be1aad 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1100,7 +1100,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
+ static const struct genl_multicast_group mptcp_pm_mcgrps[] = {
+ 	[MPTCP_PM_CMD_GRP_OFFSET]	= { .name = MPTCP_PM_CMD_GRP_NAME, },
+ 	[MPTCP_PM_EV_GRP_OFFSET]        = { .name = MPTCP_PM_EV_GRP_NAME,
+-					    .flags = GENL_UNS_ADMIN_PERM,
++					    .flags = GENL_MCAST_CAP_NET_ADMIN,
+ 					  },
+ };
+ 
+diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
+index c0d15470a10b..8c7af02f8454 100644
+--- a/net/netlink/genetlink.c
++++ b/net/netlink/genetlink.c
+@@ -1829,10 +1829,10 @@ static int genl_bind(struct net *net, int group)
+ 			continue;
+ 
+ 		grp = &family->mcgrps[i];
+-		if ((grp->flags & GENL_UNS_ADMIN_PERM) &&
++		if ((grp->flags & GENL_MCAST_CAP_NET_ADMIN) &&
+ 		    !ns_capable(net->user_ns, CAP_NET_ADMIN))
+ 			ret = -EPERM;
+-		if (grp->cap_sys_admin &&
++		if ((grp->flags & GENL_MCAST_CAP_SYS_ADMIN) &&
+ 		    !ns_capable(net->user_ns, CAP_SYS_ADMIN))
+ 			ret = -EPERM;
+ 
+diff --git a/net/psample/psample.c b/net/psample/psample.c
+index c34e902855db..ddd211a151d0 100644
+--- a/net/psample/psample.c
++++ b/net/psample/psample.c
+@@ -32,7 +32,7 @@ enum psample_nl_multicast_groups {
+ static const struct genl_multicast_group psample_nl_mcgrps[] = {
+ 	[PSAMPLE_NL_MCGRP_CONFIG] = { .name = PSAMPLE_NL_MCGRP_CONFIG_NAME },
+ 	[PSAMPLE_NL_MCGRP_SAMPLE] = { .name = PSAMPLE_NL_MCGRP_SAMPLE_NAME,
+-				      .flags = GENL_UNS_ADMIN_PERM },
++				      .flags = GENL_MCAST_CAP_NET_ADMIN, },
+ };
+ 
+ static struct genl_family psample_nl_family __ro_after_init;
+-- 
+2.40.1
 
