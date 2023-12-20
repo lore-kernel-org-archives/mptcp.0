@@ -1,108 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB90405DA;
-	Tue, 19 Dec 2023 21:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3DB7495
+	for <mptcp@lists.linux.dev>; Wed, 20 Dec 2023 02:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0Ry5sMV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71D5C43391;
-	Tue, 19 Dec 2023 21:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703021911;
-	bh=f2gvC7w8UKri1c32TAYRYmZfycGTKFEwGDAv7yV/QLQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=S0Ry5sMVLnzW9pfp5OOWzLtrq2lcFYBDkGnWaWhIjb7vvdmk3FiP0tm1rxUkZverp
-	 q4jbOfBaymVSztcy7QBqDgi0jxV+u5Vh2O5bH0yCs0lOviTxRDe75bbU+VfRnlnqUP
-	 sGcSQSuMyXispGjJyyoynNdSuPLW5iTpYCQZ0CrLvflAkFZtRMTbLL/qs8TPYnixKI
-	 jglBDy7OFaJAbElv9eCKTw8k0i8Xla+DpEBvwJlYl7319mtD5nC8iD67IpZrhmwtim
-	 ViaKR6nh2f+sXbP6uyKGqAtklvCO6ZjqU6+81WboqQ+wVI/J0uUHM97gH6Xii6JJxN
-	 rxLa5yCTq1DNg==
-From: Matthieu Baerts <matttbe@kernel.org>
-Date: Tue, 19 Dec 2023 22:31:07 +0100
-Subject: [PATCH net-next 4/4] selftests/net: add MPTCP coverage for
- IP_LOCAL_PORT_RANGE
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LJNogAIF"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1703038151;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=f59vI9JihQUjoifWsXN7BexFUg1b0NB0PJwoYGho1Fg=;
+	b=LJNogAIFbp97/B7B9g89tlihqJWQe9ImkSJd12Lu4Gi8muRprb11GwhF7jC19qFeaZc9Z1
+	prK81QgpGdV7hVudZXhT0HcQkKB4755FwKSTNoeaqR+oMQ2/knpdD6OEHi1BvJpS7RuM0x
+	bu9IA6xFyWGpdf1AIpF69eN3GIuTI3g=
+From: Geliang Tang <geliang.tang@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v3 0/2] fixes for CURRESTAB
+Date: Wed, 20 Dec 2023 10:08:15 +0800
+Message-Id: <cover.1703036129.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231219-upstream-net-next-20231219-mptcp-sockopts-ephemeral-ports-v1-4-2b13bedfcaf8@kernel.org>
-References: <20231219-upstream-net-next-20231219-mptcp-sockopts-ephemeral-ports-v1-0-2b13bedfcaf8@kernel.org>
-In-Reply-To: <20231219-upstream-net-next-20231219-mptcp-sockopts-ephemeral-ports-v1-0-2b13bedfcaf8@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Matthieu Baerts <matttbe@kernel.org>, 
- Maxim Galaganov <max@internet.ru>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1494; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=fbNXZmS3qdsPsilwuM1H+dJAdECITs25qe5pVmz8Lns=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlgg1GFZH7w/nEOkP6mdB5g8NK5fxpSdj5RXrmW
- 2XtMy/upC6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZYINRgAKCRD2t4JPQmmg
- c8NTD/4t4jyh509SjqZKZ8C+OeSKDHHfwQbtZPaRhfzX6i3eG8MFzJIoSYM4KleCc090f+b90uc
- +KjaK5eCRueP7R6jxZLwVynQjlvikIJRllhTeTUEJNTy6NJmNsS2PPZPaxkRARcyPHr0ty7Se+Z
- 4N3IIBbZzIjaa0COKK4uzvcPNQpDjZZvyweEKWOb6J+rMYJjVnfr0gDYjg49/sWCelsdswXS/XP
- JcGyYv5my09XipqrpNFwPGtJgmbV5yz3AziF8gGEZlBZj8k7ANSJ0TaMaW+d4JtBG8BDyd535bZ
- 7UBv8e8QZBT5ukVEFb9y6Epdp44xEhvAEyNT8ECMnxopATc6L/+Uj30pCQ5kmHFFDQ+ogZCFwkI
- 8frd+F3amLVX/4Tm5hVFmGyBVwpvKczuBdBobCBpW8S2iTfJD7guBCE5HEKZwb7HMDuFaY6q9s0
- 41rKsdFtLtCRGCZTR+aSkdGmGqsWXZP0X/vCTYwnLDjcMWqFO8E1PjAh/5fdr6X+30wsL6Vt2DT
- sx6C1UR6StmZP0+eCnv0nv1OORPnWwITowgBkDr+OcEDJT2i/DSshKBPotSjd7L5xwSLQ8blFj+
- vFBrGTTGjC1S9t9D5KMp7XT2Qv7818reel2WYzIo+v91qi7inseuHV/D6zdGkFzfW9zZr9XMf3E
- g+AXCkavMVLUhSg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Maxim Galaganov <max@internet.ru>
+v3:
+ - update the comment in mptcp_pm_nl_create_listen_socket.
+ - update selftests
 
-Since previous commit, MPTCP has support for IP_BIND_ADDRESS_NO_PORT and
-IP_LOCAL_PORT_RANGE sockopts.
+v2:
+ - Address Paolo & Matt's comments for v1.
 
-Add ip4_mptcp and ip6_mptcp fixture variants to ip_local_port_range
-selftest to provide selftest coverage for these sockopts.
+Geliang Tang (2):
+  Squash to "mptcp: use mptcp_set_state"
+  selftests: mptcp: diag: check CURRESTAB counters
 
-Acked-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Maxim Galaganov <max@internet.ru>
-Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
----
- tools/testing/selftests/net/ip_local_port_range.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/tools/testing/selftests/net/ip_local_port_range.c b/tools/testing/selftests/net/ip_local_port_range.c
-index 75e3fdacdf73..0f217a1cc837 100644
---- a/tools/testing/selftests/net/ip_local_port_range.c
-+++ b/tools/testing/selftests/net/ip_local_port_range.c
-@@ -146,6 +146,12 @@ FIXTURE_VARIANT_ADD(ip_local_port_range, ip4_stcp) {
- 	.so_protocol	= IPPROTO_SCTP,
- };
- 
-+FIXTURE_VARIANT_ADD(ip_local_port_range, ip4_mptcp) {
-+	.so_domain	= AF_INET,
-+	.so_type	= SOCK_STREAM,
-+	.so_protocol	= IPPROTO_MPTCP,
-+};
-+
- FIXTURE_VARIANT_ADD(ip_local_port_range, ip6_tcp) {
- 	.so_domain	= AF_INET6,
- 	.so_type	= SOCK_STREAM,
-@@ -164,6 +170,12 @@ FIXTURE_VARIANT_ADD(ip_local_port_range, ip6_stcp) {
- 	.so_protocol	= IPPROTO_SCTP,
- };
- 
-+FIXTURE_VARIANT_ADD(ip_local_port_range, ip6_mptcp) {
-+	.so_domain	= AF_INET6,
-+	.so_type	= SOCK_STREAM,
-+	.so_protocol	= IPPROTO_MPTCP,
-+};
-+
- TEST_F(ip_local_port_range, invalid_option_value)
- {
- 	__u16 val16;
+ net/mptcp/pm_netlink.c                    |  6 ++++--
+ tools/testing/selftests/net/mptcp/diag.sh | 17 ++++++++++++++++-
+ 2 files changed, 20 insertions(+), 3 deletions(-)
 
 -- 
-2.40.1
+2.35.3
 
