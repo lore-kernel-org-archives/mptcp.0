@@ -1,29 +1,29 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA914F60D
-	for <mptcp@lists.linux.dev>; Thu, 21 Dec 2023 11:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61686BB58
+	for <mptcp@lists.linux.dev>; Thu, 21 Dec 2023 11:33:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RGsiMJCW"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="j9T5ARYJ"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703158406;
+	t=1703158408;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qF5VclR1z7asngkrrAyR2NWaJhBqYyv88guIpCtTPyY=;
-	b=RGsiMJCWgVrNBJgQcsCJJSzMu/9vmy9Jw8Ri3qJmmLpUMUO3X+oyr6b2BjWgmQ5NnDUH47
-	HLCnX4HVG5u4TEU6gCMWG4DoVJMqtenL2ne1a74H5PvE3SRS10c8ZR/HgX7Ig9+p2ihuPr
-	qHOTDQxlJ+PtnHTfpTmRwSVeas7HU1c=
+	bh=krbjFYULXOEQQgxFi6i9Xgz4eN78j27Ae3DTSSUW1Po=;
+	b=j9T5ARYJBxWVc61HUvWz+XiDMgIa4YW0L0fe1gcfpV3BmjxY9c++pEQVfjY+FJsCsjU5XT
+	O2z9Z15lPxQ/ZFRdT3DOSY8hOFCn4ZGsG/qCCoDNPM/Ar40g289VK4q15gooyw/tAxvnQC
+	AHGIp9cpXw3p5Vci0ep2Bqw33WVajlI=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v6 06/15] selftests: mptcp: export ret into mptcp_lib
-Date: Thu, 21 Dec 2023 19:31:09 +0800
-Message-Id: <7bfb0baefdbe72d3de89ce49f115bd6928698eb4.1703158128.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v6 07/15] selftests: mptcp: extract mptcp_lib_check_expected
+Date: Thu, 21 Dec 2023 19:31:10 +0800
+Message-Id: <79999854e2fc1d2ed5ca90c413cccef1e9cad53d.1703158128.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1703158128.git.geliang.tang@linux.dev>
 References: <cover.1703158128.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,118 +35,126 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The variable 'ret' has been defined in every script. This patch moves it
-into mptcp_lib.sh as a public variable.
+Extract the main part of check_expected() in userspace_pm.sh to a new
+function mptcp_lib_check_expected() in mptcp_lib.sh. It will be used
+in both mptcp_john.sh and userspace_pm.sh.
+
+check_expected_one() is moved into mptcp_lib.sh too as a sub function
+of mptcp_lib_check_expected().
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- tools/testing/selftests/net/mptcp/diag.sh          | 1 -
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 1 -
- tools/testing/selftests/net/mptcp/mptcp_join.sh    | 1 -
- tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 2 ++
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 1 -
- tools/testing/selftests/net/mptcp/pm_netlink.sh    | 1 -
- tools/testing/selftests/net/mptcp/simult_flows.sh  | 1 -
- tools/testing/selftests/net/mptcp/userspace_pm.sh  | 1 -
- 8 files changed, 2 insertions(+), 7 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 43 +++++++++++++++++++
+ .../selftests/net/mptcp/userspace_pm.sh       | 41 +++---------------
+ 2 files changed, 48 insertions(+), 36 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index efef4692a4c9..7c71d589c2f8 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -10,7 +10,6 @@ ksft_skip=4
- test_cnt=1
- timeout_poll=100
- timeout_test=$((timeout_poll * 2 + 1))
--ret=0
- 
- flush_pids()
- {
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 7898d62fce0b..e3f1afa8011b 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -6,7 +6,6 @@
- time_start=$(date +%s)
- 
- optstring="S:R:d:e:l:r:h4cm:f:tC"
--ret=0
- final_ret=0
- sin=""
- sout=""
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 0e05024f6dd8..fd217d4bad5b 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -12,7 +12,6 @@
- 
- . "$(dirname "${0}")/mptcp_lib.sh"
- 
--ret=0
- sin=""
- sinfail=""
- sout=""
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 927fb0c18142..94eed09ceedd 100644
+index 94eed09ceedd..6ba3747ce217 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -8,6 +8,8 @@ readonly KSFT_SKIP=4
- # shellcheck disable=SC2155 # declare and assign separately
- readonly KSFT_TEST=$(basename "${0}" | sed 's/\.sh$//g')
+@@ -381,3 +381,46 @@ mptcp_lib_evts_remove() {
  
-+ret=0
+ 	rm -rf "${server_evts}" "${client_evts}"
+ }
 +
- MPTCP_LIB_SUBTESTS=()
- 
- # only if supported (or forced) and not disabled, see no-color.org
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index c643872ddf47..6d2f4af087d7 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -3,7 +3,6 @@
- 
- . "$(dirname "${0}")/mptcp_lib.sh"
- 
--ret=0
- sin=""
- sout=""
- cin=""
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index ed1e8380838a..b2e3ecbc376c 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -4,7 +4,6 @@
- . "$(dirname "${0}")/mptcp_lib.sh"
- 
- ksft_skip=4
--ret=0
- 
- usage() {
- 	echo "Usage: $0 [ -h ]"
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index d54ee402ac06..f18dfafb5710 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -13,7 +13,6 @@ ksft_skip=4
- timeout_poll=30
- timeout_test=$((timeout_poll * 2 + 1))
- test_cnt=1
--ret=0
- bail=0
- slack=50
- 
++# $@: all var names to check
++mptcp_lib_check_expected() {
++	: "${ret:?}"
++
++	# $1: var name ; $2: prev ret
++	check_expected_one() {
++		local var="${1}"
++		local exp="e_${var}"
++		local prev_ret="${2}"
++
++		if [ "${!var}" = "${!exp}" ]
++		then
++			return 0
++		fi
++
++		if [ "${prev_ret}" = "0" ]
++		then
++			ret=${KSFT_FAIL}
++		fi
++
++		printf "\tExpected value for '%s': '%s', got '%s'.\n" \
++			"${var}" "${!exp}" "${!var}"
++		return 1
++	}
++
++	local rc=0
++	local var
++
++	for var in "${@}"
++	do
++		check_expected_one "${var}" "${rc}" || rc=1
++	done
++	unset -f check_expected_one
++
++	if [ ${rc} -eq 0 ]
++	then
++		mptcp_lib_print_ok "[ OK ]"
++		return 0
++	fi
++
++	return 1
++}
 diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index d248ff3eff98..845400741cf2 100755
+index 845400741cf2..0b4484472313 100755
 --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
 +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -54,7 +54,6 @@ sec=$(date +%s)
- rndh=$(printf %x "$sec")-$(mktemp -u XXXXXX)
- ns1="ns1-$rndh"
- ns2="ns2-$rndh"
--ret=0
- TEST_NAME=""
+@@ -236,46 +236,15 @@ make_connection()
+ 	fi
+ }
  
- _printf() {
+-# $1: var name ; $2: prev ret
+-check_expected_one()
+-{
+-	local var="${1}"
+-	local exp="e_${var}"
+-	local prev_ret="${2}"
+-
+-	if [ "${!var}" = "${!exp}" ]
+-	then
+-		return 0
+-	fi
+-
+-	if [ "${prev_ret}" = "0" ]
+-	then
+-		test_fail
+-	fi
+-
+-	_printf "\tExpected value for '%s': '%s', got '%s'.\n" \
+-		"${var}" "${!exp}" "${!var}"
+-	return 1
+-}
+-
+ # $@: all var names to check
+ check_expected()
+ {
+-	local rc=0
+-	local var
+-
+-	for var in "${@}"
+-	do
+-		check_expected_one "${var}" "${rc}" || rc=1
+-	done
+-
+-	if [ ${rc} -eq 0 ]
+-	then
+-		test_pass
+-		return 0
++	mptcp_lib_check_expected ${*}
++	if [ $? -eq 0 ]; then
++		mptcp_lib_result_pass "${TEST_NAME}"
++	else
++		test_fail
+ 	fi
+-
+-	return 1
+ }
+ 
+ verify_announce_event()
 -- 
 2.35.3
 
