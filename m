@@ -1,28 +1,31 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FE2208C4
-	for <mptcp@lists.linux.dev>; Thu, 21 Dec 2023 09:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEEA208B6
+	for <mptcp@lists.linux.dev>; Thu, 21 Dec 2023 09:04:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ac0IQ/jL"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="klr2i1j8"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703149477;
+	t=1703149478;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0YwkiifBD0Wikh0p83Mm2aGgdOHYI9iFKsoHm78MfS0=;
-	b=Ac0IQ/jL645CCN367CpX7+W6SKHm/1PY8Nzh3EyxptaNxRNEcSHG6VynE5gFP4brcuJlGn
-	YkJck6hWNBlz/CKsfApYuiO9mHexCY53qMSxTxyH5jrlUH096klJWF8ctl0hbOGn1qpDR9
-	fuFQxU0GcBpWDW1ZoMhIXNeNYtdTGBo=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o2dlD5AYX8WFUQ+tY4mcLX0L3Mcg1HW5qPHrzPad55Q=;
+	b=klr2i1j8UaUz0GbPpE62SW+V8T8Qos/RC2cSK2f3cg0YTt/dL2XN5HUpEBz8TwjlAX+kuJ
+	fFhqh4Tg26KImynR6ZBZvF0jzZEwMpJ1wCgEP6cRed/uylKc8BA3ypbWKdvRVzl8HtRkeb
+	1JbDlA22GVB4uQWffJGs82qqfld3RbU=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v5 00/14] dump for userspace pm
-Date: Thu, 21 Dec 2023 17:03:14 +0800
-Message-Id: <cover.1703149203.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v5 01/14] mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
+Date: Thu, 21 Dec 2023 17:03:15 +0800
+Message-Id: <fab786dc235c57957458bf24de08f529ab75b26a.1703149203.git.geliang.tang@linux.dev>
+In-Reply-To: <cover.1703149203.git.geliang.tang@linux.dev>
+References: <cover.1703149203.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -32,66 +35,71 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-v5:
- - patch 2, save bitmap instead of id.
- - patch 3, drop token in reply.
- - update patch 4 and patch 12, add mptcp_pm_dump_addr and
-   mptcp_pm_get_addr wrappers in pm.c
+This patch exports struct mptcp_genl_family and mptcp_nl_fill_addr() helper
+to allow them can be used in pm_userspace.c.
 
-v4:
- - update patch 2, patch 3 and patch 12.
- - fix the warnings reported by CI in v3:
+Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
+---
+ net/mptcp/pm_netlink.c | 9 +++------
+ net/mptcp/protocol.h   | 4 ++++
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-Unable to validate one commit: 7633a101a mptcp: get addr in userspace pm list
-Unable to compile mptcp source code with make W=1 net/mptcp/pm_netlink.o
-Unable to compile mptcp source code with make C=1 net/mptcp/pm_netlink.o: net/mptcp/pm_netlink.c:1656:5: warning: symbol 'mptcp_pm_nl_get_addr' was not declared. Should it be static?
-
-v3:
- - fix the errors reported by CI in v2:
-
-[10:55:51.288] [  897.523894][ T5664] BUG: sleeping function called from invalid context at include/linux/sched/mm.h:306
-[10:55:51.288] [  897.532157][ T5664] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 5664, name: pm_nl_ctl
-[10:55:51.289] [  897.539503][ T5664] preempt_count: 201, expected: 0
-
- - drop mptcp_pm_nl_put_entry_msg and mptcp_pm_nl_put_entry_info
-   helpers.
-
-v2:
-Address Mat's comments in v1:
- - patch 2: pass token to dump_addr too.
- - patch 2: add back id in mptcp_userspace_pm_dump_addr().
- - patch 5: update mptcp.yaml
-
-v1:
-Address Mat's comments in "userspace pm enhancements" v14.
-
-Geliang Tang (14):
-  mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
-  mptcp: implement mptcp_userspace_pm_dump_addr
-  mptcp: add token for get-addr in yaml
-  mptcp: dump addrs in userspace pm list
-  mptcp: check userspace pm subflow flag
-  selftests: mptcp: add userspace pm subflow flag
-  selftests: mptcp: add token for dump_addr
-  selftests: mptcp: add check_output helper
-  selftests: mptcp: dump userspace addrs list
-  mptcp: add userspace_pm_lookup_addr_by_id helper
-  mptcp: implement mptcp_userspace_pm_get_addr
-  mptcp: get addr in userspace pm list
-  selftests: mptcp: add token for get_addr
-  selftests: mptcp: userspace pm get addr tests
-
- Documentation/netlink/specs/mptcp_pm.yaml     |   3 +-
- net/mptcp/mptcp_pm_gen.c                      |   7 +-
- net/mptcp/mptcp_pm_gen.h                      |   2 +-
- net/mptcp/pm.c                                |  18 ++
- net/mptcp/pm_netlink.c                        |  26 ++-
- net/mptcp/pm_userspace.c                      | 169 ++++++++++++++++--
- net/mptcp/protocol.h                          |  13 ++
- .../testing/selftests/net/mptcp/mptcp_join.sh |  99 ++++++++++
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  39 +++-
- 9 files changed, 344 insertions(+), 32 deletions(-)
-
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 661c226dad18..ac65266727a2 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -18,9 +18,6 @@
+ #include "protocol.h"
+ #include "mib.h"
+ 
+-/* forward declaration */
+-static struct genl_family mptcp_genl_family;
+-
+ static int pm_nl_pernet_id;
+ 
+ struct mptcp_pm_add_entry {
+@@ -1619,8 +1616,8 @@ int mptcp_pm_nl_flush_addrs_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return 0;
+ }
+ 
+-static int mptcp_nl_fill_addr(struct sk_buff *skb,
+-			      struct mptcp_pm_addr_entry *entry)
++int mptcp_nl_fill_addr(struct sk_buff *skb,
++		       struct mptcp_pm_addr_entry *entry)
+ {
+ 	struct mptcp_addr_info *addr = &entry->addr;
+ 	struct nlattr *attr;
+@@ -2264,7 +2261,7 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ 	nlmsg_free(skb);
+ }
+ 
+-static struct genl_family mptcp_genl_family __ro_after_init = {
++struct genl_family mptcp_genl_family __ro_after_init = {
+ 	.name		= MPTCP_PM_NAME,
+ 	.version	= MPTCP_PM_VER,
+ 	.netnsok	= true,
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index f7b9c1b995df..9b0b3fa65ae5 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -341,6 +341,8 @@ struct mptcp_sock {
+ #define mptcp_for_each_subflow_safe(__msk, __subflow, __tmp)			\
+ 	list_for_each_entry_safe(__subflow, __tmp, &((__msk)->conn_list), node)
+ 
++extern struct genl_family mptcp_genl_family;
++
+ static inline void msk_owned_by_me(const struct mptcp_sock *msk)
+ {
+ 	sock_owned_by_me((const struct sock *)msk);
+@@ -961,6 +963,8 @@ void mptcp_fastopen_gen_msk_ackseq(struct mptcp_sock *msk, struct mptcp_subflow_
+ 				   const struct mptcp_options_received *mp_opt);
+ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subflow,
+ 					      struct request_sock *req);
++int mptcp_nl_fill_addr(struct sk_buff *skb,
++		       struct mptcp_pm_addr_entry *entry);
+ 
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ {
 -- 
 2.35.3
 
