@@ -1,162 +1,97 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEC7257B
-	for <mptcp@lists.linux.dev>; Thu, 21 Dec 2023 00:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FE2208C4
+	for <mptcp@lists.linux.dev>; Thu, 21 Dec 2023 09:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Gy+I/jbE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1703120338; x=1734656338;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hCCNF7iGQcRhyplgbnTLU1frrwHgbZiRWW8sPPIWH8I=;
-  b=Gy+I/jbEtaUT5BmB+5QwQVBb7zb8RhD3NADQ9GmH/KBqhfyqHzzTkJ70
-   ovxNY6Ir4QRUx8JY22qRRzLQhl3m3p1WJzkz7Lk2ba7QVxL28HYYJ3+bp
-   kgLPCq+ZAbgzuiFmF8m/KgXirnhNZon1bHWQkxzc7qYQAu4hQSqju+luc
-   g=;
-X-IronPort-AV: E=Sophos;i="6.04,292,1695686400"; 
-   d="scan'208";a="260910136"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-6e7a78d7.us-east-1.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 00:58:52 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
-	by email-inbound-relay-iad-1e-m6i4x-6e7a78d7.us-east-1.amazon.com (Postfix) with ESMTPS id B9C1A804D0;
-	Thu, 21 Dec 2023 00:58:49 +0000 (UTC)
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:3402]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.6.30:2525] with esmtp (Farcaster)
- id b29cd697-4f61-493a-b153-a49eb6f7a4b6; Thu, 21 Dec 2023 00:58:49 +0000 (UTC)
-X-Farcaster-Flow-ID: b29cd697-4f61-493a-b153-a49eb6f7a4b6
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 21 Dec 2023 00:58:44 +0000
-Received: from 88665a182662.ant.amazon.com (10.119.15.211) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.40;
- Thu, 21 Dec 2023 00:58:39 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <pabeni@redhat.com>
-CC: <andrii@kernel.org>, <ast@kernel.org>, <bpf@vger.kernel.org>,
-	<daniel@iogearbox.net>, <edumazet@google.com>, <kuni1840@gmail.com>,
-	<kuniyu@amazon.com>, <martin.lau@linux.dev>, <martineau@kernel.org>,
-	<matttbe@kernel.org>, <mptcp@lists.linux.dev>, <netdev@vger.kernel.org>
-Subject: Re: [PATCH v6 bpf-next 3/6] bpf: tcp: Handle BPF SYN Cookie in skb_steal_sock().
-Date: Thu, 21 Dec 2023 09:58:30 +0900
-Message-ID: <20231221005830.33710-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <533e8e80c4db4ecd34a2c49dd3de3e76810afe22.camel@redhat.com>
-References: <533e8e80c4db4ecd34a2c49dd3de3e76810afe22.camel@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ac0IQ/jL"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1703149477;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0YwkiifBD0Wikh0p83Mm2aGgdOHYI9iFKsoHm78MfS0=;
+	b=Ac0IQ/jL645CCN367CpX7+W6SKHm/1PY8Nzh3EyxptaNxRNEcSHG6VynE5gFP4brcuJlGn
+	YkJck6hWNBlz/CKsfApYuiO9mHexCY53qMSxTxyH5jrlUH096klJWF8ctl0hbOGn1qpDR9
+	fuFQxU0GcBpWDW1ZoMhIXNeNYtdTGBo=
+From: Geliang Tang <geliang.tang@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v5 00/14] dump for userspace pm
+Date: Thu, 21 Dec 2023 17:03:14 +0800
+Message-Id: <cover.1703149203.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D045UWA003.ant.amazon.com (10.13.139.46) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
-Precedence: Bulk
+X-Migadu-Flow: FLOW_OUT
 
-From: Paolo Abeni <pabeni@redhat.com>
-Date: Wed, 20 Dec 2023 11:22:45 +0100
-> On Tue, 2023-12-19 at 08:45 -0800, Mat Martineau wrote:
-> > On Fri, 15 Dec 2023, Kuniyuki Iwashima wrote:
-> > 
-> > > From: Eric Dumazet <edumazet@google.com>
-> > > Date: Thu, 14 Dec 2023 17:31:15 +0100
-> > > > On Thu, Dec 14, 2023 at 4:56 PM Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
-> > > > > 
-> > > > > We will support arbitrary SYN Cookie with BPF.
-> > > > > 
-> > > > > If BPF prog validates ACK and kfunc allocates a reqsk, it will
-> > > > > be carried to TCP stack as skb->sk with req->syncookie 1.  Also,
-> > > > > the reqsk has its listener as req->rsk_listener with no refcnt
-> > > > > taken.
-> > > > > 
-> > > > > When the TCP stack looks up a socket from the skb, we steal
-> > > > > inet_reqsk(skb->sk)->rsk_listener in skb_steal_sock() so that
-> > > > > the skb will be processed in cookie_v[46]_check() with the
-> > > > > listener.
-> > > > > 
-> > > > > Note that we do not clear skb->sk and skb->destructor so that we
-> > > > > can carry the reqsk to cookie_v[46]_check().
-> > > > > 
-> > > > > Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-> > > > > ---
-> > > > >  include/net/request_sock.h | 15 +++++++++++++--
-> > > > >  1 file changed, 13 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/include/net/request_sock.h b/include/net/request_sock.h
-> > > > > index 26c630c40abb..8839133d6f6b 100644
-> > > > > --- a/include/net/request_sock.h
-> > > > > +++ b/include/net/request_sock.h
-> > > > > @@ -101,10 +101,21 @@ static inline struct sock *skb_steal_sock(struct sk_buff *skb,
-> > > > >         }
-> > > > > 
-> > > > >         *prefetched = skb_sk_is_prefetched(skb);
-> > > > > -       if (*prefetched)
-> > > > > +       if (*prefetched) {
-> > > > > +#if IS_ENABLED(CONFIG_SYN_COOKIES)
-> > > > > +               if (sk->sk_state == TCP_NEW_SYN_RECV && inet_reqsk(sk)->syncookie) {
-> > > > > +                       struct request_sock *req = inet_reqsk(sk);
-> > > > > +
-> > > > > +                       *refcounted = false;
-> > > > > +                       sk = req->rsk_listener;
-> > > > > +                       req->rsk_listener = NULL;
-> > > > 
-> > > > I am not sure about interactions with MPTCP.
-> > > > 
-> > > > I would be nice to have their feedback.
-> > > 
-> > > Matthieu, Mat, Paolo, could you double check if the change
-> > > above is sane ?
-> > > https://lore.kernel.org/bpf/20231214155424.67136-4-kuniyu@amazon.com/
-> > 
-> > Hi Kuniyuki -
-> > 
-> > Yes, we will take a look. Haven't had time to look in detail yet but I 
-> > wanted to let you know we saw your message and will follow up.
-> 
-> I'm sorry for the late reply.
-> 
-> AFAICS, from mptcp perspective, the main differences from built-in
-> cookie validation are:
-> 
-> - cookie allocation via mptcp_subflow_reqsk_alloc() and cookie
-> 'finalization' via cookie_tcp_reqsk_init() /
-> mptcp_subflow_init_cookie_req(req, sk, skb) could refer 2 different
-> listeners - within the same REUSEPORT group.
-> 
-> - incoming pure syn packets will not land into the TCP stack, so
-> af_ops->route_req will not happen.
-> 
-> I think both the above are problematic form mptcp. 
-> 
-> Potentially we can have both mptcp-enabled and plain tcp socket with
-> the same reuseport group. 
-> 
-> Currently the mptcp code assumes the listener is mptcp
-> cookie_tcp_reqsk_init(), the req is mptcp, too. I think we could fix
-> this at the mptcp level, but no patch ready at the moment.
-> 
-> Even the missing call to route_req() is problematic, as we use that to
-> fetch required information from the initial syn for MP_JOIN subflows -
-> yep, unfortunately mptcp needs to track of some state across MPJ syn
-> and MPJ 3rd ack reception.
-> 
-> Fixing this last item looks more difficult. I think it would be safer
-> and simpler to avoid mptcp support for generic syncookie and ev enable
-> it later - after we address things on the mptcp side.
+v5:
+ - patch 2, save bitmap instead of id.
+ - patch 3, drop token in reply.
+ - update patch 4 and patch 12, add mptcp_pm_dump_addr and
+   mptcp_pm_get_addr wrappers in pm.c
 
-Thanks for checking, Paolo!
+v4:
+ - update patch 2, patch 3 and patch 12.
+ - fix the warnings reported by CI in v3:
 
-Ok, I will change kfunc in the next version so that it will return
--EINVAL for mptcp listener, and later the issues above are sorted out,
-we can add mptcp support back.
+Unable to validate one commit: 7633a101a mptcp: get addr in userspace pm list
+Unable to compile mptcp source code with make W=1 net/mptcp/pm_netlink.o
+Unable to compile mptcp source code with make C=1 net/mptcp/pm_netlink.o: net/mptcp/pm_netlink.c:1656:5: warning: symbol 'mptcp_pm_nl_get_addr' was not declared. Should it be static?
 
+v3:
+ - fix the errors reported by CI in v2:
 
-> 
-> @Eric, were you looking to something else and/or more specific?
+[10:55:51.288] [  897.523894][ T5664] BUG: sleeping function called from invalid context at include/linux/sched/mm.h:306
+[10:55:51.288] [  897.532157][ T5664] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 5664, name: pm_nl_ctl
+[10:55:51.289] [  897.539503][ T5664] preempt_count: 201, expected: 0
+
+ - drop mptcp_pm_nl_put_entry_msg and mptcp_pm_nl_put_entry_info
+   helpers.
+
+v2:
+Address Mat's comments in v1:
+ - patch 2: pass token to dump_addr too.
+ - patch 2: add back id in mptcp_userspace_pm_dump_addr().
+ - patch 5: update mptcp.yaml
+
+v1:
+Address Mat's comments in "userspace pm enhancements" v14.
+
+Geliang Tang (14):
+  mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
+  mptcp: implement mptcp_userspace_pm_dump_addr
+  mptcp: add token for get-addr in yaml
+  mptcp: dump addrs in userspace pm list
+  mptcp: check userspace pm subflow flag
+  selftests: mptcp: add userspace pm subflow flag
+  selftests: mptcp: add token for dump_addr
+  selftests: mptcp: add check_output helper
+  selftests: mptcp: dump userspace addrs list
+  mptcp: add userspace_pm_lookup_addr_by_id helper
+  mptcp: implement mptcp_userspace_pm_get_addr
+  mptcp: get addr in userspace pm list
+  selftests: mptcp: add token for get_addr
+  selftests: mptcp: userspace pm get addr tests
+
+ Documentation/netlink/specs/mptcp_pm.yaml     |   3 +-
+ net/mptcp/mptcp_pm_gen.c                      |   7 +-
+ net/mptcp/mptcp_pm_gen.h                      |   2 +-
+ net/mptcp/pm.c                                |  18 ++
+ net/mptcp/pm_netlink.c                        |  26 ++-
+ net/mptcp/pm_userspace.c                      | 169 ++++++++++++++++--
+ net/mptcp/protocol.h                          |  13 ++
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  99 ++++++++++
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  39 +++-
+ 9 files changed, 344 insertions(+), 32 deletions(-)
+
+-- 
+2.35.3
+
