@@ -1,85 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8B11DA43
-	for <mptcp@lists.linux.dev>; Thu, 21 Dec 2023 16:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1722158234
+	for <mptcp@lists.linux.dev>; Thu, 21 Dec 2023 17:02:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RoNpn7R3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703176703; x=1734712703;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LGkuftQgsylYEyECeywOAFl+BMYJXvMoY4AhEa2ZXdc=;
-  b=RoNpn7R3OmiPxhg6m3dXUMbNcXAjAcGEkdVGL6knXg0nf6ZNinudKXKE
-   yoz+nbZVwYov89ed+KHX5lNY8hM6/xJfu0U89TILkVFpv64AoMz030wkW
-   i5iIbuZnSG696PAg1kxfL5M9Nqtcldaz7YggZiI3/e7kHSt1rCbTIg0At
-   3hdTrACoZ6zhDvt/lm0f8mRiWHd6itTe9ijXWQl+IaoWEb/eWTQKoYpwN
-   SKyBN0+3+HmUuJwz1oBtHFnXVfJhbbYUSGHu3wkYhuHB+2kLiUvLm+I9T
-   XU+CLdC1E21JmuHVy0vzcgn1QNXNxQdZhM/DuEXOYP23F7nt3+HYNAicV
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="394890997"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="394890997"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 08:38:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="920379561"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="920379561"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 08:38:19 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rGLvN-00000007tWW-0tjd;
-	Thu, 21 Dec 2023 18:29:29 +0200
-Date: Thu, 21 Dec 2023 18:29:28 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ido Schimmel <idosch@nvidia.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
-	nhorman@tuxdriver.com, matttbe@kernel.org, martineau@kernel.org,
-	yotam.gi@gmail.com, jiri@resnulli.us, jacob.e.keller@intel.com,
-	johannes@sipsolutions.net, fw@strlen.de
-Subject: Re: [PATCH net-next v2] genetlink: Use internal flags for multicast
- groups
-Message-ID: <ZYRn6AVAJ_QErXSw@smile.fi.intel.com>
-References: <20231220154358.2063280-1-idosch@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZp18CQA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 034F8C433CB;
+	Thu, 21 Dec 2023 17:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703178125;
+	bh=WAk4/7QbIL9JdGMgCH63iWpDvPe4I5TrqC4xOSXoHsA=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=qZp18CQAXuvlpfmBibx49+KIVURQ+EgrrccQxBo0PYea8ScqBFDhCjFR+pGZgJTCV
+	 uuFEzjGfAnWuBi+VmoWy2zl/06lUw6YAfS2Wnyw+uByN7ML4FY6JUnSfbCddtLG4ov
+	 huxDdX+l2rD9K01iy5Qs2i5MVT/4SIOlGUPzcqxA+aTfRpNEACVlgnppDpu6xga2OI
+	 6jL4nZIJ/UzLWOy2WTf8h/VJ8wQ1BdboMaqXodMEtKLkceTic0JfWcDIY1Z+kTRd6S
+	 PiVU4Ry268OBebI9Yk/ba7cqzL5wYAFQywKsrKaXKjZtboFwmUTnCTfVY3JmNdnRfh
+	 02IYPZd/EIkrg==
+Message-ID: <1e960def-5dee-437e-b243-e12f6d573baf@kernel.org>
+Date: Thu, 21 Dec 2023 18:02:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231220154358.2063280-1-idosch@nvidia.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v3 0/2] fixes for CURRESTAB
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang.tang@linux.dev>
+References: <cover.1703036129.git.geliang.tang@linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <cover.1703036129.git.geliang.tang@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 20, 2023 at 05:43:58PM +0200, Ido Schimmel wrote:
-> As explained in commit e03781879a0d ("drop_monitor: Require
-> 'CAP_SYS_ADMIN' when joining "events" group"), the "flags" field in the
-> multicast group structure reuses uAPI flags despite the field not being
-> exposed to user space. This makes it impossible to extend its use
-> without adding new uAPI flags, which is inappropriate for internal
-> kernel checks.
-> 
-> Solve this by adding internal flags (i.e., "GENL_MCAST_*") and convert
-> the existing users to use them instead of the uAPI flags.
-> 
-> Tested using the reproducers in commit 44ec98ea5ea9 ("psample: Require
-> 'CAP_NET_ADMIN' when joining "packets" group") and commit e03781879a0d
-> ("drop_monitor: Require 'CAP_SYS_ADMIN' when joining "events" group").
-> 
-> No functional changes intended.
+Hi Geliang,
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On 20/12/2023 03:08, Geliang Tang wrote:
+> v3:
+>  - update the comment in mptcp_pm_nl_create_listen_socket.
+>  - update selftests
 
+Thank you for this v3!
+
+New patches for t/upstream:
+
+- c8b5e71d4184: "squashed" patch 1/2 in "mptcp: use mptcp_set_state"
+- b524e1893751: tg:msg: counter in the title (instead of "mptcp: add
+mptcp_set_state") + reason
+- d6b5afed204c: selftests: mptcp: diag: check CURRESTAB counters
+- Results: 9adfb88a4930..36dd8ffc4e09 (export)
+
+Tests are not in progress on the public CI (the monthly limit has been
+reached)
+
+Cheers,
+Matt
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sponsored by the NGI0 Core fund.
