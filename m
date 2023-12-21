@@ -1,29 +1,29 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199DA208C4
-	for <mptcp@lists.linux.dev>; Thu, 21 Dec 2023 09:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBC34CDE5
+	for <mptcp@lists.linux.dev>; Thu, 21 Dec 2023 09:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="U8ILA19o"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QdpbznSV"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703149484;
+	t=1703149485;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=W754LnkAzcivDXOu6dasWxKdMy+kAUiVQX3RyKlWNjs=;
-	b=U8ILA19oMtgqfC00aDlwnQsfLt9ouPGEZz68Ux/xqVmZZg/WvHT1Reb1sKeOphTvKuQjxN
-	ZTQMkKOR0lD77kdvqRyVv400oZsGA/935Umj8sJyuRKsTMozTZa9OlKTr5HDFsXhP/mnWT
-	xlGX5sNj9+x8Pl0/RvsdyDgRN1c9Gs0=
+	bh=iCRljyM6OH4MsBLRN/q3Q8fR6iBdnpBdYGMdYVR28SY=;
+	b=QdpbznSVY/A4PF+/9I2Q/Dtx+17vfnZYW16ba95c9C0d8v7y3KMO+QqQNkFObZUH4iqSUq
+	v00nlH+DL6uHnhtzl/rDf88XwUAv5WBlZZhlbdDmgBAgPtBVBFoTDQazn9FAEcXkz0+1dC
+	aArn7ZTP6TTY+BgGLulsHAGkUL2Q3Tw=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v5 05/14] mptcp: check userspace pm subflow flag
-Date: Thu, 21 Dec 2023 17:03:19 +0800
-Message-Id: <76ae6aa8ffbb5ad8bc9f0b2ddbe56c86f301a91c.1703149203.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v5 06/14] selftests: mptcp: add userspace pm subflow flag
+Date: Thu, 21 Dec 2023 17:03:20 +0800
+Message-Id: <fb26dd066569a15a9dc31e05b71b0f87cd8f55ae.1703149203.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1703149203.git.geliang.tang@linux.dev>
 References: <cover.1703149203.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,48 +35,40 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This patch uses mptcp_pm_parse_entry() instead of mptcp_pm_parse_addr()
-to get the flags of the entry. Add MPTCP_PM_ADDR_FLAG_SUBFLOW flag check
-in mptcp_pm_nl_subflow_create_doit().
+This patch adds the address flag MPTCP_PM_ADDR_FLAG_SUBFLOW in csf() in
+pm_nl_ctl.c when subflow is created by a userspace PM.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_userspace.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index f8eadc335d53..0137157c7fbb 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -348,12 +348,19 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 		goto create_err;
- 	}
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 49369c4a5f26..e97856323ec3 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -453,6 +453,7 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+ 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
+ 		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
+ 		  1024];
++	u_int32_t flags = MPTCP_PM_ADDR_FLAG_SUBFLOW;
+ 	const char *params[5];
+ 	struct nlmsghdr *nh;
+ 	struct rtattr *addr;
+@@ -558,6 +559,13 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+ 			off += NLMSG_ALIGN(rta->rta_len);
+ 		}
  
--	err = mptcp_pm_parse_addr(laddr, info, &addr_l);
-+	err = mptcp_pm_parse_entry(laddr, info, true, &local);
- 	if (err < 0) {
- 		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
- 		goto create_err;
- 	}
- 
-+	if (!(local.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)) {
-+		GENL_SET_ERR_MSG(info, "invalid addr flags");
-+		err = -EINVAL;
-+		goto create_err;
-+	}
-+	addr_l = local.addr;
++		/* addr flags */
++		rta = (void *)(data + off);
++		rta->rta_type = MPTCP_PM_ADDR_ATTR_FLAGS;
++		rta->rta_len = RTA_LENGTH(4);
++		memcpy(RTA_DATA(rta), &flags, 4);
++		off += NLMSG_ALIGN(rta->rta_len);
 +
- 	err = mptcp_pm_parse_addr(raddr, info, &addr_r);
- 	if (err < 0) {
- 		NL_SET_ERR_MSG_ATTR(info->extack, raddr, "error parsing remote addr");
-@@ -366,7 +373,6 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 		goto create_err;
+ 		addr->rta_len = off - addr_start;
  	}
  
--	local.addr = addr_l;
- 	err = mptcp_userspace_pm_append_new_local_addr(msk, &local);
- 	if (err < 0) {
- 		GENL_SET_ERR_MSG(info, "did not match address and id");
 -- 
 2.35.3
 
