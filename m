@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EC111718
-	for <mptcp@lists.linux.dev>; Fri, 22 Dec 2023 10:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81861426C
+	for <mptcp@lists.linux.dev>; Fri, 22 Dec 2023 10:44:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/gfMpTG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7082EC433C8;
-	Fri, 22 Dec 2023 10:26:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0mEGcoB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA9F5C433C7;
+	Fri, 22 Dec 2023 10:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703240819;
-	bh=e1qxEUcL8hmm+Jci1pSY+Lton1e3nK5wFjjghZVpnxs=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=q/gfMpTGdecjFel3zibFHSJdhnyf0cYmpZqGBcnkIbGSN++UqhQHqyG2G5c//IiHU
-	 mtOw98P0Spde6EDg2dGnRBC41Ikvb0dXYh+7+f4XE9NpRAt+7KRM4tUIzXxW0XwN4/
-	 gmP29ls2SBqD/1abakjk8S/ynFCb2ChU6vu5D71cKVXZjJJGw6bphS17UrU18oJRqg
-	 rflWI2hvCOlYMHzYpjAnMlWg2AAE/PwRpT044XtdsZ2MxY11pSWRpQwwuKP1u3/yDC
-	 A/URobTzPCZsxRRCjOigp6zyS1luW97eRIGx3kj9ZF6SZq4RIPSwgsPQdYGRvOW+99
-	 89oYuGWQFIX3Q==
-Message-ID: <cae968d4-f172-46f0-b0b3-16119173c632@kernel.org>
-Date: Fri, 22 Dec 2023 11:26:56 +0100
+	s=k20201202; t=1703241890;
+	bh=7K0XSIvO69jbjWd2em94dIu/YYBgjmFUznnFQ33DDvY=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=R0mEGcoB0KuAdDlysrM3G4NtjVp8N0XXIz6M17HErwbWl8nMJUZ1qs2UrW2hr+pev
+	 IieNmxPW/aPw5Y65afcm0JcUJNzIwxcS7KOQ0+Ryvs3uFW6mv0lTNWCnsmHjTZvm8V
+	 0MBQjHoMaAMDoiIhQTKb9PL13s3LKk51AwY4ncLuxrfbezBte39H6XgGaZKTlDFRUb
+	 8vkdXWCCHRm5txBJhzYSalwmdzt2ezTptJZ5Ww0AdgI5OzbuK/suAaLrpLKzSc/Kuo
+	 o7zckT8I+2eyVOMTPGKLUc9saUsHGb26xp+KMnk+/SXtu4HUomlhJmlWn1zxtqpZjY
+	 YLSsQmz24NXJw==
+Message-ID: <293322a4-1d00-4a73-b6b6-a61ea0580e7b@kernel.org>
+Date: Fri, 22 Dec 2023 11:44:47 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,12 +26,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net-next] mptcp: cleanup state propagation.
+Subject: Re: [PATCH mptcp-net] mptcp: prevent tcp diag from closing listener
+ subflows
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev,
- Mat Martineau <martineau@kernel.org>
-References: <240a97d522887a938faeb24a6a3e3a9ed24570b1.1700667908.git.pabeni@redhat.com>
- <2763a165e2dce31e8e8d1f0268aaa69c9127a29d.camel@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+References: <f6371f65b1ebabc0f308528494ec39c9bdf786fd.1702631517.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -77,87 +77,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2763a165e2dce31e8e8d1f0268aaa69c9127a29d.camel@redhat.com>
+In-Reply-To: <f6371f65b1ebabc0f308528494ec39c9bdf786fd.1702631517.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Paolo, Mat,
 
-On 22/12/2023 10:16, Paolo Abeni wrote:
-> Hi,
+On 15/12/2023 10:12, Paolo Abeni wrote:
+> The MPTCP protocol does not expect that any other entity could change
+> the first subflow status when such socket is listening.
+> Unfortunately the TCP diag interface allows aborting any TCP socket,
+> including MPTCP listeners subflows. As reported by syzbot, that trigger
+> a WARN() and could lead to later bigger trouble.
 > 
-> On Wed, 2023-11-22 at 17:21 +0100, Paolo Abeni wrote:
->> When propagating the first subflow state via the release_cb, the
->> msk must actually take to 2 separate actions: state sync-up and
->> send buffer sync-up. Relaying on the specific flags instead of
->> bounding both in __mptcp_sync_state(), allows cleaning up a bit
->> the code.
->>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->>  net/mptcp/protocol.c | 3 +--
->>  net/mptcp/subflow.c  | 5 ++---
->>  2 files changed, 3 insertions(+), 5 deletions(-)
->>
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index 199b2e09f1ac..4fc038d29623 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -3404,9 +3404,8 @@ static void mptcp_release_cb(struct sock *sk)
->>  	if (unlikely(msk->cb_flags)) {
->>  		/* be sure to sync the msk state before taking actions
->>  		 * depending on sk_state (MPTCP_ERROR_REPORT)
->> -		 * On sk release avoid actions depending on the first subflow
->>  		 */
->> -		if (__test_and_clear_bit(MPTCP_SYNC_STATE, &msk->cb_flags) && msk->first)
->> +		if (__test_and_clear_bit(MPTCP_SYNC_STATE, &msk->cb_flags))
->>  			__mptcp_sync_state(sk, msk->pending_state);
->>  		if (__test_and_clear_bit(MPTCP_ERROR_REPORT, &msk->cb_flags))
->>  			__mptcp_error_report(sk);
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index 6d7684c35e93..64302a1ac306 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -421,9 +421,6 @@ static bool subflow_use_different_dport(struct mptcp_sock *msk, const struct soc
->>  
->>  void __mptcp_sync_state(struct sock *sk, int state)
->>  {
->> -	struct mptcp_sock *msk = mptcp_sk(sk);
->> -
->> -	__mptcp_propagate_sndbuf(sk, msk->first);
->>  	if (sk->sk_state == TCP_SYN_SENT) {
->>  		inet_sk_state_store(sk, state);
->>  		sk->sk_state_change(sk);
->> @@ -436,10 +433,12 @@ static void mptcp_propagate_state(struct sock *sk, struct sock *ssk)
->>  
->>  	mptcp_data_lock(sk);
->>  	if (!sock_owned_by_user(sk)) {
->> +		__mptcp_propagate_sndbuf(sk, msk->first);
->>  		__mptcp_sync_state(sk, ssk->sk_state);
->>  	} else {
->>  		msk->pending_state = ssk->sk_state;
->>  		__set_bit(MPTCP_SYNC_STATE, &msk->cb_flags);
->> +		__set_bit(MPTCP_SYNC_SNDBUF, &msk->cb_flags);
->>  	}
->>  	mptcp_data_unlock(sk);
->>  }
+> The MPTCP protocol needs to do some MPTCP-level cleanup actions to
+> properly shutdown the listener. To keep the fix simple, prevent
+> entirely the diag interface from stopping such listeners.
 > 
-> Could you please drop this patch? And not sent it upstream...
-> 
-> I'm working on a series of pre-req for
-> https://github.com/multipath-tcp/mptcp_net-next/issues/464
-> and - among many other things - it basically will require reverting
-> this patch :(
+> We could refine the diag callback in a later, larger patch targeting
+> net-next.
 
-Thank you for the heads-up!
+Thank you for this patch and the review!
 
-While at it, I also fixed a compilation issue after the last sync with
-net-next.
+> Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
+> Closes: https://lore.kernel.org/netdev/0000000000004f4579060c68431b@google.com/
+> Reported-by: syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com
 
-New patches for t/upstream:
-- 6835eade0d25: Revert "mptcp: cleanup state propagation"
-- ba09c8c53a73: Revert "Squash to "bpf: Add bpf_mptcp_sched_ops""
-- Results: 748f20530b90..4720030d95d3 (export)
+(I just inverted these two lines to make checkpatch happy ;) )
+(and it looks like b4 automatically adds '<>' around the email address)
+
+Now in our tree (fixes for -net):
+
+New patches for t/upstream-net and t/upstream:
+- 5913b5d75d1f: mptcp: prevent tcp diag from closing listener subflows
+- Results: 9293d696010b..b7f484870b63 (export-net)
+- Results: 4720030d95d3..b52e904674ac (export)
 
 (Tests are not in progress)
 
