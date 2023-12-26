@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E2322314;
-	Fri, 22 Dec 2023 12:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB624E1C7;
+	Tue, 26 Dec 2023 12:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NfxyJdrG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6706AC433C8;
-	Fri, 22 Dec 2023 12:48:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qjknHMxm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B44C433C8;
+	Tue, 26 Dec 2023 12:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703249284;
-	bh=f8MxnKNl8aWOOpIhsgtOmNgNY2U+VCvmLARJV8km6Lw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NfxyJdrGlPtLvGrB4WosOs67jTR2/ZZocAKu9cNtbVnDaVoVQNGrgEOXTPkv6ncyh
-	 oJ+XhP0SmyWs5MwOtFxgBGrbYBTYdXBhyq5ABRQBnbQmhtVY4+akSCgAOaxGYcXLdO
-	 GonHpnDI6el3OfgYbbg183yb/CJNMjM/GPXlfDPFUG6AmddRCOXaAOkmj+F/meSlYU
-	 KGhcWMKdpO81HcdgIfi07oYfSftBnY4KB1u55KApEXQCsnGFsg+mTvFryhzIiDz2rW
-	 rpRsXQW0wruNYCT+oN3dNtw6Tmcm+yT+ryrkUGUYRrxjh+PICH5GwkuzoDO4vNefE8
-	 O5xXw0URnzcFQ==
+	s=k20201202; t=1703592651;
+	bh=4rZCbmJDnadJWKBeFv3M2opTN6rbniARuPF/dzEQZb8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=qjknHMxm+y4wPlw4YC3tV4AZJ2tY1jSKCr3KvuZde6AlF45AR1dKJoq0XfMPIz/U2
+	 zkBncPWleqGTKB8/OqAYL01883CeBUcIJsPr1G7mGlxaTGhNZYtSSWMSMZ445Qx1tU
+	 kHsYO1QJVq7Z6bkFzgrJFWE6XCXkWP609v4egOBIAId95+rf4ckRN1Yx0mFvAJMTqP
+	 3izshPJldhvdiFdc97ybQkW0z9Qz84DkEqMQucycSsEV15F3BLYN/0NfTuBc2fXk8r
+	 BB12zNzmDINkA4krCXtyIBBxTHHm1KGHXpgqATlrmQ/Kb/8TyiyHr8o8jbxTV3AXrR
+	 5az9VzYZ8q2Iw==
 From: Matthieu Baerts <matttbe@kernel.org>
-Date: Fri, 22 Dec 2023 13:47:25 +0100
-Subject: [PATCH net-next 4/4] selftests: mptcp: diag: check CURRESTAB
- counters
+Subject: [PATCH net 0/2] mptcp: new reviewer and prevent a warning
+Date: Tue, 26 Dec 2023 13:10:16 +0100
+Message-Id: <20231226-upstream-net-20231226-mptcp-prevent-warn-v1-0-1404dcc431ea@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -29,112 +29,57 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231222-upstream-net-next-20231221-mptcp-currestab-v1-4-c1eb73d6b2b2@kernel.org>
-References: <20231222-upstream-net-next-20231221-mptcp-currestab-v1-0-c1eb73d6b2b2@kernel.org>
-In-Reply-To: <20231222-upstream-net-next-20231221-mptcp-currestab-v1-0-c1eb73d6b2b2@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAKjCimUC/z2NwQqDQAxEf0VyNqBxKdhfEQ/rGtscTJfd1RbEf
+ zd46PHNMG8OyJyEMzyrAxLvkuWjBm1dQXh7fTHKbAzUUNcSPXCLuST2KyoX/KdrLCFiNANrwa9
+ PiuSW3vVumsg3YDorF/ndVwPYGMbzvADVLjfyfwAAAA==
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang.tang@linux.dev>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>, Geliang Tang <geliang.tang@linux.dev>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Matthieu Baerts <matttbe@kernel.org>
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Matthieu Baerts <matttbe@kernel.org>, stable@vger.kernel.org, 
+ syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2223; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=QjbEHosfHcKKjU3RogRURLP58YI1j0WbbK15xL3Nrjc=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlhYV27kvIeEPmFqwJYkWT0hr+wWSl24PB90bs3
- 8+++PkN1wCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZYWFdgAKCRD2t4JPQmmg
- c1oID/9k9tbHs37JFpAk89njTgeXdt38bCqSe77DoL7Refyn9uXvhB0t3j43cDE3lXTkDHwXOCf
- vahWBybTiilXlCwgJzam49sZqdTEiW9MDxGxUzlGTCbr5bo8pF+YT2xRyJPKG7+Qk17CeBGsQLD
- iAMTl+v/965bw+QE+FcR8Vfbcnqvc0kdzy70iSZMfkFvx6nRDOHJn68p++r7WDzyrMrMYpqC61i
- b72TB97yRl6kzMzRlgOQyT4j46p3GwsuzL5QpUY6VxGdHAeWIQMDqAPG2tRRFsv8lF4pl97KfP4
- o9yXE3BEY/XMxMFx43sQU0RVzPdfM5+UmKmaeU9rrmsMHZ7p/hB2jmyLeCWPT/20raDCTNXuJ+Z
- usw3rUCiXm3/X10Lfn1zD9G89/tFgdkaraoCNvAatLTafEryh1c24T/a1uJyfskqKdHqIPwR07y
- oxfpHiGQ/qzptc6mRKwn3y5QUU/hMdK8UpPHKWSEY7KjouQnHcGTQ+9/U9S4S2fn7pq69x1jSA1
- oUlJ7jETdkdMQY2n2+zlSqcOGc8+GEwsa23b/B/xnBMuNZERizU/yCYi/wKnT7l8pqOmH2TAzaM
- q12dMzt88GQ8p8ZoOIkVPi2VqTp4ElYNjmG3r0B5d896lDCXTEv2wGAo89GPs6tFmk+RlCMnYkl
- DYPmcohz6PHPxXw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=813; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=4rZCbmJDnadJWKBeFv3M2opTN6rbniARuPF/dzEQZb8=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlisLJVoG4MVl6gB+v1+z38DaP3EoDtY/6dhmKI
+ vWxmU0+QKCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZYrCyQAKCRD2t4JPQmmg
+ cxo3EACVqPTV1aW/iMx3wqNdMA0ZNOsd6fELIihvMGMFv+XjjwGpYzBGtWbGDj9MPjlUgihdzCM
+ 72Z8rYKZwA6lQYOaSikyqyXMfRb5Iz8MCFPFNUoCNzIWbrTvVFzr94k8vfds0p3AZ1yrmhrXfsc
+ SX3e3jvJjPN59qqZwSx2SGXb7V8IxnoLtJUzjLyok1Xz/TgiizNm8vLOe9jK/i7DieEaeT1ewfR
+ MRv3VYaBzpR35HT4DPgFzbh+v9Y9BUfaLsYIWhSNhBDQCjdnsWhQeJjLZk+2dDX542IxDG5CO2R
+ ucFGLdmR4hXJE70WfwFsJppTcKzRk0n06IFZ4w9FruOXBiYapVKj2vZKtLOJcCj8oEguXhW0gfO
+ hbrFPCSYpuKIfkBMu7lyFFTCJxFn43h65jmqgphlRF7ww3bazpy6WXyXIyKV8BEpOKsVL58gbqd
+ sCCkVJ6LST7UzLQph2rpu76Y0uKcCXwnAby1WQwA9vcaUVan64kHLEeWLT4ky32ub0cXU23KVY5
+ 9aFUKU1L18eZPwkGrmqtGyY2nKQ6XSTrEmSAvVDe1iVr/p5UyoPEn8465zsiTvKfNq6eCDbAuAT
+ GGyD9JIbX2kB3nQX1rpvZxw+ubkTgfDV8juEnr2OfqZQDXinGtom+ShcELS2JJl6PxDg2y5lsUn
+ twYSgeoZ7FF71ag==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <geliang.tang@linux.dev>
+Patch 1 adds MPTCP long time contributor -- Geliang Tang -- as a new
+reviewer for the project. Thanks!
 
-This patch adds a new helper chk_msk_cestab() to check the current
-established connections counter MIB_CURRESTAB in diag.sh. Invoke it
-to check the counter during the connection after every chk_msk_inuse().
+Patch 2 prevents a warning when TCP Diag is used to close internal MPTCP
+listener subflows. This is a correction for a patch introduced in v6.4
+which was fixing an issue from v5.17.
 
-Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
-Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/diag.sh | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+Matthieu Baerts (1):
+      MAINTAINERS: add Geliang as reviewer for MPTCP
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 95b498efacd1..04fcb8a077c9 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -56,7 +56,7 @@ __chk_nr()
- 	local command="$1"
- 	local expected=$2
- 	local msg="$3"
--	local skip="${4:-SKIP}"
-+	local skip="${4-SKIP}"
- 	local nr
- 
- 	nr=$(eval $command)
-@@ -182,6 +182,15 @@ chk_msk_inuse()
- 	__chk_nr get_msk_inuse $expected "$msg" 0
- }
- 
-+# $1: cestab nr
-+chk_msk_cestab()
-+{
-+	local cestab=$1
-+
-+	__chk_nr "mptcp_lib_get_counter ${ns} MPTcpExtMPCurrEstab" \
-+		 "${cestab}" "....chk ${cestab} cestab" ""
-+}
-+
- wait_connected()
- {
- 	local listener_ns="${1}"
-@@ -219,9 +228,11 @@ chk_msk_nr 2 "after MPC handshake "
- chk_msk_remote_key_nr 2 "....chk remote_key"
- chk_msk_fallback_nr 0 "....chk no fallback"
- chk_msk_inuse 2 "....chk 2 msk in use"
-+chk_msk_cestab 2
- flush_pids
- 
- chk_msk_inuse 0 "....chk 0 msk in use after flush"
-+chk_msk_cestab 0
- 
- echo "a" | \
- 	timeout ${timeout_test} \
-@@ -237,9 +248,11 @@ echo "b" | \
- wait_connected $ns 10001
- chk_msk_fallback_nr 1 "check fallback"
- chk_msk_inuse 1 "....chk 1 msk in use"
-+chk_msk_cestab 1
- flush_pids
- 
- chk_msk_inuse 0 "....chk 0 msk in use after flush"
-+chk_msk_cestab 0
- 
- NR_CLIENTS=100
- for I in `seq 1 $NR_CLIENTS`; do
-@@ -261,9 +274,11 @@ done
- 
- wait_msk_nr $((NR_CLIENTS*2)) "many msk socket present"
- chk_msk_inuse $((NR_CLIENTS*2)) "....chk many msk in use"
-+chk_msk_cestab $((NR_CLIENTS*2))
- flush_pids
- 
- chk_msk_inuse 0 "....chk 0 msk in use after flush"
-+chk_msk_cestab 0
- 
- mptcp_lib_result_print_all_tap
- exit $ret
+Paolo Abeni (1):
+      mptcp: prevent tcp diag from closing listener subflows
 
+ MAINTAINERS         |  1 +
+ net/mptcp/subflow.c | 13 +++++++++++++
+ 2 files changed, 14 insertions(+)
+---
+base-commit: dff90e4a092b771354287fbe55e557467c9da620
+change-id: 20231226-upstream-net-20231226-mptcp-prevent-warn-24f9494bb2a0
+
+Best regards,
 -- 
-2.43.0
+Matthieu Baerts <matttbe@kernel.org>
 
