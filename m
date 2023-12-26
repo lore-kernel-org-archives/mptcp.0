@@ -1,127 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA85C4EB4C;
-	Tue, 26 Dec 2023 12:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A6A5250;
+	Tue, 26 Dec 2023 22:40:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQuLPQYQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A2BC433C8;
-	Tue, 26 Dec 2023 12:10:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8OOMrMZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E6948C433C9;
+	Tue, 26 Dec 2023 22:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703592657;
-	bh=9K3RAxwtnbgt4T42ampHD1OD/JlH35Ygy2iCSPJlHoE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=nQuLPQYQj0rJddca9UNwEtVFa9Gfe3ZywepzqjizFZ9yBP8IN9wvcebRcVwB/OItz
-	 R6BLs3SKYwlhuqWP3ADKRy+rWNnUlLtezLThB0d3BWtpB5Kk8UP4DEHzII8yvdwgah
-	 KnJhjCJ8rK3YSxyyDOEm+Cx+H5GX8gRM28VyygQh8XdJPY343/+dHGimqMqH+kkv7w
-	 e9D3ZL7s1O49Ft3+xtyLQSLosGkD4BRgJ8SU+hMbggrgSYPOb0U5rEkWHrsrmLKKHe
-	 DgVmezxBKjstYXDeOJt+MAPIQ4zvHN/nf2lwci/6UeQd22e0uhvJ1ybXw2ivd0U+l2
-	 ITEQEVdSvvd8g==
-From: Matthieu Baerts <matttbe@kernel.org>
-Date: Tue, 26 Dec 2023 13:10:18 +0100
-Subject: [PATCH net 2/2] mptcp: prevent tcp diag from closing listener
- subflows
+	s=k20201202; t=1703630424;
+	bh=t7Azjows6a4NudAwFasVutuu3ZSXugHqZpvg/vQupZc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=F8OOMrMZQGGkH81i5df0nHGftbOQDJVEAKb7h6LP/qJoTLvXbzKER+k1mHuX+YvGY
+	 fGVNCVAvEu1bpRVlgdpVZMR40XZBr06aQQ8F8EWjWRfojb5kcegjcX07jsH29G8JLb
+	 j5C3fHXQiS0kvCGuuYdG04eZUwXFXivizYewXR9ZNDY6SgNQlq9zAeqQRUxdOczrLC
+	 RA5FcUAW4Obt0yRFn5TwL+c7TayE8Kjze7Fl04+rkib6ommYoauqqbkmbit8hsbf3f
+	 Cp+sO4SDRN9MAagAPj0hqjWVk6otsm7FnHJD2WerJ0WHKU7nvbX20Q4anfmx1MAl4O
+	 hNEpVNxlaeNjg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CC014E333D7;
+	Tue, 26 Dec 2023 22:40:23 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231226-upstream-net-20231226-mptcp-prevent-warn-v1-2-1404dcc431ea@kernel.org>
-References: <20231226-upstream-net-20231226-mptcp-prevent-warn-v1-0-1404dcc431ea@kernel.org>
-In-Reply-To: <20231226-upstream-net-20231226-mptcp-prevent-warn-v1-0-1404dcc431ea@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang.tang@linux.dev>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Matthieu Baerts <matttbe@kernel.org>, stable@vger.kernel.org, 
- syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2384; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=HDp1Le2S0oz86KqWx/YgeMDwAfEXRM0g+e1uupHk7kU=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlisLJiW/jUMiX4knlvoEDr/Uu+rv4Yuf4zi62F
- gnxOCaCU0aJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZYrCyQAKCRD2t4JPQmmg
- cyKzD/9qtiKMJx5LbFlpxD6kdM8LYanxi9aYr7uyauIbafSh7dLy8U0aVLOAPMe1CKRp6hmD+HN
- B3xIhkOuFu0vqvNpir8m+GaxyQKXYRNNns3atZriKmGeBnZDPQj9UYNtDvMbrEopK9rpo5DpsNr
- voq4n45obKfYjkdeCyi0DIZbR2EIp5FgAscRZW0iXltYkE5NTVjzw1WfJ02wd9528MUEn+OsKIC
- OQf2QVLsUx0HpV8beQY9CgGnYmpKYh66Pkb6yfqpaWuygfmnVEZWYgn5dIX7hE5SlcsSK2jyThO
- XS0ydvNJEYTW9Ss5oCMRyzp3G5HkmL1oS9JZnKjeLKfMmWd4efecGRk0VO5aAAC62MDCjNK38pH
- vRmuFFDhsWu8sBZA+GTCzEDHhbt5vnntHIS1f48m6pZ/4QVsSrnawH0cMXAaoSmc7K7C8tgeln1
- lG8q5hXMD7Y95VT082MLzSWR297qqC3c1dd6t2mXLsGuxg/+GeKYGKP+sIh8T86FHTS+THOsf4Y
- gQshxwrO4hzkWof8yjXfO1eNUCHVWe8TjK3QGnhrr5y58WvAgOk6ScCVWAp5yjsZsrojhS9LTpr
- kIw3l2BKrB1DIqX6L9rbj6LXQt1cw9wAtnKjvuc0RnngRx03+P1nV8lvzQ8tpfeflnUdvbrXwkO
- mHsycIOs+16SUrQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/4] mptcp: cleanup and support more ephemeral
+ ports sockopts
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170363042382.9770.13227130852306828650.git-patchwork-notify@kernel.org>
+Date: Tue, 26 Dec 2023 22:40:23 +0000
+References: <20231219-upstream-net-next-20231219-mptcp-sockopts-ephemeral-ports-v1-0-2b13bedfcaf8@kernel.org>
+In-Reply-To: <20231219-upstream-net-next-20231219-mptcp-sockopts-ephemeral-ports-v1-0-2b13bedfcaf8@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, dcaratti@redhat.com, max@internet.ru
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hello:
 
-The MPTCP protocol does not expect that any other entity could change
-the first subflow status when such socket is listening.
-Unfortunately the TCP diag interface allows aborting any TCP socket,
-including MPTCP listeners subflows. As reported by syzbot, that trigger
-a WARN() and could lead to later bigger trouble.
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-The MPTCP protocol needs to do some MPTCP-level cleanup actions to
-properly shutdown the listener. To keep the fix simple, prevent
-entirely the diag interface from stopping such listeners.
+On Tue, 19 Dec 2023 22:31:03 +0100 you wrote:
+> Patch 1 is a cleanup one: mptcp_is_tcpsk() helper was modifying sock_ops
+> in some cases which is unexpected with that name.
+> 
+> Patch 2 to 4 add support for two socket options: IP_LOCAL_PORT_RANGE and
+> IP_BIND_ADDRESS_NO_PORT. The first one is a preparation patch, the
+> second one adds the support while the last one modifies an existing
+> selftest to validate the new features.
+> 
+> [...]
 
-We could refine the diag callback in a later, larger patch targeting
-net-next.
+Here is the summary with links:
+  - [net-next,1/4] mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()
+    https://git.kernel.org/netdev/net-next/c/8e2b8a9fa512
+  - [net-next,2/4] mptcp: rename mptcp_setsockopt_sol_ip_set_transparent()
+    https://git.kernel.org/netdev/net-next/c/57d3117ca80f
+  - [net-next,3/4] mptcp: sockopt: support IP_LOCAL_PORT_RANGE and IP_BIND_ADDRESS_NO_PORT
+    https://git.kernel.org/netdev/net-next/c/c85636a29264
+  - [net-next,4/4] selftests/net: add MPTCP coverage for IP_LOCAL_PORT_RANGE
+    https://git.kernel.org/netdev/net-next/c/122db5e3634b
 
-Fixes: 57fc0f1ceaa4 ("mptcp: ensure listener is unhashed before updating the sk status")
-Cc: stable@vger.kernel.org
-Reported-by: <syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com>
-Closes: https://lore.kernel.org/netdev/0000000000004f4579060c68431b@google.com/
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts <matttbe@kernel.org>
----
- net/mptcp/subflow.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6d7684c35e93..852b3f4af000 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1982,6 +1982,17 @@ static void tcp_release_cb_override(struct sock *ssk)
- 	tcp_release_cb(ssk);
- }
- 
-+static int tcp_abort_override(struct sock *ssk, int err)
-+{
-+	/* closing a listener subflow requires a great deal of care.
-+	 * keep it simple and just prevent such operation
-+	 */
-+	if (inet_sk_state_load(ssk) == TCP_LISTEN)
-+		return -EINVAL;
-+
-+	return tcp_abort(ssk, err);
-+}
-+
- static struct tcp_ulp_ops subflow_ulp_ops __read_mostly = {
- 	.name		= "mptcp",
- 	.owner		= THIS_MODULE,
-@@ -2026,6 +2037,7 @@ void __init mptcp_subflow_init(void)
- 
- 	tcp_prot_override = tcp_prot;
- 	tcp_prot_override.release_cb = tcp_release_cb_override;
-+	tcp_prot_override.diag_destroy = tcp_abort_override;
- 
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- 	/* In struct mptcp_subflow_request_sock, we assume the TCP request sock
-@@ -2061,6 +2073,7 @@ void __init mptcp_subflow_init(void)
- 
- 	tcpv6_prot_override = tcpv6_prot;
- 	tcpv6_prot_override.release_cb = tcp_release_cb_override;
-+	tcpv6_prot_override.diag_destroy = tcp_abort_override;
- #endif
- 
- 	mptcp_diag_subflow_init(&subflow_ulp_ops);
-
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
