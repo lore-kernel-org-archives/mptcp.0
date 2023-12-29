@@ -1,28 +1,31 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762621119E
-	for <mptcp@lists.linux.dev>; Fri, 29 Dec 2023 12:48:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D33C111A4
+	for <mptcp@lists.linux.dev>; Fri, 29 Dec 2023 12:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pACidBRV"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KeJx8dh5"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703854111;
+	t=1703854112;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MkegGt4CHM/De19pGkvEjsZSK+qDQNBVeXyzGIh0yWE=;
-	b=pACidBRVXzw1xGz7HXeuvrPJriXp7PuSlkZcK0t2/LlmcNwvgWHdE9CLa4xIzr0jD/pVlP
-	qbsmtIkeIWLu/oTdyNgYGXnPFGhXEMP5sMcfJbTEAS6snAPHy/UXN1Ixlmio63DE+fVJ9W
-	iQHDYcUJZsIrSB8AW6waGvPMum4qL34=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=em8r0e4iZXW658heJKPjv4UqqDerotwSe7ifPUWQ8zI=;
+	b=KeJx8dh5E3CqmhsicZ5JZ1ddJsNpA4yTgFpus+BITsB3dlP8budLjP/oGIZG4lvZADyvHF
+	Tmom1EarOsBeQbdvrsFtuIz34n9NKhxdDHEz0NGJGljjJhKg4Gt/RIIYOYy9X37wcOW8j1
+	x78BOzsnWGHzbStwH7NjJVtdIwnoNZk=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v6 00/24] dump for userspace pm
-Date: Fri, 29 Dec 2023 20:47:18 +0800
-Message-Id: <cover.1703853512.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v6 01/24] mptcp: set set_id flag when parsing addr
+Date: Fri, 29 Dec 2023 20:47:19 +0800
+Message-Id: <c99206de313979a271540d8dc90063266f4bdf91.1703853512.git.geliang.tang@linux.dev>
+In-Reply-To: <cover.1703853512.git.geliang.tang@linux.dev>
+References: <cover.1703853512.git.geliang.tang@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -32,84 +35,110 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-v6:
- - patches 1-5, fixes for -net
- - patches 6, 15, selftests for "fixes for -net".
- - patches 7-14, 16-21, update "dump for userspace pm v5"
- - patches 22, 23, cleanups for set_flags
- - patch 24, flush selftest.
+When userspace PM requires to create an ID 0 subflow in "userspace pm
+create id 0 subflow" test like this:
 
-v5:
- - patch 2, save bitmap instead of id.
- - patch 3, drop token in reply.
- - update patch 4 and patch 12, add mptcp_pm_dump_addr and
-   mptcp_pm_get_addr wrappers in pm.c
+        userspace_pm_add_sf $ns2 10.0.3.2 0
 
-v4:
- - update patch 2, patch 3 and patch 12.
- - fix the warnings reported by CI in v3:
+An ID 1 subflow, in fact, is created.
 
-Unable to validate one commit: 7633a101a mptcp: get addr in userspace pm list
-Unable to compile mptcp source code with make W=1 net/mptcp/pm_netlink.o
-Unable to compile mptcp source code with make C=1 net/mptcp/pm_netlink.o: net/mptcp/pm_netlink.c:1656:5: warning: symbol 'mptcp_pm_nl_get_addr' was not declared. Should it be static?
+Since in mptcp_pm_nl_append_new_local_addr(), 'id 0' will be treated as
+no ID is set by userspace, and will allocate a new ID immediately:
 
-v3:
- - fix the errors reported by CI in v2:
+     if (!e->addr.id)
+             e->addr.id = find_next_zero_bit(pernet->id_bitmap,
+                                             MPTCP_PM_MAX_ADDR_ID + 1,
+                                             1);
 
-[10:55:51.288] [  897.523894][ T5664] BUG: sleeping function called from invalid context at include/linux/sched/mm.h:306
-[10:55:51.288] [  897.532157][ T5664] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 5664, name: pm_nl_ctl
-[10:55:51.289] [  897.539503][ T5664] preempt_count: 201, expected: 0
+To solve this issue, a new flag 'MPTCP_PM_ADDR_FLAG_SET_ID' is added
+to distinguish between whether userspace has set an ID 0 or whether
+userspace has not set any address.
 
- - drop mptcp_pm_nl_put_entry_msg and mptcp_pm_nl_put_entry_info
-   helpers.
+Add a new parameter 'set_id' for mptcp_pm_parse_pm_addr_attr(), and
+pass a 'set_id' flag to them. If an address id is set from userspace,
+this 'set_id' will be set as true. If 'set_id' is set, then the newly
+added flag MPTCP_PM_ADDR_FLAG_SET_ID wiil be set.
 
-v2:
-Address Mat's comments in v1:
- - patch 2: pass token to dump_addr too.
- - patch 2: add back id in mptcp_userspace_pm_dump_addr().
- - patch 5: update mptcp.yaml
+Fixes: e5ed101a6028 ("mptcp: userspace pm allow creating id 0 subflow")
+Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
+---
+ include/uapi/linux/mptcp.h |  1 +
+ net/mptcp/pm_netlink.c     | 17 +++++++++++++----
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-v1:
-Address Mat's comments in "userspace pm enhancements" v14.
-
-Geliang Tang (24):
-  mptcp: set set_id flag when parsing addr
-  mptcp: parse userspace pm entry to get flags
-  mptcp: test set_id flag when appending addr
-  mptcp: check addrs list in userspace_pm_get_local_id
-  mptcp: map v4 address to v6 when destroying subflow
-  selftests: mptcp: rm subflow with v4/v4mapped addr
-  mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
-  mptcp: implement mptcp_userspace_pm_dump_addr
-  mptcp: add token for get-addr in yaml
-  mptcp: dump addrs in userspace pm list
-  mptcp: check userspace pm subflow flag
-  selftests: mptcp: add userspace pm subflow flag
-  selftests: mptcp: add token for dump_addr
-  selftests: mptcp: add check_output helper
-  selftests: mptcp: dump after creating id 0 subflow
-  selftests: mptcp: dump userspace addrs list
-  mptcp: add userspace_pm_lookup_addr_by_id helper
-  mptcp: implement mptcp_userspace_pm_get_addr
-  mptcp: get addr in userspace pm list
-  selftests: mptcp: add token for get_addr
-  selftests: mptcp: userspace pm get addr tests
-  mptcp: update set_flags interfaces
-  mptcp: set error messages for set_flags
-  selftests: mptcp: flush userspace addrs list
-
- Documentation/netlink/specs/mptcp_pm.yaml     |   3 +-
- include/uapi/linux/mptcp.h                    |   1 +
- net/mptcp/mptcp_pm_gen.c                      |   7 +-
- net/mptcp/mptcp_pm_gen.h                      |   2 +-
- net/mptcp/pm.c                                |  29 ++-
- net/mptcp/pm_netlink.c                        | 112 ++++----
- net/mptcp/pm_userspace.c                      | 242 ++++++++++++++++--
- net/mptcp/protocol.h                          |  23 +-
- .../testing/selftests/net/mptcp/mptcp_join.sh | 150 ++++++++++-
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  39 ++-
- 10 files changed, 510 insertions(+), 98 deletions(-)
-
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 74cfe496891e..ef3663792765 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -36,6 +36,7 @@
+ #define MPTCP_PM_ADDR_FLAG_BACKUP                      (1 << 2)
+ #define MPTCP_PM_ADDR_FLAG_FULLMESH                    (1 << 3)
+ #define MPTCP_PM_ADDR_FLAG_IMPLICIT                    (1 << 4)
++#define MPTCP_PM_ADDR_FLAG_SET_ID                      (1 << 5)
+ 
+ struct mptcp_info {
+ 	__u8	mptcpi_subflows;
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 661c226dad18..dedc5a038b10 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1159,7 +1159,8 @@ static int mptcp_pm_parse_pm_addr_attr(struct nlattr *tb[],
+ 				       const struct nlattr *attr,
+ 				       struct genl_info *info,
+ 				       struct mptcp_addr_info *addr,
+-				       bool require_family)
++				       bool require_family,
++				       bool *set_id)
+ {
+ 	int err, addr_addr;
+ 
+@@ -1174,8 +1175,11 @@ static int mptcp_pm_parse_pm_addr_attr(struct nlattr *tb[],
+ 	if (err)
+ 		return err;
+ 
+-	if (tb[MPTCP_PM_ADDR_ATTR_ID])
++	if (tb[MPTCP_PM_ADDR_ATTR_ID]) {
+ 		addr->id = nla_get_u8(tb[MPTCP_PM_ADDR_ATTR_ID]);
++		if (set_id)
++			*set_id = true;
++	}
+ 
+ 	if (!tb[MPTCP_PM_ADDR_ATTR_FAMILY]) {
+ 		if (!require_family)
+@@ -1223,7 +1227,7 @@ int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
+ 
+ 	memset(addr, 0, sizeof(*addr));
+ 
+-	return mptcp_pm_parse_pm_addr_attr(tb, attr, info, addr, true);
++	return mptcp_pm_parse_pm_addr_attr(tb, attr, info, addr, true, NULL);
+ }
+ 
+ int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
+@@ -1231,11 +1235,13 @@ int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
+ 			 struct mptcp_pm_addr_entry *entry)
+ {
+ 	struct nlattr *tb[MPTCP_PM_ADDR_ATTR_MAX + 1];
++	bool set_id = false;
+ 	int err;
+ 
+ 	memset(entry, 0, sizeof(*entry));
+ 
+-	err = mptcp_pm_parse_pm_addr_attr(tb, attr, info, &entry->addr, require_family);
++	err = mptcp_pm_parse_pm_addr_attr(tb, attr, info, &entry->addr,
++					  require_family, &set_id);
+ 	if (err)
+ 		return err;
+ 
+@@ -1248,6 +1254,9 @@ int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
+ 	if (tb[MPTCP_PM_ADDR_ATTR_FLAGS])
+ 		entry->flags = nla_get_u32(tb[MPTCP_PM_ADDR_ATTR_FLAGS]);
+ 
++	if (set_id)
++		entry->flags |= MPTCP_PM_ADDR_FLAG_SET_ID;
++
+ 	if (tb[MPTCP_PM_ADDR_ATTR_PORT])
+ 		entry->addr.port = htons(nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]));
+ 
 -- 
 2.39.2
 
