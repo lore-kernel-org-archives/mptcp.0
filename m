@@ -1,131 +1,91 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFD9111A6
-	for <mptcp@lists.linux.dev>; Fri, 29 Dec 2023 12:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0368A111B0
+	for <mptcp@lists.linux.dev>; Fri, 29 Dec 2023 13:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="h+P7tJVO"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703854141;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fdqDizggJbRNEdgSBLTE06hoqwpzgVksNqm6OQ/Vkjk=;
-	b=h+P7tJVOOazeIc5MX9KoKiftATX35FtNgYCP8YOP3j5S3KweEtwCWQCqY2Rex0qZkc3Y4U
-	zEWsWLDd8EDgGMPl/xBdNA9SGOFpNRGb74d6cSbMgAIh+ITLc/qcllRROO2KIQo0JpjZzx
-	3MJ7tZMr5+eTLt9MtMjEzCU+atRUhjg=
-From: Geliang Tang <geliang.tang@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v6 24/24] selftests: mptcp: flush userspace addrs list
-Date: Fri, 29 Dec 2023 20:47:42 +0800
-Message-Id: <33341ee1f12b97eb0369c4ea6c84c4b99f03eb8e.1703853513.git.geliang.tang@linux.dev>
-In-Reply-To: <cover.1703853512.git.geliang.tang@linux.dev>
-References: <cover.1703853512.git.geliang.tang@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hM/jAReg"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-78117c8b6ccso563836385a.0
+        for <mptcp@lists.linux.dev>; Fri, 29 Dec 2023 05:17:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703855870; x=1704460670; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iY/Ncnluj/43X4q4QNE/LamFPooOBJ434Ue7kr4D2Tg=;
+        b=hM/jARegn4C6MR+nq8FyXllOrdMBJjfRcFVowe+/Ml/6esjITfYF7FftFqUnuoWWDO
+         iM/2tER75X76bdP6si2CAEOy4tPMZYW5WvYXSjxS7N+2NGkMtyvtL1DLXgmrx4F7ckFx
+         hYgDHp58KXLsL7oNrkJh9652x2pgWkgGovqlqFbPvSa227vxWEhRdnLV3kM1nmZOTzvq
+         +hiyz6kEAJnLVxKLVV6EOH9mai4IGpQs6CyAKCjgTD6eN9Xhq2cA2mkU7RoipIsbbcT9
+         OwxFwaGWETJQpGjabeAnDRnbqsQmHxQee1+y/bHoAWIV7W/5c0on76c7UY+SYzNhXiR/
+         SbGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703855870; x=1704460670;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=iY/Ncnluj/43X4q4QNE/LamFPooOBJ434Ue7kr4D2Tg=;
+        b=POk8YQvzNEbYnbOaO/F6G+i01P3etlWLlv0kOtAyRS4QkyNctSObHS6KcMVcNRE0Pv
+         /x5vPPy4Z74OfvBlZF5A8zuk4GAB2yVQCiPsLQqjo2UQeSbva7VovZ8GYDPTRVSxN3Rt
+         uUO4sKnXY9pLvQj150XN0uPRhRObzYBgN366JjUShD3vrWW/Uq/CdMkerORlpnegPdUf
+         7oOR7Jpo89k+MRHj3b5GUDeLWhSFH6JbdqSiE5xxGUZjWX1U+z/BjOmi6QNPUOs4mXwI
+         0WWDwmnKZotsn4rlJq1O6z0BsrWolTZecId8fI4lhxaC1AATJHAgLuiMB7aF4tdM3o7Q
+         ZzWg==
+X-Gm-Message-State: AOJu0YwibqMBf/EWkQ7rBtqZooOD1zQdU+LR1pk+UV4AbmXCjd9/lDjY
+	V7o9u45WyUcYx3TYXUG8AB+yzOMDUg==
+X-Google-Smtp-Source: AGHT+IENuuQbPO+6mLTFTfwCaDYzezeXRWf+DXrp961Y+z+1HFaIYkirC1xepvdGUyJzZQdpbZOtKw==
+X-Received: by 2002:a05:620a:472c:b0:781:5e2f:6265 with SMTP id bs44-20020a05620a472c00b007815e2f6265mr5585235qkb.12.1703855869749;
+        Fri, 29 Dec 2023 05:17:49 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.130.197])
+        by smtp.gmail.com with ESMTPSA id po25-20020a05620a385900b007815fd24b2dsm1980813qkn.63.2023.12.29.05.17.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Dec 2023 05:17:49 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang.tang@linux.dev>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <33341ee1f12b97eb0369c4ea6c84c4b99f03eb8e.1703853513.git.geliang.tang@linux.dev>
+References:
+ <33341ee1f12b97eb0369c4ea6c84c4b99f03eb8e.1703853513.git.geliang.tang@linux.dev>
+Subject: Re: selftests: mptcp: flush userspace addrs list: Build Failure
+Message-ID: <69482924-45bb-d457-a75c-a154b49cb7cc@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 29 Dec 2023 13:17:48 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-This patch adds a new helper userspace_pm_flush() to flush all addresses
-for the userspace PM. Invoke it in userspace pm dump address and subflow
-tests. And use dump commands to check if the userspace pm local address
-list is empty after addresses flushing.
+Hi Geliang,
 
-Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 45 +++++++++++++++++--
- 1 file changed, 41 insertions(+), 4 deletions(-)
+Thank you for your modifications, that's great!
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 0b325b5efccf..86101e2b8a92 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3409,6 +3409,31 @@ check_output()
- 	fi
- }
- 
-+# $1: ns ; $2: addr
-+userspace_pm_flush()
-+{
-+	local ns=$1
-+	local line
-+
-+	userspace_pm_dump $ns | while read -r line; do
-+		local arr=($line)
-+		local nr=0
-+		local id
-+		local addr
-+		local i
-+		for i in "${arr[@]}"; do
-+			if [ $i = "id" ]; then
-+				id=${arr[$nr+1]}
-+			fi
-+			nr=$((nr + 1))
-+		done
-+		addr=${arr[$nr-1]}
-+		[ $ip_mptcp -eq 1 ] && addr=${arr[0]}
-+		userspace_pm_rm_addr $ns $id
-+		userspace_pm_rm_sf $ns "$addr" $MPTCP_LIB_SUB_ESTABLISHED
-+	done
-+}
-+
- userspace_tests()
- {
- 	# userspace pm type prevents add_addr
-@@ -3606,8 +3631,8 @@ userspace_tests()
- 		wait $tests_pid
- 	fi
- 
--	# userspace pm dump address
--	if reset_with_events "userspace pm dump address" &&
-+	# userspace pm dump & flush address
-+	if reset_with_events "userspace pm dump & flush address" &&
- 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns1
- 		pm_nl_set_limits $ns2 1 1
-@@ -3626,12 +3651,18 @@ userspace_tests()
- 			     "$dump" "      get id 10 addr"
- 		check_output "userspace_pm_dump $ns1" \
- 			     "$dump" "      dump addrs signal"
-+		userspace_pm_flush $ns1
-+		check_output "userspace_pm_dump $ns1" \
-+			     "" "      dump addrs after flush"
-+		chk_rm_nr 1 1 invert
-+		chk_mptcp_info subflows 0 subflows 0
-+		chk_subflows_total 1 1
- 		kill_events_pids
- 		wait $tests_pid
- 	fi
- 
--	# userspace pm dump subflow
--	if reset_with_events "userspace pm dump subflow" &&
-+	# userspace pm dump & flush subflow
-+	if reset_with_events "userspace pm dump & flush subflow" &&
- 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns2
- 		pm_nl_set_limits $ns1 0 1
-@@ -3650,6 +3681,12 @@ userspace_tests()
- 			     "$dump" "      get id 20 addr"
- 		check_output "userspace_pm_dump $ns2" \
- 			     "$dump" "      dump addrs subflow"
-+		userspace_pm_flush $ns2
-+		check_output "userspace_pm_dump $ns2" \
-+			     "" "      dump addrs after flush"
-+		chk_rm_nr 1 1
-+		chk_mptcp_info subflows 0 subflows 0
-+		chk_subflows_total 1 1
- 		kill_events_pids
- 		wait $tests_pid
- 	fi
--- 
-2.39.2
+But sadly, our CI spotted some issues with it when trying to build it.
 
+You can find more details there:
+
+  https://patchwork.kernel.=
+org/project/mptcp/patch/33341ee1f12b97eb0369c4ea6c84c4b99f03eb8e.1703853513=
+.git.geliang.tang@linux.dev/
+  https://github.com/multipath-tcp/mptcp_net-n=
+ext/actions/runs/7356843701
+
+Status: failure
+Initiator: MPTCPimporter
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/5fbf3fd9ea=
+bf
+
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
