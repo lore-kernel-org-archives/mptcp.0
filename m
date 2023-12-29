@@ -1,29 +1,29 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F5D111A4
-	for <mptcp@lists.linux.dev>; Fri, 29 Dec 2023 12:49:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFD9111A6
+	for <mptcp@lists.linux.dev>; Fri, 29 Dec 2023 12:49:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AvJcfQQa"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="h+P7tJVO"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703854140;
+	t=1703854141;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=i59hKRxb9raxsP0miossJSre0249qr+cHgBrRC814d0=;
-	b=AvJcfQQamlLzwXjgVUnvfwq0xI3zOTDPfw6Vx0w7A1Nlq6TTKCSkMSQ8Ikzr0EF1pg92WL
-	RElSrN7IRj4Zpv896d4/KRhLXiJ3C/CqbHDTdSUAR2LTZhcvlaOyVYj9ivv5id1+/yo9bv
-	ld7VwxMcc63oBPhXqt/iRL5+w30A2lo=
+	bh=fdqDizggJbRNEdgSBLTE06hoqwpzgVksNqm6OQ/Vkjk=;
+	b=h+P7tJVOOazeIc5MX9KoKiftATX35FtNgYCP8YOP3j5S3KweEtwCWQCqY2Rex0qZkc3Y4U
+	zEWsWLDd8EDgGMPl/xBdNA9SGOFpNRGb74d6cSbMgAIh+ITLc/qcllRROO2KIQo0JpjZzx
+	3MJ7tZMr5+eTLt9MtMjEzCU+atRUhjg=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v6 23/24] mptcp: set error messages for set_flags
-Date: Fri, 29 Dec 2023 20:47:41 +0800
-Message-Id: <bb12d8e504bc1d5ac9cd47d9a5e25ed086f61c9c.1703853513.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v6 24/24] selftests: mptcp: flush userspace addrs list
+Date: Fri, 29 Dec 2023 20:47:42 +0800
+Message-Id: <33341ee1f12b97eb0369c4ea6c84c4b99f03eb8e.1703853513.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1703853512.git.geliang.tang@linux.dev>
 References: <cover.1703853512.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,78 +35,97 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-In addition to returning the error value, this patch also sets an error
-messages with GENL_SET_ERR_MSG or NL_SET_ERR_MSG_ATTR both for pm_netlink.c
-and pm_userspace.c.
+This patch adds a new helper userspace_pm_flush() to flush all addresses
+for the userspace PM. Invoke it in userspace pm dump address and subflow
+tests. And use dump commands to check if the userspace pm local address
+list is empty after addresses flushing.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_netlink.c   | 6 +++++-
- net/mptcp/pm_userspace.c | 9 +++++++--
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 45 +++++++++++++++++--
+ 1 file changed, 41 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index a94e38e01631..5b7f08b9b0f0 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1906,8 +1906,10 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 0b325b5efccf..86101e2b8a92 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3409,6 +3409,31 @@ check_output()
+ 	fi
+ }
  
- 	if (addr.addr.family == AF_UNSPEC) {
- 		lookup_by_id = 1;
--		if (!addr.addr.id)
-+		if (!addr.addr.id) {
-+			GENL_SET_ERR_MSG(info, "missing required inputs");
- 			return -EOPNOTSUPP;
-+		}
- 	}
++# $1: ns ; $2: addr
++userspace_pm_flush()
++{
++	local ns=$1
++	local line
++
++	userspace_pm_dump $ns | while read -r line; do
++		local arr=($line)
++		local nr=0
++		local id
++		local addr
++		local i
++		for i in "${arr[@]}"; do
++			if [ $i = "id" ]; then
++				id=${arr[$nr+1]}
++			fi
++			nr=$((nr + 1))
++		done
++		addr=${arr[$nr-1]}
++		[ $ip_mptcp -eq 1 ] && addr=${arr[0]}
++		userspace_pm_rm_addr $ns $id
++		userspace_pm_rm_sf $ns "$addr" $MPTCP_LIB_SUB_ESTABLISHED
++	done
++}
++
+ userspace_tests()
+ {
+ 	# userspace pm type prevents add_addr
+@@ -3606,8 +3631,8 @@ userspace_tests()
+ 		wait $tests_pid
+ 	fi
  
- 	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-@@ -1917,11 +1919,13 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	entry = __lookup_addr(pernet, &addr.addr, lookup_by_id);
- 	if (!entry) {
- 		spin_unlock_bh(&pernet->lock);
-+		GENL_SET_ERR_MSG(info, "address not found");
- 		return -EINVAL;
- 	}
- 	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
- 	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
- 		spin_unlock_bh(&pernet->lock);
-+		GENL_SET_ERR_MSG(info, "invalid addr flags");
- 		return -EINVAL;
- 	}
+-	# userspace pm dump address
+-	if reset_with_events "userspace pm dump address" &&
++	# userspace pm dump & flush address
++	if reset_with_events "userspace pm dump & flush address" &&
+ 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3626,12 +3651,18 @@ userspace_tests()
+ 			     "$dump" "      get id 10 addr"
+ 		check_output "userspace_pm_dump $ns1" \
+ 			     "$dump" "      dump addrs signal"
++		userspace_pm_flush $ns1
++		check_output "userspace_pm_dump $ns1" \
++			     "" "      dump addrs after flush"
++		chk_rm_nr 1 1 invert
++		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
+ 		kill_events_pids
+ 		wait $tests_pid
+ 	fi
  
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 5a734fa25e8d..b5aa272c83b4 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -568,13 +568,17 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	token_val = nla_get_u32(token);
- 
- 	msk = mptcp_token_get_sock(net, token_val);
--	if (!msk)
-+	if (!msk) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
- 		return ret;
-+	}
- 
- 	sk = (struct sock *)msk;
- 
--	if (!mptcp_pm_is_userspace(msk))
-+	if (!mptcp_pm_is_userspace(msk)) {
-+		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
- 		goto set_flags_err;
-+	}
- 
- 	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
- 	if (ret < 0)
-@@ -588,6 +592,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 
- 	if (loc.addr.family == AF_UNSPEC ||
- 	    rem.addr.family == AF_UNSPEC) {
-+		GENL_SET_ERR_MSG(info, "address families do not match");
- 		ret = -EINVAL;
- 		goto set_flags_err;
- 	}
+-	# userspace pm dump subflow
+-	if reset_with_events "userspace pm dump subflow" &&
++	# userspace pm dump & flush subflow
++	if reset_with_events "userspace pm dump & flush subflow" &&
+ 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 1
+@@ -3650,6 +3681,12 @@ userspace_tests()
+ 			     "$dump" "      get id 20 addr"
+ 		check_output "userspace_pm_dump $ns2" \
+ 			     "$dump" "      dump addrs subflow"
++		userspace_pm_flush $ns2
++		check_output "userspace_pm_dump $ns2" \
++			     "" "      dump addrs after flush"
++		chk_rm_nr 1 1
++		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
+ 		kill_events_pids
+ 		wait $tests_pid
+ 	fi
 -- 
 2.39.2
 
