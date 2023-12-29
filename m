@@ -1,29 +1,29 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F069111A3
-	for <mptcp@lists.linux.dev>; Fri, 29 Dec 2023 12:48:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E598C111A1
+	for <mptcp@lists.linux.dev>; Fri, 29 Dec 2023 12:48:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WVkSxsqU"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GPvNq0z0"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703854132;
+	t=1703854134;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=e8HHTWwdqK/ARcl+OehSWzGxbLOCag9EnAxb60kbiH0=;
-	b=WVkSxsqUpLL0pf/OMXD4vKlCqK3Ba6xO/+M8730MK4vH0Yw11kAxFnPr+AiEJtbwXfITyU
-	lG+ZDw2mYBBOp9lnnr/AddvJUyqYIyHnMxht4V5kQnHvVwB7R9OYwkLsTcuv8nPVybSJ+g
-	0qNsU51mXBA2b1vniP1+6Qs39CkVmL4=
+	bh=+Y3hR6uaX++P0llC8ADN+iL1rjjyN/eb2lJZcBcEAMQ=;
+	b=GPvNq0z03M48ezxIHdgTkTIYPDXJYOk1H7v/69nIqOcqTvQMefr4olJ5IL/IHIdcCPKyjg
+	jnzNcgHy4CyrdawD/Jqi24B6GWsuYvL2quTTL5J0ghz69nuj+qe9ziii85Bk9elb4entI1
+	HvjNOdgA5C/e3nDJebIYzbYtOEjYdWw=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v6 18/24] mptcp: implement mptcp_userspace_pm_get_addr
-Date: Fri, 29 Dec 2023 20:47:36 +0800
-Message-Id: <d28c66f3e90434e4dd9bfad47c4024013a92774a.1703853513.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v6 19/24] mptcp: get addr in userspace pm list
+Date: Fri, 29 Dec 2023 20:47:37 +0800
+Message-Id: <60e112aa3860633cb2cd28b9916fc119a07f25a3.1703853513.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1703853512.git.geliang.tang@linux.dev>
 References: <cover.1703853512.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,110 +35,78 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This patch implements mptcp_userspace_pm_get_addr() to get an address
-from userspace pm address list according the given 'token' and 'id'.
-Use nla_get_u32() to get the u32 value of 'token', then pass it to
-mptcp_token_get_sock() to get the msk. Pass 'msk' and 'id' to the helper
-mptcp_userspace_pm_lookup_addr_by_id() to get the address entry. Put
-this entry to userspace using mptcp_pm_nl_put_entry_info().
+This patch renames mptcp_pm_nl_get_addr_doit() as a dedicated in-kernel
+netlink PM get addr function mptcp_pm_nl_get_addr(). and invoke a new
+wrapper mptcp_pm_get_addr() in mptcp_pm_nl_get_addr_doit.
+
+If a token is gotten in the wrapper, that means a userspace PM is used.
+So invoke mptcp_userspace_pm_get_addr() to get addr in userspace PM list.
+Otherwise, invoke mptcp_pm_nl_get_addr().
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_userspace.c | 70 ++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h     |  2 ++
- 2 files changed, 72 insertions(+)
+ net/mptcp/pm.c         | 8 ++++++++
+ net/mptcp/pm_netlink.c | 7 ++++++-
+ net/mptcp/protocol.h   | 2 ++
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 6d514054fe15..d3ebc0992c9a 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -641,3 +641,73 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
- 	*((struct id_bitmap *)cb->ctx) = *bitmap;
- 	return msg->len;
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index a251487d3315..86cd65dd94df 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -441,6 +441,14 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int id
+ 	return mptcp_pm_nl_get_flags_and_ifindex_by_id(msk, id, flags, ifindex);
  }
-+
-+int mptcp_userspace_pm_get_addr(struct sk_buff *skb,
-+				struct genl_info *info)
+ 
++int mptcp_pm_get_addr(struct sk_buff *skb, struct genl_info *info)
 +{
-+	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
-+	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
-+	struct mptcp_pm_addr_entry addr, *entry;
-+	struct net *net = sock_net(skb->sk);
-+	struct mptcp_sock *msk;
-+	struct sk_buff *msg;
-+	int ret = -EINVAL;
-+	struct sock *sk;
-+	void *reply;
++	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
++		return mptcp_userspace_pm_get_addr(skb, info);
 +
-+	msk = mptcp_token_get_sock(net, nla_get_u32(token));
-+	if (!msk) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
-+		return ret;
-+	}
-+
-+	if (!mptcp_pm_is_userspace(msk)) {
-+		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
-+		return ret;
-+	}
-+
-+	ret = mptcp_pm_parse_entry(attr, info, false, &addr, NULL);
-+	if (ret < 0)
-+		return ret;
-+
-+	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	reply = genlmsg_put_reply(msg, info, &mptcp_genl_family, 0,
-+				  info->genlhdr->cmd);
-+	if (!reply) {
-+		GENL_SET_ERR_MSG(info, "not enough space in Netlink message");
-+		ret = -EMSGSIZE;
-+		goto fail;
-+	}
-+
-+	sk = (struct sock *)msk;
-+
-+	lock_sock(sk);
-+	spin_lock_bh(&msk->pm.lock);
-+	entry = mptcp_userspace_pm_lookup_addr_by_id(msk, addr.addr.id);
-+	if (!entry) {
-+		GENL_SET_ERR_MSG(info, "address not found");
-+		ret = -EINVAL;
-+		goto unlock_fail;
-+	}
-+
-+	ret = mptcp_nl_fill_addr(msg, entry);
-+	if (ret)
-+		goto unlock_fail;
-+
-+	genlmsg_end(msg, reply);
-+	ret = genlmsg_reply(msg, info);
-+	spin_unlock_bh(&msk->pm.lock);
-+	release_sock(sk);
-+	return ret;
-+
-+unlock_fail:
-+	spin_unlock_bh(&msk->pm.lock);
-+	release_sock(sk);
-+
-+fail:
-+	nlmsg_free(msg);
-+	return ret;
++	return mptcp_pm_nl_get_addr(skb, info);
 +}
++
+ int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb)
+ {
+ 	const struct genl_info *info = genl_info_dump(cb);
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 0a9826be3593..cbf5c8dcf167 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1667,7 +1667,7 @@ int mptcp_nl_fill_addr(struct sk_buff *skb,
+ 	return -EMSGSIZE;
+ }
+ 
+-int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
++int mptcp_pm_nl_get_addr(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+@@ -1717,6 +1717,11 @@ int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return ret;
+ }
+ 
++int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
++{
++	return mptcp_pm_get_addr(skb, info);
++}
++
+ int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
+ 			  struct netlink_callback *cb)
+ {
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d52124490f8b..c560c310d7a6 100644
+index c560c310d7a6..f6f592971936 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
 @@ -1034,6 +1034,8 @@ int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
  			  struct netlink_callback *cb);
  int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
  				 struct netlink_callback *cb);
-+int mptcp_userspace_pm_get_addr(struct sk_buff *skb,
-+				struct genl_info *info);
++int mptcp_pm_get_addr(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_get_addr(struct sk_buff *skb, struct genl_info *info);
+ int mptcp_userspace_pm_get_addr(struct sk_buff *skb,
+ 				struct genl_info *info);
  
- void __init mptcp_pm_nl_init(void);
- void mptcp_pm_nl_work(struct mptcp_sock *msk);
 -- 
 2.39.2
 
