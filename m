@@ -1,29 +1,29 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0458810E9
-	for <mptcp@lists.linux.dev>; Sat, 30 Dec 2023 02:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1582410FF
+	for <mptcp@lists.linux.dev>; Sat, 30 Dec 2023 02:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qV4vaxqg"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LOpmnQAn"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703904577;
+	t=1703904578;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fqafRV8FgNEn/C7+5uIpfRh/2+IqQnYH8SF0WUD/Gd4=;
-	b=qV4vaxqg5Z+A5gNvCpxYZDuASLkc0BICQn9o3IBT21Z9qwCIX2oF3FZdHZ4MT7zHFP3DZz
-	TnGDmDy70r1Jyj5JG57Npr+9k67DCvhgJUOi7kvIZZSFsFb/C1FeE4HoHRURsGBBZuO4C8
-	L+7SXojbtIWUG0QPgCMelc1A+LCY1MA=
+	bh=3nzZ8wKNp85moBzUTEOojjQzfk5kfKzJq/zvTsXTS2k=;
+	b=LOpmnQAnoVTJDZej9NWefRYCYqfqS/naAPwQuuqhbSTHJhDkSvE5a4xYS6XkoPF81d9leh
+	P6HJFH0t+dcrSuwMUNDVamaB0Y1giZkTRPQF8ngnDSunkLEHtp0Wz1OPWFxY5t+DOWjRUM
+	HsPKnFO49+lozzRxyJnzs2mfMUNXW80=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v7 20/24] selftests: mptcp: add token for get_addr
-Date: Sat, 30 Dec 2023 10:48:15 +0800
-Message-Id: <778948dc657f43f9fa50045f12f35aa44d193107.1703904325.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v7 21/24] selftests: mptcp: userspace pm get addr tests
+Date: Sat, 30 Dec 2023 10:48:16 +0800
+Message-Id: <512929c8007a7b66c658d3776afa8e09fb28b36e.1703904325.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1703904325.git.geliang.tang@linux.dev>
 References: <cover.1703904325.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,63 +35,57 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The command get_addr() of pm_nl_ctl can be used like this in in-kernel PM:
-
-	pm_nl_ctl get $id
-
-This patch adds token argument for it to support userspace PM:
-
-	pm_nl_ctl get $id token $token
-
-If 'token $token' is passed to get_addr(), copy it into the kernel netlink.
+This patch adds a new helper userspace_pm_get_addr() in mptcp_join.sh.
+In it, parse the token value from the output of 'pm_nl_ctl events', then
+pass it to pm_nl_ctl get_addr command. Use this helper in userspace pm
+dump tests.
 
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index 8d7d1b4ed28e..7426a2cbd4a0 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -1087,6 +1087,7 @@ int get_addr(int fd, int pm_family, int argc, char *argv[])
- 		  1024];
- 	struct rtattr *rta, *nest;
- 	struct nlmsghdr *nh;
-+	u_int32_t token = 0;
- 	int nest_start;
- 	u_int8_t id;
- 	int off = 0;
-@@ -1097,10 +1098,12 @@ int get_addr(int fd, int pm_family, int argc, char *argv[])
- 			    MPTCP_PM_VER);
- 
- 	/* the only argument is the address id */
--	if (argc != 3)
-+	if (argc != 3 && argc != 5)
- 		syntax(argv);
- 
- 	id = atoi(argv[2]);
-+	if (argc == 5 && !strcmp(argv[3], "token"))
-+		token = strtoul(argv[4], NULL, 10);
- 
- 	nest_start = off;
- 	nest = (void *)(data + off);
-@@ -1116,6 +1119,15 @@ int get_addr(int fd, int pm_family, int argc, char *argv[])
- 	off += NLMSG_ALIGN(rta->rta_len);
- 	nest->rta_len = off - nest_start;
- 
-+	/* token */
-+	if (token) {
-+		rta = (void *)(data + off);
-+		rta->rta_type = MPTCP_PM_ATTR_TOKEN;
-+		rta->rta_len = RTA_LENGTH(4);
-+		memcpy(RTA_DATA(rta), &token, 4);
-+		off += NLMSG_ALIGN(rta->rta_len);
-+	}
-+
- 	print_addrs(nh, pm_family, do_nl_req(fd, nh, off, sizeof(data)));
- 	return 0;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index cec4bfc5193b..0b325b5efccf 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3373,6 +3373,18 @@ userspace_pm_dump()
+ 	ip netns exec $1 ./pm_nl_ctl dump token $tk
  }
+ 
++# $1: ns ; $2: id
++userspace_pm_get_addr()
++{
++	local evts=$evts_ns1
++	local tk
++
++	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	tk=$(mptcp_lib_evts_get_info token "$evts")
++
++	ip netns exec $1 ./pm_nl_ctl get $2 token $tk
++}
++
+ check_output()
+ {
+ 	local cmd="$1"
+@@ -3610,6 +3622,8 @@ userspace_tests()
+ 		chk_subflows_total 2 2
+ 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
+ 		local dump="id 10 flags signal 10.0.2.1"
++		check_output "userspace_pm_get_addr $ns1 10" \
++			     "$dump" "      get id 10 addr"
+ 		check_output "userspace_pm_dump $ns1" \
+ 			     "$dump" "      dump addrs signal"
+ 		kill_events_pids
+@@ -3632,6 +3646,8 @@ userspace_tests()
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 2 2
+ 		local dump="id 20 flags subflow 10.0.3.2"
++		check_output "userspace_pm_get_addr $ns2 20" \
++			     "$dump" "      get id 20 addr"
+ 		check_output "userspace_pm_dump $ns2" \
+ 			     "$dump" "      dump addrs subflow"
+ 		kill_events_pids
 -- 
 2.39.2
 
