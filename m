@@ -1,29 +1,29 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B034710F7
-	for <mptcp@lists.linux.dev>; Sat, 30 Dec 2023 02:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECC410FF
+	for <mptcp@lists.linux.dev>; Sat, 30 Dec 2023 02:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wG5EV7p6"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fse2/PwL"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703904561;
+	t=1703904563;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8wEloxO2vOuiuMPvXZ4ZhJE1zFc5IB7QZq4/N1e0jXM=;
-	b=wG5EV7p6GnoP5zSLYXeESJesoJtjkWIqWD+uWipeCMqkXQiMIOFHDzS3lOfBX4IPlt4gTI
-	6L1uo8sY40glQe6JRSVIEBy6usH74xAID6jpidgSe+7r3PXvaMGLt2jV5VpDrTwLDypPU1
-	pXmOZguYtlfTkVysIViZNJ3+mF9S9K8=
+	bh=UL2y88wdaVfD0h78UovmL8ymMx6E5PuCKxgLZns8MqU=;
+	b=fse2/PwLGfixRs43BJ/QxFZi5dwdfo/wGNu5/g0Swe/91HIXBOUS7LJGW8X4lbDWroJd15
+	7VNlAUmoucQNQlx17X3VlYMWiK5/DqHsLB9c9xGyJy9Qd6SjNKnMM7+xXs0SsyVr47IoQM
+	r56XFBcjigV2yDY2n2aHFOgFCz+EKXs=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang.tang@linux.dev>
-Subject: [PATCH mptcp-next v7 05/24] mptcp: map v4 address to v6 when destroying subflow
-Date: Sat, 30 Dec 2023 10:48:00 +0800
-Message-Id: <d7339002bfb57e08c1192c24e1e4c60c92e2abd3.1703904325.git.geliang.tang@linux.dev>
+Subject: [PATCH mptcp-next v7 07/24] mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
+Date: Sat, 30 Dec 2023 10:48:02 +0800
+Message-Id: <7aefa9112cfecd19a39bd597613aaa3341d20e2e.1703904325.git.geliang.tang@linux.dev>
 In-Reply-To: <cover.1703904325.git.geliang.tang@linux.dev>
 References: <cover.1703904325.git.geliang.tang@linux.dev>
 Precedence: bulk
@@ -35,37 +35,71 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-In mptcp_pm_nl_subflow_destroy_doit(), before checking local address
-family with remote address family, map an IPv4 address to an IPv6 address
-if the pair is a v4-mapped address.
+This patch exports struct mptcp_genl_family and mptcp_nl_fill_addr() helper
+to allow them can be used in pm_userspace.c.
 
-Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
 Signed-off-by: Geliang Tang <geliang.tang@linux.dev>
 ---
- net/mptcp/pm_userspace.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ net/mptcp/pm_netlink.c | 9 +++------
+ net/mptcp/protocol.h   | 4 ++++
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index c592536b9889..9df643373c39 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -499,6 +499,16 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 		goto destroy_err;
- 	}
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 8a311b497603..b777561eeaa0 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -18,9 +18,6 @@
+ #include "protocol.h"
+ #include "mib.h"
  
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	if (addr_l.family == AF_INET && ipv6_addr_v4mapped(&addr_r.addr6)) {
-+		ipv6_addr_set_v4mapped(addr_l.addr.s_addr, &addr_l.addr6);
-+		addr_l.family = AF_INET6;
-+	}
-+	if (addr_r.family == AF_INET && ipv6_addr_v4mapped(&addr_l.addr6)) {
-+		ipv6_addr_set_v4mapped(addr_r.addr.s_addr, &addr_r.addr6);
-+		addr_r.family = AF_INET6;
-+	}
-+#endif
- 	if (addr_l.family != addr_r.family) {
- 		GENL_SET_ERR_MSG(info, "address families do not match");
- 		err = -EINVAL;
+-/* forward declaration */
+-static struct genl_family mptcp_genl_family;
+-
+ static int pm_nl_pernet_id;
+ 
+ struct mptcp_pm_add_entry {
+@@ -1631,8 +1628,8 @@ int mptcp_pm_nl_flush_addrs_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return 0;
+ }
+ 
+-static int mptcp_nl_fill_addr(struct sk_buff *skb,
+-			      struct mptcp_pm_addr_entry *entry)
++int mptcp_nl_fill_addr(struct sk_buff *skb,
++		       struct mptcp_pm_addr_entry *entry)
+ {
+ 	struct mptcp_addr_info *addr = &entry->addr;
+ 	struct nlattr *attr;
+@@ -2276,7 +2273,7 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ 	nlmsg_free(skb);
+ }
+ 
+-static struct genl_family mptcp_genl_family __ro_after_init = {
++struct genl_family mptcp_genl_family __ro_after_init = {
+ 	.name		= MPTCP_PM_NAME,
+ 	.version	= MPTCP_PM_VER,
+ 	.netnsok	= true,
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index f7b9c1b995df..9b0b3fa65ae5 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -341,6 +341,8 @@ struct mptcp_sock {
+ #define mptcp_for_each_subflow_safe(__msk, __subflow, __tmp)			\
+ 	list_for_each_entry_safe(__subflow, __tmp, &((__msk)->conn_list), node)
+ 
++extern struct genl_family mptcp_genl_family;
++
+ static inline void msk_owned_by_me(const struct mptcp_sock *msk)
+ {
+ 	sock_owned_by_me((const struct sock *)msk);
+@@ -961,6 +963,8 @@ void mptcp_fastopen_gen_msk_ackseq(struct mptcp_sock *msk, struct mptcp_subflow_
+ 				   const struct mptcp_options_received *mp_opt);
+ void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subflow,
+ 					      struct request_sock *req);
++int mptcp_nl_fill_addr(struct sk_buff *skb,
++		       struct mptcp_pm_addr_entry *entry);
+ 
+ static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ {
 -- 
 2.39.2
 
