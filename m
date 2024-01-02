@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388D8EAD7
-	for <mptcp@lists.linux.dev>; Tue,  2 Jan 2024 11:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59D1EAE5;
+	Tue,  2 Jan 2024 12:08:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBUxYMfq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20920C433C8;
-	Tue,  2 Jan 2024 11:59:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uiji7T/0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5172FC433C7;
+	Tue,  2 Jan 2024 12:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704196768;
-	bh=pmy7zFyEYV1OBvLMmrqVsYh+6YipSrYbch0Vn1hTirY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=CBUxYMfqKGo1Pdnj4W2nAnAyOsXEms4MAENMeuqJ/lZUpzXP8BVgux5rY/XdLS767
-	 DZH0clMSAKvlHNpCeqd+SEvP2vUtHliB6iXh1PYASX6KZoDwALRUelec6F85yxjFE0
-	 dgzECSdGGcKPR+ouspshZjLm5qMA4ZfRSdO5sooeepOrrt2O/GIFLJW+YA+nfcVm0G
-	 yq+/10aP0vvkzkr2dp7DS2p5sl+Setv0IA12WRerclHIXnEGhL0+gbvcFlolsbASDe
-	 dk01R6OxCLTIVovqvxxygZ6jCZxreXpSG/IsoT2V7RH4Z6uMZF0bEEqi6kphhe9BIQ
-	 NKdW72ELHHGVQ==
-Message-ID: <93f56b2a-b0bf-47d3-870d-62a8dca636ee@kernel.org>
-Date: Tue, 2 Jan 2024 12:59:26 +0100
+	s=k20201202; t=1704197321;
+	bh=R6o9aFq/1eAraRvjOhvfwi4bZfBlxQ2kpClYSSZs+CU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Uiji7T/0OzS685kV62eXWDRIHs2d8lB3uInDNlFZxH0rqcp2JKULQJjsV7wilSets
+	 MXjQsh75rv3K2O4vZyKRfS2zO+z9PTtGEir2OrKIm0zQtUC0aybMoz8LJpWCjBaYf5
+	 sMYZ3s1DQsZC5rh66GH74Q33k5cXVEPl8+DiYk/Naebf7y/Sev8Vi5Otz7G2CzEIFh
+	 sf8ci0gvSNI/nfQV0T0spRhpvQP/Rh6Fz1aUMM1wW5P411okXOKkcsIS+eVy8N2tyb
+	 Kxu/3ZF0UBhTRJhdAybdGVULt/LrMWNfgnLE2JfaQEG/wrLwkNeWrFpUrve7rWF2Ba
+	 ky93mKhmq+Rzw==
+Message-ID: <8302ad43-96db-4ec3-a969-3aced7eb4750@kernel.org>
+Date: Tue, 2 Jan 2024 13:08:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,11 +26,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: selftests: mptcp: flush userspace addrs list: Tests Results
+Subject: Re: selftests: net/mptcp: mptcp_connect.sh - Internal error: Oops:
+ qdisc_block_add_dev (net/sched/sch_api.c:1191)
 Content-Language: en-GB, fr-BE
-To: mptcp@lists.linux.dev, Geliang Tang <geliang.tang@linux.dev>
-References: <21d0da867665e8fc693b12e3cecd4610efced6e2.1703904325.git.geliang.tang@linux.dev>
- <12b4818d-e419-8572-49d9-d33144b01034@gmail.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>,
+ MPTCP Upstream <mptcp@lists.linux.dev>,
+ Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org
+Cc: Victor Nogueira <victor@mojatatu.com>,
+ "David S. Miller" <davem@davemloft.net>, Hangyu Hua <hbh25y@gmail.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>
+References: <CA+G9fYvu_estw19VvZDXVXGmuXg87FZHk3x7ZNLM-KTGOmXRLQ@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -76,21 +82,61 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <12b4818d-e419-8572-49d9-d33144b01034@gmail.com>
+In-Reply-To: <CA+G9fYvu_estw19VvZDXVXGmuXg87FZHk3x7ZNLM-KTGOmXRLQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Naresh,
 
-On 02/01/2024 12:58, MPTCP CI wrote:
-> Hi Geliang,
-> 
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
+On 02/01/2024 10:48, Naresh Kamboju wrote:
+> Following kernel oops noticed on qemu-arm64 while running
+> selftests: net/mptcp: mptcp_connect.sh test cases on Linux next-20240102
 
-Please ignore this: I just re-enabled Cirrus-CI tests, but there is are
-some unrelated issues (due to QDisc).
+Thank you for having cc MPTCP list for this failure with an MPTCP selftest.
+
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> Test log:
+> ---
+> # selftests: net/mptcp: mptcp_connect.sh
+> # INFO: set ns3-6593b550-fBKovo dev ns3eth2: ethtool -K  gso off
+> # INFO: set ns4-6593b550-fBKovo dev ns4eth3: ethtool -K  gro off
+> # Created /tmp/tmp.vFrp4xubYR (size 219663 /tmp/tmp.vFrp4xubYR)
+> containing data sent by client
+> # Created /tmp/tmp.FrEUtOwsBN (size 5630063 /tmp/tmp.FrEUtOwsBN)
+> containing data sent by server
+> # New MPTCP socket can be blocked via sysctl [ OK ]
+> # INFO: validating network environment with pings
+> <6>[   32.891365] netem: version 1.3
+> <1>[   32.901072] Unable to handle kernel NULL pointer dereference at
+> virtual address 0000000000000000
+> <1>[   32.901926] Mem abort info:
+> <1>[   32.903342]   ESR = 0x0000000086000004
+> <1>[   32.903768]   EC = 0x21: IABT (current EL), IL = 32 bits
+> <1>[   32.904589]   SET = 0, FnV = 0
+> <1>[   32.905415]   EA = 0, S1PTW = 0
+> <1>[   32.905914]   FSC = 0x04: level 0 translation fault
+> <1>[   32.909254] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000103097000
+> <1>[   32.909914] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
+> <0>[   32.913724] Internal error: Oops: 0000000086000004 [#1] PREEMPT SMP
+> <4>[   32.914739] Modules linked in: sch_netem crct10dif_ce sm3_ce sm3
+> sha3_ce sha512_ce sha512_arm64 fuse drm backlight dm_mod ip_tables
+> x_tables
+> <4>[   32.916764] CPU: 0 PID: 438 Comm: tc Not tainted
+> 6.7.0-rc8-next-20240102 #1
+> <4>[   32.917555] Hardware name: linux,dummy-virt (DT)
+> <4>[   32.918608] pstate: 63400809 (nZCv daif +PAN -UAO +TCO +DIT
+> -SSBS BTYPE=-c)
+> <4>[   32.919392] pc : 0x0
+> <4>[ 32.920396] lr : qdisc_block_add_dev (net/sched/sch_api.c:1191)
+
+It doesn't look like to be an issue with MPTCP, but with TC (QDisc).
+
+It seems like the issue has already been reported. There is even a patch
+that has been proposed by Victor (but it looks like a new version is
+expected):
+
+https://lore.kernel.org/netdev/20231231172320.245375-1-victor@mojatatu.com/
 
 Cheers,
 Matt
