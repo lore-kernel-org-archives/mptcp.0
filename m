@@ -1,129 +1,70 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4140D11C94
-	for <mptcp@lists.linux.dev>; Tue,  2 Jan 2024 14:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAB6364;
+	Wed,  3 Jan 2024 00:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUn6OTm+"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7810827e54eso921756485a.2
-        for <mptcp@lists.linux.dev>; Tue, 02 Jan 2024 06:14:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704204843; x=1704809643; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hQlVvHM7T3tOoVqgPprcHn2dAjIYdi0wIHetqHaE9sE=;
-        b=HUn6OTm+LUQ2bmGAOXbIKKg6PrHo8uOaGzpx8sXev1DRBXTGwUtkqExL1FnfGdfWJ5
-         ewTArmcBqbnQmWHdotF2RrHiOC1ArqjIinowrjgE0/ybSd31U2jDx4xYpcDzbQsq7y3U
-         TVY7ecxPPs5npoNULYTWEcZVFhZRB7inJqsG6H9iOzwj44LKK9vdJLtckqsXYrDLBNfH
-         SRpirt0Rd6AGzPemHV6Rx6aadWIkb9cfUw58OpznstjllwmQjT796GnFELmd3W0iABkc
-         xjiaeqp0z0MXTZjcz8+qDNlE7CAxQp8lOrB9UrRRMIrHfS/A/d9yKi/2HVitf/ppdJiL
-         LHaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704204843; x=1704809643;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hQlVvHM7T3tOoVqgPprcHn2dAjIYdi0wIHetqHaE9sE=;
-        b=bXm1cZocyc7d+LYpsSKfyrJnLTipe2wZJSqpsf6zZ+P0uStvdz40OLykc96O+JURm0
-         Uot3BS/mHb0U9huRJf9VA1trCfVzIvYkFQ98Qr9ZIuYp0p1GojQSYRlT4lsSM8RpMGu5
-         FnhuYm7nMQR4JXb3RcFNOAYBVyqHj64iN8Njhul6kD/iI0gk2MWHZJA5+4eb4zbEj9NX
-         l3juIRZ8GrjjTFgS2n60v+yN9wJ5WZfykQ7A88RnzQTu9IhDeO6Fpy7jBdgb5yk1UyVT
-         Xnjt5BLVCy7aUP+Dkrdviw2kfZ7Aeuqk7pYK+Uwb0i0Stn5O7hipIh4hZwdqh1BFEN2V
-         hLcQ==
-X-Gm-Message-State: AOJu0YxzkBRG8ySIPkueD5nNyAWwtjPIuAYMSFd1RcnX4qCyH3H3s5Lr
-	iQB05hMFoQ3JB4SNnlEMEQ==
-X-Google-Smtp-Source: AGHT+IGltgy0ZPjTFeGLY0dQpK68d3zueyoMld0L2tpapJ1QNYqQxPIkps6rhKZKMKt+B1geUejD6g==
-X-Received: by 2002:a05:620a:1926:b0:77f:38f2:2da1 with SMTP id bj38-20020a05620a192600b0077f38f22da1mr23605904qkb.101.1704204842960;
-        Tue, 02 Jan 2024 06:14:02 -0800 (PST)
-Received: from [127.0.0.1] ([13.88.99.141])
-        by smtp.gmail.com with ESMTPSA id dy51-20020a05620a60f300b00781b99ab724sm1864632qkb.108.2024.01.02.06.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 06:14:02 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@linux.dev>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <21d0da867665e8fc693b12e3cecd4610efced6e2.1703904325.git.geliang.tang@linux.dev>
-References:
- <21d0da867665e8fc693b12e3cecd4610efced6e2.1703904325.git.geliang.tang@linux.dev>
-Subject: Re: selftests: mptcp: flush userspace addrs list: Tests Results
-Message-ID: <a7714c71-24ab-72ea-6031-4ac8376803a6@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jan 2024 14:14:01 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5qKZiw/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 05128C433C9;
+	Wed,  3 Jan 2024 00:20:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704241225;
+	bh=m/YtIRosK7AiMzo6ZLongGReudykuxF9y3ocqvW6R7w=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=f5qKZiw/REbZx47AsPFOpYVfyQYr32QPrNhfBtyzcTaphRYlUbroehMv2hNScRNhP
+	 rxMsxFIwiSHP1yw/oMsB52n7JiwqO8s8fD7i/kYSaOPI3y+MoOEximvmH2327LC0tL
+	 RcT9II93mmm4tlh4g8bQ1oFk+Y6f9JPiN/X3iwdwexfDR6Uwdal3gOk0e9TzN4qZgk
+	 GlMi47EwYWPVAT/49vEYXz+L8avtnc3vJB2Iil7P8MlwxSjfovGFJ+fE3LOudxyqbB
+	 WH71HeARxawo+kOb8ek5gTMpf8N1kYkvKSZf1rZOJL5Kv9VXcKCrerdJ0cvixsmZ2o
+	 mn6YI6MADHfaQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DC903DCB6D1;
+	Wed,  3 Jan 2024 00:20:24 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/2] mptcp: new reviewer and prevent a warning
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170424122489.12524.14018674920048838370.git-patchwork-notify@kernel.org>
+Date: Wed, 03 Jan 2024 00:20:24 +0000
+References: <20231226-upstream-net-20231226-mptcp-prevent-warn-v1-0-1404dcc431ea@kernel.org>
+In-Reply-To: <20231226-upstream-net-20231226-mptcp-prevent-warn-v1-0-1404dcc431ea@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang.tang@linux.dev,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, stable@vger.kernel.org,
+ syzbot+5a01c3a666e726bc8752@syzkaller.appspotmail.com
 
-Hi Geliang,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Our CI did some validations and here is its report:
+On Tue, 26 Dec 2023 13:10:16 +0100 you wrote:
+> Patch 1 adds MPTCP long time contributor -- Geliang Tang -- as a new
+> reviewer for the project. Thanks!
+> 
+> Patch 2 prevents a warning when TCP Diag is used to close internal MPTCP
+> listener subflows. This is a correction for a patch introduced in v6.4
+> which was fixing an issue from v5.17.
+> 
+> [...]
 
-- KVM Validation: normal (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5768546135834624
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5768546135834624/summary/summary.txt
+Here is the summary with links:
+  - [net,1/2] MAINTAINERS: add Geliang as reviewer for MPTCP
+    https://git.kernel.org/netdev/net/c/118ba479d02c
+  - [net,2/2] mptcp: prevent tcp diag from closing listener subflows
+    https://git.kernel.org/netdev/net/c/4c0288299fd0
 
-- KVM Validation: normal (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5205596182413312
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5205596182413312/su=
-mmary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4924121205702656
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4924121205702656/su=
-mmary/summary.txt
-
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_sockopts =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6331496089255936
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6331496089255936/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/11abf3873c91
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
