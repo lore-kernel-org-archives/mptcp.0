@@ -1,131 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A962575A
-	for <mptcp@lists.linux.dev>; Mon,  8 Jan 2024 11:42:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B304654F
+	for <mptcp@lists.linux.dev>; Mon,  8 Jan 2024 12:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PFe8k52H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2768C433C8;
-	Mon,  8 Jan 2024 11:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704714158;
-	bh=R7Vgi2c0jMIZ6jrq9tHNmFHJ6kz0m4RscOCBOoOLP0s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PFe8k52HWplZ+qajyTasFUNOUbfcouRDns2H5/j0MwqyDN7dVF1GJArcW/qSagWSu
-	 f9JZdd0HGmRHYFXHCvCBlB19TtZD5LJ/h+4us3nzVXHIegkdzDuCwSfKey151QkTU+
-	 eG/C9ajJiaz5drXxY7QkkaMo3o/ekC/wK5g4f8DRsUEscTjGSQ3SfeaifNEIV4wr5U
-	 9i2lssu3UPLscMg/fnNgHbE59GkWUPs4hKxYX/RzEECh3z7/Vzguzcsm3E2J0Ea1ik
-	 TnrIQZrIC4xMaeZlJyGSObSsP2FF2wzh89VwLaobymyfHhCL7ys7D6CudjwpOc5ypT
-	 KaNxmAIPinzAg==
-Message-ID: <56abe729-bc47-497a-8142-4904f0557872@kernel.org>
-Date: Mon, 8 Jan 2024 12:42:35 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rcG6HxXR"
+Message-ID: <9754c6ba4f1ef8b1463d1a50ea3a8cb35f14248f.camel@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1704717511;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=/rCEaFjhhFarl+lLwhsgEWfj4Z3dWwxVSCMQC6dXYMw=;
+	b=rcG6HxXRgNx1v9Y29GkJuhcDHdSOsTMbzOq9hyRHVVtjn3T0jwLjoc6F9NkcZkaR3zvuYd
+	AmEZqZfMwdP3NAWamo5Jlibaf7s5OSRYjUYTPOP0xWwmqapu8fD1zX64XiBE3oHBFlAb+2
+	bh69v+983yBZUf2Nv9k1Q1+gXORDZjc=
+Subject: Re: [PATCH mptcp-next] bpf: Add mptcp_sched_ops CFI
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Geliang Tang <geliang.tang@linux.dev>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Date: Mon, 08 Jan 2024 20:37:48 +0800
+In-Reply-To: <c2889577-25a3-4721-a754-61d082474d36@kernel.org>
+References: 
+	<9e2fbdc6e5a9c59d4b8eded4bfb2ae71a768afad.1704530434.git.geliang.tang@linux.dev>
+	 <c2889577-25a3-4721-a754-61d082474d36@kernel.org>
+Autocrypt: addr=geliang.tang@linux.dev; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v7 04/24] mptcp: check addrs list in
- userspace_pm_get_local_id
-Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang.tang@linux.dev>
-Cc: mptcp@lists.linux.dev
-References: <cover.1703904325.git.geliang.tang@linux.dev>
- <cabcff63b79e67ee6ea7aca30e6f7bbba38383fe.1703904325.git.geliang.tang@linux.dev>
- <c4dbd8a2-3ad3-1104-ef9c-adea4d1d62bd@kernel.org>
- <65fc77d3-a59d-01a1-8bf1-a9ca31d91175@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <65fc77d3-a59d-01a1-8bf1-a9ca31d91175@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Geliang, Mat,
+Hi Matt,
 
-On 06/01/2024 01:55, Mat Martineau wrote:
-> On Fri, 5 Jan 2024, Mat Martineau wrote:
-> 
->> On Sat, 30 Dec 2023, Geliang Tang wrote:
->>
->>> Before adding a new entry in mptcp_userspace_pm_get_local_id(), it's
->>> better to check whether this address is already in userspace pm local
->>> address list. If it's in the list, no need to add a new entry, just
->>> return it's address ID and use this address.
->>>
->>
->> Good idea!
->>
->> Reviewed-by: Mat Martineau <martineau@kernel.org>
->>
-> 
-> Matthieu -
-> 
-> To clarify (based on your discussion in
-> https://lore.kernel.org/mptcp/c22d8a90-8b52-4518-8e46-d270f9988c7a@kernel.org/#t )
-> 
-> this patch is for mptcp-net.
+On Mon, 2024-01-08 at 11:14 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+>=20
+> On 06/01/2024 09:40, Geliang Tang wrote:
+> > '''
+> > The cfi_stubs pointer is added in the commit 2cd3e3772e41
+> > ("x86/cfi,bpf:
+> > Fix bpf_struct_ops CFI"), this patch initializes it as dummy stubs
+> > __bpf_mptcp_sched_ops.
+> > '''
+> >=20
+> > Note:
+> >=20
+> > BPF tests on export branch fail with this error:
+> >=20
+> > =C2=A0BUG: kernel NULL pointer dereference, address: 0000000000000000
+> > =C2=A0#PF: supervisor read access in kernel mode
+> > =C2=A0#PF: error_code(0x0000) - not-present page
+> > =C2=A0PGD 0 P4D 0
+> > =C2=A0Oops: 0000 [#1] PREEMPT SMP PTI
+> > =C2=A0CPU: 3 PID: 1512 Comm: test_progs Tainted: G=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 W IOE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > 6.7.0-rc5 #37
+> > =C2=A0Hardware name: LENOVO 4180PG2/4180PG2, BIOS 83ET76WW (1.46 )
+> > 07/05/2013
+> > =C2=A0RIP: 0010:bpf_struct_ops_map_update_elem+0x4ee/0x610
+> >=20
+> > This patch fixes this error. It can be applied after the commit
+> > "bpf: Add bpf_mptcp_sched_ops"
+>=20
+> Thank you for having checked and fixed that!
+>=20
+> Is it OK for you if I squash it in "bpf: Add bpf_mptcp_sched_ops"
+> commit?
 
-Thank you for the patch, the review and the note!
+Yes, it's better to squash it. Please do this when merging it.
 
-I just applied it because it doesn't look like it depends on the
-previous patches. Now in our tree (fix for -net):
+I'm not sure whether "get_subflow" should be initialized here too. If
+it should be, I'll send another squash-to patch to fix this.
 
-New patches for t/upstream-net and t/upstream:
-- 6c8806a2bf91: mptcp: check addrs list in userspace_pm_get_local_id
-- Results: 92194b020fd4..9cb02effbb76 (export-net)
-- Results: 9610e17f4010..ca5de126f347 (export)
+Thanks,
+-Geliang
 
-Tests are now in progress:
+>=20
+> Cheers,
+> Matt
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240108T110134
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240108T110134
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
