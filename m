@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682CD13AD8
-	for <mptcp@lists.linux.dev>; Mon,  8 Jan 2024 10:14:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A962575A
+	for <mptcp@lists.linux.dev>; Mon,  8 Jan 2024 11:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LbXbwNry"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A048C433C7;
-	Mon,  8 Jan 2024 10:14:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PFe8k52H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2768C433C8;
+	Mon,  8 Jan 2024 11:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704708871;
-	bh=EVJHX4hQWWzMJpTcBEguh6TaOgSIHm7WiJ0End9n9gw=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=LbXbwNrySdGzxMDHeZU+nX+Y7XSBmhjVL5S9z1/9/Feo5n7JXR+u/+IEihHHYsavQ
-	 S+GXSQAgy7qjQCO/ZNIs/vuQn8vtm8ZFB/kVtu8SVFBCsboYZnrluE1n4fBtSpSF2W
-	 0QhSb6R41pTa5U3CrB7IhcN2czTPJNkVCv61IHNoU1fvQ3gmnspz2X7jBdjzjA6mrZ
-	 uoARRvoukApw357m66Cyxnh+z/AbBWiZH7duNRqus0falgAYEKm6NA4MPcfPIKCXw6
-	 4N2dmkXa90FEI9R14YzNLeMNWgbN3oKAp6XrHqRXSeic3f3v/8PdODe5cPBmkfdAFJ
-	 JTnK1yp4u5BKQ==
-Message-ID: <c2889577-25a3-4721-a754-61d082474d36@kernel.org>
-Date: Mon, 8 Jan 2024 11:14:28 +0100
+	s=k20201202; t=1704714158;
+	bh=R7Vgi2c0jMIZ6jrq9tHNmFHJ6kz0m4RscOCBOoOLP0s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PFe8k52HWplZ+qajyTasFUNOUbfcouRDns2H5/j0MwqyDN7dVF1GJArcW/qSagWSu
+	 f9JZdd0HGmRHYFXHCvCBlB19TtZD5LJ/h+4us3nzVXHIegkdzDuCwSfKey151QkTU+
+	 eG/C9ajJiaz5drXxY7QkkaMo3o/ekC/wK5g4f8DRsUEscTjGSQ3SfeaifNEIV4wr5U
+	 9i2lssu3UPLscMg/fnNgHbE59GkWUPs4hKxYX/RzEECh3z7/Vzguzcsm3E2J0Ea1ik
+	 TnrIQZrIC4xMaeZlJyGSObSsP2FF2wzh89VwLaobymyfHhCL7ys7D6CudjwpOc5ypT
+	 KaNxmAIPinzAg==
+Message-ID: <56abe729-bc47-497a-8142-4904f0557872@kernel.org>
+Date: Mon, 8 Jan 2024 12:42:35 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -26,10 +26,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] bpf: Add mptcp_sched_ops CFI
+Subject: Re: [PATCH mptcp-next v7 04/24] mptcp: check addrs list in
+ userspace_pm_get_local_id
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang.tang@linux.dev>, mptcp@lists.linux.dev
-References: <9e2fbdc6e5a9c59d4b8eded4bfb2ae71a768afad.1704530434.git.geliang.tang@linux.dev>
+To: Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang.tang@linux.dev>
+Cc: mptcp@lists.linux.dev
+References: <cover.1703904325.git.geliang.tang@linux.dev>
+ <cabcff63b79e67ee6ea7aca30e6f7bbba38383fe.1703904325.git.geliang.tang@linux.dev>
+ <c4dbd8a2-3ad3-1104-ef9c-adea4d1d62bd@kernel.org>
+ <65fc77d3-a59d-01a1-8bf1-a9ca31d91175@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -75,38 +81,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9e2fbdc6e5a9c59d4b8eded4bfb2ae71a768afad.1704530434.git.geliang.tang@linux.dev>
+In-Reply-To: <65fc77d3-a59d-01a1-8bf1-a9ca31d91175@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Geliang, Mat,
 
-On 06/01/2024 09:40, Geliang Tang wrote:
-> '''
-> The cfi_stubs pointer is added in the commit 2cd3e3772e41 ("x86/cfi,bpf:
-> Fix bpf_struct_ops CFI"), this patch initializes it as dummy stubs
-> __bpf_mptcp_sched_ops.
-> '''
+On 06/01/2024 01:55, Mat Martineau wrote:
+> On Fri, 5 Jan 2024, Mat Martineau wrote:
 > 
-> Note:
+>> On Sat, 30 Dec 2023, Geliang Tang wrote:
+>>
+>>> Before adding a new entry in mptcp_userspace_pm_get_local_id(), it's
+>>> better to check whether this address is already in userspace pm local
+>>> address list. If it's in the list, no need to add a new entry, just
+>>> return it's address ID and use this address.
+>>>
+>>
+>> Good idea!
+>>
+>> Reviewed-by: Mat Martineau <martineau@kernel.org>
+>>
 > 
-> BPF tests on export branch fail with this error:
+> Matthieu -
 > 
->  BUG: kernel NULL pointer dereference, address: 0000000000000000
->  #PF: supervisor read access in kernel mode
->  #PF: error_code(0x0000) - not-present page
->  PGD 0 P4D 0
->  Oops: 0000 [#1] PREEMPT SMP PTI
->  CPU: 3 PID: 1512 Comm: test_progs Tainted: G        W IOE      6.7.0-rc5 #37
->  Hardware name: LENOVO 4180PG2/4180PG2, BIOS 83ET76WW (1.46 ) 07/05/2013
->  RIP: 0010:bpf_struct_ops_map_update_elem+0x4ee/0x610
+> To clarify (based on your discussion in
+> https://lore.kernel.org/mptcp/c22d8a90-8b52-4518-8e46-d270f9988c7a@kernel.org/#t )
 > 
-> This patch fixes this error. It can be applied after the commit
-> "bpf: Add bpf_mptcp_sched_ops"
+> this patch is for mptcp-net.
 
-Thank you for having checked and fixed that!
+Thank you for the patch, the review and the note!
 
-Is it OK for you if I squash it in "bpf: Add bpf_mptcp_sched_ops" commit?
+I just applied it because it doesn't look like it depends on the
+previous patches. Now in our tree (fix for -net):
+
+New patches for t/upstream-net and t/upstream:
+- 6c8806a2bf91: mptcp: check addrs list in userspace_pm_get_local_id
+- Results: 92194b020fd4..9cb02effbb76 (export-net)
+- Results: 9610e17f4010..ca5de126f347 (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240108T110134
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240108T110134
 
 Cheers,
 Matt
