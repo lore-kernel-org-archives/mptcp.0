@@ -1,88 +1,98 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507EC1CAB2
-	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 17:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A1D1CD1B
+	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 18:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705427018; cv=none; b=lf7JUuQGAyibCcYynk0TLgCejceVs7tBCUn2jap/RqnMjAD0/AiuxQfMx4ZGjKNyrlX005Rn1vVV/VuagU868FhZHJ5D/P0fOrZxn1pA+7BVb+cE5hAk0Ml9bo63MBMZsbCawiIUfnLHDRGlFym1TRVrTVxnN3olFoG74YtUEBc=
+	t=1705428986; cv=none; b=PBb94C+DaEouY/1IaeKMFL0S7KPxjQwNneXVCkWjforqQs0SoKMTy1LMrKSFDi+KQZ2DiJXWIEqy2LqIQwxPNXrXCwzydKvrWfcbluXtqKyLmtH2cbVfw7bZVlGv7aFBnFGol7AX6a6wPwhwdSRRFQE60hk2hNrNyayJmDQH06U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705427018; c=relaxed/simple;
-	bh=LcH8SpaKXSuzmvpIr5OOQ94gPXvSL776wVHpa/ElBjs=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=S39+eykMox8JtUW1AuTDQ1VtArP3ykBvXm2DYgwkPaI2mrpRgqwN4AMcurfe1h87Gm/FK2NK0BNSkObea4Hn4QcL1jqsT8O61YDsfULcmMEHe2HVDJyp17AoWak1qY8HdQ5k/RJFER5KDOtiKtbrGf5fbTZ+Zr0bsGue6vmlCXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=suqrtegq; arc=none smtp.client-ip=209.85.208.50
+	s=arc-20240116; t=1705428986; c=relaxed/simple;
+	bh=Ckoz91tqwfpC8OTv4ryEApO4IRZUtDwDgVCZ58plhTk=;
+	h=DKIM-Signature:Received:X-MC-Unique:Received:Received:From:To:
+	 Subject:Date:Message-ID:MIME-Version:X-Scanned-By:
+	 X-Mimecast-Spam-Score:X-Mimecast-Originator:
+	 Content-Transfer-Encoding:Content-Type; b=NU/zqyXjQqDgisqh1y8Z1gpjXubBbIkQfgodrmyKmxHVtjw7oegMMlnhNnc69kc1ZYJUk3wvW2lyzOwfbdfxn7q8kf+nKALyH5vf1Zstu4TxcKrkwoEG3NoIPTZBgp/PUfuS6dgyDgUAUfSKAeCX2YEZfcR8GbDnXBMG/zaf5jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jUF2rgqI; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="suqrtegq"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-553e36acfbaso169a12.0
-        for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 09:43:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705427015; x=1706031815; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LcH8SpaKXSuzmvpIr5OOQ94gPXvSL776wVHpa/ElBjs=;
-        b=suqrtegqIKlEbukedyP2Jr2wcbdB2U908XlTWfwckZ1xEPJVn5jnknB323glxdvvAl
-         yC/d5P8cAltEzhhWG92NSTq+qxEEEwVUb8PXuNtEptHHs77lg8KN/PoCkF42Ch38BB0N
-         qFWGUUEPW8sEai9HPArot2E2/dZJoWykhIVdc3ZKVU5nxyfb8F4r2gIy6KruKC6JYixl
-         vdPyxWuD3mp7AmHmq0cj5fNXkp+ajSCXbW/j07Tg+LP0/HsQLQbdqGz2UXpV0HG8wdRj
-         BNEfmSECvylN/D7NHwseluQgJ1oA8kdXtXuXiyIAE7Gpbcvdk/HvEG1c+Mf60RIkB5Os
-         FKDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705427015; x=1706031815;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LcH8SpaKXSuzmvpIr5OOQ94gPXvSL776wVHpa/ElBjs=;
-        b=WHsuc8SY8F+H9Mfk68kqCQxj4gv9iUhN7sqTi/tLx1GNfcj2k29XBY4abN/pDVDIC1
-         9qQHCPYC6abBzwZu6ekPlbhEvjhG3IsMhs3b6C40XR4YZx1hk87eS0iNPtAeUkFZ2nWr
-         DUfvYjL44eMT3n7SlAfiSWmvsdShQi8D/3xrZa7/EjRaJWPfNt9G7FTb55hk4xU7CqMp
-         D4L9FjYtAZOJMHBjchmWi07NPdZu6ZltZaikUiLSIiFTxUjBE296HF8rshkk5gcavfFB
-         wadijkXkcs43Q0tDi0SZZccORwTIuRYCm3jvsz69ALbNNyRN2DvIJnkZEWydp/TQjg69
-         2KEQ==
-X-Gm-Message-State: AOJu0YxLFd5Zq4USvpJG9vuTdW6oiVJjGSkiat4KTgPP1imrQR9Qtdb5
-	AV+bGgkgTSDFGGHkxWLKwyTn4jIxVzewY16OmM9c3EIkSV0+
-X-Google-Smtp-Source: AGHT+IEqCH2+QVFUNxmp6JfimiNRnUG5eO7uirPh1kn9mq5KJ9/hSimv+N938mCVYV4dQ0aiYfzp+UCiroQPnzNfxFs=
-X-Received: by 2002:a05:6402:3098:b0:559:b56a:cc6f with SMTP id
- de24-20020a056402309800b00559b56acc6fmr26446edb.4.1705427015377; Tue, 16 Jan
- 2024 09:43:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jUF2rgqI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705428984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qd/L++BSzU9fQ6IWVMm/P4NmWmDeQP3vTRcdcWwirRg=;
+	b=jUF2rgqIU594JCSDBG80iOiLY4injpuPnVmkTm+uiM3Gr5q2LRtwJLUFRqx/rsm+YrFOiY
+	YoQbCyYCsjVWcQloZQf3GY70Ing6XhLK+nhlZ6VSWrYRgZLcIhlDuS/fnw1eK1m/FKa012
+	HNZpWPmhgW4Q1HKfPhqux/jCmuuRtlc=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-113-5vK75vSvOXKeAYWJpVPxkg-1; Tue,
+ 16 Jan 2024 13:16:22 -0500
+X-MC-Unique: 5vK75vSvOXKeAYWJpVPxkg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8FA5B299E74A
+	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 18:16:22 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.11])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 202891121306
+	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 18:16:21 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next 0/5] mptcp: annotate lockless access
+Date: Tue, 16 Jan 2024 19:16:09 +0100
+Message-ID: <cover.1705427537.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ddfc9eec6981880271d0293d05369b3385fb9e86.1705425136.git.pabeni@redhat.com>
-In-Reply-To: <ddfc9eec6981880271d0293d05369b3385fb9e86.1705425136.git.pabeni@redhat.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 16 Jan 2024 18:43:21 +0100
-Message-ID: <CANn89i+nbXMuLpB11s9rr3L0PV26UwkSPdNXDijoX89NOJ=V-w@mail.gmail.com>
-Subject: Re: [PATCH net] mptcp: relax check on MPC passive fallback
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, Matthieu Baerts <matttbe@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang.tang@linux.dev>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
-	mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On Tue, Jan 16, 2024 at 6:19=E2=80=AFPM Paolo Abeni <pabeni@redhat.com> wro=
-te:
->
-> While testing the blamed commit below, I was able to miss (!)
-> packetdrill failures in the fastopen test-cases.
->
-> On passive fastopen the child socket is created by incoming TCP MPC syn,
-> allow for both MPC_SYN and MPC_ACK header.
->
-> Fixes: 724b00c12957 ("mptcp: refine opt_mp_capable determination")
-> Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+This is the 2nd preparatory series for the TCP_NOTSENT_LOWAT support.
+The latter will need tracking more state under the msk data lock
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+The mptcp locking schema is already quite complex. We need to clarify
+and make consistent the lockless access already there or later changes
+will be even harder to follow and understand.
 
-Thanks.
+This series goes through all the msk fields accessed in the RX and TX
+path and makes the lockless annotation consistent with the in-use
+locking schema.
+
+As a bonus this should fix data races possibly found by fuzzers - even
+if we haven't seen many such reports so far.
+
+Patch 1/5 hints we could remove local_key and remote_key from the
+subflow context, and always use the ones in the msk socket, possibly
+reducing the context memory usage. That change is left over as a
+possible follow-up.
+
+Paolo Abeni (5):
+  mptcp: annotate access for msk keys
+  mptcp: annotate lockless access for the tx path
+  mptcp: annotate lockless access for RX path fields.
+  mptcp: annotate lockless access for token
+  mptcp: annotate lockless accesses around read-mostly fields
+
+ net/mptcp/options.c    | 20 ++++++++---------
+ net/mptcp/pm.c         |  2 +-
+ net/mptcp/pm_netlink.c | 10 ++++-----
+ net/mptcp/protocol.c   | 51 +++++++++++++++++++++---------------------
+ net/mptcp/protocol.h   |  8 ++++---
+ net/mptcp/sockopt.c    |  2 +-
+ net/mptcp/subflow.c    | 10 +++++----
+ 7 files changed, 54 insertions(+), 49 deletions(-)
+
+-- 
+2.43.0
+
