@@ -1,93 +1,110 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368206FBF
-	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 03:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0133D256A
+	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 04:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kV6Tc5Hb"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705376153;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qGLRKdwglHwD7mtDvhTGYi1nltWQLjQo89iER+1N0N8=;
-	b=kV6Tc5Hb76DFTdtYoCN/BwUJre7EvHzXx5NjL0+/30Xgpk+AGcmq5E/Y85tGlkaxWCQKJR
-	2kGSWRU967xaRTtGfDBZgavSKh1xHAPnIkkbl8Ks7KbBYzoq9fPuZYHY7I4CevLLl4mECZ
-	BRDPYLKnuzrVDwLC9CUXpjc6Z8jWH88=
-From: Geliang Tang <geliang.tang@linux.dev>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 20/23] selftests: mptcp: userspace pm get addr tests
-Date: Tue, 16 Jan 2024 11:35:08 +0800
-Message-Id: <412250dfc7adc6153976354d5eaf3e81c016e210.1705375746.git.tanggeliang@kylinos.cn>
-In-Reply-To: <cover.1705375746.git.tanggeliang@kylinos.cn>
-References: <cover.1705375746.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qie2qkrJ"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-429c9c4c572so28847531cf.1
+        for <mptcp@lists.linux.dev>; Mon, 15 Jan 2024 20:45:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705380310; x=1705985110; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0QA/f7pca0Ha453TpFAFiCyRmlkmIfwMQ/lGteeasjM=;
+        b=Qie2qkrJU3/CNbJXv9AZOn5iLuGwSDF/TZGwzOk0kZ1bFBw5elMXBoCnbEXh+1Tr4X
+         arq2pPFgiDJykrabMJXbMhD02hdYXx2AblAs/MlnIswKxGh02whDXflFQuhNQiBX1uEY
+         aOjmoN5wvzPJSxZnfOEz86y/9LhRlXWrGMF2MRuB5jtOBvDvqzh4arxj9Q2l3Lcx1e6X
+         BO0xMrXY0bIF47CGQlhH2+Ub5UxdZfIoYxmWPH41vionYH8b/y5eDlCreOUjsrGrEiPR
+         yipBj2M1j7gYumQlCne1MV14iJWWBateQoRiqhRQ58mpk8OZ3ZBgelYzwKv9iKx9bJec
+         ESxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705380310; x=1705985110;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0QA/f7pca0Ha453TpFAFiCyRmlkmIfwMQ/lGteeasjM=;
+        b=wdZEtlDeueIrml0Osu2eLOHSA2JeR1jmO3pY+nqKvMlwdYsKYvyYunz6Ioiw1Reo7X
+         fLsy4kP/hjWIHYaUVoK8VPV1N5tCdl2MWVXo6goSUrs9gF0g+L5XsoftdnB93F+9nsFJ
+         7JTq2547t1FFL0AhlgXIJzF2QgAInT05FgZSho7rdtvauPPlnwJIQPLLVT4yjBKVPCBo
+         v1AeiraEdvLsW9CItF+dVOUN2d9dItfcw70is+GOspE2r5mCkrldaGi3ckh2YuxkDP1P
+         C5GxLWfcWwrurDecRvPafFu9I3JFnM1/hzmlQ64bH6Bfi4f1Xchv96HMKA5w55N03Q7H
+         oDGQ==
+X-Gm-Message-State: AOJu0Yy+5hZk+xbwifPvuhx/ltU8SdRO7WxJw+uYtDx/X5SA7aSXD0zV
+	jMmLRPAOP9U3XqRasvRVB6mTMjwCgQ==
+X-Google-Smtp-Source: AGHT+IHhfX2csWL3qV5me18+tUHQKOr0WuevNxz/a9+cx0ZCNvcf4/4oWL1Ej1CXN3iMucpsDChUnQ==
+X-Received: by 2002:ac8:5d8a:0:b0:429:fc6f:5c85 with SMTP id d10-20020ac85d8a000000b00429fc6f5c85mr1597599qtx.43.1705380309785;
+        Mon, 15 Jan 2024 20:45:09 -0800 (PST)
+Received: from [127.0.0.1] ([20.81.159.194])
+        by smtp.gmail.com with ESMTPSA id g7-20020ac87747000000b004181e5a724csm4497455qtu.88.2024.01.15.20.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jan 2024 20:45:09 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <7bf6b2a10a756ce5fdc739663cf9eb2e3ae72d87.1705375746.git.tanggeliang@kylinos.cn>
+References:
+ <7bf6b2a10a756ce5fdc739663cf9eb2e3ae72d87.1705375746.git.tanggeliang@kylinos.cn>
+Subject: Re: selftests: mptcp: flush userspace addrs list: Tests Results
+Message-ID: <98d6201e-effe-5cb6-17e9-5765a2b304c3@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 16 Jan 2024 04:45:08 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-This patch adds a new helper userspace_pm_get_addr() in mptcp_join.sh.
-In it, parse the token value from the output of 'pm_nl_ctl events', then
-pass it to pm_nl_ctl get_addr command. Use this helper in userspace pm
-dump tests.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Our CI (GitHub Action) did some validations and here is its report:
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index cec4bfc5193b..0b325b5efccf 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3373,6 +3373,18 @@ userspace_pm_dump()
- 	ip netns exec $1 ./pm_nl_ctl dump token $tk
- }
- 
-+# $1: ns ; $2: id
-+userspace_pm_get_addr()
-+{
-+	local evts=$evts_ns1
-+	local tk
-+
-+	[ "$1" == "$ns2" ] && evts=$evts_ns2
-+	tk=$(mptcp_lib_evts_get_info token "$evts")
-+
-+	ip netns exec $1 ./pm_nl_ctl get $2 token $tk
-+}
-+
- check_output()
- {
- 	local cmd="$1"
-@@ -3610,6 +3622,8 @@ userspace_tests()
- 		chk_subflows_total 2 2
- 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
- 		local dump="id 10 flags signal 10.0.2.1"
-+		check_output "userspace_pm_get_addr $ns1 10" \
-+			     "$dump" "      get id 10 addr"
- 		check_output "userspace_pm_dump $ns1" \
- 			     "$dump" "      dump addrs signal"
- 		kill_events_pids
-@@ -3632,6 +3646,8 @@ userspace_tests()
- 		chk_mptcp_info subflows 1 subflows 1
- 		chk_subflows_total 2 2
- 		local dump="id 20 flags subflow 10.0.3.2"
-+		check_output "userspace_pm_get_addr $ns2 20" \
-+			     "$dump" "      get id 20 addr"
- 		check_output "userspace_pm_dump $ns2" \
- 			     "$dump" "      dump addrs subflow"
- 		kill_events_pids
--- 
-2.40.1
+- KVM Validation: normal:
+  - Unstable: 2 failed test(s): =
+packetdrill_fastopen selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/7536=
+807523
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/7a37e241bedb
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
