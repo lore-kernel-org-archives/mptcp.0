@@ -1,29 +1,29 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9FB7462
-	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 03:35:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A2E6FD0
+	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 03:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VIIhCkB/"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="f+2UQtzB"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705376145;
+	t=1705376146;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2pbXXOneYlEORsc3+Fa4OHuksrTHVsX6WPNZwNe834I=;
-	b=VIIhCkB/vBEQ5BMQMJNfwz8uVFNN79skDh18mQpqOuJ0kYmuYfTkHab3W0Q+gCtu0rOoar
-	yZzdKJteBqJAdHz0W1OxegMTrQPUvn4eS1qZ49qQ/GcMViXl+OAPCgZiEJ7LN0yGRUE47v
-	ULmJrppu1lHMt96zj2aYSUI/aMwYGyQ=
+	bh=D04CH/fJkBUHM6vvtA2xiqc2nctoxWhnFBiBg3NXvQg=;
+	b=f+2UQtzBTQuMO1SYtA2r7c7P0i+P+u7Iur45cqLqKcavgM8dXerWvpOomm20gkYFv4gSSG
+	qTvBkW5DMFP98dwZtB9hdfnFw2c3RNWg2zwY8/qAzv2RyhV/j2sAJYUmmxEffXkWyIIbbO
+	F+ZSR9OKb6k12cFqSE2uJAZDNaTsjwU=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 12/23] selftests: mptcp: add token for dump_addr
-Date: Tue, 16 Jan 2024 11:35:00 +0800
-Message-Id: <36ea0a312a6f502f8e03ed5991bad972023fc324.1705375746.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 13/23] selftests: mptcp: add check_output helper
+Date: Tue, 16 Jan 2024 11:35:01 +0800
+Message-Id: <66bafba6ab448ccdc41b1de703ccaac2516477a8.1705375746.git.tanggeliang@kylinos.cn>
 In-Reply-To: <cover.1705375746.git.tanggeliang@kylinos.cn>
 References: <cover.1705375746.git.tanggeliang@kylinos.cn>
 Precedence: bulk
@@ -37,59 +37,73 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The command dump_addr() of pm_nl_ctl can be used like this in in-kernel PM:
-
-        pm_nl_ctl dump
-
-This patch adds token argument for it to support userspace PM:
-
-        pm_nl_ctl dump token $token
-
-If 'token $token' is passed to dump_addr(), copy it into the kernel
-netlink.
+Similar to check() in pm_netlink.sh, add a new helper check_output()
+in mptcp_join.sh to check the output of the given commands.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index e97856323ec3..8d7d1b4ed28e 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -1127,8 +1127,16 @@ int dump_addrs(int fd, int pm_family, int argc, char *argv[])
- 		  1024];
- 	pid_t pid = getpid();
- 	struct nlmsghdr *nh;
-+	u_int32_t token = 0;
-+	struct rtattr *rta;
- 	int off = 0;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 915ec79f5030..f4043baa59c6 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -21,6 +21,7 @@ cinfail=""
+ cinsent=""
+ tmpfile=""
+ cout=""
++check_output_err=""
+ capout=""
+ ns1=""
+ ns2=""
+@@ -186,6 +187,7 @@ init() {
+ 	cout=$(mktemp)
+ 	evts_ns1=$(mktemp)
+ 	evts_ns2=$(mktemp)
++	check_output_err=$(mktemp)
  
-+	if (argc != 2 && argc != 4)
-+		syntax(argv);
-+
-+	if (argc == 4 && !strcmp(argv[2], "token"))
-+		token = strtoul(argv[3], NULL, 10);
-+
- 	memset(data, 0, sizeof(data));
- 	nh = (void *)data;
- 	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_GET_ADDR,
-@@ -1138,6 +1146,15 @@ int dump_addrs(int fd, int pm_family, int argc, char *argv[])
- 	nh->nlmsg_pid = pid;
- 	nh->nlmsg_len = off;
+ 	trap cleanup EXIT
  
-+	/* token */
-+	if (token) {
-+		rta = (void *)(data + off);
-+		rta->rta_type = MPTCP_PM_ATTR_TOKEN;
-+		rta->rta_len = RTA_LENGTH(4);
-+		memcpy(RTA_DATA(rta), &token, 4);
-+		off += NLMSG_ALIGN(rta->rta_len);
-+	}
-+
- 	print_addrs(nh, pm_family, do_nl_req(fd, nh, off, sizeof(data)));
- 	return 0;
+@@ -199,6 +201,7 @@ cleanup()
+ 	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
+ 	rm -f "$tmpfile"
+ 	rm -rf $evts_ns1 $evts_ns2
++	rm -f $check_output_err
+ 	cleanup_partial
  }
+ 
+@@ -3358,6 +3361,30 @@ userspace_pm_rm_sf()
+ 	wait_rm_sf $1 "${cnt}"
+ }
+ 
++check_output()
++{
++	local cmd="$1"
++	local expected="$2"
++	local msg="$3"
++	local out=`$cmd 2>$check_output_err`
++	local cmd_ret=$?
++
++	printf "%-42s" "$msg"
++	if [ $cmd_ret -ne 0 ]; then
++		mptcp_lib_print_err "[ FAIL ] command execution '$cmd' stderr "
++		cat $check_output_err
++		ret=${KSFT_FAIL}
++		return $cmd_ret
++	elif [ "$out" = "$expected" ]; then
++		mptcp_lib_print_ok "[ OK ]"
++		return 0
++	else
++		mptcp_lib_print_err "[ FAIL ] expected '$expected' got '$out'"
++		ret=${KSFT_FAIL}
++		return 1
++	fi
++}
++
+ userspace_tests()
+ {
+ 	# userspace pm type prevents add_addr
 -- 
 2.40.1
 
