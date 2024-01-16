@@ -1,47 +1,47 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0133D256A
-	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 04:45:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AAF10A3A
+	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 05:00:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qie2qkrJ"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-429c9c4c572so28847531cf.1
-        for <mptcp@lists.linux.dev>; Mon, 15 Jan 2024 20:45:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="es2dcCsQ"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-78333ad3a17so779599085a.3
+        for <mptcp@lists.linux.dev>; Mon, 15 Jan 2024 21:00:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705380310; x=1705985110; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1705381208; x=1705986008; darn=lists.linux.dev;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0QA/f7pca0Ha453TpFAFiCyRmlkmIfwMQ/lGteeasjM=;
-        b=Qie2qkrJU3/CNbJXv9AZOn5iLuGwSDF/TZGwzOk0kZ1bFBw5elMXBoCnbEXh+1Tr4X
-         arq2pPFgiDJykrabMJXbMhD02hdYXx2AblAs/MlnIswKxGh02whDXflFQuhNQiBX1uEY
-         aOjmoN5wvzPJSxZnfOEz86y/9LhRlXWrGMF2MRuB5jtOBvDvqzh4arxj9Q2l3Lcx1e6X
-         BO0xMrXY0bIF47CGQlhH2+Ub5UxdZfIoYxmWPH41vionYH8b/y5eDlCreOUjsrGrEiPR
-         yipBj2M1j7gYumQlCne1MV14iJWWBateQoRiqhRQ58mpk8OZ3ZBgelYzwKv9iKx9bJec
-         ESxA==
+        bh=qTTxVWewDCNCoqUsrgq82YhafCWjOQM4IrY85BI4g8M=;
+        b=es2dcCsQgALoQXMWMCNhQadaPNfubAWUdYGVY73wHATXCW5IgogY6BrHs5+tn81Yef
+         9p0YtgeEy3HgA54srQKE/r+Fwpzw55F5MM6+cm2G3lCoC/dhgpeG/y5YkdBDG7/n4HSh
+         S+VhEpDs/2JD/Fsd5An/vtes9HV6czIUdm9wCQ5dUfU1VaXslQalgseyIqCEezW2b0uG
+         ltdTk/AntOV4z025wk43UG9mC6Bltyz8OpObMzpUt7HPibKkzmixY0M6Ezme5xk0gd1E
+         QhHzghwiYr7FGOhjNieovtdC0u/pwuZ2zy+WAbYXKLC8mmBCdF45oDeDxGFQE4Z7Htxo
+         JBOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705380310; x=1705985110;
+        d=1e100.net; s=20230601; t=1705381208; x=1705986008;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=0QA/f7pca0Ha453TpFAFiCyRmlkmIfwMQ/lGteeasjM=;
-        b=wdZEtlDeueIrml0Osu2eLOHSA2JeR1jmO3pY+nqKvMlwdYsKYvyYunz6Ioiw1Reo7X
-         fLsy4kP/hjWIHYaUVoK8VPV1N5tCdl2MWVXo6goSUrs9gF0g+L5XsoftdnB93F+9nsFJ
-         7JTq2547t1FFL0AhlgXIJzF2QgAInT05FgZSho7rdtvauPPlnwJIQPLLVT4yjBKVPCBo
-         v1AeiraEdvLsW9CItF+dVOUN2d9dItfcw70is+GOspE2r5mCkrldaGi3ckh2YuxkDP1P
-         C5GxLWfcWwrurDecRvPafFu9I3JFnM1/hzmlQ64bH6Bfi4f1Xchv96HMKA5w55N03Q7H
-         oDGQ==
-X-Gm-Message-State: AOJu0Yy+5hZk+xbwifPvuhx/ltU8SdRO7WxJw+uYtDx/X5SA7aSXD0zV
-	jMmLRPAOP9U3XqRasvRVB6mTMjwCgQ==
-X-Google-Smtp-Source: AGHT+IHhfX2csWL3qV5me18+tUHQKOr0WuevNxz/a9+cx0ZCNvcf4/4oWL1Ej1CXN3iMucpsDChUnQ==
-X-Received: by 2002:ac8:5d8a:0:b0:429:fc6f:5c85 with SMTP id d10-20020ac85d8a000000b00429fc6f5c85mr1597599qtx.43.1705380309785;
-        Mon, 15 Jan 2024 20:45:09 -0800 (PST)
-Received: from [127.0.0.1] ([20.81.159.194])
-        by smtp.gmail.com with ESMTPSA id g7-20020ac87747000000b004181e5a724csm4497455qtu.88.2024.01.15.20.45.09
+        bh=qTTxVWewDCNCoqUsrgq82YhafCWjOQM4IrY85BI4g8M=;
+        b=GYnvS0YRoGPBhjaLbRsyTVYwu7Ksa3i90ytDyh/XXDJUDyyuj7rPxfK/BTUQj9w3pE
+         HB4JOxSF470KmMlSwi2sU3iCQQM/05CqQDJ/4WsSFZnD8o7nS8QKyW/13lSZ+0bKD/fi
+         wTJdp5mWK28ZwlNbP7mEfgp2OmqdIzCLqJ7wNqI6/uzZR+YpAtSG1iAO+U9v1YdTpTw1
+         BSomxju9TgT/VngbKacRLaqo/JsfCzX8gpe4A4gfMIp2N+TfE7aXwzxMbpspwDDrFYJ7
+         7stg4mQiaF4fGK3/dtfyyiM5eYoxiBoyhCm8wGp8g7DUyEKEavh021gPcVNzxjDrsTsB
+         Pz3g==
+X-Gm-Message-State: AOJu0Yx6Xth+mmjg4xthfnNIAMgnw8mq+WbxXiFbUCsjFSCeE3tjpRra
+	W+eXhH9q3SiWn4Q6Qoe1ylS+Qe6oYQ==
+X-Google-Smtp-Source: AGHT+IGIZcQzrPulWEA02BYQMAhCmAdNt0QNjdPLUK3R5Icll2o4LM+RDOiWW8b7MskmWBMdLkdbgA==
+X-Received: by 2002:a05:620a:4ad1:b0:783:3a51:a0e7 with SMTP id sq17-20020a05620a4ad100b007833a51a0e7mr7094784qkn.116.1705381208597;
+        Mon, 15 Jan 2024 21:00:08 -0800 (PST)
+Received: from [127.0.0.1] ([20.109.39.24])
+        by smtp.gmail.com with ESMTPSA id de28-20020a05620a371c00b00783395ce1d5sm3381181qkb.136.2024.01.15.21.00.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 20:45:09 -0800 (PST)
+        Mon, 15 Jan 2024 21:00:08 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Geliang Tang <tanggeliang@kylinos.cn>
@@ -52,9 +52,9 @@ In-Reply-To:
 References:
  <7bf6b2a10a756ce5fdc739663cf9eb2e3ae72d87.1705375746.git.tanggeliang@kylinos.cn>
 Subject: Re: selftests: mptcp: flush userspace addrs list: Tests Results
-Message-ID: <98d6201e-effe-5cb6-17e9-5765a2b304c3@gmail.com>
+Message-ID: <e4a4e729-2993-81a4-9261-2719738236fd@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jan 2024 04:45:08 +0000
+Date: Tue, 16 Jan 2024 05:00:07 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -66,13 +66,20 @@ Hi Geliang,
 
 Thank you for your modifications, that's great!
 
-Our CI (GitHub Action) did some validations and here is its report:
+Our CI (Cirrus) did some validations with a debug kernel and here is its =
+report:
 
-- KVM Validation: normal:
-  - Unstable: 2 failed test(s): =
-packetdrill_fastopen selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/7536=
-807523
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_fastopen =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5105488841408512
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5105488841408512/su=
+mmary/summary.txt
+
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6231388748251136
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6231388748251136/su=
+mmary/summary.txt
 
 Initiator: Patchew Applier
 Commits: https://github.=
@@ -88,7 +95,7 @@ the one used by the CI thanks to a docker image, e.g.:
 "${PWD}" --privileged --rm -it \
         --pull always =
 mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+        auto-debug
 
 For more details:
 
