@@ -1,117 +1,88 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8565B18C03
-	for <mptcp@lists.linux.dev>; Mon, 15 Jan 2024 19:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABB68495
+	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 03:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OmAAZDk/"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7831b3a48e7so552472385a.3
-        for <mptcp@lists.linux.dev>; Mon, 15 Jan 2024 11:44:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705347858; x=1705952658; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ICUOqZUUSz3tcvAk8LzV55U7zlPpMVCFu2W7QgCYtkM=;
-        b=OmAAZDk/vztZqGX90Voc9/FAx372QaHB8/HqL8VjwLey645tJ9XebvP1fUNMRaEUws
-         JrGL5OJ4rPT7k9fCuLEIAuj9HR3Afzcn/HOPVWN2jhPpF/jy6OJTReT4cEMC6lsO4xLk
-         oBLQqg+KGfHSQ0xCKA0pgfWRHAcOKRy3pFTk8vOvUXACTaTLxXfUOsmRF3kkOst7S4f0
-         THz3zqbHpFpa5O+LYtU+pcxmGMinbysmhZzoA6vq54g9wYw8osAiZnwiqDlxRuh8hsgT
-         G65XzrBgZdYS5siUC1+eQYOK4017Kt6i/pe5t5qpdTZ8mCvt8Rmhnc5gQG5guRDXirV1
-         hQAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705347858; x=1705952658;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ICUOqZUUSz3tcvAk8LzV55U7zlPpMVCFu2W7QgCYtkM=;
-        b=c/ojgidG1nK/bC4QlNzSL/GLf40dMi6rOLg9o+zZO/woFGEdC0OC9Sahi+eJqNS6kP
-         M+mQQ6hK/zfXecwJZYoueVFJ8shrl5dFt+uTi7H8AvEzZ8PU3wVv5ICfi+DFOa4XJlv6
-         s/0BPQxQOrU7MtUWhU/5vpuN2T7HVhdF+G2N1J1JdYlqp5uzpshW5UpIe2i7RTualXmy
-         1tEIdAahME/d1V5myhk826xHc5AX55ccP9ifiotHrUvXIzr6i1f9WHjXPhsaKXkHWKTk
-         cW7nJ8WbByXQck4DIOLb0cbcckQ4DOqjG0rPmjCd5DHETrFEKqYd1UYG1Nru5fF6m6oP
-         Gr3A==
-X-Gm-Message-State: AOJu0Yxs1X32ZYCVu9MB0X1cjdYeKzCYw0mc4Yv9GHoJGUT6C8lrGvf0
-	JdJwDsTwu66AdIjwVvyppjYTtoMJwA==
-X-Google-Smtp-Source: AGHT+IGJSvwz7ODTFhdEw5FVttEExcT/Lk10yM/TvZspzal8oxVgs7op/fjqF2GMkFjXCGHCl2s4Tw==
-X-Received: by 2002:a05:620a:40c8:b0:781:e4cd:3946 with SMTP id g8-20020a05620a40c800b00781e4cd3946mr5836527qko.114.1705347858386;
-        Mon, 15 Jan 2024 11:44:18 -0800 (PST)
-Received: from [127.0.0.1] ([74.249.6.31])
-        by smtp.gmail.com with ESMTPSA id pe15-20020a05620a850f00b007830709340csm3149535qkn.2.2024.01.15.11.44.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 11:44:18 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <d97d56012abb6e277c4ffc5042ff2f414dbe7959.1705343249.git.pabeni@redhat.com>
-References:
- <d97d56012abb6e277c4ffc5042ff2f414dbe7959.1705343249.git.pabeni@redhat.com>
-Subject: Re: mptcp: relax check on MPC passive fallback: Tests Results
-Message-ID: <61cbf9da-a70d-1405-ce52-1ea2d8d2f521@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jan 2024 19:44:17 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iF6wz0Tb"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705376131;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4OODewU0DefaEHW5OGMbaDOQRjfjk/Aze8a5tLq2Fs4=;
+	b=iF6wz0TblenL4uaiFAyQ1RqBcmrOm+JdSyUfPuTGEVF1/6a91YgyMRaITzfVpYAaU7ZzAV
+	OaAHqQXt6OJIRhz/ntkBEjMeI5gVjx/T5EnlMp7OyYQRsJYAhKgzeXdeQT8NWXB0Q4BKsU
+	071647adSfBcawCEiy9rLnXhdNK+kxc=
+From: Geliang Tang <geliang.tang@linux.dev>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 01/23] mptcp: add pm_has_addr_attr_id helper
+Date: Tue, 16 Jan 2024 11:34:49 +0800
+Message-Id: <75a870baf775b146c7e074a64baed38f181352b9.1705375746.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1705375746.git.tanggeliang@kylinos.cn>
+References: <cover.1705375746.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Paolo,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+This patch adds a new helper mptcp_pm_has_addr_attr_id() to check whether
+an address ID is set from PM or not. It will be used in the next two
+commits.
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/pm.c       | 12 ++++++++++++
+ net/mptcp/protocol.h |  2 ++
+ 2 files changed, 14 insertions(+)
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_sockopts =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5240716398428160
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5240716398428160/su=
-mmary/summary.txt
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 4ae19113b8eb..6856d10368be 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -533,6 +533,18 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+ 	bitmap_fill(msk->pm.id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+ }
+ 
++bool mptcp_pm_has_addr_attr_id(const struct nlattr *attr,
++			       struct genl_info *info)
++{
++	struct nlattr *tb[MPTCP_PM_ADDR_ATTR_MAX + 1];
++
++	if (!nla_parse_nested_deprecated(tb, MPTCP_PM_ADDR_ATTR_MAX, attr,
++					 mptcp_pm_address_nl_policy, info->extack) &&
++	    tb[MPTCP_PM_ADDR_ATTR_ID])
++		return true;
++	return false;
++}
++
+ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ {
+ 	spin_lock_init(&msk->pm.lock);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index f7b9c1b995df..def791ce751b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -886,6 +886,8 @@ int mptcp_pm_parse_addr(struct nlattr *attr, struct genl_info *info,
+ int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
+ 			 bool require_family,
+ 			 struct mptcp_pm_addr_entry *entry);
++bool mptcp_pm_has_addr_attr_id(const struct nlattr *attr,
++			       struct genl_info *info);
+ bool mptcp_pm_addr_families_match(const struct sock *sk,
+ 				  const struct mptcp_addr_info *loc,
+ 				  const struct mptcp_addr_info *rem);
+-- 
+2.40.1
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6366616305270784
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6366616305270784/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/cff2320d6411
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
