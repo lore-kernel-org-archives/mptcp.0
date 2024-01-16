@@ -1,29 +1,29 @@
 Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6783E8493
-	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 03:35:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153A36FD0
+	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 03:35:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Majo89uI"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t4D4O13R"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705376132;
+	t=1705376133;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YluL30smoKcQ0DpnvGzufIqI/v1Kfd4xtr8gCI1FVtc=;
-	b=Majo89uIrNTVIoPZhEJnFg0BVt5WyTZbwDuxNNlvRHxm/qwCCiGyGqK0p57Uhs1iwm2QYq
-	1vpC0Bo+6u1Y8OzRfYwXuv5DTUFZFM4FZyKb1H+YC1C/jIur/4Ob755oOY1yxqz90BN1EJ
-	Pf0Y2oykvbKeDILAW550dDZ7Ab+kRBU=
+	bh=YN7sYjGzvgxCIjDRha5maa0etC1G6MU6iA8YBSheg84=;
+	b=t4D4O13R6M0u/vlEqmmkF2NAeQuo65/zwx3eOZeGUlnIGYoGp+qrnxDk9f53m4RqGI2yYD
+	SjILTz3cIzVe3VbAZB6En7YjulECjIri889wZWG35JfFUQBP9qn/aWYCuFjf7OJH0u36/U
+	vi5lwTSQoyWI/uUrcxAJwYhsFWAKz50=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 02/23] mptcp: add needs_id for userspace appending addr
-Date: Tue, 16 Jan 2024 11:34:50 +0800
-Message-Id: <7edcff9daf63a93fc7c71c48658d51761ded7e38.1705375746.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 03/23] mptcp: add needs_id for netlink appending addr
+Date: Tue, 16 Jan 2024 11:34:51 +0800
+Message-Id: <7a7abb740b313d77a06d644360ce3f21dd4d7f09.1705375746.git.tanggeliang@kylinos.cn>
 In-Reply-To: <cover.1705375746.git.tanggeliang@kylinos.cn>
 References: <cover.1705375746.git.tanggeliang@kylinos.cn>
 Precedence: bulk
@@ -37,97 +37,69 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-When userspace PM requires to create an ID 0 subflow in "userspace pm
-create id 0 subflow" test like this:
+Just the same as userspace PM, a new parameter needs_id is added for
+in-kernel PM mptcp_pm_nl_append_new_local_addr() too.
 
-        userspace_pm_add_sf $ns2 10.0.3.2 0
+In mptcp_pm_nl_get_local_id(), needs_id is always true, but in
+mptcp_pm_nl_add_addr_doit(), pass mptcp_pm_has_addr_attr_id() to
+needs_it.
 
-An ID 1 subflow, in fact, is created.
-
-Since in mptcp_pm_nl_append_new_local_addr(), 'id 0' will be treated as
-no ID is set by userspace, and will allocate a new ID immediately:
-
-     if (!e->addr.id)
-             e->addr.id = find_next_zero_bit(pernet->id_bitmap,
-                                             MPTCP_PM_MAX_ADDR_ID + 1,
-                                             1);
-
-To solve this issue, a new parameter needs_id is added for
-mptcp_userspace_pm_append_new_local_addr() to distinguish between
-whether userspace PM has set an ID 0 or whether userspace PM has
-not set any address.
-
-In mptcp_userspace_pm_get_local_id(), needs_id is always true, but in
-mptcp_pm_nl_announce_doit() and mptcp_pm_nl_subflow_create_doit(),
-pass mptcp_pm_has_addr_attr_id() to needs_it.
-
-Fixes: e5ed101a6028 ("mptcp: userspace pm allow creating id 0 subflow")
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_userspace.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ net/mptcp/pm_netlink.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 4f3901d5b8ef..8ca6e28a121e 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -26,7 +26,8 @@ void mptcp_free_local_addr_list(struct mptcp_sock *msk)
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 287a60381eae..d158bfab1abc 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -901,7 +901,8 @@ static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
  }
  
- static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
--						    struct mptcp_pm_addr_entry *entry)
-+						    struct mptcp_pm_addr_entry *entry,
-+						    bool needs_id)
+ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+-					     struct mptcp_pm_addr_entry *entry)
++					     struct mptcp_pm_addr_entry *entry,
++					     bool needs_id)
  {
- 	DECLARE_BITMAP(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- 	struct mptcp_pm_addr_entry *match = NULL;
-@@ -41,7 +42,7 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 	spin_lock_bh(&msk->pm.lock);
- 	list_for_each_entry(e, &msk->pm.userspace_pm_local_addr_list, list) {
- 		addr_match = mptcp_addresses_equal(&e->addr, &entry->addr, true);
--		if (addr_match && entry->addr.id == 0)
-+		if (addr_match && entry->addr.id == 0 && needs_id)
- 			entry->addr.id = e->addr.id;
- 		id_match = (e->addr.id == entry->addr.id);
- 		if (addr_match && id_match) {
-@@ -64,7 +65,7 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+ 	struct mptcp_pm_addr_entry *cur, *del_entry = NULL;
+ 	unsigned int addr_max;
+@@ -949,7 +950,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
  		}
- 
- 		*e = *entry;
--		if (!e->addr.id)
-+		if (!e->addr.id && needs_id)
- 			e->addr.id = find_next_zero_bit(id_bitmap,
- 							MPTCP_PM_MAX_ADDR_ID + 1,
- 							1);
-@@ -153,7 +154,7 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
- 	if (new_entry.addr.port == msk_sport)
- 		new_entry.addr.port = 0;
- 
--	return mptcp_userspace_pm_append_new_local_addr(msk, &new_entry);
-+	return mptcp_userspace_pm_append_new_local_addr(msk, &new_entry, true);
- }
- 
- int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
-@@ -198,7 +199,8 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
- 		goto announce_err;
  	}
  
--	err = mptcp_userspace_pm_append_new_local_addr(msk, &addr_val);
-+	err = mptcp_userspace_pm_append_new_local_addr(msk, &addr_val,
-+						       !mptcp_pm_has_addr_attr_id(addr, info));
- 	if (err < 0) {
- 		GENL_SET_ERR_MSG(info, "did not match address and id");
- 		goto announce_err;
-@@ -378,7 +380,8 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+-	if (!entry->addr.id) {
++	if (!entry->addr.id && needs_id) {
+ find_next:
+ 		entry->addr.id = find_next_zero_bit(pernet->id_bitmap,
+ 						    MPTCP_PM_MAX_ADDR_ID + 1,
+@@ -960,7 +961,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+ 		}
  	}
  
- 	local.addr = addr_l;
--	err = mptcp_userspace_pm_append_new_local_addr(msk, &local);
-+	err = mptcp_userspace_pm_append_new_local_addr(msk, &local,
-+						       !mptcp_pm_has_addr_attr_id(laddr, info));
- 	if (err < 0) {
- 		GENL_SET_ERR_MSG(info, "did not match address and id");
- 		goto create_err;
+-	if (!entry->addr.id)
++	if (!entry->addr.id && needs_id)
+ 		goto out;
+ 
+ 	__set_bit(entry->addr.id, pernet->id_bitmap);
+@@ -1092,7 +1093,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
+ 	entry->ifindex = 0;
+ 	entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
+ 	entry->lsk = NULL;
+-	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
++	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry, true);
+ 	if (ret < 0)
+ 		kfree(entry);
+ 
+@@ -1326,7 +1327,8 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 			goto out_free;
+ 		}
+ 	}
+-	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
++	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry,
++						!mptcp_pm_has_addr_attr_id(attr, info));
+ 	if (ret < 0) {
+ 		GENL_SET_ERR_MSG_FMT(info, "too many addresses or duplicate one: %d", ret);
+ 		goto out_free;
 -- 
 2.40.1
 
