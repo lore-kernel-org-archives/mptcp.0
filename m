@@ -1,28 +1,31 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A728848E
-	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 03:35:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6783E8493
+	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 03:35:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z8FaOd04"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Majo89uI"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705376130;
+	t=1705376132;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=cNAVKe00gkkwMZ3OnvMDBmihDAcU4cUsY/QpTqD/wL4=;
-	b=Z8FaOd04jTCim/Q9NneS3oE0vrQ59AbkrD9rg4B5nzTE94RgsTJCDB4F31oDUUGgqfa++M
-	+HOU36rFUlMIFgXXJZbZeROD2wulvAR0xPI6kKwzd1eUfh+EWeRoQ/DyB5ygsS24rRK/Bo
-	hJCHrrnt36vPSjUtkoIphtDbnAXkAbc=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YluL30smoKcQ0DpnvGzufIqI/v1Kfd4xtr8gCI1FVtc=;
+	b=Majo89uIrNTVIoPZhEJnFg0BVt5WyTZbwDuxNNlvRHxm/qwCCiGyGqK0p57Uhs1iwm2QYq
+	1vpC0Bo+6u1Y8OzRfYwXuv5DTUFZFM4FZyKb1H+YC1C/jIur/4Ob755oOY1yxqz90BN1EJ
+	Pf0Y2oykvbKeDILAW550dDZ7Ab+kRBU=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 00/23] dump for userspace pm
-Date: Tue, 16 Jan 2024 11:34:48 +0800
-Message-Id: <cover.1705375746.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 02/23] mptcp: add needs_id for userspace appending addr
+Date: Tue, 16 Jan 2024 11:34:50 +0800
+Message-Id: <7edcff9daf63a93fc7c71c48658d51761ded7e38.1705375746.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1705375746.git.tanggeliang@kylinos.cn>
+References: <cover.1705375746.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,95 +37,97 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v9:
- - add missing "sock_put(sk)" in patch 7, 17 and 21 to fix the "kmemleak"
-   errors reported by CI.
- - rename the helper to mptcp_pm_has_addr_attr_id.
- - use my new mail address.
+When userspace PM requires to create an ID 0 subflow in "userspace pm
+create id 0 subflow" test like this:
 
-v8:
- - Address Mat's comments in v7
+        userspace_pm_add_sf $ns2 10.0.3.2 0
 
-v7:
- - fix checkpatch.sh warning reported by CI.
- - fix build errors reported by CI.
+An ID 1 subflow, in fact, is created.
 
-v6:
- - patches 1-5, fixes for -net
- - patches 6, 15, selftests for "fixes for -net".
- - patches 7-14, 16-21, update "dump for userspace pm v5"
- - patches 22, 23, cleanups for set_flags
- - patch 24, flush selftest.
+Since in mptcp_pm_nl_append_new_local_addr(), 'id 0' will be treated as
+no ID is set by userspace, and will allocate a new ID immediately:
 
-v5:
- - patch 2, save bitmap instead of id.
- - patch 3, drop token in reply.
- - update patch 4 and patch 12, add mptcp_pm_dump_addr and
-   mptcp_pm_get_addr wrappers in pm.c
+     if (!e->addr.id)
+             e->addr.id = find_next_zero_bit(pernet->id_bitmap,
+                                             MPTCP_PM_MAX_ADDR_ID + 1,
+                                             1);
 
-v4:
- - update patch 2, patch 3 and patch 12.
- - fix the warnings reported by CI in v3:
+To solve this issue, a new parameter needs_id is added for
+mptcp_userspace_pm_append_new_local_addr() to distinguish between
+whether userspace PM has set an ID 0 or whether userspace PM has
+not set any address.
 
-Unable to validate one commit: 7633a101a mptcp: get addr in userspace pm list
-Unable to compile mptcp source code with make W=1 net/mptcp/pm_netlink.o
-Unable to compile mptcp source code with make C=1 net/mptcp/pm_netlink.o: net/mptcp/pm_netlink.c:1656:5: warning: symbol 'mptcp_pm_nl_get_addr' was not declared. Should it be static?
+In mptcp_userspace_pm_get_local_id(), needs_id is always true, but in
+mptcp_pm_nl_announce_doit() and mptcp_pm_nl_subflow_create_doit(),
+pass mptcp_pm_has_addr_attr_id() to needs_it.
 
-v3:
- - fix the errors reported by CI in v2:
+Fixes: e5ed101a6028 ("mptcp: userspace pm allow creating id 0 subflow")
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/pm_userspace.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-[10:55:51.288] [  897.523894][ T5664] BUG: sleeping function called from invalid context at include/linux/sched/mm.h:306
-[10:55:51.288] [  897.532157][ T5664] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 5664, name: pm_nl_ctl
-[10:55:51.289] [  897.539503][ T5664] preempt_count: 201, expected: 0
-
- - drop mptcp_pm_nl_put_entry_msg and mptcp_pm_nl_put_entry_info
-   helpers.
-
-v2:
-Address Mat's comments in v1:
- - patch 2: pass token to dump_addr too.
- - patch 2: add back id in mptcp_userspace_pm_dump_addr().
- - patch 5: update mptcp.yaml
-
-v1:
-Address Mat's comments in "userspace pm enhancements" v14.
-
-Geliang Tang (23):
-  mptcp: add pm_has_addr_attr_id helper
-  mptcp: add needs_id for userspace appending addr
-  mptcp: add needs_id for netlink appending addr
-  mptcp: map v4 address to v6 when destroying subflow
-  selftests: mptcp: rm subflow with v4/v4mapped addr
-  mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
-  mptcp: implement mptcp_userspace_pm_dump_addr
-  mptcp: add token for get-addr in yaml
-  mptcp: dump addrs in userspace pm list
-  mptcp: check userspace pm subflow flag
-  selftests: mptcp: add userspace pm subflow flag
-  selftests: mptcp: add token for dump_addr
-  selftests: mptcp: add check_output helper
-  selftests: mptcp: dump after creating id 0 subflow
-  selftests: mptcp: dump userspace addrs list
-  mptcp: add userspace_pm_lookup_addr_by_id helper
-  mptcp: implement mptcp_userspace_pm_get_addr
-  mptcp: get addr in userspace pm list
-  selftests: mptcp: add token for get_addr
-  selftests: mptcp: userspace pm get addr tests
-  mptcp: update set_flags interfaces
-  mptcp: set error messages for set_flags
-  selftests: mptcp: flush userspace addrs list
-
- Documentation/netlink/specs/mptcp_pm.yaml     |   3 +-
- net/mptcp/mptcp_pm_gen.c                      |   7 +-
- net/mptcp/mptcp_pm_gen.h                      |   2 +-
- net/mptcp/pm.c                                |  38 ++-
- net/mptcp/pm_netlink.c                        | 100 ++++----
- net/mptcp/pm_userspace.c                      | 241 +++++++++++++++---
- net/mptcp/protocol.h                          |  25 +-
- .../testing/selftests/net/mptcp/mptcp_join.sh | 150 ++++++++++-
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  39 ++-
- 9 files changed, 505 insertions(+), 100 deletions(-)
-
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 4f3901d5b8ef..8ca6e28a121e 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -26,7 +26,8 @@ void mptcp_free_local_addr_list(struct mptcp_sock *msk)
+ }
+ 
+ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+-						    struct mptcp_pm_addr_entry *entry)
++						    struct mptcp_pm_addr_entry *entry,
++						    bool needs_id)
+ {
+ 	DECLARE_BITMAP(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+ 	struct mptcp_pm_addr_entry *match = NULL;
+@@ -41,7 +42,7 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+ 	spin_lock_bh(&msk->pm.lock);
+ 	list_for_each_entry(e, &msk->pm.userspace_pm_local_addr_list, list) {
+ 		addr_match = mptcp_addresses_equal(&e->addr, &entry->addr, true);
+-		if (addr_match && entry->addr.id == 0)
++		if (addr_match && entry->addr.id == 0 && needs_id)
+ 			entry->addr.id = e->addr.id;
+ 		id_match = (e->addr.id == entry->addr.id);
+ 		if (addr_match && id_match) {
+@@ -64,7 +65,7 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+ 		}
+ 
+ 		*e = *entry;
+-		if (!e->addr.id)
++		if (!e->addr.id && needs_id)
+ 			e->addr.id = find_next_zero_bit(id_bitmap,
+ 							MPTCP_PM_MAX_ADDR_ID + 1,
+ 							1);
+@@ -153,7 +154,7 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
+ 	if (new_entry.addr.port == msk_sport)
+ 		new_entry.addr.port = 0;
+ 
+-	return mptcp_userspace_pm_append_new_local_addr(msk, &new_entry);
++	return mptcp_userspace_pm_append_new_local_addr(msk, &new_entry, true);
+ }
+ 
+ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+@@ -198,7 +199,8 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 		goto announce_err;
+ 	}
+ 
+-	err = mptcp_userspace_pm_append_new_local_addr(msk, &addr_val);
++	err = mptcp_userspace_pm_append_new_local_addr(msk, &addr_val,
++						       !mptcp_pm_has_addr_attr_id(addr, info));
+ 	if (err < 0) {
+ 		GENL_SET_ERR_MSG(info, "did not match address and id");
+ 		goto announce_err;
+@@ -378,7 +380,8 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
+ 	local.addr = addr_l;
+-	err = mptcp_userspace_pm_append_new_local_addr(msk, &local);
++	err = mptcp_userspace_pm_append_new_local_addr(msk, &local,
++						       !mptcp_pm_has_addr_attr_id(laddr, info));
+ 	if (err < 0) {
+ 		GENL_SET_ERR_MSG(info, "did not match address and id");
+ 		goto create_err;
 -- 
 2.40.1
 
