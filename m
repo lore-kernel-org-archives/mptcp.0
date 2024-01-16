@@ -1,29 +1,29 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5877482
-	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 03:35:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550236FD5
+	for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 03:35:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Cmx26qxW"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IUOBWHfj"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705376138;
+	t=1705376134;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9qUvWYsmVHFEgZp/2FMSo8NRVDiEVqst6Fct+iqLHVc=;
-	b=Cmx26qxWkdwnLhD6BF9BP/+edY5vTO79ONn/7jUrEFOa5kvX31pq+AjIDimnc8lTrqjDyd
-	W6TXYWS59aKdurh4g1wheNBS7x3wBAfLzsyI6BuD8nKYpfQZ8P1+tdOnhVUBWG6pAhdYTG
-	sfDIQ439iMU3lwKAMCaP7QKrN4Dz4mo=
+	bh=BPnV2y/Ai8A0SXbv62bkBsgczrZp8eJ/F011Hp6Wo+U=;
+	b=IUOBWHfjsySyovSLOouM3SEPqBctvZXX4CtHScxQaXsBWUPR6LogIIp5BwsaMBPZ8tcN7g
+	Gtq8Iuc8nb1EA39B71r8r5hVMPwqST/h2L0+Gya38Bl3lNw7kHn5fNyIhbrlTjH1khNFMN
+	OnD75LIqOB2t3FyUJBVKxRw/6JdbsTI=
 From: Geliang Tang <geliang.tang@linux.dev>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 07/23] mptcp: implement mptcp_userspace_pm_dump_addr
-Date: Tue, 16 Jan 2024 11:34:55 +0800
-Message-Id: <fe0b361ec239de2c02192c729a083c45f301e559.1705375746.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 04/23] mptcp: map v4 address to v6 when destroying subflow
+Date: Tue, 16 Jan 2024 11:34:52 +0800
+Message-Id: <f5d079054adf4054b23922114e7a28b0854e480b.1705375746.git.tanggeliang@kylinos.cn>
 In-Reply-To: <cover.1705375746.git.tanggeliang@kylinos.cn>
 References: <cover.1705375746.git.tanggeliang@kylinos.cn>
 Precedence: bulk
@@ -37,99 +37,47 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch implements mptcp_userspace_pm_dump_addr() to dump addresses
-from userspace pm address list. Use mptcp_token_get_sock() to get the
-msk from the given token, if userspace PM is enabled in it, traverse
-each address entry in address list, put every entry to userspace using
-mptcp_pm_nl_put_entry_msg().
+Address family of server side mismatches with that of client side, like
+in "userspace pm add & remove address" test:
 
+    userspace_pm_add_addr $ns1 10.0.2.1 10
+    userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $SUB_ESTABLISHED
+
+That's because on the server side, the family is set to AF_INET6 and the
+v4 address is mapped in a v6 one.
+
+This patch fixes this issue. In mptcp_pm_nl_subflow_destroy_doit(), before
+checking local address family with remote address family, map an IPv4
+address to an IPv6 address if the pair is a v4-mapped address.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/387
+Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_userspace.c | 60 ++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h     |  2 ++
- 2 files changed, 62 insertions(+)
+ net/mptcp/pm_userspace.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 7bb3574cc65a..45d974adf382 100644
+index 8ca6e28a121e..7bb3574cc65a 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -574,3 +574,63 @@ int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
- 	sock_put(sk);
- 	return ret;
- }
-+
-+int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
-+				 struct netlink_callback *cb)
-+{
-+	struct id_bitmap {
-+		DECLARE_BITMAP(map, MPTCP_PM_MAX_ADDR_ID + 1);
-+	} *bitmap;
-+	const struct genl_info *info = genl_info_dump(cb);
-+	struct net *net = sock_net(msg->sk);
-+	struct mptcp_pm_addr_entry *entry;
-+	struct mptcp_sock *msk;
-+	struct nlattr *token;
-+	int ret = -EINVAL;
-+	struct sock *sk;
-+	void *hdr;
-+
-+	bitmap = (struct id_bitmap *)cb->ctx;
-+	token = info->attrs[MPTCP_PM_ATTR_TOKEN];
-+
-+	msk = mptcp_token_get_sock(net, nla_get_u32(token));
-+	if (!msk) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
-+		return ret;
-+	}
-+
-+	if (!mptcp_pm_is_userspace(msk)) {
-+		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
-+		goto out;
-+	}
-+
-+	sk = (struct sock *)msk;
-+
-+	lock_sock(sk);
-+	spin_lock_bh(&msk->pm.lock);
-+	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
-+		if (test_bit(entry->addr.id, bitmap->map))
-+			continue;
-+
-+		hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
-+				  cb->nlh->nlmsg_seq, &mptcp_genl_family,
-+				  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
-+		if (!hdr)
-+			break;
-+
-+		if (mptcp_nl_fill_addr(msg, entry) < 0) {
-+			genlmsg_cancel(msg, hdr);
-+			break;
-+		}
-+
-+		__set_bit(entry->addr.id, bitmap->map);
-+		genlmsg_end(msg, hdr);
-+	}
-+	spin_unlock_bh(&msk->pm.lock);
-+	release_sock(sk);
-+	ret = msg->len;
-+
-+out:
-+	sock_put(sk);
-+	return ret;
-+}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 271ddbff87de..e84ef1a6fb44 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1031,6 +1031,8 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
- int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
-+int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
-+				 struct netlink_callback *cb);
+@@ -497,6 +497,16 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
+ 		goto destroy_err;
+ 	}
  
- void __init mptcp_pm_nl_init(void);
- void mptcp_pm_nl_work(struct mptcp_sock *msk);
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	if (addr_l.family == AF_INET && ipv6_addr_v4mapped(&addr_r.addr6)) {
++		ipv6_addr_set_v4mapped(addr_l.addr.s_addr, &addr_l.addr6);
++		addr_l.family = AF_INET6;
++	}
++	if (addr_r.family == AF_INET && ipv6_addr_v4mapped(&addr_l.addr6)) {
++		ipv6_addr_set_v4mapped(addr_r.addr.s_addr, &addr_r.addr6);
++		addr_r.family = AF_INET6;
++	}
++#endif
+ 	if (addr_l.family != addr_r.family) {
+ 		GENL_SET_ERR_MSG(info, "address families do not match");
+ 		err = -EINVAL;
 -- 
 2.40.1
 
