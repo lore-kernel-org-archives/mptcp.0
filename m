@@ -1,131 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E6C1DFC8
-	for <mptcp@lists.linux.dev>; Wed, 17 Jan 2024 11:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36841225D9
+	for <mptcp@lists.linux.dev>; Wed, 17 Jan 2024 17:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705492725; cv=none; b=knQHPSm55xRQe6zejAQPzqd0jiG+OTqEtlTaTW2INtMMAJf8B2BWo2D5XyctOx8h1aQg0hhhAUqS6uppopdW+EnqWgRwpGxJ19C+sCnkMjq0qah2ab8T+kFs1TJLeZpVECiyCA41xKLbKTVty5ZT0Evwr3oHNo+JmefqLVdmp+I=
+	t=1705513721; cv=none; b=Qm+xTQ55lcaKej6G9fH1uAhmvaQ0kv07EEurwNpmRonl7iiS6v1+pq66ysigQ7jR39DnAgNYHmo7KjdJCr7fRjf8/EDrtcXpG3sQtzejVq6LR9nH0etIjKu9jTd5/QmzqrLZkRbL2unA+0cFI3QEzuwi/nzaz8yz6b1e6KpAGI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705492725; c=relaxed/simple;
-	bh=3uAGZLNkj200LdsHNrDD7B0MvS6Sj5vLp9YwSEmNfjg=;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:References:From:Autocrypt:Organization:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding; b=oI+szVKJUwNmGBs647CI+Ae6k4UA7Bike+7SUmLgZS2kOzPwlxiQ7rj9zy6v5NuK0fO1qoJoxZSgN/O65uXycs/wK6FFuRIWcwO4tjMEjt63vwNaiZtPlE9fUoVkijBNLDEAImzKz/TrwexVPPZgqHz2x3Y5bUsHErRW/nqq0xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N+OHoZC3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705513721; c=relaxed/simple;
+	bh=KwfALgAW7ZafB8Yg5PXZ4S+0fMVjIQCRL/pmKM+W5Ek=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Content-Type:From:To:Cc:Reply-To:In-Reply-To:References:Subject:
+	 Message-ID:Content-Transfer-Encoding:Date:MIME-Version; b=oK42SWgnabdltmYRtDPGi4hKwbc0+A1R+KNktMXe6kG30OCMsAoGdgTPyVepQQfFdHMDLtV4OTvQafwFqsxJWa+AeyqoJUjLIQ/uyk1jYHZPlpMgQDRLDOEzlCNCGUfvQ6VgOOMPUENhNNtKyTCjo25GdIbT+73+re+dyM3F2+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asNtL+u+; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N+OHoZC3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D698BC433C7;
-	Wed, 17 Jan 2024 11:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705492724;
-	bh=3uAGZLNkj200LdsHNrDD7B0MvS6Sj5vLp9YwSEmNfjg=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=N+OHoZC3rn+FpFxNbJaX4V+zMqLC2c6dXy+L6Eq1tOPmd+t4C7JunTAwhdfFkPxIv
-	 ewgtqXPemhBgNE+IL0eyOBXR6GeeJDs27GH/BNFmxxxOwxdEyvHryDMyewRzJXfUiL
-	 2b+DWrZPaFB2MWVoqSWmh5rii/3ThwD9lAMXAILIAngh/LnfTUJc4PmlS5P/GdeX0P
-	 wnHj0XZJgcu+HeG2krsecwgEOUxz9aoL9mfWBxLkAQclS3kZm4z7RxKyWPTunjlakz
-	 zyVomuw9auDyrRS+LzGRXzZ/6pwAKB7P5M5gV/h5AlgUoT+rYwVGUQqp/HN/Q8a+u9
-	 74ThKrmDuX8BA==
-Message-ID: <0b5da88d-6331-447b-9ddd-dd59482b7056@kernel.org>
-Date: Wed, 17 Jan 2024 12:58:41 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asNtL+u+"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dbed0710c74so9018341276.1
+        for <mptcp@lists.linux.dev>; Wed, 17 Jan 2024 09:48:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705513719; x=1706118519; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v6+axSbc9q94ZGCo+yopnKCwPUIV2owISdcw6czbcVI=;
+        b=asNtL+u+XSFFjbWgRuJ5iqydCg+/RKCqvQ3P4r2ge/Ke0NKov3RsFthUxm1aiRLFNG
+         vDZOhJ1sJj1lRTQa8sQIfdRpVEmAW8ZA6eYTOQZAoqx7qbX5eErU9IrOVZTXoWRewGe4
+         gUgZ/rp14U/sXgAPC9qXBrpS8RMWebgE8W38LC7WP4VFW01yQFgsvo3DGy/VjgI6RR3h
+         6C3P8wX5hzrlCpRBP1OoH2NUAmCFRDCyfc3dHxr6/h5DjU8nQDq4t9NdaPGWgme5tCr5
+         0HDlpdeu19SJYyGh14tChIKHAQq/X+ifPxImgqGzy5aZ92AupeZEXeYP96R9GEYXySCp
+         yEPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705513719; x=1706118519;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=v6+axSbc9q94ZGCo+yopnKCwPUIV2owISdcw6czbcVI=;
+        b=PW4IAB89sLCXsNpX6S2k0RYhmPjiCGO/fCkSVIAA0Rci4IMdFdQ5guuhicZaw8W2kG
+         ytNxmQuZrNHMdzhJc76nEMjTqkhCCu3HPhoV8fT/U/1AiIaaEAg3weY1lDgy1AmDoXUN
+         RPaTTilOvcxmcHSX/BbxGgwkq1h2mxvMLi0n79C5KxsgUZq5SnJdEo9vAaWlSn/jXBsH
+         AfYhCLpaxTUO+Mosyi7Pr3gvuJWCHtyCLhdImf6CaKb+GRV2LYRFSGibtsK9FnDhniRJ
+         HiLktE+f/4ajHk3YvVZ2lyeWNUTEAyYitVbWW/l8tYniNKezMM/h7JLQPe+xmey3CLmk
+         MIwA==
+X-Gm-Message-State: AOJu0Yyn5qFt+4HGyivQuxC/Wl0rjoDOmBwuAX9YuL4LI/c63reweYmf
+	tBBMQ2M914YgFzJOetlxWw==
+X-Google-Smtp-Source: AGHT+IH9Yose1ufH+e9lVVCZJYcw0cznpVjCqI79f2iim7NhVTNkmWeFHCpvaStOJl9rhbelP+P/QA==
+X-Received: by 2002:a05:6902:38c:b0:dbe:cfe1:3714 with SMTP id f12-20020a056902038c00b00dbecfe13714mr5888550ybs.124.1705513717909;
+        Wed, 17 Jan 2024 09:48:37 -0800 (PST)
+Received: from [127.0.0.1] ([20.49.63.251])
+        by smtp.gmail.com with ESMTPSA id a1-20020a05620a124100b007831fbfc8d0sm4624156qkl.133.2024.01.17.09.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 09:48:37 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <4f4ba04c46b432b5f2a95bb75d85912bcb937cfb.1705427537.git.pabeni@redhat.com>
+References:
+ <4f4ba04c46b432b5f2a95bb75d85912bcb937cfb.1705427537.git.pabeni@redhat.com>
+Subject: Re: mptcp: annotate lockless accesses around read-mostly fields:
+ Tests Results
+Message-ID: <d93526c3-ca0e-325d-7967-25df04e318f5@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 17 Jan 2024 17:48:36 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 0/4] mptcp: locking cleanup
-Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1705331716.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <cover.1705331716.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat,
+Hi Paolo,
 
-On 15/01/2024 16:16, Paolo Abeni wrote:
-> This is a preparatory work for the TCP_NOTSENT_LOWAT support. The latter
-> will need tracking more state under the msk data lock.
-> 
-> Since the locking msk locking schema is already quite complex, do a long
-> awaited clean-up step, moving several confusing lockless initialization
-> under the relevant locks.
-> 
-> Note that patches 2-4 carry fixes tag, and could target the net tree,
-> but AFACIS no real race could really happen even prior to such patches
-> as the MPTCP-level state machine implicitly ensure proper serialization
-> of the write accesses, even lacking explicit lock.
-> 
-> Patch 1 has no fixes, but still is logically tied to the other patches.
-> Possibly we could target net-next for the whole series.
+Thank you for your modifications, that's great!
 
-Thank you for the patches and the review!
+Our CI (GitHub Action) did some validations and here is its report:
 
-Now in our tree (fixes for -net), without a typo spotted by
-"checkpatch.pl --codespell" (and Vim's "set spell spelllang=en_gb")
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): =
+selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7559110630
 
-New patches for t/upstream-net and t/upstream:
-- c6d26639b0a9: mptcp: drop the push_pending field
-- 2541670ad929: mptcp: fix rcv space initialization
-- a6f5bfc5abf7: mptcp: fix more tx path fields initialization
-- 7e6e9b2c5e9d: mptcp: corner case locking for rx path fields initialization
-- Results: dd080a859960..50a3b99c60bd (export-net)
-- Results: 2d5218531f82..387cadd951df (export)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/64d56009713c
 
-Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240117T115551
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240117T115551
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
