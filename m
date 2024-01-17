@@ -1,80 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFA71CF8C;
-	Wed, 17 Jan 2024 11:00:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E6C1DFC8
+	for <mptcp@lists.linux.dev>; Wed, 17 Jan 2024 11:58:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705489225; cv=none; b=TD+yG7qL+4wSI1yfFngC34bmEH1/F4XXnCIiLhykIO/Q9haYDtoqSBosPCyxsS4LOK0rvs+BFMNK316kGODcU/Vh86y9reHueL301amVXrG2VJj0DzzOPIKgs+97uG/rkvBQ7+5ymn7fh7KrgsvBk1xZz0AKQ5/3g0/oZET+5WM=
+	t=1705492725; cv=none; b=knQHPSm55xRQe6zejAQPzqd0jiG+OTqEtlTaTW2INtMMAJf8B2BWo2D5XyctOx8h1aQg0hhhAUqS6uppopdW+EnqWgRwpGxJ19C+sCnkMjq0qah2ab8T+kFs1TJLeZpVECiyCA41xKLbKTVty5ZT0Evwr3oHNo+JmefqLVdmp+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705489225; c=relaxed/simple;
-	bh=o4K/jR2EQHBMBfl5VUPqywEU7RGN7eeH77w25GKdEhQ=;
-	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
-	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=i94kk5+/cZeooBqyJdAR4Vkd5HwDvAotieFppBaXFcLdPIQLmrMWGiITW19SSXyk1UgdfmfbA8lzQala2ZA0Hqv5TdveOPbv+Q+QrsFF5+j/GYOEPI3H8ucTXi1tC5SsWBPZtRC1r5vnoprIWlFxVimN9t+A5bO2+uXWhfO5K2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiNlaX6k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705492725; c=relaxed/simple;
+	bh=3uAGZLNkj200LdsHNrDD7B0MvS6Sj5vLp9YwSEmNfjg=;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:Content-Language:To:References:From:Autocrypt:Organization:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding; b=oI+szVKJUwNmGBs647CI+Ae6k4UA7Bike+7SUmLgZS2kOzPwlxiQ7rj9zy6v5NuK0fO1qoJoxZSgN/O65uXycs/wK6FFuRIWcwO4tjMEjt63vwNaiZtPlE9fUoVkijBNLDEAImzKz/TrwexVPPZgqHz2x3Y5bUsHErRW/nqq0xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N+OHoZC3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiNlaX6k"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A08BC433F1;
-	Wed, 17 Jan 2024 11:00:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N+OHoZC3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D698BC433C7;
+	Wed, 17 Jan 2024 11:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705489224;
-	bh=o4K/jR2EQHBMBfl5VUPqywEU7RGN7eeH77w25GKdEhQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=tiNlaX6k22gjICvNrUi5nZsPC1qWR7AaVCr5+Um+XcNjwMdMJzA/udMCaxfYCzAtE
-	 gC4tYi5au2u0d1vHOgVzPSYywFUzXRqIYa30yfRiXviQ613KA8ElIF73IMSNq4fpAa
-	 gabFH0TpdEbWJCrSbHYAkh/XHUMvpTLNmlegCKk9mAoyULRc89rO+T2EdN96kAl4lV
-	 y9htvvrUeDO18Wqv74e7QzRkuDqh8SddqWHIve957LfU8flyX5dWZA5ScfPQnnUQqo
-	 AyodrlGCZsV1gaWKiDcaR7BZp+/j1b9TpGWjbYGIow9HnRUxNI7fS8pRL6YIvnkY5x
-	 huiNCOO3fgjRw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 72894D8C97C;
-	Wed, 17 Jan 2024 11:00:24 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1705492724;
+	bh=3uAGZLNkj200LdsHNrDD7B0MvS6Sj5vLp9YwSEmNfjg=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=N+OHoZC3rn+FpFxNbJaX4V+zMqLC2c6dXy+L6Eq1tOPmd+t4C7JunTAwhdfFkPxIv
+	 ewgtqXPemhBgNE+IL0eyOBXR6GeeJDs27GH/BNFmxxxOwxdEyvHryDMyewRzJXfUiL
+	 2b+DWrZPaFB2MWVoqSWmh5rii/3ThwD9lAMXAILIAngh/LnfTUJc4PmlS5P/GdeX0P
+	 wnHj0XZJgcu+HeG2krsecwgEOUxz9aoL9mfWBxLkAQclS3kZm4z7RxKyWPTunjlakz
+	 zyVomuw9auDyrRS+LzGRXzZ/6pwAKB7P5M5gV/h5AlgUoT+rYwVGUQqp/HN/Q8a+u9
+	 74ThKrmDuX8BA==
+Message-ID: <0b5da88d-6331-447b-9ddd-dd59482b7056@kernel.org>
+Date: Wed, 17 Jan 2024 12:58:41 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] mptcp: relax check on MPC passive fallback
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170548922446.14327.612515051886234172.git-patchwork-notify@kernel.org>
-Date: Wed, 17 Jan 2024 11:00:24 +0000
-References: <ddfc9eec6981880271d0293d05369b3385fb9e86.1705425136.git.pabeni@redhat.com>
-In-Reply-To: <ddfc9eec6981880271d0293d05369b3385fb9e86.1705425136.git.pabeni@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, matttbe@kernel.org, martineau@kernel.org,
- geliang.tang@linux.dev, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, horms@kernel.org, mptcp@lists.linux.dev
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net 0/4] mptcp: locking cleanup
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1705331716.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1705331716.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hi Paolo, Mat,
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Tue, 16 Jan 2024 18:18:47 +0100 you wrote:
-> While testing the blamed commit below, I was able to miss (!)
-> packetdrill failures in the fastopen test-cases.
+On 15/01/2024 16:16, Paolo Abeni wrote:
+> This is a preparatory work for the TCP_NOTSENT_LOWAT support. The latter
+> will need tracking more state under the msk data lock.
 > 
-> On passive fastopen the child socket is created by incoming TCP MPC syn,
-> allow for both MPC_SYN and MPC_ACK header.
+> Since the locking msk locking schema is already quite complex, do a long
+> awaited clean-up step, moving several confusing lockless initialization
+> under the relevant locks.
 > 
-> Fixes: 724b00c12957 ("mptcp: refine opt_mp_capable determination")
-> Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Note that patches 2-4 carry fixes tag, and could target the net tree,
+> but AFACIS no real race could really happen even prior to such patches
+> as the MPTCP-level state machine implicitly ensure proper serialization
+> of the write accesses, even lacking explicit lock.
 > 
-> [...]
+> Patch 1 has no fixes, but still is logically tied to the other patches.
+> Possibly we could target net-next for the whole series.
 
-Here is the summary with links:
-  - [net] mptcp: relax check on MPC passive fallback
-    https://git.kernel.org/netdev/net/c/c0f5aec28edf
+Thank you for the patches and the review!
 
-You are awesome, thank you!
+Now in our tree (fixes for -net), without a typo spotted by
+"checkpatch.pl --codespell" (and Vim's "set spell spelllang=en_gb")
+
+New patches for t/upstream-net and t/upstream:
+- c6d26639b0a9: mptcp: drop the push_pending field
+- 2541670ad929: mptcp: fix rcv space initialization
+- a6f5bfc5abf7: mptcp: fix more tx path fields initialization
+- 7e6e9b2c5e9d: mptcp: corner case locking for rx path fields initialization
+- Results: dd080a859960..50a3b99c60bd (export-net)
+- Results: 2d5218531f82..387cadd951df (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240117T115551
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240117T115551
+
+Cheers,
+Matt
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Sponsored by the NGI0 Core fund.
