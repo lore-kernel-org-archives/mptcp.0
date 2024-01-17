@@ -1,87 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBE47F5
-	for <mptcp@lists.linux.dev>; Wed, 17 Jan 2024 02:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3971D1C05
+	for <mptcp@lists.linux.dev>; Wed, 17 Jan 2024 02:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705458730; cv=none; b=lfGZ0zRFYISEajUKJoyFgFHjMLBV/gTH4Q862jmb1xh10scJDPZSeRti+o86cIeDBNYZqbQcxr8ByNHe9FRXMexwCwHlHfPJQmO/lXPvkI7WZxjWlD4XHM5kWrM1P39u9D3SMisDEquGUXNGQGDUmNBRSE/avUGsfnsoKWx0eKM=
+	t=1705460262; cv=none; b=ntA5MKcqyvDtkHOM/Wu/5GvU+azhXk2daHySuSA/kQCmQNERpl0iTxmwCjT28+DGgxSspCIyMjFJ7SuimBogQz4NS4VmF8KgiC7Zt+94yj1bZ+ymVmfxeOODH8abW8xdgLSldtCD17ymXZVm/VXNSLWcp3fmJJ6lN4ZeFhCTLu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705458730; c=relaxed/simple;
-	bh=LDrBRxXlo9GT/YnUQZUTO8LfdHFCtw3mO77BhPyjf7M=;
-	h=Received:DKIM-Signature:Date:From:To:cc:Subject:In-Reply-To:
-	 Message-ID:References:MIME-Version:Content-Type; b=eDok8Y236lTF5gsXi+TKOGWuECiv9NFi2/Lw/7C+Rn99CQvEexUq6QvVfvd4YBcIzF1rkTI1Vooei370uVd0XdjtGIeF9E5++y0zxxPIQwlYEK3XEQr6A0RcTAM1d4jiao5EgBZd2G/kdfjZYe8UBV5WXmR87m6G+6ySDP5LVDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJYm1LlB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705460262; c=relaxed/simple;
+	bh=EQeIsmJisLT2E+mmKpnzi8tVkyvz54cZR4nZ05Z4wBk=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Content-Type:From:To:Cc:Reply-To:In-Reply-To:References:Subject:
+	 Message-ID:Content-Transfer-Encoding:Date:MIME-Version; b=O5Ln2o0/Crd7BicE9M+XquKV5MBd5qi+neM1NVuzUN2v9n+nfGmPTW4mUDZTfWKgzglC1ATPWgnTZknQyj/BdrODpewaskyl8bGy1FDFnRtQAYCHGRgappy+PP+UO0JLmsZ+2SXzSxrUleTb/Wzl7yHDqx8arwEGwFOfpEhNDj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URzaAbp3; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJYm1LlB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF79C43390;
-	Wed, 17 Jan 2024 02:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705458730;
-	bh=LDrBRxXlo9GT/YnUQZUTO8LfdHFCtw3mO77BhPyjf7M=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=NJYm1LlBZKp5TM0J9h1SYRLT1heknF6pdIKWwdi7eWRc++0xynx7P/x8Ktx8EhoOl
-	 GSpq6/jz0P6eqowkcM7igZlsn4Mec0FHgxL51K6yOOoKEXC/nqIv/gmRrNI0qGxcDe
-	 lAVqBCCpxILobSIJFBY/aISqhFHk9JQPp96JT3oxic+ZFtpa+UyvgFpLndBTeJC+RU
-	 MqfTwmwORw9NDcg/g5Uox951vkySTILQaN6jIlbOqmFQ/VXsNeGpbZr6pFzIs4bEAP
-	 sQq5Pojod42FPZqHAlblKUAj6vB41pbO1RSGA6+w4GszZ5x2mQZFNlfbUq+LjPmS+q
-	 j9pld+d33wLUQ==
-Date: Tue, 16 Jan 2024 18:32:09 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URzaAbp3"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-78333ad3a17so848127385a.3
+        for <mptcp@lists.linux.dev>; Tue, 16 Jan 2024 18:57:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705460260; x=1706065060; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=omt3LfHLj23etc2N+NisXUXI4/8g39jf6U+qmC3FlwU=;
+        b=URzaAbp3LW470cWXsUjEFmoTakihv7pgXH6ajZVvy9YvvJLiKc5ZfS+omvyoeI1Lyh
+         YytQDE7ycv+1oacJpY5PPe9WdUiNBcUz2LWpPySEUX/elvDS/lZ1jC4UXytFDEFNqi+4
+         LKS4bAigVCrl3ATqEE3P7DXZSmCN/Hqtl2z32DlR6D/f+FLHEGB9OQdkPsv8khP6yKH+
+         no0RvgLiNuM86Seo77LJMka6uFtZBC00LuTk+gfc21SDV8daw9Nd/KBG8+lWc5nkqkzq
+         25o4lyIWYY0TmzYx1aWZ3UURhzCqaPUmN8+8mR6DkNm8vU3GA4PWiaoUBxgcYueEROYP
+         WN9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705460260; x=1706065060;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=omt3LfHLj23etc2N+NisXUXI4/8g39jf6U+qmC3FlwU=;
+        b=NWG5XKQQ6CtpdQgDYwHfuQRtaZH6C9VPwpAKRmuUrmVdKYwyL17zUfUp3u3Rsha6VO
+         5toV6NQLUBC8QNcdC3DAq4x5PEdfJ2zMV8eyzu/0P0pgsvkpc4Q73ER5hnXgKjbTD6dS
+         KFGpFtebC4QKgR3ApOB/3XE7Lr7EA/zeWbUCzVtfXMgaujZ2EiznEaI3GluxDlcaPiHP
+         MyllGAUAGfqAirX5q1SE4jD0FEWQX7lyrEiDx5abx7F6+YrleX6SlY7Z0iaqYVKRiCDq
+         HwT9a7NlZFiANfclkJKQcGKzLU9n+36wZzNruaaNG6aWlYppP6kMK5rpmpyaHm3zHq7O
+         4F+A==
+X-Gm-Message-State: AOJu0YzdF6hziedXkOWcC3Tzo8l3uR9lH1CdiRVlUpZKMZ0w+WeNZ458
+	OlVePRhKS7Y/WPbA4NbIOg==
+X-Google-Smtp-Source: AGHT+IGk0JUX80iTcB/CS3kk3+t56EClKtQISZKs5rVv6t6YMM6TUXrlB7oDxIYBR8IsvzleZMEwbg==
+X-Received: by 2002:a05:620a:1655:b0:783:325a:8cd0 with SMTP id c21-20020a05620a165500b00783325a8cd0mr9437072qko.86.1705460259990;
+        Tue, 16 Jan 2024 18:57:39 -0800 (PST)
+Received: from [127.0.0.1] ([20.109.36.208])
+        by smtp.gmail.com with ESMTPSA id bi23-20020a05620a319700b007833f101522sm4171928qkb.60.2024.01.16.18.57.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 18:57:39 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net 0/4] mptcp: locking cleanup
-In-Reply-To: <cover.1705331716.git.pabeni@redhat.com>
-Message-ID: <fb88e379-a40d-0b8a-d64c-0f5957c85c81@kernel.org>
-References: <cover.1705331716.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <56241fbd64982b15aed04269c8b963206661acea.1705331716.git.pabeni@redhat.com>
+References:
+ <56241fbd64982b15aed04269c8b963206661acea.1705331716.git.pabeni@redhat.com>
+Subject: Re: mptcp: corner case locking for rx path fields initialization:
+ Tests Results
+Message-ID: <2e142d85-8e41-3f91-8426-0e00de9daf50@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 17 Jan 2024 02:57:38 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Mon, 15 Jan 2024, Paolo Abeni wrote:
+Hi Paolo,
 
-> This is a preparatory work for the TCP_NOTSENT_LOWAT support. The latter
-> will need tracking more state under the msk data lock.
->
-> Since the locking msk locking schema is already quite complex, do a long
-> awaited clean-up step, moving several confusing lockless initialization
-> under the relevant locks.
->
-> Note that patches 2-4 carry fixes tag, and could target the net tree,
-> but AFACIS no real race could really happen even prior to such patches
-> as the MPTCP-level state machine implicitly ensure proper serialization
-> of the write accesses, even lacking explicit lock.
->
-> Patch 1 has no fixes, but still is logically tied to the other patches.
-> Possibly we could target net-next for the whole series.
->
-> Paolo Abeni (4):
->  mptcp: drop the push_pending field
->  mptcp: fix rcv space initialization
->  mptcp: fix more tx path fields initialization
->  mptcp: corner case locking for rx path fields initialization
->
+Thank you for your modifications, that's great!
 
-Hi Paolo -
+Our CI (GitHub Action) did some validations and here is its report:
 
-The series LGTM, assuming the CI failure is the issue fixed by "mptcp: 
-relax check on MPC passive fallback":
+- KVM Validation: normal:
+  - Critical: 1 Call Trace(s) - Critical: =
+Unexpected stop of the VM =E2=9D=8C:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7550415246
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/1fd81af266b7
 
-> net/mptcp/fastopen.c |  6 ++--
-> net/mptcp/options.c  |  9 +++---
-> net/mptcp/protocol.c | 31 ++++++++++---------
-> net/mptcp/protocol.h | 13 ++++----
-> net/mptcp/subflow.c  | 71 +++++++++++++++++++++++++++-----------------
-> 5 files changed, 75 insertions(+), 55 deletions(-)
->
-> -- 
-> 2.43.0
->
->
->
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
