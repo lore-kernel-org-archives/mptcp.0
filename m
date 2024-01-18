@@ -1,130 +1,141 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CBE22F0E
-	for <mptcp@lists.linux.dev>; Wed, 17 Jan 2024 18:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB899444
+	for <mptcp@lists.linux.dev>; Thu, 18 Jan 2024 06:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705516699; cv=none; b=DY4d2nrGNa6lHuLQWkSEx9QqwuQ5wATv+Kfoy+7DsnDxlkq73OJK5EXXXaNnBeUrjlfZ72JzaMeFx5ba1MaixUhujzfTWGaDJfvNWo3XVv7Lijhi2PmWKw3Y1ELH1N8xNx2owWf4ZKNrhNl53/UZxjeH6BZqZjTo3Q1usAFpyAA=
+	t=1705558329; cv=none; b=hBIkLhYgmwg7hNJ4F66XNmp3XDfQ3XIktDiafbe4KL0kyZJyl3e4rWbm/VVY5fmhF30ho9HRlEi/bEAGgiDGKqYK0yTX96msowlIPg5GLcJSWfxwl0GC182KNDPCYYo+Zdi+k22B5FFpUvnj635OdONBaCJVxOVlE2qb5tMaiHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705516699; c=relaxed/simple;
-	bh=t2/stBN36YpEL5yRydYRv4pW8trHgZ6rVcWjC2z3rx0=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Content-Type:From:To:Cc:Reply-To:In-Reply-To:References:Subject:
-	 Message-ID:Content-Transfer-Encoding:Date:MIME-Version; b=MD4PGvse8VgOvUezx59rxWZyXYbGk37TahDdcNsKt2S4oO/7xl7o88CXKWhtYRjei8AXsxX6smJnAgMaKussan/kur4MM2aHJAzML1qxLZvW3zX0Rfjd65CIYQIrvY7Fkof4XrEpbmR8iVjAaRgBep8VwZUuQVaIiSmgN3nRhnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MOb4ZjJe; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705558329; c=relaxed/simple;
+	bh=NqkUNjnb/+0ojlKFCdvv7IOnY+fZmZLtSlWbLv0cuDI=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=OqsiDiCCoRZw8f6ZNbpb9EG2cQcuRJM92Tg6rFTHG3SGLXiADm8VStjeqV+KStJXo/oimAloouaKDa6GCGirG7kDObPAaa1cF21dulEhxE0MAxZp6KGwV5q4M7qgqpJ00BAu7klFZl/ngLgxoF8ljKjnFJ/lPot1AVHI8fqQvSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQgOJjkw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MOb4ZjJe"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dae7cc31151so8758146276.3
-        for <mptcp@lists.linux.dev>; Wed, 17 Jan 2024 10:38:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705516697; x=1706121497; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PaI0Hw/t6gwKsh44PKii3kwReWx0YupxeOnemSMc5/I=;
-        b=MOb4ZjJecK0yHL48AN7AGpnmmv9VwxXWKf9htx3lZkzAw4hgt7HttYI68IDxqubQQm
-         jwdtsFTK94TVg1zWE+k8L4ASk1FqDBUwFE7zVhA5l6jkUNCPnup4SvcHBD9SvuWcIRhK
-         VZZHU7bvjOBi5Dl/WFwOYy8a4mtj90agqMCWaEOopTbzaJUdIUalkVrP2RhHTG1PSEoT
-         Vf0shdu6zqUKDQXhyVQ6uwblGKMUYkCE8U3U7IiKE2mnKlx1xExRRseI5gbc+ySL4btm
-         S2OKX/itjNBG3Ofr4jUCMbVmhefEWZ6vCBx4NMPwyPgCxYcI6fzp6sWcyH1lwz5d2d9w
-         m4lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705516697; x=1706121497;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PaI0Hw/t6gwKsh44PKii3kwReWx0YupxeOnemSMc5/I=;
-        b=EFuNelJe7VAUzNJ8h8YSFGqKrx4zkIowgW8WVCnJ7lGAE/J0HtdltRAPst1jPS3Jma
-         1JifDJYfpvo+i6AGZPS983yY8F9/iz0LJS8tzSZK62Dg8lp1+Z3WeFUAbSsN4Wwq2aza
-         4V63vQe56BRRARshi0kSK/BDFzAC09APvdwX223J89TcOKRrhEFguz7vEh6iJsF2J/Hu
-         0jbvR9UMpOKOaS90YL6yVfomBJKa5fik/gvFbFAl4vjt2cfNsHBnGTBvjE8tpZK8A6/l
-         /aICWVQwtaZzGkLFGpUsiyG1u01GWf4e+UlcD68wbTuiD3UzTSLWkmEo/IhcT/LcWbkm
-         bLPw==
-X-Gm-Message-State: AOJu0YxQrvSr2Z93t08G4/lxyo6XXGyUYBg8Myi2oGGpHqVJCmPlEO3W
-	7W4Lb5snHRigOe7p7r3xWQ==
-X-Google-Smtp-Source: AGHT+IF/3hhzje8iz+R0sDAyn7ZC1W5WyioYP2yOWG8D/K7R2hUZWqJed1ubw0Wmo3fv/F0q5DoB4A==
-X-Received: by 2002:a25:d0c8:0:b0:dc2:209e:376a with SMTP id h191-20020a25d0c8000000b00dc2209e376amr3093039ybg.101.1705516697044;
-        Wed, 17 Jan 2024 10:38:17 -0800 (PST)
-Received: from [127.0.0.1] ([20.75.94.35])
-        by smtp.gmail.com with ESMTPSA id p12-20020a0ce18c000000b00680c50735c6sm5212148qvl.88.2024.01.17.10.38.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jan 2024 10:38:16 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <4f4ba04c46b432b5f2a95bb75d85912bcb937cfb.1705427537.git.pabeni@redhat.com>
-References:
- <4f4ba04c46b432b5f2a95bb75d85912bcb937cfb.1705427537.git.pabeni@redhat.com>
-Subject: Re: mptcp: annotate lockless accesses around read-mostly fields:
- Tests Results
-Message-ID: <c23be70d-816f-dceb-8bf5-a6ac18628f0a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Jan 2024 18:38:16 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQgOJjkw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD12EC433C7;
+	Thu, 18 Jan 2024 06:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705558328;
+	bh=NqkUNjnb/+0ojlKFCdvv7IOnY+fZmZLtSlWbLv0cuDI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aQgOJjkwoskiG/samu1js9H6AItoK491Qu6J1VQzjB7qTGJvE7cufDani/6phxzDT
+	 NSxQ4j+iaLvDJFid/cnS1bjXtvgiE3y+E1DOP4KnFdvYRqaj9hR6MWJYz51SqmtsCN
+	 PtJQQd4xsTyBskDapFO5bYsb+0Zf2IEGg4vOKJxjjf05x4axZsCRj5w9UDIo4Gdnbx
+	 Db///za9jDdnxLQ04k9NrpumA953+fCKxjG/c862vN6n9z/nufWK8oD1dN7FSBdnbU
+	 9mB6ZmeH0+DIAKOmoaVXOKSrs94x+ffNiOoYxQcA/X+t4viWWhhMGQaZImQxVv0TdM
+	 NEc9A+PrTjZBA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v10 00/23] dump for userspace pm
+Date: Thu, 18 Jan 2024 14:11:40 +0800
+Message-Id: <cover.1705558030.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+v10:
+ - fix a checkpatch.sh warning reported by CI.
+ - fix build warnings reported by kernel test robot <lkp@intel.com>.
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+v9:
+ - add missing "sock_put(sk)" in patch 7, 17 and 21 to fix the "kmemleak"
+   errors reported by CI.
+ - rename the helper to mptcp_pm_has_addr_attr_id.
+ - use my new mail address.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4513139903954944
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4513139903954944/summary/summary.txt
+v8:
+ - Address Mat's comments in v7
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5269944951111680
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5269944951111680/su=
-mmary/summary.txt
+v7:
+ - fix checkpatch.sh warning reported by CI.
+ - fix build errors reported by CI.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/64d56009713c
+v6:
+ - patches 1-5, fixes for -net
+ - patches 6, 15, selftests for "fixes for -net".
+ - patches 7-14, 16-21, update "dump for userspace pm v5"
+ - patches 22, 23, cleanups for set_flags
+ - patch 24, flush selftest.
 
+v5:
+ - patch 2, save bitmap instead of id.
+ - patch 3, drop token in reply.
+ - update patch 4 and patch 12, add mptcp_pm_dump_addr and
+   mptcp_pm_get_addr wrappers in pm.c
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+v4:
+ - update patch 2, patch 3 and patch 12.
+ - fix the warnings reported by CI in v3:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+Unable to validate one commit: 7633a101a mptcp: get addr in userspace pm list
+Unable to compile mptcp source code with make W=1 net/mptcp/pm_netlink.o
+Unable to compile mptcp source code with make C=1 net/mptcp/pm_netlink.o: net/mptcp/pm_netlink.c:1656:5: warning: symbol 'mptcp_pm_nl_get_addr' was not declared. Should it be static?
 
-For more details:
+v3:
+ - fix the errors reported by CI in v2:
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+[10:55:51.288] [  897.523894][ T5664] BUG: sleeping function called from invalid context at include/linux/sched/mm.h:306
+[10:55:51.288] [  897.532157][ T5664] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 5664, name: pm_nl_ctl
+[10:55:51.289] [  897.539503][ T5664] preempt_count: 201, expected: 0
 
+ - drop mptcp_pm_nl_put_entry_msg and mptcp_pm_nl_put_entry_info
+   helpers.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+v2:
+Address Mat's comments in v1:
+ - patch 2: pass token to dump_addr too.
+ - patch 2: add back id in mptcp_userspace_pm_dump_addr().
+ - patch 5: update mptcp.yaml
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+v1:
+Address Mat's comments in "userspace pm enhancements" v14.
+
+Geliang Tang (23):
+  mptcp: add pm_has_addr_attr_id helper
+  mptcp: add needs_id for userspace appending addr
+  mptcp: add needs_id for netlink appending addr
+  mptcp: map v4 address to v6 when destroying subflow
+  selftests: mptcp: rm subflow with v4/v4mapped addr
+  mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
+  mptcp: implement mptcp_userspace_pm_dump_addr
+  mptcp: add token for get-addr in yaml
+  mptcp: dump addrs in userspace pm list
+  mptcp: check userspace pm subflow flag
+  selftests: mptcp: add userspace pm subflow flag
+  selftests: mptcp: add token for dump_addr
+  selftests: mptcp: add check_output helper
+  selftests: mptcp: dump after creating id 0 subflow
+  selftests: mptcp: dump userspace addrs list
+  mptcp: add userspace_pm_lookup_addr_by_id helper
+  mptcp: implement mptcp_userspace_pm_get_addr
+  mptcp: get addr in userspace pm list
+  selftests: mptcp: add token for get_addr
+  selftests: mptcp: userspace pm get addr tests
+  mptcp: update set_flags interfaces
+  mptcp: set error messages for set_flags
+  selftests: mptcp: flush userspace addrs list
+
+ Documentation/netlink/specs/mptcp_pm.yaml     |   3 +-
+ net/mptcp/mptcp_pm_gen.c                      |   7 +-
+ net/mptcp/mptcp_pm_gen.h                      |   2 +-
+ net/mptcp/pm.c                                |  38 ++-
+ net/mptcp/pm_netlink.c                        | 100 ++++----
+ net/mptcp/pm_userspace.c                      | 241 +++++++++++++++---
+ net/mptcp/protocol.h                          |  25 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 150 ++++++++++-
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  39 ++-
+ 9 files changed, 505 insertions(+), 100 deletions(-)
+
+-- 
+2.40.1
+
