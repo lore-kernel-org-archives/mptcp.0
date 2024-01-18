@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1533C8F40
-	for <mptcp@lists.linux.dev>; Thu, 18 Jan 2024 06:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9288F40
+	for <mptcp@lists.linux.dev>; Thu, 18 Jan 2024 06:12:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705558359; cv=none; b=LbsdQmUSLCwPkEpxLJdhWDix/m91tEiq24L88oIUJZzHU4k91cSlLY0G08ht4f/+nsIjVimx1R1VCf8JoXwWE+tjDWok0/DdWfXg6YqKq1YnxmWfRtiHAvIJJYg3g1m0vqklYj1fynUYf4udSkiNR1XtjKLDb0rL8TQGFZzyPxk=
+	t=1705558360; cv=none; b=UExk38UhGDC0y3BioC2P6EXJq9XGiIpR9Ga9Hc2FxGwtWYR/Sl56ujsd8xJYvHp52ulwrtDeIfYVmwP8tmSPcqtjwe3oCoepOgFo2TYz4Gx40KZzQ4P0wrq+rXqFbyOMZ3faYwZucpOWGfgtXMN2/yEw7RdI7IJZGdh1C5bdQrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705558359; c=relaxed/simple;
-	bh=eyu4+mR9wo/LMPTYxbqKaR+MnTHC9Kb+tlp2XtfuVE8=;
+	s=arc-20240116; t=1705558360; c=relaxed/simple;
+	bh=Y1KCkJpxwWzlU5JBiGBOAc9ZAIbuZZxPpvoYmSCi8mM=;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding; b=jXuydDX5TiWcWztdazRZWBYUnAvcPJOKsiGLMWbyJ9yqtQZ/3xC/x9sppTYYHos0OwKtI9pmYXz7NeDIlfKbYw/XLnFzP2FTeOM1JYKYxEbCn+qAU1E5lqYj2T49xd3nTfk5QSxNSFISTQkWsawFUgeEeHrN5XwlGsn7zSVZcPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zb/4WAW4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Transfer-Encoding; b=maJxu5OsF10JFjIMUAtRxZ6J9T0+b5OjxwzngYYZLNeuuhyv6JwHD5slLRpHGG4nnYbSUYyS68pZfTtXchK3xIFk633jaBWZsx16hP0Jo8tOr3CYveLQUiaTz4zfvm5kECzGW789/eH4h3owtglMGgQg/+X9Phr+ma0GPCC6wgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9vx1wTk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zb/4WAW4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BB6C433B2;
-	Thu, 18 Jan 2024 06:12:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9vx1wTk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D134C433F1;
+	Thu, 18 Jan 2024 06:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705558358;
-	bh=eyu4+mR9wo/LMPTYxbqKaR+MnTHC9Kb+tlp2XtfuVE8=;
+	s=k20201202; t=1705558360;
+	bh=Y1KCkJpxwWzlU5JBiGBOAc9ZAIbuZZxPpvoYmSCi8mM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zb/4WAW4v05pOQthCoLbTuDu4YNB09TjsYwo71xlgxvZApxG0yL5Q0pdbJjd8UotV
-	 kjvOg1QAmPfJY0B58tImt8GPN7IFcjEQ4fopuoq+oJHzD8t2aglVEw44xRoLVBZHeN
-	 t9w3AgooqPm22HG51tOapUaDIy4CwL1er9RVphMYWsuwys55+7WQ2yvHVbWSP4Btm4
-	 Thv6ebtNwadyTbcYV0JKvwpNirTqTLxeAuK1vZ9zGUfFeywI/9zSicLSWZP8/CFV0H
-	 bWnus6A1T7WzIWT/U9B7DD/Nj0/ceAwR9OyFGmmduOLGrFKsWFtj+T3x9DoPlOq5J5
-	 IoYUD1HxMd60A==
+	b=a9vx1wTk46a8LsXwy+vx4iH0t9Uf2jgpHw9nHD7/VRq3o+ksz/+raaqe3dALUsLuN
+	 oKse17OsWz2uuUv9uyve6xBDatd3warEqDfdriuNtKdV9YgM3MCwRSGg7Myu9SLWY5
+	 9hFqGYeVM+fDkwsukzfjvtS/vTVTpzpkOqbJU64dOCBRF4ExnGrHKQ9qSnQPYfDMWP
+	 y5AKb1eaZgwhT69qjT7bm9sBj7sP1hZTLxxsBdqMTqCnuilYqTT1DmRWlMhWYSKDdn
+	 KNczaKuSf17yZFUrrFnsfF7ta9UON21NxrtAMecADYh9XeGmkA6A6cMWQeRGz8Icq4
+	 2rZEVVRuRQ9yg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v10 22/23] mptcp: set error messages for set_flags
-Date: Thu, 18 Jan 2024 14:12:02 +0800
-Message-Id: <8f5a0070ce87532667655e243a9c8f054c24862f.1705558030.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v10 23/23] selftests: mptcp: flush userspace addrs list
+Date: Thu, 18 Jan 2024 14:12:03 +0800
+Message-Id: <9281e7e64896c26a3d33ea78be3abe3041fe37d8.1705558030.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1705558030.git.tanggeliang@kylinos.cn>
 References: <cover.1705558030.git.tanggeliang@kylinos.cn>
@@ -46,78 +46,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In addition to returning the error value, this patch also sets an error
-messages with GENL_SET_ERR_MSG or NL_SET_ERR_MSG_ATTR both for pm_netlink.c
-and pm_userspace.c.
+This patch adds a new helper userspace_pm_flush() to flush all addresses
+for the userspace PM. Invoke it in userspace pm dump address and subflow
+tests. And use dump commands to check if the userspace pm local address
+list is empty after addresses flushing.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_netlink.c   | 6 +++++-
- net/mptcp/pm_userspace.c | 9 +++++++--
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 45 +++++++++++++++++--
+ 1 file changed, 41 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 6e913498ff79..4ab68f83ddd5 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1896,8 +1896,10 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 0b325b5efccf..65e8d9d61ac9 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3385,6 +3385,31 @@ userspace_pm_get_addr()
+ 	ip netns exec $1 ./pm_nl_ctl get $2 token $tk
+ }
  
- 	if (addr.addr.family == AF_UNSPEC) {
- 		lookup_by_id = 1;
--		if (!addr.addr.id)
-+		if (!addr.addr.id) {
-+			GENL_SET_ERR_MSG(info, "missing required inputs");
- 			return -EOPNOTSUPP;
-+		}
- 	}
++# $1: ns ; $2: addr
++userspace_pm_flush()
++{
++	local ns=$1
++	local line
++
++	userspace_pm_dump $ns | while read -r line; do
++		local arr=($line)
++		local nr=0
++		local id
++		local addr
++		local i
++		for i in "${arr[@]}"; do
++			if [ $i = "id" ]; then
++				id=${arr[$nr+1]}
++			fi
++			nr=$((nr + 1))
++		done
++		addr=${arr[$nr-1]}
++		[ $ip_mptcp -eq 1 ] && addr=${arr[0]}
++		userspace_pm_rm_addr $ns $id
++		userspace_pm_rm_sf $ns "$addr" $MPTCP_LIB_SUB_ESTABLISHED
++	done
++}
++
+ check_output()
+ {
+ 	local cmd="$1"
+@@ -3606,8 +3631,8 @@ userspace_tests()
+ 		wait $tests_pid
+ 	fi
  
- 	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-@@ -1907,11 +1909,13 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	entry = __lookup_addr(pernet, &addr.addr, lookup_by_id);
- 	if (!entry) {
- 		spin_unlock_bh(&pernet->lock);
-+		GENL_SET_ERR_MSG(info, "address not found");
- 		return -EINVAL;
- 	}
- 	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
- 	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
- 		spin_unlock_bh(&pernet->lock);
-+		GENL_SET_ERR_MSG(info, "invalid addr flags");
- 		return -EINVAL;
- 	}
+-	# userspace pm dump address
+-	if reset_with_events "userspace pm dump address" &&
++	# userspace pm dump & flush address
++	if reset_with_events "userspace pm dump & flush address" &&
+ 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3626,12 +3651,18 @@ userspace_tests()
+ 			     "$dump" "      get id 10 addr"
+ 		check_output "userspace_pm_dump $ns1" \
+ 			     "$dump" "      dump addrs signal"
++		userspace_pm_flush $ns1
++		check_output "userspace_pm_dump $ns1" \
++			     "" "      dump addrs after flush"
++		chk_rm_nr 1 1 invert
++		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
+ 		kill_events_pids
+ 		wait $tests_pid
+ 	fi
  
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index bb5672a4332e..ea9e8612da68 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -566,13 +566,17 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	token_val = nla_get_u32(token);
- 
- 	msk = mptcp_token_get_sock(net, token_val);
--	if (!msk)
-+	if (!msk) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
- 		return ret;
-+	}
- 
- 	sk = (struct sock *)msk;
- 
--	if (!mptcp_pm_is_userspace(msk))
-+	if (!mptcp_pm_is_userspace(msk)) {
-+		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
- 		goto set_flags_err;
-+	}
- 
- 	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
- 	if (ret < 0)
-@@ -586,6 +590,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 
- 	if (loc.addr.family == AF_UNSPEC ||
- 	    rem.addr.family == AF_UNSPEC) {
-+		GENL_SET_ERR_MSG(info, "address families do not match");
- 		ret = -EINVAL;
- 		goto set_flags_err;
- 	}
+-	# userspace pm dump subflow
+-	if reset_with_events "userspace pm dump subflow" &&
++	# userspace pm dump & flush subflow
++	if reset_with_events "userspace pm dump & flush subflow" &&
+ 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 1
+@@ -3650,6 +3681,12 @@ userspace_tests()
+ 			     "$dump" "      get id 20 addr"
+ 		check_output "userspace_pm_dump $ns2" \
+ 			     "$dump" "      dump addrs subflow"
++		userspace_pm_flush $ns2
++		check_output "userspace_pm_dump $ns2" \
++			     "" "      dump addrs after flush"
++		chk_rm_nr 1 1
++		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
+ 		kill_events_pids
+ 		wait $tests_pid
+ 	fi
 -- 
 2.40.1
 
