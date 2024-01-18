@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907EA8F51
-	for <mptcp@lists.linux.dev>; Thu, 18 Jan 2024 06:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D4B8F51
+	for <mptcp@lists.linux.dev>; Thu, 18 Jan 2024 06:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705558345; cv=none; b=XfcIuiVIgZ67Wsvxokn2OwqfvxY8N4ohjsa6gduBz1OS06z+7Sfdi+EwNieJx5/z75CXDlGLCjk5Jog0HXudxBAw8CyIMO1Ol2B+ygS3UN45XlSuQ1w9guFuanznYmMj/NcDFFMY8GwUkMYu8EkzC3bWEIJFiOEqHIVQ57qhhFA=
+	t=1705558346; cv=none; b=B6R9eCEIMdjp5np/OCOnsabppvLvxq58N/cPvVscPm+6inhoUWI0R5/u+vnwRS85ghzrt1mjMQ9mMW51hV8XdjjeKtp3a49czK5nVJDrRgH3CqNgSSfwSqxy7QARjfFe8p/fIVkR+2KUNXBeED0ZyBBWEIzNRxYwHvNnKERq6zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705558345; c=relaxed/simple;
-	bh=tERbG7TJiLpb8EzivoIRerccEx0mGGYaF5MyxCkw9Rk=;
+	s=arc-20240116; t=1705558346; c=relaxed/simple;
+	bh=T9k/GMdCd2AwDOgtpravWZEHCJsp8pFYszNmnMGiuio=;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding; b=QiMt3HjvbJTrp44LCs2uDO1Nz6risJaiET48q+fDA9VPEowKTfS404SHpdP1xRjeFnXmYqhR39V8x3POi2E67GpQ+dw3WC+BS2pU9T/rhFf4TdZOtRGCWKEpOudViX5TKdO6EaODglunY/8Wqo75rEPc1cArb9RSebbAZ8CAv9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YdZ0g0Lh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Transfer-Encoding; b=DkhkqdslrhpvjilNnMXt3ldimWf3AmehXmVbZBAib8F6bn+ANbVTUqMYrxbFhBDjdtoJ4SBqn2T5hpY+4WbBLlpaR9tRd18Z9+MqxLB+qwK6rnFjY8N7qVQOgec/QRKf0Fk9uZduID/wSvI1m4tzjzREpw6zX41QxHXtuZITc/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTEdIUAn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YdZ0g0Lh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59017C433F1;
-	Thu, 18 Jan 2024 06:12:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTEdIUAn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEFD3C433F1;
+	Thu, 18 Jan 2024 06:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705558345;
-	bh=tERbG7TJiLpb8EzivoIRerccEx0mGGYaF5MyxCkw9Rk=;
+	s=k20201202; t=1705558346;
+	bh=T9k/GMdCd2AwDOgtpravWZEHCJsp8pFYszNmnMGiuio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YdZ0g0LhGToCnIFS/HJvFOt0q0X1NCFSmZRCIwMqCuW5VWP0V6YZAAGDLrSWYjbXR
-	 3S9injopvUjrKzGdj7jLYO3bln3NmW1b81b7oNo8FKmvn7FWcbEDr76JZNBCt19+GB
-	 ed6z2paRR6kMlugLJ3Kp34R1Nny/LhEmNZcvneX/o2wXugdEW3E33cuBbbj6zCTJJd
-	 vCI6n6KzH/0yUs36/4QRoty6Ft7feWDulfP5UhvB4Zz33IvYcjbn+bYjSVVLe7kaFh
-	 Nm7Proee/NqN8Cz1VjWsYUj0lG2SyXvTL3iux1qqF/H0RxE6uonC+eZER6Y0HDBA6T
-	 prLUm/rJk3JpA==
+	b=jTEdIUAnWb6zOugydOE9yiAKOhbAXuXay5GfhWyVOhU8acm2OAzNXwp1RH5WddTKx
+	 zdTn/UiJgyDA8S/eA97oR1HW9AGMSWZbE0yayYHOIW6Kj3KIC2xKmVhEfG4cvdORW3
+	 QCuTdHs8jFeukukAhBUqeHgp/NkPHIoyLcIf9I7Qx/ASm7AawQP8bMEjRLJE3TP2ue
+	 nHaCxpE2RRkGNYcqxMJeOpLCFsElccd9CjFrNsvdD3URiz7Ktaj9RwBnnSkKJ+vgtX
+	 kwZA/weSU7CkCYeYvzh05xKLietrKu2ZbcMwVaXcaQyeDJgZGdLFLCl8aLkiQMo6BF
+	 Uk98LvDSDpj1w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v10 12/23] selftests: mptcp: add token for dump_addr
-Date: Thu, 18 Jan 2024 14:11:52 +0800
-Message-Id: <ab2f6221f17a06e475650140c744fdd9f1fc3fb9.1705558030.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v10 13/23] selftests: mptcp: add check_output helper
+Date: Thu, 18 Jan 2024 14:11:53 +0800
+Message-Id: <a7f379ba4bb9802bc7d37c022b0170ddfd299b85.1705558030.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1705558030.git.tanggeliang@kylinos.cn>
 References: <cover.1705558030.git.tanggeliang@kylinos.cn>
@@ -46,59 +46,73 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The command dump_addr() of pm_nl_ctl can be used like this in in-kernel PM:
-
-        pm_nl_ctl dump
-
-This patch adds token argument for it to support userspace PM:
-
-        pm_nl_ctl dump token $token
-
-If 'token $token' is passed to dump_addr(), copy it into the kernel
-netlink.
+Similar to check() in pm_netlink.sh, add a new helper check_output()
+in mptcp_join.sh to check the output of the given commands.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index e97856323ec3..8d7d1b4ed28e 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -1127,8 +1127,16 @@ int dump_addrs(int fd, int pm_family, int argc, char *argv[])
- 		  1024];
- 	pid_t pid = getpid();
- 	struct nlmsghdr *nh;
-+	u_int32_t token = 0;
-+	struct rtattr *rta;
- 	int off = 0;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 915ec79f5030..f4043baa59c6 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -21,6 +21,7 @@ cinfail=""
+ cinsent=""
+ tmpfile=""
+ cout=""
++check_output_err=""
+ capout=""
+ ns1=""
+ ns2=""
+@@ -186,6 +187,7 @@ init() {
+ 	cout=$(mktemp)
+ 	evts_ns1=$(mktemp)
+ 	evts_ns2=$(mktemp)
++	check_output_err=$(mktemp)
  
-+	if (argc != 2 && argc != 4)
-+		syntax(argv);
-+
-+	if (argc == 4 && !strcmp(argv[2], "token"))
-+		token = strtoul(argv[3], NULL, 10);
-+
- 	memset(data, 0, sizeof(data));
- 	nh = (void *)data;
- 	off = init_genl_req(data, pm_family, MPTCP_PM_CMD_GET_ADDR,
-@@ -1138,6 +1146,15 @@ int dump_addrs(int fd, int pm_family, int argc, char *argv[])
- 	nh->nlmsg_pid = pid;
- 	nh->nlmsg_len = off;
+ 	trap cleanup EXIT
  
-+	/* token */
-+	if (token) {
-+		rta = (void *)(data + off);
-+		rta->rta_type = MPTCP_PM_ATTR_TOKEN;
-+		rta->rta_len = RTA_LENGTH(4);
-+		memcpy(RTA_DATA(rta), &token, 4);
-+		off += NLMSG_ALIGN(rta->rta_len);
-+	}
-+
- 	print_addrs(nh, pm_family, do_nl_req(fd, nh, off, sizeof(data)));
- 	return 0;
+@@ -199,6 +201,7 @@ cleanup()
+ 	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
+ 	rm -f "$tmpfile"
+ 	rm -rf $evts_ns1 $evts_ns2
++	rm -f $check_output_err
+ 	cleanup_partial
  }
+ 
+@@ -3358,6 +3361,30 @@ userspace_pm_rm_sf()
+ 	wait_rm_sf $1 "${cnt}"
+ }
+ 
++check_output()
++{
++	local cmd="$1"
++	local expected="$2"
++	local msg="$3"
++	local out=`$cmd 2>$check_output_err`
++	local cmd_ret=$?
++
++	printf "%-42s" "$msg"
++	if [ $cmd_ret -ne 0 ]; then
++		mptcp_lib_print_err "[ FAIL ] command execution '$cmd' stderr "
++		cat $check_output_err
++		ret=${KSFT_FAIL}
++		return $cmd_ret
++	elif [ "$out" = "$expected" ]; then
++		mptcp_lib_print_ok "[ OK ]"
++		return 0
++	else
++		mptcp_lib_print_err "[ FAIL ] expected '$expected' got '$out'"
++		ret=${KSFT_FAIL}
++		return 1
++	fi
++}
++
+ userspace_tests()
+ {
+ 	# userspace pm type prevents add_addr
 -- 
 2.40.1
 
