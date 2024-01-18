@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAEA2D603
-	for <mptcp@lists.linux.dev>; Thu, 18 Jan 2024 18:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3252D603
+	for <mptcp@lists.linux.dev>; Thu, 18 Jan 2024 18:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705602475; cv=none; b=d1lwUf9yMc/BCTU1RiK+E4O1raxdF3CJcJ8GxnwbU33iX8wp+SHJe2tRl5I+G/vaxTUarYpwkyXgx/FTM/b6fInl/Np55chaeoAD3FeAIDfti1tzNdH4R6LcNVfbVSWSGQovZGcfh4Cm5p8L/XeyXp6e/yadEbpCUq9NdpTkAvk=
+	t=1705602476; cv=none; b=R0ySEVZGYBFz1zlJ5T1KhOwmmERVdYcwD1nCbuZB0cb3grvtahgzCz4T49WjK63Vy72ZjJG/gr6bH6Aplw2sesT75MGHAMA/Z0QEw7QGUmbfob2nJHfaveFLPbnMhidDL7WDyyEhlWdFgIQIjE/LuorsZ78VjHU0QOCY1mh9Ruk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705602475; c=relaxed/simple;
-	bh=loqJ83MLAG1L0qRH3DuB8cb7jPzyZf89xYMc6h9fHJI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ELB5hqfOYMS23pbk6F8TkuXSSgChgcd0Tny3xgfKzsPJwMWhmmMh6Gwruy8bcaCQhI1NEu8GwWJmFlbqX4pIuChZEj1zsFgldlUFrxS4u1rkBreIVuGU39qPaUB64vkNQdBeKwlMUqTMmrdD9Ue0OXHzTdaMF1zED9SEfD6o5Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLWWLuvr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705602476; c=relaxed/simple;
+	bh=SDBb6RXrWYX1luv9PnOcPtbZMucA995tbj8SOsqw+Gg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KcDWyqv0cOhzCW3mjB4rpc29uP5IrGyZd+KAxNwVLAkr+x/HIgJuW20QHfe0VHiWjiPC/YG2eagC8zrMs9YuHP4s0SIe41OOPZYVD+rcyW6QN07wBh0IamByO+lLVbRV4GPQsOwnwgNITORSyfzhyEaaaeng21O00x6URS4V32w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egt8+hpE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLWWLuvr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0513FC433C7;
-	Thu, 18 Jan 2024 18:27:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egt8+hpE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 329D3C43390;
+	Thu, 18 Jan 2024 18:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705602474;
-	bh=loqJ83MLAG1L0qRH3DuB8cb7jPzyZf89xYMc6h9fHJI=;
-	h=From:Subject:Date:To:Cc:From;
-	b=uLWWLuvrU2oAsCScf4WXQ8VM4JOC/NctTqzKSFLQJ+FuduiW4HbsTuOVbByP/M2Y0
-	 AEZHgfAGb4z16pMfTL12uWiMrXtjCjpTs5+oTN1BMWo4HCrOaR7F8nLUg/YMNZA3TO
-	 zSWxT7FEojvZOccbmoGVeA9kXhO6KvZJS0Du15v8zFM0C78iF41DFa/FitHEgrGopG
-	 ImFDPQRIy3XhCX8Ritlr+fFKiWviEV1cWzZQd5G1kbUXvO+cOTKyN9LakK5DZXBrDG
-	 1GOhnEqSuxOUdUhADicLVEGhygyU+8J+QLL21+cLiqdg5uo8fWADGlTxYqAGjL87ql
-	 J1vwUvVjIrcdg==
+	s=k20201202; t=1705602475;
+	bh=SDBb6RXrWYX1luv9PnOcPtbZMucA995tbj8SOsqw+Gg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=egt8+hpEquL4zj++AS/TSWiyudBmlGOQ5gGKAut7rbJyTPWRhiwA5OMHNUl8jDfHd
+	 VnIblGmft9E8/UagR764kjWJ0YwQswsjRY9KctvOgkNnWsJZbtv44XFlKRmahOj1+9
+	 beAsB7ry28VgWaKNI1I+/ViQiDuQ9Hd3CaM2E7EfiWzeBPABf8dqGvN5os3aJ1OcD5
+	 ++2OaRz5YFZUhDZWgi2kpr9GQ/q/pkdk1uMJAXN/XSjcT0aWj36xeF4AMi6C4EjQhu
+	 ZtVz8p35HpOGhdo+Z9hcMICxHgq/t4B9Kmiq/rbd2u3KaxOzLAHl2iNissZTBe40c+
+	 EjuonmRZcCUJA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next 0/7] selftests: mptcp: improve results in slow
- CI envs
-Date: Thu, 18 Jan 2024 19:27:30 +0100
-Message-Id: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-0-f3a4db41c3be@kernel.org>
+Date: Thu, 18 Jan 2024 19:27:31 +0100
+Subject: [PATCH mptcp-next 1/7] selftests: mptcp: add missing kconfig for
+ NF Filter
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,83 +38,57 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJJtqWUC/yWNQQqDMBAAvyJ77kIiWrFfKT2EZG0Xk5hmowji3
- w3tcQ4zc4BQZhJ4NAdk2lh4iRX0rQH7MfFNyK4ytKrtlNYKhfxUSIpgSMUmFA6rLyje2Bm/FFa
- MC85bQGfugxtV31vVQc2lTBPvv9UT/m6kvcDrPC+wwcv8hgAAAA==
+Message-Id: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-1-f3a4db41c3be@kernel.org>
+References: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-0-f3a4db41c3be@kernel.org>
+In-Reply-To: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-0-f3a4db41c3be@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2696; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=loqJ83MLAG1L0qRH3DuB8cb7jPzyZf89xYMc6h9fHJI=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlqW2p2x+PQGzt262xIKysU5iGFeXyK6CF4t/SB
- hDfNItseUaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZaltqQAKCRD2t4JPQmmg
- c74XEACXAJ9HkcgRhNJsandjS60kdyDd+oxf7ookWRyZbBDQtICQxp6ZoDJJIvdVsHEdQrqqm2z
- y7Ab0RhAg+1m23X6NJzfl7f2eDXzqQPmLCLgRSA4vn/n1cadXsiozd3gPHarfClvlrlsG3tFW/N
- +JupSbWfADWZKHTP5LM10KVMuJ4pS3N4tY1Mv8Pb8EZnaW2ZR8ttCA5CaIPRfiJXRk19azPvAh2
- qK1lZyd1c2PXTbfQyPSBUV87nOnJTEx4r9TKY04PIgw5Wz7DL3S3Brna7zsdrJ1uVhiCTWqK8CI
- hzw3V9+fPhqjOV+EJ0OZSiM7fFDnwetICflYgCx4trusz3jDyCtjEB8/qthtRzqeVnC1wkuSl87
- lumt571HI4TJ0VcIsMwHT9Ysz7A5yf9Ixo3tiFX2VP4f2TeCeANFYOBHqvaJ+vIwdsbgd6IGVpg
- vzY3PVi+yA18JL5Zftzmc8gufV2y28sQkiH2xQRwLfPk4yIBszAboyqE4k8Qf8iecaMCIb1PCOY
- NVX0iF19aQpVcRk1zhNovwEbR1Z+ZDG1niJIp1moIrwEZOWGFS6XSRdOd0LyFs2xSzYN5I6hQrg
- AAVGhTn7wMkU1F1NSvUvFg5n4NfEv8P6Gzm4NRPMEZ81zhi7QUtC34G276jo+MN5FAKdlp+eIW1
- vTiGOv1tNYOUqYg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1024; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=SDBb6RXrWYX1luv9PnOcPtbZMucA995tbj8SOsqw+Gg=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlqW2pS6Nrz4FdLil6jAX5zq16e6lAjZwlTNrTJ
+ 8oI4H3mHNaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZaltqQAKCRD2t4JPQmmg
+ c3A6EAC4lafHwhn+OCZm8V4nIHQvvYEuh7ir1uqdxC1IdgNcDFTd0d3Ah6Z12iNp4183CA/t/u6
+ rmqko6bQzv5OA3H6PD4Hwy33LdWPSOwqlLB1UJO5AMMPeNiJdIzddBM879BNDpRpOOTPE4RGUUv
+ ZIRcJGGvqUyKs2trZcGixRTBcbCGWlC2mEIM8kSi7uynA2budRiiA5caJKNH7ycbSCPSQbJeC9X
+ MS8RECeSRlGwepaAc+7EXcanJpia6UBLU5MBd/rLI/NjFdyfy8L8VKsz6ceBg6h80Gt0j8KVFJK
+ 8skF+AfAgWorTbIuvlkirHJuzefyLCbC4QmRL8RFxS7dMroTGi2mEtokvgw6REJ08N/yGhRsnTM
+ 9sMgwEZvBYhUrgeSoZoxYy+0Cs4FUXyP7gmAZEK48IczsTgq7syohGTjUeNq6fU8N42V/jd3TBO
+ NXL/3ZgagwZXyYwT5MGAJfHy0qcTWJE937YZQ5Mnc4j4/xpWT1Oj4qcIzWzdJ9vJpp1lECwmQu+
+ tLnnuq1eUViy3YdfHLXn3wZBdHdGGELO1MhMXP49HgxzYm7rv5b8WsK5OpuxQRn1b2/OC/2/Qi5
+ NTzu6bN/t0YtxfBPgOSdu/1wzvLSYdZhofA6UVz12JK+daHNxILRMYoAgK1FMTQsATH6ZP6Wtvp
+ al+SBA7Nht91wTA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The initial goal of this series is to improve the results when slow test
-environments, e.g. when using QEmu without KVM.
+Since the commit mentioned below, 'mptcp_join' selftests is using
+IPTables to add rules to the Filter table.
 
-I looked at the results from LKFT [1] and noticed that some mptcp_join
-subtests were skipped because it was not possible to add IPTables rules.
-It looks like some KConfig were missing. The 3 first patches should fix
-that.
+It is then required to have IP_NF_FILTER KConfig.
 
-I also noticed that mptcp_join selftest stopped after a timeout of 20
-minutes. We keep adding tests there, it is normal to increase this
-timeout at some points, especially because we forced many subtests to
-have a longer connections, to have enough time for some actions to
-happen. Patch 4 fixes that.
+This KConfig is usually enabled by default in many defconfig, but we
+recently noticed that some CI were running our selftests without them
+enabled.
 
-Patch 5 decreases the BW in simult flows, hopefully reducing the load on
-the CPU, and improving the stability.
-
-Patch 6 is needed because our CI run MPTCP Connect twice: the second
-time with '-m mmap'. When parsing the results, the tests from the two
-runs have the same title, hence the same "fingerprint". Instead of
-having a post-processing step modifying the results for this specific
-case, it is now possible to set a prefix.
-
-When looking at the results of mptcp_join, I also realised that the
-'userspace' tests were blocking after having displayed the results.
-That's because they wait for the end of the transfer, while they don't
-need to: tests are the end are ignored because this is done in the
-background (but that's fine, other tests check that). Patch 7 improves
-the situation there.
-
-Link: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240108/testrun/21966973/suite/kselftest-net-mptcp/tests/ [1]
+Fixes: 8d014eaa9254 ("selftests: mptcp: add ADD_ADDR timeout test case")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Matthieu Baerts (NGI0) (7):
-      selftests: mptcp: add missing kconfig for NF Filter
-      selftests: mptcp: add missing kconfig for NF Filter in v6
-      selftests: mptcp: add missing kconfig for NF Mangle
-      selftests: mptcp: increase timeout to 30 min
-      selftests: mptcp: decrease BW in simult flows
-      selftests: mptcp: allow changing subtests prefix
-      selftests: mptcp: join: stop transfer when check is done
+ tools/testing/selftests/net/mptcp/config | 1 +
+ 1 file changed, 1 insertion(+)
 
- tools/testing/selftests/net/mptcp/config          |  3 +++
- tools/testing/selftests/net/mptcp/mptcp_join.sh   | 27 +++++++++--------------
- tools/testing/selftests/net/mptcp/mptcp_lib.sh    |  2 +-
- tools/testing/selftests/net/mptcp/settings        |  2 +-
- tools/testing/selftests/net/mptcp/simult_flows.sh |  8 +++----
- 5 files changed, 20 insertions(+), 22 deletions(-)
----
-base-commit: 387cadd951df0629cc1098546acb3da13e8f6ebf
-change-id: 20240110-selftests-mptcp-simult-slack-qemu-no-kvm-da67d9055c04
+diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+index e317c2e44dae..2a00bf4acdfa 100644
+--- a/tools/testing/selftests/net/mptcp/config
++++ b/tools/testing/selftests/net/mptcp/config
+@@ -22,6 +22,7 @@ CONFIG_NFT_TPROXY=m
+ CONFIG_NFT_SOCKET=m
+ CONFIG_IP_ADVANCED_ROUTER=y
+ CONFIG_IP_MULTIPLE_TABLES=y
++CONFIG_IP_NF_FILTER=m
+ CONFIG_IP_NF_TARGET_REJECT=m
+ CONFIG_IPV6_MULTIPLE_TABLES=y
+ CONFIG_NET_ACT_CSUM=m
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.43.0
 
