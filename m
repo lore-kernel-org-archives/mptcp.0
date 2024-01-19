@@ -1,128 +1,153 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F4229438
-	for <mptcp@lists.linux.dev>; Thu, 18 Jan 2024 19:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D6E81F
+	for <mptcp@lists.linux.dev>; Fri, 19 Jan 2024 01:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705607594; cv=none; b=qo4iNRs3gl6ba7VHjGJLn6tq2s4buyOYFnv3JFMMQjekrSO+T+nW/5nRiJDMDSCDZer5YTIIh06KHbKnbikTiY7pyvWhBFnTrXbLHoiIrapf73P/cF+zHs6xEb2ortTAoERXcl7n26orQMbKqeH87wR/aBiyrPZxrxhWs8Ci+mA=
+	t=1705626218; cv=none; b=AXuAm0JGr2rlbUs5Ll+DUgNss1uoiRPhQhgmWaMFtg/0QwWa58t1W9ati5u0VkzeOaK5EeBZPLWOmfspWfZfgOf3fDXoYoBVbuvCzzS/rr9xNvrOFHaAPPcPRjHa5AkcLmUfVDYvvgg2CSfu0vVQ4BLGaoW6GyreHOTkIFp5uHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705607594; c=relaxed/simple;
-	bh=6wpx8c94XBS5FfscnJ94zNYPyy/aRlZZlgeBDqsatDg=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=hZhrDGqZoYqVmepfGL4ECIU3zeWAotT1daD0WyHPvZf1Rh/Fj0verzzMyUUtbvm7MFdvV1zTNa/QZkh9yHL/UddQXAr8vNlenQkzQeLid29RQDULfag89td3Qxc0UmM3xO4/NweqUlo2JjBbFphPyVxpw6v4RS8i2f/Z4KsrQJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jzmGuM+K; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705626218; c=relaxed/simple;
+	bh=5VJUB6HmKB9SPS7LH8jWbuLidmHO1YI1CFVYTzUzVvM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jDdHTeIF0WyeKNPD6Zn7TdQdsVsQfuGub9UsblzyPTWzHrsiXA+OSfSi9t5zcbS/m/2jQLydV1Ut5P2Pk88Vv4Z53K9WLXF1vi85r0om0DtLVkut0+RxpAZb77LILt0W0Mx+XC4zLxf/alifXwCpArUcZP7kRr8SMPFpK1zdQzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=scniTL6B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzmGuM+K"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6dd8cba736aso5509a34.3
-        for <mptcp@lists.linux.dev>; Thu, 18 Jan 2024 11:53:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705607592; x=1706212392; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gjhvxRB8u6CJzrIJVB/pqbxEhyCR7aQik+VBqfoVMHs=;
-        b=jzmGuM+K9Nc1GMGy+aPRGOKLu8BR7RaEY/Gr4F1EQNgfkD4V7J3NyrJvy5yesAnHKE
-         Iac9LrwuWZ5utTHoJs0ZgWTt/FQczGtaTJzAyW9L4fzM3UeQUQxj+wuKB8jVwy6JHJvp
-         eaWyRVSvcJ2utxrOjdFyWyLeamuKlvTtQsX3k2U0WvEEiMlz6IKXfp9PU45IMhD1KpiM
-         dCziUXVK5JQSzobBiAAH2F8hdyOvGHHLD+jICe09TK9WwgEIFiAD21n/MyRHico4/Lik
-         /PSoUBR3N/ho457AhAGanDqd7fmvdu/HTGKZ47b3kgXmhZTAjYS6SlqYkqpbudhI26Xr
-         r84g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705607592; x=1706212392;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gjhvxRB8u6CJzrIJVB/pqbxEhyCR7aQik+VBqfoVMHs=;
-        b=XJplHwyWBoKAyBvzXE83D3xqs8VMHhzFPZGgZJ5spBSN8aQ2FgzIXZ9rp7Be0CSHCI
-         6NagQcdRtnPni/iiVc8h+Q9KUoucml2VXm7COQNElk1/3kkFsXtSk+n7gqmW/bz7rkiy
-         gzCPRDUXkiBrVNfDAZMI/btUeVt0LDwI5YG7p2shpxNEzyEOfhEke7xN1Sd0m789qu2o
-         buyYa5WpOMV2kRGimDDa9JqsuYs+Vrp9auuLCKFGy8s0g3ptj31U5cUFtE3tKAG7DRoW
-         wav7cZZsA14wlaveQsZtfegn53aailGJJnOVl46MxHuqzJGCGlRPiTmLghn73UX2Sf4k
-         mD0w==
-X-Gm-Message-State: AOJu0Yz49Ri7JECnacXMGFNgfc1yipTCw69WsMKz3lK3tT1JPkLNPfBd
-	vbUN4VF8I8StWtaBsWJvETlYeSVSTiyVPHQSoDLcnzLqF0/5oEAIQnL0zfc=
-X-Google-Smtp-Source: AGHT+IHhoH8UpFZ6ybLXyxqnohRuteD5Cdyr5JgolCjOjILtAvwNoybvZvVT8BBN/3uFhBdqLhn4OA==
-X-Received: by 2002:a05:6830:7:b0:6e0:c031:681d with SMTP id c7-20020a056830000700b006e0c031681dmr1509462otp.55.1705607591552;
-        Thu, 18 Jan 2024 11:53:11 -0800 (PST)
-Received: from [127.0.0.1] ([20.81.159.99])
-        by smtp.gmail.com with ESMTPSA id v10-20020a05620a122a00b0078321b70b05sm5512940qkj.101.2024.01.18.11.53.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 11:53:11 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-7-f3a4db41c3be@kernel.org>
-References:
- <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-7-f3a4db41c3be@kernel.org>
-Subject: Re: selftests: mptcp: join: stop transfer when check is done:
- Tests Results
-Message-ID: <5a02fa68-a577-3bc7-88bc-84e2d1cc2e5e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 18 Jan 2024 19:53:10 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="scniTL6B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AFFAC433C7;
+	Fri, 19 Jan 2024 01:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705626218;
+	bh=5VJUB6HmKB9SPS7LH8jWbuLidmHO1YI1CFVYTzUzVvM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=scniTL6BGueqNiNXzNx6Bp4//RiUwSSUkW0Vr7yhbpFI9UFdgyU/qXGir2CNGhn59
+	 Pm8bdr5ZVA7UQaIfNl6Lv7b0qx9zMznaw9Q0KqJto/P47PC39yo/0CZHMFCzlIkppe
+	 AWTktpYzedzny0LpgHoPC0UL7SUnGtSc7bqZS1m9g7lUJNBF2VA3yyDFBUdJTNE04C
+	 u1zBAUG4axviK8PO9bLwwgmMee6xN+Zc9hivF0iaxBAx7Oy+qa3AkB/hAp0C1Bl19C
+	 +vcbhMfQ59BAjX3Wfe1Eb7oH9sopWSXWF7cKzJOD4iPzStCexCZv1+CAZEeOourW/K
+	 IafpWr/sknStg==
+Date: Thu, 18 Jan 2024 17:03:37 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 2/5] mptcp: annotate lockless access for the
+ tx path
+In-Reply-To: <92930a7b962611507f4bb87671d97f526ece5952.1705427537.git.pabeni@redhat.com>
+Message-ID: <348ef69e-3d3f-fb7d-2388-174ef14e3209@kernel.org>
+References: <cover.1705427537.git.pabeni@redhat.com> <92930a7b962611507f4bb87671d97f526ece5952.1705427537.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Matthieu,
+On Tue, 16 Jan 2024, Paolo Abeni wrote:
 
-Thank you for your modifications, that's great!
+> The mptcp-level TX path info (write_seq, bytes_sent, snd_nxt) are under
+> the msk socket lock protection, and are accessed lockless in a few spots.
+>
+> Always mark the write operations with WRITE_ONCE, read operations
+> outside the lock with READ_ONCE and drop the annotation for read
+> under such lock.
+>
+> To simplify the annotations move mptcp_pending_data_fin_ack() from
+> __mptcp_data_acked() to __mptcp_clean_una(), under the msk socket
+> lock, where such call would belong.
+>
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> net/mptcp/options.c  |  2 +-
+> net/mptcp/protocol.c | 14 ++++++--------
+> net/mptcp/protocol.h |  2 +-
+> 3 files changed, 8 insertions(+), 10 deletions(-)
+>
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index cebbd0bc32aa..51b00d7e7c89 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -1061,7 +1061,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
+> 		msk->wnd_end = new_wnd_end;
+>
+> 	/* this assumes mptcp_incoming_options() is invoked after tcp_ack() */
+> -	if (after64(msk->wnd_end, READ_ONCE(msk->snd_nxt)))
+> +	if (after64(msk->wnd_end, snd_nxt))
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+Is it ok to remove this READ_ONCE()? The snd_nxt local is stored before 
+the data_lock is acquired.
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4510682075365376
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4510682075365376/summary/summary.txt
+- Mat
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5636581982208000
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5636581982208000/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/2af4c20dfe1e
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> 		__mptcp_check_push(sk, ssk);
+>
+> 	if (after64(new_snd_una, old_snd_una)) {
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 9ad672a10c11..679d4576d2c1 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1033,13 +1033,14 @@ static void __mptcp_clean_una(struct sock *sk)
+> 		msk->recovery = false;
+>
+> out:
+> -	if (snd_una == READ_ONCE(msk->snd_nxt) &&
+> -	    snd_una == READ_ONCE(msk->write_seq)) {
+> +	if (snd_una == msk->snd_nxt && snd_una == msk->write_seq) {
+> 		if (mptcp_rtx_timer_pending(sk) && !mptcp_data_fin_enabled(msk))
+> 			mptcp_stop_rtx_timer(sk);
+> 	} else {
+> 		mptcp_reset_rtx_timer(sk);
+> 	}
+> +	if (mptcp_pending_data_fin_ack(sk))
+> +		mptcp_schedule_work(sk);
+> }
+>
+> static void __mptcp_clean_una_wakeup(struct sock *sk)
+> @@ -1499,7 +1500,7 @@ static void mptcp_update_post_push(struct mptcp_sock *msk,
+> 	 */
+> 	if (likely(after64(snd_nxt_new, msk->snd_nxt))) {
+> 		msk->bytes_sent += snd_nxt_new - msk->snd_nxt;
+> -		msk->snd_nxt = snd_nxt_new;
+> +		WRITE_ONCE(msk->snd_nxt, snd_nxt_new);
+> 	}
+> }
+>
+> @@ -3210,8 +3211,8 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+> 	if (mp_opt->suboptions & OPTION_MPTCP_CSUMREQD)
+> 		WRITE_ONCE(msk->csum_enabled, true);
+>
+> -	msk->write_seq = subflow_req->idsn + 1;
+> -	msk->snd_nxt = msk->write_seq;
+> +	WRITE_ONCE(msk->write_seq, subflow_req->idsn + 1);
+> +	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
+> 	msk->snd_una = msk->write_seq;
+> 	msk->wnd_end = msk->snd_nxt + req->rsk_rcv_wnd;
+> 	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
+> @@ -3316,9 +3317,6 @@ void __mptcp_data_acked(struct sock *sk)
+> 		__mptcp_clean_una(sk);
+> 	else
+> 		__set_bit(MPTCP_CLEAN_UNA, &mptcp_sk(sk)->cb_flags);
+> -
+> -	if (mptcp_pending_data_fin_ack(sk))
+> -		mptcp_schedule_work(sk);
+> }
+>
+> void __mptcp_check_push(struct sock *sk, struct sock *ssk)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 3af85643328e..d05ec76dd7c2 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -402,7 +402,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(struct sock *sk)
+> {
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+>
+> -	if (msk->snd_una == READ_ONCE(msk->snd_nxt))
+> +	if (msk->snd_una == msk->snd_nxt)
+> 		return NULL;
+>
+> 	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
+> -- 
+> 2.43.0
+>
+>
+>
