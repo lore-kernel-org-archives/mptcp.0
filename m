@@ -1,53 +1,53 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ACC184D
-	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 01:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B57A4A28
+	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 01:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705885359; cv=none; b=QEuxDP7wBLbHT76WxSDwl61ni6/A210a0Bz9CuYpYlBVbW/Zr5uIYcZnU2VSqrU4RADA5M02Mt8KmYrIdwjVehwAmvdhGcwUzOw2VF6rCTgkC0gMrIqltajs96q62yiV4994O9JDkMT+Qc6dgs5rMuFWyjz15l4WTXGWsEZnpS8=
+	t=1705888048; cv=none; b=lalXtWY2XoUlAXWZAGhMpYI1ZEjdq4cD+k/SzQATebp9nJTnxTmbNTJfS8m5OwugjgNm7QJjlJ/7ZPUEH9HB62DN3qEQipIErkKsKTfWurZrAWpxhXiT+Qoj9FCxVar+EBs1v6vvzx4lkfqas/bbjx0TwfFYbepaGw/6TyU/QR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705885359; c=relaxed/simple;
-	bh=bHn4k31ETY7/fVjXSAFBj6oV/q3rQ+6fhx2fysW+zWs=;
+	s=arc-20240116; t=1705888048; c=relaxed/simple;
+	bh=a5BEKvbCIQggB0P6OdyiqiXr+1+faFB8ziCIDk9z8nk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cLiEMlHHSfPdhhlS1mozk8z0O2TZYOgAo79GAP0QxJy9CqUw09dFDUwPs3H7pzsMaQqBq2FJTvnUoMjWlV6PXIacOlFKaLAeW5ECrtIEQH9tXuoHFEo/c4IfA+apuSo/9IOZ4I8kp34trsTiuwiYRvj2uei++hcuyWKSkEvBLq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hHNaJN4w; arc=none smtp.client-ip=209.85.218.45
+	 To:Cc:Content-Type; b=nvexqLbmS6B7Y6bcRlmTT6BsdYnYwhRGQzRXLPrsKxWjWjXlqk7lP2BcVKVz0NWoDolGvfIaQlZHWhTW5S2EF3WsfsAw/MNPCDpViCNfjK9p+JkHNDNJ3CwCRecoFZo1sA+AUb8EzPp14eRGPVfQSWrDTQTl3rApb+Wfr/LGb0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SzBr+VYz; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hHNaJN4w"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a2c375d2430so293480066b.1
-        for <mptcp@lists.linux.dev>; Sun, 21 Jan 2024 17:02:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SzBr+VYz"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50e67e37661so3569526e87.0
+        for <mptcp@lists.linux.dev>; Sun, 21 Jan 2024 17:47:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705885356; x=1706490156; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1705888045; x=1706492845; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qBDRbLk9AwXA16COeIf7kji0rjUWeRLw4C3XqzRxkC8=;
-        b=hHNaJN4wTV6XwIzd3E7ftvfL+XjQhrbzYqKCB5RFiq89Ry8BeFZIPAv5GEVdQBEoHq
-         jhEy665aHn5JtLPjNAhlxDDe5YN4kH5/4Xf3SVTvCQBE4NpBmySspJOR9wq2p2vBdUvG
-         bruF6YYZLVkFwtNpX5Mt5G3F4Dcc7/5rvsIgzODQ0BsiAgTW6XZJyoHj2b8lSrZMMYQw
-         ed9qVCU3KeEf6GgxzuC01rg/BAOWYq4xxhrCHChe/6Vy02qwScKp58nwqWpQImQaFvEd
-         BZ4FW22vkHE9k5vDaZG8v6863VVUidAePWrnX9rBIge6CZktTN2cfmpviOGgV8JVuSqM
-         QFwg==
+        bh=VOS/uBJnH2c7oN9aVh6eSBL5Nld/NqyD2nOGrrgErSo=;
+        b=SzBr+VYzsQ/TKDes4Ic3CgwUq8d18CaDwxj/Vfto7u4IGW44nGPV7xNGKrwawOCeOF
+         xlPg1ZU07xVRdOmPj2X+EGT8p/SOkDEGR6z86fOMFjeETqr2UGvpwrbs1/K58ZG0DvKF
+         7hVKP5Z0uyNFLc9LgZyzu+MrebZiWxXpEAU8sGMrwa3XUVTf4EaOlH7XN8bhrCaMAMCA
+         lIPCEdJvAPRwuT5GZ+ZD/y7vfsGRor0BnmXDbzMhUEkWtGxMw4HU3QkIAeqnSSRDEI+V
+         1EjRK9tDH5YtFCRZbr2lejD5rfuQWiLRY7WQkCw5aLVrCKyWcSl7ErJNRDv3z6tKOOgx
+         EH4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705885356; x=1706490156;
+        d=1e100.net; s=20230601; t=1705888045; x=1706492845;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qBDRbLk9AwXA16COeIf7kji0rjUWeRLw4C3XqzRxkC8=;
-        b=ScrYK0jzyMQjjrXiaRMWhGZM/yUVFAdAVsyh2uLC212/kodegsLNXY/i05GrphNix/
-         N+o2moqn3mE3w5bOFDKIEHrcPKP83E+AsVSjqxFaIXKXSn9+Wwe+B8KssIpNw4FvKYSO
-         8fjIPL1REQzhB4T2kjg9MnkGXTeaZU9V9LWuHAZ3WcdjRB18lGgy82TD71dSIRVC3fJr
-         NqKnfK7vk+8OZ3Y36J37bau/QA7XFq8LR+zMFHQzM0F4p3t4fP0UAxTwgkdX0RQlNJIE
-         v1rX1aJ3DiinQgHG189BA4WwBmzFTzicu7fVbSyISgJWn/+gDKHYbeTUe/xII4cPSI3P
-         LquA==
-X-Gm-Message-State: AOJu0Yydethlik8T6MBmfYkdx841h7ykaQUzhOrB8rzaG6//jLHhJxm/
-	3H+B8ABDvBPTqIx0uK2E/Bkeyuzr5eDV/EwciwW783wJOhsgS8TzBM6FLu47qPGua1oZDwEOrRK
-	bgmbWsD4Y9Ob4WQ/eKQxrfbgjL3vVo8gPs04=
-X-Google-Smtp-Source: AGHT+IE/bd6Oppdt3N4jRvnfUyv+MvNl0pSP7tT8TgodgAYimzx5LjVwrDuK71LeEJ6LF/CnWYdmWom1vC5IkzbDN/0=
-X-Received: by 2002:a17:907:7810:b0:a2d:4383:78c7 with SMTP id
- la16-20020a170907781000b00a2d438378c7mr1742449ejc.132.1705885355694; Sun, 21
- Jan 2024 17:02:35 -0800 (PST)
+        bh=VOS/uBJnH2c7oN9aVh6eSBL5Nld/NqyD2nOGrrgErSo=;
+        b=bDBnWUlDvSKWAuLMO1UZ6FqvqvF3yfsnlJfP55wr+f1NGA+U2oZxr/18jF25fX8oMj
+         6NypwaompTntDPYuRKvd4MePFb8Vjs6xbMdCPo8Usdo52Lppk1cBFT0DybNhd6w+djxE
+         K72oPyTfeG4mOgV8j0w2W+V2vGrMZoOMyscR75prbV1IjObG9Lm72w8NRu4ovW3UYjqK
+         f0I2n5yWK+v4tQLS02GUFwsf0CD5MjwrsxDLXH0QHpQP8NWrPqx/bI3pk5cn8hTxr3Xz
+         ehGnPcrSRuBiUWnLJ1pRWO0yaSSzAIc6B64H+frB56G86DTk/9ZLwpPWcoPfTLCifvtz
+         3IYA==
+X-Gm-Message-State: AOJu0YxWchtYTPPktaMVDuPRM7wv2XglT6WmAMgceiQSypnuZ9B+Gn16
+	fEIMQLVrm7PFXw0dM4TcnscSJsF1IaRDzx6hBDXQ/IqCj61URd9jylSWPLyb+nR/5JxFvDHkSmk
+	MElVv+Nf5T5tT0RHK7WTwm9Hg38Y=
+X-Google-Smtp-Source: AGHT+IEO2vtOdaCPIqjRKQp5RGdEU9erVDveJl0ZNyxqyPDbYVQpzGx1VUF3GzqSOAo4jGthIfxrRF9NzOuxTPjQAYI=
+X-Received: by 2002:ac2:5fd2:0:b0:50e:aa30:5ead with SMTP id
+ q18-20020ac25fd2000000b0050eaa305eadmr1171517lfg.113.1705888044954; Sun, 21
+ Jan 2024 17:47:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -55,143 +55,59 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-0-f3a4db41c3be@kernel.org>
- <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-7-f3a4db41c3be@kernel.org>
-In-Reply-To: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-7-f3a4db41c3be@kernel.org>
+ <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-2-f3a4db41c3be@kernel.org>
+In-Reply-To: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-2-f3a4db41c3be@kernel.org>
 From: Geliang Tang <geliangtang@gmail.com>
-Date: Mon, 22 Jan 2024 09:02:24 +0800
-Message-ID: <CA+WQbwsY3U-jAf83UsA-66EJv4yc766N-Jgrz_zEDzaezcWOzw@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next 7/7] selftests: mptcp: join: stop transfer when
- check is done
+Date: Mon, 22 Jan 2024 09:47:13 +0800
+Message-ID: <CA+WQbwtkbYkxMkfhs0yUOx5RnJ2_ftNf7i0URMpcBL7qK7GdhQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next 2/7] selftests: mptcp: add missing kconfig for
+ NF Filter in v6
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
+> Since the commit mentioned below, 'mptcp_join' selftests is using
+> IPTables to add rules to the Filter table for IPv6.
 >
-> Since the mentioned commit, the "userspace pm" tests of mptcp_join
-> selftests are launching the whole transfer in the background, do the
-> required checks, then wait for the end of transfer.
+> It is then required to have IP6_NF_FILTER KConfig.
 >
-> There is no need to wait longer, especially because the checks at the
-> end of the transfer are ignored (which is fine). This saves quite a few
-> seconds on slow environments.
+> This KConfig is usually enabled by default in many defconfig, but we
+> recently noticed that some CI were running our selftests without them
+> enabled.
 >
-> While at it, use 'mptcp_lib_kill_wait()' helper everywhere, instead of
-> on a specific one with 'kill_tests_wait()'. Note that old versions will
-> need commit bdbef0a6ff10 ("selftests: mptcp: add mptcp_lib_kill_wait")
-> as well.
-
-Great! This patch looks good.
-
-Reviewed-and-Tested-by: Geliang Tang <geliang@kernel.org>
-
->
-> Fixes: 4369c198e599 ("selftests: mptcp: test userspace pm out of transfer")
+> Fixes: 523514ed0a99 ("selftests: mptcp: add ADD_ADDR IPv6 test cases")
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 27 ++++++++++---------------
->  1 file changed, 11 insertions(+), 16 deletions(-)
+>  tools/testing/selftests/net/mptcp/config | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 3a5b63026191..c07386e21e0a 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -643,13 +643,6 @@ kill_events_pids()
->         mptcp_lib_kill_wait $evts_ns2_pid
->  }
->
-> -kill_tests_wait()
-> -{
-> -       #shellcheck disable=SC2046
-> -       kill -SIGUSR1 $(ip netns pids $ns2) $(ip netns pids $ns1)
-> -       wait
-> -}
-> -
->  pm_nl_set_limits()
->  {
->         local ns=$1
-> @@ -3453,7 +3446,7 @@ userspace_tests()
->                 chk_mptcp_info subflows 0 subflows 0
->                 chk_subflows_total 1 1
->                 kill_events_pids
-> -               wait $tests_pid
-> +               mptcp_lib_kill_wait $tests_pid
->         fi
->
->         # userspace pm create destroy subflow
-> @@ -3475,7 +3468,7 @@ userspace_tests()
->                 chk_mptcp_info subflows 0 subflows 0
->                 chk_subflows_total 1 1
->                 kill_events_pids
-> -               wait $tests_pid
-> +               mptcp_lib_kill_wait $tests_pid
->         fi
->
->         # userspace pm create id 0 subflow
-> @@ -3494,7 +3487,7 @@ userspace_tests()
->                 chk_mptcp_info subflows 1 subflows 1
->                 chk_subflows_total 2 2
->                 kill_events_pids
-> -               wait $tests_pid
-> +               mptcp_lib_kill_wait $tests_pid
->         fi
->
->         # userspace pm remove initial subflow
-> @@ -3518,7 +3511,7 @@ userspace_tests()
->                 chk_mptcp_info subflows 1 subflows 1
->                 chk_subflows_total 1 1
->                 kill_events_pids
-> -               wait $tests_pid
-> +               mptcp_lib_kill_wait $tests_pid
->         fi
->
->         # userspace pm send RM_ADDR for ID 0
-> @@ -3544,7 +3537,7 @@ userspace_tests()
->                 chk_mptcp_info subflows 1 subflows 1
->                 chk_subflows_total 1 1
->                 kill_events_pids
-> -               wait $tests_pid
-> +               mptcp_lib_kill_wait $tests_pid
->         fi
->  }
->
-> @@ -3558,7 +3551,8 @@ endpoint_tests()
->                 pm_nl_set_limits $ns2 2 2
->                 pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
->                 speed=slow \
-> -                       run_tests $ns1 $ns2 10.0.1.1 2>/dev/null &
-> +                       run_tests $ns1 $ns2 10.0.1.1 &
-> +               local tests_pid=$!
->
->                 wait_mpj $ns1
->                 pm_nl_check_endpoint "creation" \
-> @@ -3573,7 +3567,7 @@ endpoint_tests()
->                 pm_nl_add_endpoint $ns2 10.0.2.2 flags signal
->                 pm_nl_check_endpoint "modif is allowed" \
->                         $ns2 10.0.2.2 id 1 flags signal
-> -               kill_tests_wait
-> +               mptcp_lib_kill_wait $tests_pid
->         fi
->
->         if reset "delete and re-add" &&
-> @@ -3582,7 +3576,8 @@ endpoint_tests()
->                 pm_nl_set_limits $ns2 1 1
->                 pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
->                 test_linkfail=4 speed=20 \
-> -                       run_tests $ns1 $ns2 10.0.1.1 2>/dev/null &
-> +                       run_tests $ns1 $ns2 10.0.1.1 &
-> +               local tests_pid=$!
->
->                 wait_mpj $ns2
->                 chk_subflow_nr "before delete" 2
-> @@ -3597,7 +3592,7 @@ endpoint_tests()
->                 wait_mpj $ns2
->                 chk_subflow_nr "after re-add" 2
->                 chk_mptcp_info subflows 1 subflows 1
-> -               kill_tests_wait
-> +               mptcp_lib_kill_wait $tests_pid
->         fi
->  }
->
+> diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
+> index 2a00bf4acdfa..ec70b27288fc 100644
+> --- a/tools/testing/selftests/net/mptcp/config
+> +++ b/tools/testing/selftests/net/mptcp/config
+> @@ -20,6 +20,7 @@ CONFIG_NETFILTER_XT_TARGET_MARK=m
+>  CONFIG_NF_TABLES_INET=y
+>  CONFIG_NFT_TPROXY=m
+>  CONFIG_NFT_SOCKET=m
+> +CONFIG_IP6_NF_FILTER=m
+
+How about adding this config right after CONFIG_IP_NF_TARGET_REJECT=m?
+
+Since "IPv6: Netfilter Configuration" section in kconfig is always
+after "IP: Netfilter Configuration" one.
+
+Otherwise, the first three patches LGTM!
+
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+
+-Geliang
+
+
+
+
+>  CONFIG_IP_ADVANCED_ROUTER=y
+>  CONFIG_IP_MULTIPLE_TABLES=y
+>  CONFIG_IP_NF_FILTER=m
 >
 > --
 > 2.43.0
