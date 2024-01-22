@@ -1,50 +1,50 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72E37C0A8
-	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A1E7C0BA
+	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936136; cv=none; b=FDY7LIimK5YjC8cSxjX3QyjNy1JLc95ugw1nGgJZDwZQVhhU2fyVgGhdzIVnKi4MmJ/m178kNGRWhJm4LNOVibGlRbV0V6b34C6uFCRjf2acJn8Lh3AwLjpEJ4PUK6ePexuVJmE35EzCLsy1m1JMJ2iVRNGznOz+7WzyCoFtcsg=
+	t=1705936136; cv=none; b=iDsj/SlSMGk+jnTVvGMiuBvdTWQqaC0Ay9pdWsC1iYPjszzU71Y9LySeEjYyFWxcOeFiW9BWROEhFjIkeI/q16hebt6eElk+KsrRi6PDOMHShuiiEJLCGOo9oMDPUs2w0XaB1E5YmFRg53ej+4xtwn/cgjFlsRN5FKLFYTmUoHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705936136; c=relaxed/simple;
-	bh=d+8CI2uMCsgL1BPzno67QAdv0HRtvXP4YoJamTPQCDE=;
+	bh=Jm483eD7XCTYbTstZzMYLKIB3V+3PFzZD9vFTDmnOVs=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pXdXqU0tB070KYhY6VYPL2uZuH/8BwfN7u89sJ/AzNzNE0hOOYXNzGC2c5niUrPDUobuxtPwv7PuP6oHcW8smYeA2u9ah2CgOIt77cAr3HLbt9tg8NvrO88Az0H/mlCZbrwQT9W1gDoG5SKD4HyQ6X66/L3fMjafZkAF30zERxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dCL/Tf31; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=HMBwD9E+f0mh3D0+D0HqwUk21bC2mLHRGmAyHT4yOPXdK0JV5wKKhygSGg4coXNHicEN6W7uIUri1vF8YujIu2L/WvF7yuJdsOqZXjH8IPNoaLbEHOU0P9SxV0ratjqQ2/vOilHi+wDGapZJUF2gik7iv/zqcabjh++i7KRzoNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GqJslBfy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dCL/Tf31"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GqJslBfy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705936133;
+	s=mimecast20190719; t=1705936134;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IUsbV3x6gstmuw+xD6xLceLMmB9XZwsqFdjfq/0Oi8o=;
-	b=dCL/Tf31wr2QGK+hbR3VZnDOw7H/rlR0iOHuqwoTTeTzKWLx/AcU5Qh2j4jp4yaHP9kZYN
-	RWJ4i3Fm+m1Y34tJuqc0CiBKXisTHveLA0IioaOsPqD2XuIpgqNE5NSJiXJjwAh4oUWS5A
-	/b/MIk6dNMaXOJyWEkql7p0V7BriRmk=
+	bh=lTGB/FaQW48FTChQHYDDz35Uy2tB9OJ40H8G7HEtVEs=;
+	b=GqJslBfygSSGK0VEQTClq+TnJzqt6xucY8QUS2lPz7PV9l8+MIONkp9YK5FY66oIBE+R6Q
+	VR+kaOwehacjpwk+2GbWtfLGxKKZB7yI8SJaQtBbZfAKy8OwMRYUSgYTkOCwzjuKYVY7Dw
+	rifj597HsFfxkVn9sZbP8g4xNw5vMQc=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-311-9osGyCUJOHiAvFRkIULs4Q-1; Mon, 22 Jan 2024 10:08:52 -0500
-X-MC-Unique: 9osGyCUJOHiAvFRkIULs4Q-1
+ us-mta-568-K5vgEjh9Ou-nks34Sr1iwg-1; Mon, 22 Jan 2024 10:08:52 -0500
+X-MC-Unique: K5vgEjh9Ou-nks34Sr1iwg-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 32FC5870828
-	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:51 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ADE81884346
+	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:52 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.226.128])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B66221C060AF
-	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:50 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3D8C41C060AF
+	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:52 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 1/7] mptcp: push ad DSS boundaries
-Date: Mon, 22 Jan 2024 16:08:38 +0100
-Message-ID: <59d94e4297902d25829276df006615bbdd5f717f.1705836321.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-next 3/7] mptcp: fix potential wake-up event loss
+Date: Mon, 22 Jan 2024 16:08:40 +0100
+Message-ID: <27f976d6a8f1a88ed5ad3822af43d0fc648ab9f8.1705836321.git.pabeni@redhat.com>
 In-Reply-To: <cover.1705836321.git.pabeni@redhat.com>
 References: <cover.1705836321.git.pabeni@redhat.com>
 Precedence: bulk
@@ -59,37 +59,72 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-when inserting/creating skbs on the subflow write queue, if
-the to-be-appended data don't is not contiguous to the tail data,
-the protocol creates a new skb and prevent the TCP stack from
-merging it later by setting the EOR marker.
+After the blamed commit below, the send buffer auto-tuning can
+happen after that the mptcp_propagate_sndbuf() completes - via
+the delegated action infrastructure.
 
-Still no push flag is explicitly set at the end of previous GSO
-packet, making the aggregation on the receiver side sub-optimal -
-and packetdrill self-tests less predictable.
+We must check for write space even after such change or we risk
+missing the wake-up event.
 
-Explicitly mark the end of not contiguous DSS with the push flag.
-
-Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data packets")
+Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-This could also land on next, as needed, dropping the fixes tag
----
- net/mptcp/protocol.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/mptcp/protocol.h | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 744b4d6f15f4..4d7131f96ebf 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1264,6 +1264,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
- 		mpext = mptcp_get_ext(skb);
- 		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
- 			TCP_SKB_CB(skb)->eor = 1;
-+			tcp_mark_push(tcp_sk(ssk), skb);
- 			goto alloc_skb;
- 		}
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d05ec76dd7c2..bbc490f36273 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -797,6 +797,16 @@ static inline bool mptcp_data_fin_enabled(const struct mptcp_sock *msk)
+ 	       READ_ONCE(msk->write_seq) == READ_ONCE(msk->snd_nxt);
+ }
  
++static inline void mptcp_write_space(struct sock *sk)
++{
++	if (sk_stream_is_writeable(sk)) {
++		/* pairs with memory barrier in mptcp_poll */
++		smp_mb();
++		if (test_and_clear_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags))
++			sk_stream_write_space(sk);
++	}
++}
++
+ static inline void __mptcp_sync_sndbuf(struct sock *sk)
+ {
+ 	struct mptcp_subflow_context *subflow;
+@@ -815,6 +825,7 @@ static inline void __mptcp_sync_sndbuf(struct sock *sk)
+ 
+ 	/* the msk max wmem limit is <nr_subflows> * tcp wmem[2] */
+ 	WRITE_ONCE(sk->sk_sndbuf, new_sndbuf);
++	mptcp_write_space(sk);
+ }
+ 
+ /* The called held both the msk socket and the subflow socket locks,
+@@ -845,14 +856,16 @@ static inline void mptcp_propagate_sndbuf(struct sock *sk, struct sock *ssk)
+ 	local_bh_enable();
+ }
+ 
+-static inline void mptcp_write_space(struct sock *sk)
++static inline void __mptcp_sync_sndnxt(struct sock *sk, u64 new_snd_nxt)
+ {
+-	if (sk_stream_is_writeable(sk)) {
+-		/* pairs with memory barrier in mptcp_poll */
+-		smp_mb();
+-		if (test_and_clear_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags))
+-			sk_stream_write_space(sk);
+-	}
++	struct mptcp_sock *msk = mptcp_sk(sk);
++
++	if (!after64(new_snd_nxt, msk->snd_nxt))
++		return;
++
++	msk->bytes_sent += new_snd_nxt - msk->snd_nxt;
++	WRITE_ONCE(msk->snd_nxt, new_snd_nxt);
++	mptcp_write_space(sk);
+ }
+ 
+ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags);
 -- 
 2.43.0
 
