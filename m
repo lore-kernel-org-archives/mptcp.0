@@ -1,150 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04CC4B5B7
-	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621D27C09E
+	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936074; cv=none; b=XN9AbatLqdD7OAf+Ip/cbYWYQX2bo/uH0Za0FOhGDttferTa1OW0ajF1OLoI6i4A7RM65X1E3ej/XX62IIkYIVmzZIPeb+zczcmQfVziLzR+4HFuRMgF4v15a49wc62ydjMueX849h2V6D5BYkCr6Y15+xT8kvVtnXeRLcCBWv8=
+	t=1705936136; cv=none; b=DuAGVVlconH5SsW+hACz5Obd8Ymqcy5p0nV20EHGGlIeNGVcCB6a/Lk0vtxYUbqnIy3hICoCkhst5jmdNF8ibAo3l91Btl+Krsd+FFUF/s17GnLflhIYvdIDcGPzHLQs12LGiWvJyLEtbLhHdAK+Ehb6UFeadiafv8rffvx+CNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936074; c=relaxed/simple;
-	bh=MVmCU9l1pygZTKPFIZbHRbYcHt8kH+DeZPqHfJiBB+s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rhP1tg/yqLgQCRpIo7gfa/eQv+f5TW3tx9X6ikpZRw2/Abkl/sDC/8cr0beo3tEuQLxfUVxkA7cPfDBIZ8Eajgjr+h2XBDIB6AqKPVFa3qOPisWhpIgyvKf5bcFyM7VWNf8aHvfnegv7myxNEPS1NVBhwUBDVk7B47ebX4bblpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pbz3RCPB; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1705936136; c=relaxed/simple;
+	bh=cfSWfF26bkzGFut5qdlu5ktfWfKBGxtCCrelM2Kxmq4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MAStqmIgDALA1XCiF1L2gt003tHM3hMHf8exFUbtUHWrfvek06K0oGzP3cV0z7zk6jXBZohYlBj3Rjc9tj4nXN1Enp5Fwe9t2F/OFEbnL9hRkiNxElOtmu55n9jLsi48VwKUUaPrHI3IwCEETNZF9b1FAFp0nfxG1MW5zLlO+W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EE1VAgBs; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pbz3RCPB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EE1VAgBs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705936071;
+	s=mimecast20190719; t=1705936133;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LlU7IQKlb8AttMUw5Udk3i0X+ghY9AFjIrNdKFbtpeE=;
-	b=Pbz3RCPBfcxXPwSms/os8LykCVroiKnIzGVhOtWURbxqKOWc8OcX+e6qhltSDh02z+bnx0
-	ZkPj/4spTqxlHQRbpzEvMfxV9fc9JSpqmdXf8/O3LKT6OoGMzZGHetxJovvod24Zpa24LL
-	/E/UaLie86T46GC/j1fZo1nZExe4eUA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=J6UEF+Ej27BnwaNlYKPVRxmeAbOwB/OBF4lFqGVZ+Fg=;
+	b=EE1VAgBsFX+3kWXZJIxpEF1hxYgxnslEf+n5Y86pPwDpc9QjHw9eSY/JtVuW0hdKBhPY2F
+	Au/qaCK4I+ZvK7tgL+YeIIxR2sy98prtLyFfUtKLebvFNLh/ofW+JPtqEomJiZZnZtA76p
+	5//UCR1sqcuZI9pKpkg8a//fOQAlwwg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-311-KPSYlhVUOV6nz1G4gxHRsA-1; Mon, 22 Jan 2024 10:07:49 -0500
-X-MC-Unique: KPSYlhVUOV6nz1G4gxHRsA-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33710c9d4afso449809f8f.0
-        for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 07:07:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705936068; x=1706540868;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h+bDV7WDo7inVM4puRmwW5iF7dM9GjKcKa1A6Y1mz7E=;
-        b=qJ0ZV+2N5irBbIbSqQMWeoTwSycKKAGAUgHwIk/OEXDKJmlKsHNxxPoCV7psSOfItn
-         iJEKo+1vZpR0MgXdqQ7OBlDWMTPnvciezdSHwh6EFPvrJscOOcLhZJX0bgZmvZKAdJPq
-         IMgNT5M1uj9JYitaPfPEL9+Zd6qA/35+eGnZb8x7sFlRyw3NValNWA7qOnVRmRT39/32
-         U554KEwykfL0S5qkUbQ4KLngopPPO8oe8qXH5rCdGgi15RgYAjuRwW/IXJRVOzSb7rQE
-         Fuw68CwcjsrHBlkaxQLOrsyM6jZL932zWZXwIB78TDfV9H7nIbW66UbhYAWxxH2A6r5F
-         +sow==
-X-Gm-Message-State: AOJu0YziYqaRY8+OSH/ijX66avkpLKeETPld/60dBMOLSLq3NDRqyJcS
-	uFlLhQJL2YL5eceFnv2GDhlfBoL0in1EfkWmCmXjQhkHIumz+G69TGHRPJ72D7kRAe/Si0jH4cj
-	oHJm05OMm6SkCPg28vlhSQ4Qf0el9pn49myHQEqMTsLlfxQFz8E6VRk18staJ
-X-Received: by 2002:adf:ffc3:0:b0:337:c4e2:a1e4 with SMTP id x3-20020adfffc3000000b00337c4e2a1e4mr4801153wrs.6.1705936067987;
-        Mon, 22 Jan 2024 07:07:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IElT1bC3JPA5odMH/OyaC0u0Di0Bti+6y2umMdZchapgBmx1oAP1zhi7cuRcJ72u6P//sdjsA==
-X-Received: by 2002:adf:ffc3:0:b0:337:c4e2:a1e4 with SMTP id x3-20020adfffc3000000b00337c4e2a1e4mr4801145wrs.6.1705936067591;
-        Mon, 22 Jan 2024 07:07:47 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-245-66.dyn.eolo.it. [146.241.245.66])
-        by smtp.gmail.com with ESMTPSA id e1-20020a5d65c1000000b0033921b2a5d4sm8877238wrw.75.2024.01.22.07.07.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 07:07:47 -0800 (PST)
-Message-ID: <9c7547095ed8aadab3cff658519f37cacf0269c2.camel@redhat.com>
-Subject: Re: [PATCH mptcp-next 2/5] mptcp: annotate lockless access for the
- tx path
+ us-mta-646-JjyMShYlPWO0KPJJJuZaTA-1; Mon, 22 Jan 2024 10:08:52 -0500
+X-MC-Unique: JjyMShYlPWO0KPJJJuZaTA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ED44D85A596
+	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:51 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.226.128])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7CB5C1C060AF
+	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:51 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-Date: Mon, 22 Jan 2024 16:07:46 +0100
-In-Reply-To: <063e86ef8d80ed39d8f257f9cca3651f9b46d500.camel@redhat.com>
-References: <cover.1705427537.git.pabeni@redhat.com>
-	 <92930a7b962611507f4bb87671d97f526ece5952.1705427537.git.pabeni@redhat.com>
-	 <348ef69e-3d3f-fb7d-2388-174ef14e3209@kernel.org>
-	 <063e86ef8d80ed39d8f257f9cca3651f9b46d500.camel@redhat.com>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39)
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next 2/7] mptcp: fix snd_wnd initialization for passive socket
+Date: Mon, 22 Jan 2024 16:08:39 +0100
+Message-ID: <14ed71656159324df35d706466b6da75a60d114a.1705836321.git.pabeni@redhat.com>
+In-Reply-To: <cover.1705836321.git.pabeni@redhat.com>
+References: <cover.1705836321.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On Sun, 2024-01-21 at 22:47 +0100, Paolo Abeni wrote:
-> On Thu, 2024-01-18 at 17:03 -0800, Mat Martineau wrote:
-> > On Tue, 16 Jan 2024, Paolo Abeni wrote:
-> >=20
-> > > The mptcp-level TX path info (write_seq, bytes_sent, snd_nxt) are und=
-er
-> > > the msk socket lock protection, and are accessed lockless in a few sp=
-ots.
-> > >=20
-> > > Always mark the write operations with WRITE_ONCE, read operations
-> > > outside the lock with READ_ONCE and drop the annotation for read
-> > > under such lock.
-> > >=20
-> > > To simplify the annotations move mptcp_pending_data_fin_ack() from
-> > > __mptcp_data_acked() to __mptcp_clean_una(), under the msk socket
-> > > lock, where such call would belong.
-> > >=20
-> > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > > ---
-> > > net/mptcp/options.c  |  2 +-
-> > > net/mptcp/protocol.c | 14 ++++++--------
-> > > net/mptcp/protocol.h |  2 +-
-> > > 3 files changed, 8 insertions(+), 10 deletions(-)
-> > >=20
-> > > diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> > > index cebbd0bc32aa..51b00d7e7c89 100644
-> > > --- a/net/mptcp/options.c
-> > > +++ b/net/mptcp/options.c
-> > > @@ -1061,7 +1061,7 @@ static void ack_update_msk(struct mptcp_sock *m=
-sk,
-> > > =09=09msk->wnd_end =3D new_wnd_end;
-> > >=20
-> > > =09/* this assumes mptcp_incoming_options() is invoked after tcp_ack(=
-) */
-> > > -=09if (after64(msk->wnd_end, READ_ONCE(msk->snd_nxt)))
-> > > +=09if (after64(msk->wnd_end, snd_nxt))
-> >=20
-> > Is it ok to remove this READ_ONCE()? The snd_nxt local is stored before=
-=20
-> > the data_lock is acquired.
->=20
-> You are right, READ_ONCE is required here. This is outside the msk
-> socket lock. I'll send a v2.
+Such value should be inherited from the first subflow, but
+passive sockets always used 'rsk_rcv_wnd'.
 
-Oops, sorry I was too hasty. After a better re-read I think this patch
-is correct.
+Fixes: 6f8a612a33e4 ("mptcp: keep track of advertised windows right edge")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We don't need to re-read snd_nxt inside the data_lock:
-- the 'new' value will still _not_ be any more accurate, as the lock
-protecting such lock is the msk _socket_ lock.
-- we don't have any data dependency with others msk fields
-
-The READ_ONCE annotation is there just to make the fuzzer happy and
-avoid reporting data races, we don't need to issue the read operation
-multiple time.
-
-Please let me know if the above makes sense to you!
-
-Cheers,
-
-Paolo
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 4d7131f96ebf..7a47834bf6ac 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3218,7 +3218,7 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
+ 	WRITE_ONCE(msk->write_seq, subflow_req->idsn + 1);
+ 	WRITE_ONCE(msk->snd_nxt, msk->write_seq);
+ 	WRITE_ONCE(msk->snd_una, msk->write_seq);
+-	WRITE_ONCE(msk->wnd_end, msk->snd_nxt + req->rsk_rcv_wnd);
++	WRITE_ONCE(msk->wnd_end, msk->snd_nxt + tcp_sk(ssk)->snd_wnd);
+ 	msk->setsockopt_seq = mptcp_sk(sk)->setsockopt_seq;
+ 	mptcp_init_sched(msk, mptcp_sk(sk)->sched);
+ 
+-- 
+2.43.0
 
