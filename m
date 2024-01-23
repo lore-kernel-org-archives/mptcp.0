@@ -1,99 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C312A12E7B
-	for <mptcp@lists.linux.dev>; Tue, 23 Jan 2024 21:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202A033CCA
+	for <mptcp@lists.linux.dev>; Tue, 23 Jan 2024 22:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706043810; cv=none; b=ob0+R4t3p+m2WP0zoCHmciCqW/A1M6IiG66RABVcUdSP6svSL4+N92NdEsHJraMJDeLLouQBxZrtFqZUvC6VN/BqOCkmtq8Q1/FnHWEfxXDpA46W7oK3fZSQvk2kTV8Q+2Us2vCgZ7wLKyxzh0Mv0nXZ4ucyV3oyPOu/tlqi0uw=
+	t=1706047317; cv=none; b=q0k49Cadw2EDKyaVnXpwApzLOjDL9jkCTZEhX0SaeAcODHGEouyQ/nQFi5C5frLaSD0kQwS6SI6gXdqBTIZIu/+se8jcmwvgCaSrN6Zq9V6krqx7X1sOIhhq/EcvLKcfYMkZo23UpFsiH+DiUxld3cSqqiuHN/dPbrgCfnN26CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706043810; c=relaxed/simple;
-	bh=6DN6X0IfOlET/JczP4UXZ90V3krkkXkefcoUewjgbMA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uvXi1XpRgiQ5zb6RairRCvQm+xQWOzvD44aZIXsNtGvB6kRmWdHsh3/dVyMAjH7GTahjpOkxRY+RbvkqLaiIG7EL+zkGXAooAEx2hfuaQEFDc45EL9SBIddcBdlBTSbsMnKh2F/IMVB8ldEPLiDAx6j11FIwKC+FwrYiugAP3J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nfxakn38; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706047317; c=relaxed/simple;
+	bh=2CKz0u+zV5hrhiN5Qdl5x5vSYyt0NGBr4wTnW03G4cE=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=eLfnmbw+plDdxC4AQJ+cZ4cvefpYBWvLZX0RmHBbJKhGhwv+ZEIhhHQafvIZpul8GqvVytpA9Xd3HIw3E0FhSVXD/k1CFNAIbwS/TS8wMaKlFEVjtU2gusxf0uG1hKV6UFYeGXJZDhvHmoRrzkGLUm5Zfi8LaDBeUHMxpOxRgfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XPGcuJHL; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nfxakn38"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706043807;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=WRnh123gIhZmFY8eVdybnnd2YOfASOzk8G2ti2wCvng=;
-	b=Nfxakn38vSKJk7MA6/U39ISjYzNPmtSqVummZi7gZ7G0Kt4kkD6CNlZ9rgGDAwEOeHzbvN
-	k281tLYaGCnbrH3VRaqD1j0B8CUwWjZd3rUbG7daZFRJsPLZYGO0WK/OMqu4NGpaFPN8ES
-	VYP/vlRKbaZlN3HRx3b7UG5uwJZw1po=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-648-7DbDfkkeOCq9GlCyI32rCw-1; Tue, 23 Jan 2024 16:03:26 -0500
-X-MC-Unique: 7DbDfkkeOCq9GlCyI32rCw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E021685A59A
-	for <mptcp@lists.linux.dev>; Tue, 23 Jan 2024 21:03:25 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.225.9])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5BF31492BFD
-	for <mptcp@lists.linux.dev>; Tue, 23 Jan 2024 21:03:25 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: fix data re-injection from stale subflow
-Date: Tue, 23 Jan 2024 22:03:18 +0100
-Message-ID: <35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPGcuJHL"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78329cb6742so308387485a.0
+        for <mptcp@lists.linux.dev>; Tue, 23 Jan 2024 14:01:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706047315; x=1706652115; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YKglC1AbXv9+nRUkZG2dGlrGYAs8HMh6l7dpysI7x8U=;
+        b=XPGcuJHLRktf2uaaE4XzLnKKTipZbWIa2M2GMlbu0rmkUnVDDouxtNhFkHDe26yo8e
+         Bf8DYQiHAkjn5y05XVOElSyyP6nPotgBENKALDlzYBTlzCbHkUTdd40MaqQeiEHnyh6L
+         YU8EVgjrxC2KC8BAMf1Dlf/Ls5GeDwO+KunA9/FpZ18fJ5lFAazNedCgTskHwH2gz+Jc
+         VBpncBevOXdFJa49ViK3JO/LdFkdDcGD1rhJTgMYjYufYkE0AX0zMVAuu17O9GRsEygG
+         99RSB7iyFDUlpvobXWftLQy1gEVHRy39HJMNIlPGaziehOAk1KR/5oRaRjaMNwA69cQB
+         iD5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706047315; x=1706652115;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YKglC1AbXv9+nRUkZG2dGlrGYAs8HMh6l7dpysI7x8U=;
+        b=ZohWf8sG4UpIWAXafSoo7sLvLysBVj0v189raVFjgKUyN1HdATfAtZR36+s9caJWbb
+         K/xXmXr7WLybs3TDFqkNiCQNC6FSjls8z83CB2aAbbKSun1WLKQqpvTe+UzPmqafpxZG
+         h16jUN8X2JmVXTxhcwCXaUEuFR0VQXBbXi4ph7aPzMyszXec6HMBYwckZJ+2frzPoVj6
+         JtRA4++1X17LykQqwgRF96BqIqGsOrDAnrN62qxOkwlWcPDEdah8p4houYkxigjUPdgE
+         MjGBRZEeB3xfwfEQ9ovK+SysTn5m3Vy6KSHfGc4nHYrJI2LDCRVjuHZL6eY35oCrPoeS
+         LfaA==
+X-Gm-Message-State: AOJu0YzQ1oAH7RxlCQZZCn+kzbyg+OlWKhJMakvDcpSRvAKqxFv2/iDC
+	a9203rTcYsYf/egJv5WZ7N8nKE6yFZ8JUIp0J+/qxw0UsMwOJZg=
+X-Google-Smtp-Source: AGHT+IHo3VHfJ7k564+gzc2/euF4W/AwRws6Aw1a1LOJk1OstEIDbMJu02oFV+jix43HOHMYDp57oA==
+X-Received: by 2002:a05:620a:2489:b0:783:8f1d:a995 with SMTP id i9-20020a05620a248900b007838f1da995mr7486777qkn.102.1706047314785;
+        Tue, 23 Jan 2024 14:01:54 -0800 (PST)
+Received: from [127.0.0.1] ([74.249.21.243])
+        by smtp.gmail.com with ESMTPSA id b9-20020a05620a0f8900b00783189b0aeasm3480377qkn.46.2024.01.23.14.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 14:01:54 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com>
+References:
+ <35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix data re-injection from stale subflow: Tests Results
+Message-ID: <15089fae-0afb-90de-41a8-eee70b75d48b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 23 Jan 2024 22:01:53 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-When the MPTCP PM detects that a subflow is stale, all the packet
-scheduler must re-inject all the mptcp-level unacked data. To avoid
-acquiring unneeded locks, it first try to check if any unacked data
-is present at all in the RTX queue, but such check is currently
-broken, as it uses TCP-specific helper on an MPTCP socket.
+Hi Paolo,
 
-Funnily enough fuzzers and static checkers are happy, as the accessed
-memory still belongs to the mptcp_sock struct, and even from a
-functional perspective the recovery completed successfully, as
-the short-cut test always failed.
+Thank you for your modifications, that's great!
 
-A recent unrelated TCP change - commit d5fed5addb2b ("tcp: reorganize
-tcp_sock fast path variables") - exposed the issue, as the tcp field
-reorganization makes the mptcp code always skip the re-inection.
+Our CI (GitHub Action) did some validations and here is its report:
 
-Fix the issue dropping the bogus call: we are on a slow path, the early
-optimization proved once again to be evil.
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): =
+packetdrill_regressions =F0=9F=94=B4:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7631907725
 
-Fixes: 1e1d9d6f119c ("mptcp: handle pending data on closed subflow")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/468
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 3 ---
- 1 file changed, 3 deletions(-)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/035781441dd7
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 53d6c5544900..a8a94b34a51e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2339,9 +2339,6 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
- 	if (__mptcp_check_fallback(msk))
- 		return false;
- 
--	if (tcp_rtx_and_write_queues_empty(sk))
--		return false;
--
- 	/* the closing socket has some data untransmitted and/or unacked:
- 	 * some data in the mptcp rtx queue has not really xmitted yet.
- 	 * keep it simple and re-inject the whole mptcp level rtx queue
--- 
-2.43.0
 
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
