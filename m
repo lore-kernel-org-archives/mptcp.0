@@ -1,204 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB257CF04
-	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607F34A1A
+	for <mptcp@lists.linux.dev>; Tue, 23 Jan 2024 01:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936139; cv=none; b=YOyN8uJ5/Hs7B/xxmmZTQ7+qPYbkUh5ascgRSQZw4Mb6YRO99cUM0qBD0PxDEU8SeI+hdwoHVKEI9S7AAviGt4Pe6AmrlJDROFmAyBij1bYfDReU5KSy7YsnLPNGuqsEPgghK7GLZ10rt/a2qRynXUT47iQ+mcgjhN6KiAqHFII=
+	t=1705972878; cv=none; b=i9h9ISraJ96YpzPRA6y4dnXWiGGQrzG74fbPdms8mWGgBagwBMJDxTCZkof72ttfPOpbkAEAFDNfzsBtH+Y6FACJEoxYXn9ZWVUrnbdqPkKNW7mDVYpaCCeRJkivTqPOu5NoV4n6IxTWiMI6XSOZVAU+qwJjoOVXEYbL7FTBYwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936139; c=relaxed/simple;
-	bh=EzLZH6aFXRumUkGJpI3oeD+oymNoJs7Iq/Y89m+Rsdk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MvrQIQ7gX6xRMPD8nY0YL5ssl5TZ6R/n9gcOkuO0kzUdj6F/vmsvbObdkfYNrafv0lJnKy5mjYbzb+CHfvd822G6IdM5g2VZs+PglK94YJxsgUftYLPtkqmHyTIhnhWvORih7SkZP8mKVQUoQ56u0+k9fkEapmgJsEVmc7QLrpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E146FcDD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1705972878; c=relaxed/simple;
+	bh=GjVpVNFN7AjYTJwa8vssZuntChXv3stMU2iXQ4B8Mas=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=S7HrrKf57Bg+tVJEjzaHFzUj3LhfOHxUIQZwhbW/tE5TtFTWRmHU9LCKuNVD9f5zwKdv4ek2DP8SqHEbuPWlLyvyXkPPDImcy5KnavmcYwcMz4YZCTVg1F4yMjq5T7CKYACbFW/j9MaGapEPtaozox9c4NRZJYATsvWMDJ/LLJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXYOjOC1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E146FcDD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705936137;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+akTRa9mFQqVNm211wS2m5ZkUgSgoHSuHL1fIi9cQyo=;
-	b=E146FcDDwv09E5bSpXUZJCndZMV81xcL56XOZ5X7IJ8WqyUPm1V8CnJummm4mX3BhNRhbF
-	3TOUlgkhJurGiuYOktijv43obyzb+Xa3D0/f5rSNqlN5UBJf97I1TKHkUkIvUEpE3OPnsu
-	eQWugJuNWt8ezvDsUwE7olki7cSMZrQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-136-qf6UftvuPXyynEed3k5K6A-1; Mon,
- 22 Jan 2024 10:08:56 -0500
-X-MC-Unique: qf6UftvuPXyynEed3k5K6A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B07C53C0008A
-	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:55 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.226.128])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 401C31C060AF
-	for <mptcp@lists.linux.dev>; Mon, 22 Jan 2024 15:08:55 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-next 7/7] mptcp: cleanup SOL_TCP handling
-Date: Mon, 22 Jan 2024 16:08:44 +0100
-Message-ID: <f7142ee471b9e87528e6c4586119c56351ab149c.1705836321.git.pabeni@redhat.com>
-In-Reply-To: <cover.1705836321.git.pabeni@redhat.com>
-References: <cover.1705836321.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXYOjOC1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9471C433F1;
+	Tue, 23 Jan 2024 01:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705972877;
+	bh=GjVpVNFN7AjYTJwa8vssZuntChXv3stMU2iXQ4B8Mas=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=XXYOjOC1NZGxqpa32skOpFdAlQGumUoA9vEmgc9Ed4lnQ417iX33Db94WQ1/SA7Sp
+	 jaFucXxB+Lv9hYx8KQLxtVyYdzk8Xar3d6nGDLzMBq1O8lpRs+SKBiPTm9E/PKd0tc
+	 jTE6tl4M3QSLzhxl07Xu6y1+3Vv1Yp1mg5YRbqscV49Vf7Ygy6xlZLZDP+g6vHRgNh
+	 ChYfbhjfaTmPAR/JVqnbTENNU0a3b3W+MQOIwgvTZ7E0g6bLj7SCHuJSzpJTKbSGea
+	 tMY1/X5SWzvwfabdfjbBac4pvpFji9ebmOWxqlIUIUz4QJreZD2XHzeCGBziLj6gHB
+	 UckZAOUTWUrXA==
+Date: Mon, 22 Jan 2024 17:21:17 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 2/5] mptcp: annotate lockless access for the
+ tx path
+In-Reply-To: <9c7547095ed8aadab3cff658519f37cacf0269c2.camel@redhat.com>
+Message-ID: <918a10e2-208b-3831-cd3e-90e7cb38aeb4@kernel.org>
+References: <cover.1705427537.git.pabeni@redhat.com> <92930a7b962611507f4bb87671d97f526ece5952.1705427537.git.pabeni@redhat.com> <348ef69e-3d3f-fb7d-2388-174ef14e3209@kernel.org> <063e86ef8d80ed39d8f257f9cca3651f9b46d500.camel@redhat.com>
+ <9c7547095ed8aadab3cff658519f37cacf0269c2.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Most TCP-level socket options get an integer from user space, and
-set the corresponding field under the msk-level socket lock.
+On Mon, 22 Jan 2024, Paolo Abeni wrote:
 
-Reduce the code duplication moving such operations in the common code.
+> On Sun, 2024-01-21 at 22:47 +0100, Paolo Abeni wrote:
+>> On Thu, 2024-01-18 at 17:03 -0800, Mat Martineau wrote:
+>>> On Tue, 16 Jan 2024, Paolo Abeni wrote:
+>>>
+>>>> The mptcp-level TX path info (write_seq, bytes_sent, snd_nxt) are under
+>>>> the msk socket lock protection, and are accessed lockless in a few spots.
+>>>>
+>>>> Always mark the write operations with WRITE_ONCE, read operations
+>>>> outside the lock with READ_ONCE and drop the annotation for read
+>>>> under such lock.
+>>>>
+>>>> To simplify the annotations move mptcp_pending_data_fin_ack() from
+>>>> __mptcp_data_acked() to __mptcp_clean_una(), under the msk socket
+>>>> lock, where such call would belong.
+>>>>
+>>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>>> ---
+>>>> net/mptcp/options.c  |  2 +-
+>>>> net/mptcp/protocol.c | 14 ++++++--------
+>>>> net/mptcp/protocol.h |  2 +-
+>>>> 3 files changed, 8 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+>>>> index cebbd0bc32aa..51b00d7e7c89 100644
+>>>> --- a/net/mptcp/options.c
+>>>> +++ b/net/mptcp/options.c
+>>>> @@ -1061,7 +1061,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
+>>>> 		msk->wnd_end = new_wnd_end;
+>>>>
+>>>> 	/* this assumes mptcp_incoming_options() is invoked after tcp_ack() */
+>>>> -	if (after64(msk->wnd_end, READ_ONCE(msk->snd_nxt)))
+>>>> +	if (after64(msk->wnd_end, snd_nxt))
+>>>
+>>> Is it ok to remove this READ_ONCE()? The snd_nxt local is stored before
+>>> the data_lock is acquired.
+>>
+>> You are right, READ_ONCE is required here. This is outside the msk
+>> socket lock. I'll send a v2.
+>
+> Oops, sorry I was too hasty. After a better re-read I think this patch
+> is correct.
+>
+> We don't need to re-read snd_nxt inside the data_lock:
+> - the 'new' value will still _not_ be any more accurate, as the lock
+> protecting such lock is the msk _socket_ lock.
+> - we don't have any data dependency with others msk fields
+>
+> The READ_ONCE annotation is there just to make the fuzzer happy and
+> avoid reporting data races, we don't need to issue the read operation
+> multiple time.
+>
+> Please let me know if the above makes sense to you!
+>
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/sockopt.c | 75 ++++++++++++++++++---------------------------
- 1 file changed, 30 insertions(+), 45 deletions(-)
+Yeah, that makes sense. Also, the only (incredibly rare) consequence of a 
+stale snd_nxt here could be an unnecessary call to __mptcp_check_push(), 
+which is not a problem.
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 1b38dac70719..dcd1c76d2a3b 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -624,18 +624,11 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
- 	return ret;
- }
- 
--static int mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, sockptr_t optval,
--					 unsigned int optlen)
-+static int __mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, int val)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	int val, ret;
- 
--	ret = mptcp_get_int_option(msk, optval, optlen, &val);
--	if (ret)
--		return ret;
--
--	lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	msk->cork = !!val;
- 	mptcp_for_each_subflow(msk, subflow) {
-@@ -647,23 +640,15 @@ static int mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, sockptr_t optva
- 	}
- 	if (!val)
- 		mptcp_check_and_set_pending(sk);
--	release_sock(sk);
- 
- 	return 0;
- }
- 
--static int mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, sockptr_t optval,
--					    unsigned int optlen)
-+static int __mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, int val)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	int val, ret;
- 
--	ret = mptcp_get_int_option(msk, optval, optlen, &val);
--	if (ret)
--		return ret;
--
--	lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	msk->nodelay = !!val;
- 	mptcp_for_each_subflow(msk, subflow) {
-@@ -675,8 +660,6 @@ static int mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, sockptr_t op
- 	}
- 	if (val)
- 		mptcp_check_and_set_pending(sk);
--	release_sock(sk);
--
- 	return 0;
- }
- 
-@@ -799,35 +782,10 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 	int ret, val;
- 
- 	switch (optname) {
--	case TCP_INQ:
--		ret = mptcp_get_int_option(msk, optval, optlen, &val);
--		if (ret)
--			return ret;
--		if (val < 0 || val > 1)
--			return -EINVAL;
--
--		lock_sock(sk);
--		msk->recvmsg_inq = !!val;
--		release_sock(sk);
--		return 0;
- 	case TCP_ULP:
- 		return -EOPNOTSUPP;
--	case TCP_NOTSENT_LOWAT:
--		ret = mptcp_get_int_option(msk, optval, optlen, &val);
--		if (ret)
--			return ret;
--
--		lock_sock(sk);
--		WRITE_ONCE(msk->notsent_lowat, val);
--		mptcp_write_space(sk);
--		release_sock(sk);
--		return 0;
- 	case TCP_CONGESTION:
- 		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
--	case TCP_CORK:
--		return mptcp_setsockopt_sol_tcp_cork(msk, optval, optlen);
--	case TCP_NODELAY:
--		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
- 	case TCP_DEFER_ACCEPT:
- 		/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
- 		mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, optval, optlen);
-@@ -840,7 +798,34 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 						      optval, optlen);
- 	}
- 
--	return -EOPNOTSUPP;
-+	ret = mptcp_get_int_option(msk, optval, optlen, &val);
-+	if (ret)
-+		return ret;
-+
-+	lock_sock(sk);
-+	switch (optname) {
-+	case TCP_INQ:
-+		if (val < 0 || val > 1)
-+			ret = -EINVAL;
-+		else
-+			msk->recvmsg_inq = !!val;
-+		break;
-+	case TCP_NOTSENT_LOWAT:
-+		WRITE_ONCE(msk->notsent_lowat, val);
-+		mptcp_write_space(sk);
-+		break;
-+	case TCP_CORK:
-+		ret = __mptcp_setsockopt_sol_tcp_cork(msk, val);
-+		break;
-+	case TCP_NODELAY:
-+		ret = __mptcp_setsockopt_sol_tcp_nodelay(msk, val);
-+		break;
-+	default:
-+		ret = -ENOPROTOOPT;
-+	}
-+
-+	release_sock(sk);
-+	return ret;
- }
- 
- int mptcp_setsockopt(struct sock *sk, int level, int optname,
--- 
-2.43.0
+- Mat
 
