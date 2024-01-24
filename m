@@ -1,96 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551E510E6
-	for <mptcp@lists.linux.dev>; Wed, 24 Jan 2024 01:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A901FDC
+	for <mptcp@lists.linux.dev>; Wed, 24 Jan 2024 02:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706058893; cv=none; b=c7FzYnv5qGJgPpIinydidveJDUilH0/PKkJu8odFyKzO2TzCtaRFcvVihyIg36WXKMIU0MoPQTUvSpgkxpQLN11TRsDHREBH8e9L4Qaf/XG2QpvhfirUeXNdSzc8ms1dRiqF7otqbsDuN1tZnYRNfEKIMSJlOV8khvVHUNtVSY4=
+	t=1706063156; cv=none; b=k0xrnWNVqQqaLjqvrE+xucd80NBhP1whHIkUM3s++qe+nfEzSK9pzzmstcSfxTudxMPN54nA/rrlklgx8pNhDfGI6wcEQQTvy1hHWdmw7U2miCfXIHkjqXmxBIGb629PTMMGt5iXyLTtw+txzF1QjJrVshkTVrpEeoS4EQ3OiOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706058893; c=relaxed/simple;
-	bh=6m5YiyeyWSjXdOlk5hJ15C+Q5L6NA77axKKcPtJyLJU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qzgMHFvrqjokfVT38TiqD0mguJZAF70RfKawk6lYD10o69wLrARtNG1D/S8c4VWhUmcQLp4/2Yw7GsxWUTeLGs0HAQpS2YoXCwY41Efw+tHbUorP2eCKd9nl0b4I4SRaeka4lsfNKp13Rlo8SB/RsVPJQkjQiZ6NkgPdAQqqBhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OCT60E16; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706063156; c=relaxed/simple;
+	bh=Z6TgTmLE1eLYC/8f/77DzTSQ3k1f5nLB6s46teDnqus=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=GBstB2ilH4SyKdplY97bjrex3/C6OnJgfkLkDM2e/ms5yhztiu3NXpXKEfY52lIINzetQv1OjGBjcMnZXkblt5RWCgNv7c1UQqbLpvW+ZCcReqWXzZILvYGlqCahlIqON+airyLOmK4zTIvQH1Rd+hKZsLIMoJ0iuJNvY3LuYbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H3ew3Vfy; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OCT60E16"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF8D0C433C7;
-	Wed, 24 Jan 2024 01:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706058892;
-	bh=6m5YiyeyWSjXdOlk5hJ15C+Q5L6NA77axKKcPtJyLJU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=OCT60E16ySgqzRcXd7QZjdhK0MdbNeawCx+s1EytBT6uDOY4ld1peeePzyE1uMB/q
-	 9Pw+Rjd5Ii0P9tVjX9rxhsZlo8l8hybVJRvTzG9v1WzsA3sC3Dg+zIZCJKg002cx71
-	 1KEcZmaMtZ+HcY6sual22mcQ5Fny5E4Kd8vtSBywbgNHhNNzMJMlZWKBfXBB7xb6vg
-	 2/+NWypZSsggDHoJ9vOJMmMZ7yOEQkZlr3y4Cf2WlZ2K/ADP3uRJlt6w2rPhK7WZnr
-	 yfbSa7SQTgnRiwox4yItNTt7FkEQ97I403snqi9F/lHqV9G4239FOCkXVFTzq3P2Zv
-	 tdOg3V8ieWxaw==
-Date: Tue, 23 Jan 2024 17:14:52 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3ew3Vfy"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-78336bfc489so383932085a.0
+        for <mptcp@lists.linux.dev>; Tue, 23 Jan 2024 18:25:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706063154; x=1706667954; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lmImZwS85lj/du7jMhff11eQm6PwzTJU/z7KlrOD4LI=;
+        b=H3ew3VfyA0NrJjo8PQRPQOyO5nl0F0YcZ0Z6n5bZMIbmkrd+yzBQWjjlGdlNQEDtd1
+         0SAoJF80ccykQkGEWMJr3HP31UvDydWBCKzITbkOp1GW7ShfUiFTF8WpHP8N8vmXAvO4
+         atrbGlkxkfM98P4JTRynwop2yxPrub2C9C/RwpEfnlaIAeKr7Gs3DVNUVKjBgMK2Lclu
+         DfPXqTzP4okmu41wSqT1R/SOstHHTM24ywuJiwwUbI2qs2FMGNx4utJn1IPo8kt6+w9C
+         g6SYx2uws1VMX0lp1railpE71x88NINzLRKf0F55RPlvi0XOvifnikRtXWo5ZAhqnJ5F
+         FAhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706063154; x=1706667954;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lmImZwS85lj/du7jMhff11eQm6PwzTJU/z7KlrOD4LI=;
+        b=FcRnyHazQjP73aV1KWLOfTZ2UhIRwLJ9gZ4ksf4g2S/EQMMw6sI/E7fZA8kztDtLGN
+         7vBBNb7DqZXdBl1JfbDOAdoy+dqrgliUNgnJ7Y01gpJ8W6jD9dPnfgI+C6Khu1ZeMiqb
+         iciaYd0TeIxrNgex+FQRx3ii+JmJ7Kjsbh7uGsp9IKh7RKhUd5NQ2Hyx5Bw9dU6s4B4U
+         DsiCQ2KFlMeuolnh6KLE6J3TsgV3mPMKEURN+1z8klcCDoO5ARmsi55OdNcYTIe1tG1U
+         ThK3LD0r2WiEW72eaBIISwejJNRs2N07xangc5tnucn12kVWpknjzAM1l7rQoBq6gZG0
+         7nFQ==
+X-Gm-Message-State: AOJu0YyuxXUBBKE8EMJ42obcRNU4+y7VHa7cN84MDLyir2cRzys16QvZ
+	aySazyqm6oWxaVF99tfIeew7/ZkMF77XLBNuH3jDp1KeQ8J0FAM=
+X-Google-Smtp-Source: AGHT+IGYNTp1IHeZUR77VVXmVqSLuEUHqnCxij1NynnCBwAzWDdwirm5mkdxMsapEDhYUvphmzjcTA==
+X-Received: by 2002:ae9:c10d:0:b0:783:3514:63b4 with SMTP id z13-20020ae9c10d000000b00783351463b4mr7561878qki.113.1706063154096;
+        Tue, 23 Jan 2024 18:25:54 -0800 (PST)
+Received: from [127.0.0.1] ([20.97.191.105])
+        by smtp.gmail.com with ESMTPSA id u15-20020a05620a022f00b00783a46b6f5bsm1753805qkm.27.2024.01.23.18.25.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 18:25:53 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] mptcp: fix data re-injection from stale
- subflow
-In-Reply-To: <35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com>
-Message-ID: <043ea620-cf44-e68c-ef4d-7d5986ec1b12@kernel.org>
-References: <35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com>
+References:
+ <35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com>
+Subject: Re: mptcp: fix data re-injection from stale subflow: Tests Results
+Message-ID: <bdfcb929-d865-ad94-211b-e7b3a70b0c30@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 24 Jan 2024 02:25:53 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 23 Jan 2024, Paolo Abeni wrote:
+Hi Paolo,
 
-> When the MPTCP PM detects that a subflow is stale, all the packet
-> scheduler must re-inject all the mptcp-level unacked data. To avoid
-> acquiring unneeded locks, it first try to check if any unacked data
-> is present at all in the RTX queue, but such check is currently
-> broken, as it uses TCP-specific helper on an MPTCP socket.
->
-> Funnily enough fuzzers and static checkers are happy, as the accessed
-> memory still belongs to the mptcp_sock struct, and even from a
-> functional perspective the recovery completed successfully, as
-> the short-cut test always failed.
->
-> A recent unrelated TCP change - commit d5fed5addb2b ("tcp: reorganize
-> tcp_sock fast path variables") - exposed the issue, as the tcp field
-> reorganization makes the mptcp code always skip the re-inection.
->
-> Fix the issue dropping the bogus call: we are on a slow path, the early
-> optimization proved once again to be evil.
->
+Thank you for your modifications, that's great!
 
-Thanks for tracking this down, Paolo. Fix LGTM:
+Our CI (GitHub Action) did some validations and here is its report:
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+- KVM Validation: normal:
+  - Unstable: 2 failed test(s): =
+packetdrill_regressions selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/7634=
+219212
 
-> Fixes: 1e1d9d6f119c ("mptcp: handle pending data on closed subflow")
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/468
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/protocol.c | 3 ---
-> 1 file changed, 3 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 53d6c5544900..a8a94b34a51e 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2339,9 +2339,6 @@ bool __mptcp_retransmit_pending_data(struct sock *sk)
-> 	if (__mptcp_check_fallback(msk))
-> 		return false;
->
-> -	if (tcp_rtx_and_write_queues_empty(sk))
-> -		return false;
-> -
-> 	/* the closing socket has some data untransmitted and/or unacked:
-> 	 * some data in the mptcp rtx queue has not really xmitted yet.
-> 	 * keep it simple and re-inject the whole mptcp level rtx queue
-> -- 
-> 2.43.0
->
->
->
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/333cd7ebfec0
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
