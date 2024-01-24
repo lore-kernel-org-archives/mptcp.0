@@ -1,172 +1,247 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031C818EBF
-	for <mptcp@lists.linux.dev>; Wed, 24 Jan 2024 10:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267784F218
+	for <mptcp@lists.linux.dev>; Wed, 24 Jan 2024 11:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706091923; cv=none; b=t5L2ZQd+qBT8T9nQtlTzQ0xTxtggpB/+xqJyb/LRWBEYb489eg/OqEKtTmIWjGK8VXql3xvf5uBwgUX05ap24Z6CUfAu4tDZ1KeyOT0pkISpam0P8SxVf1xF30obZHeCJLVPrJz5k57bWK4EUPZeTVgW+DxLbfrhWSlVyS3iGY0=
+	t=1706096150; cv=none; b=NWvORdcJN7o442CcC3lfIr3QKxbtplbanVeDurR7BlIpqEqrDHjghWhmK+lIvkUjQPpwJHOnlTSCxejxKQ9wVadqOjnTvJN3Ww6sCupK4RVwwER+RlNkZSFU3iS77WK8/9qcGByLzs7Y2rhOlspAQc9HQROZI2h+57VJE14Hl8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706091923; c=relaxed/simple;
-	bh=0pmZJopIYJIZWCti0t0yPxieNup7wKCc8Y9PuItxsBY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rc1VDPgZ3YceuEOZThyuliIukTOxOB53015gsvp/SjoDd+TdMKXuuCFsCIF6ebVXna3Up/A/UgDbCQFBRow/vpBt5Mh8XKy1hdukHmpaPfGyipmONap5k7POc+a/rdfkwXt0ZbMe+zTDIrQDWCkZHmhGr+pa5/tHjDSHcZ5BbN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-361a782f134so33990825ab.1
-        for <mptcp@lists.linux.dev>; Wed, 24 Jan 2024 02:25:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706091921; x=1706696721;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3IjjgKM/MY8SfH9QZWtT7IRaOHinXyOsh8fl2oO6AC8=;
-        b=Ftp6D6arXRn0OfsnWabNj9aCEULeuf7NUFe8Rs4AlUWMh+fx6Rc+D8ru6Vnb1b6wkT
-         4VUIir7tKxevCiUz0ngBl9mUScjzSPX/wQm2em9hFddHYfZMZKBFIkQfc5yJBksyr9R3
-         Uzns3t659OLSNOvfuHGzpWBlO1lFu6Tyg3oK9/u9oPfFe2Q6hehxNgQFK5Ode50ggvbo
-         wq7H0qkV5m7pn0Xsc3sTTziOC5oi0fLoA+WtihET8s8UvidwH94h4kxh9W5O4RVh9qky
-         /5UwIDDvtfY3SsyU5ihO9ZB6DEX4EOalEldZg2I8tpUclP04K4IVXphFvp3kG05xvRNL
-         SG9w==
-X-Gm-Message-State: AOJu0Yyi2vTcXigBfULpbOp/sLtIXDMQE4D8Vh8Kj8UFKafAmRn025o4
-	hhVN32GphLvUhEc44rZU3ZPjYabk+DF6kcwwZSnuVSXD7GOdqcjd8qn+3Hc1YCOUcvif5dmOqA+
-	ssvXmcZIWD5sLfgUw3b7Uthp75fjNrI/gct5Hy6iPo6aYSjarSZ+1OG0=
-X-Google-Smtp-Source: AGHT+IEiRsfCvS+pqK1hXoSrlYusHAB5OuC5FtoV9EDiZxs9gFNOsfeueyYWXnjj8w5b8HRkSgiTIwuxtc7ptha8ITQ0JIZ3sgaf
+	s=arc-20240116; t=1706096150; c=relaxed/simple;
+	bh=tntKgwVqAYrSE+lf3UhlhvGD/JlERpZBoasms7haQDg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o6KkcijHt1BHa35y0dJeQiV/jw0VO4QVkUGoX2Kcl+enUSYpkgR1WLwBK9rKqVPXz71mj5lwOK5SZgpPH1XUziIw4l4BkUNjteqB2M2anh/rdOKUunI8qXzFZRgHIvt5kaf8PqkkxDF7cwGluVSBvyx/rXSl8pECVmprmDnum+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eYG7TizC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eYG7TizC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706096147;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K4LnbPuIIS5aULjkRlclqbtT+LC1tWRtBAaVHSDAuis=;
+	b=eYG7TizC1I5ANFUWFp9RCyigJqv0S1HKVq3DmNiAWkPSwUWjRJ6EItPcjROqUAg8xcsn6m
+	xClNaNcoA8ELU61pSrNicpL9Jg832imU/UjxV13MqhVLA52MWDMWC17wWrXq3/ZXlJhUiG
+	0a022dIWlzlBXmLxqRhmuJ3YPpaMxgQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-107-B6umFkq8PbOhfj5wcSRYpw-1; Wed,
+ 24 Jan 2024 06:35:46 -0500
+X-MC-Unique: B6umFkq8PbOhfj5wcSRYpw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 669761C03D83;
+	Wed, 24 Jan 2024 11:35:46 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.29])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C5D6A3C2E;
+	Wed, 24 Jan 2024 11:35:45 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Christoph Paasch <cpaasch@apple.com>
+Subject: [PATCH mptcp-stable] mptcp: introduce explicit flag for first subflow disposal
+Date: Wed, 24 Jan 2024 12:35:42 +0100
+Message-ID: <a1503ab571c8c076de62b872437d220a2260d2a5.1706094997.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1be1:b0:35f:affb:bd7b with SMTP id
- y1-20020a056e021be100b0035faffbbd7bmr154213ilv.2.1706091921072; Wed, 24 Jan
- 2024 02:25:21 -0800 (PST)
-Date: Wed, 24 Jan 2024 02:25:21 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e8ecae060fae7a47@google.com>
-Subject: [syzbot] [mptcp?] WARNING in subflow_data_ready (2)
-From: syzbot <syzbot+732ab7be796ec0d104ac@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang.tang@linux.dev, 
-	geliang.tang@suse.com, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hello,
+This is a partial backport of the upstram commit 39880bd808ad ("mptcp:
+get rid of msk->subflow"). It's partial to avoid a long a complex
+dependency chain not suitable for stable.
 
-syzbot found the following issue on:
+The only bit remaning from the original commit is the introduction of a
+new field avoid a race at close time causing an UaF:
 
-HEAD commit:    6613476e225e Linux 6.8-rc1
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=1200cf0de80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f9804db253bdfc61
-dashboard link: https://syzkaller.appspot.com/bug?extid=732ab7be796ec0d104ac
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111fe2bfe80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17abc23be80000
+BUG: KASAN: use-after-free in mptcp_subflow_queue_clean+0x2c9/0x390 include/net/mptcp.h:104
+Read of size 1 at addr ffff88803bf72884 by task syz-executor.6/23092
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/cdad5c52fcde/disk-6613476e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/14491fee3433/vmlinux-6613476e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/953a5864daf4/bzImage-6613476e.xz
-
-The issue was bisected to:
-
-commit 14c56686a64c65ba716ff48f1f4b19c85f4cb2a9
-Author: Geliang Tang <geliang.tang@suse.com>
-Date:   Wed Oct 18 18:23:55 2023 +0000
-
-    mptcp: avoid sending RST when closing the initial subflow
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=159a9427e80000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=179a9427e80000
-console output: https://syzkaller.appspot.com/x/log.txt?x=139a9427e80000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+732ab7be796ec0d104ac@syzkaller.appspotmail.com
-Fixes: 14c56686a64c ("mptcp: avoid sending RST when closing the initial subflow")
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 5097 at net/mptcp/subflow.c:1412 subflow_data_ready+0x3a0/0x690 net/mptcp/subflow.c:1412
-Modules linked in:
-CPU: 1 PID: 5097 Comm: syz-executor260 Not tainted 6.8.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-RIP: 0010:subflow_data_ready+0x3a0/0x690 net/mptcp/subflow.c:1412
-Code: 89 ee e8 13 ff 14 f7 40 84 ed 75 21 e8 d9 03 15 f7 44 89 fe bf 07 00 00 00 e8 3c ff 14 f7 41 83 ff 07 74 09 e8 c1 03 15 f7 90 <0f> 0b 90 e8 b8 03 15 f7 48 89 df e8 70 b2 ff ff 31 ff 89 c5 89 c6
-RSP: 0018:ffffc90003b2ed38 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff88807f306200 RCX: ffffffff8a731e94
-RDX: ffff888028d80000 RSI: ffffffff8a731e9f RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000007
-R10: 000000000000000b R11: 0000000000000000 R12: 1ffff92000765da7
-R13: ffff88802acd5080 R14: ffff88802b24d200 R15: 000000000000000b
-FS:  00007fc7f15026c0(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000040 CR3: 0000000028426000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+CPU: 0 PID: 23092 Comm: syz-executor.6 Not tainted 6.1.65-gc6114c845984 #50
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
 Call Trace:
  <TASK>
- tcp_data_ready+0x14c/0x5b0 net/ipv4/tcp_input.c:5143
- tcp_data_queue+0x19bb/0x5190 net/ipv4/tcp_input.c:5223
- tcp_rcv_state_process+0x11d2/0x4e30 net/ipv4/tcp_input.c:6859
- tcp_v4_do_rcv+0x369/0xa10 net/ipv4/tcp_ipv4.c:1929
- sk_backlog_rcv include/net/sock.h:1092 [inline]
- __release_sock+0x132/0x3b0 net/core/sock.c:2972
- release_sock+0x5a/0x1f0 net/core/sock.c:3538
- __mptcp_close_ssk+0xb12/0xfd0 net/mptcp/protocol.c:2421
- mptcp_pm_nl_rm_addr_or_subflow+0x29e/0xa30 net/mptcp/pm_netlink.c:818
- mptcp_pm_remove_subflow+0x34/0xa0 net/mptcp/pm.c:69
- mptcp_pm_remove_addrs_and_subflows+0x5a2/0x6a0 net/mptcp/pm_netlink.c:1558
- mptcp_nl_remove_addrs_list net/mptcp/pm_netlink.c:1575 [inline]
- mptcp_pm_nl_flush_addrs_doit+0x3fe/0x6e0 net/mptcp/pm_netlink.c:1616
- genl_family_rcv_msg_doit+0x1fc/0x2e0 net/netlink/genetlink.c:1113
- genl_family_rcv_msg net/netlink/genetlink.c:1193 [inline]
- genl_rcv_msg+0x561/0x800 net/netlink/genetlink.c:1208
- netlink_rcv_skb+0x16b/0x440 net/netlink/af_netlink.c:2543
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1217
- netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
- netlink_unicast+0x53b/0x810 net/netlink/af_netlink.c:1367
- netlink_sendmsg+0x8b7/0xd70 net/netlink/af_netlink.c:1908
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg+0xd5/0x180 net/socket.c:745
- ____sys_sendmsg+0x6ac/0x940 net/socket.c:2584
- ___sys_sendmsg+0x135/0x1d0 net/socket.c:2638
- __sys_sendmsg+0x117/0x1e0 net/socket.c:2667
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xd3/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-RIP: 0033:0x7fc7f1566d89
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fc7f1502228 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007fc7f15f1438 RCX: 00007fc7f1566d89
-RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000006
-RBP: 00007fc7f15f1430 R08: 00007fc7f15026c0 R09: 00007fc7f15026c0
-R10: 00007fc7f15026c0 R11: 0000000000000246 R12: 00007fc7f15f143c
-R13: 00007fc7f15bd610 R14: 6d705f706374706d R15: 00007fff17bfe738
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x125/0x18f lib/dump_stack.c:106
+ print_report+0x163/0x4f0 mm/kasan/report.c:284
+ kasan_report+0xc4/0x100 mm/kasan/report.c:495
+ mptcp_subflow_queue_clean+0x2c9/0x390 include/net/mptcp.h:104
+ mptcp_check_listen_stop+0x190/0x2a0 net/mptcp/protocol.c:3009
+ __mptcp_close+0x9a/0x970 net/mptcp/protocol.c:3024
+ mptcp_close+0x2a/0x130 net/mptcp/protocol.c:3089
+ inet_release+0x13d/0x190 net/ipv4/af_inet.c:429
+ sock_close+0xcf/0x230 net/socket.c:652
+ __fput+0x3a2/0x870 fs/file_table.c:320
+ task_work_run+0x24e/0x300 kernel/task_work.c:179
+ resume_user_mode_work include/linux/resume_user_mode.h:49 [inline]
+ exit_to_user_mode_loop+0xa4/0xc0 kernel/entry/common.c:171
+ exit_to_user_mode_prepare+0x51/0x90 kernel/entry/common.c:204
+ syscall_exit_to_user_mode+0x26/0x140 kernel/entry/common.c:286
+ do_syscall_64+0x53/0xa0 arch/x86/entry/common.c:86
+ entry_SYSCALL_64_after_hwframe+0x64/0xce
+RIP: 0033:0x41d791
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 74 2a 00 00 c3 48 83 ec 08 e8 9a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 e3 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00000000008bfb90 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 000000000041d791
+RDX: 0000001b33920000 RSI: ffffffff8139adff RDI: 0000000000000003
+RBP: 000000000079d980 R08: 0000001b33d20000 R09: 0000000000000951
+R10: 000000008139a955 R11: 0000000000000293 R12: 00000000000c739b
+R13: 000000000079bf8c R14: 00007fa301053000 R15: 00000000000c705a
  </TASK>
 
+Allocated by task 22528:
+ kasan_save_stack mm/kasan/common.c:45 [inline]
+ kasan_set_track+0x40/0x70 mm/kasan/common.c:52
+ ____kasan_kmalloc mm/kasan/common.c:374 [inline]
+ __kasan_kmalloc+0xa0/0xb0 mm/kasan/common.c:383
+ kasan_kmalloc include/linux/kasan.h:211 [inline]
+ __do_kmalloc_node mm/slab_common.c:955 [inline]
+ __kmalloc+0xaa/0x1c0 mm/slab_common.c:968
+ kmalloc include/linux/slab.h:558 [inline]
+ sk_prot_alloc+0xac/0x200 net/core/sock.c:2038
+ sk_clone_lock+0x56/0x1090 net/core/sock.c:2236
+ inet_csk_clone_lock+0x26/0x420 net/ipv4/inet_connection_sock.c:1141
+ tcp_create_openreq_child+0x30/0x1910 net/ipv4/tcp_minisocks.c:474
+ tcp_v6_syn_recv_sock+0x413/0x1a90 net/ipv6/tcp_ipv6.c:1283
+ subflow_syn_recv_sock+0x621/0x1300 net/mptcp/subflow.c:730
+ tcp_get_cookie_sock+0xf0/0x5f0 net/ipv4/syncookies.c:201
+ cookie_v6_check+0x130f/0x1c50 net/ipv6/syncookies.c:261
+ tcp_v6_do_rcv+0x7e0/0x12b0 net/ipv6/tcp_ipv6.c:1147
+ tcp_v6_rcv+0x2494/0x2f50 net/ipv6/tcp_ipv6.c:1743
+ ip6_protocol_deliver_rcu+0xba3/0x1620 net/ipv6/ip6_input.c:438
+ ip6_input+0x1bc/0x470 net/ipv6/ip6_input.c:483
+ ipv6_rcv+0xef/0x2c0 include/linux/netfilter.h:302
+ __netif_receive_skb+0x1ea/0x6a0 net/core/dev.c:5525
+ process_backlog+0x353/0x660 net/core/dev.c:5967
+ __napi_poll+0xc6/0x5a0 net/core/dev.c:6534
+ net_rx_action+0x652/0xea0 net/core/dev.c:6601
+ __do_softirq+0x176/0x525 kernel/softirq.c:571
 
+Freed by task 23093:
+ kasan_save_stack mm/kasan/common.c:45 [inline]
+ kasan_set_track+0x40/0x70 mm/kasan/common.c:52
+ kasan_save_free_info+0x2b/0x50 mm/kasan/generic.c:516
+ ____kasan_slab_free+0x13a/0x1b0 mm/kasan/common.c:236
+ kasan_slab_free include/linux/kasan.h:177 [inline]
+ slab_free_hook mm/slub.c:1724 [inline]
+ slab_free_freelist_hook mm/slub.c:1750 [inline]
+ slab_free mm/slub.c:3661 [inline]
+ __kmem_cache_free+0x1eb/0x340 mm/slub.c:3674
+ sk_prot_free net/core/sock.c:2074 [inline]
+ __sk_destruct+0x4ad/0x620 net/core/sock.c:2160
+ tcp_v6_rcv+0x269c/0x2f50 net/ipv6/tcp_ipv6.c:1761
+ ip6_protocol_deliver_rcu+0xba3/0x1620 net/ipv6/ip6_input.c:438
+ ip6_input+0x1bc/0x470 net/ipv6/ip6_input.c:483
+ ipv6_rcv+0xef/0x2c0 include/linux/netfilter.h:302
+ __netif_receive_skb+0x1ea/0x6a0 net/core/dev.c:5525
+ process_backlog+0x353/0x660 net/core/dev.c:5967
+ __napi_poll+0xc6/0x5a0 net/core/dev.c:6534
+ net_rx_action+0x652/0xea0 net/core/dev.c:6601
+ __do_softirq+0x176/0x525 kernel/softirq.c:571
+
+The buggy address belongs to the object at ffff88803bf72000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 2180 bytes inside of
+ 4096-byte region [ffff88803bf72000, ffff88803bf73000)
+
+The buggy address belongs to the physical page:
+page:00000000a72e4e51 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x3bf70
+head:00000000a72e4e51 order:3 compound_mapcount:0 compound_pincount:0
+flags: 0x100000000010200(slab|head|node=0|zone=1)
+raw: 0100000000010200 ffffea0000a0ea00 dead000000000002 ffff888100042140
+raw: 0000000000000000 0000000000040004 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88803bf72780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88803bf72800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88803bf72880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff88803bf72900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88803bf72980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+Prevent the MPTCP worker from freeing the first subflow for unaccepted
+socket when such sockets transition to TCP_CLOSE state, and let that
+happen at accept() or listener close() time.
+
+Fixes: b6985b9b8295 ("mptcp: use the workqueue to destroy unaccepted sockets")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+This is targeting _stable_ and specifically 6.1.65.
+I tested vs the repro in:
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+https://github.com/multipath-tcp/mptcp_net-next/issues/466
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+and WFM. @Christoph could you please validate this in your testbed, too?
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+If pass the testing it would be great if you could take over the
+upstream submission.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+The hash blamed above is the upstream/vanilla. I'm unsure if it's more
+relevant to tag the corresponding stable one
+---
+ net/mptcp/protocol.c | 9 ++++-----
+ net/mptcp/protocol.h | 3 ++-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 76539d1004eb..db5369b6442d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2422,7 +2422,7 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 		goto out_release;
+ 	}
+ 
+-	dispose_it = !msk->subflow || ssk != msk->subflow->sk;
++	dispose_it = msk->free_first || ssk != msk->first;
+ 	if (dispose_it)
+ 		list_del(&subflow->node);
+ 
+@@ -2440,7 +2440,6 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	need_push = (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_data(sk);
+ 	if (!dispose_it) {
+ 		__mptcp_subflow_disconnect(ssk, subflow, flags);
+-		msk->subflow->state = SS_UNCONNECTED;
+ 		release_sock(ssk);
+ 
+ 		goto out;
+@@ -3341,10 +3340,10 @@ static void mptcp_destroy(struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
+-	/* clears msk->subflow, allowing the following to close
+-	 * even the initial subflow
+-	 */
+ 	mptcp_dispose_initial_subflow(msk);
++
++	/* allow the following to close even the initial subflow */
++	msk->free_first = 1;
+ 	mptcp_destroy_common(msk, 0);
+ 	sk_sockets_allocated_dec(sk);
+ }
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 4ec8e0a81b5a..e5d553dfc13f 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -287,7 +287,8 @@ struct mptcp_sock {
+ 			cork:1,
+ 			nodelay:1,
+ 			fastopening:1,
+-			in_accept_queue:1;
++			in_accept_queue:1,
++			free_first:1;
+ 	struct work_struct work;
+ 	struct sk_buff  *ooo_last_skb;
+ 	struct rb_root  out_of_order_queue;
+-- 
+2.43.0
 
-If you want to undo deduplication, reply with:
-#syz undup
