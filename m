@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE4C79C4
-	for <mptcp@lists.linux.dev>; Sun, 28 Jan 2024 06:17:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A966FA9
+	for <mptcp@lists.linux.dev>; Sun, 28 Jan 2024 06:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706422621; cv=none; b=LLuR+YTdnSuQBC1MTLF/TOtG5ITJfGGSwnLd8ohhavbXJ22BX2O3Y/jYCtNqZM+NFJZGpC87I3v9Ozt36D5++9XBE9dsVdivr2vUuc1+wHXTF6t6AJ57aU1UrKgQzXczkUurm3KpUBjQrzYUIKRvNBTKoG7gDQfmMVyeAPP58So=
+	t=1706422623; cv=none; b=QIoN0eRIFBebHtguAyr0bK+PcvGFnqlP7QwlThRx/XOMh5xobit2AgCrU0XTJ/yNleBrd+qvk9nuLrbWB576kO5AIxta7DCSVFKVM1GOvA2Gry+Z+Qe2a0ReGoJb4EptQGQE1GOKBnd/PpDq1iuWV1a5Vi0xn5AiHhR3r1mhJLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706422621; c=relaxed/simple;
-	bh=DHvj39LiEsJxGLeLX9iPKJtvtKLHEHZ9ALydrMAJneo=;
+	s=arc-20240116; t=1706422623; c=relaxed/simple;
+	bh=IYwQgfEYenZYlUMo770sJmPpkXmlV5nnmabqrvbTs/o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XO1ER/CFptmfABpi0B6cfXTIRc5xg+7yWkpG/3qPQeeKdF4LhlFhp4Zsk3aqGhGocLkxykbU3XjB4OIwKD41ktq7Cyu8XEa6nw/1E191NUsexHSV25PGEuPGZ9xPyH/FCEvCmm/GcTGXK4EjkaUev/TdJ6rFf8PrcMPv6VAV/yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULDXpwE4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QiD7EEChRYd4R4yCXuPeASiLL7IIU0SMyz9oXMU0YnJyZLtTxWhyF+2DyVZ4wYOjWzugjuy+Rp2RJFve/EmL8j+XXQzhNF9DYs36gUL4K/ftYavUFQzR3t6CY6Qye1Pnnvzc7sV6GMITA322Tf8tVtNXvr/O9JGjEC4YRAgtE9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvJpFMt9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULDXpwE4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C67CDC43390;
-	Sun, 28 Jan 2024 06:16:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvJpFMt9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A019DC433C7;
+	Sun, 28 Jan 2024 06:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706422621;
-	bh=DHvj39LiEsJxGLeLX9iPKJtvtKLHEHZ9ALydrMAJneo=;
+	s=k20201202; t=1706422622;
+	bh=IYwQgfEYenZYlUMo770sJmPpkXmlV5nnmabqrvbTs/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ULDXpwE4CcOor/nLIAMNedkgT+3RxFanAZjVwtloBopvIvhYiViHuLaBoxi9MVs4e
-	 4xkuwO3VVNbxPLtQaK4/7ZrX9Vb3XvAV8T063la5QitBOVAsEha7eSJqV8vPpmUgjk
-	 bfCRlBzqtmFIZiOlSfcNzmQXJu76VBiIzvUk1bwAAW/Tqm1aENW3LviTv0e6X/EU9a
-	 3yNrucGFQ8Ws5P4a2/o01f2FHhZxRNNYa3RY+QQoJP5GW0f2uIXVYoZZ7uPmG++N67
-	 5HjzbQi1U6ZDL0MOi26CT2pE1RYkuSBYMTF7luwRPRlu98q/bEhPpKSu8AgJjL0fIB
-	 6FflZo9zu2vfg==
+	b=UvJpFMt9ViiXSRwYCcG1OdDmJ16fmZIH8PSs29znN1Xs8cVMMW4kO3g+9t7IRC6ET
+	 455vUuk7TdsdlsScPesj4HpHMhNJViYl0r9RLaUiOk9IS+5lmCOmdIRrielqytr6ke
+	 lyFW6iQRTgaPf/imtCBmcoYJyqvaYpx8jCcMNzHi8notdw4E1xPbcjnzVOalP2oei/
+	 gdB+tffuz6kAryzQLZDVCgWd+/s+sSEOTrAjVrcTUhLB7HEdq1CZMxCq93WwSTrtSs
+	 N1wSNDvIdWORJAMtgdZuTdF4SY6gf2i/06QdpvLwVd6z7mE4RiYWm+EO8C/GOlLkbC
+	 0mbJZ67yK/SRQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang@kernel.org>
-Subject: [PATCH virtme-docker 1/3] change watchdog to device
-Date: Sun, 28 Jan 2024 14:16:01 +0800
-Message-Id: <6732dae64a26bbbbda3d35ff29b47803a86d3983.1706422466.git.geliang@kernel.org>
+Subject: [PATCH virtme-docker 2/3] upgrade to ubuntu 23.10
+Date: Sun, 28 Jan 2024 14:16:02 +0800
+Message-Id: <dc2e14b63fd7ec288e015124919c28c9470d5913.1706422466.git.geliang@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1706422466.git.geliang@kernel.org>
 References: <cover.1706422466.git.geliang@kernel.org>
@@ -43,45 +43,39 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch should be merged into virtme repo:
+There will be many build errors when comliling bpf selftests under
+Ubuntu 22.04. Upgrade to 23.10 to use the new versions of gcc, clang
+and LLVM.
 
-'''
-architectures: use qemu -device option
-
-Use qemu '-device' option instead of '-watchdog' to fix this error in
-Ubuntu 23.04:
-
-  qemu-system-x86_64: -watchdog: invalid option
-
-         ret = Arch.qemuargs(is_native)
-
-         # Add a watchdog.  This is useful for testing.
--        ret.extend(['-watchdog', 'i6300esb'])
-+        ret.extend(['-device', 'i6300esb'])
-
-         if is_native and os.access('/dev/kvm', os.R_OK):
-             # If we're likely to use KVM, request a full-featured CPU.
-'''
+Fix sparse build errors for llvm-16. This part alse be sent to sparse
+upstream. It can be dropped from this patch when accepted.
 
 Signed-off-by: Geliang Tang <geliang@kernel.org>
 ---
- Dockerfile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Dockerfile | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/Dockerfile b/Dockerfile
-index bf7f733..cf8c692 100644
+index cf8c692..cbc11f7 100644
 --- a/Dockerfile
 +++ b/Dockerfile
-@@ -35,7 +35,8 @@ ARG VIRTME_GIT_SHA="a680c0861cf6f9dc6a8a821e9e58ae43c5e68435"
- RUN cd /opt && \
- 	git clone "${VIRTME_GIT_URL}" && \
- 	cd virtme && \
--		git checkout "${VIRTME_GIT_SHA}"
-+		git checkout "${VIRTME_GIT_SHA}" && \
-+		sed -i 's/-watchdog/-device/g' virtme/architectures.py
+@@ -1,4 +1,4 @@
+-FROM ubuntu:22.04
++FROM ubuntu:23.10
  
- # byobu (not to have a dep to iproute2)
- ARG BYOBU_URL="https://launchpad.net/byobu/trunk/5.133/+download/byobu_5.133.orig.tar.gz"
+ LABEL name=mptcp-upstream-virtme-docker
+ 
+@@ -71,6 +71,10 @@ ARG SPARSE_GIT_SHA="ce1a6720f69e6233ec9abd4e9aae5945e05fda41" # include a fix fo
+ RUN cd /opt && \
+ 	git clone "${SPARSE_GIT_URL}" sparse && \
+ 	cd "sparse" && \
++		sed -i 's/LLVMConstGEP(/LLVMConstGEP2(type, /g' sparse-llvm.c && \
++		sed -i 's/LLVMBuildInBoundsGEP(builder/LLVMBuildInBoundsGEP2(builder, type/g' sparse-llvm.c && \
++		sed -i 's/LLVMBuildLoad(fn->builder/LLVMBuildLoad2(fn->builder, insn_symbol_type(insn)/g' sparse-llvm.c && \
++		sed -i 's/LLVMBuildCall(fn->builder/LLVMBuildCall2(fn->builder, insn_symbol_type(insn)/g' sparse-llvm.c && \
+ 		make -j"$(nproc)" -l"$(nproc)" && \
+ 		make PREFIX=/usr install && \
+ 		cd .. && \
 -- 
 2.40.1
 
