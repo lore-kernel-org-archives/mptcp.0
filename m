@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA905664A2
-	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 10:05:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56909679E1
+	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 11:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706609152; cv=none; b=QeSGnkJMJ81SpeTI2co8bhwYewT44Ha6gbhGmrBAiccn9sdeyjL5WaY8HbDt9ro76Ym2b8AvPG3ZP5g7Eq6MJSZRuKvOsAba7TFey6UfcRnwtZhCOgbNVs/YBQ43N4zC07vfvI8Fq5QmrfynDKeMeyJJo3eZzphN1TlrzdJmEFw=
+	t=1706615996; cv=none; b=l+KVhEDLjD6/fvs32sEoHSJRjJUsWfQVrGgi2ZQDqE960sr6NER8OpJ25HC23slUXGVT7IEL4sqsPV5y1dgGZVQn+WMlIEqVyJyUkcJd81U01UjXyC83frKkjswKLvn7nLy8XGfvuIuCBz2CupAkVzu4j52rCiWE/T6ZCLjqHlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706609152; c=relaxed/simple;
-	bh=KFWZuO/qNFy8khMwbtIIi1A5/pdUrp8ooT5vSj/py48=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=eUhRukHvHYHmJUwUKx+WFnBVbo/x2p4rG4lAyZ/prHq1OxCxi6aYtvH5uFd3nuRU9GF9+MSXmUu/SKJaIQbIxUBKjbWUJpvuX3RTZ4GiDt34Uud3IvdGyUG7RQvMG+RF+irL+j4tFxM/gjfmQg6s4caSQERlbnHOOIQDa9GRnio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icMfxzz8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706615996; c=relaxed/simple;
+	bh=8r2/KbsEwLQFFXWCMvjcirM7mtvKvinGsBcE5VaeylY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=l6La3NDHbkgPHlwTRKJpo+v4y8IwdgYD0C9HIYBXOhcAwdKOeH8pulXmw2h/y+hKLKuRnrK5Hz/gM9TgKSO18VPlBznQqFuTaZphU8rwqhFLVSR3p1b/oXZhVbAM+aMgGTv2MSZA9QIT2y5aFbW9Qn5+cQ5RxiODrQBnE/YwhaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vOhfac8q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icMfxzz8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D50FC43390;
-	Tue, 30 Jan 2024 10:05:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vOhfac8q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506B8C433C7;
+	Tue, 30 Jan 2024 11:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706609152;
-	bh=KFWZuO/qNFy8khMwbtIIi1A5/pdUrp8ooT5vSj/py48=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=icMfxzz88ZYBcOJ3jtDw9Gv51zmW/+JTYYnsdOnDx6mkGThg980gCUf/X2mEJyVJx
-	 Mg9kwvIj3XPmNy6VmEnAhbWoLpDnSzRRckpLKdYVBzxZtaV7hwcb/tcMIbEmugv2TK
-	 5oyC42f7RlZ0KJJngGbsQC4ggBxs9Z07P2HQwTrG40lBhPPnfELwkhDWxHNlARYr8X
-	 JrQW/XLukh449SbeOwbVCChjEHX2jC7Nyz2BbrNL35sa9ADlbePl8g4FaebhCzIYml
-	 xewMGoP7N9f4JYjd8pJWUekMjIe8ypHvJdlMle7FPhNEcBxAsi9motP9J37pYHee5p
-	 CHNv2TZstcJyA==
-Message-ID: <adce608a-db14-4b8c-a34a-0cdee0baa830@kernel.org>
-Date: Tue, 30 Jan 2024 11:05:49 +0100
+	s=k20201202; t=1706615995;
+	bh=8r2/KbsEwLQFFXWCMvjcirM7mtvKvinGsBcE5VaeylY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=vOhfac8qmjPtdhwb+TANPJcodABVG4+pyJaFh8AEYMjUznM7qdFyGG3fCsBTVOr8z
+	 4RNFcWkTLtpSbyTHMxpAI3MuPQh0R8mh2fdyVWkvmtnXF8JR3rRFmsi8ckmFnZHcXb
+	 w42pm7RQrCAKXfKqvW6v/lfir9uqKY9sQia3TrtdxnzpFwd/tJs5bq9X6S1WDX4+PS
+	 Nn6GfSldipa6zY20nIc+oulE/Vlqi9ISBKJ/V9EI7JmZA3wHRNKIRMWli5qO+kxj3p
+	 PMmijjaZ7T/dxOzxU0uSVRv8lSqL4bvGlSV7HpKPXbXKGuq9Aebbi+NyO/NUeSdlWS
+	 BnyVziyeOCv5Q==
+Message-ID: <39a0fa5f-03e2-4ef3-90b7-decd8971905b@kernel.org>
+Date: Tue, 30 Jan 2024 12:59:53 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: [PATCH bpf-next v17 11/14] bpf, net: switch to dynamic
- registration
+Subject: Re: [PATCH mptcp-net] mptcp: fix data re-injection from stale subflow
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com>
 Content-Language: en-GB, fr-BE
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Geliang Tang <geliang.tang@linux.dev>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <4a617858-30d9-40a6-a00a-d0e4384f6227@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,21 +84,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4a617858-30d9-40a6-a00a-d0e4384f6227@kernel.org>
+In-Reply-To: <35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/01/2024 10:45, Matthieu Baerts wrote:
-> This is just to let you know that I had to modify two commits you made
-> to sync with upstream changes (see the patch below):
+Hi Paolo, Mat,
+
+On 23/01/2024 22:03, Paolo Abeni wrote:
+> When the MPTCP PM detects that a subflow is stale, all the packet
+> scheduler must re-inject all the mptcp-level unacked data. To avoid
+> acquiring unneeded locks, it first try to check if any unacked data
+> is present at all in the RTX queue, but such check is currently
+> broken, as it uses TCP-specific helper on an MPTCP socket.
 > 
-> - a93c47792fc3: conflict in t/mptcp-add-bpf_mptcp_sched_ops
-> - 8ac5b9528258: mptcp: bpf: adapt code to match upstream changes
-> - ebd80ac09e97: conflict in t/bpf-Add-bpf_mptcp_sched_kfunc_set
+> Funnily enough fuzzers and static checkers are happy, as the accessed
+> memory still belongs to the mptcp_sock struct, and even from a
+> functional perspective the recovery completed successfully, as
+> the short-cut test always failed.
+> 
+> A recent unrelated TCP change - commit d5fed5addb2b ("tcp: reorganize
+> tcp_sock fast path variables") - exposed the issue, as the tcp field
+> reorganization makes the mptcp code always skip the re-inection.
+> 
+> Fix the issue dropping the bogus call: we are on a slow path, the early
+> optimization proved once again to be evil.
+> 
+> Fixes: 1e1d9d6f119c ("mptcp: handle pending data on closed subflow")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/468
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 
-I also had to add:
+Thank you for the patch and the review!
 
-- cbacf0fc076a: Reapply "Squash to "bpf: Add bpf_mptcp_sched_ops""
+Any ideas how to prevent such issues? Changing the signature of the
+TCP-specific functions? Adding a custom check for our CI on our side?
+
+New patches for t/upstream-net and t/upstream:
+- 359966180a29: mptcp: fix data re-injection from stale subflow
+- Results: d2cf5db9b409..ca82f8ccb3cc (export-net)
+- Results: 171302925a80..4b8f1ec22243 (export)
+
+Tests are now in progress:
+
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240130T115340
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240130T115340
 
 Cheers,
 Matt
