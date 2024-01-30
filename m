@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3410066B37
-	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 12:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4AD67E75
+	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 12:19:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706616859; cv=none; b=lEbKpVZBTDhsPR5t8AOwe5KYxySBisvCtRSeAS/CqwMNKtqtl1ff1Onu5dwBDXAcWViOTeugdsHaF3n8ozcVaq69vQ5PijamBtT9zPoE9evpZR7PKJ1hbJgdN2cndk42smY43n3WpJBV71x/UAhRo7z3Jh2S44DDLY4f7HuksqY=
+	t=1706617173; cv=none; b=FTFYBdU1LaOJcOhld4naA7g2yLotg0LxDNTK0EbhUtqCgXxchY6UFeFWjzRtTwSL+/uJmnMq1Bo9TaiS8/oRNI4FOTr0NuzTAHdoRajcXJ9QO/M1Px6C5eMkf3Ev0mif6U8C6ibqYfkgDZ8nyrBV4fkEuumt3kOx04U9hjNTt1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706616859; c=relaxed/simple;
-	bh=n+EXzIZ+osPCNOX9L0ivb1ArdlPhnoepULaw4aB6n/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TKw+PRzj9ZntI2LzSKBL+4IBXem1qDqbgYpv/JGDJClck7oNOLWNVsV7fKgPu46rlIMM4t/wYJPmeJOL/qE2PsQ7MeIr5TSnHQkzfN09Vcql+RXd1w8zhGHUXAEPNzA7DkRpaKuwsCqakVk8hAuphR09qwXeeStmOa3ehfg9O4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9ibl57A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706617173; c=relaxed/simple;
+	bh=GgeoDTU4RqicKE7ns8jsXSnij1SnNNJhNxw3r9M7V6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dE9Uvhjqe+zmPEG8QmBtHGWBF0PKuOuLTmN5Rjiy+H55W29/TGmDT7t0FphrTT6c0LaRsBJaAB1FARYnaBzhfsdf+CTB5xU+JKdZefEIlpvXOwcI+DUCTIecTtO7qE9nCuAuBJuYXgcn8bISKUX3IuPlDoD5j81G84ObD7aqfzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFRhFIv9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9ibl57A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AED1C433F1;
-	Tue, 30 Jan 2024 12:14:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFRhFIv9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F8CBC433F1;
+	Tue, 30 Jan 2024 12:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706616858;
-	bh=n+EXzIZ+osPCNOX9L0ivb1ArdlPhnoepULaw4aB6n/U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X9ibl57AeQc1FuwQTGdjKsVb0ReOx7rTHE3xtiFGaPlNSKpvuYoLOBZoXdnqCzvVy
-	 8swh8FAuzJkv+CItXjSkamJ+gVZKhy1eDVgTj23xcjBdcxaV9T+ZBGwFEe594/xLlB
-	 rGHlx8n+uYxq5yVbG2ilfs+LAKQ2lVnDkPJh+2NGlgcMufkFgCXeSG2/1rGV5uSPKB
-	 ZbVwrKlv3XXPvqhYqV3Bv9QoU/aM8mGjQo7DdLCo0BQQ5ZwZ2Vv7clmnrkraL5E+nq
-	 fPXYQtgGJftN4NpFH64l0nBEAF/zU0GE+/C9BVMwB9sE6eq5fsdWkuRHQxR+X8gFpl
-	 Hf8PzW0J02yKA==
-Message-ID: <a5e69211-1fba-429c-8acd-dcd8053f23c1@kernel.org>
-Date: Tue, 30 Jan 2024 13:14:16 +0100
+	s=k20201202; t=1706617171;
+	bh=GgeoDTU4RqicKE7ns8jsXSnij1SnNNJhNxw3r9M7V6s=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=bFRhFIv9m8wO1ZqJ5MlLbC9Iq6a5ajQ2auDdwUvautDWNF3V+uZlSgOiEes/50Fn0
+	 4hdcnJ/EGImQx5TiaYZ2cmCZp42+rXhstSo+GpPReCA+noamOyYE7UeFjzcamiktb+
+	 nfWk2v0mEz9JzLl2dFcHwUmDGfKnbzFDhMdYVjN1PK+LkKkQKTeEV5us8oimTycrBA
+	 DddOgprSDYyT+50ZJsYPn601sq3bDLPMGp2os1HBIamyrc0cbo3UsLhNIwGpuRtIzT
+	 bYCJ5snOWKeMh3w61LLiDDksC6SbjDxCTNCqtY+m7EzYSSp6YMZPe+n4ljpr4kanKk
+	 ZL3k2ZKTJTbGA==
+Message-ID: <8afe1d4b-0096-4fd1-a82c-3bfb73e0b020@kernel.org>
+Date: Tue, 30 Jan 2024 13:19:29 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 0/7] selftests: mptcp: improve results in slow
- CI envs
+Subject: Re: [PATCH mptcp-next 0/5] mptcp: annotate lockless access
 Content-Language: en-GB, fr-BE
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang.tang@linux.dev>
-References: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-0-f3a4db41c3be@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1705427537.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,63 +84,55 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-0-f3a4db41c3be@kernel.org>
+In-Reply-To: <cover.1705427537.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Paolo,
+Hi Paolo, Mat,
 
-On 18/01/2024 19:27, Matthieu Baerts (NGI0) wrote:
-> The initial goal of this series is to improve the results when slow test
-> environments, e.g. when using QEmu without KVM.
+On 16/01/2024 19:16, Paolo Abeni wrote:
+> This is the 2nd preparatory series for the TCP_NOTSENT_LOWAT support.
+> The latter will need tracking more state under the msk data lock
 > 
-> I looked at the results from LKFT [1] and noticed that some mptcp_join
-> subtests were skipped because it was not possible to add IPTables rules.
-> It looks like some KConfig were missing. The 3 first patches should fix
-> that.
+> The mptcp locking schema is already quite complex. We need to clarify
+> and make consistent the lockless access already there or later changes
+> will be even harder to follow and understand.
 > 
-> I also noticed that mptcp_join selftest stopped after a timeout of 20
-> minutes. We keep adding tests there, it is normal to increase this
-> timeout at some points, especially because we forced many subtests to
-> have a longer connections, to have enough time for some actions to
-> happen. Patch 4 fixes that.
+> This series goes through all the msk fields accessed in the RX and TX
+> path and makes the lockless annotation consistent with the in-use
+> locking schema.
 > 
-> Patch 5 decreases the BW in simult flows, hopefully reducing the load on
-> the CPU, and improving the stability.
+> As a bonus this should fix data races possibly found by fuzzers - even
+> if we haven't seen many such reports so far.
 > 
-> Patch 6 is needed because our CI run MPTCP Connect twice: the second
-> time with '-m mmap'. When parsing the results, the tests from the two
-> runs have the same title, hence the same "fingerprint". Instead of
-> having a post-processing step modifying the results for this specific
-> case, it is now possible to set a prefix.
+> Patch 1/5 hints we could remove local_key and remote_key from the
+> subflow context, and always use the ones in the msk socket, possibly
+> reducing the context memory usage. That change is left over as a
+> possible follow-up.
 > 
-> When looking at the results of mptcp_join, I also realised that the
-> 'userspace' tests were blocking after having displayed the results.
-> That's because they wait for the end of the transfer, while they don't
-> need to: tests are the end are ignored because this is done in the
-> background (but that's fine, other tests check that). Patch 7 improves
-> the situation there.
+> Paolo Abeni (5):
+>   mptcp: annotate access for msk keys
+>   mptcp: annotate lockless access for the tx path
+>   mptcp: annotate lockless access for RX path fields.
+>   mptcp: annotate lockless access for token
+>   mptcp: annotate lockless accesses around read-mostly fields
 
-Thank you for the reviews!
+Thank you for the patches and the reviews!
 
-Now in our tree (fix for -net) with the modification demanded by Geliang
-on patch 3/7:
+Now in our tree (feat. for net-next) without a typo spotted by
+checkpatch.pl --codespell.
 
-New patches for t/upstream-net and t/upstream:
-- a773245de129: selftests: mptcp: add missing kconfig for NF Filter
-- 616af1a08349: selftests: mptcp: add missing kconfig for NF Filter in v6
-- 2d4ccf16a1ac: selftests: mptcp: add missing kconfig for NF Mangle
-- ac8595b0b31c: selftests: mptcp: increase timeout to 30 min
-- ba7e09d80ffe: selftests: mptcp: decrease BW in simult flows
-- e8a61a14a58f: selftests: mptcp: allow changing subtests prefix
-- eb5f4f5f0a80: selftests: mptcp: join: stop transfer when check is done
-- Results: 6d56aa24e733..b4671e59d316 (export-net)
-- Results: cdd4fe00f4c5..81c0f68b0316 (export)
+New patches for t/upstream:
+- 39c9cb5e8865: mptcp: annotate access for msk keys
+- 483c63a2857c: mptcp: annotate lockless access for the tx path
+- 817a9559ee7c: mptcp: annotate lockless access for RX path fields
+- 5cda40c71dad: mptcp: annotate lockless access for token
+- ce87356496c6: mptcp: annotate lockless accesses around read-mostly fields
+- Results: 81c0f68b0316..2710fa51b8b5 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240130T121223
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240130T121223
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240130T121817
 
 Cheers,
 Matt
