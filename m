@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7703667E69
-	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 09:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA905664A2
+	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 10:05:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608746; cv=none; b=Ya16gA7QafhfY8CcsJERroM6eupJWAE6QUV/MqE+/3WPRYWXjfiykNvtPXNzBZo5la2wI00E3eXtqUmX4x7CFttMR0AOor9ShmcTKvhjoHjLKYG2YEqm5G7SikhU2gvawJG7MNUD8KdCcNcHYKI+31veHqMtpaxK1fFv4P4nwPA=
+	t=1706609152; cv=none; b=QeSGnkJMJ81SpeTI2co8bhwYewT44Ha6gbhGmrBAiccn9sdeyjL5WaY8HbDt9ro76Ym2b8AvPG3ZP5g7Eq6MJSZRuKvOsAba7TFey6UfcRnwtZhCOgbNVs/YBQ43N4zC07vfvI8Fq5QmrfynDKeMeyJJo3eZzphN1TlrzdJmEFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608746; c=relaxed/simple;
-	bh=uTyoeviZGK/PKwROa2SqoZJMi82HaSxoRy0Rs0gbP98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ihUYwqmpHt+3TAmvjb2KkTHFjtOn6NI51ddRPM0Rsp+T9VBw2qhsPUn0/VycQ4jkHxxFEbhoRV10rz8gUGKGnqKATgz4WcWSouXPbbJNyW0jUsrc27wlf8+XyNv5NREJw0M4TZh4rR/FJS6ouOy/g4zy6ta4Qo9iwiO/9jMOz/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STmQDWaR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706609152; c=relaxed/simple;
+	bh=KFWZuO/qNFy8khMwbtIIi1A5/pdUrp8ooT5vSj/py48=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=eUhRukHvHYHmJUwUKx+WFnBVbo/x2p4rG4lAyZ/prHq1OxCxi6aYtvH5uFd3nuRU9GF9+MSXmUu/SKJaIQbIxUBKjbWUJpvuX3RTZ4GiDt34Uud3IvdGyUG7RQvMG+RF+irL+j4tFxM/gjfmQg6s4caSQERlbnHOOIQDa9GRnio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icMfxzz8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STmQDWaR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A648C433B1;
-	Tue, 30 Jan 2024 09:59:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icMfxzz8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D50FC43390;
+	Tue, 30 Jan 2024 10:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706608746;
-	bh=uTyoeviZGK/PKwROa2SqoZJMi82HaSxoRy0Rs0gbP98=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=STmQDWaRd5vmSdjQTcs1iLnPpLnq0ck3W1Se9p4aF60oHFcCsRp3f+zNlMZJ2bE7t
-	 vieqVTBM6/1RFqZoi3zoP5hA+JQnEDXUF9l/5LFlRrvxOFEoPD5/0DtB9QlaMJMcTl
-	 ZANVpNf1HytAkaDNYXhFtp0SF7t+9LujzqEZ6dyyLAlltfI9oTxEELfbcBPUzKnIm/
-	 Vf0imKTCUaBQ2bu8d09kjxJpIYkwNhkLf7Vsy+yit0Whu8BPyXl43Ubfb0/IpjnDaW
-	 mMjIj5W2cXXw86UotEU1X8ugJdH1ktmVQMUGWH9ZFJpAXzUD/FeP+oo9920SRGp7pq
-	 u1drIclcvdlvA==
-Message-ID: <625fa4fe-6ecf-4185-bc43-a268f55a3bf9@kernel.org>
-Date: Tue, 30 Jan 2024 10:59:03 +0100
+	s=k20201202; t=1706609152;
+	bh=KFWZuO/qNFy8khMwbtIIi1A5/pdUrp8ooT5vSj/py48=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=icMfxzz88ZYBcOJ3jtDw9Gv51zmW/+JTYYnsdOnDx6mkGThg980gCUf/X2mEJyVJx
+	 Mg9kwvIj3XPmNy6VmEnAhbWoLpDnSzRRckpLKdYVBzxZtaV7hwcb/tcMIbEmugv2TK
+	 5oyC42f7RlZ0KJJngGbsQC4ggBxs9Z07P2HQwTrG40lBhPPnfELwkhDWxHNlARYr8X
+	 JrQW/XLukh449SbeOwbVCChjEHX2jC7Nyz2BbrNL35sa9ADlbePl8g4FaebhCzIYml
+	 xewMGoP7N9f4JYjd8pJWUekMjIe8ypHvJdlMle7FPhNEcBxAsi9motP9J37pYHee5p
+	 CHNv2TZstcJyA==
+Message-ID: <adce608a-db14-4b8c-a34a-0cdee0baa830@kernel.org>
+Date: Tue, 30 Jan 2024 11:05:49 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 2/7] selftests: mptcp: add missing kconfig for
- NF Filter in v6
+Subject: Re: Fwd: [PATCH bpf-next v17 11/14] bpf, net: switch to dynamic
+ registration
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliangtang@gmail.com>
-Cc: mptcp@lists.linux.dev
-References: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-0-f3a4db41c3be@kernel.org>
- <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-2-f3a4db41c3be@kernel.org>
- <CA+WQbwtkbYkxMkfhs0yUOx5RnJ2_ftNf7i0URMpcBL7qK7GdhQ@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang.tang@linux.dev>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <4a617858-30d9-40a6-a00a-d0e4384f6227@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,58 +86,21 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CA+WQbwtkbYkxMkfhs0yUOx5RnJ2_ftNf7i0URMpcBL7qK7GdhQ@mail.gmail.com>
+In-Reply-To: <4a617858-30d9-40a6-a00a-d0e4384f6227@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
-
-Thank you for the review!
-
-Hi Geliang,
-
-Thank you for the review!
-
-On 22/01/2024 02:47, Geliang Tang wrote:
->> Since the commit mentioned below, 'mptcp_join' selftests is using
->> IPTables to add rules to the Filter table for IPv6.
->>
->> It is then required to have IP6_NF_FILTER KConfig.
->>
->> This KConfig is usually enabled by default in many defconfig, but we
->> recently noticed that some CI were running our selftests without them
->> enabled.
->>
->> Fixes: 523514ed0a99 ("selftests: mptcp: add ADD_ADDR IPv6 test cases")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  tools/testing/selftests/net/mptcp/config | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/config b/tools/testing/selftests/net/mptcp/config
->> index 2a00bf4acdfa..ec70b27288fc 100644
->> --- a/tools/testing/selftests/net/mptcp/config
->> +++ b/tools/testing/selftests/net/mptcp/config
->> @@ -20,6 +20,7 @@ CONFIG_NETFILTER_XT_TARGET_MARK=m
->>  CONFIG_NF_TABLES_INET=y
->>  CONFIG_NFT_TPROXY=m
->>  CONFIG_NFT_SOCKET=m
->> +CONFIG_IP6_NF_FILTER=m
+On 30/01/2024 10:45, Matthieu Baerts wrote:
+> This is just to let you know that I had to modify two commits you made
+> to sync with upstream changes (see the patch below):
 > 
-> How about adding this config right after CONFIG_IP_NF_TARGET_REJECT=m?
-> 
-> Since "IPv6: Netfilter Configuration" section in kconfig is always
-> after "IP: Netfilter Configuration" one.
+> - a93c47792fc3: conflict in t/mptcp-add-bpf_mptcp_sched_ops
+> - 8ac5b9528258: mptcp: bpf: adapt code to match upstream changes
+> - ebd80ac09e97: conflict in t/bpf-Add-bpf_mptcp_sched_kfunc_set
 
-My intension was to place this new entry there to keep the file sorted
-by alphabetical order. It is often recommended to do that for that kind
-of files to ease the backports. So I put it before "IP_ADVANCED_ROUTER".
+I also had to add:
 
-But now, I realise this file is not fully sorted by alphabetical order :)
-
-I don't think the order matter, but I can place it after
-"IPV6_MULTIPLE_TABLES". I can do that when applying the patches: I don't
-think I need to send a v2 just for that.
+- cbacf0fc076a: Reapply "Squash to "bpf: Add bpf_mptcp_sched_ops""
 
 Cheers,
 Matt
