@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1DA6A03A
-	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 12:08:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3410066B37
+	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 12:14:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706616497; cv=none; b=kbKd/PePOj9ZOkRKEyvOtQr0lB1JIkluU3YTlr8k4iLph7kqNX0DESBMeX1g5vt68czX50wc0kSXSAXLsT023KS2jRR3J+sC32kOP/61yxJEGC0pfaYFxVHm8IOSGnUrOj9sriZrbwd8lUhltbDXCLjILJf/LahlrqMdz1kxCbM=
+	t=1706616859; cv=none; b=lEbKpVZBTDhsPR5t8AOwe5KYxySBisvCtRSeAS/CqwMNKtqtl1ff1Onu5dwBDXAcWViOTeugdsHaF3n8ozcVaq69vQ5PijamBtT9zPoE9evpZR7PKJ1hbJgdN2cndk42smY43n3WpJBV71x/UAhRo7z3Jh2S44DDLY4f7HuksqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706616497; c=relaxed/simple;
-	bh=oMRGh0EcIgCjwn4k9FxgfTPS/unZZYBEtJeElX7kNvs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aWsEW5f9JWq5kEWlCSCEOYkPpZVyb8H4MXZutMc5Gvq11kRkLOaN0JY1xKCcWjdW0KEYSvcmDQXqThJGpvqD9TGvRgXiM+uNW+YFAoyUI48ES/nhywpKMOkKWtX3byWsyyoFt+YuKg6DL4GzQ9v3zdA/dYU/yuEmWiiYK0bkBz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uF91BW/M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706616859; c=relaxed/simple;
+	bh=n+EXzIZ+osPCNOX9L0ivb1ArdlPhnoepULaw4aB6n/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TKw+PRzj9ZntI2LzSKBL+4IBXem1qDqbgYpv/JGDJClck7oNOLWNVsV7fKgPu46rlIMM4t/wYJPmeJOL/qE2PsQ7MeIr5TSnHQkzfN09Vcql+RXd1w8zhGHUXAEPNzA7DkRpaKuwsCqakVk8hAuphR09qwXeeStmOa3ehfg9O4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9ibl57A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uF91BW/M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F43AC433C7;
-	Tue, 30 Jan 2024 12:08:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9ibl57A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AED1C433F1;
+	Tue, 30 Jan 2024 12:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706616497;
-	bh=oMRGh0EcIgCjwn4k9FxgfTPS/unZZYBEtJeElX7kNvs=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=uF91BW/MJ54eHLjLFQZvF8o3Ezrat7K/i+VwvxoWtTXJ8PbK5uyOMIsMDPffu4WZT
-	 HNM5YkHyzgN9p0CsIibMY1enBJqCOXjecwE7nRdts0b2Dkh/6oYQSs52jgMYDHXMfe
-	 ovrHl2BrDgFMOOeD3oLAQbHTr3vi/hrmrRdU1/ac7LmVPtcPomCtEF7GKRe9gGfSQ3
-	 SssKv6Uh1W6Z7WHE7CoAZbDY54eehNaUfS/toSGZMAKTT+0n9MYRKodEeyRgczWQAk
-	 SiEATuX+8i0Ioy1GaDfnPMkRAMvge1MEGIuYbiZ5/RaI0tFUfm5d4JvCGdjKmfIOUi
-	 ykHVjquoo2Cqw==
-Message-ID: <91d6bd65-e102-427a-b02c-c221d453db84@kernel.org>
-Date: Tue, 30 Jan 2024 13:08:15 +0100
+	s=k20201202; t=1706616858;
+	bh=n+EXzIZ+osPCNOX9L0ivb1ArdlPhnoepULaw4aB6n/U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X9ibl57AeQc1FuwQTGdjKsVb0ReOx7rTHE3xtiFGaPlNSKpvuYoLOBZoXdnqCzvVy
+	 8swh8FAuzJkv+CItXjSkamJ+gVZKhy1eDVgTj23xcjBdcxaV9T+ZBGwFEe594/xLlB
+	 rGHlx8n+uYxq5yVbG2ilfs+LAKQ2lVnDkPJh+2NGlgcMufkFgCXeSG2/1rGV5uSPKB
+	 ZbVwrKlv3XXPvqhYqV3Bv9QoU/aM8mGjQo7DdLCo0BQQ5ZwZ2Vv7clmnrkraL5E+nq
+	 fPXYQtgGJftN4NpFH64l0nBEAF/zU0GE+/C9BVMwB9sE6eq5fsdWkuRHQxR+X8gFpl
+	 Hf8PzW0J02yKA==
+Message-ID: <a5e69211-1fba-429c-8acd-dcd8053f23c1@kernel.org>
+Date: Tue, 30 Jan 2024 13:14:16 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] mptcp: really cope with fastopen race.
+Subject: Re: [PATCH mptcp-next 0/7] selftests: mptcp: improve results in slow
+ CI envs
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <02fe7afaec6fac65fc2da5922efe25d6ebdebc88.1706132185.git.pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang.tang@linux.dev>
+References: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-0-f3a4db41c3be@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,37 +86,63 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <02fe7afaec6fac65fc2da5922efe25d6ebdebc88.1706132185.git.pabeni@redhat.com>
+In-Reply-To: <20240118-selftests-mptcp-simult-slack-qemu-no-kvm-v1-0-f3a4db41c3be@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat,
+Hi Geliang, Paolo,
 
-On 24/01/2024 22:36, Paolo Abeni wrote:
-> Fastopen and PM-trigger subflow shutdown can race, as reported by
-> syzkaller.
+On 18/01/2024 19:27, Matthieu Baerts (NGI0) wrote:
+> The initial goal of this series is to improve the results when slow test
+> environments, e.g. when using QEmu without KVM.
 > 
-> In my first attempt to close such race, I missed the fact that
-> the subflow status can change again before the subflow_state_change
-> callback is invoked.
+> I looked at the results from LKFT [1] and noticed that some mptcp_join
+> subtests were skipped because it was not possible to add IPTables rules.
+> It looks like some KConfig were missing. The 3 first patches should fix
+> that.
 > 
-> Address the issue additionally copying with all the states directly
-> reachable from TCP_FIN_WAIT1.
+> I also noticed that mptcp_join selftest stopped after a timeout of 20
+> minutes. We keep adding tests there, it is normal to increase this
+> timeout at some points, especially because we forced many subtests to
+> have a longer connections, to have enough time for some actions to
+> happen. Patch 4 fixes that.
+> 
+> Patch 5 decreases the BW in simult flows, hopefully reducing the load on
+> the CPU, and improving the stability.
+> 
+> Patch 6 is needed because our CI run MPTCP Connect twice: the second
+> time with '-m mmap'. When parsing the results, the tests from the two
+> runs have the same title, hence the same "fingerprint". Instead of
+> having a post-processing step modifying the results for this specific
+> case, it is now possible to set a prefix.
+> 
+> When looking at the results of mptcp_join, I also realised that the
+> 'userspace' tests were blocking after having displayed the results.
+> That's because they wait for the end of the transfer, while they don't
+> need to: tests are the end are ignored because this is done in the
+> background (but that's fine, other tests check that). Patch 7 improves
+> the situation there.
 
-Thank you for the patch and the review!
+Thank you for the reviews!
 
-Now in our tree (fix for -net) without the '.' at the end of the commit
-title and a Closes tag ;)
+Now in our tree (fix for -net) with the modification demanded by Geliang
+on patch 3/7:
 
 New patches for t/upstream-net and t/upstream:
-- d59403d0c91b: mptcp: really cope with fastopen race
-- Results: ca82f8ccb3cc..6d56aa24e733 (export-net)
-- Results: 4b8f1ec22243..cdd4fe00f4c5 (export)
+- a773245de129: selftests: mptcp: add missing kconfig for NF Filter
+- 616af1a08349: selftests: mptcp: add missing kconfig for NF Filter in v6
+- 2d4ccf16a1ac: selftests: mptcp: add missing kconfig for NF Mangle
+- ac8595b0b31c: selftests: mptcp: increase timeout to 30 min
+- ba7e09d80ffe: selftests: mptcp: decrease BW in simult flows
+- e8a61a14a58f: selftests: mptcp: allow changing subtests prefix
+- eb5f4f5f0a80: selftests: mptcp: join: stop transfer when check is done
+- Results: 6d56aa24e733..b4671e59d316 (export-net)
+- Results: cdd4fe00f4c5..81c0f68b0316 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240130T120521
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240130T120521
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240130T121223
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240130T121223
 
 Cheers,
 Matt
