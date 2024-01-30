@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D7C82D99
-	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 15:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A6C15146F
+	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 17:52:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706629853; cv=none; b=s7fhLgVSkM6BYsffVD1Fvngh1Szh9xENYEPQYXk1axtP939XEBITuc79opEJ1tAvGvA00cTdBoBbPRdRVLqYmTiJMbcMa1i35kJ17LLmLuJ+uMmgG8tR6+lYPwnHEFWsOyMEuVLioGiLr53DB9Hm0qA53cBnr1fdN43NpsCW7Hk=
+	t=1706637128; cv=none; b=FATGUbSuF38cbeG+cHA2ulsmeV561iQy6+G9xDdt1gu5s/tgAxJIn5l+5+Ebo2hcODIqb57QiJoAAPNNau8JJeUhLggcRdH2t7LBXHsSS7z5m8WWIBGGbPBOYw5fXdREAUDcjmSzd8PVDgXZek7mhJLjPlIBdpjgZE41/Ko+UDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706629853; c=relaxed/simple;
-	bh=hw8JAtVdmGwf69zwFgkX0F5JcVc/khkbGMIANx3Vfdc=;
+	s=arc-20240116; t=1706637128; c=relaxed/simple;
+	bh=9fhd/oyGlxiS5NozUqVSdgxBvUXkBvZRRhrp01PzgOI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=inD+F2VgtH+53mahzkgp60Yl3AmJSv2R6CtYiwn8cmwi5ZVNjAL04CnFyVy+kTmo8NKOVqBppYhiutdmcJTkqeCVxnQefRrYVR21iRsn9NMxpvMTesszdER/aTi7xtaqejsOq4P+ddteWN9QDWc8ew8sXNT5qYwYJDF9kfLkWIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=buW2QAPs; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=AGD2BoyYukPeUn+1FpNMl2aw30wyDXx56LPM70otSyvw/QH+KZYkpz0uJlvy36UCagIGw60GbWSQul0Y2WRMvbahM2fAB3wAw0ftEMHc8BCRrBzN0DxSNCNnO0+/OJpRQfHAmresMco8GlzjPtInsk8WaVHe2eRBCYNGzR/cqy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSfhRSlm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buW2QAPs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F25DCC433C7;
-	Tue, 30 Jan 2024 15:50:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSfhRSlm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F04E1C433C7;
+	Tue, 30 Jan 2024 17:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706629853;
-	bh=hw8JAtVdmGwf69zwFgkX0F5JcVc/khkbGMIANx3Vfdc=;
+	s=k20201202; t=1706637127;
+	bh=9fhd/oyGlxiS5NozUqVSdgxBvUXkBvZRRhrp01PzgOI=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=buW2QAPs9W8PHWoFuuM38NzWfszXKdLITxRNIsGb/caZ1/fcUxN3H/h740JgtI+Iz
-	 FiKsw4DO6eCJJzHxzRqoffGkLxvIbiaoPfkFVcCE6kIXLnGm6qxVi8HIc1DdOGOmui
-	 1hsAHNLUkUlrvV6SiklSdIkDLhjJshT5SbpTC9gwLZQCpwtDPUlaCdaBggYyw4y58u
-	 WbyfxSP3QQVIG0rUp6BdT4oqezpJ6Gu117no6+XC5xocPhHBvwgPSy9sYKMaAfsYln
-	 UbAlenNfjDQ+c83rUDCPCY78hEaKb+wuW6kYdlT3KRKhkBXlmIo2h6mj5kiDZm3QfU
-	 nSRE6MGqD/VqQ==
-Message-ID: <a201bd1f-8c67-4196-bc71-4e08ab60d1db@kernel.org>
-Date: Tue, 30 Jan 2024 16:50:46 +0100
+	b=gSfhRSlmk7yr0eZWeWq3m18nzY6wpSzTEosiR0o6HJzKmPM3THQTX82efoY+3/8rx
+	 ByP5fiqfmdmbZHt6W7NrECqEEvkFltc1A6Tbh1GkdFJvWfSiTyqUwFYgDvnItbx+Xw
+	 O4lusXNiZ0ERyqhJ2UW5hQMcFO0gM/gYTyWY2g7A6s7iCaOrDHi0+m4gxdOvhFulPg
+	 uvWTJ+a1WPYjo4d0ooePjp7oFh9966GhDNnm+xuoYbkS9GNxAyoA8QRPiNxXVDc95W
+	 hlSHhkD6eaQeLvpi5M9D8PW0t3iobl839mNXYsNXvA9ApdAGt7b/RMrBex4O0sTOfH
+	 NsVV1JIrn9PhQ==
+Message-ID: <762d499c-1f90-470e-8e3f-b26eafd519dc@kernel.org>
+Date: Tue, 30 Jan 2024 18:52:05 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH virtme-docker 2/3] upgrade to ubuntu 23.10
+Subject: Re: [PATCH mptcp-net] mptcp: fix data re-injection from stale subflow
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1706422466.git.geliang@kernel.org>
- <dc2e14b63fd7ec288e015124919c28c9470d5913.1706422466.git.geliang@kernel.org>
- <ZbhHy6GPo4UcCKy0@t480>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com>
+ <39a0fa5f-03e2-4ef3-90b7-decd8971905b@kernel.org>
+ <195dfb64e0e8ecfac60c8f29df9e61c1c7cfea17.camel@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,41 +86,65 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ZbhHy6GPo4UcCKy0@t480>
+In-Reply-To: <195dfb64e0e8ecfac60c8f29df9e61c1c7cfea17.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo,
 
-On 30/01/2024 01:50, Geliang Tang wrote:
-> On Sun, Jan 28, 2024 at 02:16:02PM +0800, Geliang Tang wrote:
->> There will be many build errors when comliling bpf selftests under
->> Ubuntu 22.04. Upgrade to 23.10 to use the new versions of gcc, clang
->> and LLVM.
+Thank you for your reply!
+
+On 30/01/2024 16:12, Paolo Abeni wrote:
+> On Tue, 2024-01-30 at 12:59 +0100, Matthieu Baerts wrote:
+>> Hi Paolo, Mat,
 >>
->> Fix sparse build errors for llvm-16. This part alse be sent to sparse
->> upstream. It can be dropped from this patch when accepted.
+>> On 23/01/2024 22:03, Paolo Abeni wrote:
+>>> When the MPTCP PM detects that a subflow is stale, all the packet
+>>> scheduler must re-inject all the mptcp-level unacked data. To avoid
+>>> acquiring unneeded locks, it first try to check if any unacked data
+>>> is present at all in the RTX queue, but such check is currently
+>>> broken, as it uses TCP-specific helper on an MPTCP socket.
+>>>
+>>> Funnily enough fuzzers and static checkers are happy, as the accessed
+>>> memory still belongs to the mptcp_sock struct, and even from a
+>>> functional perspective the recovery completed successfully, as
+>>> the short-cut test always failed.
+>>>
+>>> A recent unrelated TCP change - commit d5fed5addb2b ("tcp: reorganize
+>>> tcp_sock fast path variables") - exposed the issue, as the tcp field
+>>> reorganization makes the mptcp code always skip the re-inection.
+>>>
+>>> Fix the issue dropping the bogus call: we are on a slow path, the early
+>>> optimization proved once again to be evil.
+>>>
+>>> Fixes: 1e1d9d6f119c ("mptcp: handle pending data on closed subflow")
+>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/468
+>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>>
+>> Thank you for the patch and the review!
+>>
+>> Any ideas how to prevent such issues? Changing the signature of the
+>> TCP-specific functions? Adding a custom check for our CI on our side?
 > 
-> This part has been upstreamed, we can drop it now from this patch.
+> I guess we could add debug-only code in mptcp_sk() and in tcp_sk()
+> checking that the argument pointer belongs to the relevant slab, see
+> kfree():
+> 
+> https://elixir.bootlin.com/linux/v6.8-rc2/source/mm/slub.c#L4407
+> 
+> we could fetch slab->slab_cache and check it vs
+> mptcp_v6_prot.slab/mptcp_prot.slab/tcp_prot.slab/tcpv6_prot.slab.
+> 
+> The main downside is that such code is heavily mm-dependent and may
+> change/break when upstream progresses.
 
-Thank you for the patches and this note, I didn't see it has been fixed
-upstream.
+Good idea!
 
-I didn't know you needed to upgrade to Ubuntu 23.10. I did something
-similar for your two first patches last week when looking at the issue
-471 [1] to switch to a more recent version of QEmu, but I didn't push my
-changes. I hope you don't mind if I apply my modifications (with your
-co-dev tag) where I use new versions of the dependences instead of
-patching them.
+If you think it is too fragile, maybe we could add a new entry in
+"struct inet_connection_sock" (or "struct sock"?) -- e.g. is_msk --, set
+it in mptcp_init_sock(), and check it in mptcp_sk() and in tcp_sk().
 
-I will look at the patch 3/3 (v2). I will need to modify it slightly I
-think not to have the current CI failing. I can also look at modifying
-the current CI job to validate this BPF test. I will probably need more
-conditions to be able to run on older kernels as well. I will push that
-after having done some tests, not to have regressions for the tests we
-are currently validating.
-
-[1] https://github.com/multipath-tcp/mptcp_net-next/issues/471
+We can do that only if KASAN kconfig is set (or another one?).
 
 Cheers,
 Matt
