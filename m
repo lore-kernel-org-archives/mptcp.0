@@ -1,151 +1,639 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04862628C
-	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 08:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C3A58234
+	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 09:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706603913; cv=none; b=cH6hz3QS7awQmMU/w/gmx/z8E4li1Z3EOiXjSJMIUJYRsjzVnH87KBHYYXpjFpU628sI6k3balJYhrZ9KUGUtaT9NvrOQ0qhhqPt4BJriGLV4/FGCMuSyugutDxPG8eZ1NQdaIE//TYZgY35vOEIw7xnA0EoWD2gOX7Bw/w1CR4=
+	t=1706607952; cv=none; b=UvbjCO5big2HGlKOTVb5mAIzgN27kcvCBWAgw1hU0A06vjRov1aSyghQ5CirLyJHJGpIQgAT3e9qBQjjS1pODV9J+QKpiqo+6owItYLUuOp203HbLtixo92HOr43CcD86LLqW2thkXNEaviRX4XCku8dePHzNC9GiXxKVWcguAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706603913; c=relaxed/simple;
-	bh=GLm0ZtaDbqk5QUmWrH0R5MJPU8FMiscvYFCoom14ZpM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZcCQJf9Qr3sxiAlbUeE4GHmj4bd9uxxJ75BfjvxZq4kXwk0/SyoOeGCPSXwcNQTsH5LbEpwEVPBb8AM/iArWjnMBwvJptCjIWF0ACgZw+XeN2qjXYqi6GFXBUIv3vIl4ifpNLUDXmLAxginl2DvFD0Ez2jVfbQktbUNM0QNORcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aabegm7P; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706607952; c=relaxed/simple;
+	bh=/BoMt6K3jjnFYob9JbVSGlGtRFgymM1f0dJFZx8jrsU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type; b=ijO9yNBi6gcGpTKsWFaqBh7/wBYJIGfIRFFi2WqFAjqXVxWp4+KEuarTv8z27nF2bx7dQj5v6YzIFNgdOcSS/U4EUktCxapxlBCEwe6gznDmC2Xo4mGZI8r9ypAv6lcvkgDngCB7qyjZO3GskDMJTLmUNKPNNpyAwSd1kObN9kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJmb+R2E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aabegm7P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706603910;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ysN/r9SjtTG1qwVS1VinJDnSOpXdRAhmk09y24T6R+c=;
-	b=aabegm7PiCEFtq9C3JybjV8J4OBgmEvFNMtyyVxkI9qgsouWTDVjwW2IM35mgh/BFVkDNU
-	+xdyIZGkPyOkRMqgV4bWR24JJlLO1CX25LfqHDVfolF15rTxP8ppwcvnkc3sTd653t9Cr6
-	QwW4lw0ZPGwMHj/G6/qtHwREmLOZF+4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-r3axNLBNMEm7w9MJ1IPrqw-1; Tue, 30 Jan 2024 03:38:28 -0500
-X-MC-Unique: r3axNLBNMEm7w9MJ1IPrqw-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40ef88ff82aso3419595e9.0
-        for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 00:38:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706603907; x=1707208707;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ysN/r9SjtTG1qwVS1VinJDnSOpXdRAhmk09y24T6R+c=;
-        b=dYX5zEWGQVUJ/j8KD4aktPIhjKpUBGcwBktD8V85DU/CBGiACKsbSdBQoU9HQjqtsP
-         Y2OkrDkM7m+rd0gbRJElkGL1HNGs9r5kFtFR0FhH/YBn8X2yJxMRg+RFdnU5CC3kHgsv
-         4XjT2PEUnsl1qxCmDvgVWTkEh5Qk1Z/KKfTOgFshOUp63kPcoAseBg7laf25d2cwWXB0
-         uj7HyRJc9JBcH12A4gAKRKUUTriQdHeb11atEJJRZka3jpZGTFsK+U2eF0ZcR0wFrk8y
-         Ky0VfB/sfAhJVyY1DCqeq4R0OqccCN5MjIejDdQYOdRMBYEUagd9EVO7LtTGeoKfE01H
-         AsZQ==
-X-Gm-Message-State: AOJu0YzqOcG1tATy73VcHhbAMhs9BmWb0RZup2nbVSkkfItltcKWWouu
-	Bkw0yIEHPT6CpNLSgmpgXPeKG46y44ixFiGbbTeWU6dsZVOrPb4Dxf7fEbKmLmj48an+pS//cFC
-	oe6WJRcVUUA3FAxyqmaN7krWGHlqDINJYirfKwj6eLfny5OR7y0Lv
-X-Received: by 2002:a05:600c:5185:b0:40e:f9ff:f80a with SMTP id fa5-20020a05600c518500b0040ef9fff80amr2859326wmb.0.1706603907792;
-        Tue, 30 Jan 2024 00:38:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHKdaRSFHtqbUqXSDwaXlXNVoeqEyKgcRq6FFyqW1+p81A2BBg+duZTillFrn5RfAzShHRAew==
-X-Received: by 2002:a05:600c:5185:b0:40e:f9ff:f80a with SMTP id fa5-20020a05600c518500b0040ef9fff80amr2859313wmb.0.1706603907323;
-        Tue, 30 Jan 2024 00:38:27 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-232-203.dyn.eolo.it. [146.241.232.203])
-        by smtp.gmail.com with ESMTPSA id g9-20020a05600c310900b0040ef2e7041esm7066166wmo.6.2024.01.30.00.38.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 00:38:26 -0800 (PST)
-Message-ID: <9acbd2da82d6fe9c385fc06ed359607f485d8935.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net] mptcp: really cope with fastopen race.
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-Date: Tue, 30 Jan 2024 09:38:25 +0100
-In-Reply-To: <32222760-1d3f-5acb-63b5-774e7968741c@kernel.org>
-References: <02fe7afaec6fac65fc2da5922efe25d6ebdebc88.1706132185.git.pabeni@redhat.com>
-	 <89ef77af-b4b5-8674-52e0-92405a0c0ea9@kernel.org>
-	 <482549332bcc96a8b4dd37292cb289b271b49511.camel@redhat.com>
-	 <32222760-1d3f-5acb-63b5-774e7968741c@kernel.org>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=mQINBGISiDUBEAC5uMdJicjm3ZlWQJG4u2EU1EhWUSx8IZLUTmEE8zmjPJFSYDcjtfGcbzLPb63BvX7FADmTOkO7gwtDgm501XnQaZgBUnCOUT8qv5MkKsFH20h1XJyqjPeGM55YFAXc+a4WD0YyO5M0+KhDeRLoildeRna1ey944VlZ6Inf67zMYw9vfE5XozBtytFIrRyGEWkQwkjaYhr1cGM8ia24QQVQid3P7SPkR78kJmrT32sGk+TdR4YnZzBvVaojX4AroZrrAQVdOLQWR+w4w1mONfJvahNdjq73tKv51nIpu4SAC1Zmnm3x4u9r22mbMDr0uWqDqwhsvkanYmn4umDKc1ZkBnDIbbumd40x9CKgG6ogVlLYeJa9WyfVMOHDF6f0wRjFjxVoPO6p/ZDkuEa67KCpJnXNYipLJ3MYhdKWBZw0xc3LKiKc+nMfQlo76T/qHMDfRMaMhk+L8gWc3ZlRQFG0/Pd1pdQEiRuvfM5DUXDo/YOZLV0NfRFU9SmtIPhbdm9cV8Hf8mUwubihiJB/9zPvVq8xfiVbdT0sPzBtxW0fXwrbFxYAOFvT0UC2MjlIsukjmXOUJtdZqBE3v3Jf7VnjNVj9P58+MOx9iYo8jl3fNd7biyQWdPDfYk9ncK8km4skfZQIoUVqrWqGDJjHO1W9CQLAxkfOeHrmG29PK9tHIwARAQABtB9QYW9sbyBBYmVuaSA8cGFiZW5pQHJlZGhhdC5jb20+iQJSBBMBCAA8FiEEg1AjqC77wbdLX2LbKSR5jcyPE6QFAmISiDUCGwMFCwkIBwIDIgIBBhUKCQgLAgQWAgMBAh4HAheAAAoJECkkeY3MjxOkJSYQAJcc6MTsuFxYdYZkeWjW//zbD3ApRHzpNlHLVSuJqHr9/aDS+tyszgS8jj9MiqALzgq4iZbg
- 7ZxN9ZsDL38qVIuFkSpgMZCiUHdxBC11J8nbBSLlpnc924UAyr5XrGA99 6Wl5I4Km3128GY6iAkH54pZpOmpoUyBjcxbJWHstzmvyiXrjA2sMzYjt3Xkqp0cJfIEekOi75wnNPofEEJg28XPcFrpkMUFFvB4Aqrdc2yyR8Y36rbw18sIX3dJdomIP3dL7LoJi9mfUKOnr86Z0xltgcLPGYoCiUZMlXyWgB2IPmmcMP2jLJrusICjZxLYJJLofEjznAJSUEwB/3rlvFrSYvkKkVmfnfro5XEr5nStVTECxfy7RTtltwih85LlZEHP8eJWMUDj3P4Q9CWNgz2pWr1t68QuPHWaA+PrXyasDlcRpRXHZCOcvsKhAaCOG8TzCrutOZ5NxdfXTe3f1jVIEab7lNgr+7HiNVS+UPRzmvBc73DAyToKQBn9kC4jh9HoWyYTepjdcxnio0crmara+/HEyRZDQeOzSexf85I4dwxcdPKXv0fmLtxrN57Ae82bHuRlfeTuDG3x3vl/Bjx4O7Lb+oN2BLTmgpYq7V1WJPUwikZg8M+nvDNcsOoWGbU417PbHHn3N7yS0lLGoCCWyrK1OY0QM4EVsL3TjOfUtCNQYW9sbyBBYmVuaSA8cGFvbG8uYWJlbmlAZ21haWwuY29tPokCUgQTAQgAPBYhBINQI6gu+8G3S19i2ykkeY3MjxOkBQJiEoitAhsDBQsJCAcCAyICAQYVCgkICwIEFgIDAQIeBwIXgAAKCRApJHmNzI8TpBzHD/45pUctaCnhee1vkQnmStAYvHmwrWwIEH1lzDMDCpJQHTUQOOJWDAZOFnE/67bxSS81Wie0OKW2jvg1ylmpBA0gPpnzIExQmfP72cQ1TBoeVColVT6Io35BINn+ymM7c0Bn8RvngSEpr3jBtqvvWXjvtnJ5/HbOVQCg62NC6ewosoKJPWpGXMJ9SKsVIOUHsmoWK60spzeiJoSmAwm3zTJQnM5kRh2q
- iWjoCy8L35zPqR5TV+f5WR5hTVCqmLHSgm1jxwKhPg9L+GfuE4d0SWd84y GeOB3sSxlhWsuTj1K6K3MO9srD9hr0puqjO9sAizd0BJP8ucf/AACfrgmzIqZXCfVS7jJ/M+0ic+j1Si3yY8wYPEi3dvbVC0zsoGj9n1R7B7L9c3g1pZ4L9ui428vnPiMnDN3jh9OsdaXeWLvSvTylYvw9q0DEXVQTv4/OkcoMrfEkfbXbtZ3PRlAiddSZA5BDEkkm6P9KA2YAuooi1OD9d4MW8LFAeEicvHG+TPO6jtKTacdXDRe611EfRwTjBs19HmabSUfFcumL6BlVyceIoSqXFe5jOfGpbBevTZtg4kTSHqymGb6ra6sKs+/9aJiONs5NXY7iacZ55qG3Ib1cpQTps9bQILnqpwL2VTaH9TPGWwMY3Nc2VEc08zsLrXnA/yZKqZ1YzSY9MGXWYLkCDQRiEog1ARAAyXMKL+x1lDvLZVQjSUIVlaWswc0nV5y2EzBdbdZZCP3ysGC+s+n7xtq0o1wOvSvaG9h5q7sYZs+AKbuUbeZPu0bPWKoO02i00yVoSgWnEqDbyNeiSW+vI+VdiXITV83lG6pS+pAoTZlRROkpb5xo0gQ5ZeYok8MrkEmJbsPjdoKUJDBFTwrRnaDOfb+Qx1D22PlAZpdKiNtwbNZWiwEQFm6mHkIVSTUe2zSemoqYX4QQRvbmuMyPIbwbdNWlItukjHsffuPivLF/XsI1gDV67S1cVnQbBgrpFDxN62USwewXkNl+ndwa+15wgJFyq4Sd+RSMTPDzDQPFovyDfA/jxN2SK1Lizam6o+LBmvhIxwZOfdYH8bdYCoSpqcKLJVG3qVcTwbhGJr3kpRcBRz39Ml6iZhJyI3pEoX3bJTlR5Pr1Kjpx13qGydSMos94CIYWAKhegI06aTdvvuiigBwjngo/Rk5S+iEGR5KmTqGyp27o6YxZy6D4NIc6PKUzhIUxfvuHNvfu
- sD2W1U7eyLdm/jCgticGDsRtweytsgCSYfbz0gdgUuL3EBYN3JLbAU+UZpy v/fyD4cHDWaizNy/KmOI6FFjvVh4LRCpGTGDVPHsQXaqvzUybaMb7HSfmBBzZqqfVbq9n5FqPjAgD2lJ0rkzb9XnVXHgr6bmMRlaTlBMAEQEAAYkCNgQYAQgAIBYhBINQI6gu+8G3S19i2ykkeY3MjxOkBQJiEog1AhsMAAoJECkkeY3MjxOkY1YQAKdGjHyIdOWSjM8DPLdGJaPgJdugHZowaoyCxffilMGXqc8axBtmYjUIoXurpl+f+a7S0tQhXjGUt09zKlNXxGcebL5TEPFqgJTHN/77ayLslMTtZVYHE2FiIxkvW48yDjZUlefmphGpfpoXe4nRBNto1mMB9Pb9vR47EjNBZCtWWbwJTIEUwHP2Z5fV9nMx9Zw2BhwrfnODnzI8xRWVqk7/5R+FJvl7s3nY4F+svKGD9QHYmxfd8Gx42PZc/qkeCjUORaOf1fsYyChTtJI4iNm6iWbD9HK5LTMzwl0n0lL7CEsBsCJ97i2swm1DQiY1ZJ95G2Nz5PjNRSiymIw9/neTvUT8VJJhzRl3Nb/EmO/qeahfiG7zTpqSn2dEl+AwbcwQrbAhTPzuHIcoLZYV0xDWzAibUnn7pSrQKja+b8kHD9WF+m7dPlRVY7soqEYXylyCOXr5516upH8vVBmqweCIxXSWqPAhQq8d3hB/Ww2A0H0PBTN1REVw8pRLNApEA7C2nX6RW0XmA53PIQvAP0EAakWsqHoKZ5WdpeOcH9iVlUQhRgemQSkhfNaP9LqR1XKujlTuUTpoyT3xwAzkmSxN1nABoutHEO/N87fpIbpbZaIdinF7b9srwUvDOKsywfs5HMiUZhLKoZzCcU/AEFjQsPTATACGsWf3JYPnWxL9
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJmb+R2E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445EDC433F1;
+	Tue, 30 Jan 2024 09:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706607952;
+	bh=/BoMt6K3jjnFYob9JbVSGlGtRFgymM1f0dJFZx8jrsU=;
+	h=Date:Subject:To:Cc:From:From;
+	b=GJmb+R2EnHDpPY8ojDn0bygMqx/EezN08ZEiIcaOGM82ywxBbBgjNlw1UfeA4tjqA
+	 ge3Gp29E0MHy+9BltUPQoxtmtvQPuM/vtrHJMKZBOX54+zGnfL1hoyB+k0VJnRVGw+
+	 cbVA30zN6BjxRxfGZs7NXowL3QoL7RN65sJrpwG858Mu9HelPK4F3eaSBjXqEYO5YX
+	 xuo5+Iq2617s4DSkCKiuYNezmwgsM1gZaM2pPqmy9gOxrB5DLf6K/LGE1XnXNWBoP8
+	 dgv6wzSREuXXr8DRRADaQMuhF7b6CYQkPvtPOBslCqGmo60jSxURkcjLnSMxGXZPB8
+	 bivylhNgR0y6g==
+Message-ID: <4a617858-30d9-40a6-a00a-d0e4384f6227@kernel.org>
+Date: Tue, 30 Jan 2024 10:45:48 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Fwd: [PATCH bpf-next v17 11/14] bpf, net: switch to dynamic
+ registration
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang.tang@linux.dev>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2024-01-29 at 11:16 -0800, Mat Martineau wrote:
-> On Mon, 29 Jan 2024, Paolo Abeni wrote:
->=20
-> > On Fri, 2024-01-26 at 17:18 -0800, Mat Martineau wrote:
-> > > On Wed, 24 Jan 2024, Paolo Abeni wrote:
-> > >=20
-> > > > Fastopen and PM-trigger subflow shutdown can race, as reported by
-> > > > syzkaller.
-> > > >=20
-> > > > In my first attempt to close such race, I missed the fact that
-> > > > the subflow status can change again before the subflow_state_change
-> > > > callback is invoked.
-> > > >=20
-> > > > Address the issue additionally copying with all the states directly
-> > > > reachable from TCP_FIN_WAIT1.
-> > > >=20
-> > > > Fixes: 1e777f39b4d7 ("mptcp: add MSG_FASTOPEN sendmsg flag support"=
-)
-> > > > Fixes: 4fd19a307016 ("mptcp: fix inconsistent state on fastopen rac=
-e")
-> > > > Reported-by: syzbot+c53d4d3ddb327e80bc51@syzkaller.appspotmail.com
-> > > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > >=20
-> > > I wasn't able to reproduce the CI failure, and the change looks good =
-to
-> > > me. We'll see if CI is happy when this is applied to export-net.
-> >=20
-> > I used the repro provided by syzbot upstream:
-> >=20
-> > https://lore.kernel.org/netdev/000000000000e8ecae060fae7a47@google.com/
-> > https://syzkaller.appspot.com/x/repro.c?x=3D17abc23be80000
-> >=20
-> > with my default debug config, and here it reproduced the issue reliably
-> > on the unpatched kernel (and no splat with the patched one).
-> >=20
->=20
-> I was not very specific in my wording: I was referring to the CI failures=
-=20
-> when it applied this patch to export-net:
->=20
-> https://lore.kernel.org/mptcp/482549332bcc96a8b4dd37292cb289b271b49511.ca=
-mel@redhat.com/T/#mfb81b40b8a42912362eede622b5a15b17313d2a2
+Hi Geliang,
 
-Ah, that one!
+This is just to let you know that I had to modify two commits you made
+to sync with upstream changes (see the patch below):
 
-I think it's caused by:
+- a93c47792fc3: conflict in t/mptcp-add-bpf_mptcp_sched_ops
+- 8ac5b9528258: mptcp: bpf: adapt code to match upstream changes
+- ebd80ac09e97: conflict in t/bpf-Add-bpf_mptcp_sched_kfunc_set
 
-commit 198bc90e0e734e5f98c3d2833e8390cac3df61b2
-Author: Zhengchao Shao <shaozhengchao@huawei.com>
-Date:   Thu Jan 18 09:20:19 2024 +0800
+Please see the new version of these two commits from our 'export' branch:
 
-    tcp: make sure init the accept_queue's spinlocks once
+ff544a232510 ("bpf: Add bpf_mptcp_sched_ops")
+66dfa335e74b ("bpf: Add bpf_mptcp_sched_kfunc_set")
 
-and fixed by:
-
-commit 435e202d645c197dcfd39d7372eb2a56529b6640 (net68/tmp_png)
-Author: Zhengchao Shao <shaozhengchao@huawei.com>
-Date:   Mon Jan 22 18:20:01 2024 +0800
-
-    ipv6: init the accept_queue's spinlocks in inet6_create
+Do you mind checking that everything is OK for you, please?
 
 Cheers,
+Matt
 
-Paolo
+
+-------- Forwarded Message --------
+Subject: [PATCH bpf-next v17 11/14] bpf, net: switch to dynamic registration
+Date: Fri, 19 Jan 2024 14:50:02 -0800
+From: thinker.li@gmail.com
+To: bpf@vger.kernel.org, ast@kernel.org, martin.lau@linux.dev,
+song@kernel.org, kernel-team@meta.com, andrii@kernel.org, drosen@google.com
+CC: sinquersw@gmail.com, kuifeng@meta.com, Kui-Feng Lee
+<thinker.li@gmail.com>, netdev@vger.kernel.org
+
+From: Kui-Feng Lee <thinker.li@gmail.com>
+
+Replace the static list of struct_ops types with per-btf struct_ops_tab to
+enable dynamic registration.
+
+Both bpf_dummy_ops and bpf_tcp_ca now utilize the registration function
+instead of being listed in bpf_struct_ops_types.h.
+
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kui-Feng Lee <thinker.li@gmail.com>
+---
+ include/linux/bpf.h               |  33 +++++++---
+ include/linux/btf.h               |  12 ++++
+ kernel/bpf/bpf_struct_ops.c       | 100 ++++--------------------------
+ kernel/bpf/bpf_struct_ops_types.h |  12 ----
+ kernel/bpf/btf.c                  |  84 +++++++++++++++++++++++--
+ net/bpf/bpf_dummy_struct_ops.c    |  11 +++-
+ net/ipv4/bpf_tcp_ca.c             |  12 +++-
+ 7 files changed, 146 insertions(+), 118 deletions(-)
+ delete mode 100644 kernel/bpf/bpf_struct_ops_types.h
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 90f78f04e139..085070ea3021 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1700,10 +1700,22 @@ struct bpf_struct_ops_common_value {
+ 	enum bpf_struct_ops_state state;
+ };
+ +/* This macro helps developer to register a struct_ops type and generate
++ * type information correctly. Developers should use this macro to register
++ * a struct_ops type instead of calling __register_bpf_struct_ops()
+directly.
++ */
++#define register_bpf_struct_ops(st_ops, type)				\
++	({								\
++		struct bpf_struct_ops_##type {				\
++			struct bpf_struct_ops_common_value common;	\
++			struct type data ____cacheline_aligned_in_smp;	\
++		};							\
++		BTF_TYPE_EMIT(struct bpf_struct_ops_##type);		\
++		__register_bpf_struct_ops(st_ops);			\
++	})
++
+ #if defined(CONFIG_BPF_JIT) && defined(CONFIG_BPF_SYSCALL)
+ #define BPF_MODULE_OWNER ((void *)((0xeB9FUL << 2) + POISON_POINTER_DELTA))
+-const struct bpf_struct_ops_desc *bpf_struct_ops_find(struct btf *btf,
+u32 type_id);
+-void bpf_struct_ops_init(struct btf *btf, struct bpf_verifier_log *log);
+ bool bpf_struct_ops_get(const void *kdata);
+ void bpf_struct_ops_put(const void *kdata);
+ int bpf_struct_ops_map_sys_lookup_elem(struct bpf_map *map, void *key,
+@@ -1745,16 +1757,11 @@ struct bpf_dummy_ops {
+ int bpf_struct_ops_test_run(struct bpf_prog *prog, const union bpf_attr
+*kattr,
+ 			    union bpf_attr __user *uattr);
+ #endif
++int bpf_struct_ops_desc_init(struct bpf_struct_ops_desc *st_ops_desc,
++			     struct btf *btf,
++			     struct bpf_verifier_log *log);
+ void bpf_map_struct_ops_info_fill(struct bpf_map_info *info, struct
+bpf_map *map);
+ #else
+-static inline const struct bpf_struct_ops_desc
+*bpf_struct_ops_find(struct btf *btf, u32 type_id)
+-{
+-	return NULL;
+-}
+-static inline void bpf_struct_ops_init(struct btf *btf,
+-				       struct bpf_verifier_log *log)
+-{
+-}
+ static inline bool bpf_try_module_get(const void *data, struct module
+*owner)
+ {
+ 	return try_module_get(owner);
+@@ -1792,6 +1799,12 @@ static inline int
+bpf_trampoline_link_cgroup_shim(struct bpf_prog *prog,
+ static inline void bpf_trampoline_unlink_cgroup_shim(struct bpf_prog *prog)
+ {
+ }
++static inline int bpf_struct_ops_desc_init(struct bpf_struct_ops_desc
+*st_ops_desc,
++					   struct btf *btf,
++					   struct bpf_verifier_log *log) {
++	return -EOPNOTSUPP;
++}
++
+ #endif
+  struct bpf_array {
+diff --git a/include/linux/btf.h b/include/linux/btf.h
+index 1d852dad7473..714801a382fd 100644
+--- a/include/linux/btf.h
++++ b/include/linux/btf.h
+@@ -496,6 +496,7 @@ static inline void *btf_id_set8_contains(const
+struct btf_id_set8 *set, u32 id)
+ }
+  struct bpf_verifier_log;
++struct bpf_struct_ops;
+  #ifdef CONFIG_BPF_SYSCALL
+ const struct btf_type *btf_type_by_id(const struct btf *btf, u32 type_id);
+@@ -520,6 +521,9 @@ btf_get_prog_ctx_type(struct bpf_verifier_log *log,
+const struct btf *btf,
+ int get_kern_ctx_btf_id(struct bpf_verifier_log *log, enum
+bpf_prog_type prog_type);
+ bool btf_types_are_same(const struct btf *btf1, u32 id1,
+ 			const struct btf *btf2, u32 id2);
++int __register_bpf_struct_ops(struct bpf_struct_ops *st_ops);
++const struct bpf_struct_ops_desc *bpf_struct_ops_find_value(struct btf
+*btf, u32 value_id);
++const struct bpf_struct_ops_desc *bpf_struct_ops_find(struct btf *btf,
+u32 type_id);
+ #else
+ static inline const struct btf_type *btf_type_by_id(const struct btf *btf,
+ 						    u32 type_id)
+@@ -572,6 +576,14 @@ static inline bool btf_types_are_same(const struct
+btf *btf1, u32 id1,
+ {
+ 	return false;
+ }
++static inline int __register_bpf_struct_ops(struct bpf_struct_ops *st_ops)
++{
++	return -ENOTSUPP;
++}
++static inline const struct bpf_struct_ops_desc
+*bpf_struct_ops_find(struct btf *btf, u32 type_id)
++{
++	return NULL;
++}
+ #endif
+  static inline bool btf_type_is_struct_ptr(struct btf *btf, const
+struct btf_type *t)
+diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
+index 30ab34fab0f8..defc052e4622 100644
+--- a/kernel/bpf/bpf_struct_ops.c
++++ b/kernel/bpf/bpf_struct_ops.c
+@@ -62,35 +62,6 @@ static DEFINE_MUTEX(update_mutex);
+ #define VALUE_PREFIX "bpf_struct_ops_"
+ #define VALUE_PREFIX_LEN (sizeof(VALUE_PREFIX) - 1)
+ -/* bpf_struct_ops_##_name (e.g. bpf_struct_ops_tcp_congestion_ops) is
+- * the map's value exposed to the userspace and its btf-type-id is
+- * stored at the map->btf_vmlinux_value_type_id.
+- *
+- */
+-#define BPF_STRUCT_OPS_TYPE(_name)				\
+-extern struct bpf_struct_ops bpf_##_name;			\
+-								\
+-struct bpf_struct_ops_##_name {					\
+-	struct bpf_struct_ops_common_value common;		\
+-	struct _name data ____cacheline_aligned_in_smp;		\
+-};
+-#include "bpf_struct_ops_types.h"
+-#undef BPF_STRUCT_OPS_TYPE
+-
+-enum {
+-#define BPF_STRUCT_OPS_TYPE(_name) BPF_STRUCT_OPS_TYPE_##_name,
+-#include "bpf_struct_ops_types.h"
+-#undef BPF_STRUCT_OPS_TYPE
+-	__NR_BPF_STRUCT_OPS_TYPE,
+-};
+-
+-static struct bpf_struct_ops_desc bpf_struct_ops[] = {
+-#define BPF_STRUCT_OPS_TYPE(_name)				\
+-	[BPF_STRUCT_OPS_TYPE_##_name] = { .st_ops = &bpf_##_name },
+-#include "bpf_struct_ops_types.h"
+-#undef BPF_STRUCT_OPS_TYPE
+-};
+-
+ const struct bpf_verifier_ops bpf_struct_ops_verifier_ops = {
+ };
+ @@ -145,9 +116,9 @@ static bool is_valid_value_type(struct btf *btf,
+s32 value_id,
+ 	return true;
+ }
+ -static void bpf_struct_ops_desc_init(struct bpf_struct_ops_desc
+*st_ops_desc,
+-				     struct btf *btf,
+-				     struct bpf_verifier_log *log)
++int bpf_struct_ops_desc_init(struct bpf_struct_ops_desc *st_ops_desc,
++			     struct btf *btf,
++			     struct bpf_verifier_log *log)
+ {
+ 	struct bpf_struct_ops *st_ops = st_ops_desc->st_ops;
+ 	const struct btf_member *member;
+@@ -161,7 +132,7 @@ static void bpf_struct_ops_desc_init(struct
+bpf_struct_ops_desc *st_ops_desc,
+ 	    sizeof(value_name)) {
+ 		pr_warn("struct_ops name %s is too long\n",
+ 			st_ops->name);
+-		return;
++		return -EINVAL;
+ 	}
+ 	sprintf(value_name, "%s%s", VALUE_PREFIX, st_ops->name);
+ @@ -170,13 +141,13 @@ static void bpf_struct_ops_desc_init(struct
+bpf_struct_ops_desc *st_ops_desc,
+ 	if (type_id < 0) {
+ 		pr_warn("Cannot find struct %s in %s\n",
+ 			st_ops->name, btf_get_name(btf));
+-		return;
++		return -EINVAL;
+ 	}
+ 	t = btf_type_by_id(btf, type_id);
+ 	if (btf_type_vlen(t) > BPF_STRUCT_OPS_MAX_NR_MEMBERS) {
+ 		pr_warn("Cannot support #%u members in struct %s\n",
+ 			btf_type_vlen(t), st_ops->name);
+-		return;
++		return -EINVAL;
+ 	}
+  	value_id = btf_find_by_name_kind(btf, value_name,
+@@ -184,10 +155,10 @@ static void bpf_struct_ops_desc_init(struct
+bpf_struct_ops_desc *st_ops_desc,
+ 	if (value_id < 0) {
+ 		pr_warn("Cannot find struct %s in %s\n",
+ 			value_name, btf_get_name(btf));
+-		return;
++		return -EINVAL;
+ 	}
+ 	if (!is_valid_value_type(btf, value_id, t, value_name))
+-		return;
++		return -EINVAL;
+  	for_each_member(i, t, member) {
+ 		const struct btf_type *func_proto;
+@@ -196,13 +167,13 @@ static void bpf_struct_ops_desc_init(struct
+bpf_struct_ops_desc *st_ops_desc,
+ 		if (!*mname) {
+ 			pr_warn("anon member in struct %s is not supported\n",
+ 				st_ops->name);
+-			break;
++			return -EOPNOTSUPP;
+ 		}
+  		if (__btf_member_bitfield_size(t, member)) {
+ 			pr_warn("bit field member %s in struct %s is not supported\n",
+ 				mname, st_ops->name);
+-			break;
++			return -EOPNOTSUPP;
+ 		}
+  		func_proto = btf_type_resolve_func_ptr(btf,
+@@ -214,7 +185,7 @@ static void bpf_struct_ops_desc_init(struct
+bpf_struct_ops_desc *st_ops_desc,
+ 					   &st_ops->func_models[i])) {
+ 			pr_warn("Error in parsing func ptr %s in struct %s\n",
+ 				mname, st_ops->name);
+-			break;
++			return -EINVAL;
+ 		}
+ 	}
+ @@ -222,6 +193,7 @@ static void bpf_struct_ops_desc_init(struct
+bpf_struct_ops_desc *st_ops_desc,
+ 		if (st_ops->init(btf)) {
+ 			pr_warn("Error in init bpf_struct_ops %s\n",
+ 				st_ops->name);
++			return -EINVAL;
+ 		} else {
+ 			st_ops_desc->type_id = type_id;
+ 			st_ops_desc->type = t;
+@@ -230,54 +202,8 @@ static void bpf_struct_ops_desc_init(struct
+bpf_struct_ops_desc *st_ops_desc,
+ 								 value_id);
+ 		}
+ 	}
+-}
+ -void bpf_struct_ops_init(struct btf *btf, struct bpf_verifier_log *log)
+-{
+-	struct bpf_struct_ops_desc *st_ops_desc;
+-	u32 i;
+-
+-	/* Ensure BTF type is emitted for "struct bpf_struct_ops_##_name" */
+-#define BPF_STRUCT_OPS_TYPE(_name) BTF_TYPE_EMIT(struct
+bpf_struct_ops_##_name);
+-#include "bpf_struct_ops_types.h"
+-#undef BPF_STRUCT_OPS_TYPE
+-
+-	for (i = 0; i < ARRAY_SIZE(bpf_struct_ops); i++) {
+-		st_ops_desc = &bpf_struct_ops[i];
+-		bpf_struct_ops_desc_init(st_ops_desc, btf, log);
+-	}
+-}
+-
+-static const struct bpf_struct_ops_desc *
+-bpf_struct_ops_find_value(struct btf *btf, u32 value_id)
+-{
+-	unsigned int i;
+-
+-	if (!value_id || !btf)
+-		return NULL;
+-
+-	for (i = 0; i < ARRAY_SIZE(bpf_struct_ops); i++) {
+-		if (bpf_struct_ops[i].value_id == value_id)
+-			return &bpf_struct_ops[i];
+-	}
+-
+-	return NULL;
+-}
+-
+-const struct bpf_struct_ops_desc *
+-bpf_struct_ops_find(struct btf *btf, u32 type_id)
+-{
+-	unsigned int i;
+-
+-	if (!type_id || !btf)
+-		return NULL;
+-
+-	for (i = 0; i < ARRAY_SIZE(bpf_struct_ops); i++) {
+-		if (bpf_struct_ops[i].type_id == type_id)
+-			return &bpf_struct_ops[i];
+-	}
+-
+-	return NULL;
++	return 0;
+ }
+  static int bpf_struct_ops_map_get_next_key(struct bpf_map *map, void *key,
+diff --git a/kernel/bpf/bpf_struct_ops_types.h
+b/kernel/bpf/bpf_struct_ops_types.h
+deleted file mode 100644
+index 5678a9ddf817..000000000000
+--- a/kernel/bpf/bpf_struct_ops_types.h
++++ /dev/null
+@@ -1,12 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/* internal file - do not include directly */
+-
+-#ifdef CONFIG_BPF_JIT
+-#ifdef CONFIG_NET
+-BPF_STRUCT_OPS_TYPE(bpf_dummy_ops)
+-#endif
+-#ifdef CONFIG_INET
+-#include <net/tcp.h>
+-BPF_STRUCT_OPS_TYPE(tcp_congestion_ops)
+-#endif
+-#endif
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 3fa84c44b882..78eacd4aa362 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -19,6 +19,7 @@
+ #include <linux/bpf_verifier.h>
+ #include <linux/btf.h>
+ #include <linux/btf_ids.h>
++#include <linux/bpf.h>
+ #include <linux/bpf_lsm.h>
+ #include <linux/skmsg.h>
+ #include <linux/perf_event.h>
+@@ -5792,8 +5793,6 @@ struct btf *btf_parse_vmlinux(void)
+ 	/* btf_parse_vmlinux() runs under bpf_verifier_lock */
+ 	bpf_ctx_convert.t = btf_type_by_id(btf, bpf_ctx_convert_btf_id[0]);
+ -	bpf_struct_ops_init(btf, log);
+-
+ 	refcount_set(&btf->refcnt, 1);
+  	err = btf_alloc_id(btf);
+@@ -8489,10 +8488,11 @@ bool btf_type_ids_nocast_alias(struct
+bpf_verifier_log *log,
+ }
+  static int
+-btf_add_struct_ops(struct btf *btf, struct bpf_struct_ops *st_ops)
++btf_add_struct_ops(struct btf *btf, struct bpf_struct_ops *st_ops,
++		   struct bpf_verifier_log *log)
+ {
+ 	struct btf_struct_ops_tab *tab, *new_tab;
+-	int i;
++	int i, err;
+  	if (!btf)
+ 		return -ENOENT;
+@@ -8529,7 +8529,83 @@ btf_add_struct_ops(struct btf *btf, struct
+bpf_struct_ops *st_ops)
+  	tab->ops[btf->struct_ops_tab->cnt].st_ops = st_ops;
+ +	err = bpf_struct_ops_desc_init(&tab->ops[btf->struct_ops_tab->cnt],
+btf, log);
++	if (err)
++		return err;
++
+ 	btf->struct_ops_tab->cnt++;
+  	return 0;
+ }
++
++const struct bpf_struct_ops_desc *
++bpf_struct_ops_find_value(struct btf *btf, u32 value_id)
++{
++	const struct bpf_struct_ops_desc *st_ops_list;
++	unsigned int i;
++	u32 cnt;
++
++	if (!value_id)
++		return NULL;
++	if (!btf->struct_ops_tab)
++		return NULL;
++
++	cnt = btf->struct_ops_tab->cnt;
++	st_ops_list = btf->struct_ops_tab->ops;
++	for (i = 0; i < cnt; i++) {
++		if (st_ops_list[i].value_id == value_id)
++			return &st_ops_list[i];
++	}
++
++	return NULL;
++}
++
++const struct bpf_struct_ops_desc *
++bpf_struct_ops_find(struct btf *btf, u32 type_id)
++{
++	const struct bpf_struct_ops_desc *st_ops_list;
++	unsigned int i;
++	u32 cnt;
++
++	if (!type_id)
++		return NULL;
++	if (!btf->struct_ops_tab)
++		return NULL;
++
++	cnt = btf->struct_ops_tab->cnt;
++	st_ops_list = btf->struct_ops_tab->ops;
++	for (i = 0; i < cnt; i++) {
++		if (st_ops_list[i].type_id == type_id)
++			return &st_ops_list[i];
++	}
++
++	return NULL;
++}
++
++int __register_bpf_struct_ops(struct bpf_struct_ops *st_ops)
++{
++	struct bpf_verifier_log *log;
++	struct btf *btf;
++	int err = 0;
++
++	btf = btf_get_module_btf(st_ops->owner);
++	if (!btf)
++		return -EINVAL;
++
++	log = kzalloc(sizeof(*log), GFP_KERNEL | __GFP_NOWARN);
++	if (!log) {
++		err = -ENOMEM;
++		goto errout;
++	}
++
++	log->level = BPF_LOG_KERNEL;
++
++	err = btf_add_struct_ops(btf, st_ops, log);
++
++errout:
++	kfree(log);
++	btf_put(btf);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(__register_bpf_struct_ops);
+diff --git a/net/bpf/bpf_dummy_struct_ops.c b/net/bpf/bpf_dummy_struct_ops.c
+index ba2c58dba2da..02de71719aed 100644
+--- a/net/bpf/bpf_dummy_struct_ops.c
++++ b/net/bpf/bpf_dummy_struct_ops.c
+@@ -7,7 +7,7 @@
+ #include <linux/bpf.h>
+ #include <linux/btf.h>
+ -extern struct bpf_struct_ops bpf_bpf_dummy_ops;
++static struct bpf_struct_ops bpf_bpf_dummy_ops;
+  /* A common type for test_N with return value in bpf_dummy_ops */
+ typedef int (*dummy_ops_test_ret_fn)(struct bpf_dummy_ops_state *state,
+...);
+@@ -256,7 +256,7 @@ static struct bpf_dummy_ops __bpf_bpf_dummy_ops = {
+ 	.test_sleepable = bpf_dummy_test_sleepable,
+ };
+ -struct bpf_struct_ops bpf_bpf_dummy_ops = {
++static struct bpf_struct_ops bpf_bpf_dummy_ops = {
+ 	.verifier_ops = &bpf_dummy_verifier_ops,
+ 	.init = bpf_dummy_init,
+ 	.check_member = bpf_dummy_ops_check_member,
+@@ -265,4 +265,11 @@ struct bpf_struct_ops bpf_bpf_dummy_ops = {
+ 	.unreg = bpf_dummy_unreg,
+ 	.name = "bpf_dummy_ops",
+ 	.cfi_stubs = &__bpf_bpf_dummy_ops,
++	.owner = THIS_MODULE,
+ };
++
++static int __init bpf_dummy_struct_ops_init(void)
++{
++	return register_bpf_struct_ops(&bpf_bpf_dummy_ops, bpf_dummy_ops);
++}
++late_initcall(bpf_dummy_struct_ops_init);
+diff --git a/net/ipv4/bpf_tcp_ca.c b/net/ipv4/bpf_tcp_ca.c
+index dffd8828079b..8e7716256d3c 100644
+--- a/net/ipv4/bpf_tcp_ca.c
++++ b/net/ipv4/bpf_tcp_ca.c
+@@ -12,7 +12,7 @@
+ #include <net/bpf_sk_storage.h>
+  /* "extern" is to avoid sparse warning.  It is only used in
+bpf_struct_ops.c. */
+-extern struct bpf_struct_ops bpf_tcp_congestion_ops;
++static struct bpf_struct_ops bpf_tcp_congestion_ops;
+  static u32 unsupported_ops[] = {
+ 	offsetof(struct tcp_congestion_ops, get_info),
+@@ -345,7 +345,7 @@ static struct tcp_congestion_ops
+__bpf_ops_tcp_congestion_ops = {
+ 	.release = __bpf_tcp_ca_release,
+ };
+ -struct bpf_struct_ops bpf_tcp_congestion_ops = {
++static struct bpf_struct_ops bpf_tcp_congestion_ops = {
+ 	.verifier_ops = &bpf_tcp_ca_verifier_ops,
+ 	.reg = bpf_tcp_ca_reg,
+ 	.unreg = bpf_tcp_ca_unreg,
+@@ -356,10 +356,16 @@ struct bpf_struct_ops bpf_tcp_congestion_ops = {
+ 	.validate = bpf_tcp_ca_validate,
+ 	.name = "tcp_congestion_ops",
+ 	.cfi_stubs = &__bpf_ops_tcp_congestion_ops,
++	.owner = THIS_MODULE,
+ };
+  static int __init bpf_tcp_ca_kfunc_init(void)
+ {
+-	return register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+&bpf_tcp_ca_kfunc_set);
++	int ret;
++
++	ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+&bpf_tcp_ca_kfunc_set);
++	ret = ret ?: register_bpf_struct_ops(&bpf_tcp_congestion_ops,
+tcp_congestion_ops);
++
++	return ret;
+ }
+ late_initcall(bpf_tcp_ca_kfunc_init);
+-- 
+2.34.1
+
 
