@@ -1,133 +1,66 @@
-Received: from ma-mailsvcp-mx-lapp03.apple.com (ma-mailsvcp-mx-lapp03.apple.com [17.32.222.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0CC79DD6
-	for <mptcp@lists.linux.dev>; Tue, 30 Jan 2024 20:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.32.222.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85D65672
+	for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 01:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706648181; cv=none; b=fctQyRYoNHpAIeCFgcrRQ1NSJ41kj/b4RNEWtv4OQp28mWsg7tMg5BHfRBANzVfcf0vTpJde9kcO8K40+fdBXIGPVNHIkqiP3YBxyT8DPPeUZGvwLx209Zxg2WPkeqJI2HHao27jZOFjNiEAdJw0RyE0ru0QvOph53j4ifLiPyo=
+	t=1706664775; cv=none; b=SK7dugs6CdBy6MTaGHca8a2Vj9RwcYBX2BX7ZRqIEVofVhjt+GNJ8dnqMvjtXRSWXfNo9xCP3vbMX7+YICdkVTaFffWZz7bYhi7fORpFek9GmhW8pipXY56oeOt5r3VRGYjGR9kCIgOO+bMWVse1c8+VMhI10EGK9gy2N/aycQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706648181; c=relaxed/simple;
-	bh=h5xt61pOK68xQ7L/suQPcPQrDA+umCMx5fjPfdcCO8I=;
-	h=Content-type:MIME-version:Subject:From:In-reply-to:Date:Cc:
-	 Message-id:References:To; b=OOdW2+k8gkDssfB3jbHxs/SR7Ob/gj968QUWAWU09Uj8dnNmv7mIfUbvnQJ27+5e1NLblsjmgUA2J2b4MYG0hdPtYAws+77XZL39gEPA7zFlCYI79JhUJfkq7ttg1wmSA5p5upViVPHuiDkv08bHR9Cb79XggSVX1wwgapfq1Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com; spf=pass smtp.mailfrom=apple.com; dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b=gV0NlO6Q; arc=none smtp.client-ip=17.32.222.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apple.com
+	s=arc-20240116; t=1706664775; c=relaxed/simple;
+	bh=rVfMiyCbTXqYMfBfQsvnFXkGdcQplCBTQHlJzdSnVRc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=IsWLFpVAsDIIWlZCovgun/uDbYSkoJ9GcvA+t4byB4prkbuL2SREewrlJJ5aAymFjeEh30SYPpzF9uwktsEMQaSlOLXg7VMv07HWWhWrH/KmtEKfP7pu+kmv8wj997ITt82RRFYtE/1wnk/RyQJFgcPZZPubo+byTUgYKLi2w6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n7lj4z4n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b="gV0NlO6Q"
-Received: from rn-mailsvcp-mta-lapp02.rno.apple.com
- (rn-mailsvcp-mta-lapp02.rno.apple.com [10.225.203.150])
- by ma-mailsvcp-mx-lapp03.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) with ESMTPS id <0S8300EWNBDDKX00@ma-mailsvcp-mx-lapp03.apple.com> for
- mptcp@lists.linux.dev; Tue, 30 Jan 2024 11:56:12 -0800 (PST)
-X-Proofpoint-GUID: Ex8Phl1E7j8LRRsEO13Fh3PqqA691_3k
-X-Proofpoint-ORIG-GUID: Ex8Phl1E7j8LRRsEO13Fh3PqqA691_3k
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.619,18.0.1011
- definitions=2024-01-30_09:2024-01-29,2024-01-30 signatures=0
-X-Proofpoint-Spam-Details: rule=interactive_user_notspam
- policy=interactive_user score=0 spamscore=0 phishscore=0 bulkscore=0
- adultscore=0 malwarescore=0 mlxlogscore=890 suspectscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401300148
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com;
- h=content-type : mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=20180706;
- bh=h5xt61pOK68xQ7L/suQPcPQrDA+umCMx5fjPfdcCO8I=;
- b=gV0NlO6QW0cPbyV+M65ryGnUkRSoiOO54TsG8P2o6t7+xOW/1ypxSELzlqt5Pe5225v1
- tE0o8Usj+NT7R2dWUV7ZbelXG9wdsp25Z3MgU24KBKsQ4iA+JGnfKFHZlt44NmgV4Vt5
- 9LzOIC8QOGYF+GrLYZNY2Shh8ECdHA71yk8SOPiAnGE1QLHZbudz+7V6fCal67aU2tvP
- 7lJ3YccnL0rAO4tUpMHsrf0WZ1G8w547mvD1nYmFXrCokp9ZjIqsDovx+yly1gqaLqm5
- VfdukVp9X8YJ7BV4oJltCKnRxbROiSCylvifpahnlAc9KIAsS7YrWVCKw5+DD9NbPaXx mA==
-Received: from rn-mailsvcp-mmp-lapp03.rno.apple.com
- (rn-mailsvcp-mmp-lapp03.rno.apple.com [17.179.253.16])
- by rn-mailsvcp-mta-lapp02.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) with ESMTPS id <0S83009QQBDNVXX0@rn-mailsvcp-mta-lapp02.rno.apple.com>;
- Tue, 30 Jan 2024 11:56:11 -0800 (PST)
-Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp03.rno.apple.com by
- rn-mailsvcp-mmp-lapp03.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) id <0S8300Z00B8YQ100@rn-mailsvcp-mmp-lapp03.rno.apple.com>; Tue,
- 30 Jan 2024 11:56:11 -0800 (PST)
-X-Va-A:
-X-Va-T-CD: 63633cf878a009867ff2b0b1cd43e165
-X-Va-E-CD: 065f87e5e5db2bf8991102f07c5e0146
-X-Va-R-CD: 874dbe7a0fa0efb713c0b51e6333f147
-X-Va-ID: 66019b66-c713-4b25-83b7-e6d5e937c10b
-X-Va-CD: 0
-X-V-A:
-X-V-T-CD: 63633cf878a009867ff2b0b1cd43e165
-X-V-E-CD: 065f87e5e5db2bf8991102f07c5e0146
-X-V-R-CD: 874dbe7a0fa0efb713c0b51e6333f147
-X-V-ID: df17018a-f2b3-4237-82a3-7d17ab60f62f
-X-V-CD: 0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-30_09,2024-01-30_01,2023-05-22_02
-Received: from smtpclient.apple ([17.230.192.182])
- by rn-mailsvcp-mmp-lapp03.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023))
- with ESMTPSA id <0S8300J8PBDNIL00@rn-mailsvcp-mmp-lapp03.rno.apple.com>; Tue,
- 30 Jan 2024 11:56:11 -0800 (PST)
-Content-type: text/plain; charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n7lj4z4n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACC3C433F1;
+	Wed, 31 Jan 2024 01:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706664775;
+	bh=rVfMiyCbTXqYMfBfQsvnFXkGdcQplCBTQHlJzdSnVRc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=n7lj4z4nL35tMm4PvahSJjIYyule1Ek1MSsGzUvQVqSL25ebLL5K3SzvcfwDtGo1u
+	 69aM6aCnCEppLFA3RRVszg9P5f70xsT7y5BPW9KaKPBD2AmOi8dFEGZbvoi+nCTntT
+	 DAv7CbvNDqTflUCOTAsdt2NBomzZHW/UnHvq2PdKX9yopapmI5lSmpGCh1YdY9tGyR
+	 IUPYHa5DdsmkCzL7BXOOgtBhxL3KUSR7FHfoI45EbQxF2qqy+XeMM2CUzuOBWLCLyu
+	 Q5BlYH31hLNLoJrPTo9eKirz7Rr5vnOb39Z4zVZkIrjm9l9vdEpkHPX2UFUHPTT/j5
+	 c4lDqmgej2RvQ==
+Date: Tue, 30 Jan 2024 17:32:54 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v10 00/23] dump for userspace pm
+In-Reply-To: <cover.1705558030.git.tanggeliang@kylinos.cn>
+Message-ID: <5577b594-a4f5-e396-5610-2ead7b4c70ce@kernel.org>
+References: <cover.1705558030.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
-Subject: Re: [PATCH mptcp-stable] mptcp: introduce explicit flag for first
- subflow disposal
-From: Christoph Paasch <cpaasch@apple.com>
-In-reply-to: <69dd139b2240fd9ef704a130a952d9643f2148ed.camel@redhat.com>
-Date: Tue, 30 Jan 2024 11:56:01 -0800
-Cc: mptcp@lists.linux.dev
-Content-transfer-encoding: quoted-printable
-Message-id: <724F4433-238A-4EDB-A3AE-D483810E2EF9@apple.com>
-References:
- <a1503ab571c8c076de62b872437d220a2260d2a5.1706094997.git.pabeni@redhat.com>
- <9B692AAE-74A8-4101-9CDA-2580FCBAC7F0@apple.com>
- <69dd139b2240fd9ef704a130a952d9643f2148ed.camel@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-X-Mailer: Apple Mail (2.3774.300.61.1.2)
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
+On Thu, 18 Jan 2024, Geliang Tang wrote:
 
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> v10:
+> - fix a checkpatch.sh warning reported by CI.
+> - fix build warnings reported by kernel test robot <lkp@intel.com>.
+>
+> v9:
+> - add missing "sock_put(sk)" in patch 7, 17 and 21 to fix the "kmemleak"
+>   errors reported by CI.
+> - rename the helper to mptcp_pm_has_addr_attr_id.
+> - use my new mail address.
+>
 
-> On Jan 30, 2024, at 10:56=E2=80=AFAM, Paolo Abeni <pabeni@redhat.com> =
-wrote:
->=20
-> On Wed, 2024-01-24 at 09:51 -0800, Christoph Paasch wrote:
->> On Jan 24, 2024, at 3:35=E2=80=AFAM, Paolo Abeni <pabeni@redhat.com> =
-wrote:
->>> This is targeting _stable_ and specifically 6.1.65.
->>> I tested vs the repro in:
->>>=20
->>> https://github.com/multipath-tcp/mptcp_net-next/issues/466
->>>=20
->>> and WFM. @Christoph could you please validate this in your testbed, =
-too?
->>=20
->> Yes, this fixes both #466 and #465.
->>=20
->> I=E2=80=99m updating syzkaller and if it=E2=80=99s happy I can push =
-it to upstream.
->=20
-> Thanks for testing and doing the process!
->=20
-> I'm wondering if there are other pending issues that impact your
-> deployment someway?
+Hi Geliang -
 
-Right now, nothing. RHEL 9.3 is running well ;-)
+Please also make sure you update MAINTAINERS and .mailmap with your 
+geliang@kernel.org and tanggeliang@kylinos.cn addresses.
 
-
-Christoph
-
->=20
-> Cheers,
->=20
-> Paolo
->=20
-
+Thanks,
+Mat
