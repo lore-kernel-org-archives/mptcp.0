@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DEC80BFD
-	for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 14:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5528289A
+	for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 14:06:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706709731; cv=none; b=NTyJyeHW7cOOc31uGycQm0B88vv0sSmVqrfhGW8lEyIvBFKDiv85ZZUIKgMefGVXgWjYhw/2aNjGfmafTUvXxPO4jeyU3IZFxKAy+EPSdU/7p8Tkbiczg3SjpDr5LAuzbeNnrW3z2XngeML8eI+MwL6Y+USQulnpRZBKeQhmh1A=
+	t=1706709979; cv=none; b=T/Zgyq0If2CX884oNXV+96d9xe8wDkU5EuyAGA94w+GknkZZYqmEO0FHTv6Fv4xSk2f9UQsfAn5iNFtIF/lzrl+SmuvGEeYR5/Bq28nmqv/Aki0cSMooTSJ41cP8eEBpZIUj9NUHXm6YlZ872sqhWVkcmpHPTCsLseLHAoiKOL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706709731; c=relaxed/simple;
-	bh=UHlHslTS3VUufCrLtFaMd2DAqK/9+NkoLE7HX9ynI2k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gbd0WLIR0eUxgagkjiAngP3R7WUwnUeQcIC2J3cNLAAi0H4IhTsRGlr+5BDC00dep98ozKP88hlJtUEnN4kaCkG+VmxkqXM7JchtwgXFgdrjixA3gUEZmiI1nHifesfK++lLIkxM1rTVCeYEw5GQrRWKUIIDwnrGW/MPQAIBeoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oc/GZ4OW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706709979; c=relaxed/simple;
+	bh=530yC5EQgNxmzAxCaCV7AKX2wbvCcXd+I2YrH6hOg24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ibRb1ZmubxJrvBMNbpdBclkqCrNYvWDibiiDOPVE9o8AnwWqu1VneyILMD9r7oXQ6EtfW7E964SFmXfVDpaoLKi/HwOPYZoFyZGfGx1PX5geEgWQ1KPD9YZs9lZ8txzz0OKP1zAKIRSaa0EYnQUYP2H6A4APC6S7NNgkF2oVQ9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWjIlUkd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oc/GZ4OW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 900AEC433F1
-	for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 14:02:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWjIlUkd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 473ABC43390;
+	Wed, 31 Jan 2024 14:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706709730;
-	bh=UHlHslTS3VUufCrLtFaMd2DAqK/9+NkoLE7HX9ynI2k=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Oc/GZ4OWfyAaFIB0hGX7OVlM0rJTQNJQLjvYvdc9LH9M8ucstJsdVy/k8EIeoDvk2
-	 7cJG62p+LtfowJwXPzD4Qti8PB89Kre78iXYeC3vimNXLNcqqaPWVtrD4cYwTQmyow
-	 UCA4yLuMjYBC6fBrJAwO5DCwZnZrSz+DzZHIEUXjLGzwq1+4bLBsw8qC8yUVCWY0X9
-	 CfCiFVHrML3tgqP7gTrnR97gu5cBilUFlW4SKQXNQ0ubOC6fhqzLmJ/XLR4Isk0WnB
-	 ZdVFhuV0GDsVR1K9fj7g6loMHTa9hnIUvXSzuAoP+EqUBlu4/XIgswD6enUENqSk1B
-	 RRooLOFI2G/MQ==
-Message-ID: <36b6866d-3b8f-49e2-ad81-192d1f180377@kernel.org>
-Date: Wed, 31 Jan 2024 15:02:08 +0100
+	s=k20201202; t=1706709979;
+	bh=530yC5EQgNxmzAxCaCV7AKX2wbvCcXd+I2YrH6hOg24=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HWjIlUkdOrybrZpjpi7Du3L6DpywRKXh5E5Svxq5fy4giLzHoehNQyjQ4eJM+nQht
+	 N5k1tmo8k4VRgjHY+v6O7ouupGOP2E2pVGli2SrcIRZcY2/Rh9Q7l5ykIgcs/rUKOb
+	 sotOujuxZBPDyvkWZBL3+X8D5QvtKeiMC96DN8pueoNdAtp7msCkc11X9PQjLf2R7X
+	 odwIRpsOoxThAF3jcbMCavmiahVInlJSiXhg53ySP0vDagCcr77hC3c2usH1QGl6l3
+	 to1jzmF6Ulvzg2HADfgPFueocxe7Gvvv4CVMW6ejBLlyTMkgpTHgiKOPFTUksbFqmo
+	 JFM84L0HZ6Fxg==
+Message-ID: <a3cc013a-0ddc-4851-b5d2-cfb9f8ccb22f@kernel.org>
+Date: Wed, 31 Jan 2024 15:06:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: mptcp: bpf: fix compilation error without BPF_JIT: Tests Results
+Subject: Re: [PATCH mptcp-next] mptcp: bpf: fix compilation error without
+ BPF_JIT
 Content-Language: en-GB, fr-BE
 To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang.tang@linux.dev>, kernel test robot <lkp@intel.com>
 References: <20240131134421.1045648-2-matttbe@kernel.org>
- <28ec7534-01ee-a1ee-6306-88c424464a25@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,30 +86,25 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <28ec7534-01ee-a1ee-6306-88c424464a25@gmail.com>
+In-Reply-To: <20240131134421.1045648-2-matttbe@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hello,
 
-On 31/01/2024 14:57, MPTCP CI wrote:
-> Hi Matthieu,
+On 31/01/2024 14:44, Matthieu Baerts (NGI0) wrote:
+> 'bpf_mptcp_sched_ops' is only declared is CONFIG_BPF_JIT is set.
 > 
-> Thank you for your modifications, that's great!
-> 
-> Our CI (Cirrus) did some validations with a debug kernel and here is its report:
-> 
-> - {"code":404,"message":
->   - "Can't find artifacts containing file conclusion.txt"}:
->   - Task: https://cirrus-ci.com/task/5147216461955072
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/5147216461955072/summary/summary.txt
-> 
-> - {"code":404,"message":
->   - "Can't find artifacts containing file conclusion.txt"}:
->   - Task: https://cirrus-ci.com/task/6273116368797696
->   - Summary: https://api.cirrus-ci.com/v1/artifact/task/6273116368797696/summary/summary.txt
+> I guess we don't want to define it if we don't need it. We could add a
+> new helper doing nothing if BPF_JIT is not enabled, but it is probably
+> enough to just add a ifdef here, in the init function.
 
-We just reached the monthly limit... (on the last day)
+I just applied this patch in our tree:
+
+- 2a40d851a830: "squashed" (with conflicts) in "bpf: Add
+bpf_mptcp_sched_ops"
+- eefa3de9ecc1: conflict in t/bpf-Add-bpf_mptcp_sched_kfunc_set
+- Results: 2710fa51b8b5..807457afb707 (export)
 
 Cheers,
 Matt
