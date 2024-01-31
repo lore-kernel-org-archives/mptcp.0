@@ -1,125 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3582DF63
-	for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 02:28:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15669657DD
+	for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 09:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706668114; cv=none; b=qHjCvhPXhZnniocuzhvCrdcsdpaG+pb86+whJu7UxtRykZRbbh7WcCY8HrOeltHccAiHis+n/YV4ucoBQgxcRz9Xp7O7cpJ54d1NUvhEvDrZSP5ZkUWdVvbZwgvfEKIOw9+KrKKlFGbjhGKnSr58YU1aIxGAiAndJDS8IxHlxnw=
+	t=1706691612; cv=none; b=kEYSC5i+P/6ix10E8hF457JaUcaD8gOrjxlzVXoeigNEZFVS+Ty1gp0GqXW4211yF8sNs7RLev2DikHF8c3SFKcbRme4DyQ3JQH1SJ4qcHQ4NNzCLDrt8UKFsMqdVaZjwjUGUHbREH1Ys3SHDQljSpK6HbfC4yiZC9wk/k30Bms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706668114; c=relaxed/simple;
-	bh=ovT891XfOkanLOlBdUHN5AOP/bKElEfNdCpD3LhhS8U=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ThS3EcxRzzZ7qhyHB01lHejL+4hKgrbdaW+46pNal8623hhAmQLB8yHN9lchieVj0wwuG8cXUeV62Txm/yvtc7R+QxoeET/Nn48ntsRbZAUWJw0v3p7fOat4NBMPCkhnA9CPMsfRedqmQ1P4QBSK8JQy31engGcL8C7WA2ddyYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qb3EoycW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706691612; c=relaxed/simple;
+	bh=YCNb6amrzFFZnqS+Z0BClh8TgoBFxfHEvN9hUdmwtT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=be88VBIO+rIiMj7uyA4A6LAKGSsVp2iCbYdMoQP+qOWbtok9Tu57DJW9I5fCYaIlEQe3GUTFqaDJnrQdFCayDDaNIUEo6m0lZSRfqrEtqFdV+Hbt8zdIwR6FaEbdOqAMRhVj2tV7Kl1GqZ1ympCIAC9pjqy9U0AFqzbjSGiGit8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WTtl/2XO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qb3EoycW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59B80C433C7;
-	Wed, 31 Jan 2024 02:28:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WTtl/2XO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C922CC433F1;
+	Wed, 31 Jan 2024 09:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706668114;
-	bh=ovT891XfOkanLOlBdUHN5AOP/bKElEfNdCpD3LhhS8U=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=Qb3EoycWlpSr5D7q8s7lg7qVJDtKglPVh8oqo+/kJ75ye963Q637TQISbtbqJpmgy
-	 C6OGSriitGpB4WNYJ3POkskFADg3Cn7pfc3GzcoVU1SCMSZ4gblSnbGfeiMfWywLln
-	 5uKJQNori4BkS362ZM7R8U3zXWFc5wA+fU9S25qRQxQ4uMDYRF4CmUeIxoltbzckEx
-	 cgbzBlBo/r0GxMmPpomNFgdHrX2nAvIRcbcML6z83BrCEz1E7rFNEz3XAEknkiExtN
-	 Xt/cAdLIGgufxU8u3sP08Ol+CS4YFLx6s1QNazN6l6CFPjzDooidWlptDbJedp+C4j
-	 1GgCRjG+3balA==
-Date: Tue, 30 Jan 2024 18:28:33 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v10 10/23] mptcp: check userspace pm subflow
- flag
-In-Reply-To: <8df3db253cf4e880813e2b499b12887904474736.1705558030.git.tanggeliang@kylinos.cn>
-Message-ID: <38c3cf2e-ba53-b30f-cf2c-e39d793851f2@kernel.org>
-References: <cover.1705558030.git.tanggeliang@kylinos.cn> <8df3db253cf4e880813e2b499b12887904474736.1705558030.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1706691611;
+	bh=YCNb6amrzFFZnqS+Z0BClh8TgoBFxfHEvN9hUdmwtT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WTtl/2XOXKx/IM0a2Du3PCrVAvjO7ualMBWplmu57oV9Orwvb2ISOCPYg2UopwUif
+	 BVV0EwPqZQ1lt7tkTLtS5neQ5VJkeUzrThgTX016rOFcVJU6y9u8X4tP4ja+Jxs6TL
+	 CLACJtXL8FJhr0L+fci9zhqmSWIkSZpmpjNNIFy7a52W0f5nAcgXA4phsfSd88nj9B
+	 xjPJISOMs3Di4ZykxXBkyHDLRyQw/CX2ah94KjZIvus/+bH9y37Ne0Rj6TKq1Lrwj8
+	 jNYGQXx3ZFlR5gtqTjaXdIU6z55rPtpX6rRPa5vR70X+r6ehlEtYqYcBmrcyR5xSJn
+	 T2K93qa/hkTWg==
+Date: Wed, 31 Jan 2024 17:00:01 +0800
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH virtme-docker 2/3] upgrade to ubuntu 23.10
+Message-ID: <ZboMET6t/5oso4By@t480>
+References: <cover.1706422466.git.geliang@kernel.org>
+ <dc2e14b63fd7ec288e015124919c28c9470d5913.1706422466.git.geliang@kernel.org>
+ <ZbhHy6GPo4UcCKy0@t480>
+ <a201bd1f-8c67-4196-bc71-4e08ab60d1db@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a201bd1f-8c67-4196-bc71-4e08ab60d1db@kernel.org>
 
-On Thu, 18 Jan 2024, Geliang Tang wrote:
+On Tue, Jan 30, 2024 at 04:50:46PM +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 30/01/2024 01:50, Geliang Tang wrote:
+> > On Sun, Jan 28, 2024 at 02:16:02PM +0800, Geliang Tang wrote:
+> >> There will be many build errors when comliling bpf selftests under
+> >> Ubuntu 22.04. Upgrade to 23.10 to use the new versions of gcc, clang
+> >> and LLVM.
+> >>
+> >> Fix sparse build errors for llvm-16. This part alse be sent to sparse
+> >> upstream. It can be dropped from this patch when accepted.
+> > 
+> > This part has been upstreamed, we can drop it now from this patch.
+> 
+> Thank you for the patches and this note, I didn't see it has been fixed
+> upstream.
 
-> From: Geliang Tang <tanggeliang@kylinos.cn>
->
-> Just like MPTCP_PM_ADDR_FLAG_SIGNAL flag is checked in userspace PM
-> announce mptcp_pm_nl_announce_doit(), MPTCP_PM_ADDR_FLAG_SUBFLOW flag
-> should be checked in mptcp_pm_nl_subflow_create_doit() too.
->
-> If MPTCP_PM_ADDR_FLAG_SUBFLOW flag is not set, there's no flags field
-> in the output of dump_addr. This looks a bit strange:
->
-> 	id 10 flags  10.0.3.2
->
-> This patch uses mptcp_pm_parse_entry() instead of mptcp_pm_parse_addr()
-> to get the flags of the entry. Add MPTCP_PM_ADDR_FLAG_SUBFLOW flag check
-> in mptcp_pm_nl_subflow_create_doit().
->
+It fixed in the commit 0544c547 ("llvm: fix LLVM 15 deprecation
+warnings").
 
-Hi Geliang -
+> 
+> I didn't know you needed to upgrade to Ubuntu 23.10. I did something
+> similar for your two first patches last week when looking at the issue
+> 471 [1] to switch to a more recent version of QEmu, but I didn't push my
+> changes. I hope you don't mind if I apply my modifications (with your
+> co-dev tag) where I use new versions of the dependences instead of
+> patching them.
 
-Have you tested this change with mptcpd?
+Sure, thanks.
 
-Is the addr flag (SUBFLOW or SIGNAL) relevant for userspace PM addresses? 
-It doesn't seem like a useful distinction: the userspace PM is always 
-creating a new subflow in this context, since address signaling is handled 
-by mptcp_pm_nl_announce_doit().
+-Geliang
 
-Two options I see:
-  * update the userspace tools to cleanly handle missing flags for 
-userspace connections
-or
-  * have mptcp_pm_nl_subflow_create_doit() always set 
-MPTCP_PM_ADDR_FLAG_SUBFLOW for the local addr even if it's missing from 
-the netlink attribute (and maybe don't allow MPTCP_PM_ADDR_FLAG_SIGNAL?)
-
-- Mat
-
-
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
-> net/mptcp/pm_userspace.c | 10 ++++++++--
-> 1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index f1582f40f70e..ca0d6e1dfade 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -361,11 +361,18 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
-> 		goto create_err;
-> 	}
->
-> -	err = mptcp_pm_parse_addr(laddr, info, &addr_l);
-> +	err = mptcp_pm_parse_entry(laddr, info, true, &local);
-> 	if (err < 0) {
-> 		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
-> 		goto create_err;
-> 	}
-> +	addr_l = local.addr;
-> +
-> +	if (!(local.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)) {
-> +		GENL_SET_ERR_MSG(info, "invalid addr flags");
-> +		err = -EINVAL;
-> +		goto create_err;
-> +	}
->
-> 	err = mptcp_pm_parse_addr(raddr, info, &addr_r);
-> 	if (err < 0) {
-> @@ -379,7 +386,6 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
-> 		goto create_err;
-> 	}
->
-> -	local.addr = addr_l;
-> 	err = mptcp_userspace_pm_append_new_local_addr(msk, &local,
-> 						       !mptcp_pm_has_addr_attr_id(laddr, info));
-> 	if (err < 0) {
+> 
+> I will look at the patch 3/3 (v2). I will need to modify it slightly I
+> think not to have the current CI failing. I can also look at modifying
+> the current CI job to validate this BPF test. I will probably need more
+> conditions to be able to run on older kernels as well. I will push that
+> after having done some tests, not to have regressions for the tests we
+> are currently validating.
+> 
+> [1] https://github.com/multipath-tcp/mptcp_net-next/issues/471
+> 
+> Cheers,
+> Matt
 > -- 
-> 2.40.1
->
->
->
+> Sponsored by the NGI0 Core fund.
