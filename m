@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE961272C2
-	for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 15:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5178A86AC5
+	for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 15:35:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706715356; cv=none; b=VWIlEkAf/kKuW/IMDJL+9x1jQFKZI/snHJys14GLSy3HyN2GUwXmgndQ0x4Q3GnaV2NBUdhSvk2ImIiPVt2bJ9oEEzEkZtosC9lqLdQyfuEcSAsZRXUu1/YTNQ07xi+CXQ/gb25xpWsdVkZ8Q7FBojuwplTPP+rs/mZwjezalzE=
+	t=1706715357; cv=none; b=bRF8w9BHHN1fcx+nZsg5fzeA+lEuYShsg32jr5MdQ81p9JZGEjF0sQR86oklJFKut03Vdd17TiwZtzBgJtz8BwCbWi2KJWjU7RZVbmI6JjUY3fZMX0JkdFE7OgPj45SNDmVx2QCjacW6RqVYibf1nDwElhbC5GAXCNSgDMknvTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706715356; c=relaxed/simple;
-	bh=uCboPJ0LRaDIGMdWuBXqejhsmk8WqCnmSpXCIwZJHFI=;
+	s=arc-20240116; t=1706715357; c=relaxed/simple;
+	bh=jO3nEk/mlPbUpANvlwS02TdVsHCXvCZH7qgFx4ceosY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LbnetiJy5Wp5vR8ooOHQKGzRKTufe6AiQq/JdgRs7hjV8Y75EtaMg2fUvwDjYqA9ophXgmh4ojDHYGIOcnnotl83iMuk2CubuuTuz1yiMhD4nMlLSJ1dmUSr5WcYYZJzlurXnTeBigi8W8lVo3mk3WX3H9Jx7UuvOjEogjgh36E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvCVn9Fz; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=s864dIY5gLFbBm4yt+yDHxNi80UOonKByOGySrYueHNaPccJ++iakVRZCC5T5zJcyu3X36WxoeeI77lQGrhtuUWcTm+IwWTuYv3Vpq4mtTeyjt1sT1QoXUW/OOxqzt2mNiDF9QGDnom9QrHGh/uwGsSPo/V/AmHATAoTM5Nk5W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eHhe+BNR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvCVn9Fz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAB17C433F1;
-	Wed, 31 Jan 2024 15:35:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eHhe+BNR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E1BEC43390;
+	Wed, 31 Jan 2024 15:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706715355;
-	bh=uCboPJ0LRaDIGMdWuBXqejhsmk8WqCnmSpXCIwZJHFI=;
+	s=k20201202; t=1706715356;
+	bh=jO3nEk/mlPbUpANvlwS02TdVsHCXvCZH7qgFx4ceosY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=SvCVn9Fz3w+dIDrWWI4+GyVlEHsmKItYIIXg3KOmnoYxlLSGHbzHepgGb7Ejn/T8S
-	 jkoOxwpIdzmf8xKvTT2nfFi/FGDhCQW5EOExG30GSxzLr78vOdjkhlUNFmmHzIamip
-	 Qe6L+rwPx9/ZrGKe1fwK7Po9I3+zolvN4WCkfslIHAdtwOdpu7e/qVckRzhAwDLj3f
-	 PTByO1hz1Ua+GhH7hVXymbNa/KdNlbw3aCwbybZfixxtvhXSySfM8Lv2W8B9CY4vEw
-	 Qn0dVem0YiQLFWu/2/AeZVS2rIEeQF+k8kdmX0c1XKBseJlYUz/UzRCe5MPu7Lfs5p
-	 SkH/aoxqBchhg==
+	b=eHhe+BNREhvQkW2G0wYIUFYrgfA2HpGUW9nwinLI+ZwNIX2WPfae2aINlb/WshikO
+	 QscEAamygFdvharhuabwJvCihPHr3nh/iLnyjJ0+F2UsCuJqeDb55G4uoiMttOmmcX
+	 9lmjt84cPGvSXOvUbT7SOqvQcWRJ634VWb3fxwsCbPlPVC+oKEsL8Iztkin+qOvFD5
+	 MfHkPQZHanhKvuzc1+yvQF+268yK2Qws7DBVwZLisKLjR9cdR6RZ/TYxA3OGn1qp+n
+	 UocLwJ2vs0eXNQqXq76k8Z1Xqgh1/m9Ppm9HUKup+3eFVTOv/HRQQwiXRIUX37v3K2
+	 xsCkkyyRMqjJg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 31 Jan 2024 16:35:50 +0100
-Subject: [PATCH mptcp-next 1/3] mptcp: token kunit: set protocol
+Date: Wed, 31 Jan 2024 16:35:51 +0100
+Subject: [PATCH mptcp-next 2/3] tcp: check the protocol with DEBUG_NET
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,66 +37,70 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240131-mptcp-check-protocol-v1-1-a06067f0bd08@kernel.org>
+Message-Id: <20240131-mptcp-check-protocol-v1-2-a06067f0bd08@kernel.org>
 References: <20240131-mptcp-check-protocol-v1-0-a06067f0bd08@kernel.org>
 In-Reply-To: <20240131-mptcp-check-protocol-v1-0-a06067f0bd08@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1184; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=uCboPJ0LRaDIGMdWuBXqejhsmk8WqCnmSpXCIwZJHFI=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlumjZZ4AD9mBiyIct0XD1WCPheTPy1HmMpm9Dl
- cn0+UaY7XaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZbpo2QAKCRD2t4JPQmmg
- c8gnD/9+qjhO+BzZdQfb1y9ToidHqDOASS3awhaloggHgP7tVUhU34Opx0hx8gLCOZLwMIllaA2
- IiCNQae9W/nYIWX+7rUNXom9tQ8pGR7+rAEO2inl2g6bWmn8yiqU1zfl6GUNEqDT7MN6McoNuyP
- ytCfRlxwwWjK7wbMKhm75GHGIW7qwaOQZM6jrBrAG4u8W+B5DcD5IlpQcqdShByBI3ZLh05cA2A
- aL9pfvmYXwGEqp+e+Uuf07360AUGsbSs0VQWCPMoZdppuyYNddDMHhiAcCwIDYt0XL2TdmMEoHI
- 5ZBHcj+t9oc9HyjNldfXwgZNtvZOL6SEZ4EkOYivqTO8Mz3uRAUVSN5O+0DouUejVbJo3El7RUF
- FqGFi/O3t4QI892BaD1NwPE5VJgVtaVAwZclBGbnmnZ5A8G3IVFmZHOr7c36oVPazrCErSejDNz
- +kUtnJjU4fU+L6eoDkGyc0fWuFaG30S49CFd/+whQPc6Dm08/aCwwhILZJPnEXz4t2Xcu4X4uIJ
- d3Wl/bvx2FGRkLqbJYFYE/e0Vve+MJYs3JDfE1saAeioHHASLjDU0A/pXsNp6Bl6ul5fW8ZQtge
- 5XU66DqWD7ya7SzCph9eJKBZ0eypwZpy2Ee/MzpTYL5BHEBNhAEib1xs7mw0sefJARu/ju7jO0s
- dDAhJFoGMeLlCgQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1499; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=jO3nEk/mlPbUpANvlwS02TdVsHCXvCZH7qgFx4ceosY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlumjZsgcSgNv1iz9oUDgQkUNaxbJtLURRmrm3K
+ KuBYE6lJbiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZbpo2QAKCRD2t4JPQmmg
+ c/pHD/479Jfcm2MyQWgIysoehLQ3bgvxGPmq/yLFIL2mUfz4H7rNUeK+Cix9N6f+f72LgZTp+Cz
+ vIXen6E9xzED2lqN9vPp3WQzMuyZQ45asu+TuZiS1XwqEVH/9H6naEOrq1k3ZzZooscGnv1zogo
+ +d2aBbmKNgrLJxok389IAJDDkQvk6ZFWzaF/+BcKz0oSwAA1IeDISmhzttOhIlCSGDLNb29qpCm
+ mIZiFy+wmqyyvjc4djnKW0ODU/f74IVpt2m03uHzMAN2ooB+YjMnzYgVDmk+RPmJK/p+4wvJtt2
+ o3eoBL0YFvPGkD3KXVi3rjIgUPDT8pbELBymquHEm/B7JAdFDzuBUdCC506IA0DSv8VYcQm5R5d
+ hZyGLTorKlPdy6+LIGJ2ExAjfBXVYpwVLMNhAMBzF881GdNvr4voYjU4V4v9+oQZQsssxx+XGE/
+ Mh0OxYP44kC02u6MApN+Uf2KXEICMmXPx0nvN0/kNwrScR0dE1SjyVuLBpVjP8/NJbe9NZyd8YM
+ /NdfBuFNb1zYcYWLSIKBpmR4X+LpEOTay5o+7WAjGePI6uW+IBIdUxglgnI7EFEqyF4vpc6hF9i
+ CJkLT+hGFQylL2LbEy0PgzZlCB3IbHmtmjNyV4hS0kMZRypHmkzhYZx45pifcg61Vmk9Q08RAL2
+ 7/g9SyESdEdlrug==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-As it would be done when initiating an MPTCP sock.
+Fuzzers and static checkers might not detect when tcp_sk() is used with
+a non tcp_sock structure.
 
-This is not strictly needed for this test, but it will be when a later
-patch will check if the right protocol is being used when calling
-mptcp_sk().
+This kind of mistake already happened a few times with MPTCP, when
+wrongly using TCP-specific helpers with mptcp_sock pointers. On the
+other hand, there are many 'tcp_xxx()' helpers that are taking a 'struct
+sock' as arguments, and some of them are only looking at fields from
+'struct sock', and nothing from 'struct tcp_sock'. It is then tempting
+to use them with a 'struct mptcp_sock'.
+
+So a new simple check is done when CONFIG_DEBUG_NET is enabled. tcp_sk()
+is then used as an inlined function, like before commit e9d9da91548b
+("tcp: preserve const qualifier in tcp_sk()").
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/token_test.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/linux/tcp.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/net/mptcp/token_test.c b/net/mptcp/token_test.c
-index bfff53e668da..4fc39fa2e262 100644
---- a/net/mptcp/token_test.c
-+++ b/net/mptcp/token_test.c
-@@ -52,14 +52,19 @@ static struct mptcp_subflow_context *build_ctx(struct kunit *test)
- static struct mptcp_sock *build_msk(struct kunit *test)
- {
- 	struct mptcp_sock *msk;
-+	struct sock *sk;
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 89b290d8c8dc..11413d0e3c1c 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -525,7 +525,16 @@ enum tsq_flags {
+ 	TCPF_ACK_DEFERRED		= BIT(TCP_ACK_DEFERRED),
+ };
  
- 	msk = kunit_kzalloc(test, sizeof(struct mptcp_sock), GFP_USER);
- 	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, msk);
- 	refcount_set(&((struct sock *)msk)->sk_refcnt, 1);
- 	sock_net_set((struct sock *)msk, &init_net);
- 
-+	sk = (struct sock *)msk;
++#ifdef CONFIG_DEBUG_NET
++static inline struct tcp_sock *tcp_sk(const struct sock *sk)
++{
++	WARN_ON(sk->sk_protocol != IPPROTO_TCP);
 +
- 	/* be sure the token helpers can dereference sk->sk_prot */
--	((struct sock *)msk)->sk_prot = &tcp_prot;
-+	sk->sk_prot = &tcp_prot;
-+	sk->sk_protocol = IPPROTO_MPTCP;
-+
- 	return msk;
- }
++	return (struct tcp_sock *)sk;
++}
++#else
+ #define tcp_sk(ptr) container_of_const(ptr, struct tcp_sock, inet_conn.icsk_inet.sk)
++#endif
  
+ /* Variant of tcp_sk() upgrading a const sock to a read/write tcp socket.
+  * Used in context of (lockless) tcp listeners.
 
 -- 
 2.43.0
