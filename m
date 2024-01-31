@@ -1,103 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732236EB6E
-	for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 15:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08ECC12A165
+	for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 15:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706715358; cv=none; b=cjO6nCd2hbDAHnbl/Kv4jK6WCpdHd+N3dutE3uw9Fl0PpwsywgiKyflPvvB703nHdDPNnhiWVBOYp4UtM7MW72x8al6xRMlkWainm2avzEOQ2B+/eyII7Q7oFD19tZHI320mVFlnneKG31NSJIQkE6HnhGvyyT0ExGJiN/AhQII=
+	t=1706716251; cv=none; b=LDAlPiFNkp8wXykIYkouiFvQ+V+vjjDavBdgC18YOxZ2Svdqot/Q3O4k1M8nW3Kqdg6PII9PkUyZkTTqDqx2lMsTFd8+4idRmwabEGMRahUFW2DHrkOF+hdP19nmnuE5fSGxoyHgYww5WZyDJtbpsD2u+APOfTRbFiSr860iL10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706715358; c=relaxed/simple;
-	bh=+GdEAw/qdifvpl22bnq/eNWaRfJUUz7A2fptAPl44tE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aAD6Ru1wNnqppLLDW23z5pTX/9X7tMliKC/MOpoE7j9a8KkRLHPm9SkPEMr2KYKWsF/iIYxDDjft3IH1cpMtaU6c7lxr2MQXhUhbaVxQ3xF59rIhHHsk43T+mJA5kk0KBDuhAfrN5JsCU6EIuMWoOdQycBOTLi9DQage9+7yqQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PpOqy4Rs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706716251; c=relaxed/simple;
+	bh=RyMYNKtu9X4YWKnOm6p/SrlHZ1bZMxdKiKpeARmDmOU=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=J8Fc/aUK8Qf95klYr7I9FMHvdkdr+uKLwgF6aiOYlf9vvuqKuIOVGDkygkl9vDnVdfAebplWiflgvxXJdeS3QG+8+cZFf8KlG6OytwA6lVUEY1F8I64EnQdXNB4gaw9tY2/bfUJtGcJpDA3rcSNaNd9PVq7A9vLw8Sx3MLVPByg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXgwv4kF; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PpOqy4Rs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C80C43399;
-	Wed, 31 Jan 2024 15:35:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706715357;
-	bh=+GdEAw/qdifvpl22bnq/eNWaRfJUUz7A2fptAPl44tE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=PpOqy4RsKqbNoDX31HbGpeNi0IoJSUQ26nufXN4e+XH5TLUTE14ZePCihqCCNz4UI
-	 gCYMV8blxpm6Bi/O+bCnD7Qq/JsCVx88sw/0a4HhnBFzuGplwK67+2XrxgJquRvTqe
-	 /PKoYpbhh7dyCkW2HWDhyn/5B7/8jOHzHLp0UQMpePWcKY80KbS9w5sONrQ1ZPCtdN
-	 2kZmJBn3L6Kv7PZkuFG69qrr2NGzoOTKuMAr18rbU7IApKjAYtqoD6ssJbIEsqoQa6
-	 ZH3KZ0bFlAPQH7/IhTbEPlSaZ1/Q6utcj8bgUTYumBbN5EpYDnLnYx/YyDXr3D5L8q
-	 4EnHdmhTs1cTA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 31 Jan 2024 16:35:52 +0100
-Subject: [PATCH mptcp-next 3/3] mptcp: check the protocol with DEBUG_NET
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXgwv4kF"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dc6933a46efso2825055276.0
+        for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 07:50:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706716249; x=1707321049; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tYUiXu5riWty96c0xXJvMr5YPZlDQgbfmMl4t5S3PzM=;
+        b=BXgwv4kFd0Ur27uD4Z6SM5RXyPIGvbQ/4nL+2ZhX9xPxruE6XxQYajJW+NCwUDRtdd
+         f8KsoQ7upj0GivmICHd44l7P78neThTdkujPTFYMqdWERk77GIWJsQh3QUunSJkAvLCZ
+         Zt+qGeqhY00ZbjoIsvXyKSt0si8yDCJ5JJhH3xOzGY9lfmScsBfuMBk2UrulTrO9dqKK
+         WOMLPFMRBX8RYBNF4TpQwyvGTApdiQXD+kMyrXbDUNG9bhO/b7TBgc12LrR9rXVoQQpZ
+         scw1PnIxXriMqOO3OPdg3ec+l7BCFcbiSODPD1/lPacSk4ATc+gaaW+IbgzBqhIZP06B
+         MDSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706716249; x=1707321049;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tYUiXu5riWty96c0xXJvMr5YPZlDQgbfmMl4t5S3PzM=;
+        b=VO6v8moXaLEt06hPCf2OJEF41AbOrSO51rCcjcf2fhu33IRB/WKHOpo1Fcm4f4JtXh
+         73FeAQAYodeAXrwm11LgqwIPXmiHjSNHllgpLJkR1dUQKDPE0F/urcknAk7NV32D7MTD
+         E5946IZX5+lJa/ZBvaCbxRT/6YAliNukiDX4SpRD8jBnYJd8cQo7NQj8ndmQVTEdMjl3
+         SGbnDut/hnOZWA9GS1r2NK/fbDM+dYOAPfbIRr7fUgg/yYGSBA1oApKwYKMjKe2wKdAy
+         UwmfTw829nFz3GmkjXGEuYIOTmMXqEC7bZ0mhem9qe0JiykcC9OdIgcjvjBUjiX2iD2Y
+         N7iw==
+X-Gm-Message-State: AOJu0YxIBuCyy5yiLVnnZv5gtgt4bFjlMUoraKVmrXYODlw+S15TtSdY
+	mk9NIstZxNCQuWpxAR5xhtItaHDZEdaZfPe/0wCDfoFcw2Bw3zE=
+X-Google-Smtp-Source: AGHT+IFwNaz1lMnQPl8KEvTQ5e7etAH1bvHAihi398YTaPROneWnJzpspGydYTqcmcIUYo1nsHONhA==
+X-Received: by 2002:a25:293:0:b0:dc2:46e1:3d1c with SMTP id 141-20020a250293000000b00dc246e13d1cmr1964901ybc.34.1706716248636;
+        Wed, 31 Jan 2024 07:50:48 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.131.200])
+        by smtp.gmail.com with ESMTPSA id mu12-20020a056214328c00b0068c6d56d4f7sm651731qvb.92.2024.01.31.07.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 07:50:48 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240131-mptcp-check-protocol-v1-3-a06067f0bd08@kernel.org>
+References: <20240131-mptcp-check-protocol-v1-3-a06067f0bd08@kernel.org>
+Subject: Re: mptcp: check the protocol with DEBUG_NET: Tests Results
+Message-ID: <f66cb7bb-fd7e-6cf8-77e2-423e3f2ccc0f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 31 Jan 2024 15:50:47 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240131-mptcp-check-protocol-v1-3-a06067f0bd08@kernel.org>
-References: <20240131-mptcp-check-protocol-v1-0-a06067f0bd08@kernel.org>
-In-Reply-To: <20240131-mptcp-check-protocol-v1-0-a06067f0bd08@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1248; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=+GdEAw/qdifvpl22bnq/eNWaRfJUUz7A2fptAPl44tE=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlumjZFGxsc/Ri9+EDDqkk1X5jnz6QNOwoeeq7t
- Qs7bodMQj6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZbpo2QAKCRD2t4JPQmmg
- c/wkEAC9gQRZdv5FHuuTAw7GaXY1+6/CRbzgVPvAej42qHTKsU9g8/N3ZSs7w5Y55yhuXp2heik
- HhrfpkvAsJLcaqKv+lI6+3WsghGmOPd8/fAOm0bRPU9SKAhj5TGcJZKtZoAwKb9WEccK6/AGAb7
- /SoMc6iX3p3zid9quzN17Yk6KhDCfEdR9/jGlcRnriryxM5j0UA5Nr9gYZUTWRXEsk08f6BqUHD
- hCsmAgV7SpF/FiNgCWSKPT0a6z9vE/2g4xLor+CaijKeg0MsZjyJkUqypQ/exSAHOV6l+Lz3XXf
- gaqaw/A/VZpMtwqjpWN7ovEWP9L7B1xkCrYwq4pdyVOsIVOjR3lqCjCpEOVTmdJjObG1jARRqKK
- Xr0S3DMQfYaytnjtovITPILxWoD+jkbEBT3/rBqfMwsc/2zxENaYRt2ssIl9kKekGCBFR/AM9LF
- PHLRi1MDuXa3yyg7ULM+b8Ft8xJtS/5eQ86z/7u50HOvNvn2dapAJqnEP8WZffRCxogxpiweujB
- JyjaVNdyRnDrJsOzEt+X3Oc35SdRXoRyZsrrfjf6j/SXc9ZMVk28wObMZ3Ru1TnhCmgALYZkE0O
- 11UoQsd3/vXanmb2vjl1iK3ekbqxc8G1pCCwpfNb95fyQSl3UPZaGRlYp0s+BLvvNL1snL0akG+
- G8It3U0dyxlhG4w==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Fuzzers and static checkers might not detect when mptcp_sk() is used
-with a non mptcp_sock structure.
+Hi Matthieu,
 
-This is similar to the parent commit, where it is easy to use mptcp_sk()
-with a TCP sock, e.g. with a subflow sk.
+Thank you for your modifications, that's great!
 
-So a new simple check is done when CONFIG_DEBUG_NET is enabled.
-mptcp_sk() is then used as an inlined function, like before commit
-403a40f2304d ("mptcp: preserve const qualifier in mptcp_sk()").
+Our CI (Cirrus) did some validations with a debug kernel and here is its =
+report:
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+- {"code":404,"message":
+  - "Can't find artifacts containing file=
+ conclusion.txt"}:
+  - Task: https://cirrus-ci.com/task/4603007531220992
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4603007531220992/su=
+mmary/summary.txt
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index eefd1397106d..c10c778cd773 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -348,7 +348,16 @@ static inline void msk_owned_by_me(const struct mptcp_sock *msk)
- 	sock_owned_by_me((const struct sock *)msk);
- }
- 
-+#ifdef CONFIG_DEBUG_NET
-+static inline struct mptcp_sock *mptcp_sk(const struct sock *sk)
-+{
-+	WARN_ON(sk->sk_protocol != IPPROTO_MPTCP);
-+
-+	return (struct mptcp_sock *)sk;
-+}
-+#else
- #define mptcp_sk(ptr) container_of_const(ptr, struct mptcp_sock, sk.icsk_inet.sk)
-+#endif
- 
- /* the msk socket don't use the backlog, also account for the bulk
-  * free memory
+- {"code":404,"message":
+  - "Can't find artifacts =
+containing file conclusion.txt"}:
+  - Task: https://cirrus-ci.=
+com/task/5728907438063616
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5728907438063616/summary/summary.txt
 
--- 
-2.43.0
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/399e99c4147f
 
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
