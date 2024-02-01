@@ -1,108 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068C6626BE
-	for <mptcp@lists.linux.dev>; Thu,  1 Feb 2024 16:09:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D86F1649A7;
+	Thu,  1 Feb 2024 17:20:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706803781; cv=none; b=jN76Bf2MU4i8m+CrZQOeOPL8JJp9XvHOhtE475C48VDYWC8qZaga/7eYdLX58IK1U3KAoEXyttlIAgHkSOXghni86O87iiep0ekp120Gu33HlAbcS8f1PmsOSanFY7xNIF4UHYive4d+VFdLjXqfFWRMq6MIRBeathkfBAoC4FM=
+	t=1706808028; cv=none; b=si2INydRqWg4fW1NXetxKo/fVBIxxYmgfxj7C5zanuCM+X/m70p3QVM5wUzVO8rZcirSIfipcbzL0inBdStOAAWL02tDtQ0cvZOyPM+zY9EWV5RzovdNNqHeL5p6URR6hf+APFNqkt+3RS7MmYX/je4KLpMFtMfTCbn4W7PBLIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706803781; c=relaxed/simple;
-	bh=8lytkz5ZediEVKO9v4YEKd6NPwx1gvUhp9XX5T3qsDo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Hy9+zMw7yZC8V85ZnZmvGkGJ2ziObvbZ4NV5BddOwdqZVd3zPLpP4ZipIpGuFwDwayxxE0QMgNkbBOU//bk+nQ4HSQhL1D9IOKJ/w/OrD8O7V+/s6ulIbTirLxPxuW31W2RplxtEpZ1FZSiS5K4mIH/FdxfxobiZB/X9/kSWLJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FsKkG5Xo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706808028; c=relaxed/simple;
+	bh=pxNxp2jInNaPMPU2mt5mwA5Yn1hERV9B5vHmU6y78cw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=GNrzR+wjU+cBdIHJY2Tw1g1J/bNx8YRy7myeyWP1+tjs7gQRFQQJixA7OF7vaCRonI4/LuXkC4kgFpEPggCkK1sg3JFwDsWfi6H012Y2uSsJuXOsO4IbbOwpogxVAxxHb/kb6AaOJca+uF9xm7HFlXv8Axve+v7+mn0KH6CMBRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Txv4arnq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FsKkG5Xo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8102C433A6;
-	Thu,  1 Feb 2024 16:09:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Txv4arnq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 01FE3C43394;
+	Thu,  1 Feb 2024 17:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706803780;
-	bh=8lytkz5ZediEVKO9v4YEKd6NPwx1gvUhp9XX5T3qsDo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=FsKkG5XouZON9a17JDcbCqV33ketN35l59NeaUF5cJItCegw0EalaC5Dg8G9JOUQz
-	 srcvdMLatlR4Il/KUPsabN+utO+ym1jUmNeVOmgcHF1yMIwcyeuwQNqEuKXS48dLxW
-	 FBgSLDoYQLtM4G+QBtAp4/68EiwKSxGWyhBWVv6NC1dIgGP1qfqIhCVJ7TRZS9tMkn
-	 8K9K5wyTdvCfkVE7OwyhU4nRVSmJ6v+tmEWP1ZxnfkbJcDT7Cw+RD93BfndX2xNWpt
-	 XlTyeaNrMhJw5OcWVjdlodF4awaB9ixDGYJCfhNBqoXM90TtRDj5gUEyQqStL6mJzC
-	 EOj3SEJk8pQ0g==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 01 Feb 2024 17:09:31 +0100
-Subject: [PATCH mptcp-next v2 3/3] mptcp: check the protocol in mptcp_sk()
- with DEBUG_NET
+	s=k20201202; t=1706808028;
+	bh=pxNxp2jInNaPMPU2mt5mwA5Yn1hERV9B5vHmU6y78cw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Txv4arnq5wa9wJ+pWoG2Dr0OS7TPVffhW1PLyUO0eNDFSgmDM14vZCJ2554f1g2lO
+	 iF+o53AhSB3TAkhVeNfffg7T4nRAKxnW8MhjFhs3NqHta2guik0wPr9hCsAJz7uKH2
+	 0VyBOx56/LRJSzNGUMOjw3+Erjx6dVMx4UGpl/hZ1DFjVvf6C0btl1etZUx+DBnSWi
+	 J5ejAcwWADKgVR8kyZ2u8nFuo9A4FkfpPW2D2NG3xRojuET0rAlTfGRnRKaxM7lvpH
+	 jQqPLW7YGWs8lnjyWqV3kqLxJ8chB0RO1nnflm0zZKnDEGJbKVEGelopWBQ75gRBjD
+	 iUDI963VPRrGw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DDEF8D8C978;
+	Thu,  1 Feb 2024 17:20:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240201-mptcp-check-protocol-v2-3-1e253ef51990@kernel.org>
-References: <20240201-mptcp-check-protocol-v2-0-1e253ef51990@kernel.org>
-In-Reply-To: <20240201-mptcp-check-protocol-v2-0-1e253ef51990@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1482; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=8lytkz5ZediEVKO9v4YEKd6NPwx1gvUhp9XX5T3qsDo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlu8I/EzanmmW+ai+Ih6dVpb7YU6+cXvYq/sTNc
- cYB69cggyWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZbvCPwAKCRD2t4JPQmmg
- cxrfD/92+n8j7amrJYku8LNglk2PqJJ88D2LjUeOka8B4TxZRGbAjR9uFfF+4Q7Q4xbIcIsfELm
- KEOyp/1EMoyFv/0GhzqC7hY3hfutckgwYrjHgAQSBGBnKrNacTPJpa6duiuNk9krgqznLIpPZv7
- NUr61HQm58ye47smtvNDPSOfcWPIYDY1gXNsdkI20eqIIF3FTG/NqRtaxEpRwx4Yl9houtrCRn6
- UNn47fjzJ78pfyLqgSdWDprSq0eW0xcvRKSlbc8S/NUU09uKlYdJZlD1Pf9a7JM4UH3vxjI7AZg
- G7H1uKKN/t82DMlYAUUmIkpkth09rJwVfsrQjgxJojHUrMJbigF30WrT/Jdi+gtwz0NOnXMj1Pf
- 1uhuRU+SF/DqAnWuYdTP0QAzhm/SkBwKq+3jrR2wILP7a54wgpPJTIU9h7ZPilWRobMb0MvEQZR
- k81VqiYXxGQJCzhaXIfUoUz6zPnMms/023ZjhepE0ZSH8ydcLTSLBwYy1BmTBAbIF3VcddhEqUU
- YyMlO2v1JGW8vWhhWJuGZlUJ7MmZeF+yeorgG+z3itkha1Y5yJSWtkIqXxqwT1gatLDIs1Qn+cB
- KCgwM1NJ5KGIPAP03WCyWjRu4nSdCgJoaeKZ/WLBXLj95NzkQn9AZqh8AXWujHUhaJjzIC2MrAg
- ZAhBM2FLyIFNP4A==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/9] mptcp: fixes for recent issues reported by CI's
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170680802790.24895.13487831241333435786.git-patchwork-notify@kernel.org>
+Date: Thu, 01 Feb 2024 17:20:27 +0000
+References: <20240131-upstream-net-20240131-mptcp-ci-issues-v1-0-4c1c11e571ff@kernel.org>
+In-Reply-To: <20240131-upstream-net-20240131-mptcp-ci-issues-v1-0-4c1c11e571ff@kernel.org>
+To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang.tang@linux.dev,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ shuah@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, stable@vger.kernel.org, geliang@kernel.org
 
-Fuzzers and static checkers might not detect when mptcp_sk() is used
-with a non mptcp_sock structure.
+Hello:
 
-This is similar to the parent commit, where it is easy to use mptcp_sk()
-with a TCP sock, e.g. with a subflow sk.
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-So a new simple check is done when CONFIG_DEBUG_NET is enabled to tell
-kernel devs when a non-MPTCP socket is being used as an MPTCP one.
-'mptcp_sk()' macro is then defined differently: with an extra WARN to
-complain when an unexpected socket is being used.
+On Wed, 31 Jan 2024 22:49:45 +0100 you wrote:
+> This series of 9 patches fixes issues mostly identified by CI's not
+> managed by the MPTCP maintainers. Thank you Linero (LKFT) and Netdev
+> maintainers (NIPA) for running our kunit and selftests tests!
+> 
+> For the first patch, it took a bit of time to identify the root cause.
+> Some MPTCP Join selftest subtests have been "flaky", mostly in slow
+> environments. It appears to be due to the use of a TCP-specific helper
+> on an MPTCP socket. A fix for kernels >= v5.15.
+> 
+> [...]
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
-  v2:
-    - Use a macro instead of an inlined function (Paolo)
----
- net/mptcp/protocol.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Here is the summary with links:
+  - [net,1/9] mptcp: fix data re-injection from stale subflow
+    https://git.kernel.org/netdev/net/c/b6c620dc43cc
+  - [net,2/9] selftests: mptcp: add missing kconfig for NF Filter
+    https://git.kernel.org/netdev/net/c/3645c844902b
+  - [net,3/9] selftests: mptcp: add missing kconfig for NF Filter in v6
+    https://git.kernel.org/netdev/net/c/8c86fad2cecd
+  - [net,4/9] selftests: mptcp: add missing kconfig for NF Mangle
+    https://git.kernel.org/netdev/net/c/2d41f10fa497
+  - [net,5/9] selftests: mptcp: increase timeout to 30 min
+    https://git.kernel.org/netdev/net/c/4d4dfb2019d7
+  - [net,6/9] selftests: mptcp: decrease BW in simult flows
+    https://git.kernel.org/netdev/net/c/5e2f3c65af47
+  - [net,7/9] selftests: mptcp: allow changing subtests prefix
+    https://git.kernel.org/netdev/net/c/de46d138e773
+  - [net,8/9] selftests: mptcp: join: stop transfer when check is done (part 1)
+    https://git.kernel.org/netdev/net/c/31ee4ad86afd
+  - [net,9/9] selftests: mptcp: join: stop transfer when check is done (part 2)
+    https://git.kernel.org/netdev/net/c/04b57c9e096a
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index f2473d9acae6..defccef59b3e 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -355,9 +355,14 @@ static inline void msk_owned_by_me(const struct mptcp_sock *msk)
- 	WARN_ON(ptr->sk_protocol != IPPROTO_TCP);				\
- 	container_of_const(ptr, struct tcp_sock, inet_conn.icsk_inet.sk);	\
- })
--#endif
-+#define mptcp_sk(ptr) ({						\
-+	WARN_ON(ptr->sk_protocol != IPPROTO_MPTCP);			\
-+	container_of_const(ptr, struct mptcp_sock, sk.icsk_inet.sk);	\
-+})
- 
-+#else /* !CONFIG_DEBUG_NET */
- #define mptcp_sk(ptr) container_of_const(ptr, struct mptcp_sock, sk.icsk_inet.sk)
-+#endif
- 
- /* the msk socket don't use the backlog, also account for the bulk
-  * free memory
-
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
