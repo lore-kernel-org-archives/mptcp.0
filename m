@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378FF3A8EE
-	for <mptcp@lists.linux.dev>; Thu,  1 Feb 2024 03:51:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC671DFF3
+	for <mptcp@lists.linux.dev>; Thu,  1 Feb 2024 03:51:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706759489; cv=none; b=YNZXrb3h/izzIGpAcS+Ap8/YPRK80ZUaMDJz8dnuxKAE+nQy2UvPkkMWpgyqndiznjkmGClo5pQZSoh5fsZbPoXPjmpeka0CCuNiMnDaT82yWfJWvrKBcF66SfKynsOlBj1EYC24ze16RelCSfn4jrkJTm0g3swqX53zBSNHQNY=
+	t=1706759490; cv=none; b=d1YUcq8BB695UmGl88zwOyr45dl/8kJspc/fgqbZIsOof4GEKWSiKZXtvNE8ApCP5R1KZslLKEE63IXaeBuVmkY7hGirTFvVALnexu1+EwbX1rBDtcJQ2jxr5PXAT4fIqyxwGD/cg196veo54THbL4AuCIeYH9bwze6/vLkmJLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706759489; c=relaxed/simple;
-	bh=7OESp6ArYJsjUqUxtis2O8e5RzqLd2DDEiDxUFvDbQ0=;
+	s=arc-20240116; t=1706759490; c=relaxed/simple;
+	bh=hnYBjXXQwPOjX21cOo/GguoDq08ls1+BTYVpns+F5aY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q7g6jdwff2LliP5x1pjKexzkmPOC8Ttv5/4uugXiGuB0/unoyx2h4WDbT8M/EnD7UrztjrCOgw1TuN1QCv6Uk6xC3REolOAw69f0nxy+cd4E9mMq+yl/nUAIh17uiBny/TBDlfZ5qS9w+spuYzk7cuf38Am+3n4b4UuEpCebTC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XdNnBgXF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AiwaqksRzEXdQ5Ak1Df2eADm1aVeKNkuo24+FHXHVzkwGEBn5yO/QvW9xtb0CkhkuLlxO8KqhbD0Fv7V7A2LC4ZkiaywlfKHck8F4wjSTZCMyEpGvf1qltGLe1+jVU2jC2UAiQp1wBbAkqbXuYJXoqSxE3lviQBbWk3gk+TDOes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9iOYlu0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XdNnBgXF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC68C43390;
-	Thu,  1 Feb 2024 03:51:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9iOYlu0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39C2CC433C7;
+	Thu,  1 Feb 2024 03:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706759488;
-	bh=7OESp6ArYJsjUqUxtis2O8e5RzqLd2DDEiDxUFvDbQ0=;
+	s=k20201202; t=1706759490;
+	bh=hnYBjXXQwPOjX21cOo/GguoDq08ls1+BTYVpns+F5aY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XdNnBgXF9s0D4dEzpZbjkYs9OfvIHjWlhwGb5Ua9iyUM+DD+5lSjKD/ojl70Xy6Jb
-	 EgaDDCJLNxe/ZtldgnZyzUnPYbjNofvwYh1DLuQEzHGVJ59X3UYs+VhouzYDI7vinG
-	 kkFXEX9xgyxNPnKatAmcxLWoO4s2GzOHp43ZHgNkZ+8QKOoneSEfhY/qn3h77M4KeE
-	 /rs9ofejtUn7sKCFyfySbBtNBSjc00dif+jYgGI5Aw690aaMEhxhE1N+X2dUYjiYct
-	 dvvh+gV5Eq5mqC1vbgZJ3bwdIlzJo91hWZYHlukY1HzwXRcuX5M0ABkeWD/ChF/bUN
-	 youwgNinNEG3w==
+	b=d9iOYlu0iHKZlABSGT9NIpsW8t2sHZS61bfdVMHAoas+iWSNtAHYifl/GsOLjLCkl
+	 gS8Aq16f4F11IOGdnK8bzz/ne62UXE5fNOQI2+MrcwKV/CgWFJChActa5vgTCND1sS
+	 Kytyz2AXL9KCGG38C5m0SK5dAxjV5csEwXdeGnDm17qQt+6fj8kN8rjW/hiHPJsiG9
+	 eriPExwQooIXkQyiIhXQk/bAB6FgeWsXLVnLJOVnO+bTz88XSwxhTKpHCXU5N+hthK
+	 AROcyKilmH/hhjWgK+buvq3z86aRCKCeQ9jccGGujdyqzzXOTis5B9Gx7LtcUiyjNI
+	 jR9VwRXl3kxHg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-net 2/4] mptcp: add needs_id for netlink appending addr
-Date: Thu,  1 Feb 2024 11:51:16 +0800
-Message-Id: <1d1970ac75aa9b924f1da17c3c89dcba96e5bb46.1706759413.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net 3/4] mptcp: map v4 address to v6 when destroying subflow
+Date: Thu,  1 Feb 2024 11:51:17 +0800
+Message-Id: <978747717376e43b571aa264d31eec15f149ec1e.1706759413.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1706759413.git.tanggeliang@kylinos.cn>
 References: <cover.1706759413.git.tanggeliang@kylinos.cn>
@@ -45,92 +45,47 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Just the same as userspace PM, a new parameter needs_id is added for
-in-kernel PM mptcp_pm_nl_append_new_local_addr() too.
+Address family of server side mismatches with that of client side, like
+in "userspace pm add & remove address" test:
 
-Add a new helper mptcp_pm_has_addr_attr_id() to check whether an address
-ID is set from PM or not. It will be used in the next two commits.
+    userspace_pm_add_addr $ns1 10.0.2.1 10
+    userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $SUB_ESTABLISHED
 
-In mptcp_pm_nl_get_local_id(), needs_id is always true, but in
-mptcp_pm_nl_add_addr_doit(), pass mptcp_pm_has_addr_attr_id() to
-needs_it.
+That's because on the server side, the family is set to AF_INET6 and the
+v4 address is mapped in a v6 one.
 
-Fixes: fd5a4c04e18 ("mptcp: add the address ID assignment bitmap")
+This patch fixes this issue. In mptcp_pm_nl_subflow_destroy_doit(), before
+checking local address family with remote address family, map an IPv4
+address to an IPv6 address if the pair is a v4-mapped address.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/387
+Fixes: 702c2f646d42 ("mptcp: netlink: allow userspace-driven subflow establishment")
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_netlink.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ net/mptcp/pm_userspace.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d9ad45959219..9367ab506908 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -901,7 +901,8 @@ static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
- }
- 
- static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
--					     struct mptcp_pm_addr_entry *entry)
-+					     struct mptcp_pm_addr_entry *entry,
-+					     bool needs_id)
- {
- 	struct mptcp_pm_addr_entry *cur, *del_entry = NULL;
- 	unsigned int addr_max;
-@@ -949,7 +950,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 		}
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index e582b3b2d174..b40a69649fe1 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -495,6 +495,16 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
+ 		goto destroy_err;
  	}
  
--	if (!entry->addr.id) {
-+	if (!entry->addr.id && needs_id) {
- find_next:
- 		entry->addr.id = find_next_zero_bit(pernet->id_bitmap,
- 						    MPTCP_PM_MAX_ADDR_ID + 1,
-@@ -960,7 +961,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 		}
- 	}
- 
--	if (!entry->addr.id)
-+	if (!entry->addr.id && needs_id)
- 		goto out;
- 
- 	__set_bit(entry->addr.id, pernet->id_bitmap);
-@@ -1092,7 +1093,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
- 	entry->ifindex = 0;
- 	entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
- 	entry->lsk = NULL;
--	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
-+	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry, true);
- 	if (ret < 0)
- 		kfree(entry);
- 
-@@ -1285,6 +1286,18 @@ static int mptcp_nl_add_subflow_or_signal_addr(struct net *net)
- 	return 0;
- }
- 
-+static bool mptcp_pm_has_addr_attr_id(const struct nlattr *attr,
-+				      struct genl_info *info)
-+{
-+	struct nlattr *tb[MPTCP_PM_ADDR_ATTR_MAX + 1];
-+
-+	if (!nla_parse_nested_deprecated(tb, MPTCP_PM_ADDR_ATTR_MAX, attr,
-+					 mptcp_pm_address_nl_policy, info->extack) &&
-+	    tb[MPTCP_PM_ADDR_ATTR_ID])
-+		return true;
-+	return false;
-+}
-+
- int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
-@@ -1326,7 +1339,8 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
- 			goto out_free;
- 		}
- 	}
--	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
-+	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry,
-+						!mptcp_pm_has_addr_attr_id(attr, info));
- 	if (ret < 0) {
- 		GENL_SET_ERR_MSG_FMT(info, "too many addresses or duplicate one: %d", ret);
- 		goto out_free;
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	if (addr_l.family == AF_INET && ipv6_addr_v4mapped(&addr_r.addr6)) {
++		ipv6_addr_set_v4mapped(addr_l.addr.s_addr, &addr_l.addr6);
++		addr_l.family = AF_INET6;
++	}
++	if (addr_r.family == AF_INET && ipv6_addr_v4mapped(&addr_l.addr6)) {
++		ipv6_addr_set_v4mapped(addr_r.addr.s_addr, &addr_r.addr6);
++		addr_r.family = AF_INET6;
++	}
++#endif
+ 	if (addr_l.family != addr_r.family) {
+ 		GENL_SET_ERR_MSG(info, "address families do not match");
+ 		err = -EINVAL;
 -- 
 2.40.1
 
