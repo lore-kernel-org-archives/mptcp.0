@@ -1,89 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03D54A2A
-	for <mptcp@lists.linux.dev>; Thu,  1 Feb 2024 01:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CC9EAF5
+	for <mptcp@lists.linux.dev>; Thu,  1 Feb 2024 02:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706749623; cv=none; b=ca7u3/Hzp5nngLZ+3cKvFI8GIOo0O+a+vUebsjWM1qMeF1MkwTxI1HDYb2go/s63wkCGKINNjv1znFHGnEUFq1q+i9MSn6fC4Q6/RtvJqATnNY3cLMbJ21hHv6WUiOOAD61nre07zS0ezyOn3htj9WC6shaFjb5sSyjKvXk5+7k=
+	t=1706752848; cv=none; b=A7xYJBLB9lb65Pdh09eOgeo4wuxk8iGdLk9pjgczYvTNJUhAldUieCwUs1AD04Dd68ZjZRAJ2lkZsAMG9c8lF5XM48HzA2buY5UWuey5Qbt8v9q+iSLfvo65iEYmgrWKT+TXFPJM0MxNZIMreUAA9BzZOwArZ2VZyAUWh+ZF7Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706749623; c=relaxed/simple;
-	bh=C6p4N3g9uMWAlaUtAwJ7jRlMORgSGBNiRFyjeWW4zqU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fAtzf9+OJk08i+rr5Ui95tPqLuuV2tDQcLQK8GPAcV3NByYGoIexPKgSK898v74X9ZqaO+sWzYcWsVeOymtthidf+rfu+GN6Hw+6PIb/EWuLUCI44p9BTZXbg+h0g8eIqCvmndPs0bpT99Ez6e8rxRKPgHCUfcRc9eKhiEnEx30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hKH+mret; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706752848; c=relaxed/simple;
+	bh=+kaXg7MXseit8m4va023LRyvuee+SlakFxrgWzW8VSo=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=eAvEAXLJ/7wnZNw6XTrHP/5WC6O0AEPCxRJoIQIi7/D37Rzj/x5J7Bxo7Hg8lOewl0XZPkCof20T8SX90gqssm23kNwugB9QNuBImIQkWInaX4+iDR5/QRW1NdcNpfMuf/PjLW1E9VXgZW4NbQxqqUQTEq+BlKDrpYVwqcLJQxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eqviom8b; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hKH+mret"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29EEFC433C7;
-	Thu,  1 Feb 2024 01:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706749623;
-	bh=C6p4N3g9uMWAlaUtAwJ7jRlMORgSGBNiRFyjeWW4zqU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hKH+mretLVXdeL/9ZQZwpRpJUqpnWGli4ruZrZLiG/RUHO6wfwVFxVwBRRaHS6KTY
-	 jcT7ReFRThZsciqdksxQeFnDwfJT2VJW0efiCoB3d9v86fITngKgR1ocMMCiHjtiBw
-	 7MWqEGpha/TPPs/q+cThCxlqU9ihNP3VSB+0sqA57GicXab/oe9cUS04e2GYI1Dd/G
-	 5euJryz6es5OLG74my+pCjyiWRrRT+F/DyHeRIfPHG34enGtZogPZVnYIpiEA0trgh
-	 Q7R9B/HFnTyoOhh8HzRdwjc6oX7kLJOV3kMUpOOLXv9+l+xdMDc2RcRjvn7KAzQknw
-	 CoxG90aH4XJ9w==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang@kernel.org>,
-	Mat Martineau <martineau@kernel.org>
-Subject: [PATCH mptcp-net] MAINTAINERS: update Geliang's email address
-Date: Thu,  1 Feb 2024 09:06:58 +0800
-Message-Id: <eb152068d96e0980d010272f5190da7807f35c13.1706749536.git.geliang@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqviom8b"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6818f3cf006so2157636d6.2
+        for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 18:00:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706752846; x=1707357646; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+j1WO0sO0695dmFR8NtavKbazDC1I3275fupHYACzjc=;
+        b=eqviom8bhAPs50ZddNUzbVSr5LV/CGCEevt/JHrFDh8sRv6ojoGA7Js1OS135FPR0J
+         RFrQdTXMbQ0hSVsHHjODqRI5GE4E0IGKq/jGVgC1LkfHrlGqEcpi5kZwCzkkmjN0IBix
+         RzhEAwCrveC94nwjB7BpHlsZnViG1AjMfRmN0j9mCQkN/XpFEFpth1EDGgIY1V/s1A9Y
+         S0g3ikbw01M0hUehjgVoj9Hy3cvtt6BqYGbPhiaIf9d3uHzouV0UnrXnC2pvjVHZfPHB
+         rQiIOkUcHmsbQxJPeul8lPbXNNxdneghutQfecAH+9qDtZ+v+UF3uKvDBLRotqw5yN8n
+         SrOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706752846; x=1707357646;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+j1WO0sO0695dmFR8NtavKbazDC1I3275fupHYACzjc=;
+        b=MouPMYn6UmoKcpNeYjbUVc2rBsd0GU66mU8BMcnXBxD8zmv9MO+lQ7iqMD3ndC63VB
+         h6qEDf+0UYBmJPKcUJklne94AS5zxv2IZZOZiuqiR88Kr6039/k85nldP74W7KiT3hKO
+         vBdThGdGHDLiRW17KAEQBrrF//xb8W/ip9qN4M5t1FMXS6rXfrUeR+/xOU1xTOANRwR5
+         q/tTNh5xJS0mfhlTy73T/sIfAx7EM8EAbdHzD0X3XPPfHSejFLn3FpApEto5raYNeQUr
+         pWA4C0RQp94HrI4hylR32jOJrMMUKOE0nowF703CQdn7Ck5nQAYqH9+VHLBej/95sXaT
+         WRGA==
+X-Gm-Message-State: AOJu0YwktiYWcgbZCaGgG42JFXKBJecp8nGCbtp6Tf8LFoVwi8K4PLrJ
+	6h88wUVSJ77Ho5N/d1xOzRhnuzrOXEBBm+4HkOIK1xF/Z2A3dbY=
+X-Google-Smtp-Source: AGHT+IFpT8qgHWxRGtVUjSAwAd3k1Dzcvr+XJUEW3nXh6GsLHpc6U29n+1BiICl1mszkrGFuCYC2oA==
+X-Received: by 2002:ad4:5c83:0:b0:68c:6eac:ca3 with SMTP id o3-20020ad45c83000000b0068c6eac0ca3mr1360746qvh.9.1706752845838;
+        Wed, 31 Jan 2024 18:00:45 -0800 (PST)
+Received: from [127.0.0.1] ([20.97.191.242])
+        by smtp.gmail.com with ESMTPSA id ol12-20020a0562143d0c00b0068c524a70fbsm131390qvb.66.2024.01.31.18.00.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 18:00:45 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <eb152068d96e0980d010272f5190da7807f35c13.1706749536.git.geliang@kernel.org>
+References:
+ <eb152068d96e0980d010272f5190da7807f35c13.1706749536.git.geliang@kernel.org>
+Subject: Re: MAINTAINERS: update Geliang's email address: Tests Results
+Message-ID: <f60700a1-5fb1-c6f6-9d89-f59b159e4ec3@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 01 Feb 2024 02:00:44 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Update my email-address in MAINTAINERS and .mailmap entries to my
-kernel.org account.
+Hi Geliang,
 
-Suggested-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
----
- .mailmap    | 9 +++++----
- MAINTAINERS | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+Thank you for your modifications, that's great!
 
-diff --git a/.mailmap b/.mailmap
-index 04998f7bda81..327e7eddd146 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -191,10 +191,11 @@ Gao Xiang <xiang@kernel.org> <gaoxiang25@huawei.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@aol.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@linux.alibaba.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@redhat.com>
--Geliang Tang <geliang.tang@linux.dev> <geliang.tang@suse.com>
--Geliang Tang <geliang.tang@linux.dev> <geliangtang@xiaomi.com>
--Geliang Tang <geliang.tang@linux.dev> <geliangtang@gmail.com>
--Geliang Tang <geliang.tang@linux.dev> <geliangtang@163.com>
-+Geliang Tang <geliang@kernel.org> <geliang.tang@linux.dev>
-+Geliang Tang <geliang@kernel.org> <geliang.tang@suse.com>
-+Geliang Tang <geliang@kernel.org> <geliangtang@xiaomi.com>
-+Geliang Tang <geliang@kernel.org> <geliangtang@gmail.com>
-+Geliang Tang <geliang@kernel.org> <geliangtang@163.com>
- Georgi Djakov <djakov@kernel.org> <georgi.djakov@linaro.org>
- Gerald Schaefer <gerald.schaefer@linux.ibm.com> <geraldsc@de.ibm.com>
- Gerald Schaefer <gerald.schaefer@linux.ibm.com> <gerald.schaefer@de.ibm.com>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6b49df9d5eb4..61a07588edb9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15326,7 +15326,7 @@ K:	\bmdo_
- NETWORKING [MPTCP]
- M:	Matthieu Baerts <matttbe@kernel.org>
- M:	Mat Martineau <martineau@kernel.org>
--R:	Geliang Tang <geliang.tang@linux.dev>
-+R:	Geliang Tang <geliang@kernel.org>
- L:	netdev@vger.kernel.org
- L:	mptcp@lists.linux.dev
- S:	Maintained
--- 
-2.40.1
+Our CI (GitHub Action) did some validations and here is its report:
 
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7734828846
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/2a536c07d503
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
