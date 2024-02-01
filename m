@@ -1,101 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFF81EF19
-	for <mptcp@lists.linux.dev>; Thu,  1 Feb 2024 05:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477865F85B
+	for <mptcp@lists.linux.dev>; Thu,  1 Feb 2024 05:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706764773; cv=none; b=TyKZq3W8HC8pPkcDBGTPyl34JxHsyN5i7rlxx/dDzaf0w2iNZt6l5kAqToHmqOc/VBgtRy7UpXsxKwJVE3ADRPS4VgRSw2GUs0yo3NqwaI8GKpGyQGclmI4j16Y3+raUWL98abEK+hLEO2/vxZ7udOr4PyAvqHBZANQXFrYxkgc=
+	t=1706765739; cv=none; b=mp/aiyFhvWlNg2apFJfNGXB2AYeJOwyUdgWL888ehQZCOHUs0oVpItls+gU1bmZF9Ymv6Xg5B+lSwMW+ancahnRRsbact4GRFrEI1JrDustWY/lZ1I40Gqt4QddaGkXRM1RR7eFPplwG+PKiO1VYLAx95bQ11PJsNNlPhzxLzvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706764773; c=relaxed/simple;
-	bh=60ROJHfRntDedV6gOeO3zJcIjk31fGLtY5sWOApuFTs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UAuM8x2GjIqMKuxjdGnOJ7gt/fb6LbEM701X5B5P1D9ZWorg5Da/RDLKkbIYcn8t5N2bWJ/RhNo0syydeEX43x9XtO59a/JWZOcsYz/NajZE7YA6beaqjxQzJi9un2mcpRNYfvNR2pVvok5XfAzfBXtk/7VBljHJOWb6dVqvIa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=brmCSPZy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706765739; c=relaxed/simple;
+	bh=YPp0X8xytf1YWDTJkvZZnJovdUP15fUBAl2fer7bPKI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BTzPx0gICD0iUY3w+zqHh+V4lxeELsOqCidl9gx7N9Kjroowi0RFDJsCe9wi+TpoV36nLrtU29qN/Gx0MYrkM9vZb9ADplBOuQyRvG71VzVlZki53cbP0uZhDrq/N/oSBRsDgEGEJAJz8E6MyuMQLZleIiXkTQ+m7Yh89j6keAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FYFeZzuw; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="brmCSPZy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7F32C433F1;
-	Thu,  1 Feb 2024 05:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706764772;
-	bh=60ROJHfRntDedV6gOeO3zJcIjk31fGLtY5sWOApuFTs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=brmCSPZyc4O7TN1f0mbz9tf4BDBlXxxzNlZQrVZ2uZgMV2o3zVoQHQ8NpqDBf0txq
-	 R0its2lo9gDqzPNfaIDgxXih2ARm8xvX6806hjMNlPVPYN2PTB3oETUOiDSBTw/lJp
-	 HxjRvitUNvC0vXYZ+Px3EXfIaL08MWiDHnjMhS39NSVO9UHtmBFUoJHPxKP842ZcuI
-	 GQtgDq/KRt8+tUWYrmiFAEq+G8NbZQx0caAh+D9Q5OSOtxz8RDap0ZdkaogRyepAOV
-	 eoRe4GAIJkRIEGonGCdgfUvF2td4J6xPXKMpXO0NAXBW/hOu/qB8/Eg3zxFugqTLzK
-	 cY0z8fZoqmy1g==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v11 15/15] selftests: mptcp: userspace pm get addr tests
-Date: Thu,  1 Feb 2024 13:19:05 +0800
-Message-Id: <ae91947234017dd7e8c5c8c02864131bdc99c33f.1706764519.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1706764519.git.tanggeliang@kylinos.cn>
-References: <cover.1706764519.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FYFeZzuw"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a2a17f3217aso59291166b.2
+        for <mptcp@lists.linux.dev>; Wed, 31 Jan 2024 21:35:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706765735; x=1707370535; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5D6EXwnEPsxN9ZAV5iPDUPMNs2BlXcQs70krW243ook=;
+        b=FYFeZzuwY1MJFRnvG7X67MO45PJ7vRe+xZNrDHr4a+oHOLzINihGhlM9w+9Y7opCJl
+         DvYvzrxHH6BwQ/esAXQF8kCc/BX8pdDqi6jOVSeWTyIi5vQNWPdZXFtk3j0EphDILHf+
+         0SfqlL7IKMTmXeOdjaq66TOh+Ck2jTnCZTO2/2NKJy3mBSQ2MyeoVxd1ZTM77uJLJGWX
+         O+n5cMAaFc2wj+le1LkE7SBko7LuFjZba7R50wc5sG6TadcVaFVuPOn8p3AsL1E08MjZ
+         Nzt0EPJe8dVOcqg2CV5G6Q/uYKmDRbporMkm4ODkalyDkFU1Orgz31aFnjo4dv+s1i6q
+         tvQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706765735; x=1707370535;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5D6EXwnEPsxN9ZAV5iPDUPMNs2BlXcQs70krW243ook=;
+        b=mpY0pd6QEj/nBsB3nkPKZx2XEaBHKtBzMmw0fdmVsGeQ1gR7D1wai3gY0X4uC/4fa2
+         cmAoY0av9FgjuoaUFMaMUx5NbGl2ZGB8Eev8M1WLn9xzR2AW3eJ8KGWMRhRgZ8vLdTF8
+         GRIoimdfZZ5x/RAYjzJHge2aAlVrsEBlDjyzlgCRx4kmNYzte8wLVnr0HKACLT7u5EPM
+         t07u5JrdVEfsJCUFt7IY15CPngKeQQgWsdbs72n1odUeJsTOcQw8uJA8/hvbfI5qcwmH
+         FYFugEU+U0QPOJiczfsEQCHefJtpkfrII0nj6qC/zXI/y/Qev0+KQwTY5SRgcTyI4MkB
+         Ju8g==
+X-Gm-Message-State: AOJu0YyGI37Ufo+o/pd/mdG3HlbZNzPZCHMCqmamwYzWLRlU+D4PEAcV
+	o9VpvRXDvJp7poiHI/ikXt6zsHrD2JkiMSAQ2MFhYr9PgXexsso/GLLfD+v5FnRyJYE+hcLDc7b
+	9JgQuGAI0H3hSvJsojZeuoiTZM8XAFiIgHJU=
+X-Google-Smtp-Source: AGHT+IFtj6WQxhekz7I7v/gX8g/wDcFK6MerOUOp387TAG35LqmRUUv3s886poLLQSRHEiD+wx+wVM97vaxaOfMo6yQ=
+X-Received: by 2002:a17:906:35d8:b0:a28:ec67:185f with SMTP id
+ p24-20020a17090635d800b00a28ec67185fmr2620156ejb.60.1706765734968; Wed, 31
+ Jan 2024 21:35:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1706759413.git.tanggeliang@kylinos.cn> <1d1970ac75aa9b924f1da17c3c89dcba96e5bb46.1706759413.git.tanggeliang@kylinos.cn>
+In-Reply-To: <1d1970ac75aa9b924f1da17c3c89dcba96e5bb46.1706759413.git.tanggeliang@kylinos.cn>
+From: Geliang Tang <geliangtang@gmail.com>
+Date: Thu, 1 Feb 2024 13:35:23 +0800
+Message-ID: <CA+WQbwue9GJFK+=KQk6nbr_mv9oyDjC+g0ed7awLzWKVxobXRQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-net 2/4] mptcp: add needs_id for netlink appending addr
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> Just the same as userspace PM, a new parameter needs_id is added for
+> in-kernel PM mptcp_pm_nl_append_new_local_addr() too.
+>
+> Add a new helper mptcp_pm_has_addr_attr_id() to check whether an address
+> ID is set from PM or not. It will be used in the next two commits.
+>
+> In mptcp_pm_nl_get_local_id(), needs_id is always true, but in
+> mptcp_pm_nl_add_addr_doit(), pass mptcp_pm_has_addr_attr_id() to
+> needs_it.
+>
+> Fixes: fd5a4c04e18 ("mptcp: add the address ID assignment bitmap")
 
-This patch adds a new helper userspace_pm_get_addr() in mptcp_join.sh.
-In it, parse the token value from the output of 'pm_nl_ctl events', then
-pass it to pm_nl_ctl get_addr command. Use this helper in userspace pm
-dump tests.
+ Sorry, should be efd5a4c04e18 here.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+-Geliang
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 4ed0796410b9..dcbc22bb2fd6 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3366,6 +3366,18 @@ userspace_pm_dump()
- 	ip netns exec $1 ./pm_nl_ctl dump token $tk
- }
- 
-+# $1: ns ; $2: id
-+userspace_pm_get_addr()
-+{
-+	local evts=$evts_ns1
-+	local tk
-+
-+	[ "$1" == "$ns2" ] && evts=$evts_ns2
-+	tk=$(mptcp_lib_evts_get_info token "$evts")
-+
-+	ip netns exec $1 ./pm_nl_ctl get $2 token $tk
-+}
-+
- check_output()
- {
- 	local cmd="$1"
-@@ -3603,6 +3615,8 @@ userspace_tests()
- 		chk_subflows_total 2 2
- 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
- 		local dump="id 10 flags signal 10.0.2.1"
-+		check_output "userspace_pm_get_addr $ns1 10" \
-+			     "$dump" "      get id 10 addr"
- 		check_output "userspace_pm_dump $ns1" \
- 			     "$dump" "      dump addrs signal"
- 		kill_events_pids
-@@ -3625,6 +3639,8 @@ userspace_tests()
- 		chk_mptcp_info subflows 1 subflows 1
- 		chk_subflows_total 2 2
- 		local dump="id 20 flags subflow 10.0.3.2"
-+		check_output "userspace_pm_get_addr $ns2 20" \
-+			     "$dump" "      get id 20 addr"
- 		check_output "userspace_pm_dump $ns2" \
- 			     "$dump" "      dump addrs subflow"
- 		kill_events_pids
--- 
-2.40.1
-
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm_netlink.c | 24 +++++++++++++++++++-----
+>  1 file changed, 19 insertions(+), 5 deletions(-)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index d9ad45959219..9367ab506908 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -901,7 +901,8 @@ static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
+>  }
+>
+>  static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+> -                                            struct mptcp_pm_addr_entry *entry)
+> +                                            struct mptcp_pm_addr_entry *entry,
+> +                                            bool needs_id)
+>  {
+>         struct mptcp_pm_addr_entry *cur, *del_entry = NULL;
+>         unsigned int addr_max;
+> @@ -949,7 +950,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+>                 }
+>         }
+>
+> -       if (!entry->addr.id) {
+> +       if (!entry->addr.id && needs_id) {
+>  find_next:
+>                 entry->addr.id = find_next_zero_bit(pernet->id_bitmap,
+>                                                     MPTCP_PM_MAX_ADDR_ID + 1,
+> @@ -960,7 +961,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+>                 }
+>         }
+>
+> -       if (!entry->addr.id)
+> +       if (!entry->addr.id && needs_id)
+>                 goto out;
+>
+>         __set_bit(entry->addr.id, pernet->id_bitmap);
+> @@ -1092,7 +1093,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
+>         entry->ifindex = 0;
+>         entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
+>         entry->lsk = NULL;
+> -       ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
+> +       ret = mptcp_pm_nl_append_new_local_addr(pernet, entry, true);
+>         if (ret < 0)
+>                 kfree(entry);
+>
+> @@ -1285,6 +1286,18 @@ static int mptcp_nl_add_subflow_or_signal_addr(struct net *net)
+>         return 0;
+>  }
+>
+> +static bool mptcp_pm_has_addr_attr_id(const struct nlattr *attr,
+> +                                     struct genl_info *info)
+> +{
+> +       struct nlattr *tb[MPTCP_PM_ADDR_ATTR_MAX + 1];
+> +
+> +       if (!nla_parse_nested_deprecated(tb, MPTCP_PM_ADDR_ATTR_MAX, attr,
+> +                                        mptcp_pm_address_nl_policy, info->extack) &&
+> +           tb[MPTCP_PM_ADDR_ATTR_ID])
+> +               return true;
+> +       return false;
+> +}
+> +
+>  int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
+>  {
+>         struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+> @@ -1326,7 +1339,8 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
+>                         goto out_free;
+>                 }
+>         }
+> -       ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
+> +       ret = mptcp_pm_nl_append_new_local_addr(pernet, entry,
+> +                                               !mptcp_pm_has_addr_attr_id(attr, info));
+>         if (ret < 0) {
+>                 GENL_SET_ERR_MSG_FMT(info, "too many addresses or duplicate one: %d", ret);
+>                 goto out_free;
+> --
+> 2.40.1
+>
+>
