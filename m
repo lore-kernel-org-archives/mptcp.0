@@ -1,118 +1,191 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AC67C096
-	for <mptcp@lists.linux.dev>; Fri,  2 Feb 2024 10:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74506F9C6
+	for <mptcp@lists.linux.dev>; Fri,  2 Feb 2024 10:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706868887; cv=none; b=BKUzSEDoBdqaSBSiZkLF38VN/q2chdvKRbpBNCxOkbPN2+qEjYHFoR6EXxSYxSW5/ePVSG1ebkpR1viR48pVTmaSpppH5oT6igTxtoFrcffL9Liu56iOiAPfVsWh4VhsPPzyxeWEa9b69a5AknM2Ijv3rP3XYfPx4TVyWoy+i/c=
+	t=1706869033; cv=none; b=fZi6rRKY8XB1qi1/JUV/GbYB3LWD13Q0RXlQ6VF7MBohs7Sv1/k9AulQhNPdJhwHL9WA1xeXYYqE13cz59LbvxkasuotfbJpBIzNLCvd+q5+1/WsEbrVkup1HJA0m47tBQmniUrzaIgErI2fUrN24aut3WQMYh8cwdTkg5e4Nec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706868887; c=relaxed/simple;
-	bh=cSjbhjWiBkS8JBYUTVqk0FjhwXFFXUDf276Uh1ktJBc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=BNNkXOY7v21ISpvrhu+WuGgBifcFgDp4Ln9GynwaGI0/Di4hyvR6Z40fWG4I96qX9c5TkRXL/s/EMEkJKa3TKeUcFvf0Xxj+Pq1ohBrnp3qB4daJTgLJdw8+7PbcbQMFzHUdCUHlbXNCCvxSS4l7JD3R28A2iCx2Dzet8Bj2kx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L5cgai00; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706869033; c=relaxed/simple;
+	bh=gj7u+DzTV6Myhtr1009kfC0AbWTsMN5WwathYvX9Zt4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O1ejocWy/gkK0F/VlTG6tJSZW2gPMP7UxsMQ15ssfRLRSGwL8gdXd2wya6bUPNBMla0S5TsA476AWm9KDFVp9/tZ897wbjLwsPryE9eqywTM6NpqPSXn5WsiLi/krH8xYVS84apjwsHwz6KRiD80xF6b1HsnmNhDT9paqx+vebo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j6K4Un0R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5cgai00"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-785515724b5so42517485a.0
-        for <mptcp@lists.linux.dev>; Fri, 02 Feb 2024 02:14:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706868885; x=1707473685; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a5kEuPWTblB2pPe9gqzkKxitF4tYdstViIPvbvD0kGQ=;
-        b=L5cgai002fCtlCMPhHHa1Ssh5uygWPGtOVknj+HWnIs6nGl+EGi+bjNuj3OgctYyyp
-         EYUqI7L+lj+/2q2gIAzwMY/CEAogaqcuRar2r+ct8jLOyDZ7KQRSeSHEk27K99/ITHxe
-         IsZayaeMz1bEMEseAxSi8HUM67DGrNUofJBf+pOGkHZ3gKxn8nhopGAovy/WRuYPhRaH
-         Bl5xqYy9HQjTOIM+du5wx3GJ1vPbJ81KNyP1LnA3dtvppm31BlTHj3wQgQEKGM+Vaxxv
-         r6nOW/Pr94uGJjBkguuIBaFm1rFRldN35jBIOY69n2SEfArJO0HICTYgnMIuXLvnbQVo
-         veDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706868885; x=1707473685;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=a5kEuPWTblB2pPe9gqzkKxitF4tYdstViIPvbvD0kGQ=;
-        b=HuRn0COBwbL4IP8LvipF52gO/9jgnDbBy1G01jTrDBGomRYGJ1nYw2YOsec3l7pkrA
-         0kb78vZ3gOgWt4WH9abSRsOzfyjNQfKNbgamMRiS135ZQLP1E5PzAK+7PgF3qD20Bjuo
-         wk6drfWRHwLHB4aolZC0Iz/xOU/gTFWA3zOKrb2CQ5SG1lXbST1kxSIWAa0dunMpGaGw
-         rTdiub7kkKJy1XLnQ5QgcLidW9okaEtzxrFws0vOBFdh2N2mj2wFWwOM3dL2Lq41BH1j
-         Uymet12AeZEiyySi6qxPuHyeStsHqm+0WusDc+xP6Kk3cLC8QnbA7DJRmVb/0kyax1HR
-         GUOg==
-X-Gm-Message-State: AOJu0YwqN6N6cHMTTcNxUxpqyu1E5rJ6sHGclv1oqwQWO0GWjTriNFpc
-	2xKPJOGEoNRcpDT7HjZr8JjwZoHUz0sU8+sudBRDiZXkvBHFh3yNt/pNEb8=
-X-Google-Smtp-Source: AGHT+IEAmVvQ8qm8XS64FUzgfl6ok6TEkSunXTXD/tICLJkZi9kMgJuFXRwe+dQF2NhnUHFDn/hEXQ==
-X-Received: by 2002:a05:620a:2293:b0:785:4129:8c4b with SMTP id o19-20020a05620a229300b0078541298c4bmr1667211qkh.77.1706868884953;
-        Fri, 02 Feb 2024 02:14:44 -0800 (PST)
-Received: from [127.0.0.1] ([74.249.5.224])
-        by smtp.gmail.com with ESMTPSA id i17-20020a05620a145100b00783268da8f0sm564044qkl.40.2024.02.02.02.14.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 02:14:44 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <beca71007a184b2d199f404a471f020fd4359823.1706863036.git.tanggeliang@kylinos.cn>
-References:
- <beca71007a184b2d199f404a471f020fd4359823.1706863036.git.tanggeliang@kylinos.cn>
-Subject: Re: bpf, btf: Add DEBUG_INFO_BTF checks for
- __register_bpf_struct_ops: Tests Results
-Message-ID: <54a68a4f-f081-d7b3-a5cc-325b29cf7735@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 02 Feb 2024 10:14:44 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6K4Un0R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5BC2C433F1;
+	Fri,  2 Feb 2024 10:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706869032;
+	bh=gj7u+DzTV6Myhtr1009kfC0AbWTsMN5WwathYvX9Zt4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j6K4Un0R92apoJ0cK03fhuFjTdrHIoM7mDW4OXOAUNTKrKbeJEBDlftANr4stp9O3
+	 8Co+BK7M4DWPG2YaFTxwbI/3IxxMUALz9ELys3AKxDdNbthIlhw2VQDsH+xAFCakJ8
+	 QkHS6sz4z+n+dAuUo4AeCX1NQ0ZEIWwRFfJZ4lJoki8Zg1g2AQnRIzX/Xje6Uu6nNu
+	 mMUc14qN1ls451VMI62Ydt6JsP7d19/MtPSOpU4vpcxBlgh/CW0AeCZpsG5ni/C9mg
+	 xtzp9vlqMFGsWOsljwj+Ux9+eKQSinDhrqD/rLqwRqFiNXOU+33BWub9ou5nLNmZse
+	 GCi3HZvbcsQBw==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang@kernel.org>
+Subject: [RESEND virtme-docker v3] tests: add bpftests support
+Date: Fri,  2 Feb 2024 18:17:01 +0800
+Message-Id: <8d82d9d1d8eddb660f2931edb4ef53e6ced68cfc.1706868832.git.geliang@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+This patch builds bpf tests after building other mptcp selftests in btf
+mode:
 
-Thank you for your modifications, that's great!
+	cd tools/testing/selftests/bpf && make
 
-Our CI (GitHub Action) did some validations and here is its report:
+And add run_bpftest_all to run bpftests:
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/7754058433
+	./test_progs -t mptcp
+	./test_progs-no_alu32 -t mptcp
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/c2c76443230d
+Now mptcp bpf selftests can be tested in this way:
 
+	docker run ... auto-btf
+	run_loop run_bpftest_all in .virtme-exec-run
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+Disable IA32_EMULATION config to fix this error:
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+	./include/linux/if.h:28:10: fatal
+		error: sys/socket.h: no such file or directory
 
-For more details:
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/406
+Signed-off-by: Geliang Tang <geliang@kernel.org>
+---
+RESEND:
+ - Update email only.
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+v3:
+ - depends on "bpf, btf: Add DEBUG_INFO_BTF checks for
+   __register_bpf_struct_ops", which I sent to BPF ML.
+ - cleanup.
 
+v2:
+ - drop links for 'test_progs, bpf_testmod.ko'.
+ - rename bpf_selftest.sh to mptcp_progs.sh.
+ - fix bugs in run_loop.
+---
+ entrypoint.sh | 56 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+diff --git a/entrypoint.sh b/entrypoint.sh
+index 95ff0f9..e8110b0 100755
+--- a/entrypoint.sh
++++ b/entrypoint.sh
+@@ -87,6 +87,8 @@ VIRTME_RUN_EXPECT="${VIRTME_SCRIPTS_DIR}/virtme.expect"
+ 
+ SELFTESTS_DIR="${INPUT_SELFTESTS_DIR:-tools/testing/selftests/net/mptcp}"
+ SELFTESTS_CONFIG="${SELFTESTS_DIR}/config"
++BPFTESTS_DIR="${INPUT_BPFTESTS_DIR:-tools/testing/selftests/bpf}"
++BPFTESTS_CONFIG="${BPFTESTS_DIR}/config"
+ 
+ export CCACHE_MAXSIZE="${INPUT_CCACHE_MAXSIZE}"
+ export CCACHE_DIR="${VIRTME_WORKDIR}/ccache"
+@@ -316,6 +318,12 @@ gen_kconfig() { local mode kconfig=()
+ 	# We need more debug info but it is slow to generate
+ 	if [ "${mode}" = "btf" ]; then
+ 		kconfig+=(-e DEBUG_INFO_BTF)
++		# Extra options are needed for bpftests
++		./scripts/kconfig/merge_config.sh -m "${VIRTME_KCONFIG}" "${BPFTESTS_CONFIG}"
++		kconfig+=(-e DEBUG_INFO_BTF_MODULES -e MODULE_ALLOW_BTF_MISMATCH)
++		# Fix ./include/linux/if.h:28:10: fatal error:
++		# sys/socket.h: no such file or directory
++		kconfig+=(-d IA32_EMULATION)
+ 	elif is_ci || [ "${mode}" != "debsym" ]; then
+ 		kconfig+=(-e DEBUG_INFO_REDUCED -e DEBUG_INFO_SPLIT)
+ 	fi
+@@ -428,6 +436,19 @@ build_selftests() {
+ 	_make_o KHDR_INCLUDES="-I${VIRTME_BUILD_DIR}/include" -C "${SELFTESTS_DIR}"
+ }
+ 
++build_bpftests() {
++	if [ "${INPUT_BUILD_SKIP_BPFTESTS}" = 1 ]; then
++		printinfo "Skip bpftests build"
++		return 0
++	fi
++
++	_make KHDR_INCLUDES="-I${VIRTME_BUILD_DIR}/include" -C "${BPFTESTS_DIR}"
++
++	printf "#!/bin/sh\n\n./test_progs -t mptcp\n./test_progs-no_alu32 -t mptcp" \
++		> ${BPFTESTS_DIR}/mptcp_progs.sh
++	chmod +x ${BPFTESTS_DIR}/mptcp_progs.sh
++}
++
+ build_packetdrill() { local old_pwd kversion kver_maj kver_min branch
+ 	if [ "${INPUT_BUILD_SKIP_PACKETDRILL}" = 1 ]; then
+ 		printinfo "Skip Packetdrill build"
+@@ -515,6 +536,9 @@ prepare() { local mode no_tap=1
+ 	printinfo "Prepare the environment"
+ 
+ 	build_selftests
++	if [ "${mode}" = "btf" ]; then
++		build_bpftests
++	fi
+ 	build_packetdrill
+ 	prepare_hosts_file
+ 
+@@ -772,11 +796,38 @@ run_packetdrill_all() { local pktd_dir rc=0
+ 	return \${rc}
+ }
+ 
++# \$1: output tap file; rest: command to launch
++_run_bpftest_one_tap() {
++	cd "${KERNEL_SRC}/${BPFTESTS_DIR}"
++	_tap "\${@}"
++}
++
++# \$1: script file; rest: command to launch
++run_bpftest_one() { local sf tap
++	sf=\$(basename \${1})
++	tap=bpftest_\${sf:0:-3}
++	shift
++
++	_can_run "\${tap}" || return 0
++
++	_run_bpftest_one_tap "${RESULTS_DIR}/\${tap}" "./\${sf}" "\${@}"
++}
++
++run_bpftest_all() { local sf rc=0
++	sf=${KERNEL_SRC}/${BPFTESTS_DIR}/mptcp_progs.sh
++	if [ -e "\${sf}" ]; then
++		run_bpftest_one "\${sf}" || rc=\${?}
++	fi
++
++	return \${rc}
++}
++
+ run_all() {
+ 	run_kunit_all
+ 	run_selftest_all
+ 	run_mptcp_connect_mmap
+ 	run_packetdrill_all
++	run_bpftest_all
+ }
+ 
+ has_call_trace() {
+@@ -870,6 +921,11 @@ if [ -f "${VIRTME_EXEC_POST}" ]; then
+ 	# e.g.: cat /sys/kernel/tracing/trace
+ fi
+ 
++# Cleanup
++if [ -e "${KERNEL_SRC}/${BPFTESTS_DIR}/mptcp_progs.sh" ]; then
++	rm -rf "${KERNEL_SRC}/${BPFTESTS_DIR}/mptcp_progs.sh"
++fi
++
+ # end
+ echo "${VIRTME_SCRIPT_END}"
+ EOF
+-- 
+2.40.1
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
