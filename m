@@ -1,126 +1,93 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0EF161B74
-	for <mptcp@lists.linux.dev>; Thu,  1 Feb 2024 17:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1238C604B4;
+	Fri,  2 Feb 2024 09:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706808471; cv=none; b=Is+KX753XlSfuGXxaqKH13XzhPKRbpqIl4sfNJe18ZWzkWvJ/ELYWvUZmVxI8VkgpHsqUu55eFC6EH6aHEVPMv6nTkJfc/nXwMmnsZlJ8S/MpwqnYHVpomv1N7PmVkJ1kJzT5Uic/VAlOm9qhW78x0ni+XfSMekmbglLrHmvBAg=
+	t=1706865542; cv=none; b=o77HobuWggLwVkAKsZ/NnglvxEIS1mtKFP+V19A5N32mAV3wxsaHZg0vrC4cMSaW/ZIEUZ9OWAC+/EAUOEtnJZRBQpuOuIuVDFsLPYIqj5xh8m0PjgHwwBhHXXiW1Z2HE689AvyPJiYhKBavGaBeYT6gRQPEhXIIJJ8uyjmfmWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706808471; c=relaxed/simple;
-	bh=SzkWfwiYn8kFIpyYEm1Eq99n4dAlyvJyhWPJJaM6mts=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=rQg4Rzzr4NR4H1gz/wgKk7zOfCGLrWw1k4tDlbYj0OXgkBhXJxAOtlfBERKsuRRqXG0d0fFn6R1UTVJ7AupBXwgRyl2VZXK8U0Td+X46NQi7cnvGXKVSMPqU1cUOBLs1Mov/MB+2QALXjSpwhzJlwvfLeNEIElz9h4h12jvUzmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcW9hT7H; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706865542; c=relaxed/simple;
+	bh=BvAjd6AT54EdyR0+F+bQ+kRYMX8aE1q5sRg4e+BP+yY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P2oX35R9tqW9xysl80IxxuBNH0QXXmWWGdxU5taX2B2NuSRSNmmlahXKooaFl2hmIU9jRkCqExOPJBhwnB+Og597mbOtGsRkc+E8kv5/z69owGl4Wb5hqQBrEVpnGJl8P7s13/omiIiLZiEvm153dE5dQ1EK4Pw/37r4mL9m3LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gA6SShlS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcW9hT7H"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-783d4b3ad96so76087385a.3
-        for <mptcp@lists.linux.dev>; Thu, 01 Feb 2024 09:27:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706808468; x=1707413268; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ATYPKMuY2y+LklZ4jMUmKnmMT7u5yoMCgjxAi4eh6Y0=;
-        b=NcW9hT7HuCl70kMZKmruFBzRgFyIbggN2VJlBI3N9hO1KHGSu9DI+lNG4/TKP6vOwX
-         qtOrfuOWyOTPquhSqTssJ3zXWzaJ/C2PjG8V/Cte59qeLT1kcWDsUb42ISi3bW2vgEDp
-         XpKD7Mr8BSOlUD6EadPpHNxiv41s+XYO2AxdZ0tfnjc6pPWg+LjskhSWF78HmOpzdXCW
-         QsM5VuA1n7uZGsnSl61bjbPzJ08OblKSLh0kP6mIZMxxSChfj6ytJCMbzVj0Dl0u7pHF
-         P83Xm5Bp0BXIB1/Nb1zHyF7ABPmYEcvL70IaCwXOpJ1H6AiNVa6UeEnuYwMpBPoENdcG
-         Pulg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706808468; x=1707413268;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ATYPKMuY2y+LklZ4jMUmKnmMT7u5yoMCgjxAi4eh6Y0=;
-        b=LoMg1Seb0hNF3TjPxPGS6+zH2E5VDATWsXIJxWKmORZdlO6fa2hpQd0LbfwqxvxIjo
-         RPupzd1nLLZVOCnWTxmtVmj2xKNqcECORZqCL0Y8Utqd4QTez1b+drtHul876R6Lu4o7
-         NYGjHLSCk+pBXfYHUdB2rx0RENebarw3KUVnOpsHvgLJr76eTWCWTSHvvGv03tBKmtwv
-         WcrtGU1l7Ak81Wdlw+qmay5NPptk4lYcLzSanJmWA6QZAL1jfa/dZQGXyo+jQshMGu+V
-         txRUCElq8Mok31t1ANYtYuao+jHFXk4s6xSNpvhnOHVkuDv2Hhslx7FmB7NP2/RyhqCH
-         MaXw==
-X-Gm-Message-State: AOJu0YxInFfxYjpA4t+CWSOr9GXWNzh4Cs/ZvSrOhTr1ECF6IPQQmOI+
-	1CXzFRPaCbM65ld6bNxa9SH1X+pUOTRNuxqDu4LC2UM8bgWZj1NuFl5cfH5shA==
-X-Google-Smtp-Source: AGHT+IG/lPSiwvVe9fzVc6hywcHXhPE/giuomQ3upmwDocuL7WW3JFnPDqVbYqIguznuGWT0zT0dKQ==
-X-Received: by 2002:a05:620a:4011:b0:784:934:fc32 with SMTP id h17-20020a05620a401100b007840934fc32mr4261902qko.0.1706808468708;
-        Thu, 01 Feb 2024 09:27:48 -0800 (PST)
-Received: from [127.0.0.1] ([172.183.162.43])
-        by smtp.gmail.com with ESMTPSA id p4-20020a05620a112400b00783f9f6d5b7sm3866102qkk.10.2024.02.01.09.27.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 09:27:48 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240201-mptcp-check-protocol-v2-3-1e253ef51990@kernel.org>
-References: <20240201-mptcp-check-protocol-v2-3-1e253ef51990@kernel.org>
-Subject: Re: mptcp: check the protocol in mptcp_sk() with DEBUG_NET: Tests
- Results
-Message-ID: <bc693a8d-910f-015a-ce5c-5cdb28c3f02b@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 01 Feb 2024 17:27:47 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gA6SShlS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19D3CC433F1;
+	Fri,  2 Feb 2024 09:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706865541;
+	bh=BvAjd6AT54EdyR0+F+bQ+kRYMX8aE1q5sRg4e+BP+yY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gA6SShlS13yh/3wPUolB8UJ3AjcOxt8PEGrWwQ7gWRqc+yOLHvL6hoDMw5y2ghUgH
+	 MoufyQ37JkzqJMwEi099zpPx6lJCMkcaL+Qz8BUTgB0aRhWlW7ivuAEI1wfo4VpwrI
+	 RjFqVA4KyCZ4uJQR6PrQlk9ew9SfdlZGgdF+tzezeLprypK+2O+YcNHvF5kU7/y7oo
+	 fQCgoFwDk9jadzp1zY4xbVW2EZ/QTdvhJtqGRGMwqvNpCXdavxLiHA7KE8mwSe7Ho2
+	 7F953vyuon+OPuXIlFm4+Ob9RmNTRNGbqJ737tJe4a6M/umZcwG0JrsziLMDjLdaTS
+	 gJ7zHQ+V2c/Mg==
+From: Geliang Tang <geliang@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	bpf@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH] bpf, btf: Add DEBUG_INFO_BTF checks for __register_bpf_struct_ops
+Date: Fri,  2 Feb 2024 17:18:48 +0800
+Message-Id: <beca71007a184b2d199f404a471f020fd4359823.1706863036.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+Similar to the handling in the functions __register_btf_kfunc_id_set() and
+register_btf_id_dtor_kfuncs(), this patch adds CONFIG_DEBUG_INFO_BTF and
+CONFIG_DEBUG_INFO_BTF_MODULES checks for __register_bpf_struct_ops() on
+error path too when btf_get_module_btf() returns NULL.
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ kernel/bpf/btf.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5743237663555584
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5743237663555584/summary/summary.txt
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index ef380e546952..381676add335 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -8880,8 +8880,15 @@ int __register_bpf_struct_ops(struct bpf_struct_ops *st_ops)
+ 	int err = 0;
+ 
+ 	btf = btf_get_module_btf(st_ops->owner);
+-	if (!btf)
+-		return -EINVAL;
++	if (!btf) {
++		if (!st_ops->owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
++			pr_err("missing vmlinux BTF, cannot register structs\n");
++			return -EINVAL;
++		}
++		if (st_ops->owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES))
++			pr_warn("missing module BTF, cannot register structs\n");
++		return 0;
++	}
+ 
+ 	log = kzalloc(sizeof(*log), GFP_KERNEL | __GFP_NOWARN);
+ 	if (!log) {
+-- 
+2.40.1
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5180287710134272
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5180287710134272/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/05d35e87fc2b
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
