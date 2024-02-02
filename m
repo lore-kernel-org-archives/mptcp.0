@@ -1,136 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6461145B31;
-	Fri,  2 Feb 2024 11:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68ECC137C41
+	for <mptcp@lists.linux.dev>; Fri,  2 Feb 2024 11:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706874030; cv=none; b=uBezmYQnZO77RR3lCMa//KeJ4BsAaNEP1h47s+BUTwI3siTAsYjcWnBuxYq9CmMkNdmqYofkQiJe67mYFX9XyWUI8O/h/t771KSE9Fy/3ZXF+CjqVM1JGXo3uzHGoTgDatFGoJjXWarDnQgAYD7f+jJ9RGCDBUuE6S9aYSsLFd8=
+	t=1706874331; cv=none; b=eIxIr9t0Hh2BE0KuGBi43z+7d2stCRa7v9RclD4h1wEfMaqc/iX4keYTUNP4JZSnXhRn+PeLXoXMq/ulFNU4EoNXj9OqO9tK04QkC0vctU/sKW879GJ4c0vp1AjLU3oxp4FHZSGmbDUwiKHaSEFlasfxAvCn2kMVNuW941JSCV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706874030; c=relaxed/simple;
-	bh=Jxc4BXAT6dxBPjnLFX0FeEQI0zrczQYYN04opb4NwR8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=brHJ6fykaoHM2pcv3j9NSRBxRtv2kknwlQ2cdGFLC0jjc0N2x3qr1qMjd7rYkFveXB92kFgqBhPA3c3WB6VBKI1jfb80VhQvyE6+In7XaF4Ad3TX+NvqctsN8YSaBTI2MdjXx19iyRC0kHrQqdiH8x1lJkBPVEagdWnylw6Gj00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZC0VIPY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706874331; c=relaxed/simple;
+	bh=T5mIuZ/SwLWFsPXnrPEOC9EciPyGVDTkvjKJOX+GZKk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=As6/8vhNMIKD1vTSw3GDT4CAoqXs5AAhkS3eF8qZ4pn9v1R7Bsu0KtBeenHXbGPDnNBnYQQe6ijCZTRrggWzCAyLGjMWcBftOLh3Rarjev0kAXlxZMa9LQ4XjPPZdl+d95/Utv5qJi2OKqLmhSqrRdx+SjsX01D9iZzBVXXik+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C8NZUzUP; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZC0VIPY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EDDEC43390;
-	Fri,  2 Feb 2024 11:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706874030;
-	bh=Jxc4BXAT6dxBPjnLFX0FeEQI0zrczQYYN04opb4NwR8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=eZC0VIPYmTttoPG1KCdP4MgZADpjHYBHdO1WmQLiDiUKpA0zC4WHTtfgjebCDwvKQ
-	 xikGyFVOqC7uU5JhR1Y49wTfWSlfOcIgAUJtycROLcm16vcxj1+lpzxegRkmmiK3DX
-	 PiKclq9lcZSox/ugQAVpb8AOkcmEIGAqfYofh2TCCJ2KAXvCePgHunx4SvK3VhH6xH
-	 wawNV0gILpWY+UqGlBvdstd+2csVmiyNCM0YIzp43v47Jq8M/zGb74ei/EYu2LZNUS
-	 sBP8G9oN82AkS4nwrvb/zGVrmWcpRL3I7ZUXfuIOv4jI5/ta2Na0CfUsXjejyLYTKi
-	 /qO6ZlZu2VBdQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 02 Feb 2024 12:40:11 +0100
-Subject: [PATCH net-next 5/5] mptcp: annotate lockless accesses around
- read-mostly fields
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8NZUzUP"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55fcceb5f34so1648077a12.3
+        for <mptcp@lists.linux.dev>; Fri, 02 Feb 2024 03:45:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706874327; x=1707479127; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DUag2bNXnLgT6vtKfx9vedz4gfBKi/qeU1UpbpH5qu8=;
+        b=C8NZUzUPdOgrqTEDyZBX60mwDYrRWfgpVlQw0WGycDy0d1D+haLAUC9VNsEmhmwEuO
+         qv3uHL54HosDKaP78Tq+w3PdslnlGqkOpU5kJXTCy1y2iqCvI1HX16ubQQVLp79i2J0o
+         Q2Sd8Q4IyFO9215+ppTq5tzVgd9y1joz18W/Ewjomk7zIQM2nnBu2aarRbjTgE/PUMf9
+         CcFkWiheu18QkQcrEND8MpEjVBFI/oYvrdteehZfkTbCygxFf7mzEhJdfIEzAodLOuMa
+         NuS8Tm1xT2aWKUdqNvYiJMHz6N5qk3roKOgzsHB6xtngvftfZFxXUXF3s7Dx8XEaINhC
+         ysTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706874327; x=1707479127;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DUag2bNXnLgT6vtKfx9vedz4gfBKi/qeU1UpbpH5qu8=;
+        b=D7akUfal5sobFjU/M6dl9jAzOayOpeZmm/5SmrWU5LuGdlmrTzkzyAL1AlQfz2GAnf
+         BOFdi+1ec0B3Msq3AEMWxYLW/O8dM5PDf0JRIFTW3Lx+r5Lpa2aEnpCsVwkwTvC3hUiP
+         SvRtA+vlqFuXs6yMuUwlPOfon4be9ch+JpcVoazzFvP1i459HXEb2GIrRZlep6HzV06v
+         YCVc5h0tHWEBCcn8t/KnWb8roLJM/xMWE/1vyM1c9iYC7m2oPZ/ZLKwBcw/ytZAGxUvh
+         C3qdOYqEcG4rP2nwBIU07d2UGT4miZs5WNByCnq/rVK/+MVHZKyxL4o7qsN7rJb7aQuD
+         5eMQ==
+X-Gm-Message-State: AOJu0Ywdysik0Ipc41Uyt9n2Pd64fQCVLCYQVDx3PhSqDEbTXuUijvjz
+	cwMQhqzA19wUABbF0LMdkmIQTjErVEmPtTEvB0Sp7LWBn08yRf0C
+X-Google-Smtp-Source: AGHT+IFybhEnoxSivgmOIjFSz1hCUudk8LD/uI8/sgKCW2DQDg2MdYB8g9+uOwE7Pi9yWxyupVXFeg==
+X-Received: by 2002:a05:6402:2211:b0:55f:1728:3b33 with SMTP id cq17-20020a056402221100b0055f17283b33mr4344044edb.40.1706874327217;
+        Fri, 02 Feb 2024 03:45:27 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCV2s+ZaEqdPKzHhUG5cKZL/nH/mrHTeNCMMQ1qpt6H48mlQzA83++19JoPozRdq37xuj2t2ulF2xywyh2r/UqPrRypbliILZQmWv7YbXStM0BtciiU89DRkfKS0U+mbxSKEbjTsQtxZUFK90HJ+8qN0h+WQjGln/K4uqnnnjY8OnR17YUCsFF+3Sm6MkZLscWMkHVVLF1+wlCStJDkBZjtJ/m6bXKo6vK8znrtS7lg26/qBCFZkS+9CpA4K9ARWS36xerKtK5B8B4z+EV5v90/vqmmz4aN57YVFzxjulQ/a8uXaz9AhRKec91owcEcdK6pJE8qny/E8Bt4MFICMsSMRAna9IkeRjA4M6hPGW3az/miWZ2yqtbKZX6UHhQd+11uPr14JZB7YLGjqsU5/+pG5QOFwrTpNDLqmBXuTevR4kqORt7RzjwTS+CsPNQIV2FhfqRw=
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id n16-20020a05640205d000b0055ff1749b15sm477006edx.66.2024.02.02.03.45.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 03:45:26 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 2 Feb 2024 12:45:24 +0100
+To: Geliang Tang <geliang@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Geliang Tang <tanggeliang@kylinos.cn>,
+	bpf@vger.kernel.org, mptcp@lists.linux.dev
+Subject: Re: [PATCH] bpf, btf: Add DEBUG_INFO_BTF checks for
+ __register_bpf_struct_ops
+Message-ID: <ZbzV1OVvSzQkNRqb@krava>
+References: <beca71007a184b2d199f404a471f020fd4359823.1706863036.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240202-upstream-net-next-20240202-mptcp-annotate-lockless-access-v1-5-031d6680afdc@kernel.org>
-References: <20240202-upstream-net-next-20240202-mptcp-annotate-lockless-access-v1-0-031d6680afdc@kernel.org>
-In-Reply-To: <20240202-upstream-net-next-20240202-mptcp-annotate-lockless-access-v1-0-031d6680afdc@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang.tang@linux.dev>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2205; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=mcjDNT7BXUOg/gwV+eNe8UHcg0uqImaUFo1VPMNJ1B8=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlvNSff8n+XmNCRtXgslij21RTQ7ZYYjUF0CJma
- R3m/ECc3fmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZbzUnwAKCRD2t4JPQmmg
- c1LmEADl/BohaAL8uYm11SJ5Smbiq5+ZyWk01aKz/XPWg7ewbVlsU/R/RBjdM/O+rR1SbjbH6rG
- BrMYDgz4uiVDoh3h5B1ZEBm8g/EEkNzMc39hlXM4foIrHMyzi/0cPK5rElMzEV21Quq5r75c1RF
- nKLWmxprNunbJpLP0B30NwHEqXbYkatUJlHXRhpOEt4NZtcdvo60lMr1sMvrV7V+J4UsK61rMEH
- +TprDzAk+dcVmQUFUWQDpvsiX6Skm9LsDlsb2rXgFaAkB+gzlygsJdJnVydi70VMQ6SkSq56bgj
- m5R+sTKA22TuUvkDD+ycEscoPCUU0+qtwfdheP1ckZuD+6GZsHo3P2LbUbN+HSN50w13Va9D9QJ
- mb2SFl9x45Ep0FMmhohUaO49TQH4fnkdyVWTr5noJnMSKXqve1tWxT59lezdeir583uDhQFmBjL
- PW/z1wVxk0TbpGEDTRMoSOn6AkFPZ1a6ib6lRiisQl/MgeK4mVA04OUuH47RK2+Kf9DJkApPvCF
- gf5BCWV4npKtKkiM2hSv2eT/xCcAK7iaW5uEx9gL4daulhummlWTUqKnvTXP2PJPHgkK9UwIzLm
- zTa2yjXfu+JicdMuy9fLpTxzIhS0VFItjUmwwev6s3cD9a/3M+rfr5WvigXCVC4/4yCy7E8xDBx
- qYDLFPju75tNCUA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <beca71007a184b2d199f404a471f020fd4359823.1706863036.git.tanggeliang@kylinos.cn>
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Fri, Feb 02, 2024 at 05:18:48PM +0800, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Similar to the handling in the functions __register_btf_kfunc_id_set() and
+> register_btf_id_dtor_kfuncs(), this patch adds CONFIG_DEBUG_INFO_BTF and
+> CONFIG_DEBUG_INFO_BTF_MODULES checks for __register_bpf_struct_ops() on
+> error path too when btf_get_module_btf() returns NULL.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  kernel/bpf/btf.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> index ef380e546952..381676add335 100644
+> --- a/kernel/bpf/btf.c
+> +++ b/kernel/bpf/btf.c
+> @@ -8880,8 +8880,15 @@ int __register_bpf_struct_ops(struct bpf_struct_ops *st_ops)
+>  	int err = 0;
+>  
+>  	btf = btf_get_module_btf(st_ops->owner);
+> -	if (!btf)
+> -		return -EINVAL;
+> +	if (!btf) {
+> +		if (!st_ops->owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
+> +			pr_err("missing vmlinux BTF, cannot register structs\n");
+> +			return -EINVAL;
+> +		}
+> +		if (st_ops->owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES))
+> +			pr_warn("missing module BTF, cannot register structs\n");
+> +		return 0;
 
-The following MPTCP socket fields:
+given that we have the same code in 2 other functions
+would it make sense to add function for that?
 
- - can_ack
- - fully_established
- - rcv_data_fin
- - snd_data_fin_enable
- - rcv_fastclose
- - use_64bit_ack
+jirka
 
-are accessed without any lock, add the appropriate annotation.
-
-The schema is safe as each field can change its value at most
-once in the whole mptcp socket life cycle.
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 14 +++++++-------
- net/mptcp/sockopt.c  |  2 +-
- 2 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 4478ddd3b5fa..ad39f54b3a81 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3149,16 +3149,16 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- 	msk->cb_flags = 0;
- 	msk->push_pending = 0;
- 	msk->recovery = false;
--	msk->can_ack = false;
--	msk->fully_established = false;
--	msk->rcv_data_fin = false;
--	msk->snd_data_fin_enable = false;
--	msk->rcv_fastclose = false;
--	msk->use_64bit_ack = false;
--	msk->bytes_consumed = 0;
-+	WRITE_ONCE(msk->can_ack, false);
-+	WRITE_ONCE(msk->fully_established, false);
-+	WRITE_ONCE(msk->rcv_data_fin, false);
-+	WRITE_ONCE(msk->snd_data_fin_enable, false);
-+	WRITE_ONCE(msk->rcv_fastclose, false);
-+	WRITE_ONCE(msk->use_64bit_ack, false);
- 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
- 	mptcp_pm_data_reset(msk);
- 	mptcp_ca_reset(sk);
-+	msk->bytes_consumed = 0;
- 	msk->bytes_acked = 0;
- 	msk->bytes_received = 0;
- 	msk->bytes_sent = 0;
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index c40f1428e602..da37e4541a5d 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -942,7 +942,7 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
- 	mptcp_data_unlock(sk);
- 
- 	slow = lock_sock_fast(sk);
--	info->mptcpi_csum_enabled = msk->csum_enabled;
-+	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
- 	info->mptcpi_token = msk->token;
- 	info->mptcpi_write_seq = msk->write_seq;
- 	info->mptcpi_retransmits = inet_csk(sk)->icsk_retransmits;
-
--- 
-2.43.0
-
+> +	}
+>  
+>  	log = kzalloc(sizeof(*log), GFP_KERNEL | __GFP_NOWARN);
+>  	if (!log) {
+> -- 
+> 2.40.1
+> 
