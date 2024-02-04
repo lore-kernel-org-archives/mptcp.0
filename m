@@ -1,89 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E3079C2;
-	Sun,  4 Feb 2024 06:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB278F66
+	for <mptcp@lists.linux.dev>; Sun,  4 Feb 2024 07:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707029914; cv=none; b=jf8LuZ0nCfuXWGK28+5hyf9aQrps+oxSaZS0aJBGdfk2Hba0qMEHD/k8g+BjcS5/rHbhG3nGzreTxy5iR19kuMWP/naaYskkL/58As+IKiFzYs3dUqwf5bglpLyVarrkQD2pGjj5f51sMIHEIbtcEH5xlseIySkIgNw2sWXs/dc=
+	t=1707032885; cv=none; b=Ow9rH/FwOpTZX9UYAXtz31flx1Gfvo5vVKTmmlrbgwKR151jy47ESRrhPI/0wbDUXpI7SzLBlFI91IVR10UvuL4f8PKwjmOivKgGX2RiJZ9xc5V3jL5vYYxdP52zj4LPvv+UGeOemBMY5rXiC1Xc/fNBvvbB0R/f/JLIgyqbEGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707029914; c=relaxed/simple;
-	bh=OjXAoTGCiW2e0cWcTMfwDHj2YAPWCF2ECmSMeQkoff8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=H3h7BBzdSudsSZmsSAbDAY4kft2tlFArWF9pe/mobYuUBhLkZSYYCBFP7VsGDLbHEIpAXwDAaWYLBvNWOlSw4p4SFjsqA4ZlL896J2AVqWvMTzsYHm8oYrq/Ek2vKjr4FZyfeNF76B5Nb2uDjLlZZR8x5wb5BMZa96SriYItOHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t76Ln2VA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707032885; c=relaxed/simple;
+	bh=VxP7XCLR1b45w6+wRAl9rX/kM96IshPxw7hlDwnmUUY=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=t/lrD/ie/fdBQqV+4IlOYc/dbBdrSbjrZ1CjsNUqWoqxL+7/Xnig1eu/zQGLKtyMIu18of8HVmVLBg+qgEwfjV1suB5odG8YZrUQ06/tCDeF+vuuuk5LKkR5W1vErjSOFd5H9GyR6Oh/6DsJxZJXZg/mdwLU5wianNfSm8f1XSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nDseBa+R; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t76Ln2VA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09DD3C433F1;
-	Sun,  4 Feb 2024 06:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707029913;
-	bh=OjXAoTGCiW2e0cWcTMfwDHj2YAPWCF2ECmSMeQkoff8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t76Ln2VAjbScPqTgg6Vq9mc8BuxvFnYmGccSpFXyKdVHIDZd+QHAqhrXQq65yL+xd
-	 CEsoEISALfwSqLFwfdX8TOUo0hKRBrcNNF463DClHlmbMwz1u18VrvUQVaQp5DjDWv
-	 mWju0kYPGaWPlmPRiWEzYwOlVfx4gHzq8rN5Uh6pzaRqBxmdCeezvqNE9CA4nF9e9s
-	 5twg9G9ddANgGdG11eLwNc3jLyQ9HwvoC8vFAmsFXLyubG8TpoRqA0poxtQrxkEHFt
-	 r+EyhJAggBHGbejKjqT5wtsz3S73XUDhH4LTo2socBNeW+VCJX5o518YNmNYN+osP4
-	 fyvYOG2rHAZHw==
-From: Geliang Tang <geliang@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	bpf@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH bpf-next v3 2/2] bpf, btf: Check btf for register_bpf_struct_ops
-Date: Sun,  4 Feb 2024 14:58:13 +0800
-Message-Id: <40b390e09ae6003d9dc3c571ae1c5185597e75e3.1707029682.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1707029682.git.tanggeliang@kylinos.cn>
-References: <cover.1707029682.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDseBa+R"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7838af983c1so273257185a.3
+        for <mptcp@lists.linux.dev>; Sat, 03 Feb 2024 23:48:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707032882; x=1707637682; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IQGNB0xbA1D+C5eGJzscvCLnaU01WQrRRzug4T6fvEc=;
+        b=nDseBa+RMUFZsTG31CKyTWJqZlnQ5C8BgXwO9aDRnt/lAe1HMkb/O7rEWFrOLO7VUu
+         JtvWYcyASiBpmT7/MYNH4Ba/LV7zfkv0g+UogTwBmDC1Q4vdocM3YxSMV0VRbraw8Ft3
+         QK9MQVTJYfFzjspEh/RCI5ChAtnmKfAZPLW4f2PJPYA6/gwqaONKxJ29W5J8adMrd5C7
+         9VVnX6n33eGNJlP1Z6H01yFQ3EgJtoFS1wpNEISZRIiZtr0i2YZqVQdQLUiAVy6MhUeY
+         RXO33qJZn0YfzsRA48n7dZPmTdspr7KNWw98O6oDtvOCoueMsJHsrufbzrhKDcm8zsdE
+         FBQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707032883; x=1707637683;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=IQGNB0xbA1D+C5eGJzscvCLnaU01WQrRRzug4T6fvEc=;
+        b=Nz9t3PMyQ3tsSRiDvmfd75uE739LA4eyw+cmvKiknevISP6R99IZo1j3gDC/lAfZ+h
+         MSDn2KptajyUqlTu/uz/WBawjVjSf8PoslJaqhgTAnX1SJ0nnXSkYXBArzm+Coo1WF79
+         KTOwhOtOYVvdWo4Ga7K/dRAEG/jEh8f5Sc6sP/vJhg7CPUqLZBpYDGjU9b0ZoDJCzNmz
+         cKtymVS30w0/+afaF1e0jfStfFNbYtSuIS2UVl9byKgUsZNsK5LYLpkjtbPuPA2wufxy
+         3nWHxkp0hwu3K/yRb24WSldr3/iPKlaQlL3LhSqRBZPRKsRkyhT+EGDbLSQJxkNhpx+f
+         TK3Q==
+X-Gm-Message-State: AOJu0YwnhXmHUB7wB2t/2+a79ktWOZpMuEDrrlk8PkvB/tcFCwiDsZsn
+	KoiBpbM/748D6WABODc9+Dhc0DNMyej3de2XaTu2Y5Pb+zFhCLAzucek1G4=
+X-Google-Smtp-Source: AGHT+IED4YtMbynTvQabUVpxYC41Vv1DwGBIbAiadlx91JdYvdazg77gqGAbXSK0p86L2vMA806jNA==
+X-Received: by 2002:a05:620a:439d:b0:785:7871:352f with SMTP id a29-20020a05620a439d00b007857871352fmr1686194qkp.41.1707032882732;
+        Sat, 03 Feb 2024 23:48:02 -0800 (PST)
+Received: from [127.0.0.1] ([20.55.223.226])
+        by smtp.gmail.com with ESMTPSA id j6-20020a05620a0a4600b007840a08a097sm2009588qka.76.2024.02.03.23.48.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Feb 2024 23:48:02 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <40b390e09ae6003d9dc3c571ae1c5185597e75e3.1707029682.git.tanggeliang@kylinos.cn>
+References:
+ <40b390e09ae6003d9dc3c571ae1c5185597e75e3.1707029682.git.tanggeliang@kylinos.cn>
+Subject: Re: bpf, btf: Check btf for register_bpf_struct_ops: Tests Results
+Message-ID: <1f17f84a-4df2-a4c2-3d54-5e0903414c91@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 04 Feb 2024 07:48:01 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Similar to the handling in the functions __register_btf_kfunc_id_set()
-and register_btf_id_dtor_kfuncs(), this patch uses the newly added
-helper register_check_missing_btf() and IS_ERR() to check the return
-value of btf_get_module_btf().
+Thank you for your modifications, that's great!
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- kernel/bpf/btf.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Our CI (GitHub Action) did some validations and here is its report:
 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index d166c12206ea..714f13121f1c 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -8890,7 +8890,9 @@ int __register_bpf_struct_ops(struct bpf_struct_ops *st_ops)
- 
- 	btf = btf_get_module_btf(st_ops->owner);
- 	if (!btf)
--		return -EINVAL;
-+		return register_check_missing_btf(st_ops->owner, "structs");
-+	if (IS_ERR(btf))
-+		return PTR_ERR(btf);
- 
- 	log = kzalloc(sizeof(*log), GFP_KERNEL | __GFP_NOWARN);
- 	if (!log) {
--- 
-2.40.1
+- KVM Validation: normal:
+  - Unstable: 2 failed test(s): =
+selftest_mptcp_join selftest_simult_flows =F0=9F=94=B4:
+  - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/7772=
+406927
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/5d55ee6769d9
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
