@@ -1,127 +1,164 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3399D15AF6
-	for <mptcp@lists.linux.dev>; Sat,  3 Feb 2024 09:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D91633;
+	Sun,  4 Feb 2024 00:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706951314; cv=none; b=K1SiqsAzgHsKZ8EKGPBRwC4wUwRtEprkj74653VJZ+Rqd5OEVOb1LR2vd212XvwOQUy0AwSNDWm+faK9S0uXY/sKNaPgGM67rCl3t2P9CSW35RqDDMAiyBlq6i51eXX/dflttwH6muv0wMfFrP3WZA+vqbUPKTOWqIctPbnj5fA=
+	t=1707005721; cv=none; b=IhXXJFFHbQNuUlEB9mKU49dfgavL9m8miiPoTskCS0o52AAngloioOOStlESqlnPQA2XFFyQPnm0uxtkEuJf29jcpRYlGoEV/jIXWPWnBb7x6jia1hDocrBFzcqmA/FZ5qW3r5AhCPNw6MQIl7PfJsO4WwkLpiT7vG3R6tpzTos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706951314; c=relaxed/simple;
-	bh=JrsIOMSIrm/emnDlGRcT5Q3WBF4WmYct/Nxvv2rDv0c=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=ucx8P7BpPoXaN9TBZULmkq8kM8U38ymBC6O+2vuRZhjYey+vV3DsovntCVJjF9Eq2lS00FcMh5fyflQvvDUnt3vk0O0d5yIO/goZ7exTtla5lWJkExgfYHvWXmFbtDWTdKDxK9BLfFW/z9kZiqnCdBnvm/BpRUqSYcOe2XXT8fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iFjv/Y8j; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707005721; c=relaxed/simple;
+	bh=Qmetxv98oqYTe4Vwuh5lGAp8R2QMprpLFMDJJirpkAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H1DcRT+WU9SjdOB9ernCYkWhB3tmx5DqO49nc4zNz0RSjddWZ6P+eYI0lrLiRDuxwJ7WyBLnqNQnlyo+TR8zTNQyqPnXTPh/lmks+DH0uoKe7kcI1sC5Ax4SBC2BRBGyyh4qc2Ppnv3vHc2cMjOvGgCej9zn+jdoaWLevlUY53w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SDIhNGCD; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iFjv/Y8j"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d934c8f8f7so26257445ad.2
-        for <mptcp@lists.linux.dev>; Sat, 03 Feb 2024 01:08:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706951312; x=1707556112; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O9yO/DbMBoWDD+H3Etmku/7aXoSAbMQfgpH+t6Bix1c=;
-        b=iFjv/Y8jTiFiKNrwgGlgub2qJZ/yZ+FWlJ5BZb9g2waprZZL+/w8yM7iBA8CO1U71c
-         SWmebPFRTWwJbqEXtMO0cx0tV+W+fOGf5iiTfNv579S4SQJPE+JCdnLPSYmED1q512gJ
-         SG+CYz33ZB1fsOBa/hG5Oo65Ps7g62CtxytSmKTFcS9FnOBdKtE0J5chIrp/QfI5sVT+
-         zGho1Y9Y9zPq7gtXstz2IL2QUYxswheDdn4KrGdZDOyAsIO/fTXQCGjaRhyywN7tBNQ5
-         tLTLNOb1O+YakRz4uHQ8hYoCFYPFzc8zZrtl5k9eKDrfduDJaMa0Le4Wjbb3Bg+4meqq
-         l0zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706951312; x=1707556112;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=O9yO/DbMBoWDD+H3Etmku/7aXoSAbMQfgpH+t6Bix1c=;
-        b=KIYDpp4DZDFP7UzoW/SfzuAnBu+rE/WWSPos5Lailb13H0naL+BmokESBjdskdC/l6
-         ygntQhMv0vvc5UDePAC58us0inu2+7uMn9IJxwWePs0vss4GNnXl80CYwRN945eMZLYh
-         FIL7ho9LTg6lvuzGCc3aYM6H/pC/qLDzihUU8nbrF3hWPJZ8Olk6hIsM423QQh28y7hX
-         ZjmpFmyPYJEF8QiVfKJVkuGOK4CIkUFLVBDfcyn/rhj+p0ySsuv1bx2iRrTe/PEd53Qo
-         eCt66c5Y8dube2xdbQVSnTJn94Ku4G9FD4pImZz8Mg8s/0o6JE7rJIR171e3As0CNiHe
-         wyiA==
-X-Gm-Message-State: AOJu0YwL/4R+JweVEhZz0en8jgQIKiZNtX1TFNhXuf8NE5PbjFeiCJLj
-	n9LAoBLNapqlckZnqsUbds7DEDHwY+89zbJT3p5DxWD8PMwtmBIo2vQrhfE=
-X-Google-Smtp-Source: AGHT+IGX14RGM76K/uXL2qoTn3zXJWk6Y4icBZBYM59x02WxTVwLeNnSjDqJUOHqmYFge3wTm+bnBw==
-X-Received: by 2002:a17:902:6bc5:b0:1d8:d705:c4c6 with SMTP id m5-20020a1709026bc500b001d8d705c4c6mr7448206plt.21.1706951312295;
-        Sat, 03 Feb 2024 01:08:32 -0800 (PST)
-Received: from [127.0.0.1] ([20.171.70.48])
-        by smtp.gmail.com with ESMTPSA id e5-20020a170902b78500b001d71937c37bsm2852266pls.174.2024.02.03.01.08.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Feb 2024 01:08:31 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <e86da7508219125aed45d869cc02161acee418aa.1706946547.git.tanggeliang@kylinos.cn>
-References:
- <e86da7508219125aed45d869cc02161acee418aa.1706946547.git.tanggeliang@kylinos.cn>
-Subject: Re: bpf, btf: Check btf for register_bpf_struct_ops: Tests Results
-Message-ID: <495e1e3c-f960-3763-3d5c-d0300b16aa18@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 03 Feb 2024 09:08:30 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SDIhNGCD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707005719; x=1738541719;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Qmetxv98oqYTe4Vwuh5lGAp8R2QMprpLFMDJJirpkAc=;
+  b=SDIhNGCDPneRdN7sbb1Nn/5ppaYHtvNFI4PvfNyo/jXfTEmQ17wscSZm
+   65d3HBg41euAlrxExSKUsG7ezMEvCn12+kjV/U7HL+iFNP9/YWwSjB0Ry
+   eVrC9bTvS9izHkHzAzj1HTWzvBTJ/kXF0AJcNZcPf8iLfhKZX4VcB9p7K
+   9S+Qhqr6Igq33Xgncvpz8khZu3U7WYI2A/vRilrDC7bS3AdKP0YTCP/1B
+   R5JcwDIsceHKuPuqQXnD/aRQqXHU+dmf+PDVK2+x2xxOgUmZATyxADu1X
+   NxRceVPV+ponhYyMKoVCvv0qFFly8BE4lhy4QJD7XZMJ4x2lzXNmLqMYX
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="11708710"
+X-IronPort-AV: E=Sophos;i="6.05,241,1701158400"; 
+   d="scan'208";a="11708710"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2024 16:15:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,241,1701158400"; 
+   d="scan'208";a="710111"
+Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 03 Feb 2024 16:15:13 -0800
+Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rWQAA-0005mI-2P;
+	Sun, 04 Feb 2024 00:15:10 +0000
+Date: Sun, 4 Feb 2024 08:14:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geliang Tang <geliang@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>,
+	bpf@vger.kernel.org, mptcp@lists.linux.dev
+Subject: Re: [PATCH bpf-next v2 1/2] bpf, btf: Add register_check_missing_btf
+ helper
+Message-ID: <202402040740.WcfFYJQX-lkp@intel.com>
+References: <f4b147ddaa8fe8c07c7ba77a1d61780bffc49bb6.1706946547.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f4b147ddaa8fe8c07c7ba77a1d61780bffc49bb6.1706946547.git.tanggeliang@kylinos.cn>
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+kernel test robot noticed the following build errors:
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+[auto build test ERROR on bpf-next/master]
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4543210647715840
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4543210647715840/summary/summary.txt
+url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/bpf-btf-Add-register_check_missing_btf-helper/20240203-155524
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/f4b147ddaa8fe8c07c7ba77a1d61780bffc49bb6.1706946547.git.tanggeliang%40kylinos.cn
+patch subject: [PATCH bpf-next v2 1/2] bpf, btf: Add register_check_missing_btf helper
+config: arm-randconfig-001-20240204 (https://download.01.org/0day-ci/archive/20240204/202402040740.WcfFYJQX-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240204/202402040740.WcfFYJQX-lkp@intel.com/reproduce)
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5669110554558464
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5669110554558464/su=
-mmary/summary.txt
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402040740.WcfFYJQX-lkp@intel.com/
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/ab6eec4814bc
+All errors (new ones prefixed by >>):
+
+   kernel/bpf/btf.c: In function 'btf_seq_show':
+   kernel/bpf/btf.c:7286:29: warning: function 'btf_seq_show' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+    7286 |         seq_vprintf((struct seq_file *)show->target, fmt, args);
+         |                             ^~~~~~~~
+   kernel/bpf/btf.c: In function 'btf_snprintf_show':
+   kernel/bpf/btf.c:7323:9: warning: function 'btf_snprintf_show' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+    7323 |         len = vsnprintf(show->target, ssnprintf->len_left, fmt, args);
+         |         ^~~
+   In file included from include/asm-generic/bug.h:22,
+                    from arch/arm/include/asm/bug.h:60,
+                    from include/linux/bug.h:5,
+                    from include/linux/thread_info.h:13,
+                    from include/linux/sched.h:14,
+                    from include/linux/ptrace.h:6,
+                    from include/uapi/asm-generic/bpf_perf_event.h:4,
+                    from ./arch/arm/include/generated/uapi/asm/bpf_perf_event.h:1,
+                    from include/uapi/linux/bpf_perf_event.h:11,
+                    from kernel/bpf/btf.c:6:
+   kernel/bpf/btf.c: In function 'register_check_missing_btf':
+>> kernel/bpf/btf.c:7750:39: error: invalid use of undefined type 'const struct module'
+    7750 |                                 module->name, msg);
+         |                                       ^~
+   include/linux/printk.h:427:33: note: in definition of macro 'printk_index_wrap'
+     427 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                                 ^~~~~~~~~~~
+   include/linux/printk.h:508:9: note: in expansion of macro 'printk'
+     508 |         printk(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~
+   kernel/bpf/btf.c:7749:25: note: in expansion of macro 'pr_warn'
+    7749 |                         pr_warn("allow module %s BTF mismatch, skip register %s\n",
+         |                         ^~~~~~~
+   kernel/bpf/btf.c:7753:77: error: invalid use of undefined type 'const struct module'
+    7753 |                 pr_err("missing module %s BTF, cannot register %s\n", module->name, msg);
+         |                                                                             ^~
+   include/linux/printk.h:427:33: note: in definition of macro 'printk_index_wrap'
+     427 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                                 ^~~~~~~~~~~
+   include/linux/printk.h:498:9: note: in expansion of macro 'printk'
+     498 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~
+   kernel/bpf/btf.c:7753:17: note: in expansion of macro 'pr_err'
+    7753 |                 pr_err("missing module %s BTF, cannot register %s\n", module->name, msg);
+         |                 ^~~~~~
 
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+vim +7750 kernel/bpf/btf.c
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+  7740	
+  7741	static int register_check_missing_btf(const struct module *module, const char *msg)
+  7742	{
+  7743		if (!module && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
+  7744			pr_err("missing vmlinux BTF, cannot register %s\n", msg);
+  7745			return -ENOENT;
+  7746		}
+  7747		if (module && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES)) {
+  7748			if (IS_ENABLED(CONFIG_MODULE_ALLOW_BTF_MISMATCH)) {
+  7749				pr_warn("allow module %s BTF mismatch, skip register %s\n",
+> 7750					module->name, msg);
+  7751				return 0;
+  7752			}
+  7753			pr_err("missing module %s BTF, cannot register %s\n", module->name, msg);
+  7754			return -ENOENT;
+  7755		}
+  7756		return 0;
+  7757	}
+  7758	
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
