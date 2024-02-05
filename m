@@ -1,207 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAD940BF4
-	for <mptcp@lists.linux.dev>; Mon,  5 Feb 2024 15:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16C6376E0
+	for <mptcp@lists.linux.dev>; Mon,  5 Feb 2024 16:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707148321; cv=none; b=TyC2mvQ3U+nbJyegGLlqRQx+IRulrW3HHgl0wzFdfWpI0kY48C4ObrEZgPTY4cto94ZSwG06/Fdapmx95Ijxq2jtFRUobSOvHxTeAAzLjtNqNazBtN6riHmAePL0FLxBbMfv9zHouDkqE3r1ETpASmujlsSW5WhcYf8QcD9FYMc=
+	t=1707148860; cv=none; b=ELm8zNtJYSant5c2c24ULjLnaUL3KJKQqENZsees9zna+AFIP1n/XDeFms3jeIZ1JxRMkhZl1s0fVFjEgeVWrzzurMGMQnqVHd2a9kHfkk8IkG57jL8Da5SSOwMUp0AgvcFOra6ukx3Ao1UMMbKps+rSDn5GAtUUzrScYpm2KJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707148321; c=relaxed/simple;
-	bh=t7bRzGw8v9zjSo+6pymOrtk3Z7hKulBLXIt6KxoXE2k=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pBUoNk2ZD58vVyxbOYDmUi72D5Zp4xDTwFhWIDNYW/DPPbV4VDYhcNCTR1qZ/IQMN21USFh+LxgiDWOUETwcaZM+DNNW4NSVYeDerFy0UBmJCCvOJAq15e1wHq9y4he7DniLAmVPA9KGbFbzWcnxabyBUFayyMTKHLhWd9zLkX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LkTyz60u; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1707148860; c=relaxed/simple;
+	bh=WCHhBMH9D8J1UMQTkR+UPpQtXRRtLwk2AyIqPfd27ms=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M0WrX2alZ4HsjENMObRkfJkWh54GFnkRDnZQandCbYH3m9l2OAB7vDGVJvoN2XFXfOtBnU0lamQuhfW6MWyOrqHhQhkHr0z7IC3NgbhaUx6XqgeXxuTsnXFps2xsTqnlsNYTe4xT3JxrfV0VbjLioI3cbozOfLox9lMZ4sj0bhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I8JYvKrm; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LkTyz60u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I8JYvKrm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707148317;
+	s=mimecast20190719; t=1707148857;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jCZWWVpYMu8sxWHH5MJaVEICzHIhmk4cs70pZyJPklE=;
-	b=LkTyz60u8NGW/FwZIUkbnDB6+igpF559ru7SLkeDJsR4mt8vTwl6ScXbFud5l8TGGtC1oe
-	axZipCG87P4LQtGI0VHWWDRHl8qcziaWj35Wa0E42XGjNRHBoUFP+d02skEaAy1h1Kedvz
-	5e/fm3DkZU7vfdcQkbNbwT2U4rCYifs=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-602-ptZrIWgbMCSMneJRqGZlZQ-1; Mon,
- 05 Feb 2024 10:51:55 -0500
-X-MC-Unique: ptZrIWgbMCSMneJRqGZlZQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B0E101C04332
-	for <mptcp@lists.linux.dev>; Mon,  5 Feb 2024 15:51:55 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.225.229])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 409EF3C2E
-	for <mptcp@lists.linux.dev>; Mon,  5 Feb 2024 15:51:55 +0000 (UTC)
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=WCHhBMH9D8J1UMQTkR+UPpQtXRRtLwk2AyIqPfd27ms=;
+	b=I8JYvKrmTTH0DFh9aFACTTseR7tpwzIsGyopYYwM04g/GdeZjaZzzbz/aHO77e0tJ2CRNI
+	TFgBQS+hJZZVRUmMVViVw46Z+OfY2/7AjF7i/HssswacoSmVoZnlllmu+ACq12q17pfsUZ
+	14++10m9naCbVh+AFgI+ZiBXeD/prD4=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-607-_Pg0cAxqP1yserl6VYLPKg-1; Mon, 05 Feb 2024 11:00:56 -0500
+X-MC-Unique: _Pg0cAxqP1yserl6VYLPKg-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-40e354aaf56so10718165e9.1
+        for <mptcp@lists.linux.dev>; Mon, 05 Feb 2024 08:00:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707148854; x=1707753654;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WCHhBMH9D8J1UMQTkR+UPpQtXRRtLwk2AyIqPfd27ms=;
+        b=XlWeiM4b4O4+KOnS1Mw5S12lPcQTE29Uncml3pSyPIZmOpsoMc3ck58+n1tFz1OZn+
+         OfF+PCAYWayF9Fp9bbwek1nvPRw3++3OzZOcmwmdJWsRz6Ie3zOzqIc8r/T/HQxNfdKF
+         Iea70HOwaeh01LDcdOThHzYjGw8IZaf51khrlbrQr46AQHteOgeeNVVvvFq/7t2JtKXV
+         TS1mp5s6sPyjH0Q+a9OXPhtWtWxn7fi5qZ7igUSX/h2QNguFF767X5r1FWrTVeXMNwGf
+         h45YKEY/MJ3Oevq6Le3x/gIU0iXB2BTbE3Ql6pNeynbqdy9flTWVulB7uKJm3BvQf/D9
+         sYuA==
+X-Gm-Message-State: AOJu0YxNBAwJuiXm+587s1N2Bc6DzlMqhFD3GEqj4+nOer3jhQaqE+Wn
+	tiGt0y028gA0mo5RX34+Tk1vNBM37MGT391zt2CUj+MTUMdtGPi5iSk4DqX1HOdueB6M6KTmo9A
+	y2Lmrb4PjqUtH9967AED6Sdl/iEDa6gt51CW/DoV8322Cao0spxhHcvgeUanOtsh4puZXoK8yFg
+	NjbqzEgNcRaDylsCBzKfIXSTl6xBTf6lsfbg==
+X-Received: by 2002:a05:600c:3541:b0:40f:d0a2:e9e4 with SMTP id i1-20020a05600c354100b0040fd0a2e9e4mr137526wmq.4.1707148854311;
+        Mon, 05 Feb 2024 08:00:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGVnqC10674KGNLMPiwBqMkJBJ1E6YH8o06GL7rkXeqwM4qx6vAzLQi0t5OvdjMNt7aINM7Pw==
+X-Received: by 2002:a05:600c:3541:b0:40f:d0a2:e9e4 with SMTP id i1-20020a05600c354100b0040fd0a2e9e4mr137502wmq.4.1707148853850;
+        Mon, 05 Feb 2024 08:00:53 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-230-60.dyn.eolo.it. [146.241.230.60])
+        by smtp.gmail.com with ESMTPSA id o6-20020a5d6486000000b0033b0992c364sm8359376wri.14.2024.02.05.08.00.53
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 08:00:53 -0800 (PST)
+Message-ID: <e79d5c942e65c510c01e8e60c79087d7d696e2e5.camel@redhat.com>
+Subject: Re: [PATCH mptcp-net] mptcp: really cope with fastopen race.
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net 2/4] mptcp: fix data races on local_id
-Date: Mon,  5 Feb 2024 16:51:40 +0100
-Message-ID: <34c617cdc777aa32b1fa4ecc5c23784255f5fa56.1707144963.git.pabeni@redhat.com>
-In-Reply-To: <cover.1707144963.git.pabeni@redhat.com>
-References: <cover.1707144963.git.pabeni@redhat.com>
+Date: Mon, 05 Feb 2024 17:00:52 +0100
+In-Reply-To: <02fe7afaec6fac65fc2da5922efe25d6ebdebc88.1706132185.git.pabeni@redhat.com>
+References: <02fe7afaec6fac65fc2da5922efe25d6ebdebc88.1706132185.git.pabeni@redhat.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The local address id is accessed lockless by the NL PM, add
-all the required ONCE annotation. There is a caveat: the local
-id can be initialized late in the subflow life-cycle, and its
-validity is controlled by the local_id_valid flag.
+On Wed, 2024-01-24 at 22:36 +0100, Paolo Abeni wrote:
+> Fastopen and PM-trigger subflow shutdown can race, as reported by
+> syzkaller.
+>=20
+> In my first attempt to close such race, I missed the fact that
+> the subflow status can change again before the subflow_state_change
+> callback is invoked.
+>=20
+> Address the issue additionally copying with all the states directly
+> reachable from TCP_FIN_WAIT1.
+>=20
+> Fixes: 1e777f39b4d7 ("mptcp: add MSG_FASTOPEN sendmsg flag support")
+> Fixes: 4fd19a307016 ("mptcp: fix inconsistent state on fastopen race")
+> Reported-by: syzbot+c53d4d3ddb327e80bc51@syzkaller.appspotmail.com
 
-Remove such flag and encode the validity in the local_id field
-itself with negative value before initialization. That allows
-accessing the field consistently with a single read operation.
+Hopefully it's not too late...
 
-Fixes: 0ee4261a3681 ("mptcp: implement mptcp_pm_remove_subflow")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/pm_netlink.c |  4 ++--
- net/mptcp/protocol.c   |  2 +-
- net/mptcp/protocol.h   | 15 ++++++++++++---
- net/mptcp/subflow.c    |  9 +++++----
- 4 files changed, 20 insertions(+), 10 deletions(-)
+The above should be:
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d9ad45959219..d1b984c9dc25 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -800,7 +800,7 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 		mptcp_for_each_subflow_safe(msk, subflow, tmp) {
- 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
- 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
--			u8 id = subflow->local_id;
-+			u8 id = subflow_get_local_id(subflow);
- 
- 			if (rm_type == MPTCP_MIB_RMADDR && subflow->remote_id != rm_id)
- 				continue;
-@@ -809,7 +809,7 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 
- 			pr_debug(" -> %s rm_list_ids[%d]=%u local_id=%u remote_id=%u mpc_id=%u",
- 				 rm_type == MPTCP_MIB_RMADDR ? "address" : "subflow",
--				 i, rm_id, subflow->local_id, subflow->remote_id,
-+				 i, rm_id, id, subflow->remote_id,
- 				 msk->mpc_endpoint_id);
- 			spin_unlock_bh(&msk->pm.lock);
- 			mptcp_subflow_shutdown(sk, ssk, how);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index a8a94b34a51e..626fb4907381 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -85,7 +85,7 @@ static int __mptcp_socket_create(struct mptcp_sock *msk)
- 	subflow->subflow_id = msk->subflow_id++;
- 
- 	/* This is the first subflow, always with id 0 */
--	subflow->local_id_valid = 1;
-+	WRITE_ONCE(subflow->local_id, 0);
- 	mptcp_sock_graft(msk->first, sk->sk_socket);
- 	iput(SOCK_INODE(ssock));
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index de04b97e8dd1..9813de82bab8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -493,10 +493,9 @@ struct mptcp_subflow_context {
- 		remote_key_valid : 1,        /* received the peer key from */
- 		disposable : 1,	    /* ctx can be free at ulp release time */
- 		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
--		local_id_valid : 1, /* local_id is correctly initialized */
- 		valid_csum_seen : 1,        /* at least one csum validated */
- 		is_mptfo : 1,	    /* subflow is doing TFO */
--		__unused : 9;
-+		__unused : 10;
- 	bool	data_avail;
- 	bool	scheduled;
- 	u32	remote_nonce;
-@@ -507,7 +506,7 @@ struct mptcp_subflow_context {
- 		u8	hmac[MPTCPOPT_HMAC_LEN]; /* MPJ subflow only */
- 		u64	iasn;	    /* initial ack sequence number, MPC subflows only */
- 	};
--	u8	local_id;
-+	s16	local_id;	    /* if negative not initialized yet */
- 	u8	remote_id;
- 	u8	reset_seen:1;
- 	u8	reset_transient:1;
-@@ -558,6 +557,7 @@ mptcp_subflow_ctx_reset(struct mptcp_subflow_context *subflow)
- {
- 	memset(&subflow->reset, 0, sizeof(subflow->reset));
- 	subflow->request_mptcp = 1;
-+	WRITE_ONCE(subflow->local_id, -1);
- }
- 
- static inline u64
-@@ -1064,6 +1064,15 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
- int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
- 
-+static inline int subflow_get_local_id(struct mptcp_subflow_context *subflow)
-+{
-+	int local_id = READ_ONCE(subflow->local_id);
-+
-+	if (local_id < 0)
-+		return 0;
-+	return local_id;
-+}
-+
- void __init mptcp_pm_nl_init(void);
- void mptcp_pm_nl_work(struct mptcp_sock *msk);
- void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 02dab0669cfc..068784d3e748 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -578,8 +578,8 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 
- static void subflow_set_local_id(struct mptcp_subflow_context *subflow, int local_id)
- {
--	subflow->local_id = local_id;
--	subflow->local_id_valid = 1;
-+	WARN_ON_ONCE(local_id < 0 || local_id > 255);
-+	WRITE_ONCE(subflow->local_id, local_id);
- }
- 
- static int subflow_chk_local_id(struct sock *sk)
-@@ -588,7 +588,7 @@ static int subflow_chk_local_id(struct sock *sk)
- 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
- 	int err;
- 
--	if (likely(subflow->local_id_valid))
-+	if (likely(subflow->local_id >= 0))
- 		return 0;
- 
- 	err = mptcp_pm_get_local_id(msk, (struct sock_common *)sk);
-@@ -1733,6 +1733,7 @@ static struct mptcp_subflow_context *subflow_create_ctx(struct sock *sk,
- 	pr_debug("subflow=%p", ctx);
- 
- 	ctx->tcp_sock = sk;
-+	WRITE_ONCE(ctx->local_id, -1);
- 
- 	return ctx;
- }
-@@ -1968,7 +1969,7 @@ static void subflow_ulp_clone(const struct request_sock *req,
- 		new_ctx->idsn = subflow_req->idsn;
- 
- 		/* this is the first subflow, id is always 0 */
--		new_ctx->local_id_valid = 1;
-+		subflow_set_local_id(new_ctx, 0);
- 	} else if (subflow_req->mp_join) {
- 		new_ctx->ssn_offset = subflow_req->ssn_offset;
- 		new_ctx->mp_join = 1;
--- 
-2.43.0
+Reported-by: syzbot+732ab7be796ec0d104ac@syzkaller.appspotmail.com
+
+@Mat(s), could you please update the path directly in the export
+branch?
+
+Thanks!
+
+Paolo
 
