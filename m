@@ -1,87 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45AC18AF6;
-	Mon,  5 Feb 2024 11:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB31F40BE7
+	for <mptcp@lists.linux.dev>; Mon,  5 Feb 2024 15:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707132029; cv=none; b=VmeEVMDwGw7MgVHBi55Lq0Tshq6zkzfVsVNkE44UnSKyUG/5/mOV97luuwTC7LOlvnlbi7WQd1ka6O9lY5OBdkFegdFklY/TMqik7gdYr9utp2GpdqpoukPifguWuQZKW54UX/cPDAW+35fJpRh2//9DkXzE70i62dxfHRQ08M4=
+	t=1707148319; cv=none; b=H3+cx5XKJmzbJ2N1P30rqFOKe09shL7IQo9qnvIOynjn3yXKqzI94G5DJzbz/shCWUI5D4ZW60Z1K6/YUkuHhDdB45DlWGz8OC2yLU+MmAxiv87K2ELgO0jd7IgNUSN9h4I8dJGaSBjEf6h+YXdx15N9U2qp/NORkbyVs1USP0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707132029; c=relaxed/simple;
-	bh=c7Fj/wPtiOUubtTF3wjdUAiVTE4AOhMVnaoeCU913dE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=DSqOSzs0ySPR0p8FLaG1cyiHzKERZEY4Ic65fDa7937KuK9RRoCMsLsS46RcT1ZHXHPjOAwSc27JemCnmcPE9owtcAiBznSBNHGnRBM5ukxCxw80wqAvPpviXYuZCvKiwmT7XSTOdw5+e5OB1zWqy00b++DdQexkF6VHWl5k/TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8WLBJe4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707148319; c=relaxed/simple;
+	bh=XHGOFosHuk7QS97Mvx03FeYIuEM+5+aRfTN7JeecRVQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K9+tq/7e4R3scwb8nscFr7dG4TbeuUbL0t9UEL9v9uFBYTgdkwUhG47gGEtU2UtQ1Mhvjg8XdfkWasy24lX1cMq4pju/HhqML5jMQoWh0OG0zLRJkNeaX6cGm9pXf4idLa62O3kz7fXNPAU9KJGviwLNDCvhzzWcwwWd3ktsAqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Syr7ocTp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8WLBJe4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 454D5C43399;
-	Mon,  5 Feb 2024 11:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707132029;
-	bh=c7Fj/wPtiOUubtTF3wjdUAiVTE4AOhMVnaoeCU913dE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=R8WLBJe4UHRafytugFoYiqA/o3spzg9R4i70/j3gU36jMNwkjQSdPfERjiX3Wwmqy
-	 FYnAW6KZ6zVckqPA/1+LNlq7+yaV0ouaBj8UE0DX5+HLSS6gk8kTzN9e9xDA/XFeXP
-	 ZB2uYZs2ERuQ/xPmV9xRD2bk1MjUl+A8AFU0XNdrOhxDIz5+JxzL8wdd3uIe+0phGc
-	 8mosYsB+BpLBqt8RNrUNy86VosEna++048gEqH2BRg966S33RwzQ+cYK916pkKa65s
-	 EbbmoDSBfHbGZYMoNac6iN2M3ss4GgV6sGo6zsEwzEB6eQEtltyV2nuAc1W0nqO6wf
-	 5ETH66XFaliqg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 32448E2F2F2;
-	Mon,  5 Feb 2024 11:20:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Syr7ocTp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707148316;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=v+yMO6L88dM4DukIhXhOPMWwi4PRwhNnWym+B1OZYi8=;
+	b=Syr7ocTpPdfCM4Ojm1tyEL0Bxa/M4VGGqfh/mLJ9Qm8mf5TPynVxviyo66JyBxpablOcjk
+	oPPR3sTlcC19mMzZUkW395zV2wgBtN9++/6lXAEpD5wRpN3OeMkjOEodZ3EX7Qo90Wm8AW
+	5oHyvlXjxqSt2wly2dST8JtUzohtO2U=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-582-j8aL27nIMjS1Z4k874i9Jg-1; Mon,
+ 05 Feb 2024 10:51:55 -0500
+X-MC-Unique: j8aL27nIMjS1Z4k874i9Jg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3B7D92932481
+	for <mptcp@lists.linux.dev>; Mon,  5 Feb 2024 15:51:54 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.229])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id BE6C2C38
+	for <mptcp@lists.linux.dev>; Mon,  5 Feb 2024 15:51:53 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net 0/4] mptcp: fix duplicate subflow creation
+Date: Mon,  5 Feb 2024 16:51:38 +0100
+Message-ID: <cover.1707144963.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/5] mptcp: annotate lockless access
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170713202920.23951.439284843602275473.git-patchwork-notify@kernel.org>
-Date: Mon, 05 Feb 2024 11:20:29 +0000
-References: <20240202-upstream-net-next-20240202-mptcp-annotate-lockless-access-v1-0-031d6680afdc@kernel.org>
-In-Reply-To: <20240202-upstream-net-next-20240202-mptcp-annotate-lockless-access-v1-0-031d6680afdc@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang.tang@linux.dev,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hello:
+As reported by Mat, the in kernel PM can, in some edge scenarios,
+unexpectedly create multiple subflows with the same local and remote
+address.
 
-This series was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+The real fix is implemented by patch 4/4 with some more accurate check
+at subflow creation time.
 
-On Fri, 02 Feb 2024 12:40:06 +0100 you wrote:
-> This is a series of 5 patches from Paolo to annotate lockless access.
-> 
-> The MPTCP locking schema is already quite complex. We need to clarify it
-> and make the lockless access already there consistent, or later changes
-> will be even harder to follow and understand.
-> 
-> This series goes through all the msk fields accessed in the RX and TX
-> path and makes the lockless annotation consistent with the in-use
-> locking schema.
-> 
-> [...]
+Patches 1-3 are roughly optional pre-requisities, added to avoid
+introducing more data-races with the actual fix. Patch 1/4 is a bit
+debatable, as it changes the existing ULP API, but I could not find a
+better solution and there is some similar prior art:
+commit 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info")
 
-Here is the summary with links:
-  - [net-next,1/5] mptcp: annotate access for msk keys
-    https://git.kernel.org/netdev/net-next/c/1c09d7cbb57a
-  - [net-next,2/5] mptcp: annotate lockless access for the tx path
-    https://git.kernel.org/netdev/net-next/c/d440a4e27acd
-  - [net-next,3/5] mptcp: annotate lockless access for RX path fields
-    https://git.kernel.org/netdev/net-next/c/9426ce476a70
-  - [net-next,4/5] mptcp: annotate lockless access for token
-    https://git.kernel.org/netdev/net-next/c/b9f4554356f6
-  - [net-next,5/5] mptcp: annotate lockless accesses around read-mostly fields
-    https://git.kernel.org/netdev/net-next/c/28e5c1380506
+Paolo Abeni (4):
+  mptcp: fix lockless access in subflow ULP diag
+  mptcp: fix data races on local_id
+  mptcp: fix data races on remote_id
+  mptcp: fix duplicate subflow creation
 
-You are awesome, thank you!
+ include/net/tcp.h      |  2 +-
+ net/mptcp/diag.c       |  6 +++++-
+ net/mptcp/pm_netlink.c | 43 ++++++++++++++++++++++--------------------
+ net/mptcp/protocol.c   |  2 +-
+ net/mptcp/protocol.h   | 15 ++++++++++++---
+ net/mptcp/subflow.c    | 15 ++++++++-------
+ net/tls/tls_main.c     |  2 +-
+ 7 files changed, 51 insertions(+), 34 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
