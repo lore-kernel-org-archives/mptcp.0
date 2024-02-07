@@ -1,112 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C76199DC
-	for <mptcp@lists.linux.dev>; Wed,  7 Feb 2024 11:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FD0168DE
+	for <mptcp@lists.linux.dev>; Wed,  7 Feb 2024 12:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707307014; cv=none; b=HLdVljYPt9AJy3DhSOlxBXpDcu+q8fzxQoYMpKRFoEjDoqqXkOiAlj8K4NDKbI93qrg6hIpC/jBRcHttAfveFjfc1uvNJj5HePYQkZtVLKBca0+fF1EZLLPZsRGxz+Y25g06ahoJ/8hVxL7X1h3TXeLTfkWksIFL0fN8pwlfrKc=
+	t=1707310360; cv=none; b=TYWsYPlVMD4BWVht/UpCddZ2lykU0TBrS6jrlljyChwyJfu1/UFWPrFVRqfyZ4y9/oVZGIWNklmzyrOpCCVnT0dYSEm4aw2W/RQzNuRwlNMabcSJ8GiMGCYCsnX66JzTC0dFNiE27Dvnwkrlfy7uqKUtgXc/B+AtKbRxPurA1M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707307014; c=relaxed/simple;
-	bh=5RnpXBTmJah/lQgyyeXn6rhz8z43A/1TcmH1d3oAxs4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AxSoNiEnmZCWfMUINpohcZsH6fGjvqr7k0Xfh/vUqkPVDuCD+r6Lyy+DjZk5wid06tEfUu8VWPB64Oyexl3KlnCyEHIy4z8QqerVF5gIRdXcXvR7dMo1g5alfu0Q+eQp4mNZToHwwVa5rPEj/AB/dybtkwXjWgKDjcN7fFker9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbbFhhk5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707310360; c=relaxed/simple;
+	bh=FqIaednKh299qqQV8MSnNpSGDTZGo9IQODvbBEHBlmE=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=tlz6yCRfCGYlV1iMkRkED/WNrQIiEs2o15HPRofK5dAPssDrY7A3Ogomd/81VQAXO3MPe0cHqwidChQo0bo/NNBrr8lIDSdMWcnx4Rw1VpE1x+xmyNmW6Mi/hxV3gXVVmmqNku0JQ5Ys+ZGSZZDhF4RHgVlobiUrKffMWVoej5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DWeab5V1; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbbFhhk5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA4AEC43390;
-	Wed,  7 Feb 2024 11:56:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707307013;
-	bh=5RnpXBTmJah/lQgyyeXn6rhz8z43A/1TcmH1d3oAxs4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HbbFhhk5mz2hOoMI72eWebhYndAjJY7loZk4YuIOYQZLo4W7FmsouR8ImbSuC2hoo
-	 aqkvr6BW803H9wS1t4Uer0FipSHdJLc90SJQTAFjE/vgifSkFyel++whDADmdMxPL6
-	 k6bP1RwFtOp5MByyPLn3OM0yqy73FxUNZVyLQh0Wsz3aiC4Ps/R1icgNxLy/HFA92D
-	 BnlI/p+5MHn3WhZ7Mj5xYxyAXjp+7J4MKbBeLdTkTDiGHwX6olxIQcvgKNyIQX8LHp
-	 3m67CIhObah/Wo4SOVsmyAFIQnhB9n4JUgB8Q3DCyiyVn3bIpXSMnxOKinZq0J/BOZ
-	 OIqMRQ6nsq+7g==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 07 Feb 2024 12:56:25 +0100
-Subject: [PATCH mptcp-next v3 3/3] mptcp: check the protocol in mptcp_sk()
- with DEBUG_NET
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWeab5V1"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6818f3cf00aso3583056d6.0
+        for <mptcp@lists.linux.dev>; Wed, 07 Feb 2024 04:52:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707310358; x=1707915158; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8eTrtHpcSs9t0JOIpfXXknaJu9o2ilTuL60huiYT4fw=;
+        b=DWeab5V1nzwxxz/B3WQRwzcwe7mfBYqx5lucNxZeJXc4p6HVbicBHwnXWNbn/9T0gX
+         D+qi3+nih95BvFR4EAqzSZa1efGIbWCAG17zP8pYpY+PfMrgSgO4E2k6PMg3p6z5oHTv
+         APPTUKIb/kf3DRJHAQ2nwDQnl+HfV9/qwM/IyErKK2QFmUu3Z53PeWpJEOERAfHYfvNS
+         5VQaqPle8AYWQFq5zrdFmZtB6daEzuYAZCYLjxUoeh5H1Y2Nh38vTXdLvZOu49Wm2eOv
+         TtK2xcL7jTm6EVGWkabs2odqjw38JGaUxuCqWYDwsoc50Cv/StUF3XsU1AdZ17NvuOLx
+         tjHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707310358; x=1707915158;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8eTrtHpcSs9t0JOIpfXXknaJu9o2ilTuL60huiYT4fw=;
+        b=mxuYSlwuFyf+h4BBkKYXrUuwZtWlXi7akR4IsnG6Huy4kClyuVl2lXAjZVog2bngvI
+         WTn2UiGLFV6fI5Z2syKdzE4kgLSZWocWX21Fdt4U6sk0TJZb5alUQjFIqQjahwj7MueZ
+         aDA5uddZUARSDF2o4dFT2VVq6yVAvvM3uxT7yvb4+I5981/EzHO8lpNm2R+GocIaiue0
+         vkQ/GQg+VT9kUusq6HWjwW1uKbmMcXtgpP/JPvauY2EeoVkzYo2yUhGRnzINna4/9e+T
+         2Ocm0TTTc54beFfypfYQ7kzGec9B4nHARW3Yew7tduAZIj7LjxCismIKXiiRFbL9C/7U
+         LZcw==
+X-Gm-Message-State: AOJu0Ywpb+CVRJNt/kkf9VHRdtNtqeON3gmCLQDGFXJkEYZkO5jYZq2d
+	cdTJS+Y6HZZs6MDXHQba5vKsab40l7iTB63B7gaf+Atn0JffRLrcGaRpssQ=
+X-Google-Smtp-Source: AGHT+IHwrOFx+I3UndR+lcdyfZxAMaRabS9RVyUiq71yt2CuGtWbSERNHyRZEJCtn+U1FimRicUCEg==
+X-Received: by 2002:a05:6214:1c42:b0:68c:95bb:b7ef with SMTP id if2-20020a0562141c4200b0068c95bbb7efmr7253203qvb.3.1707310357845;
+        Wed, 07 Feb 2024 04:52:37 -0800 (PST)
+Received: from [127.0.0.1] ([20.81.159.96])
+        by smtp.gmail.com with ESMTPSA id e5-20020ad442a5000000b0068c3e010d8esm545031qvr.61.2024.02.07.04.52.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 04:52:37 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240207-mptcp-check-protocol-v3-3-77c69c596f55@kernel.org>
+References: <20240207-mptcp-check-protocol-v3-3-77c69c596f55@kernel.org>
+Subject: Re: mptcp: check the protocol in mptcp_sk() with DEBUG_NET: Tests
+ Results
+Message-ID: <eb06adad-5179-9530-fe3c-24adb0351a64@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 07 Feb 2024 12:52:36 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240207-mptcp-check-protocol-v3-3-77c69c596f55@kernel.org>
-References: <20240207-mptcp-check-protocol-v3-0-77c69c596f55@kernel.org>
-In-Reply-To: <20240207-mptcp-check-protocol-v3-0-77c69c596f55@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1675; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=5RnpXBTmJah/lQgyyeXn6rhz8z43A/1TcmH1d3oAxs4=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlw3AAQn1XmhWjaQG6CvjdZmUCDOZNz2u02nBwh
- Lv6ycjTirmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZcNwAAAKCRD2t4JPQmmg
- c8YhEACgks0ptmmkAev8mOdVc7YdlWPOZ0c2emM6NZKsMuQE/1lxo+kQVQBf/NExZHhbj/KA7qi
- YW5QBNk05G2u+peBF+AnqbsrYPLGNAmB/mVx+mTk/Qn3hgH0q0o6UiMjQZkiT5oEa5SjO0RLT95
- 7HtPqze9i3kknBDKspYcoqx6xoAK30gc0pJE0M3q+7uQUxuEDeZFQCd5gutPYmSfo2S4hGcnVrk
- z6plHRoz7O0add87rPU8WN42Bs2mE3KISWibciKMfq15M0GV3m5jztQeCbOUoDlBV/zzUviBEh0
- 5+MluqAezWUBD3PWBkH65jPJZgmkcCNH6hV4CXlH0kjG22Gr6QRbI59F3Kbnygrv83ImWgBC6EJ
- 3RMIOLEIpQOSCaKFgVokiNbvIZpIdtjVkDRABMHx2ktvDxz8JkQpaW8Lsmom/aRDmTNXSfSd2eJ
- yP4H7MkTjuIkIWhzfNGK3M+NXEFOOE7npIcTawv8NPYWT7grWzPB8BH3TSOUdVBsai/1tHLoEe2
- tuweMIMlZdGSZA6tPxBa3EXeD1DdBbDvXjnWez/Q5aApQJUamHzjAcRNty1J90dMKgbnnIvwbtM
- Qd0zTrXTskTWVphwJYtVO1ZgGBviWbnykPMYwe5Jk+vW3Yb6Q0znT/ZnyKHFkjHTXePQI//x9Lf
- dISiyBtdcWVWrVg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Fuzzers and static checkers might not detect when mptcp_sk() is used
-with a non mptcp_sock structure.
+Hi Matthieu,
 
-This is similar to the parent commit, where it is easy to use mptcp_sk()
-with a TCP sock, e.g. with a subflow sk.
+Thank you for your modifications, that's great!
 
-So a new simple check is done when CONFIG_DEBUG_NET is enabled to tell
-kernel devs when a non-MPTCP socket is being used as an MPTCP one.
-'mptcp_sk()' macro is then defined differently: with an extra WARN to
-complain when an unexpected socket is being used.
+Our CI (GitHub Action) did some validations and here is its report:
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
-  v2:
-    - Use a macro instead of an inlined function (Paolo)
-  v3:
-    - add parenthesis around 'ptr' (checkpatch)
-    - there is still this check from checkpatch but I guess that's fine:
-      Macro argument reuse 'ptr' - possible side-effects?
----
- net/mptcp/protocol.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7814594663
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6b62a7f35dd9..2b837676d1fc 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -355,9 +355,14 @@ static inline void msk_owned_by_me(const struct mptcp_sock *msk)
- 	WARN_ON((ptr)->sk_protocol != IPPROTO_TCP);				\
- 	container_of_const(ptr, struct tcp_sock, inet_conn.icsk_inet.sk);	\
- })
--#endif
-+#define mptcp_sk(ptr) ({						\
-+	WARN_ON((ptr)->sk_protocol != IPPROTO_MPTCP);			\
-+	container_of_const(ptr, struct mptcp_sock, sk.icsk_inet.sk);	\
-+})
- 
-+#else /* !CONFIG_DEBUG_NET */
- #define mptcp_sk(ptr) container_of_const(ptr, struct mptcp_sock, sk.icsk_inet.sk)
-+#endif
- 
- /* the msk socket don't use the backlog, also account for the bulk
-  * free memory
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/7511efd6fe57
 
--- 
-2.43.0
 
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
