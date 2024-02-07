@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5001CD22
-	for <mptcp@lists.linux.dev>; Wed,  7 Feb 2024 03:33:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56183FC0A
+	for <mptcp@lists.linux.dev>; Wed,  7 Feb 2024 03:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707276823; cv=none; b=L/n85LQTp6KZz3JWCFbr4g64EIda5kaVqoN/TWpHkEFRGDKuLXYInx6b+RjXIQxsp0L9xFmAPuBCFx+1cJiOAOVoa5IWkWih8hS1U5PpUU+R138Fc9hWtaVCoMANU3+ZPcwUPrhUhTczyZ1cJWKVl35lQgp7uc3FHa1+Yeyh2qU=
+	t=1707276953; cv=none; b=D8+CLeCWF9vh6/8GnlLbIh9nFk+0RN04c0uFdqxF/xbokNoNinP6TFxRp2eAmFZ2Z3+yHYR+MMku/AkRjhcwx53s/JxgsV/F8/P6BYHZeYSAK7V9NqamPnk4bUZ/3hueF/yonANEtfhq6W71mi8vbk0+GYtVwWLILkVKb96JGq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707276823; c=relaxed/simple;
-	bh=K3A4od8DPEQd+cVYZN64JurMJeWiYuwC5ppt9eKWCAA=;
+	s=arc-20240116; t=1707276953; c=relaxed/simple;
+	bh=hkWO7E7sXn8ixAuz+ClyaTpt/6xt/BrFyiw6XDqsluM=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=I5dDZlWAiofJwa+cws2bXNqjDlFOMFhDVddaYHDN6U/O35k6zvq8/bxnYwFOnQcYTzAssADh4lvp6b0XEqxbJZJeQ2r3KRocUZzVJNqyyoL5AVZFlbCDv9HNXIivBOl/VKlUFm2ucAiVZOqn8LRxfCKpIOGcDJtiVTGYwuXR40c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVYTTT1J; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=fFfOXGzZE5LxTInJ9OHJoScwPX0qX/wqeIHgDd5H1P/tbKfbqKa8HWGgyXQQ8lKplw3odKiPXYLTQ/ssd/Q66mrOY2MVT0RCB1PV89nPfOP8a2ZywdZMDpUT7a+CW/u3vmlPR8xxIb5kIU+s/kn+EeoDOdmutQP6CTYfMTE+aRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=svAsCWTF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVYTTT1J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68D46C433F1;
-	Wed,  7 Feb 2024 03:33:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="svAsCWTF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6FB6C433F1;
+	Wed,  7 Feb 2024 03:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707276822;
-	bh=K3A4od8DPEQd+cVYZN64JurMJeWiYuwC5ppt9eKWCAA=;
+	s=k20201202; t=1707276952;
+	bh=hkWO7E7sXn8ixAuz+ClyaTpt/6xt/BrFyiw6XDqsluM=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ZVYTTT1Jc87gN+4WOmKy67lYvVII6ERvqpsSEuP4D18dPbUCU+PdgoGt7Ab8FLwlJ
-	 VsNUjV+gmZ1P8HyOrZ22Z4WSBFWVaScA2U+GShKSvyvTzKRP81TIAJ8zdNgDUb2/Q5
-	 v88LgPdy7qjPLoh7lLtFAyrZdEDTgmB9eq7gIDyxgHh/VjShXtYiIxz9z2PBZriLTC
-	 Euv25JB1PC4745cDPGH2sXf7we2+aR/oU0DnkUy68e4F7OqKZ4KVA7xp5s33PW59fl
-	 ongHuhgU3kHqhtG0YawE8zo70fQeh8XoFgRwdxdo7dNGKZYjDgT+uP5lLfqzgMK4oK
-	 pMWnvpbdaMi5Q==
-Date: Tue, 6 Feb 2024 19:33:42 -0800 (PST)
+	b=svAsCWTFHb+43Uu7MtYnBJxvFPvTo8qToauZp7+BHW3PodaQoa8JigJ/WV3O03Cdy
+	 H3ky8Mcx2yTvQeD/LKdQgJP0efnXnihjjZBp1skHxMkNLccdwhcQdZvCBO+QQaDgdB
+	 vzvBcZWTmB6gFQWd87HrX4mAU2gkCoTOLYcszE07IyLr0naANa+3TVQ609zZUPe4VJ
+	 h126jX1EUg+NZy+fbDwl2ZTdWRVYl6fbp8pX1Ql0ECD/1kof/lgBW+LG3tm1egjFCm
+	 07NAGLIrS+EmL63jN+98Zga9XkAeTle0qB4L4Kh8C7bpyayj1f5QNJ/m35WDCq6pkB
+	 ZeEVJcW8E5B5A==
+Date: Tue, 6 Feb 2024 19:35:52 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net 3/4] mptcp: fix data races on remote_id
-In-Reply-To: <7487c3a37301428f088edb73cab6d01e55049353.1707144963.git.pabeni@redhat.com>
-Message-ID: <a7c696cc-ae43-7bae-70ed-483954909ed4@kernel.org>
-References: <cover.1707144963.git.pabeni@redhat.com> <7487c3a37301428f088edb73cab6d01e55049353.1707144963.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net 4/4] mptcp: fix duplicate subflow creation
+In-Reply-To: <1392a4ef6a8a45ca3a920f933a12766283a828c6.1707144963.git.pabeni@redhat.com>
+Message-ID: <e815d530-4f29-c0ed-fdad-e1f5573178d9@kernel.org>
+References: <cover.1707144963.git.pabeni@redhat.com> <1392a4ef6a8a45ca3a920f933a12766283a828c6.1707144963.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,90 +44,101 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Mon, 5 Feb 2024, Paolo Abeni wrote:
 
-> Similar to the previous patch, address the data race on
-> remote_id, adding the suitable ONCE annotations.
+> Fullmesh endpoints could end-up unexpectedly generating duplicate
+> subflows - same local and remote addresses - when multiple incoming
+> ADD_ADDR are processed before the PM creates the subflow for the local
+> endpoints.
 >
-> Fixes: bedee0b56113 ("mptcp: address lookup improvements")
+> Address the issue explicitly checking for duplicates at subflow
+> creation time.
+>
+> To avoid a quadratic computational complexity, track the unavailable
+> remote address ids in a temporary bitmap and initialize such bitmap
+> with the remote ids of all the existing subflows matching the local
+> address currently processed.
+>
+> The above allows additionally replacing the existing code checking
+> for duplicate entry in the current set with a simple bit test
+> operation.
+>
+> Fixes: 2843ff6f36db ("mptcp: remote addresses fullmesh")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/435
 > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
-> net/mptcp/pm_netlink.c | 8 ++++----
-> net/mptcp/subflow.c    | 6 +++---
-> 2 files changed, 7 insertions(+), 7 deletions(-)
+> Note that there is no problem for the opposite event sequence.
+> ---
+> net/mptcp/pm_netlink.c | 33 ++++++++++++++++++---------------
+> 1 file changed, 18 insertions(+), 15 deletions(-)
 >
 > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index d1b984c9dc25..066bc855365c 100644
+> index 066bc855365c..617aad83eb87 100644
 > --- a/net/mptcp/pm_netlink.c
 > +++ b/net/mptcp/pm_netlink.c
-> @@ -443,7 +443,7 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
+> @@ -396,19 +396,6 @@ void mptcp_pm_free_anno_list(struct mptcp_sock *msk)
+> 	}
+> }
+>
+> -static bool lookup_address_in_vec(const struct mptcp_addr_info *addrs, unsigned int nr,
+> -				  const struct mptcp_addr_info *addr)
+> -{
+> -	int i;
+> -
+> -	for (i = 0; i < nr; i++) {
+> -		if (addrs[i].id == addr->id)
+> -			return true;
+> -	}
+> -
+> -	return false;
+> -}
+> -
+> /* Fill all the remote addresses into the array addrs[],
+>  * and return the array size.
+>  */
+> @@ -440,6 +427,16 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
+> 		msk->pm.subflows++;
+> 		addrs[i++] = remote;
+> 	} else {
+> +		DECLARE_BITMAP(unavail_id, MPTCP_PM_MAX_ADDR_ID + 1);
+> +
+> +		/* Forbit creation of new subflows matching existing
+
+Looks ok code-wise, but s/forbit/forbid/ here and...
+
+> +		 * ones, possibly already created by incoming ADD_ADDR
+> +		 */
+> +		bitmap_zero(unavail_id, MPTCP_PM_MAX_ADDR_ID + 1);
+> +		mptcp_for_each_subflow(msk, subflow)
+> +			if (READ_ONCE(subflow->local_id) == local->id)
+> +				__set_bit(subflow->remote_id, unavail_id);
+> +
 > 		mptcp_for_each_subflow(msk, subflow) {
 > 			ssk = mptcp_subflow_tcp_sock(subflow);
 > 			remote_address((struct sock_common *)ssk, &addrs[i]);
-> -			addrs[i].id = subflow->remote_id;
-> +			addrs[i].id = READ_ONCE(subflow->remote_id);
+> @@ -447,11 +444,17 @@ static unsigned int fill_remote_addresses_vec(struct mptcp_sock *msk,
 > 			if (deny_id0 && !addrs[i].id)
 > 				continue;
 >
-> @@ -800,17 +800,17 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
-> 		mptcp_for_each_subflow_safe(msk, subflow, tmp) {
-> 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
-> +			u8 srm_id = READ_ONCE(subflow->remote_id);
+> +			if (test_bit(addrs[i].id, unavail_id))
+> +				continue;
+> +
+> 			if (!mptcp_pm_addr_families_match(sk, local, &addrs[i]))
+> 				continue;
+>
+> -			if (!lookup_address_in_vec(addrs, i, &addrs[i]) &&
+> -			    msk->pm.subflows < subflows_max) {
+> +			if (msk->pm.subflows < subflows_max) {
+> +				/* forbit creating multiple address towards
 
-Paolo -
-
-"srm_id" reads oddly in statements like "srm_id != rm_id" since it creates 
-some confusion between "remote" and "remove". Please rename to make the 
-"remote" more obvious!
+...here too. Or "Prevent" works too :)
 
 - Mat
 
-> 			u8 id = subflow_get_local_id(subflow);
->
-> -			if (rm_type == MPTCP_MIB_RMADDR && subflow->remote_id != rm_id)
-> +			if (rm_type == MPTCP_MIB_RMADDR && srm_id != rm_id)
-> 				continue;
-> 			if (rm_type == MPTCP_MIB_RMSUBFLOW && !mptcp_local_id_match(msk, id, rm_id))
-> 				continue;
->
-> 			pr_debug(" -> %s rm_list_ids[%d]=%u local_id=%u remote_id=%u mpc_id=%u",
-> 				 rm_type == MPTCP_MIB_RMADDR ? "address" : "subflow",
-> -				 i, rm_id, id, subflow->remote_id,
-> -				 msk->mpc_endpoint_id);
-> +				 i, rm_id, id, srm_id, msk->mpc_endpoint_id);
-> 			spin_unlock_bh(&msk->pm.lock);
-> 			mptcp_subflow_shutdown(sk, ssk, how);
->
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index 068784d3e748..6403c56f2902 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -536,7 +536,7 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
-> 		subflow->backup = mp_opt.backup;
-> 		subflow->thmac = mp_opt.thmac;
-> 		subflow->remote_nonce = mp_opt.nonce;
-> -		subflow->remote_id = mp_opt.join_id;
-> +		WRITE_ONCE(subflow->remote_id, mp_opt.join_id);
-> 		pr_debug("subflow=%p, thmac=%llu, remote_nonce=%u backup=%d",
-> 			 subflow, subflow->thmac, subflow->remote_nonce,
-> 			 subflow->backup);
-> @@ -1569,7 +1569,7 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
-> 	pr_debug("msk=%p remote_token=%u local_id=%d remote_id=%d", msk,
-> 		 remote_token, local_id, remote_id);
-> 	subflow->remote_token = remote_token;
-> -	subflow->remote_id = remote_id;
-> +	WRITE_ONCE(subflow->remote_id, remote_id);
-> 	subflow->request_join = 1;
-> 	subflow->request_bkup = !!(flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-> 	subflow->subflow_id = msk->subflow_id++;
-> @@ -1976,7 +1976,7 @@ static void subflow_ulp_clone(const struct request_sock *req,
-> 		new_ctx->fully_established = 1;
-> 		new_ctx->remote_key_valid = 1;
-> 		new_ctx->backup = subflow_req->backup;
-> -		new_ctx->remote_id = subflow_req->remote_id;
-> +		WRITE_ONCE(new_ctx->remote_id, subflow_req->remote_id);
-> 		new_ctx->token = subflow_req->token;
-> 		new_ctx->thmac = subflow_req->thmac;
->
+> +				 * this id
+> +				 */
+> +				__set_bit(addrs[i].id, unavail_id);
+> 				msk->pm.subflows++;
+> 				i++;
+> 			}
 > -- 
 > 2.43.0
 >
