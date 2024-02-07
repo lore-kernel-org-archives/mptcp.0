@@ -1,88 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543BA6110;
-	Wed,  7 Feb 2024 01:44:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B27ED2FE
+	for <mptcp@lists.linux.dev>; Wed,  7 Feb 2024 01:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707270249; cv=none; b=MHyAgPl0ojdEx1maRdiUCRTeDAnElW3Gf2wJHEBdbYa6rMu8ntUYVwoESyuzMBxdgrX9ufynOv+w7rLFvr+ZX859m/6QBK+KQ6wtuEcLgaz3lM0Zy7Hmd8UZWVETen/lgWh8Z4LmilI+0qiPxSQJNJf1XToAsGMRY0LnKBCDFO4=
+	t=1707270986; cv=none; b=HgpRcJVqvzLMYTrLg59Mq+RN5+MWpSIJ2GV8rs+AynSv2O6z15jfR2Y2CiOXb/FJR927n0P9O3ZIjxfxGMLt0wJX/F8ixUQgsxtRjcZiTJ8jMjvS8QG+A2ZmfpJ5ygJH1+vYGLaNKxUcSE68+7vwxtpuoIYLMJ26gQQmK/xSJDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707270249; c=relaxed/simple;
-	bh=VtLm8iXEQmPd78upVKjrBvCXxUUWtTQqhbFstC/uJ+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TJxl4rUavezmkKLUj3hEGoWSbzxkOXamBPCVeUscNVrv4Z/MXUI799S60PZ+95VYbwiEgU3G342z9U0Astbvxek4R9Q7RwDd21p/65KLyAlCfSQsaw7a2pBareBSDT8mU9NgmAk3lYMr/eo0WkHS7E1u9Bkdb8qhr829Iryb47s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B33E/tnu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707270986; c=relaxed/simple;
+	bh=UQ61cEo/m9FDZSnTlOJVbNFEgJ3NI5x2JS4GxhnPbj0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ivugXh1Hi9pJH74EuSPdBAqFcZAx1pJPh8jAGHrSE4m4XS+7WdvkfwY0+WWfgmqO/yFNP7CWQqU85X2kXATn8jhyKcmpbk9N7JddGhsIK86fudUVwzrGLt5wskzpRVWMStdAl4qDGRVDfx13pqshOtpuDdn2Jm5mp03YK/vnOPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5VeGFv5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B33E/tnu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0686CC433C7;
-	Wed,  7 Feb 2024 01:44:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5VeGFv5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7E8CC433C7;
+	Wed,  7 Feb 2024 01:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707270248;
-	bh=VtLm8iXEQmPd78upVKjrBvCXxUUWtTQqhbFstC/uJ+k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=B33E/tnu4crn5H1QOID/aUwJAPCk6yuDDleoHkde9VsH1vIvoeQ5JMMmB/W/GKW4Z
-	 VxNZNKtT1YvrZwuS5H0tDPoZMHOrmT+ldMRHwD9Ra6uPzBjmWKJ872XPQ44km3769s
-	 bUFMrD8PBesRCeZVVoSY0h3t1YiFEu9ajQnBtnPAgFpnaz4IDnE2BgmspWREZkLWo/
-	 R4mlyFLaCMmx95lcozzmWCZIJSGjetiuiEz8ehQjkPP62YpqsDp/lANptueciVeK0m
-	 HnsBIf4JdR3K9z9oF0dCfdaajkNvGJmd/D/ngcuAC5nke3hKwjvGArQut6dq3qrWdG
-	 Vy/YETJrqqnig==
-Date: Tue, 6 Feb 2024 17:44:07 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, MPTCP Upstream
- <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>, Mat Martineau
- <martineau@kernel.org>
-Subject: Re: [TEST] The no-kvm CI instances going away
-Message-ID: <20240206174407.36ca59c4@kernel.org>
-In-Reply-To: <f6437533-b0c9-422b-af00-fb8a236b1956@kernel.org>
-References: <20240205174136.6056d596@kernel.org>
-	<f6437533-b0c9-422b-af00-fb8a236b1956@kernel.org>
+	s=k20201202; t=1707270986;
+	bh=UQ61cEo/m9FDZSnTlOJVbNFEgJ3NI5x2JS4GxhnPbj0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=O5VeGFv5LnSHZ6A92PDrMI25FbyseROjFbShlkSPdxmKKbdaRephREwHm6cHNXv/o
+	 Mrf8Hamtq0nMy84vstpF9JVBqXYYECWmgsKREmWbi2bMH+urnLLwZIZM4p8mCqxNkT
+	 uNzAM/Iv34nkQ2pglw7Xfg6G6KE0u89fY9OieNFLvPHHXmt+GyV5+oYPBTeyRGMmea
+	 Ty5+crqNJx8zn7+Aqq8apTmaqrz9XzhmPp7Wnw1C4kLCHG3YFihqFDgKWI7SmZwt0v
+	 wNCbZI/ymYMZ4baJHO43IBnoLfmCxR6xtKbgqEgoHhsFWbuT4pFMNBSohnnXyJq2PN
+	 khUCSCa/ny3+Q==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 0/2] fixes for "map v4 address to v6"
+Date: Wed,  7 Feb 2024 09:55:12 +0800
+Message-Id: <cover.1707270765.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 6 Feb 2024 12:16:43 +0100 Matthieu Baerts wrote:
-> Hi Jakub,
-> 
-> On 06/02/2024 02:41, Jakub Kicinski wrote:
-> > because cloud computing is expensive I'm shutting down the instances
-> > which were running without KVM support. We're left with the KVM-enabled
-> > instances only (metal) - one normal and one with debug configs enabled.  
-> 
-> Thank you for the notification!
-> 
-> It sounds like good news if the non-support of KVM was causing issues :)
-> 
-> I think we can then no longer ignore the two MPTCP tests that were
-> unstable in the previous environment.
-> 
-> The results from the different tests running on the -dbg instances don't
-> look good. Maybe some debug kconfig have a too big impact? [1]
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Sorry, I'm behind on the reading the list. FWIW if you want to reach me
-quickly make sure the To: doesn't include anyone else. That gets sorted
-to a higher prio folder :S
+v3:
+ - add a new argument addr for mptcp_lib_evts_get_info, instead of
+   a new helper mptcp_lib_evts_get_info_with_addr
 
-> For MPTCP, one test always hits the selftest timeout [2] when using a
-> debug kconfig. I don't know what to do in this case: if we need to set a
-> timeout value that is supported by debug environments, the value will be
-> so high, it will no longer catch issues "early enough" in "normal"
-> environments.
-> Or could it be possible to ignore or double the timeout value in this
-> debug environment?
-> 
-> Also, what is the plan with this debug env? It looks like the results
-> are not reported to patchwork for the moment. Maybe only "important"
-> issues, like kernel warnings, could be reported? Failed tests could be
-> reported as "Warning" instead of "Fail"?
+v2:
+ - update selftests as Mat suggested.
 
-Unfortunately I'm really behind on my "real job". I don't have a clear
-plan. I think we should scale the timeout by 2x or so, but I haven't
-looked how to do that.
+Geliang Tang (2):
+  mptcp: map v4 address to v6 when destroying subflow
+  selftests: mptcp: rm subflow with v4/v4mapped addr
 
-I wish the selftest subsystem had some basic guidance.
+ net/mptcp/pm_userspace.c                      | 10 +++++++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 28 +++++++++++--------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |  7 +++--
+ 3 files changed, 31 insertions(+), 14 deletions(-)
+
+-- 
+2.40.1
+
