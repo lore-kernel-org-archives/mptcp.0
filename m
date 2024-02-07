@@ -1,126 +1,84 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E7E76904
-	for <mptcp@lists.linux.dev>; Wed,  7 Feb 2024 13:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5AE7A73C;
+	Wed,  7 Feb 2024 14:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707311420; cv=none; b=gEzs+JaGouesTtUIkiN6y+yiX1DPX4No0nYrSyTG61gqUYCAcVA2WL0Wst69uMu71PrILpzEp52UZs8A3sPsVonEN8K7RuSrIcKqzeTIfII3svj/+Rma7Xj5NGFHJ95q0b0ETsqnjcgm5gsKDZxm+pmzZD34uSfvryyH80XSevQ=
+	t=1707314891; cv=none; b=cvNI/QUejl3lzyn+TlvqawO39w/ZhudW/bWatSdvqemjYizj4mMaEN6QUN6FOslZDnA5WkuCk2VgDKh8aDnwcgWD2u+epcSH1FUR8Btqi0CFV2WFDmQuLVBtCrulu7xKY7WesTx0QvEzsoh4xvMgyhoIepKBfy+41TiuVAtGc80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707311420; c=relaxed/simple;
-	bh=emHTcBJylgoS5wI7AKlw8yVTDTmJIVLjwoSRN/LJJqY=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=LkgukcjbmnH66CJ2S/ZsN/C2pWyhr1/75uuOmdGcnsxLf5KOAlEVbILJ+FVHVaAzdPdZhjybOW1dWhFJJvQS5uHo+FGoATmk5A/oVcc4KZx6AgcvOCURJhk4LyuPa8BYKhkBgvWGgZNGmtB32/JsafzeMFN4sCjGDNU19U0eLVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GA68zkKD; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707314891; c=relaxed/simple;
+	bh=BFGqAPdxafkfBpmAuN1/gbsAktxUlX++Zwef2uI7qXo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oKfuMb5UJWGXsIxmj+Aoy1cDH5mY+XZgjsappmHTOf6ukvr4q+Sd4r5XlJxNJ5orn3URI+u+tAXz/wC1/Y4v/qcBAeEG2on0Jc6un8duWKfRd/iX/u1SCRkPscUjBhzbc++Ouj3PDEUzwFhu/uyPXF8gGPmt0pBmVpHenlXnS/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W31frQhh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GA68zkKD"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-783da26489aso33956185a.3
-        for <mptcp@lists.linux.dev>; Wed, 07 Feb 2024 05:10:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707311417; x=1707916217; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4MgQQWOxnppSFJ969crc6DW+aPBH38uHZhWDW5Jn85M=;
-        b=GA68zkKD+ARYBdlo92yKcWZHrEoQjbWJcPGpylnikqI3QptcpfFWuJkp53cQe5llxC
-         ZdefsfPIB1NBmU7LxTm90pajjx9hFeUVjjtkVFTeQG76f0SzezD2LEF+IMlOt8jXyedL
-         97tu1P4+cdfQRGifUakhB8ztea6FakR/Ls8vFGAUNPYcQir9hfKYST1krUrua+r1kA/C
-         Q0hazkkd8v47Fau0z8DgFrKygNvRJnaAjRPxmG4crxJ9t4I6njJBNL+w8as6YdoCEanl
-         zg/EVGCL6MP6NVr97+At8GsdQF+yxcVWOxBkM+IkNjIBYPJDlXugyunh19NXIx5Ckaee
-         fTLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707311417; x=1707916217;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4MgQQWOxnppSFJ969crc6DW+aPBH38uHZhWDW5Jn85M=;
-        b=Ej/8cGXdYHTmXyDyhzL8p45awgTjtC72W4OUwVvMuAd+8F0gKSqahzEhzSArxFj2WV
-         QycmuCdkLwlln1CiHkNynLtyE1zNtAUp06343ftnmzQ0YYFRmV2Z6S0FgjCge9zwl/vr
-         2555ML11i4tsigBxtDWNnN7YgWj5O39Z8EUPbJW2hoRvwoo+iqNPxMf0x6zS7Jx2+9L5
-         SLfdNftqWpW4NGrF7tASSy/o2Zyze/tpPSAgQYR9pqouRPEwaxTrSYB2g21E2kwP/+Gx
-         eEg9fQ+d8CQqWn+I/8dJNFXHTT65ZNcWczFi1ntBK6drNkzFRQCRvQz9b/NW/8m2584x
-         e+5Q==
-X-Gm-Message-State: AOJu0YwUpmPyHmMvEDMWlY76KV5spWW5sUqLxAX4TVhj3v2QfdOY/SPV
-	INZZ452krQlZ0Jl6XsoWyyK5TMEcY2tJH7vAMwkbHLukMlG5AfE=
-X-Google-Smtp-Source: AGHT+IE8Sijjv5/JAvazgaRJF1+PDCdvmP72ilmXv2dmt8JI5jiU/9c55qVpzfE665GNQiMXX07+8w==
-X-Received: by 2002:ad4:5d49:0:b0:68c:79dd:cd92 with SMTP id jk9-20020ad45d49000000b0068c79ddcd92mr7067930qvb.9.1707311417687;
-        Wed, 07 Feb 2024 05:10:17 -0800 (PST)
-Received: from [127.0.0.1] ([20.109.39.245])
-        by smtp.gmail.com with ESMTPSA id m12-20020a05621402ac00b0068cbd690c47sm556855qvv.116.2024.02.07.05.10.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 05:10:17 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240207-mptcp-check-protocol-v3-3-77c69c596f55@kernel.org>
-References: <20240207-mptcp-check-protocol-v3-3-77c69c596f55@kernel.org>
-Subject: Re: mptcp: check the protocol in mptcp_sk() with DEBUG_NET: Tests
- Results
-Message-ID: <315565e1-ea1d-fa2b-753a-4721690f66ff@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 07 Feb 2024 13:10:16 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W31frQhh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F15D7C43394;
+	Wed,  7 Feb 2024 14:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707314891;
+	bh=BFGqAPdxafkfBpmAuN1/gbsAktxUlX++Zwef2uI7qXo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=W31frQhhqq7/vCnNkIwtJKJ828o22ZH1M9yPxnJ9ihPwqzTpImspWyyktoXdKW1pY
+	 q93SW1c/lOxP/KUvZJsSOh77fPLfVJqYwLRjSS2FjyGIXhy2va5PovHpw911PNIK6U
+	 khwo9pEOPXEfB8x3vUMn980q+XreKDjkHbgKzY5UB7NUlf/c7Y6LetIgiBJMe53x8A
+	 5tBeztqLHRBMqxrJFyKdoqK1MvpLR8wdjj9PzLZSbDxwlor3H9ZGSQuwY9ikZ6P1Ai
+	 x2Xblg0ZGlLSfLeN2Glu9Lt8H3/D9DxXKveRacWiLJTgB36/v/Ft0NsqaHd93IvDu8
+	 PB4IVVQ7uqSjQ==
+From: Geliang Tang <geliang@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	bpf@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH bpf-next v4 0/3] bpf, btf: Add DEBUG_INFO_BTF checks for __register_bpf_struct_ops
+Date: Wed,  7 Feb 2024 22:07:53 +0800
+Message-Id: <cover.1707314646.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+v4:
+ - add a new patch to fix error checks for btf_get_module_btf.
+ - rename the helper to check_btf_kconfigs.
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+v3:
+ - fix this build error:
+kernel/bpf/btf.c:7750:11: error: incomplete definition of type 'struct module'
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5671751590346752
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5671751590346752/summary/summary.txt
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202402040934.Fph0XeEo-lkp@intel.com/
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5108801636925440
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5108801636925440/su=
-mmary/summary.txt
+v2:
+ - add register_check_missing_btf helper as Jiri suggested.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/7511efd6fe57
+Geliang Tang (3):
+  bpf, btf: Fix error checks for btf_get_module_btf
+  bpf, btf: Add check_btf_kconfigs helper
+  bpf, btf: Check btf for register_bpf_struct_ops
 
+ kernel/bpf/btf.c | 42 +++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+-- 
+2.40.1
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
