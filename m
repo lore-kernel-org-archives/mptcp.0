@@ -1,89 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A883B7A726;
-	Wed,  7 Feb 2024 14:08:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F6D7E788;
+	Wed,  7 Feb 2024 14:25:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707314908; cv=none; b=dGTNJhlUoL7jFOih5m/1tLxbJD3JKbtRj+4IsVEYlHUj5aWOgZ4ed7trklEt+dVOCg1QtSYe6M3bJDcUtCVI5Y7khdM9Ei8m1RYMMNDpDkbnHMhquxkOb+vVCL6Ew3bZrBVU7pDn3e5BFX+Ni8k0OWGfcg5HFoyDExnjxgGpIRU=
+	t=1707315942; cv=none; b=ATGpqmCsctNAZL9//hJzXn6R5pwVBiYSQpwvpQgCCfFGVi7nbyVWiqPcglq83i1F1gw9yFuUgFP2Gll5lpOpiyCzxrGOwkQX1j/X+LGN23dJEtlzizIWvNiCCa+rSdPjPq4OA3maABNOkvt7HZLZuebHV5B77GN33Lf8evUNY30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707314908; c=relaxed/simple;
-	bh=J1Il0ufBa31zXemEA+7pfMIoFvnKy7gs4oH7qu5WSe0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SWhBj6sOoPFP5S2tdMiebK6eIdLosHNJydtCJh81819z9XeF4UHTmvTSlfYb1C77/x1i8z1ZX8JVaJzWFSpCo5+r1HpNzcxcAn7daE1dF0YPUH3YNKsDaR2nAo101Es/+nKAg/xfkoBzuqiP/TyZG47Gv3RT5sXVKx6ctVpBOtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRbbWV0A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707315942; c=relaxed/simple;
+	bh=9gfeQFNW7jPaPrbXEOMaJtzp02EITBNOO4pB5b64vxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n2ON4fuiws/Uvsb+Lp0vmWUYJHzAc2yOUJC/UytjW2RDjqtYmpNgSbZF09FrH14xwubTno3/bF+//4Qib/3L6vZ9rQOi4IuUhfku2wIWjrg3IQ+T5FMH6librtq5dzjDmndzdh7Uxkv09gj90ucXS6mBP5W9ZtKA2km0wULWETQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJUoImtl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRbbWV0A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4768C43390;
-	Wed,  7 Feb 2024 14:08:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJUoImtl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F95FC433F1;
+	Wed,  7 Feb 2024 14:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707314908;
-	bh=J1Il0ufBa31zXemEA+7pfMIoFvnKy7gs4oH7qu5WSe0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QRbbWV0AihK5q5+PMymDQHeZqrPHjbEYVxcpn9vDsHQWePLC8vpU2v+SLG8nKlc03
-	 3y24BjM7EbGQT/lXgITe6p6uTGjSK6131fZwAYlLmI4SdIcJ1A5sxdRC1njH0gxFsC
-	 y7qFb8Z/VI1JHV0oLtV0EOfd+3sPUYe4mIUKTVJOHfXGvlD/3sARhXuXLgTXglmFVO
-	 tjGtJhAsaMeq1Wf6X1L8qcBeDnXdoavdi3rxzSWQveg2lP0ixmmkT5WUwYXxf4H+yU
-	 k1AVNS4zWIzTlP/lBenRkU6N9s7bNMM6rEsfh34Jwct4bcRzwWw1zCnZ0YQu1kzbwi
-	 nW0f9Nqzbh9Qg==
-From: Geliang Tang <geliang@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	bpf@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH bpf-next v4 3/3] bpf, btf: Check btf for register_bpf_struct_ops
-Date: Wed,  7 Feb 2024 22:07:56 +0800
-Message-Id: <836391d2a7f44fffaba4ddf664354ecb8eba66cf.1707314646.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1707314646.git.tanggeliang@kylinos.cn>
-References: <cover.1707314646.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1707315941;
+	bh=9gfeQFNW7jPaPrbXEOMaJtzp02EITBNOO4pB5b64vxU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BJUoImtl/FM4XOspOEcjl6y1WzH/8PBlj2SHCeiWsnOJOUuWksjZfsXsy6sBdzWd6
+	 VIeEeTJk3cjRbz2028Fz9I9i7K38N1bf2GglHJEZPBDTi+JUlRIobwukXD6L5n01yw
+	 u2rsZ3WRJ5gYRtAVd5IGvKyWhodzYoPVZrAHeaqndc/2RLoAA89/KWn4zp3xpCO6Gt
+	 Dmj66QpWQTc769v4PlCp+lGrKogzcigj5BvDDiPsNlrSYqfrReNWixRmWG/yGiKnzz
+	 bz9z8ME3WdQVGvT7ugUKTOHzumthsadgF3MMOJw8rBB/1c0iSHWzRh22TobOWbAHtp
+	 w+VLGAC2RmO0g==
+Date: Wed, 7 Feb 2024 06:25:40 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, MPTCP Upstream
+ <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>, Mat Martineau
+ <martineau@kernel.org>
+Subject: Re: [TEST] The no-kvm CI instances going away
+Message-ID: <20240207062540.5fe5563b@kernel.org>
+In-Reply-To: <2d0eb4ef-dd07-4800-8fcf-637a924570fa@kernel.org>
+References: <20240205174136.6056d596@kernel.org>
+	<f6437533-b0c9-422b-af00-fb8a236b1956@kernel.org>
+	<20240206174407.36ca59c4@kernel.org>
+	<2d0eb4ef-dd07-4800-8fcf-637a924570fa@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On Wed, 7 Feb 2024 10:44:14 +0100 Matthieu Baerts wrote:
+> > Unfortunately I'm really behind on my "real job". I don't have a clear
+> > plan. I think we should scale the timeout by 2x or so, but I haven't
+> > looked how to do that.  
+> 
+> No hurry, I understand.
+> 
+> It is not clear to me how the patches you add on top of the ones from
+> patchwork are managed. Then, I don't know if it can help, but on the
+> debug instance, this command could be launched before starting the tests
+> to double the timeout values in all the "net" selftests:
+> 
+>   $ find tools/testing/selftests/net -name settings -print0 | xargs -0 \
+>        awk -i inplace -F '=' \
+>            '{if ($1 == "timeout") { print $1 "=" $2*2 } else { print }}'
 
-Similar to the handling in the functions __register_btf_kfunc_id_set()
-and register_btf_id_dtor_kfuncs(), this patch uses the newly added
-helper check_btf_kconfigs() and IS_ERR() to check the return value of
-btf_get_module_btf().
+I'd rather not modify the tree. Poking around - this seems to work:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- kernel/bpf/btf.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+  export kselftest_override_timeout=1
 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index eedbee04de89..9aae5a4bba24 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -8885,7 +8885,9 @@ int __register_bpf_struct_ops(struct bpf_struct_ops *st_ops)
- 
- 	btf = btf_get_module_btf(st_ops->owner);
- 	if (!btf)
--		return -EINVAL;
-+		return check_btf_kconfigs(st_ops->owner);
-+	if (IS_ERR(btf))
-+		return PTR_ERR(btf);
- 
- 	log = kzalloc(sizeof(*log), GFP_KERNEL | __GFP_NOWARN);
- 	if (!log) {
--- 
-2.40.1
-
+Now it's just a matter of finding 15min to code it up :)
