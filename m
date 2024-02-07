@@ -1,141 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476478288A
-	for <mptcp@lists.linux.dev>; Wed,  7 Feb 2024 18:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D6A85C5B
+	for <mptcp@lists.linux.dev>; Wed,  7 Feb 2024 19:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707330147; cv=none; b=AlSSnPB/xzTaPqumvaaPi2jkn2k4nbavj6NQt5a60OTbsykH4zMVHgAxwKk/8x6wG5jVLI4zNqG40SUiDLZAmpOnIu1VN6rX0ZsHfwlQSTfOFtRmFnAGeYol8QCJiJM2ifNlnu9zlo+C8+FEcwLl/06g6MdtCYnTJVy3X7jKW+A=
+	t=1707332853; cv=none; b=l0YIwwQ5GjtWGSNmhXfny6PRhSLCFseK2LXOyEhRiXFLWit3nUC+i3xq1t3N2MI5Ergc5WT9DgAXIbd+qvekLTaxhP9yvxy61ytNiziajTK1UuUUBeZQ3UMKNxgg29x5RrL7SSHlVSS7BT9dL/QSGM13PlkJC5GDk/NtVNJB2dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707330147; c=relaxed/simple;
-	bh=FCg66R3dpD9v8yo6mDZUXatJ8PnXAXVMc/jsoadc2+0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TJIOVBc6ak+3G7eZyUc8zlycvVgy6cbj6cZ1r7VU23941EB52wz+fPpQNOt0b67QskwTPymx3W+SVsnsr5oB7101E+sp/CBwsZ6F1rBbTRL7dk4248nzdlKnTleRK23DxjLuUJUG6rNT3YwvbvegoBqkQJfybBNL9Z2jgRAPq38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uVGT4S7O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707332853; c=relaxed/simple;
+	bh=MqTEvocyFV2hrFIAAQyii1y4U36WGsY99DxTNPcfUFU=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=Rz7KwTkdb8PlryczgXH5/R1cg6ubnjYlX99F8HcXEJlYnLWUWfBzwJ6otQnlAwuI+5Lvyh9NYG5E0lRSx7BYZiZemysTfw1waBsCNnW+0cUMjy8vTzw6TCsPKBmv7jZx2qcqHmEvfsKvUToeqWIVHkTuq7vmggCseOK8TuiYcU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J7CgfyRn; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uVGT4S7O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E191C433F1;
-	Wed,  7 Feb 2024 18:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707330146;
-	bh=FCg66R3dpD9v8yo6mDZUXatJ8PnXAXVMc/jsoadc2+0=;
-	h=From:Date:Subject:To:Cc:From;
-	b=uVGT4S7Og8pyAjNADNd60CAHkq+w0JYLXe3g6yP90Rtxsig1MSUKBDun+aacifZmr
-	 pUhhod2XWvy6g/Ier9kJ7pBGzXTxYbjnvuQE8IbGE2e5bXj44vjqI1s4y4fJPS8YH8
-	 q9xj63RA/JYTHbJVgZzeR7lyfXM94+M9SKSTsgvYKV9AidRoWLivgEwfpAW0Futboi
-	 o14v2SziJo5MZeVewyXM1b7y9+n2cORhldrhC/NIPyKSjSBVKqPTn/wCvLaZTw/R77
-	 3BOxeK2JOziMHgnm9T04d0s5vnAyoknuJZN8DapOt5ixRP1fNok3k34GN9iTIxWHIw
-	 jK6k/Qem2l5yQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 07 Feb 2024 19:22:11 +0100
-Subject: [PATCH mptcp-next] selftests: mptcp: stop forcing iptables-legacy
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7CgfyRn"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-783d8dff637so57001685a.3
+        for <mptcp@lists.linux.dev>; Wed, 07 Feb 2024 11:07:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707332850; x=1707937650; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r8d2Uk5ewInbjc9ioxRdwjaCI1gvGxEp3Yg5N8+AOek=;
+        b=J7CgfyRncpmtoTlLgsAauX16txQ4bQA4k454qeCDvBFJJFxaqZRmBZZ9dW/sTNxmGP
+         BO8jhd+7pzXBT1G1qJ8zW50a473zuf2cOFZ/dDUUlVPCCCYv4QlY+bSCpRzRpNWoTkAt
+         UVLvrFmTlaDo0QZUBa+UJbZeK8nnak9Cy4WZBDQGPmLtdtfu7KWkxYyRVsuyAVCdELig
+         NaQRJTmuiZ+Ok+bfYtBVMcfhoYaRPaZAui/pOqSFQHc/0gIpm5PEU6JDqPfx/HF51P19
+         hXNicxMlKqm+pRzUfkBzNGAKln6EIRBjRWMcyDzmfou7QuOTMxwUd79e/8yW0ru2ZiKN
+         0V0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707332850; x=1707937650;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=r8d2Uk5ewInbjc9ioxRdwjaCI1gvGxEp3Yg5N8+AOek=;
+        b=FOoDnznirlrOli3iYOql7C2eBv5eUCbpML7whdDTXNEwzpGG6CKiLnjSM3P4CfFH9D
+         JcTE3hBsp6sSWAuSO7TcBfiuFTmBpwIBj5RTQzBmCjveKxRlDCOXOtoM/FvUTFtvBjcE
+         YSGxgYFmJ013LUHqsvuuG7wKTmDI18RGP3msdqF0NfnwlngtvzqeShIyfcTDGhfNim+9
+         aO/KsWkL0/b6Avlq2+HDRla9m0WY2OmmX59WuLNvqIdxAp7NbQ6nz7twu/KnERTCi5dS
+         mx7nhN3anXhPR5TvAw6T98sXjqzX8Ud34JPMcgW2cF91Hg2Ynbf4IzZetkCtrIlh1w87
+         vdYQ==
+X-Gm-Message-State: AOJu0Yz5V6mfJWVytAHILgPgUrZC1/r42TUsJoJCJlimTjHupIaHnNTF
+	XQ9hF0uauvv/+vMIbC2HxC72OxpOd2NUyMXt8RyUyoIVGzFO7kMDeOtN+dA=
+X-Google-Smtp-Source: AGHT+IE2cmYAX0wJkGcN65zeTZiBPCLJtEJ53Ygspgkn8AUXcMkRJX7oJmpvEnvLxXLquMW0lHIT+w==
+X-Received: by 2002:a05:620a:2105:b0:783:f88b:387e with SMTP id l5-20020a05620a210500b00783f88b387emr6862152qkl.12.1707332850048;
+        Wed, 07 Feb 2024 11:07:30 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.74.6])
+        by smtp.gmail.com with ESMTPSA id h14-20020a05620a13ee00b00783de6b5ccfsm767390qkl.88.2024.02.07.11.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 11:07:29 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20240207-selftests-mptcp-fix-5-15-v1-3-005b0cdb135a@kernel.org>
+References:
+ <20240207-selftests-mptcp-fix-5-15-v1-3-005b0cdb135a@kernel.org>
+Subject: Re: selftests: mptcp: diag: fix bash warnings on older kernels:
+ Tests Results
+Message-ID: <98efecc1-551a-7b7a-a6d2-a601e6b2b910@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 07 Feb 2024 19:07:28 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240207-selftests-mptcp-iptables-nft-v1-1-108de489316e@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAFLKw2UC/yXM0QqDMAxA0V+RPC9QS2Hir8ge2ppsAe1KE4Yg/
- vvK9njgck9QakIK83BCo4+ovEvHeBsgv2J5EsraDd754Ly7o9LGRmqKe7VcUarFtJFiYUOfeA0
- xZE7TCH1RG7Ecv/0C/77QYfC4ri+BPudUegAAAA==
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3275; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=FCg66R3dpD9v8yo6mDZUXatJ8PnXAXVMc/jsoadc2+0=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlw8phYht+J60QMbpvwZNPy6ydTwehwnzz2atQy
- V4Ov5+5oVuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZcPKYQAKCRD2t4JPQmmg
- c1BbEADauEiTQS9EkhZY9w1IXwov3q4vil/nC7D4TDhhK8XjmTbJhLrymdWKKRU8p7ly1YXqktZ
- iE9sM42ORQn60JKU93KqJ9ks8//qsk5Dk4YCAVQ4DpsUmXEohlTKP1ngXPREKqX9NxDDyuUoQt7
- YQ8H5iN6PkoWGmanISNjyqHpcpiAVVq/27EEIyG8NMIAlgiPe2c6sOP9HPaESATUCofcb07wUjI
- Gmc2KedCp9G7k3Ly35mmqRldCcqbUN6DUV6vcvFuqNQofjwDOdqnxVFOayaWpaDRKKyDVEPEOM/
- axliGWHGV3On3PZA0VQjZ5ihNtX2QANKEf7Ri9idPIoj320RTrA5Lw83P6qvTgOJKISNLc243DN
- H06xrqbVyArA79u8IZ+SdwgsILEeHQtNoM9Z7zSNwCeAOimfw6lPrcce48zByLbOADj1HQqA2nL
- ymKQxkOOSWnqhmtqNbs7YgzrePvQ1G0zbkeUDpwmOofU6f8Y2hbPUtXczgpnECOhH5CxLTscTSE
- WBZUvTV/uGE82qfs9uJiYsYP+7naKJHfTWR6NyPy7AeF1G73ZYsfnwJ/TJ60RKtyI4B+vNmNf1Y
- utb3z5M3CsrI7vamoNrqYlZEsRphbVcMrl0vDJhqeyW8NOKwEErzyaWNSV0h0oES/fRH/yZF3KO
- JSNrWmDLl2Xh8LA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Commit 0c4cd3f86a40 ("selftests: mptcp: join: use 'iptables-legacy' if
-available") and a5a5990c099d ("selftests: mptcp: sockopt: use
-'iptables-legacy' if available") forced using iptables-legacy if
-available.
+Hi Matthieu,
 
-This was needed because of some issues that were visible when testing
-the kselftests on a v5.15.x with iptables-nft as default backend. It
-looks like these errors are no longer present. As mentioned by Pablo [1],
-the errors were maybe due to missing kernel config. We can then use
-iptables-nft if it is the default one, instead of using a legacy tool.
+Thank you for your modifications, that's great!
 
-We can then check the variables iptables and ip6tables are valid. We can
-keep the variables to easily change it later or add options.
+Our CI (GitHub Action) did some validations and here is its report:
 
-Link: https://lore.kernel.org/netdev/ZbFiixyMFpQnxzCH@calendula/ [1]
-Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh    | 12 ++++--------
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 12 ++++--------
- 2 files changed, 8 insertions(+), 16 deletions(-)
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7819509269
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index c07386e21e0a..20140ee4de2e 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -161,15 +161,11 @@ check_tools()
- 		exit $ksft_skip
- 	fi
- 
--	# Use the legacy version if available to support old kernel versions
--	if iptables-legacy -V &> /dev/null; then
--		iptables="iptables-legacy"
--		ip6tables="ip6tables-legacy"
--	elif ! iptables -V &> /dev/null; then
--		echo "SKIP: Could not run all tests without iptables tool"
-+	if ! "${iptables}" -V &> /dev/null; then
-+		echo "SKIP: Could not run all tests without ${iptables} tool"
- 		exit $ksft_skip
--	elif ! ip6tables -V &> /dev/null; then
--		echo "SKIP: Could not run all tests without ip6tables tool"
-+	elif ! "${ip6tables}" -V &> /dev/null; then
-+		echo "SKIP: Could not run all tests without ${ip6tables} tool"
- 		exit $ksft_skip
- 	fi
- }
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index c643872ddf47..dac8e1fc7143 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -96,15 +96,11 @@ if [ $? -ne 0 ];then
- 	exit $ksft_skip
- fi
- 
--# Use the legacy version if available to support old kernel versions
--if iptables-legacy -V &> /dev/null; then
--	iptables="iptables-legacy"
--	ip6tables="ip6tables-legacy"
--elif ! iptables -V &> /dev/null; then
--	echo "SKIP: Could not run all tests without iptables tool"
-+if ! "${iptables}" -V &> /dev/null; then
-+	echo "SKIP: Could not run all tests without ${iptables} tool"
- 	exit $ksft_skip
--elif ! ip6tables -V &> /dev/null; then
--	echo "SKIP: Could not run all tests without ip6tables tool"
-+elif ! "${ip6tables}" -V &> /dev/null; then
-+	echo "SKIP: Could not run all tests without ${ip6tables} tool"
- 	exit $ksft_skip
- fi
- 
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/bb075ba934d0
 
----
-base-commit: c2469b38e369c3f2b9577beeb9470cc757abc1b9
-change-id: 20240207-selftests-mptcp-iptables-nft-2bfd4a4cfb81
 
-Best regards,
--- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
