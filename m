@@ -1,127 +1,104 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED6B69DE4
-	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 07:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD676BB45
+	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 09:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707377582; cv=none; b=eWtr1c9TWYcTp0IB+JruIk1OYblprnsyxryF2Vwj1LWmm9KDjlbL3cZ+H60qnDLdeNVk6lpONuAjgKyydhdy7OqzZjCt/WVfsHS06tuK+H0IXi7o1JCMMgp1xHgyymIHgbzKwS6u+tkd+q79VFavSotHlBEEaIvIF4fzP3vhddM=
+	t=1707383689; cv=none; b=HE0yWUbjmPdcnGevwyhAK+UbkULq47NX4MXAXv96jITDEhH0gJaGuZgKc8CKogT+xHJtPTLBpNdLLmvi9dCsSZwMXhYzNekYgsvCUeRtccODeSJZZx530R86u/atnaqi23PbGGU/mvvyQ3FIMi/rHoWkjEC5GddPP6s0Q4LYxko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707377582; c=relaxed/simple;
-	bh=Knt9cnPlXWgnH1XGoIHD3A66D862g3rDsL2G5tcvrW4=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=HB1lbpOFzUNlNl5rvR/q6XdigxlvmNnb5rh7caJHHwnDUK/bGtFeQ7ORJ6BCVIL5r5yhaaDl1vIPKFHojdC2ncHBnzdMOyuExkpPm2mKvS5xen2UXz3a48fgQ3/ZrAXrlxzS/JbdA64LfzJm97upfqFEf7XclrDzNnab/Pclfjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BsOcaBCP; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707383689; c=relaxed/simple;
+	bh=6YbAJlCHQOfZcK7+3cO8OMekllmZxZfLK1yn/+fI2hI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=EygYU2iwjUO6VdwauLO+eTEaJsTO5u7qD1dRQumZAvvyP3BKYtDOJb+NLStDDIZcfM/RBE5VNIb8jcPcGVVGKHSWORGZTwNm10/K9sFJRxbS54Yp4wHqgJup289QaQMprsRsg5pGvN6RLuK4IF0Ma6hYQmxkbRhmBT5A7CA40rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=goDnm2Xl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsOcaBCP"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-783dc658b59so89406385a.2
-        for <mptcp@lists.linux.dev>; Wed, 07 Feb 2024 23:33:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707377579; x=1707982379; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n/CH5zTabh5gSZtc3l2UXbBXTh25dniYT6NF+NJy2us=;
-        b=BsOcaBCPePHZAvfC2dFa3Rr0XFz52dgtHURn3ISpkq/RzRFG5sbi5lWXo0ZfcgOJEm
-         No6vu6vKTWskl71EIF23+HTAi8AD/SFXiu8tqNUORudvLWMTrnpcnjGCGssIkNeWkF7i
-         ZIhviDMQovNVjINWPT1UaSXvXTTogLr3+nwgNZcpRfsreRzE3F9KNpsqMQzpLKrDRPyv
-         YjdwRqZw6tRmTyxYqYUdsSifoRkWf1bwzZxn798day17Xdi4SihL7i9DWN/SgWyLxnUq
-         3oUaE5RUEMYrgMPvzPtsrnBWHd5OZVBHPWLRGetj4rcFUezCcrR+xZkQQC8qQTueJBeS
-         4cdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707377579; x=1707982379;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=n/CH5zTabh5gSZtc3l2UXbBXTh25dniYT6NF+NJy2us=;
-        b=q5IxjPf7HFp5DR3zBFKaKioQ1u7l1SflbOWNzJWKptB9ut0s/vTQuswfv/DcBOViOg
-         1NL5ze/HubS7m7n9K2ScsQOPY4LyYRvrMbBpfgrR0xOWNnEqNhv1YAugdq6L/zh+rCJ+
-         HyJKNid4Pic2NCKaSU977vfKCbtFdFwodvqyYEul6Nmnnhw5xpa6vJExPUWUgN6ztyi+
-         m+8r/HWpvNoFqlW10WaMqHxi5u40Dv6lcyXGD3oKHcxTLoSVGVNcRMmIGZnDdHxDbrgg
-         +37kNiTKwlkelibTyvkH+Z1UG5S363m3KDxCy5But3kJEP7KEeQBI1wCxPFKN71M4Mps
-         GPOg==
-X-Gm-Message-State: AOJu0Yz4pOZ/mJepw2ebXM863fn97ah2v4VOWxHO44eA15CVO1l1rRCd
-	arEZpI/r41WLrDnT36w1SEImxsJKCcx23B19VhFVlzIdlCzKtzID9G/UL/4=
-X-Google-Smtp-Source: AGHT+IEv0J4mqAPwPk+7WPsEJNwfnAt9tAaizjgN6dKnXE3yssZU89lNOP4OyoP5e7FTjx985mhJ0w==
-X-Received: by 2002:a05:620a:1477:b0:785:9516:90f8 with SMTP id j23-20020a05620a147700b00785951690f8mr6317900qkl.35.1707377579441;
-        Wed, 07 Feb 2024 23:32:59 -0800 (PST)
-Received: from [127.0.0.1] ([40.76.119.128])
-        by smtp.gmail.com with ESMTPSA id h22-20020ae9ec16000000b007854d5238e9sm1194315qkg.121.2024.02.07.23.32.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 23:32:59 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <69082b9835463fe36f9e354bddf2d0a97df39c2b.1707373307.git.tanggeliang@kylinos.cn>
-References:
- <69082b9835463fe36f9e354bddf2d0a97df39c2b.1707373307.git.tanggeliang@kylinos.cn>
-Subject: Re: bpf, btf: Check btf for register_bpf_struct_ops: Tests Results
-Message-ID: <04c27777-45a9-6da7-2582-2a638821fd63@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 08 Feb 2024 07:32:58 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="goDnm2Xl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC91C43394;
+	Thu,  8 Feb 2024 09:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707383689;
+	bh=6YbAJlCHQOfZcK7+3cO8OMekllmZxZfLK1yn/+fI2hI=;
+	h=From:Date:Subject:To:Cc:From;
+	b=goDnm2Xlzpu6mok7yQsJRyNKHVXW2TKf5cd1qOyUmQ2DO3tH7Py91q4e+Jn7wTC4C
+	 jt4MhJeDp0f5+4D1WUU02w8/e7Ex1PgLK/cIG0TjOwfiYcHWOTfFv03WIJFnJ4lDKL
+	 LZ0lvMoQ+UMnaHEcwHH0zJ7euRK+b4Hm7kDnsu9t7d0U5UY0GndJbvBpH10wOkEZcd
+	 nyeR2wSZs0IT+/RpqyFoIzANetrgKKKBopCcLIWuTvSitROeIiiQCbozvr/x80L95p
+	 J+OG+jVIIaYTffI644cMu8k2CB6H44o5pYs1VKuitBZkWDpMO43siayE+WkBnafTyE
+	 RcJiqMjeM/rWw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Thu, 08 Feb 2024 10:14:42 +0100
+Subject: [PATCH mptcp-net] selftests: mptcp: simult flows: re-adapt BW
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240208-selftests-mptcp-simult_flows_faster-v1-1-2859ca46e582@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAIGbxGUC/yWNywrCMBAAf6Xs2YUYaxF/RaTEdFcX0jRk1weU/
+ rtBj3OYmRWUqpDCuVuh0ktUltxgv+sgPkK+E8rUGLzzvfPuhEqJjdQU52KxoMr8TDZyWt46clC
+ jii4cbv3AxzjRAK1UKrF8fpcL/LVMBtdt+wI+3hhJgAAAAA==
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1838; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=6YbAJlCHQOfZcK7+3cO8OMekllmZxZfLK1yn/+fI2hI=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlxJuGv1/UGbOU5cnRrQ0VTyOx9EHyOU+Upt6Q1
+ 9e8pVQV5LeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZcSbhgAKCRD2t4JPQmmg
+ c32aEACs2QzN5qkbJy9tEbwUSbFc+yvyqCjat0g1nr6UzjOEOYzc3/sQASLPD1QzvumJujEycrJ
+ +yfUnV1DN2nRam6G4Nre7p7frqZ7lCFVhvJ/uWehKQ4Il747sS5doojd2ijAxYy3toMW+Kpc7ve
+ 2vdLA7+VvdA8sRnzAot0SyMGW4SctNZtfZRkm/AWnwVmOflSljw5KOnOOCbRarKkAJoGE8eD0eY
+ k5fFmDwiy0m+oM3Q6k7bdki6Jhq5y6S6KNui72WmRnohcbK9Yn9JgNSTR1eonkW6qShKDhVmj/s
+ X5bXA/07vWz6ubY8E8AonCNZhBmnZkv/PNl2v6hCudBXsK2xTiJ6U2VwVYC0otgcXMDjJBgVYoe
+ 9GBm8SPgfgrYuC+gvlJObTE/pAUOSXlh2b9RijulmKhQ7Qs39B+uj168TGu8XHWhvASVA4SLZBN
+ JZaO1mWPbSv09qu9TNJEC2IH2U1twItUaEbk8NeB8R+gebSXzGyuo3zJwW7/sNGi8ykktwXgVWj
+ lvB/DtDJwRC3a+hnt3xwXsjwaKaQwLVzbXOgdMAT6POaIUFhMRXp42CkhpqeDgIkqDnNkAqmqik
+ mlTOb9dEksPIFYAe4ZaNmCcNBWxtsgOY0zrzXQqXi1dSS/nX5hbYR8nTZKZd4HHSWbNcaC2LYOv
+ UxppxX2rljNlz5Q==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+Recently, the bandwidth in simult flows selftest has been reduced. The
+idea was to improve the situation in slow environments. It helped in
+some, but not in all of them. With a longer transfer, it is also
+possible to get more instabilities along the way.
 
-Thank you for your modifications, that's great!
+We can increase a bit the rate limit for the unbalanced bandwidth cases,
+but limit the total of the two links to 20 Mbps, like the balanced
+bandwidth cases. The same 3:1 ratio is still being used like before, not
+to change the nature of the test.
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+Fixes: 5e2f3c65af47 ("selftests: mptcp: decrease BW in simult flows")
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ tools/testing/selftests/net/mptcp/simult_flows.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4767446159065088
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4767446159065088/summary/summary.txt
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index 0cc964e6f2c1..619be0e1acf5 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -287,9 +287,9 @@ run_test 10 10 0 0 "balanced bwidth"
+ run_test 10 10 1 25 "balanced bwidth with unbalanced delay"
+ 
+ # we still need some additional infrastructure to pass the following test-cases
+-run_test 10 3 0 0 "unbalanced bwidth"
+-run_test 10 3 1 25 "unbalanced bwidth with unbalanced delay"
+-run_test 10 3 25 1 "unbalanced bwidth with opposed, unbalanced delay"
++run_test 15 5 0 0 "unbalanced bwidth"
++run_test 15 5 1 25 "unbalanced bwidth with unbalanced delay"
++run_test 15 5 25 1 "unbalanced bwidth with opposed, unbalanced delay"
+ 
+ mptcp_lib_result_print_all_tap
+ exit $ret
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5893346065907712
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5893346065907712/su=
-mmary/summary.txt
+---
+base-commit: c2469b38e369c3f2b9577beeb9470cc757abc1b9
+change-id: 20240208-selftests-mptcp-simult_flows_faster-0a3b46f5cde6
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/0a74337f9112
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
