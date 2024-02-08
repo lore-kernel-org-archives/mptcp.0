@@ -1,115 +1,94 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D5C1E87F
-	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 00:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5908E1CD2E
+	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 01:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707353812; cv=none; b=mH9E/qGxw2oBSw6u+Q3f2n5OKeYfuVmvdqkNGzXbNprXITMNDqRj87QeNt1tF8cMYp8CLCfZqOw5UZbHgRvk1oKm1vMAaUv6FSq99paBasdASMAu7A3KupwlEWZuDXocfA+u+fNgolt9eovtvyT4b1Hw7iyifzF8b6zS1n9BuV8=
+	t=1707357338; cv=none; b=ViXEboYwSVKH0+qLp+Caji6i/rQbm+uGmwINL3IBGV7HR8XrVfVcve/5TbDbWSOfsTTbsIM7XryHHdgOpuLUczGXyObsQ3KRi4eKDtSv5cGuDTr+7MB90rga0boBJTD7o02h/zvZ1F76qWZJ0o6WqwYdLKQHvLLTvIwS2vCImn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707353812; c=relaxed/simple;
-	bh=YSVEOwOXY3unIk2yJuWpBuglzT+OFNM05+tj5o41UKg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M+OQG+tVH9/e7BUMuJd9QBbeFZuSJdM/yOVQWCxm8RcHnPQb1tYwC/XiUH3KAaqRoUA8AxOVd8cFDad3Xh1Ie3MSG2LcuGKc5D1LtzvnGlq/AQhDPn0/dm9HZVtQdJEss4aVUSdikRROG7KFE3o9+cxTGvLA80Q0mSqUyh+Re50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Jt8t54q4; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1707357338; c=relaxed/simple;
+	bh=R9TuBFhAiQWny8UntPfvtVxq/one/ErSeKNM8Hk64yQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FCADT8S9cFDnAWrTTfS1X+0s97O8q7XRKHq2NwMF1K0n2BHt7sf5JiRbw7WcjuOJOyKaU5QtL/TNXuGvnzj2KirUMPWMYtOjqLr5KU0r9OZFnmY6FereyrHN0fHT2wtTkKvzQntaVjBV7X4HTZoNpuvzQs4+ENWv/gGRJH2aP6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L2uKZ9yT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Jt8t54q4"
-Message-ID: <0dbeee01-6a41-41b9-a485-943ba371a476@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707353808;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1tjHW7jJFGY74RYnFCZM+qhfaS7aaaSGJcQmtqonX48=;
-	b=Jt8t54q4kvRhi7sXom5RwpXT1wex2wcKx/zd751P8G3Ws0aj5XJVv+HgmckUOIScL6KZRw
-	ke3NVLHnQjSrCtWS0k55/tp5a+m1++2kB76IR20FlK8S5C6xbfTAAqGwxldaLIr6miVoQU
-	5tJ5wUN677TEtHTNAGxAATUX/VAckVs=
-Date: Wed, 7 Feb 2024 16:56:34 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L2uKZ9yT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C765DC433F1;
+	Thu,  8 Feb 2024 01:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707357337;
+	bh=R9TuBFhAiQWny8UntPfvtVxq/one/ErSeKNM8Hk64yQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=L2uKZ9yTn5MgsFcuzPGjCWDWHJG9KbDZn6VYFDlea9yyVCdAgD3jnBsSZ6hO0WArG
+	 2GS50JfaopeOt/2MnfK62GgituCGRyoWrn6m1m6+5JsMmDhRK1NrEwzsKOqSSkbwae
+	 EM0PCQVTA8HOXyooVcyFgWR8XmArAZt9myHjHckQSwIj+cucjIgLG5zPuWhZnEciLo
+	 ETvpd4E7n/wtkbERtEVMdp/7kWHbn5Esd64vAuHpZYzM5Y3VAbDwyxe7CBaL95O380
+	 GW5K6WTP9b5Fi5Wh0vYfOjNapW0m6yNkH7aHqoWTd7err3w9zb1oDEgKGaVWNiitSU
+	 F57LR1xX48s2w==
+Date: Wed, 7 Feb 2024 17:55:37 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 1/7] mptcp: push ad DSS boundaries
+In-Reply-To: <59d94e4297902d25829276df006615bbdd5f717f.1705836321.git.pabeni@redhat.com>
+Message-ID: <7ab13c07-0d02-abc9-f190-fc6aae318bb1@kernel.org>
+References: <cover.1705836321.git.pabeni@redhat.com> <59d94e4297902d25829276df006615bbdd5f717f.1705836321.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v4 1/3] bpf, btf: Fix error checks for
- btf_get_module_btf
-Content-Language: en-US
-To: Geliang Tang <geliang@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, bpf@vger.kernel.org,
- mptcp@lists.linux.dev, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- Matthieu Baerts <matttbe@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>
-References: <cover.1707314646.git.tanggeliang@kylinos.cn>
- <d79e5dd6b4a189252af696a10df8ce585e9cb46d.1707314646.git.tanggeliang@kylinos.cn>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <d79e5dd6b4a189252af696a10df8ce585e9cb46d.1707314646.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On 2/7/24 6:07 AM, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> To let the modules loaded, commit 3de4d22cc9ac ("bpf, btf: Warn but
-> return no error for NULL btf from __register_btf_kfunc_id_set()")
-> changes the return value of __register_btf_kfunc_id_set() from -ENOENT
-> to 0 when btf is NULL.
-> 
-> A better way to do this is to enable CONFIG_MODULE_ALLOW_BTF_MISMATCH.
-> 
-> An error code -ENOENT should indeed be returned when kernel module BTF
-> mismatch detected except CONFIG_MODULE_ALLOW_BTF_MISMATCH is enabled in
-> __register_btf_kfunc_id_set().
-> 
-> The same in register_btf_id_dtor_kfuncs(), give the modules a chance
-> to be loaded when CONFIG_MODULE_ALLOW_BTF_MISMATCH is enabled.
-> 
-> Fixes: 3de4d22cc9ac ("bpf, btf: Warn but return no error for NULL btf from __register_btf_kfunc_id_set()")
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+On Mon, 22 Jan 2024, Paolo Abeni wrote:
+
+> when inserting/creating skbs on the subflow write queue, if
+> the to-be-appended data don't is not contiguous to the tail data,
+
+Hi Paolo -
+
+Looks like the "don't" here is extra, can you clarify this sentence?
+
+> the protocol creates a new skb and prevent the TCP stack from
+> merging it later by setting the EOR marker.
+>
+> Still no push flag is explicitly set at the end of previous GSO
+> packet, making the aggregation on the receiver side sub-optimal -
+> and packetdrill self-tests less predictable.
+>
+> Explicitly mark the end of not contiguous DSS with the push flag.
+>
+
+I agree with the approach, gro will never benefit from waiting around for 
+the next packet as it will have a new DSS header and can never be 
+combined.
+
+- Mat
+
+> Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data packets")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
->   kernel/bpf/btf.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index f7725cb6e564..203391e61d93 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -8103,8 +8103,11 @@ static int __register_btf_kfunc_id_set(enum btf_kfunc_hook hook,
->   			pr_err("missing vmlinux BTF, cannot register kfuncs\n");
->   			return -ENOENT;
->   		}
-> -		if (kset->owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES))
-> +		if (kset->owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES) &&
-> +		    !IS_ENABLED(CONFIG_MODULE_ALLOW_BTF_MISMATCH)) {
-
-I am not sure this new test can be added here now. Otherwise, the existing 
-kconfig that does not have CONFIG_MODULE_ALLOW_BTF_MISMATCH set will fail to 
-load a module with btf section stripped out as described in commit 3de4d22cc9ac.
-
-A module with stripped btf section does not mean BTF_MISMATCH also.
-
->   			pr_warn("missing module BTF, cannot register kfuncs\n");
-> +			return -ENOENT;
-> +		}
->   		return 0;
->   	}
->   	if (IS_ERR(btf))
-> @@ -8219,7 +8222,8 @@ int register_btf_id_dtor_kfuncs(const struct btf_id_dtor_kfunc *dtors, u32 add_c
->   			pr_err("missing vmlinux BTF, cannot register dtor kfuncs\n");
->   			return -ENOENT;
->   		}
-> -		if (owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES)) {
-> +		if (owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES) &&
-> +		    !IS_ENABLED(CONFIG_MODULE_ALLOW_BTF_MISMATCH)) {
->   			pr_err("missing module BTF, cannot register dtor kfuncs\n");
->   			return -ENOENT;
->   		}
-
+> This could also land on next, as needed, dropping the fixes tag
+> ---
+> net/mptcp/protocol.c | 1 +
+> 1 file changed, 1 insertion(+)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 744b4d6f15f4..4d7131f96ebf 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1264,6 +1264,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+> 		mpext = mptcp_get_ext(skb);
+> 		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
+> 			TCP_SKB_CB(skb)->eor = 1;
+> +			tcp_mark_push(tcp_sk(ssk), skb);
+> 			goto alloc_skb;
+> 		}
+>
+> -- 
+> 2.43.0
+>
+>
+>
