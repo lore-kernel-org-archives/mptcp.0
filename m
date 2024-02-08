@@ -1,108 +1,92 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2869381D1
-	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 19:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F79D4C3BF
+	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 20:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707422032; cv=none; b=kPL1tFxSYQ5OSF830uhYrBsTl2hm29hdKyJ7/t1/dJcfiTrOAnsmjlPwvEOXBC75h6djf2C/ziHenpHa/Z/jxNNH1wY66md8lL3Ykjy59PE1Jy54QnzZB3evDje0M+kOKsvgoX8kyjgSjfu5tS/VyJe+kFigO8+xm2BEJ5kz88w=
+	t=1707424979; cv=none; b=eBqXp1o7RHukVzfnqehptUZxYBEcs7AfQnrFnm5lTKLS5JR2X/5+oTtiqiSR8hoCoZdpg8gvQhYpvsUmGXNFTtwbIvYp6shY2P1ot1TtEL44+/W6MlYjeTF0TmVWf/YZPGAEI9NEi7gDHVOt0Fv5u09SaN0i44znOP6tcpQKSNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707422032; c=relaxed/simple;
-	bh=m/4TVRxkje0X/PulgW1Zro0vTN8VaiUTq4UWZeQxNvs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h+qIAqtOJ1yNG/zkcMdlnee9gjRrznrMj8/RwGz2DpgMzjfI3s34figzODpNuUUDWJzpNxnC2/mTfSWbVGJxtSJvC1JjgCr3MfXYPZtnzvY2V163cFB8ouASP5iVstrYfSoSC7WeTSmrwDyOrpU6vnU1lYhuE8SkUOgV+F3rkcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pSbJMCfV; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1707424979; c=relaxed/simple;
+	bh=avqaK0hTAc3eHzw9LQQok7m1fsGC84xTiQVVPcmVhOE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hIQy9Yxqqsdua9yIlVgZJvY98COTsF/e5HWSZtJ/nNeutPU+uziqPTCtH3GeohjG+D4RHHJRulde1F/qvYgMWKUmPH/8aFccKDk96ANqmQ2g2RR5hAisU8xdSgHxaAIF3tN3amOc7ViHgSQXyESkm5puzBJBAy3og3yFsPsNTkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IJbmazdn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pSbJMCfV"
-Message-ID: <d1b6428e-7ee2-4bb7-a902-8b45d8beed5d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707422028;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IJbmazdn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707424976;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z4oi9wR7knQrZcH788HBL3OYMquK77TCy3eNska9jYI=;
-	b=pSbJMCfVwQg0a26otc8YgvDwM4jTSS9LuLrHJALjWuXYxCmDmYl5uGNZYJzgGpcAaM5TMI
-	68MX9E2tETwD6DxKVz444Nh2aXCYsOsWLOBsS+6bjlXE1BSydBJXCHyte8zytT3/UvvIu9
-	ys5jhCNWoiTsGZmchdW2dddw2iL0R+k=
-Date: Thu, 8 Feb 2024 11:53:42 -0800
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=X+T3pDSE4GzBtwDl/7Y9gY4js69jjM8G/+wEHS3v5ao=;
+	b=IJbmazdnMFWO+/0Fom3LpQhgIUEXG2eJSLvAo2T3ZpDRXjAxZVuCBG1auXKcX7xMiMWQD4
+	yVyhWVaMKE0ZTwcBEAi+OosjsK1lg8OhXz5YDqb1WxowKDkE6ph/Fhvc4yeBHMAaURO5Uq
+	T7pO/QImuelbWBGQkrR4rKQpjvkTpRc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-281-I4lEULo9OfehtNQYaqwiyA-1; Thu, 08 Feb 2024 15:42:55 -0500
+X-MC-Unique: I4lEULo9OfehtNQYaqwiyA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D040F8489E7
+	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 20:42:54 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.247])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 60D4BC08EF7
+	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 20:42:54 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net v2 0/4] mptcp: fix duplicate subflow creation
+Date: Thu,  8 Feb 2024 21:42:44 +0100
+Message-ID: <cover.1707418323.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v5 2/3] bpf, btf: Add check_btf_kconfigs helper
-Content-Language: en-US
-To: Geliang Tang <geliang@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- Matthieu Baerts <matttbe@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Geliang Tang <tanggeliang@kylinos.cn>, bpf@vger.kernel.org,
- mptcp@lists.linux.dev, Jiri Olsa <olsajiri@gmail.com>
-References: <cover.1707373307.git.tanggeliang@kylinos.cn>
- <fa5537fc55f1e4d0bfd686598c81b7ab9dbd82b7.1707373307.git.tanggeliang@kylinos.cn>
- <ZcSn24Isfsg45jBJ@krava>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <ZcSn24Isfsg45jBJ@krava>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On 2/8/24 2:07 AM, Jiri Olsa wrote:
->> +static int check_btf_kconfigs(const struct module *module)
->> +{
->> +	if (!module && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
->> +		pr_err("missing vmlinux BTF, cannot register kfuncs\n");
->> +		return -ENOENT;
->> +	}
->> +	if (module && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES))
->> +		pr_warn("missing module BTF, cannot register kfuncs\n");
->> +	return 0;
->> +}
->> +
->>   BPF_CALL_4(bpf_btf_find_by_name_kind, char *, name, int, name_sz, u32, kind, int, flags)
->>   {
->>   	struct btf *btf = NULL;
->> @@ -8098,15 +8109,8 @@ static int __register_btf_kfunc_id_set(enum btf_kfunc_hook hook,
->>   	int ret, i;
->>   
->>   	btf = btf_get_module_btf(kset->owner);
->> -	if (!btf) {
->> -		if (!kset->owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
->> -			pr_err("missing vmlinux BTF, cannot register kfuncs\n");
->> -			return -ENOENT;
->> -		}
->> -		if (kset->owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES))
->> -			pr_warn("missing module BTF, cannot register kfuncs\n");
->> -		return 0;
->> -	}
->> +	if (!btf)
->> +		return check_btf_kconfigs(kset->owner);
->>   	if (IS_ERR(btf))
->>   		return PTR_ERR(btf);
->>   
->> @@ -8214,15 +8218,8 @@ int register_btf_id_dtor_kfuncs(const struct btf_id_dtor_kfunc *dtors, u32 add_c
->>   	int ret;
->>   
->>   	btf = btf_get_module_btf(owner);
->> -	if (!btf) {
->> -		if (!owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
->> -			pr_err("missing vmlinux BTF, cannot register dtor kfuncs\n");
->> -			return -ENOENT;
->> -		}
->> -		if (owner && IS_ENABLED(CONFIG_DEBUG_INFO_BTF_MODULES))
->> -			pr_warn("missing module BTF, cannot register dtor kfuncs\n");
-> nit, we do lose the 'dtor' from the message but I think it's ok,
-> for the patchset:
+As reported by Mat, the in kernel PM can, in some edge scenarios,
+unexpectedly create multiple subflows with the same local and remote
+address.
 
-I added "const char *feature" argument to check_btf_kconfigs(), so it is like 
-check_btf_kconfigs(, "kfunc"), check_btf_kconfigs(, "dtor kfunc"), and 
-check_btf_kconfigs(, "struct_ops"). Applied. Thanks.
+The real fix is implemented by patch 4/4 with some more accurate check
+at subflow creation time.
+
+Patches 1-3 are roughly optional pre-requisities, added to avoid
+introducing more data-races with the actual fix. Patch 1/4 is a bit
+debatable, as it changes the existing ULP API, but I could not find a
+better solution and there is some similar prior art:
+commit 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info")
+
+This address feedback from Mat on v1, see the patches changelog for 
+the details (no changes in patch 1/4).
+
+Paolo Abeni (4):
+  mptcp: fix lockless access in subflow ULP diag
+  mptcp: fix data races on local_id
+  mptcp: fix data races on remote_id
+  mptcp: fix duplicate subflow creation
+
+ include/net/tcp.h        |  2 +-
+ net/mptcp/diag.c         |  8 +++++--
+ net/mptcp/pm_netlink.c   | 45 +++++++++++++++++++++-------------------
+ net/mptcp/pm_userspace.c |  2 +-
+ net/mptcp/protocol.c     |  2 +-
+ net/mptcp/protocol.h     | 15 +++++++++++---
+ net/mptcp/subflow.c      | 15 +++++++-------
+ net/tls/tls_main.c       |  2 +-
+ 8 files changed, 54 insertions(+), 37 deletions(-)
+
+-- 
+2.43.0
 
