@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5908E1CD2E
-	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 01:55:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D5412E61
+	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 01:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707357338; cv=none; b=ViXEboYwSVKH0+qLp+Caji6i/rQbm+uGmwINL3IBGV7HR8XrVfVcve/5TbDbWSOfsTTbsIM7XryHHdgOpuLUczGXyObsQ3KRi4eKDtSv5cGuDTr+7MB90rga0boBJTD7o02h/zvZ1F76qWZJ0o6WqwYdLKQHvLLTvIwS2vCImn0=
+	t=1707357432; cv=none; b=I9QTjkQWTzCiz1aAi5uoAEktZUbr4AP6KTdI0Wp3k2t+fkUj6uHH724wUfg+zVvxmK09pJQMh29qFzBvMhpwkQe1eTa00pqNuWvu2mVdgIQw/NU8UVWEia18ewqkACCjQD5NCq5WVNVP4hoQ+/3b7LHg2yVyeeo5Jk7f5MTQCkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707357338; c=relaxed/simple;
-	bh=R9TuBFhAiQWny8UntPfvtVxq/one/ErSeKNM8Hk64yQ=;
+	s=arc-20240116; t=1707357432; c=relaxed/simple;
+	bh=oGNIM/ihzyJ/vh/ShPB8Ryy5hiEw5YrCpVP4xVbYl78=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FCADT8S9cFDnAWrTTfS1X+0s97O8q7XRKHq2NwMF1K0n2BHt7sf5JiRbw7WcjuOJOyKaU5QtL/TNXuGvnzj2KirUMPWMYtOjqLr5KU0r9OZFnmY6FereyrHN0fHT2wtTkKvzQntaVjBV7X4HTZoNpuvzQs4+ENWv/gGRJH2aP6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L2uKZ9yT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=SeiW/CaiCW/snhpr/vo+7PkRQo7ZxrlTHOUaIvZKrsAUu3zCii7qyalxiEkX7Ny2rrXp2gDvIVxlz4Ov5jqX8X7kmxdgz2O3Yef8LZtPFzP065cqN+D72azRqpgt5qOWbuqF1Rl58C0jEeJWumCDlEVlL4yKiowSjeZKs0+eq1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqutEveM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L2uKZ9yT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C765DC433F1;
-	Thu,  8 Feb 2024 01:55:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqutEveM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE99EC433F1;
+	Thu,  8 Feb 2024 01:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707357337;
-	bh=R9TuBFhAiQWny8UntPfvtVxq/one/ErSeKNM8Hk64yQ=;
+	s=k20201202; t=1707357431;
+	bh=oGNIM/ihzyJ/vh/ShPB8Ryy5hiEw5YrCpVP4xVbYl78=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=L2uKZ9yTn5MgsFcuzPGjCWDWHJG9KbDZn6VYFDlea9yyVCdAgD3jnBsSZ6hO0WArG
-	 2GS50JfaopeOt/2MnfK62GgituCGRyoWrn6m1m6+5JsMmDhRK1NrEwzsKOqSSkbwae
-	 EM0PCQVTA8HOXyooVcyFgWR8XmArAZt9myHjHckQSwIj+cucjIgLG5zPuWhZnEciLo
-	 ETvpd4E7n/wtkbERtEVMdp/7kWHbn5Esd64vAuHpZYzM5Y3VAbDwyxe7CBaL95O380
-	 GW5K6WTP9b5Fi5Wh0vYfOjNapW0m6yNkH7aHqoWTd7err3w9zb1oDEgKGaVWNiitSU
-	 F57LR1xX48s2w==
-Date: Wed, 7 Feb 2024 17:55:37 -0800 (PST)
+	b=qqutEveMVxKUvd3JHD2eqG4KyfyeTLJmr7LqxosIs4hXekrevzF8yonKuPiUwPSfU
+	 nl94sbvekyWO1Xbxs4gijLn9NuxUJdbN/Q63W9AsHX42oxRhk+Qe+HsvCbQ1q7w4o1
+	 /ZfNuTywuGJa4YAAcMyIFKeHaZfnMtTGoUJDzC/3hFpcM8K61lamZE5cG9rsNQVZbh
+	 lq6B5jek4XQ2wj+bjRR9nFV2ul7SPgA0ZapoqG5p/PyZmljFeoNHy/OqicmVyRa2tq
+	 alLyw3pOIvrDDaJ5IrxUeS+DPyeMJFfc20FC94VO2lFklRJ539XylicW1G/yga62AX
+	 a2C7guGKUv7BA==
+Date: Wed, 7 Feb 2024 17:57:11 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 1/7] mptcp: push ad DSS boundaries
-In-Reply-To: <59d94e4297902d25829276df006615bbdd5f717f.1705836321.git.pabeni@redhat.com>
-Message-ID: <7ab13c07-0d02-abc9-f190-fc6aae318bb1@kernel.org>
-References: <cover.1705836321.git.pabeni@redhat.com> <59d94e4297902d25829276df006615bbdd5f717f.1705836321.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-next 3/7] mptcp: fix potential wake-up event loss
+In-Reply-To: <27f976d6a8f1a88ed5ad3822af43d0fc648ab9f8.1705836321.git.pabeni@redhat.com>
+Message-ID: <57919905-c224-b7b6-1a66-54550487973b@kernel.org>
+References: <cover.1705836321.git.pabeni@redhat.com> <27f976d6a8f1a88ed5ad3822af43d0fc648ab9f8.1705836321.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,49 +44,84 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Mon, 22 Jan 2024, Paolo Abeni wrote:
 
-> when inserting/creating skbs on the subflow write queue, if
-> the to-be-appended data don't is not contiguous to the tail data,
+> After the blamed commit below, the send buffer auto-tuning can
+> happen after that the mptcp_propagate_sndbuf() completes - via
+> the delegated action infrastructure.
+>
+> We must check for write space even after such change or we risk
+> missing the wake-up event.
+>
+> Fixes: 8005184fd1ca ("mptcp: refactor sndbuf auto-tuning")
 
 Hi Paolo -
 
-Looks like the "don't" here is extra, can you clarify this sentence?
+These first three patches have "Fixes:" tags, what do you think about 
+applying them to mptcp-net instead of mptcp-next?
 
-> the protocol creates a new skb and prevent the TCP stack from
-> merging it later by setting the EOR marker.
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> net/mptcp/protocol.h | 27 ++++++++++++++++++++-------
+> 1 file changed, 20 insertions(+), 7 deletions(-)
 >
-> Still no push flag is explicitly set at the end of previous GSO
-> packet, making the aggregation on the receiver side sub-optimal -
-> and packetdrill self-tests less predictable.
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index d05ec76dd7c2..bbc490f36273 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -797,6 +797,16 @@ static inline bool mptcp_data_fin_enabled(const struct mptcp_sock *msk)
+> 	       READ_ONCE(msk->write_seq) == READ_ONCE(msk->snd_nxt);
+> }
 >
-> Explicitly mark the end of not contiguous DSS with the push flag.
+> +static inline void mptcp_write_space(struct sock *sk)
+> +{
+> +	if (sk_stream_is_writeable(sk)) {
+> +		/* pairs with memory barrier in mptcp_poll */
+> +		smp_mb();
+> +		if (test_and_clear_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags))
+> +			sk_stream_write_space(sk);
+> +	}
+> +}
+> +
+> static inline void __mptcp_sync_sndbuf(struct sock *sk)
+> {
+> 	struct mptcp_subflow_context *subflow;
+> @@ -815,6 +825,7 @@ static inline void __mptcp_sync_sndbuf(struct sock *sk)
 >
+> 	/* the msk max wmem limit is <nr_subflows> * tcp wmem[2] */
+> 	WRITE_ONCE(sk->sk_sndbuf, new_sndbuf);
+> +	mptcp_write_space(sk);
+> }
+>
+> /* The called held both the msk socket and the subflow socket locks,
+> @@ -845,14 +856,16 @@ static inline void mptcp_propagate_sndbuf(struct sock *sk, struct sock *ssk)
+> 	local_bh_enable();
+> }
+>
+> -static inline void mptcp_write_space(struct sock *sk)
+> +static inline void __mptcp_sync_sndnxt(struct sock *sk, u64 new_snd_nxt)
 
-I agree with the approach, gro will never benefit from waiting around for 
-the next packet as it will have a new DSS header and can never be 
-combined.
+This is never called - extra code from an experiment or did some delegated 
+action code not get added?
 
 - Mat
 
-> Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data packets")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> This could also land on next, as needed, dropping the fixes tag
-> ---
-> net/mptcp/protocol.c | 1 +
-> 1 file changed, 1 insertion(+)
+> {
+> -	if (sk_stream_is_writeable(sk)) {
+> -		/* pairs with memory barrier in mptcp_poll */
+> -		smp_mb();
+> -		if (test_and_clear_bit(MPTCP_NOSPACE, &mptcp_sk(sk)->flags))
+> -			sk_stream_write_space(sk);
+> -	}
+> +	struct mptcp_sock *msk = mptcp_sk(sk);
+> +
+> +	if (!after64(new_snd_nxt, msk->snd_nxt))
+> +		return;
+> +
+> +	msk->bytes_sent += new_snd_nxt - msk->snd_nxt;
+> +	WRITE_ONCE(msk->snd_nxt, new_snd_nxt);
+> +	mptcp_write_space(sk);
+> }
 >
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 744b4d6f15f4..4d7131f96ebf 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1264,6 +1264,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
-> 		mpext = mptcp_get_ext(skb);
-> 		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
-> 			TCP_SKB_CB(skb)->eor = 1;
-> +			tcp_mark_push(tcp_sk(ssk), skb);
-> 			goto alloc_skb;
-> 		}
->
+> void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags);
 > -- 
 > 2.43.0
 >
