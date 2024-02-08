@@ -1,119 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD76F78678
-	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 15:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640D67EF0C;
+	Thu,  8 Feb 2024 18:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707405150; cv=none; b=F2uX3oRq5NzB8bv6SO9wvmrsWefb8oM1XUXEGXl70Gse3IaX1KorQ5nKtU2EaYCeL/+zd8gbyZLmDUHw8Wc4MVeCMg/Pe4BbE2m/i7rVh4v3XMcpKaGPGnXvcfM/5lR2sTgkySsRpezulnMFTxC1GHJiT3+4DAVkuqkA30wbVQ0=
+	t=1707415462; cv=none; b=E/AQbA/ZA4EqAiW3Sc9WA/U0ibv1gH+L78oQnMsEPF7iqqsXFbtf2K4wzRwqZoiDovmklSlII51IGM6KOq7+SNHIpT0WRLs+Lg+/YpCoU6MVGSo4mrXdLj48yK5iRTxiSzVAUHWhVoXcj4E7ATtUwLvHj1JaT/ER6hpvZe1C6tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707405150; c=relaxed/simple;
-	bh=fzg4V3Mt0YlL+8AWBp3M0yO5a3M/UOx4ldL8rJMCIQg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M/o17XyPPrP7JRh5+D04uLhJa0SC92pD6TwkARBqISraC4I23YlORetG3UzHjncIpHR5Ka+QdgoUScML6YOnwtcfHDv+AWB9DXH0La2NnUw8lrGXIGIMwXjhX1UsytVc8gbBLvQvthfBM9uHw/sX6cZRzQe2udtGf/x6eiYbsl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JJ2BYaKq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707415462; c=relaxed/simple;
+	bh=gg5lRi0FckXjDkUVqSo3pBy+xDC24jMwih4308TMI/o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HoYjkEVJ3miEXV4qly/mfNMLG/+rXMbVg5SkfpwSPEOmtOD0n/hmwjRoYVva7Ml1244sUdfe+yLn4cxTTJi3vglHoIj9CAHxcDhYQS78KwmF7xPOPEldiA7ZPrQhCzlungxrVWdOVNf65MIHlyZTwqyCMBUar9RaUDwEmsrYYVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KHHlQcq5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JJ2BYaKq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707405147;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Kf9voQ3QVVHT+t4icBFgb2cB3ZatUa3EbE/5lBW5CaY=;
-	b=JJ2BYaKqVn97pdaV9Ipbb5rCCDkqQBDqIs6ptwQvEbMiTBouWYB/7KB+zcjA1R1NlgqAb9
-	ZIlOizR0yHD04Gb2IiuYdQzzJA7f3SnFxfvKhJyW82dFiNQFS+cOrjARnov3j7mnXFcPyJ
-	am+I5WOx4OmG54t7GyUfSHeAK2YycIo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-694-niNW7IAjPuq9VZKDbqkJ_w-1; Thu, 08 Feb 2024 10:12:26 -0500
-X-MC-Unique: niNW7IAjPuq9VZKDbqkJ_w-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40e4303fceaso3735345e9.1
-        for <mptcp@lists.linux.dev>; Thu, 08 Feb 2024 07:12:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707405145; x=1708009945;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kf9voQ3QVVHT+t4icBFgb2cB3ZatUa3EbE/5lBW5CaY=;
-        b=WGVhAGFya6ipU/S2CgAP3O/JbRbZkLYy9Bwjhm/TJ3YRTYDx7BYBY5uT7YtnUEVtYe
-         OnHaIkJobBXW/3MD89R9WYjQ6mqvN0YU0KoIDIPYkWgJ97yg7ZmZbRWR9dqiSqnxxxkv
-         4PS1y/x/vVUPe+KTMwjFjaXXi7Dz2/wGVtbxk8WD6LjM1ElDgMm0S7zHr82tIXCB/c7r
-         8TxzAZrrluZizzhgy0gmuZn3dXk8vee44tNfltQ2LOIHEFE2WoD1sDHfq4j3/gxXScNs
-         aMwJLHaCvobz010hBXKdTqn2uW/A6zBB8Y9Eqm3XK7uktAcmDL18n5dnQCDO9lQHjP2x
-         oiEw==
-X-Gm-Message-State: AOJu0YzfbrXG/84se5xmQfrnqvhrrW+0NuMYQ6jc4HxQrGMO3+WuQHXi
-	IQGCDpt9WEPJG1vAsz10XRoP36XeWzRjDZlosPoIP+f5RMndBmx5G8ialdA1qiUrO0Whx9GzpW0
-	6hc2Vqv5NvhmSzWAgNxHVImiBAr22T8QaNDJOY6XNDsDcLgf5ckAMOfLcuSRS
-X-Received: by 2002:a5d:4c8f:0:b0:33a:dbcc:68c3 with SMTP id z15-20020a5d4c8f000000b0033adbcc68c3mr6971328wrs.6.1707405144904;
-        Thu, 08 Feb 2024 07:12:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGReaGChTf28XHHEFc+guFgCbZbWWvTe8Sva1PKn6a4D5lSlbZguJmsm4P/diTcBBOwElBQaw==
-X-Received: by 2002:a5d:4c8f:0:b0:33a:dbcc:68c3 with SMTP id z15-20020a5d4c8f000000b0033adbcc68c3mr6971310wrs.6.1707405144542;
-        Thu, 08 Feb 2024 07:12:24 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-238-112.dyn.eolo.it. [146.241.238.112])
-        by smtp.gmail.com with ESMTPSA id t13-20020a5d690d000000b0033b2497fdaesm3764734wru.95.2024.02.08.07.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 07:12:24 -0800 (PST)
-Message-ID: <8f4974ba6b07e2313e5a2f521d2ae3810daf4001.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net 1/4] mptcp: drop the push_pending field
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Date: Thu, 08 Feb 2024 16:12:22 +0100
-In-Reply-To: <a95328ac-ed46-4d64-b06b-04f5d7eb62f4@kernel.org>
-References: <cover.1705331716.git.pabeni@redhat.com>
-	 <8363fd6542b179fdc30b42e78c922b0201c9f3fd.1705331716.git.pabeni@redhat.com>
-	 <a95328ac-ed46-4d64-b06b-04f5d7eb62f4@kernel.org>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KHHlQcq5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF7DC433F1;
+	Thu,  8 Feb 2024 18:04:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707415461;
+	bh=gg5lRi0FckXjDkUVqSo3pBy+xDC24jMwih4308TMI/o=;
+	h=From:Subject:Date:To:Cc:From;
+	b=KHHlQcq5ZRssevtCuJ1jlYCWk7seL1eQX+J123YgSdNo/gIlpycdN3GTjZJSXUKCL
+	 cRu3DB9FYwI4NsZsjTQkQ4S2ny1l7wtUkJeBGdVhHBNeHqmwnMvNqr8C8OejjwEzb9
+	 mdlZCaL6AO9BE6yWCFp7vayYzHKlX6M35ltxGvGBMtnLYrSqRb4dslgzpan1mrSVWV
+	 igUNxRLi6s2WtM5mmxk7Fk8746M/uadJ9CRPlZ+k4lSt/iSp+oyLh8kK5UwP0xyy5X
+	 AYocyg1c8fYrcRKJ9s71j48HhPYNvtPOwfDU3e5zTCBKNW+Q0V8Ok3D5XdM6w/NpL2
+	 T60n12mfK5nLg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net 0/7] mptcp: locking cleanup & misc. fixes
+Date: Thu, 08 Feb 2024 19:03:48 +0100
+Message-Id: <20240208-upstream-net-20240202-locking-cleanup-misc-v1-0-f75cc5b97e5a@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIQXxWUC/z2NSwrCQBBErxJ6bUMcjb+riIthUomNSWeYTkQIu
+ buNCzcFr+BVrWQoAqNbtVLBW0wmddjvKkrPqD1YWmcKdTjWHrxkmwviyIqZ/+0wpZdoz2lA1CX
+ zKJa46QJwvraXQ3MiH8wFnXx+Z3dynR7b9gVntgzggQAAAA==
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Kishen Maloor <kishen.maloor@intel.com>, 
+ Florian Westphal <fw@strlen.de>, 
+ Peter Krystad <peter.krystad@linux.intel.com>, 
+ Dmytro Shytyi <dmytro@shytyi.net>, 
+ Benjamin Hesmans <benjamin.hesmans@tessares.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Christoph Paasch <cpaasch@apple.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org, 
+ syzbot+c53d4d3ddb327e80bc51@syzkaller.appspotmail.com, 
+ Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2167; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=gg5lRi0FckXjDkUVqSo3pBy+xDC24jMwih4308TMI/o=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlxRehYosQjMTFqZJREP9PUCIdS9tEwvEMEsEbU
+ iOtu15J4KKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZcUXoQAKCRD2t4JPQmmg
+ c2JpEACuYOjFpW4L3CHGYvKnQbqwEOVjCxx9bX305RgAFWX2TMhBDnG82+An3yuQ7ld8wOWc7W3
+ A2sgba96KbnIOQWl1tjlzUS8NohRywHqHjbHPo/LyT1B3ReJeMZ0mihFy29zJOvLDzD9HCh0kl7
+ KvZnL2Fz1FjS8akZejt8eJi99v0munrTr0WUGk6sm9vvDqiJwprR6VK46V3wY5SgOEA6VEHznXt
+ DxsGk6lAEsNBK0OOr4nPOmbV9buQq5IqSVZLr09fUUUNVALJnCwJ6fbO0mPgE7zUEPkhAFWnCix
+ 3LscvV1g2V1sfyyUBCiPK3KKeYzTG8I5Ze7VILHCgd9haA3UBfdOl2gwVz6qk+08psm7U0Ijoe3
+ kTz9fjY62clQAxEZ4LAu5uXg95tncUn6H+x8hwN86c+SuXqtUggEPuTKFIruUiwxmUP92CIVtBX
+ We1bAUj4yBROFo9PNWi03ui4orDCJ45U4hTzO4qPit+3TEkAdNqd0IjbEncGuyJJcsv0WMRJNmV
+ KuqUoUbkek0WzQb7/nlVflpyOH0Yr3z//YfO2h6kAA4jLBvAdL9zFkoY2Y/s0N6f5vXvEJDZx7Z
+ l98N15iQVxSovB1Nj9BtWVqCPHTKPjPl8RCtQPYyPwDNZ5ZLvogXQ3lI7bqEvDx2w9BgbImDQn1
+ z3LMCeWXVy9qDyQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Thu, 2024-02-08 at 12:36 +0100, Matthieu Baerts wrote:
-> Hi Paolo,
->=20
-> On 15/01/2024 16:16, Paolo Abeni wrote:
-> > Such field is there to avoid acquiring the data lock in a few spots,
-> > but if adds complexity to the already non trivial locking schema.
-> >=20
-> > All the relevant call sites (mptcp-level reinjection, set socket optins=
-),
-> > are slow-path, drop such field in favor of 'cb_flags', adding the relev=
-ant
-> > locking.
->=20
-> In your cover-letter, you mentioned:
->=20
-> > Patch 1 has no fixes, but still is logically tied to the other patches.
->=20
-> I think it makes sense to have this patch in -net, especially because it
-> is logically tied to the others. Would it be OK for you if I add:
->=20
->   Fixes: e9d09baca676 ("mptcp: avoid atomic bit manipulation when possibl=
-e")
+Patches 1-4 are fixes for issues found by Paolo while working on adding
+TCP_NOTSENT_LOWAT support. The latter will need to track more states
+under the msk data lock. Since the locking msk locking schema is already
+quite complex, do a long awaited clean-up step by moving several
+confusing lockless initialization under the relevant locks. Note that it
+is unlikely a real race could happen even prior to such patches as the
+MPTCP-level state machine implicitly ensures proper serialization of the
+write accesses, even lacking explicit lock. But still, simplification is
+welcome and this will help for the maintenance. This can be backported
+up to v5.6.
 
-The obove, or add a sentence to the commit message alike:
+Patch 5 is a fix for the userspace PM, not to add new local address
+entries if the address is already in the list. This behaviour can be
+seen since v5.19.
 
-"""
-This will also simplify the next patch
-"""
->=20
-> Or do you prefer without?
->=20
-> Cheers,
-> Matt
+Patch 6 fixes an issue when Fastopen is used. The issue can happen since
+v6.2. A previous fix has already been applied, but not taking care of
+all cases according to syzbot.
+
+Patch 7 updates Geliang's email address in the MAINTAINERS file.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Geliang Tang (2):
+      mptcp: check addrs list in userspace_pm_get_local_id
+      MAINTAINERS: update Geliang's email address
+
+Paolo Abeni (5):
+      mptcp: drop the push_pending field
+      mptcp: fix rcv space initialization
+      mptcp: fix more tx path fields initialization
+      mptcp: corner case locking for rx path fields initialization
+      mptcp: really cope with fastopen race
+
+ .mailmap                 |  9 +++---
+ MAINTAINERS              |  2 +-
+ net/mptcp/fastopen.c     |  6 ++--
+ net/mptcp/options.c      |  9 +++---
+ net/mptcp/pm_userspace.c | 13 ++++++++-
+ net/mptcp/protocol.c     | 31 +++++++++++----------
+ net/mptcp/protocol.h     | 16 ++++++-----
+ net/mptcp/subflow.c      | 71 ++++++++++++++++++++++++++++++------------------
+ 8 files changed, 95 insertions(+), 62 deletions(-)
+---
+base-commit: 335bac1daae3fd9070d0f9f34d7d7ba708729256
+change-id: 20240202-upstream-net-20240202-locking-cleanup-misc-5f2ee79d8356
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
