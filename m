@@ -1,122 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBE786132;
-	Thu,  8 Feb 2024 18:04:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7FF83CD5
+	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 18:05:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707415488; cv=none; b=rlViRyWj5x4O55c8+0TDcmSj2TOrZ0P0zyEa6d4DE8nEYvIECxznF7HJOhjftTSMXXsTc/xc9MoDijmW0A9UDc5cSwJ1XKakPrDgeg5Rk2yPDQXYNAyk7iLEB9cVidohTLgPYA5qoRmldENQDT4fG3U5i02fg7c1PORGpCvb8nY=
+	t=1707415527; cv=none; b=RpoQwBzC9KhvOR7NG/bmygrL7RaofMhynaAaOC1hLCDy/x7fHxzWaNOE2E+E8ReDKXg5Tglvt0QEXCxCv1zaDRFimKyKjTFexF+bCdhrC5q+eG5EiJeMC3dqdD9XSz8iM9imEtvN4kgBsi9ldKSEn1cc6l7kpqtVRV57ddiIBPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707415488; c=relaxed/simple;
-	bh=3Uhrwe4sRvrwINsS64MrEMTgrGNb4S7Ahy2QqbR4f0o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=W0ubRPsFx7QfgAfmamB0kvVaf2NThr8WbPoPSpoqD9azJhozzIeXKi4agGORm1rMoJscsOJ8lhm4LPNFJ0BA669b9F/GJ9kMEVYJhd04zR+iRWyWop4e2/DhlFjZeojrYAtM5D15gVcEl1TyKou0bgnZfqctX/X5/+Q49sLIdbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UhoL6Cm5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707415527; c=relaxed/simple;
+	bh=at9vGcj1pWWZwYeHP6ZUd0OLeQcqcTOBtowq6f3MEQw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mSH3W0yExgKjZqT8HRTOajE72bIkIMtrKWXIYNwkUGl4KbdT9DPJjOYe12bEDJoGabTC6odU0zXSOCiG3JgEEpgS5RHYgdsm3ZH5TKqKcmP+pw5bfY9K2gvUFDlzkXltOJgdLy5RDSX6QpsaFTVjKTtPkpb4JfFlIwErJRUzSOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wh7IXHXg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UhoL6Cm5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E80DC43399;
-	Thu,  8 Feb 2024 18:04:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wh7IXHXg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B69B7C433C7;
+	Thu,  8 Feb 2024 18:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707415488;
-	bh=3Uhrwe4sRvrwINsS64MrEMTgrGNb4S7Ahy2QqbR4f0o=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UhoL6Cm5ieWcXeo8f3wJo/Me6dy0QuAxDjlVGWEoAH+fs64ZU02V+5+Fj0k2eAkwF
-	 BYSNB5k4bywcbzwIOnDhqk9Dv0/aNzw36wtrHkEdVttsCDu7HMqdPa6xSHxGoO/yZI
-	 LcDj3OOmkJUUckY79T4UUKhJC9pP9LLhQ1/kLOJX6E/FitqpQH7Ee7C/YWMAEAjTwX
-	 k1ZpeRL25RN3fDrn8VEKpiHY8OmF3340jlfEc27+W0DVG0VJfkcyK5PNGOeKrHNPVy
-	 b/ns23XurVR8BA/HL0bUJWFwHIUnuP8aqeg8GacwiQl+22sOYjSGsL3tOx2GuLDDAs
-	 5cMd3bn2pkR6g==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 08 Feb 2024 19:03:55 +0100
-Subject: [PATCH net 7/7] MAINTAINERS: update Geliang's email address
+	s=k20201202; t=1707415527;
+	bh=at9vGcj1pWWZwYeHP6ZUd0OLeQcqcTOBtowq6f3MEQw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Wh7IXHXgs/Ry+SCVY5jSkBJ59L9p3BQIx3253f+wcPsubADOE4KvUtqM7Zpb3Am+f
+	 m8feK7KzDjlOQ+toB1tDmIGvzW2CMCcCVfbn4PJTQpS4ZexpCU8TiWPdVBotT+YxmJ
+	 pxllf3kmQK5DPW5BZ8y/8zvdiDr0xgU2AajvWGUVYHTPJSkjMqtZTJIhnh63lV2SpC
+	 50ud3sh1s5mUw1KtVkwDnb4LeixscJ33qymjTiTSjyqgNCI2BPzqOPcml5kmS+QOqV
+	 dlqzZgCIkULXHjgL7cO14pVSUU2MhhPVTYzDVfmckJlaQJSh8s/NW7bPFseuwrrnaQ
+	 OCXeBgooT6uIA==
+Message-ID: <b2433f05-dd95-4a7d-932b-1ff7d351bd58@kernel.org>
+Date: Thu, 8 Feb 2024 19:05:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net 1/4] mptcp: drop the push_pending field
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1705331716.git.pabeni@redhat.com>
+ <8363fd6542b179fdc30b42e78c922b0201c9f3fd.1705331716.git.pabeni@redhat.com>
+ <a95328ac-ed46-4d64-b06b-04f5d7eb62f4@kernel.org>
+ <8f4974ba6b07e2313e5a2f521d2ae3810daf4001.camel@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <8f4974ba6b07e2313e5a2f521d2ae3810daf4001.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240208-upstream-net-20240202-locking-cleanup-misc-v1-7-f75cc5b97e5a@kernel.org>
-References: <20240208-upstream-net-20240202-locking-cleanup-misc-v1-0-f75cc5b97e5a@kernel.org>
-In-Reply-To: <20240208-upstream-net-20240202-locking-cleanup-misc-v1-0-f75cc5b97e5a@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Kishen Maloor <kishen.maloor@intel.com>, 
- Florian Westphal <fw@strlen.de>, 
- Peter Krystad <peter.krystad@linux.intel.com>, 
- Dmytro Shytyi <dmytro@shytyi.net>, 
- Benjamin Hesmans <benjamin.hesmans@tessares.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Christoph Paasch <cpaasch@apple.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1962; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=tZVKtIFKLYUt/oUS595FbNi1gycPQG00LtyiN6EKU6k=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlxReiRCw+6cpvej3wyzo48ma+ikX1bsTWfnN8K
- mGQLRB5xOGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZcUXogAKCRD2t4JPQmmg
- c4UJEADeoCILa8kvid/d8rgzep3cR6jKmDzEGODmFgosVbyMKYZVrdxDdyQqfw8CwbHtgpwhO8X
- 9YmoWCOvs3f3/7Mf8cQYS4isCSuSt9MoyB2/MZjHX3JDuWOIqE7E4F4cNVQdskcT6ztSugCbMoE
- 7iQK9iSFMJAwJAF6U7qd3COGYLJY8xzo1eYOXJYnnteDSLcifXuu775elASlE+aLI7Ppwk0srtb
- ADZuDQZh3v2yekBgm6PYi6raHNl0qdDwSaWCVebqnztwKien9kGD5MX9OxqCT4DilvVsiFNLfbA
- +zVLMKA3yKIw8OJ2XMZuJ7Ni+kjE5rpskdWNbOSASkl+QMaV2GAu0aewpprA6XX0JdBxrfFXGzI
- XyzQRN0PlTx0J9dU8KR2ebwJDHeLgf3lqVXKIyjS19K4kBsPVK1v2JMApy3ikyDuw68ntbD367+
- u8HAEIrDTiSraolcW8GRaImki2/LhP/PNgl2W9ttgucddtoYcjesrXYpW3akNMqp9ACtcFfy1N+
- Locb/FRi5jBFEqoWEvHxXi7VqDftm6r+JsxScZFFDpuW8pGr/esA28xh4YDh9Th5fHDW/Qwwirh
- 6e99w8h3kG7VpeBBnaWUTbWaIJvqY9LO8oiOzUaxnGtO9m/3AlDLhYFLjxAIufEimViK1jvPrKp
- JLKpCrzKGpkkGoA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <geliang@kernel.org>
+Hi Paolo,
 
-Update my email-address in MAINTAINERS and .mailmap entries to my
-kernel.org account.
+On 08/02/2024 16:12, Paolo Abeni wrote:
+> On Thu, 2024-02-08 at 12:36 +0100, Matthieu Baerts wrote:
+>> Hi Paolo,
+>>
+>> On 15/01/2024 16:16, Paolo Abeni wrote:
+>>> Such field is there to avoid acquiring the data lock in a few spots,
+>>> but if adds complexity to the already non trivial locking schema.
+>>>
+>>> All the relevant call sites (mptcp-level reinjection, set socket optins),
+>>> are slow-path, drop such field in favor of 'cb_flags', adding the relevant
+>>> locking.
+>>
+>> In your cover-letter, you mentioned:
+>>
+>>> Patch 1 has no fixes, but still is logically tied to the other patches.
+>>
+>> I think it makes sense to have this patch in -net, especially because it
+>> is logically tied to the others. Would it be OK for you if I add:
+>>
+>>   Fixes: e9d09baca676 ("mptcp: avoid atomic bit manipulation when possible")
+> 
+> The obove, or add a sentence to the commit message alike:
+> 
+> """
+> This will also simplify the next patch
+> """
 
-Suggested-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- .mailmap    | 9 +++++----
- MAINTAINERS | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+Good idea! I added both:
 
-diff --git a/.mailmap b/.mailmap
-index 04998f7bda81..327e7eddd146 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -191,10 +191,11 @@ Gao Xiang <xiang@kernel.org> <gaoxiang25@huawei.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@aol.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@linux.alibaba.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@redhat.com>
--Geliang Tang <geliang.tang@linux.dev> <geliang.tang@suse.com>
--Geliang Tang <geliang.tang@linux.dev> <geliangtang@xiaomi.com>
--Geliang Tang <geliang.tang@linux.dev> <geliangtang@gmail.com>
--Geliang Tang <geliang.tang@linux.dev> <geliangtang@163.com>
-+Geliang Tang <geliang@kernel.org> <geliang.tang@linux.dev>
-+Geliang Tang <geliang@kernel.org> <geliang.tang@suse.com>
-+Geliang Tang <geliang@kernel.org> <geliangtang@xiaomi.com>
-+Geliang Tang <geliang@kernel.org> <geliangtang@gmail.com>
-+Geliang Tang <geliang@kernel.org> <geliangtang@163.com>
- Georgi Djakov <djakov@kernel.org> <georgi.djakov@linaro.org>
- Gerald Schaefer <gerald.schaefer@linux.ibm.com> <geraldsc@de.ibm.com>
- Gerald Schaefer <gerald.schaefer@linux.ibm.com> <gerald.schaefer@de.ibm.com>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 42bdf99ed979..d7b5c622575a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15324,7 +15324,7 @@ K:	\bmdo_
- NETWORKING [MPTCP]
- M:	Matthieu Baerts <matttbe@kernel.org>
- M:	Mat Martineau <martineau@kernel.org>
--R:	Geliang Tang <geliang.tang@linux.dev>
-+R:	Geliang Tang <geliang@kernel.org>
- L:	netdev@vger.kernel.org
- L:	mptcp@lists.linux.dev
- S:	Maintained
+> This patch could be seen as an improvement, instead of a fix. But it
+> simplifies the next patch. The 'Fixes' tag has been added to help having
+> this series backported to stable.
 
+I hope that's OK! :)
+
+Cheers,
+Matt
 -- 
-2.43.0
-
+Sponsored by the NGI0 Core fund.
