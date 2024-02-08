@@ -1,135 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7FF83CD5
-	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 18:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9416BB36
+	for <mptcp@lists.linux.dev>; Thu,  8 Feb 2024 18:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707415527; cv=none; b=RpoQwBzC9KhvOR7NG/bmygrL7RaofMhynaAaOC1hLCDy/x7fHxzWaNOE2E+E8ReDKXg5Tglvt0QEXCxCv1zaDRFimKyKjTFexF+bCdhrC5q+eG5EiJeMC3dqdD9XSz8iM9imEtvN4kgBsi9ldKSEn1cc6l7kpqtVRV57ddiIBPg=
+	t=1707415638; cv=none; b=LATTnL18nqgB7ntk3Tqc0Xw5LCoL6K5qkLJ4OQN+z5wxPLxJjbhb6YhfgBx3nhT9P+vb8OXQGkZKycmgFwNZyfTvbwYUfOh2dKHBFDl+1KrsfSoz5yD0PpA+pKrtZ+xm0w7ffD2y006tNdUFUaB7zA/MV+A4Gqo/P3VUAOzdyzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707415527; c=relaxed/simple;
-	bh=at9vGcj1pWWZwYeHP6ZUd0OLeQcqcTOBtowq6f3MEQw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mSH3W0yExgKjZqT8HRTOajE72bIkIMtrKWXIYNwkUGl4KbdT9DPJjOYe12bEDJoGabTC6odU0zXSOCiG3JgEEpgS5RHYgdsm3ZH5TKqKcmP+pw5bfY9K2gvUFDlzkXltOJgdLy5RDSX6QpsaFTVjKTtPkpb4JfFlIwErJRUzSOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wh7IXHXg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707415638; c=relaxed/simple;
+	bh=UmNN9E0/r9g6YTcjbhg1432Le2zrAcE1h+xGM7EhUnM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s0NQM0p6j4cWDqDN33tBYvPLiQYQcjeDceKv40NO+qkljam0BRDVlbm6549nXQb4YwLNU3yF+uN3msGDVjC4fYv3J/yA4XprYdjb0nDOL8de4O7WtAHayzJpcn6QpSygJrK5KPPpICFP9gORWNZt2V+KaquJtBh88HSLihN10Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ewvyBRf6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wh7IXHXg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B69B7C433C7;
-	Thu,  8 Feb 2024 18:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707415527;
-	bh=at9vGcj1pWWZwYeHP6ZUd0OLeQcqcTOBtowq6f3MEQw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Wh7IXHXgs/Ry+SCVY5jSkBJ59L9p3BQIx3253f+wcPsubADOE4KvUtqM7Zpb3Am+f
-	 m8feK7KzDjlOQ+toB1tDmIGvzW2CMCcCVfbn4PJTQpS4ZexpCU8TiWPdVBotT+YxmJ
-	 pxllf3kmQK5DPW5BZ8y/8zvdiDr0xgU2AajvWGUVYHTPJSkjMqtZTJIhnh63lV2SpC
-	 50ud3sh1s5mUw1KtVkwDnb4LeixscJ33qymjTiTSjyqgNCI2BPzqOPcml5kmS+QOqV
-	 dlqzZgCIkULXHjgL7cO14pVSUU2MhhPVTYzDVfmckJlaQJSh8s/NW7bPFseuwrrnaQ
-	 OCXeBgooT6uIA==
-Message-ID: <b2433f05-dd95-4a7d-932b-1ff7d351bd58@kernel.org>
-Date: Thu, 8 Feb 2024 19:05:24 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ewvyBRf6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707415635;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UmNN9E0/r9g6YTcjbhg1432Le2zrAcE1h+xGM7EhUnM=;
+	b=ewvyBRf6NjB8p9I+Y3A1JNBl4HJxNtMLD2YE9qWLL0Vm9XhBICjFaetExDXVu4+s3d7wHJ
+	u3n7KJAoF/wiT5IOowyTvyifWsJJS50g/BDrFBnjRn4dw6jX+Y3Lp6kTJVfgDJnzZ1TqQk
+	b+XM3uKW+8+pNYQwzZphx2tHH6PD94g=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-175-Zxv6GxOJPP6tbuxiK2FaSQ-1; Thu, 08 Feb 2024 13:07:13 -0500
+X-MC-Unique: Zxv6GxOJPP6tbuxiK2FaSQ-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-33b226e710dso313440f8f.1
+        for <mptcp@lists.linux.dev>; Thu, 08 Feb 2024 10:07:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707415632; x=1708020432;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UmNN9E0/r9g6YTcjbhg1432Le2zrAcE1h+xGM7EhUnM=;
+        b=Z6hkH1EGwVNxm9zEH9DAvuV6suou7x8Enzwq5+S2KSJ/Zwx+FavACkCwESskNLjPWL
+         OjZAVp1uajZ661vuPZ+THqJgGFXOAuOY/BXQF39qCcjWh6Md44mheTzLSfQfkDRrlt48
+         rs0fnd1Ha+nLB/y3zYRIdl6FIIALVKeqZvQVHgFDi3k0dqZmIi6MxB+S8i+jU2v9pxNr
+         2f60IxxvoeWXDzVdcEj9g5ND2Ls8irfz8lHaWB88pCbpXFpYw3G2Nm+7hMiMltsKTGK4
+         A5Yol4Th33KgPMlAU9KKhGWi4aqcd5mCMHzNzJ6uvkG2A96oGxkMBmHw+s0HZ0clUJPR
+         Mudg==
+X-Gm-Message-State: AOJu0YxvnWm95mzzA3JxjoN4MYiiD0QVgzP9Gb05PhPKNVDrBfsYRLh9
+	RNSwL5LTDUMidFnyLAuI3wAtLxhXiIDR26MLImDBT0I+Np5ayoal7ZBZdwjEMeXTck2wq1AzAIK
+	B9vcE6rIuvXDfVcllIRo7YomZJLA5xdrNejnbD/sERLTZ0DqgYQi8phXGXMb9
+X-Received: by 2002:a5d:5a04:0:b0:33b:43d9:7ec7 with SMTP id bq4-20020a5d5a04000000b0033b43d97ec7mr118937wrb.3.1707415632453;
+        Thu, 08 Feb 2024 10:07:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGTK2wifgDdXCKNM8OyOB0jHuTg6TBVvfpCXU1uExiXWSvQxmdibvjgCGQg/ixQD6WQITgkkQ==
+X-Received: by 2002:a5d:5a04:0:b0:33b:43d9:7ec7 with SMTP id bq4-20020a5d5a04000000b0033b43d97ec7mr118924wrb.3.1707415632129;
+        Thu, 08 Feb 2024 10:07:12 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-238-112.dyn.eolo.it. [146.241.238.112])
+        by smtp.gmail.com with ESMTPSA id x17-20020a5d60d1000000b0033af5086c2dsm4117499wrt.58.2024.02.08.10.07.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 10:07:11 -0800 (PST)
+Message-ID: <5802739da3352c2be4576931e541cf3ba03d5b4c.camel@redhat.com>
+Subject: Re: [PATCH mptcp-net 1/4] mptcp: drop the push_pending field
+From: Paolo Abeni <pabeni@redhat.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Date: Thu, 08 Feb 2024 19:07:10 +0100
+In-Reply-To: <b2433f05-dd95-4a7d-932b-1ff7d351bd58@kernel.org>
+References: <cover.1705331716.git.pabeni@redhat.com>
+	 <8363fd6542b179fdc30b42e78c922b0201c9f3fd.1705331716.git.pabeni@redhat.com>
+	 <a95328ac-ed46-4d64-b06b-04f5d7eb62f4@kernel.org>
+	 <8f4974ba6b07e2313e5a2f521d2ae3810daf4001.camel@redhat.com>
+	 <b2433f05-dd95-4a7d-932b-1ff7d351bd58@kernel.org>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 1/4] mptcp: drop the push_pending field
-Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1705331716.git.pabeni@redhat.com>
- <8363fd6542b179fdc30b42e78c922b0201c9f3fd.1705331716.git.pabeni@redhat.com>
- <a95328ac-ed46-4d64-b06b-04f5d7eb62f4@kernel.org>
- <8f4974ba6b07e2313e5a2f521d2ae3810daf4001.camel@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <8f4974ba6b07e2313e5a2f521d2ae3810daf4001.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+On Thu, 2024-02-08 at 19:05 +0100, Matthieu Baerts wrote:
+> On 08/02/2024 16:12, Paolo Abeni wrote:
+>=20
+> > This patch could be seen as an improvement, instead of a fix. But it
+> > simplifies the next patch. The 'Fixes' tag has been added to help havin=
+g
+> > this series backported to stable.
+>=20
+> I hope that's OK! :)
 
-On 08/02/2024 16:12, Paolo Abeni wrote:
-> On Thu, 2024-02-08 at 12:36 +0100, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 15/01/2024 16:16, Paolo Abeni wrote:
->>> Such field is there to avoid acquiring the data lock in a few spots,
->>> but if adds complexity to the already non trivial locking schema.
->>>
->>> All the relevant call sites (mptcp-level reinjection, set socket optins),
->>> are slow-path, drop such field in favor of 'cb_flags', adding the relevant
->>> locking.
->>
->> In your cover-letter, you mentioned:
->>
->>> Patch 1 has no fixes, but still is logically tied to the other patches.
->>
->> I think it makes sense to have this patch in -net, especially because it
->> is logically tied to the others. Would it be OK for you if I add:
->>
->>   Fixes: e9d09baca676 ("mptcp: avoid atomic bit manipulation when possible")
-> 
-> The obove, or add a sentence to the commit message alike:
-> 
-> """
-> This will also simplify the next patch
-> """
+fine by me, thanks!
 
-Good idea! I added both:
+/P
 
-> This patch could be seen as an improvement, instead of a fix. But it
-> simplifies the next patch. The 'Fixes' tag has been added to help having
-> this series backported to stable.
-
-I hope that's OK! :)
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
