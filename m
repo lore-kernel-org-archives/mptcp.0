@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C5731A8F
-	for <mptcp@lists.linux.dev>; Fri,  9 Feb 2024 14:16:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2111E4EB4E
+	for <mptcp@lists.linux.dev>; Fri,  9 Feb 2024 14:20:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707488210; cv=none; b=RVDroFDW87Zxyf9LuQ8ABSbM4FW1BDBY9zGovQFoV1OuiRd5i4Ug20c/badGKshl/R5FtePhO/GX3uv9FsmvLmJtzdsm7DECEkN0do3KJe8ZEtvV8Hf9wLw3ARZFrM+WChE03E+44X05Mi8FtrJu8WbimNH+3cMaqtWIzWl3Bb0=
+	t=1707488435; cv=none; b=cBVxrbiL8H/WjuRyx3Awti+EgvNDrYIHxEfRjf9JNPwS0AniW6gSrI5bgMSFuI3+IS9FGo2Be9Xe70Y47T+USPbRpnvdWQ9kl3rSwqvOu3xHDYzo5RZ5mrqAtc2RgLFpPRY/8o4j0RVbPE58PKcBzAeqeJo5gNIP0ilRtZEpQ3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707488210; c=relaxed/simple;
-	bh=LTDH0bRCDVBaHUNicEZ5/mi/wdGodasjoJSv49QtLyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OVmAMxF5sJS4s2SzVwSsWObD72wWfHWL7UA5eE4YhfRxLgTrGFuTve6ILwxAMgswQPmtahG238WGwUYrRh/TjNU5GcbL1jqFKhlaicQTO0iDlzdqGO3QM/6vkt77KgON4uiB8YAsa9sJc88XHHP88Fbs80kniaFfTaoH2V201OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nEbgjLs9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707488435; c=relaxed/simple;
+	bh=PeaPvkrqDpqFGb6U4CZgiX0SDSrQJM4vVfaBV27RbQU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=U2pv4UECpNaWnUTSDbI4jxawJVuyRiKcyIciGITY6S8uvl3t65rIgguBEevClOs1N8z174F8Fc/uBdX/VqXVmD7jetZuHu2rI7ifsW7WjXwX14/kHIdQHS13cCAGO+8nhvariulTi5dRb6QSBYCMZ/u+TlH3AfQdKBdMkapBFF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TtpFxXKa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nEbgjLs9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91E77C433F1;
-	Fri,  9 Feb 2024 14:16:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TtpFxXKa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C90F0C433C7;
+	Fri,  9 Feb 2024 14:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707488210;
-	bh=LTDH0bRCDVBaHUNicEZ5/mi/wdGodasjoJSv49QtLyA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nEbgjLs92lXBrQYGlpFrSJyyXXoCG8xgQn1GHOyod0vgZSb3NyudPB7o4Je5qw79t
-	 HhpQ/3mG/CtB/fSF3cFADdVdkYqnOWbW2c1hU4WMrp4AUF7R3BBcJCl/ThyIrXAuQY
-	 qi7JGRfUh5n+Is8OtOZM0M0c0Fy5V1rpPRv69kKM6SF2Nt6fAZkOBi4Qoh+NhhddoH
-	 A6JfzsdutcDdOuKVyBpjXEZuSeL2D2aBavWe6Kc6jh5SlX0l4gsMdxrD166hwJK3Gw
-	 uuJcd2Q4NA7cOwTQcFso3wU5qoZRrOTRQ3xCONddWBR3If+ExN4tFHRo1m8Y6oAby3
-	 cUxfN0ZS+zSgw==
-Message-ID: <aa5316a3-2bee-40c6-87a8-a9eb1fa0e7d8@kernel.org>
-Date: Fri, 9 Feb 2024 15:16:46 +0100
+	s=k20201202; t=1707488434;
+	bh=PeaPvkrqDpqFGb6U4CZgiX0SDSrQJM4vVfaBV27RbQU=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=TtpFxXKaGHhgNCpKGqyrdFPFKBWVThMQcGslr0MNreZZlPSGiBaBuSDnTlSl0L/bq
+	 F3yU7IvMD8KTigpyqlHcvmLvH2eWCK81PDq/LMEv039rBpuRhlVXJbQEFxaq7QfjSu
+	 zNylkSWLCAij9YgGqsUhq/TfetbRhyD5FYtuLB3/71F3aVdc2AXXRnxsORnGTHd5Sm
+	 9SQF17Gb0ml5L7TI/VFivAA8HR0a3Az01S5szHL/ot9wFSZO8isWrgG0gxJsnVfPgW
+	 M1xrBh/UHpY2VOrYUY17OTT49Y92xkP8jBEj2qdfkA5y9f0glfq2wok2luKvRkM1La
+	 4b4dUAiH46/OA==
+Message-ID: <bcc654ee-35d2-4057-b9e4-4148e964d773@kernel.org>
+Date: Fri, 9 Feb 2024 15:20:25 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: simult flows: re-adapt BW
+Subject: Re: [PATCH mptcp-net v2 0/4] mptcp: fix duplicate subflow creation
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
+References: <cover.1707418323.git.pabeni@redhat.com>
 Cc: mptcp@lists.linux.dev
-References: <20240208-selftests-mptcp-simult_flows_faster-v1-1-2859ca46e582@kernel.org>
- <196d5d2c-39c2-b2d9-1104-75bd4b7d6af2@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,45 +85,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <196d5d2c-39c2-b2d9-1104-75bd4b7d6af2@kernel.org>
+In-Reply-To: <cover.1707418323.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Paolo, Mat,
 
-On 09/02/2024 01:30, Mat Martineau wrote:
-> On Thu, 8 Feb 2024, Matthieu Baerts (NGI0) wrote:
+On 08/02/2024 21:42, Paolo Abeni wrote:
+> As reported by Mat, the in kernel PM can, in some edge scenarios,
+> unexpectedly create multiple subflows with the same local and remote
+> address.
 > 
->> Recently, the bandwidth in simult flows selftest has been reduced. The
->> idea was to improve the situation in slow environments. It helped in
->> some, but not in all of them. With a longer transfer, it is also
->> possible to get more instabilities along the way.
->>
->> We can increase a bit the rate limit for the unbalanced bandwidth cases,
->> but limit the total of the two links to 20 Mbps, like the balanced
->> bandwidth cases. The same 3:1 ratio is still being used like before, not
->> to change the nature of the test.
->>
->> Fixes: 5e2f3c65af47 ("selftests: mptcp: decrease BW in simult flows")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> The real fix is implemented by patch 4/4 with some more accurate check
+> at subflow creation time.
 > 
-> Looks reasonable, thanks Matthieu.
+> Patches 1-3 are roughly optional pre-requisities, added to avoid
+> introducing more data-races with the actual fix. Patch 1/4 is a bit
+> debatable, as it changes the existing ULP API, but I could not find a
+> better solution and there is some similar prior art:
+> commit 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info")
 > 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> This address feedback from Mat on v1, see the patches changelog for 
+> the details (no changes in patch 1/4).
 
-Thank you for the review!
+Thank you for the modifications and the reviews!
 
-Now in our tree (fix for -net):
+Now in our tree (fixes for -net):
 
 New patches for t/upstream-net and t/upstream:
-- 7e6c60f9e796: selftests: mptcp: simult flows: re-adapt BW
-- Results: 6075087dd1c3..bef0b46af378 (export-net)
-- Results: 081844c2b78a..78a4d8e40bf5 (export)
+- ce4271cba41b: mptcp: fix lockless access in subflow ULP diag
+- bb35405f2e28: mptcp: fix data races on local_id
+- ed0e0e7b2325: mptcp: fix data races on remote_id
+- 22e3b19337f7: mptcp: fix duplicate subflow creation
+- Results: bef0b46af378..8abab82d59f2 (export-net)
+- Results: 78a4d8e40bf5..0c8d1475f726 (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240209T140100
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240209T140100
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240209T141835
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240209T141835
 
 Cheers,
 Matt
