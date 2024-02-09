@@ -1,138 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC3D53398
-	for <mptcp@lists.linux.dev>; Fri,  9 Feb 2024 17:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DECB80BF7
+	for <mptcp@lists.linux.dev>; Fri,  9 Feb 2024 18:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707499753; cv=none; b=ln6xhC3rlCPxJ7XhlQHVbLCUacfncMxVOJbX5QEOb6wcH80ThxIXBPqqr+OO09uYMbdQpUd+Vs51JqtRM87zUSU0d3Ws5FZaC5vWNLwSOV4Wq6KBsZU6VqUva25wJ5uk25WczqLs8aWeaUVp4+ig9cETS97qF8o3A82a2r2pcIA=
+	t=1707502785; cv=none; b=NxN8fQJCCatYx6mxipUxcPYzs2OrJkVcK1U//BCYvxAb/EfugnQHuEivRbgYx7M02l2NLyhxbhnDLeWr2PxhydYBqHsIgHCZfcJ2rhXEMylFMqhPexewvp13x0JD7sPQPNNf9vKnAgBMCpHAalONwX3QR4HbYW+fAaOojAcjnYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707499753; c=relaxed/simple;
-	bh=k19QfQTM6BklgCn0TivSF1zvEGRWJJiaNLoU+TAvgFY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AvdrZp/zChWVKuARZmMDvqKDP6Idx4ltdtWdyvzBK81pjTxqQPRBouY16y0oNLE9/xca/DVyL2Yr5fYwLBHwUCe3wy/qd56e6EzEOolHcJn3WYQibXolCQiS3Kplmkg+ePGq3Ax/LzVdPNE31ubWmEAEUaGzKAqbWDWlWSyX874=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vDQp4RcX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707502785; c=relaxed/simple;
+	bh=mkFzniYdMhSrO9/sWNzPXTFaouRm4mFrCxv7glRkrXQ=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=AKXI2KTqEoaKcrVmHuzzhDYsTyMNVfs1Kf+PL9wfuk3EjX1GXSomXvIzQBXl4e8uW2Bv5p2LS7Ln9vZqGKXT8enSrysCOIroDCNrC4S2+lgF0j3JpRe1JRWuW4ZIxn1n91D1cwa6AJsPbJ1ErmC2cHqshX2dVeXEkTMVaZweot0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LhQt3GYN; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vDQp4RcX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B8AAC433F1;
-	Fri,  9 Feb 2024 17:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707499753;
-	bh=k19QfQTM6BklgCn0TivSF1zvEGRWJJiaNLoU+TAvgFY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=vDQp4RcXpnOherjB5p2d+v8kwTdxZCd+iyZC/TIm8Dq+3OSGtOaUJvi/P7wVR+q4W
-	 YTWJxHf+nbZhe0nM41zOXVsKNUcZpEgdW+P8QlxyuRYajhV1vWC89FlHL4rfbkpdyW
-	 G7n+gLAuy1u+qd7YIe18Wh0uwuAEUJlJvlqxZRELOqiXMokV/8/3R79AIV1VDuCrh/
-	 dTMXG+x8oAIM8ZIBnYBrQW+L6ZljpfFeQZUpJmkskpcTNYcxBAgq1eKlUkfNCXaYmJ
-	 u0ojB+gOzZbaS4dklIljVgzl23eumM/e/wZyAj59dtnPqNRrOnNf+SOkvXS/vpSmLs
-	 J/se0mK6FIWCg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 09 Feb 2024 18:28:43 +0100
-Subject: [PATCH mptcp-net 5/5] selftests: mptcp: lib: catch duplicated
- subtest entries
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LhQt3GYN"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7857947b179so90385685a.3
+        for <mptcp@lists.linux.dev>; Fri, 09 Feb 2024 10:19:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707502783; x=1708107583; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R9TynHR5S+sBf+KiPPj98JLtUaemqid6+19RMDWsrok=;
+        b=LhQt3GYNFmhnBt29zbLHPmgqyASBVjc1biLgdIATm1XthiCS0kaVSbfhpi7owrIcwj
+         W3CEBs6IIptgWg1hSvo7CPyMFAgxx2wl4SbkFBOVihX39/VB/IWnTKqVueySznDTf6ho
+         BCgmNAua2vhYRwsGfYu8TnB+g7A257D5losEQouG8KQPzW27WTIvXN/bafiUwdLXJ9No
+         bGembCQt8lRgdMfGYPO/+hGBOGS1+3xg1OXEZauMzUT8r5SW6ZYnaWaAV3Z/08HeZHsQ
+         PfKZ7pH3bhf5xL+j8HATkGK8GCnAiah0sswUqD6KHwqeMVtzM62TqIzDt3zKayKIWIx2
+         aQXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707502783; x=1708107583;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=R9TynHR5S+sBf+KiPPj98JLtUaemqid6+19RMDWsrok=;
+        b=o31FLx+F03gPLzayWx3dVC4ZvY9zPje/lVO7J3SD8995z4Lwy8Z5j8qtfgdD766Me0
+         X2ykp7U5UkpclnWBTVKyE19UepZDVva6gAE8XMCKMjYeDGQ34x1riFjL8SvfGN5ZYvBP
+         lD2gpv3HdZy1KCxeoAmyGWKlkArf+zfontRs7iJCEtxwMipDHtDtXhTAfLKLqzzM1RPx
+         F8Ue6ryfiKDfrpmkWH61ismF7ga57RqrO/3sVmttbQbXMd5IXLlSBENtBCJUYRDIfwG7
+         +APxf0qvR6r8PiJcyoAZUR48aDHXWCn13lwQDle7DqXQquyATtMpaoYXqcoFDagN2e0v
+         ujwg==
+X-Gm-Message-State: AOJu0YxBtpRAucpRek0ZYwMWqoBrb5DJ1z0EJubf2quw1C8O0ATCBMEU
+	RuPjSrZI0Aj8ds99FEQuXUyabWjelWKVwQ1FlcNjB/Q21ydxw3gl0jMhat0=
+X-Google-Smtp-Source: AGHT+IGzRyun9ARAILtHGGJhm4GjilFk6gdTqytVb8xSFpf0Pro8mPE3ng2uKqR216FtfoxTJ9ryiA==
+X-Received: by 2002:a05:620a:44c6:b0:783:e9ba:7d43 with SMTP id y6-20020a05620a44c600b00783e9ba7d43mr2687448qkp.59.1707502783190;
+        Fri, 09 Feb 2024 10:19:43 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.138.51])
+        by smtp.gmail.com with ESMTPSA id p4-20020a05620a22a400b00783fe340e2asm919081qkh.107.2024.02.09.10.19.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 10:19:42 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20240209-selftests-mptcp-uniq-title-v1-5-e4fb3a3b5f66@kernel.org>
+References:
+ <20240209-selftests-mptcp-uniq-title-v1-5-e4fb3a3b5f66@kernel.org>
+Subject: Re: selftests: mptcp: lib: catch duplicated subtest entries: Tests
+ Results
+Message-ID: <ad37e96f-377b-73b9-f27b-6d4082356502@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 09 Feb 2024 18:19:42 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240209-selftests-mptcp-uniq-title-v1-5-e4fb3a3b5f66@kernel.org>
-References: <20240209-selftests-mptcp-uniq-title-v1-0-e4fb3a3b5f66@kernel.org>
-In-Reply-To: <20240209-selftests-mptcp-uniq-title-v1-0-e4fb3a3b5f66@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2442; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=k19QfQTM6BklgCn0TivSF1zvEGRWJJiaNLoU+TAvgFY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlxmDjaByetgH9UM7ojBfZnVfTzQvfEzy8Lvw9T
- yzTgsku0ayJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZcZg4wAKCRD2t4JPQmmg
- cwcbD/9IHADkE2NvW/b6gxOQtxbcblaewJqP56BCsSTVRL0tzDSOkgyaYt6EE70qZpRoYt/0hec
- DxGhIAmoUd9c2SdZGKYrlsXcKuyXxzytGRi6rtyUUUB17MepIgHWdVhAa3CZiOfZqpZr4WA11+z
- SQsf4v+Od43VsxgP0KTTQj+xYLXF84k8AM1OaWAO9u7R2TKAYzT1XuNq6AK1gdLyNXQmCOA+03e
- rpcbrf2ZvIk1yvdof9KI2pvQXKmB2jSDK4rkN5Hb8BFLHQn+wPSkSm9BkpM6BEAJ9Lo7BjLJZ+x
- q28NkZASOUpY2kEMBTIwy+t2lhrQv5VYkWXQk+lys+WUYfvbmsCbc6U8Iauu8E0LPSezKxy05GM
- pL5X3Ktz5PJRMaOKGYEP1owvQle/8i6g6vOvYIySCnpX7t9p9Mjwg0WJO8CzV2G/IUC+lphiqQ3
- gnIjXLFqcbs0jq+X0db9U82H+hdmG1ZyN54PJpIk6wOo/D/KiRXWeZAT/5aREtWx6raxIVbBuaN
- 4PxhAOj0AG3sar5hf4VaI+GQANIBPeOSGyOOG9oNDpIgN+jyX/opzmzvWGxLZ3hytPIEPyQ4/Ys
- SW3iAfdHC0d+IKICGm0aILlNdtYGA9iJRTdvStA3ewoCGCmaVxW5dv9uIUj7ez4J+HPrYPNBf3+
- iZnaAFdfVJh73wg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-It is important to have a unique (sub)test name in TAP, because some CI
-environments drop tests with duplicated name.
+Hi Matthieu,
 
-When adding a new subtest entry, an error message is printed in case of
-duplicated entries. If there were duplicated entries and if all features
-were expected to work, the script exits with an error at the end, after
-having printed all subtests in the TAP format. Thanks to that, the MPTCP
-CI will catch such issues early.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
-  - This is a patch for 'mptcp-next'. But because it depends on the
-    other ones, I added it in this series, also to check I didn't miss
-    anything.
----
- tools/testing/selftests/net/mptcp/mptcp_lib.sh | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Our CI (GitHub Action) did some validations and here is its report:
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 3a2abae5993e..037cb3e84330 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -9,6 +9,7 @@ readonly KSFT_SKIP=4
- readonly KSFT_TEST="${MPTCP_LIB_KSFT_TEST:-$(basename "${0}" .sh)}"
- 
- MPTCP_LIB_SUBTESTS=()
-+MPTCP_LIB_SUBTESTS_DUPLICATED=0
- 
- # only if supported (or forced) and not disabled, see no-color.org
- if { [ -t 1 ] || [ "${SELFTESTS_MPTCP_LIB_COLOR_FORCE:-}" = "1" ]; } &&
-@@ -146,12 +147,26 @@ mptcp_lib_kversion_ge() {
- 	mptcp_lib_fail_if_expected_feature "kernel version ${1} lower than ${v}"
- }
- 
-+__mptcp_lib_result_check_duplicated() {
-+	local subtest
-+
-+	for subtest in "${MPTCP_LIB_SUBTESTS[@]}"; do
-+		if [[ "${subtest}" == *" - ${KSFT_TEST}: ${*%% #*}" ]]; then
-+			MPTCP_LIB_SUBTESTS_DUPLICATED=1
-+			mptcp_lib_print_err "Duplicated entry: ${*}"
-+			break
-+		fi
-+	done
-+}
-+
- __mptcp_lib_result_add() {
- 	local result="${1}"
- 	shift
- 
- 	local id=$((${#MPTCP_LIB_SUBTESTS[@]} + 1))
- 
-+	__mptcp_lib_result_check_duplicated "${*}"
-+
- 	MPTCP_LIB_SUBTESTS+=("${result} ${id} - ${KSFT_TEST}: ${*}")
- }
- 
-@@ -206,6 +221,12 @@ mptcp_lib_result_print_all_tap() {
- 	for subtest in "${MPTCP_LIB_SUBTESTS[@]}"; do
- 		printf "%s\n" "${subtest}"
- 	done
-+
-+	if [ "${MPTCP_LIB_SUBTESTS_DUPLICATED}" = 1 ] &&
-+	   mptcp_lib_expect_all_features; then
-+		mptcp_lib_print_err "Duplicated test entries"
-+		exit ${KSFT_FAIL}
-+	fi
- }
- 
- # get the value of keyword $1 in the line marked by keyword $2
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7847651579
 
--- 
-2.43.0
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/27b6d52de8b3
 
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
