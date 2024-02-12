@@ -1,204 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CC63C06A
-	for <mptcp@lists.linux.dev>; Mon, 12 Feb 2024 15:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49C93D0D1
+	for <mptcp@lists.linux.dev>; Mon, 12 Feb 2024 16:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707751163; cv=none; b=Fxuka/xicEfShSmnM2wTc29FEyY0PCs5Fyu79XSh0LEPRdywMuG0HRTbzbdFjiyxCv5drbY803KHtpBeG5fTf5U4MCVP+8iOPYOu0Q+zwN5UTUMFUQu7pwfTNhSbqBVofUTEbrcS/5Sg47GjKTk3b3T9MXUhIu+YewcAzwJu/y0=
+	t=1707754268; cv=none; b=AHZSzhDXYFCVsJVfkTEg4qzF+ce42uw8IMrD3pps/XEAoc3H1L+JQq36Tz7V4wkj7tDEsSSk8HZXhizpy3fni5IgbEGOT3HShDaFlgdOsIokl4VzdSYx7VvQ7pUdr0JzY5X7Is50SJfitXZIOfdBKUmGA+nCIxoiVW1iVvPBmZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707751163; c=relaxed/simple;
-	bh=EzLZH6aFXRumUkGJpI3oeD+oymNoJs7Iq/Y89m+Rsdk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ic/cDd+xMckoF3Lc0cUiXsgVEIPKhLArKrZL8UjeD4E5QsWBdUa/EiElrDeOcSOYCaKzhFK+Rtb6Eth/Zkc8lj4elnIJPqWp8vum8L9qoQUmS2GBKaWzIS2o2I9eyaQy3hs64+qH3uTrTiaW6/R9t9tSWw4/48LMp0TSysFIhQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SG8DYgLy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707754268; c=relaxed/simple;
+	bh=yasHagw0H1ASoiPBzSSvI7VU5wX9UsELds/ajnABK3c=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=AfEi1JeZ75t+8k5Nx+V7b9qnx6Hy6txGzKC4W7pgxeObcQhWJC+VnkqaSS8rIMWZf0E5YOcm9TltfSkzH4Rre3NFAO+C+goOGHgAztn1bQbI5xOfFY4ZYXbvO/jUu/Fl7Fa/av5wOte1Bf9pQi0D2FefrwoYpgGHCxsYBEnTqQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XZQzYz9o; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SG8DYgLy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707751160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+akTRa9mFQqVNm211wS2m5ZkUgSgoHSuHL1fIi9cQyo=;
-	b=SG8DYgLyyM67oLFhXVAXjFVh5wqI53F8+QiNbtEC20TjpNIn1EbJV4qsEsWvvbsOkPsx2z
-	O1+pzb6tv2QAXO2J3p0S3m0U4dErqGexypoAbY3bhllI3bc51iUZpgIdt8FhKx80KEcuho
-	uCp95iQcqYQ+TRdWzQMOp/jcpEiJe9A=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-201-VShAnK4TOuSFDbz-pFNsAw-1; Mon, 12 Feb 2024 10:19:19 -0500
-X-MC-Unique: VShAnK4TOuSFDbz-pFNsAw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 35200859701
-	for <mptcp@lists.linux.dev>; Mon, 12 Feb 2024 15:19:19 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.193])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B8AF9492BC9
-	for <mptcp@lists.linux.dev>; Mon, 12 Feb 2024 15:19:18 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [mptcp-next v2 7/7] mptcp: cleanup SOL_TCP handling
-Date: Mon, 12 Feb 2024 16:19:02 +0100
-Message-ID: <da768759d9993dc8b086a1ea40131be592ae55ec.1707739536.git.pabeni@redhat.com>
-In-Reply-To: <cover.1707739536.git.pabeni@redhat.com>
-References: <cover.1707739536.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZQzYz9o"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-68c2f4c3282so16365686d6.3
+        for <mptcp@lists.linux.dev>; Mon, 12 Feb 2024 08:11:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707754265; x=1708359065; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dASvIw5kRsdLkp17HLrum1JSJ/YRJiNMRd2GIB8rJMo=;
+        b=XZQzYz9oX/JGak/kvlglc6jt9dB6E8P4qlXK2//IVqfHZNM1mRiHpPM0ETA2eHkzom
+         UN64EwAY4Ap0A1j9zmSLSo0JM1dcWjcLJXI5DUwHe8L37GFQ0GaaNTlmpoDngDYsFCr5
+         0KD1896gu39LJW7qBiJRPnSzzHYZeq9k7eKrmcE3CkChm48+Y3piIOyJDR4LH9z1aDlZ
+         gX/TbXVzXH0j2wwBu24aaQfvDIrZY2R0J7Z00jk+z+4utR8wTTLj7hjJ09hF04BG62aV
+         wvxGX9Ke9Akn0oXVh23VirXkuQbShnqcvewuiVnYFRwvIAwkJXWt2JMw/9/j/HClPPSb
+         KGbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707754265; x=1708359065;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dASvIw5kRsdLkp17HLrum1JSJ/YRJiNMRd2GIB8rJMo=;
+        b=Xu1yRxE/FPJUaMmgLAExWq1CzHGJ6IE47X2rNaNki6g9lB8xKR7LmS/fYqkhzAInhk
+         NQp7ntloEn2Qex2/gmB5v/DcYyKM44KgILGUlDqyUhJpJBuBaEFy7/9TT/CDNOvNGN3S
+         qRtl1polXwBUkkFGujaqmqMrwLF8w9ZiY6iazZ4l9aHAj3qSwG02uL3BJIYbDzbaYV9B
+         kb1EKqV3O4bnDDcFWht3fmgpEoaNhRzPd7bsRcabx4urHtzxKD218+1MtUQTsWKxIory
+         vPCSOsS/KVZjW16ld4QJl9pJUg6lBVqi67uVZb83JSqYbPTxeXO//KHHBMyenbDBB4Mf
+         RwtA==
+X-Gm-Message-State: AOJu0YzWBz9JPc6KiKVfw70cJGQfvBtJBQkwPI4DOa/tqAhzhQcbzHU8
+	4LduACUBNl8K2g1o8wi/w9GizitDmrx1VLwpkPTlKFVk+PFJX6w=
+X-Google-Smtp-Source: AGHT+IFYOqgFoD9Lj+F/9z4j+M8zI9BTIEUkAmRUVcp7LK05rZUQ8rj6TrgId0dU+jdJUBuisgYT/g==
+X-Received: by 2002:a0c:d983:0:b0:68c:96b9:c651 with SMTP id y3-20020a0cd983000000b0068c96b9c651mr6538653qvj.47.1707754265608;
+        Mon, 12 Feb 2024 08:11:05 -0800 (PST)
+Received: from [127.0.0.1] ([20.84.127.21])
+        by smtp.gmail.com with ESMTPSA id oj11-20020a056214440b00b0068c71b78980sm281601qvb.118.2024.02.12.08.10.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 08:10:43 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <da768759d9993dc8b086a1ea40131be592ae55ec.1707739536.git.pabeni@redhat.com>
+References:
+ <da768759d9993dc8b086a1ea40131be592ae55ec.1707739536.git.pabeni@redhat.com>
+Subject: Re: mptcp: cleanup SOL_TCP handling: Tests Results
+Message-ID: <dec6b4c2-acc4-0713-00d9-a7960f8a6337@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 12 Feb 2024 16:10:13 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Most TCP-level socket options get an integer from user space, and
-set the corresponding field under the msk-level socket lock.
+Hi Paolo,
 
-Reduce the code duplication moving such operations in the common code.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/sockopt.c | 75 ++++++++++++++++++---------------------------
- 1 file changed, 30 insertions(+), 45 deletions(-)
+Our CI (GitHub Action) did some validations and here is its report:
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 1b38dac70719..dcd1c76d2a3b 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -624,18 +624,11 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
- 	return ret;
- }
- 
--static int mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, sockptr_t optval,
--					 unsigned int optlen)
-+static int __mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, int val)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	int val, ret;
- 
--	ret = mptcp_get_int_option(msk, optval, optlen, &val);
--	if (ret)
--		return ret;
--
--	lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	msk->cork = !!val;
- 	mptcp_for_each_subflow(msk, subflow) {
-@@ -647,23 +640,15 @@ static int mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, sockptr_t optva
- 	}
- 	if (!val)
- 		mptcp_check_and_set_pending(sk);
--	release_sock(sk);
- 
- 	return 0;
- }
- 
--static int mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, sockptr_t optval,
--					    unsigned int optlen)
-+static int __mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, int val)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	int val, ret;
- 
--	ret = mptcp_get_int_option(msk, optval, optlen, &val);
--	if (ret)
--		return ret;
--
--	lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	msk->nodelay = !!val;
- 	mptcp_for_each_subflow(msk, subflow) {
-@@ -675,8 +660,6 @@ static int mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, sockptr_t op
- 	}
- 	if (val)
- 		mptcp_check_and_set_pending(sk);
--	release_sock(sk);
--
- 	return 0;
- }
- 
-@@ -799,35 +782,10 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 	int ret, val;
- 
- 	switch (optname) {
--	case TCP_INQ:
--		ret = mptcp_get_int_option(msk, optval, optlen, &val);
--		if (ret)
--			return ret;
--		if (val < 0 || val > 1)
--			return -EINVAL;
--
--		lock_sock(sk);
--		msk->recvmsg_inq = !!val;
--		release_sock(sk);
--		return 0;
- 	case TCP_ULP:
- 		return -EOPNOTSUPP;
--	case TCP_NOTSENT_LOWAT:
--		ret = mptcp_get_int_option(msk, optval, optlen, &val);
--		if (ret)
--			return ret;
--
--		lock_sock(sk);
--		WRITE_ONCE(msk->notsent_lowat, val);
--		mptcp_write_space(sk);
--		release_sock(sk);
--		return 0;
- 	case TCP_CONGESTION:
- 		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
--	case TCP_CORK:
--		return mptcp_setsockopt_sol_tcp_cork(msk, optval, optlen);
--	case TCP_NODELAY:
--		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
- 	case TCP_DEFER_ACCEPT:
- 		/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
- 		mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, optval, optlen);
-@@ -840,7 +798,34 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 						      optval, optlen);
- 	}
- 
--	return -EOPNOTSUPP;
-+	ret = mptcp_get_int_option(msk, optval, optlen, &val);
-+	if (ret)
-+		return ret;
-+
-+	lock_sock(sk);
-+	switch (optname) {
-+	case TCP_INQ:
-+		if (val < 0 || val > 1)
-+			ret = -EINVAL;
-+		else
-+			msk->recvmsg_inq = !!val;
-+		break;
-+	case TCP_NOTSENT_LOWAT:
-+		WRITE_ONCE(msk->notsent_lowat, val);
-+		mptcp_write_space(sk);
-+		break;
-+	case TCP_CORK:
-+		ret = __mptcp_setsockopt_sol_tcp_cork(msk, val);
-+		break;
-+	case TCP_NODELAY:
-+		ret = __mptcp_setsockopt_sol_tcp_nodelay(msk, val);
-+		break;
-+	default:
-+		ret = -ENOPROTOOPT;
-+	}
-+
-+	release_sock(sk);
-+	return ret;
- }
- 
- int mptcp_setsockopt(struct sock *sk, int level, int optname,
--- 
-2.43.0
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7874079031
 
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/11a409accb04
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
