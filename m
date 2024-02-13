@@ -1,128 +1,156 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515275F551
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 15:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E72605C2
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 18:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707839637; cv=none; b=q2wctTLv5+FEPM2O/Voyhfs1x4Pv36PW93WASAy14Js7OqvQzXOawvFyDjepff9rd+YW1Fe814ZrRCSALaXrUzcvV8jRlKa8nhoKzuPf+Vy+EX3c/T+6LMn6xw62AhvdmVo2O4/iXOrk4i6fU4njbkf/RL24yI+xguxAU6lYo48=
+	t=1707848430; cv=none; b=ktEAXvVS/rpWW0i3SPvyv2omOyv+eu32QTAwQh+FY7HFCcsmCeiXvfwdE7Bje/8TweRSmxAFAFCMy8QPNZkrIrZmrHBZsEAV1uGykWlMXKIRSBFXERpii/5sbmmic827vVW155g9Z3TLETET0fBgfcctYE55vA+p8h+DhxLTWeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707839637; c=relaxed/simple;
-	bh=4Z4qSgrZnMeNjNLkjbvrPCUcnzcYzFK14thHpGi1Tb8=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=Rfi/dcbm8S7CtbpOd9E7F0sCY+QJuoWq/qdmR/boBmF/b+cx1FxIjhyS0Mzb2ZHZbaMYKS20jUGOPBhFT6XkUQYYOtfl8PGB8bkWuJ28e2+R7JRaxhukQhUmioE3JG0VyHBdAC3aY5bs824W02AaZX85Ul+1LwsMrpuDauaf6YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Spj0Uf2P; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707848430; c=relaxed/simple;
+	bh=8SdM+NyYgzBqnJbJNWQKaxyzzH97mtN9ydms4pq3czo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Lj2L7E1erRqUSDRIFNQ3IMBEKpYGJuyMiusizt6O0gLNH/uGbKJ2Fa5ywU/F/CBvAY6GNf7n5KUygWWyTFGpJVYHrYmMtpq6yM0hAUCawldhGfGjL4ywqqeM+EMkHU3v7v3J8nvvha4T1xcO/D4gtXvGmqOzjaBR2s7datwleiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A698siWy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Spj0Uf2P"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-785d567fa26so121168985a.3
-        for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 07:53:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707839635; x=1708444435; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x9pL2BBTgYCZclHD5WZ7l95NDpPDGCpYGn1r51/5CHU=;
-        b=Spj0Uf2Ph5KJZn91ZyGPOy5YSUjQd7VCQM490Skh62x2xaEa14FtAT0j7PNsKlYEyK
-         lCLoRF53aYXZKjBVuNyZOo/mJAKC55lpMJAetDoRRfN27Zby+ivxeBbhUX5e7IFbcRth
-         Gb7YS0+MnsjRK0jEKokuUBt7rxcBlHXrrqTehYnHm8KM2w4BPT4uPK4eHHdRn3lGHI97
-         4C84OwNNjO7ooZc4lEXM48TqhTia2yT+7Lchz3T+gSGr7Jv67aEmc2W11XBfv941GYCP
-         XODOlSPIuuw2OiMedOUZ5UU2e4l5yJ5B81PRZfkp3JHtceENKFI8WAE6bWFfuqWW+b7A
-         4fLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707839635; x=1708444435;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=x9pL2BBTgYCZclHD5WZ7l95NDpPDGCpYGn1r51/5CHU=;
-        b=NFOISQskZjxhvskC6IQ5eHzNF8M+LchnQest+dQ+d+ms3sjVwu2A4p1Go5rTNHIVXJ
-         ci/ClHIZa1XDaEUEi7M1lWjQXUsqBose1aZVmWB4X7NrVEFsA0Upc0Aub9Djaza0588R
-         L/JVRPybVgCcht29hCzGKwWTQiF12gtqm70brwTm8JjRzoO7fIaXXoByoDFgxp67P57g
-         JX8I8SdU0exWx35u66W6+uLJRk9Ai8oR2Vh6WrjK7jja6P4iwZOtesSNfNelG8yJ98Pb
-         9O8uXUjllxZftCi6ixucJ85MjQeyIytdexg6g6chRcjjeQMaqajPVwXz2rot0td6bVs2
-         mnEg==
-X-Gm-Message-State: AOJu0YybWGwW3uIvVVo6G0lRx1M6XdgAjyc6waaB6U1xjMxsShzhWuNY
-	mRAz+GT9OY//vckce3Sn+j/SAkAF3YOlRRAW5BY++7CoNKpSWAySMfJw13Q=
-X-Google-Smtp-Source: AGHT+IFs55cZmRcBJc7MEoC+l5hM6FUNb5n1n5bTR9edV9uz3tcsPomycMi/4T+57zwdXIrap2WGvg==
-X-Received: by 2002:a05:620a:1a07:b0:785:becb:7b86 with SMTP id bk7-20020a05620a1a0700b00785becb7b86mr15183944qkb.34.1707839635166;
-        Tue, 13 Feb 2024 07:53:55 -0800 (PST)
-Received: from [127.0.0.1] ([40.76.119.101])
-        by smtp.gmail.com with ESMTPSA id x11-20020a05620a0ecb00b007840b13c58esm3060429qkm.63.2024.02.13.07.53.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 07:53:54 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20240209-selftests-mptcp-uniq-title-v1-5-e4fb3a3b5f66@kernel.org>
-References:
- <20240209-selftests-mptcp-uniq-title-v1-5-e4fb3a3b5f66@kernel.org>
-Subject: Re: selftests: mptcp: lib: catch duplicated subtest entries: Tests
- Results
-Message-ID: <443a4723-1538-42ef-d963-2ba4e58e6d04@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Feb 2024 15:53:54 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A698siWy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E367AC433C7;
+	Tue, 13 Feb 2024 18:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707848430;
+	bh=8SdM+NyYgzBqnJbJNWQKaxyzzH97mtN9ydms4pq3czo=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=A698siWy8hAybH2tLi9kNmEbLxT8m1FTbDk/DR4Px9TXhGYPHG9ERq4ze0yW+XcfH
+	 lVGxWBdDMm5pDuGXG8W4bAjzrh9zX0SeBTDEQTYZeDoB8c4erSvEnu2Wrs/L+Y/Iyv
+	 bF2L0nsrH0zMzc/nDFHWz87X/2VuEO2dkgzHQ/l08doyziuP5lbuNMwpRoJtgwsIaB
+	 +uYygSZandOSnKAoBLsWxLhTujMKpelMj2IhytMhg/a/mAXKR9ozofyDzhRi+YwzOQ
+	 Y1RvZhY9IkXG2ZDJ3GLVYzg2NUXfPaZvSltrcki8WlwKSY0x4i7VJS4KofCkzLucKC
+	 O8JCJWTFqswMg==
+Message-ID: <bf06eee5-ebb4-4e56-b00e-5397642cdf15@kernel.org>
+Date: Tue, 13 Feb 2024 19:20:27 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH virtme-docker v5] tests: add bpftests support
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <c8d9aacfe97acd74c369496a573ea64070485382.1707729702.git.geliang@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <c8d9aacfe97acd74c369496a573ea64070485382.1707729702.git.geliang@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 12/02/2024 10:24, Geliang Tang wrote:
+> This patch builds bpf tests after building other mptcp selftests in btf
+> mode:
+> 
+> 	cd tools/testing/selftests/bpf && make
+> 
+> And add run_bpftest_all to run bpftests:
+> 
+> 	./test_progs -t mptcp
+> 	./test_progs-no_alu32 -t mptcp
+> 
+> Now mptcp bpf selftests can be tested in this way:
+> 
+> 	docker run ... auto-btf
+> 	run_loop run_bpftest_all in .virtme-exec-run
+> 
+> Disable IA32_EMULATION config to fix this error:
+> 
+> 	./include/linux/if.h:28:10: fatal
+> 		error: sys/socket.h: no such file or directory
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+Thank you for this patch! It's good we finally have an easy way to
+validate these tests! v5 looks better without the mptcp_progs.sh script!
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6204403636502528
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6204403636502528/summary/summary.txt
-
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/4599610446970880
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4599610446970880/su=
-mmary/summary.txt
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/0c1cb32e0aaa
-
-
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+I just managed to find some time to test it and include it in the repo.
+I had to modify a bit where the test_progs are located:
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+https://github.com/multipath-tcp/mptcp-upstream-virtme-docker/commit/2051f42
+
+I guess on your side, you had an "old" test_progs in the source file,
+instead of using the one from .virtme/build.
+
+
+What's a bit annoying, is that all built files from BPF selftests are in
+the root dir of the build dir, in the middle of all kernel built files.
+I tried to change that by changing "O=" this in build_bpftests():
+
+  mkdir -p "${VIRTME_BPFTESTS_DIR}"
+  _make O="${VIRTME_BPFTESTS_DIR}" prepare
+  _make O="${VIRTME_BPFTESTS_DIR}" -C "${BPFTESTS_DIR}"
+
+where:
+
+  VIRTME_BPFTESTS_DIR="${VIRTME_BUILD_DIR}/${BPFTESTS_DIR}"
+
+(I don't think KHDR_INCLUDES is needed, I didn't check)
+
+But I had issues with bpf_testmod we don't need :-/
+I tried by setting KDIR="${VIRTME_BUILD_DIR}" but it didn't help.
+
+If you see a way to use another build dir that is specific to the bpf
+tests, that would be cleaner, I think.
+
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/406
+
+Before really closing it, I will look at modifying the .yml files used
+by the CI to have a new job validating only the BPF tests.
+
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
