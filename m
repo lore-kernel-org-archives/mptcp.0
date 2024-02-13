@@ -1,127 +1,94 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976FD22EF4
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 09:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C7E249F3
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 11:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707818011; cv=none; b=Tz6CYi7CBTJYk409F85v00XWQ8CyrRQAhXvhs4V108D07YFFANrkvFjeROPfDzPBjAn0zdx5YL4uLsYbfMG/2sLlK16NzSdpKDShdvV2tAjPNpI+E5Wm/Vf2RViKmdtH3rplC6w+2S0m1FKGJMVY6+eT3JBiCcISf41wLPzIW4M=
+	t=1707824133; cv=none; b=V1VUX5poofPN9DdWOE9ZWHgwaYo6bsla2SA4o+dD++8JjqlGHjRF7v8fwdrS8vPLDSeT07ehhCz8cucp/x9OhAqBhdn7uL3jHJlzZMRgwEra/7/S35E3HG8F+xHzA32FypHw0l0UdJMRjdilhuH6/PvUfyrfTASPaAJBk+LqYwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707818011; c=relaxed/simple;
-	bh=HZpHLsx8uhR1cMDtLrn8lJfSB8g225iZcZpxcPGTisc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=hxAu7eKTwgHiivUNKD4GGNTdothwpFkt+SfYu6NoCUUuTohPr5zR3bN/c1zQ0XM8xi8InEg6IV3l0h5ARKEcE7zU7zOYMmnDTVCyPpr/zoz3KDa+hkh6EtsLUZ4EWcNSNoA4DfHyuEZt+h5qZUf+grSTDvpHLVWy5fASjsFE/C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LkXoaS/V; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707824133; c=relaxed/simple;
+	bh=yYej/2sbnLLCGZQ5EKQc5uDe8HnSkdTH8sG0kB13IpI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uuJoS0QicSQRyXS7d3i6tHSLscakX/lhJQohFCd2Ecs+KPpHuOhOgidl7kjZ0IJ9kXMwDh/SR1P9xbi0WkqMyOioS2lMiLhvyRRP+qYn8C5U8d28jHkYT3Fa5CUeEYp8nmkqHtWGoDTL25E+SoWLIN/8kE8ca3aL5VJ+A0qdlzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DiZEIkG+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LkXoaS/V"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6818aa08a33so37405416d6.0
-        for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 01:53:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707818008; x=1708422808; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GY+mo2retjLqd9fFUkePbUf6SIfwTAG/ZQX8B00sRxU=;
-        b=LkXoaS/Vcx6+s8f2V6U2RUqa53GKu05ViDBpD8f2mVuTcdl78Hd+jz6np7lEgsuuyz
-         hCnphZhOcvPK+U1hObsMlkNabC5JJ6O1enD8vr5GSos5QmxnqySG+8LHdEH32JlkadV3
-         6e8Hmpg7hWiIf6wLTlKFVLfpmg99I5AR+hGKl6pbhv+egr80+2fScLKqn5CnQQBNWSZY
-         li7hLEAsfkw5VTCRoHmjNVHft+XH+CfgitcF+t9oWzxljzt2RllQ5AorKX4XgSvrG7yf
-         CB281DO908kZPCu+OnL9688HS+S2x0aunqaXx2reAW6fIqYpNPp0UJsajcaBuP8bjkwP
-         3xjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707818008; x=1708422808;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=GY+mo2retjLqd9fFUkePbUf6SIfwTAG/ZQX8B00sRxU=;
-        b=GeozoPuQlxeV8Oscafjwofr2fA5xFAKK7bwDFZORTjB/CvlWEtMNsLEZaSI+wLzL2c
-         ucdvHOUOuI2X0sW7uwZ1rvC3XLV0mFgzvKzjJgOcPzLB9cc8SrBYtA/HhIYvCua9u8v/
-         EE4Owc5ktnOddwd4vBt5G/DlQ2Ln2iVBAupy9kv6bPYRZINlsdavrQA6UfzDCGLT6nMl
-         NihooJ9MSXG+JEIphBrmF8mvRveSH/ELxg6o0OBt2FsElDfCWOO1/J4FqrasV+srMG5y
-         8C2dBnImt47LYNT83t0lK/NshSJVuLjnpYC9974xa/SjCwk9idScljgNUiXzSG885Co4
-         6Cqw==
-X-Gm-Message-State: AOJu0Yxuwtf98KP/YBVitShKAX8c4MAGyT4L8ywJyNNAdmI4c+zStPOW
-	0EUuldEtGUWTcvRXlnW6eg86h2i+22ehhU2FNfeVAY7HTQPdKBS10hkrf2E=
-X-Google-Smtp-Source: AGHT+IEd15oMooD8sh/NcW5FyhCB+4mvvapyvgw8hOKHrwqTNZXSBEv845x+D5hh/p2Xnr7R98NZfA==
-X-Received: by 2002:a05:6214:2b94:b0:68c:c8ce:3228 with SMTP id kr20-20020a0562142b9400b0068cc8ce3228mr3100941qvb.29.1707818008357;
-        Tue, 13 Feb 2024 01:53:28 -0800 (PST)
-Received: from [127.0.0.1] ([20.84.127.102])
-        by smtp.gmail.com with ESMTPSA id pz2-20020ad45502000000b006819aeb62d6sm1108956qvb.136.2024.02.13.01.53.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 01:53:27 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DiZEIkG+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30245C433C7;
+	Tue, 13 Feb 2024 11:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707824132;
+	bh=yYej/2sbnLLCGZQ5EKQc5uDe8HnSkdTH8sG0kB13IpI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DiZEIkG+fDpQ6P3OHYif9T2lMOrBrDCM27BxUnB7rK1mVHf5/aFm5X2CLv84M36/i
+	 Ew5V5HyNmv6vZOGQHuQOdSIkOFsdP7jI+bL7+Sde4GTFlMYi9EL8+ximw83v8zG2PL
+	 XBN721VKSmHOo9Zjb1TVOLKEH1z2MNr7FANDGsWWoDgE5k/X2e+CuDvXc+7vjF1llZ
+	 vTAdfR1U1gTfC0SjZXXYZBP49IZsFlDVVt/ZCMLjxANWTUgm0ufX9YJC0S99thIBTR
+	 Y8cdXw9aPc6KeUFLNikdV6XY+B96JktuJdlreG8OFa1du3mZFBoUwcTPLDJHrtG2bY
+	 7L2exemYOXZ8g==
+Date: Tue, 13 Feb 2024 19:34:59 +0800
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <da768759d9993dc8b086a1ea40131be592ae55ec.1707739536.git.pabeni@redhat.com>
-References:
- <da768759d9993dc8b086a1ea40131be592ae55ec.1707739536.git.pabeni@redhat.com>
-Subject: Re: mptcp: cleanup SOL_TCP handling: Tests Results
-Message-ID: <a9b564a5-0f7f-8f36-f77a-796d09fd492d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Feb 2024 09:53:26 +0000
+Subject: Re: [PATCH mptcp-net 1/5] selftests: mptcp: simult flows: fix some
+ subtest names
+Message-ID: <ZctT4/w/nH6+4Ocz@t480>
+References: <20240209-selftests-mptcp-uniq-title-v1-0-e4fb3a3b5f66@kernel.org>
+ <20240209-selftests-mptcp-uniq-title-v1-1-e4fb3a3b5f66@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240209-selftests-mptcp-uniq-title-v1-1-e4fb3a3b5f66@kernel.org>
 
-Hi Paolo,
+Hi Matt,
 
-Thank you for your modifications, that's great!
+On Fri, Feb 09, 2024 at 06:28:39PM +0100, Matthieu Baerts (NGI0) wrote:
+> The selftest was correctly recording all the results, but the 'reverse
+> direction' part was missing in the name when needed.
+> 
+> It is important to have a unique (sub)test name in TAP, because some CI
+> environments drop tests with duplicated name.
+> 
+> Fixes: 675d99338e7a ("selftests: mptcp: simult flows: format subtests results in TAP")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  tools/testing/selftests/net/mptcp/simult_flows.sh | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> index 619be0e1acf5..f377ef01970b 100755
+> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
+> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> @@ -250,7 +250,8 @@ run_test()
+>  		[ $bail -eq 0 ] || exit $ret
+>  	fi
+>  
+> -	printf "%-60s" "$msg - reverse direction"
+> +	msg="${msg} - reverse direction"
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+How about using '+=' operator to append a string like:
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5917362851938304
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5917362851938304/summary/summary.txt
+	msg+=" - reverse direction"
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5890302142054400
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5890302142054400/su=
-mmary/summary.txt
+The same in patch 3 and patch 4:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/11a409accb04
+	msg+=" after flush"
 
+WDYT?
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+Thanks,
+-Geliang
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> +	printf "%-60s" "${msg}"
+>  	do_transfer $large $small $time
+>  	lret=$?
+>  	mptcp_lib_result_code "${lret}" "${msg}"
+> 
+> -- 
+> 2.43.0
+> 
