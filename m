@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B785EE70
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 14:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D656C5FB8D
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 14:59:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707835908; cv=none; b=jTmwZiWqZzTZWwV3DG7V2IaCkjfaCqk/JAzH1jICD/dZ2/bV17BQgs+bfpDCSQTYCyOGQjcD1CvPb7il1sSN+qEMJBKdikqtkZC3U4lxjCQcVY5Q7bx5EA6+UoVtXKstVSCxZqf+RKss7JY9HtN30mwvmslh2XkytyeVK8BLlLU=
+	t=1707836344; cv=none; b=QLM7YEufDS8FNcTH13JLhA9w+5cr7qelepiE7zO10/bDidYfKO+YCov5wyHzQJyvxGn08ogJVOcDg460BRBUHcuqArDPU3kkGyDlbRkcoW3KJl64LZRglbf5WAFx1W7QFY7Xhg4cai+p1PJM3LC+zCE91n39z+lQCl/EdT6JQvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707835908; c=relaxed/simple;
-	bh=eO+hUDboT1jX2zjgaBMQr8sreAwTz60yyLoCcUXCrLI=;
+	s=arc-20240116; t=1707836344; c=relaxed/simple;
+	bh=gh6HpSPXnzJFd4/icZVokKjY6H9OmxckuVNj1nqvuTc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j43IHfiF/gze3hp8uvxlzjPxjvQrz3kb5WstYtdGvkbwo1yy9GPMLhAXVcodYv7fFOnUM/pAyOVIASOZUqkA3Mi7wmkVdUvNLohzCFOqv2QUnI/J5uvv/ChOMfiEq5JKOZQHuWeBDWq+ujGCc7rnrT0F6wX1r/iSNjXdd0P+d4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIVmf/hJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=O6r6AeWwH679APYbeNvCt37iZnF57I49I9DTYTyHIie5G54YSTu7yLlkV5oSG2LyvqJI1LtSkSwKk9EDObOK/80DkjSI2JFBYKbO0eQoHrRhOlfalfHXj6DBNBSv+G0e0S0MrugFfYZQgv2P+vdL5cu3CGlm2iHZsGle1eUgdko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3XDd0Pa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIVmf/hJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D214CC433C7;
-	Tue, 13 Feb 2024 14:51:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3XDd0Pa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31E4C433C7;
+	Tue, 13 Feb 2024 14:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707835907;
-	bh=eO+hUDboT1jX2zjgaBMQr8sreAwTz60yyLoCcUXCrLI=;
+	s=k20201202; t=1707836344;
+	bh=gh6HpSPXnzJFd4/icZVokKjY6H9OmxckuVNj1nqvuTc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OIVmf/hJfNKRG+/qt3YdRmYNOsPcMZRAASWE8FljInb3lnh8QWbsSLt2j/A5zr7gv
-	 T7MurwCcGGFAUGBIrSxQpFNlD0tCp3/Hml06UYu+dsRBNP4jEsahs4nXqG1tcv25kf
-	 RJX02a1uS4lqr74VcNvTmlLeE+vbNn+0BCHyBohC2N+NZPyR2Y71KJ6lnZ7ksIqbkl
-	 BEuBWnQbN7Vi3JWLCPbAXIXK6sOs52pUR5FA9nnBC8XlKgje3noInNUxnJqNuF6/od
-	 m4Y81RZwCImCNqOq+Yegw29XJIAnEichp1h69NO7ncEbKklEYmoZY/kgkQy3aDMSu5
-	 CmAYafrFo9iXQ==
-Message-ID: <7a29a923-7691-48b4-a359-33014b41d7fb@kernel.org>
-Date: Tue, 13 Feb 2024 15:51:44 +0100
+	b=f3XDd0PaP+K2K/x078BnZ+g2DPncMo2sJW3XPw270WF7DwBHxtABQwbeRO/ZLaxVi
+	 9qkSQosqKMB3S4QG54BKBImFPSaY61mE9oHqpLr01xlQukvPsn6RaDXFkVAykLwl2R
+	 9CKleHP5QVbmb8DJB4zHvYnbICBR3j5S0ad/JIuoPymGKbSyXwNkuP289esezxkDgh
+	 f8ZcfcQjP9+UIbmA6YM22tWFhLISU9vRU4DXihkEeI37ibumO9EQYguibdmn3eo4BF
+	 fU3VN2KcuN4Ejdwsu9e25XrnqIJfNTp1PijRN6s1vzjKA/cExQKOyAz9h9gijkqPkE
+	 zqHja6aZQjt4g==
+Message-ID: <4b764f2a-f654-4ac7-89d4-74a34b07f0e2@kernel.org>
+Date: Tue, 13 Feb 2024 15:59:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v6 00/15] add helpers and vars in mptcp_lib.sh
+Subject: Re: [PATCH mptcp-next 1/3] selftests: mptcp: pm nl: also list skipped
+ tests
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
+To: Geliang Tang <geliangtang@gmail.com>
 Cc: mptcp@lists.linux.dev
-References: <cover.1703158128.git.geliang.tang@linux.dev>
- <ZcrvUkBhCbOvcfPX@t480> <8253246b-9fbd-4dd9-940f-59667905de85@kernel.org>
- <Zct1jAaOcc8EmB1s@t480>
+References: <20240207-selftests-mptcp-fix-5-15-v1-0-005b0cdb135a@kernel.org>
+ <20240207-selftests-mptcp-fix-5-15-v1-1-005b0cdb135a@kernel.org>
+ <CA+WQbwtXWKNpKDQ1sMF-7E-ewx1Mh09sHijO76OgVR_xotLkew@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,84 +88,66 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <Zct1jAaOcc8EmB1s@t480>
+In-Reply-To: <CA+WQbwtXWKNpKDQ1sMF-7E-ewx1Mh09sHijO76OgVR_xotLkew@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13/02/2024 14:58, Geliang Tang wrote:
+Hi Geliang,
+
+Thank you for the review!
+
+On 13/02/2024 14:35, Geliang Tang wrote:
 > Hi Matt,
 > 
-> On Tue, Feb 13, 2024 at 01:02:42PM +0100, Matthieu Baerts wrote:
->> Hi Geliang,
+> Matthieu Baerts (NGI0) <matttbe@kernel.org> 于2024年2月8日周四 02:18写道：
 >>
->> On 13/02/2024 05:25, Geliang Tang wrote:
->>> On Thu, Dec 21, 2023 at 07:31:03PM +0800, Geliang Tang wrote:
->>>> v6:
->>>>  - rebased with:
->>>>  v3 fixes for CURRESTAB
->>>>  v5 dump for userspace pm
->>>>
->>>> v5:
->>>>  - rebased with "userspace pm enhancements" v13
->>>>
->>>> v4:
->>>>  - rebased with "userspace pm enhancements" v12
->>>>
->>>> v3:
->>>>  - merge squash-to patch for v2:
->>>>  Squash to "selftests: mptcp: add mptcp_lib_ns_* helpers"
->>>>  - add a new patch:
->>>>  selftests: mptcp: simult flows: define missing vars
->>>>  - update patches:
->>>>  selftests: mptcp: export event macros in mptcp_lib
->>>>  selftests: mptcp: export cin/cout/sin/sout vars
->>>>  selftests: mptcp: netlink: fix positions of newline
->>>>  - update some commit subjects and commit logs.
->>>>
->>>> v2:
->>>>  - add more patches.
->>>>
->>>> Geliang Tang (15):
->>>>   selftests: mptcp: add mptcp_lib_evts_* helpers
->>>>   selftests: mptcp: userspace: capitalize test_name
->>>>   selftests: mptcp: userspace: print colored output
->>>>   selftests: mptcp: capitalize ok/fail/skip
->>>>   selftests: mptcp: netlink: drop duplicate var ret
->>>>   selftests: mptcp: export ret into mptcp_lib
->>>>   selftests: mptcp: extract mptcp_lib_check_expected
->>>>   selftests: mptcp: export event macros in mptcp_lib
->>>>   selftests: mptcp: add mptcp_lib_verify_listener_events
->>>>   selftests: mptcp: unify namespace names
->>>>   selftests: mptcp: add mptcp_lib_ns_* helpers
->>>>   selftests: mptcp: add ss mptcp support checks
->>>>   selftests: mptcp: add mptcp_lib_check_tools helper
->>>>   selftests: mptcp: add mptcp_lib_cleanup helper
->>>>   selftests: mptcp: add mptcp_lib_check_output helper
->>>
->>> New version of this series was sent out, please change them as
->>> "Superseded" on Patchwork.
+>> If the feature is not supported by older kernels, and instead of just
+>> ignoring some tests, we should mark them as skipped, so we can still
+>> track them.
 >>
->> Thank you for the notification!
+>> Fixes: d85555ac11f9 ("selftests: mptcp: pm_netlink: format subtests results in TAP")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  tools/testing/selftests/net/mptcp/pm_netlink.sh | 6 ++++++
+>>  1 file changed, 6 insertions(+)
 >>
->> Sorry, I'm taking a long time to do the review. But I will do it.
->> Because I took so long to finish it, I can do the rebase of the other
->> patches if you prefer, that's the least I can do.
+>> diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+>> index 8f4ff123a7eb..79e83a2c95de 100755
+>> --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
+>> +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+>> @@ -194,6 +194,12 @@ subflow 10.0.1.1" "          (nofullmesh)"
+>>         ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
+>>         check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
+>>  subflow,backup,fullmesh 10.0.1.1" "          (backup,fullmesh)"
+>> +else
+>> +       for st in fullmesh nofullmesh backup,fullmesh; do
+>> +               st="          (${st})"
+>> +               printf "%-50s%s\n" "${st}" "[SKIP]"
 > 
-> Sorry, I put too many patches into one series. This makes the review
-> difficult. This time I'll split them into smaller series to make the
-> review simpler.
+> I prefer to use "[ SKIP ]" here.
 
-All good, thank you for your patience!
+I would prefer too, but in this file, we are currently using:
 
->> I marked patches 5/15 and 12/15 as superseded. Best to not mark them all
->> like that if the new version is not published.
->>
->> Should I "drop" others?
-> 
-> We can "drop" them in this series. New version is very different from
-> this one.
+  [ OK ]
+  [FAIL]
 
-OK, I just marked the whole series as superseded then.
+I think it is then better to continue using 4 letters between the [], no?
+
+  [ OK ]
+  [FAIL]
+  [SKIP]
+
+If we want to change the format, and even add colours, we can do that in
+net-next, not as part of a fix for -net.
+
+> Otherwise, this series looks good!
+>
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
+
+If you don't mind, when a whole series is OK for you, can you share your
+"Reviewed-By" tag on the cover-letter please? By doing that, your tag
+will be "propagated" to each patch. While here, 'b4' will see it as only
+valid for patch 1/3, but not the rest of the series.
 
 Cheers,
 Matt
