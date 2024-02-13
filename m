@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D656C5FB8D
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 14:59:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEDB58106
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 15:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707836344; cv=none; b=QLM7YEufDS8FNcTH13JLhA9w+5cr7qelepiE7zO10/bDidYfKO+YCov5wyHzQJyvxGn08ogJVOcDg460BRBUHcuqArDPU3kkGyDlbRkcoW3KJl64LZRglbf5WAFx1W7QFY7Xhg4cai+p1PJM3LC+zCE91n39z+lQCl/EdT6JQvk=
+	t=1707836884; cv=none; b=abJPa9FQoekE3iBjyrIfE0GboGpEf+ai6MJuvt6GVczE5WSfN7keHG9QkFrE6riF9vUCyaxh6WGNgJZ8OqH6b019ypJqD3lG91eOsGA3Bt0hSJOZ9f9RgB/bgji65DnDSmei4sk0c2v+ceEtSXwviq1dlsMs7VsrGVQn9xnZHBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707836344; c=relaxed/simple;
-	bh=gh6HpSPXnzJFd4/icZVokKjY6H9OmxckuVNj1nqvuTc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O6r6AeWwH679APYbeNvCt37iZnF57I49I9DTYTyHIie5G54YSTu7yLlkV5oSG2LyvqJI1LtSkSwKk9EDObOK/80DkjSI2JFBYKbO0eQoHrRhOlfalfHXj6DBNBSv+G0e0S0MrugFfYZQgv2P+vdL5cu3CGlm2iHZsGle1eUgdko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3XDd0Pa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707836884; c=relaxed/simple;
+	bh=7sHrwZ/RfiSwLJYlB+3lPxvL3xXvNY0I9BUXdaBck8M=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OZnz2X6wOYJRG/gzp3/Sm5e277nrjMxfB1oDY0KM6NRukUF+ReaKs+jDbNJIK3DS1XCdp8gYkTvjljmQeY9PO9SOLpk595Sh1mhvmL9n62hmRdSXJWXV0Dx9wB3AyroSeGp+D6+z7dbobxEfKN0UWVc3DbHqyF4YyNNRayq13yI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4GPu+Be; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3XDd0Pa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31E4C433C7;
-	Tue, 13 Feb 2024 14:59:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4GPu+Be"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91AF9C43394;
+	Tue, 13 Feb 2024 15:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707836344;
-	bh=gh6HpSPXnzJFd4/icZVokKjY6H9OmxckuVNj1nqvuTc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f3XDd0PaP+K2K/x078BnZ+g2DPncMo2sJW3XPw270WF7DwBHxtABQwbeRO/ZLaxVi
-	 9qkSQosqKMB3S4QG54BKBImFPSaY61mE9oHqpLr01xlQukvPsn6RaDXFkVAykLwl2R
-	 9CKleHP5QVbmb8DJB4zHvYnbICBR3j5S0ad/JIuoPymGKbSyXwNkuP289esezxkDgh
-	 f8ZcfcQjP9+UIbmA6YM22tWFhLISU9vRU4DXihkEeI37ibumO9EQYguibdmn3eo4BF
-	 fU3VN2KcuN4Ejdwsu9e25XrnqIJfNTp1PijRN6s1vzjKA/cExQKOyAz9h9gijkqPkE
-	 zqHja6aZQjt4g==
-Message-ID: <4b764f2a-f654-4ac7-89d4-74a34b07f0e2@kernel.org>
-Date: Tue, 13 Feb 2024 15:59:00 +0100
+	s=k20201202; t=1707836884;
+	bh=7sHrwZ/RfiSwLJYlB+3lPxvL3xXvNY0I9BUXdaBck8M=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=l4GPu+BeAVRHdH/EZfU1y6vymBS270xHVYjwbOtIMIT0rMvlYQnWmmEeG7605y3tu
+	 QHF/HQYTfwC9U76JXrny36F5SfD+RPm9d0q/K7vs1ZD5hG9g+QoqDv44HhigCBMFBr
+	 Jv9ikiN6HArgwpxoKKZpLWau5M/N6C8aNAl2UDBnZL0GNEQY4/e0bnnQLL8r0usoug
+	 OmoESB9W8rfRYgN1wyKKVp5URAT1VLQ84BCUn+xH9AiFl1kmo2nf2Hlx3ScnsnN5r7
+	 DIrOoor66UqldxQewKvaX0MdWfs1697q0A513ZjC4zBPcDGFFKcbahbHWLajM8IHV0
+	 Vytof+vHIcqgA==
+Message-ID: <93f3df44-4251-45e9-bcf5-e7e970b6bf78@kernel.org>
+Date: Tue, 13 Feb 2024 16:08:01 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,12 +38,13 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH mptcp-next 1/3] selftests: mptcp: pm nl: also list skipped
  tests
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliangtang@gmail.com>
 Cc: mptcp@lists.linux.dev
 References: <20240207-selftests-mptcp-fix-5-15-v1-0-005b0cdb135a@kernel.org>
  <20240207-selftests-mptcp-fix-5-15-v1-1-005b0cdb135a@kernel.org>
  <CA+WQbwtXWKNpKDQ1sMF-7E-ewx1Mh09sHijO76OgVR_xotLkew@mail.gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <4b764f2a-f654-4ac7-89d4-74a34b07f0e2@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,66 +89,76 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CA+WQbwtXWKNpKDQ1sMF-7E-ewx1Mh09sHijO76OgVR_xotLkew@mail.gmail.com>
+In-Reply-To: <4b764f2a-f654-4ac7-89d4-74a34b07f0e2@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-Thank you for the review!
-
-On 13/02/2024 14:35, Geliang Tang wrote:
-> Hi Matt,
+On 13/02/2024 15:59, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org> 于2024年2月8日周四 02:18写道：
->>
->> If the feature is not supported by older kernels, and instead of just
->> ignoring some tests, we should mark them as skipped, so we can still
->> track them.
->>
->> Fixes: d85555ac11f9 ("selftests: mptcp: pm_netlink: format subtests results in TAP")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  tools/testing/selftests/net/mptcp/pm_netlink.sh | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
->> index 8f4ff123a7eb..79e83a2c95de 100755
->> --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
->> +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
->> @@ -194,6 +194,12 @@ subflow 10.0.1.1" "          (nofullmesh)"
->>         ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
->>         check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
->>  subflow,backup,fullmesh 10.0.1.1" "          (backup,fullmesh)"
->> +else
->> +       for st in fullmesh nofullmesh backup,fullmesh; do
->> +               st="          (${st})"
->> +               printf "%-50s%s\n" "${st}" "[SKIP]"
+> Thank you for the review!
 > 
-> I prefer to use "[ SKIP ]" here.
+> On 13/02/2024 14:35, Geliang Tang wrote:
+>> Hi Matt,
+>>
+>> Matthieu Baerts (NGI0) <matttbe@kernel.org> 于2024年2月8日周四 02:18写道：
+>>>
+>>> If the feature is not supported by older kernels, and instead of just
+>>> ignoring some tests, we should mark them as skipped, so we can still
+>>> track them.
+>>>
+>>> Fixes: d85555ac11f9 ("selftests: mptcp: pm_netlink: format subtests results in TAP")
+>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>> ---
+>>>  tools/testing/selftests/net/mptcp/pm_netlink.sh | 6 ++++++
+>>>  1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+>>> index 8f4ff123a7eb..79e83a2c95de 100755
+>>> --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
+>>> +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+>>> @@ -194,6 +194,12 @@ subflow 10.0.1.1" "          (nofullmesh)"
+>>>         ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
+>>>         check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
+>>>  subflow,backup,fullmesh 10.0.1.1" "          (backup,fullmesh)"
+>>> +else
+>>> +       for st in fullmesh nofullmesh backup,fullmesh; do
+>>> +               st="          (${st})"
+>>> +               printf "%-50s%s\n" "${st}" "[SKIP]"
+>>
+>> I prefer to use "[ SKIP ]" here.
+> 
+> I would prefer too, but in this file, we are currently using:
+> 
+>   [ OK ]
+>   [FAIL]
+> 
+> I think it is then better to continue using 4 letters between the [], no?
+> 
+>   [ OK ]
+>   [FAIL]
+>   [SKIP]
+> 
+> If we want to change the format, and even add colours, we can do that in
+> net-next, not as part of a fix for -net.
 
-I would prefer too, but in this file, we are currently using:
+I hope that's OK: I just applied this series, with your RvB tag, in our
+tree for -net. As always, I can always apply squash-to patches if
+needed, if that was not OK for you (or anyone else).
 
-  [ OK ]
-  [FAIL]
+New patches for t/upstream-net and t/upstream:
+- 0d8688d3e27b: selftests: mptcp: pm nl: also list skipped tests
+- 559d098b600a: selftests: mptcp: pm nl: avoid error msg on older kernels
+- dc7dc31c08fa: selftests: mptcp: diag: fix bash warnings on older kernels
+- Results: 65bddb3d48dc..4a5e7bd9b1b6 (export-net)
+- Results: e1e18543311d..5051f12eb83c (export)
 
-I think it is then better to continue using 4 letters between the [], no?
+Tests are now in progress:
 
-  [ OK ]
-  [FAIL]
-  [SKIP]
-
-If we want to change the format, and even add colours, we can do that in
-net-next, not as part of a fix for -net.
-
-> Otherwise, this series looks good!
->
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
-
-If you don't mind, when a whole series is OK for you, can you share your
-"Reviewed-By" tag on the cover-letter please? By doing that, your tag
-will be "propagated" to each patch. While here, 'b4' will see it as only
-valid for patch 1/3, but not the rest of the series.
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240213T150358
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240213T150358
 
 Cheers,
 Matt
