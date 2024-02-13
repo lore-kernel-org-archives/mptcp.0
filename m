@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7653A1AE
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 11:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA332BB16
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 12:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707825460; cv=none; b=iUn7puBvgQVqD2Y48yLDGFDBUHe4RY1/ttHZI0GerRPKgB9nod7mKEojwMrRF5m32iD0m5k2E27qjrh2TWrKU50rtRKdggLz78nlxMTTGJiZtF18VAF1OjHBe+IH/i6FFwd39e2X0iVFBWmJsxO6onh9gkCX7XF0s1PI5XqVLlo=
+	t=1707825765; cv=none; b=PTGusjOFriShs3b8GiF/m+x7hYPz8M2G1Bdun1XiMUTFAggVCUChX4z9XZU6EhNuBApJaZeF1s7AT+jZDm+51WFaMgrw0Vlp5Uo20JnfaOObEgImL5eW08bVeSoL0vs8k5bT0DYJrid2HNguMDvycOzOvwJ9bI4IE0M3Sn+/GmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707825460; c=relaxed/simple;
-	bh=PPCa4NP2xO2V0QlfqcMNV4/yR2+fduLJphnVC4lLGUo=;
+	s=arc-20240116; t=1707825765; c=relaxed/simple;
+	bh=6HCUlSoMuBGgaqtWxR2FDmiEE5g9kFXXNUwkAtLC3YE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jtMDrrdMATquCwWM5KyyU829C1hp+GWH03NS+viMbhPRUGgBhlG8llw+jGrtC6lC+8P2iV73L0uaZ3px7FUeOZkXB2w3CWP1FeCLpH7kPgjLH8f3tge7WzMLN5OJ/E0u8iYW02qEl3IYIGU75O1y4o+DUYZsGwycv3mvSqiHm14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvHgxqX1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=JpgDFNRLFAD1mgDbtS18R3jPNYUjkkKHeEEVkzEfTlyEbL0vFtV9isqWqeZk9/hPTpYq0kwp2DykNNsrI2cstV/xfhHa9w9TtIUGd7cwFHY7n8jnp/gwN4Q2fAAQDXnVsCvFrLCEjAcIWPYxaE9zNEZW73hYF6FAZsTaAE759RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5QLRSuk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvHgxqX1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6FC7C433F1;
-	Tue, 13 Feb 2024 11:57:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5QLRSuk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E576C433F1;
+	Tue, 13 Feb 2024 12:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707825460;
-	bh=PPCa4NP2xO2V0QlfqcMNV4/yR2+fduLJphnVC4lLGUo=;
+	s=k20201202; t=1707825765;
+	bh=6HCUlSoMuBGgaqtWxR2FDmiEE5g9kFXXNUwkAtLC3YE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WvHgxqX1PHKR7gVMjU05VMkMnvmqweG/5Kyslyu2P/HAUbX6a2SOrpWSUUlFPTcjI
-	 o1G11WmwEDhcQq64WhZD+sm3cMGwH0qLSWXBUycnNoEBv5hSisyvpsZkcDOcKdsqIw
-	 LD6x+yXA8OCTZdRDeAkhyP8yGB4NPBPIxx/UtKkubs65F3m1fRJuVU1Kk51yPzcz59
-	 fM7Ggb0UAY1Q1Dq+zqV1TiUV2YIW/Nsl7w4XILs/qyD0EvjhcDSJdpSVoTWbdAyNrd
-	 yssQeuZztz7UxbXDH7OQaon0xe8YlqSbqKSPTQAb2Gh75V2zKTHhkVR9bvpoZhkeuo
-	 oEhaVrfgu5KKw==
-Message-ID: <9204ed09-b972-4a93-8d88-825a84832a89@kernel.org>
-Date: Tue, 13 Feb 2024 12:57:37 +0100
+	b=K5QLRSukDwutTuVWHIoWbdxkos5/KoTUx6huVBJ1Hr3qJVfe5IL3sm1sN5kRh3moS
+	 PQg66f9sU6oPv/Tj3x5Wvlm0ZGXzchbJJxQSKnOZbS10te28zrfVhM5Jbi1k4wLwFa
+	 RQNv9mw7DvJO+pWtmhVeSsJswL8eiHBrX2PJyz+55LFK9Ujk3fwhJC8dk7Znjr8eaW
+	 NN1rafaEBjavnLd3kejYTZ1A7ow+5Du3c6M9Zh8MJK1uA96P5FTcrMzgAgXIPZaCi6
+	 6rxQiTklvUTXMPRVo0n2Xz8eZO1jPXy5edZeu5+/Xz8L0pxIh9UGpo0QYGiaHTZbWQ
+	 u95KXwzAZpgsQ==
+Message-ID: <8253246b-9fbd-4dd9-940f-59667905de85@kernel.org>
+Date: Tue, 13 Feb 2024 13:02:42 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 0/5] selftests: mptcp: unique subtest names
+Subject: Re: [PATCH mptcp-next v6 00/15] add helpers and vars in mptcp_lib.sh
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, Geliang Tang <geliang.tang@linux.dev>
 Cc: mptcp@lists.linux.dev
-References: <20240209-selftests-mptcp-uniq-title-v1-0-e4fb3a3b5f66@kernel.org>
- <ZcruYEtG8MjhSkJG@t480>
+References: <cover.1703158128.git.geliang.tang@linux.dev>
+ <ZcrvUkBhCbOvcfPX@t480>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,48 +86,69 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ZcruYEtG8MjhSkJG@t480>
+In-Reply-To: <ZcrvUkBhCbOvcfPX@t480>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 13/02/2024 05:21, Geliang Tang wrote:
-> On Fri, Feb 09, 2024 at 06:28:38PM +0100, Matthieu Baerts (NGI0) wrote:
->> It is important to have a unique (sub)test name in TAP, because some CI
->> environments drop tests with duplicated name.
+On 13/02/2024 05:25, Geliang Tang wrote:
+> On Thu, Dec 21, 2023 at 07:31:03PM +0800, Geliang Tang wrote:
+>> v6:
+>>  - rebased with:
+>>  v3 fixes for CURRESTAB
+>>  v5 dump for userspace pm
 >>
->> When working on adding subtests support in Netdev's NIPA CI, I found out
->> some subtests had the same name. The name is used as a key, it should
->> then be unique, otherwise we don't track duplicated tests.
+>> v5:
+>>  - rebased with "userspace pm enhancements" v13
 >>
->> The fixes have been split in different patches, because it fixes
->> different commits. But the idea is always the same: make sure subtest
->> names are unique.
+>> v4:
+>>  - rebased with "userspace pm enhancements" v12
 >>
->> The last patch is not for -net, that's a new feature to make sure we
->> don't add duplicated names later.
+>> v3:
+>>  - merge squash-to patch for v2:
+>>  Squash to "selftests: mptcp: add mptcp_lib_ns_* helpers"
+>>  - add a new patch:
+>>  selftests: mptcp: simult flows: define missing vars
+>>  - update patches:
+>>  selftests: mptcp: export event macros in mptcp_lib
+>>  selftests: mptcp: export cin/cout/sin/sout vars
+>>  selftests: mptcp: netlink: fix positions of newline
+>>  - update some commit subjects and commit logs.
 >>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Matthieu Baerts (NGI0) (5):
->>       selftests: mptcp: simult flows: fix some subtest names
->>       selftests: mptcp: userspace_pm: unique subtest names
->>       selftests: mptcp: diag: unique 'in use' subtest names
->>       selftests: mptcp: diag: unique 'cestab' subtest names
->>       selftests: mptcp: lib: catch duplicated subtest entries
+>> v2:
+>>  - add more patches.
+>>
+>> Geliang Tang (15):
+>>   selftests: mptcp: add mptcp_lib_evts_* helpers
+>>   selftests: mptcp: userspace: capitalize test_name
+>>   selftests: mptcp: userspace: print colored output
+>>   selftests: mptcp: capitalize ok/fail/skip
+>>   selftests: mptcp: netlink: drop duplicate var ret
+>>   selftests: mptcp: export ret into mptcp_lib
+>>   selftests: mptcp: extract mptcp_lib_check_expected
+>>   selftests: mptcp: export event macros in mptcp_lib
+>>   selftests: mptcp: add mptcp_lib_verify_listener_events
+>>   selftests: mptcp: unify namespace names
+>>   selftests: mptcp: add mptcp_lib_ns_* helpers
+>>   selftests: mptcp: add ss mptcp support checks
+>>   selftests: mptcp: add mptcp_lib_check_tools helper
+>>   selftests: mptcp: add mptcp_lib_cleanup helper
+>>   selftests: mptcp: add mptcp_lib_check_output helper
 > 
-> Hi Matt,
-> 
-> I'd like to review this series this week.
+> New version of this series was sent out, please change them as
+> "Superseded" on Patchwork.
 
-Thank you!
+Thank you for the notification!
 
-> Please delegate them for
-> me on Patchwork. I can't delegate them by myself.
+Sorry, I'm taking a long time to do the review. But I will do it.
+Because I took so long to finish it, I can do the rebase of the other
+patches if you prefer, that's the least I can do.
 
-Sorry, I'm still not able to do that, we need to wait for kernel.org IT
-team to do the modification.
+I marked patches 5/15 and 12/15 as superseded. Best to not mark them all
+like that if the new version is not published.
+
+Should I "drop" others?
 
 Cheers,
 Matt
