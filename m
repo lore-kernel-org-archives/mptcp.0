@@ -1,115 +1,113 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1655A3FE27
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 13:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164AB56767
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 13:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707831360; cv=none; b=eyX0X+YQqGLpGsFKMCh4Y92S208y70XQ9PxZDmSRKE5w5+GAdkLCxvo6G6/rJuaRr/FjGc9l4wactzWwhxEM/sBG9VeGLGk35hlb9SuI2REgaU5JGej1qevC8/DJZklf0jcltXtSXGbKlL8QdZ8SOU9pXR7B9GCOSm16TIOYULs=
+	t=1707832108; cv=none; b=oo7yRKFT3PiiKUvJJMBRsiq47ZugwK0fEtLRp20Skq/7/F4wMDyXLP2QQyg4RakdTDG9JXpRZmnX52Rp49cUhBKvgkyKW90F7qhXSzzD981xE4ScR4Bj5N40BFoBLWS1kCPnc2FxMR6ibSkL7gxEsqPxPH59x6o47lOIn7m1a3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707831360; c=relaxed/simple;
-	bh=cjlFhzvR26zaQxp6JptHY0SXczbkmrtanjgwZx1pCZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CSgyIBl8pz9uo9rt/vIfxuWlSLv2IvYe0mfCOUPggkYWwYicAh0+0ew/Fe85KNHOMv8gIwB+zT9L2XTvA5LIajHh1pdXATJ2SFd7QtML17sRgUoJe+IK+RYCnR4UIceyElOp3EQSyDa3wWa09nsUkeKQ0oKyLgmVOHzc76aMUQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lz5nuEiy; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707832108; c=relaxed/simple;
+	bh=JA64qwRixXswdOAeiG5pgkqAeTWA9eCxzIZoQPXU/q8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=noK4qjn0D2pR4N1bjHFeoxrIUXM3kTwO3VkJzny1KMtUmlhkh/F0xdm0zLWL/cM8yQQ65ODEPrVufFJ5lWR0BOm9JBHwNN/Vm/k2HqdYbiOqJ5mUqceCSTre6N7NXAOmawMLJ7yMo86zF3++Nyh3vuIXqdsfRDm5KTNS4t58NCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MSQwJZls; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lz5nuEiy"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5600d950442so4908844a12.1
-        for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 05:35:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707831357; x=1708436157; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gSf2myVCODmdbJdRY4ZPy7mKcy2znYcBKlzk8TpJHrg=;
-        b=Lz5nuEiyKSpvtcXN6uMxwzff4+5nfrYnc0rO0/tVt6U44qbUxum5ppR0XYRtN6UoT7
-         EKJ3HVicFxijnG0Of9ItfqKwrqls9YPkaa69bEoA6b+CpnWCwnwqef0Ep5+xzP9DR82b
-         6F0Sg8H/GOAQ5ANym5PcR5Xt9Vyj8jtWQev1h7yoFGVANwKSDmk+F+EXJVvrV58D8pZt
-         1flQrV/mON2/ruxEnGMdsDlSWNfNrQjwDJiRAb99bHcevXDP2hwOuCoeRXiokPV1u66d
-         RNl8gbImR2QDHIMopghQJWxR/ALiShP9K9YOIg3OIp/6CpHIPSrxDUygOVIccYip7RWn
-         KtQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707831357; x=1708436157;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gSf2myVCODmdbJdRY4ZPy7mKcy2znYcBKlzk8TpJHrg=;
-        b=qpqaUDOJQ/Ulr68Z+TylIgKyaI9iqIkMb369RhPM2hfsn3TypXjM5y9i0TebnV3o3R
-         8+YfiuwAm5eDgjbvR71Fn2ALwuuWKXC/auz+0CZjXiXpnKwEl5Ec61SF7gKifFSlpnqM
-         NF5rwME1A+8NfRDUzfT14i7I0Lr3iv3L/nuQlMA77BptUf/bgCDsXZJr4u6Ar/m9xGh+
-         nc95ZUGNLj+yCf77ENRFmHq6Ch98FF0OU/DY9H+qpJ7YKmVKM1Y6t+WUSV7NDlCQjy9h
-         sKwHRFFX4a7m+ILC2ZX5ZXNzpa07xosx2CkN4uSdrDtAfIDsjF5/PpfUWlOr7ViGBT8A
-         mtuA==
-X-Gm-Message-State: AOJu0YyVB3TFQua12ffujt4Lq8Kwq4mIOGo58OgKr/lNeKLk6X3A/Map
-	33fCWKLj2dmVe2ci9Z080n0ZoiuHV/2XRojoQ2OXF+BZ5oB43X+D2hH02oZn9xrPGl9WqNMc79P
-	OpYhqHUXA8AT8E3aQurpeql+Xu1DWMCHPw1I=
-X-Google-Smtp-Source: AGHT+IGVZy6h/3bsH05MSXcj6UkueChbqG0FrRsUv0X4HjrQefb1FHry6NauF6PBImjy4Z7MvynLbTDXnmmZEUpNgqs=
-X-Received: by 2002:a17:906:234b:b0:a37:478c:6021 with SMTP id
- m11-20020a170906234b00b00a37478c6021mr7738673eja.76.1707831357080; Tue, 13
- Feb 2024 05:35:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MSQwJZls"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E050FC43399;
+	Tue, 13 Feb 2024 13:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707832107;
+	bh=JA64qwRixXswdOAeiG5pgkqAeTWA9eCxzIZoQPXU/q8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MSQwJZlsrJZ2L0lLTM2moU6QD7wm/pngB6jfB7auqVAYOrDLtf1Ik/R1VNne69BcY
+	 YdQR8JGrIS+q9nXdSpqnvLEQwucXHl0OQiZ08FI9/PsSshfTk/4kZYA03RibH0jioO
+	 yPdqJYMNdfaKYDmIifAP80S0gbaLUrKRj2h/v/Nvrq3Kc/Ml0d+3u33hUMNYfbuFyT
+	 +qL502IklSFjO9mpmIxe9h+D9Di9WMphyWxD/16YHR474XJrtRUepIZt3VnnxnE1iP
+	 xUQ1Lke88qoUb+OWyTExH6YE9LB0FBB2LcxlPEUjcfhSq1VdUthg3+RPVKpaU2K/hy
+	 CINsvq9b5keXw==
+Date: Tue, 13 Feb 2024 21:48:23 +0800
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net 1/5] selftests: mptcp: simult flows: fix some
+ subtest names
+Message-ID: <ZctzJ8qc2RhpZDlC@t480>
+References: <20240209-selftests-mptcp-uniq-title-v1-0-e4fb3a3b5f66@kernel.org>
+ <20240209-selftests-mptcp-uniq-title-v1-1-e4fb3a3b5f66@kernel.org>
+ <ZctT4/w/nH6+4Ocz@t480>
+ <3668c451-c2e8-4654-8ab2-42c7eabc099e@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240207-selftests-mptcp-fix-5-15-v1-0-005b0cdb135a@kernel.org> <20240207-selftests-mptcp-fix-5-15-v1-1-005b0cdb135a@kernel.org>
-In-Reply-To: <20240207-selftests-mptcp-fix-5-15-v1-1-005b0cdb135a@kernel.org>
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Tue, 13 Feb 2024 21:35:45 +0800
-Message-ID: <CA+WQbwtXWKNpKDQ1sMF-7E-ewx1Mh09sHijO76OgVR_xotLkew@mail.gmail.com>
-Subject: Re: [PATCH mptcp-next 1/3] selftests: mptcp: pm nl: also list skipped tests
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3668c451-c2e8-4654-8ab2-42c7eabc099e@kernel.org>
 
 Hi Matt,
 
-Matthieu Baerts (NGI0) <matttbe@kernel.org> =E4=BA=8E2024=E5=B9=B42=E6=9C=
-=888=E6=97=A5=E5=91=A8=E5=9B=9B 02:18=E5=86=99=E9=81=93=EF=BC=9A
->
-> If the feature is not supported by older kernels, and instead of just
-> ignoring some tests, we should mark them as skipped, so we can still
-> track them.
->
-> Fixes: d85555ac11f9 ("selftests: mptcp: pm_netlink: format subtests resul=
-ts in TAP")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  tools/testing/selftests/net/mptcp/pm_netlink.sh | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/test=
-ing/selftests/net/mptcp/pm_netlink.sh
-> index 8f4ff123a7eb..79e83a2c95de 100755
-> --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> @@ -194,6 +194,12 @@ subflow 10.0.1.1" "          (nofullmesh)"
->         ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
->         check "ip netns exec $ns1 ./pm_nl_ctl dump" "id 1 flags \
->  subflow,backup,fullmesh 10.0.1.1" "          (backup,fullmesh)"
-> +else
-> +       for st in fullmesh nofullmesh backup,fullmesh; do
-> +               st=3D"          (${st})"
-> +               printf "%-50s%s\n" "${st}" "[SKIP]"
+On Tue, Feb 13, 2024 at 01:06:40PM +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> Thank you for the review!
+> 
+> On 13/02/2024 12:34, Geliang Tang wrote:
+> > Hi Matt,
+> > 
+> > On Fri, Feb 09, 2024 at 06:28:39PM +0100, Matthieu Baerts (NGI0) wrote:
+> >> The selftest was correctly recording all the results, but the 'reverse
+> >> direction' part was missing in the name when needed.
+> >>
+> >> It is important to have a unique (sub)test name in TAP, because some CI
+> >> environments drop tests with duplicated name.
+> >>
+> >> Fixes: 675d99338e7a ("selftests: mptcp: simult flows: format subtests results in TAP")
+> >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> >> ---
+> >>  tools/testing/selftests/net/mptcp/simult_flows.sh | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> >> index 619be0e1acf5..f377ef01970b 100755
+> >> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
+> >> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> >> @@ -250,7 +250,8 @@ run_test()
+> >>  		[ $bail -eq 0 ] || exit $ret
+> >>  	fi
+> >>  
+> >> -	printf "%-60s" "$msg - reverse direction"
+> >> +	msg="${msg} - reverse direction"
+> > 
+> > How about using '+=' operator to append a string like:
+> > 
+> > 	msg+=" - reverse direction"
+> > 
+> > The same in patch 3 and patch 4:
+> > 
+> > 	msg+=" after flush"
+> > 
+> > WDYT?
+> 
+> I usually prefer not to do that, because that's Bash specific, and it
+> doesn't work with 'sh'.
+> 
+> Here, we explicitly use '/bin/bash', so nothing is blocking me, just an
+> habit when often switching between "bash" and "sh" :)
+> I can do the modification if you prefer.
 
-I prefer to use "[ SKIP ]" here. Otherwise, this series looks good!
+Both are fine to me. You can modify them or not when merging them. All
+tests passed on my side.
 
 Reviewed-by: Geliang Tang <geliang@kernel.org>
 
 Thanks,
 -Geliang
 
-> +               mptcp_lib_result_skip "${st}"
-> +       done
->  fi
->
->  mptcp_lib_result_print_all_tap
->
-> --
-> 2.43.0
->
->
+> 
+> Cheers,
+> Matt
+> -- 
+> Sponsored by the NGI0 Core fund.
