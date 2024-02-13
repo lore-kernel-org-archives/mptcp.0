@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA332BB16
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 12:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8003D99E
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 12:06:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707825765; cv=none; b=PTGusjOFriShs3b8GiF/m+x7hYPz8M2G1Bdun1XiMUTFAggVCUChX4z9XZU6EhNuBApJaZeF1s7AT+jZDm+51WFaMgrw0Vlp5Uo20JnfaOObEgImL5eW08bVeSoL0vs8k5bT0DYJrid2HNguMDvycOzOvwJ9bI4IE0M3Sn+/GmA=
+	t=1707826003; cv=none; b=Vf3Veehdy6y70jdp/yzYux3esEKGPYXqSjCd9e2//RvVGtxeoRYE0ibBTMVqG3GcD98zHOsGsY6xRS3VkdAcQLpTqfW7rZKiMlhU52WqGGbN8kH9pmeNPBS4C6rHZ9UQyOcCO4ehFRFuHZIUsfmjSb+E+sOrvsdl/uwY5XPq7Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707825765; c=relaxed/simple;
-	bh=6HCUlSoMuBGgaqtWxR2FDmiEE5g9kFXXNUwkAtLC3YE=;
+	s=arc-20240116; t=1707826003; c=relaxed/simple;
+	bh=5dCSaRbfdbufMuWs6Vhnd8Hp2vJBYLTeggg5kj/9SUk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JpgDFNRLFAD1mgDbtS18R3jPNYUjkkKHeEEVkzEfTlyEbL0vFtV9isqWqeZk9/hPTpYq0kwp2DykNNsrI2cstV/xfhHa9w9TtIUGd7cwFHY7n8jnp/gwN4Q2fAAQDXnVsCvFrLCEjAcIWPYxaE9zNEZW73hYF6FAZsTaAE759RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5QLRSuk; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DArpig1+T3JpDgQaQup3pK5AJSxiLCFrydp8zgoIZVm4YtJzGiEb7eveL2PiRB8GFdkODqGhlsXh46fEd7rdgAHuT/apwWsAKOdoTpXYePaoAnygSMQfOT1veAgufBL2foMKdVyE9CzN5I3R3UhNmZeDSoYNjPsMbiHdoe37zXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwhT16GR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5QLRSuk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E576C433F1;
-	Tue, 13 Feb 2024 12:02:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwhT16GR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38285C433C7;
+	Tue, 13 Feb 2024 12:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707825765;
-	bh=6HCUlSoMuBGgaqtWxR2FDmiEE5g9kFXXNUwkAtLC3YE=;
+	s=k20201202; t=1707826002;
+	bh=5dCSaRbfdbufMuWs6Vhnd8Hp2vJBYLTeggg5kj/9SUk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=K5QLRSukDwutTuVWHIoWbdxkos5/KoTUx6huVBJ1Hr3qJVfe5IL3sm1sN5kRh3moS
-	 PQg66f9sU6oPv/Tj3x5Wvlm0ZGXzchbJJxQSKnOZbS10te28zrfVhM5Jbi1k4wLwFa
-	 RQNv9mw7DvJO+pWtmhVeSsJswL8eiHBrX2PJyz+55LFK9Ujk3fwhJC8dk7Znjr8eaW
-	 NN1rafaEBjavnLd3kejYTZ1A7ow+5Du3c6M9Zh8MJK1uA96P5FTcrMzgAgXIPZaCi6
-	 6rxQiTklvUTXMPRVo0n2Xz8eZO1jPXy5edZeu5+/Xz8L0pxIh9UGpo0QYGiaHTZbWQ
-	 u95KXwzAZpgsQ==
-Message-ID: <8253246b-9fbd-4dd9-940f-59667905de85@kernel.org>
-Date: Tue, 13 Feb 2024 13:02:42 +0100
+	b=nwhT16GRUgk2qQJRQU/emxsMylUcvkV0Z4ll0dsDDwkhJsce648bZE+ezPr+6L9wL
+	 nk8rW5UFZGl1LWT1hL0wk7vUuVwLbf6eZxek7csC+UlaIQejMFncAwTOBgr1eTJ8KL
+	 CSq5jmAGn2kqDnf4+pAPMi+KM2cyHkB6WHahh1Zps4vnAMUIOypX7KO2Lo31q+BzOw
+	 ConX6PCsM4jNGtoowRtFp5ZdOWBwsC5HIGAY1asYfOg5iehAlzu11TgDyKgEtOCTiz
+	 sxiVr39i5qJfY2yxkfz+Yjav3PQtpWvECSQ4whuY5fn3Go02oKPP+N/eFJcdWAerJO
+	 6crKCap3zNBSw==
+Message-ID: <3668c451-c2e8-4654-8ab2-42c7eabc099e@kernel.org>
+Date: Tue, 13 Feb 2024 13:06:40 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v6 00/15] add helpers and vars in mptcp_lib.sh
+Subject: Re: [PATCH mptcp-net 1/5] selftests: mptcp: simult flows: fix some
+ subtest names
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, Geliang Tang <geliang.tang@linux.dev>
+To: Geliang Tang <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
-References: <cover.1703158128.git.geliang.tang@linux.dev>
- <ZcrvUkBhCbOvcfPX@t480>
+References: <20240209-selftests-mptcp-uniq-title-v1-0-e4fb3a3b5f66@kernel.org>
+ <20240209-selftests-mptcp-uniq-title-v1-1-e4fb3a3b5f66@kernel.org>
+ <ZctT4/w/nH6+4Ocz@t480>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,69 +88,57 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ZcrvUkBhCbOvcfPX@t480>
+In-Reply-To: <ZctT4/w/nH6+4Ocz@t480>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 13/02/2024 05:25, Geliang Tang wrote:
-> On Thu, Dec 21, 2023 at 07:31:03PM +0800, Geliang Tang wrote:
->> v6:
->>  - rebased with:
->>  v3 fixes for CURRESTAB
->>  v5 dump for userspace pm
->>
->> v5:
->>  - rebased with "userspace pm enhancements" v13
->>
->> v4:
->>  - rebased with "userspace pm enhancements" v12
->>
->> v3:
->>  - merge squash-to patch for v2:
->>  Squash to "selftests: mptcp: add mptcp_lib_ns_* helpers"
->>  - add a new patch:
->>  selftests: mptcp: simult flows: define missing vars
->>  - update patches:
->>  selftests: mptcp: export event macros in mptcp_lib
->>  selftests: mptcp: export cin/cout/sin/sout vars
->>  selftests: mptcp: netlink: fix positions of newline
->>  - update some commit subjects and commit logs.
->>
->> v2:
->>  - add more patches.
->>
->> Geliang Tang (15):
->>   selftests: mptcp: add mptcp_lib_evts_* helpers
->>   selftests: mptcp: userspace: capitalize test_name
->>   selftests: mptcp: userspace: print colored output
->>   selftests: mptcp: capitalize ok/fail/skip
->>   selftests: mptcp: netlink: drop duplicate var ret
->>   selftests: mptcp: export ret into mptcp_lib
->>   selftests: mptcp: extract mptcp_lib_check_expected
->>   selftests: mptcp: export event macros in mptcp_lib
->>   selftests: mptcp: add mptcp_lib_verify_listener_events
->>   selftests: mptcp: unify namespace names
->>   selftests: mptcp: add mptcp_lib_ns_* helpers
->>   selftests: mptcp: add ss mptcp support checks
->>   selftests: mptcp: add mptcp_lib_check_tools helper
->>   selftests: mptcp: add mptcp_lib_cleanup helper
->>   selftests: mptcp: add mptcp_lib_check_output helper
+Thank you for the review!
+
+On 13/02/2024 12:34, Geliang Tang wrote:
+> Hi Matt,
 > 
-> New version of this series was sent out, please change them as
-> "Superseded" on Patchwork.
+> On Fri, Feb 09, 2024 at 06:28:39PM +0100, Matthieu Baerts (NGI0) wrote:
+>> The selftest was correctly recording all the results, but the 'reverse
+>> direction' part was missing in the name when needed.
+>>
+>> It is important to have a unique (sub)test name in TAP, because some CI
+>> environments drop tests with duplicated name.
+>>
+>> Fixes: 675d99338e7a ("selftests: mptcp: simult flows: format subtests results in TAP")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  tools/testing/selftests/net/mptcp/simult_flows.sh | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+>> index 619be0e1acf5..f377ef01970b 100755
+>> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
+>> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+>> @@ -250,7 +250,8 @@ run_test()
+>>  		[ $bail -eq 0 ] || exit $ret
+>>  	fi
+>>  
+>> -	printf "%-60s" "$msg - reverse direction"
+>> +	msg="${msg} - reverse direction"
+> 
+> How about using '+=' operator to append a string like:
+> 
+> 	msg+=" - reverse direction"
+> 
+> The same in patch 3 and patch 4:
+> 
+> 	msg+=" after flush"
+> 
+> WDYT?
 
-Thank you for the notification!
+I usually prefer not to do that, because that's Bash specific, and it
+doesn't work with 'sh'.
 
-Sorry, I'm taking a long time to do the review. But I will do it.
-Because I took so long to finish it, I can do the rebase of the other
-patches if you prefer, that's the least I can do.
-
-I marked patches 5/15 and 12/15 as superseded. Best to not mark them all
-like that if the new version is not published.
-
-Should I "drop" others?
+Here, we explicitly use '/bin/bash', so nothing is blocking me, just an
+habit when often switching between "bash" and "sh" :)
+I can do the modification if you prefer.
 
 Cheers,
 Matt
