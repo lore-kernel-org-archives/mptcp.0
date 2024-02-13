@@ -1,167 +1,116 @@
-Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA51627EE
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 22:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D65F63087
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 23:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707863518; cv=none; b=Hb9LdLFv25hhwGqe3ZvPGWKQiweSOm3LG+GEX25oIX7BmeEs0Jz0Pve37wRLCsvyJg7ATFn6NQ3ER7twCTS1vnm2Qra0EdFh7b7n3YaTIHycrYDCZ5nIel8bRJn7H9NQSCIZB9RtKz0zIzcK+bAuWpCIZYqD6BVLpebSlxC8UKc=
+	t=1707867024; cv=none; b=anPIfOfK/i3ig7DqzBTOeoMgIUIJRkBA5/HgfS5N6D82nzEIZayWEsgQ9ATlPqGVrlpM8joBs3WuWZE9djkPSNZP/TQWFAAokLTsgGt/5sgnJR0F76Kn270GckdCeGdbaym9heakJf1tfGYxCVIIam1W9w2o1a5HR1IpOx4WPG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707863518; c=relaxed/simple;
-	bh=AjyFJoB2E5hmBxbkwSQYS3RBJ8kjXzZkJDGogqKHWkA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fo7mwjFjzUnewEdeToTBzH00koXQuRVuye4N/R1QOpZvcEy8OJ9V/3pjxrV5t7Nkq/wnBxwaxExkzDBg7vQMYaUzSc7PUuLC+O0nxyiXUmaXZABhtuia7e0GENqTCUmglhdygDnf/l7SgV4k40Y8pBBzKZm+r3SZjBokCqC+8Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=LkQy69fs; arc=none smtp.client-ip=99.78.197.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1707867024; c=relaxed/simple;
+	bh=HSe4KlEFopWnb9PsWpAjOMgGkWq0Es0SLmWt05iNPKk=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=sqs8tR8gwoBObFdbMtEdrnYSKH+okuWqkkPXh+lCanSKKEDAcPYR2SDFBltaIKqge/N+2dK42BuNP4uhIq4JD6mrAYovPy/Mzjvt5J+6X4o0cxO+CJSE4yiLRYI8dTIro8gak6voUDkHV+t6cwsY0OcbeQWfqqQN26lcIRa4Q1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iegQAX1n; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LkQy69fs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iegQAX1n"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42a8a3973c5so25014631cf.2
+        for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 15:30:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1707863516; x=1739399516;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xASju9eOcReBWPS5XiOgqPyTtw+QoZR04RComZSbo04=;
-  b=LkQy69fs1jYhP477KyLFvEcnTA3qVobwW3xFS4xzjTQPWKk3U6veeQ4W
-   fRS+s6DbuTTT1v0Pn4nZS86Qk7wUW8XNxr+uMW2BzxcUcG7Tam4NPH6ll
-   1hGCGfSsajQS24/aOvoOr8gklaqlnZCnMwdun/DOded8ywEZqQVPPppRk
-   E=;
-X-IronPort-AV: E=Sophos;i="6.06,158,1705363200"; 
-   d="scan'208";a="65833263"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 22:31:54 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:35044]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.24.112:2525] with esmtp (Farcaster)
- id 5276ae52-4884-4071-a6ca-c88b58983b92; Tue, 13 Feb 2024 22:31:53 +0000 (UTC)
-X-Farcaster-Flow-ID: 5276ae52-4884-4071-a6ca-c88b58983b92
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 13 Feb 2024 22:31:53 +0000
-Received: from 88665a182662.ant.amazon.com (10.106.101.20) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 13 Feb 2024 22:31:50 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
-	<martineau@kernel.org>, Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher
-	<jaka@linux.ibm.com>
-CC: Kuniyuki Iwashima <kuniyu@amazon.com>, Kuniyuki Iwashima
-	<kuni1840@gmail.com>, <netdev@vger.kernel.org>, <mptcp@lists.linux.dev>,
-	<linux-s390@vger.kernel.org>
-Subject: [PATCH v1 net-next] net: Deprecate SO_DEBUG and reclaim SOCK_DBG bit.
-Date: Tue, 13 Feb 2024 14:31:35 -0800
-Message-ID: <20240213223135.85957-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
+        d=gmail.com; s=20230601; t=1707867022; x=1708471822; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ld0zYWIEs5mw5xAGamg5q8bpCcgJWreBwrsmSF55enI=;
+        b=iegQAX1n+f9lVQjqLVBcmF+Q019vFr/c2Tx8J60YUaoT28iE8ntigCkyKxINejHQce
+         F69EbP49tXUKnhyn5dIQ8NwjkDk07evC34tDs1e0LtR0gf8fLiCNCzaqGi1LR2SUQ+xU
+         hOmtGIo7vGTCwKMOWWwBchbZ7Iq59aBeGlKxmfB/JpLPmI3xFwtb/SQEDbbz/g8EDyME
+         uzj3VCcgdvjSu4OTlujc1Qahr+a+8J2hhLtlSboXS8B/OKON+T2ozjDaLrMYijz2N8t8
+         PnnU6hzT1eGrUEzN09u7BSkrhVGyfDlCVWrNZJ3IoIentSMAglrAJXRluQVLZQuMpDKZ
+         kSZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707867022; x=1708471822;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ld0zYWIEs5mw5xAGamg5q8bpCcgJWreBwrsmSF55enI=;
+        b=msB7XIKlzJN5XuoA3QwMoFcMIdNTquwF41Km+pk64gLGkbubre71oVCoLGG9fiP57i
+         WbxAfxoCO6uE9ikB246HPq4dP9dnIixc3TBsNUfMKDjN9ixWgrgVzqPNlvuoMyAy6WLa
+         Hlkp+2YlVJXAjnAdFHUdPe4JGEWKbE7iqzTAhLvSwkKaw9b2kU+ClTxM6qsKkCTazMnm
+         O9yI6neVe7oGXjL0M1/5/MdmlkyG+ARfU+nH7U6bUkkMXPzNe1o8ghfWRMXqRj6mzi6y
+         jEWzP5hNHTkGwuWteUykSpN0Jrv2HMvTtU0QE1/uaEa0my5v9Ct7qmZyqsacP8t/Rp3h
+         V0yw==
+X-Gm-Message-State: AOJu0Yxt9WHI/QaPkQc9uL8zvnz8Sz6PEpspAAexdg0fgTniZkeRiQhj
+	+jFmXPwspocN5uQfcvJaZGcjPqAVDeCMe9XQ2Bf8xDEtasaVBZc=
+X-Google-Smtp-Source: AGHT+IEAXOgo2fZ5zi45sJLdHwtd2jicKNkFiQByPJAckG/dMEhOPh/41woxRQSu7022KybF/Pikeg==
+X-Received: by 2002:a05:622a:40a:b0:42c:7a74:ccff with SMTP id n10-20020a05622a040a00b0042c7a74ccffmr950293qtx.36.1707867022042;
+        Tue, 13 Feb 2024 15:30:22 -0800 (PST)
+Received: from [127.0.0.1] ([20.55.118.217])
+        by smtp.gmail.com with ESMTPSA id u26-20020ac8751a000000b0042da6e7c0e1sm1492271qtq.22.2024.02.13.15.30.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 15:30:21 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240213223135.85957-1-kuniyu@amazon.com>
+References: <20240213223135.85957-1-kuniyu@amazon.com>
+Subject: Re: net: Deprecate SO_DEBUG and reclaim SOCK_DBG bit.: Tests
+ Results
+Message-ID: <4b3d3b94-1a5b-a526-2a2b-cd63b6cf9331@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 13 Feb 2024 23:30:21 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D042UWA001.ant.amazon.com (10.13.139.92) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Recently, commit 8e5443d2b866 ("net: remove SOCK_DEBUG leftovers")
-removed the last users of SOCK_DEBUG(), and commit b1dffcf0da22 ("net:
-remove SOCK_DEBUG macro") removed the macro.
+Hi Kuniyuki,
 
-Now is the time to deprecate the oldest socket option.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
----
- include/net/sock.h  | 1 -
- net/core/sock.c     | 6 +++---
- net/mptcp/sockopt.c | 4 +---
- net/smc/af_smc.c    | 5 ++---
- 4 files changed, 6 insertions(+), 10 deletions(-)
+Our CI (GitHub Action) did some validations and here is its report:
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index a9d99a9c583f..e20d55a36f9c 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -909,7 +909,6 @@ enum sock_flags {
- 	SOCK_TIMESTAMP,
- 	SOCK_ZAPPED,
- 	SOCK_USE_WRITE_QUEUE, /* whether to call sk->sk_write_space in sock_wfree */
--	SOCK_DBG, /* %SO_DEBUG setting */
- 	SOCK_RCVTSTAMP, /* %SO_TIMESTAMP setting */
- 	SOCK_RCVTSTAMPNS, /* %SO_TIMESTAMPNS setting */
- 	SOCK_LOCALROUTE, /* route locally only, %SO_DONTROUTE setting */
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 88bf810394a5..0a58dc861908 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1194,10 +1194,9 @@ int sk_setsockopt(struct sock *sk, int level, int optname,
- 
- 	switch (optname) {
- 	case SO_DEBUG:
-+		/* deprecated, but kept for compatibility. */
- 		if (val && !sockopt_capable(CAP_NET_ADMIN))
- 			ret = -EACCES;
--		else
--			sock_valbool_flag(sk, SOCK_DBG, valbool);
- 		break;
- 	case SO_REUSEADDR:
- 		sk->sk_reuse = (valbool ? SK_CAN_REUSE : SK_NO_REUSE);
-@@ -1619,7 +1618,8 @@ int sk_getsockopt(struct sock *sk, int level, int optname,
- 
- 	switch (optname) {
- 	case SO_DEBUG:
--		v.val = sock_flag(sk, SOCK_DBG);
-+		/* deprecated. */
-+		v.val = 0;
- 		break;
- 
- 	case SO_DONTROUTE:
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index da37e4541a5d..f6d90eef3d7c 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -81,7 +81,7 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
- 
- 		switch (optname) {
- 		case SO_DEBUG:
--			sock_valbool_flag(ssk, SOCK_DBG, !!val);
-+			/* deprecated. */
- 			break;
- 		case SO_KEEPALIVE:
- 			if (ssk->sk_prot->keepalive)
-@@ -1458,8 +1458,6 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 		sk_dst_reset(ssk);
- 	}
- 
--	sock_valbool_flag(ssk, SOCK_DBG, sock_flag(sk, SOCK_DBG));
--
- 	if (inet_csk(sk)->icsk_ca_ops != inet_csk(ssk)->icsk_ca_ops)
- 		tcp_set_congestion_control(ssk, msk->ca_name, false, true);
- 	__tcp_sock_set_cork(ssk, !!msk->cork);
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index 66763c74ab76..062e16a2766a 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -445,7 +445,6 @@ static int smc_bind(struct socket *sock, struct sockaddr *uaddr,
- 			     (1UL << SOCK_LINGER) | \
- 			     (1UL << SOCK_BROADCAST) | \
- 			     (1UL << SOCK_TIMESTAMP) | \
--			     (1UL << SOCK_DBG) | \
- 			     (1UL << SOCK_RCVTSTAMP) | \
- 			     (1UL << SOCK_RCVTSTAMPNS) | \
- 			     (1UL << SOCK_LOCALROUTE) | \
-@@ -511,8 +510,8 @@ static void smc_copy_sock_settings_to_clc(struct smc_sock *smc)
- 
- #define SK_FLAGS_CLC_TO_SMC ((1UL << SOCK_URGINLINE) | \
- 			     (1UL << SOCK_KEEPOPEN) | \
--			     (1UL << SOCK_LINGER) | \
--			     (1UL << SOCK_DBG))
-+			     (1UL << SOCK_LINGER))
-+
- /* copy only settings and flags relevant for smc from clc to smc socket */
- static void smc_copy_sock_settings_to_smc(struct smc_sock *smc)
- {
--- 
-2.30.2
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7893771323
 
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/b82e0568acae
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
