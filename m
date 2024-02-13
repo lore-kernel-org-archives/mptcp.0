@@ -1,90 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3764224D5
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 15:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA1B5DF3A
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 15:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707838244; cv=none; b=AAwgZncLMbeuweOc9c0ARyJUzUUmHq4EsVaSXIYn6eGnTr7KFpZUuQej5r3RWa8OkMOWHHHyevI5ckcEOek0k6CDtwWn2v3AcVKfHxVNmicJbiNkFHpO1NXfUpqqpCQ5FbsM7SF5r7hMTUvGJVOtY/K0jzFxj79YhtwPAJtr1Y8=
+	t=1707839367; cv=none; b=tDmklqQORia4x5tWHvgXH1WE2Vge8vJ+6mIld0BGt5zHCyUjSXh+YzgfNjaamkSx5bQt5U4XwQvPRFCCCVsYfA3UWJTSKE0RQULQKxhg2d5PknNbOl2KBn8Fp92Z5VIOLn8g1+9+KBLECHG3RbSIAN25U91lRyZJzBG2RZUlzzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707838244; c=relaxed/simple;
-	bh=8g9pVPIAzhPoGIwFXdFRmJ8DIoZog94AJyG62LDOADo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u+Q6Amvu++srsHLsTq7YfH6LV9PURfC/EfdJi0B6ZtlK+ZEuqqT/AfmCS8P11jkENq9tMMtA2orNerIzgmSTiE219P5rdp320nbKDKBgxumszf5BoivSXfn98FgqQnpmUbEJLua0cmmiRLS4J5MmQYtmTf+dz0+1eXaZlr1i3YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JfLeAxaz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707839367; c=relaxed/simple;
+	bh=Q0EbyGss7CQk4Mr19HE5/UWhV1mw+RK05esmn254I24=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=e7Hwu3iqw9Cv8Xzjoy7FuT5i54HJ9VG0ErJbiBwHSMX8MMSVsNz3y9KOpo6ZqmlklK3oiPt48CsP3UF53UeqGERC/8cZ/9kRnPff0m9iwojGdAmnryKvsqsUwdJevShGzGRtYnXMT2n1xXWt70fM/7CiD4Dx6r0DcPMendI3F2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JuM1nf54; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JfLeAxaz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA93C433C7;
-	Tue, 13 Feb 2024 15:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707838243;
-	bh=8g9pVPIAzhPoGIwFXdFRmJ8DIoZog94AJyG62LDOADo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JfLeAxazQ4EMsBJRO27/kGzkhek/WaPdEiy9tN323ck46UNQuVxihIUhlteCaq1hK
-	 YDhKqeefSMGskMIbgVHmjEqCEfzjVSBq0ebjqSlGbe/dgCXGYzAKj2a2zBBacaxTRb
-	 PW5ZBhETNIla9NJtnj/ZnrliUZ6BXNJlw1+dZVbKqCKU9+JA/uuPsR14MeSsEBrp1C
-	 jVXwGuCKo14dWV9UEO1kpQMzmDmh4Vw544GPdJRILHtjkrJj7sLpM6XbkWlEXaQIqI
-	 tqFzOOucrW+etMdjQ3brAEZ64eY5kBpSFNWwMggXmPFDfSMiT+NN8reing07k8n1YX
-	 lrA9mphCZMSSg==
-Date: Tue, 13 Feb 2024 23:30:39 +0800
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JuM1nf54"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-206689895bfso3191852fac.1
+        for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 07:49:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707839365; x=1708444165; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/2b9UD1fw0qpgPr7FygGeMiFTLiSEPjagIYL3psyouU=;
+        b=JuM1nf54g2NsZxtne507qJW73wRueiMEAPFTuehsFdkxVMv4Ke2HFq55fiJqKpfutC
+         /Nf0qywGk7fJk6gNTvYs6T7lfVv5umDowtR2v69b48GfLjLFMtZodqLyJBQpkU5hLYOu
+         ndwuOtaV4B2eMyC5x+HIDiONE06/NCIdBb62JMWypJSZLQIlie621F003m+O4ooYNI+2
+         V1Nyeds1P0e67sb5TJ0+kXwCOHjL8iKrLSz3GoTikxQLSlOFXDstST9MsQkbS6e7cIkK
+         /5jqZPHardsdb8HJuWSuZ6AQB/kx6vQQy9ezdkgS/ZGMJRRrvH2aeoHIasxYOA01yYVr
+         Txdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707839365; x=1708444165;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/2b9UD1fw0qpgPr7FygGeMiFTLiSEPjagIYL3psyouU=;
+        b=jjzHT2AVWDR+ystjHJoyqWLA/Eept2vcwXcC9MsiqKQAOjhmwp/xCrpf+LwJf0LtKe
+         RtimuWKBZyuX0DrRKlM0XGVjsCaMXA7OQJEMxBuPPqca4OyMY6/2ZF5T4z6L4jioOPv8
+         ZXPzSkPnHTME8kLnwaWPNKV6kfoPi085639cxyIHE74gZ+rnUwn6sVM4M0qYWUXuHJiJ
+         Kbu09L8IM8Kh6ZMbg9203OKfDTJh4up5GCW8MDkYV0jGJFHa4R0pmyce6+fshZaUkf69
+         fkb3Jpm2d7G1yiNK0tsbI++DUdZjZhBJ34CL1CmDvmuIrAbALuh2f/HZJug4s+0FQmQn
+         hCZA==
+X-Gm-Message-State: AOJu0YwPWXOLCIZZedKkhpjg7Gh7i/oH5DUSn990yhFNMC83txjhbHMv
+	LxuoolIqDRVGOmHfesmmBe7lR5PPtrblGiPBZ4jNvwfHAz3VvWE=
+X-Google-Smtp-Source: AGHT+IGavoN4f8z1ZcYmB0kGNwQvlfRXSckfIj4n7MIsvM4F6NoBdabkZDBNsKjMQXpxEkiUCPGKuA==
+X-Received: by 2002:a05:6870:c10c:b0:219:84b8:40d1 with SMTP id f12-20020a056870c10c00b0021984b840d1mr9958963oad.20.1707839364794;
+        Tue, 13 Feb 2024 07:49:24 -0800 (PST)
+Received: from [127.0.0.1] ([20.49.63.245])
+        by smtp.gmail.com with ESMTPSA id i14-20020a05620a144e00b007859d64f76bsm3039565qkl.113.2024.02.13.07.49.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 07:49:24 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net 0/5] selftests: mptcp: unique subtest names
-Message-ID: <ZcuLHz0O+kl0PZY1@t480>
-References: <20240209-selftests-mptcp-uniq-title-v1-0-e4fb3a3b5f66@kernel.org>
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20240207-selftests-mptcp-fix-5-15-v1-3-005b0cdb135a@kernel.org>
+References:
+ <20240207-selftests-mptcp-fix-5-15-v1-3-005b0cdb135a@kernel.org>
+Subject: Re: selftests: mptcp: diag: fix bash warnings on older kernels:
+ Tests Results
+Message-ID: <98da510f-af8a-bb05-bc65-5ada20b4a0b6@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 13 Feb 2024 15:49:23 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240209-selftests-mptcp-uniq-title-v1-0-e4fb3a3b5f66@kernel.org>
 
-On Fri, Feb 09, 2024 at 06:28:38PM +0100, Matthieu Baerts (NGI0) wrote:
-> It is important to have a unique (sub)test name in TAP, because some CI
-> environments drop tests with duplicated name.
-> 
-> When working on adding subtests support in Netdev's NIPA CI, I found out
-> some subtests had the same name. The name is used as a key, it should
-> then be unique, otherwise we don't track duplicated tests.
-> 
-> The fixes have been split in different patches, because it fixes
-> different commits. But the idea is always the same: make sure subtest
-> names are unique.
-> 
-> The last patch is not for -net, that's a new feature to make sure we
-> don't add duplicated names later.
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Matthieu Baerts (NGI0) (5):
->       selftests: mptcp: simult flows: fix some subtest names
->       selftests: mptcp: userspace_pm: unique subtest names
->       selftests: mptcp: diag: unique 'in use' subtest names
->       selftests: mptcp: diag: unique 'cestab' subtest names
->       selftests: mptcp: lib: catch duplicated subtest entries
+Hi Matthieu,
 
-LGTM!
+Thank you for your modifications, that's great!
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
+Our CI (Cirrus) did some validations with a debug kernel and here is its =
+report:
 
-Thanks,
--Geliang
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Script error! =E2=9D=93:
+  - Task: https://cirrus-ci.=
+com/task/5220473605193728
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5220473605193728/summary/summary.txt
 
-> 
->  tools/testing/selftests/net/mptcp/diag.sh         | 37 ++++++++++++++---------
->  tools/testing/selftests/net/mptcp/mptcp_lib.sh    | 21 +++++++++++++
->  tools/testing/selftests/net/mptcp/simult_flows.sh |  3 +-
->  tools/testing/selftests/net/mptcp/userspace_pm.sh |  4 +--
->  4 files changed, 48 insertions(+), 17 deletions(-)
-> ---
-> base-commit: 0c8d1475f726a95cddb393e45f0b4d8ec0e15785
-> change-id: 20240209-selftests-mptcp-uniq-title-2e2df0c17695
-> 
-> Best regards,
-> -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.com/task/6152222736646144
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6152222736646144/su=
+mmary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/a0e162ea2e56
+
+
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
