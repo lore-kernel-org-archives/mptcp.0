@@ -1,156 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E72605C2
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 18:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA51627EE
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 22:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707848430; cv=none; b=ktEAXvVS/rpWW0i3SPvyv2omOyv+eu32QTAwQh+FY7HFCcsmCeiXvfwdE7Bje/8TweRSmxAFAFCMy8QPNZkrIrZmrHBZsEAV1uGykWlMXKIRSBFXERpii/5sbmmic827vVW155g9Z3TLETET0fBgfcctYE55vA+p8h+DhxLTWeg=
+	t=1707863518; cv=none; b=Hb9LdLFv25hhwGqe3ZvPGWKQiweSOm3LG+GEX25oIX7BmeEs0Jz0Pve37wRLCsvyJg7ATFn6NQ3ER7twCTS1vnm2Qra0EdFh7b7n3YaTIHycrYDCZ5nIel8bRJn7H9NQSCIZB9RtKz0zIzcK+bAuWpCIZYqD6BVLpebSlxC8UKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707848430; c=relaxed/simple;
-	bh=8SdM+NyYgzBqnJbJNWQKaxyzzH97mtN9ydms4pq3czo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Lj2L7E1erRqUSDRIFNQ3IMBEKpYGJuyMiusizt6O0gLNH/uGbKJ2Fa5ywU/F/CBvAY6GNf7n5KUygWWyTFGpJVYHrYmMtpq6yM0hAUCawldhGfGjL4ywqqeM+EMkHU3v7v3J8nvvha4T1xcO/D4gtXvGmqOzjaBR2s7datwleiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A698siWy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707863518; c=relaxed/simple;
+	bh=AjyFJoB2E5hmBxbkwSQYS3RBJ8kjXzZkJDGogqKHWkA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fo7mwjFjzUnewEdeToTBzH00koXQuRVuye4N/R1QOpZvcEy8OJ9V/3pjxrV5t7Nkq/wnBxwaxExkzDBg7vQMYaUzSc7PUuLC+O0nxyiXUmaXZABhtuia7e0GENqTCUmglhdygDnf/l7SgV4k40Y8pBBzKZm+r3SZjBokCqC+8Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=LkQy69fs; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A698siWy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E367AC433C7;
-	Tue, 13 Feb 2024 18:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707848430;
-	bh=8SdM+NyYgzBqnJbJNWQKaxyzzH97mtN9ydms4pq3czo=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=A698siWy8hAybH2tLi9kNmEbLxT8m1FTbDk/DR4Px9TXhGYPHG9ERq4ze0yW+XcfH
-	 lVGxWBdDMm5pDuGXG8W4bAjzrh9zX0SeBTDEQTYZeDoB8c4erSvEnu2Wrs/L+Y/Iyv
-	 bF2L0nsrH0zMzc/nDFHWz87X/2VuEO2dkgzHQ/l08doyziuP5lbuNMwpRoJtgwsIaB
-	 +uYygSZandOSnKAoBLsWxLhTujMKpelMj2IhytMhg/a/mAXKR9ozofyDzhRi+YwzOQ
-	 Y1RvZhY9IkXG2ZDJ3GLVYzg2NUXfPaZvSltrcki8WlwKSY0x4i7VJS4KofCkzLucKC
-	 O8JCJWTFqswMg==
-Message-ID: <bf06eee5-ebb4-4e56-b00e-5397642cdf15@kernel.org>
-Date: Tue, 13 Feb 2024 19:20:27 +0100
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LkQy69fs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1707863516; x=1739399516;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xASju9eOcReBWPS5XiOgqPyTtw+QoZR04RComZSbo04=;
+  b=LkQy69fs1jYhP477KyLFvEcnTA3qVobwW3xFS4xzjTQPWKk3U6veeQ4W
+   fRS+s6DbuTTT1v0Pn4nZS86Qk7wUW8XNxr+uMW2BzxcUcG7Tam4NPH6ll
+   1hGCGfSsajQS24/aOvoOr8gklaqlnZCnMwdun/DOded8ywEZqQVPPppRk
+   E=;
+X-IronPort-AV: E=Sophos;i="6.06,158,1705363200"; 
+   d="scan'208";a="65833263"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 22:31:54 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:35044]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.24.112:2525] with esmtp (Farcaster)
+ id 5276ae52-4884-4071-a6ca-c88b58983b92; Tue, 13 Feb 2024 22:31:53 +0000 (UTC)
+X-Farcaster-Flow-ID: 5276ae52-4884-4071-a6ca-c88b58983b92
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 13 Feb 2024 22:31:53 +0000
+Received: from 88665a182662.ant.amazon.com (10.106.101.20) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 13 Feb 2024 22:31:50 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+	<martineau@kernel.org>, Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher
+	<jaka@linux.ibm.com>
+CC: Kuniyuki Iwashima <kuniyu@amazon.com>, Kuniyuki Iwashima
+	<kuni1840@gmail.com>, <netdev@vger.kernel.org>, <mptcp@lists.linux.dev>,
+	<linux-s390@vger.kernel.org>
+Subject: [PATCH v1 net-next] net: Deprecate SO_DEBUG and reclaim SOCK_DBG bit.
+Date: Tue, 13 Feb 2024 14:31:35 -0800
+Message-ID: <20240213223135.85957-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH virtme-docker v5] tests: add bpftests support
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <c8d9aacfe97acd74c369496a573ea64070485382.1707729702.git.geliang@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <c8d9aacfe97acd74c369496a573ea64070485382.1707729702.git.geliang@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D042UWA001.ant.amazon.com (10.13.139.92) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Hi Geliang,
+Recently, commit 8e5443d2b866 ("net: remove SOCK_DEBUG leftovers")
+removed the last users of SOCK_DEBUG(), and commit b1dffcf0da22 ("net:
+remove SOCK_DEBUG macro") removed the macro.
 
-On 12/02/2024 10:24, Geliang Tang wrote:
-> This patch builds bpf tests after building other mptcp selftests in btf
-> mode:
-> 
-> 	cd tools/testing/selftests/bpf && make
-> 
-> And add run_bpftest_all to run bpftests:
-> 
-> 	./test_progs -t mptcp
-> 	./test_progs-no_alu32 -t mptcp
-> 
-> Now mptcp bpf selftests can be tested in this way:
-> 
-> 	docker run ... auto-btf
-> 	run_loop run_bpftest_all in .virtme-exec-run
-> 
-> Disable IA32_EMULATION config to fix this error:
-> 
-> 	./include/linux/if.h:28:10: fatal
-> 		error: sys/socket.h: no such file or directory
+Now is the time to deprecate the oldest socket option.
 
-Thank you for this patch! It's good we finally have an easy way to
-validate these tests! v5 looks better without the mptcp_progs.sh script!
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+---
+ include/net/sock.h  | 1 -
+ net/core/sock.c     | 6 +++---
+ net/mptcp/sockopt.c | 4 +---
+ net/smc/af_smc.c    | 5 ++---
+ 4 files changed, 6 insertions(+), 10 deletions(-)
 
-I just managed to find some time to test it and include it in the repo.
-I had to modify a bit where the test_progs are located:
-
-
-https://github.com/multipath-tcp/mptcp-upstream-virtme-docker/commit/2051f42
-
-I guess on your side, you had an "old" test_progs in the source file,
-instead of using the one from .virtme/build.
-
-
-What's a bit annoying, is that all built files from BPF selftests are in
-the root dir of the build dir, in the middle of all kernel built files.
-I tried to change that by changing "O=" this in build_bpftests():
-
-  mkdir -p "${VIRTME_BPFTESTS_DIR}"
-  _make O="${VIRTME_BPFTESTS_DIR}" prepare
-  _make O="${VIRTME_BPFTESTS_DIR}" -C "${BPFTESTS_DIR}"
-
-where:
-
-  VIRTME_BPFTESTS_DIR="${VIRTME_BUILD_DIR}/${BPFTESTS_DIR}"
-
-(I don't think KHDR_INCLUDES is needed, I didn't check)
-
-But I had issues with bpf_testmod we don't need :-/
-I tried by setting KDIR="${VIRTME_BUILD_DIR}" but it didn't help.
-
-If you see a way to use another build dir that is specific to the bpf
-tests, that would be cleaner, I think.
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/406
-
-Before really closing it, I will look at modifying the .yml files used
-by the CI to have a new job validating only the BPF tests.
-
-
-Cheers,
-Matt
+diff --git a/include/net/sock.h b/include/net/sock.h
+index a9d99a9c583f..e20d55a36f9c 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -909,7 +909,6 @@ enum sock_flags {
+ 	SOCK_TIMESTAMP,
+ 	SOCK_ZAPPED,
+ 	SOCK_USE_WRITE_QUEUE, /* whether to call sk->sk_write_space in sock_wfree */
+-	SOCK_DBG, /* %SO_DEBUG setting */
+ 	SOCK_RCVTSTAMP, /* %SO_TIMESTAMP setting */
+ 	SOCK_RCVTSTAMPNS, /* %SO_TIMESTAMPNS setting */
+ 	SOCK_LOCALROUTE, /* route locally only, %SO_DONTROUTE setting */
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 88bf810394a5..0a58dc861908 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1194,10 +1194,9 @@ int sk_setsockopt(struct sock *sk, int level, int optname,
+ 
+ 	switch (optname) {
+ 	case SO_DEBUG:
++		/* deprecated, but kept for compatibility. */
+ 		if (val && !sockopt_capable(CAP_NET_ADMIN))
+ 			ret = -EACCES;
+-		else
+-			sock_valbool_flag(sk, SOCK_DBG, valbool);
+ 		break;
+ 	case SO_REUSEADDR:
+ 		sk->sk_reuse = (valbool ? SK_CAN_REUSE : SK_NO_REUSE);
+@@ -1619,7 +1618,8 @@ int sk_getsockopt(struct sock *sk, int level, int optname,
+ 
+ 	switch (optname) {
+ 	case SO_DEBUG:
+-		v.val = sock_flag(sk, SOCK_DBG);
++		/* deprecated. */
++		v.val = 0;
+ 		break;
+ 
+ 	case SO_DONTROUTE:
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index da37e4541a5d..f6d90eef3d7c 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -81,7 +81,7 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
+ 
+ 		switch (optname) {
+ 		case SO_DEBUG:
+-			sock_valbool_flag(ssk, SOCK_DBG, !!val);
++			/* deprecated. */
+ 			break;
+ 		case SO_KEEPALIVE:
+ 			if (ssk->sk_prot->keepalive)
+@@ -1458,8 +1458,6 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+ 		sk_dst_reset(ssk);
+ 	}
+ 
+-	sock_valbool_flag(ssk, SOCK_DBG, sock_flag(sk, SOCK_DBG));
+-
+ 	if (inet_csk(sk)->icsk_ca_ops != inet_csk(ssk)->icsk_ca_ops)
+ 		tcp_set_congestion_control(ssk, msk->ca_name, false, true);
+ 	__tcp_sock_set_cork(ssk, !!msk->cork);
+diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+index 66763c74ab76..062e16a2766a 100644
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -445,7 +445,6 @@ static int smc_bind(struct socket *sock, struct sockaddr *uaddr,
+ 			     (1UL << SOCK_LINGER) | \
+ 			     (1UL << SOCK_BROADCAST) | \
+ 			     (1UL << SOCK_TIMESTAMP) | \
+-			     (1UL << SOCK_DBG) | \
+ 			     (1UL << SOCK_RCVTSTAMP) | \
+ 			     (1UL << SOCK_RCVTSTAMPNS) | \
+ 			     (1UL << SOCK_LOCALROUTE) | \
+@@ -511,8 +510,8 @@ static void smc_copy_sock_settings_to_clc(struct smc_sock *smc)
+ 
+ #define SK_FLAGS_CLC_TO_SMC ((1UL << SOCK_URGINLINE) | \
+ 			     (1UL << SOCK_KEEPOPEN) | \
+-			     (1UL << SOCK_LINGER) | \
+-			     (1UL << SOCK_DBG))
++			     (1UL << SOCK_LINGER))
++
+ /* copy only settings and flags relevant for smc from clc to smc socket */
+ static void smc_copy_sock_settings_to_smc(struct smc_sock *smc)
+ {
 -- 
-Sponsored by the NGI0 Core fund.
+2.30.2
+
