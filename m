@@ -1,32 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8967C57872
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 14:49:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B785EE70
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 14:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707835742; cv=none; b=scZEW8gyQBcSZfB8HRhL0v3NjoaMs8T0wG3pK6OXMAaN0UZqUEtcdXfJevVDi/04zC6Msl1yswXFDDUt2sFp7vBBguh9sSnse+DVVKTrhudQLO7AoDvAm/RVTSVOs4AR0vCl9LOBAOgoEwGIt4lN0f0fNQIEKCptIN6KNs1RfwM=
+	t=1707835908; cv=none; b=jTmwZiWqZzTZWwV3DG7V2IaCkjfaCqk/JAzH1jICD/dZ2/bV17BQgs+bfpDCSQTYCyOGQjcD1CvPb7il1sSN+qEMJBKdikqtkZC3U4lxjCQcVY5Q7bx5EA6+UoVtXKstVSCxZqf+RKss7JY9HtN30mwvmslh2XkytyeVK8BLlLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707835742; c=relaxed/simple;
-	bh=bQLxDmkTDFWDN7kStDcOmCs0utVBl5p9smheYzLBcgY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=TceUwZ+3eEcxgFW22kJV9oyq0+h4x8NfiRwVcZJb+7HXyMF9lXuaSPEim1RoZMKvURjssnqZmNwTar40RCsKKTnSlz/rNRP/ZAobIcglsfezxjAWU1UzPRmJh4owXiijRmOUKbQ4L5EbpGV+b6FAXk5tHaF/TPmhkqY7PPjHUnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QY4klhRa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707835908; c=relaxed/simple;
+	bh=eO+hUDboT1jX2zjgaBMQr8sreAwTz60yyLoCcUXCrLI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j43IHfiF/gze3hp8uvxlzjPxjvQrz3kb5WstYtdGvkbwo1yy9GPMLhAXVcodYv7fFOnUM/pAyOVIASOZUqkA3Mi7wmkVdUvNLohzCFOqv2QUnI/J5uvv/ChOMfiEq5JKOZQHuWeBDWq+ujGCc7rnrT0F6wX1r/iSNjXdd0P+d4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIVmf/hJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QY4klhRa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8694C433C7
-	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 14:49:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIVmf/hJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D214CC433C7;
+	Tue, 13 Feb 2024 14:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707835742;
-	bh=bQLxDmkTDFWDN7kStDcOmCs0utVBl5p9smheYzLBcgY=;
-	h=Date:From:Subject:To:From;
-	b=QY4klhRazO8IvHcxlqFBQ9ZlB2m8kye+o9NhPJf48SGpnxTklIsjhyh22CpTRQph0
-	 sL0hoyUMb81uOLmUlp+Wn7qtVF1w7V6nqp7zpqs3ZfjkInmedA4NnnmCxWjN7hGSRU
-	 LRJ5eYm/G37ZZrIjagdP84O1Xedk86Ovd6fitXKpvsfHS8enNyoJH3c7qnj2pVDChf
-	 RCMDBOTs2CnISjWIhkEDxsssZ/QCk9s8QCB3ZPklaf5hCySD3VU4pDydncsi4Gd5hK
-	 i9ZXcJnk//j+CcbGRe9AFCe5/wR1KE6MiKg+dm+fmD63gg1wE5EN57+CUrYHHt0WV8
-	 GQFk01zeNtPiA==
-Message-ID: <6f47121a-da23-4647-bd2c-5b42aa14b05c@kernel.org>
-Date: Tue, 13 Feb 2024 15:48:58 +0100
+	s=k20201202; t=1707835907;
+	bh=eO+hUDboT1jX2zjgaBMQr8sreAwTz60yyLoCcUXCrLI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OIVmf/hJfNKRG+/qt3YdRmYNOsPcMZRAASWE8FljInb3lnh8QWbsSLt2j/A5zr7gv
+	 T7MurwCcGGFAUGBIrSxQpFNlD0tCp3/Hml06UYu+dsRBNP4jEsahs4nXqG1tcv25kf
+	 RJX02a1uS4lqr74VcNvTmlLeE+vbNn+0BCHyBohC2N+NZPyR2Y71KJ6lnZ7ksIqbkl
+	 BEuBWnQbN7Vi3JWLCPbAXIXK6sOs52pUR5FA9nnBC8XlKgje3noInNUxnJqNuF6/od
+	 m4Y81RZwCImCNqOq+Yegw29XJIAnEichp1h69NO7ncEbKklEYmoZY/kgkQy3aDMSu5
+	 CmAYafrFo9iXQ==
+Message-ID: <7a29a923-7691-48b4-a359-33014b41d7fb@kernel.org>
+Date: Tue, 13 Feb 2024 15:51:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,9 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v6 00/15] add helpers and vars in mptcp_lib.sh
 Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <cover.1703158128.git.geliang.tang@linux.dev>
+ <ZcrvUkBhCbOvcfPX@t480> <8253246b-9fbd-4dd9-940f-59667905de85@kernel.org>
+ <Zct1jAaOcc8EmB1s@t480>
 From: Matthieu Baerts <matttbe@kernel.org>
-Subject: MPTCP: new blog
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -81,24 +87,84 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-To: MPTCP Upstream <mptcp@lists.linux.dev>
+In-Reply-To: <Zct1jAaOcc8EmB1s@t480>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+On 13/02/2024 14:58, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Tue, Feb 13, 2024 at 01:02:42PM +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 13/02/2024 05:25, Geliang Tang wrote:
+>>> On Thu, Dec 21, 2023 at 07:31:03PM +0800, Geliang Tang wrote:
+>>>> v6:
+>>>>  - rebased with:
+>>>>  v3 fixes for CURRESTAB
+>>>>  v5 dump for userspace pm
+>>>>
+>>>> v5:
+>>>>  - rebased with "userspace pm enhancements" v13
+>>>>
+>>>> v4:
+>>>>  - rebased with "userspace pm enhancements" v12
+>>>>
+>>>> v3:
+>>>>  - merge squash-to patch for v2:
+>>>>  Squash to "selftests: mptcp: add mptcp_lib_ns_* helpers"
+>>>>  - add a new patch:
+>>>>  selftests: mptcp: simult flows: define missing vars
+>>>>  - update patches:
+>>>>  selftests: mptcp: export event macros in mptcp_lib
+>>>>  selftests: mptcp: export cin/cout/sin/sout vars
+>>>>  selftests: mptcp: netlink: fix positions of newline
+>>>>  - update some commit subjects and commit logs.
+>>>>
+>>>> v2:
+>>>>  - add more patches.
+>>>>
+>>>> Geliang Tang (15):
+>>>>   selftests: mptcp: add mptcp_lib_evts_* helpers
+>>>>   selftests: mptcp: userspace: capitalize test_name
+>>>>   selftests: mptcp: userspace: print colored output
+>>>>   selftests: mptcp: capitalize ok/fail/skip
+>>>>   selftests: mptcp: netlink: drop duplicate var ret
+>>>>   selftests: mptcp: export ret into mptcp_lib
+>>>>   selftests: mptcp: extract mptcp_lib_check_expected
+>>>>   selftests: mptcp: export event macros in mptcp_lib
+>>>>   selftests: mptcp: add mptcp_lib_verify_listener_events
+>>>>   selftests: mptcp: unify namespace names
+>>>>   selftests: mptcp: add mptcp_lib_ns_* helpers
+>>>>   selftests: mptcp: add ss mptcp support checks
+>>>>   selftests: mptcp: add mptcp_lib_check_tools helper
+>>>>   selftests: mptcp: add mptcp_lib_cleanup helper
+>>>>   selftests: mptcp: add mptcp_lib_check_output helper
+>>>
+>>> New version of this series was sent out, please change them as
+>>> "Superseded" on Patchwork.
+>>
+>> Thank you for the notification!
+>>
+>> Sorry, I'm taking a long time to do the review. But I will do it.
+>> Because I took so long to finish it, I can do the rebase of the other
+>> patches if you prefer, that's the least I can do.
+> 
+> Sorry, I put too many patches into one series. This makes the review
+> difficult. This time I'll split them into smaller series to make the
+> review simpler.
 
-Last month, I started a new blog about my work that is now sponsored by
-NGI0 Core [1]. Now that the second post is online, I just realised I
-forgot to mention this blog here, on the mailing list :)
+All good, thank you for your patience!
 
-So here we go:
+>> I marked patches 5/15 and 12/15 as superseded. Best to not mark them all
+>> like that if the new version is not published.
+>>
+>> Should I "drop" others?
+> 
+> We can "drop" them in this series. New version is very different from
+> this one.
 
-  https://blog.mptcp.dev
-
-Of course, opinions shared through this blog are my own and not the
-views of the whole MPTCP Community or my sponsor ;)
-
-[1] https://nlnet.nl/project/MPTCP-deployability/
+OK, I just marked the whole series as superseded then.
 
 Cheers,
 Matt
