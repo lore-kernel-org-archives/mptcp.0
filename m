@@ -1,94 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B211C3D;
-	Tue, 13 Feb 2024 01:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A6CA923
+	for <mptcp@lists.linux.dev>; Tue, 13 Feb 2024 04:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707789151; cv=none; b=ecMl6ZPGg1BkfMbieriHuTdXroiZbcadTOE2anL8Lcvx2HaFn1URWdbGjgNFO0HWp89dgWoaAMIjakgnuZ29gHTRbD+0IgBFdelksqtsFcF1iUP2cDpw557f0ojsgObMUsGJ/5JOtNjoC9EC8GSF80yewdAtqsn+hqWN5pVsEeI=
+	t=1707797680; cv=none; b=l2aLz8/45V9kXX4U7qjm6EbpgEnJ5JD3WcFM2x8X0askR49uVgalt79v+R4YJnOy8/BuU9C1S01sANA4nIx87T+2BVI/8RkzdnhoGVCgO4zgOJKmQYZCo3aDoHELCrA0uXK52o3T5gvyfPOd3Umqw6oo5HHd1CRbU4w5FM3UDlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707789151; c=relaxed/simple;
-	bh=uGuxFzDBaFp/hIBEohjAhRGcb9tqim+2jqM2pnvtGo4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=JhOoI0bw/0W11dX2k92OQ8fy0EEwLFld3zFpvcZ9bsjW/5bTDjnfCKxxuSw8B6Fd3cTgk18HLW3bkAT7+T1PivYQkfpbo16iFBnK1r6lOvfCdPoGYK/3WhKRMAd/kLPeR28Tqb/ZTj8pLDQJY2VfO9SSz28jH1jkS2DMuJYCMGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDPiwvym; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707797680; c=relaxed/simple;
+	bh=5vN92ZEGzeQUa1jbz5G0X2+yfcT4aSb99Dkx5aRNh9U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oYywPwUZZpLuihRHbDcLtcHQQ3GCEF9uvvZDhIACNqQq/XCPC6thwlk6iytywM+UhZoTi39erZi74v62d+iE4M7TxYUXsaKYLjcj9Mhu70jBTstqVjh4/4VVeFhYP92ax9/pDGA775e76E+heuQxUWvHG/+vV3NgDLqEC2itgmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxmCixbv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDPiwvym"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D323C433C7;
-	Tue, 13 Feb 2024 01:52:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxmCixbv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EEB4C433C7;
+	Tue, 13 Feb 2024 04:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707789150;
-	bh=uGuxFzDBaFp/hIBEohjAhRGcb9tqim+2jqM2pnvtGo4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=eDPiwvymo5oHUt2DUOS2kOtbJ7K+J1wO6uzNETAr+HveASj7TBWCLPo0vpkjnTmJ2
-	 ccMUkNfVO98UraNQfFx1ftopzdYwFMxx/abCEaVYYIF77JyaacAJ2zKN9TwbvVOBzh
-	 fT70pastL/AOnilQY1w23dIlUVOcZ/w2dKCH6kqT49wcft0yx4KjGMtg55DevYUUkX
-	 JL7slsqaAbdy7udDnSjT2JsnSFuUQ7+AlQFRF38x8dYrAnKxgk0KQqMDbGhmEumi9I
-	 +1DkZ9mdRyBrv/6M7AEq4PWO/v2/oURpP9l1WnjmnNjp6Q/v7j3hX7ADfiJFEwE6se
-	 /wbXLzukvQ/Sw==
-Date: Mon, 12 Feb 2024 17:52:28 -0800
-From: Kees Cook <kees@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>, Kees Cook <keescook@chromium.org>
-CC: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, linux-kernel@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Qian Cai <quic_qiancai@quicinc.com>,
- mptcp@lists.linux.dev, netdev@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] configs/debug: add NET debug config
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240212170253.77a7be7c@kernel.org>
-References: <20240212-kconfig-debug-enable-net-v1-1-fb026de8174c@kernel.org> <202402121039.E14DF37@keescook> <20240212170253.77a7be7c@kernel.org>
-Message-ID: <952DDEA7-E788-4705-B85F-6B28AD6A707A@kernel.org>
+	s=k20201202; t=1707797680;
+	bh=5vN92ZEGzeQUa1jbz5G0X2+yfcT4aSb99Dkx5aRNh9U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hxmCixbv1bXLf/Cr177aV/FYm2RI9fGNKUS5yf2d+eSFvFmf93dFoWg+6dX8I5+NO
+	 8sR2hd9N8cTrVk+aD43ua+iNyjBZJ+NcZJ9pfs5J4wVKou2EH+6Cl+ltaQN2meIWfK
+	 zwBiWLwuOb2kqkZlywWYEPK3I9GtrAUhenxxcNd5Lhk0DAEZUYPZ5oe07YGRe2PKWT
+	 Ymc5uSmD9+IIhuAGucsFQedLEdgWtJNwZjGymKWAZTL6uU3c7IiePrSK4onP5ojHbm
+	 CmN0NKBlPVGv5jnWKuAHZKAC0p2gYD5CQ8MpGH3dqrWDgIk628oUeK3UIcKLSNFFAG
+	 H27bAgN5PI0OA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net 0/5] add helpers and vars in mptcp_lib.sh, part 1
+Date: Tue, 13 Feb 2024 12:14:23 +0800
+Message-Id: <cover.1707797566.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
+Part 1 of "add helpers and vars in mptcp_lib.sh", some fixes.
 
-On February 12, 2024 5:02:53 PM PST, Jakub Kicinski <kuba@kernel=2Eorg> wr=
-ote:
->On Mon, 12 Feb 2024 10:39:55 -0800 Kees Cook wrote:
->> > Notes:
->> >   - It looks like this debug=2Econfig doesn't have a specific maintai=
-ner=2E
->> >     If this patch is not rejected, I don't know if this modification =
-can
->> >     go through the net tree, or if it should be handled by Andrew=2E
->> >     Probably the latter? I didn't add [net-next] in the subject for t=
-his
->> >     reason=2E =20
->>=20
->> Adding these seem reasonable=2E I touched debug=2Econfig last, so I can=
- take
->> it via the kernel hardening tree if netdev doesn't want to take it=2E
->
->I'd prefer to have it in net-next sooner rather than later, because
->when our CI hits an issue we can tell people:
->
->	make defconfig debug=2Econfig
->	make
->
->otherwise I have to explain what options to twiddle with=2E And the
->refcount options do catch bugs, I had to do this exact the explaining
->last Friday :(
->
->So I'd offer these three options:
-> - we put it on a shared branch and both pull in
-> - you send to Linus within a week and we'll get it soon that way
-> - we take it to net-next directly
->
->What's your preference?
+Geliang Tang (5):
+  selftests: mptcp: netlink: drop duplicate var ret
+  selftests: mptcp: simult flows: define missing vars
+  selftests: mptcp: add ss mptcp support checks
+  selftests: mptcp: join: change capture/checksum as bool
+  selftests: mptcp: diag: change timeout_poll to 30
 
-Totally fine in net-next! Go for it=2E :)
+ tools/testing/selftests/net/mptcp/diag.sh     |  2 +-
+ .../selftests/net/mptcp/mptcp_connect.sh      |  6 ++++
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 28 +++++++++++--------
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  6 ++++
+ .../testing/selftests/net/mptcp/pm_netlink.sh |  1 -
+ .../selftests/net/mptcp/simult_flows.sh       |  6 ++++
+ 6 files changed, 36 insertions(+), 13 deletions(-)
 
--Kees
+-- 
+2.40.1
 
-
---=20
-Kees Cook
