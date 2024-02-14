@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E13171A3
-	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 10:18:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6723C18027
+	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 10:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707905887; cv=none; b=GPwgfKXaNUTzCKv5nPBsvLrmMh4fGFu4Tog4DXeHoAl9bLn88P+KFSuxsk9QnMxTLlrOK5pgQVQps7DGZgu+8iZLDuvkgPbGGFP0h549fvkGF63PnUnE8WfRJCZePnZVjvgJ6elT1bJF4Pl8WlogHEoOiIXBqqY7RrYVeZtYur8=
+	t=1707906492; cv=none; b=Pxxsj2BeIsQ6k+VBasLiUm866YLoKQElbP2vzFkqlBfysADIvFnFwXuIIiy5UwDMaTNyuydXT37EhGUaBsUdQ9HjvaYGn9/uJuhpLWJgSUhfak+N8bSyJ0Y+nueqPEcg0L8UQB9r4iua3INLQRu+rOiWd6RdMlwYR7KASTi5aQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707905887; c=relaxed/simple;
-	bh=PrYFYa0ypzBzLJEnGCSYzPbYhRFWnApFP2/Yw6MaT+o=;
+	s=arc-20240116; t=1707906492; c=relaxed/simple;
+	bh=e/TqoFCu+PSndnMbscAQQXSkYbY5SPlzH+03Megz+a4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I5MDqoOaUJJCd73CTrGAOY9FGAm0sEiWSULlW3Jgo8AZ8RPUe6pGIseuwQGNxL79XRWs4hBhqFC9podoQZGMfjTn5bekC9tz4P5p6GB5s7gFKS7roSV4/P8AkJ1yC4UDCeIUINiukwXAQoidt8y2jYSzguY9l3XY9D56QjcWDgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imyekNTH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=fb+Rhke98SwJTe2Wbnis5XmKJAKeb7I6r3zP1xj/72bShpgenh0yKxkYw/5S/hqJPMmEQN5f2M4XZ/bR52lbq7c8kGxErCx6bOrrZUByAmnI8fAwOq9SYFzScrY18/VBgSEc+dT0yVP0bbrirH9kYICsOpZVyQJ5iPoxC4qpc6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSjY8k30; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imyekNTH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88039C43390;
-	Wed, 14 Feb 2024 10:18:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSjY8k30"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15938C433F1;
+	Wed, 14 Feb 2024 10:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707905887;
-	bh=PrYFYa0ypzBzLJEnGCSYzPbYhRFWnApFP2/Yw6MaT+o=;
+	s=k20201202; t=1707906491;
+	bh=e/TqoFCu+PSndnMbscAQQXSkYbY5SPlzH+03Megz+a4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=imyekNTH/whsK442+B3mMVbAdyjY11Ms8DCb6boxdbfZsTPAtV04makNSxNFzUBsM
-	 n5RqV9dvH8gNTvi+JjHw1eA4aazypRioAtdJTf1IYvX7LpJyNNv24elEewo9yj3JHT
-	 NRT+oMwxC+nF2JH64j/3B9Z+xiRhtfE06QgplRINeGOskwozcjvQwOKfPIKc9SDTm9
-	 qMsNt6BqYUXQKUHuDxlTDYhCr4Nkc11/xSA2EHfYZLc+/PLtfYKFnnYi6/cebzcUyn
-	 D/u5kkxZE4zQzmbnyNoAtujoDZ1iPUGO67zns9teBL28MiUasUPcjle3D+M/guZgX5
-	 ki5DTjuhCdD4Q==
-Message-ID: <2f1a2240-b213-47b5-bd4b-4bd398bae475@kernel.org>
-Date: Wed, 14 Feb 2024 11:18:04 +0100
+	b=NSjY8k30EYtYNoULCzmugv68bmcCm/Xc7w4wHFurQtQI8vdwpdZ4gFTik+sH6kuP7
+	 hLka5kJGulmQ+JaxNAMEDJTAFk+/Wbb5qflueK5i4XFvumGUOwaOzhibii1dTH3AiU
+	 1nqCqIXftjEz8lu/VHcPCaSuRrJjZHsNcJzeRqISt3nj0Kxlss1P1KGn1FRnxEcw/W
+	 M6ENrwtjD/oxrHzmQ0ooSDonuQ4C//Ip/YQlhBS2IhOElo3IBzjCeu6Rz60RBmSRS0
+	 2wrlIzETwK88WnSA2a7by2ze5FpMEQi9aBvkdtEPNSqE4VOfHKBsaV4nHOy4YnrEse
+	 OzWKK9qHKPt6Q==
+Message-ID: <4b845333-167e-4992-83b3-46001aefc8d0@kernel.org>
+Date: Wed, 14 Feb 2024 11:28:09 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 2/2] selftests: mptcp: rm subflow with
- v4/v4mapped addr
+Subject: Re: [PATCH mptcp-next v3 0/2] fixes for "map v4 address to v6"
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1707270765.git.tanggeliang@kylinos.cn>
- <0c91c59ef950d3e64237e8a667a244ef850d0981.1707270765.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,90 +85,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0c91c59ef950d3e64237e8a667a244ef850d0981.1707270765.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1707270765.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Geliang, Mat,
 
 On 07/02/2024 02:55, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Now both a v4 address and a v4-mapped address are supported when
-> destroying a userspace pm subflow, this patch adds a second subflow
-> to "userspace pm add & remove address" test, and two subflows could
-> be removed two different ways, one with the v4mapped and one with v4.
-
-Thank you for validating this.
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index 3a2abae5993e..69001d2a8dab 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -213,9 +213,12 @@ mptcp_lib_get_info_value() {
->  	grep "${2}" | sed -n 's/.*\('"${1}"':\)\([0-9a-f:.]*\).*$/\2/p;q'
->  }
->  
-> -# $1: info name ; $2: evts_ns ; $3: event type
-> +# $1: info name ; $2: evts_ns ; $3: event type; $4: addr
->  mptcp_lib_evts_get_info() {
-> -	mptcp_lib_get_info_value "${1}" "^type:${3:-1}," < "${2}"
-> +	local addr=${4:-""}
-> +
-> +	cat "${2}" | grep "${addr}" |
-> +	mptcp_lib_get_info_value "${1}" "^type:${3:-1},"
-
-When modifying shell scripts, please make sure 'shellcheck' is happy
-with the modifications you did.
-
-> $ shellcheck -x mptcp_lib.sh
+> v3:
+>  - add a new argument addr for mptcp_lib_evts_get_info, instead of
+>    a new helper mptcp_lib_evts_get_info_with_addr
 > 
-> In mptcp_lib.sh line 220:
->         cat "${2}" | grep "${addr}" |
->             ^----^ SC2002 (style): Useless cat. Consider 'cmd < file | ..' or 'cmd file | ..' instead.
+> v2:
+>  - update selftests as Mat suggested.
 > 
-> For more information:
->   https://www.shellcheck.net/wiki/SC2002 -- Useless cat. Consider 'cmd < file...
+> Geliang Tang (2):
+>   mptcp: map v4 address to v6 when destroying subflow
+>   selftests: mptcp: rm subflow with v4/v4mapped addr
 
-I then did this modification when applying the patch:
+Thank you for the patches and the reviews!
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index 69001d2a8dab..3777d66fc56d 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -213,12 +213,9 @@ mptcp_lib_get_info_value() {
->         grep "${2}" | sed -n 's/.*\('"${1}"':\)\([0-9a-f:.]*\).*$/\2/p;q'
->  }
->  
-> -# $1: info name ; $2: evts_ns ; $3: event type; $4: addr
-> +# $1: info name ; $2: evts_ns ; [$3: event type; [$4: addr]]
->  mptcp_lib_evts_get_info() {
-> -       local addr=${4:-""}
-> -
-> -       cat "${2}" | grep "${addr}" |
-> -       mptcp_lib_get_info_value "${1}" "^type:${3:-1},"
-> +       grep "${4:-}" "${2}" | mptcp_lib_get_info_value "${1}" "^type:${3:-1},"
->  }
->  
->  # $1: PID
+Now in our tree (fixes for -net), with Mat and my RvB tags, and the
+modification I mentioned in patch 2/2.
 
-Note that it is not strictly needed to add ':-' in '${4:-}' (we don't
-use 'set -u'), but it clearly shows the argument is optional.
+New patches for t/upstream-net and t/upstream:
+- cc6b8f6f3d24: mptcp: map v4 address to v6 when destroying subflow
+- bbc429327d25: selftests: mptcp: rm subflow with v4/v4mapped addr
+- Results: 0675fccde951..abfdc616f556 (export-net)
+- Results: f63a9c1dbbaa..ce1856db2249 (export)
 
-I also edited the comment above the declaration of the function to
-reflect that.
+Tests are now in progress:
 
-About 'shellcheck', please note that for the moment, not all scripts are
-shellcheck compliant, only 'mptcp_join.sh', 'mptcp_lib.sh' and
-'userspace_pm.sh'. For the others, it would be great if at the least the
-new code is shellcheck compliant. I don't think it is needed to modify
-the existing ones, they are not often modified and they work. (Except
-maybe if there are some other big modifications needed.)
-
-Also, some checks can be ignored with '# shellcheck disable=XXXX'
-directive if needed:
-
-  https://www.shellcheck.net/wiki/Ignore
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240214T102432
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240214T102432
 
 Cheers,
 Matt
