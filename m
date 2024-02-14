@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B181272AE
-	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 18:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D28128836
+	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 18:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707934484; cv=none; b=hirfI/yOFBnAFWiHfbvrGM/RtWych948i82lt5JjPkBRAyeu72edk7frcv/4vNVADLRl4tvC0IAsOHARSql/zYz5E4y5+cEBZG2U2mmKJkDtYCgFaruN8DLVc5/O+ufRhPCcBoUthIJVv0ej+poaVK2m5u0KKQ1XvrgGMAndjhY=
+	t=1707934539; cv=none; b=rsCp00eTq7GCEOpwcO6ziY0kRAIgFlKkGvyoOspSHTmU6ZHBgR5jNFtpFUbfIhbBF5n+SMs0wjcNCpEXMoRH+/tswF0NMRyshfl3sowRWM2rxIq8qjXCWl0GftS2b5Sx3PFvwaKlMbDug1C3zHUsQAnsUFhgaVWnnYbsBSDNgQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707934484; c=relaxed/simple;
-	bh=ZsuezwSIxZuzCkiTwofSwddgWXNOTYmQ1gJsJjteK8E=;
+	s=arc-20240116; t=1707934539; c=relaxed/simple;
+	bh=drDvJ2RcS9SIA62dkbZq1sYusCJXcwvgwF+1pu7iYF4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nRnfpgmHkZIq1phQFkadec5E9ZYAAgADz9/HExya2twCPXeRHU24KQwC8TESDKk2+dq4BA/X97wUe3IFct76G6rTAg1Xdv6KEVlM8XmyRDMcg9OIfcNlf5Ea3PiplkO4T1LZrHIaRFVT0+RAN+Ov0nr1chpXEyXZnOs+/ZAdY5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eU5Awm/R; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ptKz0hhY2Up9HNsKMVrsS8aks5q5705Xev8Y5hm0HN1gvHfTaxqNyjVg8oeyTT9Kf0C6wouSd5OM3djIUlinS0l0QXnzEnnL5ZkPv6P9FwW0qcATObMKDL6QmVbvaM8fxTlvcpS9SRZladaRmOgtAoEXpA/mWoCwxRZ/OBnit2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwY7A8xo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eU5Awm/R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B22DC433F1;
-	Wed, 14 Feb 2024 18:14:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwY7A8xo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B9BC433F1;
+	Wed, 14 Feb 2024 18:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707934483;
-	bh=ZsuezwSIxZuzCkiTwofSwddgWXNOTYmQ1gJsJjteK8E=;
+	s=k20201202; t=1707934538;
+	bh=drDvJ2RcS9SIA62dkbZq1sYusCJXcwvgwF+1pu7iYF4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eU5Awm/R7tIGqKD6/vx8+cTwCjeQ0uYEx7RJ9fzTVJptEmF8Ew5oz9QsBTwfZtp2z
-	 OuG7uAxH6zAGXGi+HEOk/FN2+MUrJFGnMSJROIxLh8W+fVnnV+CzgalXRNgs8+z1zY
-	 5eQfguQG52GG9J9AuSagCcGkKxAxKZULH3YfhRY1phRW1ioYbRYaWB+RCZi/idkHq1
-	 5mIK7irOCWwjZ9Dr1e6HWcEWCtAi6PWXeq8qzm4oyqRrlWZ6FgfCpX7TS2cfEeTtJq
-	 nTN+mU9Iz53/6QyAIzbwkkqRszEZkt+23/krjY6bbu/LU0h35aYri5aiZLLbYXhF9T
-	 +gSZeH+uLABIw==
-Message-ID: <4894617c-8f44-4011-a913-e1cf11b36ea1@kernel.org>
-Date: Wed, 14 Feb 2024 19:14:42 +0100
+	b=fwY7A8xob4X/TqXz2xZY8ZzuP7+RdpsDiRNSZg7krN5SeRHrFdB+tG6tTA2998jkD
+	 5i78p2L98afapsmLEhOOn7n3xHvOYON//ngVzMi7DuryO/lZRlo/tA9hf1Mv+diWY9
+	 4lQxeU9cdeTFDOvl0PAwAP13alK0QPua2043Lqbut85r19x0c4bsTc0MNMfueTYl05
+	 CsmSkYZI+QBUvlucwI+YM1LCFzPpvDvmnd9gTiIj9OeK5YsakZtE9xgY6yDGtRWXdP
+	 aznSARlXYE+XkohpeKlUO2gXoDBUs4F5nnVDgLPwTakjQ/lDNkOvb6ZP4Dk9nK4dv4
+	 4r4kmFuZIij8Q==
+Message-ID: <4fcbae24-8438-4091-8cd4-5d44981e3de6@kernel.org>
+Date: Wed, 14 Feb 2024 19:15:37 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 2/5] selftests: mptcp: simult flows: define
- missing vars
+Subject: Re: [PATCH mptcp-net 3/5] selftests: mptcp: add ss mptcp support
+ checks
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1707797566.git.tanggeliang@kylinos.cn>
- <daf8c52d209822d296ee64c2485ee4d4bf14d176.1707797566.git.tanggeliang@kylinos.cn>
+ <8f1e695491d199be96ea6a7a9e38ffd45a30388b.1707797566.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <daf8c52d209822d296ee64c2485ee4d4bf14d176.1707797566.git.tanggeliang@kylinos.cn>
+In-Reply-To: <8f1e695491d199be96ea6a7a9e38ffd45a30388b.1707797566.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,26 +96,73 @@ Hi Geliang,
 On 13/02/2024 05:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The variables 'large', 'small', 'sout', 'cout', 'capout' and 'size' are
-> used in multiple functions, so they should be defined as global variables.
-> This patch redefines them at the beginning of simult_flows.sh.
+> Commands 'ss -M' are used in scripts mptcp_connect.sh, mptcp_join.sh,
+> and mptcp_sockopt.sh to display only MPTCP sockets. So it must be checked
+> if ss tool supports MPTCP in these script.
 > 
-> Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
+> Fixes: 767389c8dd55 ("selftests: mptcp: dump more info on errors")
+> Fixes: c2a55e8fd80f ("selftests: mptcp: dump more info on mpjoin errors")
+> Fixes: dc65fe82fb07 ("selftests: mptcp: add packet mark test case")
 
-Even if I agree it is better to clearly define global variables at the
-beginning, it is not a mistake to define them in a function.
+If we only use it to get more debug in these selftests, maybe this check
+is not needed? I think it would be better to let other CI running our
+tests, and accept we can have less debug info. (Also easier for the
+backports if there is only one thing to fix at a time)
 
-My main point is that it is maybe easier not to consider this as a fix:
-it looks like backporting this to stable will create conflicts. They
-will be easy to resolve, but still, it will take a bit of time to a few
-people. If it doesn't fix an issue, isn't a preparation patch or doesn't
-ease the backport of other patches, maybe better to target -next
-(without the "Fixes" tag). WDYT?
 
-If there are no other modifications in the series and no objections, no
-need to send a new version, I can apply the patch 2 in -next. If you
-need to send a v2, please move this patch after all the other fixes of
-the series (or as part of a new series).
+I would then add...
+
+ Fixes: e274f7154008 ("selftests: mptcp: add subflow limits test-cases")
+
+... because here it is different, it is used as a feature.
+
+So I think we only need it for mptcp_join.sh, right?
+
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 6 ++++++
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh    | 6 ++++++
+>  tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 6 ++++++
+>  3 files changed, 18 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> index 7898d62fce0b..c49351d85cae 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> @@ -154,6 +154,12 @@ if [ $? -ne 0 ];then
+>  	exit $ksft_skip
+>  fi
+>  
+> +ss -h | grep -q MPTCP
+> +if [ $? -ne 0 ];then
+> +	echo "SKIP: ss tool does not support MPTCP"
+> +	exit $ksft_skip
+> +fi
+> +
+>  sin=$(mktemp)
+>  sout=$(mktemp)
+>  cin=$(mktemp)
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index c07386e21e0a..5ca1512c3eae 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -161,6 +161,12 @@ check_tools()
+>  		exit $ksft_skip
+>  	fi
+>  
+> +	ss -h | grep -q MPTCP
+> +	if [ $? -ne 0 ];then
+
+(Even if you might have taken that from diag.sh) This will not pass
+shellcheck's validation, I think, right?
+
+Better like this?
+
+  if ! ss -h | grep -q MPTCP; then
+
+(Also, please add a space after ";", like in most of the scripts we have)
+
+Same in the other files (if you need to modify them).
 
 Cheers,
 Matt
