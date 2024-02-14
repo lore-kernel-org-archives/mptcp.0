@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9F41A58E
-	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 11:40:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7C2199BA
+	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 11:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707910852; cv=none; b=qlM3LEokd7EtLjYHLUVKcdYMfLoUe4/Q5/WcpTiQPaLV0nz1RmgGJI2Os+bM44DpHFw3u5kG1bY8y/NWdNgTnnealB+wKQdfZweHL9d81fzE4/vZk11LvCaeIHXBTqANCtwIkkNHX15Tab3Mtht8Rm2sDpoQIeLEajewWxGOTgI=
+	t=1707910853; cv=none; b=AitDmAQqegjOLyLg5Bt49J1CvqFD+B9l5CQiHj3bojvG9l6q2G5uWH7tM/mxVv/wj/S4pfM5o/a+B1eCkXK8RJ/DojKgfdfmV6PHYeo+Af5XdzyxfEsBFPXairflyvDWil3joHVzKsz6h58stMr40AvEn8XjuR4MOtxkzx4tSB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707910852; c=relaxed/simple;
-	bh=8c1yyNExST0iOyTH4GSXbdVGozpOeodQucCFwVqh+4Q=;
+	s=arc-20240116; t=1707910853; c=relaxed/simple;
+	bh=NnNcW5v6KIrnHIf30fLgb4sTxTeaPwJ6PDJdCChPznA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HYIAHDWpRew6+SbuJCzjPbXNujCzgsn53CcYANBnpMEPQpVZxKcSa1rUSuZRDhgI0ggp4/iL7WICN5uz5EFwHEmzNCfO+Q4uzmpT/QgUPwLGWe6wW5gNU1EuNTtbwSetDcI193DKwx2elnsmDvXRvl3YCVF3gzRCj++DK326Pxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n4MqnCqZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ue2aqDonCVfYaHukhbelrEnGLZ0kLUlDuroeQMDY2q4cGBNADoQDq2uBoGdpc/20p1bmHEwkhpKca25BIRKR90s+QV+weU2sAes5F9rL0NluNraEWgW+oneY+hME2MZ7EIcD4gwChoE0Xgy+zY6OvEnulS6sc7ohqbiu8vT5KrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2UQUGWU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4MqnCqZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A1FFC433F1;
-	Wed, 14 Feb 2024 11:40:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2UQUGWU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DFA1C43390;
+	Wed, 14 Feb 2024 11:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707910852;
-	bh=8c1yyNExST0iOyTH4GSXbdVGozpOeodQucCFwVqh+4Q=;
+	s=k20201202; t=1707910853;
+	bh=NnNcW5v6KIrnHIf30fLgb4sTxTeaPwJ6PDJdCChPznA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n4MqnCqZNRJkSenL6STo3sQ2SQj91GD85KSWSt+b+U0C77ncEfDlen6fDe6/16yqG
-	 VrK1bjxQaHUj/caAHG1KlNUj2NDxNw9amkq+P1YEIz1HMx7w/WiCU8Vvl1ENptOind
-	 BTXThYWZ7pZ7CziG/g1Df4GcEunvJFeU1nkuEKi+O89tNqsg7bE04IDinOWGx5dJwx
-	 sxbgl3PFb84Ks9LkDsSu1gFHOsgvupJDbupIRNwiUbxNQKPCthsJMVwu7R292QIC30
-	 +gVZKwArkgWUHlPfGb67W3hvt7RuqKGhQIfKxS1ih05EiuXm1q25mcxo0gC7KcmIY6
-	 TkyZIROpxm3Qg==
+	b=H2UQUGWUrTn/874PwkAYI66E0nxS3uKzGaxfGuXSonWM2oX+JaXaeRit50SB4oqB+
+	 EoRioOMPXFzfdi6TdBEsAcaWNR6Xvb53gM4jiSeTmmdZopQz4W+BR3fwtR471IAv1s
+	 3yo5HbNlVEYc9ju734Tlszb2qhlFs22x799QCHDy9GQA+EKpL0IJ6P42SGOKVE4OqP
+	 zWvyS0Mo7YFao4HIYICFhBanTiA5o/w9v5nqY7ty+Mg+ZlNyb8xD+q+tMidxG3WY8y
+	 qlDoXZSCf+S0dXFwFpRt51lJi9bGcewRkglOjNz83Ev66sfwmUc+B5LOInuQoJ3IjY
+	 nfhT6tqX9lW3Q==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v12 01/15] mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
-Date: Wed, 14 Feb 2024 19:39:52 +0800
-Message-Id: <944c18a030e9dcac7175d6c59006b7273eb866ff.1707910454.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v12 02/15] mptcp: implement mptcp_userspace_pm_dump_addr
+Date: Wed, 14 Feb 2024 19:39:53 +0800
+Message-Id: <6158e1ede3caac589181412df930bcc7155102e4.1707910454.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1707910454.git.tanggeliang@kylinos.cn>
 References: <cover.1707910454.git.tanggeliang@kylinos.cn>
@@ -45,70 +45,98 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch exports struct mptcp_genl_family and mptcp_nl_fill_addr() helper
-to allow them can be used in pm_userspace.c.
+This patch implements mptcp_userspace_pm_dump_addr() to dump addresses
+from userspace pm address list. Use mptcp_token_get_sock() to get the
+msk from the given token, if userspace PM is enabled in it, traverse
+each address entry in address list, put every entry to userspace using
+mptcp_pm_nl_put_entry_msg().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_netlink.c | 9 +++------
- net/mptcp/protocol.h   | 4 ++++
- 2 files changed, 7 insertions(+), 6 deletions(-)
+ net/mptcp/pm_userspace.c | 60 ++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h     |  2 ++
+ 2 files changed, 62 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d5a942b9ab29..5cca84c6b87b 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -18,9 +18,6 @@
- #include "protocol.h"
- #include "mib.h"
- 
--/* forward declaration */
--static struct genl_family mptcp_genl_family;
--
- static int pm_nl_pernet_id;
- 
- struct mptcp_pm_add_entry {
-@@ -1636,8 +1633,8 @@ int mptcp_pm_nl_flush_addrs_doit(struct sk_buff *skb, struct genl_info *info)
- 	return 0;
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index bc97cc30f013..d6b7be3afbe5 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -572,3 +572,63 @@ int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
+ 	sock_put(sk);
+ 	return ret;
  }
- 
--static int mptcp_nl_fill_addr(struct sk_buff *skb,
--			      struct mptcp_pm_addr_entry *entry)
-+int mptcp_nl_fill_addr(struct sk_buff *skb,
-+		       struct mptcp_pm_addr_entry *entry)
- {
- 	struct mptcp_addr_info *addr = &entry->addr;
- 	struct nlattr *attr;
-@@ -2281,7 +2278,7 @@ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
- 	nlmsg_free(skb);
- }
- 
--static struct genl_family mptcp_genl_family __ro_after_init = {
-+struct genl_family mptcp_genl_family __ro_after_init = {
- 	.name		= MPTCP_PM_NAME,
- 	.version	= MPTCP_PM_VER,
- 	.netnsok	= true,
++
++int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
++				 struct netlink_callback *cb)
++{
++	struct id_bitmap {
++		DECLARE_BITMAP(map, MPTCP_PM_MAX_ADDR_ID + 1);
++	} *bitmap;
++	const struct genl_info *info = genl_info_dump(cb);
++	struct net *net = sock_net(msg->sk);
++	struct mptcp_pm_addr_entry *entry;
++	struct mptcp_sock *msk;
++	struct nlattr *token;
++	int ret = -EINVAL;
++	struct sock *sk;
++	void *hdr;
++
++	bitmap = (struct id_bitmap *)cb->ctx;
++	token = info->attrs[MPTCP_PM_ATTR_TOKEN];
++
++	msk = mptcp_token_get_sock(net, nla_get_u32(token));
++	if (!msk) {
++		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
++		return ret;
++	}
++
++	sk = (struct sock *)msk;
++
++	if (!mptcp_pm_is_userspace(msk)) {
++		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
++		goto out;
++	}
++
++	lock_sock(sk);
++	spin_lock_bh(&msk->pm.lock);
++	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
++		if (test_bit(entry->addr.id, bitmap->map))
++			continue;
++
++		hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
++				  cb->nlh->nlmsg_seq, &mptcp_genl_family,
++				  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
++		if (!hdr)
++			break;
++
++		if (mptcp_nl_fill_addr(msg, entry) < 0) {
++			genlmsg_cancel(msg, hdr);
++			break;
++		}
++
++		__set_bit(entry->addr.id, bitmap->map);
++		genlmsg_end(msg, hdr);
++	}
++	spin_unlock_bh(&msk->pm.lock);
++	release_sock(sk);
++	ret = msg->len;
++
++out:
++	sock_put(sk);
++	return ret;
++}
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 486fff865803..60de3f997de2 100644
+index 60de3f997de2..af20833f3157 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -343,6 +343,8 @@ struct mptcp_sock {
- #define mptcp_for_each_subflow_safe(__msk, __subflow, __tmp)			\
- 	list_for_each_entry_safe(__subflow, __tmp, &((__msk)->conn_list), node)
+@@ -1032,6 +1032,8 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
++int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
++				 struct netlink_callback *cb);
  
-+extern struct genl_family mptcp_genl_family;
-+
- static inline void msk_owned_by_me(const struct mptcp_sock *msk)
- {
- 	sock_owned_by_me((const struct sock *)msk);
-@@ -964,6 +966,8 @@ void __mptcp_fastopen_gen_msk_ackseq(struct mptcp_sock *msk, struct mptcp_subflo
- 				     const struct mptcp_options_received *mp_opt);
- void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subflow,
- 					      struct request_sock *req);
-+int mptcp_nl_fill_addr(struct sk_buff *skb,
-+		       struct mptcp_pm_addr_entry *entry);
- 
- static inline bool mptcp_pm_should_add_signal(struct mptcp_sock *msk)
+ static inline u8 subflow_get_local_id(const struct mptcp_subflow_context *subflow)
  {
 -- 
 2.40.1
