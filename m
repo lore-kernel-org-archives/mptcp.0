@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4B41272D9
-	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 18:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B181272AE
+	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 18:14:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707934453; cv=none; b=iqZYxGejJeqR/sdbgO+VUXbgSOwFd3ESp6yaWBiKwdyxavPk6N47xohSuppsI9NrsF5CJC+5hwDRtlRUoQPxrO86A3GCpJHZLtLag6KcaHIeYdQ9xRN6wFzs0VT3UDyW6bCP1vm7XmcMy4QewVs5zFldvKa5AWznFzvlCCMd+BI=
+	t=1707934484; cv=none; b=hirfI/yOFBnAFWiHfbvrGM/RtWych948i82lt5JjPkBRAyeu72edk7frcv/4vNVADLRl4tvC0IAsOHARSql/zYz5E4y5+cEBZG2U2mmKJkDtYCgFaruN8DLVc5/O+ufRhPCcBoUthIJVv0ej+poaVK2m5u0KKQ1XvrgGMAndjhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707934453; c=relaxed/simple;
-	bh=Ub8b5/G1YM/09fMX6sPKBYHR25cIV5ZwEH+22Z2RJ/g=;
+	s=arc-20240116; t=1707934484; c=relaxed/simple;
+	bh=ZsuezwSIxZuzCkiTwofSwddgWXNOTYmQ1gJsJjteK8E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Buhe5wKct59GzRI1KT+HGj2Fy6dbzaN7Uv4v4VxdZr6apIo9pwNA1BSN1BxBFs4Vk34ustVjPOD7ekt87M9dcVdGsNtKiyIAy4ziwAMzF6gpd0q1EJixTL1OHi/qDPTiQo826zfjAaKeZzhk6qxO/TWCRzWIE1qOmpd8tg68xSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a19JFlIo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nRnfpgmHkZIq1phQFkadec5E9ZYAAgADz9/HExya2twCPXeRHU24KQwC8TESDKk2+dq4BA/X97wUe3IFct76G6rTAg1Xdv6KEVlM8XmyRDMcg9OIfcNlf5Ea3PiplkO4T1LZrHIaRFVT0+RAN+Ov0nr1chpXEyXZnOs+/ZAdY5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eU5Awm/R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a19JFlIo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F33EC433C7;
-	Wed, 14 Feb 2024 18:14:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eU5Awm/R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B22DC433F1;
+	Wed, 14 Feb 2024 18:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707934453;
-	bh=Ub8b5/G1YM/09fMX6sPKBYHR25cIV5ZwEH+22Z2RJ/g=;
+	s=k20201202; t=1707934483;
+	bh=ZsuezwSIxZuzCkiTwofSwddgWXNOTYmQ1gJsJjteK8E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a19JFlIonytgp7VDR/iusXlUPGBO63Tf9OkEzcPx2lWFZcJHD4H9Yz8jkJxoBXWRB
-	 fmhwWDWb9iUmWmu774qSfBDSGlTqfMx317E1X9vVvo4xcmQjNwY0vQu2GQRe+z+j38
-	 S1L52AwkSi4VwVh+oRQBeuVFbkvHDk12qXq3dcIpGX+1jieQMm/nE30AeewVPdhDgc
-	 m3dymdhcfKYPP7eoEMHOmTd99p+RfCNvuEX49zt3iNWbEHX3ChTxSvDwU/+pR531K9
-	 6ttrTBYOwkPnt9Ol1J5kqlCK9ZhFaB84PkBukPjzHPxWGywkfltF/r3lKxOEOV8W1u
-	 Wt7SPkfFWXQXw==
-Message-ID: <320a8a14-0bf1-4ffa-a723-8dae5c93e254@kernel.org>
-Date: Wed, 14 Feb 2024 19:14:10 +0100
+	b=eU5Awm/R7tIGqKD6/vx8+cTwCjeQ0uYEx7RJ9fzTVJptEmF8Ew5oz9QsBTwfZtp2z
+	 OuG7uAxH6zAGXGi+HEOk/FN2+MUrJFGnMSJROIxLh8W+fVnnV+CzgalXRNgs8+z1zY
+	 5eQfguQG52GG9J9AuSagCcGkKxAxKZULH3YfhRY1phRW1ioYbRYaWB+RCZi/idkHq1
+	 5mIK7irOCWwjZ9Dr1e6HWcEWCtAi6PWXeq8qzm4oyqRrlWZ6FgfCpX7TS2cfEeTtJq
+	 nTN+mU9Iz53/6QyAIzbwkkqRszEZkt+23/krjY6bbu/LU0h35aYri5aiZLLbYXhF9T
+	 +gSZeH+uLABIw==
+Message-ID: <4894617c-8f44-4011-a913-e1cf11b36ea1@kernel.org>
+Date: Wed, 14 Feb 2024 19:14:42 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 0/5] add helpers and vars in mptcp_lib.sh, part
- 1
+Subject: Re: [PATCH mptcp-net 2/5] selftests: mptcp: simult flows: define
+ missing vars
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1707797566.git.tanggeliang@kylinos.cn>
+ <daf8c52d209822d296ee64c2485ee4d4bf14d176.1707797566.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1707797566.git.tanggeliang@kylinos.cn>
+In-Reply-To: <daf8c52d209822d296ee64c2485ee4d4bf14d176.1707797566.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,19 +96,26 @@ Hi Geliang,
 On 13/02/2024 05:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Part 1 of "add helpers and vars in mptcp_lib.sh", some fixes.
+> The variables 'large', 'small', 'sout', 'cout', 'capout' and 'size' are
+> used in multiple functions, so they should be defined as global variables.
+> This patch redefines them at the beginning of simult_flows.sh.
 > 
-> Geliang Tang (5):
->   selftests: mptcp: netlink: drop duplicate var ret
->   selftests: mptcp: simult flows: define missing vars
->   selftests: mptcp: add ss mptcp support checks
->   selftests: mptcp: join: change capture/checksum as bool
->   selftests: mptcp: diag: change timeout_poll to 30
+> Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
 
-Thank you for the new series!
+Even if I agree it is better to clearly define global variables at the
+beginning, it is not a mistake to define them in a function.
 
-I think only patches 1/5 and 3/5 are for -net. I also have some comments
-in some of them. Please check the individual patches.
+My main point is that it is maybe easier not to consider this as a fix:
+it looks like backporting this to stable will create conflicts. They
+will be easy to resolve, but still, it will take a bit of time to a few
+people. If it doesn't fix an issue, isn't a preparation patch or doesn't
+ease the backport of other patches, maybe better to target -next
+(without the "Fixes" tag). WDYT?
+
+If there are no other modifications in the series and no objections, no
+need to send a new version, I can apply the patch 2 in -next. If you
+need to send a v2, please move this patch after all the other fixes of
+the series (or as part of a new series).
 
 Cheers,
 Matt
