@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCF984A3E
-	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 18:16:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6A71272D7
+	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 18:16:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707934572; cv=none; b=FOI1JuQndFB7O9E3l9Bioe1z/TjHzKOrK87+GYacoyPxLI/3OMKBl01jsRjJiQwHiEr6OCLO9ZJajKRLMevGUdXsT/WYtujP09dnGhSRryK3V7bvamn+CnaaqhvOHK198yd6sFhkgb1MdOjsEn6WjYv5hyEovvTxQHq8wnWCyZ0=
+	t=1707934578; cv=none; b=hc6lxLPg2fvcYSI9VuHwS42ptj6ubfSW3HBFIayEE3ZfqHTe7Uk4R/VeTfIoO9vtp6tsg1FKeHLn0yhgPmdhzW/Owc+lfCpFRKzgmiPOKBfj79LZIbeIy+NJ8EQUnMzUPXyewgG45ozlr2JafKrIeIRMaPtzI/4SUpGfkQ5iffQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707934572; c=relaxed/simple;
-	bh=uT2yPiqQbwqHB59VPKHyufc5KC10tCxeRspKS+4HCC8=;
+	s=arc-20240116; t=1707934578; c=relaxed/simple;
+	bh=E+DF0pX68wgUUM5ctPGih2LdQMb16v16Xb8FzkLXQfk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QQsVXf1dc5JzMeE/5dFb6FoaM1lqTK8Mdyj571+oYSm7RdUsqZriHQ1HyDfyA5nnfEs26WA++1htorprPgW8I2Nw3xzimMXbvh2sSo9s3UtQhZiQ9/SCO6bLbaBZrTuTymcdT5yTeAhyEruf7NG7t/+92i4hUO71wjsE2zf0ndU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EnpRZRNJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=tlOkGEtBkbzCm8kcyG7mPJ9/IwXf3Q2S3eq+EiInjgWaylJmYx7G6ZdZEG5ULohGyim1iPK4/0jeOn4RNJIjJpPmdXDRDZ8mdLdkzmIhSrTin5qHhSYL0dAjQMg44B2YkgwJONOqk7W+8WJmWW1ODPGBU8MPaQR1MAiygYJGmgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7WJ8386; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EnpRZRNJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA908C433C7;
-	Wed, 14 Feb 2024 18:16:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7WJ8386"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C643C433C7;
+	Wed, 14 Feb 2024 18:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707934571;
-	bh=uT2yPiqQbwqHB59VPKHyufc5KC10tCxeRspKS+4HCC8=;
+	s=k20201202; t=1707934578;
+	bh=E+DF0pX68wgUUM5ctPGih2LdQMb16v16Xb8FzkLXQfk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EnpRZRNJvX9+0Tng14V7VTbZAyMZeIylRC9zA0jTcfJyeFvU+XbyPbRs15MAYny07
-	 MqVAP3tT18cTwEy2eBEv7OrSGCfiuX5DZNz+qjwq3ODttPYmO5IlssqttKxh5uAA5i
-	 Xt91rQ4Jrqdux/9PJ15/dBcrddDuAEcEkllsYemeETkq53a+c7qD4mQycf68Ky1o9A
-	 BahaRkCjI08sS7EkuquZoe+gMtO4DYtnQIRlgSC92GPJfnvmErdc6y2258jj2IaxDg
-	 6zFl2kTRjOmZGJMcHFEHCp6iancKvvIIQHlYFg+eHSHAV6jNAYf9Si3QDPvvz9fNRZ
-	 VvFUwmsbwrYKA==
-Message-ID: <6fcbe3bf-2dca-47a3-add2-2f58f6011690@kernel.org>
-Date: Wed, 14 Feb 2024 19:16:10 +0100
+	b=K7WJ8386xdr7NI6PthNUjbh+W230gLz1Lc96UjentFB7k+2iro1zxLk7Ii5mArXJG
+	 nGI9kmbYTbqlLka2b/YghZnMNmIS7EWV91n8Nvpzm5IA0APF35hzqT2CX0aHg+jakI
+	 99SRPTs8a6a7gVqjS2yM9qtnlmBIAq+2MgWgVj+B5xhScR4Xd9Ps9gN4R80rVBg15n
+	 JARZn+3GjdDuZXvJ0g/vOtoI/JmKoR4KmlqzWcd0xzVTxc8gzlyEKa1JkmEcrBxfzb
+	 5vbJNM1lOGJiXPsqSUEHCsfLqqn95c8M0cZlzwHs4eFIRmGfgV0wVgrhyfPj55y+LY
+	 Bm5fNMne6yK7w==
+Message-ID: <21d648ac-cefa-45e4-ac86-ad9c52276f53@kernel.org>
+Date: Wed, 14 Feb 2024 19:16:17 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 4/5] selftests: mptcp: join: change
- capture/checksum as bool
+Subject: Re: [PATCH mptcp-net 5/5] selftests: mptcp: diag: change timeout_poll
+ to 30
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1707797566.git.tanggeliang@kylinos.cn>
- <616dadb2e22ba3e178d8baef90f43624cdc6e85f.1707797566.git.tanggeliang@kylinos.cn>
+ <874a6cca73e30babfaa5f6036a929314bf1a689c.1707797566.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <616dadb2e22ba3e178d8baef90f43624cdc6e85f.1707797566.git.tanggeliang@kylinos.cn>
+In-Reply-To: <874a6cca73e30babfaa5f6036a929314bf1a689c.1707797566.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,52 +96,29 @@ Hi Geliang,
 On 13/02/2024 05:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> To maintain consistency with other scripts, this patch changes vars
-> 'capture' and 'checksum' as bool vars in mptcp_join.
+> In most scripts timeout_poll is defined to 30, but in diag.sh,
+> it's 100. To maintain consistency with other scripts, this patch
+> changes it to 30.
 
-I understand it is better, but it doesn't really fix a bug, right? Maybe
-best not to target -net, no?
+It looks like we use 100 (mptcp_connect (...) -t 100) from the
+beginning, see commit df62f2ec3df6 ("selftests/mptcp: add diag interface
+tests").
 
-> Fixes: b08fbf241064 ("selftests: add test-cases for MPTCP MP_JOIN")
-> Fixes: af66d3e1c3fa ("selftests: mptcp: enable checksum in mptcp_join.sh")
-> Fixes: 3c082695e78b ("selftests: mptcp: drop msg argument of chk_csum_nr")
+It makes sense to align this with the others, but it would be good to
+explain it is OK to do that in the commit message, something like:
 
-... and without the 'Fixes' then
+  Even if it is set to 100ms from the beginning with
+  commit df62f2ec3df6 ("selftests/mptcp: add diag interface tests"),
+  there is no reason not to have it to 30ms like all the other tests.
+  diag.sh is not supposed to be slower than the other ones.
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 22 +++++++++----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 5ca1512c3eae..b3dc17daf574 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -29,11 +29,11 @@ iptables="iptables"
->  ip6tables="ip6tables"
->  timeout_poll=30
->  timeout_test=$((timeout_poll * 2 + 1))
-> -capture=0
-> -checksum=0
-> +capture=false
-> +checksum=false
->  ip_mptcp=0
->  check_invert=0
-> -validate_checksum=0
-> +validate_checksum=false
->  init=0
+Or similar.
 
-To be honest, I'm not sure if I prefer to use "boolean". At the end, it
-is still a string. Instead of comparing values, we now "execute" the
-content of the variable, it might not look safe (but it should be).
+> Fixes: 5888a61cb4e0 ("selftests: mptcp: launch mptcp_connect with timeout")
 
-Also, there are still many other variables using 0/1: ip_mptcp,
-check_invert, init. I don't think it is worth changing them.
-
-I'm not against this change for -next, but I'm not sure if it is that
-interesting. (But I'm not against using (fake) "boolean" for new code)
-
-WDYT?
+Here as well, it is not really a fix, not need to do the effort to
+backport that, and it changes the behaviour (a bit). I think it is
+better to target -next, no?
 
 Cheers,
 Matt
