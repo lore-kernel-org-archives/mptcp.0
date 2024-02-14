@@ -1,126 +1,155 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559951759F
-	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 09:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DA9125A2;
+	Wed, 14 Feb 2024 09:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707902973; cv=none; b=Iw8n2iXx1sAc7x4JMBuwPRe5eN0DcQ4JApf2jBpC4zG2uL7WChxvaS0xF5UlEX4t/MYyk2RcrfnwP5NiA/e1bd0zNp3ppqWDDGU96VWVMOixv6fKFdPX+CR6Dv7pqkRe7Es5PWG2x+9BRruOczGrd3AFh5cRvMvwa0e6WocrDGY=
+	t=1707903196; cv=none; b=aV5H/j3R0dMRzqL6eUwXJ1SDk/4MkBUeifmQCbeqeV6y/JbwwFYSF8XACEWj2s+qaFeZscbijdKC3/hS7l5aiJFGfwLXCFc/7lsnmxWqq3Vv6zBaOaol8mf4TAWXk0EaJjs2gIRycbRluYl/csbx9Zu339tZOblQgrjYnaCpizI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707902973; c=relaxed/simple;
-	bh=e4UPnfZBpxPRzNSaNL3wQv5dQgRjPen4bWK2xDdysKg=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=dntbFT5Jt0oUBWtNdZpUaMjhdrvBFv0qGLYMiL7fcDgizoUOIqFUgzPW9WG/QOJ4HeNcpneBiw69m8tgccgOLcxCSuTk20GRNPDrS1T3SJT+0XHOUXBCnkWPOvK4lpq11BPa2r/2OG4tt8/FlDZSrj+wHrfeHPfQLkujMYui8Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YENfBlde; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707903196; c=relaxed/simple;
+	bh=UISQVml4jbrLszXUXlZ5VcCn4BnTwKFkb9pedFDrCp8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bB24cf/JQghCKRovPlSiHGqt/WzNGZmy1pO946dJGSSLPQ/pj91YT26q3u/OaOaRXsaAcmdoIsS17AXUOLuTWDbb/GYadTlrsuvWVwPh679yJow46621SM288dEb/giLCwrNnYMCi7pDRS//GlgufCanuJ18ZHkLLkbgFUUDhdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zv+CDWgu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YENfBlde"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6818a9fe380so31589056d6.2
-        for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 01:29:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707902970; x=1708507770; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8c3SpCv4mBtgYl54+lZNfcyhWjY7X2V5oF1nq99hHdw=;
-        b=YENfBlde+koGfNEb9GgN0nOc6LUm9B/wLd8FGMHjIExQ2XMKDWCV75CI4zoplrPl0t
-         9+/Iu4I//95lNkYY+hHqSA0nOFbj5h4Kue7da+PLL3hEowGZjIn/YN0tqFyxAy7sfiec
-         rcWQO0VK2MNnC5Utuxe3XJ/ckjAzmro/1dZAquF3hk8bJ0i9qT+r7J3Sb6FLL8NaudED
-         1TIMaYLTzX7UB15gNeqONnjPJ5qCJY/+3gMYDttMEdiaPuerKV+zbEKMmmIH4sJD3QKW
-         WfEVAqJB+fVnr4fvqLO8qzV25wi9bapqVlPukd2N9raAQNNKhtsxUB1eZhfdAObCVtqt
-         SRyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707902970; x=1708507770;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=8c3SpCv4mBtgYl54+lZNfcyhWjY7X2V5oF1nq99hHdw=;
-        b=Xb5/cJjMRfWDp87fa8HYVxkS+inXJzEKu2xAjvbCVp2P0jq1qyXwMdxaOhTTTIzcRw
-         ZeHXrTxeCxbuI7Aut6TVdGpfjONugFhJY48hr1MYq4hNelG/9UCZepU0mt4QjZfaTvjp
-         deuZd/rKDvUtphbczRnSietCzyoJ0kopHZsOqpBokdzB7vGmNuBuwvEZN6uNIoVUW+34
-         iHbZYhXlu82soI4UvcHHDy3h5qKWClmg8c0n5BfaHalcIDZqdOIlgasYffI4TwPViAAs
-         cB0jf6NgS7TiIFi30wSqwAms4Lzs2LSPvw7KL/Ivk8FzpmdjhIHTtXwBcLejjJ0yY7H7
-         cGXw==
-X-Gm-Message-State: AOJu0Yw1oaj9SbnkW9JeA3SIMkw5+nZxaw3JM/kizzw8Chlka+Dkdwz2
-	JXbz3o/XSBGsK09hAvnD/BxTCHhk9wu26XPMpxP4tK5Fhb0Oma4=
-X-Google-Smtp-Source: AGHT+IG2GWD+wTnXZ2oa++QcmV4QovenuLVtkpe879fhkghPZUL7xDEx6HQdJwHAcgFq9GiHXwIl/Q==
-X-Received: by 2002:a05:6214:c43:b0:68c:8037:90f5 with SMTP id r3-20020a0562140c4300b0068c803790f5mr2171716qvj.44.1707902970708;
-        Wed, 14 Feb 2024 01:29:30 -0800 (PST)
-Received: from [127.0.0.1] ([74.249.21.240])
-        by smtp.gmail.com with ESMTPSA id lb7-20020a056214318700b0068c88a31f1bsm544662qvb.89.2024.02.14.01.29.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 01:29:30 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240213223135.85957-1-kuniyu@amazon.com>
-References: <20240213223135.85957-1-kuniyu@amazon.com>
-Subject: Re: net: Deprecate SO_DEBUG and reclaim SOCK_DBG bit.: Tests
- Results
-Message-ID: <fe0f7972-653f-5a65-e06b-c4ee1097d376@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 14 Feb 2024 09:29:29 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zv+CDWgu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08DD4C433C7;
+	Wed, 14 Feb 2024 09:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707903195;
+	bh=UISQVml4jbrLszXUXlZ5VcCn4BnTwKFkb9pedFDrCp8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Zv+CDWgufLAp+veVNy9g5pVHWDgVo4OmEQ1iZF8AJjSQmFKeD2pk+pVW0p8QVX//h
+	 3q9tUgOItRcKJOS6iR5C/eIjXgNLGwJlAxw67KaXsGX5064Lcx9EP4p+xEsHzfxZj+
+	 FykGPnlrlBktKaqjr27tCOP9/9umyX5dFNQUg+GIV48V5pj2w5wFTZIaZCm8wuykb6
+	 Qpx8TLBIF0jYP2RCRFBSnIthz4V1jiIjDjlTdC2W24120Nr/zc2vCLJ19P5QBgZDWE
+	 YsY94bxLXUNEJSx60Jn1J+Tsm37P+IyoAS2Og4yMGj5v/WQRkvX6/FlzivEccrnREI
+	 UVYvHHUXOlMIw==
+Message-ID: <60d7072d-392e-489b-8889-404f3c753620@kernel.org>
+Date: Wed, 14 Feb 2024 10:32:58 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 net-next] net: Deprecate SO_DEBUG and reclaim SOCK_DBG
+ bit.
+Content-Language: en-GB, fr-BE
+To: Kuniyuki Iwashima <kuniyu@amazon.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Mat Martineau <martineau@kernel.org>, Wenjia Zhang <wenjia@linux.ibm.com>,
+ Jan Karcher <jaka@linux.ibm.com>
+Cc: Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-s390@vger.kernel.org
+References: <20240213223135.85957-1-kuniyu@amazon.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240213223135.85957-1-kuniyu@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Kuniyuki,
 
-Thank you for your modifications, that's great!
+On 13/02/2024 23:31, Kuniyuki Iwashima wrote:
+> Recently, commit 8e5443d2b866 ("net: remove SOCK_DEBUG leftovers")
+> removed the last users of SOCK_DEBUG(), and commit b1dffcf0da22 ("net:
+> remove SOCK_DEBUG macro") removed the macro.
+> 
+> Now is the time to deprecate the oldest socket option.
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+Thank you for looking at this!
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/4629533685448704
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/4629533685448704/summary/summary.txt
+My review here below is only about the modifications related to MPTCP.
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.com/task/5755433592291328
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5755433592291328/su=
-mmary/summary.txt
+(...)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/fbdc306e8139
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index da37e4541a5d..f6d90eef3d7c 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -81,7 +81,7 @@ static void mptcp_sol_socket_sync_intval(struct mptcp_sock *msk, int optname, in
+>  
+>  		switch (optname) {
+>  		case SO_DEBUG:
+> -			sock_valbool_flag(ssk, SOCK_DBG, !!val);
+> +			/* deprecated. */
 
+If it is now a NOOP, maybe better to:
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+ - remove SO_DEBUG from mptcp_sol_socket_sync_intval() and
+   mptcp_setsockopt_sol_socket_int()
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+ - move it just above the "return 0" in mptcp_setsockopt_sol_socket()
+with the "deprecated" (or "removed") comment
 
-For more details:
+By doing that, we avoid a lock, plus going through the list of subflows
+for nothing.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+WDYT?
 
+>  			break;
+>  		case SO_KEEPALIVE:
+>  			if (ssk->sk_prot->keepalive)
+> @@ -1458,8 +1458,6 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+>  		sk_dst_reset(ssk);
+>  	}
+>  
+> -	sock_valbool_flag(ssk, SOCK_DBG, sock_flag(sk, SOCK_DBG));
+> -
+>  	if (inet_csk(sk)->icsk_ca_ops != inet_csk(ssk)->icsk_ca_ops)
+>  		tcp_set_congestion_control(ssk, msk->ca_name, false, true);
+>  	__tcp_sock_set_cork(ssk, !!msk->cork);
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+The rest looks good to me.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
