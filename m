@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8418B64A
-	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 01:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406BA4C79
+	for <mptcp@lists.linux.dev>; Wed, 14 Feb 2024 01:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707875091; cv=none; b=NHe9PL4Z3EjvOSlSfamlwjtHXS03M/F8MJ9nQOD/07XYo44z0Gw2flRdcJV69AwkFvE5xeYmHFtzyjIUlZ+x63P17ojPNa8BVtuql3ua4zybs1M54u6SqNrDF6f3swtbGtTmQegruOwSWl6stMsuheuouvn9Cu7BAU+cqghO1qw=
+	t=1707875525; cv=none; b=MrNmsqDDZhqagE9Yr+wDA+09SKPJlh8/e6ri15rdHHJ0TEPbaRBTT2cc/U/UF85OkOcif7deQ3pUoII9oSQ8fyWplG5j9TL5u851lFvdgI5+qYUmTAjKDnC7AyG56b3YbgoNdiIgAN91eBrH2EeUv+51GoMrwVKZyVeGFm3yveo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707875091; c=relaxed/simple;
-	bh=fsUZIysrCDaGtEMN6+PZDUe5eXcF5N/mNOYtT/vfsiI=;
+	s=arc-20240116; t=1707875525; c=relaxed/simple;
+	bh=0XFLeu4DEzz8jHypdzpCDvuYIVlrtr0JyfJkosh7CZE=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=or1ybcjqRYYJ9ps6vxnTtzc4APwwPn54zuQd/Wd1vd14PlvbgwCDSoidyNQyCiVO4wJ5WZh1ksAi5YpD+93CIM7Eev+KMRLBu/jQHptMuq2SligNB+pGcdp+4hw+wKF6HQJSO2Z4fR4a8n4Tw2vhN+emTHYuUrsZAMREMMODVhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTs27BGS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Rc3ER5eVaOq/ncfCQryQ03/onLpymGojHIc4C2yk0X3uyci3pcsayxqAbVZvc8FrHWEvHgWxRJHQ0joryzilvLDhmxRwD1rGla1h50osQG69fqXf73S3H9bqID5bHBVRjzrJ4S5aLtKCiVCKf17ZY795JSb599sjRu8WzEay6oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjMOCao8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTs27BGS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2882EC433F1;
-	Wed, 14 Feb 2024 01:44:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjMOCao8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6245C433F1;
+	Wed, 14 Feb 2024 01:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707875091;
-	bh=fsUZIysrCDaGtEMN6+PZDUe5eXcF5N/mNOYtT/vfsiI=;
+	s=k20201202; t=1707875524;
+	bh=0XFLeu4DEzz8jHypdzpCDvuYIVlrtr0JyfJkosh7CZE=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=OTs27BGSDzFyjLwgoPDl39+NNEk+XaVhjZexTrPA5Qg6Ocp75oCYQltm+Fv4wvCv6
-	 2f3UAIFla0UwAW1JwbyyCl+TZ8NaeNoGulBfU/dvUb8gNRqGDxWAiADtiR+nIbQDWg
-	 cped3IB/b+SV6n6bqBVKoenk/IT91s+bxrGn4QoKwi+aAh5j/buZVRfwihKTWfiEqM
-	 JWM5PssHnPTSSxfC16CcjmWlMC/A5FpXyN6j9/BkxrjL0qEgcXFaJOXPTkNp/inj5r
-	 VTk7l+L1EFflelo/Kc4NrAVmvtyVQ83a7ojh+hrSfOdsAqHL4wAUul/TUpEMQCT6g+
-	 eBJxT78Zsz6AA==
-Date: Tue, 13 Feb 2024 17:44:50 -0800 (PST)
+	b=hjMOCao8g8ayArF2EHnwnh61pOVBGWqwtb3TBgGBLAIv29kK9j0Rvh54tuGeiizYA
+	 ARQIGUHs3Uzckl2WrJZKVHOa4wbsVI06d4DFeo3aMpo1+/d8YS9Mrg5c1N6ta6kNgW
+	 UR6lyXglnYokg8NvVKzOVFlvVg803rQ+vOUwhX9VHDl8IGeZEIkAr4vJWSg50IFH1V
+	 DbH7SFOQSwgdbiTvR11QclVNNx+IAWtR4ruY5+hSNIbfZ3DbQ7pViFqBgPFnFKKcGw
+	 IS9MtVC/HnV5n9uFumhn5tW6V7syFQ+UHrQICBDzmYolFTuXV97seTSjoXSG2WWq0O
+	 mxD4FQ5vZ3cdw==
+Date: Tue, 13 Feb 2024 17:52:04 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>
 cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v3 0/2] fixes for "map v4 address to v6"
-In-Reply-To: <cover.1707270765.git.tanggeliang@kylinos.cn>
-Message-ID: <59fce9d5-366e-1231-6472-41f35a1da5f8@kernel.org>
-References: <cover.1707270765.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next] mptcp: add a sk_is_tcp check for
+ sk_is_mptcp
+In-Reply-To: <e97e306f73ff10b437eef979b7d5d82b822e2f52.1707113244.git.tanggeliang@kylinos.cn>
+Message-ID: <a0979ee1-8af9-fe30-f166-33de3543d030@kernel.org>
+References: <e97e306f73ff10b437eef979b7d5d82b822e2f52.1707113244.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,31 +43,49 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, 7 Feb 2024, Geliang Tang wrote:
+On Mon, 5 Feb 2024, Geliang Tang wrote:
 
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 >
-> v3:
-> - add a new argument addr for mptcp_lib_evts_get_info, instead of
->   a new helper mptcp_lib_evts_get_info_with_addr
+> sk_is_mptcp() looks like it can be called using any struct sock *, but
+> it only gives valid results with struct tcp_sock *. This patch adds a
+> sk_is_tcp() check for it.
+>
 
-v3 looks good to me, thanks Geliang.
+Hi Geliang -
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+This is exactly what I asked for in #453, however in our meeting last week 
+Paolo was concerned about the overhead of the extra checks when most of 
+the call sites are known to be tcp_socks (especially in the TCP code).
 
+Paolo, what do you think about only adding the sk_is_tcp() check when 
+CONFIG_DEBUG_NET is enabled? (kind of like Matthieu's "check the protocol 
+with DEBUG_NET" series)
+
+
+- Mat
+
+
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/453
+> Suggested-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> include/net/mptcp.h | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> v2:
-> - update selftests as Mat suggested.
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 63972d712a1d..30754bebd5fb 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -124,7 +124,7 @@ void mptcp_init(void);
 >
-> Geliang Tang (2):
->  mptcp: map v4 address to v6 when destroying subflow
->  selftests: mptcp: rm subflow with v4/v4mapped addr
+> static inline bool sk_is_mptcp(const struct sock *sk)
+> {
+> -	return tcp_sk(sk)->is_mptcp;
+> +	return sk_is_tcp(sk) ? tcp_sk(sk)->is_mptcp : false;
+> }
 >
-> net/mptcp/pm_userspace.c                      | 10 +++++++
-> .../testing/selftests/net/mptcp/mptcp_join.sh | 28 +++++++++++--------
-> .../testing/selftests/net/mptcp/mptcp_lib.sh  |  7 +++--
-> 3 files changed, 31 insertions(+), 14 deletions(-)
->
+> static inline bool rsk_is_mptcp(const struct request_sock *req)
 > -- 
 > 2.40.1
 >
