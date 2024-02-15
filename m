@@ -1,134 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA7F66B2D
-	for <mptcp@lists.linux.dev>; Thu, 15 Feb 2024 11:14:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F8A4A08
+	for <mptcp@lists.linux.dev>; Thu, 15 Feb 2024 11:40:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707995678; cv=none; b=itBzNZM5saGZTAUGrAW1ItnCS4nDUq4zAn3X8OsSfSBFcSENRjhU6XJpl6pXXt8k/AgjpflA6VGTLMC9vR82qzOiC4nhJPS8x/KyQHoygO8t0SeG3T/TtMOeJqWwxkv35xTuBzE+8MaA/YHR6y/XrxHJDorwLf0TCt0l+rRlkhU=
+	t=1707997216; cv=none; b=OU0woh7bC7l4LZiT68JPIF2l8v/XrSfYZEKbiq/Wv9XpJZNoIBa5emJ7E6MKimbyA0g7NiiHA+o5532hLn3sPnS6teQD2PKZkeDHYTGaQQmZ/P0yo1WsCz/GihHPCiY/ZUYk6P3OFIB5oJcNxAH6CzwLkgvEPqvCD0H0w7lVO64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707995678; c=relaxed/simple;
-	bh=203dncLlnLrNRgqQ9ugdf3OCZXld/JR9ug9GegLe5S0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l/yu3UJ5RQevor2Gw4ofvi0fE7E3tjnxlIWR7OFGTuRAc2C3ivGdbvOhTsXzoqqPnZHJpJ61brHOxy5nbklrV3/YDEF+FDAKYmJv9WOQcE12jDU4X8QBq4mlKfHWudJG1k58AKo6oFuZS7Yg/npotLK96pYP0Y5dkc0A2zWh/Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2RhAzpk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707997216; c=relaxed/simple;
+	bh=XOmFwEgF2lBVOJw21YXYeq1SQ3k9S4U93oHX8oPUCeg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=itysCkBSLQn8+587fas47S2CER8Kiwvk7YzEWfiQIJBqXzxASA2rjeTxphCeRu/jdfXlZMKrvosRxES8rVLYkKNymmZRVvmGSrIMy31FUrpxQ83dmIQMvXrsvYKO4MwhTDtdD+mILIuBoVhsst1DyzFNk07oVdppgPnViFXI7/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q2Nyr9GO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2RhAzpk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17D44C433C7;
-	Thu, 15 Feb 2024 11:14:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q2Nyr9GO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 093F9C433F1;
+	Thu, 15 Feb 2024 11:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707995677;
-	bh=203dncLlnLrNRgqQ9ugdf3OCZXld/JR9ug9GegLe5S0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c2RhAzpkXToS/j6CIySoSArcSeimbiQ9ZjzSTmrkLpcj3FuTWFsKxTiXTSQVkidKq
-	 ETaCwi/5hcv/YNO0q4CZJJImtbut7v6CFHPynCR7cLtGrq99OEmFVoJ6GQGZci+/G4
-	 5I/TGwB/4/t4OpxYghbZbmLmVxpSzGxnwcY0pdRtVhjzP14rFvD3j1nX3I0YC8rIdB
-	 c/GXz5UeSjzJjw142Dz9QfdqBoQEiHWK44dnHi/R4Qy0B6AyUuiFVoh50dodcqSO1I
-	 /zsFtAgdmyNYUXM7kf1GjdD2Ib/lphQbmmmBV6gqoNujFiO0PmPcJ83aY6ecQQg8VK
-	 EBeD+s96ZGTsQ==
-Message-ID: <a2570555-d265-40b0-b2d8-c871799f7751@kernel.org>
-Date: Thu, 15 Feb 2024 12:14:34 +0100
+	s=k20201202; t=1707997216;
+	bh=XOmFwEgF2lBVOJw21YXYeq1SQ3k9S4U93oHX8oPUCeg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=q2Nyr9GOYy9KoiG3VHB/VA7dBJPcJYKAThbFuResJ+jAhAb5kQGPSRoquFvbL/TQr
+	 YglGA37TPmjofd/2HkLUXee+zvQbw71jfkqTBKsaanDWRI5pVI6dLc9pIs/n25q0af
+	 OvHxjJ1SIYTwBF83vmg1eNZzNJ/KmVc/IbKLZ3mcZckX6hSf30Vhin92lwwzOWgdzh
+	 yxCof0ivqOtShF1F8ddq88yT/SymDozVPSJNvivTEqrGfywLMNe3YJr9Ti46CzBGCj
+	 FzEUn8KP4JElAFH0CcY4JX7y9RJ5OaTZPOKIgukuY49B8hf/CVZhun0Uh842CnnK9l
+	 B0kqNneS1uy0Q==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next v4 0/3] mptcp: check the protocol with DEBUG_NET
+Date: Thu, 15 Feb 2024 12:40:01 +0100
+Message-Id: <20240215-mptcp-check-protocol-v4-0-16e932665e21@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: stop forcing iptables-legacy
-Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20240207-selftests-mptcp-iptables-nft-v1-1-108de489316e@kernel.org>
- <513aac1d-35e2-6505-5cf9-b2920fe0e361@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <513aac1d-35e2-6505-5cf9-b2920fe0e361@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABH4zWUC/33NQQ6CMBAF0KuQrq2ZtpSKK+9hXGAZoEFbUpoGQ
+ 7i7DS7UGFz+/PlvZjKiNziSYzYTj9GMxtkU8l1GdFfZFqmpUyYceA5MMHofgh6o7lD3dPAuOO1
+ uFAVHKWrIKyVJmg4eGzOt7Jm8FhanQC6p68wYnH+sHyNbL/7jkVGgFRRQqAauNRxOPXqLt73z7
+ SpG/lY4bCk8KQy5FNhIVpbwo4hPRW0oIilK6aLUsiwaKb+UZVme/pkuAVEBAAA=
+To: mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1958; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=XOmFwEgF2lBVOJw21YXYeq1SQ3k9S4U93oHX8oPUCeg=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlzfgeBxfPGCTQoJOvgpQPa+EZk1B99Po/7SsiX
+ Oz74lehsSWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZc34HgAKCRD2t4JPQmmg
+ c33FD/4oh4a3ZvrDL2YtvBF8WoRioX7Wm0SP/njVeHjzd0x3/ZPOUFZ+num+FOhoQpx/0dz8dFg
+ 9YdT4KuAMzYHvULdMu+ONt5WDZXrOdLZnGnrAN3NmUk7jpCzH5lesDNOgZOixgYA5XswRMNm72G
+ O9Zl+3grL9SCRb5Uwa7TUpluyowdycZkme215oGf3CRAiZy5+8WyH6ucFL4GZHL6QxBydkDp0ZZ
+ zQsTUD5XZBBWtH1XoMTP9SmQPh2YOPSD0kgYK1BKlVjNyTeHu9p7bHxoQQG9T0YI0cIpbb09lou
+ QUqLT3HsqZlaPmUR0eSRFfSCyViEaqyqU/rOqKMEMwMTdtEpriTi+7zGp5iAIeuj05tu82bOVyS
+ wQWRri6N2kBc3JJCa1Th9QsZjVKuJwd2sy78/H/j4Jk+/e9/8ZanMlHyXi/5GdRI9BUYyoKKUzP
+ nRbphfMYlr2lL7I/7fzUxML8N9n2gOgcecKK1zqsJq1DkE7nCb5z4RBw7rxDXed43K9dljqbf3D
+ wZ3BZXrVW8UZg3jTLu3inlgH/SCSfsF+O4UinGgV/JU5nlnOzca+UGtEGEp2jbjDjlFjdcWSd60
+ h7bwC7VtjKZvonzT+LdOZ4rmEzqxWOR+/IQJJJz2VK0vJazozTx+JXvABMH0vujFKAqyYfQXGAg
+ OnklUHvHUOzhymA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Mat,
+Recently, Paolo fixed a bug where a TCP-specific helper was used with an
+MPTCP socket [1]. The bug was not detected by fuzzer or static analysis.
 
-On 14/02/2024 20:09, Mat Martineau wrote:
-> On Wed, 7 Feb 2024, Matthieu Baerts (NGI0) wrote:
-> 
->> Commit 0c4cd3f86a40 ("selftests: mptcp: join: use 'iptables-legacy' if
->> available") and a5a5990c099d ("selftests: mptcp: sockopt: use
-> 
-> Hi Matthieu -
-> 
-> You can add the word "commit" right before "a5a5990c099d" in the commit
-> message and that will satisfy checkpatch.
+Following this, it has been suggested to add a check, only in debug
+mode. This is what this series is doing.
 
-Good idea! I ignored the warning because there was already a "Commit"
-before -- should have been "commit*s*" in fact --, but best to add this
-second 'commit' to avoid a warning on Netdev's patchwork!
+The series has been split to be upstreamed: a preparation patch for
+MPTCP, the modification for TCP, then for MPTCP. It is not clear if it
+would be OK to add that upstream. If not, we can squash these three
+patches in "DO-NOT-MERGE: mptcp: improve code coverage for CI" commit we
+have in our export tree.
 
-> Fine to do that when applying
-> this to the topgit tree
+Note that the MPTCP Token kUnit test needs to be adapted for this new
+check. This is what is done in patch 1/3.
 
-Just did that!
+Link: https://lore.kernel.org/mptcp/35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com/ [1]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v4:
+- Patch 2 and 3 have been modified, please the changelog on each patch
+- Link to v3: https://lore.kernel.org/r/20240207-mptcp-check-protocol-v3-0-77c69c596f55@kernel.org
 
-> everything else LGTM:
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+Changes in v3:
+- Patch 2 and 3 have been modified, please the changelog on each patch
+- Link to v2: https://lore.kernel.org/r/20240201-mptcp-check-protocol-v2-0-1e253ef51990@kernel.org
 
-Thank you for the review!
+Changes in v2:
+- Patch 2 and 3 have been modified, please the changelog on each patch
+- Link to v1: https://lore.kernel.org/r/20240131-mptcp-check-protocol-v1-0-a06067f0bd08@kernel.org
 
-Now in our tree (feat. for -next):
+---
+Matthieu Baerts (NGI0) (3):
+      mptcp: token kunit: set protocol
+      mptcp: check the protocol in tcp_sk() with DEBUG_NET
+      mptcp: check the protocol in mptcp_sk() with DEBUG_NET
 
-New patches for t/upstream:
-- 55900e5db350: selftests: mptcp: stop forcing iptables-legacy
-- Results: ce1856db2249..52e05de42e10 (export)
+ net/mptcp/protocol.h   | 16 ++++++++++++++++
+ net/mptcp/token_test.c |  7 ++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+---
+base-commit: 52e05de42e1094a943053af93ea08c51a44091f7
+change-id: 20240131-mptcp-check-protocol-e32e53d04a75
 
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240215T111117
-
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
