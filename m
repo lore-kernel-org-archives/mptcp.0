@@ -1,125 +1,134 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291FA58AC7
-	for <mptcp@lists.linux.dev>; Thu, 15 Feb 2024 11:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA7F66B2D
+	for <mptcp@lists.linux.dev>; Thu, 15 Feb 2024 11:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707995599; cv=none; b=aIwZjEdfljeuZ1rwZMnBz+aB7MbxgeMKOdHmjxoyVcH5KbednVl4NygdGYCka91RPxVruGxW2WEz6gIS0EIfNUZLi4kZwB7DN6JqIH7NtDy8Z6wOT1U90UuGuvHWBrnPUExpuUSFE1EVbf865p4FQw4rqS1y9mrdLji4uidqT9k=
+	t=1707995678; cv=none; b=itBzNZM5saGZTAUGrAW1ItnCS4nDUq4zAn3X8OsSfSBFcSENRjhU6XJpl6pXXt8k/AgjpflA6VGTLMC9vR82qzOiC4nhJPS8x/KyQHoygO8t0SeG3T/TtMOeJqWwxkv35xTuBzE+8MaA/YHR6y/XrxHJDorwLf0TCt0l+rRlkhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707995599; c=relaxed/simple;
-	bh=QSY3HmCcVbZyXUahsw+gLnB+Ti1EAQsayaWBcIWNYtY=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=SvXUWE1xySCvT9MR5CNevoM9I/+a5POhUm8UjlA/xNlgoRWmA8rAZIRRE7U3VSm6aM0t41L4fG/kKKpNZpbwHIwzbLVdfaYWwIugJ3tKBafB2fNGcxJirdVxxp+BRyQwkKox5Zo7faOhDmBfWEuAD3Fbd+1VJu5M+1tYxruth4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S985qThl; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707995678; c=relaxed/simple;
+	bh=203dncLlnLrNRgqQ9ugdf3OCZXld/JR9ug9GegLe5S0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l/yu3UJ5RQevor2Gw4ofvi0fE7E3tjnxlIWR7OFGTuRAc2C3ivGdbvOhTsXzoqqPnZHJpJ61brHOxy5nbklrV3/YDEF+FDAKYmJv9WOQcE12jDU4X8QBq4mlKfHWudJG1k58AKo6oFuZS7Yg/npotLK96pYP0Y5dkc0A2zWh/Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2RhAzpk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S985qThl"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d95d67ff45so5322555ad.2
-        for <mptcp@lists.linux.dev>; Thu, 15 Feb 2024 03:13:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707995597; x=1708600397; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=56Vl4py+LA67xOkwFnasneGtBzVFNsKPZ4q11Lj5amE=;
-        b=S985qThlGf1ey/gSxdSPyJ0l1oDM77jPxEkjvzV2wCpWngbPOKJEZWREcapWaPtNWJ
-         qU3tELiJ2vBwXDs++5rzbSfm7GJwCrTTmojnIfyhKawn8gwzwBHuwcqwXsdIVxcSot7F
-         nomrfPkhVplP3SKVzuVpl4rPJc5g8FnPPBLktwTmIoPAedlefdWTKajQfTRj1e71Iu/y
-         20inj/d1jbLSJsz3HYo4gf39hn2QR2tgr2+UZegDRhc/GcO1dugmSrVQTfvm/zNRaRdB
-         mlI14qEotzHldTqhUnKHgX8nyNMlFfO6fMdHxchzLXX9V6w4/fRgdsaBy1+5+wpPbz8t
-         8i0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707995597; x=1708600397;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=56Vl4py+LA67xOkwFnasneGtBzVFNsKPZ4q11Lj5amE=;
-        b=C1ILR5/4tzyAc18JuVAkNI/VPbvdRXvxQ5AcbgVclww3pRZRdPtJYuDGxdT2JF5qoq
-         Cgh09A8aGe7dHwewO2Y5cGG2vgHuQcao0qIuADTsm4suY27MtWmgnu1fGUuyj+/KIZqZ
-         svXAgSBXSn0HjnLuKxfuTrO9gPaaUNi0KfpEvPMYPZ2aVfUb6K7P0cz4pNC8FluQILyp
-         hz0IQFP+hW1rQisFQyVuJbB8hp7Hpiv80pGPXPd2VU5OEhzeCxgt5VuwMqUn8LUGlxDX
-         mZSu5CGr55vY6O+8kUaDPXnQVfCf+hS/o7fKYSCnyRd81SwJ7lTDVDUTzITyPVcqSRIK
-         8rrQ==
-X-Gm-Message-State: AOJu0YykaoVWsUzhcrLH4zvbaNyxOifnEw1gK9VGFg4AFb8JwKU4T2RS
-	3ONWo9ZMJFnMr/QueSrDucLgpn4rDMVolN2howpBV80CFW+myas=
-X-Google-Smtp-Source: AGHT+IHrAOcm/1+eOVVUW8d+/tkkaVJw9M2TlwzRXsTWyGxn3jNYPRVAm4C3nhoOx62xAreSyu6LWw==
-X-Received: by 2002:a17:902:e80b:b0:1db:716e:e9c0 with SMTP id u11-20020a170902e80b00b001db716ee9c0mr1413418plg.41.1707995597065;
-        Thu, 15 Feb 2024 03:13:17 -0800 (PST)
-Received: from [127.0.0.1] ([20.171.70.52])
-        by smtp.gmail.com with ESMTPSA id i18-20020a17090320d200b001d9606aac46sm1030667plb.212.2024.02.15.03.13.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 03:13:16 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240214195407.3175-1-kuniyu@amazon.com>
-References: <20240214195407.3175-1-kuniyu@amazon.com>
-Subject: Re: net: Deprecate SO_DEBUG and reclaim SOCK_DBG bit.: Tests
- Results
-Message-ID: <dd15c73a-601a-10c2-e138-a43e7003fd48@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 15 Feb 2024 11:13:15 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2RhAzpk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17D44C433C7;
+	Thu, 15 Feb 2024 11:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707995677;
+	bh=203dncLlnLrNRgqQ9ugdf3OCZXld/JR9ug9GegLe5S0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=c2RhAzpkXToS/j6CIySoSArcSeimbiQ9ZjzSTmrkLpcj3FuTWFsKxTiXTSQVkidKq
+	 ETaCwi/5hcv/YNO0q4CZJJImtbut7v6CFHPynCR7cLtGrq99OEmFVoJ6GQGZci+/G4
+	 5I/TGwB/4/t4OpxYghbZbmLmVxpSzGxnwcY0pdRtVhjzP14rFvD3j1nX3I0YC8rIdB
+	 c/GXz5UeSjzJjw142Dz9QfdqBoQEiHWK44dnHi/R4Qy0B6AyUuiFVoh50dodcqSO1I
+	 /zsFtAgdmyNYUXM7kf1GjdD2Ib/lphQbmmmBV6gqoNujFiO0PmPcJ83aY6ecQQg8VK
+	 EBeD+s96ZGTsQ==
+Message-ID: <a2570555-d265-40b0-b2d8-c871799f7751@kernel.org>
+Date: Thu, 15 Feb 2024 12:14:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: stop forcing iptables-legacy
+Content-Language: en-GB, fr-BE
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240207-selftests-mptcp-iptables-nft-v1-1-108de489316e@kernel.org>
+ <513aac1d-35e2-6505-5cf9-b2920fe0e361@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <513aac1d-35e2-6505-5cf9-b2920fe0e361@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Kuniyuki,
+Hi Mat,
 
-Thank you for your modifications, that's great!
+On 14/02/2024 20:09, Mat Martineau wrote:
+> On Wed, 7 Feb 2024, Matthieu Baerts (NGI0) wrote:
+> 
+>> Commit 0c4cd3f86a40 ("selftests: mptcp: join: use 'iptables-legacy' if
+>> available") and a5a5990c099d ("selftests: mptcp: sockopt: use
+> 
+> Hi Matthieu -
+> 
+> You can add the word "commit" right before "a5a5990c099d" in the commit
+> message and that will satisfy checkpatch.
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+Good idea! I ignored the warning because there was already a "Commit"
+before -- should have been "commit*s*" in fact --, but best to add this
+second 'commit' to avoid a warning on Netdev's patchwork!
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_regressions =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/6157288147255296
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6157288147255296/su=
-mmary/summary.txt
+> Fine to do that when applying
+> this to the topgit tree
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5594338193833984
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5594338193833984/summary/summary.txt
+Just did that!
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/4b23a08aba91
+> everything else LGTM:
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
+Thank you for the review!
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+Now in our tree (feat. for -next):
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+New patches for t/upstream:
+- 55900e5db350: selftests: mptcp: stop forcing iptables-legacy
+- Results: ce1856db2249..52e05de42e10 (export)
 
-For more details:
+Tests are now in progress:
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240215T111117
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
