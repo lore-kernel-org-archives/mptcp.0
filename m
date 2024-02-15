@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F8A4A08
-	for <mptcp@lists.linux.dev>; Thu, 15 Feb 2024 11:40:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FB2433B1
+	for <mptcp@lists.linux.dev>; Thu, 15 Feb 2024 11:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707997216; cv=none; b=OU0woh7bC7l4LZiT68JPIF2l8v/XrSfYZEKbiq/Wv9XpJZNoIBa5emJ7E6MKimbyA0g7NiiHA+o5532hLn3sPnS6teQD2PKZkeDHYTGaQQmZ/P0yo1WsCz/GihHPCiY/ZUYk6P3OFIB5oJcNxAH6CzwLkgvEPqvCD0H0w7lVO64=
+	t=1707997218; cv=none; b=vF14EKPnPlt2W4ikNrpDVGVQrJtIpNnv2jCWJXwiBOWili2L8DF4MXgYUAujuBJIxibCMN8H97TRdp5CszjAYzR+Wzit5eIpFHmR9C87MUVstCmzWqxyyJTmx8Ns6gbUXe00bwpMuGcAyrtsjE0/5C/6IStcZ8vn1ceV782NEKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707997216; c=relaxed/simple;
-	bh=XOmFwEgF2lBVOJw21YXYeq1SQ3k9S4U93oHX8oPUCeg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=itysCkBSLQn8+587fas47S2CER8Kiwvk7YzEWfiQIJBqXzxASA2rjeTxphCeRu/jdfXlZMKrvosRxES8rVLYkKNymmZRVvmGSrIMy31FUrpxQ83dmIQMvXrsvYKO4MwhTDtdD+mILIuBoVhsst1DyzFNk07oVdppgPnViFXI7/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q2Nyr9GO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707997218; c=relaxed/simple;
+	bh=uCboPJ0LRaDIGMdWuBXqejhsmk8WqCnmSpXCIwZJHFI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SXj1y0JjpHKwio9hk30nkw9tOknRXilmXTOBBxfqhjprhsa/wPpx9M+xd/pjYq2Cdr78+kYar2V5NEQzjLLAAjhLUE2hsd2zqJJ2ZVJQuSv93TMDk9bbQ4onGL/obsZTke1QNUckQz1lNEnevNAHIxf90glcJ9e5H5JQIQoWTV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qsN81ax3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q2Nyr9GO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 093F9C433F1;
-	Thu, 15 Feb 2024 11:40:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qsN81ax3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBBD7C433F1;
+	Thu, 15 Feb 2024 11:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707997216;
-	bh=XOmFwEgF2lBVOJw21YXYeq1SQ3k9S4U93oHX8oPUCeg=;
-	h=From:Subject:Date:To:Cc:From;
-	b=q2Nyr9GOYy9KoiG3VHB/VA7dBJPcJYKAThbFuResJ+jAhAb5kQGPSRoquFvbL/TQr
-	 YglGA37TPmjofd/2HkLUXee+zvQbw71jfkqTBKsaanDWRI5pVI6dLc9pIs/n25q0af
-	 OvHxjJ1SIYTwBF83vmg1eNZzNJ/KmVc/IbKLZ3mcZckX6hSf30Vhin92lwwzOWgdzh
-	 yxCof0ivqOtShF1F8ddq88yT/SymDozVPSJNvivTEqrGfywLMNe3YJr9Ti46CzBGCj
-	 FzEUn8KP4JElAFH0CcY4JX7y9RJ5OaTZPOKIgukuY49B8hf/CVZhun0Uh842CnnK9l
-	 B0kqNneS1uy0Q==
+	s=k20201202; t=1707997217;
+	bh=uCboPJ0LRaDIGMdWuBXqejhsmk8WqCnmSpXCIwZJHFI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=qsN81ax3SrOqCmj6TOD4pPXe8OG3VZ8BIUE2xy3ZC5WVAYo+Uy4JTgJpfqR6ruq6e
+	 BSPM3CNpzb+0rRX4puNNJuApgWnkvSBReVpk2FN0U+JAAOwejnTsl6WPzsqvbPLzMk
+	 py+m/6vgHodCnvMFyQ0J+qDiTOLzsrTi6rp0Fws0zNo4GMZY+Yp0GAnlqcKA2qGASZ
+	 VELgc+6oyVTChqr7gIfQWnptt5Nclq4xsKxEsa3F8AhzLS3JBuPxdY6GRNtLxhhWNo
+	 wqqLZZZ1cC5BdkmscysN3VJoxQ6oYptoWnVTP6AclgPU3piF42Dmbadxw+OpFDD1so
+	 jEQQ+WQNkf0jA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next v4 0/3] mptcp: check the protocol with DEBUG_NET
-Date: Thu, 15 Feb 2024 12:40:01 +0100
-Message-Id: <20240215-mptcp-check-protocol-v4-0-16e932665e21@kernel.org>
+Date: Thu, 15 Feb 2024 12:40:02 +0100
+Subject: [PATCH mptcp-next v4 1/3] mptcp: token kunit: set protocol
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,75 +37,67 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABH4zWUC/33NQQ6CMBAF0KuQrq2ZtpSKK+9hXGAZoEFbUpoGQ
- 7i7DS7UGFz+/PlvZjKiNziSYzYTj9GMxtkU8l1GdFfZFqmpUyYceA5MMHofgh6o7lD3dPAuOO1
- uFAVHKWrIKyVJmg4eGzOt7Jm8FhanQC6p68wYnH+sHyNbL/7jkVGgFRRQqAauNRxOPXqLt73z7
- SpG/lY4bCk8KQy5FNhIVpbwo4hPRW0oIilK6aLUsiwaKb+UZVme/pkuAVEBAAA=
+Message-Id: <20240215-mptcp-check-protocol-v4-1-16e932665e21@kernel.org>
+References: <20240215-mptcp-check-protocol-v4-0-16e932665e21@kernel.org>
+In-Reply-To: <20240215-mptcp-check-protocol-v4-0-16e932665e21@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1958; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=XOmFwEgF2lBVOJw21YXYeq1SQ3k9S4U93oHX8oPUCeg=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlzfgeBxfPGCTQoJOvgpQPa+EZk1B99Po/7SsiX
- Oz74lehsSWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZc34HgAKCRD2t4JPQmmg
- c33FD/4oh4a3ZvrDL2YtvBF8WoRioX7Wm0SP/njVeHjzd0x3/ZPOUFZ+num+FOhoQpx/0dz8dFg
- 9YdT4KuAMzYHvULdMu+ONt5WDZXrOdLZnGnrAN3NmUk7jpCzH5lesDNOgZOixgYA5XswRMNm72G
- O9Zl+3grL9SCRb5Uwa7TUpluyowdycZkme215oGf3CRAiZy5+8WyH6ucFL4GZHL6QxBydkDp0ZZ
- zQsTUD5XZBBWtH1XoMTP9SmQPh2YOPSD0kgYK1BKlVjNyTeHu9p7bHxoQQG9T0YI0cIpbb09lou
- QUqLT3HsqZlaPmUR0eSRFfSCyViEaqyqU/rOqKMEMwMTdtEpriTi+7zGp5iAIeuj05tu82bOVyS
- wQWRri6N2kBc3JJCa1Th9QsZjVKuJwd2sy78/H/j4Jk+/e9/8ZanMlHyXi/5GdRI9BUYyoKKUzP
- nRbphfMYlr2lL7I/7fzUxML8N9n2gOgcecKK1zqsJq1DkE7nCb5z4RBw7rxDXed43K9dljqbf3D
- wZ3BZXrVW8UZg3jTLu3inlgH/SCSfsF+O4UinGgV/JU5nlnOzca+UGtEGEp2jbjDjlFjdcWSd60
- h7bwC7VtjKZvonzT+LdOZ4rmEzqxWOR+/IQJJJz2VK0vJazozTx+JXvABMH0vujFKAqyYfQXGAg
- OnklUHvHUOzhymA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1184; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=uCboPJ0LRaDIGMdWuBXqejhsmk8WqCnmSpXCIwZJHFI=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlzfge/pF3aM0PypTWAngC+cOFobG6J8uvf0s3K
+ WzbPlVN9RWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZc34HgAKCRD2t4JPQmmg
+ cwMqD/4keG0Z57qB3VeJjvDaRFgQI9uQK1cqPTBjfdpcI47nQi/lROp9scWB/qp285l2soY+d0S
+ kvsL2JLDabr0PsW2+uJtY/m4zPsPi3RI5dl0dsVx0EFNQXo45+XfEwJ9OnH+YHmPoK2jdzfercG
+ 6BsUm/SwW8WrtYOjVCWJcdwzB9fBZ3mxQY8Q/Vf2b5O/vSXYs8eCnPxZtrQIoBI5GRZJf3/2H33
+ c/4Z3/xsdPkFDwENumU3Ajv2tM+zhQXlkCIf8BDGUPYIbi+3/rgdElqWbukTap6EDE2aurllYA2
+ mhhCDTjruomt1DVLU+8DoFKAozGb3LPNDpaclwUfkirdkO9a+1PjHZO/cjQMNIuqfjXmR2z/KG6
+ AOjxrRELXD7KO77t0wfxFsNwFofDGyaXbzUGDmtSU2hnQISpHAdug7owVy8YK4o+FeqENzWRtbL
+ smekq4mgcgoU4o1tAsaeAJqzZKn2LP7VkCGEkdV9c1lFS4rUbJSa2mVCDxfzwfwsyUvzZmoTEkg
+ VzReA5Or5GcZfZUnHgBuuLZvDFBvHSntPLsgvXs34phRgHamMeb+o6GV7DdnNnMD4sA9kzl8T/n
+ 2Y691jrL+vg52jYzqRarjywYluYlxQrGH5levAL9O2XxgYO/iIMMwGUKwHeQ6Bu2EG3sk/Wyqb6
+ gqkQ2M/olYXDRlw==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Recently, Paolo fixed a bug where a TCP-specific helper was used with an
-MPTCP socket [1]. The bug was not detected by fuzzer or static analysis.
+As it would be done when initiating an MPTCP sock.
 
-Following this, it has been suggested to add a check, only in debug
-mode. This is what this series is doing.
+This is not strictly needed for this test, but it will be when a later
+patch will check if the right protocol is being used when calling
+mptcp_sk().
 
-The series has been split to be upstreamed: a preparation patch for
-MPTCP, the modification for TCP, then for MPTCP. It is not clear if it
-would be OK to add that upstream. If not, we can squash these three
-patches in "DO-NOT-MERGE: mptcp: improve code coverage for CI" commit we
-have in our export tree.
-
-Note that the MPTCP Token kUnit test needs to be adapted for this new
-check. This is what is done in patch 1/3.
-
-Link: https://lore.kernel.org/mptcp/35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com/ [1]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v4:
-- Patch 2 and 3 have been modified, please the changelog on each patch
-- Link to v3: https://lore.kernel.org/r/20240207-mptcp-check-protocol-v3-0-77c69c596f55@kernel.org
+ net/mptcp/token_test.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Changes in v3:
-- Patch 2 and 3 have been modified, please the changelog on each patch
-- Link to v2: https://lore.kernel.org/r/20240201-mptcp-check-protocol-v2-0-1e253ef51990@kernel.org
+diff --git a/net/mptcp/token_test.c b/net/mptcp/token_test.c
+index bfff53e668da..4fc39fa2e262 100644
+--- a/net/mptcp/token_test.c
++++ b/net/mptcp/token_test.c
+@@ -52,14 +52,19 @@ static struct mptcp_subflow_context *build_ctx(struct kunit *test)
+ static struct mptcp_sock *build_msk(struct kunit *test)
+ {
+ 	struct mptcp_sock *msk;
++	struct sock *sk;
+ 
+ 	msk = kunit_kzalloc(test, sizeof(struct mptcp_sock), GFP_USER);
+ 	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, msk);
+ 	refcount_set(&((struct sock *)msk)->sk_refcnt, 1);
+ 	sock_net_set((struct sock *)msk, &init_net);
+ 
++	sk = (struct sock *)msk;
++
+ 	/* be sure the token helpers can dereference sk->sk_prot */
+-	((struct sock *)msk)->sk_prot = &tcp_prot;
++	sk->sk_prot = &tcp_prot;
++	sk->sk_protocol = IPPROTO_MPTCP;
++
+ 	return msk;
+ }
+ 
 
-Changes in v2:
-- Patch 2 and 3 have been modified, please the changelog on each patch
-- Link to v1: https://lore.kernel.org/r/20240131-mptcp-check-protocol-v1-0-a06067f0bd08@kernel.org
-
----
-Matthieu Baerts (NGI0) (3):
-      mptcp: token kunit: set protocol
-      mptcp: check the protocol in tcp_sk() with DEBUG_NET
-      mptcp: check the protocol in mptcp_sk() with DEBUG_NET
-
- net/mptcp/protocol.h   | 16 ++++++++++++++++
- net/mptcp/token_test.c |  7 ++++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
----
-base-commit: 52e05de42e1094a943053af93ea08c51a44091f7
-change-id: 20240131-mptcp-check-protocol-e32e53d04a75
-
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.43.0
 
