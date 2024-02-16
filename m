@@ -1,147 +1,149 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D427219ED
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 17:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB693135A6E
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 19:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708105046; cv=none; b=fy7I9k3JGw1emP0yrjII2N36hUNs5jm7U703365Phr0CvkBi5PMt64oDEOwvHaDqMajX44hV/4ynQD51pqjumgFgUzmiFbXUZTF8erOQZNNSbx21L07Fxfbz0OAN9EQBpkEggBl5+pS6/5l6AS8mAgsKcj4zLEWWDXrxhQhvWhM=
+	t=1708111908; cv=none; b=sNr4hh9pYT+F52D54YBID2qkXuwsncDlYK6EPAeaFQmhRLk7vQNHHNMbZPE2+3+bxNUNTtx19VmfQ2rqtmPFytAaL/CsFs1JFSn/U0hreY4V5IjeRRCyNu9AXZCFcrC6Lmg5845jUOKCh9JBIIj3yc40RiZ3IVdSNnGupaw4MZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708105046; c=relaxed/simple;
-	bh=8zgHGk2XYlc0eyYqGvAJfbnqxqiQENrlYr45nngj+qM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RkBoRQtJDeOwbnYXapPDIBI1/xydXVaZJoj458gefQu+BrgYL9AcU7SgglXYB1pAcoL7cAfM6YOMOUskCl+EeE/k7b2B/2HCtIXInt1Xln2rZbwH48FjGjOkct3vcBNLZ5/J48n7WIHEjqEzl337T8/jUi9lVHEDoZ5+M7dJ/dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-363c06d9845so21756745ab.1
-        for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 09:37:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708105043; x=1708709843;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uZRU6Lm8OXebtHymXF/bT845gS+j9fCEUbQMNuXasxk=;
-        b=QUHIbHRhk0/nkuuGo0qjadVRKMrLGdH1Tt4tLsW5v9g5zqIFl6D4PvEhFuv4WYAL3K
-         8kb+8wr90DYW72mV+VQWv41FcbwZrKh0wUA3CvedavkL7NKT0Rl5vg1OBF6iyebI58Cz
-         4dXc5uHbCcShzkFM+eEXTjFc85k++XhSARnTEM56fHmm45OL9P4XQsmCJJmteQ0BfAw1
-         eqN16DYiQwg04/HD+OjzPuDbI4K3+MNy5zOihRHnO+s9A2e01Zmkmx2SRaF5DtbRpU9W
-         Fov8D3KoXPppVxi6mq/yeMYPOdCYHN+5bHB52uhF/rrCktAd8x56lWeUMwKEhXYkLERc
-         +y/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUmd1rekfyqFuSRjMLjJtzApeBVtIX7YVf990zh0EjM5vdaXe38XWcurzW2tz4xoGIIItLj+vDxR6VfzpT4iRw4ZR1PfdA=
-X-Gm-Message-State: AOJu0Ywhg4rb+ACVIfn2Zb48nwx2eLIYaKTn6K6zDQNX8pR9q//fTxi1
-	gvwiRDv5iOxzNgsRxCffeklleoQv8ySD4MoNCslNx+tVAldvzx2lfJWTXoWg+rb9zAT01TU/uE+
-	W0ChnYdLZwo7b9JJGki+nqwzyvvMjZEHj8IMXOLRUP/Pe5g+mkhdpqMU=
-X-Google-Smtp-Source: AGHT+IFlUi7Ug1pKYpl/xwhk2Po0PLq9/qTn4i4DlUDJuC9qfpEk75VqoJzOzWOMKWa/qnJCXnf1n4e7LlwpVcw01j+du1rEWOep
+	s=arc-20240116; t=1708111908; c=relaxed/simple;
+	bh=7+csAigUWuwY8Ut4yMvDHcTCOF3ZRZp2A7fq+V1xH5E=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=F1loYG1WZYgNbsLKwfRK5Z8VwCX9l/DoTB5cmkPuApD2Gy/nAJStahPGPKiFGbNc5XOzXsrY77sD8jOB8w1BarPQD9E9Yi2j3AZVs+dr4XsK6+iTUVjAu6gMbr75V4t2gJdzOWM9FuRHKv5KbK4ZR9AlW1YtPpWA6+ZLtocZ3QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4bwR4NG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4bwR4NG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58F47C433F1;
+	Fri, 16 Feb 2024 19:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708111908;
+	bh=7+csAigUWuwY8Ut4yMvDHcTCOF3ZRZp2A7fq+V1xH5E=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=H4bwR4NGW3c19PbdYjho8TK4chS09SadEl2kJOV4TYEkOEIOh1gULfgX8bRzk7VnS
+	 qiu30wXDiVfjLw0cpSNrtWu8BM1raCiuMJtLjNx4p4xGmO6H81ayDUtiTMGE1mqxw8
+	 1cTG3zVZ+/wv56VccynYXvWJyH8YMHyIh90/MQ8YcpU2X4VaZF8rNj48LSbVn47LmF
+	 Ovps59ULRK4+dk/vDQDii+h84G/i2NzKeFEqxoVGaQPlH3zSnMMcrkIp2z5sPECsvd
+	 Le+GGUgE3UDpVLwLiAJ97uRAi58QvXS3IsGd1kGq3ujXGnu0CIM7WGNWvrXJZMqI0Z
+	 sz35WaQDyQrEg==
+Date: Fri, 16 Feb 2024 11:31:47 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v13 00/14] dump for userspace pm
+In-Reply-To: <cover.1708069036.git.tanggeliang@kylinos.cn>
+Message-ID: <9e8283b2-563f-cf6d-15ae-d5b3241951a6@kernel.org>
+References: <cover.1708069036.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c26d:0:b0:363:c8ba:ea5a with SMTP id
- h13-20020a92c26d000000b00363c8baea5amr344499ild.6.1708105043656; Fri, 16 Feb
- 2024 09:37:23 -0800 (PST)
-Date: Fri, 16 Feb 2024 09:37:23 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005dc7ce0611833268@google.com>
-Subject: [syzbot] [mptcp?] WARNING in __mptcp_clean_una
-From: syzbot <syzbot+5b3e7c7a0b77f0c03b0d@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang.tang@linux.dev, 
-	geliang@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hello,
+On Fri, 16 Feb 2024, Geliang Tang wrote:
 
-syzbot found the following issue on:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> v13:
+> - fix the typo in patch #3.
+> - add 'mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"' checks.
+> - add 'mptcp_lib_kallsyms_has "mptcp_userspace_pm_get_addr$"' checks.
+> - drop "userspace pm dump address/subflow" tests, test it in "userspace
+>   pm add & remove address" and "userspace pm create destroy subflow"
+>   tests instead.
+>
 
-HEAD commit:    4f5e5092fdbf Merge tag 'net-6.8-rc5' of git://git.kernel.o..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=129f6398180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1d7c92dd8d5c7a1e
-dashboard link: https://syzkaller.appspot.com/bug?extid=5b3e7c7a0b77f0c03b0d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fc9c8a180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d0cc1c180000
+Thanks for the adjustments to the tests, v13 looks good for the export 
+branch!
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/d430539932db/disk-4f5e5092.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6369586e33b7/vmlinux-4f5e5092.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9c1e38f80254/bzImage-4f5e5092.xz
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-The issue was bisected to:
-
-commit 3f83d8a77eeeb47011b990fd766a421ee64f1d73
-Author: Paolo Abeni <pabeni@redhat.com>
-Date:   Thu Feb 8 18:03:51 2024 +0000
-
-    mptcp: fix more tx path fields initialization
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=160a83a4180000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=150a83a4180000
-console output: https://syzkaller.appspot.com/x/log.txt?x=110a83a4180000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5b3e7c7a0b77f0c03b0d@syzkaller.appspotmail.com
-Fixes: 3f83d8a77eee ("mptcp: fix more tx path fields initialization")
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 27 at net/mptcp/protocol.c:1001 __mptcp_clean_una+0xb89/0xd70 net/mptcp/protocol.c:1001
-Modules linked in:
-CPU: 1 PID: 27 Comm: kworker/1:1 Not tainted 6.8.0-rc4-syzkaller-00180-g4f5e5092fdbf #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-Workqueue: events mptcp_worker
-RIP: 0010:__mptcp_clean_una+0xb89/0xd70 net/mptcp/protocol.c:1001
-Code: 8d 0d a5 f6 e9 7d fc ff ff 44 89 f1 80 e1 07 38 c1 0f 8c 87 fc ff ff 4c 89 f7 e8 72 0d a5 f6 e9 7a fc ff ff e8 98 f0 42 f6 90 <0f> 0b 90 49 bc 00 00 00 00 00 fc ff df e9 29 f7 ff ff 44 89 f1 80
-RSP: 0018:ffffc90000a2f860 EFLAGS: 00010293
-RAX: ffffffff8b507ba8 RBX: ffff888024ee3ab8 RCX: ffff8880192e9dc0
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc90000a2f950 R08: ffffffff8b507228 R09: fffff52000145f24
-R10: dffffc0000000000 R11: fffff52000145f24 R12: dffffc0000000000
-R13: 1ffff11004a6e000 R14: 0000000000000000 R15: ffff888025370000
-FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8a82c561d0 CR3: 000000007d8b6000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __mptcp_clean_una_wakeup+0x7f/0x340 net/mptcp/protocol.c:1049
- mptcp_clean_una_wakeup net/mptcp/protocol.c:1056 [inline]
- __mptcp_retrans+0xbf/0xb20 net/mptcp/protocol.c:2587
- mptcp_worker+0xd13/0x1610 net/mptcp/protocol.c:2739
- process_one_work kernel/workqueue.c:2633 [inline]
- process_scheduled_works+0x913/0x1420 kernel/workqueue.c:2706
- worker_thread+0xa5f/0x1000 kernel/workqueue.c:2787
- kthread+0x2ef/0x390 kernel/kthread.c:388
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:242
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> v12:
+> - rebased on export/20240214T102432
+>
+> v11:
+> - update patch 5 as Mat suggested.
+> - depends on "fixes for userspace PM" series.
+>
+> v10:
+> - fix a checkpatch.sh warning reported by CI.
+> - fix build warnings reported by kernel test robot <lkp@intel.com>.
+>
+> v9:
+> - add missing "sock_put(sk)" in patch 7, 17 and 21 to fix the "kmemleak"
+>   errors reported by CI.
+> - rename the helper to mptcp_pm_has_addr_attr_id.
+> - use my new mail address.
+>
+> v8:
+> - Address Mat's comments in v7
+>
+> v7:
+> - fix checkpatch.sh warning reported by CI.
+> - fix build errors reported by CI.
+>
+> v6:
+> - patches 1-5, fixes for -net
+> - patches 6, 15, selftests for "fixes for -net".
+> - patches 7-14, 16-21, update "dump for userspace pm v5"
+> - patches 22, 23, cleanups for set_flags
+> - patch 24, flush selftest.
+>
+> v5:
+> - patch 2, save bitmap instead of id.
+> - patch 3, drop token in reply.
+> - update patch 4 and patch 12, add mptcp_pm_dump_addr and
+>   mptcp_pm_get_addr wrappers in pm.c
+>
+> v4:
+> - update patch 2, patch 3 and patch 12.
+> - fix the warnings reported by CI in v3.
+>
+> v3:
+> - fix the errors reported by CI in v2.
+> - drop mptcp_pm_nl_put_entry_msg and mptcp_pm_nl_put_entry_info
+>   helpers.
+>
+> v2:
+> Address Mat's comments in v1:
+> - patch 2: pass token to dump_addr too.
+> - patch 2: add back id in mptcp_userspace_pm_dump_addr().
+> - patch 5: update mptcp.yaml
+>
+> v1:
+> Address Mat's comments in "userspace pm enhancements" v14.
+>
+> Geliang Tang (14):
+>  mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
+>  mptcp: implement mptcp_userspace_pm_dump_addr
+>  mptcp: add token for get-addr in yaml
+>  mptcp: dump addrs in userspace pm list
+>  mptcp: check userspace pm flags
+>  selftests: mptcp: add userspace pm subflow flag
+>  selftests: mptcp: add token for dump_addr
+>  selftests: mptcp: add check_output helper
+>  selftests: mptcp: dump userspace addrs list
+>  mptcp: add userspace_pm_lookup_addr_by_id helper
+>  mptcp: implement mptcp_userspace_pm_get_addr
+>  mptcp: get addr in userspace pm list
+>  selftests: mptcp: add token for get_addr
+>  selftests: mptcp: userspace pm get addr tests
+>
+> Documentation/netlink/specs/mptcp_pm.yaml     |   3 +-
+> net/mptcp/mptcp_pm_gen.c                      |   7 +-
+> net/mptcp/mptcp_pm_gen.h                      |   2 +-
+> net/mptcp/pm.c                                |  16 ++
+> net/mptcp/pm_netlink.c                        |  26 ++-
+> net/mptcp/pm_userspace.c                      | 177 ++++++++++++++++--
+> net/mptcp/protocol.h                          |  13 ++
+> .../testing/selftests/net/mptcp/mptcp_join.sh |  93 +++++++++
+> tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  39 +++-
+> 9 files changed, 344 insertions(+), 32 deletions(-)
+>
+> -- 
+> 2.40.1
+>
+>
+>
