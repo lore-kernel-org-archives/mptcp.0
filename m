@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6F13FB1C
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 10:30:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098521EA73
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 10:42:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708079441; cv=none; b=Oa2GHG6yp3wQiL6k4K4sRoaRjCvaNWQwIewsuNz6YK2qdof8aAfibq+7nbQOe87BuNK85EAjlomEg4FOF18xNPxBGLTOLvMzAeUVxqVSpNWmGLCIgKR5zO8oyr0sTXDpdO8Ka4IO2OpDIfcLt9gbmlpCkHqOpGXXJBWBaXhsyMs=
+	t=1708080172; cv=none; b=WmzH1eiu5mWCwH72atBGHvzT8crb3HyTa5f8UU6wON8zcYGLfdigMOLtaQMNIFhVsF7E4m3QLs0q8tACXokMsmQbxmEAn91GtsXBPstSjojeaUid2CTX0uriHNbFZThb4Syj6JJ5v0z6c19i8U7/m9g0JmlycO9kP1Wi8cDC25k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708079441; c=relaxed/simple;
-	bh=eHikEwXyzhAleTxVy8GG+RWkmSDIxlh0luDOSZdh168=;
+	s=arc-20240116; t=1708080172; c=relaxed/simple;
+	bh=LA8xkXBGtLkPniavxt/bfoHPnYxp8TQq+zVMZ885EJ8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ei1L3hacsgketfGJStnEUS5XJer9M5UdTZRvywBGTHZEpI8X/mASu1cCzJV5hP7Jolr8etEs7SkFxuLQr1BCDgzbKP1nmf51uaAXaSkJ2io9R1X6mVfJAPG+RSzyWS8bQWwYq5AZBKSv342mvQbfJBPfxMZihmYVg5PZQyKk63I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byt7Ld7q; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=BPINMFC61v9fdWZsOldWk8ly/I4033EFTCRVr9OPW6kTz7RWeYf4dMKUHFkuJhwV4knIaoNMCuogkMvT5ukeHbM7Bf3Ag3XSWJ6cP0oacKad70W7kWJwqyBlJ+Jc848+3m7yGLRDo5uvSkzIFU0dQ0S5D02I7qxFQ0LxCMcoPWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y/OMBzWk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byt7Ld7q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71173C433F1;
-	Fri, 16 Feb 2024 10:30:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y/OMBzWk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82169C433F1;
+	Fri, 16 Feb 2024 10:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708079441;
-	bh=eHikEwXyzhAleTxVy8GG+RWkmSDIxlh0luDOSZdh168=;
+	s=k20201202; t=1708080171;
+	bh=LA8xkXBGtLkPniavxt/bfoHPnYxp8TQq+zVMZ885EJ8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=byt7Ld7qehHQ572BYezrPxi1oUMBfZaSgCtl5Q3EOWUgP/EhH1cc1xcVQsLw8RwlH
-	 t7oQpiJlhG9pgKAAEqDf7kN0PIhaV8rwTLoKeWLllRiaXfBp44esUG9Nq6Gx2jEDkL
-	 v24MLnHidF+pLb/qH7fCvr8aWh+Qon78WE9tPMykmOuLW3cLR33RcPddfh1YzgJQ1T
-	 Ag9tEYQune5FEAFg8/ki6ukqL4Zxn5leAiAScjMCd9qwJdPlsy1a1esPVCMLYjfYrF
-	 dIrF2eeiBz7c8Uh9rVx31STIhOv00ddKxEES5bBk9RMLaI4z9TyvdWwfHG8hmQCx5C
-	 8QCA6tHXtwG5w==
-Message-ID: <81ba80af-b387-49e1-b720-92cb750e98ec@kernel.org>
-Date: Fri, 16 Feb 2024 11:30:38 +0100
+	b=Y/OMBzWkIoIUt5zKjgz7/FF2wAXmU9ZDdF7BFsNfE3cz83exgMn66q7zAowaNUeaH
+	 UALqaXorV8hpEkEEXiIn2fOl2WQlw4VrPlaAW43Ey+VN9NjGkTfRFgmZxqS1oaTHV9
+	 LTxFnJz3PJcR76DPOKVWBnE7OPXF9+VOd7Ql8YoC28ex+2r66cB1VmgTygcTRyd1h1
+	 ks9g64+HEhwlO+qRwF+TZIx795acV4+I8u7VNZkFcg4Opdqrzc9kTpTes8bpUMzx8Z
+	 cxlGiEOJukn8Ba4OsoX+LRGQSvQlAbs70HanyDBtrQh5ahMYU7TNMeXyyT+pn6XG4x
+	 HM6NOV3iJO55A==
+Message-ID: <6b9c4a3e-3c30-4e7b-ab99-ed2e34e24015@kernel.org>
+Date: Fri, 16 Feb 2024 11:42:48 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v12 10/15] selftests: mptcp: dump userspace
- addrs list
+Subject: Re: [PATCH mptcp-net] mptcp: avoid printing warning once on client
+ side
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1707910454.git.tanggeliang@kylinos.cn>
- <2acb96d2ed25df7fce8bfc0241dc920678510542.1707910454.git.tanggeliang@kylinos.cn>
- <3478f286-365b-1bb3-1f9f-9b6611888888@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+References: <20240215-mptcp-fix-bogus-pr-warn-v1-1-d14c10312820@kernel.org>
+ <9502e96c-8a72-a6d4-ca2d-1c75c536bfa3@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,42 +87,59 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3478f286-365b-1bb3-1f9f-9b6611888888@kernel.org>
+In-Reply-To: <9502e96c-8a72-a6d4-ca2d-1c75c536bfa3@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Mat, Geliang,
+Hi Mat,
 
-On 15/02/2024 23:57, Mat Martineau wrote:
-> On Wed, 14 Feb 2024, Geliang Tang wrote:
+On 16/02/2024 00:25, Mat Martineau wrote:
+> On Thu, 15 Feb 2024, Matthieu Baerts (NGI0) wrote:
 > 
->> From: Geliang Tang <tanggeliang@kylinos.cn>
+>> After the 'Fixes' commit mentioned below, the client side might print
+>> the following warning once when a subflow is fully established at the
+>> reception of any valid additional ack:
 >>
->> This patch adds two new tests for userspace pm dump address and subflow.
->> Use userspace_pm_add_addr() and userspace_pm_add_sf() to add an address
->> and a suflow.
+>>  MPTCP: bogus mpc option on established client sk
 >>
+>> That's a normal situation, and no warning should be printed for that. We
+>> can then skip the check when the label is used.
+>>
+>> Fixes: e4a0fa47e816 ("mptcp: corner case locking for rx path fields
+>> initialization")
+>> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Hi Geliang -
+> Looks good to me:
 > 
-> The kernel code looks good to me, but I realized the selftests need some
-> changes.
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+Thank you for the review!
+
+>> ---
+>> Notes:
+>> - Should we convert this pr_warn_once() to a WARN_ONCE()? Or just in
+>>   our tree? Or just in DEBUG mode?
 > 
-> In order to run the new tests with old kernels (without userspace dump
-> address support), mptcp_lib_kallsyms_has checks are needed so the new
-> functionality is skipped on old kernels (right Matthieu?).
+> I think it makes sense to keep this patch minimal for -net and stable
+> (just moving the label).
+> 
+> Also given the consequences of panic_on_warn, would be better to make
+> any changes to WARN_ONCE() in mptcp-next/net-next. I don't see extra
+> complexity to modify this warning in our tree or debug mode as being
+> worth it, do you think it would be valuable?
 
-Good point!
+Sorry, I'm a bit confused by your reply. For the moment, our CI
+complains when a "Call Trace:" is printed, but it doesn't complain when
+there is a pr_warn().
 
-I didn't check what can be done, but yes, something needs to be done:
-looking for a counter, a symbol, the output of a command, etc.
+If the warning here can be caused by interactions with a buggy host, it
+makes sense not to have a WARN() when used in production, but it would
+be good for our CI can catch that. If the warning can only be caused by
+an internal bug, then easier to use a WARN_ONCE().
 
-> Also, since our tests already take a long time to run, could the
-> userspace dump addrs checks be integrated with an existing test like
-> "userspace pm add & remove address"?
-
-Good idea! (maybe even more tests doing the same actions, but checking
-different things, could be merged with a new title)
+So I think here, we could maybe convert it to a DEBUG_NET_WARN_ON_ONCE()
+and upstream that. WDYT?
 
 Cheers,
 Matt
