@@ -1,149 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB693135A6E
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 19:31:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271EA13AA46
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 19:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708111908; cv=none; b=sNr4hh9pYT+F52D54YBID2qkXuwsncDlYK6EPAeaFQmhRLk7vQNHHNMbZPE2+3+bxNUNTtx19VmfQ2rqtmPFytAaL/CsFs1JFSn/U0hreY4V5IjeRRCyNu9AXZCFcrC6Lmg5845jUOKCh9JBIIj3yc40RiZ3IVdSNnGupaw4MZo=
+	t=1708112924; cv=none; b=sj1gmLx8edEzOqdABCIOr5tEMFz6nyuog+9HXyn78E8cfR7GHgTiKcFiDZdgmIvOJPthL7ZXBDVwP5l+CY93vB0ZhlQYytNS4UW4I3+xpQGsAM6Lo/zI/h0MsSin59aaFxvBSWJU5fvRPdJNslWF1DmoRNHnTQYB9N1/RO4moQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708111908; c=relaxed/simple;
-	bh=7+csAigUWuwY8Ut4yMvDHcTCOF3ZRZp2A7fq+V1xH5E=;
+	s=arc-20240116; t=1708112924; c=relaxed/simple;
+	bh=KWNQgcUNu9K6byZab9271hwqo1ywNhVflAsCOs4d5HY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=F1loYG1WZYgNbsLKwfRK5Z8VwCX9l/DoTB5cmkPuApD2Gy/nAJStahPGPKiFGbNc5XOzXsrY77sD8jOB8w1BarPQD9E9Yi2j3AZVs+dr4XsK6+iTUVjAu6gMbr75V4t2gJdzOWM9FuRHKv5KbK4ZR9AlW1YtPpWA6+ZLtocZ3QI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4bwR4NG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=I2AeVAzyyAqKKaMhIdAjWjUUwjShjgFo9U3T/eWI2rxjCctRNSohK1UbAh3qg46tvBGYYIvhyeGyEJnRzpZKBMs97MAsHxKDvKn/o3k0YRlIVXD+FG1kMEJWYrKgAzGUW+5R5djDR1lSsvBj4uhzZv+6imflF+iRfoVy5y4uDxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SxvpJ2Wc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4bwR4NG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58F47C433F1;
-	Fri, 16 Feb 2024 19:31:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SxvpJ2Wc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F7CC433F1;
+	Fri, 16 Feb 2024 19:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708111908;
-	bh=7+csAigUWuwY8Ut4yMvDHcTCOF3ZRZp2A7fq+V1xH5E=;
+	s=k20201202; t=1708112924;
+	bh=KWNQgcUNu9K6byZab9271hwqo1ywNhVflAsCOs4d5HY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=H4bwR4NGW3c19PbdYjho8TK4chS09SadEl2kJOV4TYEkOEIOh1gULfgX8bRzk7VnS
-	 qiu30wXDiVfjLw0cpSNrtWu8BM1raCiuMJtLjNx4p4xGmO6H81ayDUtiTMGE1mqxw8
-	 1cTG3zVZ+/wv56VccynYXvWJyH8YMHyIh90/MQ8YcpU2X4VaZF8rNj48LSbVn47LmF
-	 Ovps59ULRK4+dk/vDQDii+h84G/i2NzKeFEqxoVGaQPlH3zSnMMcrkIp2z5sPECsvd
-	 Le+GGUgE3UDpVLwLiAJ97uRAi58QvXS3IsGd1kGq3ujXGnu0CIM7WGNWvrXJZMqI0Z
-	 sz35WaQDyQrEg==
-Date: Fri, 16 Feb 2024 11:31:47 -0800 (PST)
+	b=SxvpJ2WcxTvHcXmJVc/HFmEBp+69TbniHYn/IgrM+n/BRCxqRIsRpOGf79GaknRUi
+	 1hIxeZr5WE7qd9FVV4urjIZHiWBxgxjFIMskHLVUrvhwnONrlhdDTnvw/mKvCnOiHI
+	 z+4ZpfC5bmP4cvLaLA97X9z5QHbuuytSFME8KN/y7jE/eokui9L9KRvLUt0L/LKVq5
+	 lvqQsCYLcJ6ZXYVd5oJoqKksO9S/tcG2tuXGMn24ZvtPfjwpnnnlKi4KkD/O8Wdpko
+	 4zmYkcSyL/FnMx1wKTflB3crg9JAURNT1YxLMH3JX+AWnafe56wgmlJ+OgladCOIvY
+	 A14s6uMoBd+nA==
+Date: Fri, 16 Feb 2024 11:48:43 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v13 00/14] dump for userspace pm
-In-Reply-To: <cover.1708069036.git.tanggeliang@kylinos.cn>
-Message-ID: <9e8283b2-563f-cf6d-15ae-d5b3241951a6@kernel.org>
-References: <cover.1708069036.git.tanggeliang@kylinos.cn>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH v3 net-next 0/7] mptcp: implement TCP_NOTSENT_LOWAT
+ support
+In-Reply-To: <cover.1708082765.git.pabeni@redhat.com>
+Message-ID: <042c077b-848d-1642-08ff-9428018ac5fd@kernel.org>
+References: <cover.1708082765.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Fri, 16 Feb 2024, Geliang Tang wrote:
+On Fri, 16 Feb 2024, Paolo Abeni wrote:
 
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+> Patch 6/7 does the magic, all the others are minor cleanup and fix of
+> buglet exposed by such feature. I'll push a paired pktdrill test.
 >
-> v13:
-> - fix the typo in patch #3.
-> - add 'mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"' checks.
-> - add 'mptcp_lib_kallsyms_has "mptcp_userspace_pm_get_addr$"' checks.
-> - drop "userspace pm dump address/subflow" tests, test it in "userspace
->   pm add & remove address" and "userspace pm create destroy subflow"
->   tests instead.
+> Note that this relies on the existing accounting for snd_nxt. As I
+> stated such accounting is not 110% accurate as it tracks the most recent
+> sequence number queued to any subflow, and not the actual sequence
+> number sent on the wire.
+>
+> I experimented a lot trying to implement the latter and in the end it
+> proved to be both "too complex" and "not necessary".
+>
+> The complexity raises from the need for additional lock and a lot of
+> refactory to introduce such protection without adding significant
+> overhead. Additionally, snd_nxt is currenly used and exposed with the
+> current semantic both eBPF and the internal packet scheduling.
+> Introducing a different tracking will still require us to keep the old
+> one.
+>
+> More interesting, a more accurate tracking could be not strictly
+> necessary: as the MPTCP protocol enqueues data to the subflows only up
+> the available send window, any enqueue data is sent on the wire
+> instantly, without any blocking operation short of a drop in the tx path
+> at the nft or TC layer.
+>
+> The individual patches changelog carry the gory details.
 >
 
-Thanks for the adjustments to the tests, v13 looks good for the export 
-branch!
+v3 of the series LGTM, thanks Paolo.
+
+Matthieu note that this series is split between mptcp-net and mptcp-next:
+
+> Still sending a single series to outline the functional requirements,
+> even if the first 3 patches could land on mptcp-net directly.
+>
 
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-> v12:
-> - rebased on export/20240214T102432
+
+> v2 -> v3:
+>  - typo in patch 1/7
+>  - dropped unused code in patch 3/7
+>  - dropped duplicate code in patch 6/7
 >
-> v11:
-> - update patch 5 as Mat suggested.
-> - depends on "fixes for userspace PM" series.
+> v1 -> v2:
+>  - clarifiy commit message in patch 1/7
+>  - fix possible wake-up bug in patch 6/7
 >
-> v10:
-> - fix a checkpatch.sh warning reported by CI.
-> - fix build warnings reported by kernel test robot <lkp@intel.com>.
+> *** BLURB HERE ***
 >
-> v9:
-> - add missing "sock_put(sk)" in patch 7, 17 and 21 to fix the "kmemleak"
->   errors reported by CI.
-> - rename the helper to mptcp_pm_has_addr_attr_id.
-> - use my new mail address.
+> Paolo Abeni (7):
+>  mptcp: push at DSS boundaries
+>  mptcp: fix snd_wnd initialization for passive socket
+>  mptcp: fix potential wake-up event loss
+>  mptcp: cleanup writer wake-up
+>  mptcp: avoid some duplicate code in socket option handling
+>  mptcp: implement TCP_NOTSENT_LOWAT support.
+>  mptcp: cleanup SOL_TCP handling
 >
-> v8:
-> - Address Mat's comments in v7
->
-> v7:
-> - fix checkpatch.sh warning reported by CI.
-> - fix build errors reported by CI.
->
-> v6:
-> - patches 1-5, fixes for -net
-> - patches 6, 15, selftests for "fixes for -net".
-> - patches 7-14, 16-21, update "dump for userspace pm v5"
-> - patches 22, 23, cleanups for set_flags
-> - patch 24, flush selftest.
->
-> v5:
-> - patch 2, save bitmap instead of id.
-> - patch 3, drop token in reply.
-> - update patch 4 and patch 12, add mptcp_pm_dump_addr and
->   mptcp_pm_get_addr wrappers in pm.c
->
-> v4:
-> - update patch 2, patch 3 and patch 12.
-> - fix the warnings reported by CI in v3.
->
-> v3:
-> - fix the errors reported by CI in v2.
-> - drop mptcp_pm_nl_put_entry_msg and mptcp_pm_nl_put_entry_info
->   helpers.
->
-> v2:
-> Address Mat's comments in v1:
-> - patch 2: pass token to dump_addr too.
-> - patch 2: add back id in mptcp_userspace_pm_dump_addr().
-> - patch 5: update mptcp.yaml
->
-> v1:
-> Address Mat's comments in "userspace pm enhancements" v14.
->
-> Geliang Tang (14):
->  mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
->  mptcp: implement mptcp_userspace_pm_dump_addr
->  mptcp: add token for get-addr in yaml
->  mptcp: dump addrs in userspace pm list
->  mptcp: check userspace pm flags
->  selftests: mptcp: add userspace pm subflow flag
->  selftests: mptcp: add token for dump_addr
->  selftests: mptcp: add check_output helper
->  selftests: mptcp: dump userspace addrs list
->  mptcp: add userspace_pm_lookup_addr_by_id helper
->  mptcp: implement mptcp_userspace_pm_get_addr
->  mptcp: get addr in userspace pm list
->  selftests: mptcp: add token for get_addr
->  selftests: mptcp: userspace pm get addr tests
->
-> Documentation/netlink/specs/mptcp_pm.yaml     |   3 +-
-> net/mptcp/mptcp_pm_gen.c                      |   7 +-
-> net/mptcp/mptcp_pm_gen.h                      |   2 +-
-> net/mptcp/pm.c                                |  16 ++
-> net/mptcp/pm_netlink.c                        |  26 ++-
-> net/mptcp/pm_userspace.c                      | 177 ++++++++++++++++--
-> net/mptcp/protocol.h                          |  13 ++
-> .../testing/selftests/net/mptcp/mptcp_join.sh |  93 +++++++++
-> tools/testing/selftests/net/mptcp/pm_nl_ctl.c |  39 +++-
-> 9 files changed, 344 insertions(+), 32 deletions(-)
+> net/mptcp/protocol.c | 57 ++++++++++++++++++++++++-----------
+> net/mptcp/protocol.h | 51 ++++++++++++++++++++++---------
+> net/mptcp/sockopt.c  | 71 ++++++++++++++++++++------------------------
+> 3 files changed, 108 insertions(+), 71 deletions(-)
 >
 > -- 
-> 2.40.1
+> 2.43.0
 >
 >
 >
