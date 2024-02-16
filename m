@@ -1,110 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561F613475C
-	for <mptcp@lists.linux.dev>; Thu, 15 Feb 2024 23:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23FD170
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 00:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708039505; cv=none; b=f/7VMJ1tpwClBiiyUYBGggTJtOmGacicANmXjkUfZixO3JgP+V6iX5eXLWdN3JnHiyCKniTWkMcFmo/CmO++k9EhRu/X5Z4mMJH3ULVJ5Wqaj0vCBsm/NunH9PmoK7nyZEP4f6VvvNSqS2QkFtf+I5cEsQjn/bwYADpZrSNm5Hw=
+	t=1708041794; cv=none; b=Z6R3GTLXgIi3VM4a6XyCrqj11od1OwWpwprBiJRJLPLC2KhpeKy5FHJ8tYEyUQWiZgcJDY3RAGstxzDhiQEN7IrY6qZzXWiKZ5IpnIrZkTLKRG7c4M7/08qn7MPhUfHMcMIyt320v30ySRrR8rIvhtelDMnwQJObvhwgq+Qjv3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708039505; c=relaxed/simple;
-	bh=WQ62xzS8+FzUvo6KTLdVINRqYDsjd7oDdmbN1AqEqkw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sZQOPdafvSJFl02XH5kCCEXQcDbPYEcRJzk3QoRy/C4fk3CTm0d9bxsVaHNlcA1NiHDb5DA2zAenC0jgPzBT8DCLDqMKvJPRiCQ/QYZxtWL+9vo1yV8Ui/OEPUI7ERNp9SUsKeS08SKrDKI/5/suEees76W7LCVO97LpVM443rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emIkb2RW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708041794; c=relaxed/simple;
+	bh=kEHbP+IHd1qNsbFpFGRP/uUzBLhJ8/PxvKUtC7fVO0c=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=V9sQS50+VrOwNEDfCvUtg2oFhjf4niu6jdTIq+pQAlKzJqb6vJ6I76Zjhkl3m8dM1GVT/t24VNa31v1lJSBceaKJhMKsI/tDYTxPSs2nTCVd1pkdi3+aOH4a8c/kqBAGo6IiT5eQtO9qj5CJylfrQSiNDtGha+HPsDZQGNP1/L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KKFl/lO7; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emIkb2RW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6D8CC433C7;
-	Thu, 15 Feb 2024 23:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708039504;
-	bh=WQ62xzS8+FzUvo6KTLdVINRqYDsjd7oDdmbN1AqEqkw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=emIkb2RWpPHdTag30nxnBi3MTPBHOsjYtogEK35v332zoH4nbdw6AJFqOk+3LF16b
-	 8oO9HEhqKFKzd95eL6jVQXGBZltTX0mEZrAIMIIdc7sCZ30xtyFtNu/0yQo+ZZIbhs
-	 lZdIhsFPSsl7FoEBlAmXm8ev/OptfvvTFtAcCTwFdWrkfqEcf98RXII7XzILf1xSQr
-	 CvzrIrx8Rt+BS3LK76/KtTUo1YhzzLauc69TcLfsgzgAC69GEMXrC9N+YwzP3Njd01
-	 PvgSvYrIfiCvfea71GmmN7R49dJ5tH9du3tmyzNx611XVZWaN6DgRsg7y8V3bR185p
-	 UtR7unOPIMYPQ==
-Date: Thu, 15 Feb 2024 15:25:04 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net] mptcp: avoid printing warning once on client
- side
-In-Reply-To: <20240215-mptcp-fix-bogus-pr-warn-v1-1-d14c10312820@kernel.org>
-Message-ID: <9502e96c-8a72-a6d4-ca2d-1c75c536bfa3@kernel.org>
-References: <20240215-mptcp-fix-bogus-pr-warn-v1-1-d14c10312820@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKFl/lO7"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso1415670276.1
+        for <mptcp@lists.linux.dev>; Thu, 15 Feb 2024 16:03:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708041791; x=1708646591; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=638LltJqYsuM3GiK+4t2buaQr72RWBS/Uc0ZxBKKT80=;
+        b=KKFl/lO70WPUxVZhs1MBIJTt1EtTFPOEIRA/JioKoTKOtWQIKpKd5msFycZAsABrY9
+         v5g38zqlTT/XxjJzrs0odQ7DNHMe9Qm5JTa+g+EcixhqAxg5bcYKz+gq3Rm9hMBiQvkc
+         jFLoAZTyZcPlgUDuuGdOFKN516lyBmPr12x/J2DUZa+sNnc/F5jAfUQ8bSzOUVOykPjJ
+         WsYSTmimkvEKRzQ0yQYJSO/sdKTxsqJP2zYr5gqcnRam7+Xujo3DBhpc5NqGb3hBYOBe
+         YuRfWKG2vGIb0FWvX4fW42D4Lb8wmRpPIslvjX02sl8GPNzE8UMZyzVyexgs6DVllu7b
+         bSnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708041791; x=1708646591;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=638LltJqYsuM3GiK+4t2buaQr72RWBS/Uc0ZxBKKT80=;
+        b=SuVt99xfAObrkRw0LM9KTsw+e8Ovqumll8QNGEFcXtxZ+EcnQEVJXe4aXT1vO8Cb7x
+         hpq6ejhF3Gf/FCjUQVPfnucagR3RysTtoyZCjimODvbUCzwCheqh1zp02oqXzX+DMrTl
+         7mWU+Fn53syTEQ5PMePupqfPhYpZfzJQjbfFkjcc3ZroyI0hL4GnrMyJaR6YnKPVrvC2
+         1zbdwjHsQdPTv+Bj2CYLaDBhpkkKtfqA4yfh1HUZYh3Nj1fd9LxrMhSogpDBQ5ZZoz5w
+         udF+ccxOK6QbId/3XGpaJoj4CjN5PNr0H2fBqHN9nsqrv9a6Ggaixxwp+3n+G+REto1S
+         XGlA==
+X-Gm-Message-State: AOJu0YzwNrryxtW91LgY6XDbhF3Ttu21ccbqrfmg29y8rXqaiVGyQthz
+	em9myMOtDBkG0AY/xP2vM/qRlGAlorSOZ3kynHIv3BRe0qviStVB/MUACzE=
+X-Google-Smtp-Source: AGHT+IGaqnLGl6ZvfeNjGOOsVz03wBoehW2G0Lbxi5DQGu6/VzYxKtoSRG1yRVUqAiODmC0yFBgcZw==
+X-Received: by 2002:a25:6b46:0:b0:dcc:f6e2:44d0 with SMTP id o6-20020a256b46000000b00dccf6e244d0mr3311319ybm.37.1708041791462;
+        Thu, 15 Feb 2024 16:03:11 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.53.130])
+        by smtp.gmail.com with ESMTPSA id ow3-20020a05620a820300b007872d50caf5sm1049575qkn.19.2024.02.15.16.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 16:03:11 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240215-mptcp-check-protocol-v4-3-16e932665e21@kernel.org>
+References: <20240215-mptcp-check-protocol-v4-3-16e932665e21@kernel.org>
+Subject: Re: mptcp: check the protocol in mptcp_sk() with DEBUG_NET: Tests
+ Results
+Message-ID: <275b21e5-b31d-fac0-ce08-c303aa99014b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 16 Feb 2024 00:03:10 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 15 Feb 2024, Matthieu Baerts (NGI0) wrote:
+Hi Matthieu,
 
-> After the 'Fixes' commit mentioned below, the client side might print
-> the following warning once when a subflow is fully established at the
-> reception of any valid additional ack:
->
->  MPTCP: bogus mpc option on established client sk
->
-> That's a normal situation, and no warning should be printed for that. We
-> can then skip the check when the label is used.
->
-> Fixes: e4a0fa47e816 ("mptcp: corner case locking for rx path fields initialization")
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Thank you for your modifications, that's great!
 
-Looks good to me:
+Our CI (GitHub Action) did some validations and here is its report:
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7923641372
 
-> ---
-> Notes:
-> - Should we convert this pr_warn_once() to a WARN_ONCE()? Or just in
->   our tree? Or just in DEBUG mode?
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/e79de30e413b
 
-I think it makes sense to keep this patch minimal for -net and stable 
-(just moving the label).
 
-Also given the consequences of panic_on_warn, would be better to make any 
-changes to WARN_ONCE() in mptcp-next/net-next. I don't see extra 
-complexity to modify this warning in our tree or debug mode as being worth 
-it, do you think it would be valuable?
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
-- Mat
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-> ---
-> net/mptcp/options.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-> index 23e317ffc901..27ca42c77b02 100644
-> --- a/net/mptcp/options.c
-> +++ b/net/mptcp/options.c
-> @@ -981,10 +981,10 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
-> 	if (mp_opt->deny_join_id0)
-> 		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
->
-> -set_fully_established:
-> 	if (unlikely(!READ_ONCE(msk->pm.server_side)))
-> 		pr_warn_once("bogus mpc option on established client sk");
->
-> +set_fully_established:
-> 	mptcp_data_lock((struct sock *)msk);
-> 	__mptcp_subflow_fully_established(msk, subflow, mp_opt);
-> 	mptcp_data_unlock((struct sock *)msk);
->
-> ---
-> base-commit: 52e05de42e1094a943053af93ea08c51a44091f7
-> change-id: 20240215-mptcp-fix-bogus-pr-warn-497a3537984b
->
-> Best regards,
-> -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
->
->
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
