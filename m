@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4F41292E1
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 13:44:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F5C128825
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 13:45:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708091044; cv=none; b=b/kU9/eWiML3RMUwOGK1L/xO9dAG6O09qIGT3aFSpiqAaxb0otzsALAfvgINJh7aqF9qaDfOcWU6iFpRQ+WumYPxQRj1oqDtZp2znn7uRaDdu2wm/MOWzTqZ0nHOVaHKQWRNY3CELdSFfhkmzwhT5q2Qtyz661x729A6eYoYC7E=
+	t=1708091124; cv=none; b=Amci7QpbHbVGlH+RXzEM4RwrGYi3Ix+2cPGBv8xi+XNWR9D2kBgAsNRDxYJV4CVGIR0SujTtdcOBb6HzeDQ0stvAV4RGd2Z5gU+U/YO6QUSwSEutERUJiHQjlhpD/Rm/0HK/8NQMYf1rxj3Y7GzsSfzGCdolZoOIlmD58RTuzPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708091044; c=relaxed/simple;
-	bh=tEHjG7Rc3btaCzNIJHMfFEPY+Uu6FqY2XEcaOINyn3M=;
+	s=arc-20240116; t=1708091124; c=relaxed/simple;
+	bh=OqIejDdColhzi8eHxnmpCyY1SxUH+vV4szt2rCQHtZc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GGCyYC/YFPH5uruLCOrTs7pPw7bB+t15tx5y24Cr44qXWyiGdLMKpFLz1Ik9o3/GrjJvNGZjXn+y4Fixs4hsnKx9HPBM/dw+wKoDdxetPZ0daQy46Zik5nBF0ttBEhAQ/HOyGxo22q96erIR3/lmALcslNqg7OM+jTcxhWMGEkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GeaZA1U2; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WngDTxW5wYBoC5FRDYjlz7kjYV0v3mOh0eCAgoMZ4p4XM1CW6kTU08Y+Nx7U5bDf3ShXin2BCZSOz9YZHWy25TgzKyZvj3q5VAYH+wuCVlBlqyXUX5Z+7C6aH9zVjhJw/qDJw7CpPDh3o/LdaX5aEgbNF413aBYaY3FxRa9HJEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n83fG949; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GeaZA1U2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A373C433C7;
-	Fri, 16 Feb 2024 13:44:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n83fG949"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 964EAC43399;
+	Fri, 16 Feb 2024 13:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708091044;
-	bh=tEHjG7Rc3btaCzNIJHMfFEPY+Uu6FqY2XEcaOINyn3M=;
+	s=k20201202; t=1708091123;
+	bh=OqIejDdColhzi8eHxnmpCyY1SxUH+vV4szt2rCQHtZc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GeaZA1U2GQr8/cq2EDu/nJTPVGVhUED6RWFrfpiTdn71rtj0mYDJkRXcDXXiQAzT8
-	 A2+DW9Bvd6vjch8QqV0VdRAjpocg6WYKrW0mgTvn9OJ1zU3uZyj8Y/Ff5uKjHS89IW
-	 RfJlo9jyVA3vglKcFDQUhe/R6Ipn2ddj7SMz0T+dCdFL0Zm7XPlOLof5B+KC0tN4TT
-	 CTPxPR6cWCIyZ0SqNqT8jCsOmO+QdD1ADyarpp14tRHkZy3FJjfGntPKh7BEDb4TX3
-	 Ym18ZO/CkEheIQQ71Fnr/uxVD/R6IOAwfocZFUdMdbzMN8ApNCNvsVMh2AdeJx4gIP
-	 S65soauXBSj1A==
-Message-ID: <c1dbc7b0-dbd2-43f1-ab02-b9e8e5ea596b@kernel.org>
-Date: Fri, 16 Feb 2024 14:43:57 +0100
+	b=n83fG949kMotqLa2kKi5eN7Zn1ssge2CckAVi0l//eMJoT0nJnxggwTWGzFwj0Ug+
+	 rfdQ2ol1TjhP66uNN7k2ehrX5gSDq6kdB6APMWgbpNEH7z83GOj/SjLh2PwM3317YE
+	 KMq5euIVtLC7lHpLqAYTw5wlOF9/p704GoM4GYy1mnmUPZ7L59uKwW3gsfK3lTTfwn
+	 loDj0j1Lk1z3YAaigw3Q98ULgCl8CoUOCf0mz+D6wDOHr4CqKw17wa+DgQ8peFNxDE
+	 ql4psP+hjX5igGS+TM8UUSfWzkXJCsTlOIA/6o5l56FESLdiPdG3hJuhzcbyTAGtoH
+	 TcOmgP5JY6NcQ==
+Message-ID: <914511c5-ace0-4ff9-9695-c5f7ffef1c03@kernel.org>
+Date: Fri, 16 Feb 2024 14:45:22 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 0/7] add helpers and vars in mptcp_lib.sh,
- part 1
+Subject: Re: [PATCH mptcp-next v2 5/7] selftests: mptcp: drop
+ iptables/ip6tables vars
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708076886.git.tanggeliang@kylinos.cn>
+ <fdcfea6deedc64317296cd063c037b45d495c6b7.1708076886.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1708076886.git.tanggeliang@kylinos.cn>
+In-Reply-To: <fdcfea6deedc64317296cd063c037b45d495c6b7.1708076886.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,16 +96,17 @@ Hi Geliang,
 On 16/02/2024 10:50, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v2:
->  - address Matt's comments in v1.
->  - all for -next, not -net.
->  - add two more patches.
+> Since iptables-legacy/ip6tables-legacy are dropped in the commit
+> 5b31f0f6f954 ("selftests: mptcp: stop forcing iptables-legacy"),
+> there's no need to use ${iptables}/${ip6tables} variables anymore.
 
-Thank you for the v2.
+I agree, there is no need to use variables for the moment. But as I
+mentioned in the commit message, I kept "the variables to easily change
+them later or add options". They don't hurt, we might want to use
+'iptables -w', force using 'iptables-nft' if available, or other options
+for the debugging. I don't think we need this not so small patch.
 
-Patches 1-4 are OK for me. I can apply them already.
-
-I don't think we need 5/7, and I have some comments for the two last ones.
+In other words, the patch is OK, but maybe we don't need it?
 
 Cheers,
 Matt
