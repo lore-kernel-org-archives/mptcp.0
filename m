@@ -1,115 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271EA13AA46
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 19:48:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F10137C4A
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 19:59:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708112924; cv=none; b=sj1gmLx8edEzOqdABCIOr5tEMFz6nyuog+9HXyn78E8cfR7GHgTiKcFiDZdgmIvOJPthL7ZXBDVwP5l+CY93vB0ZhlQYytNS4UW4I3+xpQGsAM6Lo/zI/h0MsSin59aaFxvBSWJU5fvRPdJNslWF1DmoRNHnTQYB9N1/RO4moQU=
+	t=1708113543; cv=none; b=Pf9+fStG73AgzH7u3RC2ZgcMSn1mpSKIdfZK3uoDA54tOo+lfJMB3voEF3Ckk8zJze3FZts5j8iNYHDVSzjJpG3twQqjnhvi8ztZmNn2q+YoYsJ9JRcjk3MYqNxrHWkEeHngnhe8SJK4BHkuXSt009r+ecxHBH5VUKAzGJW8eSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708112924; c=relaxed/simple;
-	bh=KWNQgcUNu9K6byZab9271hwqo1ywNhVflAsCOs4d5HY=;
+	s=arc-20240116; t=1708113543; c=relaxed/simple;
+	bh=FN/N3DMD1eM9Bv5g/B9TwuqSytD65ksGcd0xMEnq4Lo=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=I2AeVAzyyAqKKaMhIdAjWjUUwjShjgFo9U3T/eWI2rxjCctRNSohK1UbAh3qg46tvBGYYIvhyeGyEJnRzpZKBMs97MAsHxKDvKn/o3k0YRlIVXD+FG1kMEJWYrKgAzGUW+5R5djDR1lSsvBj4uhzZv+6imflF+iRfoVy5y4uDxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SxvpJ2Wc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=BtMtM5WRwlF9qEtrgkkI5KG1oi7VznfaSaScU7eLacIqarTx4lh9DX/QQ7qNZPE4HqnhlE7JdAlz5K1aAMprFpPkupX4s27s0qX3Q+qBUCs4by0d7pEZ9JgkQv8pDzsS/1r7DP5y//xA4Ne4StCqf0mv/LlCWb219fxQGjwQ5bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkmYL7BS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SxvpJ2Wc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F7CC433F1;
-	Fri, 16 Feb 2024 19:48:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkmYL7BS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2406FC433F1;
+	Fri, 16 Feb 2024 19:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708112924;
-	bh=KWNQgcUNu9K6byZab9271hwqo1ywNhVflAsCOs4d5HY=;
+	s=k20201202; t=1708113543;
+	bh=FN/N3DMD1eM9Bv5g/B9TwuqSytD65ksGcd0xMEnq4Lo=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=SxvpJ2WcxTvHcXmJVc/HFmEBp+69TbniHYn/IgrM+n/BRCxqRIsRpOGf79GaknRUi
-	 1hIxeZr5WE7qd9FVV4urjIZHiWBxgxjFIMskHLVUrvhwnONrlhdDTnvw/mKvCnOiHI
-	 z+4ZpfC5bmP4cvLaLA97X9z5QHbuuytSFME8KN/y7jE/eokui9L9KRvLUt0L/LKVq5
-	 lvqQsCYLcJ6ZXYVd5oJoqKksO9S/tcG2tuXGMn24ZvtPfjwpnnnlKi4KkD/O8Wdpko
-	 4zmYkcSyL/FnMx1wKTflB3crg9JAURNT1YxLMH3JX+AWnafe56wgmlJ+OgladCOIvY
-	 A14s6uMoBd+nA==
-Date: Fri, 16 Feb 2024 11:48:43 -0800 (PST)
+	b=BkmYL7BS6MuseRUbYPgrhBW4FgjAuLRHNIezusVMJ+cWH/bm1Cv4MC0cV8V5Ch65Q
+	 e7vwznQCjyoFc6wD+goUATNGKS41EHhtw7kqkvCNR0r7vcNt0zbNL/oUyH0qfc2jat
+	 E4N3aQ5UiFoB9qhqBID6/MK0LcyaUz9oMraBxLPIReXaJ2YpHmeBPaMiUf7H9xQp2G
+	 flxyOB5foV+QRQSq+3WiI0JbhF82/mrXakpT6zKAhLvX6B2a0/ZjCKINYVrkmw7UiK
+	 AMVaWM+Dcrcgl6mzobUgPHcZDt3Y1BPitNBKBFnsoZQg6Lkz86DTyGaFYTdvPIsgdG
+	 +djb0W1FLMtCg==
+Date: Fri, 16 Feb 2024 11:59:02 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH v3 net-next 0/7] mptcp: implement TCP_NOTSENT_LOWAT
- support
-In-Reply-To: <cover.1708082765.git.pabeni@redhat.com>
-Message-ID: <042c077b-848d-1642-08ff-9428018ac5fd@kernel.org>
-References: <cover.1708082765.git.pabeni@redhat.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net] mptcp: avoid printing warning once on client
+ side
+In-Reply-To: <59625ef0-1f81-4660-b585-2e9a9ac4a8c6@kernel.org>
+Message-ID: <bc35a839-0353-abd3-cb51-2d48228f4078@kernel.org>
+References: <20240215-mptcp-fix-bogus-pr-warn-v1-1-d14c10312820@kernel.org> <9502e96c-8a72-a6d4-ca2d-1c75c536bfa3@kernel.org> <6b9c4a3e-3c30-4e7b-ab99-ed2e34e24015@kernel.org> <e7769e4c030b06c8ea4b14857a22eafeb9c93277.camel@redhat.com>
+ <59625ef0-1f81-4660-b585-2e9a9ac4a8c6@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/mixed; boundary="0-1586149649-1708113543=:68485"
 
-On Fri, 16 Feb 2024, Paolo Abeni wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Patch 6/7 does the magic, all the others are minor cleanup and fix of
-> buglet exposed by such feature. I'll push a paired pktdrill test.
+--0-1586149649-1708113543=:68485
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+
+On Fri, 16 Feb 2024, Matthieu Baerts wrote:
+
+> Hi Paolo,
 >
-> Note that this relies on the existing accounting for snd_nxt. As I
-> stated such accounting is not 110% accurate as it tracks the most recent
-> sequence number queued to any subflow, and not the actual sequence
-> number sent on the wire.
+> Thank you for your reply!
 >
-> I experimented a lot trying to implement the latter and in the end it
-> proved to be both "too complex" and "not necessary".
+> On 16/02/2024 12:23, Paolo Abeni wrote:
+>> On Fri, 2024-02-16 at 11:42 +0100, Matthieu Baerts wrote:
+>>> On 16/02/2024 00:25, Mat Martineau wrote:
+>>>> On Thu, 15 Feb 2024, Matthieu Baerts (NGI0) wrote:
 >
-> The complexity raises from the need for additional lock and a lot of
-> refactory to introduce such protection without adding significant
-> overhead. Additionally, snd_nxt is currenly used and exposed with the
-> current semantic both eBPF and the internal packet scheduling.
-> Introducing a different tracking will still require us to keep the old
-> one.
+> (...)
 >
-> More interesting, a more accurate tracking could be not strictly
-> necessary: as the MPTCP protocol enqueues data to the subflows only up
-> the available send window, any enqueue data is sent on the wire
-> instantly, without any blocking operation short of a drop in the tx path
-> at the nft or TC layer.
+>>>>> Notes:
+>>>>> - Should we convert this pr_warn_once() to a WARN_ONCE()? Or just in
+>>>>>   our tree? Or just in DEBUG mode?
+>>>>
+>>>> I think it makes sense to keep this patch minimal for -net and stable
+>>>> (just moving the label).
+>>>>
+>>>> Also given the consequences of panic_on_warn, would be better to make
+>>>> any changes to WARN_ONCE() in mptcp-next/net-next. I don't see extra
+>>>> complexity to modify this warning in our tree or debug mode as being
+>>>> worth it, do you think it would be valuable?
+>>>
+>>> Sorry, I'm a bit confused by your reply. For the moment, our CI
+>>> complains when a "Call Trace:" is printed, but it doesn't complain when
+>>> there is a pr_warn().
+>>>
+
+Ok, I didn't realize our CI ignored pr_warn() output so didn't really see 
+the motivation for switching to the WARN() macro - but did want to make 
+sure (at a minimum) that you weren't proposing WARN() for a -net patch.
+
+>>> If the warning here can be caused by interactions with a buggy host, it
+>>> makes sense not to have a WARN() when used in production, but it would
+>>> be good for our CI can catch that. If the warning can only be caused by
+>>> an internal bug, then easier to use a WARN_ONCE().
+
+This makes sense - I agree it's better for CI to catch it.
+
+>>
+>> We can trigger the warning due to either:
+>> * local S/W bug
+>> * bugged/malicious peer.
+>>
+>> I think we should avoid a WARN there.
+>>
+>>> So I think here, we could maybe convert it to a DEBUG_NET_WARN_ON_ONCE()
+>>> and upstream that. WDYT?
+>>
+>> DEBUG_NET is quite lightweight and could be enabled even in production,
 >
-> The individual patches changelog carry the gory details.
+> Ah OK, I didn't know that!
+>
+>> that should be an export-branch only change.
 >
 
-v3 of the series LGTM, thanks Paolo.
++1
 
-Matthieu note that this series is split between mptcp-net and mptcp-next:
-
-> Still sending a single series to outline the functional requirements,
-> even if the first 3 patches could land on mptcp-net directly.
+> Fine by me! I appreciate your suggestion.
 >
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+Thanks Paolo and Matthieu
 
 
-> v2 -> v3:
->  - typo in patch 1/7
->  - dropped unused code in patch 3/7
->  - dropped duplicate code in patch 6/7
->
-> v1 -> v2:
->  - clarifiy commit message in patch 1/7
->  - fix possible wake-up bug in patch 6/7
->
-> *** BLURB HERE ***
->
-> Paolo Abeni (7):
->  mptcp: push at DSS boundaries
->  mptcp: fix snd_wnd initialization for passive socket
->  mptcp: fix potential wake-up event loss
->  mptcp: cleanup writer wake-up
->  mptcp: avoid some duplicate code in socket option handling
->  mptcp: implement TCP_NOTSENT_LOWAT support.
->  mptcp: cleanup SOL_TCP handling
->
-> net/mptcp/protocol.c | 57 ++++++++++++++++++++++++-----------
-> net/mptcp/protocol.h | 51 ++++++++++++++++++++++---------
-> net/mptcp/sockopt.c  | 71 ++++++++++++++++++++------------------------
-> 3 files changed, 108 insertions(+), 71 deletions(-)
->
-> -- 
-> 2.43.0
->
->
->
+- Mat
+--0-1586149649-1708113543=:68485--
