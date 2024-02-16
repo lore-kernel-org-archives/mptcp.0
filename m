@@ -1,107 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F43312EBFC
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 14:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D427219ED
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 17:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708094800; cv=none; b=TSVVno4w+if1o7nlnmQ3RxYZkGTfd4AheBj2zoNy5WXX9QTmv4Ynbu1jP0VPBkZOZM7EV6di8OgVzRpdtunbH3i62rMPBaIcqmj9JKfwPj6p9RIYhPvbLRiAuhK1L3f2h/rKP79gKLake27XqcBsWUCWkrhbiJdK4C0VEeVxahE=
+	t=1708105046; cv=none; b=fy7I9k3JGw1emP0yrjII2N36hUNs5jm7U703365Phr0CvkBi5PMt64oDEOwvHaDqMajX44hV/4ynQD51pqjumgFgUzmiFbXUZTF8erOQZNNSbx21L07Fxfbz0OAN9EQBpkEggBl5+pS6/5l6AS8mAgsKcj4zLEWWDXrxhQhvWhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708094800; c=relaxed/simple;
-	bh=YQuf2/ea3rFgIWNOjqp0bNmgZGNc6dgjq3U0okH0xRI=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=HhibQ9VoVqyu3rswwIp2l4zD9QpmnEtr3arRypPB2iGoYVqrEYh3Hrysj63P2OHYoSq8lH4hbU+pVRO7227dsI7WVmhUlV810EhPyFoTbdmpN8rnzilJOCz9sIGB9D2RWLCuupNtFFBzuAXx1UJ9Ky+erbFYE2pwcIgzA+4GHRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ojzYYWPu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ojzYYWPu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63DBFC433F1
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 14:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708094799;
-	bh=YQuf2/ea3rFgIWNOjqp0bNmgZGNc6dgjq3U0okH0xRI=;
-	h=Date:To:From:Subject:From;
-	b=ojzYYWPuacEhn2oVNSNG/CV9dO0sG8s6+O0ckgykDJqjeLxpUcuXUVPMcr/VBmrSd
-	 CWMS/J9ukkrPOKvY1VmSFKtJyLPw7XT0Iyzpnm3yrHwUeQ7OsEIlMuMc2Cr44U4NKQ
-	 wYbcdAt942tOZbzMsyO97MboUV/U5bQtI/1bminnT/MW7MtFWOnqATg632MPLiek7g
-	 d8Oh0/c8KseXGMeuDSalxsrVksCgUjhK44LfI6kEd3c7XeWDiMcHG3QXpv7U6Y2DCk
-	 66R3wRafj68qzXt08i5gz6h2/xFqlxcCPAafbiH5GUcXLo34aINMIjXpKXIkxY7tWg
-	 qnuRTVC9Oehyg==
-Message-ID: <6dc46eb4-4c14-4314-8db4-24c460da14ae@kernel.org>
-Date: Fri, 16 Feb 2024 15:46:37 +0100
+	s=arc-20240116; t=1708105046; c=relaxed/simple;
+	bh=8zgHGk2XYlc0eyYqGvAJfbnqxqiQENrlYr45nngj+qM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RkBoRQtJDeOwbnYXapPDIBI1/xydXVaZJoj458gefQu+BrgYL9AcU7SgglXYB1pAcoL7cAfM6YOMOUskCl+EeE/k7b2B/2HCtIXInt1Xln2rZbwH48FjGjOkct3vcBNLZ5/J48n7WIHEjqEzl337T8/jUi9lVHEDoZ5+M7dJ/dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-363c06d9845so21756745ab.1
+        for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 09:37:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708105043; x=1708709843;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uZRU6Lm8OXebtHymXF/bT845gS+j9fCEUbQMNuXasxk=;
+        b=QUHIbHRhk0/nkuuGo0qjadVRKMrLGdH1Tt4tLsW5v9g5zqIFl6D4PvEhFuv4WYAL3K
+         8kb+8wr90DYW72mV+VQWv41FcbwZrKh0wUA3CvedavkL7NKT0Rl5vg1OBF6iyebI58Cz
+         4dXc5uHbCcShzkFM+eEXTjFc85k++XhSARnTEM56fHmm45OL9P4XQsmCJJmteQ0BfAw1
+         eqN16DYiQwg04/HD+OjzPuDbI4K3+MNy5zOihRHnO+s9A2e01Zmkmx2SRaF5DtbRpU9W
+         Fov8D3KoXPppVxi6mq/yeMYPOdCYHN+5bHB52uhF/rrCktAd8x56lWeUMwKEhXYkLERc
+         +y/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUmd1rekfyqFuSRjMLjJtzApeBVtIX7YVf990zh0EjM5vdaXe38XWcurzW2tz4xoGIIItLj+vDxR6VfzpT4iRw4ZR1PfdA=
+X-Gm-Message-State: AOJu0Ywhg4rb+ACVIfn2Zb48nwx2eLIYaKTn6K6zDQNX8pR9q//fTxi1
+	gvwiRDv5iOxzNgsRxCffeklleoQv8ySD4MoNCslNx+tVAldvzx2lfJWTXoWg+rb9zAT01TU/uE+
+	W0ChnYdLZwo7b9JJGki+nqwzyvvMjZEHj8IMXOLRUP/Pe5g+mkhdpqMU=
+X-Google-Smtp-Source: AGHT+IFlUi7Ug1pKYpl/xwhk2Po0PLq9/qTn4i4DlUDJuC9qfpEk75VqoJzOzWOMKWa/qnJCXnf1n4e7LlwpVcw01j+du1rEWOep
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB, fr-BE
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Subject: [CI] Cirrus-CI has been disabled for the rest of the month
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:c26d:0:b0:363:c8ba:ea5a with SMTP id
+ h13-20020a92c26d000000b00363c8baea5amr344499ild.6.1708105043656; Fri, 16 Feb
+ 2024 09:37:23 -0800 (PST)
+Date: Fri, 16 Feb 2024 09:37:23 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005dc7ce0611833268@google.com>
+Subject: [syzbot] [mptcp?] WARNING in __mptcp_clean_una
+From: syzbot <syzbot+5b3e7c7a0b77f0c03b0d@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang.tang@linux.dev, 
+	geliang@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
-FYI, we just reached Cirrus-CI's monthly limit:
+syzbot found the following issue on:
 
-> Failed to start an instance: FAILED_PRECONDITION: Monthly compute limit exceeded!
-https://cirrus-ci.com/task/5976473463422976
+HEAD commit:    4f5e5092fdbf Merge tag 'net-6.8-rc5' of git://git.kernel.o..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=129f6398180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1d7c92dd8d5c7a1e
+dashboard link: https://syzkaller.appspot.com/bug?extid=5b3e7c7a0b77f0c03b0d
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fc9c8a180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d0cc1c180000
 
-I just disabled it, see:
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d430539932db/disk-4f5e5092.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6369586e33b7/vmlinux-4f5e5092.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9c1e38f80254/bzImage-4f5e5092.xz
 
-  25511cc08fd6 ("Reapply "cirrus: disable it for the moment"")
+The issue was bisected to:
 
-I will re-enable it at the beginning of March, except if an alternative
-can be used in between:
+commit 3f83d8a77eeeb47011b990fd766a421ee64f1d73
+Author: Paolo Abeni <pabeni@redhat.com>
+Date:   Thu Feb 8 18:03:51 2024 +0000
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues/474
+    mptcp: fix more tx path fields initialization
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=160a83a4180000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=150a83a4180000
+console output: https://syzkaller.appspot.com/x/log.txt?x=110a83a4180000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5b3e7c7a0b77f0c03b0d@syzkaller.appspotmail.com
+Fixes: 3f83d8a77eee ("mptcp: fix more tx path fields initialization")
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 27 at net/mptcp/protocol.c:1001 __mptcp_clean_una+0xb89/0xd70 net/mptcp/protocol.c:1001
+Modules linked in:
+CPU: 1 PID: 27 Comm: kworker/1:1 Not tainted 6.8.0-rc4-syzkaller-00180-g4f5e5092fdbf #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+Workqueue: events mptcp_worker
+RIP: 0010:__mptcp_clean_una+0xb89/0xd70 net/mptcp/protocol.c:1001
+Code: 8d 0d a5 f6 e9 7d fc ff ff 44 89 f1 80 e1 07 38 c1 0f 8c 87 fc ff ff 4c 89 f7 e8 72 0d a5 f6 e9 7a fc ff ff e8 98 f0 42 f6 90 <0f> 0b 90 49 bc 00 00 00 00 00 fc ff df e9 29 f7 ff ff 44 89 f1 80
+RSP: 0018:ffffc90000a2f860 EFLAGS: 00010293
+RAX: ffffffff8b507ba8 RBX: ffff888024ee3ab8 RCX: ffff8880192e9dc0
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc90000a2f950 R08: ffffffff8b507228 R09: fffff52000145f24
+R10: dffffc0000000000 R11: fffff52000145f24 R12: dffffc0000000000
+R13: 1ffff11004a6e000 R14: 0000000000000000 R15: ffff888025370000
+FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8a82c561d0 CR3: 000000007d8b6000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __mptcp_clean_una_wakeup+0x7f/0x340 net/mptcp/protocol.c:1049
+ mptcp_clean_una_wakeup net/mptcp/protocol.c:1056 [inline]
+ __mptcp_retrans+0xbf/0xb20 net/mptcp/protocol.c:2587
+ mptcp_worker+0xd13/0x1610 net/mptcp/protocol.c:2739
+ process_one_work kernel/workqueue.c:2633 [inline]
+ process_scheduled_works+0x913/0x1420 kernel/workqueue.c:2706
+ worker_thread+0xa5f/0x1000 kernel/workqueue.c:2787
+ kthread+0x2ef/0x390 kernel/kthread.c:388
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1b/0x30 arch/x86/entry/entry_64.S:242
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
