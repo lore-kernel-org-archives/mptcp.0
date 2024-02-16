@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA0717753
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 07:42:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5002179B2
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 07:42:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708069347; cv=none; b=rb5voKMWHOhDE3J2pFvplvFtK9RJkLk6WLhad7ugKzEpdHM2XbigYx/jnJUNzRCqdRcH/PtgKespDUiRIjo9lcUWiG9d3Nd+6iE+Qtpa1+tp6Dxwbi8FS1dTFlNuM6kwk0FZYOZWU0v0wGs7GxBscAsUnKDN/N/WEVk08HyEqKo=
+	t=1708069349; cv=none; b=DNywUozXd2DorimoQbN3yrHj+motW5XlOvcO5wlwH6kOcNZ4b/03OaHOOO+HlSQUVcE/vMPWBsjNaSBygdzbp6YPjP30fdDYfltPTz/Ztv+2zq/9NzQdXqmcltdJqtsmmZMsvYP8rphupjN7Cs6EX30Jggb7ZxlML8sti45b3X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708069347; c=relaxed/simple;
-	bh=NnNcW5v6KIrnHIf30fLgb4sTxTeaPwJ6PDJdCChPznA=;
+	s=arc-20240116; t=1708069349; c=relaxed/simple;
+	bh=WXNJVLSDil1/0p973BkNOj6TasTWBdJpcU4wNM08Ar8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=K9fyKnNVKYDGZUVghb1uJmAaMFKz0ftu2mfXCrih+rZXgpPF+a7vW0gPKuSrshM8LDKn1bFX7PsMO9Hs+Jin71nChK0+MgE8om79exV1rEg3VbXcCi/2EuEP9vib0BamangfRFtojDPmqHpgOdqqPsxKSnMVcJNtAlgKAxvA11E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQ9sQrvj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OiMTngNIAPnqhHDUUJbYwmpbhSaVHXgDOwiTO0hF1/uGzCOoRsyHUq+TAeWFMiwcVfFn2jYAeonnzY645do2uaZPOx+rQx0+0W9HczcFJLwb/r0Npx2T4NoeIwTvM5CQtYg9PwzVKT5Mic/nEt4LQ+Fk4azKuJQoa0zVb7yUwVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XzSuWyLp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQ9sQrvj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03B0CC43394;
-	Fri, 16 Feb 2024 07:42:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XzSuWyLp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A21BBC433F1;
+	Fri, 16 Feb 2024 07:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708069347;
-	bh=NnNcW5v6KIrnHIf30fLgb4sTxTeaPwJ6PDJdCChPznA=;
+	s=k20201202; t=1708069348;
+	bh=WXNJVLSDil1/0p973BkNOj6TasTWBdJpcU4wNM08Ar8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nQ9sQrvjoZgMJbu4PsNJlfuoljz86HpzOSaP/63fV5frvIx/6DZqrWmYtM6CpGK75
-	 fK3p9tma5u+kxeqnOrK1NofSK4UConK4NU4tF0pAVfFIC9PDTfFBKT7naHVjK45Q6D
-	 F/KSkav3O6mW8Y/zsz0y3+lpKPJquuqoAcXxRwxql4YPHciZ/g4c8IajbkO1nTgHtV
-	 TY3fJUJKpDjrE0ZcC830KtuPMklYzMcFcgPI3SbqZiWMz898qqbDoUKeRS1q87rNzA
-	 Q0+CtTUVDF3SLv3vL0I9VyE3Z8QFUzmSaQCAOyeQU3JhtdnjcCj3HDH3T6YU8+u+jF
-	 /lAyw3KqzhyNQ==
+	b=XzSuWyLpngcOTaDR5cBRGDZifeWlE7SXff0Bopt2R/mz9Ssq0eN22bykBJxQacTTx
+	 FXEL24xUx/R2sr0HUIqSE0krOgzZnHFly8xNzDznShYqUcQmSriQYOC8goqW+pYRIW
+	 a0iejNp6EywfFY1qzeuhv4DBLVPqhdjoZkLGPpCYXSKR8QTjlVhwrm6f0gkguklaFP
+	 8iAUW5/BRATua+eOGaFxCE3N1YgXE9R5N4bOyAPydpIcvDYwv+XcQ7XfLO6a1Bcq6J
+	 Aj7KuOMYtnn3D4h9AKy6SjjaQ4uuVz6Njw3xafoOA4vuM7Ky0jiTGH22Iu96kyorQZ
+	 YVhIDjWgi2vEQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v13 02/14] mptcp: implement mptcp_userspace_pm_dump_addr
-Date: Fri, 16 Feb 2024 15:42:04 +0800
-Message-Id: <62aff7a01948d6edc7bd88bc831ba357e67fa87a.1708069036.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v13 03/14] mptcp: add token for get-addr in yaml
+Date: Fri, 16 Feb 2024 15:42:05 +0800
+Message-Id: <19464bdd7ef79bab1b7c747d247060e9a63584c9.1708069036.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1708069036.git.tanggeliang@kylinos.cn>
 References: <cover.1708069036.git.tanggeliang@kylinos.cn>
@@ -45,99 +45,82 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch implements mptcp_userspace_pm_dump_addr() to dump addresses
-from userspace pm address list. Use mptcp_token_get_sock() to get the
-msk from the given token, if userspace PM is enabled in it, traverse
-each address entry in address list, put every entry to userspace using
-mptcp_pm_nl_put_entry_msg().
+This patch adds token parameter together with addr in get-addr section in
+mptcp_pm.yaml, then use the following commands to update mptcp_pm_gen.c
+and mptcp_pm_gen.h:
+
+./tools/net/ynl/ynl-gen-c.py --mode kernel \
+        --spec Documentation/netlink/specs/mptcp_pm.yaml --source \
+        -o net/mptcp/mptcp_pm_gen.c
+./tools/net/ynl/ynl-gen-c.py --mode kernel \
+        --spec Documentation/netlink/specs/mptcp_pm.yaml --header \
+        -o net/mptcp/mptcp_pm_gen.h
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_userspace.c | 60 ++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h     |  2 ++
- 2 files changed, 62 insertions(+)
+ Documentation/netlink/specs/mptcp_pm.yaml | 3 ++-
+ net/mptcp/mptcp_pm_gen.c                  | 7 ++++---
+ net/mptcp/mptcp_pm_gen.h                  | 2 +-
+ 3 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index bc97cc30f013..d6b7be3afbe5 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -572,3 +572,63 @@ int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
- 	sock_put(sk);
- 	return ret;
- }
-+
-+int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
-+				 struct netlink_callback *cb)
-+{
-+	struct id_bitmap {
-+		DECLARE_BITMAP(map, MPTCP_PM_MAX_ADDR_ID + 1);
-+	} *bitmap;
-+	const struct genl_info *info = genl_info_dump(cb);
-+	struct net *net = sock_net(msg->sk);
-+	struct mptcp_pm_addr_entry *entry;
-+	struct mptcp_sock *msk;
-+	struct nlattr *token;
-+	int ret = -EINVAL;
-+	struct sock *sk;
-+	void *hdr;
-+
-+	bitmap = (struct id_bitmap *)cb->ctx;
-+	token = info->attrs[MPTCP_PM_ATTR_TOKEN];
-+
-+	msk = mptcp_token_get_sock(net, nla_get_u32(token));
-+	if (!msk) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
-+		return ret;
-+	}
-+
-+	sk = (struct sock *)msk;
-+
-+	if (!mptcp_pm_is_userspace(msk)) {
-+		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
-+		goto out;
-+	}
-+
-+	lock_sock(sk);
-+	spin_lock_bh(&msk->pm.lock);
-+	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
-+		if (test_bit(entry->addr.id, bitmap->map))
-+			continue;
-+
-+		hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
-+				  cb->nlh->nlmsg_seq, &mptcp_genl_family,
-+				  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
-+		if (!hdr)
-+			break;
-+
-+		if (mptcp_nl_fill_addr(msg, entry) < 0) {
-+			genlmsg_cancel(msg, hdr);
-+			break;
-+		}
-+
-+		__set_bit(entry->addr.id, bitmap->map);
-+		genlmsg_end(msg, hdr);
-+	}
-+	spin_unlock_bh(&msk->pm.lock);
-+	release_sock(sk);
-+	ret = msg->len;
-+
-+out:
-+	sock_put(sk);
-+	return ret;
-+}
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 60de3f997de2..af20833f3157 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1032,6 +1032,8 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
- int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
-+int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
-+				 struct netlink_callback *cb);
+diff --git a/Documentation/netlink/specs/mptcp_pm.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
+index 49f90cfb4698..af525ed29792 100644
+--- a/Documentation/netlink/specs/mptcp_pm.yaml
++++ b/Documentation/netlink/specs/mptcp_pm.yaml
+@@ -292,13 +292,14 @@ operations:
+     -
+       name: get-addr
+       doc: Get endpoint information
+-      attribute-set: endpoint
++      attribute-set: attr
+       dont-validate: [ strict ]
+       flags: [ uns-admin-perm ]
+       do: &get-addr-attrs
+         request:
+           attributes:
+            - addr
++           - token
+         reply:
+           attributes:
+            - addr
+diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
+index 670da7822e6c..c30a2a90a192 100644
+--- a/net/mptcp/mptcp_pm_gen.c
++++ b/net/mptcp/mptcp_pm_gen.c
+@@ -32,8 +32,9 @@ const struct nla_policy mptcp_pm_del_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1]
+ };
  
- static inline u8 subflow_get_local_id(const struct mptcp_subflow_context *subflow)
- {
+ /* MPTCP_PM_CMD_GET_ADDR - do */
+-const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1] = {
+-	[MPTCP_PM_ENDPOINT_ADDR] = NLA_POLICY_NESTED(mptcp_pm_address_nl_policy),
++const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ATTR_TOKEN + 1] = {
++	[MPTCP_PM_ATTR_ADDR] = NLA_POLICY_NESTED(mptcp_pm_address_nl_policy),
++	[MPTCP_PM_ATTR_TOKEN] = { .type = NLA_U32, },
+ };
+ 
+ /* MPTCP_PM_CMD_FLUSH_ADDRS - do */
+@@ -110,7 +111,7 @@ const struct genl_ops mptcp_pm_nl_ops[11] = {
+ 		.doit		= mptcp_pm_nl_get_addr_doit,
+ 		.dumpit		= mptcp_pm_nl_get_addr_dumpit,
+ 		.policy		= mptcp_pm_get_addr_nl_policy,
+-		.maxattr	= MPTCP_PM_ENDPOINT_ADDR,
++		.maxattr	= MPTCP_PM_ATTR_TOKEN,
+ 		.flags		= GENL_UNS_ADMIN_PERM,
+ 	},
+ 	{
+diff --git a/net/mptcp/mptcp_pm_gen.h b/net/mptcp/mptcp_pm_gen.h
+index ac9fc7225b6a..e24258f6f819 100644
+--- a/net/mptcp/mptcp_pm_gen.h
++++ b/net/mptcp/mptcp_pm_gen.h
+@@ -18,7 +18,7 @@ extern const struct nla_policy mptcp_pm_add_addr_nl_policy[MPTCP_PM_ENDPOINT_ADD
+ 
+ extern const struct nla_policy mptcp_pm_del_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1];
+ 
+-extern const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1];
++extern const struct nla_policy mptcp_pm_get_addr_nl_policy[MPTCP_PM_ATTR_TOKEN + 1];
+ 
+ extern const struct nla_policy mptcp_pm_flush_addrs_nl_policy[MPTCP_PM_ENDPOINT_ADDR + 1];
+ 
 -- 
 2.40.1
 
