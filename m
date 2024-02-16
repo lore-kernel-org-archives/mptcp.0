@@ -1,48 +1,52 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9289159B40
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 11:29:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E085812E
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 11:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708082942; cv=none; b=Ep1jcp+6gnx741KuWHND0kycIN2vdPrr70jwUgVQpRCz4xnVZkMc5B5lmWMGf2VfY/DQeQkkGqundtop7oT39bhE8I0TByoj5Kl5YJT5QzIFq5Jbw/eo/LjREc4CEQPsqYzhUHyT761tf9aqtIepotKeAofEMFZy0oPY7RrqOpo=
+	t=1708082943; cv=none; b=DzA1sdX7p7jYZlKs7FwJ85QlDMXZfdvQjulbyYZsVOgMiTGlUsJd2DsFIcZjIPHCj1hEEY8U5Voi2K0rEM5sLlhbqdeliXZSV6QgsQdPWccI8eoehPLayLmepkgRDKpjRf3XeYjPjglsf2c2E8RzXDDX0aap9X9f1FroVsgnkmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708082942; c=relaxed/simple;
-	bh=rbrpJnbf+HXMGwLV51VL83P+0jX30591Cg3coicNbuc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a5jbkVbleQcmFN7BDeSq8siz/bHkbn8RmyhYdD0wGubTe3QknZX+/N8WGhcVvLcJGUDCeBI0nFy4xt7KVWf/yE2LumwipD8t/07nOLgJsoVpdeDveDWkE2gHxUDHp0CoMNXi4Lj7P3UVY2Cshon8fwxQ4dhVCsBPk8k+8Wdu/CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AkdFNC+Q; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1708082943; c=relaxed/simple;
+	bh=eftXQxxgj1iZ31Isyz/h1FmrBP367vowtkPMW//1n8Q=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Javu5iObh4MCvxWhCrwqwGDa4JSA3QCIMng1pmbRQdJKQ2zohQoj4kw56tma5y/y/jwvMJ3TZI9DX06bvK7/Jg58PZO58YTU3c0dNhzUQ6T0ef1kHrRibraQDp3sH8Lj07CppjeQ7a5r8ZISvYn3nAfKCl/gH3WIKqXJi7Cgr8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QuEpsO1E; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AkdFNC+Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QuEpsO1E"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708082939;
+	s=mimecast20190719; t=1708082940;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=P5EdnVvlsvDh9OMJr0YHjaaU44vhggr8m57rTvT46no=;
-	b=AkdFNC+QBwl24v6aHRKqA0N2qi8x/EsCKsHJZ34BcLuiL3TAJwIiim+IwgbvesC80ZrH24
-	5t6ppks947UtG8RyGcAeR2P5FjqQ8uPA5ACWxeGCKUFFwD5+nbEJ8lFNZLRWLhTIFnY26o
-	bbscIg2IUS858pAbtHh7jsr+MxnVh1Q=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-414-gKMyjRL3OW-m3B5BvUnApg-1; Fri,
- 16 Feb 2024 06:28:58 -0500
-X-MC-Unique: gKMyjRL3OW-m3B5BvUnApg-1
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kSuy3gfqq1e5kUOm1iauKOUUlWQHrskJVh4dyXVfLJI=;
+	b=QuEpsO1EOqEqmz/okO684BIvYsYLkSBEHFJF7QwH9KAZAI5K0iGbLdeCQUK7XisnJeOmsv
+	OeNTBGIfKGbU6vhUBRy7dzTKvQKNp+vLy8P78JJZTZ1LrFBoh0jKvqPHg6JRr0+/DjlB3J
+	+wXfLaP4PZxmXV8c9GClD0truK1PoSU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-478-rvDdOp2GMXCz_8KSi3KS4g-1; Fri, 16 Feb 2024 06:28:58 -0500
+X-MC-Unique: rvDdOp2GMXCz_8KSi3KS4g-1
 Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DBD8F3C02B9A
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 11:28:57 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A21F880350F
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 11:28:58 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.225.51])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6B3F5492BE3
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 11:28:57 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 312BD492BE2
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 11:28:58 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v3 net-next 0/7] mptcp: implement TCP_NOTSENT_LOWAT support
-Date: Fri, 16 Feb 2024 12:28:11 +0100
-Message-ID: <cover.1708082765.git.pabeni@redhat.com>
+Subject: [PATCH v3 net-next 1/7] mptcp: push at DSS boundaries
+Date: Fri, 16 Feb 2024 12:28:12 +0100
+Message-ID: <70d4b98c5eede368e82d9238b3ca33fbf7c3e57e.1708082765.git.pabeni@redhat.com>
+In-Reply-To: <cover.1708082765.git.pabeni@redhat.com>
+References: <cover.1708082765.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -55,60 +59,37 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Patch 6/7 does the magic, all the others are minor cleanup and fix of
-buglet exposed by such feature. I'll push a paired pktdrill test.
+when inserting not contiguous data in the subflow write queue,
+the protocol creates a new skb and prevent the TCP stack from
+merging it later with already queued skbs by setting the EOR marker.
 
-Note that this relies on the existing accounting for snd_nxt. As I
-stated such accounting is not 110% accurate as it tracks the most recent
-sequence number queued to any subflow, and not the actual sequence
-number sent on the wire.
+Still no push flag is explicitly set at the end of previous GSO
+packet, making the aggregation on the receiver side sub-optimal -
+and packetdrill self-tests less predictable.
 
-I experimented a lot trying to implement the latter and in the end it
-proved to be both "too complex" and "not necessary".
+Explicitly mark the end of not contiguous DSS with the push flag.
 
-The complexity raises from the need for additional lock and a lot of
-refactory to introduce such protection without adding significant
-overhead. Additionally, snd_nxt is currenly used and exposed with the
-current semantic both eBPF and the internal packet scheduling.
-Introducing a different tracking will still require us to keep the old
-one.
-
-More interesting, a more accurate tracking could be not strictly
-necessary: as the MPTCP protocol enqueues data to the subflows only up
-the available send window, any enqueue data is sent on the wire
-instantly, without any blocking operation short of a drop in the tx path
-at the nft or TC layer.
-
-The individual patches changelog carry the gory details.
-
-Still sending a single series to outline the functional requirements,
-even if the first 3 patches could land on mptcp-net directly.
-
+Fixes: 6d0060f600ad ("mptcp: Write MPTCP DSS headers to outgoing data packets")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
 v2 -> v3:
-  - typo in patch 1/7
-  - dropped unused code in patch 3/7
-  - dropped duplicate code in patch 6/7
+ - fixed subj typo (Mat)
+---
+ net/mptcp/protocol.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-v1 -> v2:
-  - clarifiy commit message in patch 1/7
-  - fix possible wake-up bug in patch 6/7
-
-*** BLURB HERE ***
-
-Paolo Abeni (7):
-  mptcp: push at DSS boundaries
-  mptcp: fix snd_wnd initialization for passive socket
-  mptcp: fix potential wake-up event loss
-  mptcp: cleanup writer wake-up
-  mptcp: avoid some duplicate code in socket option handling
-  mptcp: implement TCP_NOTSENT_LOWAT support.
-  mptcp: cleanup SOL_TCP handling
-
- net/mptcp/protocol.c | 57 ++++++++++++++++++++++++-----------
- net/mptcp/protocol.h | 51 ++++++++++++++++++++++---------
- net/mptcp/sockopt.c  | 71 ++++++++++++++++++++------------------------
- 3 files changed, 108 insertions(+), 71 deletions(-)
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3017b01ac488..21b3729c65ac 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1265,6 +1265,7 @@ static int mptcp_sendmsg_frag(struct sock *sk, struct sock *ssk,
+ 		mpext = mptcp_get_ext(skb);
+ 		if (!mptcp_skb_can_collapse_to(data_seq, skb, mpext)) {
+ 			TCP_SKB_CB(skb)->eor = 1;
++			tcp_mark_push(tcp_sk(ssk), skb);
+ 			goto alloc_skb;
+ 		}
+ 
 -- 
 2.43.0
 
