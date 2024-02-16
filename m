@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402961B81D
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 10:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AAD535C0
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 10:51:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708080397; cv=none; b=pRzCMpU7w2BSi6Tr2X06XIFaZOBIbOEVdOUButTh5ajmEPW5VejWdKy1eWZ7C5G8pYbuObecUAta0pLZ9Syr/BEZsZj16qrItk/4BmwmalxMwfQRBTJUJ2qm/Wwje4Jv9Va0dptOJGRkToaH2D8GF4qgJkTRBGwidOhCbqmy/t0=
+	t=1708080668; cv=none; b=P0jdDfQkN+Odnj2TccLtXQMjahMpxH+ntaogxOvg/JLCiMi49A5RkFCaxfw0jTOAyMHXGugpfhLhpgzyMtngHFOStLypJisi+65nExZpP5pWFYtaS1fJ8YeM4C4Q8ifoqnGTt+8QNkdFC6cKBxHFHEW5sVUbEZFmHgKoJzu6xYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708080397; c=relaxed/simple;
-	bh=jBFDwQwo8lask2/bgsWATMs0yWn/b5klLk5ZE6rRX9w=;
+	s=arc-20240116; t=1708080668; c=relaxed/simple;
+	bh=N5GhfUuJM+rV9KxGopcFNgAGqnFDPzbXmRFRBkKmfYY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=swukffCNXONHu2+D6mTyJtAZCqbFe0y2iiQa3AhONcR8AnriYunqYepe97FaAza+MOBCuPbFTNJMkmeAdCBW5+m7aOncF8O2cD7PJ4AI2cIQmsGbTQQlPVfcEm74/C4N4zYHLiBJ3QHH4nPyVOeQJ1IiUGL6WYi5tfOPQfNW8Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpDEfBUA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ta3sGE+lRfkftq0lt6HZqXSsxjFXrTMK0pPtruLZZJfi9DA7foev6Iouy8Br6yY8hBUd7dnP8I6X2eLuzC4pDvuY+kqb3dXBvaLmmQxq4DlJT7HJ9Klh92L0Nrp1rfwkW5UgdaD4kcUmF4ndpvJIQSYvt9TMfaxnzBiggnenS8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYbiJ92D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpDEfBUA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA834C433F1;
-	Fri, 16 Feb 2024 10:46:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYbiJ92D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6B9FC433F1;
+	Fri, 16 Feb 2024 10:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708080396;
-	bh=jBFDwQwo8lask2/bgsWATMs0yWn/b5klLk5ZE6rRX9w=;
+	s=k20201202; t=1708080668;
+	bh=N5GhfUuJM+rV9KxGopcFNgAGqnFDPzbXmRFRBkKmfYY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dpDEfBUAL6kBICH3R4lIK66ayG8PsK6pxH3u7hMWWRYPFA9bqt57aT2EsP3xgWXr3
-	 Sd7ItinTmYih51NPSlwG412ReuQcPixiMQJbt7ItTiS00IvlwomZ/f4TYReF6UVz6k
-	 k9kKe1f8D+CMizNH6DYa9NzfewX77fpf+JY7iojdiHVKVKKa9IUau1RmXGD+AK2SVV
-	 AcJXZg0Rx2ELZS7NifppCjWyAoEDaD2brMDkbCCkDtGBrzDPVojXff+3rzRgzbC0rT
-	 XrD3k1rF/JF0KWwmh7B66zTc4kmf4ORYI6/+YtXGlhRfbJHXTUUbsjdpgIEZ8BpzbM
-	 c9B0iOTjki4OA==
-Message-ID: <b89ecea0-f424-4222-aea3-ac585bc3912e@kernel.org>
-Date: Fri, 16 Feb 2024 11:46:34 +0100
+	b=bYbiJ92Di3N7sBs48cHUqzOvL1S+qLdvw94GC4vGYF4Z6MzV7IRnwTCXAwWsBNFxW
+	 HL6pAUGsQwGCW8pzGp2RTB5JIKm22cVmQ4haW7Y9ERyG00vnFAhDPJXXpHd81t2cXZ
+	 2oszBrnZU770iMNISaVrSWYgd0+EDW5G5AiogLcsyKLgtDii1NczXAZpYT57ldOKbU
+	 qqAr4Ey6O6+0Qz09OdsGEWO/p2ZuHu2LXDdDjy3/RJGUfKypN6NC53YSD+17gG9DYZ
+	 w2Ej+DB8JwZE/mZbRgFdZ/lXHJX/Xmdxcc8Di2sLUPCheLPrmcn1nyUbNQbpHJGlNe
+	 Y3+dmafjF0kuw==
+Message-ID: <52cd0993-f76f-4bf3-9c47-4cfabeb4e408@kernel.org>
+Date: Fri, 16 Feb 2024 11:51:05 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] mptcp: avoid printing warning once on client
- side
+Subject: Re: [PATCH mptcp-next v4 0/3] mptcp: check the protocol with
+ DEBUG_NET
 Content-Language: en-GB, fr-BE
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-References: <20240215-mptcp-fix-bogus-pr-warn-v1-1-d14c10312820@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240215-mptcp-check-protocol-v4-0-16e932665e21@kernel.org>
+ <fc259bf3-2ebd-120d-fed3-8c5b35ad2e54@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,39 +87,56 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240215-mptcp-fix-bogus-pr-warn-v1-1-d14c10312820@kernel.org>
+In-Reply-To: <fc259bf3-2ebd-120d-fed3-8c5b35ad2e54@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Mat,
 
-On 15/02/2024 16:06, Matthieu Baerts (NGI0) wrote:
-> After the 'Fixes' commit mentioned below, the client side might print
-> the following warning once when a subflow is fully established at the
-> reception of any valid additional ack:
+On 16/02/2024 00:01, Mat Martineau wrote:
+> On Thu, 15 Feb 2024, Matthieu Baerts (NGI0) wrote:
 > 
->   MPTCP: bogus mpc option on established client sk
+>> Recently, Paolo fixed a bug where a TCP-specific helper was used with an
+>> MPTCP socket [1]. The bug was not detected by fuzzer or static analysis.
+>>
+>> Following this, it has been suggested to add a check, only in debug
+>> mode. This is what this series is doing.
+>>
+>> The series has been split to be upstreamed: a preparation patch for
+>> MPTCP, the modification for TCP, then for MPTCP. It is not clear if it
+>> would be OK to add that upstream. If not, we can squash these three
+>> patches in "DO-NOT-MERGE: mptcp: improve code coverage for CI" commit we
+>> have in our export tree.
+>>
+>> Note that the MPTCP Token kUnit test needs to be adapted for this new
+>> check. This is what is done in patch 1/3.
+>>
+>> Link:
+>> https://lore.kernel.org/mptcp/35875ef9cb7194563b580e14c71cc8cb065f846c.1706043786.git.pabeni@redhat.com/ [1]
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Changes in v4:
+>> - Patch 2 and 3 have been modified, please the changelog on each patch
+>> - Link to v3:
+>> https://lore.kernel.org/r/20240207-mptcp-check-protocol-v3-0-77c69c596f55@kernel.org
 > 
-> That's a normal situation, and no warning should be printed for that. We
-> can then skip the check when the label is used.
+> Thanks Matthieu, v4 LGTM:
 > 
-> Fixes: e4a0fa47e816 ("mptcp: corner case locking for rx path fields initialization")
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
 Thank you for the review!
 
-Now in our tree (fixes for -net):
+Now in our tree:
 
-New patches for t/upstream-net and t/upstream:
-- 738c16c9c6f1: mptcp: avoid printing warning once on client side
-- Results: 8acc1a7e7787..f2ba4d61dbc4 (export-net)
-- Results: 8cc4e9d608dd..0b8245446c36 (export)
+New patches for t/upstream:
+- c3442c02434d: mptcp: token kunit: set protocol
+- 63ecd0ec9a16: mptcp: check the protocol in tcp_sk() with DEBUG_NET
+- 6b84a8f44c8a: mptcp: check the protocol in mptcp_sk() with DEBUG_NET
+- Results: 0b8245446c36..27e2360c238b (export)
 
 Tests are now in progress:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export-net/20240216T104440
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240216T104440
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240216T104727
 
 Cheers,
 Matt
