@@ -1,148 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F5017C6D
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 11:33:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B7178679
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 12:04:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708083199; cv=none; b=FetYmZa1SGaxHDxMbbYIhHirrWgBWKiC8Bkqp0BT+1HcokIE+0IBqoHs0Cs8mLM4JCQW/zZ5cI8d7gARWTz6rAXvxcqnzUJaSc0qkQwG8AQMKllwbXlg6rvpmSlIkjKwV8dehpmHUppA2jdCXdBpygDhotJmtWFyNoZpY3LlqXk=
+	t=1708085083; cv=none; b=Fkl5BuQkw4y5xgPuraWopM/itWx6BlJKpYJIRkxbBUnFIQ7e6XA1dnGBg6snHG4k8jgIJe71BqO0c3/vuy0Du/dpiYvUERGEHiwpsAm0kBcrY5DCxukA6ygCcK7yTizpP0k4Bu9s0IVofoJlQN6NnKk7Y5wnUkgeXhqYFrCJkvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708083199; c=relaxed/simple;
-	bh=VFmxrj6Hku3CBUR6WzGMCh8F2G+fIu2iX6UMzRjr4zE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mzBWG11tfvCMOtsAe7qq+9Q/RlqBK6l/NdpMCZs6dlhGi9XkcAOVRqutQo3N4YvDqRMTcQNAZ7JcM66ujsUOPXkgGNIDgSRn5dQeh0ufyb5JW+jS9MHKD27UplxvL8PNMEWKRVrLla783rDve3LrQwcXeIlNcGWn0aQ6Ut2FTdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gw2UCY9p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708085083; c=relaxed/simple;
+	bh=8VG/4cV4zebAuPsr9w5hWdPcarIbJX40FuPeQwP9Hug=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TKUVY/5is/zfuvxt5FDoPzLVXr/N0/eqM5oGSXrqVAt9W88fkLNoyrSpPKc++nrnzLodGk4oXTtOg+5/BOKjaJ4WFFVeo8i3vGilETjVN2zNb3aO622xNPOgHwSCZoE5gYXFZuQaurenG5Lhmm98iNvgmkQAlR060nsXnGg9FDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1hmjYnq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gw2UCY9p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F759C433C7;
-	Fri, 16 Feb 2024 11:33:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1hmjYnq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C01EFC433F1;
+	Fri, 16 Feb 2024 12:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708083198;
-	bh=VFmxrj6Hku3CBUR6WzGMCh8F2G+fIu2iX6UMzRjr4zE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gw2UCY9plIjzMji+U5BOsAC1kFCWqyCAqpwTuiVZ4gEXzfJq7AJN8/WEApIMwcrK1
-	 bGYmb1OJnQ48nf16eQfwODuINrs6v1Wb90claT9GE0RuppkEvevhUEDrKlQ5lh8MXN
-	 iW4K6apI+5jtmT1pBkfoBx7dB791ofE4d6QgvxGVObn49vQHMqmBgqTJT/AyZC3Xgl
-	 dp508UrI0uT6b14vthbwWvob4RS6EBC/iu4gU6iBvuIhZp9TFVCaEh/zSCX22BYYnD
-	 NWvrloWOs5+tnbyjqsttILejAhIGCSAbNujq8df4sZZSk84AFuAWaqmtR4dk0FWoeA
-	 5J9YX5ZXMAkjQ==
-Message-ID: <59625ef0-1f81-4660-b585-2e9a9ac4a8c6@kernel.org>
-Date: Fri, 16 Feb 2024 12:33:13 +0100
+	s=k20201202; t=1708085082;
+	bh=8VG/4cV4zebAuPsr9w5hWdPcarIbJX40FuPeQwP9Hug=;
+	h=From:Date:Subject:To:Cc:From;
+	b=M1hmjYnqxMDypM18zmpDOm+UkQDSkAfougs2zZcOlBswCDH3aOPh9S1UBe/r1dQD5
+	 DS3mZRInut6SY+Qid3H7sUMxWgpSMzPgcwI8Z8kAHEZMiKSJceQWm3xbw+z5+7mH1Y
+	 qYRi6mpyYv5vnscGVMawYpsN7c6IN5MzrSGvi8RoxrMuoYZbH7BmAybI3LRgHkvki0
+	 xFl5v0ZBYcXZtNhSun09MZp2aCNz0FAQ/yWnzEj5xIpEUZSYu1Oi2NSYdwayLZYU9W
+	 ocw63JSmAQxmvKHSFDojeDMPa6TDzenGq6l9FJ+rKQThr88PKHDhmmsD+V2/uxiM27
+	 AFP4AYwo8vD9Q==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 16 Feb 2024 13:04:38 +0100
+Subject: [PATCH mptcp-next] Squash to "DO-NOT-MERGE: mptcp: improve code
+ coverage for CI"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] mptcp: avoid printing warning once on client
- side
-Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20240215-mptcp-fix-bogus-pr-warn-v1-1-d14c10312820@kernel.org>
- <9502e96c-8a72-a6d4-ca2d-1c75c536bfa3@kernel.org>
- <6b9c4a3e-3c30-4e7b-ab99-ed2e34e24015@kernel.org>
- <e7769e4c030b06c8ea4b14857a22eafeb9c93277.camel@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <e7769e4c030b06c8ea4b14857a22eafeb9c93277.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240216-mptcp-warn-bogus-pr-warn-v1-1-6388bf96adf9@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAFVPz2UC/yXMPQqAMAxA4atIZgO1SileRRy0Rs1gLal/IN7do
+ uM3vHdDJGGKUGc3CB0cefUJRZ6Bmzs/EfKQDFrpSunC4BI2F/DsxGO/TnvEIL/M4Jy1qrS6MpD
+ yIDTy9a0b+CtP1wbt87x1kVrHdgAAAA==
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1407; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=8VG/4cV4zebAuPsr9w5hWdPcarIbJX40FuPeQwP9Hug=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlz09ZTOp2MsXp0TGIJb6xwsHdWt1wzlG6q/L51
+ B5zcb1u4/OJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZc9PWQAKCRD2t4JPQmmg
+ c2UyEACGCy5DNJ7A3flxN7tYTEnSh+5bSn3IKJtAssDSs1cG/xefT1dK/UB3eDTzPlP1+8Q7Hbo
+ kfAjvhkv9QLRWn/0MBuEHhthoi9TIgCR99J26U2+vlQkBST+5K+5U0ZlW+VWj7w9Wr33R2V23p7
+ 2Ksdi61A/AgtHUcUlKYkevohvuFj8p+y0bkxLDdpX95b3y6VKr8ZoXNq/EDj9UG5292PUzjZfN8
+ UZo4Zc+rkWofLqoSts9eJJnrGhOx+YVRPnzuALqwIJpGV1/CW/cQL/8KZKXZAsekZiPk6VA9hSJ
+ FIjypv9XmL8mZIhdHJp3xRFFLzhmEaKk7YdKnfjoewsjAi6fng5mX7CfqswQJC6iD3BWBuvNECO
+ 1Y886JnWhIlmhv6LJElDOumtCU/64Ij57z5bb8gf7z42N/UWxrD53GgKNCKY7gWlmW9tZDBF98r
+ pykfHoW4IiUrvH4vwUV9BggC94HmUd55Wa5OjnkuD2OCOLcVcAU0dhbJ6fWOBAr1wqLoPHi60jm
+ UZASGUhExSArX93Wz6FsNh/ToIcWHZTOBNbVLR3c+La838bByTz8S5jFpLw1kqATtWT2ugl2JNQ
+ 83ceeno/czDbpbqWP8plZSnvUo9MvbYcBx1OP/y1Pub1wzTvDUePrHhEFkx9++8RRB62TfU4mOL
+ 0zeb+wRN1Orx30A==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+As discussed on [1], an additional check is done to catch local software
+bug.
 
-Thank you for your reply!
+This patch is supposed to land only in our tree, for both 'export' and
+'export-net' branches, because the warning could be triggered by bugged/
+malicious peer. We want it in our tree for our CI to detect internal
+bugs.
 
-On 16/02/2024 12:23, Paolo Abeni wrote:
-> On Fri, 2024-02-16 at 11:42 +0100, Matthieu Baerts wrote:
->> On 16/02/2024 00:25, Mat Martineau wrote:
->>> On Thu, 15 Feb 2024, Matthieu Baerts (NGI0) wrote:
+Link: https://lore.kernel.org/all/20240215-mptcp-fix-bogus-pr-warn-v1-1-d14c10312820@kernel.org/ [1]
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/options.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-(...)
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 27ca42c77b02..5926955625cf 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -982,7 +982,8 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+ 		WRITE_ONCE(msk->pm.remote_deny_join_id0, true);
+ 
+ 	if (unlikely(!READ_ONCE(msk->pm.server_side)))
+-		pr_warn_once("bogus mpc option on established client sk");
++		/* DO-NOT-MERGE: use WARN i/o pr_warn: only for MPTCP export */
++		WARN_ONCE(1, "bogus mpc option on established client sk");
+ 
+ set_fully_established:
+ 	mptcp_data_lock((struct sock *)msk);
 
->>>> Notes:
->>>> - Should we convert this pr_warn_once() to a WARN_ONCE()? Or just in
->>>>   our tree? Or just in DEBUG mode?
->>>
->>> I think it makes sense to keep this patch minimal for -net and stable
->>> (just moving the label).
->>>
->>> Also given the consequences of panic_on_warn, would be better to make
->>> any changes to WARN_ONCE() in mptcp-next/net-next. I don't see extra
->>> complexity to modify this warning in our tree or debug mode as being
->>> worth it, do you think it would be valuable?
->>
->> Sorry, I'm a bit confused by your reply. For the moment, our CI
->> complains when a "Call Trace:" is printed, but it doesn't complain when
->> there is a pr_warn().
->>
->> If the warning here can be caused by interactions with a buggy host, it
->> makes sense not to have a WARN() when used in production, but it would
->> be good for our CI can catch that. If the warning can only be caused by
->> an internal bug, then easier to use a WARN_ONCE().
-> 
-> We can trigger the warning due to either:
-> * local S/W bug
-> * bugged/malicious peer.
-> 
-> I think we should avoid a WARN there.
-> 
->> So I think here, we could maybe convert it to a DEBUG_NET_WARN_ON_ONCE()
->> and upstream that. WDYT?
-> 
-> DEBUG_NET is quite lightweight and could be enabled even in production,
+---
+base-commit: 65bda47e218b37c3dc919d3ccbd19dfad87a99e5
+change-id: 20240216-mptcp-warn-bogus-pr-warn-6dcc88038246
 
-Ah OK, I didn't know that!
-
-> that should be an export-branch only change.
-
-Fine by me! I appreciate your suggestion.
-
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
