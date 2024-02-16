@@ -1,33 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ABD12C54E
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 13:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F43312EBFC
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 14:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708091781; cv=none; b=NihownLVkUEMmA4ODW5VlcAYFtO4rs45MuAuQqJCta7Wsf3f94QcSUxPhBnXDthczxSTzH4Yduvh+x2T8muqosXK0M2tsm0CMdMt4e4qxFn15vxcKoKm7nf6wRtaooVNnDsOrYBOw9SlSLbPRhjwdR7LTcH2/WTmj5GNDIb4H/8=
+	t=1708094800; cv=none; b=TSVVno4w+if1o7nlnmQ3RxYZkGTfd4AheBj2zoNy5WXX9QTmv4Ynbu1jP0VPBkZOZM7EV6di8OgVzRpdtunbH3i62rMPBaIcqmj9JKfwPj6p9RIYhPvbLRiAuhK1L3f2h/rKP79gKLake27XqcBsWUCWkrhbiJdK4C0VEeVxahE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708091781; c=relaxed/simple;
-	bh=BpyNwsg7HheF6zrmgo9bKXjUEHOJnOhl6uVq9NSiThk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BFS2f7ee+spyyeqVlugFc6TwNoFHt6EfTSr9mv87OuOBPZ+JM6w412K/F9qzRsJAsiuodlv+I7NSf0Ch8tdVQpNGhGWsNUzHpKuD3ktPigfTsPMTIES6dcLnb2m9JhcZfn7dYZwd0HpZ5H2tPUw/6P5PDn+oW/PqdQuZQN/ydjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geoGSCUP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708094800; c=relaxed/simple;
+	bh=YQuf2/ea3rFgIWNOjqp0bNmgZGNc6dgjq3U0okH0xRI=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=HhibQ9VoVqyu3rswwIp2l4zD9QpmnEtr3arRypPB2iGoYVqrEYh3Hrysj63P2OHYoSq8lH4hbU+pVRO7227dsI7WVmhUlV810EhPyFoTbdmpN8rnzilJOCz9sIGB9D2RWLCuupNtFFBzuAXx1UJ9Ky+erbFYE2pwcIgzA+4GHRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ojzYYWPu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geoGSCUP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE8A3C433F1;
-	Fri, 16 Feb 2024 13:56:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ojzYYWPu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63DBFC433F1
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 14:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708091780;
-	bh=BpyNwsg7HheF6zrmgo9bKXjUEHOJnOhl6uVq9NSiThk=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=geoGSCUPuSZXVTLZdJkLbe62bHC70J7n/0TaI7YLqYfGRYS3LxthpEHwYc6oQirjr
-	 X8tkG8umLyBjRgbM671cofCgpybWr9UEhyIf5yGu4SO7Tw6DxutLKvuhxofA80yoxZ
-	 2yAYqxsORm9YtTFNWvNMKFfjBUwwVrjEZN6uRaSgth4GecUtX6L6Ma6iiq43WRYjQU
-	 ikOlXH3qyy7aT/bGXfuPZbNBhPC6h1EvuqRwbMLBBT178bzN6RDq3cFQ1VdkCI5eMn
-	 Q4rYdWzVcwarAHRhXKE8UxB2ysYE/MfQ6RE23PEXzWwNRbwdCdaYrtb5YwnjVC/xwr
-	 hQ5IlpqvwrWLA==
-Message-ID: <65cca7d1-a51e-4c83-b014-df9c99ccb90d@kernel.org>
-Date: Fri, 16 Feb 2024 14:56:18 +0100
+	s=k20201202; t=1708094799;
+	bh=YQuf2/ea3rFgIWNOjqp0bNmgZGNc6dgjq3U0okH0xRI=;
+	h=Date:To:From:Subject:From;
+	b=ojzYYWPuacEhn2oVNSNG/CV9dO0sG8s6+O0ckgykDJqjeLxpUcuXUVPMcr/VBmrSd
+	 CWMS/J9ukkrPOKvY1VmSFKtJyLPw7XT0Iyzpnm3yrHwUeQ7OsEIlMuMc2Cr44U4NKQ
+	 wYbcdAt942tOZbzMsyO97MboUV/U5bQtI/1bminnT/MW7MtFWOnqATg632MPLiek7g
+	 d8Oh0/c8KseXGMeuDSalxsrVksCgUjhK44LfI6kEd3c7XeWDiMcHG3QXpv7U6Y2DCk
+	 66R3wRafj68qzXt08i5gz6h2/xFqlxcCPAafbiH5GUcXLo34aINMIjXpKXIkxY7tWg
+	 qnuRTVC9Oehyg==
+Message-ID: <6dc46eb4-4c14-4314-8db4-24c460da14ae@kernel.org>
+Date: Fri, 16 Feb 2024 15:46:37 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +34,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 0/7] add helpers and vars in mptcp_lib.sh,
- part 1
 Content-Language: en-GB, fr-BE
+To: MPTCP Upstream <mptcp@lists.linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1708076886.git.tanggeliang@kylinos.cn>
- <c1dbc7b0-dbd2-43f1-ab02-b9e8e5ea596b@kernel.org>
+Subject: [CI] Cirrus-CI has been disabled for the rest of the month
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,42 +82,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c1dbc7b0-dbd2-43f1-ab02-b9e8e5ea596b@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hello,
 
-On 16/02/2024 14:43, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 16/02/2024 10:50, Geliang Tang wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> v2:
->>  - address Matt's comments in v1.
->>  - all for -next, not -net.
->>  - add two more patches.
-> 
-> Thank you for the v2.
-> 
-> Patches 1-4 are OK for me. I can apply them already.
+FYI, we just reached Cirrus-CI's monthly limit:
 
-Just did. I slightly modified some commit messages, I hope that's OK.
+> Failed to start an instance: FAILED_PRECONDITION: Monthly compute limit exceeded!
+https://cirrus-ci.com/task/5976473463422976
 
-Now in our tree, feat. for next.
+I just disabled it, see:
 
-New patches for t/upstream:
-- ce771d245e7a: selftests: mptcp: netlink: drop duplicate var ret
-- 980763004b18: selftests: mptcp: simult flows: define missing vars
-- 99e3296b940f: selftests: mptcp: join: change capture/checksum as bool
-- 247b270f3921: selftests: mptcp: diag: change timeout_poll to 30
-- Results: 65bda47e218b..b95a6fc53895 (export)
+  25511cc08fd6 ("Reapply "cirrus: disable it for the moment"")
 
-Tests are now in progress:
+I will re-enable it at the beginning of March, except if an alternative
+can be used in between:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240216T135434
+  https://github.com/multipath-tcp/mptcp_net-next/issues/474
 
 Cheers,
-Matt--
+Matt
+-- 
 Sponsored by the NGI0 Core fund.
