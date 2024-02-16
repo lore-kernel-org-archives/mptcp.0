@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F5C128825
-	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 13:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA01012BF37
+	for <mptcp@lists.linux.dev>; Fri, 16 Feb 2024 13:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708091124; cv=none; b=Amci7QpbHbVGlH+RXzEM4RwrGYi3Ix+2cPGBv8xi+XNWR9D2kBgAsNRDxYJV4CVGIR0SujTtdcOBb6HzeDQ0stvAV4RGd2Z5gU+U/YO6QUSwSEutERUJiHQjlhpD/Rm/0HK/8NQMYf1rxj3Y7GzsSfzGCdolZoOIlmD58RTuzPw=
+	t=1708091197; cv=none; b=cF+/ONwfLwcXqPbCma6zezOeuT9w2dWftAkJb+HaTqfS045I/tofA94j0Uu5m+ua92oYWr3aBc/BytB0gxV9EbvzDn1xjAfr/3LcB2IdgPAQs68M5nXGbmz3thSg6bb/PubuDWvVUhlls8t6xJZWUz9lXl7q2+Zv4I4jy/E85IY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708091124; c=relaxed/simple;
-	bh=OqIejDdColhzi8eHxnmpCyY1SxUH+vV4szt2rCQHtZc=;
+	s=arc-20240116; t=1708091197; c=relaxed/simple;
+	bh=CGdJ2WTOXGfiudvn8G9h8HcAgMUWHgCU3KghtdqTddo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WngDTxW5wYBoC5FRDYjlz7kjYV0v3mOh0eCAgoMZ4p4XM1CW6kTU08Y+Nx7U5bDf3ShXin2BCZSOz9YZHWy25TgzKyZvj3q5VAYH+wuCVlBlqyXUX5Z+7C6aH9zVjhJw/qDJw7CpPDh3o/LdaX5aEgbNF413aBYaY3FxRa9HJEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n83fG949; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=QhvV1wXgz0vdRK+xv5Xhy7EhT7QaWWg3IoqpwmLAt1XVfzD+KJ9VQ3zK9VjfsEEaUks85KxzbNeVXcau6trU9VqrDu8hXFZvbtqb2HUsUDX7Br0GKR/PCwkirtCeYVNSdgi63JCBJFi73Jq5LTWZYKa3IkG1/Dz6P67fh8uG378=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2+kiq+r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n83fG949"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 964EAC43399;
-	Fri, 16 Feb 2024 13:45:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2+kiq+r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B3E2C43330;
+	Fri, 16 Feb 2024 13:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708091123;
-	bh=OqIejDdColhzi8eHxnmpCyY1SxUH+vV4szt2rCQHtZc=;
+	s=k20201202; t=1708091197;
+	bh=CGdJ2WTOXGfiudvn8G9h8HcAgMUWHgCU3KghtdqTddo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n83fG949kMotqLa2kKi5eN7Zn1ssge2CckAVi0l//eMJoT0nJnxggwTWGzFwj0Ug+
-	 rfdQ2ol1TjhP66uNN7k2ehrX5gSDq6kdB6APMWgbpNEH7z83GOj/SjLh2PwM3317YE
-	 KMq5euIVtLC7lHpLqAYTw5wlOF9/p704GoM4GYy1mnmUPZ7L59uKwW3gsfK3lTTfwn
-	 loDj0j1Lk1z3YAaigw3Q98ULgCl8CoUOCf0mz+D6wDOHr4CqKw17wa+DgQ8peFNxDE
-	 ql4psP+hjX5igGS+TM8UUSfWzkXJCsTlOIA/6o5l56FESLdiPdG3hJuhzcbyTAGtoH
-	 TcOmgP5JY6NcQ==
-Message-ID: <914511c5-ace0-4ff9-9695-c5f7ffef1c03@kernel.org>
-Date: Fri, 16 Feb 2024 14:45:22 +0100
+	b=S2+kiq+rpsXrKcjrxwtV097Wbpk82bl0yArVeSGOAI0tMcbKP3wHzfrYjSZO9PJTJ
+	 sHXTJ5AtgutSuk8v0Vy+Khk4OonkE2Gh01kFvsvbO06AhX74mkdxYY/W09ZTfzqi+J
+	 pcht1lbjoGZVq1AlTZk2qE8nR1MmdsE7X3/pYXb1Ua2LzaiLyla2SZCD5s222zkdBH
+	 YNb0QMHhEkILPZZxqi0bZLJPZPnn//i916qnf2V/4zHQx9IrtAUt1Q0BnT2nI4xHAG
+	 F8FPprr5zqLcYa7B9eXgK18/1LNHpvfoU+NBLMLrSlpRk6FLUEgI/Go0bIYJf7+YhK
+	 WjycPpRfYtPvQ==
+Message-ID: <f8d0f026-4cf1-4278-a318-d9d052c71a7c@kernel.org>
+Date: Fri, 16 Feb 2024 14:46:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 5/7] selftests: mptcp: drop
- iptables/ip6tables vars
+Subject: Re: [PATCH mptcp-next v2 6/7] selftests: mptcp: add ss mptcp support
+ checks
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708076886.git.tanggeliang@kylinos.cn>
- <fdcfea6deedc64317296cd063c037b45d495c6b7.1708076886.git.tanggeliang@kylinos.cn>
+ <2d8dc3ee982371cf9fd8a2c050dec0d0bfb34ff7.1708076886.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fdcfea6deedc64317296cd063c037b45d495c6b7.1708076886.git.tanggeliang@kylinos.cn>
+In-Reply-To: <2d8dc3ee982371cf9fd8a2c050dec0d0bfb34ff7.1708076886.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,17 +96,27 @@ Hi Geliang,
 On 16/02/2024 10:50, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Since iptables-legacy/ip6tables-legacy are dropped in the commit
-> 5b31f0f6f954 ("selftests: mptcp: stop forcing iptables-legacy"),
-> there's no need to use ${iptables}/${ip6tables} variables anymore.
+> Commands 'ss -M' are used in scripts mptcp_connect.sh, mptcp_join.sh,
+> and mptcp_sockopt.sh to display only MPTCP sockets. So it must be checked
+> if ss tool supports MPTCP in these script.
 
-I agree, there is no need to use variables for the moment. But as I
-mentioned in the commit message, I kept "the variables to easily change
-them later or add options". They don't hurt, we might want to use
-'iptables -w', force using 'iptables-nft' if available, or other options
-for the debugging. I don't think we need this not so small patch.
+I think you missed my comment from v1: 'ss' is used in mptcp_connect.sh
+and mptcp_sockopt.sh, but only in case of errors, to get more info. They
+are not strictly needed to run the tests, no?
 
-In other words, the patch is OK, but maybe we don't need it?
+I think it would be better not to skip the two selftests *entirely* if
+'ss' doesn't support MPTCP.
+
+For 'mptcp_join.sh', it is different, because 'ss' with MPTCP support is
+needed for some tests, since:
+
+ Fixes: e274f7154008 ("selftests: mptcp: add subflow limits test-cases")
+
+(Even there, it is mandatory just for one subtest... In fact, I wonder
+if we should not use 'chk_subflows_total' instead, it doesn't require
+'ss -M' support.)
+
+So in other words, I think we should only modify 'mptcp_join.sh', no?
 
 Cheers,
 Matt
