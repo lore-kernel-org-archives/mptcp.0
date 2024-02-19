@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78ABE2577B
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 10:06:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED641C10
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 10:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708337194; cv=none; b=TDA5i/ZfYEdSzmoruN6GQtYw6yTsydxIIKqZ7MWDiK9vDGIam2fqGNyprgzbpivLD12KOW7klvDz8kDuOUomD0QmNF6hWoGBFjP4co8yQl077mgVEr4nDAT+jRPncWgafz86psY+NX4wo6WHIShL0QhBV6prtUnP0thGfyDr2fQ=
+	t=1708338952; cv=none; b=sVJqKvodaIZuxKw4aDgpLfif9R+fXTB1Q4Kz8mgLnKAhNLaHJfM1i/NOn8KFOe5+3Q3TERgPyX97lxIy1YKagEQE1kyh7Fq6ZO+TYtS3DIxAkW61lWb61mKbYvebWqYbix856PbdZjiQZ6URnNkoHFDdva6KoOk55YO2JFPwCeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708337194; c=relaxed/simple;
-	bh=TyN1AgynIJuyDiKh3aWesQ7flsNNJtbK+mDJsH+FXkk=;
+	s=arc-20240116; t=1708338952; c=relaxed/simple;
+	bh=I8p9GIJ+bliV9VZ7PWTKO8aHvjBKLD0plFwHBCl9aMw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kb7oGqlb3B02KUQ0dKAVc+4Cmu0w48K8gFFyjOVvs8XZ7GIeAn3OCrUBUgqCIdKpvZEt4aqiLQ8UXeOxfjhlbW/POxXPB3rFK6DwskZt8J+xil6NghlNA3Ng6xyxXjJeuVQhtrjv8PKTNDooUVbUV/RdQEp1t/HYr4nizoR2cx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqhsIspF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=BV+gnOw347aGlj8X3KpatGwdz8AZX24jNp5DBlXtm/XLzoyFLMCzXKFmWVb1nSiMTmirVW4lmzKSGGkoysxGHODs+HbDeFXCmwgeV5jWlDUThFlGuxGoZiBR1TdnesC0BOtNcVcOotaiI/lew8P/er8b2nlYJqJPPumJghnNZSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UUCFLdSi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqhsIspF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E51FC433F1;
-	Mon, 19 Feb 2024 10:06:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UUCFLdSi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD06C43390;
+	Mon, 19 Feb 2024 10:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708337194;
-	bh=TyN1AgynIJuyDiKh3aWesQ7flsNNJtbK+mDJsH+FXkk=;
+	s=k20201202; t=1708338951;
+	bh=I8p9GIJ+bliV9VZ7PWTKO8aHvjBKLD0plFwHBCl9aMw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IqhsIspFZ2hDESbH65EnQldcaM+fkSaOQOFsi04b5cCg8Q+XZoI2nRK3fPfW673Ip
-	 NadofREVMab71x0fRvwb0YUGodt1e+JhTuDQBoEy1OmMgWypSietoVzOVyNVNRB7p0
-	 oWcUtjpz/YBMvBDFeIaG04+GP9C6AesFb2xyHOSCEKS9/vGmKxHIdFg7/dUI1P75qe
-	 +kR09tHurkwjcgJ0a1P1EYf4f0UnLvRE5gzlL9m8fwfLbC26ZAII0vHyaQyNSP1WNV
-	 16dofCJz/b7PMkZKACOnte6hX3WKUT6KBqWdxSRf+hGNbhlzjCjS4NFGPd/MOEMTWG
-	 4NUjQGyOhqCAQ==
-Message-ID: <c8adeaa3-5186-41f3-b26a-b6b515ad0863@kernel.org>
-Date: Mon, 19 Feb 2024 11:06:31 +0100
+	b=UUCFLdSi8ZxqbVyx0bAo3jCkemLjsWoAr6zxOkW3qkh64GlcQDqzAHxl4ZhEI2gHh
+	 i/uimsmekwP45hYvsK0/EXp2FeJrAAwDs+yKUXRNsogqv/k/DZ4EM7LWfWsER9Z5IN
+	 v+KKXEfzKnm3LzEKK/q4nGD4zBCDQ1ZraeDFqFmLSKLJciSdBOd6klptlJAoHpZLWu
+	 v/gNMuRNSHcQChe/AUSXIO3sRAlYnX0tSjVSGbjxOyIFQ6Lo8+h/O4v9w6S5IdUeeK
+	 OhoWum/T5eVuEMpPoI5tQFdEjV3jCv9WJhA0QYxVqIPDZ+6dCxfqAadwoIAo6NOlrJ
+	 RK4x33TD/lEYw==
+Message-ID: <095b6e56-10c9-471e-969c-e5eaa544e63c@kernel.org>
+Date: Mon, 19 Feb 2024 11:35:49 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -39,9 +39,8 @@ Subject: Re: [PATCH mptcp-next] Squash to "DO-NOT-MERGE: mptcp: improve code
  coverage for CI"
 Content-Language: en-GB, fr-BE
 To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <20240216-mptcp-warn-bogus-pr-warn-v1-1-6388bf96adf9@kernel.org>
- <5a19039b-9281-eaa3-f546-e189b2d6022a@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,87 +86,40 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5a19039b-9281-eaa3-f546-e189b2d6022a@kernel.org>
+In-Reply-To: <20240216-mptcp-warn-bogus-pr-warn-v1-1-6388bf96adf9@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Mat,
 
-On 16/02/2024 21:21, Mat Martineau wrote:
-> On Fri, 16 Feb 2024, Matthieu Baerts (NGI0) wrote:
+On 16/02/2024 13:04, Matthieu Baerts (NGI0) wrote:
+> As discussed on [1], an additional check is done to catch local software
+> bug.
 > 
->> As discussed on [1], an additional check is done to catch local software
->> bug.
->>
->> This patch is supposed to land only in our tree, for both 'export' and
->> 'export-net' branches, because the warning could be triggered by bugged/
->> malicious peer. We want it in our tree for our CI to detect internal
->> bugs.
->>
->> Link:
->> https://lore.kernel.org/all/20240215-mptcp-fix-bogus-pr-warn-v1-1-d14c10312820@kernel.org/ [1]
->> Suggested-by: Paolo Abeni <pabeni@redhat.com>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> Looks good to squash.
+> This patch is supposed to land only in our tree, for both 'export' and
+> 'export-net' branches, because the warning could be triggered by bugged/
+> malicious peer. We want it in our tree for our CI to detect internal
+> bugs.
 
 Thank you for the review!
 
-> Would be good to keep some of the above info in
-> the post-squash commit message for context (especially the lore link).
+Now in our tree, for both -net and -next:
 
-Yes, good point, I will update the '.topmsg' file.
+New patches for t/upstream:
+- 735e80ba1492: tg:msg: remove 'use kmalloc on kasan build'
+- 91351bfa97db: "squashed" in "DO-NOT-MERGE: mptcp: improve code
+coverage for CI"
+- 359220a914aa: tg:msg: add 'warn in case of bogus mpc option on
+established client sk'
+- Results: f2fb9bec2195..d5aedc5b25ce (export)
 
-> One other thing, I noticed that this is mentioned in the "DO-NOT-MERGE:
-> mptcp: improve code coverage for CI" commit message:
-> 
-> """
->     mptcp: use kmalloc on kasan build
-> 
->       Helps detection UaF, which apparently kasan misses with kmem_cache
->       allocator.
-> 
->       We also need to always set the SOCK_RCU_FREE flag, to preserved the
->       current code leveraging SLAB_TYPESAFE_BY_RCU. This latter change will
->       make unreachable some existing errors path, but I don't see other
->       options.
-> 
-> """
-> 
-> But it looks like the code for that disappeared between
-> export/20230405T131056 and export/20230405T132954 (also missing on
-> export-net). I didn't find mention of this in the mailing list. A topgit
-> glitch?
-
-Oops, I forgot to update the commit message back then. Here is the
-modification I did in TopGit:
-
-
-$ git log --first-parent --no-merges $(./.tg-get-topic.sh "DO-NOT-MERGE:
-mptcp: improve code coverage for CI") -2
-
-(...) # (the first commit was an update of my email address)
-
-commit 0fd1a78a8c4d99054a1b47626d45df7f5d36e2ec
-Author: Matthieu Baerts <matttbe@kernel.org>
-Date:   Wed Apr 5 15:23:56 2023 +0200
-
-    Revert "DO-NOT-MERGE: mptcp: use kmalloc on kasan build"
-
-    This reverts commit 4edee9adfa20120c18e41c26e2ca0a97ead0d93f.
-
-    This piece of code was causing issues, see:
-
-
-https://github.com/multipath-tcp/mptcp_net-next/issues/371#issuecomment-1496226126
-
-    It sounds safer to revert it then.
-
-    Suggested-by: Paolo Abeni <pabeni@redhat.com>
-    Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-
-
-I can fix that!
+New patches for t/upstream-net:
+- a1880660e156: tg:msg: remove 'use kmalloc on kasan build'
+- 1c78093d056a: Squash to "DO-NOT-MERGE: mptcp: improve code coverage
+for CI"
+- 5405ccb66c00: tg:msg: add 'warn in case of bogus mpc option on
+established client sk'
+- Results: 9dcf86462a59..22c802d10725 (export-net)
 
 Cheers,
 Matt
