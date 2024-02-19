@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118CF2D046
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 12:21:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFFA2E620
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 12:22:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708345315; cv=none; b=axvH9+raUCq74jKRgWrrKNUpRNE/VQETU1gAnfxlkY0Ap5ax9FClQLMP8Xt3sHTQ5MDtNgpCdo49p8JViLHLdHfWjx5yGVeZiqqtKUuWbuwjIhw2/DsosMYQSn5uTn+5tEFDNkow9S/fczTAPhjpm2g3auuv4BhEDZ+2KnJk50k=
+	t=1708345321; cv=none; b=Qv0UIYt8lkMkPLFU9kcafVjLETzllsUTmjpa+BYAEzaMD6E1j79ZsIMGvnuahEk/rN6l+xtgV83LYuF9cDCOIyUUzG7uqf7of8F9VD3sm/ouhN+VKHpTAgRiubNtyjwHyJfz5UInkkwfrdBRJCfIOFuoDP8VYpsTfe4HFKd/6Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708345315; c=relaxed/simple;
-	bh=1SnSqW2pA7T4i1ClwjQd+aexxwE3xXoTNnWVuF1Ct7k=;
+	s=arc-20240116; t=1708345321; c=relaxed/simple;
+	bh=qUMOQCmKsWFA7GUotR6lIWzNQ8NeDO5mUlp2L7XpTmk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rxCn/EyfxPA003IP7CxixUyiayrmSXfCbXurV0oBew9JkeIWp4Kz1G/oyJLK6ikcYubD6i94lBb1jdo68r57Em0CdSqsB8OttDs8OfJh56p6Bt9Z0vsAk1I6dktygtbuxdBR4OebaZKMH3lwSAzSwIkw77o0KIiq4R/L5xoiVMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVLbEhlw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Yqsb0ZxqQjfhhnBJPp9UIGRWYGf1uTjsUUVWPoUEQqlLHiY1qvTb0gv1qecwiqrBngZfu+JTHFFkZZDpeOaXMa3pQNYP165ZKk46fHOHA8LIl9Zz4rDek0eBlu41Ppev/cnOBDd8dAtR9Cw0Jxs+gJ7VZ+D3lNMn6+/v/G0vhjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCFaqzcN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVLbEhlw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABF70C433F1;
-	Mon, 19 Feb 2024 12:21:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCFaqzcN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCBCFC433F1;
+	Mon, 19 Feb 2024 12:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708345314;
-	bh=1SnSqW2pA7T4i1ClwjQd+aexxwE3xXoTNnWVuF1Ct7k=;
+	s=k20201202; t=1708345321;
+	bh=qUMOQCmKsWFA7GUotR6lIWzNQ8NeDO5mUlp2L7XpTmk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BVLbEhlwaaOgdMXeK7p9qzt+YGiIXPCveFWdiNhQzkL4znCSoJsK1KYkXBeWcKn+C
-	 NfZCd0nwhw8zhOBpWBj8JeB1XXp+8wJIrLHJxicFhnXOrvEZHN+ORUZv1UjpG2yWF5
-	 ORzHdoOIBnbcY4S/2QVz6KjsJeZLyWpUN3pgqg8mLZ06rKomOfRep6lqteuaA11F2G
-	 XolTuQwftOUuvqzDoSWiRPQp/bggNKorwiksn7cXMMLuf80jyLyq8TymjG2RJc5AM6
-	 lSoZIKKQ+4eKLWbLXU5AvGFZoT/snp5s2NcUFet/MOrt8ljCmlMiCBoypviuHcVC7o
-	 +gvZcUnBegMYQ==
-Message-ID: <b199297a-af5a-440b-8aba-b7873b5f9f7f@kernel.org>
-Date: Mon, 19 Feb 2024 13:21:53 +0100
+	b=cCFaqzcN+sw7qQXY1v2IvlIrjtSRXRxnZK/5eoEY85Ldh/hw26vLyCfYu3V4L1vPa
+	 19mkfv8A55vzLbIr2p5z2wDmP3eOJ4Vj/3/79qfO/FyWYFoailGcEzcR4FfyQCKcMq
+	 N4RmPcLWAKVW+7VhIcxpE+Yr+h2Sgdc0zA3YuT23uR2Xl5wxR2CQgXxJcfMNwBbhKY
+	 3fd7z5ZUFxYgtUPb9XW9PswluywPuOqwvLpFBVeqzxV0IaSEs4pIllTFA3iOwbY0ef
+	 cdAALzFYY9eWoF+4g0SKM/x8p4x1CR8MPKZYJXa0AxDqCh+YJK1H5LTMsxreRHQNIO
+	 xUcX+GrtlEXZg==
+Message-ID: <50e682b4-5379-41ca-922c-2e47b2c9dc84@kernel.org>
+Date: Mon, 19 Feb 2024 13:21:59 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 3/5] selftests: mptcp: add mptcp_lib_cleanup
- helper
+Subject: Re: [PATCH mptcp-next 4/5] selftests: mptcp: add
+ mptcp_lib_check_output helper
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708334850.git.tanggeliang@kylinos.cn>
- <476cd38ffa68c114d97b949e248a3fb1d29e58fa.1708334850.git.tanggeliang@kylinos.cn>
+ <c81e0a2cc5cc6bf7e717fde333adf3c3b2180c6e.1708334850.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,42 +87,179 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <476cd38ffa68c114d97b949e248a3fb1d29e58fa.1708334850.git.tanggeliang@kylinos.cn>
+In-Reply-To: <c81e0a2cc5cc6bf7e717fde333adf3c3b2180c6e.1708334850.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-
-Hi Geliang,
 
 On 19/02/2024 10:29, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a new helper mptcp_lib_cleanup() in mptcp_lib.sh, it's
-> a public cleanup interface, being invoked in every cleanup() in all
-> scripts.
+> Unify check_output() in mptcp_join.sh and check() in pm_netlink.sh into
+> a new public function mptcp_lib_check_output() in mptcp_lib.sh. And use
+> mptcp_lib_print_ok() and _err() in it to print test results with colors.
+> 
+> Use this new helper instead of check_output() and check().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 21 +-----------
+>  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 32 +++++++++++++++++++
+>  .../testing/selftests/net/mptcp/pm_netlink.sh | 24 ++++----------
+>  3 files changed, 40 insertions(+), 37 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index ceaaf155cc32..f75d22dbb28d 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -21,7 +21,6 @@ cinfail=""
+>  cinsent=""
+>  tmpfile=""
+>  cout=""
+> -check_output_err=""
 
-When looking at the commit alone, it is difficult to understand why it
-is needed. In such cases, to help reviewers and dev later, please add
-something like: This will be used in the next commit(s) for XXX.
+Same as in a previous patch: to avoid some confusions, I think we should
+keep global variables declared here and not in mptcp_lib.sh (or they
+need to be prefixed).
 
-(...)
+(same in userspace_pm.sh)
 
+>  capout=""
+>  ksft_skip=4
+>  iptables="iptables"
+> @@ -151,7 +150,6 @@ init() {
+>  	cout=$(mktemp)
+>  	evts_ns1=$(mktemp)
+>  	evts_ns2=$(mktemp)
+> -	check_output_err=$(mktemp)
+>  
+>  	trap cleanup EXIT
+>  
+> @@ -165,7 +163,6 @@ cleanup()
+>  	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
+>  	rm -f "$tmpfile"
+>  	rm -rf $evts_ns1 $evts_ns2
+> -	rm -f $check_output_err
+>  	mptcp_lib_cleanup
+>  	cleanup_partial
+>  }
+
+I think it is clearer to keep the assignment and cleanup here, than
+hiding it in mptcp_lib.sh and doing that everywhere, even when not required.
+
+(same in userspace_pm.sh)
+
+> @@ -3345,26 +3342,10 @@ userspace_pm_get_addr()
+>  
+>  check_output()
+>  {
+> -	local cmd="$1"
+> -	local expected="$2"
+
+Best to keep that, it is useful to act as a doc. Otherwise, we have to
+look at mptcp_lib.sh to find out what is $1 and $2.
+
+(same in userspace_pm.sh)
+
+>  	local msg="$3"
+> -	local out=`$cmd 2>$check_output_err`
+> -	local cmd_ret=$?
+>  
+>  	printf "%-42s" "$msg"
+> -	if [ $cmd_ret -ne 0 ]; then
+> -		mptcp_lib_print_err "[FAIL] command execution '$cmd' stderr "
+> -		cat $check_output_err
+> -		ret=${KSFT_FAIL}
+> -		return $cmd_ret
+> -	elif [ "$out" = "$expected" ]; then
+> -		mptcp_lib_print_ok "[ OK ]"
+> -		return 0
+> -	else
+> -		mptcp_lib_print_err "[FAIL] expected '$expected' got '$out'"
+> -		ret=${KSFT_FAIL}
+> -		return 1
+> -	fi
+> +	mptcp_lib_check_output "${1}" "${2}"
+
+(see above: best to pass "${check_output_err}" to mptcp_lib_check_output)
+
+(same in userspace_pm.sh)
+
+>  }
+>  
+>  userspace_tests()
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index bfc535594675..01b0e43eaa80 100644
+> index 01b0e43eaa80..fd2ed3b5137c 100644
 > --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -409,3 +409,7 @@ mptcp_lib_ns_exit() {
->  		i=$((i + 1))
+> @@ -410,6 +410,38 @@ mptcp_lib_ns_exit() {
 >  	done
 >  }
+>  
+> +check_output_err=$(mktemp)
 > +
-> +mptcp_lib_cleanup() {
-> +	echo "cleanup"
+> +mptcp_lib_check_output() {
+> +	: "${check_output_err:?}"
+> +	: "${ret:?}"
+> +
+> +	local cmd="$1"
 
-Do we want to print this everywhere?
+In mptcp_lib.sh, please always use {} as in the rest of the file. (same
+below).
 
+> +	local expected="$2"
+
+(see above: "check_output_err" will not be passed as argument)
+
+> +	local out
+> +	local cmd_ret
+> +
+> +	out=$($cmd 2>"$check_output_err")
+> +	cmd_ret=$?
+> +
+> +	if [ $cmd_ret -ne 0 ]; then
+> +		mptcp_lib_print_err "[FAIL] command execution '$cmd' stderr "
+> +		cat "$check_output_err"
+> +		ret=${KSFT_FAIL}
+
+Mmh, I don't think it is a good idea to assign a global variable
+declared in another file from here.
+
+Can you not return ${ret} instead? So we would do something like:
+
+  mptcp_lib_check_output (...) || ret=${?}
+
+or:
+
+  if mptcp_lib_check_output (...); then
+      # OK (...)
+  else
+      ret=1
+      (...)
+  fi
+
+(do you need the value of "${cmd_ret}" later? I think just having 0 or
+${KSFT_FAIL} is enough, no?)
+
+> +		return $cmd_ret
+> +	elif [ "$out" = "$expected" ]; then
+> +		mptcp_lib_print_ok "[ OK ]"
+> +		return 0
+> +	else
+> +		mptcp_lib_print_err "[FAIL] expected '$expected' got '$out'"
+> +		ret=${KSFT_FAIL}
+> +		return 1
+> +	fi
 > +}
+> +
+>  mptcp_lib_cleanup() {
+> +	: "${check_output_err:?}"
+> +
+>  	echo "cleanup"
+> +	rm -f "$check_output_err"
+>  }
 
-(...)
+As mentioned above, I don't think we should do that here. Maybe we don't
+need patch 3/5 then?
 
 Cheers,
 Matt
