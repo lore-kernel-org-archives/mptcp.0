@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEA2381BD
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 14:53:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B292EB10
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 14:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708354392; cv=none; b=r7GeDznptqHl3SkPe28jxhDCIJfBRQ/cwE+kB/kBriRM+zQEN3XgkYfvIQzCCUl1JuKujDH3hNa8ftbb4IjF6dVM6dl8E/wPjJUgueG8jnckGtlnYsai9y9iqHkSka1zemme3dMARLBU3eZgxy9fk0gypC4q06shlUbq6NQXoBk=
+	t=1708354547; cv=none; b=iPa4+F3lqgSP7pdH3c7WZeVcdDe3NhGiJmBE/pJf6pIKHnzOuO1rJgTzyHNatkTP5nHtyjat5D6hqvOGLQHyv7tyVM2zKv/68hyaexzLTLP4o/aVvpDd07gm19szog5z1TAeXF/NsPx6S1W/ELgP/4o7TtWftVIgCY8KDVlMDeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708354392; c=relaxed/simple;
-	bh=83ikDrqIAYiA2CPinNlduSUjf7C+xFk0UGC7W360r0s=;
+	s=arc-20240116; t=1708354547; c=relaxed/simple;
+	bh=u3iD1BhVpJSewLt/qfXdmYC/+BBEtfXNYRAXoV+fHY4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B3UjdrLhmMElDCGWT0WqlXNlgf6Z6RTDkk17Ffc+ALS7Stvt6kC2qP+MG8TJ5cnghykDBvzon8Yd4xFTV7aoETRu0jvnO3pn3o+WICjFnr5KGkHrsUbu6MlRqiy4o3h2hyJz2gX7yod0SdF8FDA5JlH3ZJGJRKR80S/mTMJUjBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDnEcNF+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=l8CU5V/EJ3iCmX4Wm8lpfZjYXpXWViYUoKgUdNTX1ajkBZzt4HEPB6rb1CkAqk+o0yUZZ6/6bVfroBrvfSrduFCPUqdf3qLMiCgfSDerMq3XHscFbruZXAF3YCffPvv+/lw2kDdhNXrYRJn+HPXPNuS0JvAOq4i5WF+s6kD/uSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Veh55i3J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDnEcNF+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B9FC433C7;
-	Mon, 19 Feb 2024 14:53:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Veh55i3J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4151DC433C7;
+	Mon, 19 Feb 2024 14:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708354391;
-	bh=83ikDrqIAYiA2CPinNlduSUjf7C+xFk0UGC7W360r0s=;
+	s=k20201202; t=1708354547;
+	bh=u3iD1BhVpJSewLt/qfXdmYC/+BBEtfXNYRAXoV+fHY4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HDnEcNF+gLBAfCyOSaLqgHCkie/GeFVIS65RnouS7+13/zc75/TH8k8MFBvpUQ6f9
-	 1Fru1RNKrbKpJ5pfQeHGbVopbZG84ROq9dtDt8KRtPwongmK4oQd1STSyImtDH2+CY
-	 MbEFT0z/sEstt2Sment8+L15phwTmpG2FW4JTpBd0uFsXsawrDVIRPwjDKVrlaN5aQ
-	 I+f3Yr599xhAGAitoYoUGtXAJWwDx9HHqI+A5z50hzkAZr5He0iMbDf/jw1/H76Dqt
-	 oweTOTziQvBO+bVtuyBtZF8zQFPGM6lXkDWAQglGiQKk9JZVRoA+4GJEYf9bSW7Qji
-	 y8yrNSj2K76Pg==
-Message-ID: <59e46854-b8f1-48ee-9a83-25cbbce3330a@kernel.org>
-Date: Mon, 19 Feb 2024 15:53:10 +0100
+	b=Veh55i3JZ7A+vEGqAYZBdE7QdDGVmKEaL89TaBHxatPDFdZ9S2axzL5rAX8Ztv23r
+	 jFZNdZ+4Tv5kludXaIJN+ORx3hYTK3B6kPBLcnQNYz2pS2vVDHTRLN/DN1Bf8AcVNk
+	 t6jMJ91GSOl88IuzYlffEU8jgJVsfaqykr2glweRE17kWYEsItagD7MuT5TDcQ9Rfm
+	 /svJeszrSzIZ4UHMNCpMnXUUqc4LBG1cdBIc7oKSE5XWqV5/GpnaEqTb/NrNnghOAA
+	 VuGLXRgHv7lLq1rSz/MgNpz0zE5OHcbOheOcgumiHhC+5i9oqO2+J3lVWbKa5jwrlH
+	 1DdKhwdNEkf2Q==
+Message-ID: <4d28e3bc-481a-43da-846c-318de40628fa@kernel.org>
+Date: Mon, 19 Feb 2024 15:55:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v13 05/14] mptcp: check userspace pm flags
+Subject: Re: [PATCH mptcp-next v13 09/14] selftests: mptcp: dump userspace
+ addrs list
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708069036.git.tanggeliang@kylinos.cn>
- <c600e3c58ad50e778c3357af6b58aa9008b28de6.1708069036.git.tanggeliang@kylinos.cn>
+ <2ec5777c29d4e6e005c015db60432ef4ba734ed0.1708069036.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,74 +87,142 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c600e3c58ad50e778c3357af6b58aa9008b28de6.1708069036.git.tanggeliang@kylinos.cn>
+In-Reply-To: <2ec5777c29d4e6e005c015db60432ef4ba734ed0.1708069036.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 16/02/2024 08:42, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Just like MPTCP_PM_ADDR_FLAG_SIGNAL flag is checked in userspace PM
-> announce mptcp_pm_nl_announce_doit(), PM flags should be checked in
-> mptcp_pm_nl_subflow_create_doit() too.
-> 
-> If MPTCP_PM_ADDR_FLAG_SUBFLOW flag is not set, there's no flags field
-> in the output of dump_addr. This looks a bit strange:
-> 
->         id 10 flags  10.0.3.2
-> 
-> This patch uses mptcp_pm_parse_entry() instead of mptcp_pm_parse_addr()
-> to get the PM flags of the entry and check it. MPTCP_PM_ADDR_FLAG_SIGNAL
-> flag shouldn't be set here, and if MPTCP_PM_ADDR_FLAG_SUBFLOW flag is
-> missing from the netlink attribute, always set this flag.
+> This patch adds a new helper userspace_pm_dump() to dump addresses
+> for the userspace PM. Use this helper to check whether an ID 0 subflow
+> is listed in the output of dump command after creating an ID 0 subflow
+> in "userspace pm create id 0 subflow" test. Dump userspace PM addresses
+> list in "userspace pm add & remove address" test and in "userspace pm
+> create destroy subflow" test.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/pm_userspace.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 41 +++++++++++++++++++
+>  1 file changed, 41 insertions(+)
 > 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index d6b7be3afbe5..73ad286247f1 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -360,11 +360,20 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
->  		goto create_err;
->  	}
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 6f7e83f61707..fb9b3ee9fee0 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3350,6 +3350,18 @@ userspace_pm_rm_sf()
+>  	wait_rm_sf $1 "${cnt}"
+>  }
 >  
-> -	err = mptcp_pm_parse_addr(laddr, info, &addr_l);
-> +	err = mptcp_pm_parse_entry(laddr, info, true, &local);
->  	if (err < 0) {
->  		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
->  		goto create_err;
->  	}
-> +	addr_l = local.addr;
-
-Detail: do we still need addr_l? Can we not use local.addr directly below?
-
+> +# $1: ns
+> +userspace_pm_dump()
+> +{
+> +	local evts=$evts_ns1
+> +	local tk
 > +
-> +	if (local.flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
-> +		GENL_SET_ERR_MSG(info, "invalid addr flags");
-> +		err = -EINVAL;
-> +		goto create_err;
-> +	}
-> +	if (!(local.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
-> +		local.flags |= MPTCP_PM_ADDR_FLAG_SUBFLOW;
+> +	[ "$1" == "$ns2" ] && evts=$evts_ns2
+> +	tk=$(mptcp_lib_evts_get_info token "$evts")
+> +
+> +	ip netns exec $1 ./pm_nl_ctl dump token $tk
+> +}
+> +
+>  check_output()
+>  {
+>  	local cmd="$1"
+> @@ -3465,10 +3477,24 @@ userspace_tests()
+>  		chk_mptcp_info subflows 2 subflows 2
+>  		chk_subflows_total 3 3
+>  		chk_mptcp_info add_addr_signal 2 add_addr_accepted 2
+> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
 
-(not sure the 'if' is needed: why not always setting it?)
+It is important to mark tests that are skipped, otherwise we might miss
+an issue with the check skipping the tests.
 
->  
->  	err = mptcp_pm_parse_addr(raddr, info, &addr_r);
->  	if (err < 0) {
-> @@ -378,7 +387,6 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
->  		goto create_err;
->  	}
->  
-> -	local.addr = addr_l;
->  	err = mptcp_userspace_pm_append_new_local_addr(msk, &local, false);
->  	if (err < 0) {
->  		GENL_SET_ERR_MSG(info, "did not match address and id");
+In mptcp_join.sh, you can see 'mptcp_lib_kallsyms_has' is usually called
+from a 'continue_if': it is useful to skip the whole subtest. But here,
+we only want to skip one check of a subtest, not the whole subtest. We
+should then simply add: 'else print_skip (...)'.
+
+→ see below
+
+> +			check_output "userspace_pm_dump $ns1" \
+> +				     $'id 10 flags signal 10.0.2.1\nid 20 flags signal 10.0.3.1' \
+> +				     "      dump addrs signal"
+> +		fi
+
+Maybe easier to move the kallsyms check + other stuff in a new helper,
+not to repeat that 6 times? Here you would have just one line, something
+like that:
+
+  userspace_pm_chk_dump_addr "${ns1}" "<expected>" "signal"
+
+And in this helper, you would do something like:
+
+  local ns="${1}"
+  local exp="${2}"
+  local check="${3}"
+
+  print_check "dump addrs ${check}"
+
+  if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
+      check_output "userspace_pm_dump ${ns}" "${exp}"
+  else
+      print_skip
+  fi
+
+WDYT?
+
+Same below.
+
+>  		userspace_pm_rm_addr $ns1 10
+>  		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $SUB_ESTABLISHED
+> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
+> +			check_output "userspace_pm_dump $ns1" \
+> +				     "id 20 flags signal 10.0.3.1" \
+> +				     "      dump addrs after rm_addr 10"
+> +		fi
+>  		userspace_pm_rm_addr $ns1 20
+>  		userspace_pm_rm_sf $ns1 10.0.3.1 $SUB_ESTABLISHED
+> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
+> +			check_output "userspace_pm_dump $ns1" \
+> +				     "" "      dump addrs after rm_addr 20"
+> +		fi
+>  		chk_rm_nr 2 2 invert
+>  		chk_mptcp_info subflows 0 subflows 0
+>  		chk_subflows_total 1 1
+> @@ -3489,8 +3515,18 @@ userspace_tests()
+>  		chk_join_nr 1 1 1
+>  		chk_mptcp_info subflows 1 subflows 1
+>  		chk_subflows_total 2 2
+> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
+> +			check_output "userspace_pm_dump $ns2" \
+> +				     "id 20 flags subflow 10.0.3.2" \
+> +				     "      dump addrs subflow"
+> +		fi
+>  		userspace_pm_rm_addr $ns2 20
+>  		userspace_pm_rm_sf $ns2 10.0.3.2 $SUB_ESTABLISHED
+> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
+> +			check_output "userspace_pm_dump $ns2" \
+> +				     "" \
+> +				     "      dump addrs after rm_addr 20"
+> +		fi
+>  		chk_rm_nr 1 1
+>  		chk_mptcp_info subflows 0 subflows 0
+>  		chk_subflows_total 1 1
+> @@ -3510,6 +3546,11 @@ userspace_tests()
+>  		chk_mptcp_info subflows 0 subflows 0
+>  		chk_subflows_total 1 1
+>  		userspace_pm_add_sf $ns2 10.0.3.2 0
+> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
+> +			check_output "userspace_pm_dump $ns2" \
+> +				     "id 0 flags subflow 10.0.3.2" \
+> +				     "      dump addrs id 0 subflow"
+> +		fi
+>  		chk_join_nr 1 1 1
+>  		chk_mptcp_info subflows 1 subflows 1
+>  		chk_subflows_total 2 2
 
 Cheers,
 Matt
