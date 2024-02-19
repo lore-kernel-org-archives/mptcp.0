@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7262135A
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 08:52:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D19C210E1
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 09:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708332761; cv=none; b=m3+PZmr+xMBp3ChgUZVq7eThnOq/FzDPsV2lsCD9or8hTXc2C0xZ8WQONid5TWNOhj9BvGbI5fdCNH1n5l6rUmNTLYv3JhHAJ1k92YvTqmcg6hRZpwloL82ELoE0qiEphXgRYidKMgmQd32Karms9yj2rcv46RXalbdnFEpY9oA=
+	t=1708333264; cv=none; b=g6VbuNN7MIk3wBlXZZk3Hs3MZHc0D32TokwsuXysHepXSBcLyqiXotqiuaG3fV3mK60d0GtER219V+KHypWGei2wnPBjCdjwxwcWWuSflgaM3QIUK3KXipCNsR4iNy6rPAPJKm9ERnVeIyV9ksn+y8YorbeMt+kzWNF6vje43VU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708332761; c=relaxed/simple;
-	bh=QSfJos/lddHKiaEK29nuQ8nsIJlnaJlElxs6L3PPUmQ=;
+	s=arc-20240116; t=1708333264; c=relaxed/simple;
+	bh=s0MkwnES3ekJhAcLd2zDZkI1BOb+++iW/9RCE2679e8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VhJaWp64eryBxcJ6xJ3cXFI8HNnjfDk9ygK2gM36VNC1iF1QLNAOtgptfOb6/C+ZGpVCE8Yxq8QbuPP6iYXnk6JJdQrMhhb8rpBh0RUOV/KTbPj5pJclKHQzP1MubZyWtpwpzEDk0IZ6UePAMkcXOrgY5xz2SsEjieMHQZIIx38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1lTYhm4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=bDdTrbc3k1ZH8aAeZ7isoFhk722AWP0rzK+7ByYT8vDECgcfgcn1gMUIjWYhnA0yXtpNOV3luhF1rhUoR8EJmAl7G8TtCOARw/tWRNhffGJDxUQzKp7fegCWv6Tb4x8Z25EyDVEAA0W6CdrTw3MgbEjQuWP4QcJfS361VeN+6Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6zzoHrx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1lTYhm4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33E31C433F1;
-	Mon, 19 Feb 2024 08:52:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6zzoHrx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1B4AC433F1;
+	Mon, 19 Feb 2024 09:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708332760;
-	bh=QSfJos/lddHKiaEK29nuQ8nsIJlnaJlElxs6L3PPUmQ=;
+	s=k20201202; t=1708333263;
+	bh=s0MkwnES3ekJhAcLd2zDZkI1BOb+++iW/9RCE2679e8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G1lTYhm4PA36Pl2eUJ8GxJ9cfRl2ROdGDC2TqcLUeUYqQCRCAnreZ1C5974IDvwSs
-	 o5y03bte731qZna9hqoqMWjCPpnonWGg97zNqo+w9NmmscJkhT8ngqUKjvzMocMHwD
-	 50oAyQ5FFyEY40HE0HqA5j/IEntUjBO5Ex3NjxzmMkNX4WMm7UEkp0xrczAZYoLqPV
-	 T/hoaNqOTlyg2P+L1IT/O4N1bGt/SSSDeAd+TB+mz0tK7GQf4KG2iJubffkL8e0GW1
-	 oFnsIj0toV4LX/FjHKEHfv4PV4S8US45+BG6yXDGv85yR+f5i4145KNT5iok3WSPeC
-	 KWhw9bGCnUILw==
-Message-ID: <e90ec1eb-16d7-46ee-9835-d93fdbad6702@kernel.org>
-Date: Mon, 19 Feb 2024 09:52:36 +0100
+	b=n6zzoHrxQu1p0sIy4ivspqtnRX60wNgufwTGa5TtGDAXZuCKu2xDmiS52l+UENDDR
+	 AmDn44mJo7GH8XrqFl1z2X1X1ZKjM07c3POl9NR7eEPHekQPLJj8lU7qPqWNftsoPo
+	 03+7LeYjGy9Btu13/LhL3NJjF1fWjK06/dmAy0Yja3CCVWi64tb34qqvq85zFtGMQ/
+	 Z+el1mMamPc2oymZgpB7/CUxnHmheaCcf9Z6RIasgqFFvVATMbZFnfhQoSqS3aSkPq
+	 UyEtkkILvYQ9sLFrz3EJ7S84hAkKOTlz86alV/Tp9M5EErMsCPXEm55EeG7xz2B65l
+	 5LDkwMHjk2Xwg==
+Message-ID: <ac77e129-a6ef-42e7-84e8-fb7e19bc6b30@kernel.org>
+Date: Mon, 19 Feb 2024 10:01:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 1/2] selftests: mptcp: join: add ss mptcp
- support check
+Subject: Re: [PATCH mptcp-next v3 2/2] selftests: mptcp: add
+ mptcp_lib_check_tools helper
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708330720.git.tanggeliang@kylinos.cn>
- <2647a5c158e5979e55f295819370c452868b2af2.1708330720.git.tanggeliang@kylinos.cn>
+ <428122f8879686b24852d3e46850b9e3538afb99.1708330720.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,22 +87,156 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2647a5c158e5979e55f295819370c452868b2af2.1708330720.git.tanggeliang@kylinos.cn>
+In-Reply-To: <428122f8879686b24852d3e46850b9e3538afb99.1708330720.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
+Thank you for the new version.
+
 On 19/02/2024 09:22, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Commands 'ss -M' are used in script mptcp_join.sh to display only MPTCP
-> sockets. So it must be checked if ss tool supports MPTCP in this script.
+> This patch exports check_tools() helper from mptcp_join.sh into
+> mptcp_lib.sh as a public one mptcp_lib_check_tools(). The arguments
+> "ip", "ss", and "iptables" are passed into this helper to indicate
 
-Thank you for the update, I will queue it for -net, with:
+'ip6tables' can be passed too since v3.
 
-Fixes: e274f7154008 ("selftests: mptcp: add subflow limits test-cases")
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> whether to check ip tool, ss tool and iptables tools.
+> 
+> This helper can be used in every scripts.
+
+(...)
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index d797b27b7626..d9df6eb6a52a 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -152,34 +152,12 @@ cleanup_partial()
+>  	done
+>  }
+>  
+> -check_tools()
+> -{
+> -	mptcp_lib_check_mptcp
+> -	mptcp_lib_check_kallsyms
+> -
+> -	if ! ip -Version &> /dev/null; then
+> -		echo "SKIP: Could not run test without ip tool"
+> -		exit $ksft_skip
+> -	fi
+> -
+> -	if ! ss -h | grep -q MPTCP; then
+> -		echo "SKIP: ss tool does not support MPTCP"
+> -		exit $ksft_skip
+> -	fi
+> -
+> -	if ! "${iptables}" -V &> /dev/null; then
+> -		echo "SKIP: Could not run all tests without ${iptables} tool"
+> -		exit $ksft_skip
+> -	elif ! "${ip6tables}" -V &> /dev/null; then
+> -		echo "SKIP: Could not run all tests without ${ip6tables} tool"
+> -		exit $ksft_skip
+> -	fi
+> -}
+> -
+>  init() {
+>  	init=1
+>  
+> -	check_tools
+> +	mptcp_lib_check_mptcp
+> +	mptcp_lib_check_kallsyms
+> +	mptcp_lib_check_tools ip ss iptables
+
+You should use "${iptables}" -- just in case we switch to iptables-nft
+or something else later -- and add "${ip6tables}" now that the check is
+split.
+
+>  	sin=$(mktemp)
+>  	sout=$(mktemp)
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 108a1e12436c..b92c5278730b 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -319,3 +319,34 @@ mptcp_lib_wait_local_port_listen() {
+>  		sleep 0.1
+>  	done
+>  }
+> +
+> +mptcp_lib_check_tools() {
+> +	local tool
+> +
+> +	for tool in "${@}"; do
+> +		case "${tool}" in
+> +		"ip")
+> +			if ! ip -Version &> /dev/null; then
+> +				mptcp_lib_print_warn "SKIP: Could not run test without ip tool"
+> +				exit ${KSFT_SKIP}
+> +			fi
+> +			;;
+> +		"ss")
+> +			if ! ss -h | grep -q MPTCP; then
+> +				mptcp_lib_print_warn "SKIP: ss tool does not support MPTCP"
+> +				exit ${KSFT_SKIP}
+> +			fi
+> +			;;
+> +		"iptables"* | "ip6tables"*)
+> +			if ! "${tool}" -V &> /dev/null; then
+> +				mptcp_lib_print_warn "SKIP: Could not run all tests without ${tool} tool"
+> +				exit ${KSFT_SKIP}
+> +			fi
+> +			;;
+> +		*)
+> +			mptcp_lib_print_warn "Unsupported tool: ${tool}"
+> +			exit ${KSFT_SKIP}
+
+If we are here, it means we have an internal error: we are checking a
+tool we don't support. I think you should then use 'mptcp_lib_print_err'
+and exit an error "${KSFT_FAIL}".
+
+If you prefer, you can also print a more explicit message, e.g.
+
+  Internal error: unsupported tool: ${tool}
+
+Up to you, this error should not happen.
+
+> +			;;
+> +		esac
+> +	done
+> +}
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> index dac8e1fc7143..edb71f44be45 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> @@ -89,20 +89,7 @@ cleanup()
+>  
+>  mptcp_lib_check_mptcp
+>  mptcp_lib_check_kallsyms
+> -
+> -ip -Version > /dev/null 2>&1
+> -if [ $? -ne 0 ];then
+> -	echo "SKIP: Could not run test without ip tool"
+> -	exit $ksft_skip
+> -fi
+> -
+> -if ! "${iptables}" -V &> /dev/null; then
+> -	echo "SKIP: Could not run all tests without ${iptables} tool"
+> -	exit $ksft_skip
+> -elif ! "${ip6tables}" -V &> /dev/null; then
+> -	echo "SKIP: Could not run all tests without ${ip6tables} tool"
+> -	exit $ksft_skip
+> -fi
+> +mptcp_lib_check_tools ip iptables
+
+Same here: use "${iptables}" instead, and add "${ip6tables}".
+
+>  
+>  check_mark()
+>  {
+
+(...)
 
 Cheers,
 Matt
