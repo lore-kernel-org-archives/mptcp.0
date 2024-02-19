@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E87D23769
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 09:29:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3247022F03
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 09:29:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708334995; cv=none; b=LJPlj6+Fc9xKny1t1sOvw4IVGjDlUE6UArqOId2VINW8cQESbJQ3hS26Ll5FzZi+rpkYZTdkTT6XBNzqOpbXrMPpXQNeCgKUPze5UULLUjO3YXQX36R2y5gtmfMxb7z8wGhaurRwRHmVrjfuG6+U6pGHrmkpXLb1EIpJo55lId4=
+	t=1708334997; cv=none; b=bWxLqSPXh0YDma+B1hhLLJUdv5HAtPuRN75F50ERnlWm/9FmCzr3hCKXnhOxQtvEQklunLWSvGtc6Cseeid9sUI8YR/SQTlKR5IwBD7NeBlk8V/VQx0+Nq7OOqvdYlWQQ80mlnc2vbc9PiZndvEUQAqMpAKTy09vjGWz+7lOX/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708334995; c=relaxed/simple;
-	bh=apje5hz9yQ+sRC9YLz9pz5+ymYo97pW1XfGRazAHmuI=;
+	s=arc-20240116; t=1708334997; c=relaxed/simple;
+	bh=9zn6pWvxP077i+FuZV1ERxRYKo2MNwdjiwNlrYB001Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ch0dTvcnK2jDPozg6ubvM/Jffva8Gaj4Ewn6I2+0/B4J1am9AVmX6GteEh0lzN6T3DL20pvbVOLqqopBhsyCml5khCjRtRrsSHnAIy8z7XFPQWFgZLGD1isFSSxp01BEtXy/+YzmzF1FV9xC+irZrB0mxRAeuHZb9vUtjPg8rbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MU9ddtfZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oMfbm7mN+dGuO6uGu608L9q8Mmy+NoXBqMzIW//eVoe43iCrBCJA68MKnMrDYlYAWbxFRvd5K02f6uK+XzSJCiqIIGz7QnaLJgMnp5ywE03ki4ffOXbOUJ1QoVvjl4BkswrcBYwBoO/fWEaXu5EHZhrWfpWZyH+MGVx/6DUjuPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BU3pyT14; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MU9ddtfZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE23C433F1;
-	Mon, 19 Feb 2024 09:29:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BU3pyT14"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F3FDC433C7;
+	Mon, 19 Feb 2024 09:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708334994;
-	bh=apje5hz9yQ+sRC9YLz9pz5+ymYo97pW1XfGRazAHmuI=;
+	s=k20201202; t=1708334996;
+	bh=9zn6pWvxP077i+FuZV1ERxRYKo2MNwdjiwNlrYB001Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MU9ddtfZ+zzLWikIvCxyBlPWD9yFh5vE88L8a2+ScXZZddP7plmBupDb/n6OcOSWl
-	 GhMseO7n1KGqa4qVzHQYsEYCPxi/axgs6FuwBRK6X5iNJd8bMXyCQU8lRKsT4rfWRX
-	 lxwsLFN9tAj9wSJnxYbFIzbJMknJ/uIFDBW4P67URDlvbYy7A5YM78OgDxMjb8OW+x
-	 0AZtOodlMZkglrTviZKm1JDJNTVbSSyadrF69Go5ycIOYTGlbsAfZEmQ2B3NNC5wAZ
-	 c0jQHbQsPv/mEErSmFEpHUomrm+/Kdj5TU34lez8ksqlh96ICtiyhej/DgKSc6aFLD
-	 /6KKVCRT/lGZw==
+	b=BU3pyT14o1DqVNNtrNlAX/+fhM9SNmGOlMvhCBwTtD7WPuNz6cd5UAlUBP2bIdeOX
+	 4HG4KuZh8223VgYlO6uh0i+3VFwBzAzySlRM/VhIhePFMkzminGTqpsg/R7hBdmpCI
+	 kfVJTIBp+JC28U9vu5l9jxf5AKBv6lo58l1pEu09RQT6Bv3tQ3RbTNXDhsF1zxq87m
+	 e3gtJefLWNFzJWXOB+r2owF4V5kG7aqR3iHwAje185X7bHc1ew0XfmD/ffg/g3lbxG
+	 CZb8ZiaNg/Mx51Z+VO07cdA+/gYpZt0xY6eB3w9hZdHwH/ULVwAv8ORkTf5VR1ZPij
+	 Vies7mWYi2CFg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 4/5] selftests: mptcp: add mptcp_lib_check_output helper
-Date: Mon, 19 Feb 2024 17:29:34 +0800
-Message-Id: <c81e0a2cc5cc6bf7e717fde333adf3c3b2180c6e.1708334850.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 5/5] selftests: mptcp: add mptcp_lib_evts_* helpers
+Date: Mon, 19 Feb 2024 17:29:35 +0800
+Message-Id: <1fbd9490d9c18f54b0685eb07da910749e43a0d5.1708334850.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1708334850.git.tanggeliang@kylinos.cn>
 References: <cover.1708334850.git.tanggeliang@kylinos.cn>
@@ -45,168 +45,358 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Unify check_output() in mptcp_join.sh and check() in pm_netlink.sh into
-a new public function mptcp_lib_check_output() in mptcp_lib.sh. And use
-mptcp_lib_print_ok() and _err() in it to print test results with colors.
+To avoid duplicated code in different MPTCP selftests, we can add and
+use helpers defined in mptcp_lib.sh.
 
-Use this new helper instead of check_output() and check().
+This patch unifies "pm_nl_ctl events" related code in userspace_pm.sh
+and mptcp_join.sh into four helpers: mptcp_lib_evts_init(), _start(),
+_kill() and _remove(). Define them in mptcp_lib.sh and use these new
+helpers in both scripts.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 21 +-----------
- .../testing/selftests/net/mptcp/mptcp_lib.sh  | 32 +++++++++++++++++++
- .../testing/selftests/net/mptcp/pm_netlink.sh | 24 ++++----------
- 3 files changed, 40 insertions(+), 37 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 62 +++++++-----------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 63 +++++++++++++++++++
+ .../selftests/net/mptcp/userspace_pm.sh       | 31 ++-------
+ 3 files changed, 92 insertions(+), 64 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index ceaaf155cc32..f75d22dbb28d 100755
+index f75d22dbb28d..d4798495a17d 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -21,7 +21,6 @@ cinfail=""
- cinsent=""
- tmpfile=""
- cout=""
--check_output_err=""
- capout=""
- ksft_skip=4
- iptables="iptables"
-@@ -151,7 +150,6 @@ init() {
+@@ -33,10 +33,6 @@ ip_mptcp=0
+ check_invert=0
+ validate_checksum=false
+ init=0
+-evts_ns1=""
+-evts_ns2=""
+-evts_ns1_pid=0
+-evts_ns2_pid=0
+ last_test_failed=0
+ last_test_skipped=0
+ last_test_ignored=1
+@@ -148,8 +144,7 @@ init() {
+ 	cin=$(mktemp)
+ 	cinsent=$(mktemp)
  	cout=$(mktemp)
- 	evts_ns1=$(mktemp)
- 	evts_ns2=$(mktemp)
--	check_output_err=$(mktemp)
+-	evts_ns1=$(mktemp)
+-	evts_ns2=$(mktemp)
++	mptcp_lib_evts_init
  
  	trap cleanup EXIT
  
-@@ -165,7 +163,6 @@ cleanup()
+@@ -162,7 +157,7 @@ cleanup()
+ 	rm -f "$cin" "$cout" "$sinfail"
  	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
  	rm -f "$tmpfile"
- 	rm -rf $evts_ns1 $evts_ns2
--	rm -f $check_output_err
+-	rm -rf $evts_ns1 $evts_ns2
++	mptcp_lib_evts_remove
  	mptcp_lib_cleanup
  	cleanup_partial
  }
-@@ -3345,26 +3342,10 @@ userspace_pm_get_addr()
- 
- check_output()
+@@ -427,12 +422,7 @@ reset_with_events()
  {
--	local cmd="$1"
--	local expected="$2"
- 	local msg="$3"
--	local out=`$cmd 2>$check_output_err`
--	local cmd_ret=$?
+ 	reset "${1}" || return 1
  
- 	printf "%-42s" "$msg"
--	if [ $cmd_ret -ne 0 ]; then
--		mptcp_lib_print_err "[FAIL] command execution '$cmd' stderr "
--		cat $check_output_err
--		ret=${KSFT_FAIL}
--		return $cmd_ret
--	elif [ "$out" = "$expected" ]; then
--		mptcp_lib_print_ok "[ OK ]"
--		return 0
--	else
--		mptcp_lib_print_err "[FAIL] expected '$expected' got '$out'"
--		ret=${KSFT_FAIL}
--		return 1
--	fi
-+	mptcp_lib_check_output "${1}" "${2}"
+-	:> "$evts_ns1"
+-	:> "$evts_ns2"
+-	ip netns exec $ns1 ./pm_nl_ctl events >> "$evts_ns1" 2>&1 &
+-	evts_ns1_pid=$!
+-	ip netns exec $ns2 ./pm_nl_ctl events >> "$evts_ns2" 2>&1 &
+-	evts_ns2_pid=$!
++	mptcp_lib_evts_start "${ns1}" "${ns2}"
  }
  
- userspace_tests()
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 01b0e43eaa80..fd2ed3b5137c 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -410,6 +410,38 @@ mptcp_lib_ns_exit() {
+ reset_with_tcp_filter()
+@@ -602,12 +592,6 @@ wait_mpj()
  	done
  }
  
-+check_output_err=$(mktemp)
-+
-+mptcp_lib_check_output() {
-+	: "${check_output_err:?}"
-+	: "${ret:?}"
-+
-+	local cmd="$1"
-+	local expected="$2"
-+	local out
-+	local cmd_ret
-+
-+	out=$($cmd 2>"$check_output_err")
-+	cmd_ret=$?
-+
-+	if [ $cmd_ret -ne 0 ]; then
-+		mptcp_lib_print_err "[FAIL] command execution '$cmd' stderr "
-+		cat "$check_output_err"
-+		ret=${KSFT_FAIL}
-+		return $cmd_ret
-+	elif [ "$out" = "$expected" ]; then
-+		mptcp_lib_print_ok "[ OK ]"
-+		return 0
-+	else
-+		mptcp_lib_print_err "[FAIL] expected '$expected' got '$out'"
-+		ret=${KSFT_FAIL}
-+		return 1
-+	fi
-+}
-+
- mptcp_lib_cleanup() {
-+	: "${check_output_err:?}"
-+
- 	echo "cleanup"
-+	rm -f "$check_output_err"
- }
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 5da9ccafc47e..eb3440d2620e 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -25,11 +25,9 @@ while getopts "$optstring" option;do
- done
- 
- mptcp_lib_ns_init 1
--err=$(mktemp)
- 
- cleanup()
+-kill_events_pids()
+-{
+-	mptcp_lib_kill_wait $evts_ns1_pid
+-	mptcp_lib_kill_wait $evts_ns2_pid
+-}
+-
+ pm_nl_set_limits()
  {
--	rm -f $err
- 	mptcp_lib_ns_exit 1
- 	mptcp_lib_cleanup
- }
-@@ -43,26 +41,18 @@ ip netns exec $ns1 sysctl -q net.mptcp.enabled=1
+ 	local ns=$1
+@@ -2877,9 +2861,9 @@ add_addr_ports_tests()
+ 		chk_add_nr 1 1 1
+ 		chk_rm_nr 1 1 invert
  
- check()
+-		verify_listener_events $evts_ns1 $LISTENER_CREATED $AF_INET 10.0.2.1 10100
+-		verify_listener_events $evts_ns1 $LISTENER_CLOSED $AF_INET 10.0.2.1 10100
+-		kill_events_pids
++		verify_listener_events $server_evts $LISTENER_CREATED $AF_INET 10.0.2.1 10100
++		verify_listener_events $server_evts $LISTENER_CLOSED $AF_INET 10.0.2.1 10100
++		mptcp_lib_evts_kill
+ 	fi
+ 
+ 	# subflow and signal with port, remove
+@@ -3252,10 +3236,10 @@ fail_tests()
+ # $1: ns ; $2: addr ; $3: id
+ userspace_pm_add_addr()
  {
--	local cmd="$1"
--	local expected="$2"
- 	local msg="$3"
--	local out=`$cmd 2>$err`
--	local cmd_ret=$?
+-	local evts=$evts_ns1
++	local evts=$server_evts
+ 	local tk
  
- 	printf "%-50s" "$msg"
--	if [ $cmd_ret -ne 0 ]; then
--		echo "[FAIL] command execution '$cmd' stderr "
--		cat $err
--		mptcp_lib_result_fail "${msg} # error ${cmd_ret}"
--		ret=1
--	elif [ "$out" = "$expected" ]; then
--		echo "[ OK ]"
-+	# ${*} doesn't work here since there're spaces in some arguments.
-+	mptcp_lib_check_output "${1}" "${2}"
-+	local rc=$?
-+	if [ ${rc} -eq 0 ]; then
- 		mptcp_lib_result_pass "${msg}"
--	else
--		echo -n "[FAIL] "
--		echo "expected '$expected' got '$out'"
-+	elif [ ${rc} -eq 1 ]; then
- 		mptcp_lib_result_fail "${msg} # different output"
--		ret=1
-+	else
-+		mptcp_lib_result_fail "${msg} # error ${rc}"
+-	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	[ "$1" == "$ns2" ] && evts=$client_evts
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 
+ 	ip netns exec $1 ./pm_nl_ctl ann $2 token $tk id $3
+@@ -3265,11 +3249,11 @@ userspace_pm_add_addr()
+ # $1: ns ; $2: id
+ userspace_pm_rm_addr()
+ {
+-	local evts=$evts_ns1
++	local evts=$server_evts
+ 	local tk
+ 	local cnt
+ 
+-	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	[ "$1" == "$ns2" ] && evts=$client_evts
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 
+ 	cnt=$(rm_addr_count ${1})
+@@ -3280,10 +3264,10 @@ userspace_pm_rm_addr()
+ # $1: ns ; $2: addr ; $3: id
+ userspace_pm_add_sf()
+ {
+-	local evts=$evts_ns1
++	local evts=$server_evts
+ 	local tk da dp
+ 
+-	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	[ "$1" == "$ns2" ] && evts=$client_evts
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 	da=$(mptcp_lib_evts_get_info daddr4 "$evts")
+ 	dp=$(mptcp_lib_evts_get_info dport "$evts")
+@@ -3296,13 +3280,13 @@ userspace_pm_add_sf()
+ # $1: ns ; $2: addr $3: event type
+ userspace_pm_rm_sf()
+ {
+-	local evts=$evts_ns1
++	local evts=$server_evts
+ 	local t=${3:-1}
+ 	local ip
+ 	local tk da dp sp
+ 	local cnt
+ 
+-	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	[ "$1" == "$ns2" ] && evts=$client_evts
+ 	[ -n "$(mptcp_lib_evts_get_info "saddr4" "$evts" $t)" ] && ip=4
+ 	[ -n "$(mptcp_lib_evts_get_info "saddr6" "$evts" $t)" ] && ip=6
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+@@ -3319,10 +3303,10 @@ userspace_pm_rm_sf()
+ # $1: ns
+ userspace_pm_dump()
+ {
+-	local evts=$evts_ns1
++	local evts=$server_evts
+ 	local tk
+ 
+-	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	[ "$1" == "$ns2" ] && evts=$client_evts
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 
+ 	ip netns exec $1 ./pm_nl_ctl dump token $tk
+@@ -3331,10 +3315,10 @@ userspace_pm_dump()
+ # $1: ns ; $2: id
+ userspace_pm_get_addr()
+ {
+-	local evts=$evts_ns1
++	local evts=$server_evts
+ 	local tk
+ 
+-	[ "$1" == "$ns2" ] && evts=$evts_ns2
++	[ "$1" == "$ns2" ] && evts=$client_evts
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 
+ 	ip netns exec $1 ./pm_nl_ctl get $2 token $tk
+@@ -3468,7 +3452,7 @@ userspace_tests()
+ 		chk_rm_nr 2 2 invert
+ 		chk_mptcp_info subflows 0 subflows 0
+ 		chk_subflows_total 1 1
+-		kill_events_pids
++		mptcp_lib_evts_kill
+ 		mptcp_lib_kill_wait $tests_pid
+ 	fi
+ 
+@@ -3505,7 +3489,7 @@ userspace_tests()
+ 		chk_rm_nr 1 1
+ 		chk_mptcp_info subflows 0 subflows 0
+ 		chk_subflows_total 1 1
+-		kill_events_pids
++		mptcp_lib_evts_kill
+ 		mptcp_lib_kill_wait $tests_pid
+ 	fi
+ 
+@@ -3529,7 +3513,7 @@ userspace_tests()
+ 		chk_join_nr 1 1 1
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 2 2
+-		kill_events_pids
++		mptcp_lib_evts_kill
+ 		mptcp_lib_kill_wait $tests_pid
+ 	fi
+ 
+@@ -3553,7 +3537,7 @@ userspace_tests()
+ 		chk_rst_nr 0 0 invert
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 1 1
+-		kill_events_pids
++		mptcp_lib_evts_kill
+ 		mptcp_lib_kill_wait $tests_pid
+ 	fi
+ 
+@@ -3579,7 +3563,7 @@ userspace_tests()
+ 		chk_rst_nr 0 0 invert
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 1 1
+-		kill_events_pids
++		mptcp_lib_evts_kill
+ 		mptcp_lib_kill_wait $tests_pid
+ 	fi
+ }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index fd2ed3b5137c..67ceefe70059 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -439,6 +439,69 @@ mptcp_lib_check_output() {
  	fi
  }
  
++server_evts=""
++client_evts=""
++server_evts_pid=0
++client_evts_pid=0
++
++# server_evts(_pid) and client_evts(_pid) are needed
++# by mptcp_lib_evts_init, _start, _kill and _remove.
++mptcp_lib_evts_init() {
++	: "${server_evts?}"
++	: "${client_evts?}"
++
++	if [ -z "${server_evts}" ]; then
++		server_evts=$(mktemp)
++	fi
++	if [ -z "${client_evts}" ]; then
++		client_evts=$(mktemp)
++	fi
++}
++
++# $1 ns1, $2 ns2
++mptcp_lib_evts_start() {
++	: "${server_evts:?}"
++	: "${client_evts:?}"
++	: "${server_evts_pid:?}"
++	: "${client_evts_pid:?}"
++
++	local ns_1="${1}"
++	local ns_2="${2}"
++
++	:>"$server_evts"
++	:>"$client_evts"
++
++	if [ "${server_evts_pid}" -ne 0 ]; then
++		mptcp_lib_kill_wait "${server_evts_pid}"
++	fi
++	ip netns exec "${ns_1}" ./pm_nl_ctl events >> "${server_evts}" 2>&1 &
++	server_evts_pid=$!
++
++	if [ "${client_evts_pid}" -ne 0 ]; then
++		mptcp_lib_kill_wait "${client_evts_pid}"
++	fi
++	ip netns exec "${ns_2}" ./pm_nl_ctl events >> "${client_evts}" 2>&1 &
++	client_evts_pid=$!
++}
++
++mptcp_lib_evts_kill() {
++	: "${server_evts_pid:?}"
++	: "${client_evts_pid:?}"
++
++	mptcp_lib_kill_wait "${server_evts_pid}"
++	mptcp_lib_kill_wait "${client_evts_pid}"
++
++	server_evts_pid=0
++	client_evts_pid=0
++}
++
++mptcp_lib_evts_remove() {
++	: "${server_evts:?}"
++	: "${client_evts:?}"
++
++	rm -rf "${server_evts}" "${client_evts}"
++}
++
+ mptcp_lib_cleanup() {
+ 	: "${check_output_err:?}"
+ 
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index dab9115738d7..57fb990cefe9 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -30,10 +30,6 @@ AF_INET=2
+ AF_INET6=10
+ 
+ file=""
+-server_evts=""
+-client_evts=""
+-server_evts_pid=0
+-client_evts_pid=0
+ client4_pid=0
+ server4_pid=0
+ client6_pid=0
+@@ -109,15 +105,16 @@ cleanup()
+ 
+ 	# Terminate the MPTCP connection and related processes
+ 	local pid
+-	for pid in $client4_pid $server4_pid $client6_pid $server6_pid\
+-		   $server_evts_pid $client_evts_pid
++	for pid in $client4_pid $server4_pid $client6_pid $server6_pid
+ 	do
+ 		mptcp_lib_kill_wait $pid
+ 	done
++	mptcp_lib_evts_kill
+ 
+ 	mptcp_lib_ns_exit 2
+ 
+-	rm -rf $file $client_evts $server_evts
++	rm -rf $file
++	mptcp_lib_evts_remove
+ 
+ 	mptcp_lib_cleanup
+ 	_printf "Done\n"
+@@ -175,24 +172,8 @@ make_connection()
+ 
+ 	# Capture netlink events over the two network namespaces running
+ 	# the MPTCP client and server
+-	if [ -z "$client_evts" ]; then
+-		client_evts=$(mktemp)
+-	fi
+-	:>"$client_evts"
+-	if [ $client_evts_pid -ne 0 ]; then
+-		mptcp_lib_kill_wait $client_evts_pid
+-	fi
+-	ip netns exec "$ns2" ./pm_nl_ctl events >> "$client_evts" 2>&1 &
+-	client_evts_pid=$!
+-	if [ -z "$server_evts" ]; then
+-		server_evts=$(mktemp)
+-	fi
+-	:>"$server_evts"
+-	if [ $server_evts_pid -ne 0 ]; then
+-		mptcp_lib_kill_wait $server_evts_pid
+-	fi
+-	ip netns exec "$ns1" ./pm_nl_ctl events >> "$server_evts" 2>&1 &
+-	server_evts_pid=$!
++	mptcp_lib_evts_init
++	mptcp_lib_evts_start "${ns1}" "${ns2}"
+ 	sleep 0.5
+ 
+ 	# Run the server
 -- 
 2.40.1
 
