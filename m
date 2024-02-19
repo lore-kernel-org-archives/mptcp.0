@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573AE2C842
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 12:21:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC3B2AD39
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 12:21:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708345272; cv=none; b=SmrrdzmvHAvL2fsAfEJV6g/gXHR157Vg9NcgPZK3XCTu2S/25Y8FGx3dM73cD+/XZ29Qqc27MPJFj/lGMNpoFnJg1mnPDChnpQiKyesyzSGe7l/PNNVhqDjmMvCpWJYIZJEyb5zMSil0s6wlscHV2JBedIEF9ZdiZ1/NF7VfjQE=
+	t=1708345310; cv=none; b=irvyfV0zvCaoMq0BflC2Ae291Jb5boqOmthgZLKcYysXLakoARhS5hO9Zg4WoFGGhUOVd0f64jCH2ZBBJs1P6fFH1L+/+ms45ckWMJdsXmbbj1b0STAuWA0EyDsc1NV5z02Z+fuUdvBg1SOTy1j3stMJCv6ToC1eREg/Eqj1OkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708345272; c=relaxed/simple;
-	bh=2BVzvaOXMDHMreGb7HUk0Nc3dJjlaC8d+/7j8R/r7OY=;
+	s=arc-20240116; t=1708345310; c=relaxed/simple;
+	bh=m9eYGtX+kVsJChSlxjOWK5nYXTa0DodOb0q6iPE/IhA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ei+4dZHA+mLxchJlaSR01H/H5FkV1eqVqZqOzrni/D8CQPXaBeP7lqlsAVShE1/iemv7xd651lhlAXFJKMzCrqgBMu5QSexTUiHtY7pANRdvOoULSPCjdkfns9fCVCDFccxD/cPV9cLvCE2dvyMmMrPBtLWa/KMXHieCh3RIprk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYpk8Xum; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nZgWME7RjRGHR/hF63ox1CCiPfFD6VIS+LKMQudwSLMtMtW81HEYxW7CiSeGBVE1tWj2AeLRNkDwhune83oMAiTifYl69m4PKtLOYplahk7K0+LVzKBBAAyf+4fUK1YZDvjxWM7nmZO8nkvTqi2TGU2O91J2ZZ4wDTr2pLSjksA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kKsnrj5S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYpk8Xum"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00985C433F1;
-	Mon, 19 Feb 2024 12:21:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKsnrj5S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85C42C433C7;
+	Mon, 19 Feb 2024 12:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708345271;
-	bh=2BVzvaOXMDHMreGb7HUk0Nc3dJjlaC8d+/7j8R/r7OY=;
+	s=k20201202; t=1708345310;
+	bh=m9eYGtX+kVsJChSlxjOWK5nYXTa0DodOb0q6iPE/IhA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hYpk8XumCCkNQMPhd1rPT33kvb5Zm8ip/AnqrFxMY6k996riu1bESiDnv2/xbbT2v
-	 GW10VMee+xl+YIqntJ6iIlhRRaKeQXQl6qIr8DSCkURpDxnlEK21u83EoJUOYsqrmI
-	 1CBczH6L6ffQQHYPh6Nu7Je119lmTEcl9ODWUFnkBg7YnsOWnP0xZgm3pVz28g3+9p
-	 dPkE3ZCtw9Kxt5FOgoTxFjniQdecdC4Hz+qQ+ZvgriCDUNCVq/lQ9WJc5wlG8s9A3T
-	 qdUY5+WNWd/MjiIuiEf4/V3PmV8nqSIqxiHTaoNHX6FAAyrwl0/snrP1eYkv8pbkV7
-	 KtKrmFY+2DGMA==
-Message-ID: <dd4b6d97-2851-4726-bc44-8a8384055ae9@kernel.org>
-Date: Mon, 19 Feb 2024 13:21:10 +0100
+	b=kKsnrj5SZEVxIF7yaanGsiqfhEb8fndPJFa03NTtg4u9+rXJE0Yy1L7Y4vFHY5hHV
+	 S/sKevHgQ/urAqaCjiV8gjVnoKt+SkeNC/nXNCNEvQzxQ/z5ohf1AoDDLaw8KphedU
+	 TFxv48tscrJMrSDSPtdjG/slLBssyUd58jXjQzBxBjMugA/vqnkSQhMYsHfDh6IwNr
+	 RC4quoCpWi/owzcavdmFMeFc2YbDuxwZGI+qErmiw32l8iFH2BOYW5HqIADGM1PXTd
+	 GOcaONirdzlhkJvL0HZesx/g+79KnpxrOQa2KPGjo1a7RkhMf52O938agubQqXD/Zx
+	 NRPxQ2ObNIMig==
+Message-ID: <3923dab2-84bb-49b8-b286-d8015a3ad67e@kernel.org>
+Date: Mon, 19 Feb 2024 13:21:49 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 1/5] selftests: mptcp: unify namespace names to
- ns1/2/3/4
+Subject: Re: [PATCH mptcp-next 2/5] selftests: mptcp: add mptcp_lib_ns_*
+ helpers
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708334850.git.tanggeliang@kylinos.cn>
- <c25c836349eff4348c67d17a36b779836173a177.1708334850.git.tanggeliang@kylinos.cn>
+ <b231398375e6569da10c36f931be69d161a5e31b.1708334850.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,45 +87,169 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c25c836349eff4348c67d17a36b779836173a177.1708334850.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b231398375e6569da10c36f931be69d161a5e31b.1708334850.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 19/02/2024 10:29, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Most scripts use ns1, ns2, ns3 and ns4 as namespace names, but ns and
-> ns_sbox are used in diag.sh and mptcp_sockopt.sh. To maintain consistency
-> with other scripts, this patch renames these variables:
+> Add helpers mptcp_lib_ns_init() and mptcp_lib_ns_exit() in mptcp_lib.sh to
+> init all namespaces ns1, ns2, ns3 and ns4. Then every test script can
+> invoke these helpers and use all namespaces.
 
-If it is just for consistency, I don't think we should rename these
-variables:
+Good idea to move duplicated code to the _lib.sh file.
 
->     ns        -> ns1         in diag.sh
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
-For me, adding a number as suffix means there are multiple netns
-interacting with each others. Here, there is only one, that would be
-confusing.
+(...)
 
-If this rename is not needed to fix something, I would then prefer to
-avoid such modifications: that will "annoy" us in case of backports →
-more risks of having conflicts, but mainly backports done by the stable
-team will not detect issues where the wrong variable is used (the stable
-team only compiles the .c code).
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 6d9a2af85a8d..bfc535594675 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -350,3 +350,62 @@ mptcp_lib_check_tools() {
+>  		esac
+>  	done
+>  }
+> +
+> +rndh=""
 
->     ns_sbox   -> ns3         in mptcp_sockopt.sh
+I guess you "export" it because it is needed for the captured files,
+right? If yes, why not using the "${ns}" variables in a dedicated commit
+before to ease this refactoring?
 
-To be honest, I'm not a big fan of having numbers as suffix: when
-looking at the names, it is not clear what is the difference between
-'ns1' and 'ns2' for example. We should have probably used "_client",
-"_server", "_router", "_shaper", etc. from the beginning. Too late now.
+> +ns1=""
+> +ns2=""
+> +ns3=""
+> +ns4=""
 
-Hence, I would prefer here to keep 'ns_sbox', otherwise we might think
-that ns3 is connected to ns1 and/or ns2, which is not the case.
+I really don't think it is a good idea to hide these variables: if you
+open 'mptcp_connect.sh', it will be confusing not to see where these
+variables have been declared. If you declare variables (or functions) in
+the lib, they should be prefixed MPTCP_LIB_ (or mptcp_lib_ for the
+functions) I think.
 
-WDYT?
+Instead, I think you should keep the ns* variables declared at the top
+of each file, but call "mptcp_lib_ns_init" with the variables to
+initiate, e.g.
+
+  ns1=""
+  ns2=""
+  ns_disabled=""
+
+  (...)
+
+  mptcp_lib_ns_init ns1 ns2 ns_disabled
+
+in mptcp_lib_ns_init(), you can do something like:
+
+  (...)
+
+  local ns_i
+  for ns_i in "${@}"; do
+      eval "${ns_i}=${ns_i}-${rndh}"
+
+      ip netns add "${!ns_i}" || (...)
+
+(so you can use the version with '!' in the for loop)
+
+> +mptcp_lib_ns_init() {
+> +	: "${rndh?}"
+> +	: "${ns1?}"
+> +	: "${ns2?}"
+> +	: "${ns3?}"
+> +	: "${ns4?}"
+> +
+> +	local nr="${1:-4}"
+> +	local i=1
+> +	local sec
+> +
+> +	sec=$(date +%s)
+> +	rndh=$(printf %x "$sec")-$(mktemp -u XXXXXX)
+> +
+> +	ns1="ns1-$rndh"
+> +	ns2="ns2-$rndh"
+> +	ns3="ns3-$rndh"
+> +	ns4="ns4-$rndh"
+
+In this mptcp_lib.sh, probably good to continue to use {} around
+variables ('${rndh}' instead of '$rndh') like in the rest of the file:
+clearer, and we avoid typos.
+
+> +
+> +	local netns
+> +	for netns in "$ns1" "$ns2" "$ns3" "$ns4"; do
+> +		if [ "$i" -gt "$nr" ]; then
+> +			break
+> +		fi
+
+(see above)
+
+> +		ip netns add "$netns" || exit ${KSFT_SKIP}
+> +		ip -net "$netns" link set lo up
+> +
+> +		ip netns exec "$netns" sysctl -q net.ipv4.conf.all.rp_filter=0
+> +		ip netns exec "$netns" sysctl -q net.ipv4.conf.default.rp_filter=0
+
+Mmh, is it OK to do that for all netns? We were not doing that before
+for diag.sh, but I suppose that's because it was not communicating with
+other netns, right? So fine to do that everywhere?
+
+That's a behaviour change. Please always clearly mention behaviour
+changes in the commit message when you do such refactoring, where we
+would expect no behaviour changes.
+
+While at it, maybe we want to add:
+
+  ip netns exec "${!ns_i}" sysctl -q net.mptcp.enabled=1
+
+That should be the default value. If not, good to override. (I think it
+is needed for some RHEL versions.) If yes, please add that in the commit
+message as well.
+
+> +		i=$((i + 1))
+> +	done
+> +}
+> +
+> +mptcp_lib_ns_exit() {
+> +	: "${ns1:?}"
+> +	: "${ns2:?}"
+> +	: "${ns3:?}"
+> +	: "${ns4:?}"
+> +
+> +	local nr="${1:-4}"
+> +	local i=1
+> +
+> +	local netns
+> +	for netns in "$ns1" "$ns2" "$ns3" "$ns4"; do
+> +		if [ "$i" -gt "$nr" ]; then
+> +			break
+> +		fi
+
+Same here, best to clearer to pass the variables names and accept a
+variable number of parameters:
+
+
+  mptcp_lib_ns_exit "${ns1}" "${ns2}"
+
+  local ns_i
+  for ns_i in "${@}"; do
+      ip netns del "${ns_i}"
+
+> +		ip netns del "$netns"
+> +		rm -f /tmp/"$netns".{nstat,out}
+
+Here, it is also a behaviour change. I guess that's fine, but still,
+please mention that in the commit message.
+
+> +		i=$((i + 1))
+> +	done
+> +}
+
+(...)
 
 Cheers,
 Matt
