@@ -1,174 +1,204 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B3144C89
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 17:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F137D481A3
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 18:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708364148; cv=none; b=XQSaVc347Xn4vccAKNR+KP9dT0Wh1V2xc2OBVCXWKZPXoYYC2o8Rra84P1zZjC5DGGEnMgCbgLysWGKhafXHbaMABJmLm0U+hXZfNEg7OM71hQjHovQpWw6n9bGfBiURSEixNnNKOZqyF/XgDMApxJI9m7OQ63me72xuiFKV/zE=
+	t=1708365875; cv=none; b=lTUk1zuI4Qv1QPL8sc8pNLttCJZav6UYlJQgIkyiVVLWLdPLfJNPZj13jpIGX91Z3pZ7Hy9rMuS6niS8gjeR+H/T4DKFzGLt7fUt4nhjbuE+ptT4rP/yNVD5hsRqz2MblasOTqAmoiwTloYO4q+i/nUqdDPzjccJtK5DzJX+Jbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708364148; c=relaxed/simple;
-	bh=wJCpYntqq8nCglIkq88Zs9qTSRweYslEK0KjbQBa4Bg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UZWYJJ5SRuMudEx7V8fcQph2R3pKuJuIeey4+YBiTC2G7UJSGgiq3ddXGi52FoDNrErB7xFpTUNdz6hbp6flk0aW8+ZFmh+0qYTtdoMcu4VLjv8VQoHOcRg1Swm+jHmXH053h9gJkzmE6jWx/ezFT8d9xFxGrDWSw3oLcNlZakw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SjKCphJ+; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708365875; c=relaxed/simple;
+	bh=UEPLrGsnD4vv+KWzGVUqKC9P3Ismxwk1aSAAgDmpy8Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oSw2wN1fQ1984MvEc7g+gXJw71dhQskZKYtz5Zr7smlxLP/pRwPeOfuI4fHBm/CdaQXfQcpAL5XJgjzRQbvkr1Ywd/8iRAwqQW0+M1e+EFrhqMeYtQrT+UTZLYmEwjgx0s+1sq5XaaSzFrJF/71ept8q+WAYzD4sBIjS2M3lOLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ejh3xHU4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SjKCphJ+"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-563dd5bd382so17966a12.1
-        for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 09:35:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708364145; x=1708968945; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bpH+GG/JxRVKqFjHr33MFZWda+dSzZgj8Xxgn4JwPS8=;
-        b=SjKCphJ+Gg6n0/5UUq8KM0VPwc60Co8QeSi3QY5PDhRFNgew7t10HzvjF/Wl3tkGWH
-         xPVybu5uq3Oh/97aL547ephc/KHcZ2XTHrtmZLFDqiASFhPrWUn7m88REXdRoe+pAwWh
-         CW5Zf2oWV3haBGkC6oUKrtl9RFjRHwZTzXWjmluH+k3YzsB0q+VaM4aznWTIp9LEONp5
-         0LeEEFckZ8lZxPL07gbhwq0n8bFG3Z4ZQ+TVhzIMxSslmZiur7Y76hzwRBLI6eRsd8Sx
-         WiUJpQnTsbpjUUbFPNICk3VmJ5ToNkvp6APFJKJPPWqhjWz6NzqPn3vg+Uuvb2Me9pdg
-         czzg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ejh3xHU4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708365872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=a+iNeAxtauOM0aYmunbW9EYuTi28TQyi/g0k6ndzmN8=;
+	b=ejh3xHU4eO47DWDZgK3BlzuSqMVEsKJ9dohwA13bj3ZkMGEoxleiwqRpLgIfixjFKHKdxL
+	eGsS96PQISdNLJ7xskcQXqM9q1tGpGGd24fWNCj1E2eUzcOGTnvQ9Ln8Ki/RsNgXs9yXfO
+	Kl+yw6eVOL/EpU0EHaw4s3dlOnVyank=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-637-SW0qPrOUPu-GT2-fo2imdw-1; Mon, 19 Feb 2024 13:04:29 -0500
+X-MC-Unique: SW0qPrOUPu-GT2-fo2imdw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4125f4468a2so3513155e9.0
+        for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 10:04:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708364145; x=1708968945;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bpH+GG/JxRVKqFjHr33MFZWda+dSzZgj8Xxgn4JwPS8=;
-        b=XZRlcLOR1oChwIIZ8IbuTi0rWXUl/w7Y41KOHlmSoJt6xLDIrwcuntNWTjicAtjizP
-         xcyN0nK/5LqW2NHr2H8c2aSyN2Sc3x/mu6l/GTSXPlTzFWiP91F8zlu6V76oS09FAsdM
-         /VD3ipElr8IcCJXT8/iugAR5uDSdNvEIAgen3lkkcHUwwbRPjfztVxmR4RClXEFM9L5T
-         WIX3gUoha5TDruzoJ8hw6t5d2voJjWKSD3TN98Lss0XHjro/wcVkP7/v+PwJ2XO6oSvr
-         HvOTr51oKo2pD0xgr7J5mC309dUcUrPrOm0C7KnnoED9wgKTdb5iNyavJIxLrMfGuB05
-         uAVA==
-X-Gm-Message-State: AOJu0Yzb+4XA9oUXWhkSyJnXf3dhNYpBQHr+IHayeLUeezDozCdub8Hr
-	CoZ6YdYv9MmBQympOXel9X+xkrGCbOqWCww+A0ez8kduA+wnQBzsHjiVn4c9PgQqnWsOjD4AEYm
-	SqYr15FnEbPljuzUOi4Tc/qMDDRakD0TsbO4B
-X-Google-Smtp-Source: AGHT+IE99wN/PQYfiDNakz6zkMQR7kOEOngXX0T7gN2tvc5IjeQakHE9Z1BsxKNQN8jOzpCri2PXj7rsMGF+tGMHWj0=
-X-Received: by 2002:a50:a697:0:b0:563:ff57:b7e8 with SMTP id
- e23-20020a50a697000000b00563ff57b7e8mr322644edc.1.1708364145075; Mon, 19 Feb
- 2024 09:35:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708365868; x=1708970668;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a+iNeAxtauOM0aYmunbW9EYuTi28TQyi/g0k6ndzmN8=;
+        b=nFrhpQ2skWK57qGADmKBXLMd5Bcos4bpTP3yxU6fo+KJZR5pdtskQcxeB2BD/yOYUL
+         avsWHD+Oyxu/gKdZKawlEgrjsdMiV45bf4RkKewGB8k9G/9ngAG4SAg3HGwh1P7nCjlU
+         cnMANNxPlMmbtx5ZCvWpAJck89R/13eCQnEQYTFNI8ni4F5FlsG4yH3WChtZql8tudFi
+         tFrbMILltuFuNeeCOa/5aVFyLWI9kpUv7wVjptqToQ/fhqOomLoftwPtH1q6TVF8vyuZ
+         SoIgeiwSp2xOL00IFA3uYs4s1K6qdjpXM61vtj0+dQ90LAjtgSOMjA5uk1T1a7siwXko
+         xJ8w==
+X-Gm-Message-State: AOJu0Yw1h5CO6NpQwiCFV7GfmW3gxz4c7l+sSpXhk1iPqVLRqYbBtEuw
+	v6SJZzjLKFacWgOCJvOdXktz2sQ7fOWKp1kmDrs9pYmmha7XLHtWCJlXV8vUoblu21IVNnfGIcP
+	SiBLLHTizbaPONra7nJyUgl0erfDE3Ke3jKkrXaEt9Vv887qYQJRG
+X-Received: by 2002:a05:600c:3b94:b0:412:5f44:65b0 with SMTP id n20-20020a05600c3b9400b004125f4465b0mr4086960wms.4.1708365868598;
+        Mon, 19 Feb 2024 10:04:28 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGhBynsVEr8EGdASzTTZmllJJJe1pH2ebWEf7qyHZrRX+07yHK4aauCU45lP+tKzputr5MnNA==
+X-Received: by 2002:a05:600c:3b94:b0:412:5f44:65b0 with SMTP id n20-20020a05600c3b9400b004125f4465b0mr4086936wms.4.1708365868176;
+        Mon, 19 Feb 2024 10:04:28 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-227-135.dyn.eolo.it. [146.241.227.135])
+        by smtp.gmail.com with ESMTPSA id ch17-20020a5d5d11000000b0033d2ae84fafsm8346747wrb.52.2024.02.19.10.04.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 10:04:27 -0800 (PST)
+Message-ID: <278c26d6f4042dc6dadb9742afe11b7fa610f0b2.camel@redhat.com>
+Subject: Re: [PATCH net 03/13] mptcp: fix lockless access in subflow ULP diag
+From: Paolo Abeni <pabeni@redhat.com>
+To: Eric Dumazet <edumazet@google.com>, "Matthieu Baerts (NGI0)"
+	 <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Geliang
+ Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Davide Caratti <dcaratti@redhat.com>, Shuah
+ Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-kselftest@vger.kernel.org,
+ stable@vger.kernel.org, Boris Pismenny <borisp@nvidia.com>, John Fastabend
+ <john.fastabend@gmail.com>
+Date: Mon, 19 Feb 2024 19:04:15 +0100
+In-Reply-To: <CANn89iJDypRXX-8S-UdqWgw73eOgt0+D74qUCLDkb0cRpFFXkg@mail.gmail.com>
+References: <20240215-upstream-net-20240215-misc-fixes-v1-0-8c01a55d8f6a@kernel.org>
+	 <20240215-upstream-net-20240215-misc-fixes-v1-3-8c01a55d8f6a@kernel.org>
+	 <CANn89iJ=Oecw6OZDwmSYc9HJKQ_G32uN11L+oUcMu+TOD5Xiaw@mail.gmail.com>
+	 <CANn89iJDypRXX-8S-UdqWgw73eOgt0+D74qUCLDkb0cRpFFXkg@mail.gmail.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240215-upstream-net-20240215-misc-fixes-v1-0-8c01a55d8f6a@kernel.org>
- <20240215-upstream-net-20240215-misc-fixes-v1-3-8c01a55d8f6a@kernel.org> <CANn89iJ=Oecw6OZDwmSYc9HJKQ_G32uN11L+oUcMu+TOD5Xiaw@mail.gmail.com>
-In-Reply-To: <CANn89iJ=Oecw6OZDwmSYc9HJKQ_G32uN11L+oUcMu+TOD5Xiaw@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 19 Feb 2024 18:35:31 +0100
-Message-ID: <CANn89iJDypRXX-8S-UdqWgw73eOgt0+D74qUCLDkb0cRpFFXkg@mail.gmail.com>
-Subject: Re: [PATCH net 03/13] mptcp: fix lockless access in subflow ULP diag
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Davide Caratti <dcaratti@redhat.com>, Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	stable@vger.kernel.org, Boris Pismenny <borisp@nvidia.com>, 
-	John Fastabend <john.fastabend@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 19, 2024 at 6:21=E2=80=AFPM Eric Dumazet <edumazet@google.com> =
-wrote:
->
-> On Thu, Feb 15, 2024 at 7:25=E2=80=AFPM Matthieu Baerts (NGI0)
-> <matttbe@kernel.org> wrote:
-> >
-> > From: Paolo Abeni <pabeni@redhat.com>
-> >
-> > Since the introduction of the subflow ULP diag interface, the
-> > dump callback accessed all the subflow data with lockless.
-> >
-> > We need either to annotate all the read and write operation accordingly=
-,
-> > or acquire the subflow socket lock. Let's do latter, even if slower, to
-> > avoid a diffstat havoc.
-> >
-> > Fixes: 5147dfb50832 ("mptcp: allow dumping subflow context to userspace=
-")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> > Reviewed-by: Mat Martineau <martineau@kernel.org>
-> > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > ---
-> > Notes:
-> >   - This patch modifies the existing ULP API. No better solutions have
-> >     been found for -net, and there is some similar prior art, see
-> >     commit 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info").
-> >
-> >     Please also note that TLS ULP Diag has likely the same issue.
-> > To: Boris Pismenny <borisp@nvidia.com>
-> > To: John Fastabend <john.fastabend@gmail.com>
-> > ---
-> >  include/net/tcp.h  | 2 +-
-> >  net/mptcp/diag.c   | 6 +++++-
-> >  net/tls/tls_main.c | 2 +-
-> >  3 files changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/net/tcp.h b/include/net/tcp.h
-> > index dd78a1181031..f6eba9652d01 100644
-> > --- a/include/net/tcp.h
-> > +++ b/include/net/tcp.h
-> > @@ -2506,7 +2506,7 @@ struct tcp_ulp_ops {
-> >         /* cleanup ulp */
-> >         void (*release)(struct sock *sk);
-> >         /* diagnostic */
-> > -       int (*get_info)(const struct sock *sk, struct sk_buff *skb);
-> > +       int (*get_info)(struct sock *sk, struct sk_buff *skb);
-> >         size_t (*get_info_size)(const struct sock *sk);
-> >         /* clone ulp */
-> >         void (*clone)(const struct request_sock *req, struct sock *news=
-k,
-> > diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
-> > index a536586742f2..e57c5f47f035 100644
-> > --- a/net/mptcp/diag.c
-> > +++ b/net/mptcp/diag.c
-> > @@ -13,17 +13,19 @@
-> >  #include <uapi/linux/mptcp.h>
-> >  #include "protocol.h"
-> >
-> > -static int subflow_get_info(const struct sock *sk, struct sk_buff *skb=
-)
-> > +static int subflow_get_info(struct sock *sk, struct sk_buff *skb)
-> >  {
-> >         struct mptcp_subflow_context *sf;
-> >         struct nlattr *start;
-> >         u32 flags =3D 0;
-> > +       bool slow;
-> >         int err;
-> >
-> >         start =3D nla_nest_start_noflag(skb, INET_ULP_INFO_MPTCP);
-> >         if (!start)
-> >                 return -EMSGSIZE;
-> >
-> > +       slow =3D lock_sock_fast(sk);
-> >         rcu_read_lock();
->
-> I am afraid lockdep is not happy with this change.
->
-> Paolo, we probably need the READ_ONCE() annotations after all.
+On Mon, 2024-02-19 at 18:35 +0100, Eric Dumazet wrote:
+> On Mon, Feb 19, 2024 at 6:21=E2=80=AFPM Eric Dumazet <edumazet@google.com=
+> wrote:
+> >=20
+> > On Thu, Feb 15, 2024 at 7:25=E2=80=AFPM Matthieu Baerts (NGI0)
+> > <matttbe@kernel.org> wrote:
+> > >=20
+> > > From: Paolo Abeni <pabeni@redhat.com>
+> > >=20
+> > > Since the introduction of the subflow ULP diag interface, the
+> > > dump callback accessed all the subflow data with lockless.
+> > >=20
+> > > We need either to annotate all the read and write operation according=
+ly,
+> > > or acquire the subflow socket lock. Let's do latter, even if slower, =
+to
+> > > avoid a diffstat havoc.
+> > >=20
+> > > Fixes: 5147dfb50832 ("mptcp: allow dumping subflow context to userspa=
+ce")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> > > Reviewed-by: Mat Martineau <martineau@kernel.org>
+> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > > ---
+> > > Notes:
+> > >   - This patch modifies the existing ULP API. No better solutions hav=
+e
+> > >     been found for -net, and there is some similar prior art, see
+> > >     commit 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info").
+> > >=20
+> > >     Please also note that TLS ULP Diag has likely the same issue.
+> > > To: Boris Pismenny <borisp@nvidia.com>
+> > > To: John Fastabend <john.fastabend@gmail.com>
+> > > ---
+> > >  include/net/tcp.h  | 2 +-
+> > >  net/mptcp/diag.c   | 6 +++++-
+> > >  net/tls/tls_main.c | 2 +-
+> > >  3 files changed, 7 insertions(+), 3 deletions(-)
+> > >=20
+> > > diff --git a/include/net/tcp.h b/include/net/tcp.h
+> > > index dd78a1181031..f6eba9652d01 100644
+> > > --- a/include/net/tcp.h
+> > > +++ b/include/net/tcp.h
+> > > @@ -2506,7 +2506,7 @@ struct tcp_ulp_ops {
+> > >         /* cleanup ulp */
+> > >         void (*release)(struct sock *sk);
+> > >         /* diagnostic */
+> > > -       int (*get_info)(const struct sock *sk, struct sk_buff *skb);
+> > > +       int (*get_info)(struct sock *sk, struct sk_buff *skb);
+> > >         size_t (*get_info_size)(const struct sock *sk);
+> > >         /* clone ulp */
+> > >         void (*clone)(const struct request_sock *req, struct sock *ne=
+wsk,
+> > > diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
+> > > index a536586742f2..e57c5f47f035 100644
+> > > --- a/net/mptcp/diag.c
+> > > +++ b/net/mptcp/diag.c
+> > > @@ -13,17 +13,19 @@
+> > >  #include <uapi/linux/mptcp.h>
+> > >  #include "protocol.h"
+> > >=20
+> > > -static int subflow_get_info(const struct sock *sk, struct sk_buff *s=
+kb)
+> > > +static int subflow_get_info(struct sock *sk, struct sk_buff *skb)
+> > >  {
+> > >         struct mptcp_subflow_context *sf;
+> > >         struct nlattr *start;
+> > >         u32 flags =3D 0;
+> > > +       bool slow;
+> > >         int err;
+> > >=20
+> > >         start =3D nla_nest_start_noflag(skb, INET_ULP_INFO_MPTCP);
+> > >         if (!start)
+> > >                 return -EMSGSIZE;
+> > >=20
+> > > +       slow =3D lock_sock_fast(sk);
+> > >         rcu_read_lock();
+> >=20
+> > I am afraid lockdep is not happy with this change.
+> >=20
+> > Paolo, we probably need the READ_ONCE() annotations after all.
+>=20
+> Or perhaps something like the following would be enough.
+>=20
+> diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
+> index 6ff6f14674aa2941bc04c680bacd9f79fc65060d..7017dd60659dc7133318c1c82=
+e3f429bea3a5d57
+> 100644
+> --- a/net/mptcp/diag.c
+> +++ b/net/mptcp/diag.c
+> @@ -21,6 +21,9 @@ static int subflow_get_info(struct sock *sk, struct
+> sk_buff *skb)
+>         bool slow;
+>         int err;
+>=20
+> +       if (inet_sk_state_load(sk) =3D=3D TCP_LISTEN)
+> +               return 0;
+> +
+>         start =3D nla_nest_start_noflag(skb, INET_ULP_INFO_MPTCP);
+>         if (!start)
+>                 return -EMSGSIZE;
 
-Or perhaps something like the following would be enough.
+Thanks for the head-up. This later option looks preferable, to avoid
+quit a bit of noise with _ONCE annotation. Is there a syzkaller splat I
+could look at? if it landed on the ML, I missed it.
 
-diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
-index 6ff6f14674aa2941bc04c680bacd9f79fc65060d..7017dd60659dc7133318c1c82e3=
-f429bea3a5d57
-100644
---- a/net/mptcp/diag.c
-+++ b/net/mptcp/diag.c
-@@ -21,6 +21,9 @@ static int subflow_get_info(struct sock *sk, struct
-sk_buff *skb)
-        bool slow;
-        int err;
+Thanks!
 
-+       if (inet_sk_state_load(sk) =3D=3D TCP_LISTEN)
-+               return 0;
-+
-        start =3D nla_nest_start_noflag(skb, INET_ULP_INFO_MPTCP);
-        if (!start)
-                return -EMSGSIZE;
+Paolo
+
