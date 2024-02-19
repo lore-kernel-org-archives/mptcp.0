@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED641C10
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 10:35:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E122555D
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 10:43:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708338952; cv=none; b=sVJqKvodaIZuxKw4aDgpLfif9R+fXTB1Q4Kz8mgLnKAhNLaHJfM1i/NOn8KFOe5+3Q3TERgPyX97lxIy1YKagEQE1kyh7Fq6ZO+TYtS3DIxAkW61lWb61mKbYvebWqYbix856PbdZjiQZ6URnNkoHFDdva6KoOk55YO2JFPwCeE=
+	t=1708339395; cv=none; b=MB9NfgnMpuh3oVcXzmihuVRufOVeNu8tTthjMx9aSpSNz1LQ7ZomRZdAMAneoIP9Oy6vU+8ZOWiZW7igM8MlLLE0bFZV4AGKOUEKv13+Jm1p7NuEHzsLD4gEJlxrKUNBsJwpz7mWym2AsDEpUUW4AR09f6N0/M++MD6K8Kl/7yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708338952; c=relaxed/simple;
-	bh=I8p9GIJ+bliV9VZ7PWTKO8aHvjBKLD0plFwHBCl9aMw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BV+gnOw347aGlj8X3KpatGwdz8AZX24jNp5DBlXtm/XLzoyFLMCzXKFmWVb1nSiMTmirVW4lmzKSGGkoysxGHODs+HbDeFXCmwgeV5jWlDUThFlGuxGoZiBR1TdnesC0BOtNcVcOotaiI/lew8P/er8b2nlYJqJPPumJghnNZSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UUCFLdSi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708339395; c=relaxed/simple;
+	bh=HVGTANtXi/eV55bBgpEr6tFIM3lE21mutz8DCxdH/lo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=G59VZswFmiJ7hBmjwC0jtMuyXFQ4a/Vm0oO2wuw7nXXgJv2q1gSimjDl30sYkP+IuqFMRD2bRUxlrrXY1CTfX9PQaiFPBeB4zUDy8/kJUWWBBCdW1ifyvIzIJlSQVhF2y6RzD6jRBP+bCj+w9j+HU8Wn1LUeQhh7aMAnbhtxkxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTbQ6HbP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UUCFLdSi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD06C43390;
-	Mon, 19 Feb 2024 10:35:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTbQ6HbP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A06C433F1;
+	Mon, 19 Feb 2024 10:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708338951;
-	bh=I8p9GIJ+bliV9VZ7PWTKO8aHvjBKLD0plFwHBCl9aMw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UUCFLdSi8ZxqbVyx0bAo3jCkemLjsWoAr6zxOkW3qkh64GlcQDqzAHxl4ZhEI2gHh
-	 i/uimsmekwP45hYvsK0/EXp2FeJrAAwDs+yKUXRNsogqv/k/DZ4EM7LWfWsER9Z5IN
-	 v+KKXEfzKnm3LzEKK/q4nGD4zBCDQ1ZraeDFqFmLSKLJciSdBOd6klptlJAoHpZLWu
-	 v/gNMuRNSHcQChe/AUSXIO3sRAlYnX0tSjVSGbjxOyIFQ6Lo8+h/O4v9w6S5IdUeeK
-	 OhoWum/T5eVuEMpPoI5tQFdEjV3jCv9WJhA0QYxVqIPDZ+6dCxfqAadwoIAo6NOlrJ
-	 RK4x33TD/lEYw==
-Message-ID: <095b6e56-10c9-471e-969c-e5eaa544e63c@kernel.org>
-Date: Mon, 19 Feb 2024 11:35:49 +0100
+	s=k20201202; t=1708339395;
+	bh=HVGTANtXi/eV55bBgpEr6tFIM3lE21mutz8DCxdH/lo=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=TTbQ6HbPty7KA2+botS1d3tYbrJXRqyo9PyilgvdcY1vjQRFXk0z0ORFBgGAdeKni
+	 gB/jixHmg77J/QB7hRjFd/p9xCGgzY0JUMP/xLhK0dK9rzgVFoTmMxBwQduQPKydzy
+	 viBvNTTfJjeDB097u8aZ23h5eugBOOUANrnsZIYDXryuGMdgKJRuj8l7Lx5BeYOtwl
+	 vpeUJbwaaTTG1rDIYL2z8FmaniVOXc6RzVozA1VLyF0EfJg/Bj4KCO4NzghtraWPg7
+	 9no/0WTUruInYbWPsWUM2qjJNGSE5gwiDJK8s4t/CtDNXUZF9UWoWSHb+DCwBL/b7N
+	 adbajC6wZ2WlQ==
+Message-ID: <63ba5d51-ae55-4c71-84c5-0d4610a955c9@kernel.org>
+Date: Mon, 19 Feb 2024 11:43:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to "DO-NOT-MERGE: mptcp: improve code
- coverage for CI"
+Subject: Re: [PATCH mptcp-next v3 1/2] selftests: mptcp: join: add ss mptcp
+ support check
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <20240216-mptcp-warn-bogus-pr-warn-v1-1-6388bf96adf9@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1708330720.git.tanggeliang@kylinos.cn>
+ <2647a5c158e5979e55f295819370c452868b2af2.1708330720.git.tanggeliang@kylinos.cn>
+ <e90ec1eb-16d7-46ee-9835-d93fdbad6702@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,40 +88,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240216-mptcp-warn-bogus-pr-warn-v1-1-6388bf96adf9@kernel.org>
+In-Reply-To: <e90ec1eb-16d7-46ee-9835-d93fdbad6702@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang,
 
-On 16/02/2024 13:04, Matthieu Baerts (NGI0) wrote:
-> As discussed on [1], an additional check is done to catch local software
-> bug.
+On 19/02/2024 09:52, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> This patch is supposed to land only in our tree, for both 'export' and
-> 'export-net' branches, because the warning could be triggered by bugged/
-> malicious peer. We want it in our tree for our CI to detect internal
-> bugs.
+> On 19/02/2024 09:22, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> Commands 'ss -M' are used in script mptcp_join.sh to display only MPTCP
+>> sockets. So it must be checked if ss tool supports MPTCP in this script.
+> 
+> Thank you for the update, I will queue it for -net, with:
+> 
+> Fixes: e274f7154008 ("selftests: mptcp: add subflow limits test-cases")
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Thank you for the review!
+Just did:
 
-Now in our tree, for both -net and -next:
-
-New patches for t/upstream:
-- 735e80ba1492: tg:msg: remove 'use kmalloc on kasan build'
-- 91351bfa97db: "squashed" in "DO-NOT-MERGE: mptcp: improve code
-coverage for CI"
-- 359220a914aa: tg:msg: add 'warn in case of bogus mpc option on
-established client sk'
-- Results: f2fb9bec2195..d5aedc5b25ce (export)
-
-New patches for t/upstream-net:
-- a1880660e156: tg:msg: remove 'use kmalloc on kasan build'
-- 1c78093d056a: Squash to "DO-NOT-MERGE: mptcp: improve code coverage
-for CI"
-- 5405ccb66c00: tg:msg: add 'warn in case of bogus mpc option on
-established client sk'
-- Results: 9dcf86462a59..22c802d10725 (export-net)
+New patches for t/upstream-net and t/upstream:
+- ee636468e74e: selftests: mptcp: join: add ss mptcp support check
+- Results: 22c802d10725..43a48b2f8697 (export-net)
+- 05d22fbbbb38: conflict in t/selftests-mptcp-stop-forcing-iptables-legacy
+- Results: d5aedc5b25ce..1642cc21aa85 (export)
 
 Cheers,
 Matt
