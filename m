@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B3C2C842
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 12:21:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573AE2C842
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 12:21:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708345266; cv=none; b=jR0S9ojvFJvJmOua35i+/VNGwohpZSkJmyMo9mb6Ow4iLU8xuaZ52XHps7Xa5bAQUttsFqaHbOQxcX1MqIGMFyN4n6MuegRwg4RQiL13X1m79Ff8gO4mOOnYM3Sn72zs2cbdk6no+qQp1fxNNrFFxf5aKSNt6KZSwch/NjInjQc=
+	t=1708345272; cv=none; b=SmrrdzmvHAvL2fsAfEJV6g/gXHR157Vg9NcgPZK3XCTu2S/25Y8FGx3dM73cD+/XZ29Qqc27MPJFj/lGMNpoFnJg1mnPDChnpQiKyesyzSGe7l/PNNVhqDjmMvCpWJYIZJEyb5zMSil0s6wlscHV2JBedIEF9ZdiZ1/NF7VfjQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708345266; c=relaxed/simple;
-	bh=r69IF89AoxCGDMxK2uU6L3D3TQQqDCQwpj+6qKdTQzI=;
+	s=arc-20240116; t=1708345272; c=relaxed/simple;
+	bh=2BVzvaOXMDHMreGb7HUk0Nc3dJjlaC8d+/7j8R/r7OY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tQoKvPkKjtAonyOqnbKdHpwZDYcvIOAl1Xuu3jPapziax2MTdhyxU6EOsIsesDreBkRbF1UizsfLZr9F9LAkS6FqpkIoHg0LAEq4k3pL1omCCHp6Trfi4HrjIsM+rv3GnD6nIdhq02GyTtb6kF8L0Fw0+ZQ4YjkDs1+F0VQE54c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhIZaLja; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Ei+4dZHA+mLxchJlaSR01H/H5FkV1eqVqZqOzrni/D8CQPXaBeP7lqlsAVShE1/iemv7xd651lhlAXFJKMzCrqgBMu5QSexTUiHtY7pANRdvOoULSPCjdkfns9fCVCDFccxD/cPV9cLvCE2dvyMmMrPBtLWa/KMXHieCh3RIprk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYpk8Xum; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhIZaLja"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711C3C433C7;
-	Mon, 19 Feb 2024 12:21:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYpk8Xum"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00985C433F1;
+	Mon, 19 Feb 2024 12:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708345266;
-	bh=r69IF89AoxCGDMxK2uU6L3D3TQQqDCQwpj+6qKdTQzI=;
+	s=k20201202; t=1708345271;
+	bh=2BVzvaOXMDHMreGb7HUk0Nc3dJjlaC8d+/7j8R/r7OY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fhIZaLjaItRhhNSpPaoP+CxcMBi3ZZNH7u08P+t0ezDJDWm97flBcIHHreJb/XfTq
-	 8DailpXx8+Kx+soM36yQs+sRuezWfdeY4r0pHMgbbOsGI4m3ynl9vO3+IGDumkf5AZ
-	 f7/jlywQxIKQdtGlUWT3rNP8slJ/2xq+qQCAhQkVb6S8VF1r/ba+/1d1mpT2yhClsh
-	 mP0cOrLFCsKgxjqwqu6zaAdnVgYGhB67qwzGw3gnH4utntqwp6aii/iBFEJfB3/6Jm
-	 a6Bs85ShmTzY7zkAKiM5HdoDZTbnS2fQnjAm2515n8fKdYfJ5a8o888RPidR4V2f+Z
-	 2LSsgeDuezoNw==
-Message-ID: <2b450f0e-49aa-47ed-8070-019ffbc82561@kernel.org>
-Date: Mon, 19 Feb 2024 13:21:03 +0100
+	b=hYpk8XumCCkNQMPhd1rPT33kvb5Zm8ip/AnqrFxMY6k996riu1bESiDnv2/xbbT2v
+	 GW10VMee+xl+YIqntJ6iIlhRRaKeQXQl6qIr8DSCkURpDxnlEK21u83EoJUOYsqrmI
+	 1CBczH6L6ffQQHYPh6Nu7Je119lmTEcl9ODWUFnkBg7YnsOWnP0xZgm3pVz28g3+9p
+	 dPkE3ZCtw9Kxt5FOgoTxFjniQdecdC4Hz+qQ+ZvgriCDUNCVq/lQ9WJc5wlG8s9A3T
+	 qdUY5+WNWd/MjiIuiEf4/V3PmV8nqSIqxiHTaoNHX6FAAyrwl0/snrP1eYkv8pbkV7
+	 KtKrmFY+2DGMA==
+Message-ID: <dd4b6d97-2851-4726-bc44-8a8384055ae9@kernel.org>
+Date: Mon, 19 Feb 2024 13:21:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 0/5] add helpers and vars in mptcp_lib.sh, part
- 2
+Subject: Re: [PATCH mptcp-next 1/5] selftests: mptcp: unify namespace names to
+ ns1/2/3/4
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708334850.git.tanggeliang@kylinos.cn>
+ <c25c836349eff4348c67d17a36b779836173a177.1708334850.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,33 +87,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1708334850.git.tanggeliang@kylinos.cn>
+In-Reply-To: <c25c836349eff4348c67d17a36b779836173a177.1708334850.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 19/02/2024 10:29, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Depends on:
->  - dump for userspace pm
->  - add helpers and vars in mptcp_lib.sh, part 1
-> 
-> Geliang Tang (5):
->   selftests: mptcp: unify namespace names to ns1/2/3/4
->   selftests: mptcp: add mptcp_lib_ns_* helpers
->   selftests: mptcp: add mptcp_lib_cleanup helper
->   selftests: mptcp: add mptcp_lib_check_output helper
->   selftests: mptcp: add mptcp_lib_evts_* helpers
+> Most scripts use ns1, ns2, ns3 and ns4 as namespace names, but ns and
+> ns_sbox are used in diag.sh and mptcp_sockopt.sh. To maintain consistency
+> with other scripts, this patch renames these variables:
 
-Good idea to reduce duplicated code between selftests. Still, I think we
-should not go "too far", and hide the use of some variables and files.
-For example, I think it is important not to have hidden global
-variables, or declare it on one file, and use it elsewhere (except if
-they are prefixed with the name of the file: MPTCP_LIB_xxx).
+If it is just for consistency, I don't think we should rename these
+variables:
 
-Please see my comments on the individual patches.
+>     ns        -> ns1         in diag.sh
+
+For me, adding a number as suffix means there are multiple netns
+interacting with each others. Here, there is only one, that would be
+confusing.
+
+If this rename is not needed to fix something, I would then prefer to
+avoid such modifications: that will "annoy" us in case of backports →
+more risks of having conflicts, but mainly backports done by the stable
+team will not detect issues where the wrong variable is used (the stable
+team only compiles the .c code).
+
+>     ns_sbox   -> ns3         in mptcp_sockopt.sh
+
+To be honest, I'm not a big fan of having numbers as suffix: when
+looking at the names, it is not clear what is the difference between
+'ns1' and 'ns2' for example. We should have probably used "_client",
+"_server", "_router", "_shaper", etc. from the beginning. Too late now.
+
+Hence, I would prefer here to keep 'ns_sbox', otherwise we might think
+that ns3 is connected to ns1 and/or ns2, which is not the case.
+
+WDYT?
 
 Cheers,
 Matt
