@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B292EB10
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 14:55:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C937D37163
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 14:57:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708354547; cv=none; b=iPa4+F3lqgSP7pdH3c7WZeVcdDe3NhGiJmBE/pJf6pIKHnzOuO1rJgTzyHNatkTP5nHtyjat5D6hqvOGLQHyv7tyVM2zKv/68hyaexzLTLP4o/aVvpDd07gm19szog5z1TAeXF/NsPx6S1W/ELgP/4o7TtWftVIgCY8KDVlMDeA=
+	t=1708354620; cv=none; b=VmwpSRWkjxOP7fABlNg4ybmH82+XPT3Bqgdz5DPxgSgDynDQUF7E9zQMJZtfhsq6c5mcn4IICY8qiikL0aUxkpTdzHaPLACz7VQZa/Ot7aOG1QjuYMjIbCAS/7qKj6il83C7g0blIcqQzl2uGYbuSD01X9xWrBNtdhJERP6PGTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708354547; c=relaxed/simple;
-	bh=u3iD1BhVpJSewLt/qfXdmYC/+BBEtfXNYRAXoV+fHY4=;
+	s=arc-20240116; t=1708354620; c=relaxed/simple;
+	bh=/ldbhHHRdXiFqENN5LAIQK8ZqPcTcoHD0ttUW4sl0GI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l8CU5V/EJ3iCmX4Wm8lpfZjYXpXWViYUoKgUdNTX1ajkBZzt4HEPB6rb1CkAqk+o0yUZZ6/6bVfroBrvfSrduFCPUqdf3qLMiCgfSDerMq3XHscFbruZXAF3YCffPvv+/lw2kDdhNXrYRJn+HPXPNuS0JvAOq4i5WF+s6kD/uSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Veh55i3J; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=gK5zhPvY95yxGxVvIQ5SV4h6GgbLZz4AKHaIyi8Uhwtp3JVDIG5vXkQp50SGmANSCWoIVMhvE3AnBq7kLBhjl9bm9VlR971tBAmF7vGa31miQLZuKoXEyFgWkLj6jBdpqGgkM9oFfJqeoc7rg+72+12qN5GvRj45VBVIo2KQXlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHCvidUi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Veh55i3J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4151DC433C7;
-	Mon, 19 Feb 2024 14:55:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHCvidUi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73EDAC433F1;
+	Mon, 19 Feb 2024 14:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708354547;
-	bh=u3iD1BhVpJSewLt/qfXdmYC/+BBEtfXNYRAXoV+fHY4=;
+	s=k20201202; t=1708354620;
+	bh=/ldbhHHRdXiFqENN5LAIQK8ZqPcTcoHD0ttUW4sl0GI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Veh55i3JZ7A+vEGqAYZBdE7QdDGVmKEaL89TaBHxatPDFdZ9S2axzL5rAX8Ztv23r
-	 jFZNdZ+4Tv5kludXaIJN+ORx3hYTK3B6kPBLcnQNYz2pS2vVDHTRLN/DN1Bf8AcVNk
-	 t6jMJ91GSOl88IuzYlffEU8jgJVsfaqykr2glweRE17kWYEsItagD7MuT5TDcQ9Rfm
-	 /svJeszrSzIZ4UHMNCpMnXUUqc4LBG1cdBIc7oKSE5XWqV5/GpnaEqTb/NrNnghOAA
-	 VuGLXRgHv7lLq1rSz/MgNpz0zE5OHcbOheOcgumiHhC+5i9oqO2+J3lVWbKa5jwrlH
-	 1DdKhwdNEkf2Q==
-Message-ID: <4d28e3bc-481a-43da-846c-318de40628fa@kernel.org>
-Date: Mon, 19 Feb 2024 15:55:44 +0100
+	b=aHCvidUiQFkH6df2yLYmIMT3+r1b5zuNRpD3STBMg5EmgMUYIU1X6z/7G4TTHgOyy
+	 x46LOgdUTDgxTBm55sH3oHNtObCXbAjdULOjuhyP8w9GUHoCzvE2Xf0FSgGFcEp0YV
+	 l8IruzZiZxICOOxqwjzgPF+0cZSb37JAU9OU9fl0XYogJwN9HYBQTIgVi4YPwYa4N+
+	 /rNCVapIWvLRrqHl7M4j/+lW4Nd7x0zoAueL7HrGZcBZQi7ERypd/JxWo8XKESfVt9
+	 aPSZ1hqve60HfC1If08EQ56Ayg1rLJI3lDTF9yNM5fzhggIo/b4w3WbpbVmp8BKDXv
+	 m16ITpKlX/SGA==
+Message-ID: <5262a7ec-6ef6-4938-9924-e70b9bb023b8@kernel.org>
+Date: Mon, 19 Feb 2024 15:56:59 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v13 09/14] selftests: mptcp: dump userspace
- addrs list
+Subject: Re: [PATCH mptcp-next v13 14/14] selftests: mptcp: userspace pm get
+ addr tests
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708069036.git.tanggeliang@kylinos.cn>
- <2ec5777c29d4e6e005c015db60432ef4ba734ed0.1708069036.git.tanggeliang@kylinos.cn>
+ <93caac2c12105bab2e5536906c1f65b42a29f14d.1708069036.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,37 +87,35 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2ec5777c29d4e6e005c015db60432ef4ba734ed0.1708069036.git.tanggeliang@kylinos.cn>
+In-Reply-To: <93caac2c12105bab2e5536906c1f65b42a29f14d.1708069036.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 16/02/2024 08:42, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a new helper userspace_pm_dump() to dump addresses
-> for the userspace PM. Use this helper to check whether an ID 0 subflow
-> is listed in the output of dump command after creating an ID 0 subflow
-> in "userspace pm create id 0 subflow" test. Dump userspace PM addresses
-> list in "userspace pm add & remove address" test and in "userspace pm
-> create destroy subflow" test.
+> This patch adds a new helper userspace_pm_get_addr() in mptcp_join.sh.
+> In it, parse the token value from the output of 'pm_nl_ctl events', then
+> pass it to pm_nl_ctl get_addr command. Use this helper in userspace pm
+> dump tests.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 6f7e83f61707..fb9b3ee9fee0 100755
+> index fb9b3ee9fee0..a4d121f9e467 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3350,6 +3350,18 @@ userspace_pm_rm_sf()
->  	wait_rm_sf $1 "${cnt}"
+> @@ -3362,6 +3362,18 @@ userspace_pm_dump()
+>  	ip netns exec $1 ./pm_nl_ctl dump token $tk
 >  }
 >  
-> +# $1: ns
-> +userspace_pm_dump()
+> +# $1: ns ; $2: id
+> +userspace_pm_get_addr()
 > +{
 > +	local evts=$evts_ns1
 > +	local tk
@@ -125,104 +123,59 @@ On 16/02/2024 08:42, Geliang Tang wrote:
 > +	[ "$1" == "$ns2" ] && evts=$evts_ns2
 > +	tk=$(mptcp_lib_evts_get_info token "$evts")
 > +
-> +	ip netns exec $1 ./pm_nl_ctl dump token $tk
+> +	ip netns exec $1 ./pm_nl_ctl get $2 token $tk
 > +}
 > +
 >  check_output()
 >  {
 >  	local cmd="$1"
-> @@ -3465,10 +3477,24 @@ userspace_tests()
->  		chk_mptcp_info subflows 2 subflows 2
->  		chk_subflows_total 3 3
->  		chk_mptcp_info add_addr_signal 2 add_addr_accepted 2
-> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
+> @@ -3482,6 +3494,14 @@ userspace_tests()
+>  				     $'id 10 flags signal 10.0.2.1\nid 20 flags signal 10.0.3.1' \
+>  				     "      dump addrs signal"
+>  		fi
+> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_get_addr$"; then
 
-It is important to mark tests that are skipped, otherwise we might miss
-an issue with the check skipping the tests.
+Same as in patch 9/14: you need an 'else print_skip', and best to move
+duplicated code to a new helper, called with:
 
-In mptcp_join.sh, you can see 'mptcp_lib_kallsyms_has' is usually called
-from a 'continue_if': it is useful to skip the whole subtest. But here,
-we only want to skip one check of a subtest, not the whole subtest. We
-should then simply add: 'else print_skip (...)'.
-
-→ see below
-
-> +			check_output "userspace_pm_dump $ns1" \
-> +				     $'id 10 flags signal 10.0.2.1\nid 20 flags signal 10.0.3.1' \
-> +				     "      dump addrs signal"
-> +		fi
-
-Maybe easier to move the kallsyms check + other stuff in a new helper,
-not to repeat that 6 times? Here you would have just one line, something
-like that:
-
-  userspace_pm_chk_dump_addr "${ns1}" "<expected>" "signal"
+userspace_pm_chk_get_addr "${ns1}" "10" "<expected>"
 
 And in this helper, you would do something like:
 
   local ns="${1}"
-  local exp="${2}"
-  local check="${3}"
+  local id="${2}"
+  local exp="${3}"
 
-  print_check "dump addrs ${check}"
+  print_check "get id ${id} addr"
 
-  if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
-      check_output "userspace_pm_dump ${ns}" "${exp}"
+  if mptcp_lib_kallsyms_has "mptcp_userspace_pm_get_addr$"; then
+      check_output "userspace_pm_get_addr ${ns} ${id}" "${exp}"
   else
       print_skip
   fi
 
-WDYT?
-
-Same below.
-
+> +			check_output "userspace_pm_get_addr $ns1 10" \
+> +				     "id 10 flags signal 10.0.2.1" \
+> +				     "      get id 10 addr"
+> +			check_output "userspace_pm_get_addr $ns1 20" \
+> +				     "id 20 flags signal 10.0.3.1" \
+> +				     "      get id 20 addr"
+> +		fi
 >  		userspace_pm_rm_addr $ns1 10
 >  		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $SUB_ESTABLISHED
-> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
-> +			check_output "userspace_pm_dump $ns1" \
-> +				     "id 20 flags signal 10.0.3.1" \
-> +				     "      dump addrs after rm_addr 10"
-> +		fi
->  		userspace_pm_rm_addr $ns1 20
->  		userspace_pm_rm_sf $ns1 10.0.3.1 $SUB_ESTABLISHED
-> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
-> +			check_output "userspace_pm_dump $ns1" \
-> +				     "" "      dump addrs after rm_addr 20"
-> +		fi
->  		chk_rm_nr 2 2 invert
->  		chk_mptcp_info subflows 0 subflows 0
->  		chk_subflows_total 1 1
-> @@ -3489,8 +3515,18 @@ userspace_tests()
->  		chk_join_nr 1 1 1
->  		chk_mptcp_info subflows 1 subflows 1
->  		chk_subflows_total 2 2
-> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
-> +			check_output "userspace_pm_dump $ns2" \
+>  		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
+> @@ -3520,6 +3540,11 @@ userspace_tests()
+>  				     "id 20 flags subflow 10.0.3.2" \
+>  				     "      dump addrs subflow"
+>  		fi
+> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_get_addr$"; then
+> +			check_output "userspace_pm_get_addr $ns2 20" \
 > +				     "id 20 flags subflow 10.0.3.2" \
-> +				     "      dump addrs subflow"
+> +				     "      get id 20 addr"
 > +		fi
 >  		userspace_pm_rm_addr $ns2 20
 >  		userspace_pm_rm_sf $ns2 10.0.3.2 $SUB_ESTABLISHED
-> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
-> +			check_output "userspace_pm_dump $ns2" \
-> +				     "" \
-> +				     "      dump addrs after rm_addr 20"
-> +		fi
->  		chk_rm_nr 1 1
->  		chk_mptcp_info subflows 0 subflows 0
->  		chk_subflows_total 1 1
-> @@ -3510,6 +3546,11 @@ userspace_tests()
->  		chk_mptcp_info subflows 0 subflows 0
->  		chk_subflows_total 1 1
->  		userspace_pm_add_sf $ns2 10.0.3.2 0
-> +		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
-> +			check_output "userspace_pm_dump $ns2" \
-> +				     "id 0 flags subflow 10.0.3.2" \
-> +				     "      dump addrs id 0 subflow"
-> +		fi
->  		chk_join_nr 1 1 1
->  		chk_mptcp_info subflows 1 subflows 1
->  		chk_subflows_total 2 2
+>  		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
 
 Cheers,
 Matt
