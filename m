@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1148A381C2
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 14:52:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEA2381BD
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 14:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708354372; cv=none; b=sfSdJFNQmfNbIuSeARQkz02rcdVlRpBi8onTmA9KHwyFZCRvTUesIHp2B6G3kMC31jMG40Xw9mgWhvBOvF9jJe1LpmxgHLqopzPw3JZGysE1YZJ4UFJhi+EI1gDOAaVZKgrMHismAJyIVIbmsOhQ3vs39OzTolVLDiUKZ0QiXwM=
+	t=1708354392; cv=none; b=r7GeDznptqHl3SkPe28jxhDCIJfBRQ/cwE+kB/kBriRM+zQEN3XgkYfvIQzCCUl1JuKujDH3hNa8ftbb4IjF6dVM6dl8E/wPjJUgueG8jnckGtlnYsai9y9iqHkSka1zemme3dMARLBU3eZgxy9fk0gypC4q06shlUbq6NQXoBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708354372; c=relaxed/simple;
-	bh=HS4CQgYEFX0l84pby8MzCuknyO11Qhl8JumV7k8PCdw=;
+	s=arc-20240116; t=1708354392; c=relaxed/simple;
+	bh=83ikDrqIAYiA2CPinNlduSUjf7C+xFk0UGC7W360r0s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GTm1FokaM19utPsm0wJoXD7eM+5d4NyXOFzQMP+I6+zA5EFipgl5aSJ1mHVf4MIkoisRY8hY2jktU0/SoVK3N/behfwSkfRxBtAT80S9G47s0XWK6urMX2HVEXPPnOy72WNfDfXLiqxJHcUpoQx3PaoritM09z9pJCyKcNJulf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oU6TrQMr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=B3UjdrLhmMElDCGWT0WqlXNlgf6Z6RTDkk17Ffc+ALS7Stvt6kC2qP+MG8TJ5cnghykDBvzon8Yd4xFTV7aoETRu0jvnO3pn3o+WICjFnr5KGkHrsUbu6MlRqiy4o3h2hyJz2gX7yod0SdF8FDA5JlH3ZJGJRKR80S/mTMJUjBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDnEcNF+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oU6TrQMr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E25C0C433C7;
-	Mon, 19 Feb 2024 14:52:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDnEcNF+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B9FC433C7;
+	Mon, 19 Feb 2024 14:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708354371;
-	bh=HS4CQgYEFX0l84pby8MzCuknyO11Qhl8JumV7k8PCdw=;
+	s=k20201202; t=1708354391;
+	bh=83ikDrqIAYiA2CPinNlduSUjf7C+xFk0UGC7W360r0s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oU6TrQMrGV1JrBQHIz0PT7WarTgVw/qGu1WNrDv/vR2Rfy20tX9UXQNNzRsgTTuIb
-	 FQmJ/l4/H4980nvS0QL1E7+rj1QWdMQ227ELLfHSM3Bp1xjtatil/Yts29PEN5tlhL
-	 FBiTu46kB6ecYaU91aqL0HgI1fl0u2OzAnbFyBomAo2o1L1Tv3+ppgoHUbaG1uLkbe
-	 799Ojd/fGeJsOeYxykafvpn+HGxXKHG6RYqlse5PV+eoSncy8Dz8sCzvqb48A5Foz1
-	 DEmQZ32qLJeotxaS3IGubT/lJq0SM3N8N6LaLm7c3wYEoE+uHrd/UggxWGkcF+CG+o
-	 T5Jz3cdk+Dusg==
-Message-ID: <4c14d5ee-53b6-4c16-8d20-dfa57b985e8b@kernel.org>
-Date: Mon, 19 Feb 2024 15:52:50 +0100
+	b=HDnEcNF+gLBAfCyOSaLqgHCkie/GeFVIS65RnouS7+13/zc75/TH8k8MFBvpUQ6f9
+	 1Fru1RNKrbKpJ5pfQeHGbVopbZG84ROq9dtDt8KRtPwongmK4oQd1STSyImtDH2+CY
+	 MbEFT0z/sEstt2Sment8+L15phwTmpG2FW4JTpBd0uFsXsawrDVIRPwjDKVrlaN5aQ
+	 I+f3Yr599xhAGAitoYoUGtXAJWwDx9HHqI+A5z50hzkAZr5He0iMbDf/jw1/H76Dqt
+	 oweTOTziQvBO+bVtuyBtZF8zQFPGM6lXkDWAQglGiQKk9JZVRoA+4GJEYf9bSW7Qji
+	 y8yrNSj2K76Pg==
+Message-ID: <59e46854-b8f1-48ee-9a83-25cbbce3330a@kernel.org>
+Date: Mon, 19 Feb 2024 15:53:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v13 00/14] dump for userspace pm
+Subject: Re: [PATCH mptcp-next v13 05/14] mptcp: check userspace pm flags
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708069036.git.tanggeliang@kylinos.cn>
+ <c600e3c58ad50e778c3357af6b58aa9008b28de6.1708069036.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1708069036.git.tanggeliang@kylinos.cn>
+In-Reply-To: <c600e3c58ad50e778c3357af6b58aa9008b28de6.1708069036.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,17 +95,65 @@ Hi Geliang,
 On 16/02/2024 08:42, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v13:
->  - fix the typo in patch #3.
->  - add 'mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"' checks.
->  - add 'mptcp_lib_kallsyms_has "mptcp_userspace_pm_get_addr$"' checks.
->  - drop "userspace pm dump address/subflow" tests, test it in "userspace
->    pm add & remove address" and "userspace pm create destroy subflow"
->    tests instead.
+> Just like MPTCP_PM_ADDR_FLAG_SIGNAL flag is checked in userspace PM
+> announce mptcp_pm_nl_announce_doit(), PM flags should be checked in
+> mptcp_pm_nl_subflow_create_doit() too.
+> 
+> If MPTCP_PM_ADDR_FLAG_SUBFLOW flag is not set, there's no flags field
+> in the output of dump_addr. This looks a bit strange:
+> 
+>         id 10 flags  10.0.3.2
+> 
+> This patch uses mptcp_pm_parse_entry() instead of mptcp_pm_parse_addr()
+> to get the PM flags of the entry and check it. MPTCP_PM_ADDR_FLAG_SIGNAL
+> flag shouldn't be set here, and if MPTCP_PM_ADDR_FLAG_SUBFLOW flag is
+> missing from the netlink attribute, always set this flag.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm_userspace.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index d6b7be3afbe5..73ad286247f1 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -360,11 +360,20 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+>  		goto create_err;
+>  	}
+>  
+> -	err = mptcp_pm_parse_addr(laddr, info, &addr_l);
+> +	err = mptcp_pm_parse_entry(laddr, info, true, &local);
+>  	if (err < 0) {
+>  		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
+>  		goto create_err;
+>  	}
+> +	addr_l = local.addr;
 
-I found a new issue with shellcheck when applying the patches. So I
-quickly did a review. I have a few other comments as well, mainly for
-the selftests code. Do you mind looking at them, please?
+Detail: do we still need addr_l? Can we not use local.addr directly below?
+
+> +
+> +	if (local.flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
+> +		GENL_SET_ERR_MSG(info, "invalid addr flags");
+> +		err = -EINVAL;
+> +		goto create_err;
+> +	}
+> +	if (!(local.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
+> +		local.flags |= MPTCP_PM_ADDR_FLAG_SUBFLOW;
+
+(not sure the 'if' is needed: why not always setting it?)
+
+>  
+>  	err = mptcp_pm_parse_addr(raddr, info, &addr_r);
+>  	if (err < 0) {
+> @@ -378,7 +387,6 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+>  		goto create_err;
+>  	}
+>  
+> -	local.addr = addr_l;
+>  	err = mptcp_userspace_pm_append_new_local_addr(msk, &local, false);
+>  	if (err < 0) {
+>  		GENL_SET_ERR_MSG(info, "did not match address and id");
 
 Cheers,
 Matt
