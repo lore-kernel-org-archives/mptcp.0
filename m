@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BE32D04B
-	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 12:23:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78D237163
+	for <mptcp@lists.linux.dev>; Mon, 19 Feb 2024 14:51:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708345438; cv=none; b=nDDlr91n7fNwUqPJHOtV1+nMdt6HQBgtd6RfZ/WyKwNHfGvd2tyQ1LO6Qn54ATF0rQD13bm2ISzYRwrkDFnc2ODkZaP1p+Jhmn9uOSmrYXLiD37nhgxYTjA9wH6em/h5fWO1SAWZO4KtMPUcjTpgAmxI4hx9322yMt35z1SPmSc=
+	t=1708354280; cv=none; b=ZOJ0SVnULPYDjHXCKVbGqfOLEzPVK5Iz2FAemc58CxZFnxqG0N0Tnik03I1hZXaaA0qkWRE7gpBFoFI120iTZwTrw/LumBcdoZF9QrAFVdNbxu32tGdXn8Wnr4Qa4ChhZ0YdfMTRathXKj4YAomK3oyvzpED9cs+9jJo9U1JWI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708345438; c=relaxed/simple;
-	bh=Xj8ZV0VBG8M4RkkqRDZNe5QBEHwJWmOoqTBFuqBF9GE=;
+	s=arc-20240116; t=1708354280; c=relaxed/simple;
+	bh=Ay0mB959ataCLBiv5hUh8QzU2M4EMkuyAjm4y64CAEQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HyY0vfJJIB7I0QNnnyMwXngt+Q8WENM70BkNAn9L1chPNODeSIYW4ONIcbdRK9Px+bAurYkMibYPacr18mPQLPEF23u7Y7yZ14vjottKQQi9p5hfGmDoJ+JS5Nn7q/E4CVl9JRBMYrOE4qWkF5jpujzcfElDEVQT2vN2v/6VzNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EIH07LSp; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WdoVO7oaF0k5FTaaBx4Evm4akOSq0TR5QiBBfpY2gyOEiD3O9fv0tG1e0VLW/8A0dvnsXK74p4KhhkA/xdNt7XrXT+vaawwidty97odNTZZ/IVFcpCc1WrMRTRvq70hIh0kb0SxMoDTHGIv7VhtloTn1HcljYAvx1DhaleC8luQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTFHrsh3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EIH07LSp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08837C433F1;
-	Mon, 19 Feb 2024 12:23:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTFHrsh3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E435C433C7;
+	Mon, 19 Feb 2024 14:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708345437;
-	bh=Xj8ZV0VBG8M4RkkqRDZNe5QBEHwJWmOoqTBFuqBF9GE=;
+	s=k20201202; t=1708354280;
+	bh=Ay0mB959ataCLBiv5hUh8QzU2M4EMkuyAjm4y64CAEQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EIH07LSpWJUg7r3KW4mHsK3xv3ZgDgLPiyhBkUYov0QA5i6yglLnN717iEGDyHFKi
-	 8LlqSAvNx2MV+LxJuNDJjLbe6Z2fA/bP7QnCeN4Rn2xTCdG+DnYJOMsVUViRViR94r
-	 5ATo1AzUdZUb4I+LorwSiw9zB1h+BiqziUW7azowjq15eUEMFJbqOqHWvgdqElpNWO
-	 T2XrI2j+TAre2GW67VcR9+TCaPQ91SCTmOkTCrgiz6Ffcdx1K7b8yFEQJUgXe3pHyj
-	 oaWryfIqmJ0A3nHzCMmuw1oYtO4EQcxuErdfkaJUUHvh/8Ycs+qnn8wy0sfNGHhEf1
-	 /LwldhwK4toWg==
-Message-ID: <db47e104-2a92-4197-8c6d-6279645d9a3e@kernel.org>
-Date: Mon, 19 Feb 2024 13:23:55 +0100
+	b=TTFHrsh3vcJEZMla3OZD/uc5k8JMZ0B3HwqwF2yuJgBjzqonGtyukncobylOY89mY
+	 sYXQxhyA9UlDGrvZlwJCUnwqLg1j/W+Rk4Nxh++beeoX6BbDA2/qdoJqkmrM/bg+Uw
+	 7PRHgXBdUDlAHgP6X1zDyDefBYq+L3gJRyNcXbTu/96Ev3wbol3tVnnzMhVHNB4wKC
+	 kxTfIja24D+AdAnxmqLXQid/N2Tg6Vu5xaP2aoGZheOnVxu0r1JxuRv0s/OdYKz7WO
+	 QOm2Q9tT2Shs961IlzSTi+2euqBA7zrZ6ROR3l4iw9gCVEzwksJgUtJWFzvY3PIFK6
+	 UqCDCE0CB2mjg==
+Message-ID: <245af371-13ea-4e67-9d8d-93844e5cdf9a@kernel.org>
+Date: Mon, 19 Feb 2024 15:51:17 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v4] selftests: mptcp: add mptcp_lib_check_tools
+Subject: Re: [PATCH mptcp-next v13 08/14] selftests: mptcp: add check_output
  helper
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <82ff7dbbf5ba256c707e3863ebbcbdc71179de3a.1708334189.git.tanggeliang@kylinos.cn>
+References: <cover.1708069036.git.tanggeliang@kylinos.cn>
+ <203718fd9b34ac092a198737bed0e36baa447d69.1708069036.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,32 +87,130 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <82ff7dbbf5ba256c707e3863ebbcbdc71179de3a.1708334189.git.tanggeliang@kylinos.cn>
+In-Reply-To: <203718fd9b34ac092a198737bed0e36baa447d69.1708069036.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 19/02/2024 10:17, Geliang Tang wrote:
+On 16/02/2024 08:42, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch exports check_tools() helper from mptcp_join.sh into
-> mptcp_lib.sh as a public one mptcp_lib_check_tools(). The arguments
-> "ip", "ss", "iptables" and "ip6tables" are passed into this helper
-> to indicate whether to check ip tool, ss tool, iptables and ip6tables
-> tools.
+> Similar to check() in pm_netlink.sh, add a new helper check_output()
+> in mptcp_join.sh to check the output of the given commands.
 > 
-> This helper can be used in every scripts.
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index b807e2a42c61..6f7e83f61707 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -21,6 +21,7 @@ cinfail=""
+>  cinsent=""
+>  tmpfile=""
+>  cout=""
+> +check_output_err=""
+>  capout=""
+>  ns1=""
+>  ns2=""
+> @@ -182,6 +183,7 @@ init() {
+>  	cout=$(mktemp)
+>  	evts_ns1=$(mktemp)
+>  	evts_ns2=$(mktemp)
+> +	check_output_err=$(mktemp)
+>  
+>  	trap cleanup EXIT
+>  
+> @@ -195,6 +197,7 @@ cleanup()
+>  	rm -f "$sin" "$sout" "$cinsent" "$cinfail"
+>  	rm -f "$tmpfile"
+>  	rm -rf $evts_ns1 $evts_ns2
+> +	rm -f $check_output_err
+>  	cleanup_partial
+>  }
+>  
+> @@ -3347,6 +3350,30 @@ userspace_pm_rm_sf()
+>  	wait_rm_sf $1 "${cnt}"
+>  }
+>  
+> +check_output()
+> +{
+> +	local cmd="$1"
+> +	local expected="$2"
+> +	local msg="$3"
+> +	local out=`$cmd 2>$check_output_err`
 
-Just applied:
+This causes the following warnings from shellcheck:
 
-New patches for t/upstream:
-- 2c3ce46c649e: selftests: mptcp: add mptcp_lib_check_tools helper
-- Results: 1642cc21aa85..32a62b0e2c4e (export)
+> $ shellcheck -x mptcp_join.sh
+> 
+> In mptcp_join.sh line 3365:
+>         local out=`$cmd 2>$check_output_err`
+>               ^-^ SC2155 (warning): Declare and assign separately to avoid masking return values.
+>                   ^------------------------^ SC2006 (style): Use $(...) notation instead of legacy backticks `...`.
+> 
+> Did you mean: 
+>         local out=$($cmd 2>$check_output_err)
 
-Tests are now in progress:
+I guess it should be:
 
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240219T122259
+  local out cmd_ret=0
+
+  out=$(${cmd} 2>${check_output_err}) || cmd_ret=${?}
+
+Please check you don't introduce new shellcheck warnings. There are
+shellcheck plugins for various text editors.
+
+> +	local cmd_ret=$?
+> +
+> +	printf "%-42s" "$msg"
+
+You should not need this. Can you not use print_check() instead?
+
+And in fact, you should not call 'print_check' from here, but from the
+caller, where you would have 'print_skip', see patches 9 and 14/14.
+
+> +	if [ $cmd_ret -ne 0 ]; then
+> +		mptcp_lib_print_err "[FAIL] command execution '$cmd' stderr "
+
+Here, you should call fail_test() instead, and not set ret=<FAIL>: there
+is a single function setting ret to a different value, best not to
+change that.
+
+Also, fail_test() will print more info if needed, and mark the test as
+failed.
+
+> +		cat $check_output_err
+> +		ret=${KSFT_FAIL}
+> +		return $cmd_ret
+> +	elif [ "$out" = "$expected" ]; then
+> +		mptcp_lib_print_ok "[ OK ]"
+
+And here you should call print_ok().
+
+> +		return 0
+> +	else
+> +		mptcp_lib_print_err "[FAIL] expected '$expected' got '$out'"
+> +		ret=${KSFT_FAIL}
+> +		return 1
+
+Same here: fail_test().
+
+> +	fi
+> +}
+> +
+>  userspace_tests()
+>  {
+>  	# userspace pm type prevents add_addr
+
+(looking at the modifications that are specific to mptcp_join.sh, you
+might have to drop "selftests: mptcp: add mptcp_lib_check_output helper"
+from "add helpers and vars in mptcp_lib.sh, part 2" series. But of
+course, still OK to use mptcp_lib_print_XXX from pm_netlink.sh and other
+.sh scripts to add colours!)
 
 Cheers,
 Matt
