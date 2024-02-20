@@ -1,158 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2463E65190
-	for <mptcp@lists.linux.dev>; Tue, 20 Feb 2024 11:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFBC77646
+	for <mptcp@lists.linux.dev>; Tue, 20 Feb 2024 17:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708429856; cv=none; b=I6nIDVpRQsPjikzsf2GvoHB3swTT4O0ol/cRFc1TQg5zFvXw55laFf7rTqAqoy+FiFpgR7Zjr/eBPndH7CCK0jWZ50h1g0wzaMWXiFJa1YTnPFdjoAw9p41kmlSc8/Dt+OGDTzI9oC9GAyff8S9/zaYfKpYRpIlIQON6KNDtm7w=
+	t=1708450408; cv=none; b=aXeeCf9RTA6WO+ZpZ1ZQGu2SaWPfCYTjRCX+e7q8OOxHVt35ij56wb13Kla62XcowT1XlcHbLWsqqp97jpkwcW6VATuj7Z3zVktz3iVizhst4IVSV6ApRqFg023IL+XFZ03vkDqv6dbD6intLPIPzR8WDvhXoYWqb8MfpOa3QlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708429856; c=relaxed/simple;
-	bh=UKLeVTBdk1jlpUL7jdbLeYFvJuuh07QcXfKVXPBAvaE=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=Whry3qJzSsi6YRJpYOojB5UmoH4Lyb3KoBxFjuTOsc2Zy5fpAFjrLKSpT6tmPplM/4UNtel7GBVgGQ6YZ8xn7rSs9R7DxKouh9qd0Ne2KPMvSHuqGvwRRw+CDf/53XSjrKBH6iz5yx+dxTEZCJ7bCzftI373uzlOmoTj2SETyM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GPQS5i67; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708450408; c=relaxed/simple;
+	bh=ApaYUklv/cRMXANEx9oSoxNWrMLZy0a0uiWwVrNfunA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LCfOVTXlWjF0Qlb01IWlFoa8ljY3PKAsrjnYBIEp9gd9+Zo6SG3qnQ3jCTmAtHHM/PrdmXyGJDH05R5n7WLNio2QePUhpLi/n8a0x/1JJ/Y//ty9nzEFddrdQokqveTAletyK0VYRkgSCJ/k6I1VtnsdRHgbcOaHSJZvA3zCuyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iQ/4wivE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GPQS5i67"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31B1C433C7;
-	Tue, 20 Feb 2024 11:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708429855;
-	bh=UKLeVTBdk1jlpUL7jdbLeYFvJuuh07QcXfKVXPBAvaE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GPQS5i67yxyeF4mMRnU4zRoRTehPYSRUd3jmWCuTBoPtjbJpbYe53zocTJDe/CV9E
-	 wSMj/qC8w6p/XZHHkzZe+z6t9S+S9dGDm2u64DH/+5wc/hNMf7cocgyvHvBYwl2g6C
-	 /B5G0uwOrVGZFSK8EzAvjx6z3OGqFgQP63vYxq8vIhK5h3R38Eg5F0Ht3hqmCGLbyw
-	 TWmrSxApdNHjYYkUg4UPDHfEfuRVSt9SK3GW8FULSqnSh4ZIfgVNjJXUGB4QJxo0WJ
-	 WxWvnEyxXPAmmu+ps7jsKz3t4B58Nh5fCL6toWVJbqhq1zHGpMbTJyqORPvMEcsVDg
-	 wNj/O0iSLGpPA==
-Content-Type: multipart/mixed; boundary="------------gBSGccjaY06iy7OM7hExhE0J"
-Message-ID: <682134fb-8893-4ee0-9ddd-c0a4a4f5650b@kernel.org>
-Date: Tue, 20 Feb 2024 12:50:49 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iQ/4wivE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708450405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ApaYUklv/cRMXANEx9oSoxNWrMLZy0a0uiWwVrNfunA=;
+	b=iQ/4wivEO9K+eKxgscWo9Q+EWGTvCqTU0vPmbbMJauUYUZq+woeu5qrR3nVqb98Yc8EK9r
+	ixTxyy5EqB5e4/ny2fEqpnoL+ncdfdYNaQ9oNDOnQuOp7371KTWSZQc+VEKZs6Kw8u1yvV
+	4a3+7CuZt36F6mprKx5tW5p/cGAjwPk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-136-wQ9xolSTObWtT8mVGGdybA-1; Tue, 20 Feb 2024 12:33:24 -0500
+X-MC-Unique: wQ9xolSTObWtT8mVGGdybA-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-33d1896e0d5so500861f8f.1
+        for <mptcp@lists.linux.dev>; Tue, 20 Feb 2024 09:33:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708450403; x=1709055203;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ApaYUklv/cRMXANEx9oSoxNWrMLZy0a0uiWwVrNfunA=;
+        b=qjU4WxKRjlOmo5hTxHi6wkUFuTS+6UHxoHSb5kBCiDPiCegLnZ/TwMadpb4ytndmLx
+         C68cuSXdXBLRptTcX1kMO0fB5/t/nKHgIOlVcyv7X9yHN2XAG7dWWwrBb1tvHEfWQL1t
+         rIum09paFQa+DjxDM0lSg/zfEy1oiCLJETiYZYflJNeXGRdfWzmSJ1P5YE2WO/X9QDur
+         jxZ89YYraGO2U9jRdbzHedpsdOYJaOMEOAHZvlSZKJCEy+G3iWGYhXN6stbo2PLXCpzS
+         6HZiLACgWRLSeJva0tmslOCN4e7eIc+3VWzrRilweVcOEHzfdKOulE+r2m3StNITVOud
+         Fk/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWjULjBH4BeuwE6Riy455gen/Rm4Fk6S4zovhkPgCaYsj+mF49n3nYJ3IJlpADeXyH2kfEjh2ISxmOm5VElyigOfnP6n/M=
+X-Gm-Message-State: AOJu0Yy7EoIi7qSwyG20LB1eT1BnelNZGrDRPhzwEqVposr6lG8nQBUu
+	PYLZhaOZfNAbIt7l9JD37sLuvAH8gceSJ0F9S+jzbK0o0bSn/cDDkHm4nqbmc80FSERsKA7fmGd
+	gQaVTY2Rct39L7rWU/V2yqy7CCdtpIBxLpXTygNf5s0RoB8c8PY7l
+X-Received: by 2002:a05:600c:198f:b0:412:6d76:1733 with SMTP id t15-20020a05600c198f00b004126d761733mr1972647wmq.3.1708450403044;
+        Tue, 20 Feb 2024 09:33:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFq6YjQBx+SQJaXKVH7RtA5LtCzCx8M+hNieW/E8vqJziZ6ksCuwQX7/vLbccTUtQ/ixvDF8g==
+X-Received: by 2002:a05:600c:198f:b0:412:6d76:1733 with SMTP id t15-20020a05600c198f00b004126d761733mr1972630wmq.3.1708450402690;
+        Tue, 20 Feb 2024 09:33:22 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-230-79.dyn.eolo.it. [146.241.230.79])
+        by smtp.gmail.com with ESMTPSA id z19-20020a7bc7d3000000b00411e1574f7fsm15140883wmk.44.2024.02.20.09.33.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 09:33:22 -0800 (PST)
+Message-ID: <28a1a98c757e4a15b7eecdeae563a17fa5cb45cf.camel@redhat.com>
+Subject: Re: [PATCH net 03/13] mptcp: fix lockless access in subflow ULP diag
+From: Paolo Abeni <pabeni@redhat.com>
+To: Eric Dumazet <edumazet@google.com>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev, 
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>,  Jakub Kicinski <kuba@kernel.org>,
+ Davide Caratti <dcaratti@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, stable@vger.kernel.org, Boris Pismenny
+ <borisp@nvidia.com>, John Fastabend <john.fastabend@gmail.com>
+Date: Tue, 20 Feb 2024 18:33:20 +0100
+In-Reply-To: <CANn89iK72hE16sQcGPUFG6Am_V-77PNJOYHgeAA6M+SD5UO13A@mail.gmail.com>
+References: <20240215-upstream-net-20240215-misc-fixes-v1-0-8c01a55d8f6a@kernel.org>
+	 <20240215-upstream-net-20240215-misc-fixes-v1-3-8c01a55d8f6a@kernel.org>
+	 <CANn89iJ=Oecw6OZDwmSYc9HJKQ_G32uN11L+oUcMu+TOD5Xiaw@mail.gmail.com>
+	 <CANn89iJDypRXX-8S-UdqWgw73eOgt0+D74qUCLDkb0cRpFFXkg@mail.gmail.com>
+	 <278c26d6f4042dc6dadb9742afe11b7fa610f0b2.camel@redhat.com>
+	 <CANn89iK72hE16sQcGPUFG6Am_V-77PNJOYHgeAA6M+SD5UO13A@mail.gmail.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v14 00/14] dump for userspace pm
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1708422758.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <cover.1708422758.git.tanggeliang@kylinos.cn>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is a multi-part message in MIME format.
---------------gBSGccjaY06iy7OM7hExhE0J
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+On Mon, 2024-02-19 at 19:33 +0100, Eric Dumazet wrote:
+> On Mon, Feb 19, 2024 at 7:04=E2=80=AFPM Paolo Abeni <pabeni@redhat.com> w=
+rote:
+> > Thanks for the head-up. This later option looks preferable, to avoid
+> > quit a bit of noise with _ONCE annotation. Is there a syzkaller splat I
+> > could look at? if it landed on the ML, I missed it.
+> >=20
+>=20
+> Not landed yet, here is the splat :
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> WARNING: possible circular locking dependency detected
+> 6.8.0-rc4-syzkaller-00212-g40b9385dd8e6 #0 Not tainted
+> ------------------------------------------------------
+> syz-executor.2/24141 is trying to acquire lock:
+> ffff888045870130 (k-sk_lock-AF_INET6){+.+.}-{0:0}, at:
+> tcp_diag_put_ulp net/ipv4/tcp_diag.c:100 [inline]
+> ffff888045870130 (k-sk_lock-AF_INET6){+.+.}-{0:0}, at:
+> tcp_diag_get_aux+0x738/0x830 net/ipv4/tcp_diag.c:137
+>=20
+> but task is already holding lock:
+> ffffc9000135e488 (&h->lhash2[i].lock){+.+.}-{2:2}, at: spin_lock
+> include/linux/spinlock.h:351 [inline]
+> ffffc9000135e488 (&h->lhash2[i].lock){+.+.}-{2:2}, at:
+> inet_diag_dump_icsk+0x39f/0x1f80 net/ipv4/inet_diag.c:1038
 
-Hi Geliang,
+[Sorry for the latency]. Yes it looks like that checking the listener
+status will work. I can test and send the formal patch - with the due
+credits! - or do you prefer otherwise?
 
-On 20/02/2024 10:58, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> v14:
->  - address Matt's comments in v13.
+Thanks!
 
-Thank you for the new version!
+Paolo
 
-I didn't look at it yet, but:
-
->  - I have to use these lines in patch #8:
-> 
->       local cmd_ret=0
->       local out=$(${cmd} 2>${err}) || cmd_ret=${?}
-> 
->    The following expected code breaks pm_netlink.sh, I don't know why:
-> 
->       local out cmd_ret=0
->       out=$(${cmd} 2>${err}) || cmd_ret=${?}
-> 
->    If this is still a problem, I'll send a squash-to patch to fix it.
-
-Yes, we should either fix warnings or explicitly mark the false positive
-ones as ignored.
-
-Can you try with the attached patch please? It is not clear to me why
-the second block doesn't do the same as the first one.
-
-I can squash it when applying the series if there are no other comments.
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
---------------gBSGccjaY06iy7OM7hExhE0J
-Content-Type: text/x-patch; charset=UTF-8; name="mptcp_lib_shellcheck.patch"
-Content-Disposition: attachment; filename="mptcp_lib_shellcheck.patch"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL25ldC9tcHRjcC9tcHRjcF9s
-aWIuc2ggYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9uZXQvbXB0Y3AvbXB0Y3BfbGliLnNo
-CmluZGV4IGFjYTM1Mzc2MDA2Yi4uNTU2YTdkOTc4NGQ3IDEwMDY0NAotLS0gYS90b29scy90
-ZXN0aW5nL3NlbGZ0ZXN0cy9uZXQvbXB0Y3AvbXB0Y3BfbGliLnNoCisrKyBiL3Rvb2xzL3Rl
-c3Rpbmcvc2VsZnRlc3RzL25ldC9tcHRjcC9tcHRjcF9saWIuc2gKQEAgLTM1MiwyMCArMzUy
-LDI0IEBAIG1wdGNwX2xpYl9jaGVja190b29scygpIHsKIH0KIAogbXB0Y3BfbGliX2NoZWNr
-X291dHB1dCgpIHsKLQlsb2NhbCBlcnI9IiQxIgotCWxvY2FsIGNtZD0iJDIiCi0JbG9jYWwg
-ZXhwZWN0ZWQ9IiQzIgorCWxvY2FsIGVycj0iJHsxfSIKKwlsb2NhbCBjbWQ9IiR7Mn0iCisJ
-bG9jYWwgZXhwZWN0ZWQ9IiR7M30iCiAJbG9jYWwgY21kX3JldD0wCi0JbG9jYWwgb3V0PSQo
-JHtjbWR9IDI+JHtlcnJ9KSB8fCBjbWRfcmV0PSR7P30KKwlsb2NhbCBvdXQKIAotCWlmIFsg
-JGNtZF9yZXQgLW5lIDAgXTsgdGhlbgotCQltcHRjcF9saWJfcHJpbnRfZXJyICJbRkFJTF0g
-Y29tbWFuZCBleGVjdXRpb24gJyRjbWQnIHN0ZGVyciIKKwlpZiAhIG91dD0kKCR7Y21kfSAy
-PiIke2Vycn0iKTsgdGhlbgorCQljbWRfcmV0PSR7P30KKwlmaQorCisJaWYgWyAke2NtZF9y
-ZXR9IC1uZSAwIF07IHRoZW4KKwkJbXB0Y3BfbGliX3ByaW50X2VyciAiW0ZBSUxdIGNvbW1h
-bmQgZXhlY3V0aW9uICcke2NtZH0nIHN0ZGVyciIKIAkJY2F0ICIke2Vycn0iCiAJCXJldHVy
-biAyCi0JZWxpZiBbICIkb3V0IiA9ICIkZXhwZWN0ZWQiIF07IHRoZW4KKwllbGlmIFsgIiR7
-b3V0fSIgPSAiJHtleHBlY3RlZH0iIF07IHRoZW4KIAkJcmV0dXJuIDAKIAllbHNlCi0JCW1w
-dGNwX2xpYl9wcmludF9lcnIgIltGQUlMXSBleHBlY3RlZCAnJGV4cGVjdGVkJyBnb3QgJyRv
-dXQnIgorCQltcHRjcF9saWJfcHJpbnRfZXJyICJbRkFJTF0gZXhwZWN0ZWQgJyR7ZXhwZWN0
-ZWR9JyBnb3QgJyR7b3V0fSciCiAJCXJldHVybiAxCiAJZmkKIH0K
-
---------------gBSGccjaY06iy7OM7hExhE0J--
