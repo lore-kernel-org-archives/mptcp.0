@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068B45FEF9
-	for <mptcp@lists.linux.dev>; Tue, 20 Feb 2024 09:58:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EB760264
+	for <mptcp@lists.linux.dev>; Tue, 20 Feb 2024 09:58:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708423121; cv=none; b=AWRf/a5Queiy+wkgqqrKI0+Ylz7yaFExxRPDOG+rem62EPHf1Ch4PFib1ecgV+MCtByYO9vI6i21xd7NQf8LWbmzcUvfyBeQEarjo3RR5iXYcZ+HMrDTYjWrwk1tYhYX3OPjy1Ft5BXhLFctFkLUsQJ7fNu5IfRbho/De2knMos=
+	t=1708423122; cv=none; b=M+iI2yqcjPoAl4xs4/ljGvjWO7sa0yFmSoNZybceKRjTTMnFHUGqIEm7If8BK39H9LFXNeGIKv3H2zT8xJQekueSz5JUCnsBXOfpx1URpO3UbjlvJcV20X2W257EmiHZ1ZQuz0XoUmnmPqjq0cAwdzQhH3gb+y0tgv5BxsKXSqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708423121; c=relaxed/simple;
-	bh=bxYncz3Oboan33g5M45Geo2f2eqtF0tn+Bs7CD6IdUY=;
+	s=arc-20240116; t=1708423122; c=relaxed/simple;
+	bh=JRMj/SLzyGIOFS6blXMUY3ImOv8wI4WGrPWCLtVXACs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Xgjn0cFi2KEjWxxeY8t2Dhg88StdMfaxaF3X6dVJdo59v0fyN6HqdrXDucO1+YBqNK+DN2vmU/qzY0UKr1KZeJkhqtBJbQXXXEvXVeC7ExzHcN9YlXN/XXbYM0yRt8iZqSLqvuCKPK3Odx4mIXqmsejHqDDcjP9LgCIMKa2a9EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jn7jln2f; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qv68YhuO1UdvLVFrxLNU0O467XXLPSyFT1BDkLwis4g66rbQ9e5KKJVvFS9OLrjWwr0SHuuLag2EZ1ZxLIAw9GXDG23EgnU4mlJrW2QHhABvrbp0Rh4j5ehCKkMpEfXRm+3OONaYXqZeBLzs9uKwp7sU7XjN/6SyYMjxjrzP2e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dNvd8kzY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jn7jln2f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A0DC43399;
-	Tue, 20 Feb 2024 09:58:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dNvd8kzY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18C76C433C7;
+	Tue, 20 Feb 2024 09:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708423120;
-	bh=bxYncz3Oboan33g5M45Geo2f2eqtF0tn+Bs7CD6IdUY=;
+	s=k20201202; t=1708423121;
+	bh=JRMj/SLzyGIOFS6blXMUY3ImOv8wI4WGrPWCLtVXACs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jn7jln2fcmeTt1F+2FwKSybke7MFYevIa5p8WSYA+egz9kxssgnNqBO5VKEuxV3gZ
-	 QQFpb3BKMnDlXccSoyFc++qdRKm4gBijMXBDnx5UL4tpyAwTz4DvSJtrGuKAI98Ntu
-	 mJ5NQbvVZpflJXKliU+vIZcsW+TnGzLpWidlULnXHhAnUwz10u9d4NM+EU0Kccicbe
-	 knCM8799whpEpPBAAQ3Xeti7bdkLNXP+CUjoUWGQRAtO9MbAl0lbqxzUukSI2BxXBG
-	 CmQR1cc6MseiZnrlXh9tPAo+OSE2tHPSQHlArUWA3YXKdDutk3wn3p0GAHKfnAoRy6
-	 QhTp0lUxUMR8w==
+	b=dNvd8kzYoiDvebWUWzY0v72pCFmZyGA8UBxbG3jn3pQqT7TZSjllOqokIGkLQXj6x
+	 wA9kzMcsN/Iecbs8M8LEYdSfCvV7hl59TQ2YpwJe3QeABrZDsiIu35TkkVPXVd2/hb
+	 V0Pd4rObK1Na7klPsz6/apUiXV7gfiFA6k5DPxm5mfyizIgcplBd0ZkQOiinRF+6Fd
+	 6NXbMSQQ0MWCuT0VmRBhpteQFjRaytPpUs4JXVANITMlh7PHwteluog1imXYJFB367
+	 YeR15E0iyuKmWDUeLD+BinJj+54OC8zuKfl0if7Vsrwv0cUQAzvff7UElRcuXOUb13
+	 3SW5B5P6+ioig==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v14 05/14] mptcp: check userspace pm flags
-Date: Tue, 20 Feb 2024 17:58:19 +0800
-Message-Id: <3c68f7b7bb0daae49055c9c3776656a3782733a5.1708422758.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v14 06/14] selftests: mptcp: add userspace pm subflow flag
+Date: Tue, 20 Feb 2024 17:58:20 +0800
+Message-Id: <4fc159a116a6a9c8c951c05b939aae82d9a76e89.1708422758.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1708422758.git.tanggeliang@kylinos.cn>
 References: <cover.1708422758.git.tanggeliang@kylinos.cn>
@@ -45,80 +45,39 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Just like MPTCP_PM_ADDR_FLAG_SIGNAL flag is checked in userspace PM
-announce mptcp_pm_nl_announce_doit(), PM flags should be checked in
-mptcp_pm_nl_subflow_create_doit() too.
-
-If MPTCP_PM_ADDR_FLAG_SUBFLOW flag is not set, there's no flags field
-in the output of dump_addr. This looks a bit strange:
-
-        id 10 flags  10.0.3.2
-
-This patch uses mptcp_pm_parse_entry() instead of mptcp_pm_parse_addr()
-to get the PM flags of the entry and check it. MPTCP_PM_ADDR_FLAG_SIGNAL
-flag shouldn't be set here, and if MPTCP_PM_ADDR_FLAG_SUBFLOW flag is
-missing from the netlink attribute, always set this flag.
+This patch adds the address flag MPTCP_PM_ADDR_FLAG_SUBFLOW in csf() in
+pm_nl_ctl.c when subflow is created by a userspace PM.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_userspace.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index d6b7be3afbe5..3bd13e94b568 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -334,7 +334,6 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
- 	struct mptcp_pm_addr_entry local = { 0 };
- 	struct mptcp_addr_info addr_r;
--	struct mptcp_addr_info addr_l;
- 	struct mptcp_sock *msk;
- 	int err = -EINVAL;
- 	struct sock *sk;
-@@ -360,25 +359,31 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 		goto create_err;
- 	}
+diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+index 49369c4a5f26..e97856323ec3 100644
+--- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
++++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
+@@ -453,6 +453,7 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+ 	char data[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
+ 		  NLMSG_ALIGN(sizeof(struct genlmsghdr)) +
+ 		  1024];
++	u_int32_t flags = MPTCP_PM_ADDR_FLAG_SUBFLOW;
+ 	const char *params[5];
+ 	struct nlmsghdr *nh;
+ 	struct rtattr *addr;
+@@ -558,6 +559,13 @@ int csf(int fd, int pm_family, int argc, char *argv[])
+ 			off += NLMSG_ALIGN(rta->rta_len);
+ 		}
  
--	err = mptcp_pm_parse_addr(laddr, info, &addr_l);
-+	err = mptcp_pm_parse_entry(laddr, info, true, &local);
- 	if (err < 0) {
- 		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
- 		goto create_err;
- 	}
- 
-+	if (local.flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
-+		GENL_SET_ERR_MSG(info, "invalid addr flags");
-+		err = -EINVAL;
-+		goto create_err;
-+	}
-+	local.flags |= MPTCP_PM_ADDR_FLAG_SUBFLOW;
++		/* addr flags */
++		rta = (void *)(data + off);
++		rta->rta_type = MPTCP_PM_ADDR_ATTR_FLAGS;
++		rta->rta_len = RTA_LENGTH(4);
++		memcpy(RTA_DATA(rta), &flags, 4);
++		off += NLMSG_ALIGN(rta->rta_len);
 +
- 	err = mptcp_pm_parse_addr(raddr, info, &addr_r);
- 	if (err < 0) {
- 		NL_SET_ERR_MSG_ATTR(info->extack, raddr, "error parsing remote addr");
- 		goto create_err;
+ 		addr->rta_len = off - addr_start;
  	}
- 
--	if (!mptcp_pm_addr_families_match(sk, &addr_l, &addr_r)) {
-+	if (!mptcp_pm_addr_families_match(sk, &local.addr, &addr_r)) {
- 		GENL_SET_ERR_MSG(info, "families mismatch");
- 		err = -EINVAL;
- 		goto create_err;
- 	}
- 
--	local.addr = addr_l;
- 	err = mptcp_userspace_pm_append_new_local_addr(msk, &local, false);
- 	if (err < 0) {
- 		GENL_SET_ERR_MSG(info, "did not match address and id");
-@@ -387,7 +392,7 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 
- 	lock_sock(sk);
- 
--	err = __mptcp_subflow_connect(sk, &addr_l, &addr_r);
-+	err = __mptcp_subflow_connect(sk, &local.addr, &addr_r);
- 
- 	release_sock(sk);
  
 -- 
 2.40.1
