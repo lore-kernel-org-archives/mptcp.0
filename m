@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0A18120D
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07D97FBDB
+	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708532354; cv=none; b=ma+atKOPo3qe8CM1weKF7Jn7uBlBbKLfIgnvEjRKnMrFMnZ1ZKvtPaJc+vbXdH07StJvxpJHeXCHDwDbUzwSSkCawwa8hP4E1EJwEHbfEcuTXj8lnPQX4Z/BaV6my4mq61nyv6Sm5IUa9gCyNmZSLw5Oh8SY77clt7acdiznxaI=
+	t=1708532423; cv=none; b=XHbg4edAqahb1UPJEaK6zBTPDRZWQi5K/7E8thBim8557SX6jyombNZpRkzDFGr+p0nMmnFG0ATN6r2C3x5Dasvd/3aQMht/2tRGanWGNlhUAbC8xOsl0+qRYaTUFDVntJDRAdd9itKB/V/BrSlvAqZ07uyi/dXLlf3de7+RJe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708532354; c=relaxed/simple;
-	bh=ij4AubE0xHottwc/acxzgyidQeWxJXbY2iGiJ517SWI=;
+	s=arc-20240116; t=1708532423; c=relaxed/simple;
+	bh=thmJOehbRuF6cEg89N+id5KOtO8oL9vHj1bQSDSscRw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W105e+fAkRJMOHYkG71XYjDwysCoZXMrWXguWaEWQtevgGXhSncN7GDli3kwPlqPBXT9BkVJ2h5vJz4yXT7Q82+yxoa+5cWLLktyfjlyeUgGMsuu37eRu1dHaIqEPH8DeVAixhnm6+EASnezJUxc8JC2Z8yElBiS+6gY+NiS9Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaTFt402; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Pdt70XmMxphhx6fOcQowE5RPPW1mI0JKvn7kYu5tzUpYrmUQOt6TfzuonvEQQDZMfLVsUpNpYkcP8uzHjerbARvVRR8H6qZD1guNTfsV9mj6zZwFGcqfru+dNSSv6ToGYL88IK9BCWEitX+JTSnVK2saeeT2W/zphvTq7wHlFV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eaAJHAI6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaTFt402"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C9AFC433F1;
-	Wed, 21 Feb 2024 16:19:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eaAJHAI6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A3FC43390;
+	Wed, 21 Feb 2024 16:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708532354;
-	bh=ij4AubE0xHottwc/acxzgyidQeWxJXbY2iGiJ517SWI=;
+	s=k20201202; t=1708532423;
+	bh=thmJOehbRuF6cEg89N+id5KOtO8oL9vHj1bQSDSscRw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iaTFt402lxh6fYYdvHKjNOQj0PE54KLHcQMqUsmeF+9aqsVI0/fL0yE/85phWeKxJ
-	 abeIHUiG6/Kbfwv7pvaqcOnFsZavcRbPMaS4k+/JSg7H0IaxFM+eCcpy+7d/Uo15Wt
-	 /wFmAzor6DKRgTVfqV1j32LW4wp6myoLH82zjHv6O3yFZqMgrISWZAb9x0w5GLuhfc
-	 OIRMwMBwSRbjpCrPM3otOCjmmCUmasuEkcxojNM+VLLpcbA6cRcxwajN4+fsCDVzRT
-	 e13UghCIup6lSPfgYMlMHqeo/mxGk2EorKyhG9OP3VEzz/HsRNASWfgnz2IJl0h6A0
-	 vUCGe4aey7TQA==
-Message-ID: <8f77ced8-5964-49ac-a5a6-d06093f91e93@kernel.org>
-Date: Wed, 21 Feb 2024 17:19:13 +0100
+	b=eaAJHAI6Q3WgArqOrqNtJLGMmTY66uRbF4cs4D1ryjXHk0uurEf/Axihe8PLxQhOl
+	 oTCClO6cK1E8v5UqCEvX+WDySt40WCnZ+tNDPuJnvE2ks5HCX1tqmLKnatluutQoW2
+	 dAc6lBnTYwaUH7aRikvtazweDTBFXjqVtecljfnQRS4iyDYcK9F4qTyKzws1nufGzE
+	 zTqq3epk73fR/PwNU7J7WVoOsXPdTb2Y40nZmlzaje4LIMlnpSK3yat71R4ZHntTXb
+	 eZm24IN6MttnU3A5we1bpdyQGlcOb4RIKblaPbmHsP435Jq+43WhJaIqw3GVMbXwA5
+	 9zR2e7jpajdwA==
+Message-ID: <20f8644c-eb3a-47e0-8dac-1f05f27f6860@kernel.org>
+Date: Wed, 21 Feb 2024 17:20:22 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 6/8] mptcp: add use_id parameter for
- addresses_equal
+Subject: Re: [PATCH mptcp-next 7/8] mptcp: add check_id for
+ lookup_anno_list_by_saddr
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708497039.git.tanggeliang@kylinos.cn>
- <a911da17e335a0dc22dd722e484d7a79a10967c9.1708497039.git.tanggeliang@kylinos.cn>
+ <fe35233e351bbe2db9c3eb98dc13fff8ea5c60df.1708497039.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,57 +87,70 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a911da17e335a0dc22dd722e484d7a79a10967c9.1708497039.git.tanggeliang@kylinos.cn>
+In-Reply-To: <fe35233e351bbe2db9c3eb98dc13fff8ea5c60df.1708497039.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+
 
 On 21/02/2024 7:31 am, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a new parameter use_id for mptcp_addresses_equal() to
-> test the address ids, as well as the address. This can be used to test
-> if the two given addresses are identically equal, they have both the
-> same address and the same address id.
+> Add a new parameter check_id for mptcp_lookup_anno_list_by_saddr(), and
+> pass it to mptcp_addresses_equal(). Then in mptcp_pm_del_add_timer(),
+> the input parameter check_id can be passed as the new parameter into
+> mptcp_lookup_anno_list_by_saddr(). After this, this condition:
+> 
+>         (!check_id || entry->addr.id == addr->id)
+> 
+> can be dropped, only test if 'entry' is NULL is enough.
 
 (...)
 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 7905783c95e4..1c32f579e1a1 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -670,7 +670,8 @@ void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk);
->  void mptcp_set_state(struct sock *sk, int state);
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 1bf5c3440f84..4519dfa79775 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+
+(...)
+
+> @@ -329,12 +330,12 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+>  	struct sock *sk = (struct sock *)msk;
 >  
->  bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
-> -			   const struct mptcp_addr_info *b, bool use_port);
-> +			   const struct mptcp_addr_info *b,
-> +			   bool use_port, bool use_id);
-
-That's a lot of modifications just to introduce one new parameter. Would
-it not be better to use a macro?
-
-  #define mptcp_addresses_equal(a, b, use_port) \
-    mptcp_addresses_equal_check_id(a, b, use_port, false)
-
-Or maybe better with an "inline" function?
-
-Or extending the function:
-
-  bool mptcp_addresses_equal_check_id(...)
-  {
-      return mptcp_addresses_equal(...) ? a->id == b->id : false;
-  }
-
-=> Or only do this extra check in mptcp_lookup_anno_list_by_saddr()
-where you need that, no?
-
-I will check with Mat what he thinks about that.
-
->  void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr);
+>  	spin_lock_bh(&msk->pm.lock);
+> -	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
+> -	if (entry && (!check_id || entry->addr.id == addr->id))
+> +	entry = mptcp_lookup_anno_list_by_saddr(msk, addr, check_id);
+> +	if (entry)
+>  		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
+>  	spin_unlock_bh(&msk->pm.lock);
 >  
->  /* called with sk socket lock held */
+> -	if (entry && (!check_id || entry->addr.id == addr->id))
+> +	if (entry)
+
+Instead of all these modifications in mptcp_addresses_equal() and
+mptcp_lookup_anno_list_by_saddr() just for this specific case here, can
+we not use an extra variable?
+
+  bool stop_retrans;
+
+  (...)
+
+  spin_lock_bh(&msk->pm.lock);
+  entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
+  stop_retrans = entry && (!check_id || entry->addr.id == addr->id);
+
+  if (stop_retrans)  // or in one line, merged with ↑ ?
+      entry->retrans_times = ADD_ADDR_RETRANS_MAX;
+  spin_unlock_bh(&msk->pm.lock);
+
+  if (stop_retrans)
+      sk_stop_timer_sync(sk, &entry->add_timer);
+
+>  		sk_stop_timer_sync(sk, &entry->add_timer);
+>  
+>  	return entry;
+(...)
 
 Cheers,
 Matt
