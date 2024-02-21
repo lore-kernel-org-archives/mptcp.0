@@ -1,128 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE6A46558
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 11:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA684D9FD
+	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 12:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708516063; cv=none; b=SCOyJTy7xu5Vwg1QN7PRgd7zgFrdccA7V9PZsXeRAI6EerHoKwUuokhaCWI9yxW5APAxZlqDnBo5uiieV76BK+CNyc06gC9lw2LjpFsLrx+2jIsWB9S01JXlE5amsZRgLXAS9RXa/IWeG9A2B5tiFsmvLIDwgGhMYNd7OxMOgFA=
+	t=1708517680; cv=none; b=at7t1DdKI3Ei5Spz+uqDozBi6J1gH1CMV6B7Lw5iH6sKj9cyDJ3mq9+ebaCmyACZQq+fn8zw7sDUVh3wtg41phG/blu6fhUhheXiLPG3NkageEQ9NO2mdItbqJGXrqzDijgkFLZzHYopDdG6A0wquJ3arl1AHPq7QF9zAR1Jkus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708516063; c=relaxed/simple;
-	bh=JBY/mQDw97iHpPVXUG6l2AiWrlYst7bhafK07ofrkEI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nduMbT4bTigxhHYu43biHG7Uxb8YWM8o2RJH7pzHAIPdw3GBTufUPYSIsSC33tZLTCCx+NAHe6Lyx/OgUhAqwfQoHDsWcEy9gH9ss0kj7Jq71fcWHHwHj1lnGBKenPsuDQs2TQ0vcowyJGBK3Twq/zB3T1ABNR69P8ukp8E+yoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jo9c6l2Q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708517680; c=relaxed/simple;
+	bh=zY2dtcmTsG/eXzQ2O+HDXfRMLDQoHgys2vKVdMLC9RQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=chRVbec13QgOsXEORJGSkYovSpHhwrbeEJYAfiRWHToeQ4rQtbZ1xV+PwyYkFlTHndbot1Aa9vJuxhlmdTPRdEyzQMSABpQ1389rj5swxJ5UnIfCCp9PfdD3GkROuOM7Y9ff3dY1BftwRWf0woBLiXoY0x2aq0mJ9lJ06lXB6ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oj29cQbs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jo9c6l2Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708516051;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XYtHO8q8zxUSZSdp33YY0/GjFEJNFZGA2uUDD/K00Mg=;
-	b=Jo9c6l2Q6AfuYriMHprGreRr31dWCU7bFLWzjr3VGmT6iMulzZkhbuWiGd9CFcK5VRsXa1
-	gTFeynUtMEHJU5eDHjPf2eKFdPMQgrJBj88L+4yeq3SN33+NL5edaYyRAPlLxonwO0JtVQ
-	FLx6HrapVI8y3bCAD5giNPTv7r5P4TA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-444-l1e2WZA9PjmHEE1vlZXNnA-1; Wed, 21 Feb 2024 06:47:29 -0500
-X-MC-Unique: l1e2WZA9PjmHEE1vlZXNnA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5638785A588;
-	Wed, 21 Feb 2024 11:47:28 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.94])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 87354C08496;
-	Wed, 21 Feb 2024 11:47:26 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net 2/2] selftests: mptcp: explicitly trigger the listener diag code-path
-Date: Wed, 21 Feb 2024 12:46:59 +0100
-Message-ID: <1116d80f808ea870f3f77fe927dbd6c622d062ae.1708515908.git.pabeni@redhat.com>
-In-Reply-To: <cover.1708515908.git.pabeni@redhat.com>
-References: <cover.1708515908.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oj29cQbs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED4FC433F1;
+	Wed, 21 Feb 2024 12:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708517680;
+	bh=zY2dtcmTsG/eXzQ2O+HDXfRMLDQoHgys2vKVdMLC9RQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oj29cQbsZ1hTDBf6TNmfOBo1CsVsLBEI0u1nF9XexBBdEQwGtRQAoBHHY6NYyfI5C
+	 fJKfLZGn/3R2vVLBZ/qajQrannoPveizo8dNR3VFqKxCcPlsasoGfBGd5nuvC8+VO3
+	 EbcaOJMKzWluHRyiyE2FEC4spVNijjN1LkN3hH1pf5AxKOuESmpjdVW/k/iUK9Caou
+	 IOBDKE0V+R0joZfS/rJV2uoftIVGz7mS9L8GFT6MzJIBYkjRZAYKSZeDof6eMMMPku
+	 K4MRvdh0f29VlKL7ilVesm8ycmZRVotXv3h3hx2WZQRdeem0nU7Zu0cU3gOwkvEYHg
+	 nLNmzPONjouvg==
+Message-ID: <55894e9c-b651-4f4f-8bc8-c9b6660ccda9@kernel.org>
+Date: Wed, 21 Feb 2024 13:14:37 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v3 0/3] add helpers and vars in mptcp_lib.sh,
+ part 2
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1708499011.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1708499011.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The mptcp diag interface already experienced a few locking bugs
-that lockdep and appropriate coverage have detected in advance.
+Hi Geliang,
 
-Let's add a test-case triggering the relevant code path, to prevent
-similar issues in the future.
+On 21/02/2024 8:06 am, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v3:
+>  - patch #2, drop this line in mptcp_lib_ns_exit():
+> 	rm -f /tmp/"$netns".{nstat,out}
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- tools/testing/selftests/net/mptcp/diag.sh | 30 +++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Thank you for this new version. Please see my individual comments.
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 60a7009ce1b5..3ab584b38566 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -81,6 +81,21 @@ chk_msk_nr()
- 	__chk_msk_nr "grep -c token:" "$@"
- }
- 
-+chk_listener_nr()
-+{
-+	local expected=$1
-+	local msg="$2"
-+
-+	if [ $expected -gt 0 ] && \
-+	   ! mptcp_lib_kallsyms_has "mptcp_diag_dump_listeners"; then
-+		printf "%-50s%s\n" "$msg - mptcp" "[ skip ]"
-+		mptcp_lib_result_skip "many listener sockets"
-+	else
-+		__chk_nr "ss -inmlHMON $ns | wc -l" "$expected" "$msg - mptcp"
-+	fi
-+	__chk_nr "ss -inmlHtON $ns | wc -l" "$expected" "$msg - subflows"
-+}
-+
- wait_msk_nr()
- {
- 	local condition="grep -c token:"
-@@ -279,5 +294,20 @@ flush_pids
- chk_msk_inuse 0 "many->0"
- chk_msk_cestab 0 "many->0"
- 
-+chk_listener_nr 0 "no listener sockets"
-+NR_SERVERS=100
-+for I in $(seq 1 $NR_SERVERS); do
-+	ip netns exec $ns ./mptcp_connect -p $((I + 20001)) -l 0.0.0.0 2>&1 >/dev/null &
-+	mptcp_lib_wait_local_port_listen $ns $((I + 20001))
-+done
-+
-+chk_listener_nr $NR_SERVERS "many listener sockets"
-+
-+# gracefull termination
-+for I in $(seq 1 $NR_SERVERS); do
-+	echo a | ip netns exec $ns ./mptcp_connect -p $((I + 20001)) 127.0.0.1 2>&1 >/dev/null
-+done
-+flush_pids
-+
- mptcp_lib_result_print_all_tap
- exit $ret
+Cheers,
+Matt
 -- 
-2.43.0
-
+Sponsored by the NGI0 Core fund.
