@@ -1,186 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6653A1A2
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D764B8173C
+	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708532463; cv=none; b=PvIEBQ/K9HByJ+f+BkCnD2xYPFiD11+/o1LR2vg5NXzTUe6gEVmoRJkyKGk8EOkUfasH6dMvnpk+AtHb+2f/Rv8bpQhuYbYcOmY5V11OozB/T9gmZ+E2ULJneVUOarucqgFaldqKuM77chbsnh2BQ+Tumr6wOzUqc6AKT5+nwW0=
+	t=1708532525; cv=none; b=On4i/nj8Ns+NjfGO5eJle/rmxP0tshCmUQuz8dtXZCRds+uwuNuwi3HgTqDEUuX+ME4Ch3VT4K9CjtEMQzeR2Tm6T0V/nNomKOaYIS2wIZVdTOSBiyyJboLLAl72+OpqkX7GDZUTwZYetxmrs0HMGUKBcVzV0CQPzKBQ5wMYYLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708532463; c=relaxed/simple;
-	bh=YS+Mst/NOd/yZI2mZEW2nMbCP4xvuaoHbmA9O1cpVaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t/lCyX1bX7/wwrWbaFvig99rb/sQrL1yFpCBDFzmKtBpSHgvY54Yf1HtAfBu2scSXu06mOya1Em+UYr3IzqkAy15xt6TDdXhgZjEJTdTX76QyD+KnpQoCz9LKYS+6zttCjldN59Yi54uY1VArq+JehwZpw6O/9imAZUj+d8er3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgWXDqIV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708532525; c=relaxed/simple;
+	bh=4UrICG0PmIUE7416BkiCQO/2nv2YU5K/Bl26+k5hTcA=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=HdyJfxl+tqnOcBXao8uKii2hTDQQS98A7G0DHNtxb8iA+Uxp8bfaT5ZpfkgZW39wbPCd/7NotIsTfPaKxp/aYLnmjiIdl3GnyT7yIEbaUFZwTqdNGc+3bR7/a9eAryCq2m2Cl3HMfMIz0uBNRkob6skLGQKY8fxIyf4kfn+d0G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MAxWkBCf; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgWXDqIV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B010C43390;
-	Wed, 21 Feb 2024 16:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708532463;
-	bh=YS+Mst/NOd/yZI2mZEW2nMbCP4xvuaoHbmA9O1cpVaM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IgWXDqIVVi7Rn6d9symlM/7+g3oNf0tHel9kmfzJSbsW4xyDcvXlx1Kv13KGvrIey
-	 SViqh8akw3nxkSlbyZ9CjFLvfi0apYcYpaMg+aPzz0yT+jMPiUhxRJOU43YewjS55j
-	 rrVAK1sD+kEFKuAtpcvc4HO/VVTIDYIW7YSB6f0+ybalDmSeBr5oY5Y0aEjN14pbIG
-	 CpdPY30dJRmvfbida4Xmlg4I1AZQseV15Vy5w4JA03y/VUkGPOg73jVl4143KbqIx0
-	 wXKh9inm3M3rdDLORloJ78QvAf+RuAAyPtzXPwNGISHiwcg3hGTJQ0jN4x5G6mU7OF
-	 K4n5SSHCSzT4A==
-Message-ID: <360c8ee5-99c4-44b2-91f1-ebe634b19a2a@kernel.org>
-Date: Wed, 21 Feb 2024 17:21:01 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAxWkBCf"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-607d8506099so67517747b3.0
+        for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 08:22:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708532523; x=1709137323; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3Ft/Hp6ZIs1zsLn7D30ODjAZDAqcCT1umwgxsQ+9+tc=;
+        b=MAxWkBCfgQnUoKcSeL9pYaujZ3BGydRjUdjBXypGaIaI46aYQW40+OPBqVduO+RLgN
+         HJ8QwvMqIvAD8gcEb94Ahn5LXo1BxxD3MkLXPt7rTBoSfbuWnZn+y6nXPjFTVkTfk5PJ
+         X2+Af0LfbOfkYF28EgcYtnHJSvzX88RSacfM64Tgun+i1wUPJO9iW2XMZV3ggt4vNxXr
+         62oIQ9Qs5wqoyRbzo0e0pe2eOTJbvfRwW4XFbmO9vawl3Qr5RibS/ch9GisvLrPevusN
+         gsNGQ8PL3Aio04j3zEtluMjsyG5K/AImqO0uwiFoijJYjyA8MyYRfb33kgIiAqWtOrqF
+         eJdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708532523; x=1709137323;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3Ft/Hp6ZIs1zsLn7D30ODjAZDAqcCT1umwgxsQ+9+tc=;
+        b=TWalhGB9G8U1tb/xiIju5ST1wJvB6jQlrXjSEGj7NZbcQJhXNuyQldIbdWRyqUtdsC
+         7IiPZLV3+vUj1tMknc2BIrCw/z5d/ECe/6E04WUjMl9IHu+uP4rFufQfYFssmVggM/1a
+         c7NtP1T+5EVQu32Ay3g9kHUZop3xOt9Umj596cWabtFPu+P+hkvPgMulIOJsO4U4Pxby
+         hszXProay2auvjusX/fIfhrLLNAp8bM3OQ9eEWr4+bDAdP23GY6VT5naNzZMiKzumN3Z
+         dyiWM6WQfNI0su4QY8eTANSuxkQQSYkwPu/b8KUPX33Q9fDp4s1naXK8smDQGi1tIhlw
+         7QvA==
+X-Gm-Message-State: AOJu0YzK4W8ByuYMJ36ts1PbDeKPw63K9gQOLTkm0Pq7RS+QCAvNPk+8
+	0asfipw/z5O/Tpd89EGxNyWwKRB3ZCkCrmR51C1Kq2MX3IC1V10=
+X-Google-Smtp-Source: AGHT+IFRoU9/jaEJAqPHdHB+vEPBe2C5bR37CtXuiNw3IRG+0T3JlMMLp7Ge4LpRyzQRSCkMkdOmWw==
+X-Received: by 2002:a25:ec0f:0:b0:dc2:2f4f:757 with SMTP id j15-20020a25ec0f000000b00dc22f4f0757mr15312576ybh.7.1708532521656;
+        Wed, 21 Feb 2024 08:22:01 -0800 (PST)
+Received: from [127.0.0.1] ([20.97.191.100])
+        by smtp.gmail.com with ESMTPSA id q8-20020ae9e408000000b007872541c53bsm4448411qkc.24.2024.02.21.08.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 08:22:01 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <6bf1e9da6cb4ec0c6de1acd37995137b74dcc8bf.1708529444.git.pabeni@redhat.com>
+References:
+ <6bf1e9da6cb4ec0c6de1acd37995137b74dcc8bf.1708529444.git.pabeni@redhat.com>
+Subject: Re: selftests: mptcp: explicitly trigger the listener diag
+ code-path: Tests Results
+Message-ID: <07b083b4-c8ac-412f-b8dc-a4991960f77d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 21 Feb 2024 16:22:00 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 8/8] selftests: mptcp: flush userspace addrs
- list
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1708497039.git.tanggeliang@kylinos.cn>
- <bb5e3f97c4a225f616d82112570514114fce00c5.1708497039.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <bb5e3f97c4a225f616d82112570514114fce00c5.1708497039.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo,
 
-On 21/02/2024 7:31 am, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> This patch adds a new helper userspace_pm_flush() to flush all addresses
-> for the userspace PM. Invoke it in userspace pm dump address and subflow
-> tests. And use dump commands to check if the userspace pm local address
-> list is empty after addresses flushing.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 46 ++++++++++++++++---
->  1 file changed, 39 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index aedc5698f26a..9f1476f0e2ae 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3374,6 +3374,34 @@ userspace_pm_get_addr()
->  	ip netns exec $1 ./pm_nl_ctl get $2 token $tk
->  }
->  
-> +# $1: ns ; $2: addr
-> +userspace_pm_flush()
-> +{
-> +	if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
-> +		local ns=$1
-> +		local line
-> +
-> +		userspace_pm_dump $ns | while read -r line; do
+Thank you for your modifications, that's great!
 
-This will create a subshell: it means that variables that are changed
-here below will only be valid in this restricted scope. In other words,
-if there is a failure below, the 'failure' message will be printed, but
-'ret=1' will only be set here in this scope, so the test will not be
-marked as failed: the check will be ignored. You cannot do it like that.
+Our CI (GitHub Action) did some validations and here is its report:
 
-What you can do is something like that to avoid a subshell:
+- KVM Validation: normal:
+  - Unstable: 1 failed test(s): selftest_diag =
+=F0=9F=94=B4:
+  - Task: https://github.com/multipath-tcp/mptcp_net-next/act=
+ions/runs/7991747720
 
-  while read -r line; do (...); done <<< $(cmd)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/8b0da36b3364
 
-but...
 
-> +			local arr=($line)
-> +			local nr=0
-> +			local id
-> +			local addr
-> +			local i
-> +			for i in "${arr[@]}"; do
-> +				if [ $i = "id" ]; then
-> +					id=${arr[$nr+1]}
-> +				fi
-> +				nr=$((nr + 1))
-> +			done
-> +			addr=${arr[$nr-1]}
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
-Can you not use read to do the parsing if it is always the same output:
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-  read -r _ id _ _ addr
+For more details:
 
-> +			userspace_pm_rm_addr $ns $id
-> +			userspace_pm_rm_sf $ns "$addr" $SUB_ESTABLISHED
-> +		done
-> +	else
-> +		print_skip
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-The skip doesn't make sense here: there is no 'check' in progress.
 
-But that's not it, the behaviour is wrong too: if the feature is not
-supported, it means that the subflows and addresses will not be removed,
-then the rest of the test will be wrong on kernels not supporting the
-features because the counters will be different.
-
-Maybe we could do that in a new dedicated test where everything is
-skipped if "dump addresses" is not supported. But, does this test
-increase the code coverage? I understand that doing the flush is a good
-"summary", but it looks like this has already been validated, no? So
-maybe easier to drop this?
-
-> +	fi
-> +}
-> +
->  userspace_pm_chk_dump_addr()
->  {
->  	local ns="${1}"
-
-(...)
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
