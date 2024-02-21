@@ -1,246 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3202882869
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394F183CB2
+	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 17:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708533025; cv=none; b=qkdvwEWnJwJNpjWOFH05z6cSlNSaFibepIwgFoF0sDvcMK/1PvEEZtnc8XYRDCSnhf48qhPNcWFIpRtT2myL81EWwoWKeJes5eBOd9wjX2RQD6TyzWz5BUfKQpXyN6oGW475XxY64W8/xNI4oPArzuWUsuM0eLMVU75euKd80DE=
+	t=1708536336; cv=none; b=fNvtjzuflQr319+cT0aOi+HTVmGf6KJqvFiSwvtIDH8XrT7AS8gLIsvdvBnI3v1Udis9WIOFjjQzU8qPHUmWX5f8t4k1XjnU09G/3VwHqOVNJ86kKtC/3Bsb67HEB54rjIidf3K3v5FON4Rnff4nwhcwNfZ6SoTSgr+7xyIVYmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708533025; c=relaxed/simple;
-	bh=x3efNS6HLOBbordu8m6fi364KZaYKw+pNd3M5Odx4NQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FmgB+SSBUTteBGRVqzF6dsxE5R0UWfJr6UlU8kLYOxviiDdKQwpvAuMavAgaIXB+6KRuvyJHqJ/+o84C9/b7CMsiy7z9eVGOc8NWeYoSYsm/p6IjXrywgVMz9MyWpTmN/gfjuSczqHRR6LYQgg3DWEGnACz/YyZlFHV+S0+r0j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TXANk9Ct; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708536336; c=relaxed/simple;
+	bh=fzjKukM1uGUUTJ8I6KIj0aRKHmKoPiflK+sU435Vim0=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=PulZHSb4yBqLmPJtnyRvPxDDKaMF4/RNqxQUo8J0eBGsmyK3Fo/1q7NFC1tDz1yRd6Y83RI3JZ4e1KL6flH33TwF6Uty6MAsdAls+Ew2upsy4I3WhOmHiN+uOfqM2pN/4mfRj8B9rNLaDkJ+HZ5xN4DQ0K0rfJKpKLZhhfrBWaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X1qn0ehU; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TXANk9Ct"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708533021;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2no2w/UKiqbaM3k3noQpX4pUkE32OOjuZa5TRpul3kg=;
-	b=TXANk9CtFRlIWoayF9/Q9b699lJAy4N7K+5jQVyJwRtqPJF44i5NlsCjV18GvZmTNHlRK6
-	y0eUHEkuIQcaDtyls0DBP77+3pkVqARnq8xGmC+3Txk6qMqPkYCVVq40k1n201q/jl5k1B
-	U5mgBdOa/Wdgf0I8WthAs6WAC2Xh27k=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-319-mpI0GZJ-NS6qTQcBncbiiw-1; Wed, 21 Feb 2024 11:30:20 -0500
-X-MC-Unique: mpI0GZJ-NS6qTQcBncbiiw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 19C5787DC06;
-	Wed, 21 Feb 2024 16:30:20 +0000 (UTC)
-Received: from dcaratti.users.ipa.redhat.com (unknown [10.45.224.231])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6182B8CE8;
-	Wed, 21 Feb 2024 16:30:19 +0000 (UTC)
-From: Davide Caratti <dcaratti@redhat.com>
-To: Matthieu Baerts <matttbe@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1qn0ehU"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-607fc3e69adso59882097b3.0
+        for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 09:25:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708536334; x=1709141134; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Fhxy1Yf8bpLNsU5Z7gH7kv7mtIzIMzCX+k5NewCX20=;
+        b=X1qn0ehUC5ALR79CBfuIoENebnP3ct9xH6/DJ0Skt9g1J7VO4zycu+1vItVzEhZ3RL
+         R08jP5RNjEwLYBUC2qWgTzsZEve4bPmr5EVZjP5omLJQs7kZUjTDFkENvD6lY9Qh5iDf
+         x5fa+l/vVB14VFHGcTH7Z/hr/b0Pje9+A6WOGLqWMqOh+ZlaXyYR+F/FBJU236iIpiH0
+         9wBkhhTmmCSolG3PY2vkOfzvf+RreBJD0CdF8xx6i8oApDK8N4ma2x7+Hm3UIDawzivx
+         AuDREk7B6ggntafbhTpoYIkFIRg7cfo/U8LBWhoerIukh6rEE2xtHEYL9p0sVJny54y2
+         zfEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708536334; x=1709141134;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8Fhxy1Yf8bpLNsU5Z7gH7kv7mtIzIMzCX+k5NewCX20=;
+        b=UCH6AZ6G9XsFqR9XlOqGtEvsBepBu9V1NfZoHTeTo7gOFBM3VhwxiYtyo/KT64R5Qo
+         Amp7zPnrbMTYhc/FfWCuWwOIHyWohTY96T7IlcSxfb/rkSnY4fVPw2JC8rUlBcvowgBl
+         gejp3EO1B05ZdOIQK9cT38I9Vy9KU8W7y0R5Pp7yYKNa4jwmfiNRAdYlvji2ezBV3LA9
+         cLeh/Gp2MRttEnUo0IwHEJWOYsm5FFJNVZg8s35k6pb3xFefcym2Qa7SJD7dWR3S9+mu
+         pfDzRLus9MC7SyUN8+LulKQxzTeMHjNlCR93pKBPNKatE2q/vYgISASI5+Kiy1M/4EHs
+         XniA==
+X-Gm-Message-State: AOJu0YzKtdZsQ976dRPjWGvtIS91hga6VmB+EGNM6BOpTJYhaBgrMEbV
+	Vjpy4cmwGotJodczfpIrOpEtWbpTj0IE0Scc6L2NtmJpWDo5oTw=
+X-Google-Smtp-Source: AGHT+IGlb97VrkfMX4AdxDPhJt6xskZkFjIWX+v2v5Ruh+ELdTLIXhS1vihpe3Ln3y2HF6ppgjnO9Q==
+X-Received: by 2002:a81:5748:0:b0:607:813b:ad62 with SMTP id l69-20020a815748000000b00607813bad62mr19379009ywb.22.1708536334127;
+        Wed, 21 Feb 2024 09:25:34 -0800 (PST)
+Received: from [127.0.0.1] ([20.75.95.98])
+        by smtp.gmail.com with ESMTPSA id i11-20020ac871cb000000b0042dfb466c85sm3946803qtp.64.2024.02.21.09.25.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 09:25:33 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Davide Caratti <dcaratti@redhat.com>
 Cc: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: fix double-free on socket dismantle
-Date: Wed, 21 Feb 2024 17:30:12 +0100
-Message-ID: <47b5459f6b9b07c5a669d5a5233b35cf6ec601ac.1708532911.git.dcaratti@redhat.com>
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <47b5459f6b9b07c5a669d5a5233b35cf6ec601ac.1708532911.git.dcaratti@redhat.com>
+References:
+ <47b5459f6b9b07c5a669d5a5233b35cf6ec601ac.1708532911.git.dcaratti@redhat.com>
+Subject: Re: mptcp: fix double-free on socket dismantle: Tests Results
+Message-ID: <5d620fad-0084-34b7-1089-5ab8cfa5abe7@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 21 Feb 2024 17:25:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-when MPTCP server accepts an incoming connection, it clones its listener
-socket. However, the pointer to 'inet_opt' for the new socket has the same
-value as the original one: as a consequence, on program exit it's possible
-to observe the following splat:
+Hi Davide,
 
- BUG: KASAN: double-free in inet_sock_destruct+0x54f/0x8b0
- Free of addr ffff888485950880 by task swapper/25/0
+Thank you for your modifications, that's great!
 
- CPU: 25 PID: 0 Comm: swapper/25 Kdump: loaded Not tainted 6.8.0-rc1+ #609
- Hardware name: Supermicro SYS-6027R-72RF/X9DRH-7TF/7F/iTF/iF, BIOS 3.0  07/26/2013
- Call Trace:
-  <IRQ>
-  dump_stack_lvl+0x32/0x50
-  print_report+0xca/0x620
-  kasan_report_invalid_free+0x64/0x90
-  __kasan_slab_free+0x1aa/0x1f0
-  kfree+0xed/0x2e0
-  inet_sock_destruct+0x54f/0x8b0
-  __sk_destruct+0x48/0x5b0
-  rcu_do_batch+0x34e/0xd90
-  rcu_core+0x559/0xac0
-  __do_softirq+0x183/0x5a4
-  irq_exit_rcu+0x12d/0x170
-  sysvec_apic_timer_interrupt+0x6b/0x80
-  </IRQ>
-  <TASK>
-  asm_sysvec_apic_timer_interrupt+0x16/0x20
- RIP: 0010:cpuidle_enter_state+0x175/0x300
- Code: 30 00 0f 84 1f 01 00 00 83 e8 01 83 f8 ff 75 e5 48 83 c4 18 44 89 e8 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc fb 45 85 ed <0f> 89 60 ff ff ff 48 c1 e5 06 48 c7 43 18 00 00 00 00 48 83 44 2b
- RSP: 0018:ffff888481cf7d90 EFLAGS: 00000202
- RAX: 0000000000000000 RBX: ffff88887facddc8 RCX: 0000000000000000
- RDX: 1ffff1110ff588b1 RSI: 0000000000000019 RDI: ffff88887fac4588
- RBP: 0000000000000004 R08: 0000000000000002 R09: 0000000000043080
- R10: 0009b02ea273363f R11: ffff88887fabf42b R12: ffffffff932592e0
- R13: 0000000000000004 R14: 0000000000000000 R15: 00000022c880ec80
-  cpuidle_enter+0x4a/0xa0
-  do_idle+0x310/0x410
-  cpu_startup_entry+0x51/0x60
-  start_secondary+0x211/0x270
-  secondary_startup_64_no_verify+0x184/0x18b
-  </TASK>
+Our CI (GitHub Action) did some validations and here is its report:
 
- Allocated by task 6853:
-  kasan_save_stack+0x1c/0x40
-  kasan_save_track+0x10/0x30
-  __kasan_kmalloc+0xa6/0xb0
-  __kmalloc+0x1eb/0x450
-  cipso_v4_sock_setattr+0x96/0x360
-  netlbl_sock_setattr+0x132/0x1f0
-  selinux_netlbl_socket_post_create+0x6c/0x110
-  selinux_socket_post_create+0x37b/0x7f0
-  security_socket_post_create+0x63/0xb0
-  __sock_create+0x305/0x450
-  __sys_socket_create.part.23+0xbd/0x130
-  __sys_socket+0x37/0xb0
-  __x64_sys_socket+0x6f/0xb0
-  do_syscall_64+0x83/0x160
-  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7992617007
 
- Freed by task 6858:
-  kasan_save_stack+0x1c/0x40
-  kasan_save_track+0x10/0x30
-  kasan_save_free_info+0x3b/0x60
-  __kasan_slab_free+0x12c/0x1f0
-  kfree+0xed/0x2e0
-  inet_sock_destruct+0x54f/0x8b0
-  __sk_destruct+0x48/0x5b0
-  subflow_ulp_release+0x1f0/0x250
-  tcp_cleanup_ulp+0x6e/0x110
-  tcp_v4_destroy_sock+0x5a/0x3a0
-  inet_csk_destroy_sock+0x135/0x390
-  tcp_fin+0x416/0x5c0
-  tcp_data_queue+0x1bc8/0x4310
-  tcp_rcv_state_process+0x15a3/0x47b0
-  tcp_v4_do_rcv+0x2c1/0x990
-  tcp_v4_rcv+0x41fb/0x5ed0
-  ip_protocol_deliver_rcu+0x6d/0x9f0
-  ip_local_deliver_finish+0x278/0x360
-  ip_local_deliver+0x182/0x2c0
-  ip_rcv+0xb5/0x1c0
-  __netif_receive_skb_one_core+0x16e/0x1b0
-  process_backlog+0x1e3/0x650
-  __napi_poll+0xa6/0x500
-  net_rx_action+0x740/0xbb0
-  __do_softirq+0x183/0x5a4
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/dc4d4d869ec0
 
- The buggy address belongs to the object at ffff888485950880
-  which belongs to the cache kmalloc-64 of size 64
- The buggy address is located 0 bytes inside of
-  64-byte region [ffff888485950880, ffff8884859508c0)
 
- The buggy address belongs to the physical page:
- page:0000000056d1e95e refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888485950700 pfn:0x485950
- flags: 0x57ffffc0000800(slab|node=1|zone=2|lastcpupid=0x1fffff)
- page_type: 0xffffffff()
- raw: 0057ffffc0000800 ffff88810004c640 ffffea00121b8ac0 dead000000000006
- raw: ffff888485950700 0000000000200019 00000001ffffffff 0000000000000000
- page dumped because: kasan: bad access detected
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
 
- Memory state around the buggy address:
-  ffff888485950780: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff888485950800: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- >ffff888485950880: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-                    ^
-  ffff888485950900: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff888485950980: 00 00 00 00 00 01 fc fc fc fc fc fc fc fc fc fc
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Something similar (a refcount underflow) happens with CALIPSO/IPv6. Fix
-this by duplicating IP / IPv6 options after clone, so that
-ip{,6}_sock_destruct() doesn't end up freeing the same memory area twice.
+For more details:
 
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
----
- net/mptcp/protocol.c | 49 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 50dcba41b6ef..352334bda0e3 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3202,8 +3202,50 @@ static struct ipv6_pinfo *mptcp_inet6_sk(const struct sock *sk)
- 
- 	return (struct ipv6_pinfo *)(((u8 *)sk) + offset);
- }
-+
-+static void mptcp_copy_ip6_options(struct sock *newsk, const struct sock *sk)
-+{
-+	const struct ipv6_pinfo *np = inet6_sk(sk);
-+	struct ipv6_txoptions *opt;
-+	struct ipv6_pinfo *newnp;
-+
-+	newnp = inet6_sk(newsk);
-+
-+	rcu_read_lock();
-+	opt = rcu_dereference(np->opt);
-+	if (opt) {
-+		opt = ipv6_dup_options(newsk, opt);
-+		if (!opt)
-+			net_warn_ratelimited("%s: Failed to copy ip6 options\n", __func__);
-+	}
-+	RCU_INIT_POINTER(newnp->opt, opt);
-+	rcu_read_unlock();
-+}
- #endif
- 
-+static void mptcp_copy_ip_options(struct sock *newsk, const struct sock *sk)
-+{
-+	struct ip_options_rcu *inet_opt, *newopt = NULL;
-+	const struct inet_sock *inet = inet_sk(sk);
-+	struct inet_sock *newinet;
-+
-+	newinet = inet_sk(newsk);
-+
-+	rcu_read_lock();
-+	inet_opt = rcu_dereference(inet->inet_opt);
-+	if (inet_opt) {
-+		newopt = sock_kmalloc(newsk, sizeof(*inet_opt) +
-+				      inet_opt->opt.optlen, GFP_ATOMIC);
-+		if (newopt)
-+			memcpy(newopt, inet_opt, sizeof(*inet_opt) +
-+			       inet_opt->opt.optlen);
-+		else
-+			net_warn_ratelimited("%s: Failed to copy ip options\n", __func__);
-+	}
-+	RCU_INIT_POINTER(newinet->inet_opt, newopt);
-+	rcu_read_unlock();
-+}
-+
- struct sock *mptcp_sk_clone_init(const struct sock *sk,
- 				 const struct mptcp_options_received *mp_opt,
- 				 struct sock *ssk,
-@@ -3224,6 +3266,13 @@ struct sock *mptcp_sk_clone_init(const struct sock *sk,
- 
- 	__mptcp_init_sock(nsk);
- 
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	if (nsk->sk_family == AF_INET6)
-+		mptcp_copy_ip6_options(nsk, sk);
-+	else
-+#endif
-+		mptcp_copy_ip_options(nsk, sk);
-+
- 	msk = mptcp_sk(nsk);
- 	WRITE_ONCE(msk->local_key, subflow_req->local_key);
- 	WRITE_ONCE(msk->token, subflow_req->token);
--- 
-2.43.0
 
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
