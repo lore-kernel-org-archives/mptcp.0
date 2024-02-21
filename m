@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB238061A
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:18:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A83D8121F
+	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:18:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708532298; cv=none; b=aAAI0d/MvavII9BmTJ1RTY950mdHOZL4FZizWHH0qrHY+Hw9VxXaut9se/x6HJtlTPPjPfmNyPZkZRY/a+bb+nPhMxpOMyQFUC8PLe3W1XdsKnJRhnIO7DdUwSFlRKuDsOhLYUZtiTUxL7+nnSOJgfAshFP2OqbRf+wThAqjaWc=
+	t=1708532325; cv=none; b=UPVlS1soVjG8NGOJbJIi4LqMyjDUAcYGotuPJ+WznyEzvDg94FhwFKYNAqtGywa9539PUXHu6bHxR+wnwp4RhwbbrCUUvTuOQIzT5daLA/68UOIm515U42lC3zgetDBBGdFurTOremDVH0fr0rCvdtYXbd8CV5P/ga3i03vktAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708532298; c=relaxed/simple;
-	bh=QCV3VV+DokNBqcAGaIT+bUjuAoWNtDIFHnXPmj9YYO8=;
+	s=arc-20240116; t=1708532325; c=relaxed/simple;
+	bh=hIQZXZI62ECGrTPUSK54EdXtJpvcMSd5moO+6qJhglg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f4r5yawWqUGFrt9Z34bmYtU2wGgHo3056Gif180xZ3cadJ7H+iRfZSdUQG9546ZkaUWPRA8aYy0wM4Zf9bKcXm2wu5NlsdscPalTGEOB6kTGz05BR6a3f7BEvgHKiGrc0PP5gjksPxelnKgGu5zI8l/L8Mmg66uE5pQ/Jky+NJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRehlZqO; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ELwB0ouTs2/S2Z04Lyyjot2TFYIi1vj0NnYdsKUyIdEsbf9lx8cUd86PmRD0AJ/MxF7yEuJMBSICvWjx2AMS38zpyRT4S4g+il94Lx0V/SdPAEXeR/o2yyuuQRs4jEW4J1UIQifClWQOtfCSFMBc0YAbno3cutr+iYVUt5xg8Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W95B24hq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRehlZqO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A650C433C7;
-	Wed, 21 Feb 2024 16:18:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W95B24hq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 817BAC433F1;
+	Wed, 21 Feb 2024 16:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708532298;
-	bh=QCV3VV+DokNBqcAGaIT+bUjuAoWNtDIFHnXPmj9YYO8=;
+	s=k20201202; t=1708532325;
+	bh=hIQZXZI62ECGrTPUSK54EdXtJpvcMSd5moO+6qJhglg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iRehlZqOPs48IiDXXqcRFDLLo5u3S/LhSxFS60dd0lkda8Bozh9C8RXo5qN4FG3lr
-	 zxcjEypoUi/yp+bkLSjt+OeoWWcef/kaBQXtMoou5u1KntnLlC7hXsdE9Skxu2Hfq5
-	 IxR6co/d9TjcHoUML5aFgaTNcaxXj2oSJTeQs0icu/mMYnbcNRfiOCZj94XgExJo8r
-	 CbVT9dtPkOXY/civdJeRzJYHwpkcYrpmsFTySCBH4Ei1UJIP+foiDkEEK3SWvi/jF4
-	 uTYmcJ6wV0GIQamT4cYByBjD0F619VyhkLp3nHc9Fm6DQX6rgGnGhXngLZhZSi1vKx
-	 /HMADp1ZGjpYg==
-Message-ID: <81a4345f-8a51-430f-b84f-e0cf7da1bdcf@kernel.org>
-Date: Wed, 21 Feb 2024 17:18:15 +0100
+	b=W95B24hqCZiYzyOJtSCEXT63K6VvI+VNfaG2gJ+d39Oz9EF/lhvPCYXZ8/yEzAuZW
+	 iUMcCeynRhpDCOTjbyMrGzPJT9KmJ74Elf8czE+eV6LxByHh0EH1QiLOFBajVgGamX
+	 hQGKFeJZ3r4+OR4Gik6FbDitsy3pZG2M6Q/ZAPtGFsq23ltFYlp54nsOKF6aAF12PN
+	 ghLuiZPvKW0+yS93JaSFvPcJebySlzZPAPfR1FIhspMpuQC0kNHm8MPHUuoIMF294S
+	 Y1UqqXtp+cmd0zfks6nw/xpGJe9K7xrWsOVFzogRdxd4lMQxK/1+oHhkeeDGx+5tx1
+	 AZ+zaEcKp/a+g==
+Message-ID: <a716b4b3-c826-4d2c-825c-5f902baa9682@kernel.org>
+Date: Wed, 21 Feb 2024 17:18:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 0/8] some cleanups
+Subject: Re: [PATCH mptcp-next 4/8] mptcp: set error messages for set_flags
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708497039.git.tanggeliang@kylinos.cn>
+ <c8d6e3ae6b110da7d115b720825758708c9a7687.1708497039.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1708497039.git.tanggeliang@kylinos.cn>
+In-Reply-To: <c8d6e3ae6b110da7d115b720825758708c9a7687.1708497039.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,24 +95,61 @@ Hi Geliang,
 On 21/02/2024 7:31 am, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Depends on:
->  - dump for userspace pm, v14
-> 
-> Geliang Tang (8):
->   mptcp: make pm_remove_addrs_and_subflows static
->   mptcp: drop duplicate header inclusions
->   mptcp: update set_flags interfaces
->   mptcp: set error messages for set_flags
->   mptcp: drop lookup_by_id in lookup_addr
->   mptcp: add use_id parameter for addresses_equal
->   mptcp: add check_id for lookup_anno_list_by_saddr
->   selftests: mptcp: flush userspace addrs list
+> In addition to returning the error value, this patch also sets an error
+> messages with GENL_SET_ERR_MSG or NL_SET_ERR_MSG_ATTR both for pm_netlink.c
+> and pm_userspace.c.
 
-Thank you for this clean-up!
+Good idea!
 
-Patches 1-3, 5 look good to me. But I have some comments for the others.
-I think patches 6-7 can be simplified by just using one new variable,
-not sure about patch 8.
+Even if it might be obvious, please *always* explain the reason(s) why
+having this is interesting. Here, just one sentence is enough:
+
+  It will help the userspace to identify the issue.
+
+(same for other patches in general: please *always* add the reason(s))
+
+(...)
+
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 7ef3b69852f0..09a60f440fef 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -563,13 +563,17 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+>  	token_val = nla_get_u32(token);
+>  
+>  	msk = mptcp_token_get_sock(net, token_val);
+> -	if (!msk)
+> +	if (!msk) {
+> +		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+>  		return ret;
+> +	}
+>  
+>  	sk = (struct sock *)msk;
+>  
+> -	if (!mptcp_pm_is_userspace(msk))
+> +	if (!mptcp_pm_is_userspace(msk)) {
+> +		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+
+Maybe just "userspace PM not selected"?
+
+>  		goto set_flags_err;
+> +	}
+>  
+>  	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
+>  	if (ret < 0)
+> @@ -583,6 +587,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+>  
+>  	if (loc.addr.family == AF_UNSPEC ||
+>  	    rem.addr.family == AF_UNSPEC) {
+> +		GENL_SET_ERR_MSG(info, "address families do not match");
+
+Maybe better with this?
+
+  "invalid address families"
+
+>  		ret = -EINVAL;
+>  		goto set_flags_err;
+>  	}
 
 Cheers,
 Matt
