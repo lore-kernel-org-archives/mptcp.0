@@ -1,117 +1,131 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DCC130AD9
-	for <mptcp@lists.linux.dev>; Tue, 20 Feb 2024 18:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5748B64B
+	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 01:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708454783; cv=none; b=CTr5vF/qKoCjRom5sel/fR44MQwbey6bc7SCNFWnjQ9Y7iB/UShAKXh8I3ip57eqIzCOFnTIOHOVKza3EccKtaYo/0aCrUio8Apen4XtLrk5/RjzZkudiJEw3UPU2Dd/ta+a78ByaTgoABrVJvKt9krDsOethBVUJAKLRCj9tCw=
+	t=1708477574; cv=none; b=nLgUp1p4Hp1H+OgLNrKXENNwP4LmyFWy+eno64BlyYcJ4hYnnuO7xPU8qjzExvo9OFZz3M73mFN2rzEuWlKnYcwI3TF07G2bTBkt6cYos2GvG3C+V+QWqc0C3h/EemgHNC+2/lxZGWP5ikOxNsb9y5yFwnvuwuUghog7dG/SnQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708454783; c=relaxed/simple;
-	bh=FRXaJHJIKPgjX3fEHWwP2wNbGceszx2ydjhKQRPhnRc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=Uw+LV9CNIBDHL3Dufq+6si3AiVTT4alQcP+6UyVK3RgVLdsEey1xcOrnXg+5j7qEx1B245cq2sihWsq7PozI3n/Jc4oinxEh4urMq5/v19STz1edd5NML5yEWEupG8rWwaK6S6KISF+AeKuSXhY+a62bs4vlCGcUsyVc084CkeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M2529gj5; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708477574; c=relaxed/simple;
+	bh=wCFKN6FlMR0Fa4epnoUbw44j1QezlgZ+Xz55q55ET7c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SOnwqs5nFJnD5yMDEuW3AYYOacZ0B/pOZy6fiSUNkwkgnU6SFALfiiNCuXI7UQL88FSg0uw2OvLMiVv9B267usort3J/ln31woN84gH9u2G5dRPW4XHyAFFq4CQQI9BO2jYxt1ZhiqdRrCfOwDSvvg3rZOyCCRcxng/CnkMw7+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPk6cafL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2529gj5"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-58e256505f7so3831980eaf.3
-        for <mptcp@lists.linux.dev>; Tue, 20 Feb 2024 10:46:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708454781; x=1709059581; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6ZEormaTtrTohSbif2cLJ/tBAqB22jAiVW80urx+DvM=;
-        b=M2529gj5qCvGoqOnwYmCAwQa7NIvoXVPcevGwPBXDSVcNK/s5wLo7eZ+rvVAD0WNl7
-         6F6EePp7x83qZ8ciB4zQKVTAHFCkqsw9sklHN4WPNp9JGLj7iQWMbUrMg/dVvi2aB8Yh
-         YIJPnc+kma+XiFUbO2/WR+Ebaa131fFt8Xa9h3uPbmTcGw/BnfPJufwXMCnIpHEGqt0b
-         X4Ez+C2NK19WTWIXH8c1UuKYiXJx2el6lvWA+a2MSguwYSyPgIpElKlVP+DC/52YVM3X
-         0tR+55fKPxKF0BIdxYsbHV2M0hGWcnNJu8YBNm2LIMmxW7/dJSOP57QKkMkzkEV3qf7+
-         retQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708454781; x=1709059581;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6ZEormaTtrTohSbif2cLJ/tBAqB22jAiVW80urx+DvM=;
-        b=cvsPT9hY90vq/dn334cch/OjBIOWFWjoflp/Wpio77a/8sjqfVF+Nkx6OuNyN0A7wT
-         i3QwOser2UtDEt0/8uDgYLkjQYZ51W32xqj1qxV7N4S7eetV1h24J75A0KcFCcaFULMR
-         4KHBYxHC30WOPlGStAkfT12UanC4BGx/1L5fklHJf9DfpBic5r2a2wfNppuxSMcMNZp4
-         GMmHTgh+KKViHUzlEThBRDAoqgsXihmxSN2MbRkL340uMsKO3kyARNVsxMJuSSAAqJZI
-         VL2/x8HK0mkpIjAXomSDeSohogWb94IUwvEmjhvXdiOJD54DMPM9is6jpUMn2tTwYGSB
-         0uiw==
-X-Gm-Message-State: AOJu0Yx3V+Nrx/AvXnXZ8/bqdIB3fpHB5jVNrzbpTEMSQ9y6ZWlVAmuM
-	vEwGWS1ZTQ8JEvsdo9Sct9B928zjlJ6gR+xZL42UhXz3mVflPaYZf9+KHto=
-X-Google-Smtp-Source: AGHT+IHQD0RXDkDF9ThYBRhPYFE+edsP3BEH/R3i9M+UVb1QgkTUfJ/N7maBxpDCFMNFn0Td7ll/Ng==
-X-Received: by 2002:a05:6358:d090:b0:179:272e:54e9 with SMTP id jc16-20020a056358d09000b00179272e54e9mr15662603rwb.30.1708454780770;
-        Tue, 20 Feb 2024 10:46:20 -0800 (PST)
-Received: from [127.0.0.1] ([52.157.14.174])
-        by smtp.gmail.com with ESMTPSA id l184-20020a6391c1000000b005dca5caed40sm6928023pge.81.2024.02.20.10.46.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 10:46:20 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPk6cafL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27416C433C7;
+	Wed, 21 Feb 2024 01:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708477573;
+	bh=wCFKN6FlMR0Fa4epnoUbw44j1QezlgZ+Xz55q55ET7c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dPk6cafLrIf+Jt+WqbJdeyUkTZRs5qc8OoiMP9Q0gflztoIg2Q8MHqTy2XT7bHX3B
+	 H6kjPr+OANEhF0vObQJwn8YqxhQDeLnnhDZeqY5kO4l/vzFchGsp4aHP4PBbilrdAg
+	 VQjNFzFXlObXhITwLGHdoXd9U9HZVI/NpdchFPsWSr2b1AJc8FauubeaxAPYPREnZB
+	 YOGwa8h75OrZs1GDIwpMY78+awzL1hcfG+9F1qvWCG9Ws/IJuOE85rgPkEtsab6Uuj
+	 TI5EMONtZUV5NHJhxa2JCkSV0FBfVW0gmjg1iAdna8n1N8V0oZD3zaJavpf1xNRSqn
+	 RbXx4a1NZPE8Q==
+Date: Wed, 21 Feb 2024 09:06:09 +0800
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1217349b8d341c11964bb2869d141565c4d355c6.1708422758.git.tanggeliang@kylinos.cn>
-References:
- <1217349b8d341c11964bb2869d141565c4d355c6.1708422758.git.tanggeliang@kylinos.cn>
-Subject: Re: selftests: mptcp: userspace pm get addr tests: Tests Results
-Message-ID: <6ee17224-2993-8259-929d-2ab1eb49de13@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Feb 2024 18:46:19 +0000
+Subject: Re: [PATCH mptcp-next v14 00/14] dump for userspace pm
+Message-ID: <ZdVMgQEqbhO+e0fY@t480>
+References: <cover.1708422758.git.tanggeliang@kylinos.cn>
+ <682134fb-8893-4ee0-9ddd-c0a4a4f5650b@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <682134fb-8893-4ee0-9ddd-c0a4a4f5650b@kernel.org>
 
-Hi Geliang,
+On Tue, Feb 20, 2024 at 12:50:49PM +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 20/02/2024 10:58, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > v14:
+> >  - address Matt's comments in v13.
+> 
+> Thank you for the new version!
+> 
+> I didn't look at it yet, but:
+> 
+> >  - I have to use these lines in patch #8:
+> > 
+> >       local cmd_ret=0
+> >       local out=$(${cmd} 2>${err}) || cmd_ret=${?}
+> > 
+> >    The following expected code breaks pm_netlink.sh, I don't know why:
+> > 
+> >       local out cmd_ret=0
+> >       out=$(${cmd} 2>${err}) || cmd_ret=${?}
+> > 
+> >    If this is still a problem, I'll send a squash-to patch to fix it.
+> 
+> Yes, we should either fix warnings or explicitly mark the false positive
+> ones as ignored.
+> 
+> Can you try with the attached patch please? It is not clear to me why
+> the second block doesn't do the same as the first one.
 
-Thank you for your modifications, that's great!
+Thanks Matt, the attached patch works well. It fixes the issue I
+mentioned perfectly.
 
-Our CI (GitHub Action) did some validations and here is its report:
+> 
+> I can squash it when applying the series if there are no other comments.
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/7977999805
+Great, thanks.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/2ca83db7b919
+-Geliang
 
+> 
+> Cheers,
+> Matt
+> -- 
+> Sponsored by the NGI0 Core fund.
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index aca35376006b..556a7d9784d7 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -352,20 +352,24 @@ mptcp_lib_check_tools() {
+>  }
+>  
+>  mptcp_lib_check_output() {
+> -	local err="$1"
+> -	local cmd="$2"
+> -	local expected="$3"
+> +	local err="${1}"
+> +	local cmd="${2}"
+> +	local expected="${3}"
+>  	local cmd_ret=0
+> -	local out=$(${cmd} 2>${err}) || cmd_ret=${?}
+> +	local out
+>  
+> -	if [ $cmd_ret -ne 0 ]; then
+> -		mptcp_lib_print_err "[FAIL] command execution '$cmd' stderr"
+> +	if ! out=$(${cmd} 2>"${err}"); then
+> +		cmd_ret=${?}
+> +	fi
+> +
+> +	if [ ${cmd_ret} -ne 0 ]; then
+> +		mptcp_lib_print_err "[FAIL] command execution '${cmd}' stderr"
+>  		cat "${err}"
+>  		return 2
+> -	elif [ "$out" = "$expected" ]; then
+> +	elif [ "${out}" = "${expected}" ]; then
+>  		return 0
+>  	else
+> -		mptcp_lib_print_err "[FAIL] expected '$expected' got '$out'"
+> +		mptcp_lib_print_err "[FAIL] expected '${expected}' got '${out}'"
+>  		return 1
+>  	fi
+>  }
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
