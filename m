@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA684D9FD
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 12:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AED44F5EA
+	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 12:15:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708517680; cv=none; b=at7t1DdKI3Ei5Spz+uqDozBi6J1gH1CMV6B7Lw5iH6sKj9cyDJ3mq9+ebaCmyACZQq+fn8zw7sDUVh3wtg41phG/blu6fhUhheXiLPG3NkageEQ9NO2mdItbqJGXrqzDijgkFLZzHYopDdG6A0wquJ3arl1AHPq7QF9zAR1Jkus=
+	t=1708517754; cv=none; b=r8wZ3cegwF+k2Blw4O9E16ZgLUshWzeH0JOU64v44P+SMC1Eu3VF40jCiVogrbUigaNpv6Oq0R6S1R0MA8pzI9xhC2pCWlpXFqwfbEx9XGv+Taqf9TlA5W5GuuUuR8gvWsLSzahjQ05RdpfSnfb3m5nvtJwPnNOu4JoCwy6Ch1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708517680; c=relaxed/simple;
-	bh=zY2dtcmTsG/eXzQ2O+HDXfRMLDQoHgys2vKVdMLC9RQ=;
+	s=arc-20240116; t=1708517754; c=relaxed/simple;
+	bh=DF2UiH+hB0TR/3aPxSVMstONflc+ZO6eDL0UBNsbwWI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=chRVbec13QgOsXEORJGSkYovSpHhwrbeEJYAfiRWHToeQ4rQtbZ1xV+PwyYkFlTHndbot1Aa9vJuxhlmdTPRdEyzQMSABpQ1389rj5swxJ5UnIfCCp9PfdD3GkROuOM7Y9ff3dY1BftwRWf0woBLiXoY0x2aq0mJ9lJ06lXB6ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oj29cQbs; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=iiM7poNRsxsyMnrFSa3RdVCEYgEUUsN3ZDK+MSPf8lL574mL4+bz1rEDuzW5CLlZNVODsSaYHHDttXCtLJjgHc28s7OHHgRYQakliJFicNuDMD7oSHlwZGjPpLccri9uQKHdof2HQ5PSwVQoyBYztNsECjhO+nXAb5YBkrFPDUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOowHsiP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oj29cQbs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED4FC433F1;
-	Wed, 21 Feb 2024 12:14:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOowHsiP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A6BDC433F1;
+	Wed, 21 Feb 2024 12:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708517680;
-	bh=zY2dtcmTsG/eXzQ2O+HDXfRMLDQoHgys2vKVdMLC9RQ=;
+	s=k20201202; t=1708517753;
+	bh=DF2UiH+hB0TR/3aPxSVMstONflc+ZO6eDL0UBNsbwWI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oj29cQbsZ1hTDBf6TNmfOBo1CsVsLBEI0u1nF9XexBBdEQwGtRQAoBHHY6NYyfI5C
-	 fJKfLZGn/3R2vVLBZ/qajQrannoPveizo8dNR3VFqKxCcPlsasoGfBGd5nuvC8+VO3
-	 EbcaOJMKzWluHRyiyE2FEC4spVNijjN1LkN3hH1pf5AxKOuESmpjdVW/k/iUK9Caou
-	 IOBDKE0V+R0joZfS/rJV2uoftIVGz7mS9L8GFT6MzJIBYkjRZAYKSZeDof6eMMMPku
-	 K4MRvdh0f29VlKL7ilVesm8ycmZRVotXv3h3hx2WZQRdeem0nU7Zu0cU3gOwkvEYHg
-	 nLNmzPONjouvg==
-Message-ID: <55894e9c-b651-4f4f-8bc8-c9b6660ccda9@kernel.org>
-Date: Wed, 21 Feb 2024 13:14:37 +0100
+	b=WOowHsiPgDKrkBQOftGLEGwx/MGJAVe6ourAA1xQpgTWxiAEqSrROUrFayIbKZuSe
+	 LE4bmHFuqZZbLRiKEZSbq9UYhme0U+JY3ZrOXglLwGRCgIii1MLaa99rzNthnYwGbF
+	 Uu+Ln/pqprdGreMKj1Lr/eGpVe74+Orp9MldCqybVEwBwjXklwMVsoSp14rNXJxUdK
+	 YxhGqlaoGfwq6HjQQQCOGPJS4V+zd4RMjphoynf0cdIS3RKnXitPQSbMU6GU1ghgcg
+	 y33IzWQbMMpTXKUlM0dgLDgMDkH4UEdmQyvmoSF5jr5eb5oog1SGRYZMYuUzVHn0mz
+	 y9C/QJYp8CDkw==
+Message-ID: <1b3b8cb8-205a-4819-97f2-ea55367e5dd9@kernel.org>
+Date: Wed, 21 Feb 2024 13:15:52 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v3 0/3] add helpers and vars in mptcp_lib.sh,
- part 2
+Subject: Re: [PATCH mptcp-next v3 1/3] selftests: mptcp: connect: add local
+ variable rndh
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708499011.git.tanggeliang@kylinos.cn>
+ <2ca83d472f3ba157ddfc97dbbfb20e2ccbd35c29.1708499011.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1708499011.git.tanggeliang@kylinos.cn>
+In-Reply-To: <2ca83d472f3ba157ddfc97dbbfb20e2ccbd35c29.1708499011.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,11 +96,15 @@ Hi Geliang,
 On 21/02/2024 8:06 am, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v3:
->  - patch #2, drop this line in mptcp_lib_ns_exit():
-> 	rm -f /tmp/"$netns".{nstat,out}
+> This patch adds a local variable rndh in do_transfer(), setting it with
+> ${connector_ns:4}, not the global variable rndh. The global one is hidden
+> in the next commit.
 
-Thank you for this new version. Please see my individual comments.
+Do you not need to do the same in simult_flows.sh?
+
+If it is just these two modifications, and because you have other
+behaviour changes in patch 2/3, maybe easier to squash that in patch 2/3
+and add another note in the commit message?
 
 Cheers,
 Matt
