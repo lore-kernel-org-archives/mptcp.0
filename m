@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07D97FBDB
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6653A1A2
+	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:21:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708532423; cv=none; b=XHbg4edAqahb1UPJEaK6zBTPDRZWQi5K/7E8thBim8557SX6jyombNZpRkzDFGr+p0nMmnFG0ATN6r2C3x5Dasvd/3aQMht/2tRGanWGNlhUAbC8xOsl0+qRYaTUFDVntJDRAdd9itKB/V/BrSlvAqZ07uyi/dXLlf3de7+RJe4=
+	t=1708532463; cv=none; b=PvIEBQ/K9HByJ+f+BkCnD2xYPFiD11+/o1LR2vg5NXzTUe6gEVmoRJkyKGk8EOkUfasH6dMvnpk+AtHb+2f/Rv8bpQhuYbYcOmY5V11OozB/T9gmZ+E2ULJneVUOarucqgFaldqKuM77chbsnh2BQ+Tumr6wOzUqc6AKT5+nwW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708532423; c=relaxed/simple;
-	bh=thmJOehbRuF6cEg89N+id5KOtO8oL9vHj1bQSDSscRw=;
+	s=arc-20240116; t=1708532463; c=relaxed/simple;
+	bh=YS+Mst/NOd/yZI2mZEW2nMbCP4xvuaoHbmA9O1cpVaM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pdt70XmMxphhx6fOcQowE5RPPW1mI0JKvn7kYu5tzUpYrmUQOt6TfzuonvEQQDZMfLVsUpNpYkcP8uzHjerbARvVRR8H6qZD1guNTfsV9mj6zZwFGcqfru+dNSSv6ToGYL88IK9BCWEitX+JTSnVK2saeeT2W/zphvTq7wHlFV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eaAJHAI6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=t/lCyX1bX7/wwrWbaFvig99rb/sQrL1yFpCBDFzmKtBpSHgvY54Yf1HtAfBu2scSXu06mOya1Em+UYr3IzqkAy15xt6TDdXhgZjEJTdTX76QyD+KnpQoCz9LKYS+6zttCjldN59Yi54uY1VArq+JehwZpw6O/9imAZUj+d8er3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgWXDqIV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eaAJHAI6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A3FC43390;
-	Wed, 21 Feb 2024 16:20:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgWXDqIV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B010C43390;
+	Wed, 21 Feb 2024 16:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708532423;
-	bh=thmJOehbRuF6cEg89N+id5KOtO8oL9vHj1bQSDSscRw=;
+	s=k20201202; t=1708532463;
+	bh=YS+Mst/NOd/yZI2mZEW2nMbCP4xvuaoHbmA9O1cpVaM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eaAJHAI6Q3WgArqOrqNtJLGMmTY66uRbF4cs4D1ryjXHk0uurEf/Axihe8PLxQhOl
-	 oTCClO6cK1E8v5UqCEvX+WDySt40WCnZ+tNDPuJnvE2ks5HCX1tqmLKnatluutQoW2
-	 dAc6lBnTYwaUH7aRikvtazweDTBFXjqVtecljfnQRS4iyDYcK9F4qTyKzws1nufGzE
-	 zTqq3epk73fR/PwNU7J7WVoOsXPdTb2Y40nZmlzaje4LIMlnpSK3yat71R4ZHntTXb
-	 eZm24IN6MttnU3A5we1bpdyQGlcOb4RIKblaPbmHsP435Jq+43WhJaIqw3GVMbXwA5
-	 9zR2e7jpajdwA==
-Message-ID: <20f8644c-eb3a-47e0-8dac-1f05f27f6860@kernel.org>
-Date: Wed, 21 Feb 2024 17:20:22 +0100
+	b=IgWXDqIVVi7Rn6d9symlM/7+g3oNf0tHel9kmfzJSbsW4xyDcvXlx1Kv13KGvrIey
+	 SViqh8akw3nxkSlbyZ9CjFLvfi0apYcYpaMg+aPzz0yT+jMPiUhxRJOU43YewjS55j
+	 rrVAK1sD+kEFKuAtpcvc4HO/VVTIDYIW7YSB6f0+ybalDmSeBr5oY5Y0aEjN14pbIG
+	 CpdPY30dJRmvfbida4Xmlg4I1AZQseV15Vy5w4JA03y/VUkGPOg73jVl4143KbqIx0
+	 wXKh9inm3M3rdDLORloJ78QvAf+RuAAyPtzXPwNGISHiwcg3hGTJQ0jN4x5G6mU7OF
+	 K4n5SSHCSzT4A==
+Message-ID: <360c8ee5-99c4-44b2-91f1-ebe634b19a2a@kernel.org>
+Date: Wed, 21 Feb 2024 17:21:01 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 7/8] mptcp: add check_id for
- lookup_anno_list_by_saddr
+Subject: Re: [PATCH mptcp-next 8/8] selftests: mptcp: flush userspace addrs
+ list
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708497039.git.tanggeliang@kylinos.cn>
- <fe35233e351bbe2db9c3eb98dc13fff8ea5c60df.1708497039.git.tanggeliang@kylinos.cn>
+ <bb5e3f97c4a225f616d82112570514114fce00c5.1708497039.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,69 +87,97 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fe35233e351bbe2db9c3eb98dc13fff8ea5c60df.1708497039.git.tanggeliang@kylinos.cn>
+In-Reply-To: <bb5e3f97c4a225f616d82112570514114fce00c5.1708497039.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
+Hi Geliang,
 
 On 21/02/2024 7:31 am, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Add a new parameter check_id for mptcp_lookup_anno_list_by_saddr(), and
-> pass it to mptcp_addresses_equal(). Then in mptcp_pm_del_add_timer(),
-> the input parameter check_id can be passed as the new parameter into
-> mptcp_lookup_anno_list_by_saddr(). After this, this condition:
+> This patch adds a new helper userspace_pm_flush() to flush all addresses
+> for the userspace PM. Invoke it in userspace pm dump address and subflow
+> tests. And use dump commands to check if the userspace pm local address
+> list is empty after addresses flushing.
 > 
->         (!check_id || entry->addr.id == addr->id)
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 46 ++++++++++++++++---
+>  1 file changed, 39 insertions(+), 7 deletions(-)
 > 
-> can be dropped, only test if 'entry' is NULL is enough.
-
-(...)
-
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 1bf5c3440f84..4519dfa79775 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-
-(...)
-
-> @@ -329,12 +330,12 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
->  	struct sock *sk = (struct sock *)msk;
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index aedc5698f26a..9f1476f0e2ae 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3374,6 +3374,34 @@ userspace_pm_get_addr()
+>  	ip netns exec $1 ./pm_nl_ctl get $2 token $tk
+>  }
 >  
->  	spin_lock_bh(&msk->pm.lock);
-> -	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
-> -	if (entry && (!check_id || entry->addr.id == addr->id))
-> +	entry = mptcp_lookup_anno_list_by_saddr(msk, addr, check_id);
-> +	if (entry)
->  		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
->  	spin_unlock_bh(&msk->pm.lock);
->  
-> -	if (entry && (!check_id || entry->addr.id == addr->id))
-> +	if (entry)
+> +# $1: ns ; $2: addr
+> +userspace_pm_flush()
+> +{
+> +	if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
+> +		local ns=$1
+> +		local line
+> +
+> +		userspace_pm_dump $ns | while read -r line; do
 
-Instead of all these modifications in mptcp_addresses_equal() and
-mptcp_lookup_anno_list_by_saddr() just for this specific case here, can
-we not use an extra variable?
+This will create a subshell: it means that variables that are changed
+here below will only be valid in this restricted scope. In other words,
+if there is a failure below, the 'failure' message will be printed, but
+'ret=1' will only be set here in this scope, so the test will not be
+marked as failed: the check will be ignored. You cannot do it like that.
 
-  bool stop_retrans;
+What you can do is something like that to avoid a subshell:
 
-  (...)
+  while read -r line; do (...); done <<< $(cmd)
 
-  spin_lock_bh(&msk->pm.lock);
-  entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
-  stop_retrans = entry && (!check_id || entry->addr.id == addr->id);
+but...
 
-  if (stop_retrans)  // or in one line, merged with ↑ ?
-      entry->retrans_times = ADD_ADDR_RETRANS_MAX;
-  spin_unlock_bh(&msk->pm.lock);
+> +			local arr=($line)
+> +			local nr=0
+> +			local id
+> +			local addr
+> +			local i
+> +			for i in "${arr[@]}"; do
+> +				if [ $i = "id" ]; then
+> +					id=${arr[$nr+1]}
+> +				fi
+> +				nr=$((nr + 1))
+> +			done
+> +			addr=${arr[$nr-1]}
 
-  if (stop_retrans)
-      sk_stop_timer_sync(sk, &entry->add_timer);
+Can you not use read to do the parsing if it is always the same output:
 
->  		sk_stop_timer_sync(sk, &entry->add_timer);
->  
->  	return entry;
+  read -r _ id _ _ addr
+
+> +			userspace_pm_rm_addr $ns $id
+> +			userspace_pm_rm_sf $ns "$addr" $SUB_ESTABLISHED
+> +		done
+> +	else
+> +		print_skip
+
+The skip doesn't make sense here: there is no 'check' in progress.
+
+But that's not it, the behaviour is wrong too: if the feature is not
+supported, it means that the subflows and addresses will not be removed,
+then the rest of the test will be wrong on kernels not supporting the
+features because the counters will be different.
+
+Maybe we could do that in a new dedicated test where everything is
+skipped if "dump addresses" is not supported. But, does this test
+increase the code coverage? I understand that doing the flush is a good
+"summary", but it looks like this has already been validated, no? So
+maybe easier to drop this?
+
+> +	fi
+> +}
+> +
+>  userspace_pm_chk_dump_addr()
+>  {
+>  	local ns="${1}"
+
 (...)
 
 Cheers,
