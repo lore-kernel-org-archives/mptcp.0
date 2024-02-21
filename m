@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A83D8121F
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0A18120D
+	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 16:19:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708532325; cv=none; b=UPVlS1soVjG8NGOJbJIi4LqMyjDUAcYGotuPJ+WznyEzvDg94FhwFKYNAqtGywa9539PUXHu6bHxR+wnwp4RhwbbrCUUvTuOQIzT5daLA/68UOIm515U42lC3zgetDBBGdFurTOremDVH0fr0rCvdtYXbd8CV5P/ga3i03vktAI=
+	t=1708532354; cv=none; b=ma+atKOPo3qe8CM1weKF7Jn7uBlBbKLfIgnvEjRKnMrFMnZ1ZKvtPaJc+vbXdH07StJvxpJHeXCHDwDbUzwSSkCawwa8hP4E1EJwEHbfEcuTXj8lnPQX4Z/BaV6my4mq61nyv6Sm5IUa9gCyNmZSLw5Oh8SY77clt7acdiznxaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708532325; c=relaxed/simple;
-	bh=hIQZXZI62ECGrTPUSK54EdXtJpvcMSd5moO+6qJhglg=;
+	s=arc-20240116; t=1708532354; c=relaxed/simple;
+	bh=ij4AubE0xHottwc/acxzgyidQeWxJXbY2iGiJ517SWI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ELwB0ouTs2/S2Z04Lyyjot2TFYIi1vj0NnYdsKUyIdEsbf9lx8cUd86PmRD0AJ/MxF7yEuJMBSICvWjx2AMS38zpyRT4S4g+il94Lx0V/SdPAEXeR/o2yyuuQRs4jEW4J1UIQifClWQOtfCSFMBc0YAbno3cutr+iYVUt5xg8Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W95B24hq; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=W105e+fAkRJMOHYkG71XYjDwysCoZXMrWXguWaEWQtevgGXhSncN7GDli3kwPlqPBXT9BkVJ2h5vJz4yXT7Q82+yxoa+5cWLLktyfjlyeUgGMsuu37eRu1dHaIqEPH8DeVAixhnm6+EASnezJUxc8JC2Z8yElBiS+6gY+NiS9Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaTFt402; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W95B24hq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 817BAC433F1;
-	Wed, 21 Feb 2024 16:18:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaTFt402"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C9AFC433F1;
+	Wed, 21 Feb 2024 16:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708532325;
-	bh=hIQZXZI62ECGrTPUSK54EdXtJpvcMSd5moO+6qJhglg=;
+	s=k20201202; t=1708532354;
+	bh=ij4AubE0xHottwc/acxzgyidQeWxJXbY2iGiJ517SWI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W95B24hqCZiYzyOJtSCEXT63K6VvI+VNfaG2gJ+d39Oz9EF/lhvPCYXZ8/yEzAuZW
-	 iUMcCeynRhpDCOTjbyMrGzPJT9KmJ74Elf8czE+eV6LxByHh0EH1QiLOFBajVgGamX
-	 hQGKFeJZ3r4+OR4Gik6FbDitsy3pZG2M6Q/ZAPtGFsq23ltFYlp54nsOKF6aAF12PN
-	 ghLuiZPvKW0+yS93JaSFvPcJebySlzZPAPfR1FIhspMpuQC0kNHm8MPHUuoIMF294S
-	 Y1UqqXtp+cmd0zfks6nw/xpGJe9K7xrWsOVFzogRdxd4lMQxK/1+oHhkeeDGx+5tx1
-	 AZ+zaEcKp/a+g==
-Message-ID: <a716b4b3-c826-4d2c-825c-5f902baa9682@kernel.org>
-Date: Wed, 21 Feb 2024 17:18:44 +0100
+	b=iaTFt402lxh6fYYdvHKjNOQj0PE54KLHcQMqUsmeF+9aqsVI0/fL0yE/85phWeKxJ
+	 abeIHUiG6/Kbfwv7pvaqcOnFsZavcRbPMaS4k+/JSg7H0IaxFM+eCcpy+7d/Uo15Wt
+	 /wFmAzor6DKRgTVfqV1j32LW4wp6myoLH82zjHv6O3yFZqMgrISWZAb9x0w5GLuhfc
+	 OIRMwMBwSRbjpCrPM3otOCjmmCUmasuEkcxojNM+VLLpcbA6cRcxwajN4+fsCDVzRT
+	 e13UghCIup6lSPfgYMlMHqeo/mxGk2EorKyhG9OP3VEzz/HsRNASWfgnz2IJl0h6A0
+	 vUCGe4aey7TQA==
+Message-ID: <8f77ced8-5964-49ac-a5a6-d06093f91e93@kernel.org>
+Date: Wed, 21 Feb 2024 17:19:13 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 4/8] mptcp: set error messages for set_flags
+Subject: Re: [PATCH mptcp-next 6/8] mptcp: add use_id parameter for
+ addresses_equal
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708497039.git.tanggeliang@kylinos.cn>
- <c8d6e3ae6b110da7d115b720825758708c9a7687.1708497039.git.tanggeliang@kylinos.cn>
+ <a911da17e335a0dc22dd722e484d7a79a10967c9.1708497039.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c8d6e3ae6b110da7d115b720825758708c9a7687.1708497039.git.tanggeliang@kylinos.cn>
+In-Reply-To: <a911da17e335a0dc22dd722e484d7a79a10967c9.1708497039.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,61 +96,48 @@ Hi Geliang,
 On 21/02/2024 7:31 am, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> In addition to returning the error value, this patch also sets an error
-> messages with GENL_SET_ERR_MSG or NL_SET_ERR_MSG_ATTR both for pm_netlink.c
-> and pm_userspace.c.
-
-Good idea!
-
-Even if it might be obvious, please *always* explain the reason(s) why
-having this is interesting. Here, just one sentence is enough:
-
-  It will help the userspace to identify the issue.
-
-(same for other patches in general: please *always* add the reason(s))
+> This patch adds a new parameter use_id for mptcp_addresses_equal() to
+> test the address ids, as well as the address. This can be used to test
+> if the two given addresses are identically equal, they have both the
+> same address and the same address id.
 
 (...)
 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 7ef3b69852f0..09a60f440fef 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -563,13 +563,17 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
->  	token_val = nla_get_u32(token);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 7905783c95e4..1c32f579e1a1 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -670,7 +670,8 @@ void mptcp_set_owner_r(struct sk_buff *skb, struct sock *sk);
+>  void mptcp_set_state(struct sock *sk, int state);
 >  
->  	msk = mptcp_token_get_sock(net, token_val);
-> -	if (!msk)
-> +	if (!msk) {
-> +		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
->  		return ret;
-> +	}
+>  bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
+> -			   const struct mptcp_addr_info *b, bool use_port);
+> +			   const struct mptcp_addr_info *b,
+> +			   bool use_port, bool use_id);
+
+That's a lot of modifications just to introduce one new parameter. Would
+it not be better to use a macro?
+
+  #define mptcp_addresses_equal(a, b, use_port) \
+    mptcp_addresses_equal_check_id(a, b, use_port, false)
+
+Or maybe better with an "inline" function?
+
+Or extending the function:
+
+  bool mptcp_addresses_equal_check_id(...)
+  {
+      return mptcp_addresses_equal(...) ? a->id == b->id : false;
+  }
+
+=> Or only do this extra check in mptcp_lookup_anno_list_by_saddr()
+where you need that, no?
+
+I will check with Mat what he thinks about that.
+
+>  void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr);
 >  
->  	sk = (struct sock *)msk;
->  
-> -	if (!mptcp_pm_is_userspace(msk))
-> +	if (!mptcp_pm_is_userspace(msk)) {
-> +		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
-
-Maybe just "userspace PM not selected"?
-
->  		goto set_flags_err;
-> +	}
->  
->  	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
->  	if (ret < 0)
-> @@ -583,6 +587,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
->  
->  	if (loc.addr.family == AF_UNSPEC ||
->  	    rem.addr.family == AF_UNSPEC) {
-> +		GENL_SET_ERR_MSG(info, "address families do not match");
-
-Maybe better with this?
-
-  "invalid address families"
-
->  		ret = -EINVAL;
->  		goto set_flags_err;
->  	}
+>  /* called with sk socket lock held */
 
 Cheers,
 Matt
