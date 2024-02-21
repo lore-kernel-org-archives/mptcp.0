@@ -1,141 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CAC1272B6
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 18:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D200D79DD6
+	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 19:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708539748; cv=none; b=Co5v0aPbA5vMTj8CZ9OVyGx5e9gNEYfRbLCB3CLWO0eOAJiuOexp2WdcLoSO/mOn44Yb8ZTN4HRsrcMU9kZ3uBH85VqAmQAz2hZ9LTBC9J8pIBRbKlHLC9N6ryHbUgjGxwdH42xTP127I0hgGbSxGHEZTjYRae5a5/qJ5qwvG0k=
+	t=1708542893; cv=none; b=D2b+wGQA8l0J8xS2AUtT6th/FBdw1WhOBHhaLash8kbeHb6kcH7Z1O0Dwz2xMMFqONvADvzoegUONOqLrBkB4SBQKjEndUnzm05W+w5p3ERgwd54xDo3pUpP2NN/kWDEb6pVlBeSXQxxOHsf18QDehFFmoN+mZg6nNvl2w43onQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708539748; c=relaxed/simple;
-	bh=2L0EX2f1S25v+hyiEnK5KAFLw3sIMoPBKDLAEE21kiI=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GVqGJdy4tiXTMyAqirC/lBXZbj1EOsjXH3ns6wckaZggOPIZWh7QQbs1pO6eMEH+Uu6fLQz6y1IlgAfBx0uY5DLWlP4CTlOyXw6uecAydau+MLs6zh/y1lWTkoFgsn/LOEfubeYYZXvXKu6da7RWgNXqmRid4GyhG16VjpuNlcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fZVuI6Vw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708542893; c=relaxed/simple;
+	bh=+ihEvZwG+86nlZOC8ZJbUCzgjLqQnSxhkKhcIXJM0/k=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=F+x1Ie8RDOUrlIjXycs2+6QuY5Pl4SD9e9FYuGfVldPkxf+wjXY/0k2xzmzZc2qIKWb3qCtQmOtuEvZLRWi1ZTqijV0qolx0rzFylKOJJkg4DGCExgvteod+n5mg5h61G50G6LfW0UlxpFUrFKXWtYLl3OOiGip6CQKgUUotEqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MbUCAr7h; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fZVuI6Vw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708539744;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kdeetQQu06dyVnFVPf3xsBpvgWg8EL9hChFpq0iWd+o=;
-	b=fZVuI6VwpKFZ07AS8yK2hImMUqOz5jAvjVXo63Ha3LBSpTPEDoXHaaVC7SUcBjlyiJXA5k
-	nI4MVejgJmsX0QGf0QM4p5uQ5Jiqwj7oiswQdkUpH/TeiInYlgFz8DjbTqMltwszFOXTf+
-	xqPnORhKXguuWEoux5GRd7c123H1Pqk=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-65-LQZBplU4P1WYSkNh667uhg-1; Wed,
- 21 Feb 2024 13:22:22 -0500
-X-MC-Unique: LQZBplU4P1WYSkNh667uhg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 51225386A0AF
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 18:22:22 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.94])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D4FE6492BD7
-	for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 18:22:21 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH v3 mptcp-net 2/2] selftests: mptcp: explicitly trigger the listener diag code-path
-Date: Wed, 21 Feb 2024 19:22:16 +0100
-Message-ID: <00b53a9b00cf4f35361806208f1214c030fad974.1708539640.git.pabeni@redhat.com>
-In-Reply-To: <cover.1708539640.git.pabeni@redhat.com>
-References: <cover.1708539640.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MbUCAr7h"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42e3235b0d1so5544811cf.2
+        for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 11:14:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708542891; x=1709147691; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Xjk/Pq7XO3BH4yZz8om0iHbc6fEg7r0m7pxOMQ5R9c=;
+        b=MbUCAr7ht5SFvk/fauaHhOcFjmcKJKXZNeULqWMpP+exmmSQoWyycjUKQcGWNGdH60
+         vaDmUWAKN5JmSYntYCHAZluyqE0UYQ4tQBQhypgk6KHkPwsVVsJ4KCOz/T5I0+9P0OHH
+         xa93s+tOioTe/kBTmDorX/RVdzqmco0NFutFflZU6J0cKAJo6Nd4d6ZBnBPz3Tq+TyKu
+         GAPhuvd5Zs8u952uGI49TrfR8ky8c93Vda5EUG9MD9O+/l5y2ioUMgQANdklnncEdf0v
+         HU/8obhojjU/wsIEHX6+yveHUoB+FJEhesPFacCIxYUoJaFX/arPsZ06Fo0u/RIiLS0M
+         tfxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708542891; x=1709147691;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5Xjk/Pq7XO3BH4yZz8om0iHbc6fEg7r0m7pxOMQ5R9c=;
+        b=OI6h98Y01ZLl5rYBs2CWNDZQL5++Va9o5u60Y4eHR7RL0U7J8nuh31Rz823mVtqMMJ
+         KuLiK8vBWDPt/Qlpon6gAnPwt3XGiNpcnPaHbg9LoLNSyTyV4jQ0govwn6JiiaPII3eL
+         2OAlAitwtvcdzFaWyCBPfFSBXZ9j8vLZtXm0210+DcOXNB4NlcNIrjUJPmHWpjWGhHd2
+         kU/u/H7CQ34UGw415HS4byCvzOdtWvkUi+2NMXqzor/fw0lHhhUJ+1o3rk/A4QzigDUJ
+         F26MkPfokBvKp6F1++wmoZrd9XUStTtoKQuQ0AvNUDwFL3So3Za4Ax6Ty8nzb7Bt+ssj
+         Uqfg==
+X-Gm-Message-State: AOJu0YzMs2FDC50PiMBzgJB7QlqvvjEdpRRctdzyXwMegqHrLN2ZeiiV
+	biuwLkHrlf6uScdmFPQOMez1TV5ywpOSb6w2zCjiNvtZksIoryg=
+X-Google-Smtp-Source: AGHT+IEhpFHYz0ZSn7mabrZQnqMpr6SyKXXv+C7R0OuAp2b2o5xMRNF8/2gftE9gT8TL070xcXajLw==
+X-Received: by 2002:a05:6214:d0a:b0:68f:4643:eff3 with SMTP id 10-20020a0562140d0a00b0068f4643eff3mr15519849qvh.1.1708542890699;
+        Wed, 21 Feb 2024 11:14:50 -0800 (PST)
+Received: from [127.0.0.1] ([20.75.95.242])
+        by smtp.gmail.com with ESMTPSA id or23-20020a056214469700b0068f6f344d6asm3768557qvb.79.2024.02.21.11.14.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 11:14:50 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <00b53a9b00cf4f35361806208f1214c030fad974.1708539640.git.pabeni@redhat.com>
+References:
+ <00b53a9b00cf4f35361806208f1214c030fad974.1708539640.git.pabeni@redhat.com>
+Subject: Re: selftests: mptcp: explicitly trigger the listener diag
+ code-path: Tests Results
+Message-ID: <b1075da5-3959-e9fb-c5a3-0d11c0d1f57b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 21 Feb 2024 19:14:49 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-The mptcp diag interface already experienced a few locking bugs
-that lockdep and appropriate coverage have detected in advance.
+Hi Paolo,
 
-Let's add a test-case triggering the relevant code path, to prevent
-similar issues in the future.
+Thank you for your modifications, that's great!
 
-Be careful to cope with very slow environments.
+Our CI (GitHub Action) did some validations and here is its report:
 
-Note that we don't need an explicit timeout on the mptcp_connect
-subprocess to cope with eventual bug/hang-up as the final cleanup
-terminating the child processes will take care of that.
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/7993934084
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
-v2 -> v3:
- - longer wait timeout
- - run all subprocesses in  background
- - wait for tcp ports after starting all listeners
- all the above should produce a lot of resilience wrt slow env.
----
- tools/testing/selftests/net/mptcp/diag.sh | 30 ++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/282733d05eba
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 60a7009ce1b5..3896bb84ebf1 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -20,7 +20,7 @@ flush_pids()
- 
- 	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGUSR1 &>/dev/null
- 
--	for _ in $(seq 10); do
-+	for _ in $(seq $((timeout_poll * 10))); do
- 		[ -z "$(ip netns pids "${ns}")" ] && break
- 		sleep 0.1
- 	done
-@@ -81,6 +81,15 @@ chk_msk_nr()
- 	__chk_msk_nr "grep -c token:" "$@"
- }
- 
-+chk_listener_nr()
-+{
-+	local expected=$1
-+	local msg="$2"
-+
-+	__chk_nr "ss -inmlHMON $ns | wc -l" "$expected" "$msg - mptcp" 0
-+	__chk_nr "ss -inmlHtON $ns | wc -l" "$expected" "$msg - subflows"
-+}
-+
- wait_msk_nr()
- {
- 	local condition="grep -c token:"
-@@ -279,5 +288,24 @@ flush_pids
- chk_msk_inuse 0 "many->0"
- chk_msk_cestab 0 "many->0"
- 
-+chk_listener_nr 0 "no listener sockets"
-+NR_SERVERS=100
-+for I in $(seq 1 $NR_SERVERS); do
-+	ip netns exec $ns ./mptcp_connect -p $((I + 20001)) \
-+		-t ${timeout_poll} -l 0.0.0.0 2>&1 >/dev/null &
-+done
-+
-+for I in $(seq 1 $NR_SERVERS); do
-+	mptcp_lib_wait_local_port_listen $ns $((I + 20001))
-+done
-+
-+chk_listener_nr $NR_SERVERS "many listener sockets"
-+
-+# gracefull termination
-+for I in $(seq 1 $NR_SERVERS); do
-+	echo a | ip netns exec $ns ./mptcp_connect -p $((I + 20001)) 127.0.0.1 2>&1 >/dev/null &
-+done
-+flush_pids
-+
- mptcp_lib_result_print_all_tap
- exit $ret
--- 
-2.43.0
 
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
