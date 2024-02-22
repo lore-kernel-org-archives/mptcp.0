@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAF32BB13
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 08:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6C936B15
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 09:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592323; cv=none; b=eZcuec72lmi8EKQ0eje8ix1IzCusCZLkmmHvUrkTikiLi//5TrA92xLrkR4PsGwNL2ZfNvGop66rDpyKzo0PhKCvsNQYa4MLBiN+PDWX6dxCyTEhjtAaze2wwAAPmF2OFP7UiXXxCTUjHIyImBwOi4SiJBQpHc06PRyhLr5R7mQ=
+	t=1708593685; cv=none; b=iqfCcnGGlImgpGFaNLSHljZGH4ARe4NU3A2CVXxSjfYMv2PC5MHZ9mAByaCLAG+FvMiJSGNuTzmJXfTQTM/DQbjWOkcH2FvZNLf0VPzAfGqoigWZxm7kM2MoBEC1MmBrtHkUhePsj794T9LDzj2LomFrdSgRYcu8WQnHiUwoOx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592323; c=relaxed/simple;
-	bh=s99zvRCHqfJgJcdbpuBidU8SUv3IOhpQ+Gj9yTV4RGg=;
+	s=arc-20240116; t=1708593685; c=relaxed/simple;
+	bh=DKU+naV4jZOwiUosHoG+/Ntzz7mpgGHH/cAjd37MR1c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d98Jq4KIEvt/s1QGMcFG0jUs3EDXnkJyXpYho7RXPu7eHXEi6xurL7be0QJLup2Xb98FkfI4yU8QZgwsZdFTqfaGbCho3yqi4LjLHHlj3DJieRyEkvQZ4mmCBeR1Jftj5JXNy5lIKq+pqzG7dyNL679WMWpi8P66UWL0FrQQPm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1QqNxZw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=BRqH6DNfJfL+JvWhjDejQZdobgwWUqlKpPNaGo4lSAwZsmEzp98Y2+Z3E1IUEXws/vnNLr6EcmC2i/2Z9FNYsiHic+2hlBsmAVPR5jiazJ6NXYeVfzE3JPAKSOJVv6NNISHELRqp+1Nt7wV2fRM/G0lEpFjs5lVeX2iC+pJZN2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJ2GRk1M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1QqNxZw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15725C433F1;
-	Thu, 22 Feb 2024 08:58:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJ2GRk1M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F7AC433C7;
+	Thu, 22 Feb 2024 09:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708592322;
-	bh=s99zvRCHqfJgJcdbpuBidU8SUv3IOhpQ+Gj9yTV4RGg=;
+	s=k20201202; t=1708593685;
+	bh=DKU+naV4jZOwiUosHoG+/Ntzz7mpgGHH/cAjd37MR1c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=t1QqNxZw7gfZPamyY/H9XWucMX/7BtYeVGhnk6jQU9uQ2OnPoN6Pn5ZFOXWKZBDT1
-	 OyR5FeAa9KpJB65Vx8m1oU1ds8UsSZJSZiRYa6RArQ3F6k5uD0nurzEk0m4vliVlEH
-	 Zz3ttFkQZ0HU1WCAo8iSF/EW3cuPHOqSVn8FL6BLS8J0umJG5sgfQCOg7TUT+nfMYL
-	 lLOCO7Bp25dMBsPDmok+mlCt7B0zSjppFLp5C35GfNmq+mvLpCFyStQTY3PBtXOtF4
-	 yMlEZXXM/RIRgZxRHyCOnYdRutqtrhM2HSSznvlvltQ71PlNiuKjs1zsp4W0KVZYFV
-	 EaKboPLqNQYsg==
-Message-ID: <338c256c-1492-4ea8-8d3d-eca7e075b0ef@kernel.org>
-Date: Thu, 22 Feb 2024 09:58:39 +0100
+	b=jJ2GRk1MeJElCv0WCHivzfIfjPuOBPtD1rovauRa2ecwixgIqvpAxu6lJ17KwThAW
+	 6z+bb+Jr5LI/7ATOp07B0nfbPhwbriHcnP0SPuVNuUEFDSeQOdGrLOI+dtgaZ0omiy
+	 OFaVzI9aB+WMD/jQkMhboarHxkJOvWbHp9Wtwo9KM7ZvXcKJbZbpu08AWc3yQpeDUE
+	 AuDdIGU2c1w+K82wwXqddhofh+O6BngUdaEA0Byq9BhTQC9kt68/XqR4SWlqW4TJy8
+	 a8hYOxD4Rkv9bbgbMn06qK1mN28tIBvAshwgdeKDQ57Ub8HxiAVa5QJ/opOxnwhQXM
+	 CzJw2baevyYMA==
+Message-ID: <cebdec56-dd07-4613-8980-12deaeee8a82@kernel.org>
+Date: Thu, 22 Feb 2024 10:21:22 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: don't exit when a symbol not
- found
+Subject: Re: [PATCH mptcp-net] mptcp: fix double-free on socket dismantle
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <37d9862958848f8f3737eafd1b1ea0bdb63acd91.1708588566.git.tanggeliang@kylinos.cn>
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <47b5459f6b9b07c5a669d5a5233b35cf6ec601ac.1708532911.git.dcaratti@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,68 +85,32 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <37d9862958848f8f3737eafd1b1ea0bdb63acd91.1708588566.git.tanggeliang@kylinos.cn>
+In-Reply-To: <47b5459f6b9b07c5a669d5a5233b35cf6ec601ac.1708532911.git.dcaratti@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Davide, Mat,
 
-On 22/02/2024 8:56 am, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> mptcp_lib_kallsyms_has() will always exit when a symbol has not found, it
-> breaks the test itself. Unexpected errors occur:
-> 
->  007 userspace pm add & remove address
->        syn                                 [ OK ]
->        synack                              [ OK ]
->        ack                                 [ OK ]
->        add                                 [ OK ]
->        echo                                [ OK ]
->        mptcp_info subflows=2:2             [ OK ]
->        mptcp_info subflows_total=3:3       [ OK ]
->        mptcp_info add_addr_signal=2:2      [ OK ]
->        mptcp_info last_data_sent=191:18    [ OK ]
->        mptcp_info last_data_recv=40:68     [ OK ]
->        mptcp_info last_ack_recv=93:74      [ OK ]
->        dump addrs signal                   ERROR: missing feature: \
-> 			mptcp_userspace_pm_dump_addr$ symbol not found
->  Cannot open network namespace "ns1-65d6fb5a-5FviVK": \
-> 			No such file or directory
->  Cannot open network namespace "ns2-65d6fb5a-5FviVK": \
-> 			No such file or directory
->  cmp: /tmp/tmp.a7osJs7Nj0: No such file or directory
->  cmp: /tmp/tmp.f02z6brCQu: No such file or directory
->  cat: /tmp/tmp.27TzxD2efV: No such file or directory
-> not ok 1 test: selftest_mptcp_join # FAIL
-> 
-> To fix this, this patch adds a new argument 'continue' for the helper
-> mptcp_lib_fail_if_expected_feature() to control whether exit or not.
-> 
-> Always set this argument to 1 in mptcp_lib_kallsyms_has().
-> 
-> Fixes: 83013bdf90a ("selftests: mptcp: connect: skip if MPTCP is not supported")
+On 21/02/2024 5:30 pm, Davide Caratti wrote:
+> when MPTCP server accepts an incoming connection, it clones its listener
+> socket. However, the pointer to 'inet_opt' for the new socket has the same
+> value as the original one: as a consequence, on program exit it's possible
+> to observe the following splat:
 
-I'm not sure to understand why you sent this :)
+(...)
 
-The fixes commit ('d' is missing at the beginning) here mentions:
+> Something similar (a refcount underflow) happens with CALIPSO/IPv6. Fix
+> this by duplicating IP / IPv6 options after clone, so that
+> ip{,6}_sock_destruct() doesn't end up freeing the same memory area twice.
 
-> Note that this check can also
-> mark the test as failed if 'SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES' env
-> var is set to 1: by doing that, we can make sure a test is not being
-> skipped by mistake.
+Thank you for the patch and the review!
 
-So the goal is to fail when the env var is set. Otherwise, we would miss
-tests that are skipped by accident.
+Now in our tree (fix for -net), with Mat's RvB and Fixes tags:
 
-If you use 'mptcp-upstream-virtme-docker' and you want to run recent
-selftests on an older kernel, you can add this to the docker command not
-to exit if a feature is missing:
-
-  -e INPUT_SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES=0
-
-But clearly here, we don't want to continue if we expect all features to
-work!
+New patches for t/upstream-net and t/upstream:
+- 6d6a1d5ea72e: mptcp: fix double-free on socket dismantle
+- Results: 74677c9f0a8c..b35846da7660 (export-net)
+- Results: 55a829ff16aa..df010bcea0cb (export)
 
 Cheers,
 Matt
