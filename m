@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E473FE2A
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 11:15:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B1D405D4
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 11:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708600523; cv=none; b=gXOTCir/0K7YQzpJqG/1TmyiLYe8iGdthpVUctfk/m1Tql15uQOca1gJEbTe6sRPw1ql0ecw8fYAX4Jgy7Wx/eNkIPfgWJjUL8B5g2eyCPBxF9uEkw7a5VY+M3n3gfWGYi8YZ0EnyeyEvA+9DvJzOmb0/HFjgjXxA0oCaNyQVy8=
+	t=1708601964; cv=none; b=S8jszGIJyZt4FaDFucou6p4P63Y8wKnI5tV7vgpEQUUy8+Glm4eHgxPX867rsupVN5uyZeeyYUu9PdG7lreCdP5Rj+lFNuC7G1PVQr5pHLmCZwHFM5FARwWxZ3G7DJJhYxU7QzHWifh+Zo0ucX6HsbymdyGbOCK+oKFMwWqqCdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708600523; c=relaxed/simple;
-	bh=fhaLh27xVpSUQFm49QVV0QBCjaDHjnQukb0qBpXOnMk=;
+	s=arc-20240116; t=1708601964; c=relaxed/simple;
+	bh=+bCu89JnUGuH4mUUlOIqzQmD/zD6WycAI2zniOvlhyI=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cKZ76gwBGPU0O91BGmOjHoK+JuKh/wxVMUDvXjAjrow+33+K0AMOXottf794gj9nrJYu430snlh+6IkvTbZcSE9MP3qYa9VtLQ/N+CT6NnDSXTD18MlYiEeOZBvFyuhqXwlVAxSgUdU9TMyrDdqaAs3RjtYXn67TNll/cR6uFeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCdqmhTe; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=QQS/Els416eOQoIIt+sau551z+YXhH4mpuP/t7UQv365gU3g9BnPY5M82NAgvYkg7Nzx2QwzvQDkMkCAg2Xw+AKhNZnBS/sHKr5RenBINzwyUh1XVKvt+l3UTupa9WJUz9e0Ne9/wEwHXzh2RhT5AgY9yAcnfwyt+Fjfgp0itrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJ+AdBQ7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCdqmhTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED1CC433F1;
-	Thu, 22 Feb 2024 11:15:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJ+AdBQ7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 929EEC43390;
+	Thu, 22 Feb 2024 11:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708600522;
-	bh=fhaLh27xVpSUQFm49QVV0QBCjaDHjnQukb0qBpXOnMk=;
+	s=k20201202; t=1708601964;
+	bh=+bCu89JnUGuH4mUUlOIqzQmD/zD6WycAI2zniOvlhyI=;
 	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=WCdqmhTe48dqOyOa8TYKm74tb0ZD+ulVZ0hFtJARg20AEw3rK3MKiDSM5B6AjRvzW
-	 3fHMk2QCcAY+gInPXvg544zY+LAplPSmSmt5lI/yVgBVW6pjr3uBW1+IkaZ1OiY/8e
-	 d41NhJtRzm9U/iL2DTKow3FbHni2Vvi727UEwWm2iewWeufmLOhHyJ+SPdoWDIKB9T
-	 h/qVHvxxFIOrNaADdKuZIIHmyEYirKCGY8gMCI572E9hN4wRjxVtwyJnr9/dVfYNbd
-	 in/VWmF5wIF1XnsFTXFaPnTDSrpjB6OZ+AcpiI88DjV6lWJMg3lP0WaXhUCKMmg0wV
-	 g/aWQOXsv1q7A==
-Message-ID: <360e0345-0a2e-4369-9c1d-421f5fd4412f@kernel.org>
-Date: Thu, 22 Feb 2024 12:15:20 +0100
+	b=gJ+AdBQ7HcetCsH3qwrZmc/2ImF7/sVrq9+X0OpxxB2eC9eMrMIVW4WGW6KSLWoT1
+	 D6imZzsgS0FH12LVVWng66UCXQbtyPGEOnqQPOuArZOh7ZLPz+8GVo3wWp76jBE6Ea
+	 /fjca0hKR8gdiYqtWOCeGHuKxc9K3iCKqofUIm3EF8KJEbuFM2peshqlHHBBSUsxO8
+	 fKAmx9RNACzsfN+jnKLPS0mzqrvs5BT7WTw2sXvv6qgunY2yVvOwCSTO/HzNZMCsfB
+	 f46n/SFy5/BaZoZ1MCvjfOvEFazR+WeJCcjQHJ0KE7uukD++o8XuBLhREYiHUJNwRN
+	 y4y6gOWt0ciAg==
+Message-ID: <6b3f316f-c0b6-493f-a73d-b607c819f8de@kernel.org>
+Date: Thu, 22 Feb 2024 12:39:21 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v4 4/4] selftests: mptcp: add mptcp_lib_events
- helper
+Subject: Re: [PATCH mptcp-next v4 0/4] add helpers and vars in mptcp_lib.sh,
+ part 2
 Content-Language: en-GB, fr-BE
 From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708572320.git.tanggeliang@kylinos.cn>
- <a306733bbc030878afda1ba501a94b40b92ec264.1708572320.git.tanggeliang@kylinos.cn>
- <c415e047-b5ee-4aa1-919b-2a1e829d16e2@kernel.org>
+ <3c77c0a0-3150-4421-b2ed-b064393c49b8@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,59 +87,39 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c415e047-b5ee-4aa1-919b-2a1e829d16e2@kernel.org>
+In-Reply-To: <3c77c0a0-3150-4421-b2ed-b064393c49b8@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/02/2024 12:07 pm, Matthieu Baerts wrote:
+Hi Geliang,
+
+On 22/02/2024 11:30 am, Matthieu Baerts wrote:
 > Hi Geliang,
 > 
 > On 22/02/2024 4:40 am, Geliang Tang wrote:
 >> From: Geliang Tang <tanggeliang@kylinos.cn>
 >>
->> To avoid duplicated code in different MPTCP selftests, we can add and
->> use helpers defined in mptcp_lib.sh.
->>
->> This patch unifies "pm_nl_ctl events" related code in userspace_pm.sh
->> and mptcp_join.sh into a helper mptcp_lib_events(). Define it in
->> mptcp_lib.sh and use it in both scripts.
+>> v4:
+>>  - address Matt's comments in v3 except
+>>  - keep #1, #3 as separate patches, not squash them into #2, to keep #2
+>>    clean.
 > 
-> (...)
+> Thank you for the v4, it looks better to me!
 > 
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->> index f65a31594829..5b5ad9947c21 100644
->> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->> @@ -399,3 +399,17 @@ mptcp_lib_ns_exit() {
->>  		rm -f /tmp/"$netns".{nstat,out}
->>  	done
->>  }
->> +
->> +mptcp_lib_events() {
->> +	local ns="${1}"
->> +	local evts="${2}"
->> +	declare -n pid="${3}"
->> +
->> +	:>"${evts}"
->> +
->> +	if [ ${pid} -ne 0 ]; then
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Yet another new shellcheck warning introduced here:
-> 
->>
->> In mptcp_lib.sh line 410:
->>         if [ ${pid} -ne 0 ]; then
->>              ^----^ SC2086 (info): Double quote to prevent globbing and word splitting.
->>
->> Did you mean: 
->>         if [ "${pid}" -ne 0 ]; then
-> 
-> I guess the CI should check that and report it, so I would not have to
-> fix that just before applying patches.
+> I have just one comment for patch 2/4, but it is fine, I think. (I will
+> also add {} around the new 'netns' variable in mptcp_lib.sh when
+> applying the patch.)
 
-In fact, we don't need this check because mptcp_lib_kill_wait() does
-nothing if the pid is set to 0. So I simplified the fix by removing the
-condition.
+I just applied the new patches with the suggested modifications.
+
+New patches for t/upstream:
+- b19e35a9c85b: selftests: mptcp: add local variables rndh
+- 1e458efc9900: selftests: mptcp: add mptcp_lib_ns_init/exit helpers
+- dcb564917e5b: selftests: mptcp: more operations in ns_init/exit
+- d734b17e00dd: selftests: mptcp: add mptcp_lib_events helper
+- Results: a542d2d60003..80a8f9458231 (export)
 
 Cheers,
 Matt
