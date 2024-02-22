@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE762B9BF
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 10:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C27622099
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 10:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708598044; cv=none; b=nrbdLAIk+GJuPAJ1qhVJrPXc4LCBfcVYeTJkubGstnjZos7qPz6breZq2LAADl2vI1QhDIcYHcXLmmQmHwBXrcCJJDNIwGBMxq7lzBrcAZGeuYr9pvkzh7ltGLqz3vDDYYM4BB/qWtye2KXg6Xyevp1ZBhc91q3rWKXRkH3yOMs=
+	t=1708598961; cv=none; b=jTubPrb0na45crNYBfkIxmRhz15EF12fBH2Zn2LahwWOj3xrOCWI/QKxxGIQUX1ZM1asHiL6mWOLOShK7gVrvIBsOL/+yS9qqUqQqbPcRCEtLbL5wm7tkUiW0/GaZ8fqv0kWK2kQ3v43l13PC/miYh5N79obHIXOf7jwOIn7yg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708598044; c=relaxed/simple;
-	bh=xSRzMZkYXxjuTEd9cFzoFDs2kiEf7C8j3N6tlXHQsk8=;
+	s=arc-20240116; t=1708598961; c=relaxed/simple;
+	bh=ndnZY1yiC9PI0q9p9UvGvz2uQmxwEOgYQrJ64BUZ+vM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qRR27e2WGbthryNvc5o+M4flEouWBbOZ3S681w77iNhCMAAtpozPT1mZEVNDjlRlqtLMeYd5a9DJIoO4FLIRtMDjR7k7dKz8WAj+5WoCVW1iEZ6+wpF7z3xlL8RDF6ZJIDrx6aCy6VsYFKTBkZOxhpv2Ka7OHAfiaSufUtMlEdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2xi1JPx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=MuTmRC/Zb0vPdleNhpzx4Foz/fIFfbGoZmFNssSCy4PXJSVwrqMMVMFYAHK1QuNW0UMdCrQHwxGgDRZyIizk1qhl9qp+HgmPbntM1oAao0IimFkWqvxmY/xfeonQGUVIeKOF2xJ1L8Qcp2DvwC++2ADOwgZjMWxl8Phr5hbC8Sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxE/GcwU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2xi1JPx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10DD9C43390;
-	Thu, 22 Feb 2024 10:34:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxE/GcwU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70A7CC433F1;
+	Thu, 22 Feb 2024 10:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708598043;
-	bh=xSRzMZkYXxjuTEd9cFzoFDs2kiEf7C8j3N6tlXHQsk8=;
+	s=k20201202; t=1708598961;
+	bh=ndnZY1yiC9PI0q9p9UvGvz2uQmxwEOgYQrJ64BUZ+vM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=K2xi1JPxy/oWWa5/S66SZEPUyifTrVsYVFSSBB+1fCpmi5ExNJFKucXLWlt1Tk7yT
-	 o0zPnuy+EazZbg9csvHoSrRX/0b6IGG9+jLe2mkO72eorUBoADAR0gL0IMQHvWZVZS
-	 fBQ8I7jcTyvG/2fHWb5t+af1/gQww6qbovSXAlgOb0mcqzewlzXMD8trB7sF5M9xRz
-	 JJz/JhQBF/dxpwiLZ9Jvk2y38u15NqYRADBQ3foQaMf2sCi496bhqmVDV6Z8lCKW1s
-	 XUIJkrw3LWitJ2xEyr5bFSj9ODuZ9dGSCGzsWNHNaPyjQ6CjKQKxoMe027s6rxBZWN
-	 p+AHaty//6C0Q==
-Message-ID: <e0b8efb6-7f7c-43ea-ab07-8476ac7a9f9b@kernel.org>
-Date: Thu, 22 Feb 2024 11:34:01 +0100
+	b=rxE/GcwUhrHxTajDx+Xb7CpZVbBUEQgTvLT9BnCblK6572Hda7TDHt/oRw0bG9Wcw
+	 VF2p71jOa+bk6bCK6FrL9nRoVO1j4T8erfj9lo5q28h1gqmkaKhiLw65xaHa5otig2
+	 ihRK783ysBYg1UJpNLK1eftctxAKDLAgbrIhnzyNhvCNvooU0sgiU50nqjncAc2hJ/
+	 CgNUEIn2yXk2djRXHECfIO8GPOn+VT0V1XxjCJmPgY5x3yQlkc6xUpO3YHuwcbvaHt
+	 eJ/OPZ2DpKeQLPgMrB+8tecn6++NdXCi2EvRmwHLLRGIX4KYyEQNRUTn8UacwT2Qil
+	 Xf8+OV+b1/asw==
+Message-ID: <2f6096ac-568f-46a6-9938-3d57ad02536b@kernel.org>
+Date: Thu, 22 Feb 2024 11:49:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v4 2/4] selftests: mptcp: add
- mptcp_lib_ns_init/exit helpers
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: don't exit when a symbol not
+ found
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1708572320.git.tanggeliang@kylinos.cn>
- <4518f97e63707f493123c76dd36d217a8eb42d35.1708572320.git.tanggeliang@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <37d9862958848f8f3737eafd1b1ea0bdb63acd91.1708588566.git.tanggeliang@kylinos.cn>
+ <338c256c-1492-4ea8-8d3d-eca7e075b0ef@kernel.org> <ZdcibFuKvYXnXF5J@t480>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,42 +87,104 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4518f97e63707f493123c76dd36d217a8eb42d35.1708572320.git.tanggeliang@kylinos.cn>
+In-Reply-To: <ZdcibFuKvYXnXF5J@t480>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 22/02/2024 4:40 am, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 22/02/2024 11:31 am, Geliang Tang wrote:
+> On Thu, Feb 22, 2024 at 09:58:39AM +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 22/02/2024 8:56 am, Geliang Tang wrote:
+>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>
+>>> mptcp_lib_kallsyms_has() will always exit when a symbol has not found, it
+>>> breaks the test itself. Unexpected errors occur:
+>>>
+>>>  007 userspace pm add & remove address
+>>>        syn                                 [ OK ]
+>>>        synack                              [ OK ]
+>>>        ack                                 [ OK ]
+>>>        add                                 [ OK ]
+>>>        echo                                [ OK ]
+>>>        mptcp_info subflows=2:2             [ OK ]
+>>>        mptcp_info subflows_total=3:3       [ OK ]
+>>>        mptcp_info add_addr_signal=2:2      [ OK ]
+>>>        mptcp_info last_data_sent=191:18    [ OK ]
+>>>        mptcp_info last_data_recv=40:68     [ OK ]
+>>>        mptcp_info last_ack_recv=93:74      [ OK ]
+>>>        dump addrs signal                   ERROR: missing feature: \
+>>> 			mptcp_userspace_pm_dump_addr$ symbol not found
+>>>  Cannot open network namespace "ns1-65d6fb5a-5FviVK": \
+>>> 			No such file or directory
+>>>  Cannot open network namespace "ns2-65d6fb5a-5FviVK": \
+>>> 			No such file or directory
+>>>  cmp: /tmp/tmp.a7osJs7Nj0: No such file or directory
+>>>  cmp: /tmp/tmp.f02z6brCQu: No such file or directory
+>>>  cat: /tmp/tmp.27TzxD2efV: No such file or directory
+>>> not ok 1 test: selftest_mptcp_join # FAIL
+>>>
+>>> To fix this, this patch adds a new argument 'continue' for the helper
+>>> mptcp_lib_fail_if_expected_feature() to control whether exit or not.
+>>>
+>>> Always set this argument to 1 in mptcp_lib_kallsyms_has().
+>>>
+>>> Fixes: 83013bdf90a ("selftests: mptcp: connect: skip if MPTCP is not supported")
+>>
+>> I'm not sure to understand why you sent this :)
 > 
-> Add helpers mptcp_lib_ns_init() and mptcp_lib_ns_exit() in mptcp_lib.sh to
-> initialize and delete the given namespaces. Then every test script can
-> invoke these helpers and use all namespaces.
+> Say in the test "signal addresses race test":
+> 
+>                 if ! mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
+>                         chk_join_nr 3 3 2
+>                         chk_add_nr 4 4
+>                 else
+>                         chk_join_nr 3 3 3
+>                         # the server will not signal the address terminating
+>                         # the MPC subflow
+>                         chk_add_nr 3 3
+>                 fi
+> 
+> This code will never run to this block:
+> 
+>                         chk_join_nr 3 3 2
+>                         chk_add_nr 4 4
+> 
+> Since if no symbal of mptcp_pm_subflow_check_next, mptcp_lib_kallsyms_has exit.
 
-(...)
+This block will never be executed in our CI, because our CI always run
+the selftests linked to the same version of the kernel. In this case,
+that would not be normal to execute this block in our CI, it has to
+complain because we expect to have this symbol in the latest version.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> index b609649311f6..92f6260ba9f3 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+Other CIs, like LKFT, which are validating stable kernels (e.g. 5.15.x)
+using the selftests from the last stable kernel (e.g. 6.7.x) will not
+have SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var being set to 1 as
+we did in our CI. Then it is fine, tests and checks will be skipped if
+some features are missing:
 
-(...)
+https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2cJxC6Sua3VVzRZmpQYKK2jzzNN/logs?format=html
 
->  check_mptcp_disabled()
->  {
-> -	local disabled_ns="ns_disabled-$rndh"
-> -	ip netns add ${disabled_ns} || exit $ksft_skip
-> +	local disabled_ns
-> +	mptcp_lib_ns_init disabled_ns
->  
->  	# net.mptcp.enabled should be enabled by default
->  	if [ "$(ip netns exec ${disabled_ns} sysctl net.mptcp.enabled | awk '{ print $3 }')" -ne 1 ]; then
+> You can trigger this by renaming "mptcp_pm_subflow_check_next$" to
+> "no_mptcp_pm_subflow_check_next$", an non-exist function name, for test.
 
-After patch 3/4, this check will have less value: the other patch will
-always force it to the 'enabled' value. But I guess that's fine: this
-check was mainly to make sure we would not forget to adapt the test if
-we wanted to set it to disable by default. So fine like that.
+I confirm that if you use 'mptcp-upstream-virtme-docker', this env var
+will be set to 1 by default:
+
+  SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES=1
+
+You can unset it on your side, but it only makes sense to do that if you
+work on stable kernels (and you use selftests from a more recent
+version, not the ones attached to the kernel you are validating).
+
+So yes, in this environment (where we force setting the env var to 1,
+not the "default" behaviour), picking a non-existing function name will
+cause the test to fail: but that's what we want → we want to be notified
+if we picked a non-existing function, like it happened recently:
+
+  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/7988706773
 
 Cheers,
 Matt
