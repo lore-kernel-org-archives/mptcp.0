@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FE53FB14
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 10:54:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809EF3FB1C
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 11:07:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708599288; cv=none; b=gDv/xOX9JMwmK8JPSywWtshhSIOeUx1YjCK8S8yxMESO07AyQu5iTym7c6rXzCZ0I+us9Koc10zbXybAKUYel8AjIq8AyjaCy7ST4WgxPAYPJ7f4fTqIY9vT55fjMXGHscv41wt9bxW2n/mGX0TC08rINmjGjUjUyY6PbjHskpY=
+	t=1708600054; cv=none; b=BbOmb0nQy2FYyYQajOe1ei5PMEzEaTtu0cRJfGctyrlsU3bdbCDWZx5YdOTz7tk1YSR9/afV5kDspFeQqxpiZvD9QPBvg990MqlreW/cu0QgnhTHL1Mt4FO+UrK7aA2bPjFACicP44dQuAHu9KPXROHgUYdTROuxrn6FrN98VgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708599288; c=relaxed/simple;
-	bh=oSIIwVeTe2ctkMBZ6FvjYNltU++SnXKhp727RbM8ahY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Zyw5LoslOmm5pDYfXx+sLxqpzlTtU7aVSd+eSGb9LTIQ0q7OsSrqqJUpF7Xn+npCmpUnDkGru/vFqjYYqxDAXER8tbsGpwLpOzItTiHhere36TQqFgqZeugK1xqRU1Kd1i7aN71n7n+iSbGOl2sCova/aXbkV2Qw2WR1EeAtses=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5DpbmjL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708600054; c=relaxed/simple;
+	bh=LVipJmEeIig2pdw2vToKY7YbnYxXwBb5+HCxNg2d4Zo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pV3XGoBwjtTX082R/+O1SH6CoCzZh3LrtC6E5XMKOjGumtkCGAlUwk1owwDLfXWUEIaY5dh8YSspnqBqHGf4WjXU2MNlfWA4+SiRBJFhrywSHI7MvhKlhRz8lMHx2ZIL4Lsb8l/HNM3MU8A6zGs+x8v1618czFkNWFLMJcxnwUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8c6cEPG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5DpbmjL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30ED9C433C7;
-	Thu, 22 Feb 2024 10:54:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8c6cEPG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ACE9C433C7;
+	Thu, 22 Feb 2024 11:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708599287;
-	bh=oSIIwVeTe2ctkMBZ6FvjYNltU++SnXKhp727RbM8ahY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=l5DpbmjLRIjq1nedwusBYHDpP/HgaFjEgIootoCAIKbg0YkMwq2Yt3Syb2fV7sQEX
-	 Y9xOp2sFIItMbHI8+aRJysmnmDYX+98BFOXE1XLH02LzMo6lVCs4pSoPfBy0jrcboC
-	 G2lKOsWB9QT+SrAejCYTTPHTLhN5flGQ85VbWyE9xqOpmD91lZZgFcPzYM1V9DZ7gW
-	 SqNvhPwsoe+dbl5DoZkRgm4nSK1G9ZbMjpvFOZwSdC1kPWL4p/rnEMbyp5lBrD6ETX
-	 A8o/El5kFndqi6G5EukD16FefcpwaNmgAnbbKTEpK9CbGSPuFqBy2bDuIWa7chZ2Bs
-	 KUdSgMTrUQ10A==
-Message-ID: <e98b8b07-558c-498a-97fb-dd5cab11e439@kernel.org>
-Date: Thu, 22 Feb 2024 11:54:45 +0100
+	s=k20201202; t=1708600054;
+	bh=LVipJmEeIig2pdw2vToKY7YbnYxXwBb5+HCxNg2d4Zo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Q8c6cEPG1BQehq25uM8jak8ng5Z4ngCkKFXdFmi5VmLysKLcXmgHAygS1g/ZnEdAH
+	 tAvdGYtQvCHtydrN3Dr4VDlDfEjE6XHNMYFKg/nulGgKzYNvDw1psIsrAm0Y2tXxeh
+	 Mrug0COYRhtiWA53U4b0QJPAXeZokWKByXeZMXV+tCZuR9mb4vV9UEEBAGBFbdzTPH
+	 HGT1JCrp0N47f3OOuIr1tMAGmTT/1l1OH4kWn8X8NoMm/6pLefguR/yv6MQi+dcsaA
+	 QCnv+EtJ8tmcb/l0S0lZ6e4brzX+SfJYafevZRU+X7I/VXLcHuBz2CEYRHm+TXvaTp
+	 xzH2JTXMiFYiQ==
+Message-ID: <c415e047-b5ee-4aa1-919b-2a1e829d16e2@kernel.org>
+Date: Thu, 22 Feb 2024 12:07:31 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 mptcp-net 0/2] mptcp: fix another deadlock issue
+Subject: Re: [PATCH mptcp-next v4 4/4] selftests: mptcp: add mptcp_lib_events
+ helper
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1708539640.git.pabeni@redhat.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1708572320.git.tanggeliang@kylinos.cn>
+ <a306733bbc030878afda1ba501a94b40b92ec264.1708572320.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,31 +87,56 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1708539640.git.pabeni@redhat.com>
+In-Reply-To: <a306733bbc030878afda1ba501a94b40b92ec264.1708572320.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Geliang,
 
-On 21/02/2024 7:22 pm, Paolo Abeni wrote:
-> Eric reported and diagnosed another possible deadlock problem with
-> the MPTCP diag code. The first patch address the issue, and the second
-> adds self-test coverage for the relevant codepath, to get lockdep help
-> to catch future similar issues.
+On 22/02/2024 4:40 am, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> To avoid duplicated code in different MPTCP selftests, we can add and
+> use helpers defined in mptcp_lib.sh.
+> 
+> This patch unifies "pm_nl_ctl events" related code in userspace_pm.sh
+> and mptcp_join.sh into a helper mptcp_lib_events(). Define it in
+> mptcp_lib.sh and use it in both scripts.
 
-Thank you for the patches!
+(...)
 
-Now in our tree (fixes for -net), with 2 small modifications to satisfy
-CheckPatch [1]:
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index f65a31594829..5b5ad9947c21 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -399,3 +399,17 @@ mptcp_lib_ns_exit() {
+>  		rm -f /tmp/"$netns".{nstat,out}
+>  	done
+>  }
+> +
+> +mptcp_lib_events() {
+> +	local ns="${1}"
+> +	local evts="${2}"
+> +	declare -n pid="${3}"
+> +
+> +	:>"${evts}"
+> +
+> +	if [ ${pid} -ne 0 ]; then
 
-New patches for t/upstream-net and t/upstream:
-- 5ca0931fda75: mptcp: fix possible deadlock in subflow diag
-- 560736ee5851: selftests: mptcp: explicitly trigger the listener diag
-code-path
-- Results: b35846da7660..8f414384d341 (export-net)
-- Results: df010bcea0cb..a542d2d60003 (export)
+Yet another new shellcheck warning introduced here:
 
-[1] https://github.com/multipath-tcp/mptcp_net-next/actions/runs/8002395030
+> 
+> In mptcp_lib.sh line 410:
+>         if [ ${pid} -ne 0 ]; then
+>              ^----^ SC2086 (info): Double quote to prevent globbing and word splitting.
+> 
+> Did you mean: 
+>         if [ "${pid}" -ne 0 ]; then
+
+I guess the CI should check that and report it, so I would not have to
+fix that just before applying patches.
+
+I just added the suggested double-quotes when applying the patch.
 
 Cheers,
 Matt
