@@ -1,118 +1,114 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A9F10F1
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 04:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B055F17C69
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 07:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708576293; cv=none; b=rCuCWAfZy/SaoduleHk6bmiOxykNdZC070aGi1BeVxptTSZ73nv4NVcgMKh3gTZk8m63pdoz4AoCb8vMQas41b+3O60skgdQiY1zOPAaVm7dWJCjpfvhecscEFk7onb36/8KMEFfbkm5BuObOyxENq5YqlrjSe+Y5Bx7T62M3a8=
+	t=1708588606; cv=none; b=uTeHVMYYtuzcLBfBRQHU2EkfnOLn33gvEODettfGu/GI4HG4IM24MgFHGLUA4veRv3lrGui1EvACnn1V9c8RGRMNL3tDywZ6M1Tr0O2ELPah8oT8PtQMYiqmQdhBBTfSJUpwqZAAnJeIUMY+vxms9XJ49wGCPflOIMURVuDouZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708576293; c=relaxed/simple;
-	bh=K8tMMNYeymb9S9CjIExhAASp5/77pglkIIvT0tjcTqI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=hJqXU4osYMrrPZNqQi6RWZk/5MY9CbFjKYrvSHC1rl2GuTE54nGYm8rWGtmdPR4Prju3H/zjy/+YWRaSY0TilgYY/GZwZQTnQTPIuYvNU8VaWbHz5M1mu7Jufu1Rj0R3kXxw2Nl8mnDyr59W6i/w8wJenbpBlU4D69sYGHwJwQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iwc4Ko+t; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708588606; c=relaxed/simple;
+	bh=SP4D8At+mGWP2RhfY+f+FEZZ9ecWNYPtDb7LaFg3pi8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Oska7lcb7rQ2LQf2gUJcKzVYrFeFI6oZZUkj/0qM6TLovmhOxxaaaufbhzvpFQ5NBCtTWJ5+C4XBY7SJ53SieMmUd9lKFWVCmJiMwg4UeduFiwoWDY6kVatYRaU74c7EpMPt+9lgqy2RoLHcYpreuKbes9sxKucCEpnjPj45bZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzAw1xXm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwc4Ko+t"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-68009cb4669so35836156d6.1
-        for <mptcp@lists.linux.dev>; Wed, 21 Feb 2024 20:31:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708576290; x=1709181090; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xvk9NrKk3IBeApTVtjnp4BkYxGB2WfGuhRFzh/C4Z3Q=;
-        b=iwc4Ko+tX6C6vBidLmDjQvsvgipV92+colBUOwfs1VAf2nZMKAY3YkR4ZYshp+Tw4G
-         eR9fEnJ7r7bqIppU93zGIanQrpKGD/I4a/OcWCjUhPJcbFKfX6sm/cfJvlVEjfTJKE4o
-         KGutoBkGZ8yhQ4plAlJtkB9Vq+AD31dJM2fFlLEkAUkrxxqNt58Q8mq+DsGvVabiMEhh
-         ZDSN8dymrWopSoSY+XU0UyEdi8ZDNikTeFJ7iTrjX+5/0D1QiIv5hp1M+Ur7uheDaWpU
-         TeVjb00HXcSddB/afQE1FPOwG/ra1f3m/pqlvvDpmFJwrwMEnSCw9/EmNh1GSoSQIMzq
-         5uTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708576290; x=1709181090;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xvk9NrKk3IBeApTVtjnp4BkYxGB2WfGuhRFzh/C4Z3Q=;
-        b=A9y3tUWX8HUfJx+XithdD5pGWOzMM4RKX5eDpwn9Q4nDm12AwsIQHUe6i8qMTgKoms
-         KGXX76Vi//CEfHihV8uKhtc8IUvqIEdvz1zE/638huwingq2WAJyXKNuIoJp51/U+Gq8
-         5G2AldBUHd/k6LyIZ9A1BFdgkXowoXPdZH9UpEfWKJzPCGFRJd8ANVH7I6/p5c4stDAm
-         XF+q3rXdaPri3/CIrR4+6ysuMBdeDGOomI7S+pIX3v7EH2MipIiBr9UZg/3TIv8OG+nr
-         fXvi4fkYEjoz+q+HFaG+9PFzZCNGv1aBvgsegQnC0mK8E8Tmxlo3Ffjd34ucTRRltyQn
-         JXJA==
-X-Gm-Message-State: AOJu0Yxqr7fOLticrk5LqqahXeFUwr/Y24OycjO012uy4rpJMdwlX4pM
-	+udUkSuKopKbwYvGHsJ+EemtnI9XSecH439AH9VKInjgGGZk7Ho1VDUAZeo=
-X-Google-Smtp-Source: AGHT+IHnNomxy1FDefeK9P7w/1cQUpG0s2hiEyypTJdSH7sH0UVWYiWWXEFwo9+0GQuldkdAO5Yhcg==
-X-Received: by 2002:ad4:5aa7:0:b0:68f:52a9:3b24 with SMTP id u7-20020ad45aa7000000b0068f52a93b24mr14238828qvg.29.1708576290219;
-        Wed, 21 Feb 2024 20:31:30 -0800 (PST)
-Received: from [127.0.0.1] ([172.183.154.176])
-        by smtp.gmail.com with ESMTPSA id pd2-20020a056214490200b0068cdbdb8af8sm6113012qvb.119.2024.02.21.20.31.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 20:31:29 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <a306733bbc030878afda1ba501a94b40b92ec264.1708572320.git.tanggeliang@kylinos.cn>
-References:
- <a306733bbc030878afda1ba501a94b40b92ec264.1708572320.git.tanggeliang@kylinos.cn>
-Subject: Re: selftests: mptcp: add mptcp_lib_events helper: Tests Results
-Message-ID: <6e66369e-cbca-3de2-8629-abdf288e055b@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Feb 2024 04:31:29 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzAw1xXm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CA1C433C7;
+	Thu, 22 Feb 2024 07:56:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708588606;
+	bh=SP4D8At+mGWP2RhfY+f+FEZZ9ecWNYPtDb7LaFg3pi8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OzAw1xXm9iInCPa4+MxZEzLg9eHjdfEzaXR3PoC5l1jfArKQqlnUC3vat0gdKB+2u
+	 jLZ18HtpOgtBGlqWHeZNtxVlOFoVThgVlotUsPduAnZkLhguKb3cGqOwhLasbuygwU
+	 FUTCSFfB0NXyierDX0JprbcuUgW5ma8dvCdyvNOFkVCXo/+OM4C2gjKljviuynTjIi
+	 yFDuZhM8ACor0I1XcSYMlegc+i7eA7SSCGiSNvhUjGDh8rrzNI59n7jLNA6Ab4tXeJ
+	 fFCByGxmXfB4B4nX3o4pDYsxYJssd6mA4TCjUJRb6hgxud4rUBR6QACUr5/Xxv5el+
+	 B2yCHxxpS4B3Q==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net] selftests: mptcp: don't exit when a symbol not found
+Date: Thu, 22 Feb 2024 15:56:40 +0800
+Message-Id: <37d9862958848f8f3737eafd1b1ea0bdb63acd91.1708588566.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+mptcp_lib_kallsyms_has() will always exit when a symbol has not found, it
+breaks the test itself. Unexpected errors occur:
 
-Our CI (GitHub Action) did some validations and here is its report:
+ 007 userspace pm add & remove address
+       syn                                 [ OK ]
+       synack                              [ OK ]
+       ack                                 [ OK ]
+       add                                 [ OK ]
+       echo                                [ OK ]
+       mptcp_info subflows=2:2             [ OK ]
+       mptcp_info subflows_total=3:3       [ OK ]
+       mptcp_info add_addr_signal=2:2      [ OK ]
+       mptcp_info last_data_sent=191:18    [ OK ]
+       mptcp_info last_data_recv=40:68     [ OK ]
+       mptcp_info last_ack_recv=93:74      [ OK ]
+       dump addrs signal                   ERROR: missing feature: \
+			mptcp_userspace_pm_dump_addr$ symbol not found
+ Cannot open network namespace "ns1-65d6fb5a-5FviVK": \
+			No such file or directory
+ Cannot open network namespace "ns2-65d6fb5a-5FviVK": \
+			No such file or directory
+ cmp: /tmp/tmp.a7osJs7Nj0: No such file or directory
+ cmp: /tmp/tmp.f02z6brCQu: No such file or directory
+ cat: /tmp/tmp.27TzxD2efV: No such file or directory
+not ok 1 test: selftest_mptcp_join # FAIL
 
-- KVM Validation: normal:
-  - Unstable: 1 failed test(s): =
-packetdrill_regressions =F0=9F=94=B4:
-  - Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/7999199133
+To fix this, this patch adds a new argument 'continue' for the helper
+mptcp_lib_fail_if_expected_feature() to control whether exit or not.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/965ac86521bd
+Always set this argument to 1 in mptcp_lib_kallsyms_has().
 
+Fixes: 83013bdf90a ("selftests: mptcp: connect: skip if MPTCP is not supported")
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index 556a7d9784d7..e23fd85902d8 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -55,11 +55,13 @@ mptcp_lib_expect_all_features() {
+ 	[ "${SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES:-}" = "1" ]
+ }
+ 
+-# $1: msg
++# $1: msg $2: continue or not
+ mptcp_lib_fail_if_expected_feature() {
++	local continue="${2:-0}"
++
+ 	if mptcp_lib_expect_all_features; then
+-		echo "ERROR: missing feature: ${*}"
+-		exit ${KSFT_FAIL}
++		echo "ERROR: missing feature: ${1}"
++		[ "${continue}" -eq 0 ] && exit ${KSFT_FAIL}
+ 	fi
+ 
+ 	return 1
+@@ -107,7 +109,7 @@ mptcp_lib_kallsyms_has() {
+ 		return 0
+ 	fi
+ 
+-	mptcp_lib_fail_if_expected_feature "${sym} symbol not found"
++	mptcp_lib_fail_if_expected_feature "${sym} symbol not found" 1
+ }
+ 
+ # $1: part of a symbol to look at, add '$' at the end for full name
+-- 
+2.40.1
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
