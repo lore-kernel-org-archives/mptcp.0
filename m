@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76F3130E32
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 16:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD72130E32
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 16:28:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708619292; cv=none; b=Kt6Gl3fXQMyBju3YNln4IrSQCFX0A6l5jAxevz4hiyQgMY5y+bqAvwikra37k+tCOQ0Es5QtRbmzcCA3FK9wBCkZTRump8AHAFeiA+TNSdry9HUOr6Lvitlx75ooxwD06khQHZM/Swzlrozo1haTEgCi97rTejmlZwtKDcX4zYA=
+	t=1708619292; cv=none; b=dTQqsgzRuALNPAX4jJm2NnVJOKlvlWQKuf8du+7npZ7QBugds2Zxq1p25o/q5stBSUTAXrJA5TndY+hSZX0lPZTjId0+WunYqFnbkQJoNXR9Mq3aDaqGk3TgCuvXPHnB39b9lD4Fpac99daHzHEDLrA/+EHHqP+16sjf2cKjMps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708619292; c=relaxed/simple;
-	bh=ch3d4qE1pOtuyMtgo+vHhV0TD3CsAIz8LN8VnjAlsck=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Y5CkgsbS1fvWPve8C7I0TwxR7T0UWSGwEYG3SKfnjV5ZtvVpNbDMjDZuDRYny5pBJ5xTRNHy9rJeICL+X/09TQ+9yMCixv3cM5sB16qIr+Vu6aG5oVimoUtssuyDykajl4vjpm93Ntxp90K1EvxRSvq+QTukf7IZE8wBPq5Pgzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPMJq58b; arc=none smtp.client-ip=10.30.226.201
+	bh=6ppa6gVZX7Mf0YViq2iuuXIyOA1XpMhNbWorGleUM38=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WDJkqjgvme51oKVARSyrMIkPoh2c+TmAjz0ym6StR96B5whSQPJ1n6Z8gPWg5a5NcLHjSS9yUCBSbHAqYgBnio4CmPox/qK13kycNAsS3KBwBi4fUxRJ8wGU5G/x/0n8lqyYejWgX0sZ5YBwVVRd7zM+PgfvinKulIveTW09204=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7GfuB0H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPMJq58b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2A9CC433C7;
-	Thu, 22 Feb 2024 16:28:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7GfuB0H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0E63C43390;
+	Thu, 22 Feb 2024 16:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708619291;
-	bh=ch3d4qE1pOtuyMtgo+vHhV0TD3CsAIz8LN8VnjAlsck=;
-	h=From:Subject:Date:To:Cc:From;
-	b=gPMJq58bRCa7zAZ9Ma5u6dFwUJQMpdLqh5SooDfm3WgN4umkSGkVrUoEZ8S0yqQk/
-	 peTMs4njYoOBBdh9Ca1mnwxDcWnpt52rujYp5GvO5zlqpdIRSahVUbZzb7zn6JxBQG
-	 wXfoCiWYtV5CbA+uUcqvV5FIEKlO81Lnp5UDyx7JZu6Y9VHUpwCg75GL7zcCRMwuqe
-	 P2v+kmH2tjVj4/I7tNQZ66dAjvJTX6tebiGr3xQQCr+AGo/AKb1IDN4rVHe+hmpGJy
-	 K+KraPGuYt/5YEbMK5vm4j9Q8PoSyxeGrIZsynPNg0w8M6vPYhhBaRoZYLDulJe/f9
-	 IaosO7svzf2AQ==
+	s=k20201202; t=1708619292;
+	bh=6ppa6gVZX7Mf0YViq2iuuXIyOA1XpMhNbWorGleUM38=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=X7GfuB0HBOGRdVfkmSzQM8yMr769OJZzqALC3YSfWInl6zKMiai2vfYGpBVKQsHa8
+	 8v8oCSaFc8jO4j2OJJTW9IR0egFUXJ0g0gkpksaLrxhlQ2zLI4MJqN+VfcZDb2XCCY
+	 DB4NVzv9fjvQAqnBAK0II6Vvd+M1nXFOkuCCGYt7u6yD8NnW+kMRpfiRMkEaQUVafZ
+	 LQiCzlOyt4KfKbPugeD7Z7dYNDZ7Y1wy5q84NyMDX48b2YBiqvYrQOtAEOxYE6ZHQT
+	 jKLfPOI9ATXtcEfsDkyElvK1t9eVpqcDn9WLstNUiVDRd/4bnXSB1GibkI0fx/d/97
+	 ao3aUN7nwuZjQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next 0/6] selftests: mptcp: fix shellcheck warnings
-Date: Thu, 22 Feb 2024 17:27:56 +0100
-Message-Id: <20240222-selftests-mptcp-shellcheck-v1-0-fed8ba9e6ca6@kernel.org>
+Date: Thu, 22 Feb 2024 17:27:57 +0100
+Subject: [PATCH mptcp-next 1/6] selftests: mptcp: diag: fix shellcheck
+ warnings
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,72 +38,112 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAx212UC/yXM0QrCMAxA0V8ZeTYQ0wnDXxEfRsxssNbSFBmM/
- bvFPR643A1cq6nDddig6tfcPrnjfBpA4pyfivboBiYeiZnRNS1NvTm+S5OCHjUliSovnCiEaaZ
- AJBfog1J1sfU/v8FRZ10b3Pf9B+Q9eMF4AAAA
+Message-Id: <20240222-selftests-mptcp-shellcheck-v1-1-fed8ba9e6ca6@kernel.org>
+References: <20240222-selftests-mptcp-shellcheck-v1-0-fed8ba9e6ca6@kernel.org>
+In-Reply-To: <20240222-selftests-mptcp-shellcheck-v1-0-fed8ba9e6ca6@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2193; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=ch3d4qE1pOtuyMtgo+vHhV0TD3CsAIz8LN8VnjAlsck=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl13Yav1d0FWOK0Iky27MdNMJVzoE97Leekj4rL
- g0kGSP4bWCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZdd2GgAKCRD2t4JPQmmg
- c1CgEADDw8qR7GsbEucleVY+ydJSGj/dG/9KbLotkPJj4VYi2lkofqmcQ0tDMDTbIu2H7Q3Z+OD
- Uu1XDuVUY21tUjRSaNEm5TfIcoodu9ZoDcBKDeT8S1hHYjUOE0Ew97Ao6OrLYSC+yFYntcQ+GId
- fjLXaJkLpUViS5qdekkOw1BJbuKdpz4s2CGF+LglwXF5IpQq343pIA6pfdRuRBuv5HBU5rDRtvE
- cI6RubT4kSBY9i+ty4ogQG4MCee4CnG7mkoba3wne6+wty3bMPJFulBu82U2oRcVyOxDnqkiKEk
- PMvGgldR+ijNN57tsG75rWd3od/LlJ4ogx3TNE5tFBeutUWg9A9oBD7BhlEDxdOzZab8Ql0odPc
- gEd36URhM1BRp/KddfMHK7c2ttTOMBCfJy36NyIwO24RX5QGUPqPhY7bS1+U3vu2aiuVpFJw1Jv
- Zm31Xu+9Qk5oRyfS1QiwJQt8Rid9YSNRMreep0lmS3lTb+s267a0waXYFL+9XNXOOVTcgCzkNJc
- 8S5NsxK4lEVRFIJs+Fn7Ad93+mE9cH9P7590XYg9TLeBRswTaj/MXQWAfVLR9G3l7xHgAAaL8nn
- Qh/MJtL241XULI3pLW0cVXoYtTKeKn/kHu6de2h7q9jSWOFqvd4fujV9yeCLkD+EX+Rwh1MEjVr
- j9SzS+nnGe33ZSw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2632; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=6ppa6gVZX7Mf0YViq2iuuXIyOA1XpMhNbWorGleUM38=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl13Yaitd6PE7F/3RpDPMJXuO3c3KUp5QiqvkcC
+ NvWkg+zAMuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZdd2GgAKCRD2t4JPQmmg
+ c6jVEACh6WStwVKtPvnSE1evZ8iLRwP2ZD4zFh1u04dMID4qUgMVkuFhqymiiNvNdReFuLGYzwi
+ cw6ahEzT2BZVNog4ckR0g5FNcHOJD3+Gi/nLY4cekOK7Qhf2ukk8lRouMxgA7ARt+aFg3iJpVvg
+ 4dGIgoGP4Fl3dhjYhXcaub2Sy5bleTvjf5AAxky4eTYOfws9wnW22zzQFk+dODRMgY0HwOhJ/kB
+ /2mklvCg8ylz9gQCCTza6BO3DffThm6G9x8I8Go9cTfd8WNvphoeY9wd+aMtHaLG0cpW5JZ0cwq
+ 9uVEFB6aVsZ6cOw1MD+UefZQ/DTJAAUcBFHHyzwM7eJIvpGtINeSwGheR077rRwkL4g0wr8oKkK
+ ry7BMEXauYocXdqnzc0oAxsBSMjqmXGszOsTcgSXMkJ15sA1oh8k9Gp+NVBxO1bkxqYhI82SGja
+ ap7etNavhCc68MtinqvHdi5PT3LigjtDXso5QNqW5413XL3UU/bTKwi5mDx4yuXnD68S5MdSXPp
+ fzItHrttw4IeiLbKOyTygetwNs8anc85JzxYf8A9wXjZNfy07MaQo+/h9+IBSZV5s0qDlesfenM
+ Le/8BdkaQAL43euFabx3FfLEqTOIaZO0c1bVs/Qhjhhr8OeUPK6Nv3rqfznBsOJkT+4mDcereXC
+ UPYSkXaFz3ZphWg==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 shellcheck recently helped to prevent issues. It is then good to fix the
 other harmless issues in order to spot "real" ones later.
 
-Note that 3 scripts were already compliant: mptcp_join.sh, mptcp_lib.sh,
-and userspace_pm.sh. mptcp_lib.sh was compliant from the beginning.
+Here, two categories of warnings are now ignored:
 
-The modifications are minor, mainly because SC2086 has been ignored:
-Double quote to prevent globbing and word splitting. This is
-recommended, but the current usage is correct and there is no need to do
-all these modifications to be compliant with this rule. New files, like
-mptcp-lib.sh, should not have that rule ideally. Ideally new code other
-existing files should use double quotes when needed.
+- SC2317: Command appears to be unreachable. The cleanup() function is
+  invoked indirectly via the EXIT trap.
 
-Once applied, I'm planning to add a check on the CI side to catch new
-issues, not to have to check that manually and report issues when
-applying patches, like I had to do a few times very recently.
+- SC2086: Double quote to prevent globbing and word splitting. This is
+  recommended, but the current usage is correct and there is no need to
+  do all these modifications to be compliant with this rule.
 
-The last patch is not related to shellcheck, but I found this while
-looking at the scripts: in userspace_pm.sh, we launch 'pm_nl_ctl events'
-once, then kill it, then relaunch it using the same temp files.
+For the modifications:
+
+  - SC2034: ksft_skip appears unused.
+  - SC2046: Quote '$(get_msk_inuse)' to prevent word splitting.
+  - SC2006: Use $(...) notation instead of legacy backticks `...`.
+
+Now this script is shellcheck (0.9.0) compliant. We can easily spot new
+issues.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Matthieu Baerts (NGI0) (6):
-      selftests: mptcp: diag: fix shellcheck warnings
-      selftests: mptcp: connect: fix shellcheck warnings
-      selftests: mptcp: sockopt: fix shellcheck warnings
-      selftests: mptcp: pm netlink: fix shellcheck warnings
-      selftests: mptcp: simult flows: fix shellcheck warnings
-      selftests: userspace pm: avoid relaunching pm events
+ tools/testing/selftests/net/mptcp/diag.sh | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
- tools/testing/selftests/net/mptcp/diag.sh          | 14 ++--
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 76 +++++++++++++---------
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 14 ++--
- tools/testing/selftests/net/mptcp/pm_netlink.sh    | 14 ++--
- tools/testing/selftests/net/mptcp/simult_flows.sh  | 10 ++-
- tools/testing/selftests/net/mptcp/userspace_pm.sh  | 29 ++++-----
- 6 files changed, 98 insertions(+), 59 deletions(-)
----
-base-commit: 482712b4b5fc44b30dcd54409cbab4ec7e405294
-change-id: 20240222-selftests-mptcp-shellcheck-80338a0300c5
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index 0ee93915bccb..d8f080f934ac 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -1,10 +1,14 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
++# Double quotes to prevent globbing and word splitting is recommended in new
++# code but we accept it, especially because there were too many before having
++# address all other issues detected by shellcheck.
++#shellcheck disable=SC2086
++
+ . "$(dirname "${0}")/mptcp_lib.sh"
+ 
+ ns=""
+-ksft_skip=4
+ test_cnt=1
+ timeout_poll=30
+ timeout_test=$((timeout_poll * 2 + 1))
+@@ -24,6 +28,8 @@ flush_pids()
+ 	done
+ }
+ 
++# This function is used in the cleanup trap
++#shellcheck disable=SC2317
+ cleanup()
+ {
+ 	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGKILL &>/dev/null
+@@ -174,7 +180,7 @@ chk_msk_inuse()
+ 	expected=$((expected + listen_nr))
+ 
+ 	for _ in $(seq 10); do
+-		if [ $(get_msk_inuse) -eq $expected ];then
++		if [ "$(get_msk_inuse)" -eq $expected ]; then
+ 			break
+ 		fi
+ 		sleep 0.1
+@@ -260,7 +266,7 @@ chk_msk_inuse 0 "1->0"
+ chk_msk_cestab 0 "1->0"
+ 
+ NR_CLIENTS=100
+-for I in `seq 1 $NR_CLIENTS`; do
++for I in $(seq 1 $NR_CLIENTS); do
+ 	echo "a" | \
+ 		timeout ${timeout_test} \
+ 			ip netns exec $ns \
+@@ -269,7 +275,7 @@ for I in `seq 1 $NR_CLIENTS`; do
+ done
+ mptcp_lib_wait_local_port_listen $ns $((NR_CLIENTS + 10001))
+ 
+-for I in `seq 1 $NR_CLIENTS`; do
++for I in $(seq 1 $NR_CLIENTS); do
+ 	echo "b" | \
+ 		timeout ${timeout_test} \
+ 			ip netns exec $ns \
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.43.0
 
