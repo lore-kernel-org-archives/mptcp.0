@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1F2130E32
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 16:28:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF91C130E32
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 16:28:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708619296; cv=none; b=hu4J7TsjbMEDPV6pwDcFGBI/L/yMtCLt4CvREAj9PdsRnMYPuSEnCyB2MjIoSxevnsP+FniyqFVK17Fy5TxXQKoU3/mAui7URrD5v/kKyU8V5ySMxL6LOngJX/cm25VVDFC1WDpxWdKCwUR7fBxs7zc9YXQqEQbkxZGegLi5uEU=
+	t=1708619298; cv=none; b=LkfWRTsCxcZa4uadsbLL204YG7qu2YUtoG0sNmL0Vni6LmcABLWlJquEkY3dpyaG6XgN4nyx+5F7use0Q5PQMiMEOH8YlfCjpFyzx2I/7yMMfoz6lAU97qGr9aLdnaKU/An9KLs5zAD7xdIs8Js16BKWTrlq8iR/oI6WB6IL+G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708619296; c=relaxed/simple;
-	bh=6gp3tMz4Awm0XC4OVK37KQh1Stbq3kFN1MWg7WiNC+4=;
+	s=arc-20240116; t=1708619298; c=relaxed/simple;
+	bh=7wfBIsDFKLIhv3WQTuiEJmSuIVeZe6lt8rHgoUmQ+uY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LQRnLL1MJCeqwWzGuHWxp8QNdisGkEIOfuxgVfLdI9pAfFPHjMrP6XeXhuNt+QmINC0THcb25gEEZ3Hm5XQhVICImtuo9WWen3YyKuZ9VdjrVo9M7Gjm5yFJO3S7VaeiOhC0KvPdRpSWTRD+lpSMycBG2LUl4aVEwCu7n+WTsiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bo/Smj0L; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=klWBw6HZSOfxW0krGTWcS9YNqy86/2qrmKZl7x1kYUNlWaVmnpqMHJQ5Azpj1iEh0JQdCplQo3crwYviJ1PV9puak6kpHnMRJOZYl2a+at8OOIGD6IdVY3N2AITn44SehJhQnO7SHZ9f7Ke+rwu/e80GN46KOoKC70wWGS2BNyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMAND7RQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bo/Smj0L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A52C433F1;
-	Thu, 22 Feb 2024 16:28:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMAND7RQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E205CC43394;
+	Thu, 22 Feb 2024 16:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708619296;
-	bh=6gp3tMz4Awm0XC4OVK37KQh1Stbq3kFN1MWg7WiNC+4=;
+	s=k20201202; t=1708619297;
+	bh=7wfBIsDFKLIhv3WQTuiEJmSuIVeZe6lt8rHgoUmQ+uY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=bo/Smj0LFNS0UA26I9UbI9BhQ8WwnAW80EmFQPqQ1kicVFrdVG2Wm9kMuIzMqxIs9
-	 Z2qiTpbQ8hgyS8awQv1aBlJqbWbSoiJOM/0FE6oq6v5VG1DIEw/F2ngmortS9KwkK9
-	 MLKbStZJ9iqjgCgRwN5iwTa2bwPCzr2E8JZlQR1SY+HJKmhXN/SjO8I8yVjIZO/bQH
-	 eUeJv+3T+O4YUq0vXHmALkndfkJnkceN1kHAIn+NqK80bg4dG8CwTlyEI3hOBoTFHL
-	 qEc8v7Rw54XNErr4d1Id6BoXO1p8jHqJCCLBIz+8PP258g1zsxTFNV/sH4RyZ7AMLB
-	 l2YtBblQUevnA==
+	b=qMAND7RQOwQFS9megKK/mICD7vj9NZDIIo+Vq392s9XQvi9xfPP4zqRiX62pUfk5y
+	 0CoXYOTnU3GuodrYA08wdr/4RjmYgOMMpDaFzvxeLNqyDJWNSrVkpRlXaibj0Iobch
+	 HGK8abpLj5j0EArr+z53noA6wpvC2D6J8rnYonqvAf80mTu7AAz6bUg81fGjDfxG7R
+	 6gtKdn0xxsY8IPwc/CbJzE8qWRbDxEPnv4HD6Fb/bTpVyoQC0zCeW7D7Knit7znq9s
+	 +GUKpmKPu6rZsxmSsQeVaoZlTU65NXG5wXE0rmbJn8H2NxTdjbN2hiRt4MmENByiym
+	 PaSa6cACI1j7A==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 22 Feb 2024 17:28:01 +0100
-Subject: [PATCH mptcp-next 5/6] selftests: mptcp: simult flows: fix
- shellcheck warnings
+Date: Thu, 22 Feb 2024 17:28:02 +0100
+Subject: [PATCH mptcp-next 6/6] selftests: userspace pm: avoid relaunching
+ pm events
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,95 +38,101 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240222-selftests-mptcp-shellcheck-v1-5-fed8ba9e6ca6@kernel.org>
+Message-Id: <20240222-selftests-mptcp-shellcheck-v1-6-fed8ba9e6ca6@kernel.org>
 References: <20240222-selftests-mptcp-shellcheck-v1-0-fed8ba9e6ca6@kernel.org>
 In-Reply-To: <20240222-selftests-mptcp-shellcheck-v1-0-fed8ba9e6ca6@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2056; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=6gp3tMz4Awm0XC4OVK37KQh1Stbq3kFN1MWg7WiNC+4=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl13YaIeksgYAGUuI+LLgikd+42gWL23KWSKsLu
- ZnWkdtizvWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZdd2GgAKCRD2t4JPQmmg
- c2IGD/9ReoQkkQjQk2V8K6Vkoe2g/6TA86U++KsxAK6vsbpUs3snSK04slp/KuXy5AG8VrIxUux
- EORObB80dMAnmmWOyz5Df+B1KqECjgjna1ZEabiiDZFAGbsrQhZExXpaXCphf2DZU+2pSFee5vj
- UoYkjPyqP/dbePrluX2dUE9J+S6kh5QJZmYo2eRfAxM63YKl6S7pvWQ7WeQsSZyP1g7kBQbvKjx
- d9+nve2R/gIf8sM0URbpvNWJM6vUfrsAWrk2+Tm2tByTXMfCaykY4XqPa2iLHRCSknojK2brVEv
- gg5GdY9D4e7m56bY4Dx0R0NP1VpvZIpPsPWCeVNMSgnN7Tr921+H4vYiRSR2U5horn5EmtTAtDH
- CZSqPdeC3XyUPNnujJRxMia4dRhRo0m/SbHDga3UggiJljqcweYlNfa9ot9UuYPc6jkAviEWJbZ
- Nbptf8w92NJNIY8YOuLmN6S9pTj1isDZdfdS8gQy/xqeH+ITamQqspud57pa4Jpl2bDhH2Qkhzd
- Qp8JiJuZ4vAhQ3hOxa9gBOxTd6MvBTMEwauK0LhCgU6uU6inD9+UU45ZdBfU+y2PQaqYGZ6gjpH
- wqLt8aaAnKNFWWWaMXZKDuTsAAnTh9bKyz1gfsRrMi2neFC7bAI272dHC2EVINUvPiuwShZE/Ma
- iJprk/YJhQj/WAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2381; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=7wfBIsDFKLIhv3WQTuiEJmSuIVeZe6lt8rHgoUmQ+uY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl13YaV77N1aP4xvm1POf2HwxjWfYoe7AjE/Y4h
+ +wjdaWuYsCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZdd2GgAKCRD2t4JPQmmg
+ cyIgEACdhujqEsSW6yus+CBdH0QgsM8gvU0U8PCKJF0JTVNbT72vMrOq+HU6eoCxOPe0qa+ibL9
+ 2b0yKVouwUcUvtJpcXiVMomqE25f59b94XujH3Z88P0+bCn03OTqLsA8fHL4vYyBVr5F4HF+j0M
+ g5Eyq8NbjW/NuWF4fPmkdGZIych/CdzM7rBnaJBOSrrdA0cWhQYwFXW+IC3JPUuw9Ok1AKAm2zN
+ 3cHHetErMpjuid4fuxnb1/f9Q+VDaoAx/z1Bnk6W4MlPR7BVaqQAoknZVMadcKyvdbNFsm2UK6r
+ 8F5/yp4k1nR1KP1/T3NzrdSUGkc5S9vGF5HQL5vepgOnXYDpxlAHymbC/aVNlQ2s/gYVW2UAWBf
+ Nz0ir0/bE++xYwRcv0SDhNkHvW2YOisPfQSGz17cotMcePr/4njD9nqa2uYQWZQk/vPOgUw27aP
+ HQ8AZvmEgynJ8JtMeUBcM4bVeVRu1uVu9JLnhcg94D6zaCJvq8+EvrMEUq+VmbOxys14VqUsqti
+ OVdUC4SjxrlYCso29sCxTADqkxh6tpByqO51+msa8LGbceJq2gHtNu0aE+z08e47A314S95+UEN
+ j7WRHSA4+wuh4rxoLCnxcaBGEIe8iRyjPbNvFo+UT9eYLlOk5tVabgzXKoG/w1DSCkd7GDuPtng
+ O4Uqf8XPhiqtSCg==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-shellcheck recently helped to prevent issues. It is then good to fix the
-other harmless issues in order to spot "real" ones later.
+'make_connection' is launched twice: once for IPv4, once for IPv6.
 
-Here, two categories of warnings are now ignored:
+But then, the "pm_nl_ctl events" was launched a first time, killed, then
+relaunched after for no particular reason.
 
-- SC2317: Command appears to be unreachable. The cleanup() function is
-  invoked indirectly via the EXIT trap.
-
-- SC2086: Double quote to prevent globbing and word splitting. This is
-  recommended, but the current usage is correct and there is no need to
-  do all these modifications to be compliant with this rule.
-
-For the modifications:
-
-  - SC2034: ksft_skip appears unused.
-  - SC2004: $/${} is unnecessary on arithmetic variables.
-
-Now this script is shellcheck (0.9.0) compliant. We can easily spot new
-issues.
+We can then move this code, and the generation of the temp file to
+exchange, to the init part, and remove extra conditions that no longer
+needed.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/simult_flows.sh | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Notes:
+  - we could backport this to stable, but it also works without issue
+    without this patch, and it would be a bit annoying to backport, due
+    to the use of the new mptcp_lib_xxx helpers (make file, events).
+---
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 29 ++++++++++-------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index bc8f107357ac..467feb17e07b 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -1,13 +1,17 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 3200d0b96d53..b0cce8f065d8 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -149,17 +149,23 @@ ip -net "$ns2" addr add dead:beef:1::2/64 dev ns2eth1 nodad
+ ip -net "$ns2" addr add dead:beef:2::2/64 dev ns2eth1 nodad
+ ip -net "$ns2" link set ns2eth1 up
  
-+# Double quotes to prevent globbing and word splitting is recommended in new
-+# code but we accept it, especially because there were too many before having
-+# address all other issues detected by shellcheck.
-+#shellcheck disable=SC2086
++file=$(mktemp)
++mptcp_lib_make_file "$file" 2 1
 +
- . "$(dirname "${0}")/mptcp_lib.sh"
++# Capture netlink events over the two network namespaces running
++# the MPTCP client and server
++client_evts=$(mktemp)
++mptcp_lib_events "${ns2}" "${client_evts}" client_evts_pid
++server_evts=$(mktemp)
++mptcp_lib_events "${ns1}" "${server_evts}" server_evts_pid
++sleep 0.5
++
+ print_title "Init"
+ print_test "Created network namespaces ns1, ns2"
+ test_pass
  
- ns1=""
- ns2=""
- ns3=""
- capture=false
--ksft_skip=4
- timeout_poll=30
- timeout_test=$((timeout_poll * 2 + 1))
- test_cnt=1
-@@ -28,6 +32,8 @@ usage() {
- 	echo -e "\t-d: debug this script"
- }
- 
-+# This function is used in the cleanup trap
-+#shellcheck disable=SC2317
- cleanup()
+ make_connection()
  {
- 	rm -f "$cout" "$sout"
-@@ -120,7 +126,7 @@ do_transfer()
- 	local sin=$2
- 	local max_time=$3
- 	local port
--	port=$((10000+$test_cnt))
-+	port=$((10000+test_cnt))
- 	test_cnt=$((test_cnt+1))
+-	if [ -z "$file" ]; then
+-		file=$(mktemp)
+-	fi
+-	mptcp_lib_make_file "$file" 2 1
+-
+ 	local is_v6=$1
+ 	local app_port=$app4_port
+ 	local connect_addr="10.0.1.1"
+@@ -173,17 +179,8 @@ make_connection()
+ 		is_v6="v4"
+ 	fi
  
- 	:> "$cout"
+-	# Capture netlink events over the two network namespaces running
+-	# the MPTCP client and server
+-	if [ -z "$client_evts" ]; then
+-		client_evts=$(mktemp)
+-	fi
+-	mptcp_lib_events "${ns2}" "${client_evts}" client_evts_pid
+-	if [ -z "$server_evts" ]; then
+-		server_evts=$(mktemp)
+-	fi
+-	mptcp_lib_events "${ns1}" "${server_evts}" server_evts_pid
+-	sleep 0.5
++	:>"$client_evts"
++	:>"$server_evts"
+ 
+ 	# Run the server
+ 	ip netns exec "$ns1" \
 
 -- 
 2.43.0
