@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BD617BC2
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 08:04:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4ED17BD3
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 08:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708589046; cv=none; b=Zm0RI9zGuyGfelf8qZnq/onxAdbJ8lY+uJDf+dn3VWwCpsFkvKVSWLGbF5cI4Ea6sR7KFWMuLeso75b9s5sAvX2Duy3eU9iBhG66BWMnS5AC/fmx3xUUJL5z7LdgbHgFqlS6p9RoteQ56Ct3rnnreGCQGA/+W2zgS34ju0RaO1g=
+	t=1708589047; cv=none; b=UKqACwIrPug4xqiIVOuMfRpsxyWMGvLVft2CxfCyvyhqs6fG3tcmTcKwMzxiDkcaaY6YQW2EvnnoA+B+C1Xp32JA/nRQpXAW0Quu2fxMaarFCwPubpcg4mx0bJYWPKPREGetHkwA73AhOv2HYRHBmX3vc5AF1ZsQZcmKAKVuNn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708589046; c=relaxed/simple;
-	bh=V+LVlg96JbbxV9/NAT+eYZJ9otqIxXDrJP/t59ex8bQ=;
+	s=arc-20240116; t=1708589047; c=relaxed/simple;
+	bh=fAy7vYN6t5YdsccNbCCfIufVORVxTGBp+1/VDFrXN3A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ns4XoQ8li/0E0J0H2AXBAXrskS1B31uwsbgUJx/HdInehQyYsTf8teiRa0Huu9hLWQmAxODBGHppGi5FHaN7I7ZFrIDak6tqZfduFpxoCaYmm2pJwRr0i8dx8cEvigh2pOddtSrlUqZN24UL+AXcf1fZ6NkJUvUZVWooltGc2yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WUV8CQbk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cVhTR2SQV9CBtuTa/qmz1jgNznI33NiI6Punw+1fiqoy7FoEwEbXKNVpf+uHtnTS+KuVQiWmtd8h9wg9JA449/GYAYD2L7SKD+GKPLIB5dD69QtNVjQXsAd7EJy1XTTGH42tU3Odu5MoSSrye+ef9KVkqtRTDgYirRgXTiPFKCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcNtZJ/n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WUV8CQbk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16661C433F1;
-	Thu, 22 Feb 2024 08:04:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcNtZJ/n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 689A2C43390;
+	Thu, 22 Feb 2024 08:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708589045;
-	bh=V+LVlg96JbbxV9/NAT+eYZJ9otqIxXDrJP/t59ex8bQ=;
+	s=k20201202; t=1708589047;
+	bh=fAy7vYN6t5YdsccNbCCfIufVORVxTGBp+1/VDFrXN3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WUV8CQbkfFxDwmIRqKQieZZHmI1kYxrk56JaALC/meyovTvm4lkImnUz7EZlFeQpP
-	 rlksJXPuWu01cZnTV6UwFiyBfha+5ovsAgSrSyspnKDVLUDwnsW2TtlA9FXMdixi28
-	 Cw1qC1T4HgTEpsmeVHJXToRldE8jxDk1kTaVk+8dS5QROnQcpM1lwVtEONbzAN1pfD
-	 I6p+hGX0Uze9sDSKvy+hSE5ak4Voh+f8kz4xcR+JEIxP147c1GOaCnzSt+DTJ5KX4K
-	 8bnv2LsrSp44BJGC1XlODg4yYlQarjFc75AnCr8t7pYtOW67aBZ1ucKhiEHh0vl6vO
-	 UHFXb7IBmjzRQ==
+	b=fcNtZJ/nb19qL7x6haoNmcnEwqs8wEqd13S3zXMQW8HiPEPluNelDSUAcBYFtf3OX
+	 WuD1NLEP21GlxkEJ0nVQGM6CF5B0BHfqEjwVNb61J6U0WupMUrhBFzeKyDC0+xKV4B
+	 k/PqLV8tWQab9li28XHHKVMExSHmT4Z2annzNI2h/5VMHVPiz4DwDqWkE/FgCh2ukw
+	 phtn6TKVJHRCTjx66MdRSOBA4dmnGVs4veOqTkMjzkQ4t3yna6jSFBT68wJJOP0pb8
+	 owSkYUnHb+cvvUQgY3zYukaOUnQQkSC3jRw/V6EBsM3JhqSaxA5LKWZJw2yVVHJJ30
+	 WgPAUziAM04zg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 2/7] mptcp: drop duplicate header inclusions
-Date: Thu, 22 Feb 2024 16:03:53 +0800
-Message-Id: <a09170a01f6d32ae966347796aa7b60150e9799c.1708588977.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 3/7] mptcp: update set_flags interfaces
+Date: Thu, 22 Feb 2024 16:03:54 +0800
+Message-Id: <79caf5e28b53cf570ceb4cfec579d470a6eb030b.1708588977.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1708588977.git.tanggeliang@kylinos.cn>
 References: <cover.1708588977.git.tanggeliang@kylinos.cn>
@@ -45,103 +45,218 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The headers net/tcp.h, net/genetlink.h and uapi/linux/mptcp.h are included
-in protocol.h already, no need to include them again directly. This patch
-removes these duplicate header inclusions.
+This patch updates set_flags interfaces, make it more similar to the
+interfaces of dump_addr and get_addr:
+
+ mptcp_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+ mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
+ mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/diag.c       | 1 -
- net/mptcp/mptcp_diag.c | 1 -
- net/mptcp/pm.c         | 1 -
- net/mptcp/pm_netlink.c | 3 ---
- net/mptcp/protocol.c   | 1 -
- net/mptcp/subflow.c    | 2 --
- 6 files changed, 9 deletions(-)
+ net/mptcp/pm.c           | 10 +++----
+ net/mptcp/pm_netlink.c   | 58 +++++++++++++++++-----------------------
+ net/mptcp/pm_userspace.c | 32 +++++++++++++++++-----
+ net/mptcp/protocol.h     | 10 +++----
+ 4 files changed, 58 insertions(+), 52 deletions(-)
 
-diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
-index 6ff6f14674aa..aefe26e5ae72 100644
---- a/net/mptcp/diag.c
-+++ b/net/mptcp/diag.c
-@@ -10,7 +10,6 @@
- #include <linux/net.h>
- #include <linux/inet_diag.h>
- #include <net/netlink.h>
--#include <uapi/linux/mptcp.h>
- #include "protocol.h"
- 
- static int subflow_get_info(struct sock *sk, struct sk_buff *skb)
-diff --git a/net/mptcp/mptcp_diag.c b/net/mptcp/mptcp_diag.c
-index bd8ff5950c8d..0566dd793810 100644
---- a/net/mptcp/mptcp_diag.c
-+++ b/net/mptcp/mptcp_diag.c
-@@ -10,7 +10,6 @@
- #include <linux/net.h>
- #include <linux/inet_diag.h>
- #include <net/netlink.h>
--#include <uapi/linux/mptcp.h>
- #include "protocol.h"
- 
- static int sk_diag_dump(struct sock *sk, struct sk_buff *skb,
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index b4bdd92a5648..28e5d514bf20 100644
+index 28e5d514bf20..55406720c607 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -6,7 +6,6 @@
- #define pr_fmt(fmt) "MPTCP: " fmt
+@@ -456,13 +456,11 @@ int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb)
+ 	return mptcp_pm_nl_dump_addr(msg, cb);
+ }
  
- #include <linux/kernel.h>
--#include <net/tcp.h>
- #include <net/mptcp.h>
- #include "protocol.h"
+-int mptcp_pm_set_flags(struct net *net, struct nlattr *token,
+-		       struct mptcp_pm_addr_entry *loc,
+-		       struct mptcp_pm_addr_entry *rem, u8 bkup)
++int mptcp_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+ {
+-	if (token)
+-		return mptcp_userspace_pm_set_flags(net, token, loc, rem, bkup);
+-	return mptcp_pm_nl_set_flags(net, loc, bkup);
++	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
++		return mptcp_userspace_pm_set_flags(skb, info);
++	return mptcp_pm_nl_set_flags(skb, info);
+ }
  
+ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 16f8bd47f4b8..a900df9f173d 100644
+index a900df9f173d..c799fe84dfd3 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -8,12 +8,9 @@
+@@ -1887,66 +1887,58 @@ static int mptcp_nl_set_flags(struct net *net,
+ 	return ret;
+ }
  
- #include <linux/inet.h>
- #include <linux/kernel.h>
--#include <net/tcp.h>
- #include <net/inet_common.h>
- #include <net/netns/generic.h>
- #include <net/mptcp.h>
--#include <net/genetlink.h>
--#include <uapi/linux/mptcp.h>
+-int mptcp_pm_nl_set_flags(struct net *net, struct mptcp_pm_addr_entry *addr, u8 bkup)
++int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
+ {
+-	struct pm_nl_pernet *pernet = pm_nl_get_pernet(net);
++	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
++	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
+ 			   MPTCP_PM_ADDR_FLAG_FULLMESH;
++	struct net *net = sock_net(skb->sk);
+ 	struct mptcp_pm_addr_entry *entry;
++	struct pm_nl_pernet *pernet;
+ 	u8 lookup_by_id = 0;
++	u8 bkup = 0;
++	int ret;
++
++	pernet = pm_nl_get_pernet(net);
++
++	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
++	if (ret < 0)
++		return ret;
  
- #include "protocol.h"
- #include "mib.h"
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 50dcba41b6ef..b2c4eecf86c4 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -15,7 +15,6 @@
- #include <net/inet_common.h>
- #include <net/inet_hashtables.h>
- #include <net/protocol.h>
--#include <net/tcp.h>
- #include <net/tcp_states.h>
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- #include <net/transp_v6.h>
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 6403c56f2902..1626dd20c68f 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -15,13 +15,11 @@
- #include <net/inet_common.h>
- #include <net/inet_hashtables.h>
- #include <net/protocol.h>
--#include <net/tcp.h>
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- #include <net/ip6_route.h>
- #include <net/transp_v6.h>
- #endif
- #include <net/mptcp.h>
--#include <uapi/linux/mptcp.h>
- #include "protocol.h"
- #include "mib.h"
+-	if (addr->addr.family == AF_UNSPEC) {
++	if (addr.addr.family == AF_UNSPEC) {
+ 		lookup_by_id = 1;
+-		if (!addr->addr.id)
++		if (!addr.addr.id)
+ 			return -EOPNOTSUPP;
+ 	}
  
++	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
++		bkup = 1;
++
+ 	spin_lock_bh(&pernet->lock);
+-	entry = __lookup_addr(pernet, &addr->addr, lookup_by_id);
++	entry = __lookup_addr(pernet, &addr.addr, lookup_by_id);
+ 	if (!entry) {
+ 		spin_unlock_bh(&pernet->lock);
+ 		return -EINVAL;
+ 	}
+-	if ((addr->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
++	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
+ 	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
+ 		spin_unlock_bh(&pernet->lock);
+ 		return -EINVAL;
+ 	}
+ 
+-	changed = (addr->flags ^ entry->flags) & mask;
+-	entry->flags = (entry->flags & ~mask) | (addr->flags & mask);
+-	*addr = *entry;
++	changed = (addr.flags ^ entry->flags) & mask;
++	entry->flags = (entry->flags & ~mask) | (addr.flags & mask);
++	addr = *entry;
+ 	spin_unlock_bh(&pernet->lock);
+ 
+-	mptcp_nl_set_flags(net, &addr->addr, bkup, changed);
++	mptcp_nl_set_flags(net, &addr.addr, bkup, changed);
+ 	return 0;
+ }
+ 
+ int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	struct mptcp_pm_addr_entry remote = { .addr = { .family = AF_UNSPEC }, };
+-	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
+-	struct nlattr *attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+-	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+-	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
+-	struct net *net = sock_net(skb->sk);
+-	u8 bkup = 0;
+-	int ret;
+-
+-	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
+-	if (ret < 0)
+-		return ret;
+-
+-	if (attr_rem) {
+-		ret = mptcp_pm_parse_entry(attr_rem, info, false, &remote);
+-		if (ret < 0)
+-			return ret;
+-	}
+-
+-	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
+-		bkup = 1;
+-
+-	return mptcp_pm_set_flags(net, token, &addr, &remote, bkup);
++	return mptcp_pm_set_flags(skb, info);
+ }
+ 
+ static void mptcp_nl_mcast_send(struct net *net, struct sk_buff *nlskb, gfp_t gfp)
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index b9809d988693..7ef3b69852f0 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -546,14 +546,19 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
+ 	return err;
+ }
+ 
+-int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
+-				 struct mptcp_pm_addr_entry *loc,
+-				 struct mptcp_pm_addr_entry *rem, u8 bkup)
++int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+ {
++	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
++	struct mptcp_pm_addr_entry rem = { .addr = { .family = AF_UNSPEC }, };
++	struct nlattr *attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
++	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
++	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
++	struct net *net = sock_net(skb->sk);
+ 	struct mptcp_sock *msk;
+ 	int ret = -EINVAL;
+ 	struct sock *sk;
+ 	u32 token_val;
++	u8 bkup = 0;
+ 
+ 	token_val = nla_get_u32(token);
+ 
+@@ -566,12 +571,27 @@ int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
+ 	if (!mptcp_pm_is_userspace(msk))
+ 		goto set_flags_err;
+ 
+-	if (loc->addr.family == AF_UNSPEC ||
+-	    rem->addr.family == AF_UNSPEC)
++	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
++	if (ret < 0)
++		goto set_flags_err;
++
++	if (attr_rem) {
++		ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
++		if (ret < 0)
++			goto set_flags_err;
++	}
++
++	if (loc.addr.family == AF_UNSPEC ||
++	    rem.addr.family == AF_UNSPEC) {
++		ret = -EINVAL;
+ 		goto set_flags_err;
++	}
++
++	if (loc.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
++		bkup = 1;
+ 
+ 	lock_sock(sk);
+-	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc->addr, &rem->addr, bkup);
++	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem.addr, bkup);
+ 	release_sock(sk);
+ 
+ set_flags_err:
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 746d0d1f94ec..7905783c95e4 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -975,13 +975,9 @@ int mptcp_pm_nl_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int
+ int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
+ 						   unsigned int id,
+ 						   u8 *flags, int *ifindex);
+-int mptcp_pm_set_flags(struct net *net, struct nlattr *token,
+-		       struct mptcp_pm_addr_entry *loc,
+-		       struct mptcp_pm_addr_entry *rem, u8 bkup);
+-int mptcp_pm_nl_set_flags(struct net *net, struct mptcp_pm_addr_entry *addr, u8 bkup);
+-int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
+-				 struct mptcp_pm_addr_entry *loc,
+-				 struct mptcp_pm_addr_entry *rem, u8 bkup);
++int mptcp_pm_set_flags(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info);
++int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info);
+ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ 			   const struct mptcp_addr_info *addr,
+ 			   bool echo);
 -- 
 2.40.1
 
