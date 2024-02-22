@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B055F17C69
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 07:56:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3972CCAD
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 08:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708588606; cv=none; b=uTeHVMYYtuzcLBfBRQHU2EkfnOLn33gvEODettfGu/GI4HG4IM24MgFHGLUA4veRv3lrGui1EvACnn1V9c8RGRMNL3tDywZ6M1Tr0O2ELPah8oT8PtQMYiqmQdhBBTfSJUpwqZAAnJeIUMY+vxms9XJ49wGCPflOIMURVuDouZs=
+	t=1708589043; cv=none; b=PsjnB2B6+wzzGZASAJAAw2+EKGY54JdaG5wmFoEhJQI4lvH8fc1OPT19IoJ+FalGH/o3qTIXi1K3NGwA7Vh+0K3IR7W6KsI78v7mQgCKDuGduX+rwU0qHoEh3zLAcd/lpx+LqfGMZsM/3g5imFwcFsHbcWy4/ML8vUcH063Dj2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708588606; c=relaxed/simple;
-	bh=SP4D8At+mGWP2RhfY+f+FEZZ9ecWNYPtDb7LaFg3pi8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Oska7lcb7rQ2LQf2gUJcKzVYrFeFI6oZZUkj/0qM6TLovmhOxxaaaufbhzvpFQ5NBCtTWJ5+C4XBY7SJ53SieMmUd9lKFWVCmJiMwg4UeduFiwoWDY6kVatYRaU74c7EpMPt+9lgqy2RoLHcYpreuKbes9sxKucCEpnjPj45bZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzAw1xXm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708589043; c=relaxed/simple;
+	bh=oPfbibCpCDcVlkaizKN8iHGZBFcV/WxunKXnSWGeZFw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GLdZm2/j3LjVUfAum3rxcSTyE6TRhUBVhVQF3INY1sAPalmr3M7weHkwN5jdMFLT/voRalDJnHOj8t6nn6OCkPko/WvLhvKxMEHCgPsxdopKRrwvX09mxS6RBsJaf8g8eN7DCWKMz8BqrHxGyNcb1imEALV9OfLrYQhqqlHv3O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WxA67Zcg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzAw1xXm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CA1C433C7;
-	Thu, 22 Feb 2024 07:56:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WxA67Zcg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69AEBC433F1;
+	Thu, 22 Feb 2024 08:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708588606;
-	bh=SP4D8At+mGWP2RhfY+f+FEZZ9ecWNYPtDb7LaFg3pi8=;
+	s=k20201202; t=1708589043;
+	bh=oPfbibCpCDcVlkaizKN8iHGZBFcV/WxunKXnSWGeZFw=;
 	h=From:To:Cc:Subject:Date:From;
-	b=OzAw1xXm9iInCPa4+MxZEzLg9eHjdfEzaXR3PoC5l1jfArKQqlnUC3vat0gdKB+2u
-	 jLZ18HtpOgtBGlqWHeZNtxVlOFoVThgVlotUsPduAnZkLhguKb3cGqOwhLasbuygwU
-	 FUTCSFfB0NXyierDX0JprbcuUgW5ma8dvCdyvNOFkVCXo/+OM4C2gjKljviuynTjIi
-	 yFDuZhM8ACor0I1XcSYMlegc+i7eA7SSCGiSNvhUjGDh8rrzNI59n7jLNA6Ab4tXeJ
-	 fFCByGxmXfB4B4nX3o4pDYsxYJssd6mA4TCjUJRb6hgxud4rUBR6QACUr5/Xxv5el+
-	 B2yCHxxpS4B3Q==
+	b=WxA67ZcgFN+tZX5AYfTUbV674N2BFGiTAyb9gO40ZDd0PO8RokwS+Xxg0KyLwX4Ce
+	 Etif2CtZ3JLUOZdm2MFKiGzmrmum9KIcdb/VzCgaurda2xWXebO8YTxvqllOrmblH4
+	 Lh2eoLVk6wUsN6Zy16IWh9qV2F6U72Dy6hVNh6Gf5QZE79eidB0GMcyWKt3iITMkjT
+	 y9LAJ/mhQT9/vXr1noymf2dvLeno68IT4ByBqWJ2y75p7/CBQldbh7BarzSqcMINBL
+	 RIgXgxqcnnWXal1j8SvyiAWmz6J1vEbAJ2bZ6e+mjRYwiIJM857CcSuw28jUrjsHQr
+	 ahD/zpXpCEZyg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-net] selftests: mptcp: don't exit when a symbol not found
-Date: Thu, 22 Feb 2024 15:56:40 +0800
-Message-Id: <37d9862958848f8f3737eafd1b1ea0bdb63acd91.1708588566.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/7] some cleanups
+Date: Thu, 22 Feb 2024 16:03:51 +0800
+Message-Id: <cover.1708588977.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -42,73 +42,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-mptcp_lib_kallsyms_has() will always exit when a symbol has not found, it
-breaks the test itself. Unexpected errors occur:
+v2:
+ - address Matt's comments in v1
 
- 007 userspace pm add & remove address
-       syn                                 [ OK ]
-       synack                              [ OK ]
-       ack                                 [ OK ]
-       add                                 [ OK ]
-       echo                                [ OK ]
-       mptcp_info subflows=2:2             [ OK ]
-       mptcp_info subflows_total=3:3       [ OK ]
-       mptcp_info add_addr_signal=2:2      [ OK ]
-       mptcp_info last_data_sent=191:18    [ OK ]
-       mptcp_info last_data_recv=40:68     [ OK ]
-       mptcp_info last_ack_recv=93:74      [ OK ]
-       dump addrs signal                   ERROR: missing feature: \
-			mptcp_userspace_pm_dump_addr$ symbol not found
- Cannot open network namespace "ns1-65d6fb5a-5FviVK": \
-			No such file or directory
- Cannot open network namespace "ns2-65d6fb5a-5FviVK": \
-			No such file or directory
- cmp: /tmp/tmp.a7osJs7Nj0: No such file or directory
- cmp: /tmp/tmp.f02z6brCQu: No such file or directory
- cat: /tmp/tmp.27TzxD2efV: No such file or directory
-not ok 1 test: selftest_mptcp_join # FAIL
+Geliang Tang (7):
+  mptcp: make pm_remove_addrs_and_subflows static
+  mptcp: drop duplicate header inclusions
+  mptcp: update set_flags interfaces
+  mptcp: set error messages for set_flags
+  mptcp: drop lookup_by_id in lookup_addr
+  mptcp: add check_id for lookup_anno_list_by_saddr
+  selftests: mptcp: flush userspace addrs list
 
-To fix this, this patch adds a new argument 'continue' for the helper
-mptcp_lib_fail_if_expected_feature() to control whether exit or not.
+ net/mptcp/diag.c                              |  1 -
+ net/mptcp/mptcp_diag.c                        |  1 -
+ net/mptcp/pm.c                                | 13 +--
+ net/mptcp/pm_netlink.c                        | 92 +++++++++----------
+ net/mptcp/pm_userspace.c                      | 41 +++++++--
+ net/mptcp/protocol.c                          |  1 -
+ net/mptcp/protocol.h                          | 22 +++--
+ net/mptcp/subflow.c                           |  2 -
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 41 +++++++--
+ 9 files changed, 124 insertions(+), 90 deletions(-)
 
-Always set this argument to 1 in mptcp_lib_kallsyms_has().
-
-Fixes: 83013bdf90a ("selftests: mptcp: connect: skip if MPTCP is not supported")
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_lib.sh | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 556a7d9784d7..e23fd85902d8 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -55,11 +55,13 @@ mptcp_lib_expect_all_features() {
- 	[ "${SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES:-}" = "1" ]
- }
- 
--# $1: msg
-+# $1: msg $2: continue or not
- mptcp_lib_fail_if_expected_feature() {
-+	local continue="${2:-0}"
-+
- 	if mptcp_lib_expect_all_features; then
--		echo "ERROR: missing feature: ${*}"
--		exit ${KSFT_FAIL}
-+		echo "ERROR: missing feature: ${1}"
-+		[ "${continue}" -eq 0 ] && exit ${KSFT_FAIL}
- 	fi
- 
- 	return 1
-@@ -107,7 +109,7 @@ mptcp_lib_kallsyms_has() {
- 		return 0
- 	fi
- 
--	mptcp_lib_fail_if_expected_feature "${sym} symbol not found"
-+	mptcp_lib_fail_if_expected_feature "${sym} symbol not found" 1
- }
- 
- # $1: part of a symbol to look at, add '$' at the end for full name
 -- 
 2.40.1
 
