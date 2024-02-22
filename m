@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6C936B15
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 09:21:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2489D2BB1D
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 09:26:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708593685; cv=none; b=iqfCcnGGlImgpGFaNLSHljZGH4ARe4NU3A2CVXxSjfYMv2PC5MHZ9mAByaCLAG+FvMiJSGNuTzmJXfTQTM/DQbjWOkcH2FvZNLf0VPzAfGqoigWZxm7kM2MoBEC1MmBrtHkUhePsj794T9LDzj2LomFrdSgRYcu8WQnHiUwoOx0=
+	t=1708593981; cv=none; b=gYtjfK6QuDYH/PWBAt7G/0YJpvLboVoM58xX6xEaVMf9kNLcyDE864vKx9X9ZPHAiXTUcxHKRYpx30jCF+YixN+p584ysvFAuMkDgEhfJQtzpJwuXqwOv94wyFZo1wy2fb92kHLXWbrhkfVtBqopDVEr6ARw8eqoBEcS1X7lX8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708593685; c=relaxed/simple;
-	bh=DKU+naV4jZOwiUosHoG+/Ntzz7mpgGHH/cAjd37MR1c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BRqH6DNfJfL+JvWhjDejQZdobgwWUqlKpPNaGo4lSAwZsmEzp98Y2+Z3E1IUEXws/vnNLr6EcmC2i/2Z9FNYsiHic+2hlBsmAVPR5jiazJ6NXYeVfzE3JPAKSOJVv6NNISHELRqp+1Nt7wV2fRM/G0lEpFjs5lVeX2iC+pJZN2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJ2GRk1M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708593981; c=relaxed/simple;
+	bh=tp/F8RB1GoE2eVA6ANTesWwSGimubf/22W5vKVVO2EY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=V5llMjl7TxylWZp69DAq9gRtxGSc4m/h2qe1AM4VMzQW0CD8X3GczGozYqsMMHuisJx9Kn/mOJWijxa2Up6aCR7S0lGKUy2x/DO0URxr+fbOWYO1F75amvye+a8m5mWTITfq5EIH+Ka8GrvAZGnIjSIYJV3SZeomiXJhlRoTojE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B91slrDg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJ2GRk1M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F7AC433C7;
-	Thu, 22 Feb 2024 09:21:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B91slrDg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21C45C433C7;
+	Thu, 22 Feb 2024 09:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708593685;
-	bh=DKU+naV4jZOwiUosHoG+/Ntzz7mpgGHH/cAjd37MR1c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jJ2GRk1MeJElCv0WCHivzfIfjPuOBPtD1rovauRa2ecwixgIqvpAxu6lJ17KwThAW
-	 6z+bb+Jr5LI/7ATOp07B0nfbPhwbriHcnP0SPuVNuUEFDSeQOdGrLOI+dtgaZ0omiy
-	 OFaVzI9aB+WMD/jQkMhboarHxkJOvWbHp9Wtwo9KM7ZvXcKJbZbpu08AWc3yQpeDUE
-	 AuDdIGU2c1w+K82wwXqddhofh+O6BngUdaEA0Byq9BhTQC9kt68/XqR4SWlqW4TJy8
-	 a8hYOxD4Rkv9bbgbMn06qK1mN28tIBvAshwgdeKDQ57Ub8HxiAVa5QJ/opOxnwhQXM
-	 CzJw2baevyYMA==
-Message-ID: <cebdec56-dd07-4613-8980-12deaeee8a82@kernel.org>
-Date: Thu, 22 Feb 2024 10:21:22 +0100
+	s=k20201202; t=1708593980;
+	bh=tp/F8RB1GoE2eVA6ANTesWwSGimubf/22W5vKVVO2EY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=B91slrDgaOX8tCuENCT9cDNGAuU634ryu6gn1VZAgt6/XvqVZsutkeKEd3tZI22yd
+	 xrcGtaikoKOCsAjoTSxDYxJ3EUg7leAmNRrAhxRlZr6SeWI+mxTQLmnSqstKBCT54R
+	 UB2fr1+TmOIY7yJWUuIZExuMbqi28CWzQqwCOY+iI55BHeeP2idV/hqoWdI5hgbuIv
+	 aqNYE/8PbW0wnhzfHIYaZ0xTc/ZymYuMHZvMdoOWmW2M/cOW5B7e32SIB8rQZs0pia
+	 VtL1ot6NmcUXoH9X8Qxu9AdopOj4nrfT9q9WiTJtt+O7sigkzTydZWY8z21x3cxHmc
+	 rm4TR83HDg+WA==
+Message-ID: <4a2fa254-e43a-45bf-966d-2777285cfd93@kernel.org>
+Date: Thu, 22 Feb 2024 10:26:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] mptcp: fix double-free on socket dismantle
+Subject: Re: [PATCH v3 mptcp-net 0/2] mptcp: fix another deadlock issue
 Content-Language: en-GB, fr-BE
-To: Davide Caratti <dcaratti@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <47b5459f6b9b07c5a669d5a5233b35cf6ec601ac.1708532911.git.dcaratti@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1708539640.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,32 +84,25 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <47b5459f6b9b07c5a669d5a5233b35cf6ec601ac.1708532911.git.dcaratti@redhat.com>
+In-Reply-To: <cover.1708539640.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Davide, Mat,
+Hi Paolo,
 
-On 21/02/2024 5:30 pm, Davide Caratti wrote:
-> when MPTCP server accepts an incoming connection, it clones its listener
-> socket. However, the pointer to 'inet_opt' for the new socket has the same
-> value as the original one: as a consequence, on program exit it's possible
-> to observe the following splat:
+On 21/02/2024 7:22 pm, Paolo Abeni wrote:
+> Eric reported and diagnosed another possible deadlock problem with
+> the MPTCP diag code. The first patch address the issue, and the second
+> adds self-test coverage for the relevant codepath, to get lockdep help
+> to catch future similar issues.
+> 
+> v2 -> v3:
+>  - cope with very slow env
 
-(...)
+Thank you for the new version, and having mentioned why the timeout is
+not needed for this new case!
 
-> Something similar (a refcount underflow) happens with CALIPSO/IPv6. Fix
-> this by duplicating IP / IPv6 options after clone, so that
-> ip{,6}_sock_destruct() doesn't end up freeing the same memory area twice.
-
-Thank you for the patch and the review!
-
-Now in our tree (fix for -net), with Mat's RvB and Fixes tags:
-
-New patches for t/upstream-net and t/upstream:
-- 6d6a1d5ea72e: mptcp: fix double-free on socket dismantle
-- Results: 74677c9f0a8c..b35846da7660 (export-net)
-- Results: 55a829ff16aa..df010bcea0cb (export)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
