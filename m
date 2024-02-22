@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76E917BD3
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 08:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F087317C62
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 08:04:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708589051; cv=none; b=cGwMOX9hdfjH09+XhBPryDFRabG9RvDvOlwntABqhoK5g7WmeUaO2a+l48d/wSrNoF+WIilRkqp6kooiWJ37JCY7U1TvE9amkaB3TM8JLX+luzagDQ6hehjWPaf9pZ2TkobJpPlqOrv4Ym5QfP6uIy3IMkGP5uiLJ8NdbdrnA1Y=
+	t=1708589053; cv=none; b=XVaLjIBXmCShViT8kEX0nKziF/oa4gfw1tFjyp9IYwGm3T8cbbnKB1Ll2AaFrTXvZMNkqOumxv11L+QL2PduBp4jOSf2wzfVosND4P4DMsMyqbgMa44CoSjKKNWcFmI5w8DA2VBUWGGGpbNfIXJ+jyJGhla5M6dQuRazhIwjxIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708589051; c=relaxed/simple;
-	bh=f0e6F+ivXNWcy5LLkAIgtf0gsblVOmqzNopG+jGxoZE=;
+	s=arc-20240116; t=1708589053; c=relaxed/simple;
+	bh=ATCTVAieJLmgW4Gyo/eDCk/g6pDUtWhemFOfGV3JkCo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AKSmPU2+T9buTAi/C4imYytKvqU79rAh4K14qcSyYVJ8ySMI0CfrkhRGdn4hrxMCRFs2jDOeH07k8oxY6UK1y6EESAv/QgW4Oc+RqbAoHWzAiwV3FS+Ef4nZFvnfSmNd3/Y/rx1w/LJdlaCD4rHaBLoqkBOyLS0iHnq4MK+ou3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cb4FM8fn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lrE0Z042W4BapdA3ND5pYywXmxNTL35vvxGAY2k7Cz/71azjkREG09GdAKYzyWv1iWuwjQ1oiOJKiC0kDrmCFH0B5h02UZtIj7em1O4Pn6GAyNNkCeeHaaDADUZ98nsz6P2oQBb+JWyoDTq9muTQApZdeb/rtr9DG0XCojhuqpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DC9JL61G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cb4FM8fn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 584E8C433F1;
-	Thu, 22 Feb 2024 08:04:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DC9JL61G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7FD5C433C7;
+	Thu, 22 Feb 2024 08:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708589051;
-	bh=f0e6F+ivXNWcy5LLkAIgtf0gsblVOmqzNopG+jGxoZE=;
+	s=k20201202; t=1708589052;
+	bh=ATCTVAieJLmgW4Gyo/eDCk/g6pDUtWhemFOfGV3JkCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Cb4FM8fnqkP3RRPBbTKL1jY+ZpQo2H6B5m/yGPBWt7Lx9psj6RzlvJt2G4ebKh0xC
-	 V0Gqkczmu9CrRxRh0jeVFwftt6WyJBoNRwdxBxB2bZnMAiAHslXh4aBRaHvCgLyvRh
-	 Q05v1ih/luaMfRxCZDUp7mw6gsebReIZodA86Y0ljR4rxa9wbxvmMf4Z0IWuPTlf3Y
-	 ZI0EQyyVqaxsIdc183jVFNEOg3dBFn01+ST19Wl6YsSuZyHBnZwBnJrvIerkyF/l8t
-	 7Ypnz9uGdETavGrnH90I0v2486+JM02e6NBkg8jJF6hy6D5hZUWJ+ASigSlpdfUr2/
-	 cEQlHE5i5rXKg==
+	b=DC9JL61Gex8A1uRfXKL5zPpbu7VeMabnJltHEr0smjD2NACpSChZBP85+9oUVKeU0
+	 y51WsC3VsaT/piIOcFdX28oGRZ0g1NXc2QyGlebBdOxVbep6g8O5ryYzUpGvZAKt0S
+	 skzwP0RGrKi04W567efqnoBxoI+IAqs4mmetmoiBOZ9Aih6Q95xyIt8484QV/vKzT9
+	 pguGFPSm6uclyh7J4htCnEzk7smv6/iHtB2fnbXZFDgFuL2Olpriy4cfuhC6VQoR/6
+	 7WiIT+2xfgSkCzaEK5MvFZrjommJ7Y84ZA3Qhu5sYY2W3CqqfODH7AoRKEPWPtmKNN
+	 SAkGLY8w0XPKQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 6/7] mptcp: add check_id for lookup_anno_list_by_saddr
-Date: Thu, 22 Feb 2024 16:03:57 +0800
-Message-Id: <608dcc5649b212dc1a37c72fa7b465d3e8619316.1708588977.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 7/7] selftests: mptcp: flush userspace addrs list
+Date: Thu, 22 Feb 2024 16:03:58 +0800
+Message-Id: <2a89f983d02141661c2f7cf0bfb4109ee74db60e.1708588977.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1708588977.git.tanggeliang@kylinos.cn>
 References: <cover.1708588977.git.tanggeliang@kylinos.cn>
@@ -45,115 +45,87 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch adds a new helper mptcp_addresses_equal_check_id() to test the
-address ids, as well as the address. This can be used to test if the two
-given addresses are identically equal, they have both the same address and
-the same address id.
-
-Add a new parameter check_id for mptcp_lookup_anno_list_by_saddr(), pass
-it to mptcp_addresses_equal_check_id(). Then in mptcp_pm_del_add_timer(),
-the input parameter check_id can be passed as the new parameter into
-mptcp_lookup_anno_list_by_saddr(). After this, this condition:
-
-        (!check_id || entry->addr.id == addr->id)
-
-can be dropped, only test if 'entry' is NULL is enough.
+This patch adds a new helper userspace_pm_flush() to flush all addresses
+for the userspace PM. Invoke it in userspace pm dump address and subflow
+tests. And use dump commands to check if the userspace pm local address
+list is empty after addresses flushing.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm.c         |  2 +-
- net/mptcp/pm_netlink.c | 13 +++++++------
- net/mptcp/protocol.h   | 10 +++++++++-
- 3 files changed, 17 insertions(+), 8 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 41 +++++++++++++++----
+ 1 file changed, 32 insertions(+), 9 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 55406720c607..2f5ccafe7e34 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -257,7 +257,7 @@ void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 292fccb1f7f4..be1d2005c4fe 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3356,6 +3356,19 @@ userspace_pm_get_addr()
+ 	ip netns exec $1 ./pm_nl_ctl get $2 token $tk
+ }
  
- 	spin_lock_bh(&pm->lock);
- 
--	if (mptcp_lookup_anno_list_by_saddr(msk, addr) && READ_ONCE(pm->work_pending))
-+	if (mptcp_lookup_anno_list_by_saddr(msk, addr, false) && READ_ONCE(pm->work_pending))
- 		mptcp_pm_schedule_work(msk, MPTCP_PM_SUBFLOW_ESTABLISHED);
- 
- 	spin_unlock_bh(&pm->lock);
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 5c17d39146ea..7d755c0a32bb 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -237,14 +237,15 @@ bool mptcp_pm_nl_check_work_pending(struct mptcp_sock *msk)
- 
- struct mptcp_pm_add_entry *
- mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
--				const struct mptcp_addr_info *addr)
-+				const struct mptcp_addr_info *addr,
-+				bool check_id)
- {
- 	struct mptcp_pm_add_entry *entry;
- 
- 	lockdep_assert_held(&msk->pm.lock);
- 
- 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
--		if (mptcp_addresses_equal(&entry->addr, addr, true))
-+		if (mptcp_addresses_equal_check_id(&entry->addr, addr, true, check_id))
- 			return entry;
- 	}
- 
-@@ -324,12 +325,12 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- 	struct sock *sk = (struct sock *)msk;
- 
- 	spin_lock_bh(&msk->pm.lock);
--	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
--	if (entry && (!check_id || entry->addr.id == addr->id))
-+	entry = mptcp_lookup_anno_list_by_saddr(msk, addr, check_id);
-+	if (entry)
- 		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
- 	spin_unlock_bh(&msk->pm.lock);
- 
--	if (entry && (!check_id || entry->addr.id == addr->id))
-+	if (entry)
- 		sk_stop_timer_sync(sk, &entry->add_timer);
- 
- 	return entry;
-@@ -344,7 +345,7 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
- 
- 	lockdep_assert_held(&msk->pm.lock);
- 
--	add_entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
-+	add_entry = mptcp_lookup_anno_list_by_saddr(msk, addr, false);
- 
- 	if (add_entry) {
- 		if (mptcp_pm_is_kernel(msk))
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7905783c95e4..130d4c55e10a 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -673,6 +673,13 @@ bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
- 			   const struct mptcp_addr_info *b, bool use_port);
- void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr);
- 
-+static inline bool mptcp_addresses_equal_check_id(const struct mptcp_addr_info *a,
-+						  const struct mptcp_addr_info *b,
-+						  bool use_port, bool check_id)
++# $1: ns
++userspace_pm_flush()
 +{
-+	return mptcp_addresses_equal(a, b, use_port) ? a->id == b->id : false;
++	local ns="${1}"
++	local id
++	local addr
++
++	while read -r _ id _ _ addr; do
++		userspace_pm_rm_addr "${ns}" "${id}"
++		userspace_pm_rm_sf "${ns}" "${addr}" $SUB_ESTABLISHED
++	done <<< $(userspace_pm_dump "${ns}")
 +}
 +
- /* called with sk socket lock held */
- int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
- 			    const struct mptcp_addr_info *remote);
-@@ -966,7 +973,8 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- 		       const struct mptcp_addr_info *addr, bool check_id);
- struct mptcp_pm_add_entry *
- mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
--				const struct mptcp_addr_info *addr);
-+				const struct mptcp_addr_info *addr,
-+				bool check_id);
- int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
- 					 unsigned int id,
- 					 u8 *flags, int *ifindex);
+ userspace_pm_chk_dump_addr()
+ {
+ 	local ns="${1}"
+@@ -3500,27 +3513,37 @@ userspace_tests()
+ 	if reset_with_events "userspace pm create destroy subflow" &&
+ 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+ 		set_userspace_pm $ns2
+-		pm_nl_set_limits $ns1 0 1
++		pm_nl_set_limits $ns1 0 2
+ 		speed=5 \
+ 			run_tests $ns1 $ns2 10.0.1.1 &
+ 		local tests_pid=$!
+ 		wait_mpj $ns2
++		userspace_pm_add_sf $ns2 10.0.2.2 10
+ 		userspace_pm_add_sf $ns2 10.0.3.2 20
+-		chk_join_nr 1 1 1
+-		chk_mptcp_info subflows 1 subflows 1
+-		chk_subflows_total 2 2
++		chk_join_nr 2 2 2
++		chk_mptcp_info subflows 2 subflows 2
++		chk_subflows_total 3 3
+ 		userspace_pm_chk_dump_addr "${ns2}" \
+-			"id 20 flags subflow 10.0.3.2" \
++			$'id 10 flags subflow 10.0.2.2\nid 20 flags subflow 10.0.3.2' \
+ 			"subflow"
++		userspace_pm_chk_get_addr "${ns2}" "10" "id 10 flags subflow 10.0.2.2"
+ 		userspace_pm_chk_get_addr "${ns2}" "20" "id 20 flags subflow 10.0.3.2"
+ 		userspace_pm_rm_addr $ns2 20
+ 		userspace_pm_rm_sf $ns2 10.0.3.2 $SUB_ESTABLISHED
+ 		userspace_pm_chk_dump_addr "${ns2}" \
+-			"" \
++			"id 10 flags subflow 10.0.2.2" \
+ 			"after rm_addr 20"
+-		chk_rm_nr 1 1
+-		chk_mptcp_info subflows 0 subflows 0
+-		chk_subflows_total 1 1
++		if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
++			userspace_pm_flush $ns2
++			userspace_pm_chk_dump_addr "${ns2}" "" "after flush"
++			chk_rm_nr 2 2
++			chk_mptcp_info subflows 0 subflows 0
++			chk_subflows_total 1 1
++		else
++			chk_rm_nr 1 1
++			chk_mptcp_info subflows 1 subflows 1
++			chk_subflows_total 2 2
++		fi
+ 		kill_events_pids
+ 		mptcp_lib_kill_wait $tests_pid
+ 	fi
 -- 
 2.40.1
 
