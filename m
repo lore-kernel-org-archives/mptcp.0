@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4ED17BD3
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 08:04:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA88317BD9
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 08:04:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708589047; cv=none; b=UKqACwIrPug4xqiIVOuMfRpsxyWMGvLVft2CxfCyvyhqs6fG3tcmTcKwMzxiDkcaaY6YQW2EvnnoA+B+C1Xp32JA/nRQpXAW0Quu2fxMaarFCwPubpcg4mx0bJYWPKPREGetHkwA73AhOv2HYRHBmX3vc5AF1ZsQZcmKAKVuNn0=
+	t=1708589049; cv=none; b=dhYC/EwOzmm5E03QxDpqqmXAUpyH4kndiG3lOu2W4kGn23V1rZcVYwgp33Togc4NmYzbkloS9LQK4tBO4OAD28Vhh7uto2UQjPbB1kYufotf375YDPD5WeYNONUXrA6fJM3SRhBV1zHy52ere+ndTAtm1SliiBguFPM/UcjSk+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708589047; c=relaxed/simple;
-	bh=fAy7vYN6t5YdsccNbCCfIufVORVxTGBp+1/VDFrXN3A=;
+	s=arc-20240116; t=1708589049; c=relaxed/simple;
+	bh=QBkh2Zicsocn0K0m92k5uZN4Jw86khcAHLTfalFjZqU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cVhTR2SQV9CBtuTa/qmz1jgNznI33NiI6Punw+1fiqoy7FoEwEbXKNVpf+uHtnTS+KuVQiWmtd8h9wg9JA449/GYAYD2L7SKD+GKPLIB5dD69QtNVjQXsAd7EJy1XTTGH42tU3Odu5MoSSrye+ef9KVkqtRTDgYirRgXTiPFKCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcNtZJ/n; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EZaws4aaBtBusx4Nk9D+uZx6lPo97Ds/3bWgdbseXMKpI/nulT6asyZye/I51fxfa3Ood2UA1+RjPHDGy45FDY6oWuKMNS/wBK+oQV0lgnTa0QbALmzcnHlUDjuCvf3xjRESIA248xmqHx7eWXakfzjCVSXf9P3t9roWDqNLFyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ViVj4vqs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcNtZJ/n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 689A2C43390;
-	Thu, 22 Feb 2024 08:04:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ViVj4vqs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B50CFC433F1;
+	Thu, 22 Feb 2024 08:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708589047;
-	bh=fAy7vYN6t5YdsccNbCCfIufVORVxTGBp+1/VDFrXN3A=;
+	s=k20201202; t=1708589048;
+	bh=QBkh2Zicsocn0K0m92k5uZN4Jw86khcAHLTfalFjZqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fcNtZJ/nb19qL7x6haoNmcnEwqs8wEqd13S3zXMQW8HiPEPluNelDSUAcBYFtf3OX
-	 WuD1NLEP21GlxkEJ0nVQGM6CF5B0BHfqEjwVNb61J6U0WupMUrhBFzeKyDC0+xKV4B
-	 k/PqLV8tWQab9li28XHHKVMExSHmT4Z2annzNI2h/5VMHVPiz4DwDqWkE/FgCh2ukw
-	 phtn6TKVJHRCTjx66MdRSOBA4dmnGVs4veOqTkMjzkQ4t3yna6jSFBT68wJJOP0pb8
-	 owSkYUnHb+cvvUQgY3zYukaOUnQQkSC3jRw/V6EBsM3JhqSaxA5LKWZJw2yVVHJJ30
-	 WgPAUziAM04zg==
+	b=ViVj4vqsQ1S3SLqF86XhP6IbNjGlrdTLFuxJaxTlbPOCsIP2L6ny3f5JwhEjoodf0
+	 FRctSIGLSkDuQ+pmi4j2oTOHlGLq3ttb4DiSlaCwCa5qL9Ih4y0YhfK4jcbzWCbA5e
+	 b4h5TG39r7lutE9QggGLa5DiQiT3LwSoIkgaESXgwGpQUZkBjU1+sauU5fDOWOss+m
+	 9aXCqGTUTAaOptcurEdrejHbQIaztQmT7nehoVPON/iusqzeqg1wWwSOqnKQhFLUpC
+	 7pcin0B25ygidofuDOh4K723KLpUK3+PpuOqP6hvr/PTbjXw2b3lnODL5n0PlnEVZb
+	 lIzXH9hoVn13g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 3/7] mptcp: update set_flags interfaces
-Date: Thu, 22 Feb 2024 16:03:54 +0800
-Message-Id: <79caf5e28b53cf570ceb4cfec579d470a6eb030b.1708588977.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 4/7] mptcp: set error messages for set_flags
+Date: Thu, 22 Feb 2024 16:03:55 +0800
+Message-Id: <8d81f9269356ffaf710daef741ae9c155c63efdc.1708588977.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1708588977.git.tanggeliang@kylinos.cn>
 References: <cover.1708588977.git.tanggeliang@kylinos.cn>
@@ -45,218 +45,78 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch updates set_flags interfaces, make it more similar to the
-interfaces of dump_addr and get_addr:
-
- mptcp_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+In addition to returning the error value, this patch also sets an error
+messages with GENL_SET_ERR_MSG or NL_SET_ERR_MSG_ATTR both for pm_netlink.c
+and pm_userspace.c. It will help the userspace to identify the issue.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm.c           | 10 +++----
- net/mptcp/pm_netlink.c   | 58 +++++++++++++++++-----------------------
- net/mptcp/pm_userspace.c | 32 +++++++++++++++++-----
- net/mptcp/protocol.h     | 10 +++----
- 4 files changed, 58 insertions(+), 52 deletions(-)
+ net/mptcp/pm_netlink.c   | 6 +++++-
+ net/mptcp/pm_userspace.c | 9 +++++++--
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 28e5d514bf20..55406720c607 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -456,13 +456,11 @@ int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb)
- 	return mptcp_pm_nl_dump_addr(msg, cb);
- }
- 
--int mptcp_pm_set_flags(struct net *net, struct nlattr *token,
--		       struct mptcp_pm_addr_entry *loc,
--		       struct mptcp_pm_addr_entry *rem, u8 bkup)
-+int mptcp_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- {
--	if (token)
--		return mptcp_userspace_pm_set_flags(net, token, loc, rem, bkup);
--	return mptcp_pm_nl_set_flags(net, loc, bkup);
-+	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
-+		return mptcp_userspace_pm_set_flags(skb, info);
-+	return mptcp_pm_nl_set_flags(skb, info);
- }
- 
- void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index a900df9f173d..c799fe84dfd3 100644
+index c799fe84dfd3..354083b8386f 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -1887,66 +1887,58 @@ static int mptcp_nl_set_flags(struct net *net,
- 	return ret;
- }
+@@ -1908,8 +1908,10 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
  
--int mptcp_pm_nl_set_flags(struct net *net, struct mptcp_pm_addr_entry *addr, u8 bkup)
-+int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- {
--	struct pm_nl_pernet *pernet = pm_nl_get_pernet(net);
-+	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
-+	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
- 	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
- 			   MPTCP_PM_ADDR_FLAG_FULLMESH;
-+	struct net *net = sock_net(skb->sk);
- 	struct mptcp_pm_addr_entry *entry;
-+	struct pm_nl_pernet *pernet;
- 	u8 lookup_by_id = 0;
-+	u8 bkup = 0;
-+	int ret;
-+
-+	pernet = pm_nl_get_pernet(net);
-+
-+	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
-+	if (ret < 0)
-+		return ret;
- 
--	if (addr->addr.family == AF_UNSPEC) {
-+	if (addr.addr.family == AF_UNSPEC) {
+ 	if (addr.addr.family == AF_UNSPEC) {
  		lookup_by_id = 1;
--		if (!addr->addr.id)
-+		if (!addr.addr.id)
+-		if (!addr.addr.id)
++		if (!addr.addr.id) {
++			GENL_SET_ERR_MSG(info, "missing required inputs");
  			return -EOPNOTSUPP;
++		}
  	}
  
-+	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-+		bkup = 1;
-+
- 	spin_lock_bh(&pernet->lock);
--	entry = __lookup_addr(pernet, &addr->addr, lookup_by_id);
-+	entry = __lookup_addr(pernet, &addr.addr, lookup_by_id);
+ 	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
+@@ -1919,11 +1921,13 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
+ 	entry = __lookup_addr(pernet, &addr.addr, lookup_by_id);
  	if (!entry) {
  		spin_unlock_bh(&pernet->lock);
++		GENL_SET_ERR_MSG(info, "address not found");
  		return -EINVAL;
  	}
--	if ((addr->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
-+	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
+ 	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
  	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
  		spin_unlock_bh(&pernet->lock);
++		GENL_SET_ERR_MSG(info, "invalid addr flags");
  		return -EINVAL;
  	}
  
--	changed = (addr->flags ^ entry->flags) & mask;
--	entry->flags = (entry->flags & ~mask) | (addr->flags & mask);
--	*addr = *entry;
-+	changed = (addr.flags ^ entry->flags) & mask;
-+	entry->flags = (entry->flags & ~mask) | (addr.flags & mask);
-+	addr = *entry;
- 	spin_unlock_bh(&pernet->lock);
- 
--	mptcp_nl_set_flags(net, &addr->addr, bkup, changed);
-+	mptcp_nl_set_flags(net, &addr.addr, bkup, changed);
- 	return 0;
- }
- 
- int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
- {
--	struct mptcp_pm_addr_entry remote = { .addr = { .family = AF_UNSPEC }, };
--	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
--	struct nlattr *attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
--	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
--	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
--	struct net *net = sock_net(skb->sk);
--	u8 bkup = 0;
--	int ret;
--
--	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
--	if (ret < 0)
--		return ret;
--
--	if (attr_rem) {
--		ret = mptcp_pm_parse_entry(attr_rem, info, false, &remote);
--		if (ret < 0)
--			return ret;
--	}
--
--	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
--		bkup = 1;
--
--	return mptcp_pm_set_flags(net, token, &addr, &remote, bkup);
-+	return mptcp_pm_set_flags(skb, info);
- }
- 
- static void mptcp_nl_mcast_send(struct net *net, struct sk_buff *nlskb, gfp_t gfp)
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index b9809d988693..7ef3b69852f0 100644
+index 7ef3b69852f0..9f5d422d5ef6 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -546,14 +546,19 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 	return err;
- }
- 
--int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
--				 struct mptcp_pm_addr_entry *loc,
--				 struct mptcp_pm_addr_entry *rem, u8 bkup)
-+int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- {
-+	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
-+	struct mptcp_pm_addr_entry rem = { .addr = { .family = AF_UNSPEC }, };
-+	struct nlattr *attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
-+	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
-+	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-+	struct net *net = sock_net(skb->sk);
- 	struct mptcp_sock *msk;
- 	int ret = -EINVAL;
- 	struct sock *sk;
- 	u32 token_val;
-+	u8 bkup = 0;
- 
+@@ -563,13 +563,17 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
  	token_val = nla_get_u32(token);
  
-@@ -566,12 +571,27 @@ int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
- 	if (!mptcp_pm_is_userspace(msk))
- 		goto set_flags_err;
- 
--	if (loc->addr.family == AF_UNSPEC ||
--	    rem->addr.family == AF_UNSPEC)
-+	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
-+	if (ret < 0)
-+		goto set_flags_err;
-+
-+	if (attr_rem) {
-+		ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
-+		if (ret < 0)
-+			goto set_flags_err;
+ 	msk = mptcp_token_get_sock(net, token_val);
+-	if (!msk)
++	if (!msk) {
++		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+ 		return ret;
 +	}
-+
-+	if (loc.addr.family == AF_UNSPEC ||
-+	    rem.addr.family == AF_UNSPEC) {
-+		ret = -EINVAL;
+ 
+ 	sk = (struct sock *)msk;
+ 
+-	if (!mptcp_pm_is_userspace(msk))
++	if (!mptcp_pm_is_userspace(msk)) {
++		GENL_SET_ERR_MSG(info, "userspace PM not selected");
  		goto set_flags_err;
 +	}
-+
-+	if (loc.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-+		bkup = 1;
  
- 	lock_sock(sk);
--	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc->addr, &rem->addr, bkup);
-+	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem.addr, bkup);
- 	release_sock(sk);
+ 	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
+ 	if (ret < 0)
+@@ -583,6 +587,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
  
- set_flags_err:
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 746d0d1f94ec..7905783c95e4 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -975,13 +975,9 @@ int mptcp_pm_nl_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int
- int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
- 						   unsigned int id,
- 						   u8 *flags, int *ifindex);
--int mptcp_pm_set_flags(struct net *net, struct nlattr *token,
--		       struct mptcp_pm_addr_entry *loc,
--		       struct mptcp_pm_addr_entry *rem, u8 bkup);
--int mptcp_pm_nl_set_flags(struct net *net, struct mptcp_pm_addr_entry *addr, u8 bkup);
--int mptcp_userspace_pm_set_flags(struct net *net, struct nlattr *token,
--				 struct mptcp_pm_addr_entry *loc,
--				 struct mptcp_pm_addr_entry *rem, u8 bkup);
-+int mptcp_pm_set_flags(struct sk_buff *skb, struct genl_info *info);
-+int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info);
-+int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info);
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
- 			   bool echo);
+ 	if (loc.addr.family == AF_UNSPEC ||
+ 	    rem.addr.family == AF_UNSPEC) {
++		GENL_SET_ERR_MSG(info, "invalid address families");
+ 		ret = -EINVAL;
+ 		goto set_flags_err;
+ 	}
 -- 
 2.40.1
 
