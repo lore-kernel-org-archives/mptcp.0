@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C27622099
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 10:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FE53FB14
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 10:54:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708598961; cv=none; b=jTubPrb0na45crNYBfkIxmRhz15EF12fBH2Zn2LahwWOj3xrOCWI/QKxxGIQUX1ZM1asHiL6mWOLOShK7gVrvIBsOL/+yS9qqUqQqbPcRCEtLbL5wm7tkUiW0/GaZ8fqv0kWK2kQ3v43l13PC/miYh5N79obHIXOf7jwOIn7yg8=
+	t=1708599288; cv=none; b=gDv/xOX9JMwmK8JPSywWtshhSIOeUx1YjCK8S8yxMESO07AyQu5iTym7c6rXzCZ0I+us9Koc10zbXybAKUYel8AjIq8AyjaCy7ST4WgxPAYPJ7f4fTqIY9vT55fjMXGHscv41wt9bxW2n/mGX0TC08rINmjGjUjUyY6PbjHskpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708598961; c=relaxed/simple;
-	bh=ndnZY1yiC9PI0q9p9UvGvz2uQmxwEOgYQrJ64BUZ+vM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MuTmRC/Zb0vPdleNhpzx4Foz/fIFfbGoZmFNssSCy4PXJSVwrqMMVMFYAHK1QuNW0UMdCrQHwxGgDRZyIizk1qhl9qp+HgmPbntM1oAao0IimFkWqvxmY/xfeonQGUVIeKOF2xJ1L8Qcp2DvwC++2ADOwgZjMWxl8Phr5hbC8Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxE/GcwU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708599288; c=relaxed/simple;
+	bh=oSIIwVeTe2ctkMBZ6FvjYNltU++SnXKhp727RbM8ahY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Zyw5LoslOmm5pDYfXx+sLxqpzlTtU7aVSd+eSGb9LTIQ0q7OsSrqqJUpF7Xn+npCmpUnDkGru/vFqjYYqxDAXER8tbsGpwLpOzItTiHhere36TQqFgqZeugK1xqRU1Kd1i7aN71n7n+iSbGOl2sCova/aXbkV2Qw2WR1EeAtses=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5DpbmjL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxE/GcwU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70A7CC433F1;
-	Thu, 22 Feb 2024 10:49:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5DpbmjL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30ED9C433C7;
+	Thu, 22 Feb 2024 10:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708598961;
-	bh=ndnZY1yiC9PI0q9p9UvGvz2uQmxwEOgYQrJ64BUZ+vM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rxE/GcwUhrHxTajDx+Xb7CpZVbBUEQgTvLT9BnCblK6572Hda7TDHt/oRw0bG9Wcw
-	 VF2p71jOa+bk6bCK6FrL9nRoVO1j4T8erfj9lo5q28h1gqmkaKhiLw65xaHa5otig2
-	 ihRK783ysBYg1UJpNLK1eftctxAKDLAgbrIhnzyNhvCNvooU0sgiU50nqjncAc2hJ/
-	 CgNUEIn2yXk2djRXHECfIO8GPOn+VT0V1XxjCJmPgY5x3yQlkc6xUpO3YHuwcbvaHt
-	 eJ/OPZ2DpKeQLPgMrB+8tecn6++NdXCi2EvRmwHLLRGIX4KYyEQNRUTn8UacwT2Qil
-	 Xf8+OV+b1/asw==
-Message-ID: <2f6096ac-568f-46a6-9938-3d57ad02536b@kernel.org>
-Date: Thu, 22 Feb 2024 11:49:18 +0100
+	s=k20201202; t=1708599287;
+	bh=oSIIwVeTe2ctkMBZ6FvjYNltU++SnXKhp727RbM8ahY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=l5DpbmjLRIjq1nedwusBYHDpP/HgaFjEgIootoCAIKbg0YkMwq2Yt3Syb2fV7sQEX
+	 Y9xOp2sFIItMbHI8+aRJysmnmDYX+98BFOXE1XLH02LzMo6lVCs4pSoPfBy0jrcboC
+	 G2lKOsWB9QT+SrAejCYTTPHTLhN5flGQ85VbWyE9xqOpmD91lZZgFcPzYM1V9DZ7gW
+	 SqNvhPwsoe+dbl5DoZkRgm4nSK1G9ZbMjpvFOZwSdC1kPWL4p/rnEMbyp5lBrD6ETX
+	 A8o/El5kFndqi6G5EukD16FefcpwaNmgAnbbKTEpK9CbGSPuFqBy2bDuIWa7chZ2Bs
+	 KUdSgMTrUQ10A==
+Message-ID: <e98b8b07-558c-498a-97fb-dd5cab11e439@kernel.org>
+Date: Thu, 22 Feb 2024 11:54:45 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: don't exit when a symbol not
- found
+Subject: Re: [PATCH v3 mptcp-net 0/2] mptcp: fix another deadlock issue
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <37d9862958848f8f3737eafd1b1ea0bdb63acd91.1708588566.git.tanggeliang@kylinos.cn>
- <338c256c-1492-4ea8-8d3d-eca7e075b0ef@kernel.org> <ZdcibFuKvYXnXF5J@t480>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1708539640.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,104 +84,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ZdcibFuKvYXnXF5J@t480>
+In-Reply-To: <cover.1708539640.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo,
 
-On 22/02/2024 11:31 am, Geliang Tang wrote:
-> On Thu, Feb 22, 2024 at 09:58:39AM +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 22/02/2024 8:56 am, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> mptcp_lib_kallsyms_has() will always exit when a symbol has not found, it
->>> breaks the test itself. Unexpected errors occur:
->>>
->>>  007 userspace pm add & remove address
->>>        syn                                 [ OK ]
->>>        synack                              [ OK ]
->>>        ack                                 [ OK ]
->>>        add                                 [ OK ]
->>>        echo                                [ OK ]
->>>        mptcp_info subflows=2:2             [ OK ]
->>>        mptcp_info subflows_total=3:3       [ OK ]
->>>        mptcp_info add_addr_signal=2:2      [ OK ]
->>>        mptcp_info last_data_sent=191:18    [ OK ]
->>>        mptcp_info last_data_recv=40:68     [ OK ]
->>>        mptcp_info last_ack_recv=93:74      [ OK ]
->>>        dump addrs signal                   ERROR: missing feature: \
->>> 			mptcp_userspace_pm_dump_addr$ symbol not found
->>>  Cannot open network namespace "ns1-65d6fb5a-5FviVK": \
->>> 			No such file or directory
->>>  Cannot open network namespace "ns2-65d6fb5a-5FviVK": \
->>> 			No such file or directory
->>>  cmp: /tmp/tmp.a7osJs7Nj0: No such file or directory
->>>  cmp: /tmp/tmp.f02z6brCQu: No such file or directory
->>>  cat: /tmp/tmp.27TzxD2efV: No such file or directory
->>> not ok 1 test: selftest_mptcp_join # FAIL
->>>
->>> To fix this, this patch adds a new argument 'continue' for the helper
->>> mptcp_lib_fail_if_expected_feature() to control whether exit or not.
->>>
->>> Always set this argument to 1 in mptcp_lib_kallsyms_has().
->>>
->>> Fixes: 83013bdf90a ("selftests: mptcp: connect: skip if MPTCP is not supported")
->>
->> I'm not sure to understand why you sent this :)
-> 
-> Say in the test "signal addresses race test":
-> 
->                 if ! mptcp_lib_kallsyms_has "mptcp_pm_subflow_check_next$"; then
->                         chk_join_nr 3 3 2
->                         chk_add_nr 4 4
->                 else
->                         chk_join_nr 3 3 3
->                         # the server will not signal the address terminating
->                         # the MPC subflow
->                         chk_add_nr 3 3
->                 fi
-> 
-> This code will never run to this block:
-> 
->                         chk_join_nr 3 3 2
->                         chk_add_nr 4 4
-> 
-> Since if no symbal of mptcp_pm_subflow_check_next, mptcp_lib_kallsyms_has exit.
+On 21/02/2024 7:22 pm, Paolo Abeni wrote:
+> Eric reported and diagnosed another possible deadlock problem with
+> the MPTCP diag code. The first patch address the issue, and the second
+> adds self-test coverage for the relevant codepath, to get lockdep help
+> to catch future similar issues.
 
-This block will never be executed in our CI, because our CI always run
-the selftests linked to the same version of the kernel. In this case,
-that would not be normal to execute this block in our CI, it has to
-complain because we expect to have this symbol in the latest version.
+Thank you for the patches!
 
-Other CIs, like LKFT, which are validating stable kernels (e.g. 5.15.x)
-using the selftests from the last stable kernel (e.g. 6.7.x) will not
-have SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var being set to 1 as
-we did in our CI. Then it is fine, tests and checks will be skipped if
-some features are missing:
+Now in our tree (fixes for -net), with 2 small modifications to satisfy
+CheckPatch [1]:
 
-https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2cJxC6Sua3VVzRZmpQYKK2jzzNN/logs?format=html
+New patches for t/upstream-net and t/upstream:
+- 5ca0931fda75: mptcp: fix possible deadlock in subflow diag
+- 560736ee5851: selftests: mptcp: explicitly trigger the listener diag
+code-path
+- Results: b35846da7660..8f414384d341 (export-net)
+- Results: df010bcea0cb..a542d2d60003 (export)
 
-> You can trigger this by renaming "mptcp_pm_subflow_check_next$" to
-> "no_mptcp_pm_subflow_check_next$", an non-exist function name, for test.
-
-I confirm that if you use 'mptcp-upstream-virtme-docker', this env var
-will be set to 1 by default:
-
-  SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES=1
-
-You can unset it on your side, but it only makes sense to do that if you
-work on stable kernels (and you use selftests from a more recent
-version, not the ones attached to the kernel you are validating).
-
-So yes, in this environment (where we force setting the env var to 1,
-not the "default" behaviour), picking a non-existing function name will
-cause the test to fail: but that's what we want → we want to be notified
-if we picked a non-existing function, like it happened recently:
-
-  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/7988706773
+[1] https://github.com/multipath-tcp/mptcp_net-next/actions/runs/8002395030
 
 Cheers,
 Matt
