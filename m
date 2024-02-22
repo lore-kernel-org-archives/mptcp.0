@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9361509B5
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 16:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23736130E32
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 16:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708619295; cv=none; b=ZWTTL4Cwf/MMIT8D9ArXX1U1qMX8K+V01X3AxuTlh16QLELz0TdXLsbE9qOQlI7afImYC4OTSj4Z0kQ4fD0xMirLijDbQV+P+EEKbHSB8Kk4SsxWqlal5gH3Utg1eX34f4dFj4Tg7595EPMzAd7cMP3x9EQiN7LjeWHeCJ0vHL4=
+	t=1708619296; cv=none; b=c+Q9YLsdUB5YHASwwzU0BelSnmRUAYTym7yvk7ULx8GO26x9haO3HOuEx6WiNdtdhqUMqpmjXvN1EJ7W9AZzjzVxBBdWyG220jmIJ0Hx73QZGClgLYrW2eXrR2k2UZpws9npxMIs+vI0yZMS2R+UP2li/Wa+VLBsyBijFMFfmiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708619295; c=relaxed/simple;
-	bh=o+jSbvlYzxeuCb/O3UexE+kxh+qFTT5+46ZgSo6Gq38=;
+	s=arc-20240116; t=1708619296; c=relaxed/simple;
+	bh=NdzuTZnT4mM3C0AQnuBnVv5/NzPYTKcBpWEYp6mEj9w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EHXwAw0XfMSzDGG85SwoAmJ2PU57ZlUxr8dqeoiUk+Qnu0joA2qDFsnDS209mZ9ceofr8gdezMAeZOMNOXT7V5L+zLwRvJu/W7D1cdQDlVBt5GZSCvhAiRDbs3/yvl3bW3/zMIgizBio4IxOtHeJch2jnUPyPXCstWpivIttZ58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W5Zdb8V/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=bk2wd/Dqmfq0xgbHxn4vtsaD0+Pvu3Q8tJMzXy6OPwOuXqVR1S2NAFwZHGVPyyYlWXL3/uC812Ec4HvVThmiKmLPibVF+K59j0ev53KCaG5JwIII5saA2kIAPK8fqvjERYuMDE5oWe6IkIEbG2rquhe5OSLtUx7g85VPZWgk4AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehQYmTYC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W5Zdb8V/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEC9C43390;
-	Thu, 22 Feb 2024 16:28:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehQYmTYC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA345C43394;
+	Thu, 22 Feb 2024 16:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708619294;
-	bh=o+jSbvlYzxeuCb/O3UexE+kxh+qFTT5+46ZgSo6Gq38=;
+	s=k20201202; t=1708619295;
+	bh=NdzuTZnT4mM3C0AQnuBnVv5/NzPYTKcBpWEYp6mEj9w=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=W5Zdb8V/uPWZKlpC0AIIN0f262lazuSYYxxRSj+jpabe6WN+4zNuBwIQodv24tCyH
-	 6whhI423HOjXbGDWtVdxxYnPczKeP+nPQR8Ct6O6nC81wpntRbtoD8uZHSR6+8ucaL
-	 mis8o+p4Ex1jYrTyfShIyPQZddZMt7nzIxwAE4uWteAMc17qs8lVrumwZjKcNY+BZ4
-	 Z/5XNTBHAfrlqTbGYqL9iYCr3VoZfnduJWHwIwCDvQ31niDsSJ4kK4E38tkuoPzlyq
-	 bjgfUjp4IU0ExOsbXaHONnGt0PG8W8cIajbAcQKMPceQdv5/zVywhzTCAyWxnp57bi
-	 cCQOGJ5ByJf0A==
+	b=ehQYmTYCVjLfWDXAdvP8gFs2KhNZOZa112bg+aZacAF1d4EWlrLkHY/jyrQSSJzuY
+	 8BvALWmXRzZRPXmcUdlOR9KW1Vzs70dl54g7eiaG6sCXJEwaORM3KbcUrsuoJX/VJ8
+	 fGP+5FILfIhi3Tx3yVSb1V1v1eud0k7chMsw3atrsQz4UMI9UBurrFH8FDLgDR4zdw
+	 xtVr0FjsAMQYfruu5gi/iufnFMV3oveWrVVu2wAGABH8DRMWZ5OxggPtA6/mxpdSHI
+	 f6PfeERzXVU0DhHKx09Kr6SGstzaMh/VkgTX+ISo5IIkfSlyt87gm0HJ3YTu5aJzmu
+	 bcEzCIlOkYoDA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 22 Feb 2024 17:27:59 +0100
-Subject: [PATCH mptcp-next 3/6] selftests: mptcp: sockopt: fix shellcheck
- warnings
+Date: Thu, 22 Feb 2024 17:28:00 +0100
+Subject: [PATCH mptcp-next 4/6] selftests: mptcp: pm netlink: fix
+ shellcheck warnings
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,26 +38,26 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240222-selftests-mptcp-shellcheck-v1-3-fed8ba9e6ca6@kernel.org>
+Message-Id: <20240222-selftests-mptcp-shellcheck-v1-4-fed8ba9e6ca6@kernel.org>
 References: <20240222-selftests-mptcp-shellcheck-v1-0-fed8ba9e6ca6@kernel.org>
 In-Reply-To: <20240222-selftests-mptcp-shellcheck-v1-0-fed8ba9e6ca6@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2699; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=o+jSbvlYzxeuCb/O3UexE+kxh+qFTT5+46ZgSo6Gq38=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl13YaTmis9DgClAH6p6PfbTtKRNMvtDxoRVVDo
- hMyK/wsoKKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZdd2GgAKCRD2t4JPQmmg
- c1iwD/4iG4Lszko78e2Eh1k61MF3QDlzTGxRZGox0vuk7NWx2wgRKsAc8qC9Bbe807JSUUdVvII
- p1VYoLbR4I5Fet3DSkjUyccqWNMEMHOBTRJkurMisv/1h8RBMac/81ZWkYvBn/jN58G81d+X7Vo
- mQrX83D3svP1LmX1t0f0/CZBxCyGMC5oQhj3O+aHhjTaTFyerulaG41CpVshuVcT9CeG/9sOsnS
- 4VRuRPgM+VWciR2ZrC2zDIibwTNNTtneRjeficoEL6W8tZ0zhD2I/JKNQ1Soe/8hHrEokMz6PFT
- RaDvv6rswy2BGq0nwP6lZOBRj/gSg7wfyD+lqMWiksSeBmtU1hlf6UShYIV05ma//79WHhpKDQj
- kJEOyzETSmpsFCMliVjy03qAle8bxs7IuZaSWFfCW8wKsK56DLZkGopTrl+SC+IgwQTRHUYOsnQ
- rtaT6fdSONIEkmqKDXGYQtaTI9WfXhAnQTU8jY6yuurK2mlD/j4VylS5YWSKCyU9ZyCuk+CopJ+
- cABP89I4EXb8bpGce9UBguKf9n8y9ady9uFekoKeedZ3OY/FIpE11omCHBqrCHxh5z+7xs7xsY8
- o55SR+AXlOi1v/4ysxIyVQKd1XE+VObKsZ9efAjpr1MrW+GhRqChA4PJQVwtdReHHX9J6aXMmzB
- 3LWM/W5pvPu8oWA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2670; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=NdzuTZnT4mM3C0AQnuBnVv5/NzPYTKcBpWEYp6mEj9w=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl13Ya3LT+xyBODp4oJYTT8+f7lIQAgNdsWalQR
+ g8QvWh40MOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZdd2GgAKCRD2t4JPQmmg
+ cwetD/wPYjL3HhU/xpwPxFSuqRygOCiqUlYlsQfDshIpkcqxw5Qi1+eeFeSQ8Hj9fb8cSxWHz4I
+ Au1KcUACtKxIDL5WpFAbSG2d882WIyLYqyePfVQ8b1HyPj3nnhaOEjgayRJZOHxe16Hr87u6YYn
+ RtGjlhEl8dCbLPmx2T5eT0ayClo6eJmDspZBbRW5ixuReRzvUlq00kP2oOpWJ134G3aYpfbgZa6
+ 6Pp6A7HSniEVNuWcnuMOqRHD7x5ONrShnnb2tFDyE82coLwcI+md1tF4VTS8JJ6/wELsM7/aPQ6
+ 3GIoeJobhfNgUD0wAO/Ip2j2lhnsQO0tuJf3PbwjKokfR9PGp/3Oes5jp5CE+GnCRYgETs2m9qh
+ 10T5Rpt6GoFH3AzGmJc2LzTtGo8RBvfuG2+4lTMtb7J1jOLIqGPWud7Vp8O1i7HV+7yQGQAaDEN
+ gg+kRM4gJ6X7olzZ1F8tYpO0id9iZMxhwwBofVbP/XHnNsUDDt02OTadoUy80RCaZ1ZIlfqtecV
+ 9pl+omgskDlc6GTrlGMrEnDEousUhxljPKAg80es9zla2JKynbD+bJQ46OmC3QnbPrsmtoq1pwM
+ UO2fb+Bxly51rts0lB5X9C4q2NJ+YTgejaCGZGu1Xw62+eWDB2uGKaFFQWh9CsnNe7iBbchEvnz
+ bRnnp+QaRlFf12g==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
@@ -76,22 +76,22 @@ Here, two categories of warnings are now ignored:
 For the modifications:
 
   - SC2034: ksft_skip appears unused.
+  - SC2154: optstring is referenced but not assigned.
   - SC2006: Use $(...) notation instead of legacy backticks `...`.
-  - SC2145: Argument mixes string and array. Use * or separate argument.
 
 Now this script is shellcheck (0.9.0) compliant. We can easily spot new
 issues.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 14 ++++++++++----
+ tools/testing/selftests/net/mptcp/pm_netlink.sh | 14 ++++++++++----
  1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 7dd0e5467d35..6ed4aa32222f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -1,6 +1,11 @@
+diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+index c7c46152f6fd..427fc5c70b3c 100755
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -1,16 +1,20 @@
  #!/bin/bash
  # SPDX-License-Identifier: GPL-2.0
  
@@ -102,48 +102,44 @@ index 7dd0e5467d35..6ed4aa32222f 100755
 +
  . "$(dirname "${0}")/mptcp_lib.sh"
  
- ret=0
-@@ -8,7 +13,6 @@ sin=""
- sout=""
- cin=""
- cout=""
 -ksft_skip=4
- timeout_poll=30
- timeout_test=$((timeout_poll * 2 + 1))
- iptables="iptables"
-@@ -41,7 +45,7 @@ init()
- 	mptcp_lib_ns_init ns1 ns2 ns_sbox
+ ret=0
  
- 	local i
--	for i in `seq 1 4`; do
-+	for i in $(seq 1 4); do
- 		ip link add ns1eth$i netns "$ns1" type veth peer name ns2eth$i netns "$ns2"
- 		ip -net "$ns1" addr add 10.0.$i.1/24 dev ns1eth$i
- 		ip -net "$ns1" addr add dead:beef:$i::1/64 dev ns1eth$i nodad
-@@ -68,6 +72,8 @@ init()
- 	add_mark_rules $ns2 2
+ usage() {
+ 	echo "Usage: $0 [ -h ]"
  }
+ 
+-
++optstring=h
+ while getopts "$optstring" option;do
+ 	case "$option" in
+ 	"h")
+@@ -27,6 +31,8 @@ done
+ ns1=""
+ err=$(mktemp)
  
 +# This function is used in the cleanup trap
 +#shellcheck disable=SC2317
  cleanup()
  {
- 	mptcp_lib_ns_exit "${ns1}" "${ns2}" "${ns_sbox}"
-@@ -257,12 +263,12 @@ do_tcpinq_test()
- 	local lret=$?
- 	if [ $lret -ne 0 ];then
- 		ret=$lret
--		echo "FAIL: mptcp_inq $@" 1>&2
-+		echo "FAIL: mptcp_inq $*" 1>&2
- 		mptcp_lib_result_fail "TCP_INQ: $*"
- 		return $lret
- 	fi
+ 	rm -f $err
+@@ -91,14 +97,14 @@ check "ip netns exec $ns1 ./pm_nl_ctl get 4" "" "duplicate addr"
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4 flags signal
+ check "ip netns exec $ns1 ./pm_nl_ctl get 4" "id 4 flags signal 10.0.1.4" "id addr increment"
  
--	echo "PASS: TCP_INQ cmsg/ioctl $@"
-+	echo "PASS: TCP_INQ cmsg/ioctl $*"
- 	mptcp_lib_result_pass "TCP_INQ: $*"
- 	return $lret
- }
+-for i in `seq 5 9`; do
++for i in $(seq 5 9); do
+ 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.$i flags signal >/dev/null 2>&1
+ done
+ check "ip netns exec $ns1 ./pm_nl_ctl get 9" "id 9 flags signal 10.0.1.9" "hard addr limit"
+ check "ip netns exec $ns1 ./pm_nl_ctl get 10" "" "above hard addr limit"
+ 
+ ip netns exec $ns1 ./pm_nl_ctl del 9
+-for i in `seq 10 255`; do
++for i in $(seq 10 255); do
+ 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.0.9 id $i
+ 	ip netns exec $ns1 ./pm_nl_ctl del $i
+ done
 
 -- 
 2.43.0
