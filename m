@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809EF3FB1C
-	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 11:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E473FE2A
+	for <mptcp@lists.linux.dev>; Thu, 22 Feb 2024 11:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708600054; cv=none; b=BbOmb0nQy2FYyYQajOe1ei5PMEzEaTtu0cRJfGctyrlsU3bdbCDWZx5YdOTz7tk1YSR9/afV5kDspFeQqxpiZvD9QPBvg990MqlreW/cu0QgnhTHL1Mt4FO+UrK7aA2bPjFACicP44dQuAHu9KPXROHgUYdTROuxrn6FrN98VgA=
+	t=1708600523; cv=none; b=gXOTCir/0K7YQzpJqG/1TmyiLYe8iGdthpVUctfk/m1Tql15uQOca1gJEbTe6sRPw1ql0ecw8fYAX4Jgy7Wx/eNkIPfgWJjUL8B5g2eyCPBxF9uEkw7a5VY+M3n3gfWGYi8YZ0EnyeyEvA+9DvJzOmb0/HFjgjXxA0oCaNyQVy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708600054; c=relaxed/simple;
-	bh=LVipJmEeIig2pdw2vToKY7YbnYxXwBb5+HCxNg2d4Zo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pV3XGoBwjtTX082R/+O1SH6CoCzZh3LrtC6E5XMKOjGumtkCGAlUwk1owwDLfXWUEIaY5dh8YSspnqBqHGf4WjXU2MNlfWA4+SiRBJFhrywSHI7MvhKlhRz8lMHx2ZIL4Lsb8l/HNM3MU8A6zGs+x8v1618czFkNWFLMJcxnwUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8c6cEPG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708600523; c=relaxed/simple;
+	bh=fhaLh27xVpSUQFm49QVV0QBCjaDHjnQukb0qBpXOnMk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cKZ76gwBGPU0O91BGmOjHoK+JuKh/wxVMUDvXjAjrow+33+K0AMOXottf794gj9nrJYu430snlh+6IkvTbZcSE9MP3qYa9VtLQ/N+CT6NnDSXTD18MlYiEeOZBvFyuhqXwlVAxSgUdU9TMyrDdqaAs3RjtYXn67TNll/cR6uFeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCdqmhTe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8c6cEPG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ACE9C433C7;
-	Thu, 22 Feb 2024 11:07:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCdqmhTe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED1CC433F1;
+	Thu, 22 Feb 2024 11:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708600054;
-	bh=LVipJmEeIig2pdw2vToKY7YbnYxXwBb5+HCxNg2d4Zo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q8c6cEPG1BQehq25uM8jak8ng5Z4ngCkKFXdFmi5VmLysKLcXmgHAygS1g/ZnEdAH
-	 tAvdGYtQvCHtydrN3Dr4VDlDfEjE6XHNMYFKg/nulGgKzYNvDw1psIsrAm0Y2tXxeh
-	 Mrug0COYRhtiWA53U4b0QJPAXeZokWKByXeZMXV+tCZuR9mb4vV9UEEBAGBFbdzTPH
-	 HGT1JCrp0N47f3OOuIr1tMAGmTT/1l1OH4kWn8X8NoMm/6pLefguR/yv6MQi+dcsaA
-	 QCnv+EtJ8tmcb/l0S0lZ6e4brzX+SfJYafevZRU+X7I/VXLcHuBz2CEYRHm+TXvaTp
-	 xzH2JTXMiFYiQ==
-Message-ID: <c415e047-b5ee-4aa1-919b-2a1e829d16e2@kernel.org>
-Date: Thu, 22 Feb 2024 12:07:31 +0100
+	s=k20201202; t=1708600522;
+	bh=fhaLh27xVpSUQFm49QVV0QBCjaDHjnQukb0qBpXOnMk=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=WCdqmhTe48dqOyOa8TYKm74tb0ZD+ulVZ0hFtJARg20AEw3rK3MKiDSM5B6AjRvzW
+	 3fHMk2QCcAY+gInPXvg544zY+LAplPSmSmt5lI/yVgBVW6pjr3uBW1+IkaZ1OiY/8e
+	 d41NhJtRzm9U/iL2DTKow3FbHni2Vvi727UEwWm2iewWeufmLOhHyJ+SPdoWDIKB9T
+	 h/qVHvxxFIOrNaADdKuZIIHmyEYirKCGY8gMCI572E9hN4wRjxVtwyJnr9/dVfYNbd
+	 in/VWmF5wIF1XnsFTXFaPnTDSrpjB6OZ+AcpiI88DjV6lWJMg3lP0WaXhUCKMmg0wV
+	 g/aWQOXsv1q7A==
+Message-ID: <360e0345-0a2e-4369-9c1d-421f5fd4412f@kernel.org>
+Date: Thu, 22 Feb 2024 12:15:20 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,11 +38,12 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH mptcp-next v4 4/4] selftests: mptcp: add mptcp_lib_events
  helper
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708572320.git.tanggeliang@kylinos.cn>
  <a306733bbc030878afda1ba501a94b40b92ec264.1708572320.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <c415e047-b5ee-4aa1-919b-2a1e829d16e2@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,56 +88,59 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a306733bbc030878afda1ba501a94b40b92ec264.1708572320.git.tanggeliang@kylinos.cn>
+In-Reply-To: <c415e047-b5ee-4aa1-919b-2a1e829d16e2@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
-
-On 22/02/2024 4:40 am, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 22/02/2024 12:07 pm, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> To avoid duplicated code in different MPTCP selftests, we can add and
-> use helpers defined in mptcp_lib.sh.
+> On 22/02/2024 4:40 am, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> To avoid duplicated code in different MPTCP selftests, we can add and
+>> use helpers defined in mptcp_lib.sh.
+>>
+>> This patch unifies "pm_nl_ctl events" related code in userspace_pm.sh
+>> and mptcp_join.sh into a helper mptcp_lib_events(). Define it in
+>> mptcp_lib.sh and use it in both scripts.
 > 
-> This patch unifies "pm_nl_ctl events" related code in userspace_pm.sh
-> and mptcp_join.sh into a helper mptcp_lib_events(). Define it in
-> mptcp_lib.sh and use it in both scripts.
-
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index f65a31594829..5b5ad9947c21 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -399,3 +399,17 @@ mptcp_lib_ns_exit() {
->  		rm -f /tmp/"$netns".{nstat,out}
->  	done
->  }
-> +
-> +mptcp_lib_events() {
-> +	local ns="${1}"
-> +	local evts="${2}"
-> +	declare -n pid="${3}"
-> +
-> +	:>"${evts}"
-> +
-> +	if [ ${pid} -ne 0 ]; then
-
-Yet another new shellcheck warning introduced here:
-
+> (...)
 > 
-> In mptcp_lib.sh line 410:
->         if [ ${pid} -ne 0 ]; then
->              ^----^ SC2086 (info): Double quote to prevent globbing and word splitting.
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+>> index f65a31594829..5b5ad9947c21 100644
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+>> @@ -399,3 +399,17 @@ mptcp_lib_ns_exit() {
+>>  		rm -f /tmp/"$netns".{nstat,out}
+>>  	done
+>>  }
+>> +
+>> +mptcp_lib_events() {
+>> +	local ns="${1}"
+>> +	local evts="${2}"
+>> +	declare -n pid="${3}"
+>> +
+>> +	:>"${evts}"
+>> +
+>> +	if [ ${pid} -ne 0 ]; then
 > 
-> Did you mean: 
->         if [ "${pid}" -ne 0 ]; then
+> Yet another new shellcheck warning introduced here:
+> 
+>>
+>> In mptcp_lib.sh line 410:
+>>         if [ ${pid} -ne 0 ]; then
+>>              ^----^ SC2086 (info): Double quote to prevent globbing and word splitting.
+>>
+>> Did you mean: 
+>>         if [ "${pid}" -ne 0 ]; then
+> 
+> I guess the CI should check that and report it, so I would not have to
+> fix that just before applying patches.
 
-I guess the CI should check that and report it, so I would not have to
-fix that just before applying patches.
-
-I just added the suggested double-quotes when applying the patch.
+In fact, we don't need this check because mptcp_lib_kill_wait() does
+nothing if the pid is set to 0. So I simplified the fix by removing the
+condition.
 
 Cheers,
 Matt
