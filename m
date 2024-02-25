@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D103FDDC4
-	for <mptcp@lists.linux.dev>; Sun, 25 Feb 2024 09:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3B9DF4E
+	for <mptcp@lists.linux.dev>; Sun, 25 Feb 2024 09:13:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708852417; cv=none; b=qDQAszxio+ib4KNWL5rdt0nyR1TS7J1XJ8glA91WiKvXQK9twcwmnoXXFazMgCjq2VDPNxCKSkh7iMmktP+4JLhivN7rNngYPdL4p+9vzlhHEvEVKWQIC4qOgl+7GYBkMu4n6iYCe4uWHIDXDP0L+67uIfXehokq4bUrOq971P4=
+	t=1708852418; cv=none; b=al+2TnOFISEUszYNHPVnrcP1ajIqGajWMMzwmML+oxC99DD8JxUC61tab0yc+HkCOIFDumKlgKHNPx74EFqgwZoWfs4pupfohERJOWN+G0/LuJnA5NcIGWzRZv/EbiaUtdXgQ4DXF733y5i2uv6U4yLOQQ+fRlrKhCxIDgOd9IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708852417; c=relaxed/simple;
-	bh=inn4fLKEIvDgXwlKaApagt8E9XmZ4qP+vZY2ixXr7cM=;
+	s=arc-20240116; t=1708852418; c=relaxed/simple;
+	bh=lO/T4f6lJkCCaIWbjxER5owNsKqwyYngpAnShEBdA/c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LQ5SfpnTfBl2OnPVTRynBbzj1cydgyPawAleKL5AxbipgrXEEvLXIW3hJCPSE/RM+HGMCqsK9kT1fx1HzNjOX2WioqbByTHKbWRooTDC20aBw+lmESsf0dUTqoMYXaqYfxgbexgMaGFSYQmjQH9D0qDp9o+LQyN472wyOdCpB0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iw6zoIPu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hPeqMXJpjmo9cezVtnzA2BKWzyklDIOpRnVR23T5pFPcAh0Canxv+YOVkLCqLKafJuZAaMVYjEV2Ss6WiZlmEb+jjj/x9zAEE0P99QinlwmpWk4HltOepNR8SH8UW1aKEjid5snyNv71wOwVn22YqjpwZvGLJvkByP1ek+G21+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gj6Gow8i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iw6zoIPu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D898C433F1;
-	Sun, 25 Feb 2024 09:13:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gj6Gow8i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B23C43390;
+	Sun, 25 Feb 2024 09:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708852417;
-	bh=inn4fLKEIvDgXwlKaApagt8E9XmZ4qP+vZY2ixXr7cM=;
+	s=k20201202; t=1708852418;
+	bh=lO/T4f6lJkCCaIWbjxER5owNsKqwyYngpAnShEBdA/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Iw6zoIPujlcOFVeKEStNK1ysC+1yez1eLL2x2PL5dmpTfG2+SY36o9yoJGr+yS5L/
-	 +4UCVwNpQCR9MGi8Otd2V8gr9tfy9kD2Rhjc6gKDob/w21mNm+4uXCsy5r1ulWPxZ3
-	 fAGyonjxNWfHQRSsBW09tA8r04UP3YdmkT8L3oVc85UHE5RngaGiRNl8g4afqG76VX
-	 azfsB5Dk+oLr8aTWoaW5G3u8zVBZm5PyhU54y9vZHnD0d6yJ9mAzg5EIOljc5pnA8f
-	 DnjFREY9lVgBOSz75ZwGygixrk3/IKSsmFrSMwU5YydmIyyUfMv9q511twy+J80Pid
-	 DgonOuXeq5FsQ==
+	b=gj6Gow8i1+2Pwyth6cf002V5n8D2eJ8bs9/X5TXRXK8VcXSvJ9HziFgpAZQGKKCGl
+	 6bLzQpt5kDythqsY3ll2hE0qyjCd248owts1AnuVoLK0l/H88I+TnfC1GKxfg0CveY
+	 4PPUry7C2SBRcUCfPWWThNzGXPPfAZ2of7qrDbfd/1KmUyYf99DF8b0FBGZGn2fsG8
+	 HX9OGnDJyDIjZgLxK1UYMu4Pb6GTOvrK3c8rpi2Vf+qIfHwJHinHvAcKlEvHcecK4q
+	 9ivua1spKj1K1Ssynh77hghoiS2kihGRERLbRtUaBa+RY/wEUCKi+9L39oSLZ5fpst
+	 HIMmZMlZQ/egw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 12/13] selftests: mptcp: add mptcp_lib_verify_listener_events
-Date: Sun, 25 Feb 2024 17:12:33 +0800
-Message-Id: <5efdde8edf86c04df5710d1c8fdaf0372e9b3de1.1708852208.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 13/13] selftests: mptcp: use KSFT_SKIP/KSFT_PASS/KSFT_FAIL
+Date: Sun, 25 Feb 2024 17:12:34 +0800
+Message-Id: <812420af9b237318454ca7bc0a2cd05654734723.1708852208.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1708852208.git.tanggeliang@kylinos.cn>
 References: <cover.1708852208.git.tanggeliang@kylinos.cn>
@@ -45,162 +45,253 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-To avoid duplicated code in different MPTCP selftests, we can add and use
-helpers defined in mptcp_lib.sh.
+This patch uses the public var KSFT_SKIP in mptcp_lib.sh instead of
+ksft_skip, and drop 'ksft_skip=4' in mptcp_join.sh.
 
-The helper verify_listener_events() is defined both in mptcp_join.sh and
-userspace_pm.sh, export it into mptcp_lib.sh and rename it with mptcp_lib_
-prefix. Use this new helper in both scripts.
+Use KSFT_PASS and KSFT_FAIL macros instead of 0 and 1 after 'exit '
+and 'ret=' in all scripts:
+
+        exit 0 -> exit ${KSFT_PASS}
+        exit 1 -> exit ${KSFT_FAIL}
+         ret=0 ->  ret=${KSFT_PASS}
+         ret=1 ->  ret=${KSFT_FAIL}
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh | 25 +++------------
- .../testing/selftests/net/mptcp/mptcp_lib.sh  | 25 +++++++++++++++
- .../selftests/net/mptcp/userspace_pm.sh       | 31 +++++--------------
- 3 files changed, 38 insertions(+), 43 deletions(-)
+ .../selftests/net/mptcp/mptcp_connect.sh       | 18 +++++++++---------
+ .../testing/selftests/net/mptcp/mptcp_join.sh  | 13 ++++++-------
+ .../selftests/net/mptcp/mptcp_sockopt.sh       |  4 ++--
+ .../testing/selftests/net/mptcp/pm_netlink.sh  |  4 ++--
+ .../selftests/net/mptcp/simult_flows.sh        |  4 ++--
+ .../selftests/net/mptcp/userspace_pm.sh        |  4 ++--
+ 6 files changed, 23 insertions(+), 24 deletions(-)
 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index e788d31bfd02..b5ca9c63d869 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -65,14 +65,14 @@ while getopts "$optstring" option;do
+ 	case "$option" in
+ 	"h")
+ 		usage $0
+-		exit 0
++		exit ${KSFT_PASS}
+ 		;;
+ 	"d")
+ 		if [ $OPTARG -ge 0 ];then
+ 			tc_delay="$OPTARG"
+ 		else
+ 			echo "-d requires numeric argument, got \"$OPTARG\"" 1>&2
+-			exit 1
++			exit ${KSFT_FAIL}
+ 		fi
+ 		;;
+ 	"e")
+@@ -96,7 +96,7 @@ while getopts "$optstring" option;do
+ 			sndbuf="$OPTARG"
+ 		else
+ 			echo "-S requires numeric argument, got \"$OPTARG\"" 1>&2
+-			exit 1
++			exit ${KSFT_FAIL}
+ 		fi
+ 		;;
+ 	"R")
+@@ -104,7 +104,7 @@ while getopts "$optstring" option;do
+ 			rcvbuf="$OPTARG"
+ 		else
+ 			echo "-R requires numeric argument, got \"$OPTARG\"" 1>&2
+-			exit 1
++			exit ${KSFT_FAIL}
+ 		fi
+ 		;;
+ 	"m")
+@@ -121,7 +121,7 @@ while getopts "$optstring" option;do
+ 		;;
+ 	"?")
+ 		usage $0
+-		exit 1
++		exit ${KSFT_FAIL}
+ 		;;
+ 	esac
+ done
+@@ -259,7 +259,7 @@ check_mptcp_disabled()
+ 			"net.mptcp.enabled sysctl is not 1 by default"
+ 		mptcp_lib_print_err "\t\t\t\t   [FAIL]"
+ 		mptcp_lib_result_fail "net.mptcp.enabled sysctl is not 1 by default"
+-		ret=1
++		ret=${KSFT_FAIL}
+ 		return 1
+ 	fi
+ 	ip netns exec ${disabled_ns} sysctl -q net.mptcp.enabled=0
+@@ -274,7 +274,7 @@ check_mptcp_disabled()
+ 			"New MPTCP socket cannot be blocked via sysctl"
+ 		mptcp_lib_print_err "\t\t\t\t   [FAIL]"
+ 		mptcp_lib_result_fail "New MPTCP socket cannot be blocked via sysctl"
+-		ret=1
++		ret=${KSFT_FAIL}
+ 		return 1
+ 	fi
+ 
+@@ -302,7 +302,7 @@ do_ping()
+ 
+ 	if [ $rc -ne 0 ] ; then
+ 		echo "$listener_ns -> $connect_addr connectivity [FAIL]" 1>&2
+-		ret=1
++		ret=${KSFT_FAIL}
+ 
+ 		return 1
+ 	fi
+@@ -822,7 +822,7 @@ log_if_error()
+ 		echo "FAIL: ${msg}" 1>&2
+ 
+ 		final_ret=${ret}
+-		ret=0
++		ret=${KSFT_PASS}
+ 
+ 		return ${final_ret}
+ 	fi
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 14f79300e1f8..71d345f15209 100755
+index 71d345f15209..27119f5288a8 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2789,16 +2789,12 @@ backup_tests()
+@@ -25,7 +25,6 @@ err=""
+ capout=""
+ ns1=""
+ ns2=""
+-ksft_skip=4
+ iptables="iptables"
+ ip6tables="ip6tables"
+ timeout_poll=30
+@@ -396,15 +395,15 @@ setup_fail_rules()
+ 		-p tcp \
+ 		-m length --length 150:9999 \
+ 		-m statistic --mode nth --packet 1 --every 99999 \
+-		-j MARK --set-mark 42 || return ${ksft_skip}
++		-j MARK --set-mark 42 || return ${KSFT_SKIP}
  
- verify_listener_events()
+-	tc -n $ns2 qdisc add dev ns2eth$i clsact || return ${ksft_skip}
++	tc -n $ns2 qdisc add dev ns2eth$i clsact || return ${KSFT_SKIP}
+ 	tc -n $ns2 filter add dev ns2eth$i egress \
+ 		protocol ip prio 1000 \
+ 		handle 42 fw \
+ 		action pedit munge offset 148 u8 invert \
+ 		pipe csum tcp \
+-		index 100 || return ${ksft_skip}
++		index 100 || return ${KSFT_SKIP}
+ }
+ 
+ reset_with_fail()
+@@ -418,7 +417,7 @@ reset_with_fail()
+ 	local rc=0
+ 	setup_fail_rules "${@}" || rc=$?
+ 
+-	if [ ${rc} -eq ${ksft_skip} ]; then
++	if [ ${rc} -eq ${KSFT_SKIP} ]; then
+ 		mark_as_skipped "unable to set the 'fail' rules"
+ 		return 1
+ 	fi
+@@ -454,7 +453,7 @@ reset_with_tcp_filter()
+ # $1: err msg
+ fail_test()
  {
--	local evt=$1
- 	local e_type=$2
- 	local e_family=$3
- 	local e_saddr=$4
- 	local e_sport=$5
--	local type
--	local family
--	local saddr
--	local sport
- 	local name
-+	local rc=0
+-	ret=1
++	ret=${KSFT_FAIL}
  
- 	if [ $e_type = $MPTCP_LIB_LISTENER_CREATED ]; then
- 		name="LISTENER_CREATED"
-@@ -2815,23 +2811,12 @@ verify_listener_events()
- 		return
+ 	print_fail "${@}"
+ 
+@@ -3637,7 +3636,7 @@ usage()
+ {
+ 	if [ -n "${1}" ]; then
+ 		echo "${1}"
+-		ret=1
++		ret=${KSFT_FAIL}
  	fi
  
--	type=$(mptcp_lib_evts_get_info type "$evt" "$e_type")
--	family=$(mptcp_lib_evts_get_info family "$evt" "$e_type")
--	sport=$(mptcp_lib_evts_get_info sport "$evt" "$e_type")
--	if [ $family ] && [ $family = $AF_INET6 ]; then
--		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" "$e_type")
--	else
--		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" "$e_type")
--	fi
--
--	if [ $type ] && [ $type = $e_type ] &&
--	   [ $family ] && [ $family = $e_family ] &&
--	   [ $saddr ] && [ $saddr = $e_saddr ] &&
--	   [ $sport ] && [ $sport = $e_sport ]; then
--		print_ok
-+	mptcp_lib_verify_listener_events "${@}" || rc="${?}"
-+	if [ "${rc}" -eq 0 ]
-+	then
- 		return 0
+ 	echo "mptcp_join usage:"
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index 5acaf8137e45..8547ac7e5bee 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -105,7 +105,7 @@ check_mark()
+ 	for v in $values; do
+ 		if [ $v -ne 0 ]; then
+ 			echo "FAIL: got $tables $values in ns $ns , not 0 - not all expected packets marked" 1>&2
+-			ret=1
++			ret=${KSFT_FAIL}
+ 			return 1
+ 		fi
+ 	done
+@@ -174,7 +174,7 @@ do_transfer()
+ 		mptcp_lib_print_err "[FAIL]"
+ 		mptcp_lib_result_fail "transfer ${ip}"
+ 
+-		ret=1
++		ret=${KSFT_FAIL}
+ 		return 1
  	fi
--	fail_test "$e_type:$type $e_family:$family $e_saddr:$saddr $e_sport:$sport"
-+	fail_test "$e_type $e_family $e_saddr $e_sport"
- }
- 
- add_addr_ports_tests()
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 98a10690c530..91ffc00c0c43 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -479,3 +479,28 @@ mptcp_lib_check_expected() {
- 
- 	return "${rc}"
- }
-+
-+mptcp_lib_verify_listener_events() {
-+	local evt=$1
-+	local e_type=$2
-+	local e_family=$3
-+	local e_saddr=$4
-+	local e_sport=$5
-+	local type
-+	local family
-+	local saddr
-+	local sport
-+	local rc=0
-+
-+	type=$(mptcp_lib_evts_get_info type "$evt" "$e_type")
-+	family=$(mptcp_lib_evts_get_info family "$evt" "$e_type")
-+	if [ "$family" ] && [ "$family" = $AF_INET6 ]; then
-+		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" "$e_type")
-+	else
-+		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" "$e_type")
-+	fi
-+	sport=$(mptcp_lib_evts_get_info sport "$evt" "$e_type")
-+
-+	mptcp_lib_check_expected "type" "family" "saddr" "sport" || rc="${?}"
-+	return "${rc}"
-+}
+ 	mptcp_lib_print_ok "[ OK ]"
+diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+index 3e60500c8785..f3f3e5f8cc07 100755
+--- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
++++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+@@ -20,11 +20,11 @@ while getopts "$optstring" option;do
+ 	case "$option" in
+ 	"h")
+ 		usage $0
+-		exit 0
++		exit ${KSFT_PASS}
+ 		;;
+ 	"?")
+ 		usage $0
+-		exit 1
++		exit ${KSFT_FAIL}
+ 		;;
+ 	esac
+ done
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index d2be6a3c9c28..4607c074b632 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -262,7 +262,7 @@ while getopts "bcdh" option;do
+ 	case "$option" in
+ 	"h")
+ 		usage $0
+-		exit 0
++		exit ${KSFT_PASS}
+ 		;;
+ 	"b")
+ 		bail=1
+@@ -275,7 +275,7 @@ while getopts "bcdh" option;do
+ 		;;
+ 	"?")
+ 		usage $0
+-		exit 1
++		exit ${KSFT_FAIL}
+ 		;;
+ 	esac
+ done
 diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 05e0dff5397f..b36c42a55f03 100755
+index b36c42a55f03..2cd197d47fff 100755
 --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
 +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -842,32 +842,15 @@ test_prio()
- 
- verify_listener_events()
+@@ -79,7 +79,7 @@ test_skip()
+ test_fail()
  {
--	local evt=$1
--	local e_type=$2
--	local e_family=$3
--	local e_saddr=$4
--	local e_sport=$5
--	local type
--	local family
--	local saddr
--	local sport
--
--	if [ $e_type = $LISTENER_CREATED ]; then
--		print_test "CREATE_LISTENER $e_saddr:$e_sport"
--	elif [ $e_type = $LISTENER_CLOSED ]; then
--		print_test "CLOSE_LISTENER $e_saddr:$e_sport"
--	fi
-+	local rc=0
+ 	mptcp_lib_print_err "[FAIL]${1:+ ${*}}"
+-	ret=1
++	ret=${KSFT_FAIL}
  
--	type=$(mptcp_lib_evts_get_info type $evt $e_type)
--	family=$(mptcp_lib_evts_get_info family $evt $e_type)
--	sport=$(mptcp_lib_evts_get_info sport $evt $e_type)
--	if [ $family ] && [ $family = $AF_INET6 ]; then
--		saddr=$(mptcp_lib_evts_get_info saddr6 $evt $e_type)
-+	mptcp_lib_verify_listener_events "${@}" || rc="${?}"
-+	if [ "${rc}" -eq 0 ]
-+	then
-+		mptcp_lib_result_pass "${test_name}"
+ 	if [ -n "${1}" ]; then
+ 		_printf "\t%s\n" "${1}"
+@@ -204,7 +204,7 @@ make_connection()
  	else
--		saddr=$(mptcp_lib_evts_get_info saddr4 $evt $e_type)
-+		test_fail
+ 		test_fail "Expected tokens (c:${client_token} - s:${server_token}) and server (c:${client_serverside} - s:${server_serverside})"
+ 		mptcp_lib_result_print_all_tap
+-		exit 1
++		exit ${KSFT_FAIL}
  	fi
--
--	check_expected "type" "family" "saddr" "sport"
- }
  
- test_listener()
-@@ -883,6 +866,7 @@ test_listener()
- 	# Capture events on the network namespace running the client
- 	:>$client_evts
- 
-+	print_test "Listener event LISTENER_CREATED 10.0.2.2:$client4_port"
- 	# Attempt to add a listener at 10.0.2.2:<subflow-port>
- 	ip netns exec $ns2 ./pm_nl_ctl listen 10.0.2.2\
- 		$client4_port &
-@@ -902,6 +886,7 @@ test_listener()
- 		rport $client4_port token $server4_token
- 	sleep 0.5
- 
-+	print_test "Listener event LISTENER_CLOSED 10.0.2.2:$client4_port"
- 	# Delete the listener from the client ns, if one was created
- 	mptcp_lib_kill_wait $listener_pid
- 
+ 	if [ "$is_v6" = "v6" ]
 -- 
 2.40.1
 
