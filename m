@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9497F475
-	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 12:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42107F475
+	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 12:41:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708951276; cv=none; b=s0NRFupXv8G2VEweIOPL2AgNuuwMeKbJXFHhYcg7o5G/4rauq+uQiAtllm98Ozk1PBGVC19pbVg2uhITJikP7jUabXiEWLfyFqzKf0nNi8KWqAHCjl/arAlLR2HUVlKStaWqYZ33YLlM7PjQTPEHFgf2CXNJtqUaJNB7FIDRSy4=
+	t=1708951285; cv=none; b=RmrTVynYwgvUXk7NY5F3pk1aNh58GMZW8sKubMoKS9j3Iajd28MIRlP0DBDwSG5LMMaiSy68oJ/Vlm4ZRDe+LJlD/H7w58DLK9AuLkPxkcUd9T2imgcPtbkf84B0i+ia7jVvDFo0GAHYcOXAxastnEh6T4GHwZ6EbhItKdJsJCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708951276; c=relaxed/simple;
-	bh=3925oy9ElAKbK3N4jM7TacrALHYPlqRnYc3h4P5TdOo=;
+	s=arc-20240116; t=1708951285; c=relaxed/simple;
+	bh=DBdBEhNR75vQy6aO0psG0pugKCXul1aY9NYDVmtAlMw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=blEZ4QkKqB4jyooHOjUbetQ1xlcIi6h69/wsEdgI8PpJnkso+cO8nkM66TlDjWiGjG0zH6ZzcSeHlDxjLorBAOltyGGYJ9AEyx2N6r7kG4P207sTwc7cAIHmlfSibytJyOx/7dcMdPvJcd89bwkT8UOiZO/PNe3oIuu9qZJCLuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mMvS7Zd8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qIhHQY/oQJ6DmOcB6LyqE+NbHMyDE97NWTUX9zo98lwaQUrcTLHPGFPaTXtAUxLr9tIRtZvQBmApdso8gG+NLK7R9rUuSP66Gr2rvIA4laJDc0p3cwDTXkxR0k5dJJBfuqad0BngmmE400H7CuyKLCbT0lNdHsZ6ksL00CRTxJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ByzFBb+N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMvS7Zd8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A8CC43390;
-	Mon, 26 Feb 2024 12:41:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ByzFBb+N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2493C433F1;
+	Mon, 26 Feb 2024 12:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708951276;
-	bh=3925oy9ElAKbK3N4jM7TacrALHYPlqRnYc3h4P5TdOo=;
+	s=k20201202; t=1708951285;
+	bh=DBdBEhNR75vQy6aO0psG0pugKCXul1aY9NYDVmtAlMw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mMvS7Zd8BytSoxQjN+w6xvEpk0X99+bXZb9KGxKsrBfA1w1+dbzbz0mFHuBGEKGIJ
-	 QKxcMcYnZN7nVktxXIuA7E8e+c0CKUJdIdvrQ0sehMh6YHRXRM6+mV5A2UZyfN5BDr
-	 WqyuQp9aZkUFuPO24hilDlm0FDCisW2ttur1RBt7LRB2sBdJ02FycMghasPy7sNjI8
-	 K6OXrI3TY24DhUU38CaYO8rLjUXZ9PGQlM5PqqMn90gDK6vonYrIGpSiE5DFR2xYdr
-	 5oGb61ib5lRAwJyr2qOaslmq1guHKmZZWp5/xwlqUaOjHj7m4ErvDNIwCeqMiJYAFj
-	 i/X6+1ndBYdqg==
-Message-ID: <edc6f735-b8fe-491b-99f6-73c465ab3dfa@kernel.org>
-Date: Mon, 26 Feb 2024 13:41:15 +0100
+	b=ByzFBb+N8ElbZ/SSicvVjvJ5F/6YnasEJy7KM8kG0K/5s3iwQ4znKOR9Ysg843sv5
+	 rwCEiY+ednxAYtE5i5JnFDLCWUlw2bsb1PCk4twW0xJRjBgymKNPJpJwsGQSqiFc0W
+	 jmSFdzmTHRJAIoz2D1leBjEBtocCgbvPPxPVlEMY/j/gYxUBmkFkl9+mNgkYyposqc
+	 5XfC0CL9TRAgZrw8qhgESy8IwIwxpwPe9vvmkNv4voRvddR+kecP7lIFMuvOlWvvrw
+	 OrJkqXRFtLziA6nwq5AcMFq+HfybBcwee+udaa6tw1zAby7iX+ZAU5SCa/C/kwqUf5
+	 h8x+cylEvJZWA==
+Message-ID: <8657b9cd-7b16-42c2-b874-2049bb138014@kernel.org>
+Date: Mon, 26 Feb 2024 13:41:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v5 05/12] selftests: mptcp: connect: add
- dedicated port counter
+Subject: Re: [PATCH mptcp-next v5 06/12] selftests: mptcp: connect: print out
+ ping tests info
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708939962.git.tanggeliang@kylinos.cn>
- <932e4723bdbe01f37eb0f65e04f01a40ec7dd780.1708939962.git.tanggeliang@kylinos.cn>
+ <77c1b641cefdf9832b96759e2544e41330161a7c.1708939962.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,70 +87,62 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <932e4723bdbe01f37eb0f65e04f01a40ec7dd780.1708939962.git.tanggeliang@kylinos.cn>
+In-Reply-To: <77c1b641cefdf9832b96759e2544e41330161a7c.1708939962.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-
-Hi Geliang,
 
 On 26/02/2024 10:43, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a new dedicated counter 'PORT' instead of TEST_COUNT to
-> increase port numbers in mptcp_connect.sh.
+> 'ping tests' shows in the test results of mptcp_connect.sh:
 > 
-> This can avoid outputting discontinuous test counters.
+> 1..68
+> ok 1 - mptcp_connect: New MPTCP socket can be blocked via sysctl
+> ok 2 - mptcp_connect: ping tests
+> ok 3 - mptcp_connect: loopback v4: ns1 MPTCP -> ns1 (10.0.1.1:10000) MPTCP
+> ok 4 - mptcp_connect: loopback v4: ns1 MPTCP -> ns1 (10.0.1.1:10001) TCP
+> 
+> But not in the test output of this script:
+> 
+> New MPTCP socket can be blocked via sysctl			   [ OK ]
+> INFO: validating network environment with pings
+> INFO: Using loss of 0.01% delay 30 ms reorder 94% 9% with delay 7ms on
+> ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP	(duration    79ms) [ OK ]
+> ns1 MPTCP -> ns1 (10.0.1.1:10001      ) TCP  	(duration    49ms) [ OK ]
+> 
+> This patch fixes this by adding ping tests in test output.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> index c7483902026b..68073b255983 100755
+> index 68073b255983..06e945914ace 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -33,6 +33,7 @@ do_tcp=0
->  checksum=false
->  filesize=0
->  connect_per_transfer=1
-> +PORT=0
-
-Can you not initialise it her at '10000'...
-
+> @@ -861,6 +861,9 @@ mptcp_lib_result_code "${ret}" "ping tests"
 >  
->  if [ $tc_loss -eq 100 ];then
->  	tc_loss=1%
-> @@ -317,7 +318,7 @@ do_transfer()
->  	local extra_args="$7"
+>  stop_if_error "Could not even run ping tests"
 >  
->  	local port
-> -	port=$((10000+TEST_COUNT))
-> +	port=$((10000+PORT++))
+> +echo -e "ping tests"
 
-... and here, have:
+Maybe replace the "INFO: validating network environment with pings"
+message, no?
 
-  port=$((PORT + TEST_COUNT))
+> +mptcp_lib_print_ok "\t\t\t\t\t\t\t\t   [ OK ]"
 
-(or PORT++ if TEST_COUNT is removed later)
+Please use the new helper suggested in previous comments, to have
+something like:
 
->  	TEST_COUNT=$((TEST_COUNT+1))
->  
->  	if [ "$rcvbuf" -gt 0 ]; then
-> @@ -712,7 +713,7 @@ EOF
->  
->  	mptcp_lib_print_info "INFO: test $msg"
->  
-> -	TEST_COUNT=10000
-> +	PORT=10000
+  print_test "Ping tests"
+  (...)
+  mptcp_lib_print_success
 
-So here you don't need to override the value, no?
-
->  	local extra_args="-o TRANSPARENT"
->  	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
->  		    ${connect_addr} ${local_addr} "${extra_args}"
-
-While at it, maybe use ${PORT} in check_mptcp_disabled()?
+> +
+>  [ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay ${tc_delay}ms
+>  echo -n "INFO: Using loss of $tc_loss "
+>  test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
 
 Cheers,
 Matt
