@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D6956466
-	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 10:07:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8085810E
+	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 10:07:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708942057; cv=none; b=FsGmtSxiyvMJVVjqQO3gLh9PB21niBk3t28AIHioVw5jxvNTuyX6YliDazpKwukrY8Nx83EwUPhXR2/wTdHxWGESh2VtFgAnyvxZr/Uh1VyFPlhknP8aVrk/TlKlj3CJvrbl/DyBFaZC3ANmtjDa2D2s+N42fQaNVAEnmBAMqc8=
+	t=1708942064; cv=none; b=niWw0PbEfu3fBB7chKBhs6JUnT1drgOLI9+SwMPsA8byavUfhQ87vHD9z1Sz1cbTJBmjfy+PY852bAkGVGylgmUopuf4mboD2aDJ3MZggkJRp6sLB/EI76fD1n664ky976/yz8McnSQsdDWEUMsINne7euQ9nqmtsFfqSpK1uVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708942057; c=relaxed/simple;
-	bh=Q3zgYTKktZwnLWTFcBcMy0/lplXkXfyr9oZTGFWI2ms=;
+	s=arc-20240116; t=1708942064; c=relaxed/simple;
+	bh=9PxC7GahLNq1ty+NB4eKfJuAlrfdOFRTwTlU4+dOYd0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QlLFkQ9cqtN4g14Y3idmPLXHE+QPoV4qGaUyq6zpBLLumWJZHQmA6FnvLXL9VhVZJXpiGsAvoUrG6OwTXFodzLWokV/IwazUtUZpvPoxYnW23eD9w8HLekTQGjehVR5XqFdvVQ6TliMMnVT4HIZuT1AuN77ZlaMmPjrCnnO0wng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPQSd4QH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kfKrwhov0WiUiZApxUQ8HcpM94xWAO1YGS/8Z8qsodbu7RyCYJeBdAXfKVWeGdOqvnTGdz+nTGWtl7I0Bes8wPIetZnoXVdJyi4Da30uvondRYq+p1loYVYpw7GttniLfyKkddp22Q7MEqnUmptJz5iRjiyi3F4261VU56HD1+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfLsGQFd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPQSd4QH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6787C433C7;
-	Mon, 26 Feb 2024 10:07:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfLsGQFd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278A3C43399;
+	Mon, 26 Feb 2024 10:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708942056;
-	bh=Q3zgYTKktZwnLWTFcBcMy0/lplXkXfyr9oZTGFWI2ms=;
+	s=k20201202; t=1708942063;
+	bh=9PxC7GahLNq1ty+NB4eKfJuAlrfdOFRTwTlU4+dOYd0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sPQSd4QH6Ls6rsrEFeSqdwAGgHcB6BiYEW3LDaLMFRfrwtOqt/KMI0hQ11TmVAUw8
-	 hwlluclzZa3TQN15io6xS6x5jB4KIktXwEcpo2U5vviyfBgDTX2d9jdOQi6Xu2SHvc
-	 oiJI/R+6LI2f2NiCPzHkEPLnh4fgpP0FRc9mCvXnXtfx4jy62iJ6JQQK/TR1Aooz+j
-	 E87vMjJESQtpCxoFxLDOVdDHEsN2CTJlnhZqxPDqgBs5uvtQWM9NLxKr+QpaRoaOWm
-	 nO3QxsR6FQ/DurYgoZ1wNdkk7Gw/CtJ4loA7oTvGZNMBv4QnCRKed4/rFBI9IdY975
-	 EGuuhLayxfj6Q==
-Message-ID: <426ebb6d-18af-4a8f-a291-82faddb66b30@kernel.org>
-Date: Mon, 26 Feb 2024 11:07:35 +0100
+	b=HfLsGQFdAR+PXuUYEXK9Yzwn3IEGc7cApRr9ce5pwXP2XO0ysoQqfkY0RCgElHreg
+	 PonMwOO1jqp3RbkmplIq01dNKs/1EZ9ARTOR38rSfxXS/XhaPFBqNelYAqGWDHpz5Y
+	 Xw/11wI2r3Jq/mDZkfQgVL2yjvxDQUvvJhT+CouePKeV8m7KUsotdUBDkgOXJFGDAV
+	 Md9fAsM4Rremav1H4RR2acjxYQvJb0Ig3YNH/ba/+OIXgmfKTyeto1FYwcaERKTH4q
+	 0O8yaGyDHRy5Sx+Gj5ZMk8/ibjX7T2CHhCdBWX1YaeycF8iYlZ/QcBEl/Fpf6B/TEl
+	 51Q2nRs9cteKw==
+Message-ID: <21066704-661c-40ea-82a6-1e75eb12258e@kernel.org>
+Date: Mon, 26 Feb 2024 11:07:42 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 6/7] mptcp: add check_id for
- lookup_anno_list_by_saddr
+Subject: Re: [PATCH mptcp-next v2 7/7] selftests: mptcp: flush userspace addrs
+ list
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708588977.git.tanggeliang@kylinos.cn>
- <608dcc5649b212dc1a37c72fa7b465d3e8619316.1708588977.git.tanggeliang@kylinos.cn>
+ <2a89f983d02141661c2f7cf0bfb4109ee74db60e.1708588977.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,84 +87,57 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <608dcc5649b212dc1a37c72fa7b465d3e8619316.1708588977.git.tanggeliang@kylinos.cn>
+In-Reply-To: <2a89f983d02141661c2f7cf0bfb4109ee74db60e.1708588977.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 22/02/2024 09:03, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a new helper mptcp_addresses_equal_check_id() to test the
-> address ids, as well as the address. This can be used to test if the two
-> given addresses are identically equal, they have both the same address and
-> the same address id.
-> 
-> Add a new parameter check_id for mptcp_lookup_anno_list_by_saddr(), pass
-> it to mptcp_addresses_equal_check_id(). Then in mptcp_pm_del_add_timer(),
-> the input parameter check_id can be passed as the new parameter into
-> mptcp_lookup_anno_list_by_saddr(). After this, this condition:
-> 
->         (!check_id || entry->addr.id == addr->id)
-> 
-> can be dropped, only test if 'entry' is NULL is enough.
+> This patch adds a new helper userspace_pm_flush() to flush all addresses
+> for the userspace PM. Invoke it in userspace pm dump address and subflow
+> tests. And use dump commands to check if the userspace pm local address
+> list is empty after addresses flushing.
 
-Or use an extra variable? Please see below.
+I'm sorry to insist, but please *always* *always* *always* add an answer
+to this question in your commit message: why should we take this patch?
 
-(...)
+Answers can be very short -- e.g. avoid duplicated code, fix a bug when
+doing X, this new feature is useful for this use-case, etc. -- but these
+answers *have to* be present.
 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 5c17d39146ea..7d755c0a32bb 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
+Here, the commit message only explains what is being done: that's
+interesting to verify if what you wanted to do is what you did. But most
+of the time, we can see what is being done by quickly looking at the
+diff. What is *not easy* to get by looking at the diff is the *reason*
+why this patch is needed.
 
-(...)
+Of course, ↑ is valid for any patches for the Linux kernel, as mentioned
+in different places in the doc:
+-
+https://docs.kernel.org/process/submitting-patches.html?highlight=reason#the-canonical-patch-format
 
-> @@ -324,12 +325,12 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
->  	struct sock *sk = (struct sock *)msk;
->  
->  	spin_lock_bh(&msk->pm.lock);
-> -	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
-> -	if (entry && (!check_id || entry->addr.id == addr->id))
-> +	entry = mptcp_lookup_anno_list_by_saddr(msk, addr, check_id);
-> +	if (entry)
->  		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
->  	spin_unlock_bh(&msk->pm.lock);
->  
-> -	if (entry && (!check_id || entry->addr.id == addr->id))
-> +	if (entry)
+> The explanation body will be committed to the permanent source changelog, so should make sense to a competent reader who has long since forgotten the immediate details of the discussion that might have led to this patch. Including symptoms of the failure which the patch addresses (kernel log messages, oops messages, etc.) are especially useful for people who might be searching the commit logs looking for the applicable patch. The text should be written in such detail so that when read weeks, months or even years later, it can give the reader the needed details to grasp the reasoning for why the patch was created.
 
-I probably missed something, but why not only do the modification here
-as suggested in the v1 instead of changing the signature of
-mptcp_lookup_anno_list_by_saddr() and introducing
-mptcp_addresses_equal_check_id() which is indirectly only used once from
-here?
+-
+https://docs.kernel.org/process/maintainer-netdev.html?highlight=reason#preparing-changes
+
+> If your change is a bug fix, make sure your commit log indicates the end-user visible symptom, the underlying reason as to why it happens, and then if necessary, explain why the fix proposed is the best way to get things done.
 
 
-  bool stop_retrans;
 
-  (...)
+Now back to this patch, I can very quickly see that you added a new
+helper, called it, and checked there were no more addresses. But without
+the reason in the commit message, I don't understand why we should do that:
+- the output of userspace_pm_dump() is already verified
+- the actions done by userspace_pm_rm_addr() and userspace_pm_rm_sf()
+helpers are also already verified.
+- it looks like we are not covering more .c code by doing that, no?
+→ What are you trying to verify that was not verified before?
 
-  spin_lock_bh(&msk->pm.lock);
-  entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
-  stop_retrans = entry && (!check_id || entry->addr.id == addr->id);
-  if (stop_retrans)
-      entry->retrans_times = ADD_ADDR_RETRANS_MAX;
-  spin_unlock_bh(&msk->pm.lock);
-
-  if (stop_retrans)
-      sk_stop_timer_sync(sk, &entry->add_timer);
-
-The refactoring would make sense if you have multiple users of this long
-conditions. Here, it looks like it is adding more complexity to get
-functions more generic, with more checks, just to handle one particular
-case that can be extracted here, no?
-
->  		sk_stop_timer_sync(sk, &entry->add_timer);
->  
->  	return entry;
-(...)
+Maybe we don't need the patch?
 
 Cheers,
 Matt
