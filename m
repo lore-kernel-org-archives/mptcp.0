@@ -1,297 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3742B60907
-	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 09:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB0622626
+	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 10:06:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708940631; cv=none; b=V4Ob6418PrhPY/NDW39WUp7YY/GS4WJ+HJrageq8DjjStJvvKoHDwSOYJ8xXD8id/qqxO0l3AHB8/tiue6Q+GoEkphdMIJAsCEu8fG5PoTNqkxb7tdXFh4uiBLfyVcLQ+n8xUY89mJgtulS4AwuZ/GPDY9rayUDaJhmca7TjQec=
+	t=1708941975; cv=none; b=JBd+aY4/VzjUGXGPCv8ytBIom2aBpOZI1S1LcJg9P+DMsP26T5Zi32qmpfkll9Y6HxcQxvnmiEz+RbW6YU+lIjyv7mU5SxZa0B5DIy7QGSq7C984Cezxx5SYLwOVOIPNbTz7Vj2EPSXTiFfN4mpe8XfwkacxrWwz76aQCwruPEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708940631; c=relaxed/simple;
-	bh=rWgaa/ZgFWNqHCITb9rC65XQLXu4EqIufC6OR0o91jk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=o+I4QlfwU2Lm7u5rY7VmJg0d1/rBxg+kYJjtMVXRYkfvSXBwPy3SvqNuttnMtBUVVD614h0Z9tyrg/IALVcvYW+ylIoN4eKlv8hq/s51ySIha37f5WTh7z/Am3OkMBNgl2DQtBnO3yfF5GkgRPqvht4hgqk42DI+if8+6a8y1Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOVN2KEA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708941975; c=relaxed/simple;
+	bh=XcZrXas0K9fn+nSisvZu2Cyh+e6YkKsWtWh81YPXy0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dWwK6+6tzxdylmG7fEnq5npj4C75e4FbwytbmFBECmM44ijFGqZvDLOCotRe02dhGEFG+xziH/TIm5b8ySiCLNjN2bZBygqQcB2IsLJ0QKwRLI2gDVQlL1svZnPJnGPwf/hylj9TxcpNKM/uTXd1b0JpRrnn6bCxLqzuJTw+zGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2Hyxt2Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOVN2KEA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF3FCC433F1;
-	Mon, 26 Feb 2024 09:43:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2Hyxt2Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B053C433F1;
+	Mon, 26 Feb 2024 10:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708940631;
-	bh=rWgaa/ZgFWNqHCITb9rC65XQLXu4EqIufC6OR0o91jk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MOVN2KEAH0Oh0lN8uWQOv18f/BvMrjz+aG/h+PBPG/dtv05ZU8v184bSlHZCD2s9Z
-	 nV0Xw0gaH8trFnylBfmp+paoXzLKiTz2YdFK+FImsDzdEL6JDQxCNNsd+BKB0595WV
-	 T/A7EqE7cJvfYtJhvHQNqJTiD16KP9I5W886LGICAiwA7YFMl2/jFJpx8q8PfIgZIA
-	 Sz5rfWo4wqrMHmtyCDz3evV3NIQ6YbXE3TEXflD0G/yGW79R4NAFSqrwLllO+f/DrC
-	 CxL7WxzcB7Exq6rT7fsc+BY9ACs171GEdgSjYna4mPLHaUw4dtTXjnIRRdbtXqA1Yn
-	 eSoJvCX+7mBTg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 12/12] selftests: mptcp: use KSFT_SKIP/KSFT_PASS/KSFT_FAIL
-Date: Mon, 26 Feb 2024 17:43:23 +0800
-Message-Id: <33dcbce2a0b189195d040dfaef55634337fe4aa1.1708939963.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1708939962.git.tanggeliang@kylinos.cn>
-References: <cover.1708939962.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1708941975;
+	bh=XcZrXas0K9fn+nSisvZu2Cyh+e6YkKsWtWh81YPXy0I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=E2Hyxt2ZDSRgg60DIr8kXdRHYsaWN+iX6yL68DdpfUWiwG91w50UVfYg8c3NU+T7K
+	 yQB5S482xuHAQEOC8f2MQq3v2bh7asw9noczM8JRHY33FVqOnhbQq4Z30/bdVAyNRu
+	 AXVXCipGIBcH+RKlu2yyIbeFDIIsajHqW5bnPvN2Ds6gM51RI0WfIl+Gx5ErwE1FGM
+	 ToDTF/twQqts/9xxGnvineXbXmWZrTW6x9PLz8/DQPehswXYCiVV+3akVPV5j6wV6N
+	 86auylDnbY3xvZkW0zh61X5l1pPASvtbK9xyqr1jno8lKSGTM+IkztUWTgM+2RU981
+	 vgUlcTzFwZiRA==
+Message-ID: <ccfa5d4a-3ba8-47b0-8610-8266ac423c12@kernel.org>
+Date: Mon, 26 Feb 2024 11:06:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v2 0/7] some cleanups
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1708588977.git.tanggeliang@kylinos.cn>
+Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1708588977.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-This patch uses the public var KSFT_SKIP in mptcp_lib.sh instead of
-ksft_skip, and drop 'ksft_skip=4' in mptcp_join.sh.
+On 22/02/2024 09:03, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v2:
+>  - address Matt's comments in v1
 
-Use KSFT_PASS and KSFT_FAIL macros instead of 0 and 1 after 'exit '
-and 'ret=' in all scripts:
+If you don't mind, I think it would be useful to add a short changelog
+per patch, under the commit message using '---' as separator (or using
+'git notes'): it would help to remember what was discussed, what was
+applied, rejected or (accidentally or not) ignored. One line might be
+enough, but it would be useful.
 
-        exit 0 -> exit ${KSFT_PASS}
-        exit 1 -> exit ${KSFT_FAIL}
-         ret=0 ->  ret=${KSFT_PASS}
-         ret=1 ->  ret=${KSFT_FAIL}
+> Geliang Tang (7):
+>   mptcp: make pm_remove_addrs_and_subflows static
+>   mptcp: drop duplicate header inclusions
+>   mptcp: update set_flags interfaces
+>   mptcp: set error messages for set_flags
+>   mptcp: drop lookup_by_id in lookup_addr
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../selftests/net/mptcp/mptcp_connect.sh       | 18 +++++++++---------
- .../testing/selftests/net/mptcp/mptcp_join.sh  | 13 ++++++-------
- .../selftests/net/mptcp/mptcp_sockopt.sh       |  4 ++--
- .../testing/selftests/net/mptcp/pm_netlink.sh  |  4 ++--
- .../selftests/net/mptcp/simult_flows.sh        |  4 ++--
- .../selftests/net/mptcp/userspace_pm.sh        |  4 ++--
- 6 files changed, 23 insertions(+), 24 deletions(-)
+The five first patches look good to me:
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 00bbe451e50d..f54d80a1d0e4 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -65,14 +65,14 @@ while getopts "$optstring" option;do
- 	case "$option" in
- 	"h")
- 		usage $0
--		exit 0
-+		exit ${KSFT_PASS}
- 		;;
- 	"d")
- 		if [ $OPTARG -ge 0 ];then
- 			tc_delay="$OPTARG"
- 		else
- 			echo "-d requires numeric argument, got \"$OPTARG\"" 1>&2
--			exit 1
-+			exit ${KSFT_FAIL}
- 		fi
- 		;;
- 	"e")
-@@ -96,7 +96,7 @@ while getopts "$optstring" option;do
- 			sndbuf="$OPTARG"
- 		else
- 			echo "-S requires numeric argument, got \"$OPTARG\"" 1>&2
--			exit 1
-+			exit ${KSFT_FAIL}
- 		fi
- 		;;
- 	"R")
-@@ -104,7 +104,7 @@ while getopts "$optstring" option;do
- 			rcvbuf="$OPTARG"
- 		else
- 			echo "-R requires numeric argument, got \"$OPTARG\"" 1>&2
--			exit 1
-+			exit ${KSFT_FAIL}
- 		fi
- 		;;
- 	"m")
-@@ -121,7 +121,7 @@ while getopts "$optstring" option;do
- 		;;
- 	"?")
- 		usage $0
--		exit 1
-+		exit ${KSFT_FAIL}
- 		;;
- 	esac
- done
-@@ -260,7 +260,7 @@ check_mptcp_disabled()
- 			"net.mptcp.enabled sysctl is not 1 by default"
- 		mptcp_lib_print_err "\t\t\t\t   [FAIL]"
- 		mptcp_lib_result_fail "net.mptcp.enabled sysctl is not 1 by default"
--		ret=1
-+		ret=${KSFT_FAIL}
- 		return 1
- 	fi
- 	ip netns exec ${disabled_ns} sysctl -q net.mptcp.enabled=0
-@@ -275,7 +275,7 @@ check_mptcp_disabled()
- 			"New MPTCP socket cannot be blocked via sysctl"
- 		mptcp_lib_print_err "\t\t\t\t   [FAIL]"
- 		mptcp_lib_result_fail "New MPTCP socket cannot be blocked via sysctl"
--		ret=1
-+		ret=${KSFT_FAIL}
- 		return 1
- 	fi
- 
-@@ -303,7 +303,7 @@ do_ping()
- 
- 	if [ $rc -ne 0 ] ; then
- 		echo "$listener_ns -> $connect_addr connectivity [FAIL]" 1>&2
--		ret=1
-+		ret=${KSFT_FAIL}
- 
- 		return 1
- 	fi
-@@ -823,7 +823,7 @@ log_if_error()
- 		echo "FAIL: ${msg}" 1>&2
- 
- 		final_ret=${ret}
--		ret=0
-+		ret=${KSFT_PASS}
- 
- 		return ${final_ret}
- 	fi
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index fa7d07c51973..ba6d34bb2d0b 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -25,7 +25,6 @@ err=""
- capout=""
- ns1=""
- ns2=""
--ksft_skip=4
- iptables="iptables"
- ip6tables="ip6tables"
- timeout_poll=30
-@@ -398,15 +397,15 @@ setup_fail_rules()
- 		-p tcp \
- 		-m length --length 150:9999 \
- 		-m statistic --mode nth --packet 1 --every 99999 \
--		-j MARK --set-mark 42 || return ${ksft_skip}
-+		-j MARK --set-mark 42 || return ${KSFT_SKIP}
- 
--	tc -n $ns2 qdisc add dev ns2eth$i clsact || return ${ksft_skip}
-+	tc -n $ns2 qdisc add dev ns2eth$i clsact || return ${KSFT_SKIP}
- 	tc -n $ns2 filter add dev ns2eth$i egress \
- 		protocol ip prio 1000 \
- 		handle 42 fw \
- 		action pedit munge offset 148 u8 invert \
- 		pipe csum tcp \
--		index 100 || return ${ksft_skip}
-+		index 100 || return ${KSFT_SKIP}
- }
- 
- reset_with_fail()
-@@ -420,7 +419,7 @@ reset_with_fail()
- 	local rc=0
- 	setup_fail_rules "${@}" || rc=$?
- 
--	if [ ${rc} -eq ${ksft_skip} ]; then
-+	if [ ${rc} -eq ${KSFT_SKIP} ]; then
- 		mark_as_skipped "unable to set the 'fail' rules"
- 		return 1
- 	fi
-@@ -456,7 +455,7 @@ reset_with_tcp_filter()
- # $1: err msg
- fail_test()
- {
--	ret=1
-+	ret=${KSFT_FAIL}
- 
- 	print_fail "${@}"
- 
-@@ -3639,7 +3638,7 @@ usage()
- {
- 	if [ -n "${1}" ]; then
- 		echo "${1}"
--		ret=1
-+		ret=${KSFT_FAIL}
- 	fi
- 
- 	echo "mptcp_join usage:"
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index a2a5049f22bb..59ae6c649904 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -106,7 +106,7 @@ check_mark()
- 	for v in $values; do
- 		if [ $v -ne 0 ]; then
- 			echo "FAIL: got $tables $values in ns $ns , not 0 - not all expected packets marked" 1>&2
--			ret=1
-+			ret=${KSFT_FAIL}
- 			return 1
- 		fi
- 	done
-@@ -175,7 +175,7 @@ do_transfer()
- 		mptcp_lib_print_err "[FAIL]"
- 		mptcp_lib_result_fail "transfer ${ip}"
- 
--		ret=1
-+		ret=${KSFT_FAIL}
- 		return 1
- 	fi
- 	mptcp_lib_print_ok "[ OK ]"
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 87ed60ed4112..82dbdec930e6 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -21,11 +21,11 @@ while getopts "$optstring" option;do
- 	case "$option" in
- 	"h")
- 		usage $0
--		exit 0
-+		exit ${KSFT_PASS}
- 		;;
- 	"?")
- 		usage $0
--		exit 1
-+		exit ${KSFT_FAIL}
- 		;;
- 	esac
- done
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index eb2eaa48035f..ff255e4a2ed3 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -262,7 +262,7 @@ while getopts "bcdh" option;do
- 	case "$option" in
- 	"h")
- 		usage $0
--		exit 0
-+		exit ${KSFT_PASS}
- 		;;
- 	"b")
- 		bail=1
-@@ -275,7 +275,7 @@ while getopts "bcdh" option;do
- 		;;
- 	"?")
- 		usage $0
--		exit 1
-+		exit ${KSFT_FAIL}
- 		;;
- 	esac
- done
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 6fe2a4e1704f..1124ebab3ace 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -79,7 +79,7 @@ test_skip()
- test_fail()
- {
- 	mptcp_lib_print_err "[FAIL]${1:+ ${*}}"
--	ret=1
-+	ret=${KSFT_FAIL}
- 
- 	if [ -n "${1}" ]; then
- 		_printf "\t%s\n" "${1}"
-@@ -204,7 +204,7 @@ make_connection()
- 	else
- 		test_fail "Expected tokens (c:${client_token} - s:${server_token}) and server (c:${client_serverside} - s:${server_serverside})"
- 		mptcp_lib_result_print_all_tap
--		exit 1
-+		exit ${KSFT_FAIL}
- 	fi
- 
- 	if [ "$is_v6" = "v6" ]
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+>   mptcp: add check_id for lookup_anno_list_by_saddr
+>   selftests: mptcp: flush userspace addrs list
+
+Maybe the 6th patch can be simplified, and the 7th one can be dropped?
+
+Also, please check my comments on patch 7: it is *really, really*
+important for you to explain the *reasoning for why patches were
+created*. Without a clear reason, we cannot accept patches.
+
+Cheers,
+Matt
 -- 
-2.40.1
-
+Sponsored by the NGI0 Core fund.
