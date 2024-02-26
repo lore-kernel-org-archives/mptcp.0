@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD671C696
-	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 08:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8931E1C696
+	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 08:18:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708935504; cv=none; b=Ot0JIw+SaAfuxpGgU16ALx/rmFv6B4LgT95BomEK8XWCsBtDNysnNGy/bUvfRXtQfdEXArFH6JQCMKIstKAdzdIGFR89O7Vtyn8fdNcffbxWsumT2jFex99XD+XZdFSdpbWOT42lMwMUZPvdEaSw4EB0fv7vJ5sOiSpKoMV08Kk=
+	t=1708935506; cv=none; b=WqQJWYNBrGhd+o9S3P+xxXKuhFSKveI9iNDDOIKV5NE+B1w8IIwrK8m9e0UgcSwEbHzL2oEy/wZX7tLuYBcLmR7pjMw7fINz6D2yiKB0ptNPOR8eMgu6URqFzLFy7BOSJnOrwCIzYiJO+6yZp4tLCbE+xXlo5drJDt0Ol4cBuDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708935504; c=relaxed/simple;
-	bh=hhy5wm+LiAbIVu8rhmmBUlevpispT+a22AaQJSu9mmA=;
+	s=arc-20240116; t=1708935506; c=relaxed/simple;
+	bh=257GqoYqIY/PbBdIU+NPNvRukS1j33Jlo8DxZLT8lK8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dY/IEM4CkIv9k69XWTtGRsjctbxT08lcijseFxlSfZ92wpb7GrN2CIXa59Lx+PfsE6ApW9PeoH0yWufoMrvfBxvEn5Lr8OHH2ZoNKSsSs1BncN9cT3cT+yxw6nHjozcl9tjiPZE/jlIa4jVnrxyHb+FFllluvqyz9G3NdoX4PJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/hd/SEZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kI6vQ9AYVsmRBqXfOJszC7liUG9Hfedk1RH2qBGelN5O96Op7Inl2/kthP0CxK4Bk2BvCCn3rFR7VtbV7p+s2A3tM93NeW5uztWrmFBI9Uegk4nXlp1c3QVRbzxbeJHA0RJDOH1i/Pbe11DfTCdxWv0HyODKfazw2H06D9YLDNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kaj2I0n3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/hd/SEZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1683BC433F1;
-	Mon, 26 Feb 2024 08:18:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kaj2I0n3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4AD7C433C7;
+	Mon, 26 Feb 2024 08:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708935504;
-	bh=hhy5wm+LiAbIVu8rhmmBUlevpispT+a22AaQJSu9mmA=;
+	s=k20201202; t=1708935506;
+	bh=257GqoYqIY/PbBdIU+NPNvRukS1j33Jlo8DxZLT8lK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o/hd/SEZLM/QMjDK0su5WBGZxLBFDGyP/jMjwh3RVp4EygEOJJ/2Q2O7kKHZ3CkyB
-	 W/4bkNNHm3ioxJlfVCCRgXrkE0eBiN+dlhkmvblxX5C3mfzwX11Xv5SKVfHXWBCbsF
-	 kW+ua9lHLR2n+B0hpdNFi6fsMcwjh6Pnn2ZQOGFrlmX97VQvRT1AWETT3CYgKCxpx2
-	 slSNxgrv2PHA1MaM+WekhQVrpq8X1QLFUpAY3qe/0xdYQZanB9WTFiQFsHV3tGWf19
-	 B7cvVqoMUiTnklhBeoPFERBLRQBiPXR72PL2x51RyzikwExcORUCw9eaPPogLcXZ62
-	 LDddAGRgWqKAQ==
+	b=Kaj2I0n35CklrjjY9D8cjA49QTzk/duzX6WfQKEZ4t4YjllNJA4+VTJMkFnkS7hwJ
+	 Pmu0JK42Otf0yC33l9UyDVlwI6CMaHaN3a0rGH1UQsTBXllfso783G8CMRs3shqIUj
+	 yMK8mFu2zApXi5rpT1gZ8Ap86+WFNILdvWfNpKqZof0sbW87XSGv6pqOlRlUrLB9QL
+	 34rQlxXkqfb8ybuw5wSYkAIGsegWcKqoLEmbFPcSdf8lb/gEACV+OFxPZGPdrnehLe
+	 hKJjnVPMiovLU5M1oa4lwgD49kGCexb63t8Arx+GLzRe1m1UoC+NU7o4XXjAygyrKl
+	 plGsCL7Tdw/yA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 11/13] selftests: mptcp: export event macros in mptcp_lib
-Date: Mon, 26 Feb 2024 16:17:56 +0800
-Message-Id: <4cc3756c5100d809b5058ac956a8676db641cccc.1708935196.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 12/13] selftests: mptcp: add mptcp_lib_verify_listener_events
+Date: Mon, 26 Feb 2024 16:17:57 +0800
+Message-Id: <f068ed98174399aa45d6e538ce88a734f159f767.1708935196.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1708935196.git.tanggeliang@kylinos.cn>
 References: <cover.1708935196.git.tanggeliang@kylinos.cn>
@@ -45,483 +45,162 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-SUB_ESTABLISHED, LISTENER_CREATED, LISTENER_CLOSED, AF_INET and AF_INET6
-are defined in both mptcp_join.sh and userspace_pm.sh, export all event
-macros into mptcp_lib.sh. Add MPTCP_LIB_ prefix for the first three and
-add readonly for the last two.
+To avoid duplicated code in different MPTCP selftests, we can add and use
+helpers defined in mptcp_lib.sh.
+
+The helper verify_listener_events() is defined both in mptcp_join.sh and
+userspace_pm.sh, export it into mptcp_lib.sh and rename it with mptcp_lib_
+prefix. Use this new helper in both scripts.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/net/mptcp/mptcp_join.sh |  23 ++--
- .../testing/selftests/net/mptcp/mptcp_lib.sh  |  11 ++
- .../selftests/net/mptcp/userspace_pm.sh       | 121 +++++++++---------
- 3 files changed, 80 insertions(+), 75 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 25 +++------------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 25 +++++++++++++++
+ .../selftests/net/mptcp/userspace_pm.sh       | 31 +++++--------------
+ 3 files changed, 38 insertions(+), 43 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 0d45578f7858..e37ba5d46d9d 100755
+index e37ba5d46d9d..6861bfcc7ddf 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2788,13 +2788,6 @@ backup_tests()
- 	fi
- }
+@@ -2790,16 +2790,12 @@ backup_tests()
  
--SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
--LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
--LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
--
--AF_INET=2
--AF_INET6=10
--
  verify_listener_events()
  {
- 	local evt=$1
-@@ -2808,9 +2801,9 @@ verify_listener_events()
- 	local sport
+-	local evt=$1
+ 	local e_type=$2
+ 	local e_family=$3
+ 	local e_saddr=$4
+ 	local e_sport=$5
+-	local type
+-	local family
+-	local saddr
+-	local sport
  	local name
++	local rc=0
  
--	if [ $e_type = $LISTENER_CREATED ]; then
-+	if [ $e_type = $MPTCP_LIB_LISTENER_CREATED ]; then
+ 	if [ $e_type = $MPTCP_LIB_LISTENER_CREATED ]; then
  		name="LISTENER_CREATED"
--	elif [ $e_type = $LISTENER_CLOSED ]; then
-+	elif [ $e_type = $MPTCP_LIB_LISTENER_CLOSED ]; then
- 		name="LISTENER_CLOSED "
- 	else
- 		name="$e_type"
-@@ -2877,8 +2870,10 @@ add_addr_ports_tests()
- 		chk_add_nr 1 1 1
- 		chk_rm_nr 1 1 invert
- 
--		verify_listener_events $evts_ns1 $LISTENER_CREATED $AF_INET 10.0.2.1 10100
--		verify_listener_events $evts_ns1 $LISTENER_CLOSED $AF_INET 10.0.2.1 10100
-+		verify_listener_events $evts_ns1 $MPTCP_LIB_LISTENER_CREATED \
-+				       $AF_INET 10.0.2.1 10100
-+		verify_listener_events $evts_ns1 $MPTCP_LIB_LISTENER_CLOSED \
-+				       $AF_INET 10.0.2.1 10100
- 		kill_events_pids
+@@ -2816,23 +2812,12 @@ verify_listener_events()
+ 		return
  	fi
  
-@@ -3484,11 +3479,11 @@ userspace_tests()
- 		userspace_pm_chk_get_addr "${ns1}" "10" "id 10 flags signal 10.0.2.1"
- 		userspace_pm_chk_get_addr "${ns1}" "20" "id 20 flags signal 10.0.3.1"
- 		userspace_pm_rm_addr $ns1 10
--		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $SUB_ESTABLISHED
-+		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $MPTCP_LIB_SUB_ESTABLISHED
- 		userspace_pm_chk_dump_addr "${ns1}" \
- 			"id 20 flags signal 10.0.3.1" "after rm_addr 10"
- 		userspace_pm_rm_addr $ns1 20
--		userspace_pm_rm_sf $ns1 10.0.3.1 $SUB_ESTABLISHED
-+		userspace_pm_rm_sf $ns1 10.0.3.1 $MPTCP_LIB_SUB_ESTABLISHED
- 		userspace_pm_chk_dump_addr "${ns1}" "" "after rm_addr 20"
- 		chk_rm_nr 2 2 invert
- 		chk_mptcp_info subflows 0 subflows 0
-@@ -3515,7 +3510,7 @@ userspace_tests()
- 			"subflow"
- 		userspace_pm_chk_get_addr "${ns2}" "20" "id 20 flags subflow 10.0.3.2"
- 		userspace_pm_rm_addr $ns2 20
--		userspace_pm_rm_sf $ns2 10.0.3.2 $SUB_ESTABLISHED
-+		userspace_pm_rm_sf $ns2 10.0.3.2 $MPTCP_LIB_SUB_ESTABLISHED
- 		userspace_pm_chk_dump_addr "${ns2}" \
- 			"" \
- 			"after rm_addr 20"
+-	type=$(mptcp_lib_evts_get_info type "$evt" "$e_type")
+-	family=$(mptcp_lib_evts_get_info family "$evt" "$e_type")
+-	sport=$(mptcp_lib_evts_get_info sport "$evt" "$e_type")
+-	if [ $family ] && [ $family = $AF_INET6 ]; then
+-		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" "$e_type")
+-	else
+-		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" "$e_type")
+-	fi
+-
+-	if [ $type ] && [ $type = $e_type ] &&
+-	   [ $family ] && [ $family = $e_family ] &&
+-	   [ $saddr ] && [ $saddr = $e_saddr ] &&
+-	   [ $sport ] && [ $sport = $e_sport ]; then
+-		print_ok
++	mptcp_lib_verify_listener_events "${@}" || rc="${?}"
++	if [ "${rc}" -eq 0 ]
++	then
+ 		return 0
+ 	fi
+-	fail_test "$e_type:$type $e_family:$family $e_saddr:$saddr $e_sport:$sport"
++	fail_test "$e_type $e_family $e_saddr $e_sport"
+ }
+ 
+ add_addr_ports_tests()
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 141ade36c373..b75b7aedcd1c 100644
+index b75b7aedcd1c..0767da4b9436 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -2,6 +2,7 @@
- # SPDX-License-Identifier: GPL-2.0
+@@ -479,3 +479,28 @@ mptcp_lib_check_expected() {
  
- # Some variables are used below but indirectly, see check_expected_one()
-+# MPTCP_LIB_ANNOUNCED and AF_INET
- #shellcheck disable=SC2034
- 
- readonly KSFT_PASS=0
-@@ -11,6 +12,16 @@ readonly KSFT_SKIP=4
- # shellcheck disable=SC2155 # declare and assign separately
- readonly KSFT_TEST="${MPTCP_LIB_KSFT_TEST:-$(basename "${0}" .sh)}"
- 
-+MPTCP_LIB_ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
-+MPTCP_LIB_REMOVED=7          # MPTCP_EVENT_REMOVED
-+MPTCP_LIB_SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
-+MPTCP_LIB_SUB_CLOSED=11      # MPTCP_EVENT_SUB_CLOSED
-+MPTCP_LIB_LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
-+MPTCP_LIB_LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
+ 	return "${rc}"
+ }
 +
-+readonly AF_INET=2
-+readonly AF_INET6=10
++mptcp_lib_verify_listener_events() {
++	local evt=$1
++	local e_type=$2
++	local e_family=$3
++	local e_saddr=$4
++	local e_sport=$5
++	local type
++	local family
++	local saddr
++	local sport
++	local rc=0
 +
- MPTCP_LIB_SUBTESTS=()
- MPTCP_LIB_SUBTESTS_DUPLICATED=0
- 
++	type=$(mptcp_lib_evts_get_info type "$evt" "$e_type")
++	family=$(mptcp_lib_evts_get_info family "$evt" "$e_type")
++	if [ "$family" ] && [ "$family" = $AF_INET6 ]; then
++		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" "$e_type")
++	else
++		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" "$e_type")
++	fi
++	sport=$(mptcp_lib_evts_get_info sport "$evt" "$e_type")
++
++	mptcp_lib_check_expected "type" "family" "saddr" "sport" || rc="${?}"
++	return "${rc}"
++}
 diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 3f475ae44d0b..6d358b7e47e9 100755
+index 6d358b7e47e9..6fe2a4e1704f 100755
 --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
 +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -19,16 +19,6 @@ if ! mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- fi
- mptcp_lib_check_tools ip
+@@ -842,32 +842,15 @@ test_prio()
  
--ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
--REMOVED=7          # MPTCP_EVENT_REMOVED
--SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
--SUB_CLOSED=11      # MPTCP_EVENT_SUB_CLOSED
--LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
--LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
+ verify_listener_events()
+ {
+-	local evt=$1
+-	local e_type=$2
+-	local e_family=$3
+-	local e_saddr=$4
+-	local e_sport=$5
+-	local type
+-	local family
+-	local saddr
+-	local sport
 -
--AF_INET=2
--AF_INET6=10
+-	if [ $e_type = $LISTENER_CREATED ]; then
+-		print_test "CREATE_LISTENER $e_saddr:$e_sport"
+-	elif [ $e_type = $LISTENER_CLOSED ]; then
+-		print_test "CLOSE_LISTENER $e_saddr:$e_sport"
+-	fi
++	local rc=0
+ 
+-	type=$(mptcp_lib_evts_get_info type $evt $e_type)
+-	family=$(mptcp_lib_evts_get_info family $evt $e_type)
+-	sport=$(mptcp_lib_evts_get_info sport $evt $e_type)
+-	if [ $family ] && [ $family = $AF_INET6 ]; then
+-		saddr=$(mptcp_lib_evts_get_info saddr6 $evt $e_type)
++	mptcp_lib_verify_listener_events "${@}" || rc="${?}"
++	if [ "${rc}" -eq 0 ]
++	then
++		mptcp_lib_result_pass "${test_name}"
+ 	else
+-		saddr=$(mptcp_lib_evts_get_info saddr4 $evt $e_type)
++		test_fail
+ 	fi
 -
- file=""
- server_evts=""
- client_evts=""
-@@ -309,8 +299,8 @@ test_announce()
- 	   ns2eth1
- 	print_test "ADD_ADDR id:${client_addr_id} 10.0.2.2 (ns2) => ns1, reuse port"
- 	sleep 0.5
--	verify_announce_event $server_evts $ANNOUNCED $server4_token "10.0.2.2" $client_addr_id \
--			      "$client4_port"
-+	verify_announce_event $server_evts $MPTCP_LIB_ANNOUNCED $server4_token \
-+			      "10.0.2.2" $client_addr_id "$client4_port"
+-	check_expected "type" "family" "saddr" "sport"
+ }
  
- 	# ADD_ADDR6 from the client to server machine reusing the subflow port
- 	:>"$server_evts"
-@@ -318,8 +308,8 @@ test_announce()
- 	   dead:beef:2::2 token "$client6_token" id $client_addr_id dev ns2eth1
- 	print_test "ADD_ADDR6 id:${client_addr_id} dead:beef:2::2 (ns2) => ns1, reuse port"
- 	sleep 0.5
--	verify_announce_event "$server_evts" "$ANNOUNCED" "$server6_token" "dead:beef:2::2"\
--			      "$client_addr_id" "$client6_port" "v6"
-+	verify_announce_event "$server_evts" "$MPTCP_LIB_ANNOUNCED" "$server6_token" \
-+			      "dead:beef:2::2" "$client_addr_id" "$client6_port" "v6"
- 
- 	# ADD_ADDR from the client to server machine using a new port
- 	:>"$server_evts"
-@@ -328,7 +318,7 @@ test_announce()
- 	   $client_addr_id dev ns2eth1 port $new4_port
- 	print_test "ADD_ADDR id:${client_addr_id} 10.0.2.2 (ns2) => ns1, new port"
- 	sleep 0.5
--	verify_announce_event "$server_evts" "$ANNOUNCED" "$server4_token" "10.0.2.2"\
-+	verify_announce_event "$server_evts" "$MPTCP_LIB_ANNOUNCED" "$server4_token" "10.0.2.2"\
- 			      "$client_addr_id" "$new4_port"
- 
+ test_listener()
+@@ -883,6 +866,7 @@ test_listener()
  	# Capture events on the network namespace running the client
-@@ -339,7 +329,7 @@ test_announce()
- 	   $server_addr_id dev ns1eth2
- 	print_test "ADD_ADDR id:${server_addr_id} 10.0.2.1 (ns1) => ns2, reuse port"
+ 	:>$client_evts
+ 
++	print_test "Listener event LISTENER_CREATED 10.0.2.2:$client4_port"
+ 	# Attempt to add a listener at 10.0.2.2:<subflow-port>
+ 	ip netns exec $ns2 ./pm_nl_ctl listen 10.0.2.2\
+ 		$client4_port &
+@@ -902,6 +886,7 @@ test_listener()
+ 		rport $client4_port token $server4_token
  	sleep 0.5
--	verify_announce_event "$client_evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
-+	verify_announce_event "$client_evts" "$MPTCP_LIB_ANNOUNCED" "$client4_token" "10.0.2.1"\
- 			      "$server_addr_id" "$app4_port"
  
- 	# ADD_ADDR6 from the server to client machine reusing the subflow port
-@@ -348,8 +338,8 @@ test_announce()
- 	   $server_addr_id dev ns1eth2
- 	print_test "ADD_ADDR6 id:${server_addr_id} dead:beef:2::1 (ns1) => ns2, reuse port"
- 	sleep 0.5
--	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "dead:beef:2::1"\
--			      "$server_addr_id" "$app6_port" "v6"
-+	verify_announce_event "$client_evts" "$MPTCP_LIB_ANNOUNCED" "$client6_token" \
-+			      "dead:beef:2::1" "$server_addr_id" "$app6_port" "v6"
- 
- 	# ADD_ADDR from the server to client machine using a new port
- 	:>"$client_evts"
-@@ -358,7 +348,7 @@ test_announce()
- 	   $server_addr_id dev ns1eth2 port $new4_port
- 	print_test "ADD_ADDR id:${server_addr_id} 10.0.2.1 (ns1) => ns2, new port"
- 	sleep 0.5
--	verify_announce_event "$client_evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
-+	verify_announce_event "$client_evts" "$MPTCP_LIB_ANNOUNCED" "$client4_token" "10.0.2.1"\
- 			      "$server_addr_id" "$new4_port"
- }
- 
-@@ -419,7 +409,7 @@ test_remove()
- 	   $client_addr_id
- 	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1"
- 	sleep 0.5
--	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
-+	verify_remove_event "$server_evts" "$MPTCP_LIB_REMOVED" "$server4_token" "$client_addr_id"
- 
- 	# RM_ADDR from the client to server machine
- 	:>"$server_evts"
-@@ -428,7 +418,7 @@ test_remove()
- 	   $client_addr_id
- 	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1"
- 	sleep 0.5
--	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
-+	verify_remove_event "$server_evts" "$MPTCP_LIB_REMOVED" "$server4_token" "$client_addr_id"
- 
- 	# RM_ADDR6 from the client to server machine
- 	:>"$server_evts"
-@@ -436,7 +426,7 @@ test_remove()
- 	   $client_addr_id
- 	print_test "RM_ADDR6 id:${client_addr_id} ns2 => ns1"
- 	sleep 0.5
--	verify_remove_event "$server_evts" "$REMOVED" "$server6_token" "$client_addr_id"
-+	verify_remove_event "$server_evts" "$MPTCP_LIB_REMOVED" "$server6_token" "$client_addr_id"
- 
- 	# Capture events on the network namespace running the client
- 	:>"$client_evts"
-@@ -446,7 +436,7 @@ test_remove()
- 	   $server_addr_id
- 	print_test "RM_ADDR id:${server_addr_id} ns1 => ns2"
- 	sleep 0.5
--	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
-+	verify_remove_event "$client_evts" "$MPTCP_LIB_REMOVED" "$client4_token" "$server_addr_id"
- 
- 	# RM_ADDR from the server to client machine
- 	:>"$client_evts"
-@@ -455,7 +445,7 @@ test_remove()
- 	   $server_addr_id
- 	print_test "RM_ADDR id:${server_addr_id} ns1 => ns2"
- 	sleep 0.5
--	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
-+	verify_remove_event "$client_evts" "$MPTCP_LIB_REMOVED" "$client4_token" "$server_addr_id"
- 
- 	# RM_ADDR6 from the server to client machine
- 	:>"$client_evts"
-@@ -463,7 +453,7 @@ test_remove()
- 	   $server_addr_id
- 	print_test "RM_ADDR6 id:${server_addr_id} ns1 => ns2"
- 	sleep 0.5
--	verify_remove_event "$client_evts" "$REMOVED" "$client6_token" "$server_addr_id"
-+	verify_remove_event "$client_evts" "$MPTCP_LIB_REMOVED" "$client6_token" "$server_addr_id"
- }
- 
- verify_subflow_events()
-@@ -492,7 +482,7 @@ verify_subflow_events()
- 
- 	info="${e_saddr} (${e_from}) => ${e_daddr}:${e_dport} (${e_to})"
- 
--	if [ "$e_type" = "$SUB_ESTABLISHED" ]
-+	if [ "$e_type" = "$MPTCP_LIB_SUB_ESTABLISHED" ]
- 	then
- 		if [ "$e_family" = "$AF_INET6" ]
- 		then
-@@ -549,22 +539,24 @@ test_subflows()
- 	ip netns exec "$ns1" ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2\
- 	   rport "$client4_port" token "$server4_token"
- 	sleep 0.5
--	verify_subflow_events $server_evts $SUB_ESTABLISHED $server4_token $AF_INET "10.0.2.1" \
--			      "10.0.2.2" "$client4_port" "23" "$client_addr_id" "ns1" "ns2"
-+	verify_subflow_events $server_evts $MPTCP_LIB_SUB_ESTABLISHED $server4_token \
-+			      $AF_INET "10.0.2.1" "10.0.2.2" "$client4_port" "23" \
-+			      "$client_addr_id" "ns1" "ns2"
- 
++	print_test "Listener event LISTENER_CLOSED 10.0.2.2:$client4_port"
  	# Delete the listener from the client ns, if one was created
  	mptcp_lib_kill_wait $listener_pid
  
- 	local sport
--	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
-+	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $MPTCP_LIB_SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW from server to client machine
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
- 	   "$client4_port" token "$server4_token"
- 	sleep 0.5
--	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
--			      "10.0.2.2" "$client4_port" "23" "$client_addr_id" "ns1" "ns2"
-+	verify_subflow_events "$server_evts" "$MPTCP_LIB_SUB_CLOSED" "$server4_token" \
-+			      "$AF_INET" "10.0.2.1" "10.0.2.2" "$client4_port" "23" \
-+			      "$client_addr_id" "ns1" "ns2"
- 
- 	# RM_ADDR from client to server machine
- 	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
-@@ -587,21 +579,21 @@ test_subflows()
- 	ip netns exec "$ns1" ./pm_nl_ctl csf lip dead:beef:2::1 lid 23 rip\
- 	   dead:beef:2::2 rport "$client6_port" token "$server6_token"
- 	sleep 0.5
--	verify_subflow_events "$server_evts" "$SUB_ESTABLISHED" "$server6_token" "$AF_INET6"\
--			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
--			      "$client_addr_id" "ns1" "ns2"
-+	verify_subflow_events "$server_evts" "$MPTCP_LIB_SUB_ESTABLISHED" "$server6_token" \
-+			      "$AF_INET6" "dead:beef:2::1" "dead:beef:2::2" "$client6_port" \
-+			      "23" "$client_addr_id" "ns1" "ns2"
- 
- 	# Delete the listener from the client ns, if one was created
- 	mptcp_lib_kill_wait $listener_pid
- 
--	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
-+	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $MPTCP_LIB_SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW6 from server to client machine
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip dead:beef:2::1 lport "$sport" rip\
- 	   dead:beef:2::2 rport "$client6_port" token "$server6_token"
- 	sleep 0.5
--	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server6_token" "$AF_INET6"\
-+	verify_subflow_events "$server_evts" "$MPTCP_LIB_SUB_CLOSED" "$server6_token" "$AF_INET6"\
- 			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
- 			      "$client_addr_id" "ns1" "ns2"
- 
-@@ -626,22 +618,23 @@ test_subflows()
- 	ip netns exec "$ns1" ./pm_nl_ctl csf lip 10.0.2.1 lid 23 rip 10.0.2.2 rport\
- 	   $new4_port token "$server4_token"
- 	sleep 0.5
--	verify_subflow_events "$server_evts" "$SUB_ESTABLISHED" "$server4_token" "$AF_INET"\
--			      "10.0.2.1" "10.0.2.2" "$new4_port" "23"\
-+	verify_subflow_events "$server_evts" "$MPTCP_LIB_SUB_ESTABLISHED" "$server4_token" \
-+			      "$AF_INET" "10.0.2.1" "10.0.2.2" "$new4_port" "23" \
- 			      "$client_addr_id" "ns1" "ns2"
- 
- 	# Delete the listener from the client ns, if one was created
- 	mptcp_lib_kill_wait $listener_pid
- 
--	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $SUB_ESTABLISHED)
-+	sport=$(mptcp_lib_evts_get_info sport "$server_evts" $MPTCP_LIB_SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW from server to client machine
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
- 	   $new4_port token "$server4_token"
- 	sleep 0.5
--	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
--			      "10.0.2.2" "$new4_port" "23" "$client_addr_id" "ns1" "ns2"
-+	verify_subflow_events "$server_evts" "$MPTCP_LIB_SUB_CLOSED" "$server4_token" \
-+			      "$AF_INET" "10.0.2.1" "10.0.2.2" "$new4_port" "23" \
-+			      "$client_addr_id" "ns1" "ns2"
- 
- 	# RM_ADDR from client to server machine
- 	ip netns exec "$ns2" ./pm_nl_ctl rem id $client_addr_id token\
-@@ -665,21 +658,22 @@ test_subflows()
- 	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
- 	   $app4_port token "$client4_token"
- 	sleep 0.5
--	verify_subflow_events $client_evts $SUB_ESTABLISHED $client4_token $AF_INET "10.0.2.2"\
--			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
-+	verify_subflow_events $client_evts $MPTCP_LIB_SUB_ESTABLISHED $client4_token $AF_INET \
-+			      "10.0.2.2" "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
- 
- 	# Delete the listener from the server ns, if one was created
- 	mptcp_lib_kill_wait $listener_pid
- 
--	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
-+	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $MPTCP_LIB_SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
- 	   $app4_port token "$client4_token"
- 	sleep 0.5
--	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
--			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
-+	verify_subflow_events "$client_evts" "$MPTCP_LIB_SUB_CLOSED" "$client4_token" \
-+			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app4_port" "23" \
-+			      "$server_addr_id" "ns2" "ns1"
- 
- 	# RM_ADDR from server to client machine
- 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
-@@ -702,7 +696,7 @@ test_subflows()
- 	ip netns exec "$ns2" ./pm_nl_ctl csf lip dead:beef:2::2 lid 23 rip\
- 	   dead:beef:2::1 rport $app6_port token "$client6_token"
- 	sleep 0.5
--	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client6_token"\
-+	verify_subflow_events "$client_evts" "$MPTCP_LIB_SUB_ESTABLISHED" "$client6_token"\
- 			      "$AF_INET6" "dead:beef:2::2"\
- 			      "dead:beef:2::1" "$app6_port" "23"\
- 			      "$server_addr_id" "ns2" "ns1"
-@@ -710,15 +704,16 @@ test_subflows()
- 	# Delete the listener from the server ns, if one was created
- 	mptcp_lib_kill_wait $listener_pid
- 
--	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
-+	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $MPTCP_LIB_SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW6 from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip dead:beef:2::2 lport "$sport" rip\
- 	   dead:beef:2::1 rport $app6_port token "$client6_token"
- 	sleep 0.5
--	verify_subflow_events $client_evts $SUB_CLOSED $client6_token $AF_INET6 "dead:beef:2::2"\
--			      "dead:beef:2::1" "$app6_port" "23" "$server_addr_id" "ns2" "ns1"
-+	verify_subflow_events $client_evts $MPTCP_LIB_SUB_CLOSED $client6_token \
-+			      $AF_INET6 "dead:beef:2::2" "dead:beef:2::1" "$app6_port" \
-+			      "23" "$server_addr_id" "ns2" "ns1"
- 
- 	# RM_ADDR6 from server to client machine
- 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
-@@ -741,21 +736,23 @@ test_subflows()
- 	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
- 	   $new4_port token "$client4_token"
- 	sleep 0.5
--	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client4_token" "$AF_INET"\
--			      "10.0.2.2" "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
-+	verify_subflow_events "$client_evts" "$MPTCP_LIB_SUB_ESTABLISHED" "$client4_token" \
-+			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$new4_port" "23" \
-+			      "$server_addr_id" "ns2" "ns1"
- 
- 	# Delete the listener from the server ns, if one was created
- 	mptcp_lib_kill_wait $listener_pid
- 
--	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
-+	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $MPTCP_LIB_SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
- 	   $new4_port token "$client4_token"
- 	sleep 0.5
--	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
--			      "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
-+	verify_subflow_events "$client_evts" "$MPTCP_LIB_SUB_CLOSED" "$client4_token" \
-+			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$new4_port" "23" \
-+			      "$server_addr_id" "ns2" "ns1"
- 
- 	# RM_ADDR from server to client machine
- 	ip netns exec "$ns1" ./pm_nl_ctl rem id $server_addr_id token\
-@@ -778,7 +775,7 @@ test_subflows_v4_v6_mix()
- 	   $server_addr_id dev ns1eth2
- 	print_test "ADD_ADDR4 id:${server_addr_id} 10.0.2.1 (ns1) => ns2, reuse port"
- 	sleep 0.5
--	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "10.0.2.1"\
-+	verify_announce_event "$client_evts" "$MPTCP_LIB_ANNOUNCED" "$client6_token" "10.0.2.1"\
- 			      "$server_addr_id" "$app6_port"
- 
- 	# CREATE_SUBFLOW from client to server machine
-@@ -786,21 +783,21 @@ test_subflows_v4_v6_mix()
- 	ip netns exec "$ns2" ./pm_nl_ctl csf lip 10.0.2.2 lid 23 rip 10.0.2.1 rport\
- 	   $app6_port token "$client6_token"
- 	sleep 0.5
--	verify_subflow_events "$client_evts" "$SUB_ESTABLISHED" "$client6_token"\
-+	verify_subflow_events "$client_evts" "$MPTCP_LIB_SUB_ESTABLISHED" "$client6_token"\
- 			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app6_port" "23"\
- 			      "$server_addr_id" "ns2" "ns1"
- 
- 	# Delete the listener from the server ns, if one was created
- 	mptcp_lib_kill_wait $listener_pid
- 
--	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $SUB_ESTABLISHED)
-+	sport=$(mptcp_lib_evts_get_info sport "$client_evts" $MPTCP_LIB_SUB_ESTABLISHED)
- 
- 	# DESTROY_SUBFLOW from client to server machine
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
- 	   $app6_port token "$client6_token"
- 	sleep 0.5
--	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client6_token" \
-+	verify_subflow_events "$client_evts" "$MPTCP_LIB_SUB_CLOSED" "$client6_token" \
- 			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app6_port" "23"\
- 			      "$server_addr_id" "ns2" "ns1"
- 
-@@ -892,7 +889,8 @@ test_listener()
- 	local listener_pid=$!
- 
- 	sleep 0.5
--	verify_listener_events $client_evts $LISTENER_CREATED $AF_INET 10.0.2.2 $client4_port
-+	verify_listener_events $client_evts $MPTCP_LIB_LISTENER_CREATED \
-+			       $AF_INET 10.0.2.2 $client4_port
- 
- 	# ADD_ADDR from client to server machine reusing the subflow port
- 	ip netns exec $ns2 ./pm_nl_ctl ann 10.0.2.2 token $client4_token id\
-@@ -908,7 +906,8 @@ test_listener()
- 	mptcp_lib_kill_wait $listener_pid
- 
- 	sleep 0.5
--	verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.2 $client4_port
-+	verify_listener_events $client_evts $MPTCP_LIB_LISTENER_CLOSED \
-+			       $AF_INET 10.0.2.2 $client4_port
- }
- 
- print_title "Make connections"
 -- 
 2.40.1
 
