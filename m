@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016572B9BD
-	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 12:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDAC2B9BD
+	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 12:42:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708951315; cv=none; b=p4BQWiap0uIUlBiUfXjj5cxFiX4d8BdYCW/o2VfKi/Cp50dGIjlYuUaqbaA+Pwg4tiFO+OwdpECGUx8ZEKUjGSXfgEgN0E/a2wPQXH9EX8dnmG9Dea8k0OBPBmdX0tdoLqzHw4F4Ku070CBgwgTctSfyLoMKPW92F+8wLDNMm38=
+	t=1708951324; cv=none; b=Nz+C4mKVMjYj5HKJtdgk6y3QKLf2ec6EHhHQk88ls53RfnyJmEaLpAbeSvr+oPr3IKOID8mREyMkdaOl/I2G5YsAb5o/0lvCTK5BI99c7oArWhs3658hn2dqBazkOTE/dpFSZWZFeh2VpBPw8pPoWabkej2YjNO69So/o4X25V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708951315; c=relaxed/simple;
-	bh=N/RbMXHkHxXVNP6tSluwBLLvUO52fAa/IHAup95TEdo=;
+	s=arc-20240116; t=1708951324; c=relaxed/simple;
+	bh=tW1q7z+erREUYkj4oUsZ4YZQ/z2VCCgOgKOcw8AHmro=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KNMeYDPQHRGTW5E+nGTSSZmtnYfaeRq5kt6Nn66tkgcx7U8UmIPOC0TALg04JOWapgzZydqtnB4qla8bBUll0tpdyLUoTmef9vkme7mcQ3miZ7Pwy+HyHNchaw5LJluWxeKp1CIycYxUPjQqEL23AQgaZPhx1UnWbpio5yKV8ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hBBoouq+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CUSF+9FI8ZL1979VAM7ObCh5gTyQkVLOKXcJZyC0HdRXx9mLD5aAz2dlCiQ8hRGlfbzDBWVkshNHcrbAC3zjTZewBNiyIyRbkvcqqWmKsKDNbiXqlvJ//aK+tb5tyrL5Au/Ifaul5hhJbA49pqyOq36u6C7ruVgUWhADoPMmE8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORBrJGsy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBBoouq+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB79C433C7;
-	Mon, 26 Feb 2024 12:41:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORBrJGsy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F03D5C433F1;
+	Mon, 26 Feb 2024 12:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708951314;
-	bh=N/RbMXHkHxXVNP6tSluwBLLvUO52fAa/IHAup95TEdo=;
+	s=k20201202; t=1708951324;
+	bh=tW1q7z+erREUYkj4oUsZ4YZQ/z2VCCgOgKOcw8AHmro=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hBBoouq+Iu7HXDYVjZNElZQBr/wgdYZ2tzxSZUGvN5+IrzQPwMhokU+x5vWUdNuaH
-	 ngF5D9aAvOxBtJhKvxzjerQan87TiyFhQJx6wPwgmKgY+E0tvT+DDBT1beXmz6U2u5
-	 CsHj5Qt9DqyQYIkrIJmj8lm0/roCz9gI7EGX2cUcn3dhWwMs2QuuSoLXRUp48nxsBX
-	 Y/matruoiTM5nMRjl+oDqRlwBy2VU8YkBQMJNngi8jwuzHU1iscX9EVQk6i/OlE1d7
-	 FjFCyN6kaL7zBUsbTGN5r9ISNzpGRbnO67tL163AbvhCEwh3xcIT4tNYc7t9MgH22P
-	 Nu1A15ZyUiMyw==
-Message-ID: <5273bf67-282b-4b16-8576-670b12447d6a@kernel.org>
-Date: Mon, 26 Feb 2024 13:41:53 +0100
+	b=ORBrJGsyiyie7+K3ARC4tQWeG7Mm5UOu9nwP/LlWJ4qUzsoZH83Say0U4jSolwq3M
+	 ro/0F75n02LQpmS0Fwv20zrB0LyMcV76g0PPOhxIKMpZIP/lXk7KGk17XeoS0RRP70
+	 /RLZ48q2bLwat8mrJsEFWTQRmNeSAYJjBDpwI2mUaxlV8BUuJ1N0swQ62CWY9QmdtH
+	 8ONEPvKrYhJXU79SRRU4vhg2zKXKl8xqmJG5WXHbYr7x+mNlab1X+ftcOpzfekE/H0
+	 tV0t6leG0lvcRXPrbi6M7NmFIEZzQ/kKdw9cRWp1lQQ96RQ8ranh9K3+z3KZ1iza8q
+	 fpLN2tH0C7NIA==
+Message-ID: <d0f1a146-d5e4-45f9-992b-82e3ed18f239@kernel.org>
+Date: Mon, 26 Feb 2024 13:42:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v5 09/12] selftests: mptcp: extract
- mptcp_lib_check_expected
+Subject: Re: [PATCH mptcp-next v5 10/12] selftests: mptcp: export event macros
+ in mptcp_lib
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708939962.git.tanggeliang@kylinos.cn>
- <71d2dc8ad19fd8d87c8e128ed3f02a6c77d1c9d2.1708939962.git.tanggeliang@kylinos.cn>
+ <b8df72d8c39dd8760cc408fcf3c2ec21d76b6051.1708939962.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <71d2dc8ad19fd8d87c8e128ed3f02a6c77d1c9d2.1708939962.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b8df72d8c39dd8760cc408fcf3c2ec21d76b6051.1708939962.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,170 +96,83 @@ Hi Geliang,
 On 26/02/2024 10:43, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Extract the main part of check_expected() in userspace_pm.sh to a new
-> function mptcp_lib_check_expected() in mptcp_lib.sh. It will be used
-> in both mptcp_john.sh and userspace_pm.sh.
-> 
-> check_expected_one() is moved into mptcp_lib.sh too as a sub function
-> of mptcp_lib_check_expected().
+> SUB_ESTABLISHED, LISTENER_CREATED, LISTENER_CLOSED, AF_INET and AF_INET6
+> are defined in both mptcp_join.sh and userspace_pm.sh, export all event
+> macros into mptcp_lib.sh. Add MPTCP_LIB_ prefix for the first three and
+> add readonly for the last two.
 
-Out of curiosity: why a subfunction?
+Why not doing that (prefix + readonly) for both?
 
-(see below)
+(...)
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 48 +++++++++++++++++++
->  .../selftests/net/mptcp/userspace_pm.sh       | 39 ++-------------
->  2 files changed, 52 insertions(+), 35 deletions(-)
-> 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index df495658f043..ed0013b47edb 100644
+> index ed0013b47edb..5feb11801469 100644
 > --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -1,6 +1,9 @@
->  #! /bin/bash
+> @@ -2,6 +2,7 @@
 >  # SPDX-License-Identifier: GPL-2.0
 >  
-> +# Some variables are used below but indirectly, see check_expected_one()
-> +#shellcheck disable=SC2034
+>  # Some variables are used below but indirectly, see check_expected_one()
+> +# MPTCP_LIB_ANNOUNCED and AF_INET
 
-Please move that just above the lines or functions having these
-false-positive errors to reduce the scope. Otherwise, this rule will be
-applied everywhere, and maybe missing valid issues.
-
-In other words, don't declare it here, but in mptcp_join.sh, where used.
-For userspace_pm.sh, you can keep it where it is, I suppose.
-
-> +
->  readonly KSFT_PASS=0
->  readonly KSFT_FAIL=1
->  readonly KSFT_SKIP=4
-> @@ -419,3 +422,48 @@ mptcp_lib_print_test_counter() {
->  
->  	printf "%02u ${fmt}" "$((++counter))" "${msg}"
->  }
-> +
-> +# $@: all var names to check
-> +mptcp_lib_check_expected() {
-> +	# $1: var name ; $2: prev ret
-> +	check_expected_one() {
-
-You still need to prefix it with mptcp_lib_ because you could override
-functions with the same name declared elsewhere: when
-mptcp_lib_check_expected(), this subfunction will be created globally,
-potentially overriding other ones with the same name.
-
-> +		local var="${1}"
-> +		local exp="e_${var}"
-> +		local prev_ret="${2}"
-> +
-> +		if [ "${!var}" = "${!exp}" ]
-
-Please keep the same code style as in the rest of this file: "then" and
-"do" are on the same line as "if" / "for".
-
-> +		then
-> +			return 0
-> +		fi
-> +
-> +		if [ "${prev_ret}" = "0" ]
-> +		then
-> +			return 2
-> +		fi
-> +
-> +		printf "\tExpected value for '%s': '%s', got '%s'.\n" \
-> +			"${var}" "${!exp}" "${!var}"
-> +		return 1
-> +	}
-> +
-> +	local rc=0
-> +	local var
-> +
-> +	for var in "${@}"
-> +	do
-> +		check_expected_one "${var}" "${rc}" || rc="${?}"
-> +		if [ "${rc}" -eq 2 ]
-> +		then
-> +			break
-> +		fi
-> +	done
-> +	unset -f check_expected_one
-> +
-> +	if [ ${rc} -eq 0 ]
-> +	then
-> +		mptcp_lib_print_ok "[ OK ]"
-> +		return 0
-> +	fi
-> +
-> +	return "${rc}"
-> +}
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> index 473639a8009f..3f475ae44d0b 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -5,7 +5,7 @@
->  # code but we accept it.
->  #shellcheck disable=SC2086
->  
-> -# Some variables are used below but indirectly, see check_expected_one()
-> +# Some variables are used below but indirectly
-
-Maybe point to check_expected now?
+Better to "export" them then instead
 
 >  #shellcheck disable=SC2034
 >  
->  . "$(dirname "${0}")/mptcp_lib.sh"
-> @@ -233,46 +233,15 @@ make_connection()
->  	fi
->  }
+>  readonly KSFT_PASS=0
+> @@ -11,6 +12,16 @@ readonly KSFT_SKIP=4
+>  # shellcheck disable=SC2155 # declare and assign separately
+>  readonly KSFT_TEST="${MPTCP_LIB_KSFT_TEST:-$(basename "${0}" .sh)}"
 >  
-> -# $1: var name ; $2: prev ret
-> -check_expected_one()
-> -{
-> -	local var="${1}"
-> -	local exp="e_${var}"
-> -	local prev_ret="${2}"
-> -
-> -	if [ "${!var}" = "${!exp}" ]
-> -	then
-> -		return 0
-> -	fi
-> -
-> -	if [ "${prev_ret}" = "0" ]
-> -	then
-> -		return 2
-> -	fi
-> -
-> -	_printf "\tExpected value for '%s': '%s', got '%s'.\n" \
-> -		"${var}" "${!exp}" "${!var}"
-> -	return 1
-> -}
-> -
->  # $@: all var names to check
->  check_expected()
->  {
->  	local rc=0
-> -	local var
+> +MPTCP_LIB_ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
+> +MPTCP_LIB_REMOVED=7          # MPTCP_EVENT_REMOVED
+> +MPTCP_LIB_SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
+> +MPTCP_LIB_SUB_CLOSED=11      # MPTCP_EVENT_SUB_CLOSED
+> +MPTCP_LIB_LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
+> +MPTCP_LIB_LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
+
+Please use the "readonly" attribute, and align the "#".
+
+Also, probably clearer to add '_EVENT', e.g.
+
+  export MPTCP_LIB_EVENT_ANNOUNCED=6
+
+> +
+> +readonly AF_INET=2
+> +readonly AF_INET6=10
+
+Prefix with 'MPTCP_LIB_' + export?
+
+> +
+>  MPTCP_LIB_SUBTESTS=()
+>  MPTCP_LIB_SUBTESTS_DUPLICATED=0
 >  
-> -	for var in "${@}"
-> -	do
-> -		check_expected_one "${var}" "${rc}" || rc="${?}"
-> -		if [ "${rc}" -eq 2 ]
-> -		then
-> -			break
-> -		fi
-> -	done
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> index 3f475ae44d0b..6d358b7e47e9 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -19,16 +19,6 @@ if ! mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+>  fi
+>  mptcp_lib_check_tools ip
+>  
+> -ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
+> -REMOVED=7          # MPTCP_EVENT_REMOVED
+> -SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
+> -SUB_CLOSED=11      # MPTCP_EVENT_SUB_CLOSED
+> -LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
+> -LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
 > -
-> -	if [ ${rc} -eq 0 ]
-> +	mptcp_lib_check_expected "${@}" || rc="${?}"
-> +	if [ "${rc}" -eq 0 ]
->  	then
-> -		test_pass
-> +		mptcp_lib_result_pass "${test_name}"
->  		return 0
->  	elif [ "${rc}" -eq 2 ]
->  	then
+> -AF_INET=2
+> -AF_INET6=10
+
+Instead of modifying hundreds of lines, probably best to do:
+
+  ANNOUNCED=${MPTCP_LIB_EVENT_ANNOUNCED}
+  (...)
+
+Same in mptcp_join.sh? (Maybe that's fine, there are just a few there)
+
+(...)
 
 Cheers,
 Matt
