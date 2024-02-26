@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDAC2B9BD
-	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 12:42:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1337F49B
+	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 12:42:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708951324; cv=none; b=Nz+C4mKVMjYj5HKJtdgk6y3QKLf2ec6EHhHQk88ls53RfnyJmEaLpAbeSvr+oPr3IKOID8mREyMkdaOl/I2G5YsAb5o/0lvCTK5BI99c7oArWhs3658hn2dqBazkOTE/dpFSZWZFeh2VpBPw8pPoWabkej2YjNO69So/o4X25V8=
+	t=1708951344; cv=none; b=uS5YnowFz0m67XMvGb++P6vElfzk0WCDl+ZIvN7Hu4djy2gLxYo7JGboBDKYNqPuJMd0tL7/QZXqVBRjPL84tvXJVc9UAwqNYCgKnyVBBefXCjnRGEgnU3nIgdK8fQ5qMIaX3Ay2o/vV4PPbPqTcCgTtl3h0Zkt4zjmbx6+hCCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708951324; c=relaxed/simple;
-	bh=tW1q7z+erREUYkj4oUsZ4YZQ/z2VCCgOgKOcw8AHmro=;
+	s=arc-20240116; t=1708951344; c=relaxed/simple;
+	bh=0MF2xJPfiW/9hEDFGoTeSQjCosmM75dkDg+uFnOfazQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CUSF+9FI8ZL1979VAM7ObCh5gTyQkVLOKXcJZyC0HdRXx9mLD5aAz2dlCiQ8hRGlfbzDBWVkshNHcrbAC3zjTZewBNiyIyRbkvcqqWmKsKDNbiXqlvJ//aK+tb5tyrL5Au/Ifaul5hhJbA49pqyOq36u6C7ruVgUWhADoPMmE8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORBrJGsy; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=MwEl4Ry4EfL06W59cetPEuw0MrNMceaWMiyDRD5YfDji/8mNYBWYdUmWPERI+1yrh05gGtwrWwW70cV8N0EJj6dJBX2P8xXEoCEhoi4bauUCf2PNIL7Mnn2Stm7Q82uK5may59ry9AYTlQte3CgL21r61qPsrCnUXQdgC52+XXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oi/WcFj+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORBrJGsy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F03D5C433F1;
-	Mon, 26 Feb 2024 12:42:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oi/WcFj+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2C2C433F1;
+	Mon, 26 Feb 2024 12:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708951324;
-	bh=tW1q7z+erREUYkj4oUsZ4YZQ/z2VCCgOgKOcw8AHmro=;
+	s=k20201202; t=1708951343;
+	bh=0MF2xJPfiW/9hEDFGoTeSQjCosmM75dkDg+uFnOfazQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ORBrJGsyiyie7+K3ARC4tQWeG7Mm5UOu9nwP/LlWJ4qUzsoZH83Say0U4jSolwq3M
-	 ro/0F75n02LQpmS0Fwv20zrB0LyMcV76g0PPOhxIKMpZIP/lXk7KGk17XeoS0RRP70
-	 /RLZ48q2bLwat8mrJsEFWTQRmNeSAYJjBDpwI2mUaxlV8BUuJ1N0swQ62CWY9QmdtH
-	 8ONEPvKrYhJXU79SRRU4vhg2zKXKl8xqmJG5WXHbYr7x+mNlab1X+ftcOpzfekE/H0
-	 tV0t6leG0lvcRXPrbi6M7NmFIEZzQ/kKdw9cRWp1lQQ96RQ8ranh9K3+z3KZ1iza8q
-	 fpLN2tH0C7NIA==
-Message-ID: <d0f1a146-d5e4-45f9-992b-82e3ed18f239@kernel.org>
-Date: Mon, 26 Feb 2024 13:42:03 +0100
+	b=oi/WcFj+nhrH2mdW9+ld/29Ha+79DTdJt8nC0t4Tb6zWsghOX8FfnYA07c1yOJVVK
+	 xqvO786IrjEkyqUa7/88HHJOiZlY3p5u1jIZwnpHtfuyXQhqR37DT+rVe6eZt3tnRm
+	 hHZtCJr9EcM6WDQP/QILUBIGe7AusfDM7ltk+EO9rwsot67Pp3CLStOqs6lksjGHYk
+	 e09jNqdMFzIMKmOJaUKheO3VA6VZKiAi1eVydo9qXiK0LdrEfjRw6hWpA2MAeB7F8X
+	 1mho7F3PKVZfmLah1FU4WMm6nT5LdHRowZbFhVObb7n5HbnDdKMuMEpNrJjzQj0R/a
+	 JcjxCyoU6vz8g==
+Message-ID: <59a8b8bc-bff6-4b2c-9eb7-f8669fd92bb6@kernel.org>
+Date: Mon, 26 Feb 2024 13:42:22 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v5 10/12] selftests: mptcp: export event macros
- in mptcp_lib
+Subject: Re: [PATCH mptcp-next v5 11/12] selftests: mptcp: add
+ mptcp_lib_verify_listener_events
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708939962.git.tanggeliang@kylinos.cn>
- <b8df72d8c39dd8760cc408fcf3c2ec21d76b6051.1708939962.git.tanggeliang@kylinos.cn>
+ <575315da0fa8969e5cf1215f3a38c8bd83d1c431.1708939962.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b8df72d8c39dd8760cc408fcf3c2ec21d76b6051.1708939962.git.tanggeliang@kylinos.cn>
+In-Reply-To: <575315da0fa8969e5cf1215f3a38c8bd83d1c431.1708939962.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,81 +96,76 @@ Hi Geliang,
 On 26/02/2024 10:43, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> SUB_ESTABLISHED, LISTENER_CREATED, LISTENER_CLOSED, AF_INET and AF_INET6
-> are defined in both mptcp_join.sh and userspace_pm.sh, export all event
-> macros into mptcp_lib.sh. Add MPTCP_LIB_ prefix for the first three and
-> add readonly for the last two.
-
-Why not doing that (prefix + readonly) for both?
-
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index ed0013b47edb..5feb11801469 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -2,6 +2,7 @@
->  # SPDX-License-Identifier: GPL-2.0
+> To avoid duplicated code in different MPTCP selftests, we can add and use
+> helpers defined in mptcp_lib.sh.
+> 
+> The helper verify_listener_events() is defined both in mptcp_join.sh and
+> userspace_pm.sh, export it into mptcp_lib.sh and rename it with mptcp_lib_
+> prefix. Use this new helper in both scripts.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 25 +++------------
+>  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 25 +++++++++++++++
+>  .../selftests/net/mptcp/userspace_pm.sh       | 31 +++++--------------
+>  3 files changed, 38 insertions(+), 43 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index c9b779510528..fa7d07c51973 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -2791,16 +2791,12 @@ backup_tests()
 >  
->  # Some variables are used below but indirectly, see check_expected_one()
-> +# MPTCP_LIB_ANNOUNCED and AF_INET
-
-Better to "export" them then instead
-
->  #shellcheck disable=SC2034
+>  verify_listener_events()
+>  {
+> -	local evt=$1
+>  	local e_type=$2
+>  	local e_family=$3
+>  	local e_saddr=$4
+>  	local e_sport=$5
+> -	local type
+> -	local family
+> -	local saddr
+> -	local sport
+>  	local name
+> +	local rc=0
 >  
->  readonly KSFT_PASS=0
-> @@ -11,6 +12,16 @@ readonly KSFT_SKIP=4
->  # shellcheck disable=SC2155 # declare and assign separately
->  readonly KSFT_TEST="${MPTCP_LIB_KSFT_TEST:-$(basename "${0}" .sh)}"
+>  	if [ $e_type = $MPTCP_LIB_LISTENER_CREATED ]; then
+>  		name="LISTENER_CREATED"
+> @@ -2817,23 +2813,12 @@ verify_listener_events()
+>  		return
+>  	fi
 >  
-> +MPTCP_LIB_ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
-> +MPTCP_LIB_REMOVED=7          # MPTCP_EVENT_REMOVED
-> +MPTCP_LIB_SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
-> +MPTCP_LIB_SUB_CLOSED=11      # MPTCP_EVENT_SUB_CLOSED
-> +MPTCP_LIB_LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
-> +MPTCP_LIB_LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
-
-Please use the "readonly" attribute, and align the "#".
-
-Also, probably clearer to add '_EVENT', e.g.
-
-  export MPTCP_LIB_EVENT_ANNOUNCED=6
-
-> +
-> +readonly AF_INET=2
-> +readonly AF_INET6=10
-
-Prefix with 'MPTCP_LIB_' + export?
-
-> +
->  MPTCP_LIB_SUBTESTS=()
->  MPTCP_LIB_SUBTESTS_DUPLICATED=0
->  
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> index 3f475ae44d0b..6d358b7e47e9 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -19,16 +19,6 @@ if ! mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
->  fi
->  mptcp_lib_check_tools ip
->  
-> -ANNOUNCED=6        # MPTCP_EVENT_ANNOUNCED
-> -REMOVED=7          # MPTCP_EVENT_REMOVED
-> -SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
-> -SUB_CLOSED=11      # MPTCP_EVENT_SUB_CLOSED
-> -LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
-> -LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
+> -	type=$(mptcp_lib_evts_get_info type "$evt" "$e_type")
+> -	family=$(mptcp_lib_evts_get_info family "$evt" "$e_type")
+> -	sport=$(mptcp_lib_evts_get_info sport "$evt" "$e_type")
+> -	if [ $family ] && [ $family = $AF_INET6 ]; then
+> -		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" "$e_type")
+> -	else
+> -		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" "$e_type")
+> -	fi
 > -
-> -AF_INET=2
-> -AF_INET6=10
+> -	if [ $type ] && [ $type = $e_type ] &&
+> -	   [ $family ] && [ $family = $e_family ] &&
+> -	   [ $saddr ] && [ $saddr = $e_saddr ] &&
+> -	   [ $sport ] && [ $sport = $e_sport ]; then
+> -		print_ok
 
-Instead of modifying hundreds of lines, probably best to do:
+Should you not keep 'print_ok' here?
 
-  ANNOUNCED=${MPTCP_LIB_EVENT_ANNOUNCED}
-  (...)
+> +	mptcp_lib_verify_listener_events "${@}" || rc="${?}"
+> +	if [ "${rc}" -eq 0 ]
+> +	then
 
-Same in mptcp_join.sh? (Maybe that's fine, there are just a few there)
+Keep the same style as in the rest of the file: 'then' at the previous line.
+
+>  		return 0
+>  	fi
+> -	fail_test "$e_type:$type $e_family:$family $e_saddr:$saddr $e_sport:$sport"
+> +	fail_test "$e_type $e_family $e_saddr $e_sport"
+>  }
+>  
+>  add_addr_ports_tests()
 
 (...)
 
