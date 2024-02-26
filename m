@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940777F498
-	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 12:41:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016572B9BD
+	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 12:41:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708951306; cv=none; b=V25euCJfshQlM+BpAbhW+0W+fUQvUDHJeIVOTU1RlgQ+6IkN7t0kV5H4fwTrOHM6zQs5vZv3W+yH/aoaNY2BuKmpIqP/HCBMsLcXIxiIlCU3a3X9mbV7yNR5v6rFYpJJyXecwewooOUl5q/AIj5cB3ka/dXpLyYSsIe4W7Hdvg8=
+	t=1708951315; cv=none; b=p4BQWiap0uIUlBiUfXjj5cxFiX4d8BdYCW/o2VfKi/Cp50dGIjlYuUaqbaA+Pwg4tiFO+OwdpECGUx8ZEKUjGSXfgEgN0E/a2wPQXH9EX8dnmG9Dea8k0OBPBmdX0tdoLqzHw4F4Ku070CBgwgTctSfyLoMKPW92F+8wLDNMm38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708951306; c=relaxed/simple;
-	bh=zWAvlW//rsHsnxo5Ar3qJTZM1zDet9HHZWbR6Cvp6Po=;
+	s=arc-20240116; t=1708951315; c=relaxed/simple;
+	bh=N/RbMXHkHxXVNP6tSluwBLLvUO52fAa/IHAup95TEdo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tFv0ysm/9rc8mwFwwRZfRFcw+iAi41bxnUcjiPyr5O+1/ixXr6RkxuvX5TUzqopyrgj3M7ck7c3LTxzuG5uSKn7imyLurAtQhqCzuuC5J8TSQ26MuhC1A8vQ6LbJGpSRXMK3B/TtubUd6pP5iypuIqqNCL1RVgSFG1WTuiReEJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nB/lWzzO; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KNMeYDPQHRGTW5E+nGTSSZmtnYfaeRq5kt6Nn66tkgcx7U8UmIPOC0TALg04JOWapgzZydqtnB4qla8bBUll0tpdyLUoTmef9vkme7mcQ3miZ7Pwy+HyHNchaw5LJluWxeKp1CIycYxUPjQqEL23AQgaZPhx1UnWbpio5yKV8ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hBBoouq+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nB/lWzzO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A75CCC433C7;
-	Mon, 26 Feb 2024 12:41:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBBoouq+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB79C433C7;
+	Mon, 26 Feb 2024 12:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708951306;
-	bh=zWAvlW//rsHsnxo5Ar3qJTZM1zDet9HHZWbR6Cvp6Po=;
+	s=k20201202; t=1708951314;
+	bh=N/RbMXHkHxXVNP6tSluwBLLvUO52fAa/IHAup95TEdo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nB/lWzzOMPTOfwjRER+lK3RoJC9gLUcX9bt5NITIO+3ysCXVP/Wp3DmQ9ma6nNlUb
-	 UvgOKR3MTm8/FSemYfEsexZuyzYIl1vlj+ZO4kxD7m+0KN5lFf5/F+47CkXxo+VDrS
-	 mTayOdhXglqb8opyU294JmEo+wEPQMP0oqbk/qux0dTIK5xmZGhhLOzpbKIktDSDGv
-	 04ZEWG2K4JW/iy+eGw+OvF1kiN1GhHUC1MSPUkZnKpzTaz6Rqldnqo4iLQ62HD7SBc
-	 Xl4qMoQjkzTn30H7P9cb4muNM9fX0yNaDZ2iE+AiwiGrU0S0MhhDPykZw23YUzGftH
-	 SBz7eQBDe2rdg==
-Message-ID: <1de56e13-e6aa-47b1-bc5b-aeea2c1119aa@kernel.org>
-Date: Mon, 26 Feb 2024 13:41:45 +0100
+	b=hBBoouq+Iu7HXDYVjZNElZQBr/wgdYZ2tzxSZUGvN5+IrzQPwMhokU+x5vWUdNuaH
+	 ngF5D9aAvOxBtJhKvxzjerQan87TiyFhQJx6wPwgmKgY+E0tvT+DDBT1beXmz6U2u5
+	 CsHj5Qt9DqyQYIkrIJmj8lm0/roCz9gI7EGX2cUcn3dhWwMs2QuuSoLXRUp48nxsBX
+	 Y/matruoiTM5nMRjl+oDqRlwBy2VU8YkBQMJNngi8jwuzHU1iscX9EVQk6i/OlE1d7
+	 FjFCyN6kaL7zBUsbTGN5r9ISNzpGRbnO67tL163AbvhCEwh3xcIT4tNYc7t9MgH22P
+	 Nu1A15ZyUiMyw==
+Message-ID: <5273bf67-282b-4b16-8576-670b12447d6a@kernel.org>
+Date: Mon, 26 Feb 2024 13:41:53 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v5 08/12] selftests: mptcp: move test_fail out
- of check_expected_one
+Subject: Re: [PATCH mptcp-next v5 09/12] selftests: mptcp: extract
+ mptcp_lib_check_expected
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708939962.git.tanggeliang@kylinos.cn>
- <906425f25bc2951a4c18187befb60443e9d777d4.1708939962.git.tanggeliang@kylinos.cn>
+ <71d2dc8ad19fd8d87c8e128ed3f02a6c77d1c9d2.1708939962.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <906425f25bc2951a4c18187befb60443e9d777d4.1708939962.git.tanggeliang@kylinos.cn>
+In-Reply-To: <71d2dc8ad19fd8d87c8e128ed3f02a6c77d1c9d2.1708939962.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,69 +96,170 @@ Hi Geliang,
 On 26/02/2024 10:43, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch moves test_fail out of check_expected_one(), since test_fail
-> is a private function in userspace_pm.sh, and check_expected_one will be
-> exported in mptcp_lib.sh in the next commit.
+> Extract the main part of check_expected() in userspace_pm.sh to a new
+> function mptcp_lib_check_expected() in mptcp_lib.sh. It will be used
+> in both mptcp_john.sh and userspace_pm.sh.
 > 
+> check_expected_one() is moved into mptcp_lib.sh too as a sub function
+> of mptcp_lib_check_expected().
+
+Out of curiosity: why a subfunction?
+
+(see below)
+
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/net/mptcp/userspace_pm.sh | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+>  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 48 +++++++++++++++++++
+>  .../selftests/net/mptcp/userspace_pm.sh       | 39 ++-------------
+>  2 files changed, 52 insertions(+), 35 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> index 27f308601005..473639a8009f 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -247,7 +247,7 @@ check_expected_one()
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index df495658f043..ed0013b47edb 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -1,6 +1,9 @@
+>  #! /bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
 >  
->  	if [ "${prev_ret}" = "0" ]
->  	then
-> -		test_fail
+> +# Some variables are used below but indirectly, see check_expected_one()
+> +#shellcheck disable=SC2034
 
-I think, the goal to do it here was to print "FAIL", then the details.
+Please move that just above the lines or functions having these
+false-positive errors to reduce the scope. Otherwise, this rule will be
+applied everywhere, and maybe missing valid issues.
 
-> +		return 2
+In other words, don't declare it here, but in mptcp_join.sh, where used.
+For userspace_pm.sh, you can keep it where it is, I suppose.
 
-Just return 1, no?
-
->  	fi
+> +
+>  readonly KSFT_PASS=0
+>  readonly KSFT_FAIL=1
+>  readonly KSFT_SKIP=4
+> @@ -419,3 +422,48 @@ mptcp_lib_print_test_counter() {
 >  
->  	_printf "\tExpected value for '%s': '%s', got '%s'.\n" \
+>  	printf "%02u ${fmt}" "$((++counter))" "${msg}"
+>  }
+> +
+> +# $@: all var names to check
+> +mptcp_lib_check_expected() {
+> +	# $1: var name ; $2: prev ret
+> +	check_expected_one() {
 
-What's the output now in case of issue? Does it still make sense to use
-the '\t' here at the beginning?
+You still need to prefix it with mptcp_lib_ because you could override
+functions with the same name declared elsewhere: when
+mptcp_lib_check_expected(), this subfunction will be created globally,
+potentially overriding other ones with the same name.
 
-> @@ -263,13 +263,20 @@ check_expected()
->  
->  	for var in "${@}"
->  	do
-> -		check_expected_one "${var}" "${rc}" || rc=1
+> +		local var="${1}"
+> +		local exp="e_${var}"
+> +		local prev_ret="${2}"
+> +
+> +		if [ "${!var}" = "${!exp}" ]
+
+Please keep the same code style as in the rest of this file: "then" and
+"do" are on the same line as "if" / "for".
+
+> +		then
+> +			return 0
+> +		fi
+> +
+> +		if [ "${prev_ret}" = "0" ]
+> +		then
+> +			return 2
+> +		fi
+> +
+> +		printf "\tExpected value for '%s': '%s', got '%s'.\n" \
+> +			"${var}" "${!exp}" "${!var}"
+> +		return 1
+> +	}
+> +
+> +	local rc=0
+> +	local var
+> +
+> +	for var in "${@}"
+> +	do
 > +		check_expected_one "${var}" "${rc}" || rc="${?}"
 > +		if [ "${rc}" -eq 2 ]
 > +		then
 > +			break
-
-Why breaking? If you break, you only print one error, not all like before.
-
-Please check the behaviour in case of error before and after the
-modification.
-
 > +		fi
->  	done
->  
->  	if [ ${rc} -eq 0 ]
->  	then
->  		test_pass
->  		return 0
-> +	elif [ "${rc}" -eq 2 ]
+> +	done
+> +	unset -f check_expected_one
+> +
+> +	if [ ${rc} -eq 0 ]
 > +	then
-> +		test_fail
-
-Just 'test_fail' after the 'if'.
-
->  	fi
+> +		mptcp_lib_print_ok "[ OK ]"
+> +		return 0
+> +	fi
+> +
+> +	return "${rc}"
+> +}
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> index 473639a8009f..3f475ae44d0b 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -5,7 +5,7 @@
+>  # code but we accept it.
+>  #shellcheck disable=SC2086
 >  
->  	return 1
+> -# Some variables are used below but indirectly, see check_expected_one()
+> +# Some variables are used below but indirectly
+
+Maybe point to check_expected now?
+
+>  #shellcheck disable=SC2034
+>  
+>  . "$(dirname "${0}")/mptcp_lib.sh"
+> @@ -233,46 +233,15 @@ make_connection()
+>  	fi
+>  }
+>  
+> -# $1: var name ; $2: prev ret
+> -check_expected_one()
+> -{
+> -	local var="${1}"
+> -	local exp="e_${var}"
+> -	local prev_ret="${2}"
+> -
+> -	if [ "${!var}" = "${!exp}" ]
+> -	then
+> -		return 0
+> -	fi
+> -
+> -	if [ "${prev_ret}" = "0" ]
+> -	then
+> -		return 2
+> -	fi
+> -
+> -	_printf "\tExpected value for '%s': '%s', got '%s'.\n" \
+> -		"${var}" "${!exp}" "${!var}"
+> -	return 1
+> -}
+> -
+>  # $@: all var names to check
+>  check_expected()
+>  {
+>  	local rc=0
+> -	local var
+>  
+> -	for var in "${@}"
+> -	do
+> -		check_expected_one "${var}" "${rc}" || rc="${?}"
+> -		if [ "${rc}" -eq 2 ]
+> -		then
+> -			break
+> -		fi
+> -	done
+> -
+> -	if [ ${rc} -eq 0 ]
+> +	mptcp_lib_check_expected "${@}" || rc="${?}"
+> +	if [ "${rc}" -eq 0 ]
+>  	then
+> -		test_pass
+> +		mptcp_lib_result_pass "${test_name}"
+>  		return 0
+>  	elif [ "${rc}" -eq 2 ]
+>  	then
 
 Cheers,
 Matt
