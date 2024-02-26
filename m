@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84441D54B
-	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 12:40:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7FE1D54B
+	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 12:40:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708951215; cv=none; b=uEhKDdvGh2YMv5OzMw2lmweiV2NaWve4tbksZ6lT9TKcjikmXy2j6/aMDVeGwEM29DV1fpz5U4tUY6pF/cYc+1GK9Z2Pyq4cgt/9z+Jab0v01l5nSUMATWlo15VK+aUUJMwNc9enXDqwZt9dz+Cb3bn66nd89oO8yHXs0Zptb0E=
+	t=1708951222; cv=none; b=DiOOqcCFNQaGWWy/dCgo4fvZvQfUyjYjHIAI9gw8FakkTY86l6UwsLFswBOmg9+0c0bDsYptAZJk3WNA508f7hyw6qtT2GJs5DJA1dXVrl4hmyVqVcQWsxWtn8RtvsPqayJs1NcuSerJkl8h/0wLbFERy69q4krgpL5m+uquMqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708951215; c=relaxed/simple;
-	bh=1u7WGAHn2G9ewEfEKTuJy4nFh08nq3mlYAtaxO98fT8=;
+	s=arc-20240116; t=1708951222; c=relaxed/simple;
+	bh=XsI81EWJSTFox0/cJLEvAvjhnEhOZKjI6vb5s2OO0aA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RbRbnBLHYFZ6HUax6GglNMjhHD2qa0nKWraUjwpgJ/HxlbYycClB1eJAclrrB+V5/rKGDRhTyhDM+emq562Vh81u9jNxqD1PylAa1rn3DBSR5zsvhfWQJvyhND9uJr+qmfF1GXjCRTRe8iBZWYem1NRp2nUARqPRm84IA8Aq550=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=apZzFmKs; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=MxmdAh6ks1yptDCinjSnqWuMnlLdsLNKhnTDIKFZ+rxdKlq8yYSIXeb/95cnNNsfsLj+uosK/QaHQ/4jVKirJUEOOxzr/Lm2jGsjbhPk2H8cohAoRBcDbwdBfrUB3FJxFhVnWrdnOo0RilMSjWyoxcKbPkVfW+Ftu9tCQn6Gc3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppnnj9Ha; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="apZzFmKs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C66BC43394;
-	Mon, 26 Feb 2024 12:40:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppnnj9Ha"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94EF8C43394;
+	Mon, 26 Feb 2024 12:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708951215;
-	bh=1u7WGAHn2G9ewEfEKTuJy4nFh08nq3mlYAtaxO98fT8=;
+	s=k20201202; t=1708951222;
+	bh=XsI81EWJSTFox0/cJLEvAvjhnEhOZKjI6vb5s2OO0aA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=apZzFmKspr7JDq8ckhFc7Ocsvbx2yzQTFVYx8+ASEv8IqF2q5v4EZfMgEx3QHnlIb
-	 ivdpAAPOexA2oeeTgvj7MnsJgR0irOvGifo410r67pexVwRS91McM7Zt0abidCcdm7
-	 FNBagaCnD1ZwhVmYM8RD9BiINzkdV8DUc3MZdY27AyYt4VHNr1mSLOZrAfF40bOLYj
-	 vPAHA8rBGSCAa0TTgWG7UcnDmCsPv53rZtAcry1yHRBYOlYETIw918JPsiCUGHku0M
-	 MW69PQg4Ns6uZe+I8V13AUuOsfzESWA0PenunOopXXvEJXRTQCtXuSN8NizjNXET5c
-	 EwlSZXFdhMWbg==
-Message-ID: <6891c3fb-a388-4602-bedf-13b93b24e7f7@kernel.org>
-Date: Mon, 26 Feb 2024 13:40:12 +0100
+	b=ppnnj9Ha0YoRXukZLPMEgKHN+8eZ70XAeRU6Yno5yoCn+AxV/KS2VMK/vxCecKttT
+	 DQIFpG12eOWhuHbKZSCvZER7B0Hn3+B9Rk7Dj+db/YGi8bvYeJfXLuZGy+xYIE93gx
+	 FC5yAwY0v8fjCJTAwN8s31oyJmAvv2xzbAWnZoL1zVt0pSibF3+7hff+ncHVrEaiuT
+	 kz0WREwUgveL2HBibG9099D893C0skfeZZWcXsY/YzwP4dShKH1wjdBihPduv51y32
+	 XvDWWd4ZeDrnDk5RF2NMpropxSchqg46gMsHpyuGKoWR9A1wP4wkLLOjhTtwZVysWm
+	 51JaukNUhqj+w==
+Message-ID: <4225dca0-b0a6-43e6-ae14-e3cb1c47563b@kernel.org>
+Date: Mon, 26 Feb 2024 13:40:21 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v5 00/12] add helpers and vars in mptcp_lib.sh,
- part 3
+Subject: Re: [PATCH mptcp-next v5 01/12] selftests: mptcp: capitalize
+ ok/fail/skip
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1708939962.git.tanggeliang@kylinos.cn>
+ <52d42e66e9e5f1dd34220e38ca763ab41ba22f15.1708939962.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1708939962.git.tanggeliang@kylinos.cn>
+In-Reply-To: <52d42e66e9e5f1dd34220e38ca763ab41ba22f15.1708939962.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,45 +96,46 @@ Hi Geliang,
 On 26/02/2024 10:43, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v5:
->  - don't use mptcp_lib_print_test_counter in mptcp_join.sh, it breaks
->    skip_test().
+> Most scripts print uppercase [ OK ], [FAIL] and [SKIP] as test results,
+> but lowercase ones are used in diag.sh, mptcp_join.sh and simult_flows.sh.
+> To maintain consistency with other scripts, this patch capitalizes these
+> lowercase [ ok ], [ fail ] and [ skip ]:
 > 
-> v4:
->  - set test_cnt to 0, use ++counter in mptcp_lib_print_test_counter() to
->    fix the following mismatched test counters:
-> 
-> # 012 userspace pm server fullmesh
-> #       syn                                 [ OK ]
-> #       synack                              [ OK ]
-> #       ack                                 [ OK ]
-> #       add                                 [ OK ]
-> #       echo                                [FAIL] got 1 ADD_ADDR echo[s] expected 2
-> # Server ns stats
-> # TcpPassiveOpens                 5                  0.0
-> # TcpInSegs                       25                 0.0
-> ... ...
-> #
-> # 1 failure(s) has(ve) been detected:
-> #       - 13: userspace pm server fullmesh
-> 
-> v3:
->  - fix shellcheck errors in v2
-> 
-> v2:
->  - fix shellcheck errors in v1
->  - print test results with counters
+>     [ ok ]   -> [ OK ]   	in diag.sh, mptcp_join.sh
+>     [ fail ] -> [FAIL]		in diag.sh, mptcp_join.sh, simult_flows.sh
+>     [ skip ] -> [SKIP]		in diag.sh, mptcp_join.sh
 
-Thank you for the new version fixing shellcheck errors.
+I think this could be squashed with patch 4/12: OK the behaviour is
+changed, but that's still the same info being printed. This can be
+justified with a simple "we uniform how the results are presented with
+colours".
 
-Note that it is not easy to review this series with all the
-modifications everywhere. Hopefully the new modifications will be
-helpful for the maintenance and to spot issues.
+If you change that, I think it would be better to add new helpers to
+print OK/FAIL/SKIP string from one place, like it is done in
+mptcp_join.sh. So if needed, we can easily change how the results are
+presented later instead of having to change it in different places.
 
-Did you check that the messages in case of errors were all the same?
+We could even have these helpers in the lib:
 
-Please see the comments on the individual patches.
 
+ mptcp_lib_print_success()
+ {
+	mptcp_lib_print_ok "[ OK ]${1:+ ${*}}"
+ }
+
+ mptcp_lib_print_fail()
+ {
+	mptcp_lib_print_err "[FAIL]${1:+ ${*}}"
+ }
+
+ mptcp_lib_print_skip()
+ {
+	mptcp_lib_print_warn "[SKIP]${1:+ ${*}}"
+ }
+
+WDYT?
+
+(...)
 Cheers,
 Matt
 -- 
