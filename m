@@ -1,297 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A96F1C696
-	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 08:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE632D78A
+	for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 09:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708935508; cv=none; b=sOQ/iL1kG+fzVEcJC3TMS+LRLt/xQeU2JdJXx1GXIKQE2iZ3h0/idUqRZC24EajwSJp6E+dHx+9DFV4QUJDzmZQH74nn/awD+iIftADiKrQhEHGQ/wZCmw6mJ2ieX3fMRIhmsKlpo5LtVPhE5A0Ve8Jpv6be225k1Iegx9r/WcY=
+	t=1708938862; cv=none; b=HW126CwIj+ZmHeCgIwmk93eRtJbVyR+lPWqO5idrZX5h+0MjTBVw0k40VMThcPS4c7rQxFKDXIE1fR8pPNckYyeOcVUFTJmWa6dvDX4Thsqi1u+FWCCQepuI/Ls7uk++aD0UMZgubbscBUyRy5zjvNp8cN/8dFPLYMKDzabj9f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708935508; c=relaxed/simple;
-	bh=Di9UbydRrcDP0EKeh5eDndBG/k6QOL+ad3bXVvAAbss=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ko+CAcFolnBO+j1MChXpTqwOB+ZjRkixXeTcrWX05Lm5SwmmVSKIIPN5UGgLJ9pXix0uidEWeQyrJl3pirpf4oxxiPFZykUJ4KLtS5aOBQ9CB2GSgYjHvRuwrSyY8fCPepz03hjIZBbDU1U1wD78Mzc65pxMCK9wYiZA2OSe0CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bx4bUP7b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708938862; c=relaxed/simple;
+	bh=QZFLoJUVMncZ0HnlzkiD1vX4hY9P2f7EaiwJk/X4PGQ=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=F247D4iht4P7nlhOdOFK5F7xxZsvqzpwKKSWiPgN7ut/L09o4LEqN8Wini+EcTUROEq4eEPQk8KPD4gHnTxCG2rtQho1/FnohtYW8ZFlqvfrKOkBU4fSpAAg+1s6pBfEzqT+ctB6bOqx06+yL2mGOmwqK3ko3TbUwhU+TSta13A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kF+/vNRM; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bx4bUP7b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD5F6C43390;
-	Mon, 26 Feb 2024 08:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708935507;
-	bh=Di9UbydRrcDP0EKeh5eDndBG/k6QOL+ad3bXVvAAbss=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bx4bUP7bOfdPcATMs+gl6Dq7BwSVyPZWW79FEXbp6bzCwFm1tcDZLZxy97+dspzV7
-	 soafLJOZchBpcWcVDqKFTUKBM4EknKTexjuerDbjFljXzmrJ9S59vTbIDMQYX4Q+Up
-	 n0PdiyjZZExh7DncJwb/DVhsLGdnkXP+caQosRXP15to1Nvc502yY2hXaZ02EZjZGR
-	 CMk5tDSFkVJtXhkSjLdCPKcI0YAcGIlk4+TLryVtDxooYwmdwxCBzasXt4MCDB6Xf4
-	 LE1iYYuT3eleyAzrCrAqLngs5k1JXw1qVYDdpcEFvzps+wOB5C+SfeOFY1mLDHGUlj
-	 HxWsgQHqVxCfg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 13/13] selftests: mptcp: use KSFT_SKIP/KSFT_PASS/KSFT_FAIL
-Date: Mon, 26 Feb 2024 16:17:58 +0800
-Message-Id: <30f47153371ef19d5f832b3b2df4e6bf70955c1d.1708935196.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1708935196.git.tanggeliang@kylinos.cn>
-References: <cover.1708935196.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kF+/vNRM"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-42e63a658e1so5211561cf.3
+        for <mptcp@lists.linux.dev>; Mon, 26 Feb 2024 01:14:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708938860; x=1709543660; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CPHQfJcjlxJbPkHRR8Zv+3j2RcyIvJdW4tfq3e98Q/I=;
+        b=kF+/vNRM0gTLyxxGkIFeQK6J4ZccOeKfVTRVyMNiDvXkDJcjxWt+yp0UNlddLJU4m/
+         2FpK4NAIWDjDCwp2wis9ObpvPaQQW2ab0OtdV4aEbl1jlhFsL9HRcNTba20hQu2fJLLo
+         1DV/fa4DjLXvjmavfQnx2lNWlppd6MN5bUU3g1hOcmFPEI4qHpQtEAXSRbyf4LsBAX0Y
+         WyYW44Ac4FfuXb22CWE7DXnw16GLDtSfrgQ+tNbCO8L6AMWgArxdfOQddvQ6uyYGIOFc
+         l1eW+d97GteN+9NtPLpUhwFL1kGn0YyaoXSsI/7VOmZcUhOuw+X+16dW5ZdU2g4rMDlB
+         jdQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708938860; x=1709543660;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=CPHQfJcjlxJbPkHRR8Zv+3j2RcyIvJdW4tfq3e98Q/I=;
+        b=OQ+v5ftrZpTXf/nHYE+jLLir/AueFNCUjw35vWm6LH/RMx0cp9W2vOenYJTMSDd9mr
+         yIdWC6XI7J9FPuIDg4zXRPjx47qf0dHTbx73TzMVwacQVUaLWNE0HVCqpHQFFH8f5Wga
+         tzSlr7RwCzUXEf57/YqH5ZrCYITLRXv9HrOa+l7vtxPMIwmZycJBbjIU4Ir/5rzngQsY
+         9C8iK9/ZuPf1mTq8K7lKUynONITLnZEsQmzqwgSncA/MkHoc6Xfri7aEQAnMZlVw3H+/
+         tsR75J2XNhuyAuBc6gn7qeouKidix16xyeSkUEPohTH5zp8mflHsnTPQQaFdgXDXFH5c
+         iQlw==
+X-Gm-Message-State: AOJu0YzE0A23nljOFTXsKQOvkeo+yodPMs8WgrpJtdwARM84gtFJl9v5
+	0wUduthMbM6ajA5R6yxUMYnKe5aK9gws2AkjB5HoPVJsxLW89Co2VjnuCxx6yw==
+X-Google-Smtp-Source: AGHT+IFTE1WPLUu2N2UQqdmHF4qaHW5eINzDLHulgTKlMXWg3HS7yuuXgmlHyr8nUPT2HwG2sTXmAw==
+X-Received: by 2002:ac8:584e:0:b0:42e:7f3f:ad4 with SMTP id h14-20020ac8584e000000b0042e7f3f0ad4mr3528172qth.8.1708938859641;
+        Mon, 26 Feb 2024 01:14:19 -0800 (PST)
+Received: from [127.0.0.1] ([20.57.13.243])
+        by smtp.gmail.com with ESMTPSA id l18-20020ac848d2000000b0042e44960c15sm2248593qtr.52.2024.02.26.01.14.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 01:14:19 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <30f47153371ef19d5f832b3b2df4e6bf70955c1d.1708935196.git.tanggeliang@kylinos.cn>
+References:
+ <30f47153371ef19d5f832b3b2df4e6bf70955c1d.1708935196.git.tanggeliang@kylinos.cn>
+Subject: Re: selftests: mptcp: use KSFT_SKIP/KSFT_PASS/KSFT_FAIL: Tests
+ Results
+Message-ID: <a72d2212-4f62-d1ef-8e5f-fe868ca620be@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 26 Feb 2024 09:14:18 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-This patch uses the public var KSFT_SKIP in mptcp_lib.sh instead of
-ksft_skip, and drop 'ksft_skip=4' in mptcp_join.sh.
+Thank you for your modifications, that's great!
 
-Use KSFT_PASS and KSFT_FAIL macros instead of 0 and 1 after 'exit '
-and 'ret=' in all scripts:
+Our CI (GitHub Action) did some validations and here is its report:
 
-        exit 0 -> exit ${KSFT_PASS}
-        exit 1 -> exit ${KSFT_FAIL}
-         ret=0 ->  ret=${KSFT_PASS}
-         ret=1 ->  ret=${KSFT_FAIL}
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/8045893025
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../selftests/net/mptcp/mptcp_connect.sh       | 18 +++++++++---------
- .../testing/selftests/net/mptcp/mptcp_join.sh  | 13 ++++++-------
- .../selftests/net/mptcp/mptcp_sockopt.sh       |  4 ++--
- .../testing/selftests/net/mptcp/pm_netlink.sh  |  4 ++--
- .../selftests/net/mptcp/simult_flows.sh        |  4 ++--
- .../selftests/net/mptcp/userspace_pm.sh        |  4 ++--
- 6 files changed, 23 insertions(+), 24 deletions(-)
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/4cc3852a3605
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 00bbe451e50d..f54d80a1d0e4 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -65,14 +65,14 @@ while getopts "$optstring" option;do
- 	case "$option" in
- 	"h")
- 		usage $0
--		exit 0
-+		exit ${KSFT_PASS}
- 		;;
- 	"d")
- 		if [ $OPTARG -ge 0 ];then
- 			tc_delay="$OPTARG"
- 		else
- 			echo "-d requires numeric argument, got \"$OPTARG\"" 1>&2
--			exit 1
-+			exit ${KSFT_FAIL}
- 		fi
- 		;;
- 	"e")
-@@ -96,7 +96,7 @@ while getopts "$optstring" option;do
- 			sndbuf="$OPTARG"
- 		else
- 			echo "-S requires numeric argument, got \"$OPTARG\"" 1>&2
--			exit 1
-+			exit ${KSFT_FAIL}
- 		fi
- 		;;
- 	"R")
-@@ -104,7 +104,7 @@ while getopts "$optstring" option;do
- 			rcvbuf="$OPTARG"
- 		else
- 			echo "-R requires numeric argument, got \"$OPTARG\"" 1>&2
--			exit 1
-+			exit ${KSFT_FAIL}
- 		fi
- 		;;
- 	"m")
-@@ -121,7 +121,7 @@ while getopts "$optstring" option;do
- 		;;
- 	"?")
- 		usage $0
--		exit 1
-+		exit ${KSFT_FAIL}
- 		;;
- 	esac
- done
-@@ -260,7 +260,7 @@ check_mptcp_disabled()
- 			"net.mptcp.enabled sysctl is not 1 by default"
- 		mptcp_lib_print_err "\t\t\t\t   [FAIL]"
- 		mptcp_lib_result_fail "net.mptcp.enabled sysctl is not 1 by default"
--		ret=1
-+		ret=${KSFT_FAIL}
- 		return 1
- 	fi
- 	ip netns exec ${disabled_ns} sysctl -q net.mptcp.enabled=0
-@@ -275,7 +275,7 @@ check_mptcp_disabled()
- 			"New MPTCP socket cannot be blocked via sysctl"
- 		mptcp_lib_print_err "\t\t\t\t   [FAIL]"
- 		mptcp_lib_result_fail "New MPTCP socket cannot be blocked via sysctl"
--		ret=1
-+		ret=${KSFT_FAIL}
- 		return 1
- 	fi
- 
-@@ -303,7 +303,7 @@ do_ping()
- 
- 	if [ $rc -ne 0 ] ; then
- 		echo "$listener_ns -> $connect_addr connectivity [FAIL]" 1>&2
--		ret=1
-+		ret=${KSFT_FAIL}
- 
- 		return 1
- 	fi
-@@ -823,7 +823,7 @@ log_if_error()
- 		echo "FAIL: ${msg}" 1>&2
- 
- 		final_ret=${ret}
--		ret=0
-+		ret=${KSFT_PASS}
- 
- 		return ${final_ret}
- 	fi
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 6861bfcc7ddf..8ae54f2ff37f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -25,7 +25,6 @@ err=""
- capout=""
- ns1=""
- ns2=""
--ksft_skip=4
- iptables="iptables"
- ip6tables="ip6tables"
- timeout_poll=30
-@@ -397,15 +396,15 @@ setup_fail_rules()
- 		-p tcp \
- 		-m length --length 150:9999 \
- 		-m statistic --mode nth --packet 1 --every 99999 \
--		-j MARK --set-mark 42 || return ${ksft_skip}
-+		-j MARK --set-mark 42 || return ${KSFT_SKIP}
- 
--	tc -n $ns2 qdisc add dev ns2eth$i clsact || return ${ksft_skip}
-+	tc -n $ns2 qdisc add dev ns2eth$i clsact || return ${KSFT_SKIP}
- 	tc -n $ns2 filter add dev ns2eth$i egress \
- 		protocol ip prio 1000 \
- 		handle 42 fw \
- 		action pedit munge offset 148 u8 invert \
- 		pipe csum tcp \
--		index 100 || return ${ksft_skip}
-+		index 100 || return ${KSFT_SKIP}
- }
- 
- reset_with_fail()
-@@ -419,7 +418,7 @@ reset_with_fail()
- 	local rc=0
- 	setup_fail_rules "${@}" || rc=$?
- 
--	if [ ${rc} -eq ${ksft_skip} ]; then
-+	if [ ${rc} -eq ${KSFT_SKIP} ]; then
- 		mark_as_skipped "unable to set the 'fail' rules"
- 		return 1
- 	fi
-@@ -455,7 +454,7 @@ reset_with_tcp_filter()
- # $1: err msg
- fail_test()
- {
--	ret=1
-+	ret=${KSFT_FAIL}
- 
- 	print_fail "${@}"
- 
-@@ -3638,7 +3637,7 @@ usage()
- {
- 	if [ -n "${1}" ]; then
- 		echo "${1}"
--		ret=1
-+		ret=${KSFT_FAIL}
- 	fi
- 
- 	echo "mptcp_join usage:"
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index a2a5049f22bb..59ae6c649904 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -106,7 +106,7 @@ check_mark()
- 	for v in $values; do
- 		if [ $v -ne 0 ]; then
- 			echo "FAIL: got $tables $values in ns $ns , not 0 - not all expected packets marked" 1>&2
--			ret=1
-+			ret=${KSFT_FAIL}
- 			return 1
- 		fi
- 	done
-@@ -175,7 +175,7 @@ do_transfer()
- 		mptcp_lib_print_err "[FAIL]"
- 		mptcp_lib_result_fail "transfer ${ip}"
- 
--		ret=1
-+		ret=${KSFT_FAIL}
- 		return 1
- 	fi
- 	mptcp_lib_print_ok "[ OK ]"
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 87ed60ed4112..82dbdec930e6 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -21,11 +21,11 @@ while getopts "$optstring" option;do
- 	case "$option" in
- 	"h")
- 		usage $0
--		exit 0
-+		exit ${KSFT_PASS}
- 		;;
- 	"?")
- 		usage $0
--		exit 1
-+		exit ${KSFT_FAIL}
- 		;;
- 	esac
- done
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index eb2eaa48035f..ff255e4a2ed3 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -262,7 +262,7 @@ while getopts "bcdh" option;do
- 	case "$option" in
- 	"h")
- 		usage $0
--		exit 0
-+		exit ${KSFT_PASS}
- 		;;
- 	"b")
- 		bail=1
-@@ -275,7 +275,7 @@ while getopts "bcdh" option;do
- 		;;
- 	"?")
- 		usage $0
--		exit 1
-+		exit ${KSFT_FAIL}
- 		;;
- 	esac
- done
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 6fe2a4e1704f..1124ebab3ace 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -79,7 +79,7 @@ test_skip()
- test_fail()
- {
- 	mptcp_lib_print_err "[FAIL]${1:+ ${*}}"
--	ret=1
-+	ret=${KSFT_FAIL}
- 
- 	if [ -n "${1}" ]; then
- 		_printf "\t%s\n" "${1}"
-@@ -204,7 +204,7 @@ make_connection()
- 	else
- 		test_fail "Expected tokens (c:${client_token} - s:${server_token}) and server (c:${client_serverside} - s:${server_serverside})"
- 		mptcp_lib_result_print_all_tap
--		exit 1
-+		exit ${KSFT_FAIL}
- 	fi
- 
- 	if [ "$is_v6" = "v6" ]
--- 
-2.40.1
 
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
