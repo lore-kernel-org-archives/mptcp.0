@@ -1,91 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1E91B949;
-	Tue, 27 Feb 2024 03:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA04F13540A
+	for <mptcp@lists.linux.dev>; Tue, 27 Feb 2024 09:11:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709004030; cv=none; b=lPbXziJ4TJ75dY7PkKvuuZSBBxVXBaH+15dXDDPDn4p6ZeobF8sy1LP/JdQoow3Pig6t4T+OhUSrIaSBUnH9h9yf1lXo4LpM9o/hTwPOvBRXBiob98Ro+RzSLW5lDE9QJNCHGxggTgk+aZBnYf0FJxPL7zd8GZERlDIPYcJvvP0=
+	t=1709025065; cv=none; b=Sd/eRwMxnV4BfxUyMgO6ihoeSXc/ojdFFvceTB7dXaxBr4DveZskufU1JJo7zlJp99fcYdE8hQIOiuS4xgW1j7CNP1IjmdAg3hZ0M8q0+z+TGsV+0RZXYpXIBWJfS8tE1DdpPzA2I4Z50PNjZFRz+bPfrwaOyx9RePmQ3/SWozw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709004030; c=relaxed/simple;
-	bh=s2eioNfukDMALIYmsfTbL/3nVLukiMf2+0qLoHY9ES8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=AyPDmorH+dsUhtG4MRNGrSYYF40EXcH+IOT1fDHKMu8vgkxjU5hbp3ALQlxLBT7ev6yy2UMzF6qHY/b7caJenq8GaEtPvq239CT3C3aW9mJAd108b9BquwgCi+H07bpH3KuSnfURIhpha5SJ5HtPZvF7KPv8WaYCY8rUr4kxyMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ds6+qhyd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709025065; c=relaxed/simple;
+	bh=5gzv63ElqC8ZtnmO/nAOXii7GkJmtEzkbFiPZ8aQv4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SC8fECO3uSg/U/GuDe1f2Q5aDdIuciJpPA7JPelvEyT9obVZmqRZ0uV77NP+9NmO9xPZgEV0aw+DogF2zFcUxcjGN9XX5Y8i/zbjtqCGhKZNcWuawRc+B3jZuURlNwFBEmFsQ2RiW3iIoroULJRrqF/rcwqNQwskUuhBqLpqNLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDV9YE5E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ds6+qhyd"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 75D2BC43394;
-	Tue, 27 Feb 2024 03:20:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDV9YE5E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC003C433F1;
+	Tue, 27 Feb 2024 09:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709004030;
-	bh=s2eioNfukDMALIYmsfTbL/3nVLukiMf2+0qLoHY9ES8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ds6+qhydg6HvWtNREWG8A+IjqexZMZ7YWnTYjxMV+C485aQAvxyCnH9eGyGicW580
-	 Sgm2PDzkvNPOd80rCdTMHbuHKt+5DbsdufrqTDeeD4Njtfkh8LJk3B6lgk2TXA+MVF
-	 dVQ274u4amFeRIN3El/DsS4hhzl6rB9hOamyu7JahaHjIdp+EBDan3VUMui1u9PdBD
-	 48sa5tgNPsjZxIyzWlm7NbHmk6YIj3BC+a4/dm3+PrMnoeoMSzIvSHl3/KWA7wwJCV
-	 6Z31sUvzHAu1jbE0DSdlq45nI6xzz3Xcc83t7QIRqIPAAkwWQDxbGm1QW2fqDrQLxe
-	 1alt0e3SzRnBw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 55D29D8C976;
-	Tue, 27 Feb 2024 03:20:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1709025065;
+	bh=5gzv63ElqC8ZtnmO/nAOXii7GkJmtEzkbFiPZ8aQv4U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NDV9YE5E0HUawB57SXMC9kr9yuyX8RXQqwRJ43FZFUOzBR7jUHNtSs2hPeUiu9CsE
+	 5gUFq9BfKIgbt40VZ0NhOrXUI01TKU9RPS2otB/1TUydl5iuvF807Mocb2fr1CNYhI
+	 fxsT00YtQteiQDkSbLsGqzILZ7eJN+8aWUbLMFLX5T3wwV/Z+a1S91GLyUIv2qBbla
+	 B0ZtLkQcAMlEY+RphANEayyMs/CnNFENfJ/GRI0lTQkRm8PU0F5PsEJhssdtpZyBqA
+	 kdWaOT2ELL97C1UOTm/Qnf4/BMPxrjlh7pp3dDHa+wCWDnKu0FwUE83euWfpAxSfbP
+	 AQnb8CQfrcBIg==
+Message-ID: <25bb114b-5cdd-40d8-b087-b151dd3dc570@kernel.org>
+Date: Tue, 27 Feb 2024 10:11:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/8] mptcp: various small improvements
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170900403034.25082.12541895722139534693.git-patchwork-notify@kernel.org>
-Date: Tue, 27 Feb 2024 03:20:30 +0000
-References: <20240223-upstream-net-next-20240223-misc-improvements-v1-0-b6c8a10396bd@kernel.org>
-In-Reply-To: <20240223-upstream-net-next-20240223-misc-improvements-v1-0-b6c8a10396bd@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- shuah@kernel.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, tanggeliang@kylinos.cn
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v2 0/7] some cleanups
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <cover.1708588977.git.tanggeliang@kylinos.cn>
+ <ccfa5d4a-3ba8-47b0-8610-8266ac423c12@kernel.org> <Zd09gi9yBjnkGtaS@t480>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <Zd09gi9yBjnkGtaS@t480>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hi Geliang,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Fri, 23 Feb 2024 21:17:52 +0100 you wrote:
-> This series brings various small improvements to MPTCP and its
-> selftests:
+On 27/02/2024 02:40, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Patch 1 prints an error if there are duplicated subtests names. It is
-> important to have unique (sub)tests names in TAP, because some CI
-> environments drop (sub)tests with duplicated names.
+> On Mon, Feb 26, 2024 at 11:06:11AM +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 22/02/2024 09:03, Geliang Tang wrote:
+>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>
+>>> v2:
+>>>  - address Matt's comments in v1
+>>
+>> If you don't mind, I think it would be useful to add a short changelog
+>> per patch, under the commit message using '---' as separator (or using
+>> 'git notes'): it would help to remember what was discussed, what was
+>> applied, rejected or (accidentally or not) ignored. One line might be
+>> enough, but it would be useful.
 > 
-> [...]
+> Sure, I'll use 'git notes' to add notes in the future.
 
-Here is the summary with links:
-  - [net-next,1/8] selftests: mptcp: lib: catch duplicated subtest entries
-    https://git.kernel.org/netdev/net-next/c/9da74836740d
-  - [net-next,2/8] mptcp: token kunit: set protocol
-    https://git.kernel.org/netdev/net-next/c/28de50eeb734
-  - [net-next,3/8] mptcp: check the protocol in tcp_sk() with DEBUG_NET
-    https://git.kernel.org/netdev/net-next/c/dcc03f270d1e
-  - [net-next,4/8] mptcp: check the protocol in mptcp_sk() with DEBUG_NET
-    https://git.kernel.org/netdev/net-next/c/14d29ec5302c
-  - [net-next,5/8] selftests: mptcp: netlink: drop duplicate var ret
-    https://git.kernel.org/netdev/net-next/c/488ccbe76cb4
-  - [net-next,6/8] selftests: mptcp: simult flows: define missing vars
-    https://git.kernel.org/netdev/net-next/c/fccf7c922459
-  - [net-next,7/8] selftests: mptcp: join: change capture/checksum as bool
-    https://git.kernel.org/netdev/net-next/c/8c6f6b4bb53a
-  - [net-next,8/8] selftests: mptcp: diag: change timeout_poll to 30
-    https://git.kernel.org/netdev/net-next/c/e8ddc5f255c3
+Thanks!
 
-You are awesome, thank you!
+>>> Geliang Tang (7):
+>>>   mptcp: make pm_remove_addrs_and_subflows static
+>>>   mptcp: drop duplicate header inclusions
+>>>   mptcp: update set_flags interfaces
+>>>   mptcp: set error messages for set_flags
+>>>   mptcp: drop lookup_by_id in lookup_addr
+>>
+>> The five first patches look good to me:
+>>
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>
+>>>   mptcp: add check_id for lookup_anno_list_by_saddr
+>>>   selftests: mptcp: flush userspace addrs list
+>>
+>> Maybe the 6th patch can be simplified, and the 7th one can be dropped?
+> 
+> Please apply the 5 first patches for me. I changed the states of them as
+> 'Queued' on patchwork, and 'Changes Requested' for the last two.
+
+I will do it here, but I think it would be better to avoid applying part
+of a series: the CI validated the whole series.
+
+Here, it is OK, just some individual cleanups, it looks fine!
+
+>> Also, please check my comments on patch 7: it is *really, really*
+>> important for you to explain the *reasoning for why patches were
+>> created*. Without a clear reason, we cannot accept patches.
+> 
+> Thanks for the note on patch 7. I'll always explain the reason for the
+> patch in commit logs in the future. I promise.
+
+Great, thanks, that will help for the reviews and for later :)
+
+Cheers,
+Matt
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Sponsored by the NGI0 Core fund.
