@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225B018B09;
-	Tue, 27 Feb 2024 03:10:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1E91B949;
+	Tue, 27 Feb 2024 03:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709003429; cv=none; b=at2XYRHlc2PDY0v3z8gaGmiX3sc4BYIS8kBSgoQWbuEc67eslD8ty7+YWpTl9x87q4dOXOgyRdCM8dsEZXHMS/+s4Nz84QWBNGDYEZnL0FMMRzn/zBbvnqc/S2dLplPIITJF2KJrx14ulsslfPK24QDeXT7oTkOekSGAYdQk0ag=
+	t=1709004030; cv=none; b=lPbXziJ4TJ75dY7PkKvuuZSBBxVXBaH+15dXDDPDn4p6ZeobF8sy1LP/JdQoow3Pig6t4T+OhUSrIaSBUnH9h9yf1lXo4LpM9o/hTwPOvBRXBiob98Ro+RzSLW5lDE9QJNCHGxggTgk+aZBnYf0FJxPL7zd8GZERlDIPYcJvvP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709003429; c=relaxed/simple;
-	bh=px+FzP8nHYq7W65Fl++IrzC/G4rPXKu6PG/CBccJBeE=;
+	s=arc-20240116; t=1709004030; c=relaxed/simple;
+	bh=s2eioNfukDMALIYmsfTbL/3nVLukiMf2+0qLoHY9ES8=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=SBic70/OTNoTJ8LwlDBLvL+LyoKd+xUawglCl6V8GlUFPOOCAC+skIszRm7DP8Ej4muGEsP7mEUf1596tRrbJBuACDE3J3GVuEFbOdE8C6sgD73VxO/glet6S4qD6BB7AXCFFGABPqXqvwxIakBPbhkDa5be8klxau7YHLq3zyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWIAYWL/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=AyPDmorH+dsUhtG4MRNGrSYYF40EXcH+IOT1fDHKMu8vgkxjU5hbp3ALQlxLBT7ev6yy2UMzF6qHY/b7caJenq8GaEtPvq239CT3C3aW9mJAd108b9BquwgCi+H07bpH3KuSnfURIhpha5SJ5HtPZvF7KPv8WaYCY8rUr4kxyMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ds6+qhyd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWIAYWL/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B3866C43390;
-	Tue, 27 Feb 2024 03:10:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ds6+qhyd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 75D2BC43394;
+	Tue, 27 Feb 2024 03:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709003428;
-	bh=px+FzP8nHYq7W65Fl++IrzC/G4rPXKu6PG/CBccJBeE=;
+	s=k20201202; t=1709004030;
+	bh=s2eioNfukDMALIYmsfTbL/3nVLukiMf2+0qLoHY9ES8=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=BWIAYWL/zqHVMNL1ygzCyT6lKrBpz+Lxi8Tf5I5nvYRdK10Ak0DIOtZIDrwZJHynD
-	 QS+XzVVTtjxAraQTvsh6Jl2KP9OP8qSCIoo+mm8szah5m9z1B7yjy92dSg9JEJZyoL
-	 daZJgcU8sHq1qkSnhgi5MJ0Tdzv0Mwk6SPZyjaB4BsEVz/rIemtjda0Ps7OBH4InbK
-	 sdSvaEaY6J9SH3L1kl7L5vPngeHcpIBTxyQuMffpOqQ4jZt24ls8kOE24TjCNrm1EE
-	 CO7Paqxc2PFMxPrOJTYqFVaLWepHr87UAEFTn+Zkyl22qs4S7XAE8DkizbtE2vSk92
-	 tIxI/CeZvrx8A==
+	b=ds6+qhydg6HvWtNREWG8A+IjqexZMZ7YWnTYjxMV+C485aQAvxyCnH9eGyGicW580
+	 Sgm2PDzkvNPOd80rCdTMHbuHKt+5DbsdufrqTDeeD4Njtfkh8LJk3B6lgk2TXA+MVF
+	 dVQ274u4amFeRIN3El/DsS4hhzl6rB9hOamyu7JahaHjIdp+EBDan3VUMui1u9PdBD
+	 48sa5tgNPsjZxIyzWlm7NbHmk6YIj3BC+a4/dm3+PrMnoeoMSzIvSHl3/KWA7wwJCV
+	 6Z31sUvzHAu1jbE0DSdlq45nI6xzz3Xcc83t7QIRqIPAAkwWQDxbGm1QW2fqDrQLxe
+	 1alt0e3SzRnBw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 96D48D88FB0;
-	Tue, 27 Feb 2024 03:10:28 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 55D29D8C976;
+	Tue, 27 Feb 2024 03:20:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -37,57 +37,51 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 00/10] mptcp: more misc. fixes for v6.8
+Subject: Re: [PATCH net-next 0/8] mptcp: various small improvements
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170900342860.19917.16044337565928875958.git-patchwork-notify@kernel.org>
-Date: Tue, 27 Feb 2024 03:10:28 +0000
-References: <20240223-upstream-net-20240223-misc-fixes-v1-0-162e87e48497@kernel.org>
-In-Reply-To: <20240223-upstream-net-20240223-misc-fixes-v1-0-162e87e48497@kernel.org>
+ <170900403034.25082.12541895722139534693.git-patchwork-notify@kernel.org>
+Date: Tue, 27 Feb 2024 03:20:30 +0000
+References: <20240223-upstream-net-next-20240223-misc-improvements-v1-0-b6c8a10396bd@kernel.org>
+In-Reply-To: <20240223-upstream-net-next-20240223-misc-improvements-v1-0-b6c8a10396bd@kernel.org>
 To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
  davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- fw@strlen.de, kishen.maloor@intel.com, shuah@kernel.org,
- peter.krystad@linux.intel.com, cpaasch@apple.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- tanggeliang@kylinos.cn, stable@vger.kernel.org, dcaratti@redhat.com
+ shuah@kernel.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tanggeliang@kylinos.cn
 
 Hello:
 
-This series was applied to netdev/net.git (main)
+This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 23 Feb 2024 17:14:10 +0100 you wrote:
-> This series includes 6 types of fixes:
+On Fri, 23 Feb 2024 21:17:52 +0100 you wrote:
+> This series brings various small improvements to MPTCP and its
+> selftests:
 > 
-> - Patch 1 fixes v4 mapped in v6 addresses support for the userspace PM,
->   when asking to delete a subflow. It was done everywhere else, but not
->   there. Patch 2 validates the modification, thanks to a subtest in
->   mptcp_join.sh. These patches can be backported up to v5.19.
+> Patch 1 prints an error if there are duplicated subtests names. It is
+> important to have unique (sub)tests names in TAP, because some CI
+> environments drop (sub)tests with duplicated names.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,01/10] mptcp: map v4 address to v6 when destroying subflow
-    https://git.kernel.org/netdev/net/c/535d620ea5ff
-  - [net,02/10] selftests: mptcp: rm subflow with v4/v4mapped addr
-    https://git.kernel.org/netdev/net/c/7092dbee2328
-  - [net,03/10] mptcp: avoid printing warning once on client side
-    https://git.kernel.org/netdev/net/c/5b49c41ac8f2
-  - [net,04/10] mptcp: push at DSS boundaries
-    https://git.kernel.org/netdev/net/c/b9cd26f640a3
-  - [net,05/10] mptcp: fix snd_wnd initialization for passive socket
-    https://git.kernel.org/netdev/net/c/adf1bb78dab5
-  - [net,06/10] mptcp: fix potential wake-up event loss
-    https://git.kernel.org/netdev/net/c/b111d8fbd2cb
-  - [net,07/10] selftests: mptcp: join: add ss mptcp support check
-    https://git.kernel.org/netdev/net/c/9480f388a2ef
-  - [net,08/10] mptcp: fix double-free on socket dismantle
-    https://git.kernel.org/netdev/net/c/10048689def7
-  - [net,09/10] mptcp: fix possible deadlock in subflow diag
-    https://git.kernel.org/netdev/net/c/d6a9608af9a7
-  - [net,10/10] selftests: mptcp: explicitly trigger the listener diag code-path
-    https://git.kernel.org/netdev/net/c/b4b51d36bbaa
+  - [net-next,1/8] selftests: mptcp: lib: catch duplicated subtest entries
+    https://git.kernel.org/netdev/net-next/c/9da74836740d
+  - [net-next,2/8] mptcp: token kunit: set protocol
+    https://git.kernel.org/netdev/net-next/c/28de50eeb734
+  - [net-next,3/8] mptcp: check the protocol in tcp_sk() with DEBUG_NET
+    https://git.kernel.org/netdev/net-next/c/dcc03f270d1e
+  - [net-next,4/8] mptcp: check the protocol in mptcp_sk() with DEBUG_NET
+    https://git.kernel.org/netdev/net-next/c/14d29ec5302c
+  - [net-next,5/8] selftests: mptcp: netlink: drop duplicate var ret
+    https://git.kernel.org/netdev/net-next/c/488ccbe76cb4
+  - [net-next,6/8] selftests: mptcp: simult flows: define missing vars
+    https://git.kernel.org/netdev/net-next/c/fccf7c922459
+  - [net-next,7/8] selftests: mptcp: join: change capture/checksum as bool
+    https://git.kernel.org/netdev/net-next/c/8c6f6b4bb53a
+  - [net-next,8/8] selftests: mptcp: diag: change timeout_poll to 30
+    https://git.kernel.org/netdev/net-next/c/e8ddc5f255c3
 
 You are awesome, thank you!
 -- 
