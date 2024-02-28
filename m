@@ -1,160 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86457364CD
-	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 09:51:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06AB8364A4
+	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 09:59:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709113871; cv=none; b=JuXSy+Y3ROOxoNqhJeA4ddRKxGoR+szkdaRrqfcr1WmF8TmKgfsaEL1uvonzvkDqEnrzqpQ6NFAZGbRl4ODXjOEXZzQJZYyMyYXSxeAVREYJWkrmcxfdrFeK4+latLFOHSg74co3rZzU0cXFnZRXtcDAjdbHcj1YQxaT0VEWchs=
+	t=1709114352; cv=none; b=tRiMRbxfZv7qaVAUPeHSDC0gSeZtYGBMyLQ1i0hW2QFalv+v8ek1sgS8LrzSVbUL5q72mM98yxZbuG0D37YoVePYSazldEWpvwPdbTaLwkyoW2xx4dImbDT4R/gpsyMqe4snr5zIIE3k8KL4FMFfaZf+Lsxf9qIbf48e58YZn9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709113871; c=relaxed/simple;
-	bh=cPkZVqM2E4ZGoMqRI0KXY07IQBIgpWwQQpjNvqyyAOc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DLOwlQainAAIcOy7hgoyk5xXNPAqtALHzMgYR/m1AsPPqz66aqZ1HLTxLBsaqW1zM+UCH+xGkX/eUsHNuTLrWZH6hJOCW4benzhqDWr7VS4+rfwLSwplB2hKZi3Ss/8heuqNnk+BPeyRFUNpzWHpOUpnx0oujzK1qduSAiW+1fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFHwRQMX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709114352; c=relaxed/simple;
+	bh=XL/zdbpGu4NMh5JJHYG15GedpnQ/+spfeAqNO3yxkkc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dlayUtqKAMjdiwvmffYJnUJU7blMFbiiG3Os4r1JblB7y3PCRYdDHVJCG07eQ5b3jjb5p4dSOgfkX7VlZKORtIHcF0dr9X32VOHYAzZSfX9G2FFuoXiGK5H4omuX6eKP0thg8rMKJIBbhgS99ekP2mAXhnAE/iJpKAXeTB48kug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lne5pZ+Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFHwRQMX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA97C433F1;
-	Wed, 28 Feb 2024 09:51:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lne5pZ+Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E49C433F1;
+	Wed, 28 Feb 2024 09:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709113871;
-	bh=cPkZVqM2E4ZGoMqRI0KXY07IQBIgpWwQQpjNvqyyAOc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=lFHwRQMXFDHcA4kRuttYV8Pl5IWxdzU73NzWDo3xtzNp/3q9QsD5DNoHj7sVR4+Tz
-	 fOlWTLbXZouSfQrC2fnvNUGJVVveZzZwWpipugMv4Nq9TXoW0fgK6bnb6VApEGUGuQ
-	 wfx4I+UOFsCVYMqLYG1e9ib5BQehb4wCKBanmgk+G/LMkHQBTSNa7m/hWWMNLZulHt
-	 IxeXnHx6x2OXzxqVxdBDiRcXqcPAixm7jI289b34d2t4Lw8IF5URXFlcHA+IGAcJkX
-	 bT4ww3MonbvOKAOxKx47RRaqqSLDtXiCtQIxgBe496BXwXS+u9gTiAAEH/YZgDHKvH
-	 +G4P0vG8TXujA==
-Message-ID: <0869f65fc6c67394f14288b6033baeaf89f81606.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v5 02/12] selftests: mptcp: sockopt: print
- every test result
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Wed, 28 Feb 2024 17:51:06 +0800
-In-Reply-To: <7ff17cb1-0c1f-45ac-b797-17594a00a215@kernel.org>
-References: <cover.1708939962.git.tanggeliang@kylinos.cn>
-	 <1aa6a9af7ebd8690e595bfbbdde5f54f684f51e8.1708939962.git.tanggeliang@kylinos.cn>
-	 <405e2ab8-7483-4bf7-a9a5-a94c631af404@kernel.org>
-	 <0118dbd0fbf33d5a1f4ea98dc606b3be91af49db.camel@kernel.org>
-	 <7ff17cb1-0c1f-45ac-b797-17594a00a215@kernel.org>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.50.0-1 
+	s=k20201202; t=1709114351;
+	bh=XL/zdbpGu4NMh5JJHYG15GedpnQ/+spfeAqNO3yxkkc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lne5pZ+Y24jlwKYnp3C3xkFzDMNkOVgIys/uiDJZ+KjsNrpanAlBXMd2zuLSmTlVQ
+	 PdSAywZP57jcJJh67Xmi1ICuSIXAkVpSqJAwIjot3kkjqOE1rXvCHakaci6uPYsIz7
+	 A6vThIoiIZBGGal8MRrkBK97TMSqq9ctvHH/n3AoTiWV1JaaRMb7YPEeJ+ycLp+bKT
+	 1BJXdCVp7CpGJPYYDjXTCLKWrtM/fB0OMZ261xwKyQmGv42eWI+Jc/ObPBxzDtsBsg
+	 9iPIrAfESbqhaFkoeKIrcxKcLKgmULYiBJOa1/+LUsIWijpM6X3MdDud5TkpWLS+Qq
+	 Oq0nMIXt+aG1A==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	Mat Martineau <martineau@kernel.org>,
+	Christoph Paasch <cpaasch@apple.com>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp 6.1.y] mptcp: continue marking the first subflow as UNCONNECTED
+Date: Wed, 28 Feb 2024 10:58:58 +0100
+Message-ID: <20240228095858.4117568-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1493; i=matttbe@kernel.org; h=from:subject; bh=XL/zdbpGu4NMh5JJHYG15GedpnQ/+spfeAqNO3yxkkc=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl3wPicO9eQ1t6D2dvbDYq7IjoM3QLRjK/NXOL7 MFSLR/KoCKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZd8D4gAKCRD2t4JPQmmg c5BgEADdeuIiIAN6UGeK2R/o7yB9fC6jHybcmiPBtKuH+OQcDvZJHfYTgvj38CvYLgGBnyxC5pa vt/eJvA4Zve15P7DZSTTiYp3Hb2+u9efEpoaoVRYLellNJ6Fqxn+RJJtMpwGQAqa/afysmrJd3i uP/pyakoP0pHERimG11slOqUlhDIX+FyT1y0rsQPSnj2FVt/Q4s5odljEd5FGIiRcFhQHuZhGIa cTruiw3UcfPDegSlX/PUAdl7tqTdDoS/4Z4UdWDlougNX7IoPCh8IbUFyz1bWNzXaL5YDcGEPjd ieRQk63P+fwqCOelYw8r8YxC0SEWUv57MoZlgjzFVpxMx89h6kjn0O2E9gxozJ1o22fOItZAt9x Iv/tV7HVcGHhIZQiGXv1EjI+ARt2Pivvz9Jn0/yIFJ8+dri9dbQKBIX3ViYMcWRn/sACY24cjGz 33J9PXZId/xJOzDv/bLS13XlPxIhMaoxvn0KJff4G+S5Qxh2/M+Dby+LrpzikMCKc8Vat3Nz81w w7oNuLq8YWThyA6Vc2zNxedCG/24ZaDrmCK1tXG2ieiaTbxA1IDerfyeNgUSW4eczjrjGMh7mp7 5GDstFb98KLpmm6nbcBqXY9IV0/Lb9rTW9u96lZ2n+VsNxbJuUZL08ekLVPaRpWUY6r77vrz97x 7qpGVEGuWTf9zIw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-T24gV2VkLCAyMDI0LTAyLTI4IGF0IDEwOjEzICswMTAwLCBNYXR0aGlldSBCYWVydHMgd3JvdGU6
-Cj4gSGkgR2VsaWFuZywKPiAKPiBPbiAyOC8wMi8yMDI0IDA4OjU3LCBHZWxpYW5nIFRhbmcgd3Jv
-dGU6Cj4gPiBPbiBNb24sIDIwMjQtMDItMjYgYXQgMTM6NDAgKzAxMDAsIE1hdHRoaWV1IEJhZXJ0
-cyB3cm90ZToKPiA+ID4gSGkgR2VsaWFuZywKPiA+ID4gCj4gPiA+IE9uIDI2LzAyLzIwMjQgMTA6
-NDMsIEdlbGlhbmcgVGFuZyB3cm90ZToKPiA+ID4gPiBGcm9tOiBHZWxpYW5nIFRhbmcgPHRhbmdn
-ZWxpYW5nQGt5bGlub3MuY24+Cj4gPiA+ID4gCj4gPiA+ID4gT25seSB0b3RhbCB0ZXN0IHJlc3Vs
-dHMgYXJlIHByaW50ZWQgb3V0IGluIG1wdGNwX3NvY2tvcHQuc2g6Cj4gPiA+ID4gCj4gPiA+ID4g
-wqBQQVNTOiBhbGwgcGFja2V0cyBoYWQgcGFja2V0IG1hcmsgc2V0Cj4gPiA+ID4gwqBQQVNTOiBT
-T0xfTVBUQ1AgZ2V0c29ja29wdCBoYXMgZXhwZWN0ZWQgaW5mb3JtYXRpb24KPiA+ID4gPiDCoFBB
-U1M6IFRDUF9JTlEgY21zZy9pb2N0bCAtdCB0Y3AKPiA+ID4gPiDCoFBBU1M6IFRDUF9JTlEgY21z
-Zy9pb2N0bCAtNiAtdCB0Y3AKPiA+ID4gPiDCoFBBU1M6IFRDUF9JTlEgY21zZy9pb2N0bCAtciB0
-Y3AKPiA+ID4gPiDCoFBBU1M6IFRDUF9JTlEgY21zZy9pb2N0bCAtNiAtciB0Y3AKPiA+ID4gPiAK
-PiA+ID4gPiBUaGlzIHBhdGNoIHByaW50cyBtb3JlIGluZm8gZm9yIGV2ZXJ5IHRlc3QgcmVzdWx0
-IGluIGVhY2ggdGVzdAo+ID4gPiA+IGdyb3VwOgo+ID4gPiA+IAo+ID4gPiA+IHRyYW5zZmVyIGlw
-djTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsKPiA+ID4gPiBPSyBdCj4g
-PiA+ID4gbWFyayBpcHY0wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIFsKPiA+ID4gPiBPSyBdCj4gPiA+ID4gdHJhbnNmZXIgaXB2NsKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgWwo+ID4gPiA+IE9LIF0KPiA+ID4gPiBtYXJrIGlwdjbCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgWwo+ID4gPiA+IE9LIF0K
-PiA+ID4gPiBQQVNTOiBhbGwgcGFja2V0cyBoYWQgcGFja2V0IG1hcmsgc2V0Cj4gPiA+ID4gc29j
-a29wdCB2NMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgWwo+ID4g
-PiA+IE9LIF0KPiA+ID4gPiBzb2Nrb3B0IHY2wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBbCj4gPiA+ID4gT0sgXQo+ID4gPiA+IFBBU1M6IFNPTF9NUFRDUCBnZXRz
-b2Nrb3B0IGhhcyBleHBlY3RlZCBpbmZvcm1hdGlvbgo+ID4gPiA+IFRDUF9JTlE6IC10IHRjcMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbCj4gPiA+ID4gT0sgXQo+ID4gPiA+IFBB
-U1M6IFRDUF9JTlEgY21zZy9pb2N0bCAtdCB0Y3AKPiA+ID4gPiBUQ1BfSU5ROiAtNiAtdCB0Y3DC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgWwo+ID4gPiA+IE9LIF0KPiA+ID4gPiBQQVNTOiBU
-Q1BfSU5RIGNtc2cvaW9jdGwgLTYgLXQgdGNwCj4gPiA+ID4gVENQX0lOUTogLXIgdGNwwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsKPiA+ID4gPiBPSyBdCj4gPiA+ID4gUEFTUzog
-VENQX0lOUSBjbXNnL2lvY3RsIC1yIHRjcAo+ID4gPiA+IFRDUF9JTlE6IC02IC1yIHRjcMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbCj4gPiA+ID4gT0sgXQo+ID4gPiA+IFBBU1M6IFRDUF9J
-TlEgY21zZy9pb2N0bCAtNiAtciB0Y3AKPiA+ID4gPiBUQ1BfSU5ROiAtciB0Y3AgLXQgdGNwwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBbCj4gPiA+ID4gT0sgXQo+ID4gPiAKPiA+ID4gUGxlYXNlIGNsZWFy
-bHkgZXhwbGFpbiB3aHkgdGhpcyBpcyBpbnRlcmVzdGluZywgZXZlbiBpZiBpdCBsb29rcwo+ID4g
-PiBvYnZpb3VzLgo+ID4gPiAKPiA+ID4gSGVyZSwgSSBkb24ndCBrbm93IGlmIHRoaXMgcGF0Y2gg
-bWFrZXMgc2Vuc2Ugb3Igbm90OiB0byBtZSwgdGhlCj4gPiA+IG91dHB1dAo+ID4gPiBpcyBub3cg
-Y29uZnVzaW5nIGJlY2F1c2UgdGhlcmUgaXMgYSBtaXggb2YgJ1sgT0sgXScgYW5kICdQQVNTJy4K
-PiA+ID4gTWF5YmU6Cj4gPiA+IAo+ID4gPiAtIHJlbW92ZSBhbGwgdGhlICJQQVNTOiB4eHgiPyDi
-hpIgSSBkb24ndCBzZWUgd2hhdCBpdCBicmluZ3MgbW9yZQo+ID4gPiAtIChvciBjb252ZXJ0IGV4
-aXN0aW5nICJQQVNTOiB4eHgiIGFuZCAiRkFJTDogeHh4IiB0byB1c2UgIlsgT0sKPiA+ID4gXSI/
-Cj4gPiA+IEJ1dAo+ID4gPiB0aGVyZSBhcmUgZmV3ZXIgZGV0YWlscykKPiA+IAo+ID4gVGhpcyBw
-YXRjaCB1c2VzIHRvIG1hdGNoIHRoZSBvdXRwdXQgb2YgdGhpcyBzY3JpcHQ6Cj4gPiAKPiA+IElO
-Rk86IFBBU1M6IGFsbCBwYWNrZXRzIGhhZCBwYWNrZXQgbWFyayBzZXQKPiA+IElORk86IFBBU1M6
-IFNPTF9NUFRDUCBnZXRzb2Nrb3B0IGhhcyBleHBlY3RlZCBpbmZvcm1hdGlvbgo+ID4gSU5GTzog
-UEFTUzogVENQX0lOUSBjbXNnL2lvY3RsIC10IHRjcAo+ID4gSU5GTzogUEFTUzogVENQX0lOUSBj
-bXNnL2lvY3RsIC02IC10IHRjcAo+ID4gSU5GTzogUEFTUzogVENQX0lOUSBjbXNnL2lvY3RsIC1y
-IHRjcAo+ID4gSU5GTzogUEFTUzogVENQX0lOUSBjbXNnL2lvY3RsIC02IC1yIHRjcAo+ID4gSU5G
-TzogUEFTUzogVENQX0lOUSBjbXNnL2lvY3RsIC1yIHRjcCAtdCB0Y3AKPiA+IAo+ID4gd2l0aCB0
-aGUgdGVzdCByZXN1bHRzIG9mIGl0Ogo+ID4gCj4gPiBvayAxIC0gbXB0Y3Bfc29ja29wdDogbWFy
-ayBpcHY0Cj4gPiBvayAyIC0gbXB0Y3Bfc29ja29wdDogdHJhbnNmZXIgaXB2NAo+ID4gb2sgMyAt
-IG1wdGNwX3NvY2tvcHQ6IG1hcmsgaXB2Ngo+ID4gb2sgNCAtIG1wdGNwX3NvY2tvcHQ6IHRyYW5z
-ZmVyIGlwdjYKPiA+IG9rIDUgLSBtcHRjcF9zb2Nrb3B0OiBzb2Nrb3B0IHY0Cj4gPiBvayA2IC0g
-bXB0Y3Bfc29ja29wdDogc29ja29wdCB2Ngo+ID4gb2sgNyAtIG1wdGNwX3NvY2tvcHQ6IFRDUF9J
-TlE6IC10IHRjcAo+ID4gb2sgOCAtIG1wdGNwX3NvY2tvcHQ6IFRDUF9JTlE6IC02IC10IHRjcAo+
-ID4gb2sgOSAtIG1wdGNwX3NvY2tvcHQ6IFRDUF9JTlE6IC1yIHRjcAo+ID4gb2sgMTAgLSBtcHRj
-cF9zb2Nrb3B0OiBUQ1BfSU5ROiAtNiAtciB0Y3AKPiA+IG9rIDExIC0gbXB0Y3Bfc29ja29wdDog
-VENQX0lOUTogLXIgdGNwIC10IHRjcAo+ID4gCj4gPiBUaGlzIHBhdGNoIGlzIHByZXBhcmVkIGZv
-ciB0aGUgY29taW5nIHByaW50aW5nIGNvdW50ZXIgcGF0Y2gsCj4gPiBvdGhlcndpc2UKPiA+IHRo
-ZSB0d28gb3V0cHV0IHJlc3VsdHMgbWF5IGhhdmUgZGlmZmVyZW50IHNlcmlhbCBudW1iZXJzLCB3
-aGljaCBjYW4KPiA+IGJlCj4gPiBjb25mdXNpbmcuCj4gCj4gWWVzLCBJIGFncmVlIHRoYXQgaXQg
-bWFrZXMgc2Vuc2UgdG8gcHJpbnQgdGhlIGluZGl2aWR1YWwgcmVzdWx0cy4gQnV0Cj4gd2hhdCBJ
-IHdhbnRlZCB0byBzYXkgaXMgdGhhdCBtYXliZSB3ZSBubyBsb25nZXIgbmVlZCB0aGVzZSAiSU5G
-TzoKPiBQQVNTOiIKPiBsaW5lcyBpbiB0aGUgb3V0cHV0Pwo+IAo+IGUuZy4gb25seSBwcmludGlu
-ZyB0aGlzOgo+IAo+ICMgMDEgVHJhbnNmZXIgaXB2NMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbIE9LIF0KPiAj
-IDAyIE1hcmsgaXB2NMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsgT0sgXQo+ICMgMDMgVHJhbnNm
-ZXIgaXB2NsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbIE9LIF0KPiAjIDA0IE1hcmsgaXB2NsKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIFsgT0sgXQo+ICMgMDUgU09MX01QVENQIHNvY2tvcHQgdjTCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsgT0sgXQo+
-ICMgMDYgU09MX01QVENQIHNvY2tvcHQgdjbCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsgT0sgXQo+ICMgMDcgVENQX0lOUTogLXQgdGNw
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgWyBPSyBdCj4gIyAwOCBUQ1BfSU5ROiAtNiAtdCB0Y3DCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbIE9LIF0K
-PiAjIDA5IFRDUF9JTlE6IC1yIHRjcMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsgT0sgXQo+ICMgMTAgVENQX0lOUTog
-LTYgLXIgdGNwwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgWyBPSyBdCj4gIyAxMSBUQ1BfSU5ROiAtciB0Y3AgLXQgdGNwwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsgT0sgXQoK
-WWVzLCB0aGlzIGlzIG11Y2ggYmV0dGVyLiBXaWxsIHVwZGF0ZSBpdCBpbiBuZXh0IHZlcnNpb24u
-Cgo+IAo+IEkgdGhpbmsgdGhlc2UgJ0lORk86IFBBU1M6JyBsaW5lcyBkb24ndCBicmluZyBtb3Jl
-IGluZm8sIG5vPyBJZiB0aGV5Cj4gZG8sCj4gd2UgY2FuIGFsd2F5cyBtb2RpZnkgd2hhdCBpcyBw
-cmludGVkIGFib3ZlLgo+IAo+IChXaGlsZSBhdCBpdCwgaXQgbWlnaHQgbG9vayBuaWNlciB0byBk
-bzogcy9pcHY0L0lQdjQvIChvciBzL2lwdjQvdjQpCj4gaWYKPiB3ZSBlYXNpbHkgY29udHJvbCB0
-aGF0LCBJIGRpZG4ndCBjaGVjaykKCidzL2lwdjQvdjQnIGlzIGJldHRlciwgd2lsbCB1cGRhdGUg
-dGhlbS4KClRoYW5rcywKLUdlbGlhbmcKCj4gCj4gCj4gQlRXLCB0aGFuayB5b3UgZm9yIHRoZSBy
-ZXBsaWVzIG9uIHRoZSBkaWZmZXJlbnQgcGF0Y2hlcywgaXQgaGVscHMKPiBoZXJlCj4gYmVjYXVz
-ZSB0aGVyZSB3ZXJlIGEgbG90IG9mIGNvbW1lbnRzIG9uIHRoaXMgdjUuCj4gCj4gQ2hlZXJzLAo+
-IE1hdHQKCg==
+After the 'Fixes' commit mentioned below, which is a partial backport,
+the MPTCP worker was no longer marking the first subflow as "UNCONNECTED"
+when the socket was transitioning to TCP_CLOSE state.
+
+As a result, in v6.1, it was no longer possible to reconnect to the just
+disconnected socket. Continue to do that like before, only for the first
+subflow.
+
+A few refactoring have been done around the 'msk->subflow' in later
+versions, and it looks like this is not needed to do that there, but
+still needed in v6.1. Without that, the 'disconnect' tests from the
+mptcp_connect.sh selftest fail: they repeat the transfer 3 times by
+reconnecting to the server each time.
+
+Fixes: 7857e35ef10e ("mptcp: get rid of msk->subflow")
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Notes:
+ - This is specific to the 6.1 version having the partial backport.
+---
+ net/mptcp/protocol.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index cdabb00648bd..125825db642c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2440,6 +2440,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	need_push = (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_data(sk);
+ 	if (!dispose_it) {
+ 		__mptcp_subflow_disconnect(ssk, subflow, flags);
++		if (msk->subflow && ssk == msk->subflow->sk)
++			msk->subflow->state = SS_UNCONNECTED;
+ 		release_sock(ssk);
+ 
+ 		goto out;
+-- 
+2.43.0
 
