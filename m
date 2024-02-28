@@ -1,207 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B0F2E635
-	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 09:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86457364CD
+	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 09:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709111622; cv=none; b=JGXlhKvXUAm3mxUCw9qmEBow1QxXTWzNHFa5gpuVX+QmaCkD9Uz84bfJ5kDfHnYXu0Ze/NbOS5S/npKEbRG61RTe4JHltW1naY4Sdz2tKviX/2V0dD8jsIrSMtq0Ghy4LJgWz8iVq+ORZcVcfqNvKGdqTrCbET+DzfJAi7kxFO0=
+	t=1709113871; cv=none; b=JuXSy+Y3ROOxoNqhJeA4ddRKxGoR+szkdaRrqfcr1WmF8TmKgfsaEL1uvonzvkDqEnrzqpQ6NFAZGbRl4ODXjOEXZzQJZYyMyYXSxeAVREYJWkrmcxfdrFeK4+latLFOHSg74co3rZzU0cXFnZRXtcDAjdbHcj1YQxaT0VEWchs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709111622; c=relaxed/simple;
-	bh=TPxkI0Y3bymRJOmMPmm+aC00TEzHo4GwdVX7SjExR8Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DnLY9CSji2UU/hf2Q45iOrX9rRGrYxGaAvRu3pRGF7szvIdujUo0s0ehlWOPBN9WWzstyXkFClwhnKKhiUmxM0dLYzesEAtxOiQS4HccdOVOUV5Wxl7oXxddS1RlElvRviBUHtYFGcjTXFQdkD9E2QMdBOEixA+Wzjvsn1K9YSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtmqjJiW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709113871; c=relaxed/simple;
+	bh=cPkZVqM2E4ZGoMqRI0KXY07IQBIgpWwQQpjNvqyyAOc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DLOwlQainAAIcOy7hgoyk5xXNPAqtALHzMgYR/m1AsPPqz66aqZ1HLTxLBsaqW1zM+UCH+xGkX/eUsHNuTLrWZH6hJOCW4benzhqDWr7VS4+rfwLSwplB2hKZi3Ss/8heuqNnk+BPeyRFUNpzWHpOUpnx0oujzK1qduSAiW+1fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFHwRQMX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtmqjJiW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3F6C433F1;
-	Wed, 28 Feb 2024 09:13:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFHwRQMX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA97C433F1;
+	Wed, 28 Feb 2024 09:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709111622;
-	bh=TPxkI0Y3bymRJOmMPmm+aC00TEzHo4GwdVX7SjExR8Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dtmqjJiWqWhCt986OYUhGGOSOy7FXQLAd6Hp2CwV6hHhEWWembuSSUBLDE7peyRH2
-	 NgmTcySA/VheY4QCtZftbEkI32EBACUGlARZQi+fmgqPg3KKcYU5w8cTPEBAgo6rt2
-	 LHWyslKmkf+WilnzSwKWR1kzp2EeS5sAdrb7/AVrEAqxuLK5abEgatYmOTOx9lyIDm
-	 ptKMYDBBY1HJGjzx21FCmtczlj9KTXONw2p4LBtxMx8wP5gKZ/Y3l0wG7SiiFR97HK
-	 Pm4UCnu1Aq9zDkwzUFPfQT22xYwFWA11Vws3vmQrtI5QtQhdW8Z4M5N5X9bI+u2yYy
-	 B2PNgTk39iGDw==
-Message-ID: <7ff17cb1-0c1f-45ac-b797-17594a00a215@kernel.org>
-Date: Wed, 28 Feb 2024 10:13:38 +0100
+	s=k20201202; t=1709113871;
+	bh=cPkZVqM2E4ZGoMqRI0KXY07IQBIgpWwQQpjNvqyyAOc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=lFHwRQMXFDHcA4kRuttYV8Pl5IWxdzU73NzWDo3xtzNp/3q9QsD5DNoHj7sVR4+Tz
+	 fOlWTLbXZouSfQrC2fnvNUGJVVveZzZwWpipugMv4Nq9TXoW0fgK6bnb6VApEGUGuQ
+	 wfx4I+UOFsCVYMqLYG1e9ib5BQehb4wCKBanmgk+G/LMkHQBTSNa7m/hWWMNLZulHt
+	 IxeXnHx6x2OXzxqVxdBDiRcXqcPAixm7jI289b34d2t4Lw8IF5URXFlcHA+IGAcJkX
+	 bT4ww3MonbvOKAOxKx47RRaqqSLDtXiCtQIxgBe496BXwXS+u9gTiAAEH/YZgDHKvH
+	 +G4P0vG8TXujA==
+Message-ID: <0869f65fc6c67394f14288b6033baeaf89f81606.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v5 02/12] selftests: mptcp: sockopt: print
+ every test result
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Wed, 28 Feb 2024 17:51:06 +0800
+In-Reply-To: <7ff17cb1-0c1f-45ac-b797-17594a00a215@kernel.org>
+References: <cover.1708939962.git.tanggeliang@kylinos.cn>
+	 <1aa6a9af7ebd8690e595bfbbdde5f54f684f51e8.1708939962.git.tanggeliang@kylinos.cn>
+	 <405e2ab8-7483-4bf7-a9a5-a94c631af404@kernel.org>
+	 <0118dbd0fbf33d5a1f4ea98dc606b3be91af49db.camel@kernel.org>
+	 <7ff17cb1-0c1f-45ac-b797-17594a00a215@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.50.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v5 02/12] selftests: mptcp: sockopt: print
- every test result
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1708939962.git.tanggeliang@kylinos.cn>
- <1aa6a9af7ebd8690e595bfbbdde5f54f684f51e8.1708939962.git.tanggeliang@kylinos.cn>
- <405e2ab8-7483-4bf7-a9a5-a94c631af404@kernel.org>
- <0118dbd0fbf33d5a1f4ea98dc606b3be91af49db.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <0118dbd0fbf33d5a1f4ea98dc606b3be91af49db.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+T24gV2VkLCAyMDI0LTAyLTI4IGF0IDEwOjEzICswMTAwLCBNYXR0aGlldSBCYWVydHMgd3JvdGU6
+Cj4gSGkgR2VsaWFuZywKPiAKPiBPbiAyOC8wMi8yMDI0IDA4OjU3LCBHZWxpYW5nIFRhbmcgd3Jv
+dGU6Cj4gPiBPbiBNb24sIDIwMjQtMDItMjYgYXQgMTM6NDAgKzAxMDAsIE1hdHRoaWV1IEJhZXJ0
+cyB3cm90ZToKPiA+ID4gSGkgR2VsaWFuZywKPiA+ID4gCj4gPiA+IE9uIDI2LzAyLzIwMjQgMTA6
+NDMsIEdlbGlhbmcgVGFuZyB3cm90ZToKPiA+ID4gPiBGcm9tOiBHZWxpYW5nIFRhbmcgPHRhbmdn
+ZWxpYW5nQGt5bGlub3MuY24+Cj4gPiA+ID4gCj4gPiA+ID4gT25seSB0b3RhbCB0ZXN0IHJlc3Vs
+dHMgYXJlIHByaW50ZWQgb3V0IGluIG1wdGNwX3NvY2tvcHQuc2g6Cj4gPiA+ID4gCj4gPiA+ID4g
+wqBQQVNTOiBhbGwgcGFja2V0cyBoYWQgcGFja2V0IG1hcmsgc2V0Cj4gPiA+ID4gwqBQQVNTOiBT
+T0xfTVBUQ1AgZ2V0c29ja29wdCBoYXMgZXhwZWN0ZWQgaW5mb3JtYXRpb24KPiA+ID4gPiDCoFBB
+U1M6IFRDUF9JTlEgY21zZy9pb2N0bCAtdCB0Y3AKPiA+ID4gPiDCoFBBU1M6IFRDUF9JTlEgY21z
+Zy9pb2N0bCAtNiAtdCB0Y3AKPiA+ID4gPiDCoFBBU1M6IFRDUF9JTlEgY21zZy9pb2N0bCAtciB0
+Y3AKPiA+ID4gPiDCoFBBU1M6IFRDUF9JTlEgY21zZy9pb2N0bCAtNiAtciB0Y3AKPiA+ID4gPiAK
+PiA+ID4gPiBUaGlzIHBhdGNoIHByaW50cyBtb3JlIGluZm8gZm9yIGV2ZXJ5IHRlc3QgcmVzdWx0
+IGluIGVhY2ggdGVzdAo+ID4gPiA+IGdyb3VwOgo+ID4gPiA+IAo+ID4gPiA+IHRyYW5zZmVyIGlw
+djTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsKPiA+ID4gPiBPSyBdCj4g
+PiA+ID4gbWFyayBpcHY0wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIFsKPiA+ID4gPiBPSyBdCj4gPiA+ID4gdHJhbnNmZXIgaXB2NsKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgWwo+ID4gPiA+IE9LIF0KPiA+ID4gPiBtYXJrIGlwdjbCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgWwo+ID4gPiA+IE9LIF0K
+PiA+ID4gPiBQQVNTOiBhbGwgcGFja2V0cyBoYWQgcGFja2V0IG1hcmsgc2V0Cj4gPiA+ID4gc29j
+a29wdCB2NMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgWwo+ID4g
+PiA+IE9LIF0KPiA+ID4gPiBzb2Nrb3B0IHY2wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBbCj4gPiA+ID4gT0sgXQo+ID4gPiA+IFBBU1M6IFNPTF9NUFRDUCBnZXRz
+b2Nrb3B0IGhhcyBleHBlY3RlZCBpbmZvcm1hdGlvbgo+ID4gPiA+IFRDUF9JTlE6IC10IHRjcMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbCj4gPiA+ID4gT0sgXQo+ID4gPiA+IFBB
+U1M6IFRDUF9JTlEgY21zZy9pb2N0bCAtdCB0Y3AKPiA+ID4gPiBUQ1BfSU5ROiAtNiAtdCB0Y3DC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgWwo+ID4gPiA+IE9LIF0KPiA+ID4gPiBQQVNTOiBU
+Q1BfSU5RIGNtc2cvaW9jdGwgLTYgLXQgdGNwCj4gPiA+ID4gVENQX0lOUTogLXIgdGNwwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsKPiA+ID4gPiBPSyBdCj4gPiA+ID4gUEFTUzog
+VENQX0lOUSBjbXNnL2lvY3RsIC1yIHRjcAo+ID4gPiA+IFRDUF9JTlE6IC02IC1yIHRjcMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbCj4gPiA+ID4gT0sgXQo+ID4gPiA+IFBBU1M6IFRDUF9J
+TlEgY21zZy9pb2N0bCAtNiAtciB0Y3AKPiA+ID4gPiBUQ1BfSU5ROiAtciB0Y3AgLXQgdGNwwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBbCj4gPiA+ID4gT0sgXQo+ID4gPiAKPiA+ID4gUGxlYXNlIGNsZWFy
+bHkgZXhwbGFpbiB3aHkgdGhpcyBpcyBpbnRlcmVzdGluZywgZXZlbiBpZiBpdCBsb29rcwo+ID4g
+PiBvYnZpb3VzLgo+ID4gPiAKPiA+ID4gSGVyZSwgSSBkb24ndCBrbm93IGlmIHRoaXMgcGF0Y2gg
+bWFrZXMgc2Vuc2Ugb3Igbm90OiB0byBtZSwgdGhlCj4gPiA+IG91dHB1dAo+ID4gPiBpcyBub3cg
+Y29uZnVzaW5nIGJlY2F1c2UgdGhlcmUgaXMgYSBtaXggb2YgJ1sgT0sgXScgYW5kICdQQVNTJy4K
+PiA+ID4gTWF5YmU6Cj4gPiA+IAo+ID4gPiAtIHJlbW92ZSBhbGwgdGhlICJQQVNTOiB4eHgiPyDi
+hpIgSSBkb24ndCBzZWUgd2hhdCBpdCBicmluZ3MgbW9yZQo+ID4gPiAtIChvciBjb252ZXJ0IGV4
+aXN0aW5nICJQQVNTOiB4eHgiIGFuZCAiRkFJTDogeHh4IiB0byB1c2UgIlsgT0sKPiA+ID4gXSI/
+Cj4gPiA+IEJ1dAo+ID4gPiB0aGVyZSBhcmUgZmV3ZXIgZGV0YWlscykKPiA+IAo+ID4gVGhpcyBw
+YXRjaCB1c2VzIHRvIG1hdGNoIHRoZSBvdXRwdXQgb2YgdGhpcyBzY3JpcHQ6Cj4gPiAKPiA+IElO
+Rk86IFBBU1M6IGFsbCBwYWNrZXRzIGhhZCBwYWNrZXQgbWFyayBzZXQKPiA+IElORk86IFBBU1M6
+IFNPTF9NUFRDUCBnZXRzb2Nrb3B0IGhhcyBleHBlY3RlZCBpbmZvcm1hdGlvbgo+ID4gSU5GTzog
+UEFTUzogVENQX0lOUSBjbXNnL2lvY3RsIC10IHRjcAo+ID4gSU5GTzogUEFTUzogVENQX0lOUSBj
+bXNnL2lvY3RsIC02IC10IHRjcAo+ID4gSU5GTzogUEFTUzogVENQX0lOUSBjbXNnL2lvY3RsIC1y
+IHRjcAo+ID4gSU5GTzogUEFTUzogVENQX0lOUSBjbXNnL2lvY3RsIC02IC1yIHRjcAo+ID4gSU5G
+TzogUEFTUzogVENQX0lOUSBjbXNnL2lvY3RsIC1yIHRjcCAtdCB0Y3AKPiA+IAo+ID4gd2l0aCB0
+aGUgdGVzdCByZXN1bHRzIG9mIGl0Ogo+ID4gCj4gPiBvayAxIC0gbXB0Y3Bfc29ja29wdDogbWFy
+ayBpcHY0Cj4gPiBvayAyIC0gbXB0Y3Bfc29ja29wdDogdHJhbnNmZXIgaXB2NAo+ID4gb2sgMyAt
+IG1wdGNwX3NvY2tvcHQ6IG1hcmsgaXB2Ngo+ID4gb2sgNCAtIG1wdGNwX3NvY2tvcHQ6IHRyYW5z
+ZmVyIGlwdjYKPiA+IG9rIDUgLSBtcHRjcF9zb2Nrb3B0OiBzb2Nrb3B0IHY0Cj4gPiBvayA2IC0g
+bXB0Y3Bfc29ja29wdDogc29ja29wdCB2Ngo+ID4gb2sgNyAtIG1wdGNwX3NvY2tvcHQ6IFRDUF9J
+TlE6IC10IHRjcAo+ID4gb2sgOCAtIG1wdGNwX3NvY2tvcHQ6IFRDUF9JTlE6IC02IC10IHRjcAo+
+ID4gb2sgOSAtIG1wdGNwX3NvY2tvcHQ6IFRDUF9JTlE6IC1yIHRjcAo+ID4gb2sgMTAgLSBtcHRj
+cF9zb2Nrb3B0OiBUQ1BfSU5ROiAtNiAtciB0Y3AKPiA+IG9rIDExIC0gbXB0Y3Bfc29ja29wdDog
+VENQX0lOUTogLXIgdGNwIC10IHRjcAo+ID4gCj4gPiBUaGlzIHBhdGNoIGlzIHByZXBhcmVkIGZv
+ciB0aGUgY29taW5nIHByaW50aW5nIGNvdW50ZXIgcGF0Y2gsCj4gPiBvdGhlcndpc2UKPiA+IHRo
+ZSB0d28gb3V0cHV0IHJlc3VsdHMgbWF5IGhhdmUgZGlmZmVyZW50IHNlcmlhbCBudW1iZXJzLCB3
+aGljaCBjYW4KPiA+IGJlCj4gPiBjb25mdXNpbmcuCj4gCj4gWWVzLCBJIGFncmVlIHRoYXQgaXQg
+bWFrZXMgc2Vuc2UgdG8gcHJpbnQgdGhlIGluZGl2aWR1YWwgcmVzdWx0cy4gQnV0Cj4gd2hhdCBJ
+IHdhbnRlZCB0byBzYXkgaXMgdGhhdCBtYXliZSB3ZSBubyBsb25nZXIgbmVlZCB0aGVzZSAiSU5G
+TzoKPiBQQVNTOiIKPiBsaW5lcyBpbiB0aGUgb3V0cHV0Pwo+IAo+IGUuZy4gb25seSBwcmludGlu
+ZyB0aGlzOgo+IAo+ICMgMDEgVHJhbnNmZXIgaXB2NMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbIE9LIF0KPiAj
+IDAyIE1hcmsgaXB2NMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsgT0sgXQo+ICMgMDMgVHJhbnNm
+ZXIgaXB2NsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbIE9LIF0KPiAjIDA0IE1hcmsgaXB2NsKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIFsgT0sgXQo+ICMgMDUgU09MX01QVENQIHNvY2tvcHQgdjTCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsgT0sgXQo+
+ICMgMDYgU09MX01QVENQIHNvY2tvcHQgdjbCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsgT0sgXQo+ICMgMDcgVENQX0lOUTogLXQgdGNw
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgWyBPSyBdCj4gIyAwOCBUQ1BfSU5ROiAtNiAtdCB0Y3DCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBbIE9LIF0K
+PiAjIDA5IFRDUF9JTlE6IC1yIHRjcMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsgT0sgXQo+ICMgMTAgVENQX0lOUTog
+LTYgLXIgdGNwwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgWyBPSyBdCj4gIyAxMSBUQ1BfSU5ROiAtciB0Y3AgLXQgdGNwwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFsgT0sgXQoK
+WWVzLCB0aGlzIGlzIG11Y2ggYmV0dGVyLiBXaWxsIHVwZGF0ZSBpdCBpbiBuZXh0IHZlcnNpb24u
+Cgo+IAo+IEkgdGhpbmsgdGhlc2UgJ0lORk86IFBBU1M6JyBsaW5lcyBkb24ndCBicmluZyBtb3Jl
+IGluZm8sIG5vPyBJZiB0aGV5Cj4gZG8sCj4gd2UgY2FuIGFsd2F5cyBtb2RpZnkgd2hhdCBpcyBw
+cmludGVkIGFib3ZlLgo+IAo+IChXaGlsZSBhdCBpdCwgaXQgbWlnaHQgbG9vayBuaWNlciB0byBk
+bzogcy9pcHY0L0lQdjQvIChvciBzL2lwdjQvdjQpCj4gaWYKPiB3ZSBlYXNpbHkgY29udHJvbCB0
+aGF0LCBJIGRpZG4ndCBjaGVjaykKCidzL2lwdjQvdjQnIGlzIGJldHRlciwgd2lsbCB1cGRhdGUg
+dGhlbS4KClRoYW5rcywKLUdlbGlhbmcKCj4gCj4gCj4gQlRXLCB0aGFuayB5b3UgZm9yIHRoZSBy
+ZXBsaWVzIG9uIHRoZSBkaWZmZXJlbnQgcGF0Y2hlcywgaXQgaGVscHMKPiBoZXJlCj4gYmVjYXVz
+ZSB0aGVyZSB3ZXJlIGEgbG90IG9mIGNvbW1lbnRzIG9uIHRoaXMgdjUuCj4gCj4gQ2hlZXJzLAo+
+IE1hdHQKCg==
 
-On 28/02/2024 08:57, Geliang Tang wrote:
-> On Mon, 2024-02-26 at 13:40 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 26/02/2024 10:43, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> Only total test results are printed out in mptcp_sockopt.sh:
->>>
->>>  PASS: all packets had packet mark set
->>>  PASS: SOL_MPTCP getsockopt has expected information
->>>  PASS: TCP_INQ cmsg/ioctl -t tcp
->>>  PASS: TCP_INQ cmsg/ioctl -6 -t tcp
->>>  PASS: TCP_INQ cmsg/ioctl -r tcp
->>>  PASS: TCP_INQ cmsg/ioctl -6 -r tcp
->>>
->>> This patch prints more info for every test result in each test
->>> group:
->>>
->>> transfer ipv4                                                [ OK ]
->>> mark ipv4                                                    [ OK ]
->>> transfer ipv6                                                [ OK ]
->>> mark ipv6                                                    [ OK ]
->>> PASS: all packets had packet mark set
->>> sockopt v4                                                   [ OK ]
->>> sockopt v6                                                   [ OK ]
->>> PASS: SOL_MPTCP getsockopt has expected information
->>> TCP_INQ: -t tcp                                              [ OK ]
->>> PASS: TCP_INQ cmsg/ioctl -t tcp
->>> TCP_INQ: -6 -t tcp                                           [ OK ]
->>> PASS: TCP_INQ cmsg/ioctl -6 -t tcp
->>> TCP_INQ: -r tcp                                              [ OK ]
->>> PASS: TCP_INQ cmsg/ioctl -r tcp
->>> TCP_INQ: -6 -r tcp                                           [ OK ]
->>> PASS: TCP_INQ cmsg/ioctl -6 -r tcp
->>> TCP_INQ: -r tcp -t tcp                                       [ OK ]
->>
->> Please clearly explain why this is interesting, even if it looks
->> obvious.
->>
->> Here, I don't know if this patch makes sense or not: to me, the
->> output
->> is now confusing because there is a mix of '[ OK ]' and 'PASS'.
->> Maybe:
->>
->> - remove all the "PASS: xxx"? → I don't see what it brings more
->> - (or convert existing "PASS: xxx" and "FAIL: xxx" to use "[ OK ]"?
->> But
->> there are fewer details)
-> 
-> This patch uses to match the output of this script:
-> 
-> INFO: PASS: all packets had packet mark set
-> INFO: PASS: SOL_MPTCP getsockopt has expected information
-> INFO: PASS: TCP_INQ cmsg/ioctl -t tcp
-> INFO: PASS: TCP_INQ cmsg/ioctl -6 -t tcp
-> INFO: PASS: TCP_INQ cmsg/ioctl -r tcp
-> INFO: PASS: TCP_INQ cmsg/ioctl -6 -r tcp
-> INFO: PASS: TCP_INQ cmsg/ioctl -r tcp -t tcp
-> 
-> with the test results of it:
-> 
-> ok 1 - mptcp_sockopt: mark ipv4
-> ok 2 - mptcp_sockopt: transfer ipv4
-> ok 3 - mptcp_sockopt: mark ipv6
-> ok 4 - mptcp_sockopt: transfer ipv6
-> ok 5 - mptcp_sockopt: sockopt v4
-> ok 6 - mptcp_sockopt: sockopt v6
-> ok 7 - mptcp_sockopt: TCP_INQ: -t tcp
-> ok 8 - mptcp_sockopt: TCP_INQ: -6 -t tcp
-> ok 9 - mptcp_sockopt: TCP_INQ: -r tcp
-> ok 10 - mptcp_sockopt: TCP_INQ: -6 -r tcp
-> ok 11 - mptcp_sockopt: TCP_INQ: -r tcp -t tcp
-> 
-> This patch is prepared for the coming printing counter patch, otherwise
-> the two output results may have different serial numbers, which can be
-> confusing.
-
-Yes, I agree that it makes sense to print the individual results. But
-what I wanted to say is that maybe we no longer need these "INFO: PASS:"
-lines in the output?
-
-e.g. only printing this:
-
-# 01 Transfer ipv4                                     [ OK ]
-# 02 Mark ipv4                                         [ OK ]
-# 03 Transfer ipv6                                     [ OK ]
-# 04 Mark ipv6                                         [ OK ]
-# 05 SOL_MPTCP sockopt v4                              [ OK ]
-# 06 SOL_MPTCP sockopt v6                              [ OK ]
-# 07 TCP_INQ: -t tcp                                   [ OK ]
-# 08 TCP_INQ: -6 -t tcp                                [ OK ]
-# 09 TCP_INQ: -r tcp                                   [ OK ]
-# 10 TCP_INQ: -6 -r tcp                                [ OK ]
-# 11 TCP_INQ: -r tcp -t tcp                            [ OK ]
-
-I think these 'INFO: PASS:' lines don't bring more info, no? If they do,
-we can always modify what is printed above.
-
-(While at it, it might look nicer to do: s/ipv4/IPv4/ (or s/ipv4/v4) if
-we easily control that, I didn't check)
-
-
-BTW, thank you for the replies on the different patches, it helps here
-because there were a lot of comments on this v5.
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
