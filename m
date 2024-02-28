@@ -1,157 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E2B15A4A6;
-	Wed, 28 Feb 2024 17:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75853FBB5
+	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 17:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709141862; cv=none; b=QzC3hCxTlMFTTYQV0ZKgiQ11VG+CY+e+LMBp5jF6E1dUD/Su7vCsB9oEQT1nkjWl4rGxaE9/RF/lcYBOBbVu5RSNuP04n6Y3REB6IJXVEk45qLUXXmoR+GUblwtTktr0JZxoMQJKSnk4drHbfeDPFhvSrgx4RavThAg2fRfpFMk=
+	t=1709142620; cv=none; b=YdLXtnau9XhPf3juvYQC/cXZqKmcZPFIIg1DbF/xSeofAzl34Rj5jodZwgsDGOpRNK7AzO91VDHwf2Y7BATEdVqxTv20uEhBfNZNtkPK2GJra5VaZnCjqPeiIMIt0j7fUq6GB9jzH+GZH52TW/VeCArm5IyMce5zHQt9VvsfJQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709141862; c=relaxed/simple;
-	bh=DOUUPgHf0MranEJRXLW71fXNx0rR1Unte6CenbNAFig=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T8WdS4oxg0CaIba4beiHyGtaRK/4+DnEtrC7E3oV9vk4KExxKHXz+v7VnX9pG+RBygOOHqUFN8g/P4u4Tq9SCpwMFXDPyp4ChQxnseeDaY6/wRTGj7Mv23Xz+QCaB29m1hBwtqgM9fUjF/gTdK1Wwr4bCXZ7EdNfCMkm3V7ZovY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dttrbc5R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709142620; c=relaxed/simple;
+	bh=2JQM3Fm18J1rcCTm1/wQSCe/Q54s/5na9KipditUbyY=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=Qfrfb0acjkJsjCUYpbBcQFa7UKgsQigZs8AYtAa6t8AwZ1ig7WxPgKYlQqi6Gwbnjy7LBQeijdDHsnCt59ZUp0Hjqcpo7cIVVroUK/EvdN7O+RSPGwNkX7RPA+9YmXpQCTtm5QLDNcu06TgwqzivOHmiEsmTisIqyStcHgmgqoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kjh7Z03V; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dttrbc5R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A533AC433C7;
-	Wed, 28 Feb 2024 17:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709141861;
-	bh=DOUUPgHf0MranEJRXLW71fXNx0rR1Unte6CenbNAFig=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dttrbc5RPvXUb4muTvUrwDaWMREdfeN4TFWV2Zrv9PlPOSZPbh74jc/Jz69dBVHly
-	 Wn606cxzB2ztCXJo1HfWfxst6FtVrxWiew1NmICNIQZqYX1i4BFIvhZx5pn0+WvP2Q
-	 4lZYFlrKsNau1EZSRId9lbRFp1DZCAjL/mPgoA3pgW+x4PJleCcXqZT6bqpFJL/w12
-	 cxEcKIyqpB11Lj8/BuXO91j+q3dE3rIjA0fAQi0AoKCfsc2sWEQS8k8MQnNlL0+h6H
-	 A6s0zTD6s1j07GU0BM5/vv7HUhf8nJoXHt5a1/UufJsMZgxVLI8qRIERu9wf5421Fb
-	 9Un687zFu1t8g==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Geliang Tang <tanggeliang@kylinos.cn>,
-	Mat Martineau <martineau@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>
-Subject: [PATCH 5.15.y 2/2] mptcp: add needs_id for netlink appending addr
-Date: Wed, 28 Feb 2024 18:37:16 +0100
-Message-ID: <20240228173714.262012-4-matttbe@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240228173714.262012-3-matttbe@kernel.org>
-References: <2024022732-wrought-cardiac-a27a@gregkh>
- <20240228173714.262012-3-matttbe@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kjh7Z03V"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-787bb013422so1930285a.0
+        for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 09:50:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709142618; x=1709747418; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zcio3HA3Ui1LRFWSrJs7QhIJrz1R9vaorVINMR5pIL8=;
+        b=Kjh7Z03V7bFKCT3Ousx56l7BYHwD3eIHZPOp3kf09BrhH4i9jbHMiXLZekw2vQza82
+         oeQIZGV2scfL2comgQDpV3yKMAaL4NIqH429SOIHQta3A4ptUrHOExhbtfxyXS8BXiHy
+         FzmZ4GsgpKZKWJhT6InQh5xjyovGtHbcudQPPRkPCA5I4WwebkXfam2WGl/qkuhXz400
+         W7CtEQliwpDeTIqWFTee10dJtyi/6lstHF5zJ/OOHdhr87wsAYtgV2ns0hSrP9tn5glY
+         eCwEXyJFKhu/shIHin3bMyLHU2yiCpiS48B6fZ8/ww41/3B7TkKdlTR9XYu2h/VbFeaj
+         li9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709142618; x=1709747418;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Zcio3HA3Ui1LRFWSrJs7QhIJrz1R9vaorVINMR5pIL8=;
+        b=o5ohY7edrH0c9CEptjbPBKrqKGM2asfgV+8Vxl7C4lwTcTo694SiF+p1S7AlokBYut
+         Bm0AOh0wa+6m6r+EpdSZlKP4jNZpsb7in9qDlC638ZKTFiW3EI+CtQQeQjKyhZNVTVRx
+         FH9nbwU2ApztTPioFUJO0lmyCyx4EM90R2qkm0PfbJ5qLA6+L54vtlWMIPdmrGYZoD6q
+         ltZ21fOuRR4Lpsy9lHr5xeF91fYLgrMAb3eGAGlFyi3gxYPo864vDc/RbpCsllcuzEGf
+         0T38xZTJygfKdONSIY5gyoyIFStU3Yr7s05ctq0pdN1C+6yKnxbqIhqE0nmbi9fDbObX
+         MDPw==
+X-Gm-Message-State: AOJu0YyU2T26Bht9PxADhbvb0L/FJ4e6eVLRIYtorlBbyGiF6rOXGcwm
+	XcjFhGb2+A8AP/u2gAUXnKpM8imwAVEJPAses+k4f3Hpmt/WNsY=
+X-Google-Smtp-Source: AGHT+IFJ0HupP1ToLCd3PYXa9Iw2Yg68O5Uj2VO4BBh3WXfuR9bzNH4MPDAA9E0hXNtjm9ANX75Jlw==
+X-Received: by 2002:a0c:cd0f:0:b0:68f:2b21:a44d with SMTP id b15-20020a0ccd0f000000b0068f2b21a44dmr4868139qvm.33.1709142617685;
+        Wed, 28 Feb 2024 09:50:17 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.82.156])
+        by smtp.gmail.com with ESMTPSA id mx2-20020a0562142e0200b0068f2d2f64d1sm6980qvb.32.2024.02.28.09.50.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 09:50:17 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240228172121.243458-2-matttbe@kernel.org>
+References: <20240228172121.243458-2-matttbe@kernel.org>
+Subject: Re: mptcp: continue marking the first subflow as UNCONNECTED:
+ Build Failure
+Message-ID: <93ca7844-0319-c904-2452-1b832f2838b2@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 28 Feb 2024 17:50:16 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3537; i=matttbe@kernel.org; h=from:subject; bh=clILGqR2qC8WWu/V5O7pVk1vCEaeGwqdLSWaJoGeVHk=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl329KRe9EpmqlJAWMlSlrOwgKBB0mPkE7IrxRS erYfCS1SeqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZd9vSgAKCRD2t4JPQmmg cyEzD/419kjovw5Rt7Vogpuw9XhtS4ZxPT+0mISexWZH4hH42tOlstObybuhT9SvdhZdwtHzylB ftjChnRSKoPxW1V5Wy0TeWyasy+rRr36+psV6crekVnrn+2g/exew/Udiy2i6Fj8msu0pYtvpV7 kTNwL/6zq1Fo3JM7VhO89Bu22WynsIDECGQYfdc511vOt/SGjUTxaDNpW88M68FOCliuNd3y5Fh 4buBB1UaHfwznbr7Z4iXD0+yy57OwSsK1x0bKJpchpdQnTwngDbPAk9qzmGzXdYy+6SswtHCsEK ck/t3Kb6PHlJmd/ydENHIwSROAmnH2cy6U7fp6NpCAYwDdPbwgI0T0SeuV4O+RksfzHjKr1PF9J sZ8MwGR5xBVl2pYCOFr7gr2bntelIpx3DO+BqlvmGevFjM3sZySdv3yYSrTJYNV26c3AG82K6bU W+tZdN60tipeTUaFCnD22wuAnF81ZPxSW1db7ERwhpVJ7LGdRRgatL9ETQHTyz68jKjSD0ZVONq ePT2Fr4FOTd5kHaSM3VyCD55EpD7xQripeyYqiH8CFCiLN9iiQnzzvxSIrrJ34kKfzoWDD07S6D xo+BHGsxm7aLSnziRURPBEu8TIxqpyO4fn9iYgvudIKBwRsGO2f/1GjuUEtuARTF+gWzXjzsspB nlYKaCfPkDN//5Q==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matthieu,
 
-commit 584f3894262634596532cf43a5e782e34a0ce374 upstream.
+Thank you for your modifications, that's great!
 
-Just the same as userspace PM, a new parameter needs_id is added for
-in-kernel PM mptcp_pm_nl_append_new_local_addr() too.
+But sadly, our CI spotted some issues with it when trying to build it.
 
-Add a new helper mptcp_pm_has_addr_attr_id() to check whether an address
-ID is set from PM or not.
+You can find more details there:
 
-In mptcp_pm_nl_get_local_id(), needs_id is always true, but in
-mptcp_pm_nl_add_addr_doit(), pass mptcp_pm_has_addr_attr_id() to
-needs_it.
+  https://patchwork.kernel.=
+org/project/mptcp/patch/20240228172121.243458-2-matttbe@kernel.org/
+  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/8084822552
 
-Fixes: efd5a4c04e18 ("mptcp: add the address ID assignment bitmap")
-Cc: stable@vger.kernel.org
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- - Notes:
-   - no more conflicts after having backported 59060a47ca50 ("mptcp:
-     clean up harmless false expressions") and taken the version from
-     v6.1.
----
- net/mptcp/pm_netlink.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+Status: cancelled
+Initiator: MPTCPimporter
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/2c89af223cba
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 6018d9641e0b0..651f2c158637c 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -823,7 +823,8 @@ static bool address_use_port(struct mptcp_pm_addr_entry *entry)
- }
- 
- static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
--					     struct mptcp_pm_addr_entry *entry)
-+					     struct mptcp_pm_addr_entry *entry,
-+					     bool needs_id)
- {
- 	struct mptcp_pm_addr_entry *cur;
- 	unsigned int addr_max;
-@@ -850,7 +851,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 			goto out;
- 	}
- 
--	if (!entry->addr.id) {
-+	if (!entry->addr.id && needs_id) {
- find_next:
- 		entry->addr.id = find_next_zero_bit(pernet->id_bitmap,
- 						    MAX_ADDR_ID + 1,
-@@ -861,7 +862,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 		}
- 	}
- 
--	if (!entry->addr.id)
-+	if (!entry->addr.id && needs_id)
- 		goto out;
- 
- 	__set_bit(entry->addr.id, pernet->id_bitmap);
-@@ -1001,7 +1002,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
- 	entry->ifindex = 0;
- 	entry->flags = 0;
- 	entry->lsk = NULL;
--	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
-+	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry, true);
- 	if (ret < 0)
- 		kfree(entry);
- 
-@@ -1202,6 +1203,18 @@ static int mptcp_nl_add_subflow_or_signal_addr(struct net *net)
- 	return 0;
- }
- 
-+static bool mptcp_pm_has_addr_attr_id(const struct nlattr *attr,
-+				      struct genl_info *info)
-+{
-+	struct nlattr *tb[MPTCP_PM_ADDR_ATTR_MAX + 1];
-+
-+	if (!nla_parse_nested_deprecated(tb, MPTCP_PM_ADDR_ATTR_MAX, attr,
-+					 mptcp_pm_addr_policy, info->extack) &&
-+	    tb[MPTCP_PM_ADDR_ATTR_ID])
-+		return true;
-+	return false;
-+}
-+
- static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-@@ -1228,7 +1241,8 @@ static int mptcp_nl_cmd_add_addr(struct sk_buff *skb, struct genl_info *info)
- 			return ret;
- 		}
- 	}
--	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry);
-+	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry,
-+						!mptcp_pm_has_addr_attr_id(attr, info));
- 	if (ret < 0) {
- 		GENL_SET_ERR_MSG(info, "too many addresses or duplicate one");
- 		if (entry->lsk)
--- 
-2.43.0
+Feel free to reply to this email if you cannot access logs, if you need
+some support to fix the error, if this doesn't seem to be caused by your
+modifications or if the error is a false positive one.
 
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
