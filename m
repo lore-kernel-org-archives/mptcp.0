@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3DB12C55B
-	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 11:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B847352B
+	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 12:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709119033; cv=none; b=R2uQTOkgUIB8fHPmd3bxpJeYipj3ZptHJ3GaeObiHE4r45slbgCwumi0ltI8OmMjhzMvXJJFrdGQ1/s58W6MtsrVN43gqMw58a+p/CLJqhs+3jug5te+YLWO5lC53uLmC0XcMcRc8D4pL1KgUoatm+d7KfYrW/LkM0DDRGYf6Qo=
+	t=1709121700; cv=none; b=W4QTkUEznCVBdkqEyOfvaxZ/yRnSvejYIy20nC0agAmHCHsjfT+HHxtMUHlk5R0KWfkayMQLbVB9mFt3FkeatB1/FJiOszJkJPplgl5jhovnU9T+c/rhi4ut1dcWUSpifz98qlFil16o0D6cEp5x5Zh4qPrQhFxlKeaHRSfUybI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709119033; c=relaxed/simple;
-	bh=WZuPpk7WOK1WfIP/XQgcInJ012CdcBzqlZgrfoIXPaA=;
+	s=arc-20240116; t=1709121700; c=relaxed/simple;
+	bh=oZKNBaKuEHTjF6D0b08dDHXuIQMITE8UT1M/QYOR56w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p+n+jh5aUs989csw04BLq8mvpOMts0ZMF+dEflO2jMS+MjsNKmf45Un5/ABWTP7x1CLo29v4UX2DPpUwRweDPmTuzb579lBNaM65n/we9vNiFtQcAAEhNMG/HYmgAgLkK+7fvy2gTWOyY9gAp96auyNGEt5ZxByUBwNXE1HG/Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDNCv93z; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=m9YtJy3BcLvUDU7n3QJkePwkgd0bru2d9wlWG1Ix8kUVHYAP7u6j4mHGAYEIL/b4aRrK1Jx4QRTfMbeWKsEtu7y6eya6fL/C9hgBLoX9p+CC7ufRKX23lKKtGAAC5lwAYN7LHgUiWZwFcJicrrZfNuOG3E6qtnZqFFPreeZktHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDhv12wz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDNCv93z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B960AC433C7;
-	Wed, 28 Feb 2024 11:17:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDhv12wz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06B9EC433C7;
+	Wed, 28 Feb 2024 12:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709119032;
-	bh=WZuPpk7WOK1WfIP/XQgcInJ012CdcBzqlZgrfoIXPaA=;
+	s=k20201202; t=1709121699;
+	bh=oZKNBaKuEHTjF6D0b08dDHXuIQMITE8UT1M/QYOR56w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aDNCv93zIKfv2wlwjTIRzSBE0qvVwhEcf5Hy6sPbyF5VIzrNvOy+CfVNuC7HLVYqq
-	 LicA4rER9s4LK3AFo8TgPrHFCSuZoDel71cKgYOrH45lv8/ui+Ulk3EQ3kYOORxfhg
-	 2bN8GtrYUe8c6lCpKZ6bqKJ/Kp0KruCMLtsUUvQ4SjniGCUF+R1OIIiPeSWT9RwLUl
-	 /5Z2esNq3loH7etVkgDcDTT6tkBtdTYrGbO5DNqR5UgIi3PVw//cfkKUjzXGyyMUfM
-	 aEIlk+p4VJF6/DeY3hfO3DfZmA9nEyLoLuwmpAKU+zhac4JbGlW/d2fF56crFu6ZSt
-	 AyYq91wfq9fcg==
-Message-ID: <ea3c57b8-c119-494e-b659-69a574a6297d@kernel.org>
-Date: Wed, 28 Feb 2024 12:17:09 +0100
+	b=iDhv12wzMXb0ze8tdHrkxGXuossWRlwWhw6c5Z/AWKaebbqylh7UeDcTrREFi2z1G
+	 7i610Jt2GoWnIWxDfJIu2NYeSSqRC+iTaDForJNz/IObf/Qro4ddOe8csi67J0HbZ2
+	 jq6fWusrygNUn/p5GWSl/f7MSHXGoeaxxcQJry1O/J9cEAWQQVQsXbaXnOLQQ0bvhk
+	 iKygAcUuZZUeo1hx8DlfHUBvB3Mp+5iM2fg51+TF8gMearBu2uzj0ybVaC7Rr66czp
+	 hZNA5onsa0FDmL+SNUira834YlpMpGlHnousH6185XvnefPYrrMABwxfC7XGGpbwzD
+	 jC4o+UZpS+ZXA==
+Message-ID: <c4ccc059-03e1-4636-a994-cd9f8049d66d@kernel.org>
+Date: Wed, 28 Feb 2024 13:01:37 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v6 2/9] selftests: mptcp: print test results
- with colors
+Subject: Re: [PATCH mptcp-next v6 3/9] selftests: mptcp: connect: fix
+ misaligned output
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709105922.git.tanggeliang@kylinos.cn>
- <eacc57e0d627d22cdaf68fd08b430eb5e381ecc0.1709105922.git.tanggeliang@kylinos.cn>
+ <ff577139939e084179364bc5f963d6c98942e8ae.1709105922.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <eacc57e0d627d22cdaf68fd08b430eb5e381ecc0.1709105922.git.tanggeliang@kylinos.cn>
+In-Reply-To: <ff577139939e084179364bc5f963d6c98942e8ae.1709105922.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
@@ -96,334 +96,85 @@ Hi Geliang,
 On 28/02/2024 08:43, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch uses mptcp_lib_pr_ok(), mptcp_lib_pr_skip(), mptcp_lib_pr_fail()
-> and mptcp_lib_pr_info() helpers in all scripts to print test results with
-> colors.
+> The first [ OK ] and [FAIL] in the output of mptcp_connect.sh misalign
+> with the others:
 > 
-> Having colors helps to quickly identify issues when looking at a long list
-> of output logs and results.
-
-Please also mention that now we will print the "ok/skip/fail' using the
-same 'format' in all tests.
-
-(...)
-
+> New MPTCP socket can be blocked via sysctl		[ OK ]
+> INFO: validating network environment with pings
+> INFO: Using loss of 0.85% delay 16 ms reorder 95% 70% with delay 4ms on
+> ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP	(duration   184ms) [ OK ]
+> ns1 MPTCP -> ns1 (10.0.1.1:10001      ) TCP  	(duration    50ms) [ OK ]
+> ns1 TCP   -> ns1 (10.0.1.1:10002      ) MPTCP	(duration    55ms) [ OK ]
+> 
+> This patch aligns them by using the newly added print_title() helper.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> 
+> Notes:
+>     add print_title helper
+> 
+>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> index 0ca2960c9099..ffc063a58149 100755
+> index ffc063a58149..7a53c8fb1783 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -218,7 +218,7 @@ set_ethtool_flags() {
->  	local flags="$3"
+> @@ -247,11 +247,20 @@ else
+>  	set_ethtool_flags "$ns4" ns4eth3 "$ethtool_args"
+>  fi
 >  
->  	if ip netns exec $ns ethtool -K $dev $flags 2>/dev/null; then
-> -		echo "INFO: set $ns dev $dev: ethtool -K $flags"
-> +		mptcp_lib_pr_info "set $ns dev $dev: ethtool -K $flags"
->  	fi
->  }
+> +print_title()
+> +{
+> +	local msg="${1}"
+> +	local nr_blank="${2-50}"
+
+(detail: probably better to add ':': "${2:-50}" → it will use '50' is
+${2} is unset or empty, not just unset).
+
+> +
+> +	printf "%-${nr_blank}s" "${msg}"
+> +}
+> +
+>  check_mptcp_disabled()
+>  {
+>  	local disabled_ns
+>  	mptcp_lib_ns_init disabled_ns
 >  
-> @@ -254,7 +254,7 @@ check_mptcp_disabled()
->  
+> +	print_title "New MPTCP socket can be blocked via sysctl" 69
+
+Why do you need to set 69 here? All titles should be using the same
+length. 50 seems too small in fact:
+
+> $ python3
+> len("ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP	(duration   184ms)")
+> 63
+
+If you need different alignments, please use a dedicated helper, but
+don't pass a "raw" value directly, not to have to change that everywhere
+if the alignment needs to be revisited later.
+
 >  	# net.mptcp.enabled should be enabled by default
 >  	if [ "$(ip netns exec ${disabled_ns} sysctl net.mptcp.enabled | awk '{ print $3 }')" -ne 1 ]; then
-> -		echo -e "net.mptcp.enabled sysctl is not 1 by default\t\t[ FAIL ]"
-> +		mptcp_lib_pr_fail "net.mptcp.enabled sysctl is not 1 by default"
-
-That looks strange here not to have a title before. Is it because you
-are going to add one later?
-
-With this commit here, you will print '[FAIL] <title>' instead of
-'<title> [FAIL]'.
-
-In most tests, we do something like:
-
-  print_title "net.mptcp.enabled sysctl is set to 1 by default
-  if (...)
-    mptcp_lib_pr_ok
-  else
-    mptcp_lib_pr_fail
-  fi
-
-or maybe:
-
-  print_title "net.mptcp.enabled sysctl"
-  if (...)
-    mptcp_lib_pr_fail "not enabled by default"
-  elif (...)
-    mptcp_lib_pr_fail "not blocking MPTCP sockets"
-  else
-    mptcp_lib_pr_ok
-  fi
-
-
-So with a title before, and only pass argument to mptcp_lib_pr_ok/fail
-if we need to add more details, but not putting the whole test name
-after "[FAIL]", no?
-
-Or maybe you do that in a following commit?
-
-Same below
-
->  		mptcp_lib_result_fail "net.mptcp.enabled sysctl is not 1 by default"
->  		ret=1
->  		return 1
-> @@ -267,13 +267,14 @@ check_mptcp_disabled()
->  	mptcp_lib_ns_exit "${disabled_ns}"
->  
->  	if [ ${err} -eq 0 ]; then
-> -		echo -e "New MPTCP socket cannot be blocked via sysctl\t\t[ FAIL ]"
-> +		mptcp_lib_pr_fail "New MPTCP socket cannot be blocked via sysctl"
->  		mptcp_lib_result_fail "New MPTCP socket cannot be blocked via sysctl"
->  		ret=1
+>  		mptcp_lib_pr_fail "net.mptcp.enabled sysctl is not 1 by default"
+> @@ -273,7 +282,6 @@ check_mptcp_disabled()
 >  		return 1
 >  	fi
 >  
-> -	echo -e "New MPTCP socket can be blocked via sysctl\t\t[ OK ]"
-> +	echo -n -e "New MPTCP socket can be blocked via sysctl\t\t"
-> +	mptcp_lib_pr_ok
-
-And here you print the OK after, confusing :)
-
+> -	echo -n -e "New MPTCP socket can be blocked via sysctl\t\t"
+>  	mptcp_lib_pr_ok
 >  	mptcp_lib_result_pass "New MPTCP socket can be blocked via sysctl"
 >  	return 0
->  }
-> @@ -294,7 +295,7 @@ do_ping()
->  	ip netns exec ${connector_ns} ping ${ping_args} $connect_addr >/dev/null || rc=1
+> @@ -343,7 +351,7 @@ do_transfer()
+>  	addr_port=$(printf "%s:%d" ${connect_addr} ${port})
+>  	local result_msg
+>  	result_msg="$(printf "%.3s %-5s -> %.3s (%-20s) %-5s" ${connector_ns} ${cl_proto} ${listener_ns} ${addr_port} ${srv_proto})"
+> -	printf "%s\t" "${result_msg}"
+> +	print_title "${result_msg}"
 >  
->  	if [ $rc -ne 0 ] ; then
-> -		echo "$listener_ns -> $connect_addr connectivity [ FAIL ]" 1>&2
-> +		mptcp_lib_pr_fail "$listener_ns -> $connect_addr connectivity" 1>&2
-
-(as part of the unification, we can print all errors to stdout (or all
-to stderr, but best to have a consistensy here → I think most errors are
-printed to stdout)
-
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index 3f5b16fe5220..58fe4dad9d9d 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -55,6 +55,9 @@ mptcp_lib_pr_ok() {
->  mptcp_lib_pr_skip() {
->  	local msg="[SKIP]"
->  
-> +	if [ "${#}" -gt 0 ]; then
-> +		msg+="${1:+ ${*}}"
-> +	fi
-
-(should be part of the previous commit, can be in one line, see my
-previous comment)
-
->  	mptcp_lib_print_warn "${msg}"
->  }
->  
-> @@ -101,14 +104,14 @@ mptcp_lib_has_file() {
->  
->  mptcp_lib_check_mptcp() {
->  	if ! mptcp_lib_has_file "/proc/sys/net/mptcp/enabled"; then
-> -		echo "SKIP: MPTCP support is not available"
-> +		mptcp_lib_pr_skip "MPTCP support is not available"
->  		exit ${KSFT_SKIP}
-
-I was not thinking about modifying this one, just before the exit (and
-not after a test name), but why not.
-
->  	fi
->  }
->  
->  mptcp_lib_check_kallsyms() {
->  	if ! mptcp_lib_has_file "/proc/kallsyms"; then
-> -		echo "SKIP: CONFIG_KALLSYMS is missing"
-> +		mptcp_lib_pr_skip "CONFIG_KALLSYMS is missing"
->  		exit ${KSFT_SKIP}
->  	fi
->  }
-> @@ -315,7 +318,7 @@ mptcp_lib_check_transfer() {
->  	local what="${3}"
->  
->  	if ! cmp "$in" "$out" > /dev/null 2>&1; then
-> -		echo "[ FAIL ] $what does not match (in, out):"
-> +		mptcp_lib_pr_fail "$what does not match (in, out):"
->  		mptcp_lib_print_file_err "$in"
->  		mptcp_lib_print_file_err "$out"
->  
-> @@ -350,24 +353,24 @@ mptcp_lib_check_tools() {
->  		case "${tool}" in
->  		"ip")
->  			if ! ip -Version &> /dev/null; then
-> -				mptcp_lib_print_warn "SKIP: Could not run test without ip tool"
-> +				mptcp_lib_pr_skip "Could not run test without ip tool"
->  				exit ${KSFT_SKIP}
->  			fi
->  			;;
->  		"ss")
->  			if ! ss -h | grep -q MPTCP; then
-> -				mptcp_lib_print_warn "SKIP: ss tool does not support MPTCP"
-> +				mptcp_lib_pr_skip "ss tool does not support MPTCP"
->  				exit ${KSFT_SKIP}
->  			fi
->  			;;
->  		"iptables"* | "ip6tables"*)
->  			if ! "${tool}" -V &> /dev/null; then
-> -				mptcp_lib_print_warn "SKIP: Could not run all tests without ${tool}"
-> +				mptcp_lib_pr_skip "Could not run all tests without ${tool}"
->  				exit ${KSFT_SKIP}
->  			fi
->  			;;
->  		*)
-> -			mptcp_lib_print_err "Internal error: unsupported tool: ${tool}"
-> +			mptcp_lib_pr_fail "Internal error: unsupported tool: ${tool}"
->  			exit ${KSFT_FAIL}
->  			;;
->  		esac
-> @@ -386,13 +389,13 @@ mptcp_lib_check_output() {
->  	fi
->  
->  	if [ ${cmd_ret} -ne 0 ]; then
-> -		mptcp_lib_print_err "[FAIL] command execution '${cmd}' stderr"
-> +		mptcp_lib_pr_fail "command execution '${cmd}' stderr"
->  		cat "${err}"
->  		return 2
->  	elif [ "${out}" = "${expected}" ]; then
->  		return 0
->  	else
-> -		mptcp_lib_print_err "[FAIL] expected '${expected}' got '${out}'"
-> +		mptcp_lib_pr_fail "expected '${expected}' got '${out}'"
->  		return 1
->  	fi
->  }
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> index 6ed4aa32222f..ccc941e1e7bb 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> @@ -103,7 +103,8 @@ check_mark()
->  	local v
->  	for v in $values; do
->  		if [ $v -ne 0 ]; then
-> -			echo "FAIL: got $tables $values in ns $ns , not 0 - not all expected packets marked" 1>&2
-> +			mptcp_lib_pr_fail "got $tables $values in ns $ns, \
-> +not 0 - not all expected packets marked" 1>&2
-
-You can use multiple strings, probably prettyier:
-
-  mptcp_lib_pr_fail "got $tables $values in ns $ns," \
-                    "not 0 - not all expected packets marked"
-
->  			ret=1
->  			return 1
->  		fi
-> @@ -212,7 +213,7 @@ do_mptcp_sockopt_tests()
->  	local lret=0
->  
->  	if ! mptcp_lib_kallsyms_has "mptcp_diag_fill_info$"; then
-> -		echo "INFO: MPTCP sockopt not supported: SKIP"
-> +		mptcp_lib_pr_skip "INFO: MPTCP sockopt not supported"
-
-I guess you can remove the 'INFO: '. Or you print an info message.
-
->  		mptcp_lib_result_skip "sockopt"
->  		return
->  	fi
-> @@ -221,7 +222,7 @@ do_mptcp_sockopt_tests()
->  	lret=$?
->  
->  	if [ $lret -ne 0 ]; then
-> -		echo "FAIL: SOL_MPTCP getsockopt" 1>&2
-> +		mptcp_lib_pr_fail "SOL_MPTCP getsockopt" 1>&2
-
-I was thinking 'mptcp_lib_pr_skip()' and '_fail' and '_ok' were there to
-be printed after a test title. I guess they can be use to print the
-whole line but that's "strange". I didn't check but it sounds like a
-"print_title()" is missing before, not to print the test name after
-[FAIL], and not to repeat this for success and fail.
-
-But I guess I'm maybe a bit lost before you will add the '[ OK ]' in a
-later commit, no?
-
->  		mptcp_lib_result_fail "sockopt v4"
->  		ret=$lret
->  		return
-> @@ -232,7 +233,7 @@ do_mptcp_sockopt_tests()
->  	lret=$?
->  
->  	if [ $lret -ne 0 ]; then
-> -		echo "FAIL: SOL_MPTCP getsockopt (ipv6)" 1>&2
-> +		mptcp_lib_pr_fail "SOL_MPTCP getsockopt (ipv6)" 1>&2
->  		mptcp_lib_result_fail "sockopt v6"
->  		ret=$lret
->  		return
-> @@ -263,12 +264,12 @@ do_tcpinq_test()
->  	local lret=$?
->  	if [ $lret -ne 0 ];then
->  		ret=$lret
-> -		echo "FAIL: mptcp_inq $*" 1>&2
-> +		mptcp_lib_pr_fail "mptcp_inq $*" 1>&2
->  		mptcp_lib_result_fail "TCP_INQ: $*"
->  		return $lret
->  	fi
->  
-> -	echo "PASS: TCP_INQ cmsg/ioctl $*"
-> +	mptcp_lib_pr_info "PASS: TCP_INQ cmsg/ioctl $*"
->  	mptcp_lib_result_pass "TCP_INQ: $*"
->  	return $lret
->  }
-> @@ -278,7 +279,7 @@ do_tcpinq_tests()
->  	local lret=0
->  
->  	if ! mptcp_lib_kallsyms_has "mptcp_ioctl$"; then
-> -		echo "INFO: TCP_INQ not supported: SKIP"
-> +		mptcp_lib_pr_skip "INFO: TCP_INQ not supported"
->  		mptcp_lib_result_skip "TCP_INQ"
->  		return
->  	fi
-> @@ -315,12 +316,12 @@ run_tests $ns1 $ns2 10.0.1.1
->  run_tests $ns1 $ns2 dead:beef:1::1
->  
->  if [ $ret -eq 0 ];then
-> -	echo "PASS: all packets had packet mark set"
-> +	mptcp_lib_pr_info "PASS: all packets had packet mark set"
->  fi
->  
->  do_mptcp_sockopt_tests
->  if [ $ret -eq 0 ];then
-> -	echo "PASS: SOL_MPTCP getsockopt has expected information"
-> +	mptcp_lib_pr_info "PASS: SOL_MPTCP getsockopt has expected information"
->  fi
->  
->  do_tcpinq_tests
-> diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> index 427fc5c70b3c..ffa79df99d38 100755
-> --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> @@ -189,7 +189,8 @@ subflow,backup,fullmesh 10.0.1.1" "          (backup,fullmesh)"
->  else
->  	for st in fullmesh nofullmesh backup,fullmesh; do
->  		st="          (${st})"
-> -		printf "%-50s%s\n" "${st}" "[SKIP]"
-> +		printf "%-50s" "${st}"
-> +		mptcp_lib_pr_skip
->  		mptcp_lib_result_skip "${st}"
->  	done
->  fi
-> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> index 467feb17e07b..af6d9a81c317 100755
-> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-> @@ -187,12 +187,12 @@ do_transfer()
->  	printf "%-16s" " max $max_time "
->  	if [ $retc -eq 0 ] && [ $rets -eq 0 ] && \
->  	   [ $cmpc -eq 0 ] && [ $cmps -eq 0 ]; then
-> -		echo "[ OK ]"
-> +		mptcp_lib_pr_ok
->  		cat "$capout"
->  		return 0
->  	fi
->  
-> -	echo " [ fail ]"
-> +	mptcp_lib_pr_fail
->  	echo "client exit code $retc, server $rets" 1>&2
->  	echo -e "\nnetns ${ns3} socket stat for $port:" 1>&2
->  	ip netns exec ${ns3} ss -nita 1>&2 -o "sport = :$port"
+>  	if $capture; then
+>  		local capuser
 
 Cheers,
 Matt
