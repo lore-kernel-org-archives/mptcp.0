@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB7E25577
-	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 07:57:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D62725615
+	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 07:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709107035; cv=none; b=O9ftyE+u+GkIsX/12BiKVG5PqYBzm5nrDAvuGoD930ncYq/pBcySNbqZZE1GWcDEZfKVx9d6sT2cr406UWsAftblGjmOapPMdTHnam+AT8cB+xsplLsgU79lUl0zgIgZaRXccAWzpuqxzPY55tIF8w3ihZdgp26OCb+/5+tzX+o=
+	t=1709107099; cv=none; b=dI1/T/x1WJ/09OBsxUUD0b+vHb2uYhiUlf9v360RGY27e0kvFRyZp8sVRynUIk/eKT+pdIT0PmAWVwBeLioxAovAKxQwlogUxGiyrJfVRnIwrV4jm9WefpjW+3vgaQ0M/MUilM6WnRIZCl3SusIA3iaBQVOEqWcOaVJ5KJIJXuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709107035; c=relaxed/simple;
-	bh=HXrpL67my23OHfRyr6F9rGrRsBeFZfZcnHFE3JmtFY0=;
+	s=arc-20240116; t=1709107099; c=relaxed/simple;
+	bh=RVInYAAevUlTK4Ve5XiKXfUk9pYivffeGSjuaa7caMU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=vFfl2Yw1dyHE2iewM+4/gChY6d9nmAPhQal+sh0eHCvRSQbJMEpo5EJ5zoPT5Lrhyh6hpg6KBYNZichhzYQV85VTFbCZUnj+n0TRuS7zhVRD6vRf/SoOJ6BoJ5lvBOgxHmyjGLdQfFyLRw/FHtshEDxbQIlbfFmgQvg3KNpUhX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1xXx1V0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=aShWSbVUoXS0ETI2B4mqZfH6/SzP0SW60cPNjZxMiuVFq5hLIw6O+NE/rqhxEyQ6XfAHSy2WbnLXqfkRexG1DeFBXWWSoR7ud4pijjHqN3yv9wN4hNOdjoJJ3n4FVKxJkhhTw33WEkKK1VxA/2lcDQl6pph7jBmR8txVIPbWY3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ccJWOkCT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1xXx1V0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B949C433C7;
-	Wed, 28 Feb 2024 07:57:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ccJWOkCT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CF33C433C7;
+	Wed, 28 Feb 2024 07:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709107035;
-	bh=HXrpL67my23OHfRyr6F9rGrRsBeFZfZcnHFE3JmtFY0=;
+	s=k20201202; t=1709107098;
+	bh=RVInYAAevUlTK4Ve5XiKXfUk9pYivffeGSjuaa7caMU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=i1xXx1V0JF5VRJkbPZ0NCiZ7Q8ts83OlFeQ1vfBN+0YRSu/8XQpXYArfi7Z8E22L/
-	 0iXSeDDfg5ZjhKpzmPF6t86tbvP52iEkDn9IE5Z1jORDvLXmL1RrkSPfYw+Fbiz8Mj
-	 z1J5CkJrytQQbPuwXIM0+BJttx7LaiXRufeukS0HfnRVdffh7tmu2Uq/2Knm/vFhgC
-	 O+A+WeXLhbpJuwG8hanZun5dGAD4jgHYBj7ey2FPILUvnoOxHI/PySNmFB1D/I82YE
-	 DRxVTbcjK4GFYTPpVQldC7awM7N6T80OHcKSDT3j0Pqlmm+W4uSwLSHhWmQX2Mfi0H
-	 argGdKJuuNAJQ==
-Message-ID: <0118dbd0fbf33d5a1f4ea98dc606b3be91af49db.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v5 02/12] selftests: mptcp: sockopt: print
- every test result
+	b=ccJWOkCT3PXbOFr4spjP1SsLWHXtWYgRokZx/oFzs1siJwbQhYYzmOl1RI79MP/OB
+	 ubL10lWMK9WlFCiiDHxfrYnyz8k/l3VoWbw1fRUO4aRY+SAmwkV8CSwNrx5+AWV+TZ
+	 TDw/NLZFX/Rq34CiRTeMGMFSU2OvV8gbU++ISzjxBbGeJr3/5m3Fh+wOgRyJhOwGYH
+	 CRIMkNJHsCT0IE3kAVPzmFRxyAbixZi8JHlerl/sevISv49MruqeMsVP70Y7ly4Rje
+	 Q1R5I53KibKIXBkGDJ11bhfLRwp3WfPbghBCO/5/I3fsD1n2lcz9qXF5aYr1aYDNiv
+	 RRXaUpbb8ZTyw==
+Message-ID: <696f456f4815def83894812256c54e207aa46676.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v5 03/12] selftests: mptcp: connect: fix
+ misaligned OK/FAIL
 From: Geliang Tang <geliang@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Wed, 28 Feb 2024 15:57:09 +0800
-In-Reply-To: <405e2ab8-7483-4bf7-a9a5-a94c631af404@kernel.org>
+Date: Wed, 28 Feb 2024 15:58:12 +0800
+In-Reply-To: <ec8281f5-ff41-43b4-86c9-7696c744a18d@kernel.org>
 References: <cover.1708939962.git.tanggeliang@kylinos.cn>
-	 <1aa6a9af7ebd8690e595bfbbdde5f54f684f51e8.1708939962.git.tanggeliang@kylinos.cn>
-	 <405e2ab8-7483-4bf7-a9a5-a94c631af404@kernel.org>
+	 <57d3e04f51798ad454f1f028cd9a59a5066f0a96.1708939962.git.tanggeliang@kylinos.cn>
+	 <ec8281f5-ff41-43b4-86c9-7696c744a18d@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+XlU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8wwjyafN5RQV0AXhKdvofSIryqm0GIHIH/+4bTSh5aB6mvsrjUusB5MnNYU4oDv2L8MBJStqPAQRLlP9BWcKKA7T9SrlgAr0VsFLIOkKOQPVTCnYxn7gfKogH52nkPAFqNofVB6AVWBpr0RTY7OnXRBMInMHcjVG4I/NFn8Cc7oaGaWHqX/yHAufJKUsldieQVFd7C/SI8jCUXdkZxR0Tkp0EUzkRc/TS1VwWHav0x3oLSy/LGHfRaIC/MqdGVqgCnm6wapUt7f/JHloyIyKJBGBuHCLMpN6n/kNkSCzyZKV7h6Vw1OL518p0U3Optyakoh95KiJsKzcd3At/eftQGlNn5WDflHV1+oMdW2sRgfVDPrYeEcYI5IkTc3LRO6ucpVCm9/+poZSHSXMI/oJ6iXMJE8k3/aQz+EEjvc2z0p9aASJPzx0XTTC4lciTvGj62z62rGUlmEIvU23wWH37K2EBNoq+4Y0AZsSvMzM+CcTo25hgPaju1/A8ErZsLhP7IyFT17ARj/Et0G46JRsbdlVJ/PvX+XIOc2mpqx/QARAQABtCVHZWxpYW5nIFRhbmcgPGdlbGlhbmcudGFuZ0BsaW51eC5kZXY+iQJUBBMBCgA+FiEEZiKd+VhdGdcosBcafnvtNTGKqCkFAmWKTg4CGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQfnvtNTGKqCmS+A/9Fec0xGLcrHlpCooiCnNH0RsXOVPsXRp2xQiaOV4vMsvhG5AHaQLb3v0cUr5JpfzMzNpEkaBQ/Y8Oj5hFOORhTyCZD8tY1aROs8WvbxqvbGXHnyVwqy7Ad
 	WelP+0lC0DZW0kPQLeel8XvLnm9Wm3syZgRGxiM/J7PqVcjujUb6SlwfcE3b2opvsHW9AkBNK7v8wGIcmBA3pS1O0/anP/xD5s5L7LIMADVB9MqQdeLdFU+FFdafmKSmcP9A2qKHAvPBUuQo3xoBOZR3DMqXIPkNCBfQGkAx5tm1XYli1u3r5tp5QCRbY5LSkntMNJJh0eWLU8I+zF6NWhqNhHYRD3zc1tiXlG5E0obpX02Dy25SE2zB3abCRdAK30nCI4lMyMCcyaeFqvf6uhiugLiuEPRRRdJDWICOLw6KOFmxWmue1F71k08nj5PQMWQUX3X2K6jiOuoodYwnie/9NsH3DBHIVzVPWASFd6JkZ21i9Ng4ie+iQAveRTCeCCF6VRORJR0R8d7mI9+1eqhNeKzs21gQPVf/KBEIpwPFDjOdTwS/AEQQyhB+5ALeYpNgfKl2p30C20VRfJGBaTc4ReUXh9xbUx5OliV69iq9nIVIyculTUsbrZX81Gz6UlbuSzWc4JclWtXf8/QcOK31wputde7Fl1BTSR4eWJcbE5Iz2yzgQu0IUdlbGlhbmcgVGFuZyA8Z2VsaWFuZ0BrZXJuZWwub3JnPokCVAQTAQoAPhYhBGYinflYXRnXKLAXGn577TUxiqgpBQJlqclXAhsDBQkSzAMABQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEH577TUxiqgpaGkP/3+VDnbu3HhZvQJYw9a5Ob/+z7WfX4lCMjUvVz6AAiM2atDyyUoDIv0fkDDUKvqoU9BLU93oiPjVzaR48a1/LZ+RBE2mzPhZF201267XLMFBylb4dyQZxqbAsEhVc9VdjXd4pHYiRTSAUqKqyamh/geIIpJz/cCcDLvX4sM/Zjwt/iQdvCJ2eBzunMfouzryFwLGcOXzxOwZRMOBgVuXrjGVB52kYu1+K90DtclewEgvzWmS9d057CJztJZMXzvHfFAQMgJC7DX4pa
@@ -58,245 +58,85 @@ On Mon, 2024-02-26 at 13:40 +0100, Matthieu Baerts wrote:
 > On 26/02/2024 10:43, Geliang Tang wrote:
 > > From: Geliang Tang <tanggeliang@kylinos.cn>
 > >=20
-> > Only total test results are printed out in mptcp_sockopt.sh:
+> > The first [ OK ] and [FAIL] in the output of mptcp_connect.sh
+> > misalign
+> > with the others:
 > >=20
-> > =C2=A0PASS: all packets had packet mark set
-> > =C2=A0PASS: SOL_MPTCP getsockopt has expected information
-> > =C2=A0PASS: TCP_INQ cmsg/ioctl -t tcp
-> > =C2=A0PASS: TCP_INQ cmsg/ioctl -6 -t tcp
-> > =C2=A0PASS: TCP_INQ cmsg/ioctl -r tcp
-> > =C2=A0PASS: TCP_INQ cmsg/ioctl -6 -r tcp
+> > New MPTCP socket can be blocked via sysctl		[ OK ]
+> > INFO: validating network environment with pings
+> > INFO: Using loss of 0.85% delay 16 ms reorder 95% 70% with delay
+> > 4ms on
+> > ns1 MPTCP -> ns1 (10.0.1.1:10000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ) MPTCP	=
+(duration=C2=A0=C2=A0 184ms)
+> > [ OK ]
+> > ns1 MPTCP -> ns1 (10.0.1.1:10001=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ) TCP=C2=
+=A0=C2=A0	(duration=C2=A0=C2=A0=C2=A0 50ms)
+> > [ OK ]
+> > ns1 TCP=C2=A0=C2=A0 -> ns1 (10.0.1.1:10002=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 ) MPTCP	(duration=C2=A0=C2=A0=C2=A0 55ms)
+> > [ OK ]
 > >=20
-> > This patch prints more info for every test result in each test
-> > group:
+> > This patch fixes them.
 > >=20
-> > transfer ipv4=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- [ OK ]
-> > mark ipv4=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 [ OK ]
-> > transfer ipv6=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- [ OK ]
-> > mark ipv6=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 [ OK ]
-> > PASS: all packets had packet mark set
-> > sockopt v4=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 [ OK ]
-> > sockopt v6=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 [ OK ]
-> > PASS: SOL_MPTCP getsockopt has expected information
-> > TCP_INQ: -t tcp=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [ OK ]
-> > PASS: TCP_INQ cmsg/ioctl -t tcp
-> > TCP_INQ: -6 -t tcp=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [ OK ]
-> > PASS: TCP_INQ cmsg/ioctl -6 -t tcp
-> > TCP_INQ: -r tcp=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [ OK ]
-> > PASS: TCP_INQ cmsg/ioctl -r tcp
-> > TCP_INQ: -6 -r tcp=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [ OK ]
-> > PASS: TCP_INQ cmsg/ioctl -6 -r tcp
-> > TCP_INQ: -r tcp -t tcp=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [ OK ]
->=20
-> Please clearly explain why this is interesting, even if it looks
-> obvious.
->=20
-> Here, I don't know if this patch makes sense or not: to me, the
-> output
-> is now confusing because there is a mix of '[ OK ]' and 'PASS'.
-> Maybe:
->=20
-> - remove all the "PASS: xxx"? =E2=86=92 I don't see what it brings more
-> - (or convert existing "PASS: xxx" and "FAIL: xxx" to use "[ OK ]"?
-> But
-> there are fewer details)
-
-This patch uses to match the output of this script:
-
-INFO: PASS: all packets had packet mark set
-INFO: PASS: SOL_MPTCP getsockopt has expected information
-INFO: PASS: TCP_INQ cmsg/ioctl -t tcp
-INFO: PASS: TCP_INQ cmsg/ioctl -6 -t tcp
-INFO: PASS: TCP_INQ cmsg/ioctl -r tcp
-INFO: PASS: TCP_INQ cmsg/ioctl -6 -r tcp
-INFO: PASS: TCP_INQ cmsg/ioctl -r tcp -t tcp
-
-with the test results of it:
-
-ok 1 - mptcp_sockopt: mark ipv4
-ok 2 - mptcp_sockopt: transfer ipv4
-ok 3 - mptcp_sockopt: mark ipv6
-ok 4 - mptcp_sockopt: transfer ipv6
-ok 5 - mptcp_sockopt: sockopt v4
-ok 6 - mptcp_sockopt: sockopt v6
-ok 7 - mptcp_sockopt: TCP_INQ: -t tcp
-ok 8 - mptcp_sockopt: TCP_INQ: -6 -t tcp
-ok 9 - mptcp_sockopt: TCP_INQ: -r tcp
-ok 10 - mptcp_sockopt: TCP_INQ: -6 -r tcp
-ok 11 - mptcp_sockopt: TCP_INQ: -r tcp -t tcp
-
-This patch is prepared for the coming printing counter patch, otherwise
-the two output results may have different serial numbers, which can be
-confusing.
-
->=20
 > > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > > ---
-> > =C2=A0tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 12
-> > ++++++++++++
-> > =C2=A01 file changed, 12 insertions(+)
+> > =C2=A0tools/testing/selftests/net/mptcp/mptcp_connect.sh | 6 +++---
+> > =C2=A01 file changed, 3 insertions(+), 3 deletions(-)
 > >=20
-> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> > b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> > index 6ed4aa32222f..f84185b5dc9f 100755
-> > --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> > +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> > @@ -161,6 +161,7 @@ do_transfer()
-> > =C2=A0	wait $spid
-> > =C2=A0	local rets=3D$?
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> > b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> > index ab3bb3b17522..72be905bab1f 100755
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> > @@ -254,7 +254,7 @@ check_mptcp_disabled()
 > > =C2=A0
-> > +	printf "%-50s" "transfer ${ip}"
+> > =C2=A0	# net.mptcp.enabled should be enabled by default
+> > =C2=A0	if [ "$(ip netns exec ${disabled_ns} sysctl
+> > net.mptcp.enabled | awk '{ print $3 }')" -ne 1 ]; then
+> > -		echo -e "net.mptcp.enabled sysctl is not 1 by
+> > default\t\t[FAIL]"
+> > +		echo -e "net.mptcp.enabled sysctl is not 1 by
+> > default\t\t\t=C2=A0=C2=A0 [FAIL]"
 >=20
-> Best to use a helper to avoid repeating '"%-50s"', and to be able to
-> change how the titles are displayed from a single place. (same below
-> of
-> course)
-
-Add a new helper print_title() to do this.
-
->=20
-> Also, probably looking better if you use 'Transfer' instead of
-> 'transfer'.
-
-Updated in v6.
-
->=20
-> > =C2=A0	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
-> > =C2=A0		echo " client exit code $retc, server $rets" 1>&2
-> > =C2=A0		echo -e "\nnetns ${listener_ns} socket stat for
-> > ${port}:" 1>&2
-> > @@ -169,12 +170,15 @@ do_transfer()
-> > =C2=A0		echo -e "\nnetns ${connector_ns} socket stat for
-> > ${port}:" 1>&2
-> > =C2=A0		ip netns exec ${connector_ns} ss -Menita 1>&2 -o
-> > "dport =3D :$port"
-> > =C2=A0
-> > +		mptcp_lib_print_err "[FAIL]"
-> > =C2=A0		mptcp_lib_result_fail "transfer ${ip}"
-> > =C2=A0
-> > =C2=A0		ret=3D1
-> > =C2=A0		return 1
-> > =C2=A0	fi
-> > +	mptcp_lib_print_ok "[ OK ]"
->=20
-> (here as well, we could use 'mptcp_lib_print_success/fail/skip'
-> suggested in patch 1/12)
-
-
-Replaced by mptcp_lib_pr_ok.
-
->=20
-> > =C2=A0
-> > +	printf "%-50s" "mark ${ip}"
->=20
-> Same here: 'Mark' vs 'mark'.
-
-Yes, updated.
-
->=20
-> > =C2=A0	if [ $local_addr =3D "::" ];then
-> > =C2=A0		check_mark $listener_ns 6 || retc=3D1
-> > =C2=A0		check_mark $connector_ns 6 || retc=3D1
-> > @@ -190,8 +194,10 @@ do_transfer()
-> > =C2=A0	mptcp_lib_result_code "${rets}" "transfer ${ip}"
-> > =C2=A0
-> > =C2=A0	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
-> > +		mptcp_lib_print_ok "[ OK ]"
-> > =C2=A0		return 0
-> > =C2=A0	fi
-> > +	mptcp_lib_print_err "[FAIL]"
-> > =C2=A0
-> > =C2=A0	return 1
-> > =C2=A0}
-> > @@ -220,23 +226,27 @@ do_mptcp_sockopt_tests()
-> > =C2=A0	ip netns exec "$ns_sbox" ./mptcp_sockopt
-> > =C2=A0	lret=3D$?
-> > =C2=A0
-> > +	printf "%-50s" "sockopt v4"
->=20
-> Maybe 'SOL_MPTCP getsockopt v4'?
+> Best to use one new helper using 'printf %-XXXs', instead of playing
+> with tabs and spaces.
 
 Updated.
 
 >=20
-> > =C2=A0	if [ $lret -ne 0 ]; then
-> > =C2=A0		echo "FAIL: SOL_MPTCP getsockopt" 1>&2
-> > =C2=A0		mptcp_lib_result_fail "sockopt v4"
-> > =C2=A0		ret=3D$lret
-> > =C2=A0		return
-> > =C2=A0	fi
-> > +	mptcp_lib_print_ok "[ OK ]"
-> > =C2=A0	mptcp_lib_result_pass "sockopt v4"
+> That will also help to add colours later, with just:
+>=20
+> =C2=A0 mptcp_lib_print_success/fail/warn
+
+Updated.
+
+>=20
+> > =C2=A0		mptcp_lib_result_fail "net.mptcp.enabled sysctl is
+> > not 1 by default"
+> > =C2=A0		ret=3D1
+> > =C2=A0		return 1
+> > @@ -267,13 +267,13 @@ check_mptcp_disabled()
+> > =C2=A0	mptcp_lib_ns_exit "${disabled_ns}"
 > > =C2=A0
-> > =C2=A0	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
-> > =C2=A0	lret=3D$?
-> > =C2=A0
-> > +	printf "%-50s" "sockopt v6"
-> > =C2=A0	if [ $lret -ne 0 ]; then
-> > =C2=A0		echo "FAIL: SOL_MPTCP getsockopt (ipv6)" 1>&2
-> > =C2=A0		mptcp_lib_result_fail "sockopt v6"
-> > =C2=A0		ret=3D$lret
-> > =C2=A0		return
+> > =C2=A0	if [ ${err} -eq 0 ]; then
+> > -		echo -e "New MPTCP socket cannot be blocked via
+> > sysctl\t\t[FAIL]"
+> > +		echo -e "New MPTCP socket cannot be blocked via
+> > sysctl\t\t\t=C2=A0=C2=A0 [FAIL]"
+> > =C2=A0		mptcp_lib_result_fail "New MPTCP socket cannot be
+> > blocked via sysctl"
+> > =C2=A0		ret=3D1
+> > =C2=A0		return 1
 > > =C2=A0	fi
-> > +	mptcp_lib_print_ok "[ OK ]"
-> > =C2=A0	mptcp_lib_result_pass "sockopt v6"
+> > =C2=A0
+> > -	echo -e "New MPTCP socket can be blocked via sysctl\t\t[
+> > OK ]"
+> > +	echo -e "New MPTCP socket can be blocked via
+> > sysctl\t\t\t=C2=A0=C2=A0 [ OK ]"
+> > =C2=A0	mptcp_lib_result_pass "New MPTCP socket can be blocked via
+> > sysctl"
+> > =C2=A0	return 0
 > > =C2=A0}
-> > =C2=A0
-> > @@ -259,6 +269,7 @@ run_tests()
-> > =C2=A0
-> > =C2=A0do_tcpinq_test()
-> > =C2=A0{
-> > +	printf "%-50s" "TCP_INQ: $*"
-> > =C2=A0	ip netns exec "$ns_sbox" ./mptcp_inq "$@"
-> > =C2=A0	local lret=3D$?
-> > =C2=A0	if [ $lret -ne 0 ];then
-> > @@ -267,6 +278,7 @@ do_tcpinq_test()
-> > =C2=A0		mptcp_lib_result_fail "TCP_INQ: $*"
-> > =C2=A0		return $lret
-> > =C2=A0	fi
-> > +	mptcp_lib_print_ok "[ OK ]"
-> > =C2=A0
-> > =C2=A0	echo "PASS: TCP_INQ cmsg/ioctl $*"
-> > =C2=A0	mptcp_lib_result_pass "TCP_INQ: $*"
 >=20
 > Cheers,
 > Matt
