@@ -1,117 +1,261 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8535339E
-	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 10:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7628E6A8B1
+	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 10:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709115707; cv=none; b=Z5wNCUS9bjpCXWaqGdboe6VlyJNWujD5wCyh0BSKwxw7ObvG5C2+GbuBUhi+ki84opjxjMOonrxxkZLHrsY2o3NFr6aE+iCt7jUMcS9w47okIaurkYoXUKVvliq6xlfQ7SJPkOPTQLHp83N6DVyDNF3MTRjyjTRdcBty24jttz4=
+	t=1709116286; cv=none; b=mom0saG/3R2/ls1wEF7GZtBiOLjflb+I277TR13Ft3sSYtdh+Caieh/17tP4UVcqG1kb2s9VP0V52fICJqeYF4/UkvCInIOlG0LzL9b9NaYIQtFNhH5wEi0GTn6skeAavueUHDIAMBzY5c2TBanomXAgEr3PXrW88/48yyOB2vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709115707; c=relaxed/simple;
-	bh=S73ELWdvloVLxDZ90ol8vCOLHs4dg9RKTGt5264XkaI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=G5rKA+u3qeEDSW2DKUo13iVCdu5ghrDOQScrhLSveWhd1zNT80VEMgtmTdbNBJmh+5NVyivWKMmY1krqYYEug6fOcwFcZL4zHVHu4yrMX+ClIu+GZ8lpWK5aC39CAf3TmVcC5xS7fsWdoXtGOcDmYrYEU64RoEwvs+IA6MlJjNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=acK+/aG4; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709116286; c=relaxed/simple;
+	bh=ez1VxmtNteMAUyYhPJQIJM8wOyWvmZzY3PdwJiY4jsc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KRAK47fJCQ1v54Q5npmNXU3BGxAYWS7BrCvGa7xNvl5t45mElgoKnHx8YBfCD2I+2nVjdrdtfNTw6XYf4RP1+q7hs3sDOf5Vtb2fQX/SMbjSuQkWF9P9S1yATi9BoiOu8ODHKQ1/c2NMUg+YEhSFLD9ImQmEfVRxS5PhWJWkNIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RG5ywcgW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="acK+/aG4"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e572dbbc5cso55241b3a.0
-        for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 02:21:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709115705; x=1709720505; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KSSWHD7rz6vePYhrf0SfyZfVBSzYuTzwhdyAO0b/zDU=;
-        b=acK+/aG4KPYC18WysErkjGmkTnJIGlzZd1ZYOYqtjzk6hG4n6q26UXdVUdJ5vgjiwm
-         5Z0hymztaITx5tqEmSvEGzHxRTRF+/CvFzF+LneOa71Ub8xu9h912T6Skwyjyzzl6T8E
-         Z+IkhaDmKeVXNDRmMQbycaIjmBxk+Y9N1aMrdTEqT83Gf2mVj/v+HT0VOHbudDi50wdO
-         UhiHU+vp7afakcfOPpAn0btg5HVyr/1DcxOztg3z059mNf1+XdiBalIqEJA1wxfePXWC
-         EmK+4cqiIu8fQNA+4PHPSrP0r5a2Fn0gLY1nLXQiw8S1MAyuhykPqopBDFs44oHl5MU1
-         VSeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709115705; x=1709720505;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KSSWHD7rz6vePYhrf0SfyZfVBSzYuTzwhdyAO0b/zDU=;
-        b=Y55ZlaBVCmBTwrCi3Z+x46DMFebyTMvTHd8A9pZT92rVcJ5LqSf9YCCKxKllQTNAVc
-         JZRX2ydPOYrsx+kSQn1nBAz9wJId7DzYT3DgaHDzkrvPtFC3LLNyX4GQpGrbv1phr4uE
-         sVtU/Qxol+1koEMG3r6t+TIoLE7ds92O2tTZyvu69WZhAw1zzOcDs+s5reSSy9o4sMMO
-         /pTe9gN5gb/tiwdhlSQKryQIw46NifbyKO2Y5X4gbG0UKmQmrAozRg11X1ykevLgkRLD
-         VwVAumT2+3VFHGN3IiE8Vvk5gcDJNM+InCHrFqhqcqEb3HwGXdMHvXa+SuP9NccWrLLX
-         qy9A==
-X-Gm-Message-State: AOJu0YwWW3v0lzVGhpY9dEZZT72G88wPkfV+2LPTf8igd0hNmV78nRPf
-	LX0pG9Lj0yTgPIr4nnhAYI+UTCUmYJckW/VYaa4mETm1AF4T4jP4rBaz4YQ=
-X-Google-Smtp-Source: AGHT+IEyGHEEpUtNMWszxR7ZISfEXr/Lr1C0iC7uon3weMO4ihpgtFd5KG6D+iEN+zcUaIzL3wL2Kg==
-X-Received: by 2002:a05:6a20:9f98:b0:1a1:1563:4ceb with SMTP id mm24-20020a056a209f9800b001a115634cebmr2910840pzb.25.1709115705439;
-        Wed, 28 Feb 2024 02:21:45 -0800 (PST)
-Received: from [127.0.0.1] ([4.242.134.144])
-        by smtp.gmail.com with ESMTPSA id l3-20020a62be03000000b006e04553a4c5sm7407900pff.52.2024.02.28.02.21.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 02:21:45 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240228095858.4117568-2-matttbe@kernel.org>
-References: <20240228095858.4117568-2-matttbe@kernel.org>
-Subject: Re: mptcp: continue marking the first subflow as UNCONNECTED:
- Tests Results
-Message-ID: <13cf43d2-4703-2d27-6e16-94396350baec@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 28 Feb 2024 10:21:44 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RG5ywcgW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50C9AC43390;
+	Wed, 28 Feb 2024 10:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709116286;
+	bh=ez1VxmtNteMAUyYhPJQIJM8wOyWvmZzY3PdwJiY4jsc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RG5ywcgWOxKubehbWnlyBrLXM87gkbasPnYNqpUpVkSICk6skgFdJ8VogXNw9NZ66
+	 u1vYRj4f231mngPN0IehZkTY0dui/vUoARb5L1Mdc82H8LNe8liey66rbd/zbqs+yL
+	 ctXsxZS42fIoL386y+awPMJ3S/PuJ8GgVpRouFrrrqzK1A12lRI2jn0Vbr2R4bBxj8
+	 s5+6tbmI6tvI6DCvdnrkiu9YMZ98W8RGRL1cejoRhB8K9WD8u5zR1ymYHzF/g8CciH
+	 0X4I9P3qWeZmbYuxgO7avsSjBM27tCRG0Aunu3vCRIUdWds2aN0F5+gfa6niG65M6t
+	 5GN6wwAK9Gb7w==
+Message-ID: <d47680f0-c91f-497b-9ecd-b6a1375e4b60@kernel.org>
+Date: Wed, 28 Feb 2024 11:31:23 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next v6 1/9] selftests: mptcp: add
+ mptcp_lib_pr_ok/skip/fail/info
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1709105922.git.tanggeliang@kylinos.cn>
+ <d7732e6238909444e5c3d8a67aa06f2fa4b3e79b.1709105922.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <d7732e6238909444e5c3d8a67aa06f2fa4b3e79b.1709105922.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 28/02/2024 08:43, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> To unify the output formats of all test scripts, this patch adds
+> four more helpers:
+> 
+> 	mptcp_lib_pr_ok()
+> 	mptcp_lib_pr_skip()
+> 	mptcp_lib_pr_fail()
+> 	mptcp_lib_pr_info()
+> 
+> to print out [ OK ], [SKIP], [FAIL] and 'INFO:' with colors. Use
+> them in mptcp_join.sh and userspace_pm.sh first, and then use them
+> in all scripts in the next commit.
 
-Our CI (GitHub Action) did some validations and here is its report:
+Please add: please note that the mptcp_join.sh tests will now print
+these keywords with capital letters, like most of the other tests.
 
-- KVM Validation: normal:
-  - Script error! =E2=9D=93:
-  - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/8078=
-767442
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh |  6 ++---
+>  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 23 +++++++++++++++++++
+>  .../selftests/net/mptcp/userspace_pm.sh       | 13 ++++-------
+>  3 files changed, 30 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 1df2d24979a0..53d51a5f68f9 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -190,17 +190,17 @@ print_info()
+>  
+>  print_ok()
+>  {
+> -	mptcp_lib_print_ok "[ ok ]${1:+ ${*}}"
+> +	mptcp_lib_pr_ok "${@}"
+>  }
+>  
+>  print_fail()
+>  {
+> -	mptcp_lib_print_err "[fail]${1:+ ${*}}"
+> +	mptcp_lib_pr_fail "${@}"
+>  }
+>  
+>  print_skip()
+>  {
+> -	mptcp_lib_print_warn "[skip]${1:+ ${*}}"
+> +	mptcp_lib_pr_skip "${@}"
+>  }
+>  
+>  # [ $1: fail msg ]
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 763a2989ca6d..3f5b16fe5220 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -48,6 +48,29 @@ mptcp_lib_print_err() {
+>  	mptcp_lib_print_color "${MPTCP_LIB_COLOR_RED}${*}"
+>  }
+>  
+> +mptcp_lib_pr_ok() {
+> +	mptcp_lib_print_ok "[ OK ]"
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/405bf7b2a541
+Here, you will potentially have more info to print (at least from
+mptcp_join.sh, it can be called with extra args to print):
+
+  mptcp_lib_print_ok "[ OK ]${1:+ ${*}}"
 
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+> +}
+> +
+> +mptcp_lib_pr_skip() {
+> +	local msg="[SKIP]"
+> +
+> +	mptcp_lib_print_warn "${msg}"
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Same here:
 
-For more details:
+  mptcp_lib_print_warn "[SKIP]${1:+ ${*}}"
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+> +}
+> +
+> +mptcp_lib_pr_fail() {
+> +	local msg="[FAIL]"
+> +
+> +	if [ "${#}" -gt 0 ]; then
+> +		msg+="${1:+ ${*}}"
+> +	fi
+> +	mptcp_lib_print_err "${msg}"
 
+And here, it can be simplified:
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+  mptcp_lib_print_err "[FAIL]${1:+ ${*}}"
+
+> +}
+> +
+> +mptcp_lib_pr_info() {
+> +	mptcp_lib_print_info "INFO:${1:+ ${*}}"
+
+I guess here, we will always have arguments, no?
+
+  mptcp_lib_print_info "INFO: ${*}"
+
+> +}
+> +
+>  # SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var can be set when validating all
+>  # features using the last version of the kernel and the selftests to make sure
+>  # a test is not being skipped by mistake.
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> index b0cce8f065d8..5f32ac451596 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -61,7 +61,7 @@ _printf() {
+>  
+>  print_title()
+>  {
+> -	_printf "INFO: %s\n" "${1}"
+> +	mptcp_lib_print_info "INFO: ${1}"
+
+Use mptcp_lib_pr_info() directly, no?
+
+>  }
+>  
+>  # $1: test name
+> @@ -72,27 +72,22 @@ print_test()
+>  	_printf "%-68s" "${test_name}"
+>  }
+>  
+> -print_results()
+> -{
+> -	_printf "[%s]\n" "${1}"
+> -}
+> -
+>  test_pass()
+>  {
+> -	print_results " OK "
+> +	mptcp_lib_pr_ok
+>  	mptcp_lib_result_pass "${test_name}"
+>  }
+>  
+>  test_skip()
+>  {
+> -	print_results "SKIP"
+> +	mptcp_lib_pr_skip
+>  	mptcp_lib_result_skip "${test_name}"
+>  }
+>  
+>  # $1: msg
+>  test_fail()
+>  {
+> -	print_results "FAIL"
+> +	mptcp_lib_pr_fail "${1:+ ${*}}"
+
+I guess you can pass "${@}", no?
+
+  mptcp_lib_pr_fail "${@}"
+
+>  	ret=1
+>  
+>  	if [ -n "${1}" ]; then
+
+Here, I guess you don't need the 'if' to print more info, there will be
+printed with 'mptcp_lib_pr_fail "${@}"' just before, no?
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
