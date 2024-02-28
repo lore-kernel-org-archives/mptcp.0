@@ -1,119 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0462373535
-	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 12:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B4E22EED;
+	Wed, 28 Feb 2024 17:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709122755; cv=none; b=Z2ej4WgzVlzXx2IJhZdr1beqgmhMSPyMBEEYhxov8KIHCRBpilWirsYjXFSObSNqSixA/JoLZHEtcVYjOvB1AsQxzDsOdoZR1yPbCnA05CgxKOakly/g59I6A0R+N3ibuq6ovcJDx7oewiAI7KDH2GJs1PGsjoUPn6PUtaV035c=
+	t=1709140915; cv=none; b=RNAEROgjwVw8OY3/i1GwSDvPnZCiN16IV68NAXVBhefSXMb7hyeROCVYGNrLHCgmiaphF5a9gmxTz6XZd+c78e+c70WWeqy3AsQl1OEzXZKQNlzSb/WJ3N0bPgK0J01BgiGRDca7E1euWNI1BaG4gOvtk/0rXfGBngS0uoOHB1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709122755; c=relaxed/simple;
-	bh=ixrdo/40Zze4mO8IZ9PvFdVUgkA7t+aYb+i9gn/8UVU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZUTXoxOCnkEWck2AMeJBHz5sx58vdNOmO7TVDWRf3cs6lFJQlaASognC0PBA1wsyv7K2NNgLmNuSWhLOBPGLcGxcNeYBlrlir9s8d1NrORB4hH/z/wuAZwx6Z5bwr29sjThc4VUlxGdzReXgRu5KDNUfd80Ml8KT9gBmByY1e5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QS5JBJ0L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709140915; c=relaxed/simple;
+	bh=/dEb0ZgxzJCc665N5E52mcNPlgkWeMzlcJnG/uW01QQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V1UDOnl9HkUJnjl169WN3MVS7ekhK0TGYme7niavbWPSrgCCGvWKnqiQZD3EqsWkCGlHynKi3eWe+czMGElcFVVPcrNmddc0Qkt3xYfz40JWbS1iFLscHhRVtmWuAhG3H8ly//wYkegzZQwqCULkbGZaP++w/SyGlXuQ2Vler24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZ37gq8e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QS5JBJ0L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6419C433C7;
-	Wed, 28 Feb 2024 12:19:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZ37gq8e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA8BDC43390;
+	Wed, 28 Feb 2024 17:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709122754;
-	bh=ixrdo/40Zze4mO8IZ9PvFdVUgkA7t+aYb+i9gn/8UVU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QS5JBJ0LDUYN7eOh0j4AEkJgjy05I9ML3n1Ib+kgTlO+KniWeXYEn7ewSpKkHUYb2
-	 YWTyMCAYReZm9o0YU107NwzszjpaZx3DHEQOLZBnCsgPNGyLu5OuEHP4zI+p8Mf4xG
-	 F6SqV5GlLcN8ArkyS8wEul5DPXJwn7c7ismmvAzyp7lMSthIQO1ilGFRfMXNIamxGJ
-	 in9SGsbCnUUcRr4+UGcua30sZ9bgHN+lLb/8Zcj1JCn36KZPrdVt16V57I9SmC0SiW
-	 oNqGb5Nmurf5cqdjol+jB76LE/IhMfMrVsMNl8d9GEQayQ8jpIffng1mhIWbfw/iN/
-	 69ds6ai1QbuOg==
-Message-ID: <216df5d2-70cc-42ae-ab94-b573d9455ad5@kernel.org>
-Date: Wed, 28 Feb 2024 13:19:12 +0100
+	s=k20201202; t=1709140915;
+	bh=/dEb0ZgxzJCc665N5E52mcNPlgkWeMzlcJnG/uW01QQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iZ37gq8eHaQ5aE3zuXggCI4rjthSRS3Bf4JpCU9a2qgntOzGv7kCAjR5IsVnve6OD
+	 Nx2fjiP9rGlom8K0FPZcwRYap3DmghOHICY1Ip4rG0F9Qp+/zGnHIF1rirKAlIF3KI
+	 cMvlSSCK/tFW56wn1GDbozzesWFTaMsuzPr2ILrY+Txoq4aiHhLeSaf15LtRiR8zqh
+	 etw/KN9bTiUcA+Fq3MfjAsa9xjhw+tx8r9H3Ztd9WcAGtmEy4GqwQ4JTQx2sMxSuEH
+	 Uk45xHoYPvnxSCRUXvSq95pW7RKSMX9kPFyIPmoZbohcRRc5UtVv5/Vk4Fmmm2jcvQ
+	 tNTSQUzuf7jdg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	sashal@kernel.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH 6.1.y] mptcp: continue marking the first subflow as UNCONNECTED
+Date: Wed, 28 Feb 2024 18:21:21 +0100
+Message-ID: <20240228172121.243458-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v6 9/9] selftests: mptcp: print test results
- with counters
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1709105922.git.tanggeliang@kylinos.cn>
- <111be8b3feb6b8410abe43468fe00d28a131c36b.1709105922.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <111be8b3feb6b8410abe43468fe00d28a131c36b.1709105922.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1495; i=matttbe@kernel.org; h=from:subject; bh=/dEb0ZgxzJCc665N5E52mcNPlgkWeMzlcJnG/uW01QQ=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl32uRg1dBPl2Mh1SfZ40uPmZll1xmdxvmMvqLB kiNrkNVX1iJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZd9rkQAKCRD2t4JPQmmg c+sMD/0Tihf3Iw8q3bj0AId9/vwv24rnCA2Ld0NmCNIJDpQZHdX21pQ5Dj7flUCZ63CBN+BKX2x kxUfzw03Qwpo76mh7AFDgBr6V2gzXwtCFzketT7h9EpOBxByBTITgS3lATGC+LOb3IJv5wK1OrH D8H5hbWX7Hohf5mWhMz/uuOskIrl55VZ/g5mltJFyg5VPkBoNO1qcA8hZE+vkrHIrcdtJzv7sCp O9Bts8J2eqVcWxCt7TW3AO1xrBcrVg6ttcdnzbQnOqs7C5WVvXl6WRQxbb8+N1pY4xUKa3K90AC mBgCnJwq92dGA+XFUefuOzfAfv1jrn8I1sSovOBaGBM2EORO3gLYEGUlNSwS2YSxTNKL+ogddow 4yRJdcjIHW0ox4neOam0fe1nWESNYTWFy7das6ZJhzOpfBrjrqsb8emLxfP+84zNlsaefvETgTd 3IrBMSiMUL7VetNmR3dVDY0/Si4EJojEchavtsOGG5itG1eB+DkgFko6YEhHXti309l10z4T/7h dTjbMIj0O2f4JFPy3UAq0r8AuC4EqdqbLECebQr0Uo1X0IoPFbwAzSIu7TzNAimCs5qIgsGx1yc UgfXH7Nm/fIpXeYNtobzGcLRwyPrJ9kbDJI2WzGFRMluXJl7jmk4hA7UmyfguNaWbS+UN3JC1CF MC2j0vXoNZ0HYCw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+After the 'Fixes' commit mentioned below, which is a partial backport,
+the MPTCP worker was no longer marking the first subflow as "UNCONNECTED"
+when the socket was transitioning to TCP_CLOSE state.
 
-On 28/02/2024 08:43, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> This patch adds a new helper mptcp_lib_print_title() to print out
-> test counter in each test result and increase the counter. Use
-> this helper to print out test counters for every tests in diag.sh,
-> mptcp_connect.sh, mptcp_sockopt.sh, pm_netlink.sh, simult_flows.sh,
-> and userspace_pm.sh.
+As a result, in v6.1, it was no longer possible to reconnect to the just
+disconnected socket. Continue to do that like before, only for the first
+subflow.
 
-Could it not be possible to support it in mptcp_join.sh as well? I
-didn't check, but I guess we will need to increment the counter for not
-executed tests, right?
+A few refactoring have been done around the 'msk->subflow' in later
+versions, and it looks like this is not needed to do that there, but
+still needed in v6.1. Without that, the 'disconnect' tests from the
+mptcp_connect.sh selftest fail: they repeat the transfer 3 times by
+reconnecting to the server each time.
 
-I guess we could use the same counter declared in mptcp_lib.sh. For the
-special mptcp_join.sh case, we might want to add a helper (e.g.
-'mptcp_lib_inc_test_counter') to increment MPTCP_LIB_TEST_COUNT (or
-similar).
+Fixes: 7857e35ef10e ("mptcp: get rid of msk->subflow")
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Notes:
+ - This is specific to the 6.1 version having the partial backport.
+---
+ net/mptcp/protocol.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-(...)
-
-Cheers,
-Matt
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index cdabb00648bd2..125825db642cc 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2440,6 +2440,8 @@ static void __mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ 	need_push = (flags & MPTCP_CF_PUSH) && __mptcp_retransmit_pending_data(sk);
+ 	if (!dispose_it) {
+ 		__mptcp_subflow_disconnect(ssk, subflow, flags);
++		if (msk->subflow && ssk == msk->subflow->sk)
++			msk->subflow->state = SS_UNCONNECTED;
+ 		release_sock(ssk);
+ 
+ 		goto out;
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
+
