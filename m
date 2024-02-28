@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161233612C
-	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 12:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97E23BBC6
+	for <mptcp@lists.linux.dev>; Wed, 28 Feb 2024 12:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709122224; cv=none; b=YU8kKckYMfbHqYBmEAMyV6K+j/KZdpW1Jdx/g6eG9l3xVfAX1O8RvNe6eXpV2aGkttlqZUD8wXUSjKgafO7QzCXry77KrBvj0qVN56t5m9lpwv8sf4Sy/nRC3Y/bKBk/oM1lHlalX+h49UlfISjVZ/o3k5qLnr0+XobsFUdqQVA=
+	t=1709122363; cv=none; b=umpu4zVOJty8mE8LIHGXqRG1baeAWX53zZxefftRExcXcoxwK2/DPFH4w0pmqHy63iPFeXzIXE9nAMGjPtiNs213Zo6dDB5z2FjXYBLRBwBk4e3UwZXnb5S4Q4WP2JOhobkC2ki1ea5613znGm/2bTjuRFy5x8z9XuMHe5sXZwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709122224; c=relaxed/simple;
-	bh=au8wjmSJvGzOCsnRP+7cayRsCPgG1I9tSE6CjS7RVfU=;
+	s=arc-20240116; t=1709122363; c=relaxed/simple;
+	bh=BeA/4huomMG7ey7a5HZp38FLeO15uOMb6/25Z5aSbWw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XdFgQKg9ufHgNhztCFYyp8ApaoSWUJD0GHDz6/Yk4Rs/TfXXYO6wIJhoaCBr+UoGzXpy+DzORia8Z4nCJzZP/oDy/+1kzotpAgQ5ihwe0kOSTLh7VMBYdxqKxXTrdKvLVfpd713PPZZOrWZg262r0IH2PoiSx6ZQcfGOQpR0Iu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYj2DVOl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=UflNs8QLKg9fYjzn19M0BEDvEmFO/azjjfhG792WjLEaVy6q40LEqF7uaXIPrD+2pzaXeiAdBWvQ5u3fSFOD90VAsr7q3Vb0voN1eraUaaFX2QsA683mz1pA756DujSePN7O6Iwmrb9aw422Q6PYfMMxa4bmZUs6aO09of94hNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CR0viIUJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYj2DVOl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 244BAC433C7;
-	Wed, 28 Feb 2024 12:10:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CR0viIUJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E33D8C43390;
+	Wed, 28 Feb 2024 12:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709122223;
-	bh=au8wjmSJvGzOCsnRP+7cayRsCPgG1I9tSE6CjS7RVfU=;
+	s=k20201202; t=1709122363;
+	bh=BeA/4huomMG7ey7a5HZp38FLeO15uOMb6/25Z5aSbWw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uYj2DVOljIPdlihy6ISio6JGyyhHj/gq79TbSUCz1Wwpufp4Od/GKlZoJAkSTr9dr
-	 jnn8WwR7pDHYd67/4y3B/1YTVZdvSx+xwt7pZyG1t1oFr+x9BZkeIpjML8BiAFbIaV
-	 ATJf4MdTNZEcNMu8mJKQo1/025pQ/z1sw0JdEqR2nGK7Nj/2z++j8gRZAS4htt4VE0
-	 l/vaVAkbYJ12N/gDh/6/oa3zFjhnMC2jgVzquC2uMpk7lokLiiUwEyPQ4ml7qOps4R
-	 d48bZAkGoIT3mWrH2gJw7fMcRK5r/cl8iQO76BCpwT851UHbIC3BT0ZjS8xK+/R7ki
-	 6bPOGd7oHWriw==
-Message-ID: <f4923585-f34d-46ca-b5e4-9f306ba3fcab@kernel.org>
-Date: Wed, 28 Feb 2024 13:10:22 +0100
+	b=CR0viIUJeq5CggD00uuaBVWZNRuoyMGiKzwgAhgbFt8p3X4L9cdYc2UqzneWKQUuH
+	 LyiQKB5F+R8jFXoCfk0mHfqR7KLwuZXxXXj44oxdnI3RJzXY2PYB3qNMmUywfGltNU
+	 M/1IFilWhdvZ/rZuVikYjik/39xNA2MKQbXgbGHuiMoxVF8MZekHbqaYl8UhpALilL
+	 NthL7qq2E/NkGXwwg05vSlRuvbuf5Qf8O4+u1VamiInHoB10paB+LU+3nI/odup7tz
+	 ANyVpliEOQD9YXX1J8hpMP0Mt3uZo5zQhnqf40/WGypPivKHwbdAd+ktKzFXzovfV/
+	 69/2zJYA1NeUQ==
+Message-ID: <07b3073c-7306-4293-8c2f-2b0f96f4834a@kernel.org>
+Date: Wed, 28 Feb 2024 13:12:40 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v6 6/9] selftests: mptcp: connect: print out
- ping tests info
+Subject: Re: [PATCH mptcp-next v6 7/9] selftests: mptcp: add more print_title
+ helpers
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709105922.git.tanggeliang@kylinos.cn>
- <e15cd3404da3211183979a3fa5e700cc97d2b770.1709105922.git.tanggeliang@kylinos.cn>
+ <6c61dfba93c4cb7d10e9d2a6258d256257e45abd.1709105922.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,64 +87,44 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e15cd3404da3211183979a3fa5e700cc97d2b770.1709105922.git.tanggeliang@kylinos.cn>
+In-Reply-To: <6c61dfba93c4cb7d10e9d2a6258d256257e45abd.1709105922.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+
+Hi Geliang,
 
 On 28/02/2024 08:43, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> 'ping tests' shows in the test results of mptcp_connect.sh:
+> This patch adds print_title() helper for diag.sh and pm_netlink.sh to make
+> it easy to change the output information. Only print_title() helper needs
+> to be updated in that cases.
 > 
-> 1..68
-> ok 1 - mptcp_connect: New MPTCP socket can be blocked via sysctl
-> ok 2 - mptcp_connect: ping tests
-> ok 3 - mptcp_connect: loopback v4: ns1 MPTCP -> ns1 (10.0.1.1:10000) MPTCP
-> ok 4 - mptcp_connect: loopback v4: ns1 MPTCP -> ns1 (10.0.1.1:10001) TCP
-> 
-> But not in the test output of this script:
-> 
-> New MPTCP socket can be blocked via sysctl                         [ OK ]
-> INFO: validating network environment with pings
-> INFO: Using loss of 0.01% delay 30 ms reorder 94% 9% with delay 7ms on
-> ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP   (duration    79ms) [ OK ]
-> ns1 MPTCP -> ns1 (10.0.1.1:10001      ) TCP     (duration    49ms) [ OK ]
-> 
-> This patch fixes this by adding ping tests in test output:
-> 
-> New MPTCP socket can be blocked via sysctl                         [ OK ]
-> INFO: validating network environment with pings
-> ping tests                                                         [ OK ]
-> INFO: Using loss of 0.55%
-> delay 36 ms reorder 97% 43% with delay 9ms on ns3eth4
-> ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP   (duration    34ms) [ OK ]
-> ns1 MPTCP -> ns1 (10.0.1.1:10001      ) TCP     (duration    20ms) [ OK ]
+> It's useful for the coming commit "selftests: mptcp: print test results
+> with counters".
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 3 +++
->  1 file changed, 3 insertions(+)
+>  tools/testing/selftests/net/mptcp/diag.sh       | 9 +++++++--
+>  tools/testing/selftests/net/mptcp/pm_netlink.sh | 9 +++++++--
+>  2 files changed, 14 insertions(+), 4 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> index 7a53c8fb1783..bb0c7bf5b368 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -866,6 +866,9 @@ mptcp_lib_result_code "${ret}" "ping tests"
+> diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+> index 7830bc043d52..dd9c5bf7a415 100755
+> --- a/tools/testing/selftests/net/mptcp/diag.sh
+> +++ b/tools/testing/selftests/net/mptcp/diag.sh
+> @@ -45,6 +45,11 @@ get_msk_inuse()
+>  	ip netns exec $ns cat /proc/net/protocols | awk '$1~/^MPTCP$/{print $3}'
+>  }
 >  
->  stop_if_error "Could not even run ping tests"
->  
-> +print_title "ping tests" 69
+> +print_title()
+> +{
+> +	printf "%-50s" "${@}"
 
-Same here: avoid passing '69' here. 'print_title' is certainly using the
-wrong default value.
+It should be '${*}', otherwise passing more than one argument will cause
+issues with printf which expects only one arg ('%-50s')
 
-(and moved below as done in the Squash-to patch)
-
-> +mptcp_lib_pr_ok
-> +
->  [ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay ${tc_delay}ms
->  mptcp_lib_pr_info "Using loss of $tc_loss "
->  test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
+Same below, and probably in the other patches, I didn't check.
 
 Cheers,
 Matt
