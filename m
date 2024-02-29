@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089E564A9B
-	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 11:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4823263501
+	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 11:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709206284; cv=none; b=VUxCFf4SO/Pc0ReQG3nIt5oXFjqDrbaMeCD51ZbilqNQdwmsSVqM+kD7PiWP/aZ01nbha3ldSSod2wCMQuDkl4AYGGmJYqR6FbSHP49TXfofVTY7dT4MBxrFoHPU6YMj4Tl7OAyTuIJoBkjuW9BP2RlHM9gCIbbknKTYtybn5h4=
+	t=1709207898; cv=none; b=rgbS2IakcS1Y7q/SbTZ8nkb0PwYCPByjFa1RgDxiAXbz24VppltlZUeDnjkb1pBxZ3Q1ZZ/XopwMbUiVfi94EFYcChKAId7dJjuMAYJUgNrB8EghNMHKX5IVV2zgalfzTZ2arDHPpGOgGnN5nQK3zqm+vMgnvnQsUuYtUf+tT2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709206284; c=relaxed/simple;
-	bh=rVJRLgKNoWQ4MdZ5NDZKcTWrqWsBWhOy9BTPiDQSoqU=;
+	s=arc-20240116; t=1709207898; c=relaxed/simple;
+	bh=gOFSEXlsysWTqI8/5O1ww8dmUVgaC2tluhOdXeAY97I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cCsoPT3g6eCPAyeteSwzjgWbNTUvXDu6Tpzg8y27+hr/qNEHlTR+BkLbiiSgEK9Ege+B7IOkanCLRK+Lp2JY56a23LCZl5U+9+MRWwp79b+nkCUPEoDSaL2wT5YkU2tS1wTKxL3u8xpjR/v0vLL8AlKXLvdDCuNiSfwC/noyhS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R56gAI1Q; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ngAw2umwglDaY8HNRKQV4cwYC0HCTXD5Zn1MRD+Hxtyc3451Wd1rnapm370ofG6xKTCzCu8DflYq+sig9ISFA3FAGypjqlTyYNFv6pK1hJWd1RVcskraWbn3FqOyl5Soj97pg6dwx03btP+fbrdXUr8C88LaS4ZUIwG9tXKlD3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEQkX1qM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R56gAI1Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C80D6C433F1;
-	Thu, 29 Feb 2024 11:31:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEQkX1qM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62F86C433F1;
+	Thu, 29 Feb 2024 11:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709206283;
-	bh=rVJRLgKNoWQ4MdZ5NDZKcTWrqWsBWhOy9BTPiDQSoqU=;
+	s=k20201202; t=1709207898;
+	bh=gOFSEXlsysWTqI8/5O1ww8dmUVgaC2tluhOdXeAY97I=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R56gAI1Qpy+UywokRDe0RalSCJOa2ERl8X24fW3QQnv2ArEQt0O38fBSPJvza4U5B
-	 C2ugYUeVMH3ghQZE5VJ+dRv1p/iltInSy7+qAa8hXXQSeJKE0D+W2xkn/guCnruis5
-	 UYPUshj9QU2uC1D90s0KqlFjp44YGwq7tjQVCLeBg0jZtAbr40cUjcnSqmGdZjRa1A
-	 laedzc+IcF1ir9F8xRMBZhZ0d5wfFWiakY7GPNg3qo9G4BWYc2/rAy8i1iBAgVX+YD
-	 CRrPbE5PEKB0A4yQXq6yCt/owM7BgLfBqWL4+OMOrW6mujySkGVtVCKGmx6iVZan0E
-	 o3Kj5G35kiOjA==
-Message-ID: <e8ffd789-f03d-4b99-b0aa-619cc7cce14d@kernel.org>
-Date: Thu, 29 Feb 2024 12:31:21 +0100
+	b=CEQkX1qMJlyIB2av2GON90H85hr2CxKg/yabt/5+JNKrXANgv/YH/7+ML2dSIDBdg
+	 09o2G14y6KO4Z2F8qOwXocIFgoPhGtCWtgI25RsEx6RVukbKN/wmTKH/EUOWPvqiFC
+	 XGgLIi4oDKB2Lo1FJslVs/znID2AuW5hxTMnAV3bFESTFek9zbiMZFnXb8OwCVcsAr
+	 4drlBURYTwNTaUd0yFcNWTJ3sirQLO+F2dmrYcZn+xUp/8r89zcn8Fy83y18wV+sl2
+	 yFA9YaoYsA4NipJT83uhn93XJgAYHcjL2/XXwHQ96ADa3BENEOQhh6EqPhDyqistFQ
+	 aVhzp0qHJK98Q==
+Message-ID: <fea0084f-665b-4ea2-96cd-f9c025c02a28@kernel.org>
+Date: Thu, 29 Feb 2024 12:58:15 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v7 5/8] selftests: mptcp: sockopt: unify
- ipv4/ipv6 as v4/v6
+Subject: Re: [PATCH mptcp-next v7 6/8] selftests: mptcp: add test counter
+ helpers
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709200070.git.tanggeliang@kylinos.cn>
- <80749c1dfc741ca14090559c5a2364b253c03a5a.1709200070.git.tanggeliang@kylinos.cn>
+ <9a31a17605edb4546467a172d8619eff3f15a002.1709200070.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,50 +87,137 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <80749c1dfc741ca14090559c5a2364b253c03a5a.1709200070.git.tanggeliang@kylinos.cn>
+In-Reply-To: <9a31a17605edb4546467a172d8619eff3f15a002.1709200070.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 29/02/2024 10:51, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> ipv4/ipv6 and v4/v6 are mixed in the output of mptcp_sockopt.sh, this patch
-> unifies them as v4/v6.
-> 
+> This patch adds two vars in mptcp_lib.sh, MPTCP_LIB_TEST_COUNTER for
+> the test counter and MPTCP_LIB_TEST_FORMAT for the test print format.
+> Also add two helpers, mptcp_lib_inc_test_counter(), increase the test
+> counter, and mptcp_lib_pr_title_counter(), print the test title with
+> counter. They are used in mptcp_join.sh first.
+
+Please add the reason, something like: Each MPTCP selftest is having
+subtests, and it helps to give them a number to quickly identify them.
+This can be managed by mptcp_lib.sh, reusing what has been done here.
+The following commit will use these new helpers in the other tests.
+
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 16 ++++++++--------
+>  tools/testing/selftests/net/mptcp/mptcp_lib.sh  | 17 +++++++++++++++++
+>  2 files changed, 25 insertions(+), 8 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> index 6ed4aa32222f..ae59136b5bb4 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> @@ -130,10 +130,10 @@ do_transfer()
->  	local local_addr ip
->  	if mptcp_lib_is_v6 "${connect_addr}"; then
->  		local_addr="::"
-> -		ip=ipv6
-> +		ip=v6
->  	else
->  		local_addr="0.0.0.0"
-> -		ip=ipv4
-> +		ip=v4
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 1df2d24979a0..7acc6064eb17 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -48,7 +48,6 @@ declare -A all_tests
+>  declare -a only_tests_ids
+>  declare -a only_tests_names
+>  declare -A failed_tests
+> -TEST_COUNT=0
+>  TEST_NAME=""
+>  nr_blank=6
+>  
+> @@ -172,7 +171,8 @@ cleanup()
+>  
+>  print_title()
+>  {
+> -	printf "%03u %s\n" "${TEST_COUNT}" "${TEST_NAME}"
+> +	MPTCP_LIB_TEST_FORMAT="%03u %s\n"
 
-Mmh, this will change the test name (used in "mptcp_lib_result_*") and
-this will break the tracking using the test name [1] while the test is
-still doing the same thing.
+No need to re-set it all the time, this line can be moved just before
+"sourcing" mptcp_lib.sh I think, with a comment like:
 
-Maybe this patch is not worth it then, fine to see 'ipv6'. Or only
-display a different string in what is printed per test, what you were
-doing in patch 5/9 from the v6, but I don't know where this patch is:
-did you accidentally drop it?
+  # Here, we have more than 100 tests, having multiple checks
+  MPTCP_LIB_TEST_FORMAT="%03u %s\n"
 
-[1] e.g.
-https://netdev.bots.linux.dev/flakes.html?br-cnt=88&tn-needle=mptcp or
-on LKFT or our CI
+  . "$(dirname "${0}")/mptcp_lib.sh"
+
+> +	mptcp_lib_pr_title_counter "${TEST_NAME}"
+>  }
+>  
+>  print_check()
+
+(...)
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 763a2989ca6d..cbf0dd2cc4cb 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -411,3 +411,20 @@ mptcp_lib_events() {
+>  	ip netns exec "${ns}" ./pm_nl_ctl events >> "${evts}" 2>&1 &
+>  	pid=$!
+>  }
+> +
+> +MPTCP_LIB_TEST_COUNTER=0
+> +MPTCP_LIB_TEST_FORMAT=""
+
+Can you declare them at the top, around the other ones?
+(MPTCP_LIB_SUBTESTS, etc.)
+
+And I think you should set the default value there too, like what I was
+suggesting in patch 07/12 from v5:
+
+  : "${MPTCP_LIB_TEST_FORMAT:="%02u %-50s"}"
+  MPTCP_LIB_TEST_COUNTER=0
+
+So we can change the format by setting MPTCP_LIB_TEST_FORMAT before
+"sourcing" mptcp_lib.sh.
+
+No?
+
+*If* we need to alter the format just for one title, we can always do:
+
+  MPTCP_LIB_TEST_FORMAT="..." \
+      mptcp_lib_pr_title_counter "<title>"
+
+But best to avoid that.
+
+> +
+> +mptcp_lib_inc_test_counter() {
+> +	: "${MPTCP_LIB_TEST_COUNTER:?}"
+
+I don't think that's needed, it has been defined in the file, no?
+
+> +
+> +	MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
+> +}
+> +
+> +#shellcheck disable=SC2059
+
+Please always justify why you need to ignore a rule.
+
+Also, always try to reduce the scope as much as possible: just for one
+line, for one function, for the whole file → here, move it just before
+calling 'printf':
+
+  # shellcheck disable=SC2059 # the format is in a variable
+  printf "${MPTCP_LIB_TEST_FORMAT}" (...)
+
+(and add a space after '#')
+
+> +mptcp_lib_pr_title_counter() {
+> +	: "${MPTCP_LIB_TEST_COUNTER:?}"
+> +	: "${MPTCP_LIB_TEST_FORMAT:="%02u %-50s"}"
+> +
+> +	printf "${MPTCP_LIB_TEST_FORMAT}" "${MPTCP_LIB_TEST_COUNTER}" "${*}"
+
+I didn't check: can you not print the title and increment the counter
+(via mptcp_lib_inc_test_counter) from here? I think that would be a good
+practice to do that instead of having to deal with the counter in
+different places.
+
+We would only call "mptcp_lib_inc_test_counter()" from other scripts
+when a test is skipped.
+
+> +}
 
 Cheers,
 Matt
