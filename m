@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50697CF11
-	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 12:20:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433437CF30
+	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 12:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709209211; cv=none; b=J7cvJVZEbvO19YlBn3Lc1ylKQgYFPs19Bw/EaPu4XpRUxlx6TO415Oo3AHt2YwG3WEW3kb2hMgl+u6weofF7xWb0ldTRABMbhQSFVEKlM0fUoujeXk1W7lPCTTbRuzpXnZfipYiNpxAwLbk58ULdoiLDqhBgeKOx1W+cyJaqfIY=
+	t=1709209380; cv=none; b=WBkkvaPlL8DZ/KxGM1Vlo2+8wqf/MO4LZjOSBP0Xu1q7wwzLAMWdd41JWbdgTkMtPaQRaPAeEZga1ZuocXUSYgBte2oUE3wE0G0kja6IXWliTCdd7lTCdpR+uZO8XcioIEolTnpvhMbZi4x3GSJS0PL9Yt3OOB09OFEK+ec229s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709209211; c=relaxed/simple;
-	bh=nL5DO0pFibRwUlHwj7qgZgtSB0JJxvYoK8BNzciXLio=;
+	s=arc-20240116; t=1709209380; c=relaxed/simple;
+	bh=CiPry8EzVY2a8Yda6ZroxNbvqG9SySibU7XM3Zp0hEc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r8mHHB6q2pDYAjevk1HWtDVradoQnxlDFqLCpP5/WlHvg7dWd2/tVpz5ZML+A1TUDFLFz+rVmOqCr/VJO8zDNagEvU0gIfJ6fb4qkwio9+ATwgAFUwF8STj4Iia7jvJ5w7F90DE8nxog5AU312KoEci7l52cb2ZDeIgpEgCcc5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0kSgak+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=m1XFxyDhjYxKDnMwzkCu8QFsRvhp+gSYWaMUaG3tr/WYS06YKPtpzHRNehwW+P3VxsveWZNU1dJkkCdqbdCaXUe1tVBO0uuvVspZKg5xudflOW5znbuwjIZCqXMD3senxvogiW2TIqq1/8D7cJmKBWhU1OBmNKNasaSRIOxB9xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=luiOD1jr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0kSgak+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D61ABC433F1;
-	Thu, 29 Feb 2024 12:20:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="luiOD1jr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47854C433F1;
+	Thu, 29 Feb 2024 12:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709209211;
-	bh=nL5DO0pFibRwUlHwj7qgZgtSB0JJxvYoK8BNzciXLio=;
+	s=k20201202; t=1709209379;
+	bh=CiPry8EzVY2a8Yda6ZroxNbvqG9SySibU7XM3Zp0hEc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l0kSgak++KWKufgxaUwy3GKztHJaOjyHtz96k9zkBSSF9UX3EIwvyWpWzL96Visk9
-	 YINsJWqKgSAkw2+TYum4FOIYeykbL1Tu6vDq244QdagrUok59HdYnLLMTOW0Ihek8S
-	 cPS3XoUE19gTdmXr7cz+kfS++pZourQ8Rl1+aMLNpIovrCbyYiUuZ0tpHMdcDY5mT4
-	 838JaahsunHXuMaJThNSLpcp2WK8cZ0UpOdYpQ/4Q3ZVVSGUhSw2SpKl2NFBui1cQL
-	 o2/HnJrsOOolVR442rcyHEB8Rm3hmMhIzs1FZE6qNye8nklRMsNWBtp6ViPysnYbIh
-	 w8JfZuEejpTZA==
-Message-ID: <4edaeb85-e94e-4dc4-9e23-f4efb716093f@kernel.org>
-Date: Thu, 29 Feb 2024 13:20:09 +0100
+	b=luiOD1jrJnP9TFEE6HMGI37fD4uuaGzgIBTYMat6dew1zlJJ07xtPPHct0Rmw9l1t
+	 c5pfcoJvf9NKzOWqGpXpxGLERLXuMd/L5PNQUtoWLUCBTGKQv+SBnySxR8mkXMBBdn
+	 Oscp3BGy/VgXJu35I8pZFy7ZsG0YgCsgqStQwEdXenliNYUCR0rhh3eFg4GKcesROl
+	 7hY+w1Px3nCgMWEHXMxtkyHPXi/6bqSyz3smPi0U7D8y1hp60badhiK0hvgIL4pSkN
+	 vYl7/DeyLcXBIpooFF8REnPbQSvHsjHK2XjkSJ+ql45GaseLtmTI6T4OdMuN9d2CRe
+	 CSVSZ/o72vJ2g==
+Message-ID: <ac16a5a7-9eb1-4670-b466-4b5a43ee5455@kernel.org>
+Date: Thu, 29 Feb 2024 13:22:57 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v7 5/8] selftests: mptcp: sockopt: unify
- ipv4/ipv6 as v4/v6
+Subject: Re: [PATCH mptcp-next v7 2/8] selftests: mptcp: connect: add
+ dedicated port counter
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
 References: <cover.1709200070.git.tanggeliang@kylinos.cn>
- <80749c1dfc741ca14090559c5a2364b253c03a5a.1709200070.git.tanggeliang@kylinos.cn>
- <e8ffd789-f03d-4b99-b0aa-619cc7cce14d@kernel.org> <ZeBzzVL+fwawzVB6@t480>
+ <dea8ab3b33e331083ef740bb385bad314dc321db.1709200070.git.tanggeliang@kylinos.cn>
+ <fff83de1-97fc-4cd9-ad4c-7c785256bc2b@kernel.org> <ZeB2KFQQjouqrOu9@t480>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,64 +88,107 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ZeBzzVL+fwawzVB6@t480>
+In-Reply-To: <ZeB2KFQQjouqrOu9@t480>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
-
-On 29/02/2024 13:08, Geliang Tang wrote:
+On 29/02/2024 13:18, Geliang Tang wrote:
 > Hi Matt,
 > 
-> On Thu, Feb 29, 2024 at 12:31:21PM +0100, Matthieu Baerts wrote:
+> On Thu, Feb 29, 2024 at 12:23:54PM +0100, Matthieu Baerts wrote:
 >> Hi Geliang,
 >>
 >> On 29/02/2024 10:51, Geliang Tang wrote:
 >>> From: Geliang Tang <tanggeliang@kylinos.cn>
 >>>
->>> ipv4/ipv6 and v4/v6 are mixed in the output of mptcp_sockopt.sh, this patch
->>> unifies them as v4/v6.
+>>> This patch adds a new dedicated counter 'PORT' instead of TEST_COUNT to
+>>> increase port numbers in mptcp_connect.sh.
+>>>
+>>> This can avoid outputting discontinuous test counters.
 >>>
 >>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 >>> ---
->>>  tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 6 +++---
->>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 5 +++--
+>>>  1 file changed, 3 insertions(+), 2 deletions(-)
 >>>
->>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
->>> index 6ed4aa32222f..ae59136b5bb4 100755
->>> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
->>> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
->>> @@ -130,10 +130,10 @@ do_transfer()
->>>  	local local_addr ip
->>>  	if mptcp_lib_is_v6 "${connect_addr}"; then
->>>  		local_addr="::"
->>> -		ip=ipv6
->>> +		ip=v6
->>>  	else
->>>  		local_addr="0.0.0.0"
->>> -		ip=ipv4
->>> +		ip=v4
+>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>>> index 0ca2960c9099..4f40221a86cb 100755
+>>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+>>> @@ -33,6 +33,7 @@ do_tcp=0
+>>>  checksum=false
+>>>  filesize=0
+>>>  connect_per_transfer=1
+>>> +PORT=0
 >>
->> Mmh, this will change the test name (used in "mptcp_lib_result_*") and
->> this will break the tracking using the test name [1] while the test is
->> still doing the same thing.
+>> Sorry, I forgot to comment on the previous patch: I didn't get why you
+>> cannot use TEST_COUNT for the increment?
 >>
->> Maybe this patch is not worth it then, fine to see 'ipv6'. Or only
+>> So have here:
+>>
+>>   PORT=10000
+>>
+>> (Or 'PORT_BASE', or even 'port_base' like most "global" variables used
+>> in this file)
+>>
+>>>  if [ $tc_loss -eq 100 ];then
+>>>  	tc_loss=1%
+>>> @@ -314,7 +315,7 @@ do_transfer()
+>>>  	local extra_args="$7"
+>>>  
+>>>  	local port
+>>> -	port=$((10000+TEST_COUNT))
+>>> +	port=$((10000+PORT++))
+>>
+>> Here:
+>>
+>>   port=$((PORT + TEST_COUNT))
 > 
-> Do you mean drop this patch? I agree, let's drop it.
+> The first time here TEST_COUNT is 2, so all ports begin with 10002, not
+> 10000. The values of port are changed.
 
-Yes, I prefer not to modify the test name printed in the TAP format at
-the end. We can modify what is displayed before.
+This then?
 
-So OK to drop it, easier.
+   port=$((port_base + TEST_COUNT - 2))
 
->> display a different string in what is printed per test, what you were
->> doing in patch 5/9 from the v6, but I don't know where this patch is:
->> did you accidentally drop it?
+Or port_base=9998, but it looks strange.
+
 > 
-> 5/9 from the v6 is merged into "v7 7/8".
+> Thanks,
+> -Geliang
+> 
+>>
+>>>  	TEST_COUNT=$((TEST_COUNT+1))
+>>>  
+>>>  	if [ "$rcvbuf" -gt 0 ]; then
+>>> @@ -710,7 +711,7 @@ EOF
+>>>  
+>>>  	echo "INFO: test $msg"
+>>>  
+>>> -	TEST_COUNT=10000
+>>> +	PORT=10000
+>>
+>> And here:
+>>
+>>   PORT=20000
 
-Ah OK, I'm not there yet.
+Here you can also do something like this:
+
+  port_base=$((port_base + 10000 - TEST_COUNT))
+
+Up to you.
+
+>>
+>> So there is only one counter, not 2. Would that not work?
+>>
+>>>  	local extra_args="-o TRANSPARENT"
+>>>  	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
+>>>  		    ${connect_addr} ${local_addr} "${extra_args}"
+>>
+>> Cheers,
+>> Matt
+>> -- 
+>> Sponsored by the NGI0 Core fund.
 
 Cheers,
 Matt
