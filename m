@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE10365BA2
-	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 11:23:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089E564A9B
+	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 11:31:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709205837; cv=none; b=SCasrlcm6+eU5GcvZyt3NTa9F0zQ8/g01qGVUxT6z2L3dn39l5NMdxdGDTAUSFlIIDtmAKEOv+9y2sWoCtij/ZH3WxdCl4TMXO6tHI/AiB10GM3bGy0elPk2sEIBS9kA0gI7AKMBqXDfhcGpA580PVmiht+YHWwixee400i3kvk=
+	t=1709206284; cv=none; b=VUxCFf4SO/Pc0ReQG3nIt5oXFjqDrbaMeCD51ZbilqNQdwmsSVqM+kD7PiWP/aZ01nbha3ldSSod2wCMQuDkl4AYGGmJYqR6FbSHP49TXfofVTY7dT4MBxrFoHPU6YMj4Tl7OAyTuIJoBkjuW9BP2RlHM9gCIbbknKTYtybn5h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709205837; c=relaxed/simple;
-	bh=kt/gKDK556DmBJBK0Q84vGZ/HdxSmxh5uhaeyI1T2Ds=;
+	s=arc-20240116; t=1709206284; c=relaxed/simple;
+	bh=rVJRLgKNoWQ4MdZ5NDZKcTWrqWsBWhOy9BTPiDQSoqU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PyoPot3xxm8TxbmS127W/aveIe/hdOzO6GMZv16H6CkSLAXfbnN1kH5xMvWresY1mLGIq3RJf+Fd3EFIkhx/VNrcWu+O+8aW5C+TgSxA0Y7PR6/tg3f74MW4JLHnF4qNwfu7PvhgC+6q+x7bxkhzV24oT4K36qQNcRgWWYBIqYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upW6nIPs; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=cCsoPT3g6eCPAyeteSwzjgWbNTUvXDu6Tpzg8y27+hr/qNEHlTR+BkLbiiSgEK9Ege+B7IOkanCLRK+Lp2JY56a23LCZl5U+9+MRWwp79b+nkCUPEoDSaL2wT5YkU2tS1wTKxL3u8xpjR/v0vLL8AlKXLvdDCuNiSfwC/noyhS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R56gAI1Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upW6nIPs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8325AC433C7;
-	Thu, 29 Feb 2024 11:23:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R56gAI1Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C80D6C433F1;
+	Thu, 29 Feb 2024 11:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709205837;
-	bh=kt/gKDK556DmBJBK0Q84vGZ/HdxSmxh5uhaeyI1T2Ds=;
+	s=k20201202; t=1709206283;
+	bh=rVJRLgKNoWQ4MdZ5NDZKcTWrqWsBWhOy9BTPiDQSoqU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=upW6nIPs0xOdsaCQz0m+wfGUnOdrq5Mtv1JdnxfWWhIpbRWgkIYrvq8+or3kv0BbY
-	 IsiG6z2F8CO5brx7wm9QuoeaWkM9hLIrSS6/grhHc0OZegkxBcR4BE0j5okOwP60U/
-	 1ga229Ln62E6j2Dy61IvzvERGDCsqG7iYymgaHPiBtliDwUSP10uEdqmbAz5VIj23n
-	 uZK1NxE4DFjOG+T/KKqgjJzMtgVKRfl+wxg6O9Ciel225m5qljBpXfBKVKdoYqPtgu
-	 KAwSYEGs6j0wRZG6rtN7vWDq5YcA2RMJTgNdPsSuLMutvC9wIDKEcKytt8w6EOr7HP
-	 9DKGRK6uzo0ZQ==
-Message-ID: <fff83de1-97fc-4cd9-ad4c-7c785256bc2b@kernel.org>
-Date: Thu, 29 Feb 2024 12:23:54 +0100
+	b=R56gAI1Qpy+UywokRDe0RalSCJOa2ERl8X24fW3QQnv2ArEQt0O38fBSPJvza4U5B
+	 C2ugYUeVMH3ghQZE5VJ+dRv1p/iltInSy7+qAa8hXXQSeJKE0D+W2xkn/guCnruis5
+	 UYPUshj9QU2uC1D90s0KqlFjp44YGwq7tjQVCLeBg0jZtAbr40cUjcnSqmGdZjRa1A
+	 laedzc+IcF1ir9F8xRMBZhZ0d5wfFWiakY7GPNg3qo9G4BWYc2/rAy8i1iBAgVX+YD
+	 CRrPbE5PEKB0A4yQXq6yCt/owM7BgLfBqWL4+OMOrW6mujySkGVtVCKGmx6iVZan0E
+	 o3Kj5G35kiOjA==
+Message-ID: <e8ffd789-f03d-4b99-b0aa-619cc7cce14d@kernel.org>
+Date: Thu, 29 Feb 2024 12:31:21 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v7 2/8] selftests: mptcp: connect: add
- dedicated port counter
+Subject: Re: [PATCH mptcp-next v7 5/8] selftests: mptcp: sockopt: unify
+ ipv4/ipv6 as v4/v6
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709200070.git.tanggeliang@kylinos.cn>
- <dea8ab3b33e331083ef740bb385bad314dc321db.1709200070.git.tanggeliang@kylinos.cn>
+ <80749c1dfc741ca14090559c5a2364b253c03a5a.1709200070.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <dea8ab3b33e331083ef740bb385bad314dc321db.1709200070.git.tanggeliang@kylinos.cn>
+In-Reply-To: <80749c1dfc741ca14090559c5a2364b253c03a5a.1709200070.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,68 +96,41 @@ Hi Geliang,
 On 29/02/2024 10:51, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a new dedicated counter 'PORT' instead of TEST_COUNT to
-> increase port numbers in mptcp_connect.sh.
-> 
-> This can avoid outputting discontinuous test counters.
+> ipv4/ipv6 and v4/v6 are mixed in the output of mptcp_sockopt.sh, this patch
+> unifies them as v4/v6.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> index 0ca2960c9099..4f40221a86cb 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -33,6 +33,7 @@ do_tcp=0
->  checksum=false
->  filesize=0
->  connect_per_transfer=1
-> +PORT=0
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> index 6ed4aa32222f..ae59136b5bb4 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> @@ -130,10 +130,10 @@ do_transfer()
+>  	local local_addr ip
+>  	if mptcp_lib_is_v6 "${connect_addr}"; then
+>  		local_addr="::"
+> -		ip=ipv6
+> +		ip=v6
+>  	else
+>  		local_addr="0.0.0.0"
+> -		ip=ipv4
+> +		ip=v4
 
-Sorry, I forgot to comment on the previous patch: I didn't get why you
-cannot use TEST_COUNT for the increment?
+Mmh, this will change the test name (used in "mptcp_lib_result_*") and
+this will break the tracking using the test name [1] while the test is
+still doing the same thing.
 
-So have here:
+Maybe this patch is not worth it then, fine to see 'ipv6'. Or only
+display a different string in what is printed per test, what you were
+doing in patch 5/9 from the v6, but I don't know where this patch is:
+did you accidentally drop it?
 
-  PORT=10000
-
-(Or 'PORT_BASE', or even 'port_base' like most "global" variables used
-in this file)
-
->  if [ $tc_loss -eq 100 ];then
->  	tc_loss=1%
-> @@ -314,7 +315,7 @@ do_transfer()
->  	local extra_args="$7"
->  
->  	local port
-> -	port=$((10000+TEST_COUNT))
-> +	port=$((10000+PORT++))
-
-Here:
-
-  port=$((PORT + TEST_COUNT))
-
->  	TEST_COUNT=$((TEST_COUNT+1))
->  
->  	if [ "$rcvbuf" -gt 0 ]; then
-> @@ -710,7 +711,7 @@ EOF
->  
->  	echo "INFO: test $msg"
->  
-> -	TEST_COUNT=10000
-> +	PORT=10000
-
-And here:
-
-  PORT=20000
-
-So there is only one counter, not 2. Would that not work?
-
->  	local extra_args="-o TRANSPARENT"
->  	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
->  		    ${connect_addr} ${local_addr} "${extra_args}"
+[1] e.g.
+https://netdev.bots.linux.dev/flakes.html?br-cnt=88&tn-needle=mptcp or
+on LKFT or our CI
 
 Cheers,
 Matt
