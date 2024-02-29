@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314C26089C
-	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 09:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1838262154
+	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 09:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709200284; cv=none; b=MGwXuSWVkngQ51BGjssWAdjJb++Lc03zvKp7UiwREHNH5pFd9nPimgfXgI0zN4+Kv6dwJWrFy28JjVDHBd1VBJmeDtZRQ4Wscd0dCQEXDx1cJG7l43SEafiXZXN0W4gsZl/79NI58+Pe0a1AcGCwgeLaSc2d1VMkJ7QGZw4jqhk=
+	t=1709200286; cv=none; b=kodjSAD4S3PWAwccaL7vlZYnyeOiYpga2s86bblbpDdWp9lHOqdGrZYKlGFV374c5dE4PEWmZW6iUyxZuPwaC99oisesfZEPieAHsQ5Dz2H5QRHav5rFzmjVh4Ejk66oEtqXLhuCcmgy7jGdyMBFw0k2LzNM5l6f3j672rrbNzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709200284; c=relaxed/simple;
-	bh=vfYKTCtOtdP9a8Xnju6WY2Da+kYlcxBhYFQH4BcpNuo=;
+	s=arc-20240116; t=1709200286; c=relaxed/simple;
+	bh=mprnrej/0gLC63Pqw5hE0AB99UEFRq5m2fhCyfBqo8U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FatcIEqw++2vv21HwHQf3Cc4B0CAkR9xWTmX/Fq5qa2AIQMeJEx1DxSVaOXztMBiemgjN8o2JnNqBOBioAEK4KM5ATQ/9nrVjPfCbWznFjfPGEM9K/8qHvOHoPJML5HInSiEiY8us7VAUMK2cfymk/SrnzOLCzXpb+Ydf8qH21k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0JAXJ97; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=q/IP0At8HKUtremeVGaDjgoCF8OZrHlZoH609fyfAUGdciYSkKNfe+3bWlydxLLicRi55NAieTZpf9b5clIxZOLLCg99OohsoHgayNlvvLacjaO9t+5jyYB1MgfNeZ5vFBYX7L1gkgXEo4XP9GQAKLwBRHjiNDv//wFdJtZV6xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9P4yLIJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0JAXJ97"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3B4DC433F1;
-	Thu, 29 Feb 2024 09:51:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9P4yLIJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E856C433C7;
+	Thu, 29 Feb 2024 09:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709200284;
-	bh=vfYKTCtOtdP9a8Xnju6WY2Da+kYlcxBhYFQH4BcpNuo=;
+	s=k20201202; t=1709200286;
+	bh=mprnrej/0gLC63Pqw5hE0AB99UEFRq5m2fhCyfBqo8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n0JAXJ97uIPAdbjJ0RCBpPl4n4BQakM3cujk2TVLqsDcmeLqNSYPfZuhwalhd75dp
-	 9/6Zv36BJ+Tq3+UmrZxbbRG7Bk/kYcPep5t8CzypGLLcH16gF/aQxSxxtEMC+Hz5D9
-	 wIrUQpSsBaX5Dhgrx1XdIlFpzkMW0RCQGCjqgx7XAjye1x1oPlVyBpGyGRQ0wNPnZG
-	 /z1elpEKpDlh8ptb39HQojmaG2hKO1M/JUj2yjAwjKpttsk6lAUkvqRa29gOd+nAeI
-	 eK3aijfukcUXoQ4wrm9uNooDf6Hyi/JMeP9nK4q7tkB7a1wXQleAaSSEbYeq0kk+6h
-	 bwz7GmGi5E7Eg==
+	b=a9P4yLIJUO5ls6mGwV0k/KFwQ/OXtOfKqUtVOn1vR1t3cVyT7pzmWl4tTHp6XJNmm
+	 qxNcWT2cxudOYZ/JiF9JOm1l5T0ENy22FW3a9czi/Mtr6MTfRGAuYgn1M7XwScsiIf
+	 D/Y5UDwHN/TGexmkLLTmrNZaZgF8PxUV9xnynaStN0UUvAho4uFm5z1SasmA4NjAyn
+	 QSimojK9C9lh3bYFDmX+iCZI7Cad9ro2EqPk784tMo+fyokt2Nwiv9zW2MQz6cKNCd
+	 zFYbkWIGCRaVHF/VXlAATVPJnwhdLHyzmrn3p1B7aCdwmSd/HYrRCK1mtvXI/bKK9D
+	 vtAvXFmf4BpMA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v7 3/8] selftests: mptcp: connect: fix misaligned output
-Date: Thu, 29 Feb 2024 17:51:06 +0800
-Message-Id: <7dbd446f210d2d66896275da66567bfd113ee2af.1709200070.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v7 4/8] selftests: mptcp: simult_flows: fix misaligned output
+Date: Thu, 29 Feb 2024 17:51:07 +0800
+Message-Id: <c5534d2e878f0d776e0f46a28ba6703e0a05abd9.1709200070.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1709200070.git.tanggeliang@kylinos.cn>
 References: <cover.1709200070.git.tanggeliang@kylinos.cn>
@@ -45,65 +45,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The first [ OK ] in the output of mptcp_connect.sh misaligns with the
-others:
+The last line in the output of simult_flows.sh misaligns with the other
+lines, and all lines are over maximum 75 chars per line.
 
-New MPTCP socket can be blocked via sysctl              [ OK ]
-INFO: validating network environment with pings
-INFO: Using loss of 0.85% delay 16 ms reorder 95% 70% with delay 4ms on
-ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP   (duration   184ms) [ OK ]
-ns1 MPTCP -> ns1 (10.0.1.1:10001      ) TCP     (duration    50ms) [ OK ]
-ns1 TCP   -> ns1 (10.0.1.1:10002      ) MPTCP   (duration    55ms) [ OK ]
+This patch aligns them by using the newly added print_title() helper,
+and truncate them within 75 chars per line to allow it to be displayed
+normally in regular terminals without breaking lines.
 
-This patch aligns them by using 69 chars to display the first two lines,
-and 50 chars for the other. Since 19 chars are used to display duration
-time. Also print out a [ OK ] at the end of the 2nd line for consistency.
+The new output looks like this:
+
+balanced bwidth                                        7395 max 7906 [ OK ]
+balanced bwidth - reverse direction                    7484 max 7906 [ OK ]
+balanced bwidth with unbalanced delay                  7394 max 7906 [ OK ]
+balanced bwidth with unbalanced delay - reverse direct 7399 max 7906 [ OK ]
+unbalanced bwidth                                      7692 max 7906 [ OK ]
+unbalanced bwidth - reverse direction                  7614 max 7906 [ OK ]
+unbalanced bwidth with unbalanced delay                7425 max 7906 [ OK ]
+unbalanced bwidth with unbalanced delay - reverse dire 7473 max 7906 [ OK ]
+unbalanced bwidth with opposed, unbalanced delay       7639 max 7906 [ OK ]
+unbalanced bwidth with opposed, unbalanced delay - rev 7611 max 7906 [ OK ]
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/mptcp/simult_flows.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 4f40221a86cb..77b0b9d5aca0 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -274,7 +274,8 @@ check_mptcp_disabled()
- 		return 1
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index 467feb17e07b..d5f8521b88d5 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -184,7 +184,7 @@ do_transfer()
+ 	cmp $cin $sout > /dev/null 2>&1
+ 	local cmpc=$?
+ 
+-	printf "%-16s" " max $max_time "
++	printf "%-10s" " max $max_time "
+ 	if [ $retc -eq 0 ] && [ $rets -eq 0 ] && \
+ 	   [ $cmpc -eq 0 ] && [ $cmps -eq 0 ]; then
+ 		echo "[ OK ]"
+@@ -249,7 +249,7 @@ run_test()
  	fi
  
--	echo -e "New MPTCP socket can be blocked via sysctl\t\t[ OK ]"
-+	printf "%-69s" "New MPTCP socket can be blocked via sysctl"
-+	echo "[ OK ]"
- 	mptcp_lib_result_pass "New MPTCP socket can be blocked via sysctl"
- 	return 0
- }
-@@ -343,7 +344,7 @@ do_transfer()
- 	addr_port=$(printf "%s:%d" ${connect_addr} ${port})
- 	local result_msg
- 	result_msg="$(printf "%.3s %-5s -> %.3s (%-20s) %-5s" ${connector_ns} ${cl_proto} ${listener_ns} ${addr_port} ${srv_proto})"
--	printf "%s\t" "${result_msg}"
-+	printf "%-50s" "${result_msg}"
- 
- 	if $capture; then
- 		local capuser
-@@ -836,7 +837,7 @@ check_mptcp_disabled
- 
- stop_if_error "The kernel configuration is not valid for MPTCP"
- 
--echo "INFO: validating network environment with pings"
-+printf "%-69s" "Validating network environment with pings"
- for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
- 	do_ping "$ns1" $sender 10.0.1.1
- 	do_ping "$ns1" $sender dead:beef:1::1
-@@ -858,6 +859,7 @@ done
- mptcp_lib_result_code "${ret}" "ping tests"
- 
- stop_if_error "Could not even run ping tests"
-+echo "[ OK ]"
- 
- [ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay ${tc_delay}ms
- echo -n "INFO: Using loss of $tc_loss "
+ 	msg+=" - reverse direction"
+-	printf "%-60s" "${msg}"
++	printf "%-60s" "$(echo -n ${msg} | cut -c1-54)"
+ 	do_transfer $large $small $time
+ 	lret=$?
+ 	mptcp_lib_result_code "${lret}" "${msg}"
 -- 
 2.40.1
 
