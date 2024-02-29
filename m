@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DA47D410
-	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 13:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073411361D8
+	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 14:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709211900; cv=none; b=NGnY5zde62VdQx0XV8uvrO8P0qTF/KhE8nGueA5KGlw5eB57wYX33Qrz0vOplb9wwQrWjXqz1vHaxYinGMCleUGoT0+br74Dp8ZSj4UC8Lwbo/V5TU5f3nUc7oV9ltORXS2WBcqZXCa3mBlalmlAmjZfBuVuKXFQcQVeWFVT4GQ=
+	t=1709217323; cv=none; b=c/Qfp2PCobWSiFLjKM+vMI3lbUAwUzs3MMHxUDXLLt0RbQCE/Bwq9xDDwKity+/1jMsgHES9/vJEFW4LdoVYs71T04WMPs+eAnTdc1n+2sa4B0q155jpkPy6iD/vtS5ds83saEe/sGbfZmlydzOfxHpLNbcQe7LbiRXd2bALcto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709211900; c=relaxed/simple;
-	bh=3DGPZk6EmxZPnTkHQhGpmkjkQdOV7xrBBRxhNkBbFys=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qEcjYi0AmsYim/1jvhhJbwR8/f3mvven3ru2uBGqz+vsaovC9+WEEQBEdfLexBAdvlf/Qgpsxq4Xqq/7DBPPXt0bMiG9rH08Yst4/z4mL1I2NONzViWXAxRordo+iC5APGlo2i3DWJ4QiMkZzFqBYWNVoUUFDLLpXS+2JbrTErI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoZB9EfX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709217323; c=relaxed/simple;
+	bh=UTUgXLK+2eT1KEERqx7BNIvgyY9TIL3vkMhHmPLbyxI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IcKj9UJF8wRF/hiY8P0iPW0CIf06c/YJ/qeBiMDX0mTEhQj+ckHqDW59Vjdx7ePkr2CUz5Blf+d5e5f+k8WfsKL4S7KY8fWjQ/8h5qWY/60WjMSiYfVRvSRRWIKmDMWjAm/mUus7sYPof7U8HqGW7NmlI2c6ruMpOUp6yOjNAa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZm7oyzW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoZB9EfX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 461BFC433F1;
-	Thu, 29 Feb 2024 13:04:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZm7oyzW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C1E6C433C7;
+	Thu, 29 Feb 2024 14:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709211900;
-	bh=3DGPZk6EmxZPnTkHQhGpmkjkQdOV7xrBBRxhNkBbFys=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OoZB9EfXME4tGmkBXsQILrCIEa2xuIVTy/JEbue/JA3OUYExOjBEpkb9T1IoLi4ro
-	 +AOqiQU9+aBqt9Z2ts50TtuNLkiCZ6V4HeRETOFEl0L/PFrjdN9YAwrWfKAOhYJBU2
-	 Dxr6aMG0wgLOfMtXpbY+fPkfCn8AkHOkjJWYu3upyVTFzteuSFOc3VFKE7QF1CZ2GI
-	 8h+CpSlZnDS/hIVC2SzNXgC9ZZzbUY6W94te7QFSIQ+5yiHeffjJBiTWTqPQ1u4Hv+
-	 CRTkfQ8x+TlqKtFAJfbvz7JQ3UD8pAjiWfM1jff748eJWfDnywvmnyZRrOeNWnFKsb
-	 wT6KbbHGC8nXw==
-Message-ID: <409065cf-bab0-413b-8533-0b80b28862d4@kernel.org>
-Date: Thu, 29 Feb 2024 14:04:57 +0100
+	s=k20201202; t=1709217322;
+	bh=UTUgXLK+2eT1KEERqx7BNIvgyY9TIL3vkMhHmPLbyxI=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=EZm7oyzWABG68FgvugLrBibUKBfy17GqvLMqoYNpCxSdXyQVAf5Qe/DxbA8gMJRCP
+	 02ajcbFNqQyod6HHBNIjLgNqS5QIhi5/EZTZ82dYdPATBT+bfwArc6rhdMxTIAxIV2
+	 ZridUgRxuzrLd1CQhgJseyTSRqdwugC33ps3xqjQdENnCekHa5tltYoBO6aXInBX9Q
+	 5RvPwlZs6oQKXRR85CccUp1RtReSxneCKbtJwF/weoKNgI2CPpZsfjCQqpa2MOWRe7
+	 vK9bxRRMOl14b6duj19Mdh/ynB+C7XOroqO9CF3AsPbkizOm7Un5OBBXtXD0+vZHIx
+	 vOyO3RuXxhz9w==
+Message-ID: <45ece380-2edb-486b-872b-6f8681748a39@kernel.org>
+Date: Thu, 29 Feb 2024 15:35:20 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v7 8/8] selftests: mptcp: print test results
- with colors
+Subject: Re: [PATCH mptcp-next v7 4/8] selftests: mptcp: simult_flows: fix
+ misaligned output
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1709200070.git.tanggeliang@kylinos.cn>
- <81fd6204fc60dd90a4410b3435ab4552402b71c0.1709200070.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <cover.1709200070.git.tanggeliang@kylinos.cn>
+ <c5534d2e878f0d776e0f46a28ba6703e0a05abd9.1709200070.git.tanggeliang@kylinos.cn>
+ <ZeBXcFdtho6hZUZV@t480> <efe9694c-8792-4fba-a90f-44477e6909f9@kernel.org>
+ <ZeByMRcqfKz1s43B@t480> <f30e91dd-efd9-4359-9fda-417214348e60@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,203 +89,96 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <81fd6204fc60dd90a4410b3435ab4552402b71c0.1709200070.git.tanggeliang@kylinos.cn>
+In-Reply-To: <f30e91dd-efd9-4359-9fda-417214348e60@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 29/02/2024 10:51, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
+
+On 29/02/2024 13:18, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> To unify the output formats of all test scripts, this patch adds
-> four more helpers:
+> On 29/02/2024 13:01, Geliang Tang wrote:
+>> Hi Matt,
+>>
+>> On Thu, Feb 29, 2024 at 11:27:29AM +0100, Matthieu Baerts wrote:
+>>> Hi Geliang,
+>>>
+>>> On 29/02/2024 11:07, Geliang Tang wrote:
+>>>> On Thu, Feb 29, 2024 at 05:51:07PM +0800, Geliang Tang wrote:
+>>>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>>
+>>>>> The last line in the output of simult_flows.sh misaligns with the other
+>>>>> lines, and all lines are over maximum 75 chars per line.
+>>>>>
+>>>>> This patch aligns them by using the newly added print_title() helper,
+>>>>> and truncate them within 75 chars per line to allow it to be displayed
+>>>>> normally in regular terminals without breaking lines.
+>>>>
+>>>> This part of commit log needs to be updated:
+>>>>
+>>>>     This patch aligns them by reducing the number of spaces before [ OK ] to
+>>>>     1, and truncate them within 75 chars per line to allow it to be displayed
+>>>>     normally in regular terminals without breaking lines.
+>>>>
+>>>> Thanks,
+>>>> -Geliang
+>>>
+>>> I don't know if the 2nd part of my previous comment was clear:
+>>>
+>>>> But also, why not having a wider output instead? Why the 75 chars limit?
+>>
+>> "... to allow it to be displayed normally in regular terminals (80 chars)
+>> without breaking lines." 2 chars is reserved for "# " added at the beginning
+>> of each line when running tests in virtme-docker. So I chose 75 chars.
 > 
-> 	mptcp_lib_pr_ok()
-> 	mptcp_lib_pr_skip()
-> 	mptcp_lib_pr_fail()
-> 	mptcp_lib_pr_info()
+> Ah OK, I didn't get that "regular terminals are 80 chars wide". To be
+> honest, I don't know if this is still true. I mean: I never use a
+> terminal that is only 80 chars wide, at least 100/120. That's why I was
+> suggesting to show the full info, instead of trunking it.
+
+Out of curiosity: when you launch the tests, do you use a terminal of
+that size?
+
+>>>> I mean: yes, the test names should not be too long. But here, probably
+>>>> too late to change, only modify (increase) the value in print_title(), no?
+>>
+>> I thinks it's not too late, it's the right time to change this, since
+>> printing title with test counter increases 3 chars for each line,
+>> becoming much longer. It makes sense to reduce it this time.
 > 
-> to print out [ OK ], [SKIP], [FAIL] and 'INFO: ' with colors. Use them
-> in all scripts to print the "ok/skip/fail/info' using the same 'format'.
+> But are we not loosing info? e.g. the last one is already:
 > 
-> Having colors helps to quickly identify issues when looking at a long
-> list of output logs and results.
+>   "unbalanced bwidth with opposed, unbalanced delay - rev"
 > 
-> Note that the mptcp_join.sh tests will now print these keywords with
-> capital letters, like most of the other tests.
+> If you remove the last 3 chars for the counter, we don't know the
+> difference with the previous test.
+> 
+>>> Why having this limit of 75 char? In other words, why not printing a
+>>> larger title, e.g. 90 chars or more if needed?
+>>>
+>>>   print_title() {
+>>>       printf "%-90s" "${1}"
+>>>   }
+>>
+>> And the lines is too long already, so it makes sense to reduce it, not
+>> increase it, right?
+>>
+>> I thinks another option is too keep the length unchanged, not reducing
+>> it, nor increasing it too.
+> 
+> Yes, maybe better, not to "lose" bits. So increasing the title to be
+> able to align on the last one, and reducing the "${maxtime}" to save a
+> bit of space?
 
-I think it is not just mptcp_join.sh that was using different keywords.
+If it helps to align stuff or to simplify the code, we could also print
+the time after the [ OK ] / [FAIL]:
 
-  Note that now all print the same keywords, which was not the case
-  before, but it is good to uniform that.
-
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> index 096ff8941c5b..70acbb19f568 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-
-(...)
-
-> @@ -534,7 +534,6 @@ do_transfer()
->  			"${expect_ackrx}" "${stat_ackrx_now_l}"
->  	fi
->  
-> -	echo
-
-Just to be sure: do we still have something good in case of error?
-
-I mean: why were we not printing a new line before? Maybe there was no
-reason, or maybe sometimes we print more details? (syn cookies?)
-
-Maybe that's fine with the new output, it is just to know if you checked
-that.
-
->  	cat "$capout"
->  	[ $retc -eq 0 ] && [ $rets -eq 0 ]
->  }
-
-(...)
-
-> @@ -810,7 +809,7 @@ log_if_error()
->  	local msg="$1"
->  
->  	if [ ${ret} -ne 0 ]; then
-> -		echo "FAIL: ${msg}" 1>&2
-> +		mptcp_lib_pr_fail "${msg}"
-
-Good to mention in the commit message that all errors messages are
-printed to 'stdout' now, as part of the uniformation. (or do that in an
-dedicated commit)
-
->  
->  		final_ret=${ret}
->  		ret=0
-> @@ -858,11 +857,11 @@ done
->  mptcp_lib_result_code "${ret}" "ping tests"
->  
->  stop_if_error "Could not even run ping tests"
-> -echo "[ OK ]"
-> +mptcp_lib_pr_ok
->  MPTCP_LIB_TEST_FORMAT="%02u %-50s"
->  
->  [ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay ${tc_delay}ms
-> -echo -n "INFO: Using loss of $tc_loss "
-
-Here, it was using 'echo -n' ...
-
-> +mptcp_lib_pr_info "Using loss of $tc_loss "
-
-Now a new line will be printed at the end (with a trailing whitespace)
-
->  test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
-
-And this will be printed in a new line, it will look strange I think
-
-Maybe use a variable to store all the info?
-
-  tc_info="loss of $tc_loss "
-  test "$tc_delay" -gt 0 && tc_info+="delay $tc_delay ms "
+  balanced bwidth                     [ OK ] 7402 max 7906
+  balanced bwidth - reverse direction [ OK ] 7402 max 7906
   (...)
-  mptcp_lib_pr_info "Using ${tc_info}"
 
->  
->  reorder_delay=$((tc_delay / 4))
-
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index 358d5b77fc0f..53867f9d212d 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -48,6 +48,23 @@ mptcp_lib_print_err() {
->  	mptcp_lib_print_color "${MPTCP_LIB_COLOR_RED}${*}"
->  }
->  
-> +#shellcheck disable=SC2120
-
-Add a space after '#' and add a comment justifying the exception, like
-the one I shared in patch 1/9 from v6:
-
-  # shellcheck disable=SC2120  # parameters are optional
-
-Out of curiosity, we don't need this for 'skip' and 'fail'?
-
-> +mptcp_lib_pr_ok() {
-> +	mptcp_lib_print_ok "[ OK ]${1:+ ${*}}"
-> +}
-> +
-> +mptcp_lib_pr_skip() {
-> +	mptcp_lib_print_warn "[SKIP]${1:+ ${*}}"
-> +}
-> +
-> +mptcp_lib_pr_fail() {
-> +	mptcp_lib_print_err "[FAIL]${1:+ ${*}}"
-> +}
-> +
-> +mptcp_lib_pr_info() {
-> +	mptcp_lib_print_info "INFO: ${*}"
-> +}
-> +
->  # SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var can be set when validating all
->  # features using the last version of the kernel and the selftests to make sure
->  # a test is not being skipped by mistake.
-
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> index a797e13d3fe7..d695561fbf46 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-
-(...)
-
-> @@ -217,7 +218,7 @@ do_mptcp_sockopt_tests()
->  	local lret=0
->  
->  	if ! mptcp_lib_kallsyms_has "mptcp_diag_fill_info$"; then
-> -		echo "INFO: MPTCP sockopt not supported: SKIP"
-> +		mptcp_lib_pr_skip "MPTCP sockopt not supported"
->  		mptcp_lib_result_skip "sockopt"
->  		return
->  	fi
-> @@ -227,12 +228,12 @@ do_mptcp_sockopt_tests()
->  
->  	mptcp_lib_print_title "SOL_MPTCP sockopt v4"
->  	if [ $lret -ne 0 ]; then
-> -		echo "FAIL: SOL_MPTCP getsockopt" 1>&2
-> +		mptcp_lib_pr_fail "SOL_MPTCP getsockopt"
-
-No need to repeat what is already in the title. (I didn't check them
-all, but I guess some other subtests here repeat stuff already in the
-title, e.g. the same for v6)
-
->  		mptcp_lib_result_fail "sockopt v4"
->  		ret=$lret
->  		return
->  	fi
-> -	echo "[ OK ]"
-> +	mptcp_lib_pr_ok
->  	mptcp_lib_result_pass "sockopt v4"
->  
->  	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
-
-(...)
-
-> @@ -288,7 +289,7 @@ do_tcpinq_tests()
->  	local lret=0
->  
->  	if ! mptcp_lib_kallsyms_has "mptcp_ioctl$"; then
-> -		echo "INFO: TCP_INQ not supported: SKIP"
-> +		mptcp_lib_pr_skip "INFO: TCP_INQ not supported"
-
-You can remove 'INFO: ' I  suppose.
-
->  		mptcp_lib_result_skip "TCP_INQ"
->  		return
->  	fi
-
-(...)
+Up to you, just an idea.
 
 Cheers,
 Matt
