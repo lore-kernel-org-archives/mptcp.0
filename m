@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433437CF30
-	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 12:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB62739FD1
+	for <mptcp@lists.linux.dev>; Thu, 29 Feb 2024 12:28:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709209380; cv=none; b=WBkkvaPlL8DZ/KxGM1Vlo2+8wqf/MO4LZjOSBP0Xu1q7wwzLAMWdd41JWbdgTkMtPaQRaPAeEZga1ZuocXUSYgBte2oUE3wE0G0kja6IXWliTCdd7lTCdpR+uZO8XcioIEolTnpvhMbZi4x3GSJS0PL9Yt3OOB09OFEK+ec229s=
+	t=1709209721; cv=none; b=MbNNAJ2jBdLxr7WJOBepZ2HRQymGNt1u96IJurvQSnE8swtspiOPCfRL//zxsvZ75XXQDLSjjmuCtf4tJPfKbCPy/B7+Lq6y9CDngomNugTQCc7HuUo8O3sAy3oey0r9v6bS2GDjHqtzuF421cQ2cuybjTFlZAwea/jrE//y85g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709209380; c=relaxed/simple;
-	bh=CiPry8EzVY2a8Yda6ZroxNbvqG9SySibU7XM3Zp0hEc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m1XFxyDhjYxKDnMwzkCu8QFsRvhp+gSYWaMUaG3tr/WYS06YKPtpzHRNehwW+P3VxsveWZNU1dJkkCdqbdCaXUe1tVBO0uuvVspZKg5xudflOW5znbuwjIZCqXMD3senxvogiW2TIqq1/8D7cJmKBWhU1OBmNKNasaSRIOxB9xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=luiOD1jr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709209721; c=relaxed/simple;
+	bh=c9xTy4Y4iu6U4EPX1vxeaO/SRjrxoVB5w+S6B6hVU2s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KSxlzydX60cSG+ngnMCGCKEmHitLWLNtSeWv3wM8GQhfMfXIxW5ATyCQVseoVLfDM42U7VP0A77fUMSF9fdt9B09Uhonu4usOhm4gCMGrT3vMUCH0+e9xy8SNjFIaonjeTc1zMGjM+2VMykiqZLJqc/YiR4ryuQKpp88wNmL734=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EFdh3qu1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="luiOD1jr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47854C433F1;
-	Thu, 29 Feb 2024 12:22:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EFdh3qu1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B47EEC433C7;
+	Thu, 29 Feb 2024 12:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709209379;
-	bh=CiPry8EzVY2a8Yda6ZroxNbvqG9SySibU7XM3Zp0hEc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=luiOD1jrJnP9TFEE6HMGI37fD4uuaGzgIBTYMat6dew1zlJJ07xtPPHct0Rmw9l1t
-	 c5pfcoJvf9NKzOWqGpXpxGLERLXuMd/L5PNQUtoWLUCBTGKQv+SBnySxR8mkXMBBdn
-	 Oscp3BGy/VgXJu35I8pZFy7ZsG0YgCsgqStQwEdXenliNYUCR0rhh3eFg4GKcesROl
-	 7hY+w1Px3nCgMWEHXMxtkyHPXi/6bqSyz3smPi0U7D8y1hp60badhiK0hvgIL4pSkN
-	 vYl7/DeyLcXBIpooFF8REnPbQSvHsjHK2XjkSJ+ql45GaseLtmTI6T4OdMuN9d2CRe
-	 CSVSZ/o72vJ2g==
-Message-ID: <ac16a5a7-9eb1-4670-b466-4b5a43ee5455@kernel.org>
-Date: Thu, 29 Feb 2024 13:22:57 +0100
+	s=k20201202; t=1709209720;
+	bh=c9xTy4Y4iu6U4EPX1vxeaO/SRjrxoVB5w+S6B6hVU2s=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=EFdh3qu1qqneCJozmXnNVOXiSJVqBe7yEXH98RW7XZT2g/nskNLqDHoaovhVDd1V4
+	 Lv4OYU4KruFbW+6Q67y6FqEhChG4KcyKKJrwUHR2sXm34rMbDvruDdcBxoNBQERYNM
+	 oybTqKQWCak5Gdfi1ysaEKUsnDK4fnq9WAM1C9X5UyjVZXfzjAfdcAzj0+8f6ZkVi2
+	 u4u2XKtjlEvEt31QPLLrA874LOXBBvAfE6/smEzEltTH+dIFMv11QuepshkqZ1NJgW
+	 KuQxs1MEnCBTeCrM/ByuBKMTyK2HDUwG8VqgHir6eYdpeJbhpVEfEmcItP8bhQ6AOf
+	 C3XMD44gktCFw==
+Message-ID: <4930a445-3a30-4272-aa26-4dbff29b0c15@kernel.org>
+Date: Thu, 29 Feb 2024 13:28:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v7 2/8] selftests: mptcp: connect: add
- dedicated port counter
+Subject: Re: [PATCH mptcp-next v7 6/8] selftests: mptcp: add test counter
+ helpers
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <cover.1709200070.git.tanggeliang@kylinos.cn>
- <dea8ab3b33e331083ef740bb385bad314dc321db.1709200070.git.tanggeliang@kylinos.cn>
- <fff83de1-97fc-4cd9-ad4c-7c785256bc2b@kernel.org> <ZeB2KFQQjouqrOu9@t480>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1709200070.git.tanggeliang@kylinos.cn>
+ <9a31a17605edb4546467a172d8619eff3f15a002.1709200070.git.tanggeliang@kylinos.cn>
+ <fea0084f-665b-4ea2-96cd-f9c025c02a28@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,107 +88,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ZeB2KFQQjouqrOu9@t480>
+In-Reply-To: <fea0084f-665b-4ea2-96cd-f9c025c02a28@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 29/02/2024 13:18, Geliang Tang wrote:
-> Hi Matt,
+On 29/02/2024 12:58, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> On Thu, Feb 29, 2024 at 12:23:54PM +0100, Matthieu Baerts wrote:
->> Hi Geliang,
+> On 29/02/2024 10:51, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
 >>
->> On 29/02/2024 10:51, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> This patch adds a new dedicated counter 'PORT' instead of TEST_COUNT to
->>> increase port numbers in mptcp_connect.sh.
->>>
->>> This can avoid outputting discontinuous test counters.
->>>
->>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->>> ---
->>>  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 5 +++--
->>>  1 file changed, 3 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->>> index 0ca2960c9099..4f40221a86cb 100755
->>> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->>> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
->>> @@ -33,6 +33,7 @@ do_tcp=0
->>>  checksum=false
->>>  filesize=0
->>>  connect_per_transfer=1
->>> +PORT=0
->>
->> Sorry, I forgot to comment on the previous patch: I didn't get why you
->> cannot use TEST_COUNT for the increment?
->>
->> So have here:
->>
->>   PORT=10000
->>
->> (Or 'PORT_BASE', or even 'port_base' like most "global" variables used
->> in this file)
->>
->>>  if [ $tc_loss -eq 100 ];then
->>>  	tc_loss=1%
->>> @@ -314,7 +315,7 @@ do_transfer()
->>>  	local extra_args="$7"
->>>  
->>>  	local port
->>> -	port=$((10000+TEST_COUNT))
->>> +	port=$((10000+PORT++))
->>
->> Here:
->>
->>   port=$((PORT + TEST_COUNT))
+>> This patch adds two vars in mptcp_lib.sh, MPTCP_LIB_TEST_COUNTER for
+>> the test counter and MPTCP_LIB_TEST_FORMAT for the test print format.
+>> Also add two helpers, mptcp_lib_inc_test_counter(), increase the test
+>> counter, and mptcp_lib_pr_title_counter(), print the test title with
+>> counter. They are used in mptcp_join.sh first.
 > 
-> The first time here TEST_COUNT is 2, so all ports begin with 10002, not
-> 10000. The values of port are changed.
+> Please add the reason, something like: Each MPTCP selftest is having
+> subtests, and it helps to give them a number to quickly identify them.
+> This can be managed by mptcp_lib.sh, reusing what has been done here.
+> The following commit will use these new helpers in the other tests.
+> 
+>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>> ---
 
-This then?
+(...)
 
-   port=$((port_base + TEST_COUNT - 2))
+>> +mptcp_lib_pr_title_counter() {
+>> +	: "${MPTCP_LIB_TEST_COUNTER:?}"
+>> +	: "${MPTCP_LIB_TEST_FORMAT:="%02u %-50s"}"
+>> +
+>> +	printf "${MPTCP_LIB_TEST_FORMAT}" "${MPTCP_LIB_TEST_COUNTER}" "${*}"
+> 
+> I didn't check: can you not print the title and increment the counter
+> (via mptcp_lib_inc_test_counter) from here? I think that would be a good
+> practice to do that instead of having to deal with the counter in
+> different places.
+> 
+> We would only call "mptcp_lib_inc_test_counter()" from other scripts
+> when a test is skipped.
 
-Or port_base=9998, but it looks strange.
+OK, I just saw you added mptcp_lib_print_title() in the next patch. Why
+did you not use it for mptcp_join.sh?
+
+Can you not call "mptcp_lib_inc_test_counter" in the "if skip_test" from
+mptcp_join.sh and use mptcp_lib_print_title()? (if you do that, I guess
+we don't need mptcp_lib_pr_title_counter(), no?)
 
 > 
-> Thanks,
-> -Geliang
+>> +}
 > 
->>
->>>  	TEST_COUNT=$((TEST_COUNT+1))
->>>  
->>>  	if [ "$rcvbuf" -gt 0 ]; then
->>> @@ -710,7 +711,7 @@ EOF
->>>  
->>>  	echo "INFO: test $msg"
->>>  
->>> -	TEST_COUNT=10000
->>> +	PORT=10000
->>
->> And here:
->>
->>   PORT=20000
-
-Here you can also do something like this:
-
-  port_base=$((port_base + 10000 - TEST_COUNT))
-
-Up to you.
-
->>
->> So there is only one counter, not 2. Would that not work?
->>
->>>  	local extra_args="-o TRANSPARENT"
->>>  	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
->>>  		    ${connect_addr} ${local_addr} "${extra_args}"
->>
->> Cheers,
->> Matt
->> -- 
->> Sponsored by the NGI0 Core fund.
+> Cheers,
+> Matt
 
 Cheers,
 Matt
