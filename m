@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387282AEEE
-	for <mptcp@lists.linux.dev>; Fri,  1 Mar 2024 06:18:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745745EE86
+	for <mptcp@lists.linux.dev>; Fri,  1 Mar 2024 06:18:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709273890; cv=none; b=aLr8CzZCRfeYhgc3tPA3w1mzFmk1Pl0HA0MoVAz9fjgZeH5P9hWaRfMFJZlXGJ+ucD8kjaPT4QV2FbBebdxnhk5WS0G0cv5c+2gV4PXrPAaJQmg+ZW+jphaJ0q4EU/8XUaoj0Xk4dVZXpl3Gx01Qk0JKIS7m+yzFSkS5y45BJWo=
+	t=1709273891; cv=none; b=bXZdqmildAitWFXXSg6jBbdU/aUMxMtTNurvUOL0F+kyNw3lapNn2+Hmgg+W17qir8keKQuBDP4hcM4VbnVBpucFMp3nzySNKLQsOuIrfbSVV6uAXtv5a1n3KymFbB7KzZ2H9Q955D4WjD9Q53EbaghGmHp5HCHaWtv64RP0oxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709273890; c=relaxed/simple;
-	bh=5rQHPOoxMBykUEY16OEjj8EVS0zvkqZE2hCiK3w9csQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mk+TIBorUXZwaoWdZT226Q3EiHe6mq1PJfrhYNw5oIL4vMMxuGhqmr9CVrXU/igGBPffGVIs/B2woe+cQJqxkk7+YyMWUXWrjkS+4AUpzxwzgCSnbQbL/s/TbHNzbOGTHmhLWtzutpyLag5lc+w1JciQoyPMvT01LPsKM6sUbu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3VHHtyG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709273891; c=relaxed/simple;
+	bh=CeysPUs859NGxTYkiD7yPGixmyXJEiqppZF4B17j2vo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ANzzeMmM9itsG8JeRLpEl0mO0uGkC9fqmk6uL8ryIDxKOBgK2R2+LrHo4P6QaaGej8BxqVz+KWXfibj+a7OsZtVgQuQ+kiIyI5UFKUeZ7pUOY30cPRCjXXx2kyxn1t4sRBmMbjoKiP0unWh8k+2RqFYRwVR4aiy1Ln1sKJ23xBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CDjinC0T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G3VHHtyG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078F3C433F1;
-	Fri,  1 Mar 2024 06:18:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CDjinC0T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CFC0C433C7;
+	Fri,  1 Mar 2024 06:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709273889;
-	bh=5rQHPOoxMBykUEY16OEjj8EVS0zvkqZE2hCiK3w9csQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=G3VHHtyGkPGpv6aoGaoH4OUxDguS1njzWbFZDzS5uHeWd+/1AeAWMI3R46EXhTAja
-	 jED13adygqXaIdGSd3ZMLIQIzy43+dkUmGLjXrrr2pGKwnPkFohwTHWNq0cZV2kqGu
-	 GKLeSzg761Om+YDLbh5N4B9YzAby9PFXu0E4njXAPKYYztqzxlOEqDBzaE38V50YNA
-	 oCkBP7X//IYr9xdPXHeRKTtlR9/IN66E6TxXR9Mwbi3LKPcv2+gX3gYM+mMjBPBR9i
-	 JSh2tniroPT6SPs0eelmQDsxYGyQNSQWn8ucMhbcQjye3ER2VJooiWoiWC2QeuHjRc
-	 XVo7F5WqJyYdw==
+	s=k20201202; t=1709273891;
+	bh=CeysPUs859NGxTYkiD7yPGixmyXJEiqppZF4B17j2vo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CDjinC0TJTyAFTG2CBaCx0UwpUPcHKT6vS1VxvYtaGJ4LWbq95Fcfd+TSR26wpH0D
+	 tykxNDr6Nmd91MTySBDnAn++cCISnh6u+JP7gZeJhvcgM9WmNFsLw895k4d2NAITN4
+	 7YZOvXfcwHKKGKLkNyXgthsCE8MCYhhbkQl05mRHwILX2644YhfE9IOqwMnapVmGoO
+	 MPBk8f4RyAlkHNDXndU5LBUNiUFfPjoiBiF6pZav4xIN91q5pr5MwRDfVg6NZYbm89
+	 ohPAVK0aI8crMTZgFcDlh9Hfy4supDi/u98bnUwR4jpXisR4/nGi4Y7YuezgUQzkEM
+	 ChIm/PUYbYdQQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v8 0/6] add helpers and vars in mptcp_lib.sh, part 3
-Date: Fri,  1 Mar 2024 14:17:59 +0800
-Message-Id: <cover.1709273774.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v8 1/6] selftests: mptcp: connect: add dedicated port counter
+Date: Fri,  1 Mar 2024 14:18:00 +0800
+Message-Id: <955266a35b85a42645422d3fbbb4c6f672a37495.1709273774.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1709273774.git.tanggeliang@kylinos.cn>
+References: <cover.1709273774.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,65 +45,46 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v8:
- - address every comment from Matt in v7.
+This patch adds a new dedicated counter 'PORT' instead of TEST_COUNT to
+increase port numbers in mptcp_connect.sh.
 
-v7:
- - address every comment from Matt in v6.
+This can avoid outputting discontinuous test counters.
 
-v6:
- - only include the first 7 patches in v5
- - add mptcp_lib_pr_* helpers
- - add print_title helpers
- - align the output of simult_flows.sh
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-v5:
- - don't use mptcp_lib_print_test_counter in mptcp_join.sh, it breaks
-   skip_test().
-
-v4:
- - set test_cnt to 0, use ++counter in mptcp_lib_print_test_counter() to
-   fix the following mismatched test counters:
-
-# 012 userspace pm server fullmesh
-#       syn                                 [ OK ]
-#       synack                              [ OK ]
-#       ack                                 [ OK ]
-#       add                                 [ OK ]
-#       echo                                [FAIL] got 1 ADD_ADDR echo[s] expected 2
-# Server ns stats
-# TcpPassiveOpens                 5                  0.0
-# TcpInSegs                       25                 0.0
-... ...
-#
-# 1 failure(s) has(ve) been detected:
-#       - 13: userspace pm server fullmesh
-
-v3:
- - fix shellcheck errors in v2
-
-v2:
- - fix shellcheck errors in v1
- - print test results with counters
-
-Geliang Tang (6):
-  selftests: mptcp: connect: add dedicated port counter
-  selftests: mptcp: connect: fix misaligned output
-  selftests: mptcp: print all error messages to stdout
-  selftests: mptcp: add test counter helpers
-  selftests: mptcp: print test results with counters
-  selftests: mptcp: print test results with colors
-
- tools/testing/selftests/net/mptcp/diag.sh     | 19 ++---
- .../selftests/net/mptcp/mptcp_connect.sh      | 76 ++++++++++---------
- .../testing/selftests/net/mptcp/mptcp_join.sh | 28 +++----
- .../testing/selftests/net/mptcp/mptcp_lib.sh  | 45 ++++++++---
- .../selftests/net/mptcp/mptcp_sockopt.sh      | 33 ++++----
- .../testing/selftests/net/mptcp/pm_netlink.sh |  5 +-
- .../selftests/net/mptcp/simult_flows.sh       | 14 ++--
- .../selftests/net/mptcp/userspace_pm.sh       | 22 ++----
- 8 files changed, 131 insertions(+), 111 deletions(-)
-
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 0ca2960c9099..4f40221a86cb 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -33,6 +33,7 @@ do_tcp=0
+ checksum=false
+ filesize=0
+ connect_per_transfer=1
++PORT=0
+ 
+ if [ $tc_loss -eq 100 ];then
+ 	tc_loss=1%
+@@ -314,7 +315,7 @@ do_transfer()
+ 	local extra_args="$7"
+ 
+ 	local port
+-	port=$((10000+TEST_COUNT))
++	port=$((10000+PORT++))
+ 	TEST_COUNT=$((TEST_COUNT+1))
+ 
+ 	if [ "$rcvbuf" -gt 0 ]; then
+@@ -710,7 +711,7 @@ EOF
+ 
+ 	echo "INFO: test $msg"
+ 
+-	TEST_COUNT=10000
++	PORT=10000
+ 	local extra_args="-o TRANSPARENT"
+ 	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
+ 		    ${connect_addr} ${local_addr} "${extra_args}"
 -- 
 2.40.1
 
