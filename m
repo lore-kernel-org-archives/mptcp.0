@@ -1,214 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3F339AF8;
-	Fri,  1 Mar 2024 17:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921FF17BA4
+	for <mptcp@lists.linux.dev>; Fri,  1 Mar 2024 18:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709315058; cv=none; b=u3Wr4B8CwQWAwsmHsCRr2mNsMaN4NxjHDaBXvIoKI5jY2rLMgbohhLEBIB1Pimj10ioORApwsQ68wAvDk8hMM8binm3tKH8W915f7iZJ06z7wXE+NWIZ9fi3B7pNZHV48cY+RtCnZ0j1ZVt6EEvtlWrBRXSIe1oUOmj/tITwaWY=
+	t=1709316066; cv=none; b=adFQUPhYCBG9VFB0gvVQoV6AJKhUQ0V7P8Dc4u4Y1tBZ/sN67hgrdrAKkVIFI2IQDaDJe4x708fgelUOto6mBwSZFhaRIxjzU+Kuaj0ujrzzmyskCy+UfD66YPYAkuvJB5zD96uZjdXP+uIhnxov8nzO73N7w39wA5cXoZVFj1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709315058; c=relaxed/simple;
-	bh=EdDtedg5CZVRBqB3FVjkepFcu7D4qjE49o9Ec5jvrkM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LLsVxBeSGitQsh2ktqPa3m+GJ49gVvcLFiMiRiwAfBk8YqBp6zRrm/qqobIkna25tBY26KlOs3EWT+IXmgtoYVl0ldnmCrqeXSK75c5dMwJwC2B5MkJ1HNXsfPtDbXa7pQKR7X+WyQAMhCuhN+Sjl/u4m+NWNM4EmLOc4WpHOkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+0SQCYO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709316066; c=relaxed/simple;
+	bh=xKFvgYF9w1R20IyWWoYINLMYZW6E1rDrweVNOJknjCA=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=e7xucHjf1FHzRiHgHcJHUcatDp2jYplLVEiI1NbuWLjhE9mg++1a4bxck2Y3IJ+4vsDK+XXUkZ4qLl/gQ1I3FLJf0i6ssfA54VKbkw1FCiCtCqXUvLeHC5msKZyISTvpMoYjPvrzHtwxBzCTg8LBr9zvWv8kbwKHZXjjslYlTt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YSlN7bJ7; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+0SQCYO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1945C43394;
-	Fri,  1 Mar 2024 17:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709315057;
-	bh=EdDtedg5CZVRBqB3FVjkepFcu7D4qjE49o9Ec5jvrkM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=U+0SQCYOW2Fqxz64HPq0sjdCWZEYhrkEWIt0/Agtsr3QHKLuV2FyeXzaLLONCXssw
-	 yAAeF3r1yKAX+THjQHy4AKoWO2/8zApeGkDaWcS2C2T2PEoj61bkUin3iGBGG/bkVP
-	 fRdAL44UnSYX6fiIxgCZMu1Rk9gmL9BRl6mCWsu4Ci62R8pw6SL7aXaqPQxHScVAn3
-	 U7PRtfOI/oDQ0jzRjcWCL9tVnKPpxcv7svaAKtZpQM2Yo7LHY016LEYulr36peBHyn
-	 Kbz0xuFHXuwANR5J62blx4x1rGhtI2FhpHkKoemjpkD8pv88FruM/EgdYCIKnRhzUs
-	 kOuY8l2mUMN/w==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 01 Mar 2024 18:43:47 +0100
-Subject: [PATCH net-next 4/4] mptcp: cleanup SOL_TCP handling
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSlN7bJ7"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-608e3530941so26677277b3.1
+        for <mptcp@lists.linux.dev>; Fri, 01 Mar 2024 10:01:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709316064; x=1709920864; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7YLydVzZtVEhXEtZoveCzl68RgGLKgYNx/oxIdvWIO8=;
+        b=YSlN7bJ7zkYM2paKX0OgREf+On/aN02VgWpk4u7kYOYEnCJy8Gv5zgkWBlP3ipEjRj
+         g4m+aGvvLmW3cwH8JFM57hstseaAsLs5KwPdZNxvsGHsRH1h6ZqSo3+2Ps7gD2u4ABQB
+         kMyvtcD3XXLKiz4lPfvWYBTzgcY7AQdB+MvKdzCRsFoOk3fNjzxBISQxOneitk1pyMXj
+         KnGsK4hHe06V/uvIOXLr0yNp4oA4HyMlJo7MnXuKTAYemGeiX549lfLLw5Q3BpiQIeIj
+         Zj22NIZpuFgvsMfXJOt+rIbghRXqaoIMIbGKZ8pwE+mh/41gCOXL/f5tJxEAVgGzATSa
+         M39w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709316064; x=1709920864;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7YLydVzZtVEhXEtZoveCzl68RgGLKgYNx/oxIdvWIO8=;
+        b=YwlPeUqYKFJdOYYXAYMGOJVjNDWiaJ5WDQ0VD8yyGVxeoq/qMpYuRUsBunVtDy2jrj
+         3tiFLu9rZrQ+3hyum8/VAjfiQ86EDW2C5Pou+aqi99CW901sles/NSqye6r9e4gilp6f
+         UcneNP/Ka4GJKKshujObLQjdOm1zJOAl7QldnrhfTYPjHrsfc4RDqRWTqh7EooT+h4Jy
+         pmmjFCWSsbJUEJwUO3iDs+7+M7fhZNOJTwT+LIyDLMilwHmCC5Hlk0jyN3+3AlCvcM1B
+         WSHRsOuIcMdmJqmchhpcTONGxu58fKJXuASrzexf0Xw+S9WIOwIk2Eof6YuYFhfCQd7O
+         DbBg==
+X-Gm-Message-State: AOJu0YxDAX0OU3bBm5eDY2umxR+AG53oy4U7TPSWoKlvAF9MBufeBize
+	tgps3GMfozAGLriQFIypHOwx372vp+HH9A5iI1InaTp7N0iSmM9kWPGwP5I=
+X-Google-Smtp-Source: AGHT+IExP1vEs9cO5aECDBdrfGxVpzgQI9UdzA6T9zjRfJJLvnzQc10FzpLtN0UVffMQMckVifbqhw==
+X-Received: by 2002:a81:6d08:0:b0:607:be5e:fa27 with SMTP id i8-20020a816d08000000b00607be5efa27mr2511393ywc.13.1709316063191;
+        Fri, 01 Mar 2024 10:01:03 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.51.112])
+        by smtp.gmail.com with ESMTPSA id fr2-20020a05690c358200b006079f55766bsm1030169ywb.68.2024.03.01.10.01.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 10:01:02 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <>
+References: <>
+Subject: Re: DO-NOT-MERGE: mptcp: enabled by default: Tests Results
+Message-ID: <8a818f86-ce56-f2dd-6738-72e22fbe93fe@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 01 Mar 2024 18:01:02 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240301-upstream-net-next-20240301-mptcp-tcp_notsent_lowat-v1-4-415f0e8ed0e1@kernel.org>
-References: <20240301-upstream-net-next-20240301-mptcp-tcp_notsent_lowat-v1-0-415f0e8ed0e1@kernel.org>
-In-Reply-To: <20240301-upstream-net-next-20240301-mptcp-tcp_notsent_lowat-v1-0-415f0e8ed0e1@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4108; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=JOhIkA1LLYA8cGzrNasgxXO6BcQPIlXJLYVTAJAF5uE=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl4hPlZzS9ixLKjsUkekt8wgU9lZeee8d4BgCjg
- GS/R9Hs8uaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeIT5QAKCRD2t4JPQmmg
- c5lmD/9sHqCD959Q30Wnmmxl/tk4DCC/yXJjSphpIt4NGK/jNXVeS9Xy3sXR3Rxv77l/oGa8AX+
- 6cBZ61OYVCfZyBGG8C23TEKje189vY6geqp6A1Bv3qAaq7spQ80rNEUdtfOOFJlIDZ8EbiRZqw+
- zWE9hGuEwNLZqEVvAR4pgPFDj7dG9NMVtILgi+T0rR539uYwp/1UFjGB2bqKertAY4D3riqKmjh
- JGLdU23eDtl2jZsPXZQcGvU/kodiO5ovABWY3D7nBvIcK+azJ/qx9eIxD0Cj2Mlx9bEtWpOj5WQ
- GVck/w/syaJjkUfCEYK4eW+HAHtnptyLv8/BGf/epFLd4ezAZ9QTFN5DZoe7Wufq6CV1lhAhJLt
- BY/YmiMVQ/s90SodCGibd8mqalo8iVxmqu9+fuGaH9ucgHct76DYTNYKy0r1UjsrBdfIxQSkes+
- CBvrmXJHx/eMQP1LIKTPKloX99ND95FiAZQPeUEhsfZTpXB7TaJnDbgDbPmXzpsuCEyK/jZ4QQG
- lt0XTy5s4YJ1RWY0+ch5fib8PhDItjoUf8CGo1/mRQ+tiuMCMSoCgAgIv3KM7l9jD+gO41OthVY
- FLSWOGqysrrY8hvueESkPfVNDzFoOD5d5wm5A+FCE6eYWhguWsdunrjT1VBBj6sNuNcCU5I0946
- x1jxsFrGCJyh5Qw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hi Matthieu,
 
-Most TCP-level socket options get an integer from user space, and
-set the corresponding field under the msk-level socket lock.
+Thank you for your modifications, that's great!
 
-Reduce the code duplication moving such operations in the common code.
+Our CI (GitHub Action) did some validations and here is its report:
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/sockopt.c | 75 +++++++++++++++++++++--------------------------------
- 1 file changed, 30 insertions(+), 45 deletions(-)
+- KVM Validation: normal:
+  - Success! =E2=9C=85:
+  - Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/8114876257
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 1b38dac70719..dcd1c76d2a3b 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -624,18 +624,11 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
- 	return ret;
- }
- 
--static int mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, sockptr_t optval,
--					 unsigned int optlen)
-+static int __mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, int val)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	int val, ret;
- 
--	ret = mptcp_get_int_option(msk, optval, optlen, &val);
--	if (ret)
--		return ret;
--
--	lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	msk->cork = !!val;
- 	mptcp_for_each_subflow(msk, subflow) {
-@@ -647,23 +640,15 @@ static int mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, sockptr_t optva
- 	}
- 	if (!val)
- 		mptcp_check_and_set_pending(sk);
--	release_sock(sk);
- 
- 	return 0;
- }
- 
--static int mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, sockptr_t optval,
--					    unsigned int optlen)
-+static int __mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, int val)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	int val, ret;
- 
--	ret = mptcp_get_int_option(msk, optval, optlen, &val);
--	if (ret)
--		return ret;
--
--	lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	msk->nodelay = !!val;
- 	mptcp_for_each_subflow(msk, subflow) {
-@@ -675,8 +660,6 @@ static int mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, sockptr_t op
- 	}
- 	if (val)
- 		mptcp_check_and_set_pending(sk);
--	release_sock(sk);
--
- 	return 0;
- }
- 
-@@ -799,35 +782,10 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 	int ret, val;
- 
- 	switch (optname) {
--	case TCP_INQ:
--		ret = mptcp_get_int_option(msk, optval, optlen, &val);
--		if (ret)
--			return ret;
--		if (val < 0 || val > 1)
--			return -EINVAL;
--
--		lock_sock(sk);
--		msk->recvmsg_inq = !!val;
--		release_sock(sk);
--		return 0;
- 	case TCP_ULP:
- 		return -EOPNOTSUPP;
--	case TCP_NOTSENT_LOWAT:
--		ret = mptcp_get_int_option(msk, optval, optlen, &val);
--		if (ret)
--			return ret;
--
--		lock_sock(sk);
--		WRITE_ONCE(msk->notsent_lowat, val);
--		mptcp_write_space(sk);
--		release_sock(sk);
--		return 0;
- 	case TCP_CONGESTION:
- 		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
--	case TCP_CORK:
--		return mptcp_setsockopt_sol_tcp_cork(msk, optval, optlen);
--	case TCP_NODELAY:
--		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
- 	case TCP_DEFER_ACCEPT:
- 		/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
- 		mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, optval, optlen);
-@@ -840,7 +798,34 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 						      optval, optlen);
- 	}
- 
--	return -EOPNOTSUPP;
-+	ret = mptcp_get_int_option(msk, optval, optlen, &val);
-+	if (ret)
-+		return ret;
-+
-+	lock_sock(sk);
-+	switch (optname) {
-+	case TCP_INQ:
-+		if (val < 0 || val > 1)
-+			ret = -EINVAL;
-+		else
-+			msk->recvmsg_inq = !!val;
-+		break;
-+	case TCP_NOTSENT_LOWAT:
-+		WRITE_ONCE(msk->notsent_lowat, val);
-+		mptcp_write_space(sk);
-+		break;
-+	case TCP_CORK:
-+		ret = __mptcp_setsockopt_sol_tcp_cork(msk, val);
-+		break;
-+	case TCP_NODELAY:
-+		ret = __mptcp_setsockopt_sol_tcp_nodelay(msk, val);
-+		break;
-+	default:
-+		ret = -ENOPROTOOPT;
-+	}
-+
-+	release_sock(sk);
-+	return ret;
- }
- 
- int mptcp_setsockopt(struct sock *sk, int level, int optname,
+Initiator: Matthieu Baerts (NGI0)
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/cb52ed1610d3
 
--- 
-2.43.0
 
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
