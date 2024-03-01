@@ -1,115 +1,108 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC118BFC
-	for <mptcp@lists.linux.dev>; Fri,  1 Mar 2024 17:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D618BFE;
+	Fri,  1 Mar 2024 17:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314293; cv=none; b=qc8KRtaP1wkl8qHylOCa6DTbu2+DZAFlF6lqE7ndtB5XuOFDPC3bykX2YrRYBpm3VRBIOM5F2A8/R62T5t4uxkQSk3PQOc2SK78otacCmhQaqPZNiLYhd/sLLQ88vZpBm/QokOTKKwLa37XGUSBV0hfY5PJnJsY+FOMD/NY5ibs=
+	t=1709315048; cv=none; b=dYwqgbL5V1U7pKptV2mtMLruVPDa7gt/iIMXmqprvJBQszoRiVP73JSSnOeIcvuSPwSirGo9qBeGSKx7RheJ/owjlGDMbtQVYafSa9+D04xQRmUDo1M13DWSzdKatqBlMoiwgUz6ie6GNBevzVTI8jQ82Atax0XR1PSMhee/bq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314293; c=relaxed/simple;
-	bh=3YvU3gUb6sSqMW3BgLvhg60oYTt9kUGE5zJxU3sU7kY=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=Gpf9jYz/BgSRnNUSLh/bWSy3d+SImDrTq404KOn4FrXbdaIi70UfNnY/CoN5mKKdhh6h9hzvnu+vD6ltcWa/NY5lK0VGwwBv2W1mHuXvar1aX+9uOyaB7oo2KlyPOe5zJi+J485hizRZEtet/i8CCTvXB+z8NFNyly4806yLtbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R1xn/rF0; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709315048; c=relaxed/simple;
+	bh=RgiwHjq99te3mxoQlvDzBcgnm4t11h4M4CZ6qM0UMzg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gKANyEK3PGTyxCf94l+MwQIRNmMgpe+GTyKPsLK/sqWPV4uhznZ5VytSLpsNsxxqBYufbaJexq2QMARkhkj+N8RE/AmeN9kkNigxddPAaOY5Qtpp1lp4ALZy3Jr6dZAFdVVYhZ4Pzn4pfnpc0XILSC0jibfBmPNIyqwWAHAPqmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbKApwk9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1xn/rF0"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-787ef8b194dso256867485a.1
-        for <mptcp@lists.linux.dev>; Fri, 01 Mar 2024 09:31:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709314291; x=1709919091; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dCf6vPIko9sXfzUYuTlhCDB8k317Iu0N+sGeCudknnM=;
-        b=R1xn/rF02oOcixiOItR3ro34v2c3KqHg7w7d04mBlGmRxw8JyalTktBA/rkDFUcQef
-         f7jxgFlvucVuksYBEE4Sk4JJcQpXX2/PrmnU/hjGT/5NGbgaTt4rClz2SeACeNSWM/EK
-         H0/vKAFwBvHLw08kIaggxbHi1cYSd050jJ1XwfCHecPaLst+w6J/WH/xoHmLB2XEWFE/
-         JRBuTXN0TUieCwdvOtFXkDY5zOEFvAom20TTrtDauqbbJiNlURNG1wAEtxjUatwBIbfO
-         hJYHMa8Y6V3BKXV94XLNUUp8zaAgpM8BpfubZcZouUVUM5Pt0aeXMbyJMSj+KUHNfhZh
-         DWkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709314291; x=1709919091;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dCf6vPIko9sXfzUYuTlhCDB8k317Iu0N+sGeCudknnM=;
-        b=DVP7aZOwuP5zd/93fbERc5kiEdYVmeBHRXtFztGjVqkLhe8ii553Iz8+0npVkCGxNJ
-         nqOolRMAh5GSByE2pejEiS3xNcrmwTzRMwg2zyuuR3UzY9N/jrCvtwMENnyY05Bi/snD
-         B8caa6GKcb+jJ5ZPOx7NavQmDzek1k6Ggi12nPbzDzYcmlECiV4Y4TrRxLSVcGMRAxsQ
-         MDXflRx7xM5Qbue8oAmVyMlXqdwm7yikk4DzjDGSz1HLbzGE7NCeG2eTHPSbXh6AJuXf
-         gJW26vhEb1mSye+ioUIm6to63PIOcjIwFuUdh3uJRctN+dEIv59yX3LagyTuUiRrV3hX
-         iYZw==
-X-Gm-Message-State: AOJu0YwGw4JN1GjCsATP3TbuEdW/PbAL1xtMJlFSVu5M/9QMAPdA03PG
-	qzATC2eEJIeEpWH46aUUqkmm/8FkjfEXmS5P5ynyjYBqbTwMFc0=
-X-Google-Smtp-Source: AGHT+IG6+zPryH3VYJNKsEpDB3T4VnrYB4pG1Z9p9gZ5iXGIt2Le73V7pVnnSXM2lthOwpRxOTu+Vg==
-X-Received: by 2002:a05:620a:2a0c:b0:787:debf:c584 with SMTP id o12-20020a05620a2a0c00b00787debfc584mr8475670qkp.1.1709314291035;
-        Fri, 01 Mar 2024 09:31:31 -0800 (PST)
-Received: from [127.0.0.1] ([172.183.131.65])
-        by smtp.gmail.com with ESMTPSA id z23-20020a05620a08d700b00785d4d5768bsm1818630qkz.11.2024.03.01.09.31.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 09:31:30 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240301163846.1370114-2-matttbe@kernel.org>
-References: <20240301163846.1370114-2-matttbe@kernel.org>
-Subject: Re: selftests: mptcp: diag: avoid extra waiting: Tests Results
-Message-ID: <c0ccd0d2-898f-faee-f2bf-0b380dfd87eb@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 01 Mar 2024 17:31:30 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbKApwk9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4B79C43390;
+	Fri,  1 Mar 2024 17:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709315047;
+	bh=RgiwHjq99te3mxoQlvDzBcgnm4t11h4M4CZ6qM0UMzg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=fbKApwk9uFBe2y7QbpIvRChKVGAA1yHjFD0pB7CGsh/ocmoxGxIxBQBpq2k8jx983
+	 hcg7QeLO8nFd0FrKiI/gg0BVRgKLmEfMOqJvni43dp0PubaGYQeJlc22FofQ3EVR2J
+	 fN6tU3yLu2S87QViIxorsvmz+klN227O79S728Eci4RIrnSTTuBHGNA/uJWH569j+G
+	 VHgtNHOSy9Zp+sjNxOlu6EP0db8TNXSeIGCfXgxYyDie0hvXknzCbfhifS//fQek74
+	 hdj5XTkAnmgsL3JO2vXlIDHLDq6LkEznxHfJoDICOGbO5ZpNPp0h8y6ffVi5dPIb6/
+	 WslRENe+3dXqQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/4] mptcp: add TCP_NOTSENT_LOWAT sockopt support
+Date: Fri, 01 Mar 2024 18:43:43 +0100
+Message-Id: <20240301-upstream-net-next-20240301-mptcp-tcp_notsent_lowat-v1-0-415f0e8ed0e1@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM8T4mUC/z2NQQrCMBBFr1Jm7UCaVIpeRaSk6agDNgnJVAuld
+ 3cQdPEWjw/vb1CpMFU4NxsUenHlFFXaQwPh4eOdkCd1sMZ2xpkWl1ylkJ8xkiir4H+as4SMyhC
+ TVIoyPNPbC/a9CX48uckeHWg4F7rx+j29wC8D133/AGaUTxOOAAAA
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1913; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=RgiwHjq99te3mxoQlvDzBcgnm4t11h4M4CZ6qM0UMzg=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl4hPgrxAKiEvYIdh99Bb9o9cPkISVwJlwcQbPS
+ SyVSTC3hfGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeIT4AAKCRD2t4JPQmmg
+ c1rmEADlqVg8qBM6qIczmltAqyTRPHTnLk+3iDAgupkCS1dPQzoBqhokX7GxmrRCjET/U5jc5RQ
+ QxzGHwO/qBjXckl+XIt1Ui9zC661kOi6WXOU/Rf/FnHOjkAiTbVb2D4iRzr7kj+WmFxEbQQTazb
+ nmbYxdB2Q76mx/ZrcBhcnwAeRStsMzOl6DRRhZCm4M7X0q8MK0u5Nszy4MCD9WjaBYCXcTVRjr1
+ Z0HWzVQ8pgp3zRxSkaoBJILX7yEqQVXR8IwIcSwL59OiR5NadnzGfuv13O9hWDUGVYOzeotnrz7
+ d7GoKqpO2uAw0H0VTPijIzx0JDunlPiDC88FeuhmV2Ay084XaopFUvu1rn0/U+zDJ87sVnszTJP
+ xJH9mDNJF6skfiF/GqTrU5Ki7OEkqG4+hg10Q0aa6h7jVyC3E6pPN/o6hrrIlIgey9PfiSrjesB
+ 2aME0EtxuKBRFyyGRPp6HSWogxYPBXAyEaJr/rdvzT/+GDc/pRzmr5egDD16ATiWP7prB+V4i6/
+ 1bz+NyUGCxiEiun3o6iE7d6y/zMLkT1jQJS0Tw92Parq7Zlndb00mYunFdjPGr4TcRUTPFbVDJE
+ lYHfWSggOlKnSOC/IJRs5Fe1qeM967D8oBfuTBZq/8ywMFvhpWttFwRwmwkr4TFI7PVfTKPTtnc
+ 7eHm+u7QGHoE48A==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Matthieu,
+Patch 3 does the magic of adding TCP_NOTSENT_LOWAT support, all the
+other ones are minor cleanup seen along when working on the new feature.
 
-Thank you for your modifications, that's great!
+Note that this feature relies on the existing accounting for snd_nxt.
+Such accounting is not 110% accurate as it tracks the most recent
+sequence number queued to any subflow, and not the actual sequence
+number sent on the wire. Paolo experimented a lot, trying to implement
+the latter, and in the end it proved to be both "too complex" and "not
+necessary".
 
-Our CI (GitHub Action) did some validations and here is its report:
+The complexity raises from the need for additional lock and a lot of
+refactoring to introduce such protections without adding significant
+overhead. Additionally, snd_nxt is currently used and exposed with the
+current semantic by the internal packet scheduling. Introducing a
+different tracking will still require us to keep the old one.
 
-- KVM Validation: normal:
-  - Success! =E2=9C=85:
-  - Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/8114524834
+More interestingly, a more accurate tracking could be not strictly
+necessary: as the MPTCP socket enqueues data to the subflows only up to
+the available send window, any enqueue data is sent on the wire
+instantly, without any blocking operation short or a drop in the tx path
+at the nft or TC layer.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/4ee0d83081ea
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Paolo Abeni (4):
+      mptcp: cleanup writer wake-up
+      mptcp: avoid some duplicate code in socket option handling
+      mptcp: implement TCP_NOTSENT_LOWAT support
+      mptcp: cleanup SOL_TCP handling
 
+ net/mptcp/protocol.c | 54 ++++++++++++++++++++++++++-------------
+ net/mptcp/protocol.h | 42 +++++++++++++++++++++++--------
+ net/mptcp/sockopt.c  | 71 +++++++++++++++++++++++-----------------------------
+ 3 files changed, 101 insertions(+), 66 deletions(-)
+---
+base-commit: e960825709330cb199d209740326cec37e8c419d
+change-id: 20240301-upstream-net-next-20240301-mptcp-tcp_notsent_lowat-770cab93d253
 
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
