@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7393967E79
-	for <mptcp@lists.linux.dev>; Fri,  1 Mar 2024 06:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ED967E9E
+	for <mptcp@lists.linux.dev>; Fri,  1 Mar 2024 06:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709275625; cv=none; b=UcP1mSG7pIuQ0rLjV+ArBGHqSpXInwguPpokc68DUfLgNOuNr0M9msM2ZzTRyi8ipD9xb0oI/up0lUtD8pB2KC/w0qtSVgHUvBACIncoVhfsYuPBSP/RqKiYX8QstZoF+0ufRkZJ4SnYE04p8Q5Avphwn4Aofzx11ZH6DenTyQA=
+	t=1709275626; cv=none; b=lCMKCsxJmxyV2C5HL/sydpr+QRaJActy2hRz+73ba8rjD+VWbermkXkI2+Mng8pwc3uQOmonxJ4fByGX4pL0a1f8IwD7lClZM6+HHw5YJ5LRvM2RA3nrLe5qtMgpqizWWQAVUPGbgK2LODeKpVyls97GqIinw9tJ3hcR/uR87TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709275625; c=relaxed/simple;
-	bh=tM2FAYP38AQTzmUVlaiXxSly71UfRUBXaU7PHM+dX0c=;
+	s=arc-20240116; t=1709275626; c=relaxed/simple;
+	bh=CWN8PfX0cqDC2HaWWfUnt5AFAZ6W4dWqc3Pu7lZRMlU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nlxUY3EMOZbnX92XAecmTBfFhiM8xDVXE/7Ia59Ij8waz1kVYix+m6SDCl3TdhA5AARhIhQtlJcS9YSpaEeFjJ7WEkJMigsv5Zn8HyX492GIWt706NyI//aUU8UbOZXOocZZ8W8Z1I8dW0KsUGCdPJtRgl1/15nJkRMZl6bwufA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DH1TBESf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XltgbMQuHNLUnf5ELB7JuDso7/tJ/Bxav2nmbl0UJk8FFOGkKwlGFDapyUxuMIy1pDZwjaXRj9tlOlibwY7zoqelJ3FU3BBfOSPqdqIPi+Qc4Ylp25cX31Iq2pfuTJcXj7o4FT2d+6CXUQn8T+OwjYVIGxMtOL41uVFjH+VuOZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5TPsGhm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DH1TBESf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56DC2C433C7;
-	Fri,  1 Mar 2024 06:47:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5TPsGhm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 866D0C43390;
+	Fri,  1 Mar 2024 06:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709275625;
-	bh=tM2FAYP38AQTzmUVlaiXxSly71UfRUBXaU7PHM+dX0c=;
+	s=k20201202; t=1709275626;
+	bh=CWN8PfX0cqDC2HaWWfUnt5AFAZ6W4dWqc3Pu7lZRMlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DH1TBESf5ysYxOpsHzUmsOFwMyjZO6R1zpjN3IpziiFR30B4cchBbFesmx5pfugYi
-	 DG1uRt7P9tbnZR/jWSTLIE5xgB/2zR5/gOtOUmi7SyFwD03lnCVGPYJbz0fhfCmPgs
-	 ADuuhSfXeTt9mwrP2SDW7WcYXofLMmLslq11jg4h5A5ScHiCAbYLtDlZGEiSjZDUrx
-	 FVoa7yWqkeNZ3r6/0ierO5jdrYvJztU6CkO+AQlmCGz5iKKBzeFeoivn6iMl33D90q
-	 tQAox40wGiDZEsktCTYAv5COeXkEg7mJomxjXikcNn2WPOjtPytj+nSoklYab5a4JT
-	 XQnZgshQyCL/g==
+	b=t5TPsGhmt1MPtXz82Vpqz+Eth/y9o9QmYTPwxpxVBbsByqZrLTIA7Bey4aRTgep1I
+	 2oMk064Qp4sif/Nv1kM5iC1Wgdx+1f1GR4wom4bKgkj8Dst7CWyX7uUzSSQQFJwpUw
+	 h80/88aDJimDdA6x0UaFqL2bfqLj31/aYmZeWO5n9JcgrHU0YTp2b9P0518IX0zQCz
+	 ZMAi3Am7HGQmvAFKtr44h/rMSfEy3CnY+kLhDujQoiZhoc8Q05N8KotOzCt01xJs/r
+	 EVRDvo2OKHs1T8wZz1ZjUq+42KBN4lGpLMp/iO1ZWV77c9E3kR7uqisA4vzf6kgTNx
+	 c8NxsQEsBjBLw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 2/6] selftests: mptcp: connect: fix misaligned output
-Date: Fri,  1 Mar 2024 14:46:32 +0800
-Message-Id: <be219b7d53572a80e8e44d3be398e300b578427a.1709275290.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 3/6] selftests: mptcp: print all error messages to stdout
+Date: Fri,  1 Mar 2024 14:46:33 +0800
+Message-Id: <7a116f2a3ed7a09a24e52644f83a46d153510bf7.1709275290.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1709275290.git.tanggeliang@kylinos.cn>
 References: <cover.1709275290.git.tanggeliang@kylinos.cn>
@@ -45,82 +45,104 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The first [ OK ] in the output of mptcp_connect.sh misaligns with the
-others:
-
-New MPTCP socket can be blocked via sysctl              [ OK ]
-INFO: validating network environment with pings
-INFO: Using loss of 0.85% delay 16 ms reorder 95% 70% with delay 4ms on
-ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP   (duration   184ms) [ OK ]
-ns1 MPTCP -> ns1 (10.0.1.1:10001      ) TCP     (duration    50ms) [ OK ]
-ns1 TCP   -> ns1 (10.0.1.1:10002      ) MPTCP   (duration    55ms) [ OK ]
-
-This patch aligns them by using 69 chars to display the first two lines,
-and 50 chars for the other. Since 19 chars are used to display duration
-time. Also print out a [ OK ] at the end of the 2nd line for consistency.
+Some error messages are dropped while the others are printed to 'stdout'.
+As part of the unification, this patch drop "1>&2" to let all errors
+messages are printed to 'stdout'.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 10 +++++-----
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  9 +++++----
+ 2 files changed, 10 insertions(+), 9 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 4f40221a86cb..242407a1b4da 100755
+index 242407a1b4da..be598e1e25f5 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -248,11 +248,17 @@ else
- 	set_ethtool_flags "$ns4" ns4eth3 "$ethtool_args"
- fi
+@@ -301,7 +301,7 @@ do_ping()
+ 	ip netns exec ${connector_ns} ping ${ping_args} $connect_addr >/dev/null || rc=1
  
-+print_larger_title() {
-+	# here we don't have the time, a bit longer for the alignment
-+	printf "%-69s" "${@}"
-+}
-+
- check_mptcp_disabled()
- {
- 	local disabled_ns
- 	mptcp_lib_ns_init disabled_ns
+ 	if [ $rc -ne 0 ] ; then
+-		echo "$listener_ns -> $connect_addr connectivity [ FAIL ]" 1>&2
++		echo "$listener_ns -> $connect_addr connectivity [ FAIL ]"
+ 		ret=1
  
-+	print_larger_title "New MPTCP socket can be blocked via sysctl"
- 	# net.mptcp.enabled should be enabled by default
- 	if [ "$(ip netns exec ${disabled_ns} sysctl net.mptcp.enabled | awk '{ print $3 }')" -ne 1 ]; then
- 		echo -e "net.mptcp.enabled sysctl is not 1 by default\t\t[ FAIL ]"
-@@ -274,7 +280,7 @@ check_mptcp_disabled()
+ 		return 1
+@@ -477,13 +477,13 @@ do_transfer()
+ 
+ 	if [ ${stat_synrx_now_l} -lt ${expect_synrx} ]; then
+ 		printf "[ FAIL ] lower MPC SYN rx (%d) than expected (%d)\n" \
+-			"${stat_synrx_now_l}" "${expect_synrx}" 1>&2
++			"${stat_synrx_now_l}" "${expect_synrx}"
+ 		retc=1
+ 	fi
+ 	if [ ${stat_ackrx_now_l} -lt ${expect_ackrx} ] && [ ${stat_ooo_now} -eq 0 ]; then
+ 		if [ ${stat_ooo_now} -eq 0 ]; then
+ 			printf "[ FAIL ] lower MPC ACK rx (%d) than expected (%d)\n" \
+-				"${stat_ackrx_now_l}" "${expect_ackrx}" 1>&2
++				"${stat_ackrx_now_l}" "${expect_ackrx}"
+ 			rets=1
+ 		else
+ 			printf "[ Note ] fallback due to TCP OoO"
+@@ -728,7 +728,7 @@ EOF
+ 	ip -net "$listener_ns" route del local $local_addr/0 dev lo table 100
+ 
+ 	if [ $lret -ne 0 ]; then
+-		echo "FAIL: $msg, mptcp connection error" 1>&2
++		echo "FAIL: $msg, mptcp connection error"
+ 		ret=$lret
  		return 1
  	fi
+@@ -817,7 +817,7 @@ log_if_error()
+ 	local msg="$1"
  
--	echo -e "New MPTCP socket can be blocked via sysctl\t\t[ OK ]"
-+	echo "[ OK ]"
- 	mptcp_lib_result_pass "New MPTCP socket can be blocked via sysctl"
- 	return 0
- }
-@@ -343,7 +349,7 @@ do_transfer()
- 	addr_port=$(printf "%s:%d" ${connect_addr} ${port})
- 	local result_msg
- 	result_msg="$(printf "%.3s %-5s -> %.3s (%-20s) %-5s" ${connector_ns} ${cl_proto} ${listener_ns} ${addr_port} ${srv_proto})"
--	printf "%s\t" "${result_msg}"
-+	printf "%-50s" "${result_msg}"
+ 	if [ ${ret} -ne 0 ]; then
+-		echo "FAIL: ${msg}" 1>&2
++		echo "FAIL: ${msg}"
  
- 	if $capture; then
- 		local capuser
-@@ -836,7 +842,7 @@ check_mptcp_disabled
+ 		final_ret=${ret}
+ 		ret=0
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index 6ed4aa32222f..bf22174c022c 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -103,7 +103,8 @@ check_mark()
+ 	local v
+ 	for v in $values; do
+ 		if [ $v -ne 0 ]; then
+-			echo "FAIL: got $tables $values in ns $ns , not 0 - not all expected packets marked" 1>&2
++			echo "FAIL: got $tables $values in ns $ns," \
++			     "not 0 - not all expected packets marked"
+ 			ret=1
+ 			return 1
+ 		fi
+@@ -221,7 +222,7 @@ do_mptcp_sockopt_tests()
+ 	lret=$?
  
- stop_if_error "The kernel configuration is not valid for MPTCP"
+ 	if [ $lret -ne 0 ]; then
+-		echo "FAIL: SOL_MPTCP getsockopt" 1>&2
++		echo "FAIL: SOL_MPTCP getsockopt"
+ 		mptcp_lib_result_fail "sockopt v4"
+ 		ret=$lret
+ 		return
+@@ -232,7 +233,7 @@ do_mptcp_sockopt_tests()
+ 	lret=$?
  
--echo "INFO: validating network environment with pings"
-+print_larger_title "Validating network environment with pings"
- for sender in "$ns1" "$ns2" "$ns3" "$ns4";do
- 	do_ping "$ns1" $sender 10.0.1.1
- 	do_ping "$ns1" $sender dead:beef:1::1
-@@ -858,6 +864,7 @@ done
- mptcp_lib_result_code "${ret}" "ping tests"
- 
- stop_if_error "Could not even run ping tests"
-+echo "[ OK ]"
- 
- [ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay ${tc_delay}ms
- echo -n "INFO: Using loss of $tc_loss "
+ 	if [ $lret -ne 0 ]; then
+-		echo "FAIL: SOL_MPTCP getsockopt (ipv6)" 1>&2
++		echo "FAIL: SOL_MPTCP getsockopt (ipv6)"
+ 		mptcp_lib_result_fail "sockopt v6"
+ 		ret=$lret
+ 		return
+@@ -263,7 +264,7 @@ do_tcpinq_test()
+ 	local lret=$?
+ 	if [ $lret -ne 0 ];then
+ 		ret=$lret
+-		echo "FAIL: mptcp_inq $*" 1>&2
++		echo "FAIL: mptcp_inq $*"
+ 		mptcp_lib_result_fail "TCP_INQ: $*"
+ 		return $lret
+ 	fi
 -- 
 2.40.1
 
