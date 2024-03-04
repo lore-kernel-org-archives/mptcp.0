@@ -1,264 +1,257 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AAC4D9FC;
-	Mon,  4 Mar 2024 16:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02F64E1DB;
+	Mon,  4 Mar 2024 17:06:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709570722; cv=none; b=r73qc+COEGmXdl+iIeIwkqElJ2a9s64aDzxm8beLYz/XlyaXADiRNbxW7HCm3SIx/rBIPXReVoxwRB3GGtrlrZuqm/1J4PBSIn/iXhHFPSw5Oee7VO0wFEPciKQLWmh3VLpmsIAdQ/LuoJfOUlvF+kh7nep6HupjdYoaATQTsro=
+	t=1709571982; cv=none; b=ZqFMESwLsa+mEkQw9xgB/jEfZSBewotPwkBFzCwVYZiPJcMSM6xuT+i8FZrr3Fbl/a+IYzPYza5jgbmsGT7CkoME4G63xiAJO+p/kekcxON4nPy9V57Jr5Ayghfuf2B1w8Ba1PHTgb9fJ/oQm0ek8vVz5taG2hVDni6VQtCS1P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709570722; c=relaxed/simple;
-	bh=GdaVy72iP6UyLZtZ8tm2TadaO6UZAD+yWK/fe6lrqAM=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=FuhJysnZjbgCIuirT7W3mjrNy+JR7o3ziUQ9WZaUu9XDpiacxltP7m5RRynRQEHoc5lYNSfxX0Lt7S8CTV5PJ7M6BHbdzjuXVjnLbVB3QUi3WJVPzyphxeTm8y7nR3CvzD1x5zupqHAhWMIEWkEzsbc86TOcV8tsMVu8F4RAxzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ePxMap6x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709571982; c=relaxed/simple;
+	bh=WZihb+6oGuYX/sUIJx4bJJTXPUMDkZlDE3EI6QfRI0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZiBt+yvOid90OIxS939X3ogdAUmUWY+yZevBRcVKq/59iY3LVP+fAxzW/T+Ut6kg0sYr1+poWZ/3/Vftb768T9KhGyo31YO03iwLmcoP6YNi9wAn+FkiW8JOQd43521gnXgKO7uMluR9S7wcW08oY79HxqNjRKE28+QMSu4cOtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ezqWCkgn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ePxMap6x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 620F6C43390;
-	Mon,  4 Mar 2024 16:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709570721;
-	bh=GdaVy72iP6UyLZtZ8tm2TadaO6UZAD+yWK/fe6lrqAM=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=ePxMap6xNVmK5QXdoe2ddv+fchl+Qea1jmL22zIr8MK6QM7pXKsTIIPEP3fFqXhpe
-	 iwj8/wv9fzqxx+ERaPhrw7mccwavnV5CMXubZ4uf/AL73NtmFvwc1lELRCwvTQOLEb
-	 wkjnJ8JPSKzPSWZQZBiXTpBmek3y7WemsAdJM/Bk=
-Subject: Patch "selftests: mptcp: update userspace pm test helpers" has been added to the 6.7-stable tree
-To: geliang.tang@suse.com,gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Mon, 04 Mar 2024 17:44:55 +0100
-In-Reply-To: <20240304133827.1989736-10-matttbe@kernel.org>
-Message-ID: <2024030455-flail-revenue-fb95@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezqWCkgn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 182C4C433C7;
+	Mon,  4 Mar 2024 17:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709571981;
+	bh=WZihb+6oGuYX/sUIJx4bJJTXPUMDkZlDE3EI6QfRI0c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ezqWCkgnG7RJudDLQks2ikBp7b8ttSB1WMqIySPNixRnjldCgiKSaxhV14cBMDoEB
+	 DwsQxM8B0nx2ZKKFvRb/9N8z31MuHwpbVpV+PJbvpHQs7xAM02d8egPAeoJgZ1+FZb
+	 RyyC+Xirp5nW9UgVyjcb4pAkqS8t59Xv9AmJRT35TzBUk2LDHmi+TH8DkV9DmRiBK3
+	 RornT7PDuQbWRySX1Z3u9I14dVFx6wfmLdhlgD2049roRXwRIJ5H7rlmquFCTIzEAb
+	 atwO40q2ITWTr7rRgJneAEfxjsbQ+eQ7WFeisPalYaWss1A7xOuHxMT8ZQZH9gNSMy
+	 eTxQHBAc+TI9A==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	Davide Caratti <dcaratti@redhat.com>,
+	Mat Martineau <martineau@kernel.org>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.10.y] mptcp: fix double-free on socket dismantle
+Date: Mon,  4 Mar 2024 18:06:15 +0100
+Message-ID: <20240304170614.2608800-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2024030455-plausible-harmonics-a964@gregkh>
+References: <2024030455-plausible-harmonics-a964@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7572; i=matttbe@kernel.org; h=from:subject; bh=B8eU2wOlMZzhlfykinS5qfdKEH99UcHBXWQ4CCNsnUU=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl5f+G1bb1+vFwMRm1Os0P7Bpn9UBw4mI2gFAt+ VEujiQG3ieJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeX/hgAKCRD2t4JPQmmg c9CeEADGZmQjHs5h68rPohDfTjHTKcOgZuinYqkj6jCNfAmH/uEcBVQpKKNhN1CFv4P7KxrsN31 DOUZBXWFntc9hWyNuigcPAim8zCLlcNX2XWpFT854eSzk0N83t6Upp11/fRRvFYrr0dDmQULrMm iDGsqMsry6Za308c56NiaJvUxgD0U1O+V763h37ZMUQcy4AzVQfpCLKQLUKSUSS/3/BySuGrdBs OmY53ys3eeI68US4DSZB/cfH1j0cF/SJOI7y0SmEJL8727u38spH9fA4iInzHAj6l39nXc0kP3Y G96LW2WJTTu+E4dCsb7g3aCvlHsi8Qgm9+sb8MH1l/fpGxoYgdvEtM+pLka+SMglm1Hj/Fyv7gm Y5oMAkdtWkdapszLvx7HHofLE2jNlVa/9SFtPjXvtcZrsQ0twQOT84eX9ciNSs7hOycYdD9pN2h eqaEjZ3XqcXj9a2S/Bn1u8SGg7jGUB2Xlxtk2AaRWwYUbapHf2kaW9/0OLVqMmcWcVzWNYEl6Ov /z9Hb4KeJAaPfaAXNpyXijx1DOazVWGRQxNw9nzJRpWYmAJ1THb+0i8tvriSOs87ZZYITk003A5 Auu2Y6ZUPfjDxjjuNOyArplzVlijkRIosU59wBKxS6WLwEP/2nM93TJK3cHeEyWsOyCe2RK2jx6 5Mvx9bm3NXlcwpQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore
 
+From: Davide Caratti <dcaratti@redhat.com>
 
-This is a note to let you know that I've just added the patch titled
+when MPTCP server accepts an incoming connection, it clones its listener
+socket. However, the pointer to 'inet_opt' for the new socket has the same
+value as the original one: as a consequence, on program exit it's possible
+to observe the following splat:
 
-    selftests: mptcp: update userspace pm test helpers
+  BUG: KASAN: double-free in inet_sock_destruct+0x54f/0x8b0
+  Free of addr ffff888485950880 by task swapper/25/0
 
-to the 6.7-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+  CPU: 25 PID: 0 Comm: swapper/25 Kdump: loaded Not tainted 6.8.0-rc1+ #609
+  Hardware name: Supermicro SYS-6027R-72RF/X9DRH-7TF/7F/iTF/iF, BIOS 3.0  07/26/2013
+  Call Trace:
+   <IRQ>
+   dump_stack_lvl+0x32/0x50
+   print_report+0xca/0x620
+   kasan_report_invalid_free+0x64/0x90
+   __kasan_slab_free+0x1aa/0x1f0
+   kfree+0xed/0x2e0
+   inet_sock_destruct+0x54f/0x8b0
+   __sk_destruct+0x48/0x5b0
+   rcu_do_batch+0x34e/0xd90
+   rcu_core+0x559/0xac0
+   __do_softirq+0x183/0x5a4
+   irq_exit_rcu+0x12d/0x170
+   sysvec_apic_timer_interrupt+0x6b/0x80
+   </IRQ>
+   <TASK>
+   asm_sysvec_apic_timer_interrupt+0x16/0x20
+  RIP: 0010:cpuidle_enter_state+0x175/0x300
+  Code: 30 00 0f 84 1f 01 00 00 83 e8 01 83 f8 ff 75 e5 48 83 c4 18 44 89 e8 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc fb 45 85 ed <0f> 89 60 ff ff ff 48 c1 e5 06 48 c7 43 18 00 00 00 00 48 83 44 2b
+  RSP: 0018:ffff888481cf7d90 EFLAGS: 00000202
+  RAX: 0000000000000000 RBX: ffff88887facddc8 RCX: 0000000000000000
+  RDX: 1ffff1110ff588b1 RSI: 0000000000000019 RDI: ffff88887fac4588
+  RBP: 0000000000000004 R08: 0000000000000002 R09: 0000000000043080
+  R10: 0009b02ea273363f R11: ffff88887fabf42b R12: ffffffff932592e0
+  R13: 0000000000000004 R14: 0000000000000000 R15: 00000022c880ec80
+   cpuidle_enter+0x4a/0xa0
+   do_idle+0x310/0x410
+   cpu_startup_entry+0x51/0x60
+   start_secondary+0x211/0x270
+   secondary_startup_64_no_verify+0x184/0x18b
+   </TASK>
 
-The filename of the patch is:
-     selftests-mptcp-update-userspace-pm-test-helpers.patch
-and it can be found in the queue-6.7 subdirectory.
+  Allocated by task 6853:
+   kasan_save_stack+0x1c/0x40
+   kasan_save_track+0x10/0x30
+   __kasan_kmalloc+0xa6/0xb0
+   __kmalloc+0x1eb/0x450
+   cipso_v4_sock_setattr+0x96/0x360
+   netlbl_sock_setattr+0x132/0x1f0
+   selinux_netlbl_socket_post_create+0x6c/0x110
+   selinux_socket_post_create+0x37b/0x7f0
+   security_socket_post_create+0x63/0xb0
+   __sock_create+0x305/0x450
+   __sys_socket_create.part.23+0xbd/0x130
+   __sys_socket+0x37/0xb0
+   __x64_sys_socket+0x6f/0xb0
+   do_syscall_64+0x83/0x160
+   entry_SYSCALL_64_after_hwframe+0x6e/0x76
 
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
+  Freed by task 6858:
+   kasan_save_stack+0x1c/0x40
+   kasan_save_track+0x10/0x30
+   kasan_save_free_info+0x3b/0x60
+   __kasan_slab_free+0x12c/0x1f0
+   kfree+0xed/0x2e0
+   inet_sock_destruct+0x54f/0x8b0
+   __sk_destruct+0x48/0x5b0
+   subflow_ulp_release+0x1f0/0x250
+   tcp_cleanup_ulp+0x6e/0x110
+   tcp_v4_destroy_sock+0x5a/0x3a0
+   inet_csk_destroy_sock+0x135/0x390
+   tcp_fin+0x416/0x5c0
+   tcp_data_queue+0x1bc8/0x4310
+   tcp_rcv_state_process+0x15a3/0x47b0
+   tcp_v4_do_rcv+0x2c1/0x990
+   tcp_v4_rcv+0x41fb/0x5ed0
+   ip_protocol_deliver_rcu+0x6d/0x9f0
+   ip_local_deliver_finish+0x278/0x360
+   ip_local_deliver+0x182/0x2c0
+   ip_rcv+0xb5/0x1c0
+   __netif_receive_skb_one_core+0x16e/0x1b0
+   process_backlog+0x1e3/0x650
+   __napi_poll+0xa6/0x500
+   net_rx_action+0x740/0xbb0
+   __do_softirq+0x183/0x5a4
 
+  The buggy address belongs to the object at ffff888485950880
+   which belongs to the cache kmalloc-64 of size 64
+  The buggy address is located 0 bytes inside of
+   64-byte region [ffff888485950880, ffff8884859508c0)
 
-From stable+bounces-25928-greg=kroah.com@vger.kernel.org Mon Mar  4 14:39:55 2024
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon,  4 Mar 2024 14:38:31 +0100
-Subject: selftests: mptcp: update userspace pm test helpers
-To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliang.tang@suse.com>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240304133827.1989736-10-matttbe@kernel.org>
+  The buggy address belongs to the physical page:
+  page:0000000056d1e95e refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888485950700 pfn:0x485950
+  flags: 0x57ffffc0000800(slab|node=1|zone=2|lastcpupid=0x1fffff)
+  page_type: 0xffffffff()
+  raw: 0057ffffc0000800 ffff88810004c640 ffffea00121b8ac0 dead000000000006
+  raw: ffff888485950700 0000000000200019 00000001ffffffff 0000000000000000
+  page dumped because: kasan: bad access detected
 
-From: Geliang Tang <geliang.tang@suse.com>
+  Memory state around the buggy address:
+   ffff888485950780: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+   ffff888485950800: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  >ffff888485950880: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                     ^
+   ffff888485950900: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+   ffff888485950980: 00 00 00 00 00 01 fc fc fc fc fc fc fc fc fc fc
 
-commit 757c828ce94905a2975873d5e90a376c701b2b90 upstream.
+Something similar (a refcount underflow) happens with CALIPSO/IPv6. Fix
+this by duplicating IP / IPv6 options after clone, so that
+ip{,6}_sock_destruct() doesn't end up freeing the same memory area twice.
 
-This patch adds a new argument namespace to userspace_pm_add_addr() and
-userspace_pm_add_sf() to make these two helper more versatile.
-
-Add two more versatile helpers for userspace pm remove subflow or address:
-userspace_pm_rm_addr() and userspace_pm_rm_sf(). The original test helpers
-userspace_pm_rm_sf_addr_ns1() and userspace_pm_rm_sf_addr_ns2() can be
-replaced by these new helpers.
-
-Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
-Signed-off-by: Mat Martineau <martineau@kernel.org>
-Link: https://lore.kernel.org/r/20231128-send-net-next-2023107-v4-4-8d6b94150f6b@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: cf7da0d66cc1 ("mptcp: Create SUBFLOW socket for incoming connections")
+Cc: stable@vger.kernel.org
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20240223-upstream-net-20240223-misc-fixes-v1-8-162e87e48497@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+(cherry picked from commit 10048689def7e40a4405acda16fdc6477d4ecc5c)
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh |  100 +++++++++++-------------
- 1 file changed, 49 insertions(+), 51 deletions(-)
+Notes:
+ - Conflicts in protocol.c because mptcp_sk_clone() has been renamed to
+   mptcp_sk_clone_init() in commit 7e8b88ec35ee ("mptcp: consolidate
+   passive msk socket initialization") which has not been backported to
+   v5.10 due to a too long list of dependences.
+ - This is the same patch as the one sent earlier for v5.15.
+---
+ net/mptcp/protocol.c | 49 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2824,6 +2824,7 @@ backup_tests()
- 	fi
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 72d944e6a641..adbe6350f980 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2052,8 +2052,50 @@ static struct ipv6_pinfo *mptcp_inet6_sk(const struct sock *sk)
+ 
+ 	return (struct ipv6_pinfo *)(((u8 *)sk) + offset);
  }
- 
-+SUB_ESTABLISHED=10 # MPTCP_EVENT_SUB_ESTABLISHED
- LISTENER_CREATED=15 #MPTCP_EVENT_LISTENER_CREATED
- LISTENER_CLOSED=16  #MPTCP_EVENT_LISTENER_CLOSED
- 
-@@ -3284,75 +3285,70 @@ fail_tests()
- 	fi
- }
- 
-+# $1: ns ; $2: addr ; $3: id
- userspace_pm_add_addr()
- {
--	local addr=$1
--	local id=$2
-+	local evts=$evts_ns1
- 	local tk
- 
--	tk=$(grep "type:1," "$evts_ns1" |
--	     sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q')
--	ip netns exec $ns1 ./pm_nl_ctl ann $addr token $tk id $id
-+	[ "$1" == "$ns2" ] && evts=$evts_ns2
-+	tk=$(mptcp_lib_evts_get_info token "$evts")
 +
-+	ip netns exec $1 ./pm_nl_ctl ann $2 token $tk id $3
- 	sleep 1
- }
- 
--userspace_pm_rm_sf_addr_ns1()
-+# $1: ns ; $2: id
-+userspace_pm_rm_addr()
- {
--	local addr=$1
--	local id=$2
--	local tk sp da dp
--	local cnt_addr cnt_sf
--
--	tk=$(grep "type:1," "$evts_ns1" |
--	     sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q')
--	sp=$(grep "type:10" "$evts_ns1" |
--	     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
--	da=$(grep "type:10" "$evts_ns1" |
--	     sed -n 's/.*\(daddr6:\)\([0-9a-f:.]*\).*$/\2/p;q')
--	dp=$(grep "type:10" "$evts_ns1" |
--	     sed -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q')
--	cnt_addr=$(rm_addr_count ${ns1})
--	cnt_sf=$(rm_sf_count ${ns1})
--	ip netns exec $ns1 ./pm_nl_ctl rem token $tk id $id
--	ip netns exec $ns1 ./pm_nl_ctl dsf lip "::ffff:$addr" \
--				lport $sp rip $da rport $dp token $tk
--	wait_rm_addr $ns1 "${cnt_addr}"
--	wait_rm_sf $ns1 "${cnt_sf}"
-+	local evts=$evts_ns1
-+	local tk
-+	local cnt
++static void mptcp_copy_ip6_options(struct sock *newsk, const struct sock *sk)
++{
++	const struct ipv6_pinfo *np = inet6_sk(sk);
++	struct ipv6_txoptions *opt;
++	struct ipv6_pinfo *newnp;
 +
-+	[ "$1" == "$ns2" ] && evts=$evts_ns2
-+	tk=$(mptcp_lib_evts_get_info token "$evts")
++	newnp = inet6_sk(newsk);
 +
-+	cnt=$(rm_addr_count ${1})
-+	ip netns exec $1 ./pm_nl_ctl rem token $tk id $2
-+	wait_rm_addr $1 "${cnt}"
- }
++	rcu_read_lock();
++	opt = rcu_dereference(np->opt);
++	if (opt) {
++		opt = ipv6_dup_options(newsk, opt);
++		if (!opt)
++			net_warn_ratelimited("%s: Failed to copy ip6 options\n", __func__);
++	}
++	RCU_INIT_POINTER(newnp->opt, opt);
++	rcu_read_unlock();
++}
+ #endif
  
-+# $1: ns ; $2: addr ; $3: id
- userspace_pm_add_sf()
- {
--	local addr=$1
--	local id=$2
-+	local evts=$evts_ns1
- 	local tk da dp
- 
--	tk=$(sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
--	da=$(sed -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evts_ns2")
--	dp=$(sed -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
--	ip netns exec $ns2 ./pm_nl_ctl csf lip $addr lid $id \
-+	[ "$1" == "$ns2" ] && evts=$evts_ns2
-+	tk=$(mptcp_lib_evts_get_info token "$evts")
-+	da=$(mptcp_lib_evts_get_info daddr4 "$evts")
-+	dp=$(mptcp_lib_evts_get_info dport "$evts")
++static void mptcp_copy_ip_options(struct sock *newsk, const struct sock *sk)
++{
++	struct ip_options_rcu *inet_opt, *newopt = NULL;
++	const struct inet_sock *inet = inet_sk(sk);
++	struct inet_sock *newinet;
 +
-+	ip netns exec $1 ./pm_nl_ctl csf lip $2 lid $3 \
- 				rip $da rport $dp token $tk
- 	sleep 1
- }
- 
--userspace_pm_rm_sf_addr_ns2()
-+# $1: ns ; $2: addr $3: event type
-+userspace_pm_rm_sf()
- {
--	local addr=$1
--	local id=$2
-+	local evts=$evts_ns1
-+	local t=${3:-1}
-+	local ip=4
- 	local tk da dp sp
--	local cnt_addr cnt_sf
-+	local cnt
++	newinet = inet_sk(newsk);
 +
-+	[ "$1" == "$ns2" ] && evts=$evts_ns2
-+	if is_v6 $2; then ip=6; fi
-+	tk=$(mptcp_lib_evts_get_info token "$evts")
-+	da=$(mptcp_lib_evts_get_info "daddr$ip" "$evts" $t)
-+	dp=$(mptcp_lib_evts_get_info dport "$evts" $t)
-+	sp=$(mptcp_lib_evts_get_info sport "$evts" $t)
++	rcu_read_lock();
++	inet_opt = rcu_dereference(inet->inet_opt);
++	if (inet_opt) {
++		newopt = sock_kmalloc(newsk, sizeof(*inet_opt) +
++				      inet_opt->opt.optlen, GFP_ATOMIC);
++		if (newopt)
++			memcpy(newopt, inet_opt, sizeof(*inet_opt) +
++			       inet_opt->opt.optlen);
++		else
++			net_warn_ratelimited("%s: Failed to copy ip options\n", __func__);
++	}
++	RCU_INIT_POINTER(newinet->inet_opt, newopt);
++	rcu_read_unlock();
++}
++
+ struct sock *mptcp_sk_clone(const struct sock *sk,
+ 			    const struct mptcp_options_received *mp_opt,
+ 			    struct request_sock *req)
+@@ -2073,6 +2115,13 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
  
--	tk=$(sed -n 's/.*\(token:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
--	da=$(sed -n 's/.*\(daddr4:\)\([0-9.]*\).*$/\2/p;q' "$evts_ns2")
--	dp=$(sed -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q' "$evts_ns2")
--	sp=$(grep "type:10" "$evts_ns2" |
--	     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
--	cnt_addr=$(rm_addr_count ${ns2})
--	cnt_sf=$(rm_sf_count ${ns2})
--	ip netns exec $ns2 ./pm_nl_ctl rem token $tk id $id
--	ip netns exec $ns2 ./pm_nl_ctl dsf lip $addr lport $sp \
-+	cnt=$(rm_sf_count ${1})
-+	ip netns exec $1 ./pm_nl_ctl dsf lip $2 lport $sp \
- 				rip $da rport $dp token $tk
--	wait_rm_addr $ns2 "${cnt_addr}"
--	wait_rm_sf $ns2 "${cnt_sf}"
-+	wait_rm_sf $1 "${cnt}"
- }
+ 	__mptcp_init_sock(nsk);
  
- userspace_tests()
-@@ -3439,13 +3435,14 @@ userspace_tests()
- 			run_tests $ns1 $ns2 10.0.1.1 &
- 		local tests_pid=$!
- 		wait_mpj $ns1
--		userspace_pm_add_addr 10.0.2.1 10
-+		userspace_pm_add_addr $ns1 10.0.2.1 10
- 		chk_join_nr 1 1 1
- 		chk_add_nr 1 1
- 		chk_mptcp_info subflows 1 subflows 1
- 		chk_subflows_total 2 2
- 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
--		userspace_pm_rm_sf_addr_ns1 10.0.2.1 10
-+		userspace_pm_rm_addr $ns1 10
-+		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $SUB_ESTABLISHED
- 		chk_rm_nr 1 1 invert
- 		chk_mptcp_info subflows 0 subflows 0
- 		chk_subflows_total 1 1
-@@ -3462,11 +3459,12 @@ userspace_tests()
- 			run_tests $ns1 $ns2 10.0.1.1 &
- 		local tests_pid=$!
- 		wait_mpj $ns2
--		userspace_pm_add_sf 10.0.3.2 20
-+		userspace_pm_add_sf $ns2 10.0.3.2 20
- 		chk_join_nr 1 1 1
- 		chk_mptcp_info subflows 1 subflows 1
- 		chk_subflows_total 2 2
--		userspace_pm_rm_sf_addr_ns2 10.0.3.2 20
-+		userspace_pm_rm_addr $ns2 20
-+		userspace_pm_rm_sf $ns2 10.0.3.2 $SUB_ESTABLISHED
- 		chk_rm_nr 1 1
- 		chk_mptcp_info subflows 0 subflows 0
- 		chk_subflows_total 1 1
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	if (nsk->sk_family == AF_INET6)
++		mptcp_copy_ip6_options(nsk, sk);
++	else
++#endif
++		mptcp_copy_ip_options(nsk, sk);
++
+ 	msk = mptcp_sk(nsk);
+ 	msk->local_key = subflow_req->local_key;
+ 	msk->token = subflow_req->token;
+-- 
+2.43.0
 
-
-Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
-
-queue-6.7/selftests-mptcp-add-mptcp_lib_is_v6.patch
-queue-6.7/x86-bugs-use-alternative-instead-of-mds_user_clear-static-key.patch
-queue-6.7/kvm-vmx-move-verw-closer-to-vmentry-for-mds-mitigation.patch
-queue-6.7/selftests-mptcp-rm-subflow-with-v4-v4mapped-addr.patch
-queue-6.7/x86-entry_32-add-verw-just-before-userspace-transition.patch
-queue-6.7/x86-entry_64-add-verw-just-before-userspace-transition.patch
-queue-6.7/selftests-mptcp-update-userspace-pm-test-helpers.patch
-queue-6.7/selftests-mptcp-add-evts_get_info-helper.patch
-queue-6.7/kvm-vmx-use-bt-jnc-i.e.-eflags.cf-to-select-vmresume-vs.-vmlaunch.patch
-queue-6.7/selftests-mptcp-add-chk_subflows_total-helper.patch
