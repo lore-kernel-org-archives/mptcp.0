@@ -1,152 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2913DB9A;
-	Mon,  4 Mar 2024 13:39:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071473FB14;
+	Mon,  4 Mar 2024 14:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709559553; cv=none; b=nDoVGFcZf3VH35GTRaoZcOKUqYaTRxwpIUKU88DDR+GE4eRMiMET2x5y3mg5tvmM+UtOaKylMVe2wAiWhizx48iExNBbdNeEwwB92z3cbGBFX2YEt4ABAtD8P9Yf50kIv8P+SPOOXLGdBURk9V1ZELJcnLUWJJKeO6DkbI38rPI=
+	t=1709562320; cv=none; b=GqHBbsHBTq70F6MErhhmDM9Hv13VGVURaO215toTTaJqDpAnA4PsJ9LQMSL1wr2qWQ05+uPL+s4OCHvYlQMAKdC4YeDSZ5VP1OLOFZNLfJn/HwXdH6pINwcmEa30jh3RxY8OX4JKuU+pXjeB4Wqy/ibGps4oDkMQ1wVHz0R7KoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709559553; c=relaxed/simple;
-	bh=CwC9QxAIErrAtfaYiScfGf8mPejqh11llUCnGb/ko6s=;
+	s=arc-20240116; t=1709562320; c=relaxed/simple;
+	bh=VRS+n6ybLa9IWmtYpfnpQ35yJadFpwSuUqSk8qXjlG0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BugWCX7UkUr7gUiexzMV1TpPcV7Kro2bONQjyC92RAEVbTuj9Zxs5QmydIamQAZ+1wFcrfY4qkRt7jcxP1Cgdras6CAWPFeGXsSmpu8NAlIaCMBYAOhVSRFhASgRzUHJsjzeWh6MRBXOFno5C69+6WE0zITEhcHd+RclZV+M14o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LowgJOT1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=f0VR6SHdcgr+SlCptu1FLu8tMdAHZ/e/8Pifyg5i1ya3NxxXjVjbG6vCHNbaM7QvXJ41ema6yFdXUDhr02DDyT60XJwkA8JK6KdPYuo8a0M16s4fNj93etYisObkE2lriAdItiaYctyRygLNfZyHHXAG707aEyfLWTCo1eLp38o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VrOZv12F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LowgJOT1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E55DAC43394;
-	Mon,  4 Mar 2024 13:39:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VrOZv12F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D9BEC433F1;
+	Mon,  4 Mar 2024 14:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709559553;
-	bh=CwC9QxAIErrAtfaYiScfGf8mPejqh11llUCnGb/ko6s=;
+	s=k20201202; t=1709562319;
+	bh=VRS+n6ybLa9IWmtYpfnpQ35yJadFpwSuUqSk8qXjlG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LowgJOT1d4+pT222Ol1VyDKOnu0CX9AVAvLompLzkr0+8KB+xIgaRloSCx+24To6o
-	 /DyggDogfKMz5jieh/4nZX+tGNRlPJjLEq8vxUS/wp2DtQf1NvenoiOaB0VtFgy3hb
-	 tRQ1NO0lDdSSGUmuSvBpiyRKV3TOrlddKBu14zS4N/XqLno3bIvu1IwsIp5v1rejRJ
-	 bd3YUUcUL+SX6Kypi3/dXIH8zqpqJC21vuPxe7F+oGijn3EdTRVjyGUFPMdDywI16K
-	 S8kpivRKRO+2RjlqZB8kyLFIWUDjuEF2s1kEE9ICaJS2a5QprkMuHKmPD0Txng441i
-	 vMxg+6cFwdK6g==
+	b=VrOZv12FGdvZLa1kyUWHrsIe2aCJ0y95L+R5FvZNUQnsdF3r8W7nOxD0yZpya97ek
+	 m3/DuJC+mhdYhCx2BkiMzihSDar3KQ9D1gqz+YNn7Z3Q+ZuRRxQDvjJGpxx5InldDt
+	 gTMTud+igphLPYca8j89jMGF2/lV21Ru21jakeiqCJT1D5tomH8fgxyx9vq1nS2yrM
+	 p6npyBcyzkdhge6FKB9b6ucsL6/xuPw7rCbE3IfNcziRozFDwcgj3xyiY8YwWLzOc0
+	 bFXSOSRPwTJBk7M9uQEwh+9iXxYTgJehd4+OsPRmvYF/qt7iBpgiDvQan7FbrpbGR+
+	 eM4aTi3o40Byw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Geliang Tang <tanggeliang@kylinos.cn>,
-	Mat Martineau <martineau@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.7.y 5/5] selftests: mptcp: rm subflow with v4/v4mapped addr
-Date: Mon,  4 Mar 2024 14:38:33 +0100
-Message-ID: <20240304133827.1989736-12-matttbe@kernel.org>
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH 6.6.y 0/5] mptcp: dependences for "selftests: mptcp: rm subflow with v4/v4mapped addr"
+Date: Mon,  4 Mar 2024 15:25:09 +0100
+Message-ID: <20240304142508.2086803-7-matttbe@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2024030420-swimsuit-antacid-a0dd@gregkh>
-References: <2024030420-swimsuit-antacid-a0dd@gregkh>
+In-Reply-To: <2024030421-badly-bucket-6555@gregkh>
+References: <2024030421-badly-bucket-6555@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4018; i=matttbe@kernel.org; h=from:subject; bh=+YI5S+bg4Qqsk2cC/FpCWVSaR+F/PjuF/l9DB2ZTJys=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl5c7UTHaUhSR3rZLmqpX0HmqitM0QPXH2658x6 kZbfwWapEuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeXO1AAKCRD2t4JPQmmg c8RXEADgmqUHFNG7Ol2c4x8/PbJpGCrYuPXwKl4djQlti99xRE4sNbZhh4i7NI5muALGGmS8WoH MqPlzTD9Vp6IToD1daSGOfm/ZJRT1ciWShs/A3+b7Zp44E7U6iUqLXwJolBPPkxXQp8ZDeJnPmf FrmWu4+Lx7ALUjSlhzo8m+cUDLSkNEF7k2p7FaL2emCZ3DdTK1M/Z2uomjFhCffOanijwajXopW AXvW2SZKMabYNHKhrEEUz2s4jKebZDyrFvVT/GR6qAeKW2fwCQEJkr7RKXaTu+WCCagr5w5GYUQ MppDQ8qb7ZwcgDG0IXjyZMs/SOaZoo8ILM0ZjrNb6XGF0S38+ZyWisIEsP1JCHf/Bu+lAEhItAp dmH5vmxHMJfDmvsNtc2iF2nzGqR1GDk6jw+OmtLMXv8/MyKcywV93y3NrFo8LD85pkN1hYk4CwT DQ9qb+XmpQWyl0Y4dqGZCFrzXtQqA3tNt5hQgQE4AkEXOfrUXf/BwkExP7ImYusf51/WK5sDwMy bQAaFRvfZzSzG/QRSbgugUOZCPaTBCy+oPw8V9XUUsEwmJ/ry7WiN0vPfL78An9QOAzCCV2alyH xLaqn10qu60CCkWzO9KYOkRvCxtA3rrUwZ+P11f60N/dBcr8pGE5L24H7Q/lJAYYbuDuftlceEn KrFn9To6XlTAfVQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1167; i=matttbe@kernel.org; h=from:subject; bh=VRS+n6ybLa9IWmtYpfnpQ35yJadFpwSuUqSk8qXjlG0=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl5dnEASrdRf3uydwstj1MGa2r19TpipOlZlc9E S+s3g4Vjs+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeXZxAAKCRD2t4JPQmmg c8INEADgvU3ulhsUA26DqkSERsF38WQw/HPt8iLX5gROkdKPEICRS47O9vLQ61L9Dl3o8C4c58J tHcmxlJx1V/bQU4sFgOIZMQHgcYFR2QgUdkC1q+HqGFp9IIcuwz2x/bX7+S5VpzaZpLZGZg7qVA jbnDx0Jej4kAA8VUwvqseRGZIsgVuhtaqL8BLK8djsMJf6XE/v3OQY2HZacQudIczoE1TWLSRRt 4ClxjaQ2LnjoJUw8XyF2hU9/Kn53xQtN8m9SqnuLXSuDTw3SEb40ON1y8sZW990ds3c+C8/kAW6 ZX5GPpOJIZI8+QcYK1zEAaaQODmnhLGJa2kU3d0viMKg2Zhicbs+L36maEdwFrbqh4bNKBggCMk 5FdU3sfCu1z+MQBurQ39UFJlnyPUTUjvOXNemuF24hqOgcv8HSjFX2YXtscg1PTqUmJFj1xw/bo 3gKnTX6frHxUvwat+U5CBibrtNhgTCU+oqE1LOD9iFTYoOp4m1qJa+U44XS16OH7OGNM1+i7YGM 4XN7tIuTGWRxYPBNNfWAt70RxlquYoyCtFGVEYhaLdmZcVKu/TNwv991MSLLxJooGoxrzLtQrY3 XGH19oqfVxXB4CXMagcHtjmeZBSkiH8YKyfU2XoXud3r4XXJcxvhmctNeu3nspXhXBN0iiwxrbt KJOsDc/GZyAEXgQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Greg,
 
-Now both a v4 address and a v4-mapped address are supported when
-destroying a userspace pm subflow, this patch adds a second subflow
-to "userspace pm add & remove address" test, and two subflows could
-be removed two different ways, one with the v4mapped and one with v4.
+To be able to apply the last patch without conflicts in v6.6, 4 other
+clean-up patches are needed.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/387
-Fixes: 48d73f609dcc ("selftests: mptcp: update userspace pm addr tests")
-Cc: stable@vger.kernel.org
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://lore.kernel.org/r/20240223-upstream-net-20240223-misc-fixes-v1-2-162e87e48497@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit 7092dbee23282b6fcf1313fc64e2b92649ee16e8)
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 28 +++++++++++--------
- .../testing/selftests/net/mptcp/mptcp_lib.sh  |  4 +--
- 2 files changed, 18 insertions(+), 14 deletions(-)
+These patches mainly replace existing code with helpers to reduce code
+duplication. It looks interesting to backport them to ease future
+backports.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 1bc9e424194b..e6b778a9a937 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3328,16 +3328,17 @@ userspace_pm_rm_sf()
- {
- 	local evts=$evts_ns1
- 	local t=${3:-1}
--	local ip=4
-+	local ip
- 	local tk da dp sp
- 	local cnt
- 
- 	[ "$1" == "$ns2" ] && evts=$evts_ns2
--	if mptcp_lib_is_v6 $2; then ip=6; fi
-+	[ -n "$(mptcp_lib_evts_get_info "saddr4" "$evts" $t)" ] && ip=4
-+	[ -n "$(mptcp_lib_evts_get_info "saddr6" "$evts" $t)" ] && ip=6
- 	tk=$(mptcp_lib_evts_get_info token "$evts")
--	da=$(mptcp_lib_evts_get_info "daddr$ip" "$evts" $t)
--	dp=$(mptcp_lib_evts_get_info dport "$evts" $t)
--	sp=$(mptcp_lib_evts_get_info sport "$evts" $t)
-+	da=$(mptcp_lib_evts_get_info "daddr$ip" "$evts" $t $2)
-+	dp=$(mptcp_lib_evts_get_info dport "$evts" $t $2)
-+	sp=$(mptcp_lib_evts_get_info sport "$evts" $t $2)
- 
- 	cnt=$(rm_sf_count ${1})
- 	ip netns exec $1 ./pm_nl_ctl dsf lip $2 lport $sp \
-@@ -3424,20 +3425,23 @@ userspace_tests()
- 	if reset_with_events "userspace pm add & remove address" &&
- 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
- 		set_userspace_pm $ns1
--		pm_nl_set_limits $ns2 1 1
-+		pm_nl_set_limits $ns2 2 2
- 		speed=5 \
- 			run_tests $ns1 $ns2 10.0.1.1 &
- 		local tests_pid=$!
- 		wait_mpj $ns1
- 		userspace_pm_add_addr $ns1 10.0.2.1 10
--		chk_join_nr 1 1 1
--		chk_add_nr 1 1
--		chk_mptcp_info subflows 1 subflows 1
--		chk_subflows_total 2 2
--		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
-+		userspace_pm_add_addr $ns1 10.0.3.1 20
-+		chk_join_nr 2 2 2
-+		chk_add_nr 2 2
-+		chk_mptcp_info subflows 2 subflows 2
-+		chk_subflows_total 3 3
-+		chk_mptcp_info add_addr_signal 2 add_addr_accepted 2
- 		userspace_pm_rm_addr $ns1 10
- 		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $SUB_ESTABLISHED
--		chk_rm_nr 1 1 invert
-+		userspace_pm_rm_addr $ns1 20
-+		userspace_pm_rm_sf $ns1 10.0.3.1 $SUB_ESTABLISHED
-+		chk_rm_nr 2 2 invert
- 		chk_mptcp_info subflows 0 subflows 0
- 		chk_subflows_total 1 1
- 		kill_events_pids
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index f7b16d0bb5e5..8939d5c135a0 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -213,9 +213,9 @@ mptcp_lib_get_info_value() {
- 	grep "${2}" | sed -n 's/.*\('"${1}"':\)\([0-9a-f:.]*\).*$/\2/p;q'
- }
- 
--# $1: info name ; $2: evts_ns ; $3: event type
-+# $1: info name ; $2: evts_ns ; [$3: event type; [$4: addr]]
- mptcp_lib_evts_get_info() {
--	mptcp_lib_get_info_value "${1}" "^type:${3:-1}," < "${2}"
-+	grep "${4:-}" "${2}" | mptcp_lib_get_info_value "${1}" "^type:${3:-1},"
- }
- 
- # $1: PID
+I had a few conflicts in mptcp_lib.sh, because some of the new helpers
+have been backported recently, but not all: so I had to place them
+between others.
+
+Note that these patches are the same the ones I sent earlier for v6.7, 
+no other conflicts.
+
+Geliang Tang (5):
+  selftests: mptcp: add evts_get_info helper
+  selftests: mptcp: add chk_subflows_total helper
+  selftests: mptcp: update userspace pm test helpers
+  selftests: mptcp: add mptcp_lib_is_v6
+  selftests: mptcp: rm subflow with v4/v4mapped addr
+
+ .../selftests/net/mptcp/mptcp_connect.sh      |  16 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 187 ++++++++++--------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |  15 ++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |   8 +-
+ .../selftests/net/mptcp/userspace_pm.sh       |  86 ++++----
+ 5 files changed, 170 insertions(+), 142 deletions(-)
+
 -- 
 2.43.0
 
