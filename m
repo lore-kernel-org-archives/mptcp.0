@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD391E487;
-	Mon,  4 Mar 2024 16:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5FF4D12D;
+	Mon,  4 Mar 2024 16:44:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709570646; cv=none; b=pRRItWzYMHBplIMNt111M+IIEADb6wpqq+slW7yPBTlvaUuuekgfPDcgU1Ml9wp0UIDIejCII86Jg9sOOKfK7PduWP9jo5RzxpRpzMbLH/dvIwt5jUid9myFZymr8J/+LPuXbvWqlRfwgf0CmosAIo/1GA5j1L5zNb4y/EeazYA=
+	t=1709570670; cv=none; b=oYzt4T0g38ay2McaDfcqw/I0hOcJ2UBSreHstIlqym1/Rt3sPUWTVEqlu1BwV3gCGubGjmqPeTLnBRdrenL6eKVECf9U9EhMiaSFXhi4krp/IuJYlEXTOmG9+jwaCfNmcKDW67aQznV9/Grihc51TkezuJpwQ7BcHE9UTGhCZfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709570646; c=relaxed/simple;
-	bh=8MJOELcT0UfoGJGcU2XtvbLfg4R8grfdbeHZahshVxs=;
+	s=arc-20240116; t=1709570670; c=relaxed/simple;
+	bh=exmdBp/idelUtrnY8PYNwDlMxiyQRAGMlHJRF+lv22g=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=eeqmMfe2e4xjvrdWRoSGHSU37AFSLsqEuQolccXaCUkgDSzUDNNEInFGBnW6p7PdJ1xOJghNJoEMlBtg8ltuKGi6o44vK78zWWCIHIH4OXvIRxDGqnvEZ7Gy/3EnYVu5ITBXOCx4ox8ZQUnS68PaeoUypODYVM8xyb8AZvXaL4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Odyi2ads; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=jZ9QqmTVAPtWXZFvy8rm5ogIsEAaVB5NwROkY5Sv1sn0oj+EN380qZvuN2CLi/Z42aKIdGaw4VrhDVjT2fvg0QbHYfwIAGmzE/2OCIPjWEhjKGVXSLFvFiGxWHVmAkpaOl+VHbyPXuISW7JPyTa6JcfyPzw/1PJ30xOqlocrJnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pxpLTuOO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Odyi2ads"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4DFBC43390;
-	Mon,  4 Mar 2024 16:44:03 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pxpLTuOO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A9E9C433F1;
+	Mon,  4 Mar 2024 16:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709570646;
-	bh=8MJOELcT0UfoGJGcU2XtvbLfg4R8grfdbeHZahshVxs=;
+	s=korg; t=1709570669;
+	bh=exmdBp/idelUtrnY8PYNwDlMxiyQRAGMlHJRF+lv22g=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=Odyi2adsd1ZYiZ2aUyk7iul7/zQ6x770/NAFCGch0rULVUlyyXxJXUhG5Rt2u/itm
-	 3WBRVLQTBDKjwwyusjTlSvwVFymChAzn4Sb5EfOoiPF+7fNTwrMqZ/6d1ocJ1/02dk
-	 GJxHy1LSC+A0AykNJ0luKj9u+Z5gygUPjGd8h3cY=
-Subject: Patch "mptcp: fix double-free on socket dismantle" has been added to the 5.15-stable tree
-To: dcaratti@redhat.com,gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
+	b=pxpLTuOOTZ324RttYJ+810jwdN2A1Pz8sIsoGZgURLykm42BjRwRvMuhliXeFLc9Y
+	 lApBDDkA2F58qdKvoKscybzV1EeOp4vrJNolrX5eNg2q9YaOK/c0wAeDa6NQ7S3j5O
+	 zQeNOd6WGc6x3QGubiOPt76DR1jxSeOmyiQF29/g=
+Subject: Patch "selftests: mptcp: add chk_subflows_total helper" has been added to the 6.6-stable tree
+To: geliang.tang@suse.com,gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Mon, 04 Mar 2024 17:43:57 +0100
-In-Reply-To: <20240304162517.2505910-2-matttbe@kernel.org>
-Message-ID: <2024030457-quarry-esteemed-fe83@gregkh>
+Date: Mon, 04 Mar 2024 17:44:26 +0100
+In-Reply-To: <20240304142508.2086803-9-matttbe@kernel.org>
+Message-ID: <2024030426-storm-deserve-d134@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,231 +44,146 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: fix double-free on socket dismantle
+    selftests: mptcp: add chk_subflows_total helper
 
-to the 5.15-stable tree which can be found at:
+to the 6.6-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-fix-double-free-on-socket-dismantle.patch
-and it can be found in the queue-5.15 subdirectory.
+     selftests-mptcp-add-chk_subflows_total-helper.patch
+and it can be found in the queue-6.6 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-25950-greg=kroah.com@vger.kernel.org Mon Mar  4 17:25:46 2024
+From matttbe@kernel.org Mon Mar  4 15:25:24 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon,  4 Mar 2024 17:25:18 +0100
-Subject: mptcp: fix double-free on socket dismantle
+Date: Mon,  4 Mar 2024 15:25:11 +0100
+Subject: selftests: mptcp: add chk_subflows_total helper
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Davide Caratti <dcaratti@redhat.com>, Mat Martineau <martineau@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240304162517.2505910-2-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliang.tang@suse.com>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20240304142508.2086803-9-matttbe@kernel.org>
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Geliang Tang <geliang.tang@suse.com>
 
-commit 10048689def7e40a4405acda16fdc6477d4ecc5c upstream.
+commit 80775412882e273b8ef62124fae861cde8e6fb3d upstream.
 
-when MPTCP server accepts an incoming connection, it clones its listener
-socket. However, the pointer to 'inet_opt' for the new socket has the same
-value as the original one: as a consequence, on program exit it's possible
-to observe the following splat:
+This patch adds a new helper chk_subflows_total(), in it use the newly
+added counter mptcpi_subflows_total to get the "correct" amount of
+subflows, including the initial one.
 
-  BUG: KASAN: double-free in inet_sock_destruct+0x54f/0x8b0
-  Free of addr ffff888485950880 by task swapper/25/0
+To be compatible with old 'ss' or kernel versions not supporting this
+counter, get the total subflows by listing TCP connections that are
+MPTCP subflows:
 
-  CPU: 25 PID: 0 Comm: swapper/25 Kdump: loaded Not tainted 6.8.0-rc1+ #609
-  Hardware name: Supermicro SYS-6027R-72RF/X9DRH-7TF/7F/iTF/iF, BIOS 3.0  07/26/2013
-  Call Trace:
-   <IRQ>
-   dump_stack_lvl+0x32/0x50
-   print_report+0xca/0x620
-   kasan_report_invalid_free+0x64/0x90
-   __kasan_slab_free+0x1aa/0x1f0
-   kfree+0xed/0x2e0
-   inet_sock_destruct+0x54f/0x8b0
-   __sk_destruct+0x48/0x5b0
-   rcu_do_batch+0x34e/0xd90
-   rcu_core+0x559/0xac0
-   __do_softirq+0x183/0x5a4
-   irq_exit_rcu+0x12d/0x170
-   sysvec_apic_timer_interrupt+0x6b/0x80
-   </IRQ>
-   <TASK>
-   asm_sysvec_apic_timer_interrupt+0x16/0x20
-  RIP: 0010:cpuidle_enter_state+0x175/0x300
-  Code: 30 00 0f 84 1f 01 00 00 83 e8 01 83 f8 ff 75 e5 48 83 c4 18 44 89 e8 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc fb 45 85 ed <0f> 89 60 ff ff ff 48 c1 e5 06 48 c7 43 18 00 00 00 00 48 83 44 2b
-  RSP: 0018:ffff888481cf7d90 EFLAGS: 00000202
-  RAX: 0000000000000000 RBX: ffff88887facddc8 RCX: 0000000000000000
-  RDX: 1ffff1110ff588b1 RSI: 0000000000000019 RDI: ffff88887fac4588
-  RBP: 0000000000000004 R08: 0000000000000002 R09: 0000000000043080
-  R10: 0009b02ea273363f R11: ffff88887fabf42b R12: ffffffff932592e0
-  R13: 0000000000000004 R14: 0000000000000000 R15: 00000022c880ec80
-   cpuidle_enter+0x4a/0xa0
-   do_idle+0x310/0x410
-   cpu_startup_entry+0x51/0x60
-   start_secondary+0x211/0x270
-   secondary_startup_64_no_verify+0x184/0x18b
-   </TASK>
+    ss -ti state state established state syn-sent state syn-recv |
+        grep -c tcp-ulp-mptcp.
 
-  Allocated by task 6853:
-   kasan_save_stack+0x1c/0x40
-   kasan_save_track+0x10/0x30
-   __kasan_kmalloc+0xa6/0xb0
-   __kmalloc+0x1eb/0x450
-   cipso_v4_sock_setattr+0x96/0x360
-   netlbl_sock_setattr+0x132/0x1f0
-   selinux_netlbl_socket_post_create+0x6c/0x110
-   selinux_socket_post_create+0x37b/0x7f0
-   security_socket_post_create+0x63/0xb0
-   __sock_create+0x305/0x450
-   __sys_socket_create.part.23+0xbd/0x130
-   __sys_socket+0x37/0xb0
-   __x64_sys_socket+0x6f/0xb0
-   do_syscall_64+0x83/0x160
-   entry_SYSCALL_64_after_hwframe+0x6e/0x76
-
-  Freed by task 6858:
-   kasan_save_stack+0x1c/0x40
-   kasan_save_track+0x10/0x30
-   kasan_save_free_info+0x3b/0x60
-   __kasan_slab_free+0x12c/0x1f0
-   kfree+0xed/0x2e0
-   inet_sock_destruct+0x54f/0x8b0
-   __sk_destruct+0x48/0x5b0
-   subflow_ulp_release+0x1f0/0x250
-   tcp_cleanup_ulp+0x6e/0x110
-   tcp_v4_destroy_sock+0x5a/0x3a0
-   inet_csk_destroy_sock+0x135/0x390
-   tcp_fin+0x416/0x5c0
-   tcp_data_queue+0x1bc8/0x4310
-   tcp_rcv_state_process+0x15a3/0x47b0
-   tcp_v4_do_rcv+0x2c1/0x990
-   tcp_v4_rcv+0x41fb/0x5ed0
-   ip_protocol_deliver_rcu+0x6d/0x9f0
-   ip_local_deliver_finish+0x278/0x360
-   ip_local_deliver+0x182/0x2c0
-   ip_rcv+0xb5/0x1c0
-   __netif_receive_skb_one_core+0x16e/0x1b0
-   process_backlog+0x1e3/0x650
-   __napi_poll+0xa6/0x500
-   net_rx_action+0x740/0xbb0
-   __do_softirq+0x183/0x5a4
-
-  The buggy address belongs to the object at ffff888485950880
-   which belongs to the cache kmalloc-64 of size 64
-  The buggy address is located 0 bytes inside of
-   64-byte region [ffff888485950880, ffff8884859508c0)
-
-  The buggy address belongs to the physical page:
-  page:0000000056d1e95e refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888485950700 pfn:0x485950
-  flags: 0x57ffffc0000800(slab|node=1|zone=2|lastcpupid=0x1fffff)
-  page_type: 0xffffffff()
-  raw: 0057ffffc0000800 ffff88810004c640 ffffea00121b8ac0 dead000000000006
-  raw: ffff888485950700 0000000000200019 00000001ffffffff 0000000000000000
-  page dumped because: kasan: bad access detected
-
-  Memory state around the buggy address:
-   ffff888485950780: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-   ffff888485950800: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  >ffff888485950880: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-                     ^
-   ffff888485950900: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-   ffff888485950980: 00 00 00 00 00 01 fc fc fc fc fc fc fc fc fc fc
-
-Something similar (a refcount underflow) happens with CALIPSO/IPv6. Fix
-this by duplicating IP / IPv6 options after clone, so that
-ip{,6}_sock_destruct() doesn't end up freeing the same memory area twice.
-
-Fixes: cf7da0d66cc1 ("mptcp: Create SUBFLOW socket for incoming connections")
-Cc: stable@vger.kernel.org
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://lore.kernel.org/r/20240223-upstream-net-20240223-misc-fixes-v1-8-162e87e48497@kernel.org
+Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Mat Martineau <martineau@kernel.org>
+Link: https://lore.kernel.org/r/20231128-send-net-next-2023107-v4-3-8d6b94150f6b@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |   49 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |   42 +++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2856,8 +2856,50 @@ static struct ipv6_pinfo *mptcp_inet6_sk
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1840,7 +1840,7 @@ chk_mptcp_info()
+ 	local cnt2
+ 	local dump_stats
  
- 	return (struct ipv6_pinfo *)(((u8 *)sk) + offset);
+-	print_check "mptcp_info ${info1:0:8}=$exp1:$exp2"
++	print_check "mptcp_info ${info1:0:15}=$exp1:$exp2"
+ 
+ 	cnt1=$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value "$info1" "$info1")
+ 	cnt2=$(ss -N $ns2 -inmHM | mptcp_lib_get_info_value "$info2" "$info2")
+@@ -1861,6 +1861,42 @@ chk_mptcp_info()
+ 	fi
  }
-+
-+static void mptcp_copy_ip6_options(struct sock *newsk, const struct sock *sk)
-+{
-+	const struct ipv6_pinfo *np = inet6_sk(sk);
-+	struct ipv6_txoptions *opt;
-+	struct ipv6_pinfo *newnp;
-+
-+	newnp = inet6_sk(newsk);
-+
-+	rcu_read_lock();
-+	opt = rcu_dereference(np->opt);
-+	if (opt) {
-+		opt = ipv6_dup_options(newsk, opt);
-+		if (!opt)
-+			net_warn_ratelimited("%s: Failed to copy ip6 options\n", __func__);
-+	}
-+	RCU_INIT_POINTER(newnp->opt, opt);
-+	rcu_read_unlock();
-+}
- #endif
  
-+static void mptcp_copy_ip_options(struct sock *newsk, const struct sock *sk)
++# $1: subflows in ns1 ; $2: subflows in ns2
++# number of all subflows, including the initial subflow.
++chk_subflows_total()
 +{
-+	struct ip_options_rcu *inet_opt, *newopt = NULL;
-+	const struct inet_sock *inet = inet_sk(sk);
-+	struct inet_sock *newinet;
++	local cnt1
++	local cnt2
++	local info="subflows_total"
++	local dump_stats
 +
-+	newinet = inet_sk(newsk);
++	# if subflows_total counter is supported, use it:
++	if [ -n "$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value $info $info)" ]; then
++		chk_mptcp_info $info $1 $info $2
++		return
++	fi
 +
-+	rcu_read_lock();
-+	inet_opt = rcu_dereference(inet->inet_opt);
-+	if (inet_opt) {
-+		newopt = sock_kmalloc(newsk, sizeof(*inet_opt) +
-+				      inet_opt->opt.optlen, GFP_ATOMIC);
-+		if (newopt)
-+			memcpy(newopt, inet_opt, sizeof(*inet_opt) +
-+			       inet_opt->opt.optlen);
-+		else
-+			net_warn_ratelimited("%s: Failed to copy ip options\n", __func__);
-+	}
-+	RCU_INIT_POINTER(newinet->inet_opt, newopt);
-+	rcu_read_unlock();
-+}
++	print_check "$info $1:$2"
 +
- struct sock *mptcp_sk_clone(const struct sock *sk,
- 			    const struct mptcp_options_received *mp_opt,
- 			    struct request_sock *req)
-@@ -2878,6 +2920,13 @@ struct sock *mptcp_sk_clone(const struct
- 	nsk->sk_wait_pending = 0;
- 	__mptcp_init_sock(nsk);
- 
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+	if (nsk->sk_family == AF_INET6)
-+		mptcp_copy_ip6_options(nsk, sk);
++	# if not, count the TCP connections that are in fact MPTCP subflows
++	cnt1=$(ss -N $ns1 -ti state established state syn-sent state syn-recv |
++	       grep -c tcp-ulp-mptcp)
++	cnt2=$(ss -N $ns2 -ti state established state syn-sent state syn-recv |
++	       grep -c tcp-ulp-mptcp)
++
++	if [ "$1" != "$cnt1" ] || [ "$2" != "$cnt2" ]; then
++		fail_test "got subflows $cnt1:$cnt2 expected $1:$2"
++		dump_stats=1
 +	else
-+#endif
-+		mptcp_copy_ip_options(nsk, sk);
++		print_ok
++	fi
 +
- 	msk = mptcp_sk(nsk);
- 	msk->local_key = subflow_req->local_key;
- 	msk->token = subflow_req->token;
++	if [ "$dump_stats" = 1 ]; then
++		ss -N $ns1 -ti
++		ss -N $ns2 -ti
++	fi
++}
++
+ chk_link_usage()
+ {
+ 	local ns=$1
+@@ -3404,10 +3440,12 @@ userspace_tests()
+ 		chk_join_nr 1 1 1
+ 		chk_add_nr 1 1
+ 		chk_mptcp_info subflows 1 subflows 1
++		chk_subflows_total 2 2
+ 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
+ 		userspace_pm_rm_sf_addr_ns1 10.0.2.1 10
+ 		chk_rm_nr 1 1 invert
+ 		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
+ 		kill_events_pids
+ 		mptcp_lib_kill_wait $tests_pid
+ 	fi
+@@ -3424,9 +3462,11 @@ userspace_tests()
+ 		userspace_pm_add_sf 10.0.3.2 20
+ 		chk_join_nr 1 1 1
+ 		chk_mptcp_info subflows 1 subflows 1
++		chk_subflows_total 2 2
+ 		userspace_pm_rm_sf_addr_ns2 10.0.3.2 20
+ 		chk_rm_nr 1 1
+ 		chk_mptcp_info subflows 0 subflows 0
++		chk_subflows_total 1 1
+ 		kill_events_pids
+ 		mptcp_lib_kill_wait $tests_pid
+ 	fi
 
 
-Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
+Patches currently in stable-queue which might be from matttbe@kernel.org are
 
-queue-5.15/mptcp-fix-double-free-on-socket-dismantle.patch
-queue-5.15/selftests-mptcp-add-missing-kconfig-for-nf-filter.patch
-queue-5.15/selftests-mptcp-add-missing-kconfig-for-nf-filter-in-v6.patch
-queue-5.15/mptcp-add-needs_id-for-netlink-appending-addr.patch
-queue-5.15/mptcp-rename-timer-related-helper-to-less-confusing-names.patch
-queue-5.15/mptcp-process-pending-subflow-error-on-close.patch
-queue-5.15/mptcp-clean-up-harmless-false-expressions.patch
-queue-5.15/mptcp-move-__mptcp_error_report-in-protocol.c.patch
+queue-6.6/selftests-mptcp-add-mptcp_lib_is_v6.patch
+queue-6.6/mptcp-push-at-dss-boundaries.patch
+queue-6.6/mptcp-fix-double-free-on-socket-dismantle.patch
+queue-6.6/mptcp-fix-snd_wnd-initialization-for-passive-socket.patch
+queue-6.6/selftests-mptcp-rm-subflow-with-v4-v4mapped-addr.patch
+queue-6.6/selftests-mptcp-update-userspace-pm-test-helpers.patch
+queue-6.6/mptcp-map-v4-address-to-v6-when-destroying-subflow.patch
+queue-6.6/selftests-mptcp-add-evts_get_info-helper.patch
+queue-6.6/mptcp-fix-potential-wake-up-event-loss.patch
+queue-6.6/selftests-mptcp-join-add-ss-mptcp-support-check.patch
+queue-6.6/mptcp-fix-possible-deadlock-in-subflow-diag.patch
+queue-6.6/mptcp-avoid-printing-warning-once-on-client-side.patch
+queue-6.6/selftests-mptcp-add-chk_subflows_total-helper.patch
