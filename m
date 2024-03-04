@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65281E497
-	for <mptcp@lists.linux.dev>; Mon,  4 Mar 2024 12:31:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1B937156
+	for <mptcp@lists.linux.dev>; Mon,  4 Mar 2024 12:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709555520; cv=none; b=LBG0p4wEang92wwETyb4ZFUD64ro2sKP9Rpa0LFKKPrM5lNdKZJyARTh5QMxlLJ2fq1BsDsLam6GworuHhN0LZPdgj7bMT2XLL8wto5kLHqH/BTbGQ8y4SekuRjSymzpWkVvpdFfh3T2ON2YRIrw0dqYAT1aXA364BJ3lsz6W4c=
+	t=1709555525; cv=none; b=EdDl2ebccRimK/UcadO3IeFsuua985NmrFLUgL2+QydmV9rpXHACqB32O/ShUwFHxxWxlX6henJ6iQB9iD1SCQSFBE3PBASsVdVpF38EURoZkHnWwtbM5e61PBMdQ80JZGGjG3Zwal8siTgDzbtT3Fv7TVLSXySh30g7N1aHa+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709555520; c=relaxed/simple;
-	bh=PgFBHBMCb5VWGZp9GcRsoY7TWzg6vvnkpcwVD3LYbxY=;
+	s=arc-20240116; t=1709555525; c=relaxed/simple;
+	bh=hGZ8Z058VrQpEjSzF9fphfQeng7EKIpT1ky0noNN40k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qjH4THlCfJSDBA5iP4ut8LYCpCe+jQZTjSeIaXMSG8fT/EHkVZlR7oyB2pgssODjOY4DLwTVtzRpoLkJL9nm6Bprgm/8GLQdU21GYNlX3sqMIvCKJlbYKLxouOlOmNZSmvnqoRwTEC0tGvgfeauUul72ptWU9Vf1Y71Wq3Xic7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqsHpLhd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=JShGMXhqb/bNmDMFRNvqJgGFlFKUPf25MQ1T4glpJapbmhA4p7PdeH6PVX/6O2gRvigv+RLXZ4ftDFbnwOE0HEbRrTc+pnVEtjhotS2fdR+XmkLof+xcz9WK3cgsjfGF//CywB/Gpma3S3zZ1Mfhhn4ekNUh3z0+XXdNoV6HrCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMh3FUnc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqsHpLhd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE5A5C433F1;
-	Mon,  4 Mar 2024 12:31:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMh3FUnc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F08C433F1;
+	Mon,  4 Mar 2024 12:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709555519;
-	bh=PgFBHBMCb5VWGZp9GcRsoY7TWzg6vvnkpcwVD3LYbxY=;
+	s=k20201202; t=1709555524;
+	bh=hGZ8Z058VrQpEjSzF9fphfQeng7EKIpT1ky0noNN40k=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nqsHpLhdVkxpQGloK+DIG1TqPMNSZVEVQ877I9MtdGJpsszEkG4vwCd1MdYA+cW+G
-	 U92Bz8hUXBFJ4dAy/HG7IYLpvSZ1jt4VkcB3XzYkwxA4NpT1y0siWBAh8bqxkmmuen
-	 0775J5tfyc0523g/rrcrj+OhsimRcsCe0QFvMFBat70cakN7w6gYmZWXCZ9P/iPY0t
-	 qZ04zPJB553uz6W81MAMZIpWqwPfhJvrIoO/JudtlFPy/8neODlz+/XJkT/80Yr+WS
-	 kf+T96A7oighKXfdIkP9xdU3TzhGWq05snaANaGxHeynyVpdQVdtKbxpWZB9c7gIe8
-	 N0mktkCpKSMWw==
-Message-ID: <0fecf41a-a227-4de3-9243-7e9db9efb434@kernel.org>
-Date: Mon, 4 Mar 2024 13:31:58 +0100
+	b=HMh3FUncilIlm2LROEX5mOdkyAzsW/BD4NmfMDa9q+RgiENUOx+JVmmhhq8uPhKlt
+	 KQVUIWl0f5rWgpfnnHkXY9J4ny/leRmLLyh02m0/W3/Nh1n35QKLjMjIHebllghtKK
+	 v7CE/fbTuwJpGDTO7UMzTeMbiKp/Eaw0HZJPjVWNUmVnwd6ODU6DQS9q82vSR1aLCj
+	 d5liuVo70KgOpoKbDLwvkMFBRkc585rxWPxsicdn9SKyRVjQny/rM6Vn3r1dR/5oDy
+	 o2Jfv1fFXUmIwociCTiF9luUNd9C1IEikbFTX0T10oGtDBBD4mKxUkpP6wSQTL+JeV
+	 DZjV7McwG3C8Q==
+Message-ID: <73670b3c-91fd-40fe-8d1a-293a59f3cc79@kernel.org>
+Date: Mon, 4 Mar 2024 13:32:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v11 2/8] selftests: mptcp: connect: add
- dedicated port counter
+Subject: Re: [PATCH mptcp-next v11 4/8] selftests: mptcp: sockopt: print every
+ test result
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709466624.git.tanggeliang@kylinos.cn>
- <b810e5d5afb5821caab1c309898b93da909f11cf.1709466624.git.tanggeliang@kylinos.cn>
+ <d5d8963bae6555f4ebd9b51f9269cc7b64dedc94.1709466624.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,73 +87,131 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b810e5d5afb5821caab1c309898b93da909f11cf.1709466624.git.tanggeliang@kylinos.cn>
+In-Reply-To: <d5d8963bae6555f4ebd9b51f9269cc7b64dedc94.1709466624.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 03/03/2024 12:52, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a new dedicated counter 'PORT' instead of TEST_COUNT to
-> increase port numbers in mptcp_connect.sh.
-
-OK to have 2 counters, but...
-
-> This can avoid outputting discontinuous test counters.
+> Only total test results are printed out in mptcp_sockopt.sh:
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> PASS: all packets had packet mark set
+> PASS: SOL_MPTCP getsockopt has expected information
+> PASS: TCP_INQ cmsg/ioctl -t tcp
+> PASS: TCP_INQ cmsg/ioctl -6 -t tcp
+> PASS: TCP_INQ cmsg/ioctl -r tcp
+> PASS: TCP_INQ cmsg/ioctl -6 -r tcp
+> PASS: TCP_INQ cmsg/ioctl -r tcp -t tcp
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> index 679e366c8f6b..30f44900ad38 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-> @@ -33,6 +33,7 @@ do_tcp=0
->  checksum=false
->  filesize=0
->  connect_per_transfer=1
-> +PORT=0
+> They mismatch with the test results:
+> 
+> ok 1 - mptcp_sockopt: mark ipv4
+> ok 2 - mptcp_sockopt: transfer ipv4
+> ok 3 - mptcp_sockopt: mark ipv6
+> ok 4 - mptcp_sockopt: transfer ipv6
+> ok 5 - mptcp_sockopt: sockopt v4
+> ok 6 - mptcp_sockopt: sockopt v6
+> ok 7 - mptcp_sockopt: TCP_INQ: -t tcp
+> ok 8 - mptcp_sockopt: TCP_INQ: -6 -t tcp
+> ok 9 - mptcp_sockopt: TCP_INQ: -r tcp
+> ok 10 - mptcp_sockopt: TCP_INQ: -6 -r tcp
+> ok 11 - mptcp_sockopt: TCP_INQ: -r tcp -t tcp
+> 
+> 'mptcp_sockopt.sh' now display more detailed results + why (what you had
+> in a former patch from v6, merged here). It no longer displays 'PASS:',
+> because it is duplicated info now that the detailed are displayed:
+> 
+> Transfer v4                                       [ OK ]
+> Mark v4                                           [ OK ]
+> Transfer v6                                       [ OK ]
+> Mark v6                                           [ OK ]
 
-Then best not to use capital letters, like for most variables here
-above. And while at it, I think it would be better to start the counter
-from 10000, not 0. So here, have:
+Small detail: I see above, in the TAP output, that we first have 'mark',
+then 'transfer', while here, it is the opposite: 'Transfer', then 'Mark'.
 
-  port=10000
+While at it, can you invert the two please to keep the same order for
+both please? Especially when later we add the test number.
 
->  if [ $tc_loss -eq 100 ];then
->  	tc_loss=1%
-> @@ -314,7 +315,7 @@ do_transfer()
->  	local extra_args="$7"
+I guess the TAP output is wrong (not logical) → so we should move:
+
+  mptcp_lib_result_code "${rets}" "transfer ${ip}"
+
+before checking the mark.
+
+(...)
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> index bf22174c022c..f7f643779992 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+> @@ -113,6 +113,11 @@ check_mark()
+>  	return 0
+>  }
 >  
->  	local port
-> -	port=$((10000+TEST_COUNT))
-> +	port=$((10000+PORT++))
-
-  port=$((port + 1))
-
->  	TEST_COUNT=$((TEST_COUNT+1))
+> +print_title()
+> +{
+> +	printf "%-50s" "${@}"
+> +}
+> +
+>  do_transfer()
+>  {
+>  	local listener_ns="$1"
+> @@ -162,6 +167,7 @@ do_transfer()
+>  	wait $spid
+>  	local rets=$?
 >  
->  	if [ "$rcvbuf" -gt 0 ]; then
-> @@ -710,7 +711,7 @@ EOF
+> +	print_title "Transfer ${ip:2}"
+>  	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
+>  		echo " client exit code $retc, server $rets" 1>&2
+>  		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
+> @@ -175,7 +181,9 @@ do_transfer()
+>  		ret=1
+>  		return 1
+
+Here, in case of error, you will not print '[FAIL]', right?
+
+>  	fi
+> +	echo "[ OK ]"
+
+Mmh, be careful that the transfer can be marked as failed later, please
+check where we call "mptcp_lib_check_transfer".
+
+In fact, I think we should move ...
+
+  mptcp_lib_check_transfer $cin $sout "file received by server"
+  rets=$?
+  mptcp_lib_result_code "${rets}" "transfer ${ip}"
+
+... before this "echo "[ OK ]", no?
+
+
+So having something like:
+
+  print_title "Transfer ${ip:2}"
+  if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
+      echo "[FAIL]"
+      (...)
+      return 1
+  elif ! mptcp_lib_check_transfer $cin $sout "(...)"; then
+      rets=1
+      mptcp_lib_result_fail "transfer ${ip}"
+  else
+      echo "[ OK ]"
+      mptcp_lib_result_pass "transfer ${ip}"
+  fi
+
+
+By doing that, we fix the TAP order, and we correctly print "OK" even if
+there was an issue during the transfer
+
 >  
->  	echo "INFO: test $msg"
->  
-> -	TEST_COUNT=10000
-> +	PORT=10000
-
-  port=20000
-
-So at least this "port" counter represents the "port" being used, not an
-offset of it.
-
->  	local extra_args="-o TRANSPARENT"
->  	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
->  		    ${connect_addr} ${local_addr} "${extra_args}"
-
+> +	print_title "Mark ${ip:2}"
+>  	if [ $local_addr = "::" ];then
+>  		check_mark $listener_ns 6 || retc=1
+>  		check_mark $connector_ns 6 || retc=1
 Cheers,
 Matt
 -- 
