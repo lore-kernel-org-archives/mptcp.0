@@ -1,106 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFB93F8E2;
-	Mon,  4 Mar 2024 13:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5143F8E4;
+	Mon,  4 Mar 2024 13:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709557829; cv=none; b=uI77y4Hq5txZXQL57mQNaU16xg9t0qEub7fEoMtJ57Te8Vz90jSZtbLIkhJk6Kx2fRwi9pbBNc6r6AXC516+8ahZIvmpCaZn0+Tb/dbmW0Kp+5kyDyLdUnDSiHyav0ilHyOnPjPRBsYXgHu1LseSXtvesMwNDBSDiPjRPp7BLRI=
+	t=1709559543; cv=none; b=eC/+05lLv5MVkQKr8mLEp5sGQJiFj71kKuaK3BL3NVC3XKonCLw0AfOs5OdR/YCuAvxIS+0poSn+UsFMHHfhNfNqo++7A7ECShquzyB+2xvInkUihDEgxuqUyScM0/lspXqq0plMWzNqfSQj4fmjnE8hks22A5xXjSEMC9/w/Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709557829; c=relaxed/simple;
-	bh=gho4GcW/2zNAdSd9bIZCOth4JZaD3rPWTtBSvYURc3c=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Kw38r+tS5AuTVx1VicpozQgg20kbSjSUlK3aRcQ/FZfEAUWCwb+fKhO4FUz6OTEpKPdzp7uiK4Y18n9NdlJp+VyaOXqIkp87053Lj7HBXWVBhfKX8+1RXH7FgogQvlXKaNqmWXlb+zYi2BbWltuTq+w74xxZza9a1+QFNIEgPAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCBUGb+6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709559543; c=relaxed/simple;
+	bh=yU/cjn5H5P2K62EL2dxm6k8dPn1IkIYNk7rk/fgQgBk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uiyEOIsOlazdmnvJSyvHN0eXXf6QW2jr1995IeHGCejmuG+Li6F6+GwS4Ag2hO55j7ZNEI0WCv18iOtF0nK/WkiPuixNnip9sQXJcVJ2LTfeCCTKwS2FCVIvwZX3FtSrUqsKq2SDZdEsmHNGob91u2xsFGrYBa8Hop07+xChAL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qk55mqTT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCBUGb+6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4BEB8C433C7;
-	Mon,  4 Mar 2024 13:10:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qk55mqTT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0641C433F1;
+	Mon,  4 Mar 2024 13:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709557829;
-	bh=gho4GcW/2zNAdSd9bIZCOth4JZaD3rPWTtBSvYURc3c=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=PCBUGb+6QouwuiMrNrOqddkwx/AIc+B/yy8fTBAEz3x/OW73xKA9jO1JZMx5tNGOz
-	 yQ/MiRSvXBQJ9379vNOg1/nvSesOgX4yUVAiWemA8RUik+eB+TkjPqo5n77w1NJ236
-	 k94B5U2G0b4u+pAQMDW5r2M5xskDPJX1uk6TTMA5g/UyPU6Dhb4NPf0b9pXIJSgqqe
-	 n9rGXNNR7N0rmELpg+RJMN2HMcv302WC8nKCKj28A7r2kpy0UbJPc1S4CJwd3A//OE
-	 YgRhVRSFc53HrmwyCaa6ZEV++ooaxlxZpPcTCimPTmnlPdhlcCIbgabCDkCSvkhQWn
-	 XSVSKeV1PMCXQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 38831D9A4BB;
-	Mon,  4 Mar 2024 13:10:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1709559543;
+	bh=yU/cjn5H5P2K62EL2dxm6k8dPn1IkIYNk7rk/fgQgBk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qk55mqTTEaT3FOwllAmSxSD9Df8Aol8GA6SHKIrKz0uW4L+g4haetPfEub1PVje3H
+	 pHYdaU/t/JzC0endtwX+9YrGm6gyuN+RHkrJHATiuYMgqlt5xXS0Xu/9YBFEoKRcME
+	 mOhwiK0yomJfKqX7h2Xfdb3dbp5s3H8AXobvNjolq0PqGm5lreHe0dcxZvIOi7sBCi
+	 fztjoUBvyJioXhz97+RrpYWEhvSpfo9p9KNScAU6XxexIUfbTDiQlM80B5iOwb817c
+	 A4eW4OGQ72xt+1+XFXYXdNaynDmFYkAtZO6UEEjupOA148ZGYE6Sh24RBvfOBYuymn
+	 mvPK2XMyGpG3g==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH 6.7.y 0/5] mptcp: dependences for "selftests: mptcp: rm subflow with v4/v4mapped addr"
+Date: Mon,  4 Mar 2024 14:38:28 +0100
+Message-ID: <20240304133827.1989736-7-matttbe@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2024030420-swimsuit-antacid-a0dd@gregkh>
+References: <2024030420-swimsuit-antacid-a0dd@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1071; i=matttbe@kernel.org; h=from:subject; bh=yU/cjn5H5P2K62EL2dxm6k8dPn1IkIYNk7rk/fgQgBk=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl5c7TAmjsBqWUZuEt9ECEGjPHeh++PLG9SL2xf xBoAukN3ACJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeXO0wAKCRD2t4JPQmmg c5neD/4pe5r/+sh6qEEqpOgRJxhGhlyT+WW+MzdjgmF/hGBruac4HWwkJug4OX57av9o2cmfZxQ lNPUSESxAs0Z9YbY9zkWXvM1ORIxXy2YdJ/MeGs7ZjRuLmetaH29CQ3mSHpTC7VRQnew83PNHwO IIhCGLE9suPdLdrSfVBTK9e0m5lvEVBdlyntZk8d9Q5BXAGHsFmyJQGWdRDsOXx5MGPSLrq0slj JVnjEZxif0I5JJACYwnKf4QG4obQRqH8NYvyc35k+/uIrLmKrewYZbBi2Mhd2FMAOtKOpKGHpTG Yq4fuLr1mI/MfR5Dh5iy795V7W0+xfk/m5HWCZx+zxRegnEbVvJwisDib17TsIBfWI3oRBNzJo+ q3yqAnFYGwqZQxr8yaUVAPIMp2KnagtYv946GXsCS041adU49a3s/rLoawCysQUXV3GYtSBN0O8 u1HkEIc9iZO9AbDmYgchJaNOT5FVMmoID3oZXlJIgD69eSqZfglw/EF7o33lWYYCyneNM1wAEhM ajGd09VYXyN0qQEURz3tqgYAb2hWZiH0JQTx9eLcwyZTEBU/cgTk1n/Hc/lGNzekG4wE1qQ0Xkf ZT2JND/HCDBceoithi6jX0LI+lZS4QNzou/bWWpBACoBtdXL6kwnzDdX5rbt3icia/6I+0sPNrI xfsohPR6FUwBZUA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/15] mptcp: userspace pm: 'dump addrs' and 'get
- addr'
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170955782922.9155.840057347233727619.git-patchwork-notify@kernel.org>
-Date: Mon, 04 Mar 2024 13:10:29 +0000
-References: <20240301-upstream-net-next-20240301-mptcp-userspace-pm-dump-addr-v1-0-dc30a420b3a0@kernel.org>
-In-Reply-To: <20240301-upstream-net-next-20240301-mptcp-userspace-pm-dump-addr-v1-0-dc30a420b3a0@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- shuah@kernel.org, tanggeliang@kylinos.cn, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 
-Hello:
+Hi Greg,
 
-This series was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+To be able to apply the last patch without conflicts in v6.7, 4 other
+clean-up patches are needed.
 
-On Fri, 01 Mar 2024 19:18:24 +0100 you wrote:
-> This series from Geliang adds two new Netlink commands to the userspace
-> PM:
-> 
-> - one to dump all addresses of a specific MPTCP connection:
->   - feature added in patches 3 to 5
->   - test added in patches 7, 8 and 10
-> 
-> [...]
+These patches mainly replace existing code with helpers to reduce code
+duplication. It looks interesting to backport them to ease future
+backports.
 
-Here is the summary with links:
-  - [net-next,01/15] mptcp: make pm_remove_addrs_and_subflows static
-    https://git.kernel.org/netdev/net-next/c/e38b117d7f3b
-  - [net-next,02/15] mptcp: export mptcp_genl_family & mptcp_nl_fill_addr
-    https://git.kernel.org/netdev/net-next/c/34ca91e15e69
-  - [net-next,03/15] mptcp: implement mptcp_userspace_pm_dump_addr
-    https://git.kernel.org/netdev/net-next/c/34e74a5cf3b7
-  - [net-next,04/15] mptcp: add token for get-addr in yaml
-    https://git.kernel.org/netdev/net-next/c/9e6c88e2f05b
-  - [net-next,05/15] mptcp: dump addrs in userspace pm list
-    https://git.kernel.org/netdev/net-next/c/9ae7846c4b6b
-  - [net-next,06/15] mptcp: check userspace pm flags
-    https://git.kernel.org/netdev/net-next/c/c19ee3c7e388
-  - [net-next,07/15] selftests: mptcp: add userspace pm subflow flag
-    https://git.kernel.org/netdev/net-next/c/9963b77e25c6
-  - [net-next,08/15] selftests: mptcp: add token for dump_addr
-    https://git.kernel.org/netdev/net-next/c/950c332125f6
-  - [net-next,09/15] selftests: mptcp: add mptcp_lib_check_output helper
-    https://git.kernel.org/netdev/net-next/c/2d0c1d27ea4e
-  - [net-next,10/15] selftests: mptcp: dump userspace addrs list
-    https://git.kernel.org/netdev/net-next/c/38f027fca1b7
-  - [net-next,11/15] mptcp: add userspace_pm_lookup_addr_by_id helper
-    https://git.kernel.org/netdev/net-next/c/06afe09091ee
-  - [net-next,12/15] mptcp: implement mptcp_userspace_pm_get_addr
-    https://git.kernel.org/netdev/net-next/c/d32c8fb1c881
-  - [net-next,13/15] mptcp: get addr in userspace pm list
-    https://git.kernel.org/netdev/net-next/c/564ae6794ec5
-  - [net-next,14/15] selftests: mptcp: add token for get_addr
-    https://git.kernel.org/netdev/net-next/c/b055671b3936
-  - [net-next,15/15] selftests: mptcp: userspace pm get addr tests
-    https://git.kernel.org/netdev/net-next/c/4cc5cc7ca052
+I had a few conflicts in mptcp_lib.sh, because some of the new helpers
+have been backported recently, but not all: so I had to place them
+between others.
 
-You are awesome, thank you!
+Geliang Tang (5):
+  selftests: mptcp: add evts_get_info helper
+  selftests: mptcp: add chk_subflows_total helper
+  selftests: mptcp: update userspace pm test helpers
+  selftests: mptcp: add mptcp_lib_is_v6
+  selftests: mptcp: rm subflow with v4/v4mapped addr
+
+ .../selftests/net/mptcp/mptcp_connect.sh      |  16 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 187 ++++++++++--------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |  15 ++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |   8 +-
+ .../selftests/net/mptcp/userspace_pm.sh       |  86 ++++----
+ 5 files changed, 170 insertions(+), 142 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
