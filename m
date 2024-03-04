@@ -1,75 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2650F1754E;
-	Mon,  4 Mar 2024 08:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A6E1B814;
+	Mon,  4 Mar 2024 11:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709540804; cv=none; b=VHOApffjNQI2P/KTnMXq6CLFKUR4rxKLqOhuo+av8EL8AqwtHYHAifEW5hMPRwhSQpMTs9dEyVB2LoPZ/XJRMcgrPsMZxovcRQ7rAZoE/9bCLyjO2XrHnDBSCk5eguJxKbPYuCbhYCAbtrx9z0yVWMrFPKGmPtIjq+vO/mFnxdI=
+	t=1709550029; cv=none; b=AbJYiXrIcZ3vmDQBEufneRWDdlU9QsPVamys6vrNooNc3PLUCHU8wlS7yOMSx3PFvBHZnFJcx4Ddc78s5AYRAbWmR+QQYbx2/IZdoeyZBbZN5E1M0ssGKHFljm8LX1S6HeJCITqts/wPkJOpX+D+5WMJE3UKeFiQiLDTkmn1gRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709540804; c=relaxed/simple;
-	bh=a5FOUA+3Iz+D6QvEUOf9bL/62idJcjsCjBYYu5lvdJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Alp9QWabBJwJGNidiW4iYay7nhoSxc3F/q+Dr8XtjCY7tcoefJcKlgcjqFs/WSrP/ohEd1iq8XQk7V1YL5uKze3NKbmF/iEm3aGZ6kkmn3DQ03c7T6VG2V4mPgir1GxKC3zuLCOzKRL1OWpauvxhkr0LsOgdjK3wB8KhdjvidDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YMxS7Wep; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709550029; c=relaxed/simple;
+	bh=pIgEUVGtG1rVM4ZB5OE3Ns7LozVTw2LBn5mYhplujzw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=qKhgmVuWQAYNGHcNmkaMuipxvYwtkWhGEYvzyrzIj7L3pOOvzJxqPjs+w5FXG5RNG7l1Ud5cLmmVhCIfW772xQvNAGky93tSEqIhB2HCNjUeK0c+0Wj/7gJ4pXXYl9G7CgQG92NyDiGNCt3vce45slQlB7w2MPT4lhQwQC0BY5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=opdsGvKx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YMxS7Wep"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C2AC433C7;
-	Mon,  4 Mar 2024 08:26:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709540803;
-	bh=a5FOUA+3Iz+D6QvEUOf9bL/62idJcjsCjBYYu5lvdJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YMxS7WephUxtaoj12NdZbe65dh1FLSx/qtImiqKQr3qJ7gVi9Q3WjVQSwBHk4Aa6W
-	 pLEAmUmFell06anhfYWiDd4Uz3mqjEDl7BIcHYXE8dL8DvaFIN4w/KuTdAupwiogW/
-	 MbkD5+bTQGecWKun6MovVvW56S30dPobUdAr6O5s=
-Date: Mon, 4 Mar 2024 09:26:24 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: stable@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <martineau@kernel.org>,
-	Matthieu Baerts <matthieu.baerts@tessares.net>,
-	"David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 5.15.y] mptcp: move __mptcp_error_report in protocol.c
-Message-ID: <2024030409-cement-caretaker-9151@gregkh>
-References: <2023100421-divisible-bacterium-18b5@gregkh>
- <20240228173157.255719-2-matttbe@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="opdsGvKx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A6100C43390;
+	Mon,  4 Mar 2024 11:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709550028;
+	bh=pIgEUVGtG1rVM4ZB5OE3Ns7LozVTw2LBn5mYhplujzw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=opdsGvKxBYYON/IyysrGR2t4nWKu1a8CJgR/jV5gG1Ue+4LrDowsw0muhNO9iC3c+
+	 ZjBiq9/bYW8KR+NzP5Fr7xFEs7FR7z5qcs82sWKE5R//176SGVd6lKIBS5PDhj9+QE
+	 RPEVrpySnbz7SgHZGyMod9xFGeAu+6ppgZn/HQ7HZT3Yp0R19mFabhngOIyVTDKZv1
+	 qJ6thtmDfh/l2jGpBZQo3uaiJ2ArTNy7ROWhdqm8JdlVz5Dq5/w7Dobaj0qtAwFWty
+	 RLXkI9ZmBtkcuIZGaWb9cN4aCNW+RTgFGijJN2eWfkrp60gSWMmicI1J4DAHUvqfKW
+	 rB4fIgVNsPpug==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 89529D88F87;
+	Mon,  4 Mar 2024 11:00:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240228173157.255719-2-matttbe@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/4] mptcp: add TCP_NOTSENT_LOWAT sockopt support
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170955002855.28316.4147541223134809817.git-patchwork-notify@kernel.org>
+Date: Mon, 04 Mar 2024 11:00:28 +0000
+References: <20240301-upstream-net-next-20240301-mptcp-tcp_notsent_lowat-v1-0-415f0e8ed0e1@kernel.org>
+In-Reply-To: <20240301-upstream-net-next-20240301-mptcp-tcp_notsent_lowat-v1-0-415f0e8ed0e1@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Feb 28, 2024 at 06:31:58PM +0100, Matthieu Baerts (NGI0) wrote:
-> From: Paolo Abeni <pabeni@redhat.com>
-> 
-> This will simplify the next patch ("mptcp: process pending subflow error
-> on close").
-> 
-> No functional change intended.
-> 
-> Cc: stable@vger.kernel.org # v5.12+
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> (cherry picked from commit d5fbeff1ab812b6c473b6924bee8748469462e2c)
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Notes:
->  - A simple conflict because in v5.15, we don't have 9ae8e5ad99b8
->    ("mptcp: annotate lockless accesses to sk->sk_err"), and one line
->    from __mptcp_error_report() is different.
->  - Note that the version of __mptcp_error_report() from after
->    9ae8e5ad99b8 ("mptcp: annotate lockless accesses to sk->sk_err") has
->    been taken -- with the WRITE_ONCE(sk->sk_err, -err); -- to ease the
->    future backports.
+Hello:
 
-All 5.15 backports now queued up, thanks!
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-greg k-h
+On Fri, 01 Mar 2024 18:43:43 +0100 you wrote:
+> Patch 3 does the magic of adding TCP_NOTSENT_LOWAT support, all the
+> other ones are minor cleanup seen along when working on the new feature.
+> 
+> Note that this feature relies on the existing accounting for snd_nxt.
+> Such accounting is not 110% accurate as it tracks the most recent
+> sequence number queued to any subflow, and not the actual sequence
+> number sent on the wire. Paolo experimented a lot, trying to implement
+> the latter, and in the end it proved to be both "too complex" and "not
+> necessary".
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/4] mptcp: cleanup writer wake-up
+    https://git.kernel.org/netdev/net-next/c/037db6ea57da
+  - [net-next,2/4] mptcp: avoid some duplicate code in socket option handling
+    https://git.kernel.org/netdev/net-next/c/a74762675f70
+  - [net-next,3/4] mptcp: implement TCP_NOTSENT_LOWAT support
+    https://git.kernel.org/netdev/net-next/c/29b5e5ef8739
+  - [net-next,4/4] mptcp: cleanup SOL_TCP handling
+    https://git.kernel.org/netdev/net-next/c/7f71a337b515
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
