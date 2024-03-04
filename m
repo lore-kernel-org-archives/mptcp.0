@@ -1,56 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02F64E1DB;
-	Mon,  4 Mar 2024 17:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084BF6168E;
+	Mon,  4 Mar 2024 17:56:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709571982; cv=none; b=ZqFMESwLsa+mEkQw9xgB/jEfZSBewotPwkBFzCwVYZiPJcMSM6xuT+i8FZrr3Fbl/a+IYzPYza5jgbmsGT7CkoME4G63xiAJO+p/kekcxON4nPy9V57Jr5Ayghfuf2B1w8Ba1PHTgb9fJ/oQm0ek8vVz5taG2hVDni6VQtCS1P8=
+	t=1709574980; cv=none; b=cYcNiMj3tcvs+6/OhfppTgyNYiWo07CDDKpb9XfwCWGsyp/G1DMNehVOZvLiEuwpcbJy3Y7BIIIyW0Qrj35IGY5HoaIbj/LDSs2luXXUwpxQtZKxOUTx5aVuge3f+h9ey/1l+XmJHyB2qori16V0BXfff9cfVqI0lUS3P8xKX5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709571982; c=relaxed/simple;
-	bh=WZihb+6oGuYX/sUIJx4bJJTXPUMDkZlDE3EI6QfRI0c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZiBt+yvOid90OIxS939X3ogdAUmUWY+yZevBRcVKq/59iY3LVP+fAxzW/T+Ut6kg0sYr1+poWZ/3/Vftb768T9KhGyo31YO03iwLmcoP6YNi9wAn+FkiW8JOQd43521gnXgKO7uMluR9S7wcW08oY79HxqNjRKE28+QMSu4cOtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ezqWCkgn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709574980; c=relaxed/simple;
+	bh=dslpxoELvwG17jeR+R/yT7fW6RYchiv6tHz6nVdPmWI=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=vDKfK3GCiqHLPS8vLxB+Vr2G9By6EUSV5D+LQoolrOx9oXYy3n84sCD4bp8aYuFaJDPXvFqffFUeVAHUKpNl59MQQbZ8iU8cv/eF+C+28IXaV51h6fEvqmeTl6cy6re+nt4a2fQ+e1N1ZCTWPj8K8G9v15VY2TqBHwZGDvCo4Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=v1dKiXrO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezqWCkgn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 182C4C433C7;
-	Mon,  4 Mar 2024 17:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709571981;
-	bh=WZihb+6oGuYX/sUIJx4bJJTXPUMDkZlDE3EI6QfRI0c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ezqWCkgnG7RJudDLQks2ikBp7b8ttSB1WMqIySPNixRnjldCgiKSaxhV14cBMDoEB
-	 DwsQxM8B0nx2ZKKFvRb/9N8z31MuHwpbVpV+PJbvpHQs7xAM02d8egPAeoJgZ1+FZb
-	 RyyC+Xirp5nW9UgVyjcb4pAkqS8t59Xv9AmJRT35TzBUk2LDHmi+TH8DkV9DmRiBK3
-	 RornT7PDuQbWRySX1Z3u9I14dVFx6wfmLdhlgD2049roRXwRIJ5H7rlmquFCTIzEAb
-	 atwO40q2ITWTr7rRgJneAEfxjsbQ+eQ7WFeisPalYaWss1A7xOuHxMT8ZQZH9gNSMy
-	 eTxQHBAc+TI9A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Davide Caratti <dcaratti@redhat.com>,
-	Mat Martineau <martineau@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.10.y] mptcp: fix double-free on socket dismantle
-Date: Mon,  4 Mar 2024 18:06:15 +0100
-Message-ID: <20240304170614.2608800-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2024030455-plausible-harmonics-a964@gregkh>
-References: <2024030455-plausible-harmonics-a964@gregkh>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="v1dKiXrO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5558C43390;
+	Mon,  4 Mar 2024 17:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709574979;
+	bh=dslpxoELvwG17jeR+R/yT7fW6RYchiv6tHz6nVdPmWI=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=v1dKiXrOek3dXsPjNYOc8bIMoAAH14wXSYjUVjC7f6nGGEaCLw31OAzmbVZTa/D4d
+	 y0+7Vek203zY8l2t6ixboSs6quGy9spBFOjCMkRD9New0VZy4TSqanVPpd48COMHHO
+	 xOVBReZrw+rgnOlzRkXXoy6izJUQKXbIGzSTbVRU=
+Subject: Patch "mptcp: fix double-free on socket dismantle" has been added to the 5.10-stable tree
+To: dcaratti@redhat.com,gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Mon, 04 Mar 2024 18:56:07 +0100
+In-Reply-To: <20240304170614.2608800-2-matttbe@kernel.org>
+Message-ID: <2024030407-smother-shorter-7a79@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7572; i=matttbe@kernel.org; h=from:subject; bh=B8eU2wOlMZzhlfykinS5qfdKEH99UcHBXWQ4CCNsnUU=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl5f+G1bb1+vFwMRm1Os0P7Bpn9UBw4mI2gFAt+ VEujiQG3ieJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeX/hgAKCRD2t4JPQmmg c9CeEADGZmQjHs5h68rPohDfTjHTKcOgZuinYqkj6jCNfAmH/uEcBVQpKKNhN1CFv4P7KxrsN31 DOUZBXWFntc9hWyNuigcPAim8zCLlcNX2XWpFT854eSzk0N83t6Upp11/fRRvFYrr0dDmQULrMm iDGsqMsry6Za308c56NiaJvUxgD0U1O+V763h37ZMUQcy4AzVQfpCLKQLUKSUSS/3/BySuGrdBs OmY53ys3eeI68US4DSZB/cfH1j0cF/SJOI7y0SmEJL8727u38spH9fA4iInzHAj6l39nXc0kP3Y G96LW2WJTTu+E4dCsb7g3aCvlHsi8Qgm9+sb8MH1l/fpGxoYgdvEtM+pLka+SMglm1Hj/Fyv7gm Y5oMAkdtWkdapszLvx7HHofLE2jNlVa/9SFtPjXvtcZrsQ0twQOT84eX9ciNSs7hOycYdD9pN2h eqaEjZ3XqcXj9a2S/Bn1u8SGg7jGUB2Xlxtk2AaRWwYUbapHf2kaW9/0OLVqMmcWcVzWNYEl6Ov /z9Hb4KeJAaPfaAXNpyXijx1DOazVWGRQxNw9nzJRpWYmAJ1THb+0i8tvriSOs87ZZYITk003A5 Auu2Y6ZUPfjDxjjuNOyArplzVlijkRIosU59wBKxS6WLwEP/2nM93TJK3cHeEyWsOyCe2RK2jx6 5Mvx9bm3NXlcwpQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore
+
+
+This is a note to let you know that I've just added the patch titled
+
+    mptcp: fix double-free on socket dismantle
+
+to the 5.10-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     mptcp-fix-double-free-on-socket-dismantle.patch
+and it can be found in the queue-5.10 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From stable+bounces-25957-greg=kroah.com@vger.kernel.org Mon Mar  4 18:06:29 2024
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Mon,  4 Mar 2024 18:06:15 +0100
+Subject: mptcp: fix double-free on socket dismantle
+To: stable@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Davide Caratti <dcaratti@redhat.com>, Mat Martineau <martineau@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20240304170614.2608800-2-matttbe@kernel.org>
 
 From: Davide Caratti <dcaratti@redhat.com>
+
+commit 10048689def7e40a4405acda16fdc6477d4ecc5c upstream.
 
 when MPTCP server accepts an incoming connection, it clones its listener
 socket. However, the pointer to 'inet_opt' for the new socket has the same
@@ -170,24 +187,15 @@ Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Link: https://lore.kernel.org/r/20240223-upstream-net-20240223-misc-fixes-v1-8-162e87e48497@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit 10048689def7e40a4405acda16fdc6477d4ecc5c)
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-Notes:
- - Conflicts in protocol.c because mptcp_sk_clone() has been renamed to
-   mptcp_sk_clone_init() in commit 7e8b88ec35ee ("mptcp: consolidate
-   passive msk socket initialization") which has not been backported to
-   v5.10 due to a too long list of dependences.
- - This is the same patch as the one sent earlier for v5.15.
----
- net/mptcp/protocol.c | 49 ++++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.c |   49 +++++++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 49 insertions(+)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 72d944e6a641..adbe6350f980 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2052,8 +2052,50 @@ static struct ipv6_pinfo *mptcp_inet6_sk(const struct sock *sk)
+@@ -2052,8 +2052,50 @@ static struct ipv6_pinfo *mptcp_inet6_sk
  
  	return (struct ipv6_pinfo *)(((u8 *)sk) + offset);
  }
@@ -238,7 +246,7 @@ index 72d944e6a641..adbe6350f980 100644
  struct sock *mptcp_sk_clone(const struct sock *sk,
  			    const struct mptcp_options_received *mp_opt,
  			    struct request_sock *req)
-@@ -2073,6 +2115,13 @@ struct sock *mptcp_sk_clone(const struct sock *sk,
+@@ -2073,6 +2115,13 @@ struct sock *mptcp_sk_clone(const struct
  
  	__mptcp_init_sock(nsk);
  
@@ -252,6 +260,8 @@ index 72d944e6a641..adbe6350f980 100644
  	msk = mptcp_sk(nsk);
  	msk->local_key = subflow_req->local_key;
  	msk->token = subflow_req->token;
--- 
-2.43.0
 
+
+Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
+
+queue-5.10/mptcp-fix-double-free-on-socket-dismantle.patch
