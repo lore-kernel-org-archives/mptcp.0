@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FA11DDE9;
-	Mon,  4 Mar 2024 16:45:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485AD4CE11;
+	Mon,  4 Mar 2024 16:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709570702; cv=none; b=meUXVLxlvtGXt3WygTneWVOUnbIDlKYSnFE4MSyp/pYoyb0ELGYdDH1sf6rwyen9Gk0EFMHFRA4tdLpScFjTFffLwKt0wv6WiV87q/MpPivJrkMbg57eIrFTbvQHE+nKIV4L0Jik4qo8a6W6ftdfbdr+7YI2Hrj/sUWix8y7C7M=
+	t=1709570712; cv=none; b=Le736W8zx7TyMl0iSx1fnhoFqPzuCufYUZx9k+FeLt8UpLn1YEI7yoQ5FxCuy3So4teFhWu1r8kdNxrIUMvb7kZ7uAY2hOVAR/ZP1q4ehn1qyS2bspRFH08+r2QDhBPcSTIv24j2lKUp9Vfxm8zLqmBllRuhxfPtHKjQeu2y9y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709570702; c=relaxed/simple;
-	bh=skbgPlf5acYbYIVyGx0Q2autSF+guynXl4UaRX3dDxc=;
+	s=arc-20240116; t=1709570712; c=relaxed/simple;
+	bh=8uP/2/k7qOml1m7pLQW5o0Sz5ByxElc53MKFepMcrWE=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=WQYbzdl2aflCt34GYCBkiOgfIsYRAfciEizBPMpt89rD/bLwhG6Akm9jlfO97XBbGYv/RUqowEvVhhfeKaD+ac+Q9tedunejNupCnasHXwFXbZpbzA0M3NFIjVodkbEAvxWy+KpBAxcrCuw+gA9nr5SrzObGHQ2Pv30cD+oygsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rp+G3jBg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=gFDTtZXK2XoK3fUtDXesZKRBd+1pq1p+nPIB4SxVYbHXOnojGHWpgiu+DIZV+OtNgPI7gNY2bIuGyrb7ktLQuq8KEPbgx4P+WlGUxTiUHk7xQZRLfzQbfsi65YpX1Ru1HrK9wX6WbCIn/uPMcxlGYbLEzOva+rUGBypBaV1+CgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=l0zPdQfj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rp+G3jBg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AF8FC433C7;
-	Mon,  4 Mar 2024 16:45:01 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="l0zPdQfj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84975C43390;
+	Mon,  4 Mar 2024 16:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709570701;
-	bh=skbgPlf5acYbYIVyGx0Q2autSF+guynXl4UaRX3dDxc=;
+	s=korg; t=1709570712;
+	bh=8uP/2/k7qOml1m7pLQW5o0Sz5ByxElc53MKFepMcrWE=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=rp+G3jBg6kBg8lwsSGsdRXVPx8jDBQoWdB9w0EXCtHO+SVQRG5/zAFo1VWqAA1YWi
-	 qKv8IyGzWow6waDLfgDF/t37Ro2qZG3Mxqp9aOvQO9LQkjnCQyRyKUgY0WoTtuEJTK
-	 nm9OiW/YQT4jn0g+3nhBNTtgtDf5l9DuFkJmtN3s=
-Subject: Patch "selftests: mptcp: add chk_subflows_total helper" has been added to the 6.7-stable tree
+	b=l0zPdQfjarVHp5nYo58uQXX720K+sEFscJWYJF/oqmlDPLGwxyz+LpKkRRXwFX+eY
+	 7QR1AcBX47Q45ZRiv6/2OnnasY+2vp1mXEF6asxn53Zl+GJwycr7bJOwKK8lVi/I2i
+	 gda5DL0Dp1OECNrhcpPg7r3gpxctUv7m5VIvHWhw=
+Subject: Patch "selftests: mptcp: add mptcp_lib_is_v6" has been added to the 6.7-stable tree
 To: geliang.tang@suse.com,gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Mon, 04 Mar 2024 17:44:55 +0100
-In-Reply-To: <20240304133827.1989736-9-matttbe@kernel.org>
-Message-ID: <2024030454-flame-reach-5b95@gregkh>
+In-Reply-To: <20240304133827.1989736-11-matttbe@kernel.org>
+Message-ID: <2024030455-pester-fantasize-9d49@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,132 +44,198 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    selftests: mptcp: add chk_subflows_total helper
+    selftests: mptcp: add mptcp_lib_is_v6
 
 to the 6.7-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     selftests-mptcp-add-chk_subflows_total-helper.patch
+     selftests-mptcp-add-mptcp_lib_is_v6.patch
 and it can be found in the queue-6.7 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-25927-greg=kroah.com@vger.kernel.org Mon Mar  4 14:39:52 2024
+From stable+bounces-25929-greg=kroah.com@vger.kernel.org Mon Mar  4 14:39:55 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon,  4 Mar 2024 14:38:30 +0100
-Subject: selftests: mptcp: add chk_subflows_total helper
+Date: Mon,  4 Mar 2024 14:38:32 +0100
+Subject: selftests: mptcp: add mptcp_lib_is_v6
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliang.tang@suse.com>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240304133827.1989736-9-matttbe@kernel.org>
+Message-ID: <20240304133827.1989736-11-matttbe@kernel.org>
 
 From: Geliang Tang <geliang.tang@suse.com>
 
-commit 80775412882e273b8ef62124fae861cde8e6fb3d upstream.
+commit b850f2c7dd85ecd14a333685c4ffd23f12665e94 upstream.
 
-This patch adds a new helper chk_subflows_total(), in it use the newly
-added counter mptcpi_subflows_total to get the "correct" amount of
-subflows, including the initial one.
+To avoid duplicated code in different MPTCP selftests, we can add
+and use helpers defined in mptcp_lib.sh.
 
-To be compatible with old 'ss' or kernel versions not supporting this
-counter, get the total subflows by listing TCP connections that are
-MPTCP subflows:
-
-    ss -ti state state established state syn-sent state syn-recv |
-        grep -c tcp-ulp-mptcp.
+is_v6() helper is defined in mptcp_connect.sh, mptcp_join.sh and
+mptcp_sockopt.sh, so export it into mptcp_lib.sh and rename it as
+mptcp_lib_is_v6(). Use this new helper in all scripts.
 
 Reviewed-by: Matthieu Baerts <matttbe@kernel.org>
 Signed-off-by: Geliang Tang <geliang.tang@suse.com>
 Signed-off-by: Mat Martineau <martineau@kernel.org>
-Link: https://lore.kernel.org/r/20231128-send-net-next-2023107-v4-3-8d6b94150f6b@kernel.org
+Link: https://lore.kernel.org/r/20231128-send-net-next-2023107-v4-10-8d6b94150f6b@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh |   42 +++++++++++++++++++++++-
- 1 file changed, 41 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh |   16 +++++-----------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    |   14 ++++----------
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh     |    5 +++++
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |    8 +-------
+ 4 files changed, 15 insertions(+), 28 deletions(-)
 
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1843,7 +1843,7 @@ chk_mptcp_info()
- 	local cnt2
- 	local dump_stats
- 
--	print_check "mptcp_info ${info1:0:8}=$exp1:$exp2"
-+	print_check "mptcp_info ${info1:0:15}=$exp1:$exp2"
- 
- 	cnt1=$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value "$info1" "$info1")
- 	cnt2=$(ss -N $ns2 -inmHM | mptcp_lib_get_info_value "$info2" "$info2")
-@@ -1864,6 +1864,42 @@ chk_mptcp_info()
- 	fi
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -310,12 +310,6 @@ check_mptcp_disabled()
+ 	return 0
  }
  
-+# $1: subflows in ns1 ; $2: subflows in ns2
-+# number of all subflows, including the initial subflow.
-+chk_subflows_total()
-+{
-+	local cnt1
-+	local cnt2
-+	local info="subflows_total"
-+	local dump_stats
-+
-+	# if subflows_total counter is supported, use it:
-+	if [ -n "$(ss -N $ns1 -inmHM | mptcp_lib_get_info_value $info $info)" ]; then
-+		chk_mptcp_info $info $1 $info $2
-+		return
-+	fi
-+
-+	print_check "$info $1:$2"
-+
-+	# if not, count the TCP connections that are in fact MPTCP subflows
-+	cnt1=$(ss -N $ns1 -ti state established state syn-sent state syn-recv |
-+	       grep -c tcp-ulp-mptcp)
-+	cnt2=$(ss -N $ns2 -ti state established state syn-sent state syn-recv |
-+	       grep -c tcp-ulp-mptcp)
-+
-+	if [ "$1" != "$cnt1" ] || [ "$2" != "$cnt2" ]; then
-+		fail_test "got subflows $cnt1:$cnt2 expected $1:$2"
-+		dump_stats=1
-+	else
-+		print_ok
-+	fi
-+
-+	if [ "$dump_stats" = 1 ]; then
-+		ss -N $ns1 -ti
-+		ss -N $ns2 -ti
-+	fi
+-# $1: IP address
+-is_v6()
+-{
+-	[ -z "${1##*:*}" ]
+-}
+-
+ do_ping()
+ {
+ 	local listener_ns="$1"
+@@ -324,7 +318,7 @@ do_ping()
+ 	local ping_args="-q -c 1"
+ 	local rc=0
+ 
+-	if is_v6 "${connect_addr}"; then
++	if mptcp_lib_is_v6 "${connect_addr}"; then
+ 		$ipv6 || return 0
+ 		ping_args="${ping_args} -6"
+ 	fi
+@@ -620,12 +614,12 @@ run_tests_lo()
+ 	fi
+ 
+ 	# skip if we don't want v6
+-	if ! $ipv6 && is_v6 "${connect_addr}"; then
++	if ! $ipv6 && mptcp_lib_is_v6 "${connect_addr}"; then
+ 		return 0
+ 	fi
+ 
+ 	local local_addr
+-	if is_v6 "${connect_addr}"; then
++	if mptcp_lib_is_v6 "${connect_addr}"; then
+ 		local_addr="::"
+ 	else
+ 		local_addr="0.0.0.0"
+@@ -693,7 +687,7 @@ run_test_transparent()
+ 	TEST_GROUP="${msg}"
+ 
+ 	# skip if we don't want v6
+-	if ! $ipv6 && is_v6 "${connect_addr}"; then
++	if ! $ipv6 && mptcp_lib_is_v6 "${connect_addr}"; then
+ 		return 0
+ 	fi
+ 
+@@ -726,7 +720,7 @@ EOF
+ 	fi
+ 
+ 	local local_addr
+-	if is_v6 "${connect_addr}"; then
++	if mptcp_lib_is_v6 "${connect_addr}"; then
+ 		local_addr="::"
+ 		r6flag="-6"
+ 	else
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -592,12 +592,6 @@ link_failure()
+ 	done
+ }
+ 
+-# $1: IP address
+-is_v6()
+-{
+-	[ -z "${1##*:*}" ]
+-}
+-
+ # $1: ns, $2: port
+ wait_local_port_listen()
+ {
+@@ -877,7 +871,7 @@ pm_nl_set_endpoint()
+ 		local id=10
+ 		while [ $add_nr_ns1 -gt 0 ]; do
+ 			local addr
+-			if is_v6 "${connect_addr}"; then
++			if mptcp_lib_is_v6 "${connect_addr}"; then
+ 				addr="dead:beef:$counter::1"
+ 			else
+ 				addr="10.0.$counter.1"
+@@ -929,7 +923,7 @@ pm_nl_set_endpoint()
+ 		local id=20
+ 		while [ $add_nr_ns2 -gt 0 ]; do
+ 			local addr
+-			if is_v6 "${connect_addr}"; then
++			if mptcp_lib_is_v6 "${connect_addr}"; then
+ 				addr="dead:beef:$counter::2"
+ 			else
+ 				addr="10.0.$counter.2"
+@@ -971,7 +965,7 @@ pm_nl_set_endpoint()
+ 			pm_nl_flush_endpoint ${connector_ns}
+ 		elif [ $rm_nr_ns2 -eq 9 ]; then
+ 			local addr
+-			if is_v6 "${connect_addr}"; then
++			if mptcp_lib_is_v6 "${connect_addr}"; then
+ 				addr="dead:beef:1::2"
+ 			else
+ 				addr="10.0.1.2"
+@@ -3339,7 +3333,7 @@ userspace_pm_rm_sf()
+ 	local cnt
+ 
+ 	[ "$1" == "$ns2" ] && evts=$evts_ns2
+-	if is_v6 $2; then ip=6; fi
++	if mptcp_lib_is_v6 $2; then ip=6; fi
+ 	tk=$(mptcp_lib_evts_get_info token "$evts")
+ 	da=$(mptcp_lib_evts_get_info "daddr$ip" "$evts" $t)
+ 	dp=$(mptcp_lib_evts_get_info dport "$evts" $t)
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -227,6 +227,11 @@ mptcp_lib_kill_wait() {
+ 	wait "${1}" 2>/dev/null
+ }
+ 
++# $1: IP address
++mptcp_lib_is_v6() {
++	[ -z "${1##*:*}" ]
 +}
 +
- chk_link_usage()
+ # $1: ns, $2: MIB counter
+ mptcp_lib_get_counter() {
+ 	local ns="${1}"
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -161,12 +161,6 @@ check_transfer()
+ 	return 0
+ }
+ 
+-# $1: IP address
+-is_v6()
+-{
+-	[ -z "${1##*:*}" ]
+-}
+-
+ do_transfer()
  {
- 	local ns=$1
-@@ -3407,10 +3443,12 @@ userspace_tests()
- 		chk_join_nr 1 1 1
- 		chk_add_nr 1 1
- 		chk_mptcp_info subflows 1 subflows 1
-+		chk_subflows_total 2 2
- 		chk_mptcp_info add_addr_signal 1 add_addr_accepted 1
- 		userspace_pm_rm_sf_addr_ns1 10.0.2.1 10
- 		chk_rm_nr 1 1 invert
- 		chk_mptcp_info subflows 0 subflows 0
-+		chk_subflows_total 1 1
- 		kill_events_pids
- 		mptcp_lib_kill_wait $tests_pid
- 	fi
-@@ -3427,9 +3465,11 @@ userspace_tests()
- 		userspace_pm_add_sf 10.0.3.2 20
- 		chk_join_nr 1 1 1
- 		chk_mptcp_info subflows 1 subflows 1
-+		chk_subflows_total 2 2
- 		userspace_pm_rm_sf_addr_ns2 10.0.3.2 20
- 		chk_rm_nr 1 1
- 		chk_mptcp_info subflows 0 subflows 0
-+		chk_subflows_total 1 1
- 		kill_events_pids
- 		mptcp_lib_kill_wait $tests_pid
- 	fi
+ 	local listener_ns="$1"
+@@ -183,7 +177,7 @@ do_transfer()
+ 	local mptcp_connect="./mptcp_connect -r 20"
+ 
+ 	local local_addr ip
+-	if is_v6 "${connect_addr}"; then
++	if mptcp_lib_is_v6 "${connect_addr}"; then
+ 		local_addr="::"
+ 		ip=ipv6
+ 	else
 
 
 Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
