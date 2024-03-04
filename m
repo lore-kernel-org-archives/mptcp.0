@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E651015AE0;
-	Mon,  4 Mar 2024 08:26:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3169F1754F;
+	Mon,  4 Mar 2024 08:26:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709540780; cv=none; b=A2CwUzn3pNw2OabdogoiF/rPSx1Vzg1OxnqA7P0am6b6rKrcW6c6ChznClS1BKhfYnlHuUx/nk9c6cxOLsc4JBSQmW0JtW/tfj9kUnHC3OlgGVgYWsakeFZvz6epusmRAIbazOuUnXk3m9VpWsaQgQ1HsNbSaOimikc3LeD2anU=
+	t=1709540783; cv=none; b=Nr8HAzQ6Z99B5JKWJhNCezV4QA6hzKjP4nxx14h26QhgjOtXSQJY2KuGOwFVsRdjmQk+TVeluaq9ZpknDK7iL8FvnI0ayO02sHg6Q2g80SkgERv+prcmiK0DpUZZXU13sEuuz3koGdB6KarkBTimhpSuS/E5DCGy0E7om8wXtuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709540780; c=relaxed/simple;
-	bh=LziQQknb1C4Zny4CRIuROaIvq0eP4/7rV8DCzh2hd54=;
+	s=arc-20240116; t=1709540783; c=relaxed/simple;
+	bh=u2d3iDyCibGC/QPgl0gXJ8IOUhnxC9ZtcMFxl7Y7i3U=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=Cx+QJE5CWh+Zlz+CDMGyrxks3WFaBtvmAJlr2Tb1xDFvMDaSB2/AjcQI/SgDh6/sOFJc70rFLaz/yzH7NjXeZCnOYL5ipmiM4FuL8KT0Beu6wZbWG2nd+bz3zLBBQRGVPohNwRoV+SwrzisC0dQjUJSWWBh7P7352AG7lCRaqqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WuveAS4v; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=f2fsXbvVuoa+Q4seA5PE8LSG39d6rtG0yUFI3QtTf7ot+krMSdXGDG5YWZ4tpQqVPPhgCaeB2w3eS3DzRdCSCUr+NZ0h/Ry59dlk032tNWeVgaI9lBgOIXU1cVu5NjkP98YeB7tUyxLttNDL3LGIZCxMm8d9hpHgVeqKQtzh+Fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OBShbfc6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WuveAS4v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E6CC433C7;
-	Mon,  4 Mar 2024 08:26:18 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OBShbfc6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C41C433C7;
+	Mon,  4 Mar 2024 08:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709540779;
-	bh=LziQQknb1C4Zny4CRIuROaIvq0eP4/7rV8DCzh2hd54=;
+	s=korg; t=1709540782;
+	bh=u2d3iDyCibGC/QPgl0gXJ8IOUhnxC9ZtcMFxl7Y7i3U=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=WuveAS4vUE1aXiKwWFXMKaMw8pRviWBHqvnYYdrG08ouwJGfjOHK9pTx6xzDHmG+t
-	 MKi1+LV52cBBHvt3m/7gNigbiLUzA/70uHgUGlA/6SqP6cY6+LQLFbPvDW3s0YxT7z
-	 19Ib8jQjjBp4adF4dtHc/porVKDVwNu9Dexmp5TE=
-Subject: Patch "mptcp: clean up harmless false expressions" has been added to the 5.15-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,mathew.j.martineau@linux.intel.com,matthieu.baerts@tessares.net,matttbe@kernel.org,mptcp@lists.linux.dev,sakiwit@gmail.com
+	b=OBShbfc6U3TS3JcZPm794RcKQuz3pG/XNd3ii+baflMERnusNQegmHy79pAf6SL4U
+	 u6VDOPNlUs5MikrmI0V+Fd4S4Xg4MvRsb9PhCgBhKxSgr5g5Ki9Zu6p0jcSWigGRcb
+	 ATT7zd588/Yje+hAhBX2tCgrf9aGZmx581XHihO8=
+Subject: Patch "mptcp: process pending subflow error on close" has been added to the 5.15-stable tree
+To: davem@davemloft.net,gregkh@linuxfoundation.org,martineau@kernel.org,matthieu.baerts@tessares.net,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Mon, 04 Mar 2024 09:26:08 +0100
-In-Reply-To: <20240228173714.262012-3-matttbe@kernel.org>
-Message-ID: <2024030408-easel-swimsuit-0ebd@gregkh>
+Date: Mon, 04 Mar 2024 09:26:09 +0100
+In-Reply-To: <20240228173317.257282-2-matttbe@kernel.org>
+Message-ID: <2024030409-sandstorm-wool-af16@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,78 +44,136 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: clean up harmless false expressions
+    mptcp: process pending subflow error on close
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-clean-up-harmless-false-expressions.patch
+     mptcp-process-pending-subflow-error-on-close.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-25407-greg=kroah.com@vger.kernel.org Wed Feb 28 18:37:44 2024
+From stable+bounces-25403-greg=kroah.com@vger.kernel.org Wed Feb 28 18:33:29 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 28 Feb 2024 18:37:15 +0100
-Subject: mptcp: clean up harmless false expressions
+Date: Wed, 28 Feb 2024 18:33:18 +0100
+Subject: mptcp: process pending subflow error on close
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Jean Sacren <sakiwit@gmail.com>, Matthieu Baerts <matthieu.baerts@tessares.net>, Mat Martineau <mathew.j.martineau@linux.intel.com>, Jakub Kicinski <kuba@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
-Message-ID: <20240228173714.262012-3-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>, Matthieu Baerts <matthieu.baerts@tessares.net>, "David S . Miller" <davem@davemloft.net>, Matthieu Baerts <matttbe@kernel.org>
+Message-ID: <20240228173317.257282-2-matttbe@kernel.org>
 
-From: Jean Sacren <sakiwit@gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-commit 59060a47ca50bbdb1d863b73667a1065873ecc06 upstream.
+commit 9f1a98813b4b686482e5ef3c9d998581cace0ba6 upstream.
 
-entry->addr.id is u8 with a range from 0 to 255 and MAX_ADDR_ID is 255.
-We should drop both false expressions of (entry->addr.id > MAX_ADDR_ID).
+On incoming TCP reset, subflow closing could happen before error
+propagation. That in turn could cause the socket error being ignored,
+and a missing socket state transition, as reported by Daire-Byrne.
 
-We should also remove the obsolete parentheses in the first if branch.
+Address the issues explicitly checking for subflow socket error at
+close time. To avoid code duplication, factor-out of __mptcp_error_report()
+a new helper implementing the relevant bits.
 
-Use U8_MAX for MAX_ADDR_ID and add a comment to show the link to
-mptcp_addr_info.id as suggested by Mr. Matthieu Baerts.
-
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Jean Sacren <sakiwit@gmail.com>
-Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/429
+Fixes: 15cc10453398 ("mptcp: deliver ssk errors to msk")
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/pm_netlink.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c |   63 +++++++++++++++++++++++++++------------------------
+ 1 file changed, 34 insertions(+), 29 deletions(-)
 
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -38,7 +38,8 @@ struct mptcp_pm_add_entry {
- 	u8			retrans_times;
- };
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -688,40 +688,44 @@ static bool __mptcp_ofo_queue(struct mpt
+ 	return moved;
+ }
  
--#define MAX_ADDR_ID		255
-+/* max value of mptcp_addr_info.id */
-+#define MAX_ADDR_ID		U8_MAX
- #define BITMAP_SZ DIV_ROUND_UP(MAX_ADDR_ID + 1, BITS_PER_LONG)
+-void __mptcp_error_report(struct sock *sk)
++static bool __mptcp_subflow_error_report(struct sock *sk, struct sock *ssk)
+ {
+-	struct mptcp_subflow_context *subflow;
+-	struct mptcp_sock *msk = mptcp_sk(sk);
++	int err = sock_error(ssk);
++	int ssk_state;
  
- struct pm_nl_pernet {
-@@ -854,14 +855,13 @@ find_next:
- 		entry->addr.id = find_next_zero_bit(pernet->id_bitmap,
- 						    MAX_ADDR_ID + 1,
- 						    pernet->next_id);
--		if ((!entry->addr.id || entry->addr.id > MAX_ADDR_ID) &&
--		    pernet->next_id != 1) {
-+		if (!entry->addr.id && pernet->next_id != 1) {
- 			pernet->next_id = 1;
- 			goto find_next;
- 		}
+-	mptcp_for_each_subflow(msk, subflow) {
+-		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+-		int err = sock_error(ssk);
+-		int ssk_state;
++	if (!err)
++		return false;
+ 
+-		if (!err)
+-			continue;
++	/* only propagate errors on fallen-back sockets or
++	 * on MPC connect
++	 */
++	if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(mptcp_sk(sk)))
++		return false;
+ 
+-		/* only propagate errors on fallen-back sockets or
+-		 * on MPC connect
+-		 */
+-		if (sk->sk_state != TCP_SYN_SENT && !__mptcp_check_fallback(msk))
+-			continue;
++	/* We need to propagate only transition to CLOSE state.
++	 * Orphaned socket will see such state change via
++	 * subflow_sched_work_if_closed() and that path will properly
++	 * destroy the msk as needed.
++	 */
++	ssk_state = inet_sk_state_load(ssk);
++	if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
++		inet_sk_state_store(sk, ssk_state);
++	WRITE_ONCE(sk->sk_err, -err);
++
++	/* This barrier is coupled with smp_rmb() in mptcp_poll() */
++	smp_wmb();
++	sk_error_report(sk);
++	return true;
++}
+ 
+-		/* We need to propagate only transition to CLOSE state.
+-		 * Orphaned socket will see such state change via
+-		 * subflow_sched_work_if_closed() and that path will properly
+-		 * destroy the msk as needed.
+-		 */
+-		ssk_state = inet_sk_state_load(ssk);
+-		if (ssk_state == TCP_CLOSE && !sock_flag(sk, SOCK_DEAD))
+-			inet_sk_state_store(sk, ssk_state);
+-		WRITE_ONCE(sk->sk_err, -err);
+-
+-		/* This barrier is coupled with smp_rmb() in mptcp_poll() */
+-		smp_wmb();
+-		sk_error_report(sk);
+-		break;
+-	}
++void __mptcp_error_report(struct sock *sk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct mptcp_sock *msk = mptcp_sk(sk);
++
++	mptcp_for_each_subflow(msk, subflow)
++		if (__mptcp_subflow_error_report(sk, mptcp_subflow_tcp_sock(subflow)))
++			break;
+ }
+ 
+ /* In most cases we will be able to lock the mptcp socket.  If its already
+@@ -2309,6 +2313,7 @@ static void __mptcp_close_ssk(struct soc
+ 		/* close acquired an extra ref */
+ 		__sock_put(ssk);
  	}
++	__mptcp_subflow_error_report(sk, ssk);
+ 	release_sock(ssk);
  
--	if (!entry->addr.id || entry->addr.id > MAX_ADDR_ID)
-+	if (!entry->addr.id)
- 		goto out;
- 
- 	__set_bit(entry->addr.id, pernet->id_bitmap);
+ 	sock_put(ssk);
 
 
 Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
