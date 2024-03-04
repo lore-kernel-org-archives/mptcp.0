@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657AE1E506
-	for <mptcp@lists.linux.dev>; Mon,  4 Mar 2024 12:31:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5393826AD4
+	for <mptcp@lists.linux.dev>; Mon,  4 Mar 2024 12:31:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709555511; cv=none; b=IfFpMzAXA4y9qdd9F/np87ZUhpq6V1nQbzLZlDUekOs9qR3ChSm88dZCVpuOEtqaDnTMe+dh3MUKWpzTNH0Vxj/Js1LL9D1HrAfhOWVttDNsB5p5+OAC9yNOTr78UoPH4qtBiDswiAuSneIOW0IbIGcCCVrarPWiwMOg5IHWUcA=
+	t=1709555515; cv=none; b=cUPceBM1i1M5SUkxtQF6LpK13TuwYvUF6fTFRlnv2TbHs+NsqK3i6NqNiZaVTgLRDlo7H9miGhppqLj7a46knzyxiEpPhhNsHzN+WnZUTeYdr8YlL+aOxCkP9mjqnL3p0v0z6TKfnCFPcjAekOuYKoNH08OOZqOEXsjpUw6Tr+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709555511; c=relaxed/simple;
-	bh=ZeWftEANEa3yvi7TKvM1TowzuGYhVlAKsQr4HC3zBHI=;
+	s=arc-20240116; t=1709555515; c=relaxed/simple;
+	bh=drYYoLZvEqPv0c8M15YqZjZFE78wD2Y5qr5gCvvMPZA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e7UFFsp/QymM4HFu2lOcsKFWlmiqZ01NrEiGn6ZkGXyFsyewGpa/PLze1evO8zxEG/GSdw0YMKR3INRkjbOdc+I9Dq2YpVxo2GlOSbpsx9EXkfwXWt3GyNkDpCiLCVUebxDG7z65HixzbVxc6jtFjIJ67KlzhQKmhCGS+aMHTbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtijGdP/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qnt1OvFOR3+AXU2uAfEv2in4fgl9lGAul3YyYTN1ZSIG5ANEYqRNhBMOi4+7ewxVR8S/OHNoU2/u9ck9RV6Xco/FuFHDMryh8WQvMZDIev5stIGRNf3u6XphA8KGtigU3wYAa7TY0ICYVKNm6h6Hm8J7W+3eZMnJB7w7xvk98bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XpWxlkaJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtijGdP/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 305A0C433F1;
-	Mon,  4 Mar 2024 12:31:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XpWxlkaJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4033C433C7;
+	Mon,  4 Mar 2024 12:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709555511;
-	bh=ZeWftEANEa3yvi7TKvM1TowzuGYhVlAKsQr4HC3zBHI=;
+	s=k20201202; t=1709555514;
+	bh=drYYoLZvEqPv0c8M15YqZjZFE78wD2Y5qr5gCvvMPZA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gtijGdP/tSEi05Evo1p6XSYFTonqa+q6dTzXNQltAJ04Q+v2tOjLudQlXeXOOKeXx
-	 M3Y8AWgbmw/MGAO0FTx3neI3gXLNM+mQwupcpD6w1UVA1JRb4b+O4AJ2EDC6mCmMYX
-	 2xsaGZ/mK6IiSbmhZeSVNyqvLm0JGs35nVEp3lOX+W+bzvYyh5rNbZnEsDdLIjvC0Z
-	 rX4VHlWzCBNI+DD2NvvnPjRgvn12exYSjWbtY+VEeQMDxpHrmtQfj7QB1uzGtTvBkB
-	 VJZP//VF6Io38rnu9n3TcE/vawkDeolEYE/nYyCbpVNz9gMvG2GfgBOQuZJmqVMKs7
-	 4/VunthJe7P5A==
-Message-ID: <8895ca8d-a13a-412f-a014-42abfe1ed1c7@kernel.org>
-Date: Mon, 4 Mar 2024 13:31:47 +0100
+	b=XpWxlkaJ59VA+V1wzu9RO4NMHcba93GiRJOtwKqibQKo0exLfC0aeFZ1p36Wd/58m
+	 HWERo3Be8BrRzt0uu9gO99G+Wt+QG3/H95azkK5tWeLYjZfMCDGaDhCZZ5u5HJcQ8O
+	 MJmrB5nqSk809ltpZFfHd+ggEmCR1FNuKguvGt65bnrrsu7YHjIvKKjnXtqzMKIjkB
+	 QoZhkuXCgCPQlp76oAk0ECCYZuQNr3j7DlqO+pxlNyrPHWKYV+anOpcLl2Wwd98BHI
+	 DAJaPotj2nnn+Eesvwevsnvj3HmPqEln24xQEyM+7QurK7O66lfkI5sffWpH187zPU
+	 BW5rCuGYQEnaA==
+Message-ID: <b2985fbe-98c6-4c54-8fad-b001f0a1bc8e@kernel.org>
+Date: Mon, 4 Mar 2024 13:31:53 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v11 0/8] add helpers and vars in mptcp_lib.sh,
- part 3
+Subject: Re: [PATCH mptcp-next v11 1/8] selftests: mptcp: print all error
+ messages to stdout
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709466624.git.tanggeliang@kylinos.cn>
+ <25b38a5fd6e6f5d485a65ab3c1269b9ed8a0ac8b.1709466624.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1709466624.git.tanggeliang@kylinos.cn>
+In-Reply-To: <25b38a5fd6e6f5d485a65ab3c1269b9ed8a0ac8b.1709466624.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,36 +96,13 @@ Hi Geliang,
 On 03/03/2024 12:52, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v11:
->  - fix the shellcheck error in v10
-> 
-> v10:
->  - split two more patches (#4 and #5) from #6 and #7
->  - update commit logs
-> 
-> v9:
->  - move print_larger_title from patch 5 to patch 2
->  - move MPTCP_LIB_TEST_FORMAT to a more suitable location in patch 4 and
->    patch 5
-> 
-> v8:
->  - address every comment from Matt in v7.
+> Some error messages are dropped
 
-If you don't mind, please add a short changelog per individual patch.
-Without that, it is quite hard to understand what you modified, if there
-was something you didn't do on purpose or by accident, which patch has
-moved where, etc. Without that, I end up re-reviewing the whole series
-like it was a new one.
+I guess you meant to say "Some error messages are printed to stderr", no?
 
-Apart from that, I think we are almost there. Two details on the two
-first patches, then it looks like we might print 'OK', then 'FAIL' in
-patch 4. And we might print 'OK', then some 'WARN' without '\n' at the
-end in patch 8.
-
-
-One important question: did you check the output when you force issues?
-Just to make sure they are presented correctly, and mainly if we still
-catch them!
+> while the others are printed to 'stdout'.
+> As part of the unification, this patch drop "1>&2" to let all errors
+> messages are printed to 'stdout'.
 
 Cheers,
 Matt
