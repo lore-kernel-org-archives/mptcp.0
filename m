@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1B937156
-	for <mptcp@lists.linux.dev>; Mon,  4 Mar 2024 12:32:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307263D39B
+	for <mptcp@lists.linux.dev>; Mon,  4 Mar 2024 12:32:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709555525; cv=none; b=EdDl2ebccRimK/UcadO3IeFsuua985NmrFLUgL2+QydmV9rpXHACqB32O/ShUwFHxxWxlX6henJ6iQB9iD1SCQSFBE3PBASsVdVpF38EURoZkHnWwtbM5e61PBMdQ80JZGGjG3Zwal8siTgDzbtT3Fv7TVLSXySh30g7N1aHa+E=
+	t=1709555530; cv=none; b=iH9s4VdbBnsx5/1kRShGDse59IizvAjDbxU1DcO9g0BRwYWWso5dF/mEWq5KfvULRWbIIG9VChHqXm7HiqR6gMoMM8wgA9aOU/JxA13sdPyEN2qGzZkr57kiKzcmcH4wAXDhgqgxV3NLzsdIIX3uX3q31aaz6YJIG+YtuW71KtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709555525; c=relaxed/simple;
-	bh=hGZ8Z058VrQpEjSzF9fphfQeng7EKIpT1ky0noNN40k=;
+	s=arc-20240116; t=1709555530; c=relaxed/simple;
+	bh=UoH29r+6wralEJphixxe00yEn2Dn9o6OSovEgM0e4IY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JShGMXhqb/bNmDMFRNvqJgGFlFKUPf25MQ1T4glpJapbmhA4p7PdeH6PVX/6O2gRvigv+RLXZ4ftDFbnwOE0HEbRrTc+pnVEtjhotS2fdR+XmkLof+xcz9WK3cgsjfGF//CywB/Gpma3S3zZ1Mfhhn4ekNUh3z0+XXdNoV6HrCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMh3FUnc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=rB7tjkA2BVtGLedGMzADZNApUZ1alEtRIBa1n/rO1STKV5HmfcrnTnIjGh+XgVMCvJ3xbwRjUCo9TT4DhVYU+AMhhL61F3MlmbdLv0uQt9Wsl0BEK44d3FwRCcBoYKx/led5cjc81+e2XRnhnT7/FpLlmZR6Qzvvr47QkHO/QLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qfRjpMmI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMh3FUnc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F08C433F1;
-	Mon,  4 Mar 2024 12:32:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qfRjpMmI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE7D7C43390;
+	Mon,  4 Mar 2024 12:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709555524;
-	bh=hGZ8Z058VrQpEjSzF9fphfQeng7EKIpT1ky0noNN40k=;
+	s=k20201202; t=1709555528;
+	bh=UoH29r+6wralEJphixxe00yEn2Dn9o6OSovEgM0e4IY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HMh3FUncilIlm2LROEX5mOdkyAzsW/BD4NmfMDa9q+RgiENUOx+JVmmhhq8uPhKlt
-	 KQVUIWl0f5rWgpfnnHkXY9J4ny/leRmLLyh02m0/W3/Nh1n35QKLjMjIHebllghtKK
-	 v7CE/fbTuwJpGDTO7UMzTeMbiKp/Eaw0HZJPjVWNUmVnwd6ODU6DQS9q82vSR1aLCj
-	 d5liuVo70KgOpoKbDLwvkMFBRkc585rxWPxsicdn9SKyRVjQny/rM6Vn3r1dR/5oDy
-	 o2Jfv1fFXUmIwociCTiF9luUNd9C1IEikbFTX0T10oGtDBBD4mKxUkpP6wSQTL+JeV
-	 DZjV7McwG3C8Q==
-Message-ID: <73670b3c-91fd-40fe-8d1a-293a59f3cc79@kernel.org>
-Date: Mon, 4 Mar 2024 13:32:03 +0100
+	b=qfRjpMmIL2EEiseEfjanPP8T4OStwmcmrWIxOGaekEvoVjpYDlZiDSGm7fdosBcse
+	 9IZtJLUsLntmIKwB17HfaXYltWFAs+00AfqiDifedZ46wu7pGGg1yq5Oh2MfuygNgN
+	 kjXTSh1Z/+lcQh9F6HRw4j3UTDOlGucqWeA8cUGcxMFErfJR+0YdZSg+O68lbzZNBI
+	 ZuOqrqq2y39eUi9JgaykXWkdvLpELpnSvRvkYw4hXwsxkk6GIMC1qAO3AlTh8l/f0u
+	 PGf8c7fQDKJ7HnBfKavtHy+1pEM1IHxmmUtUjrBMqdWc2BqoY2Qs6G4mZ0yOL7Apis
+	 DOPv4a+n94n6Q==
+Message-ID: <29b9ce5c-9660-4850-bb73-fe4b1d54a14c@kernel.org>
+Date: Mon, 4 Mar 2024 13:32:07 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v11 4/8] selftests: mptcp: sockopt: print every
- test result
+Subject: Re: [PATCH mptcp-next v11 8/8] selftests: mptcp: print test results
+ with colors
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709466624.git.tanggeliang@kylinos.cn>
- <d5d8963bae6555f4ebd9b51f9269cc7b64dedc94.1709466624.git.tanggeliang@kylinos.cn>
+ <b95eeb617ba13a563b9f8c71d784a0f776e93877.1709466624.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,131 +87,80 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d5d8963bae6555f4ebd9b51f9269cc7b64dedc94.1709466624.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b95eeb617ba13a563b9f8c71d784a0f776e93877.1709466624.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
 On 03/03/2024 12:52, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Only total test results are printed out in mptcp_sockopt.sh:
+> To unify the output formats of all test scripts, this patch adds
+> four more helpers:
 > 
-> PASS: all packets had packet mark set
-> PASS: SOL_MPTCP getsockopt has expected information
-> PASS: TCP_INQ cmsg/ioctl -t tcp
-> PASS: TCP_INQ cmsg/ioctl -6 -t tcp
-> PASS: TCP_INQ cmsg/ioctl -r tcp
-> PASS: TCP_INQ cmsg/ioctl -6 -r tcp
-> PASS: TCP_INQ cmsg/ioctl -r tcp -t tcp
+> 	mptcp_lib_pr_ok()
+> 	mptcp_lib_pr_skip()
+> 	mptcp_lib_pr_fail()
+> 	mptcp_lib_pr_info()
 > 
-> They mismatch with the test results:
+> to print out [ OK ], [SKIP], [FAIL] and 'INFO: ' with colors. Use them
+> in all scripts to print the "ok/skip/fail/info' using the same 'format'.
 > 
-> ok 1 - mptcp_sockopt: mark ipv4
-> ok 2 - mptcp_sockopt: transfer ipv4
-> ok 3 - mptcp_sockopt: mark ipv6
-> ok 4 - mptcp_sockopt: transfer ipv6
-> ok 5 - mptcp_sockopt: sockopt v4
-> ok 6 - mptcp_sockopt: sockopt v6
-> ok 7 - mptcp_sockopt: TCP_INQ: -t tcp
-> ok 8 - mptcp_sockopt: TCP_INQ: -6 -t tcp
-> ok 9 - mptcp_sockopt: TCP_INQ: -r tcp
-> ok 10 - mptcp_sockopt: TCP_INQ: -6 -r tcp
-> ok 11 - mptcp_sockopt: TCP_INQ: -r tcp -t tcp
+> Having colors helps to quickly identify issues when looking at a long
+> list of output logs and results.
 > 
-> 'mptcp_sockopt.sh' now display more detailed results + why (what you had
-> in a former patch from v6, merged here). It no longer displays 'PASS:',
-> because it is duplicated info now that the detailed are displayed:
-> 
-> Transfer v4                                       [ OK ]
-> Mark v4                                           [ OK ]
-> Transfer v6                                       [ OK ]
-> Mark v6                                           [ OK ]
-
-Small detail: I see above, in the TAP output, that we first have 'mark',
-then 'transfer', while here, it is the opposite: 'Transfer', then 'Mark'.
-
-While at it, can you invert the two please to keep the same order for
-both please? Especially when later we add the test number.
-
-I guess the TAP output is wrong (not logical) → so we should move:
-
-  mptcp_lib_result_code "${rets}" "transfer ${ip}"
-
-before checking the mark.
+> Note that now all print the same keywords, which was not the case
+> before, but it is good to uniform that.
 
 (...)
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> index bf22174c022c..f7f643779992 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> @@ -113,6 +113,11 @@ check_mark()
->  	return 0
->  }
->  
-> +print_title()
-> +{
-> +	printf "%-50s" "${@}"
-> +}
-> +
->  do_transfer()
->  {
->  	local listener_ns="$1"
-> @@ -162,6 +167,7 @@ do_transfer()
->  	wait $spid
->  	local rets=$?
->  
-> +	print_title "Transfer ${ip:2}"
->  	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
->  		echo " client exit code $retc, server $rets" 1>&2
->  		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
-> @@ -175,7 +181,9 @@ do_transfer()
->  		ret=1
->  		return 1
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> index a94655493cdc..bb7f1bcc570d 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 
-Here, in case of error, you will not print '[FAIL]', right?
+(...)
 
+> @@ -497,19 +497,19 @@ do_transfer()
+
+(...)
+
+>  	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
+> -		printf "[ OK ]"
+> +		mptcp_lib_pr_ok
+>  		mptcp_lib_result_pass "${TEST_GROUP}: ${result_msg}"
+>  	else
+>  		mptcp_lib_result_fail "${TEST_GROUP}: ${result_msg}"
+
+(see below: best to move that at the end)
+
+> @@ -540,7 +540,6 @@ do_transfer()
+>  			"${expect_ackrx}" "${stat_ackrx_now_l}"
 >  	fi
-> +	echo "[ OK ]"
-
-Mmh, be careful that the transfer can be marked as failed later, please
-check where we call "mptcp_lib_check_transfer".
-
-In fact, I think we should move ...
-
-  mptcp_lib_check_transfer $cin $sout "file received by server"
-  rets=$?
-  mptcp_lib_result_code "${rets}" "transfer ${ip}"
-
-... before this "echo "[ OK ]", no?
-
-
-So having something like:
-
-  print_title "Transfer ${ip:2}"
-  if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
-      echo "[FAIL]"
-      (...)
-      return 1
-  elif ! mptcp_lib_check_transfer $cin $sout "(...)"; then
-      rets=1
-      mptcp_lib_result_fail "transfer ${ip}"
-  else
-      echo "[ OK ]"
-      mptcp_lib_result_pass "transfer ${ip}"
-  fi
-
-
-By doing that, we fix the TAP order, and we correctly print "OK" even if
-there was an issue during the transfer
-
 >  
-> +	print_title "Mark ${ip:2}"
->  	if [ $local_addr = "::" ];then
->  		check_mark $listener_ns 6 || retc=1
->  		check_mark $connector_ns 6 || retc=1
+> -	echo
+
+See my comment in v7: here you need to print the warning that are in
+between. Best to move the mptcp_lib_result_XXX here as suggested in my
+comment.
+
+>  	cat "$capout"
+>  	[ $retc -eq 0 ] && [ $rets -eq 0 ]
+>  }
+
+(...)
+
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> index ca238592baee..0eaf11b0b0bc 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -63,7 +63,7 @@ _printf() {
+
+Do you still need '_printf()'? Maybe there is a remaining string that
+can be converted to mptcp_lib_pr_info()?
+
+
 Cheers,
 Matt
 -- 
