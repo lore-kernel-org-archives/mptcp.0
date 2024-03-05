@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5973210A1B
-	for <mptcp@lists.linux.dev>; Tue,  5 Mar 2024 05:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0510E10A1B
+	for <mptcp@lists.linux.dev>; Tue,  5 Mar 2024 05:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709616135; cv=none; b=Ofi+xTduAiZaMApNHocmRRgAxsDXN+IpDXidPL96KDft0Mxn1Qq+RbhgtA2Y/Fo2g1V7GNd7ddYSvJz5/GsEqlj+fS7nVNY9eLjEeIjikbwO8/EG2Z+hXupeDIW5HHZOLCaYo+Lv1Xg0QqLAOhmZWbMmKvqJIjIYaTJABYbgfIA=
+	t=1709616137; cv=none; b=DPt9FlmEEuJwDKr2U+45oLr7NAvixulzbPvmLYIUBwPCXq50cNojXl+ucKCLznxEbIb4khnMyayWlHFhDVnKJI+d0ueCdwCZUET95ee22j3Y9nEkJgBb1Qz7qlw39jgSaU3elJmeHA5FceW3u7XE04KLrAg/nXEV1gVEbLAOKII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709616135; c=relaxed/simple;
-	bh=9d8uvpRp5lhOrF8UXUVmQlu9GUzoSI6gHUtZ6xn1zvc=;
+	s=arc-20240116; t=1709616137; c=relaxed/simple;
+	bh=lRvyJQ4n8mZ4DG2sxqKIHcdRZJy2sdYu/xFPhRZroCA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hKOeKm7dFs4jWhpxGwWvNdAbttMN08Bbcy52yFG9Yf+lBzWf9Iz7hqBXPkHM3WLkIXlYAoAJ/D3Kgww825o2rA1OI0T09Mn6vs1922Bp6+BcbAiN8MDIAjWKXxWWYv0bKi18kbMAXDJ+FzOZ39oWvuB59sAwslYnZO+rSU+VdeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QF9NafjG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CNlIXk6SthWcp1A6iHlCd1aeSjeo/g4hdu1HNzLYygT9ibmYkqb+7gcAfQpTw01gbmKGV/i5FdiuhjV1r7ILk3s39vt2Fc44//U/Up2LKF5v/kryp7XFrKH1uxfQ6tBa/1vW2ol2ICJj5V21IjDtlazNDy6rsY4h1Z7w6v3kq7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQ5yYsuk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QF9NafjG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B450C433F1;
-	Tue,  5 Mar 2024 05:22:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQ5yYsuk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADBA8C43390;
+	Tue,  5 Mar 2024 05:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709616135;
-	bh=9d8uvpRp5lhOrF8UXUVmQlu9GUzoSI6gHUtZ6xn1zvc=;
+	s=k20201202; t=1709616136;
+	bh=lRvyJQ4n8mZ4DG2sxqKIHcdRZJy2sdYu/xFPhRZroCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QF9NafjGOcnJ7uIVXGj4HtC7SE9fnHt41DfMIsjGusidtfRb+FyvL7h3vb7oHGsUU
-	 WuXvyFpy56in0faD2kNm19mu/44R0Oh6SrpSdls1f72tretYtbZWIOzj9t97NfzUfh
-	 XpfUtL2+zJH8atQyfJWQYQLgZuqQNbmTGGBRBcHnfoBIHuEM0Dy10WT9CrCb4rIVEz
-	 yY5XPCn2AA5DH0RJAWIy7XIbpwaxuXF3eeKeClMaJs+xnfsqi7mp1WG+yvUN0RVVsi
-	 w1gnvPnIDWwbAu9ka6k0nvgpSz3gh28Vd5kmK3l+9DlOtGrGUlcqtSVfSIGM5ERthF
-	 YBCr/Rv2wDD9g==
+	b=KQ5yYsuk9b1izUU81iW2jhFe3u5yPLrq1aFXI6eF26Qkghp9thJ6oZ4WjER5iSOyz
+	 mrWQzKw+cFBM9IVJbKBES4MUXhF/INwNQlW5A3N0dvwF/IWMDwhGCH8nG3d8slnFph
+	 EXNin8DWOIetjbaLFVIl7s89TxTw6cjUw6JUlpN1tqMCkKXJlcI+OXHXMfi+llrUK2
+	 ryEwlzIT1EsOjkd+llTI0jJ647t3j8jfALXxNlzwsK871XLucaId1U04tv/sr52h8h
+	 bLkUZEiWKBkK0SH225czIdUGSWOFOWzWQQPuQB3g5K4czQQggEroFf2ATk8JiS9tRN
+	 9bWwnEmEd8epA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v12 1/9] selftests: mptcp: print all error messages to stdout
-Date: Tue,  5 Mar 2024 13:21:59 +0800
-Message-Id: <7deb7a21ada9e7aa0933cf86b7af8b66dbefd737.1709615883.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v12 2/9] selftests: mptcp: connect: add dedicated port counter
+Date: Tue,  5 Mar 2024 13:22:00 +0800
+Message-Id: <f6e5241dd67e898b0eee815467256051f8099fbe.1709615883.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1709615883.git.tanggeliang@kylinos.cn>
 References: <cover.1709615883.git.tanggeliang@kylinos.cn>
@@ -45,117 +45,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Some error messages are printed to stderr while the others are printed
-to 'stdout'. As part of the unification, this patch drop "1>&2" to let
-all errors messages are printed to 'stdout'.
+This patch adds a new dedicated counter 'prot_base' instead of TEST_COUNT
+to increase port numbers in mptcp_connect.sh.
+
+This can avoid outputting discontinuous test counters.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
 
 Notes:
-    Drop one more 1>&2, and update commit log
+    use port_base instead of PORT
 
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 10 +++++-----
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh | 11 ++++++-----
- 2 files changed, 11 insertions(+), 10 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 0ca2960c9099..679e366c8f6b 100755
+index 679e366c8f6b..c47ea779145d 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -294,7 +294,7 @@ do_ping()
- 	ip netns exec ${connector_ns} ping ${ping_args} $connect_addr >/dev/null || rc=1
+@@ -33,6 +33,7 @@ do_tcp=0
+ checksum=false
+ filesize=0
+ connect_per_transfer=1
++port_base=10000
  
- 	if [ $rc -ne 0 ] ; then
--		echo "$listener_ns -> $connect_addr connectivity [ FAIL ]" 1>&2
-+		echo "$listener_ns -> $connect_addr connectivity [ FAIL ]"
- 		ret=1
+ if [ $tc_loss -eq 100 ];then
+ 	tc_loss=1%
+@@ -314,7 +315,7 @@ do_transfer()
+ 	local extra_args="$7"
  
- 		return 1
-@@ -470,13 +470,13 @@ do_transfer()
+ 	local port
+-	port=$((10000+TEST_COUNT))
++	port=$((port_base++))
+ 	TEST_COUNT=$((TEST_COUNT+1))
  
- 	if [ ${stat_synrx_now_l} -lt ${expect_synrx} ]; then
- 		printf "[ FAIL ] lower MPC SYN rx (%d) than expected (%d)\n" \
--			"${stat_synrx_now_l}" "${expect_synrx}" 1>&2
-+			"${stat_synrx_now_l}" "${expect_synrx}"
- 		retc=1
- 	fi
- 	if [ ${stat_ackrx_now_l} -lt ${expect_ackrx} ] && [ ${stat_ooo_now} -eq 0 ]; then
- 		if [ ${stat_ooo_now} -eq 0 ]; then
- 			printf "[ FAIL ] lower MPC ACK rx (%d) than expected (%d)\n" \
--				"${stat_ackrx_now_l}" "${expect_ackrx}" 1>&2
-+				"${stat_ackrx_now_l}" "${expect_ackrx}"
- 			rets=1
- 		else
- 			printf "[ Note ] fallback due to TCP OoO"
-@@ -721,7 +721,7 @@ EOF
- 	ip -net "$listener_ns" route del local $local_addr/0 dev lo table 100
+ 	if [ "$rcvbuf" -gt 0 ]; then
+@@ -710,7 +711,7 @@ EOF
  
- 	if [ $lret -ne 0 ]; then
--		echo "FAIL: $msg, mptcp connection error" 1>&2
-+		echo "FAIL: $msg, mptcp connection error"
- 		ret=$lret
- 		return 1
- 	fi
-@@ -810,7 +810,7 @@ log_if_error()
- 	local msg="$1"
+ 	echo "INFO: test $msg"
  
- 	if [ ${ret} -ne 0 ]; then
--		echo "FAIL: ${msg}" 1>&2
-+		echo "FAIL: ${msg}"
- 
- 		final_ret=${ret}
- 		ret=0
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 6ed4aa32222f..7c70b52e63c6 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -103,7 +103,8 @@ check_mark()
- 	local v
- 	for v in $values; do
- 		if [ $v -ne 0 ]; then
--			echo "FAIL: got $tables $values in ns $ns , not 0 - not all expected packets marked" 1>&2
-+			echo "FAIL: got $tables $values in ns $ns," \
-+			     "not 0 - not all expected packets marked"
- 			ret=1
- 			return 1
- 		fi
-@@ -162,7 +163,7 @@ do_transfer()
- 	local rets=$?
- 
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
--		echo " client exit code $retc, server $rets" 1>&2
-+		echo " client exit code $retc, server $rets"
- 		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
- 		ip netns exec ${listener_ns} ss -Menita 1>&2 -o "sport = :$port"
- 
-@@ -221,7 +222,7 @@ do_mptcp_sockopt_tests()
- 	lret=$?
- 
- 	if [ $lret -ne 0 ]; then
--		echo "FAIL: SOL_MPTCP getsockopt" 1>&2
-+		echo "FAIL: SOL_MPTCP getsockopt"
- 		mptcp_lib_result_fail "sockopt v4"
- 		ret=$lret
- 		return
-@@ -232,7 +233,7 @@ do_mptcp_sockopt_tests()
- 	lret=$?
- 
- 	if [ $lret -ne 0 ]; then
--		echo "FAIL: SOL_MPTCP getsockopt (ipv6)" 1>&2
-+		echo "FAIL: SOL_MPTCP getsockopt (ipv6)"
- 		mptcp_lib_result_fail "sockopt v6"
- 		ret=$lret
- 		return
-@@ -263,7 +264,7 @@ do_tcpinq_test()
- 	local lret=$?
- 	if [ $lret -ne 0 ];then
- 		ret=$lret
--		echo "FAIL: mptcp_inq $*" 1>&2
-+		echo "FAIL: mptcp_inq $*"
- 		mptcp_lib_result_fail "TCP_INQ: $*"
- 		return $lret
- 	fi
+-	TEST_COUNT=10000
++	port_base=20000
+ 	local extra_args="-o TRANSPARENT"
+ 	do_transfer ${listener_ns} ${connector_ns} MPTCP MPTCP \
+ 		    ${connect_addr} ${local_addr} "${extra_args}"
 -- 
 2.40.1
 
