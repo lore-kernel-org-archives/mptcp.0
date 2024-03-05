@@ -1,106 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3578F84A48
-	for <mptcp@lists.linux.dev>; Tue,  5 Mar 2024 15:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED1A84A48
+	for <mptcp@lists.linux.dev>; Tue,  5 Mar 2024 15:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709652037; cv=none; b=BwLgSgQ+fbIaxoIgfQUvhwF3qttTMFj5fZ0vIRf8KaqLK3/nCwyYTGnzvdH9tC9/2/SCHXXMqoJFbzKr3v+Wwehr3nSSmdrpOBvp8wgDqt9Vexh0L5LbH6gkrLMxToP8vua2VGITB/kDqw1RicSs6NIht/zhbgTAnGR28A1d6XA=
+	t=1709652060; cv=none; b=YlvXImrSrmTzhhyGfpsJtj/R1wWzNv6o3J3+YibBMOHzsfE3ThaQ6Z7QzqXJwRBqXDZVkrBhZ4QrQWx3hDF6dIg3fOIlp8Ez2GIWpWm9u9VPhN9xH7TYvSpodEtAPiGC/alFgNfta+/1nqUgfsTjbSVddKrKX8C4XYf0t8Naxv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709652037; c=relaxed/simple;
-	bh=SdnfepDwQdpnVF5ARXNjVZV2T3QdKf6A11Pc207J5iY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gE2PqVdiTLCFSa4YcBPDSkLOVuiuyy5qv73QUZhDjzoYH/VhHQFHkPgVjFNoYvjb9MCLszDOec90PdzXEkiHCgdpQkMh6+Yx9sTkK6Nls+BrDuyvpieBUDWnGZIYtibaF3HeQCffzTHiTphq0KPBvnBbItIE7g41YCnccU+44kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E334+1dC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709652060; c=relaxed/simple;
+	bh=iIUOKB/KiZSavNnpvYEaRa3YhebIAYF/zRLbxFztWh4=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=Et9E7PXEYo2cDVcTipLaklUXFnTr1OsXFMYRu6cTvEtYB35IGniy+HjGOFtpUN/OH4pnIAix/ayWK7UrOeel+y6GyfqCO/9mE7ox94kcXbeyh4Jje5b/ntJiykF63npqiesxIZmEtWeCtehfhiCsoHEhiOBxF0h9w8d0mEdxyyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kdTVKSFf; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E334+1dC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709652035;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zWj0jP67SZZx9Y2ZYQaP9LVB3RuOjFRgRLM4EzhCY0Q=;
-	b=E334+1dCS7HzJlwMoUBBLcc9HSmhdWKIKFbJnp0lt0wL/f1hF1FZI67QCCCXyeAOUeyrTf
-	5BHEYwl2sjKPx8ibm3NxLz43FmUMUysTs/oYfuAKbRu9n17zWaeCUEQOHIj11cfaEh52xy
-	QjON5zEB87ZHcAxtgqrZMYsDtJ3P/1c=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-267-HoNwUw5YPuygAMLBVrRy2A-1; Tue, 05 Mar 2024 10:20:33 -0500
-X-MC-Unique: HoNwUw5YPuygAMLBVrRy2A-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 309B980026C;
-	Tue,  5 Mar 2024 15:20:33 +0000 (UTC)
-Received: from dcaratti.users.ipa.redhat.com (unknown [10.32.181.200])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 87C93492BCD;
-	Tue,  5 Mar 2024 15:20:32 +0000 (UTC)
-From: Davide Caratti <dcaratti@redhat.com>
-To: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>
-Cc: Christoph Paasch <cpaasch@apple.com>,
-	mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net v2] mptcp: don't account accept() of non-MPC client as fallback to TCP
-Date: Tue,  5 Mar 2024 16:19:56 +0100
-Message-ID: <be9176dac04b292242d6afc2eefc0c931d21b0cd.1709651670.git.dcaratti@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdTVKSFf"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5a14dfa68eeso447487eaf.1
+        for <mptcp@lists.linux.dev>; Tue, 05 Mar 2024 07:20:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709652057; x=1710256857; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GKIQh7Rvy+3mAHB8sHBUz/lxuma3/WkXXoYcrXJCI9U=;
+        b=kdTVKSFfgk0abz0k+Skx8gHs585RWaJNo5y2dhTK9GUzJBgqFLgVrYTdSBkc54tflZ
+         xNujBWkYR9IPHG9BCDAVsaaLC0pauEW1Thv9hswUTanfHiuMSj8sQA844+Cc0yAxltaI
+         ZFwdqhz8hBwrRq8jjnbtunn2nl6YKGLQ+j4GN4yrsqSIoXY3XCKKWfOhOdlHI8ssgG9H
+         Ah/2CZmO5jP0qou/Mr31g1v1eNY92TWfG+UJF4BM/mAHl8JOnT/Q7Kv7LpVd9h0RZ9iV
+         PxdakTUqsg1mL7RPITJ4aXeJwaFMBHAcpJlxv3ApB3TezgcZ1EBUSAoozCDBYiUBdOVo
+         FAXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709652057; x=1710256857;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=GKIQh7Rvy+3mAHB8sHBUz/lxuma3/WkXXoYcrXJCI9U=;
+        b=Bm44bvI765Pma6Fwi9KMYk/V5ULjIp9u4E4vYCd0kfwV1n35SWMCzfeYrPHKj8CkOb
+         tcQB9ypBWQ5JcnGw/s/ZtkwZex52iEX9RGiQYZKa8usL/UhIt9FtQzfsVa9Bf5f18Xq8
+         i35QG5PRozBfnsjzzgUagZczk9iSQ7o+twkZT7eDLbG9UCFjdMdaDacqJzN1f7B6+Qz6
+         amvGzK1fnaHcKMmg3asS4J5f+WsZJNL4WzWSjXPbr3yuU1WbOlw+BXMcvDtbWiuHzH2g
+         uYTEHDbm/GVXeS+H6uxKvc181tkwAkTvY7H8a17jG19v9zx54nsjUfn1NjcIvgBpvPMR
+         7URw==
+X-Gm-Message-State: AOJu0YxOMsuocFSQeSt+djy/fFeiwAzSGsprwcsQH3LpQDojcpJoPJPV
+	odsuftVNXDqoAfHlupgwWs/vHbuTAopLQ6fv7Qx0X8x+oyqQdkw=
+X-Google-Smtp-Source: AGHT+IGjPaathPpg0f/FOBcCGzUXIJONU54SgyhLXpGv4JM+2GWPJ2cLR/1iBeQbTDhBqjBsZXoBLg==
+X-Received: by 2002:a05:6358:5910:b0:17b:62ac:1ddb with SMTP id g16-20020a056358591000b0017b62ac1ddbmr2403757rwf.23.1709652057519;
+        Tue, 05 Mar 2024 07:20:57 -0800 (PST)
+Received: from [127.0.0.1] ([20.102.214.36])
+        by smtp.gmail.com with ESMTPSA id k19-20020ac85fd3000000b0042eeddf4e42sm2352892qta.70.2024.03.05.07.20.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 07:20:57 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <cf0fb6eb68466bef37d685cc8a52cad3b69c4e7a.1709647631.git.dcaratti@redhat.com>
+References:
+ <cf0fb6eb68466bef37d685cc8a52cad3b69c4e7a.1709647631.git.dcaratti@redhat.com>
+Subject: Re: mptcp: don't account accept() of non-MPC client as fallback to
+ TCP: Tests Results
+Message-ID: <1b5d0fb6-0755-5a0e-bd5c-15a0f1fabfd3@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 05 Mar 2024 15:20:56 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-currently, inbound TCP connections increment MPTcpExtMPCapableFallbackACK
-when the server accepts them. As Christoph reported, this is "surprising"
-because the counter becomes greater than MPTcpExtMPCapableSYNRX when many
-non-MPC TCP connections are accepted.
-Change the semantic of MPTcpExtMPCapableFallbackACK to increment when the
-subflow context of an inbound MPC connection attempt is dropped.
+Hi Davide,
 
-v2: fix reporter name
+Thank you for your modifications, that's great!
 
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/449
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
----
- net/mptcp/protocol.c | 2 --
- net/mptcp/subflow.c  | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Our CI (Cirrus) did some validations with a debug kernel and here is its =
+report:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index cdf9ec67795e..556b3b95c537 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3937,8 +3937,6 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
- 				mptcp_set_state(newsk, TCP_CLOSE);
- 		}
- 	} else {
--		MPTCP_INC_STATS(sock_net(ssk),
--				MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
- tcpfallback:
- 		newsk->sk_kern_sock = kern;
- 		lock_sock(newsk);
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 1626dd20c68f..6e3fe38f057d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -905,6 +905,8 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 	return child;
- 
- fallback:
-+	if (child)
-+		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
- 	mptcp_subflow_drop_ctx(child);
- 	return child;
- }
--- 
-2.43.0
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Unstable: 1 failed test(s): packetdrill_sockopts =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/5651700250312704
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5651700250312704/su=
+mmary/summary.txt
 
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5088750296891392
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5088750296891392/summary/summary.txt
+
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/e08e8f186d4d
+
+
+If there are some issues, you can reproduce=
+ them using the same environment as
+the one used by the CI thanks to a =
+docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v =
+"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
+
+For more details:
+
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
