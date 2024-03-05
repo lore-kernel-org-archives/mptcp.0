@@ -1,125 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F935B671;
-	Tue,  5 Mar 2024 11:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B27B5B5A1;
+	Tue,  5 Mar 2024 11:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709636692; cv=none; b=MnHxqphvn6L9BbZrcyJm6nUt9heVxAYNXbmKMKZAZ5EukDYgTsA0QfP67aYhzsMhsEGY7V2zRGCNAjrSJnGQQkvrBj2HmhoozGZJMnM4hPItGTfZXoNkrDYDr/PUpng923AxZL9uDZHInalyUolMiMr97PZgJUEj5FIEbqiWZOY=
+	t=1709637550; cv=none; b=Hytz62khZs/NrlEss5IlDYw67Elhl4NqWB/xx/+LOqIucEZyEjK0t1s9sT92hi5O/t1bh2l2yrG5p2ym7UJ4/Ue0z0JJ5RuGitsQ+WYCQnq+SGyyh4fU6Tj6IXvdmyP+p+5hnYLoJj+3u3oPws8qehsS1Ev7RY2ettuVKK1lj2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709636692; c=relaxed/simple;
-	bh=VrgfVfXGL+bniwIr+Gqdl6c583H+xRtQ0rR4oYPIcrM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JB/+MobWQqzX2+5BMgJBuDxDoPFtapMyCEGoz7wdIo4kfxX+fCkzjBdM6RpPpX6dnwIaeBRzII6hdCmBkbiVSElrv68AwJPF4D4I8ROwppehWTorQyuJZugMzi4iHhAy2OnTpTUDTjCZoW9dq1y5E+j7rJ3BFsLsxGuWMh4FTtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KI7o8Snd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709637550; c=relaxed/simple;
+	bh=Z4IBEZRKAlbU/N0SOY+SwMF12pQcVJDXcB7KTmyw/KA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hy9OALHH8kvwnerbpSoYj9Dq58dinXM15VDCD+8coB7bz548fr9f7vfDn60jK7FUoTCFFLLRJciUBGUSASJS0RprFS8hpGtm9GgkPETE242MIW0htDrqSYGqgvPC84TDySy8yDSBpExZYyNEUiGgz1+t9cnU66WMbJel3ePHWCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTnLPty5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KI7o8Snd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6D97C43399;
-	Tue,  5 Mar 2024 11:04:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTnLPty5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D602C43390;
+	Tue,  5 Mar 2024 11:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709636692;
-	bh=VrgfVfXGL+bniwIr+Gqdl6c583H+xRtQ0rR4oYPIcrM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KI7o8SndIscczSWBa0jSe5sXWiSDqkpwTMxTvZHwnyBl2vOBXKsC7mzoELrAIJ8AP
-	 Aus7KDMJTEtC4yWqTzrTtKsjX734wFEKPepsIp/n4O6xK/dj8/Qrf6aNqy1G5HxEFK
-	 kWXboG3D5EchpXWmm4UFeX9b7ljgIYbf2ONyBWa/4qN4kndKsleTxNMyExN/kTnrwV
-	 jHQ7PkSvg1QNLQ3eee6z7ubdgK+3jFW5QtJdvNomxv6hG1JdxNXv1FOdufJXDH/xgg
-	 5FDUGqHvB+Mnz/5o3LvkkN1PlqxIgiiHlqpQdfXYhHaaTfkPFn7o4liwc/C7XcqTds
-	 aCqtndlWcFu2w==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 05 Mar 2024 12:04:33 +0100
-Subject: [PATCH net-next 4/4] mptcp: drop lookup_by_id in lookup_addr
+	s=k20201202; t=1709637548;
+	bh=Z4IBEZRKAlbU/N0SOY+SwMF12pQcVJDXcB7KTmyw/KA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oTnLPty5a1khzX8k8vdcade5csRGX487/YQggUreaqE4IdZBeSaK3/ZvxwI1dTXfY
+	 lMCij9GosSsZMianJnpoWlYpCViw6WJZTjlUet4Ca+E3mgmkbwImI9GnRqPIWzlcTn
+	 mJfKB3/cpYijbm/fOV4D6Rn9tKBFWefpvoXj8kImn8ADD2SoSiRoZHSarq2wOTn/6s
+	 hVhlKMoCBEVpWFc+HSni3gip/Ec9K+oeeWJHVyFg0eBoJ2tZnXNKqt9jOcCpRtYba7
+	 dUB1E9idDfn7Nc7PfXqLo+XIGEs1AfAe0N54Mz5T+RctqVO8WWhhy/an1Tsgnx+s8r
+	 Rx6Un/4ujM1Kg==
+Message-ID: <8b2b6492-d460-4981-8624-068dd766d3ac@kernel.org>
+Date: Tue, 5 Mar 2024 12:19:02 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 03/13] selftests: mptcp: add
+ mptcp_lib_check_output helper
+Content-Language: en-GB, fr-BE
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>
+References: <20240305-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v1-0-66618ea5504e@kernel.org>
+ <20240305-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v1-3-66618ea5504e@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240305-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v1-3-66618ea5504e@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240305-upstream-net-next-20240304-mptcp-misc-cleanup-v1-4-c436ba5e569b@kernel.org>
-References: <20240305-upstream-net-next-20240304-mptcp-misc-cleanup-v1-0-c436ba5e569b@kernel.org>
-In-Reply-To: <20240305-upstream-net-next-20240304-mptcp-misc-cleanup-v1-0-c436ba5e569b@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2274; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=IRouLJLzOQvuPh1nmmYUU3MxKdU5480lf2zN3s0oVSE=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl5vxDaCTvgU0QiI3890Plw4yMOhTvTcmFlgLYX
- g0H4OYsbQeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZeb8QwAKCRD2t4JPQmmg
- c/eFD/9U61UobHCI0eQctMtjgjY/zwtcGDFKiKx0mdpkxf70WmgWiSJIZYaqJTZYDwJQlEFzhEK
- tUs5/vXMS5KLs+1cHEzEg4gJrbuXCA5MqnfiBT8cTX0ERQTityTNiyAQbijClmBO3r32qidykpA
- b0OKdFDbu83C+pa9NYwrkPm/IDkTkgGwRYEPLLEGxUUf+znTaf6cLQCrdVHfkk6P/8Y9QSe9N2q
- xTSMEr8Z3s1MlbIvlEMztm+tvsb3tiFaUoYxdtFRiWyiFBimYdFT5B99yT4eLyJeZ59QMsT9Gdy
- fLDZZ9MG9P4zRjodU/bkZD+07B38W9Q8QfVVnTaIT3eHs6PDGLpcavRVgsLJInpRrrsilvClkLb
- SqvmQhibf0rin8ZEYvkVTMNGxY9K1Dlk9CvJydtTpz3zpLreW/WIqVWWiE5h3c9EmRaHUxKdov5
- GOgFUEQ38wP+5nR76MHCNYtar0KfLIDWTOe8oO7NO04T6EuFr3/NX7HaL0tVPRIHg4pR5prxkDD
- GgsTp1eQONh5GHeLG5oepkHMhp4ROlt1rkQ0jaSZBXdD3cyLISuxCPtrTsfGIslTxlUkR0Bq0pd
- 7GNc5+umCmR47oktMO776uqO+cAOT0zi8JDuyo02EriDQl7eNdztQ7XbJ78sXw0YfJY9nNbwrMx
- sdS/9uSd6pgV/fw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hello,
 
-When the lookup_by_id parameter of __lookup_addr() is true, it's the same
-as __lookup_addr_by_id(), it can be replaced by __lookup_addr_by_id()
-directly. So drop this parameter, let __lookup_addr() only looks up address
-on the local address list by comparing addresses in it, not address ids.
+On 05/03/2024 11:42, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Extract the main part of check() in pm_netlink.sh into a new helper
+> named mptcp_lib_check_output in mptcp_lib.sh.
+> 
+> This helper will be used for userspace dump addresses tests.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+Arf, I just noticed that when the MPTCP tree got rebased on top of
+net-next, Git didn't drop this patch, but resolved the conflicts by
+duplicating mptcp_lib_check_output() function. Of course, redefining the
+function is OK in Bash, and I didn't notice the issue when running the
+tests...
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 354083b8386f..5c17d39146ea 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -499,15 +499,12 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsigned int id)
- }
- 
- static struct mptcp_pm_addr_entry *
--__lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info,
--	      bool lookup_by_id)
-+__lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
- {
- 	struct mptcp_pm_addr_entry *entry;
- 
- 	list_for_each_entry(entry, &pernet->local_addr_list, list) {
--		if ((!lookup_by_id &&
--		     mptcp_addresses_equal(&entry->addr, info, entry->addr.port)) ||
--		    (lookup_by_id && entry->addr.id == info->id))
-+		if (mptcp_addresses_equal(&entry->addr, info, entry->addr.port))
- 			return entry;
- 	}
- 	return NULL;
-@@ -537,7 +534,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 
- 		mptcp_local_address((struct sock_common *)msk->first, &mpc_addr);
- 		rcu_read_lock();
--		entry = __lookup_addr(pernet, &mpc_addr, false);
-+		entry = __lookup_addr(pernet, &mpc_addr);
- 		if (entry) {
- 			__clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
- 			msk->mpc_endpoint_id = entry->addr.id;
-@@ -1918,7 +1915,8 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- 		bkup = 1;
- 
- 	spin_lock_bh(&pernet->lock);
--	entry = __lookup_addr(pernet, &addr.addr, lookup_by_id);
-+	entry = lookup_by_id ? __lookup_addr_by_id(pernet, addr.addr.id) :
-+			       __lookup_addr(pernet, &addr.addr);
- 	if (!entry) {
- 		spin_unlock_bh(&pernet->lock);
- 		GENL_SET_ERR_MSG(info, "address not found");
+I will resend this series without this patch tomorrow.
 
+Sorry for the noise :-/
+
+pw-bot: changes-requested
+
+Cheers,
+Matt
 -- 
-2.43.0
-
+Sponsored by the NGI0 Core fund.
