@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C83910A1B
-	for <mptcp@lists.linux.dev>; Tue,  5 Mar 2024 05:22:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A618910A1B
+	for <mptcp@lists.linux.dev>; Tue,  5 Mar 2024 05:22:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709616143; cv=none; b=tEI3sin//MDWqTQC1frSbj/NzwTWXEYxlpIblnLvQgvs4lgV75z7jcx/cdBne5lGZFnqobYw+Ae5JkG8xNP9xSCCZjTKLUcj4bOiPAesjdRlMdseWJNIc4rmSNqM1N46JpQl+mp/q/GZ+kQd8/ZqeOVsFqNQDgqMFuB8KG/qbkg=
+	t=1709616144; cv=none; b=KDbKW/k8VYy4e0byi/E9jMkvLZaJ1tAilrMl4j7lQi9TG8ycoygDuj1bm4HEqJGHv7ez5aZ9SL7KY8mJtXPV+5vGGdYCh5wPaHTk9uEPrsnSyG2uELZJRPHFqOxZesn2glgIVSEGs3M2F/36lPGXC0rwWhBcx8lCMmNiBmiEYkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709616143; c=relaxed/simple;
-	bh=+sK0wTaehYThqndiPHqx9kbd/99rtW7d1DSUy4y4dYM=;
+	s=arc-20240116; t=1709616144; c=relaxed/simple;
+	bh=Vt2AoNIb23GEeBBm+6o7ZTdRLZr/jHnCPmHxPkOeP+o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LNX9xs+wOl3M0VwDJldHjwK62dVPaxkuho0KVq5qgwxUc/LeQ+BM5aor8QH9w0n9ZlytE2YoAeTUHOMaN9daMOMmB1VZeVLXaOe5CTEcVde3+GNSk4UuPFAi+COYhOe/daLIzFNPGII3pF34AEMixL1mvPp32Cy+uCmZTNKZTiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q0eH9URc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qO2yrIDsbEWiKviZ2MaFN1ReiBvaTs06S93m0VJAsoTbZRY+Qzl6kVEsd6ey+nwa9gQK0oQ620kJm+nFBKGcKe1ed0M4/DKLTRJzCYtApFuy6Mmgd8f7NtqAWkWed3D1yGhEWjdMXeNPk4UwXkGnD0LnrPIsUx1sSzlsj1aJ0Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNYzDDoo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q0eH9URc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F35BC433C7;
-	Tue,  5 Mar 2024 05:22:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNYzDDoo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E64C433F1;
+	Tue,  5 Mar 2024 05:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709616143;
-	bh=+sK0wTaehYThqndiPHqx9kbd/99rtW7d1DSUy4y4dYM=;
+	s=k20201202; t=1709616144;
+	bh=Vt2AoNIb23GEeBBm+6o7ZTdRLZr/jHnCPmHxPkOeP+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q0eH9URc42Ma12xSLCuDP5PhBhRSj9rmIpDfmyBWFu68/QhTuzMMoj6BRVkr6mR6l
-	 udQOPv/s0Vkk4393kENVjs1kr/P7mY6ypqRv+QxJ1Lx7rAQ3H1qjX0DAPZajoVQjmt
-	 J4b7OXUp1d6eio4GHOtsCXXrhSIprCmX8i+Q/UViQuNTdvdO59LkG6ID4/tMocQnY6
-	 x2tnYupAVPrKprLEY6JAnMckkU7YzpdhjGeTMLen6kGCsMm+OsvSAYHMdluKmoyrFb
-	 1v0yNZaeJUSM44vsSJwYsFQhpYN+ucccQA9X1YC38LpOjXMQ2M7ezKT6uf2yCpTX05
-	 ctifFfUaYqpjA==
+	b=CNYzDDoo7EjCJD0LXRs7UedG9atFAEdI/p+H9BokXNf9KqmbKpIEGMKw0uQ4AZ5jT
+	 0iNAK+MVFvbwYU8x80q2G9dyG2s7ZlkxJim/GkMhHKUfZ805PG6HMTHE8iUBIRU+BU
+	 3dHwo/twzApInTm5/RefxLrvzg/uvp+FXhK62ifoiKQDMDmfdRTDLBD8tJyPIVZHcx
+	 RpeR9aY/oMWjx2b2NpWnmtKz7c5DcN2bsmJKD0nqQHjrrSD9Y3P3rHgg5J69CMZBxA
+	 6v4n+Ry5GQLHHuaxTsdogQDXrwtLTXXWgviTq+SCCYnoXHxP3H7Ylj873173VsaePh
+	 PqFygtsGROKvA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v12 7/9] selftests: mptcp: print test results with counters
-Date: Tue,  5 Mar 2024 13:22:05 +0800
-Message-Id: <2122d7c0809df97620282fdea7780b030f4ad312.1709615883.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v12 8/9] selftests: mptcp: connect: use += operator to append strings
+Date: Tue,  5 Mar 2024 13:22:06 +0800
+Message-Id: <bd6d215ffac737df7bc6c3d8780a4104810fe308.1709615883.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1709615883.git.tanggeliang@kylinos.cn>
 References: <cover.1709615883.git.tanggeliang@kylinos.cn>
@@ -45,291 +45,136 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch adds a new helper mptcp_lib_print_title(), a wrapper of
-mptcp_lib_inc_test_counter() and mptcp_lib_pr_title_counter(), to
-print out test counter in each test result and increase the counter.
-Use this helper to print out test counters for every tests in diag.sh,
-mptcp_connect.sh, mptcp_sockopt.sh, pm_netlink.sh, simult_flows.sh,
-and userspace_pm.sh.
+This patch uses addition assignment operator (+=) to append strings in
+mptcp_connect.sh.
 
-diag.sh:
+For extra_args, use += instead of open-coding to make the statements
+shorter.
 
-01 no msk on netns creation                          [  ok  ]
-02 listen match for dport 10000                      [  ok  ]
-03 listen match for sport 10000                      [  ok  ]
-04 listen match for saddr and sport                  [  ok  ]
-05 all listen sockets                                [  ok  ]
-
-mptcp_connect.sh:
-
-01 New MPTCP socket can be blocked via sysctl                       [ OK ]
-02 Validating network environment with pings                        [ OK ]
-INFO: Using loss of 0.85% delay 31 ms reorder .. with delay 7ms on ns3eth4
-03 ns1 MPTCP -> ns1 (10.0.1.1:10000  ) MPTCP     (duration    69ms) [ OK ]
-04 ns1 MPTCP -> ns1 (10.0.1.1:10001  ) TCP       (duration    20ms) [ OK ]
-05 ns1 TCP   -> ns1 (10.0.1.1:10002  ) MPTCP     (duration    16ms) [ OK ]
-
-mptcp_sockopt.sh:
-
-01 Transfer v4                                       [ OK ]
-02 Mark v4                                           [ OK ]
-03 Transfer v6                                       [ OK ]
-04 Mark v6                                           [ OK ]
-05 SOL_MPTCP sockopt v4                              [ OK ]
-
-pm_netlink.sh:
-
-01 defaults addr list                                [ OK ]
-02 simple add/get addr                               [ OK ]
-03 dump addrs                                        [ OK ]
-04 simple del addr                                   [ OK ]
-05 dump addrs after del                              [ OK ]
-
-simult_flows.sh:
-
-01 balanced bwidth                                     7391 max 8456 [ OK ]
-02 balanced bwidth - reverse direction                 7403 max 8456 [ OK ]
-03 balanced bwidth with unbalanced delay               7429 max 8456 [ OK ]
-04 balanced bwidth with unbalanced delay - reverse ... 7485 max 8456 [ OK ]
-05 unbalanced bwidth                                   7549 max 8456 [ OK ]
-
-userspace_pm.sh:
-
-01 Created network namespaces ns1, ns2                               [ OK ]
-INFO: Make connections
-02 Established IPv4 MPTCP Connection ns2 => ns1                      [ OK ]
-03 Established IPv6 MPTCP Connection ns2 => ns1                      [ OK ]
-INFO: Announce tests
-04 ADD_ADDR 10.0.2.2 (ns2) => ns1, invalid token                     [ OK ]
-05 ADD_ADDR id:67 10.0.2.2 (ns2) => ns1, reuse port                  [ OK ]
-
-Having test counters helps to quickly identify issues when looking at a
-long list of output logs and results.
+Add a local variable extra in do_transfer to save the various extra warning
+logs, using += to append it. And add a new variable tc_info to save various
+tc info, also using += to append it. This can make the code more readable
+and prepare for the next commit.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/diag.sh         |  6 ++----
- .../testing/selftests/net/mptcp/mptcp_connect.sh  |  6 +++---
- .../testing/selftests/net/mptcp/mptcp_sockopt.sh  | 15 +++++----------
- tools/testing/selftests/net/mptcp/pm_netlink.sh   |  5 +++--
- tools/testing/selftests/net/mptcp/simult_flows.sh |  7 ++++---
- tools/testing/selftests/net/mptcp/userspace_pm.sh |  4 +++-
- 6 files changed, 20 insertions(+), 23 deletions(-)
+ .../selftests/net/mptcp/mptcp_connect.sh      | 50 ++++++++++---------
+ 1 file changed, 27 insertions(+), 23 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index b63510ce2327..4ffdd415e670 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -54,7 +54,7 @@ __chk_nr()
- 
- 	nr=$(eval $command)
- 
--	printf "%-50s" "$msg"
-+	mptcp_lib_print_title "$msg"
- 	if [ "$nr" != "$expected" ]; then
- 		if [ "$nr" = "$skip" ] && ! mptcp_lib_expect_all_features; then
- 			echo "[ skip ] Feature probably not supported"
-@@ -68,7 +68,6 @@ __chk_nr()
- 		echo "[  ok  ]"
- 		mptcp_lib_result_pass "${msg}"
- 	fi
--	MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
- }
- 
- __chk_msk_nr()
-@@ -113,7 +112,7 @@ wait_msk_nr()
- 		sleep 1
- 	done
- 
--	printf "%-50s" "$msg"
-+	mptcp_lib_print_title "$msg"
- 	if [ $i -ge $timeout ]; then
- 		echo "[ fail ] timeout while expecting $expected max $max last $nr"
- 		mptcp_lib_result_fail "${msg} # timeout"
-@@ -126,7 +125,6 @@ wait_msk_nr()
- 		echo "[  ok  ]"
- 		mptcp_lib_result_pass "${msg}"
- 	fi
--	MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
- }
- 
- chk_msk_fallback_nr()
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index da943aa0cea1..684c24aba21a 100755
+index 684c24aba21a..762f4728f22d 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -249,7 +249,8 @@ fi
- 
- print_larger_title() {
- 	# here we don't have the time, a bit longer for the alignment
--	printf "%-69s" "${@}"
-+	MPTCP_LIB_TEST_FORMAT="%02u %-69s" \
-+		mptcp_lib_print_title "${@}"
- }
- 
- check_mptcp_disabled()
-@@ -321,7 +322,6 @@ do_transfer()
- 
- 	local port
+@@ -324,15 +324,15 @@ do_transfer()
  	port=$((port_base++))
--	MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
  
  	if [ "$rcvbuf" -gt 0 ]; then
- 		extra_args="$extra_args -R $rcvbuf"
-@@ -348,7 +348,7 @@ do_transfer()
- 	addr_port=$(printf "%s:%d" ${connect_addr} ${port})
- 	local result_msg
- 	result_msg="$(printf "%.3s %-5s -> %.3s (%-20s) %-5s" ${connector_ns} ${cl_proto} ${listener_ns} ${addr_port} ${srv_proto})"
--	printf "%-50s" "${result_msg}"
-+	mptcp_lib_print_title "${result_msg}"
- 
- 	if $capture; then
- 		local capuser
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 17b36c1312f4..466800326cbb 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -113,11 +113,6 @@ check_mark()
- 	return 0
- }
- 
--print_title()
--{
--	printf "%-50s" "${@}"
--}
--
- do_transfer()
- {
- 	local listener_ns="$1"
-@@ -167,7 +162,7 @@ do_transfer()
- 	wait $spid
- 	local rets=$?
- 
--	print_title "Transfer ${ip:2}"
-+	mptcp_lib_print_title "Transfer ${ip:2}"
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
- 		echo "[FAIL] client exit code $retc, server $rets"
- 		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
-@@ -188,7 +183,7 @@ do_transfer()
+-		extra_args="$extra_args -R $rcvbuf"
++		extra_args+=" -R $rcvbuf"
  	fi
- 	mptcp_lib_result_code "${rets}" "transfer ${ip}"
  
--	print_title "Mark ${ip:2}"
-+	mptcp_lib_print_title "Mark ${ip:2}"
- 	if [ $local_addr = "::" ];then
- 		check_mark $listener_ns 6 || retc=1
- 		check_mark $connector_ns 6 || retc=1
-@@ -232,7 +227,7 @@ do_mptcp_sockopt_tests()
- 	ip netns exec "$ns_sbox" ./mptcp_sockopt
- 	lret=$?
+ 	if [ "$sndbuf" -gt 0 ]; then
+-		extra_args="$extra_args -S $sndbuf"
++		extra_args+=" -S $sndbuf"
+ 	fi
  
--	print_title "SOL_MPTCP sockopt v4"
-+	mptcp_lib_print_title "SOL_MPTCP sockopt v4"
- 	if [ $lret -ne 0 ]; then
- 		echo "[FAIL]"
- 		mptcp_lib_result_fail "sockopt v4"
-@@ -245,7 +240,7 @@ do_mptcp_sockopt_tests()
- 	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
- 	lret=$?
+ 	if [ -n "$testmode" ]; then
+-		extra_args="$extra_args -m $testmode"
++		extra_args+=" -m $testmode"
+ 	fi
  
--	print_title "SOL_MPTCP sockopt v6"
-+	mptcp_lib_print_title "SOL_MPTCP sockopt v6"
- 	if [ $lret -ne 0 ]; then
- 		echo "[FAIL]"
- 		mptcp_lib_result_fail "sockopt v6"
-@@ -275,7 +270,7 @@ run_tests()
+ 	if [ -n "$extra_args" ] && $options_log; then
+@@ -508,39 +508,43 @@ do_transfer()
+ 		fi
+ 	fi
  
- do_tcpinq_test()
- {
--	print_title "TCP_INQ cmsg/ioctl $*"
-+	mptcp_lib_print_title "TCP_INQ cmsg/ioctl $*"
- 	ip netns exec "$ns_sbox" ./mptcp_inq "$@"
- 	local lret=$?
- 	if [ $lret -ne 0 ];then
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 427fc5c70b3c..5b9bc25dfef4 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -53,7 +53,7 @@ check()
- 	local msg="$3"
- 	local rc=0
+-	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
+-		printf "[ OK ]"
+-		mptcp_lib_result_pass "${TEST_GROUP}: ${result_msg}"
+-	else
+-		mptcp_lib_result_fail "${TEST_GROUP}: ${result_msg}"
+-	fi
++	local extra=""
  
--	printf "%-50s" "$msg"
-+	mptcp_lib_print_title "$msg"
- 	mptcp_lib_check_output "${err}" "${cmd}" "${expected}" || rc=${?}
- 	if [ ${rc} -eq 2 ]; then
- 		mptcp_lib_result_fail "${msg} # error ${rc}"
-@@ -189,7 +189,8 @@ subflow,backup,fullmesh 10.0.1.1" "          (backup,fullmesh)"
- else
- 	for st in fullmesh nofullmesh backup,fullmesh; do
- 		st="          (${st})"
--		printf "%-50s%s\n" "${st}" "[SKIP]"
-+		mptcp_lib_print_title "${st}"
-+		echo "[SKIP]"
- 		mptcp_lib_result_skip "${st}"
- 	done
+ 	if [ $cookies -eq 2 ];then
+ 		if [ $stat_cookietx_last -ge $stat_cookietx_now ] ;then
+-			printf " WARN: CookieSent: did not advance"
++			extra+=" WARN: CookieSent: did not advance"
+ 		fi
+ 		if [ $stat_cookierx_last -ge $stat_cookierx_now ] ;then
+-			printf " WARN: CookieRecv: did not advance"
++			extra+=" WARN: CookieRecv: did not advance"
+ 		fi
+ 	else
+ 		if [ $stat_cookietx_last -ne $stat_cookietx_now ] ;then
+-			printf " WARN: CookieSent: changed"
++			extra+=" WARN: CookieSent: changed"
+ 		fi
+ 		if [ $stat_cookierx_last -ne $stat_cookierx_now ] ;then
+-			printf " WARN: CookieRecv: changed"
++			extra+=" WARN: CookieRecv: changed"
+ 		fi
+ 	fi
+ 
+ 	if [ ${stat_synrx_now_l} -gt ${expect_synrx} ]; then
+-		printf " WARN: SYNRX: expect %d, got %d (probably retransmissions)" \
+-			"${expect_synrx}" "${stat_synrx_now_l}"
++		extra+=" WARN: SYNRX: expect ${expect_synrx},"
++		extra+=" got ${stat_synrx_now_l} (probably retransmissions)"
+ 	fi
+ 	if [ ${stat_ackrx_now_l} -gt ${expect_ackrx} ]; then
+-		printf " WARN: ACKRX: expect %d, got %d (probably retransmissions)" \
+-			"${expect_ackrx}" "${stat_ackrx_now_l}"
++		extra+=" WARN: ACKRX: expect ${expect_ackrx},"
++		extra+=" got ${stat_ackrx_now_l} (probably retransmissions)"
++	fi
++
++	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
++		printf "[ OK ]${extra:1}\n"
++		mptcp_lib_result_pass "${TEST_GROUP}: ${result_msg}"
++	else
++		if [ -n "${extra}" ]; then
++			printf "${extra:1}\n"
++		fi
++		mptcp_lib_result_fail "${TEST_GROUP}: ${result_msg}"
+ 	fi
+ 
+-	echo
+ 	cat "$capout"
+ 	[ $retc -eq 0 ] && [ $rets -eq 0 ]
+ }
+@@ -866,8 +870,8 @@ stop_if_error "Could not even run ping tests"
+ echo "[ OK ]"
+ 
+ [ -n "$tc_loss" ] && tc -net "$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay ${tc_delay}ms
+-echo -n "INFO: Using loss of $tc_loss "
+-test "$tc_delay" -gt 0 && echo -n "delay $tc_delay ms "
++tc_info="loss of $tc_loss "
++test "$tc_delay" -gt 0 && tc_info+="delay $tc_delay ms "
+ 
+ reorder_delay=$((tc_delay / 4))
+ 
+@@ -878,17 +882,17 @@ if [ -z "${tc_reorder}" ]; then
+ 
+ 	if [ $reorder_delay -gt 0 ] && [ $reorder1 -lt 100 ] && [ $reorder2 -gt 0 ]; then
+ 		tc_reorder="reorder ${reorder1}% ${reorder2}%"
+-		echo -n "$tc_reorder with delay ${reorder_delay}ms "
++		tc_info+="$tc_reorder with delay ${reorder_delay}ms "
+ 	fi
+ elif [ "$tc_reorder" = "0" ];then
+ 	tc_reorder=""
+ elif [ "$reorder_delay" -gt 0 ];then
+ 	# reordering requires some delay
+ 	tc_reorder="reorder $tc_reorder"
+-	echo -n "$tc_reorder with delay ${reorder_delay}ms "
++	tc_info+="$tc_reorder with delay ${reorder_delay}ms "
  fi
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index 20bf1ea43362..03fd08e8e044 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -14,6 +14,8 @@ ns3=""
- capture=false
- timeout_poll=30
- timeout_test=$((timeout_poll * 2 + 1))
-+# a bit more space: because we have more to display
-+MPTCP_LIB_TEST_FORMAT="%02u %-60s"
- ret=0
- bail=0
- slack=50
-@@ -126,7 +128,6 @@ do_transfer()
- 	local max_time=$3
- 	local port
- 	port=$((10000+MPTCP_LIB_TEST_COUNTER))
--	MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
  
- 	:> "$cout"
- 	:> "$sout"
-@@ -238,7 +239,7 @@ run_test()
- 	# completion (see mptcp_connect): 200ms on each side, add some slack
- 	time=$((time + 400 + slack))
+-echo "on ns3eth4"
++echo "INFO: Using ${tc_info}on ns3eth4"
  
--	printf "%-60s" "$msg"
-+	mptcp_lib_print_title "$msg"
- 	do_transfer $small $large $time
- 	lret=$?
- 	mptcp_lib_result_code "${lret}" "${msg}"
-@@ -248,7 +249,7 @@ run_test()
- 	fi
+ tc -net "$ns3" qdisc add dev ns3eth4 root netem delay ${reorder_delay}ms $tc_reorder
  
- 	msg+=" - reverse direction"
--	printf "%-60s" "${msg}"
-+	mptcp_lib_print_title "${msg}"
- 	do_transfer $large $small $time
- 	lret=$?
- 	mptcp_lib_result_code "${lret}" "${msg}"
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index b0cce8f065d8..ca238592baee 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -54,6 +54,8 @@ ns1=""
- ns2=""
- ret=0
- test_name=""
-+# a bit more space: because we have more to display
-+MPTCP_LIB_TEST_FORMAT="%02u %-68s"
- 
- _printf() {
- 	stdbuf -o0 -e0 printf "${@}"
-@@ -69,7 +71,7 @@ print_test()
- {
- 	test_name="${1}"
- 
--	_printf "%-68s" "${test_name}"
-+	mptcp_lib_print_title "${test_name}"
- }
- 
- print_results()
 -- 
 2.40.1
 
