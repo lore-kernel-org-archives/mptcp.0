@@ -1,128 +1,132 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4300A5256
-	for <mptcp@lists.linux.dev>; Tue,  5 Mar 2024 16:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205FAA50
+	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 01:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709656370; cv=none; b=NhWpYhLBpFvbSjGCwLMxyCQOSUXYw/0sYmWIlpGMMiH05qJDf7GgbijlNnmif9jm9XQ4cyMbH1uAGbIfNxcflliTT2ub7Wibkxz0fP1DW2wCSGXwvunMTIJh2S9IE82NnfasSQFPr/m71pWLNvp3b2PU3cFezGy13WGLOm5FTrA=
+	t=1709689265; cv=none; b=cMXr0Rx/H1UgB2tVbaCFPPNav+oHymLwtR05vFvDbTVgF4bHV3Xmrn9j6BZaDiPTZzJf+iUWtC7fzh7o+Kjegcaqbg7IRKG3iYR7V3yGFSCQbBc2Lx9zIQTrNg7+KR7ufCBf1iWysxzQgIeRfH0pBhygVpREmzkc+IR7jftEFJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709656370; c=relaxed/simple;
-	bh=gffhQNVCGIP/N6b6dnM6AEfNFrMAZ+K65LvYwgFAIKY=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=YOfg6u8QgomKENlgbYvjkVUo9Qu5WWAlsTtFHsnl84MwBYKyR7SZ62sWslek9BgDOtqibFIa9lvmxMftj9ubVPErUXFiHpIqQ9SrZ6m/hOZqO3NKTZrgaxIwOR/WQ1TCaMffWAQEOKavPOQ0loP8tIpet0EhGwK63p56EfkwSd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wb+mDs7i; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709689265; c=relaxed/simple;
+	bh=XBFC/LMHE6RYwT0xRkaJitiWkWjfqBfx0V5RTmV40e8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j8B+Q/xRUEaE/mMPHQRlQv9pPyGn/5JHnj0tXGRYMv0qx4jTBBYHExTZHZoJ10ndr6kAokWrPCr4F8wgtWCLmc2wSA/3jQOV9O6S9gwR63PvKqCERB2MxsxRosPydnRGQZW6tijiSy2a98/urHMMJPPyXYPXFsUBWB93R3zOEfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpkwfClO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wb+mDs7i"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dc13fb0133so43820455ad.3
-        for <mptcp@lists.linux.dev>; Tue, 05 Mar 2024 08:32:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709656368; x=1710261168; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wpl1slvZVRDo3RLP1i7k9qt3Ilaburn9dTgBmYjoCik=;
-        b=Wb+mDs7iJdeTdio+lXXepU31rq6cJzsLbfPnycwEHiI8BsOz+5t8iPcrwszLcqH1zp
-         UO8eI71lsqRPkxvVo81si1XptoR4kPKEIsLEzZxBMyTN4uCtGkMxwLWOLWaLrXB4GBSt
-         dnrF8bf9ZCdG4fdI0r6qUT2WDYwUQz6+FT9uI6Bq5IfLw4orhGc8ivKXr1ILDtc4ZXvT
-         Sf0rDpT6N54SJ0gMfd989560dk3uTXio85bLG/2yrO5BBPv2sVngQJiobPgoLYQ5K5rj
-         Xhey2DxVjK/aJTUEnqHGggpKN2nKM3kYDpSovNbfjkNr0kgiOVgzLCUzC5Oye+8n68la
-         wpbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709656368; x=1710261168;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=wpl1slvZVRDo3RLP1i7k9qt3Ilaburn9dTgBmYjoCik=;
-        b=Ilvk/iP6aNumybCzpuhhwpUe0BRE8ndKgYygC4zPda1ycboeKifZ2LtHbzoQKZW3V6
-         0DFE3XlO+tjdbDP1FUWNUbXNrtTn6KW3lmsX1uTZOD3XqP/Nc7Ww9kqNNPLQYaU9I1lM
-         L1q65YKBJ4E8HwER7Wdn3pLvOQhTHePH0LQoL+EosPq2x3r8xaieNbK4tUZqjw5IJvDY
-         IXR5ay+HuBGd4nTqhn7r4cvcOb+u31Ybetdyb61xjkP9LXvJhk0FY9nq7qTYSs9G5UYG
-         0umvxD2CK/I1m6VdY/qNbIJXB1zylKJe/ENrmiIMyhaNRlEoAQaZiIrNkTxYHcf4jpk5
-         /4Mw==
-X-Gm-Message-State: AOJu0Yz0MdkciiD9q0RbhO43EFP3TcbG6s8pCJ+e/bRCFBkD+W/RGxXU
-	8K6btmOVNqfOO0EzvoeLzG98bA9sSj0v8G5zr4Hp7OHGeFSmprSCR/SkMWE=
-X-Google-Smtp-Source: AGHT+IEhze9Cd+DiIGno8vBNxBUvjsVjbv0oC0ljbQAUOOxt0Jge+UrUbGrZqRzytsGWE0QMNiE+RA==
-X-Received: by 2002:a17:902:e84d:b0:1db:c390:1fdc with SMTP id t13-20020a170902e84d00b001dbc3901fdcmr2815321plg.1.1709656368515;
-        Tue, 05 Mar 2024 08:32:48 -0800 (PST)
-Received: from [127.0.0.1] ([13.91.68.166])
-        by smtp.gmail.com with ESMTPSA id bw7-20020a056a02048700b005e438ea2a5asm8174950pgb.53.2024.03.05.08.32.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 08:32:48 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Davide Caratti <dcaratti@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <be9176dac04b292242d6afc2eefc0c931d21b0cd.1709651670.git.dcaratti@redhat.com>
-References:
- <be9176dac04b292242d6afc2eefc0c931d21b0cd.1709651670.git.dcaratti@redhat.com>
-Subject: Re: mptcp: don't account accept() of non-MPC client as fallback to
- TCP: Tests Results
-Message-ID: <6c934bdb-19c4-10cc-85c7-f3abcff67c0f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 05 Mar 2024 16:32:47 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpkwfClO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC1CEC433F1;
+	Wed,  6 Mar 2024 01:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709689264;
+	bh=XBFC/LMHE6RYwT0xRkaJitiWkWjfqBfx0V5RTmV40e8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fpkwfClOQKO6QohVBvh+t7nj7RzjimXCxw9IiRJe/k3+yw9tHFqrgdgYNIeGRcuZL
+	 0VxN7XfXfvuOx6a8WzEyd8S5aaS5jmR0+yAYOpebKtvrn2qwmnGz1mcPymSmELPIbm
+	 X2Y2rNW1G6XYfdkya2L4iurtwJ4Aeh2MIzNV1ffw4nP9i/wdZxi2m6VVgr6SAPipSB
+	 qrjZKTNQ2st+vk/hR1uZcmqFtEYzurrQs+aMeBMUG4panrIuBY5pOsIErv/zRe32gP
+	 AL5y33MoodM0jcDyVBRAq/GbLLZzMbdX8b7Ikot3uKb0wHyKEBkYl6fRnFZJMEdK/6
+	 46dpV6YNFhWXA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v13 0/9] add helpers and vars in mptcp_lib.sh, part 3
+Date: Wed,  6 Mar 2024 09:40:50 +0800
+Message-Id: <cover.1709688778.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Davide,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+v13:
+ - fix the shellcheck error reported by CI in patch 8
+ - rebased
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+v12:
+ - patch 1 Drop one more 1>&2, and update commit log
+ - patch 2 use port_base=10000 instead of PORT=0
+ - patch 4 fix the TAP output
+ - patch 8 a new patch
+ - patch 9 drop _printf in userspace_pm.sh
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/6707619503538176
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/6707619503538176/summary/summary.txt
+v11:
+ - fix the shellcheck error in v10
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/4561372806119424
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/4561372806119424/su=
-mmary/summary.txt
+v10:
+ - split two more patches (#4 and #5) from #6 and #7
+ - update commit logs
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/e5de41746751
+v9:
+ - move print_larger_title from patch 5 to patch 2
+ - move MPTCP_LIB_TEST_FORMAT to a more suitable location in patch 4 and
+   patch 5
 
+v8:
+ - address every comment from Matt in v7.
 
-If there are some issues, you can reproduce them using the same environment=
- as
-the one used by the CI thanks to a docker image, e.g.:
+v7:
+ - address every comment from Matt in v6.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
+v6:
+ - only include the first 7 patches in v5
+ - add mptcp_lib_pr_* helpers
+ - add print_title helpers
+ - align the output of simult_flows.sh
 
-For more details:
+v5:
+ - don't use mptcp_lib_print_test_counter in mptcp_join.sh, it breaks
+   skip_test().
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+v4:
+ - set test_cnt to 0, use ++counter in mptcp_lib_print_test_counter() to
+   fix the following mismatched test counters:
 
+# 012 userspace pm server fullmesh
+#       syn                                 [ OK ]
+#       synack                              [ OK ]
+#       ack                                 [ OK ]
+#       add                                 [ OK ]
+#       echo                                [FAIL] got 1 ADD_ADDR echo[s] expected 2
+# Server ns stats
+# TcpPassiveOpens                 5                  0.0
+# TcpInSegs                       25                 0.0
+... ...
+#
+# 1 failure(s) has(ve) been detected:
+#       - 13: userspace pm server fullmesh
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+v3:
+ - fix shellcheck errors in v2
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+v2:
+ - fix shellcheck errors in v1
+ - print test results with counters
+
+Geliang Tang (9):
+  selftests: mptcp: print all error messages to stdout
+  selftests: mptcp: connect: add dedicated port counter
+  selftests: mptcp: connect: fix misaligned output
+  selftests: mptcp: sockopt: print every test result
+  selftests: mptcp: export TEST_COUNTER variable
+  selftests: mptcp: add print_title in mptcp_lib
+  selftests: mptcp: print test results with counters
+  selftests: mptcp: connect: use += operator to append strings
+  selftests: mptcp: print test results with colors
+
+ tools/testing/selftests/net/mptcp/diag.sh     |  19 ++-
+ .../selftests/net/mptcp/mptcp_connect.sh      | 123 ++++++++++--------
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  28 ++--
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |  42 +++++-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  44 ++++---
+ .../testing/selftests/net/mptcp/pm_netlink.sh |   5 +-
+ .../selftests/net/mptcp/simult_flows.sh       |  14 +-
+ .../selftests/net/mptcp/userspace_pm.sh       |  28 ++--
+ 8 files changed, 163 insertions(+), 140 deletions(-)
+
+-- 
+2.40.1
+
