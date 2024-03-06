@@ -1,127 +1,173 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0EBD52E
-	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 02:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05D3DDA5
+	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 02:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709693366; cv=none; b=etJDI4C823GNAf22CI6KUffUbnMNsFci7IfwDZOo2eS5Xr+UlaLCOwFqQoQjDSmFHtEhgTyXCXrrbrshTfoD6K4y5sK/1bgkf6irmXi6xZqWZZHGx/Y6gwMJ7veHGBwUxOzHng8yjcj5KJ90NhVAd3cseUN0ETvtB3LrObd1jfs=
+	t=1709693740; cv=none; b=EU+DaLaI3sTp54oq8ToSCPXiEJLMw2iXN8KJzxu0yejPx4gh/hcb9RCc1natfHOgfZlD2HJAcHsTaJZUAsPBu5/EvMfhP92JUFn4FkN8mHXBJsU2M1NYZl3KDm5uSLbpF7hf5+D7De8obDZfnwwx9ToRXGEob9WwX/HTms3DMm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709693366; c=relaxed/simple;
-	bh=+Y2UQ/nm6vLDhEoTLCRabwuSGyeBzOMtUPUDk+kh4eE=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=clp+a878L+WhmJXMrfc5M9QRY8vwoZp3gL2056KJ0MpDncO8ERxpqOTe+aRxDgSzbTiB4viVWVILv2Cr6UxVoepatwiXTwQQjMFadcCvxcP5OtH5CXSdQJgPyTFSBMTI3S1569jGJPGgUMPLY18PKByIB8yLkGuWUAvZr9Wuuy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZnQOZQi; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709693740; c=relaxed/simple;
+	bh=erewwXX/wc64vP41reoaW7Z+H31HaYmwJVYqTpwyPUc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gZ1w0IqsKSkLXFjBod2iLIlMFmj6VF8OlSB4ggHuaPIO+fhd9slW4yMBJtKe+hNvp1E586jkrKeaA+krwgWWZxS6oOLs6COzRliz+/P7SUtyyqLSI4vRzeRDzChcHm+0SMkNxX33kiPIzovy397iFfK16nvzgmfOcPpA79Kvm+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ey4HKAeC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZnQOZQi"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6e4a0e80d14so396038a34.1
-        for <mptcp@lists.linux.dev>; Tue, 05 Mar 2024 18:49:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709693364; x=1710298164; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n5k68431poFM7rB0tvCQbx6BjCssv3Xf248viJzq0A8=;
-        b=RZnQOZQiXkF2bLrakaCxAAS60xoVQkWtdD53QK0UxkX5gAndn+XZ9XwZ0j7+0VRu0n
-         t/Rh7pPVcgy/UlDMfS/W4NM39avTloNku92nros31xYyXJxEv/TVX8gFnVVmpPWlFP6K
-         RRfQ6hOkHwprAiiGXS2FD1HrwKjFHvQ2mgngcfTq3121Kic2+pHqEEM1vD5wwokqPLph
-         VE6law4ZvP5gVKnsJzzJiBonlVqC8aLOqqw/jhIAmg5YyA4azkAIP4cbJhPjthiSFSfp
-         lk3eWfKKr1OZ+9XjgJCXdGIgfI+lI7kW3oKgPEMe46+4utx4aosZFe7sLRSuepvJp8A8
-         U1Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709693364; x=1710298164;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=n5k68431poFM7rB0tvCQbx6BjCssv3Xf248viJzq0A8=;
-        b=CpAsFGJoCnk3UeO/zdOwnjejjy9cf/u5n9d3kzQh66+dpE/3Rm0tcbSy2nvQ0V2Vgh
-         E4l6sqoowu6vj6eM0Mp2n7JiF07EQohrNRdXyXyZT7/TwgU6M5oj1r4ofUsvmOshPiS/
-         g7UiD3RNhKn6qpUMWcFsRsjlBNBvQNbw3audYnadrE1nqsq/15iFnpJ4suw9TJdRg27R
-         7I/22hqIYt/NSIIFclsW0OMnBj0+rN1YGI2ydvh08QRFAJ+jxW2e7qoEF5Jyg/qSX4yK
-         Anwcuq2mvCtjTVPmWoPV0d+S7sDOfTL+LdlKLt+eUcqaD6EpPmMsi8ypOqy/lLq/BRGe
-         yW8Q==
-X-Gm-Message-State: AOJu0Yw/Fxwy/fyav3sFoUwp7gLtpjAysOPu6ggcdX0bkycOZcya1MzN
-	IU+qpDothP3lkL3fBH9eImJNN46XRt1rAaRrTqndJBlKnMmry92UdMzvUH0OGQ==
-X-Google-Smtp-Source: AGHT+IHCsSfeaxUIB/CLl4PQBwJS38dl+dP0OzDrGUg3qteSlUkn9yGCHHLpFUjB7RwebyV3cqyhWA==
-X-Received: by 2002:a9d:7590:0:b0:6e4:ed03:55d6 with SMTP id s16-20020a9d7590000000b006e4ed0355d6mr3932485otk.16.1709693364121;
-        Tue, 05 Mar 2024 18:49:24 -0800 (PST)
-Received: from [127.0.0.1] ([4.242.233.189])
-        by smtp.gmail.com with ESMTPSA id q12-20020a63504c000000b005df58c83e89sm9919938pgl.84.2024.03.05.18.49.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 18:49:23 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <3903335eb71697af9348119b569e29c50c9e741d.1709688778.git.tanggeliang@kylinos.cn>
-References:
- <3903335eb71697af9348119b569e29c50c9e741d.1709688778.git.tanggeliang@kylinos.cn>
-Subject: Re: selftests: mptcp: print test results with colors: Tests
- Results
-Message-ID: <808a6ed9-e15f-8c8e-40f3-5c276a89d381@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 06 Mar 2024 02:49:22 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ey4HKAeC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49685C433F1;
+	Wed,  6 Mar 2024 02:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709693739;
+	bh=erewwXX/wc64vP41reoaW7Z+H31HaYmwJVYqTpwyPUc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ey4HKAeCtiIQTj0wn+vjZl/D3F4lZ5u/EfM9q/TWk+gWLKgTTYrX07JWWCQyrZAZI
+	 c7+OA2XssaYwFz5z0TbzCFrZlaOpNUAasRvRbOmYOVCwxo8amaYp9fBXxjdDJDHC+f
+	 MqjcOFhDzDE/wXZ42sUzUOFJxbcmlqqT0UgyTmz3jgX9SOSbl4O6akVu+lbHrr4TLr
+	 lw5YKmVIpRVf7r9k79OzJM7VJXp5QNc6oD8VDu0+5WBwEdNw4A2eSh9pcLdcMga7Vs
+	 BxLzpvy7SftWCMda/uwn1fG3awr/jj6aCSa2r4SuPwMe2/0bv/0hsVM4QvAzO2vbJD
+	 NEamIJ3CNperQ==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH RFC] mptcp: react scheduler when subflow events pop up
+Date: Wed,  6 Mar 2024 10:55:33 +0800
+Message-Id: <433320c3a9db77bea53a34fc9c43a3c7e3320399.1709693691.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+The current packet scheduler will not react by queuing more packets if
+some subflows only events are emitted, e.g. new TCP ACKs are received
+only acking things at TCP-level but not at MPTCP level. The scheduler
+should be called when such events happen.
 
-Our CI (Cirrus) did some validations with a debug kernel and here is its =
-report:
+ack_update_msk() is invoked when an ACK is received, so it's the right
+place to call the scheduler by invoking __mptcp_check_push().
 
-- KVM Validation: debug (except selftest_mptcp_join):
-  - Unstable: 1 failed test(s): packetdrill_regressions =F0=9F=94=B4:
-  - Task: https://cirrus-ci.com/task/5965573272633344
-  - Summary: https://api.cirrus-ci.com/v1/artifact/task/5965573272633344/su=
-mmary/summary.txt
+mptcp_subflow_timeout() is implemented to call the scheduler when a
+subflow timeout happens. But I'm not sure where is the right place to
+invoke it. I mean where is the right place when a RTO is fired. So I
+temporarily do it in mptcp_worker().
 
-- KVM Validation: debug (only selftest_mptcp_join):
-  - Success! =E2=9C=85:
-  - Task: https://cirrus-ci.=
-com/task/5402623319212032
-  - Summary: https://api.cirrus-ci.=
-com/v1/artifact/task/5402623319212032/summary/summary.txt
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/343
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ include/net/tcp.h    |  3 +++
+ net/ipv4/tcp_timer.c |  6 +++---
+ net/mptcp/options.c  |  1 +
+ net/mptcp/protocol.c | 23 ++++++++++++++++++++++-
+ net/mptcp/protocol.h |  1 +
+ 5 files changed, 30 insertions(+), 4 deletions(-)
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/d2baff8ed2b4
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 6ae35199d3b3..431a23a8ebfa 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -347,6 +347,9 @@ void tcp_release_cb(struct sock *sk);
+ void tcp_wfree(struct sk_buff *skb);
+ void tcp_write_timer_handler(struct sock *sk);
+ void tcp_delack_timer_handler(struct sock *sk);
++bool retransmits_timed_out(struct sock *sk,
++			   unsigned int boundary,
++			   unsigned int timeout);
+ int tcp_ioctl(struct sock *sk, int cmd, int *karg);
+ enum skb_drop_reason tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb);
+ void tcp_rcv_established(struct sock *sk, struct sk_buff *skb);
+diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
+index d1ad20ce1c8c..cfedafc4ca36 100644
+--- a/net/ipv4/tcp_timer.c
++++ b/net/ipv4/tcp_timer.c
+@@ -212,9 +212,9 @@ static unsigned int tcp_model_timeout(struct sock *sk,
+  * after "boundary" unsuccessful, exponentially backed-off
+  * retransmissions with an initial RTO of TCP_RTO_MIN.
+  */
+-static bool retransmits_timed_out(struct sock *sk,
+-				  unsigned int boundary,
+-				  unsigned int timeout)
++bool retransmits_timed_out(struct sock *sk,
++			   unsigned int boundary,
++			   unsigned int timeout)
+ {
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	unsigned int start_ts, delta;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 5926955625cf..4b091d3bce00 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -1069,6 +1069,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
+ 		__mptcp_snd_una_update(msk, new_snd_una);
+ 		__mptcp_data_acked(sk);
+ 	}
++	__mptcp_check_push(sk, ssk);
+ 	mptcp_data_unlock(sk);
+ 
+ 	trace_ack_update_msk(mp_opt->data_ack,
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index cdf9ec67795e..c935f6a7adb0 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -486,6 +486,26 @@ static long mptcp_timeout_from_subflow(const struct mptcp_subflow_context *subfl
+ 	       inet_csk(ssk)->icsk_timeout - jiffies : 0;
+ }
+ 
++static void __mptcp_subflow_timeout(struct sock *sk, struct sock *ssk, long tout)
++{
++	unsigned int boundary = READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_retries1) + 1;
++
++	if (retransmits_timed_out(ssk, boundary, tout))
++		__mptcp_check_push(sk, ssk);
++}
++
++static void mptcp_subflow_timeout(struct sock *sk)
++{
++	struct mptcp_subflow_context *subflow;
++
++	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
++		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		long tout = mptcp_timeout_from_subflow(subflow);
++
++		__mptcp_subflow_timeout(sk, ssk, tout);
++	}
++}
++
+ void mptcp_set_timeout(struct sock *sk)
+ {
+ 	struct mptcp_subflow_context *subflow;
+@@ -1624,7 +1644,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
+ 		mptcp_check_send_data_fin(sk);
+ }
+ 
+-static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
++void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_sendmsg_info info = {
+@@ -2741,6 +2761,7 @@ static void mptcp_worker(struct work_struct *work)
+ 	mptcp_check_fastclose(msk);
+ 
+ 	mptcp_pm_nl_work(msk);
++	mptcp_subflow_timeout(sk);
+ 
+ 	mptcp_check_send_data_fin(sk);
+ 	mptcp_check_data_fin_ack(sk);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 7905783c95e4..f4b75be49690 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -656,6 +656,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
+ void __mptcp_subflow_send_ack(struct sock *ssk);
+ void mptcp_subflow_reset(struct sock *ssk);
+ void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
++void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first);
+ void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+ u64 mptcp_wnd_end(const struct mptcp_sock *msk);
+ void mptcp_set_timeout(struct sock *sk);
+-- 
+2.40.1
 
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-debug
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
