@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3855FBB7
-	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 10:46:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33DD604D5
+	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 12:01:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709722013; cv=none; b=G706SjhNnluwQAYJZtlov+uxuAGlNYvPUW2bLvGDNcLyT/Q3FHqQWK2unbFIHFMde5r5deOJXNmZ+zFNMPH2T1tcezF5NdN0goxONHTlZDteAnvubUHm0krAvOl0Ll/GOvdhF6RUUgjhxuWyUDqrAWZNVX4eEqe1ciXq8B5p90c=
+	t=1709726495; cv=none; b=YJL9pvhLYv/7v5rk3dnXVqEgIEhxlUY9OJvL/sHNypX5YriCq/ySp5zsKwhLnBKztQ9pylt7ER5evLh0J1XH0GaMv57+6GPGDImXzgTCpcFhRD+vvYJ7F4+7D3lYcjVsjnODMJ9g4o51O2HtD1GeabhNmAWn5X/vF7y0mZH8CBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709722013; c=relaxed/simple;
-	bh=C2/DuUeD1SQphk5wFK8NxIqFT7ZNwAopsEJlfPwb06k=;
+	s=arc-20240116; t=1709726495; c=relaxed/simple;
+	bh=EOaJv27l4lBq5mOMVzgHGLQKxBQW5guhylA8UhJn3OA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LRA7OvnevUVnoGFvbM41RiNc3iYysHC9nS3R13TeILkYQNXqT/vG5T6rTw5H63f4v8lAH34M33Z7rvnqm7yCKWOYY6Nw81HT9XrO+DTjNsAs4GZgu+kjOSRCT4o50nf6BCpPhEaDr20jnzYBO3EK235gQWFoDx+INnRgloby+yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVSWFz+f; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=s+S+zVOKckF0JHaHfaUa7dFmGXS/shbMCJnfcVVNomxBhtzZyQWpI1k4J16slxqIBcv2x56mD0LFbCEt4z6DfgZ1jPeTTVqDXCZYvr1dz+kidNUsyTljoIo4rmzYVLYIZpvwXx7ki7Wi2rACL9m6hYiK7VJKaYClgYWHpseFtCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8VLV92X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVSWFz+f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F25C433C7;
-	Wed,  6 Mar 2024 10:46:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8VLV92X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B22E0C43390;
+	Wed,  6 Mar 2024 12:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709722013;
-	bh=C2/DuUeD1SQphk5wFK8NxIqFT7ZNwAopsEJlfPwb06k=;
+	s=k20201202; t=1709726495;
+	bh=EOaJv27l4lBq5mOMVzgHGLQKxBQW5guhylA8UhJn3OA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WVSWFz+fyla+792CLBf+Gwv/74VKJwpryV82kUE6JvQLzjqTd5WnhQYT66DZqtMwm
-	 kIKhsYFoq3yQzmqEx3eI9g0pJ/SZZ71m9a1o7Z4uUv8vQvROwHFv817ywqZGeZ19se
-	 48e3vf8RGRmy9HXwphrGupb5K1klcxm1UKLbQN8Ux1PAsL3xSbweXQpTkjGW8i34X4
-	 Lot/ieX/lp25tZvdGu3twrP2Ehu503M87tsbCC865SlCb1B3UxXI9gDtcvd2T+ClCu
-	 IQD69mJb6ubJaZg4LcRGwtsBXJEefjJn6sJn0tysIqW1PZiqnSCPVk2cIxSXZCLeiA
-	 V1h8TkLfbmxXA==
-Message-ID: <1d3f25b3-1fc1-45ee-b712-b910f3828f3f@kernel.org>
-Date: Wed, 6 Mar 2024 11:46:50 +0100
+	b=A8VLV92X2kXUKQMx03TYTvlxNt+Zq9BnYPIquzjH68akmykiwRlMk6aDUtpxDpibV
+	 sUklr/BcpsjI+sNS54ksoPjfA+vrJWhOpUnASArK2lw2i1rBZuGhOXrJSwjyqJgmCq
+	 owPDEoGOYK8DdMVwDzkmcQJXgmInbnu3xDobahnuML2IrhnYMfjuRGN9vGwqeQovod
+	 RYlTyPijiDrWUK28lj7nNG/pjJv/xMsP3t6lMDLXiJq7lkt6XDjyVtTBLXNsGAyuGN
+	 IwdKOqQNgaWQ2aUW5+CnwELy1pYsXCrTKbSrXPa2+WDDdkrPXSNR2Bli05A9PVZtlY
+	 cdJaTXf5HgI9A==
+Message-ID: <46b9be01-3fce-49a2-b9f9-e936405712c1@kernel.org>
+Date: Wed, 6 Mar 2024 13:01:32 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iperf3 v2] add MPTCPv1 support
+Subject: Re: [PATCH mptcp-next v13 0/9] add helpers and vars in mptcp_lib.sh,
+ part 3
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>
-References: <487902825fa971916541b59e43ed25c7525b60e0.1709695652.git.geliang@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1709688778.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,56 +86,35 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <487902825fa971916541b59e43ed25c7525b60e0.1709695652.git.geliang@kernel.org>
+In-Reply-To: <cover.1709688778.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-(Without the iperf3 maintainer in CC)
-
-On 06/03/2024 04:28, Geliang Tang wrote:
-> The Multipath TCP (MPTCP) protocol (v1 / RFC 8684) has been added in the
-> upstream Linux kernel since v5.16.
-
-since v5.6, not v5.16
-
-> MPTCP is strongly tied to TCP, and the kernel APIs are almost the same.
-> The only required dependency is the 'IPPROTO_MPTCP' protocol number
-> definition, which should be provided by the netinet/in.h header.
-
-Maybe add "if it is recent enough)
-
-> This patch adds a new flag --mptcp to support MPTCPv1. It can be used
-> like this:
+On 06/03/2024 02:40, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
->  > iperf3 --mptcp -s
->  > iperf3 --mptcp -c 127.0.0.1
+> v13:
+>  - fix the shellcheck error reported by CI in patch 8
+>  - rebased
 > 
-> There is no need to check for IPPROTO_MPTCP support in configure.ac at
-> build time, it is at runtime we will see if the kernel being use supports
-> or not MPTCP.
-> 
-> If IPPROTO_MPTCP is not supported by the kernel being tested, it is
-> normal to fail because the feature is not available.
+> v12:
+>  - patch 1 Drop one more 1>&2, and update commit log
+>  - patch 2 use port_base=10000 instead of PORT=0
+>  - patch 4 fix the TAP output
+>  - patch 8 a new patch
+>  - patch 9 drop _printf in userspace_pm.sh
 
-(and the user explicitly asked to use MPTCP.)
+Thank you for the new version and the changelog. This v13 looks good to me.
 
-> Linked: https://github.com/esnet/iperf/pull/1166
+Before applying the series, I have 3 suggestions (see my comments on
+patches 2, 3, 9), and one important question (from v11):
 
-Thank you for the new version!
-
-The code looks good to me, but that's up to the IPerf maintainers to
-accept it or not.
-
-I guess the new patches should be proposed via a new GitHub pull
-request. Do you mind opening a new one, and mentioning it is replacing
-the one from Paolo and https://github.com/esnet/iperf/pull/1615 (just a
-rebase from what I understood)
-
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-
-Co-developed-by maybe?
+Did you check the output when you force failure (e.g. by modifying the
+code to force and issue, e.g. changing counters, set ret values, etc.)?
+Just to make sure they are still presented correctly, and if we still
+catch them!
 
 Cheers,
 Matt
