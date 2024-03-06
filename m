@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8475A50
-	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 01:41:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E010A50
+	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 01:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709689272; cv=none; b=fdBlX7VQqCuQj8GWO3cp6x9GjVd+x1R1bXNvc9V+8jzGLquo9zuYlCq8ZYU77o0JHIUzXWlG6ROmpcG2OE76ouHEHAnTuwZkkh0XAsbe27Ykrumr8Tm8Cnqi16WnwT4E23AMX0Z9Uf5xiW5p3ZZXW5HKWcX0EyOy17F7C8+8BCk=
+	t=1709689274; cv=none; b=piH0fvoL9RmyrWJIgQb2CXuWmHZRRDfVwOrDp9ij1nLo8kCCifAjgY9o4clTA8eRoYLoNjjL83JdjmacXzGRssrn267TkFFqsVdMmXoLprcMfXgqdcFoMKBH1YLL+6Rhn54yQ5sGi37ZxtAJK5WbNDtqNbRvEujJMiXqQztThYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709689272; c=relaxed/simple;
-	bh=f0jTeinBjuVIE07L9iwf5FkS74tQY5blTjXDif9Iu7c=;
+	s=arc-20240116; t=1709689274; c=relaxed/simple;
+	bh=wwEC2qJow6e44SejmRB9r6NGTj+5HCW+DyUIiWielU8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=APfXcgio79aCnqEUvoXnkga3ZeYK3AqQnX5CTHRwOtljcVJCmldNPzXWzryIximflFcO20p2K281fQpwckfLIUtq064TCFlN7EARkaQ8ZsvTRCA2fZaH1lPnmId5+/6tK1KGUALpYpd0ygT0MmhyRQD+Z49oNNGFbQv0NfAaPMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H52+QvP9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Bnb5pfc3I1VXvefpHCykAa8MjWbgLbo1qDqOtXaeuRuB4mVe2OLZCd2afs5+Jk+1PL/9HyJ/wEiRw3/bW8Q8l75ZgwyS0yvzhXfVTwr7FwbvuvECdv3qX2vgE2jk8rfN1gVwOw96acDt05ATuspfZczWEZ9w+NAQcNuePDO/9JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eJp23wNr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H52+QvP9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0BF7C43390;
-	Wed,  6 Mar 2024 01:41:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eJp23wNr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15701C43394;
+	Wed,  6 Mar 2024 01:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709689272;
-	bh=f0jTeinBjuVIE07L9iwf5FkS74tQY5blTjXDif9Iu7c=;
+	s=k20201202; t=1709689273;
+	bh=wwEC2qJow6e44SejmRB9r6NGTj+5HCW+DyUIiWielU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H52+QvP9JChILgIT0Qe8ncy5E8f7PvzYggXN9BA10IBrsy9F/dDpEyDS7Mi7LwP1L
-	 tWDJGZEwXFuuu5oa/+mmebPTMc5ilZ+yJIcRXhCiTC1v9Ydy4555vsUokOT+5qqVTb
-	 GyiCosw9zFKlvu1t5rMdkwWkIR9NwPvxMHnSPLeIxgZecUY9UA67vuWnHvFYQFqO0G
-	 XRus72Ke8aNipYyxmC+X9mfZ5Hu4yud5d6nEqcuIoMEuCTRFejczWoeBVzfLe4xgSB
-	 oa1iIMSP/y+Nj0kfuj01CAHuGo1bbNCRj1OdE7leEKcc2befrbAD7oXhRNOHEYttkb
-	 ExvUz+UBo/Ssg==
+	b=eJp23wNr0ON6cDkc5xhQlca5Kc2uq9Let0mD+jW8e4BcznyC+RoYo0C2vLahHLwoj
+	 RNA/2a6VzDvhutWVAJVZJh0PS+yMb5EX84feiatk/lDV+16ZeMvHtLvWd4qKUTIwDe
+	 Bd8l5mB+R/b/zTnSqm0KKdqH4fNCHeCDQy/hpupS+AfbyUFHlL6g6UfsdWEj9DZWHM
+	 F83Xt2VzvCVKH9Qstd1mvc/nFva0RgdG52BBzNeXsVDOijAXB/sV9yQ7G4KQ+dWOeQ
+	 /44coMpbtQZo+hmNQ31px929s9igA2cUCsr8cT8vzA3Mu/x/zqAy6jSLY1tN0iE5/o
+	 DrIKHdLydrMEA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v13 4/9] selftests: mptcp: sockopt: print every test result
-Date: Wed,  6 Mar 2024 09:40:54 +0800
-Message-Id: <e77d501a8afa1577f58c741604f9df2a3e94735f.1709688778.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v13 5/9] selftests: mptcp: export TEST_COUNTER variable
+Date: Wed,  6 Mar 2024 09:40:55 +0800
+Message-Id: <725cf9632aec5b8bd51230ec335d6e44dd1a038b.1709688778.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1709688778.git.tanggeliang@kylinos.cn>
 References: <cover.1709688778.git.tanggeliang@kylinos.cn>
@@ -45,195 +45,177 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Only total test results are printed out in mptcp_sockopt.sh:
-
-PASS: all packets had packet mark set
-PASS: SOL_MPTCP getsockopt has expected information
-PASS: TCP_INQ cmsg/ioctl -t tcp
-PASS: TCP_INQ cmsg/ioctl -6 -t tcp
-PASS: TCP_INQ cmsg/ioctl -r tcp
-PASS: TCP_INQ cmsg/ioctl -6 -r tcp
-PASS: TCP_INQ cmsg/ioctl -r tcp -t tcp
-
-They mismatch with the test results:
-
-ok 1 - mptcp_sockopt: mark ipv4
-ok 2 - mptcp_sockopt: transfer ipv4
-ok 3 - mptcp_sockopt: mark ipv6
-ok 4 - mptcp_sockopt: transfer ipv6
-ok 5 - mptcp_sockopt: sockopt v4
-ok 6 - mptcp_sockopt: sockopt v6
-ok 7 - mptcp_sockopt: TCP_INQ: -t tcp
-ok 8 - mptcp_sockopt: TCP_INQ: -6 -t tcp
-ok 9 - mptcp_sockopt: TCP_INQ: -r tcp
-ok 10 - mptcp_sockopt: TCP_INQ: -6 -r tcp
-ok 11 - mptcp_sockopt: TCP_INQ: -r tcp -t tcp
-
-'mptcp_sockopt.sh' now display more detailed results + why (what you had
-in a former patch from v6, merged here). It no longer displays 'PASS:',
-because it is duplicated info now that the detailed are displayed:
-
-Transfer v4                                       [ OK ]
-Mark v4                                           [ OK ]
-Transfer v6                                       [ OK ]
-Mark v6                                           [ OK ]
-SOL_MPTCP sockopt v4                              [ OK ]
-SOL_MPTCP sockopt v6                              [ OK ]
-TCP_INQ cmsg/ioctl -t tcp                         [ OK ]
-TCP_INQ cmsg/ioctl -6 -t tcp                      [ OK ]
-TCP_INQ cmsg/ioctl -r tcp                         [ OK ]
-TCP_INQ cmsg/ioctl -6 -r tcp                      [ OK ]
-TCP_INQ cmsg/ioctl -r tcp -t tcp                  [ OK ]
-
-Also fix the TAP output:
-
-ok 1 - mptcp_sockopt: transfer ipv4
-ok 2 - mptcp_sockopt: mark ipv4
-ok 3 - mptcp_sockopt: transfer ipv6
-ok 4 - mptcp_sockopt: mark ipv6
-ok 5 - mptcp_sockopt: sockopt v4
-ok 6 - mptcp_sockopt: sockopt v6
-ok 7 - mptcp_sockopt: TCP_INQ: -t tcp
-ok 8 - mptcp_sockopt: TCP_INQ: -6 -t tcp
-ok 9 - mptcp_sockopt: TCP_INQ: -r tcp
-ok 10 - mptcp_sockopt: TCP_INQ: -6 -r tcp
-ok 11 - mptcp_sockopt: TCP_INQ: -r tcp -t tcp
+Variable TEST_COUNT are used in mptcp_connect.sh and mptcp_join.sh as
+test counters, which are initialized to 0, while variable test_cnt are used
+in diag.sh and simult_flows.sh, which are initialized to 1. To maintain
+consistency, this patch renames them all as MPTCP_LIB_TEST_COUNTER,
+initializes it to 1, and exports it into mptcp_lib.sh.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
+ tools/testing/selftests/net/mptcp/diag.sh         |  5 ++---
+ .../testing/selftests/net/mptcp/mptcp_connect.sh  |  3 +--
+ tools/testing/selftests/net/mptcp/mptcp_join.sh   | 15 +++++++--------
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh    |  2 ++
+ tools/testing/selftests/net/mptcp/simult_flows.sh |  5 ++---
+ 5 files changed, 14 insertions(+), 16 deletions(-)
 
-Notes:
-    fix the TAP output
-
- .../selftests/net/mptcp/mptcp_sockopt.sh      | 42 +++++++++++--------
- 1 file changed, 25 insertions(+), 17 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-index 7c70b52e63c6..17b36c1312f4 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-@@ -113,6 +113,11 @@ check_mark()
- 	return 0
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index afe862895946..b63510ce2327 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -9,7 +9,6 @@
+ . "$(dirname "${0}")/mptcp_lib.sh"
+ 
+ ns=""
+-test_cnt=1
+ timeout_poll=30
+ timeout_test=$((timeout_poll * 2 + 1))
+ ret=0
+@@ -69,7 +68,7 @@ __chk_nr()
+ 		echo "[  ok  ]"
+ 		mptcp_lib_result_pass "${msg}"
+ 	fi
+-	test_cnt=$((test_cnt+1))
++	MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
  }
  
-+print_title()
-+{
-+	printf "%-50s" "${@}"
-+}
-+
- do_transfer()
+ __chk_msk_nr()
+@@ -127,7 +126,7 @@ wait_msk_nr()
+ 		echo "[  ok  ]"
+ 		mptcp_lib_result_pass "${msg}"
+ 	fi
+-	test_cnt=$((test_cnt+1))
++	MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
+ }
+ 
+ chk_msk_fallback_nr()
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 709233ffa305..da943aa0cea1 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -131,7 +131,6 @@ ns2=""
+ ns3=""
+ ns4=""
+ 
+-TEST_COUNT=0
+ TEST_GROUP=""
+ 
+ # This function is used in the cleanup trap
+@@ -322,7 +321,7 @@ do_transfer()
+ 
+ 	local port
+ 	port=$((port_base++))
+-	TEST_COUNT=$((TEST_COUNT+1))
++	MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
+ 
+ 	if [ "$rcvbuf" -gt 0 ]; then
+ 		extra_args="$extra_args -R $rcvbuf"
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 1df2d24979a0..4ef0d5ae9dae 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -48,7 +48,6 @@ declare -A all_tests
+ declare -a only_tests_ids
+ declare -a only_tests_names
+ declare -A failed_tests
+-TEST_COUNT=0
+ TEST_NAME=""
+ nr_blank=6
+ 
+@@ -172,7 +171,7 @@ cleanup()
+ 
+ print_title()
  {
- 	local listener_ns="$1"
-@@ -162,8 +167,9 @@ do_transfer()
- 	wait $spid
- 	local rets=$?
- 
-+	print_title "Transfer ${ip:2}"
- 	if [ ${rets} -ne 0 ] || [ ${retc} -ne 0 ]; then
--		echo " client exit code $retc, server $rets"
-+		echo "[FAIL] client exit code $retc, server $rets"
- 		echo -e "\nnetns ${listener_ns} socket stat for ${port}:" 1>&2
- 		ip netns exec ${listener_ns} ss -Menita 1>&2 -o "sport = :$port"
- 
-@@ -175,7 +181,14 @@ do_transfer()
- 		ret=1
- 		return 1
- 	fi
-+	if ! mptcp_lib_check_transfer $cin $sout "file received by server"; then
-+		rets=1
-+	else
-+		echo "[ OK ]"
-+	fi
-+	mptcp_lib_result_code "${rets}" "transfer ${ip}"
- 
-+	print_title "Mark ${ip:2}"
- 	if [ $local_addr = "::" ];then
- 		check_mark $listener_ns 6 || retc=1
- 		check_mark $connector_ns 6 || retc=1
-@@ -184,15 +197,13 @@ do_transfer()
- 		check_mark $connector_ns 4 || retc=1
- 	fi
- 
--	mptcp_lib_check_transfer $cin $sout "file received by server"
--	rets=$?
--
- 	mptcp_lib_result_code "${retc}" "mark ${ip}"
--	mptcp_lib_result_code "${rets}" "transfer ${ip}"
- 
- 	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
-+		echo "[ OK ]"
- 		return 0
- 	fi
-+	echo "[FAIL]"
- 
- 	return 1
- }
-@@ -221,23 +232,27 @@ do_mptcp_sockopt_tests()
- 	ip netns exec "$ns_sbox" ./mptcp_sockopt
- 	lret=$?
- 
-+	print_title "SOL_MPTCP sockopt v4"
- 	if [ $lret -ne 0 ]; then
--		echo "FAIL: SOL_MPTCP getsockopt"
-+		echo "[FAIL]"
- 		mptcp_lib_result_fail "sockopt v4"
- 		ret=$lret
- 		return
- 	fi
-+	echo "[ OK ]"
- 	mptcp_lib_result_pass "sockopt v4"
- 
- 	ip netns exec "$ns_sbox" ./mptcp_sockopt -6
- 	lret=$?
- 
-+	print_title "SOL_MPTCP sockopt v6"
- 	if [ $lret -ne 0 ]; then
--		echo "FAIL: SOL_MPTCP getsockopt (ipv6)"
-+		echo "[FAIL]"
- 		mptcp_lib_result_fail "sockopt v6"
- 		ret=$lret
- 		return
- 	fi
-+	echo "[ OK ]"
- 	mptcp_lib_result_pass "sockopt v6"
+-	printf "%03u %s\n" "${TEST_COUNT}" "${TEST_NAME}"
++	printf "%03u %s\n" "${MPTCP_LIB_TEST_COUNTER}" "${TEST_NAME}"
  }
  
-@@ -260,16 +275,17 @@ run_tests()
+ print_check()
+@@ -233,7 +232,7 @@ skip_test()
  
- do_tcpinq_test()
- {
-+	print_title "TCP_INQ cmsg/ioctl $*"
- 	ip netns exec "$ns_sbox" ./mptcp_inq "$@"
- 	local lret=$?
- 	if [ $lret -ne 0 ];then
- 		ret=$lret
--		echo "FAIL: mptcp_inq $*"
-+		echo "[FAIL]"
- 		mptcp_lib_result_fail "TCP_INQ: $*"
- 		return $lret
+ 	local i
+ 	for i in "${only_tests_ids[@]}"; do
+-		if [ "${TEST_COUNT}" -eq "${i}" ]; then
++		if [ "${MPTCP_LIB_TEST_COUNTER}" -eq "${i}" ]; then
+ 			return 1
+ 		fi
+ 	done
+@@ -268,7 +267,7 @@ reset()
+ 
+ 	TEST_NAME="${1}"
+ 
+-	TEST_COUNT=$((TEST_COUNT+1))
++	MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
+ 
+ 	if skip_test; then
+ 		last_test_ignored=1
+@@ -462,7 +461,7 @@ fail_test()
+ 
+ 	# just in case a test is marked twice as failed
+ 	if [ ${last_test_failed} -eq 0 ]; then
+-		failed_tests[${TEST_COUNT}]="${TEST_NAME}"
++		failed_tests[${MPTCP_LIB_TEST_COUNTER}]="${TEST_NAME}"
+ 		dump_stats
+ 		last_test_failed=1
  	fi
+@@ -973,7 +972,7 @@ do_transfer()
+ 	local srv_proto="$4"
+ 	local connect_addr="$5"
  
--	echo "PASS: TCP_INQ cmsg/ioctl $*"
-+	echo "[ OK ]"
- 	mptcp_lib_result_pass "TCP_INQ: $*"
- 	return $lret
- }
-@@ -315,15 +331,7 @@ trap cleanup EXIT
- run_tests $ns1 $ns2 10.0.1.1
- run_tests $ns1 $ns2 dead:beef:1::1
+-	local port=$((10000 + TEST_COUNT - 1))
++	local port=$((10000 + MPTCP_LIB_TEST_COUNTER - 1))
+ 	local cappid
+ 	local FAILING_LINKS=${FAILING_LINKS:-""}
+ 	local fastclose=${fastclose:-""}
+@@ -991,9 +990,9 @@ do_transfer()
+ 			capuser="-Z $SUDO_USER"
+ 		fi
  
--if [ $ret -eq 0 ];then
--	echo "PASS: all packets had packet mark set"
--fi
--
- do_mptcp_sockopt_tests
--if [ $ret -eq 0 ];then
--	echo "PASS: SOL_MPTCP getsockopt has expected information"
--fi
--
- do_tcpinq_tests
+-		capfile=$(printf "mp_join-%02u-%s.pcap" "$TEST_COUNT" "${listener_ns}")
++		capfile=$(printf "mp_join-%02u-%s.pcap" "$MPTCP_LIB_TEST_COUNTER" "${listener_ns}")
  
- mptcp_lib_result_print_all_tap
+-		echo "Capturing traffic for test $TEST_COUNT into $capfile"
++		echo "Capturing traffic for test $MPTCP_LIB_TEST_COUNTER into $capfile"
+ 		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -w $capfile > "$capout" 2>&1 &
+ 		cappid=$!
+ 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index 5d071b6eb780..63abf4431993 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -10,6 +10,8 @@ readonly KSFT_TEST="${MPTCP_LIB_KSFT_TEST:-$(basename "${0}" .sh)}"
+ 
+ MPTCP_LIB_SUBTESTS=()
+ MPTCP_LIB_SUBTESTS_DUPLICATED=0
++# shellcheck disable=SC2034 # unused at this moment
++MPTCP_LIB_TEST_COUNTER=0
+ 
+ # only if supported (or forced) and not disabled, see no-color.org
+ if { [ -t 1 ] || [ "${SELFTESTS_MPTCP_LIB_COLOR_FORCE:-}" = "1" ]; } &&
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index 467feb17e07b..20bf1ea43362 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -14,7 +14,6 @@ ns3=""
+ capture=false
+ timeout_poll=30
+ timeout_test=$((timeout_poll * 2 + 1))
+-test_cnt=1
+ ret=0
+ bail=0
+ slack=50
+@@ -126,8 +125,8 @@ do_transfer()
+ 	local sin=$2
+ 	local max_time=$3
+ 	local port
+-	port=$((10000+test_cnt))
+-	test_cnt=$((test_cnt+1))
++	port=$((10000+MPTCP_LIB_TEST_COUNTER))
++	MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
+ 
+ 	:> "$cout"
+ 	:> "$sout"
 -- 
 2.40.1
 
