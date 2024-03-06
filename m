@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECEF5EE70
-	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 12:04:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8087FBBB
+	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 12:04:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709726655; cv=none; b=qqXDAsh0rM5KUcUXIssekqgVgLp3tk5chTvPQxdgHbJupUwZ01VLNxdQo0sSOp0CwMKgPuhehlpQ+eqjJcDXyOe0ui/mYokpbQbDvRsj08GW/CvXl3HSpUZRs5F0LOaspgRRVgW//KBvgh4MXxcnJ0x74LREUn6x1cvDrR42wmo=
+	t=1709726666; cv=none; b=HaplKu2xFgc+khu++Ud+AfOXW63l1HW0719uD2Sr0q2p4ZMGBv3HWkoqy8vej9gfiZW4Hl2m92zAFqx5Ww+2q+FnNND1FmLeyxS2jVQxDfYtITc/WOVeGQjQhTtsSqwLM8VwjLxPSE0X3WpLCtZJCIVtaYiirCXzScQ9E4IFciE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709726655; c=relaxed/simple;
-	bh=NGL49yV4S9XUCFVe0z3fJXuyTKeiyrfkqgWmz4nPHBM=;
+	s=arc-20240116; t=1709726666; c=relaxed/simple;
+	bh=I/Q5cqOEyzP73PJR2A7U03bBB4hfBhtPF068jjmslXo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t7pSfufVmDTSomVwdPcK6ikCF7QOxhQxW9P3GGw/hv85WU53CW21E62OX13IaVo0pW8DtWFtRIEcF87mqoKfU71vGzMUF0yEHwmJOWb9aDArWZGJ0J3tZ1fagGziyoR4oJpD8eJ0DAzMRUVZALY3MBW4CE/TxdkhSs5fDCzkD3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cedERTzl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=V+Q/wUhbsdhnmOw32Uv1rfZnqD3hVGwU5vE6ANRrV0nPXTYrEHVazr7mMMR/dSARFFqjiapkN3A6dRzy/WROVu3oTPwgJ/vp0OkFSjqiLtzhO6UFZ4vBncXvSLT6tXq8Hv58Hoq+07kEQ3PmoSZrsaGrWIEc0NAhJxiAB05wg6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TmUJAr3L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cedERTzl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42336C433F1;
-	Wed,  6 Mar 2024 12:04:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TmUJAr3L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61DABC433C7;
+	Wed,  6 Mar 2024 12:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709726655;
-	bh=NGL49yV4S9XUCFVe0z3fJXuyTKeiyrfkqgWmz4nPHBM=;
+	s=k20201202; t=1709726666;
+	bh=I/Q5cqOEyzP73PJR2A7U03bBB4hfBhtPF068jjmslXo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cedERTzlf8VzjapmYwSq7cHGJ/MGBZjEAzyWw3Bmw9aMfDoOnaMAcIA+akKqcqbP0
-	 ipMR7RrEesCC/z5VYkgNH9fEQiRg2uMRFgCMfY5nh4BJJABzwWppMWyBihQcDeuift
-	 TuDJiXohzSpirnSjdWoDdXWaPzVzB+8897nvMuHR3n3mWzDxgdF4jxp/Ekm0Ssf9Yy
-	 un8Y6rTrmGkQw4j8OHmMG1XigWvwWuuDtSz1P65Je37bDVbnfh7WcQdPnv7NWj94bU
-	 vgQGf9Oveu2CmCbqc6sUkT3uznjA94/O3A905WntuwpcFSIRsCCCE6ueX193eNOBlu
-	 Sk7FzRQQg9uig==
-Message-ID: <5dab9b9c-d1ce-4ff7-b7de-2e4fb0fba57f@kernel.org>
-Date: Wed, 6 Mar 2024 13:04:13 +0100
+	b=TmUJAr3LkBpgPsvHz2Y8eRaBU1vKiFlcOW31GxobbBWhVfLE5xDajbBfBQ1765wSn
+	 8X0C+0eaNz2DVCTVqjNFlwDMcbrxsgDibS4PnpRzAXj3QKvURSrfNjm0SVw24/k/at
+	 uNZqSX3GWSKnHyEEIejTFtmf0p+sDukVdFv9yKvk2jmStVJJryf8ykDHBUUuNXClS5
+	 L/jFNgMLRCS6WI5iK+eUay7UOYgpIUeNeCol1RcaQ6MQEteYKhnT3gFM/pO8iXnNu9
+	 f6tVYwU+Wvcii2zFbm5+sbfSIopPENz5pX5BxcKbu69dQZL/UlPP5dxVDaV1jwAn1u
+	 8bxSP6+qE8MIg==
+Message-ID: <49dffe4c-4a42-4bbe-ae5d-45c4a80ab2f2@kernel.org>
+Date: Wed, 6 Mar 2024 13:04:25 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v13 7/9] selftests: mptcp: print test results
- with counters
+Subject: Re: [PATCH mptcp-next v13 9/9] selftests: mptcp: print test results
+ with colors
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709688778.git.tanggeliang@kylinos.cn>
- <17ece3b5751fd87d44633f0f379080da780a82f5.1709688778.git.tanggeliang@kylinos.cn>
+ <3903335eb71697af9348119b569e29c50c9e741d.1709688778.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <17ece3b5751fd87d44633f0f379080da780a82f5.1709688778.git.tanggeliang@kylinos.cn>
+In-Reply-To: <3903335eb71697af9348119b569e29c50c9e741d.1709688778.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,40 +96,37 @@ Hi Geliang,
 On 06/03/2024 02:40, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a new helper mptcp_lib_print_title(), a wrapper of
-> mptcp_lib_inc_test_counter() and mptcp_lib_pr_title_counter(), to
-> print out test counter in each test result and increase the counter.
-> Use this helper to print out test counters for every tests in diag.sh,
-> mptcp_connect.sh, mptcp_sockopt.sh, pm_netlink.sh, simult_flows.sh,
-> and userspace_pm.sh.
+> To unify the output formats of all test scripts, this patch adds
+> four more helpers:
+> 
+> 	mptcp_lib_pr_ok()
+> 	mptcp_lib_pr_skip()
+> 	mptcp_lib_pr_fail()
+> 	mptcp_lib_pr_info()
+> 
+> to print out [ OK ], [SKIP], [FAIL] and 'INFO: ' with colors. Use them
+> in all scripts to print the "ok/skip/fail/info' using the same 'format'.
+> 
+> Having colors helps to quickly identify issues when looking at a long
+> list of output logs and results.
+> 
+> Note that now all print the same keywords, which was not the case
+> before, but it is good to uniform that.
 
 (...)
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> index 17b36c1312f4..466800326cbb 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> @@ -113,11 +113,6 @@ check_mark()
->  	return 0
->  }
->  
-> -print_title()
-> -{
-> -	printf "%-50s" "${@}"
-> -}
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index eb740a2f7898..d623c3c418be 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 
-That's strange to add this helper in patch 4/9, and removing it after.
+(...)
 
-To reduce the size of this patch, is it OK if I call
-mptcp_lib_print_title() from print_title()? So only one line is changed,
-only the 'printf' line, similar to what has been done in the other files?
+> @@ -352,29 +369,30 @@ mptcp_lib_check_tools() {
 
-I can do that when applying the series.
-
-> -
->  do_transfer()
->  {
->  	local listener_ns="$1"
+I think you missed "mptcp_lib_check_output()" just above. Is it OK if I
+replace the two 'mptcp_lib_print_err "[FAIL] "' by 'mptcp_lib_pr_fail'
+when applying the series?
 
 (...)
 
