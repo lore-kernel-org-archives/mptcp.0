@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8087FBBB
-	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 12:04:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7F912FF88
+	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 15:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709726666; cv=none; b=HaplKu2xFgc+khu++Ud+AfOXW63l1HW0719uD2Sr0q2p4ZMGBv3HWkoqy8vej9gfiZW4Hl2m92zAFqx5Ww+2q+FnNND1FmLeyxS2jVQxDfYtITc/WOVeGQjQhTtsSqwLM8VwjLxPSE0X3WpLCtZJCIVtaYiirCXzScQ9E4IFciE=
+	t=1709738911; cv=none; b=XhPE6IiaAoFjTU/1AduQCVpReIc5/cQEbZVeQI2lrN99kKQsgdpkrSm/26CxumtA3W+cdmBVMyz0AmFUh32CrTXe1aBxIwS6gbfXhRyCYrjWwyaJ1Wo1AxV5GHqM1kUKBpqryOyuX/rrEGYSriRk31No+GlfA+yNxMEN0+WyLZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709726666; c=relaxed/simple;
-	bh=I/Q5cqOEyzP73PJR2A7U03bBB4hfBhtPF068jjmslXo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V+Q/wUhbsdhnmOw32Uv1rfZnqD3hVGwU5vE6ANRrV0nPXTYrEHVazr7mMMR/dSARFFqjiapkN3A6dRzy/WROVu3oTPwgJ/vp0OkFSjqiLtzhO6UFZ4vBncXvSLT6tXq8Hv58Hoq+07kEQ3PmoSZrsaGrWIEc0NAhJxiAB05wg6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TmUJAr3L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709738911; c=relaxed/simple;
+	bh=k4Gb92FV7/9GDwNfV44aLyxueJpwEOVREjs4dK9j8Cc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ch+IN4jehrGrAuySJQjYk4Z5Rbhw+BpjtrQB9LfFUpLyYkopVsPjXQj56ftM06zke6+rKmY20sH9abAayk5RPX4xzEwckmxM2VdiaY3IaKUQSnTNL87U1Huz9WnnFBwyV9U+o87nosv5b0PONe8nU/BMXCSr67xc+RI6C1yyM5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aToU/V79; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TmUJAr3L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61DABC433C7;
-	Wed,  6 Mar 2024 12:04:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aToU/V79"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85DE9C433C7;
+	Wed,  6 Mar 2024 15:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709726666;
-	bh=I/Q5cqOEyzP73PJR2A7U03bBB4hfBhtPF068jjmslXo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TmUJAr3LkBpgPsvHz2Y8eRaBU1vKiFlcOW31GxobbBWhVfLE5xDajbBfBQ1765wSn
-	 8X0C+0eaNz2DVCTVqjNFlwDMcbrxsgDibS4PnpRzAXj3QKvURSrfNjm0SVw24/k/at
-	 uNZqSX3GWSKnHyEEIejTFtmf0p+sDukVdFv9yKvk2jmStVJJryf8ykDHBUUuNXClS5
-	 L/jFNgMLRCS6WI5iK+eUay7UOYgpIUeNeCol1RcaQ6MQEteYKhnT3gFM/pO8iXnNu9
-	 f6tVYwU+Wvcii2zFbm5+sbfSIopPENz5pX5BxcKbu69dQZL/UlPP5dxVDaV1jwAn1u
-	 8bxSP6+qE8MIg==
-Message-ID: <49dffe4c-4a42-4bbe-ae5d-45c4a80ab2f2@kernel.org>
-Date: Wed, 6 Mar 2024 13:04:25 +0100
+	s=k20201202; t=1709738911;
+	bh=k4Gb92FV7/9GDwNfV44aLyxueJpwEOVREjs4dK9j8Cc=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=aToU/V79fPgYXRwCoqMEQ/mZgVfuP9KagNlYIJ13KbV1jCLc6yoxYV99r1qDR+Qbq
+	 1omtubNqCiRRbjdU0Sy5DRC3vc40X7lwYgOyypKERHDfp7C9YxsLFikaSipiv5BWhc
+	 cIrIfIaa8eRW1mb4GbZtB7qyG8c1Lfia1KkMlYlNggSOELQdkP0OB+pQIHc+exegRF
+	 rTbV8j/Fpc25iWWOcNkbGiWb4zKCvcud4AcdOzBfEc62f0foKkPzOMZMJkpENlfheH
+	 air7wE9vUacFRpBclegRActn5eCKIr21SRKfJ/+BvBsggoC+UHVFI9tlFUZFfiQyvs
+	 qTdIj5naPZpjg==
+Message-ID: <55dbc24f-c3ad-4761-a785-5f6c4b0ebd5c@kernel.org>
+Date: Wed, 6 Mar 2024 16:28:28 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v13 9/9] selftests: mptcp: print test results
- with colors
+Subject: Re: [PATCH mptcp-next v13 0/9] add helpers and vars in mptcp_lib.sh,
+ part 3
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709688778.git.tanggeliang@kylinos.cn>
- <3903335eb71697af9348119b569e29c50c9e741d.1709688778.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <46b9be01-3fce-49a2-b9f9-e936405712c1@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,48 +87,74 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3903335eb71697af9348119b569e29c50c9e741d.1709688778.git.tanggeliang@kylinos.cn>
+In-Reply-To: <46b9be01-3fce-49a2-b9f9-e936405712c1@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 06/03/2024 02:40, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 06/03/2024 13:01, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> To unify the output formats of all test scripts, this patch adds
-> four more helpers:
+> On 06/03/2024 02:40, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> v13:
+>>  - fix the shellcheck error reported by CI in patch 8
+>>  - rebased
+>>
+>> v12:
+>>  - patch 1 Drop one more 1>&2, and update commit log
+>>  - patch 2 use port_base=10000 instead of PORT=0
+>>  - patch 4 fix the TAP output
+>>  - patch 8 a new patch
+>>  - patch 9 drop _printf in userspace_pm.sh
 > 
-> 	mptcp_lib_pr_ok()
-> 	mptcp_lib_pr_skip()
-> 	mptcp_lib_pr_fail()
-> 	mptcp_lib_pr_info()
+> Thank you for the new version and the changelog. This v13 looks good to me.
 > 
-> to print out [ OK ], [SKIP], [FAIL] and 'INFO: ' with colors. Use them
-> in all scripts to print the "ok/skip/fail/info' using the same 'format'.
+> Before applying the series, I have 3 suggestions (see my comments on
+> patches 2, 3, 9), and one important question (from v11):
 > 
-> Having colors helps to quickly identify issues when looking at a long
-> list of output logs and results.
-> 
-> Note that now all print the same keywords, which was not the case
-> before, but it is good to uniform that.
+> Did you check the output when you force failure (e.g. by modifying the
+> code to force and issue, e.g. changing counters, set ret values, etc.)?
+> Just to make sure they are still presented correctly, and if we still
+> catch them!
 
-(...)
+I just applied the patches in our tree (with the modifications I
+suggested), so we can discuss them at the meeting today to check if we
+send them before the end of the merge window.
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index eb740a2f7898..d623c3c418be 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+Please tell me if the modifications I did were OK or not, and more
+importantly, if you checked we are still catching and printing errors
+correctly.
 
-(...)
+New patches for t/upstream:
+- 1078cbfbcaca: selftests: mptcp: print all error messages to stdout
+- 41d8173fc08e: selftests: mptcp: connect: add dedicated port counter
+- 2f5133832972: selftests: mptcp: connect: fix misaligned output
+- 675afbc67f16: selftests: mptcp: sockopt: print every test result
+- ea343f146c45: selftests: mptcp: export TEST_COUNTER variable
+- 7f8d83dedeec: selftests: mptcp: add print_title in mptcp_lib
+- a7107253146f: selftests: mptcp: print test results with counters
+- 4d5fa38b0feb: selftests: mptcp: connect: use += operator to append strings
+- eb2df7f20113: selftests: mptcp: print test results with colors
+- Results: 22573260e303..f5104afeca7c (export)
 
-> @@ -352,29 +369,30 @@ mptcp_lib_check_tools() {
+My modifications:
+- 24a6ed34b014: Squash to "selftests: mptcp: connect: add dedicated port
+counter"
+- d1395cdf78c9: tg:msg: 'prot_base' (typo) -> 'port'
+- 29f333cf764b: conflict in t/selftests-mptcp-export-TEST_COUNTER-variable
+- a7d331066c9a: conflict in
+t/selftests-mptcp-print-test-results-with-counters
+- f6a25c3bc6f2: Squash to "selftests: mptcp: print test results with
+counters"
+- 8664917a10d3: Squash to "selftests: mptcp: print test results with colors"
+- Results: f5104afeca7c..03439b759bbc (export)
 
-I think you missed "mptcp_lib_check_output()" just above. Is it OK if I
-replace the two 'mptcp_lib_print_err "[FAIL] "' by 'mptcp_lib_pr_fail'
-when applying the series?
+Tests are now in progress:
 
-(...)
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240306T152450
 
 Cheers,
 Matt
