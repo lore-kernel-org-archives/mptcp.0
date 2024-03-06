@@ -1,36 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05D3DDA5
-	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 02:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B2A12E78
+	for <mptcp@lists.linux.dev>; Wed,  6 Mar 2024 03:29:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709693740; cv=none; b=EU+DaLaI3sTp54oq8ToSCPXiEJLMw2iXN8KJzxu0yejPx4gh/hcb9RCc1natfHOgfZlD2HJAcHsTaJZUAsPBu5/EvMfhP92JUFn4FkN8mHXBJsU2M1NYZl3KDm5uSLbpF7hf5+D7De8obDZfnwwx9ToRXGEob9WwX/HTms3DMm4=
+	t=1709695742; cv=none; b=pCj+d841xl/hAIHds2qy6taKlV4y9dS8vLcoRSD0rUVfEmhmOII9+7vfVlAIZGdbrPBQaqN9dLWd5P/rhxpnL5AU/3rqCw/87Vs4CD/kJzV1VaybhzQJxLgjEHRN38c/bP2c1dBDTR14P4UNM4Ro7YicvWoM6J2lcAwkmxnG7nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709693740; c=relaxed/simple;
-	bh=erewwXX/wc64vP41reoaW7Z+H31HaYmwJVYqTpwyPUc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gZ1w0IqsKSkLXFjBod2iLIlMFmj6VF8OlSB4ggHuaPIO+fhd9slW4yMBJtKe+hNvp1E586jkrKeaA+krwgWWZxS6oOLs6COzRliz+/P7SUtyyqLSI4vRzeRDzChcHm+0SMkNxX33kiPIzovy397iFfK16nvzgmfOcPpA79Kvm+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ey4HKAeC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709695742; c=relaxed/simple;
+	bh=5uMoKIvWLdzJG07k6xJfwzKhCi+9SUOSvb21z3ChdFI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aaL2793fm5YXPtv5+Rg81ECL+rkYqPMaF9IHlN19r6lTjXTqMiIr25P23QZXOq20ekQzk608esM0PYD2evJK7MQ+4mEZVkHzBxU0zT5bVvEFzvazxCGH/ghf9GMow99S64sEskklKtTO0sTZlDEgORjF6gXNmS6+009iweG1dBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WyX8EbI3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ey4HKAeC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49685C433F1;
-	Wed,  6 Mar 2024 02:55:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WyX8EbI3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04750C433F1;
+	Wed,  6 Mar 2024 03:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709693739;
-	bh=erewwXX/wc64vP41reoaW7Z+H31HaYmwJVYqTpwyPUc=;
+	s=k20201202; t=1709695742;
+	bh=5uMoKIvWLdzJG07k6xJfwzKhCi+9SUOSvb21z3ChdFI=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Ey4HKAeCtiIQTj0wn+vjZl/D3F4lZ5u/EfM9q/TWk+gWLKgTTYrX07JWWCQyrZAZI
-	 c7+OA2XssaYwFz5z0TbzCFrZlaOpNUAasRvRbOmYOVCwxo8amaYp9fBXxjdDJDHC+f
-	 MqjcOFhDzDE/wXZ42sUzUOFJxbcmlqqT0UgyTmz3jgX9SOSbl4O6akVu+lbHrr4TLr
-	 lw5YKmVIpRVf7r9k79OzJM7VJXp5QNc6oD8VDu0+5WBwEdNw4A2eSh9pcLdcMga7Vs
-	 BxLzpvy7SftWCMda/uwn1fG3awr/jj6aCSa2r4SuPwMe2/0bv/0hsVM4QvAzO2vbJD
-	 NEamIJ3CNperQ==
+	b=WyX8EbI39KgiF1jNptypibISr0gNGw6Vl0Gh5IfKQgkZKOalltg6F2CgqEyJ6m4Se
+	 ESlR+ArCkHCiBfAEO3NIrWwmo4cgidc30U/gyznyf7qcBkWnuqo82ZfzbpEZO/eNF/
+	 KHUshVKouysMtwj6r3/I9lgrQf9xpeT0Ndf9ftQ6E9tua3TKYe0n2cbDyWBF/k5oUS
+	 ZchxhvK+YckHmDBaBpQRygMpnFA/1vD680OO756q7ZlY3ZShxfQZ8GQJ3e9VyXFK2m
+	 vX0vWH1QUJDkzjXMdfbPynRzB0mSR2DbLvjfEeywHWfD/XgH4pYR6CL7uJ4h0i4l6i
+	 HlLDH6t69/vdw==
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH RFC] mptcp: react scheduler when subflow events pop up
-Date: Wed,  6 Mar 2024 10:55:33 +0800
-Message-Id: <433320c3a9db77bea53a34fc9c43a3c7e3320399.1709693691.git.tanggeliang@kylinos.cn>
+To: mptcp@lists.linux.dev,
+	"Bruce A . Mah" <bmah@es.net>
+Cc: Geliang Tang <geliang@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH iperf3 v2] add MPTCPv1 support
+Date: Wed,  6 Mar 2024 11:28:54 +0800
+Message-Id: <487902825fa971916541b59e43ed25c7525b60e0.1709695652.git.geliang@kernel.org>
 X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -40,134 +42,248 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+The Multipath TCP (MPTCP) protocol (v1 / RFC 8684) has been added in the
+upstream Linux kernel since v5.16.
 
-The current packet scheduler will not react by queuing more packets if
-some subflows only events are emitted, e.g. new TCP ACKs are received
-only acking things at TCP-level but not at MPTCP level. The scheduler
-should be called when such events happen.
+MPTCP is strongly tied to TCP, and the kernel APIs are almost the same.
+The only required dependency is the 'IPPROTO_MPTCP' protocol number
+definition, which should be provided by the netinet/in.h header.
 
-ack_update_msk() is invoked when an ACK is received, so it's the right
-place to call the scheduler by invoking __mptcp_check_push().
+This patch adds a new flag --mptcp to support MPTCPv1. It can be used
+like this:
 
-mptcp_subflow_timeout() is implemented to call the scheduler when a
-subflow timeout happens. But I'm not sure where is the right place to
-invoke it. I mean where is the right place when a RTO is fired. So I
-temporarily do it in mptcp_worker().
+ > iperf3 --mptcp -s
+ > iperf3 --mptcp -c 127.0.0.1
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/343
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+There is no need to check for IPPROTO_MPTCP support in configure.ac at
+build time, it is at runtime we will see if the kernel being use supports
+or not MPTCP.
+
+If IPPROTO_MPTCP is not supported by the kernel being tested, it is
+normal to fail because the feature is not available.
+
+Linked: https://github.com/esnet/iperf/pull/1166
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Geliang Tang <geliang@kernel.org>
 ---
- include/net/tcp.h    |  3 +++
- net/ipv4/tcp_timer.c |  6 +++---
- net/mptcp/options.c  |  1 +
- net/mptcp/protocol.c | 23 ++++++++++++++++++++++-
- net/mptcp/protocol.h |  1 +
- 5 files changed, 30 insertions(+), 4 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 6ae35199d3b3..431a23a8ebfa 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -347,6 +347,9 @@ void tcp_release_cb(struct sock *sk);
- void tcp_wfree(struct sk_buff *skb);
- void tcp_write_timer_handler(struct sock *sk);
- void tcp_delack_timer_handler(struct sock *sk);
-+bool retransmits_timed_out(struct sock *sk,
-+			   unsigned int boundary,
-+			   unsigned int timeout);
- int tcp_ioctl(struct sock *sk, int cmd, int *karg);
- enum skb_drop_reason tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb);
- void tcp_rcv_established(struct sock *sk, struct sk_buff *skb);
-diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
-index d1ad20ce1c8c..cfedafc4ca36 100644
---- a/net/ipv4/tcp_timer.c
-+++ b/net/ipv4/tcp_timer.c
-@@ -212,9 +212,9 @@ static unsigned int tcp_model_timeout(struct sock *sk,
-  * after "boundary" unsuccessful, exponentially backed-off
-  * retransmissions with an initial RTO of TCP_RTO_MIN.
-  */
--static bool retransmits_timed_out(struct sock *sk,
--				  unsigned int boundary,
--				  unsigned int timeout)
-+bool retransmits_timed_out(struct sock *sk,
-+			   unsigned int boundary,
-+			   unsigned int timeout)
+Notes:
+    restrict this feature to Linux builds
+
+ src/iperf.h            |  7 +++++++
+ src/iperf_api.c        |  8 ++++++++
+ src/iperf_api.h        |  1 +
+ src/iperf_client_api.c |  2 +-
+ src/iperf_locale.c     |  3 +++
+ src/iperf_tcp.c        |  4 ++--
+ src/iperf_udp.c        |  2 +-
+ src/net.c              | 14 +++++++-------
+ src/net.h              |  4 ++--
+ 9 files changed, 32 insertions(+), 13 deletions(-)
+
+diff --git a/src/iperf.h b/src/iperf.h
+index dc3c0d1..bc9fdf6 100644
+--- a/src/iperf.h
++++ b/src/iperf.h
+@@ -50,6 +50,10 @@
+ #include <sys/cpuset.h>
+ #endif /* HAVE_CPUSET_SETAFFINITY */
+ 
++#ifndef IPPROTO_MPTCP
++#define IPPROTO_MPTCP 262
++#endif
++
+ #include "timer.h"
+ #include "queue.h"
+ #include "cjson.h"
+@@ -175,6 +179,9 @@ struct iperf_settings
+     int       idle_timeout;         /* server idle time timeout */
+     unsigned int snd_timeout; /* Timeout for sending tcp messages in active mode, in us */
+     struct iperf_time rcv_timeout;  /* Timeout for receiving messages in active mode, in us */
++#if defined(linux)
++    int       mptcp;
++#endif
+ };
+ 
+ struct iperf_test;
+diff --git a/src/iperf_api.c b/src/iperf_api.c
+index 1dcfaab..686b78b 100644
+--- a/src/iperf_api.c
++++ b/src/iperf_api.c
+@@ -1144,6 +1144,9 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
+         {"idle-timeout", required_argument, NULL, OPT_IDLE_TIMEOUT},
+         {"rcv-timeout", required_argument, NULL, OPT_RCV_TIMEOUT},
+         {"snd-timeout", required_argument, NULL, OPT_SND_TIMEOUT},
++#if defined(linux)
++        {"mptcp", no_argument, NULL, OPT_MPTCP},
++#endif
+         {"debug", optional_argument, NULL, 'd'},
+         {"help", no_argument, NULL, 'h'},
+         {NULL, 0, NULL, 0}
+@@ -1639,6 +1642,11 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
+ 		test->settings->connect_timeout = unit_atoi(optarg);
+ 		client_flag = 1;
+ 		break;
++#if defined(linux)
++	    case OPT_MPTCP:
++		test->settings->mptcp = 1;
++		break;
++#endif
+ 	    case 'h':
+ 		usage_long(stdout);
+ 		exit(0);
+diff --git a/src/iperf_api.h b/src/iperf_api.h
+index d2bbdfe..2ee29d9 100644
+--- a/src/iperf_api.h
++++ b/src/iperf_api.h
+@@ -100,6 +100,7 @@ typedef atomic_uint_fast64_t atomic_iperf_size_t;
+ #define OPT_RCV_TIMEOUT 27
+ #define OPT_JSON_STREAM 28
+ #define OPT_SND_TIMEOUT 29
++#define OPT_MPTCP 30
+ 
+ /* states */
+ #define TEST_START 1
+diff --git a/src/iperf_client_api.c b/src/iperf_client_api.c
+index 7ad4c93..01dceb6 100644
+--- a/src/iperf_client_api.c
++++ b/src/iperf_client_api.c
+@@ -399,7 +399,7 @@ iperf_connect(struct iperf_test *test)
+     /* Create and connect the control channel */
+     if (test->ctrl_sck < 0)
+ 	// Create the control channel using an ephemeral port
+-	test->ctrl_sck = netdial(test->settings->domain, Ptcp, test->bind_address, test->bind_dev, 0, test->server_hostname, test->server_port, test->settings->connect_timeout);
++	test->ctrl_sck = netdial(test->settings->domain, Ptcp, test->settings->mptcp ? IPPROTO_MPTCP : 0, test->bind_address, test->bind_dev, 0, test->server_hostname, test->server_port, test->settings->connect_timeout);
+     if (test->ctrl_sck < 0) {
+         i_errno = IECONNECT;
+         return -1;
+diff --git a/src/iperf_locale.c b/src/iperf_locale.c
+index ae0f63a..7e00fb6 100644
+--- a/src/iperf_locale.c
++++ b/src/iperf_locale.c
+@@ -128,6 +128,9 @@ const char usage_longstr[] = "Usage: iperf3 [-s|-c host] [options]\n"
+                            "  --snd-timeout #           timeout for unacknowledged TCP data\n"
+                            "                            (in ms, default is system settings)\n"
+ #endif /* HAVE_TCP_USER_TIMEOUT */
++#if defined(linux)
++                           "  --mptcp                   Multipath TCP support\n"
++#endif
+                            "  -d, --debug[=#]           emit debugging output\n"
+                            "                            (optional optional \"=\" and debug level: 1-4. Default is 4 - all messages)\n"
+                            "  -v, --version             show version information and quit\n"
+diff --git a/src/iperf_tcp.c b/src/iperf_tcp.c
+index 184a195..cb88317 100644
+--- a/src/iperf_tcp.c
++++ b/src/iperf_tcp.c
+@@ -210,7 +210,7 @@ iperf_tcp_listen(struct iperf_test *test)
+             return -1;
+         }
+ 
+-        if ((s = socket(res->ai_family, SOCK_STREAM, 0)) < 0) {
++        if ((s = socket(res->ai_family, SOCK_STREAM, res->ai_protocol)) < 0) {
+ 	    freeaddrinfo(res);
+             i_errno = IESTREAMLISTEN;
+             return -1;
+@@ -376,7 +376,7 @@ iperf_tcp_connect(struct iperf_test *test)
+     int saved_errno;
+     int rcvbuf_actual, sndbuf_actual;
+ 
+-    s = create_socket(test->settings->domain, SOCK_STREAM, test->bind_address, test->bind_dev, test->bind_port, test->server_hostname, test->server_port, &server_res);
++    s = create_socket(test->settings->domain, SOCK_STREAM, test->settings->mptcp ? IPPROTO_MPTCP : 0, test->bind_address, test->bind_dev, test->bind_port, test->server_hostname, test->server_port, &server_res);
+     if (s < 0) {
+ 	i_errno = IESTREAMCONNECT;
+ 	return -1;
+diff --git a/src/iperf_udp.c b/src/iperf_udp.c
+index a603236..4e651fe 100644
+--- a/src/iperf_udp.c
++++ b/src/iperf_udp.c
+@@ -507,7 +507,7 @@ iperf_udp_connect(struct iperf_test *test)
+     int i, max_len_wait_for_reply;
+ 
+     /* Create and bind our local socket. */
+-    if ((s = netdial(test->settings->domain, Pudp, test->bind_address, test->bind_dev, test->bind_port, test->server_hostname, test->server_port, -1)) < 0) {
++    if ((s = netdial(test->settings->domain, Pudp, 0, test->bind_address, test->bind_dev, test->bind_port, test->server_hostname, test->server_port, -1)) < 0) {
+         i_errno = IESTREAMCONNECT;
+         return -1;
+     }
+diff --git a/src/net.c b/src/net.c
+index c82caff..b8d3da5 100644
+--- a/src/net.c
++++ b/src/net.c
+@@ -124,7 +124,7 @@ timeout_connect(int s, const struct sockaddr *name, socklen_t namelen,
+ 
+ /* create a socket */
+ int
+-create_socket(int domain, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, struct addrinfo **server_res_out)
++create_socket(int domain, int type, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, struct addrinfo **server_res_out)
  {
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	unsigned int start_ts, delta;
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 5926955625cf..4b091d3bce00 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1069,6 +1069,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
- 		__mptcp_snd_una_update(msk, new_snd_una);
- 		__mptcp_data_acked(sk);
- 	}
-+	__mptcp_check_push(sk, ssk);
- 	mptcp_data_unlock(sk);
+     struct addrinfo hints, *local_res = NULL, *server_res = NULL;
+     int s, saved_errno;
+@@ -133,14 +133,14 @@ create_socket(int domain, int proto, const char *local, const char *bind_dev, in
+     if (local) {
+         memset(&hints, 0, sizeof(hints));
+         hints.ai_family = domain;
+-        hints.ai_socktype = proto;
++        hints.ai_socktype = type;
+         if ((gerror = getaddrinfo(local, NULL, &hints, &local_res)) != 0)
+             return -1;
+     }
  
- 	trace_ack_update_msk(mp_opt->data_ack,
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index cdf9ec67795e..c935f6a7adb0 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -486,6 +486,26 @@ static long mptcp_timeout_from_subflow(const struct mptcp_subflow_context *subfl
- 	       inet_csk(ssk)->icsk_timeout - jiffies : 0;
- }
+     memset(&hints, 0, sizeof(hints));
+     hints.ai_family = domain;
+-    hints.ai_socktype = proto;
++    hints.ai_socktype = type;
+     snprintf(portstr, sizeof(portstr), "%d", port);
+     if ((gerror = getaddrinfo(server, portstr, &hints, &server_res)) != 0) {
+ 	if (local)
+@@ -148,7 +148,7 @@ create_socket(int domain, int proto, const char *local, const char *bind_dev, in
+         return -1;
+     }
  
-+static void __mptcp_subflow_timeout(struct sock *sk, struct sock *ssk, long tout)
-+{
-+	unsigned int boundary = READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_retries1) + 1;
-+
-+	if (retransmits_timed_out(ssk, boundary, tout))
-+		__mptcp_check_push(sk, ssk);
-+}
-+
-+static void mptcp_subflow_timeout(struct sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+
-+	mptcp_for_each_subflow(mptcp_sk(sk), subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		long tout = mptcp_timeout_from_subflow(subflow);
-+
-+		__mptcp_subflow_timeout(sk, ssk, tout);
-+	}
-+}
-+
- void mptcp_set_timeout(struct sock *sk)
+-    s = socket(server_res->ai_family, proto, 0);
++    s = socket(server_res->ai_family, type, proto);
+     if (s < 0) {
+ 	if (local)
+ 	    freeaddrinfo(local_res);
+@@ -233,12 +233,12 @@ create_socket(int domain, int proto, const char *local, const char *bind_dev, in
+ 
+ /* make connection to server */
+ int
+-netdial(int domain, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, int timeout)
++netdial(int domain, int type, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, int timeout)
  {
- 	struct mptcp_subflow_context *subflow;
-@@ -1624,7 +1644,7 @@ void __mptcp_push_pending(struct sock *sk, unsigned int flags)
- 		mptcp_check_send_data_fin(sk);
- }
+     struct addrinfo *server_res = NULL;
+     int s, saved_errno;
  
--static void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
-+void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_sendmsg_info info = {
-@@ -2741,6 +2761,7 @@ static void mptcp_worker(struct work_struct *work)
- 	mptcp_check_fastclose(msk);
+-    s = create_socket(domain, proto, local, bind_dev, local_port, server, port, &server_res);
++    s = create_socket(domain, type, proto, local, bind_dev, local_port, server, port, &server_res);
+     if (s < 0) {
+       return -1;
+     }
+@@ -289,7 +289,7 @@ netannounce(int domain, int proto, const char *local, const char *bind_dev, int
+     if ((gerror = getaddrinfo(local, portstr, &hints, &res)) != 0)
+         return -1;
  
- 	mptcp_pm_nl_work(msk);
-+	mptcp_subflow_timeout(sk);
+-    s = socket(res->ai_family, proto, 0);
++    s = socket(res->ai_family, proto, res->ai_protocol);
+     if (s < 0) {
+ 	freeaddrinfo(res);
+         return -1;
+diff --git a/src/net.h b/src/net.h
+index f0e1b4f..cd0afb7 100644
+--- a/src/net.h
++++ b/src/net.h
+@@ -28,8 +28,8 @@
+ #define __NET_H
  
- 	mptcp_check_send_data_fin(sk);
- 	mptcp_check_data_fin_ack(sk);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7905783c95e4..f4b75be49690 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -656,6 +656,7 @@ void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- void __mptcp_subflow_send_ack(struct sock *ssk);
- void mptcp_subflow_reset(struct sock *ssk);
- void mptcp_subflow_queue_clean(struct sock *sk, struct sock *ssk);
-+void __mptcp_subflow_push_pending(struct sock *sk, struct sock *ssk, bool first);
- void mptcp_sock_graft(struct sock *sk, struct socket *parent);
- u64 mptcp_wnd_end(const struct mptcp_sock *msk);
- void mptcp_set_timeout(struct sock *sk);
+ int timeout_connect(int s, const struct sockaddr *name, socklen_t namelen, int timeout);
+-int create_socket(int domain, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, struct addrinfo **server_res_out);
+-int netdial(int domain, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, int timeout);
++int create_socket(int domain, int type, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, struct addrinfo **server_res_out);
++int netdial(int domain, int type, int proto, const char *local, const char *bind_dev, int local_port, const char *server, int port, int timeout);
+ int netannounce(int domain, int proto, const char *local, const char *bind_dev, int port);
+ int Nread(int fd, char *buf, size_t count, int prot);
+ int Nwrite(int fd, const char *buf, size_t count, int prot) /* __attribute__((hot)) */;
 -- 
 2.40.1
 
