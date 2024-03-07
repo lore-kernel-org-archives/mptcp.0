@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCF8161
-	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 14:45:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E14B1E866
+	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 14:47:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709822731; cv=none; b=u0GFWgn6V4x3xNY/B3UZVhN6NHze+G1JTUNS0aAqV0eu+nnda4LgcthPjTsCqUplvWSjaYSA+zOZ5IPeA6c4HtZQoeOuioupMR4Ilu/i/c/wfM+IEXz78mscatYS6ZYxEIE4kSKWWGRr3TBDC6FN9sWhEPhwYwPTd6z5KX2K0zo=
+	t=1709822860; cv=none; b=HXQVb16f27B8LnBWnqfKF5Wl0W2QIbvk4dXWMBBxSZ6uhADYCXrG/7jauFIHRnvuywVzgDL1dnsl7wE+HvDUvCxPxFyWwABjZUEGv5ulfUoV0gGSA5wn6n0zBlIdLlNtKi4yCQV7hgRcvU/r1zd+PbHMAq9KAp+WW/wRITG63Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709822731; c=relaxed/simple;
-	bh=IONmtwQeR3uo5C6V+4h4BZUtauYof6exmjYs+Ub9cOU=;
+	s=arc-20240116; t=1709822860; c=relaxed/simple;
+	bh=Mr/Kk+Tx9z1IaIg762JyoPjVWDdQ8lhEBn1/4jNZIbM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mgjzt1nhVRQXYcmKDPEbQxTJT3HDexIYGSCT/FLbLG6Vr5wMK7LeC4Cv41AuR4AXlRR5eV8L4sFHypl3bC+CwD0t97Y6Ahrp1JSnIx0RDR3OXvl+Dz4e/XLnb9L6JSv9/d0bEM/cV5nUGEmxaf5lw0D7oRpIy+DvVKJJ5Mdt7tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lySQRMiL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=suItIV/o5FB4cqksxCju9fb/buuZsDn0zGD41Yur+b97cN8VuATW1AsXtQBHPLzw/kBhuilaksdO4pq47HGHTd2GlCwhOqJJmlcVXV/fAvlEVwj87WEUhCEA8rc5Ssq0FPZ5KTWVlcQy9k7bGQbcJdk6qekdJiostHayc4aYGUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kstdyc3S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lySQRMiL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 469F4C433C7;
-	Thu,  7 Mar 2024 14:45:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kstdyc3S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2827C433C7;
+	Thu,  7 Mar 2024 14:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709822730;
-	bh=IONmtwQeR3uo5C6V+4h4BZUtauYof6exmjYs+Ub9cOU=;
+	s=k20201202; t=1709822859;
+	bh=Mr/Kk+Tx9z1IaIg762JyoPjVWDdQ8lhEBn1/4jNZIbM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lySQRMiLFZxfYaOYyfaCD/SBj6HjAOGwx7FvEwQlSeCryF/XqA61HkA2Ebtv54Shl
-	 uhoYXxJoN82nJg6ifk8wJbNagyiq2OaRIG/MMHWUBcsrIIRJTQsGeDClWkxwMY+T8K
-	 Ow33ltlFjnNAX9P6hh0fCVab8lxuZ/lYmal/QtbMZ13S2cidJW86ZjNlHDFIX2wXfR
-	 9HNrpBOjkc98S8Gkwg4pSU+6CXhZc9GQn5wZu4tnOOHIyyVH6t+diZuvnuVyTUOhfc
-	 fxHIIJhgzSAP1ouSJO8F1PNI2JiRD1byMBZJVJ0v0n91eYAC4DSPg+yH1LZB/i4qe1
-	 uOgnf/nsuvh5A==
-Message-ID: <74297461-299a-4054-b6d6-aeb782453554@kernel.org>
-Date: Thu, 7 Mar 2024 15:45:26 +0100
+	b=kstdyc3Sb/dFyUosxYfxeRNxYR/1HgRaHExJw0+e5kjBL3rvRK7FpKOgXU/SbW3Rw
+	 o8hfq4uHwCgcdRb0LSe8SjnN9KQXRk52PUavGUHOdhgFcNzywtCkDVeEwWFHAy315W
+	 EaUmCvq+5UR0yp1G0atgS6VOwj//RWD3IH96OGpMHI4VFU3OzyAULYPP5Ae4lon07K
+	 c4kwQquRKtlbsVfI7IaGPg2EMTxQVK1ptmux1oEC+HwtKxfq3cdcQ/Gpilqkdry1b5
+	 vve9ths2f27vXyNyuvbr5/QbOXfWOoj/5QiwP+M1PnnWS8Zkhkkq7pmLiVQ39kszUM
+	 G2PzmCLbOTWoA==
+Message-ID: <565efb7d-3f29-4636-a717-84c45db8856b@kernel.org>
+Date: Thu, 7 Mar 2024 15:47:36 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 0/5] add helpers and vars in mptcp_lib.sh, part
- 4
+Subject: Re: [PATCH mptcp-next 1/5] selftests: mptcp: extract
+ mptcp_lib_check_expected
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709815545.git.tanggeliang@kylinos.cn>
+ <b1d6b400a21b15b9237e6cdd35d325f9fd5584d9.1709815545.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,20 +87,150 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1709815545.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b1d6b400a21b15b9237e6cdd35d325f9fd5584d9.1709815545.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 07/03/2024 13:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> MPTCP events related patches and two cleanups.
+> Extract the main part of check_expected() in userspace_pm.sh to a new
+> function mptcp_lib_check_expected() in mptcp_lib.sh. It will be used
+> in both mptcp_john.sh and userspace_pm.sh. check_expected_one() is
+> moved into mptcp_lib.sh too as mptcp_lib_check_expected_one().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 30 ++++++++++++++++
+>  .../selftests/net/mptcp/userspace_pm.sh       | 34 +++----------------
+>  2 files changed, 35 insertions(+), 29 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index ea39392c68e7..44491f18ed17 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -438,3 +438,33 @@ mptcp_lib_print_title() {
+>  	# shellcheck disable=SC2059 # the format is in a variable
+>  	printf "${MPTCP_LIB_TEST_FORMAT}" "$((++MPTCP_LIB_TEST_COUNTER))" "${*}"
+>  }
+> +
+> +# $1: var name ; $2: prev ret
+> +mptcp_lib_check_expected_one() {
+> +	local var="${1}"
+> +	local exp="e_${var}"
+> +	local prev_ret="${2}"
+> +
+> +	if [ "${!var}" = "${!exp}" ]; then
+> +		return 0
+> +	fi
+> +
+> +	if [ "${prev_ret}" = "0" ]; then
+> +		mptcp_lib_pr_fail
+> +	fi
+> +
+> +	mptcp_lib_print_err "Expected value for '${var}': '${!exp}', got '${!var}'."
 
-Thank you for the patches!
+Maybe keep the tab like before? Please check how it looks like when
+there is a failure in mptcp_join.sh and userspace_pm.sh.
 
-I just did a first review. Please check my different replies.
+> +	return 1
+> +}
+> +
+> +# $@: all var names to check
+> +mptcp_lib_check_expected() {
+> +	local rc=0
+> +	local var
+> +
+> +	for var in "${@}"; do
+> +		mptcp_lib_check_expected_one "${var}" "${rc}" || rc=1
+> +	done
+> +
+> +	return "${rc}"
+> +}
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> index 4e29aa9c2529..6ab9efda8627 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -5,7 +5,7 @@
+>  # code but we accept it.
+>  #shellcheck disable=SC2086
+>  
+> -# Some variables are used below but indirectly, see check_expected_one()
+> +# Some variables are used below but indirectly, see verify_*_event()
+>  #shellcheck disable=SC2034
+>  
+>  . "$(dirname "${0}")/mptcp_lib.sh"
+> @@ -225,44 +225,20 @@ make_connection()
+>  	fi
+>  }
+>  
+> -# $1: var name ; $2: prev ret
+> -check_expected_one()
+> -{
+> -	local var="${1}"
+> -	local exp="e_${var}"
+> -	local prev_ret="${2}"
+> -
+> -	if [ "${!var}" = "${!exp}" ]
+> -	then
+> -		return 0
+> -	fi
+> -
+> -	if [ "${prev_ret}" = "0" ]
+> -	then
+> -		test_fail
+> -	fi
+> -
+> -	mptcp_lib_print_err "\tExpected value for '${var}': '${!exp}', got '${!var}'."
+> -	return 1
+> -}
+> -
+>  # $@: all var names to check
+>  check_expected()
+>  {
+>  	local rc=0
+> -	local var
+>  
+> -	for var in "${@}"
+> -	do
+> -		check_expected_one "${var}" "${rc}" || rc=1
+> -	done
+> -
+> -	if [ ${rc} -eq 0 ]
+> +	mptcp_lib_check_expected "${@}" || rc=1
+> +	if [ "${rc}" -eq 0 ]
+
+I guess you no longer need "rc":
+
+  if mptcp_lib_check_expected "${@}"
+  then
+      test_pass
+      return 0
+  fi
+
+>  	then
+>  		test_pass
+>  		return 0
+>  	fi
+>  
+> +	ret=1
+> +	mptcp_lib_result_fail "${test_name}"
+
+Mmh, you should keep using test_fail(): best to keep using a single
+helper in case of failure, because we need to do these two actions, and
+for sure, we will miss one later in new code by accident.
+
+Instead, I suggest modifying test_fail() to call "mptcp_lib_pr_fail"
+only if there are arguments (if [ ${#} -gt 0 ]). But then, you will have
+to add arguments when calling test_fail() from test_remove() → e.g.
+"unexpected type: ${type}" (it even makes sense to print that any way to
+help to understand what's wrong)
+
+>  	return 1
+>  }
+>  
 
 Cheers,
 Matt
