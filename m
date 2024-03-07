@@ -1,118 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B8382D9C
-	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 09:42:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD7B839E8
+	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 09:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709804535; cv=none; b=UxPbFFnqcJxLBrubtW085T0RZmubf3XIm+xwf1k+W8LmhgE464CVtCxq1BsRHL3S+C5UjEZ2V9xmtyQu9PbUWrovqTdMPEOxhA2rVLstPKSMtIOO9AfQSaT0zTk4dwMVKJ/Po5+LoUVwaD+Zba/D2KR1yd7cjDjybreSA07UcR0=
+	t=1709805006; cv=none; b=upZKmMy0nUKmouqAQ/sOn06e42CXJvbf3vgDBQkSDUUh6Qfd/QWzyOyAukzyl/fS2/I09FiEVG2/U9EqVAqef8Hk367Fvjo0ZwfhyvyHMGpKUrHFgR2HlqgJlnYFUf2iaZ0mrv95EIFFGL+M0frbzn4F7dlfyFbJuTK4iW9FfYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709804535; c=relaxed/simple;
-	bh=rkvXuaDCTE8rjg0jjc7LFJwhnkgOSt/OEbhDCn6yjcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U8ldMHgxImenMiLerDU1xUk4XxZKP/s5IwpOpix1RIr2+k/E8/avBMFfHkhhA95PahweGvK7/SNA6qV88+YOrWo0iFKsoQK5bix20uHAmTp9WrhMkAIKkvPPZ/Y0noZ8Jrt5DftFYhJtfpm7+wy4zRm9Dg9qsOiJ6Xu+KJpv11U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5tRnQwv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709805006; c=relaxed/simple;
+	bh=0bvoQTlIAzfuDplziYEr+0UXWlSexYxxIdnZkTSeviI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IpiSHtQvff6TiZOFCuLN5/E1HtNAyzGL8A0ba3LN+TlXAqSePifKfo9qNXK/SU5Uh/WJVjk9jnoHaLBfyCz0p8DQInQlOVTjM2Xx8UyVR1OUQ4FtVH3Ek7nqfWvbjBO7MTVi4fuQo2d6yc5GaA/aGH8VUi0GcgYJBDI0fvGB/eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tS6iW4vZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5tRnQwv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63F0FC433F1;
-	Thu,  7 Mar 2024 09:42:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tS6iW4vZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9026EC433F1;
+	Thu,  7 Mar 2024 09:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709804535;
-	bh=rkvXuaDCTE8rjg0jjc7LFJwhnkgOSt/OEbhDCn6yjcs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r5tRnQwvtSP/8hAAvoE/2eknTP7+J0m0Dw9D1KGDngeiHokIivwNQ3Mv3Szfd530L
-	 YU42VzRmmSWyDhd+1fg20aICwFXy2CU9NYgvMLjh6a3qEOqVqf1XwR5/v4l6RWOHWv
-	 bzcNPRJtt95QCeV9n8v9VbL1pOs0Y+y5im+bKSV9AANgm+aedTIAKQohV3p1jJdSUD
-	 DK4GJRg4RBFgfIzdmIv26d01Z3ll8W+JUitdjRWsOs5FgSr26QwT2Ar/Bahr9wuh56
-	 xt3Tfh+PzjAglHS/AxkBHrfHr3Getju61Hef2TVJMtjkNj4jJoUlreUdH09SdED8ZT
-	 Q9rf3yNJrPSGA==
-Message-ID: <d59a7eed-108f-4739-b3c7-70710a58d582@kernel.org>
-Date: Thu, 7 Mar 2024 10:42:12 +0100
+	s=k20201202; t=1709805005;
+	bh=0bvoQTlIAzfuDplziYEr+0UXWlSexYxxIdnZkTSeviI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tS6iW4vZI1ZadLWvB2K0XnmJp08ksQA+hqCimWYRK3/MRUzS91GF84knSzMiP12lJ
+	 vAxS3lkPMCBIrFCAqZ6gX8YAL/oG4N632MttR9M9LSafgJ7u2+j8mLRSVXNq1FR1gr
+	 ifshS1VDnY9abyb3cvzFzuq7cSgVqudLZ+dpUe0ST4fYgXRlGT2/oQ2iuYs+Gwjb8b
+	 ab+ScjjuPuGMODDuFhl1I4fLaaoJmZLNTzr6baO2grxuPfQO0I2PsfM+bl/CLnyrwf
+	 7JTwIfiDNAYzxEqV3MdCcGGM0/Ozy+IInx47j+LXxkHEy9el+F6NkRUxtaU9eGhTvy
+	 Ktn2Mc5JeiMPA==
+Date: Thu, 7 Mar 2024 17:49:59 +0800
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: print test
+ results with colors"
+Message-ID: <ZemNx1NDoNIjlVDH@t480>
+References: <6f47bafed58fcc6fd3236b12134b23ff012d5643.1709791100.git.tanggeliang@kylinos.cn>
+ <78621021-60bd-4d7e-80d7-2df9a4f3d571@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 2/2] Squash to "selftests: mptcp: connect: use
- += operator to append strings"
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1709773913.git.tanggeliang@kylinos.cn>
- <06f55d6d6a1f37da444bbaae9262079d300efe0d.1709773913.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <06f55d6d6a1f37da444bbaae9262079d300efe0d.1709773913.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78621021-60bd-4d7e-80d7-2df9a4f3d571@kernel.org>
 
-Hi Geliang,
+Hi Matt,
 
-On 07/03/2024 02:14, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On Thu, Mar 07, 2024 at 10:35:43AM +0100, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> Append the fallback note into 'extra' string too.
+> On 07/03/2024 06:58, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > _printf is dropped now, use mptcp_lib_pr_fail instead.
+> 
+> Good catch.
+> 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  tools/testing/selftests/net/mptcp/userspace_pm.sh | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> > index 9fc9e574bc27..30652a1c548b 100755
+> > --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> > +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> > @@ -242,8 +242,7 @@ check_expected_one()
+> >  		test_fail
+> >  	fi
+> >  
+> > -	_printf "\tExpected value for '%s': '%s', got '%s'.\n" \
+> > -		"${var}" "${!exp}" "${!var}"
+> > +	mptcp_lib_pr_fail "Expected value for '${var}': '${!exp}', got '${!var}'."
+> 
+> Maybe best to use 'mptcp_lib_print_err()' instead?
+> Because a "[FAIL]" will already be printed via test_fail() called just
+> above.
+> 
+> I will apply this patch with mptcp_lib_print_err instead. Please tell me
+> if it's not OK.
 
-Thanks, just applied this patch 2/2 and the other one you sent today +
-my suggestion:
+Yes, mptcp_lib_print_err is much better.
 
-- 853ccbd0b6df: "squashed" in "selftests: mptcp: connect: use +=
-operator to append strings"
-- 346ae0576b55: "squashed" in "selftests: mptcp: print test results with
-colors"
-- 405273a52e3c: "squashed" in "selftests: mptcp: print test results with
-colors"
+Thanks,
+-Geliang
 
-Tests are now in progress:
-
-https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240307T094044
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+> 
+> >  	return 1
+> >  }
+> >  
+> 
+> Cheers,
+> Matt
+> -- 
+> Sponsored by the NGI0 Core fund.
