@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC39B1B94D
-	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 14:49:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCB81EB41
+	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 14:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709822993; cv=none; b=IJlb7yFR5xXVWs/NUYmqQeLwAHXnzjwhhTN8DanAns7SwBrJwJJyeHhG7rzjs7ck4kPnqjw5xV2SlUvXUKVPNRpN3odtw+pe1KKM+P8Lllo4Hg16jGK2WFnTEvth1wYVwXJvpMS2xLKgWBTOWdLoHj6GKIVhlc2L6w1xZLlIEgQ=
+	t=1709823201; cv=none; b=tACGjQ2/aGGE0B1kQIIkw/gLI8Ea7vliYZXZOqJK2Bc/N7QLJYx65fyzmRbnFhnggv3E8/ALfrkap9w+SH1F7syhZobcysT6GM8+EeOYv0vepg797gBmfDTTfA9LLcJ8bmW34LAHs9tJCtaAfZbAT2qMT2Vgw5jd0zU4JWzAw60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709822993; c=relaxed/simple;
-	bh=omuh48NZstp5VK5cFQxp2kpLiDfIv5ZpTyA2x/MfGi4=;
+	s=arc-20240116; t=1709823201; c=relaxed/simple;
+	bh=5N0DYkzbQAdW4PgPYLZca4v6yVscaTRUQePvcw6yjZQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IDEI7XDC+wsBVc9UUwnWgj41rjwxyS7yPyjKnlyh9P3D+TGYUVcTTDBqgjW2hoT1Kr1q5uVnYsVRQ9Cg6s4s0TGSr7h9cNClG+ZlELp4naVjK35lq8pL79JqBHKqDloDJandiZoyRFXsXLXwUFxGCgXxiM43bpjegCGFHX0fFq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+wSukeY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Z7D3I+RPtAPW7q3A1rjKBH+6+OUkrkJ4ehpVkuHu5a3nimBTLgZ/8y7hFtmG26PrgHvy+e+zirBgzSRdchGh6em5fTztTxOpOv3X3Sgdjid77DYhAqSwEZbNzEmr73ds/KjLs4kSLG1VzXUxrJTGyq/2xccBhNnvODFOSZplOK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8tXEOGo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+wSukeY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D644C433F1;
-	Thu,  7 Mar 2024 14:49:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8tXEOGo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F4B7C43390;
+	Thu,  7 Mar 2024 14:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709822993;
-	bh=omuh48NZstp5VK5cFQxp2kpLiDfIv5ZpTyA2x/MfGi4=;
+	s=k20201202; t=1709823200;
+	bh=5N0DYkzbQAdW4PgPYLZca4v6yVscaTRUQePvcw6yjZQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T+wSukeYOwncoQ5nNObxL19isFWtYHAXpkA0nlmfGbqjeLBl/E1kSQduAsxsIYFd2
-	 SNy2Bf0fQaK1rtUW3qKf+AY64/tZA17cVxCJCXSDWbxSg1n+ZtdlBNDrOJe791nW4z
-	 gEga/Ea/oZUCfjp/miTpU4fthbd7fulUwxdS2ro8W8EwkrZ8ckb6ccu0Z06DzQzZft
-	 yTO5ut02eLSgTv8EyZEsPG9EmlfHw/54u5lCGYntMlIUj9UNpbNr/TG7EE8EzXDmXw
-	 OUNXkuDfVbFjU/vq/vGZjOSDei5rvffY+1t8jfKcN3bWMb9rK1aHE+ahgdUBi1eR50
-	 g1V5s7UCe5xjA==
-Message-ID: <c1cabfcb-fccf-4245-a32e-f711c93b0fef@kernel.org>
-Date: Thu, 7 Mar 2024 15:49:49 +0100
+	b=n8tXEOGonfisGAHzR2yaMWrotBP/V6ju7qNDj3YLZKo5DDF5nIphSsXfpEVxftLc9
+	 WPS/XD67thF4EcLsO2lsTrM6MMtLxOH75buwrBfoE0iKMYEmGcBw6jyjWb1yrX/+nK
+	 KQeS2CQ5qpjCpNqd+q2kXPz5A/QX4Jn36P2OhDWjNtf3LbghRUaHSNZUBkcRJQ2+jg
+	 id0app3W0gLjoWYNdegmr+avX8az206F2ma1p/0wc0aQwANtJCB3xpanl0CNyVdkdp
+	 jmLTQBaIC8rC7O/uDmoax5R8GrDi9iXC+oWAnxOhtN+fZvFgI6wKzBT0STHsNR3KjG
+	 ABeTasShMKSmQ==
+Message-ID: <27098f40-a3c7-4676-a33b-94734d3c7f65@kernel.org>
+Date: Thu, 7 Mar 2024 15:53:17 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 2/5] selftests: mptcp: add
- mptcp_lib_verify_listener_events
+Subject: Re: [PATCH mptcp-next 3/5] selftests: mptcp: export event macros in
+ mptcp_lib
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709815545.git.tanggeliang@kylinos.cn>
- <85bb025586bf9f9a185e9b1c0ec21fff16626b20.1709815545.git.tanggeliang@kylinos.cn>
+ <36afeadc75e82e20c3033628682159c1a4bc38d0.1709815545.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <85bb025586bf9f9a185e9b1c0ec21fff16626b20.1709815545.git.tanggeliang@kylinos.cn>
+In-Reply-To: <36afeadc75e82e20c3033628682159c1a4bc38d0.1709815545.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,204 +96,62 @@ Hi Geliang,
 On 07/03/2024 13:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> To avoid duplicated code in different MPTCP selftests, we can add and use
-> helpers defined in mptcp_lib.sh.
-> 
-> The helper verify_listener_events() is defined both in mptcp_join.sh and
-> userspace_pm.sh, export it into mptcp_lib.sh and rename it with mptcp_lib_
-> prefix. Use this new helper in both scripts.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 23 +++-----------
->  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 26 ++++++++++++++++
->  .../selftests/net/mptcp/userspace_pm.sh       | 31 +++++--------------
->  3 files changed, 38 insertions(+), 42 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index cecf09d14f46..f28b10a61268 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -2792,16 +2792,12 @@ AF_INET6=10
->  
->  verify_listener_events()
->  {
-> -	local evt=$1
->  	local e_type=$2
->  	local e_family=$3
->  	local e_saddr=$4
->  	local e_sport=$5
-> -	local type
-> -	local family
-> -	local saddr
-> -	local sport
->  	local name
-> +	local rc=0
->  
->  	if [ $e_type = $LISTENER_CREATED ]; then
->  		name="LISTENER_CREATED"
-> @@ -2818,23 +2814,12 @@ verify_listener_events()
->  		return
->  	fi
->  
-> -	type=$(mptcp_lib_evts_get_info type "$evt" "$e_type")
-> -	family=$(mptcp_lib_evts_get_info family "$evt" "$e_type")
-> -	sport=$(mptcp_lib_evts_get_info sport "$evt" "$e_type")
-> -	if [ $family ] && [ $family = $AF_INET6 ]; then
-> -		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" "$e_type")
-> -	else
-> -		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" "$e_type")
-> -	fi
-> -
-> -	if [ $type ] && [ $type = $e_type ] &&
-> -	   [ $family ] && [ $family = $e_family ] &&
-> -	   [ $saddr ] && [ $saddr = $e_saddr ] &&
-> -	   [ $sport ] && [ $sport = $e_sport ]; then
-> +	mptcp_lib_verify_listener_events "${@}" || rc="${?}"
-> +	if [ "${rc}" -eq 0 ]; then
+> SUB_ESTABLISHED, LISTENER_CREATED, LISTENER_CLOSED, AF_INET and AF_INET6
+> are defined in both mptcp_join.sh and userspace_pm.sh, export all event
+> macros into mptcp_lib.sh. Add MPTCP_LIB_ prefix for the first three and
+> add readonly for the last two.
 
-Same here, you don't need 'rc':
+The last sentence is not correct any more.
 
-  if mptcp_lib_verify_listener_events "${@}"; then
-     (...)
+Please also add the reason (e.g. not to duplicate code).
 
->  		print_ok
->  		return 0
->  	fi
-> -	fail_test "$e_type:$type $e_family:$family $e_saddr:$saddr $e_sport:$sport"
-> +	fail_test "$e_type $e_family $e_saddr $e_sport"
+(...)
 
-Mmh, this will call "mptcp_lib_pr_fail" again, with info that have
-already been displayed, no?
-
-What about calling "fail_test" without argument, and adapt this helper
-not to call "print_fail" in this case, no?
-
-  if [ ${#} -gt 0 ]; then
-      print_fail "${@}"
-  fi
-
->  }
->  
->  add_addr_ports_tests()
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index 44491f18ed17..aefe4db47656 100644
+> index aefe4db47656..5a765af98b71 100644
 > --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -468,3 +468,29 @@ mptcp_lib_check_expected() {
+> @@ -8,6 +8,24 @@ readonly KSFT_SKIP=4
+>  # shellcheck disable=SC2155 # declare and assign separately
+>  readonly KSFT_TEST="${MPTCP_LIB_KSFT_TEST:-$(basename "${0}" .sh)}"
 >  
->  	return "${rc}"
->  }
-> +
 > +# shellcheck disable=SC2034
 
-Please *always* document why you need to disable a check
+If you export them, you tell shellcheck it will be used elsewhere, you
+no longer need to disable this check. Please note that you cannot use
+'export readonly' together, see:
 
-  # shellcheck disable=(...) # <why> (or above it is a long description)
+  https://www.shellcheck.net/wiki/SC2316
 
+But you can use 'declare -rx'
 
-> +mptcp_lib_verify_listener_events() {
-> +	local evt=$1
-> +	local e_type=$2
-> +	local e_family=$3
-> +	local e_saddr=$4
-> +	local e_sport=$5
+  # These variables are used in some selftests, read-only
+  declare -rx MPTCP_LIB_EVENT_ANNOUNCED=6   (...)
+  declare -rx MPTCP_LIB_EVENT_REMOVED=7     (...)
+  (...)
 
-Please use {} around the variable name in mptcp_lib.sh: same style as
-the rest of the code in this file.
-
-> +	local type
-> +	local family
-> +	local saddr
-> +	local sport
-> +	local rc=0
+> +readonly MPTCP_LIB_EVENT_ANNOUNCED=6         # MPTCP_EVENT_ANNOUNCED
+> +# shellcheck disable=SC2034
+> +readonly MPTCP_LIB_EVENT_REMOVED=7           # MPTCP_EVENT_REMOVED
+> +# shellcheck disable=SC2034
+> +readonly MPTCP_LIB_EVENT_SUB_ESTABLISHED=10  # MPTCP_EVENT_SUB_ESTABLISHED
+> +# shellcheck disable=SC2034
+> +readonly MPTCP_LIB_EVENT_SUB_CLOSED=11       # MPTCP_EVENT_SUB_CLOSED
+> +# shellcheck disable=SC2034
+> +readonly MPTCP_LIB_EVENT_LISTENER_CREATED=15 # MPTCP_EVENT_LISTENER_CREATED
+> +# shellcheck disable=SC2034
+> +readonly MPTCP_LIB_EVENT_LISTENER_CLOSED=16  # MPTCP_EVENT_LISTENER_CLOSED
 > +
-> +	type=$(mptcp_lib_evts_get_info type "$evt" "$e_type")
-> +	family=$(mptcp_lib_evts_get_info family "$evt" "$e_type")
-> +	if [ "$family" ] && [ "$family" = "$AF_INET6" ]; then
-> +		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" "$e_type")
-> +	else
-> +		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" "$e_type")
-> +	fi
-> +	sport=$(mptcp_lib_evts_get_info sport "$evt" "$e_type")
-
-Same here above for the whole block for the {}.
-
+> +# shellcheck disable=SC2034
+> +readonly MPTCP_LIB_AF_INET=2
+> +# shellcheck disable=SC2034
+> +readonly MPTCP_LIB_AF_INET6=10
 > +
-> +	mptcp_lib_check_expected "type" "family" "saddr" "sport" || rc="${?}"
-> +	return "${rc}"
-> +}
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> index 6ab9efda8627..28669e49de80 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -836,32 +836,15 @@ test_prio()
->  
->  verify_listener_events()
->  {
-> -	local evt=$1
-> -	local e_type=$2
-> -	local e_family=$3
-> -	local e_saddr=$4
-> -	local e_sport=$5
-> -	local type
-> -	local family
-> -	local saddr
-> -	local sport
-> -
-> -	if [ $e_type = $LISTENER_CREATED ]; then
-> -		print_test "CREATE_LISTENER $e_saddr:$e_sport"
-> -	elif [ $e_type = $LISTENER_CLOSED ]; then
-> -		print_test "CLOSE_LISTENER $e_saddr:$e_sport"
-> -	fi
-> +	local rc=0
->  
-> -	type=$(mptcp_lib_evts_get_info type $evt $e_type)
-> -	family=$(mptcp_lib_evts_get_info family $evt $e_type)
-> -	sport=$(mptcp_lib_evts_get_info sport $evt $e_type)
-> -	if [ $family ] && [ $family = $AF_INET6 ]; then
-> -		saddr=$(mptcp_lib_evts_get_info saddr6 $evt $e_type)
-> +	mptcp_lib_verify_listener_events "${@}" || rc="${?}"
-> +	if [ "${rc}" -eq 0 ]; then
+>  MPTCP_LIB_SUBTESTS=()
+>  MPTCP_LIB_SUBTESTS_DUPLICATED=0
+>  MPTCP_LIB_TEST_COUNTER=0
 
-Same here for 'rc': not needed
-
-> +		test_pass
->  	else
-> -		saddr=$(mptcp_lib_evts_get_info saddr4 $evt $e_type)
-> +		ret=1
-> +		mptcp_lib_result_fail "${test_name}"
-
-Same here for ret=1: don't do that, use test_fail without parameters
-
->  	fi
-> -
-> -	check_expected "type" "family" "saddr" "sport"
->  }
->  
->  test_listener()
-> @@ -877,6 +860,7 @@ test_listener()
->  	# Capture events on the network namespace running the client
->  	:>$client_evts
->  
-> +	print_test "Listener event LISTENER_CREATED 10.0.2.2:$client4_port"
-
-Please don't change the name, it is used in the TAP output.
-
->  	# Attempt to add a listener at 10.0.2.2:<subflow-port>
->  	ip netns exec $ns2 ./pm_nl_ctl listen 10.0.2.2\
->  		$client4_port &
-> @@ -895,6 +879,7 @@ test_listener()
->  		rport $client4_port token $server4_token
->  	sleep 0.5
->  
-> +	print_test "Listener event LISTENER_CLOSED 10.0.2.2:$client4_port"
-
-Same here, keep the same name.
-
->  	# Delete the listener from the client ns, if one was created
->  	mptcp_lib_kill_wait $listener_pid
->  
+(...)
 
 Cheers,
 Matt
