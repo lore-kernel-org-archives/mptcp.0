@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DD183CBB
-	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 09:35:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B8382D9C
+	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 09:42:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709804146; cv=none; b=NdQ8Javd9vDFimYMpCakY4r7wIMKxEzLvaTvRkv0NUkDpQsGwQhmfs+9Y2GyqvCHSW2Z+TEFmDW6XXulumH+mXQqVDHNfkS+s1tL8v1mmlHIcM1doYyNxELdZdX+7wj8iWJFIZTZcDT+zCvA6EWKg9aKdtA6qON/KWJHCMAr97k=
+	t=1709804535; cv=none; b=UxPbFFnqcJxLBrubtW085T0RZmubf3XIm+xwf1k+W8LmhgE464CVtCxq1BsRHL3S+C5UjEZ2V9xmtyQu9PbUWrovqTdMPEOxhA2rVLstPKSMtIOO9AfQSaT0zTk4dwMVKJ/Po5+LoUVwaD+Zba/D2KR1yd7cjDjybreSA07UcR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709804146; c=relaxed/simple;
-	bh=aJq7Q2OZy+vN3guqdEEkb4DcwL+qFnU+UIoRMbC8R+U=;
+	s=arc-20240116; t=1709804535; c=relaxed/simple;
+	bh=rkvXuaDCTE8rjg0jjc7LFJwhnkgOSt/OEbhDCn6yjcs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G4y15kJ9ETYbLewc4NhAxKYsR1Szu26ga6msW5Q0kbWmzMy19QEcLX6LDIfvNNsEHv4dP4mhktgh0DJPOUtxA9aRAsXZwRgSIWc2cIYhzIzpoOOTlJQ0IENhY2NEz/MDz1MURceQADFKwd8hWoh/yPw5rFHTBz1i6chiCbrn6B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EOJIakvd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=U8ldMHgxImenMiLerDU1xUk4XxZKP/s5IwpOpix1RIr2+k/E8/avBMFfHkhhA95PahweGvK7/SNA6qV88+YOrWo0iFKsoQK5bix20uHAmTp9WrhMkAIKkvPPZ/Y0noZ8Jrt5DftFYhJtfpm7+wy4zRm9Dg9qsOiJ6Xu+KJpv11U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5tRnQwv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EOJIakvd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD16C433F1;
-	Thu,  7 Mar 2024 09:35:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5tRnQwv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63F0FC433F1;
+	Thu,  7 Mar 2024 09:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709804146;
-	bh=aJq7Q2OZy+vN3guqdEEkb4DcwL+qFnU+UIoRMbC8R+U=;
+	s=k20201202; t=1709804535;
+	bh=rkvXuaDCTE8rjg0jjc7LFJwhnkgOSt/OEbhDCn6yjcs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EOJIakvdrSsIP1k55+hBeiKIVD8EjUlU1dUh2D55xgNbfkH5KXXTK6tNMCeeBsWlg
-	 kq4/BH1pagJEVdM2K25POYnRfPj9MATxqpo1rmwCKHHqM9SEf4BcUtixk5vBjdvmeE
-	 vVNXT84Kob0MlEPnHKHTy6Bfa7MaEl8U4E7lJ2Kuvd0+gJv/6jdSKFxEbACHY/En5o
-	 tmr52vzlFDu1R/gjouZrgmqqFa2MeDdEpejtsaSLbb7OZrCzFoy0KD5bCvxx3CrH4w
-	 ZWcX0aKdtT0H+2SWbi2rfk+fO8c6tKUM0MjqY7moSdYnrBVXe7R+nXDSebZeVJa0x9
-	 jDTlLCinA6cHw==
-Message-ID: <78621021-60bd-4d7e-80d7-2df9a4f3d571@kernel.org>
-Date: Thu, 7 Mar 2024 10:35:43 +0100
+	b=r5tRnQwvtSP/8hAAvoE/2eknTP7+J0m0Dw9D1KGDngeiHokIivwNQ3Mv3Szfd530L
+	 YU42VzRmmSWyDhd+1fg20aICwFXy2CU9NYgvMLjh6a3qEOqVqf1XwR5/v4l6RWOHWv
+	 bzcNPRJtt95QCeV9n8v9VbL1pOs0Y+y5im+bKSV9AANgm+aedTIAKQohV3p1jJdSUD
+	 DK4GJRg4RBFgfIzdmIv26d01Z3ll8W+JUitdjRWsOs5FgSr26QwT2Ar/Bahr9wuh56
+	 xt3Tfh+PzjAglHS/AxkBHrfHr3Getju61Hef2TVJMtjkNj4jJoUlreUdH09SdED8ZT
+	 Q9rf3yNJrPSGA==
+Message-ID: <d59a7eed-108f-4739-b3c7-70710a58d582@kernel.org>
+Date: Thu, 7 Mar 2024 10:42:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: print test
- results with colors"
+Subject: Re: [PATCH mptcp-next 2/2] Squash to "selftests: mptcp: connect: use
+ += operator to append strings"
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <6f47bafed58fcc6fd3236b12134b23ff012d5643.1709791100.git.tanggeliang@kylinos.cn>
+References: <cover.1709773913.git.tanggeliang@kylinos.cn>
+ <06f55d6d6a1f37da444bbaae9262079d300efe0d.1709773913.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,46 +87,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6f47bafed58fcc6fd3236b12134b23ff012d5643.1709791100.git.tanggeliang@kylinos.cn>
+In-Reply-To: <06f55d6d6a1f37da444bbaae9262079d300efe0d.1709773913.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 07/03/2024 06:58, Geliang Tang wrote:
+On 07/03/2024 02:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> _printf is dropped now, use mptcp_lib_pr_fail instead.
+> Append the fallback note into 'extra' string too.
 
-Good catch.
+Thanks, just applied this patch 2/2 and the other one you sent today +
+my suggestion:
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  tools/testing/selftests/net/mptcp/userspace_pm.sh | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> index 9fc9e574bc27..30652a1c548b 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -242,8 +242,7 @@ check_expected_one()
->  		test_fail
->  	fi
->  
-> -	_printf "\tExpected value for '%s': '%s', got '%s'.\n" \
-> -		"${var}" "${!exp}" "${!var}"
-> +	mptcp_lib_pr_fail "Expected value for '${var}': '${!exp}', got '${!var}'."
+- 853ccbd0b6df: "squashed" in "selftests: mptcp: connect: use +=
+operator to append strings"
+- 346ae0576b55: "squashed" in "selftests: mptcp: print test results with
+colors"
+- 405273a52e3c: "squashed" in "selftests: mptcp: print test results with
+colors"
 
-Maybe best to use 'mptcp_lib_print_err()' instead?
-Because a "[FAIL]" will already be printed via test_fail() called just
-above.
+Tests are now in progress:
 
-I will apply this patch with mptcp_lib_print_err instead. Please tell me
-if it's not OK.
-
->  	return 1
->  }
->  
+https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240307T094044
 
 Cheers,
 Matt
