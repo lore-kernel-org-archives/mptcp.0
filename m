@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D8C12B167
-	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 12:48:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5168F12B167
+	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 12:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709815739; cv=none; b=uJdun3TNuOU892kUzAd1smFLdcOUBF1HpGum/xWAu4X5TwK6yfm9TTVTKrCExKGc/0mCntKpjW1+akGLdOcsLPeWCNBEY2sQ7jAve/Y1WyesCrcBdW1mV3hXKsIJ/YxqkrS939dLIooNdb2Ck42JOD0if0iFpMBHbGkGXd4Ygis=
+	t=1709815741; cv=none; b=I7/oU6PwMw83cAQY+5ay05NM+/A/FTYiUdWyFPe8XK5w2NugpXnGO20EWxW9YIj6Nlg1Stb36IGN8q/q89oHjhhNjfDS/AFg3rmEkt4WKVKZjF1n4ZiRODBY0hUw23m9U3+1ZTeI7GO3B+RcXIwMs83oPCYPLUycEy3CQEK8QRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709815739; c=relaxed/simple;
-	bh=uIRLvHX3CjoY4bl58xEBR8R3aWju+Vt9JOog6WBhVxo=;
+	s=arc-20240116; t=1709815741; c=relaxed/simple;
+	bh=4eyl/dB4bwjfNf+rHDQV11kMa4aCbQG6rLZv4xB1bbA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dIjm5OHDaYigTaesSChZuwh9mkzLUrmKMcWcsidswtLZ6eOostTglFFi9OYfISWO88lQIeGIKAD2dH+oRm46SnZ6bC8LmMFmIfXrYGpk4Gbm694DrKUj0R1Ljdx73XDN7GBWICIT9V1LactiGyZyUOWFyqD+zwOf1jjPYeMh2VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hoZYUIo3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XzHL5E0ms3yEVr09GHfzapGPrHYq4ZPCCJe3vCVOic0DQLFAZUdjzSd8HOeZrfUX6Xmw7feKXQ6JiNrLTuH7Q+VToBgbeZc0zaElca9lQY5++MDTSeMK3XYY5E0/4Zm587rEtpXfg1Z8NYgvzT5VY8rJRbdqZz8X/UfuKFwOB1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3Ohn8xb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hoZYUIo3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A3EC433F1;
-	Thu,  7 Mar 2024 12:48:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3Ohn8xb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04E7AC433C7;
+	Thu,  7 Mar 2024 12:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709815739;
-	bh=uIRLvHX3CjoY4bl58xEBR8R3aWju+Vt9JOog6WBhVxo=;
+	s=k20201202; t=1709815741;
+	bh=4eyl/dB4bwjfNf+rHDQV11kMa4aCbQG6rLZv4xB1bbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hoZYUIo3TSZFxfIm8W29+c43HEoO5pyWjUY4131f49HMm0jLyqRlcoqGqLoXfCcNq
-	 fF5N3W70rFtHUiynYCBhaUu9poEaDvCEIlAWAkwCsbcj6jzFHVobHUU2qrxl1WT8us
-	 RVJYBWQngImyeCgveJ43FpkJgfqtzfnVuZXjRcjZfmoruhENP1rhyLMwCKJOr6Urbh
-	 KTJyN/bSs6HiYJZ28Td0PtxDiIF3QKqSHgvf3t6vKbPd4PxiRQ0sCrqQH+1bgi0YIk
-	 vxPT5td0svN7+15MJVhI94gDS0k8HguyPqhVWi6ug3J1cSr3IKzPS9gBQ96dp3/ckk
-	 RpbjeHoqCExnQ==
+	b=L3Ohn8xb440Rlxe+GrxzBwKqghRD8gHqcsfGEbG9yXTOXO02Nmec4JLMpwLAXugJr
+	 5MRKGCV2E5R/3+KbpCKNZ8kySzmXXwGNgka9mSFYHewqBeDDg61xLEAr/6dVDY5es+
+	 /ABCAUQ1gEaMSPqsBns4pOmVeuo/1JN25XkVRq9BYXJQvHHtmTRevMZrg+EEU8iJpI
+	 aoWpbqnd3vfGdmULXBylPCTHet37Vy7IvSHuSIuF7+hb2Fcpc0l69caMqJb93xLKCk
+	 Up6HgzOB8WlScLJhTY5RNn9850D9h3CFvgCq0c9LVUoGoAcSfL2SMDPBGyMDvpJBtP
+	 n5W1t+Ms7gbYA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 1/5] selftests: mptcp: extract mptcp_lib_check_expected
-Date: Thu,  7 Mar 2024 20:48:40 +0800
-Message-Id: <b1d6b400a21b15b9237e6cdd35d325f9fd5584d9.1709815545.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 2/5] selftests: mptcp: add mptcp_lib_verify_listener_events
+Date: Thu,  7 Mar 2024 20:48:41 +0800
+Message-Id: <85bb025586bf9f9a185e9b1c0ec21fff16626b20.1709815545.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1709815545.git.tanggeliang@kylinos.cn>
 References: <cover.1709815545.git.tanggeliang@kylinos.cn>
@@ -45,116 +45,161 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Extract the main part of check_expected() in userspace_pm.sh to a new
-function mptcp_lib_check_expected() in mptcp_lib.sh. It will be used
-in both mptcp_john.sh and userspace_pm.sh. check_expected_one() is
-moved into mptcp_lib.sh too as mptcp_lib_check_expected_one().
+To avoid duplicated code in different MPTCP selftests, we can add and use
+helpers defined in mptcp_lib.sh.
+
+The helper verify_listener_events() is defined both in mptcp_join.sh and
+userspace_pm.sh, export it into mptcp_lib.sh and rename it with mptcp_lib_
+prefix. Use this new helper in both scripts.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/net/mptcp/mptcp_lib.sh  | 30 ++++++++++++++++
- .../selftests/net/mptcp/userspace_pm.sh       | 34 +++----------------
- 2 files changed, 35 insertions(+), 29 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 23 +++-----------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 26 ++++++++++++++++
+ .../selftests/net/mptcp/userspace_pm.sh       | 31 +++++--------------
+ 3 files changed, 38 insertions(+), 42 deletions(-)
 
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index cecf09d14f46..f28b10a61268 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -2792,16 +2792,12 @@ AF_INET6=10
+ 
+ verify_listener_events()
+ {
+-	local evt=$1
+ 	local e_type=$2
+ 	local e_family=$3
+ 	local e_saddr=$4
+ 	local e_sport=$5
+-	local type
+-	local family
+-	local saddr
+-	local sport
+ 	local name
++	local rc=0
+ 
+ 	if [ $e_type = $LISTENER_CREATED ]; then
+ 		name="LISTENER_CREATED"
+@@ -2818,23 +2814,12 @@ verify_listener_events()
+ 		return
+ 	fi
+ 
+-	type=$(mptcp_lib_evts_get_info type "$evt" "$e_type")
+-	family=$(mptcp_lib_evts_get_info family "$evt" "$e_type")
+-	sport=$(mptcp_lib_evts_get_info sport "$evt" "$e_type")
+-	if [ $family ] && [ $family = $AF_INET6 ]; then
+-		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" "$e_type")
+-	else
+-		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" "$e_type")
+-	fi
+-
+-	if [ $type ] && [ $type = $e_type ] &&
+-	   [ $family ] && [ $family = $e_family ] &&
+-	   [ $saddr ] && [ $saddr = $e_saddr ] &&
+-	   [ $sport ] && [ $sport = $e_sport ]; then
++	mptcp_lib_verify_listener_events "${@}" || rc="${?}"
++	if [ "${rc}" -eq 0 ]; then
+ 		print_ok
+ 		return 0
+ 	fi
+-	fail_test "$e_type:$type $e_family:$family $e_saddr:$saddr $e_sport:$sport"
++	fail_test "$e_type $e_family $e_saddr $e_sport"
+ }
+ 
+ add_addr_ports_tests()
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index ea39392c68e7..44491f18ed17 100644
+index 44491f18ed17..aefe4db47656 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -438,3 +438,33 @@ mptcp_lib_print_title() {
- 	# shellcheck disable=SC2059 # the format is in a variable
- 	printf "${MPTCP_LIB_TEST_FORMAT}" "$((++MPTCP_LIB_TEST_COUNTER))" "${*}"
+@@ -468,3 +468,29 @@ mptcp_lib_check_expected() {
+ 
+ 	return "${rc}"
  }
 +
-+# $1: var name ; $2: prev ret
-+mptcp_lib_check_expected_one() {
-+	local var="${1}"
-+	local exp="e_${var}"
-+	local prev_ret="${2}"
-+
-+	if [ "${!var}" = "${!exp}" ]; then
-+		return 0
-+	fi
-+
-+	if [ "${prev_ret}" = "0" ]; then
-+		mptcp_lib_pr_fail
-+	fi
-+
-+	mptcp_lib_print_err "Expected value for '${var}': '${!exp}', got '${!var}'."
-+	return 1
-+}
-+
-+# $@: all var names to check
-+mptcp_lib_check_expected() {
++# shellcheck disable=SC2034
++mptcp_lib_verify_listener_events() {
++	local evt=$1
++	local e_type=$2
++	local e_family=$3
++	local e_saddr=$4
++	local e_sport=$5
++	local type
++	local family
++	local saddr
++	local sport
 +	local rc=0
-+	local var
 +
-+	for var in "${@}"; do
-+		mptcp_lib_check_expected_one "${var}" "${rc}" || rc=1
-+	done
++	type=$(mptcp_lib_evts_get_info type "$evt" "$e_type")
++	family=$(mptcp_lib_evts_get_info family "$evt" "$e_type")
++	if [ "$family" ] && [ "$family" = "$AF_INET6" ]; then
++		saddr=$(mptcp_lib_evts_get_info saddr6 "$evt" "$e_type")
++	else
++		saddr=$(mptcp_lib_evts_get_info saddr4 "$evt" "$e_type")
++	fi
++	sport=$(mptcp_lib_evts_get_info sport "$evt" "$e_type")
 +
++	mptcp_lib_check_expected "type" "family" "saddr" "sport" || rc="${?}"
 +	return "${rc}"
 +}
 diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 4e29aa9c2529..6ab9efda8627 100755
+index 6ab9efda8627..28669e49de80 100755
 --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
 +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -5,7 +5,7 @@
- # code but we accept it.
- #shellcheck disable=SC2086
+@@ -836,32 +836,15 @@ test_prio()
  
--# Some variables are used below but indirectly, see check_expected_one()
-+# Some variables are used below but indirectly, see verify_*_event()
- #shellcheck disable=SC2034
- 
- . "$(dirname "${0}")/mptcp_lib.sh"
-@@ -225,44 +225,20 @@ make_connection()
- 	fi
- }
- 
--# $1: var name ; $2: prev ret
--check_expected_one()
--{
--	local var="${1}"
--	local exp="e_${var}"
--	local prev_ret="${2}"
--
--	if [ "${!var}" = "${!exp}" ]
--	then
--		return 0
--	fi
--
--	if [ "${prev_ret}" = "0" ]
--	then
--		test_fail
--	fi
--
--	mptcp_lib_print_err "\tExpected value for '${var}': '${!exp}', got '${!var}'."
--	return 1
--}
--
- # $@: all var names to check
- check_expected()
+ verify_listener_events()
  {
- 	local rc=0
--	local var
- 
--	for var in "${@}"
--	do
--		check_expected_one "${var}" "${rc}" || rc=1
--	done
+-	local evt=$1
+-	local e_type=$2
+-	local e_family=$3
+-	local e_saddr=$4
+-	local e_sport=$5
+-	local type
+-	local family
+-	local saddr
+-	local sport
 -
--	if [ ${rc} -eq 0 ]
-+	mptcp_lib_check_expected "${@}" || rc=1
-+	if [ "${rc}" -eq 0 ]
- 	then
- 		test_pass
- 		return 0
- 	fi
+-	if [ $e_type = $LISTENER_CREATED ]; then
+-		print_test "CREATE_LISTENER $e_saddr:$e_sport"
+-	elif [ $e_type = $LISTENER_CLOSED ]; then
+-		print_test "CLOSE_LISTENER $e_saddr:$e_sport"
+-	fi
++	local rc=0
  
-+	ret=1
-+	mptcp_lib_result_fail "${test_name}"
- 	return 1
+-	type=$(mptcp_lib_evts_get_info type $evt $e_type)
+-	family=$(mptcp_lib_evts_get_info family $evt $e_type)
+-	sport=$(mptcp_lib_evts_get_info sport $evt $e_type)
+-	if [ $family ] && [ $family = $AF_INET6 ]; then
+-		saddr=$(mptcp_lib_evts_get_info saddr6 $evt $e_type)
++	mptcp_lib_verify_listener_events "${@}" || rc="${?}"
++	if [ "${rc}" -eq 0 ]; then
++		test_pass
+ 	else
+-		saddr=$(mptcp_lib_evts_get_info saddr4 $evt $e_type)
++		ret=1
++		mptcp_lib_result_fail "${test_name}"
+ 	fi
+-
+-	check_expected "type" "family" "saddr" "sport"
  }
+ 
+ test_listener()
+@@ -877,6 +860,7 @@ test_listener()
+ 	# Capture events on the network namespace running the client
+ 	:>$client_evts
+ 
++	print_test "Listener event LISTENER_CREATED 10.0.2.2:$client4_port"
+ 	# Attempt to add a listener at 10.0.2.2:<subflow-port>
+ 	ip netns exec $ns2 ./pm_nl_ctl listen 10.0.2.2\
+ 		$client4_port &
+@@ -895,6 +879,7 @@ test_listener()
+ 		rport $client4_port token $server4_token
+ 	sleep 0.5
+ 
++	print_test "Listener event LISTENER_CLOSED 10.0.2.2:$client4_port"
+ 	# Delete the listener from the client ns, if one was created
+ 	mptcp_lib_kill_wait $listener_pid
  
 -- 
 2.40.1
