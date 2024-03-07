@@ -1,32 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7054012D1E0
-	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 13:59:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCF8161
+	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 14:45:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709819958; cv=none; b=FoHdcdE6S1XPWHvitOj6O9C3PXfbZZT/obisyyFf2mCq2rvscjyhzOZ7ldUoO5RUtUC6he9m37xNSaLRVquPq2rVXH4yld/QfncMIlWFbzmITWkDzUOWUCHVQzVVjoZidXU9VYIjnpVK+RrB/0rl7Q9dPldSfppvp+6d97DRxAo=
+	t=1709822731; cv=none; b=u0GFWgn6V4x3xNY/B3UZVhN6NHze+G1JTUNS0aAqV0eu+nnda4LgcthPjTsCqUplvWSjaYSA+zOZ5IPeA6c4HtZQoeOuioupMR4Ilu/i/c/wfM+IEXz78mscatYS6ZYxEIE4kSKWWGRr3TBDC6FN9sWhEPhwYwPTd6z5KX2K0zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709819958; c=relaxed/simple;
-	bh=slPOsFNSr2A/lfim84CGtGDBsko2ZvX+G6lxQCqEYRQ=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=JuyvOwndZeZd1RpVpdMm0Ro1ezcR5ZTVzGhib8l1WYn2YtpAS6g94tjI1kEo1fnm/tWqbgjYrjnagtUIHea/yB2qCG0cazVTO0vaTofKImSjYrELN7fTFz3hOkloWWmQUXCjdHjktr91CbovqZ1eyIdtH8QBmxXe6bMesf3oByc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orT1l4Qt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709822731; c=relaxed/simple;
+	bh=IONmtwQeR3uo5C6V+4h4BZUtauYof6exmjYs+Ub9cOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mgjzt1nhVRQXYcmKDPEbQxTJT3HDexIYGSCT/FLbLG6Vr5wMK7LeC4Cv41AuR4AXlRR5eV8L4sFHypl3bC+CwD0t97Y6Ahrp1JSnIx0RDR3OXvl+Dz4e/XLnb9L6JSv9/d0bEM/cV5nUGEmxaf5lw0D7oRpIy+DvVKJJ5Mdt7tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lySQRMiL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orT1l4Qt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FCBDC43394;
-	Thu,  7 Mar 2024 13:59:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lySQRMiL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 469F4C433C7;
+	Thu,  7 Mar 2024 14:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709819958;
-	bh=slPOsFNSr2A/lfim84CGtGDBsko2ZvX+G6lxQCqEYRQ=;
-	h=Date:To:From:Subject:From;
-	b=orT1l4QtOqZg7/q1o7bRYPPFi+wLh8TfImNfgz27bRFljNW/57AI5wHo70vgXmg+T
-	 uVcbCL9fFA/hZRYBwz6oUCOH1SCDe5zTOHSwdWxD4ydYa/77eJLd8a/T+SOW9xZKZc
-	 eED87msfHPrm63xHo+qhpoXfaKAg6EtzWLumwduJx5kqLjHFQY2+CmFcBi5HW7ormm
-	 gyQ+zwOnjJ08w3bWpIsNRfmpOi1HwyrvAKLRdyRvr8VaxL/9hfWkz3LhD4pKQexT6l
-	 IouE5nXh8GC3A4Xd7oBhHEpxsfjPE1PurJz4TzhV+jLvNVv+T80HPx0doc+BewPpLR
-	 fCF+OvdAPd/zQ==
-Message-ID: <47ca79ba-6212-42af-af25-46b6bdf94eb1@kernel.org>
-Date: Thu, 7 Mar 2024 14:59:14 +0100
+	s=k20201202; t=1709822730;
+	bh=IONmtwQeR3uo5C6V+4h4BZUtauYof6exmjYs+Ub9cOU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lySQRMiLFZxfYaOYyfaCD/SBj6HjAOGwx7FvEwQlSeCryF/XqA61HkA2Ebtv54Shl
+	 uhoYXxJoN82nJg6ifk8wJbNagyiq2OaRIG/MMHWUBcsrIIRJTQsGeDClWkxwMY+T8K
+	 Ow33ltlFjnNAX9P6hh0fCVab8lxuZ/lYmal/QtbMZ13S2cidJW86ZjNlHDFIX2wXfR
+	 9HNrpBOjkc98S8Gkwg4pSU+6CXhZc9GQn5wZu4tnOOHIyyVH6t+diZuvnuVyTUOhfc
+	 fxHIIJhgzSAP1ouSJO8F1PNI2JiRD1byMBZJVJ0v0n91eYAC4DSPg+yH1LZB/i4qe1
+	 uOgnf/nsuvh5A==
+Message-ID: <74297461-299a-4054-b6d6-aeb782453554@kernel.org>
+Date: Thu, 7 Mar 2024 15:45:26 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,10 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-next 0/5] add helpers and vars in mptcp_lib.sh, part
+ 4
 Content-Language: en-GB, fr-BE
-To: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliang@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1709815545.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
-Subject: CI: MPTCP BPF tests are now validated
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -82,27 +86,20 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
+In-Reply-To: <cover.1709815545.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Geliang,
 
-From today, the CI is now validating MPTCP BPF tests!
+On 07/03/2024 13:48, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> MPTCP events related patches and two cleanups.
 
-To be able to do that, I got some help from Geliang (thanks!) to update
-the script used by the CI to launch these tests. I just did the wiring
-to run these tests in a new job, in parallel to the other ones, and it
-seems working:
+Thank you for the patches!
 
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/8186843723
-
-Please tell me if there are anything wrong with that (results,
-notifications, summary, etc.)
-
-
-@Geliang: it looks like the "burst" test is unstable. Do you mind
-looking at that please?
-
+I just did a first review. Please check my different replies.
 
 Cheers,
 Matt
