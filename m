@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782731CD29
-	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 10:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF7E82880
+	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 10:29:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709805992; cv=none; b=t78i9PRgFiPW54qGktWMItcmFOIpDyIIxdeCeCC/22R18sTQcjFuYFUy45fEq4mHIJXm5yjA5RoOS1GrqfM0nJZPMBMtWYe0wq3adl1YSuuEaF21LIW12eCf8aO2LXepkeLAFZ701HjFLwPahfmGjLRBCSvs3nNNHNHoqD8PDeg=
+	t=1709807351; cv=none; b=jWnTtNkJylhwXJJMiQFqlOtmE07rbxmcPT8bSRaNSPsjiF6hK4XVCQbiZ4IerbuzzXe4D2Vq2iIfMUjij27IXdMlyRuMB199HC1uMqTyoz0h/Yr2Mn25nMkxnMRGFs2xS8OKMyNXkoEMP9YNcwh9zclzjloGARCy2X9B/Vsw9Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709805992; c=relaxed/simple;
-	bh=ED16AJPPU4nAAj0EcZumtRph+3IdFYxqDbUxdir1aAM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kMGUAM1jL4WKykhhBVZV/DM1LCscDVd7bDVn6yzCik8bbVRN71Y/yfE6yUiZHfkiEkLcEhRX5yH/0aRyCIkN8AxgcqhXidReSLw8ioAnUB0AjwydlI1sCIMnC/MZIJgtJ3WRmzw0+Tftwblm6k/35YjZIDWqr0dnBUOyFouPRuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJR0rm8w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709807351; c=relaxed/simple;
+	bh=sq1jNjJ4ff6AL7l4TJUybx1Cjci0JWqGj0yfgmCt468=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jgMw938K7WbWZp63flOAn2YmdA+uSu9bwBE9RPqnXsSeqpA0/fqZzRYg+j1lzQIB0vxRp5ujoLngpoVRrnpRAz5OUkNZ8dOpwYSdVKpjnPuSAe914+6LfqBpPdADmm8Vu7+OVMuq3KwNBNvOn0S5GHBsuImD38iqii0LAAvxdJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8rwnBwN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJR0rm8w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 101B7C433F1;
-	Thu,  7 Mar 2024 10:06:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8rwnBwN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F85CC433C7;
+	Thu,  7 Mar 2024 10:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709805992;
-	bh=ED16AJPPU4nAAj0EcZumtRph+3IdFYxqDbUxdir1aAM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=rJR0rm8wUJ6/AtMBXUqDT1SWzyApi5vL4uUEQ5BNPiDmnZweAHSzIZTBDikGt1C14
-	 R5paFOI1rGJxlsh1GuCPtMe86Ve2jI7lCoyRk7vz7Iz6XQR21DlTFhuKf3/m2yx5WH
-	 DiJ7DJk8yRcleoXh9R20XTaNwJqTYsF9iQvgj1LYqua6iXarQDwKm3thPf49V8J8N3
-	 QKHGzTueo18r2msbtlC6f6dlCsDhCeEBG5IDtgBXQk2fr6CQkm6Y2RbEoutX09TvSM
-	 E9AB2Gjmci7tdQM5CGucFbiVcDd4F9JINr0KUG4XEIyExndzqJQfrE8AbM6xXPI0Hv
-	 a7LDhiW3zI64Q==
-Message-ID: <9ce2f793-57ad-47f3-8e52-1a48a7fc9ba1@kernel.org>
-Date: Thu, 7 Mar 2024 11:06:30 +0100
+	s=k20201202; t=1709807351;
+	bh=sq1jNjJ4ff6AL7l4TJUybx1Cjci0JWqGj0yfgmCt468=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=T8rwnBwNJaRktd/C6dDj8CyoGyVnXmQWhE7ZoxRMFB+IX+k+vh0MHsKaycteJSQYs
+	 xFs7YRy6N9AhLp0HA3q/Wx2QdPBg/d0kEcAPml3C1rvU/mIk4sR84aZ/60Y/twrGom
+	 eOAqAKJ9gHvqpW3HXLMAak7ciVUhJx2ILIfe+LoryIsZzRX0yr1LYrKqCRWJZgw33v
+	 8spYvAUh9GBPC7pTuS10fy769d3pK3dqftlgQP0v7vsnoe1gZIgvhHiHSTkgg3BBEP
+	 Z4/YpIBTNE1AskVnupVhZtqrYqHovGzPL+6yeHvP9L3pgV63p1FnRxWCVaB/3iAGpI
+	 nzy8qUUCV2CZg==
+Message-ID: <f45d69c2-76aa-48bd-ae47-139ef37fa619@kernel.org>
+Date: Thu, 7 Mar 2024 11:29:08 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v2] mptcp: don't account accept() of non-MPC
- client as fallback to TCP
+Subject: Re: [PATCH iperf3 v2] add MPTCPv1 support
 Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>
+References: <487902825fa971916541b59e43ed25c7525b60e0.1709695652.git.geliang@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Davide Caratti <dcaratti@redhat.com>, Mat Martineau <martineau@kernel.org>
-Cc: Christoph Paasch <cpaasch@apple.com>, mptcp@lists.linux.dev
-References: <be9176dac04b292242d6afc2eefc0c931d21b0cd.1709651670.git.dcaratti@redhat.com>
- <62dd5009-fd83-4cd6-b7b1-8afff28a575c@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,14 +85,83 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <62dd5009-fd83-4cd6-b7b1-8afff28a575c@kernel.org>
+In-Reply-To: <487902825fa971916541b59e43ed25c7525b60e0.1709695652.git.geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 07/03/2024 11:05, Matthieu Baerts wrote:
-> Hi Davide,
+Hi Geliang,
 
-I forgot to add: thank you for having worked on that :)
+On 06/03/2024 04:28, Geliang Tang wrote:
+> The Multipath TCP (MPTCP) protocol (v1 / RFC 8684) has been added in the
+> upstream Linux kernel since v5.16.
+> 
+> MPTCP is strongly tied to TCP, and the kernel APIs are almost the same.
+> The only required dependency is the 'IPPROTO_MPTCP' protocol number
+> definition, which should be provided by the netinet/in.h header.
+> 
+> This patch adds a new flag --mptcp to support MPTCPv1. It can be used
+> like this:
+> 
+>  > iperf3 --mptcp -s
+>  > iperf3 --mptcp -c 127.0.0.1
+> 
+> There is no need to check for IPPROTO_MPTCP support in configure.ac at
+> build time, it is at runtime we will see if the kernel being use supports
+> or not MPTCP.
+> 
+> If IPPROTO_MPTCP is not supported by the kernel being tested, it is
+> normal to fail because the feature is not available.
+> 
+> Linked: https://github.com/esnet/iperf/pull/1166
+
+(...)
+
+> diff --git a/src/iperf_api.c b/src/iperf_api.c
+> index 1dcfaab..686b78b 100644
+> --- a/src/iperf_api.c
+> +++ b/src/iperf_api.c
+> @@ -1144,6 +1144,9 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
+>          {"idle-timeout", required_argument, NULL, OPT_IDLE_TIMEOUT},
+>          {"rcv-timeout", required_argument, NULL, OPT_RCV_TIMEOUT},
+>          {"snd-timeout", required_argument, NULL, OPT_SND_TIMEOUT},
+> +#if defined(linux)
+> +        {"mptcp", no_argument, NULL, OPT_MPTCP},
+> +#endif
+
+I guess you will need to add something in the man page (src/iperf3.1)
+and in the usage menu (src/iperf_locale.c) as well.
+
+>          {"debug", optional_argument, NULL, 'd'},
+>          {"help", no_argument, NULL, 'h'},
+>          {NULL, 0, NULL, 0}
+> @@ -1639,6 +1642,11 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
+>  		test->settings->connect_timeout = unit_atoi(optarg);
+>  		client_flag = 1;
+>  		break;
+> +#if defined(linux)
+> +	    case OPT_MPTCP:
+> +		test->settings->mptcp = 1;
+> +		break;
+> +#endif
+>  	    case 'h':
+>  		usage_long(stdout);
+>  		exit(0);
+
+I see in Paolo's version that he added the mptcp option in the JSON that
+is sent to the server (send_parameters/get_parameters). Does that mean
+that if only the client asks for MPTCP, the server will create a
+listening socket for the data with MPTCP support? It might be good to do
+that: so we would not need to ask people maintaining public IPerf3
+servers to enable MPTCP support, MPTCP will be used if it is asked by
+the client! We would only need to set the option on the client side:
+
+  iperf3 -c <SERVER> --mptcp
+
+And keep the server as it was (as long as it is up-to-date).
+
+But would it work if we do that? I mean: when is created the listening
+socket for the data connection? After the client has sent the JSON via
+the control connection? Or before?
 
 Cheers,
 Matt
