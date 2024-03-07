@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCB81EB41
-	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 14:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782DA12D74E
+	for <mptcp@lists.linux.dev>; Thu,  7 Mar 2024 14:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709823201; cv=none; b=tACGjQ2/aGGE0B1kQIIkw/gLI8Ea7vliYZXZOqJK2Bc/N7QLJYx65fyzmRbnFhnggv3E8/ALfrkap9w+SH1F7syhZobcysT6GM8+EeOYv0vepg797gBmfDTTfA9LLcJ8bmW34LAHs9tJCtaAfZbAT2qMT2Vgw5jd0zU4JWzAw60=
+	t=1709823355; cv=none; b=smfT3YXWaEiDUNc9u/sOrv/TApMVjsaPlapR9ppaXIGTk1gH40f6hguznEKsRE6x0cfy5QZhDEWM7LKnagqsLfiSRamoq/MjzLFOznfB45mwyE2suWlc2rdIJAG/oj/IwmK8EBlBQL59haZyo2d8fwHeN56bVks4noWQBwrrF6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709823201; c=relaxed/simple;
-	bh=5N0DYkzbQAdW4PgPYLZca4v6yVscaTRUQePvcw6yjZQ=;
+	s=arc-20240116; t=1709823355; c=relaxed/simple;
+	bh=xTE4zkEfuGvd0RBGaIRd9GcwtFYR806bv7ZnxSeliAY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z7D3I+RPtAPW7q3A1rjKBH+6+OUkrkJ4ehpVkuHu5a3nimBTLgZ/8y7hFtmG26PrgHvy+e+zirBgzSRdchGh6em5fTztTxOpOv3X3Sgdjid77DYhAqSwEZbNzEmr73ds/KjLs4kSLG1VzXUxrJTGyq/2xccBhNnvODFOSZplOK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8tXEOGo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=o13z1cuqpnSrQAw4fNEv/EVuoDoIxxM0Y8TJ4/zSt2jyPXqDquo2gUJao7P7O2/N5migl1T1BRho/jZ3fuvhv4HSmAB1XoECTgTQDn6fASDWLWF7ikd0cghdhoDJ5Rz2rUMLs+RTnwlfEBf2xVTjHRqu6qjuD+SxE9FK99K1opE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nU4Cgms3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8tXEOGo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F4B7C43390;
-	Thu,  7 Mar 2024 14:53:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nU4Cgms3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4291C433F1;
+	Thu,  7 Mar 2024 14:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709823200;
-	bh=5N0DYkzbQAdW4PgPYLZca4v6yVscaTRUQePvcw6yjZQ=;
+	s=k20201202; t=1709823355;
+	bh=xTE4zkEfuGvd0RBGaIRd9GcwtFYR806bv7ZnxSeliAY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n8tXEOGonfisGAHzR2yaMWrotBP/V6ju7qNDj3YLZKo5DDF5nIphSsXfpEVxftLc9
-	 WPS/XD67thF4EcLsO2lsTrM6MMtLxOH75buwrBfoE0iKMYEmGcBw6jyjWb1yrX/+nK
-	 KQeS2CQ5qpjCpNqd+q2kXPz5A/QX4Jn36P2OhDWjNtf3LbghRUaHSNZUBkcRJQ2+jg
-	 id0app3W0gLjoWYNdegmr+avX8az206F2ma1p/0wc0aQwANtJCB3xpanl0CNyVdkdp
-	 jmLTQBaIC8rC7O/uDmoax5R8GrDi9iXC+oWAnxOhtN+fZvFgI6wKzBT0STHsNR3KjG
-	 ABeTasShMKSmQ==
-Message-ID: <27098f40-a3c7-4676-a33b-94734d3c7f65@kernel.org>
-Date: Thu, 7 Mar 2024 15:53:17 +0100
+	b=nU4Cgms3jdukXG90pJUoY5N2GBs/x8kM3IJGphxAxl2PU01dzOTDhCJsP9tOx69+l
+	 vJe6KEa59zJaMseRZSsCiAXsSQdGCIF4vCm+5iwxGGFU/3cjcSlCqjpIl8kDMT06gF
+	 rzy9NF+CvmAwcHZuM9fdvcpqorOhnS8DrRw10+2ar4OOcOxRWsjkzWOLQMtLVi8Z2U
+	 AmP7LZrgJKZ3pe+RB2y7YPry26fRktg6hh8BeFwFMlhL92ha9l0NIv5MG1cvaVgaeP
+	 aY4Rrm+s0dvMvOqLok7eeMeH4szLDshubcBpJAEBPGx7QuSk5P9kEjhASfvWwmCo+W
+	 5qMfaTwDL8hXQ==
+Message-ID: <ee6b2dfc-ab55-4275-b14d-96db118ca9e1@kernel.org>
+Date: Thu, 7 Mar 2024 15:55:50 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next 3/5] selftests: mptcp: export event macros in
- mptcp_lib
+Subject: Re: [PATCH mptcp-next 5/5] selftests: mptcp: join: use += operator to
+ append strings
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1709815545.git.tanggeliang@kylinos.cn>
- <36afeadc75e82e20c3033628682159c1a4bc38d0.1709815545.git.tanggeliang@kylinos.cn>
+ <c8bd786e0c09f4f19d518ec998a36f9fbd64e0b5.1709815545.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <36afeadc75e82e20c3033628682159c1a4bc38d0.1709815545.git.tanggeliang@kylinos.cn>
+In-Reply-To: <c8bd786e0c09f4f19d518ec998a36f9fbd64e0b5.1709815545.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,60 +96,76 @@ Hi Geliang,
 On 07/03/2024 13:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> SUB_ESTABLISHED, LISTENER_CREATED, LISTENER_CLOSED, AF_INET and AF_INET6
-> are defined in both mptcp_join.sh and userspace_pm.sh, export all event
-> macros into mptcp_lib.sh. Add MPTCP_LIB_ prefix for the first three and
-> add readonly for the last two.
-
-The last sentence is not correct any more.
-
-Please also add the reason (e.g. not to duplicate code).
-
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index aefe4db47656..5a765af98b71 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -8,6 +8,24 @@ readonly KSFT_SKIP=4
->  # shellcheck disable=SC2155 # declare and assign separately
->  readonly KSFT_TEST="${MPTCP_LIB_KSFT_TEST:-$(basename "${0}" .sh)}"
+> This patch uses addition assignment operator (+=) to append strings instead
+> of open-coding in mptcp_join.sh. This can make the statements shorter.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 34 +++++++++----------
+>  1 file changed, 17 insertions(+), 17 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 6d725419b7d4..b70bd8e0088a 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -753,18 +753,18 @@ pm_nl_check_endpoint()
+>  		line="${line% }"
+>  		# the dump order is: address id flags port dev
+>  		[ -n "$addr" ] && expected_line="$addr"
+> -		expected_line="$expected_line $id"
+> -		[ -n "$_flags" ] && expected_line="$expected_line ${_flags//","/" "}"
+> -		[ -n "$dev" ] && expected_line="$expected_line $dev"
+> -		[ -n "$port" ] && expected_line="$expected_line $port"
+> +		expected_line+=" $id"
+> +		[ -n "$_flags" ] && expected_line+=" ${_flags//","/" "}"
+> +		[ -n "$dev" ] && expected_line+=" $dev"
+> +		[ -n "$port" ] && expected_line+=" $port"
+>  	else
+>  		line=$(ip netns exec $ns ./pm_nl_ctl get $_id)
+>  		# the dump order is: id flags dev address port
+>  		expected_line="$id"
+> -		[ -n "$flags" ] && expected_line="$expected_line $flags"
+> -		[ -n "$dev" ] && expected_line="$expected_line $dev"
+> -		[ -n "$addr" ] && expected_line="$expected_line $addr"
+> -		[ -n "$_port" ] && expected_line="$expected_line $_port"
+> +		[ -n "$flags" ] && expected_line+=" $flags"
+> +		[ -n "$dev" ] && expected_line+=" $dev"
+> +		[ -n "$addr" ] && expected_line+=" $addr"
+> +		[ -n "$_port" ] && expected_line+=" $_port"
+>  	fi
+>  	if [ "$line" = "$expected_line" ]; then
+>  		print_ok
+> @@ -1032,7 +1032,7 @@ do_transfer()
+>  		fi
+>  	fi
 >  
-> +# shellcheck disable=SC2034
+> -	extra_srv_args="$extra_args $extra_srv_args"
+> +	extra_srv_args+=" $extra_args"
 
-If you export them, you tell shellcheck it will be used elsewhere, you
-no longer need to disable this check. Please note that you cannot use
-'export readonly' together, see:
+Here, you are changing the order. Just to be sure, is it still OK with
+the new order?
 
-  https://www.shellcheck.net/wiki/SC2316
+If yes, please add a comment in the commit message to explain why this
+change of behaviour is OK (any behaviour changes in such refactoring
+should be mentioned, otherwise it might look like an accident, reviewers
+will ask questions or lose time trying to understand why it would be OK,
+etc.)
 
-But you can use 'declare -rx'
+>  	if [ "$test_linkfail" -gt 1 ];then
+>  		timeout ${timeout_test} \
+>  			ip netns exec ${listener_ns} \
+> @@ -1048,7 +1048,7 @@ do_transfer()
+>  
+>  	mptcp_lib_wait_local_port_listen "${listener_ns}" "${port}"
+>  
+> -	extra_cl_args="$extra_args $extra_cl_args"
+> +	extra_cl_args+=" $extra_args"
 
-  # These variables are used in some selftests, read-only
-  declare -rx MPTCP_LIB_EVENT_ANNOUNCED=6   (...)
-  declare -rx MPTCP_LIB_EVENT_REMOVED=7     (...)
-  (...)
+Same here for the order.
 
-> +readonly MPTCP_LIB_EVENT_ANNOUNCED=6         # MPTCP_EVENT_ANNOUNCED
-> +# shellcheck disable=SC2034
-> +readonly MPTCP_LIB_EVENT_REMOVED=7           # MPTCP_EVENT_REMOVED
-> +# shellcheck disable=SC2034
-> +readonly MPTCP_LIB_EVENT_SUB_ESTABLISHED=10  # MPTCP_EVENT_SUB_ESTABLISHED
-> +# shellcheck disable=SC2034
-> +readonly MPTCP_LIB_EVENT_SUB_CLOSED=11       # MPTCP_EVENT_SUB_CLOSED
-> +# shellcheck disable=SC2034
-> +readonly MPTCP_LIB_EVENT_LISTENER_CREATED=15 # MPTCP_EVENT_LISTENER_CREATED
-> +# shellcheck disable=SC2034
-> +readonly MPTCP_LIB_EVENT_LISTENER_CLOSED=16  # MPTCP_EVENT_LISTENER_CLOSED
-> +
-> +# shellcheck disable=SC2034
-> +readonly MPTCP_LIB_AF_INET=2
-> +# shellcheck disable=SC2034
-> +readonly MPTCP_LIB_AF_INET6=10
-> +
->  MPTCP_LIB_SUBTESTS=()
->  MPTCP_LIB_SUBTESTS_DUPLICATED=0
->  MPTCP_LIB_TEST_COUNTER=0
+>  	if [ "$test_linkfail" -eq 0 ];then
+>  		timeout ${timeout_test} \
+>  			ip netns exec ${connector_ns} \
 
 (...)
 
