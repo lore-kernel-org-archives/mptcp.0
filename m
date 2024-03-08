@@ -1,169 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA06518C3B
-	for <mptcp@lists.linux.dev>; Fri,  8 Mar 2024 13:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B5963B8
+	for <mptcp@lists.linux.dev>; Fri,  8 Mar 2024 13:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709904435; cv=none; b=qPH9BGB+8fuV69XKPK7YaB0J5SA0ODuCghB1zv9umFRmm+E9SUpRLIl4jHX/6G+LxVNxUuHfOqkwruYm+l005ejyWz2jW8Oew8qrp7R0oZiBI8xwkOP7AyDf7Ci4jRts8BiEm3IYrha6xQbPOehs8+p9jBzFZ7an8WfAzIrVf7s=
+	t=1709905537; cv=none; b=o7kS3ifeaCQKEJJSKPo4jVby2j7eVORwOD5yaglNSm+/ZwzEh+2H23tbisbpu2lc+s/EvV4ufsCBTk6oOb593sIv9py9eKd88NzQ8jjulB7F1LUZdn5fhDdnS3TD1zVpL2cb6nthAC5VHTDHDtrzVCm0TGUz0U9vDIR/ZXxOVso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709904435; c=relaxed/simple;
-	bh=eHjvJwOchMGgKw6VjTW/icyHHgQWqHm2PivtZOj8QF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d7zGhA1Qr/4nLYsLwdOP5JEaawnTW8jVzLB99d/O64uYwRrw0L0ldUzZ2o0YYNTPPdroyHhZ8ubfIcmg04YBX+mNQ0Uc7dlmgoi5an6v3LOzDR/M0jQFRlw9TC/3Y+uclgY1qj5kIeHrxxNRNkjmCIo1DzGpetC5aSiD8hj6IwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ctw8Np76; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709905537; c=relaxed/simple;
+	bh=toV5UQ/iLeFb6KeKx0GZxvgHKC9HnxCSfVAYNWdXhaY=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=VwWp5qvcA6TGkBmfdzjrqIpTCI9pkaIG8Taak9aGLFs+Aw+eNky8VJeK8hMXUCBGY0712e2iORNIBOGp+UBXyGqZCbLjsTksFzPDdIvO8lyUIcoNXeBE393+loVL5JCoHifTlohBxTP4YigmjoFqxRw5wCake/X2LQ9HoFtG2cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EZc4VGJQ; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ctw8Np76"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55677C433C7;
-	Fri,  8 Mar 2024 13:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709904435;
-	bh=eHjvJwOchMGgKw6VjTW/icyHHgQWqHm2PivtZOj8QF8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ctw8Np76oRvY2TT7RL+7mJ8MVKsGat2gDNh1Qz0YIUo41huv+99OuJO7gi8hqxmXx
-	 iBieGpeKkHCMZIpchBEVk3g5nAFI9vM1arghGrGyZxahMG4MzaTJtsaa6Xd8rUgL/m
-	 a1y/7nZz0A+3RICa7Z7MVtHgTF/lh1iku7h/HwuvtS7PXvV6h2WU/bToYRwWr19KPu
-	 onZoLjPeG2VOcgNPDXPQmFycY0S0IqtIaTeXc9xKrTqMxE/82YTszi9OrM59IP/Wpx
-	 3vQsAWD/DUfD4Ob2Lg5mheSykW9Fm3PITjfJKSj23sZpP3iqluPIz8Gu/ZG7WkOgdf
-	 kak/8iSx1CqeQ==
-Date: Fri, 8 Mar 2024 21:27:10 +0800
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZc4VGJQ"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6869233d472so4959036d6.2
+        for <mptcp@lists.linux.dev>; Fri, 08 Mar 2024 05:45:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709905535; x=1710510335; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zTeyMPymf7c32o+GAc/x1refGC6gF/HDgtTUDZaTIJ4=;
+        b=EZc4VGJQ1Y5qGJN/kZQZJoJ24NU/NJjwfyN8ZXOgTz6dFfmQF/I4QqNYZ5E63FfvMf
+         IDeh+ifb+NRT4A/ozftih/AIGesS92UJjrHlmnA/QyRoe0dPzDvNVViqB4FMeD9N6qHO
+         6dEBn2HUFDWECKOCz5wiQ7sZ+mnjkjvfeqOmO5f1BJusyQ3CkE+qgtDD+74g9QnspDEI
+         MipBdBv/eJfpMOXLjEFYWUgflIIKjHt04cw4F7BDFx0/joLMs/qwjcbF1gqwU6DlWsuD
+         rHCSCQf5JmRFDDtVfdOHL1WTzqlkqxeFI4jn5K1SEOVWXBNmRA9Qi7kE/9vxl1wrxuLk
+         VxaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709905535; x=1710510335;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=zTeyMPymf7c32o+GAc/x1refGC6gF/HDgtTUDZaTIJ4=;
+        b=rI2xtnp6i2oMZ58TTQ8nsB1fP3e+d9ZhxjiOFDOuC8OCetQFZ2BnFkFqvcUOzKcnhJ
+         Ddqja2hzfW6ADMMQggHr1Wfn7S5GMgDpnCteivCPq8UXT6sk2cRo6AZjJLskbwZ6Rwyw
+         ODut40uhDiLJVOP1RIqGJJiRDu1nJ0gm53hBKoh2cr+uR1wUrXpkY1n/gShIlXipfYNb
+         Q+bz6/NoP+WBLGIvNE/ct725DSmNFdxr5MuBBeiQz4kGcQvDL/wSpcL3hBS0xn1IVPq2
+         i17GOOYdACVwFBEAB5X1048n+8ExSjWEub9bJp6GZ/jakmJ+Di7v2UFiyiqI9AYsVQ8G
+         OIlQ==
+X-Gm-Message-State: AOJu0Yz5rnKSAmBIEsJfe7HIZQSr9eAQzOzPFsTGuurhFsK2lDaXCUUG
+	I4j5bgWf2kgta+2rUg+pj3lyhpFIOm1pwNaSqcBchVpKOPoUxXsOJDMyYOQ=
+X-Google-Smtp-Source: AGHT+IE5dtK0y3xxAWT1jojKILDiPX8kmHPP8ALLkGS1jOzdn/IZrGcGWXEU1dKHQiFhdBT3kM2yZA==
+X-Received: by 2002:a0c:9781:0:b0:690:19d4:5eb7 with SMTP id l1-20020a0c9781000000b0069019d45eb7mr12909305qvd.14.1709905535143;
+        Fri, 08 Mar 2024 05:45:35 -0800 (PST)
+Received: from [127.0.0.1] ([20.109.37.2])
+        by smtp.gmail.com with ESMTPSA id oh2-20020a056214438200b0068f572af88esm9798738qvb.75.2024.03.08.05.45.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Mar 2024 05:45:34 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Jason Xing <kernelxing@tencent.com>
 Cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 0/7] add helpers and vars in mptcp_lib.sh,
- part 4
-Message-ID: <ZesSLljdEO9xou4X@t480>
-References: <cover.1709876991.git.tanggeliang@kylinos.cn>
- <32a33aa4-84a8-4615-82d4-b8ea0a685492@kernel.org>
- <b20180d5-18e8-46a0-a493-71abfac1bc66@kernel.org>
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240308112504.29099-3-kerneljasonxing@gmail.com>
+References: <20240308112504.29099-3-kerneljasonxing@gmail.com>
+Subject: Re: tcp: annotate a data-race around sysctl_tcp_wmem[0]: Tests
+ Results
+Message-ID: <c7268a84-51f2-4d81-cc72-a263943db0e2@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 08 Mar 2024 13:45:34 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b20180d5-18e8-46a0-a493-71abfac1bc66@kernel.org>
 
-Hi Matt,
+Hi Jason,
 
-On Fri, Mar 08, 2024 at 01:11:43PM +0100, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 08/03/2024 11:35, Matthieu Baerts wrote:
-> > Hi Geliang,
-> > 
-> > On 08/03/2024 06:57, Geliang Tang wrote:
-> >> From: Geliang Tang <tanggeliang@kylinos.cn>
-> >>
-> >> v2:
-> >>  - add new patches #1 & #3
-> >>  - #2 drop the tab in
-> >> "\tExpected value for '${var}': '${!exp}', got '${!var}'.", this breaks
-> >> the alignments.
-> >>  - drop 'rc' in patch #2 & #4
-> >>  - use declare in #5
-> >>  - drop 
-> >> extra_srv_args+=" $extra_args"
-> >> extra_cl_args+=" $extra_args"
-> >>    in #7
-> > 
-> > Thank you for the new version!
-> > 
-> > Did you check that after your modifications errors are still caught as
-> > before, and presented correctly? (the CI didn't get any error)
-> 
+Thank you for your modifications, that's great!
 
-Yes, I checked the error logs, they are fine as before.
+Our CI (Cirrus) did some validations with a debug kernel and here is its =
+report:
 
-Old userspace_pm log:
+- KVM Validation: debug (except selftest_mptcp_join):
+  - Success! =E2=9C=85:
+  - Task: https://cirrus-ci.=
+com/task/5015312026828800
+  - Summary: https://api.cirrus-ci.=
+com/v1/artifact/task/5015312026828800/summary/summary.txt
 
-34 MP_PRIO TX                                                          [ OK ]
-35 MP_PRIO RX                                                          [ OK ]
-INFO: Listener tests
-36 CREATE_LISTENER 0:57916                                             [FAIL]
-	Expected value for 'family': '0', got '2'.
-	Expected value for 'saddr': '0', got '10.0.2.2'.
-37 CLOSE_LISTENER 0:57916                                              [FAIL]
-	Expected value for 'family': '0', got '2'.
-	Expected value for 'saddr': '0', got '10.0.2.2'.
-... ...
-not ok 36 - userspace_pm: CREATE_LISTENER 0:57916
-not ok 37 - userspace_pm: CLOSE_LISTENER 0:57916
+- KVM Validation: debug (only selftest_mptcp_join):
+  - Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4:
+  - Task: https://cirrus-ci.com/task/6141211933671424
+  - Summary: https://api.cirrus-ci.com/v1/artifact/task/6141211933671424/su=
+mmary/summary.txt
 
-New userspace_pm log:
-
-34 MP_PRIO TX                                                          [ OK ]
-35 MP_PRIO RX                                                          [ OK ]
-INFO: Listener tests
-36 CREATE_LISTENER 10.0.2.2:57310                                      [FAIL]
-Expected value for 'family': '0', got '2'.
-Expected value for 'saddr': '0', got '10.0.2.2'.
-37 CLOSE_LISTENER 10.0.2.2:57310                                       [FAIL]
-Expected value for 'family': '0', got '2'.
-Expected value for 'saddr': '0', got '10.0.2.2'.
-... ...
-not ok 36 - userspace_pm: CREATE_LISTENER 10.0.2.2:57310
-not ok 37 - userspace_pm: CLOSE_LISTENER 10.0.2.2:57310
-
-Old mptcp_join.sh log:
-
-      rm                                  [ OK ]
-      rmsf                                [ OK ]
-      Info: invert
-      LISTENER_CREATED 0:10100            [FAIL] 15:15 0:2 0:10.0.2.1 10100:10100
-Server ns stats
-MPTcpExtPortAdd                 1                  0.0
-MPTcpExtMPJoinPortSynAckRx      1                  0.0
-MPTcpExtRmAddr                  1                  0.0
-... ...
-      LISTENER_CLOSED  0:10100            [FAIL] 16:16 0:2 0:10.0.2.1 10100:10100
-... ...
-not ok 3 - mptcp_join: remove single address with port
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/e55bd7ed14f5
 
 
-New mptcp_join.sh log:
+If there are some issues, you can reproduce them using the same environment=
+ as
+the one used by the CI thanks to a docker image, e.g.:
 
-      rmsf                                [ OK ]
-      Info: invert
-      LISTENER_CREATED 10.0.2.1:10100     [FAIL]
-Expected value for 'family': '0', got '2'.
-Expected value for 'saddr': '0', got '10.0.2.1'.
-MPTcpExtPortAdd                 1                  0.0
-MPTcpExtMPJoinPortSynAckRx      1                  0.0
-MPTcpExtRmAddr                  1                  0.0
-... ...
-      LISTENER_CLOSED  10.0.2.1:10100     [FAIL]
-Expected value for 'family': '0', got '2'.
-Expected value for 'saddr': '0', got '10.0.2.1'.
-... ...
-not ok 3 - mptcp_join: remove single address with port
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-debug
 
-Thanks,
--Geliang
+For more details:
 
-> While waiting for your reply to this question ↑, I just applied these
-> patches in our tree (feat. for net-next), so I can check if we can
-> already send them to netdev today or tomorrow:
-> 
-> New patches for t/upstream:
-> - a472412db36f: selftests: mptcp: call test_fail without argument
-> - b4d6c3097bd0: selftests: mptcp: extract mptcp_lib_check_expected
-> - f826a35f7b2d: selftests: mptcp: print_test out of verify_listener_events
-> - f469a988b798: selftests: mptcp: add mptcp_lib_verify_listener_events
-> - 0f5aa3b047a7: selftests: mptcp: declare event macros in mptcp_lib
-> - 31fffc8fa3b8: selftests: mptcp: use KSFT_SKIP/KSFT_PASS/KSFT_FAIL
-> - 4913857b325c: selftests: mptcp: join: use += operator to append strings
-> - Results: 2d8b9fa0983b..2c35e2ddd1b1 (export)
-> 
-> Tests are now in progress:
-> 
-> https://cirrus-ci.com/github/multipath-tcp/mptcp_net-next/export/20240308T121027
-> 
-> Cheers,
-> Matt
-> -- 
-> Sponsored by the NGI0 Core fund.
-> 
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
