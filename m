@@ -1,117 +1,101 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BFA4C84
-	for <mptcp@lists.linux.dev>; Fri,  8 Mar 2024 12:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCCF1429E
+	for <mptcp@lists.linux.dev>; Fri,  8 Mar 2024 12:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709900481; cv=none; b=nasbXoogviL8YpP2dmcoVio5uHA/fNWZPV9ihcRllE6C+Iviq7udb9Ekww+MKYm3OvGwEgplM4xgCAcXrLw/vPp7R3rFZkGWVuMgSv+h6syxwjFkNXiXyU5cBycQMj699AmGzwdx4aEY9zGKwJnmVNTMXRtkrtHM0EEi06Y7j78=
+	t=1709902310; cv=none; b=hfzeurfUytT9MDWTZJRWG6rQ7miM0Ei2hg8vDrvHfhraIgpHLTxYSbOYDy0qee9fg6XFoEzPm4wnNF2uwLCiHh1fMACXZmL50omkWi/A02EsYOiCa6jH8alDoLhGB331uTuD1yL0sandwwZxYIuE13KOXLTHVaNrYlptEosPObY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709900481; c=relaxed/simple;
-	bh=tE4avc1yRmNUGSWiTUtA+zmxOidew+gXauA8NQi8wIs=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=BuyDVyvXdTr7JBZdCXtqjSNtZnDLLiYyfKfRbWCg1AwSwULlTIcG/QMckrn63YEPVtF8Da4KXNf/vdJX5hv14EZXPfKqObLhMOyFp+oa/Ih3do2l98U4SrK/29BUsx4BA9rITIyLAKErCZ9lV8BRDzJGJ0ly5LB4BPPiFUQc1Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a8rK251c; arc=none smtp.client-ip=209.85.167.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709902310; c=relaxed/simple;
+	bh=LzJWnD345e/TSnWMXwsnCzIAp9EATcd2Az2CODBO2Io=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B83iSTvmiYbpGfrJm3nC1rniYSb7rOl4dFK/w9IcYpH+dvG547IH7X0ORsg/FZ+4Ng3exSBp6cl+Glvs4Q9AZWyeH/ldqJShaC8TR5exzMfSx7jl4/yYGbGF0nWQ6MNtYIvuoXXoXLNkhNiiPWdd+K33Bcn9MkkdOeyy+LtROb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IdRP0Ga4; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8rK251c"
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c1ea5e54d3so1029542b6e.0
-        for <mptcp@lists.linux.dev>; Fri, 08 Mar 2024 04:21:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IdRP0Ga4"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-568251882d7so15021a12.0
+        for <mptcp@lists.linux.dev>; Fri, 08 Mar 2024 04:51:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709900479; x=1710505279; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1709902307; x=1710507107; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HkXwqIdeDbJPSO+ZVxcBflAGIJi8cnBBYYqJclQUeFE=;
-        b=a8rK251cgdAnURoajtLXwLHgROE/BzK+WZxWOGiWM8xsNEx0Mh5FYzJo4KVWqnc9Zz
-         FZJmqh22+l8buRbuky4ZTFTgTy/5jHRXyGRMyJYNyLeos/GapS49e2ULIwc/ZFQ14A2F
-         5WcKNzOiun9y6pSHjFw0KwhLBiJr6jsR7T9giefsatCl0jfk0IYh47MbR2WO9JhG5nk9
-         ijZ1WmK8h17fseY5W2msBWG2wqv6UI78cEUvdohloxLEfHXryLMu95LCRBmyPZi7uqj7
-         KUlITWEMjmC6GzlT6SPIgapJ8d2Cl+XkCNw7gYACUxg50b8VUndjeZzHwdhPYz33phJI
-         pIqw==
+        bh=2wFxcRKzixSphhwxyAsaZYfo58Ol0VCtNiJzKLN7/S0=;
+        b=IdRP0Ga4dIQJJFGZQraWW1bv5/SA4YrmbYXbhkDCokgf99empSkUm2OQV5HsNFTnoB
+         aRzxdUWx7SdfVfSq51jcl6mdL+BX46l+MK40EE+TLLQKIgjiYa7y91bOEX7QeOEJjnNk
+         llslM7NbagNxaDYxvqqyTKf7KI5a1MzHNxdbt9RLM4kb+KT8BR1lJ9ngUpTSFny2GZvC
+         gUfHU5rUpapkuyiwkZ6mQH3JyPbaou6oX01txwe1uE4HuBRWVHOUYlnbWtNeTiYcxFsV
+         0uoObNeMBfpUQyJb4WLaIS0V/KgGZipyMgrAbFn2kO7EG/1MdJnpna5EHO04p5hVzVSG
+         8x8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709900479; x=1710505279;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HkXwqIdeDbJPSO+ZVxcBflAGIJi8cnBBYYqJclQUeFE=;
-        b=Xbw5tBHqrOG3pYu3NdyfpRhWGGHKbg0tPJP+DMqgMUE+MxERgUPvOseS5xJM/Bz3z1
-         cRcN5+rJwW7Rkkqs3cu3hg10L50yIKrG8H7x9lEkVy1BhglTaHmZhr2lhzyj0WkSKPPW
-         se1Bb8RCRVeCjc6F1eFdr5hoYnXlF9rmol04aj8ghQsPItaZF2yvRmOAwrV/B6B+8nww
-         ezANdOeTqkXhIAZcvCBf6HUwbhU4IXuskRDPfpSsWrZ1tiDlIk4ytydn5p8vnyhL77oV
-         ezqA0bUqJA409TbhdonsSpXKaFMssxMqMGexpqso3Sw7wk+FyfEdD6vlU0uYPAXQCQp2
-         ixWA==
-X-Gm-Message-State: AOJu0YyKPzMvjEgU9Rpd1WMiuXgd8i9ckGXQAaO/Ejlc18P4Hx89s7ND
-	Yma0Hd5dO5HQgZmYq/MN71UyKBZkUC58fBdfGTb+4EZ+vQDeUzPlAPkA2Ww=
-X-Google-Smtp-Source: AGHT+IE7aGBb7LXHliOhWSUvf+6I7u6tukXgN/OsL+2VecBX2E76f6wkWGHoiEAksz3fOy2qo6DkuQ==
-X-Received: by 2002:a05:6358:9486:b0:17b:f6aa:6519 with SMTP id i6-20020a056358948600b0017bf6aa6519mr10485060rwb.17.1709900478695;
-        Fri, 08 Mar 2024 04:21:18 -0800 (PST)
-Received: from [127.0.0.1] ([20.75.95.160])
-        by smtp.gmail.com with ESMTPSA id g3-20020a05620a13c300b007882fe32acasm4537602qkl.3.2024.03.08.04.21.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 04:21:18 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Jason Xing <kernelxing@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240308112504.29099-3-kerneljasonxing@gmail.com>
-References: <20240308112504.29099-3-kerneljasonxing@gmail.com>
-Subject: Re: tcp: annotate a data-race around sysctl_tcp_wmem[0]: Tests
- Results
-Message-ID: <8176eae8-e184-2b41-301c-497edb515608@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 08 Mar 2024 12:21:17 +0000
+        d=1e100.net; s=20230601; t=1709902307; x=1710507107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2wFxcRKzixSphhwxyAsaZYfo58Ol0VCtNiJzKLN7/S0=;
+        b=rTlDXp/nm5TwipkupZlE2xehHQGAMZtM7QOuC4L3S3+ACZ2k6VXSD3A1WUqIEH6p76
+         ILj8j7yAwotPV6PGqyGzxieUdgu67m0BQeHwNHjg6YQmz4+KLeAwdDjVKwy48aT9J8E5
+         4DTYXvRKNZNC38mJwzIXovz1maghs3X4OKMsLa4J6/0Yw6bm6pI+FncpHTsgUP7jf67W
+         Fgv4tvQi2eEO0MwbA4YKVqI3Ngljls1h/kTNnmUK7HKGyyE6/sVE6ZimmObJHITq1vOM
+         HxXSL7WhKCKj16M67mWbGNJD3+ChSjKG5oo0UBNwo9Mtp7U7y8tdwLg/F3VT5Bf9t8ry
+         swPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUobirDssNqYnwlDnKKhKwIWC4rlJAdtFbqG0o67tHjXrMyEvo3eCuVB4sH0sLkTSyhoPruJwz3orV8qlXZDzKi7te8gpI=
+X-Gm-Message-State: AOJu0Yw14T2bbqUl2UHEi37gd5ivErnYyIYGZf3p/HbXeAuyJGrl80Jl
+	qLuylgRGXOa4BBuoOirUPdhAQffne2jBjSd8WONY/rYfhd0ZglsmEY+Cyv82RErRjSOeVRA5bl6
+	mRGw+s5nT8USY4i6QTM3giGE6BSs3FC7wlKn3
+X-Google-Smtp-Source: AGHT+IEFIF41DVJKRfWSOGlQA5QraR0feuXtqNSe+bwfu8uemjBwZSGFloqujZg3mDGCaQoDzKpp08nVvDRu/6VHVe8=
+X-Received: by 2002:a05:6402:349:b0:568:257a:482f with SMTP id
+ r9-20020a056402034900b00568257a482fmr225008edw.3.1709902306583; Fri, 08 Mar
+ 2024 04:51:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20240308112504.29099-1-kerneljasonxing@gmail.com> <20240308112504.29099-3-kerneljasonxing@gmail.com>
+In-Reply-To: <20240308112504.29099-3-kerneljasonxing@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 8 Mar 2024 13:51:35 +0100
+Message-ID: <CANn89iLtRYt6U+q_VHb_3Vj2ydmnwsSon4uwPX3+yTJDgoDenQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 2/2] tcp: annotate a data-race around sysctl_tcp_wmem[0]
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: dsahern@kernel.org, matttbe@kernel.org, martineau@kernel.org, 
+	geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, 
+	mptcp@lists.linux.dev, netdev@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jason,
+On Fri, Mar 8, 2024 at 12:25=E2=80=AFPM Jason Xing <kerneljasonxing@gmail.c=
+om> wrote:
+>
+> From: Jason Xing <kernelxing@tencent.com>
+>
+> When reading wmem[0], it could be changed concurrently without
+> READ_ONCE() protection. So add one annotation here.
+>
+> Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> ---
+>  net/ipv4/tcp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index c5b83875411a..e3904c006e63 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -975,7 +975,7 @@ int tcp_wmem_schedule(struct sock *sk, int copy)
+>          * Use whatever is left in sk->sk_forward_alloc and tcp_wmem[0]
+>          * to guarantee some progress.
+>          */
+> -       left =3D sock_net(sk)->ipv4.sysctl_tcp_wmem[0] - sk->sk_wmem_queu=
+ed;
+> +       left =3D READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_wmem[0]) - sk->s=
+k_wmem_queued;
 
-Thank you for your modifications, that's great!
+SGTM, you could have split the long line...
 
-Our CI (GitHub Action) did some validations and here is its report:
-
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: btf (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/8202785775
-
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/e55bd7ed14f5
-
-
-If there are some issues, you can reproduce=
- them using the same environment as
-the one used by the CI thanks to a =
-docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v =
-"${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Reviewed-by: Eric Dumazet <edumazet@google.com>
