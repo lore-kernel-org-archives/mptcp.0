@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD5654BC1
-	for <mptcp@lists.linux.dev>; Fri,  8 Mar 2024 09:54:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA1155E43
+	for <mptcp@lists.linux.dev>; Fri,  8 Mar 2024 10:35:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709891675; cv=none; b=riF4tl9j9RhRam2sTjimMvw/2tXr41FnlyxFpq2MLRKQLNA+7MPAAHy3ujAP2s24Pscvn4pUrlpX2MbH2g472WYEf1CqsZr1areQHcPVoFVPAq4nylvtyPOvgZuxKMI7d5YVNv2b8XgZLDadTJDEUQps0TwX3Ot0C68dvMKZsA8=
+	t=1709894119; cv=none; b=mHD+ZpUBuYrVGzHk+L3Qqj6K5jzaCWymvCd1KbHy6drKmJFfBBrxrNfnKEtJ+/k0mdlROpYsZxzm9N8J6d8FDxhoYUuMOxmi7vwh1ai4+uGgHEFwP8xjAyNLaNQ1l3YHQZRd4FHiFPVwPGAW9YO9ZlTXGgGA73ATyifXqrNmLU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709891675; c=relaxed/simple;
-	bh=DMpbfkXgruC5p30t9Ysd6OIJMbyfegBSssG71EUDR0M=;
+	s=arc-20240116; t=1709894119; c=relaxed/simple;
+	bh=5e0zgM/G8VaDWEtX4kbgKy/rYmcEgOFzrWaqdzxAKEg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HUIaUUKBJRYIqHo4yV3R6qMyc4hQkKA6peHcjRysbzFOYIrEHa0+owZN/uRk9n2SwU2Z7xCR9NZFalBLgdPt9AMt11kPH0E/M9BfJb99sayJ7woXDTi8NvtGnOVJgEHqss84lSNP4aBUXAOcaFYcphx1DGv9B/pyO6mv/NTR7s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aiE6Fhpc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ERC1KajCYh1CT5n9DgGQ0eoxZdZXJwIKLvswyYpnu25cRGatpPEvxv72gBI23Th5rp6fuahFhaPR1AvrKn0DU2/oD6uLNWelD1cd1V6YovevfKICByndqWe9apBDOvP2DBgLWOEH4aZQcLfML61rvnKc97ec+yWCYFPX3KaeVUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExG5XHXK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aiE6Fhpc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F7B7C433F1;
-	Fri,  8 Mar 2024 09:54:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExG5XHXK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 527FFC433C7;
+	Fri,  8 Mar 2024 10:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709891675;
-	bh=DMpbfkXgruC5p30t9Ysd6OIJMbyfegBSssG71EUDR0M=;
+	s=k20201202; t=1709894119;
+	bh=5e0zgM/G8VaDWEtX4kbgKy/rYmcEgOFzrWaqdzxAKEg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aiE6FhpcBFEFeN6PuEZgXLuLDmwj517BB7Nalcb3bfeI5lJjqPgoZ6VOuyGXvDHaO
-	 UyzKbOOtI/DKDerRqKS7z90gvtEoUF7I4vZS2HL5PVH90sy5CDlxS2v9HJBGKiRtk2
-	 2AZyM5QkKFACd7yBSjgIeubAtWNlRU/Pa4KY+9WQ5aERMc2cKaRZpHNagiiJaw+JR1
-	 UhDhKHHolZYEmqhsD0raN/pINmMjV49CD3YUAzdyCCaYld8qLJlxTOJ12BEf90dWyU
-	 xkcM/6VlDIAPk4D5wOS0xy8TPjqO1OKUeNMbDb6HSLM/5VZhTmykRxPywcJ238if3y
-	 vaO9+ekPlntZQ==
-Message-ID: <636a37c1-ce8a-429a-a668-0c0abb125911@kernel.org>
-Date: Fri, 8 Mar 2024 10:54:31 +0100
+	b=ExG5XHXKZ9e5GT8kOxvBzZYgnfQmXYR7Kyw1XY/UtBIY4HVpiS57hpfMVO283s5in
+	 2GZHkoEb7O+kx9wtA67FcgLD+1DHehh/lh6UVNB5FKfYbzW3HD0ehOsq2IPZdof9IB
+	 XZu67cD8MwvKLyJ+LZs4pdeFT4v0itueSRae5Y5EUOq0hNfFkaRVZ1e6LRLSswH4tN
+	 cxFm+0C4oR8TDAmhpf+xkDGMPst24k/ALC008KRw/V5WLFLwdcv+KVOwAVKLppau1A
+	 MzvIeOerHzpasd0bbnllB/qdMx8rXfTHSo2NxTUpvZ+Du/Jm9XuMlQo9ov29H5SWNx
+	 30XU3YlX0rWtg==
+Message-ID: <32a33aa4-84a8-4615-82d4-b8ea0a685492@kernel.org>
+Date: Fri, 8 Mar 2024 11:35:16 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] mptcp: don't account accept() of non-MPC
- client as fallback to TCP
-To: Davide Caratti <dcaratti@redhat.com>
-Cc: Mat Martineau <martineau@kernel.org>, Christoph Paasch
- <cpaasch@apple.com>, mptcp@lists.linux.dev
-References: <be9176dac04b292242d6afc2eefc0c931d21b0cd.1709651670.git.dcaratti@redhat.com>
- <62dd5009-fd83-4cd6-b7b1-8afff28a575c@kernel.org>
- <ZenfkXU_zYb0AcR8@dcaratti.users.ipa.redhat.com>
- <07323939-df11-4a2c-950e-de1412bb32b6@kernel.org>
- <CAKa-r6uQmQO+vD0UnkOHNbR-2EdxWoJArTpxMwJAiV7xC2Yz3A@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v2 0/7] add helpers and vars in mptcp_lib.sh,
+ part 4
 Content-Language: en-US
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1709876991.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -91,36 +86,40 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CAKa-r6uQmQO+vD0UnkOHNbR-2EdxWoJArTpxMwJAiV7xC2Yz3A@mail.gmail.com>
+In-Reply-To: <cover.1709876991.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Davide,
+Hi Geliang,
 
-On 08/03/2024 10:14, Davide Caratti wrote:
-> On Thu, Mar 7, 2024 at 5:33 PM Matthieu Baerts <matttbe@kernel.org> wrote:
->>
->> Hi Davide,
->>
->>>
->>> and I mixed variable names while cleaning up pr_debug()s. Non-MPC connection
->>> attempts (pure TCP, but also MPTCP with pathological MP_CAPABLE
->>> sub-options) have fallback equal to false here. Will fix this in v3.
->>
->> Maybe it also means it would be good to add a check in the selftests (in
->> mptcp_connect.sh?) to make sure it is doing the right thing (and there
->> is no regressions later) :)
+On 08/03/2024 06:57, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> 
-> I can push a PR for packetdrill's 'mp_capable' v1_bind_*.pkt
-> scenarios, is that ok?
+> v2:
+>  - add new patches #1 & #3
+>  - #2 drop the tab in
+> "\tExpected value for '${var}': '${!exp}', got '${!var}'.", this breaks
+> the alignments.
+>  - drop 'rc' in patch #2 & #4
+>  - use declare in #5
+>  - drop 
+> extra_srv_args+=" $extra_args"
+> extra_cl_args+=" $extra_args"
+>    in #7
 
-Yes, I guess it will be easier to check that the counter has been
-incremented when needed.
+Thank you for the new version!
 
-What about also checking in mptcp_connect.sh that the counter is no
-longer incremented? I guess it should always be set to 0 after the
-patch, but it was not the case before, no?
+Did you check that after your modifications errors are still caught as
+before, and presented correctly? (the CI didn't get any error)
+
+If yes, the series looks good to me:
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+To be able to send them to netdev before the closure of the merge window
+-- if I can apply these patches in our tree soon --, I might have to
+squash 2 commits, maybe "use += operator to append strings" for join and
+connect, I will see.
 
 Cheers,
 Matt
