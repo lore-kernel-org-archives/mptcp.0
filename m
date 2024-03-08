@@ -1,35 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F692E84A;
-	Fri,  8 Mar 2024 05:10:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6901E4A4
+	for <mptcp@lists.linux.dev>; Fri,  8 Mar 2024 05:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709874641; cv=none; b=ZMHbo6CnvOWxIM5DOnRXNrkdOQSfoSeLCUzpGkYjRr7wafMuqf/RUokOpPnMsHoP2yW7ZN86/BoD7roDDtB1qgfxu7BJ429yaZ0MTbQbSY3jCYKZque9ngtE/WJ6XnLcHfbIgRbFs9sLtkslArI/UdgmDEsGRSHyTZbQGvmg43s=
+	t=1709877465; cv=none; b=d3mTSKAEhHCcXWfIyVU8Vy+Hj41XqvwZoIaeJ0LEMjrKqcK56gHnZjE7yEYJzJzT4kOHluRLjlVK07yEBfASywcUeylM8dHObx8niO2GnYab8B3abtVEZFIl1nZnMtof2ZC+NT3NzATbhySnXOQ/HRfBOHCyXHBm/nkpTRb60Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709874641; c=relaxed/simple;
-	bh=qZ78qFcl7k/7Rui8/PriB7iG4Q9wj8DC4UpF5qtA0mw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=nxV3A1QZyWNyCXkyvDWkk0HOrjfxwLlUDwBmyMbefIpRwDvywBoIu1h6GonSoj2TluJ4VNTKaRSSS4gCWTQNh3sduV2rJ1Kea566Dm6z8XuhcOzMY0ikufQPw3RE6cXnunpJMUUt6YQk6dM1N4WBTQgMBtAR3U2GyjixyKNtNE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QEDDpfAm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709877465; c=relaxed/simple;
+	bh=SiGATKsbSR3dcZ3SiXB9B4mWnAPCY8eI+xAW4I9uTnU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BBUIV71rGGiDxKtlcHlVbUj2mIfqJvJlIMFnEjgaPYZrRnNY0U4UWjAHyL1ryq4EaiPgVm7ih3FxEgsilNkPG0ELvawhhqkGA3q3qzuklndaVRNC6Um1rUA+uQaeIrNhP7UQM1PIU+UciTRDc59OikDW3RjIgin/6ZLO+JRh0wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRyGmGE1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QEDDpfAm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 08DDBC433C7;
-	Fri,  8 Mar 2024 05:10:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRyGmGE1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56BB3C433F1;
+	Fri,  8 Mar 2024 05:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709874641;
-	bh=qZ78qFcl7k/7Rui8/PriB7iG4Q9wj8DC4UpF5qtA0mw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=QEDDpfAmkMZuKRZyTm4mrVksO27WpBKsiFh7LsqkKIaKdDWI4GYmuufTV+KTvjtHi
-	 Iea/e3A7Czdd8+Cv6KuffnXufXQHW0xo9FlHBvgHtsJzG3Ev4HXyt4bVbTqH1BXp7/
-	 3efQ9pAyF4SCgdD8hlSDornNLIZs/4j218zkr2iwvlynjCinLSc74shbN3/8mt2h/q
-	 RNLw5JwDDQknhnYSx9Xq7JuELdGBi/eLPKyiNlxXGTOWtCjtgxKwnykqsXL9CkKtoc
-	 XA7c38Gy5KrlQ8bsmPhEOaumrkBSgCRBmS1JNmTDEpie1xenN1QrHn1u3PZjEINhXe
-	 jwObybiUodWiA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DE45BD84BDB;
-	Fri,  8 Mar 2024 05:10:40 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1709877465;
+	bh=SiGATKsbSR3dcZ3SiXB9B4mWnAPCY8eI+xAW4I9uTnU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VRyGmGE19VBEbzs1wBC8ilnfJ2y2DQEGTb8tNhCZm5wQ4/Hf6BuRB45tDgaWT8I/p
+	 CCJlxK8g1qQ2p8zqlYLqnEvlyZVd3a+OIA74uePYGg9pwcqOsM0wKll1Fi6NJSn2o+
+	 IjTl9Dhd4GhdFLlyI9eQk9Vhi56Jod6HePez/OtqlpOfduH1VShmizYilZjv+tisfF
+	 0DD6tLfEDasONn3Gz/xbNgANbG46SElyTIuHFv0Xz+nG/mllVYEDvnca453HNPlIiP
+	 6iR2s5Z8lECYumh469e+epoEEIEYeBjrz1um//IBA4ClaMr6D0t14WQcxMKAbAN4fx
+	 XxfIVl9c/utyg==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/7] add helpers and vars in mptcp_lib.sh, part 4
+Date: Fri,  8 Mar 2024 13:57:33 +0800
+Message-Id: <cover.1709876991.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,66 +39,42 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 00/12] selftests: mptcp: share code and fix
- shellcheck warnings
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170987464090.14945.15081894796160593216.git-patchwork-notify@kernel.org>
-Date: Fri, 08 Mar 2024 05:10:40 +0000
-References: <20240306-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v2-0-bc79e6e5e6a0@kernel.org>
-In-Reply-To: <20240306-upstream-net-next-20240304-selftests-mptcp-shared-code-shellcheck-v2-0-bc79e6e5e6a0@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- shuah@kernel.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, pablo@netfilter.org, tanggeliang@kylinos.cn
 
-Hello:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+v2:
+ - add new patches #1 & #3
+ - #2 drop the tab in
+"\tExpected value for '${var}': '${!exp}', got '${!var}'.", this breaks
+the alignments.
+ - drop 'rc' in patch #2 & #4
+ - use declare in #5
+ - drop 
+extra_srv_args+=" $extra_args"
+extra_cl_args+=" $extra_args"
+   in #7
 
-On Wed, 06 Mar 2024 10:42:49 +0100 you wrote:
-> This series cleans MPTCP selftests code.
-> 
-> Patch 1 stops using 'iptables-legacy' if available, but uses 'iptables',
-> which is likely 'iptables-nft' behind.
-> 
-> Patches 2, 4 and 6 move duplicated code to mptcp_lib.sh. Patch 3 is a
-> preparation for patch 4, and patch 5 adds generic actions at the
-> creation and deletion of netns.
-> 
-> [...]
+v1:
+ MPTCP events related patches and two cleanups.
 
-Here is the summary with links:
-  - [net-next,v2,01/12] selftests: mptcp: stop forcing iptables-legacy
-    https://git.kernel.org/netdev/net-next/c/7c2eac649054
-  - [net-next,v2,02/12] selftests: mptcp: add mptcp_lib_check_tools helper
-    https://git.kernel.org/netdev/net-next/c/3fb8c33ef4b9
-  - [net-next,v2,03/12] selftests: mptcp: add local variables rndh
-    https://git.kernel.org/netdev/net-next/c/4214aac14e51
-  - [net-next,v2,04/12] selftests: mptcp: add mptcp_lib_ns_init/exit helpers
-    https://git.kernel.org/netdev/net-next/c/3a0f9bed3c28
-  - [net-next,v2,05/12] selftests: mptcp: more operations in ns_init/exit
-    https://git.kernel.org/netdev/net-next/c/df8d3ba55b4f
-  - [net-next,v2,06/12] selftests: mptcp: add mptcp_lib_events helper
-    https://git.kernel.org/netdev/net-next/c/35bc143a8514
-  - [net-next,v2,07/12] selftests: mptcp: diag: fix shellcheck warnings
-    https://git.kernel.org/netdev/net-next/c/97633aa74d93
-  - [net-next,v2,08/12] selftests: mptcp: connect: fix shellcheck warnings
-    https://git.kernel.org/netdev/net-next/c/e3aae1098f10
-  - [net-next,v2,09/12] selftests: mptcp: sockopt: fix shellcheck warnings
-    https://git.kernel.org/netdev/net-next/c/5751c291349d
-  - [net-next,v2,10/12] selftests: mptcp: pm netlink: fix shellcheck warnings
-    https://git.kernel.org/netdev/net-next/c/21781b42f2f3
-  - [net-next,v2,11/12] selftests: mptcp: simult flows: fix shellcheck warnings
-    https://git.kernel.org/netdev/net-next/c/2aebd3579d90
-  - [net-next,v2,12/12] selftests: userspace pm: avoid relaunching pm events
-    https://git.kernel.org/netdev/net-next/c/c66fb480a330
+Geliang Tang (7):
+  selftests: mptcp: call test_fail without argument
+  selftests: mptcp: extract mptcp_lib_check_expected
+  selftests: mptcp: print_test out of verify_listener_events
+  selftests: mptcp: add mptcp_lib_verify_listener_events
+  selftests: mptcp: declare event macros in mptcp_lib
+  selftests: mptcp: use KSFT_SKIP/KSFT_PASS/KSFT_FAIL
+  selftests: mptcp: join: use += operator to append strings
 
-You are awesome, thank you!
+ .../selftests/net/mptcp/mptcp_connect.sh      | 18 ++--
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 92 +++++++------------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 67 ++++++++++++++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  4 +-
+ .../testing/selftests/net/mptcp/pm_netlink.sh |  8 +-
+ .../selftests/net/mptcp/simult_flows.sh       |  4 +-
+ .../selftests/net/mptcp/userspace_pm.sh       | 92 +++++--------------
+ 7 files changed, 143 insertions(+), 142 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.40.1
 
