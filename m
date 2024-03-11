@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9491F44375;
-	Mon, 11 Mar 2024 15:12:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE9D5FDC4;
+	Mon, 11 Mar 2024 15:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710169967; cv=none; b=pb8FUnN568E8SgK0pHr2R7JdHo7p/wnyvWcy792FQmcdzsiIJjmwDV+6+6W/nXF+DT/tXk3IapbhiIpEmRMiO23Uf/cUKcBhVKNkGxkY5LWwzr1TYmg16UW8boQP9GU3Q9pSTmx9/Fnk0w64UdxwypKSIP32HCkIMvDloSudqQE=
+	t=1710170011; cv=none; b=euejs2DLLOOq1TvVV0dWQ+ZbgS16F7hzdOdkb9ksZ2qpTyBJ9RroScAmD8tGAP8Dsh4V10Y2lSjcm19lXswXh2oB8xOE/fUnYicUMj1NA6D+uFdA4LjF3WCm8qN+f/hlJwLyZp13R2wGZpUG51aPzomNPb01VFQY77IWOwJCsvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710169967; c=relaxed/simple;
+	s=arc-20240116; t=1710170011; c=relaxed/simple;
 	bh=jkL9pcfs3sRnSPlvjikdgvSxArB73ECs5GBn3OKS72M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=flCxS9g26vIusfjyY4vvNd72ZZp30W368XNC/uisboK0Loo5UJOXsnFEJi0chLLkdLABXKQEXiN5xJMMAlKM6+ZL9aQ10o8cyiKhmmQN28xMGItHG20QabubNtXi71mPR0BBn4D0DT5d9Ng622NUJUCYd9MOrkqTjPcHZe6C+2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JtlyvqH0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gENI335pp6riwPCax9UP1HV4RSSVk69SOrHScCMuKhM3/lrGpEhFBjFtzfGn22dKy69hcXT/w16xc73h5qF024W8Q/yxbHME7M9MhII9K9X+hPc/6ExaHknloDMt0ikdPKRBo7JfriVlvQTK8kzGnYswcl7uU+MJMIbWfJP6eIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K9QWlWqa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JtlyvqH0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6BD3C43390;
-	Mon, 11 Mar 2024 15:12:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K9QWlWqa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E755C43390;
+	Mon, 11 Mar 2024 15:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710169967;
+	s=k20201202; t=1710170010;
 	bh=jkL9pcfs3sRnSPlvjikdgvSxArB73ECs5GBn3OKS72M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JtlyvqH06S4VHV2OHqCDORJvywxAOJjBE5neDUZjwzd/ayHWzQhwwJ29uUlaxPvk1
-	 SmYRSWZq7jgnoM0dPIjCy1qTThaupgcXsJCBXPtDSjH0LRkOJeGDfA4cgHlIOIHfJC
-	 ScgZylm90YEWKSaSgcdDwhvZKfC0JorhMDzQUSxSP+bHF0DQ7ZLTNdkt3AL9k6pCzY
-	 gVZau+v+LFavx6QjM5m2TDuktSk9zv2XtodDxyDd8SzlXmk/ZE6wTRqxlRUHQAZ6RR
-	 HAtj7sucwtWkG1gVvICu9iLOQgFVyfVsuXFdJ/cstfg9lEDBq/cL3O7Guc1AjwzCvT
-	 c2Vl0DXJOOGeg==
+	b=K9QWlWqabci0aYqlvGxyzbo/QVzT4Bp0zl3AgOdgTbNGNFn5PG+AOlJqebJDclynF
+	 X/LFEhvpU0xJDBxrt4QJq5+Y6QVEbK3zA0soyo6bnTWp5LG9c4OPaQDC/5lA6sAxD/
+	 pO4rtklwxvBjh+PrUTtyI/e9ulO1SnNfYM0J+8rzjmg8UciD/4GR6KvU8zfZ6AEwug
+	 s1IaA25VPK8K5w5QO2DLuUTvi7Ewagu+BLkwox35V+1bW9LKowDYPdWsAFsRs/QF0I
+	 l2WbUPy5zf8BMuGE4XlCQ1pBnKfPqTsPMRlpgFc4/x4W1vudmwqp5l+KkmEGD8rMYe
+	 pT161nPGrKpIQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -41,12 +41,12 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.7 14/23] selftests: mptcp: explicitly trigger the listener diag code-path
-Date: Mon, 11 Mar 2024 11:11:54 -0400
-Message-ID: <20240311151217.317068-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 09/17] selftests: mptcp: explicitly trigger the listener diag code-path
+Date: Mon, 11 Mar 2024 11:13:00 -0400
+Message-ID: <20240311151314.317776-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240311151217.317068-1-sashal@kernel.org>
-References: <20240311151217.317068-1-sashal@kernel.org>
+In-Reply-To: <20240311151314.317776-1-sashal@kernel.org>
+References: <20240311151314.317776-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7.9
+X-stable-base: Linux 6.6.21
 Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
