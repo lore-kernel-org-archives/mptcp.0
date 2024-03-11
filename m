@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AA510E5
-	for <mptcp@lists.linux.dev>; Mon, 11 Mar 2024 01:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24ABD10E3
+	for <mptcp@lists.linux.dev>; Mon, 11 Mar 2024 01:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710121744; cv=none; b=WnmlkQBWfKIFwaRtjKKSdqDxPjk5Y882rj+QopDJB2VhRYNF72XR2DmjUno4DNTM3yONUNDNWdFF50jz2f9aoPfsjXLUkjpmYoyP3IumOPweVFjg6g8Ut4wA+EFjuP1fzDBojejnmjoLOJkRQ8HGnRkSkh0kdChfx5mvbSon19Q=
+	t=1710121746; cv=none; b=pKrFg2lLihGMFMY9U/yY5BmSVwDHqCHJ9dAHuRTu8QkQYwX+27koxhLxXYNGhk2LNkBUGG8l1wKkzWzwi7ws2NBXDXySAaUZxdgCYKIQ32lH3fZqvv405nGP692vitkt42w0w9TqDYZVVly6LAlXF/QnTelbd1XyrSsRLRY4d1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710121744; c=relaxed/simple;
-	bh=cfKZgqG+71jJ03Nm3RRRfrygN5SP7gfvrOHpgfXEsS8=;
+	s=arc-20240116; t=1710121746; c=relaxed/simple;
+	bh=bwW8CgsMzTap7/Wu1tosIS9ne2+WovQH8EoaXbwrozo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X1OHG2P/1eDitA88Du0UBwiMSMkacuIJWevbjq2WOCx6wOueqZnFMF7OWigQ4w58Lj3bk6oVQbmiJMMCS9M2//0cVeNqJnZ5TVN5s/ceV/re2Sa0CkjQgAHQxDHC30ekIM/wwGlnVwq59QIWDtTH5q3IcgyKcu/ZeBcZecLADLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0QMlnTi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LAzkeemFeT4I1AQPoA8rGHTwmJp65i2sgJb0HKXMLgrJrGuY8iXsN6rKi3oFNjFDzt8XBwZQ/KhsCrSbYWZsyue5ejficqUFZOPJdnt3Z/jbFAdy3vAti5DlSApqN6goHIn/o/riHCHuzWVByB9R1waW+QH2Y3OqgtwjlAX/mOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eHOyt5rv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0QMlnTi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00951C433F1;
-	Mon, 11 Mar 2024 01:49:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eHOyt5rv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6CF6C433C7;
+	Mon, 11 Mar 2024 01:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710121744;
-	bh=cfKZgqG+71jJ03Nm3RRRfrygN5SP7gfvrOHpgfXEsS8=;
+	s=k20201202; t=1710121745;
+	bh=bwW8CgsMzTap7/Wu1tosIS9ne2+WovQH8EoaXbwrozo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l0QMlnTiUwOr7pOfUBBhXxx5q30hbgeNYu8jpKSvjskfKVxjlj3O/fxrdTt3O/xA8
-	 YXg58KcbkSINsRZRdNT0ThmRJuez+EAbIIh3k1ynwMUtvZDA8zjRdeY5OcjOLxOv0W
-	 U7uQ2C0MmngUmjEknxgavx4E1tmzAc54M8Qx02NXqL297zAeBZq/aEqdUxG/2Bhcl6
-	 i01Z5oDLOLGP95Uz5uUFqkKGos8jBo0E65TXRr0abB+X2dIugV7aMKgFek+Wggnntx
-	 /buF9Q4NpWMvurYYY6DoCaQ3feRLx0zegzp1/TN9wTaDAQhZNfBEOawyqzs0UWF+p9
-	 EWUKWOJaTUUWg==
+	b=eHOyt5rvE8C5PppDO/q1o48bEim8dIQUbk+NLNBc0cGndMalA/cCa9Xu06xRiWyxe
+	 FezobKCeZD8PsNVgZWYGuCFqoQC+wz/ZmlkK9VwSum3I/F9MVSMOjrWencCJOV98uQ
+	 zk6gPZo4kGd+tHKXvTIvotAKf78JYdkmSOomx+aW8QXwhi89fn4PkiEgmMPvVE/uMx
+	 45gSKWkO6EE2JyMQVkuF8UvvBAjeH8UbYDsETzq/pwTkks6VGUIh9D1uqsfM4byVjH
+	 kpNz54SGOyOHjcxkKhiP5I5BHYWzINQvd3QyoZatdP/8Fwo5lDYyzM9K44Rs2KdY9P
+	 fOKFNsYWK2j+g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 06/10] selftests: mptcp: netlink: add outputs for ip_mptcp
-Date: Mon, 11 Mar 2024 09:48:43 +0800
-Message-Id: <c8bc708a1b492fcbbd370b55983e8575de9baec8.1710121590.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 07/10] selftests: mptcp: add endpoint_ops API helper
+Date: Mon, 11 Mar 2024 09:48:44 +0800
+Message-Id: <d327fe8645094080a922dc5075a0d2b45166a5f8.1710121590.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1710121590.git.tanggeliang@kylinos.cn>
 References: <cover.1710121590.git.tanggeliang@kylinos.cn>
@@ -45,153 +45,337 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The outputs of 'ip mptcp' are different from that of 'pm_nl_ctl'. This
-patch adds corresponding outputs of 'ip mptcp' together with 'pm_nl_ctl'.
-Use mptcp_lib_is_ip_mptcp() helper to test whether ip_mptcp is set. If
-it it, use 'ip mptcp' format outputs for check().
+This patch moves six endpoint operation helpers with the pm_nl_ prefix:
+
+	pm_nl_limits(),
+	pm_nl_add_endpoint(),
+	pm_nl_del_endpoint(),
+	pm_nl_flush_endpoint(),
+	pm_nl_show_endpoints() and
+	pm_nl_change_endpoint()
+
+from mptcp_join.sh into mptcp_lib.sh as public functions, and renamed each
+of them with a mptcp_lib_ prefix.
+
+Add a new helper mptcp_lib_endpoint_ops() in mptcp_lib.sh as the API for
+all endpoint operation helpers, which invokes each of mptcp_lib_ prefix
+helpers according to the first argument of it is "limits", "add", "del",
+"flush", "show" or "change".
+
+Usage:
+        mptcp_lib_endpoint_ops limits $ns $addrs $subflows
+        mptcp_lib_endpoint_ops add $ns $addr
+        mptcp_lib_endpoint_ops del $ns $id $addr
+        mptcp_lib_endpoint_ops flush $ns
+        mptcp_lib_endpoint_ops show $ns
+        mptcp_lib_endpoint_ops change $ns $id $flags
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/net/mptcp/pm_netlink.sh | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 107 +------------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 148 ++++++++++++++++++
+ 2 files changed, 155 insertions(+), 100 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 00949f73153a..2096c52b3a4b 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -72,6 +72,7 @@ check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "defaults addr list"
- default_limits="$(ip netns exec $ns1 ./pm_nl_ctl limits)"
- if mptcp_lib_expect_all_features; then
- 	limits=$'accept 0\nsubflows 2'
-+	mptcp_lib_is_ip_mptcp && limits="add_addr_accepted 0 subflows 2 "
- 	check "ip netns exec $ns1 ./pm_nl_ctl limits" "${limits}" "defaults limits"
- fi
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 431233e25abc..8e35f875147b 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -603,132 +603,39 @@ kill_events_pids()
+ 	evts_ns2_pid=0
+ }
  
-@@ -79,17 +80,24 @@ ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.2 flags subflow dev lo
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 flags signal,backup
- endpoint="id 1 flags  10.0.1.1"
-+mptcp_lib_is_ip_mptcp && endpoint="10.0.1.1 id 1 "
- check "ip netns exec $ns1 ./pm_nl_ctl get 1" "${endpoint}" "simple add/get addr"
+-pm_nl_limits()
+-{
+-	local ns=$1
+-	local addrs=$2
+-	local subflows=$3
+-
+-	if mptcp_lib_is_ip_mptcp; then
+-		local limits="limits"
+-
+-		if [ -n "$addrs" ] && [ -n "$subflows" ]; then
+-			limits+=" set add_addr_accepted $addrs subflows $subflows"
+-		fi
+-		ip -n $ns mptcp $limits
+-	else
+-		ip netns exec $ns ./pm_nl_ctl limits $addrs $subflows
+-	fi
+-}
+-
+ pm_nl_set_limits()
+ {
+-	pm_nl_limits "${@}"
++	mptcp_lib_endpoint_ops limits "${@}"
+ }
  
- dump="$(printf '%s\n' \
- 	"id 1 flags  10.0.1.1" \
- 	"id 2 flags subflow dev lo 10.0.1.2" \
- 	"id 3 flags signal,backup 10.0.1.3")"
-+mptcp_lib_is_ip_mptcp && \
-+dump="$(printf '%s\n' \
-+	"10.0.1.1 id 1 " \
-+	"10.0.1.2 id 2 subflow dev lo " \
-+	"10.0.1.3 id 3 signal backup ")"
- check "ip netns exec $ns1 ./pm_nl_ctl dump" \
- 	"${dump}" "dump addrs"
+ pm_nl_get_limits()
+ {
+-	pm_nl_limits "${@}"
++	mptcp_lib_endpoint_ops limits "${@}"
+ }
  
- ip netns exec $ns1 ./pm_nl_ctl del 2
- dump=$'id 1 flags  10.0.1.1\nid 3 flags signal,backup 10.0.1.3'
-+mptcp_lib_is_ip_mptcp && dump=$'10.0.1.1 id 1 \n10.0.1.3 id 3 signal backup '
- check "ip netns exec $ns1 ./pm_nl_ctl get 2" "" "simple del addr"
- check "ip netns exec $ns1 ./pm_nl_ctl dump" \
- 	"${dump}" "dump addrs after del"
-@@ -99,12 +107,14 @@ check "ip netns exec $ns1 ./pm_nl_ctl get 4" "" "duplicate addr"
+ pm_nl_add_endpoint()
+ {
+-	local ns=$1
+-	local addr=$2
+-	local flags _flags
+-	local port _port
+-	local dev _dev
+-	local id _id
+-	local nr=2
+-
+-	local p
+-	for p in "${@}"
+-	do
+-		if [ $p = "flags" ]; then
+-			eval _flags=\$"$nr"
+-			[ -n "$_flags" ]; flags="flags $_flags"
+-		fi
+-		if [ $p = "dev" ]; then
+-			eval _dev=\$"$nr"
+-			[ -n "$_dev" ]; dev="dev $_dev"
+-		fi
+-		if [ $p = "id" ]; then
+-			eval _id=\$"$nr"
+-			[ -n "$_id" ]; id="id $_id"
+-		fi
+-		if [ $p = "port" ]; then
+-			eval _port=\$"$nr"
+-			[ -n "$_port" ]; port="port $_port"
+-		fi
+-
+-		nr=$((nr + 1))
+-	done
+-
+-	if mptcp_lib_is_ip_mptcp; then
+-		ip -n $ns mptcp endpoint add $addr ${_flags//","/" "} $dev $id $port
+-	else
+-		ip netns exec $ns ./pm_nl_ctl add $addr $flags $dev $id $port
+-	fi
++	mptcp_lib_endpoint_ops add "${@}"
+ }
  
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4 flags signal
- endpoint="id 4 flags signal 10.0.1.4"
-+mptcp_lib_is_ip_mptcp && endpoint="10.0.1.4 id 4 signal "
- check "ip netns exec $ns1 ./pm_nl_ctl get 4" "${endpoint}" "id addr increment"
+ pm_nl_del_endpoint()
+ {
+-	local ns=$1
+-	local id=$2
+-	local addr=$3
+-
+-	if mptcp_lib_is_ip_mptcp; then
+-		[ $id -ne 0 ] && addr=''
+-		ip -n $ns mptcp endpoint delete id $id $addr
+-	else
+-		ip netns exec $ns ./pm_nl_ctl del $id $addr
+-	fi
++	mptcp_lib_endpoint_ops del "${@}"
+ }
  
- for i in $(seq 5 9); do
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.$i flags signal >/dev/null 2>&1
- done
- endpoint="id 9 flags signal 10.0.1.9"
-+mptcp_lib_is_ip_mptcp && endpoint="10.0.1.9 id 9 signal "
- check "ip netns exec $ns1 ./pm_nl_ctl get 9" "${endpoint}" "hard addr limit"
- check "ip netns exec $ns1 ./pm_nl_ctl get 10" "" "above hard addr limit"
+ pm_nl_flush_endpoint()
+ {
+-	local ns=$1
+-
+-	if mptcp_lib_is_ip_mptcp; then
+-		ip -n $ns mptcp endpoint flush
+-	else
+-		ip netns exec $ns ./pm_nl_ctl flush
+-	fi
++	mptcp_lib_endpoint_ops flush "${@}"
+ }
  
-@@ -121,6 +131,15 @@ dump="$(printf '%s\n' \
- 	"id 6 flags signal 10.0.1.6" \
- 	"id 7 flags signal 10.0.1.7" \
- 	"id 8 flags signal 10.0.1.8")"
-+mptcp_lib_is_ip_mptcp && \
-+dump="$(printf '%s\n' \
-+	"10.0.1.1 id 1 " \
-+	"10.0.1.3 id 3 signal backup " \
-+	"10.0.1.4 id 4 signal " \
-+	"10.0.1.5 id 5 signal " \
-+	"10.0.1.6 id 6 signal " \
-+	"10.0.1.7 id 7 signal " \
-+	"10.0.1.8 id 8 signal ")"
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "${dump}" "id limit"
+ pm_nl_show_endpoints()
+ {
+-	local ns=$1
+-	local id=$2
+-
+-	if mptcp_lib_is_ip_mptcp; then
+-		local show="show"
+-
+-		[ -n "$id" ] && show+=" id $id"
+-		ip -n $ns mptcp endpoint $show
+-	else
+-		local dump="dump"
+-
+-		[ -n "$id" ] && dump="get $id"
+-		ip netns exec $ns ./pm_nl_ctl $dump
+-	fi
++	mptcp_lib_endpoint_ops show "${@}"
+ }
  
- ip netns exec $ns1 ./pm_nl_ctl flush
-@@ -134,6 +153,7 @@ check "ip netns exec $ns1 ./pm_nl_ctl limits" "$default_limits" "subflows above
+ pm_nl_change_endpoint()
+ {
+-	local ns=$1
+-	local addr=$2
+-	local flags=$3
+-
+-	if ! mptcp_lib_is_addr "$addr"; then
+-		[ $addr -gt 0 ] && [ $addr -lt 256 ] && addr="id $addr"
+-	fi
+-
+-	if mptcp_lib_is_ip_mptcp; then
+-		ip -n $ns mptcp endpoint change $addr ${flags//","/" "}
+-	else
+-		ip netns exec $ns ./pm_nl_ctl set $addr flags $flags
+-	fi
++	mptcp_lib_endpoint_ops change "${@}"
+ }
  
- ip netns exec $ns1 ./pm_nl_ctl limits 8 8
- limits=$'accept 8\nsubflows 8'
-+mptcp_lib_is_ip_mptcp && limits="add_addr_accepted 8 subflows 8 "
- check "ip netns exec $ns1 ./pm_nl_ctl limits" "${limits}" "set limits"
+ pm_nl_check_endpoint()
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index c465f1d59419..d395692fac0d 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -523,3 +523,151 @@ mptcp_lib_is_ip_mptcp() {
  
- ip netns exec $ns1 ./pm_nl_ctl flush
-@@ -154,6 +174,16 @@ dump="$(printf '%s\n' \
- 	"id 101 flags  10.0.1.4" \
- 	"id 254 flags  10.0.1.5" \
- 	"id 255 flags  10.0.1.6")"
-+mptcp_lib_is_ip_mptcp && \
-+dump="$(printf '%s\n' \
-+	"10.0.1.1 id 1 " \
-+	"10.0.1.2 id 2 " \
-+	"10.0.1.7 id 3 " \
-+	"10.0.1.8 id 4 " \
-+	"10.0.1.3 id 100 " \
-+	"10.0.1.4 id 101 " \
-+	"10.0.1.5 id 254 " \
-+	"10.0.1.6 id 255 ")"
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "${dump}" "set ids"
- 
- ip netns exec $ns1 ./pm_nl_ctl flush
-@@ -174,15 +204,27 @@ dump="$(printf '%s\n' \
- 	"id 253 flags  10.0.0.5" \
- 	"id 254 flags  10.0.0.2" \
- 	"id 255 flags  10.0.0.3")"
-+mptcp_lib_is_ip_mptcp && \
-+dump="$(printf '%s\n' \
-+	"10.0.0.1 id 1 " \
-+	"10.0.0.4 id 2 " \
-+	"10.0.0.6 id 3 " \
-+	"10.0.0.7 id 4 " \
-+	"10.0.0.8 id 5 " \
-+	"10.0.0.5 id 253 " \
-+	"10.0.0.2 id 254 " \
-+	"10.0.0.3 id 255 ")"
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "${dump}" "wrap-around ids"
- 
- ip netns exec $ns1 ./pm_nl_ctl flush
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1 flags subflow
- ip netns exec $ns1 ./pm_nl_ctl set 10.0.1.1 flags backup
- dump="id 1 flags subflow,backup 10.0.1.1"
-+mptcp_lib_is_ip_mptcp && dump="10.0.1.1 id 1 subflow backup "
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "${dump}" "set flags (backup)"
- ip netns exec $ns1 ./pm_nl_ctl set 10.0.1.1 flags nobackup
- dump="id 1 flags subflow 10.0.1.1"
-+mptcp_lib_is_ip_mptcp && dump="10.0.1.1 id 1 subflow "
- check "ip netns exec $ns1 ./pm_nl_ctl dump" "${dump}" "          (nobackup)"
- 
- # fullmesh support has been added later
-@@ -190,12 +232,15 @@ ip netns exec $ns1 ./pm_nl_ctl set id 1 flags fullmesh 2>/dev/null
- if ip netns exec $ns1 ./pm_nl_ctl dump | grep -q "fullmesh" ||
-    mptcp_lib_expect_all_features; then
- 	dump="id 1 flags subflow,fullmesh 10.0.1.1"
-+	mptcp_lib_is_ip_mptcp && dump="10.0.1.1 id 1 subflow fullmesh "
- 	check "ip netns exec $ns1 ./pm_nl_ctl dump" "${dump}" "          (fullmesh)"
- 	ip netns exec $ns1 ./pm_nl_ctl set id 1 flags nofullmesh
- 	dump="id 1 flags subflow 10.0.1.1"
-+	mptcp_lib_is_ip_mptcp && dump="10.0.1.1 id 1 subflow "
- 	check "ip netns exec $ns1 ./pm_nl_ctl dump" "${dump}" "          (nofullmesh)"
- 	ip netns exec $ns1 ./pm_nl_ctl set id 1 flags backup,fullmesh
- 	dump="id 1 flags subflow,backup,fullmesh 10.0.1.1"
-+	mptcp_lib_is_ip_mptcp && dump="10.0.1.1 id 1 subflow backup fullmesh "
- 	check "ip netns exec $ns1 ./pm_nl_ctl dump" "${dump}" "          (backup,fullmesh)"
- else
- 	for st in fullmesh nofullmesh backup,fullmesh; do
+ 	[ ${mptcp_lib_ip_mptcp} -eq 1 ]
+ }
++
++mptcp_lib_limits() {
++	local ns=${1}
++	local addrs=${2}
++	local subflows=${3}
++
++	if mptcp_lib_is_ip_mptcp; then
++		local limits="limits"
++
++		if [ -n "${addrs}" ] && [ -n "${subflows}" ]; then
++			limits+=" set add_addr_accepted ${addrs} subflows ${subflows}"
++		fi
++		# shellcheck disable=SC2086
++		ip -n "${ns}" mptcp ${limits}
++	else
++		# shellcheck disable=SC2086
++		ip netns exec "${ns}" ./pm_nl_ctl limits "${addrs}" ${subflows}
++	fi
++}
++
++mptcp_lib_add_endpoint() {
++	local ns=${1}
++	local addr=${2}
++	local flags _flags
++	local port _port
++	local dev _dev
++	local id _id
++	local nr=2
++
++	local p
++	for p in "${@}"
++	do
++		if [ "${p}" = "flags" ]; then
++			eval _flags=\$"${nr}"
++			[ -n "${_flags}" ]; flags="flags ${_flags}"
++		fi
++		if [ "${p}" = "dev" ]; then
++			eval _dev=\$"${nr}"
++			[ -n "${_dev}" ]; dev="dev ${_dev}"
++		fi
++		if [ "${p}" = "id" ]; then
++			eval _id=\$"${nr}"
++			[ -n "${_id}" ]; id="id ${_id}"
++		fi
++		if [ "${p}" = "port" ]; then
++			eval _port=\$"${nr}"
++			[ -n "${_port}" ]; port="port ${_port}"
++		fi
++
++		nr=$((nr + 1))
++	done
++
++	if mptcp_lib_is_ip_mptcp; then
++		# shellcheck disable=SC2086
++		ip -n "${ns}" mptcp endpoint add "${addr}" ${_flags//","/" "} ${dev} ${id} ${port}
++	else
++		# shellcheck disable=SC2086
++		ip netns exec "${ns}" ./pm_nl_ctl add "${addr}" ${flags} ${dev} ${id} ${port}
++	fi
++}
++
++mptcp_lib_del_endpoint() {
++	local ns=${1}
++	local id=${2}
++	local addr=${3}
++
++	if mptcp_lib_is_ip_mptcp; then
++		[ "${id}" -ne 0 ] && addr=''
++		# shellcheck disable=SC2086
++		ip -n "${ns}" mptcp endpoint delete id "${id}" ${addr}
++	else
++		ip netns exec "${ns}" ./pm_nl_ctl del "${id}" "${addr}"
++	fi
++}
++
++mptcp_lib_flush_endpoint() {
++	local ns=${1}
++
++	if mptcp_lib_is_ip_mptcp; then
++		ip -n "${ns}" mptcp endpoint flush
++	else
++		ip netns exec "${ns}" ./pm_nl_ctl flush
++	fi
++}
++
++mptcp_lib_show_endpoints() {
++	local ns=${1}
++	local id=${2}
++
++	if mptcp_lib_is_ip_mptcp; then
++		local show="show"
++
++		[ -n "${id}" ] && show+=" id ${id}"
++		# shellcheck disable=SC2086
++		ip -n "${ns}" mptcp endpoint ${show}
++	else
++		local dump="dump"
++
++		[ -n "${id}" ] && dump="get ${id}"
++		# shellcheck disable=SC2086
++		ip netns exec "${ns}" ./pm_nl_ctl ${dump}
++	fi
++}
++
++mptcp_lib_change_endpoint() {
++	local ns=${1}
++	local addr=${2}
++	local flags=${3}
++
++	if ! mptcp_lib_is_addr "${addr}"; then
++		[ "${addr}" -gt 0 ] && [ "${addr}" -lt 256 ] && addr="id ${addr}"
++	fi
++
++	if mptcp_lib_is_ip_mptcp; then
++		# shellcheck disable=SC2086
++		ip -n "${ns}" mptcp endpoint change ${addr} ${flags//","/" "}
++	else
++		# shellcheck disable=SC2086
++		ip netns exec "${ns}" ./pm_nl_ctl set ${addr} flags "${flags}"
++	fi
++}
++
++mptcp_lib_endpoint_ops() {
++	[ "$#" -lt 2 ] && return 1
++
++	case "$1" in
++	"limits")
++		mptcp_lib_limits "${@:2}"
++		;;
++	"add")
++		mptcp_lib_add_endpoint "${@:2}"
++		;;
++	"del")
++		mptcp_lib_del_endpoint "${@:2}"
++		;;
++	"flush")
++		mptcp_lib_flush_endpoint "${@:2}"
++		;;
++	"show")
++		mptcp_lib_show_endpoints "${@:2}"
++		;;
++	"change")
++		mptcp_lib_change_endpoint "${@:2}"
++		;;
++	*)
++		;;
++	esac
++}
 -- 
 2.40.1
 
