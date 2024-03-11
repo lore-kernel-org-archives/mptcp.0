@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7916E5579F;
-	Mon, 11 Mar 2024 19:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A6B58104;
+	Mon, 11 Mar 2024 22:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710185962; cv=none; b=EPwmJcdg0Mho97XCtQ00UzK46lF3kb2pyZ2N27Vm73UR8qEGPhmFaYoBhpwESYX3eOisisJikcn+pB2IGHJ+EgAbLwxxOaVLHhef8mzM0puIfz9oGcSUWdrDUZ95rpQhWqKD5hzWYGgP380MUrSPeM0quazKXDi/DaZhYJ5T9mw=
+	t=1710195632; cv=none; b=cF9kI/SqEH0uXpLTNKIGw0a5keWv7gZ1VhX0KTeKfUrhN4/Lh5sc1d/vdNtRQCj0uA+jQxGQ5imBtWFEV3LBzRX+Suff9CGos3iu7FY9bSzBtuMiXu+G/0hPmPGi6998rlT0P13fV7xsH2b9ahs9PhXc6cuMuq5JnV4gn0zcWcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710185962; c=relaxed/simple;
-	bh=RxFF2//vLuW1+4v7hEe9axSby27a7ZHrxc8sIlCocZk=;
+	s=arc-20240116; t=1710195632; c=relaxed/simple;
+	bh=wpoixAH5hmLkM35K/YQ7kamEzrI2/hx3uKaAyzVuvW0=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hToFR3tizzgtT7Ap+REjuGE11OKfJoV0Ga41vFP8pdppuAf6X8Ket3cRkWxJhPOSu5RfPYGMQV1RWAlVJ6Zd4S99JJoimyPnVCg7DRBrRV2PsPyBvlBS31BAstXy2KGHEiGHXWhlkmFgb2TiQl5sjiM5NP24Gl7dEXrEOOhz1tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEn3l/E5; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=k1mHRMDB9reRc+1vlxi25M6YiA2IxU837AG8j6NXJuBeJz3bWaNJDYjvcDWJ1gNjQuWrjaMnbBGhqslvyan1sIXEewzBsmG9p/ZS7tBo2EOIuL5aioraJdQiXt05gZR8zQZPnySK2x1IvvhIegEyse4X7n4hhZO+mqIMWKVg2No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ncIpVrqC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEn3l/E5"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 29E26C43601;
-	Mon, 11 Mar 2024 19:39:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ncIpVrqC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9161EC43390;
+	Mon, 11 Mar 2024 22:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710185962;
-	bh=RxFF2//vLuW1+4v7hEe9axSby27a7ZHrxc8sIlCocZk=;
+	s=k20201202; t=1710195631;
+	bh=wpoixAH5hmLkM35K/YQ7kamEzrI2/hx3uKaAyzVuvW0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MEn3l/E5kTFDtiG36YggELNTNkmcui+sOaC9uL1aKDHvJbSWZK1g5l4bo3MMdH2JD
-	 w3BwfvBb/t6+9VIT2mlIoLH1A0ef8dCB/EW12WFF6dB0RpPzdLBI9EuR46WM6HtjHL
-	 k9KUGHbxCAcrjEn/dNtaLBtWcMjkCIRD3QPl3o8Nl+DorfcZQsXgII74ZyUbmQGlVD
-	 pBgNGeJ1WmRin4ZpU75uC3XBeLYnKuIrbLonzKuvgF6f2E1X53rheezcColrfdPUCY
-	 xkkwT+XOe5H6bfp+rqucms4sAvIPPrYyQ0PSVsM5g+OPdCRSltIwOotEiuPKmjK1Ic
-	 NU1LyWIqBLqWw==
+	b=ncIpVrqCU/a4KDUIUnKzFzOXKQFqdMKJhN1H9cFpEi4WQ49Y+8tEhAcTArdYMbGSl
+	 CYNwlWMMJ7pqSXzqzuKEKz7zCSN4lUKIMHL2THGIyLYKsZ4m0/e3NLcUtPDHZbUOTO
+	 8HBkpezzTDrpjoA3mdxMnhXIN4EqeLPTpOqqvxGIpYuj1N8xn4RI+VImGeSujOs7F2
+	 VOvXMc19ZtL4g2No/59y9BZAi+29HNOxKFQ77wDNBZNI+/2L53hpVvH6U5cdWp8Jqn
+	 X42lCpLrfFBfOh2FbKOp48kzcvi1RpvvwVbTTkDGWp5tpiDRlvlTD5/EGIvYKUQb0Y
+	 Zw671a3g4LB9A==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 05E76D9505A;
-	Mon, 11 Mar 2024 19:39:22 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 74BA0D95056;
+	Mon, 11 Mar 2024 22:20:31 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -37,41 +37,66 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/2] annotate data-races around sysctl_tcp_wmem[0]
+Subject: Re: [PATCH net-next 00/15] selftests: mptcp: various improvements
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171018596201.1144.18058014960608498774.git-patchwork-notify@kernel.org>
-Date: Mon, 11 Mar 2024 19:39:22 +0000
-References: <20240308112504.29099-1-kerneljasonxing@gmail.com>
-In-Reply-To: <20240308112504.29099-1-kerneljasonxing@gmail.com>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: edumazet@google.com, dsahern@kernel.org, matttbe@kernel.org,
- martineau@kernel.org, geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com,
- davem@davemloft.net, mptcp@lists.linux.dev, netdev@vger.kernel.org,
- kernelxing@tencent.com
+ <171019563147.21986.8830557428552738563.git-patchwork-notify@kernel.org>
+Date: Mon, 11 Mar 2024 22:20:31 +0000
+References: <20240308-upstream-net-next-20240308-selftests-mptcp-unification-v1-0-4f42c347b653@kernel.org>
+In-Reply-To: <20240308-upstream-net-next-20240308-selftests-mptcp-unification-v1-0-4f42c347b653@kernel.org>
+To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ tanggeliang@kylinos.cn, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
 
 Hello:
 
 This series was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri,  8 Mar 2024 19:25:02 +0800 you wrote:
-> From: Jason Xing <kernelxing@tencent.com>
+On Fri, 08 Mar 2024 23:10:07 +0100 you wrote:
+> In this series from Geliang, there are various improvements in MPTCP
+> selftests: sharing code, doing actions the same way, colours, etc.
 > 
-> Adding simple READ_ONCE() can avoid reading the sysctl knob meanwhile
-> someone is trying to change it.
+> Patch 1 prints all error messages to stdout: what was done in almost all
+> other MPTCP selftests. This can be now easily changed later if needed.
 > 
-> Jason Xing (2):
->   mptcp: annotate a data-race around sysctl_tcp_wmem[0]
->   tcp: annotate a data-race around sysctl_tcp_wmem[0]
+> Patch 2 makes sure the test counter is continuous in mptcp_connect.sh.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,1/2] mptcp: annotate a data-race around sysctl_tcp_wmem[0]
-    https://git.kernel.org/netdev/net-next/c/9eb430d40e44
-  - [net-next,2/2] tcp: annotate a data-race around sysctl_tcp_wmem[0]
-    https://git.kernel.org/netdev/net-next/c/683a67da9561
+  - [net-next,01/15] selftests: mptcp: print all error messages to stdout
+    https://git.kernel.org/netdev/net-next/c/6215df11b945
+  - [net-next,02/15] selftests: mptcp: connect: add dedicated port counter
+    https://git.kernel.org/netdev/net-next/c/01ed9838107f
+  - [net-next,03/15] selftests: mptcp: connect: fix misaligned output
+    https://git.kernel.org/netdev/net-next/c/c9161a0f8ff9
+  - [net-next,04/15] selftests: mptcp: sockopt: print every test result
+    https://git.kernel.org/netdev/net-next/c/fd959262c1bb
+  - [net-next,05/15] selftests: mptcp: export TEST_COUNTER variable
+    https://git.kernel.org/netdev/net-next/c/9e6a39ecb9a1
+  - [net-next,06/15] selftests: mptcp: add print_title in mptcp_lib
+    https://git.kernel.org/netdev/net-next/c/3382bb09701b
+  - [net-next,07/15] selftests: mptcp: print test results with counters
+    https://git.kernel.org/netdev/net-next/c/aa7694766f14
+  - [net-next,08/15] selftests: mptcp: use += operator to append strings
+    https://git.kernel.org/netdev/net-next/c/e7c42bf4d320
+  - [net-next,09/15] selftests: mptcp: print test results with colors
+    https://git.kernel.org/netdev/net-next/c/747ba8783a33
+  - [net-next,10/15] selftests: mptcp: call test_fail without argument
+    https://git.kernel.org/netdev/net-next/c/339c225e2e03
+  - [net-next,11/15] selftests: mptcp: extract mptcp_lib_check_expected
+    https://git.kernel.org/netdev/net-next/c/663260e14668
+  - [net-next,12/15] selftests: mptcp: print_test out of verify_listener_events
+    https://git.kernel.org/netdev/net-next/c/8ebb44196585
+  - [net-next,13/15] selftests: mptcp: add mptcp_lib_verify_listener_events
+    https://git.kernel.org/netdev/net-next/c/7f0782ca1ce9
+  - [net-next,14/15] selftests: mptcp: declare event macros in mptcp_lib
+    https://git.kernel.org/netdev/net-next/c/23a0485d1c04
+  - [net-next,15/15] selftests: mptcp: use KSFT_SKIP/KSFT_PASS/KSFT_FAIL
+    https://git.kernel.org/netdev/net-next/c/8f7a69a8e7dc
 
 You are awesome, thank you!
 -- 
