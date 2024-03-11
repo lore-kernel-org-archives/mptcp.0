@@ -1,104 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A1638FA5;
-	Mon, 11 Mar 2024 11:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D70B3B79F
+	for <mptcp@lists.linux.dev>; Mon, 11 Mar 2024 12:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710155740; cv=none; b=WiFUEP50Wu12B+waj1VngLL6pA5kLlucq4FClv7vOmCCijyvPFBj3Na3TMTw/hhuNYYhhPm9nRMWp5eJmeRiMEpt8qYyipSexfiuSKbmpUrnT2A6AcAhSnVDKmpZJcz9aV1x5PeN4YmbMCgeUjrrlqD5LijLYlR/Ti+ASluicmY=
+	t=1710159612; cv=none; b=no8XhKv2//CUBq4qKUCzGdKM62HOPsMZOGS4IZVBXICiqgjmryh4Dl2bOvl/l31AAhUeipYKx6Fu/bnrtBI/WIAa8UefFV4xxYdQi4LHWqjNeoK0pnFSDrgyHVfjiLZ7nJ5dyEB9cq5tvADK9nHSad+zjSlsEwx4W7e1uw8dO6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710155740; c=relaxed/simple;
-	bh=6peI3ciCm7aQ4dA3hRQ4FkGNP7ugdIiF/HMrpOKrqxY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cQnExqzF3a5egsHwIZ/dPbEDpe2aquH0oV6oq/ybCVK2D7KLwvKpW1hW/Tlnh2fZKStcL1fCeH9U5l3eyO79QRKjjV1u61xwSgOQOxGiT++VpXXJ3Fkai0axaszg1BqlQ9IKhlR6TaFZ1O7EmBB2wJ0oAT9mVRWf0z2w4DMMDI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pvs6Sxfk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710159612; c=relaxed/simple;
+	bh=8KBBMUCx+sNPxqjnZBzvgja37a70mfWuELd6+PeFHG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=gHq6dafEW6w8L5fcPk3fCdQOcOcf3KJtom/cSJUuwnGekZW4o+lnVqFk/f0MWbq1ymbINemlrPOnF+yl1xhuctVq+xQ2b/wMW0MumkT8HqNiuypsh51Q68yOyVPiSbnK+Kdu9w4hQzAvteEemZSdNgcAC22R/adYNTRV41DIpnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LAD7biYk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pvs6Sxfk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C34C433C7;
-	Mon, 11 Mar 2024 11:15:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710155739;
-	bh=6peI3ciCm7aQ4dA3hRQ4FkGNP7ugdIiF/HMrpOKrqxY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Pvs6Sxfk+Cjsf74wv029DhoroomWjkMSCT3Ucq8yMW979HGKJ8mXrjJJgJSjNkGbW
-	 eV4lQmxO3oaYgw5QSNE3mr/3JiIuAdt22dnBCG+2VHpkU79J0bzMCQPH4e/F5CPzh6
-	 B28jFSE8U1p/LHHOyovr4R3kJm8K/oSJu/0jL7kIWXXcFuEvRsIgcft/5mMTk6AgdP
-	 8nTTcvwo98G66tEOcChKCC8/mXMachTRlEUtLBEIpMfSv6DTA0br5ms7Fa4Ah4gX8j
-	 V37qZfkYiXD0YsjhJReAtqhlNXqJxGZlGKobW2Rd2rOpSOJvN1C6nfn+CPkjFfIvOL
-	 q0ksq0IJKqTqQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	sashal@kernel.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.15.y] selftests: mptcp: decrease BW in simult flows
-Date: Mon, 11 Mar 2024 12:15:31 +0100
-Message-ID: <20240311111530.1425144-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LAD7biYk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710159608;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5dBz3pqqa/NfIAn3Nps5E9S3OF+EfTBcN3eZbuNKm7A=;
+	b=LAD7biYkwdaeACkV3bBvR9DFgqFeZIXdqDRqB6wH3tzRXHaZqV7x7xNYQdypVxGc4y49VG
+	Q3pOcAarKywQzcUIqIbCb6oe/8uovVhdRbYzTwj92NQZTNYxnaosFd1S1+3Zt3hc77pQgV
+	e7P/cr7D0XYZCQd4vT2rPBklf0yEapg=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-93-FYOHfW8KOb6LS8nQ74njbQ-1; Mon, 11 Mar 2024 08:20:07 -0400
+X-MC-Unique: FYOHfW8KOb6LS8nQ74njbQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-412d1f1ee7cso21353755e9.3
+        for <mptcp@lists.linux.dev>; Mon, 11 Mar 2024 05:20:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710159605; x=1710764405;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5dBz3pqqa/NfIAn3Nps5E9S3OF+EfTBcN3eZbuNKm7A=;
+        b=SjH2HSTufmMdy5CyxGr4/ADi5r07DtU16lRgceLQVb4EnWNxoulNzDJSAx0SajNreW
+         Agse1J/WfOYXg0Ra80oYr/5YsQbW7eC9kVIWBgORFHOzu2UuQZQG0W5j9GvbxC/cWi2z
+         eUTzY1y0tp83WCh9w5Vz/Ya+riRaKMOAXFZggiCoRz2zOwvV07ZIM9Q7xfBWu9UO9JLA
+         zMq5UKWxzm3V1cRVLrUabJqXSSRn9O0yZDO+o+KSFbYjUUW3dEPy4cgMtcnAR2w3ojhh
+         miXHJe2TT6JmfyKU5n2hiDklEkEkdYUJJ1uRGFR5kl1xxQIVHvxy5tkNx1ZkSaT+2iCY
+         FLgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZAbktSJ7YKX+F4Du0K5lcIMR0H+tDnvIwr2pBnm3xSFH55qH5npQasuYgmK7V3z9iwWinQNgR+TAxZR47OIF4F/THrlI=
+X-Gm-Message-State: AOJu0YxtcbyB0A+djctrF0Gob77yQfw5bpjalNsM5y4XpamfHjFqvEaK
+	bx+8Jl/bUVl4Y3xab4aXtXRjOE3hCe1rxK2AV0zqyivTs3ZBrSpMTvWkOn5B3bSBm5KZWhpLdot
+	iUXe2muUN/gTXijcLP1tuGanIwmfd3EUNY1Vxw/4IJNE6MPDb2H9/1pCtAlwa
+X-Received: by 2002:a05:600c:a07:b0:413:1645:29a6 with SMTP id z7-20020a05600c0a0700b00413164529a6mr4752671wmp.22.1710159604607;
+        Mon, 11 Mar 2024 05:20:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGui/IB7dBmq4ZCc5ptSo3Vwh8IAcNobt53bnN5sljVrqENQTYoYE/1Y4zLtiH6Rj3vWa6H/Q==
+X-Received: by 2002:a05:600c:a07:b0:413:1645:29a6 with SMTP id z7-20020a05600c0a0700b00413164529a6mr4752644wmp.22.1710159604034;
+        Mon, 11 Mar 2024 05:20:04 -0700 (PDT)
+Received: from localhost ([81.56.90.2])
+        by smtp.gmail.com with ESMTPSA id ay24-20020a05600c1e1800b004132be1189bsm2105972wmb.45.2024.03.11.05.20.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 05:20:03 -0700 (PDT)
+Date: Mon, 11 Mar 2024 13:20:03 +0100
+From: Davide Caratti <dcaratti@redhat.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>,
+	Christoph Paasch <cpaasch@apple.com>, mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v2] mptcp: don't account accept() of non-MPC
+ client as fallback to TCP
+Message-ID: <Ze728xdGAhQIgHW5@dcaratti.users.ipa.redhat.com>
+References: <be9176dac04b292242d6afc2eefc0c931d21b0cd.1709651670.git.dcaratti@redhat.com>
+ <62dd5009-fd83-4cd6-b7b1-8afff28a575c@kernel.org>
+ <ZenfkXU_zYb0AcR8@dcaratti.users.ipa.redhat.com>
+ <07323939-df11-4a2c-950e-de1412bb32b6@kernel.org>
+ <CAKa-r6uQmQO+vD0UnkOHNbR-2EdxWoJArTpxMwJAiV7xC2Yz3A@mail.gmail.com>
+ <636a37c1-ce8a-429a-a668-0c0abb125911@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2548; i=matttbe@kernel.org; h=from:subject; bh=6peI3ciCm7aQ4dA3hRQ4FkGNP7ugdIiF/HMrpOKrqxY=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBl7ufSqB/PIpQYSGmnvn16lkqqNu0u9NuJ9qJPU EQPnjMg42mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZe7n0gAKCRD2t4JPQmmg c3YhD/9z4cu/hVfKUes7OcIrIyF6MoKRfJMH+PQBScvctE/QhSzUqdVecwFX6VCIvy7z9Q2eg1Y miVtE1HwjLtbCs+rWAjqOC/PMukpQALl2tbovchQrkLBsVjuxPZ0Gnp32jCaCzzB1X0IyXt8H+Z DNFtdECibBEqKOhCE0URPj8gzQsoai5+aDobq6pBm+2SaKmxmJ0OdQen1Bzi9/NsYwBtZgxDeHB it7cUZGAzc9PS6GmPakLm0awV5zNcgZChDXYbqbJohZSbCMZIjDSmSybJ7iUGM0/OZzqWLH4a/Q 1rmfYKc/Pj41wtajdQ5YxstRSOrY331/0qOO6AUrynmh9LTmdqtCsZ7dBtZSDDmVLFVkeekrSZ0 gqZu/JD7R0ri4zte1tjJcQ7bGP3D5DXqG3XULfMHrqgfo6X6B2wNywSbeDED7bQA/IZyJzkue+G ChsRPUH2vlXQPxipolrmIeWrEkXF90MgrmE13YGjY22y43/HPzcLpHzjqh1aDUpyb7jRIu1VjCw f6Yeypo4Dn6SmQF8E5BTwUXPE9l0MvjbcAct79QbAanHqr//5q3cnf2pvQhf0kTYPW3VZ0j0BvV yuKrYvNUMzeUdcFnbzA7WdiIaQPpN8spU9Y0zYBGDNJdvClB66aMPCLV/CgzkVTCxE2puGp0nOo rsqppbduuSKHsfw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+In-Reply-To: <636a37c1-ce8a-429a-a668-0c0abb125911@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-When running the simult_flow selftest in slow environments -- e.g. QEmu
-without KVM support --, the results can be unstable. This selftest
-checks if the aggregated bandwidth is (almost) fully used as expected.
+hello,
 
-To help improving the stability while still keeping the same validation
-in place, the BW and the delay are reduced to lower the pressure on the
-CPU.
-
-Fixes: 1a418cb8e888 ("mptcp: simult flow self-tests")
-Fixes: 219d04992b68 ("mptcp: push pending frames when subflow has free space")
-Cc: stable@vger.kernel.org
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://lore.kernel.org/r/20240131-upstream-net-20240131-mptcp-ci-issues-v1-6-4c1c11e571ff@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit 5e2f3c65af47e527ccac54060cf909e3306652ff)
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
- - Conflicts in simult_flows.sh, because v5.15 doesn't have commit
-   675d99338e7a ("selftests: mptcp: simult flows: format subtests
-   results in TAP") which modifies the context for a new but unrelated
-   feature.
- - This is a new version to the one recently proposed by Sasha, this
-   time without dependences:
-   https://lore.kernel.org/stable/9f185a3f-9373-401c-9a5c-ec0f106c0cbc@kernel.org/
- - This is the same patch as the one recently sent for v6.1:
-   https://lore.kernel.org/stable/20240311111224.1421344-2-matttbe@kernel.org/
----
- tools/testing/selftests/net/mptcp/simult_flows.sh | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index 752cef168804..cab3e3a5481d 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -289,10 +289,11 @@ done
+On Fri, Mar 08, 2024 at 10:54:31AM +0100, Matthieu Baerts wrote:
+> Hi Davide,
+> 
+> On 08/03/2024 10:14, Davide Caratti wrote:
+> > On Thu, Mar 7, 2024 at 5:33 PM Matthieu Baerts <matttbe@kernel.org> wrote:
+> >>
+> >> Hi Davide,
  
- setup
- run_test 10 10 0 0 "balanced bwidth"
--run_test 10 10 1 50 "balanced bwidth with unbalanced delay"
-+run_test 10 10 1 25 "balanced bwidth with unbalanced delay"
- 
- # we still need some additional infrastructure to pass the following test-cases
--run_test 30 10 0 0 "unbalanced bwidth"
--run_test 30 10 1 50 "unbalanced bwidth with unbalanced delay"
--run_test 30 10 50 1 "unbalanced bwidth with opposed, unbalanced delay"
-+run_test 10 3 0 0 "unbalanced bwidth"
-+run_test 10 3 1 25 "unbalanced bwidth with unbalanced delay"
-+run_test 10 3 25 1 "unbalanced bwidth with opposed, unbalanced delay"
-+
- exit $ret
+> What about also checking in mptcp_connect.sh that the counter is no
+> longer incremented? I guess it should always be set to 0 after the
+> patch, but it was not the case before, no?
+
+correct. that would result in checking that $expect_ackrx didn't
+increment when $cl_proto is "TCP" and $srv_proto is "MPTCP", right?
+
 -- 
-2.43.0
+davide
 
