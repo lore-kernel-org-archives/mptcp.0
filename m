@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225E4A35
-	for <mptcp@lists.linux.dev>; Mon, 11 Mar 2024 01:48:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CEEA35
+	for <mptcp@lists.linux.dev>; Mon, 11 Mar 2024 01:48:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710121735; cv=none; b=kx6VH/o3DkaXUyFiIvECtQTUqh1QwLiDMjPvFBLeMXuA8E4u6v3WWIno3NIAOTpilnReoHnsFCIKDaXATvMbAqWC6qCoud9LuTSHwLWGdUDVaPXMkz90sRXu7NoUa3KEfgxtXECI+qTmjSC4MMe5rh0ZcqjeIW4ssur87LVhunA=
+	t=1710121737; cv=none; b=G767b59Jwpn31sMiHNlCs7NDd8glIZBZulyD5VuSVP6GW8Dl86+9qeDKyGBwPdJRF1+hUyN4wT9gl0+IUqEgGjUmgLEFDDYhikyu4tsf1K8yB0Pm+R/ihTJuHRB4H+NtoyemetYV3qTsx+gA2x7rvOArk5nn8Etb5OVByOW3Sds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710121735; c=relaxed/simple;
-	bh=0ycBCrRQyJ+rkajvlKwovdvZS4FvuvD05qgK0ULu7Xg=;
+	s=arc-20240116; t=1710121737; c=relaxed/simple;
+	bh=t0PjEkHGrF3beQen3geQkEdYiBkumvUszEWKhEn2UGs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dYXhk3Pkmx67EdEE0sIEGUE3ySqG8WvGE6+n+97EPQ/VNjCiDz7fg3gsa1dq1CeRCX+oTpx0RlIa6cz6M4w80GIXEYSX3VZQbeY3/QOhRO+TqUmz6KV6W2ExVwtMiosQ3pht8kBzmfLaRbAhEICHJ4QOUhQl76fe7xLZ9fJGTDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OMHrp2tI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=syxijrq1caQgBYct6GZh/afHmF0UFaSzOZAsCRsGxldvkuN+CeHpLjVtwIpU/Kji+qfhoSzMzqehqUB8+mvlKa0GYKrxJkhmdgDPF5i0zshOAxWU0BFcKsGT3EFs2JWk/sY1kYDAZz4dxRm1QSIYzuXic3TJlk1e9/3/M+Ap7L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VS1/4SA1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OMHrp2tI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C152AC433F1;
-	Mon, 11 Mar 2024 01:48:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VS1/4SA1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A4B2C433C7;
+	Mon, 11 Mar 2024 01:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710121735;
-	bh=0ycBCrRQyJ+rkajvlKwovdvZS4FvuvD05qgK0ULu7Xg=;
+	s=k20201202; t=1710121736;
+	bh=t0PjEkHGrF3beQen3geQkEdYiBkumvUszEWKhEn2UGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OMHrp2tIC2uHE1wKOeh9fW/WO5yXw9wJAxU4Za76HxJPVY0cOplPK5xufQ1E6Z9Yp
-	 kIvXq0CJTCjirLdUx/zDBNXdCT7Gs8yLZEjZiuy8M5QsTBSBG8MhtEpeNjVgH9lqA3
-	 XKl/g/hsgUqaaUcWeznSufexRFlx5RYZJxJHNQRhv6FiWqNRP/s51yZHinVxZFjNQC
-	 /fQCEwKcv6uWKdYBdOFTZwml9kaaDCCMHVkzCNSb9QuMa8Qb9MPC3qHf45nYFX+Kc1
-	 P+9rDgH2GwUSOuvS/L05zsJGzfpxF6ANCxaVyW4TiUlTiQJaHV6WhoEqAGs894A24D
-	 spfudeLWO9pgg==
+	b=VS1/4SA1YPSIwsjStecMaja/NkK2mHVsZvURYJbjwdk9ogN7y8P6TwGKnjiRH0Ivk
+	 Dl816LG9nzis0dc4Tr9xe2FnApjugikPIUwvF1YRtBr4roImGMyqgNcd38cdxVRl/f
+	 P4vcwPXb5cXxrFuwLR23S6WsYKS3CWr6q7pyTvzbmi1mY27zXTKEyPcXY83/gMLuor
+	 bLD/u5CH6/DiW2dBBJxjuVEShfI7XAysOc7BHwHxbQPiWPAs/OGIXOpwGAJJegIZch
+	 arYB5EGL2pJF7C8/+ECrZwsmYBPZZAZnGPLdXkdte9illCYl9KvDPHAWTQjD/czcgE
+	 b8F/MpUbbgu0g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 01/10] selftests: mptcp: export ip_mptcp to mptcp_lib
-Date: Mon, 11 Mar 2024 09:48:38 +0800
-Message-Id: <79aa9c522bcbd104823284a9ea42a91bbbd1f9e2.1710121590.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 02/10] selftests: mptcp: get support for limits
+Date: Mon, 11 Mar 2024 09:48:39 +0800
+Message-Id: <fe6ee65c22c22e0b2da067841a4226cf8093948a.1710121590.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1710121590.git.tanggeliang@kylinos.cn>
 References: <cover.1710121590.git.tanggeliang@kylinos.cn>
@@ -45,131 +45,74 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch exports ip_mptcp into mptcp_lib.sh as a public variable,
-named mptcp_lib_ip_mptcp. Add a helper mptcp_lib_set_ip_mptcp() to set
-it, and a helper mptcp_lib_is_ip_mptcp() to test whether it is set. Use
-these two helpers in mptcp_join.sh.
+There's only 'set limits' ability in pm_nl_set_limits(), this patch adds
+'get limits' support for it as well to show the limits, and rename it as
+pm_nl_limits(). Then pm_nl_set_limits() can be a wrapper of it. Also add
+another wrapper pm_nl_get_limits() to get limits.
 
-This patch is prepared for coming commits.
+Usage:
+        Set limits - pm_nl_set_limits $ns $addrs $subflows
+        Get limits - pm_nl_get_limits $ns
+
+A test for 'get limits' is added in endpoint_tests().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 17 ++++++++---------
- tools/testing/selftests/net/mptcp/mptcp_lib.sh  | 13 +++++++++++++
- 2 files changed, 21 insertions(+), 9 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 23 +++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 5e9211e89825..7fd32f645650 100755
+index 7fd32f645650..8eb5cf54ea42 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -31,7 +31,6 @@ timeout_poll=30
- timeout_test=$((timeout_poll * 2 + 1))
- capture=false
- checksum=false
--ip_mptcp=0
- check_invert=0
- validate_checksum=false
- init=0
-@@ -610,7 +609,7 @@ pm_nl_set_limits()
+@@ -603,19 +603,34 @@ kill_events_pids()
+ 	evts_ns2_pid=0
+ }
+ 
+-pm_nl_set_limits()
++pm_nl_limits()
+ {
+ 	local ns=$1
  	local addrs=$2
  	local subflows=$3
  
--	if [ $ip_mptcp -eq 1 ]; then
-+	if mptcp_lib_is_ip_mptcp; then
- 		ip -n $ns mptcp limits set add_addr_accepted $addrs subflows $subflows
+ 	if mptcp_lib_is_ip_mptcp; then
+-		ip -n $ns mptcp limits set add_addr_accepted $addrs subflows $subflows
++		local limits="limits"
++
++		if [ -n "$addrs" ] && [ -n "$subflows" ]; then
++			limits+=" set add_addr_accepted $addrs subflows $subflows"
++		fi
++		ip -n $ns mptcp $limits
  	else
  		ip netns exec $ns ./pm_nl_ctl limits $addrs $subflows
-@@ -650,7 +649,7 @@ pm_nl_add_endpoint()
- 		nr=$((nr + 1))
- 	done
- 
--	if [ $ip_mptcp -eq 1 ]; then
-+	if mptcp_lib_is_ip_mptcp; then
- 		ip -n $ns mptcp endpoint add $addr ${_flags//","/" "} $dev $id $port
- 	else
- 		ip netns exec $ns ./pm_nl_ctl add $addr $flags $dev $id $port
-@@ -663,7 +662,7 @@ pm_nl_del_endpoint()
- 	local id=$2
- 	local addr=$3
- 
--	if [ $ip_mptcp -eq 1 ]; then
-+	if mptcp_lib_is_ip_mptcp; then
- 		[ $id -ne 0 ] && addr=''
- 		ip -n $ns mptcp endpoint delete id $id $addr
- 	else
-@@ -675,7 +674,7 @@ pm_nl_flush_endpoint()
- {
- 	local ns=$1
- 
--	if [ $ip_mptcp -eq 1 ]; then
-+	if mptcp_lib_is_ip_mptcp; then
- 		ip -n $ns mptcp endpoint flush
- 	else
- 		ip netns exec $ns ./pm_nl_ctl flush
-@@ -686,7 +685,7 @@ pm_nl_show_endpoints()
- {
- 	local ns=$1
- 
--	if [ $ip_mptcp -eq 1 ]; then
-+	if mptcp_lib_is_ip_mptcp; then
- 		ip -n $ns mptcp endpoint show
- 	else
- 		ip netns exec $ns ./pm_nl_ctl dump
-@@ -699,7 +698,7 @@ pm_nl_change_endpoint()
- 	local id=$2
- 	local flags=$3
- 
--	if [ $ip_mptcp -eq 1 ]; then
-+	if mptcp_lib_is_ip_mptcp; then
- 		ip -n $ns mptcp endpoint change id $id ${flags//","/" "}
- 	else
- 		ip netns exec $ns ./pm_nl_ctl set id $id flags $flags
-@@ -749,7 +748,7 @@ pm_nl_check_endpoint()
- 		return
  	fi
- 
--	if [ $ip_mptcp -eq 1 ]; then
-+	if mptcp_lib_is_ip_mptcp; then
- 		# get line and trim trailing whitespace
- 		line=$(ip -n $ns mptcp endpoint show $id)
- 		line="${line% }"
-@@ -3700,7 +3699,7 @@ while getopts "${all_tests_args}cCih" opt; do
- 			checksum=true
- 			;;
- 		i)
--			ip_mptcp=1
-+			mptcp_lib_set_ip_mptcp
- 			;;
- 		h)
- 			usage
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index d529b4b37af8..d84f2f4986a7 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -23,6 +23,7 @@ MPTCP_LIB_SUBTESTS=()
- MPTCP_LIB_SUBTESTS_DUPLICATED=0
- MPTCP_LIB_TEST_COUNTER=0
- MPTCP_LIB_TEST_FORMAT="%02u %-50s"
-+mptcp_lib_ip_mptcp=0
- 
- # only if supported (or forced) and not disabled, see no-color.org
- if { [ -t 1 ] || [ "${SELFTESTS_MPTCP_LIB_COLOR_FORCE:-}" = "1" ]; } &&
-@@ -505,3 +506,15 @@ mptcp_lib_verify_listener_events() {
- 	mptcp_lib_check_expected "type" "family" "saddr" "sport" || rc="${?}"
- 	return "${rc}"
  }
-+
-+mptcp_lib_set_ip_mptcp() {
-+	: "${mptcp_lib_ip_mptcp:?}"
-+
-+	mptcp_lib_ip_mptcp=1
+ 
++pm_nl_set_limits()
++{
++	pm_nl_limits "${@}"
 +}
 +
-+mptcp_lib_is_ip_mptcp() {
-+	: "${mptcp_lib_ip_mptcp:?}"
-+
-+	[ ${mptcp_lib_ip_mptcp} -eq 1 ]
++pm_nl_get_limits()
++{
++	pm_nl_limits "${@}"
 +}
++
+ pm_nl_add_endpoint()
+ {
+ 	local ns=$1
+@@ -3578,6 +3593,10 @@ endpoint_tests()
+ 	   mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
+ 		pm_nl_set_limits $ns1 2 2
+ 		pm_nl_set_limits $ns2 2 2
++		print_check "get limits"
++		local output=$'accept 2\nsubflows 2'
++		mptcp_lib_is_ip_mptcp && output="add_addr_accepted 2 subflows 2 "
++		check_output "pm_nl_get_limits ${ns1}" "${output}"
+ 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+ 		speed=slow \
+ 			run_tests $ns1 $ns2 10.0.1.1 &
 -- 
 2.40.1
 
