@@ -1,99 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E823C13D
-	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 03:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451CF10A11
+	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 04:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710299594; cv=none; b=c+T6E9wsLzUSo89tqAw5ilmbdszU5srNrLiDGi+Iq4JzzOk9mGAaMto6oBrO/7gB/nnuu9SQNThMz52KNN+XmHbsdngvWYUDwHFxcncug8oHAVDdv6OGSH6gG14bUIeRoTUUd22FoBI7Yzm9q3xzAG+kTxtKeZLo3YMSM/PCg9g=
+	t=1710303091; cv=none; b=YquJEF2q5UJYB+8+LuZa0iFLxgFqJrTzinsSkKOwwZ6MQCyOUPTrP+3zqW9QJ6+TxKAjK0AKvMTSQYEptsCsqE9TvpvlW+7pvVVyWlz04pivF6uCVwaCPBQJelNsiymFW9QXJfYVBXH4MGW0bj3MFATBBaUSKWU42BSz/2Ozo3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710299594; c=relaxed/simple;
-	bh=9TldoPRGOHizoHdV5Hxc2yQFAg9h/bFUtboZBf4pWvw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hg8LK3BMEEQ817YtKVmNkIbmrE4DnV0yuiAk4XcxIEFzGpbA2lCEGQBvB4w1QKs3nAd2LcEb7gEhafMgTLre4m1byDBBt9tkiQramJRY3Fa2O2BxRnE4qr+8i4YVZkfMiNeBi2dG/wat92HwMXdAXaQuxJ9GA3M4qx/xa9pil8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8ZGZ8vK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710303091; c=relaxed/simple;
+	bh=h/VRMsr9TH/blSXBdYXaTOFyYrZB6kDzSFEKhql6cw0=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=fujrOaMbYIXI4b5+cMb4IVUCbGh1MNB1c8aCUwaWC0JmT5J+2rnhmdRtzLkd8WFzRMYtIY0CXyVbp3WynNgSE0NH4/8gGm99pUTWlmV7yiI1IOUY1mhT1MCDGQwnfP+J1FtYAQQdnT90vbAtUYoZCJPMQ2MMjdrcAIyaP9S9pXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gjK/hMbX; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8ZGZ8vK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE24DC433F1;
-	Wed, 13 Mar 2024 03:13:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710299593;
-	bh=9TldoPRGOHizoHdV5Hxc2yQFAg9h/bFUtboZBf4pWvw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A8ZGZ8vK1WDKnqfYn8SWalhMcUEr77kWLT3/pNIUESgz+p/wiFHj9MRg0gmwCJUhy
-	 V0BOcIznZh8XUV20CbTBdBfypKtwFQx8pZvHrc9uYIxMzECk+aqUpJJLYCDlY2rq/P
-	 shvfOxCcohu1GCRpMn4OSnmgieNbgmwCGJKIA1k0+ReLIgQkSnQZwUhi6KHrYIY7iU
-	 iSTmrI/z6wFCHZfjzIEwRwx2fAI2OziCIsfDXZV3HV8vaO+rAtDrEjxcbCLduQYju3
-	 8Nemmiho1RZ+Zl6n3cYOri+YdRmnPSjhb6tElDQWfvsUYoi/gQ2Z8M5b9/fMTTuBT0
-	 vk17jgB9xzFHg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 2/2] selftests: mptcp: add ms units for tc-netem delay
-Date: Wed, 13 Mar 2024 11:13:05 +0800
-Message-Id: <b83594277aa2ad30545e91d810f2a440a1f9c56c.1710299501.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gjK/hMbX"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4308c87f6faso2619601cf.3
+        for <mptcp@lists.linux.dev>; Tue, 12 Mar 2024 21:11:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710303089; x=1710907889; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h1ZZkAyRdUtVrLkfTsDu18hjJQslwNfCkVqzdX6hQl8=;
+        b=gjK/hMbXeJKlOr9DJ9969wk7ph4Qnep+39ASnM+rzNhHbMqGhtfu9hMsRXt3RqZRHm
+         hlxdslK7jrtswtr4GLWu0KPrPpN73m6Yj5aBdCldkNElu5sMW60uGv1tLhnf+EW4Q6XJ
+         n9riOJFUSKnMQ0UlTzFT8q54mOvKK7Bu4Xi3fTr8ubSWFwFRo4gKqXbhQtO6ncncQAvr
+         Bs1dL9H0LYGWkooIRvnzAwzQ/jn7flD2LsGYteDmJhtDYYrUL4P+wpedvlIPDvYjtgve
+         4SFopXaJ2OwhBwC9tyFZPtGOadNk8nCN+poZgzlkM+zq0JRaBM/yOEfQAETRq7xlZw6R
+         ysaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710303089; x=1710907889;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=h1ZZkAyRdUtVrLkfTsDu18hjJQslwNfCkVqzdX6hQl8=;
+        b=G7cGmJcShNJkPMldMUEbEv8ho9TnM30Y6JASc5zyody26xtBlnn+mFE9y34WI/hX4p
+         w/A7Oqd6N1yHSNVNfmnJMe/zf3H9fjm/rQcbU8RtBe7uEW7RLBz5Z/sGnUirnPwqK7j0
+         Ap3lg/BnUW2QPMn6mwbu4H8p/yw07T1s0z7P0Vpj90WANFfTWpbIW/Yya0sKXgGQwbrC
+         xzliJunY0IfN/beKT4OMGWE2bBgr8t71pepxv38neAqwpaVlqK1L13iONLz+BLxLMFio
+         DJP42dtbD4L5bJR5l8n0ectoTStDwNifZa7xkQeTMeuJtWocZz6uNuMcDpZ5foEKTSlS
+         tWkQ==
+X-Gm-Message-State: AOJu0YzVncybjKOTpS/bMOfA2id0mJfYiWSQS8gzYPRDwaZllqhsNtib
+	T5ChEqkMtellqulCWt3kx+RxkSfk93mItdtJwKadV9v9yC8H0H+/tERTuqA=
+X-Google-Smtp-Source: AGHT+IGGdurAMmoK5L0eckiFlB1II7yjCV6E/Ka7+T96RARYCZ8Y+oyqlhcb9VcipUmmKrp04VX69g==
+X-Received: by 2002:ac8:5d10:0:b0:42e:b8e8:dcd9 with SMTP id f16-20020ac85d10000000b0042eb8e8dcd9mr16074639qtx.15.1710303089035;
+        Tue, 12 Mar 2024 21:11:29 -0700 (PDT)
+Received: from [127.0.0.1] ([172.183.39.68])
+        by smtp.gmail.com with ESMTPSA id h18-20020ac85152000000b0042f04e421d2sm4315938qtn.24.2024.03.12.21.11.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 21:11:28 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1710299501.git.tanggeliang@kylinos.cn>
 References: <cover.1710299501.git.tanggeliang@kylinos.cn>
+Subject: Re: [mptcp-next,0/2] two tc related patches
+Message-ID: <61a29a81-6693-2314-258c-77ec0805d2dc@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 13 Mar 2024 04:11:27 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-'delay 1' in tc-netem is confusing, not sure if it's a delay of 1 second or
-1 millisecond. This patch explicitly adds millisecond units to make these
-commands clearer.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh   | 6 +++---
- tools/testing/selftests/net/mptcp/simult_flows.sh | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+Our CI did some validations and here is its report:
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 8f95e730f4e1..70621cbbab09 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -125,8 +125,8 @@ init_shapers()
- {
- 	local i
- 	for i in $(seq 1 4); do
--		tc -n $ns1 qdisc add dev ns1eth$i root netem rate 20mbit delay 1
--		tc -n $ns2 qdisc add dev ns2eth$i root netem rate 20mbit delay 1
-+		tc -n $ns1 qdisc add dev ns1eth$i root netem rate 20mbit delay 1ms
-+		tc -n $ns2 qdisc add dev ns2eth$i root netem rate 20mbit delay 1ms
- 	done
- }
- 
-@@ -3212,7 +3212,7 @@ fail_tests()
- 
- 	# multiple subflows
- 	if reset_with_fail "MP_FAIL MP_RST" 2; then
--		tc -n $ns2 qdisc add dev ns2eth1 root netem rate 1mbit delay 5
-+		tc -n $ns2 qdisc add dev ns2eth1 root netem rate 1mbit delay 5ms
- 		pm_nl_set_limits $ns1 0 1
- 		pm_nl_set_limits $ns2 0 1
- 		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
-diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
-index 72ea563c923c..e129fcb5a598 100755
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -216,8 +216,8 @@ run_test()
- 	shift 4
- 	local msg=$*
- 
--	[ $delay1 -gt 0 ] && delay1="delay $delay1" || delay1=""
--	[ $delay2 -gt 0 ] && delay2="delay $delay2" || delay2=""
-+	[ $delay1 -gt 0 ] && delay1="delay ${delay1}ms" || delay1=""
-+	[ $delay2 -gt 0 ] && delay2="delay ${delay2}ms" || delay2=""
- 
- 	for dev in ns1eth1 ns1eth2; do
- 		tc -n $ns1 qdisc del dev $dev root >/dev/null 2>&1
--- 
-2.40.1
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/8259068044
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/cd3741dc2965
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D834831
+
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
