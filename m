@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6669139852
-	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 10:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5831D59B4B
+	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 11:03:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710324960; cv=none; b=lc/f7EfSFNAoogiR3yomzp2qcd2jIEIDYYHrF2WjccL0GliNRtnBLcVEG5HdhTrQVtDm0RQtng4wnwCDYvN4S/EJNnCG+NEBoY4c3benXEDhQ8PPcmc15A9tvvtK44cAYlvEsSnkABPMHkFePQWQ/woHYD0FUH6O4VaDRHn9I3I=
+	t=1710327799; cv=none; b=qNnrm82N9ydxN+wR/oXKTVKO/NSJxTEL5Nd69GQWTCP26MKcNlM4tzfkPi0HQjbwb1M4QNrsNcAnKfsZQjZ/wkvgAh9ruNalcak/URH41EGlQ6IkDWZh7XV4bgiG/7o3kUVPkmR6vXm7M+V/oNCrZkeAYhpDwAPZh1zrFFVcBWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710324960; c=relaxed/simple;
-	bh=wBxyCA/9AbjRG0hneYLNN2oNNEzrVCKfmrNXiKs1RTg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bqji18eAAaS5iDcYy3RAyqneSGOwip69482mZBe/Y9buTWErhudXUg9IhbJPz6MXl9kJXif7zeCVUESX9cnFN3UEIZFmOBWSRp4B9svuE4rjOAZKLFgOqYzQ+9Jv5GVeP44Pe0UdpHqKHPNY5v9foO3Bla8546HUuQOZNvc0gEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xhi4jg6F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710327799; c=relaxed/simple;
+	bh=I6F51x7DZtWQrwue29ljgx9/gIeteSdoTVMXs54fjOo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=VyU/Q09Ku0YE572Y/pMMC0eDYi1R3JRzTeQp9OL2NXhdNxdNGBe8PSLRSqfiHQpU+TjZUIiKWcp6ldqSuVBRaP4M21P9GlF7iMF3ngO9hM7S1IrsyLBRCjV/cuk8Y+HDTVehbMoy6KkUva7nhDKc4UT/1++4JKcgVwzSD+hdwnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XdSrqwlc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xhi4jg6F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 021DCC433F1;
-	Wed, 13 Mar 2024 10:15:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XdSrqwlc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278E1C433F1;
+	Wed, 13 Mar 2024 11:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710324960;
-	bh=wBxyCA/9AbjRG0hneYLNN2oNNEzrVCKfmrNXiKs1RTg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Xhi4jg6FxWxmArv5UHnfvmd8WlZPDU+Rc6Iu5IwKBt1EHDpZ2TA54mZXCwpXQ5v9i
-	 dwM3qin5So22ubFNJEVP6JsRO3s+yYXRH9msKEcn/d4ZRYyhGgQNaWTVHUymsgImgD
-	 +Vfwiaa5yWQzWd9vTp6mBEz1CcEOCmh5dUZZTmWMMPrpvekxhb1QR1XwoTVTXT+Qty
-	 C7HOThp6oi9K4GMziv3kxWTAkw2UQl6vSCfdy7IL7b2gSMg1VaCoDOEwZL3Y0UMhsf
-	 x6PCiVdQpcWjNMmMNRCqYBOJfJPqPNPE/EUQmOfiXzqA20X049D/+M/axkVXAvbqPj
-	 bXHUvaA2AFZLQ==
-Message-ID: <1c646579-bfb5-442c-82df-e79d2bff6ca1@kernel.org>
-Date: Wed, 13 Mar 2024 11:15:56 +0100
+	s=k20201202; t=1710327798;
+	bh=I6F51x7DZtWQrwue29ljgx9/gIeteSdoTVMXs54fjOo=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=XdSrqwlcZJJZ4L8skgz/I6+jSq+3pIWyJhu+/EI2yHK+aJTJcf86+tWnHj9L2Yynt
+	 gBWAoamtby9NdyXo1QQ1iyn3K56L3sbnrEuOcnjid5ddu5/qipVed7uFoNgMaoHnCh
+	 E3ZhxI0p5MOpf62oGf+uM+1Tky+IiC7KL1vf0F18dqyY+JBSfENFGY/lr0O1QFsbKr
+	 oO8OkwU5ihnrEZkTdULif9DcEF6vx+u9N3WpwhI6ariJgYMS7iJpuJ6LZf3dV8l9C4
+	 y7BZcym56yID3RX4gMrVP8WeSbCbRBQFTFJWH2PjQnf8b/ZesC5uJk03Zqn6ivrm6+
+	 /uICzdodAFgtA==
+Message-ID: <6285e266-7d5a-4475-bd36-223be1a2c61d@kernel.org>
+Date: Wed, 13 Mar 2024 12:03:16 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -36,11 +36,12 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next 0/2] two tc related patches
+Content-Language: en-US
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710299501.git.tanggeliang@kylinos.cn>
-Content-Language: en-US
-From: Matthieu Baerts <matttbe@kernel.org>
+ <1c646579-bfb5-442c-82df-e79d2bff6ca1@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,24 +86,39 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1710299501.git.tanggeliang@kylinos.cn>
+In-Reply-To: <1c646579-bfb5-442c-82df-e79d2bff6ca1@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 13/03/2024 04:13, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 13/03/2024 11:15, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> Two tc related patches.
+> On 13/03/2024 04:13, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> Two tc related patches.
+>>
+>> Geliang Tang (2):
+>>   selftests: mptcp: add tc check for check_tools
+>>   selftests: mptcp: add ms units for tc-netem delay
 > 
-> Geliang Tang (2):
->   selftests: mptcp: add tc check for check_tools
->   selftests: mptcp: add ms units for tc-netem delay
+> Thank you, it looks good to me:
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Thank you, it looks good to me:
+Now in our tree (feat. for next):
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream:
+- 4daabed4354a: selftests: mptcp: add tc check for check_tools
+- 3b184258a310: selftests: mptcp: add ms units for tc-netem delay
+- Results: 02195e22026a..e2c5d9481519 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/5f3aa05a0186bfbf6f4d4feeb99657c756a6f456/checks
 
 Cheers,
 Matt
