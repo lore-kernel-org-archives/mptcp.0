@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0AD60B87
-	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 18:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094D6548F2
+	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 18:50:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710355754; cv=none; b=huQzq5Re+tG7g22zYqgqENiJ2ZJ7FRekrCfVddsAR/iavRqFUSx5aj4xBsFvtCjqQU5OrS1ZtbcOkzrXU8gPLlfKAI1wQyEe81sCZFaDIhyiykHn1Wl+fVn6j6wivrSZU1tgHCLo3HJFxrquNG3iJfce6+L/6YOa53grtTJ5lLY=
+	t=1710355828; cv=none; b=hQtqTJUmgba/U6YqSLA5svf9qrXhMd5frQD39y6KH9ZAj9Gun/qFU3N15b80xUrGubx8gNu5fP7HKt6smaMvPtNqieYDsQiPFeJBtU5pBqm3ZEJJ1Qx5EG57c34HP2xcC1PTy+kSEv2ntVdjoXtLccAgvEpMF3cphAgu5dONLbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710355754; c=relaxed/simple;
-	bh=DpJHJ4aGI52sgPoSr/Db7ZYWZjRvBQp4a6NPe6jXWvk=;
+	s=arc-20240116; t=1710355828; c=relaxed/simple;
+	bh=xr36Gme3GN9IsMOLPP6xvfw40oVW0vkjqOJx0BRm4hQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V/+ntmBWX8ouSHi4PNfObqtJLBaTvWTx69Lm862lTXg0hyoJ8DtoRVAwK3IbDeEFRg8PpFHXGbeQPxfgNiXR3scOkKmjQ4wfc78WkhHw5vva/+083a+RwNd7llkAUYKS0hU7x1m92CVV6mrNxEwlXXnMFNPthyk9g+U2mcOliFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I+EFCisT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KYCSBXNX9RezSYrtY6GwSm4lhZYNQHks35lyK7l8Wk8LMbTcAQdQi9dMJbK6aTgMJWK75ikRhJhc4DtWw9rTpiFNZKl00aTdYEhDScbKI88kRg6d86M4xxzz8FAl0Q/664lNhbMQowHWxTHcmZwLy+NyWOWDNLIjMUdYmiVZP+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xx+XaZ92; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I+EFCisT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12AB1C433C7;
-	Wed, 13 Mar 2024 18:49:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xx+XaZ92"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9094BC433C7;
+	Wed, 13 Mar 2024 18:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710355754;
-	bh=DpJHJ4aGI52sgPoSr/Db7ZYWZjRvBQp4a6NPe6jXWvk=;
+	s=k20201202; t=1710355827;
+	bh=xr36Gme3GN9IsMOLPP6xvfw40oVW0vkjqOJx0BRm4hQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I+EFCisTjm2cGt5lbpDPmoHXqdTG8Zmy/NeJjmKXD6/Zwbhpkg8aQGrD0XGbZErxN
-	 btzhgFAq3K7p6tekGRhyQkgk0NDXkC4M1EilCL/eQHD/00M8on7JR6wWED8TZx27tI
-	 muYhWMMgkJ8/W8Ay6+LBdjUDamKqNMmU5PcYyfVmyCE2CipBnlqbpst07zmqIB8hCC
-	 pgOGhcMDQriHJZOFenZhjaBDCar0HjrKLnJ/Sld02bNayaxSq6tOmigRf4aelFtoYK
-	 YENJRcY7zcSnaZ/+7bQipN7YWioXe1oHe8V1OPzLL4/d4KJCChuH3vtvaj9AevntVg
-	 RiO2rR00tvPVA==
-Message-ID: <9a81819c-7f3d-4fbb-9505-f678d81fc63b@kernel.org>
-Date: Wed, 13 Mar 2024 19:49:10 +0100
+	b=Xx+XaZ92k1jGr/LQ7rhavx8toqrtnqxnDd+Q4qemYwSHuDIMnT+r7E+OfgMy90XdP
+	 bKsrvL9rpHf2EGsD8NOPGYdvrbLcedYNI82llRWt9b5Y3gb8KM/yWU8i1X4IFX9ixB
+	 juO6oKb65crdR9k672MKA7MUHjGEdla8Md5WBJdJBAPNb6G4kWUBJ5Md/ut4boYzWs
+	 7KTo3dpSycOyR20IM7dbCzSjCpzG0bA/ac4fxbxscMbKRKozh5TSZxaH0N4AVyVsJh
+	 iYvYLs1jkjd4+TET0gp0vCL01w1gro8jDU3qDVsgzXSDS0/4ibwteZ9Dba7HJck/07
+	 8GjGNWBV075dA==
+Message-ID: <bc95bd09-8b32-4a4a-ae87-0cd4fbfc6e4c@kernel.org>
+Date: Wed, 13 Mar 2024 19:50:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 06/10] selftests: mptcp: netlink: add outputs
- for ip_mptcp
+Subject: Re: [PATCH mptcp-next 07/10] selftests: mptcp: add endpoint_ops API
+ helper
 Content-Language: en-US
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710121590.git.tanggeliang@kylinos.cn>
- <c8bc708a1b492fcbbd370b55983e8575de9baec8.1710121590.git.tanggeliang@kylinos.cn>
+ <d327fe8645094080a922dc5075a0d2b45166a5f8.1710121590.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,89 +87,260 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c8bc708a1b492fcbbd370b55983e8575de9baec8.1710121590.git.tanggeliang@kylinos.cn>
+In-Reply-To: <d327fe8645094080a922dc5075a0d2b45166a5f8.1710121590.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 11/03/2024 02:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The outputs of 'ip mptcp' are different from that of 'pm_nl_ctl'. This
-> patch adds corresponding outputs of 'ip mptcp' together with 'pm_nl_ctl'.
-> Use mptcp_lib_is_ip_mptcp() helper to test whether ip_mptcp is set. If
-> it it, use 'ip mptcp' format outputs for check().
+> This patch moves six endpoint operation helpers with the pm_nl_ prefix:
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../testing/selftests/net/mptcp/pm_netlink.sh | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
+> 	pm_nl_limits(),
+> 	pm_nl_add_endpoint(),
+> 	pm_nl_del_endpoint(),
+> 	pm_nl_flush_endpoint(),
+> 	pm_nl_show_endpoints() and
+> 	pm_nl_change_endpoint()
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> index 00949f73153a..2096c52b3a4b 100755
-> --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-> @@ -72,6 +72,7 @@ check "ip netns exec $ns1 ./pm_nl_ctl dump" "" "defaults addr list"
->  default_limits="$(ip netns exec $ns1 ./pm_nl_ctl limits)"
->  if mptcp_lib_expect_all_features; then
->  	limits=$'accept 0\nsubflows 2'
-> +	mptcp_lib_is_ip_mptcp && limits="add_addr_accepted 0 subflows 2 "
+> from mptcp_join.sh into mptcp_lib.sh as public functions, and renamed each
+> of them with a mptcp_lib_ prefix.
+> 
+> Add a new helper mptcp_lib_endpoint_ops() in mptcp_lib.sh as the API for
+> all endpoint operation helpers, which invokes each of mptcp_lib_ prefix
+> helpers according to the first argument of it is "limits", "add", "del",
+> "flush", "show" or "change".
+> 
+> Usage:
+>         mptcp_lib_endpoint_ops limits $ns $addrs $subflows
+>         mptcp_lib_endpoint_ops add $ns $addr
+>         mptcp_lib_endpoint_ops del $ns $id $addr
+>         mptcp_lib_endpoint_ops flush $ns
+>         mptcp_lib_endpoint_ops show $ns
+>         mptcp_lib_endpoint_ops change $ns $id $flags
 
-Do you think new helpers could be added to avoid all these
-mptcp_lib_is_ip_mptcp in the test description? e.g.
+I'm not sure to understand why you called this helper "endpoint". With
+"pm_nl", it means it is linked to the Path Manager, the Netlink
+interface. Maybe best to use 'mptcp_lib_pm_nl_ops'?
 
-  get_limits() {
-      local accept="${1}"
-      local subflows="${2}"
-
-      if mptcp_lib_is_ip_mptcp; then
-          # with a space at the end
-          printf "add_addr_accepted %d subflows %d \n" \
-                 "${accept}" "${subflows} "
-      else
-          printf "accept %d\nsubflows %d\n" "${accept}" "${subflows}"
-      fi
-  }
-
-  (...)
-
-  limits="$(get_limits 0 2)"
-
-That's clearer when you check what the test is doing.
-
-
-Same idea for the dumps/endpoints below, we could have:
-
-  # format: <id>,<ip>,<flags>,<dev>
-  get_endpoints() {
-      local entry id ip flags dev
-
-      for entry in "${@}"; do
-          IFS=, read -r id ip flags dev <<< "${entry}"
-          if mptcp_lib_is_ip_mptcp; then
-              echo -n "${ip} id ${id}"
-              [ -n "${flags}" ] && echo -n " ${flags}"
-              [ -n "${dev}" ] && echo -n " dev ${dev}"
-              echo " " # always a space at the end
-          else
-              echo -n "id ${id} flags ${flags//" "/","}"
-              [ -n "${dev}" ] && echo -n " dev ${dev}"
-              echo "${ip}"
-          fi
-      done
-  }
-
-  (...)
-  endpoint="$(get_endpoints "1,10.0.1.1")
-  (...)
-  dump="$(get_endpoints "1,10.0.1.1" "2,10.0.1.2,subflow backup,lo")"
-
-WDYT?
-
->  	check "ip netns exec $ns1 ./pm_nl_ctl limits" "${limits}" "defaults limits"
->  fi
 (...)
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index c465f1d59419..d395692fac0d 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -523,3 +523,151 @@ mptcp_lib_is_ip_mptcp() {
+>  
+>  	[ ${mptcp_lib_ip_mptcp} -eq 1 ]
+>  }
+> +
+> +mptcp_lib_limits() {
+
+Same here for the prefix, "limits" is too vague:
+
+  mptcp_lib_pm_nl_limits()
+
+> +	local ns=${1}
+> +	local addrs=${2}
+> +	local subflows=${3}
+> +
+> +	if mptcp_lib_is_ip_mptcp; then
+> +		local limits="limits"
+> +
+> +		if [ -n "${addrs}" ] && [ -n "${subflows}" ]; then
+> +			limits+=" set add_addr_accepted ${addrs} subflows ${subflows}"
+> +		fi
+> +		# shellcheck disable=SC2086
+
+Please *always* *always* justify why you ignore a rule, e.g.
+
+  # shellcheck disable=SCXXXX  ## <reason>
+
+or
+
+  # <long description>
+  # <on multiple lines>
+  # shellcheck disable=SCXXXX
+
+
+(I guess you don't need to ignore that if you look at my comment on
+patch 2/10, same below)
+
+> +		ip -n "${ns}" mptcp ${limits}
+> +	else
+> +		# shellcheck disable=SC2086
+> +		ip netns exec "${ns}" ./pm_nl_ctl limits "${addrs}" ${subflows}
+> +	fi
+> +}
+> +
+> +mptcp_lib_add_endpoint() {
+> +	local ns=${1}
+> +	local addr=${2}
+> +	local flags _flags
+> +	local port _port
+> +	local dev _dev
+> +	local id _id
+> +	local nr=2
+> +
+> +	local p
+> +	for p in "${@}"
+> +	do
+> +		if [ "${p}" = "flags" ]; then
+> +			eval _flags=\$"${nr}"
+> +			[ -n "${_flags}" ]; flags="flags ${_flags}"
+> +		fi
+> +		if [ "${p}" = "dev" ]; then
+> +			eval _dev=\$"${nr}"
+> +			[ -n "${_dev}" ]; dev="dev ${_dev}"
+> +		fi
+> +		if [ "${p}" = "id" ]; then
+> +			eval _id=\$"${nr}"
+> +			[ -n "${_id}" ]; id="id ${_id}"
+> +		fi
+> +		if [ "${p}" = "port" ]; then
+> +			eval _port=\$"${nr}"
+> +			[ -n "${_port}" ]; port="port ${_port}"
+> +		fi
+> +
+> +		nr=$((nr + 1))
+> +	done
+> +
+> +	if mptcp_lib_is_ip_mptcp; then
+> +		# shellcheck disable=SC2086
+
+I wonder if you couldn't use arrays:
+
+  dev=(dev "${_dev}")
+  (...)
+  ip (...) "${dev[@]}")
+
+> +		ip -n "${ns}" mptcp endpoint add "${addr}" ${_flags//","/" "} ${dev} ${id} ${port}
+> +	else
+> +		# shellcheck disable=SC2086
+> +		ip netns exec "${ns}" ./pm_nl_ctl add "${addr}" ${flags} ${dev} ${id} ${port}
+> +	fi
+> +}
+> +
+> +mptcp_lib_del_endpoint() {
+> +	local ns=${1}
+> +	local id=${2}
+> +	local addr=${3}
+> +
+> +	if mptcp_lib_is_ip_mptcp; then
+> +		[ "${id}" -ne 0 ] && addr=''
+> +		# shellcheck disable=SC2086
+> +		ip -n "${ns}" mptcp endpoint delete id "${id}" ${addr}
+
+or something like that to avoid the disable:
+
+  ${addr:+"${addr}"}
+
+> +	else
+> +		ip netns exec "${ns}" ./pm_nl_ctl del "${id}" "${addr}"
+> +	fi
+> +}
+> +
+> +mptcp_lib_flush_endpoint() {
+> +	local ns=${1}
+> +
+> +	if mptcp_lib_is_ip_mptcp; then
+> +		ip -n "${ns}" mptcp endpoint flush
+> +	else
+> +		ip netns exec "${ns}" ./pm_nl_ctl flush
+> +	fi
+> +}
+> +
+> +mptcp_lib_show_endpoints() {
+
+(I guess this one is only needed in pm_netlink.sh, no?)
+
+> +	local ns=${1}
+> +	local id=${2}
+> +
+> +	if mptcp_lib_is_ip_mptcp; then
+> +		local show="show"
+> +
+> +		[ -n "${id}" ] && show+=" id ${id}"
+> +		# shellcheck disable=SC2086
+> +		ip -n "${ns}" mptcp endpoint ${show}
+
+Maybe this to avoid the disable:
+
+  ip -n "${ns}" mptcp endpoint show ${id:+id "${id}"}
+
+Same below
+
+> +	else
+> +		local dump="dump"
+> +
+> +		[ -n "${id}" ] && dump="get ${id}"
+> +		# shellcheck disable=SC2086
+> +		ip netns exec "${ns}" ./pm_nl_ctl ${dump}
+> +	fi
+> +}
+> +
+> +mptcp_lib_change_endpoint() {
+
+(I guess this one is only needed in pm_netlink.sh, no?)
+
+> +	local ns=${1}
+> +	local addr=${2}
+> +	local flags=${3}
+> +
+> +	if ! mptcp_lib_is_addr "${addr}"; then
+> +		[ "${addr}" -gt 0 ] && [ "${addr}" -lt 256 ] && addr="id ${addr}"
+
+use an array?
+
+  XX=("${addr}")
+  XX=("id ${addr}")
+  ${XX[@]}
+
+> +	fi
+> +
+> +	if mptcp_lib_is_ip_mptcp; then
+> +		# shellcheck disable=SC2086
+> +		ip -n "${ns}" mptcp endpoint change ${addr} ${flags//","/" "}
+> +	else
+> +		# shellcheck disable=SC2086
+> +		ip netns exec "${ns}" ./pm_nl_ctl set ${addr} flags "${flags}"
+> +	fi
+> +}
+> +
+> +mptcp_lib_endpoint_ops() {
+> +	[ "$#" -lt 2 ] && return 1
+> +
+> +	case "$1" in
+
+(missing {} → ${1})
+
+> +	"limits")
+> +		mptcp_lib_limits "${@:2}"
+> +		;;
+> +	"add")
+> +		mptcp_lib_add_endpoint "${@:2}"
+> +		;;
+> +	"del")
+> +		mptcp_lib_del_endpoint "${@:2}"
+> +		;;
+> +	"flush")
+> +		mptcp_lib_flush_endpoint "${@:2}"
+> +		;;
+> +	"show")
+> +		mptcp_lib_show_endpoints "${@:2}"
+> +		;;
+> +	"change")
+> +		mptcp_lib_change_endpoint "${@:2}"
+> +		;;
+> +	*)
+> +		;;
+> +	esac
+> +}
+
+I'm not sure to see the advantage of using mptcp_lib_endpoint_ops(), why
+not directly calling mptcp_lib_pm_nl_limits, etc.?
 
 Cheers,
 Matt
