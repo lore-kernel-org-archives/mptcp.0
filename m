@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B119E4F8B2
-	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 18:46:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFE24F8B2
+	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 18:47:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710355604; cv=none; b=MIpSTQKvqb2zK32NRTa7MF690DcrA7ydLY81fZLOL2mmgFlyFYkhW8qMmd7/4Rw9y7XuvMMYV1gkRepoawwmgwKyeyg8sf/Rxo6uJeIWOE9xrVJeGhPxNKKBwBizgxUEJiFRAxXyzPBWXcUc0GOfSYXQBLwYYcct2s+x7vRLUpI=
+	t=1710355632; cv=none; b=YLWPPnTy03HeKgg/EZiu0IwIwst/f0u00zaBuGCDMiNjP4yGAMyJ1NDAo3OISlfCjiLWPqinvt8OHaOXkFsG9jS8zqFQhq83Shb6NdgEvIJDmCvrddy19UN7yZDN22A89S4OyOZ9YG78SKwZ0u6dnw28ZFpi2xyt83OYzA+JTYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710355604; c=relaxed/simple;
-	bh=oidbY/Dg7XQ8oV620nqVkoeFYgl280EofZuvhtdb+QI=;
+	s=arc-20240116; t=1710355632; c=relaxed/simple;
+	bh=Z6dA48x4MkQPrVymS17pn9LXoN4DgO0i73I9p3bMWSc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tCo6hFmdo6RYcb2IvPzVaUYAJq9uzNidyVipSy+IBtQeee+tXEXhuMp9OZFgd7QEFyME6S9kvcZwS7ipbYTgNAgi0QOEy49nUNo/zMXE0OnF5Rlk6onL0fCJWpNLz9vVG54m+gRjTbCeDMx/WNQhb/+p4dRX86S/09T75Va3O9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UeD5qfcv; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=o8ZY+ATLMmgQKl8IKLbgBgBxJq3nEjfHgbI+5FeDwgIT1RUtyeStLBenuwv/40DOo1uHVPTEvdlF2/is+0yZBsQmm7rkEbzSfhyq0BLlCLwEnnVq/I2Y+u+zDest4gK8X6Jap+S/fYlHPe4QsOjwqTgk/f2pbiEk7wADMud8adk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YggSBn8T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UeD5qfcv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CE8C433C7;
-	Wed, 13 Mar 2024 18:46:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YggSBn8T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0EDC433C7;
+	Wed, 13 Mar 2024 18:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710355604;
-	bh=oidbY/Dg7XQ8oV620nqVkoeFYgl280EofZuvhtdb+QI=;
+	s=k20201202; t=1710355631;
+	bh=Z6dA48x4MkQPrVymS17pn9LXoN4DgO0i73I9p3bMWSc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UeD5qfcvZM4cdHppeIAAkIlm7llkU0Cervs0DIO7F+2xUqZ1zS13YdLw3huPJIJ0z
-	 mmKEYu8YzO9Gi7K6RMNrfI2eMWVMej9cdYuHm9h0x8yHCfqUnF5HqBbmvaI+OuqRnU
-	 Afv6C/rx3zliUyBzpyI8Dkl4Ddva6RmY5a9rDrxWEyYGPHiXU291oySHMT7AvBOmSG
-	 Jidouc5VDC20l/HwCj+bFvayguw3O+n9RjTnzstYHO0KTRT5C019afDmafIa9GY/sV
-	 RRoL4QLI+uVPKoIgCP2zztIcMQZ8DZP3tYzE7Mk6nHJiEvJK4+0Ai83oWaimZr0/ki
-	 qk4cWym4SvnsA==
-Message-ID: <d4ad6607-3a57-49cd-a0d6-de7f3ceb38c9@kernel.org>
-Date: Wed, 13 Mar 2024 19:46:41 +0100
+	b=YggSBn8Tb3fQBnEuc6hoFc5KxnnO2OOHrLgQkQtcU8bFduHbDBcztnIKCGQSUxF8o
+	 wITNhNkoHD8xawg6HxD8UcYhWTRK7jO/eqhJXJvmSvpLaY9EgXTtNVn2akPL1Laogl
+	 Ea/seNKWQHNIayPsN7/NTX2tEF75a4kOZBS6jc1U4i8jMO37XvjN1XvqPkW/pkxa5j
+	 iCggHY4afkJF6z4ckUfsOkWoMLXtCKQsDWvR4Aq6bBk09HFPdVMBsy/LLoCXqO9Ii5
+	 TJ5GgybpcKYcdLCELsgws4LmQuzwIGr9EhT3XIRZYNp7ESRx5ronyQgTrVBjJfxTh0
+	 A5vfPM9lO63Vg==
+Message-ID: <252586c0-53bd-4588-8dee-3378099ed4a1@kernel.org>
+Date: Wed, 13 Mar 2024 19:47:07 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 00/10] add helpers and vars in mptcp_lib.sh,
- final
+Subject: Re: [PATCH mptcp-next 01/10] selftests: mptcp: export ip_mptcp to
+ mptcp_lib
 Content-Language: en-US
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710121590.git.tanggeliang@kylinos.cn>
+ <79aa9c522bcbd104823284a9ea42a91bbbd1f9e2.1710121590.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1710121590.git.tanggeliang@kylinos.cn>
+In-Reply-To: <79aa9c522bcbd104823284a9ea42a91bbbd1f9e2.1710121590.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,46 +96,61 @@ Hi Geliang,
 On 11/03/2024 02:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This is the last part for "add helpers and vars in mptcp_lib.sh" series,
-> add endpoint operation helpers into mptcp_lib.sh.
-
-Thank you for looking at that!
-
-I just did a review, see my different replies.
-
-In general, I think we should only add tests if they validate new code
-path on the kernel side, e.g. new feature. Having more tests means more
-code to maintain, a longer time to execute them, etc. Best to only add
-"valuable" ones.
-
-> Geliang Tang (10):
->   selftests: mptcp: export ip_mptcp to mptcp_lib
->   selftests: mptcp: get support for limits
->   selftests: mptcp: id support for show_endpoints
->   selftests: mptcp: addr support for change_endpoint
->   selftests: mptcp: netlink: fix positions of newline
->   selftests: mptcp: netlink: add outputs for ip_mptcp
->   selftests: mptcp: add endpoint_ops API helper
->   selftests: mptcp: use mptcp_lib_endpoint_ops
->   selftests: mptcp: add ip_mptcp option for more scripts
-
-I hope some people are going to validate that. I don't think our CI
-should always run these tests with and without this new '-i' option.
-
-Maybe once in a while, to validate the interface with 'ip mptcp' is
-still OK? Do you plan to do this check periodically? e.g. before a new
-version of 'iproute2'?
-
-
->   selftests: mptcp: netlink: drop disable=SC2086
+> This patch exports ip_mptcp into mptcp_lib.sh as a public variable,
+> named mptcp_lib_ip_mptcp. Add a helper mptcp_lib_set_ip_mptcp() to set
+> it, and a helper mptcp_lib_is_ip_mptcp() to test whether it is set. Use
+> these two helpers in mptcp_join.sh.
 > 
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 108 ++-----
->  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 166 ++++++++++
->  .../selftests/net/mptcp/mptcp_sockopt.sh      |  34 ++-
->  .../testing/selftests/net/mptcp/pm_netlink.sh | 288 +++++++++++-------
->  .../selftests/net/mptcp/simult_flows.sh       |  14 +-
->  5 files changed, 401 insertions(+), 209 deletions(-)
-> 
+> This patch is prepared for coming commits.
+
+(...)
+
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index d529b4b37af8..d84f2f4986a7 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -23,6 +23,7 @@ MPTCP_LIB_SUBTESTS=()
+>  MPTCP_LIB_SUBTESTS_DUPLICATED=0
+>  MPTCP_LIB_TEST_COUNTER=0
+>  MPTCP_LIB_TEST_FORMAT="%02u %-50s"
+> +mptcp_lib_ip_mptcp=0
+
+Please use capital letters for these global variables, like the other
+ones here above.
+
+>  # only if supported (or forced) and not disabled, see no-color.org
+>  if { [ -t 1 ] || [ "${SELFTESTS_MPTCP_LIB_COLOR_FORCE:-}" = "1" ]; } &&
+> @@ -505,3 +506,15 @@ mptcp_lib_verify_listener_events() {
+>  	mptcp_lib_check_expected "type" "family" "saddr" "sport" || rc="${?}"
+>  	return "${rc}"
+>  }
+> +
+> +mptcp_lib_set_ip_mptcp() {
+> +	: "${mptcp_lib_ip_mptcp:?}"
+
+I don't think you need that, the variable is declared in the same file.
+(and you are going to modify it anyway, no "read")
+
+> +	mptcp_lib_ip_mptcp=1
+> +}
+> +
+> +mptcp_lib_is_ip_mptcp() {
+> +	: "${mptcp_lib_ip_mptcp:?}"
+
+Same here, not needed I think.
+
+> +
+> +	[ ${mptcp_lib_ip_mptcp} -eq 1 ]
+
+detail: because global variables could be modified elsewhere, I usually
+find it safer to use double quotes, and compare strings:
+
+  [ "${MPTCP_LIB_IP_MPTCP}" = "1" ]
+
+But on the other hand, this global variable is not supposed to be
+modified elsewhere... So up to you.
+
+> +}
 
 Cheers,
 Matt
