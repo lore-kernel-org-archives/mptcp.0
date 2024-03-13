@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E390453E2E
-	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 18:47:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC38555C0A
+	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 18:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710355671; cv=none; b=kMu0Bx8l0gY691/tl0OMiFK08B1Yn6VwLKWr4IJYzq/D4wbJf/EnSnPEq8wl5i5E6TNJ1i7QDAPgXhD0/A5xhuj6QVzG51HiwUfbVHoRzLdYMZA8mRcjDdusJqvAQllrzj/ZkwBaS6t2FLq4s72+Lu3zcGTKqUzSb8BrZ6fOhD8=
+	t=1710355681; cv=none; b=FHbleFgtTxapPfQE6jW+9p/j9oHjT0R+2azXtbV7kigLmxWDSMVhtj0RifADK+9dAulDUW4W6JR1yx9Fo6y+P0fBdMreOMwwWSMKxSQgf7k44E2LcewCwSOpz6jKUEdLbBrDq8xMtHuZLQDpZQCvdtz7E1zmuMOmNBQSu3e/oo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710355671; c=relaxed/simple;
-	bh=ZB/xU3byNwiQxgm0AstExry5ARQcjT6DlAWFJZ2xc1Y=;
+	s=arc-20240116; t=1710355681; c=relaxed/simple;
+	bh=dcVWb4N9NdsJ7tiR/OkRHC9HMr2vN7pZKD+UVC6JBgY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CBYgeaynOipEa0SOJvU01CFNW2IkpcBzblmNcMyvX8a7P4DLz/XHNNCxuVj9OlLYmBQOhbJgshJkwGoVY8FOso1vHkQahUOwalaDpSM8rMAWX51y9/n23D4a/wJcjftZTwgrEwAAURrXFuLPnqI8Wj4TlEd7U3jY0wsrKUwzaOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tt5K7GjE; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=XRPFx5HDvTjuktdFmZqOzQsqdyC7qID/zp1O0SolIxTxK0/VGGKK3HAZ3nqx2Lu6h/aeU8cJfsTk/NWm8foIiYMdl6i6NM6lOY9PeZW2f5fzTHx1L9j49LfVI4GaHnx4LdHeBeIkkMSKtT7nf2OkAO9F63Atb1dO8w0w3SCWTcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBgTVMh3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tt5K7GjE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C34CC433C7;
-	Wed, 13 Mar 2024 18:47:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBgTVMh3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1194CC433F1;
+	Wed, 13 Mar 2024 18:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710355670;
-	bh=ZB/xU3byNwiQxgm0AstExry5ARQcjT6DlAWFJZ2xc1Y=;
+	s=k20201202; t=1710355681;
+	bh=dcVWb4N9NdsJ7tiR/OkRHC9HMr2vN7pZKD+UVC6JBgY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Tt5K7GjEeQCoSv5RbdSx7LmMPqGLnVP2XnRiWOqGlIzeQRsplbSlw7aLBluCyhqfy
-	 OzuQBUBA0/HRovddGuG9CoMXpl0lfXnx7iHT59mdO4Kf26TBzL6LP2w+3Zd8FTKvYE
-	 sfrwATIyCnJSOCA/9FfQnxm1/2DxGsntxh88FxLAEkLWyatvIWQcNd5MX46a0WZVKl
-	 DJ+ITgEFm4FqUFLna4VKBgYKaS38uqgu9pWcGt2kZs6De0BvE2rgp0lXZRi492za9A
-	 Td/FwI7PgNixOUF5XAELoJuXsFOJG1AaKuGgn2MJoQBtzDuBIu/KVhvlGDs/WTh48N
-	 piEfY7h2d+ADg==
-Message-ID: <18d67bad-8898-4920-9f6c-2b306046b291@kernel.org>
-Date: Wed, 13 Mar 2024 19:47:47 +0100
+	b=KBgTVMh3RZC7VA9B14tdVyNQUVkw0enTcJyg/lcCvdFie4foJfx/aes+0qCZ6lqxE
+	 9p9oiDBtdpm7c+LV/qZcjesK61SmjV+1v3OTqOpPYz24XF3WZ1M/LQ7ji2mDtgOJ3V
+	 xBiGHfBSvzcKVgTkyGyvHy0TzqJP7nO83NWSf38fpam/TyMZX5sL4S8rYg4eYxYbsH
+	 xcjDuWCBbglvtdIm1xUt0B4sFh9xRP8jZkEaB4PwKg+3K0SOhHfHfr0KzqEfEZPHgP
+	 YhBe1UbjovXuwNiVai/tw5WJB5MM+hS86eX9VDD/GP5VL3wttes6ZvU2CoV0ltUIci
+	 kb8izaIhC24iQ==
+Message-ID: <d3129248-0191-4a02-b0c0-9e0959791cad@kernel.org>
+Date: Wed, 13 Mar 2024 19:47:57 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 02/10] selftests: mptcp: get support for limits
+Subject: Re: [PATCH mptcp-next 03/10] selftests: mptcp: id support for
+ show_endpoints
 Content-Language: en-US
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710121590.git.tanggeliang@kylinos.cn>
- <fe6ee65c22c22e0b2da067841a4226cf8093948a.1710121590.git.tanggeliang@kylinos.cn>
+ <3e52c3dda1c27337c482e4752c376fad1c4d4e67.1710121590.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fe6ee65c22c22e0b2da067841a4226cf8093948a.1710121590.git.tanggeliang@kylinos.cn>
+In-Reply-To: <3e52c3dda1c27337c482e4752c376fad1c4d4e67.1710121590.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,104 +96,58 @@ Hi Geliang,
 On 11/03/2024 02:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> There's only 'set limits' ability in pm_nl_set_limits(), this patch adds
-> 'get limits' support for it as well to show the limits, and rename it as
-> pm_nl_limits(). Then pm_nl_set_limits() can be a wrapper of it. Also add
-> another wrapper pm_nl_get_limits() to get limits.
+> All endpoints are showed in pm_nl_show_endpoints(). This patch adds support
+> for showing a specofic endpoint identified by the given address ID.
 > 
 > Usage:
->         Set limits - pm_nl_set_limits $ns $addrs $subflows
->         Get limits - pm_nl_get_limits $ns
-> 
-> A test for 'get limits' is added in endpoint_tests().
+>         All endpoints - pm_nl_show_endpoints $ns
+>         One endpoint - pm_nl_show_endpoints $ns $id
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 23 +++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 7fd32f645650..8eb5cf54ea42 100755
+> index 8eb5cf54ea42..e33a136aef8e 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -603,19 +603,34 @@ kill_events_pids()
->  	evts_ns2_pid=0
->  }
->  
-> -pm_nl_set_limits()
-> +pm_nl_limits()
+> @@ -699,11 +699,18 @@ pm_nl_flush_endpoint()
+>  pm_nl_show_endpoints()
 >  {
 >  	local ns=$1
->  	local addrs=$2
->  	local subflows=$3
+> +	local id=$2
 >  
 >  	if mptcp_lib_is_ip_mptcp; then
-> -		ip -n $ns mptcp limits set add_addr_accepted $addrs subflows $subflows
-> +		local limits="limits"
+> -		ip -n $ns mptcp endpoint show
+> +		local show="show"
 > +
-> +		if [ -n "$addrs" ] && [ -n "$subflows" ]; then
-> +			limits+=" set add_addr_accepted $addrs subflows $subflows"
-> +		fi
-> +		ip -n $ns mptcp $limits
+> +		[ -n "$id" ] && show+=" id $id"
+> +		ip -n $ns mptcp endpoint $show
 >  	else
->  		ip netns exec $ns ./pm_nl_ctl limits $addrs $subflows
+> -		ip netns exec $ns ./pm_nl_ctl dump
+> +		local dump="dump"
+> +
+> +		[ -n "$id" ] && dump="get $id"
+> +		ip netns exec $ns ./pm_nl_ctl $dump
 >  	fi
 >  }
 >  
-> +pm_nl_set_limits()
-> +{
-> +	pm_nl_limits "${@}"
-> +}
-> +
-> +pm_nl_get_limits()
-> +{
-> +	pm_nl_limits "${@}"
-
-Even if it is explained in the commit message, I find it confusing.
-
-Is it not clearer to have dedicated functions for such simple helpers?
-
-  pm_nl_get_limits()
-  {
-      local ns="${1}"
-
-      if mptcp_lib_is_ip_mptcp; then
-          ip -n "${ns}" mptcp limits
-      else
-          ip netns exec "${ns}" ./pm_nl_ctl limits
-      fi
-  }
-
-> +}
-> +
->  pm_nl_add_endpoint()
->  {
->  	local ns=$1
-> @@ -3578,6 +3593,10 @@ endpoint_tests()
->  	   mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
->  		pm_nl_set_limits $ns1 2 2
->  		pm_nl_set_limits $ns2 2 2
-> +		print_check "get limits"
-> +		local output=$'accept 2\nsubflows 2'
-> +		mptcp_lib_is_ip_mptcp && output="add_addr_accepted 2 subflows 2 "
-
-(maybe clearer with a dedicated helper to get the limit depending on
-which tool we use?)
-
-> +		check_output "pm_nl_get_limits ${ns1}" "${output}"
-
-Mmh, I appreciate new tests, but I think we should only add tests that
-are covering new kernel code. The goal of MPTCP Join, compared to other
-selftests, is to check behaviours when there are multiple subflows.
-Here, you are validating the limits, which is already something managed
-by pm_netlink.sh which is dedicated to that. And this doesn't depend on
-how many subflows are established.
-
-So I think we should drop the patch. WDYT?
-
+> @@ -3598,6 +3605,10 @@ endpoint_tests()
+>  		mptcp_lib_is_ip_mptcp && output="add_addr_accepted 2 subflows 2 "
+>  		check_output "pm_nl_get_limits ${ns1}" "${output}"
 >  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+> +		print_check "show id 1 addr"
+> +		output="id 1 flags signal 10.0.2.1"
+> +		mptcp_lib_is_ip_mptcp && output="10.0.2.1 id 1 signal "
+> +		check_output "pm_nl_show_endpoints ${ns1} 1" "${output}"
+
+Same here, that's already validated in pm_netlink.sh, no need to
+duplicate the test validating the same kernel code path. WDYT?
+
 >  		speed=slow \
 >  			run_tests $ns1 $ns2 10.0.1.1 &
+>  		local tests_pid=$!
 
 Cheers,
 Matt
