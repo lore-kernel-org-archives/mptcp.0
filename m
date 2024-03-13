@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFE24F8B2
-	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 18:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E390453E2E
+	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 18:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710355632; cv=none; b=YLWPPnTy03HeKgg/EZiu0IwIwst/f0u00zaBuGCDMiNjP4yGAMyJ1NDAo3OISlfCjiLWPqinvt8OHaOXkFsG9jS8zqFQhq83Shb6NdgEvIJDmCvrddy19UN7yZDN22A89S4OyOZ9YG78SKwZ0u6dnw28ZFpi2xyt83OYzA+JTYI=
+	t=1710355671; cv=none; b=kMu0Bx8l0gY691/tl0OMiFK08B1Yn6VwLKWr4IJYzq/D4wbJf/EnSnPEq8wl5i5E6TNJ1i7QDAPgXhD0/A5xhuj6QVzG51HiwUfbVHoRzLdYMZA8mRcjDdusJqvAQllrzj/ZkwBaS6t2FLq4s72+Lu3zcGTKqUzSb8BrZ6fOhD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710355632; c=relaxed/simple;
-	bh=Z6dA48x4MkQPrVymS17pn9LXoN4DgO0i73I9p3bMWSc=;
+	s=arc-20240116; t=1710355671; c=relaxed/simple;
+	bh=ZB/xU3byNwiQxgm0AstExry5ARQcjT6DlAWFJZ2xc1Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o8ZY+ATLMmgQKl8IKLbgBgBxJq3nEjfHgbI+5FeDwgIT1RUtyeStLBenuwv/40DOo1uHVPTEvdlF2/is+0yZBsQmm7rkEbzSfhyq0BLlCLwEnnVq/I2Y+u+zDest4gK8X6Jap+S/fYlHPe4QsOjwqTgk/f2pbiEk7wADMud8adk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YggSBn8T; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CBYgeaynOipEa0SOJvU01CFNW2IkpcBzblmNcMyvX8a7P4DLz/XHNNCxuVj9OlLYmBQOhbJgshJkwGoVY8FOso1vHkQahUOwalaDpSM8rMAWX51y9/n23D4a/wJcjftZTwgrEwAAURrXFuLPnqI8Wj4TlEd7U3jY0wsrKUwzaOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tt5K7GjE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YggSBn8T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0EDC433C7;
-	Wed, 13 Mar 2024 18:47:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tt5K7GjE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C34CC433C7;
+	Wed, 13 Mar 2024 18:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710355631;
-	bh=Z6dA48x4MkQPrVymS17pn9LXoN4DgO0i73I9p3bMWSc=;
+	s=k20201202; t=1710355670;
+	bh=ZB/xU3byNwiQxgm0AstExry5ARQcjT6DlAWFJZ2xc1Y=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YggSBn8Tb3fQBnEuc6hoFc5KxnnO2OOHrLgQkQtcU8bFduHbDBcztnIKCGQSUxF8o
-	 wITNhNkoHD8xawg6HxD8UcYhWTRK7jO/eqhJXJvmSvpLaY9EgXTtNVn2akPL1Laogl
-	 Ea/seNKWQHNIayPsN7/NTX2tEF75a4kOZBS6jc1U4i8jMO37XvjN1XvqPkW/pkxa5j
-	 iCggHY4afkJF6z4ckUfsOkWoMLXtCKQsDWvR4Aq6bBk09HFPdVMBsy/LLoCXqO9Ii5
-	 TJ5GgybpcKYcdLCELsgws4LmQuzwIGr9EhT3XIRZYNp7ESRx5ronyQgTrVBjJfxTh0
-	 A5vfPM9lO63Vg==
-Message-ID: <252586c0-53bd-4588-8dee-3378099ed4a1@kernel.org>
-Date: Wed, 13 Mar 2024 19:47:07 +0100
+	b=Tt5K7GjEeQCoSv5RbdSx7LmMPqGLnVP2XnRiWOqGlIzeQRsplbSlw7aLBluCyhqfy
+	 OzuQBUBA0/HRovddGuG9CoMXpl0lfXnx7iHT59mdO4Kf26TBzL6LP2w+3Zd8FTKvYE
+	 sfrwATIyCnJSOCA/9FfQnxm1/2DxGsntxh88FxLAEkLWyatvIWQcNd5MX46a0WZVKl
+	 DJ+ITgEFm4FqUFLna4VKBgYKaS38uqgu9pWcGt2kZs6De0BvE2rgp0lXZRi492za9A
+	 Td/FwI7PgNixOUF5XAELoJuXsFOJG1AaKuGgn2MJoQBtzDuBIu/KVhvlGDs/WTh48N
+	 piEfY7h2d+ADg==
+Message-ID: <18d67bad-8898-4920-9f6c-2b306046b291@kernel.org>
+Date: Wed, 13 Mar 2024 19:47:47 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 01/10] selftests: mptcp: export ip_mptcp to
- mptcp_lib
+Subject: Re: [PATCH mptcp-next 02/10] selftests: mptcp: get support for limits
 Content-Language: en-US
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710121590.git.tanggeliang@kylinos.cn>
- <79aa9c522bcbd104823284a9ea42a91bbbd1f9e2.1710121590.git.tanggeliang@kylinos.cn>
+ <fe6ee65c22c22e0b2da067841a4226cf8093948a.1710121590.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <79aa9c522bcbd104823284a9ea42a91bbbd1f9e2.1710121590.git.tanggeliang@kylinos.cn>
+In-Reply-To: <fe6ee65c22c22e0b2da067841a4226cf8093948a.1710121590.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,61 +95,104 @@ Hi Geliang,
 On 11/03/2024 02:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch exports ip_mptcp into mptcp_lib.sh as a public variable,
-> named mptcp_lib_ip_mptcp. Add a helper mptcp_lib_set_ip_mptcp() to set
-> it, and a helper mptcp_lib_is_ip_mptcp() to test whether it is set. Use
-> these two helpers in mptcp_join.sh.
+> There's only 'set limits' ability in pm_nl_set_limits(), this patch adds
+> 'get limits' support for it as well to show the limits, and rename it as
+> pm_nl_limits(). Then pm_nl_set_limits() can be a wrapper of it. Also add
+> another wrapper pm_nl_get_limits() to get limits.
 > 
-> This patch is prepared for coming commits.
-
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index d529b4b37af8..d84f2f4986a7 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -23,6 +23,7 @@ MPTCP_LIB_SUBTESTS=()
->  MPTCP_LIB_SUBTESTS_DUPLICATED=0
->  MPTCP_LIB_TEST_COUNTER=0
->  MPTCP_LIB_TEST_FORMAT="%02u %-50s"
-> +mptcp_lib_ip_mptcp=0
-
-Please use capital letters for these global variables, like the other
-ones here above.
-
->  # only if supported (or forced) and not disabled, see no-color.org
->  if { [ -t 1 ] || [ "${SELFTESTS_MPTCP_LIB_COLOR_FORCE:-}" = "1" ]; } &&
-> @@ -505,3 +506,15 @@ mptcp_lib_verify_listener_events() {
->  	mptcp_lib_check_expected "type" "family" "saddr" "sport" || rc="${?}"
->  	return "${rc}"
+> Usage:
+>         Set limits - pm_nl_set_limits $ns $addrs $subflows
+>         Get limits - pm_nl_get_limits $ns
+> 
+> A test for 'get limits' is added in endpoint_tests().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 23 +++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 7fd32f645650..8eb5cf54ea42 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -603,19 +603,34 @@ kill_events_pids()
+>  	evts_ns2_pid=0
 >  }
+>  
+> -pm_nl_set_limits()
+> +pm_nl_limits()
+>  {
+>  	local ns=$1
+>  	local addrs=$2
+>  	local subflows=$3
+>  
+>  	if mptcp_lib_is_ip_mptcp; then
+> -		ip -n $ns mptcp limits set add_addr_accepted $addrs subflows $subflows
+> +		local limits="limits"
 > +
-> +mptcp_lib_set_ip_mptcp() {
-> +	: "${mptcp_lib_ip_mptcp:?}"
-
-I don't think you need that, the variable is declared in the same file.
-(and you are going to modify it anyway, no "read")
-
-> +	mptcp_lib_ip_mptcp=1
+> +		if [ -n "$addrs" ] && [ -n "$subflows" ]; then
+> +			limits+=" set add_addr_accepted $addrs subflows $subflows"
+> +		fi
+> +		ip -n $ns mptcp $limits
+>  	else
+>  		ip netns exec $ns ./pm_nl_ctl limits $addrs $subflows
+>  	fi
+>  }
+>  
+> +pm_nl_set_limits()
+> +{
+> +	pm_nl_limits "${@}"
 > +}
 > +
-> +mptcp_lib_is_ip_mptcp() {
-> +	: "${mptcp_lib_ip_mptcp:?}"
+> +pm_nl_get_limits()
+> +{
+> +	pm_nl_limits "${@}"
 
-Same here, not needed I think.
+Even if it is explained in the commit message, I find it confusing.
 
-> +
-> +	[ ${mptcp_lib_ip_mptcp} -eq 1 ]
+Is it not clearer to have dedicated functions for such simple helpers?
 
-detail: because global variables could be modified elsewhere, I usually
-find it safer to use double quotes, and compare strings:
+  pm_nl_get_limits()
+  {
+      local ns="${1}"
 
-  [ "${MPTCP_LIB_IP_MPTCP}" = "1" ]
-
-But on the other hand, this global variable is not supposed to be
-modified elsewhere... So up to you.
+      if mptcp_lib_is_ip_mptcp; then
+          ip -n "${ns}" mptcp limits
+      else
+          ip netns exec "${ns}" ./pm_nl_ctl limits
+      fi
+  }
 
 > +}
+> +
+>  pm_nl_add_endpoint()
+>  {
+>  	local ns=$1
+> @@ -3578,6 +3593,10 @@ endpoint_tests()
+>  	   mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
+>  		pm_nl_set_limits $ns1 2 2
+>  		pm_nl_set_limits $ns2 2 2
+> +		print_check "get limits"
+> +		local output=$'accept 2\nsubflows 2'
+> +		mptcp_lib_is_ip_mptcp && output="add_addr_accepted 2 subflows 2 "
+
+(maybe clearer with a dedicated helper to get the limit depending on
+which tool we use?)
+
+> +		check_output "pm_nl_get_limits ${ns1}" "${output}"
+
+Mmh, I appreciate new tests, but I think we should only add tests that
+are covering new kernel code. The goal of MPTCP Join, compared to other
+selftests, is to check behaviours when there are multiple subflows.
+Here, you are validating the limits, which is already something managed
+by pm_netlink.sh which is dedicated to that. And this doesn't depend on
+how many subflows are established.
+
+So I think we should drop the patch. WDYT?
+
+>  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+>  		speed=slow \
+>  			run_tests $ns1 $ns2 10.0.1.1 &
 
 Cheers,
 Matt
