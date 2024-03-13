@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC38555C0A
-	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 18:48:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10F154BD3
+	for <mptcp@lists.linux.dev>; Wed, 13 Mar 2024 18:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710355681; cv=none; b=FHbleFgtTxapPfQE6jW+9p/j9oHjT0R+2azXtbV7kigLmxWDSMVhtj0RifADK+9dAulDUW4W6JR1yx9Fo6y+P0fBdMreOMwwWSMKxSQgf7k44E2LcewCwSOpz6jKUEdLbBrDq8xMtHuZLQDpZQCvdtz7E1zmuMOmNBQSu3e/oo8=
+	t=1710355694; cv=none; b=KFy+I1cviXNQT9Jyv3rjM9iy5HqI9RQYGgyNPfSdDeIRhbpgDD50Rj8rXueFCQ/d8f5ni2oO7/d6XgsSN8r5VRzjDhkgxsi2vucxhRDHeRagHZYkbWR+GJEpAD8BmFU6JMJD0vsZL+pk8df4FUvUziT9ypTwFh37uUjzSrAzayY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710355681; c=relaxed/simple;
-	bh=dcVWb4N9NdsJ7tiR/OkRHC9HMr2vN7pZKD+UVC6JBgY=;
+	s=arc-20240116; t=1710355694; c=relaxed/simple;
+	bh=PHL0oKD0IoROktHDLbULHwTIpiJ3VFZH6mV44JXuXOw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XRPFx5HDvTjuktdFmZqOzQsqdyC7qID/zp1O0SolIxTxK0/VGGKK3HAZ3nqx2Lu6h/aeU8cJfsTk/NWm8foIiYMdl6i6NM6lOY9PeZW2f5fzTHx1L9j49LfVI4GaHnx4LdHeBeIkkMSKtT7nf2OkAO9F63Atb1dO8w0w3SCWTcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBgTVMh3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=axb8ahm7NiZ+SfLeMp0sDdS3I/dLgfsY4hyQyn4i8WAhyLmyrrOQk7PkcJs6cj4zR3qtiUdK1Gi6GZpwW2MikT7LzfKtk8ZQUvlS2OR6wASnG3fYg4vufGDS01Hymn2ZMQGxTN8qvxToeIie2e7GZMIYaHnRNjSaLBmMXqrMyTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iXF5XUPl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBgTVMh3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1194CC433F1;
-	Wed, 13 Mar 2024 18:47:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iXF5XUPl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 592BBC433F1;
+	Wed, 13 Mar 2024 18:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710355681;
-	bh=dcVWb4N9NdsJ7tiR/OkRHC9HMr2vN7pZKD+UVC6JBgY=;
+	s=k20201202; t=1710355693;
+	bh=PHL0oKD0IoROktHDLbULHwTIpiJ3VFZH6mV44JXuXOw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KBgTVMh3RZC7VA9B14tdVyNQUVkw0enTcJyg/lcCvdFie4foJfx/aes+0qCZ6lqxE
-	 9p9oiDBtdpm7c+LV/qZcjesK61SmjV+1v3OTqOpPYz24XF3WZ1M/LQ7ji2mDtgOJ3V
-	 xBiGHfBSvzcKVgTkyGyvHy0TzqJP7nO83NWSf38fpam/TyMZX5sL4S8rYg4eYxYbsH
-	 xcjDuWCBbglvtdIm1xUt0B4sFh9xRP8jZkEaB4PwKg+3K0SOhHfHfr0KzqEfEZPHgP
-	 YhBe1UbjovXuwNiVai/tw5WJB5MM+hS86eX9VDD/GP5VL3wttes6ZvU2CoV0ltUIci
-	 kb8izaIhC24iQ==
-Message-ID: <d3129248-0191-4a02-b0c0-9e0959791cad@kernel.org>
-Date: Wed, 13 Mar 2024 19:47:57 +0100
+	b=iXF5XUPl7v5IlnhAM3XVoNp5pYkvGCk/Gv8wvo7EQ1o9hTO9XrPllUN8RWjfaa3g/
+	 fcJvXLm6C/N4zsnwD33gcqVZs4SwevXMMyWpE0SuSOrVD43IvjoZEFRJOWM5i8+a2K
+	 KGPG4+KG7UwmLFUuhp6bBDyZ88Pc41K+deSgHODuMdBtA31+jU00J05WSg0B0Kequh
+	 TaBRLyaAIUrmGUEh+F7U4Ak/rnDHN06IdooTCoVIOsr+GpIUEWJcvzw1I1me59f/Id
+	 uV7qkinEwPuX4y8Jb5b1vsxwbCpZB1/gjN/JDTFqvh8R8oi7lsQTBogp1MuiGici3k
+	 1SW4A1nYnVBLQ==
+Message-ID: <17dd5b67-fa9e-4ef8-8736-82f6fa3fe587@kernel.org>
+Date: Wed, 13 Mar 2024 19:48:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 03/10] selftests: mptcp: id support for
- show_endpoints
+Subject: Re: [PATCH mptcp-next 04/10] selftests: mptcp: addr support for
+ change_endpoint
 Content-Language: en-US
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710121590.git.tanggeliang@kylinos.cn>
- <3e52c3dda1c27337c482e4752c376fad1c4d4e67.1710121590.git.tanggeliang@kylinos.cn>
+ <4f69ef8b2a7d3a131548424ddf9f0ba96ee53f78.1710121590.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3e52c3dda1c27337c482e4752c376fad1c4d4e67.1710121590.git.tanggeliang@kylinos.cn>
+In-Reply-To: <4f69ef8b2a7d3a131548424ddf9f0ba96ee53f78.1710121590.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,54 +96,59 @@ Hi Geliang,
 On 11/03/2024 02:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> All endpoints are showed in pm_nl_show_endpoints(). This patch adds support
-> for showing a specofic endpoint identified by the given address ID.
+> The address that needs to change flags can only be identified by an address
+> ID in pm_nl_change_endpoint(). This patch adds support for passing an IP
+> address directly to this helper.
 > 
-> Usage:
->         All endpoints - pm_nl_show_endpoints $ns
->         One endpoint - pm_nl_show_endpoints $ns $id
+>         Address ID:
+>                 pm_nl_change_endpoint $ns id $id $flags
+> 
+>         IP address:
+>                 pm_nl_change_endpoint $ns $addr $flags
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 15 ++++++++++++---
+>  tools/testing/selftests/net/mptcp/mptcp_lib.sh  |  5 +++++
+>  2 files changed, 17 insertions(+), 3 deletions(-)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 8eb5cf54ea42..e33a136aef8e 100755
+> index e33a136aef8e..431233e25abc 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -699,11 +699,18 @@ pm_nl_flush_endpoint()
->  pm_nl_show_endpoints()
+> @@ -717,13 +717,17 @@ pm_nl_show_endpoints()
+>  pm_nl_change_endpoint()
 >  {
 >  	local ns=$1
-> +	local id=$2
+> -	local id=$2
+> +	local addr=$2
+>  	local flags=$3
 >  
+> +	if ! mptcp_lib_is_addr "$addr"; then
+> +		[ $addr -gt 0 ] && [ $addr -lt 256 ] && addr="id $addr"
+> +	fi
+> +
 >  	if mptcp_lib_is_ip_mptcp; then
-> -		ip -n $ns mptcp endpoint show
-> +		local show="show"
-> +
-> +		[ -n "$id" ] && show+=" id $id"
-> +		ip -n $ns mptcp endpoint $show
+> -		ip -n $ns mptcp endpoint change id $id ${flags//","/" "}
+> +		ip -n $ns mptcp endpoint change $addr ${flags//","/" "}
 >  	else
-> -		ip netns exec $ns ./pm_nl_ctl dump
-> +		local dump="dump"
-> +
-> +		[ -n "$id" ] && dump="get $id"
-> +		ip netns exec $ns ./pm_nl_ctl $dump
+> -		ip netns exec $ns ./pm_nl_ctl set id $id flags $flags
+> +		ip netns exec $ns ./pm_nl_ctl set $addr flags $flags
 >  	fi
 >  }
 >  
-> @@ -3598,6 +3605,10 @@ endpoint_tests()
->  		mptcp_lib_is_ip_mptcp && output="add_addr_accepted 2 subflows 2 "
->  		check_output "pm_nl_get_limits ${ns1}" "${output}"
->  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-> +		print_check "show id 1 addr"
-> +		output="id 1 flags signal 10.0.2.1"
-> +		mptcp_lib_is_ip_mptcp && output="10.0.2.1 id 1 signal "
-> +		check_output "pm_nl_show_endpoints ${ns1} 1" "${output}"
+> @@ -3609,6 +3613,11 @@ endpoint_tests()
+>  		output="id 1 flags signal 10.0.2.1"
+>  		mptcp_lib_is_ip_mptcp && output="10.0.2.1 id 1 signal "
+>  		check_output "pm_nl_show_endpoints ${ns1} 1" "${output}"
+> +		pm_nl_change_endpoint ${ns1} 1 backup
+> +		print_check "change id 1 addr"
+> +		output="id 1 flags signal,backup 10.0.2.1"
+> +		mptcp_lib_is_ip_mptcp && output="10.0.2.1 id 1 signal backup "
+> +		check_output "pm_nl_show_endpoints ${ns1}" "${output}"
 
-Same here, that's already validated in pm_netlink.sh, no need to
-duplicate the test validating the same kernel code path. WDYT?
+I feel like here as well, that's something already validated in
+pm_netlink.sh, and this will not check anything new, no?
 
 >  		speed=slow \
 >  			run_tests $ns1 $ns2 10.0.1.1 &
