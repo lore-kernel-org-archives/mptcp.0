@@ -1,90 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1CC749A;
-	Thu, 14 Mar 2024 22:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F39D18027
+	for <mptcp@lists.linux.dev>; Fri, 15 Mar 2024 09:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710456172; cv=none; b=BCmr6dyG1secgbl9WBjICf5FOnwuyjx+/oapXz4Z1IryDrUVNMBaDA7wXFzYjM+SLB5cxhlcjyXi1w20WG4Et5JsPIuV1cfosyhV3ezwklVPn7ROUy2A4iGUZ9cW7mLxzEIYRP9o2t/rELbNCDHg5cT5O0Ev9ES6DF0+4MJknvg=
+	t=1710496000; cv=none; b=Jf9SzehdFfPz5g3EHP0NbsY4tiHYrNxW5P4UMXM/b0XOPSk26XvFh7tOy0trt9xqH1CPKwuQGAhw5yTReDqtP4zHFBV5UfE3x5M5zaYHe6LLPzsy1W3I6K/4BY5FAr4G/597kqVKShXwWh4DsoVs6JftVZIOsoJ/3zU3ro/vD4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710456172; c=relaxed/simple;
-	bh=U45zB3+40tmVIhF5iKt03Xdrdh8+Z7vW7QN+7y5B3f0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LB5Wb3hQ98+4qPYjE5RspExN3TQo+lo5Is+cx7p+cGooHVZO1SUVPRJclUMvpm+X1fpOHBTQCDRC5w4XkCLg+mbxnVpfQm4tYYUDJeQulI7J6E7RyHg0BlbvzBY1zbCud9RYe4CrhQMuIoZVu4tk7EdhxY4kqiC4mW+VwUqhOlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TL1JK3Da; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710496000; c=relaxed/simple;
+	bh=de/DHXJns6jhbK+b9nDwO+GmO9dmJ47k3bXJqhiexlI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DmDVTyFYOtQ+N6pfxaCIxtspXh0vBND/GbcZQcrWIh2OMqikAboKeuYciQF/ovSLB7xZL6M9ZjjpKxu37SJdz0VZm+dVVgrUbu8jdcMxQHvu5T3Zu+nWhz92EugJGG22V092ASJdSDHu+lRpufuXATRG6Ff5GzGY+qRiahVevNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xi5ZFR/s; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TL1JK3Da"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F7C9C433C7;
-	Thu, 14 Mar 2024 22:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710456171;
-	bh=U45zB3+40tmVIhF5iKt03Xdrdh8+Z7vW7QN+7y5B3f0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TL1JK3Dai/kz4OGSXOftYv022x+e7Q4s6+0rQaw50afW+buujjI7SqPnwHoAH/3aY
-	 mHTeNCNm02z8wXyaMCJODN+iXSFMO5ZqOrHw6II6qseUS3PXj/GAIKs2k3exN0FaMG
-	 lgbBhDkTmXnrCvS40pNbF3ZnvBEUlCKF1ne+k8VzuEVhYpEglNHD41xcRqtveNNHb0
-	 5zJFI9JPRdFPROEN46yi+IL95kRvDd7R2MZNGlrZ0+JIHP972CJ8zYnOHQCaTLhiDZ
-	 ouFccyuRjCmD0Wx7PCvr2x5nVuP6IV9lwMrD/Xt8W4JeMxTlXrcUrM0JHh/VAe2C68
-	 3WGbOwnNpaulg==
-Date: Thu, 14 Mar 2024 15:42:48 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Cc: <j.granados@samsung.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Alexander
- Aring <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern
- <dsahern@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Matthieu Baerts
- <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Geliang Tang
- <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Remi
- Denis-Courmont <courmisch@gmail.com>, Allison Henderson
- <allison.henderson@oracle.com>, David Howells <dhowells@redhat.com>, Marc
- Dionne <marc.dionne@auristor.com>, Marcelo Ricardo Leitner
- <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Wenjia Zhang
- <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, "D. Wythe"
- <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, Wen Gu
- <guwen@linux.alibaba.com>, Trond Myklebust
- <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, Chuck
- Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil
- Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Jon Maloy
- <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>, Martin Schiller
- <ms@dev.tdt.de>, Pablo Neira Ayuso <pablo@netfilter.org>, Jozsef Kadlecsik
- <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, Roopa Prabhu
- <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, Simon Horman
- <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, Joerg Reuter
- <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook
- <keescook@chromium.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
- linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
- linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
- rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
- linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
- linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
- linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org
-Subject: Re: [PATCH 0/4] sysctl: Remove sentinel elements from networking
-Message-ID: <20240314154248.155d96a4@kernel.org>
-In-Reply-To: <20240314-jag-sysctl_remset_net-v1-0-aa26b44d29d9@samsung.com>
-References: <20240314-jag-sysctl_remset_net-v1-0-aa26b44d29d9@samsung.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xi5ZFR/s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710495998;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=de/DHXJns6jhbK+b9nDwO+GmO9dmJ47k3bXJqhiexlI=;
+	b=Xi5ZFR/sN7bGSKfjZA5AxOP0Y3p3kCO+kL3zHzZfM97/+Q81RBJh81t0LhZ7PI0E4VrANH
+	qCu3n7RG4QmsPd7AsTZVUWPkCDUcGfzpWErPq5AYVxeGth8+vp0J8gKB4KC1VR04fusv+v
+	ewbioKhBdSI5mOu/15sUWxPVpRr+HOg=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-131-JBxOYBEvMsmicT4nb5JndQ-1; Fri, 15 Mar 2024 05:46:36 -0400
+X-MC-Unique: JBxOYBEvMsmicT4nb5JndQ-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d4858fff42so7736701fa.3
+        for <mptcp@lists.linux.dev>; Fri, 15 Mar 2024 02:46:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710495995; x=1711100795;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=de/DHXJns6jhbK+b9nDwO+GmO9dmJ47k3bXJqhiexlI=;
+        b=dXfBaPiVmCr0ObWFGPlPxJocqNJzF1J3wclSyf7Jfcb659IZo0RdMvDZNF4JiRymLw
+         fJ85bGOJpQwv4qBGr9U0Dpq7c2+NXNMIKkSFxhUo1me0bnRjoqGx+nAjTz7u/f/sLegM
+         xCmbS1Y5XAyAQ9cTt2r+y1dgVgND+7nHjXJiBdBfUA9FzSJDQwxaPjbB/04OlkG8I5b7
+         MrD5zvRzd2KTdc9d4ALQoXBaWW2al0Fxu5CjZv2h0jKDBOPPUnvPxQj50T3EOGD1SgIY
+         XAyok7Oo3kquNlPXuIAMWBCBhZQdXsSManyvlhhs18wyXtY1m8DuSQa28kVVxhgf4qPU
+         B1GA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmCE9pBDckhXEmgYlnlj3UwMuq0OD7V6ypnS8T9NNOL/q7evtJ9FW6m0s/CjOk/p2/JWcR3c3JChAJqIlEjNHo/qsIDcI=
+X-Gm-Message-State: AOJu0YxiML7wHCsnrrMjbgOm1Xi0nxopwMFSl/RsKcHF4TvWdWfa6mvi
+	d5p3dH4mjJnGOueS5JDLMdpIE31vczuifo0vU291PNHwn2EfBc+dXtRlePPayKdRhpwbZn4GKis
+	LSvho8Y3b2527iyz7fqhx1X3ea/wZEP0uvwRiAG1ACili8/gDf0joEbdlGtXzPj9BiLnzXDWjzV
+	71vA2cl626QiLHJng86UOfz0C2HD0=
+X-Received: by 2002:a2e:a412:0:b0:2d4:5f50:1fa with SMTP id p18-20020a2ea412000000b002d45f5001famr1666606ljn.41.1710495994738;
+        Fri, 15 Mar 2024 02:46:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmCl6lLHXMH/wVMpEDUaejh6wUygcQhOEpyJIThEAL7X1JeBweQcO6+qbGSli7z56scCmbjuo8J4Pg5aoQYBM=
+X-Received: by 2002:a2e:a412:0:b0:2d4:5f50:1fa with SMTP id
+ p18-20020a2ea412000000b002d45f5001famr1666592ljn.41.1710495994264; Fri, 15
+ Mar 2024 02:46:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <a5f63fbcf13323d8cf293f42849673093d1bf45b.1710179839.git.dcaratti@redhat.com>
+ <145aa063-d762-8933-7c1e-b611dcc9525e@kernel.org>
+In-Reply-To: <145aa063-d762-8933-7c1e-b611dcc9525e@kernel.org>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Fri, 15 Mar 2024 10:46:23 +0100
+Message-ID: <CAKa-r6uT6+2ho4t+M0P6WC=pTGANj=drXVrOYjX2dbmn3bEb_Q@mail.gmail.com>
+Subject: Re: [PATCH mptcp-net v3] mptcp: don't account accept() of non-MPC
+ client as fallback to TCP
+To: Mat Martineau <martineau@kernel.org>
+Cc: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 14 Mar 2024 20:20:40 +0100 Joel Granados via B4 Relay wrote:
-> These commits remove the sentinel element (last empty element) from the
-> sysctl arrays of all the files under the "net/" directory that register
-> a sysctl array. The merging of the preparation patches [4] to mainline
-> allows us to just remove sentinel elements without changing behavior.
-> This is safe because the sysctl registration code (register_sysctl() and
-> friends) use the array size in addition to checking for a sentinel [1].
+hello Mat, thanks for reviewing!
 
-Thanks, but please resend after the merge window, we don't apply
-code to -next until -rc1 is cut.
--- 
-pw-bot: defer
+On Thu, Mar 14, 2024 at 1:46=E2=80=AFAM Mat Martineau <martineau@kernel.org=
+> wrote:
+>
+
+[...]
+
+> This prints:
+>
+> [FAIL] pure TCP counted as fallback (expect:%d, got:%d) 0 1
+>
+> which I don't think is what you intended
+
+yes I forgot to convert the old argument I used with printf: will fix
+that in v4.
+
+Thinking out loud with Matthieu: those "if" tests on client and server
+protocol can be removed, mptcp_connect is not expected to fallback to
+TCP at all in that scenario. So, whatever 4 combinations you can make
+out of $cl_proto and $srv_proto, that MIB shall not have an increment.
+
+--=20
+davide
+
