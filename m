@@ -1,104 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F39D18027
-	for <mptcp@lists.linux.dev>; Fri, 15 Mar 2024 09:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4B21BC23
+	for <mptcp@lists.linux.dev>; Fri, 15 Mar 2024 10:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710496000; cv=none; b=Jf9SzehdFfPz5g3EHP0NbsY4tiHYrNxW5P4UMXM/b0XOPSk26XvFh7tOy0trt9xqH1CPKwuQGAhw5yTReDqtP4zHFBV5UfE3x5M5zaYHe6LLPzsy1W3I6K/4BY5FAr4G/597kqVKShXwWh4DsoVs6JftVZIOsoJ/3zU3ro/vD4Y=
+	t=1710499465; cv=none; b=n12Nt9pdBTEvQeEF7p+iYGMQTbbOfZs3TWnG17NgMq3TQwuz9+rrsPWBJJyQ4CqrLpaMxZpExHUQuOjUHtzi/me+LDqVpwzK1lAHmRVV8bW2Q8zro5vmVxpK4mUa2eQzAm7uuOXBqOONZXtzSmbXVdVkPmEC0HHt1LRjGq6Mdn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710496000; c=relaxed/simple;
-	bh=de/DHXJns6jhbK+b9nDwO+GmO9dmJ47k3bXJqhiexlI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DmDVTyFYOtQ+N6pfxaCIxtspXh0vBND/GbcZQcrWIh2OMqikAboKeuYciQF/ovSLB7xZL6M9ZjjpKxu37SJdz0VZm+dVVgrUbu8jdcMxQHvu5T3Zu+nWhz92EugJGG22V092ASJdSDHu+lRpufuXATRG6Ff5GzGY+qRiahVevNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xi5ZFR/s; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710499465; c=relaxed/simple;
+	bh=PKBKQyhuH/F5Bm6d+p3QrjZ9gl+xPCz19GrO2xvRaX4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ge6WgElXvLBvnajOuGC/ALmM54LwDQIToWWsY0ir9sK+8fWsqnlhp4yYeGLF0Rrd8+zXBihBXTbOCa5+PVh4HRFXw03uqFQCkj1+t0tsU4tMCiyTvbutJWcIDKHNczY5M/e5KMrkEabY2Xsu1bxNP0hj46S9qt9tonZGAv3ytoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1cGFcQz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xi5ZFR/s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710495998;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=de/DHXJns6jhbK+b9nDwO+GmO9dmJ47k3bXJqhiexlI=;
-	b=Xi5ZFR/sN7bGSKfjZA5AxOP0Y3p3kCO+kL3zHzZfM97/+Q81RBJh81t0LhZ7PI0E4VrANH
-	qCu3n7RG4QmsPd7AsTZVUWPkCDUcGfzpWErPq5AYVxeGth8+vp0J8gKB4KC1VR04fusv+v
-	ewbioKhBdSI5mOu/15sUWxPVpRr+HOg=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-131-JBxOYBEvMsmicT4nb5JndQ-1; Fri, 15 Mar 2024 05:46:36 -0400
-X-MC-Unique: JBxOYBEvMsmicT4nb5JndQ-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d4858fff42so7736701fa.3
-        for <mptcp@lists.linux.dev>; Fri, 15 Mar 2024 02:46:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710495995; x=1711100795;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=de/DHXJns6jhbK+b9nDwO+GmO9dmJ47k3bXJqhiexlI=;
-        b=dXfBaPiVmCr0ObWFGPlPxJocqNJzF1J3wclSyf7Jfcb659IZo0RdMvDZNF4JiRymLw
-         fJ85bGOJpQwv4qBGr9U0Dpq7c2+NXNMIKkSFxhUo1me0bnRjoqGx+nAjTz7u/f/sLegM
-         xCmbS1Y5XAyAQ9cTt2r+y1dgVgND+7nHjXJiBdBfUA9FzSJDQwxaPjbB/04OlkG8I5b7
-         MrD5zvRzd2KTdc9d4ALQoXBaWW2al0Fxu5CjZv2h0jKDBOPPUnvPxQj50T3EOGD1SgIY
-         XAyok7Oo3kquNlPXuIAMWBCBhZQdXsSManyvlhhs18wyXtY1m8DuSQa28kVVxhgf4qPU
-         B1GA==
-X-Forwarded-Encrypted: i=1; AJvYcCWmCE9pBDckhXEmgYlnlj3UwMuq0OD7V6ypnS8T9NNOL/q7evtJ9FW6m0s/CjOk/p2/JWcR3c3JChAJqIlEjNHo/qsIDcI=
-X-Gm-Message-State: AOJu0YxiML7wHCsnrrMjbgOm1Xi0nxopwMFSl/RsKcHF4TvWdWfa6mvi
-	d5p3dH4mjJnGOueS5JDLMdpIE31vczuifo0vU291PNHwn2EfBc+dXtRlePPayKdRhpwbZn4GKis
-	LSvho8Y3b2527iyz7fqhx1X3ea/wZEP0uvwRiAG1ACili8/gDf0joEbdlGtXzPj9BiLnzXDWjzV
-	71vA2cl626QiLHJng86UOfz0C2HD0=
-X-Received: by 2002:a2e:a412:0:b0:2d4:5f50:1fa with SMTP id p18-20020a2ea412000000b002d45f5001famr1666606ljn.41.1710495994738;
-        Fri, 15 Mar 2024 02:46:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHmCl6lLHXMH/wVMpEDUaejh6wUygcQhOEpyJIThEAL7X1JeBweQcO6+qbGSli7z56scCmbjuo8J4Pg5aoQYBM=
-X-Received: by 2002:a2e:a412:0:b0:2d4:5f50:1fa with SMTP id
- p18-20020a2ea412000000b002d45f5001famr1666592ljn.41.1710495994264; Fri, 15
- Mar 2024 02:46:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1cGFcQz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E479AC433C7;
+	Fri, 15 Mar 2024 10:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710499465;
+	bh=PKBKQyhuH/F5Bm6d+p3QrjZ9gl+xPCz19GrO2xvRaX4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=r1cGFcQzQGxCqjk/ax/qpFB53Ipz+4QlQ6eQf4UIH6xTSlEJYYeLo66vF2tMtA1Vr
+	 2uf5yIT/foRwE1ohoRAvqCJGzQIKF2ngW2EaWFKdaeQXCHoUDoWx3vv8C6UWMdBBnB
+	 3+6QpTbIWIb28K004jgVmOGPJk9QyRq5KglDJujYHKWR3P6YfztGGd89jtxfMhOmYG
+	 U3ZKb5Ky3fsWwWljlOq7nHtTsoP/7o8JZVFIFLJI7qwWPYUxfIi6N+/qfo4YsCkOqi
+	 5fKAVWN3x0acFroXxA3GhsJ0BRok8QpQBiD2DQjePMQt/1cpKcwtKwH6H2Qmze/N+s
+	 K8fAHcBY5ysbw==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net] selftests: mptcp: join: fix dev in check_endpoint
+Date: Fri, 15 Mar 2024 18:44:19 +0800
+Message-Id: <c2b0609aa21bef01ea1191dec3c127612cff3ebc.1710499440.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a5f63fbcf13323d8cf293f42849673093d1bf45b.1710179839.git.dcaratti@redhat.com>
- <145aa063-d762-8933-7c1e-b611dcc9525e@kernel.org>
-In-Reply-To: <145aa063-d762-8933-7c1e-b611dcc9525e@kernel.org>
-From: Davide Caratti <dcaratti@redhat.com>
-Date: Fri, 15 Mar 2024 10:46:23 +0100
-Message-ID: <CAKa-r6uT6+2ho4t+M0P6WC=pTGANj=drXVrOYjX2dbmn3bEb_Q@mail.gmail.com>
-Subject: Re: [PATCH mptcp-net v3] mptcp: don't account accept() of non-MPC
- client as fallback to TCP
-To: Mat Martineau <martineau@kernel.org>
-Cc: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-hello Mat, thanks for reviewing!
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On Thu, Mar 14, 2024 at 1:46=E2=80=AFAM Mat Martineau <martineau@kernel.org=
-> wrote:
->
+There's a bug in pm_nl_check_endpoint(), 'dev' didn't be parsed correctly.
+If calling it in the 2nd test of endpoint_tests() too, it fails with an
+error like this:
 
-[...]
+ creation  [FAIL] expected '10.0.2.2 id 2 subflow dev dev' \
+                     found '10.0.2.2 id 2 subflow dev ns2eth2'
 
-> This prints:
->
-> [FAIL] pure TCP counted as fallback (expect:%d, got:%d) 0 1
->
-> which I don't think is what you intended
+The reason is '$2' should be set to 'dev', not '$1'. This patch fixes it.
 
-yes I forgot to convert the old argument I used with printf: will fix
-that in v4.
+Fixes: 69c6ce7b6eca ("selftests: mptcp: add implicit endpoint test case")
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thinking out loud with Matthieu: those "if" tests on client and server
-protocol can be removed, mptcp_connect is not expected to fallback to
-TCP at all in that scenario. So, whatever 4 combinations you can make
-out of $cl_proto and $srv_proto, that MIB shall not have an increment.
-
---=20
-davide
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 70621cbbab09..73a2131e6da2 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -729,7 +729,7 @@ pm_nl_check_endpoint()
+ 			[ -n "$_flags" ]; flags="flags $_flags"
+ 			shift
+ 		elif [ $1 = "dev" ]; then
+-			[ -n "$2" ]; dev="dev $1"
++			[ -n "$2" ]; dev="dev $2"
+ 			shift
+ 		elif [ $1 = "id" ]; then
+ 			_id=$2
+@@ -3610,6 +3610,8 @@ endpoint_tests()
+ 		local tests_pid=$!
+ 
+ 		wait_mpj $ns2
++		pm_nl_check_endpoint "creation" \
++			$ns2 10.0.2.2 id 2 flags subflow dev ns2eth2
+ 		chk_subflow_nr "before delete" 2
+ 		chk_mptcp_info subflows 1 subflows 1
+ 
+-- 
+2.40.1
 
